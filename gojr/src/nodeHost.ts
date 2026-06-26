@@ -64,6 +64,7 @@ export interface NodeSourcePackageRequest {
   packageCacheParent?: string;
   compilerVersion?: string;
   progress?: boolean;
+  streamOutput?: boolean;
   argv?: string[];
   sheetJSON?: string;
   sheetsJSON?: string;
@@ -751,6 +752,9 @@ function evaluationOptionsFromNodeRequest(request: NodeSourcePackageRequest): Ev
   if (request.sheetJSON) options.sheet = parseSheetJson(request.sheetJSON);
   if (request.sheetsJSON) options.sheets = parseSheetsJson(request.sheetsJSON);
   if (request.argv) options.argv = request.argv;
+  if (request.streamOutput) options.stdout = (text: string) => {
+    process.stdout.write(text);
+  };
   if (typeof request.testVerbose === "boolean") options.testVerbose = request.testVerbose;
   if (typeof request.testRun === "string") options.testRun = request.testRun;
   return options;

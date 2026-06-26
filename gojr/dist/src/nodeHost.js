@@ -627,6 +627,10 @@ function evaluationOptionsFromNodeRequest(request) {
         options.sheets = parseSheetsJson(request.sheetsJSON);
     if (request.argv)
         options.argv = request.argv;
+    if (request.streamOutput)
+        options.stdout = (text) => {
+            process.stdout.write(text);
+        };
     if (typeof request.testVerbose === "boolean")
         options.testVerbose = request.testVerbose;
     if (typeof request.testRun === "string")

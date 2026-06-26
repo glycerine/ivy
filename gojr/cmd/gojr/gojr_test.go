@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"testing"
 )
 
@@ -61,6 +62,58 @@ func stripGojrStartupVersionLine(output string) string {
 		return ""
 	}
 	return output[lineEnd+1:]
+}
+
+func withProcessStdin(t *testing.T, input string, body func()) {
+	t.Helper()
+
+	original, err := syscall.Dup(0)
+	if err != nil {
+		t.Fatalf("Dup(stdin) error = %v", err)
+	}
+	t.Cleanup(func() {
+		_ = syscall.Close(original)
+	})
+
+	reader, writer, err := os.Pipe()
+	if err != nil {
+		t.Fatalf("Pipe() error = %v", err)
+	}
+	if _, err := writer.WriteString(input); err != nil {
+		t.Fatalf("Pipe writer WriteString error = %v", err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatalf("Pipe writer Close error = %v", err)
+	}
+	defer reader.Close()
+
+	if err := syscall.Dup2(int(reader.Fd()), 0); err != nil {
+		t.Fatalf("Dup2(pipe, stdin) error = %v", err)
+	}
+	defer func() {
+		if err := syscall.Dup2(original, 0); err != nil {
+			t.Fatalf("restore stdin Dup2 error = %v", err)
+		}
+	}()
+
+	body()
+}
+
+func withWorkingDirectory(t *testing.T, dir string, body func()) {
+	t.Helper()
+	original, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("Getwd() error = %v", err)
+	}
+	if err := os.Chdir(dir); err != nil {
+		t.Fatalf("Chdir(%s) error = %v", dir, err)
+	}
+	defer func() {
+		if err := os.Chdir(original); err != nil {
+			t.Fatalf("restore Chdir(%s) error = %v", original, err)
+		}
+	}()
+	body()
 }
 
 func TestShouldPrintValueSuppressesOnlyActualNil(t *testing.T) {
@@ -556,6 +609,54 @@ func main() {
 		t.Fatalf("runSource(main.go --ok) ok=%v err=%v, want argv success", ok, err)
 	}
 
+	stdinDir := filepath.Join(moduleRoot, "cmd", "stdin")
+	if err := os.MkdirAll(stdinDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(stdinDir) error = %v", err)
+	}
+	stdinMainFile := filepath.Join(stdinDir, "main.go")
+	writeTestFile(t, stdinMainFile, `package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+func main() {
+	fmt.Print("ready> ")
+	line, err := bufio.NewReader(os.Stdin).ReadString('\n')
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("got %q\n", line)
+}
+`)
+	stdinFiles, err := readBuildTarget(stdinMainFile)
+	if err != nil {
+		t.Fatalf("readBuildTarget(stdinMainFile) error = %v", err)
+	}
+	withProcessStdin(t, "from embedded stdin\n", func() {
+		result, err := rt.RunMainFilesWithPackages(evalWithPackagesRequest{
+			ImportPath:         deriveBuildImportPath(stdinMainFile, packageNameFromSourceFiles(stdinFiles)),
+			PackageName:        "main",
+			Files:              stdinFiles,
+			SourceRoots:        buildSourceRoots(stdinMainFile, "", nil),
+			PackageCacheParent: runCacheParent,
+			CompilerVersion:    toolchainCompilerVersion(),
+		})
+		if err != nil {
+			t.Fatalf("RunMainFilesWithPackages(stdin) error = %v", err)
+		}
+		if !result.OK || result.Output != "ready> got \"from embedded stdin\\n\"\n" {
+			t.Fatalf("RunMainFilesWithPackages(stdin) ok=%v output=%q diagnostics=%v, want prompt and line", result.OK, result.Output, result.Diagnostics)
+		}
+	})
+	withProcessStdin(t, "from gojr run stdin\n", func() {
+		if ok, err := runSource(rt, []string{"-pkgdir", runCacheParent, stdinMainFile}); err != nil || !ok {
+			t.Fatalf("runSource(stdin main.go) ok=%v err=%v, want success", ok, err)
+		}
+	})
+
 	pkgDir := t.TempDir()
 	writeTestFile(t, filepath.Join(pkgDir, "counter.go"), `package counter
 
@@ -613,6 +714,11 @@ func Next() int {
 	if ok, err := runTest(rt, []string{testDir}); err != nil || !ok {
 		t.Fatalf("runTest() ok=%v err=%v, want success", ok, err)
 	}
+	withWorkingDirectory(t, testDir, func() {
+		if ok, err := runTest(rt, []string{"-v"}); err != nil || !ok {
+			t.Fatalf("runTest(-v current directory) ok=%v err=%v, want success", ok, err)
+		}
+	})
 
 	verboseDir := t.TempDir()
 	writeTestFile(t, filepath.Join(verboseDir, "verbose.go"), "package verbose\n\nfunc Ready() bool { return true }\n")

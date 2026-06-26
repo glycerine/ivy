@@ -528,8 +528,6 @@ func Two() int { return lib.One() + 1 }
 
     expect(second.ok).toBe(true);
     expect(events.map((event) => `${event.action}:${event.importPath}`)).toEqual([
-      "checking:example.com/app",
-      "checking:example.com/lib",
       "cached:example.com/lib",
       "cached:example.com/app"
     ]);

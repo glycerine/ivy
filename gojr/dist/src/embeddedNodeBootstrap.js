@@ -149,6 +149,7 @@
     }
     function installEmbeddedRuntime(moduleBundleJson) {
         const embeddedRequire = createEmbeddedModuleLoader(moduleBundleJson);
+        installNodeStdioHooks(embeddedRequire);
         const gojrModule = embeddedRequire("/src/index.js");
         const runtimeOptions = (extra = {}) => gojrModule.runtimeOptionsFromEnvironment(processEnvironment(), extra);
         const gojrSession = new gojrModule.GoJuniorSession(runtimeOptions({ sheet: {} }));
@@ -172,8 +173,10 @@
             return evaluationJSON(result, result.packageOutput || []);
         };
         root.__gojrRunMainFilesWithPackages = async function (json) {
-            const result = await gojrModule.runMainSourceFilesWithPackagesOnNode(JSON.parse(json));
-            return evaluationJSON({ ...result, incomplete: false }, result.packageOutput || []);
+            const request = JSON.parse(json);
+            const result = await gojrModule.runMainSourceFilesWithPackagesOnNode(request);
+            const streamed = request && request.streamOutput === true;
+            return evaluationJSON({ ...result, output: streamed ? [] : result.output, incomplete: false }, streamed ? [] : result.packageOutput || []);
         };
         root.__gojrTestFilesWithPackages = async function (json) {
             const result = await gojrModule.testSourceFilesWithPackagesOnNode(JSON.parse(json));
@@ -217,6 +220,28 @@
             const result = await gojrModule.runSpreadsheetFixtureWithPackagesOnNode(JSON.parse(json));
             return gojrModule.spreadsheetFixtureResultToHostJSON(result);
         };
+    }
+    function installNodeStdioHooks(embeddedRequire) {
+        if (typeof root.__gojrReadSync === "function" && typeof root.__gojrWriteSync === "function")
+            return;
+        let fs;
+        try {
+            fs = embeddedRequire("node:fs");
+        }
+        catch {
+            try {
+                fs = embeddedRequire("fs");
+            }
+            catch {
+                return;
+            }
+        }
+        if (typeof root.__gojrReadSync !== "function" && typeof fs.readSync === "function") {
+            root.__gojrReadSync = (fd, buffer, offset, length, position) => fs.readSync(fd, buffer, offset, length, position);
+        }
+        if (typeof root.__gojrWriteSync !== "function" && typeof fs.writeSync === "function") {
+            root.__gojrWriteSync = (fd, buffer, offset, length, position) => fs.writeSync(fd, buffer, offset, length, position);
+        }
     }
     root.__gojrCreateEmbeddedModuleLoader = createEmbeddedModuleLoader;
     root.__gojrInstallEmbeddedRuntime = installEmbeddedRuntime;

@@ -100,6 +100,7 @@ type evalWithPackagesRequest struct {
 	PackageCacheParent string               `json:"packageCacheParent,omitempty"`
 	CompilerVersion    string               `json:"compilerVersion,omitempty"`
 	Progress           bool                 `json:"progress,omitempty"`
+	StreamOutput       bool                 `json:"streamOutput,omitempty"`
 	Argv               []string             `json:"argv,omitempty"`
 	TestVerbose        bool                 `json:"testVerbose"`
 	TestRun            string               `json:"testRun,omitempty"`
@@ -484,6 +485,7 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 			PackageCacheParent: strings.TrimSpace(*packageCacheParent),
 			CompilerVersion:    toolchainCompilerVersion(),
 			Progress:           !*jsonMode,
+			StreamOutput:       !*jsonMode,
 			Argv:               argv,
 		})
 		if err != nil {
@@ -502,6 +504,7 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 			Packages:        packages,
 			SourceRoots:     sourceRoots,
 			CompilerVersion: toolchainCompilerVersion(),
+			StreamOutput:    !*jsonMode,
 			Argv:            argv,
 		})
 		if err != nil {
@@ -515,6 +518,7 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 			Files:           []sourceFile{source},
 			SheetJSON:       strings.TrimSpace(*sheetJSON),
 			CompilerVersion: toolchainCompilerVersion(),
+			StreamOutput:    !*jsonMode,
 			Argv:            argv,
 		})
 		if err != nil {
@@ -601,10 +605,13 @@ func runTest(rt *nodeRuntime, args []string) (bool, error) {
 	}
 	_ = seed
 	_ = randomSeed
-	if flags.NArg() != 1 {
-		return false, fmt.Errorf("usage: gojr test [-v] [-run REGEXP] [--json] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] PATH")
+	if flags.NArg() > 1 {
+		return false, fmt.Errorf("usage: gojr test [-v] [-run REGEXP] [--json] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] [PATH]")
 	}
-	target := flags.Arg(0)
+	target := "."
+	if flags.NArg() == 1 {
+		target = flags.Arg(0)
+	}
 	targets, err := readGoTestTargets(target)
 	if err != nil {
 		return false, err
@@ -829,8 +836,8 @@ gojr run [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [-pkgdi
 gojr compile [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--expr SOURCE] [FILE|DIR|-]
   parse and typecheck Go-junior source without executing it
 
-gojr test [--json] [-run REGEXP] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] PATH
-  run Go-junior tests from a .go file or package directory
+gojr test [--json] [-run REGEXP] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] [PATH]
+  run Go-junior tests from a .go file or package directory; defaults to .
 
 gojr build [--json] [-importpath PATH] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] TARGET
   compile a Go-junior package into the package artifact cache
@@ -932,7 +939,11 @@ func handleCommand(rt *nodeRuntime, source *strings.Builder, command string) (bo
 		}
 		return false, evalLoadedSourceFiles(rt, source, dir, files)
 	case command == ".test":
-		return false, fmt.Errorf("usage: .test PATH")
+		targets, err := readGoTestTargets(".")
+		if err != nil {
+			return false, err
+		}
+		return false, testLoadedSourceFiles(rt, source, targets)
 	case strings.HasPrefix(command, ".test "):
 		target := strings.TrimSpace(strings.TrimPrefix(command, ".test "))
 		targets, err := readGoTestTargets(target)
@@ -953,7 +964,7 @@ func printHelp() {
   .source PATH   load one Go-junior .go source file into the session
   .sheet JSON    replace the current sheet, e.g. .sheet {"A1":40,"B1":2.5}
   .load DIR      load a Go-junior package directory into the session
-  .test PATH     run Go-junior tests from a .go file or package directory
+  .test [PATH]   run Go-junior tests from a .go file or package directory; defaults to .
   .quit          exit
 
 Normal input is evaluated eagerly. If the parser reaches EOF while expecting

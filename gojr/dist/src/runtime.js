@@ -963,6 +963,8 @@ const tupleValues = new WeakSet();
 const runtimePackageInspections = new WeakMap();
 const reflectValueInfos = new WeakMap();
 const runtimeUintptrIds = new Map();
+const runtimeUintptrPointers = new Map();
+const runtimeFunctionPCNames = new Map();
 let nextObjectMapKeyId = 1;
 let nextNonReflexiveMapKeyId = 1;
 let nextRuntimeUintptrId = 1n;
@@ -2410,6 +2412,18 @@ function packageFunctionIntrinsic(declaration, importPath) {
             throw new GoJuniorExit(toNumber(args[0] ?? 0));
         });
     }
+    if (importPath === "syscall" && declaration.name === "read") {
+        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => syscallReadSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+    }
+    if (importPath === "syscall" && declaration.name === "write") {
+        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => syscallWriteSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+    }
+    if (importPath === "internal/runtime/syscall/linux" && declaration.name === "Read") {
+        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => syscallReadErrnoSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+    }
+    if (importPath === "internal/runtime/syscall/linux" && declaration.name === "Write") {
+        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => syscallWriteErrnoSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+    }
     if (importPath === "internal/abi" && declaration.name === "TypeOf") {
         intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => internalAbiTypeOf(args[0] ?? null, context));
     }
@@ -2627,6 +2641,7 @@ function bodylessPackageFunctionIntrinsic(declaration, importPath) {
     const intrinsic = bodylessBytealgIntrinsic(importPath, declaration.name, declaration.signature) ??
         bodylessAtomicIntrinsic(importPath, declaration.name, declaration.signature) ??
         bodylessAbiIntrinsic(importPath, declaration.name, declaration.signature) ??
+        bodylessSyscallIntrinsic(importPath, declaration.name, declaration.signature) ??
         bodylessIterCoroutineIntrinsic(importPath, declaration.name, declaration.signature) ??
         bodylessRuntimeIntrinsic(declaration.name, declaration.signature);
     return intrinsic
@@ -2690,11 +2705,167 @@ function bodylessAbiIntrinsic(importPath, name, signature) {
             const value = unwrapNamed(args[0] ?? null);
             if (value === null)
                 return 0n;
-            if (typeof value === "object")
-                return BigInt(objectIdentityId(value));
+            if (typeof value === "object") {
+                const pc = BigInt(objectIdentityId(value));
+                if (isGoJuniorFunction(value) || isRuntimeCallable(value))
+                    runtimeFunctionPCNames.set(pc, value.name);
+                return pc;
+            }
             return BigInt(runtimeMapKeyId(value).length);
         }
     };
+}
+function bodylessSyscallIntrinsic(importPath, name, signature) {
+    if (importPath !== "syscall" && importPath !== "internal/runtime/syscall/linux")
+        return undefined;
+    if (name === "Syscall" ||
+        name === "Syscall6" ||
+        name === "RawSyscall" ||
+        name === "RawSyscall6" ||
+        name === "syscall" ||
+        name === "syscall6" ||
+        name === "rawSyscall" ||
+        name === "rawSyscall6" ||
+        name === "syscalln" ||
+        name === "rawsyscalln") {
+        return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args) => {
+            const operands = syscallOperands(args);
+            return syscallTrap(args[0] ?? 0n, operands[0] ?? 0n, operands[1] ?? 0n, operands[2] ?? 0n);
+        }, { preserveResultIdentity: true });
+    }
+    if (name === "read") {
+        return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args) => syscallReadSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+    }
+    if (name === "write") {
+        return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args) => syscallWriteSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+    }
+    return undefined;
+}
+const syscallReadTrapNumbers = new Set(["0", "3", "63", "4003", "5000"]);
+const syscallWriteTrapNumbers = new Set(["1", "4", "64", "4004", "5001"]);
+function syscallOperands(args) {
+    const packed = unwrapNamed(args[1] ?? null);
+    if (Array.isArray(packed)) {
+        return packed.map((item, index) => getArrayElement(packed, index));
+    }
+    return args.slice(1);
+}
+function syscallTrap(trapValue, a1, a2, a3) {
+    const trap = toBigInt(trapValue);
+    const kind = syscallTrapKind(trap);
+    if (kind === "read") {
+        return [syscallReadPointer(a1, a2, a3), 0n, 0n];
+    }
+    if (kind === "write") {
+        return [syscallWritePointer(a1, a2, a3), 0n, 0n];
+    }
+    return [0n, 0n, 0n];
+}
+function syscallTrapKind(trap) {
+    const pcName = runtimeFunctionPCNames.get(trap);
+    if (pcName) {
+        if (/(^|[.])libc_read_trampoline$/.test(pcName))
+            return "read";
+        if (/(^|[.])libc_write_trampoline$/.test(pcName))
+            return "write";
+    }
+    const key = trap.toString();
+    if (syscallReadTrapNumbers.has(key))
+        return "read";
+    if (syscallWriteTrapNumbers.has(key))
+        return "write";
+    return undefined;
+}
+function syscallReadSlice(fdValue, bufferValue) {
+    const buffer = unwrapNamed(bufferValue);
+    if (!Array.isArray(buffer))
+        throwTypeError(bufferValue, "[]byte", "syscall.read buffer");
+    const bytes = new Uint8Array(buffer.length);
+    const count = hostReadSync(toNumber(fdValue), bytes, 0, bytes.length, null);
+    copyBytesToRuntimeSlice(buffer, bytes, count);
+    return [BigInt(count), null];
+}
+function syscallWriteSlice(fdValue, bufferValue) {
+    const buffer = unwrapNamed(bufferValue);
+    if (!Array.isArray(buffer))
+        throwTypeError(bufferValue, "[]byte", "syscall.write buffer");
+    const bytes = bytealgBytes(buffer);
+    const count = hostWriteSync(toNumber(fdValue), bytes, 0, bytes.length, null);
+    return [BigInt(count), null];
+}
+function syscallReadErrnoSlice(fdValue, bufferValue) {
+    const result = syscallReadSlice(fdValue, bufferValue);
+    return [result[0] ?? 0n, 0n];
+}
+function syscallWriteErrnoSlice(fdValue, bufferValue) {
+    const result = syscallWriteSlice(fdValue, bufferValue);
+    return [result[0] ?? 0n, 0n];
+}
+function syscallReadPointer(fdValue, pointerValue, lengthValue) {
+    const pointer = runtimeUintptrPointers.get(toBigInt(pointerValue));
+    const length = toNonNegativeLength(lengthValue, "syscall read length");
+    if (!pointer || length === 0)
+        return 0n;
+    const bytes = new Uint8Array(length);
+    const count = hostReadSync(toNumber(fdValue), bytes, 0, length, null);
+    copyBytesToRuntimePointer(pointer, bytes, count);
+    return BigInt(count);
+}
+function syscallWritePointer(fdValue, pointerValue, lengthValue) {
+    const pointer = runtimeUintptrPointers.get(toBigInt(pointerValue));
+    const length = toNonNegativeLength(lengthValue, "syscall write length");
+    if (!pointer || length === 0)
+        return 0n;
+    const bytes = bytesFromRuntimePointer(pointer, length);
+    return BigInt(hostWriteSync(toNumber(fdValue), bytes, 0, bytes.length, null));
+}
+function copyBytesToRuntimeSlice(target, bytes, count) {
+    for (let index = 0; index < count && index < target.length; index += 1) {
+        setArrayElement(target, index, BigInt(bytes[index] ?? 0));
+    }
+}
+function copyBytesToRuntimePointer(pointer, bytes, count) {
+    const sequence = pointer.sequenceInfo();
+    if (sequence) {
+        for (let index = 0; index < count; index += 1) {
+            setArrayElement(sequence.values, sequence.index + index, BigInt(bytes[index] ?? 0));
+        }
+        return;
+    }
+    if (count > 0)
+        pointer.set(BigInt(bytes[0] ?? 0));
+}
+function bytesFromRuntimePointer(pointer, length) {
+    const bytes = new Uint8Array(length);
+    const sequence = pointer.sequenceInfo();
+    if (sequence) {
+        for (let index = 0; index < length; index += 1) {
+            bytes[index] = bytealgByte(getArrayElement(sequence.values, sequence.index + index));
+        }
+        return bytes;
+    }
+    if (length > 0)
+        bytes[0] = bytealgByte(pointer.get());
+    return bytes;
+}
+function hostReadSync(fd, buffer, offset, length, position) {
+    const host = globalThis;
+    if (typeof host.__gojrReadSync !== "function")
+        return 0;
+    return normalizeHostByteCount(host.__gojrReadSync(fd, buffer, offset, length, position), length, "read");
+}
+function hostWriteSync(fd, buffer, offset, length, position) {
+    const host = globalThis;
+    if (typeof host.__gojrWriteSync !== "function")
+        return length;
+    return normalizeHostByteCount(host.__gojrWriteSync(fd, buffer, offset, length, position), length, "write");
+}
+function normalizeHostByteCount(value, limit, operation) {
+    const count = typeof value === "bigint" ? Number(value) : typeof value === "number" ? value : Number(value);
+    if (!Number.isInteger(count) || count < 0 || count > limit) {
+        throw new GoJuniorRuntimeError(`host ${operation} returned invalid byte count ${String(value)}`);
+    }
+    return count;
 }
 const internalAbiTypeDescriptorCache = new Map();
 const internalAbiTFlagNamed = 1n << 2n;
@@ -3823,7 +3994,7 @@ function bytealgBytes(value) {
     if (value instanceof RuntimeTypedNilValue && parseArrayOrSliceTypeText(value.typeName))
         return new Uint8Array();
     if (Array.isArray(value)) {
-        return Uint8Array.from(value.map((item) => Number(BigInt.asUintN(8, toBigInt(item)))));
+        return Uint8Array.from(Array.from({ length: value.length }, (_item, index) => Number(BigInt.asUintN(8, toBigInt(getArrayElement(value, index))))));
     }
     throwTypeError(value, "string or []byte", "internal/bytealg argument");
 }
@@ -4785,6 +4956,9 @@ function syscallJSFSObject() {
     const ok = (args, value) => {
         callback(args)?.(null, value);
     };
+    const fail = (args, error) => {
+        callback(args)?.(error);
+    };
     return {
         constants,
         open: (...args) => ok(args, 3),
@@ -4809,13 +4983,63 @@ function syscallJSFSObject() {
         link: (...args) => ok(args),
         symlink: (...args) => ok(args),
         fsync: (...args) => ok(args),
-        read: (...args) => ok(args, 0),
-        write: (...args) => ok(args, syscallJSWriteLength(args))
+        read: (...args) => {
+            try {
+                ok(args, syscallJSRead(args));
+            }
+            catch (error) {
+                fail(args, error);
+            }
+        },
+        write: (...args) => {
+            try {
+                ok(args, syscallJSWrite(args));
+            }
+            catch (error) {
+                fail(args, error);
+            }
+        }
     };
+}
+function syscallJSRead(args) {
+    const fd = syscallJSNumberArg(args[0], "fs.read fd");
+    const buffer = syscallJSByteBufferArg(args[1], "fs.read buffer");
+    const offset = syscallJSNumberArg(args[2], "fs.read offset");
+    const length = syscallJSNumberArg(args[3], "fs.read length");
+    const position = syscallJSPositionArg(args[4]);
+    return hostReadSync(fd, buffer, offset, length, position);
+}
+function syscallJSWrite(args) {
+    const fd = syscallJSNumberArg(args[0], "fs.write fd");
+    const buffer = syscallJSByteBufferArg(args[1], "fs.write buffer");
+    const offset = syscallJSNumberArg(args[2], "fs.write offset");
+    const length = syscallJSNumberArg(args[3], "fs.write length");
+    const position = syscallJSPositionArg(args[4]);
+    return hostWriteSync(fd, buffer, offset, length, position);
 }
 function syscallJSWriteLength(args) {
     const length = args[3];
     return typeof length === "number" ? length : 0;
+}
+function syscallJSNumberArg(value, role) {
+    const number = typeof value === "bigint" ? Number(value) : typeof value === "number" ? value : Number(value);
+    if (!Number.isInteger(number))
+        throw new GoJuniorRuntimeError(`${role} must be an integer`);
+    return number;
+}
+function syscallJSPositionArg(value) {
+    if (value === null || value === undefined)
+        return null;
+    return syscallJSNumberArg(value, "fs position");
+}
+function syscallJSByteBufferArg(value, role) {
+    if (value instanceof Uint8Array)
+        return value;
+    if (value instanceof Uint8ClampedArray)
+        return new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
+    if (Array.isArray(value))
+        return Uint8Array.from(value.map((item) => Number(item)));
+    throw new GoJuniorRuntimeError(`${role} must be a Uint8Array`);
 }
 function syscallJSCopyBytesToGo(dst, src) {
     const target = unwrapNamed(dst);
@@ -6487,23 +6711,29 @@ async function executeAssign(statement, context) {
         const expectedRoles = statement.values.length === statement.targets.length
             ? statement.targets.map((target) => assignmentTargetRole(target))
             : [];
+        const targets = [];
+        for (const target of statement.targets)
+            targets.push(await prepareAssignmentTarget(target, context));
+        const currentValues = statement.operator && statement.operator !== "="
+            ? await Promise.all(targets.map((target) => target.get()))
+            : [];
         const values = await evaluateAssignmentValues(statement.values, statement.targets.length, context, expectedTypes, expectedRoles);
         if (values.length !== statement.targets.length) {
             throw new GoJuniorRuntimeError(`assignment count mismatch: ${statement.targets.length} targets but ${values.length} values`);
         }
         await context.withScopeAsync(assignmentScope, async () => {
-            for (const [index, target] of statement.targets.entries()) {
+            for (const [index, target] of targets.entries()) {
                 const source = statement.values.length === statement.targets.length ? statement.values[index] : undefined;
-                let value = prepareValueForAssignmentTarget(values[index] ?? null, target, source, context);
+                let value = prepareValueForAssignmentTarget(values[index] ?? null, target.expression, source, context);
                 if (statement.operator && statement.operator !== "=") {
-                    const current = await evaluateExpression(target, context);
-                    const targetType = assignmentTargetExpectedTypeText(target, context);
+                    const current = currentValues[index] ?? null;
+                    const targetType = assignmentTargetExpectedTypeText(target.expression, context);
                     const [left, right] = prepareCompoundAssignmentOperands(statement.operator, current, value, targetType, context);
                     const compound = applyCompoundAssignment(statement.operator, left, right);
-                    await assignExpressionTarget(target, materializeValueForType(compound, targetType, context), context);
+                    await target.set(materializeValueForType(compound, targetType, context), source);
                 }
                 else {
-                    await assignExpressionTarget(target, value, context, source);
+                    await target.set(value, source);
                 }
             }
         });
@@ -6725,30 +6955,67 @@ async function executeIncDec(statement, context) {
         : subtractNumbers(current, 1n);
     await assignExpressionTarget(statement.target, materializeValueForType(next, assignmentTargetExpectedTypeText(statement.target, context), context), context);
 }
-async function assignExpressionTarget(target, value, context, source) {
+async function prepareAssignmentTarget(target, context) {
     if (target.kind === "Identifier") {
-        if (target.name === "_")
-            return;
-        context.assign(target.name, value);
-        return;
+        return {
+            expression: target,
+            async get() {
+                if (target.name === "_")
+                    return null;
+                return context.lookup(target.name);
+            },
+            async set(value) {
+                if (target.name === "_")
+                    return;
+                context.assign(target.name, value);
+            }
+        };
     }
     if (target.kind === "SelectorExpression") {
-        await setSelector(target, value, context, source);
-        return;
+        const object = await evaluateExpression(target.object, context);
+        return {
+            expression: target,
+            async get() {
+                return getEvaluatedSelector(target, object, context);
+            },
+            async set(value, source) {
+                setEvaluatedSelector(target, object, value, context, source);
+            }
+        };
     }
     if (target.kind === "IndexExpression") {
-        await setIndex(target, value, context);
-        return;
+        const object = await evaluateExpression(target.object, context);
+        const index = await evaluateExpression(target.index, context);
+        return {
+            expression: target,
+            async get() {
+                return getIndex(object, index);
+            },
+            async set(value) {
+                setEvaluatedIndex(target, object, index, value);
+            }
+        };
     }
     if (target.kind === "UnaryExpression" && target.operator === "*") {
         const pointer = await evaluateExpression(target.operand, context);
         if (!(pointer instanceof RuntimePointer)) {
             throw new GoJuniorRuntimeError(`${formatValue(pointer)} is not a pointer`);
         }
-        pointer.set(value);
-        return;
+        return {
+            expression: target,
+            async get() {
+                return pointer.get();
+            },
+            async set(value) {
+                pointer.set(value);
+            }
+        };
     }
     throw new GoJuniorRuntimeError("unsupported assignment target");
+}
+async function assignExpressionTarget(target, value, context, source) {
+    const prepared = await prepareAssignmentTarget(target, context);
+    await prepared.set(value, source);
 }
 async function evaluateExpression(expression, context) {
     switch (expression.kind) {
@@ -7473,8 +7740,12 @@ function clearValue(target, context) {
 function copyValues(target, source) {
     target = unwrapNamed(target);
     source = unwrapNamed(source);
+    if (target instanceof RuntimeTypedNilValue && parseArrayOrSliceTypeText(target.typeName))
+        return 0;
     if (!Array.isArray(target))
         throw new GoJuniorRuntimeError("copy destination must be a slice");
+    if (source instanceof RuntimeTypedNilValue && parseArrayOrSliceTypeText(source.typeName))
+        return 0;
     const sourceValues = isRuntimeString(source)
         ? [...goStringBytes(source)].map((value) => BigInt(value))
         : source;
@@ -7714,6 +7985,28 @@ function promotedMethodAvailableForType(typeText, methodName, context, addressab
 }
 async function setSelector(expression, value, context, source) {
     const object = await evaluateExpression(expression.object, context);
+    setEvaluatedSelector(expression, object, value, context, source);
+}
+function getEvaluatedSelector(expression, object, context) {
+    if (object instanceof SheetBinding) {
+        context.recordSheetCellRead(object.name, expression.field);
+        return object.get(expression.field);
+    }
+    const struct = structFromValue(object);
+    if (struct) {
+        const field = structFieldAccessor(struct, expression.field, context);
+        if (field)
+            return field.get() ?? null;
+    }
+    const runtimeObjectForSelector = unwrapNamed(dereferenceIfPointer(object));
+    if (isRuntimeObject(runtimeObjectForSelector)) {
+        const value = runtimeObjectForSelector[expression.field];
+        if (value !== undefined)
+            return value;
+    }
+    throw new GoJuniorRuntimeError(`${formatValue(object)} has no selector ${expression.field}`, expression.span);
+}
+function setEvaluatedSelector(expression, object, value, context, source) {
     if (object instanceof SheetBinding) {
         object.set(expression.field, value);
         return;
@@ -7761,6 +8054,9 @@ function getIndex(object, index) {
 async function setIndex(expression, value, context) {
     let object = await evaluateExpression(expression.object, context);
     const index = await evaluateExpression(expression.index, context);
+    setEvaluatedIndex(expression, object, index, value);
+}
+function setEvaluatedIndex(expression, object, index, value) {
     object = unwrapNamed(object);
     if (object instanceof RuntimeMap) {
         object.set(index, value);
@@ -7782,7 +8078,7 @@ async function setIndex(expression, value, context) {
         setArrayElement(object, numericIndex, value);
         return;
     }
-    throw new GoJuniorRuntimeError(`${formatValue(object)} is not indexable`);
+    throw new GoJuniorRuntimeError(`${formatValue(object)} is not indexable`, expression.span);
 }
 async function pointerToExpression(expression, context) {
     if (expression.kind === "StructLiteralExpression" || expression.kind === "ArrayLiteralExpression" || expression.kind === "MapLiteralExpression") {
@@ -8737,8 +9033,11 @@ function uintptrFromUnsafePointer(value) {
         return 0n;
     if (typeof value === "bigint")
         return BigInt.asUintN(64, value);
-    if (value instanceof RuntimePointer)
-        return BigInt(objectIdentityId(value));
+    if (value instanceof RuntimePointer) {
+        const id = BigInt(objectIdentityId(value));
+        runtimeUintptrPointers.set(id, value);
+        return id;
+    }
     throwTypeError(value, "uintptr", "conversion");
 }
 function reinterpretUnsafePointer(pointer, targetType, context) {
@@ -11112,13 +11411,10 @@ function externalizePackageRuntimeValue(value, packageName) {
         if (isTupleValues(value))
             markTupleValues(mapped);
         copyArrayRuntimeMetadata(value, mapped, (typeText) => qualifyLocalRuntimeTypeName(typeText, packageName));
-        const sourceView = arrayViews.get(value);
-        if (!sourceView?.toView && !sourceView?.toSource) {
-            markArrayView(mapped, value, 0, {
-                toView: (item) => externalizePackageRuntimeValue(item, packageName),
-                toSource: (item) => internalizePackageRuntimeValue(item, packageName)
-            });
-        }
+        markArrayView(mapped, value, 0, {
+            toView: (item) => externalizePackageRuntimeValue(item, packageName),
+            toSource: (item) => internalizePackageRuntimeValue(item, packageName)
+        });
         return mapped;
     }
     if (value instanceof RuntimeMap) {
@@ -11198,13 +11494,10 @@ function internalizePackageRuntimeValue(value, packageName) {
         if (isTupleValues(value))
             markTupleValues(mapped);
         copyArrayRuntimeMetadata(value, mapped, (typeText) => unqualifyLocalRuntimeTypeName(typeText, packageName));
-        const sourceView = arrayViews.get(value);
-        if (!sourceView?.toView && !sourceView?.toSource) {
-            markArrayView(mapped, value, 0, {
-                toView: (item) => internalizePackageRuntimeValue(item, packageName),
-                toSource: (item) => externalizePackageRuntimeValue(item, packageName)
-            });
-        }
+        markArrayView(mapped, value, 0, {
+            toView: (item) => internalizePackageRuntimeValue(item, packageName),
+            toSource: (item) => externalizePackageRuntimeValue(item, packageName)
+        });
         return mapped;
     }
     if (value instanceof RuntimeMap) {

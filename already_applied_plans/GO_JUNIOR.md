@@ -11,13 +11,12 @@ JavaScript using compiler-owned async/await lowering with source-level
 copy-and-patch templates where useful. Potentially blocking Go operations lower
 to `await` points over a deterministic cooperative scheduler. It should be able
 to call Go-compatible source packages compiled in-browser or in Node, and it
-should be able to call allowlisted Go packages compiled to WebAssembly through
-typed host wrappers.
+should be able to call allowlisted host services through typed host wrappers.
 
 The first production target is the Ivy webui analysis spreadsheet. The current
 spreadsheet-like pane can then evolve from an editable mock grid into a real
 spreadsheet/calculation surface with formula cells, dependencies, diagnostics,
-and host/WASM calls.
+and typed host-service calls.
 
 ## Design Principles
 
@@ -38,10 +37,10 @@ and host/WASM calls.
   emit compiler-owned JavaScript stencils with sanitized holes.
 - Keep the compiler backend replaceable. Start with JavaScript async/await
   lowering that preserves source spans and types and maps goroutine suspension
-  to native Promise/microtask machinery. Leave a path to a future WebAssembly
-  stencil backend.
+  to native Promise/microtask machinery. Leave a path to future alternate
+  backends without coupling the current code to them.
 - Go-junior code cannot directly import arbitrary JavaScript or reach ambient
-  browser globals; JavaScript, browser, sheet, graph, UI, and WASM
+  browser globals; JavaScript, browser, sheet, graph, UI, and host-service
   functionality must be exposed through explicit typed host capabilities.
   Go-junior package imports resolve through an explicit package resolver,
   package manifest, and compiled-code cache.
@@ -57,8 +56,8 @@ pure, stateful, volatile, or effectful.
 
 Typed host capabilities preserve useful power without granting ambient
 authority. Go-junior should be able to call JavaScript-backed helpers, draw
-graphs, request UI actions, mutate sheets through explicit actions, call Go/WASM
-services, and use compiled package libraries. The rule is that those operations
+graphs, request UI actions, mutate sheets through explicit actions, call typed
+host services, and use compiled package libraries. The rule is that those operations
 must pass through a typed, auditable contract instead of reaching invisible
 global state directly.
 
@@ -80,7 +79,7 @@ This protects:
 - Caching: compiled formulas and packages can be cached only if their host
   capability contract is explicit.
 - Backend flexibility: the same typed IR can later run in an interpreter or
-  Wasm backend if external calls are abstracted.
+  another approved backend if external calls are abstracted.
 
 Direct ambient access should be rejected:
 
@@ -124,7 +123,7 @@ The distinction is not "no JavaScript". It is "no ambient JavaScript authority".
   `window`, `document`, `globalThis`, or DOM APIs directly.
 - Long-running unbounded calculations on the main UI thread.
 - Browser-native cgo execution. cgo packages may be represented through typed
-  host/WASM bindings or trusted precompiled adapters, but the TypeScript
+  host-service bindings or trusted precompiled adapters, but the TypeScript
   runtime does not execute arbitrary native cgo.
 - Exact Go runtime implementation details that are not observable by ordinary
   source programs, such as native stack layout, OS thread scheduling,
@@ -150,7 +149,7 @@ Go-junior source
   -> JavaScript source copy-and-patch emitter plus runtime scheduler
   -> function/package compiler cache
   -> worker-backed runtime
-  -> typed package and host/WASM bindings
+  -> typed package and host-service bindings
 ```
 
 The compiler package should be independent from the Ivy runtime. The Ivy webui
@@ -231,7 +230,7 @@ Async lowering requirements:
 
 - Every Go function is emitted as an `async` JavaScript function. This avoids a
   transitive "sync versus async" split and lets channel, goroutine, host, worker,
-  package, WASM, and future sheet/graph suspension points use native `await`.
+  package, and future sheet/graph suspension points use native `await`.
 - Calls between Go-junior functions are emitted with `await`. Direct synchronous
   host helpers may return plain values, but the call bridge accepts either plain
   values or Promises so capabilities can become asynchronous without changing
@@ -305,7 +304,7 @@ Test strategy for the pivot:
 
 Current Go toolchain corpus note:
 
-- `gojr/test/go-toolchain/test` contains an imported copy of the Go
+- `gojr/_test/go-toolchain/test` contains an imported copy of the Go
   distribution `test/` tree, and `gojr/tests/goToolchainCorpus.test.ts` now
   executes a small active `// run` smoke set from that corpus:
   `alias1.go`, `bigmap.go`, `align.go`, `char_lit.go`, `clear.go`, `decl.go`,
@@ -313,7 +312,7 @@ Current Go toolchain corpus note:
   `closure2.go`, `compos.go`, `const.go`, `const3.go`, `const8.go`, `func.go`, `func4.go`,
   `func6.go`, `func7.go`, `func8.go`, `if.go`, `intcvt.go`,
   `initcomma.go`, `range3.go`, `range4.go`, `typeswitch1.go`, `varinit.go`,
-  `mapclear.go`, `map.go`,
+  `mapclear.go`, `map.go`, `fixedbugs/issue23188.go`,
   `abi/convF_criteria.go`,
   `abi/convT64_criteria.go`,
   `abi/defer_aggregate.go`, `abi/double_nested_addressed_struct.go`,
@@ -415,6 +414,9 @@ Current Go toolchain corpus note:
   use constant expressions such as `[2*count]`, nested map/slice/pointer map
   values, float bit helpers, Go's `+0`/`-0` map-key equality, and
   non-reflexive NaN map keys.
+  `fixedbugs/issue23188.go` guards Go's assignment evaluation order for
+  indexed left-hand side targets: index operands are captured before writeback
+  and assignments are then applied left-to-right.
   `print.go` guards built-in print/println coverage for nil interfaces,
   nil maps, typed nil slices, signed and unsigned integers, floats, complex
   values, booleans, strings, spacing, and deferred print execution.
@@ -569,7 +571,8 @@ and values:
 - `byte` as an alias for `uint8`
 - `rune` as an alias for `int32`
 - `string`
-- `int64`; untyped integer constants default to `int64`
+- untyped integer constants default to Go's `int` when a concrete type is
+  required
 - `float32`
 - `float64`; untyped floating-point constants default to `float64`
 - `complex64` and `complex128`; imaginary literals are supported and untyped
@@ -788,7 +791,7 @@ Browser target:
 - production webui execution
 - Web Worker isolation
 - OPFS package artifact cache, with IndexedDB only for optional indexes
-- browser-safe host/WASM bindings
+- browser-safe typed host bindings
 
 Node target:
 
@@ -995,7 +998,7 @@ const (
 
 Constants are compile-time values. Grouped declarations, implicit expression
 repetition, and `iota` should match Go's useful semantics. Untyped integer
-constants default to `int64`; untyped floating-point constants default to
+constants default to Go `int`; untyped floating-point constants default to
 `float64` when a concrete type is required.
 
 ### Predeclared Built-ins
@@ -1342,14 +1345,14 @@ The package resolver should distinguish three sources:
 
 - built-in packages shipped with the webui
 - user/workbook packages stored with the sheet or in browser storage
-- trusted host packages that are already compiled to JavaScript or WASM
+- trusted host packages that are already compiled to JavaScript
 
 Full arbitrary Go modules are still a packaging and environment project, but
 the language implementation target is full Go. A package can be used as source
 when its imports and environment requirements are available to the Go-junior
 runtime. Packages requiring cgo, native syscalls, OS-specific services, or
 unimplemented standard-library internals should be exposed through typed
-host/WASM bindings until those runtime services exist.
+host-service bindings until those runtime services exist.
 
 ### Built-in fmt Package
 
@@ -1434,7 +1437,7 @@ The runtime must enforce a fuel counter for all loops, including `for {}` and
 data-dependent loops. Loop syntax is full Go-style; loop execution is still
 bounded by runtime fuel so spreadsheet recalculation cannot hang indefinitely.
 
-## Host and WebAssembly Calls
+## Host Service Calls
 
 External calls must resolve through a typed host binding table:
 
@@ -1459,17 +1462,15 @@ const _h0 = host.math.Sqrt;
 return _h0(_x);
 ```
 
-Go packages compiled to `GOOS=js GOARCH=wasm` should be wrapped as services
-behind this table. The Go WASM side should expose stable functions to
-JavaScript through `wasm_exec.js` or a narrower wrapper. Go-junior should not
-know whether a host function is implemented in JavaScript, Go WASM, TinyGo
-WASM, or a web worker RPC.
+External host services should be wrapped behind this table. Go-junior should
+not know whether a host function is implemented in JavaScript, a trusted
+precompiled package, a native host adapter, or a web worker RPC.
 
 Host calls may be synchronous or asynchronous. Asynchronous host calls are
 may-suspend operations and must use the same async runtime scheduler path as
 channel operations and goroutine blocking. Pure synchronous calculation helpers
 remain preferable for ordinary formulas, but the compiler/runtime must be able
-to suspend and resume a goroutine around host, worker, package, or WASM calls
+to suspend and resume a goroutine around host, worker, or package calls
 from the start of the async/await backend.
 
 ## Capability and Effect Model
@@ -1482,7 +1483,7 @@ typed host contract.
 Capability categories:
 
 - `pure`: deterministic calculation helpers. Safe in ordinary formula cells.
-- `wasm`: calls into allowlisted Go/WASM services. Safe in formulas if the
+- `host-service`: calls into allowlisted host services. Safe in formulas if the
   binding is deterministic and side-effect-free.
 - `package-state`: reads or writes mutable Go-junior package variables. Legal
   from the start so source packages match ordinary Go semantics, but formulas
@@ -1506,7 +1507,7 @@ Capability categories:
 - `ui-effect`: explicit UI requests, such as opening a panel, displaying a
   diagnostic, or focusing a result.
 
-Formula recalculation should run `pure`, approved deterministic `wasm`,
+Formula recalculation should run `pure`, approved deterministic `host-service`,
 approved formula-safe `dynamic-js`, approved `diagnostic-effect`, and
 explicitly allowed `package-state` exports. A formula that uses `package-state`
 is not pure: it should not be common-subexpression cached, it should be
@@ -1564,7 +1565,7 @@ package sources
   -> validate package declaration
   -> resolve imports
   -> typecheck package exports and internals
-  -> emit JS package module or future Wasm package module
+  -> emit JS package module
   -> persist compiled package artifact in the target artifact cache
 ```
 
@@ -1595,10 +1596,10 @@ Cache keys must include:
 - content hashes of all package source files
 - transitive dependency cache keys
 - compiler version
-- target backend, for example `js-source` or `wasm-stencil`
+- target backend, for example `js-source`
 - package ABI version
 - artifact layout version
-- host spec version for host/WASM calls used by the package
+- host spec version for host-service calls used by the package
 - capability policy, because formula-safe and action-capable packages have
   different authority
 
@@ -1608,7 +1609,7 @@ Cached artifacts should include:
 - exported package variable table with mutability and effect metadata
 - package diagnostics, if compilation failed
 - generated JavaScript source or compiled function factory
-- future Wasm bytes or module metadata
+- generated module metadata
 - source map or source-span metadata
 - dependency metadata for imported packages
 
@@ -1792,7 +1793,7 @@ Current implementation note:
 This model allows existing Go source libraries to be loaded when their imports
 and runtime environment requirements are available to Go-junior, while keeping
 cgo/native or otherwise target-specific libraries available through typed
-host/WASM bindings until equivalent runtime services exist.
+host-service bindings until equivalent runtime services exist.
 
 ## Async/Await and Source-level Copy-and-Patch JavaScript Emission
 
@@ -1853,7 +1854,7 @@ return function _gj_entry(runtime, ctx, host) {
 
 Compilation can use `new Function(source)()` in the worker. If Content Security
 Policy later forbids dynamic code generation, the same IR should be runnable by
-a simple interpreter or a future WebAssembly backend.
+a simple interpreter or another approved backend.
 
 ## Runtime and Sandboxing
 
@@ -1875,7 +1876,7 @@ Runtime responsibilities:
 - enforce execution budget/fuel
 - convert thrown exceptions into spreadsheet error values
 - serialize diagnostics back to the UI
-- isolate host/WASM service calls behind narrow wrappers
+- isolate host-service calls behind narrow wrappers
 
 The main UI thread should not evaluate user programs directly except in unit
 tests or explicitly small trusted development paths.
@@ -2373,7 +2374,7 @@ Implementation tasks:
 
 - Define type model and assignability rules.
 - Type arithmetic, comparisons, booleans, strings, and returns.
-- Type untyped integer constants as `int64` by default and untyped
+- Type untyped integer constants as Go `int` by default and untyped
   floating-point constants as `float64` by default.
 - Type arrays, slices, maps, structs, pointers, interfaces, methods, function
   literals, closures, indexing, slicing, address-of, dereference, and composite
@@ -2415,7 +2416,7 @@ Implementation tasks:
 Tests:
 
 - Arithmetic accepts compatible numeric operands.
-- Integer literals default to `int64`; floating-point literals default to
+- Integer literals default to Go `int`; floating-point literals default to
   `float64`.
 - There is no accepted `number` type annotation or conversion helper.
 - String concatenation policy is enforced, either allowed only for strings or
@@ -2557,8 +2558,8 @@ Acceptance criteria:
 
 ### Stage 7: Typed IR
 
-Lower typed AST to a compact IR designed for both JS template emission and a
-future WebAssembly backend.
+Lower typed AST to a compact IR designed for JS template emission and future
+approved backends.
 
 Implementation tasks:
 
@@ -2670,7 +2671,7 @@ Tests:
 - Accepts full Go language constructs in package source, including generics,
   channels, `go`, `select`, `close`, `panic`, and `recover`.
 - Rejects only target/environment-unavailable requirements such as browser cgo
-  execution with explicit diagnostics and host/WASM adapter guidance.
+  execution with explicit diagnostics and host-service adapter guidance.
 - Resolves imports from a fake built-in package provider.
 - Resolves the real built-in `fmt` package and its `Printf`, `Sprintf`, and
   `Println` exports.
@@ -2722,7 +2723,7 @@ Tests:
 - Failed package compilation stores diagnostics but not executable artifacts.
 - Worker package compile results are ignored if their generation token is stale.
 - Cached package artifacts never persist raw executable authority beyond the
-  generated JS/Wasm and typed metadata.
+  generated JavaScript and typed metadata.
 - Cached package artifacts do not persist current mutable package variable
   values unless a separate explicit workbook-session state format is added.
 
@@ -2731,7 +2732,7 @@ Acceptance criteria:
 - Go-junior formulas can call Go source packages compiled and cached in the
   browser when their imports and runtime requirements are available.
 - cgo/native or target-specific packages remain available through typed
-  host/WASM bindings or trusted precompiled package providers until equivalent
+  host-service bindings or trusted precompiled package providers until equivalent
   runtime services exist.
 
 ### Stage 8: JavaScript Async/Await Copy-and-Patch Emitter
@@ -3181,7 +3182,7 @@ Implementation tasks:
   disposePackageCache, and diagnostics messages.
 - Include `observedDeps`, runtime diagnostics, captured `fmt` diagnostic output,
   value version, and dependency generation in evaluation responses.
-- Keep host/WASM services behind explicit RPC endpoints.
+- Keep host services behind explicit RPC endpoints.
 - Support cancellation by generation token.
 - Ensure stale results are ignored by the main thread.
 - Implement an OPFS-backed browser `PackageArtifactCache` for generated `.js`
@@ -3352,27 +3353,24 @@ Acceptance criteria:
 - The visible spreadsheet pane performs real calculations with Go-junior
   formulas.
 
-### Stage 14: Go WASM Host Binding Integration
+### Stage 14: Typed Host Service Integration
 
-Expose selected Go/WASM package functions through typed host wrappers and
-trusted precompiled package providers.
+Expose selected trusted host functions through typed host wrappers and trusted
+precompiled package providers.
 
 Implementation tasks:
 
 - Define host binding declaration format in TypeScript.
-- Wrap existing Go WASM exports or `wasm_exec.js` globals behind stable async or
-  sync functions.
+- Wrap trusted host implementations behind stable async or sync functions.
 - Define a trusted precompiled package provider interface for packages that are
-  delivered as already-compiled JavaScript or Wasm plus ABI metadata.
+  delivered as already-compiled JavaScript plus ABI metadata.
 - Version the host spec.
 - Add marshalling for primitive values and structured spreadsheet values.
-- Add error conversion from Go/WASM failures to spreadsheet errors.
+- Add error conversion from host-service failures to spreadsheet errors.
 
 Tests:
 
 - Fake host binding tests for arity/type enforcement.
-- Real smoke test loads a small Go WASM module if available in the existing
-  webui runtime.
 - Host function can be called from Go-junior formula.
 - Formula can call an export from a trusted precompiled package provider.
 - Trusted precompiled package ABI is typechecked like source package ABI.
@@ -3387,7 +3385,7 @@ Tests:
 
 Acceptance criteria:
 
-- Go-junior formulas can call allowlisted Go/WASM functions safely.
+- Go-junior formulas can call allowlisted host-service functions safely.
 - Go-junior formulas can call trusted precompiled Go package exports through
   the same package-call path used by source packages.
 - Go-junior actions can call allowlisted sheet, graph, UI, and dynamic-JS
@@ -3407,7 +3405,7 @@ Implementation tasks:
 - Persist Go-junior function cell source and signature metadata, not compiled
   function objects.
 - Persist source package text/manifests, not generated package JavaScript or
-  Wasm as authoritative workbook state.
+  backend artifacts as authoritative workbook state.
 - Define whether mutable package variable current values are workbook-session
   state, saved workbook state, or reset-on-open state. The initial
   implementation should make this policy explicit and test it rather than
@@ -3479,7 +3477,7 @@ Implementation tasks:
 - Confirm no raw user source enters generated JS.
 - Confirm worker has no unnecessary host capabilities.
 - Confirm host bindings are allowlisted and typed.
-- Confirm formula contexts receive only pure, approved deterministic WASM,
+- Confirm formula contexts receive only pure, approved deterministic host services,
   approved formula-safe dynamic-JS, approved diagnostic-effect, and explicitly
   allowed package-state capabilities.
 - Confirm action contexts receive only explicitly granted effect capabilities.
@@ -3583,30 +3581,29 @@ Acceptance criteria:
 
 - There is a non-dynamic-code fallback path if needed.
 
-### Stage 20: Optional WebAssembly Stencil Backend
+### Stage 20: Optional Alternate Backend
 
-If JS source copy-and-patch is not enough, add a WebAssembly bytecode stencil
-backend using the same IR.
+If JS source copy-and-patch is not enough, add an alternate backend using the
+same IR.
 
 Implementation tasks:
 
-- Define Wasm-friendly subset of IR.
-- Build Wasm stencils for arithmetic, locals, branches, calls, and returns.
+- Define the backend-friendly subset of IR.
+- Build backend stencils for arithmetic, locals, branches, calls, and returns.
 - Patch locals, constants, function indexes, and branch depths.
-- Compile with `WebAssembly.compile`.
 - Keep JS backend as baseline/fallback.
 
 Tests:
 
-- Wasm backend matches JS backend on arithmetic and branch formulas.
+- Alternate backend matches JS backend on arithmetic and branch formulas.
 - Host call ABI tests cover supported primitive signatures.
 - Invalid or unsupported IR falls back to JS or reports a diagnostic.
 - Benchmark compile/evaluate cost against JS backend.
 
 Acceptance criteria:
 
-- Wasm backend is optional and only adopted if it beats JS source templates for
-  the target workloads.
+- Alternate backends are optional and only adopted if they beat JS source
+  templates for the target workloads.
 
 ## Cross-cutting Test Strategy
 
@@ -3764,7 +3761,7 @@ return counter.Next()
 
 - Go-junior has documented, tested full Go language syntax and semantics plus
   explicit spreadsheet extensions.
-- Go-junior has no user-facing `number` type; integer defaults are `int64` and
+- Go-junior has no user-facing `number` type; integer defaults are Go `int` and
   floating-point defaults are `float64`.
 - Go-junior has one Go-style `error` type.
 - Go-junior supports Go consts, structs, interfaces, methods, closures,
@@ -3804,7 +3801,7 @@ return counter.Next()
   ergonomics while preserving Go-like typed map reads, delete/clear behavior,
   and deterministic insertion-order iteration.
 - Target/environment limitations such as browser cgo/native execution are
-  reported explicitly with diagnostics and host/WASM adapter guidance.
+  reported explicitly with diagnostics and host-service adapter guidance.
 - Valid formulas typecheck before execution.
 - Statically visible dependencies are extracted without running formulas.
 - Dynamic dependencies are observed during evaluation and update the dependency
@@ -3819,7 +3816,7 @@ return counter.Next()
 - Formulas compile to JavaScript generated only from compiler-owned stencils.
 - Generated code runs in both browser worker-backed and Node.js runtimes.
 - Formula cells recalculate incrementally and detect cycles.
-- Go/WASM host calls work through typed allowlisted wrappers.
+- Host-service calls work through typed allowlisted wrappers.
 - Spreadsheet state persists raw Go-junior source, not executable JS.
 - Security tests cover injection, globals access, runaway execution, and host
   authority boundaries.

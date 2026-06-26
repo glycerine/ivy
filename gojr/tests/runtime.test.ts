@@ -28,6 +28,33 @@ async function expectRuns(source: string, options = {}) {
   return result;
 }
 
+async function withHostInput<T>(text: string, body: () => Promise<T>): Promise<T> {
+  const host = globalThis as typeof globalThis & {
+    __gojrReadSync?: (fd: number, buffer: Uint8Array, offset: number, length: number, position: number | null) => number;
+    __gojrWriteSync?: (fd: number, buffer: Uint8Array, offset: number, length: number, position: number | null) => number;
+  };
+  const previousRead = host.__gojrReadSync;
+  const previousWrite = host.__gojrWriteSync;
+  const input = new TextEncoder().encode(text);
+  let inputOffset = 0;
+  host.__gojrReadSync = (fd, buffer, offset, length) => {
+    if (fd !== 0) return 0;
+    const count = Math.min(length, input.length - inputOffset);
+    buffer.set(input.slice(inputOffset, inputOffset + count), offset);
+    inputOffset += count;
+    return count;
+  };
+  host.__gojrWriteSync = (_fd, _buffer, _offset, length) => length;
+  try {
+    return await body();
+  } finally {
+    if (previousRead) host.__gojrReadSync = previousRead;
+    else delete host.__gojrReadSync;
+    if (previousWrite) host.__gojrWriteSync = previousWrite;
+    else delete host.__gojrWriteSync;
+  }
+}
+
 describe("Go-junior runtime slice", () => {
   test("evaluates sheet arithmetic with explicit dynamic type assertions", async () => {
     const result = await expectRuns(`
@@ -642,6 +669,79 @@ return v.Int(), v.Type() == js.TypeNumber, js.TypeNumber.String(), js.ValueOf("h
 `);
 
     expect(script.values).toEqual([7n, true, "number", "hi", 2n, 65n, 66n]);
+  });
+
+  test("reads host stdin through shared host stdio hooks", async () => {
+    await withHostInput("xy\n", async () => {
+      const script = await expectRuns(`
+import "syscall/js"
+
+buf := js.Global().Get("Uint8Array").New(3)
+var got int
+cb := js.FuncOf(func(this js.Value, args []js.Value) any {
+  got = args[1].Int()
+  return nil
+})
+js.Global().Get("fs").Call("read", 0, buf, 0, 3, nil, cb)
+var dst []byte
+dst = make([]byte, 3)
+js.CopyBytesToGo(dst, buf)
+return got, dst[0], dst[1], dst[2]
+`);
+
+      expect(script.values).toEqual([3n, 120n, 121n, 10n]);
+    });
+
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    await withHostInput("gojr\n", async () => {
+      const result = await runMainSourcePackageFiles([{
+        filename: "/workspace/stdin-syscall/main.go",
+        source: `package main
+
+import "syscall"
+
+func main() {
+  buf := make([]byte, 5)
+  n, err := syscall.Read(0, buf)
+  if err != nil {
+    panic(err)
+  }
+  if n != 5 || buf[0] != 'g' || buf[1] != 'o' || buf[2] != 'j' || buf[3] != 'r' || buf[4] != '\\n' {
+    panic("bad stdin read")
+  }
+}
+`
+      }], { sourcePackageProvider });
+
+      expect(result.diagnostics).toEqual([]);
+    });
+
+    await withHostInput("alpha\n", async () => {
+      const result = await runMainSourcePackageFiles([{
+        filename: "/workspace/stdin-bufio/main.go",
+        source: `package main
+
+import (
+  "bufio"
+  "os"
+)
+
+func main() {
+  line, err := bufio.NewReader(os.Stdin).ReadString('\\n')
+  if err != nil {
+    panic(err)
+  }
+  if line != "alpha\\n" {
+    panic(line)
+  }
+}
+`
+      }], { sourcePackageProvider });
+
+      expect(result.diagnostics).toEqual([]);
+    });
   });
 
   test("initializes imported sync values and compiled atomic named zero values", async () => {

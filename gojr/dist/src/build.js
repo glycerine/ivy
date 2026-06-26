@@ -126,6 +126,9 @@ class PackageGraphBuilder {
         }
     }
     build() {
+        const cached = this.buildFromFreshArtifacts();
+        if (cached)
+            return cached;
         const root = this.buildOne(this.request.importPath, this.request.files, []);
         if (this.hasErrors() || !root)
             return emptyBuildReport(this.diagnostics);
@@ -172,6 +175,140 @@ class PackageGraphBuilder {
             built,
             skipped
         };
+    }
+    buildFromFreshArtifacts() {
+        if (!this.store?.read || !this.request.importPath)
+            return undefined;
+        const nodes = new Map();
+        const visiting = new Set();
+        const rootFiles = this.request.files.map(ensureSourceFile);
+        const root = this.freshArtifactNode(this.request.importPath, rootFiles, nodes, visiting);
+        if (!root)
+            return undefined;
+        const ordered = orderedNodesFrom(root, nodes);
+        const artifacts = ordered.map((node) => this.reportArtifact(node, "skipped"));
+        const skipped = ordered.map((node) => node.artifactPath);
+        for (const node of ordered) {
+            this.progress({
+                action: "cached",
+                importPath: node.importPath,
+                packageName: node.packageName,
+                artifactPath: node.artifactPath,
+                dependencyCount: node.dependencies.length,
+                fileCount: node.files.length,
+                standardLibrary: this.standardLibraryPackages.has(node.importPath)
+            });
+        }
+        return {
+            ok: true,
+            diagnostics: [],
+            artifacts,
+            built: [],
+            skipped
+        };
+    }
+    freshArtifactNode(importPath, files, nodes, visiting) {
+        const existing = nodes.get(importPath);
+        if (existing)
+            return existing;
+        if (visiting.has(importPath))
+            return undefined;
+        const artifactPath = artifactPathForImportPath(resolveArtifactRoot(this.request), importPath);
+        const source = this.store?.read?.(artifactPath);
+        if (source === undefined)
+            return undefined;
+        const archive = parseGoJuniorPackageArchive(source);
+        if (!archive || !this.artifactMetadataMatchesRequest(archive.pkgdef, importPath))
+            return undefined;
+        const artifactFiles = files ?? this.freshArtifactSourceFiles(importPath, archive.pkgdef);
+        if (!artifactFiles)
+            return undefined;
+        const sourceHash = archive.pkgdef.standardLibrary && isAmbientBuildImport(importPath)
+            ? archive.pkgdef.sourceHash
+            : hashSourceFiles(artifactFiles);
+        if (sourceHash !== archive.pkgdef.sourceHash)
+            return undefined;
+        visiting.add(importPath);
+        const dependencies = [...archive.pkgdef.dependencies].sort();
+        const dependencyCacheKeys = [];
+        for (const dependencyPath of dependencies) {
+            const dependency = this.freshArtifactNode(dependencyPath, undefined, nodes, visiting);
+            if (!dependency) {
+                visiting.delete(importPath);
+                return undefined;
+            }
+            dependencyCacheKeys.push(`${dependency.importPath}:${dependency.cacheKey}`);
+        }
+        visiting.delete(importPath);
+        const sortedDependencyCacheKeys = dependencyCacheKeys.sort();
+        if (!stringArraysEqual(sortedDependencyCacheKeys, [...archive.pkgdef.dependencyCacheKeys].sort()))
+            return undefined;
+        const node = {
+            importPath,
+            packageName: archive.pkgdef.packageName,
+            files: artifactFiles,
+            sourceHash: archive.pkgdef.sourceHash,
+            cacheKey: archive.pkgdef.cacheKey,
+            dependencies,
+            dependencyCacheKeys: sortedDependencyCacheKeys,
+            exports: archive.pkgdef.exports,
+            artifactPath,
+            artifactSource: source
+        };
+        nodes.set(importPath, node);
+        if (archive.pkgdef.standardLibrary)
+            this.standardLibraryPackages.add(importPath);
+        return node;
+    }
+    artifactMetadataMatchesRequest(pkgdef, importPath) {
+        return pkgdef.importPath === importPath &&
+            pkgdef.layoutVersion === ARTIFACT_LAYOUT_VERSION &&
+            pkgdef.compilerVersion === (this.request.compilerVersion ?? DEFAULT_COMPILER_VERSION) &&
+            pkgdef.backend === (this.request.backend ?? DEFAULT_BACKEND) &&
+            pkgdef.hostSpecVersion === (this.request.hostSpecVersion ?? DEFAULT_HOST_SPEC_VERSION) &&
+            pkgdef.capabilityPolicy === (this.request.capabilityPolicy ?? DEFAULT_CAPABILITY_POLICY) &&
+            pkgdef.goos === (this.request.goos ?? GOJR_GOOS) &&
+            pkgdef.goarch === (this.request.goarch ?? GOJR_GOARCH) &&
+            stringArraysEqual(pkgdef.buildTags, resolvedBuildTags(this.request));
+    }
+    freshArtifactSourceFiles(importPath, pkgdef) {
+        if (pkgdef.standardLibrary && isAmbientBuildImport(importPath)) {
+            return pkgdef.sources.map((source) => ({
+                filename: source.filename,
+                source: ""
+            }));
+        }
+        const files = this.sourceFilesForImportFast(importPath);
+        if (!files)
+            return undefined;
+        return files.length === pkgdef.sources.length ? files : undefined;
+    }
+    sourceFilesForImportFast(importPath) {
+        const explicit = this.packageSources.get(importPath);
+        if (explicit)
+            return explicit;
+        const stub = stubSourcePackageFiles(importPath);
+        if (stub) {
+            const files = stub.map(ensureSourceFile);
+            this.packageSources.set(importPath, files);
+            if (isStubSourcePackageStandardLibrary(importPath))
+                this.standardLibraryPackages.add(importPath);
+            return files;
+        }
+        try {
+            const loaded = this.request.sourcePackageProvider?.load(importPath);
+            if (!loaded)
+                return undefined;
+            const files = loaded.map(ensureSourceFile);
+            this.packageSources.set(importPath, files);
+            if (this.request.sourcePackageProvider?.isStandardLibraryPackage?.(importPath)) {
+                this.standardLibraryPackages.add(importPath);
+            }
+            return files;
+        }
+        catch {
+            return undefined;
+        }
     }
     buildOne(importPathHint, rawFiles, stack) {
         const files = rawFiles.map(ensureSourceFile);
@@ -433,21 +570,7 @@ class PackageGraphBuilder {
         }
     }
     orderedNodes(root) {
-        const out = [];
-        const seen = new Set();
-        const visit = (node) => {
-            if (seen.has(node.importPath))
-                return;
-            seen.add(node.importPath);
-            for (const dependencyPath of node.dependencies) {
-                const dependency = this.nodes.get(dependencyPath);
-                if (dependency)
-                    visit(dependency);
-            }
-            out.push(node);
-        };
-        visit(root);
-        return out;
+        return orderedNodesFrom(root, this.nodes);
     }
     reportArtifact(node, action) {
         return {
@@ -465,6 +588,28 @@ class PackageGraphBuilder {
     hasErrors() {
         return this.diagnostics.some((diagnostic) => diagnostic.severity === "error");
     }
+}
+function orderedNodesFrom(root, nodes) {
+    const out = [];
+    const seen = new Set();
+    const visit = (node) => {
+        if (seen.has(node.importPath))
+            return;
+        seen.add(node.importPath);
+        for (const dependencyPath of node.dependencies) {
+            const dependency = nodes.get(dependencyPath);
+            if (dependency)
+                visit(dependency);
+        }
+        out.push(node);
+    };
+    visit(root);
+    return out;
+}
+function stringArraysEqual(left, right) {
+    if (left.length !== right.length)
+        return false;
+    return left.every((value, index) => value === right[index]);
 }
 function parseGeneratedArtifactSource(source) {
     const archive = parseGoJuniorPackageArchive(source);

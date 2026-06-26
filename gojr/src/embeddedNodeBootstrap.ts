@@ -181,6 +181,7 @@
 
   function installEmbeddedRuntime(moduleBundleJson: string): void {
     const embeddedRequire = createEmbeddedModuleLoader(moduleBundleJson);
+    installNodeStdioHooks(embeddedRequire);
     const gojrModule = embeddedRequire("/src/index.js");
     const runtimeOptions = (extra: AnyRecord = {}) => gojrModule.runtimeOptionsFromEnvironment(processEnvironment(), extra);
     const gojrSession = new gojrModule.GoJuniorSession(runtimeOptions({ sheet: {} }));
@@ -210,8 +211,13 @@
     };
 
     root.__gojrRunMainFilesWithPackages = async function(json: string): Promise<string> {
-      const result = await gojrModule.runMainSourceFilesWithPackagesOnNode(JSON.parse(json));
-      return evaluationJSON({ ...result, incomplete: false }, result.packageOutput || []);
+      const request = JSON.parse(json);
+      const result = await gojrModule.runMainSourceFilesWithPackagesOnNode(request);
+      const streamed = request && request.streamOutput === true;
+      return evaluationJSON(
+        { ...result, output: streamed ? [] : result.output, incomplete: false },
+        streamed ? [] : result.packageOutput || []
+      );
     };
 
     root.__gojrTestFilesWithPackages = async function(json: string): Promise<string> {
@@ -265,6 +271,28 @@
       const result = await gojrModule.runSpreadsheetFixtureWithPackagesOnNode(JSON.parse(json));
       return gojrModule.spreadsheetFixtureResultToHostJSON(result);
     };
+  }
+
+  function installNodeStdioHooks(embeddedRequire: EmbeddedRequire): void {
+    if (typeof root.__gojrReadSync === "function" && typeof root.__gojrWriteSync === "function") return;
+    let fs: AnyRecord;
+    try {
+      fs = embeddedRequire("node:fs");
+    } catch {
+      try {
+        fs = embeddedRequire("fs");
+      } catch {
+        return;
+      }
+    }
+    if (typeof root.__gojrReadSync !== "function" && typeof fs.readSync === "function") {
+      root.__gojrReadSync = (fd: number, buffer: Uint8Array, offset: number, length: number, position: number | null) =>
+        fs.readSync(fd, buffer, offset, length, position);
+    }
+    if (typeof root.__gojrWriteSync !== "function" && typeof fs.writeSync === "function") {
+      root.__gojrWriteSync = (fd: number, buffer: Uint8Array, offset: number, length: number, position: number | null) =>
+        fs.writeSync(fd, buffer, offset, length, position);
+    }
   }
 
   root.__gojrCreateEmbeddedModuleLoader = createEmbeddedModuleLoader;

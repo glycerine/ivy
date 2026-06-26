@@ -41,6 +41,7 @@ describe("Go toolchain corpus smoke tests", () => {
       { path: "varinit.go", output: [] },
       { path: "mapclear.go", output: [] },
       { path: "map.go", output: [] },
+      { path: "fixedbugs/issue23188.go", output: [] },
       { path: "method3.go", output: [] },
       { path: "method7.go", output: [] },
       { path: "newexpr.go", output: [] },
