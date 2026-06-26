@@ -8156,19 +8156,75 @@ return a, b, ok, c, ok2, len(ch), cap(ch)
     expect(result.value).toBe(2n);
   });
 
-  test("incompatible REPL function redefinition is rejected and keeps the old slot value", async () => {
+  test("REPL function redefinition may replace an existing binding with a different signature", async () => {
+    const session = new GoJuniorSession();
+
+    expect((await session.evaluate("func f() int { return 1 }")).diagnostics).toEqual([]);
+    expect((await session.evaluate("func f(x int) int { return x }")).diagnostics).toEqual([]);
+
+    const result = await session.evaluate("f(7)");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(7n);
+  });
+
+  test("failed REPL function definitions leave no accepted type or runtime binding", async () => {
+    const session = new GoJuniorSession();
+
+    const bad = await session.evaluate("func f(a, b int) { return a * b }");
+    expect(bad.diagnostics).toHaveLength(1);
+    expect(bad.diagnostics[0]?.code).toBe("GOJR_TYPE001");
+    expect(bad.diagnostics[0]?.message).toContain("too many return values");
+
+    const missing = await session.evaluate("f");
+    expect(missing.diagnostics).toHaveLength(1);
+    expect(missing.diagnostics[0]?.code).toBe("GOJR_TYPE001");
+    expect(missing.diagnostics[0]?.message).toContain("undefined: f");
+
+    expect((await session.evaluate("func f(a, b int) int { return a * b }")).diagnostics).toEqual([]);
+
+    const result = await session.evaluate("f(6, 7)");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(42n);
+  });
+
+  test("failed REPL function replacement keeps the old accepted binding", async () => {
     const session = new GoJuniorSession();
 
     expect((await session.evaluate("func f() int { return 1 }")).diagnostics).toEqual([]);
 
-    const replacement = await session.evaluate("func f(x int) int { return x }");
-    expect(replacement.diagnostics).toHaveLength(1);
-    expect(replacement.diagnostics[0]?.code).toBe("GOJR_TYPE001");
-    expect(replacement.diagnostics[0]?.message).toContain("cannot redeclare f with different signature");
+    const bad = await session.evaluate("func f(x int) { return x }");
+    expect(bad.diagnostics).toHaveLength(1);
+    expect(bad.diagnostics[0]?.code).toBe("GOJR_TYPE001");
+    expect(bad.diagnostics[0]?.message).toContain("too many return values");
 
     const result = await session.evaluate("f()");
     expect(result.diagnostics).toEqual([]);
     expect(result.value).toBe(1n);
+  });
+
+  test("REPL short declarations may replace an existing top-level variable", async () => {
+    const session = new GoJuniorSession();
+
+    expect((await session.evaluate("a := 10")).diagnostics).toEqual([]);
+    expect((await session.evaluate(`a := "hi"`)).diagnostics).toEqual([]);
+
+    const result = await session.evaluate("a");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe("hi");
+  });
+
+  test("failed REPL runtime execution rolls back top-level declarations", async () => {
+    const session = new GoJuniorSession();
+
+    const failed = await session.evaluate(`a := 10; panic("boom")`);
+    expect(failed.diagnostics).toHaveLength(1);
+    expect(failed.diagnostics[0]?.code).toBe("GOJR_PANIC001");
+    expect(failed.diagnostics[0]?.message).toContain("boom");
+
+    const missing = await session.evaluate("a");
+    expect(missing.diagnostics).toHaveLength(1);
+    expect(missing.diagnostics[0]?.code).toBe("GOJR_TYPE001");
+    expect(missing.diagnostics[0]?.message).toContain("undefined: a");
   });
 
   test("reports REPL deadlocks and keeps the session usable without zombie receives", async () => {
