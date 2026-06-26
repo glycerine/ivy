@@ -52,6 +52,7 @@ import {
   type Package as GoTypesPackage,
   type Type as GoTypesType
 } from "./go/types/index.js";
+import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
 
 export interface GoJuniorImporter {
   import(path: string): GoTypesPackage | undefined;
@@ -130,7 +131,8 @@ export function checkGoJuniorFiles(
   const conf = new Config();
   conf.Importer = {
     Import(path: string): [GoTypesPackage | null, unknown] {
-      const imported = config.importer?.import(path) ?? config.codebaseTxn?.PackageInfo(path) ?? standardTypePackage(path);
+      const intrinsic = isIntrinsicPackageImport(path) ? standardTypePackage(path) : undefined;
+      const imported = intrinsic ?? config.importer?.import(path) ?? config.codebaseTxn?.PackageInfo(path) ?? standardTypePackage(path);
       if (imported === undefined) return [null, new Error(`package ${path} is not available`)];
       return [imported, null];
     }

@@ -2,6 +2,7 @@ import { REPL_FILENAME, diagnosticFilename, withDiagnosticSourceContext } from "
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
 import { Config, Info, Int, Int8, Int16, Int32, Int64, UntypedInt, Uint, Uint8, Uint16, Uint32, Uint64, Uintptr, Float32, Float64, Bool, NewArray, NewChecker, NewConst, NewField, NewFunc, NewInterfaceType, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTerm, NewTypeName, NewTypeParam, NewTuple, NewUnion, NewVar, NoPos, String as GoString, Typ, emptyInterface, ensureUniverseInitialized, UniverseLookup, Unsafe } from "./go/types/index.js";
+import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
 export const GOJR_SYNTHETIC_CHECK_PREFIX = "__gojr_check_statements";
 const standardTypePackageCache = new Map();
 export function isGoJuniorSyntheticCheckName(name) {
@@ -40,7 +41,8 @@ export function checkGoJuniorFiles(files, statements = [], parserDiagnostics = [
     const conf = new Config();
     conf.Importer = {
         Import(path) {
-            const imported = config.importer?.import(path) ?? config.codebaseTxn?.PackageInfo(path) ?? standardTypePackage(path);
+            const intrinsic = isIntrinsicPackageImport(path) ? standardTypePackage(path) : undefined;
+            const imported = intrinsic ?? config.importer?.import(path) ?? config.codebaseTxn?.PackageInfo(path) ?? standardTypePackage(path);
             if (imported === undefined)
                 return [null, new Error(`package ${path} is not available`)];
             return [imported, null];

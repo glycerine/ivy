@@ -4,7 +4,7 @@ import { blake3HashString } from "./blake3.js";
 import { File, ImportSpec } from "./front/ast.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
 import { frontFilesToProgramAst } from "./frontToAst.js";
-import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
+import { intrinsicPackageName, isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { isStubSourcePackageStandardLibrary, stubSourcePackageFiles } from "./stubPackages.js";
 import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage, type GoJuniorCheckResult } from "./typecheck.js";
 import { emitStage1Package, GOJR_STAGE1_BACKEND } from "./emitter/package.js";
@@ -16,7 +16,6 @@ import {
   RelativeTo as GoTypesRelativeTo,
   TypeName as GoTypesTypeName,
   TypeString as GoTypesTypeString,
-  Unsafe as GoTypesUnsafe,
   Var as GoTypesVar,
   type Object as GoTypesObject,
   type Package as GoTypesPackage,
@@ -214,7 +213,9 @@ export function buildPackages(request: BuildPackageRequest, store?: BuildArtifac
 
 export function buildStandardLibraryPackage(request: BuildStandardLibraryPackageRequest, store?: BuildArtifactStore): BuildPackageReport {
   const provider = request.sourcePackageProvider ?? createStandardLibrarySourcePackageProvider(request.standardLibrary);
-  const files = provider.load(request.importPath);
+  const files = isIntrinsicPackageImport(request.importPath)
+    ? [intrinsicSyntheticSourceFile(request.importPath)]
+    : provider.load(request.importPath);
   if (!files) {
     return emptyBuildReport([buildDiagnostic(
       request.importPath,
@@ -613,8 +614,11 @@ class PackageGraphBuilder {
     }
 
     if (!this.hasErrors()) {
-      const checked: Pick<GoJuniorCheckResult, "diagnostics" | "pkg"> & Partial<Pick<GoJuniorCheckResult, "info">> = importPath === "unsafe"
-        ? this.ambientCheckedPackage(importPath, GoTypesUnsafe)
+      const ambientTypePackage = isIntrinsicPackageImport(importPath)
+        ? standardTypePackage(importPath)
+        : undefined;
+      const checked: Pick<GoJuniorCheckResult, "diagnostics" | "pkg"> & Partial<Pick<GoJuniorCheckResult, "info">> = ambientTypePackage
+        ? this.ambientCheckedPackage(importPath, ambientTypePackage)
         : checkGoJuniorFiles(parsed.files, parsed.statements, [], {
           packageName,
           packagePath: importPath,
@@ -1145,6 +1149,13 @@ function ensureSourceFile(file: SourceFile): SourceFile {
   return {
     filename: file.filename || REPL_FILENAME,
     source: file.source ?? ""
+  };
+}
+
+function intrinsicSyntheticSourceFile(importPath: string): SourceFile {
+  return {
+    filename: `gojr:intrinsic/${importPath}`,
+    source: `package ${intrinsicPackageName(importPath) ?? importPath.split("/").filter(Boolean).at(-1) ?? importPath}\n`
   };
 }
 

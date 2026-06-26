@@ -2,12 +2,12 @@ import { REPL_FILENAME } from "./diagnostics.js";
 import { blake3HashString } from "./blake3.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
 import { frontFilesToProgramAst } from "./frontToAst.js";
-import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
+import { intrinsicPackageName, isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { isStubSourcePackageStandardLibrary, stubSourcePackageFiles } from "./stubPackages.js";
 import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import { emitStage1Package, GOJR_STAGE1_BACKEND } from "./emitter/package.js";
 import { Codebase } from "./codebase.js";
-import { Builtin as GoTypesBuiltin, Const as GoTypesConst, Func as GoTypesFunc, RelativeTo as GoTypesRelativeTo, TypeName as GoTypesTypeName, TypeString as GoTypesTypeString, Unsafe as GoTypesUnsafe, Var as GoTypesVar } from "./go/types/index.js";
+import { Builtin as GoTypesBuiltin, Const as GoTypesConst, Func as GoTypesFunc, RelativeTo as GoTypesRelativeTo, TypeName as GoTypesTypeName, TypeString as GoTypesTypeString, Var as GoTypesVar } from "./go/types/index.js";
 const ARTIFACT_LAYOUT_VERSION = "gojr-js-v4";
 export const GOJR_GOOS = "js";
 export const GOJR_GOARCH = "gojr";
@@ -29,7 +29,9 @@ export function buildPackages(request, store) {
 }
 export function buildStandardLibraryPackage(request, store) {
     const provider = request.sourcePackageProvider ?? createStandardLibrarySourcePackageProvider(request.standardLibrary);
-    const files = provider.load(request.importPath);
+    const files = isIntrinsicPackageImport(request.importPath)
+        ? [intrinsicSyntheticSourceFile(request.importPath)]
+        : provider.load(request.importPath);
     if (!files) {
         return emptyBuildReport([buildDiagnostic(request.importPath, `standard library package ${request.importPath} is not available under ${request.standardLibrary.sourceRoot}`)]);
     }
@@ -410,8 +412,11 @@ class PackageGraphBuilder {
                 sourceDependencies.push(dependency);
         }
         if (!this.hasErrors()) {
-            const checked = importPath === "unsafe"
-                ? this.ambientCheckedPackage(importPath, GoTypesUnsafe)
+            const ambientTypePackage = isIntrinsicPackageImport(importPath)
+                ? standardTypePackage(importPath)
+                : undefined;
+            const checked = ambientTypePackage
+                ? this.ambientCheckedPackage(importPath, ambientTypePackage)
                 : checkGoJuniorFiles(parsed.files, parsed.statements, [], {
                     packageName,
                     packagePath: importPath,
@@ -918,6 +923,12 @@ function ensureSourceFile(file) {
     return {
         filename: file.filename || REPL_FILENAME,
         source: file.source ?? ""
+    };
+}
+function intrinsicSyntheticSourceFile(importPath) {
+    return {
+        filename: `gojr:intrinsic/${importPath}`,
+        source: `package ${intrinsicPackageName(importPath) ?? importPath.split("/").filter(Boolean).at(-1) ?? importPath}\n`
     };
 }
 function sourceFilesFromPkgdef(pkgdef) {

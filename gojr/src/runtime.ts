@@ -63,7 +63,7 @@ import {
 } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
 import type { File as FrontFile } from "./front/ast.js";
-import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
+import { isHostResolvedSourceImport, isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { DeterministicPrng } from "./prng.js";
 import {
   AsyncGoChannel,
@@ -842,12 +842,12 @@ export class EvaluationContext {
 
   public packageInfo(importPath: string): GoTypesPackage | undefined {
     if (this.options.codebase && this.options.codebaseTxn && !this.options.codebaseTxn.IsClosed()) {
-      return this.options.codebase.PackageInfo(this.options.codebaseTxn, importPath);
+      return this.options.codebase.PackageInfo(this.options.codebaseTxn, importPath) ?? this.options.packageInfos?.[importPath];
     }
     if (this.options.codebase) {
       const txn = this.options.codebase.NewViewTxn();
       try {
-        return this.options.codebase.PackageInfo(txn, importPath);
+        return this.options.codebase.PackageInfo(txn, importPath) ?? this.options.packageInfos?.[importPath];
       } finally {
         txn.Rollback();
       }
@@ -1005,7 +1005,7 @@ export class EvaluationContext {
   private packageInfoHasType(typeText: string): boolean {
     const qualified = packageQualifiedRuntimeTypeNameParts(typeText);
     if (!qualified) return false;
-    const pkg = this.packageInfo(qualified.importPath) ?? standardTypePackage(qualified.importPath);
+    const pkg = typePackageForImport(qualified.importPath, this);
     const object = pkg?.Scope().Lookup(qualified.localName);
     return object?.constructor.name === "TypeName";
   }
@@ -1013,28 +1013,28 @@ export class EvaluationContext {
   private packageInfoStructTypeDef(typeText: string): StructTypeDef | undefined {
     const qualified = packageQualifiedRuntimeTypeNameParts(typeText);
     if (!qualified) return undefined;
-    const pkg = this.packageInfo(qualified.importPath) ?? standardTypePackage(qualified.importPath);
+    const pkg = typePackageForImport(qualified.importPath, this);
     return pkg ? goTypesStructTypeDef(qualified.importPath, qualified.localName, typeText, pkg) : undefined;
   }
 
   private packageInfoInterfaceDef(typeText: string): InterfaceTypeDef | undefined {
     const qualified = packageQualifiedRuntimeTypeNameParts(typeText);
     if (!qualified) return undefined;
-    const pkg = this.packageInfo(qualified.importPath) ?? standardTypePackage(qualified.importPath);
+    const pkg = typePackageForImport(qualified.importPath, this);
     return pkg ? goTypesInterfaceDef(qualified.importPath, qualified.localName, pkg) : undefined;
   }
 
   private packageInfoMethodDef(typeText: string, methodName: string): MethodDef | undefined {
     const qualified = packageQualifiedRuntimeTypeNameParts(typeText);
     if (!qualified) return undefined;
-    const pkg = this.packageInfo(qualified.importPath) ?? standardTypePackage(qualified.importPath);
+    const pkg = typePackageForImport(qualified.importPath, this);
     return pkg ? goTypesMethodDef(qualified.importPath, qualified.localName, methodName, pkg) : undefined;
   }
 
   private packageInfoAliasType(typeText: string): { target: string; trueAlias: boolean } | undefined {
     const qualified = packageQualifiedRuntimeTypeNameParts(typeText);
     if (!qualified) return undefined;
-    const pkg = this.packageInfo(qualified.importPath) ?? standardTypePackage(qualified.importPath);
+    const pkg = typePackageForImport(qualified.importPath, this);
     return pkg ? goTypesAliasType(qualified.importPath, qualified.localName, pkg) : undefined;
   }
 
@@ -1097,12 +1097,12 @@ export class EvaluationContext {
 
   public packageRuntime(importPath: string): PackageRuntime | undefined {
     if (this.options.codebase && this.options.codebaseTxn && !this.options.codebaseTxn.IsClosed()) {
-      return this.options.codebase.PackageRuntime(this.options.codebaseTxn, importPath);
+      return this.options.codebase.PackageRuntime(this.options.codebaseTxn, importPath) ?? this.options.packageRuntimes?.[importPath];
     }
     if (this.options.codebase) {
       const txn = this.options.codebase.NewViewTxn();
       try {
-        return this.options.codebase.PackageRuntime(txn, importPath);
+        return this.options.codebase.PackageRuntime(txn, importPath) ?? this.options.packageRuntimes?.[importPath];
       } finally {
         txn.Rollback();
       }
@@ -3388,9 +3388,9 @@ export class GoJuniorSession {
       const name = importBindingName(imported, this.context);
       if (name === "_" || name === ".") continue;
       if (checkerPackage.Scope().Lookup(name) !== null) continue;
-      const pkg = this.codebase.PackageInfo(transaction, imported.path)
-        ?? this.options.packageInfos?.[imported.path]
-        ?? standardTypePackage(imported.path);
+      const pkg = (isIntrinsicPackageImport(imported.path) ? standardTypePackage(imported.path) : undefined)
+        ?? this.codebase.PackageInfo(transaction, imported.path)
+        ?? this.options.packageInfos?.[imported.path];
       if (pkg !== undefined) {
         checkerPackage.Scope().Insert(NewPkgName(NoPos, checkerPackage, name, pkg));
       }
@@ -3599,9 +3599,14 @@ function importBindingFileKey(filename: string, localName: string): string {
 
 function importBindingName(imported: { path: string; alias?: string }, context?: EvaluationContext): string {
   return imported.alias
-    ?? context?.packageInfo(imported.path)?.Name()
-    ?? standardTypePackage(imported.path)?.Name()
+    ?? typePackageForImport(imported.path, context)?.Name()
     ?? importDefaultName(imported.path);
+}
+
+function typePackageForImport(importPath: string, context?: EvaluationContext): GoTypesPackage | undefined {
+  const intrinsic = isIntrinsicPackageImport(importPath) ? standardTypePackage(importPath) : undefined;
+  if (intrinsic) return intrinsic;
+  return context?.packageInfo(importPath) ?? standardTypePackage(importPath);
 }
 
 function installFunctionDeclaration(context: EvaluationContext, declaration: FunctionDecl): void {
@@ -3868,6 +3873,12 @@ function packageMethodIntrinsic(declaration: FunctionDecl, importPath?: string):
       case "Elem":
         return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
           reflectRtypeElem(args[0] ?? null, context));
+      case "NumField":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
+          reflectRtypeNumField(args[0] ?? null, context));
+      case "Field":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
+          reflectRtypeField(args[0] ?? null, args[1] ?? 0n, context));
       default:
         return undefined;
     }
@@ -4224,7 +4235,8 @@ function internalAbiTypeDescriptor(typeText: string, context: EvaluationContext)
   const names = internalAbiRuntimeTypeNames(context);
   const cacheKey = `${Object.values(names).join(":")}:${type}`;
   const identityKey = `internal/abi.Type:${type}`;
-  const cached = internalAbiTypeDescriptorCache.get(cacheKey);
+  const cacheable = !internalAbiDescriptorHasUnresolvedPackageType(type, context);
+  const cached = cacheable ? internalAbiTypeDescriptorCache.get(cacheKey) : undefined;
   if (cached) return cached;
 
   let layout = new RuntimeStruct(names.type);
@@ -4233,9 +4245,34 @@ function internalAbiTypeDescriptor(typeText: string, context: EvaluationContext)
     if (!struct) throwTypeError(next, names.type, `*${names.type}`);
     for (const [field, value] of struct.orderedFields()) layout.set(field, value);
   }, identityKey);
-  internalAbiTypeDescriptorCache.set(cacheKey, pointer);
+  if (cacheable) internalAbiTypeDescriptorCache.set(cacheKey, pointer);
   layout = internalAbiDescriptorStruct(type, names, context);
   return pointer;
+}
+
+function internalAbiDescriptorHasUnresolvedPackageType(typeText: string, context: EvaluationContext): boolean {
+  const type = normalizeTypeText(typeText);
+  if (!type || isPredeclaredType(type) || isUnsafePointerType(type)) return false;
+  if (type.startsWith("*")) return internalAbiDescriptorHasUnresolvedPackageType(type.slice(1), context);
+  if (type.startsWith("[]")) return internalAbiDescriptorHasUnresolvedPackageType(type.slice(2), context);
+  const arrayType = parseArrayOrSliceTypeText(type, context);
+  if (arrayType) return internalAbiDescriptorHasUnresolvedPackageType(arrayType.elementType, context);
+  const mapType = parseMapTypeText(type);
+  if (mapType) {
+    return internalAbiDescriptorHasUnresolvedPackageType(mapType.keyType, context) ||
+      internalAbiDescriptorHasUnresolvedPackageType(mapType.valueType, context);
+  }
+  const chanType = parseChanTypeText(type);
+  if (chanType) return internalAbiDescriptorHasUnresolvedPackageType(chanType.elementType, context);
+  const generic = genericTypeArguments(type);
+  if (generic) {
+    return internalAbiDescriptorHasUnresolvedPackageType(generic.base, context) ||
+      generic.args.some((arg) => internalAbiDescriptorHasUnresolvedPackageType(arg, context));
+  }
+  const qualified = packageQualifiedRuntimeTypeNameParts(type);
+  if (!qualified) return false;
+  if (context.typeDef(type) || context.interfaceDef(type) || context.aliasType(type)) return false;
+  return !context.packageRuntime(qualified.importPath) && !context.packageInfo(qualified.importPath);
 }
 
 function internalAbiTypeDescriptorAsTypePointer(
@@ -4626,6 +4663,47 @@ function reflectRtypeElementTypeText(typeText: string, context: EvaluationContex
   const chanType = parseChanTypeText(type);
   if (chanType) return chanType.elementType;
   return undefined;
+}
+
+function reflectRtypeStructFields(value: RuntimeValue, context: EvaluationContext): { typeText: string; fields: StructFieldDecl[] } | undefined {
+  const typeText = reflectRtypeRuntimeTypeText(value);
+  if (!typeText) return undefined;
+  const typeDef = context.typeDef(typeText) ?? parseAnonymousStructTypeText(typeText);
+  if (!typeDef) return undefined;
+  return { typeText, fields: instantiateStructFields(typeDef, typeText) };
+}
+
+function reflectRtypeNumField(value: RuntimeValue, context: EvaluationContext): bigint {
+  const fields = reflectRtypeStructFields(value, context);
+  if (!fields) {
+    throw new GoJuniorPanic(`panic: reflect: NumField of non-struct type ${reflectRtypeDescriptorText(value, "GoJrString")}`);
+  }
+  return BigInt(fields.fields.length);
+}
+
+function reflectRtypeField(value: RuntimeValue, indexValue: RuntimeValue, context: EvaluationContext): RuntimeStruct {
+  const struct = reflectRtypeStructFields(value, context);
+  if (!struct) {
+    throw new GoJuniorPanic(`panic: reflect: Field of non-struct type ${reflectRtypeDescriptorText(value, "GoJrString")}`);
+  }
+  const index = toNumber(indexValue);
+  const field = struct.fields[index];
+  if (!field) throw new GoJuniorPanic("panic: reflect: Field index out of bounds");
+  const ownerPackage = runtimeQualifiedTypePackagePath(struct.typeText) ?? "";
+  const fieldPkgPath = field.name && !isExportedRuntimeName(field.name) ? ownerPackage : "";
+  const indexSlice: RuntimeValue[] = [BigInt(index)];
+  markArrayType(indexSlice, "[]int");
+  const structFieldType = context.importPath() === "reflect" ? "StructField" : "reflect.StructField";
+  const structTagType = context.importPath() === "reflect" ? "StructTag" : "reflect.StructTag";
+  return new RuntimeStruct(structFieldType, [
+    ["Name", RuntimeGoString.fromUtf8Text(field.name)],
+    ["PkgPath", RuntimeGoString.fromUtf8Text(fieldPkgPath)],
+    ["Type", reflectTypeInterfaceForTypeText(field.type.text, context)],
+    ["Tag", new RuntimeNamedValue(structTagType, RuntimeGoString.fromUtf8Text(field.tag ?? ""))],
+    ["Offset", BigInt(index)],
+    ["Index", indexSlice],
+    ["Anonymous", Boolean(field.embedded)]
+  ]);
 }
 
 function reflectRtypePointerForTypeText(typeText: string, context: EvaluationContext): RuntimePointer {

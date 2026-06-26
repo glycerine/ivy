@@ -240,7 +240,6 @@ func hidden() {}
   test("builds leaf standard-library packages into the GOPATH-style js_gojr cache", () => {
     const goSourceRoot = "/usr/local/go1.27rc1/src";
     expect(fs.existsSync(path.join(goSourceRoot, "cmp"))).toBe(true);
-    expect(fs.existsSync(path.join(goSourceRoot, "unsafe"))).toBe(true);
 
     const store = new MemoryArtifactStore();
     const provider = createStandardLibrarySourcePackageProvider({
@@ -320,7 +319,7 @@ func hidden() {}
     expect(unsafeArtifact.standardLibrary).toBe(true);
     expect(unsafeArtifact.sources).toEqual([
       {
-        filename: "/usr/local/go1.27rc1/src/unsafe/unsafe.go",
+        filename: "gojr:intrinsic/unsafe",
         hash: expect.any(String)
       }
     ]);

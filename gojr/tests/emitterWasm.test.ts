@@ -1119,6 +1119,119 @@ func ReflectPointer() (string, string, bool) {
     expect(await (pkg.ReflectPointer as () => Promise<[string, string, boolean]>)()).toEqual(["*Thing", "Thing", true]);
   });
 
+  test("generated artifacts prefer intrinsic unsafe over supplied import objects", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6unsafe",
+      artifactRoot: "/tmp/gojr-stage6unsafe",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6unsafe.go",
+        source: `package stage6unsafe
+
+import "unsafe"
+
+func IntrinsicLen() int {
+	buf := []byte{1, 2, 3}
+	return len(unsafe.Slice(unsafe.SliceData(buf), 2))
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6unsafe/example.com/stage6unsafe.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage({}, {
+      importsByPath: {
+        unsafe: {
+          SliceData: async () => [9, 9, 9, 9],
+          Slice: async () => Array.from({ length: 99 }, () => 9)
+        }
+      }
+    });
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.IntrinsicLen as () => Promise<bigint>)()).toBe(2n);
+  });
+
+  test("generated package globals zero anonymous struct values", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6anonstruct",
+      artifactRoot: "/tmp/gojr-stage6anonstruct",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6anonstruct.go",
+        source: `package stage6anonstruct
+
+var PPC64 struct {
+	IsPOWER8 bool
+	IsPOWER9 bool
+	Count int
+	Names []string
+}
+
+func Initial() (bool, bool, int, int) {
+	return PPC64.IsPOWER8, PPC64.IsPOWER9, PPC64.Count, len(PPC64.Names)
+}
+
+func Set() bool {
+	PPC64.IsPOWER9 = true
+	PPC64.Count = 7
+	return PPC64.IsPOWER9
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6anonstruct/example.com/stage6anonstruct.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Initial as () => Promise<[boolean, boolean, bigint, bigint]>)()).toEqual([false, false, 0n, 0n]);
+    expect(await (instantiated.package.Set as () => Promise<boolean>)()).toBe(true);
+    expect(await (instantiated.package.Initial as () => Promise<[boolean, boolean, bigint, bigint]>)()).toEqual([false, true, 7n, 0n]);
+  });
+
+  test("generated const declarations evaluate iota and inherited expressions", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6iota",
+      artifactRoot: "/tmp/gojr-stage6iota",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6iota.go",
+        source: `package stage6iota
+
+const (
+	A = 1 << iota
+	B
+	C
+)
+
+func Values() (int, int, int) {
+	const (
+		X = 10 + iota
+		Y
+	)
+	return A, B + X, C + Y
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6iota/example.com/stage6iota.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Values as () => Promise<[bigint, bigint, bigint]>)()).toEqual([1n, 12n, 15n]);
+  });
+
   test("resolves imported package type descriptors for reflect-style metadata", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
