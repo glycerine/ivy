@@ -465,7 +465,17 @@ function returnExpression(ctx, statement, env) {
         return `__gojrTuple([${values.filter((value) => value !== undefined).join(", ")}])`;
     }
     const rendered = expressionToJs(ctx, statement.values[0], env);
-    return rendered ? valueForTargetType(rendered, env.expectedReturnTypes?.[0], expressionTypeText(statement.values[0], env), env) : undefined;
+    if (!rendered)
+        return undefined;
+    if ((env.expectedReturnTypes?.length ?? 0) > 1) {
+        return returnTupleExpression(rendered, env.expectedReturnTypes ?? [], env);
+    }
+    return valueForTargetType(rendered, env.expectedReturnTypes?.[0], expressionTypeText(statement.values[0], env), env);
+}
+function returnTupleExpression(rendered, expectedTypes, env) {
+    const valuesName = "__gojrReturnValues";
+    const converted = expectedTypes.map((typeText, index) => valueForTargetType(`${valuesName}[${index}]`, typeText, undefined, env));
+    return `__gojrTuple(((${valuesName}) => [${converted.join(", ")}])(__gojrTupleValues(${rendered})))`;
 }
 function emitNamedResultDeclarations(fn, env) {
     const namedResults = [];
@@ -3398,6 +3408,11 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "function __gojrTuple(values) {",
         "  Object.defineProperty(values, \"__gojrTuple\", { value: true });",
         "  return values;",
+        "}",
+        "function __gojrTupleValues(value) {",
+        "  if (Array.isArray(value) && value.__gojrTuple === true) return value;",
+        "  if (Array.isArray(value)) return value;",
+        "  return [value];",
         "}",
         "function __gojrEqual(left, right) {",
         "  if (left && left.__gojrInterface === true && right === null) return left.value === null;",
