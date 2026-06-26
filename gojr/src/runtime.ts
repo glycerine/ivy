@@ -7757,12 +7757,12 @@ async function executeStatementInner(statement: Statement, context: EvaluationCo
             context,
             `variable ${declaration.name}`
           );
-          context.declare(
-            declaration.name,
-            value,
-            true,
-            declarationRuntimeTypeText(declaration, source, value, group, context)
-          );
+          const typeText = declarationRuntimeTypeText(declaration, source, value, group, context);
+          if (context.isInterpreterRootScope() && context.hasLocal(declaration.name)) {
+            context.replaceLocal(declaration.name, value, true, typeText);
+          } else {
+            context.declare(declaration.name, value, true, typeText);
+          }
         }
       }
       return { kind: "normal" };

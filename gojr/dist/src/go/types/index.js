@@ -2556,20 +2556,128 @@ var go_types_scope;
     // (parent) and contained (children) scopes. Objects may be inserted
     // and looked up by name. The zero value for Scope is a ready-to-use
     // empty scope.
+    class ScopeObjectEnvironment {
+        fallback;
+        values;
+        deleted = new globalThis.Set();
+        closed = false;
+        constructor(fallback = null, values = null) {
+            this.fallback = fallback;
+            this.values = values ?? new globalThis.Map();
+        }
+        beginOverlay() {
+            this.ensureOpen();
+            return new ScopeObjectEnvironment(this);
+        }
+        get(name) {
+            this.ensureOpen();
+            if (this.deleted.has(name))
+                return null;
+            const local = this.values.get(name);
+            if (local !== undefined)
+                return local;
+            return this.fallback?.get(name) ?? null;
+        }
+        getLocal(name) {
+            this.ensureOpen();
+            if (this.deleted.has(name))
+                return null;
+            return this.values.get(name) ?? null;
+        }
+        set(name, obj) {
+            this.ensureOpen();
+            this.deleted.delete(name);
+            this.values.set(name, obj);
+        }
+        delete(name) {
+            this.ensureOpen();
+            this.values.delete(name);
+            if (this.fallback !== null) {
+                this.deleted.add(name);
+            }
+            else {
+                this.deleted.delete(name);
+            }
+        }
+        names() {
+            const names = new globalThis.Set();
+            if (this.fallback !== null) {
+                for (const name of this.fallback.names())
+                    names.add(name);
+            }
+            for (const name of this.deleted)
+                names.delete(name);
+            for (const name of this.values.keys())
+                names.add(name);
+            return globalThis.Array.from(names);
+        }
+        entries() {
+            return this.names().flatMap((name) => {
+                const obj = this.get(name);
+                return obj === null ? [] : [[name, obj]];
+            });
+        }
+        commitOverlay(overlay) {
+            this.ensureOpen();
+            overlay.ensureOpen();
+            for (const name of overlay.deleted)
+                this.delete(name);
+            for (const [name, obj] of overlay.values.entries())
+                this.set(name, obj);
+            overlay.close();
+        }
+        close() {
+            this.closed = true;
+            this.values.clear();
+            this.deleted.clear();
+        }
+        ensureOpen() {
+            if (this.closed)
+                throw new globalThis.Error("closed scope transaction");
+        }
+    }
+    class ScopeTransaction {
+        target;
+        overlay;
+        closed = false;
+        constructor(target, overlay) {
+            this.target = target;
+            this.overlay = overlay;
+        }
+        Scope() {
+            this.ensureOpen();
+            return this.overlay;
+        }
+        Commit() {
+            this.ensureOpen();
+            this.target.txElems.commitOverlay(this.overlay.txElems);
+            this.closed = true;
+        }
+        Rollback() {
+            this.ensureOpen();
+            this.overlay.txElems.close();
+            this.closed = true;
+        }
+        ensureOpen() {
+            if (this.closed)
+                throw new globalThis.Error("scope transaction already closed");
+        }
+    }
+    go_types_scope.ScopeTransaction = ScopeTransaction;
     class Scope {
         parent;
         children;
         number; // parent.children[number-1] is this scope; 0 if there is no parent
-        elems; // lazily allocated
+        txElems; // lazily allocated
         pos;
         end; // scope extent; may be invalid
         comment; // for debugging only
         isFunc; // set if this is a function scope (internal use only)
-        constructor(parent, children, number, elems, pos, end, comment, isFunc) {
+        constructor(parent, children, number, elems, pos, end, comment, isFunc, txElems = null) {
             this.parent = parent;
             this.children = children ?? [];
             this.number = number;
-            this.elems = elems ?? new globalThis.Map();
+            this.txElems = txElems ?? new ScopeObjectEnvironment(null, elems);
             this.pos = pos;
             this.end = end;
             this.comment = comment;
@@ -2578,10 +2686,10 @@ var go_types_scope;
         // Parent returns the scope's containing (parent) scope.
         Parent() { return this.parent; }
         // Len returns the number of scope elements.
-        Len() { return this.elems.size; }
+        Len() { return this.txElems.names().length; }
         // Names returns the scope's element names in sorted order.
         Names() {
-            const names = globalThis.Array.from(this.elems.keys());
+            const names = this.txElems.names();
             names.sort();
             return names;
         }
@@ -2591,7 +2699,7 @@ var go_types_scope;
         Child(i) { return this.children[i]; }
         // Lookup returns the object in scope s with the given name if such an
         // object exists; otherwise the result is nil.
-        Lookup(name) { return resolve(name, this.elems.get(name) ?? null); }
+        Lookup(name) { return resolve(name, this.txElems.get(name)); }
         // lookupIgnoringCase returns the objects in scope s whose names match
         // the given name ignoring case. If exported is set, only exported names
         // are returned.
@@ -2614,7 +2722,7 @@ var go_types_scope;
         // if not already set, and returns nil.
         Insert(obj) {
             const name = obj.Name();
-            const alt = this.Lookup(name);
+            const alt = resolve(name, this.txElems.getLocal(name));
             if (alt !== null) {
                 return alt;
             }
@@ -2637,14 +2745,24 @@ var go_types_scope;
         // records the binding and returns true. The object's parent scope
         // will be set to s after resolve is called.
         _InsertLazy(name, resolve_) {
-            if (this.elems.get(name) !== undefined) {
+            if (this.txElems.getLocal(name) !== null) {
                 return false;
             }
             this.insert(name, new lazyObject(this, resolve_));
             return true;
         }
         insert(name, obj) {
-            this.elems.set(name, obj);
+            this.txElems.set(name, obj);
+        }
+        Delete(name) {
+            this.txElems.delete(name);
+        }
+        Entries() {
+            return this.txElems.entries();
+        }
+        BeginTransaction() {
+            const overlay = new Scope(this.parent, null, this.number, null, this.pos, this.end, this.comment, this.isFunc, this.txElems.beginOverlay());
+            return new ScopeTransaction(this, overlay);
         }
         // WriteTo writes a string representation of the scope to w,
         // with the scope elements sorted by name.
@@ -2698,7 +2816,7 @@ var go_types_scope;
             this.resolve_ = resolve_;
         }
         // stub implementations so *lazyObject implements Object and we can
-        // store them directly into Scope.elems.
+        // store them directly into Scope.
         Parent() { throw new globalThis.Error("unreachable"); }
         Pos() { throw new globalThis.Error("unreachable"); }
         Pkg() { throw new globalThis.Error("unreachable"); }
@@ -20602,7 +20720,7 @@ var go_types_labels;
             this.errorf(labelIdent(jmp), code, msg, name);
         }
         for (const name of all.Names()) {
-            const obj = go_types_scope.resolve(name, all.elems.get(name) ?? null);
+            const obj = all.Lookup(name);
             const lbl = obj;
             if (lbl !== null && !lbl.used) {
                 this.softErrorf(lbl, "UnusedLabel", "label %s declared and not used", lbl.name);
@@ -22261,8 +22379,7 @@ var go_types_stmt;
             return !(kind === go_types_object.RecvVar || kind === go_types_object.ParamVar || kind === go_types_object.ResultVar);
         };
         const unused = [];
-        for (const [name, elem0] of scope.elems.entries()) {
-            const elem = go_types_scope.resolve(name, elem0);
+        for (const [_name, elem] of scope.Entries()) {
             const v = elem instanceof go_types_object.Var ? elem : null;
             if (v !== null && needUse(v.kind) && !this.usedVars.get(v)) {
                 unused.push(v);
@@ -24286,6 +24403,7 @@ export var safeUnderlying = go_types_named.safeUnderlying;
 export var samePkg = go_types_predicates.samePkg;
 export var Satisfies = go_types_api_predicates.Satisfies;
 export var Scope = go_types_scope.Scope;
+export var ScopeTransaction = go_types_scope.ScopeTransaction;
 export var scopeUniverse = go_types_scope.scopeUniverse;
 export var Selection = go_types_selection.Selection;
 export var SelectionKind = go_types_selection.SelectionKind;

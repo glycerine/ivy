@@ -8213,6 +8213,17 @@ return a, b, ok, c, ok2, len(ch), cap(ch)
     expect(result.value).toBe("hi");
   });
 
+  test("REPL var declarations may replace an existing top-level variable with a different type", async () => {
+    const session = new GoJuniorSession();
+
+    expect((await session.evaluate("var v string")).diagnostics).toEqual([]);
+    expect((await session.evaluate("var v int")).diagnostics).toEqual([]);
+
+    const result = await session.evaluate("v");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(0n);
+  });
+
   test("failed REPL runtime execution rolls back top-level declarations", async () => {
     const session = new GoJuniorSession();
 

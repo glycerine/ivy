@@ -92,6 +92,29 @@ class GoJuniorTestStop extends Error {
         this.name = "GoJuniorTestStop";
     }
 }
+class EvaluationRootTransaction {
+    commit_;
+    rollback_;
+    closed = false;
+    constructor(commit_, rollback_) {
+        this.commit_ = commit_;
+        this.rollback_ = rollback_;
+    }
+    Commit() {
+        this.ensureOpen();
+        this.commit_();
+        this.closed = true;
+    }
+    Rollback() {
+        this.ensureOpen();
+        this.rollback_();
+        this.closed = true;
+    }
+    ensureOpen() {
+        if (this.closed)
+            throw new GoJuniorRuntimeError("runtime transaction already closed");
+    }
+}
 export class EvaluationContext {
     options;
     shared;
@@ -162,6 +185,13 @@ export class EvaluationContext {
         }
         this.declareRoot(name, value, mutable, type);
     }
+    replaceLocal(name, value, mutable = true, type) {
+        if (name === "_")
+            return;
+        const typeText = resolvedBindingTypeText(type, this);
+        const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, this) : value;
+        this.currentScope.replaceLocal(name, stored, mutable, typeText);
+    }
     assign(name, value) {
         this.currentScope.assign(name, value, this.assignmentChecker());
     }
@@ -177,11 +207,18 @@ export class EvaluationContext {
     hasLocal(name) {
         return this.currentScope.hasLocal(name);
     }
+    isInterpreterRootScope() {
+        return (this.options.replMode ?? false) && this.currentScope === this.shared.rootScope;
+    }
     hasShortVarSite(statement) {
         return this.currentScope.hasShortVarSite(statement);
     }
     rememberShortVarSite(statement) {
         this.currentScope.rememberShortVarSite(statement);
+    }
+    beginRootTransaction() {
+        const snapshot = this.snapshotRootState();
+        return new EvaluationRootTransaction(() => { }, () => this.restoreRootState(snapshot));
     }
     hasBinding(name) {
         return this.currentScope.hasBinding(name);
@@ -712,6 +749,33 @@ export class EvaluationContext {
     assignmentChecker() {
         return (value, typeText, role) => prepareAssignableToType(value, typeText, role, this);
     }
+    snapshotRootState() {
+        return {
+            rootScope: this.shared.rootScope.snapshot(),
+            types: new Map(this.shared.types),
+            interfaces: new Map(this.shared.interfaces),
+            aliases: new Map(this.shared.aliases),
+            trueAliases: new Map(this.shared.trueAliases),
+            methods: new Map(this.shared.methods),
+            importPathsByLocalName: new Map(this.shared.importPathsByLocalName),
+            ambiguousImportLocalNames: new Set(this.shared.ambiguousImportLocalNames),
+            importPathsByFileAndLocalName: new Map(this.shared.importPathsByFileAndLocalName)
+        };
+    }
+    restoreRootState(snapshot) {
+        this.shared.rootScope.restore(snapshot.rootScope);
+        this.shared.types = new Map(snapshot.types);
+        this.shared.interfaces = new Map(snapshot.interfaces);
+        this.shared.aliases = new Map(snapshot.aliases);
+        this.shared.trueAliases = new Map(snapshot.trueAliases);
+        this.shared.methods = new Map(snapshot.methods);
+        this.shared.importPathsByLocalName = new Map(snapshot.importPathsByLocalName);
+        this.shared.ambiguousImportLocalNames = new Set(snapshot.ambiguousImportLocalNames);
+        this.shared.importPathsByFileAndLocalName = new Map(snapshot.importPathsByFileAndLocalName);
+        if (!this.currentScope.hasParent()) {
+            this.currentScope = this.shared.rootScope;
+        }
+    }
 }
 class Scope {
     parent;
@@ -724,6 +788,12 @@ class Scope {
     declare(name, value, mutable, typeText) {
         if (this.bindings.has(name)) {
             throw new GoJuniorRuntimeError(`${name} already declared`);
+        }
+        this.bindings.set(name, { value, mutable, ...(typeText ? { typeText } : {}) });
+    }
+    replaceLocal(name, value, mutable, typeText) {
+        if (!this.bindings.has(name)) {
+            throw new GoJuniorRuntimeError(`${name} is not declared`);
         }
         this.bindings.set(name, { value, mutable, ...(typeText ? { typeText } : {}) });
     }
@@ -778,6 +848,25 @@ class Scope {
     }
     declareTypeAlias(name, target) {
         this.typeAliases.set(name, target);
+    }
+    snapshot() {
+        return {
+            bindings: new Map(this.bindings),
+            typeAliases: new Map(this.typeAliases)
+        };
+    }
+    restore(snapshot) {
+        this.bindings.clear();
+        for (const [name, binding] of snapshot.bindings.entries()) {
+            this.bindings.set(name, { ...binding });
+        }
+        this.typeAliases.clear();
+        for (const [name, target] of snapshot.typeAliases.entries()) {
+            this.typeAliases.set(name, target);
+        }
+    }
+    hasParent() {
+        return this.parent !== undefined;
     }
     lookupTypeAlias(name) {
         return this.typeAliases.get(name) ?? this.parent?.lookupTypeAlias(name);
@@ -2313,7 +2402,7 @@ export class GoJuniorSession {
         this.sessionSheets = options.sheets ? { ...options.sheets } : undefined;
         ensureUniverseInitialized();
         this.checkerPackage = NewPackage("main", "main");
-        this.context = new EvaluationContext(options);
+        this.context = new EvaluationContext({ ...options, replMode: options.replMode ?? true });
         installSheets(this.context, options);
     }
     setSheet(sheet) {
@@ -2349,29 +2438,24 @@ export class GoJuniorSession {
                 output: []
             }, this.context);
         }
-        const preparedRedeclarations = this.prepareFunctionRedeclarations(ast, sourceFile.filename);
-        if (preparedRedeclarations.diagnostics.length > 0) {
-            return withObservedDeps({
-                diagnostics: preparedRedeclarations.diagnostics,
-                output: [],
-                ast
-            }, this.context);
-        }
-        const checked = this.checkSource(sourceFile);
+        const checkedTransaction = this.checkSource(sourceFile);
+        const checked = checkedTransaction.checked;
         if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-            this.restoreFunctionRedeclarations(preparedRedeclarations.replacements);
+            checkedTransaction.transaction.Rollback();
             return withObservedDeps({
                 diagnostics: checked.diagnostics,
                 output: [],
                 ast
             }, this.context);
         }
+        const runtimeTransaction = this.context.beginRootTransaction();
         const outputStart = this.context.output.length;
+        let typeInfoAccepted = false;
+        let runtimeAccepted = false;
         try {
             const { declarations, statements } = splitTopLevelDeclarations(ast.body);
             const declarationCompletion = await this.context.scheduler().runRoot(async () => {
                 installImports(this.context, ast);
-                this.persistCheckerImports(ast);
                 for (const declaration of ast.functions) {
                     installFunctionDeclaration(this.context, declaration);
                 }
@@ -2381,7 +2465,11 @@ export class GoJuniorSession {
             expectNormalCompletion(declarationCompletion, "top-level declarations");
             if (ast.kind === "function" && ast.functions[0] && ast.body.length === 0) {
                 const value = installedFunctionValue(this.context, ast.functions[0]);
-                this.acceptTypeInfo(checked);
+                this.acceptTypeInfo(checkedTransaction);
+                typeInfoAccepted = true;
+                this.persistCheckerImports(ast);
+                runtimeTransaction.Commit();
+                runtimeAccepted = true;
                 return withObservedDeps({
                     diagnostics: ast.diagnostics,
                     output: this.context.outputFrom(outputStart),
@@ -2394,10 +2482,18 @@ export class GoJuniorSession {
                 return executeTopLevelStatements(statements, this.context);
             });
             const result = withObservedDeps(resultFromCompletion(ast, this.context.outputFrom(outputStart), completion), this.context);
-            this.acceptTypeInfo(checked);
+            this.acceptTypeInfo(checkedTransaction);
+            typeInfoAccepted = true;
+            this.persistCheckerImports(ast);
+            runtimeTransaction.Commit();
+            runtimeAccepted = true;
             return result;
         }
         catch (error) {
+            if (!runtimeAccepted)
+                runtimeTransaction.Rollback();
+            if (!typeInfoAccepted)
+                checkedTransaction.transaction.Rollback();
             const message = error instanceof Error ? error.message : String(error);
             return withObservedDeps({
                 diagnostics: [
@@ -2410,17 +2506,18 @@ export class GoJuniorSession {
         }
     }
     checkSource(source) {
+        const transaction = this.checkerPackage.Scope().BeginTransaction();
+        const candidatePackage = NewPackage(this.checkerPackage.Path(), this.checkerPackage.Name());
+        candidatePackage.scope = transaction.Scope();
         const checked = checkGoJuniorSourceFiles([ensureTrailingNewlineSourceFile(source)], {
             ...typeCheckConfig(this.currentOptions()),
-            packageInstance: this.checkerPackage,
+            packageInstance: candidatePackage,
             syntheticFunctionName: `${GOJR_SYNTHETIC_CHECK_PREFIX}_${++this.checkSequence}`
         });
-        return checked;
+        return { checked, transaction };
     }
-    acceptTypeInfo(_checked) {
-        // The session owns a persistent go/types.Package, so successful checks have
-        // already extended its package scope. Keeping this hook makes the call sites
-        // spell out when checked declarations become visible to later evaluations.
+    acceptTypeInfo(checked) {
+        checked.transaction.Commit();
     }
     persistCheckerImports(ast) {
         for (const imported of ast.imports) {
@@ -2433,43 +2530,6 @@ export class GoJuniorSession {
                 ?? standardTypePackage(imported.path);
             if (pkg !== undefined) {
                 this.checkerPackage.Scope().Insert(NewPkgName(NoPos, this.checkerPackage, name, pkg));
-            }
-        }
-    }
-    prepareFunctionRedeclarations(ast, filename) {
-        const diagnostics = [];
-        const replacements = [];
-        const scope = this.checkerPackage.Scope();
-        for (const declaration of ast.functions) {
-            if (declaration.receiver || declaration.name === "init")
-                continue;
-            const existingObject = scope.Lookup(declaration.name);
-            if (existingObject === null)
-                continue;
-            const existingValue = this.context.hasBinding(declaration.name) ? this.context.lookup(declaration.name) : undefined;
-            if (existingValue === undefined ||
-                !isGoJuniorFunction(existingValue) ||
-                existingValue.signature === undefined ||
-                !signaturesCompatible(existingValue.signature, declaration.signature)) {
-                diagnostics.push({
-                    filename,
-                    code: "GOJR_TYPE001",
-                    severity: "error",
-                    message: `cannot redeclare ${declaration.name} with different signature`,
-                    ...(declaration.span ? { span: declaration.span } : {})
-                });
-                continue;
-            }
-            scope.elems.delete(declaration.name);
-            replacements.push({ name: declaration.name, object: existingObject });
-        }
-        return { diagnostics, replacements };
-    }
-    restoreFunctionRedeclarations(replacements) {
-        const scope = this.checkerPackage.Scope();
-        for (const replacement of replacements) {
-            if (scope.Lookup(replacement.name) === null) {
-                scope.insert(replacement.name, replacement.object);
             }
         }
     }
@@ -6603,7 +6663,13 @@ async function executeStatementInner(statement, context) {
                         continue;
                     const source = declarationSourceExpression(group, index);
                     const value = prepareValueForTargetType(values[index] ?? null, declaration.type?.text, source, context, `variable ${declaration.name}`);
-                    context.declare(declaration.name, value, true, declarationRuntimeTypeText(declaration, source, value, group, context));
+                    const typeText = declarationRuntimeTypeText(declaration, source, value, group, context);
+                    if (context.isInterpreterRootScope() && context.hasLocal(declaration.name)) {
+                        context.replaceLocal(declaration.name, value, true, typeText);
+                    }
+                    else {
+                        context.declare(declaration.name, value, true, typeText);
+                    }
                 }
             }
             return { kind: "normal" };
@@ -7069,8 +7135,9 @@ function declareOrAssignShortVars(names, values, context, sources = [], statemen
     if (values.length !== names.length) {
         throw new GoJuniorRuntimeError(`short declaration count mismatch: ${names.length} names (${names.join(", ")}) but ${values.length} values${shortValueShapeSuffix(values)}`, statement?.span);
     }
+    const mayReplaceLocalBindings = context.isInterpreterRootScope();
     const hasNewName = names.some((name) => name !== "_" && name !== "<invalid>" && !context.hasLocal(name));
-    if (!hasNewName && (!statement || !context.hasShortVarSite(statement))) {
+    if (!mayReplaceLocalBindings && !hasNewName && (!statement || !context.hasShortVarSite(statement))) {
         throw new GoJuniorRuntimeError("short declaration has no new variables", statement?.span);
     }
     if (statement)
@@ -7083,7 +7150,13 @@ function declareOrAssignShortVars(names, values, context, sources = [], statemen
         const value = values[index] ?? null;
         const source = assignmentSourceExpression(sources, index, names.length);
         if (context.hasLocal(name)) {
-            context.assign(name, prepareValueForTargetType(value, context.lookupTypeText(name), source, context, `variable ${name}`));
+            if (mayReplaceLocalBindings) {
+                const typeText = assignmentDeclaredTypeText(sources, index, names.length, context, value);
+                context.replaceLocal(name, value, true, typeText);
+            }
+            else {
+                context.assign(name, prepareValueForTargetType(value, context.lookupTypeText(name), source, context, `variable ${name}`));
+            }
         }
         else {
             const typeText = assignmentDeclaredTypeText(sources, index, names.length, context, value);
