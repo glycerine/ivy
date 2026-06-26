@@ -19,15 +19,16 @@ export function frontSourceFilesToAst(files) {
         ...(ast ? { ast } : {})
     };
 }
-export function frontToProgramAst(file, diagnostics = [], statements = []) {
-    return frontFilesToProgramAst([file], diagnostics, statements);
+export function frontToProgramAst(file, diagnostics = [], statements = [], info) {
+    return frontFilesToProgramAst([file], diagnostics, statements, info);
 }
-export function frontFilesToProgramAst(files, diagnostics = [], statements = []) {
+export function frontFilesToProgramAst(files, diagnostics = [], statements = [], info) {
+    const ctx = info ? { info } : {};
     const body = [
-        ...files.flatMap((file) => file.declarations.flatMap(declarationToBodyStatement)),
-        ...statements.map(statementToAst)
+        ...files.flatMap((file) => file.declarations.flatMap((declaration) => declarationToBodyStatement(declaration, ctx))),
+        ...statements.map((statement) => statementToAst(statement, ctx))
     ];
-    const functions = files.flatMap((file) => file.declarations).flatMap((declaration) => declaration.kind === "FuncDecl" ? [functionDeclToAst(declaration)] : []);
+    const functions = files.flatMap((file) => file.declarations).flatMap((declaration) => declaration.kind === "FuncDecl" ? [functionDeclToAst(declaration, ctx)] : []);
     return {
         kind: functions.length > 0 && body.length === 0 ? "function" : "script",
         imports: files.flatMap((file) => file.imports.map(importSpecToAst)),
@@ -36,10 +37,10 @@ export function frontFilesToProgramAst(files, diagnostics = [], statements = [])
         functions
     };
 }
-function declarationToBodyStatement(declaration) {
+function declarationToBodyStatement(declaration, ctx) {
     if (declaration.kind !== "GenDecl")
         return [];
-    const statement = genDeclToStatement(declaration);
+    const statement = genDeclToStatement(declaration, ctx);
     return statement ? [statement] : [];
 }
 function importSpecToAst(spec) {
@@ -50,17 +51,17 @@ function importSpecToAst(spec) {
         ...(spec.span ? { span: spec.span } : {})
     };
 }
-function genDeclToStatement(declaration) {
+function genDeclToStatement(declaration, ctx) {
     if (declaration.token === TokenKind.Const) {
         return withSpan({
             kind: "ConstDecl",
-            declarations: declaration.specs.flatMap((spec, index) => valueSpecToDeclarations(spec, index, index))
+            declarations: declaration.specs.flatMap((spec, index) => valueSpecToDeclarations(spec, ctx, index, index))
         }, declaration.span);
     }
     if (declaration.token === TokenKind.Var) {
         return withSpan({
             kind: "VarDecl",
-            declarations: declaration.specs.flatMap((spec, index) => valueSpecToDeclarations(spec, undefined, index))
+            declarations: declaration.specs.flatMap((spec, index) => valueSpecToDeclarations(spec, ctx, undefined, index))
         }, declaration.span);
     }
     if (declaration.token === TokenKind.Type) {
@@ -71,10 +72,10 @@ function genDeclToStatement(declaration) {
     }
     return undefined;
 }
-function valueSpecToDeclarations(spec, iotaIndex, valueGroup) {
+function valueSpecToDeclarations(spec, ctx, iotaIndex, valueGroup) {
     if (spec.kind !== "ValueSpec")
         return [];
-    const values = spec.values.map((value) => expressionToAst(value));
+    const values = spec.values.map((value) => expressionToAst(value, ctx));
     const sharedSingleValue = values.length === 1 && spec.names.length > 1 ? values[0] : undefined;
     return spec.names.map((name, index) => ({
         name: name.name,
@@ -150,7 +151,7 @@ function interfaceMethodsFromType(spec) {
         ...(interfaceEmbeds.length > 0 ? { interfaceEmbeds } : {})
     };
 }
-function functionDeclToAst(declaration) {
+function functionDeclToAst(declaration, ctx) {
     const typeParameters = functionTypeParameterNames(declaration);
     return withSpan({
         kind: "FunctionDecl",
@@ -158,7 +159,7 @@ function functionDeclToAst(declaration) {
         ...(declaration.receiver ? { receiver: receiverToAst(declaration.receiver) } : {}),
         ...(typeParameters.length > 0 ? { typeParameters } : {}),
         signature: signatureToAst(declaration.type),
-        body: declaration.body ? blockToAst(declaration.body) : { kind: "BlockStatement", statements: [] },
+        body: declaration.body ? blockToAst(declaration.body, ctx) : { kind: "BlockStatement", statements: [] },
         source: formatNode(declaration).trimEnd()
     }, declaration.span);
 }
@@ -236,106 +237,106 @@ function parametersFromFields(list) {
         }));
     });
 }
-function blockToAst(block) {
+function blockToAst(block, ctx) {
     return withSpan({
         kind: "BlockStatement",
-        statements: block.statements.map(statementToAst)
+        statements: block.statements.map((statement) => statementToAst(statement, ctx))
     }, block.span);
 }
-function statementToAst(statement) {
+function statementToAst(statement, ctx) {
     switch (statement.kind) {
         case "DeclStmt": {
             if (statement.decl.kind === "GenDecl")
-                return genDeclToStatement(statement.decl) ?? expressionStatement(missingExpression(), statement.span);
+                return genDeclToStatement(statement.decl, ctx) ?? expressionStatement(missingExpression(), statement.span);
             return expressionStatement(missingExpression(), statement.span);
         }
         case "BlockStmt":
-            return blockToAst(statement);
+            return blockToAst(statement, ctx);
         case "LabeledStmt":
             return withSpan({
                 kind: "LabeledStatement",
                 label: statement.label.name,
-                statement: statementToAst(statement.stmt)
+                statement: statementToAst(statement.stmt, ctx)
             }, statement.span);
         case "ExprStmt":
-            return expressionStatement(expressionToAst(statement.expr), statement.span);
+            return expressionStatement(expressionToAst(statement.expr, ctx), statement.span);
         case "AssignStmt":
             if (statement.token === TokenKind.Define) {
                 return withSpan({
                     kind: "ShortVarStatement",
                     names: statement.lhs.map(shortVarName),
-                    values: statement.rhs.map(expressionToAst)
+                    values: statement.rhs.map((expression) => expressionToAst(expression, ctx))
                 }, statement.span);
             }
             return withSpan({
                 kind: "AssignStatement",
-                targets: statement.lhs.map(expressionToAst),
+                targets: statement.lhs.map((expression) => expressionToAst(expression, ctx)),
                 operator: assignmentOperator(statement.token),
-                values: statement.rhs.map(expressionToAst)
+                values: statement.rhs.map((expression) => expressionToAst(expression, ctx))
             }, statement.span);
         case "IncDecStmt":
             return withSpan({
                 kind: "IncDecStatement",
-                target: expressionToAst(statement.expr),
+                target: expressionToAst(statement.expr, ctx),
                 operator: statement.token === TokenKind.PlusPlus ? "++" : "--"
             }, statement.span);
         case "ReturnStmt":
             return withSpan({
                 kind: "ReturnStatement",
-                values: statement.results.map(expressionToAst)
+                values: statement.results.map((expression) => expressionToAst(expression, ctx))
             }, statement.span);
         case "BranchStmt":
             return branchToAst(statement);
         case "IfStmt":
             return withSpan({
                 kind: "IfStatement",
-                ...(statement.init ? { init: statementToAst(statement.init) } : {}),
-                condition: expressionToAst(statement.condition),
-                thenBlock: blockToAst(statement.body),
-                ...(statement.else ? { elseBranch: elseBranchToAst(statement.else) } : {})
+                ...(statement.init ? { init: statementToAst(statement.init, ctx) } : {}),
+                condition: expressionToAst(statement.condition, ctx),
+                thenBlock: blockToAst(statement.body, ctx),
+                ...(statement.else ? { elseBranch: elseBranchToAst(statement.else, ctx) } : {})
             }, statement.span);
         case "ForStmt":
             return withSpan({
                 kind: "ForStatement",
-                ...(statement.init ? { init: statementToAst(statement.init) } : {}),
-                ...(statement.condition ? { condition: expressionToAst(statement.condition) } : {}),
-                ...(statement.post ? { post: statementToAst(statement.post) } : {}),
-                body: blockToAst(statement.body)
+                ...(statement.init ? { init: statementToAst(statement.init, ctx) } : {}),
+                ...(statement.condition ? { condition: expressionToAst(statement.condition, ctx) } : {}),
+                ...(statement.post ? { post: statementToAst(statement.post, ctx) } : {}),
+                body: blockToAst(statement.body, ctx)
             }, statement.span);
         case "RangeStmt":
-            return rangeStmtToAst(statement);
+            return rangeStmtToAst(statement, ctx);
         case "SwitchStmt":
-            return switchStmtToAst(statement);
+            return switchStmtToAst(statement, ctx);
         case "TypeSwitchStmt":
-            return typeSwitchStmtToAst(statement);
+            return typeSwitchStmtToAst(statement, ctx);
         case "SelectStmt":
-            return selectStmtToAst(statement);
+            return selectStmtToAst(statement, ctx);
         case "DeferStmt":
             return withSpan({
                 kind: "DeferStatement",
-                expression: expressionToAst(statement.call)
+                expression: expressionToAst(statement.call, ctx)
             }, statement.span);
         case "GoStmt":
             return withSpan({
                 kind: "GoStatement",
-                call: expressionToAst(statement.call)
+                call: expressionToAst(statement.call, ctx)
             }, statement.span);
         case "SendStmt":
             return withSpan({
                 kind: "SendStatement",
-                channel: expressionToAst(statement.channel),
-                value: expressionToAst(statement.value)
+                channel: expressionToAst(statement.channel, ctx),
+                value: expressionToAst(statement.value, ctx)
             }, statement.span);
         default:
             return expressionStatement(missingExpression(), statement.span);
     }
 }
-function elseBranchToAst(statement) {
+function elseBranchToAst(statement, ctx) {
     if (statement.kind === "IfStmt")
-        return statementToAst(statement);
+        return statementToAst(statement, ctx);
     if (statement.kind === "BlockStmt")
-        return blockToAst(statement);
-    return { kind: "BlockStatement", statements: [statementToAst(statement)] };
+        return blockToAst(statement, ctx);
+    return { kind: "BlockStatement", statements: [statementToAst(statement, ctx)] };
 }
 function branchToAst(statement) {
     const branch = statement.token === TokenKind.Break
@@ -351,63 +352,63 @@ function branchToAst(statement) {
         ...(statement.label ? { label: statement.label.name } : {})
     }, statement.span);
 }
-function rangeStmtToAst(statement) {
+function rangeStmtToAst(statement, ctx) {
     return withSpan({
         kind: "ForStatement",
         range: {
             ...(statement.key?.kind === "Ident" ? { keyName: statement.key.name } : {}),
-            ...(statement.key && statement.key.kind !== "Ident" ? { keyTarget: expressionToAst(statement.key) } : {}),
+            ...(statement.key && statement.key.kind !== "Ident" ? { keyTarget: expressionToAst(statement.key, ctx) } : {}),
             ...(statement.value?.kind === "Ident" ? { valueName: statement.value.name } : {}),
-            ...(statement.value && statement.value.kind !== "Ident" ? { valueTarget: expressionToAst(statement.value) } : {}),
+            ...(statement.value && statement.value.kind !== "Ident" ? { valueTarget: expressionToAst(statement.value, ctx) } : {}),
             define: statement.token === TokenKind.Define,
-            source: expressionToAst(statement.source)
+            source: expressionToAst(statement.source, ctx)
         },
-        body: blockToAst(statement.body)
+        body: blockToAst(statement.body, ctx)
     }, statement.span);
 }
-function switchStmtToAst(statement) {
+function switchStmtToAst(statement, ctx) {
     return withSpan({
         kind: "SwitchStatement",
-        ...(statement.init ? { init: statementToAst(statement.init) } : {}),
-        ...(statement.tag ? { expression: expressionToAst(statement.tag) } : {}),
-        clauses: statement.body.map((clause) => caseClauseToAst(clause, false))
+        ...(statement.init ? { init: statementToAst(statement.init, ctx) } : {}),
+        ...(statement.tag ? { expression: expressionToAst(statement.tag, ctx) } : {}),
+        clauses: statement.body.map((clause) => caseClauseToAst(clause, false, ctx))
     }, statement.span);
 }
-function typeSwitchStmtToAst(statement) {
+function typeSwitchStmtToAst(statement, ctx) {
     return withSpan({
         kind: "SwitchStatement",
-        ...(statement.init ? { init: statementToAst(statement.init) } : {}),
-        typeSwitch: typeSwitchGuardToAst(statement.assign),
-        clauses: statement.body.map((clause) => caseClauseToAst(clause, true))
+        ...(statement.init ? { init: statementToAst(statement.init, ctx) } : {}),
+        typeSwitch: typeSwitchGuardToAst(statement.assign, ctx),
+        clauses: statement.body.map((clause) => caseClauseToAst(clause, true, ctx))
     }, statement.span);
 }
-function selectStmtToAst(statement) {
+function selectStmtToAst(statement, ctx) {
     return withSpan({
         kind: "SelectStatement",
-        clauses: statement.body.map(commClauseToAst)
+        clauses: statement.body.map((clause) => commClauseToAst(clause, ctx))
     }, statement.span);
 }
-function commClauseToAst(clause) {
+function commClauseToAst(clause, ctx) {
     return {
         kind: "CommClause",
-        ...(clause.comm ? { comm: statementToAst(clause.comm) } : {}),
+        ...(clause.comm ? { comm: statementToAst(clause.comm, ctx) } : {}),
         default: clause.default,
-        statements: clause.body.map(statementToAst)
+        statements: clause.body.map((statement) => statementToAst(statement, ctx))
     };
 }
-function typeSwitchGuardToAst(statement) {
+function typeSwitchGuardToAst(statement, ctx) {
     if (statement.kind === "AssignStmt") {
         const assertion = statement.rhs[0];
         return {
             ...(statement.lhs[0]?.kind === "Ident" ? { name: statement.lhs[0].name } : {}),
             define: statement.token === TokenKind.Define,
-            expression: assertion?.kind === "TypeAssertExpr" ? expressionToAst(assertion.object) : missingExpression()
+            expression: assertion?.kind === "TypeAssertExpr" ? expressionToAst(assertion.object, ctx) : missingExpression()
         };
     }
     if (statement.kind === "ExprStmt" && statement.expr.kind === "TypeAssertExpr") {
         return {
             define: false,
-            expression: expressionToAst(statement.expr.object)
+            expression: expressionToAst(statement.expr.object, ctx)
         };
     }
     return {
@@ -415,13 +416,13 @@ function typeSwitchGuardToAst(statement) {
         expression: missingExpression()
     };
 }
-function caseClauseToAst(clause, typeSwitch) {
+function caseClauseToAst(clause, typeSwitch, ctx) {
     return {
         kind: "SwitchClause",
-        values: typeSwitch ? [] : clause.list.map(expressionToAst),
+        values: typeSwitch ? [] : clause.list.map((expression) => expressionToAst(expression, ctx)),
         ...(typeSwitch ? { typeValues: clause.list.map(typeNode) } : {}),
         default: clause.default,
-        statements: clause.body.map(statementToAst)
+        statements: clause.body.map((statement) => statementToAst(statement, ctx))
     };
 }
 function expressionStatement(expression, span) {
@@ -430,109 +431,116 @@ function expressionStatement(expression, span) {
         expression
     }, span);
 }
-function expressionToAst(expr) {
+function expressionToAst(expr, ctx) {
     switch (expr.kind) {
         case "Ident":
             if (expr.name === "true" || expr.name === "false")
-                return literal(expr.name === "true", "bool", expr.name, expr.span);
+                return annotateExpression(ctx, expr, literal(expr.name === "true", "bool", expr.name, expr.span));
             if (expr.name === "nil")
-                return literal(null, "nil", "nil", expr.span);
-            return withSpan({ kind: "Identifier", name: expr.name }, expr.span);
+                return annotateExpression(ctx, expr, literal(null, "nil", "nil", expr.span));
+            return annotateExpression(ctx, expr, withSpan({ kind: "Identifier", name: expr.name }, expr.span));
         case "BasicLit":
-            return basicLitToAst(expr);
+            return annotateExpression(ctx, expr, basicLitToAst(expr));
         case "FuncLit":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "FunctionLiteralExpression",
                 signature: signatureToAst(expr.type),
-                body: blockToAst(expr.body),
+                body: blockToAst(expr.body, ctx),
                 source: formatNode(expr).trimEnd()
-            }, expr.span);
+            }, expr.span));
         case "CompositeLit":
-            return compositeLitToAst(expr);
+            return annotateExpression(ctx, expr, compositeLitToAst(expr, undefined, ctx));
         case "ParenExpr":
-            return expressionToAst(expr.expr);
+            return expressionToAst(expr.expr, ctx);
         case "SelectorExpr":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "SelectorExpression",
-                object: expressionToAst(expr.object),
+                object: expressionToAst(expr.object, ctx),
                 field: expr.selector.name
-            }, expr.span);
+            }, expr.span));
         case "CellRefExpr":
-            return cellRefToSelector(expr);
+            return annotateExpression(ctx, expr, cellRefToSelector(expr));
         case "RangeRefExpr":
-            return rangeRefToAst(expr);
+            return annotateExpression(ctx, expr, rangeRefToAst(expr));
         case "IndexExpr":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "IndexExpression",
-                object: expressionToAst(expr.object),
-                index: expressionToAst(expr.index)
-            }, expr.span);
+                object: expressionToAst(expr.object, ctx),
+                index: expressionToAst(expr.index, ctx)
+            }, expr.span));
         case "IndexListExpr":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "IndexExpression",
-                object: expressionToAst(expr.object),
+                object: expressionToAst(expr.object, ctx),
                 index: withSpan({
                     kind: "TypeExpression",
                     type: { text: expr.indices.map(typeText).join(", ") }
                 }, expr.span)
-            }, expr.span);
+            }, expr.span));
         case "SliceExpr":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "SliceExpression",
-                object: expressionToAst(expr.object),
-                ...(expr.low ? { start: expressionToAst(expr.low) } : {}),
-                ...(expr.high ? { end: expressionToAst(expr.high) } : {}),
-                ...(expr.max ? { max: expressionToAst(expr.max) } : {})
-            }, expr.span);
+                object: expressionToAst(expr.object, ctx),
+                ...(expr.low ? { start: expressionToAst(expr.low, ctx) } : {}),
+                ...(expr.high ? { end: expressionToAst(expr.high, ctx) } : {}),
+                ...(expr.max ? { max: expressionToAst(expr.max, ctx) } : {})
+            }, expr.span));
         case "TypeAssertExpr":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "TypeAssertionExpression",
-                expression: expressionToAst(expr.object),
+                expression: expressionToAst(expr.object, ctx),
                 type: expr.type ? typeNode(expr.type) : { text: "type" }
-            }, expr.span);
+            }, expr.span));
         case "CallExpr":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "CallExpression",
-                callee: expressionToAst(expr.fun),
-                args: expr.args.map(expressionToAst),
+                callee: expressionToAst(expr.fun, ctx),
+                args: expr.args.map((arg) => expressionToAst(arg, ctx)),
                 spreadLast: expr.ellipsis
-            }, expr.span);
+            }, expr.span));
         case "StarExpr":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "UnaryExpression",
                 operator: "*",
-                operand: expressionToAst(expr.expr)
-            }, expr.span);
+                operand: expressionToAst(expr.expr, ctx)
+            }, expr.span));
         case "UnaryExpr":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "UnaryExpression",
                 operator: unaryOperator(expr.op),
-                operand: expressionToAst(expr.expr)
-            }, expr.span);
+                operand: expressionToAst(expr.expr, ctx)
+            }, expr.span));
         case "BinaryExpr":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "BinaryExpression",
                 operator: binaryOperator(expr.op),
-                left: expressionToAst(expr.left),
-                right: expressionToAst(expr.right)
-            }, expr.span);
+                left: expressionToAst(expr.left, ctx),
+                right: expressionToAst(expr.right, ctx)
+            }, expr.span));
         case "ArrayType":
         case "MapType":
         case "StructType":
         case "InterfaceType":
         case "FuncType":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "TypeExpression",
                 type: typeNode(expr)
-            }, expr.span);
+            }, expr.span));
         case "ChanType":
-            return withSpan({
+            return annotateExpression(ctx, expr, withSpan({
                 kind: "TypeExpression",
                 type: typeNode(expr)
-            }, expr.span);
+            }, expr.span));
         default:
-            return missingExpression(expr.span);
+            return annotateExpression(ctx, expr, missingExpression(expr.span));
     }
+}
+function annotateExpression(ctx, source, expression) {
+    const type = ctx.info?.TypeOf(source);
+    if (!type)
+        return expression;
+    expression.typeText = type.String();
+    return expression;
 }
 function basicLitToAst(expr) {
     if (expr.token === TokenKind.IntLiteral)
@@ -556,59 +564,59 @@ function literal(value, literalKind, raw, span) {
         raw
     }, span);
 }
-function compositeLitToAst(expr, expectedType) {
+function compositeLitToAst(expr, expectedType, ctx) {
     const type = expr.type ?? expectedType;
     if (type?.kind === "MapType") {
         return withSpan({
             kind: "MapLiteralExpression",
             keyType: typeNode(type.key),
             valueType: typeNode(type.value),
-            entries: expr.elements.flatMap((element) => mapEntryToAst(element, type.key, type.value))
+            entries: expr.elements.flatMap((element) => mapEntryToAst(element, type.key, type.value, ctx))
         }, expr.span);
     }
     if (type?.kind === "ArrayType") {
         return withSpan({
             kind: "ArrayLiteralExpression",
             type: typeNode(type),
-            elements: expr.elements.map((element) => arrayElementToAst(element, type.element))
+            elements: expr.elements.map((element) => arrayElementToAst(element, type.element, ctx))
         }, expr.span);
     }
     const structFieldTypes = type?.kind === "StructType" ? expandedStructFieldTypes(type) : [];
     return withSpan({
         kind: "StructLiteralExpression",
         typeName: type ? typeText(type) : "<missing>",
-        fields: expr.elements.map((element, index) => structFieldToAst(element, structFieldTypeForElement(element, index, structFieldTypes)))
+        fields: expr.elements.map((element, index) => structFieldToAst(element, structFieldTypeForElement(element, index, structFieldTypes), ctx))
     }, expr.span);
 }
-function mapEntryToAst(expr, keyType, valueType) {
+function mapEntryToAst(expr, keyType, valueType, ctx) {
     if (expr.kind !== "KeyValueExpr")
         return [];
-    return [{ key: expressionToAstWithExpectedType(expr.key, keyType), value: expressionToAstWithExpectedType(expr.value, valueType) }];
+    return [{ key: expressionToAstWithExpectedType(expr.key, keyType, ctx), value: expressionToAstWithExpectedType(expr.value, valueType, ctx) }];
 }
-function structFieldToAst(expr, expectedType) {
+function structFieldToAst(expr, expectedType, ctx) {
     if (expr.kind === "KeyValueExpr") {
         return {
             ...(expr.key.kind === "Ident" ? { name: expr.key.name } : {}),
-            key: expressionToAst(expr.key),
-            value: expressionToAstWithExpectedType(expr.value, expectedType)
+            key: expressionToAst(expr.key, ctx),
+            value: expressionToAstWithExpectedType(expr.value, expectedType, ctx)
         };
     }
-    return { value: expressionToAstWithExpectedType(expr, expectedType) };
+    return { value: expressionToAstWithExpectedType(expr, expectedType, ctx) };
 }
-function elementValueToAst(expr, expectedType) {
-    return expr.kind === "KeyValueExpr" ? expressionToAstWithExpectedType(expr.value, expectedType) : expressionToAstWithExpectedType(expr, expectedType);
+function elementValueToAst(expr, expectedType, ctx) {
+    return expr.kind === "KeyValueExpr" ? expressionToAstWithExpectedType(expr.value, expectedType, ctx) : expressionToAstWithExpectedType(expr, expectedType, ctx);
 }
-function arrayElementToAst(expr, expectedType) {
+function arrayElementToAst(expr, expectedType, ctx) {
     if (expr.kind === "KeyValueExpr") {
         return {
-            key: expressionToAst(expr.key),
-            value: expressionToAstWithExpectedType(expr.value, expectedType)
+            key: expressionToAst(expr.key, ctx),
+            value: expressionToAstWithExpectedType(expr.value, expectedType, ctx)
         };
     }
-    return { value: expressionToAstWithExpectedType(expr, expectedType) };
+    return { value: expressionToAstWithExpectedType(expr, expectedType, ctx) };
 }
-function expressionToAstWithExpectedType(expr, expectedType) {
-    return expr.kind === "CompositeLit" && !expr.type ? compositeLitToAst(expr, expectedType) : expressionToAst(expr);
+function expressionToAstWithExpectedType(expr, expectedType, ctx) {
+    return expr.kind === "CompositeLit" && !expr.type ? annotateExpression(ctx, expr, compositeLitToAst(expr, expectedType, ctx)) : expressionToAst(expr, ctx);
 }
 function expandedStructFieldTypes(type) {
     const fields = [];

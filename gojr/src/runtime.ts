@@ -1834,7 +1834,8 @@ async function generatedChanRecv(
 }
 
 function generatedDefer(ctx: GoJuniorGeneratedPackageContext | EvaluationContext, callback: () => MaybePromise<RuntimeValue>): void {
-  generatedEvaluationContext(ctx).pushDefer(callback);
+  const context = generatedEvaluationContext(ctx);
+  context.pushDefer(async () => await context.functionCallAsync(async () => await callback()));
 }
 
 async function generatedDeferScope<T>(

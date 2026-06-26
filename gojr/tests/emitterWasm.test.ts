@@ -247,6 +247,65 @@ func Noop() {}
     expect(await (pkg.Noop as () => Promise<null>)()).toBeNull();
   });
 
+  test("lowers Stage 3 concrete expressions without interpreter expression calls", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage3expr",
+      artifactRoot: "/tmp/gojr-stage3expr",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage3expr.go",
+        source: `package stage3expr
+
+type Point struct {
+	X int64
+	Name string
+}
+
+var Numbers = []int64{4, 5, 6}
+var Labels = map[string]int64{"a": 11}
+var P = Point{X: 7, Name: "ada"}
+
+func Mul(a, b int64) int64 { return a * b }
+func Mix(a, b int64) int64 { return (a + b) * 2 - 3 }
+func Cat(a, b string) string { return a + ":" + b }
+func Pick(i int) int64 { return Numbers[i] }
+func Tail() []int64 { return Numbers[1:] }
+func ByteAt(s string, i int) uint8 { return s[i] }
+func Lookup() int64 { return Labels["a"] }
+func Missing() int64 { return Labels["missing"] }
+func Field() string { return P.Name }
+func Convert(a int64) float64 { return float64(a) + 0.5 }
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage3expr/example.com/stage3expr.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.members.map((member) => member.name)).toEqual(["__.PKGDEF", "_gojr.js"]);
+    expect(archive?.javascript).not.toContain("evaluatePackageArtifact");
+    expect(archive?.javascript).not.toContain("runtime.ast");
+    expect(archive?.javascript).not.toContain("runtime.binary");
+    expect(archive?.javascript).toContain("=> ((");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.Mul as (a: bigint, b: bigint) => Promise<bigint>)(6n, 7n)).toBe(42n);
+    expect(await (pkg.Mix as (a: bigint, b: bigint) => Promise<bigint>)(3n, 4n)).toBe(11n);
+    expect(await (pkg.Cat as (a: string, b: string) => Promise<string>)("go", "jr")).toBe("go:jr");
+    expect(await (pkg.Pick as (i: bigint) => Promise<bigint>)(2n)).toBe(6n);
+    expect(await (pkg.Tail as () => Promise<bigint[]>)()).toEqual([5n, 6n]);
+    expect(await (pkg.ByteAt as (s: string, i: bigint) => Promise<bigint>)("Aπ", 1n)).toBe(207n);
+    expect(await (pkg.Lookup as () => Promise<bigint>)()).toBe(11n);
+    expect(await (pkg.Missing as () => Promise<bigint>)()).toBe(0n);
+    expect(await (pkg.Field as () => Promise<string>)()).toBe("ada");
+    expect(await (pkg.Convert as (a: bigint) => Promise<number>)(4n)).toBe(4.5);
+  });
+
   test("reports unsupported Stage 1 lowering as GOJR_EMIT001", () => {
     const result = buildPackages({
       importPath: "example.com/stage1bad",
@@ -254,7 +313,7 @@ func Noop() {}
       backend: GOJR_STAGE1_BACKEND,
       files: [{
         filename: "bad.go",
-        source: "package stage1bad\n\nfunc Mul(a, b int64) int64 { return a * b }\n"
+        source: "package stage1bad\n\nfunc Hard(a []int64) []int64 { return a[0:1:1] }\n"
       }]
     }, new MemoryArtifactStore());
 

@@ -83,7 +83,7 @@ function makeMatchers<T>(actual: T, negate: boolean): Matchers<T> {
       return makeMatchers(actual, !negate);
     },
     toBe(expected) {
-      check(Object.is(actual, expected), `expected ${String(actual)} ${negate ? "not " : ""}to be ${String(expected)}`);
+      check(Object.is(actual, expected), `expected ${formatValue(actual)} ${negate ? "not " : ""}to be ${formatValue(expected)}`);
     },
     toEqual(expected) {
       if (containsExpectedAny(expected)) {
@@ -100,7 +100,7 @@ function makeMatchers<T>(actual: T, negate: boolean): Matchers<T> {
       const passed = typeof actual === "string"
         ? actual.includes(String(expected))
         : Array.isArray(actual) && actual.includes(expected);
-      check(passed, `expected ${String(actual)} ${negate ? "not " : ""}to contain ${String(expected)}`);
+      check(passed, `expected ${formatValue(actual)} ${negate ? "not " : ""}to contain ${formatValue(expected)}`);
     },
     toHaveLength(expected) {
       const length = (actual as { length?: unknown }).length;
@@ -122,10 +122,10 @@ function makeMatchers<T>(actual: T, negate: boolean): Matchers<T> {
       check(actual instanceof expected, `expected value ${negate ? "not " : ""}to be instance of ${expected.name}`);
     },
     toBeGreaterThan(expected) {
-      check(typeof actual === "number" && actual > expected, `expected ${String(actual)} ${negate ? "not " : ""}to be greater than ${expected}`);
+      check(typeof actual === "number" && actual > expected, `expected ${formatValue(actual)} ${negate ? "not " : ""}to be greater than ${expected}`);
     },
     toBeNaN() {
-      check(typeof actual === "number" && Number.isNaN(actual), `expected ${String(actual)} ${negate ? "not " : ""}to be NaN`);
+      check(typeof actual === "number" && Number.isNaN(actual), `expected ${formatValue(actual)} ${negate ? "not " : ""}to be NaN`);
     },
     toThrow(expected) {
       if (typeof actual !== "function") fail("expected value to be a function");
@@ -139,6 +139,14 @@ function makeMatchers<T>(actual: T, negate: boolean): Matchers<T> {
       check(passed, `expected function ${negate ? "not " : ""}to throw`);
     }
   };
+}
+
+function formatValue(value: unknown): string {
+  try {
+    return String(value);
+  } catch {
+    return Object.prototype.toString.call(value);
+  }
 }
 
 function containsExpectedAny(value: unknown): boolean {

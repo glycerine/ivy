@@ -1161,6 +1161,162 @@ export class RuntimeChannel {
         return this.channel;
     }
 }
+export const gojrGeneratedRuntimeApi = {
+    createPackageContext: createGeneratedPackageContext,
+    finishPackage: finishGeneratedPackage,
+    declarePackageVar: declareGeneratedPackageVar,
+    zeroValue: generatedZeroValue,
+    makeMap: generatedMakeMap,
+    mapGet: generatedMapGet,
+    mapGetOk: generatedMapGetOk,
+    mapSet: generatedMapSet,
+    mapDelete: generatedMapDelete,
+    makeSlice: generatedMakeSlice,
+    sliceGet: generatedSliceGet,
+    sliceSet: generatedSliceSet,
+    sliceRange: generatedSliceRange,
+    append: generatedAppend,
+    copy: generatedCopy,
+    newPointer: generatedNewPointer,
+    makeChan: generatedMakeChan,
+    chanSend: generatedChanSend,
+    chanRecv: generatedChanRecv,
+    defer: generatedDefer,
+    deferScope: generatedDeferScope,
+    panic: generatedPanic,
+    recover: generatedRecover,
+    toInterface: generatedToInterface
+};
+function createGeneratedPackageContext(artifact, options = {}) {
+    const { context: providedContext, importsByPath: providedImportsByPath, ...evaluationOptionsBase } = options;
+    const importsByPath = providedImportsByPath ?? evaluationOptionsBase.packages ?? {};
+    const evaluationOptions = {
+        ...evaluationOptionsBase,
+        packages: importsByPath
+    };
+    if (artifact.importPath !== undefined)
+        evaluationOptions.importPath = artifact.importPath;
+    if (artifact.packageName !== undefined)
+        evaluationOptions.packageName = artifact.packageName;
+    const context = providedContext ?? new EvaluationContext(evaluationOptions);
+    return {
+        artifact,
+        package: Object.create(null),
+        importsByPath,
+        output: context.output,
+        context
+    };
+}
+function finishGeneratedPackage(ctx) {
+    return {
+        diagnostics: [],
+        output: ctx.output,
+        package: ctx.package,
+        context: ctx.context
+    };
+}
+function declareGeneratedPackageVar(ctx, name, value, typeText) {
+    const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, ctx.context) : value;
+    ctx.package[name] = stored;
+    return stored;
+}
+function generatedZeroValue(typeText, ctx) {
+    return defaultValueForTypeText(typeText, generatedEvaluationContext(ctx));
+}
+function generatedMakeMap(keyType, valueType, entries = [], ctx) {
+    const map = new RuntimeMap(keyType, valueType, generatedEvaluationContext(ctx));
+    for (const [key, value] of entries)
+        map.set(key, value);
+    return map;
+}
+function generatedMapGet(map, key) {
+    return map.get(key);
+}
+function generatedMapGetOk(map, key) {
+    return map.getWithPresence(key);
+}
+function generatedMapSet(map, key, value) {
+    map.set(key, value);
+}
+function generatedMapDelete(map, key) {
+    map.delete(key);
+}
+function generatedMakeSlice(elementType, length, capacity = length, ctx) {
+    if (!Number.isInteger(length) || length < 0)
+        throw new GoJuniorRuntimeError("slice length must be non-negative");
+    if (!Number.isInteger(capacity) || capacity < length)
+        throw new GoJuniorRuntimeError("slice capacity must be at least length");
+    const context = generatedEvaluationContext(ctx);
+    const values = Array.from({ length }, () => defaultValueForTypeText(elementType, context));
+    markArrayType(values, `[]${elementType}`);
+    arrayCapacities.set(values, capacity);
+    return values;
+}
+function generatedSliceGet(slice, index) {
+    return getArrayElement(slice, index);
+}
+function generatedSliceSet(slice, index, value) {
+    setArrayElement(slice, index, value);
+}
+function generatedSliceRange(slice, low = 0, high = slice.length, max) {
+    if (!Number.isInteger(low) || !Number.isInteger(high) || low < 0 || high < low) {
+        throw new GoJuniorRuntimeError("invalid slice bounds");
+    }
+    const capacity = sliceCapacity(slice);
+    const upper = max ?? high;
+    if (!Number.isInteger(upper) || upper < high || upper > capacity)
+        throw new GoJuniorRuntimeError("invalid slice capacity bound");
+    const out = Array.from({ length: high - low }, (_item, index) => getArrayElement(slice, low + index));
+    const typeText = arrayTypeTexts.get(slice);
+    if (typeText)
+        markArrayType(out, typeText);
+    arrayCapacities.set(out, upper - low);
+    markArrayView(out, slice, low);
+    return out;
+}
+function generatedAppend(slice, ...values) {
+    return appendValues(slice, values);
+}
+function generatedCopy(dst, src) {
+    return copyValues(dst, src);
+}
+function generatedNewPointer(typeName, get, set, identity) {
+    return new RuntimePointer(typeName, get, set, identity);
+}
+function generatedMakeChan(elementType, capacity = 0, ctx) {
+    return new RuntimeChannel(elementType, capacity, generatedEvaluationContext(ctx));
+}
+async function generatedChanSend(_ctx, channel, value) {
+    await channel.sendAsync(value);
+}
+async function generatedChanRecv(_ctx, channel) {
+    return await channel.receiveAsync();
+}
+function generatedDefer(ctx, callback) {
+    const context = generatedEvaluationContext(ctx);
+    context.pushDefer(async () => await context.functionCallAsync(async () => await callback()));
+}
+async function generatedDeferScope(ctx, body) {
+    return await generatedEvaluationContext(ctx).deferScopeAsync(body);
+}
+function generatedPanic(value) {
+    throw new GoJuniorPanic(value);
+}
+function generatedRecover(ctx) {
+    return generatedEvaluationContext(ctx).recover();
+}
+function generatedToInterface(value, interfaceTypeText, ctx, dynamicType) {
+    const context = generatedEvaluationContext(ctx);
+    const target = interfaceTarget(interfaceTypeText, context);
+    if (!target)
+        throw new GoJuniorRuntimeError(`${interfaceTypeText} is not an interface type`);
+    return prepareInterfaceAssignment(value, interfaceTypeText, target, "interface assignment", context, dynamicType);
+}
+function generatedEvaluationContext(ctx) {
+    if (!ctx)
+        return undefined;
+    return ctx instanceof EvaluationContext ? ctx : ctx.context;
+}
 export async function evaluateSource(source, options = {}) {
     return evaluateSourceFiles([sourceFileFromSource(source, options)], options);
 }

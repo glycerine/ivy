@@ -287,27 +287,6 @@ export type {
   SpreadsheetValue
 } from "./spreadsheet.js";
 export type { Diagnostic, SourceFile, SourceSpan } from "./diagnostics.js";
-export {
-  EvaluationContext,
-  GoJuniorPanic,
-  GoJuniorRuntimeError,
-  RuntimeChannel,
-  RuntimeInterfaceValue,
-  RuntimeMap,
-  RuntimeNamedValue,
-  RuntimePointer,
-  RuntimeStruct,
-  RuntimeTypedNilValue,
-  gojrGeneratedRuntimeApi
-} from "./runtime.js";
-export type {
-  GoJuniorGeneratedPackageArtifact,
-  GoJuniorGeneratedPackageContext,
-  GoJuniorGeneratedPackageContextOptions,
-  GoJuniorGeneratedRuntimeApi,
-  RuntimeObject,
-  RuntimeValue
-} from "./runtime.js";
 export type { ImportDecl, ProgramAst, ProgramKind } from "./ast.js";
 export { childNodes, ident, parseCellAddress, walk } from "./front/ast.js";
 export {
@@ -356,6 +335,7 @@ export {
 } from "./go/format.js";
 export { parseRuntimeJson, parseSheetJson, parseSheetsJson } from "./jsonInput.js";
 export {
+  EvaluationContext,
   evaluateProgram,
   evaluateSource,
   formatReplValue,
@@ -366,6 +346,12 @@ export {
   GoJuniorRuntimeError,
   RuntimeMap,
   RuntimeChannel,
+  RuntimeInterfaceValue,
+  RuntimeNamedValue,
+  RuntimePointer,
+  RuntimeStruct,
+  RuntimeTypedNilValue,
+  gojrGeneratedRuntimeApi,
   evaluatePackageArtifact,
   evaluatePackageSourceFiles,
   evaluateSourcePackageGraph,
@@ -379,6 +365,10 @@ export {
 export type {
   EvaluationOptions,
   EvaluationResult,
+  GoJuniorGeneratedPackageArtifact,
+  GoJuniorGeneratedPackageContext,
+  GoJuniorGeneratedPackageContextOptions,
+  GoJuniorGeneratedRuntimeApi,
   GoJuniorFunction,
   PackageEvaluationOptions,
   PackageEvaluationResult,

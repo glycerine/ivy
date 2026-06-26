@@ -457,7 +457,7 @@ class PackageGraphBuilder {
                         hash: stableHash(file.source)
                     }))
                 });
-                const ast = frontFilesToProgramAst(parsed.files, [], []);
+                const ast = frontFilesToProgramAst(parsed.files, [], [], "info" in checked ? checked.info : undefined);
                 const runtimePlan = packageRuntimePlan(importPath, packageName, checked.pkg, "info" in checked ? checked.info.InitOrder ?? [] : []);
                 const artifactSource = this.request.backend === GOJR_STAGE1_BACKEND
                     ? this.stage1ArtifactSource(pkgdef, ast)

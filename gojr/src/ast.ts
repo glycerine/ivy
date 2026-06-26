@@ -276,12 +276,14 @@ export type Expression =
 export interface IdentifierExpression {
   kind: "Identifier";
   name: string;
+  typeText?: string;
   span?: SourceSpan;
 }
 
 export interface TypeExpression {
   kind: "TypeExpression";
   type: TypeNode;
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -297,6 +299,7 @@ export interface LiteralExpression {
   literalKind: "int" | "float" | "imag" | "rune" | "string" | "bool" | "nil";
   value: LiteralValue;
   raw: string;
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -305,6 +308,7 @@ export interface FunctionLiteralExpression {
   signature: Signature;
   body: BlockStatement;
   source?: string;
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -312,6 +316,7 @@ export interface ArrayLiteralExpression {
   kind: "ArrayLiteralExpression";
   type: TypeNode;
   elements: ArrayLiteralElement[];
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -330,6 +335,7 @@ export interface StructLiteralExpression {
   kind: "StructLiteralExpression";
   typeName: string;
   fields: StructLiteralField[];
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -343,6 +349,7 @@ export interface MapLiteralExpression {
   keyType: TypeNode;
   valueType: TypeNode;
   entries: MapEntryExpression[];
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -350,6 +357,7 @@ export interface UnaryExpression {
   kind: "UnaryExpression";
   operator: "+" | "-" | "!" | "^" | "&" | "*" | "<-";
   operand: Expression;
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -358,6 +366,7 @@ export interface BinaryExpression {
   operator: "||" | "&&" | "==" | "!=" | "<" | "<=" | ">" | ">=" | "+" | "-" | "|" | "^" | "*" | "/" | "%" | "<<" | ">>" | "&" | "&^";
   left: Expression;
   right: Expression;
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -365,6 +374,7 @@ export interface TypeAssertionExpression {
   kind: "TypeAssertionExpression";
   expression: Expression;
   type: TypeNode;
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -372,6 +382,7 @@ export interface SelectorExpression {
   kind: "SelectorExpression";
   object: Expression;
   field: string;
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -380,6 +391,7 @@ export interface CallExpression {
   callee: Expression;
   args: Expression[];
   spreadLast: boolean;
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -387,6 +399,7 @@ export interface IndexExpression {
   kind: "IndexExpression";
   object: Expression;
   index: Expression;
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -396,6 +409,7 @@ export interface SliceExpression {
   start?: Expression;
   end?: Expression;
   max?: Expression;
+  typeText?: string;
   span?: SourceSpan;
 }
 
@@ -403,5 +417,6 @@ export interface SpreadsheetRangeExpression {
   kind: "SpreadsheetRangeExpression";
   start: SelectorExpression;
   endCell: string;
+  typeText?: string;
   span?: SourceSpan;
 }

@@ -2,15 +2,22 @@ import type {
   ArrayLiteralExpression,
   BinaryExpression,
   BlockStatement,
+  CallExpression,
   ConstDeclStatement,
   DeclarationSpec,
   Expression,
   FunctionDecl,
+  IdentifierExpression,
+  IndexExpression,
   LiteralExpression,
   MapLiteralExpression,
   ProgramAst,
   ReturnStatement,
+  SelectorExpression,
+  SliceExpression,
+  StructLiteralExpression,
   Statement,
+  UnaryExpression,
   VarDeclStatement
 } from "../ast.js";
 import type { GoJuniorPackageExportData } from "../build.js";
@@ -25,6 +32,12 @@ export interface Stage1PackageEmitResult {
   javascript: string;
   wasmBase64?: string;
 }
+
+interface ExpressionEmitEnv {
+  locals: Map<string, string>;
+}
+
+const emptyExpressionEnv: ExpressionEmitEnv = { locals: new Map() };
 
 export function emitStage1Package(artifact: GoJuniorPackageExportData, ast: ProgramAst): Stage1PackageEmitResult {
   const ctx = new EmitterContext({ artifact });
@@ -89,18 +102,30 @@ function emitFunction(ctx: EmitterContext, fn: FunctionDecl): string[] {
     return [`  pkg[${JSON.stringify(fn.name)}] = async () => null;`];
   }
   if (statements.length === 1 && statements[0]?.kind === "ReturnStatement") {
-    const returned = returnLiteralExpression(ctx, statements[0]);
-    if (returned) return [`  pkg[${JSON.stringify(fn.name)}] = async () => ${returned};`];
+    const parameters = functionParameterBindings(fn);
+    const returned = returnExpression(ctx, statements[0], parameters.env);
+    if (returned) return [`  pkg[${JSON.stringify(fn.name)}] = async (${parameters.params.join(", ")}) => ${returned};`];
   }
 
   ctx.emitError(`unsupported Stage 1 function body for ${fn.name}`);
   return [];
 }
 
-function returnLiteralExpression(ctx: EmitterContext, statement: ReturnStatement): string | undefined {
+function returnExpression(ctx: EmitterContext, statement: ReturnStatement, env: ExpressionEmitEnv): string | undefined {
   if (statement.values.length === 0) return "null";
   if (statement.values.length !== 1) return undefined;
-  return expressionToJs(ctx, statement.values[0]);
+  return expressionToJs(ctx, statement.values[0], env);
+}
+
+function functionParameterBindings(fn: FunctionDecl): { params: string[]; env: ExpressionEmitEnv } {
+  const locals = new Map<string, string>();
+  const params = fn.signature.parameters.map((parameter, index) => {
+    const goName = parameter.name && parameter.name !== "_" ? parameter.name : `__gojrArg${index}`;
+    const jsName = safeLocalName(goName, index);
+    if (parameter.name && parameter.name !== "_") locals.set(parameter.name, jsName);
+    return jsName;
+  });
+  return { params, env: { locals } };
 }
 
 function isI64AddFunction(fn: FunctionDecl): boolean {
@@ -125,19 +150,43 @@ function isIdentifier(expression: Expression, name: string | undefined): boolean
   return Boolean(name && expression.kind === "Identifier" && expression.name === name);
 }
 
-function expressionToJs(ctx: EmitterContext, expression: Expression | undefined): string | undefined {
+function expressionToJs(ctx: EmitterContext, expression: Expression | undefined, env: ExpressionEmitEnv = emptyExpressionEnv): string | undefined {
   if (!expression) return undefined;
   switch (expression.kind) {
+    case "Identifier":
+      return identifierToJs(expression, env);
     case "Literal":
       return literalToJs(expression);
     case "ArrayLiteralExpression":
-      return arrayLiteralToJs(ctx, expression);
+      return arrayLiteralToJs(ctx, expression, env);
+    case "StructLiteralExpression":
+      return structLiteralToJs(ctx, expression, env);
     case "MapLiteralExpression":
-      return mapLiteralToJs(ctx, expression);
+      return mapLiteralToJs(ctx, expression, env);
+    case "UnaryExpression":
+      return unaryExpressionToJs(ctx, expression, env);
+    case "BinaryExpression":
+      return binaryExpressionToJs(ctx, expression, env);
+    case "SelectorExpression":
+      return selectorExpressionToJs(ctx, expression, env);
+    case "CallExpression":
+      return callExpressionToJs(ctx, expression, env);
+    case "IndexExpression":
+      return indexExpressionToJs(ctx, expression, env);
+    case "SliceExpression":
+      return sliceExpressionToJs(ctx, expression, env);
+    case "TypeAssertionExpression":
+      return typeAssertionExpressionToJs(ctx, expression);
     default:
-      ctx.emitError(`unsupported Stage 1 expression ${expression.kind}`);
+      ctx.emitError(`unsupported Stage 3 expression ${expression.kind}`);
       return undefined;
   }
+}
+
+function identifierToJs(expression: IdentifierExpression, env: ExpressionEmitEnv): string {
+  const local = env.locals.get(expression.name);
+  if (local) return local;
+  return `pkg[${JSON.stringify(expression.name)}]`;
 }
 
 function literalToJs(expression: LiteralExpression): string | undefined {
@@ -160,8 +209,12 @@ function literalToJs(expression: LiteralExpression): string | undefined {
   }
 }
 
-function arrayLiteralToJs(ctx: EmitterContext, expression: ArrayLiteralExpression): string | undefined {
-  const values = expression.elements.map((element) => expressionToJs(ctx, element.value));
+function arrayLiteralToJs(ctx: EmitterContext, expression: ArrayLiteralExpression, env: ExpressionEmitEnv): string | undefined {
+  if (expression.elements.some((element) => element.key !== undefined)) {
+    ctx.emitError("unsupported Stage 3 keyed array literal");
+    return undefined;
+  }
+  const values = expression.elements.map((element) => expressionToJs(ctx, element.value, env));
   if (values.some((value) => value === undefined)) return undefined;
   const rendered = values.filter((value): value is string => value !== undefined);
   if (isByteSliceType(expression.type.text)) {
@@ -175,19 +228,132 @@ function arrayLiteralToJs(ctx: EmitterContext, expression: ArrayLiteralExpressio
   return `[${rendered.join(", ")}]`;
 }
 
-function mapLiteralToJs(ctx: EmitterContext, expression: MapLiteralExpression): string | undefined {
-  if (expression.keyType.text !== "string" || !isByteSliceType(expression.valueType.text)) {
-    ctx.emitError(`unsupported Stage 1 map literal map[${expression.keyType.text}]${expression.valueType.text}`);
-    return undefined;
+function structLiteralToJs(ctx: EmitterContext, expression: StructLiteralExpression, env: ExpressionEmitEnv): string | undefined {
+  const fields: string[] = [];
+  for (const field of expression.fields) {
+    if (!field.name) {
+      ctx.emitError(`unsupported Stage 3 unkeyed struct literal ${expression.typeName}`);
+      return undefined;
+    }
+    const value = expressionToJs(ctx, field.value, env);
+    if (!value) return undefined;
+    fields.push(`${JSON.stringify(field.name)}: ${value}`);
   }
+  return `({ ${fields.join(", ")} })`;
+}
+
+function mapLiteralToJs(ctx: EmitterContext, expression: MapLiteralExpression, env: ExpressionEmitEnv): string | undefined {
   const entries: string[] = [];
   for (const entry of expression.entries) {
-    const key = expressionToJs(ctx, entry.key);
-    const value = expressionToJs(ctx, entry.value);
+    const key = expressionToJs(ctx, entry.key, env);
+    const value = expressionToJs(ctx, entry.value, env);
     if (!key || !value) return undefined;
     entries.push(`[${key}, ${value}]`);
   }
   return `new Map([${entries.join(", ")}])`;
+}
+
+function unaryExpressionToJs(ctx: EmitterContext, expression: UnaryExpression, env: ExpressionEmitEnv): string | undefined {
+  const operand = expressionToJs(ctx, expression.operand, env);
+  if (!operand) return undefined;
+  switch (expression.operator) {
+    case "+":
+      return `(${operand})`;
+    case "-":
+      return `(-(${operand}))`;
+    case "!":
+      return `(!(${operand}))`;
+    case "^":
+      return `(~(${operand}))`;
+    default:
+      ctx.emitError(`unsupported Stage 3 unary operator ${expression.operator}`);
+      return undefined;
+  }
+}
+
+function binaryExpressionToJs(ctx: EmitterContext, expression: BinaryExpression, env: ExpressionEmitEnv): string | undefined {
+  const left = expressionToJs(ctx, expression.left, env);
+  const right = expressionToJs(ctx, expression.right, env);
+  if (!left || !right) return undefined;
+  if (expression.operator === "&&" || expression.operator === "||") return `((${left}) ${expression.operator} (${right}))`;
+  if (expression.operator === "&^") return `((${left}) & ~(${right}))`;
+  const operator = jsBinaryOperator(expression.operator);
+  if (!operator) {
+    ctx.emitError(`unsupported Stage 3 binary operator ${expression.operator}`);
+    return undefined;
+  }
+  return `((${left}) ${operator} (${right}))`;
+}
+
+function selectorExpressionToJs(ctx: EmitterContext, expression: SelectorExpression, env: ExpressionEmitEnv): string | undefined {
+  const object = expressionToJs(ctx, expression.object, env);
+  if (!object) return undefined;
+  return `(${object})[${JSON.stringify(expression.field)}]`;
+}
+
+function callExpressionToJs(ctx: EmitterContext, expression: CallExpression, env: ExpressionEmitEnv): string | undefined {
+  if (expression.spreadLast) {
+    ctx.emitError("unsupported Stage 3 spread call");
+    return undefined;
+  }
+  if (expression.callee.kind === "TypeExpression") return conversionCallToJs(ctx, expression.callee.type.text, expression.args, env);
+  if (expression.callee.kind === "Identifier" && primitiveTypeNames.has(expression.callee.name) && !env.locals.has(expression.callee.name)) {
+    return conversionCallToJs(ctx, expression.callee.name, expression.args, env);
+  }
+  const args = expression.args.map((arg) => expressionToJs(ctx, arg, env));
+  if (args.some((arg) => arg === undefined)) return undefined;
+  const renderedArgs = args.filter((arg): arg is string => arg !== undefined);
+  if (expression.callee.kind === "Identifier" && !env.locals.has(expression.callee.name)) {
+    return `(await pkg[${JSON.stringify(expression.callee.name)}](${renderedArgs.join(", ")}))`;
+  }
+  const callee = expressionToJs(ctx, expression.callee, env);
+  if (!callee) return undefined;
+  return `(await (${callee})(${renderedArgs.join(", ")}))`;
+}
+
+function conversionCallToJs(ctx: EmitterContext, typeText: string, args: Expression[], env: ExpressionEmitEnv): string | undefined {
+  if (args.length !== 1) {
+    ctx.emitError(`unsupported Stage 3 conversion to ${typeText} with ${args.length} arguments`);
+    return undefined;
+  }
+  const value = expressionToJs(ctx, args[0], env);
+  if (!value) return undefined;
+  if (isIntegerType(typeText)) return `BigInt(${value})`;
+  if (isFloatType(typeText)) return `Number(${value})`;
+  if (typeText === "string") return `String(${value})`;
+  ctx.emitError(`unsupported Stage 3 conversion to ${typeText}`);
+  return undefined;
+}
+
+function indexExpressionToJs(ctx: EmitterContext, expression: IndexExpression, env: ExpressionEmitEnv): string | undefined {
+  const object = expressionToJs(ctx, expression.object, env);
+  const index = expressionToJs(ctx, expression.index, env);
+  if (!object || !index) return undefined;
+  const objectType = expression.object.typeText ?? "";
+  if (objectType.startsWith("map[")) {
+    return `((${object}).get(${index}) ?? ${zeroValueForType(expression.typeText) ?? "null"})`;
+  }
+  if (objectType === "string") return `BigInt(__gojrStringByteAt(${object}, Number(${index})))`;
+  return `(${object})[Number(${index})]`;
+}
+
+function sliceExpressionToJs(ctx: EmitterContext, expression: SliceExpression, env: ExpressionEmitEnv): string | undefined {
+  if (expression.max) {
+    ctx.emitError("unsupported Stage 3 three-index slice");
+    return undefined;
+  }
+  const object = expressionToJs(ctx, expression.object, env);
+  const start = expression.start ? expressionToJs(ctx, expression.start, env) : undefined;
+  const end = expression.end ? expressionToJs(ctx, expression.end, env) : undefined;
+  if (!object || (expression.start && !start) || (expression.end && !end)) return undefined;
+  if (!start && !end) return `(${object}).slice()`;
+  if (!end) return `(${object}).slice(Number(${start}))`;
+  return `(${object}).slice(${start ? `Number(${start})` : "undefined"}, Number(${end}))`;
+}
+
+function typeAssertionExpressionToJs(ctx: EmitterContext, expression: Expression): string | undefined {
+  ctx.emitError(`unsupported Stage 3 expression ${expression.kind}`);
+  return undefined;
 }
 
 function byteLiteralValue(expression: Expression): number | undefined {
@@ -236,6 +402,74 @@ function isByteSliceType(typeText: string): boolean {
   return typeText === "[]byte" || typeText === "[]uint8";
 }
 
+const primitiveTypeNames = new Set([
+  "bool",
+  "string",
+  "int",
+  "int8",
+  "int16",
+  "int32",
+  "int64",
+  "uint",
+  "uint8",
+  "uint16",
+  "uint32",
+  "uint64",
+  "uintptr",
+  "float32",
+  "float64"
+]);
+
+function isIntegerType(typeText: string): boolean {
+  return typeText === "int" ||
+    typeText === "int8" ||
+    typeText === "int16" ||
+    typeText === "int32" ||
+    typeText === "int64" ||
+    typeText === "uint" ||
+    typeText === "uint8" ||
+    typeText === "uint16" ||
+    typeText === "uint32" ||
+    typeText === "uint64" ||
+    typeText === "uintptr";
+}
+
+function isFloatType(typeText: string): boolean {
+  return typeText === "float32" || typeText === "float64";
+}
+
+function jsBinaryOperator(operator: BinaryExpression["operator"]): string | undefined {
+  switch (operator) {
+    case "==":
+      return "===";
+    case "!=":
+      return "!==";
+    case "<":
+    case "<=":
+    case ">":
+    case ">=":
+    case "+":
+    case "-":
+    case "|":
+    case "^":
+    case "*":
+    case "/":
+    case "%":
+    case "<<":
+    case ">>":
+    case "&":
+      return operator;
+    default:
+      return undefined;
+  }
+}
+
+function safeLocalName(name: string, index: number): string {
+  const candidate = name.replace(/[^A-Za-z0-9_$]/g, "_");
+  if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(candidate)) return candidate;
+  return `__gojrArg${index}`;
+}
+
 function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean, bodyLines: string[]): string {
   const artifactHeader: GoJuniorPackageExportData = { ...artifact };
   delete artifactHeader.runtime;
@@ -253,6 +487,11 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     usesWasm ? "  const __gojrWasmExports = __gojrWasmInstance.exports;" : "  const __gojrWasmExports = {};",
     ...bodyLines,
     "  return { diagnostics: [], output: [], package: pkg, wasm: __gojrWasmExports };",
+    "}",
+    "function __gojrStringByteAt(value, index) {",
+    "  const bytes = new TextEncoder().encode(String(value));",
+    "  if (index < 0 || index >= bytes.length) throw new RangeError(\"string index out of range\");",
+    "  return bytes[index];",
     "}",
     usesWasm ? "function __gojrDecodeBase64(base64) {" : "",
     usesWasm ? "  if (typeof Buffer !== \"undefined\") return new Uint8Array(Buffer.from(base64, \"base64\"));" : "",
