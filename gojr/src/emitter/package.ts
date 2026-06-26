@@ -1700,9 +1700,20 @@ function literalToJs(expression: LiteralExpression): string | undefined {
 }
 
 function arrayLiteralToJs(ctx: EmitterContext, expression: ArrayLiteralExpression, env: ExpressionEmitEnv): string | undefined {
+  const arrayType = parseArrayOrSliceTypeText(expression.type.text);
   if (expression.elements.some((element) => element.key !== undefined)) {
-    ctx.emitError("unsupported Stage 3 keyed array literal");
-    return undefined;
+    if (!arrayType) {
+      ctx.emitError(`unsupported Stage 3 keyed array literal ${expression.type.text}`);
+      return undefined;
+    }
+    const entries: string[] = [];
+    for (const element of expression.elements) {
+      const key = element.key ? expressionToJs(ctx, element.key, env) : "null";
+      const value = expressionToJs(ctx, element.value, env);
+      if (!key || !value) return undefined;
+      entries.push(`[${key}, ${value}]`);
+    }
+    return `__gojrArrayLiteral(${JSON.stringify(expression.type.text)}, ${JSON.stringify(arrayType.elementType)}, [${entries.join(", ")}])`;
   }
   if (isByteSliceType(expression.type.text)) {
     const bytes = bytesFromArrayLiteral(expression);
@@ -1720,12 +1731,21 @@ function arrayLiteralToJs(ctx: EmitterContext, expression: ArrayLiteralExpressio
 }
 
 function structLiteralToJs(ctx: EmitterContext, expression: StructLiteralExpression, env: ExpressionEmitEnv): string | undefined {
+  if (expression.fields.some((field) => !field.name)) {
+    const values: string[] = [];
+    for (const field of expression.fields) {
+      if (field.name) {
+        ctx.emitError(`unsupported Stage 3 mixed keyed and unkeyed struct literal ${expression.typeName}`);
+        return undefined;
+      }
+      const value = expressionToJs(ctx, field.value, env);
+      if (!value) return undefined;
+      values.push(value);
+    }
+    return `__gojrStructFromValues(${JSON.stringify(expression.typeName)}, [${values.join(", ")}])`;
+  }
   const fields: string[] = [];
   for (const field of expression.fields) {
-    if (!field.name) {
-      ctx.emitError(`unsupported Stage 3 unkeyed struct literal ${expression.typeName}`);
-      return undefined;
-    }
     const value = expressionToJs(ctx, field.value, env);
     if (!value) return undefined;
     fields.push(`${JSON.stringify(field.name)}: ${value}`);
@@ -2221,10 +2241,12 @@ function conversionCallToJs(ctx: EmitterContext, typeText: string, args: Express
   }
   const value = expressionToJs(ctx, args[0], env);
   if (!value) return undefined;
-  if (isIntegerType(typeText)) return `BigInt(${value})`;
-  if (isFloatType(typeText)) return `Number(${value})`;
-  if (isComplexType(typeText)) return `__gojrToComplex(${value})`;
-  if (typeText === "string") return `String(${value})`;
+  const resolvedType = resolveUnderlyingTypeText(typeText, env.facts);
+  if (isByteSliceType(resolvedType)) return `__gojrBytesFrom(${value})`;
+  if (isIntegerType(resolvedType)) return `BigInt(${value})`;
+  if (isFloatType(resolvedType)) return `Number(${value})`;
+  if (isComplexType(resolvedType)) return `__gojrToComplex(${value})`;
+  if (resolvedType === "string") return `__gojrStringFrom(${value})`;
   ctx.emitError(`unsupported Stage 3 conversion to ${typeText}`);
   return undefined;
 }
@@ -2245,17 +2267,12 @@ function indexExpressionToJs(ctx: EmitterContext, expression: IndexExpression, e
 }
 
 function sliceExpressionToJs(ctx: EmitterContext, expression: SliceExpression, env: ExpressionEmitEnv): string | undefined {
-  if (expression.max) {
-    ctx.emitError("unsupported Stage 3 three-index slice");
-    return undefined;
-  }
   const object = expressionToJs(ctx, expression.object, env);
   const start = expression.start ? expressionToJs(ctx, expression.start, env) : undefined;
   const end = expression.end ? expressionToJs(ctx, expression.end, env) : undefined;
-  if (!object || (expression.start && !start) || (expression.end && !end)) return undefined;
-  if (!start && !end) return `(${object}).slice()`;
-  if (!end) return `(${object}).slice(Number(${start}))`;
-  return `(${object}).slice(${start ? `Number(${start})` : "undefined"}, Number(${end}))`;
+  const max = expression.max ? expressionToJs(ctx, expression.max, env) : undefined;
+  if (!object || (expression.start && !start) || (expression.end && !end) || (expression.max && !max)) return undefined;
+  return `__gojrSlice(${object}, ${start ? `Number(${start})` : "null"}, ${end ? `Number(${end})` : "null"}, ${max ? `Number(${max})` : "null"})`;
 }
 
 function typeAssertionExpressionToJs(ctx: EmitterContext, expression: Expression, env: ExpressionEmitEnv = emptyExpressionEnv): string | undefined {
@@ -2539,6 +2556,12 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  if (index < 0 || index >= bytes.length) throw new RangeError(\"string index out of range\");",
     "  return bytes[index];",
     "}",
+    "function __gojrStringFrom(value) {",
+    "  if (value instanceof Uint8Array) return new TextDecoder().decode(value);",
+    "  if (ArrayBuffer.isView(value)) return new TextDecoder().decode(new Uint8Array(value.buffer, value.byteOffset, value.byteLength));",
+    "  if (Array.isArray(value)) return new TextDecoder().decode(Uint8Array.from(value, (item) => Number(item) & 255));",
+    "  return String(value);",
+    "}",
     "function __gojrTuple(values) {",
     "  Object.defineProperty(values, \"__gojrTuple\", { value: true });",
     "  return values;",
@@ -2578,6 +2601,16 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "function __gojrBytesBase64(base64) {",
     "  return __gojrDecodeBase64(base64);",
     "}",
+    "function __gojrBytesFrom(value) {",
+    "  if (typeof value === \"string\") return new TextEncoder().encode(value);",
+    "  if (value instanceof Uint8Array) return new Uint8Array(value);",
+    "  if (ArrayBuffer.isView(value)) return new Uint8Array(value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength));",
+    "  if (Array.isArray(value)) return Uint8Array.from(value, (item) => Number(item) & 255);",
+    "  return new Uint8Array();",
+    "}",
+    "function __gojrIsByteSliceTypeName(typeName) {",
+    "  return typeName === \"[]byte\" || typeName === \"[]uint8\";",
+    "}",
     "function __gojrMapStringBytesBase64(entries) {",
     "  const map = new Map();",
     "  for (const [key, base64] of entries) map.set(key, __gojrBytesBase64(base64));",
@@ -2592,9 +2625,47 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "}",
     "function __gojrCap(value) {",
     "  if (value == null) return 0;",
+    "  if (typeof value.__gojrCap === \"number\") return value.__gojrCap;",
     "  if (Array.isArray(value) || ArrayBuffer.isView(value)) return value.length;",
     "  if (value.__gojrChannel === true) return value.capacity;",
     "  return __gojrLen(value);",
+    "}",
+    "function __gojrSetCap(value, capacity) {",
+    "  try { Object.defineProperty(value, \"__gojrCap\", { value: Math.max(0, Number(capacity)), configurable: true }); } catch { }",
+    "  return value;",
+    "}",
+    "function __gojrArrayLiteral(typeName, elemType, entries) {",
+    "  const resolved = [];",
+    "  let nextIndex = 0;",
+    "  let length = __gojrFixedArrayLength(typeName) ?? 0;",
+    "  for (const [rawKey, value] of entries) {",
+    "    const index = rawKey === null || rawKey === undefined ? nextIndex : Number(rawKey);",
+    "    resolved.push([index, value]);",
+    "    nextIndex = index + 1;",
+    "    if (index + 1 > length) length = index + 1;",
+    "  }",
+    "  if (__gojrIsByteSliceTypeName(typeName)) {",
+    "    const out = new Uint8Array(length);",
+    "    for (const [index, value] of resolved) out[index] = Number(value) & 255;",
+    "    return __gojrSetCap(out, length);",
+    "  }",
+    "  const out = Array.from({ length }, () => __gojrZero(elemType));",
+    "  for (const [index, value] of resolved) out[index] = value;",
+    "  return __gojrSetCap(out, length);",
+    "}",
+    "function __gojrFixedArrayLength(typeName) {",
+    "  const match = /^\\[(\\d+)\\]/.exec(String(typeName || \"\"));",
+    "  if (!match) return undefined;",
+    "  const length = Number(match[1]);",
+    "  return Number.isSafeInteger(length) ? length : undefined;",
+    "}",
+    "function __gojrSlice(object, start, end, max) {",
+    "  const length = __gojrLen(object);",
+    "  const low = start === null || start === undefined ? 0 : Number(start);",
+    "  const high = end === null || end === undefined ? length : Number(end);",
+    "  const capHigh = max === null || max === undefined ? __gojrCap(object) : Number(max);",
+    "  const sliced = typeof object === \"string\" ? object.slice(low, high) : (object ?? []).slice(low, high);",
+    "  return typeof sliced === \"string\" ? sliced : __gojrSetCap(sliced, capHigh - low);",
     "}",
     "function __gojrAppend(slice, ...values) {",
     "  if (slice instanceof Uint8Array) {",
@@ -2808,6 +2879,16 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  Object.defineProperty(value, \"__gojrType\", { value: typeName });",
     "  Object.defineProperty(value, \"__gojrPkgPath\", { value: gojrPackageArtifact.importPath });",
     "  return value;",
+    "}",
+    "function __gojrStructFromValues(typeName, values) {",
+    "  const descriptor = __gojrDescriptorForTypeName(typeName);",
+    "  const fields = descriptor && Array.isArray(descriptor.fields) ? descriptor.fields : [];",
+    "  const out = {};",
+    "  for (let index = 0; index < fields.length; index += 1) {",
+    "    const field = fields[index];",
+    "    out[field.name] = index < values.length ? values[index] : __gojrZero(field.type);",
+    "  }",
+    "  return __gojrStruct(typeName, out);",
     "}",
     "function __gojrPointer(typeName, get, set) {",
     "  return { __gojrPointer: true, __gojrType: `*${typeName}`, __gojrElemType: typeName, __gojrPkgPath: gojrPackageArtifact.importPath, __gojrGet: get, __gojrSet: set };",

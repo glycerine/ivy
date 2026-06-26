@@ -5200,7 +5200,7 @@ slc := make([]interface{}, 1)
 slc[0] = 4
 _, slcInt := slc[0].(int)
 
-var m map[string]interface{}
+m := make(map[string]interface{})
 m["x"] = 5
 m["y"] = int64(6)
 _, mapInt := m["x"].(int)

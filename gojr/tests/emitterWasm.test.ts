@@ -301,6 +301,9 @@ type Point struct {
 	X int64
 	Name string
 }
+type errString struct {
+	s string
+}
 
 var Numbers = []int64{4, 5, 6}
 var Labels = map[string]int64{"a": 11}
@@ -320,6 +323,9 @@ func Pair(a, b int64) (int64, int64) { return a, b }
 func ComplexOps() complex128 { return complex(1, 2) * complex(3, 4) + 5i }
 func RealPart() float64 { return real(ComplexOps()) }
 func ImagPart() float64 { return imag(ComplexOps()) }
+func Bytes(s string) []byte { return []byte(s) }
+func StringFromBytes() string { return string([]byte{104, 105}) }
+func ErrText(s string) string { return (&errString{s}).s }
 func AssertInt(x any) int64 { return x.(int64) }
 func AssertIntOk(x any) (int64, bool) { v, ok := x.(int64); return v, ok }
 func BuiltinSliceOps() (int, int, int64) {
@@ -334,6 +340,15 @@ func BuiltinCopyDelete() (int, bool, uint8) {
 	delete(m, "a")
 	_, ok := m["a"]
 	return n, ok, dst[1]
+}
+func KeyedSlice() (int, string, string) {
+	xs := []string{2: "two", 4: "four"}
+	return len(xs), xs[0], xs[4]
+}
+func ThreeIndexCap() (int, int) {
+	xs := []int64{1, 2, 3, 4, 5}
+	ys := xs[1:3:4]
+	return len(ys), cap(ys)
 }
 func BuiltinPanic() { panic("boom") }
 func (p Point) Sum(delta int64) int64 { return p.X + delta }
@@ -371,11 +386,16 @@ func MethodValue() func(int64) int64 { return P.Sum }
     expect(await (pkg.ComplexOps as () => Promise<{ real: number; imag: number }>)()).toEqual({ real: -5, imag: 15 });
     expect(await (pkg.RealPart as () => Promise<number>)()).toBe(-5);
     expect(await (pkg.ImagPart as () => Promise<number>)()).toBe(15);
+    expect(Array.from(await (pkg.Bytes as (s: string) => Promise<Uint8Array>)("Aπ"))).toEqual([65, 207, 128]);
+    expect(await (pkg.StringFromBytes as () => Promise<string>)()).toBe("hi");
+    expect(await (pkg.ErrText as (s: string) => Promise<string>)("boom")).toBe("boom");
     expect(await (pkg.AssertInt as (x: unknown) => Promise<bigint>)(42n)).toBe(42n);
     expect(await (pkg.AssertIntOk as (x: unknown) => Promise<[bigint, boolean]>)(42n)).toEqual([42n, true]);
     expect(await (pkg.AssertIntOk as (x: unknown) => Promise<[bigint, boolean]>)("nope")).toEqual([0n, false]);
     expect(await (pkg.BuiltinSliceOps as () => Promise<[bigint, bigint, bigint]>)()).toEqual([4n, 4n, 3n]);
     expect(await (pkg.BuiltinCopyDelete as () => Promise<[bigint, boolean, bigint]>)()).toEqual([2n, false, 8n]);
+    expect(await (pkg.KeyedSlice as () => Promise<[bigint, string, string]>)()).toEqual([5n, "", "four"]);
+    expect(await (pkg.ThreeIndexCap as () => Promise<[bigint, bigint]>)()).toEqual([2n, 3n]);
     let panicMessage = "";
     try {
       await (pkg.BuiltinPanic as () => Promise<null>)();
