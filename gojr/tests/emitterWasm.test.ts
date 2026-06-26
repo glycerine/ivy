@@ -247,6 +247,46 @@ func Noop() {}
     expect(await (pkg.Noop as () => Promise<null>)()).toBeNull();
   });
 
+  test("emits byte literal supernodes instead of giant element AST-shaped payloads", async () => {
+    const dataA = Array.from({ length: 256 }, (_, index) => index % 256);
+    const dataB = Array.from({ length: 192 }, (_, index) => (255 - index) & 255);
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage1data",
+      artifactRoot: "/tmp/gojr-stage1data",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage1data.go",
+        source: `package stage1data
+
+var Blob = []byte{${dataA.join(", ")}}
+var Files = map[string][]byte{
+	"a": []byte{${dataA.join(", ")}},
+	"b": []byte{${dataB.join(", ")}},
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage1data/example.com/stage1data.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.pkgdef.runtime).toBeUndefined();
+    expect(archive?.javascript).toContain("__gojrBytesBase64(");
+    expect(archive?.javascript).toContain("__gojrMapStringBytesBase64(");
+    expect(archive?.javascript).not.toContain("runtime.ast");
+    expect(archive?.javascript).not.toContain(dataA.slice(0, 32).join(", "));
+    expect((archive?.members.find((member) => member.name === "__.PKGDEF")?.data.length ?? 0) < 8192).toBe(true);
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(Array.from(pkg.Blob as Uint8Array)).toEqual(dataA);
+    expect(Array.from((pkg.Files as Map<string, Uint8Array>).get("a") ?? [])).toEqual(dataA);
+    expect(Array.from((pkg.Files as Map<string, Uint8Array>).get("b") ?? [])).toEqual(dataB);
+  });
+
   test("lowers Stage 3 concrete expressions without interpreter expression calls", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
@@ -282,6 +322,20 @@ func RealPart() float64 { return real(ComplexOps()) }
 func ImagPart() float64 { return imag(ComplexOps()) }
 func AssertInt(x any) int64 { return x.(int64) }
 func AssertIntOk(x any) (int64, bool) { v, ok := x.(int64); return v, ok }
+func BuiltinSliceOps() (int, int, int64) {
+	xs := []int64{1, 2}
+	xs = append(xs, 3, 4)
+	return len(xs), cap(xs), xs[2]
+}
+func BuiltinCopyDelete() (int, bool, uint8) {
+	dst := []byte{0, 0, 0}
+	n := copy(dst, []byte{7, 8})
+	m := map[string]int64{"a": 1}
+	delete(m, "a")
+	_, ok := m["a"]
+	return n, ok, dst[1]
+}
+func BuiltinPanic() { panic("boom") }
 func (p Point) Sum(delta int64) int64 { return p.X + delta }
 func MethodCall(delta int64) int64 { return P.Sum(delta) }
 func MethodValue() func(int64) int64 { return P.Sum }
@@ -320,6 +374,15 @@ func MethodValue() func(int64) int64 { return P.Sum }
     expect(await (pkg.AssertInt as (x: unknown) => Promise<bigint>)(42n)).toBe(42n);
     expect(await (pkg.AssertIntOk as (x: unknown) => Promise<[bigint, boolean]>)(42n)).toEqual([42n, true]);
     expect(await (pkg.AssertIntOk as (x: unknown) => Promise<[bigint, boolean]>)("nope")).toEqual([0n, false]);
+    expect(await (pkg.BuiltinSliceOps as () => Promise<[bigint, bigint, bigint]>)()).toEqual([4n, 4n, 3n]);
+    expect(await (pkg.BuiltinCopyDelete as () => Promise<[bigint, boolean, bigint]>)()).toEqual([2n, false, 8n]);
+    let panicMessage = "";
+    try {
+      await (pkg.BuiltinPanic as () => Promise<null>)();
+    } catch (error) {
+      panicMessage = error instanceof Error ? error.message : String(error);
+    }
+    expect(panicMessage).toContain("panic: boom");
     expect(await (pkg["Point.Sum"] as (p: { X: bigint; Name: string }, delta: bigint) => Promise<bigint>)(pkg.P as { X: bigint; Name: string }, 4n)).toBe(11n);
     expect(await (pkg.MethodCall as (delta: bigint) => Promise<bigint>)(5n)).toBe(12n);
     const methodValue = await (pkg.MethodValue as () => Promise<(delta: bigint) => Promise<bigint>>)();
@@ -640,6 +703,30 @@ func Odd(n int64) bool {
 	}
 	return Even(n - 1)
 }
+
+func Sum(prefix int64, vals ...int64) int64 {
+	sum := prefix
+	for _, v := range vals {
+		sum += v
+	}
+	return sum
+}
+
+func VariadicCalls() (int64, int64) {
+	xs := []int64{2, 3}
+	return Sum(1, 2, 3), Sum(1, xs...)
+}
+
+func VariadicLiteral() int64 {
+	f := func(vals ...int64) int64 {
+		sum := int64(0)
+		for _, v := range vals {
+			sum += v
+		}
+		return sum
+	}
+	return f(4, 5)
+}
 `
       }]
     }, store);
@@ -661,6 +748,8 @@ func Odd(n int64) bool {
     expect(await (pkg.Fact as (n: bigint) => Promise<bigint>)(5n)).toBe(120n);
     expect(await (pkg.Even as (n: bigint) => Promise<boolean>)(8n)).toBe(true);
     expect(await (pkg.Odd as (n: bigint) => Promise<boolean>)(8n)).toBe(false);
+    expect(await (pkg.VariadicCalls as () => Promise<[bigint, bigint]>)()).toEqual([6n, 6n]);
+    expect(await (pkg.VariadicLiteral as () => Promise<bigint>)()).toBe(9n);
   });
 
   test("calls generated dependency packages through importsByPath", async () => {
@@ -721,13 +810,49 @@ type Stringer interface {
 	String() string
 }
 
+type Labeller interface {
+	Label() string
+}
+
 type Thing struct {
 	Name string
 }
 
 func (t Thing) String() string { return "thing:" + t.Name }
+func (t *Thing) Label() string {
+	if t == nil {
+		return "nil thing"
+	}
+	return "ptr:" + t.Name
+}
 func Use(s Stringer) string { return s.String() }
+func UseLabel(l Labeller) string { return l.Label() }
 func InterfaceCall() string { return Use(Thing{Name: "ivy"}) }
+func PointerValueCall() string {
+	t := Thing{Name: "bee"}
+	return t.Label()
+}
+func TypedNilInterfaceIsNil() bool {
+	var t *Thing
+	var l Labeller = t
+	return l == nil
+}
+func NilInterfaceIsNil() bool {
+	var l Labeller
+	return l == nil
+}
+func TypedNilInterfaceCall() string {
+	var t *Thing
+	return UseLabel(t)
+}
+func AssertThing(x any) (string, bool) {
+	t, ok := x.(Thing)
+	if ok {
+		return t.Name, ok
+	}
+	return "", ok
+}
+func AssertThingCall() (string, bool) { return AssertThing(Thing{Name: "ok"}) }
 `
       }]
     }, store);
@@ -744,6 +869,404 @@ func InterfaceCall() string { return Use(Thing{Name: "ivy"}) }
     const pkg = instantiated.package;
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (pkg.InterfaceCall as () => Promise<string>)()).toBe("thing:ivy");
+    expect(await (pkg.PointerValueCall as () => Promise<string>)()).toBe("ptr:bee");
+    expect(await (pkg.TypedNilInterfaceIsNil as () => Promise<boolean>)()).toBe(false);
+    expect(await (pkg.NilInterfaceIsNil as () => Promise<boolean>)()).toBe(true);
+    expect(await (pkg.TypedNilInterfaceCall as () => Promise<string>)()).toBe("nil thing");
+    expect(await (pkg.AssertThingCall as () => Promise<[string, boolean]>)()).toEqual(["ok", true]);
+  });
+
+  test("generates package-local type descriptors for reflect-style metadata", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6reflect",
+      artifactRoot: "/tmp/gojr-stage6reflect",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        reflect: [{
+          filename: "reflect.go",
+          source: `package reflect
+
+type Kind int
+type StructTag string
+
+const (
+	Invalid Kind = iota
+	Bool
+	Int
+	Int8
+	Int16
+	Int32
+	Int64
+	Uint
+	Uint8
+	Uint16
+	Uint32
+	Uint64
+	Uintptr
+	Float32
+	Float64
+	Complex64
+	Complex128
+	Array
+	Chan
+	Func
+	Interface
+	Map
+	Pointer
+	Ptr = Pointer
+	Slice
+	String
+	Struct
+	UnsafePointer
+)
+
+type Type interface {
+	String() string
+	Name() string
+	PkgPath() string
+	Kind() Kind
+	NumField() int
+	Field(i int) StructField
+	Elem() Type
+	Implements(u Type) bool
+}
+
+type StructField struct {
+	Name string
+	Type Type
+	Tag StructTag
+	Index []int
+	Anonymous bool
+}
+
+func TypeOf(i any) Type
+`
+        }]
+      },
+      files: [{
+        filename: "stage6reflect.go",
+        source: `package stage6reflect
+
+import "reflect"
+
+type Stringer interface {
+	String() string
+}
+
+type Thing struct {
+	Name string
+	Count int64
+}
+
+func (t Thing) String() string { return t.Name }
+
+func ReflectThing() (string, string, int, string, string, bool) {
+	t := reflect.TypeOf(Thing{Name: "ivy", Count: 3})
+	f := t.Field(1)
+	return t.String(), t.Name(), t.NumField(), f.Name, f.Type.String(), t.Kind() == reflect.Struct
+}
+
+func ReflectPointer() (string, string, bool) {
+	var t *Thing
+	typ := reflect.TypeOf(t)
+	return typ.String(), typ.Elem().Name(), typ.Kind() == reflect.Pointer
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage6reflect/example.com/stage6reflect.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.pkgdef.runtime).toBeUndefined();
+    expect(archive?.javascript).toContain("__gojrTypeDescriptors[\"Thing\"]");
+    expect(archive?.javascript).toContain("__gojrReflectPackage");
+    expect(archive?.javascript).not.toContain("runtime.ast");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(Object.keys(pkg.__gojrTypeDescriptors as Record<string, unknown>)).toContain("Thing");
+    expect(await (pkg.ReflectThing as () => Promise<[string, string, bigint, string, string, boolean]>)()).toEqual([
+      "Thing",
+      "Thing",
+      2n,
+      "Count",
+      "int64",
+      true
+    ]);
+    expect(await (pkg.ReflectPointer as () => Promise<[string, string, boolean]>)()).toEqual(["*Thing", "Thing", true]);
+  });
+
+  test("resolves imported package type descriptors for reflect-style metadata", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6reflectroot",
+      artifactRoot: "/tmp/gojr-stage6reflect-imported",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        "example.com/dep": [{
+          filename: "dep.go",
+          source: `package dep
+
+type RemoteThing struct {
+	Name string
+	Count int64
+}
+
+func Make() RemoteThing { return RemoteThing{Name: "dep", Count: 9} }
+`
+        }],
+        reflect: [{
+          filename: "reflect.go",
+          source: `package reflect
+
+type Kind int
+type StructTag string
+
+const (
+	Invalid Kind = iota
+	Bool
+	Int
+	Int8
+	Int16
+	Int32
+	Int64
+	Uint
+	Uint8
+	Uint16
+	Uint32
+	Uint64
+	Uintptr
+	Float32
+	Float64
+	Complex64
+	Complex128
+	Array
+	Chan
+	Func
+	Interface
+	Map
+	Pointer
+	Ptr = Pointer
+	Slice
+	String
+	Struct
+	UnsafePointer
+)
+
+type Type interface {
+	String() string
+	Name() string
+	PkgPath() string
+	Kind() Kind
+	NumField() int
+	Field(i int) StructField
+	Elem() Type
+	Implements(u Type) bool
+}
+
+type StructField struct {
+	Name string
+	Type Type
+	Tag StructTag
+	Index []int
+	Anonymous bool
+}
+
+func TypeOf(i any) Type
+`
+        }]
+      },
+      files: [{
+        filename: "root.go",
+        source: `package stage6reflectroot
+
+import (
+	d "example.com/dep"
+	"reflect"
+)
+
+type RemoteThing struct {
+	Local string
+}
+
+func ReflectImported() (string, string, string, int, string, string, bool) {
+	t := reflect.TypeOf(d.Make())
+	f := t.Field(1)
+	return t.String(), t.Name(), t.PkgPath(), t.NumField(), f.Name, f.Type.String(), t.Kind() == reflect.Struct
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const depArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6reflect-imported/example.com/dep.a") ?? "");
+    const rootArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6reflect-imported/example.com/stage6reflectroot.a") ?? "");
+    expect(rootArchive?.pkgdef.runtime).toBeUndefined();
+    expect(rootArchive?.javascript).toContain("__gojrTypeDescriptors[\"RemoteThing\"]");
+    expect(depArchive?.javascript).toContain("__gojrTypeDescriptors[\"RemoteThing\"]");
+    expect(rootArchive?.javascript).not.toContain("runtime.ast");
+
+    const depModule = await importArtifactJavaScript(depArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const dep = await depModule.instantiateGoJrPackage();
+    const rootModule = await importArtifactJavaScript(rootArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const root = await rootModule.instantiateGoJrPackage({}, { importsByPath: { "example.com/dep": dep.package } });
+    expect(root.diagnostics).toEqual([]);
+    expect(await (root.package.ReflectImported as () => Promise<[string, string, string, bigint, string, string, boolean]>)()).toEqual([
+      "dep.RemoteThing",
+      "RemoteThing",
+      "example.com/dep",
+      2n,
+      "Count",
+      "int64",
+      true
+    ]);
+  });
+
+  test("generates composite named type descriptors for reflect-style metadata", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6reflectcomposite",
+      artifactRoot: "/tmp/gojr-stage6reflect-composite",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        reflect: [{
+          filename: "reflect.go",
+          source: `package reflect
+
+type Kind int
+type StructTag string
+
+const (
+	Invalid Kind = iota
+	Bool
+	Int
+	Int8
+	Int16
+	Int32
+	Int64
+	Uint
+	Uint8
+	Uint16
+	Uint32
+	Uint64
+	Uintptr
+	Float32
+	Float64
+	Complex64
+	Complex128
+	Array
+	Chan
+	Func
+	Interface
+	Map
+	Pointer
+	Ptr = Pointer
+	Slice
+	String
+	Struct
+	UnsafePointer
+)
+
+type Type interface {
+	String() string
+	Name() string
+	PkgPath() string
+	Kind() Kind
+	NumField() int
+	Field(i int) StructField
+	Elem() Type
+	Key() Type
+	Len() int
+	NumIn() int
+	In(i int) Type
+	NumOut() int
+	Out(i int) Type
+	Implements(u Type) bool
+}
+
+type StructField struct {
+	Name string
+	Type Type
+	Tag StructTag
+	Index []int
+	Anonymous bool
+}
+
+func TypeOf(i any) Type
+`
+        }]
+      },
+      files: [{
+        filename: "composite.go",
+        source: `package stage6reflectcomposite
+
+import "reflect"
+
+type Names []string
+type Counts map[string]int64
+type Pair [2]int64
+type Updates chan int64
+type Callback func(int64) string
+
+func ReflectComposites() (string, bool, string, bool, string, string, bool, int, string, bool, string, bool, int, string, int, string) {
+	var names *Names
+	var counts *Counts
+	var pair *Pair
+	var updates *Updates
+	var callback *Callback
+	nt := reflect.TypeOf(names).Elem()
+	mt := reflect.TypeOf(counts).Elem()
+	at := reflect.TypeOf(pair).Elem()
+	ct := reflect.TypeOf(updates).Elem()
+	ft := reflect.TypeOf(callback).Elem()
+	return nt.Name(), nt.Kind() == reflect.Slice, nt.Elem().String(),
+		mt.Kind() == reflect.Map, mt.Key().String(), mt.Elem().String(),
+		at.Kind() == reflect.Array, at.Len(), at.Elem().String(),
+		ct.Kind() == reflect.Chan, ct.Elem().String(),
+		ft.Kind() == reflect.Func, ft.NumIn(), ft.In(0).String(), ft.NumOut(), ft.Out(0).String()
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage6reflect-composite/example.com/stage6reflectcomposite.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.pkgdef.runtime).toBeUndefined();
+    expect(archive?.javascript).toContain("__gojrTypeDescriptors[\"Names\"]");
+    expect(archive?.javascript).toContain("\"elem\":\"string\"");
+    expect(archive?.javascript).toContain("\"key\":\"string\"");
+    expect(archive?.javascript).not.toContain("runtime.ast");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.ReflectComposites as () => Promise<[string, boolean, string, boolean, string, string, boolean, bigint, string, boolean, string, boolean, bigint, string, bigint, string]>)()).toEqual([
+      "Names",
+      true,
+      "string",
+      true,
+      "string",
+      "int64",
+      true,
+      2n,
+      "int64",
+      true,
+      "int64",
+      true,
+      1n,
+      "int64",
+      1n,
+      "string"
+    ]);
   });
 
   test("erases generated generic function instantiations to reusable functions", async () => {

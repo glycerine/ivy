@@ -951,6 +951,42 @@ Template Expansion Pass:
 - Promote the highest-payoff shapes into new stencils or supernodes before declaring the stage complete.
 - Add regression tests for every promoted stencil so later work does not collapse back to generic helper-heavy output.
 
+## Current Implementation Progress
+
+As of June 26, 2026, the `copy-patch-wasm-stage1` backend has moved past the initial fixture stage and now writes package-local executable artifacts for a useful subset of GoJr packages.
+
+Implemented and covered by focused tests:
+
+- Thin `__.PKGDEF` plus executable `_gojr.js`, with `_gojr.wasm` when an `int64` add kernel is selected.
+- Checked-in Clang-produced Wasm stencil extraction and mixed JS/Wasm fixture execution.
+- Direct generated package functions, methods, package vars, constants, imports by full import path, and source-order `init` calls.
+- Stage 3 expression lowering for literals, selectors, indexing, slicing, concrete arithmetic/string/bool/complex expressions, calls, conversions, method values, method calls, type assertions, map/slice/string indexing, and tuple returns.
+- Stage 4 statement lowering for blocks, declarations, returns, if/else, switch/fallthrough, type switch, for, range, select, assignment, short declaration, inc/dec, labels, simple goto state machines, defer, goroutines, sends, receives, and named returns.
+- Function literals, lexical captures, recursive and mutually recursive functions.
+- Variadic generated functions and function literals, including spread calls such as `xs...`.
+- First-pass generated interface descriptors: concrete method dispatch, pointer receiver dispatch, interface argument/return boxing, nil interface versus typed-nil interface preservation, and concrete type assertions through `any`.
+- First-pass package-local type descriptor tables for named structs and interfaces, with generated reflect-style `TypeOf`, `String`, `Name`, `Kind`, `NumField`, `Field`, `Elem`, pointer descriptors, and typed nil pointer reflection.
+- First-pass imported package descriptor lookup through `importsByPath`, preserving full import-path identity on generated values so reflection can distinguish same-named local and dependency types without embedding dependency descriptors.
+- First-pass generic function instantiation erasure for simple generic functions.
+- Literal supernodes for large `[]byte{...}` and `map[string][]byte{...}` data, using base64 payloads instead of huge element-by-element JavaScript.
+- Narrow generated helpers for common builtins: `len`, `cap`, `append`, `copy`, `delete`, and `panic`.
+
+Current focused scoreboard:
+
+```text
+emitterWasm.test.ts: 18 pass
+adjacent build/bench/generated-runtime/Wasm POC suites: 61 pass
+```
+
+Still incomplete:
+
+- The backend still lowers from `ProgramAst`; the long-term target remains direct Go-shaped AST plus `go/types.Info`.
+- Type descriptors are not yet complete enough for imported private/helper types, package-qualified field descriptors, composite named type metadata, all nil-able type zero values, or `reflect.Value` parity.
+- Generic dictionaries, generic named types, constraints, and specialization are only smoke-tested.
+- Pointer/addressability semantics are still shallow; address-taken locals, struct fields, slice elements, and `new(T)` need the planned box/pointer stencils.
+- Package artifacts are executable for the supported subset, but the old interpreter-compatible path still exists elsewhere and must be removed when compiled artifacts become authoritative.
+- Standard-library and `zygo` cutover still need broader lowering coverage and warm-cache startup work.
+
 ## Test Plan By Concern
 
 ### Artifact Tests

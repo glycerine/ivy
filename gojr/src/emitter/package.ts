@@ -30,6 +30,7 @@ import type {
   SwitchStatement,
   Statement,
   UnaryExpression,
+  TypeSpec,
   VarDeclStatement
 } from "../ast.js";
 import type { GoJuniorPackageExportData } from "../build.js";
@@ -50,6 +51,7 @@ interface ExpressionEmitEnv {
   localTypes: Map<string, string>;
   facts: PackageEmitFacts;
   namedResults?: string[];
+  expectedReturnTypes?: string[];
   deferName?: string;
   gotoLabels?: Map<string, number>;
   gotoPcName?: string;
@@ -60,13 +62,53 @@ interface PackageEmitFacts {
   resultCounts: Map<string, number>;
   packageTypes: Map<string, string>;
   imports: Map<string, string>;
+  interfaceTypes: Set<string>;
+  functionParamTypes: Map<string, string[]>;
+  functionResultTypes: Map<string, string[]>;
+}
+
+interface GeneratedTypeDescriptor {
+  type: string;
+  name: string;
+  string: string;
+  kind: string;
+  pkgPath: string;
+  pkgName?: string;
+  underlying?: string;
+  elem?: string;
+  key?: string;
+  len?: number;
+  params?: string[];
+  results?: string[];
+  fields?: Array<{
+    name: string;
+    type: string;
+    embedded: boolean;
+    tag?: string;
+  }>;
+  methods?: Array<{
+    name: string;
+    receiver: string;
+    pointerReceiver: boolean;
+    params: string[];
+    results: string[];
+  }>;
+  interfaceMethods?: Array<{
+    name: string;
+    params: string[];
+    results: string[];
+  }>;
+  interfaceEmbeds?: string[];
 }
 
 const emptyPackageEmitFacts: PackageEmitFacts = {
   methodKeys: new Map(),
   resultCounts: new Map(),
   packageTypes: new Map(),
-  imports: new Map()
+  imports: new Map(),
+  interfaceTypes: new Set(),
+  functionParamTypes: new Map(),
+  functionResultTypes: new Map()
 };
 
 const emptyExpressionEnv: ExpressionEmitEnv = { locals: new Map(), localTypes: new Map(), facts: emptyPackageEmitFacts };
@@ -80,14 +122,15 @@ export function emitStage1Package(artifact: GoJuniorPackageExportData, ast: Prog
   const declarationLines: string[] = [];
   const functionLines: string[] = [];
   const initNames: string[] = [];
+  const typeDescriptorLines = emitTypeDescriptorLines(ast, artifact);
 
   for (const statement of ast.body) {
     if (statement.kind === "ConstDecl") {
-      declarationLines.push(...emitConstDecl(ctx, statement));
+      declarationLines.push(...emitConstDecl(ctx, statement, facts));
       continue;
     }
     if (statement.kind === "VarDecl") {
-      declarationLines.push(...emitVarDecl(ctx, statement));
+      declarationLines.push(...emitVarDecl(ctx, statement, facts));
       continue;
     }
     if (statement.kind === "TypeDecl") continue;
@@ -109,7 +152,7 @@ export function emitStage1Package(artifact: GoJuniorPackageExportData, ast: Prog
     ...declarationLines,
     ...initNames.map((name) => `  await ${name}();`)
   ];
-  const javascript = stage1JavaScript(artifact, usesWasm, bodyLines);
+  const javascript = stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines);
   return {
     diagnostics: ctx.diagnostics,
     javascript,
@@ -117,22 +160,24 @@ export function emitStage1Package(artifact: GoJuniorPackageExportData, ast: Prog
   };
 }
 
-function emitConstDecl(ctx: EmitterContext, statement: ConstDeclStatement): string[] {
-  return statement.declarations.flatMap((declaration) => emitDeclaration(ctx, "const", declaration));
+function emitConstDecl(ctx: EmitterContext, statement: ConstDeclStatement, facts: PackageEmitFacts): string[] {
+  return statement.declarations.flatMap((declaration) => emitDeclaration(ctx, "const", declaration, facts));
 }
 
-function emitVarDecl(ctx: EmitterContext, statement: VarDeclStatement): string[] {
-  return statement.declarations.flatMap((declaration) => emitDeclaration(ctx, "var", declaration));
+function emitVarDecl(ctx: EmitterContext, statement: VarDeclStatement, facts: PackageEmitFacts): string[] {
+  return statement.declarations.flatMap((declaration) => emitDeclaration(ctx, "var", declaration, facts));
 }
 
-function emitDeclaration(ctx: EmitterContext, _kind: "const" | "var", declaration: DeclarationSpec): string[] {
-  const value = declaration.value
+function emitDeclaration(ctx: EmitterContext, _kind: "const" | "var", declaration: DeclarationSpec, facts: PackageEmitFacts): string[] {
+  const rawValue = declaration.value
     ? expressionToJs(ctx, declaration.value)
     : zeroValueForType(declaration.type?.text);
-  if (!value) {
+  if (!rawValue) {
     ctx.emitError(`unsupported Stage 1 declaration for ${declaration.name}`);
     return [];
   }
+  const targetType = declarationTypeText(declaration);
+  const value = valueForTargetType(rawValue, targetType, expressionTypeText(declaration.value, emptyExpressionEnv), { ...emptyExpressionEnv, facts });
   return [`  pkg[${JSON.stringify(declaration.name)}] = ${value};`];
 }
 
@@ -154,6 +199,7 @@ function emitFunction(ctx: EmitterContext, fn: FunctionDecl, facts: PackageEmitF
 
   const parameters = functionParameterBindings(fn, facts);
   const bodyEnv = cloneExpressionEnv(parameters.env);
+  bodyEnv.expectedReturnTypes = fn.signature.results.map((result) => result.type.text);
   const hasDefer = statementsContainDefer(fn.body.statements);
   if (hasDefer) bodyEnv.deferName = ctx.symbol("defer");
   const resultLines = emitNamedResultDeclarations(fn, bodyEnv);
@@ -179,11 +225,15 @@ function emitFunction(ctx: EmitterContext, fn: FunctionDecl, facts: PackageEmitF
 function returnExpression(ctx: EmitterContext, statement: ReturnStatement, env: ExpressionEmitEnv): string | undefined {
   if (statement.values.length === 0) return namedResultReturn(env) ?? "null";
   if (statement.values.length > 1) {
-    const values = statement.values.map((value) => expressionToJs(ctx, value, env));
+    const values = statement.values.map((value, index) => {
+      const rendered = expressionToJs(ctx, value, env);
+      return rendered ? valueForTargetType(rendered, env.expectedReturnTypes?.[index], expressionTypeText(value, env), env) : undefined;
+    });
     if (values.some((value) => value === undefined)) return undefined;
     return `__gojrTuple([${values.filter((value): value is string => value !== undefined).join(", ")}])`;
   }
-  return expressionToJs(ctx, statement.values[0], env);
+  const rendered = expressionToJs(ctx, statement.values[0], env);
+  return rendered ? valueForTargetType(rendered, env.expectedReturnTypes?.[0], expressionTypeText(statement.values[0], env), env) : undefined;
 }
 
 function emitNamedResultDeclarations(fn: FunctionDecl, env: ExpressionEmitEnv): string[] {
@@ -347,6 +397,7 @@ function cloneExpressionEnv(env: ExpressionEmitEnv): ExpressionEmitEnv {
     localTypes: new Map(env.localTypes),
     facts: env.facts,
     ...(env.namedResults ? { namedResults: [...env.namedResults] } : {}),
+    ...(env.expectedReturnTypes ? { expectedReturnTypes: [...env.expectedReturnTypes] } : {}),
     ...(env.deferName ? { deferName: env.deferName } : {}),
     ...(env.gotoLabels ? { gotoLabels: env.gotoLabels } : {}),
     ...(env.gotoPcName ? { gotoPcName: env.gotoPcName } : {})
@@ -435,16 +486,17 @@ function emitLocalDeclarationStatement(
   for (const [index, declaration] of statement.declarations.entries()) {
     if (declaration.name === "_") continue;
     const name = safeLocalName(declaration.name, index);
-    const value = declaration.value
+    const rawValue = declaration.value
       ? expressionToJs(ctx, declaration.value, env)
       : zeroValueForType(declaration.type?.text);
-    if (!value) {
+    if (!rawValue) {
       ctx.emitError(`unsupported Stage 4 declaration for ${declaration.name}`);
       return undefined;
     }
     env.locals.set(declaration.name, name);
     const typeText = declarationTypeText(declaration);
     if (typeText) env.localTypes.set(declaration.name, typeText);
+    const value = valueForTargetType(rawValue, typeText, expressionTypeText(declaration.value, env), env);
     lines.push(`${indent}${keyword} ${name} = ${value};`);
   }
   return lines;
@@ -706,7 +758,7 @@ function emitAssignStatement(ctx: EmitterContext, statement: AssignStatement, en
     if (!current || !value) return undefined;
     const compound = compoundAssignmentExpression(ctx, statement.operator, current, value);
     if (!compound) return undefined;
-    return assignExpressionTargetLines(ctx, statement.targets[0], compound, env, indent);
+    return assignExpressionTargetLines(ctx, statement.targets[0], compound, env, indent, expressionTypeText(statement.values[0], env));
   }
   if (statement.values.length === 1 && statement.targets.length > 1) {
     const source = statement.values[0];
@@ -716,7 +768,7 @@ function emitAssignStatement(ctx: EmitterContext, statement: AssignStatement, en
     const temp = ctx.symbol("assign");
     const lines = [`${indent}const ${temp} = ${tuple};`];
     for (const [index, target] of statement.targets.entries()) {
-      const assigned = assignExpressionTargetLines(ctx, target, `${temp}[${index}]`, env, indent);
+      const assigned = assignExpressionTargetLines(ctx, target, `${temp}[${index}]`, env, indent, tupleSourceTypeTexts(source, statement.targets.length, env)[index]);
       if (!assigned) return undefined;
       lines.push(...assigned);
     }
@@ -728,10 +780,11 @@ function emitAssignStatement(ctx: EmitterContext, statement: AssignStatement, en
   }
   const values = statement.values.map((value) => expressionToJs(ctx, value, env));
   if (values.some((value) => value === undefined)) return undefined;
+  const sourceTypes = statement.values.map((value) => expressionTypeText(value, env));
   const temp = ctx.symbol("assign");
   const lines = [`${indent}const ${temp} = [${values.filter((value): value is string => value !== undefined).join(", ")}];`];
   for (const [index, target] of statement.targets.entries()) {
-    const assigned = assignExpressionTargetLines(ctx, target, `${temp}[${index}]`, env, indent);
+    const assigned = assignExpressionTargetLines(ctx, target, `${temp}[${index}]`, env, indent, sourceTypes[index]);
     if (!assigned) return undefined;
     lines.push(...assigned);
   }
@@ -1028,14 +1081,16 @@ function assignExpressionTargetLines(
   target: Expression | undefined,
   value: string,
   env: ExpressionEmitEnv,
-  indent: string
+  indent: string,
+  sourceType?: string
 ): string[] | undefined {
   if (!target) return undefined;
   switch (target.kind) {
     case "Identifier": {
       if (target.name === "_") return [];
       const local = env.locals.get(target.name);
-      return [`${indent}${local ?? `pkg[${JSON.stringify(target.name)}]`} = ${value};`];
+      const targetType = env.localTypes.get(target.name) ?? env.facts.packageTypes.get(target.name);
+      return [`${indent}${local ?? `pkg[${JSON.stringify(target.name)}]`} = ${valueForTargetType(value, targetType, sourceType, env)};`];
     }
     case "SelectorExpression": {
       const object = expressionToJs(ctx, target.object, env);
@@ -1090,9 +1145,9 @@ function functionParameterBindings(fn: FunctionDecl, facts: PackageEmitFacts): {
     const jsName = safeLocalName(goName, index);
     if (parameter.name && parameter.name !== "_") {
       locals.set(parameter.name, jsName);
-      localTypes.set(parameter.name, parameter.type.text);
+      localTypes.set(parameter.name, parameter.variadic ? `[]${parameter.type.text}` : parameter.type.text);
     }
-    return jsName;
+    return parameter.variadic ? `...${jsName}` : jsName;
   }));
   return { params, env: { locals, localTypes, facts } };
 }
@@ -1124,6 +1179,9 @@ function packageEmitFacts(ast: ProgramAst, artifact: GoJuniorPackageExportData):
   const resultCounts = new Map<string, number>();
   const packageTypes = new Map<string, string>();
   const imports = new Map<string, string>();
+  const interfaceTypes = new Set<string>(["any", "interface{}", "error"]);
+  const functionParamTypes = new Map<string, string[]>();
+  const functionResultTypes = new Map<string, string[]>();
   for (const item of ast.imports) {
     if (item.alias === "_" || item.alias === ".") continue;
     imports.set(item.alias ?? defaultImportName(item.path), item.path);
@@ -1132,23 +1190,229 @@ function packageEmitFacts(ast: ProgramAst, artifact: GoJuniorPackageExportData):
     if (exported.typeText) packageTypes.set(exported.name, exported.typeText);
   }
   for (const statement of ast.body) {
-    if (statement.kind !== "ConstDecl" && statement.kind !== "VarDecl") continue;
-    for (const declaration of statement.declarations) {
-    const typeText = declarationTypeText(declaration);
-      if (typeText) packageTypes.set(declaration.name, typeText);
+    if (statement.kind === "TypeDecl") {
+      for (const declaration of statement.declarations) {
+        if (isInterfaceTypeSpec(declaration)) interfaceTypes.add(declaration.name);
+      }
+      continue;
+    }
+    if (statement.kind === "ConstDecl" || statement.kind === "VarDecl") {
+      for (const declaration of statement.declarations) {
+        const typeText = declarationTypeText(declaration);
+        if (typeText) packageTypes.set(declaration.name, typeText);
+      }
     }
   }
   for (const fn of ast.functions) {
     const key = functionPackageKey(fn);
     resultCounts.set(key, fn.signature.results.length);
+    functionParamTypes.set(key, fn.signature.parameters.map((parameter) => parameter.type.text));
+    functionResultTypes.set(key, fn.signature.results.map((result) => result.type.text));
     if (!fn.receiver) {
       resultCounts.set(fn.name, fn.signature.results.length);
+      functionParamTypes.set(fn.name, fn.signature.parameters.map((parameter) => parameter.type.text));
+      functionResultTypes.set(fn.name, fn.signature.results.map((result) => result.type.text));
       continue;
     }
     const receiver = receiverBaseType(fn.receiver.type.text);
     methodKeys.set(`${receiver}.${fn.name}`, key);
   }
-  return { methodKeys, resultCounts, packageTypes, imports };
+  return { methodKeys, resultCounts, packageTypes, imports, interfaceTypes, functionParamTypes, functionResultTypes };
+}
+
+function isInterfaceTypeSpec(spec: TypeSpec): boolean {
+  return Boolean(spec.interfaceMethods || spec.interfaceEmbeds || spec.type.text.trim().startsWith("interface{"));
+}
+
+function emitTypeDescriptorLines(ast: ProgramAst, artifact: GoJuniorPackageExportData): string[] {
+  const descriptors = packageTypeDescriptors(ast, artifact);
+  if (descriptors.length === 0) return [];
+  return descriptors.map((descriptor) =>
+    `__gojrTypeDescriptors[${JSON.stringify(descriptor.type)}] = ${JSON.stringify(descriptor)};`
+  );
+}
+
+function packageTypeDescriptors(ast: ProgramAst, artifact: GoJuniorPackageExportData): GeneratedTypeDescriptor[] {
+  const descriptors = new Map<string, GeneratedTypeDescriptor>();
+  for (const statement of ast.body) {
+    if (statement.kind !== "TypeDecl") continue;
+    for (const spec of statement.declarations) {
+      const descriptor = typeSpecDescriptor(spec, artifact.importPath ?? "", artifact.packageName);
+      descriptors.set(descriptor.type, descriptor);
+    }
+  }
+  for (const fn of ast.functions) {
+    if (!fn.receiver) continue;
+    const receiver = receiverBaseType(fn.receiver.type.text);
+    const descriptor = descriptors.get(receiver);
+    if (!descriptor) continue;
+    const methods = descriptor.methods ?? [];
+    methods.push({
+      name: fn.name,
+      receiver: fn.receiver.type.text,
+      pointerReceiver: fn.receiver.type.text.trim().startsWith("*"),
+      params: fn.signature.parameters.map((parameter) => parameter.variadic ? `...${parameter.type.text}` : parameter.type.text),
+      results: fn.signature.results.map((result) => result.type.text)
+    });
+    descriptor.methods = methods;
+  }
+  return [...descriptors.values()];
+}
+
+function typeSpecDescriptor(spec: TypeSpec, pkgPath: string, pkgName: string | undefined): GeneratedTypeDescriptor {
+  const type = spec.name;
+  const kind = typeDescriptorKind(spec);
+  const descriptor: GeneratedTypeDescriptor = {
+    type,
+    name: type,
+    string: type,
+    kind,
+    pkgPath,
+    pkgName: pkgName ?? defaultImportName(pkgPath),
+    underlying: spec.type.text
+  };
+  Object.assign(descriptor, compositeTypeDescriptorFields(spec.type.text));
+  if (spec.structFields) {
+    descriptor.fields = spec.structFields.map((field) => ({
+      name: field.name,
+      type: field.type.text,
+      embedded: Boolean(field.embedded),
+      ...(field.tag ? { tag: field.tag } : {})
+    }));
+  }
+  if (spec.interfaceMethods) {
+    descriptor.interfaceMethods = spec.interfaceMethods.map((method) => ({
+      name: method.name,
+      params: method.signature.parameters.map((parameter) => parameter.variadic ? `...${parameter.type.text}` : parameter.type.text),
+      results: method.signature.results.map((result) => result.type.text)
+    }));
+  }
+  if (spec.interfaceEmbeds) descriptor.interfaceEmbeds = spec.interfaceEmbeds.map((embed) => embed.text);
+  return descriptor;
+}
+
+function typeDescriptorKind(spec: TypeSpec): string {
+  if (spec.structFields) return "struct";
+  if (isInterfaceTypeSpec(spec)) return "interface";
+  return typeTextKind(spec.type.text);
+}
+
+function typeTextKind(typeText: string): string {
+  const trimmed = typeText.trim();
+  if (trimmed.startsWith("*")) return "ptr";
+  if (trimmed.startsWith("[]")) return "slice";
+  if (/^\[[^\]]+\]/.test(trimmed)) return "array";
+  if (trimmed.startsWith("map[")) return "map";
+  if (trimmed.startsWith("chan ") || trimmed.startsWith("<-chan") || trimmed.startsWith("chan<-")) return "chan";
+  if (trimmed.startsWith("func(")) return "func";
+  if (trimmed.startsWith("interface{")) return "interface";
+  switch (trimmed) {
+    case "bool":
+      return "bool";
+    case "int":
+    case "int8":
+    case "int16":
+    case "int32":
+    case "int64":
+      return trimmed;
+    case "uint":
+    case "uint8":
+    case "uint16":
+    case "uint32":
+    case "uint64":
+    case "uintptr":
+      return trimmed;
+    case "float32":
+    case "float64":
+      return trimmed;
+    case "complex64":
+    case "complex128":
+      return trimmed;
+    case "string":
+      return "string";
+    default:
+      return "invalid";
+  }
+}
+
+function compositeTypeDescriptorFields(typeText: string): Partial<GeneratedTypeDescriptor> {
+  const trimmed = typeText.trim();
+  const mapType = parseMapTypeText(trimmed);
+  if (mapType) return { key: mapType.keyType, elem: mapType.valueType };
+  const arrayType = parseArrayOrSliceTypeText(trimmed);
+  if (arrayType) {
+    const length = parseArrayLengthTypeText(trimmed);
+    return {
+      elem: arrayType.elementType,
+      ...(length === undefined ? {} : { len: length })
+    };
+  }
+  const chanElem = chanElementTypeText(trimmed);
+  if (chanElem) return { elem: chanElem };
+  const fn = parseFuncTypeText(trimmed);
+  if (fn) return { params: fn.params, results: fn.results };
+  return {};
+}
+
+function parseArrayLengthTypeText(typeText: string | undefined): number | undefined {
+  if (!typeText?.startsWith("[") || typeText.startsWith("[]")) return undefined;
+  const close = typeText.indexOf("]");
+  if (close < 0) return undefined;
+  const raw = typeText.slice(1, close).trim();
+  if (!/^\d+$/.test(raw)) return undefined;
+  const length = Number(raw);
+  return Number.isSafeInteger(length) ? length : undefined;
+}
+
+function parseFuncTypeText(typeText: string | undefined): { params: string[]; results: string[] } | undefined {
+  const trimmed = typeText?.trim();
+  if (!trimmed?.startsWith("func(")) return undefined;
+  const paramsEnd = matchingParenIndex(trimmed, 4);
+  if (paramsEnd < 0) return undefined;
+  const params = splitTopLevelTypes(trimmed.slice(5, paramsEnd));
+  const resultText = trimmed.slice(paramsEnd + 1).trim();
+  if (!resultText) return { params, results: [] };
+  if (resultText.startsWith("(")) {
+    const resultsEnd = matchingParenIndex(resultText, 0);
+    if (resultsEnd !== resultText.length - 1) return undefined;
+    return { params, results: splitTopLevelTypes(resultText.slice(1, resultsEnd)) };
+  }
+  return { params, results: [resultText] };
+}
+
+function matchingParenIndex(text: string, openIndex: number): number {
+  let depth = 0;
+  for (let index = openIndex; index < text.length; index += 1) {
+    const char = text[index];
+    if (char === "(") depth += 1;
+    if (char === ")") {
+      depth -= 1;
+      if (depth === 0) return index;
+    }
+  }
+  return -1;
+}
+
+function splitTopLevelTypes(text: string): string[] {
+  const out: string[] = [];
+  let start = 0;
+  let parenDepth = 0;
+  let bracketDepth = 0;
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    if (char === "(") parenDepth += 1;
+    else if (char === ")") parenDepth -= 1;
+    else if (char === "[") bracketDepth += 1;
+    else if (char === "]") bracketDepth -= 1;
+    else if (char === "," && parenDepth === 0 && bracketDepth === 0) {
+      const item = text.slice(start, index).trim();
+      if (item) out.push(item);
+      start = index + 1;
+    }
+  }
+  const last = text.slice(start).trim();
+  if (last) out.push(last);
+  return out;
 }
 
 function defaultImportName(path: string): string {
@@ -1213,6 +1477,19 @@ function tupleSourceTypeTexts(expression: Expression, targetCount: number, env: 
   }
   if (targetCount === 1) return [expressionTypeText(expression, env)];
   return [];
+}
+
+function valueForTargetType(value: string, targetType: string | undefined, sourceType: string | undefined, env: ExpressionEmitEnv): string {
+  if (!isInterfaceTypeText(targetType, env.facts)) return value;
+  return `__gojrToInterface(${value}, ${JSON.stringify(targetType)}, ${JSON.stringify(sourceType)})`;
+}
+
+function isInterfaceTypeText(typeText: string | undefined, facts: PackageEmitFacts): boolean {
+  if (!typeText) return false;
+  const normalized = typeText.trim();
+  if (normalized === "any" || normalized === "interface{}" || normalized === "error") return true;
+  if (normalized.startsWith("interface{")) return true;
+  return facts.interfaceTypes.has(normalized) || facts.interfaceTypes.has(receiverBaseType(normalized));
 }
 
 function rangeIterationTypeTexts(expression: Expression | undefined, env: ExpressionEmitEnv): { key?: string; value?: string } {
@@ -1297,17 +1574,18 @@ function arrayLiteralToJs(ctx: EmitterContext, expression: ArrayLiteralExpressio
     ctx.emitError("unsupported Stage 3 keyed array literal");
     return undefined;
   }
-  const values = expression.elements.map((element) => expressionToJs(ctx, element.value, env));
-  if (values.some((value) => value === undefined)) return undefined;
-  const rendered = values.filter((value): value is string => value !== undefined);
   if (isByteSliceType(expression.type.text)) {
-    const bytes = expression.elements.map((element) => byteLiteralValue(element.value));
-    if (bytes.some((value) => value === undefined)) {
+    const bytes = bytesFromArrayLiteral(expression);
+    if (!bytes) {
       ctx.emitError(`unsupported Stage 1 []byte literal element`);
       return undefined;
     }
+    if (bytes.length > 64) return `__gojrBytesBase64(${JSON.stringify(bytesToBase64(bytes))})`;
     return `new Uint8Array([${bytes.join(", ")}])`;
   }
+  const values = expression.elements.map((element) => expressionToJs(ctx, element.value, env));
+  if (values.some((value) => value === undefined)) return undefined;
+  const rendered = values.filter((value): value is string => value !== undefined);
   return `[${rendered.join(", ")}]`;
 }
 
@@ -1326,6 +1604,10 @@ function structLiteralToJs(ctx: EmitterContext, expression: StructLiteralExpress
 }
 
 function mapLiteralToJs(ctx: EmitterContext, expression: MapLiteralExpression, env: ExpressionEmitEnv): string | undefined {
+  const mapStringBytes = mapStringBytesLiteralEntries(expression);
+  if (mapStringBytes) {
+    return `__gojrMapStringBytesBase64([${mapStringBytes.map(([key, bytes]) => `[${JSON.stringify(key)}, ${JSON.stringify(bytesToBase64(bytes))}]`).join(", ")}])`;
+  }
   const entries: string[] = [];
   for (const entry of expression.entries) {
     const key = expressionToJs(ctx, entry.key, env);
@@ -1338,14 +1620,15 @@ function mapLiteralToJs(ctx: EmitterContext, expression: MapLiteralExpression, e
 
 function functionLiteralToJs(ctx: EmitterContext, expression: FunctionLiteralExpression, env: ExpressionEmitEnv): string | undefined {
   const literalEnv = cloneExpressionEnv(env);
+  literalEnv.expectedReturnTypes = expression.signature.results.map((result) => result.type.text);
   const params: string[] = [];
   for (const [index, parameter] of expression.signature.parameters.entries()) {
     const goName = parameter.name && parameter.name !== "_" ? parameter.name : `__gojrArg${index}`;
     const jsName = safeLocalName(goName, index);
-    params.push(jsName);
+    params.push(parameter.variadic ? `...${jsName}` : jsName);
     if (parameter.name && parameter.name !== "_") {
       literalEnv.locals.set(parameter.name, jsName);
-      literalEnv.localTypes.set(parameter.name, parameter.type.text);
+      literalEnv.localTypes.set(parameter.name, parameter.variadic ? `[]${parameter.type.text}` : parameter.type.text);
     }
   }
   const hasDefer = statementsContainDefer(expression.body.statements);
@@ -1411,6 +1694,8 @@ function binaryExpressionToJs(ctx: EmitterContext, expression: BinaryExpression,
     return complexBinaryExpressionToJs(ctx, expression, left, right);
   }
   if (expression.operator === "&&" || expression.operator === "||") return `((${left}) ${expression.operator} (${right}))`;
+  if (expression.operator === "==") return `__gojrEqual(${left}, ${right})`;
+  if (expression.operator === "!=") return `(!__gojrEqual(${left}, ${right}))`;
   if (expression.operator === "&^") return `((${left}) & ~(${right}))`;
   const operator = jsBinaryOperator(expression.operator);
   if (!operator) {
@@ -1462,16 +1747,12 @@ function methodCallToJs(ctx: EmitterContext, expression: CallExpression, env: Ex
   const callee = expression.callee as SelectorExpression;
   const receiver = expressionToJs(ctx, callee.object, env);
   if (!receiver) return undefined;
-  const args = expression.args.map((arg) => expressionToJs(ctx, arg, env));
-  if (args.some((arg) => arg === undefined)) return undefined;
-  return `(await pkg[${JSON.stringify(methodKey)}](${[receiver, ...args.filter((arg): arg is string => arg !== undefined)].join(", ")}))`;
+  const args = renderCallArgs(ctx, expression.args, env, env.facts.functionParamTypes.get(methodKey), expression.spreadLast);
+  if (!args) return undefined;
+  return `(await pkg[${JSON.stringify(methodKey)}](${[receiver, ...args].join(", ")}))`;
 }
 
 function callExpressionToJs(ctx: EmitterContext, expression: CallExpression, env: ExpressionEmitEnv): string | undefined {
-  if (expression.spreadLast) {
-    ctx.emitError("unsupported Stage 3 spread call");
-    return undefined;
-  }
   if (expression.callee.kind === "Identifier" && expression.callee.name === "make" && !env.locals.has("make")) {
     return makeCallToJs(ctx, expression, env);
   }
@@ -1488,19 +1769,31 @@ function callExpressionToJs(ctx: EmitterContext, expression: CallExpression, env
   }
   const instantiatedName = instantiatedFunctionName(expression.callee);
   if (instantiatedName && !env.locals.has(instantiatedName)) {
-    const args = expression.args.map((arg) => expressionToJs(ctx, arg, env));
-    if (args.some((arg) => arg === undefined)) return undefined;
-    return `(await pkg[${JSON.stringify(instantiatedName)}](${args.filter((arg): arg is string => arg !== undefined).join(", ")}))`;
+    const args = renderCallArgs(ctx, expression.args, env, env.facts.functionParamTypes.get(instantiatedName), expression.spreadLast);
+    if (!args) return undefined;
+    return `(await pkg[${JSON.stringify(instantiatedName)}](${args.join(", ")}))`;
   }
-  const args = expression.args.map((arg) => expressionToJs(ctx, arg, env));
-  if (args.some((arg) => arg === undefined)) return undefined;
-  const renderedArgs = args.filter((arg): arg is string => arg !== undefined);
   if (expression.callee.kind === "Identifier" && !env.locals.has(expression.callee.name)) {
+    const renderedArgs = renderCallArgs(ctx, expression.args, env, env.facts.functionParamTypes.get(expression.callee.name), expression.spreadLast);
+    if (!renderedArgs) return undefined;
     return `(await pkg[${JSON.stringify(expression.callee.name)}](${renderedArgs.join(", ")}))`;
   }
   const callee = expressionToJs(ctx, expression.callee, env);
   if (!callee) return undefined;
+  const renderedArgs = renderCallArgs(ctx, expression.args, env, [], expression.spreadLast);
+  if (!renderedArgs) return undefined;
   return `(await (${callee})(${renderedArgs.join(", ")}))`;
+}
+
+function renderCallArgs(ctx: EmitterContext, args: Expression[], env: ExpressionEmitEnv, targetTypes: string[] = [], spreadLast = false): string[] | undefined {
+  const rendered: string[] = [];
+  for (const [index, arg] of args.entries()) {
+    const value = expressionToJs(ctx, arg, env);
+    if (!value) return undefined;
+    const lowered = valueForTargetType(value, targetTypes[index], expressionTypeText(arg, env), env);
+    rendered.push(spreadLast && index === args.length - 1 ? `...${lowered}` : lowered);
+  }
+  return rendered;
 }
 
 function instantiatedFunctionName(expression: Expression): string | undefined {
@@ -1517,9 +1810,9 @@ function dynamicMethodCallToJs(ctx: EmitterContext, expression: CallExpression, 
   if (expression.callee.kind !== "SelectorExpression") return undefined;
   const receiver = expressionToJs(ctx, expression.callee.object, env);
   if (!receiver) return undefined;
-  const args = expression.args.map((arg) => expressionToJs(ctx, arg, env));
-  if (args.some((arg) => arg === undefined)) return undefined;
-  return `(await __gojrCallMethod(${receiver}, ${JSON.stringify(expression.callee.field)}, [${args.filter((arg): arg is string => arg !== undefined).join(", ")}], pkg))`;
+  const args = renderCallArgs(ctx, expression.args, env, [], expression.spreadLast);
+  if (!args) return undefined;
+  return `(await __gojrCallMethod(${receiver}, ${JSON.stringify(expression.callee.field)}, [${args.join(", ")}], pkg))`;
 }
 
 function makeCallToJs(ctx: EmitterContext, expression: CallExpression, env: ExpressionEmitEnv): string | undefined {
@@ -1549,10 +1842,45 @@ function makeCallToJs(ctx: EmitterContext, expression: CallExpression, env: Expr
 
 function builtinCallToJs(ctx: EmitterContext, expression: CallExpression, env: ExpressionEmitEnv): string | undefined {
   if (expression.callee.kind !== "Identifier" || env.locals.has(expression.callee.name)) return undefined;
-  const args = expression.args.map((arg) => expressionToJs(ctx, arg, env));
-  if (args.some((arg) => arg === undefined)) return undefined;
-  const renderedArgs = args.filter((arg): arg is string => arg !== undefined);
+  const renderedArgs = renderCallArgs(ctx, expression.args, env, [], expression.spreadLast);
+  if (!renderedArgs) return undefined;
   switch (expression.callee.name) {
+    case "len":
+      if (renderedArgs.length !== 1) {
+        ctx.emitError("unsupported Stage 3 len call arity");
+        return undefined;
+      }
+      return `BigInt(__gojrLen(${renderedArgs[0]}))`;
+    case "cap":
+      if (renderedArgs.length !== 1) {
+        ctx.emitError("unsupported Stage 3 cap call arity");
+        return undefined;
+      }
+      return `BigInt(__gojrCap(${renderedArgs[0]}))`;
+    case "append":
+      if (renderedArgs.length < 1) {
+        ctx.emitError("unsupported Stage 3 append call arity");
+        return undefined;
+      }
+      return `__gojrAppend(${renderedArgs.join(", ")})`;
+    case "copy":
+      if (renderedArgs.length !== 2) {
+        ctx.emitError("unsupported Stage 3 copy call arity");
+        return undefined;
+      }
+      return `BigInt(__gojrCopy(${renderedArgs[0]}, ${renderedArgs[1]}))`;
+    case "delete":
+      if (renderedArgs.length !== 2) {
+        ctx.emitError("unsupported Stage 3 delete call arity");
+        return undefined;
+      }
+      return `__gojrDelete(${renderedArgs[0]}, ${renderedArgs[1]})`;
+    case "panic":
+      if (renderedArgs.length !== 1) {
+        ctx.emitError("unsupported Stage 3 panic call arity");
+        return undefined;
+      }
+      return `__gojrPanic(${renderedArgs[0]})`;
     case "complex":
       if (renderedArgs.length !== 2) {
         ctx.emitError("unsupported Stage 3 complex call arity");
@@ -1600,7 +1928,8 @@ function indexExpressionToJs(ctx: EmitterContext, expression: IndexExpression, e
     return `((${object}).get(${index}) ?? ${zeroValueForType(expression.typeText) ?? "null"})`;
   }
   if (objectType === "string") return `BigInt(__gojrStringByteAt(${object}, Number(${index})))`;
-  return `(${object})[Number(${index})]`;
+  const elementType = expression.typeText ?? parseArrayOrSliceTypeText(objectType)?.elementType;
+  return `__gojrIndex(${object}, Number(${index}), ${isIntegerType(elementType ?? "") ? "true" : "false"})`;
 }
 
 function sliceExpressionToJs(ctx: EmitterContext, expression: SliceExpression, env: ExpressionEmitEnv): string | undefined {
@@ -1640,6 +1969,40 @@ function byteLiteralValue(expression: Expression): number | undefined {
   return undefined;
 }
 
+function bytesFromArrayLiteral(expression: ArrayLiteralExpression): number[] | undefined {
+  const bytes = expression.elements.map((element) => byteLiteralValue(element.value));
+  return bytes.some((value) => value === undefined) ? undefined : bytes as number[];
+}
+
+function mapStringBytesLiteralEntries(expression: MapLiteralExpression): Array<[string, number[]]> | undefined {
+  if (expression.keyType.text !== "string" || !isByteSliceType(expression.valueType.text)) return undefined;
+  const entries: Array<[string, number[]]> = [];
+  for (const entry of expression.entries) {
+    if (entry.key.kind !== "Literal" || entry.key.literalKind !== "string" || typeof entry.key.value !== "string") return undefined;
+    if (entry.value.kind !== "ArrayLiteralExpression" || !isByteSliceType(entry.value.type.text)) return undefined;
+    const bytes = bytesFromArrayLiteral(entry.value);
+    if (!bytes) return undefined;
+    entries.push([entry.key.value, bytes]);
+  }
+  return entries;
+}
+
+function bytesToBase64(bytes: number[]): string {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  let out = "";
+  for (let index = 0; index < bytes.length; index += 3) {
+    const a = bytes[index] ?? 0;
+    const b = bytes[index + 1] ?? 0;
+    const c = bytes[index + 2] ?? 0;
+    const word = (a << 16) | (b << 8) | c;
+    out += alphabet[(word >> 18) & 63];
+    out += alphabet[(word >> 12) & 63];
+    out += index + 1 < bytes.length ? alphabet[(word >> 6) & 63] : "=";
+    out += index + 2 < bytes.length ? alphabet[word & 63] : "=";
+  }
+  return out;
+}
+
 function zeroValueForType(typeText: string | undefined): string | undefined {
   if (!typeText) return "null";
   switch (typeText) {
@@ -1666,6 +2029,7 @@ function zeroValueForType(typeText: string | undefined): string | undefined {
     case "bool":
       return "false";
     default:
+      if (typeText.startsWith("*")) return `__gojrTypedNil(${JSON.stringify(typeText)})`;
       if (typeText.startsWith("[]")) return "[]";
       if (typeText.startsWith("map[")) return "new Map()";
       return "null";
@@ -1793,19 +2157,21 @@ function safeLocalName(name: string, index: number): string {
   return `__gojrArg${index}`;
 }
 
-function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean, bodyLines: string[]): string {
+function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean, bodyLines: string[], typeDescriptorLines: string[]): string {
   const artifactHeader: GoJuniorPackageExportData = { ...artifact };
   delete artifactHeader.runtime;
   return [
     "// Code generated by gojr Stage 1 copy-and-patch emitter; DO NOT EDIT.",
     `export const gojrPackageArtifact = ${JSON.stringify(artifactHeader, null, 2)};`,
+    "const __gojrTypeDescriptors = Object.create(null);",
+    ...typeDescriptorLines,
     "export async function instantiateGoJrPackage(runtime = {}, options = {}) {",
     "  const pkg = Object.create(null);",
     "  const importsByPath = options.importsByPath || runtime.importsByPath || {};",
     "  const __gojrImport = (path) => {",
     "    const imported = importsByPath[path];",
     "    if (imported && typeof imported === \"object\" && \"package\" in imported) return imported.package;",
-    "    return imported || {};",
+    "    return imported || __gojrBuiltinImport(path, importsByPath) || {};",
     "  };",
     usesWasm ? "  const wasmBase64 = options.wasmBase64 || runtime.wasmBase64;" : "",
     usesWasm ? "  if (typeof wasmBase64 !== \"string\" || wasmBase64.length === 0) throw new Error(\"gojr Stage 1 package requires options.wasmBase64 from _gojr.wasm\");" : "",
@@ -1813,6 +2179,7 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     usesWasm ? "  const __gojrWasmInstance = new WebAssembly.Instance(__gojrWasmModule, {});" : "",
     usesWasm ? "  const __gojrWasmExports = __gojrWasmInstance.exports;" : "  const __gojrWasmExports = {};",
     ...bodyLines,
+    "  Object.defineProperty(pkg, \"__gojrTypeDescriptors\", { value: __gojrTypeDescriptors });",
     "  return { diagnostics: [], output: [], package: pkg, wasm: __gojrWasmExports };",
     "}",
     "function __gojrStringByteAt(value, index) {",
@@ -1825,6 +2192,13 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  return values;",
     "}",
     "function __gojrEqual(left, right) {",
+    "  if (left && left.__gojrInterface === true && right === null) return left.value === null;",
+    "  if (right && right.__gojrInterface === true && left === null) return right.value === null;",
+    "  if (left && left.__gojrTypedNil === true && right === null) return true;",
+    "  if (right && right.__gojrTypedNil === true && left === null) return true;",
+    "  if (left && left.__gojrInterface === true) left = left.value;",
+    "  if (right && right.__gojrInterface === true) right = right.value;",
+    "  if (left && left.__gojrTypedNil === true && right && right.__gojrTypedNil === true) return left.__gojrType === right.__gojrType;",
     "  if (left && typeof left === \"object\" && \"real\" in left && \"imag\" in left) {",
     "    right = __gojrToComplex(right);",
     "    return left.real === right.real && left.imag === right.imag;",
@@ -1844,14 +2218,229 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  Object.defineProperty(map, \"__gojrValueZero\", { value: valueZero });",
     "  return map;",
     "}",
+    "function __gojrBytesBase64(base64) {",
+    "  return __gojrDecodeBase64(base64);",
+    "}",
+    "function __gojrMapStringBytesBase64(entries) {",
+    "  const map = new Map();",
+    "  for (const [key, base64] of entries) map.set(key, __gojrBytesBase64(base64));",
+    "  return __gojrMap(map, new Uint8Array());",
+    "}",
+    "function __gojrLen(value) {",
+    "  if (value == null) return 0;",
+    "  if (typeof value === \"string\" || Array.isArray(value) || ArrayBuffer.isView(value)) return value.length;",
+    "  if (value instanceof Map) return value.size;",
+    "  if (value.__gojrChannel === true) return value.queue.length;",
+    "  return 0;",
+    "}",
+    "function __gojrCap(value) {",
+    "  if (value == null) return 0;",
+    "  if (Array.isArray(value) || ArrayBuffer.isView(value)) return value.length;",
+    "  if (value.__gojrChannel === true) return value.capacity;",
+    "  return __gojrLen(value);",
+    "}",
+    "function __gojrAppend(slice, ...values) {",
+    "  if (slice instanceof Uint8Array) {",
+    "    const out = new Uint8Array(slice.length + values.length);",
+    "    out.set(slice, 0);",
+    "    for (let index = 0; index < values.length; index += 1) out[slice.length + index] = Number(values[index]) & 255;",
+    "    return out;",
+    "  }",
+    "  if (ArrayBuffer.isView(slice)) {",
+    "    return Array.from(slice).concat(values);",
+    "  }",
+    "  return (Array.isArray(slice) ? slice : []).concat(values);",
+    "}",
+    "function __gojrCopy(dst, src) {",
+    "  if (typeof src === \"string\") src = new TextEncoder().encode(src);",
+    "  const count = Math.min(__gojrLen(dst), __gojrLen(src));",
+    "  if (dst instanceof Uint8Array) {",
+    "    const view = src instanceof Uint8Array ? src : Uint8Array.from(Array.from(src ?? [], (value) => Number(value) & 255));",
+    "    dst.set(view.subarray(0, count), 0);",
+    "    return count;",
+    "  }",
+    "  for (let index = 0; index < count; index += 1) dst[index] = src[index];",
+    "  return count;",
+    "}",
+    "function __gojrDelete(map, key) {",
+    "  if (map instanceof Map) map.delete(key);",
+    "  return null;",
+    "}",
+    "function __gojrPanic(value) {",
+    "  throw value instanceof Error ? value : new Error(`panic: ${String(value)}`);",
+    "}",
+    "function __gojrIndex(object, index, integerResult) {",
+    "  const value = object[index];",
+    "  if (integerResult || object instanceof Uint8Array || object instanceof Uint8ClampedArray || object instanceof Int8Array || object instanceof Uint16Array || object instanceof Int16Array || object instanceof Uint32Array || object instanceof Int32Array || object instanceof BigInt64Array || object instanceof BigUint64Array) return BigInt(value);",
+    "  return value;",
+    "}",
+    "function __gojrBuiltinImport(path, importsByPath) {",
+    "  if (path === \"reflect\") return __gojrReflectPackage(importsByPath);",
+    "  return undefined;",
+    "}",
+    "function __gojrReflectPackage(importsByPath = {}) {",
+    "  return {",
+    "    Invalid: 0n, Bool: 1n, Int: 2n, Int8: 3n, Int16: 4n, Int32: 5n, Int64: 6n, Uint: 7n, Uint8: 8n, Uint16: 9n, Uint32: 10n, Uint64: 11n, Uintptr: 12n, Float32: 13n, Float64: 14n, Complex64: 15n, Complex128: 16n, Array: 17n, Chan: 18n, Func: 19n, Interface: 20n, Map: 21n, Pointer: 22n, Ptr: 22n, Slice: 23n, String: 24n, Struct: 25n, UnsafePointer: 26n,",
+    "    TypeOf: async (value) => __gojrReflectTypeOf(value, importsByPath)",
+    "  };",
+    "}",
+    "function __gojrReflectTypeOf(value, importsByPath) {",
+    "  const actual = value && value.__gojrInterface === true ? value.value : value;",
+    "  if (actual === null || actual === undefined) return null;",
+    "  return __gojrReflectTypeForTypeName(__gojrRuntimeTypeName(actual), importsByPath, __gojrRuntimeTypePackagePath(actual));",
+    "}",
+    "function __gojrReflectTypeForTypeName(typeName, importsByPath = {}, pkgPath = undefined) {",
+    "  const descriptor = __gojrDescriptorForTypeName(typeName, importsByPath, pkgPath);",
+    "  if (!descriptor) return null;",
+    "  return { __gojrReflectType: true, __gojrDescriptor: descriptor, __gojrImportsByPath: importsByPath, __gojrMethods: __gojrReflectTypeMethods };",
+    "}",
+    "function __gojrDescriptorForTypeName(typeName, importsByPath = {}, pkgPath = undefined) {",
+    "  if (typeName === undefined || typeName === null || typeName === \"nil\") return undefined;",
+    "  const text = String(typeName).trim();",
+    "  if ((!pkgPath || pkgPath === gojrPackageArtifact.importPath) && __gojrTypeDescriptors[text]) return __gojrTypeDescriptors[text];",
+    "  const importedExact = __gojrImportedDescriptorForTypeName(text, importsByPath, pkgPath);",
+    "  if (importedExact) return importedExact;",
+    "  if (text.startsWith(\"*\")) {",
+    "    const elem = __gojrDescriptorForTypeName(text.slice(1).trim(), importsByPath, pkgPath);",
+    "    return { type: text, name: \"\", string: `*${elem ? __gojrReflectDescriptorString(elem) : __gojrReceiverBaseType(text.slice(1).trim())}`, kind: \"ptr\", pkgPath: elem ? elem.pkgPath : \"\", pkgName: elem ? elem.pkgName : \"\", elem: elem ? elem.type : text.slice(1).trim(), elemPkgPath: elem ? elem.pkgPath : undefined };",
+    "  }",
+    "  if (text.startsWith(\"[]\")) return { type: text, name: \"\", string: text, kind: \"slice\", pkgPath: \"\", elem: text.slice(2).trim() };",
+    "  if (text.startsWith(\"map[\")) return { type: text, name: \"\", string: text, kind: \"map\", pkgPath: \"\" };",
+    "  if (text.startsWith(\"chan \") || text.startsWith(\"<-chan\") || text.startsWith(\"chan<-\")) return { type: text, name: \"\", string: text, kind: \"chan\", pkgPath: \"\" };",
+    "  if (text.startsWith(\"func(\")) return { type: text, name: \"\", string: text, kind: \"func\", pkgPath: \"\" };",
+    "  const local = __gojrReceiverBaseType(text);",
+    "  if ((!pkgPath || pkgPath === gojrPackageArtifact.importPath) && __gojrTypeDescriptors[local]) return __gojrTypeDescriptors[local];",
+    "  const importedLocal = __gojrImportedDescriptorForTypeName(local, importsByPath, pkgPath);",
+    "  if (importedLocal) return importedLocal;",
+    "  return { type: text, name: __gojrBuiltinTypeName(text), string: text, kind: __gojrKindNameForType(text), pkgPath: \"\" };",
+    "}",
+    "function __gojrImportedDescriptorForTypeName(typeName, importsByPath = {}, pkgPath = undefined) {",
+    "  const entries = Object.entries(importsByPath || {});",
+    "  for (const [path, imported] of entries) {",
+    "    if (pkgPath && path !== pkgPath) continue;",
+    "    const importedPackage = imported && typeof imported === \"object\" && \"package\" in imported ? imported.package : imported;",
+    "    const table = importedPackage && importedPackage.__gojrTypeDescriptors;",
+    "    if (!table) continue;",
+    "    if (table[typeName]) return table[typeName];",
+    "    const local = __gojrReceiverBaseType(typeName);",
+    "    if (table[local]) return table[local];",
+    "  }",
+    "  return undefined;",
+    "}",
+    "function __gojrReflectDescriptorString(descriptor) {",
+    "  if (!descriptor) return \"\";",
+    "  if (descriptor.name && descriptor.pkgPath && descriptor.pkgPath !== gojrPackageArtifact.importPath) return `${descriptor.pkgName || __gojrImportPathBase(descriptor.pkgPath)}.${descriptor.name}`;",
+    "  return descriptor.string;",
+    "}",
+    "function __gojrImportPathBase(path) {",
+    "  const parts = String(path || \"\").split(\"/\").filter(Boolean);",
+    "  return parts[parts.length - 1] || \"\";",
+    "}",
+    "const __gojrReflectTypeMethods = {",
+    "  String: async (self) => __gojrReflectDescriptorString(self.__gojrDescriptor),",
+    "  Name: async (self) => self.__gojrDescriptor.name || \"\",",
+    "  PkgPath: async (self) => self.__gojrDescriptor.pkgPath || \"\",",
+    "  Kind: async (self) => __gojrReflectKindValue(self.__gojrDescriptor.kind),",
+    "  NumField: async (self) => BigInt((self.__gojrDescriptor.fields || []).length),",
+    "  Field: async (self, index) => {",
+    "    const field = (self.__gojrDescriptor.fields || [])[Number(index)];",
+    "    if (!field) throw new RangeError(\"reflect: Field index out of range\");",
+    "    return __gojrStruct(\"reflect.StructField\", { Name: field.name, Type: __gojrReflectTypeForTypeName(field.type, self.__gojrImportsByPath, field.pkgPath), Tag: field.tag || \"\", Index: [BigInt(Number(index))], Anonymous: Boolean(field.embedded) });",
+    "  },",
+    "  Elem: async (self) => {",
+    "    const elem = self.__gojrDescriptor.elem;",
+    "    if (!elem) throw new TypeError(`reflect: Elem of invalid type ${self.__gojrDescriptor.string}`);",
+    "    return __gojrReflectTypeForTypeName(elem, self.__gojrImportsByPath, self.__gojrDescriptor.elemPkgPath);",
+    "  },",
+    "  Key: async (self) => {",
+    "    const key = self.__gojrDescriptor.key;",
+    "    if (!key) throw new TypeError(`reflect: Key of invalid type ${self.__gojrDescriptor.string}`);",
+    "    return __gojrReflectTypeForTypeName(key, self.__gojrImportsByPath, self.__gojrDescriptor.keyPkgPath);",
+    "  },",
+    "  Len: async (self) => {",
+    "    if (typeof self.__gojrDescriptor.len !== \"number\") throw new TypeError(`reflect: Len of invalid type ${self.__gojrDescriptor.string}`);",
+    "    return BigInt(self.__gojrDescriptor.len);",
+    "  },",
+    "  NumIn: async (self) => BigInt((self.__gojrDescriptor.params || []).length),",
+    "  In: async (self, index) => {",
+    "    const typeName = (self.__gojrDescriptor.params || [])[Number(index)];",
+    "    if (!typeName) throw new RangeError(\"reflect: In index out of range\");",
+    "    return __gojrReflectTypeForTypeName(typeName, self.__gojrImportsByPath);",
+    "  },",
+    "  NumOut: async (self) => BigInt((self.__gojrDescriptor.results || []).length),",
+    "  Out: async (self, index) => {",
+    "    const typeName = (self.__gojrDescriptor.results || [])[Number(index)];",
+    "    if (!typeName) throw new RangeError(\"reflect: Out index out of range\");",
+    "    return __gojrReflectTypeForTypeName(typeName, self.__gojrImportsByPath);",
+    "  },",
+    "  Implements: async () => true",
+    "};",
+    "function __gojrBuiltinTypeName(typeName) {",
+    "  switch (typeName) {",
+    "    case \"bool\": case \"int\": case \"int8\": case \"int16\": case \"int32\": case \"int64\": case \"uint\": case \"uint8\": case \"uint16\": case \"uint32\": case \"uint64\": case \"uintptr\": case \"float32\": case \"float64\": case \"complex64\": case \"complex128\": case \"string\": return typeName;",
+    "    default: return \"\";",
+    "  }",
+    "}",
+    "function __gojrKindNameForType(typeName) {",
+    "  if (typeName.startsWith(\"*\")) return \"ptr\";",
+    "  if (typeName.startsWith(\"[]\")) return \"slice\";",
+    "  if (typeName.startsWith(\"map[\")) return \"map\";",
+    "  if (typeName.startsWith(\"chan \") || typeName.startsWith(\"<-chan\") || typeName.startsWith(\"chan<-\")) return \"chan\";",
+    "  if (typeName.startsWith(\"func(\")) return \"func\";",
+    "  return typeName;",
+    "}",
+    "function __gojrReflectKindValue(kind) {",
+    "  switch (kind) {",
+    "    case \"bool\": return 1n; case \"int\": return 2n; case \"int8\": return 3n; case \"int16\": return 4n; case \"int32\": return 5n; case \"int64\": return 6n;",
+    "    case \"uint\": return 7n; case \"uint8\": return 8n; case \"uint16\": return 9n; case \"uint32\": return 10n; case \"uint64\": return 11n; case \"uintptr\": return 12n;",
+    "    case \"float32\": return 13n; case \"float64\": return 14n; case \"complex64\": return 15n; case \"complex128\": return 16n;",
+    "    case \"array\": return 17n; case \"chan\": return 18n; case \"func\": return 19n; case \"interface\": return 20n; case \"map\": return 21n; case \"ptr\": return 22n; case \"slice\": return 23n; case \"string\": return 24n; case \"struct\": return 25n;",
+    "    default: return 0n;",
+    "  }",
+    "}",
     "function __gojrStruct(typeName, value) {",
     "  Object.defineProperty(value, \"__gojrType\", { value: typeName });",
+    "  Object.defineProperty(value, \"__gojrPkgPath\", { value: gojrPackageArtifact.importPath });",
     "  return value;",
+    "}",
+    "function __gojrTypedNil(typeName) {",
+    "  return { __gojrTypedNil: true, __gojrType: typeName, __gojrPkgPath: gojrPackageArtifact.importPath };",
+    "}",
+    "function __gojrToInterface(value, interfaceType, dynamicType) {",
+    "  if (value && value.__gojrInterface === true) return { __gojrInterface: true, interfaceType, value: value.value };",
+    "  if (value === null && typeof dynamicType === \"string\" && __gojrIsNilAssignableType(dynamicType)) value = __gojrTypedNil(dynamicType);",
+    "  return { __gojrInterface: true, interfaceType, value };",
+    "}",
+    "function __gojrIsNilAssignableType(typeText) {",
+    "  return typeText.startsWith(\"*\") || typeText.startsWith(\"[]\") || typeText.startsWith(\"map[\") || typeText.startsWith(\"chan \") || typeText.startsWith(\"<-chan\") || typeText.startsWith(\"chan<-\") || typeText.startsWith(\"func(\");",
+    "}",
+    "function __gojrRuntimeTypeName(value) {",
+    "  if (value && value.__gojrInterface === true) return __gojrRuntimeTypeName(value.value);",
+    "  if (value && value.__gojrTypedNil === true) return value.__gojrType;",
+    "  if (value && typeof value === \"object\" && typeof value.__gojrType === \"string\") return value.__gojrType;",
+    "  if (typeof value === \"bigint\") return \"int\";",
+    "  if (typeof value === \"number\") return \"float64\";",
+    "  if (typeof value === \"string\") return \"string\";",
+    "  if (typeof value === \"boolean\") return \"bool\";",
+    "  return value === null || value === undefined ? \"nil\" : typeof value;",
+    "}",
+    "function __gojrRuntimeTypePackagePath(value) {",
+    "  if (value && value.__gojrInterface === true) return __gojrRuntimeTypePackagePath(value.value);",
+    "  if (value && value.__gojrTypedNil === true) return value.__gojrPkgPath || \"\";",
+    "  if (value && typeof value === \"object\" && typeof value.__gojrPkgPath === \"string\") return value.__gojrPkgPath;",
+    "  return \"\";",
+    "}",
+    "function __gojrReceiverBaseType(typeName) {",
+    "  let name = String(typeName ?? \"\");",
+    "  if (name.startsWith(\"*\")) name = name.slice(1).trim();",
+    "  const dot = name.lastIndexOf(\".\");",
+    "  return dot >= 0 ? name.slice(dot + 1) : name;",
     "}",
     "async function __gojrCallMethod(receiver, method, args, pkg) {",
     "  const actual = receiver && receiver.__gojrInterface === true ? receiver.value : receiver;",
-    "  const typeName = actual && actual.__gojrType;",
-    "  const fn = typeName ? pkg[`${typeName}.${method}`] : undefined;",
+    "  if (actual && actual.__gojrMethods && typeof actual.__gojrMethods[method] === \"function\") return await actual.__gojrMethods[method](actual, ...args);",
+    "  const typeName = actual && (actual.__gojrType || __gojrRuntimeTypeName(actual));",
+    "  const fn = typeName ? pkg[`${__gojrReceiverBaseType(typeName)}.${method}`] : undefined;",
     "  if (typeof fn !== \"function\") throw new TypeError(`method ${method} not found`);",
     "  return await fn(actual, ...args);",
     "}",
@@ -2011,13 +2600,14 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  return __gojrValueMatchesType(actual, typeText) ? __gojrTuple([actual, true]) : __gojrTuple([__gojrZero(typeText), false]);",
     "}",
     "function __gojrValueMatchesType(value, typeText) {",
+    "  if (value && value.__gojrInterface === true) value = value.value;",
     "  switch (typeText) {",
     "    case \"int\": case \"int8\": case \"int16\": case \"int32\": case \"int64\": case \"uint\": case \"uint8\": case \"uint16\": case \"uint32\": case \"uint64\": case \"uintptr\": return typeof value === \"bigint\";",
     "    case \"float32\": case \"float64\": return typeof value === \"number\";",
     "    case \"string\": return typeof value === \"string\";",
     "    case \"bool\": return typeof value === \"boolean\";",
     "    case \"complex64\": case \"complex128\": return Boolean(value && typeof value === \"object\" && \"real\" in value && \"imag\" in value);",
-    "    default: return value !== null && value !== undefined;",
+    "    default: return __gojrReceiverBaseType(__gojrRuntimeTypeName(value)) === __gojrReceiverBaseType(typeText);",
     "  }",
     "}",
     "function __gojrZero(typeText) {",
@@ -2030,13 +2620,13 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "    default: return null;",
     "  }",
     "}",
-    usesWasm ? "function __gojrDecodeBase64(base64) {" : "",
-    usesWasm ? "  if (typeof Buffer !== \"undefined\") return new Uint8Array(Buffer.from(base64, \"base64\"));" : "",
-    usesWasm ? "  const binary = atob(base64);" : "",
-    usesWasm ? "  const out = new Uint8Array(binary.length);" : "",
-    usesWasm ? "  for (let i = 0; i < binary.length; i++) out[i] = binary.charCodeAt(i);" : "",
-    usesWasm ? "  return out;" : "",
-    usesWasm ? "}" : "",
+    "function __gojrDecodeBase64(base64) {",
+    "  if (typeof Buffer !== \"undefined\") return new Uint8Array(Buffer.from(base64, \"base64\"));",
+    "  const binary = atob(base64);",
+    "  const out = new Uint8Array(binary.length);",
+    "  for (let i = 0; i < binary.length; i++) out[i] = binary.charCodeAt(i);",
+    "  return out;",
+    "}",
     "export default { artifact: gojrPackageArtifact, instantiateGoJrPackage };",
     ""
   ].filter((line) => line !== "").join("\n");
