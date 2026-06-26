@@ -1020,6 +1020,17 @@ type RemoteThing struct {
 func Make() RemoteThing { return RemoteThing{Name: "dep", Count: 9} }
 `
         }],
+        "example.com/other": [{
+          filename: "other.go",
+          source: `package other
+
+type RemoteThing struct {
+	Other string
+}
+
+func Make() RemoteThing { return RemoteThing{Other: "other"} }
+`
+        }],
         reflect: [{
           filename: "reflect.go",
           source: `package reflect
@@ -1087,6 +1098,7 @@ func TypeOf(i any) Type
 
 import (
 	d "example.com/dep"
+	o "example.com/other"
 	"reflect"
 )
 
@@ -1094,10 +1106,24 @@ type RemoteThing struct {
 	Local string
 }
 
+type Container struct {
+	Item d.RemoteThing
+	Other o.RemoteThing
+	Local RemoteThing
+}
+
 func ReflectImported() (string, string, string, int, string, string, bool) {
 	t := reflect.TypeOf(d.Make())
 	f := t.Field(1)
 	return t.String(), t.Name(), t.PkgPath(), t.NumField(), f.Name, f.Type.String(), t.Kind() == reflect.Struct
+}
+
+func ReflectImportedField() (string, string, string, string, string, string) {
+	t := reflect.TypeOf(Container{Item: d.Make(), Other: o.Make(), Local: RemoteThing{Local: "root"}})
+	imported := t.Field(0)
+	other := t.Field(1)
+	local := t.Field(2)
+	return imported.Type.String(), imported.Type.PkgPath(), other.Type.String(), other.Type.PkgPath(), local.Type.String(), local.Type.PkgPath()
 }
 `
       }]
@@ -1125,6 +1151,18 @@ func ReflectImported() (string, string, string, int, string, string, bool) {
       "Count",
       "int64",
       true
+    ]);
+    const otherArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6reflect-imported/example.com/other.a") ?? "");
+    const otherModule = await importArtifactJavaScript(otherArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const other = await otherModule.instantiateGoJrPackage();
+    const rootWithBothImports = await rootModule.instantiateGoJrPackage({}, { importsByPath: { "example.com/dep": dep.package, "example.com/other": other.package } });
+    expect(await (rootWithBothImports.package.ReflectImportedField as () => Promise<[string, string, string, string, string, string]>)()).toEqual([
+      "dep.RemoteThing",
+      "example.com/dep",
+      "other.RemoteThing",
+      "example.com/other",
+      "RemoteThing",
+      "example.com/stage6reflectroot"
     ]);
   });
 
@@ -1231,6 +1269,17 @@ func ReflectComposites() (string, bool, string, bool, string, string, bool, int,
 		ct.Kind() == reflect.Chan, ct.Elem().String(),
 		ft.Kind() == reflect.Func, ft.NumIn(), ft.In(0).String(), ft.NumOut(), ft.Out(0).String()
 }
+
+func ReflectNilableZeros() (bool, bool, bool, bool, string, string, string, string, int64, bool, int, int) {
+	var names Names
+	var counts Counts
+	var updates Updates
+	var callback Callback
+	missing, ok := counts["missing"]
+	return names == nil, counts == nil, updates == nil, callback == nil,
+		reflect.TypeOf(names).Name(), reflect.TypeOf(counts).Name(), reflect.TypeOf(updates).Name(), reflect.TypeOf(callback).Name(),
+		missing, ok, len(names), cap(names)
+}
 `
       }]
     }, store);
@@ -1267,6 +1316,199 @@ func ReflectComposites() (string, bool, string, bool, string, string, bool, int,
       1n,
       "string"
     ]);
+    expect(await (pkg.ReflectNilableZeros as () => Promise<[boolean, boolean, boolean, boolean, string, string, string, string, bigint, boolean, bigint, bigint]>)()).toEqual([
+      true,
+      true,
+      true,
+      true,
+      "Names",
+      "Counts",
+      "Updates",
+      "Callback",
+      0n,
+      false,
+      0n,
+      0n
+    ]);
+  });
+
+  test("keeps generated named map zero values nil until make or literal", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6nilmap",
+      artifactRoot: "/tmp/gojr-stage6nilmap",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "nilmap.go",
+        source: `package stage6nilmap
+
+type Counts map[string]int64
+
+func NilMapReadRange() (bool, int64, bool, int64) {
+	var counts Counts
+	var loops int64
+	for range counts {
+		loops++
+	}
+	missing, ok := counts["missing"]
+	return counts == nil, missing, ok, loops
+}
+
+func NilMapWrite() {
+	var counts Counts
+	counts["missing"] = 1
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage6nilmap/example.com/stage6nilmap.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.NilMapReadRange as () => Promise<[boolean, bigint, boolean, bigint]>)()).toEqual([true, 0n, false, 0n]);
+    let error: unknown;
+    try {
+      await (pkg.NilMapWrite as () => Promise<null>)();
+    } catch (err) {
+      error = err;
+    }
+    expect(Boolean(error)).toBe(true);
+    expect(String(error)).toContain("assignment to entry in nil map");
+  });
+
+  test("generates reflect.Value host methods for basic generated values", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6reflectvalue",
+      artifactRoot: "/tmp/gojr-stage6reflect-value",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        reflect: [{
+          filename: "reflect.go",
+          source: `package reflect
+
+type Kind int
+type StructTag string
+
+const (
+	Invalid Kind = iota
+	Bool
+	Int
+	Int8
+	Int16
+	Int32
+	Int64
+	Uint
+	Uint8
+	Uint16
+	Uint32
+	Uint64
+	Uintptr
+	Float32
+	Float64
+	Complex64
+	Complex128
+	Array
+	Chan
+	Func
+	Interface
+	Map
+	Pointer
+	Ptr = Pointer
+	Slice
+	String
+	Struct
+	UnsafePointer
+)
+
+type Type interface {
+	String() string
+	Name() string
+	PkgPath() string
+	Kind() Kind
+	NumField() int
+	Field(i int) StructField
+	Elem() Type
+	Implements(u Type) bool
+}
+
+type StructField struct {
+	Name string
+	Type Type
+	Tag StructTag
+	Index []int
+	Anonymous bool
+}
+
+type Value struct{}
+
+func TypeOf(i any) Type
+func ValueOf(i any) Value
+func (v Value) IsValid() bool
+func (v Value) IsNil() bool
+func (v Value) Kind() Kind
+func (v Value) Type() Type
+func (v Value) Field(i int) Value
+func (v Value) Interface() any
+func (v Value) String() string
+func (v Value) Int() int64
+func (v Value) Bool() bool
+`
+        }]
+      },
+      files: [{
+        filename: "value.go",
+        source: `package stage6reflectvalue
+
+import "reflect"
+
+type Thing struct {
+	Name string
+	Count int64
+	Flag bool
+}
+
+func ReflectValueBasics() (bool, bool, bool, string, int64, bool, string, bool) {
+	var names []string
+	invalid := reflect.ValueOf(nil)
+	nilSlice := reflect.ValueOf(names)
+	v := reflect.ValueOf(Thing{Name: "ivy", Count: 7, Flag: true})
+	name := v.Field(0)
+	count := v.Field(1)
+	flag := v.Field(2)
+	return invalid.IsValid(), nilSlice.IsNil(), v.Kind() == reflect.Struct, v.Type().Name(), count.Int(), flag.Bool(), name.String(), name.Interface() == "ivy"
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage6reflect-value/example.com/stage6reflectvalue.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.pkgdef.runtime).toBeUndefined();
+    expect(archive?.javascript).toContain("__gojrReflectValueMethods");
+    expect(archive?.javascript).not.toContain("runtime.ast");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.ReflectValueBasics as () => Promise<[boolean, boolean, boolean, string, bigint, boolean, string, boolean]>)()).toEqual([
+      false,
+      true,
+      true,
+      "Thing",
+      7n,
+      true,
+      "ivy",
+      true
+    ]);
   });
 
   test("erases generated generic function instantiations to reusable functions", async () => {
@@ -1300,6 +1542,92 @@ func GenericString() string { return Choose[int64, string](7, "seven") }
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (pkg.GenericInt as () => Promise<bigint>)()).toBe(42n);
     expect(await (pkg.GenericString as () => Promise<string>)()).toBe("seven");
+  });
+
+  test("lowers generated generic named type methods by generic receiver base", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage7genericmethod",
+      artifactRoot: "/tmp/gojr-stage7genericmethod",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage7genericmethod.go",
+        source: `package stage7genericmethod
+
+type Box[T any] struct {
+	Value T
+}
+
+func (b Box[T]) Get() T { return b.Value }
+func (b *Box[T]) Set(v T) { b.Value = v }
+func (b Box[T]) Zero() T {
+	var z T
+	return z
+}
+
+func GenericBox() (int64, string, int64, string) {
+	bi := Box[int64]{Value: 7}
+	bs := Box[string]{Value: "ok"}
+	bi.Set(9)
+	return bi.Get(), bs.Get(), bi.Zero(), bs.Zero()
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage7genericmethod/example.com/stage7genericmethod.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.javascript).not.toContain("runtime.ast");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.GenericBox as () => Promise<[bigint, string, bigint, string]>)()).toEqual([9n, "ok", 0n, ""]);
+  });
+
+  test("passes generated generic function type dictionaries for zero values", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage7genericdict",
+      artifactRoot: "/tmp/gojr-stage7genericdict",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage7genericdict.go",
+        source: `package stage7genericdict
+
+func Zero[T any]() T {
+	var z T
+	return z
+}
+
+func Defaults[T any]() []T {
+	return make([]T, 2)
+}
+
+func GenericDefaults() (int64, string, int64, string) {
+	ints := Defaults[int64]()
+	strings := Defaults[string]()
+	return Zero[int64](), Zero[string](), ints[1], strings[1]
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage7genericdict/example.com/stage7genericdict.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.javascript).toContain("__gojrTypeArg");
+    expect(archive?.javascript).not.toContain("runtime.ast");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.GenericDefaults as () => Promise<[bigint, string, bigint, string]>)()).toEqual([0n, "", 0n, ""]);
   });
 
   test("reports unsupported Stage 1 lowering as GOJR_EMIT001", () => {

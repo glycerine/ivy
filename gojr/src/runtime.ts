@@ -8353,8 +8353,14 @@ function prepareCompoundAssignmentOperands(
 
 async function evaluateMapLookupWithPresence(expression: IndexExpression, context: EvaluationContext): Promise<RuntimeValue[] | undefined> {
   const object = unwrapNamed(await evaluateExpression(expression.object, context));
-  if (!(object instanceof RuntimeMap)) return undefined;
+  const nilMapType = object instanceof RuntimeTypedNilValue ? typedNilMapType(object, context) : undefined;
+  if (!(object instanceof RuntimeMap) && !nilMapType) return undefined;
   const index = await evaluateExpression(expression.index, context);
+  if (nilMapType) {
+    prepareAssignableToType(index, nilMapType.keyType, "map key", context);
+    return [defaultValueForTypeText(nilMapType.valueType, context), false];
+  }
+  if (!(object instanceof RuntimeMap)) return undefined;
   const [value, ok] = object.getWithPresence(index);
   return [value, ok];
 }
@@ -8405,10 +8411,10 @@ async function prepareAssignmentTarget(target: Expression, context: EvaluationCo
     return {
       expression: target,
       async get() {
-        return getIndex(object, index);
+        return getIndex(object, index, context);
       },
       async set(value) {
-        setEvaluatedIndex(target, object, index, value);
+        setEvaluatedIndex(target, object, index, value, context);
       }
     };
   }
@@ -8484,7 +8490,7 @@ async function evaluateExpression(expression: Expression, context: EvaluationCon
       if ((isRuntimeCallable(object) || isGoJuniorFunction(object)) && isTypeArgumentExpression(expression.index, context, true)) {
         return object;
       }
-      return getIndex(object, await evaluateExpression(expression.index, context));
+      return getIndex(object, await evaluateExpression(expression.index, context), context);
     }
 
     case "SliceExpression":
@@ -9220,6 +9226,10 @@ function makeUnderlyingTypeText(typeText: string, context: EvaluationContext): s
   return resolveRuntimeCompositeAliases(alias && alias !== imported ? alias : imported, context);
 }
 
+function typedNilMapType(value: RuntimeTypedNilValue, context: EvaluationContext): ReturnType<typeof parseMapTypeText> {
+  return parseMapTypeText(makeUnderlyingTypeText(value.typeName, context));
+}
+
 function spreadLastArgument(
   args: RuntimeValue[],
   context: EvaluationContext,
@@ -9631,9 +9641,16 @@ async function getSpreadsheetRange(expression: SpreadsheetRangeExpression, conte
   return sheet.range(expression.start.field, expression.endCell);
 }
 
-function getIndex(object: RuntimeValue, index: RuntimeValue): RuntimeValue {
+function getIndex(object: RuntimeValue, index: RuntimeValue, context: EvaluationContext): RuntimeValue {
   object = unwrapNamed(object);
   if (object instanceof RuntimeMap) return object.get(index);
+  if (object instanceof RuntimeTypedNilValue) {
+    const mapType = typedNilMapType(object, context);
+    if (mapType) {
+      prepareAssignableToType(index, mapType.keyType, "map key", context);
+      return defaultValueForTypeText(mapType.valueType, context);
+    }
+  }
   const numericIndex = toNumber(index);
   if (isRuntimeString(object)) return goStringByteAt(object, numericIndex);
   if (isRuntimeObject(object)) return object[String(index)] ?? null;
@@ -9647,19 +9664,23 @@ function getIndex(object: RuntimeValue, index: RuntimeValue): RuntimeValue {
 async function setIndex(expression: IndexExpression, value: RuntimeValue, context: EvaluationContext): Promise<void> {
   let object = await evaluateExpression(expression.object, context);
   const index = await evaluateExpression(expression.index, context);
-  setEvaluatedIndex(expression, object, index, value);
+  setEvaluatedIndex(expression, object, index, value, context);
 }
 
 function setEvaluatedIndex(
   expression: IndexExpression,
   object: RuntimeValue,
   index: RuntimeValue,
-  value: RuntimeValue
+  value: RuntimeValue,
+  context: EvaluationContext
 ): void {
   object = unwrapNamed(object);
   if (object instanceof RuntimeMap) {
     object.set(index, value);
     return;
+  }
+  if (object instanceof RuntimeTypedNilValue && typedNilMapType(object, context)) {
+    throw new GoJuniorRuntimeError("assignment to entry in nil map", expression.span);
   }
   if (isRuntimeObject(object)) {
     object[String(index)] = value;
@@ -10019,9 +10040,10 @@ function defaultValueForDeclarationType(type: TypeNode | undefined, context?: Ev
 }
 
 function defaultValueForTypeText(typeText: string, context?: EvaluationContext): RuntimeValue {
-  const resolvedTypeText = resolveRuntimeCompositeAliases(context?.resolveImportedTypeText(typeText) ?? typeText, context);
+  const declaredTypeText = normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
+  const resolvedTypeText = resolveRuntimeCompositeAliases(declaredTypeText, context);
   const mapType = parseMapTypeText(resolvedTypeText);
-  if (mapType) return new RuntimeMap(mapType.keyType, mapType.valueType, context);
+  if (mapType) return new RuntimeTypedNilValue(declaredTypeText || resolvedTypeText);
   if (parseChanTypeText(resolvedTypeText)) return null;
   const arrayType = parseArrayOrSliceTypeText(resolvedTypeText, context);
   if (arrayType) {
@@ -10402,9 +10424,10 @@ function atomicUint64Value(): RuntimeObject {
 }
 
 function zeroValueForMapValue(typeText: string, context?: EvaluationContext): RuntimeValue {
-  const resolvedTypeText = resolveRuntimeCompositeAliases(context?.resolveImportedTypeText(typeText) ?? typeText, context);
+  const declaredTypeText = normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
+  const resolvedTypeText = resolveRuntimeCompositeAliases(declaredTypeText, context);
   const mapType = parseMapTypeText(resolvedTypeText);
-  if (mapType) return null;
+  if (mapType) return new RuntimeTypedNilValue(declaredTypeText || resolvedTypeText);
   if (parseChanTypeText(resolvedTypeText)) return null;
   const arrayType = parseArrayOrSliceTypeText(resolvedTypeText, context);
   if (arrayType) {

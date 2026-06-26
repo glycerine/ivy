@@ -635,11 +635,12 @@ concurrency, or runtime gaps. Required compatibility work includes:
 - package initialization order, including package variable dependencies and
   multiple `init` functions
 
-Go-junior intentionally keeps one spreadsheet ergonomics deviation from Go:
-declared but uninitialized maps may auto-initialize on first assignment or map
-literal-like use. This avoids a common spreadsheet-scripting annoyance while
-the type system still records `map[K]V` and map reads still produce Go-like
-zero values plus optional presence booleans.
+Go-junior follows Go zero-value map semantics in the core language: declared
+but uninitialized maps are nil maps, reads produce the element zero value plus
+optional presence booleans, and writes require `make(map[K]V)` or a map
+literal. Any future spreadsheet ergonomics such as map auto-vivification must
+be an explicit host/library feature, not an implicit change to Go-compatible
+map zero values.
 
 Static spreadsheet references should be strongly typed. The compiler should
 receive a workbook/sheet type environment that maps literal cells, formula
@@ -1273,10 +1274,9 @@ position.
 
 Map keys must be Go-comparable. Slices, maps, functions, and other
 non-comparable values are rejected as map keys, except for Go's explicit nil
-comparison rules where applicable. Declared zero-value maps may auto-initialize
-on first assignment for spreadsheet ergonomics, but `delete`, `clear`,
-two-value lookup, range order, and missing-key zero values should otherwise be
-Go-like.
+comparison rules where applicable. Declared zero-value maps are nil maps:
+lookups return missing-key zero values and `ok == false`, while assignment
+requires an initialized map from `make` or a map literal.
 
 ### Source Packages
 
@@ -3797,9 +3797,8 @@ return counter.Next()
 - The built-in `fmt` package supports `Printf`, `Sprintf`, and `Println` early,
   with `Printf`/`Println` routed through the diagnostic sink.
 - Go-junior maps iterate in deterministic insertion order.
-- Declared zero-value maps auto-initialize on first assignment for spreadsheet
-  ergonomics while preserving Go-like typed map reads, delete/clear behavior,
-  and deterministic insertion-order iteration.
+- Declared zero-value maps are nil maps: reads are Go-like zero/false lookups,
+  and writes require `make` or a map literal.
 - Target/environment limitations such as browser cgo/native execution are
   reported explicitly with diagnostics and host-service adapter guidance.
 - Valid formulas typecheck before execution.

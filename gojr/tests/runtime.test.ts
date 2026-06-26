@@ -4283,20 +4283,37 @@ func TestBad(t int) {}
     expect(result.output.join("")).toContain("--- FAIL: TestBad\n");
   });
 
-  test("supports declared maps with typed string and integer keys", async () => {
+  test("supports made maps with typed string and integer keys", async () => {
     const stringKeyed = await expectRuns(`
-var m map[string]int
+m := make(map[string]int)
 m["hi"] = 3
 return m["hi"]
 `);
     expect(stringKeyed.value).toBe(3n);
 
     const intKeyed = await expectRuns(`
-var mm map[int]string
+mm := make(map[int]string)
 mm[3] = "hi"
 return mm[3]
 `);
     expect(intKeyed.value).toBe("hi");
+  });
+
+  test("keeps declared map zero values nil and rejects writes before make", async () => {
+    const read = await expectRuns(`
+var m map[string]int
+v, ok := m["hi"]
+return m == nil, v, ok, len(m)
+`);
+    expect(read.values).toEqual([true, 0n, false, 0n]);
+
+    const write = await evaluateSource(`
+var m map[string]int
+m["hi"] = 3
+`);
+    expect(write.diagnostics).toHaveLength(1);
+    expect(write.diagnostics[0]?.code).toBe("GOJR_RUNTIME001");
+    expect(write.diagnostics[0]?.message).toContain("assignment to entry in nil map");
   });
 
   test("supports Go two-value map lookups for key presence", async () => {
@@ -4308,7 +4325,7 @@ return a, ok
     expect(missing.values).toEqual([0n, false]);
 
     const present = await expectRuns(`
-var m map[int]string
+m := make(map[int]string)
 m[3] = "hi"
 a, ok := m[3]
 return a, ok
@@ -4663,7 +4680,7 @@ m = map[int]string{1: "bad"}
 
   test("reports map key and value type mismatches without numeric-index coercion", async () => {
     const badKey = await evaluateSource(`
-var mm map[int]string
+mm := make(map[int]string)
 mm["hi"] = 3
 `);
     expect(badKey.diagnostics).toHaveLength(1);
@@ -4671,7 +4688,7 @@ mm["hi"] = 3
     expect(badKey.diagnostics[0]?.message).not.toContain("numeric");
 
     const badValue = await evaluateSource(`
-var m map[string]int
+m := make(map[string]int)
 m["hi"] = "three"
 `);
     expect(badValue.diagnostics).toHaveLength(1);
@@ -4733,7 +4750,7 @@ return m[0] + v + m[2] + missing, ok, missingOK, len(m)
 import "fmt"
 
 counts := map[string]int64{"a": 1, "b": 2}
-var floats map[int]float64
+floats := make(map[int]float64)
 empty := fmt.Sprintf("%v", floats)
 floats[39] = 3.2
 return fmt.Sprintf("%v | %#v | %v | %v", counts, counts, empty, floats)
@@ -4744,20 +4761,20 @@ return fmt.Sprintf("%v | %#v | %v | %v", counts, counts, empty, floats)
 
   test("formats REPL map string values as Go literals", async () => {
     const result = await expectRuns(`
-var m map[int]string
+m := make(map[int]string)
 m[3] = "hi"
 m[5] = "there"
 var empty map[int]string
-var multi map[int]string
+multi := make(map[int]string)
 multi[9] = "hello\\nthere"
-var quoted map[int]string
+quoted := make(map[int]string)
 quoted[1] = "he said \\"hi\\""
 quoted[2] = "tick \` and \\"quote\\""
 return empty, m, multi, quoted
 `);
 
     expect(result.values?.map(formatReplValue)).toEqual([
-      `map[int]string{}`,
+      `map[int]string(nil)`,
       `map[int]string{3:"hi", 5:"there"}`,
       "map[int]string{9:`hello\nthere`}",
       "map[int]string{1:`he said \"hi\"`, 2:`tick \\` and \"quote\"`}"

@@ -967,22 +967,30 @@ Implemented and covered by focused tests:
 - First-pass generated interface descriptors: concrete method dispatch, pointer receiver dispatch, interface argument/return boxing, nil interface versus typed-nil interface preservation, and concrete type assertions through `any`.
 - First-pass package-local type descriptor tables for named structs and interfaces, with generated reflect-style `TypeOf`, `String`, `Name`, `Kind`, `NumField`, `Field`, `Elem`, pointer descriptors, and typed nil pointer reflection.
 - First-pass imported package descriptor lookup through `importsByPath`, preserving full import-path identity on generated values so reflection can distinguish same-named local and dependency types without embedding dependency descriptors.
+- First-pass composite named type descriptors for slices, maps, arrays, channels, and functions, including `Elem`, `Key`, `Len`, `In`, and `Out` metadata used by generated reflection.
+- Go-correct nil-able zero values in generated code for pointers, slices, maps, channels, and functions, including named nil-able types, nil map zero/false reads, nil range behavior, nil-map assignment rejection, and reflect-visible typed nil identity.
+- Package-qualified struct field descriptors, including ambiguous same-named imported field types from multiple packages.
+- First-pass generated `reflect.Value` host support for `ValueOf`, `IsValid`, `IsNil`, `Kind`, `Type`, `Field`, `Interface`, `String`, `Int`, and `Bool`.
 - First-pass generic function instantiation erasure for simple generic functions.
+- First-pass generic named type method lowering by generic receiver base, covering instantiated values such as `Box[int64]` calling methods declared on `Box[T]` and `*Box[T]`.
+- First-pass generic function type-argument dictionaries for runtime type-sensitive lowering, currently covering zero values of `T` and `make([]T, n)` element initialization.
+- First-pass generic receiver method dictionaries inferred from receiver runtime type names such as `Box[int64]`, covering method bodies that need zero values of receiver type parameters.
 - Literal supernodes for large `[]byte{...}` and `map[string][]byte{...}` data, using base64 payloads instead of huge element-by-element JavaScript.
 - Narrow generated helpers for common builtins: `len`, `cap`, `append`, `copy`, `delete`, and `panic`.
 
 Current focused scoreboard:
 
 ```text
-emitterWasm.test.ts: 18 pass
-adjacent build/bench/generated-runtime/Wasm POC suites: 61 pass
+emitterWasm.test.ts: 23 pass
+targeted runtime nil-map compatibility slice: 6 pass
+adjacent build/bench/generated-runtime/Wasm POC suites: 66 pass
 ```
 
 Still incomplete:
 
 - The backend still lowers from `ProgramAst`; the long-term target remains direct Go-shaped AST plus `go/types.Info`.
-- Type descriptors are not yet complete enough for imported private/helper types, package-qualified field descriptors, composite named type metadata, all nil-able type zero values, or `reflect.Value` parity.
-- Generic dictionaries, generic named types, constraints, and specialization are only smoke-tested.
+- Type descriptors are not yet complete enough for imported private/helper types or full `reflect.Value` parity.
+- Generic constraints, inference-heavy generic calls, generic type descriptors for instantiated types, dictionary use beyond zero-value construction, and specialization are only smoke-tested.
 - Pointer/addressability semantics are still shallow; address-taken locals, struct fields, slice elements, and `new(T)` need the planned box/pointer stencils.
 - Package artifacts are executable for the supported subset, but the old interpreter-compatible path still exists elsewhere and must be removed when compiled artifacts become authoritative.
 - Standard-library and `zygo` cutover still need broader lowering coverage and warm-cache startup work.
