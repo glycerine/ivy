@@ -93,7 +93,18 @@ class GoJuniorTestStop extends Error {
         this.name = "GoJuniorTestStop";
     }
 }
+function defaultBrowserConsoleSink(stream) {
+    const root = globalThis;
+    if (root.process !== undefined)
+        return undefined;
+    const target = stream === "stderr" ? root.console?.error ?? root.console?.log : root.console?.log;
+    if (typeof target !== "function")
+        return undefined;
+    return (text) => target.call(root.console, text);
+}
 function createEvaluationSharedState(options = {}) {
+    const stdout = options.stdout ?? defaultBrowserConsoleSink("stdout");
+    const stderr = options.stderr ?? defaultBrowserConsoleSink("stderr");
     return {
         output: [],
         rootScope: new Scope(),
@@ -106,7 +117,8 @@ function createEvaluationSharedState(options = {}) {
         ambiguousImportLocalNames: new Set(),
         importPathsByFileAndLocalName: new Map(),
         maxLoopIterations: options.maxLoopIterations ?? 100_000,
-        ...(options.stdout ? { stdout: options.stdout } : {}),
+        ...(stdout ? { stdout } : {}),
+        ...(stderr ? { stderr } : {}),
         random: new DeterministicPrng(options.randomSeed),
         scheduler: new AsyncGoScheduler(options.randomSeed === undefined ? {} : { randomSeed: options.randomSeed }),
         observedDeps: new Map()
@@ -443,8 +455,15 @@ export class EvaluationContext {
         }
     }
     write(text) {
+        this.writeStdout(text);
+    }
+    writeStdout(text) {
         this.shared.output.push(text);
         this.shared.stdout?.(text);
+    }
+    writeStderr(text) {
+        this.shared.output.push(text);
+        this.shared.stderr?.(text);
     }
     loopLimit() {
         return this.shared.maxLoopIterations;
@@ -1683,6 +1702,10 @@ class SourcePackageGraphEvaluator {
         this.output.push(text);
         this.options.stdout?.(text);
     };
+    writeErrorOutput = (text) => {
+        this.output.push(text);
+        this.options.stderr?.(text);
+    };
     constructor(specs, options) {
         this.options = options;
         this.packages = { ...(options.packages ?? {}) };
@@ -1802,7 +1825,8 @@ class SourcePackageGraphEvaluator {
             codebase: this.codebase,
             packageInfos: this.packageInfos,
             packageRuntimes: this.packageRuntimes,
-            stdout: this.writeOutput
+            stdout: this.writeOutput,
+            stderr: this.writeErrorOutput
         });
         this.diagnostics.push(...result.diagnostics);
         if (this.hasErrors())
@@ -2588,6 +2612,7 @@ export class GoJuniorSession {
     context;
     codebase;
     checkerPackage;
+    replImports = new Map();
     sessionSheet;
     sessionSheets;
     checkSequence = 0;
@@ -2642,7 +2667,7 @@ export class GoJuniorSession {
                 output: []
             }, this.context);
         }
-        const checkedTransaction = this.checkSource(sourceFile);
+        const checkedTransaction = this.checkSource(sourceFile, ast);
         const checked = checkedTransaction.checked;
         if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
             if (!checkedTransaction.transaction.IsClosed())
@@ -2710,9 +2735,9 @@ export class GoJuniorSession {
             }, this.context);
         }
     }
-    checkSource(source) {
+    checkSource(source, ast) {
         const transaction = this.codebase.NewUpdateTxn();
-        const checked = checkGoJuniorSourceFiles([ensureTrailingNewlineSourceFile(source)], {
+        const checked = checkGoJuniorSourceFiles([ensureTrailingNewlineSourceFile(this.sourceWithSessionImports(source, ast))], {
             ...typeCheckConfig(this.currentOptions()),
             codebaseTxn: transaction,
             packagePath: this.checkerPackage.Path(),
@@ -2726,11 +2751,12 @@ export class GoJuniorSession {
             checked.transaction.Commit();
     }
     persistCheckerImports(ast, transaction) {
-        const checkerPackage = this.codebase.PackageInfo(transaction, this.checkerPackage.Path()) ?? this.checkerPackage;
+        const checkerPackage = this.codebase.BeginPackageUpdate(transaction, this.checkerPackage.Path(), this.checkerPackage.Name());
         for (const imported of ast.imports) {
             const name = importBindingName(imported, this.context);
             if (name === "_" || name === ".")
                 continue;
+            this.replImports.set(name, imported.alias ? { path: imported.path, alias: imported.alias } : { path: imported.path });
             if (checkerPackage.Scope().Lookup(name) !== null)
                 continue;
             const pkg = (isIntrinsicPackageImport(imported.path) ? standardTypePackage(imported.path) : undefined)
@@ -2740,6 +2766,19 @@ export class GoJuniorSession {
                 checkerPackage.Scope().Insert(NewPkgName(NoPos, checkerPackage, name, pkg));
             }
         }
+    }
+    sourceWithSessionImports(source, ast) {
+        const currentImports = new Set(ast.imports.map((imported) => importBindingName(imported, this.context)));
+        const imports = [...this.replImports.entries()]
+            .filter(([name]) => !currentImports.has(name))
+            .map(([_name, imported]) => imported);
+        if (imports.length === 0)
+            return source;
+        const lines = imports.map((imported) => `${imported.alias ? `${imported.alias} ` : ""}${JSON.stringify(imported.path)}`);
+        return {
+            filename: source.filename,
+            source: `import (\n${lines.join("\n")}\n)\n${source.source}`
+        };
     }
     currentOptions() {
         return {
@@ -2990,13 +3029,13 @@ function packageFunctionIntrinsic(declaration, importPath) {
         intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => syscallReadSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
     }
     if (importPath === "syscall" && declaration.name === "write") {
-        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => syscallWriteSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => syscallWriteSlice(args[0] ?? 0n, args[1] ?? [], context), { preserveResultIdentity: true });
     }
     if (importPath === "internal/runtime/syscall/linux" && declaration.name === "Read") {
         intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => syscallReadErrnoSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
     }
     if (importPath === "internal/runtime/syscall/linux" && declaration.name === "Write") {
-        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => syscallWriteErrnoSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => syscallWriteErrnoSlice(args[0] ?? 0n, args[1] ?? [], context), { preserveResultIdentity: true });
     }
     if (importPath === "internal/abi" && declaration.name === "TypeOf") {
         intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => internalAbiTypeOf(args[0] ?? null, context));
@@ -3077,9 +3116,9 @@ function packageMethodIntrinsic(declaration, importPath) {
     if (importPath === "os" && (receiver.baseType === "File" || receiver.baseType === "os.File")) {
         switch (declaration.name) {
             case "Write":
-                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => osFileWrite(args[1] ?? [], context));
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => osFileWrite(args[0] ?? null, args[1] ?? [], context));
             case "WriteString":
-                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => osFileWriteString(args[1] ?? "", context));
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => osFileWriteString(args[0] ?? null, args[1] ?? "", context));
             default:
                 return undefined;
         }
@@ -3193,14 +3232,14 @@ function packageMethodIntrinsic(declaration, importPath) {
             return undefined;
     }
 }
-function osFileWrite(value, context) {
+function osFileWrite(receiver, value, context) {
     const bytes = bytealgBytes(value);
-    context.write(new TextDecoder().decode(bytes));
+    writeStandardStreamBytes(runtimeOsFileFd(receiver), bytes, context);
     return [BigInt(bytes.length), null];
 }
-function osFileWriteString(value, context) {
+function osFileWriteString(receiver, value, context) {
     const text = toStringValue(value);
-    context.write(text);
+    writeStandardStreamText(runtimeOsFileFd(receiver), text, context);
     return [BigInt(text.length), null];
 }
 function intrinsicGoJuniorFunction(name, signature, call, options = {}) {
@@ -3307,16 +3346,16 @@ function bodylessSyscallIntrinsic(importPath, name, signature) {
         name === "rawSyscall6" ||
         name === "syscalln" ||
         name === "rawsyscalln") {
-        return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args) => {
+        return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args, context) => {
             const operands = syscallOperands(args);
-            return syscallTrap(args[0] ?? 0n, operands[0] ?? 0n, operands[1] ?? 0n, operands[2] ?? 0n);
+            return syscallTrap(args[0] ?? 0n, operands[0] ?? 0n, operands[1] ?? 0n, operands[2] ?? 0n, context);
         }, { preserveResultIdentity: true });
     }
     if (name === "read") {
         return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args) => syscallReadSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
     }
     if (name === "write") {
-        return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args) => syscallWriteSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+        return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args, context) => syscallWriteSlice(args[0] ?? 0n, args[1] ?? [], context), { preserveResultIdentity: true });
     }
     return undefined;
 }
@@ -3329,14 +3368,14 @@ function syscallOperands(args) {
     }
     return args.slice(1);
 }
-function syscallTrap(trapValue, a1, a2, a3) {
+function syscallTrap(trapValue, a1, a2, a3, context) {
     const trap = toBigInt(trapValue);
     const kind = syscallTrapKind(trap);
     if (kind === "read") {
         return [syscallReadPointer(a1, a2, a3), 0n, 0n];
     }
     if (kind === "write") {
-        return [syscallWritePointer(a1, a2, a3), 0n, 0n];
+        return [syscallWritePointer(a1, a2, a3, context), 0n, 0n];
     }
     return [0n, 0n, 0n];
 }
@@ -3364,20 +3403,21 @@ function syscallReadSlice(fdValue, bufferValue) {
     copyBytesToRuntimeSlice(buffer, bytes, count);
     return [BigInt(count), null];
 }
-function syscallWriteSlice(fdValue, bufferValue) {
+function syscallWriteSlice(fdValue, bufferValue, context) {
     const buffer = unwrapNamed(bufferValue);
     if (!Array.isArray(buffer))
         throwTypeError(bufferValue, "[]byte", "syscall.write buffer");
     const bytes = bytealgBytes(buffer);
-    const count = hostWriteSync(toNumber(fdValue), bytes, 0, bytes.length, null);
+    const fd = toNumber(fdValue);
+    const count = writeStandardStreamBytes(fd, bytes, context) ?? hostWriteSync(fd, bytes, 0, bytes.length, null);
     return [BigInt(count), null];
 }
 function syscallReadErrnoSlice(fdValue, bufferValue) {
     const result = syscallReadSlice(fdValue, bufferValue);
     return [result[0] ?? 0n, 0n];
 }
-function syscallWriteErrnoSlice(fdValue, bufferValue) {
-    const result = syscallWriteSlice(fdValue, bufferValue);
+function syscallWriteErrnoSlice(fdValue, bufferValue, context) {
+    const result = syscallWriteSlice(fdValue, bufferValue, context);
     return [result[0] ?? 0n, 0n];
 }
 function syscallReadPointer(fdValue, pointerValue, lengthValue) {
@@ -3390,13 +3430,14 @@ function syscallReadPointer(fdValue, pointerValue, lengthValue) {
     copyBytesToRuntimePointer(pointer, bytes, count);
     return BigInt(count);
 }
-function syscallWritePointer(fdValue, pointerValue, lengthValue) {
+function syscallWritePointer(fdValue, pointerValue, lengthValue, context) {
     const pointer = runtimeUintptrPointers.get(toBigInt(pointerValue));
     const length = toNonNegativeLength(lengthValue, "syscall write length");
     if (!pointer || length === 0)
         return 0n;
     const bytes = bytesFromRuntimePointer(pointer, length);
-    return BigInt(hostWriteSync(toNumber(fdValue), bytes, 0, bytes.length, null));
+    const fd = toNumber(fdValue);
+    return BigInt(writeStandardStreamBytes(fd, bytes, context) ?? hostWriteSync(fd, bytes, 0, bytes.length, null));
 }
 function copyBytesToRuntimeSlice(target, bytes, count) {
     for (let index = 0; index < count && index < target.length; index += 1) {
@@ -3426,6 +3467,23 @@ function bytesFromRuntimePointer(pointer, length) {
     if (length > 0)
         bytes[0] = bytealgByte(pointer.get());
     return bytes;
+}
+function writeStandardStreamBytes(fd, bytes, context) {
+    if (fd !== 1 && fd !== 2)
+        return undefined;
+    writeStandardStreamText(fd, new TextDecoder().decode(bytes), context);
+    return bytes.length;
+}
+function writeStandardStreamText(fd, text, context) {
+    if (fd === 1) {
+        context.writeStdout(text);
+        return new TextEncoder().encode(text).length;
+    }
+    if (fd === 2) {
+        context.writeStderr(text);
+        return new TextEncoder().encode(text).length;
+    }
+    return undefined;
 }
 function hostReadSync(fd, buffer, offset, length, position) {
     const host = globalThis;
@@ -4501,6 +4559,7 @@ function bodylessBytealgIntrinsic(importPath, name, signature) {
 function bodylessAtomicIntrinsic(importPath, name, signature) {
     if (importPath !== "sync/atomic")
         return undefined;
+    const integer = atomicIntegerKindByFunctionName(name);
     const functionValue = (call) => ({
         kind: "GoJuniorFunction",
         name: `${importPath}.${name}`,
@@ -4509,63 +4568,25 @@ function bodylessAtomicIntrinsic(importPath, name, signature) {
             return call(args, context);
         }
     });
+    if (integer) {
+        switch (integer.operation) {
+            case "Load":
+                return functionValue((args) => atomicLoadInteger(args, integer.kind.type, name));
+            case "Store":
+                return functionValue((args, context) => atomicStoreInteger(args, integer.kind.type, name, context));
+            case "Swap":
+                return functionValue((args, context) => atomicSwapInteger(args, integer.kind.type, name, context));
+            case "CompareAndSwap":
+                return functionValue((args, context) => atomicCompareAndSwapInteger(args, integer.kind.type, name, context));
+            case "Add":
+                return functionValue((args, context) => atomicAddInteger(args, integer.kind.type, name, context));
+            case "And":
+                return functionValue((args, context) => atomicBitwiseInteger(args, integer.kind.type, name, "&", context));
+            case "Or":
+                return functionValue((args, context) => atomicBitwiseInteger(args, integer.kind.type, name, "|", context));
+        }
+    }
     switch (name) {
-        case "LoadInt32":
-            return functionValue((args) => atomicLoadInteger(args, "int32", name));
-        case "LoadUint32":
-            return functionValue((args) => atomicLoadInteger(args, "uint32", name));
-        case "LoadUint64":
-            return functionValue((args) => atomicLoadInteger(args, "uint64", name));
-        case "LoadUintptr":
-            return functionValue((args) => atomicLoadInteger(args, "uintptr", name));
-        case "StoreInt32":
-            return functionValue((args, context) => atomicStoreInteger(args, "int32", name, context));
-        case "StoreUint32":
-            return functionValue((args, context) => atomicStoreInteger(args, "uint32", name, context));
-        case "StoreUint64":
-            return functionValue((args, context) => atomicStoreInteger(args, "uint64", name, context));
-        case "StoreUintptr":
-            return functionValue((args, context) => atomicStoreInteger(args, "uintptr", name, context));
-        case "SwapInt32":
-            return functionValue((args, context) => atomicSwapInteger(args, "int32", name, context));
-        case "SwapUint32":
-            return functionValue((args, context) => atomicSwapInteger(args, "uint32", name, context));
-        case "SwapUint64":
-            return functionValue((args, context) => atomicSwapInteger(args, "uint64", name, context));
-        case "SwapUintptr":
-            return functionValue((args, context) => atomicSwapInteger(args, "uintptr", name, context));
-        case "CompareAndSwapInt32":
-            return functionValue((args, context) => atomicCompareAndSwapInteger(args, "int32", name, context));
-        case "CompareAndSwapUint32":
-            return functionValue((args, context) => atomicCompareAndSwapInteger(args, "uint32", name, context));
-        case "CompareAndSwapUint64":
-            return functionValue((args, context) => atomicCompareAndSwapInteger(args, "uint64", name, context));
-        case "CompareAndSwapUintptr":
-            return functionValue((args, context) => atomicCompareAndSwapInteger(args, "uintptr", name, context));
-        case "AddInt32":
-            return functionValue((args, context) => atomicAddInteger(args, "int32", name, context));
-        case "AddUint32":
-            return functionValue((args, context) => atomicAddInteger(args, "uint32", name, context));
-        case "AddUint64":
-            return functionValue((args, context) => atomicAddInteger(args, "uint64", name, context));
-        case "AddUintptr":
-            return functionValue((args, context) => atomicAddInteger(args, "uintptr", name, context));
-        case "AndInt32":
-            return functionValue((args, context) => atomicBitwiseInteger(args, "int32", name, "&", context));
-        case "AndUint32":
-            return functionValue((args, context) => atomicBitwiseInteger(args, "uint32", name, "&", context));
-        case "AndUint64":
-            return functionValue((args, context) => atomicBitwiseInteger(args, "uint64", name, "&", context));
-        case "AndUintptr":
-            return functionValue((args, context) => atomicBitwiseInteger(args, "uintptr", name, "&", context));
-        case "OrInt32":
-            return functionValue((args, context) => atomicBitwiseInteger(args, "int32", name, "|", context));
-        case "OrUint32":
-            return functionValue((args, context) => atomicBitwiseInteger(args, "uint32", name, "|", context));
-        case "OrUint64":
-            return functionValue((args, context) => atomicBitwiseInteger(args, "uint64", name, "|", context));
-        case "OrUintptr":
-            return functionValue((args, context) => atomicBitwiseInteger(args, "uintptr", name, "|", context));
         case "LoadPointer":
             return functionValue((args) => atomicPointerArg(args[0] ?? null, name).get() ?? new RuntimeTypedNilValue("unsafe.Pointer"));
         case "StorePointer":
@@ -4593,13 +4614,40 @@ function bodylessAtomicIntrinsic(importPath, name, signature) {
             return undefined;
     }
 }
+const atomicIntegerKinds = [
+    { suffix: "Int32", type: "int32", bits: 32, signed: true },
+    { suffix: "Int64", type: "int64", bits: 64, signed: true },
+    { suffix: "Uint32", type: "uint32", bits: 32, signed: false },
+    { suffix: "Uint64", type: "uint64", bits: 64, signed: false },
+    { suffix: "Uintptr", type: "uintptr", bits: 64, signed: false }
+];
+const atomicIntegerOperations = [
+    "Load",
+    "Store",
+    "Swap",
+    "CompareAndSwap",
+    "Add",
+    "And",
+    "Or"
+];
+function atomicIntegerKindByFunctionName(name) {
+    for (const operation of atomicIntegerOperations) {
+        if (!name.startsWith(operation))
+            continue;
+        const suffix = name.slice(operation.length);
+        const kind = atomicIntegerKinds.find((candidate) => candidate.suffix === suffix);
+        if (kind)
+            return { operation, kind };
+    }
+    return undefined;
+}
 function atomicPointerArg(value, name) {
     if (!(value instanceof RuntimePointer))
         throwTypeError(value, "pointer", `sync/atomic.${name} address`);
     return value;
 }
 function atomicLoadInteger(args, type, name) {
-    return atomicPreparedInteger(atomicPointerArg(args[0] ?? null, name).get() ?? 0n, type, `sync/atomic.${name}`);
+    return atomicCoercedInteger(atomicPointerArg(args[0] ?? null, name).get() ?? 0n, type);
 }
 function atomicStoreInteger(args, type, name, context) {
     atomicPointerArg(args[0] ?? null, name).set(prepareAssignableToType(args[1] ?? 0n, type, `sync/atomic.${name} value`, context));
@@ -4607,13 +4655,13 @@ function atomicStoreInteger(args, type, name, context) {
 }
 function atomicSwapInteger(args, type, name, context) {
     const ptr = atomicPointerArg(args[0] ?? null, name);
-    const previous = atomicPreparedInteger(ptr.get() ?? 0n, type, `sync/atomic.${name}`);
+    const previous = atomicCoercedInteger(ptr.get() ?? 0n, type);
     ptr.set(prepareAssignableToType(args[1] ?? 0n, type, `sync/atomic.${name} value`, context));
     return previous;
 }
 function atomicCompareAndSwapInteger(args, type, name, context) {
     const ptr = atomicPointerArg(args[0] ?? null, name);
-    const current = atomicPreparedInteger(ptr.get() ?? 0n, type, `sync/atomic.${name}`);
+    const current = atomicCoercedInteger(ptr.get() ?? 0n, type);
     const oldValue = prepareAssignableToType(args[1] ?? 0n, type, `sync/atomic.${name} old value`, context);
     if (!valueEqual(current, oldValue))
         return false;
@@ -4622,23 +4670,23 @@ function atomicCompareAndSwapInteger(args, type, name, context) {
 }
 function atomicAddInteger(args, type, name, context) {
     const ptr = atomicPointerArg(args[0] ?? null, name);
-    const current = toBigInt(atomicPreparedInteger(ptr.get() ?? 0n, type, `sync/atomic.${name}`));
+    const current = toBigInt(atomicCoercedInteger(ptr.get() ?? 0n, type));
     const delta = toBigInt(prepareAssignableToType(args[1] ?? 0n, type, `sync/atomic.${name} delta`, context));
-    const next = prepareAssignableToType(current + delta, type, `sync/atomic.${name} result`, context);
+    const next = atomicCoercedInteger(current + delta, type);
     ptr.set(next);
     return next;
 }
 function atomicBitwiseInteger(args, type, name, operator, context) {
     const ptr = atomicPointerArg(args[0] ?? null, name);
-    const previous = atomicPreparedInteger(ptr.get() ?? 0n, type, `sync/atomic.${name}`);
+    const previous = atomicCoercedInteger(ptr.get() ?? 0n, type);
     const mask = toBigInt(prepareAssignableToType(args[1] ?? 0n, type, `sync/atomic.${name} mask`, context));
     const previousInt = toBigInt(previous);
-    const next = prepareAssignableToType(operator === "&" ? previousInt & mask : previousInt | mask, type, `sync/atomic.${name} result`, context);
+    const next = atomicCoercedInteger(operator === "&" ? previousInt & mask : previousInt | mask, type);
     ptr.set(next);
     return previous;
 }
-function atomicPreparedInteger(value, type, role) {
-    return prepareAssignableToType(value, type, role);
+function atomicCoercedInteger(value, type) {
+    return convertIntegerToType(toBigInt(value), type);
 }
 function bytealgBytes(value) {
     value = unwrapNamed(value);
@@ -4736,8 +4784,11 @@ function availablePackages(context) {
         "internal/reflectlite": reflectlitePackage(),
         os: osPackage(context),
         runtime: runtimePackage(),
+        sync: syncRuntimePackage(),
+        "sync/atomic": syncAtomicRuntimePackage(),
         "syscall/js": syscallJSPackage(),
-        unsafe: unsafePackage()
+        unsafe: unsafePackage(),
+        weak: weakRuntimePackage()
     };
     for (const [path, pkg] of Object.entries(packages)) {
         markRuntimePackageObject(pkg, path, context.packageInfo(path) ?? standardTypePackage(path));
@@ -4751,10 +4802,94 @@ function cmpPackage() {
         Or: hostCallable("cmp.Or", (args) => args.find((arg) => !isRuntimeZeroValue(arg)) ?? zeroValueLike(args[0] ?? null))
     };
 }
+function syncRuntimePackage() {
+    return {
+        NewCond: hostCallable("sync.NewCond", (args) => {
+            let cond = new RuntimeNamedValue("sync.Cond", { L: args[0] ?? null });
+            return new RuntimePointer("sync.Cond", () => cond, (next) => {
+                cond = prepareAssignableToType(next, "sync.Cond", "sync.NewCond result");
+            }, "sync.Cond");
+        }),
+        OnceFunc: hostCallable("sync.OnceFunc", (args) => {
+            const once = syncOnceValue();
+            const fn = args[0] ?? null;
+            return hostCallable("sync.OnceFunc.func", async (_callArgs, context) => {
+                await callRuntime(once.Do ?? null, [fn], context);
+                return null;
+            });
+        }),
+        OnceValue: hostCallable("sync.OnceValue", (args) => {
+            const once = syncOnceValue();
+            const fn = args[0] ?? null;
+            let value = null;
+            return hostCallable("sync.OnceValue.func", async (_callArgs, context) => {
+                await callRuntime(once.Do ?? null, [hostCallable("sync.OnceValue.thunk", async (_args, thunkContext) => {
+                        value = await callRuntime(fn, [], thunkContext);
+                        return null;
+                    })], context);
+                return value;
+            });
+        }),
+        OnceValues: hostCallable("sync.OnceValues", (args) => {
+            const once = syncOnceValue();
+            const fn = args[0] ?? null;
+            let values = markTupleValues([null, null]);
+            return hostCallable("sync.OnceValues.func", async (_callArgs, context) => {
+                await callRuntime(once.Do ?? null, [hostCallable("sync.OnceValues.thunk", async (_args, thunkContext) => {
+                        const result = await callRuntime(fn, [], thunkContext);
+                        values = markTupleValues(Array.isArray(result) ? [...result] : [result ?? null]);
+                        return null;
+                    })], context);
+                return markTupleValues([...values]);
+            }, { tupleResult: true });
+        })
+    };
+}
+function syncAtomicRuntimePackage() {
+    const pkg = {};
+    for (const kind of atomicIntegerKinds) {
+        pkg[`Load${kind.suffix}`] = hostCallable(`sync/atomic.Load${kind.suffix}`, (args) => atomicLoadInteger(args, kind.type, `Load${kind.suffix}`));
+        pkg[`Store${kind.suffix}`] = hostCallable(`sync/atomic.Store${kind.suffix}`, (args, context) => atomicStoreInteger(args, kind.type, `Store${kind.suffix}`, context));
+        pkg[`Swap${kind.suffix}`] = hostCallable(`sync/atomic.Swap${kind.suffix}`, (args, context) => atomicSwapInteger(args, kind.type, `Swap${kind.suffix}`, context));
+        pkg[`CompareAndSwap${kind.suffix}`] = hostCallable(`sync/atomic.CompareAndSwap${kind.suffix}`, (args, context) => atomicCompareAndSwapInteger(args, kind.type, `CompareAndSwap${kind.suffix}`, context));
+        pkg[`Add${kind.suffix}`] = hostCallable(`sync/atomic.Add${kind.suffix}`, (args, context) => atomicAddInteger(args, kind.type, `Add${kind.suffix}`, context));
+        pkg[`And${kind.suffix}`] = hostCallable(`sync/atomic.And${kind.suffix}`, (args, context) => atomicBitwiseInteger(args, kind.type, `And${kind.suffix}`, "&", context));
+        pkg[`Or${kind.suffix}`] = hostCallable(`sync/atomic.Or${kind.suffix}`, (args, context) => atomicBitwiseInteger(args, kind.type, `Or${kind.suffix}`, "|", context));
+    }
+    pkg.LoadPointer = hostCallable("sync/atomic.LoadPointer", (args) => atomicPointerArg(args[0] ?? null, "LoadPointer").get() ?? new RuntimeTypedNilValue("unsafe.Pointer"));
+    pkg.StorePointer = hostCallable("sync/atomic.StorePointer", (args) => {
+        atomicPointerArg(args[0] ?? null, "StorePointer").set(args[1] ?? new RuntimeTypedNilValue("unsafe.Pointer"));
+        return null;
+    });
+    pkg.SwapPointer = hostCallable("sync/atomic.SwapPointer", (args) => {
+        const ptr = atomicPointerArg(args[0] ?? null, "SwapPointer");
+        const previous = ptr.get() ?? new RuntimeTypedNilValue("unsafe.Pointer");
+        ptr.set(args[1] ?? new RuntimeTypedNilValue("unsafe.Pointer"));
+        return previous;
+    });
+    pkg.CompareAndSwapPointer = hostCallable("sync/atomic.CompareAndSwapPointer", (args) => {
+        const ptr = atomicPointerArg(args[0] ?? null, "CompareAndSwapPointer");
+        const current = ptr.get() ?? new RuntimeTypedNilValue("unsafe.Pointer");
+        if (!valueEqual(current, args[1] ?? new RuntimeTypedNilValue("unsafe.Pointer")))
+            return false;
+        ptr.set(args[2] ?? new RuntimeTypedNilValue("unsafe.Pointer"));
+        return true;
+    });
+    return pkg;
+}
 function iterPackage() {
     return {
         Pull: hostCallable("iter.Pull", (args, context, typeArguments) => iterPull(args[0] ?? null, context, 1, typeArguments), { tupleResult: true }),
         Pull2: hostCallable("iter.Pull2", (args, context, typeArguments) => iterPull(args[0] ?? null, context, 2, typeArguments), { tupleResult: true })
+    };
+}
+function weakRuntimePackage() {
+    return {
+        Make: hostCallable("weak.Make", (args, _context, typeArguments) => {
+            const value = args[0] ?? null;
+            const elementType = typeArguments?.[0] ?? weakPointerElementTypeFromValue(value) ?? "any";
+            return new RuntimeNamedValue(`weak.Pointer[${elementType}]`, weakPointerValue(value, elementType));
+        })
     };
 }
 function fmtPackage() {
@@ -5341,17 +5476,20 @@ function runtimeOsFileRead(receiver, bufferValue) {
     copyBytesToRuntimeSlice(buffer, bytes, count);
     return [BigInt(count), null];
 }
-function runtimeOsFileWrite(receiver, bufferValue) {
+function runtimeOsFileWrite(receiver, bufferValue, context) {
     const buffer = unwrapNamed(bufferValue);
     const bytes = Array.isArray(buffer)
         ? bytealgBytes(buffer)
         : new TextEncoder().encode(toStringValue(bufferValue));
-    const count = hostWriteSync(runtimeOsFileFd(receiver), bytes, 0, bytes.length, null);
+    const fd = runtimeOsFileFd(receiver);
+    const count = writeStandardStreamBytes(fd, bytes, context) ?? hostWriteSync(fd, bytes, 0, bytes.length, null);
     return [BigInt(count), null];
 }
-function runtimeOsFileWriteString(receiver, value) {
-    const bytes = new TextEncoder().encode(toStringValue(value));
-    const count = hostWriteSync(runtimeOsFileFd(receiver), bytes, 0, bytes.length, null);
+function runtimeOsFileWriteString(receiver, value, context) {
+    const text = toStringValue(value);
+    const fd = runtimeOsFileFd(receiver);
+    const bytes = new TextEncoder().encode(text);
+    const count = writeStandardStreamText(fd, text, context) ?? hostWriteSync(fd, bytes, 0, bytes.length, null);
     return [BigInt(count), null];
 }
 function markRuntimeByteSlice(values) {
@@ -6596,11 +6734,11 @@ function intrinsicMethodDef(typeName, methodName) {
             case "SyscallConn":
                 return intrinsicMethod(type, methodName, [], ["any", "error"], () => [null, null]);
             case "Write":
-                return intrinsicMethod(type, methodName, ["[]byte"], ["int", "error"], (args) => runtimeOsFileWrite(args[0] ?? null, args[1] ?? null));
+                return intrinsicMethod(type, methodName, ["[]byte"], ["int", "error"], (args, context) => runtimeOsFileWrite(args[0] ?? null, args[1] ?? null, context));
             case "WriteAt":
-                return intrinsicMethod(type, methodName, ["[]byte", "int64"], ["int", "error"], (args) => runtimeOsFileWrite(args[0] ?? null, args[1] ?? null));
+                return intrinsicMethod(type, methodName, ["[]byte", "int64"], ["int", "error"], (args, context) => runtimeOsFileWrite(args[0] ?? null, args[1] ?? null, context));
             case "WriteString":
-                return intrinsicMethod(type, methodName, ["string"], ["int", "error"], (args) => runtimeOsFileWriteString(args[0] ?? null, args[1] ?? ""));
+                return intrinsicMethod(type, methodName, ["string"], ["int", "error"], (args, context) => runtimeOsFileWriteString(args[0] ?? null, args[1] ?? "", context));
             default:
                 return undefined;
         }
@@ -9281,13 +9419,13 @@ function defaultValueForTypeText(typeText, context) {
     }
     const type = normalizeTypeText(resolvedTypeText);
     const typeDef = context?.typeDef(type);
+    const intrinsic = defaultIntrinsicNamedValue(type, context);
+    if (intrinsic)
+        return intrinsic;
     if (typeDef && prefersCompiledZeroValue(type)) {
         const struct = defaultStructValueForTypeDef(typeDef, context, type);
         return type !== typeDef.name ? new RuntimeNamedValue(type, struct) : struct;
     }
-    const intrinsic = defaultIntrinsicNamedValue(type, context);
-    if (intrinsic)
-        return intrinsic;
     const interfaceType = interfaceTarget(type, context);
     if (interfaceType)
         return new RuntimeInterfaceValue(type, null);
@@ -9431,9 +9569,12 @@ function prefersCompiledZeroValue(type) {
         type === "internal/sync.RWMutex" ||
         type === "sync/atomic.Bool" ||
         type === "sync/atomic.Int32" ||
+        type === "sync/atomic.Int64" ||
         type === "sync/atomic.Uint32" ||
         type === "sync/atomic.Uint64" ||
         type === "sync/atomic.Uintptr" ||
+        type === "sync/atomic.Value" ||
+        /^weak\.Pointer(?:\[[\s\S]*\])?$/.test(type) ||
         /^sync\/atomic\.Pointer(?:\[[\s\S]*\])?$/.test(type);
 }
 function defaultIntrinsicNamedValue(type, context) {
@@ -9456,13 +9597,16 @@ function defaultIntrinsicNamedValue(type, context) {
         return new RuntimeNamedValue(type, syncMutexValue(type));
     if (type === "atomic.Bool" || type === "sync/atomic.Bool")
         return new RuntimeNamedValue(type, atomicBoolValue());
-    if (type === "atomic.Int32" || type === "sync/atomic.Int32")
-        return new RuntimeNamedValue(type, atomicInt32Value());
-    if (type === "atomic.Uint64" || type === "sync/atomic.Uint64")
-        return new RuntimeNamedValue(type, atomicUint64Value());
+    const atomicInteger = atomicIntegerKindForWrapperType(type);
+    if (atomicInteger)
+        return new RuntimeNamedValue(type, atomicIntegerValue(type, atomicInteger.type, atomicInteger.bits, atomicInteger.signed));
+    if (type === "atomic.Value" || type === "sync/atomic.Value")
+        return new RuntimeNamedValue(type, atomicValueValue());
     const atomicPointer = /^(?:atomic|sync\/atomic)\.Pointer(?:\[[\s\S]*\])?$/.exec(type);
     if (atomicPointer)
         return new RuntimeNamedValue(type, atomicPointerValue(atomicPointerElementType(type)));
+    if (/^weak\.Pointer(?:\[[\s\S]*\])?$/.test(type))
+        return new RuntimeNamedValue(type, weakPointerValue(null, weakPointerElementType(type)));
     return undefined;
 }
 function intrinsicStructTypeDef(typeText) {
@@ -9565,6 +9709,41 @@ function atomicPointerElementType(type) {
     const generic = genericTypeArguments(type);
     return generic?.args[0];
 }
+function weakPointerElementType(type) {
+    const generic = genericTypeArguments(type);
+    return generic?.args[0];
+}
+function weakPointerElementTypeFromValue(value) {
+    if (value instanceof RuntimePointer)
+        return value.typeName;
+    if (value instanceof RuntimeTypedNilValue && value.typeName.startsWith("*"))
+        return value.typeName.slice(1);
+    if (value instanceof RuntimeNamedValue && isUnsafePointerType(value.typeName)) {
+        const actual = unwrapNamed(value);
+        if (actual instanceof RuntimePointer)
+            return actual.typeName;
+    }
+    return undefined;
+}
+function weakPointerValue(value, elementType) {
+    const typeName = elementType ? `*${elementType}` : "*any";
+    return {
+        Value: hostCallable("weak.Pointer.Value", () => {
+            if (value === null)
+                return new RuntimeTypedNilValue(typeName);
+            return value;
+        })
+    };
+}
+function atomicIntegerKindForWrapperType(type) {
+    const normalized = normalizeTypeText(type);
+    const local = normalized.startsWith("sync/atomic.")
+        ? normalized.slice("sync/atomic.".length)
+        : normalized.startsWith("atomic.")
+            ? normalized.slice("atomic.".length)
+            : "";
+    return atomicIntegerKinds.find((kind) => kind.suffix === local);
+}
 function atomicPointerValue(elementType) {
     let value = null;
     const pointerType = elementType ? `*${elementType}` : undefined;
@@ -9591,6 +9770,44 @@ function atomicPointerValue(elementType) {
         })
     };
 }
+function atomicIntegerValue(typeName, valueType, bits, signed) {
+    let value = 0n;
+    const coerce = (next) => signed ? BigInt.asIntN(bits, toBigInt(next)) : BigInt.asUintN(bits, toBigInt(next));
+    const prepare = (next, context, role) => coerce(prepareAssignableToType(next, valueType, role, context));
+    return {
+        Add: hostCallable(`${typeName}.Add`, (args, context) => {
+            value = coerce(value + prepare(args[0] ?? 0n, context, `${typeName}.Add delta`));
+            return value;
+        }),
+        And: hostCallable(`${typeName}.And`, (args, context) => {
+            const previous = value;
+            value = coerce(value & prepare(args[0] ?? 0n, context, `${typeName}.And mask`));
+            return previous;
+        }),
+        CompareAndSwap: hostCallable(`${typeName}.CompareAndSwap`, (args, context) => {
+            const oldValue = prepare(args[0] ?? 0n, context, `${typeName}.CompareAndSwap old value`);
+            if (value !== oldValue)
+                return false;
+            value = prepare(args[1] ?? 0n, context, `${typeName}.CompareAndSwap new value`);
+            return true;
+        }),
+        Load: hostCallable(`${typeName}.Load`, () => value),
+        Or: hostCallable(`${typeName}.Or`, (args, context) => {
+            const previous = value;
+            value = coerce(value | prepare(args[0] ?? 0n, context, `${typeName}.Or mask`));
+            return previous;
+        }),
+        Store: hostCallable(`${typeName}.Store`, (args, context) => {
+            value = prepare(args[0] ?? 0n, context, `${typeName}.Store value`);
+            return null;
+        }),
+        Swap: hostCallable(`${typeName}.Swap`, (args, context) => {
+            const previous = value;
+            value = prepare(args[0] ?? 0n, context, `${typeName}.Swap value`);
+            return previous;
+        })
+    };
+}
 function atomicBoolValue() {
     let value = false;
     return {
@@ -9614,44 +9831,56 @@ function atomicBoolValue() {
         })
     };
 }
-function atomicInt32Value() {
-    let value = 0n;
+function atomicValueValue() {
+    let value = null;
+    let concreteType;
+    const typeKey = (next) => runtimeValueConcreteTypeText(next) ?? inferredTypeText(next) ?? (next === null ? undefined : runtimeTypeText(next));
+    const requireStorable = (next, operation) => {
+        if (next instanceof RuntimeInterfaceValue && next.value === null)
+            next = null;
+        if (next === null || next instanceof RuntimeTypedNilValue) {
+            throw new GoJuniorPanic(`sync/atomic: ${operation} of nil value into Value`);
+        }
+        const nextType = typeKey(next);
+        if (!nextType)
+            throw new GoJuniorPanic(`sync/atomic: ${operation} of nil value into Value`);
+        if (concreteType !== undefined && concreteType !== nextType) {
+            throw new GoJuniorPanic(`sync/atomic: ${operation} of inconsistently typed value into Value`);
+        }
+        return { value: next, type: nextType };
+    };
     return {
-        Add: hostCallable("sync/atomic.Int32.Add", (args) => {
-            value = BigInt.asIntN(32, value + toBigInt(args[0] ?? 0n));
-            return value;
-        }),
-        CompareAndSwap: hostCallable("sync/atomic.Int32.CompareAndSwap", (args) => {
-            const oldValue = BigInt.asIntN(32, toBigInt(args[0] ?? 0n));
-            if (value === oldValue) {
-                value = BigInt.asIntN(32, toBigInt(args[1] ?? 0n));
+        CompareAndSwap: hostCallable("sync/atomic.Value.CompareAndSwap", (args) => {
+            const oldValue = args[0] ?? null;
+            const next = requireStorable(args[1] ?? null, "compare and swap");
+            if (value === null) {
+                if (oldValue !== null && !(oldValue instanceof RuntimeInterfaceValue && oldValue.value === null))
+                    return false;
+                concreteType = next.type;
+                value = next.value;
                 return true;
             }
-            return false;
+            const oldType = typeKey(oldValue);
+            if (oldType !== concreteType)
+                return false;
+            if (!valueEqual(value, oldValue))
+                return false;
+            value = next.value;
+            return true;
         }),
-        Load: hostCallable("sync/atomic.Int32.Load", () => value),
-        Store: hostCallable("sync/atomic.Int32.Store", (args) => {
-            value = BigInt.asIntN(32, toBigInt(args[0] ?? 0n));
+        Load: hostCallable("sync/atomic.Value.Load", () => value),
+        Store: hostCallable("sync/atomic.Value.Store", (args) => {
+            const next = requireStorable(args[0] ?? null, "store");
+            concreteType = next.type;
+            value = next.value;
             return null;
         }),
-        Swap: hostCallable("sync/atomic.Int32.Swap", (args) => {
+        Swap: hostCallable("sync/atomic.Value.Swap", (args) => {
+            const next = requireStorable(args[0] ?? null, "swap");
             const previous = value;
-            value = BigInt.asIntN(32, toBigInt(args[0] ?? 0n));
+            concreteType = next.type;
+            value = next.value;
             return previous;
-        })
-    };
-}
-function atomicUint64Value() {
-    let value = 0n;
-    return {
-        Add: hostCallable("sync/atomic.Uint64.Add", (args) => {
-            value = BigInt.asUintN(64, value + toBigInt(args[0] ?? 0n));
-            return value;
-        }),
-        Load: hostCallable("sync/atomic.Uint64.Load", () => value),
-        Store: hostCallable("sync/atomic.Uint64.Store", (args) => {
-            value = BigInt.asUintN(64, toBigInt(args[0] ?? 0n));
-            return null;
         })
     };
 }
@@ -9678,14 +9907,14 @@ function zeroValueForMapValue(typeText, context) {
         return values;
     }
     const type = normalizeTypeText(resolvedTypeText);
+    const intrinsic = defaultIntrinsicNamedValue(type, context);
+    if (intrinsic)
+        return intrinsic;
     const typeDef = context?.typeDef(type);
     if (typeDef) {
         const struct = defaultStructValueForTypeDef(typeDef, context, type);
         return type !== typeDef.name ? new RuntimeNamedValue(type, struct) : struct;
     }
-    const intrinsic = defaultIntrinsicNamedValue(type, context);
-    if (intrinsic)
-        return intrinsic;
     if (interfaceTarget(type, context))
         return new RuntimeInterfaceValue(type, null);
     if (isUnsafePointerType(type) || type.startsWith("*"))
@@ -10614,7 +10843,8 @@ function methodCallResultTypeText(expression, context, resultIndex) {
         : expression.callee;
     if (callee.kind !== "SelectorExpression")
         return undefined;
-    const objectType = expressionDeclaredTypeText(callee.object, context);
+    const rawObjectType = expressionDeclaredTypeText(callee.object, context);
+    const objectType = rawObjectType ? context.resolveImportedTypeText(rawObjectType, callee.object.span?.filename) : undefined;
     if (!objectType)
         return undefined;
     const receiver = normalizeReceiverType(objectType);
@@ -10632,7 +10862,8 @@ function methodCallResultTypeText(expression, context, resultIndex) {
     const resultTypeText = packageName && packageName !== context.importPath()
         ? qualifyLocalRuntimeTypeName(result.type.text, packageName, localTypeParameters)
         : result.type.text;
-    return normalizeTypeText(substituteTypeArgumentBindings(resultTypeText, methodReceiverTypeArgumentBindings(method, objectType, context)));
+    const typeText = normalizeTypeText(substituteTypeArgumentBindings(resultTypeText, methodReceiverTypeArgumentBindings(method, objectType, context)));
+    return typeTextContainsAnyTypeParameter(typeText, [...localTypeParameters]) ? undefined : typeText;
 }
 function typeTextContainsAnyTypeParameter(typeText, names) {
     if (names.length === 0)
@@ -12603,8 +12834,15 @@ function functionDeclarationRuntimeTypeParameters(declaration) {
     const generic = genericTypeArguments(receiver);
     for (const arg of generic?.args ?? []) {
         const name = normalizeTypeText(arg);
-        if (/^[A-Za-z_]\w*$/.test(name))
+        if (/^[A-Za-z_]\w*$/.test(name)) {
             names.add(name);
+            continue;
+        }
+        const qualified = packageQualifiedRuntimeTypeNameParts(name);
+        if (qualified && /^[A-Za-z_]\w*$/.test(qualified.localName)) {
+            names.add(name);
+            names.add(qualified.localName);
+        }
     }
     return names;
 }

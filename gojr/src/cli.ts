@@ -77,6 +77,9 @@ async function main(argv: string[]): Promise<number> {
     ...(options.randomSeed !== undefined ? { randomSeed: options.randomSeed } : {}),
     stdout: (text) => {
       process.stdout.write(text);
+    },
+    stderr: (text) => {
+      process.stderr.write(text);
     }
   });
   printDiagnostics(result.diagnostics);

@@ -3060,6 +3060,26 @@ func main() {
     expect(result.output).toEqual(["zygo\n"]);
   });
 
+  test("routes os stdout and stderr writes through configurable hooks", async () => {
+    const stdout: string[] = [];
+    const stderr: string[] = [];
+
+    const result = await evaluateSource(`import "os"
+
+os.Stdout.Write([]byte("out-bytes\\n"))
+os.Stdout.WriteString("out-string\\n")
+os.Stderr.WriteString("err-string\\n")
+`, {
+      stdout: (text) => stdout.push(text),
+      stderr: (text) => stderr.push(text)
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["out-bytes\n", "out-string\n", "err-string\n"]);
+    expect(stdout).toEqual(["out-bytes\n", "out-string\n"]);
+    expect(stderr).toEqual(["err-string\n"]);
+  });
+
   test("runs source-built fmt printf through os stdout file writes", async () => {
     const sourcePackageProvider = createNodeSourcePackageProvider([]);
     if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");

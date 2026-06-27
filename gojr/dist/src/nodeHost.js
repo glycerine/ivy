@@ -393,9 +393,14 @@ async function loadPackageArtifactsFromBuildOnNode(build, baseOptions) {
     const packageInfos = {};
     const packageRuntimes = {};
     const baseStdout = baseOptions.stdout;
+    const baseStderr = baseOptions.stderr;
     const writeOutput = (text) => {
         output.push(text);
         baseStdout?.(text);
+    };
+    const writeErrorOutput = (text) => {
+        output.push(text);
+        baseStderr?.(text);
     };
     for (const artifact of build.artifacts) {
         let archive;
@@ -423,7 +428,8 @@ async function loadPackageArtifactsFromBuildOnNode(build, baseOptions) {
                     packages,
                     packageInfos,
                     packageRuntimes,
-                    stdout: writeOutput
+                    stdout: writeOutput,
+                    stderr: writeErrorOutput
                 })
                 : await instantiatePackageArtifactJavaScript(archive.javascript, {
                     ...baseOptions,
@@ -432,7 +438,8 @@ async function loadPackageArtifactsFromBuildOnNode(build, baseOptions) {
                     packages,
                     packageInfos,
                     packageRuntimes,
-                    stdout: writeOutput
+                    stdout: writeOutput,
+                    stderr: writeErrorOutput
                 }, artifact.artifactPath, diagnostics);
         }
         catch (error) {
@@ -760,6 +767,10 @@ function evaluationOptionsFromNodeRequest(request) {
     if (request.streamOutput)
         options.stdout = (text) => {
             process.stdout.write(text);
+        };
+    if (request.streamOutput)
+        options.stderr = (text) => {
+            process.stderr.write(text);
         };
     if (typeof request.testVerbose === "boolean")
         options.testVerbose = request.testVerbose;

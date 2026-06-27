@@ -49,6 +49,9 @@ async function main(argv) {
         ...(options.randomSeed !== undefined ? { randomSeed: options.randomSeed } : {}),
         stdout: (text) => {
             process.stdout.write(text);
+        },
+        stderr: (text) => {
+            process.stderr.write(text);
         }
     });
     printDiagnostics(result.diagnostics);

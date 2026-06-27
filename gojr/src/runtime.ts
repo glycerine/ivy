@@ -179,6 +179,7 @@ export interface EvaluationOptions {
   sheets?: Record<string, SheetData>;
   currentSheetName?: string;
   stdout?: (text: string) => void;
+  stderr?: (text: string) => void;
   maxLoopIterations?: number;
   randomSeed?: number | string | bigint;
   testVerbose?: boolean;
@@ -402,6 +403,7 @@ export interface EvaluationSharedState {
   importPathsByFileAndLocalName: Map<string, string>;
   maxLoopIterations: number;
   stdout?: (text: string) => void;
+  stderr?: (text: string) => void;
   random: DeterministicPrng;
   scheduler: AsyncGoScheduler;
   observedDeps: Map<string, SpreadsheetDependency>;
@@ -424,7 +426,23 @@ interface EvaluationRootSnapshot {
   importPathsByFileAndLocalName: Map<string, string>;
 }
 
+function defaultBrowserConsoleSink(stream: "stdout" | "stderr"): ((text: string) => void) | undefined {
+  const root = globalThis as typeof globalThis & {
+    process?: unknown;
+    console?: {
+      log?: (text: string) => void;
+      error?: (text: string) => void;
+    };
+  };
+  if (root.process !== undefined) return undefined;
+  const target = stream === "stderr" ? root.console?.error ?? root.console?.log : root.console?.log;
+  if (typeof target !== "function") return undefined;
+  return (text: string) => target.call(root.console, text);
+}
+
 function createEvaluationSharedState(options: EvaluationOptions = {}): EvaluationSharedState {
+  const stdout = options.stdout ?? defaultBrowserConsoleSink("stdout");
+  const stderr = options.stderr ?? defaultBrowserConsoleSink("stderr");
   return {
     output: [],
     rootScope: new Scope(),
@@ -437,7 +455,8 @@ function createEvaluationSharedState(options: EvaluationOptions = {}): Evaluatio
     ambiguousImportLocalNames: new Set(),
     importPathsByFileAndLocalName: new Map(),
     maxLoopIterations: options.maxLoopIterations ?? 100_000,
-    ...(options.stdout ? { stdout: options.stdout } : {}),
+    ...(stdout ? { stdout } : {}),
+    ...(stderr ? { stderr } : {}),
     random: new DeterministicPrng(options.randomSeed),
     scheduler: new AsyncGoScheduler(options.randomSeed === undefined ? {} : { randomSeed: options.randomSeed }),
     observedDeps: new Map()
@@ -809,8 +828,17 @@ export class EvaluationContext {
   }
 
   public write(text: string): void {
+    this.writeStdout(text);
+  }
+
+  public writeStdout(text: string): void {
     this.shared.output.push(text);
     this.shared.stdout?.(text);
+  }
+
+  public writeStderr(text: string): void {
+    this.shared.output.push(text);
+    this.shared.stderr?.(text);
   }
 
   public loopLimit(): number {
@@ -2272,6 +2300,10 @@ class SourcePackageGraphEvaluator {
     this.output.push(text);
     this.options.stdout?.(text);
   };
+  private readonly writeErrorOutput = (text: string): void => {
+    this.output.push(text);
+    this.options.stderr?.(text);
+  };
 
   public constructor(
     specs: SourcePackageSpec[],
@@ -2400,7 +2432,8 @@ class SourcePackageGraphEvaluator {
       codebase: this.codebase,
       packageInfos: this.packageInfos,
       packageRuntimes: this.packageRuntimes,
-      stdout: this.writeOutput
+      stdout: this.writeOutput,
+      stderr: this.writeErrorOutput
     });
     this.diagnostics.push(...result.diagnostics);
     if (this.hasErrors()) return;
@@ -3693,16 +3726,16 @@ function packageFunctionIntrinsic(declaration: FunctionDecl, importPath?: string
       syscallReadSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
   }
   if (importPath === "syscall" && declaration.name === "write") {
-    intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
-      syscallWriteSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+    intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
+      syscallWriteSlice(args[0] ?? 0n, args[1] ?? [], context), { preserveResultIdentity: true });
   }
   if (importPath === "internal/runtime/syscall/linux" && declaration.name === "Read") {
     intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
       syscallReadErrnoSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
   }
   if (importPath === "internal/runtime/syscall/linux" && declaration.name === "Write") {
-    intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
-      syscallWriteErrnoSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+    intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
+      syscallWriteErrnoSlice(args[0] ?? 0n, args[1] ?? [], context), { preserveResultIdentity: true });
   }
   if (importPath === "internal/abi" && declaration.name === "TypeOf") {
     intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
@@ -3787,10 +3820,10 @@ function packageMethodIntrinsic(declaration: FunctionDecl, importPath?: string):
     switch (declaration.name) {
       case "Write":
         return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
-          osFileWrite(args[1] ?? [], context));
+          osFileWrite(args[0] ?? null, args[1] ?? [], context));
       case "WriteString":
         return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
-          osFileWriteString(args[1] ?? "", context));
+          osFileWriteString(args[0] ?? null, args[1] ?? "", context));
       default:
         return undefined;
     }
@@ -3944,15 +3977,15 @@ function packageMethodIntrinsic(declaration: FunctionDecl, importPath?: string):
   }
 }
 
-function osFileWrite(value: RuntimeValue, context: EvaluationContext): RuntimeValue[] {
+function osFileWrite(receiver: RuntimeValue, value: RuntimeValue, context: EvaluationContext): RuntimeValue[] {
   const bytes = bytealgBytes(value);
-  context.write(new TextDecoder().decode(bytes));
+  writeStandardStreamBytes(runtimeOsFileFd(receiver), bytes, context);
   return [BigInt(bytes.length), null];
 }
 
-function osFileWriteString(value: RuntimeValue, context: EvaluationContext): RuntimeValue[] {
+function osFileWriteString(receiver: RuntimeValue, value: RuntimeValue, context: EvaluationContext): RuntimeValue[] {
   const text = toStringValue(value);
-  context.write(text);
+  writeStandardStreamText(runtimeOsFileFd(receiver), text, context);
   return [BigInt(text.length), null];
 }
 
@@ -4080,9 +4113,9 @@ function bodylessSyscallIntrinsic(
     name === "syscalln" ||
     name === "rawsyscalln"
   ) {
-    return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args) => {
+    return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args, context) => {
       const operands = syscallOperands(args);
-      return syscallTrap(args[0] ?? 0n, operands[0] ?? 0n, operands[1] ?? 0n, operands[2] ?? 0n);
+      return syscallTrap(args[0] ?? 0n, operands[0] ?? 0n, operands[1] ?? 0n, operands[2] ?? 0n, context);
     }, { preserveResultIdentity: true });
   }
   if (name === "read") {
@@ -4090,8 +4123,8 @@ function bodylessSyscallIntrinsic(
       syscallReadSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
   }
   if (name === "write") {
-    return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args) =>
-      syscallWriteSlice(args[0] ?? 0n, args[1] ?? []), { preserveResultIdentity: true });
+    return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, (args, context) =>
+      syscallWriteSlice(args[0] ?? 0n, args[1] ?? [], context), { preserveResultIdentity: true });
   }
   return undefined;
 }
@@ -4107,14 +4140,14 @@ function syscallOperands(args: RuntimeValue[]): RuntimeValue[] {
   return args.slice(1);
 }
 
-function syscallTrap(trapValue: RuntimeValue, a1: RuntimeValue, a2: RuntimeValue, a3: RuntimeValue): RuntimeValue[] {
+function syscallTrap(trapValue: RuntimeValue, a1: RuntimeValue, a2: RuntimeValue, a3: RuntimeValue, context: EvaluationContext): RuntimeValue[] {
   const trap = toBigInt(trapValue);
   const kind = syscallTrapKind(trap);
   if (kind === "read") {
     return [syscallReadPointer(a1, a2, a3), 0n, 0n];
   }
   if (kind === "write") {
-    return [syscallWritePointer(a1, a2, a3), 0n, 0n];
+    return [syscallWritePointer(a1, a2, a3, context), 0n, 0n];
   }
   return [0n, 0n, 0n];
 }
@@ -4140,11 +4173,12 @@ function syscallReadSlice(fdValue: RuntimeValue, bufferValue: RuntimeValue): Run
   return [BigInt(count), null];
 }
 
-function syscallWriteSlice(fdValue: RuntimeValue, bufferValue: RuntimeValue): RuntimeValue[] {
+function syscallWriteSlice(fdValue: RuntimeValue, bufferValue: RuntimeValue, context: EvaluationContext): RuntimeValue[] {
   const buffer = unwrapNamed(bufferValue);
   if (!Array.isArray(buffer)) throwTypeError(bufferValue, "[]byte", "syscall.write buffer");
   const bytes = bytealgBytes(buffer);
-  const count = hostWriteSync(toNumber(fdValue), bytes, 0, bytes.length, null);
+  const fd = toNumber(fdValue);
+  const count = writeStandardStreamBytes(fd, bytes, context) ?? hostWriteSync(fd, bytes, 0, bytes.length, null);
   return [BigInt(count), null];
 }
 
@@ -4153,8 +4187,8 @@ function syscallReadErrnoSlice(fdValue: RuntimeValue, bufferValue: RuntimeValue)
   return [result[0] ?? 0n, 0n];
 }
 
-function syscallWriteErrnoSlice(fdValue: RuntimeValue, bufferValue: RuntimeValue): RuntimeValue[] {
-  const result = syscallWriteSlice(fdValue, bufferValue);
+function syscallWriteErrnoSlice(fdValue: RuntimeValue, bufferValue: RuntimeValue, context: EvaluationContext): RuntimeValue[] {
+  const result = syscallWriteSlice(fdValue, bufferValue, context);
   return [result[0] ?? 0n, 0n];
 }
 
@@ -4168,12 +4202,13 @@ function syscallReadPointer(fdValue: RuntimeValue, pointerValue: RuntimeValue, l
   return BigInt(count);
 }
 
-function syscallWritePointer(fdValue: RuntimeValue, pointerValue: RuntimeValue, lengthValue: RuntimeValue): bigint {
+function syscallWritePointer(fdValue: RuntimeValue, pointerValue: RuntimeValue, lengthValue: RuntimeValue, context: EvaluationContext): bigint {
   const pointer = runtimeUintptrPointers.get(toBigInt(pointerValue));
   const length = toNonNegativeLength(lengthValue, "syscall write length");
   if (!pointer || length === 0) return 0n;
   const bytes = bytesFromRuntimePointer(pointer, length);
-  return BigInt(hostWriteSync(toNumber(fdValue), bytes, 0, bytes.length, null));
+  const fd = toNumber(fdValue);
+  return BigInt(writeStandardStreamBytes(fd, bytes, context) ?? hostWriteSync(fd, bytes, 0, bytes.length, null));
 }
 
 function copyBytesToRuntimeSlice(target: RuntimeValue[], bytes: Uint8Array, count: number): void {
@@ -4208,6 +4243,24 @@ function bytesFromRuntimePointer(pointer: RuntimePointer, length: number): Uint8
 
 type GoJrHostReadSync = (fd: number, buffer: Uint8Array, offset: number, length: number, position: number | null) => number;
 type GoJrHostWriteSync = (fd: number, buffer: Uint8Array, offset: number, length: number, position: number | null) => number;
+
+function writeStandardStreamBytes(fd: number, bytes: Uint8Array, context: EvaluationContext): number | undefined {
+  if (fd !== 1 && fd !== 2) return undefined;
+  writeStandardStreamText(fd, new TextDecoder().decode(bytes), context);
+  return bytes.length;
+}
+
+function writeStandardStreamText(fd: number, text: string, context: EvaluationContext): number | undefined {
+  if (fd === 1) {
+    context.writeStdout(text);
+    return new TextEncoder().encode(text).length;
+  }
+  if (fd === 2) {
+    context.writeStderr(text);
+    return new TextEncoder().encode(text).length;
+  }
+  return undefined;
+}
 
 function hostReadSync(fd: number, buffer: Uint8Array, offset: number, length: number, position: number | null): number {
   const host = globalThis as typeof globalThis & { __gojrReadSync?: GoJrHostReadSync };
@@ -6347,18 +6400,21 @@ function runtimeOsFileRead(receiver: RuntimeValue, bufferValue: RuntimeValue): R
   return [BigInt(count), null];
 }
 
-function runtimeOsFileWrite(receiver: RuntimeValue, bufferValue: RuntimeValue): RuntimeValue[] {
+function runtimeOsFileWrite(receiver: RuntimeValue, bufferValue: RuntimeValue, context: EvaluationContext): RuntimeValue[] {
   const buffer = unwrapNamed(bufferValue);
   const bytes = Array.isArray(buffer)
     ? bytealgBytes(buffer)
     : new TextEncoder().encode(toStringValue(bufferValue));
-  const count = hostWriteSync(runtimeOsFileFd(receiver), bytes, 0, bytes.length, null);
+  const fd = runtimeOsFileFd(receiver);
+  const count = writeStandardStreamBytes(fd, bytes, context) ?? hostWriteSync(fd, bytes, 0, bytes.length, null);
   return [BigInt(count), null];
 }
 
-function runtimeOsFileWriteString(receiver: RuntimeValue, value: RuntimeValue): RuntimeValue[] {
-  const bytes = new TextEncoder().encode(toStringValue(value));
-  const count = hostWriteSync(runtimeOsFileFd(receiver), bytes, 0, bytes.length, null);
+function runtimeOsFileWriteString(receiver: RuntimeValue, value: RuntimeValue, context: EvaluationContext): RuntimeValue[] {
+  const text = toStringValue(value);
+  const fd = runtimeOsFileFd(receiver);
+  const bytes = new TextEncoder().encode(text);
+  const count = writeStandardStreamText(fd, text, context) ?? hostWriteSync(fd, bytes, 0, bytes.length, null);
   return [BigInt(count), null];
 }
 
@@ -7742,11 +7798,11 @@ function intrinsicMethodDef(typeName: string, methodName: string): MethodDef | u
       case "SyscallConn":
         return intrinsicMethod(type, methodName, [], ["any", "error"], () => [null, null]);
       case "Write":
-        return intrinsicMethod(type, methodName, ["[]byte"], ["int", "error"], (args) => runtimeOsFileWrite(args[0] ?? null, args[1] ?? null));
+        return intrinsicMethod(type, methodName, ["[]byte"], ["int", "error"], (args, context) => runtimeOsFileWrite(args[0] ?? null, args[1] ?? null, context));
       case "WriteAt":
-        return intrinsicMethod(type, methodName, ["[]byte", "int64"], ["int", "error"], (args) => runtimeOsFileWrite(args[0] ?? null, args[1] ?? null));
+        return intrinsicMethod(type, methodName, ["[]byte", "int64"], ["int", "error"], (args, context) => runtimeOsFileWrite(args[0] ?? null, args[1] ?? null, context));
       case "WriteString":
-        return intrinsicMethod(type, methodName, ["string"], ["int", "error"], (args) => runtimeOsFileWriteString(args[0] ?? null, args[1] ?? ""));
+        return intrinsicMethod(type, methodName, ["string"], ["int", "error"], (args, context) => runtimeOsFileWriteString(args[0] ?? null, args[1] ?? "", context));
       default:
         return undefined;
     }

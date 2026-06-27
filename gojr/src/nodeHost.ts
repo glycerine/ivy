@@ -525,9 +525,14 @@ async function loadPackageArtifactsFromBuildOnNode(
   const packageInfos: Record<string, GoTypesPackage> = {};
   const packageRuntimes: Record<string, PackageRuntime> = {};
   const baseStdout = baseOptions.stdout;
+  const baseStderr = baseOptions.stderr;
   const writeOutput = (text: string): void => {
     output.push(text);
     baseStdout?.(text);
+  };
+  const writeErrorOutput = (text: string): void => {
+    output.push(text);
+    baseStderr?.(text);
   };
 
   for (const artifact of build.artifacts) {
@@ -558,7 +563,8 @@ async function loadPackageArtifactsFromBuildOnNode(
           packages,
           packageInfos,
           packageRuntimes,
-          stdout: writeOutput
+          stdout: writeOutput,
+          stderr: writeErrorOutput
         })
         : await instantiatePackageArtifactJavaScript(archive.javascript, {
           ...baseOptions,
@@ -567,7 +573,8 @@ async function loadPackageArtifactsFromBuildOnNode(
           packages,
           packageInfos,
           packageRuntimes,
-          stdout: writeOutput
+          stdout: writeOutput,
+          stderr: writeErrorOutput
         }, artifact.artifactPath, diagnostics);
     } catch (error) {
       diagnostics.push(nodeArtifactDiagnostic(
@@ -932,6 +939,9 @@ function evaluationOptionsFromNodeRequest(request: NodeSourcePackageRequest): Ev
   if (request.argv) options.argv = request.argv;
   if (request.streamOutput) options.stdout = (text: string) => {
     process.stdout.write(text);
+  };
+  if (request.streamOutput) options.stderr = (text: string) => {
+    process.stderr.write(text);
   };
   if (typeof request.testVerbose === "boolean") options.testVerbose = request.testVerbose;
   if (typeof request.testRun === "string") options.testRun = request.testRun;

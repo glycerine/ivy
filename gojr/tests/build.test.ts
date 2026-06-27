@@ -86,6 +86,28 @@ async function importArtifactJavaScript(source: string): Promise<ExecutablePacka
   return await import(url) as ExecutablePackageArtifactModule;
 }
 
+async function withHostInput<T>(text: string, body: () => Promise<T>): Promise<T> {
+  const host = globalThis as typeof globalThis & {
+    __gojrReadSync?: (fd: number, buffer: Uint8Array, offset: number, length: number, position: number | null) => number;
+  };
+  const previousRead = host.__gojrReadSync;
+  const bytes = new TextEncoder().encode(text);
+  let cursor = 0;
+  host.__gojrReadSync = (fd, buffer, offset, length) => {
+    if (fd !== 0) return 0;
+    const count = Math.min(length, bytes.length - cursor);
+    buffer.set(bytes.subarray(cursor, cursor + count), offset);
+    cursor += count;
+    return count;
+  };
+  try {
+    return await body();
+  } finally {
+    if (previousRead) host.__gojrReadSync = previousRead;
+    else delete host.__gojrReadSync;
+  }
+}
+
 const nodeSourceHost = {
   readDir(dir: string) {
     return fs.readdirSync(dir, { withFileTypes: true }).map((entry) => ({
@@ -367,6 +389,136 @@ func hidden() {}
     const instantiated = await artifactModule.instantiateGoJrPackage();
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (instantiated.package.Hello as () => Promise<string>)()).toBe("hello gorj!");
+  });
+
+  test("generated package artifacts route stdout and stderr through configured hooks", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stdio",
+      artifactRoot: "/tmp/gojr-stdio",
+      files: [{
+        filename: "stdio.go",
+        source: `package stdio
+
+import "os"
+
+func WriteBoth() {
+  os.Stdout.WriteString("out\\n")
+  os.Stderr.WriteString("err\\n")
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stdio/example.com/stdio.a") ?? "");
+    if (!archive) throw new Error("missing stdio archive");
+
+    const stdout: string[] = [];
+    const stderr: string[] = [];
+    const module = await importArtifactJavaScript(archive.javascript);
+    const instantiated = await module.instantiateGoJrPackage({}, {
+      stdout: (text: string) => stdout.push(text),
+      stderr: (text: string) => stderr.push(text)
+    });
+    expect(instantiated.diagnostics).toEqual([]);
+    await (instantiated.package.WriteBoth as () => Promise<void>)();
+    expect(stdout).toEqual(["out\n"]);
+    expect(stderr).toEqual(["err\n"]);
+  });
+
+  test("generated package artifacts zero imported named structs before method calls", async () => {
+    const store = new MemoryArtifactStore();
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+    const result = buildPackages({
+      importPath: "example.com/builder",
+      artifactRoot: "/tmp/gojr-builder",
+      sourcePackageProvider,
+      files: [{
+        filename: "builder.go",
+        source: `package builder
+
+import "strings"
+
+func Run() string {
+  var b strings.Builder
+  b.Grow(5)
+  b.WriteString("hi")
+  return b.String()
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const packages: Record<string, unknown> = {};
+    for (const artifact of result.artifacts) {
+      const archive = parseGoJuniorPackageArchive(store.writes.get(artifact.artifactPath) ?? "");
+      if (!archive) throw new Error(`missing archive for ${artifact.importPath}`);
+      const module = await importArtifactJavaScript(archive.javascript);
+      const instantiated = await module.instantiateGoJrPackage({}, { importsByPath: packages });
+      expect(instantiated.diagnostics).toEqual([]);
+      packages[artifact.importPath] = instantiated.package;
+    }
+
+    const pkg = packages["example.com/builder"] as Record<string, unknown>;
+    expect(await (pkg.Run as () => Promise<string>)()).toBe("hi");
+  });
+
+  test("generated package artifacts read stdin through shared host stdio hooks", async () => {
+    const store = new MemoryArtifactStore();
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+    const result = buildPackages({
+      importPath: "example.com/stdin",
+      artifactRoot: "/tmp/gojr-stdin",
+      sourcePackageProvider,
+      files: [{
+        filename: "stdin.go",
+        source: `package stdin
+
+import (
+  "bufio"
+  "fmt"
+  "os"
+)
+
+func Run() {
+  fmt.Print("ready> ")
+  line, err := bufio.NewReader(os.Stdin).ReadString('\\n')
+  if err != nil {
+    panic(err)
+  }
+  fmt.Printf("got %q\\n", line)
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const packages: Record<string, unknown> = {};
+    const stdout: string[] = [];
+    await withHostInput("from generated stdin\n", async () => {
+      for (const artifact of result.artifacts) {
+        const archive = parseGoJuniorPackageArchive(store.writes.get(artifact.artifactPath) ?? "");
+        if (!archive) throw new Error(`missing archive for ${artifact.importPath}`);
+        const module = await importArtifactJavaScript(archive.javascript);
+        const instantiated = await module.instantiateGoJrPackage({}, {
+          importsByPath: packages,
+          stdout: (text: string) => stdout.push(text)
+        });
+        expect(instantiated.diagnostics).toEqual([]);
+        packages[artifact.importPath] = instantiated.package;
+      }
+
+      const pkg = packages["example.com/stdin"] as Record<string, unknown>;
+      await (pkg.Run as () => Promise<void>)();
+    });
+    expect(stdout.join("")).toBe("ready> got \"from generated stdin\\n\"\n");
   });
 
   test("skips fresh package artifacts with the same cache key", () => {

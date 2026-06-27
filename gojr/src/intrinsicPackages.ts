@@ -13,6 +13,7 @@ export const RESERVED_INTRINSIC_PACKAGE_IMPORTS = [
 
 export const GENERATED_ARTIFACT_INTRINSIC_IMPORTS = [
   ...RESERVED_INTRINSIC_PACKAGE_IMPORTS,
+  "internal/bytealg",
   "internal/sync",
   "reflect"
 ] as const;
