@@ -454,6 +454,7 @@ function emitFunction(ctx, fn, facts, options = {}) {
     if (hasDefer)
         bodyEnv.deferName = ctx.symbol("defer");
     const resultLines = emitNamedResultDeclarations(fn, bodyEnv);
+    const parameterCoercionLines = functionDeclarationParameterCoercionLines(fn, parameters.env, "    ");
     const statementLines = statementsRequireGotoStateMachine(fn.body.statements)
         ? emitGotoStateMachineStatements(ctx, fn.body.statements, bodyEnv, "    ", () => [`return ${defaultFunctionReturn(fn, bodyEnv)};`])
         : emitStatements(ctx, fn.body.statements, bodyEnv, "    ");
@@ -465,6 +466,7 @@ function emitFunction(ctx, fn, facts, options = {}) {
         const defaultReturn = defaultFunctionReturn(fn, bodyEnv);
         return [
             `  ${target} = async (${parameters.params.join(", ")}) => __gojrCallScope(async () => {`,
+            ...parameterCoercionLines,
             ...resultLines.map((line) => `    ${line}`),
             `    return await __gojrDeferScope(async (${bodyEnv.deferName}) => {`,
             ...statementLines,
@@ -475,6 +477,7 @@ function emitFunction(ctx, fn, facts, options = {}) {
     }
     return [
         `  ${target} = async (${parameters.params.join(", ")}) => __gojrCallScope(async () => {`,
+        ...parameterCoercionLines,
         ...resultLines.map((line) => `    ${line}`),
         ...statementLines,
         ...(hasExplicitReturn ? [] : [`    return ${defaultFunctionReturn(fn, bodyEnv)};`]),
@@ -1005,7 +1008,7 @@ function emitRangeStatement(ctx, statement, env, indent) {
     if (!body)
         return undefined;
     return [
-        `${indent}${loopLabel}: for (const [${key}, ${value}] of __gojrRangeEntries(${source})) {`,
+        `${indent}${loopLabel}: for (const [${key}, ${value}] of await __gojrRangeEntries(${source})) {`,
         ...bindLines,
         ...body,
         `${indent}}`
@@ -1170,7 +1173,7 @@ function emitAssignStatement(ctx, statement, env, indent) {
         const value = expressionToJs(ctx, statement.values[0], env);
         if (!current || !value)
             return undefined;
-        const compound = compoundAssignmentExpression(ctx, statement.operator, current, value);
+        const compound = compoundAssignmentExpression(ctx, statement.operator, current, value, expressionTypeText(statement.targets[0], env));
         if (!compound)
             return undefined;
         return assignExpressionTargetLines(ctx, statement.targets[0], compound, env, indent, expressionTypeText(statement.values[0], env));
@@ -1244,7 +1247,10 @@ function emitIncDecStatement(ctx, statement, env, indent) {
     if (!current)
         return undefined;
     const one = incDecOneLiteral(statement.target, env);
-    const next = statement.operator === "++" ? `((${current}) + ${one})` : `((${current}) - ${one})`;
+    const targetType = expressionTypeText(statement.target, env);
+    const next = statement.operator === "++"
+        ? `__gojrAdd(${current}, ${one}, ${JSON.stringify(targetType ?? "")})`
+        : `__gojrSub(${current}, ${one}, ${JSON.stringify(targetType ?? "")})`;
     return assignExpressionTargetLines(ctx, statement.target, next, env, indent);
 }
 function incDecOneLiteral(target, env) {
@@ -1267,12 +1273,8 @@ function emitDeferStatement(ctx, statement, env, indent) {
         const callee = deferredCalleeToJs(ctx, statement.expression, env);
         if (!callee)
             return undefined;
-        if (statement.expression.spreadLast) {
-            ctx.emitError("unsupported Stage 4 deferred spread call");
-            return undefined;
-        }
-        const args = statement.expression.args.map((arg) => expressionToJs(ctx, arg, env));
-        if (args.some((arg) => arg === undefined))
+        const args = renderCallArgs(ctx, statement.expression.args, env, [], statement.expression.spreadLast);
+        if (!args)
             return undefined;
         const temp = ctx.symbol("deferArgs");
         return [
@@ -1495,7 +1497,7 @@ function emitForHeaderStatement(ctx, statement, env, position) {
                         ctx.emitError("unsupported Stage 4 compound multi-assignment in for header");
                         return undefined;
                     }
-                    const compound = compoundAssignmentExpression(ctx, statement.operator, target, value);
+                    const compound = compoundAssignmentExpression(ctx, statement.operator, target, value, expressionTypeText(targetExpression, env));
                     if (!compound)
                         return undefined;
                     parts.push(`${target} = ${compound}`);
@@ -1508,7 +1510,7 @@ function emitForHeaderStatement(ctx, statement, env, position) {
                 if (!target)
                     return undefined;
                 const one = incDecOneLiteral(statement.target, env);
-                return `${target} ${statement.operator === "++" ? "+=" : "-="} ${one}`;
+                return `${target} = ${statement.operator === "++" ? "__gojrAdd" : "__gojrSub"}(${target}, ${one}, ${JSON.stringify(expressionTypeText(statement.target, env) ?? "")})`;
             }
         case "ExpressionStatement":
             return expressionToJs(ctx, statement.expression, env);
@@ -1524,9 +1526,11 @@ function tupleSourceExpressionToJs(ctx, expression, targetCount, env) {
         if (!object || !index)
             return undefined;
         const objectType = expressionTypeText(expression.object, env) ?? packageExportTypeText(ctx, expression.object);
-        const zero = zeroValueForTypeInEnv(mapValueTypeText(objectType, env.facts) ?? expression.typeText, env) ??
+        const mapType = parseMapTypeText(objectType ? resolveUnderlyingTypeTextInEnv(objectType, env) : undefined);
+        const keyValue = mapType ? valueForTargetType(index, mapType.keyType, expressionTypeText(expression.index, env), env) : index;
+        const zero = zeroValueForTypeInEnv(mapType?.valueType ?? mapValueTypeText(objectType, env.facts) ?? expression.typeText, env) ??
             "null";
-        return `__gojrMapGetOk(${object}, ${index}, ${zero})`;
+        return `__gojrMapGetOk(${object}, ${keyValue}, ${zero})`;
     }
     if (targetCount === 2 && expression.kind === "TypeAssertionExpression") {
         const value = expressionToJs(ctx, expression.expression, env);
@@ -1552,7 +1556,7 @@ function bindShortNames(names, tuple, env, indent, sourceTypes = []) {
             continue;
         const existing = env.locals.get(name);
         if (existing) {
-            lines.push(`${indent}${existing} = ${tuple}[${index}];`);
+            lines.push(`${indent}${existing} = ${valueForTargetType(`${tuple}[${index}]`, env.localTypes.get(name), sourceTypes[index], env)};`);
             continue;
         }
         const local = safeLocalName(name, index);
@@ -1560,7 +1564,7 @@ function bindShortNames(names, tuple, env, indent, sourceTypes = []) {
         const source = sourceTypes[index];
         if (source)
             env.localTypes.set(name, source);
-        lines.push(`${indent}let ${local} = ${tuple}[${index}];`);
+        lines.push(`${indent}let ${local} = ${source ? valueForTargetType(`${tuple}[${index}]`, source, source, env) : `${tuple}[${index}]`};`);
     }
     return lines;
 }
@@ -1579,7 +1583,7 @@ function assignExpressionTargetLines(ctx, target, value, env, indent, sourceType
             const object = expressionToJs(ctx, target.object, env);
             if (!object)
                 return undefined;
-            return [`${indent}__gojrSetField(${object}, ${JSON.stringify(target.field)}, ${value});`];
+            return [`${indent}__gojrSetField(${object}, ${JSON.stringify(target.field)}, ${valueForTargetType(value, selectorFieldTypeText(target, env), sourceType, env)});`];
         }
         case "IndexExpression": {
             const object = expressionToJs(ctx, target.object, env);
@@ -1587,9 +1591,14 @@ function assignExpressionTargetLines(ctx, target, value, env, indent, sourceType
             if (!object || !index)
                 return undefined;
             const objectType = expressionTypeText(target.object, env) ?? packageExportTypeText(ctx, target.object) ?? "";
-            if (parseMapTypeText(resolveUnderlyingTypeTextInEnv(objectType, env)))
-                return [`${indent}__gojrMapSet(${object}, ${index}, ${value});`];
-            return [`${indent}__gojrSetIndex(${object}, ${index}, ${value});`];
+            const resolvedObjectType = resolveUnderlyingTypeTextInEnv(objectType, env);
+            const mapType = parseMapTypeText(resolvedObjectType);
+            if (mapType) {
+                const keyValue = valueForTargetType(index, mapType.keyType, expressionTypeText(target.index, env), env);
+                return [`${indent}__gojrMapSet(${object}, ${keyValue}, ${valueForTargetType(value, mapType.valueType, sourceType, env)});`];
+            }
+            const elementType = parseArrayOrSliceTypeText(resolvedObjectType)?.elementType;
+            return [`${indent}__gojrSetIndex(${object}, ${index}, ${valueForTargetType(value, elementType, sourceType, env)});`];
         }
         case "UnaryExpression": {
             if (target.operator !== "*") {
@@ -1606,18 +1615,16 @@ function assignExpressionTargetLines(ctx, target, value, env, indent, sourceType
             return undefined;
     }
 }
-function compoundAssignmentExpression(ctx, operator, left, right) {
+function compoundAssignmentExpression(ctx, operator, left, right, resultType) {
     if (operator === "=")
         return right;
     const binary = operator.slice(0, -1);
-    if (binary === "&^")
-        return `((${left}) & ~(${right}))`;
-    const jsOperator = jsBinaryOperator(binary);
-    if (!jsOperator) {
+    const rendered = binaryOperationToJs(binary, left, right, resultType);
+    if (!rendered) {
         ctx.emitError(`unsupported Stage 4 compound operator ${operator}`);
         return undefined;
     }
-    return `((${left}) ${jsOperator} (${right}))`;
+    return rendered;
 }
 function functionParameterBindings(fn, facts) {
     const locals = new Map();
@@ -1648,6 +1655,25 @@ function functionParameterBindings(fn, facts) {
         return parameter.variadic ? `...${jsName}` : jsName;
     }));
     return { params, env: { locals, localTypes, localTypeUnderlyings, facts, ...(typeParameters ? { typeParameters } : {}) } };
+}
+function functionDeclarationParameterCoercionLines(fn, env, indent) {
+    const lines = [];
+    if (fn.receiver) {
+        const receiverName = fn.receiver.name && fn.receiver.name !== "_" ? fn.receiver.name : "__gojrRecv";
+        const receiverJsName = safeLocalName(receiverName, -1);
+        lines.push(`${indent}${receiverJsName} = ${valueForTargetType(receiverJsName, fn.receiver.type.text, fn.receiver.type.text, env)};`);
+    }
+    for (const [index, parameter] of fn.signature.parameters.entries()) {
+        const goName = parameter.name && parameter.name !== "_" ? parameter.name : `__gojrArg${index}`;
+        const jsName = safeLocalName(goName, index);
+        if (parameter.variadic) {
+            lines.push(`${indent}${jsName} = Array.from(${jsName}, (__gojrItem) => ${valueForTargetType("__gojrItem", parameter.type.text, parameter.type.text, env)});`);
+        }
+        else {
+            lines.push(`${indent}${jsName} = ${valueForTargetType(jsName, parameter.type.text, parameter.type.text, env)};`);
+        }
+    }
+    return lines;
 }
 function wasmScalarLoweringForFunction(fn) {
     if (fn.receiver)
@@ -1750,13 +1776,13 @@ function packageEmitFacts(ast, artifact) {
     for (const fn of ast.functions) {
         const key = functionPackageKey(fn);
         resultCounts.set(key, fn.signature.results.length);
-        functionParamTypes.set(key, fn.signature.parameters.map((parameter) => parameter.type.text));
+        functionParamTypes.set(key, fn.signature.parameters.map((parameter) => parameter.variadic ? `...${parameter.type.text}` : parameter.type.text));
         functionResultTypes.set(key, fn.signature.results.map((result) => result.type.text));
         if (fn.typeParameters && fn.typeParameters.length > 0)
             functionTypeParameters.set(key, fn.typeParameters);
         if (!fn.receiver) {
             resultCounts.set(fn.name, fn.signature.results.length);
-            functionParamTypes.set(fn.name, fn.signature.parameters.map((parameter) => parameter.type.text));
+            functionParamTypes.set(fn.name, fn.signature.parameters.map((parameter) => parameter.variadic ? `...${parameter.type.text}` : parameter.type.text));
             functionResultTypes.set(fn.name, fn.signature.results.map((result) => result.type.text));
             if (fn.typeParameters && fn.typeParameters.length > 0)
                 functionTypeParameters.set(fn.name, fn.typeParameters);
@@ -2435,9 +2461,13 @@ function tupleSourceTypeTexts(expression, targetCount, env) {
     return [];
 }
 function valueForTargetType(value, targetType, sourceType, env) {
+    const staticTargetType = targetType?.trim();
+    if (staticTargetType && env.typeParameters?.has(staticTargetType)) {
+        return `__gojrConvertDynamicType(__gojrTypeArg(__gojrTypeArgs, ${JSON.stringify(staticTargetType)}), ${value})`;
+    }
     const resolvedTargetType = targetType ? resolveUnderlyingTypeTextInEnv(targetType, env) : undefined;
     if (resolvedTargetType && isIntegerType(resolvedTargetType) && !(resolvedTargetType === "uintptr" && isPointerLikeTypeText(sourceType))) {
-        return `__gojrIntegerFrom(${value})`;
+        return `__gojrIntegerConvert(${JSON.stringify(resolvedTargetType)}, ${value})`;
     }
     if (resolvedTargetType && isFloatType(resolvedTargetType))
         return `Number(${value})`;
@@ -2566,7 +2596,7 @@ function arrayLiteralToJs(ctx, expression, env) {
             const value = expressionToJs(ctx, element.value, env);
             if (!key || !value)
                 return undefined;
-            entries.push(`[${key}, ${value}]`);
+            entries.push(`[${key}, ${valueForTargetType(value, arrayType.elementType, expressionTypeText(element.value, env), env)}]`);
         }
         return `__gojrArrayLiteral(${JSON.stringify(expression.type.text)}, ${JSON.stringify(arrayType.elementType)}, [${entries.join(", ")}])`;
     }
@@ -2585,7 +2615,9 @@ function arrayLiteralToJs(ctx, expression, env) {
     const values = expression.elements.map((element) => expressionToJs(ctx, element.value, env));
     if (values.some((value) => value === undefined))
         return undefined;
-    const rendered = values.filter((value) => value !== undefined);
+    const rendered = values
+        .map((value, index) => value === undefined ? undefined : valueForTargetType(value, arrayType?.elementType, expressionTypeText(expression.elements[index]?.value, env), env))
+        .filter((value) => value !== undefined);
     return `[${rendered.join(", ")}]`;
 }
 function structLiteralToJs(ctx, expression, env) {
@@ -2602,7 +2634,7 @@ function structLiteralToJs(ctx, expression, env) {
             const value = expressionToJs(ctx, field.value, env);
             if (!key || !value)
                 return undefined;
-            entries.push(`[${key}, ${value}]`);
+            entries.push(`[${key}, ${valueForTargetType(value, arrayType.elementType, expressionTypeText(field.value, env), env)}]`);
         }
         return `__gojrArrayLiteral(${JSON.stringify(underlying)}, ${JSON.stringify(arrayType.elementType)}, [${entries.join(", ")}])`;
     }
@@ -2641,9 +2673,9 @@ function mapLiteralToJs(ctx, expression, env) {
         const value = expressionToJs(ctx, entry.value, env);
         if (!key || !value)
             return undefined;
-        entries.push(`[${key}, ${value}]`);
+        entries.push(`[${valueForTargetType(key, expression.keyType.text, expressionTypeText(entry.key, env), env)}, ${valueForTargetType(value, expression.valueType.text, expressionTypeText(entry.value, env), env)}]`);
     }
-    return `__gojrMap(new Map([${entries.join(", ")}]), ${zeroValueForType(expression.valueType.text, env.facts) ?? "null"})`;
+    return `__gojrMap(new Map([${entries.join(", ")}]), ${zeroValueForType(expression.valueType.text, env.facts) ?? "null"}, ${JSON.stringify(expression.keyType.text)}, ${JSON.stringify(expression.valueType.text)})`;
 }
 function functionLiteralToJs(ctx, expression, env) {
     const literalEnv = cloneExpressionEnv(env);
@@ -2674,19 +2706,35 @@ function functionLiteralToJs(ctx, expression, env) {
     }
     if (namedResults.length > 0)
         literalEnv.namedResults = namedResults;
+    const parameterCoercionLines = functionLiteralParameterCoercionLines(expression, literalEnv, "  ");
     const statementLines = emitStatements(ctx, expression.body.statements, literalEnv, "  ");
     if (!statementLines)
         return undefined;
     const defaultReturn = functionLiteralDefaultReturn(expression, literalEnv);
     const body = [
+        ...parameterCoercionLines,
         ...resultLines,
         ...statementLines,
         ...(functionBodyAlwaysReturns(expression.body) ? [] : [`  return ${defaultReturn};`])
     ].join("\n");
     if (hasDefer) {
-        return `(async (${params.join(", ")}) => __gojrCallScope(async () => {\n${resultLines.map((line) => `  ${line}`).join("\n")}${resultLines.length > 0 ? "\n" : ""}  return await __gojrDeferScope(async (${literalEnv.deferName}) => {\n${statementLines.join("\n")}\n${functionBodyAlwaysReturns(expression.body) ? "" : `  return ${defaultReturn};\n`}  }, () => ${defaultReturn});\n}))`;
+        return `(async (${params.join(", ")}) => __gojrCallScope(async () => {\n${parameterCoercionLines.join("\n")}${parameterCoercionLines.length > 0 ? "\n" : ""}${resultLines.map((line) => `  ${line}`).join("\n")}${resultLines.length > 0 ? "\n" : ""}  return await __gojrDeferScope(async (${literalEnv.deferName}) => {\n${statementLines.join("\n")}\n${functionBodyAlwaysReturns(expression.body) ? "" : `  return ${defaultReturn};\n`}  }, () => ${defaultReturn});\n}))`;
     }
     return `(async (${params.join(", ")}) => __gojrCallScope(async () => {\n${body}\n}))`;
+}
+function functionLiteralParameterCoercionLines(expression, env, indent) {
+    const lines = [];
+    for (const [index, parameter] of expression.signature.parameters.entries()) {
+        const goName = parameter.name && parameter.name !== "_" ? parameter.name : `__gojrArg${index}`;
+        const jsName = safeLocalName(goName, index);
+        if (parameter.variadic) {
+            lines.push(`${indent}${jsName} = Array.from(${jsName}, (__gojrItem) => ${valueForTargetType("__gojrItem", parameter.type.text, parameter.type.text, env)});`);
+        }
+        else {
+            lines.push(`${indent}${jsName} = ${valueForTargetType(jsName, parameter.type.text, parameter.type.text, env)};`);
+        }
+    }
+    return lines;
 }
 function functionLiteralDefaultReturn(expression, env) {
     const named = namedResultReturn(env);
@@ -2706,11 +2754,11 @@ function unaryExpressionToJs(ctx, expression, env) {
         return undefined;
     switch (expression.operator) {
         case "+":
-            return `(${operand})`;
+            return `__gojrNumericIdentity(${operand})`;
         case "-":
-            return `(-(${operand}))`;
+            return `__gojrNegate(${operand}, ${JSON.stringify(expression.typeText ?? expressionTypeText(expression.operand, env) ?? "")})`;
         case "!":
-            return `(!(${operand}))`;
+            return `(!__gojrBool(${operand}))`;
         case "^":
             return `__gojrBitwiseNot(${operand}, ${JSON.stringify(expression.typeText ?? expressionTypeText(expression.operand, env) ?? "")})`;
         case "*":
@@ -2729,7 +2777,8 @@ function addressOfExpressionToJs(ctx, expression, env) {
             const target = identifierToJs(expression, env);
             const targetType = env.localTypes.get(expression.name) ?? env.facts.packageTypes.get(expression.name);
             const pkgPath = packagePathForTypeText(typeText, env);
-            return `__gojrPointer(${JSON.stringify(typeText)}, () => ${target}, (next) => { ${target} = ${valueForTargetType("next", targetType, undefined, env)}; }${pkgPath ? `, ${JSON.stringify(pkgPath)}` : ""})`;
+            const identity = env.locals.has(expression.name) ? undefined : `pkg:${ctx.options.artifact.importPath}:${expression.name}`;
+            return `__gojrPointer(${JSON.stringify(typeText)}, () => ${target}, (next) => { ${target} = ${valueForTargetType("next", targetType, undefined, env)}; }, ${pkgPath ? JSON.stringify(pkgPath) : "undefined"}, undefined, undefined${identity ? `, ${JSON.stringify(identity)}` : ""})`;
         }
         case "SelectorExpression": {
             const object = expressionToJs(ctx, expression.object, env);
@@ -2773,27 +2822,54 @@ function binaryExpressionToJs(ctx, expression, env) {
     if (isComplexType(expression.typeText) || isComplexType(expression.left.typeText) || isComplexType(expression.right.typeText)) {
         return complexBinaryExpressionToJs(ctx, expression, left, right);
     }
-    const usesFloatArithmetic = expressionPrefersNumberArithmetic(expression, env);
-    if (usesFloatArithmetic && numberArithmeticOperators.has(expression.operator))
-        return `((Number(${left})) ${expression.operator} (Number(${right})))`;
-    if (usesFloatArithmetic && numberComparisonOperators.has(expression.operator))
-        return `((Number(${left})) ${expression.operator} (Number(${right})))`;
-    if (expression.operator === "&&" || expression.operator === "||")
-        return `((${left}) ${expression.operator} (${right}))`;
-    if (expression.operator === "==")
-        return `__gojrEqual(${left}, ${right})`;
-    if (expression.operator === "!=")
-        return `(!__gojrEqual(${left}, ${right}))`;
-    if (expression.operator === "&^")
-        return `((${left}) & ~(${right}))`;
-    if (expression.operator === "^")
-        return `__gojrBitwiseXor(${left}, ${right})`;
-    const operator = jsBinaryOperator(expression.operator);
-    if (!operator) {
+    const rendered = binaryOperationToJs(expression.operator, left, right, expression.typeText ?? expressionTypeText(expression.left, env));
+    if (!rendered) {
         ctx.emitError(`unsupported Stage 3 binary operator ${expression.operator}`);
         return undefined;
     }
-    return `((${left}) ${operator} (${right}))`;
+    return rendered;
+}
+function binaryOperationToJs(operator, left, right, resultType) {
+    const type = JSON.stringify(resultType ?? "");
+    switch (operator) {
+        case "&&":
+            return `(__gojrBool(${left}) && __gojrBool(${right}))`;
+        case "||":
+            return `(__gojrBool(${left}) || __gojrBool(${right}))`;
+        case "==":
+            return `__gojrEqual(${left}, ${right})`;
+        case "!=":
+            return `(!__gojrEqual(${left}, ${right}))`;
+        case "<":
+        case "<=":
+        case ">":
+        case ">=":
+            return `__gojrCompareOp(${left}, ${right}, ${JSON.stringify(operator)})`;
+        case "+":
+            return `__gojrAdd(${left}, ${right}, ${type})`;
+        case "-":
+            return `__gojrSub(${left}, ${right}, ${type})`;
+        case "*":
+            return `__gojrMul(${left}, ${right}, ${type})`;
+        case "/":
+            return `__gojrDiv(${left}, ${right}, ${type})`;
+        case "%":
+            return `__gojrMod(${left}, ${right}, ${type})`;
+        case "&":
+            return `__gojrBitwiseAnd(${left}, ${right}, ${type})`;
+        case "|":
+            return `__gojrBitwiseOr(${left}, ${right}, ${type})`;
+        case "^":
+            return `__gojrBitwiseXor(${left}, ${right}, ${type})`;
+        case "&^":
+            return `__gojrBitClear(${left}, ${right}, ${type})`;
+        case "<<":
+            return `__gojrShiftLeft(${left}, ${right}, ${type})`;
+        case ">>":
+            return `__gojrShiftRight(${left}, ${right}, ${type})`;
+        default:
+            return undefined;
+    }
 }
 function complexBinaryExpressionToJs(ctx, expression, left, right) {
     switch (expression.operator) {
@@ -3123,10 +3199,25 @@ function renderCallArgs(ctx, args, env, targetTypes = [], spreadLast = false) {
         const value = expressionToJs(ctx, arg, env);
         if (!value)
             return undefined;
-        const lowered = valueForTargetType(value, targetTypes[index], expressionTypeText(arg, env), env);
+        const targetType = callArgumentTargetType(targetTypes, index, spreadLast && index === args.length - 1);
+        const lowered = valueForTargetType(value, targetType, expressionTypeText(arg, env), env);
         rendered.push(spreadLast && index === args.length - 1 ? `...__gojrSpread(${lowered})` : lowered);
     }
     return rendered;
+}
+function callArgumentTargetType(targetTypes, index, isSpread) {
+    if (!targetTypes || targetTypes.length === 0)
+        return undefined;
+    const direct = targetTypes[index];
+    if (direct !== undefined) {
+        return direct.startsWith("...")
+            ? (isSpread ? `[]${direct.slice(3)}` : direct.slice(3))
+            : direct;
+    }
+    const variadicIndex = targetTypes.findIndex((type) => type.startsWith("..."));
+    if (variadicIndex >= 0 && index >= variadicIndex)
+        return targetTypes[variadicIndex]?.slice(3);
+    return undefined;
 }
 function instantiatedFunctionName(expression) {
     if (expression.kind !== "IndexExpression")
@@ -3159,16 +3250,18 @@ function inferredFunctionTypeArgObject(functionName, args, env) {
         const actualType = expressionTypeText(args[index], env);
         if (!actualType)
             continue;
-        inferGenericTypeArguments(parameterType, actualType, parameterSet, inferred);
+        inferGenericTypeArguments(parameterType.startsWith("...") ? parameterType.slice(3) : parameterType, actualType, parameterSet, inferred);
     }
     const fields = parameterNames.map((name) => `${JSON.stringify(name)}: ${JSON.stringify(inferred.get(name) ?? "any")}`);
     return `({ ${fields.join(", ")} })`;
 }
 function inferGenericTypeArguments(pattern, actual, parameters, out) {
-    const lhs = pattern?.trim();
+    let lhs = pattern?.trim();
     const rhs = actual?.trim();
     if (!lhs || !rhs)
         return;
+    if (lhs.startsWith("..."))
+        lhs = lhs.slice(3).trim();
     if (parameters.has(lhs)) {
         if (!out.has(lhs) || out.get(lhs) === "any")
             out.set(lhs, rhs);
@@ -3280,8 +3373,9 @@ function makeCallToJs(ctx, expression, env) {
             return undefined;
         return `__gojrMakeChan(${JSON.stringify(chanElementTypeText(resolvedTypeText) ?? "any")}, Number(${capacity}))`;
     }
-    if (parseMapTypeText(resolvedTypeText)) {
-        return `__gojrMap(new Map(), ${zeroValueForTypeInEnv(mapValueTypeText(typeText), env) ?? "null"})`;
+    const mapType = parseMapTypeText(resolvedTypeText);
+    if (mapType) {
+        return `__gojrMap(new Map(), ${zeroValueForTypeInEnv(mapType.valueType, env) ?? "null"}, ${JSON.stringify(mapType.keyType)}, ${JSON.stringify(mapType.valueType)})`;
     }
     const slice = parseArrayOrSliceTypeText(resolvedTypeText);
     if (slice && resolvedTypeText.startsWith("[]")) {
@@ -3339,7 +3433,13 @@ function builtinCallToJs(ctx, expression, env) {
                 ctx.emitError("unsupported Stage 3 delete call arity");
                 return undefined;
             }
-            return `__gojrDelete(${renderedArgs[0]}, ${renderedArgs[1]})`;
+            {
+                const mapType = parseMapTypeText(resolveUnderlyingTypeTextInEnv(expressionTypeText(expression.args[0], env) ?? "", env));
+                const mapArg = renderedArgs[0] ?? "";
+                const rawKeyArg = renderedArgs[1] ?? "";
+                const key = mapType ? valueForTargetType(rawKeyArg, mapType.keyType, expressionTypeText(expression.args[1], env), env) : rawKeyArg;
+                return `__gojrDelete(${mapArg}, ${key})`;
+            }
         case "clear":
             if (renderedArgs.length !== 1) {
                 ctx.emitError("unsupported Stage 3 clear call arity");
@@ -3427,7 +3527,7 @@ function unsafePackageCallToJs(ctx, expression, env) {
                 ctx.emitError("unsupported Stage 3 unsafe.Offsetof arity");
                 return undefined;
             }
-            return "0n";
+            return unsafeOffsetofExpressionToJs(ctx, expression.args[0], env);
         default:
             return undefined;
     }
@@ -3452,6 +3552,18 @@ function unsafeAlignofExpressionToJs(ctx, expression, env) {
     const value = expressionToJs(ctx, expression, env);
     return value ? `__gojrAlignofValue(${value})` : undefined;
 }
+function unsafeOffsetofExpressionToJs(ctx, expression, env) {
+    if (!expression)
+        return undefined;
+    if (expression.kind !== "SelectorExpression") {
+        ctx.emitError("unsafe.Offsetof requires a selector expression");
+        return undefined;
+    }
+    const object = expressionToJs(ctx, expression.object, env);
+    if (!object)
+        return undefined;
+    return `__gojrOffsetof(${object}, ${JSON.stringify(expression.field)})`;
+}
 function conversionCallToJs(ctx, typeText, args, env) {
     if (args.length !== 1) {
         ctx.emitError(`unsupported Stage 3 conversion to ${typeText} with ${args.length} arguments`);
@@ -3474,7 +3586,7 @@ function conversionCallToJs(ctx, typeText, args, env) {
     if (resolvedType === "uintptr" && isPointerLikeTypeText(sourceType))
         return `__gojrPointerToUintptr(${value})`;
     if (isIntegerType(resolvedType))
-        return `BigInt(${value})`;
+        return `__gojrIntegerConvert(${JSON.stringify(resolvedType)}, ${value})`;
     if (isFloatType(resolvedType))
         return `Number(${value})`;
     if (isComplexType(resolvedType))
@@ -3516,9 +3628,11 @@ function indexExpressionToJs(ctx, expression, env) {
         return undefined;
     const objectType = expressionTypeText(expression.object, env) ?? packageExportTypeText(ctx, expression.object) ?? "";
     const resolvedObjectType = resolveUnderlyingTypeTextInEnv(objectType, env);
-    if (parseMapTypeText(resolvedObjectType)) {
-        const zero = zeroValueForTypeInEnv(mapValueTypeText(objectType, env.facts) ?? expression.typeText, env) ?? "null";
-        return `__gojrMapGetOk(${object}, ${index}, ${zero})[0]`;
+    const mapType = parseMapTypeText(resolvedObjectType);
+    if (mapType) {
+        const zero = zeroValueForTypeInEnv(mapType.valueType ?? mapValueTypeText(objectType, env.facts) ?? expression.typeText, env) ?? "null";
+        const keyValue = valueForTargetType(index, mapType.keyType, expressionTypeText(expression.index, env), env);
+        return `__gojrMapGetOk(${object}, ${keyValue}, ${zero})[0]`;
     }
     if (resolvedObjectType === "string")
         return `BigInt(__gojrStringByteAt(${object}, Number(${index})))`;
@@ -4107,38 +4221,108 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  if (Array.isArray(value)) return value;",
         "  return [value];",
         "}",
+        "const __gojrObjectIds = new WeakMap();",
+        "let __gojrNextObjectId = 1;",
+        "let __gojrNextNonReflexiveMapKeyId = 1;",
+        "function __gojrUnwrapInterface(value) {",
+        "  while (value && value.__gojrInterface === true) value = value.value;",
+        "  return value;",
+        "}",
         "function __gojrEqual(left, right) {",
-        "  if (left && left.__gojrInterface === true && right === null) return left.value === null;",
-        "  if (right && right.__gojrInterface === true && left === null) return right.value === null;",
+        "  if (left && left.__gojrInterface === true || right && right.__gojrInterface === true) {",
+        "    if (left && left.__gojrInterface === true && right === null) return left.value === null;",
+        "    if (right && right.__gojrInterface === true && left === null) return right.value === null;",
+        "    left = __gojrUnwrapInterface(left);",
+        "    right = __gojrUnwrapInterface(right);",
+        "  }",
         "  if (left && left.__gojrTypedNil === true && right === null) return true;",
         "  if (right && right.__gojrTypedNil === true && left === null) return true;",
-        "  if (left && left.__gojrInterface === true) left = left.value;",
-        "  if (right && right.__gojrInterface === true) right = right.value;",
-        "  if (left && left.__gojrTypedNil === true && right && right.__gojrTypedNil === true) return left.__gojrType === right.__gojrType;",
+        "  if (left && left.__gojrTypedNil === true && right && right.__gojrTypedNil === true) return left.__gojrType === right.__gojrType || (__gojrNilPointerType(left.__gojrType) && __gojrNilPointerType(right.__gojrType));",
         "  if (left && left.__gojrWeakPointer === true && right && right.__gojrWeakPointer === true) return __gojrEqual(left.__gojrWeakValue, right.__gojrWeakValue);",
-        "  if (left && typeof left === \"object\" && \"real\" in left && \"imag\" in left) {",
-        "    right = __gojrToComplex(right);",
-        "    return left.real === right.real && left.imag === right.imag;",
+        "  if ((typeof left === \"bigint\" || typeof left === \"number\") && (typeof right === \"bigint\" || typeof right === \"number\")) return __gojrCompareValues(left, right) === 0;",
+        "  if (left && typeof left === \"object\" && \"real\" in left && \"imag\" in left || right && typeof right === \"object\" && \"real\" in right && \"imag\" in right) return __gojrComplexEq(left, right);",
+        "  if (typeof left === \"string\" || typeof right === \"string\") return typeof left === \"string\" && typeof right === \"string\" && left === right;",
+        "  if (left && left.__gojrPointer === true && right && right.__gojrPointer === true) return __gojrPointerIdentityKey(left) === __gojrPointerIdentityKey(right);",
+        "  if (Array.isArray(left) && Array.isArray(right)) return left.length === right.length && left.every((item, index) => __gojrEqual(item, right[index]));",
+        "  if (ArrayBuffer.isView(left) && ArrayBuffer.isView(right)) {",
+        "    if (left.length !== right.length) return false;",
+        "    for (let index = 0; index < left.length; index += 1) if (!__gojrEqual(left[index], right[index])) return false;",
+        "    return true;",
         "  }",
-        "  if (right && typeof right === \"object\" && \"real\" in right && \"imag\" in right) {",
-        "    left = __gojrToComplex(left);",
-        "    return left.real === right.real && left.imag === right.imag;",
+        "  if (left && right && typeof left === \"object\" && typeof right === \"object\" && left.__gojrType && right.__gojrType) {",
+        "    if (left.__gojrType !== right.__gojrType) return false;",
+        "    const fields = __gojrStructComparableFields(left);",
+        "    return fields.every((field) => __gojrEqual(left[field], right[field]));",
         "  }",
         "  return left === right;",
+        "}",
+        "function __gojrNilPointerType(typeName) {",
+        "  const text = String(typeName || \"\").trim();",
+        "  return text === \"unsafe.Pointer\" || text.startsWith(\"*\");",
+        "}",
+        "function __gojrStructComparableFields(value) {",
+        "  const descriptor = __gojrDescriptorForTypeName(__gojrRuntimeTypeName(value), __gojrActiveImportsByPath, __gojrRuntimeTypePackagePath(value));",
+        "  if (descriptor && Array.isArray(descriptor.fields)) return descriptor.fields.map((field) => field.name);",
+        "  return Object.keys(value).filter((key) => !key.startsWith(\"__gojr\"));",
+        "}",
+        "function __gojrObjectIdentityId(value) {",
+        "  if (value === null || (typeof value !== \"object\" && typeof value !== \"function\")) return 0;",
+        "  const existing = __gojrObjectIds.get(value);",
+        "  if (existing !== undefined) return existing;",
+        "  const id = __gojrNextObjectId++;",
+        "  __gojrObjectIds.set(value, id);",
+        "  return id;",
+        "}",
+        "function __gojrMapNumberKeyId(value, options = {}) {",
+        "  if (Number.isNaN(value)) {",
+        "    if (options.freshNonReflexive) return `NaN#${__gojrNextNonReflexiveMapKeyId++}`;",
+        "    return \"NaN\";",
+        "  }",
+        "  return String(value);",
+        "}",
+        "function __gojrMapKeyId(key, options = {}) {",
+        "  const actual = __gojrUnwrapInterface(key);",
+        "  if (actual === null || actual === undefined) return \"nil\";",
+        "  if (actual && actual.__gojrTypedNil === true) return `typednil:${actual.__gojrType}`;",
+        "  if (typeof actual === \"boolean\") return `b:${actual}`;",
+        "  if (typeof actual === \"string\") return `s:${actual}`;",
+        "  if (typeof actual === \"bigint\") return `i:${actual}`;",
+        "  if (typeof actual === \"number\") return `f:${__gojrMapNumberKeyId(actual, options)}`;",
+        "  if (actual && typeof actual === \"object\" && \"real\" in actual && \"imag\" in actual) return `c:${__gojrMapNumberKeyId(actual.real, options)}:${__gojrMapNumberKeyId(actual.imag, options)}`;",
+        "  if (actual && actual.__gojrPointer === true) return `ptr:${__gojrPointerIdentityKey(actual)}`;",
+        "  if (Array.isArray(actual) || ArrayBuffer.isView(actual)) return `a:[${Array.from(actual).map((item) => __gojrMapKeyId(item, options)).join(\",\")}]`; ",
+        "  if (actual && typeof actual === \"object\" && actual.__gojrType) return `st:${actual.__gojrType}{${__gojrStructComparableFields(actual).map((name) => `${name}:${__gojrMapKeyId(actual[name], options)}`).join(\",\")}}`; ",
+        "  return `o:${__gojrObjectIdentityId(actual)}`;",
+        "}",
+        "function __gojrPointerIdentityKey(pointer) {",
+        "  if (!pointer || pointer.__gojrPointer !== true) return `object:${__gojrObjectIdentityId(pointer)}`;",
+        "  if (pointer.__gojrIdentity !== undefined) return String(pointer.__gojrIdentity);",
+        "  if (pointer.__gojrSequence) return `seq:${__gojrObjectIdentityId(pointer.__gojrSequence.values)}:${Number(pointer.__gojrSequence.index || 0)}:${pointer.__gojrElemType || \"\"}`;",
+        "  return `ptr:${__gojrObjectIdentityId(pointer)}`;",
         "}",
         "function __gojrMapGetOk(map, key, zero) {",
         "  if (!(map instanceof Map)) return __gojrTuple([zero, false]);",
         "  if (zero === null && Object.prototype.hasOwnProperty.call(map, \"__gojrValueZero\")) zero = map.__gojrValueZero;",
+        "  if (map.__gojrGoMap === true) {",
+        "    const entry = map.get(__gojrMapKeyId(key));",
+        "    return entry ? __gojrTuple([entry.value, true]) : __gojrTuple([zero, false]);",
+        "  }",
         "  return map.has(key) ? __gojrTuple([map.get(key), true]) : __gojrTuple([zero, false]);",
         "}",
         "function __gojrMapSet(map, key, value) {",
         "  if (map && map.__gojrTypedNil === true && __gojrDescriptorForTypeName(map.__gojrType)?.kind === \"map\") throw new Error(\"GOJR_RUNTIME001: assignment to entry in nil map\");",
         "  if (!(map instanceof Map)) throw new Error(\"GOJR_RUNTIME001: assignment target is not a map\");",
-        "  map.set(key, value);",
+        "  if (map.__gojrGoMap === true) map.set(__gojrMapKeyId(key, { freshNonReflexive: true }), { key, value });",
+        "  else map.set(key, value);",
         "}",
-        "function __gojrMap(map, valueZero) {",
-        "  Object.defineProperty(map, \"__gojrValueZero\", { value: valueZero });",
-        "  return map;",
+        "function __gojrMap(map, valueZero, keyType = \"any\", valueType = \"any\") {",
+        "  const out = new Map();",
+        "  Object.defineProperty(out, \"__gojrGoMap\", { value: true });",
+        "  Object.defineProperty(out, \"__gojrValueZero\", { value: valueZero });",
+        "  Object.defineProperty(out, \"__gojrKeyType\", { value: keyType });",
+        "  Object.defineProperty(out, \"__gojrValueType\", { value: valueType });",
+        "  for (const [key, value] of map instanceof Map ? map.entries() : []) out.set(__gojrMapKeyId(key, { freshNonReflexive: true }), { key, value });",
+        "  return out;",
         "}",
         "function __gojrBytesBase64(base64) {",
         "  return __gojrDecodeBase64(base64);",
@@ -4162,7 +4346,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "function __gojrMapStringBytesBase64(entries) {",
         "  const map = new Map();",
         "  for (const [key, base64] of entries) map.set(key, __gojrBytesBase64(base64));",
-        "  return __gojrMap(map, new Uint8Array());",
+        "  return __gojrMap(map, new Uint8Array(), \"string\", \"[]byte\");",
         "}",
         "function __gojrLen(value) {",
         "  if (value == null) return 0;",
@@ -4215,7 +4399,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  return __gojrSetCap(out, length);",
         "}",
         "function __gojrConvertArrayElement(elemType, value) {",
-        "  if (__gojrIntegerTypeName(elemType) && value !== null && value !== undefined) return BigInt(value);",
+        "  if (__gojrIntegerTypeName(elemType) && value !== null && value !== undefined) return __gojrIntegerConvert(elemType, value);",
         "  return value;",
         "}",
         "function __gojrIntegerTypeName(typeName) {",
@@ -4231,6 +4415,131 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  try { return BigInt(value); } catch (error) {",
         "    const typeName = value && typeof value === \"object\" ? (value.__gojrType || value.constructor && value.constructor.name || \"object\") : typeof value;",
         "    throw new TypeError(`cannot convert ${String(value)} (${typeName}) to Go integer`);",
+        "  }",
+        "}",
+        "function __gojrIntegerConvert(typeName, value) {",
+        "  const raw = __gojrIntegerFrom(value);",
+        "  if (__gojrPointerLike(raw)) return raw;",
+        "  switch (String(typeName || \"\").trim()) {",
+        "    case \"uint8\": case \"byte\": return BigInt.asUintN(8, raw);",
+        "    case \"int8\": return BigInt.asIntN(8, raw);",
+        "    case \"uint16\": return BigInt.asUintN(16, raw);",
+        "    case \"int16\": return BigInt.asIntN(16, raw);",
+        "    case \"uint32\": return BigInt.asUintN(32, raw);",
+        "    case \"int32\": case \"rune\": return BigInt.asIntN(32, raw);",
+        "    case \"uint\": case \"uint64\": case \"uintptr\": return BigInt.asUintN(64, raw);",
+        "    case \"int\": case \"int64\": return BigInt.asIntN(64, raw);",
+        "    default: return raw;",
+        "  }",
+        "}",
+        "function __gojrBool(value) {",
+        "  value = __gojrUnwrapInterface(value);",
+        "  if (typeof value !== \"boolean\") throw new TypeError(`GOJR_RUNTIME001: ${String(value)} is not a bool`);",
+        "  return value;",
+        "}",
+        "function __gojrIsComplexValue(value) {",
+        "  return Boolean(value && typeof value === \"object\" && \"real\" in value && \"imag\" in value);",
+        "}",
+        "function __gojrToFloat(value) {",
+        "  value = __gojrUnwrapInterface(value);",
+        "  if (typeof value === \"number\") return value;",
+        "  if (typeof value === \"bigint\") return Number(value);",
+        "  throw new TypeError(`GOJR_RUNTIME001: ${String(value)} is not numeric`);",
+        "}",
+        "function __gojrToBigInt(value) {",
+        "  value = __gojrUnwrapInterface(value);",
+        "  if (typeof value === \"bigint\") return value;",
+        "  if (typeof value === \"number\" && Number.isInteger(value)) return BigInt(value);",
+        "  throw new TypeError(`GOJR_RUNTIME001: ${String(value)} is not an integer`);",
+        "}",
+        "function __gojrWrapNumericResult(value, typeName) {",
+        "  const type = String(typeName || \"\").trim();",
+        "  if (__gojrIntegerTypeName(type)) return __gojrIntegerConvert(type, value);",
+        "  if (type === \"float32\") return Math.fround(Number(value));",
+        "  if (type === \"float64\") return Number(value);",
+        "  if (type === \"complex64\" || type === \"complex128\") return __gojrToComplex(value);",
+        "  return value;",
+        "}",
+        "function __gojrNumericIdentity(value) {",
+        "  value = __gojrUnwrapInterface(value);",
+        "  if (__gojrIsComplexValue(value) || typeof value === \"bigint\" || typeof value === \"number\") return value;",
+        "  throw new TypeError(`GOJR_RUNTIME001: ${String(value)} is not numeric`);",
+        "}",
+        "function __gojrNegate(value, typeName = \"\") {",
+        "  value = __gojrUnwrapInterface(value);",
+        "  if (__gojrIsComplexValue(value)) return __gojrComplex(-value.real, -value.imag);",
+        "  if (typeof value === \"bigint\") return __gojrWrapNumericResult(-value, typeName);",
+        "  return __gojrWrapNumericResult(-__gojrToFloat(value), typeName);",
+        "}",
+        "function __gojrAdd(left, right, typeName = \"\") {",
+        "  left = __gojrUnwrapInterface(left); right = __gojrUnwrapInterface(right);",
+        "  if (typeof left === \"string\" || typeof right === \"string\") {",
+        "    if (typeof left === \"string\" && typeof right === \"string\") return left + right;",
+        "    throw new TypeError(`GOJR_RUNTIME001: invalid operation: ${typeof left} + ${typeof right}`);",
+        "  }",
+        "  if (__gojrIsComplexValue(left) || __gojrIsComplexValue(right)) return __gojrComplexAdd(left, right);",
+        "  if (typeof left === \"bigint\" && typeof right === \"bigint\") return __gojrWrapNumericResult(left + right, typeName);",
+        "  return __gojrWrapNumericResult(__gojrToFloat(left) + __gojrToFloat(right), typeName);",
+        "}",
+        "function __gojrSub(left, right, typeName = \"\") {",
+        "  left = __gojrUnwrapInterface(left); right = __gojrUnwrapInterface(right);",
+        "  if (__gojrIsComplexValue(left) || __gojrIsComplexValue(right)) return __gojrComplexSub(left, right);",
+        "  if (typeof left === \"bigint\" && typeof right === \"bigint\") return __gojrWrapNumericResult(left - right, typeName);",
+        "  return __gojrWrapNumericResult(__gojrToFloat(left) - __gojrToFloat(right), typeName);",
+        "}",
+        "function __gojrMul(left, right, typeName = \"\") {",
+        "  left = __gojrUnwrapInterface(left); right = __gojrUnwrapInterface(right);",
+        "  if (__gojrIsComplexValue(left) || __gojrIsComplexValue(right)) return __gojrComplexMul(left, right);",
+        "  if (typeof left === \"bigint\" && typeof right === \"bigint\") return __gojrWrapNumericResult(left * right, typeName);",
+        "  return __gojrWrapNumericResult(__gojrToFloat(left) * __gojrToFloat(right), typeName);",
+        "}",
+        "function __gojrDiv(left, right, typeName = \"\") {",
+        "  left = __gojrUnwrapInterface(left); right = __gojrUnwrapInterface(right);",
+        "  if (__gojrIsComplexValue(left) || __gojrIsComplexValue(right)) return __gojrComplexDiv(left, right);",
+        "  if (typeof left === \"bigint\" && typeof right === \"bigint\") return __gojrWrapNumericResult(left / right, typeName);",
+        "  return __gojrWrapNumericResult(__gojrToFloat(left) / __gojrToFloat(right), typeName);",
+        "}",
+        "function __gojrMod(left, right, typeName = \"\") {",
+        "  const result = __gojrToBigInt(left) % __gojrToBigInt(right);",
+        "  return __gojrWrapNumericResult(result, typeName);",
+        "}",
+        "function __gojrBitwiseAnd(left, right, typeName = \"\") { return __gojrWrapNumericResult(__gojrToBigInt(left) & __gojrToBigInt(right), typeName); }",
+        "function __gojrBitwiseOr(left, right, typeName = \"\") { return __gojrWrapNumericResult(__gojrToBigInt(left) | __gojrToBigInt(right), typeName); }",
+        "function __gojrBitwiseXor(left, right, typeName = \"\") {",
+        "  if (__gojrPointerLike(left) && __gojrIsZeroInteger(right)) return left;",
+        "  if (__gojrPointerLike(right) && __gojrIsZeroInteger(left)) return right;",
+        "  return __gojrWrapNumericResult(__gojrToBigInt(left) ^ __gojrToBigInt(right), typeName);",
+        "}",
+        "function __gojrBitClear(left, right, typeName = \"\") { return __gojrWrapNumericResult(__gojrToBigInt(left) & ~__gojrToBigInt(right), typeName); }",
+        "function __gojrShiftLeft(left, right, typeName = \"\") {",
+        "  const shift = __gojrToBigInt(right);",
+        "  if (shift < 0n) throw new TypeError(\"GOJR_RUNTIME001: negative shift count\");",
+        "  return __gojrWrapNumericResult(__gojrToBigInt(left) << shift, typeName);",
+        "}",
+        "function __gojrShiftRight(left, right, typeName = \"\") {",
+        "  const shift = __gojrToBigInt(right);",
+        "  if (shift < 0n) throw new TypeError(\"GOJR_RUNTIME001: negative shift count\");",
+        "  return __gojrWrapNumericResult(__gojrToBigInt(left) >> shift, typeName);",
+        "}",
+        "function __gojrCompareValues(left, right) {",
+        "  left = __gojrUnwrapInterface(left); right = __gojrUnwrapInterface(right);",
+        "  if ((typeof left === \"bigint\" || typeof left === \"number\") && (typeof right === \"bigint\" || typeof right === \"number\")) {",
+        "    const a = typeof left === \"bigint\" && typeof right === \"bigint\" ? left : Number(left);",
+        "    const b = typeof left === \"bigint\" && typeof right === \"bigint\" ? right : Number(right);",
+        "    if (Number.isNaN(a) || Number.isNaN(b)) return NaN;",
+        "    return a === b ? 0 : a < b ? -1 : 1;",
+        "  }",
+        "  if (typeof left === \"string\" && typeof right === \"string\") return left === right ? 0 : left < right ? -1 : 1;",
+        "  throw new TypeError(`GOJR_RUNTIME001: cannot compare ${String(left)} and ${String(right)}`);",
+        "}",
+        "function __gojrCompareOp(left, right, op) {",
+        "  const compared = __gojrCompareValues(left, right);",
+        "  switch (op) {",
+        "    case \"<\": return compared < 0;",
+        "    case \"<=\": return compared <= 0;",
+        "    case \">\": return compared > 0;",
+        "    case \">=\": return compared >= 0;",
+        "    default: throw new TypeError(`GOJR_RUNTIME001: unsupported comparison ${op}`);",
         "  }",
         "}",
         "function __gojrUnderlyingRuntimeTypeName(typeName, importsByPath = __gojrActiveImportsByPath, pkgPath = undefined) {",
@@ -4249,7 +4558,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  const text = String(typeName || \"any\").trim();",
         "  const resolved = __gojrUnderlyingRuntimeTypeName(text, importsByPath, pkgPath);",
         "  if (__gojrIsByteSliceTypeName(resolved)) return __gojrBytesFrom(value);",
-        "  if (__gojrIntegerTypeName(resolved)) return __gojrIntegerFrom(value);",
+        "  if (__gojrIntegerTypeName(resolved)) return __gojrIntegerConvert(resolved, value);",
         "  if (resolved === \"float32\" || resolved === \"float64\") return Number(value);",
         "  if (resolved === \"complex64\" || resolved === \"complex128\") return __gojrToComplex(value);",
         "  if (resolved === \"bool\") return Boolean(value);",
@@ -4310,6 +4619,16 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  if (size <= 4n) return 4n;",
         "  return 8n;",
         "}",
+        "function __gojrOffsetof(object, field) {",
+        "  const target = __gojrDerefIfPointer(object);",
+        "  const descriptor = __gojrDescriptorForTypeName(__gojrRuntimeTypeName(target), __gojrActiveImportsByPath, __gojrRuntimeTypePackagePath(target));",
+        "  let offset = 0n;",
+        "  for (const item of descriptor && descriptor.fields || []) {",
+        "    if (item.name === field) return offset;",
+        "    offset += __gojrSizeofType(item.type, __gojrActiveImportsByPath);",
+        "  }",
+        "  return 0n;",
+        "}",
         "function __gojrFixedArrayLength(typeName) {",
         "  const match = /^\\[(\\d+)\\]/.exec(String(typeName || \"\"));",
         "  if (!match) return undefined;",
@@ -4339,7 +4658,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "}",
         "function __gojrMake(typeName, length = 0, capacity = length) {",
         "  const text = String(typeName || \"\").trim();",
-        "  if (text.startsWith(\"map[\")) return __gojrMap(new Map(), __gojrZero(__gojrMapValueType(text) || \"any\"));",
+        "  if (text.startsWith(\"map[\")) { const kv = __gojrMapKeyValueTypes(text); return __gojrMap(new Map(), __gojrZero(kv && kv.valueType || \"any\"), kv && kv.keyType || \"any\", kv && kv.valueType || \"any\"); }",
         "  if (text.startsWith(\"chan \")) return __gojrMakeChan(text.slice(5).trim(), capacity);",
         "  if (text.startsWith(\"chan<-\")) return __gojrMakeChan(text.slice(6).trim(), capacity);",
         "  if (text.startsWith(\"<-chan\")) return __gojrMakeChan(text.slice(6).trim(), capacity);",
@@ -4347,7 +4666,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  if (elem !== undefined) return elem === \"byte\" || elem === \"uint8\" ? __gojrSetCap(new Uint8Array(length), capacity) : __gojrSetCap(Array.from({ length }, () => __gojrZero(elem)), capacity);",
         "  const descriptor = __gojrDescriptorForTypeName(text);",
         "  if (descriptor && descriptor.kind === \"slice\") return descriptor.elem === \"byte\" || descriptor.elem === \"uint8\" ? __gojrSetCap(new Uint8Array(length), capacity) : __gojrSetCap(Array.from({ length }, () => __gojrZero(descriptor.elem || \"any\")), capacity);",
-        "  if (descriptor && descriptor.kind === \"map\") return __gojrMap(new Map(), __gojrZero(descriptor.elem || \"any\"));",
+        "  if (descriptor && descriptor.kind === \"map\") return __gojrMap(new Map(), __gojrZero(descriptor.elem || \"any\"), descriptor.key || \"any\", descriptor.elem || \"any\");",
         "  if (descriptor && descriptor.kind === \"chan\") return __gojrMakeChan(descriptor.elem || \"any\", capacity);",
         "  throw new Error(`GOJR_RUNTIME001: cannot make ${text}`);",
         "}",
@@ -4396,7 +4715,8 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  return count;",
         "}",
         "function __gojrDelete(map, key) {",
-        "  if (map instanceof Map) map.delete(key);",
+        "  if (map instanceof Map && map.__gojrGoMap === true) map.delete(__gojrMapKeyId(key));",
+        "  else if (map instanceof Map) map.delete(key);",
         "  return null;",
         "}",
         "function __gojrClear(value) {",
@@ -4420,12 +4740,12 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "}",
         "function __gojrMin(first, ...rest) {",
         "  let best = first;",
-        "  for (const value of rest) if (value < best) best = value;",
+        "  for (const value of rest) if (__gojrCompareValues(value, best) < 0) best = value;",
         "  return best;",
         "}",
         "function __gojrMax(first, ...rest) {",
         "  let best = first;",
-        "  for (const value of rest) if (value > best) best = value;",
+        "  for (const value of rest) if (__gojrCompareValues(value, best) > 0) best = value;",
         "  return best;",
         "}",
         "class __GoJrPanic extends Error {",
@@ -4512,7 +4832,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "}",
         "function __gojrUnsafePackage() {",
         "  return {",
-        "    Add: (ptr, _offset) => ptr,",
+        "    Add: (ptr, offset) => __gojrUnsafeAdd(ptr, offset),",
         "    Alignof: (value) => __gojrAlignofValue(value),",
         "    Offsetof: (_value) => 0n,",
         "    Sizeof: (value) => __gojrSizeofValue(value),",
@@ -5531,10 +5851,11 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  }",
         "  return __gojrStruct(typeName, out, descriptor && descriptor.pkgPath);",
         "}",
-        "function __gojrPointer(typeName, get, set, pkgPath = gojrPackageArtifact.importPath, sequence = undefined, owners = undefined) {",
+        "function __gojrPointer(typeName, get, set, pkgPath = gojrPackageArtifact.importPath, sequence = undefined, owners = undefined, identity = undefined) {",
         "  const pointer = { __gojrPointer: true, __gojrType: `*${typeName}`, __gojrElemType: typeName, __gojrPkgPath: pkgPath || gojrPackageArtifact.importPath, __gojrGet: get, __gojrSet: set };",
         "  if (sequence) Object.defineProperty(pointer, \"__gojrSequence\", { value: { values: sequence.values, index: Number(sequence.index || 0) } });",
         "  if (owners && owners.length) Object.defineProperty(pointer, \"__gojrOwners\", { value: owners });",
+        "  if (identity !== undefined) Object.defineProperty(pointer, \"__gojrIdentity\", { value: String(identity) });",
         "  return pointer;",
         "}",
         "function __gojrPointerValue(typeName, value, pkgPath = gojrPackageArtifact.importPath) {",
@@ -5568,6 +5889,16 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "}",
         "function __gojrNilUnsafePointer(value) {",
         "  return value === null || value === undefined || (value && value.__gojrTypedNil === true && (String(value.__gojrType || \"\").startsWith(\"*\") || String(value.__gojrType || \"\") === \"unsafe.Pointer\"));",
+        "}",
+        "function __gojrUnsafeAdd(ptr, offset) {",
+        "  if (__gojrNilUnsafePointer(ptr)) return ptr;",
+        "  const bytes = Number(offset || 0);",
+        "  const sequence = __gojrPointerSequence(ptr);",
+        "  if (!sequence || !ptr || ptr.__gojrPointer !== true) return ptr;",
+        "  const elemType = ptr.__gojrElemType || \"byte\";",
+        "  const elemSize = Math.max(1, Number(__gojrSizeofType(elemType)));",
+        "  const nextIndex = Number(sequence.index || 0) + Math.trunc(bytes / elemSize);",
+        "  return __gojrPointer(elemType, () => sequence.values[nextIndex], (next) => { sequence.values[nextIndex] = next; }, ptr.__gojrPkgPath, { values: sequence.values, index: nextIndex }, ptr.__gojrOwners);",
         "}",
         "function __gojrPointerSequence(value) {",
         "  if (value && value.__gojrPointer === true && value.__gojrSequence) return { values: value.__gojrSequence.values, index: Number(value.__gojrSequence.index || 0) };",
@@ -5610,14 +5941,9 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  if (typeof value === \"number\") return value === 0;",
         "  return false;",
         "}",
-        "function __gojrBitwiseXor(left, right) {",
-        "  if (__gojrPointerLike(left) && __gojrIsZeroInteger(right)) return left;",
-        "  if (__gojrPointerLike(right) && __gojrIsZeroInteger(left)) return right;",
-        "  return BigInt(left) ^ BigInt(right);",
-        "}",
         "function __gojrBitwiseNot(value, typeName) {",
         "  const bits = __gojrUnsignedIntegerBitWidth(typeName);",
-        "  const raw = BigInt(value);",
+        "  const raw = __gojrToBigInt(value);",
         "  return bits > 0 ? (((1n << BigInt(bits)) - 1n) ^ raw) : ~raw;",
         "}",
         "function __gojrUnsignedIntegerBitWidth(typeName) {",
@@ -5978,7 +6304,9 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  if (typeof source[Symbol.iterator] === \"function\") return Array.from(source);",
         "  throw new TypeError(\"GOJR_RUNTIME001: spread argument is not a slice\");",
         "}",
-        "function __gojrRangeEntries(source) {",
+        "async function __gojrRangeEntries(source) {",
+        "  source = __gojrUnwrapInterface(source);",
+        "  if (source && source.__gojrPointer === true) source = __gojrDeref(source);",
         "  if (source == null) return [];",
         "  if (source && source.__gojrTypedNil === true) return [];",
         "  if (typeof source === \"bigint\" || typeof source === \"number\") {",
@@ -5996,6 +6324,19 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "    }",
         "    return entries;",
         "  }",
+        "  if (typeof source === \"function\") {",
+        "    const entries = [];",
+        "    let index = 0n;",
+        "    const yieldFn = async (...args) => {",
+        "      if (args.length === 0) { entries.push([index, index]); index += 1n; }",
+        "      else if (args.length === 1) entries.push([args[0] ?? null, args[0] ?? null]);",
+        "      else entries.push([args[0] ?? null, args[1] ?? null]);",
+        "      return true;",
+        "    };",
+        "    await source(yieldFn);",
+        "    return entries;",
+        "  }",
+        "  if (source instanceof Map && source.__gojrGoMap === true) return Array.from(source.values(), (entry) => [entry.key, entry.value]);",
         "  if (source instanceof Map) return Array.from(source.entries());",
         "  if (Array.isArray(source) || ArrayBuffer.isView(source)) return Array.from(source, (value, index) => [BigInt(index), value]);",
         "  if (typeof source === \"object\") return Object.entries(source);",
@@ -6045,14 +6386,27 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "}",
         "function __gojrValueMatchesType(value, typeText) {",
         "  if (value && value.__gojrInterface === true) value = value.value;",
-        "  if (String(typeText || \"\").startsWith(\"*\")) return Boolean((value && value.__gojrPointer === true && value.__gojrType === typeText) || (value && value.__gojrTypedNil === true && value.__gojrType === typeText));",
-        "  switch (typeText) {",
+        "  const text = String(typeText || \"\").trim();",
+        "  if (text === \"any\" || text === \"interface{}\") return true;",
+        "  if (text === \"nil\") return value === null || value === undefined || Boolean(value && value.__gojrTypedNil === true);",
+        "  const descriptor = __gojrDescriptorForTypeName(text, __gojrActiveImportsByPath);",
+        "  if (descriptor && descriptor.kind === \"interface\") {",
+        "    if (value === null || value === undefined) return false;",
+        "    const required = __gojrReflectInterfaceMethods(descriptor, __gojrActiveImportsByPath);",
+        "    if (required === undefined) return false;",
+        "    if (required.length === 0) return true;",
+        "    const actualDescriptor = __gojrDescriptorForTypeName(__gojrRuntimeTypeName(value), __gojrActiveImportsByPath, __gojrRuntimeTypePackagePath(value));",
+        "    const available = __gojrReflectConcreteMethods(actualDescriptor, __gojrActiveImportsByPath, new Set(), Boolean(value && value.__gojrPointer === true));",
+        "    return required.every((method) => __gojrReflectMethodSetHas(available, method));",
+        "  }",
+        "  if (text.startsWith(\"*\")) return Boolean((value && value.__gojrPointer === true && __gojrNormalizeTypeIdentity(value.__gojrType) === __gojrNormalizeTypeIdentity(text)) || (value && value.__gojrTypedNil === true && __gojrNormalizeTypeIdentity(value.__gojrType) === __gojrNormalizeTypeIdentity(text)));",
+        "  switch (text) {",
         "    case \"int\": case \"int8\": case \"int16\": case \"int32\": case \"int64\": case \"uint\": case \"uint8\": case \"uint16\": case \"uint32\": case \"uint64\": case \"uintptr\": return typeof value === \"bigint\";",
         "    case \"float32\": case \"float64\": return typeof value === \"number\";",
         "    case \"string\": return typeof value === \"string\";",
         "    case \"bool\": return typeof value === \"boolean\";",
         "    case \"complex64\": case \"complex128\": return Boolean(value && typeof value === \"object\" && \"real\" in value && \"imag\" in value);",
-        "    default: return __gojrReceiverBaseType(__gojrRuntimeTypeName(value)) === __gojrReceiverBaseType(typeText);",
+        "    default: return __gojrReceiverBaseType(__gojrRuntimeTypeName(value)) === __gojrReceiverBaseType(text);",
         "  }",
         "}",
         "function __gojrTypeArg(typeArgs, name) {",
@@ -6074,8 +6428,28 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "async function __gojrCallImportedFunction(importPath, functionName, args, argTypes) {",
         "  const importedPackage = __gojrImportedPackage(importPath);",
         "  const fn = __gojrSelectPackageCallableField(__gojrActiveImportsByPath, importPath, functionName);",
+        "  const typeText = importedPackage && importedPackage.__gojrExportIndex && importedPackage.__gojrExportIndex[functionName] && importedPackage.__gojrExportIndex[functionName].typeText;",
+        "  const parameterTypes = __gojrFunctionParameterTypes(typeText);",
+        "  const convertedArgs = args.map((arg, index) => __gojrConvertRuntimeCallArg(arg, __gojrRuntimeCallArgumentTargetType(parameterTypes, index, false)));",
         "  const typeArgs = __gojrInferImportedTypeArgs(importedPackage, functionName, argTypes);",
-        "  return typeArgs ? await fn(typeArgs, ...args) : await fn(...args);",
+        "  return typeArgs ? await fn(typeArgs, ...convertedArgs) : await fn(...convertedArgs);",
+        "}",
+        "function __gojrRuntimeCallArgumentTargetType(targetTypes, index, isSpread) {",
+        "  if (!Array.isArray(targetTypes) || targetTypes.length === 0) return undefined;",
+        "  const direct = targetTypes[index];",
+        "  if (direct !== undefined) return String(direct).startsWith(\"...\") ? (isSpread ? `[]${String(direct).slice(3)}` : String(direct).slice(3)) : direct;",
+        "  const variadicIndex = targetTypes.findIndex((type) => String(type).startsWith(\"...\"));",
+        "  return variadicIndex >= 0 && index >= variadicIndex ? String(targetTypes[variadicIndex]).slice(3) : undefined;",
+        "}",
+        "function __gojrConvertRuntimeCallArg(value, targetType) {",
+        "  if (!targetType) return value;",
+        "  if (__gojrRuntimeInterfaceTypeName(targetType)) return __gojrToInterface(value, targetType, __gojrRuntimeTypeName(value));",
+        "  return __gojrConvertDynamicType(targetType, value);",
+        "}",
+        "function __gojrRuntimeInterfaceTypeName(typeName) {",
+        "  const text = String(typeName || \"\").trim();",
+        "  if (text === \"any\" || text === \"interface{}\" || text === \"error\" || text.startsWith(\"interface{\")) return true;",
+        "  return __gojrDescriptorForTypeName(text, __gojrActiveImportsByPath)?.kind === \"interface\";",
         "}",
         "function __gojrImportedPackage(importPath) {",
         "  const builtin = __gojrBuiltinImport(importPath, __gojrActiveImportsByPath);",
@@ -6128,7 +6502,6 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "      continue;",
         "    }",
         "    let type = pieces[pieces.length - 1];",
-        "    if (type.startsWith(\"...\")) type = type.slice(3);",
         "    const count = Math.max(1, pendingNames + pieces.slice(0, -1).join(\" \").split(\",\").filter(Boolean).length);",
         "    for (let index = 0; index < count; index += 1) out.push(type);",
         "    pendingNames = 0;",
@@ -6148,8 +6521,9 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  return -1;",
         "}",
         "function __gojrInferTypeArgument(pattern, actual, parameters, out) {",
-        "  const lhs = String(pattern || \"\").trim();",
+        "  let lhs = String(pattern || \"\").trim();",
         "  const rhs = String(actual || \"\").trim();",
+        "  if (lhs.startsWith(\"...\")) lhs = lhs.slice(3).trim();",
         "  if (!lhs || !rhs) return;",
         "  if (parameters.has(lhs)) { out[lhs] = rhs; return; }",
         "  if (lhs.startsWith(\"*\") && rhs.startsWith(\"*\")) { __gojrInferTypeArgument(lhs.slice(1), rhs.slice(1), parameters, out); return; }",
