@@ -3204,6 +3204,36 @@ func EmptyFixedByteArray() (int, byte, byte) {
     expect(await (pkg.EmptyFixedByteArray as () => Promise<[bigint, bigint, bigint]>)()).toEqual([4n, 0n, 9n]);
   });
 
+  test("indexes generated Go string byte tables as bytes", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage7stringbytetable",
+      artifactRoot: "/tmp/gojr-stage7stringbytetable",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stringbytetable.go",
+        source: `package stage7stringbytetable
+
+const tab = "" + "\\x00\\x80\\x40\\xc0"
+
+func Pick(x uint16) uint16 {
+	return uint16(tab[x>>8]) | uint16(tab[x&3])<<8
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage7stringbytetable/example.com/stage7stringbytetable.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.Pick as (x: bigint) => Promise<bigint>)(3n)).toBe(0xc000n);
+  });
+
   test("lowers function-local type aliases in generated conversions", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
