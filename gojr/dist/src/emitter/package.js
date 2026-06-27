@@ -136,8 +136,10 @@ function topLevelValueDeclarationNames(ast) {
     for (const statement of ast.body) {
         if (statement.kind !== "ConstDecl" && statement.kind !== "VarDecl")
             continue;
-        for (const declaration of statement.declarations)
-            names.add(declaration.name);
+        for (const declaration of statement.declarations) {
+            if (declaration.name !== "_")
+                names.add(declaration.name);
+        }
     }
     return names;
 }
@@ -150,29 +152,44 @@ function emitConstDecl(ctx, statement, facts, topLevelNames, functionDependencie
             inheritedValues = groupValues;
         for (const declaration of group) {
             const effectiveValue = declaration.value ?? inheritedValues[declaration.valueIndex ?? 0];
-            items.push(emitDeclaration(ctx, declaration, facts, topLevelNames, functionDependencies, nextOrder(), effectiveValue));
+            items.push(emitDeclaration(ctx, declaration, "const", facts, topLevelNames, functionDependencies, nextOrder(), effectiveValue));
         }
     }
     return items;
 }
 function emitVarDecl(ctx, statement, facts, topLevelNames, functionDependencies, nextOrder) {
-    return statement.declarations.map((declaration) => emitDeclaration(ctx, declaration, facts, topLevelNames, functionDependencies, nextOrder()));
+    return statement.declarations.map((declaration) => emitDeclaration(ctx, declaration, "var", facts, topLevelNames, functionDependencies, nextOrder()));
 }
-function emitDeclaration(ctx, declaration, facts, topLevelNames, functionDependencies, order, effectiveValue = declaration.value) {
+function emitDeclaration(ctx, declaration, kind, facts, topLevelNames, functionDependencies, order, effectiveValue = declaration.value) {
     const env = {
         ...emptyExpressionEnv,
         facts,
         ...(declaration.iotaIndex !== undefined ? { iotaValue: declaration.iotaIndex } : {})
     };
+    const itemName = declaration.name === "_" ? `__gojrBlank${order}` : declaration.name;
+    if (declaration.name === "_" && kind === "const") {
+        return { name: itemName, order, lines: [], dependencies: new Set() };
+    }
+    if (declaration.name === "_" && kind === "var" && !effectiveValue) {
+        return { name: itemName, order, lines: [], dependencies: new Set() };
+    }
     const rawValue = effectiveValue
         ? expressionToJs(ctx, effectiveValue, env)
         : zeroValueForType(declaration.type?.text, facts);
     if (!rawValue) {
         ctx.emitError(`unsupported Stage 1 declaration for ${declaration.name}`);
-        return { name: declaration.name, order, lines: [], dependencies: new Set() };
+        return { name: itemName, order, lines: [], dependencies: new Set() };
     }
     const targetType = declarationTypeText(declaration, effectiveValue);
     const value = valueForTargetType(rawValue, targetType, expressionTypeText(effectiveValue, env), env);
+    if (declaration.name === "_") {
+        return {
+            name: itemName,
+            order,
+            lines: [`  void (${value});`],
+            dependencies: expressionDependencies(effectiveValue, topLevelNames, facts, itemName, functionDependencies)
+        };
+    }
     return {
         name: declaration.name,
         order,
@@ -4190,10 +4207,13 @@ function jsBinaryOperator(operator) {
     }
 }
 function safeLocalName(name, index) {
-    const candidate = name.replace(/[^A-Za-z0-9_$]/g, "_");
-    if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(candidate) && !JS_RESERVED_WORDS.has(candidate))
-        return candidate;
-    return `__gojrArg${index}`;
+    if (name !== "_" && /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name) && !JS_RESERVED_WORDS.has(name))
+        return name;
+    const encoded = Array.from(name)
+        .map((char) => char.codePointAt(0)?.toString(16) ?? "0")
+        .join("_");
+    const suffix = index < 0 ? "recv" : String(index);
+    return `__gojrIdent_${encoded || "blank"}_${suffix}`;
 }
 function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
     const artifactHeader = { ...artifact };

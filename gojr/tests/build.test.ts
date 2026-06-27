@@ -521,6 +521,49 @@ func Run() {
     expect(stdout.join("")).toBe("ready> got \"from generated stdin\\n\"\n");
   });
 
+  test("generated package artifacts sink blank declarations and encode Unicode identifiers", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/blanks",
+      artifactRoot: "/tmp/gojr-blanks",
+      files: [{
+        filename: "blanks.go",
+        source: `package blanks
+
+var Count int
+
+func bump() int {
+  Count++
+  return Count
+}
+
+var _, _ = bump(), bump()
+const _, _ = 1, 2
+
+func AddUnicode(δ, λ int) int {
+  return δ + λ
+}
+
+func IgnoreBoth(_, _ int) int {
+  return Count
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-blanks/example.com/blanks.a") ?? "");
+    if (!archive) throw new Error("missing blanks archive");
+    expect(archive.javascript).not.toContain("pkg[\"_\"]");
+    const module = await importArtifactJavaScript(archive.javascript);
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(instantiated.package.Count).toBe(2n);
+    expect(await (instantiated.package.AddUnicode as (left: bigint, right: bigint) => Promise<bigint>)(3n, 4n)).toBe(7n);
+    expect(await (instantiated.package.IgnoreBoth as (left: bigint, right: bigint) => Promise<bigint>)(9n, 10n)).toBe(2n);
+  });
+
   test("skips fresh package artifacts with the same cache key", () => {
     const store = new MemoryArtifactStore();
     const request = {
