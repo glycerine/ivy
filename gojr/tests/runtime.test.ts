@@ -864,6 +864,90 @@ func init() {
     expect(graph.packages.app?.HitCount).toBe(6n);
   });
 
+  test("runs the full intrinsic sync/atomic runtime surface", async () => {
+    const result = await expectRuns(`
+import "sync/atomic"
+
+var i64 atomic.Int64
+i64.Store(-2)
+a := i64.Add(5)
+oldAnd := i64.And(6)
+oldOr := i64.Or(8)
+oldSwap := i64.Swap(-1)
+okSwap := i64.CompareAndSwap(-1, -9)
+finalI := i64.Load()
+
+var u32 atomic.Uint32
+u32.Store(4294967295)
+wrap32 := u32.Add(1)
+u32.Store(10)
+prevAnd32 := u32.And(6)
+prevOr32 := u32.Or(8)
+
+var u64 atomic.Uint64
+u64.Store(10)
+prevAnd64 := u64.And(12)
+prevOr64 := u64.Or(2)
+
+var up atomic.Uintptr
+up.Store(4)
+oldUp := up.Swap(9)
+okUp := up.CompareAndSwap(9, 11)
+finalUp := up.Load()
+
+var raw int64
+atomic.StoreInt64(&raw, 1)
+rawAdd := atomic.AddInt64(&raw, -3)
+rawPrevAnd := atomic.AndInt64(&raw, -1)
+rawPrevOr := atomic.OrInt64(&raw, 4)
+rawSwap := atomic.SwapInt64(&raw, 5)
+rawOk := atomic.CompareAndSwapInt64(&raw, 5, 6)
+rawFinal := atomic.LoadInt64(&raw)
+
+var raw32 uint32
+atomic.StoreUint32(&raw32, 10)
+raw32Prev := atomic.AndUint32(&raw32, 6)
+raw32PrevOr := atomic.OrUint32(&raw32, 8)
+raw32Swap := atomic.SwapUint32(&raw32, 1)
+raw32Ok := atomic.CompareAndSwapUint32(&raw32, 1, 2)
+raw32Final := atomic.LoadUint32(&raw32)
+
+var rawPtr uintptr
+atomic.StoreUintptr(&rawPtr, 3)
+ptrAdd := atomic.AddUintptr(&rawPtr, 4)
+ptrPrevAnd := atomic.AndUintptr(&rawPtr, 6)
+ptrPrevOr := atomic.OrUintptr(&rawPtr, 8)
+ptrFinal := atomic.LoadUintptr(&rawPtr)
+
+var val atomic.Value
+val.Store("alpha")
+value1 := val.Load().(string)
+oldValue := val.Swap("beta").(string)
+okValue := val.CompareAndSwap("beta", "gamma")
+value2 := val.Load().(string)
+
+return a, oldAnd, oldOr, oldSwap, okSwap, finalI,
+  wrap32, prevAnd32, prevOr32, u32.Load(),
+  prevAnd64, prevOr64, u64.Load(),
+  oldUp, okUp, finalUp,
+  rawAdd, rawPrevAnd, rawPrevOr, rawSwap, rawOk, rawFinal,
+  raw32Prev, raw32PrevOr, raw32Swap, raw32Ok, raw32Final,
+  ptrAdd, ptrPrevAnd, ptrPrevOr, ptrFinal,
+  value1, oldValue, okValue, value2
+`);
+
+    expect(result.values).toEqual([
+      3n, 3n, 2n, 10n, true, -9n,
+      0n, 10n, 2n, 10n,
+      10n, 8n, 10n,
+      4n, true, 11n,
+      -2n, -2n, -2n, -2n, true, 6n,
+      10n, 2n, 10n, true, 2n,
+      7n, 7n, 6n, 14n,
+      "alpha", "alpha", true, "gamma"
+    ]);
+  });
+
   test("supports runtime cleanup handles as no-op host values", async () => {
     const script = await expectRuns(`
 import "runtime"

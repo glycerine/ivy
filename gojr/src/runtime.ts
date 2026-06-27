@@ -3243,6 +3243,7 @@ export class GoJuniorSession {
   private readonly context: EvaluationContext;
   private readonly codebase: Codebase;
   private readonly checkerPackage: GoTypesPackage;
+  private readonly replImports = new Map<string, { path: string; alias?: string }>();
   private sessionSheet: SheetData | undefined;
   private sessionSheets: Record<string, SheetData> | undefined;
   private checkSequence = 0;
@@ -3301,7 +3302,7 @@ export class GoJuniorSession {
       }, this.context);
     }
 
-    const checkedTransaction = this.checkSource(sourceFile);
+    const checkedTransaction = this.checkSource(sourceFile, ast);
     const checked = checkedTransaction.checked;
     if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
       if (!checkedTransaction.transaction.IsClosed()) checkedTransaction.transaction.Rollback();
@@ -3371,9 +3372,9 @@ export class GoJuniorSession {
     }
   }
 
-  private checkSource(source: SourceFile): { checked: GoJuniorCheckResult; transaction: CodebaseUpdateTxn } {
+  private checkSource(source: SourceFile, ast: ProgramAst): { checked: GoJuniorCheckResult; transaction: CodebaseUpdateTxn } {
     const transaction = this.codebase.NewUpdateTxn();
-    const checked = checkGoJuniorSourceFiles([ensureTrailingNewlineSourceFile(source)], {
+    const checked = checkGoJuniorSourceFiles([ensureTrailingNewlineSourceFile(this.sourceWithSessionImports(source, ast))], {
       ...typeCheckConfig(this.currentOptions()),
       codebaseTxn: transaction,
       packagePath: this.checkerPackage.Path(),
@@ -3388,10 +3389,15 @@ export class GoJuniorSession {
   }
 
   private persistCheckerImports(ast: ProgramAst, transaction: CodebaseUpdateTxn): void {
-    const checkerPackage = this.codebase.PackageInfo(transaction, this.checkerPackage.Path()) ?? this.checkerPackage;
+    const checkerPackage = this.codebase.BeginPackageUpdate(
+      transaction,
+      this.checkerPackage.Path(),
+      this.checkerPackage.Name()
+    );
     for (const imported of ast.imports) {
       const name = importBindingName(imported, this.context);
       if (name === "_" || name === ".") continue;
+      this.replImports.set(name, imported.alias ? { path: imported.path, alias: imported.alias } : { path: imported.path });
       if (checkerPackage.Scope().Lookup(name) !== null) continue;
       const pkg = (isIntrinsicPackageImport(imported.path) ? standardTypePackage(imported.path) : undefined)
         ?? this.codebase.PackageInfo(transaction, imported.path)
@@ -3400,6 +3406,21 @@ export class GoJuniorSession {
         checkerPackage.Scope().Insert(NewPkgName(NoPos, checkerPackage, name, pkg));
       }
     }
+  }
+
+  private sourceWithSessionImports(source: SourceFile, ast: ProgramAst): SourceFile {
+    const currentImports = new Set(ast.imports.map((imported) => importBindingName(imported, this.context)));
+    const imports = [...this.replImports.entries()]
+      .filter(([name]) => !currentImports.has(name))
+      .map(([_name, imported]) => imported);
+    if (imports.length === 0) return source;
+    const lines = imports.map((imported) =>
+      `${imported.alias ? `${imported.alias} ` : ""}${JSON.stringify(imported.path)}`
+    );
+    return {
+      filename: source.filename,
+      source: `import (\n${lines.join("\n")}\n)\n${source.source}`
+    };
   }
 
   private currentOptions(): EvaluationOptions {
@@ -5332,6 +5353,7 @@ function bodylessAtomicIntrinsic(
   signature: FunctionDecl["signature"]
 ): GoJuniorFunction | undefined {
   if (importPath !== "sync/atomic") return undefined;
+  const integer = atomicIntegerKindByFunctionName(name);
   const functionValue = (
     call: (args: RuntimeValue[], context: EvaluationContext) => RuntimeValue
   ): GoJuniorFunction => ({
@@ -5343,63 +5365,26 @@ function bodylessAtomicIntrinsic(
     }
   });
 
+  if (integer) {
+    switch (integer.operation) {
+      case "Load":
+        return functionValue((args) => atomicLoadInteger(args, integer.kind.type, name));
+      case "Store":
+        return functionValue((args, context) => atomicStoreInteger(args, integer.kind.type, name, context));
+      case "Swap":
+        return functionValue((args, context) => atomicSwapInteger(args, integer.kind.type, name, context));
+      case "CompareAndSwap":
+        return functionValue((args, context) => atomicCompareAndSwapInteger(args, integer.kind.type, name, context));
+      case "Add":
+        return functionValue((args, context) => atomicAddInteger(args, integer.kind.type, name, context));
+      case "And":
+        return functionValue((args, context) => atomicBitwiseInteger(args, integer.kind.type, name, "&", context));
+      case "Or":
+        return functionValue((args, context) => atomicBitwiseInteger(args, integer.kind.type, name, "|", context));
+    }
+  }
+
   switch (name) {
-    case "LoadInt32":
-      return functionValue((args) => atomicLoadInteger(args, "int32", name));
-    case "LoadUint32":
-      return functionValue((args) => atomicLoadInteger(args, "uint32", name));
-    case "LoadUint64":
-      return functionValue((args) => atomicLoadInteger(args, "uint64", name));
-    case "LoadUintptr":
-      return functionValue((args) => atomicLoadInteger(args, "uintptr", name));
-    case "StoreInt32":
-      return functionValue((args, context) => atomicStoreInteger(args, "int32", name, context));
-    case "StoreUint32":
-      return functionValue((args, context) => atomicStoreInteger(args, "uint32", name, context));
-    case "StoreUint64":
-      return functionValue((args, context) => atomicStoreInteger(args, "uint64", name, context));
-    case "StoreUintptr":
-      return functionValue((args, context) => atomicStoreInteger(args, "uintptr", name, context));
-    case "SwapInt32":
-      return functionValue((args, context) => atomicSwapInteger(args, "int32", name, context));
-    case "SwapUint32":
-      return functionValue((args, context) => atomicSwapInteger(args, "uint32", name, context));
-    case "SwapUint64":
-      return functionValue((args, context) => atomicSwapInteger(args, "uint64", name, context));
-    case "SwapUintptr":
-      return functionValue((args, context) => atomicSwapInteger(args, "uintptr", name, context));
-    case "CompareAndSwapInt32":
-      return functionValue((args, context) => atomicCompareAndSwapInteger(args, "int32", name, context));
-    case "CompareAndSwapUint32":
-      return functionValue((args, context) => atomicCompareAndSwapInteger(args, "uint32", name, context));
-    case "CompareAndSwapUint64":
-      return functionValue((args, context) => atomicCompareAndSwapInteger(args, "uint64", name, context));
-    case "CompareAndSwapUintptr":
-      return functionValue((args, context) => atomicCompareAndSwapInteger(args, "uintptr", name, context));
-    case "AddInt32":
-      return functionValue((args, context) => atomicAddInteger(args, "int32", name, context));
-    case "AddUint32":
-      return functionValue((args, context) => atomicAddInteger(args, "uint32", name, context));
-    case "AddUint64":
-      return functionValue((args, context) => atomicAddInteger(args, "uint64", name, context));
-    case "AddUintptr":
-      return functionValue((args, context) => atomicAddInteger(args, "uintptr", name, context));
-    case "AndInt32":
-      return functionValue((args, context) => atomicBitwiseInteger(args, "int32", name, "&", context));
-    case "AndUint32":
-      return functionValue((args, context) => atomicBitwiseInteger(args, "uint32", name, "&", context));
-    case "AndUint64":
-      return functionValue((args, context) => atomicBitwiseInteger(args, "uint64", name, "&", context));
-    case "AndUintptr":
-      return functionValue((args, context) => atomicBitwiseInteger(args, "uintptr", name, "&", context));
-    case "OrInt32":
-      return functionValue((args, context) => atomicBitwiseInteger(args, "int32", name, "|", context));
-    case "OrUint32":
-      return functionValue((args, context) => atomicBitwiseInteger(args, "uint32", name, "|", context));
-    case "OrUint64":
-      return functionValue((args, context) => atomicBitwiseInteger(args, "uint64", name, "|", context));
-    case "OrUintptr":
-      return functionValue((args, context) => atomicBitwiseInteger(args, "uintptr", name, "|", context));
     case "LoadPointer":
       return functionValue((args) => atomicPointerArg(args[0] ?? null, name).get() ?? new RuntimeTypedNilValue("unsafe.Pointer"));
     case "StorePointer":
@@ -5427,13 +5412,50 @@ function bodylessAtomicIntrinsic(
   }
 }
 
+type AtomicIntegerOperation = "Load" | "Store" | "Swap" | "CompareAndSwap" | "Add" | "And" | "Or";
+
+interface AtomicIntegerKind {
+  suffix: string;
+  type: string;
+  bits: number;
+  signed: boolean;
+}
+
+const atomicIntegerKinds: AtomicIntegerKind[] = [
+  { suffix: "Int32", type: "int32", bits: 32, signed: true },
+  { suffix: "Int64", type: "int64", bits: 64, signed: true },
+  { suffix: "Uint32", type: "uint32", bits: 32, signed: false },
+  { suffix: "Uint64", type: "uint64", bits: 64, signed: false },
+  { suffix: "Uintptr", type: "uintptr", bits: 64, signed: false }
+];
+
+const atomicIntegerOperations: AtomicIntegerOperation[] = [
+  "Load",
+  "Store",
+  "Swap",
+  "CompareAndSwap",
+  "Add",
+  "And",
+  "Or"
+];
+
+function atomicIntegerKindByFunctionName(name: string): { operation: AtomicIntegerOperation; kind: AtomicIntegerKind } | undefined {
+  for (const operation of atomicIntegerOperations) {
+    if (!name.startsWith(operation)) continue;
+    const suffix = name.slice(operation.length);
+    const kind = atomicIntegerKinds.find((candidate) => candidate.suffix === suffix);
+    if (kind) return { operation, kind };
+  }
+  return undefined;
+}
+
 function atomicPointerArg(value: RuntimeValue, name: string): RuntimePointer {
   if (!(value instanceof RuntimePointer)) throwTypeError(value, "pointer", `sync/atomic.${name} address`);
   return value;
 }
 
 function atomicLoadInteger(args: RuntimeValue[], type: string, name: string): RuntimeValue {
-  return atomicPreparedInteger(atomicPointerArg(args[0] ?? null, name).get() ?? 0n, type, `sync/atomic.${name}`);
+  return atomicCoercedInteger(atomicPointerArg(args[0] ?? null, name).get() ?? 0n, type);
 }
 
 function atomicStoreInteger(args: RuntimeValue[], type: string, name: string, context: EvaluationContext): RuntimeValue {
@@ -5443,14 +5465,14 @@ function atomicStoreInteger(args: RuntimeValue[], type: string, name: string, co
 
 function atomicSwapInteger(args: RuntimeValue[], type: string, name: string, context: EvaluationContext): RuntimeValue {
   const ptr = atomicPointerArg(args[0] ?? null, name);
-  const previous = atomicPreparedInteger(ptr.get() ?? 0n, type, `sync/atomic.${name}`);
+  const previous = atomicCoercedInteger(ptr.get() ?? 0n, type);
   ptr.set(prepareAssignableToType(args[1] ?? 0n, type, `sync/atomic.${name} value`, context));
   return previous;
 }
 
 function atomicCompareAndSwapInteger(args: RuntimeValue[], type: string, name: string, context: EvaluationContext): RuntimeValue {
   const ptr = atomicPointerArg(args[0] ?? null, name);
-  const current = atomicPreparedInteger(ptr.get() ?? 0n, type, `sync/atomic.${name}`);
+  const current = atomicCoercedInteger(ptr.get() ?? 0n, type);
   const oldValue = prepareAssignableToType(args[1] ?? 0n, type, `sync/atomic.${name} old value`, context);
   if (!valueEqual(current, oldValue)) return false;
   ptr.set(prepareAssignableToType(args[2] ?? 0n, type, `sync/atomic.${name} new value`, context));
@@ -5459,9 +5481,9 @@ function atomicCompareAndSwapInteger(args: RuntimeValue[], type: string, name: s
 
 function atomicAddInteger(args: RuntimeValue[], type: string, name: string, context: EvaluationContext): RuntimeValue {
   const ptr = atomicPointerArg(args[0] ?? null, name);
-  const current = toBigInt(atomicPreparedInteger(ptr.get() ?? 0n, type, `sync/atomic.${name}`));
+  const current = toBigInt(atomicCoercedInteger(ptr.get() ?? 0n, type));
   const delta = toBigInt(prepareAssignableToType(args[1] ?? 0n, type, `sync/atomic.${name} delta`, context));
-  const next = prepareAssignableToType(current + delta, type, `sync/atomic.${name} result`, context);
+  const next = atomicCoercedInteger(current + delta, type);
   ptr.set(next);
   return next;
 }
@@ -5474,16 +5496,16 @@ function atomicBitwiseInteger(
   context: EvaluationContext
 ): RuntimeValue {
   const ptr = atomicPointerArg(args[0] ?? null, name);
-  const previous = atomicPreparedInteger(ptr.get() ?? 0n, type, `sync/atomic.${name}`);
+  const previous = atomicCoercedInteger(ptr.get() ?? 0n, type);
   const mask = toBigInt(prepareAssignableToType(args[1] ?? 0n, type, `sync/atomic.${name} mask`, context));
   const previousInt = toBigInt(previous);
-  const next = prepareAssignableToType(operator === "&" ? previousInt & mask : previousInt | mask, type, `sync/atomic.${name} result`, context);
+  const next = atomicCoercedInteger(operator === "&" ? previousInt & mask : previousInt | mask, type);
   ptr.set(next);
   return previous;
 }
 
-function atomicPreparedInteger(value: RuntimeValue, type: string, role: string): RuntimeValue {
-  return prepareAssignableToType(value, type, role);
+function atomicCoercedInteger(value: RuntimeValue, type: string): bigint {
+  return convertIntegerToType(toBigInt(value), type);
 }
 
 function bytealgBytes(value: RuntimeValue): Uint8Array {
@@ -5591,8 +5613,11 @@ function availablePackages(context: EvaluationContext): Record<string, RuntimeOb
     "internal/reflectlite": reflectlitePackage(),
     os: osPackage(context),
     runtime: runtimePackage(),
+    sync: syncRuntimePackage(),
+    "sync/atomic": syncAtomicRuntimePackage(),
     "syscall/js": syscallJSPackage(),
-    unsafe: unsafePackage()
+    unsafe: unsafePackage(),
+    weak: weakRuntimePackage()
   };
   for (const [path, pkg] of Object.entries(packages)) {
     markRuntimePackageObject(pkg, path, context.packageInfo(path) ?? standardTypePackage(path));
@@ -5608,12 +5633,100 @@ function cmpPackage(): RuntimeObject {
   };
 }
 
+function syncRuntimePackage(): RuntimeObject {
+  return {
+    NewCond: hostCallable("sync.NewCond", (args) => {
+      let cond: RuntimeValue = new RuntimeNamedValue("sync.Cond", { L: args[0] ?? null });
+      return new RuntimePointer("sync.Cond", () => cond, (next) => {
+        cond = prepareAssignableToType(next, "sync.Cond", "sync.NewCond result");
+      }, "sync.Cond");
+    }),
+    OnceFunc: hostCallable("sync.OnceFunc", (args) => {
+      const once = syncOnceValue();
+      const fn = args[0] ?? null;
+      return hostCallable("sync.OnceFunc.func", async (_callArgs, context) => {
+        await callRuntime(once.Do ?? null, [fn], context);
+        return null;
+      });
+    }),
+    OnceValue: hostCallable("sync.OnceValue", (args) => {
+      const once = syncOnceValue();
+      const fn = args[0] ?? null;
+      let value: RuntimeValue = null;
+      return hostCallable("sync.OnceValue.func", async (_callArgs, context) => {
+        await callRuntime(once.Do ?? null, [hostCallable("sync.OnceValue.thunk", async (_args, thunkContext) => {
+          value = await callRuntime(fn, [], thunkContext);
+          return null;
+        })], context);
+        return value;
+      });
+    }),
+    OnceValues: hostCallable("sync.OnceValues", (args) => {
+      const once = syncOnceValue();
+      const fn = args[0] ?? null;
+      let values = markTupleValues([null, null]);
+      return hostCallable("sync.OnceValues.func", async (_callArgs, context) => {
+        await callRuntime(once.Do ?? null, [hostCallable("sync.OnceValues.thunk", async (_args, thunkContext) => {
+          const result = await callRuntime(fn, [], thunkContext);
+          values = markTupleValues(Array.isArray(result) ? [...result] : [result ?? null]);
+          return null;
+        })], context);
+        return markTupleValues([...values]);
+      }, { tupleResult: true });
+    })
+  };
+}
+
+function syncAtomicRuntimePackage(): RuntimeObject {
+  const pkg: RuntimeObject = {};
+  for (const kind of atomicIntegerKinds) {
+    pkg[`Load${kind.suffix}`] = hostCallable(`sync/atomic.Load${kind.suffix}`, (args) => atomicLoadInteger(args, kind.type, `Load${kind.suffix}`));
+    pkg[`Store${kind.suffix}`] = hostCallable(`sync/atomic.Store${kind.suffix}`, (args, context) => atomicStoreInteger(args, kind.type, `Store${kind.suffix}`, context));
+    pkg[`Swap${kind.suffix}`] = hostCallable(`sync/atomic.Swap${kind.suffix}`, (args, context) => atomicSwapInteger(args, kind.type, `Swap${kind.suffix}`, context));
+    pkg[`CompareAndSwap${kind.suffix}`] = hostCallable(`sync/atomic.CompareAndSwap${kind.suffix}`, (args, context) =>
+      atomicCompareAndSwapInteger(args, kind.type, `CompareAndSwap${kind.suffix}`, context));
+    pkg[`Add${kind.suffix}`] = hostCallable(`sync/atomic.Add${kind.suffix}`, (args, context) => atomicAddInteger(args, kind.type, `Add${kind.suffix}`, context));
+    pkg[`And${kind.suffix}`] = hostCallable(`sync/atomic.And${kind.suffix}`, (args, context) => atomicBitwiseInteger(args, kind.type, `And${kind.suffix}`, "&", context));
+    pkg[`Or${kind.suffix}`] = hostCallable(`sync/atomic.Or${kind.suffix}`, (args, context) => atomicBitwiseInteger(args, kind.type, `Or${kind.suffix}`, "|", context));
+  }
+  pkg.LoadPointer = hostCallable("sync/atomic.LoadPointer", (args) =>
+    atomicPointerArg(args[0] ?? null, "LoadPointer").get() ?? new RuntimeTypedNilValue("unsafe.Pointer"));
+  pkg.StorePointer = hostCallable("sync/atomic.StorePointer", (args) => {
+    atomicPointerArg(args[0] ?? null, "StorePointer").set(args[1] ?? new RuntimeTypedNilValue("unsafe.Pointer"));
+    return null;
+  });
+  pkg.SwapPointer = hostCallable("sync/atomic.SwapPointer", (args) => {
+    const ptr = atomicPointerArg(args[0] ?? null, "SwapPointer");
+    const previous = ptr.get() ?? new RuntimeTypedNilValue("unsafe.Pointer");
+    ptr.set(args[1] ?? new RuntimeTypedNilValue("unsafe.Pointer"));
+    return previous;
+  });
+  pkg.CompareAndSwapPointer = hostCallable("sync/atomic.CompareAndSwapPointer", (args) => {
+    const ptr = atomicPointerArg(args[0] ?? null, "CompareAndSwapPointer");
+    const current = ptr.get() ?? new RuntimeTypedNilValue("unsafe.Pointer");
+    if (!valueEqual(current, args[1] ?? new RuntimeTypedNilValue("unsafe.Pointer"))) return false;
+    ptr.set(args[2] ?? new RuntimeTypedNilValue("unsafe.Pointer"));
+    return true;
+  });
+  return pkg;
+}
+
 function iterPackage(): RuntimeObject {
   return {
     Pull: hostCallable("iter.Pull", (args, context, typeArguments) =>
       iterPull(args[0] ?? null, context, 1, typeArguments), { tupleResult: true }),
     Pull2: hostCallable("iter.Pull2", (args, context, typeArguments) =>
       iterPull(args[0] ?? null, context, 2, typeArguments), { tupleResult: true })
+  };
+}
+
+function weakRuntimePackage(): RuntimeObject {
+  return {
+    Make: hostCallable("weak.Make", (args, _context, typeArguments) => {
+      const value = args[0] ?? null;
+      const elementType = typeArguments?.[0] ?? weakPointerElementTypeFromValue(value) ?? "any";
+      return new RuntimeNamedValue(`weak.Pointer[${elementType}]`, weakPointerValue(value, elementType));
+    })
   };
 }
 
@@ -10599,12 +10712,12 @@ function defaultValueForTypeText(typeText: string, context?: EvaluationContext):
   }
   const type = normalizeTypeText(resolvedTypeText);
   const typeDef = context?.typeDef(type);
+  const intrinsic = defaultIntrinsicNamedValue(type, context);
+  if (intrinsic) return intrinsic;
   if (typeDef && prefersCompiledZeroValue(type)) {
     const struct = defaultStructValueForTypeDef(typeDef, context, type);
     return type !== typeDef.name ? new RuntimeNamedValue(type, struct) : struct;
   }
-  const intrinsic = defaultIntrinsicNamedValue(type, context);
-  if (intrinsic) return intrinsic;
   const interfaceType = interfaceTarget(type, context);
   if (interfaceType) return new RuntimeInterfaceValue(type, null);
   if (isUnsafePointerType(type)) return new RuntimeTypedNilValue(type);
@@ -10736,9 +10849,12 @@ function prefersCompiledZeroValue(type: string): boolean {
     type === "internal/sync.RWMutex" ||
     type === "sync/atomic.Bool" ||
     type === "sync/atomic.Int32" ||
+    type === "sync/atomic.Int64" ||
     type === "sync/atomic.Uint32" ||
     type === "sync/atomic.Uint64" ||
     type === "sync/atomic.Uintptr" ||
+    type === "sync/atomic.Value" ||
+    /^weak\.Pointer(?:\[[\s\S]*\])?$/.test(type) ||
     /^sync\/atomic\.Pointer(?:\[[\s\S]*\])?$/.test(type);
 }
 
@@ -10753,10 +10869,12 @@ function defaultIntrinsicNamedValue(type: string, context?: EvaluationContext): 
   if (type === "sync.Pool") return new RuntimeNamedValue(type, syncPoolValue());
   if (type === "sync.Mutex" || type === "sync.RWMutex" || type === "internal/sync.Mutex") return new RuntimeNamedValue(type, syncMutexValue(type));
   if (type === "atomic.Bool" || type === "sync/atomic.Bool") return new RuntimeNamedValue(type, atomicBoolValue());
-  if (type === "atomic.Int32" || type === "sync/atomic.Int32") return new RuntimeNamedValue(type, atomicInt32Value());
-  if (type === "atomic.Uint64" || type === "sync/atomic.Uint64") return new RuntimeNamedValue(type, atomicUint64Value());
+  const atomicInteger = atomicIntegerKindForWrapperType(type);
+  if (atomicInteger) return new RuntimeNamedValue(type, atomicIntegerValue(type, atomicInteger.type, atomicInteger.bits, atomicInteger.signed));
+  if (type === "atomic.Value" || type === "sync/atomic.Value") return new RuntimeNamedValue(type, atomicValueValue());
   const atomicPointer = /^(?:atomic|sync\/atomic)\.Pointer(?:\[[\s\S]*\])?$/.exec(type);
   if (atomicPointer) return new RuntimeNamedValue(type, atomicPointerValue(atomicPointerElementType(type)));
+  if (/^weak\.Pointer(?:\[[\s\S]*\])?$/.test(type)) return new RuntimeNamedValue(type, weakPointerValue(null, weakPointerElementType(type)));
   return undefined;
 }
 
@@ -10861,6 +10979,41 @@ function atomicPointerElementType(type: string): string | undefined {
   return generic?.args[0];
 }
 
+function weakPointerElementType(type: string): string | undefined {
+  const generic = genericTypeArguments(type);
+  return generic?.args[0];
+}
+
+function weakPointerElementTypeFromValue(value: RuntimeValue): string | undefined {
+  if (value instanceof RuntimePointer) return value.typeName;
+  if (value instanceof RuntimeTypedNilValue && value.typeName.startsWith("*")) return value.typeName.slice(1);
+  if (value instanceof RuntimeNamedValue && isUnsafePointerType(value.typeName)) {
+    const actual = unwrapNamed(value);
+    if (actual instanceof RuntimePointer) return actual.typeName;
+  }
+  return undefined;
+}
+
+function weakPointerValue(value: RuntimeValue, elementType?: string): RuntimeObject {
+  const typeName = elementType ? `*${elementType}` : "*any";
+  return {
+    Value: hostCallable("weak.Pointer.Value", () => {
+      if (value === null) return new RuntimeTypedNilValue(typeName);
+      return value;
+    })
+  };
+}
+
+function atomicIntegerKindForWrapperType(type: string): AtomicIntegerKind | undefined {
+  const normalized = normalizeTypeText(type);
+  const local = normalized.startsWith("sync/atomic.")
+    ? normalized.slice("sync/atomic.".length)
+    : normalized.startsWith("atomic.")
+      ? normalized.slice("atomic.".length)
+      : "";
+  return atomicIntegerKinds.find((kind) => kind.suffix === local);
+}
+
 function atomicPointerValue(elementType?: string): RuntimeObject {
   let value: RuntimeValue = null;
   const pointerType = elementType ? `*${elementType}` : undefined;
@@ -10890,6 +11043,46 @@ function atomicPointerValue(elementType?: string): RuntimeObject {
   };
 }
 
+function atomicIntegerValue(typeName: string, valueType: string, bits: number, signed: boolean): RuntimeObject {
+  let value = 0n;
+  const coerce = (next: RuntimeValue): bigint =>
+    signed ? BigInt.asIntN(bits, toBigInt(next)) : BigInt.asUintN(bits, toBigInt(next));
+  const prepare = (next: RuntimeValue, context: EvaluationContext, role: string): bigint =>
+    coerce(prepareAssignableToType(next, valueType, role, context));
+  return {
+    Add: hostCallable(`${typeName}.Add`, (args, context) => {
+      value = coerce(value + prepare(args[0] ?? 0n, context, `${typeName}.Add delta`));
+      return value;
+    }),
+    And: hostCallable(`${typeName}.And`, (args, context) => {
+      const previous = value;
+      value = coerce(value & prepare(args[0] ?? 0n, context, `${typeName}.And mask`));
+      return previous;
+    }),
+    CompareAndSwap: hostCallable(`${typeName}.CompareAndSwap`, (args, context) => {
+      const oldValue = prepare(args[0] ?? 0n, context, `${typeName}.CompareAndSwap old value`);
+      if (value !== oldValue) return false;
+      value = prepare(args[1] ?? 0n, context, `${typeName}.CompareAndSwap new value`);
+      return true;
+    }),
+    Load: hostCallable(`${typeName}.Load`, () => value),
+    Or: hostCallable(`${typeName}.Or`, (args, context) => {
+      const previous = value;
+      value = coerce(value | prepare(args[0] ?? 0n, context, `${typeName}.Or mask`));
+      return previous;
+    }),
+    Store: hostCallable(`${typeName}.Store`, (args, context) => {
+      value = prepare(args[0] ?? 0n, context, `${typeName}.Store value`);
+      return null;
+    }),
+    Swap: hostCallable(`${typeName}.Swap`, (args, context) => {
+      const previous = value;
+      value = prepare(args[0] ?? 0n, context, `${typeName}.Swap value`);
+      return previous;
+    })
+  };
+}
+
 function atomicBoolValue(): RuntimeObject {
   let value = false;
   return {
@@ -10914,45 +11107,52 @@ function atomicBoolValue(): RuntimeObject {
   };
 }
 
-function atomicInt32Value(): RuntimeObject {
-  let value = 0n;
+function atomicValueValue(): RuntimeObject {
+  let value: RuntimeValue = null;
+  let concreteType: string | undefined;
+  const typeKey = (next: RuntimeValue): string | undefined =>
+    runtimeValueConcreteTypeText(next) ?? inferredTypeText(next) ?? (next === null ? undefined : runtimeTypeText(next));
+  const requireStorable = (next: RuntimeValue, operation: string): { value: RuntimeValue; type: string } => {
+    if (next instanceof RuntimeInterfaceValue && next.value === null) next = null;
+    if (next === null || next instanceof RuntimeTypedNilValue) {
+      throw new GoJuniorPanic(`sync/atomic: ${operation} of nil value into Value`);
+    }
+    const nextType = typeKey(next);
+    if (!nextType) throw new GoJuniorPanic(`sync/atomic: ${operation} of nil value into Value`);
+    if (concreteType !== undefined && concreteType !== nextType) {
+      throw new GoJuniorPanic(`sync/atomic: ${operation} of inconsistently typed value into Value`);
+    }
+    return { value: next, type: nextType };
+  };
   return {
-    Add: hostCallable("sync/atomic.Int32.Add", (args) => {
-      value = BigInt.asIntN(32, value + toBigInt(args[0] ?? 0n));
-      return value;
-    }),
-    CompareAndSwap: hostCallable("sync/atomic.Int32.CompareAndSwap", (args) => {
-      const oldValue = BigInt.asIntN(32, toBigInt(args[0] ?? 0n));
-      if (value === oldValue) {
-        value = BigInt.asIntN(32, toBigInt(args[1] ?? 0n));
+    CompareAndSwap: hostCallable("sync/atomic.Value.CompareAndSwap", (args) => {
+      const oldValue = args[0] ?? null;
+      const next = requireStorable(args[1] ?? null, "compare and swap");
+      if (value === null) {
+        if (oldValue !== null && !(oldValue instanceof RuntimeInterfaceValue && oldValue.value === null)) return false;
+        concreteType = next.type;
+        value = next.value;
         return true;
       }
-      return false;
+      const oldType = typeKey(oldValue);
+      if (oldType !== concreteType) return false;
+      if (!valueEqual(value, oldValue)) return false;
+      value = next.value;
+      return true;
     }),
-    Load: hostCallable("sync/atomic.Int32.Load", () => value),
-    Store: hostCallable("sync/atomic.Int32.Store", (args) => {
-      value = BigInt.asIntN(32, toBigInt(args[0] ?? 0n));
+    Load: hostCallable("sync/atomic.Value.Load", () => value),
+    Store: hostCallable("sync/atomic.Value.Store", (args) => {
+      const next = requireStorable(args[0] ?? null, "store");
+      concreteType = next.type;
+      value = next.value;
       return null;
     }),
-    Swap: hostCallable("sync/atomic.Int32.Swap", (args) => {
+    Swap: hostCallable("sync/atomic.Value.Swap", (args) => {
+      const next = requireStorable(args[0] ?? null, "swap");
       const previous = value;
-      value = BigInt.asIntN(32, toBigInt(args[0] ?? 0n));
+      concreteType = next.type;
+      value = next.value;
       return previous;
-    })
-  };
-}
-
-function atomicUint64Value(): RuntimeObject {
-  let value = 0n;
-  return {
-    Add: hostCallable("sync/atomic.Uint64.Add", (args) => {
-      value = BigInt.asUintN(64, value + toBigInt(args[0] ?? 0n));
-      return value;
-    }),
-    Load: hostCallable("sync/atomic.Uint64.Load", () => value),
-    Store: hostCallable("sync/atomic.Uint64.Store", (args) => {
-      value = BigInt.asUintN(64, toBigInt(args[0] ?? 0n));
-      return null;
     })
   };
 }
@@ -10975,13 +11175,13 @@ function zeroValueForMapValue(typeText: string, context?: EvaluationContext): Ru
     return values;
   }
   const type = normalizeTypeText(resolvedTypeText);
+  const intrinsic = defaultIntrinsicNamedValue(type, context);
+  if (intrinsic) return intrinsic;
   const typeDef = context?.typeDef(type);
   if (typeDef) {
     const struct = defaultStructValueForTypeDef(typeDef, context, type);
     return type !== typeDef.name ? new RuntimeNamedValue(type, struct) : struct;
   }
-  const intrinsic = defaultIntrinsicNamedValue(type, context);
-  if (intrinsic) return intrinsic;
   if (interfaceTarget(type, context)) return new RuntimeInterfaceValue(type, null);
   if (isUnsafePointerType(type) || type.startsWith("*")) return new RuntimeTypedNilValue(type);
   const anonymousStruct = parseAnonymousStructTypeText(resolvedTypeText);
@@ -11960,7 +12160,8 @@ function methodCallResultTypeText(expression: CallExpression, context: Evaluatio
     ? expression.callee.object
     : expression.callee;
   if (callee.kind !== "SelectorExpression") return undefined;
-  const objectType = expressionDeclaredTypeText(callee.object, context);
+  const rawObjectType = expressionDeclaredTypeText(callee.object, context);
+  const objectType = rawObjectType ? context.resolveImportedTypeText(rawObjectType, callee.object.span?.filename) : undefined;
   if (!objectType) return undefined;
   const receiver = normalizeReceiverType(objectType);
   const method = context.methodFor(receiver.baseType, callee.field);
@@ -11976,7 +12177,8 @@ function methodCallResultTypeText(expression: CallExpression, context: Evaluatio
   const resultTypeText = packageName && packageName !== context.importPath()
     ? qualifyLocalRuntimeTypeName(result.type.text, packageName, localTypeParameters)
     : result.type.text;
-  return normalizeTypeText(substituteTypeArgumentBindings(resultTypeText, methodReceiverTypeArgumentBindings(method, objectType, context)));
+  const typeText = normalizeTypeText(substituteTypeArgumentBindings(resultTypeText, methodReceiverTypeArgumentBindings(method, objectType, context)));
+  return typeTextContainsAnyTypeParameter(typeText, [...localTypeParameters]) ? undefined : typeText;
 }
 
 function typeTextContainsAnyTypeParameter(typeText: string, names: string[]): boolean {
@@ -13885,7 +14087,15 @@ function functionDeclarationRuntimeTypeParameters(declaration: FunctionDecl | un
   const generic = genericTypeArguments(receiver);
   for (const arg of generic?.args ?? []) {
     const name = normalizeTypeText(arg);
-    if (/^[A-Za-z_]\w*$/.test(name)) names.add(name);
+    if (/^[A-Za-z_]\w*$/.test(name)) {
+      names.add(name);
+      continue;
+    }
+    const qualified = packageQualifiedRuntimeTypeNameParts(name);
+    if (qualified && /^[A-Za-z_]\w*$/.test(qualified.localName)) {
+      names.add(name);
+      names.add(qualified.localName);
+    }
   }
   return names;
 }
