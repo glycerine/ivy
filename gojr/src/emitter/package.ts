@@ -49,6 +49,7 @@ export interface Stage1PackageEmitResult {
 
 interface ExpressionEmitEnv {
   locals: Map<string, string>;
+  declaredLocals: Set<string>;
   localTypes: Map<string, string>;
   localTypeUnderlyings: Map<string, string>;
   facts: PackageEmitFacts;
@@ -141,6 +142,7 @@ const emptyPackageEmitFacts: PackageEmitFacts = {
 
 const emptyExpressionEnv: ExpressionEmitEnv = {
   locals: new Map(),
+  declaredLocals: new Set(),
   localTypes: new Map(),
   localTypeUnderlyings: new Map(),
   facts: emptyPackageEmitFacts
@@ -756,6 +758,7 @@ function emitNamedResultDeclarations(fn: FunctionDecl, env: ExpressionEmitEnv): 
     if (!result.name || result.name === "_") continue;
     const name = safeLocalName(result.name, index);
     env.locals.set(result.name, name);
+    env.declaredLocals.add(result.name);
     env.localTypes.set(result.name, result.type.text);
     namedResults.push(name);
     lines.push(`let ${name} = ${zeroValueForTypeInEnv(result.type.text, env) ?? "null"};`);
@@ -894,6 +897,7 @@ function emitGotoStateMachineStatements(
   const hoisted = hoistedGotoLocals(statements);
   for (const [name, typeText] of hoisted.entries()) {
     env.locals.set(name, safeLocalName(name, 0));
+    env.declaredLocals.add(name);
     if (typeText) env.localTypes.set(name, typeText);
   }
   const pc = ctx.symbol("pc");
@@ -951,6 +955,7 @@ function hoistedGotoLocals(statements: Statement[]): Map<string, string | undefi
 function cloneExpressionEnv(env: ExpressionEmitEnv): ExpressionEmitEnv {
   return {
     locals: new Map(env.locals),
+    declaredLocals: new Set(),
     localTypes: new Map(env.localTypes),
     localTypeUnderlyings: new Map(env.localTypeUnderlyings),
     facts: env.facts,
@@ -1111,8 +1116,7 @@ function emitLocalDeclarationStatement(
     if (groupValues.some(Boolean)) inheritedValues = groupValues;
     for (const declaration of group) {
       if (declaration.name === "_") continue;
-      const existing = statement.kind === "VarDecl" ? env.locals.get(declaration.name) : undefined;
-      const name = existing ?? safeLocalName(declaration.name, localIndex++);
+      const name = safeLocalName(declaration.name, localIndex++);
       const declarationEnv: ExpressionEmitEnv = {
         ...env,
         ...(declaration.iotaIndex !== undefined ? { iotaValue: declaration.iotaIndex } : {})
@@ -1128,12 +1132,9 @@ function emitLocalDeclarationStatement(
       const typeText = declarationTypeText(declaration, effectiveValue);
       if (typeText) env.localTypes.set(declaration.name, typeText);
       const value = valueForTargetType(rawValue, typeText, expressionTypeText(effectiveValue, declarationEnv), declarationEnv);
-      if (existing) {
-        lines.push(`${indent}${existing} = ${value};`);
-      } else {
-        env.locals.set(declaration.name, name);
-        lines.push(`${indent}${keyword} ${name} = ${value};`);
-      }
+      env.locals.set(declaration.name, name);
+      env.declaredLocals.add(declaration.name);
+      lines.push(`${indent}${keyword} ${name} = ${value};`);
     }
   }
   return lines;
@@ -1227,6 +1228,7 @@ function emitRangeStatement(ctx: EmitterContext, statement: ForStatement, env: E
       const jsName = safeLocalName(name, index);
       if (statement.range?.define || !loopEnv.locals.has(name)) {
         loopEnv.locals.set(name, jsName);
+        loopEnv.declaredLocals.add(name);
         if (name === statement.range?.keyName && rangeTypes.key) loopEnv.localTypes.set(name, rangeTypes.key);
         if (name === statement.range?.valueName && rangeTypes.value) loopEnv.localTypes.set(name, rangeTypes.value);
         return [`${indent}  let ${jsName} = ${assignedPart};`];
@@ -1241,6 +1243,7 @@ function emitRangeStatement(ctx: EmitterContext, statement: ForStatement, env: E
   if (!keyLines || !valueLines) return undefined;
   bindLines.push(...keyLines, ...valueLines);
   const bodyEnv = cloneExpressionEnv(loopEnv);
+  bodyEnv.declaredLocals = new Set(loopEnv.declaredLocals);
   const loopLabel = ctx.symbol("rangeLoop");
   bodyEnv.loopContinueLabel = loopLabel;
   const body = emitStatements(ctx, statement.body.statements, bodyEnv, `${indent}  `);
@@ -1367,6 +1370,7 @@ function emitTypeSwitchBinding(
   if (guard.define || !env.locals.has(guard.name)) {
     const local = safeLocalName(guard.name, 0);
     env.locals.set(guard.name, local);
+    env.declaredLocals.add(guard.name);
     if (singleType) env.localTypes.set(guard.name, singleType);
     return [`${indent}let ${local} = ${value};`];
   }
@@ -1670,6 +1674,7 @@ function emitForHeaderStatement(
           const names = statement.names.map((goName, index) => {
             const name = safeLocalName(goName, index);
             env.locals.set(goName, name);
+            env.declaredLocals.add(goName);
             return name;
           });
           const sourceTypes = tupleSourceTypeTexts(source, statement.names.length, env);
@@ -1691,6 +1696,7 @@ function emitForHeaderStatement(
           if (!value) return undefined;
           const name = safeLocalName(goName, index);
           env.locals.set(goName, name);
+          env.declaredLocals.add(goName);
           const typeText = expressionTypeText(expression, env);
           if (typeText) env.localTypes.set(goName, typeText);
           declarations.push(`${name} = ${value}`);
@@ -1781,13 +1787,14 @@ function bindShortNames(names: string[], tuple: string, env: ExpressionEmitEnv, 
   const lines: string[] = [];
   for (const [index, name] of names.entries()) {
     if (name === "_") continue;
-    const existing = env.locals.get(name);
+    const existing = env.declaredLocals.has(name) ? env.locals.get(name) : undefined;
     if (existing) {
       lines.push(`${indent}${existing} = ${valueForTargetType(`${tuple}[${index}]`, env.localTypes.get(name), sourceTypes[index], env)};`);
       continue;
     }
     const local = safeLocalName(name, index);
     env.locals.set(name, local);
+    env.declaredLocals.add(name);
     const source = sourceTypes[index];
     if (source) env.localTypes.set(name, source);
     lines.push(`${indent}let ${local} = ${source ? valueForTargetType(`${tuple}[${index}]`, source, source, env) : `${tuple}[${index}]`};`);
@@ -1864,6 +1871,7 @@ function compoundAssignmentExpression(
 
 function functionParameterBindings(fn: FunctionDecl, facts: PackageEmitFacts): { params: string[]; env: ExpressionEmitEnv } {
   const locals = new Map<string, string>();
+  const declaredLocals = new Set<string>();
   const localTypes = new Map<string, string>();
   const localTypeUnderlyings = new Map<string, string>();
   const params: string[] = [];
@@ -1876,6 +1884,7 @@ function functionParameterBindings(fn: FunctionDecl, facts: PackageEmitFacts): {
     const receiverJsName = safeLocalName(receiverName, -1);
     if (fn.receiver.name && fn.receiver.name !== "_") {
       locals.set(fn.receiver.name, receiverJsName);
+      declaredLocals.add(fn.receiver.name);
       localTypes.set(fn.receiver.name, fn.receiver.type.text);
     }
     params.push(receiverJsName);
@@ -1885,6 +1894,7 @@ function functionParameterBindings(fn: FunctionDecl, facts: PackageEmitFacts): {
     const jsName = safeLocalName(goName, index);
     if (parameter.name && parameter.name !== "_") {
       locals.set(parameter.name, jsName);
+      declaredLocals.add(parameter.name);
       localTypes.set(parameter.name, parameter.variadic ? `[]${parameter.type.text}` : parameter.type.text);
     }
     return parameter.variadic ? `...${jsName}` : jsName;
@@ -1893,6 +1903,7 @@ function functionParameterBindings(fn: FunctionDecl, facts: PackageEmitFacts): {
     params,
     env: {
       locals,
+      declaredLocals,
       localTypes,
       localTypeUnderlyings,
       facts,
@@ -2657,6 +2668,45 @@ function tupleSourceTypeTexts(expression: Expression, targetCount: number, env: 
   return [];
 }
 
+function singleArgumentTupleTypeTexts(expression: Expression, env: ExpressionEmitEnv): Array<string | undefined> {
+  if (expression.kind === "IndexExpression") {
+    const objectType = expressionTypeText(expression.object, env);
+    const mapType = parseMapTypeText(objectType ? resolveUnderlyingTypeTextInEnv(objectType, env) : undefined);
+    return mapType ? [mapType.valueType, "bool"] : [];
+  }
+  if (expression.kind === "TypeAssertionExpression") {
+    return [expression.type.text, "bool"];
+  }
+  if (expression.kind === "UnaryExpression" && expression.operator === "<-") {
+    return [chanElementTypeText(expressionTypeText(expression.operand, env)), "bool"];
+  }
+  if (expression.kind !== "CallExpression") return [];
+  const annotatedTuple = tupleResultTypeTextsFromAnnotation(expression.typeText);
+  if (annotatedTuple.length > 1) return annotatedTuple;
+  const callee = expression.callee;
+  if (callee.kind === "Identifier" && !env.locals.has(callee.name)) {
+    return env.facts.functionResultTypes.get(callee.name) ?? [];
+  }
+  const instantiatedName = instantiatedFunctionName(callee);
+  if (instantiatedName && !env.locals.has(instantiatedName)) {
+    return env.facts.functionResultTypes.get(instantiatedName) ?? [];
+  }
+  if (callee.kind === "SelectorExpression") {
+    const methodKey = methodPackageKeyForSelector(callee, env);
+    if (methodKey) return env.facts.functionResultTypes.get(methodKey) ?? [];
+  }
+  return [];
+}
+
+function tupleResultTypeTextsFromAnnotation(typeText: string | undefined): Array<string | undefined> {
+  const trimmed = typeText?.trim();
+  if (!trimmed?.startsWith("(")) return [];
+  const end = matchingParenIndex(trimmed, 0);
+  if (end !== trimmed.length - 1) return [];
+  const types = splitTopLevelTypes(trimmed.slice(1, end));
+  return types.length > 1 ? types : [];
+}
+
 function valueForTargetType(value: string, targetType: string | undefined, sourceType: string | undefined, env: ExpressionEmitEnv): string {
   const staticTargetType = targetType?.trim();
   if (staticTargetType && env.typeParameters?.has(staticTargetType)) {
@@ -2881,6 +2931,7 @@ function functionLiteralToJs(ctx: EmitterContext, expression: FunctionLiteralExp
     params.push(parameter.variadic ? `...${jsName}` : jsName);
     if (parameter.name && parameter.name !== "_") {
       literalEnv.locals.set(parameter.name, jsName);
+      literalEnv.declaredLocals.add(parameter.name);
       literalEnv.localTypes.set(parameter.name, parameter.variadic ? `[]${parameter.type.text}` : parameter.type.text);
     }
   }
@@ -2892,6 +2943,7 @@ function functionLiteralToJs(ctx: EmitterContext, expression: FunctionLiteralExp
     if (!result.name || result.name === "_") continue;
     const name = safeLocalName(result.name, index);
     literalEnv.locals.set(result.name, name);
+    literalEnv.declaredLocals.add(result.name);
     literalEnv.localTypes.set(result.name, result.type.text);
     namedResults.push(name);
     resultLines.push(`  let ${name} = ${zeroValueForTypeInEnv(result.type.text, literalEnv) ?? "null"};`);
@@ -3211,7 +3263,7 @@ function callExpressionToJs(ctx: EmitterContext, expression: CallExpression, env
       const importPath = env.facts.imports.get(expression.callee.object.name);
       const renderedArgs = renderCallArgs(ctx, expression.args, env, [], expression.spreadLast);
       if (!renderedArgs) return undefined;
-      const argTypes = expression.args.map((arg) => JSON.stringify(expressionTypeText(arg, env) ?? ""));
+      const argTypes = renderCallArgTypes(expression.args, env);
       return `(await __gojrCallImportedFunction(${JSON.stringify(importPath)}, ${JSON.stringify(expression.callee.field)}, [${renderedArgs.join(", ")}], [${argTypes.join(", ")}]))`;
     }
     if (!isImportedPackageSelector(expression.callee, env)) return dynamicMethodCallToJs(ctx, expression, env);
@@ -3352,6 +3404,19 @@ function isKnownConversionTypeText(typeText: string, env: ExpressionEmitEnv): bo
 }
 
 function renderCallArgs(ctx: EmitterContext, args: Expression[], env: ExpressionEmitEnv, targetTypes: string[] = [], spreadLast = false): string[] | undefined {
+  const onlyArg = args.length === 1 ? args[0] : undefined;
+  if (!spreadLast && onlyArg) {
+    const tupleTypes = singleArgumentTupleTypeTexts(onlyArg, env);
+    if (tupleTypes.length > 1) {
+      const value = tupleSourceExpressionToJs(ctx, onlyArg, tupleTypes.length, env);
+      if (!value) return undefined;
+      const valuesName = "__gojrCallValues";
+      const converted = tupleTypes.map((sourceType, index) =>
+        valueForTargetType(`${valuesName}[${index}]`, callArgumentTargetType(targetTypes, index, false), sourceType, env)
+      );
+      return [`...(((${valuesName}) => [${converted.join(", ")}])(__gojrTupleValues(${value})))`];
+    }
+  }
   const rendered: string[] = [];
   for (const [index, arg] of args.entries()) {
     const value = expressionToJs(ctx, arg, env);
@@ -3361,6 +3426,15 @@ function renderCallArgs(ctx: EmitterContext, args: Expression[], env: Expression
     rendered.push(spreadLast && index === args.length - 1 ? `...__gojrSpread(${lowered})` : lowered);
   }
   return rendered;
+}
+
+function renderCallArgTypes(args: Expression[], env: ExpressionEmitEnv): string[] {
+  const onlyArg = args.length === 1 ? args[0] : undefined;
+  if (onlyArg) {
+    const tupleTypes = singleArgumentTupleTypeTexts(onlyArg, env);
+    if (tupleTypes.length > 1) return tupleTypes.map((type) => JSON.stringify(type ?? ""));
+  }
+  return args.map((arg) => JSON.stringify(expressionTypeText(arg, env) ?? ""));
 }
 
 function callArgumentTargetType(targetTypes: string[] | undefined, index: number, isSpread: boolean): string | undefined {
@@ -4584,6 +4658,8 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "}",
     "const __gojrObjectIds = new WeakMap();",
     "let __gojrNextObjectId = 1;",
+    "const __gojrUintptrKeys = new Map();",
+    "let __gojrNextUintptr = 1n;",
     "let __gojrNextNonReflexiveMapKeyId = 1;",
     "function __gojrUnwrapInterface(value) {",
     "  while (value && value.__gojrInterface === true) value = value.value;",
@@ -4644,6 +4720,22 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  const id = __gojrNextObjectId++;",
     "  __gojrObjectIds.set(value, id);",
     "  return id;",
+    "}",
+    "function __gojrUintptrForKey(key) {",
+    "  const text = String(key);",
+    "  const existing = __gojrUintptrKeys.get(text);",
+    "  if (existing !== undefined) return existing;",
+    "  const id = __gojrNextUintptr++;",
+    "  __gojrUintptrKeys.set(text, id);",
+    "  return id;",
+    "}",
+    "function __gojrRuntimeUintptrForValue(value) {",
+    "  const actual = __gojrUnwrapNamed(__gojrUnwrapInterface(value));",
+    "  if (actual === null || actual === undefined) return 0n;",
+    "  if (actual && actual.__gojrTypedNil === true) return 0n;",
+    "  if (actual && actual.__gojrPointer === true) return __gojrUintptrForKey(`ptr:${__gojrPointerIdentityKey(actual)}`);",
+    "  if (typeof actual === \"object\" || typeof actual === \"function\") return __gojrUintptrForKey(`object:${__gojrObjectIdentityId(actual)}`);",
+    "  return 0n;",
     "}",
     "function __gojrMapNumberKeyId(value, options = {}) {",
     "  if (Number.isNaN(value)) {",
@@ -6185,11 +6277,26 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  const parts = String(path || \"\").split(\"/\").filter(Boolean);",
     "  return parts[parts.length - 1] || \"\";",
     "}",
+    "function __gojrReflectTypeBits(self) {",
+    "  const descriptor = self && self.__gojrDescriptor || {};",
+    "  const type = String(descriptor.type || descriptor.string || \"\");",
+    "  const kind = descriptor.kind || __gojrKindNameForType(type);",
+    "  switch (kind) {",
+    "    case \"int8\": case \"uint8\": case \"byte\": return 8n;",
+    "    case \"int16\": case \"uint16\": return 16n;",
+    "    case \"int32\": case \"uint32\": case \"rune\": case \"float32\": return 32n;",
+    "    case \"int\": case \"uint\": case \"uintptr\": case \"int64\": case \"uint64\": case \"float64\": return 64n;",
+    "    case \"complex64\": return 64n;",
+    "    case \"complex128\": return 128n;",
+    "    default: throw new TypeError(`reflect: Bits of invalid type ${descriptor.string || type || \"<unknown>\"}`);",
+    "  }",
+    "}",
     "const __gojrReflectTypeMethods = {",
     "  String: async (self) => __gojrReflectDescriptorString(self.__gojrDescriptor),",
     "  Name: async (self) => self.__gojrDescriptor.name || \"\",",
     "  PkgPath: async (self) => self.__gojrDescriptor.pkgPath || \"\",",
     "  Kind: async (self) => __gojrReflectKindValue(self.__gojrDescriptor.kind),",
+    "  Bits: async (self) => __gojrReflectTypeBits(self),",
     "  NumField: async (self) => BigInt((self.__gojrDescriptor.fields || []).length),",
     "  Field: async (self, index) => {",
     "    const field = (self.__gojrDescriptor.fields || [])[Number(index)];",
@@ -6339,6 +6446,15 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  Bool: async (self) => {",
     "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Bool on zero Value\");",
     "    return Boolean(self.__gojrValue);",
+    "  },",
+    "  Pointer: async (self) => {",
+    "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Pointer on zero Value\");",
+    "    const value = self.__gojrValue;",
+    "    if (value && value.__gojrReflectType === true) return __gojrRuntimeUintptrForValue(value);",
+    "    const typ = __gojrReflectValueType(self);",
+    "    const kind = typ && typ.__gojrDescriptor && typ.__gojrDescriptor.kind || \"\";",
+    "    if (kind === \"chan\" || kind === \"func\" || kind === \"map\" || kind === \"ptr\" || kind === \"slice\" || kind === \"unsafe.Pointer\" || __gojrPointerLike(value)) return __gojrRuntimeUintptrForValue(value);",
+    "    throw new TypeError(`reflect: call of Value.Pointer on ${kind || \"invalid\"} Value`);",
     "  }",
     "};",
     "function __gojrBuiltinTypeName(typeName) {",
@@ -6377,6 +6493,19 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  }",
     "  Object.defineProperty(value, \"__gojrType\", { value: typeName });",
     "  Object.defineProperty(value, \"__gojrPkgPath\", { value: pkgPath || gojrPackageArtifact.importPath });",
+    "  __gojrAttachValueReceiverMethods(value, descriptor);",
+    "  return value;",
+    "}",
+    "function __gojrAttachValueReceiverMethods(value, descriptor) {",
+    "  if (!value || !descriptor || !Array.isArray(descriptor.methods)) return value;",
+    "  const methods = Object.assign(Object.create(null), value.__gojrMethods || {});",
+    "  const base = __gojrReceiverBaseType(descriptor.type || value.__gojrType || \"\");",
+    "  for (const item of descriptor.methods) {",
+    "    if (!item || item.pointerReceiver || !item.name) continue;",
+    "    const fn = __gojrActivePackage && __gojrActivePackage[`${base}.${item.name}`];",
+    "    if (typeof fn === \"function\") methods[item.name] = async (self, ...args) => __gojrInvokeMethodFunction(fn, self, args);",
+    "  }",
+    "  if (Object.keys(methods).length > 0) Object.defineProperty(value, \"__gojrMethods\", { value: methods, configurable: true });",
     "  return value;",
     "}",
     "function __gojrStructFromValues(typeName, values) {",
@@ -6641,6 +6770,7 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  if (typeof value === \"number\") return \"float64\";",
     "  if (__gojrIsString(value)) return \"string\";",
     "  if (typeof value === \"boolean\") return \"bool\";",
+    "  if (__gojrIsComplexValue(value)) return \"complex128\";",
     "  return value === null || value === undefined ? \"nil\" : typeof value;",
     "}",
     "function __gojrRuntimeTypePackagePath(value) {",

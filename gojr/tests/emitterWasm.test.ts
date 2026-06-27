@@ -313,6 +313,63 @@ func Noop() {}
     expect(await (pkg.Noop as () => Promise<null>)()).toBeNull();
   });
 
+  test("keeps inner var and short declarations from clobbering outer locals", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage1shadow",
+      artifactRoot: "/tmp/gojr-stage1shadow",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "shadow.go",
+        source: `package stage1shadow
+
+func VarShadowArray() int {
+	n := [3]int{4, 5, 6}
+	for i := 0; i < 1; i++ {
+		var n uint32
+		n = 9
+		_ = n
+	}
+	return n[1]
+}
+
+func ShortShadowArray() int {
+	n := [3]int{4, 5, 6}
+	if true {
+		n := 12
+		_ = n
+	}
+	return n[2]
+}
+
+func RangeShortRedeclare() int {
+	m := map[int]int{1: 2}
+	sum := 0
+	for _, d := range []int{1} {
+		d, ok := m[d]
+		if ok {
+			sum += d
+		}
+	}
+	return sum
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage1shadow/example.com/stage1shadow.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.VarShadowArray as () => Promise<bigint>)()).toBe(5n);
+    expect(await (pkg.ShortShadowArray as () => Promise<bigint>)()).toBe(6n);
+    expect(await (pkg.RangeShortRedeclare as () => Promise<bigint>)()).toBe(2n);
+  });
+
   test("emits byte literal supernodes instead of giant element AST-shaped payloads", async () => {
     const dataA = Array.from({ length: 256 }, (_, index) => index % 256);
     const dataB = Array.from({ length: 192 }, (_, index) => (255 - index) & 255);
@@ -421,6 +478,70 @@ func LoadLocation(name string) (*time.Location, error) {
     expect(Boolean(err && typeof err === "object" && (err as { __gojrInterface?: boolean; value?: unknown }).__gojrInterface === true &&
       (err as { value?: unknown }).value === null)).toBe(true);
     expect(location).toBe(timePackage.package.UTC);
+  });
+
+  test("expands imported Must calls with chained multi-result method arguments", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/usemust",
+      artifactRoot: "/tmp/gojr-importedmust",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        "example.com/template": [{
+          filename: "template.go",
+          source: `package template
+
+type Template struct { Name string; Text string }
+
+func New(name string) *Template { return &Template{Name: name} }
+
+func (t *Template) Parse(text string) (*Template, error) {
+	t.Text = text
+	return t, nil
+}
+
+func Must(t *Template, err error) *Template {
+	if err != nil {
+		panic(err)
+	}
+	return t
+}
+
+func (t *Template) Size() int {
+	return len(t.Name) + len(t.Text)
+}
+`
+        }]
+      },
+      files: [{
+        filename: "usemust.go",
+        source: `package usemust
+
+import template "example.com/template"
+
+var T = template.Must(template.New("RPC debug").Parse("abc"))
+
+func Ready() int {
+	return T.Size()
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const templateArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-importedmust/example.com/template.a") ?? "");
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-importedmust/example.com/usemust.a") ?? "");
+    if (!templateArchive || !archive) throw new Error("missing imported Must archives");
+    expect(archive.javascript).toContain('...(((__gojrCallValues)');
+    expect(archive.javascript).toContain('["*example.com/template.Template", "error"]');
+
+    const templateModule = await importArtifactJavaScript(templateArchive.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const templatePackage = await templateModule.instantiateGoJrPackage();
+    const module = await importArtifactJavaScript(archive.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage({}, { importsByPath: { "example.com/template": templatePackage } });
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Ready as () => Promise<bigint>)()).toBe(12n);
   });
 
   test("forwards caller constraint element type into local generic calls", () => {
@@ -1136,6 +1257,57 @@ func Call() int64 { return d.Value(2) }
     const root = await rootModule.instantiateGoJrPackage({}, { importsByPath: { "example.com/dep": dep.package } });
     expect(dep.package.Count).toBe(40n);
     expect(await (root.package.Call as () => Promise<bigint>)()).toBe(42n);
+  });
+
+  test("dispatches caller value receiver methods through imported interface calls", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/useiface",
+      artifactRoot: "/tmp/gojr-crossiface",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        "example.com/sortlike": [{
+          filename: "sortlike.go",
+          source: `package sortlike
+
+type Interface interface {
+	Len() int
+}
+
+func Run(data Interface) int {
+	return data.Len()
+}
+`
+        }]
+      },
+      files: [{
+        filename: "useiface.go",
+        source: `package useiface
+
+import "example.com/sortlike"
+
+type fastpathAslice struct{}
+
+func (fastpathAslice) Len() int { return 56 }
+
+func Ready() int {
+	return sortlike.Run(fastpathAslice{})
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const sortArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-crossiface/example.com/sortlike.a") ?? "");
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-crossiface/example.com/useiface.a") ?? "");
+    if (!sortArchive || !archive) throw new Error("missing cross-interface archives");
+    const sortModule = await importArtifactJavaScript(sortArchive.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const sortPackage = await sortModule.instantiateGoJrPackage();
+    const module = await importArtifactJavaScript(archive.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage({}, { importsByPath: { "example.com/sortlike": sortPackage } });
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Ready as () => Promise<bigint>)()).toBe(56n);
   });
 
   test("preserves imported function-typed parameter signatures", async () => {
@@ -2036,6 +2208,7 @@ type Type interface {
 	Name() string
 	PkgPath() string
 	Kind() Kind
+	Bits() int
 	NumField() int
 	Field(i int) StructField
 	Elem() Type
@@ -2050,7 +2223,11 @@ type StructField struct {
 	Anonymous bool
 }
 
+type Value struct{}
+
 func TypeOf(i any) Type
+func ValueOf(i any) Value
+func (v Value) Pointer() uintptr
 `
         }]
       },
@@ -2082,6 +2259,15 @@ func ReflectPointer() (string, string, bool) {
 	typ := reflect.TypeOf(t)
 	return typ.String(), typ.Elem().Name(), typ.Kind() == reflect.Pointer
 }
+
+func ReflectTypePointerNonZero() bool {
+	t := reflect.TypeOf(Thing{})
+	return reflect.ValueOf(t).Pointer() != 0
+}
+
+func ReflectBits() (int, int, int) {
+	return reflect.TypeOf(0).Bits(), reflect.TypeOf(uint(0)).Bits(), reflect.TypeOf(complex128(0)).Bits()
+}
 `
       }]
     }, store);
@@ -2109,6 +2295,8 @@ func ReflectPointer() (string, string, bool) {
       true
     ]);
     expect(await (pkg.ReflectPointer as () => Promise<[string, string, boolean]>)()).toEqual(["*Thing", "Thing", true]);
+    expect(await (pkg.ReflectTypePointerNonZero as () => Promise<boolean>)()).toBe(true);
+    expect(await (pkg.ReflectBits as () => Promise<[bigint, bigint, bigint]>)()).toEqual([64n, 64n, 128n]);
   });
 
   test("generated artifacts prefer intrinsic unsafe over supplied import objects", async () => {
@@ -2728,6 +2916,58 @@ func Ready() (int, int, int) {
     const instantiated = await module.instantiateGoJrPackage();
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (instantiated.package.Ready as () => Promise<[bigint, bigint, bigint]>)()).toEqual([41n, 1n, 42n]);
+  });
+
+  test("expands single multi-result method calls into generated call arguments", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6callargmultivalue",
+      artifactRoot: "/tmp/gojr-stage6-callargmultivalue",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6callargmultivalue.go",
+        source: `package stage6callargmultivalue
+
+type Pos int
+type Tree struct{}
+type Pipe struct{ N int }
+type List struct{ N int }
+type WithNode struct {
+	Pos Pos
+	Line int
+	Pipe *Pipe
+	List *List
+	ElseList *List
+}
+
+func (t *Tree) parseControl(context string) (Pos, int, *Pipe, *List, *List) {
+	return 162, 10, &Pipe{N: 1}, &List{N: 2}, &List{N: 3}
+}
+
+func (t *Tree) newWith(pos Pos, line int, pipe *Pipe, list, elseList *List) *WithNode {
+	return &WithNode{Pos: pos, Line: line, Pipe: pipe, List: list, ElseList: elseList}
+}
+
+func (t *Tree) withControl() *WithNode {
+	return t.newWith(t.parseControl("with"))
+}
+
+func Ready() int {
+	n := (&Tree{}).withControl()
+	return int(n.Pos) + n.Line + n.Pipe.N + n.List.N + n.ElseList.N
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6-callargmultivalue/example.com/stage6callargmultivalue.a") ?? "");
+    expect(archive?.javascript).toContain("...(((__gojrCallValues)");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Ready as () => Promise<bigint>)()).toBe(178n);
   });
 
   test("generated float constants render integer literals as numbers", async () => {
