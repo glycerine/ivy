@@ -2618,7 +2618,7 @@ function callExpressionToJs(ctx: EmitterContext, expression: CallExpression, env
   if (expression.callee.kind === "Identifier" && expression.callee.name === "make" && !env.locals.has("make")) {
     return makeCallToJs(ctx, expression, env);
   }
-  const conversionType = conversionCalleeTypeText(expression.callee, env);
+  const conversionType = conversionCalleeTypeText(expression.callee, env, expression.typeText);
   if (conversionType) {
     return conversionCallToJs(ctx, conversionType, expression.args, env);
   }
@@ -2672,7 +2672,7 @@ function instantiatedImportedSelectorCallToJs(ctx: EmitterContext, expression: C
   return `(await (__gojrGetField(${imported}, ${JSON.stringify(selector.field)}))(${[typeArgs, ...args].join(", ")}))`;
 }
 
-function conversionCalleeTypeText(callee: Expression, env: ExpressionEmitEnv): string | undefined {
+function conversionCalleeTypeText(callee: Expression, env: ExpressionEmitEnv, callTypeText?: string): string | undefined {
   if (callee.kind === "IndexExpression" &&
     callee.object.kind === "SelectorExpression" &&
     isImportedPackageSelector(callee.object, env)) {
@@ -2681,14 +2681,30 @@ function conversionCalleeTypeText(callee: Expression, env: ExpressionEmitEnv): s
   if (callee.kind === "TypeExpression") return callee.type.text;
   if (callee.kind === "Identifier") {
     if (env.locals.has(callee.name)) return undefined;
-    if (primitiveTypeNames.has(callee.name) || env.facts.typeUnderlyings.has(callee.name)) return callee.name;
+    if (isKnownConversionTypeText(callee.name, env)) return callee.name;
     return undefined;
+  }
+  if (callee.kind === "SelectorExpression" && callee.object.kind === "Identifier") {
+    const importPath = env.facts.imports.get(callee.object.name);
+    if (importPath) {
+      const candidate = `${callee.object.name}.${callee.field}`;
+      return selectorConversionMatchesCallType(candidate, importPath, callTypeText) ? candidate : undefined;
+    }
   }
   const typeText = conversionTypeExpressionText(callee, env);
   if (!typeText) return undefined;
-  const base = genericBaseTypeText(typeText);
-  if (isCompositeTypeText(typeText) || env.facts.typeUnderlyings.has(base) || typeText === "unsafe.Pointer") return typeText;
+  if (isKnownConversionTypeText(typeText, env)) return typeText;
   return undefined;
+}
+
+function selectorConversionMatchesCallType(candidate: string, importPath: string, callTypeText: string | undefined): boolean {
+  const resultType = callTypeText?.trim();
+  if (!resultType) return false;
+  if (resultType === candidate) return true;
+  const dot = candidate.indexOf(".");
+  if (dot < 0) return false;
+  const name = candidate.slice(dot + 1);
+  return resultType === `${importPath}.${name}`;
 }
 
 function conversionTypeExpressionText(expression: Expression, env: ExpressionEmitEnv): string | undefined {
@@ -2697,11 +2713,12 @@ function conversionTypeExpressionText(expression: Expression, env: ExpressionEmi
       return expression.type.text;
     case "Identifier":
       if (env.locals.has(expression.name)) return undefined;
-      return primitiveTypeNames.has(expression.name) || env.facts.typeUnderlyings.has(expression.name)
+      return isKnownConversionTypeText(expression.name, env)
         ? expression.name
         : undefined;
     case "SelectorExpression":
       if (expression.object.kind !== "Identifier" || !env.facts.imports.has(expression.object.name)) return undefined;
+      if (expression.typeText?.trim().startsWith("func(")) return undefined;
       return `${expression.object.name}.${expression.field}`;
     case "IndexExpression": {
       const object = conversionTypeExpressionText(expression.object, env);
@@ -2716,6 +2733,20 @@ function conversionTypeExpressionText(expression: Expression, env: ExpressionEmi
     default:
       return undefined;
   }
+}
+
+function isKnownConversionTypeText(typeText: string, env: ExpressionEmitEnv): boolean {
+  const trimmed = typeText.trim();
+  if (!trimmed) return false;
+  if (isCompositeTypeText(trimmed)) return true;
+  if (trimmed === "unsafe.Pointer") return true;
+  if (predeclaredTypeNames.has(trimmed)) return true;
+  if (env.typeParameters?.has(trimmed)) return true;
+  const base = genericBaseTypeText(trimmed);
+  if (env.facts.typeUnderlyings.has(base)) return true;
+  if (directSelectorTypePackagePath(trimmed, env.facts)) return true;
+  if (trimmed.startsWith("*")) return isKnownConversionTypeText(trimmed.slice(1).trim(), env);
+  return false;
 }
 
 function renderCallArgs(ctx: EmitterContext, args: Expression[], env: ExpressionEmitEnv, targetTypes: string[] = [], spreadLast = false): string[] | undefined {
@@ -3387,6 +3418,7 @@ const primitiveTypeNames = new Set([
   "complex64",
   "complex128"
 ]);
+const predeclaredTypeNames = new Set([...primitiveTypeNames, "any", "error"]);
 
 function isIntegerType(typeText: string): boolean {
   return typeText === "int" ||

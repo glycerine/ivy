@@ -2632,15 +2632,14 @@ function conversionCalleeTypeText(callee, env) {
     if (callee.kind === "Identifier") {
         if (env.locals.has(callee.name))
             return undefined;
-        if (primitiveTypeNames.has(callee.name) || env.facts.typeUnderlyings.has(callee.name))
+        if (isKnownConversionTypeText(callee.name, env))
             return callee.name;
         return undefined;
     }
     const typeText = conversionTypeExpressionText(callee, env);
     if (!typeText)
         return undefined;
-    const base = genericBaseTypeText(typeText);
-    if (isCompositeTypeText(typeText) || env.facts.typeUnderlyings.has(base) || typeText === "unsafe.Pointer")
+    if (isKnownConversionTypeText(typeText, env))
         return typeText;
     return undefined;
 }
@@ -2651,7 +2650,7 @@ function conversionTypeExpressionText(expression, env) {
         case "Identifier":
             if (env.locals.has(expression.name))
                 return undefined;
-            return primitiveTypeNames.has(expression.name) || env.facts.typeUnderlyings.has(expression.name)
+            return isKnownConversionTypeText(expression.name, env)
                 ? expression.name
                 : undefined;
         case "SelectorExpression":
@@ -2672,6 +2671,27 @@ function conversionTypeExpressionText(expression, env) {
         default:
             return undefined;
     }
+}
+function isKnownConversionTypeText(typeText, env) {
+    const trimmed = typeText.trim();
+    if (!trimmed)
+        return false;
+    if (isCompositeTypeText(trimmed))
+        return true;
+    if (trimmed === "unsafe.Pointer")
+        return true;
+    if (predeclaredTypeNames.has(trimmed))
+        return true;
+    if (env.typeParameters?.has(trimmed))
+        return true;
+    const base = genericBaseTypeText(trimmed);
+    if (env.facts.typeUnderlyings.has(base))
+        return true;
+    if (directSelectorTypePackagePath(trimmed, env.facts))
+        return true;
+    if (trimmed.startsWith("*"))
+        return isKnownConversionTypeText(trimmed.slice(1).trim(), env);
+    return false;
 }
 function renderCallArgs(ctx, args, env, targetTypes = [], spreadLast = false) {
     const rendered = [];
@@ -3397,6 +3417,7 @@ const primitiveTypeNames = new Set([
     "complex64",
     "complex128"
 ]);
+const predeclaredTypeNames = new Set([...primitiveTypeNames, "any", "error"]);
 function isIntegerType(typeText) {
     return typeText === "int" ||
         typeText === "byte" ||

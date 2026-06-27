@@ -2125,6 +2125,43 @@ func PointerBasics() (int64, string, int64, string, int64, bool, string) {
     ]);
   });
 
+  test("generates pointer conversions for predeclared interface types", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage7predeclaredptr",
+      artifactRoot: "/tmp/gojr-stage7predeclaredptr",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "predeclaredptr.go",
+        source: `package stage7predeclaredptr
+
+import "unsafe"
+
+var errorPointer = (*error)(nil)
+var anyPointer = (*any)(nil)
+
+func PointerToPredeclaredTypes() (bool, bool, string) {
+	b := []byte("ok")
+	return errorPointer == nil, anyPointer == nil, unsafe.String(&b[0], len(b))
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage7predeclaredptr/example.com/stage7predeclaredptr.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.javascript).not.toContain("__gojrDeref(pkg[\"error\"])");
+    expect(archive?.javascript).not.toContain("__gojrDeref(pkg[\"any\"])");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.PointerToPredeclaredTypes as () => Promise<[boolean, boolean, string]>)()).toEqual([true, true, "ok"]);
+  });
+
   test("generates reflect.Value host methods for basic generated values", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
