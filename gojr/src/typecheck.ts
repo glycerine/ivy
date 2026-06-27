@@ -412,8 +412,17 @@ export function standardTypePackage(path: string): GoTypesPackage | undefined {
   else if (path === "testing") pkg = testingPackage();
   else if (path === "time") pkg = timePackage();
   else if (path === "unsafe") pkg = Unsafe;
+  else if (path === "weak") pkg = weakPackage();
   if (pkg) standardTypePackageCache.set(path, pkg);
   return pkg;
+}
+
+function weakPackage(): GoTypesPackage {
+  return checkedSyntheticStandardPackage("weak", `package weak
+type Pointer[T any] struct{}
+func Make[T any](ptr *T) Pointer[T] { return Pointer[T]{} }
+func (p Pointer[T]) Value() *T { return nil }
+`);
 }
 
 function ioFsPackage(): GoTypesPackage {

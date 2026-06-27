@@ -548,25 +548,35 @@ async function loadPackageArtifactsFromBuildOnNode(
     const importPath = archive.pkgdef.importPath;
     if (isSyntheticIntrinsicArtifact(importPath, archive.pkgdef.sources)) continue;
 
-    const result = archive.runtime
-      ? await evaluatePackageArtifact(archive.runtime.ast, archive.runtime.runtimePlan, {
-        ...baseOptions,
-        importPath,
-        packageName: archive.pkgdef.packageName,
-        packages,
-        packageInfos,
-        packageRuntimes,
-        stdout: writeOutput
-      })
-      : await instantiatePackageArtifactJavaScript(archive.javascript, {
-        ...baseOptions,
-        importPath,
-        packageName: archive.pkgdef.packageName,
-        packages,
-        packageInfos,
-        packageRuntimes,
-        stdout: writeOutput
-      }, artifact.artifactPath, diagnostics);
+    let result;
+    try {
+      result = archive.runtime
+        ? await evaluatePackageArtifact(archive.runtime.ast, archive.runtime.runtimePlan, {
+          ...baseOptions,
+          importPath,
+          packageName: archive.pkgdef.packageName,
+          packages,
+          packageInfos,
+          packageRuntimes,
+          stdout: writeOutput
+        })
+        : await instantiatePackageArtifactJavaScript(archive.javascript, {
+          ...baseOptions,
+          importPath,
+          packageName: archive.pkgdef.packageName,
+          packages,
+          packageInfos,
+          packageRuntimes,
+          stdout: writeOutput
+        }, artifact.artifactPath, diagnostics);
+    } catch (error) {
+      diagnostics.push(nodeArtifactDiagnostic(
+        artifact.artifactPath,
+        `could not initialize package ${importPath} from ${artifact.artifactPath}: ${error instanceof Error ? error.message : String(error)}`,
+        error
+      ));
+      break;
+    }
     if (!result) break;
     diagnostics.push(...result.diagnostics);
     if (hasErrorDiagnostics(diagnostics)) break;
@@ -613,7 +623,16 @@ async function instantiatePackageArtifactJavaScript(
     ));
     return undefined;
   }
-  return artifactModule.instantiateGoJrPackage({ evaluatePackageArtifact }, options);
+  try {
+    return await artifactModule.instantiateGoJrPackage({ evaluatePackageArtifact }, options);
+  } catch (error) {
+    diagnostics.push(nodeArtifactDiagnostic(
+      artifactPath,
+      `could not initialize package ${options.importPath} from ${artifactPath}: ${error instanceof Error ? error.message : String(error)}`,
+      error
+    ));
+    return undefined;
+  }
 }
 
 async function importPackageArtifactJavaScript(source: string): Promise<PackageArtifactJavaScriptModule> {

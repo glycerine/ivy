@@ -7,11 +7,13 @@ export const RESERVED_INTRINSIC_PACKAGE_IMPORTS = [
   "sync/atomic",
   "syscall/js",
   "unsafe",
+  "weak",
   "internal/reflectlite"
 ] as const;
 
 export const GENERATED_ARTIFACT_INTRINSIC_IMPORTS = [
   ...RESERVED_INTRINSIC_PACKAGE_IMPORTS,
+  "internal/sync",
   "reflect"
 ] as const;
 

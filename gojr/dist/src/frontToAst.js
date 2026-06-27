@@ -1,6 +1,7 @@
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
 import { Node as formatNode } from "./go/format.js";
+import { RelativeTo as GoTypesRelativeTo, TypeString as GoTypesTypeString } from "./go/types/index.js";
 export function frontSourceToAst(source, filename) {
     const parsed = parseFrontSource(source, filename);
     const ast = parsed.file ? frontToProgramAst(parsed.file, parsed.diagnostics, parsed.statements) : undefined;
@@ -19,11 +20,14 @@ export function frontSourceFilesToAst(files) {
         ...(ast ? { ast } : {})
     };
 }
-export function frontToProgramAst(file, diagnostics = [], statements = [], info) {
-    return frontFilesToProgramAst([file], diagnostics, statements, info);
+export function frontToProgramAst(file, diagnostics = [], statements = [], info, pkg) {
+    return frontFilesToProgramAst([file], diagnostics, statements, info, pkg);
 }
-export function frontFilesToProgramAst(files, diagnostics = [], statements = [], info) {
-    const ctx = info ? { info } : {};
+export function frontFilesToProgramAst(files, diagnostics = [], statements = [], info, pkg) {
+    const ctx = {
+        ...(info ? { info } : {}),
+        ...(pkg ? { pkg } : {})
+    };
     const body = [
         ...files.flatMap((file) => file.declarations.flatMap((declaration) => declarationToBodyStatement(declaration, ctx))),
         ...statements.map((statement) => statementToAst(statement, ctx))
@@ -539,7 +543,7 @@ function annotateExpression(ctx, source, expression) {
     const type = ctx.info?.TypeOf(source);
     if (!type)
         return expression;
-    expression.typeText = type.String();
+    expression.typeText = GoTypesTypeString(type, GoTypesRelativeTo(ctx.pkg ?? null));
     return expression;
 }
 function basicLitToAst(expr) {

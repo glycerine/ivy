@@ -669,7 +669,7 @@ class PackageGraphBuilder {
             hash: stableHash(file.source)
           }))
         });
-        const ast = frontFilesToProgramAst(parsed.files, [], [], "info" in checked ? checked.info : undefined);
+        const ast = frontFilesToProgramAst(parsed.files, [], [], "info" in checked ? checked.info : undefined, checked.pkg);
         const runtimePlan = packageRuntimePlan(
           importPath,
           packageName,

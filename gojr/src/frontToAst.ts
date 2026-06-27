@@ -79,10 +79,16 @@ import {
 import { ParseFrontFilesResult, ParseFrontResult, parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
 import { Node as formatNode } from "./go/format.js";
-import type { Info as GoTypesInfo } from "./go/types/index.js";
+import {
+  RelativeTo as GoTypesRelativeTo,
+  TypeString as GoTypesTypeString,
+  type Info as GoTypesInfo,
+  type Package as GoTypesPackage
+} from "./go/types/index.js";
 
 interface AstConversionContext {
   info?: GoTypesInfo;
+  pkg?: GoTypesPackage;
 }
 
 export function frontSourceToAst(source: string, filename: string): { ast?: ProgramAst; diagnostics: Diagnostic[]; parsed: ParseFrontResult } {
@@ -105,12 +111,15 @@ export function frontSourceFilesToAst(files: SourceFile[]): { ast?: ProgramAst; 
   };
 }
 
-export function frontToProgramAst(file: File, diagnostics: Diagnostic[] = [], statements: Stmt[] = [], info?: GoTypesInfo): ProgramAst {
-  return frontFilesToProgramAst([file], diagnostics, statements, info);
+export function frontToProgramAst(file: File, diagnostics: Diagnostic[] = [], statements: Stmt[] = [], info?: GoTypesInfo, pkg?: GoTypesPackage): ProgramAst {
+  return frontFilesToProgramAst([file], diagnostics, statements, info, pkg);
 }
 
-export function frontFilesToProgramAst(files: File[], diagnostics: Diagnostic[] = [], statements: Stmt[] = [], info?: GoTypesInfo): ProgramAst {
-  const ctx: AstConversionContext = info ? { info } : {};
+export function frontFilesToProgramAst(files: File[], diagnostics: Diagnostic[] = [], statements: Stmt[] = [], info?: GoTypesInfo, pkg?: GoTypesPackage): ProgramAst {
+  const ctx: AstConversionContext = {
+    ...(info ? { info } : {}),
+    ...(pkg ? { pkg } : {})
+  };
   const body: Statement[] = [
     ...files.flatMap((file) => file.declarations.flatMap((declaration) => declarationToBodyStatement(declaration, ctx))),
     ...statements.map((statement) => statementToAst(statement, ctx))
@@ -641,7 +650,7 @@ function expressionToAst(expr: Expr, ctx: AstConversionContext): Expression {
 function annotateExpression<T extends Expression>(ctx: AstConversionContext, source: Expr, expression: T): T {
   const type = ctx.info?.TypeOf(source);
   if (!type) return expression;
-  expression.typeText = type.String();
+  expression.typeText = GoTypesTypeString(type, GoTypesRelativeTo(ctx.pkg ?? null));
   return expression;
 }
 
