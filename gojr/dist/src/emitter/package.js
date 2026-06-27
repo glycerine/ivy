@@ -2591,7 +2591,15 @@ function literalToJs(expression, env = emptyExpressionEnv) {
         case "imag":
             return isComplexLiteralValue(expression.value) ? `__gojrComplex(${JSON.stringify(expression.value.real)}, ${JSON.stringify(expression.value.imag)})` : undefined;
         case "string":
-            return typeof expression.value === "string" ? JSON.stringify(expression.value) : undefined;
+            if (typeof expression.value !== "string")
+                return undefined;
+            {
+                const literalBytes = goStringLiteralBytes(expression.raw);
+                if (literalBytes && !byteArraysEqual(literalBytes, utf8Bytes(expression.value))) {
+                    return `__gojrRawStringBase64(${JSON.stringify(bytesToBase64(literalBytes))})`;
+                }
+            }
+            return JSON.stringify(expression.value);
         case "bool":
             return typeof expression.value === "boolean" ? String(expression.value) : undefined;
         case "nil":
@@ -3730,6 +3738,84 @@ function bytesFromArrayLiteral(expression) {
     const bytes = expression.elements.map((element) => byteLiteralValue(element.value));
     return bytes.some((value) => value === undefined) ? undefined : bytes;
 }
+function utf8Bytes(value) {
+    return Array.from(new TextEncoder().encode(value));
+}
+function byteArraysEqual(left, right) {
+    return left.length === right.length && left.every((value, index) => value === right[index]);
+}
+function goStringLiteralBytes(raw) {
+    if (!raw)
+        return undefined;
+    if (raw.length >= 2 && raw.startsWith("`") && raw.endsWith("`")) {
+        return utf8Bytes(raw.slice(1, -1).replace(/\r/g, ""));
+    }
+    if (raw.length < 2 || !raw.startsWith("\"") || !raw.endsWith("\""))
+        return undefined;
+    return interpretedGoStringLiteralBytes(raw.slice(1, -1));
+}
+function interpretedGoStringLiteralBytes(value) {
+    const bytes = [];
+    for (let index = 0; index < value.length; index += 1) {
+        const char = value[index] ?? "";
+        if (char !== "\\") {
+            bytes.push(...utf8Bytes(char));
+            continue;
+        }
+        const next = value[index + 1] ?? "";
+        index += 1;
+        switch (next) {
+            case "a":
+                bytes.push(0x07);
+                break;
+            case "b":
+                bytes.push(0x08);
+                break;
+            case "f":
+                bytes.push(0x0c);
+                break;
+            case "n":
+                bytes.push(0x0a);
+                break;
+            case "r":
+                bytes.push(0x0d);
+                break;
+            case "t":
+                bytes.push(0x09);
+                break;
+            case "v":
+                bytes.push(0x0b);
+                break;
+            case "\\":
+            case "\"":
+            case "'":
+                bytes.push(next.charCodeAt(0));
+                break;
+            case "x":
+                bytes.push(parseInt(value.slice(index + 1, index + 3), 16) & 255);
+                index += 2;
+                break;
+            case "u":
+                bytes.push(...utf8Bytes(String.fromCodePoint(parseInt(value.slice(index + 1, index + 5), 16))));
+                index += 4;
+                break;
+            case "U":
+                bytes.push(...utf8Bytes(String.fromCodePoint(parseInt(value.slice(index + 1, index + 9), 16))));
+                index += 8;
+                break;
+            default:
+                if (/^[0-7]$/.test(next)) {
+                    bytes.push(parseInt(next + value.slice(index + 1, index + 3), 8) & 255);
+                    index += 2;
+                }
+                else {
+                    bytes.push(...utf8Bytes(next));
+                }
+                break;
+        }
+    }
+    return bytes;
+}
 function mapStringBytesLiteralEntries(expression) {
     if (expression.keyType.text !== "string" || !isByteSliceType(expression.valueType.text))
         return undefined;
@@ -4256,14 +4342,50 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  return { diagnostics: [], output: [], package: pkg, wasm: __gojrWasmExports };",
         "}",
         "function __gojrStringByteAt(value, index) {",
-        "  const text = String(value);",
-        "  if (index < 0 || index >= text.length) throw new RangeError(\"string index out of range\");",
-        "  return text.charCodeAt(index) & 255;",
+        "  const bytes = __gojrStringBytes(value);",
+        "  if (index < 0 || index >= bytes.length) throw new RangeError(\"string index out of range\");",
+        "  return bytes[index];",
+        "}",
+        "function __gojrRawString(bytes) {",
+        "  const rawBytes = bytes instanceof Uint8Array ? new Uint8Array(bytes) : Uint8Array.from(bytes ?? [], (item) => Number(item) & 255);",
+        "  return { __gojrRawString: true, bytes: rawBytes, toString() { return new TextDecoder().decode(rawBytes); }, valueOf() { return new TextDecoder().decode(rawBytes); } };",
+        "}",
+        "function __gojrRawStringBase64(base64) {",
+        "  return __gojrRawString(__gojrDecodeBase64(base64));",
+        "}",
+        "function __gojrIsString(value) {",
+        "  return typeof value === \"string\" || Boolean(value && value.__gojrRawString === true);",
+        "}",
+        "function __gojrBytesEqual(left, right) {",
+        "  if (left.length !== right.length) return false;",
+        "  for (let index = 0; index < left.length; index += 1) if (left[index] !== right[index]) return false;",
+        "  return true;",
+        "}",
+        "function __gojrStringBytes(value) {",
+        "  if (value && value.__gojrRawString === true) return new Uint8Array(value.bytes);",
+        "  return new TextEncoder().encode(String(value));",
+        "}",
+        "function __gojrStringFromBytes(bytes) {",
+        "  const raw = bytes instanceof Uint8Array ? new Uint8Array(bytes) : Uint8Array.from(bytes ?? [], (item) => Number(item) & 255);",
+        "  const text = new TextDecoder().decode(raw);",
+        "  return __gojrBytesEqual(new TextEncoder().encode(text), raw) ? text : __gojrRawString(raw);",
+        "}",
+        "function __gojrConcatStrings(left, right) {",
+        "  if (left && left.__gojrRawString === true || right && right.__gojrRawString === true) {",
+        "    const leftBytes = __gojrStringBytes(left);",
+        "    const rightBytes = __gojrStringBytes(right);",
+        "    const out = new Uint8Array(leftBytes.length + rightBytes.length);",
+        "    out.set(leftBytes, 0);",
+        "    out.set(rightBytes, leftBytes.length);",
+        "    return __gojrStringFromBytes(out);",
+        "  }",
+        "  return String(left) + String(right);",
         "}",
         "function __gojrStringFrom(value) {",
-        "  if (value instanceof Uint8Array) return new TextDecoder().decode(value);",
-        "  if (ArrayBuffer.isView(value)) return new TextDecoder().decode(new Uint8Array(value.buffer, value.byteOffset, value.byteLength));",
-        "  if (Array.isArray(value)) return new TextDecoder().decode(Uint8Array.from(value, (item) => Number(item) & 255));",
+        "  if (value && value.__gojrRawString === true) return value;",
+        "  if (value instanceof Uint8Array) return __gojrStringFromBytes(value);",
+        "  if (ArrayBuffer.isView(value)) return __gojrStringFromBytes(new Uint8Array(value.buffer, value.byteOffset, value.byteLength));",
+        "  if (Array.isArray(value)) return __gojrStringFromBytes(Uint8Array.from(value, (item) => Number(item) & 255));",
         "  return String(value);",
         "}",
         "function __gojrTuple(values) {",
@@ -4295,7 +4417,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  if (left && left.__gojrWeakPointer === true && right && right.__gojrWeakPointer === true) return __gojrEqual(left.__gojrWeakValue, right.__gojrWeakValue);",
         "  if ((typeof left === \"bigint\" || typeof left === \"number\") && (typeof right === \"bigint\" || typeof right === \"number\")) return __gojrCompareValues(left, right) === 0;",
         "  if (left && typeof left === \"object\" && \"real\" in left && \"imag\" in left || right && typeof right === \"object\" && \"real\" in right && \"imag\" in right) return __gojrComplexEq(left, right);",
-        "  if (typeof left === \"string\" || typeof right === \"string\") return typeof left === \"string\" && typeof right === \"string\" && left === right;",
+        "  if (__gojrIsString(left) || __gojrIsString(right)) return __gojrIsString(left) && __gojrIsString(right) && __gojrBytesEqual(__gojrStringBytes(left), __gojrStringBytes(right));",
         "  if (left && left.__gojrPointer === true && right && right.__gojrPointer === true) return __gojrPointerIdentityKey(left) === __gojrPointerIdentityKey(right);",
         "  if (Array.isArray(left) && Array.isArray(right)) return left.length === right.length && left.every((item, index) => __gojrEqual(item, right[index]));",
         "  if (ArrayBuffer.isView(left) && ArrayBuffer.isView(right)) {",
@@ -4339,7 +4461,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  if (actual === null || actual === undefined) return \"nil\";",
         "  if (actual && actual.__gojrTypedNil === true) return `typednil:${actual.__gojrType}`;",
         "  if (typeof actual === \"boolean\") return `b:${actual}`;",
-        "  if (typeof actual === \"string\") return `s:${actual}`;",
+        "  if (__gojrIsString(actual)) return `s:${Array.from(__gojrStringBytes(actual)).map((byte) => byte.toString(16).padStart(2, \"0\")).join(\"\")}`;",
         "  if (typeof actual === \"bigint\") return `i:${actual}`;",
         "  if (typeof actual === \"number\") return `f:${__gojrMapNumberKeyId(actual, options)}`;",
         "  if (actual && typeof actual === \"object\" && \"real\" in actual && \"imag\" in actual) return `c:${__gojrMapNumberKeyId(actual.real, options)}:${__gojrMapNumberKeyId(actual.imag, options)}`;",
@@ -4391,7 +4513,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  return __gojrDecodeBase64(base64);",
         "}",
         "function __gojrBytesFrom(value) {",
-        "  if (typeof value === \"string\") return new TextEncoder().encode(value);",
+        "  if (__gojrIsString(value)) return __gojrStringBytes(value);",
         "  if (value && value.__gojrByteView === true) return value.subarray(0, value.length);",
         "  if (value instanceof Uint8Array) return new Uint8Array(value);",
         "  if (ArrayBuffer.isView(value)) return new Uint8Array(value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength));",
@@ -4399,10 +4521,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  return new Uint8Array();",
         "}",
         "function __gojrRawBytesFromGoString(value) {",
-        "  const text = String(value);",
-        "  const out = new Uint8Array(text.length);",
-        "  for (let index = 0; index < text.length; index += 1) out[index] = text.charCodeAt(index) & 255;",
-        "  return out;",
+        "  return __gojrStringBytes(value);",
         "}",
         "function __gojrIsByteSliceTypeName(typeName) {",
         "  return typeName === \"[]byte\" || typeName === \"[]uint8\";",
@@ -4414,7 +4533,8 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "}",
         "function __gojrLen(value) {",
         "  if (value == null) return 0;",
-        "  if (typeof value === \"string\" || Array.isArray(value) || ArrayBuffer.isView(value)) return value.length;",
+        "  if (__gojrIsString(value)) return __gojrStringBytes(value).length;",
+        "  if (Array.isArray(value) || ArrayBuffer.isView(value)) return value.length;",
         "  if (value.__gojrByteView === true) return value.length;",
         "  if (value instanceof Map) return value.size;",
         "  if (value.__gojrChannel === true) return value.queue.length;",
@@ -4539,8 +4659,8 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "}",
         "function __gojrAdd(left, right, typeName = \"\") {",
         "  left = __gojrUnwrapInterface(left); right = __gojrUnwrapInterface(right);",
-        "  if (typeof left === \"string\" || typeof right === \"string\") {",
-        "    if (typeof left === \"string\" && typeof right === \"string\") return left + right;",
+        "  if (__gojrIsString(left) || __gojrIsString(right)) {",
+        "    if (__gojrIsString(left) && __gojrIsString(right)) return __gojrConcatStrings(left, right);",
         "    throw new TypeError(`GOJR_RUNTIME001: invalid operation: ${typeof left} + ${typeof right}`);",
         "  }",
         "  if (__gojrIsComplexValue(left) || __gojrIsComplexValue(right)) return __gojrComplexAdd(left, right);",
@@ -4595,7 +4715,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "    if (Number.isNaN(a) || Number.isNaN(b)) return NaN;",
         "    return a === b ? 0 : a < b ? -1 : 1;",
         "  }",
-        "  if (typeof left === \"string\" && typeof right === \"string\") return left === right ? 0 : left < right ? -1 : 1;",
+        "  if (__gojrIsString(left) && __gojrIsString(right)) return __gojrByteSequenceCompare(__gojrStringBytes(left), __gojrStringBytes(right));",
         "  throw new TypeError(`GOJR_RUNTIME001: cannot compare ${String(left)} and ${String(right)}`);",
         "}",
         "function __gojrCompareOp(left, right, op) {",
@@ -4666,7 +4786,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  if (typeName) return __gojrSizeofType(typeName);",
         "  if (typeof value === \"boolean\") return 1n;",
         "  if (typeof value === \"bigint\" || typeof value === \"number\") return 8n;",
-        "  if (typeof value === \"string\") return 16n;",
+        "  if (__gojrIsString(value)) return 16n;",
         "  if (value && typeof value === \"object\" && \"real\" in value && \"imag\" in value) return 16n;",
         "  if (Array.isArray(value) || ArrayBuffer.isView(value)) return 24n;",
         "  return 8n;",
@@ -4716,6 +4836,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  const capHigh = max === null || max === undefined ? __gojrCap(object) : Number(max);",
         "  const target = object ?? [];",
         "  if (target && target.__gojrByteView === true) return __gojrSetCap(target.subarray(low, high), capHigh - low);",
+        "  if (__gojrIsString(target)) return __gojrStringFromBytes(__gojrStringBytes(target).slice(low, high));",
         "  const sliced = typeof target === \"string\" ? target.slice(low, high) : (ArrayBuffer.isView(target) && typeof target.subarray === \"function\" ? target.subarray(low, high) : (typeof target.slice === \"function\" ? target.slice(low, high) : []));",
         "  return typeof sliced === \"string\" ? sliced : __gojrSetCap(sliced, capHigh - low);",
         "}",
@@ -4777,7 +4898,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  return (Array.isArray(slice) ? slice : []).concat(values);",
         "}",
         "function __gojrCopy(dst, src) {",
-        "  if (typeof src === \"string\") src = __gojrRawBytesFromGoString(src);",
+        "  if (__gojrIsString(src)) src = __gojrRawBytesFromGoString(src);",
         "  const count = Math.min(__gojrLen(dst), __gojrLen(src));",
         "  if (dst instanceof Uint8Array) {",
         "    const view = src instanceof Uint8Array ? src : Uint8Array.from(Array.from(src ?? [], (value) => Number(value) & 255));",
@@ -4842,7 +4963,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "}",
         "function __gojrIndex(object, index, integerResult) {",
         "  object = __gojrDerefIfPointer(object);",
-        "  if (typeof object === \"string\") {",
+        "  if (__gojrIsString(object)) {",
         "    const value = __gojrStringByteAt(object, Number(index));",
         "    return integerResult ? BigInt(value) : value;",
         "  }",
@@ -5001,7 +5122,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "      return \"\";",
         "    },",
         "    StringData: (value) => {",
-        "      const bytes = new TextEncoder().encode(String(value));",
+        "      const bytes = __gojrStringBytes(value);",
         "      if (bytes.length === 0) return null;",
         "      return __gojrPointer(\"byte\", () => bytes[0], (next) => { bytes[0] = Number(next) & 255; }, gojrPackageArtifact.importPath, { values: bytes, index: 0 });",
         "    }",
@@ -5479,7 +5600,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "    Sync: async () => null, SyscallConn: async () => __gojrTuple([null, null]), Truncate: async () => null,",
         "    Write: async (_self, b) => __gojrTuple([__gojrOsWrite(fd, b), null]),",
         "    WriteAt: async (_self, b) => __gojrTuple([__gojrOsWrite(fd, b), null]),",
-        "    WriteString: async (_self, s) => { const bytes = new TextEncoder().encode(String(s ?? \"\")); return __gojrTuple([__gojrOsWrite(fd, bytes), null]); }",
+        "    WriteString: async (_self, s) => { const bytes = __gojrStringBytes(s ?? \"\"); return __gojrTuple([__gojrOsWrite(fd, bytes), null]); }",
         "  };",
         "  return pointer;",
         "}",
@@ -5600,7 +5721,8 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  if (value && value.__gojrTypedNil === true) return `nil:${value.__gojrType || \"\"}`;",
         "  if (value === null || value === undefined) return \"nil\";",
         "  if (typeof value === \"bigint\") return `${value}n`;",
-        "  if (typeof value === \"number\" || typeof value === \"boolean\" || typeof value === \"string\") return JSON.stringify(value);",
+        "  if (typeof value === \"number\" || typeof value === \"boolean\") return JSON.stringify(value);",
+        "  if (__gojrIsString(value)) return JSON.stringify(Array.from(__gojrStringBytes(value)).map((byte) => byte.toString(16).padStart(2, \"0\")).join(\"\"));",
         "  if (value instanceof Uint8Array) return `bytes:${Array.from(value).join(\",\")}`;",
         "  if (Array.isArray(value)) return `[${value.map((item) => __gojrStableValueString(item, seen)).join(\",\")}]`;",
         "  if (value instanceof Map) return `map:${Array.from(value.entries()).map(([key, item]) => `${__gojrStableValueString(key, seen)}:${__gojrStableValueString(item, seen)}`).sort().join(\",\")}`;",
@@ -6250,7 +6372,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  if (value && typeof value === \"object\" && typeof value.__gojrType === \"string\") return value.__gojrType;",
         "  if (typeof value === \"bigint\") return \"int\";",
         "  if (typeof value === \"number\") return \"float64\";",
-        "  if (typeof value === \"string\") return \"string\";",
+        "  if (__gojrIsString(value)) return \"string\";",
         "  if (typeof value === \"boolean\") return \"bool\";",
         "  return value === null || value === undefined ? \"nil\" : typeof value;",
         "}",
@@ -6506,7 +6628,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  if (source && source.__gojrTypedNil === true) return [];",
         "  if (Array.isArray(source)) return source;",
         "  if (ArrayBuffer.isView(source)) return Array.from(source);",
-        "  if (typeof source === \"string\") return Array.from(new TextEncoder().encode(source));",
+        "  if (__gojrIsString(source)) return Array.from(__gojrStringBytes(source));",
         "  if (typeof source[Symbol.iterator] === \"function\") return Array.from(source);",
         "  throw new TypeError(\"GOJR_RUNTIME001: spread argument is not a slice\");",
         "}",
@@ -6521,7 +6643,8 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "    for (let i = 0; i < count; i += 1) entries.push([BigInt(i), BigInt(i)]);",
         "    return entries;",
         "  }",
-        "  if (typeof source === \"string\") {",
+        "  if (__gojrIsString(source)) {",
+        "    if (source && source.__gojrRawString === true) source = new TextDecoder().decode(source.bytes);",
         "    const entries = [];",
         "    let byteIndex = 0;",
         "    for (const rune of source) {",
@@ -6609,7 +6732,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  switch (text) {",
         "    case \"int\": case \"int8\": case \"int16\": case \"int32\": case \"int64\": case \"uint\": case \"uint8\": case \"uint16\": case \"uint32\": case \"uint64\": case \"uintptr\": return typeof value === \"bigint\";",
         "    case \"float32\": case \"float64\": return typeof value === \"number\";",
-        "    case \"string\": return typeof value === \"string\";",
+        "    case \"string\": return __gojrIsString(value);",
         "    case \"bool\": return typeof value === \"boolean\";",
         "    case \"complex64\": case \"complex128\": return Boolean(value && typeof value === \"object\" && \"real\" in value && \"imag\" in value);",
         "    default: return __gojrReceiverBaseType(__gojrRuntimeTypeName(value)) === __gojrReceiverBaseType(text);",
