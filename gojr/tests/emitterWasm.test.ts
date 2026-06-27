@@ -1691,6 +1691,39 @@ func RoundTrip() (bool, int, bool, int) {
     expect(await (instantiated.package.RoundTrip as () => Promise<[boolean, bigint, boolean, bigint]>)()).toEqual([true, 7n, true, 11n]);
   });
 
+  test("generated unsafe pointer conversions expose scalar bytes through fixed byte array pointers", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6ptrbytes",
+      artifactRoot: "/tmp/gojr-stage6ptrbytes",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6ptrbytes.go",
+        source: `package stage6ptrbytes
+
+import "unsafe"
+
+func Probe() (byte, byte, int, uint32) {
+	i := uint32(1)
+	b := (*[4]byte)(unsafe.Pointer(&i))
+	first := b[0]
+	b[0] = 2
+	s := b[:]
+	return first, s[0], len(s), i
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6ptrbytes/example.com/stage6ptrbytes.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Probe as () => Promise<[bigint, bigint, bigint, bigint]>)()).toEqual([1n, 2n, 4n, 2n]);
+  });
+
   test("generated defer and recover follow Go direct deferred-call semantics", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
@@ -3139,6 +3172,36 @@ func FixedByteArrayZero() (uint8, int, int) {
     const pkg = instantiated.package;
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (pkg.FixedByteArrayZero as () => Promise<[bigint, bigint, bigint]>)()).toEqual([7n, 256n, 9n]);
+  });
+
+  test("emits empty fixed byte array literals as zero-filled byte storage", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage7emptyfixedbytearray",
+      artifactRoot: "/tmp/gojr-stage7emptyfixedbytearray",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "emptyfixedbytearray.go",
+        source: `package stage7emptyfixedbytearray
+
+func EmptyFixedByteArray() (int, byte, byte) {
+	a := [4]byte{}
+	a[3] = 9
+	return len(a), a[0], a[3]
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage7emptyfixedbytearray/example.com/stage7emptyfixedbytearray.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.EmptyFixedByteArray as () => Promise<[bigint, bigint, bigint]>)()).toEqual([4n, 0n, 9n]);
   });
 
   test("lowers function-local type aliases in generated conversions", async () => {
