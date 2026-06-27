@@ -3775,18 +3775,48 @@ func GenericSizeofAndConvert() (uintptr, uintptr, unrounded) {
     expect(await (pkg.GenericSizeofAndConvert as () => Promise<[bigint, bigint, bigint]>)()).toEqual([4n, 8n, 1n]);
   });
 
-  test("reports unsupported Stage 1 lowering as GOJR_EMIT001", () => {
+  test("lowers deferred spread calls in generated packages", async () => {
+    const output: string[] = [];
     const result = buildPackages({
-      importPath: "example.com/stage1bad",
-      artifactRoot: "/tmp/gojr-stage1bad",
+      importPath: "example.com/stage1defer",
+      artifactRoot: "/tmp/gojr-stage1defer",
       backend: GOJR_STAGE1_BACKEND,
       files: [{
-        filename: "bad.go",
-        source: "package stage1bad\n\nfunc Hard(f func(...int64), xs []int64) { defer f(xs...) }\n"
+        filename: "defer.go",
+        source: `package stage1defer
+
+func Hard(f func(...int64), xs []int64) {
+	defer f(xs...)
+}
+`
       }]
     }, new MemoryArtifactStore());
 
-    expect(result.ok).toBe(false);
-    expect(result.diagnostics.map((diagnostic) => diagnostic.code)).toContain("GOJR_EMIT001");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const store = new MemoryArtifactStore();
+    buildPackages({
+      importPath: "example.com/stage1defer",
+      artifactRoot: "/tmp/gojr-stage1defer-run",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "defer.go",
+        source: `package stage1defer
+
+func Hard(f func(...int64), xs []int64) {
+	defer f(xs...)
+}
+`
+      }]
+    }, store);
+    const source = store.writes.get("/tmp/gojr-stage1defer-run/example.com/stage1defer.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    await (instantiated.package.Hard as (f: (...values: bigint[]) => Promise<void>, xs: bigint[]) => Promise<null>)(
+      async (...values: bigint[]) => { output.push(values.join(",")); },
+      [1n, 2n, 3n]
+    );
+    expect(output).toEqual(["1,2,3"]);
   });
 });
