@@ -21,6 +21,7 @@ export interface FunctionDecl {
   name: string;
   receiver?: ReceiverDecl;
   typeParameters?: string[];
+  typeParameterConstraints?: Record<string, string>;
   signature: Signature;
   body: BlockStatement;
   source?: string;
@@ -108,6 +109,7 @@ export interface TypeSpec {
   name: string;
   alias?: boolean;
   typeParameters?: string[];
+  typeParameterConstraints?: Record<string, string>;
   type: TypeNode;
   structFields?: StructFieldDecl[];
   interfaceMethods?: InterfaceMethodDecl[];

@@ -353,6 +353,110 @@ var Files = map[string][]byte{
     expect(Array.from((pkg.Files as Map<string, Uint8Array>).get("b") ?? [])).toEqual(dataB);
   });
 
+  test("keeps shared Stage 1 helpers out of timezone-style package artifacts", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "4d63.com/tz",
+      artifactRoot: "/tmp/gojr-stage1tz",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        time: [{
+          filename: "time.go",
+          source: `package time
+
+type Location struct { name string }
+var UTC = &Location{name: "UTC"}
+func (l *Location) String() string { return l.name }
+`
+        }]
+      },
+      files: [{
+        filename: "tz.go",
+        source: `package tz
+
+import "time"
+
+var fileNames = []string{"UTC"}
+var files = map[string][]byte{"UTC": []byte{85, 84, 67}}
+
+func tzData(name string) ([]byte, bool) {
+	data, ok := files[name]
+	return data, ok
+}
+
+func LoadLocation(name string) (*time.Location, error) {
+	_, _ = tzData(name)
+	return time.UTC, nil
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage1tz/4d63.com/tz.a") ?? "");
+    const timeArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage1tz/time.a") ?? "");
+    if (!archive || !timeArchive) throw new Error("missing timezone-style archive");
+    expect(archive.javascript.length < 100_000).toBe(true);
+    expect(archive.javascript).toContain("pkg[\"fileNames\"]");
+    expect(archive.javascript).toContain("pkg[\"files\"]");
+    expect(archive.javascript).toContain("pkg[\"tzData\"]");
+    expect(archive.javascript).toContain("pkg[\"LoadLocation\"]");
+    expect(archive.javascript).not.toContain("function __gojrReflectDescriptorString");
+    expect(archive.javascript).not.toContain("const __gojrReflectTypeMethods");
+    expect(archive.javascript).not.toContain("function __gojrDecodeBase64");
+    expect(archive.javascript).not.toContain("function __gojrBuiltinImport(path, importsByPath) {");
+
+    const timeModule = await importArtifactJavaScript(timeArchive.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const timePackage = await timeModule.instantiateGoJrPackage();
+    const module = await importArtifactJavaScript(archive.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage({}, { importsByPath: { time: timePackage } });
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(Array.from(instantiated.package.fileNames as string[])).toEqual(["UTC"]);
+    expect(Array.from((instantiated.package.files as Map<string, Uint8Array>).get("UTC") ?? [])).toEqual([85, 84, 67]);
+    const [data, ok] = await (instantiated.package.tzData as (name: string) => Promise<[Uint8Array, boolean]>)("UTC");
+    expect(Array.from(data)).toEqual([85, 84, 67]);
+    expect(ok).toBe(true);
+    const [location, err] = await (instantiated.package.LoadLocation as (name: string) => Promise<[unknown, unknown]>)("UTC");
+    expect(Boolean(err && typeof err === "object" && (err as { __gojrInterface?: boolean; value?: unknown }).__gojrInterface === true &&
+      (err as { value?: unknown }).value === null)).toBe(true);
+    expect(location).toBe(timePackage.package.UTC);
+  });
+
+  test("forwards caller constraint element type into local generic calls", () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/genericforward",
+      artifactRoot: "/tmp/gojr-genericforward",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "genericforward.go",
+        source: `package genericforward
+
+func SortFunc[S ~[]E, E any](x S, cmp func(a, b E) int) {
+	n := len(x)
+	pdqsortCmpFunc(x, 0, n, cmp)
+}
+
+func pdqsortCmpFunc[E any](data []E, a, b int, cmp func(a, b E) int) {
+	if a < b {
+		_ = data[a]
+	}
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-genericforward/example.com/genericforward.a") ?? "");
+    if (!archive) throw new Error("missing genericforward archive");
+    expect(archive.javascript).toContain(
+      'pkg["pdqsortCmpFunc"](({ "E": __gojrSubstituteType("E", __gojrTypeArgs) })'
+    );
+    expect(archive.javascript).not.toContain('pkg["pdqsortCmpFunc"](({ "E": "any" })');
+  });
+
   test("lowers Stage 3 concrete expressions without interpreter expression calls", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
@@ -685,6 +789,23 @@ func SelectSend() int64 {
 	return <-c
 }
 
+func SelectBreakInLoop() int64 {
+	c := make(chan int64, 1)
+	c <- 1
+	out := int64(0)
+	for i := int64(0); i < 3; i++ {
+		select {
+		case <-c:
+			out += 10
+			break
+			out += 100
+		default:
+			out += 1
+		}
+	}
+	return out
+}
+
 func TypeSwitch(x any) string {
 	switch v := x.(type) {
 	case int64:
@@ -788,6 +909,7 @@ func NestedBackwardGoto(n int64) int64 {
     expect(await (pkg.SelectDefault as () => Promise<bigint>)()).toBe(7n);
     expect(await (pkg.SelectRecv as () => Promise<bigint>)()).toBe(5n);
     expect(await (pkg.SelectSend as () => Promise<bigint>)()).toBe(6n);
+    expect(await (pkg.SelectBreakInLoop as () => Promise<bigint>)()).toBe(12n);
     expect(await (pkg.TypeSwitch as (x: unknown) => Promise<string>)(3n)).toBe("int");
     expect(await (pkg.TypeSwitch as (x: unknown) => Promise<string>)("hi")).toBe("hi");
     expect(await (pkg.TypeSwitch as (x: unknown) => Promise<string>)(true)).toBe("other");
@@ -1416,6 +1538,114 @@ func Call() int64 {
     expect(await (root.package.Call as () => Promise<bigint>)()).toBe(9n);
   });
 
+  test("infers imported generic constraint element types through named slices before conversion", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/root",
+      artifactRoot: "/tmp/gojr-stage5importedgenericnamed",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        dep: [{
+          filename: "dep.go",
+          source: `package dep
+
+func First[S ~[]E, E any](value S) E { return value[0] }
+`
+        }]
+      },
+      files: [{
+        filename: "root.go",
+        source: `package root
+
+import "dep"
+
+type Detail struct {
+	N int64
+}
+type Details []Detail
+
+func Call() int64 {
+	v := dep.First(Details{{N: 17}})
+	return v.N
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const depArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage5importedgenericnamed/dep.a") ?? "");
+    const rootArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage5importedgenericnamed/example.com/root.a") ?? "");
+    const depModule = await importArtifactJavaScript(depArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const dep = await depModule.instantiateGoJrPackage();
+    const rootModule = await importArtifactJavaScript(rootArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const root = await rootModule.instantiateGoJrPackage({}, { importsByPath: { dep: dep.package } });
+    expect(root.diagnostics).toEqual([]);
+    expect(await (root.package.Call as () => Promise<bigint>)()).toBe(17n);
+  });
+
+  test("runs imported generic sort-style calls with function-typed element parameters", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/root",
+      artifactRoot: "/tmp/gojr-stage5importedgenericsort",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        dep: [{
+          filename: "dep.go",
+          source: `package dep
+
+func SortFunc[S ~[]E, E any](x S, cmp func(a, b E) int) {
+	n := len(x)
+	pdqsortCmpFunc(x, 0, n, cmp)
+}
+
+func pdqsortCmpFunc[E any](data []E, a, b int, cmp func(a, b E) int) {
+	if a < b {
+		_ = cmp(data[0], data[0])
+	}
+}
+`
+        }]
+      },
+      files: [{
+        filename: "root.go",
+        source: `package root
+
+import "dep"
+
+type Detail struct {
+	N int
+}
+type Details []Detail
+
+func Call() {
+	values := Details{
+		{N: 17}, {N: 29}, {N: 3}, {N: 41}, {N: 5},
+		{N: 23}, {N: 7}, {N: 19}, {N: 11}, {N: 13},
+		{N: 31}, {N: 37}, {N: 43}, {N: 47}, {N: 53},
+		{N: 59}, {N: 61}, {N: 67}, {N: 71}, {N: 73},
+	}
+	dep.SortFunc(values, func(a, b Detail) int {
+		return a.N - b.N
+	})
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const depArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage5importedgenericsort/dep.a") ?? "");
+    const rootArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage5importedgenericsort/example.com/root.a") ?? "");
+    const depModule = await importArtifactJavaScript(depArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const dep = await depModule.instantiateGoJrPackage();
+    const rootModule = await importArtifactJavaScript(rootArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const root = await rootModule.instantiateGoJrPackage({}, { importsByPath: { dep: dep.package } });
+    expect(root.diagnostics).toEqual([]);
+    await (root.package.Call as () => Promise<void>)();
+  });
+
   test("forwards generated generic type parameters through imported instantiations", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
@@ -1461,7 +1691,7 @@ func Call() uintptr { return mid.Size[byte]() }
     const depArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage5importedgenericforward/dep.a") ?? "");
     const midArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage5importedgenericforward/mid.a") ?? "");
     const rootArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage5importedgenericforward/example.com/root.a") ?? "");
-    expect(midArchive?.javascript).toContain("__gojrTypeArg(__gojrTypeArgs, \"T\")");
+    expect(midArchive?.javascript).toContain("__gojrSubstituteType(\"T\", __gojrTypeArgs)");
     const depModule = await importArtifactJavaScript(depArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
     const dep = await depModule.instantiateGoJrPackage();
     const midModule = await importArtifactJavaScript(midArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
@@ -1470,6 +1700,48 @@ func Call() uintptr { return mid.Size[byte]() }
     const root = await rootModule.instantiateGoJrPackage({}, { importsByPath: { mid: mid.package } });
     expect(root.diagnostics).toEqual([]);
     expect(await (root.package.Call as () => Promise<bigint>)()).toBe(1n);
+  });
+
+  test("substitutes package-local generic type parameters in generated generic calls", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/root",
+      artifactRoot: "/tmp/gojr-stage5localgenericforward",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "root.go",
+        source: `package root
+
+type item struct {
+	Name string
+}
+
+func identity[T any](value T) T {
+	return value
+}
+
+func first[S ~[]E, E any](values S) E {
+	return identity[E](values[0])
+}
+
+func Call() string {
+	values := []item{{Name: "ok"}}
+	return first(values).Name
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage5localgenericforward/example.com/root.a") ?? "");
+    expect(archive?.javascript).toContain("\"T\": __gojrSubstituteType(\"E\", __gojrTypeArgs)");
+    expect(archive?.javascript).toContain("\"E\": \"item\"");
+    expect(archive?.javascript).not.toContain("\"E\": \"E\"");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const root = await module.instantiateGoJrPackage();
+    expect(root.diagnostics).toEqual([]);
+    expect(await (root.package.Call as () => Promise<string>)()).toBe("ok");
   });
 
   test("emits internal abi TypeFor as a generated intrinsic", async () => {
@@ -2208,6 +2480,63 @@ func Values() (int, int, int) {
     const instantiated = await module.instantiateGoJrPackage();
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (instantiated.package.Values as () => Promise<[bigint, bigint, bigint]>)()).toEqual([1n, 12n, 15n]);
+  });
+
+  test("preserves named scalar identity for inherited typed constants across package calls", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/hashuser",
+      artifactRoot: "/tmp/gojr-stage6namedconst",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        "example.com/hashdep": [{
+          filename: "hashdep.go",
+          source: `package hashdep
+
+type Hash uint
+
+const (
+	MD4 Hash = 1 + iota
+	MD5
+	SHA1
+	SHA224
+	SHA256
+)
+
+var sizes = []uint8{
+	MD4:    16,
+	SHA256: 32,
+}
+
+func (h Hash) Size() int {
+	return int(sizes[h])
+}
+`
+        }]
+      },
+      files: [{
+        filename: "hashuser.go",
+        source: `package hashuser
+
+import "example.com/hashdep"
+
+func Size() int {
+	return hashdep.SHA256.Size()
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const depArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6namedconst/example.com/hashdep.a") ?? "");
+    const rootArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6namedconst/example.com/hashuser.a") ?? "");
+    const depModule = await importArtifactJavaScript(depArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const dep = await depModule.instantiateGoJrPackage();
+    const rootModule = await importArtifactJavaScript(rootArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const root = await rootModule.instantiateGoJrPackage({}, { importsByPath: { "example.com/hashdep": dep.package } });
+    expect(dep.package.SHA256).toMatchObject({ __gojrNamed: true, __gojrType: "Hash", __gojrPkgPath: "example.com/hashdep" });
+    expect(await (root.package.Size as () => Promise<bigint>)()).toBe(32n);
   });
 
   test("generated package declarations initialize in dependency order", async () => {

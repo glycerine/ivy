@@ -1,6 +1,7 @@
-import { stage1IntrinsicSupportSource } from "./emitter/package.js";
+import { stage1SharedSupportBindingNames, stage1SharedSupportSource } from "./emitter/package.js";
 
 type Stage1IntrinsicOps = Record<PropertyKey, unknown>;
+type Stage1HelperState = Record<PropertyKey, unknown>;
 
 interface Stage1BuiltinSupport {
   __gojrBuiltinImport(path: string, importsByPath: Record<string, unknown>): unknown;
@@ -18,9 +19,17 @@ export type Stage1RuntimeCore = Record<string, unknown> & {
   intrinsicZero(typeText: string, pkgPath: string | undefined, ops: Stage1IntrinsicOps): unknown;
   intrinsicDescriptor(typeText: string, pkgPath: string | undefined, ops: Stage1IntrinsicOps): unknown;
   intrinsicStruct(typeName: string, value: unknown, pkgPath: string | undefined, ops: Stage1IntrinsicOps): unknown;
+  stage1Helpers(state: Stage1HelperState): Record<string, unknown>;
 };
 
-type Stage1SupportFactory = (ops: Stage1IntrinsicOps) => Stage1BuiltinSupport;
+type Stage1SupportFactory = (
+  gojrPackageArtifact: unknown,
+  __gojrImportPathsByQualifier: unknown,
+  __gojrTypeDescriptors: unknown,
+  __gojrActiveImportsByPath: unknown,
+  __gojrActivePackage: unknown,
+  __gojrActiveRuntimeOptions: unknown
+) => Stage1BuiltinSupport;
 
 const supportCache = new WeakMap<object, Stage1BuiltinSupport>();
 let cachedSupportFactory: Stage1SupportFactory | undefined;
@@ -45,6 +54,11 @@ export function createStage1RuntimeCore(runtime: Record<string, unknown> = {}): 
     ? runtime.intrinsicStruct as (typeName: string, value: unknown, pkgPath: string | undefined, ops: Stage1IntrinsicOps) => unknown
     : typeof runtime.__gojrIntrinsicStruct === "function"
       ? runtime.__gojrIntrinsicStruct as (typeName: string, value: unknown, pkgPath: string | undefined, ops: Stage1IntrinsicOps) => unknown
+      : undefined;
+  const callerStage1Helpers = typeof runtime.stage1Helpers === "function"
+    ? runtime.stage1Helpers as (state: Stage1HelperState) => Record<string, unknown> | undefined
+    : typeof runtime.__gojrStage1Helpers === "function"
+      ? runtime.__gojrStage1Helpers as (state: Stage1HelperState) => Record<string, unknown> | undefined
       : undefined;
 
   return {
@@ -72,6 +86,16 @@ export function createStage1RuntimeCore(runtime: Record<string, unknown> = {}): 
     intrinsicStruct(typeName: string, value: unknown, pkgPath: string | undefined, ops: Stage1IntrinsicOps) {
       const custom = callerIntrinsicStruct?.(typeName, value, pkgPath, ops);
       return custom !== undefined ? custom : supportForOps(ops).__gojrWeakStruct?.(typeName, value, pkgPath);
+    },
+    defaultTextSink(stream: string) {
+      if (typeof process !== "undefined") return undefined;
+      const target = stream === "stderr" ? globalThis.console?.error || globalThis.console?.log : globalThis.console?.log;
+      if (typeof target !== "function") return undefined;
+      return (text: string) => target.call(globalThis.console, text);
+    },
+    stage1Helpers(state: Stage1HelperState) {
+      const custom = callerStage1Helpers?.(state);
+      return custom !== undefined ? custom : supportForOps(state as Stage1IntrinsicOps) as unknown as Record<string, unknown>;
     }
   };
 }
@@ -80,35 +104,31 @@ function supportForOps(ops: Stage1IntrinsicOps): Stage1BuiltinSupport {
   const key = typeof ops === "object" && ops !== null ? ops : Object(ops);
   const cached = supportCache.get(key);
   if (cached) return cached;
-  const support = stage1SupportFactory()(key as Stage1IntrinsicOps);
+  const support = stage1SupportFactory()(
+    key.gojrPackageArtifact,
+    key.__gojrImportPathsByQualifier ?? {},
+    key.__gojrTypeDescriptors ?? {},
+    key.__gojrActiveImportsByPath ?? {},
+    key.__gojrActivePackage ?? {},
+    key.__gojrActiveRuntimeOptions ?? {}
+  );
   supportCache.set(key, support);
   return support;
 }
 
 function stage1SupportFactory(): Stage1SupportFactory {
   if (cachedSupportFactory) return cachedSupportFactory;
-  cachedSupportFactory = new Function("ops", `
-const __gojrScope = new Proxy(ops || {}, {
-  has(target, key) {
-    return key in target || key in globalThis;
-  },
-  get(target, key) {
-    return key in target ? target[key] : globalThis[key];
-  }
-});
-with (__gojrScope) {
-${stage1IntrinsicSupportSource()}
-return {
-  __gojrBuiltinImport,
-  __gojrSyncZero,
-  __gojrAtomicZero,
-  __gojrWeakZero,
-  __gojrSyncDescriptorForTypeName,
-  __gojrAtomicDescriptorForTypeName,
-  __gojrWeakDescriptorForTypeName,
-  __gojrWeakStruct
-};
-}
-`) as Stage1SupportFactory;
+  cachedSupportFactory = new Function(
+    "gojrPackageArtifact",
+    "__gojrImportPathsByQualifier",
+    "__gojrTypeDescriptors",
+    "__gojrActiveImportsByPath",
+    "__gojrActivePackage",
+    "__gojrActiveRuntimeOptions",
+    `
+${stage1SharedSupportSource()}
+return { ${stage1SharedSupportBindingNames().join(", ")} };
+`
+  ) as Stage1SupportFactory;
   return cachedSupportFactory;
 }

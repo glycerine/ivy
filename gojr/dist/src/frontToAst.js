@@ -96,10 +96,12 @@ function typeSpecToAst(spec) {
     if (spec.kind !== "TypeSpec")
         return [];
     const typeParameters = typeSpecTypeParameterNames(spec);
+    const typeParameterConstraints = typeParameterConstraintsFromFieldList(spec.typeParams);
     return [{
             name: spec.name.name,
             ...(spec.alias ? { alias: true } : {}),
             ...(typeParameters.length > 0 ? { typeParameters } : {}),
+            ...(typeParameterConstraints ? { typeParameterConstraints } : {}),
             type: typeNode(spec.type),
             ...structFieldsFromType(spec),
             ...interfaceMethodsFromType(spec)
@@ -157,11 +159,13 @@ function interfaceMethodsFromType(spec) {
 }
 function functionDeclToAst(declaration, ctx) {
     const typeParameters = functionTypeParameterNames(declaration);
+    const typeParameterConstraints = typeParameterConstraintsFromFieldList(declaration.type.typeParams);
     return withSpan({
         kind: "FunctionDecl",
         name: declaration.name.name,
         ...(declaration.receiver ? { receiver: receiverToAst(declaration.receiver) } : {}),
         ...(typeParameters.length > 0 ? { typeParameters } : {}),
+        ...(typeParameterConstraints ? { typeParameterConstraints } : {}),
         signature: signatureToAst(declaration.type),
         body: declaration.body ? blockToAst(declaration.body, ctx) : { kind: "BlockStatement", statements: [] },
         source: formatNode(declaration).trimEnd()
@@ -183,6 +187,19 @@ function addFieldListNames(fields, names) {
                 names.add(name.name);
         }
     }
+}
+function typeParameterConstraintsFromFieldList(fields) {
+    if (!fields)
+        return undefined;
+    const constraints = {};
+    for (const field of fields.fields) {
+        const constraint = field.type ? typeText(field.type) : "any";
+        for (const name of field.names) {
+            if (name.name !== "_")
+                constraints[name.name] = constraint;
+        }
+    }
+    return Object.keys(constraints).length > 0 ? constraints : undefined;
 }
 function addReceiverTypeParameterNames(receiver, names) {
     const field = receiver.fields[0];

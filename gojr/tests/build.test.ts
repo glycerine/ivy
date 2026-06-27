@@ -1012,7 +1012,8 @@ func Use() (string, string, string, uint64, uintptr) {
     expect(loaded).toEqual([]);
     const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-noembed-intrinsics/example.com/noembed.a") ?? "");
     if (!archive) throw new Error("missing noembed archive");
-    expect(archive.javascript).toContain("function __gojrBuiltinImport(path, importsByPath) {");
+    expect(archive.javascript).toContain("function __gojrLoadStage1Helpers(runtime, options, state) {");
+    expect(archive.javascript).not.toContain("function __gojrBuiltinImport(path, importsByPath) {");
     expect(archive.javascript).not.toContain("if (path === \"os\") return __gojrOsPackage();");
     expect(archive.javascript).not.toContain("function __gojrOsPackage()");
     expect(archive.javascript).not.toContain("function __gojrRuntimePackage()");

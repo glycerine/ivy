@@ -14,6 +14,7 @@ const emptyPackageEmitFacts = {
     functionParamTypes: new Map(),
     functionResultTypes: new Map(),
     functionTypeParameters: new Map(),
+    functionTypeParameterConstraints: new Map(),
     methodPointerReceivers: new Map()
 };
 const emptyExpressionEnv = {
@@ -771,6 +772,7 @@ function cloneExpressionEnv(env) {
         ...(env.namedResults ? { namedResults: [...env.namedResults] } : {}),
         ...(env.expectedReturnTypes ? { expectedReturnTypes: [...env.expectedReturnTypes] } : {}),
         ...(env.typeParameters ? { typeParameters: new Set(env.typeParameters) } : {}),
+        ...(env.currentTypeParameterConstraints ? { currentTypeParameterConstraints: { ...env.currentTypeParameterConstraints } } : {}),
         ...(env.deferName ? { deferName: env.deferName } : {}),
         ...(env.gotoLabels ? { gotoLabels: env.gotoLabels } : {}),
         ...(env.gotoPcName ? { gotoPcName: env.gotoPcName } : {}),
@@ -1361,11 +1363,13 @@ function emitSendStatement(ctx, statement, env, indent) {
 }
 function emitSelectStatement(ctx, statement, env, indent) {
     const cases = [];
-    for (const clause of statement.clauses) {
+    const selectedResult = ctx.symbol("select");
+    const selectedValue = ctx.symbol("selected");
+    const selectedBodyLines = [];
+    for (const [caseIndex, clause] of statement.clauses.entries()) {
         const clauseEnv = cloneExpressionEnv(env);
-        const selected = ctx.symbol("selected");
         const bodyLines = [];
-        const prepared = emitSelectComm(ctx, clause.comm, clause.default, clauseEnv, `${indent}      `, selected);
+        const prepared = emitSelectComm(ctx, clause.comm, clause.default, clauseEnv, `${indent}      `, selectedValue);
         if (!prepared)
             return undefined;
         bodyLines.push(...prepared.prefixLines);
@@ -1378,16 +1382,17 @@ function emitSelectStatement(ctx, statement, env, indent) {
             `${indent}    op: ${JSON.stringify(prepared.op)},`,
             ...(prepared.channel ? [`${indent}    channel: ${prepared.channel},`] : []),
             ...(prepared.value ? [`${indent}    value: ${prepared.value},`] : []),
-            `${indent}    apply: async (${selected}) => {`,
-            ...bodyLines,
-            `${indent}    }`,
             `${indent}  }`
         ].join("\n"));
+        selectedBodyLines.push(`${indent}  case ${caseIndex}: {`, `${indent}    const ${selectedValue} = ${selectedResult}.result;`, ...bodyLines, `${indent}    break;`, `${indent}  }`);
     }
     return [
-        `${indent}await __gojrSelect([`,
+        `${indent}const ${selectedResult} = await __gojrSelect([`,
         cases.join(",\n"),
-        `${indent}]);`
+        `${indent}]);`,
+        `${indent}switch (${selectedResult}.index) {`,
+        ...selectedBodyLines,
+        `${indent}}`
     ];
 }
 function emitSelectComm(ctx, statement, isDefault, env, indent, selected) {
@@ -1713,7 +1718,17 @@ function functionParameterBindings(fn, facts) {
         }
         return parameter.variadic ? `...${jsName}` : jsName;
     }));
-    return { params, env: { locals, localTypes, localTypeUnderlyings, facts, ...(typeParameters ? { typeParameters } : {}) } };
+    return {
+        params,
+        env: {
+            locals,
+            localTypes,
+            localTypeUnderlyings,
+            facts,
+            ...(typeParameters ? { typeParameters } : {}),
+            ...(fn.typeParameterConstraints ? { currentTypeParameterConstraints: fn.typeParameterConstraints } : {})
+        }
+    };
 }
 function functionDeclarationParameterCoercionLines(fn, env, indent) {
     const lines = [];
@@ -1798,6 +1813,7 @@ function packageEmitFacts(ast, artifact) {
     const functionParamTypes = new Map();
     const functionResultTypes = new Map();
     const functionTypeParameters = new Map();
+    const functionTypeParameterConstraints = new Map();
     const methodPointerReceivers = new Map();
     for (const item of ast.imports) {
         if (item.alias === "_" || item.alias === ".")
@@ -1839,12 +1855,16 @@ function packageEmitFacts(ast, artifact) {
         functionResultTypes.set(key, fn.signature.results.map((result) => result.type.text));
         if (fn.typeParameters && fn.typeParameters.length > 0)
             functionTypeParameters.set(key, fn.typeParameters);
+        if (fn.typeParameterConstraints)
+            functionTypeParameterConstraints.set(key, fn.typeParameterConstraints);
         if (!fn.receiver) {
             resultCounts.set(fn.name, fn.signature.results.length);
             functionParamTypes.set(fn.name, fn.signature.parameters.map((parameter) => parameter.variadic ? `...${parameter.type.text}` : parameter.type.text));
             functionResultTypes.set(fn.name, fn.signature.results.map((result) => result.type.text));
             if (fn.typeParameters && fn.typeParameters.length > 0)
                 functionTypeParameters.set(fn.name, fn.typeParameters);
+            if (fn.typeParameterConstraints)
+                functionTypeParameterConstraints.set(fn.name, fn.typeParameterConstraints);
             continue;
         }
         const receiver = receiverBaseType(fn.receiver.type.text);
@@ -1863,6 +1883,7 @@ function packageEmitFacts(ast, artifact) {
         functionParamTypes,
         functionResultTypes,
         functionTypeParameters,
+        functionTypeParameterConstraints,
         methodPointerReceivers
     };
 }
@@ -2525,6 +2546,13 @@ function valueForTargetType(value, targetType, sourceType, env) {
         return `__gojrConvertDynamicType(__gojrTypeArg(__gojrTypeArgs, ${JSON.stringify(staticTargetType)}), ${value})`;
     }
     const resolvedTargetType = targetType ? resolveUnderlyingTypeTextInEnv(targetType, env) : undefined;
+    if (staticTargetType &&
+        resolvedTargetType &&
+        staticTargetType !== resolvedTargetType &&
+        isScalarTypeText(resolvedTargetType) &&
+        isKnownLocalNamedTypeText(staticTargetType, env)) {
+        return `__gojrConvertDynamicType(${JSON.stringify(staticTargetType)}, ${value})`;
+    }
     if (resolvedTargetType && isIntegerType(resolvedTargetType) && !(resolvedTargetType === "uintptr" && isPointerLikeTypeText(sourceType))) {
         return `__gojrIntegerConvert(${JSON.stringify(resolvedTargetType)}, ${value})`;
     }
@@ -3159,12 +3187,11 @@ function instantiatedImportedSelectorCallToJs(ctx, expression, env) {
     return `(await (__gojrGetField(${imported}, ${JSON.stringify(selector.field)}))(${[typeArgs, ...args].join(", ")}))`;
 }
 function renderTypeArgumentValues(typeArgText, env) {
-    return splitTopLevelTypes(typeArgText).map((typeArg) => {
-        const trimmed = typeArg.trim();
-        if (env.typeParameters?.has(trimmed))
-            return `__gojrTypeArg(__gojrTypeArgs, ${JSON.stringify(trimmed)})`;
-        return JSON.stringify(trimmed);
-    });
+    return splitTopLevelTypes(typeArgText).map((typeArg) => renderTypeArgumentValue(typeArg, env));
+}
+function renderTypeArgumentValue(typeArg, env) {
+    const trimmed = (typeArg ?? "any").trim() || "any";
+    return runtimeTypeTextExpression(trimmed, env);
 }
 function conversionCalleeTypeText(callee, env, callTypeText) {
     if (callee.kind === "IndexExpression" &&
@@ -3304,7 +3331,7 @@ function instantiatedFunctionTypeArgObject(expression, functionName, env) {
     if (!typeArgText)
         return undefined;
     const typeArgs = splitTopLevelTypes(typeArgText);
-    const fields = parameterNames.map((name, index) => `${JSON.stringify(name)}: ${JSON.stringify(typeArgs[index] ?? "any")}`);
+    const fields = parameterNames.map((name, index) => `${JSON.stringify(name)}: ${renderTypeArgumentValue(typeArgs[index] ?? "any", env)}`);
     return `({ ${fields.join(", ")} })`;
 }
 function inferredFunctionTypeArgObject(functionName, args, env) {
@@ -3315,13 +3342,94 @@ function inferredFunctionTypeArgObject(functionName, args, env) {
     const parameterTypes = env.facts.functionParamTypes.get(functionName) ?? [];
     const inferred = new Map();
     for (const [index, parameterType] of parameterTypes.entries()) {
-        const actualType = expressionTypeText(args[index], env);
+        const actualType = actualTypeForGenericInference(expressionTypeText(args[index], env), env);
         if (!actualType)
             continue;
         inferGenericTypeArguments(parameterType.startsWith("...") ? parameterType.slice(3) : parameterType, actualType, parameterSet, inferred);
     }
-    const fields = parameterNames.map((name) => `${JSON.stringify(name)}: ${JSON.stringify(inferred.get(name) ?? "any")}`);
+    inferGenericTypeArgumentsFromConstraints(parameterNames, env.facts.functionTypeParameterConstraints.get(functionName), parameterSet, inferred);
+    const fields = parameterNames.map((name) => `${JSON.stringify(name)}: ${renderTypeArgumentValue(inferred.get(name) ?? "any", env)}`);
     return `({ ${fields.join(", ")} })`;
+}
+function actualTypeForGenericInference(actualType, env) {
+    const trimmed = actualType?.trim();
+    if (!trimmed || !env.typeParameters || !env.currentTypeParameterConstraints)
+        return trimmed;
+    if (env.typeParameters.has(trimmed)) {
+        return constraintInferencePattern(env.currentTypeParameterConstraints[trimmed], env.typeParameters) ?? trimmed;
+    }
+    return trimmed;
+}
+function inferGenericTypeArgumentsFromConstraints(parameterNames, constraints, parameterSet, inferred) {
+    if (!constraints)
+        return;
+    for (let pass = 0; pass < parameterNames.length; pass += 1) {
+        let changed = false;
+        for (const name of parameterNames) {
+            const actual = inferred.get(name);
+            if (!actual)
+                continue;
+            const pattern = constraintInferencePattern(constraints[name], parameterSet);
+            if (!pattern)
+                continue;
+            const before = new Map(inferred);
+            inferGenericTypeArguments(pattern, actual, parameterSet, inferred);
+            if (!sameStringMap(before, inferred))
+                changed = true;
+        }
+        if (!changed)
+            return;
+    }
+}
+function constraintInferencePattern(constraint, parameterSet) {
+    if (!constraint)
+        return undefined;
+    for (const option of splitTopLevelUnion(constraint)) {
+        const trimmed = option.trim().replace(/^~/, "").trim();
+        if (!trimmed)
+            continue;
+        const identifiers = trimmed.match(/[_$\p{L}][_$\p{L}\p{N}]*/gu) ?? [];
+        if (identifiers.some((identifier) => parameterSet.has(identifier)))
+            return trimmed;
+    }
+    return undefined;
+}
+function splitTopLevelUnion(text) {
+    const parts = [];
+    let start = 0;
+    let paren = 0;
+    let bracket = 0;
+    let brace = 0;
+    for (let index = 0; index < text.length; index += 1) {
+        const char = text[index];
+        if (char === "(")
+            paren += 1;
+        else if (char === ")")
+            paren = Math.max(0, paren - 1);
+        else if (char === "[")
+            bracket += 1;
+        else if (char === "]")
+            bracket = Math.max(0, bracket - 1);
+        else if (char === "{")
+            brace += 1;
+        else if (char === "}")
+            brace = Math.max(0, brace - 1);
+        else if (char === "|" && paren === 0 && bracket === 0 && brace === 0) {
+            parts.push(text.slice(start, index));
+            start = index + 1;
+        }
+    }
+    parts.push(text.slice(start));
+    return parts;
+}
+function sameStringMap(left, right) {
+    if (left.size !== right.size)
+        return false;
+    for (const [key, value] of left) {
+        if (right.get(key) !== value)
+            return false;
+    }
+    return true;
 }
 function inferGenericTypeArguments(pattern, actual, parameters, out) {
     let lhs = pattern?.trim();
@@ -3673,6 +3781,9 @@ function conversionCallToJs(ctx, typeText, args, env) {
     const pointerPkgPath = pointerConversionPackagePath(typeText, env, ctx.options.artifact.importPath);
     if (isInterfaceTypeText(typeText, env.facts))
         return valueForTargetType(value, typeText, sourceType, env);
+    if (typeText.trim() !== resolvedType && isScalarTypeText(resolvedType) && isKnownLocalNamedTypeText(typeText, env)) {
+        return `__gojrConvertDynamicType(${JSON.stringify(typeText)}, ${value})`;
+    }
     if (isByteSliceType(resolvedType))
         return `__gojrBytesFrom(${value})`;
     if (typeText.trim() === "unsafe.Pointer" || resolvedType.trim() === "unsafe.Pointer")
@@ -4294,6 +4405,17 @@ function isIntegerType(typeText) {
         typeText === "uint64" ||
         typeText === "uintptr";
 }
+function isScalarTypeText(typeText) {
+    return isIntegerType(typeText) ||
+        isFloatType(typeText) ||
+        isComplexType(typeText) ||
+        typeText === "bool" ||
+        typeText === "string";
+}
+function isKnownLocalNamedTypeText(typeText, env) {
+    const base = genericBaseTypeText(typeText.trim());
+    return env.localTypeUnderlyings.has(base) || env.facts.typeUnderlyings.has(base);
+}
 function isFloatType(typeText) {
     return typeText === "float32" || typeText === "float64" || typeText === "untyped float";
 }
@@ -4364,6 +4486,9 @@ function safeLocalName(name, index) {
     const suffix = index < 0 ? "recv" : String(index);
     return `__gojrIdent_${encoded || "blank"}_${suffix}`;
 }
+const STAGE1_SHARED_SUPPORT_BINDINGS_PLACEHOLDER = "  // __GOJR_STAGE1_SHARED_SUPPORT_BINDINGS__";
+const STAGE1_SHARED_SUPPORT_START = "// __GOJR_STAGE1_SHARED_SUPPORT_START__";
+const STAGE1_SHARED_SUPPORT_END = "// __GOJR_STAGE1_SHARED_SUPPORT_END__";
 function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, facts) {
     const artifactHeader = { ...artifact };
     delete artifactHeader.runtime;
@@ -4383,9 +4508,19 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  const importsByPath = options.importsByPath || runtime.importsByPath || options.packages || runtime.packages || {};",
         "  __gojrActiveImportsByPath = importsByPath;",
         "  __gojrActivePackage = pkg;",
-        "  const __gojrStdout = options.stdout || runtime.stdout || __gojrDefaultTextSink(\"stdout\") || (() => {});",
-        "  const __gojrStderr = options.stderr || runtime.stderr || __gojrDefaultTextSink(\"stderr\") || (() => {});",
+        "  const __gojrDefaultTextSinkFromRuntime = runtime.defaultTextSink || runtime.__gojrDefaultTextSink || options.defaultTextSink || options.__gojrDefaultTextSink;",
+        "  const __gojrStdout = options.stdout || runtime.stdout || (typeof __gojrDefaultTextSinkFromRuntime === \"function\" ? __gojrDefaultTextSinkFromRuntime(\"stdout\") : undefined) || (() => {});",
+        "  const __gojrStderr = options.stderr || runtime.stderr || (typeof __gojrDefaultTextSinkFromRuntime === \"function\" ? __gojrDefaultTextSinkFromRuntime(\"stderr\") : undefined) || (() => {});",
         "  __gojrActiveRuntimeOptions = { ...runtime, ...options, stdout: __gojrStdout, stderr: __gojrStderr };",
+        "  const __gojrStage1Helpers = __gojrLoadStage1Helpers(runtime, options, {",
+        "    gojrPackageArtifact,",
+        "    __gojrImportPathsByQualifier,",
+        "    __gojrTypeDescriptors,",
+        "    get __gojrActiveImportsByPath() { return __gojrActiveImportsByPath; },",
+        "    get __gojrActivePackage() { return __gojrActivePackage; },",
+        "    get __gojrActiveRuntimeOptions() { return __gojrActiveRuntimeOptions; }",
+        "  });",
+        STAGE1_SHARED_SUPPORT_BINDINGS_PLACEHOLDER,
         "  const __gojrImport = (path) => {",
         "    const builtin = __gojrBuiltinImport(path, importsByPath);",
         "    const imported = importsByPath[path];",
@@ -4408,6 +4543,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  Object.defineProperty(pkg, \"__gojrImportPathsByQualifier\", { value: __gojrImportPathsByQualifier });",
         "  return { diagnostics: [], output: [], package: pkg, wasm: __gojrWasmExports };",
         "}",
+        STAGE1_SHARED_SUPPORT_START,
         "function __gojrStringByteAt(value, index) {",
         "  const bytes = __gojrStringBytes(value);",
         "  if (index < 0 || index >= bytes.length) throw new RangeError(\"string index out of range\");",
@@ -4471,7 +4607,13 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  while (value && value.__gojrInterface === true) value = value.value;",
         "  return value;",
         "}",
+        "function __gojrUnwrapNamed(value) {",
+        "  while (value && value.__gojrNamed === true) value = value.value;",
+        "  return value;",
+        "}",
         "function __gojrEqual(left, right) {",
+        "  const leftWasInterface = Boolean(left && left.__gojrInterface === true);",
+        "  const rightWasInterface = Boolean(right && right.__gojrInterface === true);",
         "  if (left && left.__gojrInterface === true || right && right.__gojrInterface === true) {",
         "    if (left && left.__gojrInterface === true && right === null) return left.value === null;",
         "    if (right && right.__gojrInterface === true && left === null) return right.value === null;",
@@ -4482,6 +4624,11 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  if (right && right.__gojrTypedNil === true && left === null) return true;",
         "  if (left && left.__gojrTypedNil === true && right && right.__gojrTypedNil === true) return left.__gojrType === right.__gojrType || (__gojrNilPointerType(left.__gojrType) && __gojrNilPointerType(right.__gojrType));",
         "  if (left && left.__gojrWeakPointer === true && right && right.__gojrWeakPointer === true) return __gojrEqual(left.__gojrWeakValue, right.__gojrWeakValue);",
+        "  if (left && left.__gojrNamed === true || right && right.__gojrNamed === true) {",
+        "    if ((leftWasInterface || rightWasInterface) && left && right && left.__gojrNamed === true && right.__gojrNamed === true && (left.__gojrType !== right.__gojrType || (left.__gojrPkgPath || \"\") !== (right.__gojrPkgPath || \"\"))) return false;",
+        "    left = __gojrUnwrapNamed(left);",
+        "    right = __gojrUnwrapNamed(right);",
+        "  }",
         "  if ((typeof left === \"bigint\" || typeof left === \"number\") && (typeof right === \"bigint\" || typeof right === \"number\")) return __gojrCompareValues(left, right) === 0;",
         "  if (left && typeof left === \"object\" && \"real\" in left && \"imag\" in left || right && typeof right === \"object\" && \"real\" in right && \"imag\" in right) return __gojrComplexEq(left, right);",
         "  if (__gojrIsString(left) || __gojrIsString(right)) return __gojrIsString(left) && __gojrIsString(right) && __gojrBytesEqual(__gojrStringBytes(left), __gojrStringBytes(right));",
@@ -4527,6 +4674,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  const actual = __gojrUnwrapInterface(key);",
         "  if (actual === null || actual === undefined) return \"nil\";",
         "  if (actual && actual.__gojrTypedNil === true) return `typednil:${actual.__gojrType}`;",
+        "  if (actual && actual.__gojrNamed === true) return `n:${actual.__gojrPkgPath || \"\"}:${actual.__gojrType}:${__gojrMapKeyId(actual.value, options)}`;",
         "  if (typeof actual === \"boolean\") return `b:${actual}`;",
         "  if (__gojrIsString(actual)) return `s:${Array.from(__gojrStringBytes(actual)).map((byte) => byte.toString(16).padStart(2, \"0\")).join(\"\")}`;",
         "  if (typeof actual === \"bigint\") return `i:${actual}`;",
@@ -4662,6 +4810,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  }",
         "}",
         "function __gojrIntegerFrom(value) {",
+        "  value = __gojrUnwrapNamed(__gojrUnwrapInterface(value));",
         "  if (typeof value === \"bigint\") return value;",
         "  if (typeof value === \"number\") return BigInt(Math.trunc(value));",
         "  if (__gojrPointerLike(value)) return value;",
@@ -4671,7 +4820,12 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  }",
         "}",
         "function __gojrIntegerConvert(typeName, value) {",
-        "  const raw = __gojrIntegerFrom(value);",
+        "  let raw;",
+        "  try { raw = __gojrIntegerFrom(value); }",
+        "  catch (error) {",
+        "    const detail = error instanceof Error ? error.message : String(error);",
+        "    throw new TypeError(`${detail} for target ${String(typeName || \"\").trim() || \"integer\"}`);",
+        "  }",
         "  if (__gojrPointerLike(raw)) return raw;",
         "  switch (String(typeName || \"\").trim()) {",
         "    case \"uint8\": case \"byte\": return BigInt.asUintN(8, raw);",
@@ -4685,8 +4839,31 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "    default: return raw;",
         "  }",
         "}",
+        "function __gojrScalarTypeName(typeName) {",
+        "  const text = String(typeName || \"\").trim();",
+        "  return __gojrIntegerTypeName(text) || text === \"float32\" || text === \"float64\" || text === \"complex64\" || text === \"complex128\" || text === \"bool\" || text === \"string\";",
+        "}",
+        "function __gojrConvertScalarRuntimeType(typeName, value) {",
+        "  const text = String(typeName || \"\").trim();",
+        "  if (__gojrIntegerTypeName(text)) return __gojrIntegerConvert(text, value);",
+        "  if (text === \"float32\") return Math.fround(Number(__gojrUnwrapNamed(__gojrUnwrapInterface(value))));",
+        "  if (text === \"float64\") return Number(__gojrUnwrapNamed(__gojrUnwrapInterface(value)));",
+        "  if (text === \"complex64\" || text === \"complex128\") return __gojrToComplex(value);",
+        "  if (text === \"bool\") return Boolean(__gojrUnwrapNamed(__gojrUnwrapInterface(value)));",
+        "  if (text === \"string\") return __gojrStringFrom(__gojrUnwrapNamed(__gojrUnwrapInterface(value)));",
+        "  return value;",
+        "}",
+        "function __gojrNamedValue(typeName, value, pkgPath = undefined) {",
+        "  const box = { __gojrNamed: true, __gojrType: typeName, __gojrPkgPath: pkgPath || gojrPackageArtifact.importPath, value };",
+        "  Object.defineProperty(box, \"valueOf\", { value() { return this.value; } });",
+        "  Object.defineProperty(box, \"toString\", { value() { return String(this.value); } });",
+        "  return box;",
+        "}",
+        "function __gojrDescriptorNeedsNamedScalarIdentity(descriptor) {",
+        "  return Boolean(descriptor && Array.isArray(descriptor.methods) && descriptor.methods.length > 0);",
+        "}",
         "function __gojrBool(value) {",
-        "  value = __gojrUnwrapInterface(value);",
+        "  value = __gojrUnwrapNamed(__gojrUnwrapInterface(value));",
         "  if (typeof value !== \"boolean\") throw new TypeError(`GOJR_RUNTIME001: ${String(value)} is not a bool`);",
         "  return value;",
         "}",
@@ -4694,19 +4871,22 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  return Boolean(value && typeof value === \"object\" && \"real\" in value && \"imag\" in value);",
         "}",
         "function __gojrToFloat(value) {",
-        "  value = __gojrUnwrapInterface(value);",
+        "  value = __gojrUnwrapNamed(__gojrUnwrapInterface(value));",
         "  if (typeof value === \"number\") return value;",
         "  if (typeof value === \"bigint\") return Number(value);",
         "  throw new TypeError(`GOJR_RUNTIME001: ${String(value)} is not numeric`);",
         "}",
         "function __gojrToBigInt(value) {",
-        "  value = __gojrUnwrapInterface(value);",
+        "  value = __gojrUnwrapNamed(__gojrUnwrapInterface(value));",
         "  if (typeof value === \"bigint\") return value;",
         "  if (typeof value === \"number\" && Number.isInteger(value)) return BigInt(value);",
         "  throw new TypeError(`GOJR_RUNTIME001: ${String(value)} is not an integer`);",
         "}",
         "function __gojrWrapNumericResult(value, typeName) {",
         "  const type = String(typeName || \"\").trim();",
+        "  const resolved = type ? __gojrUnderlyingRuntimeTypeName(type) : type;",
+        "  const descriptor = type ? __gojrDescriptorForTypeName(type) : undefined;",
+        "  if (type && type !== resolved && __gojrScalarTypeName(resolved) && __gojrDescriptorNeedsNamedScalarIdentity(descriptor)) return __gojrConvertDynamicType(type, value);",
         "  if (__gojrIntegerTypeName(type)) return __gojrIntegerConvert(type, value);",
         "  if (type === \"float32\") return Math.fround(Number(value));",
         "  if (type === \"float64\") return Number(value);",
@@ -4714,18 +4894,18 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  return value;",
         "}",
         "function __gojrNumericIdentity(value) {",
-        "  value = __gojrUnwrapInterface(value);",
+        "  value = __gojrUnwrapNamed(__gojrUnwrapInterface(value));",
         "  if (__gojrIsComplexValue(value) || typeof value === \"bigint\" || typeof value === \"number\") return value;",
         "  throw new TypeError(`GOJR_RUNTIME001: ${String(value)} is not numeric`);",
         "}",
         "function __gojrNegate(value, typeName = \"\") {",
-        "  value = __gojrUnwrapInterface(value);",
+        "  value = __gojrUnwrapNamed(__gojrUnwrapInterface(value));",
         "  if (__gojrIsComplexValue(value)) return __gojrComplex(-value.real, -value.imag);",
         "  if (typeof value === \"bigint\") return __gojrWrapNumericResult(-value, typeName);",
         "  return __gojrWrapNumericResult(-__gojrToFloat(value), typeName);",
         "}",
         "function __gojrAdd(left, right, typeName = \"\") {",
-        "  left = __gojrUnwrapInterface(left); right = __gojrUnwrapInterface(right);",
+        "  left = __gojrUnwrapNamed(__gojrUnwrapInterface(left)); right = __gojrUnwrapNamed(__gojrUnwrapInterface(right));",
         "  if (__gojrIsString(left) || __gojrIsString(right)) {",
         "    if (__gojrIsString(left) && __gojrIsString(right)) return __gojrConcatStrings(left, right);",
         "    throw new TypeError(`GOJR_RUNTIME001: invalid operation: ${typeof left} + ${typeof right}`);",
@@ -4735,19 +4915,19 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  return __gojrWrapNumericResult(__gojrToFloat(left) + __gojrToFloat(right), typeName);",
         "}",
         "function __gojrSub(left, right, typeName = \"\") {",
-        "  left = __gojrUnwrapInterface(left); right = __gojrUnwrapInterface(right);",
+        "  left = __gojrUnwrapNamed(__gojrUnwrapInterface(left)); right = __gojrUnwrapNamed(__gojrUnwrapInterface(right));",
         "  if (__gojrIsComplexValue(left) || __gojrIsComplexValue(right)) return __gojrComplexSub(left, right);",
         "  if (typeof left === \"bigint\" && typeof right === \"bigint\") return __gojrWrapNumericResult(left - right, typeName);",
         "  return __gojrWrapNumericResult(__gojrToFloat(left) - __gojrToFloat(right), typeName);",
         "}",
         "function __gojrMul(left, right, typeName = \"\") {",
-        "  left = __gojrUnwrapInterface(left); right = __gojrUnwrapInterface(right);",
+        "  left = __gojrUnwrapNamed(__gojrUnwrapInterface(left)); right = __gojrUnwrapNamed(__gojrUnwrapInterface(right));",
         "  if (__gojrIsComplexValue(left) || __gojrIsComplexValue(right)) return __gojrComplexMul(left, right);",
         "  if (typeof left === \"bigint\" && typeof right === \"bigint\") return __gojrWrapNumericResult(left * right, typeName);",
         "  return __gojrWrapNumericResult(__gojrToFloat(left) * __gojrToFloat(right), typeName);",
         "}",
         "function __gojrDiv(left, right, typeName = \"\") {",
-        "  left = __gojrUnwrapInterface(left); right = __gojrUnwrapInterface(right);",
+        "  left = __gojrUnwrapNamed(__gojrUnwrapInterface(left)); right = __gojrUnwrapNamed(__gojrUnwrapInterface(right));",
         "  if (__gojrIsComplexValue(left) || __gojrIsComplexValue(right)) return __gojrComplexDiv(left, right);",
         "  if (typeof left === \"bigint\" && typeof right === \"bigint\") return __gojrWrapNumericResult(left / right, typeName);",
         "  return __gojrWrapNumericResult(__gojrToFloat(left) / __gojrToFloat(right), typeName);",
@@ -4775,7 +4955,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  return __gojrWrapNumericResult(__gojrToBigInt(left) >> shift, typeName);",
         "}",
         "function __gojrCompareValues(left, right) {",
-        "  left = __gojrUnwrapInterface(left); right = __gojrUnwrapInterface(right);",
+        "  left = __gojrUnwrapNamed(__gojrUnwrapInterface(left)); right = __gojrUnwrapNamed(__gojrUnwrapInterface(right));",
         "  if ((typeof left === \"bigint\" || typeof left === \"number\") && (typeof right === \"bigint\" || typeof right === \"number\")) {",
         "    const a = typeof left === \"bigint\" && typeof right === \"bigint\" ? left : Number(left);",
         "    const b = typeof left === \"bigint\" && typeof right === \"bigint\" ? right : Number(right);",
@@ -4809,13 +4989,13 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "}",
         "function __gojrConvertDynamicType(typeName, value, importsByPath = __gojrActiveImportsByPath, pkgPath = undefined) {",
         "  const text = String(typeName || \"any\").trim();",
+        "  const descriptor = __gojrDescriptorForTypeName(text, importsByPath, pkgPath);",
+        "  const descriptorPkgPath = descriptor && descriptor.pkgPath ? descriptor.pkgPath : pkgPath;",
+        "  if (value && value.__gojrNamed === true && value.__gojrType === (descriptor && descriptor.type || text) && (value.__gojrPkgPath || \"\") === (descriptorPkgPath || gojrPackageArtifact.importPath || \"\")) return value;",
         "  const resolved = __gojrUnderlyingRuntimeTypeName(text, importsByPath, pkgPath);",
+        "  if (descriptor && descriptor.underlying && descriptor.underlying !== text && __gojrScalarTypeName(resolved) && __gojrDescriptorNeedsNamedScalarIdentity(descriptor)) return __gojrNamedValue(descriptor.type || text, __gojrConvertScalarRuntimeType(resolved, value), descriptorPkgPath);",
         "  if (__gojrIsByteSliceTypeName(resolved)) return __gojrBytesFrom(value);",
-        "  if (__gojrIntegerTypeName(resolved)) return __gojrIntegerConvert(resolved, value);",
-        "  if (resolved === \"float32\" || resolved === \"float64\") return Number(value);",
-        "  if (resolved === \"complex64\" || resolved === \"complex128\") return __gojrToComplex(value);",
-        "  if (resolved === \"bool\") return Boolean(value);",
-        "  if (resolved === \"string\") return __gojrStringFrom(value);",
+        "  if (__gojrScalarTypeName(resolved)) return __gojrConvertScalarRuntimeType(resolved, value);",
         "  if (resolved === \"unsafe.Pointer\") return __gojrConvertPointer(text, value, pkgPath);",
         "  if (resolved.startsWith(\"*\")) return __gojrConvertPointer(text, value, pkgPath);",
         "  if (resolved.startsWith(\"[]\")) return __gojrConvertSlice(text, value);",
@@ -5101,6 +5281,42 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         `const __gojrGeneratedBuiltinImportPaths = new Set(${generatedBuiltinImports});`,
         "function __gojrBuiltinImportOverrides(path) {",
         "  return __gojrGeneratedBuiltinImportPaths.has(path);",
+        "}",
+        "function __gojrIntrinsicZero(typeText, pkgPath = undefined) {",
+        "  const resolver = __gojrActiveRuntimeOptions.intrinsicZero || __gojrActiveRuntimeOptions.__gojrIntrinsicZero;",
+        "  return typeof resolver === \"function\" ? resolver(typeText, pkgPath, __gojrIntrinsicOps()) : undefined;",
+        "}",
+        "function __gojrIntrinsicDescriptor(typeText, pkgPath = undefined) {",
+        "  const resolver = __gojrActiveRuntimeOptions.intrinsicDescriptor || __gojrActiveRuntimeOptions.__gojrIntrinsicDescriptor;",
+        "  return typeof resolver === \"function\" ? resolver(typeText, pkgPath, __gojrIntrinsicOps()) : undefined;",
+        "}",
+        "function __gojrIntrinsicStruct(typeName, value, pkgPath = undefined) {",
+        "  const resolver = __gojrActiveRuntimeOptions.intrinsicStruct || __gojrActiveRuntimeOptions.__gojrIntrinsicStruct;",
+        "  return typeof resolver === \"function\" ? resolver(typeName, value, pkgPath, __gojrIntrinsicOps()) : undefined;",
+        "}",
+        "let __gojrCachedIntrinsicOps;",
+        "function __gojrIntrinsicOps() {",
+        "  if (__gojrCachedIntrinsicOps) return __gojrCachedIntrinsicOps;",
+        "  const ops = {",
+        "    gojrPackageArtifact,",
+        "    __gojrImportPathsByQualifier,",
+        "    __gojrTypeDescriptors,",
+        "    get __gojrActiveRuntimeOptions() { return __gojrActiveRuntimeOptions; },",
+        "    get __gojrActiveImportsByPath() { return __gojrActiveImportsByPath; },",
+        "    get __gojrActivePackage() { return __gojrActivePackage; },",
+        "    globalThis,",
+        "    Array, ArrayBuffer, BigInt, Boolean, DataView, Error, JSON, Map, Math, Number, Object, Promise, RangeError, Reflect, RegExp, Set, String, Symbol, TextDecoder, TextEncoder, TypeError, Uint8Array, WeakMap, console,",
+        "    setTimeout, clearTimeout,",
+        "    __gojrSetCap, __gojrBytesFrom, __gojrBytesFromSequence, __gojrStringBytes, __gojrLen,",
+        "    __gojrTuple, __gojrTupleValues, __gojrStruct, __gojrPointer, __gojrPointerValue, __gojrTypedNil,",
+        "    __gojrDeref, __gojrDerefIfPointer, __gojrPointerSequence, __gojrSliceFromSequence, __gojrSliceElementRuntimeType,",
+        "    __gojrUnsafeAdd, __gojrNilUnsafePointer, __gojrAlignofValue, __gojrSizeofValue,",
+        "    __gojrEqual, __gojrTypeArg, __gojrRuntimeTypeName, __gojrRuntimeTypePackagePath,",
+        "    __gojrReflectTypeOf, __gojrReflectValueOf, __gojrReflectliteSwapper, __gojrReflectTypeForTypeName,",
+        "    __gojrReflectPointerTo, __gojrTypeAssertOk, __gojrDescriptorForTypeName, __gojrZero",
+        "  };",
+        "  __gojrCachedIntrinsicOps = ops;",
+        "  return ops;",
         "}",
         "function __gojrBytealgPackage() {",
         "  return {",
@@ -6676,18 +6892,19 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  return Boolean(channel && channel.__gojrChannel === true && (channel.closed || channel.receivers.length > 0 || channel.queue.length < channel.capacity));",
         "}",
         "async function __gojrSelect(cases) {",
-        "  const defaults = cases.filter((item) => item.op === \"default\");",
-        "  const ready = cases.filter((item) =>",
+        "  const indexed = cases.map((item, index) => ({ ...item, index }));",
+        "  const defaults = indexed.filter((item) => item.op === \"default\");",
+        "  const ready = indexed.filter((item) =>",
         "    (item.op === \"recv\" && __gojrChanCanRecv(item.channel)) ||",
         "    (item.op === \"send\" && __gojrChanCanSend(item.channel))",
         "  );",
         "  let selected = ready.length > 0 ? ready[__gojrSelectIndex(ready.length)] : undefined;",
         "  if (!selected && defaults.length > 0) selected = defaults[0];",
         "  if (!selected) selected = cases[0];",
-        "  if (!selected) return null;",
-        "  if (selected.op === \"recv\") return selected.apply(await __gojrChanRecv(selected.channel));",
-        "  if (selected.op === \"send\") { await __gojrChanSend(selected.channel, selected.value); return selected.apply(__gojrTuple([null, true])); }",
-        "  return selected.apply(__gojrTuple([null, true]));",
+        "  if (!selected) return { index: -1, result: __gojrTuple([null, true]) };",
+        "  if (selected.op === \"recv\") return { index: selected.index, result: await __gojrChanRecv(selected.channel) };",
+        "  if (selected.op === \"send\") { await __gojrChanSend(selected.channel, selected.value); return { index: selected.index, result: __gojrTuple([null, true]) }; }",
+        "  return { index: selected.index, result: __gojrTuple([null, true]) };",
         "}",
         "function __gojrSpread(source) {",
         "  if (source == null) return [];",
@@ -6827,8 +7044,8 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  const fn = __gojrSelectPackageCallableField(__gojrActiveImportsByPath, importPath, functionName);",
         "  const typeText = importedPackage && importedPackage.__gojrExportIndex && importedPackage.__gojrExportIndex[functionName] && importedPackage.__gojrExportIndex[functionName].typeText;",
         "  const parameterTypes = __gojrFunctionParameterTypes(typeText);",
-        "  const convertedArgs = args.map((arg, index) => __gojrConvertRuntimeCallArg(arg, __gojrRuntimeCallArgumentTargetType(parameterTypes, index, false), importPath));",
         "  const typeArgs = __gojrInferImportedTypeArgs(importedPackage, functionName, argTypes);",
+        "  const convertedArgs = args.map((arg, index) => __gojrConvertRuntimeCallArg(arg, __gojrRuntimeCallArgumentTargetType(parameterTypes, index, false), importPath, typeArgs));",
         "  return typeArgs ? await fn(typeArgs, ...convertedArgs) : await fn(...convertedArgs);",
         "}",
         "function __gojrRuntimeCallArgumentTargetType(targetTypes, index, isSpread) {",
@@ -6838,11 +7055,12 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  const variadicIndex = targetTypes.findIndex((type) => String(type).startsWith(\"...\"));",
         "  return variadicIndex >= 0 && index >= variadicIndex ? String(targetTypes[variadicIndex]).slice(3) : undefined;",
         "}",
-        "function __gojrConvertRuntimeCallArg(value, targetType, declaringImportPath = undefined) {",
+        "function __gojrConvertRuntimeCallArg(value, targetType, declaringImportPath = undefined, typeArgs = undefined) {",
         "  if (!targetType) return value;",
-        "  const targetPkgPath = __gojrPackagePathForTypeName(targetType, declaringImportPath);",
-        "  if (__gojrRuntimeInterfaceTypeName(targetType, targetPkgPath)) return __gojrToInterface(value, targetType, __gojrRuntimeTypeName(value));",
-        "  return __gojrConvertDynamicType(targetType, value, __gojrActiveImportsByPath, targetPkgPath);",
+        "  const resolvedTargetType = typeArgs ? __gojrSubstituteType(targetType, typeArgs) : targetType;",
+        "  const targetPkgPath = __gojrPackagePathForTypeName(resolvedTargetType, declaringImportPath);",
+        "  if (__gojrRuntimeInterfaceTypeName(resolvedTargetType, targetPkgPath)) return __gojrToInterface(value, resolvedTargetType, __gojrRuntimeTypeName(value));",
+        "  return __gojrConvertDynamicType(resolvedTargetType, value, __gojrActiveImportsByPath, targetPkgPath);",
         "}",
         "function __gojrRuntimeInterfaceTypeName(typeName, pkgPath = undefined) {",
         "  const text = String(typeName || \"\").trim();",
@@ -6895,6 +7113,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  const parameters = new Set(names);",
         "  const inferred = Object.create(null);",
         "  for (let index = 0; index < parameterTypes.length; index += 1) __gojrInferTypeArgument(parameterTypes[index], argTypes[index], parameters, inferred);",
+        "  __gojrInferTypeArgumentsFromConstraints(names, __gojrFunctionTypeParameterConstraints(typeText), parameters, inferred);",
         "  const out = __gojrPositionalTypeArgs([]);",
         "  for (const name of names) out[name] = inferred[name] || \"any\";",
         "  return out;",
@@ -6985,6 +7204,75 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "    }",
         "  }",
         "  return -1;",
+        "}",
+        "function __gojrFunctionTypeParameterConstraints(typeText) {",
+        "  const text = String(typeText || \"\");",
+        "  if (!text.startsWith(\"func[\")) return {};",
+        "  const close = __gojrMatchingBracket(text, 4);",
+        "  if (close < 0) return {};",
+        "  const out = Object.create(null);",
+        "  let pending = [];",
+        "  for (const raw of __gojrSplitTopLevelTypes(text.slice(5, close))) {",
+        "    const part = raw.trim();",
+        "    if (!part) continue;",
+        "    const boundary = __gojrFirstTopLevelWhitespace(part);",
+        "    if (boundary < 0) { pending.push(part); continue; }",
+        "    const head = part.slice(0, boundary).trim();",
+        "    const constraint = part.slice(boundary).trim() || \"any\";",
+        "    const names = [...pending, ...head.split(\",\").map((item) => item.trim()).filter(Boolean)];",
+        "    pending = [];",
+        "    for (const name of names) out[name] = constraint;",
+        "  }",
+        "  for (const name of pending) out[name] = \"any\";",
+        "  return out;",
+        "}",
+        "function __gojrInferTypeArgumentsFromConstraints(names, constraints, parameters, inferred) {",
+        "  if (!constraints) return;",
+        "  for (let pass = 0; pass < names.length; pass += 1) {",
+        "    let changed = false;",
+        "    for (const name of names) {",
+        "      const actual = inferred[name];",
+        "      if (!actual) continue;",
+        "      const pattern = __gojrConstraintInferencePattern(constraints[name], parameters);",
+        "      if (!pattern) continue;",
+        "      const before = JSON.stringify(Object.entries(inferred).sort());",
+        "      __gojrInferTypeArgument(pattern, actual, parameters, inferred);",
+        "      const actualUnderlying = __gojrUnderlyingRuntimeTypeName(actual);",
+        "      if (actualUnderlying && actualUnderlying !== actual) __gojrInferTypeArgument(pattern, actualUnderlying, parameters, inferred);",
+        "      if (before !== JSON.stringify(Object.entries(inferred).sort())) changed = true;",
+        "    }",
+        "    if (!changed) return;",
+        "  }",
+        "}",
+        "function __gojrConstraintInferencePattern(constraint, parameters) {",
+        "  if (!constraint) return undefined;",
+        "  for (const option of __gojrSplitTopLevelUnion(String(constraint))) {",
+        "    const trimmed = option.trim().replace(/^~/, \"\").trim();",
+        "    if (!trimmed) continue;",
+        "    const identifiers = trimmed.match(/[_$\\p{L}][_$\\p{L}\\p{N}]*/gu) || [];",
+        "    if (identifiers.some((identifier) => parameters.has(identifier))) return trimmed;",
+        "  }",
+        "  return undefined;",
+        "}",
+        "function __gojrSplitTopLevelUnion(text) {",
+        "  const parts = [];",
+        "  let start = 0;",
+        "  let paren = 0, bracket = 0, brace = 0;",
+        "  for (let index = 0; index < text.length; index += 1) {",
+        "    const char = text[index];",
+        "    if (char === \"(\") paren += 1;",
+        "    else if (char === \")\") paren = Math.max(0, paren - 1);",
+        "    else if (char === \"[\") bracket += 1;",
+        "    else if (char === \"]\") bracket = Math.max(0, bracket - 1);",
+        "    else if (char === \"{\") brace += 1;",
+        "    else if (char === \"}\") brace = Math.max(0, brace - 1);",
+        "    else if (char === \"|\" && paren === 0 && bracket === 0 && brace === 0) {",
+        "      parts.push(text.slice(start, index));",
+        "      start = index + 1;",
+        "    }",
+        "  }",
+        "  parts.push(text.slice(start));",
+        "  return parts;",
         "}",
         "function __gojrInferTypeArgument(pattern, actual, parameters, out) {",
         "  let lhs = String(pattern || \"\").trim();",
@@ -7133,92 +7421,70 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  for (let i = 0; i < binary.length; i++) out[i] = binary.charCodeAt(i);",
         "  return out;",
         "}",
+        STAGE1_SHARED_SUPPORT_END,
         "export default { artifact: gojrPackageArtifact, instantiateGoJrPackage };",
         ""
     ].filter((line) => line !== "").join("\n");
-    return stripStage1IntrinsicSupport(source, generatedBuiltinImports);
+    return stripStage1SharedSupport(source);
 }
-const STAGE1_INTRINSIC_SUPPORT_START = "function __gojrBuiltinImport(path, importsByPath) {";
-const STAGE1_INTRINSIC_SUPPORT_END = "const __gojrInternalAbiTypeCache = new Map();";
-let cachedStage1IntrinsicSupportSource;
+let cachedStage1SharedSupportSource;
+let cachedStage1SharedSupportBindingNames;
+export function stage1SharedSupportSource() {
+    ensureStage1SharedSupport();
+    if (!cachedStage1SharedSupportSource)
+        throw new Error("could not extract GoJr Stage 1 shared support source");
+    return cachedStage1SharedSupportSource;
+}
+export function stage1SharedSupportBindingNames() {
+    ensureStage1SharedSupport();
+    return cachedStage1SharedSupportBindingNames ? [...cachedStage1SharedSupportBindingNames] : [];
+}
 export function stage1IntrinsicSupportSource() {
-    if (cachedStage1IntrinsicSupportSource)
-        return cachedStage1IntrinsicSupportSource;
-    stage1JavaScript(stage1IntrinsicSupportDummyArtifact(), false, [], [], emptyPackageEmitFacts);
-    if (cachedStage1IntrinsicSupportSource)
-        return cachedStage1IntrinsicSupportSource;
-    throw new Error("could not extract GoJr Stage 1 intrinsic support source");
+    return stage1SharedSupportSource();
 }
-function stripStage1IntrinsicSupport(source, generatedBuiltinImports) {
-    const start = source.indexOf(STAGE1_INTRINSIC_SUPPORT_START);
-    const end = source.indexOf(STAGE1_INTRINSIC_SUPPORT_END);
+function ensureStage1SharedSupport() {
+    if (cachedStage1SharedSupportSource && cachedStage1SharedSupportBindingNames)
+        return;
+    stage1JavaScript(stage1IntrinsicSupportDummyArtifact(), false, [], [], emptyPackageEmitFacts);
+}
+function stripStage1SharedSupport(source) {
+    const start = source.indexOf(STAGE1_SHARED_SUPPORT_START);
+    const end = source.indexOf(STAGE1_SHARED_SUPPORT_END);
     if (start < 0 || end < 0 || end <= start)
         return source;
-    cachedStage1IntrinsicSupportSource = source.slice(start, end).trimEnd();
+    const supportStart = start + STAGE1_SHARED_SUPPORT_START.length;
+    const support = source.slice(supportStart, end).trim();
+    const bindingNames = collectStage1SupportBindingNames(support);
+    cachedStage1SharedSupportSource = support;
+    cachedStage1SharedSupportBindingNames = bindingNames;
+    const helperBindingLine = `  const { ${bindingNames.join(", ")} } = __gojrStage1Helpers;`;
+    const before = source.slice(0, start).replace(STAGE1_SHARED_SUPPORT_BINDINGS_PLACEHOLDER, helperBindingLine).trimEnd();
+    const after = source.slice(end + STAGE1_SHARED_SUPPORT_END.length).trimStart();
     return [
-        source.slice(0, start).trimEnd(),
-        stage1IntrinsicSupportHookSource(generatedBuiltinImports),
-        source.slice(end)
+        before,
+        stage1SharedSupportLoaderSource(),
+        after
     ].join("\n");
 }
-function stage1IntrinsicSupportHookSource(generatedBuiltinImports) {
+function collectStage1SupportBindingNames(source) {
+    const names = [];
+    const seen = new Set();
+    const pattern = /^(?:(?:async\s+)?function|const|let|var)\s+(__gojr[A-Za-z0-9_$]*)\b/gm;
+    for (let match = pattern.exec(source); match; match = pattern.exec(source)) {
+        const name = match[1];
+        if (!name || seen.has(name))
+            continue;
+        seen.add(name);
+        names.push(name);
+    }
+    return names;
+}
+function stage1SharedSupportLoaderSource() {
     return [
-        `const __gojrGeneratedBuiltinImportPaths = new Set(${generatedBuiltinImports});`,
-        "function __gojrBuiltinImportOverrides(path) {",
-        "  return __gojrGeneratedBuiltinImportPaths.has(path);",
-        "}",
-        "function __gojrBuiltinImport(path, importsByPath) {",
-        "  const resolver = __gojrActiveRuntimeOptions.builtinImport || __gojrActiveRuntimeOptions.__gojrBuiltinImport;",
-        "  if (typeof resolver !== \"function\") return undefined;",
-        "  return resolver(path, importsByPath, __gojrIntrinsicOps());",
-        "}",
-        "function __gojrIntrinsicZero(typeText, pkgPath = undefined) {",
-        "  const resolver = __gojrActiveRuntimeOptions.intrinsicZero || __gojrActiveRuntimeOptions.__gojrIntrinsicZero;",
-        "  return typeof resolver === \"function\" ? resolver(typeText, pkgPath, __gojrIntrinsicOps()) : undefined;",
-        "}",
-        "function __gojrIntrinsicDescriptor(typeText, pkgPath = undefined) {",
-        "  const resolver = __gojrActiveRuntimeOptions.intrinsicDescriptor || __gojrActiveRuntimeOptions.__gojrIntrinsicDescriptor;",
-        "  return typeof resolver === \"function\" ? resolver(typeText, pkgPath, __gojrIntrinsicOps()) : undefined;",
-        "}",
-        "function __gojrIntrinsicStruct(typeName, value, pkgPath = undefined) {",
-        "  const resolver = __gojrActiveRuntimeOptions.intrinsicStruct || __gojrActiveRuntimeOptions.__gojrIntrinsicStruct;",
-        "  return typeof resolver === \"function\" ? resolver(typeName, value, pkgPath, __gojrIntrinsicOps()) : undefined;",
-        "}",
-        "function __gojrByteSequenceCompare(left, right) {",
-        "  const length = Math.min(left.length, right.length);",
-        "  for (let index = 0; index < length; index += 1) {",
-        "    if (left[index] !== right[index]) return left[index] < right[index] ? -1 : 1;",
-        "  }",
-        "  if (left.length === right.length) return 0;",
-        "  return left.length < right.length ? -1 : 1;",
-        "}",
-        "function __gojrDefaultTextSink(stream) {",
-        "  if (typeof process !== \"undefined\") return undefined;",
-        "  const target = stream === \"stderr\" ? globalThis.console?.error || globalThis.console?.log : globalThis.console?.log;",
-        "  if (typeof target !== \"function\") return undefined;",
-        "  return (text) => target.call(globalThis.console, text);",
-        "}",
-        "let __gojrCachedIntrinsicOps;",
-        "function __gojrIntrinsicOps() {",
-        "  if (__gojrCachedIntrinsicOps) return __gojrCachedIntrinsicOps;",
-        "  const ops = {",
-        "    gojrPackageArtifact,",
-        "    get __gojrActiveRuntimeOptions() { return __gojrActiveRuntimeOptions; },",
-        "    get __gojrActiveImportsByPath() { return __gojrActiveImportsByPath; },",
-        "    get __gojrActivePackage() { return __gojrActivePackage; },",
-        "    globalThis,",
-        "    Array, ArrayBuffer, BigInt, Boolean, DataView, Error, JSON, Map, Math, Number, Object, Promise, RangeError, Reflect, RegExp, Set, String, Symbol, TextDecoder, TextEncoder, TypeError, Uint8Array, WeakMap, console,",
-        "    setTimeout, clearTimeout,",
-        "    __gojrSetCap, __gojrBytesFrom, __gojrBytesFromSequence, __gojrStringBytes, __gojrLen,",
-        "    __gojrTuple, __gojrTupleValues, __gojrStruct, __gojrPointer, __gojrPointerValue, __gojrTypedNil,",
-        "    __gojrDeref, __gojrDerefIfPointer, __gojrPointerSequence, __gojrSliceFromSequence, __gojrSliceElementRuntimeType,",
-        "    __gojrUnsafeAdd, __gojrNilUnsafePointer, __gojrAlignofValue, __gojrSizeofValue,",
-        "    __gojrEqual, __gojrTypeArg, __gojrRuntimeTypeName, __gojrRuntimeTypePackagePath,",
-        "    __gojrReflectTypeOf, __gojrReflectValueOf, __gojrReflectliteSwapper, __gojrReflectTypeForTypeName,",
-        "    __gojrReflectPointerTo, __gojrTypeAssertOk, __gojrDescriptorForTypeName, __gojrZero",
-        "  };",
-        "  __gojrCachedIntrinsicOps = ops;",
-        "  return ops;",
+        "function __gojrLoadStage1Helpers(runtime, options, state) {",
+        "  const factory = runtime.stage1Helpers || runtime.__gojrStage1Helpers || options.stage1Helpers || options.__gojrStage1Helpers || globalThis.__gojrStage1Helpers;",
+        "  if (typeof factory !== \"function\") throw new Error(\"gojr Stage 1 package requires runtime.stage1Helpers from createStage1RuntimeCore\");",
+        "  return factory(state);",
         "}"
     ].join("\n");
 }

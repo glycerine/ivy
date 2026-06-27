@@ -192,10 +192,12 @@ function valueSpecToDeclarations(spec: Spec, ctx: AstConversionContext, iotaInde
 function typeSpecToAst(spec: Spec): TypeSpec[] {
   if (spec.kind !== "TypeSpec") return [];
   const typeParameters = typeSpecTypeParameterNames(spec);
+  const typeParameterConstraints = typeParameterConstraintsFromFieldList(spec.typeParams);
   return [{
     name: spec.name.name,
     ...(spec.alias ? { alias: true } : {}),
     ...(typeParameters.length > 0 ? { typeParameters } : {}),
+    ...(typeParameterConstraints ? { typeParameterConstraints } : {}),
     type: typeNode(spec.type),
     ...structFieldsFromType(spec),
     ...interfaceMethodsFromType(spec)
@@ -255,11 +257,13 @@ function interfaceMethodsFromType(spec: FrontTypeSpec): Pick<TypeSpec, "interfac
 
 function functionDeclToAst(declaration: FuncDecl, ctx: AstConversionContext): FunctionDecl {
   const typeParameters = functionTypeParameterNames(declaration);
+  const typeParameterConstraints = typeParameterConstraintsFromFieldList(declaration.type.typeParams);
   return withSpan({
     kind: "FunctionDecl",
     name: declaration.name.name,
     ...(declaration.receiver ? { receiver: receiverToAst(declaration.receiver) } : {}),
     ...(typeParameters.length > 0 ? { typeParameters } : {}),
+    ...(typeParameterConstraints ? { typeParameterConstraints } : {}),
     signature: signatureToAst(declaration.type),
     body: declaration.body ? blockToAst(declaration.body, ctx) : { kind: "BlockStatement", statements: [] },
     source: formatNode(declaration).trimEnd()
@@ -280,6 +284,18 @@ function addFieldListNames(fields: FieldList | undefined, names: Set<string>): v
       if (name.name !== "_") names.add(name.name);
     }
   }
+}
+
+function typeParameterConstraintsFromFieldList(fields: FieldList | undefined): Record<string, string> | undefined {
+  if (!fields) return undefined;
+  const constraints: Record<string, string> = {};
+  for (const field of fields.fields) {
+    const constraint = field.type ? typeText(field.type) : "any";
+    for (const name of field.names) {
+      if (name.name !== "_") constraints[name.name] = constraint;
+    }
+  }
+  return Object.keys(constraints).length > 0 ? constraints : undefined;
 }
 
 function addReceiverTypeParameterNames(receiver: FieldList, names: Set<string>): void {
