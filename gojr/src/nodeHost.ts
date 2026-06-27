@@ -48,6 +48,7 @@ import {
   type RuntimeObject,
   type SourcePackageSpec
 } from "./runtime.js";
+import { createStage1RuntimeCore } from "./stage1Core.js";
 import type { Package as GoTypesPackage } from "./go/types/index.js";
 
 export interface NodeBuildPackageRequest extends BuildPackageRequest {
@@ -88,7 +89,7 @@ export interface NodeLoadedSourcePackages {
 
 interface PackageArtifactJavaScriptModule {
   instantiateGoJrPackage(
-    runtime: { evaluatePackageArtifact: typeof evaluatePackageArtifact },
+    runtime: Record<string, unknown>,
     options?: unknown
   ): Promise<{
     diagnostics: Diagnostic[];
@@ -631,7 +632,7 @@ async function instantiatePackageArtifactJavaScript(
     return undefined;
   }
   try {
-    return await artifactModule.instantiateGoJrPackage({ evaluatePackageArtifact }, options);
+    return await artifactModule.instantiateGoJrPackage(createStage1RuntimeCore({ evaluatePackageArtifact }), options);
   } catch (error) {
     diagnostics.push(nodeArtifactDiagnostic(
       artifactPath,

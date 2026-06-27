@@ -242,20 +242,26 @@ export function emitStage1Package(artifact: GoJuniorPackageExportData, ast: Prog
 }
 
 function intrinsicPackageOverrideLines(importPath: string): string[] {
-  if (importPath !== "internal/abi") return [];
-  return [
-    "  pkg[\"TypeFor\"] = async (__gojrTypeArgs) => __gojrInternalAbiTypePointer(__gojrTypeArg(__gojrTypeArgs, \"T\"));",
-    "  pkg[\"TypeOf\"] = async (value) => __gojrInternalAbiTypeOf(value);",
-    "  pkg[\"Type.MapType\"] = async (typePointer) => __gojrInternalAbiMapType(typePointer);",
-    "  pkg[\"NoEscape\"] = async (value) => value;",
-    "  pkg[\"Escape\"] = async (value) => value;",
-    "  pkg[\"EscapeNonString\"] = async (value) => value;",
-    "  pkg[\"EscapeToResultNonString\"] = async (value) => value;"
-  ];
+  const lines: string[] = [];
+  if (importPath === "internal/abi") {
+    lines.push(
+      "  pkg[\"TypeFor\"] = async (__gojrTypeArgs) => __gojrInternalAbiTypePointer(__gojrTypeArg(__gojrTypeArgs, \"T\"));",
+      "  pkg[\"TypeOf\"] = async (value) => __gojrInternalAbiTypeOf(value);",
+      "  pkg[\"Type.MapType\"] = async (typePointer) => __gojrInternalAbiMapType(typePointer);",
+      "  pkg[\"NoEscape\"] = async (value) => value;",
+      "  pkg[\"Escape\"] = async (value) => value;",
+      "  pkg[\"EscapeNonString\"] = async (value) => value;",
+      "  pkg[\"EscapeToResultNonString\"] = async (value) => value;"
+    );
+  }
+  if (importPath === "crypto/internal/constanttime") {
+    lines.push("  pkg[\"boolToUint8\"] = async (value) => __gojrBool(value) ? 1n : 0n;");
+  }
+  return lines;
 }
 
 interface TopLevelDeclarationEmission {
-  name: string;
+  names: string[];
   order: number;
   lines: string[];
   dependencies: Set<string>;
@@ -301,7 +307,56 @@ function emitVarDecl(
   functionDependencies: Map<string, Set<string>>,
   nextOrder: () => number
 ): TopLevelDeclarationEmission[] {
-  return statement.declarations.map((declaration) => emitDeclaration(ctx, declaration, "var", facts, topLevelNames, functionDependencies, nextOrder()));
+  const items: TopLevelDeclarationEmission[] = [];
+  for (const group of declarationGroups(statement.declarations)) {
+    const shared = group.length > 1 && group.every((declaration) =>
+      declaration.valueCount === 1 &&
+      declaration.groupNameCount === group.length &&
+      declaration.value === group[0]?.value
+    );
+    if (shared && group[0]?.value) {
+      items.push(emitTupleVarDeclarationGroup(ctx, group, facts, topLevelNames, functionDependencies, nextOrder(), group[0].value));
+      continue;
+    }
+    for (const declaration of group) {
+      items.push(emitDeclaration(ctx, declaration, "var", facts, topLevelNames, functionDependencies, nextOrder()));
+    }
+  }
+  return items;
+}
+
+function emitTupleVarDeclarationGroup(
+  ctx: EmitterContext,
+  group: DeclarationSpec[],
+  facts: PackageEmitFacts,
+  topLevelNames: Set<string>,
+  functionDependencies: Map<string, Set<string>>,
+  order: number,
+  source: Expression
+): TopLevelDeclarationEmission {
+  const env: ExpressionEmitEnv = { ...emptyExpressionEnv, facts };
+  const rendered = tupleSourceExpressionToJs(ctx, source, group.length, env);
+  const names = group.map((declaration, index) => declaration.name === "_" ? `__gojrBlank${order}_${index}` : declaration.name);
+  if (!rendered) {
+    ctx.emitError(`unsupported Stage 1 declaration for ${group.map((declaration) => declaration.name).join(", ")}`);
+    return { names, order, lines: [], dependencies: new Set() };
+  }
+  const temp = ctx.symbol("varTuple");
+  const sourceTypes = tupleSourceTypeTexts(source, group.length, env);
+  const lines = [`  const ${temp} = __gojrTupleValues(${rendered});`];
+  for (const [index, declaration] of group.entries()) {
+    const sourceType = sourceTypes[index];
+    const targetType = declaration.type?.text ?? sourceType;
+    const value = valueForTargetType(`${temp}[${index}]`, targetType, sourceType, env);
+    if (declaration.name === "_") {
+      lines.push(`  void (${value});`);
+      continue;
+    }
+    lines.push(`  pkg[${JSON.stringify(declaration.name)}] = ${value};`);
+  }
+  const dependencies = expressionDependencies(source, topLevelNames, facts, "", functionDependencies);
+  for (const declaration of group) dependencies.delete(declaration.name);
+  return { names, order, lines, dependencies };
 }
 
 function emitDeclaration(
@@ -321,30 +376,30 @@ function emitDeclaration(
   };
   const itemName = declaration.name === "_" ? `__gojrBlank${order}` : declaration.name;
   if (declaration.name === "_" && kind === "const") {
-    return { name: itemName, order, lines: [], dependencies: new Set() };
+    return { names: [itemName], order, lines: [], dependencies: new Set() };
   }
   if (declaration.name === "_" && kind === "var" && !effectiveValue) {
-    return { name: itemName, order, lines: [], dependencies: new Set() };
+    return { names: [itemName], order, lines: [], dependencies: new Set() };
   }
   const rawValue = effectiveValue
     ? expressionToJs(ctx, effectiveValue, env)
     : zeroValueForType(declaration.type?.text, facts);
   if (!rawValue) {
     ctx.emitError(`unsupported Stage 1 declaration for ${declaration.name}`);
-    return { name: itemName, order, lines: [], dependencies: new Set() };
+    return { names: [itemName], order, lines: [], dependencies: new Set() };
   }
   const targetType = declarationTypeText(declaration, effectiveValue);
   const value = valueForTargetType(rawValue, targetType, expressionTypeText(effectiveValue, env), env);
   if (declaration.name === "_") {
     return {
-      name: itemName,
+      names: [itemName],
       order,
       lines: [`  void (${value});`],
       dependencies: expressionDependencies(effectiveValue, topLevelNames, facts, itemName, functionDependencies)
     };
   }
   return {
-    name: declaration.name,
+    names: [declaration.name],
     order,
     lines: [`  pkg[${JSON.stringify(declaration.name)}] = ${value};`],
     dependencies: expressionDependencies(effectiveValue, topLevelNames, facts, declaration.name, functionDependencies)
@@ -355,7 +410,7 @@ function orderTopLevelDeclarationEmissions(items: TopLevelDeclarationEmission[])
   const remaining = [...items].sort((left, right) => left.order - right.order);
   const ordered: TopLevelDeclarationEmission[] = [];
   while (remaining.length > 0) {
-    const remainingNames = new Set(remaining.map((item) => item.name));
+    const remainingNames = new Set(remaining.flatMap((item) => item.names));
     const readyIndex = remaining.findIndex((item) =>
       [...item.dependencies].every((dependency) => !remainingNames.has(dependency))
     );
@@ -390,9 +445,10 @@ function topLevelFunctionDependencyMap(ast: ProgramAst, topLevelNames: Set<strin
   const functionNames = new Set<string>();
   const functions = new Map<string, FunctionDecl>();
   for (const fn of ast.functions) {
-    if (fn.receiver || fn.name === "init") continue;
-    functionNames.add(fn.name);
-    functions.set(fn.name, fn);
+    if (fn.name === "init") continue;
+    const key = functionPackageKey(fn);
+    functionNames.add(key);
+    functions.set(key, fn);
   }
   const namesAndFunctions = new Set([...topLevelNames, ...functionNames]);
   const direct = new Map<string, Set<string>>();
@@ -448,6 +504,10 @@ function collectExpressionDependencies(
       return;
     case "SelectorExpression":
       if (expression.object.kind === "Identifier" && facts.imports.has(expression.object.name)) return;
+      {
+        const methodKey = methodPackageKeyForSelector(expression, { ...emptyExpressionEnv, facts });
+        if (methodKey && topLevelNames.has(methodKey)) dependencies.add(methodKey);
+      }
       collectExpressionDependencies(expression.object, topLevelNames, facts, dependencies);
       return;
     case "UnaryExpression":
@@ -3855,12 +3915,12 @@ function zeroValueForType(typeText: string | undefined, facts: PackageEmitFacts 
   const staticType = typeText?.trim();
   if (!staticType) return "null";
   const weakType = weakIntrinsicTypeText(staticType, facts);
-  if (weakType) return `__gojrWeakZero(${JSON.stringify(weakType)})`;
+  if (weakType) return `__gojrIntrinsicZero(${JSON.stringify(weakType)})`;
   const syncType = syncIntrinsicTypeText(staticType, facts);
-  if (syncType) return `__gojrSyncZero(${JSON.stringify(syncType)})`;
+  if (syncType) return `__gojrIntrinsicZero(${JSON.stringify(syncType)})`;
   if (fsFileModeTypeText(staticType, facts)) return "0n";
   const atomicType = atomicIntrinsicTypeText(staticType, facts);
-  if (atomicType) return `__gojrAtomicZero(${JSON.stringify(atomicType)})`;
+  if (atomicType) return `__gojrIntrinsicZero(${JSON.stringify(atomicType)})`;
   if (isNilAssignableConcreteTypeText(staticType)) return `__gojrTypedNil(${JSON.stringify(staticType)})`;
   const valueType = resolveUnderlyingTypeText(staticType, facts);
   if (isNilAssignableConcreteTypeText(valueType)) return `__gojrTypedNil(${JSON.stringify(staticType)})`;
@@ -4287,7 +4347,7 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
   delete artifactHeader.runtime;
   const generatedBuiltinImports = JSON.stringify(GENERATED_ARTIFACT_INTRINSIC_IMPORTS);
   const importPathsByQualifier = Object.fromEntries([...facts.imports.entries()].sort(([left], [right]) => left.localeCompare(right)));
-  return [
+  const source = [
     "// Code generated by gojr Stage 1 copy-and-patch emitter; DO NOT EDIT.",
     `export const gojrPackageArtifact = ${JSON.stringify(artifactHeader, null, 2)};`,
     `const __gojrImportPathsByQualifier = Object.freeze(${JSON.stringify(importPathsByQualifier, null, 2)});`,
@@ -5745,12 +5805,8 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  if (typeName === undefined || typeName === null || typeName === \"nil\") return undefined;",
     "  const text = String(typeName).trim();",
     "  if ((!pkgPath || pkgPath === gojrPackageArtifact.importPath) && __gojrTypeDescriptors[text]) return __gojrTypeDescriptors[text];",
-    "  const syncDescriptor = __gojrSyncDescriptorForTypeName(text, pkgPath);",
-    "  if (syncDescriptor) return syncDescriptor;",
-    "  const intrinsicDescriptor = __gojrAtomicDescriptorForTypeName(text);",
+    "  const intrinsicDescriptor = __gojrIntrinsicDescriptor(text, pkgPath);",
     "  if (intrinsicDescriptor) return intrinsicDescriptor;",
-    "  const weakDescriptor = __gojrWeakDescriptorForTypeName(text);",
-    "  if (weakDescriptor) return weakDescriptor;",
     "  if (text.startsWith(\"*\")) {",
     "    const elem = __gojrDescriptorForTypeName(text.slice(1).trim(), importsByPath, pkgPath);",
     "    return { type: text, name: \"\", string: `*${elem ? __gojrReflectDescriptorString(elem) : __gojrReceiverBaseType(text.slice(1).trim())}`, kind: \"ptr\", pkgPath: elem ? elem.pkgPath : \"\", pkgName: elem ? elem.pkgName : \"\", elem: elem ? elem.type : text.slice(1).trim(), elemPkgPath: elem ? elem.pkgPath : undefined };",
@@ -6092,8 +6148,8 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  }",
     "}",
     "function __gojrStruct(typeName, value, pkgPath = gojrPackageArtifact.importPath) {",
-    "  const weak = __gojrWeakStruct(typeName, value, pkgPath);",
-    "  if (weak !== undefined) return weak;",
+    "  const intrinsic = __gojrIntrinsicStruct(typeName, value, pkgPath);",
+    "  if (intrinsic !== undefined) return intrinsic;",
     "  const descriptor = __gojrDescriptorForTypeName(typeName, __gojrActiveImportsByPath, pkgPath);",
     "  const fields = descriptor && Array.isArray(descriptor.fields) ? descriptor.fields : [];",
     "  for (const field of fields) {",
@@ -7013,12 +7069,8 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  return text;",
     "}",
     "function __gojrZero(typeText, pkgPath = undefined, importsByPath = __gojrActiveImportsByPath) {",
-    "  const syncZero = __gojrSyncZero(typeText, pkgPath);",
-    "  if (syncZero !== undefined) return syncZero;",
-    "  const atomicZero = __gojrAtomicZero(typeText);",
-    "  if (atomicZero !== undefined) return atomicZero;",
-    "  const weakZero = __gojrWeakZero(typeText);",
-    "  if (weakZero !== undefined) return weakZero;",
+    "  const intrinsicZero = __gojrIntrinsicZero(typeText, pkgPath);",
+    "  if (intrinsicZero !== undefined) return intrinsicZero;",
     "  switch (typeText) {",
     "    case \"byte\": case \"rune\": case \"int\": case \"int8\": case \"int16\": case \"int32\": case \"int64\": case \"uint\": case \"uint8\": case \"uint16\": case \"uint32\": case \"uint64\": case \"uintptr\": return 0n;",
     "    case \"float32\": case \"float64\": return 0;",
@@ -7062,4 +7114,115 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "export default { artifact: gojrPackageArtifact, instantiateGoJrPackage };",
     ""
   ].filter((line) => line !== "").join("\n");
+  return stripStage1IntrinsicSupport(source, generatedBuiltinImports);
+}
+
+const STAGE1_INTRINSIC_SUPPORT_START = "function __gojrBuiltinImport(path, importsByPath) {";
+const STAGE1_INTRINSIC_SUPPORT_END = "const __gojrInternalAbiTypeCache = new Map();";
+let cachedStage1IntrinsicSupportSource: string | undefined;
+
+export function stage1IntrinsicSupportSource(): string {
+  if (cachedStage1IntrinsicSupportSource) return cachedStage1IntrinsicSupportSource;
+  stage1JavaScript(stage1IntrinsicSupportDummyArtifact(), false, [], [], emptyPackageEmitFacts);
+  if (cachedStage1IntrinsicSupportSource) return cachedStage1IntrinsicSupportSource;
+  throw new Error("could not extract GoJr Stage 1 intrinsic support source");
+}
+
+function stripStage1IntrinsicSupport(source: string, generatedBuiltinImports: string): string {
+  const start = source.indexOf(STAGE1_INTRINSIC_SUPPORT_START);
+  const end = source.indexOf(STAGE1_INTRINSIC_SUPPORT_END);
+  if (start < 0 || end < 0 || end <= start) return source;
+  cachedStage1IntrinsicSupportSource = source.slice(start, end).trimEnd();
+  return [
+    source.slice(0, start).trimEnd(),
+    stage1IntrinsicSupportHookSource(generatedBuiltinImports),
+    source.slice(end)
+  ].join("\n");
+}
+
+function stage1IntrinsicSupportHookSource(generatedBuiltinImports: string): string {
+  return [
+    `const __gojrGeneratedBuiltinImportPaths = new Set(${generatedBuiltinImports});`,
+    "function __gojrBuiltinImportOverrides(path) {",
+    "  return __gojrGeneratedBuiltinImportPaths.has(path);",
+    "}",
+    "function __gojrBuiltinImport(path, importsByPath) {",
+    "  const resolver = __gojrActiveRuntimeOptions.builtinImport || __gojrActiveRuntimeOptions.__gojrBuiltinImport;",
+    "  if (typeof resolver !== \"function\") return undefined;",
+    "  return resolver(path, importsByPath, __gojrIntrinsicOps());",
+    "}",
+    "function __gojrIntrinsicZero(typeText, pkgPath = undefined) {",
+    "  const resolver = __gojrActiveRuntimeOptions.intrinsicZero || __gojrActiveRuntimeOptions.__gojrIntrinsicZero;",
+    "  return typeof resolver === \"function\" ? resolver(typeText, pkgPath, __gojrIntrinsicOps()) : undefined;",
+    "}",
+    "function __gojrIntrinsicDescriptor(typeText, pkgPath = undefined) {",
+    "  const resolver = __gojrActiveRuntimeOptions.intrinsicDescriptor || __gojrActiveRuntimeOptions.__gojrIntrinsicDescriptor;",
+    "  return typeof resolver === \"function\" ? resolver(typeText, pkgPath, __gojrIntrinsicOps()) : undefined;",
+    "}",
+    "function __gojrIntrinsicStruct(typeName, value, pkgPath = undefined) {",
+    "  const resolver = __gojrActiveRuntimeOptions.intrinsicStruct || __gojrActiveRuntimeOptions.__gojrIntrinsicStruct;",
+    "  return typeof resolver === \"function\" ? resolver(typeName, value, pkgPath, __gojrIntrinsicOps()) : undefined;",
+    "}",
+    "function __gojrByteSequenceCompare(left, right) {",
+    "  const length = Math.min(left.length, right.length);",
+    "  for (let index = 0; index < length; index += 1) {",
+    "    if (left[index] !== right[index]) return left[index] < right[index] ? -1 : 1;",
+    "  }",
+    "  if (left.length === right.length) return 0;",
+    "  return left.length < right.length ? -1 : 1;",
+    "}",
+    "function __gojrDefaultTextSink(stream) {",
+    "  if (typeof process !== \"undefined\") return undefined;",
+    "  const target = stream === \"stderr\" ? globalThis.console?.error || globalThis.console?.log : globalThis.console?.log;",
+    "  if (typeof target !== \"function\") return undefined;",
+    "  return (text) => target.call(globalThis.console, text);",
+    "}",
+    "let __gojrCachedIntrinsicOps;",
+    "function __gojrIntrinsicOps() {",
+    "  if (__gojrCachedIntrinsicOps) return __gojrCachedIntrinsicOps;",
+    "  const ops = {",
+    "    gojrPackageArtifact,",
+    "    get __gojrActiveRuntimeOptions() { return __gojrActiveRuntimeOptions; },",
+    "    get __gojrActiveImportsByPath() { return __gojrActiveImportsByPath; },",
+    "    get __gojrActivePackage() { return __gojrActivePackage; },",
+    "    globalThis,",
+    "    Array, ArrayBuffer, BigInt, Boolean, DataView, Error, JSON, Map, Math, Number, Object, Promise, RangeError, Reflect, RegExp, Set, String, Symbol, TextDecoder, TextEncoder, TypeError, Uint8Array, WeakMap, console,",
+    "    setTimeout, clearTimeout,",
+    "    __gojrSetCap, __gojrBytesFrom, __gojrBytesFromSequence, __gojrStringBytes, __gojrLen,",
+    "    __gojrTuple, __gojrTupleValues, __gojrStruct, __gojrPointer, __gojrPointerValue, __gojrTypedNil,",
+    "    __gojrDeref, __gojrDerefIfPointer, __gojrPointerSequence, __gojrSliceFromSequence, __gojrSliceElementRuntimeType,",
+    "    __gojrUnsafeAdd, __gojrNilUnsafePointer, __gojrAlignofValue, __gojrSizeofValue,",
+    "    __gojrEqual, __gojrTypeArg, __gojrRuntimeTypeName, __gojrRuntimeTypePackagePath,",
+    "    __gojrReflectTypeOf, __gojrReflectValueOf, __gojrReflectliteSwapper, __gojrReflectTypeForTypeName,",
+    "    __gojrReflectPointerTo, __gojrTypeAssertOk, __gojrDescriptorForTypeName, __gojrZero",
+    "  };",
+    "  __gojrCachedIntrinsicOps = ops;",
+    "  return ops;",
+    "}"
+  ].join("\n");
+}
+
+function stage1IntrinsicSupportDummyArtifact(): GoJuniorPackageExportData {
+  return {
+    exportFormat: "gojr-iexport",
+    exportVersion: 1,
+    exportIndex: {},
+    layoutVersion: "gojr-js-v4",
+    compilerVersion: "gojr-dev",
+    backend: GOJR_STAGE1_BACKEND,
+    hostSpecVersion: "host-v0",
+    capabilityPolicy: "default",
+    goos: "js",
+    goarch: "gojr",
+    buildTags: [],
+    standardLibrary: false,
+    importPath: "gojr/intrinsic-support-probe",
+    packageName: "probe",
+    sourceHash: "",
+    cacheKey: "",
+    dependencies: [],
+    dependencyCacheKeys: [],
+    exports: [],
+    sources: []
+  };
 }

@@ -10,6 +10,7 @@ import {
   BuildProgressEvent,
   collectSourceImportPaths,
   createNodeSourcePackageProvider,
+  createStage1RuntimeCore,
   createStandardLibrarySourcePackageProvider,
   evaluatePackageSourceFiles,
   formatBuildProgressEvent,
@@ -83,7 +84,13 @@ interface ExecutablePackageArtifactModule {
 
 async function importArtifactJavaScript(source: string): Promise<ExecutablePackageArtifactModule> {
   const url = `data:text/javascript;base64,${Buffer.from(source, "utf8").toString("base64")}`;
-  return await import(url) as ExecutablePackageArtifactModule;
+  const module = await import(url) as ExecutablePackageArtifactModule;
+  return {
+    ...module,
+    instantiateGoJrPackage(runtime: Record<string, unknown> = {}, options: Record<string, unknown> = {}) {
+      return module.instantiateGoJrPackage(createStage1RuntimeCore(runtime), options);
+    }
+  };
 }
 
 async function withHostInput<T>(text: string, body: () => Promise<T>): Promise<T> {
@@ -956,6 +963,74 @@ func Capture(buf []byte) int {
     const value = await capture([65n, 10n]);
     expect(typeof value).toBe("bigint");
     expect(output.join("")).toBe("A\n");
+  });
+
+  test("generated package artifacts do not embed central intrinsic package implementations", async () => {
+    const store = new MemoryArtifactStore();
+    const loaded: string[] = [];
+    const result = buildPackages({
+      importPath: "example.com/noembed",
+      artifactRoot: "/tmp/gojr-noembed-intrinsics",
+      sourcePackageProvider: {
+        load(importPath) {
+          loaded.push(importPath);
+          return [{
+            filename: `/usr/local/go/src/${importPath}/bad.go`,
+            source: `package ${importPath.split("/").at(-1) ?? importPath}\nconst _ = 1 / 0\n`
+          }];
+        },
+        isStandardLibraryPackage(importPath) {
+          return ["os", "runtime", "sync", "sync/atomic", "unsafe"].includes(importPath);
+        }
+      },
+      files: [{
+        filename: "/workspace/example.com/noembed/noembed.go",
+        source: `package noembed
+
+import (
+	"os"
+	"runtime"
+	"sync"
+	"sync/atomic"
+	"unsafe"
+)
+
+var once sync.Once
+var hits atomic.Uint64
+
+func Use() (string, string, string, uint64, uintptr) {
+	once.Do(func() { hits.Store(41) })
+	var b byte
+	return runtime.GOOS, runtime.GOARCH, os.DevNull, hits.Add(1), unsafe.Sizeof(b)
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    expect(loaded).toEqual([]);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-noembed-intrinsics/example.com/noembed.a") ?? "");
+    if (!archive) throw new Error("missing noembed archive");
+    expect(archive.javascript).toContain("function __gojrBuiltinImport(path, importsByPath) {");
+    expect(archive.javascript).not.toContain("if (path === \"os\") return __gojrOsPackage();");
+    expect(archive.javascript).not.toContain("function __gojrOsPackage()");
+    expect(archive.javascript).not.toContain("function __gojrRuntimePackage()");
+    expect(archive.javascript).not.toContain("function __gojrSyncPackage()");
+    expect(archive.javascript).not.toContain("function __gojrAtomicPackage()");
+    expect(archive.javascript).not.toContain("function __gojrUnsafePackage()");
+    expect(archive.javascript).not.toContain("function __gojrWeakPackage()");
+
+    const module = await importArtifactJavaScript(archive.javascript);
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Use as () => Promise<[string, string, string, bigint, bigint]>)()).toEqual([
+      "js",
+      "gojr",
+      "/dev/null",
+      42n,
+      1n
+    ]);
   });
 
   test("builds packages with intrinsic sync/atomic without consulting source packages", async () => {

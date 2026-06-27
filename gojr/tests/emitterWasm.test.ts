@@ -3,6 +3,7 @@ import {
   buildPackages,
   type BuildArtifactStore,
   checkedInWasmStencil,
+  createStage1RuntimeCore,
   createChunkedMixedWasmArtifactFixture,
   createMixedWasmArtifactFixture,
   discoverClangForWasm,
@@ -65,7 +66,13 @@ interface ChunkedMixedArtifactModule {
 
 async function importArtifactJavaScript(source: string): Promise<MixedArtifactModule> {
   const url = `data:text/javascript;base64,${Buffer.from(source, "utf8").toString("base64")}`;
-  return await import(url) as MixedArtifactModule;
+  const module = await import(url) as MixedArtifactModule;
+  return {
+    ...module,
+    instantiateGoJrPackage(runtime: Record<string, unknown> = {}, options: Record<string, unknown> = {}) {
+      return module.instantiateGoJrPackage(createStage1RuntimeCore(runtime), options);
+    }
+  };
 }
 
 function wasmBufferSource(bytes: Uint8Array): ArrayBuffer {
@@ -1813,7 +1820,7 @@ func ReflectPointer() (string, string, bool) {
     const archive = parseGoJuniorPackageArchive(source);
     expect(archive?.pkgdef.runtime).toBeUndefined();
     expect(archive?.javascript).toContain("__gojrTypeDescriptors[\"Thing\"]");
-    expect(archive?.javascript).toContain("__gojrReflectPackage");
+    expect(archive?.javascript).not.toContain("function __gojrReflectPackage");
     expect(archive?.javascript).not.toContain("runtime.ast");
 
     const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
@@ -2272,6 +2279,126 @@ func Ready() int {
     const instantiated = await module.instantiateGoJrPackage();
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (instantiated.package.Ready as () => Promise<bigint>)()).toBe(8n);
+  });
+
+  test("generated package declaration order includes globals referenced through called methods", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6declmethoddeps",
+      artifactRoot: "/tmp/gojr-stage6declmethoddeps",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6declmethoddeps.go",
+        source: `package stage6declmethoddeps
+
+type T struct { N int }
+
+var A = new(T).F()
+var B = &T{N: 41}
+
+func (t *T) F() *T {
+	return B
+}
+
+func Ready() int {
+	return A.N + 1
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6declmethoddeps/example.com/stage6declmethoddeps.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Ready as () => Promise<bigint>)()).toBe(42n);
+  });
+
+  test("emitted packages intrinsicify crypto internal constanttime boolToUint8", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "crypto/internal/constanttime",
+      artifactRoot: "/tmp/gojr-stage6-constanttime-intrinsic",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "/usr/local/go/src/crypto/internal/constanttime/constant_time.go",
+        source: `package constanttime
+
+func Select(v, x, y int) int {
+	v = int(boolToUint8(v != 0))
+	return ^(v-1)&x | (v-1)&y
+}
+
+func ByteEq(x, y uint8) int {
+	return int(boolToUint8(x == y))
+}
+
+func Eq(x, y int32) int {
+	return int(boolToUint8(x == y))
+}
+
+func LessOrEq(x, y int) int {
+	return int(boolToUint8(x <= y))
+}
+
+func boolToUint8(b bool) uint8 {
+	panic("unreachable; must be intrinsicified")
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6-constanttime-intrinsic/crypto/internal/constanttime.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.ByteEq as (x: bigint, y: bigint) => Promise<bigint>)(7n, 7n)).toBe(1n);
+    expect(await (instantiated.package.ByteEq as (x: bigint, y: bigint) => Promise<bigint>)(7n, 8n)).toBe(0n);
+    expect(await (instantiated.package.Eq as (x: bigint, y: bigint) => Promise<bigint>)(9n, 9n)).toBe(1n);
+    expect(await (instantiated.package.LessOrEq as (x: bigint, y: bigint) => Promise<bigint>)(9n, 8n)).toBe(0n);
+    expect(await (instantiated.package.Select as (v: bigint, x: bigint, y: bigint) => Promise<bigint>)(1n, 41n, 99n)).toBe(41n);
+    expect(await (instantiated.package.Select as (v: bigint, x: bigint, y: bigint) => Promise<bigint>)(0n, 41n, 99n)).toBe(99n);
+  });
+
+  test("top-level multi-result var declarations split tuples once", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6topvarmultivalue",
+      artifactRoot: "/tmp/gojr-stage6-topvarmultivalue",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6topvarmultivalue.go",
+        source: `package stage6topvarmultivalue
+
+type T struct { N int }
+
+var Calls int
+var A, _ = makeT()
+var B = A.N + Calls
+
+func makeT() (*T, error) {
+	Calls = Calls + 1
+	return &T{N: 41}, nil
+}
+
+func Ready() (int, int, int) {
+	return A.N, Calls, B
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6-topvarmultivalue/example.com/stage6topvarmultivalue.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Ready as () => Promise<[bigint, bigint, bigint]>)()).toEqual([41n, 1n, 42n]);
   });
 
   test("generated float constants render integer literals as numbers", async () => {

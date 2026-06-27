@@ -5,6 +5,7 @@ export { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, a
 export { blake3HashBytes, blake3HashString, blake3RawBytes } from "./blake3.js";
 export { artifactPathForImportPath, buildPackage, buildPackages, buildStandardLibraryPackage, collectSourceImportPaths, createStandardLibrarySourcePackageProvider, GOJR_GOARCH, GOJR_GOOS, generatedCompiledPackageArtifactSource, inspectPackageJavaScript, generatedMixedWasmArtifactSource, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
 export { GOJR_STAGE1_BACKEND, emitStage1Package } from "./emitter/package.js";
+export { createStage1RuntimeCore } from "./stage1Core.js";
 export { EmitterContext } from "./emitter/context.js";
 export { createChunkedMixedWasmArtifactFixture, createMixedWasmArtifactFixture } from "./emitter/mixedArtifact.js";
 export { CHECKED_IN_WASM_STENCILS, checkedInWasmStencil, decodeBase64, encodeBase64 } from "./emitter/stencils.js";

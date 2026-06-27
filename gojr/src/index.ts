@@ -56,6 +56,12 @@ export {
   GOJR_STAGE1_BACKEND,
   emitStage1Package
 } from "./emitter/package.js";
+export {
+  createStage1RuntimeCore
+} from "./stage1Core.js";
+export type {
+  Stage1RuntimeCore
+} from "./stage1Core.js";
 export type {
   Stage1PackageEmitResult
 } from "./emitter/package.js";

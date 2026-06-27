@@ -10,6 +10,7 @@ import { isHostResolvedSourceImport, isIntrinsicPackageImport } from "./intrinsi
 import { stubSourcePackageFiles } from "./stubPackages.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
 import { evaluateSource, evaluateSourceFiles, evaluatePackageArtifact, evaluateSourcePackageGraph, runLoadedMainPackage, testSourceFiles } from "./runtime.js";
+import { createStage1RuntimeCore } from "./stage1Core.js";
 export function defaultPackageCacheParent() {
     return join(homedir(), "go", "pkg");
 }
@@ -476,7 +477,7 @@ async function instantiatePackageArtifactJavaScript(source, options, artifactPat
         return undefined;
     }
     try {
-        return await artifactModule.instantiateGoJrPackage({ evaluatePackageArtifact }, options);
+        return await artifactModule.instantiateGoJrPackage(createStage1RuntimeCore({ evaluatePackageArtifact }), options);
     }
     catch (error) {
         diagnostics.push(nodeArtifactDiagnostic(artifactPath, `could not initialize package ${options.importPath} from ${artifactPath}: ${error instanceof Error ? error.message : String(error)}`, error));
