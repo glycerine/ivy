@@ -353,6 +353,21 @@ func RangeShortRedeclare() int {
 	}
 	return sum
 }
+
+type FactoryHolder struct {
+	Factory func() int
+}
+
+func NewScope() int { return 7 }
+
+var Holder = FactoryHolder{Factory: func() int {
+	pkg := NewScope()
+	return pkg
+}}
+
+func LocalPkgDoesNotShadowGeneratedPackage() int {
+	return Holder.Factory()
+}
 `
       }]
     }, store);
@@ -368,6 +383,7 @@ func RangeShortRedeclare() int {
     expect(await (pkg.VarShadowArray as () => Promise<bigint>)()).toBe(5n);
     expect(await (pkg.ShortShadowArray as () => Promise<bigint>)()).toBe(6n);
     expect(await (pkg.RangeShortRedeclare as () => Promise<bigint>)()).toBe(2n);
+    expect(await (pkg.LocalPkgDoesNotShadowGeneratedPackage as () => Promise<bigint>)()).toBe(7n);
   });
 
   test("emits byte literal supernodes instead of giant element AST-shaped payloads", async () => {

@@ -66,6 +66,14 @@ const JS_RESERVED_WORDS = new Set([
     "with",
     "yield"
 ]);
+const GOJR_GENERATED_LOCAL_NAMES = new Set([
+    "gojrPackageArtifact",
+    "importsByPath",
+    "instantiateGoJrPackage",
+    "options",
+    "pkg",
+    "runtime"
+]);
 export function emitStage1Package(artifact, ast) {
     const ctx = new EmitterContext({ artifact });
     const facts = packageEmitFacts(ast, artifact);
@@ -4552,7 +4560,11 @@ function jsBinaryOperator(operator) {
     }
 }
 function safeLocalName(name, index) {
-    if (name !== "_" && /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name) && !JS_RESERVED_WORDS.has(name))
+    if (name !== "_" &&
+        /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name) &&
+        !JS_RESERVED_WORDS.has(name) &&
+        !GOJR_GENERATED_LOCAL_NAMES.has(name) &&
+        !name.startsWith("__gojr"))
         return name;
     const encoded = Array.from(name)
         .map((char) => char.codePointAt(0)?.toString(16) ?? "0")
