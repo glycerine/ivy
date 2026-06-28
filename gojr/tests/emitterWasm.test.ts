@@ -648,6 +648,47 @@ func Ready() int {
     expect(await (instantiated.package.Ready as () => Promise<bigint>)()).toBe(12n);
   });
 
+  test("matches cached artifacts that spell pointer type switch cases with outer parens", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/parentype",
+      artifactRoot: "/tmp/gojr-parentype",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "parentype.go",
+        source: `package parentype
+
+type Elem interface { Mark() }
+type Scope struct { Value string }
+func (*Scope) Mark() {}
+
+func Run() string {
+	var elem Elem = &Scope{Value: "ok"}
+	switch scope := elem.(type) {
+	case *Scope:
+		return scope.Value
+	}
+	return "missing"
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-parentype/example.com/parentype.a") ?? "");
+    if (!archive) throw new Error("missing parenthesized type artifact");
+    const mutated = archive.javascript
+      .replace(/__gojrValueMatchesType\((__gojr_typeswitch_\d+), "\*Scope"\)/g, "__gojrValueMatchesType($1, \"(*Scope)\")")
+      .replace(/__gojrTypeAssert\((__gojr_typeswitch_\d+), "\*Scope"\)/g, "__gojrTypeAssert($1, \"(*Scope)\")");
+    expect(mutated).not.toBe(archive.javascript);
+
+    const module = await importArtifactJavaScript(mutated) as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Run as () => Promise<string>)()).toBe("ok");
+  });
+
   test("forwards caller constraint element type into local generic calls", () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
