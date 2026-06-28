@@ -408,6 +408,72 @@ func LocalPkgDoesNotShadowGeneratedPackage() int {
     expect(await (pkg.LocalPkgDoesNotShadowGeneratedPackage as () => Promise<bigint>)()).toBe(7n);
   });
 
+  test("hoists goto-state local declarations outside generated switch cases", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage1gotohoist",
+      artifactRoot: "/tmp/gojr-stage1gotohoist",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "goto_hoist.go",
+        source: `package stage1gotohoist
+
+func GotoVarHoist(n int) int {
+	var flag int
+	flag = 7
+Loop:
+	if n == 0 {
+		return flag
+	}
+	n--
+	goto Loop
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage1gotohoist/example.com/stage1gotohoist.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.GotoVarHoist as (n: bigint) => Promise<bigint>)(3n)).toBe(7n);
+  });
+
+  test("normalizes nilable concrete parameters at generated function entry", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage1nilparams",
+      artifactRoot: "/tmp/gojr-stage1nilparams",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "nil_params.go",
+        source: `package stage1nilparams
+
+func ByteInputChoice(b []byte, s string) int {
+	if b != nil {
+		return len(b)
+	}
+	return len(s)
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage1nilparams/example.com/stage1nilparams.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.javascript).toContain(`b = __gojrConvertNilable("[]byte", b);`);
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.ByteInputChoice as (b: null | Uint8Array, s: string) => Promise<bigint>)(null, "abc")).toBe(3n);
+    expect(await (instantiated.package.ByteInputChoice as (b: null | Uint8Array, s: string) => Promise<bigint>)(new Uint8Array([1, 2]), "abc")).toBe(2n);
+  });
+
   test("emits byte literal supernodes instead of giant element AST-shaped payloads", async () => {
     const dataA = Array.from({ length: 256 }, (_, index) => index % 256);
     const dataB = Array.from({ length: 192 }, (_, index) => (255 - index) & 255);
@@ -634,6 +700,9 @@ type errString struct {
 	s string
 }
 type MyInts []int64
+type PanicPayload struct {
+	Msg string
+}
 
 var Numbers = []int64{4, 5, 6}
 var Labels = map[string]int64{"a": 11}
@@ -690,6 +759,7 @@ func ThreeIndexCap() (int, int) {
 	return len(ys), cap(ys)
 }
 func BuiltinPanic() { panic("boom") }
+func BuiltinPanicPayload() { panic(PanicPayload{Msg: "structured"}) }
 func (p Point) Sum(delta int64) int64 { return p.X + delta }
 func MethodCall(delta int64) int64 { return P.Sum(delta) }
 func MethodValue() func(int64) int64 { return P.Sum }
@@ -746,6 +816,14 @@ func MethodValue() func(int64) int64 { return P.Sum }
       panicMessage = error instanceof Error ? error.message : String(error);
     }
     expect(panicMessage).toContain("panic: boom");
+    let structuredPanicMessage = "";
+    try {
+      await (pkg.BuiltinPanicPayload as () => Promise<null>)();
+    } catch (error) {
+      structuredPanicMessage = error instanceof Error ? error.message : String(error);
+    }
+    expect(structuredPanicMessage).toContain("Msg");
+    expect(structuredPanicMessage).toContain("structured");
     expect(await (pkg["Point.Sum"] as (p: { X: bigint; Name: string }, delta: bigint) => Promise<bigint>)(pkg.P as { X: bigint; Name: string }, 4n)).toBe(11n);
     expect(await (pkg.MethodCall as (delta: bigint) => Promise<bigint>)(5n)).toBe(12n);
     const methodValue = await (pkg.MethodValue as () => Promise<(delta: bigint) => Promise<bigint>>)();
@@ -2400,6 +2478,8 @@ func Call() int {
           filename: "reflect.go",
           source: `package reflect
 
+import "unsafe"
+
 type Kind int
 type StructTag string
 
@@ -3781,6 +3861,81 @@ func Run() int {
     expect(await (root.package.Run as () => Promise<bigint>)()).toBe(7n);
   });
 
+  test("retags embedded imported struct fields for promoted pointer receiver methods", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/root",
+      artifactRoot: "/tmp/gojr-stage6-embedded-imported-pointer-method",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        "example.com/regexp/syntax": [{
+          filename: "syntax.go",
+          source: `package syntax
+
+type Inst struct {
+	Rune []rune
+}
+
+type Prog struct {
+	Inst []Inst
+}
+
+func NewProg() *Prog {
+	return &Prog{Inst: []Inst{{Rune: []rune{'a'}}}}
+}
+
+func (i *Inst) MatchRune(r rune) bool {
+	return len(i.Rune) > 0 && i.Rune[0] == r
+}
+`
+        }]
+      },
+      files: [{
+        filename: "root.go",
+        source: `package root
+
+import syntax "example.com/regexp/syntax"
+
+type onePassInst struct {
+	syntax.Inst
+	Next []int
+}
+
+func Check() bool {
+	original := []syntax.Inst{{Rune: []rune{'a'}}}
+	prog := make([]onePassInst, len(original))
+	for i, inst := range original {
+		prog[i] = onePassInst{Inst: inst}
+	}
+	p := &prog[0]
+	return p.MatchRune('a')
+}
+
+func CheckDirectImportedIndex() bool {
+	prog := syntax.NewProg()
+	inst := &prog.Inst[0]
+	return inst.MatchRune('a')
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const depArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6-embedded-imported-pointer-method/example.com/regexp/syntax.a") ?? "");
+    const rootArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6-embedded-imported-pointer-method/example.com/root.a") ?? "");
+    const depModule = await importArtifactJavaScript(depArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const rootModule = await importArtifactJavaScript(rootArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const importsByPath: Record<string, unknown> = {};
+    const dep = await depModule.instantiateGoJrPackage({}, { importsByPath });
+    expect(dep.diagnostics).toEqual([]);
+    importsByPath["example.com/regexp/syntax"] = dep.package;
+    const root = await rootModule.instantiateGoJrPackage({}, { importsByPath });
+    expect(root.diagnostics).toEqual([]);
+    expect(await (root.package.Check as () => Promise<boolean>)()).toBe(true);
+    expect(await (root.package.CheckDirectImportedIndex as () => Promise<boolean>)()).toBe(true);
+  });
+
   test("generates make for imported named slice types through package descriptors", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
@@ -4872,14 +5027,24 @@ type Value struct{}
 func TypeOf(i any) Type
 func ValueOf(i any) Value
 func (v Value) IsValid() bool
+func (v Value) CanInterface() bool
+func (v Value) CanAddr() bool
+func (v Value) CanSet() bool
 func (v Value) IsNil() bool
 func (v Value) Kind() Kind
 func (v Value) Type() Type
 func (v Value) Field(i int) Value
+func (v Value) NumField() int
+func (v Value) Elem() Value
 func (v Value) Interface() any
 func (v Value) String() string
 func (v Value) Int() int64
+func (v Value) Uint() uint64
+func (v Value) Float() float64
 func (v Value) Bool() bool
+func (v Value) Len() int
+func (v Value) Index(i int) Value
+func (v Value) UnsafePointer() any
 `
         }]
       },
@@ -4904,6 +5069,28 @@ func ReflectValueBasics() (bool, bool, bool, string, int64, bool, string, bool) 
 	count := v.Field(1)
 	flag := v.Field(2)
 	return invalid.IsValid(), nilSlice.IsNil(), v.Kind() == reflect.Struct, v.Type().Name(), count.Int(), flag.Bool(), name.String(), name.Interface() == "ivy"
+}
+
+func ReflectUnsafePointerNonZero() bool {
+	x := 10
+	return reflect.ValueOf(&x).UnsafePointer() != nil
+}
+
+func ReflectElemPointerInt() int64 {
+	x := int64(31)
+	return reflect.ValueOf(&x).Elem().Int()
+}
+
+func ReflectReadOnlyExtras() (bool, bool, int, int64, uint64, float64) {
+	xs := []int64{41, 42}
+	u := uint64(12)
+	f := 2.5
+	v := reflect.ValueOf(xs)
+	return v.CanInterface(), v.CanAddr(), v.Len(), v.Index(1).Int(), reflect.ValueOf(u).Uint(), reflect.ValueOf(f).Float()
+}
+
+func ReflectValueNumField() int {
+	return reflect.ValueOf(Thing{Name: "ivy", Count: 7, Flag: true}).NumField()
 }
 `
       }]
@@ -4931,6 +5118,17 @@ func ReflectValueBasics() (bool, bool, bool, string, int64, bool, string, bool) 
       "ivy",
       true
     ]);
+    expect(await (pkg.ReflectUnsafePointerNonZero as () => Promise<boolean>)()).toBe(true);
+    expect(await (pkg.ReflectElemPointerInt as () => Promise<bigint>)()).toBe(31n);
+    expect(await (pkg.ReflectReadOnlyExtras as () => Promise<[boolean, boolean, bigint, bigint, bigint, number]>)()).toEqual([
+      true,
+      false,
+      2n,
+      42n,
+      12n,
+      2.5
+    ]);
+    expect(await (pkg.ReflectValueNumField as () => Promise<bigint>)()).toBe(3n);
   });
 
   test("erases generated generic function instantiations to reusable functions", async () => {

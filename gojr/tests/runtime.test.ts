@@ -3681,6 +3681,41 @@ env.stack.elements[0].(*Scope).Map[3].Value()
     expect(result.value).toBe("ok");
   });
 
+  test("preserves Stage 1 interface slice elements for map mutation through type assertions", async () => {
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/iface-slice-map/main.go",
+      source: `package main
+
+type Elem interface { IsElem() }
+type Value interface { Value() string }
+type Item struct { name string }
+func (i *Item) Value() string { return i.name }
+type Scope struct { Map map[int]Value }
+func (s *Scope) IsElem() {}
+type Stack struct { elements []Elem }
+func (s *Stack) Push(e Elem) { s.elements = append(s.elements, e) }
+func NewStack() *Stack { return &Stack{elements: make([]Elem, 0)} }
+type Env struct { stack *Stack }
+func NewEnv() *Env {
+  env := &Env{stack: NewStack()}
+  env.stack.Push(&Scope{Map: make(map[int]Value)})
+  return env
+}
+func (env *Env) Add(k int, v Value) {
+  env.stack.elements[0].(*Scope).Map[k] = v
+}
+func main() {
+  env := NewEnv()
+  env.Add(3, &Item{name:"ok"})
+  print(env.stack.elements[0].(*Scope).Map[3].Value() + "\\n")
+}
+`
+    }]);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output.join("")).toBe("ok\n");
+  });
+
   test("mutates package-local global scope maps through constructor methods", async () => {
     const result = await runMainSourcePackageFiles([{
       filename: "/workspace/envbugmain/main.go",
@@ -4075,6 +4110,10 @@ func main() {
   print(b.String() + "\\n")
   b.WriteByte('!')
   print(b.String() + "\\n")
+  b.WriteRune('&')
+  b.WriteRune('<')
+  b.WriteRune('+')
+  print(b.String() + "\\n")
 }
 `
     }], {
@@ -4082,7 +4121,7 @@ func main() {
     });
 
     expect(result.diagnostics).toEqual([]);
-    expect(result.output).toEqual(["ab\n", "ab!\n"]);
+    expect(result.output).toEqual(["ab\n", "ab!\n", "ab!&<+\n"]);
   });
 
   test("shares standard iter type identity across source-built maps and slices", async () => {
@@ -4247,6 +4286,111 @@ func TestReadRuneTuple(t *testing.T) {
   r, _, err := h.stream.ReadRune()
   if r != 97 || err != nil {
     t.Fatalf("ReadRune() = %v, %v", r, err)
+  }
+}
+`
+        }],
+        packageCacheParent,
+        testVerbose: true
+      });
+
+      expect(result.diagnostics).toEqual([]);
+      expect(result.output.join("")).toContain("PASS");
+    } finally {
+      rmSync(packageCacheParent, { recursive: true, force: true });
+    }
+  });
+
+  test("matches backtracking regular expressions compiled from cached standard-library regexp", async () => {
+    const packageCacheParent = mkdtempSync(join(tmpdir(), "gojr-runtime-test-cache-"));
+    const dotPattern = String.raw`^[.]$|^([.][^'#:;\\~@\[\]{}\^|"()%.0-9,][^'#:;\\~@\[\]{}\^|"()%.,*+\-]*)+$|^[^'#:;\\~@\[\]{}\^|"()%.0-9,][^'#:;\\~@\[\]{}\^|"()%.,*+\-]*([.][^'#:;\\~@\[\]{}\^|"()%.0-9,][^'#:;\\~@\[\]{}\^|"()%.,*+\-]*)+$`;
+    const symbolPattern = String.raw`^[#?]?[^#?':;\\~@\[\]{}\^|"()%0-9,&][^'#:;\\~@\[\]{}\^|"()%,&*\-]*[:]?$`;
+    const builtinPattern = String.raw`^(\+\+|\-\-|\+=|\-=|=|==|:=|\+|\-|\*|<|>|<=|>=|<-|->|\*=|/=|\*\*|!|!=|<!|&&|\|\|)$`;
+    const decimalPattern = String.raw`^-?[0-9][_0-9]*$`;
+    const boolPattern = String.raw`^(true|false)$`;
+    const uint64Pattern = String.raw`^(0x|0o)?[0-9a-fA-F]+ULL$`;
+    const hexPattern = String.raw`^0x[0-9a-fA-F]+$`;
+    const octPattern = String.raw`^0o[0-7]+$`;
+    const binaryPattern = String.raw`^0b[01]+$`;
+    const infPattern = String.raw`^(-|\+)?[Ii]nf$`;
+    const floatPattern = String.raw`^-?([0-9]+[0-9_]*\.[0-9_]*)$|^-?(\.[0-9]+[0-9_]*)$|^-?([0-9]+[0-9_]*(\.[0-9_]*)?[eE]([-+]?[0-9]+[0-9_]*))$`;
+    try {
+      const result = await testSourceFilesWithPackagesOnNode({
+        importPath: "example.com/regressregexp",
+        packageName: "regressregexp",
+        files: [{
+          filename: "regexp_test.go",
+          source: `package regressregexp
+
+import (
+  "regexp"
+  "testing"
+)
+
+func TestBacktrackingPattern(t *testing.T) {
+  dot := regexp.MustCompile(${JSON.stringify(dotPattern)})
+  if !dot.MatchString("a.b") {
+    t.Fatalf("expected a.b to match")
+  }
+  if dot.MatchString("defmac") {
+    t.Fatalf("expected defmac not to match")
+  }
+  if dot.MatchString(")") {
+    t.Fatalf("expected close paren not to match")
+  }
+
+  sym := regexp.MustCompile(${JSON.stringify(symbolPattern)})
+  if !sym.MatchString("defmac") {
+    t.Fatalf("expected defmac to match")
+  }
+  if !sym.MatchString("range") {
+    t.Fatalf("expected range to match")
+  }
+  if sym.MatchString("&") {
+    t.Fatalf("expected ampersand not to match")
+  }
+  if sym.MatchString(")") {
+    t.Fatalf("expected close paren not to match")
+  }
+
+  builtin := regexp.MustCompile(${JSON.stringify(builtinPattern)})
+  if builtin.MatchString("defmac") {
+    t.Fatalf("expected defmac not to match builtin op")
+  }
+  if !builtin.MatchString("<") || !builtin.MatchString("+") || !builtin.MatchString("&&") {
+    t.Fatalf("expected operator to match builtin op")
+  }
+
+  decimal := regexp.MustCompile(${JSON.stringify(decimalPattern)})
+  if !decimal.MatchString("0") || decimal.MatchString("defmac") {
+    t.Fatalf("decimal regex mismatch")
+  }
+
+  cascade := []*regexp.Regexp{
+    regexp.MustCompile(${JSON.stringify(boolPattern)}),
+    regexp.MustCompile(${JSON.stringify(uint64Pattern)}),
+    decimal,
+    regexp.MustCompile(${JSON.stringify(hexPattern)}),
+    regexp.MustCompile(${JSON.stringify(octPattern)}),
+    regexp.MustCompile(${JSON.stringify(binaryPattern)}),
+    regexp.MustCompile(${JSON.stringify(floatPattern)}),
+    regexp.MustCompile(${JSON.stringify(infPattern)}),
+    dot,
+    builtin,
+    sym,
+  }
+  atoms := []string{"defmac", "range", "key", "value", "myhash", "&", "body", "let", "n", "len", "for", "def", "i", "0", "<", "+", "1", "begin", "mdef", "quote", "hpair"}
+  for _, atom := range atoms {
+    matched := false
+    for _, re := range cascade {
+      if re.MatchString(atom) {
+        matched = true
+        break
+      }
+    }
+    if !matched && atom != "&" {
+      t.Fatalf("expected some lexer regex to match %q", atom)
+    }
   }
 }
 `
@@ -4540,6 +4684,16 @@ d = c
 return d[0], d[1], d[2], d[3], len(d), cap(d)
 `);
     expect(result.values).toEqual([0n, 0n, 0n, 7n, 4n, 5n]);
+  });
+
+  test("converts integer values to single-rune strings", async () => {
+    const result = await expectRuns(`
+r := rune('&')
+b := byte('<')
+i := 43
+return string(r), string(b), string(i)
+`);
+    expect(result.values).toEqual(["&", "<", "+"]);
   });
 
   test("externalizes sparse zero arrays with materialized zero elements", async () => {
@@ -5844,6 +5998,26 @@ return len(s), cap(s), len(grown), cap(grown), grown[0], grown[1], grown[3], aga
 `);
 
     expect(result.values).toEqual([2n, 5n, 5n, 5n, 7n, 0n, 11n, 11n]);
+  });
+
+  test("preserves Stage 1 non-byte slice backing when reslicing to capacity", async () => {
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/sliceback/main.go",
+      source: `package main
+
+func main() {
+  s := make([]uint32, 2, 8)
+  s[0] = 7
+  grown := s[:6]
+  grown[5] = 99
+  again := s[:6]
+  print(len(s), ":", cap(s), ":", len(grown), ":", cap(grown), ":", grown[0], ":", grown[1], ":", again[5], "\\n")
+}
+`
+    }]);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output.join("")).toBe("2:8:6:8:7:0:99\n");
   });
 
   test("supports len and cap on pointers to arrays", async () => {

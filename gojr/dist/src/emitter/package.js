@@ -762,7 +762,7 @@ function hoistedGotoLocals(statements) {
                     out.set(name, expressionTypeText(statement.values[index], emptyExpressionEnv));
             }
         }
-        if (statement.kind === "VarDecl") {
+        if (statement.kind === "ConstDecl" || statement.kind === "VarDecl") {
             for (const declaration of statement.declarations) {
                 if (declaration.name !== "_")
                     out.set(declaration.name, declarationTypeText(declaration));
@@ -772,6 +772,12 @@ function hoistedGotoLocals(statements) {
             for (const [index, name] of statement.statement.names.entries()) {
                 if (name !== "_")
                     out.set(name, expressionTypeText(statement.statement.values[index], emptyExpressionEnv));
+            }
+        }
+        if (statement.kind === "LabeledStatement" && (statement.statement?.kind === "ConstDecl" || statement.statement?.kind === "VarDecl")) {
+            for (const declaration of statement.statement.declarations) {
+                if (declaration.name !== "_")
+                    out.set(declaration.name, declarationTypeText(declaration));
             }
         }
     }
@@ -935,7 +941,8 @@ function emitLocalDeclarationStatement(ctx, statement, env, indent) {
         for (const declaration of group) {
             if (declaration.name === "_")
                 continue;
-            const name = freshLocalName(declaration.name, localIndex++, env);
+            const existing = env.declaredLocals.has(declaration.name) ? env.locals.get(declaration.name) : undefined;
+            const name = existing ?? freshLocalName(declaration.name, localIndex++, env);
             const declarationEnv = {
                 ...env,
                 ...(declaration.iotaIndex !== undefined ? { iotaValue: declaration.iotaIndex } : {})
@@ -952,9 +959,14 @@ function emitLocalDeclarationStatement(ctx, statement, env, indent) {
             if (typeText)
                 env.localTypes.set(declaration.name, typeText);
             const value = valueForTargetType(rawValue, typeText, expressionTypeText(effectiveValue, declarationEnv), declarationEnv);
-            env.locals.set(declaration.name, name);
-            env.declaredLocals.add(declaration.name);
-            lines.push(`${indent}${keyword} ${name} = ${value};`);
+            if (existing) {
+                lines.push(`${indent}${name} = ${value};`);
+            }
+            else {
+                env.locals.set(declaration.name, name);
+                env.declaredLocals.add(declaration.name);
+                lines.push(`${indent}${keyword} ${name} = ${value};`);
+            }
         }
     }
     return lines;
@@ -2399,9 +2411,10 @@ function splitTopLevelTypes(text) {
     return out;
 }
 function directSelectorTypePackagePath(typeText, facts) {
-    let text = typeText.trim();
-    while (text.startsWith("*"))
-        text = text.slice(1).trim();
+    const text = typeTextPackagePathCore(typeText);
+    const fullPath = fullImportPathTypePrefix(text, facts);
+    if (fullPath)
+        return fullPath;
     const match = /^([A-Za-z_][A-Za-z0-9_]*)\.[A-Za-z_][A-Za-z0-9_]*(?:\[.*\])?$/.exec(text);
     if (!match)
         return undefined;
@@ -2608,6 +2621,9 @@ function valueForTargetType(value, targetType, sourceType, env) {
         return `__gojrConvertDynamicType(__gojrTypeArg(__gojrTypeArgs, ${JSON.stringify(staticTargetType)}), ${value})`;
     }
     const resolvedTargetType = targetType ? resolveUnderlyingTypeTextInEnv(targetType, env) : undefined;
+    if (staticTargetType && resolvedTargetType && isNilAssignableConcreteTypeText(resolvedTargetType)) {
+        return `__gojrConvertNilable(${JSON.stringify(staticTargetType)}, ${value})`;
+    }
     if (staticTargetType &&
         resolvedTargetType &&
         staticTargetType !== resolvedTargetType &&
@@ -3131,16 +3147,39 @@ function genericTypeArgumentsFromTypeText(typeText) {
     return splitTopLevelTypes(trimmed.slice(open + 1, close));
 }
 function packagePathForTypeText(typeText, env) {
-    let trimmed = typeText?.trim();
-    if (!trimmed)
+    const base = typeTextPackagePathCore(typeText);
+    if (!base)
         return undefined;
-    while (trimmed.startsWith("*"))
-        trimmed = trimmed.slice(1).trim();
-    const base = genericBaseTypeText(trimmed);
+    const fullPath = fullImportPathTypePrefix(base, env.facts);
+    if (fullPath)
+        return fullPath;
     const dot = base.indexOf(".");
     if (dot <= 0)
         return undefined;
     return env.facts.imports.get(base.slice(0, dot));
+}
+function typeTextPackagePathCore(typeText) {
+    let text = typeText?.trim() ?? "";
+    while (text.startsWith("..."))
+        text = text.slice(3).trim();
+    while (text.startsWith("*"))
+        text = text.slice(1).trim();
+    while (text.startsWith("[]"))
+        text = text.slice(2).trim();
+    while (/^\[[^\]]+\]/.test(text) && !text.startsWith("[]"))
+        text = text.replace(/^\[[^\]]+\]/, "").trim();
+    return genericBaseTypeText(text);
+}
+function fullImportPathTypePrefix(typeText, facts) {
+    const dot = typeText.lastIndexOf(".");
+    if (dot <= 0)
+        return undefined;
+    const prefix = typeText.slice(0, dot);
+    for (const importPath of facts.imports.values()) {
+        if (prefix === importPath)
+            return importPath;
+    }
+    return prefix.includes("/") ? prefix : undefined;
 }
 function methodCallToJs(ctx, expression, env, methodKey) {
     const callee = expression.callee;
@@ -4384,7 +4423,8 @@ function resolveUnderlyingTypeText(typeText, facts) {
     return current;
 }
 function isNilAssignableConcreteTypeText(typeText) {
-    return typeText.startsWith("*") ||
+    return typeText === "unsafe.Pointer" ||
+        typeText.startsWith("*") ||
         typeText.startsWith("[]") ||
         typeText.startsWith("map[") ||
         typeText.startsWith("chan ") ||
@@ -4684,8 +4724,19 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  }",
         "  return String(left) + String(right);",
         "}",
+        "function __gojrStringFromRune(value) {",
+        "  value = __gojrUnwrapNamed(__gojrUnwrapInterface(value));",
+        "  let codepoint;",
+        "  if (typeof value === \"bigint\") codepoint = value;",
+        "  else if (typeof value === \"number\") codepoint = BigInt(Math.trunc(value));",
+        "  else codepoint = BigInt(value);",
+        "  if (codepoint < 0n || codepoint > 0x10ffffn) return \"\\ufffd\";",
+        "  return String.fromCodePoint(Number(codepoint));",
+        "}",
         "function __gojrStringFrom(value) {",
         "  if (value && value.__gojrRawString === true) return value;",
+        "  value = __gojrUnwrapNamed(__gojrUnwrapInterface(value));",
+        "  if (typeof value === \"bigint\" || typeof value === \"number\") return __gojrStringFromRune(value);",
         "  if (value instanceof Uint8Array) return __gojrStringFromBytes(value);",
         "  if (ArrayBuffer.isView(value)) return __gojrStringFromBytes(new Uint8Array(value.buffer, value.byteOffset, value.byteLength));",
         "  if (Array.isArray(value)) return __gojrStringFromBytes(Uint8Array.from(value, (item) => Number(item) & 255));",
@@ -4885,6 +4936,33 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  try { Object.defineProperty(value, \"__gojrCap\", { value: Math.max(0, Number(capacity)), configurable: true }); } catch { }",
         "  return value;",
         "}",
+        "function __gojrMakeArraySlice(elemType, length = 0, capacity = length) {",
+        "  const len = Math.max(0, Number(length));",
+        "  const cap = Math.max(len, Number(capacity));",
+        "  const backing = Array.from({ length: cap }, () => __gojrZero(elemType || \"any\"));",
+        "  return __gojrArraySliceView(backing, 0, len, cap, elemType || \"any\");",
+        "}",
+        "function __gojrArraySliceView(backing, offset, length, capacity, elemType = \"any\") {",
+        "  const base = Array.isArray(backing) ? backing : [];",
+        "  const start = Math.max(0, Number(offset));",
+        "  const len = Math.max(0, Number(length));",
+        "  const cap = Math.max(len, Number(capacity));",
+        "  while (base.length < start + cap) base.push(__gojrZero(elemType || \"any\"));",
+        "  const view = new Array(len);",
+        "  Object.defineProperty(view, \"__gojrSliceBacking\", { value: base, configurable: true });",
+        "  Object.defineProperty(view, \"__gojrSliceOffset\", { value: start, configurable: true });",
+        "  Object.defineProperty(view, \"__gojrSliceElemType\", { value: elemType || \"any\", configurable: true });",
+        "  Object.defineProperty(view, \"__gojrCap\", { value: cap, configurable: true });",
+        "  for (let index = 0; index < len; index += 1) {",
+        "    Object.defineProperty(view, index, {",
+        "      get() { return base[start + index]; },",
+        "      set(next) { base[start + index] = next; },",
+        "      enumerable: true,",
+        "      configurable: true",
+        "    });",
+        "  }",
+        "  return view;",
+        "}",
         "function __gojrArrayLiteral(typeName, elemType, entries) {",
         "  const resolved = [];",
         "  let nextIndex = 0;",
@@ -4902,7 +4980,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  }",
         "  const out = Array.from({ length }, () => __gojrZero(elemType));",
         "  for (const [index, value] of resolved) out[index] = value;",
-        "  return __gojrSetCap(out, length);",
+        "  return String(typeName || \"\").trim().startsWith(\"[]\") ? __gojrArraySliceView(out, 0, length, length, elemType) : __gojrSetCap(out, length);",
         "}",
         "function __gojrConvertArray(typeName, elemType, value) {",
         "  const length = __gojrFixedArrayLength(typeName) ?? __gojrLen(value);",
@@ -5202,7 +5280,25 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  const target = object ?? [];",
         "  if (target && target.__gojrByteView === true) return __gojrSetCap(target.subarray(low, high), capHigh - low);",
         "  if (__gojrIsString(target)) return __gojrStringFromBytes(__gojrStringBytes(target).slice(low, high));",
-        "  const sliced = typeof target === \"string\" ? target.slice(low, high) : (ArrayBuffer.isView(target) && typeof target.subarray === \"function\" ? target.subarray(low, high) : (typeof target.slice === \"function\" ? target.slice(low, high) : []));",
+        "  let sliced;",
+        "  if (typeof target === \"string\") {",
+        "    sliced = target.slice(low, high);",
+        "  } else if (ArrayBuffer.isView(target) && target instanceof Uint8Array) {",
+        "    const byteLength = Math.max(0, high - low);",
+        "    const byteOffset = target.byteOffset + low;",
+        "    if (high > capHigh || byteOffset + byteLength > target.buffer.byteLength) throw new RangeError(\"slice bounds out of range\");",
+        "    sliced = new Uint8Array(target.buffer, byteOffset, byteLength);",
+        "  } else if (ArrayBuffer.isView(target) && typeof target.subarray === \"function\") {",
+        "    sliced = target.subarray(low, high);",
+        "  } else if (Array.isArray(target)) {",
+        "    const backing = target.__gojrSliceBacking || target;",
+        "    const baseOffset = Number(target.__gojrSliceOffset || 0);",
+        "    const elemType = target.__gojrSliceElemType || \"any\";",
+        "    if (high > capHigh || capHigh > __gojrCap(target)) throw new RangeError(\"slice bounds out of range\");",
+        "    sliced = __gojrArraySliceView(backing, baseOffset + low, high - low, capHigh - low, elemType);",
+        "  } else {",
+        "    sliced = typeof target.slice === \"function\" ? target.slice(low, high) : [];",
+        "  }",
         "  return typeof sliced === \"string\" ? sliced : __gojrSetCap(sliced, capHigh - low);",
         "}",
         "function __gojrConvertSlice(typeName, value) {",
@@ -5227,6 +5323,12 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  if (value && value.__gojrTypedNil === true) return __gojrTypedNil(typeName);",
         "  return value;",
         "}",
+        "function __gojrMakeByteSlice(length = 0, capacity = length) {",
+        "  const len = Math.max(0, Number(length));",
+        "  const cap = Math.max(len, Number(capacity));",
+        "  const backing = new Uint8Array(cap);",
+        "  return __gojrSetCap(new Uint8Array(backing.buffer, 0, len), cap);",
+        "}",
         "function __gojrMake(typeName, length = 0, capacity = length) {",
         "  const text = String(typeName || \"\").trim();",
         "  if (text.startsWith(\"map[\")) { const kv = __gojrMapKeyValueTypes(text); return __gojrMap(new Map(), __gojrZero(kv && kv.valueType || \"any\"), kv && kv.keyType || \"any\", kv && kv.valueType || \"any\"); }",
@@ -5234,9 +5336,9 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  if (text.startsWith(\"chan<-\")) return __gojrMakeChan(text.slice(6).trim(), capacity);",
         "  if (text.startsWith(\"<-chan\")) return __gojrMakeChan(text.slice(6).trim(), capacity);",
         "  const elem = __gojrSliceElementType(text);",
-        "  if (elem !== undefined) return elem === \"byte\" || elem === \"uint8\" ? __gojrSetCap(new Uint8Array(length), capacity) : __gojrSetCap(Array.from({ length }, () => __gojrZero(elem)), capacity);",
+        "  if (elem !== undefined) return elem === \"byte\" || elem === \"uint8\" ? __gojrMakeByteSlice(length, capacity) : __gojrMakeArraySlice(elem, length, capacity);",
         "  const descriptor = __gojrDescriptorForTypeName(text);",
-        "  if (descriptor && descriptor.kind === \"slice\") return descriptor.elem === \"byte\" || descriptor.elem === \"uint8\" ? __gojrSetCap(new Uint8Array(length), capacity) : __gojrSetCap(Array.from({ length }, () => __gojrZero(descriptor.elem || \"any\")), capacity);",
+        "  if (descriptor && descriptor.kind === \"slice\") return descriptor.elem === \"byte\" || descriptor.elem === \"uint8\" ? __gojrMakeByteSlice(length, capacity) : __gojrMakeArraySlice(descriptor.elem || \"any\", length, capacity);",
         "  if (descriptor && descriptor.kind === \"map\") return __gojrMap(new Map(), __gojrZero(descriptor.elem || \"any\"), descriptor.key || \"any\", descriptor.elem || \"any\");",
         "  if (descriptor && descriptor.kind === \"chan\") return __gojrMakeChan(descriptor.elem || \"any\", capacity);",
         "  throw new Error(`GOJR_RUNTIME001: cannot make ${text}`);",
@@ -5263,16 +5365,46 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  return undefined;",
         "}",
         "function __gojrAppend(slice, ...values) {",
+        "  if (slice && slice.__gojrTypedNil === true) slice = [];",
         "  if (slice instanceof Uint8Array) {",
-        "    const out = new Uint8Array(slice.length + values.length);",
-        "    out.set(slice, 0);",
-        "    for (let index = 0; index < values.length; index += 1) out[slice.length + index] = Number(values[index]) & 255;",
-        "    return out;",
+        "    const oldLen = slice.length;",
+        "    const newLen = oldLen + values.length;",
+        "    let out;",
+        "    let outCap;",
+        "    if (newLen <= __gojrCap(slice) && slice.byteOffset + newLen <= slice.buffer.byteLength) {",
+        "      out = new Uint8Array(slice.buffer, slice.byteOffset, newLen);",
+        "      outCap = __gojrCap(slice);",
+        "    } else {",
+        "      const newCap = Math.max(newLen, oldLen * 2, 1);",
+        "      const backing = new Uint8Array(newCap);",
+        "      backing.set(slice, 0);",
+        "      out = new Uint8Array(backing.buffer, 0, newLen);",
+        "      outCap = newCap;",
+        "    }",
+        "    for (let index = 0; index < values.length; index += 1) out[oldLen + index] = Number(values[index]) & 255;",
+        "    return __gojrSetCap(out, outCap);",
         "  }",
         "  if (ArrayBuffer.isView(slice)) {",
         "    return Array.from(slice).concat(values);",
         "  }",
-        "  return (Array.isArray(slice) ? slice : []).concat(values);",
+        "  if (Array.isArray(slice)) {",
+        "    const oldLen = __gojrLen(slice);",
+        "    const newLen = oldLen + values.length;",
+        "    const oldCap = __gojrCap(slice);",
+        "    const elemType = slice.__gojrSliceElemType || \"any\";",
+        "    const baseOffset = Number(slice.__gojrSliceOffset || 0);",
+        "    let backing = slice.__gojrSliceBacking;",
+        "    let outCap = oldCap;",
+        "    if (!backing || newLen > oldCap) {",
+        "      outCap = Math.max(newLen, oldLen * 2, 1);",
+        "      backing = Array.from({ length: outCap }, (_item, index) => index < oldLen ? slice[index] : __gojrZero(elemType));",
+        "      for (let index = 0; index < values.length; index += 1) backing[oldLen + index] = values[index];",
+        "      return __gojrArraySliceView(backing, 0, newLen, outCap, elemType);",
+        "    }",
+        "    for (let index = 0; index < values.length; index += 1) backing[baseOffset + oldLen + index] = values[index];",
+        "    return __gojrArraySliceView(backing, baseOffset, newLen, outCap, elemType);",
+        "  }",
+        "  return values.length === 0 ? [] : __gojrArraySliceView(values.slice(), 0, values.length, values.length, \"any\");",
         "}",
         "function __gojrCopy(dst, src) {",
         "  if (__gojrIsString(src)) src = __gojrRawBytesFromGoString(src);",
@@ -5321,7 +5453,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "}",
         "class __GoJrPanic extends Error {",
         "  constructor(value) {",
-        "    super(`panic: ${String(value)}`);",
+        "    super(`panic: ${__gojrPanicString(value)}`);",
         "    this.name = \"GoJuniorPanic\";",
         "    this.value = value;",
         "    this.__gojrPanic = true;",
@@ -5329,6 +5461,29 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "}",
         "function __gojrPanic(value) {",
         "  throw value && value.__gojrPanic === true ? value : new __GoJrPanic(value);",
+        "}",
+        "function __gojrPanicString(value) {",
+        "  if (value instanceof Error) return value.message;",
+        "  return __gojrDisplayValueString(value);",
+        "}",
+        "function __gojrDisplayValueString(value, seen = new Set()) {",
+        "  if (value && value.__gojrInterface === true) return __gojrDisplayValueString(value.value, seen);",
+        "  if (value && value.__gojrPointer === true) return `&${__gojrDisplayValueString(__gojrDerefIfPointer(value), seen)}`;",
+        "  if (value && value.__gojrTypedNil === true) return `nil:${value.__gojrType || \"\"}`;",
+        "  if (value === null || value === undefined) return \"nil\";",
+        "  if (__gojrIsString(value)) return typeof value === \"string\" ? value : new TextDecoder().decode(__gojrStringBytes(value));",
+        "  if (typeof value === \"bigint\") return `${value}n`;",
+        "  if (typeof value === \"number\" || typeof value === \"boolean\") return JSON.stringify(value);",
+        "  if (value instanceof Uint8Array) return `bytes:${Array.from(value).join(\",\")}`;",
+        "  if (Array.isArray(value)) return `[${value.map((item) => __gojrDisplayValueString(item, seen)).join(\",\")}]`;",
+        "  if (value instanceof Map) return `map:${Array.from(value.entries()).map(([key, item]) => `${__gojrDisplayValueString(key, seen)}:${__gojrDisplayValueString(item, seen)}`).join(\",\")}`;",
+        "  if (typeof value === \"object\") {",
+        "    if (seen.has(value)) return \"<cycle>\";",
+        "    seen.add(value);",
+        "    const keys = Object.keys(value).filter((key) => !key.startsWith(\"__gojr\")).sort();",
+        "    return `{${keys.map((key) => `${key}:${__gojrDisplayValueString(value[key], seen)}`).join(\",\")}}`;",
+        "  }",
+        "  return String(value);",
         "}",
         "function __gojrPrint(stdout, ...values) {",
         "  stdout(values.map((value) => String(value)).join(\"\"));",
@@ -5344,8 +5499,12 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "    const value = __gojrStringByteAt(object, Number(index));",
         "    return integerResult ? BigInt(value) : value;",
         "  }",
-        "  const value = object[index];",
-        "  if (integerResult || object instanceof Uint8Array || object instanceof Uint8ClampedArray || object instanceof Int8Array || object instanceof Uint16Array || object instanceof Int16Array || object instanceof Uint32Array || object instanceof Int32Array || object instanceof BigInt64Array || object instanceof BigUint64Array) return BigInt(value);",
+        "  const numericIndex = Number(index);",
+        "  const value = object[numericIndex];",
+        "  if (integerResult || object instanceof Uint8Array || object instanceof Uint8ClampedArray || object instanceof Int8Array || object instanceof Uint16Array || object instanceof Int16Array || object instanceof Uint32Array || object instanceof Int32Array || object instanceof BigInt64Array || object instanceof BigUint64Array) {",
+        "    if (value === undefined) throw new Error(`GOJR_RUNTIME001: index ${numericIndex} out of range [0:${__gojrLen(object)}]`);",
+        "    return BigInt(value);",
+        "  }",
         "  return value;",
         "}",
         "function __gojrSetIndex(object, index, value) {",
@@ -6603,17 +6762,32 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "    return null;",
         "  };",
         "}",
-        "function __gojrReflectValueOf(value, importsByPath = {}) {",
+        "function __gojrReflectValueOf(value, importsByPath = {}, typeName = undefined, pkgPath = undefined) {",
         "  const actual = value && value.__gojrInterface === true ? value.value : value;",
-        "  if (actual === null || actual === undefined) return { __gojrReflectValue: true, __gojrValid: false, __gojrValue: undefined, __gojrImportsByPath: importsByPath, __gojrMethods: __gojrReflectValueMethods };",
-        "  return { __gojrReflectValue: true, __gojrValid: true, __gojrValue: actual, __gojrImportsByPath: importsByPath, __gojrMethods: __gojrReflectValueMethods };",
+        "  const out = actual === null || actual === undefined",
+        "    ? { __gojrReflectValue: true, __gojrValid: false, __gojrValue: undefined, __gojrImportsByPath: importsByPath, __gojrMethods: __gojrReflectValueMethods }",
+        "    : { __gojrReflectValue: true, __gojrValid: true, __gojrValue: actual, __gojrImportsByPath: importsByPath, __gojrMethods: __gojrReflectValueMethods };",
+        "  if (typeName !== undefined) Object.defineProperty(out, \"__gojrReflectTypeName\", { value: typeName });",
+        "  if (pkgPath !== undefined) Object.defineProperty(out, \"__gojrReflectPkgPath\", { value: pkgPath });",
+        "  return out;",
         "}",
         "function __gojrReflectValueType(self) {",
         "  if (!self.__gojrValid) return null;",
-        "  return __gojrReflectTypeForTypeName(__gojrRuntimeTypeName(self.__gojrValue), self.__gojrImportsByPath, __gojrRuntimeTypePackagePath(self.__gojrValue));",
+        "  const typeName = self.__gojrReflectTypeName || __gojrRuntimeTypeName(self.__gojrValue);",
+        "  const pkgPath = self.__gojrReflectPkgPath !== undefined ? self.__gojrReflectPkgPath : __gojrRuntimeTypePackagePath(self.__gojrValue);",
+        "  return __gojrReflectTypeForTypeName(typeName, self.__gojrImportsByPath, pkgPath);",
+        "}",
+        "function __gojrReflectZeroValue(importsByPath = {}) {",
+        "  return { __gojrReflectValue: true, __gojrValid: false, __gojrValue: undefined, __gojrImportsByPath: importsByPath, __gojrMethods: __gojrReflectValueMethods };",
         "}",
         "const __gojrReflectValueMethods = {",
         "  IsValid: async (self) => Boolean(self.__gojrValid),",
+        "  CanInterface: async (self) => {",
+        "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.CanInterface on zero Value\");",
+        "    return true;",
+        "  },",
+        "  CanAddr: async (self) => Boolean(self && self.__gojrReflectSet),",
+        "  CanSet: async (self) => Boolean(self && self.__gojrReflectSet),",
         "  IsNil: async (self) => {",
         "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.IsNil on zero Value\");",
         "    const value = self.__gojrValue;",
@@ -6632,7 +6806,31 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "    const typ = __gojrReflectValueType(self);",
         "    const field = typ && (typ.__gojrDescriptor.fields || [])[Number(index)];",
         "    if (!field) throw new RangeError(\"reflect: Field index out of range\");",
-        "    return __gojrReflectValueOf(self.__gojrValue[field.name], self.__gojrImportsByPath);",
+        "    return __gojrReflectValueOf(__gojrGetField(self.__gojrValue, field.name), self.__gojrImportsByPath, field.type, field.pkgPath);",
+        "  },",
+        "  NumField: async (self) => {",
+        "    const typ = __gojrReflectValueType(self);",
+        "    const descriptor = typ && typ.__gojrDescriptor;",
+        "    if (!descriptor || descriptor.kind !== \"struct\") throw new TypeError(`reflect: call of Value.NumField on ${descriptor && descriptor.kind || \"invalid\"} Value`);",
+        "    return BigInt((descriptor.fields || []).length);",
+        "  },",
+        "  Elem: async (self) => {",
+        "    const typ = __gojrReflectValueType(self);",
+        "    const descriptor = typ && typ.__gojrDescriptor;",
+        "    const kind = descriptor && descriptor.kind || \"\";",
+        "    const value = self.__gojrValue;",
+        "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Elem on zero Value\");",
+        "    if (kind === \"ptr\") {",
+        "      if (value && value.__gojrTypedNil === true) return __gojrReflectZeroValue(self.__gojrImportsByPath);",
+        "      if (!__gojrPointerLike(value) || !value.__gojrPointer) throw new TypeError(\"reflect: Elem of invalid pointer Value\");",
+        "      const elemType = descriptor.elem || value.__gojrElemType || \"any\";",
+        "      return __gojrReflectValueOf(__gojrDeref(value), self.__gojrImportsByPath, elemType, descriptor.elemPkgPath || value.__gojrPkgPath);",
+        "    }",
+        "    if (kind === \"interface\") {",
+        "      const dynamic = value && value.__gojrInterface === true ? value.value : value;",
+        "      return dynamic === null || dynamic === undefined ? __gojrReflectZeroValue(self.__gojrImportsByPath) : __gojrReflectValueOf(dynamic, self.__gojrImportsByPath);",
+        "    }",
+        "    throw new TypeError(`reflect: call of Value.Elem on ${kind || \"invalid\"} Value`);",
         "  },",
         "  Interface: async (self) => {",
         "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Interface on zero Value\");",
@@ -6646,9 +6844,34 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Int on zero Value\");",
         "    return BigInt(self.__gojrValue);",
         "  },",
+        "  Uint: async (self) => {",
+        "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Uint on zero Value\");",
+        "    return BigInt.asUintN(64, BigInt(self.__gojrValue));",
+        "  },",
+        "  Float: async (self) => {",
+        "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Float on zero Value\");",
+        "    return Number(self.__gojrValue);",
+        "  },",
+        "  Complex: async (self) => {",
+        "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Complex on zero Value\");",
+        "    return __gojrToComplex(self.__gojrValue);",
+        "  },",
         "  Bool: async (self) => {",
         "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Bool on zero Value\");",
         "    return Boolean(self.__gojrValue);",
+        "  },",
+        "  Len: async (self) => {",
+        "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Len on zero Value\");",
+        "    return BigInt(__gojrLen(self.__gojrValue));",
+        "  },",
+        "  Index: async (self, index) => {",
+        "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Index on zero Value\");",
+        "    const typ = __gojrReflectValueType(self);",
+        "    const descriptor = typ && typ.__gojrDescriptor;",
+        "    const kind = descriptor && descriptor.kind || \"\";",
+        "    const elemType = descriptor && descriptor.elem || __gojrSliceElementRuntimeType(self.__gojrValue);",
+        "    const item = __gojrIndex(self.__gojrValue, Number(index), __gojrIntegerTypeName(elemType));",
+        "    return __gojrReflectValueOf(item, self.__gojrImportsByPath, kind === \"string\" ? \"uint8\" : elemType, descriptor && descriptor.elemPkgPath);",
         "  },",
         "  Pointer: async (self) => {",
         "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.Pointer on zero Value\");",
@@ -6658,6 +6881,15 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "    const kind = typ && typ.__gojrDescriptor && typ.__gojrDescriptor.kind || \"\";",
         "    if (kind === \"chan\" || kind === \"func\" || kind === \"map\" || kind === \"ptr\" || kind === \"slice\" || kind === \"unsafe.Pointer\" || __gojrPointerLike(value)) return __gojrRuntimeUintptrForValue(value);",
         "    throw new TypeError(`reflect: call of Value.Pointer on ${kind || \"invalid\"} Value`);",
+        "  },",
+        "  UnsafePointer: async (self) => {",
+        "    if (!self.__gojrValid) throw new TypeError(\"reflect: call of Value.UnsafePointer on zero Value\");",
+        "    const value = self.__gojrValue;",
+        "    const typ = __gojrReflectValueType(self);",
+        "    const kind = typ && typ.__gojrDescriptor && typ.__gojrDescriptor.kind || \"\";",
+        "    if (__gojrPointerLike(value)) return value;",
+        "    if (kind === \"chan\" || kind === \"func\" || kind === \"map\" || kind === \"ptr\" || kind === \"slice\" || kind === \"string\" || kind === \"unsafe.Pointer\") return __gojrRuntimeUintptrForValue(value);",
+        "    throw new TypeError(`reflect: call of Value.UnsafePointer on ${kind || \"invalid\"} Value`);",
         "  }",
         "};",
         "function __gojrBuiltinTypeName(typeName) {",
@@ -6791,8 +7023,24 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  }",
         "  return undefined;",
         "}",
-        "function __gojrNormalizeTypeIdentity(typeName) {",
+        "function __gojrCanonicalTypeText(typeName) {",
         "  let text = String(typeName || \"\").trim();",
+        "  for (;;) {",
+        "    if (!text.startsWith(\"(\") || !text.endsWith(\")\")) return text;",
+        "    let depth = 0;",
+        "    let wraps = true;",
+        "    for (let index = 0; index < text.length; index += 1) {",
+        "      const ch = text[index];",
+        "      if (ch === \"(\") depth += 1;",
+        "      else if (ch === \")\") depth -= 1;",
+        "      if (depth < 0 || (depth === 0 && index < text.length - 1)) { wraps = false; break; }",
+        "    }",
+        "    if (!wraps || depth !== 0) return text;",
+        "    text = text.slice(1, -1).trim();",
+        "  }",
+        "}",
+        "function __gojrNormalizeTypeIdentity(typeName) {",
+        "  let text = __gojrCanonicalTypeText(typeName);",
         "  if (text.startsWith(\"*\")) text = text.slice(1).trim();",
         "  const dot = text.lastIndexOf(\".\");",
         "  if (dot >= 0) text = text.slice(dot + 1);",
@@ -6984,7 +7232,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  return \"\";",
         "}",
         "function __gojrReceiverBaseType(typeName) {",
-        "  let name = String(typeName ?? \"\");",
+        "  let name = __gojrCanonicalTypeText(typeName);",
         "  if (name.startsWith(\"*\")) name = name.slice(1).trim();",
         "  const dot = name.lastIndexOf(\".\");",
         "  let base = dot >= 0 ? name.slice(dot + 1) : name;",
@@ -7315,7 +7563,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "}",
         "function __gojrValueMatchesType(value, typeText) {",
         "  if (value && value.__gojrInterface === true) value = value.value;",
-        "  const text = String(typeText || \"\").trim();",
+        "  const text = __gojrCanonicalTypeText(typeText);",
         "  if (text === \"any\" || text === \"interface{}\") return true;",
         "  if (text === \"nil\") return value === null || value === undefined || Boolean(value && value.__gojrTypedNil === true);",
         "  const descriptor = __gojrDescriptorForTypeName(text, __gojrActiveImportsByPath);",
@@ -7383,6 +7631,8 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  return __gojrDescriptorForTypeName(text, __gojrActiveImportsByPath, pkgPath)?.kind === \"interface\";",
         "}",
         "function __gojrPackagePathForTypeName(typeName, declaringImportPath = undefined) {",
+        "  const fullPath = __gojrFullImportPathForTypeName(typeName);",
+        "  if (fullPath) return fullPath;",
         "  const qualifier = __gojrLeadingTypeQualifier(typeName);",
         "  if (!qualifier) return declaringImportPath;",
         "  const declaringPackage = declaringImportPath ? __gojrImportedPackage(declaringImportPath) : undefined;",
@@ -7392,6 +7642,20 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines, fa
         "  const builtinPath = __gojrBuiltinImportPathForQualifier(qualifier);",
         "  if (builtinPath) return builtinPath;",
         "  return declaringImportPath;",
+        "}",
+        "function __gojrFullImportPathForTypeName(typeName) {",
+        "  let text = String(typeName || \"\").trim();",
+        "  while (text.startsWith(\"...\")) text = text.slice(3).trim();",
+        "  while (text.startsWith(\"*\")) text = text.slice(1).trim();",
+        "  while (text.startsWith(\"[]\")) text = text.slice(2).trim();",
+        "  while (/^\\[[^\\]]+\\]/.test(text) && !text.startsWith(\"[]\")) text = text.replace(/^\\[[^\\]]+\\]/, \"\").trim();",
+        "  const open = text.indexOf(\"[\");",
+        "  if (open > 0 && text.endsWith(\"]\") && !text.startsWith(\"map[\") && !text.startsWith(\"[\")) text = text.slice(0, open).trim();",
+        "  const dot = text.lastIndexOf(\".\");",
+        "  if (dot <= 0) return undefined;",
+        "  const prefix = text.slice(0, dot);",
+        "  for (const importPath of Object.values(__gojrImportPathsByQualifier || {})) if (prefix === importPath) return importPath;",
+        "  return prefix.includes(\"/\") ? prefix : undefined;",
         "}",
         "function __gojrLeadingTypeQualifier(typeName) {",
         "  let text = String(typeName || \"\").trim();",
