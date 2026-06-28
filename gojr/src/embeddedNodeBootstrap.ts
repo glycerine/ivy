@@ -281,7 +281,11 @@
   }
 
   function installNodeStdioHooks(embeddedRequire: EmbeddedRequire): void {
-    if (typeof root.__gojrReadSync === "function" && typeof root.__gojrWriteSync === "function") return;
+    if (
+      typeof root.__gojrReadSync === "function" &&
+      typeof root.__gojrWriteSync === "function" &&
+      typeof root.__gojrStatSync === "function"
+    ) return;
     let fs: AnyRecord;
     try {
       fs = embeddedRequire("node:fs");
@@ -309,6 +313,9 @@
     if (typeof root.__gojrWriteSync !== "function" && typeof fs.writeSync === "function") {
       root.__gojrWriteSync = (fd: number, buffer: Uint8Array, offset: number, length: number, position: number | null) =>
         fs.writeSync(fd, buffer, offset, length, position);
+    }
+    if (typeof root.__gojrStatSync !== "function" && typeof fs.statSync === "function") {
+      root.__gojrStatSync = (path: string) => fs.statSync(String(path ?? ""));
     }
   }
 

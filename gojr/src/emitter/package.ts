@@ -271,6 +271,13 @@ function intrinsicPackageOverrideLines(importPath: string): string[] {
   if (importPath === "crypto/internal/constanttime") {
     lines.push("  pkg[\"boolToUint8\"] = async (value) => __gojrBool(value) ? 1n : 0n;");
   }
+  if (importPath === "time") {
+    lines.push(
+      "  pkg[\"FixedZone\"] = async (name, offset) => __gojrTimeLocation(String(name ?? \"\"), offset);",
+      "  pkg[\"LoadLocation\"] = async (name) => __gojrTuple([String(name ?? \"\") === \"UTC\" && pkg[\"UTC\"] ? pkg[\"UTC\"] : __gojrTimeLocation(String(name ?? \"\")), null]);",
+      "  pkg[\"LoadLocationFromTZData\"] = async (name) => __gojrTuple([__gojrTimeLocation(String(name ?? \"\")), null]);"
+    );
+  }
   return lines;
 }
 
@@ -905,7 +912,7 @@ function emitGotoStateMachineStatements(
   }
   const hoisted = hoistedGotoLocals(statements);
   for (const [name, typeText] of hoisted.entries()) {
-    env.locals.set(name, safeLocalName(name, 0));
+    env.locals.set(name, freshLocalName(name, 0, env));
     env.declaredLocals.add(name);
     if (typeText) env.localTypes.set(name, typeText);
   }
@@ -1125,7 +1132,7 @@ function emitLocalDeclarationStatement(
     if (groupValues.some(Boolean)) inheritedValues = groupValues;
     for (const declaration of group) {
       if (declaration.name === "_") continue;
-      const name = safeLocalName(declaration.name, localIndex++);
+      const name = freshLocalName(declaration.name, localIndex++, env);
       const declarationEnv: ExpressionEmitEnv = {
         ...env,
         ...(declaration.iotaIndex !== undefined ? { iotaValue: declaration.iotaIndex } : {})
@@ -1234,7 +1241,7 @@ function emitRangeStatement(ctx: EmitterContext, statement: ForStatement, env: E
     const assignedPart = targetType ? valueForTargetType(part, targetType, undefined, loopEnv) : part;
     if (name !== undefined) {
       if (name === "_") return [];
-      const jsName = safeLocalName(name, index);
+      const jsName = freshLocalName(name, index, loopEnv);
       if (statement.range?.define || !loopEnv.locals.has(name)) {
         loopEnv.locals.set(name, jsName);
         loopEnv.declaredLocals.add(name);
@@ -1377,7 +1384,7 @@ function emitTypeSwitchBinding(
   const singleType = !clause.default && (clause.typeValues?.length ?? 0) === 1 ? clause.typeValues?.[0]?.text : undefined;
   const value = singleType ? `__gojrTypeAssert(${switchValue}, ${JSON.stringify(singleType)})` : switchValue;
   if (guard.define || !env.locals.has(guard.name)) {
-    const local = safeLocalName(guard.name, 0);
+    const local = freshLocalName(guard.name, 0, env);
     env.locals.set(guard.name, local);
     env.declaredLocals.add(guard.name);
     if (singleType) env.localTypes.set(guard.name, singleType);
@@ -1681,7 +1688,7 @@ function emitForHeaderStatement(
             return undefined;
           }
           const names = statement.names.map((goName, index) => {
-            const name = safeLocalName(goName, index);
+            const name = freshLocalName(goName, index, env);
             env.locals.set(goName, name);
             env.declaredLocals.add(goName);
             return name;
@@ -1703,7 +1710,7 @@ function emitForHeaderStatement(
           if (!goName || !expression) return undefined;
           const value = expressionToJs(ctx, expression, env);
           if (!value) return undefined;
-          const name = safeLocalName(goName, index);
+          const name = freshLocalName(goName, index, env);
           env.locals.set(goName, name);
           env.declaredLocals.add(goName);
           const typeText = expressionTypeText(expression, env);
@@ -1801,7 +1808,7 @@ function bindShortNames(names: string[], tuple: string, env: ExpressionEmitEnv, 
       lines.push(`${indent}${existing} = ${valueForTargetType(`${tuple}[${index}]`, env.localTypes.get(name), sourceTypes[index], env)};`);
       continue;
     }
-    const local = safeLocalName(name, index);
+    const local = freshLocalName(name, index, env);
     env.locals.set(name, local);
     env.declaredLocals.add(name);
     const source = sourceTypes[index];
@@ -2936,7 +2943,7 @@ function functionLiteralToJs(ctx: EmitterContext, expression: FunctionLiteralExp
   const params: string[] = [];
   for (const [index, parameter] of expression.signature.parameters.entries()) {
     const goName = parameter.name && parameter.name !== "_" ? parameter.name : `__gojrArg${index}`;
-    const jsName = safeLocalName(goName, index);
+    const jsName = freshLocalName(goName, index, literalEnv);
     params.push(parameter.variadic ? `...${jsName}` : jsName);
     if (parameter.name && parameter.name !== "_") {
       literalEnv.locals.set(parameter.name, jsName);
@@ -2950,7 +2957,7 @@ function functionLiteralToJs(ctx: EmitterContext, expression: FunctionLiteralExp
   const resultLines: string[] = [];
   for (const [index, result] of expression.signature.results.entries()) {
     if (!result.name || result.name === "_") continue;
-    const name = safeLocalName(result.name, index);
+    const name = freshLocalName(result.name, index, literalEnv);
     literalEnv.locals.set(result.name, name);
     literalEnv.declaredLocals.add(result.name);
     literalEnv.localTypes.set(result.name, result.type.text);
@@ -2978,7 +2985,7 @@ function functionLiteralParameterCoercionLines(expression: FunctionLiteralExpres
   const lines: string[] = [];
   for (const [index, parameter] of expression.signature.parameters.entries()) {
     const goName = parameter.name && parameter.name !== "_" ? parameter.name : `__gojrArg${index}`;
-    const jsName = safeLocalName(goName, index);
+    const jsName = parameter.name && parameter.name !== "_" ? env.locals.get(parameter.name) ?? safeLocalName(goName, index) : safeLocalName(goName, index);
     if (parameter.variadic) {
       lines.push(`${indent}${jsName} = Array.from(${jsName}, (__gojrItem) => ${valueForTargetType("__gojrItem", parameter.type.text, parameter.type.text, env)});`);
     } else {
@@ -4554,6 +4561,16 @@ function safeLocalName(name: string, index: number): string {
   return `__gojrIdent_${encoded || "blank"}_${suffix}`;
 }
 
+function freshLocalName(name: string, index: number, env: ExpressionEmitEnv): string {
+  const base = safeLocalName(name, index);
+  const used = new Set(env.locals.values());
+  if (!used.has(base)) return base;
+  for (let suffix = 1; ; suffix += 1) {
+    const candidate = `${base}_${suffix}`;
+    if (!used.has(candidate)) return candidate;
+  }
+}
+
 const STAGE1_SHARED_SUPPORT_BINDINGS_PLACEHOLDER = "  // __GOJR_STAGE1_SHARED_SUPPORT_BINDINGS__";
 const STAGE1_SHARED_SUPPORT_START = "// __GOJR_STAGE1_SHARED_SUPPORT_START__";
 const STAGE1_SHARED_SUPPORT_END = "// __GOJR_STAGE1_SHARED_SUPPORT_END__";
@@ -5177,7 +5194,19 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "function __gojrConvertSlice(typeName, value) {",
     "  if (value === null || value === undefined) return __gojrTypedNil(typeName);",
     "  if (value && value.__gojrTypedNil === true) return __gojrTypedNil(typeName);",
+    "  const descriptor = __gojrDescriptorForTypeName(typeName);",
+    "  if (descriptor && descriptor.underlying && descriptor.underlying !== typeName && value && typeof value === \"object\") {",
+    "    __gojrDefineHiddenValue(value, \"__gojrType\", descriptor.type || typeName);",
+    "    __gojrDefineHiddenValue(value, \"__gojrPkgPath\", descriptor.pkgPath || gojrPackageArtifact.importPath);",
+    "    __gojrAttachValueReceiverMethods(value, descriptor);",
+    "  }",
     "  return value;",
+    "}",
+    "function __gojrDefineHiddenValue(object, key, value) {",
+    "  if (!object || typeof object !== \"object\") return object;",
+    "  try { Object.defineProperty(object, key, { value, configurable: true }); }",
+    "  catch { object[key] = value; }",
+    "  return object;",
     "}",
     "function __gojrConvertNilable(typeName, value) {",
     "  if (value === null || value === undefined) return __gojrTypedNil(typeName);",
@@ -5354,6 +5383,7 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "function __gojrBuiltinImport(path, importsByPath) {",
     "  if (path === \"internal/bytealg\") return __gojrBytealgPackage();",
     "  if (path === \"internal/reflectlite\") return __gojrReflectlitePackage(importsByPath);",
+    "  if (path === \"iter\") return __gojrIterPackage();",
     "  if (path === \"io/fs\") return __gojrFsPackage();",
     "  if (path === \"os\") return __gojrOsPackage();",
     "  if (path === \"reflect\") return __gojrReflectPackage(importsByPath);",
@@ -5825,6 +5855,104 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  if (structValue && Object.prototype.hasOwnProperty.call(structValue, \"u\")) return structValue.u ?? null;",
     "  return null;",
     "}",
+    "function __gojrIterPackage() {",
+    "  return {",
+    "    Pull: async (...args) => __gojrIterPull(__gojrIterSequenceArg(args), 1, __gojrIterTypeArgsArg(args)),",
+    "    Pull2: async (...args) => __gojrIterPull(__gojrIterSequenceArg(args), 2, __gojrIterTypeArgsArg(args))",
+    "  };",
+    "}",
+    "function __gojrIterSequenceArg(args) {",
+    "  if (args.length > 1 && args[0] && typeof args[0] === \"object\" && typeof args[0] !== \"function\" && args[0].__gojrInterface !== true && args[0].__gojrPointer !== true) return args[1];",
+    "  return args[0];",
+    "}",
+    "function __gojrIterTypeArgsArg(args) {",
+    "  if (args.length > 1 && args[0] && typeof args[0] === \"object\" && typeof args[0] !== \"function\" && args[0].__gojrInterface !== true && args[0].__gojrPointer !== true) return args[0];",
+    "  return undefined;",
+    "}",
+    "function __gojrIterPull(seq, arity, typeArgs = undefined) {",
+    "  const source = __gojrUnwrapInterface(seq);",
+    "  if (typeof source !== \"function\") throw new Error(\"GOJR_RUNTIME001: iter.Pull expects an iterator function\");",
+    "  const name = arity === 1 ? \"iter.Pull\" : \"iter.Pull2\";",
+    "  let started = false;",
+    "  let done = false;",
+    "  let stopped = false;",
+    "  let producer = undefined;",
+    "  let producerError = undefined;",
+    "  let waitingNext = undefined;",
+    "  let resumeYield = undefined;",
+    "  let lastYielded = [];",
+    "  const doneValues = () => __gojrTuple([...Array.from({ length: arity }, (_item, index) => __gojrIterPullZeroValue(index, typeArgs, lastYielded)), false]);",
+    "  const finishDone = () => {",
+    "    done = true;",
+    "    const waiter = waitingNext;",
+    "    waitingNext = undefined;",
+    "    if (waiter) waiter.resolve(doneValues());",
+    "  };",
+    "  const finishError = (error) => {",
+    "    producerError = error;",
+    "    done = true;",
+    "    const waiter = waitingNext;",
+    "    waitingNext = undefined;",
+    "    if (waiter) waiter.reject(error);",
+    "  };",
+    "  const yieldFn = async (...yielded) => {",
+    "    if (stopped || done) return false;",
+    "    const waiter = waitingNext;",
+    "    if (!waiter) __gojrPanic(`${name}: yield called before next`);",
+    "    waitingNext = undefined;",
+    "    lastYielded = yielded.slice(0, arity).map((value) => value ?? null);",
+    "    waiter.resolve(__gojrTuple([...lastYielded, true]));",
+    "    return await new Promise((resolve) => { resumeYield = resolve; });",
+    "  };",
+    "  const runProducer = async () => {",
+    "    try {",
+    "      await source(yieldFn);",
+    "      finishDone();",
+    "    } catch (error) {",
+    "      finishError(error);",
+    "    }",
+    "  };",
+    "  const next = async () => {",
+    "    if (producerError) throw producerError;",
+    "    if (done || stopped) return doneValues();",
+    "    if (waitingNext) __gojrPanic(`${name}: next called before previous next returned`);",
+    "    const result = new Promise((resolve, reject) => { waitingNext = { resolve, reject }; });",
+    "    if (!started) {",
+    "      started = true;",
+    "      producer = runProducer();",
+    "    } else if (resumeYield) {",
+    "      const resume = resumeYield;",
+    "      resumeYield = undefined;",
+    "      resume(true);",
+    "    }",
+    "    return await result;",
+    "  };",
+    "  const stop = async () => {",
+    "    if (producerError) throw producerError;",
+    "    if (done || stopped) return null;",
+    "    stopped = true;",
+    "    const waiter = waitingNext;",
+    "    waitingNext = undefined;",
+    "    if (waiter) waiter.resolve(doneValues());",
+    "    if (resumeYield) {",
+    "      const resume = resumeYield;",
+    "      resumeYield = undefined;",
+    "      resume(false);",
+    "    }",
+    "    if (producer) await producer;",
+    "    else done = true;",
+    "    if (producerError) throw producerError;",
+    "    return null;",
+    "  };",
+    "  return __gojrTuple([next, stop]);",
+    "}",
+    "function __gojrIterPullZeroValue(index, typeArgs, lastYielded) {",
+    "  const names = Array.isArray(typeArgs) ? typeArgs : undefined;",
+    "  const objectType = typeArgs && typeof typeArgs === \"object\" && !Array.isArray(typeArgs) ? typeArgs : undefined;",
+    "  const typeText = names ? names[index] : objectType ? (index === 0 ? (objectType.K || objectType.V) : objectType.V) : undefined;",
+    "  if (typeof typeText === \"string\") return __gojrZero(typeText);",
+    "  return __gojrZeroLike(lastYielded[index] ?? null);",
+    "}",
     "function __gojrRuntimePackage() {",
     "  return {",
     "    GOOS: \"js\",",
@@ -5927,13 +6055,13 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "    Expand: async (s) => String(s ?? \"\"), ExpandEnv: async (s) => String(s ?? \"\"),",
     "    FindProcess: async () => __gojrTuple([__gojrStruct(\"os.Process\", {}, \"os\"), null]),",
     "    Getegid: async () => 0n, Geteuid: async () => 0n, Getgid: async () => 0n, Getgroups: async () => __gojrTuple([[], null]), Getpagesize: async () => 4096n, Getpid: async () => 1n, Getppid: async () => 0n, Getuid: async () => 0n,",
-    "    Lchown: async () => null, Link: async () => null, Lstat: async () => __gojrTuple([null, null]),",
+    "    Lchown: async () => null, Link: async () => null, Lstat: async (name) => __gojrOsStat(String(name ?? \"\")),",
     "    Mkdir: async () => null, MkdirAll: async () => null, MkdirTemp: async (_dir, pattern) => __gojrTuple([String(pattern ?? \"\"), null]),",
     "    Pipe: async () => __gojrTuple([__gojrOsFilePointer(-1, \"pipe-r\"), __gojrOsFilePointer(-1, \"pipe-w\"), null]),",
     "    ReadDir: async () => __gojrTuple([[], null]), Readlink: async () => __gojrTuple([\"\", null]),",
     "    Remove: async () => null, RemoveAll: async () => null, Rename: async () => null, SameFile: async () => false, Setenv: async () => null,",
     "    StartProcess: async () => __gojrTuple([__gojrStruct(\"os.Process\", {}, \"os\"), null]),",
-    "    Stat: async () => __gojrTuple([null, null]), Symlink: async () => null, Truncate: async () => null, Unsetenv: async () => null,",
+    "    Stat: async (name) => __gojrOsStat(String(name ?? \"\")), Symlink: async () => null, Truncate: async () => null, Unsetenv: async () => null,",
     "    IsExist: async () => false, IsNotExist: async () => false, IsPermission: async () => false, IsTimeout: async () => false, IsPathSeparator: async (c) => Number(c) === 47",
     "  };",
     "}",
@@ -5953,6 +6081,54 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "  const env = __gojrOsEnv();",
     "  return Object.prototype.hasOwnProperty.call(env, key) ? String(env[key]) : \"\";",
     "}",
+    "function __gojrOsStat(name) {",
+    "  const path = String(name ?? \"\");",
+    "  const hostStat = globalThis.__gojrStatSync;",
+    "  if (typeof hostStat !== \"function\") return __gojrTuple([null, __gojrOsPathError(\"stat\", path, \"file does not exist\")]);",
+    "  try {",
+    "    const stat = hostStat(path);",
+    "    if (!stat) return __gojrTuple([null, __gojrOsPathError(\"stat\", path, \"file does not exist\")]);",
+    "    return __gojrTuple([__gojrOsFileInfo(path, stat), null]);",
+    "  } catch (error) {",
+    "    return __gojrTuple([null, __gojrOsPathError(\"stat\", path, error)]);",
+    "  }",
+    "}",
+    "function __gojrOsPathError(op, path, error) {",
+    "  const message = error && typeof error === \"object\" && \"message\" in error ? String(error.message) : String(error ?? \"file does not exist\");",
+    "  return __gojrError(`${op} ${path}: ${message}`);",
+    "}",
+    "function __gojrOsFileInfo(path, stat) {",
+    "  const text = String(path ?? \"\");",
+    "  const parts = text.split(/[\\\\/]+/).filter(Boolean);",
+    "  const name = parts.length > 0 ? parts[parts.length - 1] : text;",
+    "  const isDir = typeof stat?.isDirectory === \"function\" ? stat.isDirectory() === true : stat?.isDirectory === true;",
+    "  const size = __gojrSafeBigInt(stat?.size ?? 0);",
+    "  const modeBits = Number(stat?.mode ?? 0) & 511;",
+    "  const mode = BigInt(modeBits) | (isDir ? 2147483648n : 0n);",
+    "  const info = { __gojrType: \"os.fileInfo\", __gojrPkgPath: \"os\", name, size, mode, isDir, stat };",
+    "  info.__gojrMethods = {",
+    "    Name: async () => name,",
+    "    Size: async () => size,",
+    "    Mode: async () => mode,",
+    "    ModTime: async () => __gojrStruct(\"time.Time\", {}, \"time\"),",
+    "    IsDir: async () => isDir,",
+    "    Sys: async () => stat ?? null",
+    "  };",
+    "  return info;",
+    "}",
+    "function __gojrSafeBigInt(value) {",
+    "  if (typeof value === \"bigint\") return value;",
+    "  if (typeof value === \"number\") return BigInt(Number.isFinite(value) ? Math.trunc(value) : 0);",
+    "  if (typeof value === \"string\" && /^[-+]?\\d+$/.test(value.trim())) return BigInt(value.trim());",
+    "  return 0n;",
+    "}",
+    "function __gojrTimeLocation(name, offset = 0n) {",
+    "  const text = String(name ?? \"\");",
+    "  const value = __gojrStruct(\"time.Location\", { \"name\": text, \"offset\": __gojrSafeBigInt(offset) }, \"time\");",
+    "  const pointer = __gojrPointerValue(\"time.Location\", value, \"time\");",
+    "  pointer.__gojrMethods = { String: async () => text };",
+    "  return pointer;",
+    "}",
     "function __gojrError(message) {",
     "  return { __gojrInterface: true, interfaceType: \"error\", value: { __gojrType: \"errorString\", message: String(message), __gojrMethods: { Error: async (self) => self.message } } };",
     "}",
@@ -5966,7 +6142,7 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "    ReadDir: async () => __gojrTuple([[], null]), Readdir: async () => __gojrTuple([[], null]), Readdirnames: async () => __gojrTuple([[], null]),",
     "    Seek: async () => __gojrTuple([0n, null]),",
     "    SetDeadline: async () => null, SetReadDeadline: async () => null, SetWriteDeadline: async () => null,",
-    "    Stat: async () => __gojrTuple([null, null]),",
+    "    Stat: async () => __gojrOsStat(String(name ?? \"\")),",
     "    Sync: async () => null, SyscallConn: async () => __gojrTuple([null, null]), Truncate: async () => null,",
     "    Write: async (_self, b) => __gojrTuple([__gojrOsWrite(fd, b), null]),",
     "    WriteAt: async (_self, b) => __gojrTuple([__gojrOsWrite(fd, b), null]),",

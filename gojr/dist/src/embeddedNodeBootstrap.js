@@ -227,7 +227,9 @@
         };
     }
     function installNodeStdioHooks(embeddedRequire) {
-        if (typeof root.__gojrReadSync === "function" && typeof root.__gojrWriteSync === "function")
+        if (typeof root.__gojrReadSync === "function" &&
+            typeof root.__gojrWriteSync === "function" &&
+            typeof root.__gojrStatSync === "function")
             return;
         let fs;
         try {
@@ -259,6 +261,9 @@
         }
         if (typeof root.__gojrWriteSync !== "function" && typeof fs.writeSync === "function") {
             root.__gojrWriteSync = (fd, buffer, offset, length, position) => fs.writeSync(fd, buffer, offset, length, position);
+        }
+        if (typeof root.__gojrStatSync !== "function" && typeof fs.statSync === "function") {
+            root.__gojrStatSync = (path) => fs.statSync(String(path ?? ""));
         }
     }
     root.__gojrCreateEmbeddedModuleLoader = createEmbeddedModuleLoader;

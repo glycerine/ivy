@@ -354,6 +354,27 @@ func RangeShortRedeclare() int {
 	return sum
 }
 
+func ShadowAfterOuterUse() int {
+	var err error
+	total := 0
+	for i := 0; i < 1; i++ {
+		if err != nil {
+			return 1
+		}
+		expr, err := shadowValue()
+		if err != nil {
+			return 2
+		}
+		total += expr
+	}
+	if err != nil {
+		return 3
+	}
+	return total
+}
+
+func shadowValue() (int, error) { return 9, nil }
+
 type FactoryHolder struct {
 	Factory func() int
 }
@@ -383,6 +404,7 @@ func LocalPkgDoesNotShadowGeneratedPackage() int {
     expect(await (pkg.VarShadowArray as () => Promise<bigint>)()).toBe(5n);
     expect(await (pkg.ShortShadowArray as () => Promise<bigint>)()).toBe(6n);
     expect(await (pkg.RangeShortRedeclare as () => Promise<bigint>)()).toBe(2n);
+    expect(await (pkg.ShadowAfterOuterUse as () => Promise<bigint>)()).toBe(9n);
     expect(await (pkg.LocalPkgDoesNotShadowGeneratedPackage as () => Promise<bigint>)()).toBe(7n);
   });
 
@@ -1324,6 +1346,199 @@ func Ready() int {
     const instantiated = await module.instantiateGoJrPackage({}, { importsByPath: { "example.com/sortlike": sortPackage } });
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (instantiated.package.Ready as () => Promise<bigint>)()).toBe(56n);
+  });
+
+  test("dispatches named slice value receiver methods through imported interface calls", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/useiface",
+      artifactRoot: "/tmp/gojr-crossnamed-slice",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        "example.com/sortlike": [{
+          filename: "sortlike.go",
+          source: `package sortlike
+
+type Interface interface {
+	Len() int
+}
+
+func Run(data Interface) int {
+	return data.Len()
+}
+`
+        }]
+      },
+      files: [{
+        filename: "useiface.go",
+        source: `package useiface
+
+import "example.com/sortlike"
+
+type NamedInts []int
+
+func (n NamedInts) Len() int { return len(n) }
+
+func Ready() int {
+	values := []int{1, 2, 3, 4}
+	return sortlike.Run(NamedInts(values))
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const sortArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-crossnamed-slice/example.com/sortlike.a") ?? "");
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-crossnamed-slice/example.com/useiface.a") ?? "");
+    if (!sortArchive || !archive) throw new Error("missing cross-interface archives");
+    const sortModule = await importArtifactJavaScript(sortArchive.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const sortPackage = await sortModule.instantiateGoJrPackage();
+    const module = await importArtifactJavaScript(archive.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage({}, { importsByPath: { "example.com/sortlike": sortPackage } });
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Ready as () => Promise<bigint>)()).toBe(4n);
+  });
+
+  test("generated os.Stat returns host-backed FileInfo values", async () => {
+    const host = globalThis as typeof globalThis & {
+      __gojrStatSync?: (path: string) => unknown;
+    };
+    const previousStat = host.__gojrStatSync;
+    host.__gojrStatSync = (path: string) => {
+      if (path === "/tmp/gojr-file") return { size: 12, mode: 0o644, isDirectory: () => false };
+      if (path === "/tmp/gojr-dir") return { size: 0, mode: 0o755, isDirectory: () => true };
+      const error = new Error(`stat ${path}: no such file or directory`) as Error & { code?: string };
+      error.code = "ENOENT";
+      throw error;
+    };
+    try {
+      const store = new MemoryArtifactStore();
+      const result = buildPackages({
+        importPath: "example.com/statcheck",
+        artifactRoot: "/tmp/gojr-stage1-statcheck",
+        backend: GOJR_STAGE1_BACKEND,
+        files: [{
+          filename: "statcheck.go",
+          source: `package statcheck
+
+import "os"
+
+func Check() int {
+	fi, err := os.Stat("/tmp/gojr-file")
+	if err != nil || fi.IsDir() || fi.Size() != 12 || fi.Name() != "gojr-file" {
+		return 1
+	}
+	di, err := os.Stat("/tmp/gojr-dir")
+	if err != nil || !di.IsDir() || di.Name() != "gojr-dir" {
+		return 2
+	}
+	_, err = os.Stat("/tmp/gojr-missing")
+	if err == nil {
+		return 3
+	}
+	return 0
+}
+`
+        }]
+      }, store);
+      expect(result.diagnostics).toEqual([]);
+      expect(result.ok).toBe(true);
+      const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage1-statcheck/example.com/statcheck.a") ?? "");
+      if (!archive) throw new Error("missing statcheck archive");
+      const module = await importArtifactJavaScript(archive.javascript ?? "") as unknown as Stage1ArtifactModule;
+      const instantiated = await module.instantiateGoJrPackage();
+      expect(instantiated.diagnostics).toEqual([]);
+      expect(await (instantiated.package.Check as () => Promise<bigint>)()).toBe(0n);
+    } finally {
+      if (previousStat) host.__gojrStatSync = previousStat;
+      else delete host.__gojrStatSync;
+    }
+  });
+
+  test("generated time package overrides filesystem-backed LoadLocation", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "time",
+      artifactRoot: "/tmp/gojr-stage1-time-location",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "time.go",
+        source: `package time
+
+type Location struct { name string }
+
+var UTC = &Location{name: "UTC"}
+
+func FixedZone(name string, offset int) *Location { return nil }
+func LoadLocation(name string) (*Location, error) { return nil, nil }
+func LoadLocationFromTZData(name string, data []byte) (*Location, error) { return nil, nil }
+`
+      }]
+    }, store);
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage1-time-location/time.a") ?? "");
+    if (!archive) throw new Error("missing time archive");
+    const module = await importArtifactJavaScript(archive.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    const [nyc, err] = await (instantiated.package.LoadLocation as (name: string) => Promise<[unknown, unknown]>)("America/New_York");
+    expect(err).toBe(null);
+    expect(nyc).not.toBe(null);
+    expect(await (instantiated.package.FixedZone as (name: string, offset: bigint) => Promise<unknown>)("GMT-5", -18000n)).not.toBe(null);
+  });
+
+  test("generated artifacts use intrinsic iter.Pull for pointer iterator results", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/itercheck",
+      artifactRoot: "/tmp/gojr-stage1-itercheck",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "itercheck.go",
+        source: `package itercheck
+
+import "iter"
+
+type reply struct {
+	N int
+}
+
+func Check() int {
+	seq := func(yield func(*reply) bool) {
+		if !yield(&reply{N: 7}) {
+			return
+		}
+		yield(&reply{N: 11})
+	}
+	next, stop := iter.Pull[*reply](seq)
+	defer stop()
+	got, ok := next()
+	empty, ok2 := next()
+	if !ok || got.N != 7 {
+		return 1
+	}
+	if !ok2 || empty.N != 11 {
+		return 2
+	}
+	done, ok3 := next()
+	if ok3 || done != nil {
+		return 3
+	}
+	return 0
+}
+`
+      }]
+    }, store);
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage1-itercheck/example.com/itercheck.a") ?? "");
+    if (!archive) throw new Error("missing itercheck archive");
+    const module = await importArtifactJavaScript(archive.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Check as () => Promise<bigint>)()).toBe(0n);
   });
 
   test("preserves imported function-typed parameter signatures", async () => {
