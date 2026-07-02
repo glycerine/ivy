@@ -1,3 +1,0 @@
-(setenv "willy" "wonka")
-(def w (getenv "willy"))
-(assert (== w "wonka"))

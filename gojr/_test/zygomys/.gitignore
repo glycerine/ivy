@@ -1,5 +1,0 @@
-*.prof
-*.mprof
-*~
-tests/lines2
-zygo/gitcommit.go

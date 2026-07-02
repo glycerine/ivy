@@ -1,5 +1,0 @@
-// rmsym removes a symbol from the local scope
-(assert (== `12` (newScope (def b 5) (newScope (def b 12) (str b)  ))))
-(assert (== `5` (newScope (def b 5) (newScope (def b 12) (rmsym %b) (str b)  ))))
-
-

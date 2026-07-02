@@ -1,9 +1,0 @@
-(def h (hash a:b:)) // check kw: symbols: should not crash
-
-(def recor (eventdemo id:"Id" persondemo: (persondemo first:"george" last:"washington")))
-
-(assert (== (hget recor id:) "Id"))
-
-  
-
-

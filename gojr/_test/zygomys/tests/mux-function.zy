@@ -1,2 +1,0 @@
-(defn sub [f a b] (f a b))
-(assert (== 1 (sub - 2 1)))

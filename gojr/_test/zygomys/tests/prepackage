@@ -1,8 +1,0 @@
-// a pre-made package
-(package "helloKit"
-   (def Kit "cat")
-   (def Rov "erDog")
-   (def privetLane 42)
-   (defn Funky [a] (concat a " rov" Rov " chases " Kit))
-   (defn UsePriv [] (concat "my number is " (str privetLane)))
-)

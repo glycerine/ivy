@@ -1,2 +1,0 @@
-(def w (weather type:"stormy" size:222))
-(def r (gob w))

@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "/tmp/gojr-test-dist"
-  },
-  "include": ["src/**/*.ts", "tests/**/*.ts"]
-}
