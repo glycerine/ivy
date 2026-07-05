@@ -159,6 +159,17 @@ func (gbe *GoBackend) Action(sessionID, action string, args map[string]interface
 	return
 }
 
+func (gbe *GoBackend) GetMenus(sessionID string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		if _, err = b.getSession(sessionID); err != nil {
+			return nil
+		}
+		by, err = canonicalJSON(BuildBrowserMenuDescriptors())
+		return nil
+	})
+	return
+}
+
 func (gbe *GoBackend) GetARG(sessionID string, full bool) (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
 		var sess *Session

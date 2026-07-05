@@ -45,6 +45,10 @@ type Backend interface {
 	Close() error
 }
 
+type menuBackend interface {
+	GetMenus(sessionID string) ([]byte, error)
+}
+
 type ConceptMaterializeRequest struct {
 	Concept  string `json:"concept,omitempty"`
 	Type     string `json:"type,omitempty"`

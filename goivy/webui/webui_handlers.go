@@ -161,6 +161,15 @@ func (s *Server) apiMenus(w http.ResponseWriter, r *http.Request, sessionID stri
 		writeErr(w, http.StatusMethodNotAllowed, "GET required")
 		return
 	}
+	if b, ok := s.backend.(menuBackend); ok {
+		data, err := b.GetMenus(sessionID)
+		if err != nil {
+			writeBackendErr(w, err)
+			return
+		}
+		writeBackend(w, data)
+		return
+	}
 	data, err := canonicalJSON(BuildBrowserMenuDescriptors())
 	if err != nil {
 		writeBackendErr(w, err)

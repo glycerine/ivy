@@ -110,4 +110,29 @@ describe('menuService', () => {
     expect(app.boundedCheck).not.toHaveBeenCalled();
     expect(app.runAction).not.toHaveBeenCalled();
   });
+
+  it('routes descriptor File menu actions to browser controller commands', async () => {
+    const app = {
+      activeSheetId: 'sheet-2',
+      saveAnalysisState: vi.fn(async () => ({ ok: true })),
+      saveAbstraction: vi.fn(async () => ({ ok: true })),
+      saveInvariant: vi.fn(async () => ({ ok: true })),
+      removeSheet: vi.fn(),
+      closeCurrentFile: vi.fn(async () => true),
+      runAction: vi.fn(),
+    };
+
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'save', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'save_abstraction', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'save_conjectures', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'remove_tab', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'exit', dispatch: 'action' });
+
+    expect(app.saveAnalysisState).toHaveBeenCalledTimes(1);
+    expect(app.saveAbstraction).toHaveBeenCalledTimes(1);
+    expect(app.saveInvariant).toHaveBeenCalledTimes(1);
+    expect(app.removeSheet).toHaveBeenCalledWith('sheet-2');
+    expect(app.closeCurrentFile).toHaveBeenCalledTimes(1);
+    expect(app.runAction).not.toHaveBeenCalled();
+  });
 });

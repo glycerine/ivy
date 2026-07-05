@@ -378,6 +378,62 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.getElementById('job-control-page').classList.contains('open')).toBe(false);
   });
 
+  it('binds every visible static File menu item to a controller command', () => {
+    vi.useFakeTimers();
+    document.body.innerHTML = [
+      '<input id="file-input" type="file">',
+      '<input id="event-file-input" type="file">',
+      '<input id="analysis-state-file-input" type="file">',
+      '<button id="btn-toggle-tutorial"></button>',
+      '<a id="file-load" href="#"></a>',
+      '<a id="file-open-event-trace" href="#"></a>',
+      '<a id="file-save-as" href="#"></a>',
+      '<a id="file-download" href="#"></a>',
+      '<a id="file-save-analysis-state" href="#"></a>',
+      '<a id="file-load-analysis-state" href="#"></a>',
+      '<a id="file-save-invariant" href="#"></a>',
+      '<a id="file-new" href="#"></a>',
+      '<div id="file-menu" class="dropdown-content"></div>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.setupDropdownMenus = vi.fn();
+    runtime._bindStaticMenuActions = vi.fn();
+    runtime.attachGraphEventHandlers = vi.fn();
+    runtime.setUIMode = vi.fn();
+    runtime.closeAllDropdowns = vi.fn();
+    runtime.chooseAndLoadModelFile = vi.fn(async () => true);
+    runtime.chooseAndLoadEventTraceFile = vi.fn(async () => true);
+    runtime.saveAs = vi.fn();
+    runtime.downloadModel = vi.fn();
+    runtime.saveAnalysisState = vi.fn();
+    runtime.chooseAndLoadAnalysisStateFile = vi.fn();
+    runtime.saveInvariant = vi.fn();
+    runtime.newModel = vi.fn();
+    runtime.runAction = vi.fn();
+
+    runtime.setupEventHandlers();
+
+    document.getElementById('file-load')!.click();
+    document.getElementById('file-open-event-trace')!.click();
+    document.getElementById('file-save-as')!.click();
+    document.getElementById('file-download')!.click();
+    document.getElementById('file-save-analysis-state')!.click();
+    document.getElementById('file-load-analysis-state')!.click();
+    document.getElementById('file-save-invariant')!.click();
+    document.getElementById('file-new')!.click();
+    vi.advanceTimersByTime(50);
+
+    expect(runtime.chooseAndLoadModelFile).toHaveBeenCalledTimes(1);
+    expect(runtime.chooseAndLoadEventTraceFile).toHaveBeenCalledTimes(1);
+    expect(runtime.saveAs).toHaveBeenCalledTimes(1);
+    expect(runtime.downloadModel).toHaveBeenCalledTimes(1);
+    expect(runtime.saveAnalysisState).toHaveBeenCalledTimes(1);
+    expect(runtime.chooseAndLoadAnalysisStateFile).toHaveBeenCalledTimes(1);
+    expect(runtime.saveInvariant).toHaveBeenCalledTimes(1);
+    expect(runtime.newModel).toHaveBeenCalledTimes(1);
+    expect(runtime.runAction).not.toHaveBeenCalled();
+  });
+
   it('explains remote backend switch failures in the job control panel', async () => {
     class BrowserAPI extends FakeAPI {
       constructor() {

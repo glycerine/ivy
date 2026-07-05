@@ -80,6 +80,22 @@ export function flashAndClose(app, el, callback, {
 
 export function dispatchMenuDescriptorAction(app, region, item) {
   if (!item || item.enabled === false) return Promise.resolve({ ok: false, error: 'disabled action' });
+  if (item.action === 'save') {
+    return app.saveAnalysisState();
+  }
+  if (item.action === 'save_abstraction') {
+    return app.saveAbstraction();
+  }
+  if (item.action === 'save_conjectures') {
+    return app.saveInvariant();
+  }
+  if (item.action === 'remove_tab') {
+    if (app.activeSheetId) app.removeSheet(app.activeSheetId);
+    return Promise.resolve({ ok: true });
+  }
+  if (item.action === 'exit') {
+    return app.closeCurrentFile();
+  }
   if (item.action === 'bmc_conjecture') {
     if (region === 'concept' && typeof app.ctiBoundedCheck === 'function') {
       return app.ctiBoundedCheck();

@@ -256,6 +256,18 @@ func TestAPIActionEmpty(t *testing.T) {
 	}
 }
 
+func TestAPIMenusRequiresKnownSession(t *testing.T) {
+	cfg := goivy.NewConfig()
+	srv := NewServer(cfg, ":0")
+	w := doReq(t, srv, "GET", "/api/session/not-a-session/menus", "")
+	if w.Code == 200 {
+		t.Fatalf("expected unknown session menus request to fail, body: %s", w.Body.String())
+	}
+	if !strings.Contains(w.Body.String(), "session not found") {
+		t.Fatalf("menus unknown session response = %q, want session not found", w.Body.String())
+	}
+}
+
 func TestAPIARG(t *testing.T) {
 	cfg := goivy.NewConfig()
 	srv := NewServer(cfg, ":0")

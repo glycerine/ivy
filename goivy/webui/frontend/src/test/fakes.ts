@@ -22,6 +22,8 @@ export class FakeControls {
     this.lastInfo = { shortInfo, longInfo };
     this.infos.push(this.lastInfo);
   }
+
+  hideContextMenu() {}
 }
 
 export class FakeGraph {
