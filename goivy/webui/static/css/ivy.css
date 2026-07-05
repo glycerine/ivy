@@ -762,6 +762,19 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     margin-left: auto;
 }
 
+.job-control-backend-status {
+    min-height: 16px;
+    color: #ff9b9b;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    text-align: center;
+}
+
+.job-control-backend-status[hidden] {
+    display: none;
+}
+
 .job-control-list {
     width: 100%;
     min-height: 120px;

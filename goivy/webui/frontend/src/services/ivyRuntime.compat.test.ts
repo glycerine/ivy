@@ -340,6 +340,7 @@ describe('ivyRuntime compatibility behavior', () => {
       '<button id="btn-toggle-job-control"></button>',
       '<section id="job-control-page" aria-hidden="true"></section>',
       '<button id="job-control-close"></button>',
+      '<div id="job-control-backend-status" hidden></div>',
       '<button id="job-submission-toggle" class="job-mode-toggle is-browser" data-mode="browser"></button>',
       '<span id="job-submission-label"></span>',
     ].join('');
@@ -349,6 +350,7 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-browser')).toBe(true);
     expect(document.getElementById('btn-toggle-job-control').getAttribute('data-job-submission-mode')).toBe('browser');
     expect(document.getElementById('job-submission-label').textContent).toBe('run in browser');
+    expect(document.getElementById('job-control-backend-status').hidden).toBe(true);
 
     document.getElementById('btn-toggle-job-control').click();
 
@@ -374,6 +376,46 @@ describe('ivyRuntime compatibility behavior', () => {
 
     document.getElementById('job-control-close').click();
     expect(document.getElementById('job-control-page').classList.contains('open')).toBe(false);
+  });
+
+  it('explains remote backend switch failures in the job control panel', async () => {
+    class BrowserAPI extends FakeAPI {
+      constructor() {
+        super({ kind: 'browser-wasm' });
+        this.createSession = vi.fn(async () => 'browser-s1');
+        this.disconnectEvents = vi.fn();
+      }
+    }
+    class UnreachableRemoteAPI extends FakeAPI {
+      constructor() {
+        super({ kind: 'hosted-go' });
+        this.createSession = vi.fn(async () => {
+          throw new Error('connection refused');
+        });
+      }
+    }
+
+    document.body.innerHTML = [
+      '<button id="btn-toggle-job-control"></button>',
+      '<div id="job-control-backend-status" hidden></div>',
+      '<button id="job-submission-toggle" class="job-mode-toggle is-browser" data-mode="browser"></button>',
+      '<span id="job-submission-label"></span>',
+      '<span id="session-id"></span>',
+    ].join('');
+    const runtime = makeRuntime({
+      BrowserIvyAPI: BrowserAPI,
+      IvyAPI: UnreachableRemoteAPI,
+    });
+    runtime._jobSubmissionReady = true;
+
+    await runtime._switchJobSubmissionBackend('remote');
+
+    expect(runtime.jobSubmissionMode).toBe('browser');
+    expect(runtime.api.kind).toBe('browser-wasm');
+    expect(document.getElementById('job-submission-toggle').classList.contains('is-browser')).toBe(true);
+    expect(document.getElementById('btn-toggle-job-control').getAttribute('data-job-submission-mode')).toBe('browser');
+    expect(document.getElementById('job-control-backend-status').hidden).toBe(false);
+    expect(document.getElementById('job-control-backend-status').textContent).toBe('server unreachable');
   });
 
   it('confirms before clearing saved localStorage session data from job control', async () => {

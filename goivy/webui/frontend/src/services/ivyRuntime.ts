@@ -1317,6 +1317,14 @@ class IvyRuntime {
         }
     }
 
+    _setJobControlBackendStatus(message) {
+        var status = document.getElementById('job-control-backend-status');
+        if (!status) return false;
+        status.textContent = message || '';
+        status.hidden = !message;
+        return true;
+    }
+
     _setJobSubmissionMode(mode) {
         var normalized = mode === 'remote' ? 'remote' : 'browser';
         this.jobSubmissionMode = normalized;
@@ -1362,11 +1370,13 @@ class IvyRuntime {
         this.controls.setStatus('Switching job backend to ' + (normalized === 'remote' ? 'remote' : 'browser') + '...');
         try {
             await createSession(next, { controls: this.controls });
+            this._setJobControlBackendStatus('');
             this.updateSessionDisplay(runtimeDeps.IvyPersist.getSessionIdFromURL() || next.sessionId);
             this.uiDataModel.setSessionMetadata({
                 id: runtimeDeps.IvyPersist.getSessionIdFromURL() || next.sessionId || '',
             });
             connectSessionEvents(next, this.handleEvent.bind(this), () => {
+                if (normalized === 'remote') this._setJobControlBackendStatus('server unreachable');
                 this.controls.setStatus('Backend connection lost', 'error');
             });
             var content = this.cmEditor && typeof this.cmEditor.getValue === 'function'
@@ -1400,6 +1410,9 @@ class IvyRuntime {
                 this._apiMode = previous.kind === 'browser-wasm' ? 'browser' : 'remote';
                 if (this.controls) this.controls.api = previous;
                 this._setJobSubmissionMode(this._apiMode);
+            }
+            if (normalized === 'remote') {
+                this._setJobControlBackendStatus('server unreachable');
             }
         }
     }

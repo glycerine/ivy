@@ -90,6 +90,23 @@ describe('static graph background controls', () => {
   });
 });
 
+describe('static job control', () => {
+  it('places a backend status message above the browser/remote toggle', () => {
+    const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
+    const row = doc.querySelector('.job-control-row');
+    const children = Array.from(row?.children || []);
+    const status = doc.getElementById('job-control-backend-status');
+    const toggle = doc.getElementById('job-submission-toggle');
+    const statusRule = ivyCss.match(/\.job-control-backend-status\s*\{[^}]+\}/)?.[0] || '';
+
+    expect(status).not.toBeNull();
+    expect(status?.hasAttribute('hidden')).toBe(true);
+    expect(children.indexOf(status!)).toBeLessThan(children.indexOf(toggle!));
+    expect(statusRule).toContain('color: #ff9b9b;');
+    expect(statusRule).toContain('text-align: center;');
+  });
+});
+
 describe('static analysis spreadsheet pane', () => {
   it('does not render the retired analysis spreadsheet pane', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
