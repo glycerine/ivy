@@ -30,10 +30,6 @@ import {
     setEditorKeymap as setEditorKeymapViaService,
     updateEditorLabel as updateEditorLabelViaService,
 } from './editorService.ts';
-import {
-    setupAnalysisSpreadsheet as setupAnalysisSpreadsheetViaService,
-    syncAnalysisSpreadsheetFromEditor as syncAnalysisSpreadsheetFromEditorViaService,
-} from './analysisSpreadsheetService.ts';
 import { initializeCodeMirrorEditor } from '../codeMirrorEditor.ts';
 import { UIDataModel } from '../models/uiDataModel.ts';
 import {
@@ -283,7 +279,6 @@ class IvyRuntime {
         this._suppressModelStateInvalidation = false;
         this._loadedModelContent = '';
         this._programmaticEditorContent = '';
-        this._analysisSpreadsheetApplyingEdit = false;
         this._modelLoadGeneration = 0;
         this._activeModelLoad = null;
         this._deferModelLoadRendering = false;
@@ -644,8 +639,6 @@ class IvyRuntime {
                 });
             }
         }
-        this._setupAnalysisSpreadsheet();
-
         // Restore saved session if available (survives page reload).
         if (savedState && savedState.fileContent) {
             console.log('IvyPersist: restoring session', savedState.sessionId, savedState.fileName);
@@ -702,7 +695,6 @@ class IvyRuntime {
 
     setEditorContent(content) {
         setEditorContentViaService(this, content);
-        this._syncAnalysisSpreadsheetFromEditor();
     }
 
     _updateEditorLabel() {
@@ -721,14 +713,6 @@ class IvyRuntime {
 
     _editorDirty() {
         return editorDirty(this);
-    }
-
-    _setupAnalysisSpreadsheet() {
-        return setupAnalysisSpreadsheetViaService(this);
-    }
-
-    _syncAnalysisSpreadsheetFromEditor() {
-        return syncAnalysisSpreadsheetFromEditorViaService(this);
     }
 
     _showSaveProgress(message) {

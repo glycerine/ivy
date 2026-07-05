@@ -91,43 +91,14 @@ describe('static graph background controls', () => {
 });
 
 describe('static analysis spreadsheet pane', () => {
-  it('places a full-width formula input between the title and grid', () => {
+  it('does not render the retired analysis spreadsheet pane', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
-    const paneContent = doc.querySelector('#analysis-spreadsheet-panel .sheet-pane-content');
-    const children = Array.from(paneContent?.children || []);
-    const formulaInput = doc.getElementById('analysis-formula-input') as HTMLInputElement | null;
-    const formulaLabel = doc.getElementById('analysis-formula-cell-label') as HTMLSpanElement | null;
-    const formulaBarRule = ivyCss.match(/\.analysis-formula-bar\s*\{[^}]+\}/)?.[0] || '';
-    const formulaRule = ivyCss.match(/\.analysis-formula-input\s*\{[^}]+\}/)?.[0] || '';
-    const labelRule = ivyCss.match(/\.analysis-formula-cell-label\s*\{[^}]+\}/)?.[0] || '';
-    const headerRule = ivyCss.match(/#analysis-spreadsheet-panel \.panel-header\s*\{[^}]+\}/)?.[0] || '';
-    const lineNumberRule = ivyCss.match(/\.analysis-spreadsheet-table th\.analysis-line-number-header,\s*\.analysis-spreadsheet-table td\.analysis-line-number-cell\s*\{[^}]+\}/)?.[0] || '';
-    const lineNumberHeaderRule = ivyCss.match(/\.analysis-spreadsheet-table th\.analysis-line-number-header\s*\{[^}]+\}/)?.[0] || '';
-    const columnResizeRule = ivyCss.match(/\.analysis-column-resize-handle\s*\{[^}]+\}/)?.[0] || '';
-    const rowResizeRule = ivyCss.match(/\.analysis-row-resize-handle\s*\{[^}]+\}/)?.[0] || '';
 
-    expect(children[0]?.classList.contains('panel-header')).toBe(true);
-    expect(children[1]?.classList.contains('analysis-formula-bar')).toBe(true);
-    expect(children[2]?.id).toBe('analysis-spreadsheet-grid');
-    expect(formulaInput?.type).toBe('text');
-    expect(formulaInput?.getAttribute('aria-label')).toBe('Formula bar');
-    expect(formulaLabel).not.toBeNull();
-    expect(headerRule).toContain('min-height: 0;');
-    expect(formulaBarRule).toContain('display: flex;');
-    expect(formulaBarRule).toContain('padding: 2px 8px 5px;');
-    expect(labelRule).toContain('color: #6ec8ff;');
-    expect(labelRule).toContain('flex: 0 0 36px;');
-    expect(formulaRule).toContain('flex: 1 1 auto;');
-    expect(formulaRule).toContain('min-width: 0;');
-    expect(formulaRule).toContain('box-sizing: border-box;');
-    expect(lineNumberRule).toContain('position: sticky;');
-    expect(lineNumberRule).toContain('left: 0;');
-    expect(lineNumberRule).toContain('box-shadow: 1px 0 0 #3c3c3c;');
-    expect(lineNumberHeaderRule).toContain('z-index: 5;');
-    expect(columnResizeRule).toContain('cursor: col-resize;');
-    expect(columnResizeRule).toContain('right: -4px;');
-    expect(rowResizeRule).toContain('cursor: row-resize;');
-    expect(rowResizeRule).toContain('bottom: -3px;');
+    expect(doc.getElementById('analysis-spreadsheet-panel')).toBeNull();
+    expect(doc.getElementById('analysis-formula-input')).toBeNull();
+    expect(doc.getElementById('analysis-spreadsheet-grid')).toBeNull();
+    expect(ivyCss).not.toContain('analysis-spreadsheet');
+    expect(ivyCss).not.toContain('analysis-formula');
   });
 });
 

@@ -79,9 +79,6 @@ export function initializeCodeMirrorEditor({
       if (typeof runtime._invalidateModelState === 'function') {
         runtime._invalidateModelState('editor-change');
       }
-      if (typeof runtime._syncAnalysisSpreadsheetFromEditor === 'function') {
-        runtime._syncAnalysisSpreadsheetFromEditor();
-      }
     });
   }
 
