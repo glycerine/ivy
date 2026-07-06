@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # 1. Wipe the CMake build directory
 
