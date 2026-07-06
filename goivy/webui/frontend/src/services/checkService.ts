@@ -86,7 +86,19 @@ export function openTraceArgFromResult(app, result, {
 } = {}) {
   if (!app || !result || !result.trace_arg) return false;
   if (typeof app.setUIMode === 'function') app.setUIMode('reachability');
-  app.openARGSheet(label, result.trace_arg, traceSheetIdForResult(app, result), traceSheetOptionsForResult(result));
+  const sheetId = traceSheetIdForResult(app, result);
+  // The "View error trace" button persists in the details pane, so it can be
+  // clicked more than once for the same result. The backend hands back a stable
+  // trace_sheet_id, so a second click would ask addSheet() to recreate a sheet
+  // that already exists and it throws "duplicate sheet id". When the trace sheet
+  // is already open, refresh it and switch to it instead (mirrors showReachableStates).
+  if (sheetId && typeof app.sheetExists === 'function' && app.sheetExists(sheetId)) {
+    if (typeof app.setSheetTabBaseLabel === 'function') app.setSheetTabBaseLabel(sheetId, label);
+    if (typeof app.applyArgSnapshot === 'function') app.applyArgSnapshot(sheetId, result.trace_arg || {});
+    if (typeof app.switchSheet === 'function') app.switchSheet(sheetId);
+    return true;
+  }
+  app.openARGSheet(label, result.trace_arg, sheetId, traceSheetOptionsForResult(result));
   return true;
 }
 

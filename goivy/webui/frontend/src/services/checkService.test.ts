@@ -231,6 +231,41 @@ describe('checkService', () => {
     });
   });
 
+  it('reuses an open trace sheet instead of recreating it when clicked again', () => {
+    document.body.innerHTML = '<div id="info-content"></div>';
+    const openSheetIds = new Set();
+    const app = {
+      sheetExists: vi.fn((id) => openSheetIds.has(id)),
+      switchSheet: vi.fn(),
+      applyArgSnapshot: vi.fn(),
+      setSheetTabBaseLabel: vi.fn(),
+      setUIMode: vi.fn(),
+      openARGSheet: vi.fn((_label, _arg, id) => openSheetIds.add(id)),
+    };
+    const result = {
+      trace_arg: { elements: [] },
+      trace_sheet_id: 'sheet-2',
+    };
+
+    addCheckResultViewActions(app, result, { doc: document });
+    const button = document.querySelector('[data-check-view-trace]');
+
+    // First click opens the trace sheet.
+    button.click();
+    expect(app.openARGSheet).toHaveBeenCalledTimes(1);
+    expect(app.openARGSheet).toHaveBeenCalledWith('Error trace', result.trace_arg, 'sheet-2', {
+      reachabilityOnly: true,
+      visualOnly: false,
+    });
+
+    // Second click must not throw "duplicate sheet id"; it reuses the open sheet.
+    expect(() => button.click()).not.toThrow();
+    expect(app.openARGSheet).toHaveBeenCalledTimes(1);
+    expect(app.applyArgSnapshot).toHaveBeenCalledWith('sheet-2', result.trace_arg);
+    expect(app.switchSheet).toHaveBeenCalledWith('sheet-2');
+    expect(app.setSheetTabBaseLabel).toHaveBeenCalledWith('sheet-2', 'Error trace');
+  });
+
   it('uses frontend-local ids for check traces without backend sheet ids', () => {
     document.body.innerHTML = '<div id="info-content"></div>';
     const app = {
