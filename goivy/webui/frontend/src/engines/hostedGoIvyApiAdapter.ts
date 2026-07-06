@@ -167,22 +167,22 @@ export class HostedGoIvyApiAdapter extends IvyApiAdapter {
     }
   }
 
-  async getSnapshot(request: AnyRecord = {}): Promise<any> {
+  async getSnapshot(request: AnyRecord = {}, requestOptions: RequestInit = {}): Promise<any> {
     const snapshot: AnyRecord = {};
     const includeDefault = Object.keys(request || {}).length === 0;
 
     if (includeDefault || request.arg) {
       const argRequest = typeof request.arg === 'object' ? request.arg : {};
-      snapshot.arg = await this.getArgSnapshot(argRequest);
+      snapshot.arg = await this.getArgSnapshot(argRequest, requestOptions);
     }
 
     if (request.ctiArg) {
-      snapshot.ctiArg = await this.getCTIArgSnapshot();
+      snapshot.ctiArg = await this.getCTIArgSnapshot(requestOptions);
     }
 
     if (includeDefault || request.concept) {
       const conceptRequest = typeof request.concept === 'object' ? request.concept : {};
-      snapshot.concept = await this.getConceptSnapshot(conceptRequest);
+      snapshot.concept = await this.getConceptSnapshot(conceptRequest, requestOptions);
     }
 
     if (request.menus) {
@@ -191,39 +191,39 @@ export class HostedGoIvyApiAdapter extends IvyApiAdapter {
       if (menuRequest.sheetId) params.set('sheet', menuRequest.sheetId);
       if (menuRequest.uiMode) params.set('ui_mode', menuRequest.uiMode);
       const query = params.toString();
-      snapshot.menus = await this.client.request(this.sessionPath('/menus' + (query ? `?${query}` : '')));
+      snapshot.menus = await this.client.request(this.sessionPath('/menus' + (query ? `?${query}` : '')), requestOptions);
     }
 
     if (request.toggles) {
-      snapshot.toggles = await this.client.request(this.sessionPath('/toggles'));
+      snapshot.toggles = await this.client.request(this.sessionPath('/toggles'), requestOptions);
     }
 
     if (request.proof) {
-      snapshot.proof = await this.client.request(this.sessionPath('/proof'));
+      snapshot.proof = await this.client.request(this.sessionPath('/proof'), requestOptions);
     }
 
     return snapshot;
   }
 
-  async getArgSnapshot({ sheetId, full }: AnyRecord = {}): Promise<any> {
+  async getArgSnapshot({ sheetId, full }: AnyRecord = {}, requestOptions: RequestInit = {}): Promise<any> {
     const params = new URLSearchParams();
     if (sheetId) params.set('sheet', sheetId);
     if (full) params.set('full', 'true');
     const query = params.toString();
-    return this.client.request(this.sessionPath(`/arg${query ? `?${query}` : ''}`));
+    return this.client.request(this.sessionPath(`/arg${query ? `?${query}` : ''}`), requestOptions);
   }
 
-  async getCTIArgSnapshot(): Promise<any> {
-    return this.client.request(this.sessionPath('/arg/cti'));
+  async getCTIArgSnapshot(requestOptions: RequestInit = {}): Promise<any> {
+    return this.client.request(this.sessionPath('/arg/cti'), requestOptions);
   }
 
-  async getConceptSnapshot(request: AnyRecord = {}): Promise<any> {
+  async getConceptSnapshot(request: AnyRecord = {}, requestOptions: RequestInit = {}): Promise<any> {
     const params = new URLSearchParams();
     if (request.sheetId) params.set('sheet', request.sheetId);
     const selectedNode = conceptNodeParam(request);
     if (selectedNode != null) params.set('node', String(selectedNode));
     const query = params.toString();
-    return this.client.request(this.sessionPath(`/concept${query ? `?${query}` : ''}`));
+    return this.client.request(this.sessionPath(`/concept${query ? `?${query}` : ''}`), requestOptions);
   }
 
   async saveSession(): Promise<Blob> {

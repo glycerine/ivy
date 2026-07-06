@@ -151,6 +151,75 @@ describe('checkService', () => {
     expect(app._activeCheck).toBeNull();
   });
 
+  it('recovers the UI on cancel even if the check request never settles', async () => {
+    const app = {
+      getMode: vi.fn(() => 'induction'),
+      _persistedFileContent: 'ivy source',
+      _persistedFileName: 'model.ivy',
+      activeIsolate: '',
+      api: {
+        reloadContent: vi.fn(async () => ({ status: 'ok' })),
+        // Simulates a wedged backend: the request never settles, even on abort.
+        runCheck: vi.fn(() => new Promise(() => {})),
+      },
+      controls: {
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        setStatus: vi.fn(),
+      },
+    };
+
+    const running = runCheck(app);
+    // Let reloadContent resolve so runCheck reaches the wedged runCheck call.
+    for (let i = 0; i < 10 && app.api.runCheck.mock.calls.length === 0; i += 1) {
+      await Promise.resolve();
+    }
+    expect(app.api.runCheck).toHaveBeenCalled();
+    expect(app._activeCheck).not.toBeNull();
+
+    const cancelled = cancelActiveCheck(app);
+
+    // Cancel must give the user back the UI without waiting for the stuck request.
+    expect(cancelled).toBe(true);
+    expect(app.controls.hideLoading).toHaveBeenCalled();
+    expect(app._activeCheck).toBeNull();
+    // The underlying promise stays pending; that's fine - the browser is usable again.
+    void running;
+  });
+
+  it('threads the abort signal through the post-check ARG and concept fetches', async () => {
+    const app = {
+      getMode: vi.fn(() => 'induction'),
+      _persistedFileContent: 'ivy source',
+      _persistedFileName: 'model.ivy',
+      activeIsolate: '',
+      activeSheetId: 'sheet-1',
+      api: {
+        reloadContent: vi.fn(async () => ({ status: 'ok' })),
+        runCheck: vi.fn(async () => ({ result: 'pass', mode: 'induction' })),
+        getARG: vi.fn(async () => null),
+        getConceptGraph: vi.fn(async () => null),
+      },
+      controls: {
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        setStatus: vi.fn(),
+      },
+      showCheckResult: vi.fn(),
+      _autoCheckUsedRelations: vi.fn(),
+    };
+
+    await runCheck(app);
+
+    // A wedged /arg or /concept fetch must be abortable by Cancel too.
+    expect(app.api.getARG).toHaveBeenCalledWith({}, expect.objectContaining({
+      signal: expect.any(AbortSignal),
+    }));
+    expect(app.api.getConceptGraph).toHaveBeenCalledWith(undefined, undefined, expect.objectContaining({
+      signal: expect.any(AbortSignal),
+    }));
+  });
+
   it('passes the relations-to-minimize field to induction checks', async () => {
     document.body.innerHTML = '<input id="cti-relations-to-minimize" value="p q">';
     const app = {

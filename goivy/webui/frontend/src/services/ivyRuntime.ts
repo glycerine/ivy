@@ -1773,21 +1773,46 @@ class IvyRuntime {
             previous.disconnectEvents();
         }
         this.controls.setStatus('Switching job backend to ' + (normalized === 'remote' ? 'remote' : 'browser') + '...');
+
+        // Phase 1 - connectivity. Establishing the session is the only step that
+        // tells us whether the server is actually reachable. A failure here (and
+        // only here) means "server unreachable", so this is the sole place we
+        // revert the switch and surface that message.
         try {
             await createSession(next, { controls: this.controls });
-            this._setJobControlBackendStatus('');
-            this.updateSessionDisplay(runtimeDeps.IvyPersist.getSessionIdFromURL() || next.sessionId);
-            this.uiDataModel.setSessionMetadata({
-                id: runtimeDeps.IvyPersist.getSessionIdFromURL() || next.sessionId || '',
-            });
-            connectSessionEvents(next, this.handleEvent.bind(this), () => {
-                if (normalized === 'remote') this._setJobControlBackendStatus('server unreachable');
-                this.controls.setStatus('Backend connection lost', 'error');
-            });
-            var content = this.cmEditor && typeof this.cmEditor.getValue === 'function'
-                ? this.cmEditor.getValue()
-                : this._persistedFileContent;
-            var modelLoad = null;
+        } catch (err) {
+            this.controls.setStatus('Backend switch failed: ' + err.message, 'error');
+            if (previous) {
+                this.api = previous;
+                this._apiMode = previous.kind === 'browser-wasm' ? 'browser' : 'remote';
+                if (this.controls) this.controls.api = previous;
+                this._setJobSubmissionMode(this._apiMode);
+            }
+            if (normalized === 'remote') {
+                this._setJobControlBackendStatus('server unreachable');
+            }
+            return;
+        }
+
+        this._setJobControlBackendStatus('');
+        this.updateSessionDisplay(runtimeDeps.IvyPersist.getSessionIdFromURL() || next.sessionId);
+        this.uiDataModel.setSessionMetadata({
+            id: runtimeDeps.IvyPersist.getSessionIdFromURL() || next.sessionId || '',
+        });
+        connectSessionEvents(next, this.handleEvent.bind(this), () => {
+            if (normalized === 'remote') this._setJobControlBackendStatus('server unreachable');
+            this.controls.setStatus('Backend connection lost', 'error');
+        });
+
+        // Phase 2 - re-send the current model to the new backend. The server is
+        // reachable at this point, so a reload failure is a model/compile problem,
+        // not a connectivity problem: keep the new backend selected and report the
+        // real error instead of falsely claiming the server is unreachable.
+        var content = this.cmEditor && typeof this.cmEditor.getValue === 'function'
+            ? this.cmEditor.getValue()
+            : this._persistedFileContent;
+        var modelLoad = null;
+        try {
             if (content) {
                 modelLoad = this._beginModelLoad({
                     reason: 'backend-switch',
@@ -1809,16 +1834,10 @@ class IvyRuntime {
             );
         } catch (err) {
             if (modelLoad) this._abortModelLoad(modelLoad);
-            this.controls.setStatus('Backend switch failed: ' + err.message, 'error');
-            if (previous) {
-                this.api = previous;
-                this._apiMode = previous.kind === 'browser-wasm' ? 'browser' : 'remote';
-                if (this.controls) this.controls.api = previous;
-                this._setJobSubmissionMode(this._apiMode);
-            }
-            if (normalized === 'remote') {
-                this._setJobControlBackendStatus('server unreachable');
-            }
+            this.controls.setStatus(
+                (normalized === 'remote' ? 'Switched to remote backend, but reloading the model failed: ' : 'Switched to browser backend, but reloading the model failed: ') + err.message,
+                'error',
+            );
         }
     }
 

@@ -32,7 +32,7 @@ export class IvyApiAdapter {
     this._notImplemented('runCommand');
   }
 
-  async getSnapshot(_request: any = {}): Promise<any> {
+  async getSnapshot(_request: any = {}, _requestOptions: RequestInit = {}): Promise<any> {
     this._notImplemented('getSnapshot');
   }
 
@@ -56,8 +56,8 @@ export class IvyApiAdapter {
     return this.loadModel({ content, filename: filename || 'model.ivy', ...(options || {}) }, requestOptions);
   }
 
-  async getARG(options = {}) {
-    const snapshot = await this.getSnapshot({ arg: options || {} });
+  async getARG(options = {}, requestOptions: RequestInit = {}) {
+    const snapshot = await this.getSnapshot({ arg: options || {} }, requestOptions);
     return snapshot && snapshot.arg;
   }
 
@@ -71,8 +71,8 @@ export class IvyApiAdapter {
     return snapshot && snapshot.menus;
   }
 
-  async getConceptGraph(nodeId, sheetId) {
-    const snapshot = await this.getSnapshot({ concept: { nodeId, sheetId } });
+  async getConceptGraph(nodeId, sheetId, requestOptions: RequestInit = {}) {
+    const snapshot = await this.getSnapshot({ concept: { nodeId, sheetId } }, requestOptions);
     return snapshot && snapshot.concept;
   }
 

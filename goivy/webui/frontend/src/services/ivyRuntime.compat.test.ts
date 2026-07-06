@@ -4,7 +4,7 @@ import {
   configureIvyRuntimeDependencies,
   resetIvyRuntimeDependencies,
 } from './ivyRuntime.ts';
-import { FakeAPI, FakeControls, FakeGraph } from '../test/fakes.ts';
+import { FakeAPI, FakeControls, FakeGraph, makePersist } from '../test/fakes.ts';
 
 function makeRuntime(overrides = {}) {
   resetIvyRuntimeDependencies();
@@ -595,6 +595,55 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.getElementById('btn-toggle-job-control').getAttribute('data-job-submission-mode')).toBe('browser');
     expect(document.getElementById('job-control-backend-status').hidden).toBe(false);
     expect(document.getElementById('job-control-backend-status').textContent).toBe('server unreachable');
+  });
+
+  it('stays on the remote backend when only the model reload fails on a reachable server', async () => {
+    class BrowserAPI extends FakeAPI {
+      constructor() {
+        super({ kind: 'browser-wasm' });
+        this.createSession = vi.fn(async () => 'browser-s1');
+        this.disconnectEvents = vi.fn();
+      }
+    }
+    class ReachableRemoteAPI extends FakeAPI {
+      constructor() {
+        super({ kind: 'hosted-go' });
+        this.sessionId = 'remote-s1';
+        this.createSession = vi.fn(async () => 'remote-s1');
+        // Server is reachable but rejects the model (e.g. a compile error).
+        this.reloadContent = vi.fn(async () => {
+          throw new Error('API error 400: syntax error');
+        });
+      }
+    }
+
+    document.body.innerHTML = [
+      '<button id="btn-toggle-job-control"></button>',
+      '<div id="job-control-backend-status" hidden></div>',
+      '<button id="job-submission-toggle" class="job-mode-toggle is-browser" data-mode="browser"></button>',
+      '<span id="job-submission-label"></span>',
+      '<span id="session-id"></span>',
+    ].join('');
+    const runtime = makeRuntime({
+      BrowserIvyAPI: BrowserAPI,
+      IvyAPI: ReachableRemoteAPI,
+      IvyPersist: makePersist({ getSessionIdFromURL: () => '' }),
+    });
+    runtime._jobSubmissionReady = true;
+    runtime._persistedFileContent = 'type client\n';
+    runtime._persistedFileName = 'client.ivy';
+
+    await runtime._switchJobSubmissionBackend('remote');
+
+    // The session was created, so the server is reachable: stay on remote.
+    expect(runtime._apiMode).toBe('remote');
+    expect(runtime.api.kind).toBe('hosted-go');
+    // Do NOT falsely blame the (reachable) server.
+    expect(document.getElementById('job-control-backend-status').textContent).toBe('');
+    // Surface the real model error instead.
+    expect(runtime.controls.lastStatus.kind).toBe('error');
+    expect(runtime.controls.lastStatus.message).toContain('reloading the model failed');
+    expect(runtime.controls.lastStatus.message).toContain('syntax error');
   });
 
   it('confirms before clearing saved localStorage session data from job control', async () => {

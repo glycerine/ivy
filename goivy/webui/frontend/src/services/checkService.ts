@@ -238,6 +238,11 @@ export function cancelActiveCheck(app) {
   active.cancelled = true;
   if (active.controller) active.controller.abort();
   if (app && app.controls) app.controls.setStatus(`Cancelling ${active.label || activeCheckLabel(app)}...`, 'warning');
+  // Recover the UI immediately rather than waiting for the aborted request to
+  // settle, so a wedged backend connection can never leave the loading overlay
+  // stuck on screen.
+  if (typeof active.forceRecoverUI === 'function') active.forceRecoverUI();
+  if (app._activeCheck === active) app._activeCheck = null;
   return true;
 }
 
@@ -253,6 +258,7 @@ export async function runCheck(app) {
     cancelled: false,
     label: `${mode} check`,
     jobId: `check-${Date.now()}`,
+    forceRecoverUI: null as null | (() => void),
   };
   app._activeCheck = active;
   upsertJob(app, {
@@ -272,6 +278,15 @@ export async function runCheck(app) {
     runContextFinished = true;
     finishRunContext();
   };
+  // Let cancelActiveCheck tear down the loading overlay and check controls
+  // directly. Aborting a request does not always make the awaited promise
+  // settle promptly (a wedged remote connection can leave it pending), so cancel
+  // must be able to give the user back the UI without waiting for this run to
+  // unwind. Sharing finishRunContextOnce keeps the run-context depth balanced.
+  active.forceRecoverUI = () => {
+    setCheckControlsRunning(false);
+    finishRunContextOnce();
+  };
   app.controls.setStatus('Recompiling editor content...');
   try {
     const requestOptions = controller ? { signal: controller.signal } : {};
@@ -290,12 +305,12 @@ export async function runCheck(app) {
       return result;
     }
 
-    const argData = await app.api.getARG();
+    const argData = await app.api.getARG({}, requestOptions);
     if (argData && argData.elements) {
       applyArgSnapshot(app, app.activeSheetId || 'sheet-1', argData);
     }
 
-    const conceptData = await app.api.getConceptGraph();
+    const conceptData = await app.api.getConceptGraph(undefined, undefined, requestOptions);
     if (conceptData && conceptData.elements) {
       applyConceptSnapshot(app, app.activeSheetId || 'sheet-1', conceptData);
     }
