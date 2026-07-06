@@ -97,7 +97,7 @@ static_matrix<T, X>::static_matrix(static_matrix const &A, unsigned * /* basis *
     init_row_columns(m, m);
     while (m--) {
         for (auto & col : A.m_columns[m]){
-            set(col.m_i, m, A.get_value_of_column_cell(col));
+            set(col.m_i, m, A.get_val(col));
         }
     }
 }
