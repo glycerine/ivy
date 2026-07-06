@@ -152,6 +152,7 @@ afterEach(() => {
   resetIvyRuntimeDependencies();
   document.body.innerHTML = '';
   document.documentElement.style.removeProperty('--ivy-graph-background');
+  document.documentElement.style.removeProperty('--ivy-relation-name-color');
   vi.useRealTimers();
 });
 
@@ -204,6 +205,7 @@ describe('ivyRuntime compatibility behavior', () => {
 
     runtime._setupGraphBackgroundSlider();
     expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(0, 0, 0)');
+    expect(document.documentElement.style.getPropertyValue('--ivy-relation-name-color')).toBe('rgb(224, 224, 224)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(0, 0, 0)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('0%');
     expect(slider.title).toBe('Graph background: rgb(0, 0, 0)');
@@ -211,6 +213,7 @@ describe('ivyRuntime compatibility behavior', () => {
     slider.value = '50';
     slider.dispatchEvent(new Event('input'));
     expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(128, 128, 128)');
+    expect(document.documentElement.style.getPropertyValue('--ivy-relation-name-color')).toBe('rgb(112, 160, 240)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(128, 128, 128)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('50%');
     expect(slider.title).toBe('Graph background: rgb(128, 128, 128)');
@@ -218,6 +221,7 @@ describe('ivyRuntime compatibility behavior', () => {
     slider.value = '100';
     slider.dispatchEvent(new Event('input'));
     expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(255, 255, 255)');
+    expect(document.documentElement.style.getPropertyValue('--ivy-relation-name-color')).toBe('rgb(0, 96, 255)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(255, 255, 255)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('100%');
     expect(slider.title).toBe('Graph background: rgb(255, 255, 255)');

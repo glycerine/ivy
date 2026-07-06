@@ -5,6 +5,7 @@
 
 :root {
     --ivy-graph-background: rgb(0, 0, 0);
+    --ivy-relation-name-color: rgb(224, 224, 224);
 }
 
 /* --- Reset & Base --- */
@@ -1655,7 +1656,7 @@ body[data-event-viewer-only="true"] #outer-container {
 #state-checkbox-table td.name-col button {
     background: none;
     border: 0;
-    color: #4fc1ff;
+    color: var(--ivy-relation-name-color);
     cursor: pointer;
     font: inherit;
     padding: 0;

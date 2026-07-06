@@ -508,6 +508,16 @@ class IvyRuntime {
         return 'rgb(' + channel(0) + ', ' + channel(1) + ', ' + channel(2) + ')';
     }
 
+    _relationNameColorForGraphBackground(value) {
+        var pct = Math.max(0, Math.min(100, Number(value))) / 100;
+        var darkBackgroundText = [224, 224, 224];
+        var lightBackgroundText = [0, 96, 255];
+        var channel = function (i) {
+            return Math.round(darkBackgroundText[i] + (lightBackgroundText[i] - darkBackgroundText[i]) * pct);
+        };
+        return 'rgb(' + channel(0) + ', ' + channel(1) + ', ' + channel(2) + ')';
+    }
+
     _setupGraphBackgroundSlider(doc = document) {
         var slider = doc && doc.getElementById('graph-background-slider');
         if (!slider || slider._ivyGraphBackgroundBound) return;
@@ -549,12 +559,14 @@ class IvyRuntime {
         };
         var apply = function (event = null) {
             var color = self._graphBackgroundColor(slider.value);
+            var relationNameColor = self._relationNameColorForGraphBackground(slider.value);
             var min = Number(slider.min || 0);
             var max = Number(slider.max || 100);
             var value = Number(slider.value || min);
             var pct = max > min ? ((value - min) / (max - min)) * 100 : 0;
             pct = Math.max(0, Math.min(100, pct));
             doc.documentElement.style.setProperty('--ivy-graph-background', color);
+            doc.documentElement.style.setProperty('--ivy-relation-name-color', relationNameColor);
             slider.style.setProperty('--ivy-graph-slider-color', color);
             slider.style.setProperty('--ivy-graph-slider-fill', pct + '%');
             slider.title = 'Graph background: ' + color;

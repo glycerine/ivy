@@ -88,7 +88,7 @@ describe('conceptVisibilityService', () => {
     expect(app.onEdgeToggle).toHaveBeenCalledWith('link(X,Y)', 'all_to_all', true);
   });
 
-  it('colors relation-name buttons from backend relation color metadata', () => {
+  it('keeps backend relation color metadata without varying relation-name text', () => {
     document.body.innerHTML = '<table><tbody id="state-checkbox-body"></tbody></table>';
     const app = modelApp({
       relations: ['link(X,Y)', 'semaphore'],
@@ -104,12 +104,15 @@ describe('conceptVisibilityService', () => {
 
     renderStateCheckboxes(app, rows, { doc: document });
 
-    const linkButton = document.querySelector('button[data-state-toggle-relation="link(X,Y)"]');
+    const linkButton = document.querySelector('button[data-state-toggle-relation="link(X,Y)"]') as HTMLButtonElement;
+    const semaphoreButton = document.querySelector('button[data-state-toggle-relation="semaphore"]') as HTMLButtonElement;
     expect(linkButton.style.getPropertyValue('--ivy-relation-color')).toBe('#0000ff');
-    expect(linkButton.style.color).toBe('rgb(0, 0, 255)');
+    expect(semaphoreButton.style.getPropertyValue('--ivy-relation-color')).toBe('#ff0000');
+    expect(linkButton.style.color).toBe('');
+    expect(semaphoreButton.style.color).toBe('');
   });
 
-  it('does not render black backend relation colors as black relation-name text', () => {
+  it('does not let black backend relation colors override relation-name text color', () => {
     document.body.innerHTML = '<table><tbody id="state-checkbox-body"></tbody></table>';
     const app = modelApp({
       relations: ['link(X,Y)'],
@@ -122,7 +125,7 @@ describe('conceptVisibilityService', () => {
 
     const linkButton = document.querySelector('button[data-state-toggle-relation="link(X,Y)"]') as HTMLButtonElement;
     expect(linkButton.style.getPropertyValue('--ivy-relation-color')).toBe('#000000');
-    expect(linkButton.style.color).not.toBe('rgb(0, 0, 0)');
+    expect(linkButton.style.color).toBe('');
   });
 
   it('reuses the static state header instead of adding a duplicate header row', () => {

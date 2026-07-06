@@ -48,6 +48,7 @@ describe('static graph background controls', () => {
     const rootRule = ivyCss.match(/:root\s*\{[^}]+\}/)?.[0] || '';
     const graphRule = ivyCss.match(/\.graph-container\s*\{[^}]+\}/)?.[0] || '';
     const statePaneContentRule = ivyCss.match(/#state-panel \.sheet-pane-content\s*\{[^}]+\}/)?.[0] || '';
+    const stateRelationNameRule = ivyCss.match(/#state-checkbox-table td\.name-col a,\s*#state-checkbox-table td\.name-col button\s*\{[^}]+\}/)?.[0] || '';
     const titleRowRule = ivyCss.match(/\.panel-title-row\s*\{[^}]+\}/)?.[0] || '';
     const sliderRule = ivyCss.match(/\.graph-background-slider\s*\{[^}]+\}/)?.[0] || '';
     const webkitTrackRule = ivyCss.match(/\.graph-background-slider::-webkit-slider-runnable-track\s*\{[^}]+\}/)?.[0] || '';
@@ -66,8 +67,10 @@ describe('static graph background controls', () => {
     expect(slider?.getAttribute('aria-label')).toBe('Graph background');
     expect(slider?.title).toBe('Graph background: rgb(0, 0, 0)');
     expect(rootRule).toContain('--ivy-graph-background: rgb(0, 0, 0);');
+    expect(rootRule).toContain('--ivy-relation-name-color: rgb(224, 224, 224);');
     expect(graphRule).toContain('background-color: var(--ivy-graph-background);');
     expect(statePaneContentRule).toContain('background-color: var(--ivy-graph-background);');
+    expect(stateRelationNameRule).toContain('color: var(--ivy-relation-name-color);');
     expect(titleRowRule).toContain('width: 100%;');
     expect(sliderRule).toContain('width: 120px;');
     expect(sliderRule).toContain('height: 18px;');
