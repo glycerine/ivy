@@ -33,18 +33,23 @@ func init() {
 	if gopath == "" {
 		gopath = filepath.Join(home, "go")
 	}
+	user := os.Getenv("USER")
+	users := filepath.Join("/Users", user)
 
 	ivyIncludeDirs = []string{
 		filepath.Join(repo, "/pyivy/ivy/ivy/include/"),
 		filepath.Join(repo, "/ivy-lang-examples/ivy/include/"),
 		filepath.Join(home, "/ivy/pyivy/ivy/ivy/include/"),
 		filepath.Join(home, "/ivy/ivy-lang-examples/ivy/include/"),
+		filepath.Join(users, "/ivy/pyivy/ivy/ivy/include/"),
+		filepath.Join(users, "/ivy/ivy-lang-examples/ivy/include/"),
 		filepath.Join(gopath, "/src/github.com/glycerine/ivy/ivy-lang-examples/ivy/include/"),
 		filepath.Join(gopath, "/src/github.com/glycerine/ivy/pyivy/ivy/ivy/include/"),
 	}
 	ivyExamplesDir = []string{
 		filepath.Join(home, "/ivy/ivy-lang-examples/"),
 		filepath.Join(repo, "/ivy-lang-examples/"),
+		filepath.Join(users, "/ivy/ivy-lang-examples/"),
 		filepath.Join(gopath, "/src/github.com/glycerine/ivy/ivy-lang-examples/"),
 	}
 }
