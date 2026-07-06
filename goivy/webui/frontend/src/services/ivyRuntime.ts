@@ -35,6 +35,7 @@ import {
     setEditorKeymap as setEditorKeymapViaService,
     updateEditorLabel as updateEditorLabelViaService,
 } from './editorService.ts';
+import { openSourceBrowser as openSourceBrowserViaService } from './sourceBrowserService.ts';
 import { initializeCodeMirrorEditor } from '../codeMirrorEditor.ts';
 import { UIDataModel } from '../models/uiDataModel.ts';
 import {
@@ -294,7 +295,9 @@ class IvyRuntime {
         this._savedFileContent = null;
         this._saveInProgress = false;
         this._saveProgressSheen = null;
-        this.currentBound = 10;
+        this.currentBound = 3;
+        this.selectedAbstractor = 'ta.Abstractors.top_bottom';
+        this.transitionLogFile = '';
         this.uiMode = 'cti';
         this.availableIsolates = [];
         this.activeIsolate = '';
@@ -763,6 +766,10 @@ class IvyRuntime {
 
     setEditorContent(content) {
         setEditorContentViaService(this, content);
+    }
+
+    openSourceBrowser(payload) {
+        return openSourceBrowserViaService(this, payload);
     }
 
     _updateEditorLabel() {
@@ -1594,6 +1601,8 @@ class IvyRuntime {
             } else {
                 this.setUIMode(this.uiMode || 'cti');
             }
+
+            this._setupAnalysisControllerControls();
 
             var bindOptionalButton = function (id, callback) {
                 var button = document.getElementById(id);
@@ -4026,6 +4035,35 @@ class IvyRuntime {
         if (modeEl && mode) modeEl.value = mode;
     }
 
+    _setupAnalysisControllerControls() {
+        var self = this;
+        var abstractorEl = document.getElementById('analysis-abstractor-select') as HTMLSelectElement | null;
+        if (abstractorEl) {
+            this.selectedAbstractor = abstractorEl.value || this.selectedAbstractor;
+            abstractorEl.addEventListener('change', function () {
+                self.selectedAbstractor = this.value || '';
+            });
+        }
+        var boundEl = document.getElementById('analysis-bmc-bound') as HTMLSelectElement | null;
+        if (boundEl) {
+            var syncBound = function () {
+                var value = Number.parseInt(boundEl.value, 10);
+                if (Number.isInteger(value) && value >= 0) {
+                    self.currentBound = value;
+                }
+            };
+            syncBound();
+            boundEl.addEventListener('change', syncBound);
+        }
+        var logEl = document.getElementById('transition-log-file') as HTMLInputElement | null;
+        if (logEl) {
+            this.transitionLogFile = logEl.value || '';
+            logEl.addEventListener('input', function () {
+                self.transitionLogFile = this.value || '';
+            });
+        }
+    }
+
     buildAnalysisState() {
         return buildAnalysisStateViaService(this, runtimeDeps.IvyPersist);
     }
@@ -5390,10 +5428,88 @@ class IvyRuntime {
      * Perform one step of PDR strengthening.
      * Matches Python ivy_graph_ui.py pdr_step().
      */
+    _selectionDialogDescriptor(result) {
+        if (!result) return null;
+        return result.dialog || result.modal || result.interaction_dialog || null;
+    }
+
+    _selectionDialogOptions(dialog) {
+        var options = dialog && dialog.options;
+        if (Array.isArray(options)) {
+            return options.map(function (item) {
+                if (typeof item === 'object' && item !== null) {
+                    return { label: item.label || String(item.value), value: item.value };
+                }
+                return { label: String(item), value: item };
+            });
+        }
+        if (options && typeof options === 'object') {
+            return Object.keys(options).map(function (label) {
+                return { label: label, value: options[label] };
+            });
+        }
+        return [];
+    }
+
+    async _resolveSelectionDialog(result, actionName) {
+        var dialog = this._selectionDialogDescriptor(result);
+        if (!dialog || typeof this.listboxDialog !== 'function') return null;
+        var dialogType = dialog.type || dialog.kind || 'select';
+        var isMultiple = dialog.multiple === true ||
+            dialogType === 'select_multiple' ||
+            dialogType === 'multi_select' ||
+            dialogType === 'select_core' ||
+            dialogType === 'core_select' ||
+            dialogType === 'updr_select_core';
+        var title = dialog.title || actionName || 'Choose';
+        var prompt = dialog.prompt || dialog.message || 'Choose:';
+        var argName = dialog.arg || dialog.arg_name ||
+            ((dialogType === 'select_core' || dialogType === 'core_select' || dialogType === 'updr_select_core') ? 'core' : 'selection');
+        var selected = await this.listboxDialog(title, prompt, this._selectionDialogOptions(dialog), {
+            multiple: isMultiple,
+            okLabel: dialog.okLabel || dialog.ok_label || 'OK',
+            cancel: dialog.cancel !== false,
+        });
+        if (selected === null) {
+            return { cancelled: true };
+        }
+        return { argName: argName, value: selected };
+    }
+
+    async _resumeSelectionDialogAction(actionName, initialArgs, initialResult) {
+        var result = initialResult;
+        for (var i = 0; i < 10 && this._selectionDialogDescriptor(result); i++) {
+            var resolved = await this._resolveSelectionDialog(result, actionName);
+            if (!resolved || resolved.cancelled) {
+                return { result: result, cancelled: true };
+            }
+            var resumeArgs = {
+                ...initialArgs,
+                ...(result.resume_args || result.resumeArgs || {}),
+            };
+            if (result.sheet_id && resumeArgs.sheet_id == null) {
+                resumeArgs.sheet_id = result.sheet_id;
+            }
+            resumeArgs[resolved.argName] = resolved.value;
+            result = await this.api.executeAction(result.resume_action || result.resumeAction || actionName, resumeArgs);
+        }
+        if (this._selectionDialogDescriptor(result)) {
+            throw new Error('too many interactive PDR selections');
+        }
+        return { result: result, cancelled: false };
+    }
+
     async pdrStep() {
         this.controls.setStatus('PDR step...');
         try {
-            var result = await this.api.executeAction('pdr_step', { sheet_id: this.activeSheetId || 'sheet-1' });
+            var pdrArgs = { sheet_id: this.activeSheetId || 'sheet-1' };
+            var result = await this.api.executeAction('pdr_step', pdrArgs);
+            var resumed = await this._resumeSelectionDialogAction('pdr_step', pdrArgs, result);
+            if (resumed.cancelled) {
+                this.controls.setStatus('PDR step cancelled', 'warning');
+                return null;
+            }
+            result = resumed.result;
             if (result && result.concept) {
                 this.applyConceptSnapshot(result.concept.sheet_id || result.sheet_id || this.activeSheetId || 'sheet-1', result.concept);
             } else {

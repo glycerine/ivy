@@ -130,6 +130,9 @@ type AnalysisGraphUI struct {
 
 	// UIParent is used for dialog interactions.
 	UIParent interface{}
+
+	// ExtensionConfig holds dynamic extension-point actions exposed to browsers.
+	ExtensionConfig *ExtConfig
 }
 
 // NewAnalysisGraphUI creates a new AnalysisGraphUI.
@@ -140,6 +143,7 @@ func NewAnalysisGraphUI() *AnalysisGraphUI {
 		SafeNodes:        make(map[int]bool),
 		Radios:           map[string]string{"mode": string(DefaultMode)},
 		RememberedGraphs: make(map[string]*Graph),
+		ExtensionConfig:  NewExtConfig(),
 	}
 }
 
@@ -531,6 +535,10 @@ func (ui *AnalysisGraphUI) GetNodeActions(nodeID int, click string) []ActionEntr
 	actions = append(actions, ui.NodeExecuteCommands(nodeID)...)
 	actions = append(actions, ActionEntry{Label: "---", Action: ""})
 	actions = append(actions, ui.NodeCommands()...)
+	if extActions := ui.NodeExtensionCommands(nodeID); len(extActions) > 0 {
+		actions = append(actions, ActionEntry{Label: "---", Action: ""})
+		actions = append(actions, extActions...)
+	}
 	return actions
 }
 
@@ -574,6 +582,84 @@ func (ui *AnalysisGraphUI) NodeExecuteCommands(nodeID int) []ActionEntry {
 		})
 	}
 	return entries
+}
+
+// NodeExtensionCommands returns dynamic extension-point entries for a node.
+func (ui *AnalysisGraphUI) NodeExtensionCommands(nodeID int) []ActionEntry {
+	if ui == nil || ui.ExtensionConfig == nil || ui.ExtensionConfig.ArgNodeActions == nil {
+		return nil
+	}
+	extActions, _ := ui.ExtensionConfig.ArgNodeActions.Invoke(ui, nodeID)
+	var entries []ActionEntry
+	seen := make(map[string]bool)
+	for _, ext := range extActions {
+		label := strings.TrimSpace(ext.Label)
+		if label == "" || seen[label] {
+			continue
+		}
+		seen[label] = true
+		entries = append(entries, ActionEntry{
+			Label:  label,
+			Action: "extension_arg_node",
+			Args: map[string]interface{}{
+				"extension_label": label,
+			},
+		})
+	}
+	return entries
+}
+
+func actionSelectionStrings(raw interface{}) []string {
+	switch v := raw.(type) {
+	case nil:
+		return nil
+	case []string:
+		return append([]string{}, v...)
+	case []interface{}:
+		out := make([]string, 0, len(v))
+		for _, item := range v {
+			out = append(out, fmt.Sprint(item))
+		}
+		return out
+	case string:
+		if v == "" {
+			return nil
+		}
+		return []string{v}
+	default:
+		return []string{fmt.Sprint(v)}
+	}
+}
+
+// RunArgNodeExtension dispatches a browser-selected ARG node extension action.
+func (ui *AnalysisGraphUI) RunArgNodeExtension(nodeID int, label string, args map[string]interface{}) error {
+	if ui == nil || ui.ExtensionConfig == nil || ui.ExtensionConfig.ArgNodeActions == nil {
+		return fmt.Errorf("no ARG node extension actions registered")
+	}
+	label = strings.TrimSpace(label)
+	if label == "" {
+		return fmt.Errorf("missing extension label")
+	}
+	extActions, errs := ui.ExtensionConfig.ArgNodeActions.Invoke(ui, nodeID)
+	if len(errs) > 0 && len(extActions) == 0 {
+		return errs[0]
+	}
+	for _, ext := range extActions {
+		if strings.TrimSpace(ext.Label) != label {
+			continue
+		}
+		if ext.Callback == nil {
+			return nil
+		}
+		callbackArgs := []interface{}{nodeID}
+		if args != nil {
+			if selection, ok := args["selection"]; ok {
+				callbackArgs = append(callbackArgs, actionSelectionStrings(selection))
+			}
+		}
+		return ext.Callback(callbackArgs...)
+	}
+	return fmt.Errorf("ARG node extension action %q not found", label)
 }
 
 // GetEdgeActions returns context-menu actions for an ARG edge

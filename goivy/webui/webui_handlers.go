@@ -464,6 +464,8 @@ func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sessionID stri
 		Mode                string `json:"mode"`
 		Bound               int    `json:"bound,omitempty"`
 		RelationsToMinimize string `json:"relations_to_minimize,omitempty"`
+		Abstractor          string `json:"abstractor,omitempty"`
+		TransitionLogFile   string `json:"transition_log_file,omitempty"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		// Default to the current mode if no body
@@ -472,6 +474,8 @@ func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sessionID stri
 	data, err := s.backend.Check(sessionID, req.Mode, CheckOptions{
 		Bound:               req.Bound,
 		RelationsToMinimize: req.RelationsToMinimize,
+		Abstractor:          req.Abstractor,
+		TransitionLogFile:   req.TransitionLogFile,
 		Context:             r.Context(),
 	})
 	if err != nil {

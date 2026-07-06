@@ -1,8 +1,38 @@
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
-import { addTraceResultViewAction, openTraceArgFromResult } from './checkService.ts';
+import { addTraceResultViewAction, analysisControllerOptions, openTraceArgFromResult } from './checkService.ts';
 import { runWithContext } from './runContextService.ts';
+import { openSourceBrowser as openSourceBrowserViaService } from './sourceBrowserService.ts';
+
+async function applyDescriptorDialog(app, actionName, args) {
+  const dialog = args && args.dialog;
+  if (!dialog) return args;
+  delete args.dialog;
+  const dialogType = dialog.type || dialog.kind || 'select';
+  const title = dialog.title || actionName || 'Choose';
+  const prompt = dialog.prompt || dialog.message || 'Choose:';
+  const argName = dialog.arg || dialog.arg_name || 'selection';
+  const items = Array.isArray(dialog.options) ? dialog.options : [];
+  if (dialogType === 'select_multiple' || dialogType === 'multi_select' || dialog.multiple === true) {
+    const selected = await app.listboxDialog(title, prompt, items, {
+      multiple: true,
+      okLabel: dialog.okLabel || dialog.ok_label || 'OK',
+    });
+    if (selected === null) return null;
+    args[argName] = selected || [];
+    return args;
+  }
+  const selected = await app.listboxDialog(title, prompt, items, {
+    okLabel: dialog.okLabel || dialog.ok_label || 'OK',
+    cancel: dialog.cancel !== false,
+  });
+  if (selected === null) return null;
+  args[argName] = selected;
+  return args;
+}
 
 export async function prepareArgNodeActionArgs(app, nodeData, actionName, args, sheetId) {
+  args = await applyDescriptorDialog(app, actionName, args);
+  if (args === null) return null;
   if (actionName === 'try_conjecture' && !args.conjecture) {
     const conjChoices = await app.api.argNodeAction(nodeData.obj || nodeData.id, 'try_conjecture_choices', { sheet_id: sheetId });
     const selectedConj = await app.listboxDialog(
@@ -108,11 +138,10 @@ async function showArgNodeExtendResult(app, result) {
 
 function showReturnedSource(app, result) {
   if (!result || !result.source) return false;
-  if (typeof app.setEditorContent === 'function') {
-    app.setEditorContent(result.source);
-  }
-  if (result.lineno && typeof app.scrollEditorToLine === 'function') {
-    app.scrollEditorToLine(result.lineno);
+  if (typeof app.openSourceBrowser === 'function') {
+    app.openSourceBrowser(result);
+  } else {
+    openSourceBrowserViaService(app, result);
   }
   if (app.controls && typeof app.controls.showInfo === 'function') {
     app.controls.showInfo(
@@ -158,7 +187,11 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
   const actionName = action.action || action.id || action[0] || action.name;
   app.controls.setStatus(`Executing: ${actionName}...`);
   try {
-    let args = { ...(action.args || {}), sheet_id: targetSheetId };
+    let args = {
+      ...analysisControllerOptions({ includeBound: false, includeRelations: false }),
+      ...(action.args || {}),
+      sheet_id: targetSheetId,
+    };
     args = await app.prepareArgNodeActionArgs(nodeData, actionName, args, targetSheetId);
     if (args === null) {
       app.controls.setStatus(`Action cancelled: ${actionName}`, 'warning');
@@ -216,7 +249,11 @@ export async function executeArgEdgeAction(app, edgeData, actionName, sheetId) {
     }, () => app.api.argNodeAction(
         edgeData.source_obj || edgeData.source || edgeData.obj,
         actionName,
-        { target: edgeData.target_obj || edgeData.target, sheet_id: targetSheetId },
+        {
+          ...analysisControllerOptions({ includeBound: false, includeRelations: false }),
+          target: edgeData.target_obj || edgeData.target,
+          sheet_id: targetSheetId,
+        },
       ));
     if (!result) return null;
     if (actionName === 'decompose' && result && result.decomposed) {

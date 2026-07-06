@@ -38,6 +38,49 @@ function relationsToMinimizeOptions({
   return { relations_to_minimize: input.value || '' };
 }
 
+function readSelectValue(doc, id) {
+  const select = doc && doc.getElementById(id) as HTMLSelectElement | null;
+  return select ? select.value : '';
+}
+
+function readInputValue(doc, id) {
+  const input = doc && doc.getElementById(id) as HTMLInputElement | null;
+  return input ? input.value : '';
+}
+
+function readBmcBound(doc) {
+  const raw = readSelectValue(doc, 'analysis-bmc-bound');
+  if (raw === '') return undefined;
+  const value = Number.parseInt(raw, 10);
+  return Number.isInteger(value) && value >= 0 ? value : undefined;
+}
+
+export function analysisControllerOptions({
+  doc = globalThis.document,
+  includeAbstractor = true,
+  includeBound = true,
+  includeRelations = true,
+  includeTransitionLog = true,
+} = {}) {
+  const options: Record<string, any> = {};
+  if (includeAbstractor) {
+    const abstractor = readSelectValue(doc, 'analysis-abstractor-select');
+    if (abstractor) options.abstractor = abstractor;
+  }
+  if (includeBound) {
+    const bound = readBmcBound(doc);
+    if (bound !== undefined) options.bound = bound;
+  }
+  if (includeRelations) {
+    Object.assign(options, relationsToMinimizeOptions({ doc }));
+  }
+  if (includeTransitionLog) {
+    const transitionLogFile = readInputValue(doc, 'transition-log-file').trim();
+    if (transitionLogFile) options.transition_log_file = transitionLogFile;
+  }
+  return options;
+}
+
 export function openTraceArgFromResult(app, result, {
   label = 'Error trace',
 } = {}) {
@@ -227,7 +270,7 @@ export async function runCheck(app) {
       }, requestOptions);
     }
     app.controls.setStatus(`Running ${mode} check...`);
-    const result = await app.api.runCheck(mode, relationsToMinimizeOptions(), requestOptions);
+    const result = await app.api.runCheck(mode, analysisControllerOptions(), requestOptions);
 
     if (active.cancelled || result?.result === 'cancelled') {
       app.controls.setStatus(`${mode} check cancelled`, 'warning');
@@ -479,17 +522,21 @@ export async function checkInduction(app) {
 
 export async function boundedCheck(app) {
   try {
-    const bound = await app.integerDialog('Bounded check', 'Enter bound:', app.currentBound, {
-      min: 1,
-      okLabel: 'OK',
-    });
+    const options = analysisControllerOptions();
+    let bound = options.bound;
+    if (bound === undefined) {
+      bound = await app.integerDialog('Bounded check', 'Enter bound:', app.currentBound, {
+        min: 1,
+        okLabel: 'OK',
+      });
+    }
     if (bound === null) {
       app.controls.setStatus('Bounded check cancelled');
       return;
     }
     app.currentBound = bound;
     app.controls.setStatus('Running bounded check...');
-    const result = await app.api.runCheck('bounded', { bound });
+    const result = await app.api.runCheck('bounded', { ...options, bound });
     app.controls.setStatus(`Bounded check: ${result.result || 'done'}`, 'success');
   } catch (err) {
     app.controls.setStatus(`Bounded check failed: ${err.message}`, 'error');
@@ -587,7 +634,7 @@ export async function ctiConceptAction(app, actionName) {
   app.controls.setStatus('Running CTI action...');
   const args = {
     sheet_id: app.activeSheetId || 'sheet-1',
-    ...relationsToMinimizeOptions(),
+    ...analysisControllerOptions(),
   };
   if (actionName === 'cti_strengthen') {
     const accepted = await confirmCtiStrengthen(app, args);

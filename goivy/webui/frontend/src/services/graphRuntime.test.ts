@@ -28,6 +28,7 @@ function makeFakeCy() {
     edges: vi.fn(() => [...edges]),
     getElementById: vi.fn((id) => nodes.find((node) => node.id() === id) || { length: 0 }),
     fit: vi.fn(),
+    reset: vi.fn(),
     resize: vi.fn(),
     destroy: vi.fn(),
     animate: vi.fn(),
@@ -134,6 +135,16 @@ describe('graphRuntime', () => {
     expect(styleFor(CONCEPT_STYLE, 'edge:selected')['overlay-opacity']).toBe(0);
   });
 
+  it('wraps semantic graph edge labels for long actions and relations', () => {
+    const styleFor = (style, selector) => style.find((entry) => entry.selector === selector)?.style || {};
+
+    expect(styleFor(ARG_STYLE, 'edge')['text-wrap']).toBe('wrap');
+    expect(styleFor(ARG_STYLE, 'edge')['text-max-width']).toBe('data(text_max_width)');
+    expect(styleFor(CONCEPT_STYLE, 'edge')['content']).toBe('data(label)');
+    expect(styleFor(CONCEPT_STYLE, 'edge')['text-wrap']).toBe('wrap');
+    expect(styleFor(CONCEPT_STYLE, 'edge')['text-max-width']).toBe('data(text_max_width)');
+  });
+
   it('renders concept subgraph shapes as compound cluster boxes', () => {
     expect(CONCEPT_STYLE.some((entry) => entry.selector === 'node.subgraph_box')).toBe(true);
 
@@ -156,6 +167,52 @@ describe('graphRuntime', () => {
     });
     expect(cy.added.filter((element) => element.data.parent === 's0').map((element) => element.data.id)).toEqual(['n0', 'n1']);
     expect(cy.added.some((element) => element.group === 'shapes')).toBe(false);
+  });
+
+  it('maps Python generic shape coordinates to locked Cytoscape box nodes', () => {
+    const cy = makeFakeCy();
+    window.cytoscape = vi.fn(() => cy);
+    document.body.innerHTML = '<div id="concept-graph"></div>';
+    const graph = new IvyGraph('concept-graph', CONCEPT_STYLE);
+
+    graph.update([
+      {
+        group: 'shapes',
+        classes: 'subgraphs',
+        locked: true,
+        data: {
+          id: 'cluster_0',
+          obj: 'cluster_0',
+          label: 'client',
+          shape: 'rectangle',
+          coords: [
+            { x: 10, y: 20 },
+            { x: 110, y: 20 },
+            { x: 110, y: 80 },
+            { x: 10, y: 80 },
+          ],
+        },
+      },
+    ], null);
+
+    const box = cy.added.find((element) => element.data.id === 'cluster_0');
+    expect(box).toMatchObject({
+      group: 'nodes',
+      locked: true,
+      position: { x: 60, y: 50 },
+      data: expect.objectContaining({
+        obj: 'cluster_0',
+        label: 'client',
+        shape: 'rectangle',
+        width: 100,
+        height: 60,
+        generic_shape: true,
+      }),
+    });
+    expect(box.classes).toContain('subgraph_box');
+    expect(box.classes).toContain('generic_shape');
+    expect(cy.added.some((element) => element.group === 'shapes')).toBe(false);
+    expect(cy.layout).not.toHaveBeenCalled();
   });
 
   it('uses layout-only edges for reversed and unconstrained layout edges', () => {
@@ -257,6 +314,41 @@ describe('graphRuntime', () => {
     expect(edge.style).toHaveBeenCalledWith('line-color', '#0000ff');
     expect(edge.style).toHaveBeenCalledWith('target-arrow-color', '#0000ff');
     expect(edge.style).toHaveBeenCalledWith('source-arrow-color', '#0000ff');
+  });
+
+  it('fits and resets the graph viewport as the scrollbar replacement', () => {
+    const cy = makeFakeCy();
+    window.cytoscape = vi.fn(() => cy);
+    document.body.innerHTML = '<div id="arg-graph"></div>';
+    const graph = new IvyGraph('arg-graph', ARG_STYLE);
+
+    graph.fit();
+    graph.resetView();
+
+    expect(cy.fit).toHaveBeenCalledWith(undefined, 30);
+    expect(cy.reset).toHaveBeenCalledTimes(1);
+    expect(cy.fit).toHaveBeenCalledTimes(2);
+  });
+
+  it('centers highlighted graph nodes so large graphs remain navigable', () => {
+    const cy = makeFakeCy();
+    window.cytoscape = vi.fn(() => cy);
+    document.body.innerHTML = '<div id="arg-graph"></div>';
+    const graph = new IvyGraph('arg-graph', ARG_STYLE);
+
+    graph.update([
+      { group: 'nodes', data: { id: 'state_99', label: '99' } },
+    ], { state_99: { x: 2400, y: 1800 } });
+    const node = cy.getElementById('state_99');
+    cy.animate.mockClear();
+
+    graph.highlightNode('state_99');
+
+    expect(node.addClass).toHaveBeenCalledWith('highlighted');
+    expect(cy.animate).toHaveBeenCalledWith({
+      center: { eles: node },
+      duration: 300,
+    });
   });
 
   it('preserves existing node positions when an edge-only update arrives', () => {

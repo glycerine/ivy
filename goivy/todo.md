@@ -16,7 +16,7 @@ The current Go/web UI already covers a large core: it can load Ivy source into a
 
 ## P1: Menus, Commands, And Dialogs
 
-### 2. Backend Session Save Is Not Wired To Python File Menu Semantics
+[x] ### 2. Backend Session Save Is Not Wired To Python File Menu Semantics
 
 Inventory refs: PLAN383 items 19, 34, and 35; PLAN378 sections 5.1, 5.2, and 22.11.
 
@@ -415,7 +415,7 @@ TODO: implement or exclude analysis-session history navigation for web UI. Tests
 
 Done: Go `AnalysisSessionWidget` history navigation now clamps to Python-style first/previous/next/last bounds, and browser analysis sheets now expose a history strip with first/prev/next/last controls plus step/transition info. Browser snapshot history restores ARG and concept graph payloads for the selected step. Focused Go and Playwright coverage was added, and `make test`/`make test-web` are green.
 
-[ ] ### 49. Proof Goal And CRG Widget Interactions Are Missing From The Browser
+[x] ### 49. Proof Goal And CRG Widget Interactions Are Missing From The Browser
 
 Inventory refs: PLAN378 sections 33.3 and 33.4.
 
@@ -423,7 +423,9 @@ The backend has proof stack data and proof actions, but the browser has no proof
 
 TODO: add a proof/goal graph UI or mark proof widgets out of scope. Tests should click proof goals and CRG nodes and verify the concept graph, transition view, and selected goal state update.
 
-[ ] ### 50. Abstractor, BMC Bound, Relations-To-Minimize, And Transition Log Controls Are Missing
+Done: the browser now creates a proof/CRG pane for analysis sheets, renders backend proof goals with the proof graph style, refreshes on model load and `proof_updated`, and applies proof-goal `view` results to the selected goal label, proof info, concept/ARG snapshots, transition view, and CRG node list. CRG node clicks now update the selected CRG node plus any supplied concept/ARG/transition payloads. Added focused Playwright coverage for proof goal and CRG clicks; focused Vitest, `make test`, and approved `make test-web` are green.
+
+[x] ### 50. Abstractor, BMC Bound, Relations-To-Minimize, And Transition Log Controls Are Missing
 
 Inventory refs: PLAN378 sections 33.5 through 33.8.
 
@@ -431,7 +433,11 @@ The Python widget layer includes an abstractor selection dropdown, BMC bound dro
 
 TODO: decide which controls should be surfaced in the web controller. Tests should set each control, run the dependent command, and verify the backend receives the selected abstractor/bound/relation/log setting.
 
-### 51. UI Extension Points Are Not Browser-Extensible Yet
+Progress: added a focused Playwright red test for browser analysis-controller controls. The test sets abstractor, BMC bound, relations-to-minimize, and transition log file controls, then verifies check, CTI minimize, and ARG action payloads carry those settings. The focused run reached the test body and failed red because the abstractor control is not yet present.
+
+Done: added Python-style browser controller controls for abstractor, BMC bound, and transition log file alongside the existing relations-to-minimize field. Check, bounded-check, CTI, and ARG action paths now use shared controller option extraction and send the selected values to backend APIs; hosted Go and Python backend adapters decode/forward those fields, and Go sessions persist selected abstractor, transition log file, CTI relation set, and bound. Added focused Playwright coverage for all four controls plus a focused Go session persistence test and static/Vitest coverage for the controls. The new focused test was red first, then green; focused adjacent CTI browser tests, `make test`, and approved `make test-web` are green with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 51. UI Extension Points Are Not Browser-Extensible Yet
 
 Inventory refs: PLAN383 items 7, 87, and 88; PLAN378 section 29.
 
@@ -439,7 +445,9 @@ The Go code has some registered ARG helper actions, but the Python `ui_extension
 
 TODO: design a web extension action descriptor API for ARG nodes, proof goals, and modal interactions. Tests should register a fake extension action, verify it appears in the right context menu, exercise its dialog interactions, and confirm it mutates backend state.
 
-[ ] ### 52. Interactive UPDR Modal Fact/Core Selection Is Missing
+Done: wired Go extension-point registrations into browser-visible ARG node descriptors and dispatch. `AnalysisGraphUI` now owns an extension config, renders registered ARG node extension actions into right-click menus, and `ArgNodeAction("extension_arg_node")` resolves the selected label back to the registered callback, passes modal selections, refreshes ARG payloads, and reports the extension result. The frontend ARG action path now supports descriptor-provided single/multi-select dialogs and strips dialog metadata before calling the backend. Added red-first focused Go coverage for registering a fake extension action and proving backend state mutation, plus red-first Playwright coverage for a descriptor-provided "Remove facts" multi-select modal and selected fact dispatch. Focused Go/Vitest/Playwright checks, `make test`, and approved `make test-web` are green.
+
+[x] ### 52. Interactive UPDR Modal Fact/Core Selection Is Missing
 
 Inventory refs: PLAN383 item 88; PLAN378 sections 28.8 through 28.10 and 29.6.
 
@@ -447,9 +455,11 @@ The backend can run PDR/UPDR-like actions, but Python interactive UPDR uses moda
 
 TODO: port interactive UPDR selection dialogs or provide a non-interactive mode with explicit limitations. Tests should run a PDR case that requires user selection and verify the modal choices drive the backend tactic result.
 
+Done: `pdrStep()` now accepts backend-provided interactive dialog descriptors, opens browser listbox modals for UPDR literal/fact and refinement-core selections, resumes the requested backend tactic action with the selected values, and then applies the final concept/status result. Added a red-first Vitest regression for the two-step literal/core resume flow and a red-first hosted-browser regression that drives both modals and verifies the resumed backend calls. Focused tests, `make test`, and approved `make test-web` are green with `GOCACHE=/tmp/goivy-gocache-codex`.
+
 ## P3: Lower-Level Rendering And Styling Details
 
-[ ] ### 53. Generic Canvas Element Mapping Is Not Ported
+[x] ### 53. Generic Canvas Element Mapping Is Not Ported
 
 Inventory refs: PLAN378 section 26 and PLAN383 item 104.
 
@@ -457,7 +467,9 @@ Python maps generic graph elements such as polygons, splines, text, clusters, an
 
 TODO: determine whether any remaining Python GUI behavior depends on generic graph elements rather than semantic ARG/concept elements. If so, add a generic render layer or targeted conversions and tests for every element kind.
 
-### 54. Scrollbar/Scroll-Region Semantics Are Replaced By Pan/Zoom
+Done: confirmed the active Python widget path emits Cytoscape-style nodes/edges plus sidecar `group: "shapes"` subgraph boxes with coordinate payloads, not raw Tk canvas items. The browser graph runtime now maps Python-style shape coordinates into locked Cytoscape box nodes with preserved position, width, height, label, and shape metadata, while keeping existing semantic compound cluster boxes. Added a red-first graph runtime regression for coordinate-only generic shapes, then fixed it; focused graph runtime tests, frontend typecheck, rebuilt web assets, `make test`, and approved `make test-web` are green with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 54. Scrollbar/Scroll-Region Semantics Are Replaced By Pan/Zoom
 
 Inventory refs: PLAN378 sections 2.5, 8.7, and 23.4.
 
@@ -465,7 +477,9 @@ Tk canvases expose scrollbars and update scroll regions after rendering. Cytosca
 
 TODO: decide whether this is an acceptable toolkit substitution. Tests should at least verify large graphs remain navigable, fit/reset works, and selected/highlighted nodes can be centered or scrolled into view.
 
-**Go/Web### 55. Text Fitting And Wrapping Need Semantic Regression Tests
+Done: accepted Cytoscape pan/zoom as the web replacement for Tk canvas scrollbars/scroll regions and made the behavior explicit. `IvyGraph` now exposes `resetView()`/`reset()` over Cytoscape reset plus fit, and `highlightNode()` centers the highlighted node so selected items in large graphs are brought into view. Added red-first graph runtime regressions for reset/fit behavior and center-on-highlight navigation. Focused tests, full graph runtime tests, frontend typecheck, rebuilt web assets, `make test`, and approved `make test-web` are green with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 55. Text Fitting And Wrapping Need Semantic Regression Tests
 
 Inventory refs: PLAN378 sections 32.16 and 32.17.
 
@@ -473,12 +487,16 @@ Python graph rendering sets wrapping and font sizes for ARG and concept nodes. T
 
 TODO: add graph-render tests for long state labels, relation labels, concept labels, and multi-line edge labels. Tests should assert text remains visible and does not overlap enough to hide the graph semantics.
 
+Done: graph payloads now cap long node-label widths, grow node height for wrapped/multi-line text, and attach edge wrapping metadata for long action/relation labels. Browser and Go Cytoscape styles now wrap semantic edge labels with `text-max-width`, and concept edges expose their relation labels through `data(label)`. Added red-first Go coverage for long state labels plus multi-line edge label metadata and red-first frontend coverage for ARG/concept edge wrapping styles. Focused tests, adjacent render tests, frontend typecheck, rebuilt web assets, `make test`, and approved `make test-web` are green with `GOCACHE=/tmp/goivy-gocache-codex`.
+
 ## P3: Source, Files, And Recent State
 
-[ ] ### 56. File Browser Raise/Re-use Semantics Are Missing
+[x] ### 56. File Browser Raise/Re-use Semantics Are Missing
 
 Inventory refs: PLAN383 item 20; PLAN378 sections 23.1 through 23.5.
 
 The web UI has one editor and can highlight a line in it. Python has a separate source browser window that is reused, raised, and line-highlighted independently.
 
 TODO: if source browsing remains in scope, implement a source browser surface with reuse and raise semantics. Tests should open source for two different edges and verify the same browser surface updates and remains separate from the editable model.
+
+Done: source browsing now opens in a reusable, raiseable browser pane that stays separate from the editable model. ARG source actions route to `openSourceBrowser`, reuse the same `[data-source-browser]` surface across different edges, update the file/line/content metadata, and highlight the requested line without mutating the editor. Added red-first source-browser and ARG source-action regressions, plus a two-edge reuse test. Focused tests, frontend typecheck, rebuilt web assets, `make test`, and approved `make test-web` are green with `GOCACHE=/tmp/goivy-gocache-codex`.

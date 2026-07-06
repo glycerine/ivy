@@ -341,6 +341,15 @@ func (b *PyBackend) Check(sessionID, mode string, options CheckOptions) ([]byte,
 	if options.Bound != 0 {
 		body["bound"] = options.Bound
 	}
+	if options.RelationsToMinimize != "" {
+		body["relations_to_minimize"] = options.RelationsToMinimize
+	}
+	if options.Abstractor != "" {
+		body["abstractor"] = options.Abstractor
+	}
+	if options.TransitionLogFile != "" {
+		body["transition_log_file"] = options.TransitionLogFile
+	}
 	return b.post("/session/"+sessionID+"/check", body)
 }
 

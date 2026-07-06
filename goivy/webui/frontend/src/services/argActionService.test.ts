@@ -97,6 +97,7 @@ describe('argActionService', () => {
         applyConceptSnapshot: vi.fn(),
       },
       controls: { setStatus: vi.fn(), showInfo: vi.fn() },
+      openSourceBrowser: vi.fn(),
       setEditorContent: vi.fn(),
       scrollEditorToLine: vi.fn(),
     };
@@ -114,8 +115,9 @@ describe('argActionService', () => {
       conjecture: 'c',
     });
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', { elements: ['concept'], positions: null });
-    expect(app.setEditorContent).toHaveBeenCalledWith('ivy source');
-    expect(app.scrollEditorToLine).toHaveBeenCalledWith(7);
+    expect(app.openSourceBrowser).toHaveBeenCalledWith(expect.objectContaining({ source: 'ivy source', lineno: 7, file: 'm.ivy' }));
+    expect(app.setEditorContent).not.toHaveBeenCalled();
+    expect(app.scrollEditorToLine).not.toHaveBeenCalled();
     expect(app.controls.showInfo).toHaveBeenCalledWith('Source: m.ivy line 7', '');
     expect(app.controls.setStatus).toHaveBeenLastCalledWith('Conjecture goal opened.', 'success');
   });
@@ -137,6 +139,7 @@ describe('argActionService', () => {
       },
       okDialog: vi.fn(),
       controls: { setStatus: vi.fn(), showInfo: vi.fn() },
+      openSourceBrowser: vi.fn(),
       setEditorContent: vi.fn(),
       scrollEditorToLine: vi.fn(),
     };
@@ -148,8 +151,9 @@ describe('argActionService', () => {
       'sheet-1',
     );
 
-    expect(app.setEditorContent).toHaveBeenCalledWith('ivy source');
-    expect(app.scrollEditorToLine).toHaveBeenCalledWith(3);
+    expect(app.openSourceBrowser).toHaveBeenCalledWith(expect.objectContaining({ source: 'ivy source', lineno: 3, file: 'm.ivy' }));
+    expect(app.setEditorContent).not.toHaveBeenCalled();
+    expect(app.scrollEditorToLine).not.toHaveBeenCalled();
     expect(app.okDialog).toHaveBeenCalledWith('ivyweb', 'The condition is unreachable along the given path.');
     expect(app.controls.setStatus).toHaveBeenLastCalledWith('The condition is unreachable along the given path.', 'success');
   });
@@ -177,6 +181,7 @@ describe('argActionService', () => {
       openARGSheet: vi.fn(),
       setUIMode: vi.fn(),
       controls: { setStatus: vi.fn(), showInfo: vi.fn() },
+      openSourceBrowser: vi.fn(),
       setEditorContent: vi.fn(),
       scrollEditorToLine: vi.fn(),
     };
@@ -188,8 +193,9 @@ describe('argActionService', () => {
       'sheet-1',
     );
 
-    expect(app.setEditorContent).toHaveBeenCalledWith('ivy source');
-    expect(app.scrollEditorToLine).toHaveBeenCalledWith(4);
+    expect(app.openSourceBrowser).toHaveBeenCalledWith(expect.objectContaining({ source: 'ivy source', lineno: 4, file: 'm.ivy' }));
+    expect(app.setEditorContent).not.toHaveBeenCalled();
+    expect(app.scrollEditorToLine).not.toHaveBeenCalled();
     expect(app.textDialog).toHaveBeenCalledWith(
       'ivyweb',
       'The condition is reachable along the given path.',
@@ -317,12 +323,14 @@ describe('argActionService', () => {
   });
 
   it('loads source returned by ARG edge view-source actions', async () => {
+    const sourceResult = { source: 'action a', lineno: 7, file: 'm.ivy' };
     const app = {
       activeSheetId: 'sheet-1',
       api: {
-        argNodeAction: vi.fn(async () => ({ source: 'action a', lineno: 7, file: 'm.ivy' })),
+        argNodeAction: vi.fn(async () => sourceResult),
       },
       controls: { setStatus: vi.fn(), showInfo: vi.fn() },
+      openSourceBrowser: vi.fn(),
       setEditorContent: vi.fn(),
       scrollEditorToLine: vi.fn(),
     };
@@ -330,8 +338,43 @@ describe('argActionService', () => {
     await executeArgEdgeAction(app, { source_obj: 's0', target_obj: 's1' }, 'view_source', 'sheet-1');
 
     expect(app.api.argNodeAction).toHaveBeenCalledWith('s0', 'view_source', { target: 's1', sheet_id: 'sheet-1' });
-    expect(app.setEditorContent).toHaveBeenCalledWith('action a');
-    expect(app.scrollEditorToLine).toHaveBeenCalledWith(7);
+    expect(app.openSourceBrowser).toHaveBeenCalledWith(sourceResult);
+    expect(app.setEditorContent).not.toHaveBeenCalled();
+    expect(app.scrollEditorToLine).not.toHaveBeenCalled();
     expect(app.controls.showInfo).toHaveBeenCalledWith('Source: m.ivy line 7', '');
+  });
+
+  it('reuses one source browser for two edge view-source actions without mutating the model editor', async () => {
+    document.body.innerHTML = [
+      '<div class="sheet-content active">',
+      '  <textarea id="model-editor">editable model</textarea>',
+      '</div>',
+    ].join('');
+    const app = {
+      activeSheetId: 'sheet-1',
+      api: {
+        argNodeAction: vi.fn(async (_node, _action, args) => (
+          args.target === 's1'
+            ? { source: 'first edge\nkeep', lineno: 1, file: 'first.ivy' }
+            : { source: 'second edge\nupdated', lineno: 2, file: 'second.ivy' }
+        )),
+      },
+      controls: { setStatus: vi.fn(), showInfo: vi.fn() },
+      setEditorContent: vi.fn(),
+      scrollEditorToLine: vi.fn(),
+    };
+
+    await executeArgEdgeAction(app, { source_obj: 's0', target_obj: 's1' }, 'view_source', 'sheet-1');
+    const browser = document.querySelector('[data-source-browser]');
+    await executeArgEdgeAction(app, { source_obj: 's0', target_obj: 's2' }, 'view_source', 'sheet-1');
+
+    expect(document.querySelectorAll('[data-source-browser]')).toHaveLength(1);
+    expect(document.querySelector('[data-source-browser]')).toBe(browser);
+    expect(browser?.getAttribute('data-source-file')).toBe('second.ivy');
+    expect(browser?.getAttribute('data-source-line')).toBe('2');
+    expect(browser?.querySelector('.source-browser-line-highlight')?.textContent).toBe('updated');
+    expect((document.getElementById('model-editor') as HTMLTextAreaElement).value).toBe('editable model');
+    expect(app.setEditorContent).not.toHaveBeenCalled();
+    expect(app.scrollEditorToLine).not.toHaveBeenCalled();
   });
 });

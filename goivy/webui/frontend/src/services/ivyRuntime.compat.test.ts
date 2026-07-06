@@ -1056,6 +1056,107 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(result.message).toBe('PDR step diagrammed the predecessor goal.');
   });
 
+  it('resumes PDR step after interactive UPDR literal and core selections', async () => {
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-7';
+    runtime.api.executeAction = vi.fn(async (action, args) => {
+      if (action === 'pdr_step' && !args.selection && !args.core) {
+        return {
+          sheet_id: 'sheet-7',
+          status: 'needs_input',
+          message: 'Choose which literals to take as the refutation goal',
+          dialog: {
+            type: 'select_multiple',
+            title: 'Generalize Diagram',
+            prompt: 'Choose which literals to take as the refutation goal',
+            arg: 'selection',
+            options: [
+              { label: 'p(X)', value: 'p(X)' },
+              { label: 'q(X)', value: 'q(X)' },
+            ],
+          },
+          resume_action: 'pdr_step',
+          resume_args: {
+            sheet_id: 'sheet-7',
+            interaction_id: 'iupdr-1',
+          },
+        };
+      }
+      if (action === 'pdr_step' && args.selection && !args.core) {
+        return {
+          sheet_id: 'sheet-7',
+          status: 'needs_input',
+          message: 'Choose the literals to use',
+          dialog: {
+            type: 'updr_select_core',
+            title: 'Refinement',
+            prompt: 'Choose the literals to use',
+            options: [
+              { label: 'p(X)', value: 'p(X)' },
+              { label: 'q(X)', value: 'q(X)' },
+            ],
+          },
+          resume_action: 'pdr_step',
+          resume_args: {
+            sheet_id: 'sheet-7',
+            interaction_id: 'iupdr-1',
+          },
+        };
+      }
+      return {
+        sheet_id: 'sheet-7',
+        status: 'reversed',
+        message: 'Refined with user selected core',
+        concept: { sheet_id: 'sheet-7', graph: {}, elements: ['selected'] },
+      };
+    });
+    runtime.listboxDialog = vi.fn(async (title) => (title === 'Refinement' ? ['q(X)'] : ['p(X)']));
+    runtime.applyConceptSnapshot = vi.fn();
+    runtime.refreshConceptGraph = vi.fn();
+
+    const result = await runtime.pdrStep();
+
+    expect(runtime.listboxDialog).toHaveBeenCalledWith(
+      'Generalize Diagram',
+      'Choose which literals to take as the refutation goal',
+      [
+        { label: 'p(X)', value: 'p(X)' },
+        { label: 'q(X)', value: 'q(X)' },
+      ],
+      expect.objectContaining({ multiple: true, okLabel: 'OK' }),
+    );
+    expect(runtime.listboxDialog).toHaveBeenCalledWith(
+      'Refinement',
+      'Choose the literals to use',
+      [
+        { label: 'p(X)', value: 'p(X)' },
+        { label: 'q(X)', value: 'q(X)' },
+      ],
+      expect.objectContaining({ multiple: true, okLabel: 'OK' }),
+    );
+    expect(runtime.api.executeAction).toHaveBeenNthCalledWith(1, 'pdr_step', { sheet_id: 'sheet-7' });
+    expect(runtime.api.executeAction).toHaveBeenNthCalledWith(2, 'pdr_step', {
+      sheet_id: 'sheet-7',
+      interaction_id: 'iupdr-1',
+      selection: ['p(X)'],
+    });
+    expect(runtime.api.executeAction).toHaveBeenNthCalledWith(3, 'pdr_step', {
+      sheet_id: 'sheet-7',
+      interaction_id: 'iupdr-1',
+      core: ['q(X)'],
+    });
+    expect(runtime.applyConceptSnapshot).toHaveBeenCalledWith('sheet-7', {
+      sheet_id: 'sheet-7',
+      graph: {},
+      elements: ['selected'],
+    });
+    expect(runtime.controls.lastStatus).toEqual({
+      message: 'Refined with user selected core',
+      kind: 'success',
+    });
+    expect(result?.message).toBe('Refined with user selected core');
+  });
+
   it('shows eliminated conjectures after one-step reach', async () => {
     const runtime = makeRuntime();
     runtime.activeSheetId = 'sheet-7';

@@ -100,6 +100,27 @@ describe('static CTI relation controls', () => {
     expect(input?.getAttribute('aria-label')).toBe('Relations to minimize');
     expect(input?.closest('#state-controls')).not.toBeNull();
   });
+
+  it('exposes Python-style abstractor, BMC bound, and transition log controls', () => {
+    const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
+    const abstractor = doc.getElementById('analysis-abstractor-select') as HTMLSelectElement | null;
+    const bound = doc.getElementById('analysis-bmc-bound') as HTMLSelectElement | null;
+    const logFile = doc.getElementById('transition-log-file') as HTMLInputElement | null;
+    const abstractorValues = Array.from(abstractor?.querySelectorAll('option') || []).map((option) => option.value);
+    const boundValues = Array.from(bound?.querySelectorAll('option') || []).map((option) => option.value);
+
+    expect(abstractorValues).toEqual([
+      'ta.Abstractors.top_bottom',
+      'ta.Abstractors.concrete',
+      'ta.Abstractors.propagate',
+      'ta.Abstractors.propagate_and_conjectures',
+      'ta.Abstractors.concept_space',
+    ]);
+    expect(boundValues).toEqual(['1', '3', '5', '10', '15']);
+    expect(bound?.value).toBe('3');
+    expect(logFile?.getAttribute('aria-label')).toBe('Transition log file');
+    expect(logFile?.closest('[data-analysis-controller-controls]')).not.toBeNull();
+  });
 });
 
 describe('static job control', () => {

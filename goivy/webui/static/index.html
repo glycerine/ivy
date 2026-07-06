@@ -66,6 +66,32 @@
                 <option value="bounded">Bounded</option>
             </select>
         </div>
+        <div class="menu-group analysis-controller-controls" data-analysis-controller-controls>
+            <label class="menu-field">
+                <span class="menu-label">Abstractor</span>
+                <select id="analysis-abstractor-select" aria-label="Abstractor">
+                    <option value="ta.Abstractors.top_bottom" selected>top/bottom</option>
+                    <option value="ta.Abstractors.concrete">concrete</option>
+                    <option value="ta.Abstractors.propagate">propagate</option>
+                    <option value="ta.Abstractors.propagate_and_conjectures">propagate &amp; conjectures</option>
+                    <option value="ta.Abstractors.concept_space">concept space</option>
+                </select>
+            </label>
+            <label class="menu-field menu-field-compact">
+                <span class="menu-label">BMC</span>
+                <select id="analysis-bmc-bound" aria-label="BMC bound">
+                    <option value="1">1</option>
+                    <option value="3" selected>3</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                </select>
+            </label>
+            <label class="menu-field transition-log-field">
+                <span class="menu-label">Log</span>
+                <input id="transition-log-file" class="transition-log-input" type="text" aria-label="Transition log file" placeholder="model.log" spellcheck="false">
+            </label>
+        </div>
         <div class="menu-group ui-mode-only ui-mode-reachability">
             <button id="btn-check" class="menu-btn action-btn">Check</button>
             <button id="btn-show-reachable" class="menu-btn">Show Reachable</button>

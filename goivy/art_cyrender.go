@@ -46,6 +46,47 @@ type CyPosition struct {
 	Y float64 `json:"y"`
 }
 
+const (
+	cyNodeMinWidth     = 50
+	cyNodeMaxWidth     = 240
+	cyNodeCharWidth    = 10
+	cyNodeBaseHeight   = 30
+	cyNodeLineHeight   = 20
+	cyEdgeTextMaxWidth = 180
+)
+
+func cyLabelDimensions(label string) (int, int) {
+	maxLine := 0
+	wrappedLines := 0
+	maxCharsPerLine := cyNodeMaxWidth / cyNodeCharWidth
+	if maxCharsPerLine < 1 {
+		maxCharsPerLine = 1
+	}
+	for _, line := range strings.Split(label, "\n") {
+		lineLen := len(line)
+		if lineLen > maxLine {
+			maxLine = lineLen
+		}
+		lines := (lineLen + maxCharsPerLine - 1) / maxCharsPerLine
+		if lines < 1 {
+			lines = 1
+		}
+		wrappedLines += lines
+	}
+	width := maxLine * cyNodeCharWidth
+	if width < cyNodeMinWidth {
+		width = cyNodeMinWidth
+	}
+	if width > cyNodeMaxWidth {
+		width = cyNodeMaxWidth
+	}
+	height := cyNodeBaseHeight + wrappedLines*cyNodeLineHeight
+	if height < 50 {
+		height = 50
+	}
+	return width, height
+}
+
 // NewCyElements creates an empty CyElements container.
 func NewCyElements() *CyElements {
 	return &CyElements{
@@ -71,18 +112,7 @@ func (g *CyElements) AddNode(obj, label string, classes []string, shortInfo stri
 		data["actions"] = actions
 	}
 
-	// Compute width heuristic: 10px per character, minimum 50.
-	maxLine := 0
-	for _, line := range strings.Split(label, "\n") {
-		if len(line) > maxLine {
-			maxLine = len(line)
-		}
-	}
-	w := maxLine * 10
-	if w < 50 {
-		w = 50
-	}
-	h := 50
+	w, h := cyLabelDimensions(label)
 	data["width"] = w
 	data["height"] = h
 
@@ -113,23 +143,7 @@ func (g *CyElements) AddNodeWithColor(obj, label string, classes []string, short
 		data["border_color"] = borderColor
 	}
 
-	// Compute width heuristic: 10px per character, minimum 50.
-	maxLine := 0
-	for _, line := range strings.Split(label, "\n") {
-		if len(line) > maxLine {
-			maxLine = len(line)
-		}
-	}
-	w := maxLine * 10
-	if w < 50 {
-		w = 50
-	}
-	// Height grows with number of label lines
-	lines := strings.Count(label, "\n") + 1
-	h := 30 + lines*20
-	if h < 50 {
-		h = 50
-	}
+	w, h := cyLabelDimensions(label)
 	data["width"] = w
 	data["height"] = h
 
@@ -151,15 +165,17 @@ func (g *CyElements) AddEdge(obj, sourceObj, targetObj, label string, classes []
 	g.Elements = append(g.Elements, CyElement{
 		Group: "edges",
 		Data: map[string]interface{}{
-			"id":         eid,
-			"source":     srcID,
-			"target":     tgtID,
-			"obj":        obj,
-			"source_obj": sourceObj,
-			"target_obj": targetObj,
-			"label":      label,
-			"short_info": shortInfo,
-			"long_info":  longInfo,
+			"id":             eid,
+			"source":         srcID,
+			"target":         tgtID,
+			"obj":            obj,
+			"source_obj":     sourceObj,
+			"target_obj":     targetObj,
+			"label":          label,
+			"short_info":     shortInfo,
+			"long_info":      longInfo,
+			"text_wrap":      true,
+			"text_max_width": cyEdgeTextMaxWidth,
 		},
 		Classes: strings.Join(classes, " "),
 	})

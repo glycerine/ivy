@@ -388,7 +388,11 @@ test('CTI relations-to-minimize field is sent to check and minimize actions', as
 
   expect(await page.evaluate(() => window._ctiCheckOptions)).toEqual({
     mode: 'induction',
-    options: { relations_to_minimize: 'q' },
+    options: {
+      abstractor: 'ta.Abstractors.top_bottom',
+      bound: 3,
+      relations_to_minimize: 'q',
+    },
   });
 
   await page.evaluate(async () => {
@@ -403,7 +407,79 @@ test('CTI relations-to-minimize field is sent to check and minimize actions', as
 
   expect(await page.evaluate(() => window._ctiMinimizeCall)).toEqual({
     action: 'cti_minimize',
-    args: { sheet_id: 'sheet-1', relations_to_minimize: 'q' },
+    args: {
+      sheet_id: 'sheet-1',
+      abstractor: 'ta.Abstractors.top_bottom',
+      bound: 3,
+      relations_to_minimize: 'q',
+    },
+  });
+});
+
+test('analysis controller controls are sent to dependent backend commands', async ({ page }) => {
+  await openIvy(page);
+
+  await page.locator('#analysis-abstractor-select').selectOption('ta.Abstractors.propagate');
+  await page.locator('#analysis-bmc-bound').selectOption('15');
+  await page.locator('#cti-relations-to-minimize').fill('link semaphore');
+  await page.locator('#transition-log-file').fill('client_server.log');
+
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.getMode = () => 'bounded';
+    app._persistedFileContent = '';
+    app.api.runCheck = async (mode, options) => {
+      window._controllerCheckCall = { mode, options };
+      return { result: 'pass', mode, message: 'ok' };
+    };
+    app.api.getARG = async () => null;
+    app.api.getConceptGraph = async () => null;
+    app.showCheckResult = () => {};
+    app._autoCheckUsedRelations = async () => {};
+    await app.runCheck();
+
+    app.api.executeAction = async (action, args) => {
+      window._controllerCtiCall = { action, args };
+      return { message: 'minimized' };
+    };
+    app.refreshConceptGraph = async () => {};
+    await app.ctiConceptAction('cti_minimize');
+
+    app.api.argNodeAction = async (node, action, args) => {
+      window._controllerArgCall = { node, action, args };
+      return { message: 'recalculated' };
+    };
+    app.isVisualOnlySheet = () => false;
+    await app.executeArgNodeAction({ id: 'state_0' }, { id: 'recalculate' }, 'sheet-1');
+  });
+
+  expect(await page.evaluate(() => window._controllerCheckCall)).toEqual({
+    mode: 'bounded',
+    options: {
+      abstractor: 'ta.Abstractors.propagate',
+      bound: 15,
+      relations_to_minimize: 'link semaphore',
+      transition_log_file: 'client_server.log',
+    },
+  });
+  expect(await page.evaluate(() => window._controllerCtiCall)).toEqual({
+    action: 'cti_minimize',
+    args: {
+      sheet_id: 'sheet-1',
+      abstractor: 'ta.Abstractors.propagate',
+      bound: 15,
+      relations_to_minimize: 'link semaphore',
+      transition_log_file: 'client_server.log',
+    },
+  });
+  expect(await page.evaluate(() => window._controllerArgCall)).toEqual({
+    node: 'state_0',
+    action: 'recalculate',
+    args: {
+      sheet_id: 'sheet-1',
+      abstractor: 'ta.Abstractors.propagate',
+      transition_log_file: 'client_server.log',
+    },
   });
 });
 
@@ -450,7 +526,12 @@ test('CTI minimize shows BMC bound core details and omits unselected facts', asy
   await expect(minimizeRun).resolves.toEqual({
     call: {
       action: 'cti_minimize',
-      args: { sheet_id: 'sheet-1', relations_to_minimize: 'relations to minimize' },
+      args: {
+        sheet_id: 'sheet-1',
+        abstractor: 'ta.Abstractors.top_bottom',
+        bound: 3,
+        relations_to_minimize: 'relations to minimize',
+      },
     },
     status: expect.stringContaining('Conjecture minimized using BMC bound 4'),
   });
@@ -509,7 +590,12 @@ test('CTI sufficient and relative induction checks show selected conjecture dial
     await expect(checkRun).resolves.toEqual({
       call: {
         action: scenario.action,
-        args: { sheet_id: 'sheet-1', relations_to_minimize: 'relations to minimize' },
+        args: {
+          sheet_id: 'sheet-1',
+          abstractor: 'ta.Abstractors.top_bottom',
+          bound: 3,
+          relations_to_minimize: 'relations to minimize',
+        },
       },
       status: expect.stringContaining(scenario.message),
     });
@@ -577,7 +663,12 @@ test('CTI strengthen confirms the exact conjecture before appending', async ({ p
   await expect(page.locator('[data-ivy-dialog-text]')).toHaveValue('forall X. p(X)');
   await page.getByRole('button', { name: 'Cancel' }).click();
   await expect(firstRun).resolves.toBeNull();
-  const strengthenArgs = { sheet_id: 'sheet-1', relations_to_minimize: 'relations to minimize' };
+  const strengthenArgs = {
+    sheet_id: 'sheet-1',
+    abstractor: 'ta.Abstractors.top_bottom',
+    bound: 3,
+    relations_to_minimize: 'relations to minimize',
+  };
   expect(await page.evaluate(() => window._ctiStrengthenCalls)).toEqual([
     { action: 'cti_strengthen_preview', args: strengthenArgs },
   ]);
@@ -865,6 +956,108 @@ test('reach action shows eliminated conjectures dialog', async ({ page }) => {
   await expect(reachPromise).resolves.toEqual({
     call: { action: 'reach', args: { sheet_id: 'sheet-1' } },
     status: expect.stringContaining('Reach complete'),
+  });
+});
+
+test('PDR step modal fact and core selections resume the backend tactic', async ({ page }) => {
+  await openIvy(page);
+
+  const pdrPromise = page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.activeSheetId = 'sheet-1';
+    window._pdrCalls = [];
+    app.api.executeAction = async (action, args) => {
+      window._pdrCalls.push({ action, args });
+      if (action === 'pdr_step' && !args.selection && !args.core) {
+        return {
+          sheet_id: 'sheet-1',
+          status: 'needs_input',
+          message: 'Choose which literals to take as the refutation goal',
+          dialog: {
+            type: 'select_multiple',
+            title: 'Generalize Diagram',
+            prompt: 'Choose which literals to take as the refutation goal',
+            arg: 'selection',
+            options: [
+              { label: 'p(X)', value: 'p(X)' },
+              { label: 'q(X)', value: 'q(X)' },
+            ],
+          },
+          resume_action: 'pdr_step',
+          resume_args: {
+            sheet_id: 'sheet-1',
+            interaction_id: 'iupdr-1',
+          },
+        };
+      }
+      if (action === 'pdr_step' && args.selection && !args.core) {
+        return {
+          sheet_id: 'sheet-1',
+          status: 'needs_input',
+          message: 'Choose the literals to use',
+          dialog: {
+            type: 'updr_select_core',
+            title: 'Refinement',
+            prompt: 'Choose the literals to use',
+            options: [
+              { label: 'p(X)', value: 'p(X)' },
+              { label: 'q(X)', value: 'q(X)' },
+            ],
+          },
+          resume_action: 'pdr_step',
+          resume_args: {
+            sheet_id: 'sheet-1',
+            interaction_id: 'iupdr-1',
+          },
+        };
+      }
+      return {
+        sheet_id: 'sheet-1',
+        status: 'reversed',
+        message: 'Refined with user selected core',
+        concept: { sheet_id: 'sheet-1', elements: [], positions: {} },
+      };
+    };
+    app.refreshConceptGraph = async () => undefined;
+    await app.pdrStep();
+    return {
+      calls: window._pdrCalls,
+      status: document.querySelector('#statusbar')?.textContent || '',
+    };
+  });
+
+  await expect(page.locator('[data-ivy-dialog]')).toBeVisible();
+  await expect(page.locator('[data-ivy-dialog]')).toContainText('Generalize Diagram');
+  await expect(page.locator('[data-ivy-dialog]')).toContainText('Choose which literals to take as the refutation goal');
+  await page.locator('[data-ivy-dialog-list]').selectOption(['p(X)']);
+  await page.getByRole('button', { name: 'OK' }).click();
+  await expect(page.locator('[data-ivy-dialog]')).toBeVisible();
+  await expect(page.locator('[data-ivy-dialog]')).toContainText('Refinement');
+  await expect(page.locator('[data-ivy-dialog]')).toContainText('Choose the literals to use');
+  await page.locator('[data-ivy-dialog-list]').selectOption(['q(X)']);
+  await page.getByRole('button', { name: 'OK' }).click();
+
+  await expect(pdrPromise).resolves.toEqual({
+    calls: [
+      { action: 'pdr_step', args: { sheet_id: 'sheet-1' } },
+      {
+        action: 'pdr_step',
+        args: {
+          sheet_id: 'sheet-1',
+          interaction_id: 'iupdr-1',
+          selection: ['p(X)'],
+        },
+      },
+      {
+        action: 'pdr_step',
+        args: {
+          sheet_id: 'sheet-1',
+          interaction_id: 'iupdr-1',
+          core: ['q(X)'],
+        },
+      },
+    ],
+    status: expect.stringContaining('Refined with user selected core'),
   });
 });
 
@@ -2046,8 +2239,78 @@ test('ARG node execute actions are rendered from backend descriptors and dispatc
   await page.locator('.context-menu-item', { hasText: 'ext:connect' }).click();
   const calls = await page.evaluate(() => window._executeActionCalls);
   expect(calls).toEqual([
-    { node: 'state_0', action: 'execute_action', args: { action_name: 'ext:connect', action_label: 'ext:connect', sheet_id: 'sheet-1' } },
+    {
+      node: 'state_0',
+      action: 'execute_action',
+      args: {
+        action_name: 'ext:connect',
+        action_label: 'ext:connect',
+        abstractor: 'ta.Abstractors.top_bottom',
+        sheet_id: 'sheet-1',
+      },
+    },
   ]);
+});
+
+test('extension ARG descriptors prompt for modal selections before dispatch', async ({ page }) => {
+  await openIvy(page);
+
+  const dispatchRun = page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.api.argNodeAction = async (node, action, args) => {
+      window._extensionArgCall = { node, action, args };
+      return { status: 'ok', message: 'facts removed' };
+    };
+    app.argGraph.update([
+      {
+        group: 'nodes',
+        data: {
+          id: 'state_0',
+          obj: 'state_0',
+          label: '0',
+          actions: [
+            {
+              label: 'Remove facts',
+              action: 'extension_arg_node',
+              args: {
+                extension_label: 'Remove facts',
+                dialog: {
+                  type: 'select_multiple',
+                  title: 'Remove Facts',
+                  prompt: 'Select facts to remove from ARG node 0:',
+                  arg: 'selection',
+                  options: [
+                    { label: 'fact A', value: 'fact-a' },
+                    { label: 'fact B', value: 'fact-b' },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      },
+    ]);
+    app.onArgNodeRightClick(app.argGraph.cy.getElementById('state_0').data(), { x: 12, y: 12 }, 'sheet-1');
+  });
+  await dispatchRun;
+
+  await page.locator('.context-menu-item', { hasText: 'Remove facts' }).click();
+  await expect(page.locator('[data-ivy-dialog]')).toBeVisible();
+  await expect(page.locator('[data-ivy-dialog]')).toContainText('Select facts to remove from ARG node 0:');
+  await page.locator('[data-ivy-dialog-list]').selectOption(['fact-a']);
+  await page.getByRole('button', { name: 'OK' }).click();
+  await page.waitForFunction(() => window._extensionArgCall);
+
+  expect(await page.evaluate(() => window._extensionArgCall)).toEqual({
+    node: 'state_0',
+    action: 'extension_arg_node',
+    args: {
+      extension_label: 'Remove facts',
+      selection: ['fact-a'],
+      abstractor: 'ta.Abstractors.top_bottom',
+      sheet_id: 'sheet-1',
+    },
+  });
 });
 
 test('failed check result can open its trace ARG in a sheet', async ({ page }) => {

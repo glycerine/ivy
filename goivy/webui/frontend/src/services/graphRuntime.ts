@@ -49,6 +49,7 @@ export const CONCEPT_STYLE = [
   {
     selector: 'edge',
     style: {
+      content: 'data(label)',
       width: '3px',
       'line-color': '#888',
       'target-arrow-color': '#888',
@@ -57,6 +58,8 @@ export const CONCEPT_STYLE = [
       'target-arrow-fill': 'filled',
       'source-arrow-fill': 'filled',
       'curve-style': 'bezier',
+      'text-wrap': 'wrap',
+      'text-max-width': 'data(text_max_width)',
     },
   },
   {
@@ -147,6 +150,8 @@ export const ARG_STYLE = [
       'line-style': 'solid',
       'edge-text-rotation': 'none',
       'curve-style': 'bezier',
+      'text-wrap': 'wrap',
+      'text-max-width': 'data(text_max_width)',
       color: '#c8c8c8',
       'text-outline-width': '2px',
       'text-outline-color': '#1a1a2e',
@@ -240,8 +245,13 @@ function hasClass(element: any, className: string): boolean {
   return classesArray(element).includes(className);
 }
 
+function classStringWith(classes: string | string[], className: string): string {
+  const current = Array.isArray(classes) ? classes : String(classes || '').split(/\s+/);
+  return Array.from(new Set([...current.filter(Boolean), className])).join(' ');
+}
+
 function withClass(element: any, className: string): string {
-  return Array.from(new Set([...classesArray(element), className])).join(' ');
+  return classStringWith(classesArray(element), className);
 }
 
 function isSubgraphShape(element: any): boolean {
@@ -250,6 +260,10 @@ function isSubgraphShape(element: any): boolean {
 
 function isSubgraphBoxNode(element: any): boolean {
   return element && element.group === 'nodes' && hasClass(element, 'subgraph_box');
+}
+
+function isGenericShapeNode(element: any): boolean {
+  return element && element.group === 'nodes' && hasClass(element, 'generic_shape');
 }
 
 function shapeCluster(element: any): string {
@@ -267,6 +281,23 @@ function shapeMembers(element: any): Set<string> {
     if (typeof value === 'string' && value) members.add(value);
   });
   return members;
+}
+
+function shapeBounds(element: any) {
+  const coords = element && element.data && Array.isArray(element.data.coords) ? element.data.coords : [];
+  const points = coords.map(positionValue).filter(Boolean);
+  if (points.length === 0) return null;
+  const xs = points.map((point) => point.x);
+  const ys = points.map((point) => point.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  return {
+    position: { x: (minX + maxX) / 2, y: (minY + maxY) / 2 },
+    width: Math.max(1, maxX - minX),
+    height: Math.max(1, maxY - minY),
+  };
 }
 
 function nodeMatchesSubgraphShape(node: any, cluster: string, members: Set<string>): boolean {
@@ -301,20 +332,35 @@ function expandSubgraphShapes(elements: any[]): any[] {
     const cluster = shapeCluster(box);
     const members = shapeMembers(box);
     const childNodes = nodesAndEdges.filter((node) => nodeMatchesSubgraphShape(node, cluster, members));
-    if (childNodes.length === 0) continue;
+    const bounds = shapeBounds(box);
+    if (childNodes.length === 0 && !bounds) continue;
     const parentId = String(data.id || data.obj || `subgraph_box_${index}`);
-    parentNodes.push({
+    const parentData: any = {
+      id: parentId,
+      obj: data.obj || parentId,
+      label: data.label || '',
+      shape: data.shape || 'rectangle',
+      cluster,
+    };
+    if (bounds) {
+      parentData.width = bounds.width;
+      parentData.height = bounds.height;
+      parentData.generic_shape = childNodes.length === 0;
+    }
+    let parentClasses = withClass(box, 'subgraph_box');
+    if (bounds && childNodes.length === 0) {
+      parentClasses = classStringWith(parentClasses, 'generic_shape');
+    }
+    const parentNode: any = {
       group: 'nodes',
-      data: {
-        id: parentId,
-        obj: data.obj || parentId,
-        label: data.label || '',
-        shape: data.shape || 'rectangle',
-        cluster,
-      },
-      classes: withClass(box, 'subgraph_box'),
+      data: parentData,
+      classes: parentClasses,
       locked: !!box.locked,
-    });
+    };
+    if (bounds) {
+      parentNode.position = bounds.position;
+    }
+    parentNodes.push(parentNode);
     for (const child of childNodes) {
       child.data.parent = parentId;
     }
@@ -384,9 +430,20 @@ function mergePositionMaps(...maps: any[]) {
   return Object.assign({}, ...maps.map((map) => clonePositionMap(map)));
 }
 
+function elementPositionMap(elements: any[]) {
+  const out = {};
+  for (const element of elements || []) {
+    if (!element || element.group !== 'nodes') continue;
+    const id = nodeId(element);
+    const position = positionValue(element.position);
+    if (id && position) out[id] = position;
+  }
+  return out;
+}
+
 function graphNodeIds(elements: any[]): string[] {
   return (elements || [])
-    .filter((element) => element && element.group === 'nodes' && !isSubgraphBoxNode(element))
+    .filter((element) => element && element.group === 'nodes' && (!isSubgraphBoxNode(element) || isGenericShapeNode(element)))
     .map(nodeId)
     .filter(Boolean);
 }
@@ -504,7 +561,7 @@ export class IvyGraph {
       return next;
     });
 
-    const mergedPositions = fillMissingNodePositions(toAdd, mergePositionMaps(currentPositions, positions));
+    const mergedPositions = fillMissingNodePositions(toAdd, mergePositionMaps(elementPositionMap(toAdd), currentPositions, positions));
     const usePresetPositions = allNodesHavePositions(toAdd, mergedPositions);
     if (usePresetPositions) {
       for (const element of toAdd) {
@@ -624,7 +681,10 @@ export class IvyGraph {
   highlightNode(id) {
     this.cy.nodes().removeClass('highlighted');
     const node = this.cy.getElementById(id);
-    if (node.length > 0) node.addClass('highlighted');
+    if (node.length > 0) {
+      node.addClass('highlighted');
+      this.centerOnNode(id);
+    }
   }
 
   clearHighlights() {
@@ -643,6 +703,17 @@ export class IvyGraph {
 
   fit() {
     this.cy.fit(undefined, 30);
+  }
+
+  resetView() {
+    if (this.cy && typeof this.cy.reset === 'function') {
+      this.cy.reset();
+    }
+    this.fit();
+  }
+
+  reset() {
+    this.resetView();
   }
 
   resize() {

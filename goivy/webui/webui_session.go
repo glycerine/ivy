@@ -49,6 +49,8 @@ type Session struct {
 	CTIUI               *CTIAnalysisGraphUI  // CTI/invariant workflow UI
 	SheetUIs            map[string]*AnalysisGraphUI
 	sheetCounter        int
+	SelectedAbstractor  string
+	TransitionLogFile   string
 	ReachableUI         *AnalysisGraphUI
 	EventViewer         *EventTraceViewer
 }
@@ -710,6 +712,46 @@ func actionStringArg(args map[string]interface{}, key string) string {
 		return v
 	}
 	return ""
+}
+
+func (s *Session) applyAnalysisControllerArgs(args map[string]interface{}) {
+	if s == nil || args == nil {
+		return
+	}
+	if abstractor := strings.TrimSpace(actionStringArg(args, "abstractor")); abstractor != "" {
+		s.SelectedAbstractor = abstractor
+	}
+	if transitionLogFile := strings.TrimSpace(actionStringArg(args, "transition_log_file")); transitionLogFile != "" {
+		s.TransitionLogFile = transitionLogFile
+	}
+	if s.CTIUI != nil {
+		if rels := strings.TrimSpace(actionStringArg(args, "relations_to_minimize")); rels != "" {
+			s.CTIUI.RelationsToMinimize = rels
+		}
+		if bound, ok := actionIntArg(args, "bound"); ok && bound >= 0 {
+			s.CTIUI.CurrentBound = bound
+		}
+	}
+}
+
+func (s *Session) applyAnalysisControllerOptions(options CheckOptions) {
+	if s == nil {
+		return
+	}
+	if strings.TrimSpace(options.Abstractor) != "" {
+		s.SelectedAbstractor = strings.TrimSpace(options.Abstractor)
+	}
+	if strings.TrimSpace(options.TransitionLogFile) != "" {
+		s.TransitionLogFile = strings.TrimSpace(options.TransitionLogFile)
+	}
+	if s.CTIUI != nil {
+		if options.RelationsToMinimize != "" {
+			s.CTIUI.RelationsToMinimize = options.RelationsToMinimize
+		}
+		if options.Bound > 0 {
+			s.CTIUI.CurrentBound = options.Bound
+		}
+	}
 }
 
 func parseARGStateNodeID(nodeID string) (int, bool, error) {
@@ -2520,6 +2562,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		return nil, fmt.Errorf("empty action name")
 	}
 	s.emit(Event{Type: "action_started", Data: map[string]interface{}{"action": actionName, "args": args}})
+	s.applyAnalysisControllerArgs(args)
 
 	var err error
 	switch actionName {
@@ -3769,6 +3812,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 	if uiErr == nil {
 		result["sheet_id"] = resolvedSheetID
 	}
+	s.applyAnalysisControllerArgs(args)
 
 	switch action {
 	case "view_state":
@@ -3788,6 +3832,30 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 				break
 			}
 			s.syncAbstractValue()
+		}
+	case "extension_arg_node":
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		stateIdx, ok, parseErr := parseARGStateNodeID(nodeID)
+		if parseErr != nil {
+			err = parseErr
+			break
+		}
+		if !ok {
+			err = fmt.Errorf("extension_arg_node: invalid ARG node %q", nodeID)
+			break
+		}
+		label := actionStringArg(args, "extension_label")
+		err = ui.RunArgNodeExtension(stateIdx, label, args)
+		if err == nil {
+			if ui.SyncCallback != nil {
+				ui.SyncCallback()
+			}
+			result["extension"] = label
+			result["arg"] = AnalysisUIARGPayload(ui)
+			s.emit(Event{Type: "status", Data: map[string]string{"message": "Extension action " + label}})
 		}
 	case "check_safety":
 		stateIdx := -1
@@ -4408,11 +4476,9 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 	if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
 		return cancelled
 	}
+	s.applyAnalysisControllerOptions(options)
 	if s.CompiledModule == nil {
 		return &WebUICheckResult{Result: "error", Message: "No module loaded — load an .ivy file first"}
-	}
-	if s.CTIUI != nil && options.RelationsToMinimize != "" {
-		s.CTIUI.RelationsToMinimize = options.RelationsToMinimize
 	}
 
 	switch mode {

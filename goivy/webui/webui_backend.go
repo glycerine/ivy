@@ -62,6 +62,8 @@ type ConceptMaterializeRequest struct {
 type CheckOptions struct {
 	Bound               int             `json:"bound,omitempty"`
 	RelationsToMinimize string          `json:"relations_to_minimize,omitempty"`
+	Abstractor          string          `json:"abstractor,omitempty"`
+	TransitionLogFile   string          `json:"transition_log_file,omitempty"`
 	Context             context.Context `json:"-"`
 }
 

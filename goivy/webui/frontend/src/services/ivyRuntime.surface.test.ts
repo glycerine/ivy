@@ -113,6 +113,7 @@ describe('ivyRuntime public surface', () => {
       'onLabelToggleChange',
       'openARGSheet',
       'openEventTraceSheet',
+      'openSourceBrowser',
       'pathReach',
       'pdrStep',
       'populateConstraintFacts',

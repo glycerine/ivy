@@ -182,6 +182,31 @@ func TestNodeWidthHeuristic(t *testing.T) {
 	}
 }
 
+func TestGraphLabelSizingAndWrappingMetadata(t *testing.T) {
+	g := NewWebUICyElements()
+	longStateLabel := "state with a deliberately verbose symbolic clause label"
+	g.AddNode("state", longStateLabel, []string{"state"}, "", "", nil, "ellipse")
+	node := g.Elements[0]
+	width := node.Data["width"].(int)
+	height := node.Data["height"].(int)
+	if width > 240 {
+		t.Fatalf("long state node width = %d, want capped at 240 for wrapping", width)
+	}
+	if height <= 50 {
+		t.Fatalf("long state node height = %d, want room for wrapped text", height)
+	}
+
+	g.AddNode("target", "target", []string{"state"}, "", "", nil, "ellipse")
+	g.AddEdge("transition", "state", "target", "first line\nsecond line with a long update relation", []string{"transition_action"}, "", "")
+	edge := g.Elements[2]
+	if got := edge.Data["text_wrap"]; got != true {
+		t.Fatalf("edge text_wrap = %v, want true", got)
+	}
+	if got := edge.Data["text_max_width"]; got != 180 {
+		t.Fatalf("edge text_max_width = %v, want 180", got)
+	}
+}
+
 // --- RenderWebUIARG tests ---
 
 func TestRenderARGEmpty(t *testing.T) {
