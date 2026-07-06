@@ -4756,6 +4756,7 @@ class IvyRuntime {
         var old = header.querySelector('[data-dynamic-menu-region="' + region + '"]');
         if (old) old.remove();
         var menuRow = header.querySelector('.panel-header-actions') || header;
+        if (this._hasStaticPanelMenus(menuRow)) return;
 
         var root = document.createElement('div');
         root.className = 'dynamic-menu-root';
@@ -4765,6 +4766,15 @@ class IvyRuntime {
         for (var i = 0; i < menus.length; i++) {
             this.renderMenuDescriptor(root, region, menus[i], i);
         }
+    }
+
+    _hasStaticPanelMenus(menuRow) {
+        if (!menuRow) return false;
+        var menus = menuRow.querySelectorAll('.dropdown');
+        for (var i = 0; i < menus.length; i++) {
+            if (!menus[i].closest('[data-dynamic-menu-region]')) return true;
+        }
+        return false;
     }
 
     renderMenuDescriptor(root, region, menu, index) {

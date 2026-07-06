@@ -55,6 +55,92 @@ function installSheetDom() {
   ].join('');
 }
 
+function installStaticMenuDom() {
+  document.body.innerHTML = [
+    '<div id="menubar">',
+    '  <div class="menu-group">',
+    '    <div class="dropdown">',
+    '      <span class="panel-menu" data-dropdown="file-menu">File</span>',
+    '      <div id="file-menu" class="dropdown-content">',
+    '        <a href="#" id="file-load">Open .ivy spec...</a>',
+    '      </div>',
+    '    </div>',
+    '  </div>',
+    '</div>',
+    '<div id="sheet-1" class="sheet-content active">',
+    '  <div id="arg-panel" class="panel">',
+    '    <div class="panel-header">',
+    '      <strong class="column-title">Reachability Graph</strong>',
+    '      <div class="panel-header-actions">',
+    '        <div class="dropdown ui-mode-only ui-mode-cti">',
+    '          <span class="panel-menu" data-dropdown="arg-inv-menu">Invariant</span>',
+    '          <div id="arg-inv-menu" class="dropdown-content">',
+    '            <a href="#" id="arg-check-induction">Check induction</a>',
+    '          </div>',
+    '        </div>',
+    '        <div class="dropdown ui-mode-only ui-mode-reachability">',
+    '          <span class="panel-menu" data-dropdown="arg-action-menu">Action</span>',
+    '          <div id="arg-action-menu" class="dropdown-content">',
+    '            <a href="#" id="arg-recalculate-all">Recalculate all</a>',
+    '          </div>',
+    '        </div>',
+    '      </div>',
+    '    </div>',
+    '  </div>',
+    '  <div id="concept-panel" class="panel">',
+    '    <div class="panel-header">',
+    '      <strong class="column-title">Concept graph</strong>',
+    '      <div class="panel-header-actions">',
+    '        <div class="dropdown ui-mode-only ui-mode-cti">',
+    '          <span class="panel-menu" data-dropdown="conj-menu">Conjecture</span>',
+    '          <div id="conj-menu" class="dropdown-content">',
+    '            <a href="#" id="conj-undo">Undo</a>',
+    '          </div>',
+    '        </div>',
+    '        <div class="dropdown ui-mode-only ui-mode-reachability">',
+    '          <span class="panel-menu" data-dropdown="reach-action-menu">Action</span>',
+    '          <div id="reach-action-menu" class="dropdown-content">',
+    '            <a href="#" id="conj-reach-undo">Undo</a>',
+    '          </div>',
+    '        </div>',
+    '        <div class="dropdown">',
+    '          <span class="panel-menu" data-dropdown="view-menu">View</span>',
+    '          <div id="view-menu" class="dropdown-content">',
+    '            <a href="#" id="view-add-relation">Add relation</a>',
+    '          </div>',
+    '        </div>',
+    '      </div>',
+    '    </div>',
+    '  </div>',
+    '</div>',
+  ].join('');
+}
+
+function visibleMenuLabels(scope: Element | Document, mode: 'cti' | 'reachability') {
+  return Array.from(scope.querySelectorAll('.panel-menu'))
+    .filter((el) => {
+      const modeOnly = el.closest('.ui-mode-only');
+      return !modeOnly || modeOnly.classList.contains(`ui-mode-${mode}`);
+    })
+    .map((el) => (el.textContent || '').trim())
+    .filter(Boolean);
+}
+
+function duplicateMenuLabels(labels: string[]) {
+  const counts = new Map<string, number>();
+  for (const label of labels) {
+    counts.set(label, (counts.get(label) || 0) + 1);
+  }
+  return Array.from(counts)
+    .filter(([, count]) => count > 1)
+    .map(([label]) => label)
+    .sort();
+}
+
+function duplicatedVisibleMenuLabels(scope: Element | Document, mode: 'cti' | 'reachability') {
+  return duplicateMenuLabels(visibleMenuLabels(scope, mode));
+}
+
 function setOffsetWidth(element: Element, width: number) {
   Object.defineProperty(element, 'offsetWidth', {
     configurable: true,
@@ -435,7 +521,11 @@ describe('ivyRuntime compatibility behavior', () => {
   });
 
   it('clicks every descriptor File menu item through controller commands', async () => {
-    installSheetDom();
+    document.body.innerHTML = [
+      '<div id="sheet-2" class="sheet-content active">',
+      '  <div id="arg-panel"><div class="panel-header"><div class="panel-header-actions"></div></div></div>',
+      '</div>',
+    ].join('');
     const runtime = makeRuntime();
     runtime.activeSheetId = 'sheet-2';
     runtime.closeAllDropdowns = vi.fn();
@@ -527,6 +617,67 @@ describe('ivyRuntime compatibility behavior', () => {
 
     expect(document.querySelector('#sheet-1 [data-dynamic-menu-region="arg"]')).toBeNull();
     expect(document.querySelector('#sheet-2 [data-dynamic-menu-region="arg"]')?.textContent).toContain('Action');
+  });
+
+  it('does not duplicate top-level menu labels when reachability descriptors render', () => {
+    installStaticMenuDom();
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-1';
+    runtime.uiMode = 'reachability';
+
+    runtime.renderMenuRegion('arg', [
+      { type: 'menu', label: 'File', items: [{ type: 'button', label: 'Save', action: 'save_model', enabled: true }] },
+      { type: 'menu', label: 'Mode', items: [{ type: 'button', label: 'Pdr', action: 'mode_pdr', enabled: true }] },
+      { type: 'menu', label: 'Action', items: [{ type: 'button', label: 'Show reachable states', action: 'show_reachable', enabled: true }] },
+    ]);
+    runtime.renderMenuRegion('concept', [
+      { type: 'menu', label: 'Action', items: [{ type: 'button', label: 'Undo', action: 'undo', enabled: true }] },
+      { type: 'menu', label: 'View', items: [{ type: 'button', label: 'Add relation', action: 'add_relation', enabled: true }] },
+    ]);
+
+    const argMenuScope = document.createElement('div');
+    argMenuScope.append(
+      document.getElementById('menubar')!.cloneNode(true),
+      document.getElementById('arg-panel')!.cloneNode(true),
+    );
+
+    expect({
+      reachabilityGraph: duplicatedVisibleMenuLabels(argMenuScope, 'reachability'),
+      conceptGraph: duplicatedVisibleMenuLabels(document.getElementById('concept-panel')!, 'reachability'),
+    }).toEqual({
+      reachabilityGraph: [],
+      conceptGraph: [],
+    });
+  });
+
+  it('does not duplicate top-level menu labels when CTI descriptors render', () => {
+    installStaticMenuDom();
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-1';
+    runtime.uiMode = 'cti';
+
+    runtime.renderMenuRegion('arg', [
+      { type: 'menu', label: 'File', items: [{ type: 'button', label: 'Save invariant', action: 'save_conjectures', enabled: true }] },
+      { type: 'menu', label: 'Invariant', items: [{ type: 'button', label: 'Check induction', action: 'check_inductiveness', enabled: true }] },
+    ]);
+    runtime.renderMenuRegion('concept', [
+      { type: 'menu', label: 'Conjecture', items: [{ type: 'button', label: 'Undo', action: 'undo', enabled: true }] },
+      { type: 'menu', label: 'View', items: [{ type: 'button', label: 'Add relation', action: 'add_relation', enabled: true }] },
+    ]);
+
+    const argMenuScope = document.createElement('div');
+    argMenuScope.append(
+      document.getElementById('menubar')!.cloneNode(true),
+      document.getElementById('arg-panel')!.cloneNode(true),
+    );
+
+    expect({
+      reachabilityGraph: duplicatedVisibleMenuLabels(argMenuScope, 'cti'),
+      conceptGraph: duplicatedVisibleMenuLabels(document.getElementById('concept-panel')!, 'cti'),
+    }).toEqual({
+      reachabilityGraph: [],
+      conceptGraph: [],
+    });
   });
 
   it('sends CTI mode to Diagram and applies the returned pre-state label', async () => {
