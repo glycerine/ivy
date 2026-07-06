@@ -229,6 +229,10 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     display: none !important;
 }
 
+body[data-active-sheet-type="events"] .ui-mode-only {
+    display: none !important;
+}
+
 .session-info {
     color: #666;
     font-size: 11px;
@@ -1352,6 +1356,29 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     padding: 8px;
     overflow-y: auto;
     flex: 1;
+}
+
+.cti-relations-control {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.cti-relations-control label {
+    font-size: 11px;
+    color: #aaa;
+}
+
+.cti-relations-input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #3c3c3c;
+    border-radius: 3px;
+    background: #1e1e1e;
+    color: #ddd;
+    font-size: 12px;
+    padding: 4px 6px;
 }
 
 #state-checkbox-table {

@@ -489,6 +489,74 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(runtime.renderMenuRegion).toHaveBeenCalledWith('concept', []);
   });
 
+  it('refreshes menu descriptors when the workflow mode changes', async () => {
+    document.body.innerHTML = [
+      '<select id="ui-mode-select">',
+      '  <option value="cti">CTI</option>',
+      '  <option value="reachability">reachability</option>',
+      '</select>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.controls.setStatus = vi.fn();
+    runtime.loadMenuDescriptors = vi.fn(async () => ({ ok: true }));
+
+    runtime.setUIMode('reachability', { announce: true });
+    await Promise.resolve();
+
+    expect(document.body.getAttribute('data-ui-mode')).toBe('reachability');
+    expect(runtime.loadMenuDescriptors).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders descriptor menus into the active sheet panel', () => {
+    document.body.innerHTML = [
+      '<div id="sheet-1" class="sheet-content">',
+      '  <div id="arg-panel"><div class="panel-header"><div class="panel-header-actions"></div></div></div>',
+      '</div>',
+      '<div id="sheet-2" class="sheet-content active">',
+      '  <div id="arg-panel"><div class="panel-header"><div class="panel-header-actions"></div></div></div>',
+      '</div>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-2';
+
+    runtime.renderMenuRegion('arg', [{
+      type: 'menu',
+      label: 'Action',
+      items: [{ type: 'button', label: 'Reach', action: 'reach', dispatch: 'action', enabled: true }],
+    }]);
+
+    expect(document.querySelector('#sheet-1 [data-dynamic-menu-region="arg"]')).toBeNull();
+    expect(document.querySelector('#sheet-2 [data-dynamic-menu-region="arg"]')?.textContent).toContain('Action');
+  });
+
+  it('sends CTI mode to Diagram and applies the returned pre-state label', async () => {
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-2';
+    runtime.getUIMode = vi.fn(() => 'cti');
+    runtime.api.executeAction = vi.fn(async () => ({
+      status: 'diagrammed',
+      message: 'Diagram complete.',
+      concept: {
+        sheet_id: 'sheet-2',
+        elements: [],
+        cti_state_label: 'CTI pre-state 0',
+      },
+    }));
+    runtime.applyConceptSnapshot = vi.fn();
+
+    await runtime.diagramCurrentState();
+
+    expect(runtime.api.executeAction).toHaveBeenCalledWith('diagram', {
+      sheet_id: 'sheet-2',
+      ui_mode: 'cti',
+    });
+    expect(runtime.applyConceptSnapshot).toHaveBeenCalledWith('sheet-2', {
+      sheet_id: 'sheet-2',
+      elements: [],
+      cti_state_label: 'CTI pre-state 0',
+    });
+  });
+
   it('explains remote backend switch failures in the job control panel', async () => {
     class BrowserAPI extends FakeAPI {
       constructor() {
@@ -986,6 +1054,35 @@ describe('ivyRuntime compatibility behavior', () => {
       kind: 'success',
     });
     expect(result.message).toBe('PDR step diagrammed the predecessor goal.');
+  });
+
+  it('shows eliminated conjectures after one-step reach', async () => {
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-7';
+    runtime.api.executeAction = vi.fn(async () => ({
+      reachable: true,
+      eliminated_conjectures_message: 'The following conjectures have been eliminated:',
+      eliminated_conjectures: ['p', 'q'],
+    }));
+    runtime.refreshConceptGraph = vi.fn(async () => undefined);
+    runtime.listboxDialog = vi.fn(async () => null);
+
+    await runtime.reachStep();
+
+    expect(runtime.api.executeAction).toHaveBeenCalledWith('reach', { sheet_id: 'sheet-7' });
+    expect(runtime.listboxDialog).toHaveBeenCalledWith(
+      'Reach',
+      'The following conjectures have been eliminated:',
+      [
+        { label: 'p', value: 'p' },
+        { label: 'q', value: 'q' },
+      ],
+      { cancel: false },
+    );
+    expect(runtime.controls.lastStatus).toEqual({
+      message: 'Reach complete',
+      kind: 'success',
+    });
   });
 
   it('submits accepted PDR interpolants through a Refine dialog', async () => {

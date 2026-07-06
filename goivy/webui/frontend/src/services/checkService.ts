@@ -30,6 +30,14 @@ function traceInfoElement(app, doc) {
   return doc.getElementById('info-content');
 }
 
+function relationsToMinimizeOptions({
+  doc = globalThis.document,
+} = {}) {
+  const input = doc && doc.getElementById('cti-relations-to-minimize') as HTMLInputElement | null;
+  if (!input) return {};
+  return { relations_to_minimize: input.value || '' };
+}
+
 export function openTraceArgFromResult(app, result, {
   label = 'Error trace',
 } = {}) {
@@ -219,7 +227,7 @@ export async function runCheck(app) {
       }, requestOptions);
     }
     app.controls.setStatus(`Running ${mode} check...`);
-    const result = await app.api.runCheck(mode, {}, requestOptions);
+    const result = await app.api.runCheck(mode, relationsToMinimizeOptions(), requestOptions);
 
     if (active.cancelled || result?.result === 'cancelled') {
       app.controls.setStatus(`${mode} check cancelled`, 'warning');
@@ -480,10 +488,14 @@ export async function weakenInvariant(app) {
 
 export async function ctiConceptAction(app, actionName) {
   app.controls.setStatus('Running CTI action...');
+  const args = {
+    sheet_id: app.activeSheetId || 'sheet-1',
+    ...relationsToMinimizeOptions(),
+  };
   const result = await runWithContext(app, {
     busyMessage: 'Running CTI action...',
     failurePrefix: 'CTI action failed',
-  }, () => app.api.executeAction(actionName, { sheet_id: app.activeSheetId || 'sheet-1' }));
+  }, () => app.api.executeAction(actionName, args));
   if (!result) {
     return null;
   }

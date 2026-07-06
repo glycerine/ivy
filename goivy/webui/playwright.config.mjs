@@ -1,10 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const webuiDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(webuiDir, '../..');
-const goBuildCache = path.join(repoRoot, '.cache', 'go-build-playwright');
+const goBuildCache = process.env.GOCACHE || path.join('/tmp', 'goivy-gocache-playwright');
 
 export default defineConfig({
   testDir: './pw_test',

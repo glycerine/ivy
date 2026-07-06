@@ -112,6 +112,9 @@ func (w *GraphWidget) Menus() []MenuDef {
 			Label: "View",
 			Items: []MenuItem{
 				{Type: "button", Label: "Add relation", Action: "add_relation"},
+				{Type: "button", Label: "Save domain", Action: "save_domain"},
+				{Type: "button", Label: "Load domain", Action: "load_domain"},
+				{Type: "button", Label: "Replace domain", Action: "replace_domain"},
 			},
 		},
 	}
@@ -132,13 +135,13 @@ func (w *GraphWidget) Checkpoint(setBacktrackPoint bool) {
 // Undo rolls back the graph and updates.
 func (w *GraphWidget) Undo() error {
 	w.GraphStack.Undo()
-	return w.Update()
+	return nil
 }
 
 // Redo replays the last undo and updates.
 func (w *GraphWidget) Redo() error {
 	w.GraphStack.Redo()
-	return w.Update()
+	return nil
 }
 
 // Backtrack undoes to the most recent backtrack point (Python: GraphWidget.backtrack).
@@ -263,11 +266,7 @@ func (w *GraphWidget) SplitConcept(predicateID, nodeID string) error {
 // SupposeEmpty marks a node as empty (Python: GraphWidget.empty).
 func (w *GraphWidget) SupposeEmpty(nodeID string) error {
 	w.Checkpoint(false)
-	err := w.G().Empty(nodeID, true)
-	if err != nil {
-		return err
-	}
-	return w.Update()
+	return w.G().ConceptSess.SupposeEmpty(nodeID)
 }
 
 // RemoveConcept removes a concept from the domain.
@@ -314,7 +313,7 @@ func (w *GraphWidget) DematerializeEdge(relID, headID, tailID string) ([]string,
 }
 
 // Splatter splits a node using all available constants (Python: Graph.splatter).
-func (w *GraphWidget) Splatter(nodeID string) error {
+func (w *GraphWidget) Splatter(nodeID string, constantNames ...string) error {
 	w.Checkpoint(false)
 	g := w.G()
 	if g.InteractiveSess != nil {
@@ -340,6 +339,13 @@ func (w *GraphWidget) Splatter(nodeID string) error {
 					}
 				}
 			}
+		}
+		for _, name := range constantNames {
+			if name == "" || seen[name] {
+				continue
+			}
+			constants = append(constants, goivy.NewConst(name, cSort))
+			seen[name] = true
 		}
 
 		if len(constants) > 0 {
@@ -368,7 +374,9 @@ func (w *GraphWidget) Splatter(nodeID string) error {
 			return err
 		}
 	} else {
-		g.ConceptSess.Splatter(nodeID, nil)
+		if err := g.ConceptSess.Splatter(nodeID, constantNames); err != nil {
+			return err
+		}
 	}
 	return w.Update()
 }

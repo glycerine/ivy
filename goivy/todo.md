@@ -229,7 +229,7 @@ TODO: decide whether Python's relation color cycling is required for readability
 
 Done: Python-compatible relation color cycling is now part of the web contract. The shared palette has all 27 Python `line_colors`, concept graph rendering assigns deterministic relation colors from sorted relation ids, edge elements carry `line_color` metadata, and concept payloads expose `relation_colors` for controls. The frontend model preserves relation color data, state checkbox relation buttons use the same color metadata, and the graph runtime applies `line_color` to Cytoscape edge lines and arrows. Tests cover palette parity, stable edge metadata across rebuilds, typed metadata preservation, row button styling, and runtime edge styling.
 
-[ ] ### 31. Constraint Text/Facts UI Is Not The Same As Python's Selectable Text Area
+[x] ### 31. Constraint Text/Facts UI Is Not The Same As Python's Selectable Text Area
 
 Inventory refs: PLAN383 item 45; PLAN378 sections 19.9, 20.28, 33.9, 33.10, and 33.11.
 
@@ -237,7 +237,9 @@ The web details panel renders facts as selectable buttons and persists selected 
 
 TODO: finish the fact-selection contract: visual location, multi-select ergonomics, highlight-selected-facts behavior, and exact use in conjecture/CTI flows. Tests should gather facts, select/deselect facts, verify graph highlighting, and assert selected facts are the only facts used by conjecture/minimize/strengthen when appropriate.
 
-[ ] ### 32. Concept Domain Save/Load/Replace Is Backend-Tested But Not UI-Exposed
+Done: Fact selection now follows Python SelectMultiple semantics: newly gathered facts default selected, explicitly selected subsets remain active, and an empty selected subset falls back to all facts. `set_fact_selection` recomputes highlighted fact selections and returns an updated concept snapshot; concept payload rendering carries backend-selected nodes/edges as `selected_node`/`selected_edge`, and the frontend applies returned concept snapshots after fact toggles so highlighting refreshes immediately. Covered by backend active-fact fallback, payload highlight, regression/conjecture tests, and frontend details-service snapshot application tests.
+
+[x] ### 32. Concept Domain Save/Load/Replace Is Backend-Tested But Not UI-Exposed
 
 Inventory refs: PLAN378 sections 30.3 and 30.4.
 
@@ -245,7 +247,9 @@ The Go concept domain/session code has save/load/replace-style functionality and
 
 TODO: add UI commands for save domain, load domain, and replace domain if these remain part of the GUI contract. Tests should save a modified domain, reset/replace it, reload the saved domain, and verify concepts, checkboxes, graph stack, and abstract value update correctly.
 
-[ ] ### 33. Add Projection And Ternary Relation UX Needs Full Fidelity
+Done: Concept domain persistence is now exposed through browser actions and concept-menu commands. The backend supports `save_domain`, `load_domain`, and `replace_domain` for the active concept graph, stores browser-visible saved domains, mirrors full interactive-session saves when present, restores domains through the graph replacement path, and returns updated concept snapshots with graph-stack state. The frontend prompts for a domain name, calls the backend action with the active sheet, applies returned concept snapshots immediately, and routes menu descriptors to the new commands. Covered by a reachability-domain save/load/replace backend workflow using a modified diagram domain, plus frontend command and descriptor routing tests.
+
+[x] ### 33. Add Projection And Ternary Relation UX Needs Full Fidelity
 
 Inventory refs: PLAN383 item 56; PLAN378 section 20.21.
 
@@ -253,7 +257,9 @@ The backend and frontend have add-projection plumbing, but the Python UI present
 
 TODO: test and finish projection selection for ternary and higher-arity relations. Tests should right-click a concept node with available projections, add a projection, and verify the new binary concept appears with correct endpoints and relation controls.
 
-[ ] ### 34. Splatter, Materialize, And Empty Need End-To-End Browser Coverage
+Done: Ternary projection selection now follows the Python contract, which only offers binary projections from arity-3 concepts with a concrete witness. Backend coverage builds a real ternary relation, obtains the node projection descriptor, adds the projection through the session action, and verifies the interactive domain, render domain, edge list, arity, and relation controls all update for the new binary concept. The projection endpoint now returns an updated concept snapshot, and the frontend applies that snapshot immediately after `addProjection` while preserving the existing CTI projection context-menu filtering behavior.
+
+[x] ### 34. Splatter, Materialize, And Empty Need End-To-End Browser Coverage
 
 Inventory refs: PLAN383 items 51 through 55; PLAN378 sections 20.23 through 20.27 and 33.14.
 
@@ -261,7 +267,9 @@ The backend implements splatter, empty, materialize node, positive/negative edge
 
 TODO: add UI-level tests for each concept context action. Tests should verify witness names with `@` prefixes, negative edge facts, selected-source materialize edge prompts, graph-stack undo/redo after the operation, and relation checkbox preservation.
 
-[ ] ### 35. One-Step Reachability Eliminated-Conjecture Dialog Is Missing
+Done 2026-07-06: Added focused red/green Go and browser coverage for concept-node Splatter, Empty, Materialize, positive edge Materialize, negative edge Dematerialize, and selected-source Materialize edge prompts using the hosted Go backend and typed concrete constants. Node Materialize now routes through the graph-stack-aware session action and returns witness/concept payloads; edge Materialize seeds/syncs the interactive concept session, preserves it through graph-stack copies, returns witnesses plus concept snapshots, and keeps the legacy empty `/concept/undo` endpoint error contract. Browser tests verify fresh witness concepts/facts, negative edge facts, selected-source relation dialog behavior, relation-checkbox preservation, and graph-stack undo/redo. Full `make test` and `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 35. One-Step Reachability Eliminated-Conjecture Dialog Is Missing
 
 Inventory refs: PLAN383 item 61; PLAN378 sections 31.1 and 31.2.
 
@@ -269,9 +277,11 @@ The web backend has reach/path-reach actions and can update graph state, but the
 
 TODO: port eliminated-conjecture reporting for reach operations. Tests should run a reach case that eliminates conjectures and assert the dialog/content lists them before or while updating the graph.
 
+Done 2026-07-06: Ported one-step reach eliminated-conjecture reporting. The backend now filters conjectures against the reached model and returns `eliminated_conjectures` plus the Python-shaped dialog message for both current-sheet and generic reach actions. The frontend `reachStep()` shows a non-cancel listbox dialog before completing the reach status update. Added focused red/green Go coverage for eliminated conjecture payloads, Vitest coverage for the runtime dialog behavior, and hosted-Go Playwright coverage for the browser dialog. Full `make test` and `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
+
 ## P1: CTI And Invariant Workflows
 
-[ ] ### 36. CTI Menu Switching Is Partial
+[x] ### 36. CTI Menu Switching Is Partial
 
 Inventory refs: PLAN383 items 64 and 72; PLAN378 sections 20.1 and 20.12 through 20.20.
 
@@ -279,7 +289,9 @@ The web shell always shows static Invariant and Conjecture menus, and descriptor
 
 TODO: make CTI/non-CTI menu switching match the active sheet and state. Tests should load a model with conjectures, cause a CTI, switch between ARG, CTI, and event sheets, and assert the visible menu set and enabled actions match Python's CTI menus.
 
-[ ] ### 37. CTI Used-Relations Display Is Partial
+Done 2026-07-06: Completed active sheet/workflow menu switching for the browser shell. Sheet switches now publish the active sheet type and reachability-only state on the document body, refresh backend-owned menu descriptors, and render descriptor menus into the active sheet's panel instead of the first cloned panel ID. Workflow mode changes now refresh descriptors as well, and event sheets hide analysis-only workflow controls while preserving the File/event surface. Added focused red/green Vitest coverage for sheet menu context, workflow descriptor refresh, and active-sheet descriptor placement, plus hosted-Go Playwright coverage for CTI/reachability/event-sheet visible menu switching. Existing Go descriptor coverage verifies CTI/reachability/event menu payloads. Full `make test` and `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`; the first sandboxed `make test-web` attempt was rerun outside the sandbox because localhost binding was blocked.
+
+[x] ### 37. CTI Used-Relations Display Is Partial
 
 Inventory refs: PLAN383 item 67; PLAN378 sections 20.10 and 33.7.
 
@@ -287,13 +299,17 @@ The frontend can auto-check used relation rows from a failed check result, but P
 
 TODO: add CTI used-relations and relations-to-minimize UI. Tests should run a failing induction check, verify only relevant relation controls are enabled/checked, edit the relations-to-minimize input, and verify minimize uses that set.
 
-[ ] ### 38. CTI Diagram Pre/Post State Presentation Is Partial
+Done 2026-07-06: Added the CTI relations-to-minimize control and wired it through the check/minimize paths. The state/relations pane now exposes the Python-style `relations to minimize` text input. Frontend checks send the edited value as `relations_to_minimize`, CTI Minimize sends the same value with its active sheet, the HTTP check endpoint decodes it, and the Go induction path stores it on `CTIUI.RelationsToMinimize` and passes it into `CheckFinalCond`. Added focused red/green Go coverage for the check option, static/Vitest coverage for the visible input and request payloads, and hosted-Go Playwright coverage proving the browser field is sent to both check and Minimize. Existing used-relation tests still verify only relevant relation rows are auto-checked. Full `make test` and `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 38. CTI Diagram Pre/Post State Presentation Is Partial
 
 Inventory refs: PLAN383 item 68; PLAN378 sections 20.6 and 20.11.
 
 The backend routes diagram through `CTIUI.Diagram()` and returns concept payloads, but the browser workflow does not clearly present CTI pre-state/post-state context as Python does. Users need to see which CTI state is being diagrammed and how it affects the concept graph.
 
 TODO: add visible CTI state labels and verify diagram uses the intended pre-state. Tests should create a CTI, run Diagram, and assert the concept graph/facts correspond to the pre-state rather than a stale BMC or post-state value.
+
+Done 2026-07-06: Added explicit CTI pre-state labeling to diagram responses and concept snapshots. CTI-scoped diagram actions now return top-level `cti_state_label` plus concept-level `state_label`/`cti_state_label`, derived from the CTI analysis graph pre-state when available; the older direct `ConceptDiagram` backend route emits the same labels. The browser now sends `ui_mode` with Diagram, prefers CTI labels when rendering concept snapshots, and shows `State: CTI pre-state 0` in the state panel. Added focused red/green Go, Vitest, and hosted-Go Playwright coverage for the backend label, runtime payload, model label preference, and visible browser label. Full `make test` and `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
 
 [ ] ### 39. CTI Strengthen Confirmation Is Missing
 

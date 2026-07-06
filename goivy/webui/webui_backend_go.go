@@ -380,17 +380,12 @@ func (gbe *GoBackend) ConceptEmpty(sessionID, concept string) (by []byte, err er
 		if err != nil {
 			return nil
 		}
-		if sess.ConceptSess != nil {
-			err = sess.ConceptSess.SupposeEmpty(concept)
-			if err != nil {
-				return nil
-			}
-		}
-		err = sess.SimpleSess.SupposeEmpty(concept)
+		var result map[string]interface{}
+		result, err = sess.ExecuteAction("empty", map[string]interface{}{"concept": concept, "sheet_id": rootSheetID})
 		if err != nil {
 			return nil
 		}
-		by = okJSON
+		by, err = canonicalJSON(result)
 		return nil
 	})
 	return
@@ -421,23 +416,33 @@ func (gbe *GoBackend) ConceptRemove(sessionID, concept string) (by []byte, err e
 
 func (gbe *GoBackend) ConceptUndo(sessionID string) (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
-
 		var sess *Session
 		sess, err = b.getSession(sessionID)
 		if err != nil {
 			return nil
 		}
-		if sess.ConceptSess != nil {
-			err = sess.ConceptSess.Undo()
-			if err != nil {
-				return nil
-			}
+		sess.mu.Lock()
+		canUndo := false
+		if sess.AGUI != nil && sess.AGUI.CurrentConceptGraph != nil && sess.AGUI.CurrentConceptGraph.GraphStack.CanUndo() {
+			canUndo = true
 		}
-		err = sess.SimpleSess.Undo()
+		if !canUndo && sess.ConceptSess != nil && len(sess.ConceptSess.UndoStack) > 0 {
+			canUndo = true
+		}
+		if !canUndo && sess.SimpleSess != nil && len(sess.SimpleSess.undoStack) > 0 {
+			canUndo = true
+		}
+		sess.mu.Unlock()
+		if !canUndo {
+			err = fmt.Errorf("nothing to undo")
+			return nil
+		}
+		var result map[string]interface{}
+		result, err = sess.ExecuteAction("undo", map[string]interface{}{"sheet_id": rootSheetID})
 		if err != nil {
 			return nil
 		}
-		by = okJSON
+		by, err = canonicalJSON(result)
 		return nil
 	})
 	return
@@ -459,17 +464,40 @@ func (gbe *GoBackend) ConceptMaterialize(sessionID string, req ConceptMaterializ
 				err = fmt.Errorf("materialize edge: relation, source, and target are required")
 				return nil
 			}
-			widget := sess.ensureConceptGraphWidgetLocked()
-			if widget == nil {
-				err = fmt.Errorf("materialize edge: no concept graph")
+			sess.mu.Lock()
+			_, resolvedSheetID, widget, uiErr := sess.activeConceptGraphForActionLocked("materialize_edge", rootSheetID)
+			if uiErr != nil {
+				sess.mu.Unlock()
+				err = uiErr
+				return nil
+			}
+			sess.seedSimpleConceptSessionIntoGraphLocked(widget)
+			if seedErr := sess.seedInteractiveConceptSessionIntoGraphLocked(widget); seedErr != nil {
+				sess.mu.Unlock()
+				err = seedErr
 				return nil
 			}
 			var witnesses []string
 			witnesses, err = widget.MaterializeEdge(relation, req.Source, req.Target, req.Positive)
 			if err != nil {
+				sess.mu.Unlock()
 				return nil
 			}
-			by, err = canonicalJSON(map[string]interface{}{"status": "ok", "witnesses": witnesses})
+			sess.syncSimpleSessionFromGraphLocked(widget)
+			if syncErr := sess.syncInteractiveConceptSessionFromGraphLocked(widget); syncErr != nil {
+				sess.mu.Unlock()
+				err = syncErr
+				return nil
+			}
+			result := map[string]interface{}{
+				"status":    "ok",
+				"sheet_id":  resolvedSheetID,
+				"witnesses": witnesses,
+				"concept":   conceptGraphActionPayload(widget),
+			}
+			sess.emit(Event{Type: "concept_updated", Data: result["concept"]})
+			sess.mu.Unlock()
+			by, err = canonicalJSON(result)
 			return nil
 		}
 		concept := req.Concept
@@ -477,23 +505,12 @@ func (gbe *GoBackend) ConceptMaterialize(sessionID string, req ConceptMaterializ
 			err = fmt.Errorf("materialize node: concept is required")
 			return nil
 		}
-		if sess.ConceptSess != nil {
-			err = sess.ConceptSess.MaterializeNode(concept)
-			if err != nil {
-				return nil
-			}
-		}
-		if sess.AGUI != nil && sess.AGUI.CurrentConceptGraph != nil {
-			_, err = sess.AGUI.CurrentConceptGraph.MaterializeNode(concept)
-			if err != nil {
-				return nil
-			}
-		}
-		err = sess.SimpleSess.Materialize(concept)
+		var result map[string]interface{}
+		result, err = sess.ExecuteAction("materialize", map[string]interface{}{"concept": concept, "sheet_id": rootSheetID})
 		if err != nil {
 			return nil
 		}
-		by = okJSON
+		by, err = canonicalJSON(result)
 		return nil
 	})
 	return
@@ -534,8 +551,13 @@ func (gbe *GoBackend) ConceptDiagram(sessionID string) (by []byte, err error) {
 				"status":  "ok",
 				"diagram": diagram,
 			}
+			label := ctiPreStateLabel(sess.CTIUI)
+			response["cti_state_label"] = label
 			if sess.CTIUI.CurrentConceptGraph != nil {
-				response["concept"] = conceptGraphActionPayload(sess.CTIUI.CurrentConceptGraph)
+				concept := conceptGraphActionPayload(sess.CTIUI.CurrentConceptGraph)
+				concept["state_label"] = label
+				concept["cti_state_label"] = label
+				response["concept"] = concept
 			}
 			by, err = canonicalJSON(response)
 			return nil
@@ -562,7 +584,13 @@ func (gbe *GoBackend) ConceptProjection(sessionID, name, concept string) (by []b
 		if err != nil {
 			return nil
 		}
-		by = okJSON
+		result := map[string]interface{}{"status": "ok"}
+		sess.mu.Lock()
+		if w := sess.currentConceptGraphForProjectionLocked(); w != nil {
+			result["concept"] = conceptGraphActionPayload(w)
+		}
+		sess.mu.Unlock()
+		by, err = canonicalJSON(result)
 		return nil
 	})
 	return

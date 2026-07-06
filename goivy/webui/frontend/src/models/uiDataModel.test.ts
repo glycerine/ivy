@@ -461,6 +461,15 @@ describe('UIDataModel — wire format coverage', () => {
     expect(snap.stateLabel).toBe('state 0');
   });
 
+  it('ConceptSnapshot prefers CTI state context labels', () => {
+    const snap = new ConceptSnapshot({
+      state_label: 'state 0',
+      cti_state_label: 'CTI pre-state 0',
+    });
+
+    expect(snap.stateLabel).toBe('CTI pre-state 0');
+  });
+
   // -------------------------------------------------------------------------
   // FactSelection tests
   // -------------------------------------------------------------------------

@@ -90,6 +90,18 @@ describe('static graph background controls', () => {
   });
 });
 
+describe('static CTI relation controls', () => {
+  it('exposes the Python relations-to-minimize text input in the state pane', () => {
+    const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
+    const input = doc.getElementById('cti-relations-to-minimize') as HTMLInputElement | null;
+
+    expect(input).not.toBeNull();
+    expect(input?.value).toBe('relations to minimize');
+    expect(input?.getAttribute('aria-label')).toBe('Relations to minimize');
+    expect(input?.closest('#state-controls')).not.toBeNull();
+  });
+});
+
 describe('static job control', () => {
   it('places a backend status message above the browser/remote toggle', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');

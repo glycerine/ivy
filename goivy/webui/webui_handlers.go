@@ -461,14 +461,19 @@ func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sessionID stri
 		return
 	}
 	var req struct {
-		Mode  string `json:"mode"`
-		Bound int    `json:"bound,omitempty"`
+		Mode                string `json:"mode"`
+		Bound               int    `json:"bound,omitempty"`
+		RelationsToMinimize string `json:"relations_to_minimize,omitempty"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		// Default to the current mode if no body
 		req.Mode = "pdr"
 	}
-	data, err := s.backend.Check(sessionID, req.Mode, CheckOptions{Bound: req.Bound, Context: r.Context()})
+	data, err := s.backend.Check(sessionID, req.Mode, CheckOptions{
+		Bound:               req.Bound,
+		RelationsToMinimize: req.RelationsToMinimize,
+		Context:             r.Context(),
+	})
 	if err != nil {
 		writeBackendErr(w, err)
 		return

@@ -122,6 +122,15 @@ export function dispatchMenuDescriptorAction(app, region, item) {
   if (item.action === 'diagram' && typeof app.diagramCurrentState === 'function') {
     return app.diagramCurrentState();
   }
+  if (region === 'concept' && item.action === 'save_domain' && typeof app.saveConceptDomain === 'function') {
+    return app.saveConceptDomain();
+  }
+  if (region === 'concept' && item.action === 'load_domain' && typeof app.loadConceptDomain === 'function') {
+    return app.loadConceptDomain();
+  }
+  if (region === 'concept' && item.action === 'replace_domain' && typeof app.replaceConceptDomain === 'function') {
+    return app.replaceConceptDomain();
+  }
   if (item.action === 'weaken' && typeof app.weakenInvariant === 'function') {
     return app.weakenInvariant();
   }

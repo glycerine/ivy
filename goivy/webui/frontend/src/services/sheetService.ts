@@ -1,4 +1,34 @@
 import { installUIDataModelStore } from './uiDataRenderService.ts';
+import { selectSheet } from '../models/uiDataSelectors.ts';
+
+function activeSheetMenuContext(app, sheetId) {
+  const runtimeSheet = app && app.sheets && app.sheets[sheetId];
+  const modelSheet = selectSheet(app && app.uiDataModel, sheetId);
+  const type = (runtimeSheet && runtimeSheet.type) || (modelSheet && modelSheet.type) || 'analysis';
+  const reachabilityOnly = type !== 'events' && !!(
+    (runtimeSheet && runtimeSheet.reachabilityOnly) ||
+    (modelSheet && modelSheet.reachabilityOnly)
+  );
+  return { type, reachabilityOnly };
+}
+
+function updateActiveSheetMenuContext(app, sheetId, doc) {
+  const body = doc && doc.body;
+  if (!body) return;
+  const context = activeSheetMenuContext(app, sheetId);
+  body.setAttribute('data-active-sheet-type', context.type);
+  body.setAttribute('data-active-sheet-reachability-only', context.reachabilityOnly ? 'true' : 'false');
+}
+
+function refreshActiveSheetMenus(app) {
+  if (!app || typeof app.loadMenuDescriptors !== 'function') return;
+  try {
+    const refresh = app.loadMenuDescriptors();
+    if (refresh && typeof refresh.catch === 'function') refresh.catch(() => {});
+  } catch {
+    // loadMenuDescriptors reports user-visible failures itself when available.
+  }
+}
 
 export function isVisualOnlySheet(app, sheetId) {
   const modelSheet = app.uiDataModel && app.uiDataModel.sheets && app.uiDataModel.sheets[sheetId];
@@ -88,6 +118,8 @@ export function switchSheet(app, sheetId, {
       if (runtimeSheet.argGraph) runtimeSheet.argGraph.resize();
       if (runtimeSheet.conceptGraph) runtimeSheet.conceptGraph.resize();
     }
+    updateActiveSheetMenuContext(app, sheetId, doc);
+    refreshActiveSheetMenus(app);
     return;
   }
 }

@@ -25,31 +25,32 @@ type Event struct {
 type Session struct {
 	Cfg *goivy.Config
 
-	ID                string
-	Graph             *WebUIAnalysisGraphState   // ARG state
-	ConceptSess       *ConceptInteractiveSession // concept graph state (uses Z3 via WebUIAlpha)
-	SimpleSess        *ConceptSession            // legacy simple session (for API compat)
-	Events            chan Event                 // buffered SSE channel
-	mu                sync.Mutex
-	FilePath          string // last loaded file path
-	FileContent       string // file content (when uploaded via browser)
-	ActiveIsolate     string
-	AvailableIsolates []string
-	toggles           *Toggles
-	WebUIProofStack   *WebUIProofStack
-	ProofMgr          *goivy.ProofManager // live proof state (goals + reachability graph)
-	CompiledModule    *goivy.Module       // populated by full compiler pipeline
-	CompiledSig       *goivy.Sig          // populated by full compiler pipeline
-	SourceModule      *goivy.Module       // pre-isolate compile used for source-level UI operations
-	SourceSig         *goivy.Sig          // pre-isolate signature used by Diagram Domain
-	OriginalConjs     []*goivy.LabeledFormula
-	AG                *goivy.AnalysisGraph // persistent analysis graph for interactive verification
-	AGUI              *AnalysisGraphUI     // ARG navigation UI (delegates to AG)
-	CTIUI             *CTIAnalysisGraphUI  // CTI/invariant workflow UI
-	SheetUIs          map[string]*AnalysisGraphUI
-	sheetCounter      int
-	ReachableUI       *AnalysisGraphUI
-	EventViewer       *EventTraceViewer
+	ID                  string
+	Graph               *WebUIAnalysisGraphState   // ARG state
+	ConceptSess         *ConceptInteractiveSession // concept graph state (uses Z3 via WebUIAlpha)
+	SimpleSess          *ConceptSession            // legacy simple session (for API compat)
+	SavedConceptDomains map[string]*ConceptDomain  // browser-visible saved concept domains
+	Events              chan Event                 // buffered SSE channel
+	mu                  sync.Mutex
+	FilePath            string // last loaded file path
+	FileContent         string // file content (when uploaded via browser)
+	ActiveIsolate       string
+	AvailableIsolates   []string
+	toggles             *Toggles
+	WebUIProofStack     *WebUIProofStack
+	ProofMgr            *goivy.ProofManager // live proof state (goals + reachability graph)
+	CompiledModule      *goivy.Module       // populated by full compiler pipeline
+	CompiledSig         *goivy.Sig          // populated by full compiler pipeline
+	SourceModule        *goivy.Module       // pre-isolate compile used for source-level UI operations
+	SourceSig           *goivy.Sig          // pre-isolate signature used by Diagram Domain
+	OriginalConjs       []*goivy.LabeledFormula
+	AG                  *goivy.AnalysisGraph // persistent analysis graph for interactive verification
+	AGUI                *AnalysisGraphUI     // ARG navigation UI (delegates to AG)
+	CTIUI               *CTIAnalysisGraphUI  // CTI/invariant workflow UI
+	SheetUIs            map[string]*AnalysisGraphUI
+	sheetCounter        int
+	ReachableUI         *AnalysisGraphUI
+	EventViewer         *EventTraceViewer
 }
 
 const rootSheetID = "sheet-1"
@@ -64,14 +65,15 @@ const NoIsolatesFoundChoice = "no_isolates_found"
 // NewSession creates a new verification session with the given id.
 func NewSession(cfg *goivy.Config, id string) *Session {
 	return &Session{
-		Cfg:          cfg,
-		ID:           id,
-		Events:       make(chan Event, 64),
-		Graph:        NewWebUIAnalysisGraphState(),
-		SimpleSess:   NewConceptSession(),
-		SheetUIs:     make(map[string]*AnalysisGraphUI),
-		sheetCounter: 1,
-		EventViewer:  NewEventTraceViewer(),
+		Cfg:                 cfg,
+		ID:                  id,
+		Events:              make(chan Event, 64),
+		Graph:               NewWebUIAnalysisGraphState(),
+		SimpleSess:          NewConceptSession(),
+		SavedConceptDomains: make(map[string]*ConceptDomain),
+		SheetUIs:            make(map[string]*AnalysisGraphUI),
+		sheetCounter:        1,
+		EventViewer:         NewEventTraceViewer(),
 	}
 }
 
@@ -786,6 +788,24 @@ func conceptGraphActionPayload(w *GraphWidget) map[string]interface{} {
 	}
 }
 
+func ctiPreStateLabel(ui *CTIAnalysisGraphUI) string {
+	if ui != nil && ui.AG != nil && len(ui.AG.States) > 0 && ui.AG.States[0] != nil && ui.AG.States[0].ID >= 0 {
+		return fmt.Sprintf("CTI pre-state %d", ui.AG.States[0].ID)
+	}
+	return "CTI pre-state"
+}
+
+func applyCTIStateLabelToDiagramResult(result map[string]interface{}, label string) {
+	if result == nil || label == "" {
+		return
+	}
+	result["cti_state_label"] = label
+	if concept, ok := result["concept"].(map[string]interface{}); ok {
+		concept["state_label"] = label
+		concept["cti_state_label"] = label
+	}
+}
+
 func applyGraphWidgetSelections(cy *WebUICyElements, w *GraphWidget) {
 	if cy == nil || w == nil {
 		return
@@ -888,6 +908,21 @@ func exprStrings(exprs []goivy.Expr) []string {
 	return out
 }
 
+func eliminatedConjectureStrings(state *goivy.InterpState, model *goivy.Clauses) []string {
+	if state == nil || model == nil {
+		return nil
+	}
+	eliminated := goivy.FilterConjectures(state, model)
+	out := make([]string, 0, len(eliminated))
+	for _, conj := range eliminated {
+		if conj == nil {
+			continue
+		}
+		out = append(out, goivy.PrettyFmla(conj.ToFormula()))
+	}
+	return out
+}
+
 func conceptGraphGoalClauses(w *GraphWidget, parentState *goivy.State) (*goivy.Clauses, error) {
 	if w != nil {
 		exprs := w.GetActiveFactExprs()
@@ -984,6 +1019,99 @@ func (s *Session) compiledSymbolListLocked() []*goivy.Const {
 	return symbols
 }
 
+func (s *Session) compiledConstantNamesForSortLocked(sortName string) []string {
+	if sortName == "" || s == nil {
+		return nil
+	}
+	seen := make(map[string]bool)
+	var constants []string
+	collect := func(sig *goivy.Sig) {
+		if sig == nil || sig.Symbols == nil {
+			return
+		}
+		for symName, entry := range sig.Symbols.All() {
+			if seen[symName] || entry == nil || entry.Sort == nil {
+				continue
+			}
+			if fs, ok := entry.Sort.(*goivy.LogicFunctionSort); ok {
+				if len(fs.Domain()) == 0 && conceptSortNamesMatch(fs.Range().String(), sortName) {
+					seen[symName] = true
+					constants = append(constants, symName)
+				}
+				continue
+			}
+			if sortVal, ok := entry.Sort.(goivy.Sort); ok && conceptSortNamesMatch(sortVal.String(), sortName) {
+				seen[symName] = true
+				constants = append(constants, symName)
+			}
+		}
+	}
+	collect(s.CompiledSig)
+	collect(s.SourceSig)
+	sort.Strings(constants)
+	return constants
+}
+
+func conceptSortNamesMatch(a, b string) bool {
+	a = strings.TrimSpace(a)
+	b = strings.TrimSpace(b)
+	if a == "" || b == "" {
+		return false
+	}
+	if a == b {
+		return true
+	}
+	if strings.TrimPrefix(a, "this.") == b || a == strings.TrimPrefix(b, "this.") {
+		return true
+	}
+	if idx := strings.LastIndex(a, "."); idx >= 0 {
+		a = a[idx+1:]
+	}
+	if idx := strings.LastIndex(b, "."); idx >= 0 {
+		b = b[idx+1:]
+	}
+	return a == b
+}
+
+func (s *Session) seedSimpleConceptSessionIntoGraphLocked(w *GraphWidget) {
+	if s == nil || s.SimpleSess == nil || w == nil || w.G() == nil || w.G().InteractiveSess != nil {
+		return
+	}
+	w.G().ConceptSess = conceptSessionCopy(s.SimpleSess)
+}
+
+func (s *Session) seedInteractiveConceptSessionIntoGraphLocked(w *GraphWidget) error {
+	if s == nil || s.ConceptSess == nil || w == nil || w.G() == nil || w.G().InteractiveSess != nil {
+		return nil
+	}
+	clone, err := s.ConceptSess.CloneE(false)
+	if err != nil {
+		return err
+	}
+	w.G().InteractiveSess = clone
+	return nil
+}
+
+func (s *Session) syncSimpleSessionFromGraphLocked(w *GraphWidget) {
+	if s == nil || w == nil || w.G() == nil || w.G().ConceptSess == nil {
+		return
+	}
+	s.SimpleSess = conceptSessionCopy(w.G().ConceptSess)
+	s.toggles = w.G().Checks.Snapshot()
+}
+
+func (s *Session) syncInteractiveConceptSessionFromGraphLocked(w *GraphWidget) error {
+	if s == nil || w == nil || w.G() == nil || w.G().InteractiveSess == nil {
+		return nil
+	}
+	clone, err := w.G().InteractiveSess.CloneE(false)
+	if err != nil {
+		return err
+	}
+	s.ConceptSess = clone
+	return nil
+}
+
 func (s *Session) sourceSortMapLocked() map[string]goivy.Sort {
 	if s == nil || s.SourceSig == nil || s.SourceSig.Sorts == nil {
 		return s.compiledSortMapLocked()
@@ -1056,10 +1184,25 @@ func (s *Session) replaceConceptGraphDomainLocked(w *GraphWidget, cd *CDConceptD
 	if cd == nil {
 		return fmt.Errorf("replace concept domain: nil domain")
 	}
+	if w.G().InteractiveSess != nil {
+		if err := w.G().InteractiveSess.ReplaceDomain(cd, nil); err != nil {
+			return err
+		}
+	}
+	return s.replaceConceptGraphSimpleDomainLocked(w, simpleConceptDomainFromCD(cd))
+}
+
+func (s *Session) replaceConceptGraphSimpleDomainLocked(w *GraphWidget, domain *ConceptDomain) error {
+	if w == nil || w.G() == nil {
+		return fmt.Errorf("replace concept domain: no concept graph")
+	}
+	if domain == nil {
+		return fmt.Errorf("replace concept domain: nil domain")
+	}
 	w.Checkpoint(false)
 	g := w.G()
 	g.ConceptSess = NewConceptSession()
-	g.ConceptSess.Domain = simpleConceptDomainFromCD(cd)
+	g.ConceptSess.Domain = domain.Copy()
 	g.ConceptSess.AbstractValue = make(map[string]bool)
 	g.Checks = NewDisplayCheckboxes()
 	g.NewRelations = nil
@@ -1073,6 +1216,30 @@ func (s *Session) replaceConceptGraphDomainLocked(w *GraphWidget, cd *CDConceptD
 	s.SimpleSess = conceptSessionCopy(g.ConceptSess)
 	s.toggles = g.Checks.Snapshot()
 	return nil
+}
+
+func (s *Session) savedConceptDomainNamesLocked() []string {
+	seen := make(map[string]bool)
+	var names []string
+	for name := range s.SavedConceptDomains {
+		seen[name] = true
+		names = append(names, name)
+	}
+	for _, ui := range s.SheetUIs {
+		if ui == nil || ui.CurrentConceptGraph == nil || ui.CurrentConceptGraph.G() == nil {
+			continue
+		}
+		if cis := ui.CurrentConceptGraph.G().InteractiveSess; cis != nil {
+			for name := range cis.AnalysisSession {
+				if !seen[name] {
+					seen[name] = true
+					names = append(names, name)
+				}
+			}
+		}
+	}
+	sort.Strings(names)
+	return names
 }
 
 func clausesFromFormulaText(text string) (*goivy.Clauses, error) {
@@ -1882,35 +2049,42 @@ func simpleConceptDomainFromCD(cd *CDConceptDomain) *ConceptDomain {
 		if c == nil {
 			return
 		}
-		var vars []string
-		var sorts []string
-		for _, v := range c.Variables {
-			if v == nil {
-				continue
-			}
-			vars = append(vars, v.Name)
-			if v.VSort != nil {
-				sorts = append(sorts, v.VSort.String())
-			} else {
-				sorts = append(sorts, "")
-			}
-		}
-		formula := ""
-		if c.Formula != nil {
-			formula = c.Formula.String()
-		}
-		d.Concepts[name] = &Concept{
-			Name:      name,
-			Variables: vars,
-			Formula:   formula,
-			Sorts:     sorts,
-			Arity:     c.Arity(),
-		}
+		d.Concepts[name] = simpleConceptFromCDConcept(name, c)
 	})
 	d.Nodes = append([]string{}, cd.Concepts.GetList("nodes")...)
 	d.Edges = append([]string{}, cd.Concepts.GetList("edges")...)
 	d.NodeLabels = append([]string{}, cd.Concepts.GetList("node_labels")...)
 	return d
+}
+
+func simpleConceptFromCDConcept(name string, c *CDConcept) *Concept {
+	if c == nil {
+		return nil
+	}
+	var vars []string
+	var sorts []string
+	for _, v := range c.Variables {
+		if v == nil {
+			continue
+		}
+		vars = append(vars, v.Name)
+		if v.VSort != nil {
+			sorts = append(sorts, v.VSort.String())
+		} else {
+			sorts = append(sorts, "")
+		}
+	}
+	formula := ""
+	if c.Formula != nil {
+		formula = c.Formula.String()
+	}
+	return &Concept{
+		Name:      name,
+		Variables: vars,
+		Formula:   formula,
+		Sorts:     sorts,
+		Arity:     c.Arity(),
+	}
 }
 
 func (s *Session) showUsedRelationsInRoot(clauses *goivy.Clauses, both bool) error {
@@ -2322,7 +2496,8 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			if err = s.AGUI.CurrentConceptGraph.Undo(); err != nil {
 				break
 			}
-			s.toggles = s.AGUI.CurrentConceptGraph.G().Checks.Snapshot()
+			s.syncSimpleSessionFromGraphLocked(s.AGUI.CurrentConceptGraph)
+			result["concept"] = conceptGraphActionPayload(s.AGUI.CurrentConceptGraph)
 			break
 		}
 		if s.ConceptSess != nil {
@@ -2333,12 +2508,115 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			if err = s.AGUI.CurrentConceptGraph.Redo(); err != nil {
 				break
 			}
-			s.toggles = s.AGUI.CurrentConceptGraph.G().Checks.Snapshot()
+			s.syncSimpleSessionFromGraphLocked(s.AGUI.CurrentConceptGraph)
+			result["concept"] = conceptGraphActionPayload(s.AGUI.CurrentConceptGraph)
 			break
 		}
 		if s.ConceptSess != nil {
 			err = s.ConceptSess.Redo()
 		}
+	case "empty", "suppose_empty":
+		conceptName, _ := args["concept"].(string)
+		if conceptName == "" {
+			err = fmt.Errorf("%s requires a concept name", actionName)
+			break
+		}
+		_, resolvedSheetID, w, uiErr := s.activeConceptGraphForActionLocked(actionName, actionStringArg(args, "sheet_id"))
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		s.seedSimpleConceptSessionIntoGraphLocked(w)
+		err = w.SupposeEmpty(conceptName)
+		if err == nil {
+			s.syncSimpleSessionFromGraphLocked(w)
+			result["sheet_id"] = resolvedSheetID
+			result["concept"] = conceptGraphActionPayload(w)
+			s.emit(Event{Type: "concept_updated", Data: result["concept"]})
+		}
+	case "materialize", "materialize_node":
+		conceptName, _ := args["concept"].(string)
+		if conceptName == "" {
+			err = fmt.Errorf("%s requires a concept name", actionName)
+			break
+		}
+		_, resolvedSheetID, w, uiErr := s.activeConceptGraphForActionLocked(actionName, actionStringArg(args, "sheet_id"))
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		s.seedSimpleConceptSessionIntoGraphLocked(w)
+		var witness string
+		witness, err = w.MaterializeNode(conceptName)
+		if err == nil {
+			s.syncSimpleSessionFromGraphLocked(w)
+			result["sheet_id"] = resolvedSheetID
+			result["witness"] = witness
+			result["concept"] = conceptGraphActionPayload(w)
+			s.emit(Event{Type: "concept_updated", Data: result["concept"]})
+		}
+	case "save_domain":
+		name := strings.TrimSpace(actionStringArg(args, "name"))
+		if name == "" {
+			err = fmt.Errorf("save_domain: missing name")
+			break
+		}
+		_, resolvedSheetID, w, uiErr := s.activeConceptGraphForActionLocked(actionName, actionStringArg(args, "sheet_id"))
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		if s.SavedConceptDomains == nil {
+			s.SavedConceptDomains = make(map[string]*ConceptDomain)
+		}
+		s.SavedConceptDomains[name] = w.G().ConceptSess.Domain.Copy()
+		if cis := w.G().InteractiveSess; cis != nil {
+			cis.SaveDomain(name)
+		}
+		result["sheet_id"] = resolvedSheetID
+		result["type"] = "save_domain"
+		result["name"] = name
+		result["saved_domains"] = s.savedConceptDomainNamesLocked()
+		result["message"] = "Domain saved."
+	case "load_domain", "replace_domain":
+		name := strings.TrimSpace(actionStringArg(args, "name"))
+		if name == "" {
+			err = fmt.Errorf("%s: missing name", actionName)
+			break
+		}
+		_, resolvedSheetID, w, uiErr := s.activeConceptGraphForActionLocked(actionName, actionStringArg(args, "sheet_id"))
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		restored := false
+		if cis := w.G().InteractiveSess; cis != nil {
+			if cd, ok := cis.AnalysisSession[name]; ok {
+				if err = s.replaceConceptGraphDomainLocked(w, cd); err != nil {
+					break
+				}
+				restored = true
+			}
+		}
+		if !restored {
+			domain, ok := s.SavedConceptDomains[name]
+			if !ok {
+				err = fmt.Errorf("%s: domain %q not found", actionName, name)
+				break
+			}
+			if w.G().InteractiveSess != nil {
+				w.G().InteractiveSess = nil
+			}
+			if err = s.replaceConceptGraphSimpleDomainLocked(w, domain); err != nil {
+				break
+			}
+		}
+		result["sheet_id"] = resolvedSheetID
+		result["type"] = actionName
+		result["name"] = name
+		result["saved_domains"] = s.savedConceptDomainNamesLocked()
+		result["message"] = "Domain restored."
+		result["concept"] = conceptGraphActionPayload(w)
 	case "reset_domain":
 		_, resolvedSheetID, w, uiErr := s.activeConceptGraphForActionLocked(actionName, actionStringArg(args, "sheet_id"))
 		if uiErr != nil {
@@ -2400,6 +2678,9 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		}
 		for k, v := range diagramResult {
 			result[k] = v
+		}
+		if strings.EqualFold(actionStringArg(args, "ui_mode"), "cti") && s.CTIUI != nil {
+			applyCTIStateLabelToDiagramResult(result, ctiPreStateLabel(s.CTIUI))
 		}
 	case "recalculate":
 		_, resolvedSheetID, w, uiErr := s.activeConceptGraphForActionLocked(actionName, actionStringArg(args, "sheet_id"))
@@ -2728,7 +3009,8 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				break
 			}
 
-			reached := goivy.ReachState(goivy.ArtToInterpState(parentState), goalClauses)
+			interpParentState := goivy.ArtToInterpState(parentState)
+			reached := goivy.ReachState(interpParentState, goalClauses)
 			if reached == nil {
 				result["reachable"] = false
 				result["message"] = `Cannot reach this state in one step from any known reachable state. Try "reverse".`
@@ -2739,6 +3021,10 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			result["reachable"] = true
 			if artReached.Clauses != nil {
 				result["reached_state"] = goivy.PrettyFmla(artReached.Clauses.ToFormula())
+			}
+			if eliminated := eliminatedConjectureStrings(interpParentState, reached.Clauses); len(eliminated) > 0 {
+				result["eliminated_conjectures"] = eliminated
+				result["eliminated_conjectures_message"] = "The following conjectures have been eliminated:"
 			}
 			break
 		}
@@ -2771,6 +3057,10 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			artReached := goivy.InterpToArtState(reached)
 			if artReached.Clauses != nil {
 				result["reached_state"] = goivy.PrettyFmla(artReached.Clauses.ToFormula())
+			}
+			if eliminated := eliminatedConjectureStrings(interpState, reached.Clauses); len(eliminated) > 0 {
+				result["eliminated_conjectures"] = eliminated
+				result["eliminated_conjectures_message"] = "The following conjectures have been eliminated:"
 			}
 			state.Unders = append(state.Unders, artReached)
 			s.syncARGToGraph()
@@ -2830,6 +3120,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		if widgetErr != nil {
 			err = widgetErr
 			break
+		}
+		if s.CTIUI != nil && args != nil {
+			if raw, ok := args["relations_to_minimize"]; ok {
+				s.CTIUI.RelationsToMinimize = strings.TrimSpace(fmt.Sprint(raw))
+			}
 		}
 		switch actionName {
 		case "cti_gather":
@@ -3042,29 +3337,30 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			err = fmt.Errorf("splatter requires a concept name")
 			break
 		}
-		// Collect constants of the matching sort from the compiled signature.
-		var constants []string
-		if s.CompiledSig != nil {
-			// Find the sort of this concept
-			concept := s.SimpleSess.Domain.Concepts[conceptName]
-			if concept != nil && len(concept.Sorts) > 0 {
-				targetSort := concept.Sorts[0]
-				for symName, entry := range s.CompiledSig.Symbols.All() {
-					if entry == nil || entry.Sort == nil {
-						continue
-					}
-					// A constant is a symbol with no domain args whose range matches the sort
-					if fs, ok := entry.Sort.(*goivy.LogicFunctionSort); ok {
-						if len(fs.Domain()) == 0 && fs.Range().String() == targetSort {
-							constants = append(constants, symName)
-						}
-					}
-				}
+		_, resolvedSheetID, w, uiErr := s.activeConceptGraphForActionLocked(actionName, actionStringArg(args, "sheet_id"))
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		s.seedSimpleConceptSessionIntoGraphLocked(w)
+		var targetSort string
+		if w != nil && w.G() != nil && w.G().ConceptSess != nil && w.G().ConceptSess.Domain != nil {
+			if concept := w.G().ConceptSess.Domain.Concepts[conceptName]; concept != nil && len(concept.Sorts) > 0 {
+				targetSort = concept.Sorts[0]
 			}
 		}
-		err = s.SimpleSess.Splatter(conceptName, constants)
+		if targetSort == "" && s.SimpleSess != nil && s.SimpleSess.Domain != nil {
+			if concept := s.SimpleSess.Domain.Concepts[conceptName]; concept != nil && len(concept.Sorts) > 0 {
+				targetSort = concept.Sorts[0]
+			}
+		}
+		constants := s.compiledConstantNamesForSortLocked(targetSort)
+		err = w.Splatter(conceptName, constants...)
 		if err == nil {
-			s.emit(Event{Type: "concept_updated", Data: nil})
+			s.syncSimpleSessionFromGraphLocked(w)
+			result["sheet_id"] = resolvedSheetID
+			result["concept"] = conceptGraphActionPayload(w)
+			s.emit(Event{Type: "concept_updated", Data: result["concept"]})
 		}
 
 	default:
@@ -3190,6 +3486,13 @@ func (s *Session) ProofStackData() *WebUIProofStack {
 func (s *Session) AddProjection(name, concept string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	if w := s.currentConceptGraphForProjectionLocked(); w != nil && w.G() != nil {
+		if err := s.addProjectionToGraphLocked(w, name, concept); err != nil {
+			return err
+		}
+		s.emit(Event{Type: "concept_updated", Data: conceptGraphActionPayload(w)})
+		return nil
+	}
 	if s.ConceptSess != nil {
 		// AddCustomEdge creates a projection in the concept domain
 		if err := s.ConceptSess.AddCustomEdge(name, concept, concept); err != nil {
@@ -3198,6 +3501,95 @@ func (s *Session) AddProjection(name, concept string) error {
 	}
 	s.emit(Event{Type: "concept_updated", Data: nil})
 	return nil
+}
+
+func (s *Session) currentConceptGraphForProjectionLocked() *GraphWidget {
+	if s.AGUI != nil && s.AGUI.CurrentConceptGraph != nil {
+		return s.AGUI.CurrentConceptGraph
+	}
+	for _, ui := range s.SheetUIs {
+		if ui != nil && ui.CurrentConceptGraph != nil {
+			return ui.CurrentConceptGraph
+		}
+	}
+	return nil
+}
+
+func (s *Session) addProjectionToGraphLocked(w *GraphWidget, name, formula string) error {
+	g := w.G()
+	if g == nil {
+		return fmt.Errorf("add projection: no concept graph")
+	}
+	var cdConcept *CDConcept
+	if g.InteractiveSess != nil {
+		var err error
+		cdConcept, err = findProjectedConcept(g.InteractiveSess, name, formula)
+		if err != nil {
+			return err
+		}
+		if cdConcept != nil && !g.InteractiveSess.Domain.Concepts.Has(name) {
+			if err := g.InteractiveSess.AddEdge(name, cdConcept); err != nil {
+				return err
+			}
+		}
+	}
+	simpleConcept := simpleConceptFromCDConcept(name, cdConcept)
+	if simpleConcept == nil {
+		simpleConcept = s.conceptFromFormulaString(name)
+		if strings.TrimSpace(formula) != "" {
+			simpleConcept.Formula = formula
+		}
+		if simpleConcept.Arity == 0 {
+			simpleConcept.Arity = 2
+		}
+	}
+	g.ConceptSess.Domain.Concepts[name] = simpleConcept
+	if simpleConcept.Arity == 1 {
+		if !stringSliceContains(g.ConceptSess.Domain.NodeLabels, name) {
+			g.ConceptSess.Domain.NodeLabels = append(g.ConceptSess.Domain.NodeLabels, name)
+		}
+	} else {
+		if !stringSliceContains(g.ConceptSess.Domain.Edges, name) {
+			g.ConceptSess.Domain.Edges = append(g.ConceptSess.Domain.Edges, name)
+		}
+		g.Checks.EnsureEdge(name)
+	}
+	w.UpdateRelations()
+	if err := w.Update(); err != nil {
+		return err
+	}
+	s.SimpleSess = conceptSessionCopy(g.ConceptSess)
+	s.toggles = g.Checks.Snapshot()
+	return nil
+}
+
+func findProjectedConcept(cis *ConceptInteractiveSession, name, formula string) (*CDConcept, error) {
+	if cis == nil || cis.Domain == nil || cis.Domain.Concepts == nil {
+		return nil, nil
+	}
+	nodes := cis.Domain.Concepts.GetList("nodes")
+	if len(nodes) == 0 {
+		nodes = cis.Domain.ConceptsByArity(1)
+	}
+	for _, node := range nodes {
+		projections, err := cis.GetProjections(node)
+		if err != nil {
+			return nil, err
+		}
+		for _, projection := range projections {
+			if projection.Concept == nil {
+				continue
+			}
+			projectionFormula := ""
+			if projection.Concept.Formula != nil {
+				projectionFormula = projection.Concept.Formula.String()
+			}
+			if projection.Name == name || projectionFormula == formula || projectionFormula == name {
+				return projection.Concept, nil
+			}
+		}
+	}
+	return nil, nil
 }
 
 // ArgNodeAction executes an action on an ARG node.
@@ -3858,6 +4250,9 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 	if s.CompiledModule == nil {
 		return &WebUICheckResult{Result: "error", Message: "No module loaded — load an .ivy file first"}
 	}
+	if s.CTIUI != nil && options.RelationsToMinimize != "" {
+		s.CTIUI.RelationsToMinimize = options.RelationsToMinimize
+	}
 
 	switch mode {
 	case "induction":
@@ -3916,6 +4311,10 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 		}
 		if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
 			return cancelled
+		}
+		var relsToMin []string
+		if s.CTIUI != nil && s.CTIUI.RelationsToMinimize != "" && s.CTIUI.RelationsToMinimize != "relations to minimize" {
+			relsToMin = strings.Fields(s.CTIUI.RelationsToMinimize)
 		}
 
 		// Test each conjecture. Matches Python ivy_ui_cti.py check_inductiveness lines 120-174:
@@ -4003,7 +4402,7 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 				}()
 				// Check: post_state_with_TR & ~conjecture satisfiable?
 				// Matches Python: check_final_cond(ag, post, dual_clauses(conj))
-				cexTrace = goivy.CheckFinalCond(ag, postState, finalCond, nil, true)
+				cexTrace = goivy.CheckFinalCond(ag, postState, finalCond, relsToMin, true)
 			}()
 			if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
 				cancelled.Z3Contacted = true

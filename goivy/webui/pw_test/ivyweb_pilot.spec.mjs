@@ -38,6 +38,10 @@ export disconnect
 conjecture link(X,Y) -> ~semaphore(Y)
 conjecture ~link(X,Y) | ~link(X,Z) | Y = Z
 `;
+const clientServerWithIndividualsContent = clientServerIvyContent.replace(
+  'type server\n\nrelation link',
+  'type server\n\nindividual c0 : client\nindividual c1 : client\nindividual s0 : server\n\nrelation link',
+);
 
 async function openIvy(page) {
   const consoleErrors = [];
@@ -54,6 +58,7 @@ async function openIvy(page) {
   await expect(page).toHaveTitle(/ivy/i);
   await expect(page.locator('#menubar')).toBeVisible();
   await page.waitForFunction(() => window.__ivyDiagnostics && window.__ivyDiagnostics.runtime() && window.__ivyDiagnostics.runtime().api);
+  await page.waitForFunction(() => window.__ivyDiagnostics.runtime().api.sessionId);
   return consoleErrors;
 }
 
@@ -76,23 +81,139 @@ async function createSession(request) {
 }
 
 async function loadExampleIntoCurrentSession(page) {
-  return page.evaluate(async (content) => {
-    const sid = window.__ivyDiagnostics.runtime().api.sessionId;
-    const formData = new FormData();
-    const blob = new Blob([content], { type: 'text/plain' });
-    formData.append('file', blob, 'test.ivy');
-    const loadResponse = await fetch(`/api/session/${sid}/load`, {
-      method: 'POST',
-      body: formData,
-    });
-    const loadBody = await loadResponse.json();
-    const conceptResponse = await fetch(`/api/session/${sid}/concept`);
-    const concept = await conceptResponse.json();
-    if (window.__ivyDiagnostics.runtime() && window.__ivyDiagnostics.runtime().conceptGraph) {
-      window.__ivyDiagnostics.runtime().conceptGraph.update(concept.elements, concept.positions);
+  return loadContentIntoCurrentSession(page, clientServerIvyContent, 'test.ivy');
+}
+
+async function loadContentIntoCurrentSession(page, content, filename) {
+  return page.evaluate(async ({ content, filename }) => {
+    const app = window.__ivyDiagnostics.runtime();
+    const file = new File([content], filename, { type: 'text/plain' });
+    const loadBody = await app.api.loadFile(file, { isolate: '' });
+    const arg = await app.api.getARG();
+    const concept = await app.api.getConceptGraph();
+    if (app.applyArgSnapshot) {
+      app.applyArgSnapshot('sheet-1', arg);
+    } else if (app.argGraph) {
+      app.argGraph.update(arg.elements, arg.positions);
     }
-    return { loadBody, concept };
-  }, clientServerIvyContent);
+    if (app.applyConceptSnapshot) {
+      app.applyConceptSnapshot('sheet-1', concept);
+    } else if (app.conceptGraph) {
+      app.conceptGraph.update(concept.elements, concept.positions);
+    }
+    return { loadBody, arg, concept };
+  }, { content, filename });
+}
+
+async function selectArgStateForConcept(page, stateId = 'state_0') {
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.sheets && app.sheets['sheet-1'];
+    const graph = (sheet && sheet.argGraph) || app.argGraph;
+    return graph && graph.cy;
+  });
+  await page.evaluate((stateId) => {
+    const app = window.__ivyDiagnostics.runtime();
+    if (app.switchSheet) app.switchSheet('sheet-1');
+    const sheet = app.sheets && app.sheets['sheet-1'];
+    const graph = (sheet && sheet.argGraph) || app.argGraph;
+    const nodes = graph.cy.nodes().toArray();
+    const node = nodes.find((n) => n.data('obj') === stateId || n.id() === stateId);
+    if (!node) {
+      throw new Error(`ARG state ${stateId} not found; saw ${nodes.map((n) => `${n.id()}:${n.data('obj')}`).join(', ')}`);
+    }
+    node.emit('tap', { target: node });
+  }, stateId);
+  await page.waitForFunction((stateId) => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.sheets && app.sheets[app.activeSheetId || 'sheet-1'];
+    const graph = (sheet && sheet.conceptGraph) || app.conceptGraph;
+    return sheet && sheet.selectedArgNode === stateId && graph && graph.cy.nodes().length > 0;
+  }, stateId);
+}
+
+async function openConceptNodeContextMenu(page, labelFragment) {
+  await page.evaluate((labelFragment) => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.sheets && app.sheets[app.activeSheetId || 'sheet-1'];
+    const graph = (sheet && sheet.conceptGraph) || app.conceptGraph;
+    const nodes = graph.cy.nodes().toArray();
+    const candidates = nodes.filter((n) => !(n.hasClass && n.hasClass('subgraph_box')));
+    const node = candidates.find((n) => String(n.data('obj') || '') === labelFragment) || candidates.find((n) => {
+      const haystack = `${n.data('obj') || ''}\n${n.data('label') || ''}`;
+      return haystack.includes(labelFragment);
+    });
+    if (!node) {
+      throw new Error(`concept node containing ${labelFragment} not found; saw ${nodes.map((n) => `${n.data('obj')}:${n.data('label')}`).join(', ')}`);
+    }
+    const pos = node.renderedPosition ? node.renderedPosition() : { x: 24, y: 24 };
+    app.onConceptNodeRightClick(node.data(), pos);
+  }, labelFragment);
+  await expect(page.locator('#context-menu')).toBeVisible();
+}
+
+async function openConceptEdgeContextMenu(page, labelFragment) {
+  await page.evaluate((labelFragment) => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.sheets && app.sheets[app.activeSheetId || 'sheet-1'];
+    const graph = (sheet && sheet.conceptGraph) || app.conceptGraph;
+    const edges = graph.cy.edges().toArray();
+    const edge = edges.find((e) => {
+      const haystack = `${e.data('obj') || ''}\n${e.data('label') || ''}\n${e.data('short_info') || ''}`;
+      return haystack.includes(labelFragment);
+    });
+    if (!edge) {
+      throw new Error(`concept edge containing ${labelFragment} not found; saw ${edges.map((e) => `${e.data('obj')}:${e.data('label')}:${e.data('short_info')}`).join(', ')}`);
+    }
+    let pos = edge.renderedMidpoint ? edge.renderedMidpoint() : null;
+    if (!pos) {
+      const source = edge.source && edge.source();
+      const target = edge.target && edge.target();
+      const sp = source && source.renderedPosition ? source.renderedPosition() : { x: 24, y: 24 };
+      const tp = target && target.renderedPosition ? target.renderedPosition() : sp;
+      pos = { x: (sp.x + tp.x) / 2, y: (sp.y + tp.y) / 2 };
+    }
+    app.onConceptEdgeRightClick(edge.data(), pos);
+  }, labelFragment);
+  await expect(page.locator('#context-menu')).toBeVisible();
+}
+
+async function conceptContextActionState(page) {
+  return page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheetId = app.activeSheetId || 'sheet-1';
+    const sheet = app.uiDataModel && app.uiDataModel.sheets && app.uiDataModel.sheets[sheetId];
+    const runtimeSheet = app.sheets && app.sheets[sheetId];
+    const graph = (runtimeSheet && runtimeSheet.conceptGraph) || app.conceptGraph;
+    const graphStack = sheet && sheet.concept && sheet.concept.graphStack;
+    const conceptNames = Object.keys((sheet && sheet.concept && sheet.concept.domain && sheet.concept.domain.concepts) || {});
+    const factTexts = ((sheet && sheet.concept && sheet.concept.facts) || []).map((fact) => String(fact.text || ''));
+    const labels = graph.cy.nodes().map((n) => String(n.data('label') || ''));
+    const objects = graph.cy.nodes().map((n) => String(n.data('obj') || ''));
+    const classesByObj = {};
+    graph.cy.nodes().forEach((n) => {
+      classesByObj[String(n.data('obj') || '')] = String(n.classes ? n.classes() : '');
+    });
+    const linkRow = Array.from(document.querySelectorAll('#state-checkbox-body tr'))
+      .find((row) => row.textContent && row.textContent.includes('link'));
+    const linkUnknown = linkRow ? linkRow.querySelectorAll('input[type="checkbox"]')[1] : null;
+    const values = labels.concat(objects);
+    return {
+      labels,
+      objects,
+      conceptNames,
+      factTexts,
+      values,
+      classesByObj,
+      graphStack: graphStack ? {
+        canUndo: graphStack.canUndo,
+        canRedo: graphStack.canRedo,
+        undoDepth: graphStack.undoDepth,
+        redoDepth: graphStack.redoDepth,
+      } : null,
+      linkUnknownChecked: !!(linkUnknown && linkUnknown.checked),
+    };
+  });
 }
 
 test('page loads', async ({ page }) => {
@@ -185,6 +306,117 @@ test('workflow mode selector switches CTI and reachability controls', async ({ p
   await expect(page.locator('#btn-show-reachable')).toBeVisible();
   await expect(page.locator('[data-dropdown="conj-menu"]')).toBeHidden();
   await expect(page.locator('[data-dropdown="reach-action-menu"]')).toBeVisible();
+});
+
+test('active event sheets hide analysis workflow menus', async ({ page }) => {
+  await openIvy(page);
+
+  await page.locator('#ui-mode-select').selectOption('reachability');
+  await expect(page.locator('#mode-select')).toBeVisible();
+  await expect(page.locator('#btn-check')).toBeVisible();
+
+  await page.evaluate(() => {
+    window.__ivyDiagnostics.runtime().openEventTraceSheet('Trace', {
+      sheet_id: 'events-1',
+      events: [
+        { text: 'root(a)', address: '0', children: [] },
+      ],
+      patterns: ['root(a)'],
+    }, 'events-1');
+  });
+
+  await expect(page.locator('.sheet-tab[data-sheet="events-1"]')).toHaveClass(/active/);
+  await expect(page.locator('body')).toHaveAttribute('data-active-sheet-type', 'events');
+  await expect(page.locator('#mode-select')).toBeHidden();
+  await expect(page.locator('#btn-check')).toBeHidden();
+  await expect(page.locator('#btn-show-reachable')).toBeHidden();
+
+  await page.locator('.sheet-tab[data-sheet="sheet-1"]').click();
+  await expect(page.locator('body')).toHaveAttribute('data-active-sheet-type', 'analysis');
+  await expect(page.locator('#mode-select')).toBeVisible();
+  await expect(page.locator('#btn-check')).toBeVisible();
+});
+
+test('CTI relations-to-minimize field is sent to check and minimize actions', async ({ page }) => {
+  await openIvy(page);
+
+  const input = page.locator('#cti-relations-to-minimize');
+  await expect(input).toBeVisible();
+  await input.fill('q');
+
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.getMode = () => 'induction';
+    app._persistedFileContent = '';
+    app.api.runCheck = async (mode, options) => {
+      window._ctiCheckOptions = { mode, options };
+      return { result: 'pass', mode, message: 'ok' };
+    };
+    app.api.getARG = async () => null;
+    app.api.getConceptGraph = async () => null;
+    app.showCheckResult = () => {};
+    app._autoCheckUsedRelations = async () => {};
+    await app.runCheck();
+  });
+
+  expect(await page.evaluate(() => window._ctiCheckOptions)).toEqual({
+    mode: 'induction',
+    options: { relations_to_minimize: 'q' },
+  });
+
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.api.executeAction = async (action, args) => {
+      window._ctiMinimizeCall = { action, args };
+      return { message: 'minimized' };
+    };
+    app.refreshConceptGraph = async () => {};
+    await app.ctiConceptAction('cti_minimize');
+  });
+
+  expect(await page.evaluate(() => window._ctiMinimizeCall)).toEqual({
+    action: 'cti_minimize',
+    args: { sheet_id: 'sheet-1', relations_to_minimize: 'q' },
+  });
+});
+
+test('CTI diagram sends CTI mode and labels the pre-state', async ({ page }) => {
+  await openIvy(page);
+
+  const result = await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.activeSheetId = 'sheet-1';
+    app.setUIMode('cti');
+    app.api.executeAction = async (action, args) => {
+      window._ctiDiagramCall = { action, args };
+      return {
+        status: 'diagrammed',
+        message: 'Diagram complete.',
+        concept: {
+          sheet_id: 'sheet-1',
+          elements: [],
+          cti_state_label: 'CTI pre-state 0',
+        },
+      };
+    };
+    app.refreshConceptGraph = async () => {
+      window._ctiDiagramRefreshed = true;
+    };
+    await app.diagramCurrentState();
+    return {
+      call: window._ctiDiagramCall,
+      label: document.querySelector('#state-label')?.textContent || '',
+      status: document.querySelector('#statusbar')?.textContent || '',
+      refreshed: !!window._ctiDiagramRefreshed,
+    };
+  });
+
+  expect(result).toEqual({
+    call: { action: 'diagram', args: { sheet_id: 'sheet-1', ui_mode: 'cti' } },
+    label: 'State: CTI pre-state 0',
+    status: expect.stringContaining('Diagram complete'),
+    refreshed: false,
+  });
 });
 
 test('graph health check passes', async ({ page }) => {
@@ -314,6 +546,42 @@ test('dialog primitives accept integer and list selections', async ({ page }) =>
   await expect(listPromise).resolves.toBe('beta');
 });
 
+test('reach action shows eliminated conjectures dialog', async ({ page }) => {
+  await openIvy(page);
+
+  const reachPromise = page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.activeSheetId = 'sheet-1';
+    app.api.executeAction = async (action, args) => {
+      window._reachActionCall = { action, args };
+      return {
+        reachable: true,
+        eliminated_conjectures_message: 'The following conjectures have been eliminated:',
+        eliminated_conjectures: ['p', 'q'],
+      };
+    };
+    app.refreshConceptGraph = async () => undefined;
+    await app.reachStep();
+    return {
+      call: window._reachActionCall,
+      status: document.querySelector('#statusbar')?.textContent || '',
+    };
+  });
+
+  await expect(page.locator('[data-ivy-dialog]')).toBeVisible();
+  await expect(page.locator('[data-ivy-dialog]')).toContainText('The following conjectures have been eliminated:');
+  await expect(page.locator('[data-ivy-dialog-list]')).toContainText('p');
+  await expect(page.locator('[data-ivy-dialog-list]')).toContainText('q');
+  await expect(page.getByRole('button', { name: 'Cancel' })).toHaveCount(0);
+  await page.locator('[data-ivy-dialog-list]').selectOption('p');
+  await page.getByRole('button', { name: 'OK' }).click();
+
+  await expect(reachPromise).resolves.toEqual({
+    call: { action: 'reach', args: { sheet_id: 'sheet-1' } },
+    status: expect.stringContaining('Reach complete'),
+  });
+});
+
 test('Go-supplied concept menu descriptor renders and dispatches', async ({ page }) => {
   await openIvy(page);
 
@@ -428,6 +696,395 @@ test('backend relation toggle controls concept edge rendering and survives refre
 
   await expect(page.locator('#state-checkbox-body tr', { hasText: 'link' }).locator('input[type="checkbox"]').nth(1)).toBeChecked();
   expect(await page.evaluate(() => window.__ivyDiagnostics.runtime().conceptGraph.cy.edges().toArray().filter((e) => e.data('obj') === 'link').length)).toBeGreaterThan(0);
+});
+
+test('concept node Splatter context action preserves relation toggles and graph-stack undo redo', async ({ page }) => {
+  await openIvy(page);
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    await app._switchJobSubmissionBackend('remote');
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return app.api && app.api.kind === 'hosted-go' && app.api.sessionId;
+  });
+  await page.locator('#ui-mode-select').selectOption('reachability');
+  await loadContentIntoCurrentSession(page, clientServerWithIndividualsContent, 'client_server_with_individuals.ivy');
+
+  const linkUnknown = page.locator('#state-checkbox-body tr', { hasText: 'link' }).locator('input[type="checkbox"]').nth(1);
+  await expect(linkUnknown).toBeVisible();
+  await linkUnknown.check();
+  await expect(linkUnknown).toBeChecked();
+
+  await openConceptNodeContextMenu(page, 'client');
+  await page.locator('.context-menu-item', { hasText: 'Splatter' }).click();
+  await expect(page.locator('#statusbar')).toContainText('Splattered: client', { timeout: 10_000 });
+
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const values = app.conceptGraph.cy.nodes().flatMap((n) => [String(n.data('obj') || ''), String(n.data('label') || '')]);
+    return values.some((value) => value.includes('c0')) && values.some((value) => value.includes('c1'));
+  });
+  const splattered = await conceptContextActionState(page);
+  expect(splattered.values.some((value) => value.includes('c0'))).toBe(true);
+  expect(splattered.values.some((value) => value.includes('c1'))).toBe(true);
+  expect(splattered.linkUnknownChecked).toBe(true);
+  expect(splattered.graphStack).toMatchObject({ canUndo: true, canRedo: false });
+  expect(splattered.graphStack.undoDepth).toBeGreaterThan(0);
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doUndo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return sheet.concept.graphStack.canRedo;
+  });
+  const undone = await conceptContextActionState(page);
+  expect(undone.values.some((value) => value.includes('c0'))).toBe(false);
+  expect(undone.values.some((value) => value.includes('c1'))).toBe(false);
+  expect(undone.linkUnknownChecked).toBe(true);
+  expect(undone.graphStack).toMatchObject({ canUndo: false, canRedo: true });
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doRedo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const values = app.conceptGraph.cy.nodes().flatMap((n) => [String(n.data('obj') || ''), String(n.data('label') || '')]);
+    return values.some((value) => value.includes('c0')) && values.some((value) => value.includes('c1'));
+  });
+  const redone = await conceptContextActionState(page);
+  expect(redone.linkUnknownChecked).toBe(true);
+  expect(redone.graphStack).toMatchObject({ canUndo: true, canRedo: false });
+});
+
+test('concept node Empty context action preserves relation toggles and graph-stack undo redo', async ({ page }) => {
+  await openIvy(page);
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    await app._switchJobSubmissionBackend('remote');
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return app.api && app.api.kind === 'hosted-go' && app.api.sessionId;
+  });
+  await page.locator('#ui-mode-select').selectOption('reachability');
+  await loadContentIntoCurrentSession(page, clientServerWithIndividualsContent, 'client_server_with_individuals.ivy');
+
+  const linkUnknown = page.locator('#state-checkbox-body tr', { hasText: 'link' }).locator('input[type="checkbox"]').nth(1);
+  await expect(linkUnknown).toBeVisible();
+  await linkUnknown.check();
+  await expect(linkUnknown).toBeChecked();
+
+  await openConceptNodeContextMenu(page, 'client');
+  await page.locator('.context-menu-item', { hasText: 'Empty' }).click();
+  await expect(page.locator('#statusbar')).toContainText('Suppose empty applied', { timeout: 10_000 });
+
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const classes = app.conceptGraph.cy.nodes().toArray()
+      .filter((n) => String(n.data('obj') || '') === 'client')
+      .map((n) => String(n.classes ? n.classes() : ''))
+      .join(' ');
+    return classes.includes('non_existing');
+  });
+  const emptied = await conceptContextActionState(page);
+  expect(emptied.classesByObj.client).toContain('non_existing');
+  expect(emptied.linkUnknownChecked).toBe(true);
+  expect(emptied.graphStack).toMatchObject({ canUndo: true, canRedo: false });
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doUndo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return sheet.concept.graphStack.canRedo;
+  });
+  const undone = await conceptContextActionState(page);
+  expect(undone.classesByObj.client || '').not.toContain('non_existing');
+  expect(undone.linkUnknownChecked).toBe(true);
+  expect(undone.graphStack).toMatchObject({ canRedo: true });
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doRedo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const classes = app.conceptGraph.cy.nodes().toArray()
+      .filter((n) => String(n.data('obj') || '') === 'client')
+      .map((n) => String(n.classes ? n.classes() : ''))
+      .join(' ');
+    return classes.includes('non_existing');
+  });
+  const redone = await conceptContextActionState(page);
+  expect(redone.classesByObj.client).toContain('non_existing');
+  expect(redone.linkUnknownChecked).toBe(true);
+  expect(redone.graphStack).toMatchObject({ canUndo: true, canRedo: false });
+});
+
+test('concept node Materialize context action creates a fresh witness with graph-stack undo redo', async ({ page }) => {
+  await openIvy(page);
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    await app._switchJobSubmissionBackend('remote');
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return app.api && app.api.kind === 'hosted-go' && app.api.sessionId;
+  });
+  await page.locator('#ui-mode-select').selectOption('reachability');
+  await loadContentIntoCurrentSession(page, clientServerWithIndividualsContent, 'client_server_with_individuals.ivy');
+
+  const linkUnknown = page.locator('#state-checkbox-body tr', { hasText: 'link' }).locator('input[type="checkbox"]').nth(1);
+  await expect(linkUnknown).toBeVisible();
+  await linkUnknown.check();
+  await expect(linkUnknown).toBeChecked();
+
+  await openConceptNodeContextMenu(page, 'client');
+  await page.locator('.context-menu-item').filter({ hasText: /^Materialize$/ }).click();
+  await expect(page.locator('#statusbar')).toContainText('Node materialized', { timeout: 10_000 });
+
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return !!(sheet && sheet.concept && sheet.concept.domain && sheet.concept.domain.concepts['=__c0']);
+  });
+  const materialized = await conceptContextActionState(page);
+  expect(materialized.conceptNames).toContain('=__c0');
+  expect(materialized.linkUnknownChecked).toBe(true);
+  expect(materialized.graphStack).toMatchObject({ canUndo: true, canRedo: false });
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doUndo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return sheet.concept.graphStack.canRedo;
+  });
+  const undone = await conceptContextActionState(page);
+  expect(undone.conceptNames).not.toContain('=__c0');
+  expect(undone.linkUnknownChecked).toBe(true);
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doRedo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return !!(sheet && sheet.concept && sheet.concept.domain && sheet.concept.domain.concepts['=__c0']);
+  });
+  const redone = await conceptContextActionState(page);
+  expect(redone.conceptNames).toContain('=__c0');
+  expect(redone.linkUnknownChecked).toBe(true);
+  expect(redone.graphStack).toMatchObject({ canUndo: true, canRedo: false });
+});
+
+test('concept edge Materialize context action records positive fact with graph-stack undo redo', async ({ page }) => {
+  await openIvy(page);
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    await app._switchJobSubmissionBackend('remote');
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return app.api && app.api.kind === 'hosted-go' && app.api.sessionId;
+  });
+  await page.locator('#ui-mode-select').selectOption('reachability');
+  await loadContentIntoCurrentSession(page, clientServerWithIndividualsContent, 'client_server_with_individuals.ivy');
+
+  const linkUnknown = page.locator('#state-checkbox-body tr', { hasText: 'link' }).locator('input[type="checkbox"]').nth(1);
+  await expect(linkUnknown).toBeVisible();
+  await linkUnknown.check();
+  await expect(linkUnknown).toBeChecked();
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return app.conceptGraph.cy.edges().toArray().some((edge) => {
+      const haystack = `${edge.data('obj') || ''}\n${edge.data('label') || ''}\n${edge.data('short_info') || ''}`;
+      return haystack.includes('link');
+    });
+  });
+
+  await openConceptEdgeContextMenu(page, 'link');
+  await page.locator('.context-menu-item').filter({ hasText: /^Materialize$/ }).click();
+  await expect(page.locator('#statusbar')).toContainText('Edge materialized (+)', { timeout: 10_000 });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return ((sheet && sheet.concept && sheet.concept.facts) || [])
+      .some((fact) => String(fact.text || '').includes('link'));
+  });
+  const materialized = await conceptContextActionState(page);
+  expect(materialized.factTexts.some((text) => text.includes('link'))).toBe(true);
+  expect(materialized.linkUnknownChecked).toBe(true);
+  expect(materialized.graphStack).toMatchObject({ canUndo: true, canRedo: false });
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doUndo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return sheet.concept.graphStack.canRedo;
+  });
+  const undone = await conceptContextActionState(page);
+  expect(undone.factTexts.some((text) => text.includes('link'))).toBe(false);
+  expect(undone.linkUnknownChecked).toBe(true);
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doRedo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return ((sheet && sheet.concept && sheet.concept.facts) || [])
+      .some((fact) => String(fact.text || '').includes('link'));
+  });
+  const redone = await conceptContextActionState(page);
+  expect(redone.factTexts.some((text) => text.includes('link'))).toBe(true);
+  expect(redone.linkUnknownChecked).toBe(true);
+  expect(redone.graphStack).toMatchObject({ canUndo: true, canRedo: false });
+});
+
+test('concept edge Dematerialize context action records negative fact with graph-stack undo redo', async ({ page }) => {
+  await openIvy(page);
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    await app._switchJobSubmissionBackend('remote');
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return app.api && app.api.kind === 'hosted-go' && app.api.sessionId;
+  });
+  await page.locator('#ui-mode-select').selectOption('reachability');
+  await loadContentIntoCurrentSession(page, clientServerWithIndividualsContent, 'client_server_with_individuals.ivy');
+
+  const linkUnknown = page.locator('#state-checkbox-body tr', { hasText: 'link' }).locator('input[type="checkbox"]').nth(1);
+  await expect(linkUnknown).toBeVisible();
+  await linkUnknown.check();
+  await expect(linkUnknown).toBeChecked();
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return app.conceptGraph.cy.edges().toArray().some((edge) => {
+      const haystack = `${edge.data('obj') || ''}\n${edge.data('label') || ''}\n${edge.data('short_info') || ''}`;
+      return haystack.includes('link');
+    });
+  });
+
+  await openConceptEdgeContextMenu(page, 'link');
+  await page.locator('.context-menu-item').filter({ hasText: /^Dematerialize$/ }).click();
+  await expect(page.locator('#statusbar')).toContainText('Edge materialized', { timeout: 10_000 });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return ((sheet && sheet.concept && sheet.concept.facts) || [])
+      .some((fact) => {
+        const text = String(fact.text || '');
+        return text.includes('link') && (text.includes('~') || text.toLowerCase().includes('not'));
+      });
+  });
+  const dematerialized = await conceptContextActionState(page);
+  expect(dematerialized.factTexts.some((text) => text.includes('link') && (text.includes('~') || text.toLowerCase().includes('not')))).toBe(true);
+  expect(dematerialized.linkUnknownChecked).toBe(true);
+  expect(dematerialized.graphStack).toMatchObject({ canUndo: true, canRedo: false });
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doUndo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return sheet.concept.graphStack.canRedo;
+  });
+  const undone = await conceptContextActionState(page);
+  expect(undone.factTexts.some((text) => text.includes('link') && (text.includes('~') || text.toLowerCase().includes('not')))).toBe(false);
+  expect(undone.linkUnknownChecked).toBe(true);
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doRedo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return ((sheet && sheet.concept && sheet.concept.facts) || [])
+      .some((fact) => {
+        const text = String(fact.text || '');
+        return text.includes('link') && (text.includes('~') || text.toLowerCase().includes('not'));
+      });
+  });
+  const redone = await conceptContextActionState(page);
+  expect(redone.factTexts.some((text) => text.includes('link') && (text.includes('~') || text.toLowerCase().includes('not')))).toBe(true);
+  expect(redone.linkUnknownChecked).toBe(true);
+  expect(redone.graphStack).toMatchObject({ canUndo: true, canRedo: false });
+});
+
+test('concept node Materialize edge action prompts for selected source relation', async ({ page }) => {
+  await openIvy(page);
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    await app._switchJobSubmissionBackend('remote');
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return app.api && app.api.kind === 'hosted-go' && app.api.sessionId;
+  });
+  await page.locator('#ui-mode-select').selectOption('reachability');
+  await loadContentIntoCurrentSession(page, clientServerWithIndividualsContent, 'client_server_with_individuals.ivy');
+
+  const linkUnknown = page.locator('#state-checkbox-body tr', { hasText: 'link' }).locator('input[type="checkbox"]').nth(1);
+  await expect(linkUnknown).toBeVisible();
+  await linkUnknown.check();
+  await expect(linkUnknown).toBeChecked();
+
+  await openConceptNodeContextMenu(page, 'client');
+  await page.locator('.context-menu-item').filter({ hasText: /^Select$/ }).click();
+  await expect(page.locator('#statusbar')).toContainText('Selected: client');
+
+  await openConceptNodeContextMenu(page, 'server');
+  await page.locator('.context-menu-item').filter({ hasText: /^Materialize edge$/ }).click();
+  await expect(page.locator('[data-ivy-dialog]')).toBeVisible();
+  await expect(page.locator('[data-ivy-dialog]')).toContainText('Materialize edge');
+  await page.locator('[data-ivy-dialog-list]').selectOption('link');
+  await page.getByRole('button', { name: 'OK' }).click();
+  await expect(page.locator('#statusbar')).toContainText('Edge materialized (+)', { timeout: 10_000 });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return ((sheet && sheet.concept && sheet.concept.facts) || [])
+      .some((fact) => String(fact.text || '').includes('link'));
+  });
+  const materialized = await conceptContextActionState(page);
+  expect(materialized.factTexts.some((text) => text.includes('link'))).toBe(true);
+  expect(materialized.linkUnknownChecked).toBe(true);
+  expect(materialized.graphStack).toMatchObject({ canUndo: true, canRedo: false });
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doUndo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return sheet.concept.graphStack.canRedo;
+  });
+  const undone = await conceptContextActionState(page);
+  expect(undone.factTexts.some((text) => text.includes('link'))).toBe(false);
+  expect(undone.linkUnknownChecked).toBe(true);
+
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().doRedo();
+  });
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.uiDataModel.sheets[app.activeSheetId || 'sheet-1'];
+    return ((sheet && sheet.concept && sheet.concept.facts) || [])
+      .some((fact) => String(fact.text || '').includes('link'));
+  });
+  const redone = await conceptContextActionState(page);
+  expect(redone.factTexts.some((text) => text.includes('link'))).toBe(true);
+  expect(redone.linkUnknownChecked).toBe(true);
+  expect(redone.graphStack).toMatchObject({ canUndo: true, canRedo: false });
 });
 
 test('ord_live load keeps state relations visible five seconds after load completes', async ({ page }) => {

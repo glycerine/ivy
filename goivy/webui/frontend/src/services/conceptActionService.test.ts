@@ -1,10 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
+  addProjection,
   addRelationFromString,
   executeConceptNodeAction,
+  loadConceptDomain,
   materializeEdge,
   materializeEdgeFromSelected,
   removeConcept,
+  replaceConceptDomain,
+  saveConceptDomain,
 } from './conceptActionService.ts';
 import { UIDataModel } from '../models/uiDataModel.ts';
 import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
@@ -13,11 +17,14 @@ describe('conceptActionService', () => {
   it('dispatches named concept node actions to high-level workflows', async () => {
     const app = {
       removeConcept: vi.fn(),
+      splatterNode: vi.fn(),
     };
 
     await executeConceptNodeAction(app, { obj: 'client=0' }, { id: 'remove' });
+    await executeConceptNodeAction(app, { obj: 'client' }, { id: 'splatter' });
 
     expect(app.removeConcept).toHaveBeenCalledWith('client=0');
+    expect(app.splatterNode).toHaveBeenCalledWith('client');
   });
 
   it('materializes edge objects through the API and refreshes', async () => {
@@ -91,6 +98,26 @@ describe('conceptActionService', () => {
     expect(app.addProjection).toHaveBeenCalledWith('p(0,Y,Z)', 'p(0,Y,Z)');
   });
 
+  it('applies returned concept snapshots after adding a projection', async () => {
+    const concept = { sheet_id: 'sheet-7', concept_domain: { edges: ['p(c0,Y)'] } };
+    const app = {
+      activeSheetId: 'sheet-7',
+      api: {
+        addProjection: vi.fn(async () => ({ status: 'ok', concept })),
+      },
+      applyConceptSnapshot: vi.fn(),
+      refreshConceptGraph: vi.fn(),
+      controls: { setStatus: vi.fn() },
+    };
+
+    await addProjection(app, 'p(c0,Y)', 'p(c0,Y)');
+
+    expect(app.api.addProjection).toHaveBeenCalledWith('p(c0,Y)', 'p(c0,Y)');
+    expect(app.applyConceptSnapshot).toHaveBeenCalledWith('sheet-7', concept);
+    expect(app.refreshConceptGraph).not.toHaveBeenCalled();
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('Projection added', 'success');
+  });
+
   it('uses the entry dialog and backend action for Add relation', async () => {
     const app = {
       entryDialog: vi.fn(async () => 'link(X,Y)'),
@@ -112,6 +139,87 @@ describe('conceptActionService', () => {
     expect(app.api.executeAction).toHaveBeenCalledWith('add_relation', { formula: 'link(X,Y)' });
     expect(app.refreshConceptGraph).toHaveBeenCalled();
     expect(app.controls.setStatus).toHaveBeenLastCalledWith('Relation added', 'success');
+  });
+
+  it('prompts before saving the active concept domain', async () => {
+    const app = {
+      activeSheetId: 'sheet-7',
+      entryDialog: vi.fn(async () => 'diagram'),
+      api: {
+        executeAction: vi.fn(async () => ({ type: 'save_domain', name: 'diagram' })),
+      },
+      controls: { setStatus: vi.fn() },
+    };
+
+    await saveConceptDomain(app);
+
+    expect(app.entryDialog).toHaveBeenCalledWith(
+      'Save domain',
+      'Save concept domain as:',
+      '',
+      { okLabel: 'Save' },
+    );
+    expect(app.api.executeAction).toHaveBeenCalledWith('save_domain', {
+      sheet_id: 'sheet-7',
+      name: 'diagram',
+    });
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('Domain saved: diagram', 'success');
+  });
+
+  it('loads a named concept domain and applies the returned snapshot', async () => {
+    const concept = { sheet_id: 'sheet-7', concept_domain: { nodes: ['saved-node'] } };
+    const app = {
+      activeSheetId: 'sheet-7',
+      entryDialog: vi.fn(async () => 'diagram'),
+      api: {
+        executeAction: vi.fn(async () => ({ type: 'load_domain', name: 'diagram', concept })),
+      },
+      applyConceptSnapshot: vi.fn(),
+      controls: { setStatus: vi.fn() },
+    };
+
+    await loadConceptDomain(app);
+
+    expect(app.entryDialog).toHaveBeenCalledWith(
+      'Load domain',
+      'Load saved concept domain:',
+      '',
+      { okLabel: 'Load' },
+    );
+    expect(app.api.executeAction).toHaveBeenCalledWith('load_domain', {
+      sheet_id: 'sheet-7',
+      name: 'diagram',
+    });
+    expect(app.applyConceptSnapshot).toHaveBeenCalledWith('sheet-7', concept);
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('Domain loaded: diagram', 'success');
+  });
+
+  it('replaces the active concept domain from a saved domain name', async () => {
+    const concept = { sheet_id: 'sheet-7', concept_domain: { nodes: ['saved-node'] } };
+    const app = {
+      activeSheetId: 'sheet-7',
+      entryDialog: vi.fn(async () => 'diagram'),
+      api: {
+        executeAction: vi.fn(async () => ({ type: 'replace_domain', name: 'diagram', concept })),
+      },
+      applyConceptSnapshot: vi.fn(),
+      controls: { setStatus: vi.fn() },
+    };
+
+    await replaceConceptDomain(app);
+
+    expect(app.entryDialog).toHaveBeenCalledWith(
+      'Replace domain',
+      'Replace concept domain with saved domain:',
+      '',
+      { okLabel: 'Replace' },
+    );
+    expect(app.api.executeAction).toHaveBeenCalledWith('replace_domain', {
+      sheet_id: 'sheet-7',
+      name: 'diagram',
+    });
+    expect(app.applyConceptSnapshot).toHaveBeenCalledWith('sheet-7', concept);
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('Domain replaced: diagram', 'success');
   });
 
   it('removes concepts through the API', async () => {

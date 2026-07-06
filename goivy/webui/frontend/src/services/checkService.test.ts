@@ -151,6 +151,34 @@ describe('checkService', () => {
     expect(app._activeCheck).toBeNull();
   });
 
+  it('passes the relations-to-minimize field to induction checks', async () => {
+    document.body.innerHTML = '<input id="cti-relations-to-minimize" value="p q">';
+    const app = {
+      getMode: vi.fn(() => 'induction'),
+      _persistedFileContent: '',
+      _persistedFileName: 'model.ivy',
+      activeIsolate: '',
+      api: {
+        runCheck: vi.fn(async () => ({ result: 'pass', mode: 'induction' })),
+        getARG: vi.fn(async () => null),
+        getConceptGraph: vi.fn(async () => null),
+      },
+      controls: {
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        setStatus: vi.fn(),
+      },
+      showCheckResult: vi.fn(),
+      _autoCheckUsedRelations: vi.fn(),
+    };
+
+    await runCheck(app);
+
+    expect(app.api.runCheck).toHaveBeenCalledWith('induction', {
+      relations_to_minimize: 'p q',
+    }, expect.objectContaining({ signal: expect.any(AbortSignal) }));
+  });
+
   it('adds CTI details and trace actions for failed checks', () => {
     const app = {
       addCheckResultViewActions: vi.fn(),
@@ -424,6 +452,30 @@ describe('checkService', () => {
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-2', { elements: [] });
     expect(app.refreshConceptGraph).not.toHaveBeenCalled();
     expect(app.controls.setStatus).toHaveBeenLastCalledWith('strengthened', 'success');
+  });
+
+  it('passes relations-to-minimize to CTI minimize', async () => {
+    document.body.innerHTML = '<input id="cti-relations-to-minimize" value="q">';
+    const app = {
+      activeSheetId: 'sheet-2',
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
+      },
+      refreshConceptGraph: vi.fn(),
+      api: {
+        executeAction: vi.fn(async () => ({ ok: true, message: 'minimized', concept: { elements: [] } })),
+      },
+      controls: {
+        setStatus: vi.fn(),
+      },
+    };
+
+    await ctiConceptAction(app, 'cti_minimize');
+
+    expect(app.api.executeAction).toHaveBeenCalledWith('cti_minimize', {
+      sheet_id: 'sheet-2',
+      relations_to_minimize: 'q',
+    });
   });
 
   it('auto-checks used relation rows', async () => {

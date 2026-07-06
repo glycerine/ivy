@@ -4,6 +4,7 @@ package webui
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -122,6 +123,16 @@ func clientServerExampleWithIndividualC0(t *testing.T) []byte {
 		t.Fatalf("client_server_example.ivy did not contain expected type server declaration")
 	}
 	return []byte(withC0)
+}
+
+func clientServerExampleWithConcreteIndividuals(t *testing.T) []byte {
+	t.Helper()
+	content := string(readClientServerExample(t))
+	withIndividuals := strings.Replace(content, "type server\n", "type server\n\nindividual c0 : client\nindividual c1 : client\nindividual s0 : server\n", 1)
+	if withIndividuals == content {
+		t.Fatalf("client_server_example.ivy did not contain expected type server declaration")
+	}
+	return []byte(withIndividuals)
 }
 
 func pythonIvyDiagramDomainNodes(t *testing.T, content []byte) []string {
@@ -884,6 +895,51 @@ func TestReachUsesCurrentConceptGraphParentState(t *testing.T) {
 	}
 }
 
+func TestReachReportsEliminatedConjectures(t *testing.T) {
+	mod := goivy.New()
+	p := goivy.NewConst("p", goivy.Boolean)
+	mod.Relations.Set(goivy.RelationKey("p", goivy.Boolean), goivy.Boolean)
+	conj := goivy.NewClauses([]goivy.Expr{p}, nil, nil)
+	mod.SetAttribute("__interp_conjs", []*goivy.Clauses{conj})
+
+	pred := goivy.NewState(mod, goivy.TrueClauses(nil))
+	pred.Unders = []*goivy.State{goivy.NewState(mod, goivy.TrueClauses(nil))}
+	target := goivy.NewState(mod, goivy.TrueClauses(nil))
+	target.Pred = pred
+	target.Update = goivy.GetUpdate(goivy.NewAssignAction(p, goivy.False), &goivy.UpdateContext{
+		Domain: mod,
+		ActCfg: goivy.NewActionsConfig(),
+	})
+	ag := goivy.NewAnalysisGraph(mod)
+	ag.Add(pred, nil)
+	ag.Add(target, nil)
+
+	ui := NewAnalysisGraphUI()
+	ui.AG = ag
+	ui.Mod = mod
+	w := NewGraphWidget(StandardGraph([]string{"node"}, target))
+	w.G().ParentState = target
+	ui.CurrentConceptGraph = w
+
+	s := NewSession(goivy.NewConfig(), "test-reach-eliminated-conjectures")
+	s.CompiledModule = mod
+	s.AG = ag
+	s.AGUI = ui
+	s.SheetUIs = map[string]*AnalysisGraphUI{"sheet-1": ui}
+
+	result, err := s.ExecuteAction("reach", map[string]interface{}{"sheet_id": "sheet-1"})
+	if err != nil {
+		t.Fatalf("reach: %v", err)
+	}
+	if result["reachable"] != true {
+		t.Fatalf("reachable = %#v, want true; result=%#v", result["reachable"], result)
+	}
+	eliminated, ok := result["eliminated_conjectures"].([]string)
+	if !ok || len(eliminated) != 1 || !strings.Contains(eliminated[0], "p") {
+		t.Fatalf("eliminated_conjectures = %#v, want [p]", result["eliminated_conjectures"])
+	}
+}
+
 func TestExportConceptGraphReturnsDOT(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-export-dot")
 	ui := NewAnalysisGraphUI()
@@ -1064,6 +1120,23 @@ func TestInductionFailureUsedRelationsExcludeUnusedSignatureRelations(t *testing
 	}
 }
 
+func TestInductionCheckAcceptsRelationsToMinimizeOption(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-relations-to-minimize-option")
+	if err := s.LoadFileContent("test.ivy", []byte(ctiUsedRelationSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	cr := s.RunCheckWithOptions("induction", CheckOptions{RelationsToMinimize: "q"})
+	if cr.Result != "fail" {
+		t.Fatalf("RunCheck induction result = %q, want fail; message=%s", cr.Result, cr.Message)
+	}
+	if s.CTIUI == nil {
+		t.Fatal("CTIUI missing after load")
+	}
+	if s.CTIUI.RelationsToMinimize != "q" {
+		t.Fatalf("RelationsToMinimize = %q, want q", s.CTIUI.RelationsToMinimize)
+	}
+}
+
 func TestConceptDiagramRoutesThroughCTIUI(t *testing.T) {
 	be := NewGoBackend(goivy.NewConfig())
 	s := NewSession(goivy.NewConfig(), "test-cti-diagram")
@@ -1073,6 +1146,34 @@ func TestConceptDiagramRoutesThroughCTIUI(t *testing.T) {
 	_, err := be.ConceptDiagram(s.ID)
 	if err == nil || !strings.Contains(err.Error(), "no module loaded") {
 		t.Fatalf("ConceptDiagram error = %v, want CTI Diagram no-module error", err)
+	}
+}
+
+func TestCTIDiagramActionReportsPreStateContext(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-cti-diagram-pre-state")
+	if err := s.LoadFileContent("test.ivy", []byte(ctiUsedRelationSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	cr := s.RunCheck("induction")
+	if cr.Result != "fail" {
+		t.Fatalf("RunCheck induction result = %q, want fail; message=%s", cr.Result, cr.Message)
+	}
+	result, err := s.ExecuteAction("diagram", map[string]interface{}{
+		"sheet_id": rootSheetID,
+		"ui_mode":  "cti",
+	})
+	if err != nil {
+		t.Fatalf("diagram action: %v", err)
+	}
+	if result["cti_state_label"] != "CTI pre-state 0" {
+		t.Fatalf("cti_state_label = %#v, want CTI pre-state 0; result=%#v", result["cti_state_label"], result)
+	}
+	concept, ok := result["concept"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("concept payload missing or wrong type: %#v", result["concept"])
+	}
+	if concept["state_label"] != "CTI pre-state 0" {
+		t.Fatalf("concept state_label = %#v, want CTI pre-state 0", concept["state_label"])
 	}
 }
 
@@ -1104,6 +1205,372 @@ func TestReachabilityDomainActionsReturnConceptSnapshots(t *testing.T) {
 
 	if _, err := s.ExecuteAction("diagram", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
 		t.Fatalf("diagram: %v", err)
+	}
+}
+
+func TestConceptDomainSaveLoadReplaceActionsReturnSnapshots(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-domain-save-load-replace")
+	if err := s.LoadFileContent("client_server_example.ivy", clientServerExampleWithIndividualC0(t)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+	if _, err := s.AGUI.ViewState(0, "", false); err != nil {
+		t.Fatalf("ViewState: %v", err)
+	}
+
+	diagram, err := s.ExecuteAction("diagram_domain", map[string]interface{}{"sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("diagram_domain: %v", err)
+	}
+	if got := diagram["type"]; got == "diagram_domain_empty" {
+		t.Fatalf("diagram_domain unexpectedly empty: %#v", diagram)
+	}
+	savedNodes := append([]string{}, s.AGUI.CurrentConceptGraph.G().ConceptSess.Domain.Nodes...)
+	if len(savedNodes) == 0 {
+		t.Fatalf("diagram_domain produced no saved nodes")
+	}
+
+	save, err := s.ExecuteAction("save_domain", map[string]interface{}{"sheet_id": rootSheetID, "name": "diagram"})
+	if err != nil {
+		t.Fatalf("save_domain: %v", err)
+	}
+	if got := save["type"]; got != "save_domain" {
+		t.Fatalf("save_domain type = %v, want save_domain; result=%#v", got, save)
+	}
+	if got := save["name"]; got != "diagram" {
+		t.Fatalf("save_domain name = %v, want diagram; result=%#v", got, save)
+	}
+
+	if _, err := s.ExecuteAction("reset_domain", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
+		t.Fatalf("reset_domain: %v", err)
+	}
+	resetNodes := s.AGUI.CurrentConceptGraph.G().ConceptSess.Domain.Nodes
+	if strings.Join(resetNodes, "\x00") == strings.Join(savedNodes, "\x00") {
+		t.Fatalf("reset_domain left saved diagram nodes in place: %v", resetNodes)
+	}
+
+	load, err := s.ExecuteAction("load_domain", map[string]interface{}{"sheet_id": rootSheetID, "name": "diagram"})
+	if err != nil {
+		t.Fatalf("load_domain: %v", err)
+	}
+	if got := load["type"]; got != "load_domain" {
+		t.Fatalf("load_domain type = %v, want load_domain; result=%#v", got, load)
+	}
+	if got := s.AGUI.CurrentConceptGraph.G().ConceptSess.Domain.Nodes; strings.Join(got, "\x00") != strings.Join(savedNodes, "\x00") {
+		t.Fatalf("load_domain nodes = %v, want saved nodes %v", got, savedNodes)
+	}
+	loadConcept, ok := load["concept"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("load_domain concept payload missing: %#v", load["concept"])
+	}
+	if stack, ok := loadConcept["graph_stack"].(map[string]interface{}); !ok || stack["can_undo"] != true {
+		t.Fatalf("load_domain graph stack should expose undo after replacement: %#v", loadConcept["graph_stack"])
+	}
+
+	if _, err := s.ExecuteAction("reset_domain", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
+		t.Fatalf("reset_domain before replace: %v", err)
+	}
+	replace, err := s.ExecuteAction("replace_domain", map[string]interface{}{"sheet_id": rootSheetID, "name": "diagram"})
+	if err != nil {
+		t.Fatalf("replace_domain: %v", err)
+	}
+	if got := replace["type"]; got != "replace_domain" {
+		t.Fatalf("replace_domain type = %v, want replace_domain; result=%#v", got, replace)
+	}
+	if got := s.AGUI.CurrentConceptGraph.G().ConceptSess.Domain.Nodes; strings.Join(got, "\x00") != strings.Join(savedNodes, "\x00") {
+		t.Fatalf("replace_domain nodes = %v, want saved nodes %v", got, savedNodes)
+	}
+	if _, ok := replace["concept"].(map[string]interface{}); !ok {
+		t.Fatalf("replace_domain concept payload missing: %#v", replace["concept"])
+	}
+}
+
+func TestSplatterActionUsesSignatureConstantsAndGraphStackUndoRedo(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-splatter-action-constants")
+	if err := s.LoadFileContent("client_server_example.ivy", clientServerExampleWithConcreteIndividuals(t)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	w := s.ensureConceptGraphWidgetLocked()
+	if w == nil || w.G() == nil {
+		t.Fatalf("concept graph widget was not created")
+	}
+
+	splatter, err := s.ExecuteAction("splatter", map[string]interface{}{"concept": "client", "sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("splatter: %v", err)
+	}
+	if _, ok := splatter["concept"].(map[string]interface{}); !ok {
+		t.Fatalf("splatter did not return concept snapshot: %#v", splatter)
+	}
+	if !w.GraphStack.CanUndo() {
+		t.Fatalf("splatter did not create graph-stack undo state")
+	}
+	if !conceptSessionNodesContain(s.SimpleSess, "c0") || !conceptSessionNodesContain(s.SimpleSess, "c1") {
+		t.Fatalf("SimpleSess nodes after splatter = %v, want c0/c1 split nodes", s.SimpleSess.Domain.Nodes)
+	}
+
+	if _, err := s.ExecuteAction("undo", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
+		t.Fatalf("undo: %v", err)
+	}
+	if !w.GraphStack.CanRedo() {
+		t.Fatalf("undo did not create graph-stack redo state")
+	}
+	if conceptSessionNodesContain(s.SimpleSess, "c0") || conceptSessionNodesContain(s.SimpleSess, "c1") {
+		t.Fatalf("SimpleSess nodes after undo = %v, want original unsplattered nodes", s.SimpleSess.Domain.Nodes)
+	}
+
+	if _, err := s.ExecuteAction("redo", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
+		t.Fatalf("redo: %v", err)
+	}
+	if !w.GraphStack.CanUndo() || w.GraphStack.CanRedo() {
+		t.Fatalf("redo graph stack canUndo=%v canRedo=%v, want true/false", w.GraphStack.CanUndo(), w.GraphStack.CanRedo())
+	}
+	if !conceptSessionNodesContain(s.SimpleSess, "c0") || !conceptSessionNodesContain(s.SimpleSess, "c1") {
+		t.Fatalf("SimpleSess nodes after redo = %v, want c0/c1 split nodes", s.SimpleSess.Domain.Nodes)
+	}
+}
+
+func TestEmptyActionUsesGraphStackUndoRedo(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-empty-action-graph-stack")
+	if err := s.LoadFileContent("client_server_example.ivy", clientServerExampleWithConcreteIndividuals(t)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	w := s.ensureConceptGraphWidgetLocked()
+	if w == nil || w.G() == nil {
+		t.Fatalf("concept graph widget was not created")
+	}
+
+	empty, err := s.ExecuteAction("empty", map[string]interface{}{"concept": "client", "sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("empty: %v", err)
+	}
+	if _, ok := empty["concept"].(map[string]interface{}); !ok {
+		t.Fatalf("empty did not return concept snapshot: %#v", empty)
+	}
+	if !w.GraphStack.CanUndo() {
+		t.Fatalf("empty did not create graph-stack undo state")
+	}
+	if !s.SimpleSess.AbstractValue["node_info|none|client"] {
+		t.Fatalf("SimpleSess abstract value after empty = %v, want client marked none", s.SimpleSess.AbstractValue)
+	}
+
+	if _, err := s.ExecuteAction("undo", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
+		t.Fatalf("undo: %v", err)
+	}
+	if !w.GraphStack.CanRedo() {
+		t.Fatalf("undo did not create graph-stack redo state")
+	}
+	if s.SimpleSess.AbstractValue["node_info|none|client"] {
+		t.Fatalf("SimpleSess abstract value after undo = %v, want client restored", s.SimpleSess.AbstractValue)
+	}
+
+	if _, err := s.ExecuteAction("redo", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
+		t.Fatalf("redo: %v", err)
+	}
+	if !s.SimpleSess.AbstractValue["node_info|none|client"] {
+		t.Fatalf("SimpleSess abstract value after redo = %v, want client marked none", s.SimpleSess.AbstractValue)
+	}
+}
+
+func TestGoBackendConceptMaterializeNodeUsesGraphStackUndoRedo(t *testing.T) {
+	cfg := goivy.NewConfig()
+	be := NewGoBackend(cfg)
+	defer be.Close()
+	sessionJSON, err := be.NewSession(cfg)
+	if err != nil {
+		t.Fatalf("NewSession: %v", err)
+	}
+	var session map[string]string
+	if err := json.Unmarshal(sessionJSON, &session); err != nil {
+		t.Fatalf("session json: %v", err)
+	}
+	sessionID := session["session_id"]
+	if sessionID == "" {
+		t.Fatalf("missing session_id in %s", sessionJSON)
+	}
+	if _, err := be.Load(sessionID, "client_server_example.ivy", clientServerExampleWithConcreteIndividuals(t), ""); err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+
+	materializedJSON, err := be.ConceptMaterialize(sessionID, ConceptMaterializeRequest{Concept: "client"})
+	if err != nil {
+		t.Fatalf("ConceptMaterialize: %v", err)
+	}
+	materialized := decodeMapJSON(t, materializedJSON)
+	if got, _ := materialized["witness"].(string); got == "" {
+		t.Fatalf("witness missing/empty; body=%s", materializedJSON)
+	}
+	materializedConcept := requireConceptPayload(t, materialized)
+	if !conceptPayloadConceptNamesContain(materializedConcept, "=__c0") {
+		t.Fatalf("materialized concept domain does not contain =__c0: %#v", materializedConcept["concept_domain"])
+	}
+	assertConceptGraphStack(t, materializedConcept, true, false)
+
+	undoneJSON, err := be.ConceptUndo(sessionID)
+	if err != nil {
+		t.Fatalf("ConceptUndo: %v", err)
+	}
+	undoneConcept := requireConceptPayload(t, decodeMapJSON(t, undoneJSON))
+	if conceptPayloadConceptNamesContain(undoneConcept, "=__c0") {
+		t.Fatalf("undone concept domain still contains =__c0: %#v", undoneConcept["concept_domain"])
+	}
+	assertConceptGraphStack(t, undoneConcept, false, true)
+
+	redoneJSON, err := be.Action(sessionID, "redo", map[string]interface{}{"sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("redo action: %v", err)
+	}
+	redoneConcept := requireConceptPayload(t, decodeMapJSON(t, redoneJSON))
+	if !conceptPayloadConceptNamesContain(redoneConcept, "=__c0") {
+		t.Fatalf("redone concept domain does not contain =__c0: %#v", redoneConcept["concept_domain"])
+	}
+	assertConceptGraphStack(t, redoneConcept, true, false)
+}
+
+func TestGoBackendConceptMaterializeEdgeReturnsConceptFactAndGraphStackUndoRedo(t *testing.T) {
+	cfg := goivy.NewConfig()
+	be := NewGoBackend(cfg)
+	defer be.Close()
+	sessionJSON, err := be.NewSession(cfg)
+	if err != nil {
+		t.Fatalf("NewSession: %v", err)
+	}
+	var session map[string]string
+	if err := json.Unmarshal(sessionJSON, &session); err != nil {
+		t.Fatalf("session json: %v", err)
+	}
+	sessionID := session["session_id"]
+	if sessionID == "" {
+		t.Fatalf("missing session_id in %s", sessionJSON)
+	}
+	if _, err := be.Load(sessionID, "client_server_example.ivy", clientServerExampleWithConcreteIndividuals(t), ""); err != nil {
+		t.Fatalf("Load: %v", err)
+	}
+
+	materializedJSON, err := be.ConceptMaterialize(sessionID, ConceptMaterializeRequest{
+		Type:     "edge",
+		Relation: "link",
+		Source:   "client",
+		Target:   "server",
+		Positive: true,
+	})
+	if err != nil {
+		t.Fatalf("ConceptMaterialize edge: %v", err)
+	}
+	materialized := decodeMapJSON(t, materializedJSON)
+	witnesses, ok := materialized["witnesses"].([]interface{})
+	if !ok || len(witnesses) != 2 {
+		t.Fatalf("witnesses = %#v, want two materialized endpoints; body=%s", materialized["witnesses"], materializedJSON)
+	}
+	materializedConcept := requireConceptPayload(t, materialized)
+	if !conceptPayloadFactsContain(materializedConcept, "link") {
+		t.Fatalf("materialized edge facts do not mention link: %#v", materializedConcept["facts"])
+	}
+	assertConceptGraphStack(t, materializedConcept, true, false)
+
+	undoneJSON, err := be.Action(sessionID, "undo", map[string]interface{}{"sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("undo action: %v", err)
+	}
+	undoneConcept := requireConceptPayload(t, decodeMapJSON(t, undoneJSON))
+	if conceptPayloadFactsContain(undoneConcept, "link") {
+		t.Fatalf("undone concept facts still mention link: %#v", undoneConcept["facts"])
+	}
+	assertConceptGraphStack(t, undoneConcept, false, true)
+
+	redoneJSON, err := be.Action(sessionID, "redo", map[string]interface{}{"sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("redo action: %v", err)
+	}
+	redoneConcept := requireConceptPayload(t, decodeMapJSON(t, redoneJSON))
+	if !conceptPayloadFactsContain(redoneConcept, "link") {
+		t.Fatalf("redone concept facts do not mention link: %#v", redoneConcept["facts"])
+	}
+	assertConceptGraphStack(t, redoneConcept, true, false)
+}
+
+func conceptSessionNodesContain(cs *ConceptSession, fragment string) bool {
+	if cs == nil || cs.Domain == nil {
+		return false
+	}
+	for _, node := range cs.Domain.Nodes {
+		if strings.Contains(node, fragment) {
+			return true
+		}
+	}
+	return false
+}
+
+func decodeMapJSON(t *testing.T, data []byte) map[string]interface{} {
+	t.Helper()
+	var result map[string]interface{}
+	if err := json.Unmarshal(data, &result); err != nil {
+		t.Fatalf("decode json %s: %v", data, err)
+	}
+	return result
+}
+
+func requireConceptPayload(t *testing.T, result map[string]interface{}) map[string]interface{} {
+	t.Helper()
+	concept, ok := result["concept"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("concept payload missing/wrong type: %#v", result["concept"])
+	}
+	return concept
+}
+
+func conceptPayloadValuesContain(concept map[string]interface{}, fragment string) bool {
+	elements, _ := concept["elements"].([]interface{})
+	for _, raw := range elements {
+		elem, _ := raw.(map[string]interface{})
+		data, _ := elem["data"].(map[string]interface{})
+		for _, key := range []string{"id", "obj", "label", "source", "target"} {
+			if strings.Contains(fmt.Sprint(data[key]), fragment) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func conceptPayloadFactsContain(concept map[string]interface{}, fragments ...string) bool {
+	facts, _ := concept["facts"].([]interface{})
+	for _, raw := range facts {
+		fact, _ := raw.(map[string]interface{})
+		text := fmt.Sprint(fact["text"])
+		matched := true
+		for _, fragment := range fragments {
+			if !strings.Contains(text, fragment) {
+				matched = false
+				break
+			}
+		}
+		if matched {
+			return true
+		}
+	}
+	return false
+}
+
+func conceptPayloadConceptNamesContain(concept map[string]interface{}, name string) bool {
+	domain, _ := concept["concept_domain"].(map[string]interface{})
+	concepts, _ := domain["concepts"].(map[string]interface{})
+	_, ok := concepts[name]
+	return ok
+}
+
+func assertConceptGraphStack(t *testing.T, concept map[string]interface{}, wantUndo, wantRedo bool) {
+	t.Helper()
+	stack, ok := concept["graph_stack"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("graph_stack missing/wrong type: %#v", concept["graph_stack"])
+	}
+	if got, _ := stack["can_undo"].(bool); got != wantUndo {
+		t.Fatalf("graph_stack can_undo = %v, want %v; stack=%#v", got, wantUndo, stack)
+	}
+	if got, _ := stack["can_redo"].(bool); got != wantRedo {
+		t.Fatalf("graph_stack can_redo = %v, want %v; stack=%#v", got, wantRedo, stack)
 	}
 }
 

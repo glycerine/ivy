@@ -15,6 +15,7 @@ export async function executeConceptNodeAction(app, nodeData, action) {
   if (actionName === 'empty' || actionName === 'suppose empty') return app.supposeEmpty(concept);
   if (actionName === 'materialize') return app.materializeNode(concept);
   if (actionName === 'materialize edge' || actionName === 'materialize_from_selected') return app.materializeEdgeFromSelected(concept);
+  if (actionName === 'splatter') return app.splatterNode(concept);
   if (actionName.indexOf('split by ') === 0) return app.splitConcept(concept, actionName.substring('split by '.length));
   if (actionName.indexOf('split:') === 0) return app.splitConcept(concept, actionName.substring('split:'.length));
   if (actionName.indexOf('add ') === 0) return app.addProjection(actionName.substring('add '.length), concept);
@@ -149,7 +150,9 @@ export async function addProjection(app, name, concept) {
   app.controls.setStatus(`Adding projection ${name}...`);
   try {
     const result = await app.api.addProjection(name, concept);
-    await app.refreshConceptGraph();
+    if (!applyReturnedConceptSnapshot(app, result)) {
+      await app.refreshConceptGraph();
+    }
     app.controls.setStatus('Projection added', 'success');
     return result;
   } catch (err) {
@@ -209,6 +212,82 @@ export async function addRelationFromString(app) {
     app.controls.setStatus(`Add relation failed: ${err.message}`, 'error');
     return null;
   }
+}
+
+function activeConceptSheetId(app) {
+  return app.activeSheetId || 'sheet-1';
+}
+
+function applyReturnedConceptSnapshot(app, result) {
+  if (result && result.concept && typeof app.applyConceptSnapshot === 'function') {
+    app.applyConceptSnapshot(result.concept.sheet_id || result.sheet_id || activeConceptSheetId(app), result.concept);
+    return true;
+  }
+  return false;
+}
+
+export async function saveConceptDomain(app) {
+  const name = await app.entryDialog(
+    'Save domain',
+    'Save concept domain as:',
+    '',
+    { okLabel: 'Save' },
+  );
+  if (!name) return undefined;
+  app.controls.setStatus(`Saving domain ${name}...`);
+  try {
+    const result = await app.api.executeAction('save_domain', {
+      sheet_id: activeConceptSheetId(app),
+      name,
+    });
+    app.controls.setStatus(`Domain saved: ${name}`, 'success');
+    return result;
+  } catch (err) {
+    app.controls.setStatus(`Save domain failed: ${err.message}`, 'error');
+    return null;
+  }
+}
+
+async function restoreConceptDomain(app, actionName, title, message, okLabel, successVerb) {
+  const name = await app.entryDialog(title, message, '', { okLabel });
+  if (!name) return undefined;
+  app.controls.setStatus(`${successVerb} domain ${name}...`);
+  try {
+    const result = await app.api.executeAction(actionName, {
+      sheet_id: activeConceptSheetId(app),
+      name,
+    });
+    if (!applyReturnedConceptSnapshot(app, result) && typeof app.refreshConceptGraph === 'function') {
+      await app.refreshConceptGraph();
+    }
+    app.controls.setStatus(`Domain ${successVerb.toLowerCase()}: ${name}`, 'success');
+    return result;
+  } catch (err) {
+    app.controls.setStatus(`${successVerb} domain failed: ${err.message}`, 'error');
+    return null;
+  }
+}
+
+export async function loadConceptDomain(app) {
+  return restoreConceptDomain(
+    app,
+    'load_domain',
+    'Load domain',
+    'Load saved concept domain:',
+    'Load',
+    'Loaded',
+  );
+}
+
+export async function replaceConceptDomain(app) {
+  return restoreConceptDomain(
+    app,
+    'replace_domain',
+    'Replace domain',
+    'Replace concept domain with saved domain:',
+    'Replace',
+    'Replaced',
+  );
 }
 
 export function selectConceptNode(app, conceptId) {

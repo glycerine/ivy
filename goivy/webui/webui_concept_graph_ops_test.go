@@ -185,6 +185,77 @@ func TestConceptGraphActionPayloadIncludesHighlightedFactSelections(t *testing.T
 	}
 }
 
+func TestAddProjectionAddsBinaryConceptToCurrentGraph(t *testing.T) {
+	client := mkSort("client")
+	server := mkSort("server")
+	token := mkSort("token")
+	X := mkVar("X", client)
+	Y := mkVar("Y", server)
+	Z := mkVar("Z", token)
+	c0 := mkConst("c0", client)
+	routeSort, err := goivy.NewFunctionSort(client, server, token, goivy.Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	route := goivy.NewConst("route", routeSort)
+
+	domain := NewCDConceptDomain(nil, nil, nil)
+	client0 := MustCDConcept("client0", []*goivy.LogicVariable{X}, mkEq(X, c0))
+	domain.Concepts.SetConcept("client0", client0)
+	domain.Concepts.SetSet("nodes", NewCDConceptSet("client0"))
+	routeC := MustCDConcept("route", []*goivy.LogicVariable{X, Y, Z}, mkApply(route, X, Y, Z))
+	domain.Concepts.SetConcept("route", routeC)
+	domain.Concepts.SetSet("edges", NewCDConceptSet("route"))
+
+	cis := NewConceptInteractiveSession(domain, nil, nil, nil, nil, nil, nil, nil, false)
+	g := NewGraph([]string{"client", "server", "token"}, nil)
+	g.InteractiveSess = cis
+	g.ConceptSess.Domain = simpleConceptDomainFromCD(domain)
+	w := NewGraphWidget(NewGraphStack(g))
+	projectionActions := w.GetNodeProjectionActions("client0")
+	var projection ActionEntry
+	for _, action := range projectionActions {
+		if action.Action == "add_projection" {
+			projection = action
+			break
+		}
+	}
+	if projection.Action == "" {
+		t.Fatalf("no projection action produced from ternary route relation: %#v", projectionActions)
+	}
+	name, _ := projection.Args["name"].(string)
+	formula, _ := projection.Args["concept"].(string)
+	if found, err := findProjectedConcept(cis, name, formula); err != nil || found == nil {
+		t.Fatalf("projection descriptor did not resolve back to a CD concept: found=%v err=%v name=%q formula=%q", found, err, name, formula)
+	}
+
+	s := NewSession(goivy.NewConfig(), "test-add-projection-current-graph")
+	s.AGUI = &AnalysisGraphUI{CurrentConceptGraph: w}
+	if err := s.AddProjection(name, formula); err != nil {
+		t.Fatalf("AddProjection: %v", err)
+	}
+
+	if !w.G().InteractiveSess.Domain.Concepts.Has(name) {
+		t.Fatalf("interactive domain missing added projection %q", name)
+	}
+	if !stringSliceContains(w.G().InteractiveSess.Domain.Concepts.GetList("edges"), name) {
+		t.Fatalf("interactive edge list missing projection %q: %v", name, w.G().InteractiveSess.Domain.Concepts.GetList("edges"))
+	}
+	concept := w.G().ConceptSess.Domain.Concepts[name]
+	if concept == nil {
+		t.Fatalf("render domain missing added projection %q", name)
+	}
+	if concept.Arity != 2 {
+		t.Fatalf("projection arity = %d, want 2: %#v", concept.Arity, concept)
+	}
+	if !stringSliceContains(w.G().ConceptSess.Domain.Edges, name) {
+		t.Fatalf("render edge list missing projection %q: %v", name, w.G().ConceptSess.Domain.Edges)
+	}
+	if _, ok := w.G().Checks.EdgeDisplayCheckboxes[name]; !ok {
+		t.Fatalf("projection %q missing edge display checkboxes: %#v", name, w.G().Checks.EdgeDisplayCheckboxes)
+	}
+}
+
 func payloadHasClass(elements []WebUICyElement, group, obj, className string) bool {
 	for _, el := range elements {
 		if el.Group != group {

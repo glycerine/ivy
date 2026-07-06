@@ -163,10 +163,13 @@ import {
     addRelationFromString as addRelationFromStringViaService,
     executeConceptEdgeAction as executeConceptEdgeActionViaService,
     executeConceptNodeAction as executeConceptNodeActionViaService,
+    loadConceptDomain as loadConceptDomainViaService,
     materializeEdge as materializeEdgeViaService,
     materializeEdgeFromSelected as materializeEdgeFromSelectedViaService,
     materializeNode as materializeNodeViaService,
     removeConcept as removeConceptViaService,
+    replaceConceptDomain as replaceConceptDomainViaService,
+    saveConceptDomain as saveConceptDomainViaService,
     selectConceptNode as selectConceptNodeViaService,
     splatterNode as splatterNodeViaService,
     splitConcept as splitConceptViaService,
@@ -3468,6 +3471,14 @@ class IvyRuntime {
             var label = normalized === 'reachability' ? 'reachability' : 'CTI';
             this.controls.setStatus('Workflow: ' + label);
         }
+        if (!opts.skipMenuRefresh && typeof this.loadMenuDescriptors === 'function') {
+            try {
+                var refresh = this.loadMenuDescriptors();
+                if (refresh && typeof refresh.catch === 'function') refresh.catch(function () {});
+            } catch (_e) {
+                // loadMenuDescriptors owns user-visible failure reporting.
+            }
+        }
         return normalized;
     }
 
@@ -3771,19 +3782,7 @@ class IvyRuntime {
      * Undo the last concept domain change.
      */
     async doUndo() {
-        this.controls.setStatus('Undoing...');
-        try {
-            await this.api.undo();
-            await this.refreshConceptGraph();
-            this.controls.setStatus('Undo complete', 'success');
-        } catch (e) {
-            // "nothing to undo" is not an error — just a no-op.
-            if (e.message && e.message.indexOf('nothing to undo') >= 0) {
-                this.controls.setStatus('Nothing to undo');
-            } else {
-                this.controls.setStatus('Undo failed: ' + e.message, 'error');
-            }
-        }
+        return executeAndRefresh(this, { action: 'undo', running: 'Undoing...', success: 'Undo complete', failure: 'Undo failed' });
     }
 
     /**
@@ -3826,13 +3825,28 @@ class IvyRuntime {
         }
     }
 
+    async saveConceptDomain() {
+        return saveConceptDomainViaService(this);
+    }
+
+    async loadConceptDomain() {
+        return loadConceptDomainViaService(this);
+    }
+
+    async replaceConceptDomain() {
+        return replaceConceptDomainViaService(this);
+    }
+
     /**
      * Diagram the current proof goal/state.
      */
     async diagramCurrentState() {
         this.controls.setStatus('Diagramming current state...');
         try {
-            var result = await this.api.executeAction('diagram', { sheet_id: this.activeSheetId || 'sheet-1' });
+            var result = await this.api.executeAction('diagram', {
+                sheet_id: this.activeSheetId || 'sheet-1',
+                ui_mode: this.getUIMode ? this.getUIMode() : (this.uiMode || 'cti'),
+            });
             if (result && result.concept) {
                 this.applyConceptSnapshot(result.concept.sheet_id || result.sheet_id || this.activeSheetId || 'sheet-1', result.concept);
             } else {
@@ -4141,7 +4155,10 @@ class IvyRuntime {
     }
 
     renderMenuRegion(region, menus) {
-        var panel = region === 'arg' ? document.getElementById('arg-panel') : document.getElementById('concept-panel');
+        var panelId = region === 'arg' ? 'arg-panel' : 'concept-panel';
+        var activeSheet = document.getElementById(this.activeSheetId || 'sheet-1');
+        var panel = activeSheet ? activeSheet.querySelector('[id="' + panelId + '"]') : null;
+        if (!panel) panel = document.getElementById(panelId);
         if (!panel) return;
         var header = panel.querySelector('.panel-header');
         if (!header) return;
@@ -5012,6 +5029,15 @@ class IvyRuntime {
         this.controls.setStatus('Computing reachability...');
         try {
             var result = await this.api.executeAction('reach', { sheet_id: this.activeSheetId || 'sheet-1' });
+            var eliminated = (result && result.eliminated_conjectures) || [];
+            if (eliminated.length > 0 && typeof this.listboxDialog === 'function') {
+                await this.listboxDialog(
+                    'Reach',
+                    result.eliminated_conjectures_message || 'The following conjectures have been eliminated:',
+                    eliminated.map(function (conj) { return { label: String(conj), value: String(conj) }; }),
+                    { cancel: false },
+                );
+            }
             await this.refreshConceptGraph();
             this.controls.setStatus('Reach complete', 'success');
         } catch (e) {

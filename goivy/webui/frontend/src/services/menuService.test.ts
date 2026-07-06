@@ -184,4 +184,22 @@ describe('menuService', () => {
     ]);
     expect(app.runAction).not.toHaveBeenCalled();
   });
+
+  it('routes descriptor concept-domain menu actions to controller commands', async () => {
+    const app = {
+      saveConceptDomain: vi.fn(async () => ({ ok: true })),
+      loadConceptDomain: vi.fn(async () => ({ ok: true })),
+      replaceConceptDomain: vi.fn(async () => ({ ok: true })),
+      runAction: vi.fn(),
+    };
+
+    await dispatchMenuDescriptorAction(app, 'concept', { action: 'save_domain', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'concept', { action: 'load_domain', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'concept', { action: 'replace_domain', dispatch: 'action' });
+
+    expect(app.saveConceptDomain).toHaveBeenCalledTimes(1);
+    expect(app.loadConceptDomain).toHaveBeenCalledTimes(1);
+    expect(app.replaceConceptDomain).toHaveBeenCalledTimes(1);
+    expect(app.runAction).not.toHaveBeenCalled();
+  });
 });

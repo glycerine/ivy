@@ -97,4 +97,38 @@ describe('sheetService', () => {
     expect(analysisConcept.resize).not.toHaveBeenCalled();
     expect(app.uiDataModel.sheets['events-1'].type).toBe('events');
   });
+
+  it('updates menu context and reloads descriptors when switching sheet kinds', () => {
+    document.body.innerHTML = [
+      '<button class="sheet-tab active" data-sheet="sheet-1"></button>',
+      '<button class="sheet-tab" data-sheet="reach-1"></button>',
+      '<button class="sheet-tab" data-sheet="events-1"></button>',
+      '<div id="sheet-1" class="sheet-content active"></div>',
+      '<div id="reach-1" class="sheet-content"></div>',
+      '<div id="events-1" class="sheet-content"></div>',
+    ].join('');
+    const uiDataModel = new UIDataModel();
+    const app = {
+      activeSheetId: 'sheet-1',
+      uiDataModel,
+      loadMenuDescriptors: vi.fn(async () => ({ ok: true })),
+      sheetTab(id) {
+        return document.querySelector(`[data-sheet="${id}"]`);
+      },
+      sheets: {
+        'sheet-1': { type: 'analysis', argGraph: { resize: vi.fn() }, conceptGraph: { resize: vi.fn() } },
+        'reach-1': { type: 'analysis', reachabilityOnly: true, argGraph: { resize: vi.fn() }, conceptGraph: null },
+        'events-1': { type: 'events' },
+      },
+    };
+
+    switchSheet(app, 'reach-1', { doc: document });
+    expect(document.body.getAttribute('data-active-sheet-type')).toBe('analysis');
+    expect(document.body.getAttribute('data-active-sheet-reachability-only')).toBe('true');
+
+    switchSheet(app, 'events-1', { doc: document });
+    expect(document.body.getAttribute('data-active-sheet-type')).toBe('events');
+    expect(document.body.getAttribute('data-active-sheet-reachability-only')).toBe('false');
+    expect(app.loadMenuDescriptors).toHaveBeenCalledTimes(2);
+  });
 });

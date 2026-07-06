@@ -522,6 +522,9 @@ func (g *Graph) Copy() *Graph {
 		c.ReverseResult = make([]string, len(g.ReverseResult))
 		copy(c.ReverseResult, g.ReverseResult)
 	}
+	if g.InteractiveSess != nil {
+		c.InteractiveSess = g.InteractiveSess.Clone(false)
+	}
 	return c
 }
 

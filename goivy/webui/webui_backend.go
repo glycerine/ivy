@@ -60,8 +60,9 @@ type ConceptMaterializeRequest struct {
 }
 
 type CheckOptions struct {
-	Bound   int             `json:"bound,omitempty"`
-	Context context.Context `json:"-"`
+	Bound               int             `json:"bound,omitempty"`
+	RelationsToMinimize string          `json:"relations_to_minimize,omitempty"`
+	Context             context.Context `json:"-"`
 }
 
 // ErrSessionNotFound is returned when a session ID is not recognized.
