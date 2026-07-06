@@ -6,7 +6,12 @@
  * file loading, mode selection, and verification checks.
  */
 
-import { ARG_STYLE as DEFAULT_ARG_STYLE, CONCEPT_STYLE as DEFAULT_CONCEPT_STYLE, IvyGraph as DefaultIvyGraph } from './graphRuntime.ts';
+import {
+    ARG_STYLE as DEFAULT_ARG_STYLE,
+    CONCEPT_STYLE as DEFAULT_CONCEPT_STYLE,
+    PROOF_STYLE as DEFAULT_PROOF_STYLE,
+    IvyGraph as DefaultIvyGraph,
+} from './graphRuntime.ts';
 import {
     IvyAPIShim as DefaultIvyAPI,
     IvyBrowserAPIShim as DefaultBrowserIvyAPI,
@@ -189,6 +194,7 @@ const defaultRuntimeDependencies = {
     IvyPersist: createIvyPersist(globalThis.window),
     ARG_STYLE: DEFAULT_ARG_STYLE,
     CONCEPT_STYLE: DEFAULT_CONCEPT_STYLE,
+    PROOF_STYLE: DEFAULT_PROOF_STYLE,
     CodeMirror: globalThis.window && globalThis.window.CodeMirror,
 };
 let runtimeDeps = { ...defaultRuntimeDependencies };
@@ -252,6 +258,16 @@ function resetIvyRuntimeDependencies() {
     return runtimeDeps;
 }
 
+function cloneAnalysisHistoryValue(value) {
+    if (value === undefined) return undefined;
+    if (value === null) return null;
+    try {
+        return JSON.parse(JSON.stringify(value));
+    } catch (err) {
+        return value;
+    }
+}
+
 class IvyRuntime {
     [key: string]: any;
 
@@ -292,6 +308,7 @@ class IvyRuntime {
         this._activeModelLoad = null;
         this._deferModelLoadRendering = false;
         this._dialogAnswerQueue = [];
+        this._analysisHistory = {};
     }
 
     createApi(mode = this.jobSubmissionMode || 'browser') {
@@ -966,6 +983,8 @@ class IvyRuntime {
 
     registerSheet(sheetId, argGraph, conceptGraph, raw = {}) {
         registerSheetViaService(this, sheetId, argGraph, conceptGraph, raw);
+        this._ensureAnalysisHistoryControls(sheetId);
+        this._ensureProofGoalPane(sheetId);
     }
 
     applyArgSnapshot(sheetId, payload) {
@@ -978,6 +997,332 @@ class IvyRuntime {
 
     applyCtiSnapshot(sheetId, payload) {
         return applyCtiSnapshotViaModel(this, sheetId || this.activeSheetId || 'sheet-1', payload || {});
+    }
+
+    _analysisHistoryState(sheetId) {
+        var id = sheetId || this.activeSheetId || 'sheet-1';
+        this._analysisHistory = this._analysisHistory || {};
+        if (!this._analysisHistory[id]) {
+            this._analysisHistory[id] = { entries: [], currentStep: -1 };
+        }
+        return this._analysisHistory[id];
+    }
+
+    _ensureAnalysisHistoryControls(sheetId) {
+        var sheet = document.getElementById(sheetId || 'sheet-1');
+        if (!sheet || sheet.classList.contains('event-sheet')) return null;
+        sheet.classList.add('has-analysis-history');
+        var existing = sheet.querySelector('[data-analysis-history]');
+        var bar = existing;
+        if (!bar) {
+            bar = document.createElement('div');
+            bar.className = 'analysis-history-bar';
+            bar.setAttribute('data-analysis-history', 'true');
+            bar.innerHTML = [
+                '<div class="analysis-history-controls">',
+                '  <button class="menu-btn analysis-history-btn" type="button" data-analysis-history-action="first" title="First step">First</button>',
+                '  <button class="menu-btn analysis-history-btn" type="button" data-analysis-history-action="prev" title="Previous step">Prev</button>',
+                '  <span class="analysis-history-status" data-analysis-history-status>No analysis history</span>',
+                '  <button class="menu-btn analysis-history-btn" type="button" data-analysis-history-action="next" title="Next step">Next</button>',
+                '  <button class="menu-btn analysis-history-btn" type="button" data-analysis-history-action="last" title="Last step">Last</button>',
+                '</div>',
+                '<pre class="analysis-history-step-info" data-analysis-step-info></pre>',
+            ].join('');
+            var columns = sheet.querySelector('.sheet-columns');
+            if (columns && columns.parentNode) {
+                columns.parentNode.insertBefore(bar, columns);
+            } else {
+                sheet.insertBefore(bar, sheet.firstChild);
+            }
+        }
+        if (!bar.__ivyAnalysisHistoryBound) {
+            var self = this;
+            var buttons = bar.querySelectorAll('[data-analysis-history-action]');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function (e) {
+                    var action = e.currentTarget.getAttribute('data-analysis-history-action');
+                    self._navigateAnalysisHistory(sheetId, action);
+                });
+            }
+            bar.__ivyAnalysisHistoryBound = true;
+        }
+        this._renderAnalysisHistoryControls(sheetId);
+        return bar;
+    }
+
+    _normalizeAnalysisHistoryEntry(entry) {
+        entry = entry || {};
+        var stepInfo = entry.step_info || entry.stepInfo || {};
+        return {
+            arg: cloneAnalysisHistoryValue(entry.arg),
+            concept: cloneAnalysisHistoryValue(entry.concept),
+            transition: cloneAnalysisHistoryValue(entry.transition),
+            stepInfo: cloneAnalysisHistoryValue(stepInfo) || {},
+            label: entry.label || '',
+        };
+    }
+
+    _recordAnalysisHistoryStep(sheetId, entry) {
+        var id = sheetId || this.activeSheetId || 'sheet-1';
+        var history = this._analysisHistoryState(id);
+        if (history.currentStep >= 0 && history.currentStep < history.entries.length - 1) {
+            history.entries = history.entries.slice(0, history.currentStep + 1);
+        }
+        history.entries.push(this._normalizeAnalysisHistoryEntry(entry));
+        history.currentStep = history.entries.length - 1;
+        this._applyAnalysisHistoryStep(id, history.currentStep, { quiet: true });
+        return history.currentStep;
+    }
+
+    _applyAnalysisHistoryStep(sheetId, stepIndex, options: any = {}) {
+        var id = sheetId || this.activeSheetId || 'sheet-1';
+        var history = this._analysisHistoryState(id);
+        if (!history.entries.length) {
+            history.currentStep = -1;
+            this._renderAnalysisHistoryControls(id);
+            return null;
+        }
+        var index = Math.max(0, Math.min(Number(stepIndex) || 0, history.entries.length - 1));
+        history.currentStep = index;
+        var entry = history.entries[index];
+        if (entry.arg) this.applyArgSnapshot(id, cloneAnalysisHistoryValue(entry.arg));
+        if (entry.concept) this.applyConceptSnapshot(id, cloneAnalysisHistoryValue(entry.concept));
+        this._renderAnalysisHistoryControls(id);
+        if (!options.quiet && this.controls && typeof this.controls.setStatus === 'function') {
+            this.controls.setStatus('Analysis history: step ' + (index + 1) + ' of ' + history.entries.length);
+        }
+        return entry;
+    }
+
+    _navigateAnalysisHistory(sheetId, action) {
+        var id = sheetId || this.activeSheetId || 'sheet-1';
+        var history = this._analysisHistoryState(id);
+        if (!history.entries.length) {
+            this._renderAnalysisHistoryControls(id);
+            return null;
+        }
+        var index = history.currentStep;
+        if (action === 'first') index = 0;
+        if (action === 'prev') index = Math.max(0, index - 1);
+        if (action === 'next') index = Math.min(history.entries.length - 1, index + 1);
+        if (action === 'last') index = history.entries.length - 1;
+        return this._applyAnalysisHistoryStep(id, index);
+    }
+
+    _analysisHistoryTransitionLabel(entry) {
+        var transition = entry && entry.transition;
+        if (!transition) return '';
+        if (typeof transition === 'string') return transition;
+        return transition.label || transition.name || transition.action || transition.tactic || '';
+    }
+
+    _analysisHistoryStepText(entry, index, total) {
+        if (!entry) return '';
+        var stepInfo = entry.stepInfo || {};
+        var lines = ['Step ' + (index + 1) + ' of ' + total + ':'];
+        if (stepInfo.tactic || entry.label) lines.push('Tactic: ' + (stepInfo.tactic || entry.label));
+        var transition = stepInfo.transition || this._analysisHistoryTransitionLabel(entry);
+        if (transition) lines.push('Transition: ' + transition);
+        if (stepInfo.msg) {
+            lines.push('Message:');
+            lines.push(String(stepInfo.msg));
+        }
+        Object.keys(stepInfo).sort().forEach(function (key) {
+            if (key === 'msg' || key === 'tactic' || key === 'transition') return;
+            lines.push(key + ': ' + stepInfo[key]);
+        });
+        return lines.join('\n');
+    }
+
+    _renderAnalysisHistoryControls(sheetId) {
+        var sheet = document.getElementById(sheetId || 'sheet-1');
+        if (!sheet) return;
+        var bar = sheet.querySelector('[data-analysis-history]');
+        if (!bar) return;
+        var history = this._analysisHistoryState(sheetId);
+        var count = history.entries.length;
+        var index = history.currentStep;
+        var status = bar.querySelector('[data-analysis-history-status]');
+        var info = bar.querySelector('[data-analysis-step-info]');
+        if (count === 0 || index < 0) {
+            if (status) status.textContent = 'No analysis history';
+            if (info) info.textContent = '';
+        } else {
+            if (status) status.textContent = 'Step ' + (index + 1) + ' of ' + count;
+            if (info) info.textContent = this._analysisHistoryStepText(history.entries[index], index, count);
+        }
+        var first = bar.querySelector('[data-analysis-history-action="first"]');
+        var prev = bar.querySelector('[data-analysis-history-action="prev"]');
+        var next = bar.querySelector('[data-analysis-history-action="next"]');
+        var last = bar.querySelector('[data-analysis-history-action="last"]');
+        var atStart = count === 0 || index <= 0;
+        var atEnd = count === 0 || index >= count - 1;
+        if (first) first.disabled = atStart;
+        if (prev) prev.disabled = atStart;
+        if (next) next.disabled = atEnd;
+        if (last) last.disabled = atEnd;
+    }
+
+    _ensureProofGoalPane(sheetId) {
+        var id = sheetId || this.activeSheetId || 'sheet-1';
+        var sheetEl = document.getElementById(id);
+        if (!sheetEl || sheetEl.classList.contains('event-sheet')) return null;
+        var pane = sheetEl.querySelector('[data-proof-goal-pane]');
+        if (!pane) {
+            pane = document.createElement('div');
+            pane.className = 'proof-crg-pane';
+            pane.setAttribute('data-proof-goal-pane', 'true');
+            pane.innerHTML = [
+                '<div class="proof-goal-column">',
+                '  <div class="proof-crg-header">Proof goals <span class="proof-selected-goal" data-selected-proof-goal></span></div>',
+                '  <div class="proof-goal-graph" data-proof-goal-graph></div>',
+                '  <pre class="proof-goal-info" data-proof-goal-info></pre>',
+                '</div>',
+                '<div class="crg-column">',
+                '  <div class="proof-crg-header">CRG / transition</div>',
+                '  <div class="crg-node-list" data-crg-node-list></div>',
+                '  <pre class="transition-view" data-transition-view></pre>',
+                '</div>',
+            ].join('');
+            var history = sheetEl.querySelector('[data-analysis-history]');
+            if (history && history.parentNode) {
+                history.parentNode.insertBefore(pane, history.nextSibling);
+            } else {
+                var columns = sheetEl.querySelector('.sheet-columns');
+                if (columns && columns.parentNode) {
+                    columns.parentNode.insertBefore(pane, columns);
+                } else {
+                    sheetEl.insertBefore(pane, sheetEl.firstChild);
+                }
+            }
+        }
+        var graphEl = pane.querySelector('[data-proof-goal-graph]');
+        if (graphEl) graphEl.id = 'proof-graph-' + id;
+        var runtimeSheet = this.sheets && this.sheets[id];
+        if (runtimeSheet && graphEl && !runtimeSheet.proofGraph) {
+            var proofGraph = new runtimeDeps.IvyGraph(graphEl.id, runtimeDeps.PROOF_STYLE || runtimeDeps.ARG_STYLE);
+            proofGraph.healthCheck();
+            var self = this;
+            proofGraph.onNodeClick(function (nodeData) {
+                var goalId = nodeData.obj || nodeData.id;
+                self._handleProofGoalTap(id, goalId);
+            });
+            runtimeSheet.proofGraph = proofGraph;
+        }
+        return pane;
+    }
+
+    async _refreshProofGoalPane(sheetId) {
+        var id = sheetId || this.activeSheetId || 'sheet-1';
+        var pane = this._ensureProofGoalPane(id);
+        if (!pane || !this.api || typeof this.api.getProofGraph !== 'function') return null;
+        var graph = await this.api.getProofGraph();
+        this._renderProofGoalGraph(id, graph || {});
+        return graph;
+    }
+
+    _renderProofGoalGraph(sheetId, graph) {
+        var pane = this._ensureProofGoalPane(sheetId);
+        var runtimeSheet = this.sheets && this.sheets[sheetId];
+        if (!pane || !runtimeSheet || !runtimeSheet.proofGraph) return;
+        runtimeSheet.proofGraph.update((graph && graph.elements) || [], graph && graph.positions);
+    }
+
+    async _handleProofGoalTap(sheetId, goalId) {
+        var id = sheetId || this.activeSheetId || 'sheet-1';
+        if (!goalId) return null;
+        var runtimeSheet = this.sheets && this.sheets[id];
+        if (runtimeSheet && runtimeSheet.visualOnly) {
+            this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
+            return null;
+        }
+        try {
+            var result = await this.api.proofGoalAction(goalId, 'view');
+            this._applyProofGoalResult(id, goalId, result || {});
+            this.controls.setStatus('Viewing proof goal ' + goalId);
+            return result;
+        } catch (e) {
+            this.controls.setStatus('Proof goal view failed: ' + e.message, 'error');
+            return null;
+        }
+    }
+
+    _applyProofGoalResult(sheetId, goalId, result) {
+        var id = sheetId || this.activeSheetId || 'sheet-1';
+        var pane = this._ensureProofGoalPane(id);
+        var runtimeSheet = this.sheets && this.sheets[id];
+        if (!pane || !runtimeSheet) return;
+        runtimeSheet.selectedProofGoal = result.goal || goalId;
+        var selected = pane.querySelector('[data-selected-proof-goal]');
+        if (selected) selected.textContent = runtimeSheet.selectedProofGoal ? '(' + runtimeSheet.selectedProofGoal + ')' : '';
+        var info = pane.querySelector('[data-proof-goal-info]');
+        if (info) info.textContent = result.info || result.message || '';
+        if (runtimeSheet.proofGraph && runtimeSheet.proofGraph.highlightNode && runtimeSheet.selectedProofGoal) {
+            runtimeSheet.proofGraph.highlightNode(runtimeSheet.selectedProofGoal);
+        }
+        if (result.arg) this.applyArgSnapshot(id, result.arg);
+        if (result.concept) this.applyConceptSnapshot(id, result.concept);
+        if (result.transition) this._renderTransitionView(id, result.transition);
+        if (result.crg) this._renderCRGView(id, result.crg);
+        if (result.proof) this._renderProofGoalGraph(id, result.proof);
+    }
+
+    _transitionText(transition) {
+        if (!transition) return '';
+        if (typeof transition === 'string') return transition;
+        var lines = [];
+        if (transition.label) lines.push(String(transition.label));
+        if (transition.detail) lines.push(String(transition.detail));
+        Object.keys(transition).sort().forEach(function (key) {
+            if (key === 'label' || key === 'detail' || key === 'concept' || key === 'arg') return;
+            lines.push(key + ': ' + transition[key]);
+        });
+        return lines.join('\n');
+    }
+
+    _renderTransitionView(sheetId, transition) {
+        var pane = this._ensureProofGoalPane(sheetId);
+        if (!pane) return;
+        var view = pane.querySelector('[data-transition-view]');
+        if (view) view.textContent = this._transitionText(transition);
+    }
+
+    _renderCRGView(sheetId, crg) {
+        var pane = this._ensureProofGoalPane(sheetId);
+        var runtimeSheet = this.sheets && this.sheets[sheetId];
+        if (!pane || !runtimeSheet) return;
+        runtimeSheet.crg = cloneAnalysisHistoryValue(crg || {});
+        var list = pane.querySelector('[data-crg-node-list]');
+        if (!list) return;
+        list.innerHTML = '';
+        var nodes = (crg && crg.nodes) || [];
+        var self = this;
+        nodes.forEach(function (node) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'crg-node-btn';
+            btn.setAttribute('data-crg-node', node.id || node.label || '');
+            btn.textContent = node.label || node.id || 'CRG node';
+            btn.addEventListener('click', function () {
+                self._handleCRGNodeClick(sheetId, node);
+            });
+            list.appendChild(btn);
+        });
+    }
+
+    _handleCRGNodeClick(sheetId, node) {
+        var pane = this._ensureProofGoalPane(sheetId);
+        var runtimeSheet = this.sheets && this.sheets[sheetId];
+        if (!pane || !runtimeSheet || !node) return;
+        runtimeSheet.selectedCrgNode = node.id || node.label || '';
+        var buttons = pane.querySelectorAll('[data-crg-node]');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.toggle('selected', buttons[i].getAttribute('data-crg-node') === runtimeSheet.selectedCrgNode);
+        }
+        if (node.arg) this.applyArgSnapshot(sheetId, node.arg);
+        if (node.concept) this.applyConceptSnapshot(sheetId, node.concept);
+        this._renderTransitionView(sheetId, node.transition || node);
+        this.controls.setStatus('Viewing CRG node ' + runtimeSheet.selectedCrgNode);
     }
 
     renderUIDataChange(change) {
@@ -2150,13 +2495,21 @@ class IvyRuntime {
             self.removeSelectedEventPattern(sheetId);
         });
         var patSave = sheet.querySelector('.event-pattern-save');
-        if (patSave) patSave.addEventListener('click', function () {
-            self.saveEventPatterns(sheetId);
+        if (patSave) patSave.addEventListener('click', async function () {
+            try {
+                await self.saveEventPatterns(sheetId);
+            } catch (e) {
+                self.controls.setStatus('Save patterns failed: ' + e.message, 'error');
+            }
         });
         var patLoad = sheet.querySelector('.event-pattern-load');
         if (patLoad) patLoad.addEventListener('click', async function () {
-            var text = await self.textDialog('Load patterns', 'Paste patterns:', '', { okLabel: 'Load' });
-            if (text !== null) await self.loadEventPatterns(sheetId, text);
+            try {
+                var text = await self.textDialog('Load patterns', 'Paste patterns:', '', { okLabel: 'Load' });
+                if (text !== null) await self.loadEventPatterns(sheetId, text);
+            } catch (e) {
+                self.controls.setStatus('Load patterns failed: ' + e.message, 'error');
+            }
         });
         var patClear = sheet.querySelector('.event-pattern-clear');
         if (patClear) patClear.addEventListener('click', function () {
@@ -4134,7 +4487,7 @@ class IvyRuntime {
                 break;
 
             case 'proof_updated':
-                // Future: update proof graph view
+                this._refreshProofGoalPane(this.activeSheetId || 'sheet-1').catch(function () {});
                 break;
 
             case 'file_loaded':
@@ -5371,6 +5724,9 @@ class IvyRuntime {
                 this.setIsolates(data.isolates || [], data.isolate || '');
             }
             await refreshLoadedModelSnapshots(this);
+            if (this.api && typeof this.api.getProofGraph === 'function') {
+                await this._refreshProofGoalPane('sheet-1');
+            }
         } catch (e) {
             console.error('refreshAfterLoad error:', e);
         }

@@ -393,7 +393,7 @@ TODO: define the required event tree interaction details for the web port. Tests
 
 Done: event trees now expose tree/treeitem roles, ARIA selected/expanded state, roving focus, visible selected-row styling, click focus, arrow-key navigation, keyboard expand/collapse, and selected-row preservation when filtering retains the selected event. Focused Playwright coverage was added and `make test`/`make test-web` are green.
 
-### 47. Event Pattern File Dialog Semantics Need Coverage
+[x] ### 47. Event Pattern File Dialog Semantics Need Coverage
 
 Inventory refs: PLAN383 item 82; PLAN378 sections 25.5 and 25.6.
 
@@ -401,15 +401,19 @@ Pattern add/remove/load/save/clear exists, but save/load currently use web dialo
 
 TODO: add end-to-end tests for loading and saving pattern files from the browser shell. Tests should verify newline handling, invalid patterns, duplicate patterns, selected pattern preservation, and backend-authoritative state after failed operations.
 
+Done: browser coverage now drives the event pattern Load and Save buttons, including malformed pattern load failures, CRLF/newline input, duplicate pattern preservation, selected option preservation after backend-authoritative list refresh, and File System Access picker save content/metadata. Failed loads/saves now report status errors without mutating the pattern list, and `make test`/`make test-web` are green.
+
 ## P2: Notebook/Widget Workflows And Extensions
 
-### 48. Analysis-Session History Navigation Is Missing
+[x] ### 48. Analysis-Session History Navigation Is Missing
 
 Inventory refs: PLAN383 item 90; PLAN378 sections 21.1 through 21.4 and 33.2.
 
 Python notebook widgets expose first/prev/next/last history navigation, step info display, active-element auto-click, and modal messages. The current web UI has sheet switching and tutorial URL history, but not analysis-session step history.
 
 TODO: implement or exclude analysis-session history navigation for web UI. Tests should drive a multi-step analysis session, navigate back and forward, and verify the ARG/concept/transition widgets reflect the selected history step.
+
+Done: Go `AnalysisSessionWidget` history navigation now clamps to Python-style first/previous/next/last bounds, and browser analysis sheets now expose a history strip with first/prev/next/last controls plus step/transition info. Browser snapshot history restores ARG and concept graph payloads for the selected step. Focused Go and Playwright coverage was added, and `make test`/`make test-web` are green.
 
 [ ] ### 49. Proof Goal And CRG Widget Interactions Are Missing From The Browser
 

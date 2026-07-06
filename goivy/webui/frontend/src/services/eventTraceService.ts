@@ -208,12 +208,22 @@ export function renderEventPatternList(app, sheetId, {
   const sheet = doc.getElementById(sheetId);
   const select = sheet ? sheet.querySelector<HTMLSelectElement>('.event-pattern-list') : null;
   if (!select || !sheetState) return;
+  const selectedValue = select.value || '';
+  const selectedIndex = select.selectedIndex;
   select.innerHTML = '';
+  let restoredSelection = false;
   for (const pattern of sheetState.patterns || []) {
     const option = doc.createElement('option');
     option.value = pattern;
     option.textContent = pattern;
+    if (!restoredSelection && selectedValue && pattern === selectedValue) {
+      option.selected = true;
+      restoredSelection = true;
+    }
     select.appendChild(option);
+  }
+  if (!restoredSelection && selectedIndex >= 0 && selectedIndex < select.options.length) {
+    select.selectedIndex = selectedIndex;
   }
 }
 

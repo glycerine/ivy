@@ -55,6 +55,40 @@ func TestNewAnalysisSessionWidget(t *testing.T) {
 	}
 }
 
+func TestAnalysisSessionWidgetHistoryNavigationClampsToSession(t *testing.T) {
+	a := NewAnalysisSessionWidget()
+	session := &AnalysisSession{History: []any{"init", "middle", "last"}}
+	a.RegisterSession(session)
+
+	if got, want := a.CurrentStep, 2; got != want {
+		t.Fatalf("CurrentStep after RegisterSession = %d, want %d", got, want)
+	}
+	a.Prev(nil)
+	if got, want := a.CurrentStep, 1; got != want {
+		t.Fatalf("CurrentStep after Prev = %d, want %d", got, want)
+	}
+	a.First(nil)
+	if got, want := a.CurrentStep, 0; got != want {
+		t.Fatalf("CurrentStep after First = %d, want %d", got, want)
+	}
+	a.Prev(nil)
+	if got, want := a.CurrentStep, 0; got != want {
+		t.Fatalf("CurrentStep after Prev at first = %d, want %d", got, want)
+	}
+	a.Next(nil)
+	if got, want := a.CurrentStep, 1; got != want {
+		t.Fatalf("CurrentStep after Next = %d, want %d", got, want)
+	}
+	a.Last(nil)
+	if got, want := a.CurrentStep, 2; got != want {
+		t.Fatalf("CurrentStep after Last = %d, want %d", got, want)
+	}
+	a.Next(nil)
+	if got, want := a.CurrentStep, 2; got != want {
+		t.Fatalf("CurrentStep after Next at last = %d, want %d", got, want)
+	}
+}
+
 // TestConceptSessionControlsButtons verifies that the base class init
 // builds the three concept buttons mirroring Python lines 100-104.
 func TestConceptSessionControlsButtons(t *testing.T) {

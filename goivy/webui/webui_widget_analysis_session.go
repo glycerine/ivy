@@ -1171,8 +1171,10 @@ func (a *AnalysisSessionWidget) RegisterSession(session *AnalysisSession) {
 	a.Session = session
 	if session != nil {
 		// Python: self.current_step = len(session.history) - 1
-		// (proof.AnalysisSession.History is the analogue if exposed)
-		a.CurrentStep = 0
+		a.CurrentStep = len(session.History) - 1
+		if a.CurrentStep < 0 {
+			a.CurrentStep = 0
+		}
 	}
 	if a.Concept != nil {
 		a.Concept.AnalysisSessionWidget = a
@@ -1211,8 +1213,12 @@ func (a *AnalysisSessionWidget) Prev(button *ButtonWidget) {
 //	    self.current_step = min(self.current_step + 1, len(self.session.history) - 1)
 //	    self.render()
 func (a *AnalysisSessionWidget) Next(button *ButtonWidget) {
-	if a.Session != nil {
-		// max := len(a.Session.History) - 1
+	if a.Session != nil && len(a.Session.History) > 0 {
+		maxStep := len(a.Session.History) - 1
+		if a.CurrentStep < maxStep {
+			a.CurrentStep++
+		}
+	} else {
 		a.CurrentStep++
 	}
 	a.Render()
@@ -1235,6 +1241,9 @@ func (a *AnalysisSessionWidget) First(button *ButtonWidget) {
 //	    self.render()
 func (a *AnalysisSessionWidget) Last(button *ButtonWidget) {
 	// CurrentStep should be max history index.
+	if a.Session != nil && len(a.Session.History) > 0 {
+		a.CurrentStep = len(a.Session.History) - 1
+	}
 	a.Render()
 }
 

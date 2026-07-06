@@ -1626,6 +1626,255 @@ test('event tree selection, keyboard traversal, and filtered selection preservat
   expect(filteredSelection).toBe('0/0');
 });
 
+test('event pattern load and save dialogs keep backend state authoritative', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    window.__eventPatternCalls = [];
+    window.__eventPatternWrites = [];
+    window.__eventPatternPickerOptions = null;
+    window.showSaveFilePicker = async (options) => {
+      window.__eventPatternPickerOptions = options;
+      return {
+        async createWritable() {
+          return {
+            async write(content) {
+              window.__eventPatternWrites.push(String(content));
+            },
+            async close() {
+              window.__eventPatternClosed = true;
+            },
+          };
+        },
+      };
+    };
+
+    const app = window.__ivyDiagnostics.runtime();
+    app.openEventTraceSheet('Trace', {
+      sheet_id: 'events-patterns',
+      events: [{ text: 'root(a)', address: '0', subs: [{ text: 'child(a)', address: '0/0' }] }],
+      patterns: ['root(a)', 'child(a)'],
+    }, 'events-patterns');
+    app.api.executeAction = async (actionName, args) => {
+      window.__eventPatternCalls.push({ actionName, args });
+      if (actionName === 'events_load_patterns') {
+        if (args.patterns.includes('broken(')) {
+          throw new Error('malformed pattern');
+        }
+        const loaded = String(args.patterns || '').split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+        return { patterns: ['root(a)', 'child(a)'].concat(loaded) };
+      }
+      if (actionName === 'events_save_patterns') {
+        return { content: 'root(a)\nchild(a)\nchild(a)\ndone\n' };
+      }
+      throw new Error(actionName);
+    };
+  });
+
+  const list = page.locator('#events-patterns .event-pattern-list');
+  await list.selectOption('child(a)');
+
+  await page.locator('#events-patterns .event-pattern-load').click();
+  await page.locator('[data-ivy-dialog-text]').fill('broken(');
+  await page.locator('[data-ivy-dialog] [data-ivy-dialog-button]', { hasText: 'Load' }).click();
+  await expect(page.locator('#statusbar')).toHaveClass(/error/);
+  await expect(page.locator('#statusbar .status-message')).toContainText('Load patterns failed: malformed pattern');
+  let patternState = await page.evaluate(() => {
+    const select = document.querySelector('#events-patterns .event-pattern-list');
+    return {
+      options: Array.from(select.options).map((option) => option.textContent),
+      selected: select.value,
+      selectedIndex: select.selectedIndex,
+      patterns: window.__ivyDiagnostics.runtime().sheets['events-patterns'].patterns,
+    };
+  });
+  expect(patternState.options).toEqual(['root(a)', 'child(a)']);
+  expect(patternState.patterns).toEqual(['root(a)', 'child(a)']);
+  expect(patternState.selected).toBe('child(a)');
+  expect(patternState.selectedIndex).toBe(1);
+
+  await page.locator('#events-patterns .event-pattern-load').click();
+  await page.locator('[data-ivy-dialog-text]').fill('child(a)\r\ndone\n\n');
+  await page.locator('[data-ivy-dialog] [data-ivy-dialog-button]', { hasText: 'Load' }).click();
+  await expect(page.locator('#events-patterns .event-pattern-list option')).toHaveCount(4);
+  patternState = await page.evaluate(() => {
+    const select = document.querySelector('#events-patterns .event-pattern-list');
+    const loadCalls = window.__eventPatternCalls.filter((call) => call.actionName === 'events_load_patterns');
+    return {
+      options: Array.from(select.options).map((option) => option.textContent),
+      selected: select.value,
+      selectedIndex: select.selectedIndex,
+      patterns: window.__ivyDiagnostics.runtime().sheets['events-patterns'].patterns,
+      lastLoadText: loadCalls[loadCalls.length - 1].args.patterns,
+    };
+  });
+  expect(patternState.options).toEqual(['root(a)', 'child(a)', 'child(a)', 'done']);
+  expect(patternState.patterns).toEqual(['root(a)', 'child(a)', 'child(a)', 'done']);
+  expect(patternState.selected).toBe('child(a)');
+  expect(patternState.selectedIndex).toBe(1);
+  expect(patternState.lastLoadText).toMatch(/^child\(a\)\r?\ndone\n\n$/);
+
+  await page.locator('#events-patterns .event-pattern-save').click();
+  await page.waitForFunction(() => window.__eventPatternWrites.length === 1);
+  const saved = await page.evaluate(() => ({
+    content: window.__eventPatternWrites[0],
+    closed: !!window.__eventPatternClosed,
+    suggestedName: window.__eventPatternPickerOptions && window.__eventPatternPickerOptions.suggestedName,
+    accept: window.__eventPatternPickerOptions && window.__eventPatternPickerOptions.types[0].accept['text/plain'],
+  }));
+  expect(saved).toEqual({
+    content: 'root(a)\nchild(a)\nchild(a)\ndone\n',
+    closed: true,
+    suggestedName: 'event_patterns.pats',
+    accept: ['.pats'],
+  });
+});
+
+test('analysis session history navigation restores graph snapshots and step info', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    app._recordAnalysisHistoryStep('sheet-1', {
+      arg: {
+        elements: [{ group: 'nodes', data: { id: 'state_0', label: 'init', obj: 'state_0' } }],
+        positions: { state_0: { x: 0, y: 0 } },
+      },
+      concept: {
+        elements: [{ group: 'nodes', data: { id: 'concept_init', label: 'initial facts', obj: 'initial facts' } }],
+        positions: { concept_init: { x: 0, y: 0 } },
+      },
+      transition: { label: 'init' },
+      step_info: { tactic: 'init', msg: 'Initial analysis state' },
+    });
+    app._recordAnalysisHistoryStep('sheet-1', {
+      arg: {
+        elements: [{ group: 'nodes', data: { id: 'state_1', label: 'after connect', obj: 'state_1' } }],
+        positions: { state_1: { x: 0, y: 0 } },
+      },
+      concept: {
+        elements: [{ group: 'nodes', data: { id: 'concept_connect', label: 'link(c,s)', obj: 'link(c,s)' } }],
+        positions: { concept_connect: { x: 0, y: 0 } },
+      },
+      transition: { label: 'connect' },
+      step_info: { tactic: 'pdr_step', msg: 'Advanced through connect', transition: 'connect' },
+    });
+  });
+
+  const history = page.locator('#sheet-1 [data-analysis-history]');
+  await expect(history).toBeVisible();
+  await expect(page.locator('#sheet-1 [data-analysis-history-status]')).toContainText('Step 2 of 2');
+  await expect(page.locator('#sheet-1 [data-analysis-step-info]')).toContainText('Tactic: pdr_step');
+  await expect(page.locator('#sheet-1 [data-analysis-step-info]')).toContainText('Transition: connect');
+
+  let labels = await page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return {
+      arg: app.sheets['sheet-1'].argGraph.cy.nodes().map((node) => node.data('label')),
+      concept: app.sheets['sheet-1'].conceptGraph.cy.nodes().map((node) => node.data('label')),
+    };
+  });
+  expect(labels.arg).toEqual(['after connect']);
+  expect(labels.concept).toEqual(['link(c,s)']);
+
+  await page.locator('#sheet-1 [data-analysis-history-action="prev"]').click();
+  await expect(page.locator('#sheet-1 [data-analysis-history-status]')).toContainText('Step 1 of 2');
+  await expect(page.locator('#sheet-1 [data-analysis-step-info]')).toContainText('Tactic: init');
+  await expect(page.locator('#sheet-1 [data-analysis-step-info]')).toContainText('Transition: init');
+  labels = await page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return {
+      arg: app.sheets['sheet-1'].argGraph.cy.nodes().map((node) => node.data('label')),
+      concept: app.sheets['sheet-1'].conceptGraph.cy.nodes().map((node) => node.data('label')),
+    };
+  });
+  expect(labels.arg).toEqual(['init']);
+  expect(labels.concept).toEqual(['initial facts']);
+
+  await expect(page.locator('#sheet-1 [data-analysis-history-action="first"]')).toBeDisabled();
+  await page.locator('#sheet-1 [data-analysis-history-action="next"]').click();
+  await expect(page.locator('#sheet-1 [data-analysis-history-status]')).toContainText('Step 2 of 2');
+  await expect(page.locator('#sheet-1 [data-analysis-history-action="next"]')).toBeDisabled();
+  await page.locator('#sheet-1 [data-analysis-history-action="first"]').click();
+  await expect(page.locator('#sheet-1 [data-analysis-history-status]')).toContainText('Step 1 of 2');
+  await page.locator('#sheet-1 [data-analysis-history-action="last"]').click();
+  await expect(page.locator('#sheet-1 [data-analysis-history-status]')).toContainText('Step 2 of 2');
+});
+
+test('proof goal and CRG interactions update selected goal concept and transition views', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.api.getProofGraph = async () => ({
+      elements: [
+        { group: 'nodes', data: { id: 'goal_0', label: 'safety', obj: 'goal_0', info: 'goal info' }, classes: 'proof_goal' },
+      ],
+      positions: { goal_0: { x: 0, y: 0 } },
+    });
+    app.api.proofGoalAction = async (goalId, actionName) => {
+      if (goalId !== 'goal_0' || actionName !== 'view') throw new Error(`${goalId}:${actionName}`);
+      return {
+        status: 'ok',
+        goal: goalId,
+        action: actionName,
+        info: 'forall X. safe(X)',
+        concept: {
+          elements: [{ group: 'nodes', data: { id: 'goal_concept', label: 'goal facts', obj: 'goal facts' } }],
+          positions: { goal_concept: { x: 0, y: 0 } },
+        },
+        transition: { label: 'proof goal safety', detail: 'viewed from proof goal' },
+        crg: {
+          nodes: [{
+            id: 'crg_1',
+            label: 'crg after connect',
+            transition: { label: 'connect transition', detail: 'from crg node' },
+            concept: {
+              elements: [{ group: 'nodes', data: { id: 'crg_concept', label: 'crg facts', obj: 'crg facts' } }],
+              positions: { crg_concept: { x: 0, y: 0 } },
+            },
+          }],
+        },
+      };
+    };
+    await app._refreshProofGoalPane('sheet-1');
+  });
+
+  await expect(page.locator('#sheet-1 [data-proof-goal-pane]')).toBeVisible();
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    const node = app.sheets['sheet-1'].proofGraph.cy.getElementById('goal_0');
+    node.emit('tap', { target: node });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+
+  await expect(page.locator('#sheet-1 [data-selected-proof-goal]')).toContainText('goal_0');
+  await expect(page.locator('#sheet-1 [data-proof-goal-info]')).toContainText('forall X. safe(X)');
+  await expect(page.locator('#sheet-1 [data-transition-view]')).toContainText('proof goal safety');
+  await expect(page.locator('#sheet-1 [data-crg-node="crg_1"]')).toContainText('crg after connect');
+  let state = await page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return {
+      selectedGoal: app.sheets['sheet-1'].selectedProofGoal,
+      conceptLabels: app.sheets['sheet-1'].conceptGraph.cy.nodes().map((node) => node.data('label')),
+    };
+  });
+  expect(state.selectedGoal).toBe('goal_0');
+  expect(state.conceptLabels).toEqual(['goal facts']);
+
+  await page.locator('#sheet-1 [data-crg-node="crg_1"]').click();
+  await expect(page.locator('#sheet-1 [data-transition-view]')).toContainText('connect transition');
+  state = await page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return {
+      selectedCrgNode: app.sheets['sheet-1'].selectedCrgNode,
+      conceptLabels: app.sheets['sheet-1'].conceptGraph.cy.nodes().map((node) => node.data('label')),
+    };
+  });
+  expect(state.selectedCrgNode).toBe('crg_1');
+  expect(state.conceptLabels).toEqual(['crg facts']);
+});
+
 test('event viewer launch mode opens an iev trace without a model file', async ({ page }) => {
   const params = new URLSearchParams({
     'event-viewer': '1',

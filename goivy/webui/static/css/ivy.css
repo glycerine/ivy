@@ -982,6 +982,57 @@ body[data-event-viewer-only="true"] #outer-container {
     flex-direction: row;
 }
 
+.sheet-content.has-analysis-history.active {
+    flex-direction: column;
+}
+
+.sheet-content.has-analysis-history .sheet-columns {
+    flex: 1 1 auto;
+    width: 100%;
+}
+
+.analysis-history-bar {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 8px;
+    border-bottom: 1px solid #3c3c3c;
+    background: #252526;
+}
+
+.analysis-history-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 24px;
+}
+
+.analysis-history-btn {
+    min-width: 44px;
+}
+
+.analysis-history-status {
+    flex: 1;
+    min-width: 90px;
+    color: #d4d4d4;
+    font-size: 12px;
+}
+
+.analysis-history-step-info {
+    max-height: 72px;
+    margin: 0;
+    padding: 6px;
+    overflow: auto;
+    border: 1px solid #3c3c3c;
+    color: #d4d4d4;
+    background: #1e1e1e;
+    font-family: Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.35;
+    white-space: pre-wrap;
+}
+
 .event-sheet.active {
     min-height: 0;
 }
