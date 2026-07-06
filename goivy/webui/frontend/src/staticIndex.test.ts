@@ -47,6 +47,7 @@ describe('static graph background controls', () => {
     const slider = doc.getElementById('graph-background-slider') as HTMLInputElement | null;
     const rootRule = ivyCss.match(/:root\s*\{[^}]+\}/)?.[0] || '';
     const graphRule = ivyCss.match(/\.graph-container\s*\{[^}]+\}/)?.[0] || '';
+    const statePaneContentRule = ivyCss.match(/#state-panel \.sheet-pane-content\s*\{[^}]+\}/)?.[0] || '';
     const titleRowRule = ivyCss.match(/\.panel-title-row\s*\{[^}]+\}/)?.[0] || '';
     const sliderRule = ivyCss.match(/\.graph-background-slider\s*\{[^}]+\}/)?.[0] || '';
     const webkitTrackRule = ivyCss.match(/\.graph-background-slider::-webkit-slider-runnable-track\s*\{[^}]+\}/)?.[0] || '';
@@ -66,6 +67,7 @@ describe('static graph background controls', () => {
     expect(slider?.title).toBe('Graph background: rgb(0, 0, 0)');
     expect(rootRule).toContain('--ivy-graph-background: rgb(0, 0, 0);');
     expect(graphRule).toContain('background-color: var(--ivy-graph-background);');
+    expect(statePaneContentRule).toContain('background-color: var(--ivy-graph-background);');
     expect(titleRowRule).toContain('width: 100%;');
     expect(sliderRule).toContain('width: 120px;');
     expect(sliderRule).toContain('height: 18px;');
@@ -96,8 +98,10 @@ describe('static CTI relation controls', () => {
     const input = doc.getElementById('cti-relations-to-minimize') as HTMLInputElement | null;
 
     expect(input).not.toBeNull();
-    expect(input?.value).toBe('relations to minimize');
+    expect(input?.value).toBe('');
+    expect(input?.getAttribute('placeholder')).toBe('relation names, space-separated');
     expect(input?.getAttribute('aria-label')).toBe('Relations to minimize');
+    expect(input?.getAttribute('title')).toContain('CTI checks and minimization');
     expect(input?.closest('#state-controls')).not.toBeNull();
   });
 

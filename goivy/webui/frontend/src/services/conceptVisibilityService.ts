@@ -190,7 +190,7 @@ export function renderStateCheckboxes(app, rows, {
     relationButton.setAttribute('data-state-toggle-relation', row.name);
     if (row.color) {
       relationButton.style.setProperty('--ivy-relation-color', row.color);
-      relationButton.style.color = row.color;
+      relationButton.style.color = relationTextColor(row.color);
       relationButton.style.borderColor = row.color;
     }
     relationButton.addEventListener('click', () => {
@@ -214,6 +214,20 @@ export function renderStateCheckboxes(app, rows, {
     tr.appendChild(td);
     tbody.appendChild(tr);
   }
+}
+
+function relationTextColor(color) {
+  const normalized = String(color || '').trim().toLowerCase().replace(/\s+/g, '');
+  if (
+    normalized === 'black' ||
+    normalized === '#000' ||
+    normalized === '#000000' ||
+    normalized === 'rgb(0,0,0)' ||
+    normalized === 'rgba(0,0,0,1)'
+  ) {
+    return '#e0e0e0';
+  }
+  return color;
 }
 
 export function populateStateCheckboxes(app, conceptData, {

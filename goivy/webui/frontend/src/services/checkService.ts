@@ -35,7 +35,9 @@ function relationsToMinimizeOptions({
 } = {}) {
   const input = doc && doc.getElementById('cti-relations-to-minimize') as HTMLInputElement | null;
   if (!input) return {};
-  return { relations_to_minimize: input.value || '' };
+  const value = (input.value || '').trim();
+  if (!value || value === 'relations to minimize') return {};
+  return { relations_to_minimize: value };
 }
 
 function readSelectValue(doc, id) {

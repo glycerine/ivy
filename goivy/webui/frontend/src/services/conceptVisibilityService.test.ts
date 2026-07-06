@@ -109,6 +109,22 @@ describe('conceptVisibilityService', () => {
     expect(linkButton.style.color).toBe('rgb(0, 0, 255)');
   });
 
+  it('does not render black backend relation colors as black relation-name text', () => {
+    document.body.innerHTML = '<table><tbody id="state-checkbox-body"></tbody></table>';
+    const app = modelApp({
+      relations: ['link(X,Y)'],
+      relation_colors: {
+        link: '#000000',
+      },
+    });
+
+    renderStateCheckboxes(app, stateRelationRows(app), { doc: document });
+
+    const linkButton = document.querySelector('button[data-state-toggle-relation="link(X,Y)"]') as HTMLButtonElement;
+    expect(linkButton.style.getPropertyValue('--ivy-relation-color')).toBe('#000000');
+    expect(linkButton.style.color).not.toBe('rgb(0, 0, 0)');
+  });
+
   it('reuses the static state header instead of adding a duplicate header row', () => {
     document.body.innerHTML = `
       <table id="state-checkbox-table">

@@ -248,6 +248,36 @@ describe('checkService', () => {
     }, expect.objectContaining({ signal: expect.any(AbortSignal) }));
   });
 
+  it('does not pass an empty or placeholder relations-to-minimize field to induction checks', async () => {
+    for (const value of ['', 'relations to minimize']) {
+      document.body.innerHTML = `<input id="cti-relations-to-minimize" value="${value}">`;
+      const app = {
+        getMode: vi.fn(() => 'induction'),
+        _persistedFileContent: '',
+        _persistedFileName: 'model.ivy',
+        activeIsolate: '',
+        api: {
+          runCheck: vi.fn(async () => ({ result: 'pass', mode: 'induction' })),
+          getARG: vi.fn(async () => null),
+          getConceptGraph: vi.fn(async () => null),
+        },
+        controls: {
+          showLoading: vi.fn(),
+          hideLoading: vi.fn(),
+          setStatus: vi.fn(),
+        },
+        showCheckResult: vi.fn(),
+        _autoCheckUsedRelations: vi.fn(),
+      };
+
+      await runCheck(app);
+
+      expect(app.api.runCheck).toHaveBeenCalledWith('induction', {}, expect.objectContaining({
+        signal: expect.any(AbortSignal),
+      }));
+    }
+  });
+
   it('adds CTI details and trace actions for failed checks', () => {
     const app = {
       addCheckResultViewActions: vi.fn(),

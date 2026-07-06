@@ -1375,6 +1375,10 @@ body[data-event-viewer-only="true"] #outer-container {
     overflow: hidden;
 }
 
+#state-panel .sheet-pane-content {
+    background-color: var(--ivy-graph-background);
+}
+
 .sheet-pane {
     flex: 0 0 var(--sheet-pane-width, 30rem);
     min-width: var(--sheet-pane-min-width, 220px);
