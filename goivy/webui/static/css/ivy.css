@@ -5,7 +5,7 @@
 
 :root {
     --ivy-graph-background: rgb(0, 0, 0);
-    --ivy-relation-name-color: rgb(224, 224, 224);
+    --ivy-relation-name-color: rgb(255, 255, 255);
 }
 
 /* --- Reset & Base --- */

@@ -67,7 +67,7 @@ describe('static graph background controls', () => {
     expect(slider?.getAttribute('aria-label')).toBe('Graph background');
     expect(slider?.title).toBe('Graph background: rgb(0, 0, 0)');
     expect(rootRule).toContain('--ivy-graph-background: rgb(0, 0, 0);');
-    expect(rootRule).toContain('--ivy-relation-name-color: rgb(224, 224, 224);');
+    expect(rootRule).toContain('--ivy-relation-name-color: rgb(255, 255, 255);');
     expect(graphRule).toContain('background-color: var(--ivy-graph-background);');
     expect(statePaneContentRule).toContain('background-color: var(--ivy-graph-background);');
     expect(stateRelationNameRule).toContain('color: var(--ivy-relation-name-color);');

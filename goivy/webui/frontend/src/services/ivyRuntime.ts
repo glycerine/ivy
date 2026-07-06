@@ -510,12 +510,8 @@ class IvyRuntime {
 
     _relationNameColorForGraphBackground(value) {
         var pct = Math.max(0, Math.min(100, Number(value))) / 100;
-        var darkBackgroundText = [224, 224, 224];
-        var lightBackgroundText = [0, 96, 255];
-        var channel = function (i) {
-            return Math.round(darkBackgroundText[i] + (lightBackgroundText[i] - darkBackgroundText[i]) * pct);
-        };
-        return 'rgb(' + channel(0) + ', ' + channel(1) + ', ' + channel(2) + ')';
+        var backgroundChannel = Math.round(255 * pct);
+        return backgroundChannel <= 180 ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 255)';
     }
 
     _setupGraphBackgroundSlider(doc = document) {

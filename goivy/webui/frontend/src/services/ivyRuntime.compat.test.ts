@@ -198,14 +198,14 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(state.style.flex).toBe('');
   });
 
-  it('maps the graph background slider from editor black through gray to white', () => {
+  it('maps the graph background slider and flips relation-name text at channel 181', () => {
     document.body.innerHTML = '<input id="graph-background-slider" type="range" min="0" max="100" value="0">';
     const runtime = makeRuntime();
     const slider = document.getElementById('graph-background-slider') as HTMLInputElement;
 
     runtime._setupGraphBackgroundSlider();
     expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(0, 0, 0)');
-    expect(document.documentElement.style.getPropertyValue('--ivy-relation-name-color')).toBe('rgb(224, 224, 224)');
+    expect(document.documentElement.style.getPropertyValue('--ivy-relation-name-color')).toBe('rgb(255, 255, 255)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(0, 0, 0)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('0%');
     expect(slider.title).toBe('Graph background: rgb(0, 0, 0)');
@@ -213,15 +213,26 @@ describe('ivyRuntime compatibility behavior', () => {
     slider.value = '50';
     slider.dispatchEvent(new Event('input'));
     expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(128, 128, 128)');
-    expect(document.documentElement.style.getPropertyValue('--ivy-relation-name-color')).toBe('rgb(112, 160, 240)');
+    expect(document.documentElement.style.getPropertyValue('--ivy-relation-name-color')).toBe('rgb(255, 255, 255)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(128, 128, 128)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('50%');
     expect(slider.title).toBe('Graph background: rgb(128, 128, 128)');
 
+    expect(runtime._relationNameColorForGraphBackground((180 / 255) * 100)).toBe('rgb(255, 255, 255)');
+    expect(runtime._relationNameColorForGraphBackground((181 / 255) * 100)).toBe('rgb(0, 0, 255)');
+
+    slider.value = '71';
+    slider.dispatchEvent(new Event('input'));
+    expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(181, 181, 181)');
+    expect(document.documentElement.style.getPropertyValue('--ivy-relation-name-color')).toBe('rgb(0, 0, 255)');
+    expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(181, 181, 181)');
+    expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('71%');
+    expect(slider.title).toBe('Graph background: rgb(181, 181, 181)');
+
     slider.value = '100';
     slider.dispatchEvent(new Event('input'));
     expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(255, 255, 255)');
-    expect(document.documentElement.style.getPropertyValue('--ivy-relation-name-color')).toBe('rgb(0, 96, 255)');
+    expect(document.documentElement.style.getPropertyValue('--ivy-relation-name-color')).toBe('rgb(0, 0, 255)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(255, 255, 255)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('100%');
     expect(slider.title).toBe('Graph background: rgb(255, 255, 255)');
