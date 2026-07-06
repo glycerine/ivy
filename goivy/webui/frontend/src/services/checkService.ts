@@ -380,6 +380,40 @@ export async function showCtiBoundedCheckResult(app, result, message) {
   }
 }
 
+function ctiResultList(title, items) {
+  const values = Array.isArray(items) ? items : [];
+  if (values.length === 0) return [title, '- (none)'];
+  return [title, ...values.map((item) => `- ${item}`)];
+}
+
+function ctiMinimizeDetailsText(result) {
+  const bound = result && result.bound !== undefined ? result.bound : 'unknown';
+  const coreFacts = result && (result.core_facts || result.minimized_facts);
+  const lines = [
+    `BMC bound: ${bound}`,
+    '',
+    ...ctiResultList('Selected facts:', result && result.input_facts),
+    '',
+    ...ctiResultList('Core facts kept:', coreFacts),
+    '',
+    ...ctiResultList('Removed facts:', result && result.removed_facts),
+  ];
+  if (result && result.conjecture) {
+    lines.push('', 'Resulting conjecture:', String(result.conjecture));
+  }
+  return lines.join('\n');
+}
+
+async function showCtiMinimizeDetails(app, result) {
+  if (!result || result.bound === undefined || typeof app.textDialog !== 'function') return;
+  await app.textDialog(
+    'CTI minimize',
+    result.message || 'Conjecture minimized',
+    ctiMinimizeDetailsText(result),
+    { readOnly: true, okLabel: 'OK', cancel: false },
+  );
+}
+
 export async function checkInduction(app) {
   app.controls.setStatus('Checking induction...');
   const result = await runWithContext(app, {
@@ -458,6 +492,33 @@ export async function ctiBoundedCheck(app) {
   }
 }
 
+async function confirmCtiStrengthen(app, args) {
+  const preview = await runWithContext(app, {
+    busyMessage: 'Preparing strengthen confirmation...',
+    failurePrefix: 'CTI strengthen failed',
+  }, () => app.api.executeAction('cti_strengthen_preview', args));
+  if (!preview) {
+    return false;
+  }
+  const conjecture = String((preview && preview.conjecture) || '');
+  let accepted = true;
+  if (typeof app.textDialog === 'function') {
+    const answer = await app.textDialog('Strengthen', 'Add this conjecture as an invariant?', conjecture, {
+      readOnly: true,
+      okLabel: 'Strengthen',
+      cancel: true,
+    });
+    accepted = answer !== null;
+  } else if (typeof app.okCancelDialog === 'function') {
+    accepted = await app.okCancelDialog('Strengthen', `Add this conjecture as an invariant?\n\n${conjecture}`);
+  }
+  if (!accepted) {
+    app.controls.setStatus('Strengthen cancelled');
+    return false;
+  }
+  return true;
+}
+
 export async function weakenInvariant(app) {
   try {
     app.controls.setStatus('Choosing conjectures...');
@@ -492,6 +553,12 @@ export async function ctiConceptAction(app, actionName) {
     sheet_id: app.activeSheetId || 'sheet-1',
     ...relationsToMinimizeOptions(),
   };
+  if (actionName === 'cti_strengthen') {
+    const accepted = await confirmCtiStrengthen(app, args);
+    if (!accepted) {
+      return null;
+    }
+  }
   const result = await runWithContext(app, {
     busyMessage: 'Running CTI action...',
     failurePrefix: 'CTI action failed',
@@ -505,5 +572,8 @@ export async function ctiConceptAction(app, actionName) {
     await app.refreshConceptGraph();
   }
   app.controls.setStatus((result && result.message) || 'CTI action complete', 'success');
+  if (actionName === 'cti_minimize') {
+    await showCtiMinimizeDetails(app, result);
+  }
   return result;
 }

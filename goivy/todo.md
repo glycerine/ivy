@@ -311,7 +311,7 @@ TODO: add visible CTI state labels and verify diagram uses the intended pre-stat
 
 Done 2026-07-06: Added explicit CTI pre-state labeling to diagram responses and concept snapshots. CTI-scoped diagram actions now return top-level `cti_state_label` plus concept-level `state_label`/`cti_state_label`, derived from the CTI analysis graph pre-state when available; the older direct `ConceptDiagram` backend route emits the same labels. The browser now sends `ui_mode` with Diagram, prefers CTI labels when rendering concept snapshots, and shows `State: CTI pre-state 0` in the state panel. Added focused red/green Go, Vitest, and hosted-Go Playwright coverage for the backend label, runtime payload, model label preference, and visible browser label. Full `make test` and `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
 
-[ ] ### 39. CTI Strengthen Confirmation Is Missing
+[x] ### 39. CTI Strengthen Confirmation Is Missing
 
 Inventory refs: PLAN383 item 75; PLAN378 section 20.18.
 
@@ -319,7 +319,9 @@ Python asks for confirmation before adding a selected conjecture as a strengthen
 
 TODO: add a confirm dialog with the exact conjecture text before strengthening. Tests should cancel and accept the dialog, verifying cancel leaves conjectures unchanged and accept appends exactly one new conjecture.
 
-[ ] ### 40. CTI Save-Invariant File Content Needs Full Section Fidelity
+Done 2026-07-06: Added a backend `cti_strengthen_preview` action that derives the exact selected conjecture without mutating CTI state, and routed browser `cti_strengthen` through a read-only confirmation dialog before the mutating action runs. Cancel now leaves conjectures unchanged and accept performs exactly one append using the same conjecture text. Added focused red/green Go coverage for preview-vs-append behavior, Vitest coverage for cancel/accept frontend flow, and hosted-Go Playwright coverage for the visible dialog text and cancel/accept dispatch. Full `make test` and `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 40. CTI Save-Invariant File Content Needs Full Section Fidelity
 
 Inventory refs: PLAN383 item 70; PLAN378 section 20.8.
 
@@ -327,13 +329,17 @@ There is backend coverage for kept/dropped-style invariant output, but the brows
 
 TODO: add browser-level tests for CTI Save invariant, including kept, dropped, and new conjectures. Tests should verify the filename, extension, content sections, labels, and formula formatting.
 
-[ ] ### 41. CTI Bounded-Check Counterexample Viewing Is Partial
+Done 2026-07-06: Added hosted-Go browser coverage for CTI Save invariant using a labeled invariant model that drops one original invariant and adds one new conjecture before saving. The test captures the File System Access picker payload and saved text, verifying the backend filename `invariant.ivy`, `.ivy` picker extension, kept/dropped/new section ordering, preserved labels, commented dropped invariant, and formula formatting. The browser save path now honors the backend-provided filename before falling back to model-derived suggestions. Full `make test` and `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 41. CTI Bounded-Check Counterexample Viewing Is Partial
 
 Inventory refs: PLAN383 item 71; PLAN378 section 20.9.
 
 The current bounded check path prompts for a bound and calls the backend, and failed top-level checks can offer trace actions. Python CTI bounded check specifically offers to view a counterexample for the conjecture workflow.
 
 TODO: implement the CTI-specific BMC result path, including view-counterexample affordance. Tests should run a CTI bounded check with a counterexample and assert the user can open the corresponding trace/ARG sheet.
+
+Done 2026-07-06: Completed the CTI bounded-check counterexample affordance contract. CTI BMC results that register a counterexample trace now explicitly return `view: "trace"` along with the trace ARG, sheet id, and label. Added focused red/green Go coverage for that backend result shape and hosted-Go Playwright coverage for the browser flow: entering a bound, seeing the Python-style `View` dialog, switching to reachability mode, and opening the reachability-only trace sheet. Existing Vitest coverage verifies cancel does not open the trace. Full `make test` and `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
 
 [ ] ### 42. CTI Minimize Needs User-Visible BMC/Core Details
 

@@ -42,6 +42,14 @@ const clientServerWithIndividualsContent = clientServerIvyContent.replace(
   'type server\n\nrelation link',
   'type server\n\nindividual c0 : client\nindividual c1 : client\nindividual s0 : server\n\nrelation link',
 );
+const labeledSaveInvariantContent = `#lang ivy1.7
+type node
+relation p(X:node)
+relation q(X:node)
+after init { p(X) := true; q(X) := true }
+invariant [drop_p] p(X) -> q(X)
+invariant [keep_q] q(X) -> q(X)
+`;
 
 async function openIvy(page) {
   const consoleErrors = [];
@@ -380,6 +388,55 @@ test('CTI relations-to-minimize field is sent to check and minimize actions', as
   });
 });
 
+test('CTI minimize shows BMC bound core details and omits unselected facts', async ({ page }) => {
+  await openIvy(page);
+
+  const minimizeRun = page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.activeSheetId = 'sheet-1';
+    app.api.executeAction = async (action, args) => {
+      window._ctiMinimizeDetailsCall = { action, args };
+      return {
+        message: 'Conjecture minimized using BMC bound 4; kept 1 of 2 selected facts.',
+        bound: 4,
+        input_facts: ['p(X)', 'q(X)'],
+        core_facts: ['p(X)'],
+        removed_facts: ['q(X)'],
+        conjecture: '~p(X)',
+        concept: {
+          sheet_id: 'sheet-1',
+          facts: [{ text: 'r(X)' }],
+          elements: [],
+        },
+      };
+    };
+    await app.ctiConceptAction('cti_minimize');
+    return {
+      call: window._ctiMinimizeDetailsCall,
+      status: document.querySelector('#statusbar')?.textContent || '',
+    };
+  });
+
+  const dialogText = page.locator('[data-ivy-dialog-text]');
+  await expect(page.locator('[data-ivy-dialog]')).toBeVisible();
+  await expect(page.locator('[data-ivy-dialog]')).toContainText('Conjecture minimized using BMC bound 4');
+  await expect(dialogText).toHaveValue(/BMC bound: 4/);
+  await expect(dialogText).toHaveValue(/Selected facts:\n- p\(X\)\n- q\(X\)/);
+  await expect(dialogText).toHaveValue(/Core facts kept:\n- p\(X\)/);
+  await expect(dialogText).toHaveValue(/Removed facts:\n- q\(X\)/);
+  await expect(dialogText).toHaveValue(/Resulting conjecture:\n~p\(X\)/);
+  expect(await dialogText.inputValue()).not.toContain('r(X)');
+  await page.getByRole('button', { name: 'OK' }).click();
+
+  await expect(minimizeRun).resolves.toEqual({
+    call: {
+      action: 'cti_minimize',
+      args: { sheet_id: 'sheet-1', relations_to_minimize: 'relations to minimize' },
+    },
+    status: expect.stringContaining('Conjecture minimized using BMC bound 4'),
+  });
+});
+
 test('CTI diagram sends CTI mode and labels the pre-state', async ({ page }) => {
   await openIvy(page);
 
@@ -416,6 +473,156 @@ test('CTI diagram sends CTI mode and labels the pre-state', async ({ page }) => 
     label: 'State: CTI pre-state 0',
     status: expect.stringContaining('Diagram complete'),
     refreshed: false,
+  });
+});
+
+test('CTI strengthen confirms the exact conjecture before appending', async ({ page }) => {
+  await openIvy(page);
+
+  const firstRun = page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.activeSheetId = 'sheet-1';
+    window._ctiStrengthenCalls = [];
+    app.api.executeAction = async (action, args) => {
+      window._ctiStrengthenCalls.push({ action, args });
+      if (action === 'cti_strengthen_preview') {
+        return { conjecture: 'forall X. p(X)' };
+      }
+      return { message: 'Invariant strengthened', concept: { sheet_id: 'sheet-1', elements: [] } };
+    };
+    return app.ctiConceptAction('cti_strengthen');
+  });
+
+  await expect(page.locator('[data-ivy-dialog]')).toBeVisible();
+  await expect(page.locator('[data-ivy-dialog]')).toContainText('Add this conjecture as an invariant?');
+  await expect(page.locator('[data-ivy-dialog-text]')).toHaveValue('forall X. p(X)');
+  await page.getByRole('button', { name: 'Cancel' }).click();
+  await expect(firstRun).resolves.toBeNull();
+  const strengthenArgs = { sheet_id: 'sheet-1', relations_to_minimize: 'relations to minimize' };
+  expect(await page.evaluate(() => window._ctiStrengthenCalls)).toEqual([
+    { action: 'cti_strengthen_preview', args: strengthenArgs },
+  ]);
+
+  const secondRun = page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    window._ctiStrengthenCalls = [];
+    return app.ctiConceptAction('cti_strengthen');
+  });
+  await expect(page.locator('[data-ivy-dialog]')).toBeVisible();
+  await expect(page.locator('[data-ivy-dialog-text]')).toHaveValue('forall X. p(X)');
+  await page.getByRole('button', { name: 'Strengthen' }).click();
+  await expect(secondRun).resolves.toMatchObject({ message: 'Invariant strengthened' });
+  expect(await page.evaluate(() => window._ctiStrengthenCalls)).toEqual([
+    { action: 'cti_strengthen_preview', args: strengthenArgs },
+    { action: 'cti_strengthen', args: strengthenArgs },
+  ]);
+});
+
+test('CTI save invariant writes kept dropped and new sections through the browser picker', async ({ page }) => {
+  await openIvy(page);
+  await loadContentIntoCurrentSession(page, labeledSaveInvariantContent, 'cti_save.ivy');
+
+  const result = await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    await app.api.executeAction('weaken', { indices: [0] });
+    await app.api.executeAction('cti_strengthen', { sheet_id: 'sheet-1' });
+    window._savedInvariant = {
+      options: null,
+      content: '',
+      closed: false,
+    };
+    window.showSaveFilePicker = async (options) => {
+      window._savedInvariant.options = options;
+      return {
+        name: 'invariant.ivy',
+        async createWritable() {
+          return {
+            async write(text) {
+              window._savedInvariant.content = String(text);
+            },
+            async close() {
+              window._savedInvariant.closed = true;
+            },
+          };
+        },
+      };
+    };
+    await app.saveInvariant();
+    return {
+      ...window._savedInvariant,
+      status: document.querySelector('#statusbar')?.textContent || '',
+    };
+  });
+
+  expect(result.options).toEqual({
+    suggestedName: 'invariant.ivy',
+    types: [{ description: 'Ivy invariant files', accept: { 'text/plain': ['.ivy'] } }],
+  });
+  expect(result.closed).toBe(true);
+  expect(result.status).toContain('Invariant saved: invariant.ivy');
+  expect(result.content).toContain('# This file was generated by ivy.');
+  expect(result.content).toContain('# original conjectures kept');
+  expect(result.content).toContain('invariant [keep_q] q(X) -> q(X)');
+  expect(result.content).toContain('# original conjectures dropped');
+  expect(result.content).toContain('# invariant [drop_p] p(X) -> q(X)');
+  expect(result.content).toContain('# new conjectures');
+  expect(result.content).toMatch(/^invariant .*true/m);
+  expect(result.content.indexOf('# original conjectures kept')).toBeLessThan(result.content.indexOf('# original conjectures dropped'));
+  expect(result.content.indexOf('# original conjectures dropped')).toBeLessThan(result.content.indexOf('# new conjectures'));
+});
+
+test('CTI bounded check View opens the counterexample trace sheet', async ({ page }) => {
+  await openIvy(page);
+
+  const bmcRun = page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.activeSheetId = 'sheet-1';
+    app.currentBound = 3;
+    app.api.executeAction = async (action, args) => {
+      window._ctiBmcCall = { action, args };
+      return {
+        found: true,
+        result: 'fail',
+        view: 'trace',
+        message: 'BMC with bound 0 found a counter-example to:\n(~true)',
+        conjecture: '(~true)',
+        trace_sheet_id: 'trace-cti',
+        trace_label: 'CTI counterexample',
+        trace_arg: {
+          elements: [
+            { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+            { group: 'nodes', data: { id: 'state_1', obj: 'state_1', label: '1' } },
+            { group: 'edges', data: { id: 'trace_edge', source: 'state_0', target: 'state_1', label: 'trace' } },
+          ],
+        },
+      };
+    };
+    await app.ctiBoundedCheck();
+    const sheet = app.uiDataModel && app.uiDataModel.sheets && app.uiDataModel.sheets[app.activeSheetId];
+    return {
+      call: window._ctiBmcCall,
+      activeSheet: app.activeSheetId,
+      uiMode: document.body.getAttribute('data-ui-mode'),
+      reachabilityOnly: !!(sheet && sheet.reachabilityOnly),
+      activeTabText: document.querySelector('.sheet-tab.active')?.textContent || '',
+    };
+  });
+
+  await expect(page.locator('[data-ivy-dialog]')).toBeVisible();
+  await page.locator('[data-ivy-dialog-int]').fill('0');
+  await page.getByRole('button', { name: 'OK' }).click();
+
+  await expect(page.locator('[data-ivy-dialog]')).toBeVisible();
+  await expect(page.locator('[data-ivy-dialog]')).toContainText('BMC with bound 0 found a counter-example to:');
+  await expect(page.locator('[data-ivy-dialog-text]')).toHaveValue('(~true)');
+  await page.getByRole('button', { name: 'View' }).click();
+
+  await expect(bmcRun).resolves.toEqual({
+    call: { action: 'cti_bounded_check', args: { sheet_id: 'sheet-1', bound: 0 } },
+    activeSheet: 'trace-cti',
+    uiMode: 'reachability',
+    reachabilityOnly: true,
+    activeTabText: expect.stringContaining('CTI counterexample'),
   });
 });
 

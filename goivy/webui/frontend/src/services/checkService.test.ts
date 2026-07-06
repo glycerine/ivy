@@ -446,12 +446,79 @@ describe('checkService', () => {
       },
     };
 
-    await ctiConceptAction(app, 'cti_strengthen');
+    await ctiConceptAction(app, 'cti_gather');
 
-    expect(app.api.executeAction).toHaveBeenCalledWith('cti_strengthen', { sheet_id: 'sheet-2' });
+    expect(app.api.executeAction).toHaveBeenCalledWith('cti_gather', { sheet_id: 'sheet-2' });
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-2', { elements: [] });
     expect(app.refreshConceptGraph).not.toHaveBeenCalled();
     expect(app.controls.setStatus).toHaveBeenLastCalledWith('strengthened', 'success');
+  });
+
+  it('cancels CTI strengthen after previewing the exact conjecture', async () => {
+    const app = {
+      activeSheetId: 'sheet-2',
+      textDialog: vi.fn(async () => null),
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
+      },
+      refreshConceptGraph: vi.fn(),
+      api: {
+        executeAction: vi.fn(async (action) => {
+          if (action === 'cti_strengthen_preview') {
+            return { conjecture: 'forall X. p(X)' };
+          }
+          return { ok: true, message: 'strengthened', concept: { elements: [] } };
+        }),
+      },
+      controls: {
+        setStatus: vi.fn(),
+      },
+    };
+
+    const result = await ctiConceptAction(app, 'cti_strengthen');
+
+    expect(result).toBeNull();
+    expect(app.api.executeAction).toHaveBeenCalledTimes(1);
+    expect(app.api.executeAction).toHaveBeenCalledWith('cti_strengthen_preview', { sheet_id: 'sheet-2' });
+    expect(app.textDialog).toHaveBeenCalledWith(
+      'Strengthen',
+      'Add this conjecture as an invariant?',
+      'forall X. p(X)',
+      { readOnly: true, okLabel: 'Strengthen', cancel: true },
+    );
+    expect(app.uiDataStore.applyConceptSnapshot).not.toHaveBeenCalled();
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('Strengthen cancelled');
+  });
+
+  it('accepts CTI strengthen confirmation and appends once', async () => {
+    const app = {
+      activeSheetId: 'sheet-2',
+      textDialog: vi.fn(async () => 'forall X. p(X)'),
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
+      },
+      refreshConceptGraph: vi.fn(),
+      api: {
+        executeAction: vi.fn(async (action) => {
+          if (action === 'cti_strengthen_preview') {
+            return { conjecture: 'forall X. p(X)' };
+          }
+          return { ok: true, message: 'Invariant strengthened', concept: { sheet_id: 'sheet-2', elements: [] } };
+        }),
+      },
+      controls: {
+        setStatus: vi.fn(),
+      },
+    };
+
+    const result = await ctiConceptAction(app, 'cti_strengthen');
+
+    expect(result && result.message).toBe('Invariant strengthened');
+    expect(app.api.executeAction).toHaveBeenCalledTimes(2);
+    expect(app.api.executeAction).toHaveBeenNthCalledWith(1, 'cti_strengthen_preview', { sheet_id: 'sheet-2' });
+    expect(app.api.executeAction).toHaveBeenNthCalledWith(2, 'cti_strengthen', { sheet_id: 'sheet-2' });
+    expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-2', { sheet_id: 'sheet-2', elements: [] });
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('Invariant strengthened', 'success');
   });
 
   it('passes relations-to-minimize to CTI minimize', async () => {
@@ -476,6 +543,56 @@ describe('checkService', () => {
       sheet_id: 'sheet-2',
       relations_to_minimize: 'q',
     });
+  });
+
+  it('shows CTI minimize bound and core details', async () => {
+    const app = {
+      activeSheetId: 'sheet-2',
+      textDialog: vi.fn(async () => true),
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
+      },
+      refreshConceptGraph: vi.fn(),
+      api: {
+        executeAction: vi.fn(async () => ({
+          ok: true,
+          message: 'Conjecture minimized using BMC bound 2; kept 1 of 2 selected facts.',
+          bound: 2,
+          input_facts: ['false', 'true'],
+          core_facts: ['false'],
+          removed_facts: ['true'],
+          conjecture: '~false',
+          concept: { elements: [] },
+        })),
+      },
+      controls: {
+        setStatus: vi.fn(),
+      },
+    };
+
+    await ctiConceptAction(app, 'cti_minimize');
+
+    expect(app.textDialog).toHaveBeenCalledWith(
+      'CTI minimize',
+      'Conjecture minimized using BMC bound 2; kept 1 of 2 selected facts.',
+      [
+        'BMC bound: 2',
+        '',
+        'Selected facts:',
+        '- false',
+        '- true',
+        '',
+        'Core facts kept:',
+        '- false',
+        '',
+        'Removed facts:',
+        '- true',
+        '',
+        'Resulting conjecture:',
+        '~false',
+      ].join('\n'),
+      { readOnly: true, okLabel: 'OK', cancel: false },
+    );
   });
 
   it('auto-checks used relation rows', async () => {

@@ -908,6 +908,22 @@ func exprStrings(exprs []goivy.Expr) []string {
 	return out
 }
 
+func stringSliceDifference(all, kept []string) []string {
+	keptCounts := make(map[string]int, len(kept))
+	for _, item := range kept {
+		keptCounts[item]++
+	}
+	var removed []string
+	for _, item := range all {
+		if keptCounts[item] > 0 {
+			keptCounts[item]--
+			continue
+		}
+		removed = append(removed, item)
+	}
+	return removed
+}
+
 func eliminatedConjectureStrings(state *goivy.InterpState, model *goivy.Clauses) []string {
 	if state == nil || model == nil {
 		return nil
@@ -3115,7 +3131,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		result["remaining_count"] = len(kept)
 		s.emit(Event{Type: "weaken_result", Data: map[string]interface{}{"removed": removed}})
 
-	case "cti_gather", "cti_bounded_check", "cti_minimize", "cti_check_sufficient", "cti_check_inductive", "cti_strengthen":
+	case "cti_gather", "cti_bounded_check", "cti_minimize", "cti_check_sufficient", "cti_check_inductive", "cti_strengthen_preview", "cti_strengthen":
 		w, widgetErr := s.ctiConceptWidgetForSheetLocked(actionStringArg(args, "sheet_id"))
 		if widgetErr != nil {
 			err = widgetErr
@@ -3165,6 +3181,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			if found && trace != nil && trace.AnalysisGraph != nil {
 				traceUI := s.newAnalysisGraphUIForGraphLocked(trace.AnalysisGraph)
 				traceSheetID := s.registerAnalysisSheetLocked(traceUI)
+				result["view"] = "trace"
 				result["trace_sheet_id"] = traceSheetID
 				result["trace_label"] = analysisSheetLabel(traceSheetID)
 				result["trace_arg"] = AnalysisUIARGPayload(traceUI)
@@ -3174,15 +3191,23 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			if s.CTIUI != nil && s.CTIUI.CurrentBound > 0 {
 				bound = s.CTIUI.CurrentBound
 			}
+			inputFacts := exprStrings(w.ActiveFactExprs)
 			conj, minErr := w.MinimizeConjecture(bound)
 			if minErr != nil {
 				err = minErr
 				break
 			}
+			coreFacts := exprStrings(w.ActiveFactExprs)
+			removedFacts := stringSliceDifference(inputFacts, coreFacts)
+			result["bound"] = bound
+			result["input_facts"] = inputFacts
+			result["core_facts"] = coreFacts
+			result["minimized_facts"] = coreFacts
+			result["removed_facts"] = removedFacts
 			if conj != nil {
 				result["conjecture"] = fmt.Sprint(conj.ToFormula())
 			}
-			result["message"] = "Conjecture minimized"
+			result["message"] = fmt.Sprintf("Conjecture minimized using BMC bound %d; kept %d of %d selected facts.", bound, len(coreFacts), len(inputFacts))
 		case "cti_check_sufficient":
 			ok, msg := w.IsSufficient()
 			result["ok"] = ok
@@ -3191,6 +3216,19 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			ok, msg := w.IsInductive()
 			result["ok"] = ok
 			result["message"] = msg
+		case "cti_strengthen_preview":
+			conj, conjErr := w.GetSelectedConjecture()
+			if conjErr != nil {
+				err = conjErr
+				break
+			}
+			if conj == nil {
+				err = fmt.Errorf("cti_strengthen_preview: no conjecture selected")
+				break
+			}
+			result["preview"] = true
+			result["conjecture"] = fmt.Sprint(conj.ToFormula())
+			result["message"] = "Add this conjecture as an invariant?"
 		case "cti_strengthen":
 			conj, strErr := w.Strengthen()
 			if strErr != nil {

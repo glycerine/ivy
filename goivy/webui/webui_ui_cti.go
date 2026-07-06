@@ -1013,21 +1013,17 @@ func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*goivy.Clauses, e
 
 	// Python: self.set_facts([fact for fact in facts if fact in core_formulas])
 	var filteredFacts []goivy.Expr
-	var filteredStrs []string
 	for _, f := range facts {
 		key := fmt.Sprintf("%v", f)
 		if coreSet[key] {
 			filteredFacts = append(filteredFacts, f)
-			filteredStrs = append(filteredStrs, key)
 		}
 	}
 	w.ActiveFactExprs = filteredFacts
 
 	g := w.G()
 	if g != nil {
-		if err := g.SetFacts(filteredStrs); err != nil {
-			return nil, err
-		}
+		g.SetFactsExpr(filteredFacts)
 	}
 	w.HighlightSelectedFacts()
 

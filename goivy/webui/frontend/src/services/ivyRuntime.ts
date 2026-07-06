@@ -3257,7 +3257,7 @@ class IvyRuntime {
         try {
             var result = await this.api.executeAction('save_invariant', {});
             var text = (result && result.content) || '';
-            var suggestedName = invariantSuggestedName(this._persistedFileName);
+            var suggestedName = (result && result.filename) || invariantSuggestedName(this._persistedFileName);
 
             // Use File System Access API to let user choose save location
             if (window.showSaveFilePicker) {

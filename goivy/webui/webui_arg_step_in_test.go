@@ -1081,6 +1081,9 @@ func TestCTIConceptBoundedCheckEmptySelectionUsesPythonDefault(t *testing.T) {
 	if !ok {
 		t.Fatalf("empty-selection counterexample missing trace_arg: %#v", result)
 	}
+	if result["view"] != "trace" {
+		t.Fatalf("view = %#v, want trace for CTI BMC counterexample", result["view"])
+	}
 	if elements, ok := trace["elements"].([]goivy.CyElement); !ok || len(elements) == 0 {
 		t.Fatalf("trace_arg elements missing/empty: %#v", trace["elements"])
 	}
@@ -1089,6 +1092,89 @@ func TestCTIConceptBoundedCheckEmptySelectionUsesPythonDefault(t *testing.T) {
 	}
 	if label, _ := result["trace_label"].(string); label == "" {
 		t.Fatalf("trace_label missing: %#v", result)
+	}
+}
+
+func TestCTIStrengthenPreviewDoesNotAppendAndAcceptAppendsOnce(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-cti-strengthen-confirm")
+	ui := NewCTIAnalysisGraphUI(goivy.New())
+	widget := NewGraphWidget(StandardGraph([]string{"S"}, nil))
+	ui.CurrentConceptGraph = widget
+	s.CTIUI = ui
+
+	before := len(ui.Conjectures)
+	preview, err := s.ExecuteAction("cti_strengthen_preview", map[string]interface{}{
+		"sheet_id": rootSheetID,
+	})
+	if err != nil {
+		t.Fatalf("cti_strengthen_preview: %v", err)
+	}
+	if len(ui.Conjectures) != before {
+		t.Fatalf("preview appended conjectures: got %d, want %d", len(ui.Conjectures), before)
+	}
+	previewConj, _ := preview["conjecture"].(string)
+	if previewConj == "" {
+		t.Fatalf("preview conjecture missing: %#v", preview)
+	}
+
+	result, err := s.ExecuteAction("cti_strengthen", map[string]interface{}{
+		"sheet_id": rootSheetID,
+	})
+	if err != nil {
+		t.Fatalf("cti_strengthen: %v", err)
+	}
+	if len(ui.Conjectures) != before+1 {
+		t.Fatalf("strengthen conjecture count = %d, want %d", len(ui.Conjectures), before+1)
+	}
+	if result["conjecture"] != previewConj {
+		t.Fatalf("strengthen conjecture = %#v, want preview %q", result["conjecture"], previewConj)
+	}
+}
+
+func TestCTIMinimizeReportsBoundAndCoreFacts(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-cti-minimize-details")
+	mod := goivy.New()
+	ui := NewCTIAnalysisGraphUI(mod)
+	ui.CurrentBound = 2
+	widget := NewGraphWidget(StandardGraph([]string{"S"}, nil))
+	domain, _ := argStepInTestDomainSetup()
+	widget.G().InteractiveSess = NewConceptInteractiveSession(
+		domain,
+		goivy.True,
+		goivy.True,
+		nil,
+		[]goivy.Expr{goivy.False, goivy.True},
+		nil,
+		nil,
+		nil,
+		false,
+	)
+	ui.CurrentConceptGraph = widget
+	s.CTIUI = ui
+
+	result, err := s.ExecuteAction("cti_minimize", map[string]interface{}{
+		"sheet_id": rootSheetID,
+	})
+	if err != nil {
+		t.Fatalf("cti_minimize: %v", err)
+	}
+	if result["bound"] != 2 {
+		t.Fatalf("bound = %#v, want 2; result=%#v", result["bound"], result)
+	}
+	inputFacts, ok := result["input_facts"].([]string)
+	if !ok || !stringSliceContains(inputFacts, "false") || !stringSliceContains(inputFacts, "true") {
+		t.Fatalf("input_facts = %#v, want false and true", result["input_facts"])
+	}
+	coreFacts, ok := result["core_facts"].([]string)
+	if !ok || !stringSliceContains(coreFacts, "false") || stringSliceContains(coreFacts, "true") {
+		t.Fatalf("core_facts = %#v, want only false retained", result["core_facts"])
+	}
+	removedFacts, ok := result["removed_facts"].([]string)
+	if !ok || !stringSliceContains(removedFacts, "true") || stringSliceContains(removedFacts, "false") {
+		t.Fatalf("removed_facts = %#v, want only true removed", result["removed_facts"])
+	}
+	if message, _ := result["message"].(string); !strings.Contains(message, "BMC bound 2") || !strings.Contains(message, "kept 1 of 2") {
+		t.Fatalf("message = %q, want visible bound/core detail", message)
 	}
 }
 
