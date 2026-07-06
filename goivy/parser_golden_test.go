@@ -1330,13 +1330,18 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string, skipR
 		// could do instead:
 		//rebuild_goivy_check_xtrace()
 
-		doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", goivyCheckCmdDir, goBinary, target)
+		tmpTarget := target + ".tmp"
+		doFullCmd := fmt.Sprintf("cd %v && %v build -buildvcs=false -a -o %v && mv %v %v", goivyCheckCmdDir, goBinary, tmpTarget, tmpTarget, target)
 		fmt.Printf("build goivy_check_xtrace so we know it is up to date: '%v'\n", doFullCmd)
-		cmd = exec.Command(goBinary, "build", "-o", target)
+		_ = os.Remove(tmpTarget)
+		cmd = exec.Command(goBinary, "build", "-buildvcs=false", "-a", "-o", tmpTarget)
 		cmd.Dir = goivyCheckCmdDir
 		err = cmd.Run()
 		if err != nil {
 			panicf("could not run '%v' (see also 'make tr') to build goivy_check_xtrace; error: '%v'", doFullCmd, err)
+		}
+		if err = os.Rename(tmpTarget, target); err != nil {
+			panicf("could not install freshly built goivy_check_xtrace from '%v' to '%v'; error: '%v'", tmpTarget, target, err)
 		}
 		fmt.Printf("done refreshing goivy_check_xtrace\n\n")
 	}
@@ -1565,13 +1570,19 @@ func rebuild_goivy_check_xtrace() {
 	target := filepath.Join(gobin, "goivy_check_xtrace")
 	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
 
-	doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", goivyCheckCmdDir, goBinary, target)
+	tmpTarget := target + ".tmp"
+	doFullCmd := fmt.Sprintf("cd %v && %v build -buildvcs=false -a -o %v && mv %v %v", goivyCheckCmdDir, goBinary, tmpTarget, tmpTarget, target)
 	fmt.Printf("build '%v' so we know it is up to date: '%v'\n", target, doFullCmd)
-	cmd := exec.Command(goBinary, "build", "-o", target)
+	_ = os.Remove(target)
+	_ = os.Remove(tmpTarget)
+	cmd := exec.Command(goBinary, "build", "-buildvcs=false", "-a", "-o", tmpTarget)
 	cmd.Dir = goivyCheckCmdDir
 	err := cmd.Run()
 	if err != nil {
 		panicf("could not run '%v' (see also 'make tr') to build goivy_check_xtrace; error: '%v'", doFullCmd, err)
+	}
+	if err = os.Rename(tmpTarget, target); err != nil {
+		panicf("could not install freshly built goivy_check_xtrace from '%v' to '%v'; error: '%v'", tmpTarget, target, err)
 	}
 	fmt.Printf("done refreshing %v\n\n", target)
 }
