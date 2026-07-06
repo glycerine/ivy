@@ -278,6 +278,8 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 	}
 
 	edgeTuples := renderConceptGraphEdgeTuples(cs, nodes)
+	layoutRanks := conceptLayoutRanks(cs, nodes)
+	relationColors := ConceptRelationColors(cs)
 	hiddenByTransitive := make(map[[3]string]bool)
 	if checks != nil && cs.AbstractValue != nil {
 		hiddenByTransitive = GetTransitiveReduction(checks, cs.AbstractValue, edgeTuples)
@@ -324,6 +326,8 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 		}
 		shortInfo := fmt.Sprintf("%s(%s, %s)", edgeName, sourceSortName, targetSortName)
 		g.AddEdge(edgeName, sourceSortName, targetSortName, conceptDisplayName(edgeName), []string{edgeCls}, shortInfo, "")
+		annotateConceptEdgeColor(&g.Elements[len(g.Elements)-1], relationColors[edgeName])
+		annotateConceptEdgeLayout(&g.Elements[len(g.Elements)-1], layoutRanks)
 	}
 
 	// Also add any explicit combiners.
@@ -348,9 +352,174 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *WebUICyE
 			}
 			shortInfo := fmt.Sprintf("%s(%s, %s)", comb.Label, comb.Source, comb.Target)
 			g.AddEdge(comb.Label, comb.Source, comb.Target, comb.Label, []string{edgeCls}, shortInfo, "")
+			annotateConceptEdgeColor(&g.Elements[len(g.Elements)-1], relationColors[comb.Label])
+			annotateConceptEdgeLayout(&g.Elements[len(g.Elements)-1], layoutRanks)
 		}
 	}
+	addConceptSubgraphBoxes(g)
 	return g
+}
+
+// ConceptRelationColors returns the Python-compatible palette assignment for
+// concept relations. Controls and rendered edges both use this map so the same
+// relation has the same color across rebuilds.
+func ConceptRelationColors(cs *ConceptSession) map[string]string {
+	colors := make(map[string]string)
+	if cs == nil || cs.Domain == nil || len(goivy.SortColors) == 0 {
+		return colors
+	}
+	ids := conceptRelationColorIDs(cs)
+	for i, id := range ids {
+		color := goivy.SortColors[i%len(goivy.SortColors)]
+		colors[id] = color
+		if c := cs.Domain.Concepts[id]; c != nil {
+			colors[conceptRelationDisplayName(c)] = color
+		}
+	}
+	return colors
+}
+
+func conceptRelationColorIDs(cs *ConceptSession) []string {
+	seen := make(map[string]bool)
+	var ids []string
+	add := func(id string) {
+		if id == "" || seen[id] {
+			return
+		}
+		seen[id] = true
+		ids = append(ids, id)
+	}
+	for _, id := range cs.Domain.RelationIDs() {
+		add(id)
+	}
+	for _, comb := range cs.Domain.Combiners {
+		if comb != nil {
+			add(comb.Label)
+		}
+	}
+	sort.Strings(ids)
+	return ids
+}
+
+func conceptRelationDisplayName(c *Concept) string {
+	if c == nil {
+		return ""
+	}
+	if c.Arity >= 2 && len(c.Variables) >= 2 {
+		return c.Name + "(" + strings.Join(c.Variables, ",") + ")"
+	}
+	return c.Name
+}
+
+func annotateConceptEdgeColor(edge *WebUICyElement, color string) {
+	if edge == nil || edge.Group != "edges" || color == "" {
+		return
+	}
+	edge.Data["line_color"] = color
+	edge.Data["color"] = color
+}
+
+func conceptLayoutRanks(cs *ConceptSession, nodes []string) map[string]int {
+	type rankedNode struct {
+		index   int
+		name    string
+		cluster string
+	}
+	ranked := make([]rankedNode, 0, len(nodes))
+	for i, name := range nodes {
+		var c *Concept
+		if cs != nil && cs.Domain != nil {
+			c = cs.Domain.Concepts[name]
+		}
+		ranked = append(ranked, rankedNode{index: i, name: name, cluster: conceptCluster(c, name)})
+	}
+	sort.SliceStable(ranked, func(i, j int) bool {
+		if ranked[i].cluster != ranked[j].cluster {
+			return ranked[i].cluster < ranked[j].cluster
+		}
+		return ranked[i].index < ranked[j].index
+	})
+	out := make(map[string]int, len(ranked))
+	for i, node := range ranked {
+		out[node.name] = i
+	}
+	return out
+}
+
+func annotateConceptEdgeLayout(edge *WebUICyElement, layoutRanks map[string]int) {
+	if edge == nil || edge.Group != "edges" {
+		return
+	}
+	obj, _ := edge.Data["obj"].(string)
+	if bareRelationName(obj) == "pending" {
+		edge.Data["layout_constraint"] = false
+	}
+	sourceObj, _ := edge.Data["source_obj"].(string)
+	targetObj, _ := edge.Data["target_obj"].(string)
+	sourceRank, sourceOK := layoutRanks[sourceObj]
+	targetRank, targetOK := layoutRanks[targetObj]
+	if !sourceOK || !targetOK || sourceRank <= targetRank {
+		return
+	}
+	edge.Data["layout_reversed"] = true
+	edge.Data["layout_source"] = edge.Data["target"]
+	edge.Data["layout_target"] = edge.Data["source"]
+	edge.Data["layout_source_obj"] = targetObj
+	edge.Data["layout_target_obj"] = sourceObj
+}
+
+func addConceptSubgraphBoxes(g *WebUICyElements) {
+	if g == nil {
+		return
+	}
+	clusters := make(map[string][]string)
+	for _, el := range g.Elements {
+		if el.Group != "nodes" || hasCyClass(el.Classes, "non_existing") {
+			continue
+		}
+		cluster, _ := el.Data["cluster"].(string)
+		if cluster == "" {
+			continue
+		}
+		obj, _ := el.Data["obj"].(string)
+		if obj == "" {
+			obj, _ = el.Data["id"].(string)
+		}
+		if obj == "" {
+			continue
+		}
+		clusters[cluster] = append(clusters[cluster], obj)
+	}
+	keys := make([]string, 0, len(clusters))
+	for cluster := range clusters {
+		keys = append(keys, cluster)
+	}
+	sort.Strings(keys)
+	for _, cluster := range keys {
+		nodes := clusters[cluster]
+		sort.Strings(nodes)
+		box := g.AddShape("cluster_"+cluster, "", []string{"subgraphs"}, true, "rectangle", nil)
+		box.Data["cluster"] = cluster
+		box.Data["nodes"] = nodes
+	}
+}
+
+func hasCyClass(classes, want string) bool {
+	for _, className := range strings.Fields(classes) {
+		if className == want {
+			return true
+		}
+	}
+	return false
+}
+
+func appendCyClass(classes, className string) string {
+	if className == "" || hasCyClass(classes, className) {
+		return classes
+	}
+	fields := strings.Fields(classes)
+	fields = append(fields, className)
+	return strings.Join(fields, " ")
 }
 
 func orderedConceptNodes(cs *ConceptSession, checks *DisplayCheckboxes) []string {

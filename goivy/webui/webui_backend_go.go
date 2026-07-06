@@ -252,6 +252,9 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 		if cy.Elements == nil {
 			cy.Elements = []WebUICyElement{}
 		}
+		if widget != nil {
+			applyGraphWidgetSelections(cy, widget)
+		}
 
 		// Gather metadata for the state checkbox panel and JS rendering.
 		var nodes []string
@@ -329,6 +332,7 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 			"node_labels":                 nodeLabels,
 			"nodes":                       nodes,
 			"relations":                   relations,
+			"relation_colors":             ConceptRelationColors(sess.SimpleSess),
 			"selected_node":               selectedNode,
 			"state_label":                 stateLabel,
 			"toggles":                     checks,

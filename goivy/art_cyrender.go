@@ -26,6 +26,7 @@ type CyElements struct {
 	Elements []CyElement       `json:"elements"`
 	NodeID   map[string]string `json:"-"` // obj key -> cy node id
 	EdgeID   map[string]string `json:"-"` // obj key -> cy edge id
+	ShapeID  map[string]string `json:"-"` // obj key -> cy shape id
 }
 
 // CyElement is a single Cytoscape.js element (node or edge).
@@ -48,8 +49,9 @@ type CyPosition struct {
 // NewCyElements creates an empty CyElements container.
 func NewCyElements() *CyElements {
 	return &CyElements{
-		NodeID: make(map[string]string),
-		EdgeID: make(map[string]string),
+		NodeID:  make(map[string]string),
+		EdgeID:  make(map[string]string),
+		ShapeID: make(map[string]string),
 	}
 }
 
@@ -163,6 +165,33 @@ func (g *CyElements) AddEdge(obj, sourceObj, targetObj, label string, classes []
 	})
 }
 
+// AddShape adds a Python-compatible sidecar shape element. Cytoscape.js does
+// not draw these directly, but the web runtime translates subgraph shapes into
+// compound parent nodes so cluster boxes remain visible.
+func (g *CyElements) AddShape(obj, label string, classes []string, locked bool, shape string, coords interface{}) *CyElement {
+	if g.ShapeID == nil {
+		g.ShapeID = make(map[string]string)
+	}
+	sid := fmt.Sprintf("s%d", len(g.ShapeID))
+	g.ShapeID[obj] = sid
+	data := map[string]interface{}{
+		"id":    sid,
+		"obj":   obj,
+		"label": label,
+		"shape": shape,
+	}
+	if coords != nil {
+		data["coords"] = coords
+	}
+	g.Elements = append(g.Elements, CyElement{
+		Group:   "shapes",
+		Data:    data,
+		Classes: strings.Join(classes, " "),
+		Locked:  locked,
+	})
+	return &g.Elements[len(g.Elements)-1]
+}
+
 // -----------------------------------------------------------------------
 // ARG rendering types
 // -----------------------------------------------------------------------
@@ -235,6 +264,9 @@ func NewFullAnalysisGraphState() *FullAnalysisGraphState {
 }
 
 func displayARGEdgeLabel(label string) string {
+	label = strings.ReplaceAll(label, "\\l", "\n")
+	label = strings.ReplaceAll(label, "\\n", "\n")
+	label = strings.TrimSuffix(label, "\n")
 	label = strings.ReplaceAll(label, "-[", "{")
 	label = strings.ReplaceAll(label, "]-", "}")
 	return label
@@ -333,6 +365,13 @@ var SortColors = []string{
 	"#00688b", // DeepSkyBlue4
 	"#ff6a6a", // IndianRed1
 	"#8b1a1a", // maroon4
+	"#9a32cd", // DarkOrchid3
+	"#ff7f24", // chocolate1
+	"#4876ff", // RoyalBlue1
+	"#8b2500", // OrangeRed4
+	"#00ee00", // green2
+	"#5d478b", // MediumPurple4
+	"#8b2323", // brown4
 }
 
 // -----------------------------------------------------------------------

@@ -106,6 +106,49 @@ async function showArgNodeExtendResult(app, result) {
   return true;
 }
 
+function showReturnedSource(app, result) {
+  if (!result || !result.source) return false;
+  if (typeof app.setEditorContent === 'function') {
+    app.setEditorContent(result.source);
+  }
+  if (result.lineno && typeof app.scrollEditorToLine === 'function') {
+    app.scrollEditorToLine(result.lineno);
+  }
+  if (app.controls && typeof app.controls.showInfo === 'function') {
+    app.controls.showInfo(
+      `Source: ${result.file || ''}${result.lineno ? ` line ${result.lineno}` : ''}`,
+      '',
+    );
+  }
+  return true;
+}
+
+async function showArgNodeTryConjectureResult(app, result) {
+  const message = (result && result.message) || 'Try conjecture complete';
+  showReturnedSource(app, result);
+  if (result && result.view === 'trace' && result.trace_arg) {
+    app.controls.setStatus(message, 'error');
+    if (typeof app.textDialog === 'function') {
+      const action = await app.textDialog('ivyweb', message, '', {
+        okLabel: 'View',
+        cancel: true,
+        primaryFirst: true,
+      });
+      if (action !== null) {
+        openTraceArgFromResult(app, result, { label: result.trace_label || 'Try conjecture trace' });
+      }
+      return true;
+    }
+    openTraceArgFromResult(app, result, { label: result.trace_label || 'Try conjecture trace' });
+    return true;
+  }
+  if (result && result.view === 'message' && typeof app.okDialog === 'function') {
+    await app.okDialog('ivyweb', message);
+  }
+  app.controls.setStatus(message, 'success');
+  return true;
+}
+
 export async function executeArgNodeAction(app, nodeData, action, sheetId) {
   const targetSheetId = sheetId || app.activeSheetId || 'sheet-1';
   if (app.isVisualOnlySheet(targetSheetId)) {
@@ -138,6 +181,10 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
     }
     if (actionName === 'bmc') {
       await showArgNodeBmcResult(app, result);
+      return result;
+    }
+    if (actionName === 'try_conjecture') {
+      await showArgNodeTryConjectureResult(app, result);
       return result;
     }
     if (actionName === 'find_extension' || actionName === 'extend') {
@@ -179,15 +226,8 @@ export async function executeArgEdgeAction(app, edgeData, actionName, sheetId) {
     if (result && result.arg) {
       applyArgSnapshot(app, targetSheetId, result.arg);
     }
-    if (result && result.source && actionName === 'view_source') {
-      app.setEditorContent(result.source);
-      if (result.lineno) {
-        app.scrollEditorToLine(result.lineno);
-      }
-      app.controls.showInfo(
-        `Source: ${result.file || ''}${result.lineno ? ` line ${result.lineno}` : ''}`,
-        '',
-      );
+    if (actionName === 'view_source') {
+      showReturnedSource(app, result);
     }
     app.controls.setStatus(`Done: ${actionName}`, 'success');
     return result;

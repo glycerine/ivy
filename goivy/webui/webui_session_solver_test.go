@@ -91,6 +91,66 @@ func TestSolverPDRStepNoModule(t *testing.T) {
 	}
 }
 
+func TestRefineWithInterpolantPDRAddsPredicate(t *testing.T) {
+	s := loadTestSession(t)
+	drainEvents(s)
+	s.AGUI.SetMode(ModePDR)
+	before := len(s.CompiledModule.AbstractionPredicates)
+
+	result, err := s.ExecuteAction("refine_with_interpolant", map[string]interface{}{
+		"sheet_id":     "sheet-1",
+		"interpolant": "link(X,Y) -> ~semaphore(Y)",
+	})
+	if err != nil {
+		t.Fatalf("refine_with_interpolant: %v", err)
+	}
+	if got := len(s.CompiledModule.AbstractionPredicates); got != before+1 {
+		t.Fatalf("abstraction predicates = %d, want %d", got, before+1)
+	}
+	if result["refinement_kind"] != "predicate" {
+		t.Fatalf("refinement_kind = %#v, want predicate", result["refinement_kind"])
+	}
+	if result["message"] == "" {
+		t.Fatalf("result missing message: %#v", result)
+	}
+}
+
+func TestRefineWithInterpolantNonPDRAddsConceptSpaceAndGraphConcept(t *testing.T) {
+	s := loadTestSession(t)
+	drainEvents(s)
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+	if _, err := s.AGUI.ViewState(0, "", false); err != nil {
+		t.Fatalf("ViewState: %v", err)
+	}
+	s.AGUI.SetMode(ModeInduction)
+	before := len(s.CompiledModule.ConceptSpaces)
+
+	result, err := s.ExecuteAction("refine_with_interpolant", map[string]interface{}{
+		"sheet_id":     "sheet-1",
+		"interpolant": "link(X,Y) -> ~semaphore(Y)",
+	})
+	if err != nil {
+		t.Fatalf("refine_with_interpolant: %v", err)
+	}
+	if got := len(s.CompiledModule.ConceptSpaces); got != before+1 {
+		t.Fatalf("concept spaces = %d, want %d", got, before+1)
+	}
+	if result["refinement_kind"] != "concept" {
+		t.Fatalf("refinement_kind = %#v, want concept", result["refinement_kind"])
+	}
+	conceptName, _ := result["concept_name"].(string)
+	if conceptName == "" {
+		t.Fatalf("missing concept_name in result: %#v", result)
+	}
+	if _, ok := result["concept"].(map[string]interface{}); !ok {
+		t.Fatalf("missing concept payload: %#v", result["concept"])
+	}
+	if _, ok := s.AGUI.CurrentConceptGraph.G().ConceptSess.Domain.Concepts[conceptName]; !ok {
+		t.Fatalf("new concept %q not present in current concept graph domain", conceptName)
+	}
+}
+
 // --- Step 2: Concrete ---
 
 func TestSolverConcrete(t *testing.T) {

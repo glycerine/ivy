@@ -617,10 +617,15 @@ func (w *GraphWidget) GetActiveFactExprs() []goivy.Expr {
 	defer w.mu.Unlock()
 	texts := w.syncConstraintSelectionLocked(exprs)
 	active := make([]goivy.Expr, 0, len(exprs))
+	anySelected := false
 	for i, expr := range exprs {
 		if i < len(texts) && i < len(w.SelectedConstraints) && w.SelectedConstraints[i] {
+			anySelected = true
 			active = append(active, expr)
 		}
+	}
+	if !anySelected && len(exprs) > 0 {
+		return exprs
 	}
 	return active
 }

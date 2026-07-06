@@ -122,4 +122,25 @@ describe('IvyRuntime context menus', () => {
       'Delete',
     ]);
   });
+
+  it('executes a single <> ARG node action directly without showing a menu', () => {
+    installGraphContainer('arg-graph');
+    const runtime = makeRuntime('reachability');
+    runtime.sheets = { 'sheet-1': { argGraph: { containerId: 'arg-graph' } } };
+    runtime.onArgNodeClick = vi.fn();
+    runtime.executeArgNodeAction = vi.fn();
+
+    runtime.onArgNodeRightClick({
+      id: 'state_0',
+      obj: 'state_0',
+      actions: [{ label: '<>', action: 'view_state' }],
+    }, { x: 1, y: 2 }, 'sheet-1');
+
+    expect(runtime.onArgNodeClick).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'state_0', obj: 'state_0' }),
+      'sheet-1',
+    );
+    expect(runtime.executeArgNodeAction).not.toHaveBeenCalled();
+    expect(runtime.controls.showContextMenu).not.toHaveBeenCalled();
+  });
 });

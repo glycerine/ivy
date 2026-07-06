@@ -135,7 +135,7 @@ TODO: make closed-node and extension-success UX match the inventory. Tests shoul
 
 Done 2026-07-06: Added a Python-shaped Extend result path. Closed nodes now return a non-error payload with `closed=true`, `result=closed`, and the explicit `State N is closed.` message that the frontend shows through an `ivyweb` OK dialog. Successful Extend now evaluates the chosen state equation, adds the resulting ARG state with action provenance, switches the concept graph to the new state, and returns both ARG and concept payloads. Added red/green Go tests for closed-node payloads and successful state/concept updates, plus a frontend test for the closed-node dialog. Full `make test-web` and `make test` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
 
-[ ] ### 20. Try-Conjecture Source Browsing And Result Views Are Partial
+[x] ### 20. Try-Conjecture Source Browsing And Result Views Are Partial
 
 Inventory refs: PLAN383 item 57; PLAN378 sections 16.1 through 16.4.
 
@@ -143,7 +143,9 @@ The web UI prompts for conjecture choices and calls the backend, but the Python 
 
 TODO: complete the mode-specific try-conjecture flow, including source browsing and resulting concept/trace graph presentation. Tests should try a conjecture in bounded, induction, and PDR modes and assert the expected sheet/dialog/source behavior for each mode.
 
-[ ] ### 21. Interpolant Refinement Workflow Is Missing
+Done 2026-07-06: Completed the mode-specific Try conjecture workflow. The backend now resolves dialog-returned pretty conjectures back to module formulas, returns source filename/line/content for browsing, opens PDR conjectures as concept graphs with dual conjecture constraints, and returns bounded/induction result views as either unreachable message payloads or registered trace ARG sheets with explicit `reachable` status. The frontend now browses returned source, applies returned concept graphs, shows unreachable results in an `ivyweb` dialog, and opens trace-result sheets through a Python-style View dialog. Added focused red/green Go coverage for PDR concept/source behavior and bounded/induction result views, plus frontend coverage for concept, message, and trace try-conjecture results.
+
+[x] ### 21. Interpolant Refinement Workflow Is Missing
 
 Inventory refs: PLAN378 sections 17.1 through 17.3.
 
@@ -151,7 +153,9 @@ Python supports refinement with interpolants, including a vacuous-pre-state mess
 
 TODO: port the interpolant/refinement command path. Tests should trigger a refinement case, accept an interpolant, and verify the new predicate appears in the concept relation controls and graph.
 
-[ ] ### 23. Direct Context-Popup Shortcut For Single `<>` Action Is Not Preserved
+Done 2026-07-06: Added an explicit interpolant refinement workflow. `pdr_step` now returns a Python-shaped refinement payload (`refinement_action`, `refinement_kind`, `refinement_message`, and interpolant text) when reverse produces an interpolant. The browser shows a text dialog with a `Refine` action and, when accepted, calls `refine_with_interpolant`. The backend action parses the interpolant in the compiled module context, adds PDR refinements to `AbstractionPredicates`, and adds non-PDR refinements as concept spaces plus a visible current-graph concept. Added red/green Go tests for PDR predicate refinement and non-PDR concept-space/graph-domain refinement, plus frontend coverage for accepting the Refine dialog from PDR step.
+
+[x] ### 23. Direct Context-Popup Shortcut For Single `<>` Action Is Not Preserved
 
 Inventory refs: PLAN383 item 105; PLAN378 section 9.2.
 
@@ -159,9 +163,11 @@ The web UI handles ARG left-click as "view state", which covers the main user ef
 
 TODO: decide whether the shortcut matters in the web context-menu implementation. If it matters, test a one-action context list and verify the action executes directly without rendering a redundant popup.
 
+Done 2026-07-06: Preserved the Python `TkCyCanvas.make_popup` direct-action shortcut for web context actions. When a server-provided ARG node action list contains exactly one `<>` action, the runtime now dispatches it immediately instead of rendering a context menu; `view_state` routes through the same path as the normal ARG left-click state view. Added focused red/green frontend coverage asserting the action runs directly and no redundant menu is shown.
+
 ## P1: Graph Rendering Fidelity
 
-[ ] ### 25. Cluster/Subgraph Box Rendering Is Missing
+[x] ### 25. Cluster/Subgraph Box Rendering Is Missing
 
 Inventory refs: PLAN378 sections 8.13, 26.4, and 104.
 
@@ -169,7 +175,9 @@ The Python canvas renderer draws cluster/subgraph rectangles when graph elements
 
 TODO: either render cluster/subgraph boxes in Cytoscape or record them as intentionally omitted. Tests should load a graph with subgraph/cluster metadata and assert the web graph displays the same grouping affordance.
 
-[ ] ### 26. Back Edge Reversal And Pending Edge Constraints Are Missing
+Done: Go concept rendering now emits Python-compatible `subgraphs` shape elements for visible clusters, and the web Cytoscape runtime translates those shape records into compound `subgraph_box` parent nodes so grouped concepts display with cluster boxes. Covered by focused Go renderer tests and a frontend graph runtime test.
+
+[x] ### 26. Back Edge Reversal And Pending Edge Constraints Are Missing
 
 Inventory refs: PLAN378 sections 26.3 and 26.6.
 
@@ -177,7 +185,9 @@ Python graph rendering handles DOT-specific back edge reversal and pending edge 
 
 TODO: identify whether Ivy ARG/concept graphs still emit these edge cases in the Go port. Tests should construct a graph containing a back edge and pending edge constraint and verify the displayed direction and placement match the intended semantics.
 
-[ ] ### 27. Edge Label Post-Processing Is Incomplete
+Done: Concept graph rendering now annotates layout-only back-edge reversal while preserving the visible source/target, and `pending` edges are marked `layout_constraint:false`. The frontend preserves those fields, adds hidden `layout_only` edges for Dagre ranking, excludes visible ignored edges from the layout collection, and keeps pending edges visible but unconstrained. Covered by focused Go renderer, frontend runtime, and typed metadata tests.
+
+[x] ### 27. Edge Label Post-Processing Is Incomplete
 
 Inventory refs: PLAN383 item 44; PLAN378 section 8.3.
 
@@ -185,7 +195,9 @@ The Go renderer restores brace markers in ARG labels, and there is regression co
 
 TODO: port the full label transformation rules from Python graph rendering. Tests should include labels with escaped braces, newline encodings, and action labels that combine transition and action names.
 
-[ ] ### 28. ARG Green/Black Outline And Concept Grey Background Styling Diverge
+Done: Web ARG rendering now restores Python/DOT label encodings by converting `-[`/`]-` back to braces, decoding `\l` and `\n` line markers to real newlines, and removing the terminal left-justify marker added by Python graph rendering. Covered by an ARG renderer regression that includes brace markers, newline encodings, and a `trans -> action` label.
+
+[x] ### 28. ARG Green/Black Outline And Concept Grey Background Styling Diverge
 
 Inventory refs: PLAN378 sections 32.1 through 32.18; PLAN383 items 40 through 42 and 97.
 
@@ -193,9 +205,11 @@ The web styles intentionally use a dark UI and white concept node backgrounds, w
 
 TODO: decide which visual styling details are semantic test requirements. At minimum, tests should cover bottom states, safe states, marked states, cover edges, join edges, concept cardinality, edge truth classes, total/functional/injective/surjective arrows, selection overlays, and node text wrapping.
 
+Done: The semantic contract is now selector/class affordances rather than exact palette parity: bottom/safe/marked ARG states, cover/join/action edges, concept cardinality borders, edge truth line styles, total/functional/injective/surjective arrows, selection overlays, and text wrapping are covered in frontend style tests. The web palette remains intentionally dark/white, but unknown concept nodes now match Python/Go semantics with no cardinality border.
+
 ## P1: Concept Graph And Domain Workflows
 
-[ ] ### 29. Relation Bulk-Toggling By Relation And Class Is Partial
+[x] ### 29. Relation Bulk-Toggling By Relation And Class Is Partial
 
 Inventory refs: PLAN383 items 39 and 85; PLAN378 sections 19.1 through 19.7.
 
@@ -203,13 +217,17 @@ The web UI renders per-relation checkboxes for `+`, `?`, `-`, and `T` and syncs 
 
 TODO: add bulk toggle controls or document their exclusion. Tests should toggle one class for all relations, one relation across all classes, and a single cell, then verify backend-owned toggle state and graph visibility remain consistent.
 
-[ ] ### 30. Relation Color Assignment Is Partial
+Done: Relation-name buttons now have regression coverage for toggling every edge display class for a relation, class headers have coverage for toggling one class across all relation rows, and single-cell toggles have coverage for graph visibility. The frontend optimistic model update now mirrors backend `set_checkbox` normalization by updating both full and bare relation names, and by mapping `+`, `?`, and `-` edge toggles to the corresponding unary node-label display classes, so rendered graph visibility stays consistent before the backend refresh completes.
+
+[x] ### 30. Relation Color Assignment Is Partial
 
 Inventory refs: PLAN383 item 40; PLAN378 sections 19.8 and 32.18.
 
 The Go concept renderer computes a fixed palette for sort/node border colors, but relation controls and relation edge line colors do not fully mirror Python's 27-color relation palette behavior. The current Cytoscape frontend also overrides some backend color assumptions.
 
 TODO: decide whether Python's relation color cycling is required for readability and tests. If required, carry relation color metadata through the render payload and test that controls, edges, and labels use stable colors across graph rebuilds.
+
+Done: Python-compatible relation color cycling is now part of the web contract. The shared palette has all 27 Python `line_colors`, concept graph rendering assigns deterministic relation colors from sorted relation ids, edge elements carry `line_color` metadata, and concept payloads expose `relation_colors` for controls. The frontend model preserves relation color data, state checkbox relation buttons use the same color metadata, and the graph runtime applies `line_color` to Cytoscape edge lines and arrows. Tests cover palette parity, stable edge metadata across rebuilds, typed metadata preservation, row button styling, and runtime edge styling.
 
 [ ] ### 31. Constraint Text/Facts UI Is Not The Same As Python's Selectable Text Area
 

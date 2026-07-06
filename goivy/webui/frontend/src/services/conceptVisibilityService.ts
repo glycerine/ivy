@@ -188,6 +188,11 @@ export function renderStateCheckboxes(app, rows, {
     relationButton.type = 'button';
     relationButton.textContent = row.name;
     relationButton.setAttribute('data-state-toggle-relation', row.name);
+    if (row.color) {
+      relationButton.style.setProperty('--ivy-relation-color', row.color);
+      relationButton.style.color = row.color;
+      relationButton.style.borderColor = row.color;
+    }
     relationButton.addEventListener('click', () => {
       const shouldCheck = EDGE_DISPLAY_CLASSES.some((displayClass) => !(row.checked && row.checked[displayClass]));
       onRelationToggle(app, row.name, shouldCheck);

@@ -29,6 +29,28 @@ describe('detailsService', () => {
     expect(fact.classList.contains('inactive')).toBe(false);
   });
 
+  it('applies returned concept snapshots after fact selection changes', async () => {
+    document.body.innerHTML = '<div id="info-content"></div>';
+    const concept = { sheet_id: 'sheet-7', elements: [], facts: [{ index: 0, text: 'link(X,Y)', selected: true }] };
+    const app = {
+      api: {
+        executeAction: vi.fn().mockResolvedValue({ concept }),
+      },
+      controls: {
+        setStatus: vi.fn(),
+      },
+      activeSheetId: 'sheet-1',
+      applyConceptSnapshot: vi.fn(),
+    };
+
+    populateConstraintFacts(app, { facts: [{ index: 0, text: 'link(X,Y)', selected: false }] }, { doc: document });
+    document.querySelector('[data-constraint-fact="0"]').click();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(app.applyConceptSnapshot).toHaveBeenCalledWith('sheet-7', concept);
+  });
+
   it('does not erase selected node details when a concept refresh has no facts', () => {
     document.body.innerHTML = '<div id="info-content" data-ivy-details-kind="selection">State 0\nInitial state</div>';
     const app = {

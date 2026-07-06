@@ -4,6 +4,7 @@ package webui
 
 import (
 	"encoding/json"
+	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
 	"strings"
 	"testing"
@@ -56,6 +57,32 @@ func TestAddEdge(t *testing.T) {
 	}
 	if edge.Data["target"] != g.NodeID["b"] {
 		t.Errorf("target = %v", edge.Data["target"])
+	}
+}
+
+func TestAddShape(t *testing.T) {
+	g := NewWebUICyElements()
+	el := g.AddShape("cluster_client", "", []string{"subgraphs"}, true, "rectangle", nil)
+	if len(g.Elements) != 1 {
+		t.Fatalf("len = %d", len(g.Elements))
+	}
+	if el.Group != "shapes" {
+		t.Errorf("group = %q", el.Group)
+	}
+	if el.Data["id"] != "s0" {
+		t.Errorf("id = %v, want s0", el.Data["id"])
+	}
+	if el.Data["obj"] != "cluster_client" {
+		t.Errorf("obj = %v", el.Data["obj"])
+	}
+	if el.Data["shape"] != "rectangle" {
+		t.Errorf("shape = %v", el.Data["shape"])
+	}
+	if el.Classes != "subgraphs" {
+		t.Errorf("classes = %q", el.Classes)
+	}
+	if !el.Locked {
+		t.Error("shape should be locked")
 	}
 }
 
@@ -121,6 +148,21 @@ func TestCyElementsJSONEdgeFields(t *testing.T) {
 		if !strings.Contains(s, want) {
 			t.Errorf("missing %s in %s", want, s)
 		}
+	}
+}
+
+func TestRelationColorPaletteMatchesPython(t *testing.T) {
+	if got, want := len(goivy.SortColors), 27; got != want {
+		t.Fatalf("len(SortColors) = %d, want %d", got, want)
+	}
+	if got, want := goivy.SortColors[0], "#000000"; got != want {
+		t.Fatalf("SortColors[0] = %q, want %q", got, want)
+	}
+	if got, want := goivy.SortColors[20], "#9a32cd"; got != want {
+		t.Fatalf("SortColors[20] = %q, want %q", got, want)
+	}
+	if got, want := goivy.SortColors[26], "#8b2323"; got != want {
+		t.Fatalf("SortColors[26] = %q, want %q", got, want)
 	}
 }
 
@@ -219,6 +261,27 @@ func TestRenderARGTransitionLabelUnescapesBraceMarkers(t *testing.T) {
 	}
 	if got := edge.Data["short_info"]; got != "choice {assume p}" {
 		t.Fatalf("edge short_info = %q, want %q", got, "choice {assume p}")
+	}
+}
+
+func TestRenderARGTransitionLabelRestoresDotNewlinesAndActionLabel(t *testing.T) {
+	ag := &WebUIAnalysisGraphState{
+		States: []WebUIARGNode{
+			{ID: 0, Label: "0"},
+			{ID: 1, Label: "1"},
+		},
+		Transitions: []WebUIARGTransition{
+			{SourceID: 0, TargetID: 1, Label: "choice -[assume p]-\\lupdate -[q]-\\ntrans -> action\\l"},
+		},
+	}
+	g := RenderWebUIARG(ag)
+	edge := g.Elements[2]
+	want := "choice {assume p}\nupdate {q}\ntrans -> action"
+	if got := edge.Data["label"]; got != want {
+		t.Fatalf("edge label = %q, want %q", got, want)
+	}
+	if got := edge.Data["short_info"]; got != want {
+		t.Fatalf("edge short_info = %q, want %q", got, want)
 	}
 }
 
@@ -375,6 +438,54 @@ func TestRenderConceptGraphEdgeVisibility(t *testing.T) {
 	}
 }
 
+func TestRenderConceptGraphAnnotatesStableRelationColors(t *testing.T) {
+	cs := NewConceptSession()
+	cs.Domain.Concepts["Client"] = &Concept{Name: "Client", Formula: "client", Sorts: []string{"Client"}, Arity: 1}
+	cs.Domain.Concepts["Server"] = &Concept{Name: "Server", Formula: "server", Sorts: []string{"Server"}, Arity: 1}
+	cs.Domain.Nodes = []string{"Client", "Server"}
+	cs.Domain.Concepts["link"] = &Concept{Name: "link", Variables: []string{"X", "Y"}, Formula: "link(X,Y)", Sorts: []string{"Client", "Server"}, Arity: 2}
+	cs.Domain.Concepts["route"] = &Concept{Name: "route", Variables: []string{"X", "Y"}, Formula: "route(X,Y)", Sorts: []string{"Client", "Server"}, Arity: 2}
+	cs.Domain.Edges = []string{"route", "link"}
+
+	checks := NewDisplayCheckboxes()
+	checks.SetEdgeCheckbox("link", EdgeDisplayUnknown, true)
+	checks.SetEdgeCheckbox("route", EdgeDisplayUnknown, true)
+
+	g1 := RenderConceptGraph(cs, checks)
+	g2 := RenderConceptGraph(cs, checks)
+	colors1 := renderedEdgeColors(g1)
+	colors2 := renderedEdgeColors(g2)
+
+	if got, want := colors1["link"], goivy.SortColors[0]; got != want {
+		t.Fatalf("link line_color = %q, want %q", got, want)
+	}
+	if got, want := colors1["route"], goivy.SortColors[1]; got != want {
+		t.Fatalf("route line_color = %q, want %q", got, want)
+	}
+	if colors1["link"] == colors1["route"] {
+		t.Fatalf("relation colors should differ, got %q", colors1["link"])
+	}
+	if colors2["link"] != colors1["link"] || colors2["route"] != colors1["route"] {
+		t.Fatalf("relation colors changed across rebuilds: first=%v second=%v", colors1, colors2)
+	}
+}
+
+func renderedEdgeColors(g *WebUICyElements) map[string]string {
+	out := make(map[string]string)
+	if g == nil {
+		return out
+	}
+	for _, el := range g.Elements {
+		if el.Group != "edges" {
+			continue
+		}
+		obj, _ := el.Data["obj"].(string)
+		color, _ := el.Data["line_color"].(string)
+		out[obj] = color
+	}
+	return out
+}
+
 func TestRenderConceptGraphUsesTransitiveOrderingAndReduction(t *testing.T) {
 	cs := NewConceptSession()
 	cs.Domain.Nodes = []string{"C", "B", "A"}
@@ -485,6 +596,75 @@ func TestRenderConceptGraphUsesConcreteEdgeTuples(t *testing.T) {
 		if label != "client" {
 			t.Fatalf("client node label = %q, want sort label without witness id", label)
 		}
+	}
+}
+
+func TestRenderConceptGraphEmitsSubgraphBoxesForClusters(t *testing.T) {
+	cs := NewConceptSession()
+	cs.Domain.Nodes = []string{"1:client", "0:server", "0:client"}
+	cs.Domain.Concepts["0:client"] = &Concept{Name: "0:client", Formula: "X = 0:client", Sorts: []string{"client"}, Arity: 1}
+	cs.Domain.Concepts["1:client"] = &Concept{Name: "1:client", Formula: "X = 1:client", Sorts: []string{"client"}, Arity: 1}
+	cs.Domain.Concepts["0:server"] = &Concept{Name: "0:server", Formula: "X = 0:server", Sorts: []string{"server"}, Arity: 1}
+
+	cy := RenderConceptGraph(cs, nil)
+	boxes := map[string]WebUICyElement{}
+	for _, el := range cy.Elements {
+		if el.Group == "shapes" && strings.Contains(el.Classes, "subgraphs") {
+			cluster, _ := el.Data["cluster"].(string)
+			boxes[cluster] = el
+		}
+	}
+
+	if len(boxes) != 2 {
+		t.Fatalf("subgraph boxes = %d, want 2: %#v", len(boxes), boxes)
+	}
+	client := boxes["client"]
+	if client.Data["shape"] != "rectangle" {
+		t.Fatalf("client box shape = %v, want rectangle", client.Data["shape"])
+	}
+	nodes, ok := client.Data["nodes"].([]string)
+	if !ok {
+		t.Fatalf("client box nodes = %T, want []string", client.Data["nodes"])
+	}
+	if strings.Join(nodes, ",") != "0:client,1:client" {
+		t.Fatalf("client box nodes = %v, want sorted client members", nodes)
+	}
+	if boxes["server"].Data["nodes"].([]string)[0] != "0:server" {
+		t.Fatalf("server box nodes = %v", boxes["server"].Data["nodes"])
+	}
+}
+
+func TestRenderConceptGraphAnnotatesBackEdgesAndPendingConstraints(t *testing.T) {
+	cs := NewConceptSession()
+	cs.Domain.Nodes = []string{"B", "A"}
+	cs.Domain.Concepts["A"] = &Concept{Name: "A", Formula: "A", Sorts: []string{"A"}, Arity: 1}
+	cs.Domain.Concepts["B"] = &Concept{Name: "B", Formula: "B", Sorts: []string{"B"}, Arity: 1}
+	cs.Domain.Edges = []string{"rel", "pending"}
+	cs.Domain.Concepts["rel"] = &Concept{Name: "rel", Formula: "rel(X,Y)", Sorts: []string{"B", "A"}, Arity: 2}
+	cs.Domain.Concepts["pending"] = &Concept{Name: "pending", Formula: "pending(X,Y)", Sorts: []string{"A", "B"}, Arity: 2}
+
+	cy := RenderConceptGraph(cs, nil)
+	edges := map[string]WebUICyElement{}
+	for _, el := range cy.Elements {
+		if el.Group == "edges" {
+			edges[el.Data["obj"].(string)] = el
+		}
+	}
+
+	rel := edges["rel"]
+	if rel.Data["source_obj"] != "B" || rel.Data["target_obj"] != "A" {
+		t.Fatalf("rel displayed as %v->%v, want B->A", rel.Data["source_obj"], rel.Data["target_obj"])
+	}
+	if rel.Data["layout_reversed"] != true {
+		t.Fatalf("rel layout_reversed = %v, want true", rel.Data["layout_reversed"])
+	}
+	if rel.Data["layout_source"] != rel.Data["target"] || rel.Data["layout_target"] != rel.Data["source"] {
+		t.Fatalf("rel layout endpoints = %v->%v, want target->source", rel.Data["layout_source"], rel.Data["layout_target"])
+	}
+
+	pending := edges["pending"]
+	if pending.Data["layout_constraint"] != false {
+		t.Fatalf("pending layout_constraint = %v, want false", pending.Data["layout_constraint"])
 	}
 }
 

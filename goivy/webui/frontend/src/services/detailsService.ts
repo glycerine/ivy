@@ -42,10 +42,14 @@ export function populateConstraintFacts(app, conceptData, {
       row.classList.toggle('inactive', !selected);
       row.setAttribute('aria-pressed', selected ? 'true' : 'false');
       try {
-        await app.api.executeAction('set_fact_selection', {
+        const result = await app.api.executeAction('set_fact_selection', {
           index,
           selected,
         });
+        const concept = result && result.concept;
+        if (concept && typeof app.applyConceptSnapshot === 'function') {
+          app.applyConceptSnapshot(concept.sheet_id || concept.sheetId || app.activeSheetId || 'sheet-1', concept);
+        }
       } catch (err) {
         row.classList.toggle('inactive', selected);
         row.setAttribute('aria-pressed', selected ? 'false' : 'true');

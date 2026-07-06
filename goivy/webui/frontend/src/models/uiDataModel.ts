@@ -64,6 +64,15 @@ function stringArrayMap(value: unknown): Record<string, string[]> {
   return out;
 }
 
+function stringMap(value: unknown): Record<string, string> {
+  const obj = rawRecord(value);
+  const out: Record<string, string> = {};
+  for (const key of Object.keys(obj)) {
+    out[key] = stringValue(obj[key]);
+  }
+  return out;
+}
+
 function boolMap(value: unknown): Record<string, boolean> {
   const obj = rawRecord(value);
   const out: Record<string, boolean> = {};
@@ -83,6 +92,10 @@ function optionalString(value: unknown): string | undefined {
 
 function optionalNumber(value: unknown): number | undefined {
   return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+}
+
+function optionalBoolean(value: unknown): boolean | undefined {
+  return typeof value === 'boolean' ? value : undefined;
 }
 
 function cloneJsonish(value: unknown): unknown {
@@ -357,8 +370,16 @@ export class CyElementData {
   readonly height: number | undefined;
   readonly shape: string;
   readonly borderColor: string;
+  readonly lineColor: string;
   readonly isSafe: boolean;
   readonly isMarked: boolean;
+  readonly layoutSource: string;
+  readonly layoutTarget: string;
+  readonly layoutSourceObj: string;
+  readonly layoutTargetObj: string;
+  readonly layoutReversed: boolean;
+  readonly layoutConstraint: boolean | undefined;
+  readonly layoutFor: string;
 
   constructor(raw: unknown = {}) {
     this.id = stringValue(pick(raw, 'id', 'ID'));
@@ -378,8 +399,16 @@ export class CyElementData {
     this.height = optionalNumber(pick(raw, 'height', 'Height'));
     this.shape = stringValue(pick(raw, 'shape', 'Shape'));
     this.borderColor = stringValue(pick(raw, 'border_color', 'borderColor', 'BorderColor'));
+    this.lineColor = stringValue(pick(raw, 'line_color', 'lineColor', 'LineColor', 'color', 'Color'));
     this.isSafe = boolValue(pick(raw, 'is_safe', 'isSafe', 'IsSafe'));
     this.isMarked = boolValue(pick(raw, 'is_marked', 'isMarked', 'IsMarked'));
+    this.layoutSource = stringValue(pick(raw, 'layout_source', 'layoutSource', 'LayoutSource'));
+    this.layoutTarget = stringValue(pick(raw, 'layout_target', 'layoutTarget', 'LayoutTarget'));
+    this.layoutSourceObj = stringValue(pick(raw, 'layout_source_obj', 'layoutSourceObj', 'LayoutSourceObj'));
+    this.layoutTargetObj = stringValue(pick(raw, 'layout_target_obj', 'layoutTargetObj', 'LayoutTargetObj'));
+    this.layoutReversed = boolValue(pick(raw, 'layout_reversed', 'layoutReversed', 'LayoutReversed'));
+    this.layoutConstraint = optionalBoolean(pick(raw, 'layout_constraint', 'layoutConstraint', 'LayoutConstraint'));
+    this.layoutFor = stringValue(pick(raw, 'layout_for', 'layoutFor', 'LayoutFor'));
   }
 
   toCytoscapeData(): RawRecord {
@@ -401,8 +430,16 @@ export class CyElementData {
     if (this.height !== undefined) out.height = this.height;
     if (this.shape) out.shape = this.shape;
     if (this.borderColor) out.border_color = this.borderColor;
+    if (this.lineColor) out.line_color = this.lineColor;
     if (this.isSafe) out.is_safe = true;
     if (this.isMarked) out.is_marked = true;
+    if (this.layoutSource) out.layout_source = this.layoutSource;
+    if (this.layoutTarget) out.layout_target = this.layoutTarget;
+    if (this.layoutSourceObj) out.layout_source_obj = this.layoutSourceObj;
+    if (this.layoutTargetObj) out.layout_target_obj = this.layoutTargetObj;
+    if (this.layoutReversed) out.layout_reversed = true;
+    if (this.layoutConstraint !== undefined) out.layout_constraint = this.layoutConstraint;
+    if (this.layoutFor) out.layout_for = this.layoutFor;
     return out;
   }
 }
@@ -785,6 +822,7 @@ export class ConceptSnapshot extends RawBackedModel<unknown> {
   readonly edges: string[];
   readonly nodeLabels: string[];
   readonly relations: string[];
+  readonly relationColors: Record<string, string>;
   readonly edgeSorts: Record<string, string[]>;
   readonly labelSorts: Record<string, string>;
   readonly abstractValue: Record<string, boolean>;
@@ -806,6 +844,7 @@ export class ConceptSnapshot extends RawBackedModel<unknown> {
     this.edges = stringArray(pick(raw, 'edges', 'Edges'));
     this.nodeLabels = stringArray(pick(raw, 'node_labels', 'nodeLabels', 'NodeLabels'));
     this.relations = stringArray(pick(raw, 'relations', 'Relations'));
+    this.relationColors = stringMap(pick(raw, 'relation_colors', 'relationColors', 'RelationColors'));
     this.edgeSorts = stringArrayMap(pick(raw, 'edge_sorts', 'edgeSorts', 'EdgeSorts'));
     const labelSortsRaw = rawRecord(pick(raw, 'label_sorts', 'labelSorts', 'LabelSorts'));
     this.labelSorts = {};

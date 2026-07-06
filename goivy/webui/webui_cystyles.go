@@ -34,6 +34,20 @@ func ConceptStyle() []CyStyleEntry {
 			Style:    map[string]string{"display": "none"},
 		},
 		{
+			Selector: "node.subgraph_box",
+			Style: map[string]string{
+				"content":            "data(label)",
+				"shape":              "roundrectangle",
+				"background-opacity": "0",
+				"border-width":       "2px",
+				"border-style":       "dashed",
+				"border-color":       "#777",
+				"padding":            "18px",
+				"events":             "no",
+				"z-index":            "0",
+			},
+		},
+		{
 			Selector: "node.exactly_one",
 			Style:    map[string]string{"border-width": "4px", "border-style": "solid"},
 		},
@@ -76,6 +90,10 @@ func ConceptStyle() []CyStyleEntry {
 		{
 			Selector: "edge.edge_unknown",
 			Style:    map[string]string{"width": "4px", "line-style": "dotted"},
+		},
+		{
+			Selector: "edge.layout_only",
+			Style:    map[string]string{"display": "none"},
 		},
 		{
 			Selector: "edge.total",
@@ -156,6 +174,10 @@ func ARGStyle() []CyStyleEntry {
 		{
 			Selector: "edge.transition_action",
 			Style:    map[string]string{"target-arrow-shape": "triangle"},
+		},
+		{
+			Selector: "edge.layout_only",
+			Style:    map[string]string{"display": "none"},
 		},
 		{
 			Selector: "edge.cover",

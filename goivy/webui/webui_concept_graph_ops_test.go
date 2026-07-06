@@ -133,10 +133,71 @@ func TestGraphWidgetActiveFactsDefaultAndSelection(t *testing.T) {
 		t.Fatalf("expected only second fact active after deselecting first, got %v", got)
 	}
 
+	if err := w.SetFactSelected(1, false); err != nil {
+		t.Fatalf("SetFactSelected second: %v", err)
+	}
+	if got := w.GetActiveFacts(); len(got) != 2 {
+		t.Fatalf("expected Python fallback to all facts when none are selected, got %d: %v", len(got), got)
+	}
+
 	facts = w.ConstraintFacts()
-	if facts[0].Selected || !facts[1].Selected {
+	if facts[0].Selected || facts[1].Selected {
 		t.Fatalf("constraint selection did not round-trip: %#v", facts)
 	}
+}
+
+func TestConceptGraphActionPayloadIncludesHighlightedFactSelections(t *testing.T) {
+	S := mkSort("node")
+	g := NewGraph([]string{"node"}, nil)
+	g.ConceptSess = NewConceptSession()
+	g.ConceptSess.Domain.Concepts["Client"] = &Concept{Name: "Client", Formula: "client", Sorts: []string{"Client"}, Arity: 1}
+	g.ConceptSess.Domain.Concepts["Server"] = &Concept{Name: "Server", Formula: "server", Sorts: []string{"Server"}, Arity: 1}
+	g.ConceptSess.Domain.Concepts["link"] = &Concept{Name: "link", Variables: []string{"X", "Y"}, Formula: "link(X,Y)", Sorts: []string{"Client", "Server"}, Arity: 2}
+	g.ConceptSess.Domain.Nodes = []string{"Client", "Server"}
+	g.ConceptSess.Domain.Edges = []string{"link"}
+	g.Checks = NewDisplayCheckboxes()
+	g.Checks.SetEdgeCheckbox("link", EdgeDisplayUnknown, true)
+	g.InteractiveSess = NewConceptInteractiveSession(
+		NewCDConceptDomain(nil, nil, nil), nil, nil, nil, nil, nil, nil, nil, false,
+	)
+	fact := mkEq(mkConst("a", S), mkConst("b", S))
+	g.SetFactsExpr([]goivy.Expr{fact})
+
+	w := NewGraphWidget(NewGraphStack(g))
+	w.FactElems = map[string][][]string{
+		fact.String(): {
+			{"Client"},
+			{"link", "Client", "Server"},
+		},
+	}
+	w.HighlightSelectedFacts()
+
+	payload := conceptGraphActionPayload(w)
+	elements, ok := payload["elements"].([]WebUICyElement)
+	if !ok {
+		t.Fatalf("payload elements wrong type: %#v", payload["elements"])
+	}
+	if !payloadHasClass(elements, "nodes", "Client", "selected_node") {
+		t.Fatalf("highlighted fact node was not marked selected: %#v", elements)
+	}
+	if !payloadHasClass(elements, "edges", "link", "selected_edge") {
+		t.Fatalf("highlighted fact edge was not marked selected: %#v", elements)
+	}
+}
+
+func payloadHasClass(elements []WebUICyElement, group, obj, className string) bool {
+	for _, el := range elements {
+		if el.Group != group {
+			continue
+		}
+		if got, _ := el.Data["obj"].(string); got != obj {
+			continue
+		}
+		if hasCyClass(el.Classes, className) {
+			return true
+		}
+	}
+	return false
 }
 
 func TestSetFactsExpr_Replaces(t *testing.T) {

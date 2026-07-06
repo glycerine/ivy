@@ -27,6 +27,12 @@ export interface UIDataChange {
 type Listener = (change: UIDataChange) => void;
 type RawRecord = Record<string, any>;
 
+const EDGE_TO_LABEL_CLASS: Record<string, string> = {
+  all_to_all: 'node_necessarily',
+  edge_unknown: 'node_maybe',
+  none_to_none: 'node_necessarily_not',
+};
+
 export interface ToggleUpdate {
   edge?: string;
   label?: string;
@@ -54,6 +60,22 @@ function checkboxMapToBooleans(map: Record<string, Record<string, { val: boolean
   return out;
 }
 
+function bareRelationName(name: string): string {
+  const idx = String(name || '').indexOf('(');
+  return idx >= 0 ? name.slice(0, idx) : String(name || '');
+}
+
+function toggleNames(name: string | undefined): string[] {
+  if (!name) return [];
+  const bare = bareRelationName(name);
+  return Array.from(new Set([name, bare].filter(Boolean)));
+}
+
+function setToggle(map: Record<string, Record<string, boolean>>, name: string, displayClass: string, value: boolean): void {
+  map[name] = map[name] || {};
+  map[name][displayClass] = value;
+}
+
 function conceptSnapshotWithToggles(snapshot: ConceptSnapshot, updates: ToggleUpdate[]): ConceptSnapshot {
   const edges = checkboxMapToBooleans(snapshot.displayCheckboxes.edgeDisplayCheckboxes);
   const labels = checkboxMapToBooleans(snapshot.displayCheckboxes.nodeLabelDisplayCheckboxes);
@@ -62,12 +84,20 @@ function conceptSnapshotWithToggles(snapshot: ConceptSnapshot, updates: ToggleUp
     const displayClass = update.display_class || update.displayClass;
     if (!displayClass) continue;
     if (update.edge) {
-      edges[update.edge] = edges[update.edge] || {};
-      edges[update.edge][displayClass] = !!update.value;
+      for (const name of toggleNames(update.edge)) {
+        setToggle(edges, name, displayClass, !!update.value);
+      }
+      const labelClass = EDGE_TO_LABEL_CLASS[displayClass];
+      if (labelClass) {
+        for (const name of toggleNames(update.edge)) {
+          setToggle(labels, name, labelClass, !!update.value);
+        }
+      }
     }
     if (update.label) {
-      labels[update.label] = labels[update.label] || {};
-      labels[update.label][displayClass] = !!update.value;
+      for (const name of toggleNames(update.label)) {
+        setToggle(labels, name, displayClass, !!update.value);
+      }
     }
   }
   const toggles = { edges, labels };

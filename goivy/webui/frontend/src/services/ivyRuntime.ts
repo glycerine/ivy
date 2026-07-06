@@ -2609,6 +2609,21 @@ class IvyRuntime {
         }
     }
 
+    _contextActionLabel(action) {
+        return action && (action.label || action[0] || action.name || '');
+    }
+
+    _contextActionId(action) {
+        return action && (action.action || action.id || action[0] || '');
+    }
+
+    _singleDirectContextAction(actions) {
+        if (!actions || !Array.isArray(actions) || actions.length !== 1) return null;
+        var action = actions[0];
+        if (this._contextActionLabel(action) !== '<>') return null;
+        return action;
+    }
+
      /**
      * Handle right-click on an ARG node: show context menu.
      * Actions match Python ivy_ui.py AnalysisGraphUI.get_node_actions().
@@ -2619,6 +2634,15 @@ class IvyRuntime {
         var sheet = this.sheets && this.sheets[sheetId];
         if (sheet && sheet.visualOnly) {
             this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
+            return;
+        }
+        var directAction = this._singleDirectContextAction(nodeData.actions);
+        if (directAction) {
+            if (this._contextActionId(directAction) === 'view_state') {
+                this.onArgNodeClick(nodeData, sheetId);
+            } else {
+                this.executeArgNodeAction(nodeData, directAction, sheetId);
+            }
             return;
         }
         var actions: any[] = [];
@@ -4824,11 +4848,36 @@ class IvyRuntime {
             } else {
                 await this.refreshConceptGraph();
             }
-            if (result && result.interpolant && typeof this.showTextDialog === 'function') {
+            var refinementResult = null;
+            if (result && result.interpolant && result.refinement_action && typeof this.textDialog === 'function') {
+                var acceptedInterpolant = await this.textDialog(
+                    'ivyweb',
+                    result.refinement_message || result.message || 'The pre-state is vacuous.',
+                    result.interpolant,
+                    { okLabel: 'Refine', cancel: true, primaryFirst: true },
+                );
+                if (acceptedInterpolant !== null) {
+                    refinementResult = await this.api.executeAction(result.refinement_action, {
+                        sheet_id: result.sheet_id || this.activeSheetId || 'sheet-1',
+                        interpolant: acceptedInterpolant || result.interpolant,
+                    });
+                    if (refinementResult && refinementResult.concept) {
+                        this.applyConceptSnapshot(
+                            refinementResult.concept.sheet_id || refinementResult.sheet_id || result.sheet_id || this.activeSheetId || 'sheet-1',
+                            refinementResult.concept,
+                        );
+                    }
+                }
+            } else if (result && result.interpolant && typeof this.showTextDialog === 'function') {
                 this.showTextDialog('ivyweb', result.message || 'The pre-state is vacuous.', result.interpolant);
             }
             if (result && result.type === 'vacuous' && typeof this.okDialog === 'function') {
                 await this.okDialog('ivyweb', result.message || 'The current state is vacuous.');
+            }
+            if (refinementResult) {
+                this.controls.setStatus((refinementResult && refinementResult.message) || 'Refinement applied.', 'success');
+                result.refinement_result = refinementResult;
+                return result;
             }
             var statusKind = (result && (
                 result.status === 'cannot_reverse' ||

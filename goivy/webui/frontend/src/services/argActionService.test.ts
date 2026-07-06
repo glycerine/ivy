@@ -77,6 +77,132 @@ describe('argActionService', () => {
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', { elements: ['concept'], positions: null });
   });
 
+  it('loads source and concept returned by ARG try-conjecture actions', async () => {
+    const app = {
+      activeSheetId: 'sheet-1',
+      isVisualOnlySheet: vi.fn(() => false),
+      prepareArgNodeActionArgs: (node, action, args) => args,
+      api: {
+        argNodeAction: vi.fn(async () => ({
+          view: 'concept',
+          message: 'Conjecture goal opened.',
+          source: 'ivy source',
+          lineno: 7,
+          file: 'm.ivy',
+          concept: { elements: ['concept'], positions: null },
+        })),
+      },
+      sheets: {},
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
+      },
+      controls: { setStatus: vi.fn(), showInfo: vi.fn() },
+      setEditorContent: vi.fn(),
+      scrollEditorToLine: vi.fn(),
+    };
+
+    const result = await executeArgNodeAction(
+      app,
+      { id: 'state_0' },
+      { id: 'try_conjecture', args: { conjecture: 'c' } },
+      'sheet-1',
+    );
+
+    expect(result?.view).toBe('concept');
+    expect(app.api.argNodeAction).toHaveBeenCalledWith('state_0', 'try_conjecture', {
+      sheet_id: 'sheet-1',
+      conjecture: 'c',
+    });
+    expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', { elements: ['concept'], positions: null });
+    expect(app.setEditorContent).toHaveBeenCalledWith('ivy source');
+    expect(app.scrollEditorToLine).toHaveBeenCalledWith(7);
+    expect(app.controls.showInfo).toHaveBeenCalledWith('Source: m.ivy line 7', '');
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('Conjecture goal opened.', 'success');
+  });
+
+  it('shows try-conjecture message views in an ivyweb dialog', async () => {
+    const app = {
+      activeSheetId: 'sheet-1',
+      isVisualOnlySheet: vi.fn(() => false),
+      prepareArgNodeActionArgs: (node, action, args) => args,
+      api: {
+        argNodeAction: vi.fn(async () => ({
+          view: 'message',
+          reachable: false,
+          message: 'The condition is unreachable along the given path.',
+          source: 'ivy source',
+          lineno: 3,
+          file: 'm.ivy',
+        })),
+      },
+      okDialog: vi.fn(),
+      controls: { setStatus: vi.fn(), showInfo: vi.fn() },
+      setEditorContent: vi.fn(),
+      scrollEditorToLine: vi.fn(),
+    };
+
+    await executeArgNodeAction(
+      app,
+      { id: 'state_0' },
+      { id: 'try_conjecture', args: { conjecture: 'c' } },
+      'sheet-1',
+    );
+
+    expect(app.setEditorContent).toHaveBeenCalledWith('ivy source');
+    expect(app.scrollEditorToLine).toHaveBeenCalledWith(3);
+    expect(app.okDialog).toHaveBeenCalledWith('ivyweb', 'The condition is unreachable along the given path.');
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('The condition is unreachable along the given path.', 'success');
+  });
+
+  it('opens try-conjecture trace views through the Python-style View dialog', async () => {
+    const traceArg = { elements: [{ group: 'nodes', data: { id: 'state_0' } }] };
+    const app = {
+      activeSheetId: 'sheet-1',
+      isVisualOnlySheet: vi.fn(() => false),
+      prepareArgNodeActionArgs: (node, action, args) => args,
+      api: {
+        argNodeAction: vi.fn(async () => ({
+          view: 'trace',
+          reachable: true,
+          message: 'The condition is reachable along the given path.',
+          source: 'ivy source',
+          lineno: 4,
+          file: 'm.ivy',
+          trace_arg: traceArg,
+          trace_sheet_id: 'sheet-4',
+          trace_label: 'Sheet 4',
+        })),
+      },
+      textDialog: vi.fn(async () => ''),
+      openARGSheet: vi.fn(),
+      setUIMode: vi.fn(),
+      controls: { setStatus: vi.fn(), showInfo: vi.fn() },
+      setEditorContent: vi.fn(),
+      scrollEditorToLine: vi.fn(),
+    };
+
+    await executeArgNodeAction(
+      app,
+      { id: 'state_0' },
+      { id: 'try_conjecture', args: { conjecture: 'c' } },
+      'sheet-1',
+    );
+
+    expect(app.setEditorContent).toHaveBeenCalledWith('ivy source');
+    expect(app.scrollEditorToLine).toHaveBeenCalledWith(4);
+    expect(app.textDialog).toHaveBeenCalledWith(
+      'ivyweb',
+      'The condition is reachable along the given path.',
+      '',
+      expect.objectContaining({ okLabel: 'View', cancel: true, primaryFirst: true }),
+    );
+    expect(app.setUIMode).toHaveBeenCalledWith('reachability');
+    expect(app.openARGSheet).toHaveBeenCalledWith('Sheet 4', traceArg, 'sheet-4', {
+      reachabilityOnly: true,
+      visualOnly: false,
+    });
+  });
+
   it('shows the Python-style closed-node dialog for Extend', async () => {
     const app = {
       activeSheetId: 'sheet-1',

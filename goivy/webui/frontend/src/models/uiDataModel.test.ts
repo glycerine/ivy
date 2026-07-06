@@ -181,6 +181,11 @@ describe('UIDataModel — wire format coverage', () => {
       actions: [{ label: 'Remove', action: 'remove', args: { concept: 'link' } }],
       is_safe: true,
       is_marked: true,
+      line_color: '#0000ff',
+      layout_source: 'n1',
+      layout_target: 'n0',
+      layout_reversed: true,
+      layout_constraint: false,
       ignored_raw_field: 'nope',
     });
 
@@ -188,6 +193,8 @@ describe('UIDataModel — wire format coverage', () => {
     expect(data.actions[0].action).toBe('remove');
     expect(data.isSafe).toBe(true);
     expect(data.isMarked).toBe(true);
+    expect(data.lineColor).toBe('#0000ff');
+    expect(data.layoutConstraint).toBe(false);
     expect(data.toCytoscapeData()).toEqual({
       id: 'e0',
       obj: 'link',
@@ -200,6 +207,11 @@ describe('UIDataModel — wire format coverage', () => {
       actions: [{ label: 'Remove', action: 'remove', args: { concept: 'link' } }],
       is_safe: true,
       is_marked: true,
+      line_color: '#0000ff',
+      layout_source: 'n1',
+      layout_target: 'n0',
+      layout_reversed: true,
+      layout_constraint: false,
     });
   });
 

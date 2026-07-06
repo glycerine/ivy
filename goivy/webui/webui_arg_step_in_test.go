@@ -580,6 +580,76 @@ func TestTryConjecturePDRBrowsesSourceAndShowsConceptGraph(t *testing.T) {
 	}
 }
 
+func TestTryConjectureBoundedAndInductionReturnResultViewsAndSource(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		mode VerificationMode
+	}{
+		{name: "bounded", mode: ModeBounded},
+		{name: "induction", mode: ModeInduction},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			s := NewSession(goivy.NewConfig(), "test-try-conjecture-"+tc.name)
+			if err := s.LoadFileContent("test.ivy", []byte(executeActionMenuSample)); err != nil {
+				t.Fatalf("LoadFileContent: %v", err)
+			}
+			s.AG.AddInitialState(nil, nil)
+			s.syncARGToGraph()
+			s.AGUI.SetMode(tc.mode)
+
+			choices, err := s.ArgNodeAction("state_0", "try_conjecture_choices", map[string]interface{}{"sheet_id": "sheet-1"})
+			if err != nil {
+				t.Fatalf("try_conjecture_choices: %v", err)
+			}
+			conjChoices, ok := choices["choices"].([]ChoiceItem)
+			if !ok || len(conjChoices) == 0 {
+				t.Fatalf("expected conjecture choices, got %#v", choices["choices"])
+			}
+
+			result, err := s.ArgNodeAction("state_0", "try_conjecture", map[string]interface{}{
+				"sheet_id":   "sheet-1",
+				"conjecture": conjChoices[0].Value,
+			})
+			if err != nil {
+				t.Fatalf("try_conjecture: %v", err)
+			}
+			if result["mode"] != string(tc.mode) {
+				t.Fatalf("mode = %#v, want %s", result["mode"], tc.mode)
+			}
+			if result["source"] != string(executeActionMenuSample) {
+				t.Fatalf("try_conjecture did not return source for browsing: %#v", result["source"])
+			}
+			if _, ok := result["lineno"].(int); !ok {
+				t.Fatalf("lineno = %#v, want int", result["lineno"])
+			}
+			if _, ok := result["reachable"].(bool); !ok {
+				t.Fatalf("reachable = %#v, want bool", result["reachable"])
+			}
+			if _, ok := result["concept"]; ok {
+				t.Fatalf("%s try_conjecture should not return a concept graph: %#v", tc.name, result["concept"])
+			}
+			switch result["view"] {
+			case "message":
+				if msg, _ := result["message"].(string); msg == "" {
+					t.Fatalf("%s message view missing message: %#v", tc.name, result)
+				}
+				if _, ok := result["trace_arg"]; ok {
+					t.Fatalf("%s message view should not include trace_arg: %#v", tc.name, result["trace_arg"])
+				}
+			case "trace":
+				if _, ok := result["trace_arg"].(map[string]interface{}); !ok {
+					t.Fatalf("%s trace view missing trace_arg: %#v", tc.name, result["trace_arg"])
+				}
+				if sheetID, _ := result["trace_sheet_id"].(string); sheetID == "" || sheetID == "sheet-1" {
+					t.Fatalf("%s trace_sheet_id = %#v, want registered trace sheet", tc.name, result["trace_sheet_id"])
+				}
+			default:
+				t.Fatalf("%s view = %#v, want message or trace", tc.name, result["view"])
+			}
+		})
+	}
+}
+
 func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
 	cfg := goivy.NewConfig()
 	be := NewGoBackend(cfg)

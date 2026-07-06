@@ -92,6 +92,12 @@ function labelVisible(snapshot: ConceptSnapshot, name: string, displayClass: str
     || snapshot.displayCheckboxes.nodeLabelVisible(base, displayClass);
 }
 
+function relationColor(snapshot: ConceptSnapshot, name: string): string {
+  if (!name) return '';
+  const base = bareRelationName(name);
+  return snapshot.relationColors[name] || snapshot.relationColors[base] || '';
+}
+
 export function displayConceptName(name: string): string {
   if (typeof name === 'string' && name.charAt(0) === '=') {
     const body = name.slice(1);
@@ -201,15 +207,20 @@ export function selectStateCheckboxRows(sheet: SheetModel | null | undefined) {
   const snapshot = sheet && sheet.concept;
   if (!snapshot) return [];
   const names = (snapshot.relations.length > 0 ? snapshot.relations : snapshot.edges).slice().sort();
-  return names.map((name) => ({
-    name,
-    checked: {
+  return names.map((name) => {
+    const row: Record<string, any> = {
+      name,
+      checked: {
       all_to_all: toggleChecked(snapshot, name, 'all_to_all'),
       edge_unknown: toggleChecked(snapshot, name, 'edge_unknown'),
       none_to_none: toggleChecked(snapshot, name, 'none_to_none'),
       transitive: toggleChecked(snapshot, name, 'transitive'),
-    },
-  }));
+      },
+    };
+    const color = relationColor(snapshot, name);
+    if (color) row.color = color;
+    return row;
+  });
 }
 
 export function selectStateToggles(sheet: SheetModel | null | undefined): Record<string, boolean> {

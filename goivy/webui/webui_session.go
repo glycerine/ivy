@@ -444,6 +444,7 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	s.AGUI = NewAnalysisGraphUI()
 	s.AGUI.AG = s.AG
 	s.AGUI.Mod = s.CompiledModule
+	s.AGUI.ConceptDomainFn = s.analysisConceptDomainFactoryLocked()
 	s.AGUI.SyncCallback = func() { s.syncARGToGraph() }
 	s.SheetUIs = map[string]*AnalysisGraphUI{rootSheetID: s.AGUI}
 	s.sheetCounter = 1
@@ -451,6 +452,7 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	s.CTIUI = NewCTIAnalysisGraphUI(s.CompiledModule)
 	s.CTIUI.AnalysisGraphUI.AG = goivy.NewAnalysisGraph(s.CompiledModule)
 	s.CTIUI.AnalysisGraphUI.Mod = s.CompiledModule
+	s.CTIUI.AnalysisGraphUI.ConceptDomainFn = s.analysisConceptDomainFactoryLocked()
 	s.CTIUI.AnalysisGraphUI.SyncCallback = func() {
 		if s.CTIUI != nil && s.CTIUI.AnalysisGraphUI != nil {
 			s.CTIUI.AnalysisGraphUI.G = AnalysisUIARGState(s.CTIUI.AnalysisGraphUI)
@@ -547,6 +549,12 @@ func analysisSheetLabel(sheetID string) string {
 	return sheetID
 }
 
+func (s *Session) analysisConceptDomainFactoryLocked() func() (*CDConceptDomain, error) {
+	return func() (*CDConceptDomain, error) {
+		return GetInitialConceptDomainE(s.compiledSortMapLocked(), s.compiledSymbolMapLocked())
+	}
+}
+
 func (s *Session) newAnalysisGraphUIForGraphLocked(ag *goivy.AnalysisGraph) *AnalysisGraphUI {
 	ui := NewAnalysisGraphUI()
 	ui.AG = ag
@@ -554,6 +562,7 @@ func (s *Session) newAnalysisGraphUIForGraphLocked(ag *goivy.AnalysisGraph) *Ana
 	if ui.Mod == nil {
 		ui.Mod = s.CompiledModule
 	}
+	ui.ConceptDomainFn = s.analysisConceptDomainFactoryLocked()
 	ui.G = AnalysisUIARGState(ui)
 	ui.SyncCallback = func() {
 		ui.G = AnalysisUIARGState(ui)
@@ -756,6 +765,7 @@ func conceptGraphActionPayload(w *GraphWidget) map[string]interface{} {
 			"facts":           []FactSelection{},
 			"graph":           conceptGraphPayload(nil, nil),
 			"graph_stack":     conceptGraphStackPayload(nil),
+			"relation_colors": map[string]string{},
 			"toggles":         NewDisplayCheckboxes().Snapshot(),
 		}
 	}
@@ -763,6 +773,7 @@ func conceptGraphActionPayload(w *GraphWidget) map[string]interface{} {
 	if cy.Elements == nil {
 		cy.Elements = []WebUICyElement{}
 	}
+	applyGraphWidgetSelections(cy, w)
 	return map[string]interface{}{
 		"concept_domain":  w.G().ConceptSess.Domain,
 		"concept_session": w.G().ConceptSess,
@@ -770,7 +781,40 @@ func conceptGraphActionPayload(w *GraphWidget) map[string]interface{} {
 		"facts":           w.ConstraintFacts(),
 		"graph":           conceptGraphPayload(w.G(), w.GraphStack),
 		"graph_stack":     conceptGraphStackPayload(w.GraphStack),
+		"relation_colors": ConceptRelationColors(w.G().ConceptSess),
 		"toggles":         w.G().Checks.Snapshot(),
+	}
+}
+
+func applyGraphWidgetSelections(cy *WebUICyElements, w *GraphWidget) {
+	if cy == nil || w == nil {
+		return
+	}
+	w.mu.Lock()
+	nodeSelection := make(map[string]bool, len(w.NodeSelection))
+	for k, v := range w.NodeSelection {
+		nodeSelection[k] = v
+	}
+	edgeSelection := make(map[string]bool, len(w.EdgeSelection))
+	for k, v := range w.EdgeSelection {
+		edgeSelection[k] = v
+	}
+	w.mu.Unlock()
+	for i := range cy.Elements {
+		el := &cy.Elements[i]
+		obj, _ := el.Data["obj"].(string)
+		switch el.Group {
+		case "nodes":
+			if nodeSelection[obj] {
+				el.Classes = appendCyClass(el.Classes, "selected_node")
+			}
+		case "edges":
+			sourceObj, _ := el.Data["source_obj"].(string)
+			targetObj, _ := el.Data["target_obj"].(string)
+			if edgeSelection[strings.Join([]string{obj, sourceObj, targetObj}, "|")] {
+				el.Classes = appendCyClass(el.Classes, "selected_edge")
+			}
+		}
 	}
 }
 
@@ -1187,6 +1231,153 @@ type pdrReverseOutcome struct {
 	clauses      *goivy.Clauses
 }
 
+func interpolantRefinementMessage(kind string) string {
+	if kind == "predicate" {
+		return "The pre-state is vacuous. The following predicate can be used to prove your goal in the post-state:"
+	}
+	return "The pre-state is vacuous. The following concept can be used to prove your goal in the post-state:"
+}
+
+func (s *Session) parseInterpolantExprLocked(text string) (goivy.Expr, error) {
+	text = strings.TrimSpace(text)
+	if text == "" {
+		return nil, fmt.Errorf("refine_with_interpolant: missing interpolant")
+	}
+	switch strings.ToLower(text) {
+	case "true":
+		return goivy.True, nil
+	case "false":
+		return goivy.False, nil
+	}
+	if s != nil && s.CompiledModule != nil {
+		compiler := goivy.NewCompiler(s.CompiledSig, s.CompiledModule)
+		if expr, err := compiler.ToFormula(text); err == nil {
+			return expr, nil
+		}
+	}
+	fmla, err := goivy.ToFormula(text)
+	if err != nil {
+		return nil, fmt.Errorf("parse interpolant: %w", err)
+	}
+	expr, ok := fmla.(goivy.Expr)
+	if !ok {
+		return nil, fmt.Errorf("interpolant is not a logic expression")
+	}
+	return expr, nil
+}
+
+func unusedConceptSpaceName(mod *goivy.Module, base string) string {
+	used := make(map[string]bool)
+	if mod != nil {
+		for _, cs := range mod.ConceptSpaces {
+			used[fmt.Sprint(cs.Label)] = true
+		}
+	}
+	if !used[base] {
+		return base
+	}
+	for i := 0; ; i++ {
+		name := fmt.Sprintf("%s%d", base, i)
+		if !used[name] {
+			return name
+		}
+	}
+}
+
+func conceptFromInterpolant(name string, expr goivy.Expr) *Concept {
+	vars := goivy.VariablesAST(expr)
+	sorts := make([]string, 0, len(vars))
+	for _, v := range vars {
+		if v == nil || v.VSort == nil {
+			continue
+		}
+		sorts = append(sorts, v.VSort.String())
+	}
+	return &Concept{
+		Name:      name,
+		Variables: variableNames(vars),
+		Formula:   goivy.PrettyFmla(expr),
+		Sorts:     sorts,
+		Arity:     len(vars),
+	}
+}
+
+func variableNames(vars []*goivy.LogicVariable) []string {
+	names := make([]string, 0, len(vars))
+	for _, v := range vars {
+		if v == nil {
+			continue
+		}
+		names = append(names, v.Name)
+	}
+	return names
+}
+
+func conceptSpaceFromInterpolant(name string, expr goivy.Expr) goivy.ConceptSpace {
+	vars := goivy.VariablesAST(expr)
+	sorts := make([]goivy.Sort, len(vars))
+	varExprs := make([]goivy.Expr, len(vars))
+	for i, v := range vars {
+		sorts[i] = v.VSort
+		varExprs[i] = v
+	}
+	sym := goivy.NewConst(name, goivy.LogicRelationSort(sorts))
+	var label goivy.Expr = sym
+	if len(varExprs) > 0 {
+		label = goivy.MustApply(sym, varExprs...)
+	}
+	return goivy.ConceptSpace{
+		Label: label,
+		Body:  &goivy.LogicLiteral{Polarity: 0, Atom: expr},
+	}
+}
+
+func (s *Session) refineWithInterpolantLocked(sheetID, interpolant string) (map[string]interface{}, error) {
+	if s.CompiledModule == nil {
+		return nil, fmt.Errorf("refine_with_interpolant: no compiled module")
+	}
+	expr, err := s.parseInterpolantExprLocked(interpolant)
+	if err != nil {
+		return nil, err
+	}
+	ui, resolvedSheetID, uiErr := s.requireAnalysisUIForSheetLocked(sheetID)
+	if uiErr != nil {
+		ui = s.AGUI
+		resolvedSheetID = rootSheetID
+	}
+	mode := ModePDR
+	if ui != nil {
+		mode = ui.GetMode()
+	}
+	result := map[string]interface{}{
+		"sheet_id":    resolvedSheetID,
+		"interpolant": goivy.PrettyFmla(expr),
+		"status":      "refined",
+	}
+	if mode == ModePDR {
+		clauses := goivy.FormulaToClauses(expr, nil)
+		s.CompiledModule.AbstractionPredicates = append(s.CompiledModule.AbstractionPredicates, clauses)
+		if ui != nil && ui.AG != nil && ui.AG.Domain != nil && ui.AG.Domain != s.CompiledModule {
+			ui.AG.Domain.AbstractionPredicates = append(ui.AG.Domain.AbstractionPredicates, clauses)
+		}
+		result["refinement_kind"] = "predicate"
+		result["predicate_count"] = len(s.CompiledModule.AbstractionPredicates)
+		result["message"] = "Predicate refinement applied."
+		return result, nil
+	}
+
+	name := unusedConceptSpaceName(s.CompiledModule, "itp")
+	s.CompiledModule.ConceptSpaces = append(s.CompiledModule.ConceptSpaces, conceptSpaceFromInterpolant(name, expr))
+	result["refinement_kind"] = "concept"
+	result["concept_name"] = name
+	result["message"] = "Concept refinement applied."
+	if ui != nil && ui.CurrentConceptGraph != nil {
+		ui.CurrentConceptGraph.AddConcept(conceptFromInterpolant(name, expr))
+		result["concept"] = conceptGraphActionPayload(ui.CurrentConceptGraph)
+	}
+	return result, nil
+}
+
 func (s *Session) pdrStepConceptGraphLocked(sheetID string) (map[string]interface{}, error) {
 	ui, resolvedSheetID, err := s.requireAnalysisUIForSheetLocked(sheetID)
 	if err != nil {
@@ -1248,6 +1439,16 @@ func (s *Session) pdrStepConceptGraphLocked(sheetID string) (map[string]interfac
 	}
 	if outcome.interpolant != "" {
 		result["interpolant"] = outcome.interpolant
+		result["refinement_action"] = "refine_with_interpolant"
+		refinementKind := "concept"
+		if ui.GetMode() == ModePDR {
+			refinementKind = "predicate"
+		}
+		result["refinement_kind"] = refinementKind
+		result["refinement_message"] = interpolantRefinementMessage(refinementKind)
+		if status == "refinement_suggested" {
+			result["message"] = interpolantRefinementMessage(refinementKind)
+		}
 	}
 	if status == "vacuous" {
 		result["type"] = "vacuous"
@@ -2274,6 +2475,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			break
 		}
 		err = w.SetFactSelected(idx, selected)
+		if err != nil {
+			break
+		}
+		w.HighlightSelectedFacts()
+		result["concept"] = conceptGraphActionPayload(w)
 	case "get_active_facts":
 		w := s.ensureConceptGraphWidgetLocked()
 		if w == nil {
@@ -2365,6 +2571,19 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			break
 		}
 		for k, v := range pdrResult {
+			result[k] = v
+		}
+
+	case "refine_with_interpolant":
+		refineResult, refineErr := s.refineWithInterpolantLocked(
+			actionStringArg(args, "sheet_id"),
+			actionStringArg(args, "interpolant"),
+		)
+		if refineErr != nil {
+			err = refineErr
+			break
+		}
+		for k, v := range refineResult {
 			result[k] = v
 		}
 
@@ -3194,6 +3413,9 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 			result["view"] = tryResult.View
 			result["conjecture"] = tryResult.Conjecture
 			result["message"] = tryResult.Message
+			if tryResult.Mode == ModeBounded || tryResult.Mode == ModeInduction {
+				result["reachable"] = tryResult.Reachable
+			}
 			if tryResult.SourceLoc.Line > 0 {
 				result["lineno"] = tryResult.SourceLoc.Line
 				if tryResult.SourceLoc.Filename != "" {

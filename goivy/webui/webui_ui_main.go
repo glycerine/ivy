@@ -106,6 +106,10 @@ type AnalysisGraphUI struct {
 	// Set by the caller (e.g., session wiring) to avoid circular import with alpha.
 	AlphaFn func() goivy.Abstractor
 
+	// ConceptDomainFn returns a freshly initialized concept domain for ARG state
+	// views that need a solver-backed interactive session.
+	ConceptDomainFn func() (*CDConceptDomain, error)
+
 	// CurrentConceptGraph is the currently displayed concept graph widget.
 	CurrentConceptGraph *GraphWidget
 
@@ -196,6 +200,69 @@ func (ui *AnalysisGraphUI) getAlpha() goivy.Abstractor {
 	if ui.AlphaFn != nil {
 		return ui.AlphaFn()
 	}
+	return nil
+}
+
+func (ui *AnalysisGraphUI) initialConceptDomain() (*CDConceptDomain, error) {
+	if ui != nil && ui.ConceptDomainFn != nil {
+		return ui.ConceptDomainFn()
+	}
+	sorts := make(map[string]goivy.Sort)
+	symbols := make(map[string]*goivy.Const)
+	if ui != nil && ui.Mod != nil && ui.Mod.Sig != nil {
+		if ui.Mod.Sig.Sorts != nil {
+			for name, sortVal := range ui.Mod.Sig.Sorts.All() {
+				if sortVal != nil {
+					sorts[name] = sortVal
+				}
+			}
+		}
+		if ui.Mod.Sig.Symbols != nil {
+			for name, entry := range ui.Mod.Sig.Symbols.All() {
+				if entry == nil || entry.Sort == nil {
+					continue
+				}
+				if sortVal, ok := entry.Sort.(goivy.Sort); ok {
+					symbols[name] = goivy.NewConst(name, sortVal)
+				}
+			}
+		}
+	}
+	return GetInitialConceptDomainE(sorts, symbols)
+}
+
+func (ui *AnalysisGraphUI) ensureInteractiveConceptSession(w *GraphWidget, state *goivy.State) error {
+	if w == nil || w.G() == nil {
+		return fmt.Errorf("no concept graph")
+	}
+	g := w.G()
+	if g.InteractiveSess != nil {
+		return nil
+	}
+	domain, err := ui.initialConceptDomain()
+	if err != nil {
+		return err
+	}
+	stateExpr := goivy.True
+	if state != nil && state.Clauses != nil {
+		stateExpr = state.Clauses.ToFormula()
+	}
+	axioms := goivy.True
+	if ui != nil && ui.Mod != nil {
+		axiomTerms := ui.Mod.Axioms()
+		if len(axiomTerms) > 0 {
+			var axiomErr error
+			axioms, axiomErr = goivy.NewAnd(axiomTerms...)
+			if axiomErr != nil {
+				return axiomErr
+			}
+		}
+	}
+	sess, err := NewConceptInteractiveSessionE(domain, stateExpr, axioms, nil, nil, nil, nil, nil, false)
+	if err != nil {
+		return err
+	}
+	g.InteractiveSess = sess
 	return nil
 }
 
@@ -965,6 +1032,9 @@ func (ui *AnalysisGraphUI) TryConjectureResult(nodeID int, conjecture string) (*
 	}
 	w, err := ui.ViewState(nodeID, "", true)
 	if err != nil {
+		return nil, err
+	}
+	if err := ui.ensureInteractiveConceptSession(w, state); err != nil {
 		return nil, err
 	}
 	w.G().SetFactsExpr(nil)

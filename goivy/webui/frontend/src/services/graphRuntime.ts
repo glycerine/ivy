@@ -17,6 +17,20 @@ export const CONCEPT_STYLE = [
   },
   { selector: 'node.non_existing', style: { display: 'none' } },
   {
+    selector: 'node.subgraph_box',
+    style: {
+      content: 'data(label)',
+      shape: 'roundrectangle',
+      'background-opacity': 0,
+      'border-width': '2px',
+      'border-style': 'dashed',
+      'border-color': '#777',
+      padding: '18px',
+      events: 'no',
+      'z-index': 0,
+    },
+  },
+  {
     selector: 'node.exactly_one',
     style: { 'border-width': '4px', 'border-style': 'solid', 'border-color': '#000' },
   },
@@ -30,7 +44,7 @@ export const CONCEPT_STYLE = [
   },
   {
     selector: 'node.node_unknown',
-    style: { 'border-width': '5px', 'border-style': 'double', 'border-color': '#000' },
+    style: { 'border-width': '0px' },
   },
   {
     selector: 'edge',
@@ -57,6 +71,7 @@ export const CONCEPT_STYLE = [
   },
   { selector: 'edge.all_to_all', style: { width: '4px', 'line-style': 'solid' } },
   { selector: 'edge.edge_unknown', style: { width: '4px', 'line-style': 'dotted' } },
+  { selector: 'edge.layout_only', style: { display: 'none' } },
   {
     selector: 'edge.total',
     style: { 'source-arrow-shape': 'circle', 'source-arrow-fill': 'filled' },
@@ -140,6 +155,7 @@ export const ARG_STYLE = [
   },
   { selector: 'edge.transition_join', style: { 'target-arrow-shape': 'triangle-backcurve' } },
   { selector: 'edge.transition_action', style: { 'target-arrow-shape': 'triangle' } },
+  { selector: 'edge.layout_only', style: { display: 'none' } },
   {
     selector: 'edge.cover',
     style: { content: '', 'target-arrow-shape': 'triangle', 'line-style': 'dashed' },
@@ -215,6 +231,146 @@ function nodeId(element: any): string {
   return String(data.id || data.obj || data.label || '');
 }
 
+function classesArray(element: any): string[] {
+  const classes = element && typeof element.classes === 'string' ? element.classes : '';
+  return classes.split(/\s+/).filter(Boolean);
+}
+
+function hasClass(element: any, className: string): boolean {
+  return classesArray(element).includes(className);
+}
+
+function withClass(element: any, className: string): string {
+  return Array.from(new Set([...classesArray(element), className])).join(' ');
+}
+
+function isSubgraphShape(element: any): boolean {
+  return element && element.group === 'shapes' && hasClass(element, 'subgraphs');
+}
+
+function isSubgraphBoxNode(element: any): boolean {
+  return element && element.group === 'nodes' && hasClass(element, 'subgraph_box');
+}
+
+function shapeCluster(element: any): string {
+  const data = (element && element.data) || {};
+  const explicit = String(data.cluster || '');
+  if (explicit) return explicit;
+  const obj = String(data.obj || '');
+  return obj.startsWith('cluster_') ? obj.slice('cluster_'.length) : obj;
+}
+
+function shapeMembers(element: any): Set<string> {
+  const members = new Set<string>();
+  const raw = element && element.data && Array.isArray(element.data.nodes) ? element.data.nodes : [];
+  raw.forEach((value) => {
+    if (typeof value === 'string' && value) members.add(value);
+  });
+  return members;
+}
+
+function nodeMatchesSubgraphShape(node: any, cluster: string, members: Set<string>): boolean {
+  if (!node || node.group !== 'nodes' || isSubgraphBoxNode(node)) return false;
+  const data = node.data || {};
+  const id = String(data.id || '');
+  const obj = String(data.obj || '');
+  if (members.size > 0) {
+    return members.has(id) || members.has(obj);
+  }
+  return !!cluster && String(data.cluster || '') === cluster;
+}
+
+function expandSubgraphShapes(elements: any[]): any[] {
+  const nodesAndEdges = [];
+  const boxes = [];
+  for (const element of elements || []) {
+    if (isSubgraphShape(element)) {
+      boxes.push(element);
+    } else {
+      nodesAndEdges.push({
+        ...element,
+        data: { ...((element && element.data) || {}) },
+      });
+    }
+  }
+  if (boxes.length === 0) return nodesAndEdges;
+
+  const parentNodes = [];
+  for (const [index, box] of boxes.entries()) {
+    const data = box.data || {};
+    const cluster = shapeCluster(box);
+    const members = shapeMembers(box);
+    const childNodes = nodesAndEdges.filter((node) => nodeMatchesSubgraphShape(node, cluster, members));
+    if (childNodes.length === 0) continue;
+    const parentId = String(data.id || data.obj || `subgraph_box_${index}`);
+    parentNodes.push({
+      group: 'nodes',
+      data: {
+        id: parentId,
+        obj: data.obj || parentId,
+        label: data.label || '',
+        shape: data.shape || 'rectangle',
+        cluster,
+      },
+      classes: withClass(box, 'subgraph_box'),
+      locked: !!box.locked,
+    });
+    for (const child of childNodes) {
+      child.data.parent = parentId;
+    }
+  }
+  return [...parentNodes, ...nodesAndEdges];
+}
+
+function edgeLayoutEndpoint(value: any): string {
+  return typeof value === 'string' && value ? value : '';
+}
+
+function layoutEdgeClasses(element: any): string {
+  return Array.from(new Set([...classesArray(element).filter((klass) => klass !== 'layout_ignored'), 'layout_only'])).join(' ');
+}
+
+function expandLayoutEdges(elements: any[]): any[] {
+  const out = [];
+  const layoutOnly = [];
+  for (const element of elements || []) {
+    const next = {
+      ...element,
+      data: { ...((element && element.data) || {}) },
+    };
+    if (next.group === 'edges') {
+      const data = next.data || {};
+      const layoutSource = edgeLayoutEndpoint(data.layout_source);
+      const layoutTarget = edgeLayoutEndpoint(data.layout_target);
+      const displayedSource = edgeLayoutEndpoint(data.source);
+      const displayedTarget = edgeLayoutEndpoint(data.target);
+      const hasLayoutProxy = !!layoutSource
+        && !!layoutTarget
+        && (layoutSource !== displayedSource || layoutTarget !== displayedTarget);
+      const unconstrained = data.layout_constraint === false;
+      if (hasLayoutProxy || unconstrained) {
+        next.classes = withClass(next, 'layout_ignored');
+      }
+      if (hasLayoutProxy && !unconstrained) {
+        const id = String(data.id || data.obj || `edge_${layoutOnly.length}`);
+        layoutOnly.push({
+          group: 'edges',
+          data: {
+            id: `layout_${id}`,
+            source: layoutSource,
+            target: layoutTarget,
+            label: '',
+            layout_for: id,
+          },
+          classes: layoutEdgeClasses(element),
+        });
+      }
+    }
+    out.push(next);
+  }
+  return [...out, ...layoutOnly];
+}
+
 function clonePositionMap(positions: any = {}) {
   const out = {};
   for (const [id, position] of Object.entries(positions || {})) {
@@ -230,7 +386,7 @@ function mergePositionMaps(...maps: any[]) {
 
 function graphNodeIds(elements: any[]): string[] {
   return (elements || [])
-    .filter((element) => element && element.group === 'nodes')
+    .filter((element) => element && element.group === 'nodes' && !isSubgraphBoxNode(element))
     .map(nodeId)
     .filter(Boolean);
 }
@@ -332,7 +488,7 @@ export class IvyGraph {
     this.cy.elements().remove();
     if (!elements || elements.length === 0) return;
 
-    const toAdd = elements.map((element) => {
+    const toAdd = expandLayoutEdges(expandSubgraphShapes(elements)).map((element) => {
       const next = {
         ...element,
         data: { ...(element.data || {}) },
@@ -363,6 +519,13 @@ export class IvyGraph {
       const borderColor = node.data('border_color');
       if (borderColor) node.style('border-color', borderColor);
     });
+    this.cy.edges().forEach((edge) => {
+      const lineColor = edge.data('line_color') || edge.data('color');
+      if (!lineColor) return;
+      edge.style('line-color', lineColor);
+      edge.style('target-arrow-color', lineColor);
+      edge.style('source-arrow-color', lineColor);
+    });
 
     if (usePresetPositions) {
       Object.entries(mergedPositions).forEach(([id, position]) => {
@@ -388,7 +551,12 @@ export class IvyGraph {
     }, options);
 
     try {
-      this.cy.layout(layoutOptions).run();
+      const elements = typeof this.cy.elements === 'function' ? this.cy.elements() : null;
+      if (elements && typeof elements.not === 'function' && typeof elements.layout === 'function') {
+        elements.not('.layout_ignored').layout(layoutOptions).run();
+      } else {
+        this.cy.layout(layoutOptions).run();
+      }
     } catch (err) {
       console.warn('Dagre layout failed, falling back to grid:', err);
       this.cy.layout({ name: 'grid', fit: true, padding: 30 }).run();

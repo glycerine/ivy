@@ -988,6 +988,50 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(result.message).toBe('PDR step diagrammed the predecessor goal.');
   });
 
+  it('submits accepted PDR interpolants through a Refine dialog', async () => {
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-7';
+    runtime.api.executeAction = vi.fn(async (action) => {
+      if (action === 'pdr_step') {
+        return {
+          sheet_id: 'sheet-7',
+          status: 'refinement_suggested',
+          message: 'The pre-state is vacuous. The following predicate can be used to prove your goal in the post-state:',
+          interpolant: 'p(X)',
+          refinement_action: 'refine_with_interpolant',
+          refinement_kind: 'predicate',
+          concept: { sheet_id: 'sheet-7', graph: {}, elements: [] },
+        };
+      }
+      return {
+        sheet_id: 'sheet-7',
+        message: 'Refinement applied.',
+        concept: { sheet_id: 'sheet-7', graph: {}, elements: ['refined'] },
+      };
+    });
+    runtime.textDialog = vi.fn(async () => 'p(X)');
+    runtime.applyConceptSnapshot = vi.fn();
+    runtime.refreshConceptGraph = vi.fn();
+
+    await runtime.pdrStep();
+
+    expect(runtime.textDialog).toHaveBeenCalledWith(
+      'ivyweb',
+      'The pre-state is vacuous. The following predicate can be used to prove your goal in the post-state:',
+      'p(X)',
+      expect.objectContaining({ okLabel: 'Refine', cancel: true, primaryFirst: true }),
+    );
+    expect(runtime.api.executeAction).toHaveBeenCalledWith('refine_with_interpolant', {
+      sheet_id: 'sheet-7',
+      interpolant: 'p(X)',
+    });
+    expect(runtime.applyConceptSnapshot).toHaveBeenCalledWith('sheet-7', {
+      sheet_id: 'sheet-7',
+      graph: {},
+      elements: ['refined'],
+    });
+  });
+
   it('leaves the graph alone when Diagram Domain would be empty', async () => {
     const runtime = makeRuntime();
     runtime.activeSheetId = 'sheet-1';
