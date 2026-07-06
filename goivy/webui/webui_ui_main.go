@@ -62,6 +62,29 @@ type NodeSafetyCheckResult struct {
 	Trace   *goivy.AnalysisGraph
 }
 
+type TryConjectureResult struct {
+	Mode       VerificationMode
+	View       string
+	Conjecture string
+	SourceLoc  goivy.Location
+	Concept    *GraphWidget
+	Trace      *goivy.AnalysisGraph
+	Reachable  bool
+	Message    string
+}
+
+type ClosedStateError struct {
+	StateID int
+}
+
+func (e *ClosedStateError) Error() string {
+	return fmt.Sprintf("state %d is closed", e.StateID)
+}
+
+func (e *ClosedStateError) DialogMessage() string {
+	return fmt.Sprintf("State %d is closed.", e.StateID)
+}
+
 // AnalysisGraphUI manages the ARG display and user interactions
 // (Python: class AnalysisGraphUI).
 type AnalysisGraphUI struct {
@@ -123,7 +146,8 @@ func (ui *AnalysisGraphUI) Menus() []MenuDef {
 			Type:  "menu",
 			Label: "File",
 			Items: []MenuItem{
-				{Type: "button", Label: "Save", Action: "save"},
+				{Type: "button", Label: "Save", Action: "save_model"},
+				{Type: "button", Label: "Save analysis state", Action: "save_analysis_state"},
 				{Type: "button", Label: "Save abstraction", Action: "save_abstraction"},
 				{Type: "separator", Label: "---"},
 				{Type: "button", Label: "Remove tab", Action: "remove_tab"},
@@ -447,6 +471,7 @@ func (ui *AnalysisGraphUI) GetNodeActions(nodeID int, click string) []ActionEntr
 func (ui *AnalysisGraphUI) NodeCommands() []ActionEntry {
 	return []ActionEntry{
 		{Label: "Check safety", Action: "check_safety"},
+		{Label: "Bounded check", Action: "bmc"},
 		{Label: "Extend", Action: "find_extension"},
 		{Label: "Mark", Action: "mark_node"},
 		{Label: "Cover by marked", Action: "cover_node"},
@@ -650,11 +675,20 @@ func (ui *AnalysisGraphUI) FindExtension(nodeID int) (string, error) {
 	}
 	extensions := ui.AG.StateExtensions(state, nil)
 	if len(extensions) == 0 {
-		return "", fmt.Errorf("state %d is closed", nodeID)
+		return "", &ClosedStateError{StateID: nodeID}
 	}
 	s := ui.AG.DoStateAction(false, extensions[0], ui.getAlpha())
 	if s == nil {
 		return "", fmt.Errorf("state action evaluation failed")
+	}
+	actionName := stateEquationActionName(extensions[0])
+	if actionName != "" {
+		ui.AG.Add(s, goivy.NewActionApp(ui.resolveActionName(actionName), state))
+	} else {
+		ui.AG.Add(s, nil)
+	}
+	if _, err := ui.ViewState(s.ID, "", true); err != nil {
+		return "", err
 	}
 	ui.sync()
 	return defEquationLabel(extensions[0]), nil
@@ -719,6 +753,20 @@ func (ui *AnalysisGraphUI) RecalculateEdge(srcID, tgtID int) {
 	}
 	ui.AG.Recalculate(false, *t, ui.getAlpha())
 	ui.sync()
+}
+
+// RecalculateState re-evaluates one ARG state from its equation or join sources
+// (Python: AnalysisGraphUI.recalculate_state).
+func (ui *AnalysisGraphUI) RecalculateState(state *goivy.State) error {
+	if ui == nil || ui.AG == nil {
+		return fmt.Errorf("no analysis graph")
+	}
+	if state == nil {
+		return fmt.Errorf("recalculate state: nil state")
+	}
+	ui.AG.RecalculateState(false, state, ui.getAlpha())
+	ui.sync()
+	return nil
 }
 
 // DecomposeEdge decomposes a transition into sub-actions
@@ -850,36 +898,90 @@ func (ui *AnalysisGraphUI) JoinNode(nodeID int) error {
 	return nil
 }
 
-// TryConjecture sets up to prove a conjecture at a node
-// (Python: AnalysisGraphUI.try_conjecture).
-func (ui *AnalysisGraphUI) TryConjecture(nodeID int, conjecture string) error {
-	state, err := ui.stateByID(nodeID)
-	if err != nil {
-		return err
+func (ui *AnalysisGraphUI) resolveConjectureFormula(conjecture string) (goivy.Expr, goivy.Location, string, error) {
+	selected := strings.TrimSpace(conjecture)
+	if selected == "" {
+		return nil, goivy.Location{}, "", fmt.Errorf("no conjecture specified")
 	}
-	if conjecture == "" {
-		return fmt.Errorf("no conjecture specified")
+	if ui != nil && ui.Mod != nil {
+		for _, lf := range ui.Mod.LabeledConjs {
+			if lf == nil || lf.Formula == nil {
+				continue
+			}
+			expr, ok := lf.Formula.(goivy.Expr)
+			if !ok {
+				continue
+			}
+			pretty := goivy.PrettyFmla(expr)
+			if selected == pretty || selected == strings.TrimSpace(fmt.Sprint(expr)) {
+				return expr, lf.GetLineno(), pretty, nil
+			}
+		}
 	}
 	fmla, parseErr := goivy.ToFormula(conjecture)
 	if parseErr != nil {
-		return fmt.Errorf("parse conjecture: %w", parseErr)
+		return nil, goivy.Location{}, "", fmt.Errorf("parse conjecture: %w", parseErr)
 	}
 	fExpr, ok := fmla.(goivy.Expr)
 	if !ok {
-		return fmt.Errorf("conjecture is not a logic expression")
+		return nil, goivy.Location{}, "", fmt.Errorf("conjecture is not a logic expression")
+	}
+	return fExpr, goivy.Location{}, goivy.PrettyFmla(fExpr), nil
+}
+
+// TryConjectureResult sets up to prove a conjecture at a node and returns the
+// user-visible result view (Python: AnalysisGraphUI.try_conjecture).
+func (ui *AnalysisGraphUI) TryConjectureResult(nodeID int, conjecture string) (*TryConjectureResult, error) {
+	state, err := ui.stateByID(nodeID)
+	if err != nil {
+		return nil, err
+	}
+	fExpr, sourceLoc, displayConjecture, resolveErr := ui.resolveConjectureFormula(conjecture)
+	if resolveErr != nil {
+		return nil, resolveErr
 	}
 	conj := goivy.FormulaToClauses(fExpr, nil)
 	dual := goivy.DualClauses(conj, nil, nil)
 
 	mode := ui.GetMode()
+	result := &TryConjectureResult{
+		Mode:       mode,
+		Conjecture: displayConjecture,
+		SourceLoc:  sourceLoc,
+	}
 	if mode == ModeInduction || mode == ModeBounded {
 		bmcResult := ui.AG.BMC(state, dual.ToFormula(), nil, nil)
 		if bmcResult == nil {
-			return fmt.Errorf("the condition is unreachable along the given path")
+			result.View = "message"
+			result.Reachable = false
+			result.Message = "The condition is unreachable along the given path."
+			return result, nil
 		}
-		return nil
+		result.View = "trace"
+		result.Reachable = true
+		result.Trace = bmcResult
+		result.Message = "The condition is reachable along the given path."
+		return result, nil
 	}
-	return nil
+	w, err := ui.ViewState(nodeID, "", true)
+	if err != nil {
+		return nil, err
+	}
+	w.G().SetFactsExpr(nil)
+	if err := w.G().AddConstraintsExpr(dual.Fmlas, true); err != nil {
+		return nil, err
+	}
+	result.View = "concept"
+	result.Concept = w
+	result.Message = "Conjecture goal opened."
+	return result, nil
+}
+
+// TryConjecture sets up to prove a conjecture at a node
+// (Python: AnalysisGraphUI.try_conjecture).
+func (ui *AnalysisGraphUI) TryConjecture(nodeID int, conjecture string) error {
+	_, err := ui.TryConjectureResult(nodeID, conjecture)
+	return err
 }
 
 func (ui *AnalysisGraphUI) TryConjectureChoices(nodeID int) ([]ChoiceItem, error) {
@@ -964,13 +1066,9 @@ func (ui *AnalysisGraphUI) BMC(nodeID int, errCond string, bound int) (*WebUIAna
 	if err != nil {
 		return nil, err
 	}
-	fmla, parseErr := goivy.ToFormula(errCond)
+	fExpr, parseErr := parseBMCErrorConditionString(errCond)
 	if parseErr != nil {
-		return nil, fmt.Errorf("parse error condition: %w", parseErr)
-	}
-	fExpr, ok := fmla.(goivy.Expr)
-	if !ok {
-		return nil, fmt.Errorf("error condition is not a logic expression")
+		return nil, parseErr
 	}
 	var boundPtr *int
 	if bound >= 0 {

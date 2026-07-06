@@ -2,6 +2,7 @@ import { connectSessionEvents, createSession } from './sessionService.ts';
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
 import { resetEditorUndoHistory } from './editorService.ts';
 import { logStateRelationTableClear } from './conceptVisibilityService.ts';
+import { saveMimeType, savePickerOptions } from './saveDialogService.ts';
 
 export const NEW_MODEL_STARTER_CONTENT = '#lang ivy1.8\n\n';
 
@@ -294,7 +295,7 @@ export async function downloadModel(app) {
       return undefined;
     }
     const filename = app._persistedFileName || 'model.ivy';
-    app.downloadTextFile(filename, content, 'text/plain');
+    app.downloadTextFile(filename, content, saveMimeType('model'));
     app.controls.setStatus(`Downloaded: ${filename}`, 'success');
     return true;
   } catch (err) {
@@ -306,7 +307,7 @@ export async function downloadModel(app) {
 export function downloadModelForUnsupportedSave(app, content, persist) {
   const filename = app._persistedFileName || 'model.ivy';
   try {
-    app.downloadTextFile(filename, content, 'text/plain');
+    app.downloadTextFile(filename, content, saveMimeType('model'));
     app._persistedFileContent = content;
     app._savedFileContent = content;
     app._updateEditorLabel();
@@ -389,13 +390,7 @@ export async function saveModelAs(app, persist, {
     }
     let handle;
     try {
-      handle = await win.showSaveFilePicker({
-        suggestedName: app._persistedFileName || 'model.ivy',
-        types: [{
-          description: 'Ivy files',
-          accept: { 'text/plain': ['.ivy'] },
-        }],
-      });
+      handle = await win.showSaveFilePicker(savePickerOptions('model', app._persistedFileName || 'model.ivy'));
     } finally {
       if (options.explainMissingHandle) {
         app.hideSaveAsExplanationNotice();

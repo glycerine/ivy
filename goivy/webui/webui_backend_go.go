@@ -159,12 +159,13 @@ func (gbe *GoBackend) Action(sessionID, action string, args map[string]interface
 	return
 }
 
-func (gbe *GoBackend) GetMenus(sessionID string) (by []byte, err error) {
+func (gbe *GoBackend) GetMenus(sessionID string, req MenuRequest) (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
-		if _, err = b.getSession(sessionID); err != nil {
+		var sess *Session
+		if sess, err = b.getSession(sessionID); err != nil {
 			return nil
 		}
-		by, err = canonicalJSON(BuildBrowserMenuDescriptors())
+		by, err = canonicalJSON(BuildBrowserMenuDescriptorsForSession(sess, req))
 		return nil
 	})
 	return

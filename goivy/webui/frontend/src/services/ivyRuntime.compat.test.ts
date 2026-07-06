@@ -434,6 +434,61 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(runtime.runAction).not.toHaveBeenCalled();
   });
 
+  it('clicks every descriptor File menu item through controller commands', async () => {
+    installSheetDom();
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-2';
+    runtime.closeAllDropdowns = vi.fn();
+    runtime.save = vi.fn(async () => true);
+    runtime.saveAnalysisState = vi.fn(async () => ({ ok: true }));
+    runtime.saveAbstraction = vi.fn(async () => ({ ok: true }));
+    runtime.removeSheet = vi.fn();
+    runtime.closeCurrentFile = vi.fn(async () => true);
+    runtime.runAction = vi.fn();
+
+    runtime.renderMenuRegion('arg', [{
+      type: 'menu',
+      label: 'File',
+      items: [
+        { type: 'button', label: 'Save', action: 'save_model', dispatch: 'action', enabled: true },
+        { type: 'button', label: 'Save analysis state', action: 'save_analysis_state', dispatch: 'action', enabled: true },
+        { type: 'button', label: 'Save abstraction', action: 'save_abstraction', dispatch: 'action', enabled: true },
+        { type: 'separator', label: '---' },
+        { type: 'button', label: 'Remove tab', action: 'remove_tab', dispatch: 'action', enabled: true },
+        { type: 'button', label: 'Exit', action: 'exit', dispatch: 'action', enabled: true },
+      ],
+    }]);
+
+    for (const link of document.querySelectorAll('[data-dynamic-menu-region="arg"] [data-menu-action]')) {
+      (link as HTMLElement).click();
+    }
+    await Promise.resolve();
+
+    expect(runtime.save).toHaveBeenCalledTimes(1);
+    expect(runtime.saveAnalysisState).toHaveBeenCalledTimes(1);
+    expect(runtime.saveAbstraction).toHaveBeenCalledTimes(1);
+    expect(runtime.removeSheet).toHaveBeenCalledWith('sheet-2');
+    expect(runtime.closeCurrentFile).toHaveBeenCalledTimes(1);
+    expect(runtime.runAction).not.toHaveBeenCalled();
+  });
+
+  it('requests menu descriptors for the active sheet and workflow', async () => {
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-7';
+    runtime.uiMode = 'reachability';
+    runtime.api.getMenus = vi.fn(async () => ({ arg: [], concept: [] }));
+    runtime.renderMenuRegion = vi.fn();
+
+    await runtime.loadMenuDescriptors();
+
+    expect(runtime.api.getMenus).toHaveBeenCalledWith({
+      sheetId: 'sheet-7',
+      uiMode: 'reachability',
+    });
+    expect(runtime.renderMenuRegion).toHaveBeenCalledWith('arg', []);
+    expect(runtime.renderMenuRegion).toHaveBeenCalledWith('concept', []);
+  });
+
   it('explains remote backend switch failures in the job control panel', async () => {
     class BrowserAPI extends FakeAPI {
       constructor() {
@@ -526,6 +581,135 @@ describe('ivyRuntime compatibility behavior', () => {
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
 
     await expect(resultPromise).resolves.toBe(10);
+    expect(document.querySelector('[data-ivy-dialog]')).toBeNull();
+  });
+
+  it('submits entry dialogs with Return', async () => {
+    const runtime = makeRuntime();
+
+    const resultPromise = runtime.entryDialog('Remember graph', 'Name:', '', {});
+    const input = document.querySelector('[data-ivy-dialog-entry]') as HTMLInputElement;
+    input.value = 'goal-from-return';
+
+    let resolved = false;
+    resultPromise.then(() => { resolved = true; });
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await Promise.resolve();
+
+    const resolvedByReturn = resolved;
+    if (!resolvedByReturn) {
+      const ok = Array.from(document.querySelectorAll('[data-ivy-dialog-button]'))
+        .find((button) => button.textContent === 'OK') as HTMLButtonElement;
+      ok.click();
+      await resultPromise;
+    }
+    expect(resolvedByReturn).toBe(true);
+    await expect(resultPromise).resolves.toBe('goal-from-return');
+  });
+
+  it('can return listbox selection indices for Tk-compatible callers', async () => {
+    const runtime = makeRuntime();
+
+    const singlePromise = runtime.listboxDialog('Pick one', 'Choice:', [
+      { label: 'Alpha', value: 'alpha' },
+      { label: 'Beta', value: 'beta' },
+    ], { returnIndex: true });
+    const single = document.querySelector('[data-ivy-dialog-list]') as HTMLSelectElement;
+    single.selectedIndex = 1;
+    let ok = Array.from(document.querySelectorAll('[data-ivy-dialog-button]'))
+      .find((button) => button.textContent === 'OK') as HTMLButtonElement;
+    ok.click();
+    await expect(singlePromise).resolves.toBe(1);
+
+    const multiPromise = runtime.listboxDialog('Pick many', 'Choices:', [
+      { label: 'Alpha', value: 'alpha' },
+      { label: 'Beta', value: 'beta' },
+      { label: 'Gamma', value: 'gamma' },
+    ], { multiple: true, returnIndex: true });
+    const multi = document.querySelector('[data-ivy-dialog-list]') as HTMLSelectElement;
+    Array.from(multi.options).forEach((option, index) => {
+      option.selected = index === 0 || index === 2;
+    });
+    ok = Array.from(document.querySelectorAll('[data-ivy-dialog-button]'))
+      .find((button) => button.textContent === 'OK') as HTMLButtonElement;
+    ok.click();
+    await expect(multiPromise).resolves.toEqual([0, 2]);
+  });
+
+  it('cancels listbox and button-list dialogs with Tk-compatible values', async () => {
+    const runtime = makeRuntime();
+
+    const singlePromise = runtime.listboxDialog('Pick one', 'Choice:', ['a', 'b'], {});
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await expect(singlePromise).resolves.toBeNull();
+
+    const multiPromise = runtime.listboxDialog('Pick many', 'Choices:', ['a', 'b'], { multiple: true });
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await expect(multiPromise).resolves.toEqual([]);
+
+    const buttonPromise = runtime.buttonListDialog('Choose', 'Continue?', [
+      { label: 'Go', value: 'go' },
+    ]);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await expect(buttonPromise).resolves.toBeNull();
+  });
+
+  it('keeps integer dialogs open for out-of-range input', async () => {
+    const runtime = makeRuntime();
+
+    const resultPromise = runtime.integerDialog('Bounded check', 'Number of steps to check:', 1, { min: 0, max: 3 });
+    const input = document.querySelector('[data-ivy-dialog-int]') as HTMLInputElement;
+    let resolved = false;
+    resultPromise.then(() => { resolved = true; });
+
+    input.value = '4';
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await Promise.resolve();
+
+    expect(resolved).toBe(false);
+    expect(document.querySelector('[data-ivy-dialog-error]')?.textContent).toBe('Enter a value at most 3.');
+    expect(document.querySelector('[data-ivy-dialog]')).not.toBeNull();
+
+    input.value = '3';
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await expect(resultPromise).resolves.toBe(3);
+    expect(document.querySelector('[data-ivy-dialog]')).toBeNull();
+  });
+
+  it('preseeds dialog answers for deterministic command tests', async () => {
+    const runtime = makeRuntime();
+    runtime.preseedDialogAnswers([
+      { kind: 'entry', value: 'goal-a' },
+      { kind: 'integer', value: 7 },
+      { kind: 'listbox', value: 'choice-b' },
+      { kind: 'listbox', value: [0, 2] },
+      { kind: 'buttonList', value: 'save' },
+    ]);
+
+    await expect(runtime.entryDialog('Remember graph', 'Name:', '', {})).resolves.toBe('goal-a');
+    await expect(runtime.integerDialog('Bounded check', 'Bound:', 3, { min: 0 })).resolves.toBe(7);
+    await expect(runtime.listboxDialog('Pick one', 'Choice:', ['choice-a', 'choice-b'], {})).resolves.toBe('choice-b');
+    await expect(runtime.listboxDialog('Pick many', 'Choices:', [0, 1, 2], { multiple: true })).resolves.toEqual([0, 2]);
+    await expect(runtime.buttonListDialog('Unsaved changes', 'Save first?', [
+      { label: 'Save', value: 'save' },
+      { label: 'Discard', value: 'discard' },
+    ])).resolves.toBe('save');
+
+    expect(document.querySelector('[data-ivy-dialog]')).toBeNull();
+  });
+
+  it('passes preseeded entry answers through real commands', async () => {
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-9';
+    runtime.api.executeAction = vi.fn(async () => ({ status: 'ok' }));
+    runtime.preseedDialogAnswers([{ kind: 'entry', value: 'saved-goal' }]);
+
+    await runtime.rememberGraph();
+
+    expect(runtime.api.executeAction).toHaveBeenCalledWith('remember', {
+      name: 'saved-goal',
+      sheet_id: 'sheet-9',
+    });
     expect(document.querySelector('[data-ivy-dialog]')).toBeNull();
   });
 
@@ -639,6 +823,22 @@ describe('ivyRuntime compatibility behavior', () => {
     vi.advanceTimersByTime(50);
 
     expect(runtime.recalculateAll).toHaveBeenCalledOnce();
+  });
+
+  it('recalculates the active sheet concept graph from the backend payload', async () => {
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-2';
+    const concept = { elements: [{ group: 'nodes', data: { id: 'node' } }] };
+    runtime.api.executeAction = vi.fn(async () => ({ sheet_id: 'sheet-2', concept }));
+    runtime.applyConceptSnapshot = vi.fn();
+    runtime.refreshConceptGraph = vi.fn();
+
+    await runtime.recalculateGraph();
+
+    expect(runtime.api.executeAction).toHaveBeenCalledWith('recalculate', { sheet_id: 'sheet-2' });
+    expect(runtime.applyConceptSnapshot).toHaveBeenCalledWith('sheet-2', concept);
+    expect(runtime.refreshConceptGraph).not.toHaveBeenCalled();
+    expect(runtime.controls.lastStatus).toEqual({ message: 'Recalculated', kind: 'success' });
   });
 
   it('resizes the active reachability-only sheet details pane', () => {

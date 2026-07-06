@@ -3,6 +3,7 @@ package webui
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	goivy "github.com/glycerine/ivy/goivy"
 	"os"
@@ -2200,13 +2201,27 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			result[k] = v
 		}
 	case "recalculate":
+		_, resolvedSheetID, w, uiErr := s.activeConceptGraphForActionLocked(actionName, actionStringArg(args, "sheet_id"))
+		if uiErr == nil {
+			if err = w.Recalculate(); err != nil {
+				break
+			}
+			result["sheet_id"] = resolvedSheetID
+			result["concept"] = conceptGraphActionPayload(w)
+			if w.G() != nil {
+				s.toggles = w.G().Checks.Snapshot()
+			}
+			break
+		}
 		if s.ConceptSess != nil {
 			if err = s.ConceptSess.Recompute(nil); err != nil {
 				break
 			}
 			// Propagate abstract value to SimpleSess for rendering.
 			s.syncAbstractValue()
+			break
 		}
+		err = uiErr
 	case "gather":
 		sheetID := actionStringArg(args, "sheet_id")
 		if sheetID != "" {
@@ -3029,16 +3044,85 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 			}
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Safety check at node " + nodeID}})
+	case "bmc":
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		stateIdx := -1
+		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+		if stateIdx < 0 {
+			err = fmt.Errorf("bmc: invalid ARG node %q", nodeID)
+			break
+		}
+		bound := 0
+		if parsed, ok := actionIntArg(args, "bound"); ok {
+			bound = parsed
+		}
+		if bound < 0 {
+			err = fmt.Errorf("bmc: bound must be non-negative")
+			break
+		}
+		errCond := strings.TrimSpace(actionStringArg(args, "err_cond"))
+		if errCond == "" {
+			errCond = strings.TrimSpace(actionStringArg(args, "error_condition"))
+		}
+		if errCond == "" {
+			errCond = "true"
+		}
+		state, stateErr := ui.stateByID(stateIdx)
+		if stateErr != nil {
+			err = stateErr
+			break
+		}
+		fExpr, parseErr := parseBMCErrorConditionString(errCond)
+		if parseErr != nil {
+			err = parseErr
+			break
+		}
+		result["bound"] = bound
+		result["err_cond"] = errCond
+		boundPtr := &bound
+		traceAG := ui.AG.BMC(state, fExpr, nil, boundPtr)
+		if traceAG == nil {
+			result["reachable"] = false
+			result["found"] = false
+			result["result"] = "pass"
+			result["message"] = fmt.Sprintf("BMC with bound %d did not find a counterexample to:\n%s", bound, errCond)
+			break
+		}
+		traceUI := s.newAnalysisGraphUIForGraphLocked(traceAG)
+		traceUI.markFinalTraceState()
+		traceSheetID := s.registerAnalysisSheetLocked(traceUI)
+		result["reachable"] = true
+		result["found"] = true
+		result["result"] = "fail"
+		result["message"] = fmt.Sprintf("BMC with bound %d found a counterexample to:\n%s", bound, errCond)
+		result["trace_arg"] = AnalysisUIARGPayload(traceUI)
+		result["trace_sheet_id"] = traceSheetID
+		result["trace_label"] = analysisSheetLabel(traceSheetID)
+		s.emit(Event{Type: "status", Data: map[string]string{"message": "BMC at node " + nodeID}})
 	case "extend", "find_extension":
 		stateIdx := -1
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
 		if uiErr == nil && stateIdx >= 0 {
 			label, extErr := ui.FindExtension(stateIdx)
 			if extErr != nil {
-				err = extErr
+				var closedErr *ClosedStateError
+				if errors.As(extErr, &closedErr) {
+					result["closed"] = true
+					result["result"] = "closed"
+					result["message"] = closedErr.DialogMessage()
+					result["arg"] = AnalysisUIARGPayload(ui)
+				} else {
+					err = extErr
+				}
 			} else {
 				result["extension"] = label
 				result["arg"] = AnalysisUIARGPayload(ui)
+				if ui.CurrentConceptGraph != nil {
+					result["concept"] = conceptGraphActionPayload(ui.CurrentConceptGraph)
+				}
 			}
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Extended from node " + nodeID}})
@@ -3101,7 +3185,37 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
 		conjStr, _ := args["conjecture"].(string)
 		if uiErr == nil && stateIdx >= 0 {
-			err = ui.TryConjecture(stateIdx, conjStr)
+			tryResult, tryErr := ui.TryConjectureResult(stateIdx, conjStr)
+			if tryErr != nil {
+				err = tryErr
+				break
+			}
+			result["mode"] = string(tryResult.Mode)
+			result["view"] = tryResult.View
+			result["conjecture"] = tryResult.Conjecture
+			result["message"] = tryResult.Message
+			if tryResult.SourceLoc.Line > 0 {
+				result["lineno"] = tryResult.SourceLoc.Line
+				if tryResult.SourceLoc.Filename != "" {
+					result["file"] = tryResult.SourceLoc.Filename
+				} else if s.FilePath != "" {
+					result["file"] = s.FilePath
+				}
+				if s.FileContent != "" {
+					result["source"] = s.FileContent
+				}
+			}
+			if tryResult.Concept != nil {
+				result["concept"] = conceptGraphActionPayload(tryResult.Concept)
+			}
+			if tryResult.Trace != nil {
+				traceUI := s.newAnalysisGraphUIForGraphLocked(tryResult.Trace)
+				traceUI.markFinalTraceState()
+				traceSheetID := s.registerAnalysisSheetLocked(traceUI)
+				result["trace_arg"] = AnalysisUIARGPayload(traceUI)
+				result["trace_sheet_id"] = traceSheetID
+				result["trace_label"] = analysisSheetLabel(traceSheetID)
+			}
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Try conjecture at node " + nodeID}})
 	case "try_conjecture_choices":

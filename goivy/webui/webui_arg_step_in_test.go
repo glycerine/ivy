@@ -532,6 +532,54 @@ func TestARGChoiceBackedCommandsExposeConjecturesAndRememberedGraphs(t *testing.
 	}
 }
 
+func TestTryConjecturePDRBrowsesSourceAndShowsConceptGraph(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-try-conjecture-pdr")
+	if err := s.LoadFileContent("test.ivy", []byte(executeActionMenuSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+	s.AGUI.SetMode(ModePDR)
+
+	choices, err := s.ArgNodeAction("state_0", "try_conjecture_choices", map[string]interface{}{"sheet_id": "sheet-1"})
+	if err != nil {
+		t.Fatalf("try_conjecture_choices: %v", err)
+	}
+	conjChoices, ok := choices["choices"].([]ChoiceItem)
+	if !ok || len(conjChoices) == 0 {
+		t.Fatalf("expected conjecture choices, got %#v", choices["choices"])
+	}
+
+	result, err := s.ArgNodeAction("state_0", "try_conjecture", map[string]interface{}{
+		"sheet_id":   "sheet-1",
+		"conjecture": conjChoices[0].Value,
+	})
+	if err != nil {
+		t.Fatalf("try_conjecture: %v", err)
+	}
+	if result["view"] != "concept" {
+		t.Fatalf("try_conjecture view = %#v, want concept", result["view"])
+	}
+	if _, ok := result["concept"].(map[string]interface{}); !ok {
+		t.Fatalf("try_conjecture result missing concept payload: %#v", result["concept"])
+	}
+	if result["source"] != string(executeActionMenuSample) {
+		t.Fatalf("try_conjecture did not return source for browsing: %#v", result["source"])
+	}
+	if result["file"] != "test.ivy" {
+		t.Fatalf("try_conjecture source file = %#v, want test.ivy", result["file"])
+	}
+	if line, ok := result["lineno"].(int); !ok || line <= 0 {
+		t.Fatalf("try_conjecture lineno = %#v, want positive int", result["lineno"])
+	}
+	if s.AGUI.CurrentConceptGraph == nil || s.AGUI.CurrentConceptGraph.G() == nil {
+		t.Fatal("try_conjecture did not install a current concept graph")
+	}
+	if got := len(s.AGUI.CurrentConceptGraph.G().InteractiveSess.SupposeConstraints); got == 0 {
+		t.Fatal("try_conjecture did not add dual conjecture constraints to concept graph")
+	}
+}
+
 func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
 	cfg := goivy.NewConfig()
 	be := NewGoBackend(cfg)

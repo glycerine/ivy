@@ -51,6 +51,7 @@ describe('IvyApiAdapter', () => {
 
     await api.reloadContent('ivy source', 'client.ivy');
     await api.getConceptGraph('state_1', 'sheet-2');
+    await api.getMenus({ sheetId: 'sheet-2', uiMode: 'reachability' });
     await api.executeAction('gather', { sheet_id: 'sheet-1' });
     await api.argNodeAction('state_1', 'view_source', { target: 'state_2' });
     await api.runCheck('bounded', { bound: 7 });
@@ -58,6 +59,7 @@ describe('IvyApiAdapter', () => {
     expect(api.calls).toEqual([
       ['loadModel', { content: 'ivy source', filename: 'client.ivy' }],
       ['getSnapshot', { concept: { nodeId: 'state_1', sheetId: 'sheet-2' } }],
+      ['getSnapshot', { menus: { sheetId: 'sheet-2', uiMode: 'reachability' } }],
       ['runCommand', { commandId: 'gather', args: { sheet_id: 'sheet-1' } }],
       ['runCommand', {
         commandId: 'view_source',

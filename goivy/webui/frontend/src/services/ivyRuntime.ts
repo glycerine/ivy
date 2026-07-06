@@ -172,6 +172,12 @@ import {
     splitConcept as splitConceptViaService,
     supposeEmpty as supposeEmptyViaService,
 } from './conceptActionService.ts';
+import {
+    abstractionSuggestedName,
+    invariantSuggestedName,
+    saveMimeType,
+    savePickerOptions,
+} from './saveDialogService.ts';
 const defaultRuntimeDependencies = {
     IvyAPI: DefaultIvyAPI,
     BrowserIvyAPI: DefaultBrowserIvyAPI,
@@ -282,6 +288,7 @@ class IvyRuntime {
         this._modelLoadGeneration = 0;
         this._activeModelLoad = null;
         this._deferModelLoadRendering = false;
+        this._dialogAnswerQueue = [];
     }
 
     createApi(mode = this.jobSubmissionMode || 'browser') {
@@ -3223,32 +3230,18 @@ class IvyRuntime {
         try {
             var result = await this.api.executeAction('save_invariant', {});
             var text = (result && result.content) || '';
-            var suggestedName = (this._persistedFileName || 'model').replace(/\.ivy$/, '') + '_invariant.ivy';
+            var suggestedName = invariantSuggestedName(this._persistedFileName);
 
             // Use File System Access API to let user choose save location
             if (window.showSaveFilePicker) {
-                var handle = await window.showSaveFilePicker({
-                    suggestedName: suggestedName,
-                    types: [{
-                        description: 'Ivy files',
-                        accept: { 'text/plain': ['.ivy'] },
-                    }],
-                });
+                var handle = await window.showSaveFilePicker(savePickerOptions('invariant', suggestedName));
                 var writable = await handle.createWritable();
                 await writable.write(text);
                 await writable.close();
                 this.controls.setStatus('Invariant saved: ' + handle.name, 'success');
             } else {
                 // Fallback: browser download
-                var blob = new Blob([text], { type: 'text/plain' });
-                var url = URL.createObjectURL(blob);
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = suggestedName;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+                this.downloadTextFile(suggestedName, text, saveMimeType('invariant'));
                 this.controls.setStatus('Invariant downloaded: ' + suggestedName, 'success');
             }
         } catch (e) {
@@ -4112,7 +4105,10 @@ class IvyRuntime {
 
     async loadMenuDescriptors() {
         try {
-            var menus = await this.api.getMenus();
+            var menus = await this.api.getMenus({
+                sheetId: this.activeSheetId || 'sheet-1',
+                uiMode: this.getUIMode ? this.getUIMode() : this.uiMode,
+            });
             this.renderMenuRegion('arg', menus.arg || []);
             this.renderMenuRegion('concept', menus.concept || []);
         } catch (e) {
@@ -4358,7 +4354,33 @@ class IvyRuntime {
         };
     }
 
+    preseedDialogAnswers(answers = []) {
+        this._dialogAnswerQueue = Array.isArray(answers) ? answers.slice() : [answers];
+        return this._dialogAnswerQueue.length;
+    }
+
+    clearDialogAnswers() {
+        this._dialogAnswerQueue = [];
+    }
+
+    _preseededDialogPromise(kind) {
+        if (!this._dialogAnswerQueue || this._dialogAnswerQueue.length === 0) return null;
+        var answer = this._dialogAnswerQueue.shift();
+        var value = answer;
+        if (answer && typeof answer === 'object' && Object.prototype.hasOwnProperty.call(answer, 'kind')) {
+            var expectedKind = String(kind || '').toLowerCase().replace(/[-_]/g, '');
+            var actualKind = String(answer.kind || '').toLowerCase().replace(/[-_]/g, '');
+            if (actualKind && actualKind !== expectedKind) {
+                return Promise.reject(new Error('preseeded dialog answer kind ' + answer.kind + ' does not match ' + kind));
+            }
+            value = answer.value;
+        }
+        return Promise.resolve(value);
+    }
+
     okDialog(title, message) {
+        var seeded = this._preseededDialogPromise('ok');
+        if (seeded) return seeded;
         var self = this;
         return new Promise(function (resolve) {
             var dialog = self._createDialog(title, message);
@@ -4372,6 +4394,8 @@ class IvyRuntime {
     }
 
     okCancelDialog(title, message) {
+        var seeded = this._preseededDialogPromise('okCancel');
+        if (seeded) return seeded;
         var self = this;
         return new Promise(function (resolve) {
             var dialog = self._createDialog(title, message);
@@ -4388,6 +4412,8 @@ class IvyRuntime {
     }
 
     confirmDeleteSavedSessionsDialog() {
+        var seeded = this._preseededDialogPromise('buttonList');
+        if (seeded) return seeded;
         var self = this;
         return new Promise(function (resolve) {
             var dialog = self._createDialog('Delete saved session data', 'Really delete all browser localStorage sessions?');
@@ -4405,6 +4431,8 @@ class IvyRuntime {
     }
 
     textDialog(title, message, text, options) {
+        var seeded = this._preseededDialogPromise('text');
+        if (seeded) return seeded;
         var self = this;
         var opts = options || {};
         return new Promise(function (resolve) {
@@ -4496,6 +4524,8 @@ class IvyRuntime {
     }
 
     entryDialog(title, message, initialValue, options) {
+        var seeded = this._preseededDialogPromise('entry');
+        if (seeded) return seeded;
         var self = this;
         var opts = options || {};
         return new Promise(function (resolve) {
@@ -4515,15 +4545,24 @@ class IvyRuntime {
                     self._finishDialog(dialog, cleanup, resolve, null);
                 });
             }
-            self._addDialogButton(dialog, opts.okLabel || 'OK', function () {
+            var submit = function () {
                 self._finishDialog(dialog, cleanup, resolve, input.value);
+            };
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submit();
+                }
             });
+            self._addDialogButton(dialog, opts.okLabel || 'OK', submit);
             input.focus();
             input.select();
         });
     }
 
     integerDialog(title, message, initialValue, options) {
+        var seeded = this._preseededDialogPromise('integer');
+        if (seeded) return seeded;
         var self = this;
         var opts = options || {};
         return new Promise(function (resolve) {
@@ -4575,6 +4614,8 @@ class IvyRuntime {
     }
 
     listboxDialog(title, message, items, options) {
+        var seeded = this._preseededDialogPromise('listbox');
+        if (seeded) return seeded;
         var self = this;
         var opts = options || {};
         var entries = (items || []).map(function (item) {
@@ -4608,22 +4649,26 @@ class IvyRuntime {
                 });
             }
             self._addDialogButton(dialog, opts.okLabel || 'OK', function () {
+                var returnIndex = !!(opts.returnIndex || opts.returnIndices);
                 if (opts.multiple) {
                     var selected = Array.from(select.selectedOptions).map(function (opt) {
-                        return entries[Number(opt.getAttribute('data-ivy-dialog-index'))].value;
+                        var selectedIndex = Number(opt.getAttribute('data-ivy-dialog-index'));
+                        return returnIndex ? selectedIndex : entries[selectedIndex].value;
                     });
                     self._finishDialog(dialog, cleanup, resolve, selected);
                     return;
                 }
                 var selectedOption = select.selectedOptions[0];
                 var idx = selectedOption ? Number(selectedOption.getAttribute('data-ivy-dialog-index')) : -1;
-                self._finishDialog(dialog, cleanup, resolve, idx >= 0 ? entries[idx].value : null);
+                self._finishDialog(dialog, cleanup, resolve, idx >= 0 ? (returnIndex ? idx : entries[idx].value) : null);
             });
             select.focus();
         });
     }
 
     buttonListDialog(title, message, buttons) {
+        var seeded = this._preseededDialogPromise('buttonList');
+        if (seeded) return seeded;
         var self = this;
         var entries = buttons || [];
         return new Promise(function (resolve) {
@@ -4724,31 +4769,17 @@ class IvyRuntime {
                 }
             }
 
-            var suggestedName = (this._persistedFileName || 'abstraction').replace(/\.ivy$/, '') + '_abstraction.ivy';
+            var suggestedName = abstractionSuggestedName(this._persistedFileName);
 
             if (window.showSaveFilePicker) {
-                var handle = await window.showSaveFilePicker({
-                    suggestedName: suggestedName,
-                    types: [{
-                        description: 'Ivy files',
-                        accept: { 'text/plain': ['.ivy'] },
-                    }],
-                });
+                var handle = await window.showSaveFilePicker(savePickerOptions('abstraction', suggestedName));
                 var writable = await handle.createWritable();
                 await writable.write(content);
                 await writable.close();
                 this.controls.setStatus('Abstraction saved: ' + handle.name, 'success');
             } else {
                 // Fallback: browser download
-                var blob = new Blob([content], { type: 'text/plain' });
-                var url = URL.createObjectURL(blob);
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = suggestedName;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+                this.downloadTextFile(suggestedName, content, saveMimeType('abstraction'));
                 this.controls.setStatus('Abstraction downloaded: ' + suggestedName, 'success');
             }
         } catch (e) {
@@ -4976,11 +5007,18 @@ class IvyRuntime {
     async recalculateGraph() {
         this.controls.setStatus('Recalculating...');
         try {
-            await this.api.executeAction('recalculate', {});
-            await this.refreshConceptGraph();
+            var sheetId = this.activeSheetId || 'sheet-1';
+            var result = await this.api.executeAction('recalculate', { sheet_id: sheetId });
+            if (result && result.concept) {
+                this.applyConceptSnapshot(result.concept.sheet_id || result.sheet_id || sheetId, result.concept);
+            } else {
+                await this.refreshConceptGraph();
+            }
             this.controls.setStatus('Recalculated', 'success');
+            return result;
         } catch (e) {
             this.controls.setStatus('Recalculate failed: ' + e.message, 'error');
+            return null;
         }
     }
 

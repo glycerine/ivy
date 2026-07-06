@@ -4,6 +4,7 @@ import {
   selectSheet,
   selectStateToggles,
 } from '../models/uiDataSelectors.ts';
+import { analysisStateSuggestedName, saveMimeType, savePickerOptions } from './saveDialogService.ts';
 
 function rawRecord(value) {
   return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
@@ -178,18 +179,15 @@ export async function saveAnalysisState(app, {
   try {
     const state = app.buildAnalysisState();
     const text = `${JSON.stringify(state, null, 2)}\n`;
-    const suggestedName = (app._persistedFileName || 'ivy_analysis').replace(/\.ivy$/, '') + '.ivyweb.json';
+    const suggestedName = analysisStateSuggestedName(app._persistedFileName);
     if (win && win.showSaveFilePicker) {
-      const handle = await win.showSaveFilePicker({
-        suggestedName,
-        types: [{ description: 'IvyWeb analysis state', accept: { 'application/json': ['.json'] } }],
-      });
+      const handle = await win.showSaveFilePicker(savePickerOptions('analysisState', suggestedName));
       const writable = await handle.createWritable();
       await writable.write(text);
       await writable.close();
       app.controls.setStatus(`Analysis state saved: ${handle.name}`, 'success');
     } else {
-      app.downloadTextFile(suggestedName, text, 'application/json');
+      app.downloadTextFile(suggestedName, text, saveMimeType('analysisState'));
       app.controls.setStatus(`Analysis state downloaded: ${suggestedName}`, 'success');
     }
     return state;

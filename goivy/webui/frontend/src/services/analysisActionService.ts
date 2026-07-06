@@ -1,4 +1,5 @@
 import { applyConceptSnapshot } from './uiDataRenderService.ts';
+import { saveMimeType, savePickerOptions } from './saveDialogService.ts';
 
 function activeSheetId(app) {
   return (app && app.activeSheetId) || 'sheet-1';
@@ -115,16 +116,10 @@ export async function exportConjecture(app, {
     const result = await app.api.executeAction('export', { sheet_id: app.activeSheetId || 'sheet-1' });
     const content = (result && result.content) || '';
     const filename = (result && result.filename) || 'concept_graph.dot';
-    const mimeType = (result && result.mime_type) || 'text/vnd.graphviz';
+    const mimeType = (result && result.mime_type) || saveMimeType('dot');
     if (content) {
       if (win && win.showSaveFilePicker) {
-        const handle = await win.showSaveFilePicker({
-          suggestedName: filename,
-          types: [{
-            description: 'DOT files',
-            accept: { 'text/vnd.graphviz': ['.dot'] },
-          }],
-        });
+        const handle = await win.showSaveFilePicker(savePickerOptions('dot', filename));
         const writable = await handle.createWritable();
         await writable.write(content);
         await writable.close();

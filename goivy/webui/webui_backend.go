@@ -26,6 +26,7 @@ type Backend interface {
 	GetARG(sessionID string, full bool) ([]byte, error)
 	GetCTIARG(sessionID string) ([]byte, error)
 	GetConcept(sessionID, sheetID, nodeID string) ([]byte, error)
+	GetMenus(sessionID string, req MenuRequest) ([]byte, error)
 	ConceptSplit(sessionID, concept, splitBy string) ([]byte, error)
 	ConceptEmpty(sessionID, concept string) ([]byte, error)
 	ConceptRemove(sessionID, concept string) ([]byte, error)
@@ -46,7 +47,7 @@ type Backend interface {
 }
 
 type menuBackend interface {
-	GetMenus(sessionID string) ([]byte, error)
+	GetMenus(sessionID string, req MenuRequest) ([]byte, error)
 }
 
 type ConceptMaterializeRequest struct {

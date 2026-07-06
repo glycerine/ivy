@@ -183,7 +183,12 @@ func getSnapshot(ctx context.Context, req wasmRequest) (map[string]any, error) {
 		out["concept"] = concept
 	}
 	if hasKey(snapshot, "menus") {
-		menus, err := engine.Menus(ctx)
+		menuReq := webui.MenuRequest{}
+		if raw, ok := snapshot["menus"].(map[string]any); ok {
+			menuReq.SheetID = stringArg(raw["sheetId"])
+			menuReq.UIMode = stringArg(raw["uiMode"])
+		}
+		menus, err := engine.Menus(ctx, req.SessionID, menuReq)
 		if err != nil {
 			return nil, err
 		}

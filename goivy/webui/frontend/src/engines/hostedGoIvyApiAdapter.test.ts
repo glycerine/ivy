@@ -55,9 +55,11 @@ describe('HostedGoIvyApiAdapter', () => {
 
     await api.getARG({ sheetId: 'trace-1' });
     await api.getConceptGraph('state_2', 'trace-1');
+    await api.getMenus({ sheetId: 'sheet-2', uiMode: 'reachability' });
 
     expect(fetchImpl.mock.calls[0][0]).toBe('/api/session/abc/arg?sheet=trace-1');
     expect(fetchImpl.mock.calls[1][0]).toBe('/api/session/abc/concept?sheet=trace-1&node=state_2');
+    expect(fetchImpl.mock.calls[2][0]).toBe('/api/session/abc/menus?sheet=sheet-2&ui_mode=reachability');
   });
 
   it('maps check commands to the hosted check endpoint', async () => {

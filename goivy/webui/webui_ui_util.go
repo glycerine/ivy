@@ -151,6 +151,12 @@ type BrowserMenuDescriptors struct {
 	Concept []MenuDef `json:"concept"`
 }
 
+// MenuRequest carries the browser's active menu context.
+type MenuRequest struct {
+	SheetID string `json:"sheet_id,omitempty"`
+	UIMode  string `json:"ui_mode,omitempty"`
+}
+
 // BuildMenuBar constructs a MenuBarDef from a list of menu definitions.
 func BuildMenuBar(menus []MenuDef) *MenuBarDef {
 	return &MenuBarDef{Menus: menus}
@@ -159,9 +165,72 @@ func BuildMenuBar(menus []MenuDef) *MenuBarDef {
 // BuildBrowserMenuDescriptors returns the current browser menu descriptors.
 func BuildBrowserMenuDescriptors() *BrowserMenuDescriptors {
 	return &BrowserMenuDescriptors{
-		Arg:     BrowserizeMenuDefs(NewCTIAnalysisGraphUI(nil).CTIMenus(), "action"),
+		Arg:     BrowserizeMenuDefs(withBrowserFileMenu(NewCTIAnalysisGraphUI(nil).CTIMenus()), "action"),
 		Concept: BrowserizeMenuDefs(ConceptGraphUIMenus(), "action"),
 	}
+}
+
+// BuildBrowserMenuDescriptorsForSession returns menu descriptors for the
+// active sheet/workflow, using the session's UI objects instead of defaults.
+func BuildBrowserMenuDescriptorsForSession(sess *Session, req MenuRequest) *BrowserMenuDescriptors {
+	if sess == nil {
+		return BuildBrowserMenuDescriptors()
+	}
+	sess.mu.Lock()
+	defer sess.mu.Unlock()
+
+	sheetID := req.SheetID
+	if sheetID == "" {
+		sheetID = rootSheetID
+	}
+	uiMode := strings.ToLower(strings.TrimSpace(req.UIMode))
+
+	if sess.EventViewer != nil && sheetID != "" && sess.EventViewer.GetSheet(sheetID) != nil {
+		return &BrowserMenuDescriptors{
+			Arg:     BrowserizeMenuDefs([]MenuDef{browserFileMenu()}, "action"),
+			Concept: []MenuDef{},
+		}
+	}
+
+	if uiMode == "reachability" {
+		argMenus := NewAnalysisGraphUI().Menus()
+		conceptMenus := []MenuDef{}
+		if ui := sess.analysisUIForSheetLocked(sheetID); ui != nil {
+			argMenus = ui.Menus()
+			if ui.CurrentConceptGraph != nil {
+				conceptMenus = ui.CurrentConceptGraph.Menus()
+			}
+		}
+		return &BrowserMenuDescriptors{
+			Arg:     BrowserizeMenuDefs(withBrowserFileMenu(argMenus), "action"),
+			Concept: BrowserizeMenuDefs(conceptMenus, "action"),
+		}
+	}
+
+	argMenus := NewCTIAnalysisGraphUI(nil).CTIMenus()
+	if sess.CTIUI != nil {
+		argMenus = sess.CTIUI.CTIMenus()
+	}
+	return &BrowserMenuDescriptors{
+		Arg:     BrowserizeMenuDefs(withBrowserFileMenu(argMenus), "action"),
+		Concept: BrowserizeMenuDefs(ConceptGraphUIMenus(), "action"),
+	}
+}
+
+func browserFileMenu() MenuDef {
+	return NewAnalysisGraphUI().Menus()[0]
+}
+
+func withBrowserFileMenu(menus []MenuDef) []MenuDef {
+	result := make([]MenuDef, 0, len(menus)+1)
+	if len(menus) > 0 && menus[0].Label == "File" {
+		result = append(result, browserFileMenu())
+		result = append(result, menus[1:]...)
+		return result
+	}
+	result = append(result, browserFileMenu())
+	result = append(result, menus...)
+	return result
 }
 
 // BrowserizeMenuDefs annotates toolkit-independent menu specs with browser

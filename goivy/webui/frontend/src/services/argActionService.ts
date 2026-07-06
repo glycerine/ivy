@@ -1,5 +1,6 @@
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
-import { addTraceResultViewAction } from './checkService.ts';
+import { addTraceResultViewAction, openTraceArgFromResult } from './checkService.ts';
+import { runWithContext } from './runContextService.ts';
 
 export async function prepareArgNodeActionArgs(app, nodeData, actionName, args, sheetId) {
   if (actionName === 'try_conjecture' && !args.conjecture) {
@@ -22,6 +23,24 @@ export async function prepareArgNodeActionArgs(app, nodeData, actionName, args, 
     );
     if (selectedGoal == null) return null;
     args.goal = selectedGoal;
+  } else if (actionName === 'bmc') {
+    if (args.bound == null) {
+      const initialBound = Number.isInteger(app.currentBound) && app.currentBound >= 0 ? app.currentBound : 10;
+      const bound = await app.integerDialog('Bounded check', 'Enter bound:', initialBound, {
+        min: 0,
+        okLabel: 'Check',
+      });
+      if (bound === null) return null;
+      args.bound = bound;
+      app.currentBound = bound;
+    }
+    if (!args.err_cond && !args.error_condition) {
+      const errCond = await app.entryDialog('Bounded check', 'Enter error condition:', 'true', {
+        okLabel: 'Check',
+      });
+      if (errCond === null) return null;
+      args.err_cond = errCond || 'true';
+    }
   } else if (actionName === 'check_safety' && !args.mode && typeof app.getMode === 'function') {
     args.mode = app.getMode();
   }
@@ -42,6 +61,51 @@ function showArgNodeSafetyResult(app, result) {
   return true;
 }
 
+function splitBmcMessage(message) {
+  const lines = String(message || 'Bounded check complete').split('\n');
+  const dialogMessage = lines.shift() || 'Bounded check complete';
+  return {
+    dialogMessage,
+    dialogText: lines.join('\n'),
+  };
+}
+
+async function showArgNodeBmcResult(app, result) {
+  const message = (result && result.message) || 'Bounded check complete';
+  const found = !!(result && (result.reachable === true || result.found === true || result.result === 'fail'));
+  app.controls.setStatus(message, found ? 'error' : 'success');
+  const { dialogMessage, dialogText } = splitBmcMessage(message);
+  if (found && result && result.trace_arg && typeof app.textDialog === 'function') {
+    const action = await app.textDialog('ivyweb', dialogMessage, dialogText, {
+      okLabel: 'View',
+      cancel: true,
+      primaryFirst: true,
+    });
+    if (action !== null) {
+      openTraceArgFromResult(app, result, { label: result.trace_label || 'BMC counterexample' });
+    }
+    return true;
+  }
+  if (typeof app.okDialog === 'function') {
+    await app.okDialog('ivyweb', message);
+  } else if (app.controls && typeof app.controls.showInfo === 'function') {
+    app.controls.showInfo('Bounded Check', message);
+  }
+  return true;
+}
+
+async function showArgNodeExtendResult(app, result) {
+  if (!result || !result.closed) return false;
+  const message = result.message || 'State is closed.';
+  if (typeof app.okDialog === 'function') {
+    await app.okDialog('ivyweb', message);
+  } else if (app.controls && typeof app.controls.showInfo === 'function') {
+    app.controls.showInfo('Extend', message);
+  }
+  app.controls.setStatus(message, 'warning');
+  return true;
+}
+
 export async function executeArgNodeAction(app, nodeData, action, sheetId) {
   const targetSheetId = sheetId || app.activeSheetId || 'sheet-1';
   if (app.isVisualOnlySheet(targetSheetId)) {
@@ -57,7 +121,11 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
       app.controls.setStatus(`Action cancelled: ${actionName}`, 'warning');
       return null;
     }
-    const result = await app.api.argNodeAction(nodeData.obj || nodeData.id, actionName, args);
+    const result = await runWithContext(app, {
+      busyMessage: `Executing: ${actionName}...`,
+      failurePrefix: 'Action failed',
+    }, () => app.api.argNodeAction(nodeData.obj || nodeData.id, actionName, args));
+    if (!result) return null;
     if (result && result.arg) {
       applyArgSnapshot(app, targetSheetId, result.arg);
     }
@@ -68,10 +136,24 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
       showArgNodeSafetyResult(app, result);
       return result;
     }
+    if (actionName === 'bmc') {
+      await showArgNodeBmcResult(app, result);
+      return result;
+    }
+    if (actionName === 'find_extension' || actionName === 'extend') {
+      if (await showArgNodeExtendResult(app, result)) {
+        return result;
+      }
+    }
     app.controls.setStatus(`Action complete: ${actionName}`, 'success');
     return result;
   } catch (err) {
-    app.controls.setStatus(`Action failed: ${err.message}`, 'error');
+    await runWithContext(app, {
+      busyMessage: `Executing: ${actionName}...`,
+      failurePrefix: 'Action failed',
+    }, () => {
+      throw err;
+    });
     console.error('ARG action error:', err);
     return null;
   }
@@ -81,11 +163,15 @@ export async function executeArgEdgeAction(app, edgeData, actionName, sheetId) {
   const targetSheetId = sheetId || app.activeSheetId || 'sheet-1';
   app.controls.setStatus(`Executing: ${actionName}...`);
   try {
-    const result = await app.api.argNodeAction(
-      edgeData.source_obj || edgeData.source || edgeData.obj,
-      actionName,
-      { target: edgeData.target_obj || edgeData.target, sheet_id: targetSheetId },
-    );
+    const result = await runWithContext(app, {
+      busyMessage: `Executing: ${actionName}...`,
+      failurePrefix: 'Edge action failed',
+    }, () => app.api.argNodeAction(
+        edgeData.source_obj || edgeData.source || edgeData.obj,
+        actionName,
+        { target: edgeData.target_obj || edgeData.target, sheet_id: targetSheetId },
+      ));
+    if (!result) return null;
     if (actionName === 'decompose' && result && result.decomposed) {
       const label = `Step: ${edgeData.label || actionName}`;
       app.openARGSheet(label, result.sub_arg, result.sheet_id);
@@ -106,7 +192,12 @@ export async function executeArgEdgeAction(app, edgeData, actionName, sheetId) {
     app.controls.setStatus(`Done: ${actionName}`, 'success');
     return result;
   } catch (err) {
-    app.controls.setStatus(`Edge action failed: ${err.message}`, 'error');
+    await runWithContext(app, {
+      busyMessage: `Executing: ${actionName}...`,
+      failurePrefix: 'Edge action failed',
+    }, () => {
+      throw err;
+    });
     console.error('ARG edge action error:', err);
     return null;
   }

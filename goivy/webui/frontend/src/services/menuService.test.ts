@@ -114,6 +114,7 @@ describe('menuService', () => {
   it('routes descriptor File menu actions to browser controller commands', async () => {
     const app = {
       activeSheetId: 'sheet-2',
+      save: vi.fn(async () => true),
       saveAnalysisState: vi.fn(async () => ({ ok: true })),
       saveAbstraction: vi.fn(async () => ({ ok: true })),
       saveInvariant: vi.fn(async () => ({ ok: true })),
@@ -122,17 +123,65 @@ describe('menuService', () => {
       runAction: vi.fn(),
     };
 
-    await dispatchMenuDescriptorAction(app, 'arg', { action: 'save', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'save_model', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'save_analysis_state', dispatch: 'action' });
     await dispatchMenuDescriptorAction(app, 'arg', { action: 'save_abstraction', dispatch: 'action' });
     await dispatchMenuDescriptorAction(app, 'arg', { action: 'save_conjectures', dispatch: 'action' });
     await dispatchMenuDescriptorAction(app, 'arg', { action: 'remove_tab', dispatch: 'action' });
     await dispatchMenuDescriptorAction(app, 'arg', { action: 'exit', dispatch: 'action' });
 
+    expect(app.save).toHaveBeenCalledTimes(1);
     expect(app.saveAnalysisState).toHaveBeenCalledTimes(1);
     expect(app.saveAbstraction).toHaveBeenCalledTimes(1);
     expect(app.saveInvariant).toHaveBeenCalledTimes(1);
     expect(app.removeSheet).toHaveBeenCalledWith('sheet-2');
     expect(app.closeCurrentFile).toHaveBeenCalledTimes(1);
+    expect(app.runAction).not.toHaveBeenCalled();
+  });
+
+  it('routes descriptor workflow menu actions to controller commands', async () => {
+    const app = {
+      setMode: vi.fn(),
+      checkInduction: vi.fn(async () => ({ ok: true })),
+      boundedCheck: vi.fn(async () => ({ ok: true })),
+      diagramCurrentState: vi.fn(async () => ({ ok: true })),
+      weakenInvariant: vi.fn(async () => ({ ok: true })),
+      recalculateAll: vi.fn(async () => ({ ok: true })),
+      showReachableStates: vi.fn(async () => ({ ok: true })),
+      ctiBoundedCheck: vi.fn(async () => ({ ok: true })),
+      ctiConceptAction: vi.fn(async () => ({ ok: true })),
+      runAction: vi.fn(async () => ({ ok: true })),
+    };
+
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'mode_concrete', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'mode_bounded', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'check_inductiveness', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'bmc_conjecture', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'diagram', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'weaken', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'recalculate_all', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'arg', { action: 'show_reachable', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'concept', { action: 'gather_facts', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'concept', { action: 'minimize_conjecture', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'concept', { action: 'is_sufficient', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'concept', { action: 'is_inductive', dispatch: 'action' });
+    await dispatchMenuDescriptorAction(app, 'concept', { action: 'strengthen', dispatch: 'action' });
+
+    expect(app.setMode.mock.calls).toEqual([['concrete'], ['bounded']]);
+    expect(app.checkInduction).toHaveBeenCalledTimes(1);
+    expect(app.boundedCheck).toHaveBeenCalledTimes(1);
+    expect(app.diagramCurrentState).toHaveBeenCalledTimes(1);
+    expect(app.weakenInvariant).toHaveBeenCalledTimes(1);
+    expect(app.recalculateAll).toHaveBeenCalledTimes(1);
+    expect(app.showReachableStates).toHaveBeenCalledTimes(1);
+    expect(app.ctiBoundedCheck).not.toHaveBeenCalled();
+    expect(app.ctiConceptAction.mock.calls).toEqual([
+      ['cti_gather'],
+      ['cti_minimize'],
+      ['cti_check_sufficient'],
+      ['cti_check_inductive'],
+      ['cti_strengthen'],
+    ]);
     expect(app.runAction).not.toHaveBeenCalled();
   });
 });

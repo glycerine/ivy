@@ -399,6 +399,9 @@ func (w *GraphWidget) Recalculate() error {
 	if g.ParentState != nil {
 		if agui, ok := w.Parent.(*AnalysisGraphUI); ok && agui != nil && agui.AG != nil {
 			if ps, ok := g.ParentState.(*goivy.State); ok && ps.Clauses != nil {
+				if err := agui.RecalculateState(ps); err != nil {
+					return err
+				}
 				clauses := ps.Clauses.ToFormula()
 				if g.InteractiveSess != nil {
 					g.InteractiveSess.State = clauses

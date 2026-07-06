@@ -196,6 +196,13 @@ func (c *ConformBackend) GetConcept(sessionID, sheetID, nodeID string) ([]byte, 
 	)
 }
 
+func (c *ConformBackend) GetMenus(sessionID string, req MenuRequest) ([]byte, error) {
+	return c.conform("GetMenus",
+		func() ([]byte, error) { return c.goBE.GetMenus(sessionID, req) },
+		func() ([]byte, error) { return c.pyBE.GetMenus(c.pySessionID(sessionID), req) },
+	)
+}
+
 func (c *ConformBackend) ConceptSplit(sessionID, concept, splitBy string) ([]byte, error) {
 	return c.conform("ConceptSplit",
 		func() ([]byte, error) { return c.goBE.ConceptSplit(sessionID, concept, splitBy) },

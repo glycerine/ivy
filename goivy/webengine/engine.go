@@ -159,19 +159,11 @@ func (e *Engine) Toggles(ctx context.Context, sessionID string) (Payload, error)
 	return decodePayload(e.backend.GetToggles(sessionID))
 }
 
-func (e *Engine) Menus(ctx context.Context) (Payload, error) {
+func (e *Engine) Menus(ctx context.Context, sessionID string, req webui.MenuRequest) (Payload, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
-	data, err := json.Marshal(webui.BuildBrowserMenuDescriptors())
-	if err != nil {
-		return nil, err
-	}
-	var payload Payload
-	if err := json.Unmarshal(data, &payload); err != nil {
-		return nil, fmt.Errorf("webengine: decode menu json: %w", err)
-	}
-	return payload, nil
+	return decodePayload(e.backend.GetMenus(sessionID, req))
 }
 
 func (e *Engine) Action(ctx context.Context, sessionID string, req ActionRequest) (Payload, error) {

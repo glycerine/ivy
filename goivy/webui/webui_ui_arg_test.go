@@ -474,6 +474,74 @@ func TestBMCNilAG(t *testing.T) {
 	}
 }
 
+func TestArgNodeActionBMCReturnsReachabilityAndTrace(t *testing.T) {
+	cfg := goivy.NewConfig()
+	s := NewSession(cfg, "test-arg-node-bmc")
+	mod := goivy.New()
+	ag := goivy.NewAnalysisGraph(mod)
+	ag.Add(goivy.NewState(mod, goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)), nil)
+	ui := NewAnalysisGraphUI()
+	ui.AG = ag
+	ui.Mod = mod
+	ui.G = AnalysisUIARGState(ui)
+	ui.SyncCallback = func() { ui.G = AnalysisUIARGState(ui) }
+	s.AG = ag
+	s.AGUI = ui
+	s.CompiledModule = mod
+	drainEvents(s)
+
+	unreachable, err := s.ArgNodeAction("state_0", "bmc", map[string]interface{}{
+		"bound":    float64(0),
+		"err_cond": "false",
+	})
+	if err != nil {
+		t.Fatalf("ArgNodeAction bmc unreachable: %v", err)
+	}
+	if got := unreachable["reachable"]; got != false {
+		t.Fatalf("unreachable reachable = %#v, want false", got)
+	}
+	if got := unreachable["result"]; got != "pass" {
+		t.Fatalf("unreachable result = %#v, want pass", got)
+	}
+	if _, ok := unreachable["trace_arg"]; ok {
+		t.Fatalf("unreachable BMC should not include trace_arg: %#v", unreachable)
+	}
+
+	reachable, err := s.ArgNodeAction("state_0", "bmc", map[string]interface{}{
+		"bound":    float64(0),
+		"err_cond": "true",
+	})
+	if err != nil {
+		t.Fatalf("ArgNodeAction bmc reachable: %v", err)
+	}
+	if got := reachable["bound"]; got != 0 {
+		t.Fatalf("reachable bound = %#v, want 0", got)
+	}
+	if got := reachable["err_cond"]; got != "true" {
+		t.Fatalf("reachable err_cond = %#v, want true", got)
+	}
+	if got := reachable["reachable"]; got != true {
+		t.Fatalf("reachable reachable = %#v, want true", got)
+	}
+	if got := reachable["result"]; got != "fail" {
+		t.Fatalf("reachable result = %#v, want fail", got)
+	}
+	if _, ok := reachable["trace_sheet_id"].(string); !ok {
+		t.Fatalf("missing trace_sheet_id in result: %#v", reachable)
+	}
+	traceArg, ok := reachable["trace_arg"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("missing trace_arg in result: %#v", reachable)
+	}
+	traceState := requireArgState(t, traceArg)
+	if len(traceState.States) == 0 {
+		t.Fatalf("trace ARG has no states: %#v", traceState)
+	}
+	if !traceState.States[len(traceState.States)-1].IsMarked {
+		t.Fatalf("final trace state is not marked: %#v", traceState.States)
+	}
+}
+
 // --- Stub 15: TryProperty ---
 
 func TestTryPropertyEmpty(t *testing.T) {
@@ -594,6 +662,64 @@ func TestArgNodeActionBoundedSafetyFailureReturnsTrace(t *testing.T) {
 	}
 	if countCyNodesWithClass(traceArg, "marked_state") != 1 {
 		t.Fatalf("trace ARG should render exactly one marked node: %#v", traceArg["elements"])
+	}
+}
+
+func TestArgNodeActionExtendClosedNodeReturnsDialogPayload(t *testing.T) {
+	cfg := goivy.NewConfig()
+	s := NewSession(cfg, "test-extend-closed")
+	mod := goivy.New()
+	ag := goivy.NewAnalysisGraph(mod)
+	ag.Add(goivy.NewState(mod, goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)), nil)
+	ui := NewAnalysisGraphUI()
+	ui.AG = ag
+	ui.Mod = mod
+	ui.G = AnalysisUIARGState(ui)
+	s.AG = ag
+	s.AGUI = ui
+	s.SheetUIs = map[string]*AnalysisGraphUI{rootSheetID: ui}
+	s.sheetCounter = 1
+
+	result, err := s.ArgNodeAction("state_0", "find_extension", nil)
+	if err != nil {
+		t.Fatalf("find_extension should return a closed-node payload, not an error: %v", err)
+	}
+	if result["closed"] != true {
+		t.Fatalf("closed node payload missing closed=true: %#v", result)
+	}
+	if result["result"] != "closed" {
+		t.Fatalf("closed node result = %#v, want closed", result["result"])
+	}
+	if result["message"] != "State 0 is closed." {
+		t.Fatalf("closed node message = %#v", result["message"])
+	}
+}
+
+func TestArgNodeActionExtendAddsStateAndViewsConceptGraph(t *testing.T) {
+	s, ui := loadARGTestSession(t)
+	drainEvents(s)
+	beforeStates := len(s.AG.States)
+	result, err := s.ArgNodeAction("state_0", "find_extension", nil)
+	if err != nil {
+		t.Fatalf("find_extension: %v", err)
+	}
+	if len(s.AG.States) <= beforeStates {
+		t.Fatalf("extend should add a new ARG state, before=%d after=%d", beforeStates, len(s.AG.States))
+	}
+	if _, ok := result["arg"]; !ok {
+		t.Fatalf("extend result missing ARG payload: %#v", result)
+	}
+	if _, ok := result["concept"]; !ok {
+		t.Fatalf("extend result missing concept payload for viewed extension state: %#v", result)
+	}
+	if result["extension"] == "" {
+		t.Fatalf("extend result missing extension label: %#v", result)
+	}
+	if ui.CurrentConceptGraph == nil || ui.CurrentConceptGraph.G() == nil {
+		t.Fatal("extend did not install a current concept graph")
+	}
+	if got, want := ui.CurrentConceptGraph.G().ParentState, s.AG.States[len(s.AG.States)-1]; got != want {
+		t.Fatalf("concept graph parent state = %#v, want new extension state %#v", got, want)
 	}
 }
 

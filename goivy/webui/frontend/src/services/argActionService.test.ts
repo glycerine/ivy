@@ -28,6 +28,29 @@ describe('argActionService', () => {
     expect(app.api.argNodeAction).toHaveBeenCalledWith('state_0', 'try_remembered_choices', { sheet_id: 'sheet-1' });
   });
 
+  it('prompts for ARG BMC bound and error condition', async () => {
+    const app = {
+      currentBound: 3,
+      integerDialog: vi.fn(async () => 5),
+      entryDialog: vi.fn(async () => 'bad(X)'),
+    };
+
+    const args = await prepareArgNodeActionArgs(app, { id: 'state_0' }, 'bmc', { sheet_id: 'sheet-1' }, 'sheet-1');
+
+    expect(app.integerDialog).toHaveBeenCalledWith('Bounded check', 'Enter bound:', 3, {
+      min: 0,
+      okLabel: 'Check',
+    });
+    expect(app.entryDialog).toHaveBeenCalledWith(
+      'Bounded check',
+      'Enter error condition:',
+      'true',
+      { okLabel: 'Check' },
+    );
+    expect(app.currentBound).toBe(5);
+    expect(args).toEqual({ sheet_id: 'sheet-1', bound: 5, err_cond: 'bad(X)' });
+  });
+
   it('executes ARG node actions and refreshes returned graphs', async () => {
     const app = {
       activeSheetId: 'sheet-1',
@@ -54,6 +77,34 @@ describe('argActionService', () => {
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', { elements: ['concept'], positions: null });
   });
 
+  it('shows the Python-style closed-node dialog for Extend', async () => {
+    const app = {
+      activeSheetId: 'sheet-1',
+      isVisualOnlySheet: vi.fn(() => false),
+      prepareArgNodeActionArgs: (node, action, args) => args,
+      api: {
+        argNodeAction: vi.fn(async () => ({
+          closed: true,
+          result: 'closed',
+          message: 'State 0 is closed.',
+          arg: { elements: ['arg'], positions: null },
+        })),
+      },
+      sheets: {},
+      uiDataStore: {
+        applyArgSnapshot: vi.fn(),
+      },
+      okDialog: vi.fn(),
+      controls: { setStatus: vi.fn(), showInfo: vi.fn() },
+    };
+
+    const result = await executeArgNodeAction(app, { id: 'state_0' }, { id: 'find_extension' }, 'sheet-1');
+
+    expect(result?.closed).toBe(true);
+    expect(app.okDialog).toHaveBeenCalledWith('ivyweb', 'State 0 is closed.');
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('State 0 is closed.', 'warning');
+  });
+
   it('passes the current mode and offers trace viewing for failed node safety', async () => {
     document.body.innerHTML = '<div id="info-content"></div>';
     const traceArg = { elements: [{ group: 'nodes', data: { id: 'state_0' } }] };
@@ -77,6 +128,7 @@ describe('argActionService', () => {
         applyArgSnapshot: vi.fn(),
       },
       openARGSheet: vi.fn(),
+      setUIMode: vi.fn(),
       controls: { setStatus: vi.fn(), showInfo: vi.fn() },
     };
 
@@ -88,7 +140,51 @@ describe('argActionService', () => {
     });
     expect(app.controls.showInfo).toHaveBeenCalledWith('Safety Check', 'The node is unsafe: View error trace?');
     document.querySelector('[data-check-view-trace]')?.click();
+    expect(app.setUIMode).toHaveBeenCalledWith('reachability');
     expect(app.openARGSheet).toHaveBeenCalledWith('Error trace', traceArg, 'sheet-2', {
+      reachabilityOnly: true,
+      visualOnly: false,
+    });
+  });
+
+  it('opens ARG BMC counterexample traces through the Python-style View dialog', async () => {
+    const traceArg = { elements: [{ group: 'nodes', data: { id: 'state_0' } }] };
+    const app = {
+      activeSheetId: 'sheet-1',
+      isVisualOnlySheet: vi.fn(() => false),
+      prepareArgNodeActionArgs: (node, action, args, sheetId) => prepareArgNodeActionArgs(app, node, action, args, sheetId),
+      api: {
+        argNodeAction: vi.fn(async () => ({
+          result: 'fail',
+          reachable: true,
+          message: 'BMC with bound 5 found a counterexample to:\nbad(X)',
+          trace_arg: traceArg,
+          trace_sheet_id: 'sheet-3',
+          trace_label: 'Sheet 3',
+        })),
+      },
+      currentBound: 5,
+      textDialog: vi.fn(async () => ''),
+      openARGSheet: vi.fn(),
+      setUIMode: vi.fn(),
+      controls: { setStatus: vi.fn(), showLoading: vi.fn(), hideLoading: vi.fn() },
+    };
+
+    await executeArgNodeAction(app, { id: 'state_0' }, { id: 'bmc', args: { bound: 5, err_cond: 'bad(X)' } }, 'sheet-1');
+
+    expect(app.api.argNodeAction).toHaveBeenCalledWith('state_0', 'bmc', {
+      sheet_id: 'sheet-1',
+      bound: 5,
+      err_cond: 'bad(X)',
+    });
+    expect(app.textDialog).toHaveBeenCalledWith(
+      'ivyweb',
+      'BMC with bound 5 found a counterexample to:',
+      'bad(X)',
+      expect.objectContaining({ okLabel: 'View', cancel: true, primaryFirst: true }),
+    );
+    expect(app.setUIMode).toHaveBeenCalledWith('reachability');
+    expect(app.openARGSheet).toHaveBeenCalledWith('Sheet 3', traceArg, 'sheet-3', {
       reachabilityOnly: true,
       visualOnly: false,
     });

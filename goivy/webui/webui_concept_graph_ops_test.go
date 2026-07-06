@@ -495,6 +495,89 @@ func TestRecalculate_WithParentState(t *testing.T) {
 	w.Recalculate()
 }
 
+func TestRecalculate_RefreshesParentARGStateWithoutUnrelatedStates(t *testing.T) {
+	mod := goivy.New()
+	ag := goivy.NewAnalysisGraph(mod)
+	clauseFormula := func(clauses *goivy.Clauses) string {
+		if clauses == nil {
+			return ""
+		}
+		return clauses.ToFormula().String()
+	}
+
+	left := goivy.NewState(mod, goivy.NewClauses([]goivy.Expr{goivy.False}, nil, nil))
+	right := goivy.NewState(mod, goivy.NewClauses([]goivy.Expr{goivy.False}, nil, nil))
+	staleJoined := goivy.NewState(mod, goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil))
+	staleJoined.JoinOf = []*goivy.State{left, right}
+	unrelated := goivy.NewState(mod, goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil))
+	ag.Add(left, nil)
+	ag.Add(right, nil)
+	ag.Add(staleJoined, nil)
+	ag.Add(unrelated, nil)
+
+	ui := &AnalysisGraphUI{AG: ag, Mod: mod}
+	w, err := ui.ViewState(staleJoined.ID, "", false)
+	if err != nil {
+		t.Fatalf("ViewState: %v", err)
+	}
+
+	if got := clauseFormula(staleJoined.Clauses); got != "true" {
+		t.Fatalf("test setup expected stale joined state to start true, got %q", got)
+	}
+	if err := w.Recalculate(); err != nil {
+		t.Fatalf("Recalculate: %v", err)
+	}
+	if got := clauseFormula(staleJoined.Clauses); !strings.Contains(got, "false") {
+		t.Fatalf("joined parent state was not recalculated from join sources: got %q", got)
+	}
+	if got := w.G().State; !strings.Contains(got, "false") {
+		t.Fatalf("concept graph did not reload recalculated parent clauses: got %q", got)
+	}
+	if got := clauseFormula(unrelated.Clauses); got != "true" {
+		t.Fatalf("unrelated state should not be recalculated by state recalc: got %q", got)
+	}
+}
+
+func TestExecuteActionRecalculateRefreshesCurrentConceptGraphState(t *testing.T) {
+	mod := goivy.New()
+	ag := goivy.NewAnalysisGraph(mod)
+	clauseFormula := func(clauses *goivy.Clauses) string {
+		if clauses == nil {
+			return ""
+		}
+		return clauses.ToFormula().String()
+	}
+
+	left := goivy.NewState(mod, goivy.NewClauses([]goivy.Expr{goivy.False}, nil, nil))
+	right := goivy.NewState(mod, goivy.NewClauses([]goivy.Expr{goivy.False}, nil, nil))
+	staleJoined := goivy.NewState(mod, goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil))
+	staleJoined.JoinOf = []*goivy.State{left, right}
+	ag.Add(left, nil)
+	ag.Add(right, nil)
+	ag.Add(staleJoined, nil)
+
+	ui := &AnalysisGraphUI{AG: ag, Mod: mod}
+	if _, err := ui.ViewState(staleJoined.ID, "", false); err != nil {
+		t.Fatalf("ViewState: %v", err)
+	}
+	s := NewSession(goivy.NewConfig(), "test-recalculate-state")
+	s.AG = ag
+	s.AGUI = ui
+	s.SheetUIs = map[string]*AnalysisGraphUI{rootSheetID: ui}
+	s.sheetCounter = 1
+
+	result, err := s.ExecuteAction("recalculate", map[string]interface{}{"sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("ExecuteAction(recalculate): %v", err)
+	}
+	if got := clauseFormula(staleJoined.Clauses); !strings.Contains(got, "false") {
+		t.Fatalf("selected parent state was not recalculated: got %q", got)
+	}
+	if _, ok := result["concept"].(map[string]interface{}); !ok {
+		t.Fatalf("recalculate result missing concept graph snapshot: %#v", result["concept"])
+	}
+}
+
 // ---------------------------------------------------------------------------
 // RegisterArg* tests
 // ---------------------------------------------------------------------------

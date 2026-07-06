@@ -24,7 +24,9 @@ The current web UI has browser-side "Save Analysis State" and backend `SaveState
 
 TODO: make File menu behavior explicit and complete: save current model, save analysis state, save abstraction, remove tab, and exit/close should each map to one controller command or be removed from the menu. Tests should click every File menu item exposed by the browser shell and assert a successful state effect or a deliberate disabled state, not an "unknown action" backend error.
 
-[ ] ### 8. Descriptor Menus Are Static And Not Session/Mode Aware
+Done 2026-07-05: Added focused red tests for explicit descriptor File commands in Go and frontend dispatcher routing. The ARG descriptor File menu now exposes `save_model`, `save_analysis_state`, `save_abstraction`, `remove_tab`, and `exit`, and JSDOM coverage clicks each dynamic File item to verify it routes through browser controller methods instead of backend `runAction`.
+
+[x] ### 8. Descriptor Menus Are Static And Not Session/Mode Aware
 
 Inventory refs: PLAN383 items 9, 37, 64, and 72; PLAN378 sections 4, 20.1, and 20.12 through 20.20.
 
@@ -32,7 +34,9 @@ The backend exposes browser menu descriptors, but `BuildBrowserMenuDescriptors()
 
 TODO: collapse menu ownership into one active-session menu model or make the static menus the only source of truth. Tests should load a model, enter CTI and non-CTI contexts, switch sheets, and assert that only valid current actions are enabled and dispatchable.
 
-[ ] ### 9. Some Menu Items Dispatch Unsupported Backend Actions
+Done 2026-07-05: Added active menu context (`sheet_id`/`ui_mode`) through runtime, hosted Go, and browser-WASM snapshot paths. Go descriptors now come from the actual session: reachability mode exposes ARG analysis menus, CTI mode exposes Invariant/Conjecture menus, and event sheets expose only global File commands. Added focused Go and frontend tests for active sheet/workflow menu selection.
+
+[x] ### 9. Some Menu Items Dispatch Unsupported Backend Actions
 
 Inventory refs: PLAN383 items 9, 31, 33, 34, and 35; PLAN378 sections 5 and 7.
 
@@ -40,7 +44,9 @@ The descriptor menu includes actions such as `save`, `remove_tab`, `exit`, mode 
 
 TODO: create a command map for every descriptor/static menu item and add regression tests that no visible menu item produces an unknown-action response. Where a menu action is intentionally browser-only, it should dispatch to the controller rather than the backend action endpoint.
 
-[ ] ### 10. Dialog Pre-Seeding For Tests Is Missing
+Done 2026-07-05: Added a frontend dispatcher command map for descriptor workflow actions that were falling through to backend `runAction`: mode changes, CTI invariant actions, reachability ARG actions, and CTI concept aliases. Added red/green regression coverage proving those visible descriptor actions route to controller methods instead of unknown backend actions.
+
+[x] ### 10. Dialog Pre-Seeding For Tests Is Missing
 
 Inventory refs: PLAN383 item 11; PLAN378 sections 22.2 and 28.9 through 28.10.
 
@@ -48,7 +54,9 @@ The Python GUI can pre-seed dialog answers to make workflows testable without ma
 
 TODO: add a small dialog-answer harness owned by the controller or command registry. Tests should pre-seed entry, integer, listbox, multiple-selection, and button-list dialogs, run real commands, and assert the command receives the injected result.
 
-[ ] ### 11. Dialog Return Semantics Differ From Tk In Several Places
+Done 2026-07-05: Added controller-owned `preseedDialogAnswers`/`clearDialogAnswers` queue support in `IvyRuntime`. The real dialog methods now consume queued answers for entry, integer, listbox single/multiple, text, OK, OK/cancel, and button-list dialogs. Added tests that preseed all requested dialog kinds and verify a real `rememberGraph` command receives the injected entry result.
+
+[x] ### 11. Dialog Return Semantics Differ From Tk In Several Places
 
 Inventory refs: PLAN383 items 13 through 18; PLAN378 sections 22.3 through 22.10.
 
@@ -56,7 +64,9 @@ The web `listboxDialog` generally returns option values, while the Tk inventory 
 
 TODO: define and test dialog return semantics per dialog kind. Tests should cover single selection, multiple selection, cancel, Escape, Return, out-of-range integer input, and callers that need selected indices rather than displayed text.
 
-[ ] ### 12. RunContext/Error Modal Behavior Is Only Partially Ported
+Done 2026-07-05: Added focused dialog-semantic coverage for Return-submitted entry dialogs, Tk-compatible listbox index return via `returnIndex`/`returnIndices`, cancel/Escape behavior for listbox and button-list dialogs, and integer dialogs that stay open on out-of-range input. Implemented the matching controller behavior in `IvyRuntime`; full `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 12. RunContext/Error Modal Behavior Is Only Partially Ported
 
 Inventory refs: PLAN383 item 10; PLAN378 sections 22.13 through 22.15 and 33.1.
 
@@ -64,7 +74,9 @@ Python wraps long-running UI callbacks in a run context that shows blocking Ivy 
 
 TODO: define a web equivalent of `RunContext` for command execution, including modal-vs-status policy and busy/ready visual state. Tests should force backend errors in check, ARG action, concept action, CTI action, and event filtering paths and assert consistent user-visible error handling.
 
-[ ] ### 13. Save-As Dialog Filters And Titles Are Incomplete
+Done 2026-07-06: Added a shared frontend run-context helper that marks command execution busy, restores the ready state, formats Ivy error messages, and opens blocking `Ivy error` dialogs for backend failures. Added focused red/green coverage forcing errors through check, ARG action, concept action, CTI action, and event-filter paths; those paths now show a modal error, set the error status, hide the loading overlay, and clear `aria-busy`/`data-ivy-run-context`. Full `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 13. Save-As Dialog Filters And Titles Are Incomplete
 
 Inventory refs: PLAN383 item 19; PLAN378 section 22.11.
 
@@ -72,9 +84,11 @@ Python uses file dialogs with specific titles and filters for model files, abstr
 
 TODO: inventory every save/open/export path and give it an explicit suggested name, MIME type, extension set, and cancel behavior. Tests should stub `showSaveFilePicker` and download fallback paths for `.ivy`, `.ivyweb.json`, invariant files, abstraction files, DOT exports, and event pattern files.
 
+Done 2026-07-06: Added a shared save-dialog descriptor service with explicit suggested names, descriptions, MIME types, and extension sets for Ivy models, IvyWeb analysis state, invariants, abstractions, Graphviz DOT, and event-pattern files. Added focused red/green tests that stub `showSaveFilePicker` and fallback downloads across those paths. Runtime invariant/abstraction saves now use the common download fallback, analysis state accepts `.ivyweb.json`, and event pattern saves support the File System Access picker. Full `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
+
 ## P1: ARG Graph Behavior
 
-### 16. Safety Error Trace Viewing From Node Safety Is Missing
+[x] ### 16. Safety Error Trace Viewing From Node Safety Is Missing
 
 Inventory refs: PLAN378 sections 12.5, 13.4, 24, and 27.2. ( ~/ivy/already_applied_plans/PLAN378_cc_python_gui_inventory.md )
 
@@ -88,8 +102,10 @@ When the local safety check fails, one of the buttons in the `buttons_dialog_can
 
 **Testing:** Trigger a local safety failure. In the resulting dialog, click the view-trace button. Confirm a new tab with the counterexample trace ARG appears. Confirm the trace states are highlighted appropriately.
 
+Done 2026-07-06: Verified the Go node-safety backend already returns `trace_arg`/`trace_sheet_id` for bounded safety failures and marks the final trace state, with existing Go coverage. Added focused red/green frontend coverage requiring the visible "View error trace" action to switch into reachability mode before opening the trace ARG sheet. Full `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
 
-### 17. BMC Entry Points Are Not Fully Exposed As ARG Workflows
+
+[x] ### 17. BMC Entry Points Are Not Fully Exposed As ARG Workflows
 
 Inventory refs: PLAN378 sections 13.1 through 13.4 and 16.3; PLAN383 items 71 and 92.
 
@@ -97,7 +113,9 @@ There is a top-level bounded check and backend methods for BMC-like operations, 
 
 TODO: add the missing ARG/CTI BMC commands and result dialogs, or clearly merge them with the existing bounded-check button. Tests should cover user-entered bounds, unreachable results, reachable counterexamples, and trace-sheet creation.
 
-[ ] ### 18. Recalculate-State Behavior Is Missing Or Ambiguous
+Done 2026-07-06: Added an ARG node "Bounded check" command backed by `Session.ArgNodeAction("bmc")`. The backend now accepts user-supplied bounds and error conditions, returns explicit reachable/unreachable result payloads, registers counterexample trace ARG sheets, and marks the final trace state. The frontend prompts for bound/error condition, preserves the current bound, and shows a Python-style View dialog that opens the trace sheet. Added focused red/green Go and frontend tests for user-entered bounds, unreachable results, reachable counterexamples, and trace-sheet creation; full `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 18. Recalculate-State Behavior Is Missing Or Ambiguous
 
 Inventory refs: PLAN383 item 32; PLAN378 sections 7.1, 10.2, and 16.4.
 
@@ -105,13 +123,17 @@ The port supports recalculating all transitions and recalculating an edge, but t
 
 TODO: identify the Python state-level recalculate behavior and add a matching command if it is distinct from edge/all recalculation. Tests should select a state, modify concept/domain information, run recalculate state, and verify the concept graph is updated without recalculating unrelated targets.
 
-[ ] ### 19. `Extend` Closed-Node Reporting Is Too Weak
+Done 2026-07-06: Matched Python's concept-graph Recalculate path by having `GraphWidget.Recalculate()` ask its parent `AnalysisGraphUI` to recalculate the selected ARG state via `AnalysisGraph.RecalculateState` before reloading the parent clauses into the concept graph. The backend `recalculate` action now targets the active sheet's current concept graph and returns a refreshed concept payload, while the frontend sends the active `sheet_id` and applies that payload directly. Added red/green Go tests for join-state recalculation without touching unrelated states and session action payloads, plus a focused frontend test for active-sheet dispatch. While running `make test`, fixed two build-contract gaps it exposed: `ConformBackend.GetMenus` now satisfies the backend interface, and `ivySample` is shared by web and non-web webui tests. Full `make test` and `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 19. `Extend` Closed-Node Reporting Is Too Weak
 
 Inventory refs: PLAN383 item 30; PLAN378 sections 14.1 and 14.2.
 
 The backend can attempt an extension and returns an error when the state is closed. Python shows an explicit closed-node dialog and otherwise executes the chosen extension and rebuilds the graph.
 
 TODO: make closed-node and extension-success UX match the inventory. Tests should run Extend on a closed node and assert a visible closed-node message, then run it on an extendable node and assert the new state/edge appears.
+
+Done 2026-07-06: Added a Python-shaped Extend result path. Closed nodes now return a non-error payload with `closed=true`, `result=closed`, and the explicit `State N is closed.` message that the frontend shows through an `ivyweb` OK dialog. Successful Extend now evaluates the chosen state equation, adds the resulting ARG state with action provenance, switches the concept graph to the new state, and returns both ARG and concept payloads. Added red/green Go tests for closed-node payloads and successful state/concept updates, plus a frontend test for the closed-node dialog. Full `make test-web` and `make test` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
 
 [ ] ### 20. Try-Conjecture Source Browsing And Result Views Are Partial
 

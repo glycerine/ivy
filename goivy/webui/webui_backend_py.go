@@ -282,6 +282,10 @@ func (b *PyBackend) GetConcept(sessionID, sheetID, nodeID string) ([]byte, error
 	return b.get("/session/" + sessionID + "/concept")
 }
 
+func (b *PyBackend) GetMenus(sessionID string, req MenuRequest) ([]byte, error) {
+	return canonicalJSON(BuildBrowserMenuDescriptors())
+}
+
 func (b *PyBackend) ConceptSplit(sessionID, concept, splitBy string) ([]byte, error) {
 	return b.post("/session/"+sessionID+"/concept/split", map[string]string{
 		"concept":  concept,

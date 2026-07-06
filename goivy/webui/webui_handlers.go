@@ -162,7 +162,10 @@ func (s *Server) apiMenus(w http.ResponseWriter, r *http.Request, sessionID stri
 		return
 	}
 	if b, ok := s.backend.(menuBackend); ok {
-		data, err := b.GetMenus(sessionID)
+		data, err := b.GetMenus(sessionID, MenuRequest{
+			SheetID: r.URL.Query().Get("sheet"),
+			UIMode:  r.URL.Query().Get("ui_mode"),
+		})
 		if err != nil {
 			writeBackendErr(w, err)
 			return

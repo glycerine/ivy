@@ -2,6 +2,7 @@ import {
   selectMaterializableEdges,
   selectPrimaryConceptNodeSelection,
 } from '../models/uiDataSelectors.ts';
+import { runWithContext } from './runContextService.ts';
 
 export async function executeConceptNodeAction(app, nodeData, action) {
   const actionID = action.action || action.id || action[0] || action.name || '';
@@ -21,12 +22,21 @@ export async function executeConceptNodeAction(app, nodeData, action) {
 
   app.controls.setStatus(`Executing: ${actionName}...`);
   try {
-    const result = await app.api.executeAction(actionName, { concept });
+    const result = await runWithContext(app, {
+      busyMessage: `Executing: ${actionName}...`,
+      failurePrefix: 'Concept action failed',
+    }, () => app.api.executeAction(actionName, { concept }));
+    if (!result) return null;
     await app.refreshConceptGraph();
     app.controls.setStatus(`Done: ${actionName}`, 'success');
     return result;
   } catch (err) {
-    app.controls.setStatus(`Error: ${err.message}`, 'error');
+    await runWithContext(app, {
+      busyMessage: `Executing: ${actionName}...`,
+      failurePrefix: 'Concept action failed',
+    }, () => {
+      throw err;
+    });
     return null;
   }
 }
@@ -42,12 +52,21 @@ export async function executeConceptEdgeAction(app, edgeData, action) {
 
   app.controls.setStatus(`Executing: ${actionName}...`);
   try {
-    const result = await app.api.executeAction(actionName, { concept: conceptId });
+    const result = await runWithContext(app, {
+      busyMessage: `Executing: ${actionName}...`,
+      failurePrefix: 'Concept action failed',
+    }, () => app.api.executeAction(actionName, { concept: conceptId }));
+    if (!result) return null;
     await app.refreshConceptGraph();
     app.controls.setStatus(`Done: ${actionName}`, 'success');
     return result;
   } catch (err) {
-    app.controls.setStatus(`Error: ${err.message}`, 'error');
+    await runWithContext(app, {
+      busyMessage: `Executing: ${actionName}...`,
+      failurePrefix: 'Concept action failed',
+    }, () => {
+      throw err;
+    });
     return null;
   }
 }

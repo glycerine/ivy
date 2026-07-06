@@ -100,18 +100,25 @@ func TestAnalysisGraphUIGetEdgeActions(t *testing.T) {
 func TestAnalysisGraphUINodeCommands(t *testing.T) {
 	ui := NewAnalysisGraphUI()
 	cmds := ui.NodeCommands()
-	if len(cmds) != 8 {
-		t.Errorf("expected 8 node commands, got %d", len(cmds))
+	if len(cmds) != 9 {
+		t.Errorf("expected 9 node commands, got %d", len(cmds))
 	}
 	// Check that expected commands are present.
-	found := false
+	foundSafety := false
+	foundBMC := false
 	for _, c := range cmds {
 		if c.Action == "check_safety" {
-			found = true
+			foundSafety = true
+		}
+		if c.Action == "bmc" {
+			foundBMC = true
 		}
 	}
-	if !found {
+	if !foundSafety {
 		t.Error("check_safety action not found")
+	}
+	if !foundBMC {
+		t.Error("bmc action not found")
 	}
 }
 
@@ -926,6 +933,49 @@ func TestBrowserMenuDescriptors(t *testing.T) {
 	}
 	if !foundUndo {
 		t.Fatal("concept Conjecture menu missing undo descriptor")
+	}
+}
+
+func TestBrowserFileMenuDescriptorCommandsAreExplicit(t *testing.T) {
+	menus := BuildBrowserMenuDescriptors()
+	var fileMenu *MenuDef
+	for i := range menus.Arg {
+		if menus.Arg[i].Label == "File" {
+			fileMenu = &menus.Arg[i]
+			break
+		}
+	}
+	if fileMenu == nil {
+		t.Fatal("missing ARG File menu descriptor")
+	}
+
+	want := map[string]string{
+		"save_model":          "Save",
+		"save_analysis_state": "Save analysis state",
+		"save_abstraction":    "Save abstraction",
+		"remove_tab":          "Remove tab",
+		"exit":                "Exit",
+	}
+	seen := make(map[string]string)
+	for _, item := range fileMenu.Items {
+		if item.Type == "separator" {
+			continue
+		}
+		seen[item.Action] = item.Label
+		if !item.Enabled {
+			t.Fatalf("File menu action %q should be enabled", item.Action)
+		}
+		if item.Dispatch != "action" {
+			t.Fatalf("File menu action %q dispatch = %q, want action", item.Action, item.Dispatch)
+		}
+	}
+	for action, label := range want {
+		if seen[action] != label {
+			t.Fatalf("File menu action %q label = %q, want %q; all actions: %#v", action, seen[action], label, seen)
+		}
+	}
+	if _, ok := seen["save"]; ok {
+		t.Fatalf("File menu should not expose ambiguous legacy save action; actions: %#v", seen)
 	}
 }
 

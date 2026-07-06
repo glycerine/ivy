@@ -186,7 +186,12 @@ export class HostedGoIvyApiAdapter extends IvyApiAdapter {
     }
 
     if (request.menus) {
-      snapshot.menus = await this.client.request(this.sessionPath('/menus'));
+      const menuRequest = typeof request.menus === 'object' ? request.menus : {};
+      const params = new URLSearchParams();
+      if (menuRequest.sheetId) params.set('sheet', menuRequest.sheetId);
+      if (menuRequest.uiMode) params.set('ui_mode', menuRequest.uiMode);
+      const query = params.toString();
+      snapshot.menus = await this.client.request(this.sessionPath('/menus' + (query ? `?${query}` : '')));
     }
 
     if (request.toggles) {

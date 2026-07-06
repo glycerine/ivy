@@ -1,5 +1,6 @@
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
 import { selectSheet, selectStateCheckboxRows } from '../models/uiDataSelectors.ts';
+import { beginRunContext, reportRunContextError, runWithContext } from './runContextService.ts';
 
 function activeCheckLabel(app) {
   const mode = app && typeof app.getMode === 'function' ? app.getMode() : 'verification';
@@ -33,6 +34,7 @@ export function openTraceArgFromResult(app, result, {
   label = 'Error trace',
 } = {}) {
   if (!app || !result || !result.trace_arg) return false;
+  if (typeof app.setUIMode === 'function') app.setUIMode('reachability');
   app.openARGSheet(label, result.trace_arg, traceSheetIdForResult(app, result), traceSheetOptionsForResult(result));
   return true;
 }
@@ -200,7 +202,13 @@ export async function runCheck(app) {
     mode,
   });
   setCheckControlsRunning(true);
-  app.controls.showLoading(`Running ${mode} check...`);
+  const finishRunContext = beginRunContext(app, { busyMessage: `Running ${mode} check...` });
+  let runContextFinished = false;
+  const finishRunContextOnce = () => {
+    if (runContextFinished) return;
+    runContextFinished = true;
+    finishRunContext();
+  };
   app.controls.setStatus('Recompiling editor content...');
   try {
     const requestOptions = controller ? { signal: controller.signal } : {};
@@ -246,9 +254,11 @@ export async function runCheck(app) {
     if (active.cancelled || isAbortError(err)) {
       app.controls.setStatus(`${mode} check cancelled`, 'warning');
       upsertJob(app, { id: active.jobId, status: 'cancelled' });
+      finishRunContextOnce();
       return null;
     }
-    app.controls.setStatus(`Check failed: ${err.message}`, 'error');
+    finishRunContextOnce();
+    await reportRunContextError(app, err, { prefix: 'Check failed' });
     upsertJob(app, { id: active.jobId, status: 'error', message: err.message });
     console.error('Check error:', err);
     return null;
@@ -257,7 +267,7 @@ export async function runCheck(app) {
       app._activeCheck = null;
     }
     setCheckControlsRunning(false);
-    app.controls.hideLoading();
+    finishRunContextOnce();
   }
 }
 
@@ -364,31 +374,29 @@ export async function showCtiBoundedCheckResult(app, result, message) {
 
 export async function checkInduction(app) {
   app.controls.setStatus('Checking induction...');
-  app.controls.showLoading('Checking inductiveness...');
-  try {
-    const result = await app.api.runCheck('induction');
-    if (result.result === 'fail' && result.failed_conjecture) {
-      app.showTextDialog(
-        'ivyweb',
-        result.message || 'The following conjecture is not relatively inductive:',
-        result.failed_conjecture,
-      );
-      app.controls.setStatus('Induction check: not inductive');
-    } else if (result.result === 'pass') {
-      app.showTextDialog(
-        'ivyweb',
-        'Inductive invariant found:',
-        result.message.replace('Inductive invariant found:\n', ''),
-      );
-      app.controls.setStatus('Induction check: PASSED', 'success');
-    } else {
-      app.controls.setStatus(`Induction check: ${result.message || result.result}`);
-    }
-  } catch (err) {
-    app.controls.setStatus(`Induction check failed: ${err.message}`, 'error');
-  } finally {
-    app.controls.hideLoading();
+  const result = await runWithContext(app, {
+    busyMessage: 'Checking inductiveness...',
+    failurePrefix: 'Induction check failed',
+  }, () => app.api.runCheck('induction'));
+  if (!result) return null;
+  if (result.result === 'fail' && result.failed_conjecture) {
+    app.showTextDialog(
+      'ivyweb',
+      result.message || 'The following conjecture is not relatively inductive:',
+      result.failed_conjecture,
+    );
+    app.controls.setStatus('Induction check: not inductive');
+  } else if (result.result === 'pass') {
+    app.showTextDialog(
+      'ivyweb',
+      'Inductive invariant found:',
+      result.message.replace('Inductive invariant found:\n', ''),
+    );
+    app.controls.setStatus('Induction check: PASSED', 'success');
+  } else {
+    app.controls.setStatus(`Induction check: ${result.message || result.result}`);
   }
+  return result;
 }
 
 export async function boundedCheck(app) {
@@ -472,17 +480,18 @@ export async function weakenInvariant(app) {
 
 export async function ctiConceptAction(app, actionName) {
   app.controls.setStatus('Running CTI action...');
-  try {
-    const result = await app.api.executeAction(actionName, { sheet_id: app.activeSheetId || 'sheet-1' });
-    if (result && result.concept) {
-      applyConceptSnapshot(app, result.concept.sheet_id || app.activeSheetId || 'sheet-1', result.concept);
-    } else {
-      await app.refreshConceptGraph();
-    }
-    app.controls.setStatus((result && result.message) || 'CTI action complete', 'success');
-    return result;
-  } catch (err) {
-    app.controls.setStatus(`CTI action failed: ${err.message}`, 'error');
+  const result = await runWithContext(app, {
+    busyMessage: 'Running CTI action...',
+    failurePrefix: 'CTI action failed',
+  }, () => app.api.executeAction(actionName, { sheet_id: app.activeSheetId || 'sheet-1' }));
+  if (!result) {
     return null;
   }
+  if (result && result.concept) {
+    applyConceptSnapshot(app, result.concept.sheet_id || app.activeSheetId || 'sheet-1', result.concept);
+  } else {
+    await app.refreshConceptGraph();
+  }
+  app.controls.setStatus((result && result.message) || 'CTI action complete', 'success');
+  return result;
 }

@@ -1,3 +1,6 @@
+import { runWithContext } from './runContextService.ts';
+import { eventPatternsSuggestedName, saveMimeType, savePickerOptions } from './saveDialogService.ts';
+
 export function readFileText(file, win = globalThis.window) {
   if (file && typeof file.text === 'function') {
     return file.text();
@@ -109,18 +112,19 @@ export async function filterEventTrace(app, pattern) {
     app.controls.setStatus(app.visualOnlyMessage('events'), 'warning');
     return null;
   }
-  try {
-    const result = await app.api.executeAction('events_filter', {
+  const result = await runWithContext(app, {
+    busyMessage: 'Filtering event trace...',
+    failurePrefix: 'Filter failed',
+  }, () => app.api.executeAction('events_filter', {
       sheet_id: sheet.id,
       pattern,
-    });
-    const label = (result && result.label) || 'Filtered events';
-    app.openEventTraceSheet(label, result || {}, result && result.sheet_id);
-    return result;
-  } catch (err) {
-    app.controls.setStatus(`Filter failed: ${err.message}`, 'error');
+    }));
+  if (!result) {
     return null;
   }
+  const label = (result && result.label) || 'Filtered events';
+  app.openEventTraceSheet(label, result || {}, result && result.sheet_id);
+  return result;
 }
 
 export async function findEventTrace(app, pattern, reverse) {
@@ -247,7 +251,9 @@ export async function loadEventPatterns(app, sheetId, text) {
   return sheet.patterns;
 }
 
-export async function saveEventPatterns(app, sheetId) {
+export async function saveEventPatterns(app, sheetId, {
+  win = globalThis.window,
+} = {}) {
   const sheet = app.sheets && app.sheets[sheetId];
   if (!sheet) return '';
   let content = (sheet.patterns || []).join('\n');
@@ -258,6 +264,25 @@ export async function saveEventPatterns(app, sheetId) {
       content = result.content;
     }
   }
-  app.downloadTextFile('event_patterns.pats', content, 'text/plain');
+  const filename = eventPatternsSuggestedName();
+  const mimeType = saveMimeType('eventPatterns');
+  if (win && win.showSaveFilePicker) {
+    try {
+      const handle = await win.showSaveFilePicker(savePickerOptions('eventPatterns', filename));
+      const writable = await handle.createWritable();
+      await writable.write(content);
+      await writable.close();
+      return content;
+    } catch (err) {
+      if (err && err.name === 'AbortError') {
+        if (app.controls && typeof app.controls.setStatus === 'function') {
+          app.controls.setStatus('Save event patterns cancelled');
+        }
+        return '';
+      }
+      throw err;
+    }
+  }
+  app.downloadTextFile(filename, content, mimeType);
   return content;
 }
