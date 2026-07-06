@@ -70,6 +70,25 @@ async function openIvy(page) {
   return consoleErrors;
 }
 
+async function openIvyAt(page, target) {
+  const consoleErrors = [];
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') {
+      consoleErrors.push(msg.text());
+    }
+  });
+  page.on('pageerror', (err) => {
+    consoleErrors.push(err.message);
+  });
+
+  await page.goto(target);
+  await expect(page).toHaveTitle(/ivy/i);
+  await expect(page.locator('#menubar')).toBeVisible();
+  await page.waitForFunction(() => window.__ivyDiagnostics && window.__ivyDiagnostics.runtime() && window.__ivyDiagnostics.runtime().api);
+  await page.waitForFunction(() => window.__ivyDiagnostics.runtime().api.sessionId);
+  return consoleErrors;
+}
+
 async function openIvyWithSavedSession(page, savedState) {
   await page.addInitScript((state) => {
     localStorage.clear();
@@ -435,6 +454,66 @@ test('CTI minimize shows BMC bound core details and omits unselected facts', asy
     },
     status: expect.stringContaining('Conjecture minimized using BMC bound 4'),
   });
+});
+
+test('CTI sufficient and relative induction checks show selected conjecture dialogs', async ({ page }) => {
+  await openIvy(page);
+
+  const scenarios = [
+    {
+      action: 'cti_check_sufficient',
+      result: 'insufficient',
+      message: '(1) does not imply (2) at the next time.',
+      title: 'CTI check sufficient',
+    },
+    {
+      action: 'cti_check_inductive',
+      result: 'inductive',
+      message: '(1) is relatively inductive.',
+      title: 'CTI relative induction',
+    },
+  ];
+
+  for (const scenario of scenarios) {
+    const checkRun = page.evaluate(async (scenario) => {
+      const app = window.__ivyDiagnostics.runtime();
+      app.activeSheetId = 'sheet-1';
+      app.api.executeAction = async (action, args) => {
+        window._ctiCheckDetailsCall = { action, args };
+        return {
+          ok: scenario.result === 'inductive',
+          check: action === 'cti_check_sufficient' ? 'sufficient' : 'relative_induction',
+          result: scenario.result,
+          message: scenario.message,
+          selected_conjecture: 'forall X. p(X)',
+          target_conjecture: 'forall X. q(X)',
+          concept: { sheet_id: 'sheet-1', elements: [] },
+        };
+      };
+      await app.ctiConceptAction(scenario.action);
+      return {
+        call: window._ctiCheckDetailsCall,
+        status: document.querySelector('#statusbar')?.textContent || '',
+      };
+    }, scenario);
+
+    const dialogText = page.locator('[data-ivy-dialog-text]');
+    await expect(page.locator('[data-ivy-dialog]')).toBeVisible();
+    await expect(page.locator('[data-ivy-dialog]')).toContainText(scenario.title);
+    await expect(page.locator('[data-ivy-dialog]')).toContainText(scenario.message);
+    await expect(dialogText).toHaveValue(new RegExp(`Result: ${scenario.result}`));
+    await expect(dialogText).toHaveValue(/Selected conjecture:\nforall X\. p\(X\)/);
+    await expect(dialogText).toHaveValue(/Target conjecture:\nforall X\. q\(X\)/);
+    await page.getByRole('button', { name: 'OK' }).click();
+
+    await expect(checkRun).resolves.toEqual({
+      call: {
+        action: scenario.action,
+        args: { sheet_id: 'sheet-1', relations_to_minimize: 'relations to minimize' },
+      },
+      status: expect.stringContaining(scenario.message),
+    });
+  }
 });
 
 test('CTI diagram sends CTI mode and labels the pre-state', async ({ page }) => {
@@ -1467,6 +1546,147 @@ test('event trace sheets render through the controller', async ({ page }) => {
   await page.locator('#events-1 .event-pattern-list').selectOption('root(a)');
   const selectedPattern = await page.evaluate(() => window.__ivyDiagnostics.runtime().selectedEventPattern('events-1'));
   expect(selectedPattern).toBe('root(a)');
+});
+
+test('event tree selection, keyboard traversal, and filtered selection preservation', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    window.__ivyDiagnostics.runtime().openEventTraceSheet('Trace', {
+      sheet_id: 'events-keyboard',
+      events: [
+        { text: 'root(a)', address: '0', subs: [{ text: 'child(a)', address: '0/0' }] },
+        { text: 'done', address: '1' },
+      ],
+      patterns: ['child(a)'],
+    }, 'events-keyboard');
+  });
+
+  const tree = page.locator('#events-keyboard .event-tree');
+  const root = page.locator('#events-keyboard [data-event-address="0"]');
+  const child = page.locator('#events-keyboard [data-event-address="0/0"]');
+  const done = page.locator('#events-keyboard [data-event-address="1"]');
+
+  await expect(tree).toHaveAttribute('role', 'tree');
+  await expect(root).toHaveAttribute('role', 'treeitem');
+  await expect(root).toHaveAttribute('tabindex', '0');
+  await expect(root).toHaveAttribute('aria-expanded', 'false');
+  await expect(root).toHaveAttribute('aria-selected', 'false');
+
+  await root.click();
+  await expect(root).toHaveClass(/selected/);
+  await expect(root).toHaveAttribute('aria-selected', 'true');
+  await expect(root).toBeFocused();
+
+  await root.press('ArrowRight');
+  await expect(root).toHaveAttribute('aria-expanded', 'true');
+  await expect(child).toContainText('child(a)');
+
+  await root.press('ArrowRight');
+  await expect(child).toHaveClass(/selected/);
+  await expect(child).toHaveAttribute('aria-selected', 'true');
+  await expect(child).toBeFocused();
+
+  await child.press('ArrowDown');
+  await expect(done).toHaveClass(/selected/);
+  await done.press('ArrowUp');
+  await expect(child).toHaveClass(/selected/);
+
+  await child.press('ArrowLeft');
+  await expect(root).toHaveClass(/selected/);
+  await root.press('ArrowLeft');
+  await expect(root).toHaveAttribute('aria-expanded', 'false');
+  await expect(child).toHaveCount(0);
+
+  await root.press('ArrowRight');
+  await root.press('ArrowRight');
+  await expect(child).toHaveClass(/selected/);
+
+  await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.api.executeAction = async (actionName) => {
+      if (actionName !== 'events_filter') throw new Error(actionName);
+      return {
+        sheet_id: 'events-filtered-keyboard',
+        label: 'Filtered',
+        events: [{ text: 'child(a)', address: '0/0' }],
+        patterns: ['child(a)'],
+      };
+    };
+    await app.filterEventTrace('child(a)');
+  });
+
+  const filteredChild = page.locator('#events-filtered-keyboard [data-event-address="0/0"]');
+  await expect(filteredChild).toHaveClass(/selected/);
+  await expect(filteredChild).toHaveAttribute('aria-selected', 'true');
+  const filteredSelection = await page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return app.sheets['events-filtered-keyboard'].selectedEventAddress;
+  });
+  expect(filteredSelection).toBe('0/0');
+});
+
+test('event viewer launch mode opens an iev trace without a model file', async ({ page }) => {
+  const params = new URLSearchParams({
+    'event-viewer': '1',
+    'event-trace': 'root(a){child(b)}; done',
+    'event-filename': 'trace.iev',
+  });
+  await openIvyAt(page, `/?${params.toString()}`);
+
+  await expect(page.locator('body')).toHaveAttribute('data-event-viewer-only', 'true');
+  await expect(page.locator('.sheet-tab[data-sheet="sheet-1"]')).toBeHidden();
+  await expect(page.locator('.sheet-tab.active')).toContainText('trace.iev');
+  await expect(page.locator('[data-event-address="0"]')).toContainText('root(a)');
+  await page.locator('[data-event-toggle="0"]').click();
+  await expect(page.locator('[data-event-address="0/0"]')).toContainText('child(b)');
+  await expect(page.locator('[data-event-address="1"]')).toContainText('done');
+
+  const state = await page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return {
+      activeSheetId: app.activeSheetId,
+      fileName: app._persistedFileName || '',
+      fileContent: app._persistedFileContent || '',
+      editorContent: app.cmEditor && app.cmEditor.getValue ? app.cmEditor.getValue() : '',
+      loadedFileText: document.querySelector('#loaded-file')?.textContent || '',
+    };
+  });
+  expect(state.activeSheetId).toMatch(/^sht\d+$/);
+  expect(state.fileName).toBe('');
+  expect(state.fileContent).toBe('');
+  expect(state.editorContent).toBe('');
+  expect(state.loadedFileText).not.toContain('.ivy');
+});
+
+test('event trace sheets expose compact and detailed serialized trace text', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    window.__ivyDiagnostics.runtime().openEventTraceSheet('Trace', {
+      sheet_id: 'events-trace-text',
+      events: [
+        { text: 'connect(c0)', kind: 'env_call', line: 'model.ivy:12', state_key: 's0', state: { pc: 'idle' }, subs: [
+          { text: 'helper(c0)', kind: 'call', line: 'model.ivy:8', state: { owner: 'c0' } },
+        ] },
+        { text: 'connect(c0)', kind: 'env_call', state_key: 's0', state: { pc: 'idle' } },
+      ],
+      trace_text: '> connect(c0)\n  < helper(c0)\n> connect(c0)\n',
+      trace_text_detailed: 'model.ivy:12\nconnect(c0)\n{\n    model.ivy:8\n    helper(c0)\n}\n[\n    pc = idle\n]\n\n--- the following repeats infinitely ---\n',
+      patterns: [],
+    }, 'events-trace-text');
+  });
+
+  const tracePane = page.locator('#events-trace-text [data-event-trace-text]');
+  await expect(tracePane).toBeVisible();
+  await expect(tracePane).toContainText('> connect(c0)');
+  await expect(tracePane).toContainText('< helper(c0)');
+  await expect(tracePane).not.toContainText('model.ivy:12');
+
+  await page.locator('#events-trace-text .event-trace-detailed-toggle').check();
+  await expect(tracePane).toContainText('model.ivy:12');
+  await expect(tracePane).toContainText('pc = idle');
+  await expect(tracePane).toContainText('repeats infinitely');
 });
 
 test('Step in opens a backend-owned sheet whose node clicks load that sheet concept graph', async ({ page }) => {

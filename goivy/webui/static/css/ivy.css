@@ -233,6 +233,16 @@ body[data-active-sheet-type="events"] .ui-mode-only {
     display: none !important;
 }
 
+body[data-event-viewer-only="true"] .sheet-tab[data-sheet="sheet-1"],
+body[data-event-viewer-only="true"] #tutorial-container,
+body[data-event-viewer-only="true"] #divider-h {
+    display: none !important;
+}
+
+body[data-event-viewer-only="true"] #outer-container {
+    height: calc(100vh - 36px - 22px);
+}
+
 .session-info {
     color: #666;
     font-size: 11px;
@@ -986,6 +996,35 @@ body[data-active-sheet-type="events"] .ui-mode-only {
 .event-tree-panel {
     flex: 1;
     min-width: 260px;
+}
+
+.event-trace-text-panel {
+    flex: 1.2;
+    min-width: 280px;
+    border-left: 1px solid #3c3c3c;
+}
+
+.event-trace-detailed-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #d4d4d4;
+}
+
+.event-trace-text {
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+    padding: 8px;
+    overflow: auto;
+    color: #d4d4d4;
+    background: #1e1e1e;
+    border: 0;
+    white-space: pre;
+    font-family: Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.45;
 }
 
 .event-pattern-panel {

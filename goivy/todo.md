@@ -341,7 +341,7 @@ TODO: implement the CTI-specific BMC result path, including view-counterexample 
 
 Done 2026-07-06: Completed the CTI bounded-check counterexample affordance contract. CTI BMC results that register a counterexample trace now explicitly return `view: "trace"` along with the trace ARG, sheet id, and label. Added focused red/green Go coverage for that backend result shape and hosted-Go Playwright coverage for the browser flow: entering a bound, seeing the Python-style `View` dialog, switching to reachability mode, and opening the reachability-only trace sheet. Existing Vitest coverage verifies cancel does not open the trace. Full `make test` and `make test-web` passed with `GOCACHE=/tmp/goivy-gocache-codex`.
 
-[ ] ### 42. CTI Minimize Needs User-Visible BMC/Core Details
+[x] ### 42. CTI Minimize Needs User-Visible BMC/Core Details
 
 Inventory refs: PLAN383 item 76; PLAN378 sections 20.15 and 33.10.
 
@@ -349,7 +349,9 @@ The backend has a minimize action, but Python's CTI minimize first runs BMC and 
 
 TODO: expose enough minimize detail for users and tests to validate the same facts were minimized. Tests should select facts, run minimize, verify the BMC bound used, inspect the resulting conjecture, and verify unselected facts do not appear.
 
-[ ] ### 43. CTI Check-Sufficient And Check-Relative-Induction Result Dialogs Are Partial
+Done: `cti_minimize` now reports the BMC bound, selected/input facts, core/minimized facts, removed facts, and resulting conjecture. The frontend opens a read-only details dialog for the minimize result, and browser coverage verifies the bound/core display while excluding unselected facts. Added focused Go, Vitest, and Playwright regressions; `make test` and `make test-web` pass with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 43. CTI Check-Sufficient And Check-Relative-Induction Result Dialogs Are Partial
 
 Inventory refs: PLAN383 items 77 and 78; PLAN378 sections 20.16 and 20.17.
 
@@ -357,9 +359,11 @@ The backend returns ok/message for these checks, and the frontend can call the a
 
 TODO: make the result display explicit and tied to the active selected facts/conjecture. Tests should run both actions with sufficient, insufficient, inductive, and non-inductive selections and assert the displayed result text and backend state.
 
+Done: CTI sufficient and relative-induction actions now return explicit check/result metadata, selected conjecture, target conjecture, and dialog text. The frontend displays read-only result dialogs for sufficient, insufficient, inductive, and non-inductive outcomes. Added focused Go, Vitest, and hosted-browser regressions; `make test` and `make test-web` pass with `GOCACHE=/tmp/goivy-gocache-codex`.
+
 ## P2: Event Viewer And Trace Display
 
-### 44. Trace Serialization Display Is Missing
+[x] ### 44. Trace Serialization Display Is Missing
 
 Inventory refs: PLAN378 sections 24.1 through 24.5 and 27.2.
 
@@ -367,7 +371,9 @@ The web UI can load event traces and show check-result details, but Python trace
 
 TODO: port trace formatting or explicitly fold it into the event trace viewer. Tests should feed traces with repeated states, function calls, detailed and non-detailed output, and line numbers, then verify the displayed text matches the Python behavior.
 
-[ ] ### 45. Event Viewer Launch As A Standalone Tool Is Missing
+Done: event trace sheets now carry compact and detailed serialized trace text alongside the tree view. Trace events accept optional line, kind, state, state-key, and loop metadata; backend formatting covers Python-style compact call lines, detailed line/state blocks, and infinite-repeat markers. The browser renders a Trace pane with a Detailed toggle. Added focused Go and hosted-browser regressions; `make test` and `make test-web` pass with `GOCACHE=/tmp/goivy-gocache-codex`.
+
+[x] ### 45. Event Viewer Launch As A Standalone Tool Is Missing
 
 Inventory refs: PLAN383 item 79; PLAN378 sections 25.1 and 25.2.
 
@@ -375,13 +381,17 @@ The web UI can open event trace sheets from the main app. Python also has an eve
 
 TODO: decide whether `ivyweb` should support an event-viewer-only launch mode. Tests should open a `.iev` file directly into the intended web surface and verify no model session is required if standalone mode is in scope.
 
-### 46. Event Tree Selection Style And Keyboard Ergonomics Are Partial
+Done: `ivyweb` now supports an event-viewer-only launch mode through query parameters, opens `.iev` traces into an event sheet without restoring or requiring a model session, hides the default model sheet, and has focused Playwright coverage plus green `make test`/`make test-web`.
+
+[x] ### 46. Event Tree Selection Style And Keyboard Ergonomics Are Partial
 
 Inventory refs: PLAN378 section 25.7.
 
 The web event tree supports lazy child expansion, filtering, find forward/reverse, and saved patterns. Tk HList selection style, keyboard traversal, and selection affordances are not fully represented.
 
 TODO: define the required event tree interaction details for the web port. Tests should cover row selection, expansion/collapse, keyboard navigation if supported, preserved selection after filtering/finding, and visible selected-row styling.
+
+Done: event trees now expose tree/treeitem roles, ARIA selected/expanded state, roving focus, visible selected-row styling, click focus, arrow-key navigation, keyboard expand/collapse, and selected-row preservation when filtering retains the selected event. Focused Playwright coverage was added and `make test`/`make test-web` are green.
 
 ### 47. Event Pattern File Dialog Semantics Need Coverage
 

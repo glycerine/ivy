@@ -595,6 +595,85 @@ describe('checkService', () => {
     );
   });
 
+  it('shows CTI sufficient and relative induction result dialogs', async () => {
+    const cases = [
+      {
+        action: 'cti_check_sufficient',
+        result: 'sufficient',
+        ok: true,
+        message: '(1) implies (2) at the next time.',
+        title: 'CTI check sufficient',
+        status: 'sufficient',
+      },
+      {
+        action: 'cti_check_sufficient',
+        result: 'insufficient',
+        ok: false,
+        message: '(1) does not imply (2) at the next time.',
+        title: 'CTI check sufficient',
+        status: 'insufficient',
+      },
+      {
+        action: 'cti_check_inductive',
+        result: 'inductive',
+        ok: true,
+        message: '(1) is relatively inductive.',
+        title: 'CTI relative induction',
+        status: 'inductive',
+      },
+      {
+        action: 'cti_check_inductive',
+        result: 'non_inductive',
+        ok: false,
+        message: '(1) is not relatively inductive.',
+        title: 'CTI relative induction',
+        status: 'non_inductive',
+      },
+    ];
+
+    for (const scenario of cases) {
+      const app = {
+        activeSheetId: 'sheet-2',
+        textDialog: vi.fn(async () => true),
+        uiDataStore: {
+          applyConceptSnapshot: vi.fn(),
+        },
+        refreshConceptGraph: vi.fn(),
+        api: {
+          executeAction: vi.fn(async () => ({
+            ok: scenario.ok,
+            check: scenario.action === 'cti_check_sufficient' ? 'sufficient' : 'relative_induction',
+            result: scenario.result,
+            message: scenario.message,
+            selected_conjecture: 'forall X. p(X)',
+            target_conjecture: 'forall X. q(X)',
+            concept: { elements: [] },
+          })),
+        },
+        controls: {
+          setStatus: vi.fn(),
+        },
+      };
+
+      await ctiConceptAction(app, scenario.action);
+
+      expect(app.textDialog).toHaveBeenCalledWith(
+        scenario.title,
+        scenario.message,
+        [
+          `Result: ${scenario.status}`,
+          '',
+          'Selected conjecture:',
+          'forall X. p(X)',
+          '',
+          'Target conjecture:',
+          'forall X. q(X)',
+        ].join('\n'),
+        { readOnly: true, okLabel: 'OK', cancel: false },
+      );
+    }
+  });
+
   it('auto-checks used relation rows', async () => {
     const uiDataModel = new UIDataModel();
     createUIDataModelStore(uiDataModel).applyConceptSnapshot('sheet-1', {

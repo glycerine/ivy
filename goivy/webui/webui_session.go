@@ -588,6 +588,8 @@ func eventSheetResult(result map[string]interface{}, viewer *EventTraceViewer, s
 	result["label"] = sheet.Label
 	result["events"] = sheet.Events
 	result["patterns"] = append([]string{}, viewer.Patterns...)
+	result["trace_text"] = sheet.TraceText
+	result["trace_text_detailed"] = sheet.TraceTextDetailed
 }
 
 func traceEventsFromActionArg(raw interface{}) ([]*TraceEvent, error) {
@@ -634,8 +636,30 @@ func traceEventFromActionArg(raw interface{}) (*TraceEvent, error) {
 		if addr, ok := v["address"].(string); ok {
 			ev.Address = addr
 		}
+		if line, ok := traceEventStringField(v, "line"); ok {
+			ev.Line = line
+		}
+		if kind, ok := v["kind"].(string); ok {
+			ev.Kind = kind
+		}
+		if stateKey, ok := v["state_key"].(string); ok {
+			ev.StateKey = stateKey
+		}
+		if loopStart, ok := v["loop_start"].(bool); ok {
+			ev.LoopStart = loopStart
+		}
+		if rawState, ok := v["state"].(map[string]interface{}); ok {
+			ev.State = traceEventStringMap(rawState)
+		}
 		if rawSubs, ok := v["subs"].([]interface{}); ok {
 			subs, err := traceEventsFromActionArg(rawSubs)
+			if err != nil {
+				return nil, err
+			}
+			ev.Subs = subs
+		}
+		if rawChildren, ok := v["children"].([]interface{}); ok && len(ev.Subs) == 0 {
+			subs, err := traceEventsFromActionArg(rawChildren)
 			if err != nil {
 				return nil, err
 			}
@@ -645,6 +669,37 @@ func traceEventFromActionArg(raw interface{}) (*TraceEvent, error) {
 	default:
 		return nil, fmt.Errorf("unsupported event payload %T", raw)
 	}
+}
+
+func traceEventStringField(v map[string]interface{}, key string) (string, bool) {
+	raw, ok := v[key]
+	if !ok {
+		return "", false
+	}
+	switch x := raw.(type) {
+	case string:
+		return x, true
+	case fmt.Stringer:
+		return x.String(), true
+	case float64:
+		if x == float64(int(x)) {
+			return fmt.Sprintf("%d", int(x)), true
+		}
+		return fmt.Sprint(x), true
+	default:
+		return fmt.Sprint(x), true
+	}
+}
+
+func traceEventStringMap(raw map[string]interface{}) map[string]string {
+	if len(raw) == 0 {
+		return nil
+	}
+	out := make(map[string]string, len(raw))
+	for key, value := range raw {
+		out[key] = fmt.Sprint(value)
+	}
+	return out
 }
 
 func actionStringArg(args map[string]interface{}, key string) string {
@@ -922,6 +977,68 @@ func stringSliceDifference(all, kept []string) []string {
 		removed = append(removed, item)
 	}
 	return removed
+}
+
+func clausesFormulaString(clauses *goivy.Clauses) string {
+	if clauses == nil {
+		return ""
+	}
+	return fmt.Sprint(clauses.ToFormula())
+}
+
+func ctiCheckResultKind(check string, ok bool) string {
+	switch check {
+	case "sufficient":
+		if ok {
+			return "sufficient"
+		}
+		return "insufficient"
+	case "relative_induction":
+		if ok {
+			return "inductive"
+		}
+		return "non_inductive"
+	default:
+		if ok {
+			return "pass"
+		}
+		return "fail"
+	}
+}
+
+func ctiCheckDialogTitle(check string) string {
+	if check == "relative_induction" {
+		return "CTI relative induction"
+	}
+	return "CTI check sufficient"
+}
+
+func ctiCheckDialogText(resultKind, selected, target string) string {
+	lines := []string{
+		fmt.Sprintf("Result: %s", resultKind),
+		"",
+		"Selected conjecture:",
+		selected,
+		"",
+		"Target conjecture:",
+		target,
+	}
+	return strings.Join(lines, "\n")
+}
+
+func populateCTICheckResult(result map[string]interface{}, check string, ok bool, message string, selected, target *goivy.Clauses) {
+	resultKind := ctiCheckResultKind(check, ok)
+	selectedStr := clausesFormulaString(selected)
+	targetStr := clausesFormulaString(target)
+	result["check"] = check
+	result["ok"] = ok
+	result["result"] = resultKind
+	result["message"] = message
+	result["selected_conjecture"] = selectedStr
+	result["target_conjecture"] = targetStr
+	result["dialog_title"] = ctiCheckDialogTitle(check)
+	result["dialog_message"] = message
+	result["dialog_text"] = ctiCheckDialogText(resultKind, selectedStr, targetStr)
 }
 
 func eliminatedConjectureStrings(state *goivy.InterpState, model *goivy.Clauses) []string {
@@ -3209,13 +3326,17 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			}
 			result["message"] = fmt.Sprintf("Conjecture minimized using BMC bound %d; kept %d of %d selected facts.", bound, len(coreFacts), len(inputFacts))
 		case "cti_check_sufficient":
+			selected, _ := w.GetSelectedConjecture()
+			var target *goivy.Clauses
+			if s.CTIUI != nil {
+				target = s.CTIUI.CurrentConjecture
+			}
 			ok, msg := w.IsSufficient()
-			result["ok"] = ok
-			result["message"] = msg
+			populateCTICheckResult(result, "sufficient", ok, msg, selected, target)
 		case "cti_check_inductive":
+			selected, _ := w.GetSelectedConjecture()
 			ok, msg := w.IsInductive()
-			result["ok"] = ok
-			result["message"] = msg
+			populateCTICheckResult(result, "relative_induction", ok, msg, selected, selected)
 		case "cti_strengthen_preview":
 			conj, conjErr := w.GetSelectedConjecture()
 			if conjErr != nil {
@@ -4206,6 +4327,8 @@ func eventSheetState(viewer *EventTraceViewer, sheet *EventSheet) map[string]int
 		"label":                sheet.Label,
 		"events":               sheet.Events,
 		"patterns":             append([]string{}, viewer.Patterns...),
+		"trace_text":           sheet.TraceText,
+		"trace_text_detailed":  sheet.TraceTextDetailed,
 		"selectedEventAddress": nil,
 	}
 }

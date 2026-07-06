@@ -649,8 +649,13 @@ class IvyRuntime {
                 });
             }
         }
+        var eventViewerLaunch = this._eventViewerLaunchParams();
+        if (eventViewerLaunch) {
+            savedState = null;
+            await this._openEventViewerLaunch(eventViewerLaunch);
+        }
         // Restore saved session if available (survives page reload).
-        if (savedState && savedState.fileContent) {
+        if (!eventViewerLaunch && savedState && savedState.fileContent) {
             console.log('IvyPersist: restoring session', savedState.sessionId, savedState.fileName);
             var restored = await runtimeDeps.IvyPersist.restore(this, savedState);
             if (restored) {
@@ -679,6 +684,42 @@ class IvyRuntime {
             }
         };
         this._jobSubmissionReady = true;
+    }
+
+    _eventViewerLaunchParams(win = window) {
+        if (!win || !win.location || !win.URLSearchParams && typeof URLSearchParams === 'undefined') return null;
+        var params = new URLSearchParams(win.location.search || '');
+        if (params.get('event-viewer') !== '1' && params.get('view') !== 'events') {
+            document.body.removeAttribute('data-event-viewer-only');
+            this.eventViewerOnly = false;
+            return null;
+        }
+        return {
+            content: params.get('event-trace') || '',
+            filename: params.get('event-filename') || params.get('filename') || 'event_trace.iev',
+        };
+    }
+
+    async _openEventViewerLaunch(launch) {
+        this.eventViewerOnly = true;
+        document.body.setAttribute('data-event-viewer-only', 'true');
+        if (!launch || !launch.content) {
+            this.controls.setStatus('Event viewer ready');
+            return null;
+        }
+        try {
+            this.controls.setStatus('Loading event trace...');
+            var result = await this.api.executeAction('events_parse', {
+                content: launch.content,
+                filename: launch.filename || '',
+            });
+            this.openEventTraceSheet(launch.filename || (result && result.label) || 'Event trace', result || {}, result && result.sheet_id);
+            this.controls.setStatus('Loaded event trace: ' + (launch.filename || 'trace'), 'success');
+            return result;
+        } catch (err) {
+            this.controls.setStatus('Event trace load failed: ' + err.message, 'error');
+            return null;
+        }
     }
 
     // --- Editor helpers (CodeMirror) ---
@@ -1802,6 +1843,9 @@ class IvyRuntime {
             type: 'events',
             events: events,
             patterns: patterns.slice(),
+            traceText: data.trace_text || '',
+            traceTextDetailed: data.trace_text_detailed || data.trace_text || '',
+            traceDetailed: false,
             selectedEventAddress: data.selected_address || null,
         };
         this.renderEventTraceSheet(sheetId);
@@ -1855,6 +1899,13 @@ class IvyRuntime {
             '    </div>',
             '    <div class="event-tree" data-event-tree="' + sheetId + '"></div>',
             '  </div>',
+            '  <div class="event-trace-text-panel panel">',
+            '    <div class="panel-header">',
+            '      <span class="panel-title">Trace</span>',
+            '      <label class="event-trace-detailed-label"><input class="event-trace-detailed-toggle" type="checkbox"> Detailed</label>',
+            '    </div>',
+            '    <pre class="event-trace-text" data-event-trace-text></pre>',
+            '  </div>',
             '  <div class="event-pattern-panel panel">',
             '    <div class="panel-header"><span class="panel-title">Patterns</span></div>',
             '    <select class="event-pattern-list" size="8"></select>',
@@ -1874,11 +1925,32 @@ class IvyRuntime {
         ].join('');
 
         var tree = sheet.querySelector('.event-tree');
+        if (tree) {
+            tree.setAttribute('role', 'tree');
+            tree.setAttribute('aria-label', 'Event trace');
+        }
         this.renderEventTree(tree, sheetState.events || [], sheetId, '');
         this.renderEventPatternList(sheetId);
+        this._renderEventTraceText(sheetId);
         this.attachEventTraceHandlers(sheetId);
         if (sheetState.selectedEventAddress) {
             this.selectEventTraceRow(sheetId, sheetState.selectedEventAddress);
+        } else {
+            this._syncEventTraceTreeFocus(sheetId);
+        }
+    }
+
+    _renderEventTraceText(sheetId) {
+        var sheetState = this.sheets && this.sheets[sheetId];
+        var sheet = document.getElementById(sheetId);
+        if (!sheetState || !sheet) return;
+        var text = sheet.querySelector('[data-event-trace-text]');
+        var toggle = sheet.querySelector('.event-trace-detailed-toggle');
+        if (toggle) toggle.checked = !!sheetState.traceDetailed;
+        if (text) {
+            text.textContent = sheetState.traceDetailed
+                ? (sheetState.traceTextDetailed || sheetState.traceText || '')
+                : (sheetState.traceText || sheetState.traceTextDetailed || '');
         }
     }
 
@@ -1904,6 +1976,9 @@ class IvyRuntime {
         var row = document.createElement('div');
         row.className = 'event-row';
         row.setAttribute('data-event-address', address);
+        row.setAttribute('role', 'treeitem');
+        row.setAttribute('aria-selected', 'false');
+        row.setAttribute('tabindex', '-1');
 
         var hasSubs = ev.subs && ev.subs.length > 0;
         var toggle = document.createElement('button');
@@ -1911,7 +1986,10 @@ class IvyRuntime {
         toggle.type = 'button';
         toggle.textContent = hasSubs ? '+' : '';
         toggle.disabled = !hasSubs;
-        if (hasSubs) toggle.setAttribute('data-event-toggle', address);
+        if (hasSubs) {
+            toggle.setAttribute('data-event-toggle', address);
+            row.setAttribute('aria-expanded', 'false');
+        }
         row.appendChild(toggle);
 
         var text = document.createElement('span');
@@ -1920,20 +1998,123 @@ class IvyRuntime {
         row.appendChild(text);
         li.appendChild(row);
 
-        row.addEventListener('click', this.selectEventTraceRow.bind(this, sheetId, address));
+        row.addEventListener('click', function () {
+            this.selectEventTraceRow(sheetId, address);
+        }.bind(this));
+        row.addEventListener('keydown', this._handleEventTraceRowKeydown.bind(this, sheetId, address));
         if (hasSubs) {
             toggle.addEventListener('click', function (e) {
                 e.stopPropagation();
                 this.toggleEventTraceNode(sheetId, address);
+                this._syncEventTraceTreeFocus(sheetId);
             }.bind(this));
         }
         return li;
+    }
+
+    _syncEventTraceTreeFocus(sheetId) {
+        var sheet = document.getElementById(sheetId);
+        if (!sheet) return;
+        var sheetState = this.sheets && this.sheets[sheetId];
+        var rows = Array.prototype.slice.call(sheet.querySelectorAll('.event-row'));
+        if (!rows.length) return;
+        var focusRow = sheetState && sheetState.selectedEventAddress
+            ? this.eventTraceRow(sheetId, sheetState.selectedEventAddress)
+            : null;
+        if (!focusRow) focusRow = rows[0];
+        rows.forEach(function (row) {
+            row.setAttribute('tabindex', row === focusRow ? '0' : '-1');
+        });
+    }
+
+    _eventTraceVisibleRows(sheetId) {
+        var sheet = document.getElementById(sheetId);
+        if (!sheet) return [];
+        return Array.prototype.slice.call(sheet.querySelectorAll('.event-row'));
+    }
+
+    _selectAndFocusEventTraceRow(sheetId, address) {
+        this.selectEventTraceRow(sheetId, address);
+        var row = this.eventTraceRow(sheetId, address);
+        if (row && typeof row.focus === 'function') {
+            try {
+                row.focus({ preventScroll: true });
+            } catch (err) {
+                row.focus();
+            }
+        }
+    }
+
+    _handleEventTraceRowKeydown(sheetId, address, e) {
+        var key = e && e.key;
+        if (!key || ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Enter', ' '].indexOf(key) === -1) return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        var row = this.eventTraceRow(sheetId, address);
+        if (!row) return;
+        var rows = this._eventTraceVisibleRows(sheetId);
+        var index = rows.indexOf(row);
+        var toggle = row.querySelector('.event-toggle');
+        var canExpand = !!(toggle && !toggle.disabled && toggle.hasAttribute('data-event-toggle'));
+        var li = row.closest('.event-tree-node');
+        var expanded = !!(li && li.querySelector(':scope > ul.event-tree-list'));
+
+        if (key === 'ArrowDown') {
+            if (index >= 0 && index + 1 < rows.length) {
+                this._selectAndFocusEventTraceRow(sheetId, rows[index + 1].getAttribute('data-event-address'));
+            }
+            return;
+        }
+        if (key === 'ArrowUp') {
+            if (index > 0) {
+                this._selectAndFocusEventTraceRow(sheetId, rows[index - 1].getAttribute('data-event-address'));
+            }
+            return;
+        }
+        if (key === 'ArrowRight') {
+            if (!canExpand) return;
+            if (!expanded) {
+                this.toggleEventTraceNode(sheetId, address);
+                this._syncEventTraceTreeFocus(sheetId);
+                row.focus({ preventScroll: true });
+                return;
+            }
+            var childRow = li && li.querySelector(':scope > ul.event-tree-list > .event-tree-node > .event-row');
+            if (childRow) this._selectAndFocusEventTraceRow(sheetId, childRow.getAttribute('data-event-address'));
+            return;
+        }
+        if (key === 'ArrowLeft') {
+            if (canExpand && expanded) {
+                this.toggleEventTraceNode(sheetId, address);
+                this._syncEventTraceTreeFocus(sheetId);
+                row.focus({ preventScroll: true });
+                return;
+            }
+            var slash = String(address || '').lastIndexOf('/');
+            if (slash > 0) {
+                this._selectAndFocusEventTraceRow(sheetId, String(address).slice(0, slash));
+            }
+            return;
+        }
+        if ((key === 'Enter' || key === ' ') && canExpand) {
+            this.toggleEventTraceNode(sheetId, address);
+            this._syncEventTraceTreeFocus(sheetId);
+            row.focus({ preventScroll: true });
+        }
     }
 
     attachEventTraceHandlers(sheetId) {
         var sheet = document.getElementById(sheetId);
         if (!sheet) return;
         var self = this;
+        var detailedToggle = sheet.querySelector('.event-trace-detailed-toggle');
+        if (detailedToggle) detailedToggle.addEventListener('change', function () {
+            var sheetState = self.sheets && self.sheets[sheetId];
+            if (!sheetState) return;
+            sheetState.traceDetailed = !!detailedToggle.checked;
+            self._renderEventTraceText(sheetId);
+        });
         var filter = sheet.querySelector('.event-filter-btn');
         if (filter) filter.addEventListener('click', async function () {
             var pat = await self.entryDialog('Filter events', 'Pattern:', '', { okLabel: 'Filter' });

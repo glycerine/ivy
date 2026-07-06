@@ -52,8 +52,14 @@ export function toggleEventTraceNode(app, sheetId, address, {
   const existing = li.querySelector(':scope > ul.event-tree-list');
   const toggle = row.querySelector('.event-toggle');
   if (existing) {
+    const selectedAddress = String(sheetState.selectedEventAddress || '');
+    const selectingDescendant = selectedAddress && selectedAddress !== address && selectedAddress.startsWith(`${address}/`);
     existing.remove();
     if (toggle) toggle.textContent = '+';
+    row.setAttribute('aria-expanded', 'false');
+    if (selectingDescendant && typeof app.selectEventTraceRow === 'function') {
+      app.selectEventTraceRow(sheetId, address);
+    }
     return;
   }
   const ev = app.lookupEventTrace(sheetState.events, address);
@@ -65,6 +71,7 @@ export function toggleEventTraceNode(app, sheetId, address, {
   }
   li.appendChild(list);
   if (toggle) toggle.textContent = '-';
+  row.setAttribute('aria-expanded', 'true');
 }
 
 export function uncoverEventTraceAddress(app, sheetId, address) {
@@ -86,10 +93,23 @@ export function selectEventTraceRow(app, sheetId, address, {
   app.uncoverEventTraceAddress(sheetId, address);
   const sheet = doc.getElementById(sheetId);
   if (!sheetState || !sheet) return;
-  for (const row of sheet.querySelectorAll('.event-row.selected')) row.classList.remove('selected');
+  for (const row of sheet.querySelectorAll('.event-row')) {
+    row.classList.remove('selected');
+    row.setAttribute('aria-selected', 'false');
+    row.setAttribute('tabindex', '-1');
+  }
   const row = app.eventTraceRow(sheetId, address);
   if (row) {
     row.classList.add('selected');
+    row.setAttribute('aria-selected', 'true');
+    row.setAttribute('tabindex', '0');
+    if (typeof row.focus === 'function') {
+      try {
+        row.focus({ preventScroll: true });
+      } catch (err) {
+        row.focus();
+      }
+    }
     if (typeof row.scrollIntoView === 'function') {
       row.scrollIntoView({ block: 'nearest' });
     }
@@ -123,7 +143,11 @@ export async function filterEventTrace(app, pattern) {
     return null;
   }
   const label = (result && result.label) || 'Filtered events';
-  app.openEventTraceSheet(label, result || {}, result && result.sheet_id);
+  const openedSheetId = app.openEventTraceSheet(label, result || {}, result && result.sheet_id) || (result && result.sheet_id);
+  if (openedSheetId && sheet.selectedEventAddress && typeof app.eventTraceRow === 'function'
+      && app.eventTraceRow(openedSheetId, sheet.selectedEventAddress)) {
+    app.selectEventTraceRow(openedSheetId, sheet.selectedEventAddress);
+  }
   return result;
 }
 

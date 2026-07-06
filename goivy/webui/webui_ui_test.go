@@ -785,6 +785,80 @@ func TestFormatTrace(t *testing.T) {
 	}
 }
 
+func TestFormatTraceDisplayShowsPythonStyleDetailsAndCompactCalls(t *testing.T) {
+	root := NewTraceEvent("connect(c0)")
+	root.Kind = "env_call"
+	root.Line = "model.ivy:12"
+	root.StateKey = "s0"
+	root.State = map[string]string{"pc": "idle", "owner": "none"}
+	child := NewTraceEvent("helper(c0)")
+	child.Kind = "call"
+	child.Line = "model.ivy:8"
+	child.State = map[string]string{"owner": "c0"}
+	root.AddSub(child)
+	repeated := NewTraceEvent("connect(c0)")
+	repeated.Kind = "env_call"
+	repeated.StateKey = "s0"
+	repeated.State = map[string]string{"pc": "idle", "owner": "none"}
+
+	detailed := FormatTraceDisplay([]*TraceEvent{root, repeated}, TraceFormatOptions{Detailed: true})
+	for _, want := range []string{
+		"model.ivy:12\n",
+		"connect(c0)",
+		"{\n",
+		"model.ivy:8\n",
+		"helper(c0)",
+		"[\n",
+		"owner = none",
+		"pc = idle",
+		"--- the following repeats infinitely ---",
+	} {
+		if !strings.Contains(detailed, want) {
+			t.Fatalf("detailed trace missing %q:\n%s", want, detailed)
+		}
+	}
+
+	compact := FormatTraceDisplay([]*TraceEvent{root}, TraceFormatOptions{Detailed: false})
+	if !strings.Contains(compact, "> connect(c0)") || !strings.Contains(compact, "  < helper(c0)") {
+		t.Fatalf("compact trace did not format calls like Python:\n%s", compact)
+	}
+	if strings.Contains(compact, "model.ivy:12") || strings.Contains(compact, "[") {
+		t.Fatalf("compact trace should omit detailed line/state blocks:\n%s", compact)
+	}
+}
+
+func TestEventSheetResultCarriesSerializedTraceDisplay(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "events-trace-display")
+	result, err := s.ExecuteAction("events_new_sheet", map[string]interface{}{
+		"events": []interface{}{
+			map[string]interface{}{
+				"text":      "step",
+				"kind":      "env_call",
+				"line":      "model.ivy:7",
+				"state_key": "s0",
+				"state": map[string]interface{}{
+					"x": "0",
+				},
+			},
+			map[string]interface{}{
+				"text":      "step",
+				"kind":      "env_call",
+				"state_key": "s0",
+			},
+		},
+	})
+	if err != nil {
+		t.Fatalf("events_new_sheet: %v", err)
+	}
+	if text, _ := result["trace_text"].(string); !strings.Contains(text, "> step") {
+		t.Fatalf("trace_text = %q, want compact call text", text)
+	}
+	detailed, _ := result["trace_text_detailed"].(string)
+	if !strings.Contains(detailed, "model.ivy:7") || !strings.Contains(detailed, "x = 0") || !strings.Contains(detailed, "repeats infinitely") {
+		t.Fatalf("trace_text_detailed missing line/state/loop detail:\n%s", detailed)
+	}
+}
+
 func TestEventTraceViewerPatterns(t *testing.T) {
 	v := NewEventTraceViewer()
 	v.AddPattern("pat1")

@@ -12,9 +12,14 @@ import (
 // TraceEvent represents a single event in a verification trace
 // (Python: ev.Event).
 type TraceEvent struct {
-	Text    string        `json:"text"`
-	Subs    []*TraceEvent `json:"subs,omitempty"`
-	Address string        `json:"address,omitempty"`
+	Text      string            `json:"text"`
+	Subs      []*TraceEvent     `json:"subs,omitempty"`
+	Address   string            `json:"address,omitempty"`
+	Line      string            `json:"line,omitempty"`
+	Kind      string            `json:"kind,omitempty"`
+	State     map[string]string `json:"state,omitempty"`
+	StateKey  string            `json:"state_key,omitempty"`
+	LoopStart bool              `json:"loop_start,omitempty"`
 }
 
 // NewTraceEvent creates a new trace event.
@@ -49,9 +54,11 @@ type EventTraceViewer struct {
 
 // EventSheet represents one sheet/tab of events.
 type EventSheet struct {
-	Name   string        `json:"name"`
-	Label  string        `json:"label"`
-	Events []*TraceEvent `json:"events"`
+	Name              string        `json:"name"`
+	Label             string        `json:"label"`
+	Events            []*TraceEvent `json:"events"`
+	TraceText         string        `json:"trace_text,omitempty"`
+	TraceTextDetailed string        `json:"trace_text_detailed,omitempty"`
 }
 
 // NewEventTraceViewer creates a new empty viewer.
@@ -74,9 +81,11 @@ func (v *EventTraceViewer) NewSheet(events []*TraceEvent) string {
 	}
 
 	v.Sheets[name] = &EventSheet{
-		Name:   name,
-		Label:  label,
-		Events: events,
+		Name:              name,
+		Label:             label,
+		Events:            events,
+		TraceText:         FormatTraceDisplay(events, TraceFormatOptions{Detailed: false}),
+		TraceTextDetailed: FormatTraceDisplay(events, TraceFormatOptions{Detailed: true}),
 	}
 	v.CurrentSheet = name
 	return name
@@ -853,6 +862,128 @@ func formatTraceIndented(sb *strings.Builder, events []*TraceEvent, indent int) 
 		if ev.HasSubs() {
 			formatTraceIndented(sb, ev.Subs, indent+1)
 		}
+	}
+}
+
+// TraceFormatOptions controls the serialized trace text rendered beside the
+// event tree. Detailed mode follows Python ivy_trace.TraceBase.to_lines more
+// closely; compact mode keeps only the call-style action stream.
+type TraceFormatOptions struct {
+	Detailed bool
+}
+
+// FormatTraceDisplay serializes trace events as user-visible text.
+func FormatTraceDisplay(events []*TraceEvent, opts TraceFormatOptions) string {
+	var lines []string
+	seenStates := make(map[string]bool)
+	stateHash := make(map[string]string)
+	formatTraceDisplayEvents(&lines, events, opts, 0, seenStates, stateHash)
+	return strings.Join(lines, "")
+}
+
+func formatTraceDisplayEvents(lines *[]string, events []*TraceEvent, opts TraceFormatOptions, indent int, seenStates map[string]bool, stateHash map[string]string) {
+	for _, ev := range events {
+		if ev == nil {
+			continue
+		}
+		if opts.Detailed {
+			formatTraceDisplayDetailed(lines, ev, opts, indent, seenStates, stateHash)
+		} else {
+			formatTraceDisplayCompact(lines, ev, opts, indent, seenStates, stateHash)
+		}
+	}
+}
+
+func formatTraceDisplayDetailed(lines *[]string, ev *TraceEvent, opts TraceFormatOptions, indent int, seenStates map[string]bool, stateHash map[string]string) {
+	prefix := strings.Repeat("    ", indent)
+	if ev.Line != "" {
+		*lines = append(*lines, ev.Line+"\n")
+	}
+	if ev.Text != "" {
+		*lines = append(*lines, prefix+ev.Text+"\n")
+	}
+	if len(ev.Subs) > 0 {
+		*lines = append(*lines, prefix+"{\n")
+		formatTraceDisplayEvents(lines, ev.Subs, opts, indent+1, seenStates, stateHash)
+		*lines = append(*lines, prefix+"}\n")
+	}
+	if traceEventStartsLoop(ev, seenStates) {
+		*lines = append(*lines, "\n--- the following repeats infinitely ---\n\n")
+	}
+	formatTraceDisplayState(lines, ev.State, indent, stateHash)
+	if ev.Text != "" || len(ev.Subs) > 0 {
+		*lines = append(*lines, "\n")
+	}
+}
+
+func formatTraceDisplayCompact(lines *[]string, ev *TraceEvent, opts TraceFormatOptions, indent int, seenStates map[string]bool, stateHash map[string]string) {
+	prefix := strings.Repeat("  ", indent)
+	line := compactTraceEventLine(ev)
+	if line != "" {
+		*lines = append(*lines, prefix+line+"\n")
+	}
+	formatTraceDisplayEvents(lines, ev.Subs, opts, indent+1, seenStates, stateHash)
+}
+
+func compactTraceEventLine(ev *TraceEvent) string {
+	switch ev.Kind {
+	case "env_call", "env":
+		return "> " + ev.Text
+	case "call", "return":
+		return "< " + ev.Text
+	case "error":
+		if ev.Line != "" {
+			return ev.Line + "error: assertion failed"
+		}
+		if ev.Text != "" {
+			return ev.Text
+		}
+		return "error: assertion failed"
+	default:
+		return ev.Text
+	}
+}
+
+func traceEventStartsLoop(ev *TraceEvent, seenStates map[string]bool) bool {
+	if ev.LoopStart {
+		return true
+	}
+	if ev.StateKey == "" {
+		return false
+	}
+	if seenStates[ev.StateKey] {
+		return true
+	}
+	seenStates[ev.StateKey] = true
+	return false
+}
+
+func formatTraceDisplayState(lines *[]string, state map[string]string, indent int, stateHash map[string]string) {
+	if len(state) == 0 {
+		return
+	}
+	keys := make([]string, 0, len(state))
+	for key := range state {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	prefix := strings.Repeat("    ", indent)
+	valuePrefix := strings.Repeat("    ", indent+1)
+	wroteHeader := false
+	for _, key := range keys {
+		value := state[key]
+		if old, ok := stateHash[key]; ok && old == value {
+			continue
+		}
+		stateHash[key] = value
+		if !wroteHeader {
+			*lines = append(*lines, prefix+"[\n")
+			wroteHeader = true
+		}
+		*lines = append(*lines, valuePrefix+key+" = "+value+"\n")
+	}
+	if wroteHeader {
+		*lines = append(*lines, prefix+"]\n")
 	}
 }
 

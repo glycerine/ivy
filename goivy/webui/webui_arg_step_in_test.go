@@ -1178,6 +1178,68 @@ func TestCTIMinimizeReportsBoundAndCoreFacts(t *testing.T) {
 	}
 }
 
+func TestCTICheckActionsReportSelectedTargetAndResultKind(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-cti-check-result-details")
+	ui := NewCTIAnalysisGraphUI(nil)
+	ui.CurrentConjecture = goivy.NewClauses([]goivy.Expr{goivy.False}, nil, nil)
+	widget := NewGraphWidget(StandardGraph([]string{"S"}, nil))
+	domain, _ := argStepInTestDomainSetup()
+	widget.G().InteractiveSess = NewConceptInteractiveSession(
+		domain,
+		goivy.True,
+		goivy.True,
+		nil,
+		[]goivy.Expr{goivy.False},
+		nil,
+		nil,
+		nil,
+		false,
+	)
+	ui.CurrentConceptGraph = widget
+	s.CTIUI = ui
+
+	cases := []struct {
+		action     string
+		check      string
+		wantResult string
+	}{
+		{"cti_check_sufficient", "sufficient", "insufficient"},
+		{"cti_check_inductive", "relative_induction", "non_inductive"},
+	}
+	for _, tc := range cases {
+		result, err := s.ExecuteAction(tc.action, map[string]interface{}{
+			"sheet_id": rootSheetID,
+		})
+		if err != nil {
+			t.Fatalf("%s: %v", tc.action, err)
+		}
+		if result["check"] != tc.check {
+			t.Fatalf("%s check = %#v, want %q; result=%#v", tc.action, result["check"], tc.check, result)
+		}
+		if result["result"] != tc.wantResult {
+			t.Fatalf("%s result = %#v, want %q; result=%#v", tc.action, result["result"], tc.wantResult, result)
+		}
+		selected, _ := result["selected_conjecture"].(string)
+		if selected == "" {
+			t.Fatalf("%s selected_conjecture missing: %#v", tc.action, result)
+		}
+		target, _ := result["target_conjecture"].(string)
+		if target == "" {
+			t.Fatalf("%s target_conjecture missing: %#v", tc.action, result)
+		}
+		if tc.action == "cti_check_inductive" && target != selected {
+			t.Fatalf("inductive target = %q, want selected conjecture %q", target, selected)
+		}
+		dialogText, _ := result["dialog_text"].(string)
+		if !strings.Contains(dialogText, "Selected conjecture:") || !strings.Contains(dialogText, selected) {
+			t.Fatalf("%s dialog_text = %q, want selected conjecture %q", tc.action, dialogText, selected)
+		}
+		if !strings.Contains(dialogText, "Target conjecture:") || !strings.Contains(dialogText, target) {
+			t.Fatalf("%s dialog_text = %q, want target conjecture %q", tc.action, dialogText, target)
+		}
+	}
+}
+
 func TestInductionFailureUsedRelationsExcludeUnusedSignatureRelations(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-used-relations")
 	if err := s.LoadFileContent("test.ivy", []byte(ctiUsedRelationSample)); err != nil {

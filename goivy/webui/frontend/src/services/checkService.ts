@@ -414,6 +414,42 @@ async function showCtiMinimizeDetails(app, result) {
   );
 }
 
+function isCtiCheckAction(actionName) {
+  return actionName === 'cti_check_sufficient' || actionName === 'cti_check_inductive';
+}
+
+function ctiCheckTitle(actionName, result) {
+  if (result && result.dialog_title) return String(result.dialog_title);
+  if (actionName === 'cti_check_inductive') return 'CTI relative induction';
+  return 'CTI check sufficient';
+}
+
+function ctiCheckDetailsText(result) {
+  if (result && result.dialog_text) return String(result.dialog_text);
+  const resultKind = result && result.result ? String(result.result) : (result && result.ok ? 'pass' : 'fail');
+  const selected = result && result.selected_conjecture ? String(result.selected_conjecture) : '';
+  const target = result && result.target_conjecture ? String(result.target_conjecture) : '';
+  return [
+    `Result: ${resultKind}`,
+    '',
+    'Selected conjecture:',
+    selected,
+    '',
+    'Target conjecture:',
+    target,
+  ].join('\n');
+}
+
+async function showCtiCheckDetails(app, actionName, result) {
+  if (!isCtiCheckAction(actionName) || !result || typeof app.textDialog !== 'function') return;
+  await app.textDialog(
+    ctiCheckTitle(actionName, result),
+    result.dialog_message || result.message || 'CTI check complete',
+    ctiCheckDetailsText(result),
+    { readOnly: true, okLabel: 'OK', cancel: false },
+  );
+}
+
 export async function checkInduction(app) {
   app.controls.setStatus('Checking induction...');
   const result = await runWithContext(app, {
@@ -571,9 +607,12 @@ export async function ctiConceptAction(app, actionName) {
   } else {
     await app.refreshConceptGraph();
   }
-  app.controls.setStatus((result && result.message) || 'CTI action complete', 'success');
+  const statusKind = isCtiCheckAction(actionName) && result && result.ok === false ? 'error' : 'success';
+  app.controls.setStatus((result && result.message) || 'CTI action complete', statusKind);
   if (actionName === 'cti_minimize') {
     await showCtiMinimizeDetails(app, result);
+  } else if (isCtiCheckAction(actionName)) {
+    await showCtiCheckDetails(app, actionName, result);
   }
   return result;
 }
