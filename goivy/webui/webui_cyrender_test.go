@@ -705,6 +705,15 @@ func TestConceptShapeOctagon(t *testing.T) {
 
 // --- Style tests ---
 
+func cyStyleForTest(styles []CyStyleEntry, selector string) map[string]string {
+	for _, entry := range styles {
+		if entry.Selector == selector {
+			return entry.Style
+		}
+	}
+	return nil
+}
+
 func TestConceptStyleJSON(t *testing.T) {
 	data, err := json.Marshal(ConceptStyle())
 	if err != nil {
@@ -712,6 +721,12 @@ func TestConceptStyleJSON(t *testing.T) {
 	}
 	if !strings.Contains(string(data), "non_existing") {
 		t.Error("missing non_existing selector")
+	}
+	if got := cyStyleForTest(ConceptStyle(), "edge")["text-max-width"]; got != "" {
+		t.Fatalf("base concept edge text-max-width = %q, want no data mapper on broad selector", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), "edge[text_max_width]")["text-max-width"]; got != "data(text_max_width)" {
+		t.Fatalf("concept edge[text_max_width] text-max-width = %q, want data(text_max_width)", got)
 	}
 }
 
@@ -728,6 +743,12 @@ func TestARGStyleJSON(t *testing.T) {
 	}
 	if !strings.Contains(string(data), "marked_state") {
 		t.Error("missing marked_state selector")
+	}
+	if got := cyStyleForTest(ARGStyle(), "edge")["text-max-width"]; got != "" {
+		t.Fatalf("base ARG edge text-max-width = %q, want no data mapper on broad selector", got)
+	}
+	if got := cyStyleForTest(ARGStyle(), "edge[text_max_width]")["text-max-width"]; got != "data(text_max_width)" {
+		t.Fatalf("ARG edge[text_max_width] text-max-width = %q, want data(text_max_width)", got)
 	}
 }
 
