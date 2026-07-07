@@ -645,6 +645,7 @@ class IvyRuntime {
         this.setupTabs();
         this._setupSheetPaneToggles();
         this.setupResizer();
+        this._setupSheetRowResizer();
         this.setupResizerH();
         this.setupDetailsResizer();
         this.setupTutorialUrlBar();
@@ -1187,13 +1188,15 @@ class IvyRuntime {
             pane = document.createElement('div');
             pane.className = 'proof-crg-pane';
             pane.setAttribute('data-proof-goal-pane', 'true');
+            pane.setAttribute('data-resizable-row', 'proof-crg');
             pane.innerHTML = [
-                '<div class="proof-goal-column">',
+                '<div class="proof-goal-column" data-resizable-pane="proof-goals">',
                 '  <div class="proof-crg-header">Proof goals <span class="proof-selected-goal" data-selected-proof-goal></span></div>',
                 '  <div class="proof-goal-graph" data-proof-goal-graph></div>',
                 '  <pre class="proof-goal-info" data-proof-goal-info></pre>',
                 '</div>',
-                '<div class="crg-column">',
+                '<div class="divider proof-crg-column-divider" data-resize-target="previous" title="Drag to resize Proof goals and CRG / transition" aria-label="Resize Proof goals and CRG / transition"></div>',
+                '<div class="crg-column" data-resizable-pane="crg-transition">',
                 '  <div class="proof-crg-header">CRG / transition</div>',
                 '  <div class="crg-node-list" data-crg-node-list></div>',
                 '  <pre class="transition-view" data-transition-view></pre>',
@@ -1210,6 +1213,34 @@ class IvyRuntime {
                     sheetEl.insertBefore(pane, sheetEl.firstChild);
                 }
             }
+        }
+        if (!pane.hasAttribute('data-resizable-row')) {
+            pane.setAttribute('data-resizable-row', 'proof-crg');
+        }
+        if (!pane.querySelector('.proof-crg-column-divider')) {
+            var goalColumn = pane.querySelector('.proof-goal-column');
+            var crgColumn = pane.querySelector('.crg-column');
+            if (goalColumn) goalColumn.setAttribute('data-resizable-pane', 'proof-goals');
+            if (crgColumn) crgColumn.setAttribute('data-resizable-pane', 'crg-transition');
+            if (crgColumn && crgColumn.parentNode) {
+                var columnDivider = document.createElement('div');
+                columnDivider.className = 'divider proof-crg-column-divider';
+                columnDivider.setAttribute('data-resize-target', 'previous');
+                columnDivider.setAttribute('title', 'Drag to resize Proof goals and CRG / transition');
+                columnDivider.setAttribute('aria-label', 'Resize Proof goals and CRG / transition');
+                crgColumn.parentNode.insertBefore(columnDivider, crgColumn);
+            }
+        }
+        var rowDivider = sheetEl.querySelector('[data-proof-crg-row-divider]');
+        if (!rowDivider && pane.parentNode) {
+            rowDivider = document.createElement('div');
+            rowDivider.className = 'divider-horizontal proof-crg-row-divider';
+            rowDivider.setAttribute('data-proof-crg-row-divider', 'true');
+            rowDivider.setAttribute('data-resize-axis', 'y');
+            rowDivider.setAttribute('data-resize-target', 'previous');
+            rowDivider.setAttribute('title', 'Drag to resize Proof goals / CRG and graph panes');
+            rowDivider.setAttribute('aria-label', 'Resize Proof goals / CRG and graph panes');
+            pane.parentNode.insertBefore(rowDivider, pane.nextSibling);
         }
         var graphEl = pane.querySelector('[data-proof-goal-graph]');
         if (graphEl) graphEl.id = 'proof-graph-' + id;
@@ -1891,18 +1922,49 @@ class IvyRuntime {
         return Math.max(120, cssMin || minWidth || 160);
     }
 
+    _isResizablePane(node) {
+        return !!(
+            node
+            && node.classList
+            && (
+                node.classList.contains('sheet-pane')
+                || node.hasAttribute('data-resizable-pane')
+            )
+            && !node.classList.contains('sheet-pane-collapsed')
+        );
+    }
+
     _neighborResizablePane(node, direction) {
         while (node) {
-            if (
-                node.classList
-                && node.classList.contains('sheet-pane')
-                && !node.classList.contains('sheet-pane-collapsed')
-            ) {
+            if (this._isResizablePane(node)) {
                 return node;
             }
             node = direction === 'next' ? node.nextElementSibling : node.previousElementSibling;
         }
         return null;
+    }
+
+    _rowResizeMinimum(panel) {
+        if (!panel || typeof window === 'undefined' || !window.getComputedStyle) return 96;
+        var styles = window.getComputedStyle(panel);
+        var cssMin = parseFloat(styles.getPropertyValue('--resizable-row-min-height'));
+        var minHeight = parseFloat(styles.minHeight);
+        return Math.max(64, cssMin || minHeight || 96);
+    }
+
+    _neighborResizableRow(node, direction) {
+        while (node) {
+            if (node.hasAttribute && node.hasAttribute('data-resizable-row')) return node;
+            node = direction === 'next' ? node.nextElementSibling : node.previousElementSibling;
+        }
+        return null;
+    }
+
+    _resizeActiveProofGraph() {
+        var sheet = this.sheets && this.sheets[this.activeSheetId || 'sheet-1'];
+        if (sheet && sheet.proofGraph && typeof sheet.proofGraph.resize === 'function') {
+            sheet.proofGraph.resize();
+        }
     }
 
     /**
@@ -1973,6 +2035,7 @@ class IvyRuntime {
             activePanel.style.width = newWidth + 'px';
             if (self.argGraph) self.argGraph.resize();
             if (self.conceptGraph) self.conceptGraph.resize();
+            self._resizeActiveProofGraph();
             self._refreshEditorLayout();
         });
 
@@ -1986,6 +2049,7 @@ class IvyRuntime {
                 for (var i = 0; i < canvases.length; i++) canvases[i].style.pointerEvents = '';
                 if (self.argGraph) self.argGraph.resize();
                 if (self.conceptGraph) self.conceptGraph.resize();
+                self._resizeActiveProofGraph();
                 activeHandle = null;
                 activePanel = null;
                 activeContainer = null;
@@ -2002,9 +2066,80 @@ class IvyRuntime {
      * Set up the tutorial URL bar: Go button and Enter key navigate the iframe.
      */
     /**
-     * Resizer for divider-h: horizontal divider between top row and tutorial BiB.
-     * Dragging up makes tutorial taller; dragging down makes top row taller.
+     * Resizer for horizontal dividers inside a sheet, such as Proof/CRG over graph panes.
      */
+    _setupSheetRowResizer() {
+        var sheetArea = document.getElementById('sheet-area');
+        if (!sheetArea) return;
+        if (sheetArea.__ivyRowResizerInstalled) return;
+        sheetArea.__ivyRowResizerInstalled = true;
+        var self = this;
+        var isDragging = false;
+        var startY = 0;
+        var startHeight = 0;
+        var activeHandle = null;
+        var activePanel = null;
+        var activeContainer = null;
+
+        sheetArea.addEventListener('mousedown', function (e) {
+            var target = e.target;
+            var div = target && target.closest ? target.closest('.divider-horizontal[data-resize-axis="y"]') : target;
+            var targetSide;
+
+            if (!div || !div.classList || !div.classList.contains('divider-horizontal') || !sheetArea.contains(div)) return;
+            targetSide = div.getAttribute('data-resize-target') || 'previous';
+            activePanel = targetSide === 'next'
+                ? self._neighborResizableRow(div.nextElementSibling, 'next')
+                : self._neighborResizableRow(div.previousElementSibling, 'previous');
+            activeContainer = div.parentElement;
+            if (!activePanel || !activeContainer) return;
+
+            isDragging = true;
+            activeHandle = div;
+            activeHandle.__ivyResizeTargetSide = targetSide;
+            startY = e.clientY;
+            startHeight = activePanel.offsetHeight;
+            activeHandle.classList.add('active');
+            document.body.style.cursor = 'row-resize';
+            document.body.style.userSelect = 'none';
+            var canvases = activeContainer.querySelectorAll('.graph-container');
+            for (var i = 0; i < canvases.length; i++) canvases[i].style.pointerEvents = 'none';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (!isDragging || !activePanel) return;
+            var targetSide = activeHandle && activeHandle.__ivyResizeTargetSide === 'next' ? 'next' : 'previous';
+            var dy = targetSide === 'next' ? startY - e.clientY : e.clientY - startY;
+            var newHeight = startHeight + dy;
+            var minHeight = self._rowResizeMinimum(activePanel);
+            var containerHeight = activeContainer ? Math.max(activeContainer.offsetHeight, activeContainer.scrollHeight || 0) : 900;
+            var maxHeight = Math.max(minHeight, Math.min(1400, containerHeight + 400));
+            newHeight = Math.max(minHeight, Math.min(newHeight, maxHeight));
+            activePanel.style.flex = '0 0 ' + newHeight + 'px';
+            activePanel.style.height = newHeight + 'px';
+            self._refreshGraphsAndEditorLayout();
+            self._resizeActiveProofGraph();
+        });
+
+        document.addEventListener('mouseup', function () {
+            if (!isDragging) return;
+            isDragging = false;
+            if (activeHandle) activeHandle.classList.remove('active');
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+            if (activeContainer) {
+                var canvases = activeContainer.querySelectorAll('.graph-container');
+                for (var i = 0; i < canvases.length; i++) canvases[i].style.pointerEvents = '';
+            }
+            self._refreshGraphsAndEditorLayout();
+            self._resizeActiveProofGraph();
+            activeHandle = null;
+            activePanel = null;
+            activeContainer = null;
+        });
+    }
+
     /**
      * Toggle the tutorial BiB panel visibility.
      */

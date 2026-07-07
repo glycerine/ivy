@@ -40,6 +40,20 @@ describe('static index toolbar', () => {
 });
 
 describe('static graph background controls', () => {
+  it('keeps pane resize handles wired to the panes they can actually resize', () => {
+    const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
+    const divider3 = doc.getElementById('divider3');
+    const proofColumnDividerRule = ivyCss.match(/\.proof-crg-column-divider\s*\{[^}]+\}/)?.[0] || '';
+    const proofRowDividerRule = ivyCss.match(/\.proof-crg-row-divider\s*\{[^}]+\}/)?.[0] || '';
+
+    expect(divider3?.getAttribute('data-resize-target')).toBe('next');
+    expect(proofColumnDividerRule).toContain('align-self: stretch;');
+    expect(proofColumnDividerRule).toContain('flex: 0 0 4px;');
+    expect(proofColumnDividerRule).toContain('width: 4px;');
+    expect(proofRowDividerRule).toContain('flex: 0 0 4px;');
+    expect(proofRowDividerRule).toContain('width: 100%;');
+  });
+
   it('keeps the Reachability, Concept, and State pane headers at one fixed height', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
     const paneHeaders = [

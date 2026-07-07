@@ -1088,6 +1088,7 @@ body[data-event-viewer-only="true"] #outer-container {
 .proof-crg-pane {
     display: flex;
     flex: 0 0 148px;
+    --resizable-row-min-height: 96px;
     min-height: 0;
     border-bottom: 1px solid #3c3c3c;
     background: #1e1e1e;
@@ -1095,6 +1096,7 @@ body[data-event-viewer-only="true"] #outer-container {
 
 .proof-goal-column,
 .crg-column {
+    --sheet-pane-min-width: 160px;
     display: flex;
     flex-direction: column;
     min-width: 0;
@@ -1107,7 +1109,17 @@ body[data-event-viewer-only="true"] #outer-container {
 
 .crg-column {
     flex: 1;
-    border-left: 1px solid #3c3c3c;
+}
+
+.proof-crg-column-divider {
+    align-self: stretch;
+    flex: 0 0 4px;
+    width: 4px;
+}
+
+.proof-crg-row-divider {
+    flex: 0 0 4px;
+    width: 100%;
 }
 
 .proof-crg-header {

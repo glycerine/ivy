@@ -148,6 +148,13 @@ function setOffsetWidth(element: Element, width: number) {
   });
 }
 
+function setOffsetHeight(element: Element, height: number) {
+  Object.defineProperty(element, 'offsetHeight', {
+    configurable: true,
+    value: height,
+  });
+}
+
 afterEach(() => {
   resetIvyRuntimeDependencies();
   document.body.innerHTML = '';
@@ -196,6 +203,116 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(concept.style.flex).toBe('0 0 210px');
     expect(state.style.width).toBe('');
     expect(state.style.flex).toBe('');
+  });
+
+  it('resizes the editor pane from the State/relations and Editing divider', () => {
+    document.body.innerHTML = [
+      '<div id="sheet-area">',
+      '  <div id="sheet-workspace" class="sheet-workspace">',
+      '    <div id="sheet-pages" class="sheet-pages">',
+      '      <div id="sheet-1" class="sheet-content active">',
+      '        <div class="sheet-columns">',
+      '          <div id="arg-panel" class="sheet-pane"></div>',
+      '          <div id="divider" class="divider" data-resize-target="previous"></div>',
+      '          <div id="concept-panel" class="sheet-pane"></div>',
+      '          <div id="divider2" class="divider" data-resize-target="previous"></div>',
+      '          <div id="state-panel" class="sheet-pane"></div>',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '    <div id="divider3" class="divider" data-resize-target="next"></div>',
+      '    <div id="editor-panel" class="sheet-pane" style="min-width: 120px"></div>',
+      '  </div>',
+      '</div>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.argGraph = new FakeGraph();
+    runtime.conceptGraph = new FakeGraph();
+    runtime._refreshEditorLayout = vi.fn();
+    const workspace = document.getElementById('sheet-workspace')!;
+    const editor = document.getElementById('editor-panel')!;
+    const divider = document.getElementById('divider3')!;
+    setOffsetWidth(workspace, 1200);
+    setOffsetWidth(editor, 420);
+
+    runtime.setupResizer();
+    divider.dispatchEvent(new MouseEvent('mousedown', { clientX: 600, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 550, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(editor.style.width).toBe('470px');
+    expect(editor.style.flex).toBe('0 0 470px');
+  });
+
+  it('adds and drags the divider between Proof goals and CRG / transition', () => {
+    document.body.innerHTML = [
+      '<div id="sheet-area">',
+      '  <div id="sheet-1" class="sheet-content active">',
+      '    <div class="sheet-columns"></div>',
+      '  </div>',
+      '</div>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-1';
+    runtime.sheets = { 'sheet-1': { id: 'sheet-1' } };
+    runtime.argGraph = new FakeGraph();
+    runtime.conceptGraph = new FakeGraph();
+    runtime._refreshEditorLayout = vi.fn();
+
+    runtime._ensureProofGoalPane('sheet-1');
+    const pane = document.querySelector('.proof-crg-pane')!;
+    const goalColumn = document.querySelector('.proof-goal-column')!;
+    const crgColumn = document.querySelector('.crg-column')!;
+    const divider = document.querySelector('.proof-crg-column-divider')!;
+    setOffsetWidth(pane, 760);
+    setOffsetWidth(goalColumn, 280);
+
+    runtime.setupResizer();
+    divider.dispatchEvent(new MouseEvent('mousedown', { clientX: 300, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 360, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(goalColumn.getAttribute('data-resizable-pane')).toBe('proof-goals');
+    expect(crgColumn.getAttribute('data-resizable-pane')).toBe('crg-transition');
+    expect(goalColumn.style.width).toBe('340px');
+    expect(goalColumn.style.flex).toBe('0 0 340px');
+    expect(runtime.sheets['sheet-1'].proofGraph.resize).toHaveBeenCalled();
+  });
+
+  it('adds and drags the divider between Proof/CRG and the graph panes', () => {
+    document.body.innerHTML = [
+      '<div id="sheet-area">',
+      '  <div id="sheet-1" class="sheet-content active">',
+      '    <div class="sheet-columns"></div>',
+      '  </div>',
+      '</div>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-1';
+    runtime.sheets = { 'sheet-1': { id: 'sheet-1' } };
+    runtime.argGraph = new FakeGraph();
+    runtime.conceptGraph = new FakeGraph();
+    runtime._refreshEditorLayout = vi.fn();
+
+    runtime._ensureProofGoalPane('sheet-1');
+    const sheet = document.getElementById('sheet-1')!;
+    const pane = document.querySelector('.proof-crg-pane')!;
+    const divider = document.querySelector('.proof-crg-row-divider')!;
+    const columns = document.querySelector('.sheet-columns')!;
+    setOffsetHeight(sheet, 720);
+    setOffsetHeight(pane, 148);
+
+    runtime._setupSheetRowResizer();
+    divider.dispatchEvent(new MouseEvent('mousedown', { clientY: 200, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientY: 250, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(pane.getAttribute('data-resizable-row')).toBe('proof-crg');
+    expect(divider.getAttribute('data-resize-axis')).toBe('y');
+    expect(columns.parentElement).toBe(sheet);
+    expect(pane.style.height).toBe('198px');
+    expect(pane.style.flex).toBe('0 0 198px');
+    expect(runtime.sheets['sheet-1'].proofGraph.resize).toHaveBeenCalled();
   });
 
   it('maps the graph background slider and flips relation-name text at channel 181', () => {
