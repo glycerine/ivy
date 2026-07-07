@@ -1726,6 +1726,10 @@ body[data-event-viewer-only="true"] #outer-container {
     max-height: var(--ivy-pane-header-height);
 }
 
+#concept-panel > .sheet-pane-content > .panel-header {
+    position: relative;
+}
+
 .panel-header h3 {
     font-size: 12px;
     font-weight: 600;
@@ -1753,14 +1757,31 @@ body[data-event-viewer-only="true"] #outer-container {
     overflow: visible;
 }
 
+.graph-background-control {
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
 .graph-background-slider {
     width: 120px;
     height: 18px;
-    margin-left: auto;
     appearance: none;
     -webkit-appearance: none;
     background: transparent;
     accent-color: var(--ivy-graph-slider-color, var(--ivy-graph-background));
+}
+
+.graph-background-slider-label {
+    color: #fff;
+    font-size: 10px;
+    font-style: italic;
+    line-height: 12px;
+    white-space: nowrap;
 }
 
 .graph-background-slider::-webkit-slider-runnable-track {
