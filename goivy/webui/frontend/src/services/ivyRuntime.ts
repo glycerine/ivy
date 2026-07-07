@@ -1967,6 +1967,13 @@ class IvyRuntime {
         }
     }
 
+    _isEditorResizeEdge(editorPanel, event) {
+        if (!editorPanel || !event || typeof event.clientX !== 'number') return false;
+        var rect = editorPanel.getBoundingClientRect ? editorPanel.getBoundingClientRect() : null;
+        var left = rect ? rect.left : 0;
+        return event.clientX >= left - 6 && event.clientX <= left + 8;
+    }
+
     /**
      * Set up resizable dividers between sheet panes.
      * Uses event delegation on the sheet area so it works for ALL tabs,
@@ -1988,23 +1995,31 @@ class IvyRuntime {
         sheetArea.addEventListener('mousedown', function (e) {
             var target = e.target;
             var div = target && target.closest ? target.closest('.divider') : target;
+            var editorPanel = target && target.closest ? target.closest('#editor-panel') : null;
             var targetSide;
             var panel;
             var container;
 
-            if (!div || !div.classList || !div.classList.contains('divider') || !sheetArea.contains(div)) return;
-            targetSide = div.getAttribute('data-resize-target');
-            activeHandle = div;
-            if (targetSide) {
-                panel = targetSide === 'next'
-                    ? self._neighborResizablePane(div.nextElementSibling, 'next')
-                    : self._neighborResizablePane(div.previousElementSibling, 'previous');
-                container = div.closest('.sheet-columns') || div.closest('.sheet-workspace') || div.parentElement;
+            if (editorPanel && sheetArea.contains(editorPanel) && self._isEditorResizeEdge(editorPanel, e)) {
+                activeHandle = editorPanel;
+                targetSide = 'next';
+                panel = editorPanel;
+                container = editorPanel.closest('.sheet-workspace') || editorPanel.parentElement;
             } else {
-                container = div.parentElement;
-                if (!container || !container.classList || !container.classList.contains('sheet-main')) return;
-                targetSide = 'previous';
-                panel = div.previousElementSibling;
+                if (!div || !div.classList || !div.classList.contains('divider') || !sheetArea.contains(div)) return;
+                targetSide = div.getAttribute('data-resize-target');
+                activeHandle = div;
+                if (targetSide) {
+                    panel = targetSide === 'next'
+                        ? self._neighborResizablePane(div.nextElementSibling, 'next')
+                        : self._neighborResizablePane(div.previousElementSibling, 'previous');
+                    container = div.closest('.sheet-columns') || div.closest('.sheet-workspace') || div.parentElement;
+                } else {
+                    container = div.parentElement;
+                    if (!container || !container.classList || !container.classList.contains('sheet-main')) return;
+                    targetSide = 'previous';
+                    panel = div.previousElementSibling;
+                }
             }
             if (!container || !panel) return;
 

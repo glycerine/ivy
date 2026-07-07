@@ -244,6 +244,50 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(editor.style.flex).toBe('0 0 470px');
   });
 
+  it('resizes the editor pane by dragging its left edge', () => {
+    document.body.innerHTML = [
+      '<div id="sheet-area">',
+      '  <div id="sheet-workspace" class="sheet-workspace">',
+      '    <div id="sheet-pages" class="sheet-pages">',
+      '      <div id="sheet-1" class="sheet-content active">',
+      '        <div class="sheet-columns"></div>',
+      '      </div>',
+      '    </div>',
+      '    <div id="divider3" class="divider" data-resize-target="next"></div>',
+      '    <div id="editor-panel" class="sheet-pane" style="min-width: 120px"><div class="panel-header"></div></div>',
+      '  </div>',
+      '</div>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.argGraph = new FakeGraph();
+    runtime.conceptGraph = new FakeGraph();
+    runtime._refreshEditorLayout = vi.fn();
+    const workspace = document.getElementById('sheet-workspace')!;
+    const editor = document.getElementById('editor-panel')!;
+    setOffsetWidth(workspace, 1200);
+    setOffsetWidth(editor, 420);
+    Object.defineProperty(editor, 'getBoundingClientRect', {
+      configurable: true,
+      value: () => ({ left: 600, right: 1020, top: 0, bottom: 600, width: 420, height: 600 }),
+    });
+
+    runtime.setupResizer();
+    editor.dispatchEvent(new MouseEvent('mousedown', { clientX: 602, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 552, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(editor.style.width).toBe('470px');
+    expect(editor.style.flex).toBe('0 0 470px');
+
+    setOffsetWidth(editor, 470);
+    editor.dispatchEvent(new MouseEvent('mousedown', { clientX: 602, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 642, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(editor.style.width).toBe('430px');
+    expect(editor.style.flex).toBe('0 0 430px');
+  });
+
   it('adds and drags the divider between Proof goals and CRG / transition', () => {
     document.body.innerHTML = [
       '<div id="sheet-area">',
@@ -313,6 +357,43 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(pane.style.height).toBe('198px');
     expect(pane.style.flex).toBe('0 0 198px');
     expect(runtime.sheets['sheet-1'].proofGraph.resize).toHaveBeenCalled();
+  });
+
+  it('adds draggable Proof/CRG dividers to Reachable states sheets', () => {
+    installSheetDom();
+    const runtime = makeRuntime();
+    runtime.setupResizer();
+    runtime._setupSheetRowResizer();
+
+    const sheetId = runtime.addSheet('Reachable states', 'sheet-2', { reachabilityOnly: true });
+    const sheet = document.getElementById(sheetId)!;
+    const pane = sheet.querySelector('.proof-crg-pane') as HTMLElement;
+    const goalColumn = sheet.querySelector('.proof-goal-column') as HTMLElement;
+    const columnDivider = sheet.querySelector('.proof-crg-column-divider') as HTMLElement;
+    const rowDivider = sheet.querySelector('.proof-crg-row-divider') as HTMLElement;
+    setOffsetWidth(pane, 760);
+    setOffsetWidth(goalColumn, 280);
+    setOffsetHeight(sheet, 720);
+    setOffsetHeight(pane, 148);
+
+    expect(sheet.classList.contains('reachability-only-sheet')).toBe(true);
+    expect(columnDivider).not.toBeNull();
+    expect(rowDivider).not.toBeNull();
+
+    columnDivider.dispatchEvent(new MouseEvent('mousedown', { clientX: 300, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 360, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(goalColumn.style.width).toBe('340px');
+    expect(goalColumn.style.flex).toBe('0 0 340px');
+
+    rowDivider.dispatchEvent(new MouseEvent('mousedown', { clientY: 200, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientY: 250, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(pane.style.height).toBe('198px');
+    expect(pane.style.flex).toBe('0 0 198px');
+    expect(runtime.sheets[sheetId].proofGraph.resize).toHaveBeenCalled();
   });
 
   it('maps the graph background slider and flips relation-name text at channel 181', () => {

@@ -485,6 +485,17 @@ body[data-event-viewer-only="true"] #outer-container {
     overflow: hidden;
 }
 
+#editor-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -4px;
+    z-index: 10;
+    width: 8px;
+    cursor: col-resize;
+}
+
 .model-editor-text {
     flex: 1;
     width: 100%;

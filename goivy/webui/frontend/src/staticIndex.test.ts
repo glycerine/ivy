@@ -43,10 +43,14 @@ describe('static graph background controls', () => {
   it('keeps pane resize handles wired to the panes they can actually resize', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
     const divider3 = doc.getElementById('divider3');
+    const editorEdgeRule = ivyCss.match(/#editor-panel::before\s*\{[^}]+\}/)?.[0] || '';
     const proofColumnDividerRule = ivyCss.match(/\.proof-crg-column-divider\s*\{[^}]+\}/)?.[0] || '';
     const proofRowDividerRule = ivyCss.match(/\.proof-crg-row-divider\s*\{[^}]+\}/)?.[0] || '';
 
     expect(divider3?.getAttribute('data-resize-target')).toBe('next');
+    expect(editorEdgeRule).toContain('left: -4px;');
+    expect(editorEdgeRule).toContain('width: 8px;');
+    expect(editorEdgeRule).toContain('cursor: col-resize;');
     expect(proofColumnDividerRule).toContain('align-self: stretch;');
     expect(proofColumnDividerRule).toContain('flex: 0 0 4px;');
     expect(proofColumnDividerRule).toContain('width: 4px;');
