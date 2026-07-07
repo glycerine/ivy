@@ -141,7 +141,7 @@ describe('static graph background controls', () => {
     expect(sliderRule).toContain('width: var(--ivy-graph-background-slider-width);');
     expect(sliderRule).toContain('height: 18px;');
     expect(sliderRule).toContain('box-sizing: border-box;');
-    expect(sliderRule).toContain('padding: 0 9px;');
+    expect(sliderRule).not.toContain('padding:');
     expect(sliderRule).toContain('background: transparent;');
     expect(sliderRule).toContain('accent-color: var(--ivy-graph-slider-color, var(--ivy-graph-background));');
     expect(sliderLabelRule).toContain('color: #fff;');

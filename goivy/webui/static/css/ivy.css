@@ -1780,7 +1780,6 @@ body[data-event-viewer-only="true"] #outer-container {
     width: var(--ivy-graph-background-slider-width);
     height: 18px;
     box-sizing: border-box;
-    padding: 0 9px;
     appearance: none;
     -webkit-appearance: none;
     background: transparent;
