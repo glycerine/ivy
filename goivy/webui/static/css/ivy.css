@@ -1780,6 +1780,7 @@ body[data-event-viewer-only="true"] #outer-container {
     width: var(--ivy-graph-background-slider-width);
     height: 18px;
     box-sizing: border-box;
+    /*padding: 0 9px;*/
     appearance: none;
     -webkit-appearance: none;
     background: transparent;
@@ -1828,7 +1829,7 @@ body[data-event-viewer-only="true"] #outer-container {
     height: 18px;
     margin-top: -6.5px;
     border-radius: 50%;
-    border: 1px solid #20232a;
+    /*border: 0px solid #20232a; */
     background: #f0f0f0;
 }
 
@@ -1836,7 +1837,7 @@ body[data-event-viewer-only="true"] #outer-container {
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    border: 1px solid #20232a;
+    /*border: 0px solid #20232a;*/
     background: #f0f0f0;
 }
 

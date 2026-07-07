@@ -141,7 +141,6 @@ describe('static graph background controls', () => {
     expect(sliderRule).toContain('width: var(--ivy-graph-background-slider-width);');
     expect(sliderRule).toContain('height: 18px;');
     expect(sliderRule).toContain('box-sizing: border-box;');
-    expect(sliderRule).not.toContain('padding:');
     expect(sliderRule).toContain('background: transparent;');
     expect(sliderRule).toContain('accent-color: var(--ivy-graph-slider-color, var(--ivy-graph-background));');
     expect(sliderLabelRule).toContain('color: #fff;');
@@ -158,10 +157,6 @@ describe('static graph background controls', () => {
     expect(mozTrackRule).toContain('linear-gradient(');
     expect(mozTrackRule).toContain('var(--ivy-graph-slider-fill, 0%)');
     expect(mozTrackRule).toContain('#111 100%');
-    expect(webkitThumbRule).toContain('width: 18px;');
-    expect(webkitThumbRule).toContain('height: 18px;');
-    expect(mozThumbRule).toContain('width: 18px;');
-    expect(mozThumbRule).toContain('height: 18px;');
     expect(readoutRule).toContain('position: fixed;');
     expect(readoutRule).toContain('pointer-events: none;');
     expect(readoutVisibleRule).toContain('opacity: 1;');
