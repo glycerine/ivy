@@ -388,7 +388,7 @@ func ArtToGraphState(ag *goivy.AnalysisGraph) *WebUIAnalysisGraphState {
 		gs.Transitions = append(gs.Transitions, WebUIARGTransition{
 			SourceID: t.Pre.ID,
 			TargetID: t.Post.ID,
-			Label:    t.Label,
+			Label:    argTransitionDisplayLabel(t),
 		})
 	}
 	for _, c := range ag.Covering {
@@ -430,7 +430,7 @@ func ArtToFullGraphState(ag *goivy.AnalysisGraph) *goivy.FullAnalysisGraphState 
 		gs.Transitions = append(gs.Transitions, goivy.ARGTransition{
 			SourceID: t.Pre.ID,
 			TargetID: t.Post.ID,
-			Label:    t.Label,
+			Label:    argTransitionDisplayLabel(t),
 		})
 	}
 	for _, c := range ag.Covering {
@@ -450,6 +450,154 @@ func argNodeClauses(st *goivy.State) string {
 		return fmt.Sprint(f)
 	}
 	return st.Clauses.String()
+}
+
+func argTransitionDisplayLabel(t goivy.Transition) string {
+	label := strings.TrimSpace(t.Label)
+	if display := actionDisplayNameForARG(t.Op); display != "" {
+		if label == "" || argTransitionLabelIsGeneric(label) {
+			return display
+		}
+	}
+	if display := cleanARGActionDisplayName(label); display != "" && display != label {
+		return display
+	}
+	return t.Label
+}
+
+func argTransitionLabelIsGeneric(label string) bool {
+	lower := strings.ToLower(strings.TrimSpace(label))
+	return lower == "call ext" || lower == "call:ext" || lower == "ext" || strings.HasPrefix(lower, "ext:")
+}
+
+func actionDisplayNameForARG(action goivy.ActionsAction) string {
+	switch a := action.(type) {
+	case nil:
+		return ""
+	case *goivy.FailAction:
+		return actionDisplayNameForARG(a.Inner)
+	case *goivy.LogicEnvAction:
+		if len(a.Branches) == 1 {
+			for _, branch := range a.Branches {
+				if branchAction, ok := branch.(goivy.ActionsAction); ok {
+					if display := actionDisplayNameForARG(branchAction); display != "" {
+						return display
+					}
+				}
+			}
+		}
+		return cleanARGActionDisplayName(a.GetLabel())
+	case *goivy.LogicSequence:
+		if display := cleanARGActionDisplayName(a.GetLabel()); display != "" {
+			return display
+		}
+		for _, elem := range a.Elems {
+			if elemAction, ok := elem.(goivy.ActionsAction); ok {
+				if display := actionDisplayNameForARG(elemAction); display != "" {
+					return display
+				}
+			}
+		}
+		return ""
+	case *goivy.LogicCallAction:
+		return cleanARGActionDisplayName(a.CalleeName())
+	default:
+		if labeler, ok := action.(interface{ GetLabel() string }); ok {
+			return cleanARGActionDisplayName(labeler.GetLabel())
+		}
+		return ""
+	}
+}
+
+func cleanARGActionDisplayName(label string) string {
+	label = strings.TrimSpace(label)
+	label = strings.TrimPrefix(label, "call:")
+	label = strings.TrimPrefix(label, "call ")
+	label = strings.TrimPrefix(label, "ext:")
+	label = strings.TrimSpace(label)
+	if label == "" || strings.EqualFold(label, "ext") || strings.EqualFold(label, "call ext") {
+		return ""
+	}
+	return label
+}
+
+func applyCounterexampleTraceTransitionLabels(trace *goivy.TraceBase) {
+	if trace == nil || trace.AnalysisGraph == nil {
+		return
+	}
+	exported := exportedActionDisplayNames(trace.AnalysisGraph.Domain)
+	if len(exported) == 0 {
+		return
+	}
+	traceStates := make(map[*goivy.State]*goivy.TraceState, len(trace.TraceStates))
+	for _, ts := range trace.TraceStates {
+		if ts != nil && ts.State != nil {
+			traceStates[ts.State] = ts
+		}
+	}
+	for i := range trace.AnalysisGraph.Transitions {
+		t := &trace.AnalysisGraph.Transitions[i]
+		current := argTransitionDisplayLabel(*t)
+		if exported[current] {
+			t.Label = current
+			continue
+		}
+		if !argTransitionLabelIsGeneric(t.Label) {
+			continue
+		}
+		if display := traceStateExportedActionDisplayName(traceStates[t.Post], exported); display != "" {
+			t.Label = display
+		}
+	}
+}
+
+func exportedActionDisplayNames(mod *goivy.Module) map[string]bool {
+	names := make(map[string]bool)
+	if mod == nil || mod.PublicActions == nil {
+		return names
+	}
+	for name := range mod.PublicActions.All() {
+		if display := cleanARGActionDisplayName(name); display != "" {
+			names[display] = true
+		}
+	}
+	return names
+}
+
+func traceStateExportedActionDisplayName(ts *goivy.TraceState, exported map[string]bool) string {
+	if ts == nil || ts.Subgraph == nil || ts.Subgraph.Graph == nil {
+		return ""
+	}
+	return traceGraphExportedActionDisplayName(ts.Subgraph.Graph, exported, make(map[*goivy.TraceBase]bool))
+}
+
+func traceGraphExportedActionDisplayName(trace *goivy.TraceBase, exported map[string]bool, seen map[*goivy.TraceBase]bool) string {
+	if trace == nil || seen[trace] {
+		return ""
+	}
+	seen[trace] = true
+	if trace.AnalysisGraph != nil {
+		for _, tr := range trace.AnalysisGraph.Transitions {
+			for _, candidate := range []string{
+				actionDisplayNameForARG(tr.Op),
+				cleanARGActionDisplayName(tr.Label),
+				argTransitionDisplayLabel(tr),
+			} {
+				if exported[candidate] {
+					return candidate
+				}
+			}
+		}
+	}
+	for _, ts := range trace.TraceStates {
+		if ts == nil || ts.Subgraph == nil {
+			continue
+		}
+		if display := traceGraphExportedActionDisplayName(ts.Subgraph.Graph, exported, seen); display != "" {
+			return display
+		}
+	}
+	return ""
 }
 
 func argNodeUniverse(st *goivy.State) map[string][]string {

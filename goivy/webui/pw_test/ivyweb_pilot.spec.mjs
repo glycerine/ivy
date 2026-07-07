@@ -2168,7 +2168,7 @@ test('Step in opens a backend-owned sheet whose node clicks load that sheet conc
     await app.executeArgEdgeAction({
       source_obj: 'state_0',
       target_obj: 'state_1',
-      label: 'call ext',
+      label: 'connect',
     }, 'decompose', 'sheet-1');
 
     const sheet = app.sheets['sheet-2'];

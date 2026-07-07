@@ -2023,6 +2023,7 @@ func (s *Session) installCounterexampleFeedback(cexTrace *goivy.TraceBase, final
 	}
 	ag := cexTrace.AnalysisGraph
 	if ag != nil {
+		applyCounterexampleTraceTransitionLabels(cexTrace)
 		s.AG = ag
 		if s.AGUI != nil {
 			s.AGUI.AG = ag

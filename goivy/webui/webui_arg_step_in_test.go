@@ -206,8 +206,11 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if s.AG == nil || len(s.AG.Transitions) == 0 {
 		t.Fatalf("induction failure did not populate ARG transitions")
 	}
-	if got := s.AG.Transitions[0].Label; got != "call ext" {
-		t.Fatalf("ARG transition label = %q, want %q", got, "call ext")
+	if s.Graph == nil || len(s.Graph.Transitions) == 0 {
+		t.Fatalf("induction failure did not populate rendered ARG transitions")
+	}
+	if got := s.Graph.Transitions[0].Label; got != "bad" {
+		t.Fatalf("rendered ARG transition label = %q, want %q", got, "bad")
 	}
 	if cr.CounterexampleDetails == "" || !strings.Contains(cr.CounterexampleDetails, "Counterexample trace") {
 		t.Fatalf("induction failure did not return counterexample details: %#v", cr.CounterexampleDetails)
@@ -249,6 +252,58 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if len(elements) == 0 {
 		t.Fatal("sub_arg elements empty")
 	}
+}
+
+func TestARGClientServerCounterexampleEdgesUseExportedActionNames(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-client-server-edge-labels")
+	if err := s.LoadFileContent("client_server.ivy", []byte(clientServerIvy)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	cr := s.RunCheck("induction")
+	if cr.Result != "fail" {
+		t.Fatalf("RunCheck induction result = %q, want fail; message: %s", cr.Result, cr.Message)
+	}
+	if s.AGUI == nil {
+		t.Fatalf("induction failure did not initialize ARG UI")
+	}
+
+	payload := AnalysisUIARGPayload(s.AGUI)
+	edges := transitionEdgeDataFromPayload(t, payload)
+	if len(edges) == 0 {
+		t.Fatalf("ARG payload has no transition edges: %#v", payload["elements"])
+	}
+	allowed := map[string]bool{"connect": true, "disconnect": true}
+	for _, data := range edges {
+		label, _ := data["label"].(string)
+		if strings.Contains(label, "call ext") || strings.Contains(label, "call:ext") {
+			t.Fatalf("ARG edge kept generic external-call label: %#v", data)
+		}
+		if !allowed[label] {
+			t.Fatalf("ARG edge label = %q, want exported action name connect or disconnect; edge=%#v", label, data)
+		}
+		if got, _ := data["short_info"].(string); got != label {
+			t.Fatalf("ARG edge short_info = %q, want %q; edge=%#v", got, label, data)
+		}
+		if got, _ := data["long_info"].(string); got != label {
+			t.Fatalf("ARG edge long_info = %q, want %q; edge=%#v", got, label, data)
+		}
+	}
+}
+
+func transitionEdgeDataFromPayload(t *testing.T, payload map[string]interface{}) []map[string]interface{} {
+	t.Helper()
+	rawElements, ok := payload["elements"].([]WebUICyElement)
+	if !ok {
+		t.Fatalf("payload elements = %T, want []WebUICyElement", payload["elements"])
+	}
+	var edges []map[string]interface{}
+	for _, element := range rawElements {
+		if element.Group != "edges" || !strings.Contains(element.Classes, "transition_action") {
+			continue
+		}
+		edges = append(edges, element.Data)
+	}
+	return edges
 }
 
 func TestClientServerStrengtheningInvariantMakesInductionPass(t *testing.T) {
