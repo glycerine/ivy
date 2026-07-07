@@ -6,6 +6,9 @@
 :root {
     --ivy-graph-background: rgb(0, 0, 0);
     --ivy-relation-name-color: rgb(255, 255, 255);
+    --ivy-pane-header-height: 47px;
+    --ivy-pane-title-row-height: 15px;
+    --ivy-pane-header-actions-height: 18px;
 }
 
 /* --- Reset & Base --- */
@@ -1590,7 +1593,7 @@ body[data-event-viewer-only="true"] #outer-container {
 
 .cti-relations-control label {
     font-size: 11px;
-    color: #aaa;
+    color: var(--ivy-relation-name-color);
 }
 
 .cti-relations-input {
@@ -1693,6 +1696,14 @@ body[data-event-viewer-only="true"] #outer-container {
     min-height: 44px;
 }
 
+#arg-panel > .sheet-pane-content > .panel-header,
+#concept-panel > .sheet-pane-content > .panel-header,
+#state-panel > .sheet-pane-content > .panel-header {
+    height: var(--ivy-pane-header-height);
+    min-height: var(--ivy-pane-header-height);
+    max-height: var(--ivy-pane-header-height);
+}
+
 .panel-header h3 {
     font-size: 12px;
     font-weight: 600;
@@ -1706,15 +1717,18 @@ body[data-event-viewer-only="true"] #outer-container {
     font-size: 12px;
     font-weight: 700;
     color: #f0f0f0;
-    line-height: 1.25;
+    line-height: var(--ivy-pane-title-row-height);
 }
 
 .panel-title-row {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex: 0 0 var(--ivy-pane-title-row-height);
+    height: var(--ivy-pane-title-row-height);
     width: 100%;
     min-width: 0;
+    overflow: visible;
 }
 
 .graph-background-slider {
@@ -1816,6 +1830,15 @@ body[data-event-viewer-only="true"] #outer-container {
     flex-wrap: wrap;
     gap: 12px;
     min-height: 18px;
+}
+
+#arg-panel > .sheet-pane-content > .panel-header > .panel-header-actions,
+#concept-panel > .sheet-pane-content > .panel-header > .panel-header-actions,
+#state-panel > .sheet-pane-content > .panel-header > .panel-header-actions {
+    flex: 0 0 var(--ivy-pane-header-actions-height);
+    height: var(--ivy-pane-header-actions-height);
+    min-height: var(--ivy-pane-header-actions-height);
+    overflow: visible;
 }
 
 /* --- Graph Container --- */

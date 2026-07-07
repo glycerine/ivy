@@ -40,6 +40,35 @@ describe('static index toolbar', () => {
 });
 
 describe('static graph background controls', () => {
+  it('keeps the Reachability, Concept, and State pane headers at one fixed height', () => {
+    const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
+    const paneHeaders = [
+      doc.querySelector('#arg-panel > .sheet-pane-content > .panel-header'),
+      doc.querySelector('#concept-panel > .sheet-pane-content > .panel-header'),
+      doc.querySelector('#state-panel > .sheet-pane-content > .panel-header'),
+    ];
+    const rootRule = ivyCss.match(/:root\s*\{[^}]+\}/)?.[0] || '';
+    const topPaneHeaderRule = ivyCss.match(/#arg-panel > \.sheet-pane-content > \.panel-header,\s*#concept-panel > \.sheet-pane-content > \.panel-header,\s*#state-panel > \.sheet-pane-content > \.panel-header\s*\{[^}]+\}/)?.[0] || '';
+    const titleRule = ivyCss.match(/(?:^|\n)\.column-title\s*\{[^}]+\}/)?.[0] || '';
+    const titleRowRule = ivyCss.match(/\.panel-title-row\s*\{[^}]+\}/)?.[0] || '';
+    const topPaneActionsRule = ivyCss.match(/#arg-panel > \.sheet-pane-content > \.panel-header > \.panel-header-actions,\s*#concept-panel > \.sheet-pane-content > \.panel-header > \.panel-header-actions,\s*#state-panel > \.sheet-pane-content > \.panel-header > \.panel-header-actions\s*\{[^}]+\}/)?.[0] || '';
+
+    expect(paneHeaders).toHaveLength(3);
+    paneHeaders.forEach((header) => expect(header).not.toBeNull());
+    expect(rootRule).toContain('--ivy-pane-header-height: 47px;');
+    expect(rootRule).toContain('--ivy-pane-title-row-height: 15px;');
+    expect(rootRule).toContain('--ivy-pane-header-actions-height: 18px;');
+    expect(topPaneHeaderRule).toContain('height: var(--ivy-pane-header-height);');
+    expect(topPaneHeaderRule).toContain('min-height: var(--ivy-pane-header-height);');
+    expect(topPaneHeaderRule).toContain('max-height: var(--ivy-pane-header-height);');
+    expect(titleRule).toContain('line-height: var(--ivy-pane-title-row-height);');
+    expect(titleRowRule).toContain('flex: 0 0 var(--ivy-pane-title-row-height);');
+    expect(titleRowRule).toContain('height: var(--ivy-pane-title-row-height);');
+    expect(topPaneActionsRule).toContain('flex: 0 0 var(--ivy-pane-header-actions-height);');
+    expect(topPaneActionsRule).toContain('height: var(--ivy-pane-header-actions-height);');
+    expect(topPaneActionsRule).toContain('min-height: var(--ivy-pane-header-actions-height);');
+  });
+
   it('places a midpoint background slider next to the Concept graph title', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
     const conceptHeader = doc.querySelector('#concept-panel .panel-header');
@@ -48,6 +77,7 @@ describe('static graph background controls', () => {
     const rootRule = ivyCss.match(/:root\s*\{[^}]+\}/)?.[0] || '';
     const graphRule = ivyCss.match(/\.graph-container\s*\{[^}]+\}/)?.[0] || '';
     const statePaneContentRule = ivyCss.match(/#state-panel \.sheet-pane-content\s*\{[^}]+\}/)?.[0] || '';
+    const ctiRelationsLabelRule = ivyCss.match(/\.cti-relations-control label\s*\{[^}]+\}/)?.[0] || '';
     const stateRelationNameRule = ivyCss.match(/#state-checkbox-table td\.name-col a,\s*#state-checkbox-table td\.name-col button\s*\{[^}]+\}/)?.[0] || '';
     const titleRowRule = ivyCss.match(/\.panel-title-row\s*\{[^}]+\}/)?.[0] || '';
     const sliderRule = ivyCss.match(/\.graph-background-slider\s*\{[^}]+\}/)?.[0] || '';
@@ -70,6 +100,7 @@ describe('static graph background controls', () => {
     expect(rootRule).toContain('--ivy-relation-name-color: rgb(255, 255, 255);');
     expect(graphRule).toContain('background-color: var(--ivy-graph-background);');
     expect(statePaneContentRule).toContain('background-color: var(--ivy-graph-background);');
+    expect(ctiRelationsLabelRule).toContain('color: var(--ivy-relation-name-color);');
     expect(stateRelationNameRule).toContain('color: var(--ivy-relation-name-color);');
     expect(titleRowRule).toContain('width: 100%;');
     expect(sliderRule).toContain('width: 120px;');
