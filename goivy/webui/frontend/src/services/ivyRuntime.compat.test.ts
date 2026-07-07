@@ -254,7 +254,10 @@ describe('ivyRuntime compatibility behavior', () => {
       '      </div>',
       '    </div>',
       '    <div id="divider3" class="divider" data-resize-target="next"></div>',
-      '    <div id="editor-panel" class="sheet-pane" style="min-width: 120px"><div class="panel-header"></div></div>',
+      '    <div id="editor-panel" class="sheet-pane" style="min-width: 120px">',
+      '      <div class="editor-resize-handle"></div>',
+      '      <div class="panel-header"></div>',
+      '    </div>',
       '  </div>',
       '</div>',
     ].join('');
@@ -264,6 +267,7 @@ describe('ivyRuntime compatibility behavior', () => {
     runtime._refreshEditorLayout = vi.fn();
     const workspace = document.getElementById('sheet-workspace')!;
     const editor = document.getElementById('editor-panel')!;
+    const handle = document.querySelector('.editor-resize-handle')!;
     setOffsetWidth(workspace, 1200);
     setOffsetWidth(editor, 420);
     Object.defineProperty(editor, 'getBoundingClientRect', {
@@ -272,7 +276,7 @@ describe('ivyRuntime compatibility behavior', () => {
     });
 
     runtime.setupResizer();
-    editor.dispatchEvent(new MouseEvent('mousedown', { clientX: 602, bubbles: true }));
+    handle.dispatchEvent(new MouseEvent('mousedown', { clientX: 602, bubbles: true }));
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 552, bubbles: true }));
     document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
 
@@ -280,12 +284,23 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(editor.style.flex).toBe('0 0 470px');
 
     setOffsetWidth(editor, 470);
-    editor.dispatchEvent(new MouseEvent('mousedown', { clientX: 602, bubbles: true }));
+    handle.dispatchEvent(new MouseEvent('mousedown', { clientX: 602, bubbles: true }));
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 642, bubbles: true }));
     document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
 
     expect(editor.style.width).toBe('430px');
     expect(editor.style.flex).toBe('0 0 430px');
+  });
+
+  it('adds the editor resize handle when older markup lacks it', () => {
+    document.body.innerHTML = '<div id="editor-panel"><div class="panel-header"></div></div>';
+    const runtime = makeRuntime();
+
+    const handle = runtime._ensureEditorResizeHandle();
+
+    expect(handle).not.toBeNull();
+    expect(document.querySelector('#editor-panel > .editor-resize-handle')).toBe(handle);
+    expect(handle.getAttribute('aria-label')).toBe('Resize editor');
   });
 
   it('adds and drags the divider between Proof goals and CRG / transition', () => {
@@ -377,6 +392,9 @@ describe('ivyRuntime compatibility behavior', () => {
     setOffsetHeight(pane, 148);
 
     expect(sheet.classList.contains('reachability-only-sheet')).toBe(true);
+    expect(sheet.classList.contains('has-analysis-history')).toBe(true);
+    expect(rowDivider.previousElementSibling).toBe(pane);
+    expect(rowDivider.nextElementSibling).toBe(sheet.querySelector('.sheet-columns'));
     expect(columnDivider).not.toBeNull();
     expect(rowDivider).not.toBeNull();
 

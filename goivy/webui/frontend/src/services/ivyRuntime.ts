@@ -644,6 +644,7 @@ class IvyRuntime {
         this.setupEventHandlers();
         this.setupTabs();
         this._setupSheetPaneToggles();
+        this._ensureEditorResizeHandle();
         this.setupResizer();
         this._setupSheetRowResizer();
         this.setupResizerH();
@@ -1967,6 +1968,18 @@ class IvyRuntime {
         }
     }
 
+    _ensureEditorResizeHandle() {
+        var editorPanel = document.getElementById('editor-panel');
+        if (!editorPanel || editorPanel.querySelector('.editor-resize-handle')) return null;
+        var handle = document.createElement('div');
+        handle.id = 'editor-resize-handle';
+        handle.className = 'editor-resize-handle';
+        handle.setAttribute('title', 'Drag to resize editor');
+        handle.setAttribute('aria-label', 'Resize editor');
+        editorPanel.insertBefore(handle, editorPanel.firstChild);
+        return handle;
+    }
+
     _isEditorResizeEdge(editorPanel, event) {
         if (!editorPanel || !event || typeof event.clientX !== 'number') return false;
         var rect = editorPanel.getBoundingClientRect ? editorPanel.getBoundingClientRect() : null;
@@ -1995,12 +2008,19 @@ class IvyRuntime {
         sheetArea.addEventListener('mousedown', function (e) {
             var target = e.target;
             var div = target && target.closest ? target.closest('.divider') : target;
+            var editorHandle = target && target.closest ? target.closest('.editor-resize-handle') : null;
             var editorPanel = target && target.closest ? target.closest('#editor-panel') : null;
             var targetSide;
             var panel;
             var container;
 
-            if (editorPanel && sheetArea.contains(editorPanel) && self._isEditorResizeEdge(editorPanel, e)) {
+            if (editorHandle && sheetArea.contains(editorHandle)) {
+                editorPanel = editorHandle.closest('#editor-panel');
+                activeHandle = editorHandle;
+                targetSide = 'next';
+                panel = editorPanel;
+                container = editorPanel && (editorPanel.closest('.sheet-workspace') || editorPanel.parentElement);
+            } else if (editorPanel && sheetArea.contains(editorPanel) && self._isEditorResizeEdge(editorPanel, e)) {
                 activeHandle = editorPanel;
                 targetSide = 'next';
                 panel = editorPanel;
