@@ -98,6 +98,14 @@ function optionalBoolean(value: unknown): boolean | undefined {
   return typeof value === 'boolean' ? value : undefined;
 }
 
+export function normalizeArgNodeId(nodeId: string | null | undefined): string | null {
+  if (typeof nodeId !== 'string') return null;
+  const trimmed = nodeId.trim();
+  if (!trimmed) return null;
+  if (/^\d+$/.test(trimmed)) return `state_${trimmed}`;
+  return trimmed;
+}
+
 function cloneJsonish(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(cloneJsonish);
   if (isRecord(value)) {
@@ -884,7 +892,7 @@ export class SheetModel extends RawBackedModel<unknown> {
     this.argPositions = graphPositionMap(pick(raw, 'argPositions', 'arg_positions'));
     this.conceptPositions = graphPositionMap(pick(raw, 'conceptPositions', 'concept_positions'));
     const selected = pick(raw, 'selectedArgNode', 'selected_arg_node');
-    this.selectedArgNode = typeof selected === 'string' ? selected : null;
+    this.selectedArgNode = typeof selected === 'string' ? normalizeArgNodeId(selected) : null;
     this.conceptSelections = rawArray(pick(raw, 'conceptSelections', 'concept_selections'))
       .map((item) => normalizeGraphSelection(item, 'node'))
       .filter((item): item is GraphSelection => !!item);
@@ -943,7 +951,7 @@ export class UIDataModel extends RawBackedModel<unknown> {
 
   setSelectedArgNode(sheetId: string, nodeId: string | null | undefined): string | null {
     const sheet = this.registerSheet(sheetId || this.activeSheetId);
-    sheet.selectedArgNode = nodeId || null;
+    sheet.selectedArgNode = normalizeArgNodeId(nodeId);
     return sheet.selectedArgNode;
   }
 

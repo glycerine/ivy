@@ -5,6 +5,7 @@ import {
   selectSheet,
   selectStateToggles,
 } from '../models/uiDataSelectors.ts';
+import { normalizeArgNodeId } from '../models/uiDataModel.ts';
 
 const STORAGE_SESSIONS = 'ivy_sessions';
 const STORAGE_LAST_SESSION = 'ivy_last_session';
@@ -43,6 +44,26 @@ function recentSpecSessionId(state) {
   if (!state || !state.fileName || state.fileName === '(unnamed)') return '';
   const identity = state.filePath || state.fileName;
   return identity ? `${RECENT_SPEC_PREFIX}${identity}` : '';
+}
+
+function argSnapshotNodeIds(argData) {
+  const ids = new Set();
+  const elements = Array.isArray(argData && argData.elements) ? argData.elements : [];
+  for (const element of elements) {
+    if (element && element.group && element.group !== 'nodes') continue;
+    const data = (element && element.data) || {};
+    for (const key of ['id', 'obj']) {
+      const normalized = normalizeArgNodeId(data[key]);
+      if (normalized) ids.add(normalized);
+    }
+  }
+  return ids;
+}
+
+function restorableSelectedArgNode(argData, nodeId) {
+  const selected = normalizeArgNodeId(nodeId);
+  if (!selected) return null;
+  return argSnapshotNodeIds(argData).has(selected) ? selected : null;
 }
 
 export function createIvyPersist(winArg = globalThis.window) {
@@ -366,8 +387,9 @@ export function createIvyPersist(winArg = globalThis.window) {
           if (typeof app.setEditorKeymap === 'function') app.setEditorKeymap(state.editorKeymap, { save: false });
           else persist._setEditorKeymap(state.editorKeymap);
         }
-        if (state.selectedArgNode && app.uiDataStore) {
-          app.uiDataStore.setSelectedArgNode(app.activeSheetId || 'sheet-1', state.selectedArgNode);
+        const selectedArgNode = restorableSelectedArgNode(argData, state.selectedArgNode);
+        if (selectedArgNode && app.uiDataStore) {
+          app.uiDataStore.setSelectedArgNode(app.activeSheetId || 'sheet-1', selectedArgNode);
         }
         if (state.conceptSelections && app.uiDataStore) {
           app.uiDataStore.setConceptSelections(app.activeSheetId || 'sheet-1', state.conceptSelections);

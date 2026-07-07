@@ -99,6 +99,18 @@ async function openIvyWithSavedSession(page, savedState) {
   return openIvy(page);
 }
 
+async function waitForStartupRefreshToSettle(page) {
+  await page.waitForFunction(() => {
+    const app = window.__ivyDiagnostics && window.__ivyDiagnostics.runtime && window.__ivyDiagnostics.runtime();
+    if (!app || !app.api || !app.api.sessionId) return false;
+    const sheet = app.sheets && app.sheets[app.activeSheetId || 'sheet-1'];
+    const argGraph = sheet && sheet.argGraph;
+    const conceptGraph = sheet && sheet.conceptGraph;
+    return argGraph && argGraph.cy && conceptGraph && conceptGraph.cy;
+  });
+  await page.waitForTimeout(750);
+}
+
 async function createSession(request) {
   const response = await request.post('/api/session/new');
   expect(response.ok()).toBe(true);
@@ -248,6 +260,25 @@ test('page loads', async ({ page }) => {
 
   await expect(page.locator('#arg-panel')).toBeVisible();
   await expect(page.locator('#concept-panel')).toBeVisible();
+  expect(consoleErrors).toEqual([]);
+});
+
+test('startup restore does not report JavaScript console errors', async ({ page }) => {
+  const consoleErrors = await openIvyWithSavedSession(page, {
+    sessionId: 'startup-console-clean',
+    fileName: 'client_server.ivy',
+    filePath: 'client_server.ivy',
+    fileContent: clientServerIvyContent,
+    selectedArgNode: '0',
+    uiMode: 'cti',
+    mode: 'pdr',
+  });
+
+  await waitForStartupRefreshToSettle(page);
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().refreshConceptGraph();
+  });
+
   expect(consoleErrors).toEqual([]);
 });
 

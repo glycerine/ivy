@@ -1,5 +1,6 @@
 import { applyConceptSnapshot } from './uiDataRenderService.ts';
 import { saveMimeType, savePickerOptions } from './saveDialogService.ts';
+import { normalizeArgNodeId } from '../models/uiDataModel.ts';
 
 function activeSheetId(app) {
   return (app && app.activeSheetId) || 'sheet-1';
@@ -55,7 +56,7 @@ export async function refreshConceptGraph(app) {
   const sheetId = activeSheetId(app);
   const { modelSheet, runtimeSheet, reachabilityOnly, visualOnly } = sheetForRefresh(app, sheetId);
   if (reachabilityOnly || visualOnly) return null;
-  const selectedArgNode = selectedArgNodeForRefresh(app, sheetId, modelSheet, runtimeSheet);
+  const selectedArgNode = normalizeArgNodeId(selectedArgNodeForRefresh(app, sheetId, modelSheet, runtimeSheet)) || undefined;
   try {
     const result = await app.api.getConceptGraph(selectedArgNode, sheetId);
     if (result && result.elements) {

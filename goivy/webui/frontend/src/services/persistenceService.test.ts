@@ -303,6 +303,52 @@ describe('persistenceService', () => {
     ]);
   });
 
+  it('restores saved ARG selection only when the loaded ARG still has that node', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    document.body.innerHTML = '<span id="loaded-file"></span><span id="model-editor-label"></span><table><tbody id="state-checkbox-body"></tbody></table>';
+    const persist = createIvyPersist(window);
+    const makeRestoringApp = (argPayload: any) => {
+      const uiDataModel = new UIDataModel();
+      return {
+        uiDataModel,
+        activeSheetId: 'sheet-1',
+        argGraph: makeGraph(),
+        conceptGraph: makeGraph(),
+        api: {
+          sessionId: 'server-session',
+          loadFile: vi.fn(),
+          getARG: vi.fn(async () => argPayload),
+          getConceptGraph: vi.fn(async () => ({ elements: [] })),
+        },
+        controls: { setStatus: vi.fn() },
+        setEditorContent: vi.fn(),
+        _updateEditorLabel: vi.fn(),
+        _applyEdgeVisibility: vi.fn(),
+      };
+    };
+    const savedState = {
+      sessionId: 'persisted-session',
+      fileName: 'client.ivy',
+      filePath: '/tmp/client.ivy',
+      fileContent: '#lang ivy1.7',
+      selectedArgNode: '0',
+    };
+
+    try {
+      const staleApp = makeRestoringApp({ elements: [] });
+      await persist.restore(staleApp, savedState);
+      expect(staleApp.uiDataModel.sheets['sheet-1'].selectedArgNode).toBeNull();
+      expect(staleApp.argGraph.highlightNode).not.toHaveBeenCalled();
+
+      const validApp = makeRestoringApp({ elements: [{ group: 'nodes', data: { id: 'state_0', label: '0' } }] });
+      await persist.restore(validApp, savedState);
+      expect(validApp.uiDataModel.sheets['sheet-1'].selectedArgNode).toBe('state_0');
+      expect(validApp.argGraph.highlightNode).toHaveBeenCalledWith('state_0');
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
   it('keeps URL session and path truncation behavior compatible with the old runtime', () => {
     const persist = createIvyPersist(window);
 

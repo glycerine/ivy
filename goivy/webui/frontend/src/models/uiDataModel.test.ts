@@ -669,4 +669,15 @@ describe('UIDataModel — wire format coverage', () => {
     expect(model.sheets['sheet-1'].conceptSelections).toEqual([]);
     expect(model.sheets['events-1'].argPositions).toEqual({ kept: { x: 9, y: 9 } });
   });
+
+  it('normalizes legacy numeric ARG selections to state node ids', () => {
+    const model = new UIDataModel();
+    const store = createUIDataModelStore(model);
+
+    expect(store.setSelectedArgNode('sheet-1', '0')).toBe('state_0');
+    expect(model.sheets['sheet-1'].selectedArgNode).toBe('state_0');
+
+    const restored = model.registerSheet('restored', { selectedArgNode: '1' });
+    expect(restored.selectedArgNode).toBe('state_1');
+  });
 });

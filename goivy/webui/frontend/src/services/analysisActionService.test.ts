@@ -41,7 +41,7 @@ describe('analysisActionService', () => {
 
     await refreshConceptGraph(app);
 
-    expect(app.api.getConceptGraph).toHaveBeenCalledWith('0', 'sheet-1');
+    expect(app.api.getConceptGraph).toHaveBeenCalledWith('state_0', 'sheet-1');
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', concept);
     expect(app.populateStateCheckboxes).not.toHaveBeenCalled();
   });
