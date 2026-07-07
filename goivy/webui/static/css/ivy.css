@@ -1766,6 +1766,7 @@ body[data-event-viewer-only="true"] #outer-container {
 }
 
 .graph-background-control {
+    --ivy-graph-background-slider-width: 156px;
     position: absolute;
     top: 9px;
     right: 10px;
@@ -1776,8 +1777,10 @@ body[data-event-viewer-only="true"] #outer-container {
 }
 
 .graph-background-slider {
-    width: 120px;
+    width: var(--ivy-graph-background-slider-width);
     height: 18px;
+    box-sizing: border-box;
+    padding: 0 9px;
     appearance: none;
     -webkit-appearance: none;
     background: transparent;
@@ -1790,6 +1793,8 @@ body[data-event-viewer-only="true"] #outer-container {
     font-style: italic;
     line-height: 12px;
     white-space: nowrap;
+    width: var(--ivy-graph-background-slider-width);
+    text-align: center;
 }
 
 .graph-background-slider::-webkit-slider-runnable-track {
