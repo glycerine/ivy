@@ -87,10 +87,6 @@
                     <option value="15">15</option>
                 </select>
             </label>
-            <label class="menu-field transition-log-field">
-                <span class="menu-label">Log</span>
-                <input id="transition-log-file" class="transition-log-input" type="text" aria-label="Transition log file" placeholder="model.log" spellcheck="false">
-            </label>
         </div>
         <div class="menu-group ui-mode-only ui-mode-reachability">
             <button id="btn-check" class="menu-btn action-btn">Check</button>
@@ -307,6 +303,10 @@
                     danger: clear saved session data
                 </button>
                 <div class="job-control-row">
+                    <label class="menu-field transition-log-field job-control-log-field">
+                        <span class="menu-label">Log</span>
+                        <input id="transition-log-file" class="transition-log-input" type="text" aria-label="Transition log file" placeholder="model.log" spellcheck="false">
+                    </label>
                     <div id="job-control-backend-status" class="job-control-backend-status" aria-live="polite" hidden></div>
                     <button id="job-submission-toggle" class="job-mode-toggle is-browser" type="button" aria-pressed="false" data-mode="browser">
                         <span class="job-mode-option job-mode-browser">browser</span>

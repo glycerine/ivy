@@ -176,7 +176,7 @@ describe('static CTI relation controls', () => {
     expect(input?.closest('#state-controls')).not.toBeNull();
   });
 
-  it('exposes Python-style abstractor, BMC bound, and transition log controls', () => {
+  it('exposes Python-style abstractor and BMC bound controls in the top bar', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
     const abstractor = doc.getElementById('analysis-abstractor-select') as HTMLSelectElement | null;
     const bound = doc.getElementById('analysis-bmc-bound') as HTMLSelectElement | null;
@@ -193,23 +193,35 @@ describe('static CTI relation controls', () => {
     ]);
     expect(boundValues).toEqual(['1', '3', '5', '10', '15']);
     expect(bound?.value).toBe('3');
-    expect(logFile?.getAttribute('aria-label')).toBe('Transition log file');
-    expect(logFile?.closest('[data-analysis-controller-controls]')).not.toBeNull();
+    expect(logFile?.closest('[data-analysis-controller-controls]')).toBeNull();
   });
 });
 
 describe('static job control', () => {
-  it('places a backend status message above the browser/remote toggle', () => {
+  it('places transition log controls and backend status above the browser/remote toggle', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
     const row = doc.querySelector('.job-control-row');
     const children = Array.from(row?.children || []);
+    const logField = doc.querySelector('.job-control-log-field');
+    const logLabel = logField?.querySelector('.menu-label');
+    const logFile = doc.getElementById('transition-log-file') as HTMLInputElement | null;
     const status = doc.getElementById('job-control-backend-status');
     const toggle = doc.getElementById('job-submission-toggle');
+    const logFieldRule = ivyCss.match(/\.job-control-log-field\s*\{[^}]+\}/)?.[0] || '';
     const statusRule = ivyCss.match(/\.job-control-backend-status\s*\{[^}]+\}/)?.[0] || '';
 
+    expect(logField).not.toBeNull();
+    expect(logLabel?.textContent).toBe('Log');
+    expect(logFile?.getAttribute('aria-label')).toBe('Transition log file');
+    expect(logFile?.getAttribute('placeholder')).toBe('model.log');
+    expect(logFile?.closest('#job-control-page')).not.toBeNull();
+    expect(children.indexOf(logField!)).toBeLessThan(children.indexOf(toggle!));
     expect(status).not.toBeNull();
     expect(status?.hasAttribute('hidden')).toBe(true);
     expect(children.indexOf(status!)).toBeLessThan(children.indexOf(toggle!));
+    expect(logFieldRule).toContain('width: 440px;');
+    expect(logFieldRule).toContain('justify-content: center;');
+    expect(logFieldRule).toContain('margin-bottom: 1em;');
     expect(statusRule).toContain('color: #ff9b9b;');
     expect(statusRule).toContain('text-align: center;');
   });
