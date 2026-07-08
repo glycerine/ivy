@@ -1025,10 +1025,42 @@ class IvyRuntime {
         return this._analysisHistory[id];
     }
 
-    _ensureAnalysisHistoryControls(sheetId) {
+    _ensureProofGoalWrapper(sheetId) {
         var sheet = document.getElementById(sheetId || 'sheet-1');
         if (!sheet || sheet.classList.contains('event-sheet')) return null;
         sheet.classList.add('has-analysis-history');
+        var wrapper = sheet.querySelector('[data-proof-goal-wrapper]');
+        if (!wrapper) {
+            wrapper = document.createElement('div');
+            wrapper.className = 'proof-goal-wrapper';
+            wrapper.setAttribute('data-proof-goal-wrapper', 'true');
+            wrapper.setAttribute('aria-hidden', 'true');
+            wrapper.hidden = true;
+            var columns = sheet.querySelector('.sheet-columns');
+            if (columns && columns.parentNode) {
+                columns.parentNode.insertBefore(wrapper, columns);
+            } else {
+                sheet.insertBefore(wrapper, sheet.firstChild);
+            }
+        }
+        return wrapper;
+    }
+
+    _setProofGoalWrapperVisible(sheetId, visible) {
+        var sheet = document.getElementById(sheetId || 'sheet-1');
+        if (!sheet) return false;
+        var wrapper = sheet.querySelector('[data-proof-goal-wrapper]');
+        if (!wrapper) return false;
+        wrapper.hidden = !visible;
+        wrapper.classList.toggle('is-visible', !!visible);
+        wrapper.setAttribute('aria-hidden', visible ? 'false' : 'true');
+        return true;
+    }
+
+    _ensureAnalysisHistoryControls(sheetId) {
+        var sheet = document.getElementById(sheetId || 'sheet-1');
+        if (!sheet || sheet.classList.contains('event-sheet')) return null;
+        var wrapper = this._ensureProofGoalWrapper(sheetId);
         var existing = sheet.querySelector('[data-analysis-history]');
         var bar = existing;
         if (!bar) {
@@ -1045,12 +1077,9 @@ class IvyRuntime {
                 '</div>',
                 '<pre class="analysis-history-step-info" data-analysis-step-info></pre>',
             ].join('');
-            var columns = sheet.querySelector('.sheet-columns');
-            if (columns && columns.parentNode) {
-                columns.parentNode.insertBefore(bar, columns);
-            } else {
-                sheet.insertBefore(bar, sheet.firstChild);
-            }
+        }
+        if (wrapper && bar.parentNode !== wrapper) {
+            wrapper.insertBefore(bar, wrapper.firstChild);
         }
         if (!bar.__ivyAnalysisHistoryBound) {
             var self = this;
@@ -1159,6 +1188,7 @@ class IvyRuntime {
         var history = this._analysisHistoryState(sheetId);
         var count = history.entries.length;
         var index = history.currentStep;
+        if (count > 0) this._setProofGoalWrapperVisible(sheetId, true);
         var status = bar.querySelector('[data-analysis-history-status]');
         var info = bar.querySelector('[data-analysis-step-info]');
         if (count === 0 || index < 0) {
@@ -1184,6 +1214,7 @@ class IvyRuntime {
         var id = sheetId || this.activeSheetId || 'sheet-1';
         var sheetEl = document.getElementById(id);
         if (!sheetEl || sheetEl.classList.contains('event-sheet')) return null;
+        var wrapper = this._ensureProofGoalWrapper(id);
         var pane = sheetEl.querySelector('[data-proof-goal-pane]');
         if (!pane) {
             pane = document.createElement('div');
@@ -1203,17 +1234,11 @@ class IvyRuntime {
                 '  <pre class="transition-view" data-transition-view></pre>',
                 '</div>',
             ].join('');
-            var history = sheetEl.querySelector('[data-analysis-history]');
-            if (history && history.parentNode) {
-                history.parentNode.insertBefore(pane, history.nextSibling);
-            } else {
-                var columns = sheetEl.querySelector('.sheet-columns');
-                if (columns && columns.parentNode) {
-                    columns.parentNode.insertBefore(pane, columns);
-                } else {
-                    sheetEl.insertBefore(pane, sheetEl.firstChild);
-                }
-            }
+        }
+        if (wrapper && pane.parentNode !== wrapper) {
+            var history = wrapper.querySelector('[data-analysis-history]');
+            if (history && history.nextSibling) wrapper.insertBefore(pane, history.nextSibling);
+            else wrapper.appendChild(pane);
         }
         if (!pane.hasAttribute('data-resizable-row')) {
             pane.setAttribute('data-resizable-row', 'proof-crg');
@@ -1233,7 +1258,7 @@ class IvyRuntime {
             }
         }
         var rowDivider = sheetEl.querySelector('[data-proof-crg-row-divider]');
-        if (!rowDivider && pane.parentNode) {
+        if (!rowDivider && wrapper) {
             rowDivider = document.createElement('div');
             rowDivider.className = 'divider-horizontal proof-crg-row-divider';
             rowDivider.setAttribute('data-proof-crg-row-divider', 'true');
@@ -1241,7 +1266,11 @@ class IvyRuntime {
             rowDivider.setAttribute('data-resize-target', 'previous');
             rowDivider.setAttribute('title', 'Drag to resize Proof goals / CRG and graph panes');
             rowDivider.setAttribute('aria-label', 'Resize Proof goals / CRG and graph panes');
-            pane.parentNode.insertBefore(rowDivider, pane.nextSibling);
+        }
+        if (rowDivider && wrapper && rowDivider.parentNode !== wrapper) {
+            wrapper.insertBefore(rowDivider, pane.nextSibling);
+        } else if (rowDivider && wrapper && rowDivider.previousElementSibling !== pane) {
+            wrapper.insertBefore(rowDivider, pane.nextSibling);
         }
         var graphEl = pane.querySelector('[data-proof-goal-graph]');
         if (graphEl) graphEl.id = 'proof-graph-' + id;
@@ -1264,6 +1293,7 @@ class IvyRuntime {
         var pane = this._ensureProofGoalPane(id);
         if (!pane || !this.api || typeof this.api.getProofGraph !== 'function') return null;
         var graph = await this.api.getProofGraph();
+        this._setProofGoalWrapperVisible(id, true);
         this._renderProofGoalGraph(id, graph || {});
         return graph;
     }
@@ -1299,6 +1329,7 @@ class IvyRuntime {
         var pane = this._ensureProofGoalPane(id);
         var runtimeSheet = this.sheets && this.sheets[id];
         if (!pane || !runtimeSheet) return;
+        this._setProofGoalWrapperVisible(id, true);
         runtimeSheet.selectedProofGoal = result.goal || goalId;
         var selected = pane.querySelector('[data-selected-proof-goal]');
         if (selected) selected.textContent = runtimeSheet.selectedProofGoal ? '(' + runtimeSheet.selectedProofGoal + ')' : '';
@@ -1938,8 +1969,13 @@ class IvyRuntime {
     _isElementDisplayed(node) {
         if (!node) return false;
         if (typeof window === 'undefined' || !window.getComputedStyle) return true;
-        var styles = window.getComputedStyle(node);
-        return !styles || (styles.display !== 'none' && styles.visibility !== 'hidden');
+        var current = node;
+        while (current && current.nodeType === 1) {
+            var styles = window.getComputedStyle(current);
+            if (styles && (styles.display === 'none' || styles.visibility === 'hidden')) return false;
+            current = current.parentElement;
+        }
+        return true;
     }
 
     _neighborResizablePane(node, direction) {

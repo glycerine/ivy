@@ -469,6 +469,33 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(handle.getAttribute('data-resize-target')).toBeNull();
   });
 
+  it('wraps analysis history and Proof/CRG panes in a hidden proof goal wrapper by default', () => {
+    document.body.innerHTML = [
+      '<div id="sheet-area">',
+      '  <div id="sheet-1" class="sheet-content active">',
+      '    <div class="sheet-columns"></div>',
+      '  </div>',
+      '</div>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-1';
+    runtime.sheets = { 'sheet-1': { id: 'sheet-1' } };
+
+    const history = runtime._ensureAnalysisHistoryControls('sheet-1');
+    const pane = runtime._ensureProofGoalPane('sheet-1');
+    const wrapper = document.querySelector('.proof-goal-wrapper') as HTMLElement;
+    const rowDivider = document.querySelector('.proof-crg-row-divider') as HTMLElement;
+
+    expect(wrapper).not.toBeNull();
+    expect(wrapper.hidden).toBe(true);
+    expect(wrapper.classList.contains('is-visible')).toBe(false);
+    expect(wrapper.nextElementSibling).toBe(document.querySelector('.sheet-columns'));
+    expect(history.parentElement).toBe(wrapper);
+    expect(pane.parentElement).toBe(wrapper);
+    expect(rowDivider.parentElement).toBe(wrapper);
+    expect(rowDivider.previousElementSibling).toBe(pane);
+  });
+
   it('adds and drags the divider between Proof goals and CRG / transition', () => {
     document.body.innerHTML = [
       '<div id="sheet-area">',
@@ -485,6 +512,7 @@ describe('ivyRuntime compatibility behavior', () => {
     runtime._refreshEditorLayout = vi.fn();
 
     runtime._ensureProofGoalPane('sheet-1');
+    runtime._setProofGoalWrapperVisible('sheet-1', true);
     const pane = document.querySelector('.proof-crg-pane')!;
     const goalColumn = document.querySelector('.proof-goal-column')!;
     const crgColumn = document.querySelector('.crg-column')!;
@@ -548,6 +576,7 @@ describe('ivyRuntime compatibility behavior', () => {
 
     const sheetId = runtime.addSheet('Reachable states', 'sheet-2', { reachabilityOnly: true });
     const sheet = document.getElementById(sheetId)!;
+    const wrapper = sheet.querySelector('.proof-goal-wrapper') as HTMLElement;
     const pane = sheet.querySelector('.proof-crg-pane') as HTMLElement;
     const goalColumn = sheet.querySelector('.proof-goal-column') as HTMLElement;
     const columnDivider = sheet.querySelector('.proof-crg-column-divider') as HTMLElement;
@@ -559,10 +588,13 @@ describe('ivyRuntime compatibility behavior', () => {
 
     expect(sheet.classList.contains('reachability-only-sheet')).toBe(true);
     expect(sheet.classList.contains('has-analysis-history')).toBe(true);
+    expect(wrapper.hidden).toBe(true);
+    expect(wrapper.nextElementSibling).toBe(sheet.querySelector('.sheet-columns'));
     expect(rowDivider.previousElementSibling).toBe(pane);
-    expect(rowDivider.nextElementSibling).toBe(sheet.querySelector('.sheet-columns'));
+    expect(rowDivider.parentElement).toBe(wrapper);
     expect(columnDivider).not.toBeNull();
     expect(rowDivider).not.toBeNull();
+    runtime._setProofGoalWrapperVisible(sheetId, true);
 
     columnDivider.dispatchEvent(new MouseEvent('mousedown', { clientX: 300, bubbles: true }));
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 360, bubbles: true }));

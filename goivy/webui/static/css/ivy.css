@@ -1064,6 +1064,21 @@ body[data-event-viewer-only="true"] #outer-container {
     width: 100%;
 }
 
+.proof-goal-wrapper {
+    display: none;
+    flex: 0 0 auto;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.proof-goal-wrapper.is-visible {
+    display: flex;
+}
+
+.proof-goal-wrapper[hidden] {
+    display: none;
+}
+
 .analysis-history-bar {
     display: flex;
     flex: 0 0 auto;
