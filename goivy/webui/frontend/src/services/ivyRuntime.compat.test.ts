@@ -205,12 +205,17 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(state.style.flex).toBe('');
   });
 
-  it('resizes the editor pane from the single editor-left boundary handle', () => {
+  it('moves the editor boundary by resizing the rightmost active sheet panes', () => {
     document.body.innerHTML = [
       '<div id="sheet-area">',
       '  <div id="sheet-workspace" class="sheet-workspace">',
       '    <div id="sheet-pages" class="sheet-pages">',
-      '      <div id="sheet-1" class="sheet-content active">',
+      '      <div id="sheet-1" class="sheet-content active has-analysis-history">',
+      '        <div class="proof-crg-pane">',
+      '          <div class="proof-goal-column" data-resizable-pane="proof-goals"></div>',
+      '          <div class="divider proof-crg-column-divider" data-resize-target="previous"></div>',
+      '          <div class="crg-column" data-resizable-pane="crg-transition"></div>',
+      '        </div>',
       '        <div class="sheet-columns">',
       '          <div id="arg-panel" class="sheet-pane"></div>',
       '          <div id="divider" class="divider" data-resize-target="previous"></div>',
@@ -232,28 +237,38 @@ describe('ivyRuntime compatibility behavior', () => {
     const workspace = document.getElementById('sheet-workspace')!;
     const editor = document.getElementById('editor-panel')!;
     const divider = document.getElementById('editor-left-resize-handle')!;
+    const state = document.getElementById('state-panel')!;
+    const crg = document.querySelector('.crg-column')!;
     const log = vi.spyOn(console, 'log').mockImplementation(() => {});
     setOffsetWidth(workspace, 1200);
     setOffsetWidth(editor, 420);
+    setOffsetWidth(state, 220);
+    setOffsetWidth(crg, 260);
 
     runtime.setupResizer();
     divider.dispatchEvent(new MouseEvent('mousedown', { clientX: 600, bubbles: true }));
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 550, bubbles: true }));
     document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
 
-    expect(editor.style.width).toBe('470px');
-    expect(editor.style.flex).toBe('0 0 470px');
+    expect(state.style.width).toBe('170px');
+    expect(state.style.flex).toBe('0 0 170px');
+    expect(crg.style.width).toBe('210px');
+    expect(crg.style.flex).toBe('0 0 210px');
+    expect(editor.style.width).toBe('');
+    expect(editor.style.flex).toBe('');
     expect(log).toHaveBeenCalledTimes(1);
     log.mockRestore();
   });
 
-  it('resizes the editor pane by dragging its left edge', () => {
+  it('keeps the editor width fixed while logging geometry after left-edge drags', () => {
     document.body.innerHTML = [
       '<div id="sheet-area">',
       '  <div id="sheet-workspace" class="sheet-workspace">',
       '    <div id="sheet-pages" class="sheet-pages">',
       '      <div id="sheet-1" class="sheet-content active">',
-      '        <div class="sheet-columns"></div>',
+      '        <div class="sheet-columns">',
+      '          <div id="state-panel" class="sheet-pane"></div>',
+      '        </div>',
       '      </div>',
       '    </div>',
       '    <div id="editor-left-resize-handle"></div>',
@@ -269,15 +284,18 @@ describe('ivyRuntime compatibility behavior', () => {
     runtime._refreshEditorLayout = vi.fn();
     const workspace = document.getElementById('sheet-workspace')!;
     const editor = document.getElementById('editor-panel')!;
+    const state = document.getElementById('state-panel')!;
     const handle = document.getElementById('editor-left-resize-handle')!;
     const log = vi.spyOn(console, 'log').mockImplementation(() => {});
     setOffsetWidth(workspace, 1200);
     setOffsetWidth(editor, 420);
+    setOffsetWidth(state, 220);
     Object.defineProperty(editor, 'getBoundingClientRect', {
       configurable: true,
       value: () => {
-        const width = Number.parseFloat(editor.style.width) || editor.offsetWidth;
-        return { left: 600, right: 600 + width, top: 0, bottom: 600, width, height: 600 };
+        const left = 400 + (Number.parseFloat(state.style.width) || state.offsetWidth);
+        const width = editor.offsetWidth;
+        return { left, right: left + width, top: 0, bottom: 600, width, height: 600 };
       },
     });
 
@@ -286,24 +304,28 @@ describe('ivyRuntime compatibility behavior', () => {
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 552, bubbles: true }));
     document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
 
-    expect(editor.style.width).toBe('470px');
-    expect(editor.style.flex).toBe('0 0 470px');
+    expect(state.style.width).toBe('170px');
+    expect(state.style.flex).toBe('0 0 170px');
+    expect(editor.style.width).toBe('');
+    expect(editor.style.flex).toBe('');
     expect(log).toHaveBeenLastCalledWith(
       '[ivyweb editor-left-resize-handle] editor pane geometry',
-      expect.objectContaining({ left: 600, right: 1070, width: 470, height: 600, styleWidth: '470px', flex: '0 0 470px' }),
+      expect.objectContaining({ left: 570, right: 990, width: 420, height: 600, styleWidth: '', flex: '' }),
     );
 
-    setOffsetWidth(editor, 470);
+    setOffsetWidth(state, 170);
     handle.dispatchEvent(new MouseEvent('mousedown', { clientX: 602, bubbles: true }));
     document.dispatchEvent(new MouseEvent('mousemove', { clientX: 642, bubbles: true }));
     document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
 
-    expect(editor.style.width).toBe('430px');
-    expect(editor.style.flex).toBe('0 0 430px');
+    expect(state.style.width).toBe('210px');
+    expect(state.style.flex).toBe('0 0 210px');
+    expect(editor.style.width).toBe('');
+    expect(editor.style.flex).toBe('');
     expect(log).toHaveBeenCalledTimes(2);
     expect(log).toHaveBeenLastCalledWith(
       '[ivyweb editor-left-resize-handle] editor pane geometry',
-      expect.objectContaining({ left: 600, right: 1030, width: 430, height: 600, styleWidth: '430px', flex: '0 0 430px' }),
+      expect.objectContaining({ left: 610, right: 1030, width: 420, height: 600, styleWidth: '', flex: '' }),
     );
     log.mockRestore();
   });

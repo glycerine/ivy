@@ -51,8 +51,8 @@ describe('static graph background controls', () => {
     expect(doc.querySelector('#editor-panel > #editor-left-resize-handle')).toBeNull();
     expect(editorHandle).not.toBeNull();
     expect(editorHandle?.getAttribute('aria-label')).toBe('Resize editor');
-    expect(editorEdgeRule).toContain('flex: 0 0 10px;');
-    expect(editorEdgeRule).toContain('width: 10px;');
+    expect(editorEdgeRule).toContain('flex: 0 0 4px;');
+    expect(editorEdgeRule).toContain('width: 4px;');
     expect(editorEdgeRule).toContain('cursor: col-resize;');
     expect(proofColumnDividerRule).toContain('align-self: stretch;');
     expect(proofColumnDividerRule).toContain('flex: 0 0 4px;');

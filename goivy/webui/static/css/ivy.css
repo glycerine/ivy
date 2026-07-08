@@ -494,8 +494,8 @@ body[data-event-viewer-only="true"] #outer-container {
 }
 
 #editor-left-resize-handle {
-    flex: 0 0 10px;
-    width: 10px;
+    flex: 0 0 4px;
+    width: 4px;
     cursor: col-resize;
     background-color: #3c3c3c;
     transition: background-color 0.15s;

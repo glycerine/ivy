@@ -1935,14 +1935,51 @@ class IvyRuntime {
         );
     }
 
+    _isElementDisplayed(node) {
+        if (!node) return false;
+        if (typeof window === 'undefined' || !window.getComputedStyle) return true;
+        var styles = window.getComputedStyle(node);
+        return !styles || (styles.display !== 'none' && styles.visibility !== 'hidden');
+    }
+
     _neighborResizablePane(node, direction) {
         while (node) {
-            if (this._isResizablePane(node)) {
+            if (this._isResizablePane(node) && this._isElementDisplayed(node)) {
                 return node;
             }
             node = direction === 'next' ? node.nextElementSibling : node.previousElementSibling;
         }
         return null;
+    }
+
+    _rightmostResizablePane(container) {
+        if (!container) return null;
+        var node = container.lastElementChild;
+        while (node) {
+            if (this._isResizablePane(node) && this._isElementDisplayed(node)) return node;
+            node = node.previousElementSibling;
+        }
+        return null;
+    }
+
+    _editorLeftResizeTargets() {
+        var sheet = document.getElementById(this.activeSheetId || '')
+            || document.querySelector('#sheet-pages > .sheet-content.active')
+            || document.querySelector('.sheet-content.active');
+        if (!sheet) return [];
+        var targets = [];
+        var seen = [];
+        var add = function (target) {
+            if (!target || seen.indexOf(target) >= 0) return;
+            seen.push(target);
+            targets.push(target);
+        };
+        add(this._rightmostResizablePane(sheet.querySelector('.proof-crg-pane')));
+        add(this._rightmostResizablePane(sheet.querySelector('.sheet-columns')));
+        if (targets.length === 0) {
+            add(this._rightmostResizablePane(sheet));
+        }
+        return targets;
     }
 
     _rowResizeMinimum(panel) {
@@ -2035,6 +2072,7 @@ class IvyRuntime {
         var activePanel = null;
         var activeContainer = null;
         var activeEditorLeftResize = false;
+        var activeEditorLeftResizeTargets = null;
 
         sheetArea.addEventListener('mousedown', function (e) {
             var target = e.target;
@@ -2045,12 +2083,21 @@ class IvyRuntime {
             var panel;
             var container;
             activeEditorLeftResize = false;
+            activeEditorLeftResizeTargets = null;
 
             if (editorHandle && sheetArea.contains(editorHandle)) {
                 editorPanel = self._neighborResizablePane(editorHandle.nextElementSibling, 'next') || document.getElementById('editor-panel');
+                var editorResizeTargets = self._editorLeftResizeTargets();
+                if (!editorPanel || editorResizeTargets.length === 0) return;
                 activeHandle = editorHandle;
                 activeEditorLeftResize = true;
-                targetSide = 'next';
+                activeEditorLeftResizeTargets = editorResizeTargets.map(function (resizeTarget) {
+                    return {
+                        panel: resizeTarget,
+                        startWidth: resizeTarget.offsetWidth || (resizeTarget.getBoundingClientRect ? resizeTarget.getBoundingClientRect().width : 0),
+                    };
+                });
+                targetSide = 'editor-left';
                 panel = editorPanel;
                 container = editorPanel && (editorPanel.closest('.sheet-workspace') || editorPanel.parentElement);
             } else {
@@ -2087,6 +2134,23 @@ class IvyRuntime {
 
         document.addEventListener('mousemove', function (e) {
             if (!isDragging) return;
+            if (activeEditorLeftResize) {
+                var editorDx = e.clientX - startX;
+                for (var t = 0; activeEditorLeftResizeTargets && t < activeEditorLeftResizeTargets.length; t++) {
+                    var target = activeEditorLeftResizeTargets[t];
+                    var targetPanel = target.panel;
+                    var targetMinWidth = self._paneResizeMinimum(targetPanel);
+                    var targetMaxWidth = Math.max(targetMinWidth, 4000);
+                    var targetWidth = Math.max(targetMinWidth, Math.min(target.startWidth + editorDx, targetMaxWidth));
+                    targetPanel.style.flex = '0 0 ' + targetWidth + 'px';
+                    targetPanel.style.width = targetWidth + 'px';
+                }
+                if (self.argGraph) self.argGraph.resize();
+                if (self.conceptGraph) self.conceptGraph.resize();
+                self._resizeActiveProofGraph();
+                self._refreshEditorLayout();
+                return;
+            }
             var targetSide = activeHandle && activeHandle.__ivyResizeTargetSide === 'next' ? 'next' : 'previous';
             var dx = targetSide === 'next' ? startX - e.clientX : e.clientX - startX;
             var newWidth = startWidth + dx;
@@ -2118,6 +2182,7 @@ class IvyRuntime {
                 activePanel = null;
                 activeContainer = null;
                 activeEditorLeftResize = false;
+                activeEditorLeftResizeTargets = null;
             }
         });
     }

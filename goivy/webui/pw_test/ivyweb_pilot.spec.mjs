@@ -2680,7 +2680,7 @@ test('panel resize path does not crash', async ({ page }) => {
   expect(await page.evaluate(() => window.__ivyInitError || '')).toBe('');
 });
 
-test('editor left boundary handle resizes editor and logs geometry', async ({ page }) => {
+test('editor left boundary handle moves editor without resizing it and logs geometry', async ({ page }) => {
   const editorResizeLogs = [];
   page.on('console', (msg) => {
     if (msg.type() === 'log' && msg.text().includes('[ivyweb editor-left-resize-handle]')) {
@@ -2709,8 +2709,23 @@ test('editor left boundary handle resizes editor and logs geometry', async ({ pa
   await page.mouse.up();
 
   const after = await editor.boundingBox();
-  expect(after?.width || 0).toBeGreaterThan(before.width + 40);
+  expect(Math.abs((after?.width || 0) - before.width)).toBeLessThan(2);
+  expect(after?.x || 0).toBeLessThan(before.x - 40);
   await expect.poll(() => editorResizeLogs.length).toBeGreaterThan(0);
+
+  const gripAfterLeft = await handle.boundingBox();
+  test.skip(!gripAfterLeft, 'editor resize handle has no measurable box after left drag');
+  const rightDragX = gripAfterLeft.x + gripAfterLeft.width / 2;
+  const rightDragY = gripAfterLeft.y + gripAfterLeft.height / 2;
+  await page.mouse.move(rightDragX, rightDragY);
+  await page.mouse.down();
+  await page.mouse.move(rightDragX + 80, rightDragY, { steps: 8 });
+  await page.mouse.up();
+
+  const afterRight = await editor.boundingBox();
+  expect(Math.abs((afterRight?.width || 0) - before.width)).toBeLessThan(2);
+  expect(afterRight?.x || 0).toBeGreaterThan((after?.x || 0) + 40);
+  await expect.poll(() => editorResizeLogs.length).toBeGreaterThan(1);
   expect(await page.evaluate(() => window.__ivyInitError || '')).toBe('');
 });
 
