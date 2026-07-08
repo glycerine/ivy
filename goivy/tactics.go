@@ -361,18 +361,26 @@ func GetBigAction(ag *AnalysisGraph) ActionsAction {
 	var branches []Expr
 	for _, e := range ag.Exports {
 		name := e.Exported()
-		if act, ok := ag.Actions.Get2(name); ok {
-			if a, ok := act.(ActionsAction); ok {
-				names = append(names, name)
-				branches = append(branches, a)
-			}
+		if actionName, ok := ag.actionNameFromActionLabel(name); ok {
+			names = append(names, actionName)
+		}
+		act, ok := ag.Actions.Get2(name)
+		if !ok {
+			continue
+		}
+		if a, ok := act.(ActionsAction); ok {
+			branches = append(branches, a)
 		}
 	}
+	var result ActionsAction
 	if len(branches) == 0 {
-		return NewSequence()
+		result = NewSequence()
+	} else {
+		choice := NewChoiceActionOn(ag.Domain.Cfg.ActCfg, branches...)
+		choice.Label = strings.Join(names, " + ")
+		result = choice
 	}
-	result := NewChoiceActionOn(ag.Domain.Cfg.ActCfg, branches...)
-	result.Label = strings.Join(names, " + ")
+	ag.RegisterActionNames(result, names)
 	return result
 }
 

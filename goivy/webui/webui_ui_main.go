@@ -6,6 +6,7 @@ package webui
 import (
 	"fmt"
 	goivy "github.com/glycerine/ivy/goivy"
+	"reflect"
 	"sort"
 	"strings"
 	"sync"
@@ -372,6 +373,9 @@ func (ui *AnalysisGraphUI) IsNodeSafe(nodeID int) bool {
 // ArtToGraphState converts an art.AnalysisGraph to a lightweight WebUIAnalysisGraphState.
 func ArtToGraphState(ag *goivy.AnalysisGraph) *WebUIAnalysisGraphState {
 	gs := NewWebUIAnalysisGraphState()
+	if ag != nil {
+		ag.CanonicalizeTransitionActionNames()
+	}
 	for _, st := range ag.States {
 		label := st.Label
 		if label == "" {
@@ -411,6 +415,9 @@ func argNodeInfo(st *goivy.State) string {
 // including formula strings and universe data for CTI inspection.
 func ArtToFullGraphState(ag *goivy.AnalysisGraph) *goivy.FullAnalysisGraphState {
 	gs := goivy.NewFullAnalysisGraphState()
+	if ag != nil {
+		ag.CanonicalizeTransitionActionNames()
+	}
 	for _, st := range ag.States {
 		label := st.Label
 		if label == "" {
@@ -453,16 +460,231 @@ func argNodeClauses(st *goivy.State) string {
 }
 
 func argTransitionDisplayLabel(t goivy.Transition) string {
-	label := strings.TrimSpace(t.Label)
-	if display := actionDisplayNameForARG(t.Op); display != "" {
-		if label == "" || argTransitionLabelIsGeneric(label) {
-			return display
-		}
+	if t.IsJoin() {
+		return "join"
 	}
-	if display := cleanARGActionDisplayName(label); display != "" && display != label {
+	return mustARGTransitionDisplayLabel(argTransitionDisplayLabelCandidate(t), t)
+}
+
+func argTransitionDisplayLabelCandidate(t goivy.Transition) string {
+	actionName := strings.TrimSpace(t.ActionName)
+	if actionName == "" {
+		return ""
+	}
+	if display := actionDisplayNameForModelActionName(argTransitionModule(t), actionName); display != "" {
 		return display
 	}
-	return t.Label
+	if display := cleanARGActionDisplayName(actionName); display != "" {
+		return display
+	}
+	return actionName
+}
+
+func mustARGTransitionDisplayLabel(label string, t goivy.Transition) string {
+	actionName := strings.TrimSpace(t.ActionName)
+	if actionName == "" {
+		panic(fmt.Sprintf("ARG transition edge is missing canonical action name: raw=%q op=%T pre=%s post=%s", t.Label, t.Op, argTransitionStateID(t.Pre), argTransitionStateID(t.Post)))
+	}
+	if strings.EqualFold(actionName, "sequence") {
+		panic(fmt.Sprintf("ARG transition edge action name resolved to internal action name %q: raw=%q op=%T pre=%s post=%s", actionName, t.Label, t.Op, argTransitionStateID(t.Pre), argTransitionStateID(t.Post)))
+	}
+	if argLabelLooksLikeGoImplementation(actionName) {
+		panic(fmt.Sprintf("ARG transition edge action name leaked Go implementation detail %q: raw=%q op=%T pre=%s post=%s", actionName, t.Label, t.Op, argTransitionStateID(t.Pre), argTransitionStateID(t.Post)))
+	}
+	if strings.EqualFold(actionName, "ext") || strings.EqualFold(actionName, "call ext") || strings.EqualFold(actionName, "call:ext") {
+		panic(fmt.Sprintf("ARG transition edge action name resolved to generic external dispatcher %q: raw=%q op=%T pre=%s post=%s", actionName, t.Label, t.Op, argTransitionStateID(t.Pre), argTransitionStateID(t.Post)))
+	}
+	if mod := argTransitionModule(t); mod != nil && mod.Actions != nil {
+		if _, ok := mod.Actions.Get2(actionName); !ok {
+			panic(fmt.Sprintf("ARG transition edge action name %q is not in the model: raw=%q op=%T pre=%s post=%s", actionName, t.Label, t.Op, argTransitionStateID(t.Pre), argTransitionStateID(t.Post)))
+		}
+	}
+	trimmed := strings.TrimSpace(label)
+	if trimmed == "" {
+		panic(fmt.Sprintf("ARG transition edge label resolved to empty string: raw=%q op=%T pre=%s post=%s", t.Label, t.Op, argTransitionStateID(t.Pre), argTransitionStateID(t.Post)))
+	}
+	if strings.EqualFold(trimmed, "sequence") {
+		panic(fmt.Sprintf("ARG transition edge label resolved to internal action name %q: raw=%q op=%T pre=%s post=%s", trimmed, t.Label, t.Op, argTransitionStateID(t.Pre), argTransitionStateID(t.Post)))
+	}
+	return label
+}
+
+func argTransitionModule(t goivy.Transition) *goivy.Module {
+	if t.Post != nil && t.Post.Domain != nil {
+		return t.Post.Domain
+	}
+	if t.Pre != nil {
+		return t.Pre.Domain
+	}
+	return nil
+}
+
+func argTransitionStateID(st *goivy.State) string {
+	if st == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("%d", st.ID)
+}
+
+func actionDisplayNameFromTransitionContext(t goivy.Transition) string {
+	if display := actionDisplayNameFromPostState(t.Post, t.Pre, t.Op); display != "" {
+		return display
+	}
+	if display := actionDisplayNameFromStateModule(t.Post, t.Op); display != "" {
+		return display
+	}
+	if display := actionDisplayNameFromStateModule(t.Pre, t.Op); display != "" {
+		return display
+	}
+	return ""
+}
+
+func actionDisplayNameFromPostState(post, pre *goivy.State, op goivy.ActionsAction) string {
+	if post == nil {
+		return ""
+	}
+	if display := actionDisplayNameForModelActionName(post.Domain, post.ActionName); display != "" {
+		return display
+	}
+	if post.Action != nil {
+		if display := actionDisplayNameInModule(post.Domain, post.Action); display != "" {
+			return display
+		}
+		if op == nil || sameARGActionIdentity(post.Action, op) {
+			if display := actionDisplayNameForARG(post.Action); display != "" {
+				return display
+			}
+		}
+	}
+	aa, ok := post.Prov.(*goivy.ActionApp)
+	if !ok || aa == nil {
+		return ""
+	}
+	if pre != nil && (len(aa.Args) == 0 || aa.Args[0] != pre) {
+		return ""
+	}
+	switch rep := aa.Rep.(type) {
+	case string:
+		if display := actionDisplayNameForModelActionName(post.Domain, rep); display != "" {
+			return display
+		}
+		if post.Domain == nil || post.Domain.Actions == nil {
+			return cleanARGActionDisplayName(rep)
+		}
+	case *goivy.Const:
+		if display := actionDisplayNameForModelActionName(post.Domain, rep.Name); display != "" {
+			return display
+		}
+		if post.Domain == nil || post.Domain.Actions == nil {
+			return cleanARGActionDisplayName(rep.Name)
+		}
+	case goivy.ActionsAction:
+		if display := actionDisplayNameInModule(post.Domain, rep); display != "" {
+			return display
+		}
+		if op == nil || sameARGActionIdentity(rep, op) {
+			return actionDisplayNameForARG(rep)
+		}
+	}
+	return ""
+}
+
+func actionDisplayNameFromStateModule(st *goivy.State, action goivy.ActionsAction) string {
+	if st == nil {
+		return ""
+	}
+	return actionDisplayNameInModule(st.Domain, action)
+}
+
+func actionDisplayNameForModelActionName(mod *goivy.Module, name string) string {
+	display := cleanARGActionDisplayName(name)
+	if display == "" {
+		return ""
+	}
+	if mod == nil || mod.Actions == nil {
+		return display
+	}
+	if _, ok := mod.Actions.Get2(name); ok {
+		return display
+	}
+	if strings.HasPrefix(name, "ext:") {
+		if _, ok := mod.Actions.Get2(strings.TrimPrefix(name, "ext:")); ok {
+			return display
+		}
+		return ""
+	}
+	if _, ok := mod.Actions.Get2("ext:" + name); ok {
+		return display
+	}
+	return ""
+}
+
+func actionDisplayNameInModule(mod *goivy.Module, action goivy.ActionsAction) string {
+	if mod == nil || mod.Actions == nil || action == nil {
+		return ""
+	}
+	for name, candidate := range mod.Actions.All() {
+		if sameARGActionIdentity(candidate, action) {
+			if display := cleanARGActionDisplayName(name); display != "" {
+				return display
+			}
+		}
+	}
+	var structuralDisplay string
+	for name, candidate := range mod.Actions.All() {
+		if !sameARGActionStructure(candidate, action) {
+			continue
+		}
+		display := cleanARGActionDisplayName(name)
+		if display == "" {
+			continue
+		}
+		if structuralDisplay != "" && structuralDisplay != display {
+			return ""
+		}
+		structuralDisplay = display
+	}
+	if structuralDisplay != "" {
+		return structuralDisplay
+	}
+	return ""
+}
+
+func sameARGActionIdentity(a, b goivy.ActionsAction) bool {
+	if a == nil || b == nil {
+		return false
+	}
+	av := reflect.ValueOf(a)
+	bv := reflect.ValueOf(b)
+	if !av.IsValid() || !bv.IsValid() || av.Type() != bv.Type() {
+		return false
+	}
+	if av.Kind() == reflect.Ptr {
+		if av.IsNil() || bv.IsNil() {
+			return false
+		}
+		return av.Pointer() == bv.Pointer()
+	}
+	if av.Type().Comparable() {
+		return a == b
+	}
+	return false
+}
+
+func sameARGActionStructure(a, b goivy.ActionsAction) (same bool) {
+	if a == nil || b == nil {
+		return false
+	}
+	defer func() {
+		if recover() != nil {
+			same = false
+		}
+	}()
+	return a.Equal(b) || b.Equal(a)
+}
+
+func argLabelLooksLikeGoImplementation(label string) bool {
+	return strings.Contains(label, "goivy.") || strings.Contains(label, "@0x")
 }
 
 func argTransitionLabelIsGeneric(label string) bool {
@@ -472,8 +694,7 @@ func argTransitionLabelIsGeneric(label string) bool {
 		lower == "call:ext" ||
 		lower == "ext" ||
 		strings.HasPrefix(lower, "ext:") ||
-		strings.Contains(trimmed, "goivy.") ||
-		strings.Contains(trimmed, "@0x")
+		argLabelLooksLikeGoImplementation(trimmed)
 }
 
 func actionDisplayNameForARG(action goivy.ActionsAction) string {
@@ -517,11 +738,17 @@ func actionDisplayNameForARG(action goivy.ActionsAction) string {
 
 func cleanARGActionDisplayName(label string) string {
 	label = strings.TrimSpace(label)
+	if argLabelLooksLikeGoImplementation(label) {
+		return ""
+	}
 	label = strings.TrimPrefix(label, "call:")
 	label = strings.TrimPrefix(label, "call ")
 	label = strings.TrimPrefix(label, "ext:")
 	label = strings.TrimSpace(label)
-	if label == "" || strings.EqualFold(label, "ext") || strings.EqualFold(label, "call ext") {
+	if label == "" ||
+		strings.EqualFold(label, "ext") ||
+		strings.EqualFold(label, "call ext") ||
+		argLabelLooksLikeGoImplementation(label) {
 		return ""
 	}
 	return label
@@ -531,7 +758,8 @@ func applyCounterexampleTraceTransitionLabels(trace *goivy.TraceBase) {
 	if trace == nil || trace.AnalysisGraph == nil {
 		return
 	}
-	exported := exportedActionDisplayNames(trace.AnalysisGraph.Domain)
+	trace.AnalysisGraph.CanonicalizeTransitionActionNames()
+	exported := exportedActionNamesByDisplay(trace.AnalysisGraph.Domain)
 	if len(exported) == 0 {
 		return
 	}
@@ -543,41 +771,58 @@ func applyCounterexampleTraceTransitionLabels(trace *goivy.TraceBase) {
 	}
 	for i := range trace.AnalysisGraph.Transitions {
 		t := &trace.AnalysisGraph.Transitions[i]
-		current := argTransitionDisplayLabel(*t)
-		if exported[current] {
+		current := argTransitionDisplayLabelCandidate(*t)
+		if actionName := exported[current]; actionName != "" {
+			t.ActionName = actionName
 			t.Label = current
 			continue
 		}
-		if !argTransitionLabelIsGeneric(t.Label) {
+		if !argTransitionLabelIsGeneric(t.Label) && !argTransitionLabelIsGeneric(t.ActionName) {
 			continue
 		}
 		if display := traceStateExportedActionDisplayName(traceStates[t.Post], exported); display != "" {
+			t.ActionName = exported[display]
+			t.Label = display
+			continue
+		}
+		if display, actionName, ok := soleExportedAction(exported); ok {
+			t.ActionName = actionName
 			t.Label = display
 		}
 	}
 }
 
-func exportedActionDisplayNames(mod *goivy.Module) map[string]bool {
-	names := make(map[string]bool)
+func soleExportedAction(exported map[string]string) (display string, actionName string, ok bool) {
+	if len(exported) != 1 {
+		return "", "", false
+	}
+	for display, actionName := range exported {
+		return display, actionName, true
+	}
+	return "", "", false
+}
+
+func exportedActionNamesByDisplay(mod *goivy.Module) map[string]string {
+	names := make(map[string]string)
 	if mod == nil || mod.PublicActions == nil {
 		return names
 	}
 	for name := range mod.PublicActions.All() {
 		if display := cleanARGActionDisplayName(name); display != "" {
-			names[display] = true
+			names[display] = name
 		}
 	}
 	return names
 }
 
-func traceStateExportedActionDisplayName(ts *goivy.TraceState, exported map[string]bool) string {
+func traceStateExportedActionDisplayName(ts *goivy.TraceState, exported map[string]string) string {
 	if ts == nil || ts.Subgraph == nil || ts.Subgraph.Graph == nil {
 		return ""
 	}
 	return traceGraphExportedActionDisplayName(ts.Subgraph.Graph, exported, make(map[*goivy.TraceBase]bool))
 }
 
-func traceGraphExportedActionDisplayName(trace *goivy.TraceBase, exported map[string]bool, seen map[*goivy.TraceBase]bool) string {
+func traceGraphExportedActionDisplayName(trace *goivy.TraceBase, exported map[string]string, seen map[*goivy.TraceBase]bool) string {
 	if trace == nil || seen[trace] {
 		return ""
 	}
@@ -587,9 +832,9 @@ func traceGraphExportedActionDisplayName(trace *goivy.TraceBase, exported map[st
 			for _, candidate := range []string{
 				actionDisplayNameForARG(tr.Op),
 				cleanARGActionDisplayName(tr.Label),
-				argTransitionDisplayLabel(tr),
+				argTransitionDisplayLabelCandidate(tr),
 			} {
-				if exported[candidate] {
+				if exported[candidate] != "" {
 					return candidate
 				}
 			}
@@ -1119,7 +1364,9 @@ func (ui *AnalysisGraphUI) fallbackStepInGraph(t *goivy.Transition) *goivy.Analy
 	post := goivy.NewState(ui.AG.Domain, t.Post.Clauses)
 	post.Label = t.Post.Label
 	subArt.Add(pre, nil)
-	subArt.Add(post, goivy.NewActionApp(t.Op, pre))
+	expr := goivy.NewActionApp(t.Op, pre)
+	expr.ActionName = t.ActionName
+	subArt.Add(post, expr)
 	return subArt
 }
 

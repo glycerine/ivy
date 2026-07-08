@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,6 +7,14 @@ const webuiDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const ivyRoot = path.resolve(webuiDir, '../..');
 const ordLivePath = path.join(ivyRoot, 'ivy-lang-examples', 'doc', 'examples', 'apple', 'ord_live.ivy');
 const ordLiveContent = readFileSync(ordLivePath, 'utf8');
+const clientServerDocExamplePath = [
+  path.join(ivyRoot, 'ivy-lang-examples', 'doc', 'examples', 'client_server_example.ivy'),
+  path.join(ivyRoot, 'goivy', 'examples', 'client_server_example.ivy'),
+].find((candidate) => existsSync(candidate));
+if (!clientServerDocExamplePath) {
+  throw new Error('client_server_example.ivy fixture not found');
+}
+const clientServerDocExampleContent = readFileSync(clientServerDocExamplePath, 'utf8');
 const clientServerIvyContent = `#lang ivy1.7
 
 type client
@@ -121,6 +129,32 @@ async function createSession(request) {
 
 async function loadExampleIntoCurrentSession(page) {
   return loadContentIntoCurrentSession(page, clientServerIvyContent, 'test.ivy');
+}
+
+async function waitForCheckOutcome(page) {
+  const handle = await page.waitForFunction(() => {
+    const status = document.querySelector('#statusbar')?.textContent || '';
+    const dialogText = Array.from(document.querySelectorAll('[data-ivy-dialog-text]')).map((node) => {
+      if ('value' in node) return String(node.value || '');
+      return String(node.textContent || '');
+    }).join('\n');
+    const crash = status.includes('Browser WASM Go runtime')
+      || dialogText.includes('Browser WASM Go runtime crash report');
+    const transportFailure = status.includes('Check failed:')
+      || dialogText.includes('goivy webengine wasm returned no response');
+    const complete = /Check (PASSED|FAILED|ERROR)/.test(status);
+    if (complete || crash || transportFailure) {
+      return {
+        status,
+        dialogText,
+        crash,
+        transportFailure,
+        complete,
+      };
+    }
+    return null;
+  }, null, { timeout: 60_000 });
+  return handle.jsonValue();
 }
 
 async function loadContentIntoCurrentSession(page, content, filename) {
@@ -364,6 +398,53 @@ test('workflow mode selector switches CTI and reachability controls', async ({ p
   await expect(page.locator('#btn-show-reachable')).toBeVisible();
   await expect(page.locator('[data-dropdown="conj-menu"]')).toBeHidden();
   await expect(page.locator('[data-dropdown="reach-action-menu"]')).toBeVisible();
+});
+
+test('browser WASM default reachability Check handles client server doc example', async ({ page }) => {
+  test.setTimeout(90_000);
+  await openIvy(page);
+  await loadContentIntoCurrentSession(page, clientServerDocExampleContent, 'client_server_example.ivy');
+
+  await page.locator('#ui-mode-select').selectOption('reachability');
+  await expect(page.locator('body')).toHaveAttribute('data-ui-mode', 'reachability');
+  await expect(page.locator('#mode-select')).toHaveValue('pdr');
+  await expect(page.locator('#btn-check')).toBeVisible();
+
+  await expect(page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    return {
+      apiKind: app.api && app.api.kind,
+      apiMode: app._apiMode,
+      jobSubmissionMode: app.jobSubmissionMode,
+      mode: app.getMode(),
+    };
+  })).resolves.toEqual({
+    apiKind: 'browser-wasm',
+    apiMode: 'browser',
+    jobSubmissionMode: 'browser',
+    mode: 'pdr',
+  });
+
+  await page.locator('#btn-check').click();
+  const outcome = await waitForCheckOutcome(page);
+  expect(outcome.crash, outcome.dialogText || outcome.status).toBe(false);
+  expect(outcome.transportFailure, outcome.dialogText || outcome.status).toBe(false);
+  expect(outcome.status).toMatch(/Check (PASSED|FAILED|ERROR)/);
+
+  const edgeLabels = await page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.sheets && app.sheets[app.activeSheetId || 'sheet-1'];
+    const graph = (sheet && sheet.argGraph) || app.argGraph;
+    if (!graph || !graph.cy) return [];
+    return graph.cy.edges().map((edge) => String(edge.data('label') || ''));
+  });
+  expect(edgeLabels.length).toBeGreaterThan(0);
+  expect(edgeLabels.filter((label) => (
+    !label
+    || label === 'sequence'
+    || label.includes('goivy.')
+    || label.includes('@0x')
+  ))).toEqual([]);
 });
 
 test('active event sheets hide analysis workflow menus', async ({ page }) => {

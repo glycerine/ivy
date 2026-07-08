@@ -49,7 +49,6 @@ export const CONCEPT_STYLE = [
   {
     selector: 'edge',
     style: {
-      content: 'data(label)',
       width: '3px',
       'line-color': '#888',
       'target-arrow-color': '#888',
@@ -61,6 +60,7 @@ export const CONCEPT_STYLE = [
       'text-wrap': 'wrap',
     },
   },
+  { selector: 'edge[label]', style: { content: 'data(label)' } },
   { selector: 'edge[text_max_width]', style: { 'text-max-width': 'data(text_max_width)' } },
   {
     selector: 'edge.none_to_none',
@@ -145,7 +145,6 @@ export const ARG_STYLE = [
   {
     selector: 'edge',
     style: {
-      content: 'data(label)',
       width: '4px',
       'line-style': 'solid',
       'edge-text-rotation': 'none',
@@ -157,6 +156,7 @@ export const ARG_STYLE = [
       'font-size': '11px',
     },
   },
+  { selector: 'edge[label]', style: { content: 'data(label)' } },
   { selector: 'edge[text_max_width]', style: { 'text-max-width': 'data(text_max_width)' } },
   { selector: 'edge.transition_join', style: { 'target-arrow-shape': 'triangle-backcurve' } },
   { selector: 'edge.transition_action', style: { 'target-arrow-shape': 'triangle' } },

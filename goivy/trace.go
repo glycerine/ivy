@@ -85,9 +85,10 @@ func (tb *TraceBase) AddTraceState(eqns []Expr) {
 	state := NewState(tb.Domain, clauses)
 	ts := &TraceState{State: state}
 	if tb.LastAction != nil {
+		tb.registerReturnedTraceActionNames(tb.LastAction, tb.Returned)
 		expr := NewActionApp(tb.LastAction, tb.lastArtState())
 		tb.LastAction = nil
-		tb.AnalysisGraph.Add(state, expr)
+		tb.AnalysisGraph.addActionState(state, expr)
 		if tb.Returned != nil {
 			ts.Subgraph = &Subgraph{Graph: tb.Returned}
 			tb.Returned = nil
@@ -785,9 +786,14 @@ func (t *Trace) AddState(eqns []Expr) {
 	}
 	ts := &TraceState{State: state}
 	if t.LastAction != nil {
+		var returned *TraceBase
+		if t.ReturnedTrace != nil {
+			returned = t.ReturnedTrace.TraceBase
+		}
+		t.registerReturnedTraceActionNames(t.LastAction, returned)
 		expr := NewActionApp(t.LastAction, t.lastArtState())
 		t.LastAction = nil
-		t.AnalysisGraph.Add(state, expr)
+		t.AnalysisGraph.addActionState(state, expr)
 		if t.ReturnedTrace != nil {
 			ts.Subgraph = &Subgraph{Graph: t.ReturnedTrace.TraceBase}
 			t.ReturnedTrace = nil
@@ -796,6 +802,27 @@ func (t *Trace) AddState(eqns []Expr) {
 		t.AnalysisGraph.Add(state, nil)
 	}
 	t.TraceStates = append(t.TraceStates, ts)
+}
+
+func (tb *TraceBase) registerReturnedTraceActionNames(action ActionsAction, returned *TraceBase) {
+	if tb == nil || tb.AnalysisGraph == nil || action == nil || returned == nil || returned.AnalysisGraph == nil {
+		return
+	}
+	returned.AnalysisGraph.CanonicalizeTransitionActionNames()
+	seen := make(map[string]bool)
+	var names []string
+	for _, tr := range returned.AnalysisGraph.Transitions {
+		if tr.IsJoin() {
+			continue
+		}
+		name := strings.TrimSpace(tr.ActionName)
+		if !tb.AnalysisGraph.validTransitionActionName(name) || seen[name] {
+			continue
+		}
+		seen[name] = true
+		names = append(names, name)
+	}
+	tb.AnalysisGraph.RegisterActionNames(action, names)
 }
 
 // IsSkolem reports whether a trace symbol should be treated as a Skolem.
@@ -1191,7 +1218,7 @@ func MakeVCWithModule(mod *Module, action ActionsAction, precond []*Clauses,
 	if action == nil {
 		action = NewSequence()
 	}
-	postState, err := ag.Execute(traceCheckPrecondFalse, action, preState, nil, "")
+	postState, err := ag.executeStateOnly(traceCheckPrecondFalse, action.Name(), action, preState, nil)
 	if err != nil {
 		panic(fmt.Sprintf("MakeVC: Execute failed: %v", err))
 	}

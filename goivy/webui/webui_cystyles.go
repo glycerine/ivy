@@ -67,12 +67,15 @@ func ConceptStyle() []CyStyleEntry {
 		{
 			Selector: "edge",
 			Style: map[string]string{
-				"content":            "data(label)",
 				"target-arrow-shape": "triangle",
 				"target-arrow-fill":  "filled",
 				"source-arrow-fill":  "filled",
 				"text-wrap":          "wrap",
 			},
+		},
+		{
+			Selector: "edge[label]",
+			Style:    map[string]string{"content": "data(label)"},
 		},
 		{
 			Selector: "edge[text_max_width]",
@@ -167,12 +170,15 @@ func ARGStyle() []CyStyleEntry {
 		{
 			Selector: "edge",
 			Style: map[string]string{
-				"content":            "data(label)",
 				"width":              "4px",
 				"line-style":         "solid",
 				"edge-text-rotation": "none",
 				"text-wrap":          "wrap",
 			},
+		},
+		{
+			Selector: "edge[label]",
+			Style:    map[string]string{"content": "data(label)"},
 		},
 		{
 			Selector: "edge[text_max_width]",

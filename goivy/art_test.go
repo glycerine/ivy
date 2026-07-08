@@ -544,6 +544,159 @@ func TestArtAnalysisGraphExecuteAction(t *testing.T) {
 	}
 }
 
+func TestAnalysisGraphAddActionObjectRecordsCanonicalActionName(t *testing.T) {
+	mod := New()
+	act := NewSequence()
+	act.SetLabel("*goivy.LogicSequence@0xdb35e0")
+	mod.Actions.Set("ext:connect", act)
+	ag := NewAnalysisGraph(mod)
+	pre := testState(mod)
+	post := testState(mod)
+	ag.Add(pre, nil)
+
+	expr := NewActionApp(act, pre)
+	ag.Add(post, expr)
+
+	if expr.ActionName != "ext:connect" {
+		t.Fatalf("ActionApp.ActionName = %q, want ext:connect", expr.ActionName)
+	}
+	if post.ActionName != "ext:connect" {
+		t.Fatalf("post.ActionName = %q, want ext:connect", post.ActionName)
+	}
+	if len(ag.Transitions) != 1 {
+		t.Fatalf("transition count = %d, want 1", len(ag.Transitions))
+	}
+	tr := ag.Transitions[0]
+	if tr.ActionName != "ext:connect" {
+		t.Fatalf("Transition.ActionName = %q, want ext:connect", tr.ActionName)
+	}
+	if tr.Label != "ext:connect" {
+		t.Fatalf("Transition.Label = %q, want ext:connect", tr.Label)
+	}
+}
+
+func TestAnalysisGraphAddWrappedSequenceRecordsCanonicalActionName(t *testing.T) {
+	mod := New()
+	act := NewAssumeAction(True)
+	mod.Actions.Set("ext:connect", act)
+	wrapper := NewSequence(act, NewReturnAction())
+	wrapper.SetLabel("*goivy.LogicSequence@0xdeb400")
+
+	ag := NewAnalysisGraph(mod)
+	pre := testState(mod)
+	post := testState(mod)
+	ag.Add(pre, nil)
+	expr := NewActionApp(wrapper, pre)
+	ag.Add(post, expr)
+
+	if expr.ActionName != "ext:connect" {
+		t.Fatalf("ActionApp.ActionName = %q, want ext:connect", expr.ActionName)
+	}
+	if post.ActionName != "ext:connect" {
+		t.Fatalf("post.ActionName = %q, want ext:connect", post.ActionName)
+	}
+	if len(ag.Transitions) != 1 {
+		t.Fatalf("transition count = %d, want 1", len(ag.Transitions))
+	}
+	if got := ag.Transitions[0].ActionName; got != "ext:connect" {
+		t.Fatalf("Transition.ActionName = %q, want ext:connect", got)
+	}
+}
+
+func TestAnalysisGraphExecuteActionRecordsCanonicalActionName(t *testing.T) {
+	mod := New()
+	act := NewAssumeAction(True)
+	mod.Actions.Set("ext:connect", act)
+	ag := NewAnalysisGraph(mod)
+	pre := testState(mod)
+	ag.Add(pre, nil)
+
+	post, err := ag.ExecuteAction(false, "ext:connect", pre, nil)
+	if err != nil {
+		t.Fatalf("ExecuteAction: %v", err)
+	}
+	if post.ActionName != "ext:connect" {
+		t.Fatalf("post.ActionName = %q, want ext:connect", post.ActionName)
+	}
+	if len(ag.Transitions) != 1 {
+		t.Fatalf("transition count = %d, want 1", len(ag.Transitions))
+	}
+	if got := ag.Transitions[0].ActionName; got != "ext:connect" {
+		t.Fatalf("Transition.ActionName = %q, want ext:connect", got)
+	}
+}
+
+func TestAnalysisGraphExecuteEnvActionCreatesModelNamedTransitions(t *testing.T) {
+	mod := New()
+	mod.Actions.Set("ext:connect", NewAssumeAction(True))
+	mod.Actions.Set("ext:disconnect", NewAssumeAction(True))
+	mod.PublicActions.Set("ext:connect", true)
+	mod.PublicActions.Set("ext:disconnect", true)
+	ag := NewAnalysisGraph(mod)
+	pre := testState(mod)
+
+	env := BuildEnvAction(mod.Cfg.ActCfg, mod.PublicActions, mod.Actions, "", "")
+	post, err := ag.Execute(false, env, pre, nil, "")
+	if err != nil {
+		t.Fatalf("Execute env action: %v", err)
+	}
+	if post == nil {
+		t.Fatal("Execute env action returned nil post")
+	}
+	got := make(map[string]bool)
+	for _, tr := range ag.Transitions {
+		got[tr.ActionName] = true
+	}
+	if !got["ext:connect"] || !got["ext:disconnect"] || len(got) != 2 {
+		t.Fatalf("transition action names = %#v, want ext:connect and ext:disconnect", got)
+	}
+}
+
+func TestAnalysisGraphAddUnregisteredActionObjectPanics(t *testing.T) {
+	ag := testGraph()
+	pre := testState(ag.Domain)
+	post := testState(ag.Domain)
+	ag.Add(pre, nil)
+	defer func() {
+		got := recover()
+		if got == nil {
+			t.Fatal("Add with unregistered action object did not panic")
+		}
+		if !strings.Contains(got.(string), "canonical model action name") {
+			t.Fatalf("panic = %q, want canonical model action name", got)
+		}
+	}()
+	ag.Add(post, NewActionApp(NewAssumeAction(True), pre))
+}
+
+func TestActionAppPointerStringDoesNotBecomeActionName(t *testing.T) {
+	app := NewActionApp("*goivy.LogicSequence@0xdb35e0")
+	if app.ActionName != "" {
+		t.Fatalf("ActionName = %q, want empty for Go implementation string", app.ActionName)
+	}
+}
+
+func TestActionAppInterpNamePrefersCanonicalActionName(t *testing.T) {
+	mod := New()
+	act := NewSequence()
+	act.SetLabel("*goivy.LogicSequence@0xdb35e0")
+	mod.Actions.Set("ext:connect", act)
+	pre := NewState(mod, TrueClauses(nil))
+	post := NewState(mod, TrueClauses(nil))
+	post.Prov = NewActionApp(act, pre)
+	post.Prov.(*ActionApp).ActionName = "ext:connect"
+	post.ActionName = "ext:connect"
+
+	interp := ArtToInterpState(post)
+	atom, ok := interp.Expr.(*Atom)
+	if !ok {
+		t.Fatalf("interp expr = %T, want *Atom", interp.Expr)
+	}
+	if atom.Rep != "ext:connect" {
+		t.Fatalf("interp action app rep = %q, want ext:connect", atom.Rep)
+	}
+}
+
 func TestArtAnalysisGraphExecuteActionNotFound(t *testing.T) {
 	ag := testGraph()
 	pre := testState(ag.Domain)

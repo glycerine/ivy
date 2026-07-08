@@ -272,15 +272,10 @@ func TestARGClientServerCounterexampleEdgesUseExportedActionNames(t *testing.T) 
 	if len(edges) == 0 {
 		t.Fatalf("ARG payload has no transition edges: %#v", payload["elements"])
 	}
-	allowed := map[string]bool{"connect": true, "disconnect": true}
+	modelLabels := modelActionDisplayLabels(s.CompiledModule)
 	for _, data := range edges {
 		label, _ := data["label"].(string)
-		if strings.Contains(label, "call ext") || strings.Contains(label, "call:ext") {
-			t.Fatalf("ARG edge kept generic external-call label: %#v", data)
-		}
-		if !allowed[label] {
-			t.Fatalf("ARG edge label = %q, want exported action name connect or disconnect; edge=%#v", label, data)
-		}
+		assertARGTransitionLabelDrawnFromModel(t, label, modelLabels)
 		if got, _ := data["short_info"].(string); got != label {
 			t.Fatalf("ARG edge short_info = %q, want %q; edge=%#v", got, label, data)
 		}
@@ -537,6 +532,7 @@ func TestARGExecuteActionMenuEntriesRenderAndDispatch(t *testing.T) {
 	if _, ok := result["arg"]; !ok {
 		t.Fatalf("execute_action result missing arg update: %#v", result)
 	}
+	assertARGPayloadTransitionEdgeLabelsDrawnFromModel(t, requireArgPayload(t, result), s.CompiledModule)
 }
 
 func TestARGChoiceBackedCommandsExposeConjecturesAndRememberedGraphs(t *testing.T) {
@@ -1931,8 +1927,9 @@ func TestArgViewSourceLocatedActionReturnsLine(t *testing.T) {
 	post := goivy.NewState(mod, goivy.TrueClauses(nil))
 	act := goivy.NewAssumeAction(goivy.True)
 	act.SetLineno(goivy.Location{Filename: "sample.ivy", Line: 2})
+	mod.Actions.Set("act", act)
 	ag.Add(pre, nil)
-	ag.Add(post, goivy.NewActionApp(act, pre))
+	ag.Add(post, goivy.NewActionApp("act", pre))
 
 	s := NewSession(goivy.NewConfig(), "test-view-source-located")
 	s.FilePath = "sample.ivy"

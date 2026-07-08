@@ -139,9 +139,12 @@ describe('graphRuntime', () => {
     const styleFor = (style, selector) => style.find((entry) => entry.selector === selector)?.style || {};
 
     expect(styleFor(ARG_STYLE, 'edge')['text-wrap']).toBe('wrap');
+    expect(styleFor(ARG_STYLE, 'edge').content).toBeUndefined();
+    expect(styleFor(ARG_STYLE, 'edge[label]').content).toBe('data(label)');
     expect(styleFor(ARG_STYLE, 'edge')['text-max-width']).toBeUndefined();
     expect(styleFor(ARG_STYLE, 'edge[text_max_width]')['text-max-width']).toBe('data(text_max_width)');
-    expect(styleFor(CONCEPT_STYLE, 'edge')['content']).toBe('data(label)');
+    expect(styleFor(CONCEPT_STYLE, 'edge').content).toBeUndefined();
+    expect(styleFor(CONCEPT_STYLE, 'edge[label]').content).toBe('data(label)');
     expect(styleFor(CONCEPT_STYLE, 'edge')['text-wrap']).toBe('wrap');
     expect(styleFor(CONCEPT_STYLE, 'edge')['text-max-width']).toBeUndefined();
     expect(styleFor(CONCEPT_STYLE, 'edge[text_max_width]')['text-max-width']).toBe('data(text_max_width)');

@@ -4,6 +4,7 @@ package webui
 
 import (
 	"encoding/json"
+	"fmt"
 	goivy "github.com/glycerine/ivy/goivy"
 	"os"
 	"path/filepath"
@@ -37,14 +38,235 @@ func TestAnalysisGraphUISetMode(t *testing.T) {
 }
 
 func TestARGTransitionDisplayLabelTreatsGoPointerTypeLabelAsGeneric(t *testing.T) {
-	action := goivy.NewCallActionOn(goivy.NewActionsConfig(), goivy.NewConst("ext:connect", goivy.TopS))
-	tr := goivy.Transition{
-		Op:    action,
-		Label: "*goivy.LogicSequence@0x108e500",
+	mod := goivy.New()
+	action := goivy.NewSequence()
+	action.SetLabel("*goivy.LogicSequence@0xdb35e0")
+	mod.Actions.Set("ext:connect", action)
+
+	ag := goivy.NewAnalysisGraph(mod)
+	pre := goivy.NewState(mod, goivy.TrueClauses(nil))
+	post := goivy.NewState(mod, goivy.TrueClauses(nil))
+	ag.Add(pre, nil)
+	ag.Add(post, goivy.NewActionApp(action, pre))
+	tr := ag.Transitions[0]
+	if tr.ActionName != "ext:connect" {
+		t.Fatalf("transition ActionName = %q, want ext:connect", tr.ActionName)
 	}
 	if got := argTransitionDisplayLabel(tr); got != "connect" {
 		t.Fatalf("argTransitionDisplayLabel() = %q, want %q", got, "connect")
 	}
+}
+
+func TestARGTransitionDisplayLabelNeverReturnsGoPointerTypeLabel(t *testing.T) {
+	tr := goivy.Transition{ActionName: "*goivy.LogicSequence@0xdb35e0", Label: "*goivy.LogicSequence@0xdb35e0"}
+	requireARGTransitionLabelPanic(t, "Go implementation", tr)
+}
+
+func TestARGTransitionDisplayLabelPanicsOnEmptyEdgeLabel(t *testing.T) {
+	requireARGTransitionLabelPanic(t, "missing canonical action name", goivy.Transition{})
+}
+
+func TestARGTransitionDisplayLabelPanicsOnSequenceEdgeLabel(t *testing.T) {
+	requireARGTransitionLabelPanic(t, "internal action name", goivy.Transition{ActionName: "sequence", Label: "sequence"})
+}
+
+func requireARGTransitionLabelPanic(t *testing.T, want string, tr goivy.Transition) {
+	t.Helper()
+	defer func() {
+		got := recover()
+		if got == nil {
+			t.Fatalf("argTransitionDisplayLabel(%#v) did not panic", tr)
+		}
+		if msg := fmt.Sprint(got); !strings.Contains(msg, want) {
+			t.Fatalf("argTransitionDisplayLabel panic = %q, want substring %q", msg, want)
+		}
+	}()
+	_ = argTransitionDisplayLabel(tr)
+}
+
+func TestARGTransitionDisplayLabelNeverReturnsEmptyForActionEdge(t *testing.T) {
+	mod := goivy.New()
+	action := goivy.NewSequence()
+	action.SetLabel("*goivy.LogicSequence@0xdb35e0")
+	mod.Actions.Set("ext:connect", action)
+
+	ag := goivy.NewAnalysisGraph(mod)
+	pre := goivy.NewState(mod, goivy.TrueClauses(nil))
+	post := goivy.NewState(mod, goivy.TrueClauses(nil))
+	ag.Add(pre, nil)
+	ag.Add(post, goivy.NewActionApp(action, pre))
+
+	gs := ArtToGraphState(ag)
+	if len(gs.Transitions) != 1 {
+		t.Fatalf("expected 1 transition, got %d", len(gs.Transitions))
+	}
+	got := gs.Transitions[0].Label
+	if got != "connect" {
+		t.Fatalf("reachability graph edge label = %q, want %q", got, "connect")
+	}
+	if strings.Contains(got, "goivy.") || strings.Contains(got, "@0x") {
+		t.Fatalf("argTransitionDisplayLabel() leaked Go implementation label %q", got)
+	}
+}
+
+func TestArtToGraphStateCanonicalizesPointerActionNameFromOp(t *testing.T) {
+	mod := goivy.New()
+	action := goivy.NewSequence()
+	action.SetLabel("*goivy.LogicSequence@0xdb35e0")
+	mod.Actions.Set("ext:connect", action)
+
+	ag := goivy.NewAnalysisGraph(mod)
+	pre := goivy.NewState(mod, goivy.TrueClauses(nil))
+	post := goivy.NewState(mod, goivy.TrueClauses(nil))
+	ag.Add(pre, nil)
+	ag.Add(post, nil)
+	ag.Transitions = append(ag.Transitions, goivy.Transition{
+		Pre:        pre,
+		Op:         action,
+		ActionName: "*goivy.LogicSequence@0xdb35e0",
+		Label:      "*goivy.LogicSequence@0xdb35e0",
+		Post:       post,
+	})
+
+	gs := ArtToGraphState(ag)
+	if len(gs.Transitions) != 1 {
+		t.Fatalf("expected 1 transition, got %d", len(gs.Transitions))
+	}
+	if got := gs.Transitions[0].Label; got != "connect" {
+		t.Fatalf("reachability graph edge label = %q, want connect", got)
+	}
+	if got := ag.Transitions[0].ActionName; got != "ext:connect" {
+		t.Fatalf("canonical transition ActionName = %q, want ext:connect", got)
+	}
+}
+
+func TestArtToGraphStateCanonicalizesPointerNamedWrappedSequenceTransition(t *testing.T) {
+	mod := goivy.New()
+	action := goivy.NewAssumeAction(goivy.True)
+	mod.Actions.Set("ext:connect", action)
+	wrapper := goivy.NewSequence(action, goivy.NewReturnAction())
+	wrapper.SetLabel("*goivy.LogicSequence@0xdeb400")
+
+	ag := goivy.NewAnalysisGraph(mod)
+	pre := goivy.NewState(mod, goivy.TrueClauses(nil))
+	post := goivy.NewState(mod, goivy.TrueClauses(nil))
+	ag.Add(pre, nil)
+	ag.Add(post, nil)
+	ag.Transitions = append(ag.Transitions, goivy.Transition{
+		Pre:        pre,
+		Op:         wrapper,
+		ActionName: "*goivy.LogicSequence@0xdeb400",
+		Label:      "*goivy.LogicSequence@0xdeb400",
+		Post:       post,
+	})
+
+	gs := ArtToGraphState(ag)
+	if len(gs.Transitions) != 1 {
+		t.Fatalf("expected 1 transition, got %d", len(gs.Transitions))
+	}
+	if got := gs.Transitions[0].Label; got != "connect" {
+		t.Fatalf("reachability graph edge label = %q, want connect", got)
+	}
+	if got := ag.Transitions[0].ActionName; got != "ext:connect" {
+		t.Fatalf("canonical transition ActionName = %q, want ext:connect", got)
+	}
+}
+
+func TestPDRCheckClientServerARGTransitionsHaveModelActionLabels(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-pdr-client-server-action-labels")
+	if err := s.LoadFileContent("client_server_example.ivy", readClientServerExample(t)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	result := s.RunCheck("pdr")
+	if result.Result == "error" {
+		t.Fatalf("RunCheck pdr error: %s", result.Message)
+	}
+	if s.AGUI == nil || s.AGUI.AG == nil {
+		t.Fatal("RunCheck pdr did not leave an ARG graph")
+	}
+	state := ArtToGraphState(s.AGUI.AG)
+	if len(state.Transitions) == 0 {
+		t.Fatal("PDR ARG has no transitions")
+	}
+	assertARGTransitionLabelsDrawnFromModel(t, state.Transitions, s.CompiledModule)
+}
+
+func TestARGTransitionDisplayLabelIsDrawnFromModelActionNames(t *testing.T) {
+	mod := goivy.New()
+	action := goivy.NewSequence()
+	action.SetLabel("sequence")
+	mod.Actions.Set("ext:connect", action)
+
+	ag := goivy.NewAnalysisGraph(mod)
+	pre := goivy.NewState(mod, goivy.TrueClauses(nil))
+	post := goivy.NewState(mod, goivy.TrueClauses(nil))
+	ag.Add(pre, nil)
+	ag.Add(post, goivy.NewActionApp(action, pre))
+
+	gs := ArtToGraphState(ag)
+	if len(gs.Transitions) != 1 {
+		t.Fatalf("expected 1 transition, got %d", len(gs.Transitions))
+	}
+	assertARGTransitionLabelsDrawnFromModel(t, gs.Transitions, mod)
+}
+
+func assertARGTransitionLabelsDrawnFromModel(t *testing.T, transitions []WebUIARGTransition, mod *goivy.Module) {
+	t.Helper()
+	modelLabels := modelActionDisplayLabels(mod)
+	if len(modelLabels) == 0 {
+		t.Fatal("model has no action labels to compare against")
+	}
+	for _, tr := range transitions {
+		assertARGTransitionLabelDrawnFromModel(t, tr.Label, modelLabels)
+	}
+}
+
+func assertARGPayloadTransitionEdgeLabelsDrawnFromModel(t *testing.T, payload map[string]interface{}, mod *goivy.Module) {
+	t.Helper()
+	modelLabels := modelActionDisplayLabels(mod)
+	if len(modelLabels) == 0 {
+		t.Fatal("model has no action labels to compare against")
+	}
+	edges := transitionEdgeDataFromPayload(t, payload)
+	if len(edges) == 0 {
+		t.Fatalf("ARG payload has no transition edges: %#v", payload["elements"])
+	}
+	for _, edge := range edges {
+		label, _ := edge["label"].(string)
+		assertARGTransitionLabelDrawnFromModel(t, label, modelLabels)
+		if got, _ := edge["short_info"].(string); got != label {
+			t.Fatalf("ARG edge short_info = %q, want %q; edge=%#v", got, label, edge)
+		}
+		if got, _ := edge["long_info"].(string); got != label {
+			t.Fatalf("ARG edge long_info = %q, want %q; edge=%#v", got, label, edge)
+		}
+	}
+}
+
+func assertARGTransitionLabelDrawnFromModel(t *testing.T, label string, modelLabels map[string]bool) {
+	t.Helper()
+	if label == "sequence" {
+		t.Fatalf("reachability graph edge label %q is an internal action node name, not a model action label; model labels=%#v", label, modelLabels)
+	}
+	if strings.Contains(label, "goivy.") || strings.Contains(label, "@0x") {
+		t.Fatalf("reachability graph edge label %q leaked a Go implementation detail; model labels=%#v", label, modelLabels)
+	}
+	if strings.Contains(label, "call ext") || strings.Contains(label, "call:ext") {
+		t.Fatalf("reachability graph edge label %q kept a generic external-call label; model labels=%#v", label, modelLabels)
+	}
+	if !modelLabels[label] {
+		t.Fatalf("reachability graph edge label = %q, want one of the model action labels %#v", label, modelLabels)
+	}
+}
+
+func modelActionDisplayLabels(mod *goivy.Module) map[string]bool {
+	labels := make(map[string]bool)
+	for name := range mod.Actions.All() {
+		if display := cleanARGActionDisplayName(name); display != "" {
+			labels[display] = true
+		}
+	}
+	return labels
 }
 
 func TestAnalysisGraphUIMenus(t *testing.T) {

@@ -332,11 +332,46 @@ async function callWasm(request, retryOnExited = true) {
     }
     throw error;
   }
-  const response = JSON.parse(rawResponse);
+  let response;
+  try {
+    response = parseWasmResponse(rawResponse);
+  } catch (error) {
+    if (retryOnExited && isMissingWasmResponse(rawResponse)) {
+      const runtimeError = wasmRuntimeError || error;
+      reportWasmRuntimeCrash(runtimeError, `missing dispatcher response while handling ${request.type || 'request'}`);
+      discardWasmRuntime(runtimeError);
+      return callWasm(request, false);
+    }
+    throw error;
+  }
   if (response.type === 'error') {
     throw new Error(response.error || 'goivy webengine wasm failed');
   }
   return response.value;
+}
+
+function parseWasmResponse(rawResponse) {
+  if (rawResponse === undefined) {
+    throw new Error('goivy webengine wasm returned no response');
+  }
+  if (rawResponse === null) {
+    throw new Error('goivy webengine wasm returned null response');
+  }
+  if (typeof rawResponse !== 'string') {
+    throw new Error(`goivy webengine wasm returned a non-string response: ${typeof rawResponse}`);
+  }
+  if (rawResponse.trim() === '') {
+    throw new Error('goivy webengine wasm returned an empty response');
+  }
+  try {
+    return JSON.parse(rawResponse);
+  } catch (error) {
+    throw new Error(`goivy webengine wasm returned invalid JSON: ${errorMessage(error)}`);
+  }
+}
+
+function isMissingWasmResponse(rawResponse) {
+  return rawResponse === undefined || rawResponse === null || rawResponse === '';
 }
 
 function isGoProgramExited(error) {

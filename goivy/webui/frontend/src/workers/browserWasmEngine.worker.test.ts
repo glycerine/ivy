@@ -95,6 +95,46 @@ function installFakeGoRuntime() {
   });
 }
 
+function installNoResponseGoRuntime() {
+  (globalThis as any).__fakeGoRunCount = 0;
+  vi.stubGlobal('Go', class FakeGo {
+    argv = [];
+    env = {};
+    importObject = {};
+
+    run() {
+      (globalThis as any).__fakeGoRunCount += 1;
+      (globalThis as any).goivyWebEngineDispatch = () => undefined;
+      return new Promise(() => {});
+    }
+  });
+}
+
+function stubWasmRuntimeAssets() {
+  vi.stubGlobal('fetch', vi.fn(async (url) => {
+    const text = String(url);
+    if (text.endsWith('include-tree.json')) {
+      return response(JSON.stringify({ root: '/include', files: [] }), {
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    if (text.endsWith('z3-471-api.js')) {
+      return response('function initZ3() { return Promise.resolve({}); }');
+    }
+    if (text.endsWith('goivy-webengine.wasm')) {
+      return response(new Uint8Array([0]), {
+        headers: { 'Content-Type': 'application/wasm' },
+      });
+    }
+    throw new Error(`unexpected fetch: ${text}`);
+  }));
+  vi.stubGlobal('WebAssembly', {
+    ...WebAssembly,
+    instantiateStreaming: vi.fn(async () => ({ instance: { exports: { mem: {} } } })),
+    instantiate: vi.fn(async () => ({ instance: { exports: { mem: {} } } })),
+  });
+}
+
 async function flushAsync() {
   await Promise.resolve();
   await Promise.resolve();
@@ -110,28 +150,7 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
   it('restarts the Go runtime instead of reusing a dispatcher after wasm_exec reports exit', async () => {
     installFakeGoRuntime();
     const harness = installWorkerHarness();
-    vi.stubGlobal('fetch', vi.fn(async (url) => {
-      const text = String(url);
-      if (text.endsWith('include-tree.json')) {
-        return response(JSON.stringify({ root: '/include', files: [] }), {
-          headers: { 'Content-Type': 'application/json' },
-        });
-      }
-      if (text.endsWith('z3-471-api.js')) {
-        return response('function initZ3() { return Promise.resolve({}); }');
-      }
-      if (text.endsWith('goivy-webengine.wasm')) {
-        return response(new Uint8Array([0]), {
-          headers: { 'Content-Type': 'application/wasm' },
-        });
-      }
-      throw new Error(`unexpected fetch: ${text}`);
-    }));
-    vi.stubGlobal('WebAssembly', {
-      ...WebAssembly,
-      instantiateStreaming: vi.fn(async () => ({ instance: { exports: { mem: {} } } })),
-      instantiate: vi.fn(async () => ({ instance: { exports: { mem: {} } } })),
-    });
+    stubWasmRuntimeAssets();
 
     await import('./browserWasmEngine.worker.js');
     (globalThis as any).self = undefined;
@@ -156,5 +175,36 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
     expect(crashEvent?.event.data.message).toContain('goivy webengine wasm exited');
     expect(crashEvent?.event.data.recent_output).toContain('panic: fake Go wasm crash');
     expect(crashEvent?.event.data.recent_output).toContain('fake stack frame');
+  });
+
+  it('reports missing wasm dispatcher responses without JSON.parse undefined noise', async () => {
+    installNoResponseGoRuntime();
+    const harness = installWorkerHarness();
+    stubWasmRuntimeAssets();
+
+    await import('./browserWasmEngine.worker.js');
+    (globalThis as any).self = undefined;
+
+    await expect(harness.send({
+      type: 'init',
+      requestId: 'init-1',
+      assetBaseUrl: '/static/wasm/',
+      includeRoot: '/include',
+    })).resolves.toEqual({ ok: true });
+
+    let thrown = null;
+    try {
+      await harness.send({
+        type: 'new-session',
+        requestId: 'new-session-1',
+        projectId: 'webui',
+      });
+    } catch (error) {
+      thrown = error;
+    }
+    expect(thrown).toBeInstanceOf(Error);
+    expect((thrown as Error).message).toContain('goivy webengine wasm returned no response');
+    expect((thrown as Error).message).not.toContain('"undefined" is not valid JSON');
+    expect((globalThis as any).__fakeGoRunCount).toBe(2);
   });
 });

@@ -725,6 +725,12 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), "edge")["text-max-width"]; got != "" {
 		t.Fatalf("base concept edge text-max-width = %q, want no data mapper on broad selector", got)
 	}
+	if got := cyStyleForTest(ConceptStyle(), "edge")["content"]; got != "" {
+		t.Fatalf("base concept edge content = %q, want no label mapper on broad selector", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), "edge[label]")["content"]; got != "data(label)" {
+		t.Fatalf("concept edge[label] content = %q, want data(label)", got)
+	}
 	if got := cyStyleForTest(ConceptStyle(), "edge[text_max_width]")["text-max-width"]; got != "data(text_max_width)" {
 		t.Fatalf("concept edge[text_max_width] text-max-width = %q, want data(text_max_width)", got)
 	}
@@ -746,6 +752,12 @@ func TestARGStyleJSON(t *testing.T) {
 	}
 	if got := cyStyleForTest(ARGStyle(), "edge")["text-max-width"]; got != "" {
 		t.Fatalf("base ARG edge text-max-width = %q, want no data mapper on broad selector", got)
+	}
+	if got := cyStyleForTest(ARGStyle(), "edge")["content"]; got != "" {
+		t.Fatalf("base ARG edge content = %q, want no label mapper on broad selector", got)
+	}
+	if got := cyStyleForTest(ARGStyle(), "edge[label]")["content"]; got != "data(label)" {
+		t.Fatalf("ARG edge[label] content = %q, want data(label)", got)
 	}
 	if got := cyStyleForTest(ARGStyle(), "edge[text_max_width]")["text-max-width"]; got != "data(text_max_width)" {
 		t.Fatalf("ARG edge[text_max_width] text-max-width = %q, want data(text_max_width)", got)

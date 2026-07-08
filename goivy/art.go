@@ -8,6 +8,7 @@ package goivy
 import (
 	"fmt"
 	"log"
+	"reflect"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -170,9 +171,10 @@ type Provenance interface {
 // ActionApp records that a state was derived by applying an action to a
 // predecessor state.
 type ActionApp struct {
-	Rep      interface{} // either an actions.ActionsAction or a string (action name)
-	Args     []*State
-	Subgraph *AnalysisGraph // cached decomposition subgraph
+	Rep        interface{} // either an actions.ActionsAction or a string (action name)
+	ActionName string      // canonical model action name, when this is an action edge
+	Args       []*State
+	Subgraph   *AnalysisGraph // cached decomposition subgraph
 }
 
 func (*ActionApp) provenanceMarker() {}
@@ -185,7 +187,14 @@ func IsActionApp(p Provenance) bool {
 
 // NewActionApp creates an ActionApp provenance.
 func NewActionApp(rep interface{}, args ...*State) *ActionApp {
-	return &ActionApp{Rep: rep, Args: args}
+	app := &ActionApp{Rep: rep, Args: args}
+	switch rep := rep.(type) {
+	case string:
+		app.ActionName = actionNameCandidate(rep)
+	case *Const:
+		app.ActionName = actionNameCandidate(rep.Name)
+	}
+	return app
 }
 
 // StateJoin records that a state was derived by joining two or more states.
@@ -294,10 +303,16 @@ func (ac *AC) NewState(clauses *Clauses, exact bool, prov Provenance) *State {
 
 // Transition records a graph edge: prestate --(action/label)--> poststate.
 type Transition struct {
-	Pre   *State
-	Op    ActionsAction // may be nil for joins
-	Label string
-	Post  *State
+	Pre        *State
+	Op         ActionsAction // may be nil for joins
+	ActionName string        // canonical model action name for non-join action edges
+	Label      string
+	Post       *State
+}
+
+// IsJoin reports whether this transition is a join edge instead of an action edge.
+func (t Transition) IsJoin() bool {
+	return t.Op == nil && t.ActionName == "" && t.Label == "join"
 }
 
 // -----------------------------------------------------------------------
@@ -325,6 +340,7 @@ type AnalysisGraph struct {
 	PVars         []Expr
 	StateGraphs   []interface{}
 	Actions       *InsMap[string, Action]
+	ActionNames   map[ActionsAction][]string
 	Predicates    map[string]Node
 	Assertions    []*LabeledFormula
 	Mixins        *InsMap[string, []MixinDef]
@@ -349,6 +365,7 @@ func NewAnalysisGraph(mod *Module, pvars ...Expr) *AnalysisGraph {
 		PVars:         pvars,
 		StateGraphs:   nil,
 		Actions:       mod.Actions,
+		ActionNames:   make(map[ActionsAction][]string),
 		Predicates:    mod.Predicates,
 		Assertions:    mod.Assertions,
 		Mixins:        mod.Mixins,
@@ -363,6 +380,361 @@ func NewAnalysisGraph(mod *Module, pvars ...Expr) *AnalysisGraph {
 // Context returns a new AC action context for this graph.
 func (ag *AnalysisGraph) Context() *AC {
 	return NewAC(ag, false)
+}
+
+func (ag *AnalysisGraph) actionByName(name string) (ActionsAction, bool) {
+	name = strings.TrimSpace(name)
+	if ag == nil || ag.Actions == nil || name == "" {
+		return nil, false
+	}
+	action, ok := ag.Actions.Get2(name)
+	if !ok || action == nil {
+		return nil, false
+	}
+	return action, true
+}
+
+// ActionNameForActionInModule returns the canonical model action name for an
+// action object in mod when the object identifies exactly one model action.
+func ActionNameForActionInModule(mod *Module, action ActionsAction) (string, bool) {
+	return NewAnalysisGraph(mod).actionNameForAction(action)
+}
+
+func (ag *AnalysisGraph) actionNameForAction(action ActionsAction) (string, bool) {
+	name, ok, ambiguous := ag.actionNameForActionDetailed(action)
+	return name, ok && !ambiguous
+}
+
+func (ag *AnalysisGraph) actionNamesForAction(action ActionsAction) ([]string, bool) {
+	if names, ok := ag.registeredActionNames(action); ok {
+		return names, true
+	}
+	if fail, ok := action.(*FailAction); ok {
+		return ag.actionNamesForAction(fail.Inner)
+	}
+	if name, ok := ag.actionNameForAction(action); ok {
+		return []string{name}, true
+	}
+	switch a := action.(type) {
+	case *LogicEnvAction:
+		return ag.actionNamesForBranches(a.Branches)
+	case *LogicChoiceAction:
+		return ag.actionNamesForBranches(a.Branches)
+	}
+	return nil, false
+}
+
+func (ag *AnalysisGraph) actionNameForActionDetailed(action ActionsAction) (name string, ok bool, ambiguous bool) {
+	if ag == nil || ag.Actions == nil || action == nil {
+		return "", false, false
+	}
+	if names, ok := ag.registeredActionNames(action); ok {
+		if len(names) == 1 {
+			return names[0], true, false
+		}
+		return "", false, true
+	}
+	if fail, ok := action.(*FailAction); ok {
+		return ag.actionNameForActionDetailed(fail.Inner)
+	}
+	if labeled, ok := action.(interface{ GetLabel() string }); ok {
+		if name, ok := ag.actionNameFromActionLabel(labeled.GetLabel()); ok {
+			return name, true, false
+		}
+	}
+	for name, candidate := range ag.Actions.All() {
+		if !usableModelActionName(name) {
+			continue
+		}
+		if sameActionIdentity(candidate, action) {
+			return name, true, false
+		}
+	}
+	for candidateName, candidate := range ag.Actions.All() {
+		if !usableModelActionName(candidateName) {
+			continue
+		}
+		if !sameActionStructure(candidate, action) {
+			continue
+		}
+		if name != "" && name != candidateName {
+			return "", false, true
+		}
+		name = candidateName
+	}
+	if name != "" {
+		return name, true, false
+	}
+	return ag.actionNameForWrapper(action)
+}
+
+func (ag *AnalysisGraph) actionNameForWrapper(action ActionsAction) (name string, ok bool, ambiguous bool) {
+	switch a := action.(type) {
+	case *LogicEnvAction:
+		return ag.actionNameForActionBranches(a.Branches)
+	case *LogicChoiceAction:
+		return ag.actionNameForActionBranches(a.Branches)
+	case *LogicSequence:
+		if name, ok := ag.actionNameFromActionLabel(a.GetLabel()); ok {
+			return name, true, false
+		}
+		return ag.actionNameForActionBranches(a.Elems)
+	case *LogicCallAction:
+		if name, ok := ag.actionNameFromActionLabel(a.CalleeName()); ok {
+			return name, true, false
+		}
+	}
+	return "", false, false
+}
+
+func (ag *AnalysisGraph) actionNameForActionBranches(branches []Expr) (name string, ok bool, ambiguous bool) {
+	for _, branch := range branches {
+		action, ok := branch.(ActionsAction)
+		if !ok || action == nil {
+			continue
+		}
+		branchName, branchOK, branchAmbiguous := ag.actionNameForActionDetailed(action)
+		if branchAmbiguous {
+			return "", false, true
+		}
+		if !branchOK {
+			continue
+		}
+		if name != "" && name != branchName {
+			return "", false, true
+		}
+		name = branchName
+	}
+	return name, name != "", false
+}
+
+func (ag *AnalysisGraph) actionNamesForBranches(branches []Expr) ([]string, bool) {
+	var names []string
+	seen := make(map[string]bool)
+	for _, branch := range branches {
+		action, ok := branch.(ActionsAction)
+		if !ok || action == nil {
+			continue
+		}
+		name, nameOK, ambiguous := ag.actionNameForActionDetailed(action)
+		if ambiguous || !nameOK {
+			return nil, false
+		}
+		if !seen[name] {
+			seen[name] = true
+			names = append(names, name)
+		}
+	}
+	return names, len(names) > 0
+}
+
+func (ag *AnalysisGraph) actionNameFromActionLabel(label string) (string, bool) {
+	label = strings.TrimSpace(label)
+	if !usableModelActionName(label) {
+		return "", false
+	}
+	if _, ok := ag.actionByName(label); ok {
+		return label, true
+	}
+	if strings.HasPrefix(label, "ext:") {
+		return "", false
+	}
+	extended := "ext:" + label
+	if _, ok := ag.actionByName(extended); ok {
+		return extended, true
+	}
+	return "", false
+}
+
+func (ag *AnalysisGraph) RegisterActionNames(action ActionsAction, names []string) {
+	if ag == nil || action == nil || len(names) == 0 {
+		return
+	}
+	if ag.ActionNames == nil {
+		ag.ActionNames = make(map[ActionsAction][]string)
+	}
+	seen := make(map[string]bool)
+	var resolved []string
+	for _, name := range names {
+		if canonical, ok := ag.actionNameFromActionLabel(name); ok && !seen[canonical] {
+			seen[canonical] = true
+			resolved = append(resolved, canonical)
+		}
+	}
+	if len(resolved) > 0 {
+		ag.ActionNames[action] = resolved
+	}
+}
+
+func (ag *AnalysisGraph) registeredActionNames(action ActionsAction) ([]string, bool) {
+	if ag == nil || action == nil || len(ag.ActionNames) == 0 {
+		return nil, false
+	}
+	names := ag.ActionNames[action]
+	if len(names) == 0 {
+		return nil, false
+	}
+	return append([]string(nil), names...), true
+}
+
+func actionNameCandidate(name string) string {
+	name = strings.TrimSpace(name)
+	if actionNameLooksLikeGoImplementation(name) {
+		return ""
+	}
+	return name
+}
+
+func usableModelActionName(name string) bool {
+	name = strings.TrimSpace(name)
+	return name != "" &&
+		!strings.EqualFold(name, "sequence") &&
+		!strings.EqualFold(name, "ext") &&
+		!strings.EqualFold(name, "call ext") &&
+		!strings.EqualFold(name, "call:ext") &&
+		!actionNameLooksLikeGoImplementation(name)
+}
+
+func actionNameLooksLikeGoImplementation(name string) bool {
+	return strings.Contains(name, "goivy.") || strings.Contains(name, "@0x")
+}
+
+func sameActionIdentity(a, b ActionsAction) bool {
+	if a == nil || b == nil {
+		return false
+	}
+	av := reflect.ValueOf(a)
+	bv := reflect.ValueOf(b)
+	if !av.IsValid() || !bv.IsValid() || av.Type() != bv.Type() {
+		return false
+	}
+	if av.Kind() == reflect.Ptr {
+		if av.IsNil() || bv.IsNil() {
+			return false
+		}
+		return av.Pointer() == bv.Pointer()
+	}
+	if av.Type().Comparable() {
+		return a == b
+	}
+	return false
+}
+
+func sameActionStructure(a, b ActionsAction) (same bool) {
+	if a == nil || b == nil {
+		return false
+	}
+	defer func() {
+		if recover() != nil {
+			same = false
+		}
+	}()
+	return a.Equal(b) || b.Equal(a)
+}
+
+func (ag *AnalysisGraph) canonicalActionApp(e *ActionApp) (ActionsAction, string) {
+	if e == nil {
+		panic("art.Add: ActionApp is nil")
+	}
+	actionName := actionNameCandidate(e.ActionName)
+	var repAction ActionsAction
+	switch rep := e.Rep.(type) {
+	case ActionsAction:
+		repAction = rep
+	case string:
+		if actionName == "" {
+			actionName = actionNameCandidate(rep)
+		}
+	case *Const:
+		if actionName == "" {
+			actionName = actionNameCandidate(rep.Name)
+		}
+	case nil:
+		panic("art.Add: ActionApp rep is nil")
+	default:
+		panic(fmt.Sprintf("art.Add: unsupported ActionApp rep type %T", rep))
+	}
+
+	if actionName != "" {
+		namedAction, ok := ag.actionByName(actionName)
+		if !ok {
+			panic(fmt.Sprintf("art.Add: action %q not found in actions", actionName))
+		}
+		if repAction == nil {
+			repAction = namedAction
+		}
+		e.ActionName = actionName
+		return repAction, actionName
+	}
+
+	resolvedName, ok, ambiguous := ag.actionNameForActionDetailed(repAction)
+	if ambiguous {
+		panic(fmt.Sprintf("art.Add: action object %T matches multiple model actions", repAction))
+	}
+	if !ok {
+		panic(fmt.Sprintf("art.Add: action object %T has no canonical model action name", repAction))
+	}
+	e.ActionName = resolvedName
+	return repAction, resolvedName
+}
+
+// CanonicalizeTransitionActionNames repairs transition identity from the
+// owning graph's action map. It is intentionally strict: unresolved non-join
+// action edges remain invalid so the web/UI guardrail can panic with context.
+func (ag *AnalysisGraph) CanonicalizeTransitionActionNames() {
+	if ag == nil || len(ag.Transitions) == 0 {
+		return
+	}
+	out := make([]Transition, 0, len(ag.Transitions))
+	for _, tr := range ag.Transitions {
+		if tr.IsJoin() {
+			out = append(out, tr)
+			continue
+		}
+		names, ok := ag.canonicalTransitionActionNames(tr)
+		if !ok {
+			out = append(out, tr)
+			continue
+		}
+		for _, name := range names {
+			next := tr
+			next.ActionName = name
+			next.Label = name
+			if action, ok := ag.actionByName(name); ok {
+				next.Op = action
+			}
+			out = append(out, next)
+		}
+	}
+	ag.Transitions = out
+}
+
+func (ag *AnalysisGraph) canonicalTransitionActionNames(tr Transition) ([]string, bool) {
+	for _, name := range []string{tr.ActionName, tr.PostActionName(), tr.Label} {
+		if ag.validTransitionActionName(name) {
+			return []string{strings.TrimSpace(name)}, true
+		}
+	}
+	if tr.Op != nil {
+		return ag.actionNamesForAction(tr.Op)
+	}
+	return nil, false
+}
+
+func (ag *AnalysisGraph) validTransitionActionName(name string) bool {
+	name = strings.TrimSpace(name)
+	if !usableModelActionName(name) {
+		return false
+	}
+	_, ok := ag.actionByName(name)
+	return ok
+}
+
+func (t Transition) PostActionName() string {
+	if t.Post == nil {
+		return ""
+	}
+	return t.Post.ActionName
 }
 
 // Add adds a state to the graph, assigning it an ID. If expr is non-nil,
@@ -384,27 +756,15 @@ func (ag *AnalysisGraph) Add(state *State, prov Provenance) {
 			if state.Pred == nil {
 				state.Pred = e.Args[0]
 			}
-			var action ActionsAction
-			var label string
-			switch rep := e.Rep.(type) {
-			case ActionsAction:
-				action = rep
-				label = LabelFromAction(rep)
-			case string:
-				label = rep
-				a, ok := ag.Actions.Get2(rep)
-				if !ok {
-					panic(fmt.Sprintf("art.Add: action %q not found in actions", rep))
-				}
-				if act, ok2 := a.(ActionsAction); ok2 {
-					action = act
-				}
-			}
+			action, actionName := ag.canonicalActionApp(e)
+			state.Action = action
+			state.ActionName = actionName
 			ag.Transitions = append(ag.Transitions, Transition{
-				Pre:   e.Args[0],
-				Op:    action,
-				Label: label,
-				Post:  state,
+				Pre:        e.Args[0],
+				Op:         action,
+				ActionName: actionName,
+				Label:      actionName,
+				Post:       state,
 			})
 		case *StateJoin:
 			for _, js := range e.Args {
@@ -443,17 +803,132 @@ func (ag *AnalysisGraph) Execute(checkPrecond bool, op ActionsAction, prestate *
 	if prestate == nil {
 		return nil, nil
 	}
-	poststate, err := ag.PostState(checkPrecond, op, prestate, abstractor)
+	rawLabel := strings.TrimSpace(label)
+	actionName := ""
+	if rawLabel != "" {
+		if name, ok := ag.actionNameFromActionLabel(rawLabel); ok {
+			actionName = name
+		} else if usableModelActionName(rawLabel) {
+			return nil, fmt.Errorf("art.Execute: action %q not found", rawLabel)
+		}
+	}
+	executionActionName := actionName
+	if executionActionName == "" && rawLabel != "" {
+		if _, ok := ag.actionByName(rawLabel); ok {
+			executionActionName = rawLabel
+		}
+	}
+	var transitionActionNames []string
+	if actionName != "" {
+		if _, ok := ag.actionByName(actionName); !ok {
+			return nil, fmt.Errorf("art.Execute: action %q not found", actionName)
+		}
+		transitionActionNames = []string{actionName}
+	} else {
+		var ok bool
+		transitionActionNames, ok = ag.actionNamesForAction(op)
+		if !ok {
+			if !isAggregateAction(op) {
+				return nil, fmt.Errorf("art.Execute: action object %T has no canonical model action name", op)
+			}
+			return ag.executeStateOnly(checkPrecond, op.Name(), op, prestate, abstractor)
+		}
+		if len(transitionActionNames) == 1 {
+			actionName = transitionActionNames[0]
+		} else {
+			actionName = op.Name()
+		}
+	}
+	if executionActionName == "" {
+		executionActionName = actionName
+	}
+	poststate, err := ag.postStateNamed(checkPrecond, executionActionName, op, prestate, abstractor)
 	if err != nil {
 		return nil, err
 	}
-	var exprRep interface{} = op
-	if label != "" {
-		exprRep = label
+	expr := NewActionApp(op, prestate)
+	if len(transitionActionNames) == 1 {
+		expr.ActionName = transitionActionNames[0]
+		ag.Add(poststate, expr)
+	} else {
+		ag.addStateWithActionTransitions(poststate, expr, op, prestate, transitionActionNames)
 	}
-	expr := NewActionApp(exprRep, prestate)
-	ag.Add(poststate, expr)
 	return poststate, nil
+}
+
+func (ag *AnalysisGraph) executeStateOnly(checkPrecond bool, actionName string, op ActionsAction, prestate *State, abstractor Abstractor) (*State, error) {
+	poststate, err := ag.postStateNamed(checkPrecond, actionName, op, prestate, abstractor)
+	if err != nil {
+		return nil, err
+	}
+	ag.addStateOnly(poststate, NewActionApp(op, prestate))
+	return poststate, nil
+}
+
+func isAggregateAction(action ActionsAction) bool {
+	switch action.(type) {
+	case *LogicEnvAction, *LogicChoiceAction:
+		return true
+	default:
+		return false
+	}
+}
+
+func (ag *AnalysisGraph) addStateWithActionTransitions(state *State, expr *ActionApp, op ActionsAction, prestate *State, actionNames []string) {
+	ag.addStateOnly(state, expr)
+	if prestate != nil && state.Pred == nil {
+		state.Pred = prestate
+	}
+	state.Action = op
+	for _, actionName := range actionNames {
+		action, ok := ag.actionByName(actionName)
+		if !ok {
+			panic(fmt.Sprintf("art.Execute: action %q not found while building transition", actionName))
+		}
+		ag.Transitions = append(ag.Transitions, Transition{
+			Pre:        prestate,
+			Op:         action,
+			ActionName: actionName,
+			Label:      actionName,
+			Post:       state,
+		})
+	}
+}
+
+func (ag *AnalysisGraph) addActionState(state *State, expr *ActionApp) {
+	if expr == nil {
+		ag.addStateOnly(state, nil)
+		return
+	}
+	if action, ok := expr.Rep.(ActionsAction); ok {
+		if actionNames, ok := ag.actionNamesForAction(action); ok {
+			if len(actionNames) == 1 {
+				expr.ActionName = actionNames[0]
+				ag.Add(state, expr)
+				return
+			}
+			var prestate *State
+			if len(expr.Args) > 0 {
+				prestate = expr.Args[0]
+			}
+			ag.addStateWithActionTransitions(state, expr, action, prestate, actionNames)
+			return
+		}
+		ag.addStateOnly(state, expr)
+		return
+	}
+	ag.Add(state, expr)
+}
+
+func (ag *AnalysisGraph) addStateOnly(state *State, prov Provenance) {
+	state.ID = len(ag.States)
+	if prov != nil {
+		state.Prov = prov
+		if aa, ok := prov.(*ActionApp); ok && len(aa.Args) > 0 && state.Pred == nil {
+			state.Pred = aa.Args[0]
+		}
+	}
+	ag.States = append(ag.States, state)
 }
 
 // ExecuteAction executes a named action from the graph's action map.
@@ -479,6 +954,14 @@ func (ag *AnalysisGraph) ExecuteAction(checkPrecond bool, name string, prestate 
 // When checkPrecond is true the action's precondition is checked; if it is
 // violated an error wrapping interp.IvyActionFailedError is returned.
 func (ag *AnalysisGraph) PostState(checkPrecond bool, op ActionsAction, preState *State, abstractor Abstractor) (*State, error) {
+	actionName := op.Name()
+	if resolvedName, ok := ag.actionNameForAction(op); ok {
+		actionName = resolvedName
+	}
+	return ag.postStateNamed(checkPrecond, actionName, op, preState, abstractor)
+}
+
+func (ag *AnalysisGraph) postStateNamed(checkPrecond bool, actionName string, op ActionsAction, preState *State, abstractor Abstractor) (*State, error) {
 	xtracer.Trace("art.PostState ENTER opName=%s", ActionTypeName(op))
 	xtracer.Trace("art.PostState calling GetUpdate type=%s", ActionTypeName(op))
 	interpPre := ArtToInterpState(preState)
@@ -489,13 +972,14 @@ func (ag *AnalysisGraph) PostState(checkPrecond bool, op ActionsAction, preState
 	//   1. Checks the precondition when checkPrecond is true
 	//   2. Handles moded-symbol renaming (compose_state_action logic)
 	//   3. Computes actions.ForwardImage
-	interpPost, err := ApplyAction(checkPrecond, nil, op.Name(), op, interpPre)
+	interpPost, err := ApplyAction(checkPrecond, nil, actionName, op, interpPre)
 	if err != nil {
 		return nil, err
 	}
 
 	s := InterpToArtState(interpPost)
 	s.Action = op
+	s.ActionName = actionName
 	if abstractor != nil {
 		abstractor.Abstract(s)
 	}
@@ -677,20 +1161,18 @@ func (ag *AnalysisGraph) ReplaceState(poststate, ps *State) {
 func (ag *AnalysisGraph) Recalculate(checkPrecond bool, t Transition, abstractor Abstractor) (*State, error) {
 	var ps *State
 	var err error
-	if t.Op == nil && t.Label == "join" {
+	if t.IsJoin() {
 		if t.Post.JoinOf != nil && len(t.Post.JoinOf) >= 2 {
 			ps = ag.JoinStates(t.Post.JoinOf[0], t.Post.JoinOf[1], abstractor)
 		} else {
 			ps = t.Post
 		}
 	} else {
-		if t.Label != "" {
-			if a, ok := ag.Actions.Get2(t.Label); ok {
-				if act, ok2 := a.(ActionsAction); ok2 {
-					ps, err = ag.PostState(checkPrecond, act, t.Pre, abstractor)
-					if err != nil {
-						return nil, err
-					}
+		if t.ActionName != "" {
+			if act, ok := ag.actionByName(t.ActionName); ok {
+				ps, err = ag.postStateNamed(checkPrecond, t.ActionName, act, t.Pre, abstractor)
+				if err != nil {
+					return nil, err
 				}
 			}
 		}
@@ -875,15 +1357,22 @@ func (ag *AnalysisGraph) CopyPath(state *State, other *AnalysisGraph, bound *int
 		}
 		pred := ag.CopyPath(state.Pred, other, nextBound)
 		var rep interface{}
+		var actionName string
 		if state.Prov != nil {
 			if aa, ok := state.Prov.(*ActionApp); ok {
 				rep = aa.Rep
+				actionName = aa.ActionName
 			}
+		}
+		if actionName == "" {
+			actionName = state.ActionName
 		}
 		if rep == nil {
 			rep = "unknown"
 		}
-		other.Add(otherState, NewActionApp(rep, pred))
+		expr := NewActionApp(rep, pred)
+		expr.ActionName = actionNameCandidate(actionName)
+		other.addActionState(otherState, expr)
 	} else {
 		other.Add(otherState, nil)
 	}
@@ -1159,25 +1648,15 @@ func (ag *AnalysisGraph) ConstructTransitionsFromExpressions() {
 			continue
 		}
 		prestate := aa.Args[0]
-		var action ActionsAction
-		var label string
-		switch rep := aa.Rep.(type) {
-		case ActionsAction:
-			action = rep
-			label = LabelFromAction(rep)
-		case string:
-			label = rep
-			if a, ok := ag.Actions.Get2(rep); ok {
-				if act, ok2 := a.(ActionsAction); ok2 {
-					action = act
-				}
-			}
-		}
+		action, actionName := ag.canonicalActionApp(aa)
+		state.Action = action
+		state.ActionName = actionName
 		ag.Transitions = append(ag.Transitions, Transition{
-			Pre:   prestate,
-			Op:    action,
-			Label: label,
-			Post:  state,
+			Pre:        prestate,
+			Op:         action,
+			ActionName: actionName,
+			Label:      actionName,
+			Post:       state,
 		})
 	}
 }
@@ -1419,13 +1898,16 @@ func (ag *AnalysisGraph) AsCyElements(dotLayout func(*CyElements) *CyElements) *
 		var label, info string
 		var classes []string
 
-		if t.Label == "join" {
+		if t.IsJoin() {
 			classes = []string{"transition_join"}
 			label = "join"
 			info = "join"
 		} else {
 			classes = []string{"transition_action"}
 			label = t.Label
+			if t.ActionName != "" {
+				label = PrettyActionName(t.ActionName)
+			}
 			if label == "" {
 				label = "(unlabeled)"
 			}
@@ -1753,13 +2235,13 @@ func artToInterpMemo(s *State, memo map[*State]*InterpState) *InterpState {
 	}
 	is.Universe = s.Universe
 	// Convert art.State.Prov (art.Provenance) → interp.InterpState.Expr (ast.Node)
-	is.Expr = provenanceToInterpExpr(s.Prov, s.Domain, memo)
+	is.Expr = provenanceToInterpExpr(s.Prov, s.Domain, s.ActionName, memo)
 	return is
 }
 
 // provenanceToInterpExpr converts an art.Provenance to an ast.Node
 // suitable for interp.InterpState.Expr.
-func provenanceToInterpExpr(prov Provenance, domain *Module, memo map[*State]*InterpState) Node {
+func provenanceToInterpExpr(prov Provenance, domain *Module, stateActionName string, memo map[*State]*InterpState) Node {
 	if prov == nil {
 		return nil
 	}
@@ -1771,7 +2253,7 @@ func provenanceToInterpExpr(prov Provenance, domain *Module, memo map[*State]*In
 	case *ActionApp:
 		if len(p.Args) > 0 {
 			interpPred := artToInterpMemo(p.Args[0], memo)
-			actionName := fmt.Sprintf("%v", p.Rep)
+			actionName := actionAppInterpName(p, domain, stateActionName)
 			return InterpActionApp(cfg, actionName, WrapState(interpPred))
 		}
 	case *StateJoin:
@@ -1786,6 +2268,30 @@ func provenanceToInterpExpr(prov Provenance, domain *Module, memo map[*State]*In
 		return acfg.NewOr(terms...)
 	}
 	return nil
+}
+
+func actionAppInterpName(p *ActionApp, domain *Module, stateActionName string) string {
+	for _, candidate := range []string{p.ActionName, stateActionName} {
+		if name := actionNameCandidate(candidate); name != "" {
+			return name
+		}
+	}
+	switch rep := p.Rep.(type) {
+	case string:
+		if name := actionNameCandidate(rep); name != "" {
+			return name
+		}
+	case *Const:
+		if name := actionNameCandidate(rep.Name); name != "" {
+			return name
+		}
+	case ActionsAction:
+		if name, ok := ActionNameForActionInModule(domain, rep); ok {
+			return name
+		}
+		return rep.Name()
+	}
+	return fmt.Sprintf("%v", p.Rep)
 }
 
 // InterpToArtState converts an interp.InterpState back to an art.State.
@@ -1851,7 +2357,7 @@ func interpExprToProvenance(expr Node, memo map[*InterpState]*State) Provenance 
 				args = append(args, interpToArtMemo(is, memo))
 			}
 		}
-		return &ActionApp{Rep: rep, Args: args}
+		return NewActionApp(rep, args...)
 	}
 	if IsInterpStateJoin(expr) {
 		or := expr.(*Or)
