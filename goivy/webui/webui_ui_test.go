@@ -36,6 +36,17 @@ func TestAnalysisGraphUISetMode(t *testing.T) {
 	}
 }
 
+func TestARGTransitionDisplayLabelTreatsGoPointerTypeLabelAsGeneric(t *testing.T) {
+	action := goivy.NewCallActionOn(goivy.NewActionsConfig(), goivy.NewConst("ext:connect", goivy.TopS))
+	tr := goivy.Transition{
+		Op:    action,
+		Label: "*goivy.LogicSequence@0x108e500",
+	}
+	if got := argTransitionDisplayLabel(tr); got != "connect" {
+		t.Fatalf("argTransitionDisplayLabel() = %q, want %q", got, "connect")
+	}
+}
+
 func TestAnalysisGraphUIMenus(t *testing.T) {
 	ui := NewAnalysisGraphUI()
 	menus := ui.Menus()

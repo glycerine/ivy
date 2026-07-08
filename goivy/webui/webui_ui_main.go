@@ -466,8 +466,14 @@ func argTransitionDisplayLabel(t goivy.Transition) string {
 }
 
 func argTransitionLabelIsGeneric(label string) bool {
-	lower := strings.ToLower(strings.TrimSpace(label))
-	return lower == "call ext" || lower == "call:ext" || lower == "ext" || strings.HasPrefix(lower, "ext:")
+	trimmed := strings.TrimSpace(label)
+	lower := strings.ToLower(trimmed)
+	return lower == "call ext" ||
+		lower == "call:ext" ||
+		lower == "ext" ||
+		strings.HasPrefix(lower, "ext:") ||
+		strings.Contains(trimmed, "goivy.") ||
+		strings.Contains(trimmed, "@0x")
 }
 
 func actionDisplayNameForARG(action goivy.ActionsAction) string {
