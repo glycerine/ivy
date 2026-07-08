@@ -2,6 +2,7 @@ import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts
 import { addTraceResultViewAction, analysisControllerOptions, openTraceArgFromResult } from './checkService.ts';
 import { runWithContext } from './runContextService.ts';
 import { openSourceBrowser as openSourceBrowserViaService } from './sourceBrowserService.ts';
+import { clearDetailsLog } from './detailsService.ts';
 
 async function applyDescriptorDialog(app, actionName, args) {
   const dialog = args && args.dialog;
@@ -191,6 +192,7 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
     return null;
   }
   const actionName = action.action || action.id || action[0] || action.name;
+  clearDetailsLog(app);
   app.controls.setStatus(`Executing: ${actionName}...`);
   try {
     let args = {

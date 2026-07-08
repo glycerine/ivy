@@ -279,6 +279,41 @@ describe('argActionService', () => {
     });
   });
 
+  it('clears stale details before ARG node actions start executing', async () => {
+    document.body.innerHTML = '<div id="info-content" data-ivy-details-kind="selection">old node details</div>';
+    const app = {
+      activeSheetId: 'sheet-1',
+      getMode: vi.fn(() => 'induction'),
+      isVisualOnlySheet: vi.fn(() => false),
+      prepareArgNodeActionArgs: (node, action, args, sheetId) => prepareArgNodeActionArgs(app, node, action, args, sheetId),
+      api: {
+        argNodeAction: vi.fn(async () => {
+          expect(document.getElementById('info-content')?.textContent).toBe('Select a node or edge to see details');
+          expect(document.getElementById('info-content')?.getAttribute('data-ivy-details-kind')).toBe('placeholder');
+          return {
+            safe: true,
+            message: 'Node is safe',
+            arg: { elements: [], positions: null },
+          };
+        }),
+      },
+      sheets: {},
+      uiDataStore: {
+        applyArgSnapshot: vi.fn(),
+      },
+      controls: {
+        setStatus: vi.fn(),
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        showInfo: vi.fn(),
+      },
+    };
+
+    await executeArgNodeAction(app, { id: 'state_0' }, { id: 'check_safety' }, 'sheet-1');
+
+    expect(app.api.argNodeAction).toHaveBeenCalled();
+  });
+
   it('opens ARG BMC counterexample traces through the Python-style View dialog', async () => {
     const traceArg = { elements: [{ group: 'nodes', data: { id: 'state_0' } }] };
     const app = {

@@ -1,7 +1,20 @@
 import { describe, expect, it, vi } from 'vitest';
-import { populateConstraintFacts } from './detailsService.ts';
+import { clearDetailsLog, populateConstraintFacts } from './detailsService.ts';
 
 describe('detailsService', () => {
+  it('clears the active details pane to the placeholder', () => {
+    document.body.innerHTML = [
+      '<div class="sheet-content"><div class="info-panel"><div id="info-content">root stale</div></div></div>',
+      '<div class="sheet-content active"><div class="info-panel"><div id="info-content-2" data-ivy-details-kind="selection">stale CTI log</div></div></div>',
+    ].join('');
+
+    clearDetailsLog(null, { doc: document });
+
+    expect(document.getElementById('info-content')?.textContent).toBe('root stale');
+    expect(document.getElementById('info-content-2')?.textContent).toBe('Select a node or edge to see details');
+    expect(document.getElementById('info-content-2')?.getAttribute('data-ivy-details-kind')).toBe('placeholder');
+  });
+
   it('renders fact buttons and writes selections through the app API', async () => {
     document.body.innerHTML = '<div id="info-content"></div>';
     const app = {

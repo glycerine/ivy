@@ -1,6 +1,7 @@
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
 import { selectSheet, selectStateCheckboxRows } from '../models/uiDataSelectors.ts';
 import { beginRunContext, reportRunContextError, runWithContext } from './runContextService.ts';
+import { clearDetailsLog } from './detailsService.ts';
 
 function activeCheckLabel(app) {
   const mode = app && typeof app.getMode === 'function' ? app.getMode() : 'verification';
@@ -253,6 +254,7 @@ export async function runCheck(app) {
     app.controls.setStatus(`${app._activeCheck.label || activeCheckLabel(app)} is already running`, 'warning');
     return null;
   }
+  clearDetailsLog(app);
   const mode = app.getMode();
   const controller = makeCheckAbortController();
   const active = {
@@ -523,6 +525,7 @@ async function showCtiCheckDetails(app, actionName, result) {
 }
 
 export async function checkInduction(app) {
+  clearDetailsLog(app);
   app.controls.setStatus('Checking induction...');
   const result = await runWithContext(app, {
     busyMessage: 'Checking inductiveness...',
@@ -563,6 +566,7 @@ export async function boundedCheck(app) {
       app.controls.setStatus('Bounded check cancelled');
       return;
     }
+    clearDetailsLog(app);
     app.currentBound = bound;
     app.controls.setStatus('Running bounded check...');
     const result = await app.api.runCheck('bounded', { ...options, bound });
@@ -583,6 +587,7 @@ export async function ctiBoundedCheck(app) {
       app.controls.setStatus('Bounded check cancelled');
       return null;
     }
+    clearDetailsLog(app);
     app.currentBound = bound;
     app.controls.setStatus('Running bounded check...');
     const result = await app.api.executeAction('cti_bounded_check', {
@@ -660,6 +665,7 @@ export async function weakenInvariant(app) {
 }
 
 export async function ctiConceptAction(app, actionName) {
+  clearDetailsLog(app);
   app.controls.setStatus('Running CTI action...');
   const args = {
     sheet_id: app.activeSheetId || 'sheet-1',

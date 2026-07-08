@@ -1,21 +1,39 @@
+const DETAILS_PLACEHOLDER = 'Select a node or edge to see details';
+
+function activeDetailsElement(doc = globalThis.document) {
+  return doc && (
+    doc.querySelector('.sheet-content.active .info-panel [id^="info-content"]') ||
+    doc.getElementById('info-content')
+  );
+}
+
+export function clearDetailsLog(app = null, {
+  doc = globalThis.document,
+} = {}) {
+  if (app && app.controls && typeof app.controls.clearInfo === 'function') {
+    app.controls.clearInfo();
+    return;
+  }
+  const info = activeDetailsElement(doc);
+  if (!info) return;
+  info.innerHTML = '';
+  info.textContent = DETAILS_PLACEHOLDER;
+  info.setAttribute('data-ivy-details-kind', 'placeholder');
+}
+
 export function populateConstraintFacts(app, conceptData, {
   doc = globalThis.document,
 } = {}) {
   const facts = conceptData && Array.isArray(conceptData.facts) ? conceptData.facts : [];
-  const info = doc && (
-    doc.querySelector('.sheet-content.active .info-panel [id^="info-content"]') ||
-    doc.getElementById('info-content')
-  );
+  const info = activeDetailsElement(doc);
   if (!info) return;
   if (facts.length === 0) {
     const kind = info.getAttribute('data-ivy-details-kind') || '';
     const text = (info.textContent || '').trim();
-    if (kind === 'selection' || (text && text !== 'Select a node or edge to see details' && kind !== 'constraints')) {
+    if (kind === 'selection' || (text && text !== DETAILS_PLACEHOLDER && kind !== 'constraints')) {
       return;
     }
-    info.innerHTML = '';
-    info.textContent = 'Select a node or edge to see details';
-    info.setAttribute('data-ivy-details-kind', 'placeholder');
+    clearDetailsLog(app, { doc });
     return;
   }
 

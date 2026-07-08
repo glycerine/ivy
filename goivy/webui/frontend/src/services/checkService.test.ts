@@ -3,6 +3,7 @@ import {
   addCheckResultViewActions,
   autoCheckUsedRelations,
   boundedCheck,
+  checkInduction,
   ctiBoundedCheck,
   ctiConceptAction,
   cancelActiveCheck,
@@ -14,6 +15,87 @@ import { UIDataModel } from '../models/uiDataModel.ts';
 import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 
 describe('checkService', () => {
+  it('clears stale details before a reachability check starts executing', async () => {
+    document.body.innerHTML = '<div id="info-content" data-ivy-details-kind="selection">old failed proof log</div>';
+    const app = {
+      getMode: vi.fn(() => 'induction'),
+      cmEditor: { getValue: vi.fn(() => 'ivy source') },
+      _persistedFileName: 'model.ivy',
+      activeIsolate: '',
+      api: {
+        reloadContent: vi.fn(async () => {
+          expect(document.getElementById('info-content')?.textContent).toBe('Select a node or edge to see details');
+          expect(document.getElementById('info-content')?.getAttribute('data-ivy-details-kind')).toBe('placeholder');
+          return { status: 'ok' };
+        }),
+        runCheck: vi.fn(async () => ({ result: 'pass', mode: 'induction' })),
+        getARG: vi.fn(async () => null),
+        getConceptGraph: vi.fn(async () => null),
+      },
+      controls: {
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        setStatus: vi.fn(),
+      },
+      showCheckResult: vi.fn(),
+      _autoCheckUsedRelations: vi.fn(),
+    };
+
+    await runCheck(app);
+
+    expect(app.api.reloadContent).toHaveBeenCalled();
+  });
+
+  it('clears stale details before the invariant induction command starts executing', async () => {
+    document.body.innerHTML = '<div id="info-content" data-ivy-details-kind="selection">stale inductive result</div>';
+    const app = {
+      api: {
+        runCheck: vi.fn(async () => {
+          expect(document.getElementById('info-content')?.textContent).toBe('Select a node or edge to see details');
+          return { result: 'pass', message: 'Inductive invariant found:\ntrue' };
+        }),
+      },
+      controls: {
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        setStatus: vi.fn(),
+      },
+      showTextDialog: vi.fn(),
+    };
+
+    await checkInduction(app);
+
+    expect(app.api.runCheck).toHaveBeenCalledWith('induction');
+  });
+
+  it('clears stale details before CTI check commands start executing', async () => {
+    document.body.innerHTML = '<div id="info-content" data-ivy-details-kind="selection">old CTI details</div>';
+    const app = {
+      activeSheetId: 'sheet-2',
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
+      },
+      refreshConceptGraph: vi.fn(),
+      api: {
+        executeAction: vi.fn(async () => {
+          expect(document.getElementById('info-content')?.textContent).toBe('Select a node or edge to see details');
+          return { ok: false, result: 'fail', message: 'not inductive', concept: { elements: [] } };
+        }),
+      },
+      controls: {
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        setStatus: vi.fn(),
+      },
+    };
+
+    await ctiConceptAction(app, 'cti_check_inductive');
+
+    expect(app.api.executeAction).toHaveBeenCalledWith('cti_check_inductive', {
+      sheet_id: 'sheet-2',
+    });
+  });
+
   it('renders numbered job control rows with timestamp, isolate, and run details', async () => {
     vi.useFakeTimers();
     try {
