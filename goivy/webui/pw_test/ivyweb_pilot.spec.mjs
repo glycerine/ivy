@@ -2097,6 +2097,11 @@ test('proof goal and CRG interactions update selected goal concept and transitio
   });
   expect(state.selectedCrgNode).toBe('crg_1');
   expect(state.conceptLabels).toEqual(['crg facts']);
+
+  const closeButton = page.locator('#sheet-1 .proof-goal-close-btn');
+  await expect(closeButton).toHaveAttribute('title', 'Close proof goal windows');
+  await closeButton.click();
+  await expect(page.locator('#sheet-1 .proof-goal-wrapper')).toBeHidden();
 });
 
 test('event viewer launch mode opens an iev trace without a model file', async ({ page }) => {

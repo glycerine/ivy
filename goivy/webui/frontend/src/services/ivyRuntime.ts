@@ -1223,7 +1223,7 @@ class IvyRuntime {
             pane.setAttribute('data-resizable-row', 'proof-crg');
             pane.innerHTML = [
                 '<div class="proof-goal-column" data-resizable-pane="proof-goals">',
-                '  <div class="proof-crg-header">Proof goals <span class="proof-selected-goal" data-selected-proof-goal></span></div>',
+                '  <div class="proof-crg-header proof-goal-header"><button class="proof-goal-close-btn" type="button" title="Close proof goal windows" aria-label="Close proof goal windows">&times;</button><span>Proof goals</span> <span class="proof-selected-goal" data-selected-proof-goal></span></div>',
                 '  <div class="proof-goal-graph" data-proof-goal-graph></div>',
                 '  <pre class="proof-goal-info" data-proof-goal-info></pre>',
                 '</div>',
@@ -1234,28 +1234,20 @@ class IvyRuntime {
                 '  <pre class="transition-view" data-transition-view></pre>',
                 '</div>',
             ].join('');
+            var proofGoalClose = pane.querySelector('.proof-goal-close-btn');
+            if (proofGoalClose) {
+                var runtime = this;
+                proofGoalClose.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    runtime._setProofGoalWrapperVisible(id, false);
+                });
+            }
         }
         if (wrapper && pane.parentNode !== wrapper) {
             var history = wrapper.querySelector('[data-analysis-history]');
             if (history && history.nextSibling) wrapper.insertBefore(pane, history.nextSibling);
             else wrapper.appendChild(pane);
-        }
-        if (!pane.hasAttribute('data-resizable-row')) {
-            pane.setAttribute('data-resizable-row', 'proof-crg');
-        }
-        if (!pane.querySelector('.proof-crg-column-divider')) {
-            var goalColumn = pane.querySelector('.proof-goal-column');
-            var crgColumn = pane.querySelector('.crg-column');
-            if (goalColumn) goalColumn.setAttribute('data-resizable-pane', 'proof-goals');
-            if (crgColumn) crgColumn.setAttribute('data-resizable-pane', 'crg-transition');
-            if (crgColumn && crgColumn.parentNode) {
-                var columnDivider = document.createElement('div');
-                columnDivider.className = 'divider proof-crg-column-divider';
-                columnDivider.setAttribute('data-resize-target', 'previous');
-                columnDivider.setAttribute('title', 'Drag to resize Proof goals and CRG / transition');
-                columnDivider.setAttribute('aria-label', 'Resize Proof goals and CRG / transition');
-                crgColumn.parentNode.insertBefore(columnDivider, crgColumn);
-            }
         }
         var rowDivider = sheetEl.querySelector('[data-proof-crg-row-divider]');
         if (!rowDivider && wrapper) {

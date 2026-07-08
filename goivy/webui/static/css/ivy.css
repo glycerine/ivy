@@ -709,7 +709,8 @@ body[data-event-viewer-only="true"] #outer-container {
     cursor: default;
 }
 
-.tutorial-close-btn {
+.tutorial-close-btn,
+.proof-goal-close-btn {
     font-size: 16px;
     background: #2d2d2d;
     color: #666;
@@ -721,7 +722,8 @@ body[data-event-viewer-only="true"] #outer-container {
     flex: 0 0 auto;
 }
 
-.tutorial-close-btn:hover {
+.tutorial-close-btn:hover,
+.proof-goal-close-btn:hover {
     color: #ff5555;
     border-color: #ff5555;
 }
@@ -1163,6 +1165,20 @@ body[data-event-viewer-only="true"] #outer-container {
     color: #d4d4d4;
     font-size: 12px;
     font-weight: 600;
+}
+
+.proof-goal-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.proof-goal-close-btn {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    font-size: 14px;
+    line-height: 16px;
 }
 
 .proof-selected-goal {

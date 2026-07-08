@@ -485,6 +485,7 @@ describe('ivyRuntime compatibility behavior', () => {
     const pane = runtime._ensureProofGoalPane('sheet-1');
     const wrapper = document.querySelector('.proof-goal-wrapper') as HTMLElement;
     const rowDivider = document.querySelector('.proof-crg-row-divider') as HTMLElement;
+    const closeButton = wrapper.querySelector('.proof-goal-close-btn') as HTMLButtonElement;
 
     expect(wrapper).not.toBeNull();
     expect(wrapper.hidden).toBe(true);
@@ -494,6 +495,16 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(pane.parentElement).toBe(wrapper);
     expect(rowDivider.parentElement).toBe(wrapper);
     expect(rowDivider.previousElementSibling).toBe(pane);
+    expect(closeButton).not.toBeNull();
+    expect(closeButton.parentElement?.firstElementChild).toBe(closeButton);
+    expect(closeButton.title).toBe('Close proof goal windows');
+    expect(closeButton.getAttribute('aria-label')).toBe('Close proof goal windows');
+
+    runtime._setProofGoalWrapperVisible('sheet-1', true);
+    expect(wrapper.hidden).toBe(false);
+    closeButton.click();
+    expect(wrapper.hidden).toBe(true);
+    expect(wrapper.classList.contains('is-visible')).toBe(false);
   });
 
   it('adds and drags the divider between Proof goals and CRG / transition', () => {
