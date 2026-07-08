@@ -60,7 +60,15 @@ export const CONCEPT_STYLE = [
       'text-wrap': 'wrap',
     },
   },
-  { selector: 'edge[label]', style: { content: 'data(label)' } },
+  {
+    selector: 'edge[label]',
+    style: {
+      content: 'data(label)',
+      color: '#000',
+      'text-outline-width': '3px',
+      'text-outline-color': '#ffd400',
+    },
+  },
   { selector: 'edge[text_max_width]', style: { 'text-max-width': 'data(text_max_width)' } },
   {
     selector: 'edge.none_to_none',

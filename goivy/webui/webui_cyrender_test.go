@@ -731,6 +731,15 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), "edge[label]")["content"]; got != "data(label)" {
 		t.Fatalf("concept edge[label] content = %q, want data(label)", got)
 	}
+	if got := cyStyleForTest(ConceptStyle(), "edge[label]")["color"]; got != "#000" {
+		t.Fatalf("concept edge[label] color = %q, want #000", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), "edge[label]")["text-outline-width"]; got != "3px" {
+		t.Fatalf("concept edge[label] text-outline-width = %q, want 3px", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), "edge[label]")["text-outline-color"]; got != "#ffd400" {
+		t.Fatalf("concept edge[label] text-outline-color = %q, want #ffd400", got)
+	}
 	if got := cyStyleForTest(ConceptStyle(), "edge[text_max_width]")["text-max-width"]; got != "data(text_max_width)" {
 		t.Fatalf("concept edge[text_max_width] text-max-width = %q, want data(text_max_width)", got)
 	}

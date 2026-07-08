@@ -75,7 +75,12 @@ func ConceptStyle() []CyStyleEntry {
 		},
 		{
 			Selector: "edge[label]",
-			Style:    map[string]string{"content": "data(label)"},
+			Style: map[string]string{
+				"content":            "data(label)",
+				"color":              "#000",
+				"text-outline-width": "3px",
+				"text-outline-color": "#ffd400",
+			},
 		},
 		{
 			Selector: "edge[text_max_width]",

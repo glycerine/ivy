@@ -145,6 +145,9 @@ describe('graphRuntime', () => {
     expect(styleFor(ARG_STYLE, 'edge[text_max_width]')['text-max-width']).toBe('data(text_max_width)');
     expect(styleFor(CONCEPT_STYLE, 'edge').content).toBeUndefined();
     expect(styleFor(CONCEPT_STYLE, 'edge[label]').content).toBe('data(label)');
+    expect(styleFor(CONCEPT_STYLE, 'edge[label]').color).toBe('#000');
+    expect(styleFor(CONCEPT_STYLE, 'edge[label]')['text-outline-width']).toBe('3px');
+    expect(styleFor(CONCEPT_STYLE, 'edge[label]')['text-outline-color']).toBe('#ffd400');
     expect(styleFor(CONCEPT_STYLE, 'edge')['text-wrap']).toBe('wrap');
     expect(styleFor(CONCEPT_STYLE, 'edge')['text-max-width']).toBeUndefined();
     expect(styleFor(CONCEPT_STYLE, 'edge[text_max_width]')['text-max-width']).toBe('data(text_max_width)');
