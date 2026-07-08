@@ -2713,3 +2713,35 @@ test('editor left boundary handle resizes editor and logs geometry', async ({ pa
   await expect.poll(() => editorResizeLogs.length).toBeGreaterThan(0);
   expect(await page.evaluate(() => window.__ivyInitError || '')).toBe('');
 });
+
+test('editor left boundary drag moves the editor geometry left edge', async ({ page }) => {
+  const editorGeometryLogs = [];
+  page.on('console', async (msg) => {
+    if (msg.type() !== 'log' || !msg.text().includes('[ivyweb editor-left-resize-handle]')) return;
+    const args = msg.args();
+    if (args.length < 2) return;
+    editorGeometryLogs.push(await args[1].jsonValue());
+  });
+  await openIvy(page);
+
+  const editor = page.locator('#editor-panel');
+  const handle = page.locator('#editor-left-resize-handle');
+  await expect(handle).toBeVisible();
+
+  const before = await editor.boundingBox();
+  const grip = await handle.boundingBox();
+  test.skip(!before || before.width <= 0, 'editor panel has no measurable width');
+  test.skip(!grip, 'editor resize handle has no measurable box');
+
+  const startX = grip.x + grip.width / 2;
+  const startY = grip.y + grip.height / 2;
+  await page.mouse.move(startX, startY);
+  await page.mouse.down();
+  await page.mouse.move(startX - 80, startY, { steps: 8 });
+  await page.mouse.up();
+
+  await expect.poll(() => editorGeometryLogs.length).toBeGreaterThan(0);
+  const afterGeometry = editorGeometryLogs.at(-1);
+  expect(afterGeometry.left).toBeLessThan(before.x - 40);
+  expect(await page.evaluate(() => window.__ivyInitError || '')).toBe('');
+});
