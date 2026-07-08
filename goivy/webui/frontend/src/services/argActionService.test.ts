@@ -322,7 +322,7 @@ describe('argActionService', () => {
     });
   });
 
-  it('loads source returned by ARG edge view-source actions', async () => {
+  it('highlights existing editor source returned by ARG edge view-source actions', async () => {
     const sourceResult = { source: 'action a', lineno: 7, file: 'm.ivy' };
     const app = {
       activeSheetId: 'sheet-1',
@@ -338,13 +338,13 @@ describe('argActionService', () => {
     await executeArgEdgeAction(app, { source_obj: 's0', target_obj: 's1' }, 'view_source', 'sheet-1');
 
     expect(app.api.argNodeAction).toHaveBeenCalledWith('s0', 'view_source', { target: 's1', sheet_id: 'sheet-1' });
-    expect(app.openSourceBrowser).toHaveBeenCalledWith(sourceResult);
+    expect(app.openSourceBrowser).not.toHaveBeenCalled();
     expect(app.setEditorContent).not.toHaveBeenCalled();
-    expect(app.scrollEditorToLine).not.toHaveBeenCalled();
-    expect(app.controls.showInfo).toHaveBeenCalledWith('Source: m.ivy line 7', '');
+    expect(app.scrollEditorToLine).toHaveBeenCalledWith(7);
+    expect(app.controls.showInfo).not.toHaveBeenCalled();
   });
 
-  it('reuses one source browser for two edge view-source actions without mutating the model editor', async () => {
+  it('does not create a source browser for edge view-source actions', async () => {
     document.body.innerHTML = [
       '<div class="sheet-content active">',
       '  <textarea id="model-editor">editable model</textarea>',
@@ -360,21 +360,20 @@ describe('argActionService', () => {
         )),
       },
       controls: { setStatus: vi.fn(), showInfo: vi.fn() },
+      openSourceBrowser: vi.fn(),
       setEditorContent: vi.fn(),
       scrollEditorToLine: vi.fn(),
     };
 
     await executeArgEdgeAction(app, { source_obj: 's0', target_obj: 's1' }, 'view_source', 'sheet-1');
-    const browser = document.querySelector('[data-source-browser]');
     await executeArgEdgeAction(app, { source_obj: 's0', target_obj: 's2' }, 'view_source', 'sheet-1');
 
-    expect(document.querySelectorAll('[data-source-browser]')).toHaveLength(1);
-    expect(document.querySelector('[data-source-browser]')).toBe(browser);
-    expect(browser?.getAttribute('data-source-file')).toBe('second.ivy');
-    expect(browser?.getAttribute('data-source-line')).toBe('2');
-    expect(browser?.querySelector('.source-browser-line-highlight')?.textContent).toBe('updated');
+    expect(document.querySelectorAll('[data-source-browser]')).toHaveLength(0);
     expect((document.getElementById('model-editor') as HTMLTextAreaElement).value).toBe('editable model');
+    expect(app.openSourceBrowser).not.toHaveBeenCalled();
     expect(app.setEditorContent).not.toHaveBeenCalled();
-    expect(app.scrollEditorToLine).not.toHaveBeenCalled();
+    expect(app.scrollEditorToLine).toHaveBeenCalledWith(1);
+    expect(app.scrollEditorToLine).toHaveBeenCalledWith(2);
+    expect(app.controls.showInfo).not.toHaveBeenCalled();
   });
 });

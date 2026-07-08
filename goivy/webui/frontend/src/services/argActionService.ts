@@ -152,6 +152,12 @@ function showReturnedSource(app, result) {
   return true;
 }
 
+function highlightReturnedSourceInEditor(app, result) {
+  if (!result || !result.lineno || typeof app.scrollEditorToLine !== 'function') return false;
+  app.scrollEditorToLine(result.lineno);
+  return true;
+}
+
 async function showArgNodeTryConjectureResult(app, result) {
   const message = (result && result.message) || 'Try conjecture complete';
   showReturnedSource(app, result);
@@ -264,7 +270,7 @@ export async function executeArgEdgeAction(app, edgeData, actionName, sheetId) {
       applyArgSnapshot(app, targetSheetId, result.arg);
     }
     if (actionName === 'view_source') {
-      showReturnedSource(app, result);
+      highlightReturnedSourceInEditor(app, result);
     }
     app.controls.setStatus(`Done: ${actionName}`, 'success');
     return result;

@@ -3682,39 +3682,6 @@ class IvyRuntime {
      */
     async executeArgEdgeAction(edgeData, actionName, sheetId) {
         return executeArgEdgeActionViaService(this, edgeData, actionName, sheetId);
-        sheetId = sheetId || this.activeSheetId || 'sheet-1';
-        this.controls.setStatus('Executing: ' + actionName + '...');
-        try {
-            var result = await this.api.argNodeAction(
-                edgeData.source_obj || edgeData.source || edgeData.obj,
-                actionName,
-                { target: edgeData.target_obj || edgeData.target, sheet_id: sheetId }
-            );
-            if (actionName === 'decompose' && result && result.decomposed) {
-                // Decompose: open a new tab with the sub-ARG
-                var label = 'Step: ' + (edgeData.label || actionName);
-                this.openARGSheet(label, result.sub_arg, result.sheet_id);
-            }
-            if (result && result.arg) {
-                this.applyArgSnapshot(sheetId, result.arg);
-            }
-            if (result && result.source && actionName === 'view_source') {
-                // Show source in the model editor and scroll to the action line.
-                // Matches Python ivy_ui.py view_source_edge → browse(filename, lineno).
-                this.setEditorContent(result.source);
-                if (result.lineno) {
-                    this.scrollEditorToLine(result.lineno);
-                }
-                this.controls.showInfo(
-                    'Source: ' + (result.file || '') + (result.lineno ? ' line ' + result.lineno : ''),
-                    ''
-                );
-            }
-            this.controls.setStatus('Done: ' + actionName, 'success');
-        } catch (e) {
-            this.controls.setStatus('Edge action failed: ' + e.message, 'error');
-            console.error('ARG edge action error:', e);
-        }
     }
 
     // ================================================================

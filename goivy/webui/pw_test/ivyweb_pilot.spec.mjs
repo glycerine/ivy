@@ -1657,23 +1657,33 @@ test('constraint facts render below the graph and toggle through backend action'
   ]);
 });
 
-test('View Source edge action loads source text and highlights the backend line', async ({ page }) => {
+test('View Source edge action highlights existing editor source without filling Details', async ({ page }) => {
   await openIvy(page);
 
   const result = await page.evaluate(async () => {
+    const app = window.__ivyDiagnostics.runtime();
+    const beforeValue = app.cmEditor.getValue();
+    app.textDialog = async (...args) => {
+      app._testTextDialog = args;
+      return '';
+    };
+    app.okDialog = async (...args) => {
+      app._testOkDialog = args;
+      return '';
+    };
+    document.getElementById('info-content').textContent = 'Select a node or edge to see details';
     window.__ivyDiagnostics.runtime().api.argNodeAction = async () => {
       window.__ivyDiagnostics.runtime()._testArgNodeActionResult = {
         status: 'ok',
         file: 'sample.ivy',
         lineno: 2,
-        source: 'line1\naction go = {}\nline3\n',
+        source: beforeValue,
       };
       return window.__ivyDiagnostics.runtime()._testArgNodeActionResult;
     };
-    const originalScroll = window.__ivyDiagnostics.runtime().scrollEditorToLine.bind(window.__ivyDiagnostics.runtime());
     window.__ivyDiagnostics.runtime().scrollEditorToLine = (lineno) => {
       window.__ivyDiagnostics.runtime()._testScrollLine = lineno;
-      return originalScroll(lineno);
+      window.__ivyDiagnostics.runtime()._highlightedEditorLine = lineno;
     };
     const originalSetEditor = window.__ivyDiagnostics.runtime().setEditorContent.bind(window.__ivyDiagnostics.runtime());
     window.__ivyDiagnostics.runtime().setEditorContent = (source) => {
@@ -1682,23 +1692,28 @@ test('View Source edge action loads source text and highlights the backend line'
     };
     await window.__ivyDiagnostics.runtime().executeArgEdgeAction({ source_obj: 'state_0', target_obj: 'state_1' }, 'view_source');
     return {
+      beforeValue,
       value: window.__ivyDiagnostics.runtime().cmEditor.getValue(),
       highlightedLine: window.__ivyDiagnostics.runtime()._highlightedEditorLine,
       scrollLine: window.__ivyDiagnostics.runtime()._testScrollLine,
       setEditorSource: window.__ivyDiagnostics.runtime()._testSetEditorSource,
       apiResult: window.__ivyDiagnostics.runtime()._testArgNodeActionResult,
+      dialog: window.__ivyDiagnostics.runtime()._testTextDialog || window.__ivyDiagnostics.runtime()._testOkDialog,
       status: document.getElementById('statusbar').textContent,
       details: document.getElementById('info-content').textContent,
+      sourceBrowserCount: document.querySelectorAll('[data-source-browser]').length,
     };
   });
 
-  expect(result.value).toBe('line1\naction go = {}\nline3\n');
-  expect(result.setEditorSource).toBe('line1\naction go = {}\nline3\n');
+  expect(result.value).toBe(result.beforeValue);
+  expect(result.setEditorSource).toBeUndefined();
+  expect(result.dialog).toBeUndefined();
   expect(result.apiResult.lineno).toBe(2);
   expect(result.status).toContain('Done: view_source');
   expect(result.scrollLine).toBe(2);
   expect(result.highlightedLine).toBe(2);
-  expect(result.details).toContain('sample.ivy line 2');
+  expect(result.details).toBe('Select a node or edge to see details');
+  expect(result.sourceBrowserCount).toBe(0);
 });
 
 test('sheet graph instances are owned independently when switching tabs', async ({ page }) => {
