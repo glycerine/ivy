@@ -2136,12 +2136,23 @@ class IvyRuntime {
             if (!isDragging) return;
             if (activeEditorLeftResize) {
                 var editorDx = e.clientX - startX;
+                var effectiveEditorDx = editorDx;
+                if (editorDx < 0 && activeEditorLeftResizeTargets && activeEditorLeftResizeTargets.length > 1) {
+                    var requestedShrink = -editorDx;
+                    var availableShrink = requestedShrink;
+                    for (var shrinkIndex = 0; shrinkIndex < activeEditorLeftResizeTargets.length; shrinkIndex++) {
+                        var shrinkTarget = activeEditorLeftResizeTargets[shrinkIndex];
+                        var shrinkMinWidth = self._paneResizeMinimum(shrinkTarget.panel);
+                        availableShrink = Math.min(availableShrink, Math.max(0, shrinkTarget.startWidth - shrinkMinWidth));
+                    }
+                    effectiveEditorDx = -availableShrink;
+                }
                 for (var t = 0; activeEditorLeftResizeTargets && t < activeEditorLeftResizeTargets.length; t++) {
                     var target = activeEditorLeftResizeTargets[t];
                     var targetPanel = target.panel;
                     var targetMinWidth = self._paneResizeMinimum(targetPanel);
                     var targetMaxWidth = Math.max(targetMinWidth, 4000);
-                    var targetWidth = Math.max(targetMinWidth, Math.min(target.startWidth + editorDx, targetMaxWidth));
+                    var targetWidth = Math.max(targetMinWidth, Math.min(target.startWidth + effectiveEditorDx, targetMaxWidth));
                     targetPanel.style.flex = '0 0 ' + targetWidth + 'px';
                     targetPanel.style.width = targetWidth + 'px';
                 }

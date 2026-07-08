@@ -260,6 +260,112 @@ describe('ivyRuntime compatibility behavior', () => {
     log.mockRestore();
   });
 
+  it('does not shrink CRG / transition when State/relations is already at minimum width', () => {
+    document.body.innerHTML = [
+      '<div id="sheet-area">',
+      '  <div id="sheet-workspace" class="sheet-workspace">',
+      '    <div id="sheet-pages" class="sheet-pages">',
+      '      <div id="sheet-1" class="sheet-content active has-analysis-history">',
+      '        <div class="proof-crg-pane">',
+      '          <div class="proof-goal-column" data-resizable-pane="proof-goals"></div>',
+      '          <div class="divider proof-crg-column-divider" data-resize-target="previous"></div>',
+      '          <div class="crg-column" data-resizable-pane="crg-transition"></div>',
+      '        </div>',
+      '        <div class="sheet-columns">',
+      '          <div id="arg-panel" class="sheet-pane"></div>',
+      '          <div id="divider" class="divider" data-resize-target="previous"></div>',
+      '          <div id="concept-panel" class="sheet-pane"></div>',
+      '          <div id="divider2" class="divider" data-resize-target="previous"></div>',
+      '          <div id="state-panel" class="sheet-pane" style="min-width: 220px"></div>',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '    <div id="editor-left-resize-handle"></div>',
+      '    <div id="editor-panel" class="sheet-pane" style="min-width: 120px"></div>',
+      '  </div>',
+      '</div>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.argGraph = new FakeGraph();
+    runtime.conceptGraph = new FakeGraph();
+    runtime._refreshEditorLayout = vi.fn();
+    const workspace = document.getElementById('sheet-workspace')!;
+    const editor = document.getElementById('editor-panel')!;
+    const divider = document.getElementById('editor-left-resize-handle')!;
+    const state = document.getElementById('state-panel')!;
+    const crg = document.querySelector('.crg-column')!;
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    setOffsetWidth(workspace, 1200);
+    setOffsetWidth(editor, 420);
+    setOffsetWidth(state, 220);
+    setOffsetWidth(crg, 260);
+
+    runtime.setupResizer();
+    divider.dispatchEvent(new MouseEvent('mousedown', { clientX: 600, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 550, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(state.style.width).toBe('220px');
+    expect(state.style.flex).toBe('0 0 220px');
+    expect(crg.style.width).toBe('260px');
+    expect(crg.style.flex).toBe('0 0 260px');
+    expect(log).toHaveBeenCalledTimes(1);
+    log.mockRestore();
+  });
+
+  it('does not shrink State/relations when CRG / transition is already at minimum width', () => {
+    document.body.innerHTML = [
+      '<div id="sheet-area">',
+      '  <div id="sheet-workspace" class="sheet-workspace">',
+      '    <div id="sheet-pages" class="sheet-pages">',
+      '      <div id="sheet-1" class="sheet-content active has-analysis-history">',
+      '        <div class="proof-crg-pane">',
+      '          <div class="proof-goal-column" data-resizable-pane="proof-goals"></div>',
+      '          <div class="divider proof-crg-column-divider" data-resize-target="previous"></div>',
+      '          <div class="crg-column" data-resizable-pane="crg-transition" style="min-width: 260px"></div>',
+      '        </div>',
+      '        <div class="sheet-columns">',
+      '          <div id="arg-panel" class="sheet-pane"></div>',
+      '          <div id="divider" class="divider" data-resize-target="previous"></div>',
+      '          <div id="concept-panel" class="sheet-pane"></div>',
+      '          <div id="divider2" class="divider" data-resize-target="previous"></div>',
+      '          <div id="state-panel" class="sheet-pane" style="min-width: 220px"></div>',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '    <div id="editor-left-resize-handle"></div>',
+      '    <div id="editor-panel" class="sheet-pane" style="min-width: 120px"></div>',
+      '  </div>',
+      '</div>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.argGraph = new FakeGraph();
+    runtime.conceptGraph = new FakeGraph();
+    runtime._refreshEditorLayout = vi.fn();
+    const workspace = document.getElementById('sheet-workspace')!;
+    const editor = document.getElementById('editor-panel')!;
+    const divider = document.getElementById('editor-left-resize-handle')!;
+    const state = document.getElementById('state-panel')!;
+    const crg = document.querySelector('.crg-column')!;
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    setOffsetWidth(workspace, 1200);
+    setOffsetWidth(editor, 420);
+    setOffsetWidth(state, 260);
+    setOffsetWidth(crg, 260);
+
+    runtime.setupResizer();
+    divider.dispatchEvent(new MouseEvent('mousedown', { clientX: 600, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 550, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(state.style.width).toBe('260px');
+    expect(state.style.flex).toBe('0 0 260px');
+    expect(crg.style.width).toBe('260px');
+    expect(crg.style.flex).toBe('0 0 260px');
+    expect(log).toHaveBeenCalledTimes(1);
+    log.mockRestore();
+  });
+
   it('keeps the editor width fixed while logging geometry after left-edge drags', () => {
     document.body.innerHTML = [
       '<div id="sheet-area">',
