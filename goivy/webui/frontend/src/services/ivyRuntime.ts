@@ -1970,20 +1970,30 @@ class IvyRuntime {
 
     _ensureEditorResizeHandle() {
         var editorPanel = document.getElementById('editor-panel');
-        if (!editorPanel || editorPanel.querySelector('#editor-left-resize-handle')) return null;
-        var handle = document.createElement('div');
-        handle.id = 'editor-left-resize-handle';
+        if (!editorPanel || !editorPanel.parentElement) return null;
+        var parent = editorPanel.parentElement;
+        var handle = document.getElementById('editor-left-resize-handle');
+        var oldDivider = document.getElementById('divider3');
+        if (oldDivider && oldDivider.parentElement === parent) {
+            if (handle && handle !== oldDivider && handle.parentElement) {
+                handle.parentElement.removeChild(handle);
+            }
+            handle = oldDivider;
+            handle.id = 'editor-left-resize-handle';
+        } else if (!handle) {
+            handle = document.createElement('div');
+            handle.id = 'editor-left-resize-handle';
+        } else if (oldDivider && oldDivider !== handle && oldDivider.parentElement) {
+            oldDivider.parentElement.removeChild(oldDivider);
+        }
+        if (handle.parentElement !== parent || handle.nextElementSibling !== editorPanel) {
+            parent.insertBefore(handle, editorPanel);
+        }
+        handle.removeAttribute('class');
+        handle.removeAttribute('data-resize-target');
         handle.setAttribute('title', 'Drag to resize editor');
         handle.setAttribute('aria-label', 'Resize editor');
-        editorPanel.insertBefore(handle, editorPanel.firstChild);
         return handle;
-    }
-
-    _isEditorResizeEdge(editorPanel, event) {
-        if (!editorPanel || !event || typeof event.clientX !== 'number') return false;
-        var rect = editorPanel.getBoundingClientRect ? editorPanel.getBoundingClientRect() : null;
-        var left = rect ? rect.left : 0;
-        return event.clientX >= left - 6 && event.clientX <= left + 8;
     }
 
     _logEditorLeftResizeGeometry(editorPanel) {
@@ -2037,18 +2047,12 @@ class IvyRuntime {
             activeEditorLeftResize = false;
 
             if (editorHandle && sheetArea.contains(editorHandle)) {
-                editorPanel = editorHandle.closest('#editor-panel');
+                editorPanel = self._neighborResizablePane(editorHandle.nextElementSibling, 'next') || document.getElementById('editor-panel');
                 activeHandle = editorHandle;
                 activeEditorLeftResize = true;
                 targetSide = 'next';
                 panel = editorPanel;
                 container = editorPanel && (editorPanel.closest('.sheet-workspace') || editorPanel.parentElement);
-            } else if (editorPanel && sheetArea.contains(editorPanel) && self._isEditorResizeEdge(editorPanel, e)) {
-                activeHandle = editorPanel;
-                activeEditorLeftResize = true;
-                targetSide = 'next';
-                panel = editorPanel;
-                container = editorPanel.closest('.sheet-workspace') || editorPanel.parentElement;
             } else {
                 if (!div || !div.classList || !div.classList.contains('divider') || !sheetArea.contains(div)) return;
                 targetSide = div.getAttribute('data-resize-target');

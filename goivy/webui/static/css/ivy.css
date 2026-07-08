@@ -494,13 +494,16 @@ body[data-event-viewer-only="true"] #outer-container {
 }
 
 #editor-left-resize-handle {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 80;
+    flex: 0 0 10px;
     width: 10px;
     cursor: col-resize;
+    background-color: #3c3c3c;
+    transition: background-color 0.15s;
+}
+
+#editor-left-resize-handle:hover,
+#editor-left-resize-handle.active {
+    background-color: #007acc;
 }
 
 .model-editor-text {

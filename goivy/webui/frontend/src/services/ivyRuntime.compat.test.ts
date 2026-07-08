@@ -205,7 +205,7 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(state.style.flex).toBe('');
   });
 
-  it('resizes the editor pane from the State/relations and Editing divider', () => {
+  it('resizes the editor pane from the single editor-left boundary handle', () => {
     document.body.innerHTML = [
       '<div id="sheet-area">',
       '  <div id="sheet-workspace" class="sheet-workspace">',
@@ -220,7 +220,7 @@ describe('ivyRuntime compatibility behavior', () => {
       '        </div>',
       '      </div>',
       '    </div>',
-      '    <div id="divider3" class="divider" data-resize-target="next"></div>',
+      '    <div id="editor-left-resize-handle"></div>',
       '    <div id="editor-panel" class="sheet-pane" style="min-width: 120px"></div>',
       '  </div>',
       '</div>',
@@ -231,7 +231,8 @@ describe('ivyRuntime compatibility behavior', () => {
     runtime._refreshEditorLayout = vi.fn();
     const workspace = document.getElementById('sheet-workspace')!;
     const editor = document.getElementById('editor-panel')!;
-    const divider = document.getElementById('divider3')!;
+    const divider = document.getElementById('editor-left-resize-handle')!;
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
     setOffsetWidth(workspace, 1200);
     setOffsetWidth(editor, 420);
 
@@ -242,6 +243,8 @@ describe('ivyRuntime compatibility behavior', () => {
 
     expect(editor.style.width).toBe('470px');
     expect(editor.style.flex).toBe('0 0 470px');
+    expect(log).toHaveBeenCalledTimes(1);
+    log.mockRestore();
   });
 
   it('resizes the editor pane by dragging its left edge', () => {
@@ -253,9 +256,8 @@ describe('ivyRuntime compatibility behavior', () => {
       '        <div class="sheet-columns"></div>',
       '      </div>',
       '    </div>',
-      '    <div id="divider3" class="divider" data-resize-target="next"></div>',
+      '    <div id="editor-left-resize-handle"></div>',
       '    <div id="editor-panel" class="sheet-pane" style="min-width: 120px">',
-      '      <div id="editor-left-resize-handle"></div>',
       '      <div class="panel-header"></div>',
       '    </div>',
       '  </div>',
@@ -313,8 +315,30 @@ describe('ivyRuntime compatibility behavior', () => {
     const handle = runtime._ensureEditorResizeHandle();
 
     expect(handle).not.toBeNull();
-    expect(document.querySelector('#editor-panel > #editor-left-resize-handle')).toBe(handle);
+    expect(document.querySelector('#editor-left-resize-handle + #editor-panel')).toBe(document.getElementById('editor-panel'));
     expect(handle.getAttribute('aria-label')).toBe('Resize editor');
+  });
+
+  it('normalizes old editor divider markup to one boundary handle', () => {
+    document.body.innerHTML = [
+      '<div id="sheet-workspace">',
+      '  <div id="divider3" class="divider" data-resize-target="next"></div>',
+      '  <div id="editor-panel">',
+      '    <div id="editor-left-resize-handle"></div>',
+      '  </div>',
+      '</div>',
+    ].join('');
+    const runtime = makeRuntime();
+    const editor = document.getElementById('editor-panel')!;
+
+    const handle = runtime._ensureEditorResizeHandle();
+
+    expect(document.getElementById('divider3')).toBeNull();
+    expect(document.querySelectorAll('#editor-left-resize-handle')).toHaveLength(1);
+    expect(handle.nextElementSibling).toBe(editor);
+    expect(editor.querySelector('#editor-left-resize-handle')).toBeNull();
+    expect(handle.getAttribute('class')).toBeNull();
+    expect(handle.getAttribute('data-resize-target')).toBeNull();
   });
 
   it('adds and drags the divider between Proof goals and CRG / transition', () => {
