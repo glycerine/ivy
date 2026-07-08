@@ -484,7 +484,7 @@ body[data-event-viewer-only="true"] #outer-container {
 /* --- Editor panel --- */
 #editor-panel {
     --sheet-pane-width: 44rem;
-    --sheet-pane-min-width: 360px;
+    --sheet-pane-min-width: 460px;
     flex: 0 0 var(--sheet-pane-width);
     display: flex;
     flex-direction: column;
