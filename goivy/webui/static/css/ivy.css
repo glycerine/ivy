@@ -493,7 +493,7 @@ body[data-event-viewer-only="true"] #outer-container {
     overflow: hidden;
 }
 
-.editor-resize-handle {
+#editor-left-resize-handle {
     position: absolute;
     top: 0;
     bottom: 0;

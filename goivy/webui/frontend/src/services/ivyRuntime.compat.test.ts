@@ -255,7 +255,7 @@ describe('ivyRuntime compatibility behavior', () => {
       '    </div>',
       '    <div id="divider3" class="divider" data-resize-target="next"></div>',
       '    <div id="editor-panel" class="sheet-pane" style="min-width: 120px">',
-      '      <div class="editor-resize-handle"></div>',
+      '      <div id="editor-left-resize-handle"></div>',
       '      <div class="panel-header"></div>',
       '    </div>',
       '  </div>',
@@ -267,12 +267,16 @@ describe('ivyRuntime compatibility behavior', () => {
     runtime._refreshEditorLayout = vi.fn();
     const workspace = document.getElementById('sheet-workspace')!;
     const editor = document.getElementById('editor-panel')!;
-    const handle = document.querySelector('.editor-resize-handle')!;
+    const handle = document.getElementById('editor-left-resize-handle')!;
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
     setOffsetWidth(workspace, 1200);
     setOffsetWidth(editor, 420);
     Object.defineProperty(editor, 'getBoundingClientRect', {
       configurable: true,
-      value: () => ({ left: 600, right: 1020, top: 0, bottom: 600, width: 420, height: 600 }),
+      value: () => {
+        const width = Number.parseFloat(editor.style.width) || editor.offsetWidth;
+        return { left: 600, right: 600 + width, top: 0, bottom: 600, width, height: 600 };
+      },
     });
 
     runtime.setupResizer();
@@ -282,6 +286,10 @@ describe('ivyRuntime compatibility behavior', () => {
 
     expect(editor.style.width).toBe('470px');
     expect(editor.style.flex).toBe('0 0 470px');
+    expect(log).toHaveBeenLastCalledWith(
+      '[ivyweb editor-left-resize-handle] editor pane geometry',
+      expect.objectContaining({ left: 600, right: 1070, width: 470, height: 600, styleWidth: '470px', flex: '0 0 470px' }),
+    );
 
     setOffsetWidth(editor, 470);
     handle.dispatchEvent(new MouseEvent('mousedown', { clientX: 602, bubbles: true }));
@@ -290,6 +298,12 @@ describe('ivyRuntime compatibility behavior', () => {
 
     expect(editor.style.width).toBe('430px');
     expect(editor.style.flex).toBe('0 0 430px');
+    expect(log).toHaveBeenCalledTimes(2);
+    expect(log).toHaveBeenLastCalledWith(
+      '[ivyweb editor-left-resize-handle] editor pane geometry',
+      expect.objectContaining({ left: 600, right: 1030, width: 430, height: 600, styleWidth: '430px', flex: '0 0 430px' }),
+    );
+    log.mockRestore();
   });
 
   it('adds the editor resize handle when older markup lacks it', () => {
@@ -299,7 +313,7 @@ describe('ivyRuntime compatibility behavior', () => {
     const handle = runtime._ensureEditorResizeHandle();
 
     expect(handle).not.toBeNull();
-    expect(document.querySelector('#editor-panel > .editor-resize-handle')).toBe(handle);
+    expect(document.querySelector('#editor-panel > #editor-left-resize-handle')).toBe(handle);
     expect(handle.getAttribute('aria-label')).toBe('Resize editor');
   });
 

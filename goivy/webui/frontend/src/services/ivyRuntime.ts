@@ -1970,10 +1970,9 @@ class IvyRuntime {
 
     _ensureEditorResizeHandle() {
         var editorPanel = document.getElementById('editor-panel');
-        if (!editorPanel || editorPanel.querySelector('.editor-resize-handle')) return null;
+        if (!editorPanel || editorPanel.querySelector('#editor-left-resize-handle')) return null;
         var handle = document.createElement('div');
-        handle.id = 'editor-resize-handle';
-        handle.className = 'editor-resize-handle';
+        handle.id = 'editor-left-resize-handle';
         handle.setAttribute('title', 'Drag to resize editor');
         handle.setAttribute('aria-label', 'Resize editor');
         editorPanel.insertBefore(handle, editorPanel.firstChild);
@@ -1985,6 +1984,27 @@ class IvyRuntime {
         var rect = editorPanel.getBoundingClientRect ? editorPanel.getBoundingClientRect() : null;
         var left = rect ? rect.left : 0;
         return event.clientX >= left - 6 && event.clientX <= left + 8;
+    }
+
+    _logEditorLeftResizeGeometry(editorPanel) {
+        if (!editorPanel || !editorPanel.getBoundingClientRect || typeof console === 'undefined' || typeof console.log !== 'function') return;
+        var rect = editorPanel.getBoundingClientRect();
+        console.log('[ivyweb editor-left-resize-handle] editor pane geometry', {
+            x: rect.x != null ? rect.x : rect.left,
+            y: rect.y != null ? rect.y : rect.top,
+            left: rect.left,
+            top: rect.top,
+            right: rect.right,
+            bottom: rect.bottom,
+            width: rect.width,
+            height: rect.height,
+            offsetWidth: editorPanel.offsetWidth,
+            offsetHeight: editorPanel.offsetHeight,
+            clientWidth: editorPanel.clientWidth,
+            clientHeight: editorPanel.clientHeight,
+            styleWidth: editorPanel.style ? editorPanel.style.width : '',
+            flex: editorPanel.style ? editorPanel.style.flex : '',
+        });
     }
 
     /**
@@ -2004,24 +2024,28 @@ class IvyRuntime {
         var activeHandle = null;
         var activePanel = null;
         var activeContainer = null;
+        var activeEditorLeftResize = false;
 
         sheetArea.addEventListener('mousedown', function (e) {
             var target = e.target;
             var div = target && target.closest ? target.closest('.divider') : target;
-            var editorHandle = target && target.closest ? target.closest('.editor-resize-handle') : null;
+            var editorHandle = target && target.closest ? target.closest('#editor-left-resize-handle') : null;
             var editorPanel = target && target.closest ? target.closest('#editor-panel') : null;
             var targetSide;
             var panel;
             var container;
+            activeEditorLeftResize = false;
 
             if (editorHandle && sheetArea.contains(editorHandle)) {
                 editorPanel = editorHandle.closest('#editor-panel');
                 activeHandle = editorHandle;
+                activeEditorLeftResize = true;
                 targetSide = 'next';
                 panel = editorPanel;
                 container = editorPanel && (editorPanel.closest('.sheet-workspace') || editorPanel.parentElement);
             } else if (editorPanel && sheetArea.contains(editorPanel) && self._isEditorResizeEdge(editorPanel, e)) {
                 activeHandle = editorPanel;
+                activeEditorLeftResize = true;
                 targetSide = 'next';
                 panel = editorPanel;
                 container = editorPanel.closest('.sheet-workspace') || editorPanel.parentElement;
@@ -2085,9 +2109,11 @@ class IvyRuntime {
                 if (self.argGraph) self.argGraph.resize();
                 if (self.conceptGraph) self.conceptGraph.resize();
                 self._resizeActiveProofGraph();
+                if (activeEditorLeftResize) self._logEditorLeftResizeGeometry(activePanel);
                 activeHandle = null;
                 activePanel = null;
                 activeContainer = null;
+                activeEditorLeftResize = false;
             }
         });
     }

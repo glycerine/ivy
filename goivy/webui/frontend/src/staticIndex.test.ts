@@ -43,8 +43,8 @@ describe('static graph background controls', () => {
   it('keeps pane resize handles wired to the panes they can actually resize', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
     const divider3 = doc.getElementById('divider3');
-    const editorHandle = doc.querySelector('#editor-panel > .editor-resize-handle');
-    const editorEdgeRule = ivyCss.match(/\.editor-resize-handle\s*\{[^}]+\}/)?.[0] || '';
+    const editorHandle = doc.querySelector('#editor-panel > #editor-left-resize-handle');
+    const editorEdgeRule = ivyCss.match(/#editor-left-resize-handle\s*\{[^}]+\}/)?.[0] || '';
     const proofColumnDividerRule = ivyCss.match(/\.proof-crg-column-divider\s*\{[^}]+\}/)?.[0] || '';
     const proofRowDividerRule = ivyCss.match(/\.proof-crg-row-divider\s*\{[^}]+\}/)?.[0] || '';
 
