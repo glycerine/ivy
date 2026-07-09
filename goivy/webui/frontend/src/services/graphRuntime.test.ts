@@ -73,10 +73,12 @@ function makeNode(element) {
 
 function makeEdge(element) {
   const data = element.data || {};
+  const classes = String(element.classes || '').split(/\s+/).filter(Boolean);
   return {
     length: 1,
     id: () => data.id,
     data: vi.fn((key) => (key ? data[key] : data)),
+    hasClass: vi.fn((className) => classes.includes(className)),
     style: vi.fn(),
   };
 }
@@ -133,6 +135,13 @@ describe('graphRuntime', () => {
     expect(styleFor(CONCEPT_STYLE, 'edge.surjective')['target-arrow-fill']).toBe('filled');
     expect(styleFor(CONCEPT_STYLE, 'node:selected')['overlay-opacity']).toBe(0);
     expect(styleFor(CONCEPT_STYLE, 'edge:selected')['overlay-opacity']).toBe(0);
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge').width).toBe('6px');
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['line-color']).toBe('#00ffd5');
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['target-arrow-color']).toBe('#00ffd5');
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['source-arrow-color']).toBe('#00ffd5');
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['underlay-color']).toBe('#00ffd5');
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['underlay-padding']).toBe('5px');
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['underlay-opacity']).toBe(0.95);
   });
 
   it('wraps semantic graph edge labels for long actions and relations', () => {
@@ -144,6 +153,9 @@ describe('graphRuntime', () => {
     expect(styleFor(ARG_STYLE, 'edge')['text-max-width']).toBeUndefined();
     expect(styleFor(ARG_STYLE, 'edge[text_max_width]')['text-max-width']).toBe('data(text_max_width)');
     expect(styleFor(CONCEPT_STYLE, 'edge').content).toBeUndefined();
+    expect(styleFor(CONCEPT_STYLE, 'edge')['underlay-color']).toBe('#ccff00');
+    expect(styleFor(CONCEPT_STYLE, 'edge')['underlay-padding']).toBe('3px');
+    expect(styleFor(CONCEPT_STYLE, 'edge')['underlay-opacity']).toBe(0.85);
     expect(styleFor(CONCEPT_STYLE, 'edge[label]').content).toBe('data(label)');
     expect(styleFor(CONCEPT_STYLE, 'edge[label]').color).toBe('#000');
     expect(styleFor(CONCEPT_STYLE, 'edge[label]')['text-outline-width']).toBe('3px');
@@ -322,6 +334,32 @@ describe('graphRuntime', () => {
     expect(edge.style).toHaveBeenCalledWith('line-color', '#0000ff');
     expect(edge.style).toHaveBeenCalledWith('target-arrow-color', '#0000ff');
     expect(edge.style).toHaveBeenCalledWith('source-arrow-color', '#0000ff');
+  });
+
+  it('keeps selected concept edges fluorescent over relation line colors', () => {
+    const cy = makeFakeCy();
+    window.cytoscape = vi.fn(() => cy);
+    document.body.innerHTML = '<div id="concept-graph"></div>';
+    const graph = new IvyGraph('concept-graph', CONCEPT_STYLE);
+
+    graph.update([
+      { group: 'nodes', data: { id: 'n0', obj: 'Client', label: 'Client' } },
+      { group: 'nodes', data: { id: 'n1', obj: 'Server', label: 'Server' } },
+      {
+        group: 'edges',
+        classes: 'all_to_all selected_edge',
+        data: { id: 'e0', obj: 'link', source: 'n0', target: 'n1', line_color: '#0000ff' },
+      },
+    ], null);
+
+    const edge = cy.edges()[0];
+    expect(edge.style).toHaveBeenCalledWith('line-color', '#00ffd5');
+    expect(edge.style).toHaveBeenCalledWith('target-arrow-color', '#00ffd5');
+    expect(edge.style).toHaveBeenCalledWith('source-arrow-color', '#00ffd5');
+    expect(edge.style).toHaveBeenCalledWith('underlay-color', '#00ffd5');
+    expect(edge.style).toHaveBeenCalledWith('underlay-padding', '5px');
+    expect(edge.style).toHaveBeenCalledWith('underlay-opacity', 0.95);
+    expect(edge.style).not.toHaveBeenCalledWith('line-color', '#0000ff');
   });
 
   it('fits and resets the graph viewport as the scrollbar replacement', () => {

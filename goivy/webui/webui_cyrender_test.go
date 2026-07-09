@@ -728,6 +728,15 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), "edge")["content"]; got != "" {
 		t.Fatalf("base concept edge content = %q, want no label mapper on broad selector", got)
 	}
+	if got := cyStyleForTest(ConceptStyle(), "edge")["underlay-color"]; got != "#ccff00" {
+		t.Fatalf("base concept edge underlay-color = %q, want #ccff00", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), "edge")["underlay-padding"]; got != "3px" {
+		t.Fatalf("base concept edge underlay-padding = %q, want 3px", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), "edge")["underlay-opacity"]; got != "0.85" {
+		t.Fatalf("base concept edge underlay-opacity = %q, want 0.85", got)
+	}
 	if got := cyStyleForTest(ConceptStyle(), "edge[label]")["content"]; got != "data(label)" {
 		t.Fatalf("concept edge[label] content = %q, want data(label)", got)
 	}
@@ -742,6 +751,36 @@ func TestConceptStyleJSON(t *testing.T) {
 	}
 	if got := cyStyleForTest(ConceptStyle(), "edge[text_max_width]")["text-max-width"]; got != "data(text_max_width)" {
 		t.Fatalf("concept edge[text_max_width] text-max-width = %q, want data(text_max_width)", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["line-color"]; got != "#00ffd5" {
+		t.Fatalf("concept selected edge line-color = %q, want #00ffd5", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["underlay-color"]; got != "#00ffd5" {
+		t.Fatalf("concept selected edge underlay-color = %q, want #00ffd5", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["underlay-padding"]; got != "5px" {
+		t.Fatalf("concept selected edge underlay-padding = %q, want 5px", got)
+	}
+}
+
+func TestConceptStyleKeepsSelectedEdgeAfterRelationColors(t *testing.T) {
+	controls := NewConceptSessionControls()
+	controls.ConceptStyleColors = []CyStyleEntry{
+		{
+			Selector: "edge[obj='link']",
+			Style:    map[string]string{"line-color": "blue"},
+		},
+	}
+
+	styles := controls.GetConceptStyle()
+	if len(styles) == 0 {
+		t.Fatal("empty concept style")
+	}
+	if got := styles[len(styles)-1].Selector; got != conceptSelectedEdgeSelector {
+		t.Fatalf("last concept style selector = %q, want %q", got, conceptSelectedEdgeSelector)
+	}
+	if got := styles[len(styles)-1].Style["line-color"]; got != "#00ffd5" {
+		t.Fatalf("last concept selected edge line-color = %q, want #00ffd5", got)
 	}
 }
 

@@ -1,3 +1,6 @@
+const CONCEPT_EDGE_HALO_COLOR = '#ccff00';
+const CONCEPT_SELECTED_EDGE_COLOR = '#00ffd5';
+
 export const CONCEPT_STYLE = [
   {
     selector: 'node',
@@ -56,6 +59,9 @@ export const CONCEPT_STYLE = [
       'target-arrow-shape': 'triangle',
       'target-arrow-fill': 'filled',
       'source-arrow-fill': 'filled',
+      'underlay-color': CONCEPT_EDGE_HALO_COLOR,
+      'underlay-padding': '3px',
+      'underlay-opacity': 0.85,
       'curve-style': 'bezier',
       'text-wrap': 'wrap',
     },
@@ -96,9 +102,12 @@ export const CONCEPT_STYLE = [
     selector: 'edge.selected_edge',
     style: {
       width: '6px',
-      'line-color': '#007acc',
-      'target-arrow-color': '#007acc',
-      'source-arrow-color': '#007acc',
+      'line-color': CONCEPT_SELECTED_EDGE_COLOR,
+      'target-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
+      'source-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
+      'underlay-color': CONCEPT_SELECTED_EDGE_COLOR,
+      'underlay-padding': '5px',
+      'underlay-opacity': 0.95,
     },
   },
   {
@@ -251,6 +260,11 @@ function classesArray(element: any): string[] {
 
 function hasClass(element: any, className: string): boolean {
   return classesArray(element).includes(className);
+}
+
+function cyElementHasClass(element: any, className: string): boolean {
+  if (element && typeof element.hasClass === 'function') return element.hasClass(className);
+  return false;
 }
 
 function classStringWith(classes: string | string[], className: string): string {
@@ -585,6 +599,15 @@ export class IvyGraph {
       if (borderColor) node.style('border-color', borderColor);
     });
     this.cy.edges().forEach((edge) => {
+      if (cyElementHasClass(edge, 'selected_edge')) {
+        edge.style('line-color', CONCEPT_SELECTED_EDGE_COLOR);
+        edge.style('target-arrow-color', CONCEPT_SELECTED_EDGE_COLOR);
+        edge.style('source-arrow-color', CONCEPT_SELECTED_EDGE_COLOR);
+        edge.style('underlay-color', CONCEPT_SELECTED_EDGE_COLOR);
+        edge.style('underlay-padding', '5px');
+        edge.style('underlay-opacity', 0.95);
+        return;
+      }
       const lineColor = edge.data('line_color') || edge.data('color');
       if (!lineColor) return;
       edge.style('line-color', lineColor);

@@ -6,6 +6,27 @@ type CyStyleEntry struct {
 	Style    map[string]string `json:"style"`
 }
 
+const (
+	conceptEdgeHaloColor        = "#ccff00"
+	conceptSelectedEdgeColor    = "#00ffd5"
+	conceptSelectedEdgeSelector = "edge.selected_edge"
+)
+
+func selectedConceptEdgeStyle() CyStyleEntry {
+	return CyStyleEntry{
+		Selector: conceptSelectedEdgeSelector,
+		Style: map[string]string{
+			"width":              "6px",
+			"line-color":         conceptSelectedEdgeColor,
+			"target-arrow-color": conceptSelectedEdgeColor,
+			"source-arrow-color": conceptSelectedEdgeColor,
+			"underlay-color":     conceptSelectedEdgeColor,
+			"underlay-padding":   "5px",
+			"underlay-opacity":   "0.95",
+		},
+	}
+}
+
 // ConceptStyle returns the Cytoscape stylesheet for concept graphs.
 // This is a direct port of cy_styles.py concept_style.
 func ConceptStyle() []CyStyleEntry {
@@ -70,6 +91,9 @@ func ConceptStyle() []CyStyleEntry {
 				"target-arrow-shape": "triangle",
 				"target-arrow-fill":  "filled",
 				"source-arrow-fill":  "filled",
+				"underlay-color":     conceptEdgeHaloColor,
+				"underlay-padding":   "3px",
+				"underlay-opacity":   "0.85",
 				"text-wrap":          "wrap",
 			},
 		},
@@ -134,6 +158,7 @@ func ConceptStyle() []CyStyleEntry {
 			Selector: "edge:selected",
 			Style:    map[string]string{"overlay-opacity": "0.2"},
 		},
+		selectedConceptEdgeStyle(),
 	}
 }
 
