@@ -7,16 +7,12 @@ type CyStyleEntry struct {
 }
 
 const (
-	conceptEdgeHaloColor                = "#ccff00"
-	conceptEdgeHaloOpacity              = "0.5"
-	conceptEdgeHaloSelector             = "edge.concept_edge_halo"
-	conceptSelectedEdgeColor            = "#00ffd5"
-	conceptSelectedEdgeSelector         = "edge.selected_edge"
-	conceptSelectedEdgeHaloSelector     = "edge.concept_edge_halo.selected_edge"
-	conceptSelectedEdgeHaloWidth        = "12px"
-	conceptSelectedEdgeHaloArrowScale   = "1.55"
-	conceptUnselectedEdgeHaloWidth      = "9px"
-	conceptUnselectedEdgeHaloArrowScale = "1.35"
+	conceptEdgeHaloColor            = "#ccff00"
+	conceptEdgeHaloOpacity          = "0.5"
+	conceptEdgeHaloSelector         = "edge.concept_edge_halo"
+	conceptSelectedEdgeColor        = "#00ffd5"
+	conceptSelectedEdgeSelector     = "edge.selected_edge"
+	conceptSelectedEdgeHaloSelector = "edge.concept_edge_halo.selected_edge"
 )
 
 func selectedConceptEdgeStyle() CyStyleEntry {
@@ -36,19 +32,19 @@ func conceptEdgeHaloStyle() CyStyleEntry {
 		Selector: conceptEdgeHaloSelector,
 		Style: map[string]string{
 			"content":                "",
-			"width":                  conceptUnselectedEdgeHaloWidth,
+			"width":                  "data(halo_width)",
 			"line-color":             conceptEdgeHaloColor,
 			"target-arrow-color":     conceptEdgeHaloColor,
 			"source-arrow-color":     conceptEdgeHaloColor,
 			"mid-target-arrow-color": conceptEdgeHaloColor,
 			"mid-source-arrow-color": conceptEdgeHaloColor,
 			"curve-style":            "straight",
-			"arrow-scale":            conceptUnselectedEdgeHaloArrowScale,
+			"arrow-scale":            "1",
 			"line-opacity":           conceptEdgeHaloOpacity,
 			"text-opacity":           "0",
 			"events":                 "no",
 			"overlay-opacity":        "0",
-			"z-index":                "-1",
+			"z-index":                "2",
 		},
 	}
 }
@@ -57,14 +53,13 @@ func selectedConceptEdgeHaloStyle() CyStyleEntry {
 	return CyStyleEntry{
 		Selector: conceptSelectedEdgeHaloSelector,
 		Style: map[string]string{
-			"width":                  conceptSelectedEdgeHaloWidth,
 			"line-color":             conceptSelectedEdgeColor,
 			"target-arrow-color":     conceptSelectedEdgeColor,
 			"source-arrow-color":     conceptSelectedEdgeColor,
 			"mid-target-arrow-color": conceptSelectedEdgeColor,
 			"mid-source-arrow-color": conceptSelectedEdgeColor,
 			"curve-style":            "straight",
-			"arrow-scale":            conceptSelectedEdgeHaloArrowScale,
+			"arrow-scale":            "1",
 			"line-opacity":           conceptEdgeHaloOpacity,
 		},
 	}

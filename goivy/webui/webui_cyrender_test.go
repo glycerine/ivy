@@ -746,8 +746,8 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["content"]; got != "" {
 		t.Fatalf("concept edge halo content = %q, want empty label", got)
 	}
-	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["width"]; got != "9px" {
-		t.Fatalf("concept edge halo width = %q, want 9px", got)
+	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["width"]; got != "data(halo_width)" {
+		t.Fatalf("concept edge halo width = %q, want data(halo_width)", got)
 	}
 	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["line-color"]; got != "#ccff00" {
 		t.Fatalf("concept edge halo line-color = %q, want #ccff00", got)
@@ -755,8 +755,8 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["target-arrow-color"]; got != "#ccff00" {
 		t.Fatalf("concept edge halo target-arrow-color = %q, want #ccff00", got)
 	}
-	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["arrow-scale"]; got != "1.35" {
-		t.Fatalf("concept edge halo arrow-scale = %q, want 1.35", got)
+	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["arrow-scale"]; got != "1" {
+		t.Fatalf("concept edge halo arrow-scale = %q, want 1", got)
 	}
 	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["curve-style"]; got != "straight" {
 		t.Fatalf("concept edge halo curve-style = %q, want straight", got)
@@ -767,6 +767,9 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["events"]; got != "no" {
 		t.Fatalf("concept edge halo events = %q, want no", got)
 	}
+	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["z-index"]; got != "2" {
+		t.Fatalf("concept edge halo z-index = %q, want 2", got)
+	}
 	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["line-color"]; got != "#00ffd5" {
 		t.Fatalf("concept selected edge line-color = %q, want #00ffd5", got)
 	}
@@ -775,6 +778,9 @@ func TestConceptStyleJSON(t *testing.T) {
 	}
 	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeHaloSelector)["target-arrow-color"]; got != "#00ffd5" {
 		t.Fatalf("concept selected edge halo target-arrow-color = %q, want #00ffd5", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeHaloSelector)["arrow-scale"]; got != "1" {
+		t.Fatalf("concept selected edge halo arrow-scale = %q, want 1", got)
 	}
 	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeHaloSelector)["line-opacity"]; got != "0.5" {
 		t.Fatalf("concept selected edge halo line-opacity = %q, want 0.5", got)

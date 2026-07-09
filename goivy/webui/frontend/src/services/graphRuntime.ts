@@ -101,19 +101,19 @@ export const CONCEPT_STYLE = [
     selector: `edge.${CONCEPT_EDGE_HALO_CLASS}`,
     style: {
       content: '',
-      width: '9px',
+      width: 'data(halo_width)',
       'line-color': CONCEPT_EDGE_HALO_COLOR,
       'target-arrow-color': CONCEPT_EDGE_HALO_COLOR,
       'source-arrow-color': CONCEPT_EDGE_HALO_COLOR,
       'mid-target-arrow-color': CONCEPT_EDGE_HALO_COLOR,
       'mid-source-arrow-color': CONCEPT_EDGE_HALO_COLOR,
       'curve-style': 'straight',
-      'arrow-scale': 1.35,
+      'arrow-scale': 1,
       'line-opacity': CONCEPT_EDGE_HALO_OPACITY,
       'text-opacity': 0,
       events: 'no',
       'overlay-opacity': 0,
-      'z-index': -1,
+      'z-index': 2,
     },
   },
   {
@@ -128,14 +128,13 @@ export const CONCEPT_STYLE = [
   {
     selector: `edge.${CONCEPT_EDGE_HALO_CLASS}.selected_edge`,
     style: {
-      width: '12px',
       'line-color': CONCEPT_SELECTED_EDGE_COLOR,
       'target-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
       'source-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
       'mid-target-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
       'mid-source-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
       'curve-style': 'straight',
-      'arrow-scale': 1.55,
+      'arrow-scale': 1,
       'line-opacity': CONCEPT_EDGE_HALO_OPACITY,
     },
   },
@@ -564,6 +563,18 @@ function conceptEdgeHaloClasses(element: any): string {
   ])).join(' ');
 }
 
+function conceptEdgeVisualWidth(element: any): string {
+  if (hasClass(element, 'selected_edge')) return '6px';
+  if (
+    hasClass(element, 'none_to_none')
+    || hasClass(element, 'all_to_all')
+    || hasClass(element, 'edge_unknown')
+  ) {
+    return '4px';
+  }
+  return '3px';
+}
+
 function conceptEdgeHaloElement(element: any, index: number) {
   const data = (element && element.data) || {};
   const id = String(data.id || data.obj || `edge_${index}`);
@@ -580,6 +591,7 @@ function conceptEdgeHaloElement(element: any, index: number) {
       halo_obj: data.obj || '',
       halo_source_obj: data.source_obj || '',
       halo_target_obj: data.target_obj || '',
+      halo_width: conceptEdgeVisualWidth(element),
       layout_constraint: false,
     },
     classes: conceptEdgeHaloClasses(element),
@@ -599,7 +611,9 @@ function expandConceptEdgeHalos(elements: any[], enabled: boolean): any[] {
     ) {
       const halo = conceptEdgeHaloElement(element, haloIndex);
       haloIndex += 1;
+      out.push(element);
       if (halo) out.push(halo);
+      continue;
     }
     out.push(element);
   }
