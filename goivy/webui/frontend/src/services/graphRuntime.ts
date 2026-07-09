@@ -1,7 +1,5 @@
-const CONCEPT_EDGE_HALO_COLOR = '#ccff00';
-const CONCEPT_EDGE_HALO_CLASS = 'concept_edge_halo';
-const CONCEPT_EDGE_HALO_OPACITY = 0.5;
-const CONCEPT_SELECTED_EDGE_COLOR = '#00ffd5';
+const CONCEPT_EDGE_OUTLINE_COLOR = 'rgba(204, 255, 0, 0.5)';
+const CONCEPT_SELECTED_EDGE_COLOR = 'rgba(0, 255, 213, 0.5)';
 
 export const CONCEPT_STYLE = [
   {
@@ -61,6 +59,8 @@ export const CONCEPT_STYLE = [
       'target-arrow-shape': 'triangle',
       'target-arrow-fill': 'filled',
       'source-arrow-fill': 'filled',
+      'line-outline-width': '3px',
+      'line-outline-color': CONCEPT_EDGE_OUTLINE_COLOR,
       'curve-style': 'bezier',
       'text-wrap': 'wrap',
     },
@@ -98,44 +98,14 @@ export const CONCEPT_STYLE = [
   { selector: 'node:selected', style: { 'overlay-opacity': 0 } },
   { selector: 'edge:selected', style: { 'overlay-opacity': 0 } },
   {
-    selector: `edge.${CONCEPT_EDGE_HALO_CLASS}`,
-    style: {
-      content: '',
-      width: 'data(halo_width)',
-      'line-color': CONCEPT_EDGE_HALO_COLOR,
-      'target-arrow-color': CONCEPT_EDGE_HALO_COLOR,
-      'source-arrow-color': CONCEPT_EDGE_HALO_COLOR,
-      'mid-target-arrow-color': CONCEPT_EDGE_HALO_COLOR,
-      'mid-source-arrow-color': CONCEPT_EDGE_HALO_COLOR,
-      'curve-style': 'straight',
-      'arrow-scale': 1,
-      'line-opacity': CONCEPT_EDGE_HALO_OPACITY,
-      'text-opacity': 0,
-      events: 'no',
-      'overlay-opacity': 0,
-      'z-index': 2,
-    },
-  },
-  {
     selector: 'edge.selected_edge',
     style: {
       width: '6px',
       'line-color': CONCEPT_SELECTED_EDGE_COLOR,
       'target-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
       'source-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
-    },
-  },
-  {
-    selector: `edge.${CONCEPT_EDGE_HALO_CLASS}.selected_edge`,
-    style: {
-      'line-color': CONCEPT_SELECTED_EDGE_COLOR,
-      'target-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
-      'source-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
-      'mid-target-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
-      'mid-source-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
-      'curve-style': 'straight',
-      'arrow-scale': 1,
-      'line-opacity': CONCEPT_EDGE_HALO_OPACITY,
+      'line-outline-width': '3px',
+      'line-outline-color': CONCEPT_SELECTED_EDGE_COLOR,
     },
   },
   {
@@ -293,11 +263,6 @@ function hasClass(element: any, className: string): boolean {
 function cyElementHasClass(element: any, className: string): boolean {
   if (element && typeof element.hasClass === 'function') return element.hasClass(className);
   return false;
-}
-
-function styleSupportsConceptEdgeHalos(style: any): boolean {
-  return Array.isArray(style)
-    && style.some((entry) => entry && entry.selector === `edge.${CONCEPT_EDGE_HALO_CLASS}`);
 }
 
 function classStringWith(classes: string | string[], className: string): string {
@@ -507,7 +472,6 @@ function averageKnownNeighborPosition(node: string, elements: any[], positions: 
   const neighbors = [];
   for (const element of elements || []) {
     if (!element || element.group !== 'edges') continue;
-    if (hasClass(element, CONCEPT_EDGE_HALO_CLASS)) continue;
     const data = element.data || {};
     if (data.source === node && positions[data.target]) neighbors.push(positions[data.target]);
     if (data.target === node && positions[data.source]) neighbors.push(positions[data.source]);
@@ -555,71 +519,6 @@ function allNodesHavePositions(elements: any[], positions: any): boolean {
   return ids.length > 0 && ids.every((id) => !!positions[id]);
 }
 
-function conceptEdgeHaloClasses(element: any): string {
-  return Array.from(new Set([
-    ...classesArray(element).filter((klass) => klass !== 'layout_only' && klass !== 'layout_ignored'),
-    CONCEPT_EDGE_HALO_CLASS,
-    'layout_ignored',
-  ])).join(' ');
-}
-
-function conceptEdgeVisualWidth(element: any): string {
-  if (hasClass(element, 'selected_edge')) return '6px';
-  if (
-    hasClass(element, 'none_to_none')
-    || hasClass(element, 'all_to_all')
-    || hasClass(element, 'edge_unknown')
-  ) {
-    return '4px';
-  }
-  return '3px';
-}
-
-function conceptEdgeHaloElement(element: any, index: number) {
-  const data = (element && element.data) || {};
-  const id = String(data.id || data.obj || `edge_${index}`);
-  if (!data.source || !data.target) return null;
-  return {
-    group: 'edges',
-    selectable: false,
-    grabbable: false,
-    data: {
-      id: `concept_edge_halo_${id}`,
-      source: data.source,
-      target: data.target,
-      halo_for: id,
-      halo_obj: data.obj || '',
-      halo_source_obj: data.source_obj || '',
-      halo_target_obj: data.target_obj || '',
-      halo_width: conceptEdgeVisualWidth(element),
-      layout_constraint: false,
-    },
-    classes: conceptEdgeHaloClasses(element),
-  };
-}
-
-function expandConceptEdgeHalos(elements: any[], enabled: boolean): any[] {
-  if (!enabled) return elements;
-  const out = [];
-  let haloIndex = 0;
-  for (const element of elements || []) {
-    if (
-      element
-      && element.group === 'edges'
-      && !hasClass(element, CONCEPT_EDGE_HALO_CLASS)
-      && !hasClass(element, 'layout_only')
-    ) {
-      const halo = conceptEdgeHaloElement(element, haloIndex);
-      haloIndex += 1;
-      out.push(element);
-      if (halo) out.push(halo);
-      continue;
-    }
-    out.push(element);
-  }
-  return out;
-}
-
 export class IvyGraph {
   [key: string]: any;
 
@@ -627,7 +526,6 @@ export class IvyGraph {
     this.containerId = containerId;
     this.win = getWindow(win);
     this.doc = this.win && this.win.document;
-    this._conceptEdgeHalos = styleSupportsConceptEdgeHalos(style);
     const cytoscape = getCytoscape(this.win);
     try {
       this.cy = cytoscape({
@@ -667,10 +565,7 @@ export class IvyGraph {
     this.cy.elements().remove();
     if (!elements || elements.length === 0) return;
 
-    const toAdd = expandConceptEdgeHalos(
-      expandLayoutEdges(expandSubgraphShapes(elements)),
-      this._conceptEdgeHalos,
-    ).map((element) => {
+    const toAdd = expandLayoutEdges(expandSubgraphShapes(elements)).map((element) => {
       const next = {
         ...element,
         data: { ...(element.data || {}) },
@@ -702,11 +597,12 @@ export class IvyGraph {
       if (borderColor) node.style('border-color', borderColor);
     });
     this.cy.edges().forEach((edge) => {
-      if (cyElementHasClass(edge, CONCEPT_EDGE_HALO_CLASS)) return;
       if (cyElementHasClass(edge, 'selected_edge')) {
         edge.style('line-color', CONCEPT_SELECTED_EDGE_COLOR);
         edge.style('target-arrow-color', CONCEPT_SELECTED_EDGE_COLOR);
         edge.style('source-arrow-color', CONCEPT_SELECTED_EDGE_COLOR);
+        edge.style('line-outline-width', '3px');
+        edge.style('line-outline-color', CONCEPT_SELECTED_EDGE_COLOR);
         return;
       }
       const lineColor = edge.data('line_color') || edge.data('color');

@@ -136,23 +136,11 @@ describe('graphRuntime', () => {
     expect(styleFor(CONCEPT_STYLE, 'node:selected')['overlay-opacity']).toBe(0);
     expect(styleFor(CONCEPT_STYLE, 'edge:selected')['overlay-opacity']).toBe(0);
     expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge').width).toBe('6px');
-    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['line-color']).toBe('#00ffd5');
-    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['target-arrow-color']).toBe('#00ffd5');
-    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['source-arrow-color']).toBe('#00ffd5');
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo').width).toBe('data(halo_width)');
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo').content).toBe('');
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo')['line-color']).toBe('#ccff00');
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo')['target-arrow-color']).toBe('#ccff00');
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo')['curve-style']).toBe('straight');
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo')['arrow-scale']).toBe(1);
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo')['line-opacity']).toBe(0.5);
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo').events).toBe('no');
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo')['z-index']).toBe(2);
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo.selected_edge').width).toBeUndefined();
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo.selected_edge')['line-color']).toBe('#00ffd5');
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo.selected_edge')['target-arrow-color']).toBe('#00ffd5');
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo.selected_edge')['arrow-scale']).toBe(1);
-    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo.selected_edge')['line-opacity']).toBe(0.5);
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['line-color']).toBe('rgba(0, 255, 213, 0.5)');
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['target-arrow-color']).toBe('rgba(0, 255, 213, 0.5)');
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['source-arrow-color']).toBe('rgba(0, 255, 213, 0.5)');
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['line-outline-width']).toBe('3px');
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['line-outline-color']).toBe('rgba(0, 255, 213, 0.5)');
   });
 
   it('wraps semantic graph edge labels for long actions and relations', () => {
@@ -164,6 +152,8 @@ describe('graphRuntime', () => {
     expect(styleFor(ARG_STYLE, 'edge')['text-max-width']).toBeUndefined();
     expect(styleFor(ARG_STYLE, 'edge[text_max_width]')['text-max-width']).toBe('data(text_max_width)');
     expect(styleFor(CONCEPT_STYLE, 'edge').content).toBeUndefined();
+    expect(styleFor(CONCEPT_STYLE, 'edge')['line-outline-width']).toBe('3px');
+    expect(styleFor(CONCEPT_STYLE, 'edge')['line-outline-color']).toBe('rgba(204, 255, 0, 0.5)');
     expect(styleFor(CONCEPT_STYLE, 'edge[label]').content).toBe('data(label)');
     expect(styleFor(CONCEPT_STYLE, 'edge[label]').color).toBe('#000');
     expect(styleFor(CONCEPT_STYLE, 'edge[label]')['text-outline-width']).toBe('3px');

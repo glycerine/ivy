@@ -364,19 +364,15 @@ func (c *ConceptSessionControls) NodeLabelNameClick(labelName string) {
 //	        self.concept_style_colors
 //	    )
 func (c *ConceptSessionControls) GetConceptStyle() []CyStyleEntry {
-	out := make([]CyStyleEntry, 0, len(c.ConceptStyleBasis)+len(c.ConceptStyleColors)+3)
+	out := make([]CyStyleEntry, 0, len(c.ConceptStyleBasis)+len(c.ConceptStyleColors)+1)
 	for _, entry := range c.ConceptStyleBasis {
-		if entry.Selector == conceptEdgeHaloSelector ||
-			entry.Selector == conceptSelectedEdgeSelector ||
-			entry.Selector == conceptSelectedEdgeHaloSelector {
+		if entry.Selector == conceptSelectedEdgeSelector {
 			continue
 		}
 		out = append(out, entry)
 	}
 	out = append(out, c.ConceptStyleColors...)
-	out = append(out, conceptEdgeHaloStyle())
 	out = append(out, selectedConceptEdgeStyle())
-	out = append(out, selectedConceptEdgeHaloStyle())
 	return out
 }
 

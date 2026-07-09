@@ -7,12 +7,9 @@ type CyStyleEntry struct {
 }
 
 const (
-	conceptEdgeHaloColor            = "#ccff00"
-	conceptEdgeHaloOpacity          = "0.5"
-	conceptEdgeHaloSelector         = "edge.concept_edge_halo"
-	conceptSelectedEdgeColor        = "#00ffd5"
-	conceptSelectedEdgeSelector     = "edge.selected_edge"
-	conceptSelectedEdgeHaloSelector = "edge.concept_edge_halo.selected_edge"
+	conceptEdgeOutlineColor     = "rgba(204, 255, 0, 0.5)"
+	conceptSelectedEdgeColor    = "rgba(0, 255, 213, 0.5)"
+	conceptSelectedEdgeSelector = "edge.selected_edge"
 )
 
 func selectedConceptEdgeStyle() CyStyleEntry {
@@ -23,44 +20,8 @@ func selectedConceptEdgeStyle() CyStyleEntry {
 			"line-color":         conceptSelectedEdgeColor,
 			"target-arrow-color": conceptSelectedEdgeColor,
 			"source-arrow-color": conceptSelectedEdgeColor,
-		},
-	}
-}
-
-func conceptEdgeHaloStyle() CyStyleEntry {
-	return CyStyleEntry{
-		Selector: conceptEdgeHaloSelector,
-		Style: map[string]string{
-			"content":                "",
-			"width":                  "data(halo_width)",
-			"line-color":             conceptEdgeHaloColor,
-			"target-arrow-color":     conceptEdgeHaloColor,
-			"source-arrow-color":     conceptEdgeHaloColor,
-			"mid-target-arrow-color": conceptEdgeHaloColor,
-			"mid-source-arrow-color": conceptEdgeHaloColor,
-			"curve-style":            "straight",
-			"arrow-scale":            "1",
-			"line-opacity":           conceptEdgeHaloOpacity,
-			"text-opacity":           "0",
-			"events":                 "no",
-			"overlay-opacity":        "0",
-			"z-index":                "2",
-		},
-	}
-}
-
-func selectedConceptEdgeHaloStyle() CyStyleEntry {
-	return CyStyleEntry{
-		Selector: conceptSelectedEdgeHaloSelector,
-		Style: map[string]string{
-			"line-color":             conceptSelectedEdgeColor,
-			"target-arrow-color":     conceptSelectedEdgeColor,
-			"source-arrow-color":     conceptSelectedEdgeColor,
-			"mid-target-arrow-color": conceptSelectedEdgeColor,
-			"mid-source-arrow-color": conceptSelectedEdgeColor,
-			"curve-style":            "straight",
-			"arrow-scale":            "1",
-			"line-opacity":           conceptEdgeHaloOpacity,
+			"line-outline-width": "3px",
+			"line-outline-color": conceptSelectedEdgeColor,
 		},
 	}
 }
@@ -129,6 +90,8 @@ func ConceptStyle() []CyStyleEntry {
 				"target-arrow-shape": "triangle",
 				"target-arrow-fill":  "filled",
 				"source-arrow-fill":  "filled",
+				"line-outline-width": "3px",
+				"line-outline-color": conceptEdgeOutlineColor,
 				"text-wrap":          "wrap",
 			},
 		},
@@ -193,9 +156,7 @@ func ConceptStyle() []CyStyleEntry {
 			Selector: "edge:selected",
 			Style:    map[string]string{"overlay-opacity": "0.2"},
 		},
-		conceptEdgeHaloStyle(),
 		selectedConceptEdgeStyle(),
-		selectedConceptEdgeHaloStyle(),
 	}
 }
 
