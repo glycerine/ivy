@@ -287,56 +287,7 @@ describe('graphRuntime', () => {
     expect(cy.elements().not).toHaveBeenCalledWith('.layout_ignored');
   });
 
-  it('adds non-interactive halo edges around concept graph arrowheads', () => {
-    const cy = makeFakeCy();
-    window.cytoscape = vi.fn(() => cy);
-    document.body.innerHTML = '<div id="concept-graph"></div>';
-    const graph = new IvyGraph('concept-graph', CONCEPT_STYLE);
-
-    graph.update([
-      { group: 'nodes', data: { id: 'n0', obj: 'Client', label: 'Client' } },
-      { group: 'nodes', data: { id: 'n1', obj: 'Server', label: 'Server' } },
-      {
-        group: 'edges',
-        classes: 'all_to_all selected_edge',
-        data: {
-          id: 'e0',
-          obj: 'link',
-          source: 'n0',
-          target: 'n1',
-          source_obj: 'Client',
-          target_obj: 'Server',
-          line_color: '#0000ff',
-        },
-      },
-    ], null);
-
-    const halo = cy.added.find((element) => element.data.id === 'concept_edge_halo_e0');
-    const real = cy.added.find((element) => element.data.id === 'e0');
-    expect(cy.added.indexOf(halo)).toBeGreaterThan(cy.added.indexOf(real));
-    expect(halo).toMatchObject({
-      group: 'edges',
-      selectable: false,
-      grabbable: false,
-      classes: expect.stringContaining('concept_edge_halo'),
-      data: expect.objectContaining({
-        source: 'n0',
-        target: 'n1',
-        halo_for: 'e0',
-        halo_obj: 'link',
-        halo_source_obj: 'Client',
-        halo_target_obj: 'Server',
-        halo_width: '6px',
-        layout_constraint: false,
-      }),
-    });
-    expect(halo.classes).toContain('layout_ignored');
-    expect(halo.classes).toContain('selected_edge');
-    expect(halo.data.obj).toBeUndefined();
-    expect(cy.elements().not).toHaveBeenCalledWith('.layout_ignored');
-  });
-
-  it('matches unselected concept halo arrowhead size to the visible edge width', () => {
+  it('does not add a separate visual edge for concept graph outlines', () => {
     const cy = makeFakeCy();
     window.cytoscape = vi.fn(() => cy);
     document.body.innerHTML = '<div id="concept-graph"></div>';
@@ -352,8 +303,7 @@ describe('graphRuntime', () => {
       },
     ], null);
 
-    const halo = cy.added.find((element) => element.data.id === 'concept_edge_halo_e0');
-    expect(halo.data.halo_width).toBe('4px');
+    expect(cy.added.filter((element) => element.group === 'edges').map((element) => element.data.id)).toEqual(['e0']);
   });
 
   it('updates Cytoscape elements with Ivy defaults and supplied positions', () => {
@@ -420,12 +370,12 @@ describe('graphRuntime', () => {
     ], null);
 
     const edge = cy.edges().find((candidate) => candidate.id() === 'e0');
-    const halo = cy.edges().find((candidate) => candidate.id() === 'concept_edge_halo_e0');
-    expect(edge.style).toHaveBeenCalledWith('line-color', '#00ffd5');
-    expect(edge.style).toHaveBeenCalledWith('target-arrow-color', '#00ffd5');
-    expect(edge.style).toHaveBeenCalledWith('source-arrow-color', '#00ffd5');
+    expect(edge.style).toHaveBeenCalledWith('line-color', 'rgba(0, 255, 213, 0.5)');
+    expect(edge.style).toHaveBeenCalledWith('target-arrow-color', 'rgba(0, 255, 213, 0.5)');
+    expect(edge.style).toHaveBeenCalledWith('source-arrow-color', 'rgba(0, 255, 213, 0.5)');
+    expect(edge.style).toHaveBeenCalledWith('line-outline-width', '3px');
+    expect(edge.style).toHaveBeenCalledWith('line-outline-color', 'rgba(0, 255, 213, 0.5)');
     expect(edge.style).not.toHaveBeenCalledWith('line-color', '#0000ff');
-    expect(halo.style).not.toHaveBeenCalledWith('line-color', '#0000ff');
   });
 
   it('fits and resets the graph viewport as the scrollbar replacement', () => {

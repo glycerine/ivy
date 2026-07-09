@@ -294,17 +294,11 @@ export function applyEdgeVisibility(app, conceptGraph, view = null) {
   const conceptView = view || selectConceptGraphView(activeSheet(app));
   graph.cy.edges().forEach((edge) => {
     const id = edge.id ? edge.id() : edge.data('id');
-    const haloFor = edge.data('halo_for') || '';
-    const obj = edge.data('obj') || edge.data('halo_obj') || '';
-    const sourceObj = edge.data('source_obj') || edge.data('halo_source_obj') || '';
-    const targetObj = edge.data('target_obj') || edge.data('halo_target_obj') || '';
     const aliases = [
       id,
       `edge:${id}`,
-      haloFor,
-      `edge:${haloFor}`,
-      `edge:${obj}`,
-      `edge:${obj}|${sourceObj}|${targetObj}`,
+      `edge:${edge.data('obj') || ''}`,
+      `edge:${edge.data('obj') || ''}|${edge.data('source_obj') || ''}|${edge.data('target_obj') || ''}`,
     ];
     const visible = aliases.some((alias) => conceptView.edgeVisibilityById[alias]);
     edge.style('display', visible ? 'element' : 'none');

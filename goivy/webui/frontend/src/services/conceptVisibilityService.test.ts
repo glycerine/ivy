@@ -3,7 +3,6 @@ import {
   displayConceptName,
   findEdgeVisibility,
   hydrateBackendToggleState,
-  applyEdgeVisibility,
   onDisplayClassToggle,
   onEdgeToggle,
   onRelationToggle,
@@ -344,42 +343,6 @@ describe('conceptVisibilityService', () => {
       transitive: false,
     });
     expect(displayConceptName('=X:client')).toBe('=X');
-  });
-
-  it('applies real edge visibility to concept edge halos', () => {
-    const makeEdge = (data) => ({
-      id: vi.fn(() => data.id),
-      data: vi.fn((key) => data[key]),
-      style: vi.fn(),
-    });
-    const real = makeEdge({
-      id: 'e0',
-      obj: 'link',
-      source_obj: 'Client',
-      target_obj: 'Server',
-    });
-    const halo = makeEdge({
-      id: 'concept_edge_halo_e0',
-      halo_for: 'e0',
-      halo_obj: 'link',
-      halo_source_obj: 'Client',
-      halo_target_obj: 'Server',
-    });
-    const app = modelApp({ elements: [], toggles: {} });
-    const view = {
-      edgeVisibilityById: {
-        'edge:link|Client|Server': true,
-      },
-    };
-
-    applyEdgeVisibility(app, {
-      cy: {
-        edges: () => [real, halo],
-      },
-    }, view);
-
-    expect(real.style).toHaveBeenCalledWith('display', 'element');
-    expect(halo.style).toHaveBeenCalledWith('display', 'element');
   });
 
   it('updates the state label through the DOM', () => {
