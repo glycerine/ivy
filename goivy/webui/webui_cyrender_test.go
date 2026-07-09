@@ -728,15 +728,6 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), "edge")["content"]; got != "" {
 		t.Fatalf("base concept edge content = %q, want no label mapper on broad selector", got)
 	}
-	if got := cyStyleForTest(ConceptStyle(), "edge")["underlay-color"]; got != "#ccff00" {
-		t.Fatalf("base concept edge underlay-color = %q, want #ccff00", got)
-	}
-	if got := cyStyleForTest(ConceptStyle(), "edge")["underlay-padding"]; got != "3px" {
-		t.Fatalf("base concept edge underlay-padding = %q, want 3px", got)
-	}
-	if got := cyStyleForTest(ConceptStyle(), "edge")["underlay-opacity"]; got != "0.85" {
-		t.Fatalf("base concept edge underlay-opacity = %q, want 0.85", got)
-	}
 	if got := cyStyleForTest(ConceptStyle(), "edge[label]")["content"]; got != "data(label)" {
 		t.Fatalf("concept edge[label] content = %q, want data(label)", got)
 	}
@@ -752,14 +743,41 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), "edge[text_max_width]")["text-max-width"]; got != "data(text_max_width)" {
 		t.Fatalf("concept edge[text_max_width] text-max-width = %q, want data(text_max_width)", got)
 	}
+	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["content"]; got != "" {
+		t.Fatalf("concept edge halo content = %q, want empty label", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["width"]; got != "9px" {
+		t.Fatalf("concept edge halo width = %q, want 9px", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["line-color"]; got != "#ccff00" {
+		t.Fatalf("concept edge halo line-color = %q, want #ccff00", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["target-arrow-color"]; got != "#ccff00" {
+		t.Fatalf("concept edge halo target-arrow-color = %q, want #ccff00", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["arrow-scale"]; got != "1.35" {
+		t.Fatalf("concept edge halo arrow-scale = %q, want 1.35", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["curve-style"]; got != "straight" {
+		t.Fatalf("concept edge halo curve-style = %q, want straight", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["line-opacity"]; got != "0.5" {
+		t.Fatalf("concept edge halo line-opacity = %q, want 0.5", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptEdgeHaloSelector)["events"]; got != "no" {
+		t.Fatalf("concept edge halo events = %q, want no", got)
+	}
 	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["line-color"]; got != "#00ffd5" {
 		t.Fatalf("concept selected edge line-color = %q, want #00ffd5", got)
 	}
-	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["underlay-color"]; got != "#00ffd5" {
-		t.Fatalf("concept selected edge underlay-color = %q, want #00ffd5", got)
+	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeHaloSelector)["line-color"]; got != "#00ffd5" {
+		t.Fatalf("concept selected edge halo line-color = %q, want #00ffd5", got)
 	}
-	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["underlay-padding"]; got != "5px" {
-		t.Fatalf("concept selected edge underlay-padding = %q, want 5px", got)
+	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeHaloSelector)["target-arrow-color"]; got != "#00ffd5" {
+		t.Fatalf("concept selected edge halo target-arrow-color = %q, want #00ffd5", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeHaloSelector)["line-opacity"]; got != "0.5" {
+		t.Fatalf("concept selected edge halo line-opacity = %q, want 0.5", got)
 	}
 }
 
@@ -776,11 +794,17 @@ func TestConceptStyleKeepsSelectedEdgeAfterRelationColors(t *testing.T) {
 	if len(styles) == 0 {
 		t.Fatal("empty concept style")
 	}
-	if got := styles[len(styles)-1].Selector; got != conceptSelectedEdgeSelector {
-		t.Fatalf("last concept style selector = %q, want %q", got, conceptSelectedEdgeSelector)
+	if got := styles[len(styles)-3].Selector; got != conceptEdgeHaloSelector {
+		t.Fatalf("third-from-last concept style selector = %q, want %q", got, conceptEdgeHaloSelector)
+	}
+	if got := styles[len(styles)-2].Selector; got != conceptSelectedEdgeSelector {
+		t.Fatalf("second-from-last concept style selector = %q, want %q", got, conceptSelectedEdgeSelector)
+	}
+	if got := styles[len(styles)-1].Selector; got != conceptSelectedEdgeHaloSelector {
+		t.Fatalf("last concept style selector = %q, want %q", got, conceptSelectedEdgeHaloSelector)
 	}
 	if got := styles[len(styles)-1].Style["line-color"]; got != "#00ffd5" {
-		t.Fatalf("last concept selected edge line-color = %q, want #00ffd5", got)
+		t.Fatalf("last concept selected edge halo line-color = %q, want #00ffd5", got)
 	}
 }
 

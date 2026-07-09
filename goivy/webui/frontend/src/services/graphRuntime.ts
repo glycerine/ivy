@@ -1,4 +1,6 @@
 const CONCEPT_EDGE_HALO_COLOR = '#ccff00';
+const CONCEPT_EDGE_HALO_CLASS = 'concept_edge_halo';
+const CONCEPT_EDGE_HALO_OPACITY = 0.5;
 const CONCEPT_SELECTED_EDGE_COLOR = '#00ffd5';
 
 export const CONCEPT_STYLE = [
@@ -59,9 +61,6 @@ export const CONCEPT_STYLE = [
       'target-arrow-shape': 'triangle',
       'target-arrow-fill': 'filled',
       'source-arrow-fill': 'filled',
-      'underlay-color': CONCEPT_EDGE_HALO_COLOR,
-      'underlay-padding': '3px',
-      'underlay-opacity': 0.85,
       'curve-style': 'bezier',
       'text-wrap': 'wrap',
     },
@@ -99,15 +98,45 @@ export const CONCEPT_STYLE = [
   { selector: 'node:selected', style: { 'overlay-opacity': 0 } },
   { selector: 'edge:selected', style: { 'overlay-opacity': 0 } },
   {
+    selector: `edge.${CONCEPT_EDGE_HALO_CLASS}`,
+    style: {
+      content: '',
+      width: '9px',
+      'line-color': CONCEPT_EDGE_HALO_COLOR,
+      'target-arrow-color': CONCEPT_EDGE_HALO_COLOR,
+      'source-arrow-color': CONCEPT_EDGE_HALO_COLOR,
+      'mid-target-arrow-color': CONCEPT_EDGE_HALO_COLOR,
+      'mid-source-arrow-color': CONCEPT_EDGE_HALO_COLOR,
+      'curve-style': 'straight',
+      'arrow-scale': 1.35,
+      'line-opacity': CONCEPT_EDGE_HALO_OPACITY,
+      'text-opacity': 0,
+      events: 'no',
+      'overlay-opacity': 0,
+      'z-index': -1,
+    },
+  },
+  {
     selector: 'edge.selected_edge',
     style: {
       width: '6px',
       'line-color': CONCEPT_SELECTED_EDGE_COLOR,
       'target-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
       'source-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
-      'underlay-color': CONCEPT_SELECTED_EDGE_COLOR,
-      'underlay-padding': '5px',
-      'underlay-opacity': 0.95,
+    },
+  },
+  {
+    selector: `edge.${CONCEPT_EDGE_HALO_CLASS}.selected_edge`,
+    style: {
+      width: '12px',
+      'line-color': CONCEPT_SELECTED_EDGE_COLOR,
+      'target-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
+      'source-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
+      'mid-target-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
+      'mid-source-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
+      'curve-style': 'straight',
+      'arrow-scale': 1.55,
+      'line-opacity': CONCEPT_EDGE_HALO_OPACITY,
     },
   },
   {
@@ -265,6 +294,11 @@ function hasClass(element: any, className: string): boolean {
 function cyElementHasClass(element: any, className: string): boolean {
   if (element && typeof element.hasClass === 'function') return element.hasClass(className);
   return false;
+}
+
+function styleSupportsConceptEdgeHalos(style: any): boolean {
+  return Array.isArray(style)
+    && style.some((entry) => entry && entry.selector === `edge.${CONCEPT_EDGE_HALO_CLASS}`);
 }
 
 function classStringWith(classes: string | string[], className: string): string {
@@ -474,6 +508,7 @@ function averageKnownNeighborPosition(node: string, elements: any[], positions: 
   const neighbors = [];
   for (const element of elements || []) {
     if (!element || element.group !== 'edges') continue;
+    if (hasClass(element, CONCEPT_EDGE_HALO_CLASS)) continue;
     const data = element.data || {};
     if (data.source === node && positions[data.target]) neighbors.push(positions[data.target]);
     if (data.target === node && positions[data.source]) neighbors.push(positions[data.source]);
@@ -521,6 +556,56 @@ function allNodesHavePositions(elements: any[], positions: any): boolean {
   return ids.length > 0 && ids.every((id) => !!positions[id]);
 }
 
+function conceptEdgeHaloClasses(element: any): string {
+  return Array.from(new Set([
+    ...classesArray(element).filter((klass) => klass !== 'layout_only' && klass !== 'layout_ignored'),
+    CONCEPT_EDGE_HALO_CLASS,
+    'layout_ignored',
+  ])).join(' ');
+}
+
+function conceptEdgeHaloElement(element: any, index: number) {
+  const data = (element && element.data) || {};
+  const id = String(data.id || data.obj || `edge_${index}`);
+  if (!data.source || !data.target) return null;
+  return {
+    group: 'edges',
+    selectable: false,
+    grabbable: false,
+    data: {
+      id: `concept_edge_halo_${id}`,
+      source: data.source,
+      target: data.target,
+      halo_for: id,
+      halo_obj: data.obj || '',
+      halo_source_obj: data.source_obj || '',
+      halo_target_obj: data.target_obj || '',
+      layout_constraint: false,
+    },
+    classes: conceptEdgeHaloClasses(element),
+  };
+}
+
+function expandConceptEdgeHalos(elements: any[], enabled: boolean): any[] {
+  if (!enabled) return elements;
+  const out = [];
+  let haloIndex = 0;
+  for (const element of elements || []) {
+    if (
+      element
+      && element.group === 'edges'
+      && !hasClass(element, CONCEPT_EDGE_HALO_CLASS)
+      && !hasClass(element, 'layout_only')
+    ) {
+      const halo = conceptEdgeHaloElement(element, haloIndex);
+      haloIndex += 1;
+      if (halo) out.push(halo);
+    }
+    out.push(element);
+  }
+  return out;
+}
+
 export class IvyGraph {
   [key: string]: any;
 
@@ -528,6 +613,7 @@ export class IvyGraph {
     this.containerId = containerId;
     this.win = getWindow(win);
     this.doc = this.win && this.win.document;
+    this._conceptEdgeHalos = styleSupportsConceptEdgeHalos(style);
     const cytoscape = getCytoscape(this.win);
     try {
       this.cy = cytoscape({
@@ -567,7 +653,10 @@ export class IvyGraph {
     this.cy.elements().remove();
     if (!elements || elements.length === 0) return;
 
-    const toAdd = expandLayoutEdges(expandSubgraphShapes(elements)).map((element) => {
+    const toAdd = expandConceptEdgeHalos(
+      expandLayoutEdges(expandSubgraphShapes(elements)),
+      this._conceptEdgeHalos,
+    ).map((element) => {
       const next = {
         ...element,
         data: { ...(element.data || {}) },
@@ -599,13 +688,11 @@ export class IvyGraph {
       if (borderColor) node.style('border-color', borderColor);
     });
     this.cy.edges().forEach((edge) => {
+      if (cyElementHasClass(edge, CONCEPT_EDGE_HALO_CLASS)) return;
       if (cyElementHasClass(edge, 'selected_edge')) {
         edge.style('line-color', CONCEPT_SELECTED_EDGE_COLOR);
         edge.style('target-arrow-color', CONCEPT_SELECTED_EDGE_COLOR);
         edge.style('source-arrow-color', CONCEPT_SELECTED_EDGE_COLOR);
-        edge.style('underlay-color', CONCEPT_SELECTED_EDGE_COLOR);
-        edge.style('underlay-padding', '5px');
-        edge.style('underlay-opacity', 0.95);
         return;
       }
       const lineColor = edge.data('line_color') || edge.data('color');

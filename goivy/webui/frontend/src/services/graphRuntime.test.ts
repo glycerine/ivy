@@ -139,9 +139,19 @@ describe('graphRuntime', () => {
     expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['line-color']).toBe('#00ffd5');
     expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['target-arrow-color']).toBe('#00ffd5');
     expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['source-arrow-color']).toBe('#00ffd5');
-    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['underlay-color']).toBe('#00ffd5');
-    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['underlay-padding']).toBe('5px');
-    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['underlay-opacity']).toBe(0.95);
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo').width).toBe('9px');
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo').content).toBe('');
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo')['line-color']).toBe('#ccff00');
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo')['target-arrow-color']).toBe('#ccff00');
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo')['curve-style']).toBe('straight');
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo')['arrow-scale']).toBe(1.35);
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo')['line-opacity']).toBe(0.5);
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo').events).toBe('no');
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo.selected_edge').width).toBe('12px');
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo.selected_edge')['line-color']).toBe('#00ffd5');
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo.selected_edge')['target-arrow-color']).toBe('#00ffd5');
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo.selected_edge')['arrow-scale']).toBe(1.55);
+    expect(styleFor(CONCEPT_STYLE, 'edge.concept_edge_halo.selected_edge')['line-opacity']).toBe(0.5);
   });
 
   it('wraps semantic graph edge labels for long actions and relations', () => {
@@ -153,9 +163,6 @@ describe('graphRuntime', () => {
     expect(styleFor(ARG_STYLE, 'edge')['text-max-width']).toBeUndefined();
     expect(styleFor(ARG_STYLE, 'edge[text_max_width]')['text-max-width']).toBe('data(text_max_width)');
     expect(styleFor(CONCEPT_STYLE, 'edge').content).toBeUndefined();
-    expect(styleFor(CONCEPT_STYLE, 'edge')['underlay-color']).toBe('#ccff00');
-    expect(styleFor(CONCEPT_STYLE, 'edge')['underlay-padding']).toBe('3px');
-    expect(styleFor(CONCEPT_STYLE, 'edge')['underlay-opacity']).toBe(0.85);
     expect(styleFor(CONCEPT_STYLE, 'edge[label]').content).toBe('data(label)');
     expect(styleFor(CONCEPT_STYLE, 'edge[label]').color).toBe('#000');
     expect(styleFor(CONCEPT_STYLE, 'edge[label]')['text-outline-width']).toBe('3px');
@@ -289,6 +296,54 @@ describe('graphRuntime', () => {
     expect(cy.elements().not).toHaveBeenCalledWith('.layout_ignored');
   });
 
+  it('adds non-interactive halo edges around concept graph arrowheads', () => {
+    const cy = makeFakeCy();
+    window.cytoscape = vi.fn(() => cy);
+    document.body.innerHTML = '<div id="concept-graph"></div>';
+    const graph = new IvyGraph('concept-graph', CONCEPT_STYLE);
+
+    graph.update([
+      { group: 'nodes', data: { id: 'n0', obj: 'Client', label: 'Client' } },
+      { group: 'nodes', data: { id: 'n1', obj: 'Server', label: 'Server' } },
+      {
+        group: 'edges',
+        classes: 'all_to_all selected_edge',
+        data: {
+          id: 'e0',
+          obj: 'link',
+          source: 'n0',
+          target: 'n1',
+          source_obj: 'Client',
+          target_obj: 'Server',
+          line_color: '#0000ff',
+        },
+      },
+    ], null);
+
+    const halo = cy.added.find((element) => element.data.id === 'concept_edge_halo_e0');
+    const real = cy.added.find((element) => element.data.id === 'e0');
+    expect(cy.added.indexOf(halo)).toBeLessThan(cy.added.indexOf(real));
+    expect(halo).toMatchObject({
+      group: 'edges',
+      selectable: false,
+      grabbable: false,
+      classes: expect.stringContaining('concept_edge_halo'),
+      data: expect.objectContaining({
+        source: 'n0',
+        target: 'n1',
+        halo_for: 'e0',
+        halo_obj: 'link',
+        halo_source_obj: 'Client',
+        halo_target_obj: 'Server',
+        layout_constraint: false,
+      }),
+    });
+    expect(halo.classes).toContain('layout_ignored');
+    expect(halo.classes).toContain('selected_edge');
+    expect(halo.data.obj).toBeUndefined();
+    expect(cy.elements().not).toHaveBeenCalledWith('.layout_ignored');
+  });
+
   it('updates Cytoscape elements with Ivy defaults and supplied positions', () => {
     const cy = makeFakeCy();
     window.cytoscape = vi.fn(() => cy);
@@ -330,7 +385,7 @@ describe('graphRuntime', () => {
       },
     ], null);
 
-    const edge = cy.edges()[0];
+    const edge = cy.edges().find((candidate) => candidate.id() === 'e0');
     expect(edge.style).toHaveBeenCalledWith('line-color', '#0000ff');
     expect(edge.style).toHaveBeenCalledWith('target-arrow-color', '#0000ff');
     expect(edge.style).toHaveBeenCalledWith('source-arrow-color', '#0000ff');
@@ -352,14 +407,13 @@ describe('graphRuntime', () => {
       },
     ], null);
 
-    const edge = cy.edges()[0];
+    const edge = cy.edges().find((candidate) => candidate.id() === 'e0');
+    const halo = cy.edges().find((candidate) => candidate.id() === 'concept_edge_halo_e0');
     expect(edge.style).toHaveBeenCalledWith('line-color', '#00ffd5');
     expect(edge.style).toHaveBeenCalledWith('target-arrow-color', '#00ffd5');
     expect(edge.style).toHaveBeenCalledWith('source-arrow-color', '#00ffd5');
-    expect(edge.style).toHaveBeenCalledWith('underlay-color', '#00ffd5');
-    expect(edge.style).toHaveBeenCalledWith('underlay-padding', '5px');
-    expect(edge.style).toHaveBeenCalledWith('underlay-opacity', 0.95);
     expect(edge.style).not.toHaveBeenCalledWith('line-color', '#0000ff');
+    expect(halo.style).not.toHaveBeenCalledWith('line-color', '#0000ff');
   });
 
   it('fits and resets the graph viewport as the scrollbar replacement', () => {
