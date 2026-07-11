@@ -50,7 +50,8 @@ binaries built:
 ~~~
 # the main tools
 ivyweb      (starts the Ivy web app on 127.0.0.1:8080 )
-goivy_check (equivalent to python ivy_check, but faster and with many bug fixes).
+goivy_check (equivalent to python ivy_check, but 
+             faster and with many bug fixes).
 
 # for compositional testing
 ivy2cpp
