@@ -1,3 +1,5 @@
+![an ivy covered place](https://github.com/glycerine/ivy/blob/master/reference/new_ivy_icon_starting_large.png)
+
 GoIvy (Ivy in Go/as a Web application backed by a Go server)
 ======================================================
 
