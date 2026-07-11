@@ -1,3 +1,70 @@
+goivy (Ivy as a Web application backed by a Go server)
+======================================================
+
+This is a port of the Ivy formal verification toolchain to Go and a Web app, based
+on the original python and Tk by Ken McMillan and Oded Padon et al 2016. It supports Ivy
+language versions 1.6 and up (so 1.6, 1.7, and 1.8).
+
+installation steps:
+
+pre-requisites to build from source: 
+
+you should already have installed 
+
+1. go1.26.4 
+
+2. python 3.10.18
+
+3. clang or gnu C++ toolchain; 
+to build Z3. I used Apple clang version 15.0.0 (clang-1500.3.9.4) on darwin.
+
+4. emscripten to produce wasm support, to do ivy-checks in-browser (they can
+also be run on the server).
+
+Note that the required Z3 fork is vendored in this repo, in ivy/goivy/z3vendor/z3 (Z3 v4.7.1_425291ee2)
+and is compiled below (building Z3 takes about 10-20 minutes, be patient).
+
+~~~
+export GOPATH=/home/yourUserName/go # where "go install" will put the goivy_check and ivyweb binaries
+
+git clone https://github.com/glycerine/ivy
+cd ivy/pyivy
+# setup a python venv that knows how to find Ivy python programs
+./redo.sh
+# install abc and aigtoaig binaries that are shelled out to.
+./onetime.sh # same as "make setup" from ivy/goivy
+
+cd ../goivy # same as ivy/goivy
+make get_goyacc
+cd z3vendor/z3
+./compile.sh # build libz3.a
+cd ../..
+make z3-build
+make build
+~~~
+
+binaries built:
+~~~
+# the main tools
+ivyweb      (starts the Ivy web app on 127.0.0.1:8080 )
+goivy_check (equivalent to python ivy_check, but faster and with many bug fixes).
+
+# for compositional testing
+ivy2cpp
+ivy2go
+~~~
+
+----
+
+GoIvy author: Jason E. Aten, Ph.D.
+
+License: Gnu Affero General Public License, version 3 (See https://www.gnu.org/licenses/agpl-3.0.html or the enclosed LICENSE file)
+
+
+questions and answers
+---------------------
+
+
 # What is Ivy?
 
 Q: Tell me about the history and current status of the Ivy project from Microsoft Research for formal verification. It looks to me like a real breakthough, but it is not widely used. Or perhaps that is a false negative since I have low visibility. Apple hardware engineers used it for broad liveness checking a memory subsystem design. But other uses are less visible.
@@ -714,7 +781,7 @@ Esc %         -- for search-and-replace
   '.', y, n, !, q to supervise search-and-replace.
 ~~~
 
-# Propisitions versus Predicates
+# Propositions versus Predicates
 
 Q: I am new to "logic" because in computer science undergrad 
 they taught us truth tables and booleans and skipped alot of 

@@ -1,4 +1,4 @@
-The original IVy code is licensed as follows. See
+The original python+Tk IVy code is licensed as follows. See
 https://github.com/kenmcmil/ivy/blob/master/license.txt
 
 ------------------------------------------ START OF LICENSE -----------------------------------------
