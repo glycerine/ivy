@@ -1,11 +1,12 @@
-goivy (Ivy as a Web application backed by a Go server)
+GoIvy (Ivy in Go/as a Web application backed by a Go server)
 ======================================================
 
 This is a port of the Ivy formal verification toolchain to Go and a Web app, based
 on the original python and Tk by Ken McMillan and Oded Padon et al 2016. It supports Ivy
-language versions 1.6 and up (so 1.6, 1.7, and 1.8).
+language versions 1.6 and up (so 1.6, 1.7, and 1.8). See the Q & A below for
+links and references.
 
-installation steps:
+GoIvy installation steps:
 
 pre-requisites to build from source: 
 
@@ -18,8 +19,9 @@ you should already have installed
 3. clang or gnu C++ toolchain; 
 to build Z3. I used Apple clang version 15.0.0 (clang-1500.3.9.4) on darwin.
 
-4. emscripten to produce wasm support, to do ivy-checks in-browser (they can
-also be run on the server).
+4. emscripten 3.1.50 to produce wasm support, to do ivy-checks in-browser (they can
+also be run on the server). emcc --version should show that emcc 3.1.50 is on your path;
+emar and emmake and wasm-opt should all be on your $PATH.
 
 Note that the required Z3 fork is vendored in this repo, in ivy/goivy/z3vendor/z3 (Z3 v4.7.1_425291ee2)
 and is compiled below (building Z3 takes about 10-20 minutes, be patient).
@@ -38,7 +40,8 @@ cd ../goivy # same as ivy/goivy
 make get_goyacc
 cd z3vendor/z3
 ./compile.sh # build libz3.a
-cd ../..
+./compile-wasm.sh # build wasm version of Z3
+cd ../.. # so you should be in ivy/goivy now, using the goivy/Makefile to:
 make z3-build
 make build
 ~~~
@@ -61,7 +64,7 @@ GoIvy author: Jason E. Aten, Ph.D.
 License: Gnu Affero General Public License, version 3 (See https://www.gnu.org/licenses/agpl-3.0.html or the enclosed LICENSE file)
 
 
-questions and answers
+Questions and Answers
 ---------------------
 
 
