@@ -73,6 +73,46 @@ GoIvy author: Jason E. Aten, Ph.D.
 
 License: Gnu Affero General Public License, version 3 (See https://www.gnu.org/licenses/agpl-3.0.html or the enclosed LICENSE file)
 
+-------
+original Ivy:
+
+The MIT License for the original python and Tk Ivy (before updates
+and fixes authored by me, Jason) can be viewed 
+https://github.com/glycerine/ivy/blob/master/pyivy/LICENSE.original.ivy.txt
+or here
+https://raw.githubusercontent.com/kenmcmil/ivy/refs/heads/master/license.txt
+and is as follows. It was committed in 0a6f6e707348f0e075a90440cbda39bbe39c5699 on  Dec 28, 2015 by github account kenmcmil in https://github.com/kenmcmil/ivy/commit/0a6f6e707348f0e075a90440cbda39bbe39c5699.
+
+~~~
+IVy-tool
+
+Copyright (c) Microsoft Corporation
+
+All rights reserved. 
+
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+""Software""), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+~~~
+
+Note that GoIvy and my (Jason E. Aten) updates, fixes, and works derived from and to python Ivy are licensed under the AGPL3 license and not the MIT license.
 
 Questions and Answers
 ---------------------
