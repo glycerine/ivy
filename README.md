@@ -10,9 +10,9 @@ links and references.
 
 GoIvy installation steps:
 
-# binary installation (pre-built)
+# binary installation (pre-built for amd64)
 
-download a macOS (Sonoma 14.0) or Linux (Ubuntu 24.04) release 
+download a macOS (Sonoma 14.0/amd64) or Linux (Ubuntu 24.04/amd64) release 
 from the releases page https://github.com/glycerine/ivy/releases
 
 # building from source
