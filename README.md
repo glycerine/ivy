@@ -21,7 +21,7 @@ pre-requisites to build from source:
 
 you should already have installed 
 
-1. go1.26.4 
+1. go1.26.4 ; get the pre-compiled Go for your platform from https://go.dev/dl/
 
 2. python 3.10.18
 
