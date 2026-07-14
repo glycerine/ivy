@@ -801,7 +801,7 @@ they taught us truth tables and booleans and skipped alot of
 mathematical navel gazing. Still now that I am working with
 Ivy I need to understand the difference between Propositional Logic and Predicate logic. 
 Or are they synonyms? Does Ivy use one and not the other? 
-What Dyjkstra talking about one or the other when he invented "weakest pre-conditions"?
+Was Dyjkstra talking about one or the other when he invented "weakest pre-conditions"?
 
 A (Claude):
 
@@ -831,7 +831,7 @@ Ivy is fundamentally a **first-order logic** tool — predicate logic all the wa
 1. They're expressive enough to model real distributed protocols with unbounded numbers of nodes, messages, etc. — that's the FOL part you need.
 2. They're *decidable* — Z3 always terminates on them with a definite answer. That's the special thing about these fragments versus general FOL.
 
-The name "Effectively Propositional" is telling. EPR formulas have the form ∃*x⃗*. ∀*y⃗*. φ where φ is quantifier-free and has no function symbols (only relations and constants). The Skolemization of such a formula produces a *finite* Herbrand universe, so deciding satisfiability reduces to a (potentially huge) propositional SAT problem. EPR is in NEXPTIME — propositional logic is in NP — but the reduction is the reason for the name. So Ivy is using predicate logic, but deliberately staying in a fragment that has a propositional-flavored decision procedure underneath.
+The name "Effectively Propositional" is telling. EPR formulas have the form ∃ X . ∀ Y . φ where φ is quantifier-free and has no function symbols (only relations and constants). The Skolemization of such a formula produces a *finite* Herbrand universe, so deciding satisfiability reduces to a (potentially huge) propositional SAT problem. EPR is in NEXPTIME — propositional logic is in NP — but the reduction is the reason for the name. So Ivy is using predicate logic, but deliberately staying in a fragment that has a propositional-flavored decision procedure underneath.
 
 When Ivy complains about a "function cycle" or "quantifier alternation" pushing your VC outside the decidable fragment, what's happening is: your formula is valid FOL, but it's drifted out of EPR/FAU into territory where Z3 might loop forever instantiating ground terms (the Herbrand expansion is now infinite). The fragment checker is enforcing the boundary.
 
