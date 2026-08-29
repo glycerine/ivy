@@ -8,6 +8,8 @@ on the original python and Tk by Oded Padon and Ken McMillan et al 2016. It supp
 language versions 1.6 and up (so 1.6, 1.7, and 1.8). See the Q & A below for
 links and references.
 
+A quick aside: Note that this project has nothing to do with Rob Pike's Ivy https://github.com/robpike/ivy calculator project. The repeat of the name Ivy is a mere coincidence. McMillan and Padon were thinking of "[I]nteractive [V]erification", and I doubt they were even aware of Mr. Pike's arbitrary-precision APL-like calculator project in Go.
+
 GoIvy installation steps:
 
 # binary installation (pre-built for amd64)
