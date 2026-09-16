@@ -38,6 +38,10 @@ func (g *Generator) mkNondet(w *cppWriter, varExpr string, _rng int, label strin
 }
 
 func (g *Generator) mkNondetWithCType(w *cppWriter, varExpr string, label string, uniqueID int64, ctype string) {
+	if g != nil && g.Config.Target == "test" {
+		w.linef("%s = (%s)___ivy_choose(0,%q,%d);", varExpr, ctype, escapeString(label), uniqueID)
+		return
+	}
 	w.linef("%s = (%s)___ivy_choose(0, \"%s\", %d);", varExpr, ctype, escapeString(label), uniqueID)
 }
 

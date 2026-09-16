@@ -31,7 +31,12 @@ func (g *Generator) emitAssignSimple(w *cppWriter, a *goivy.LogicAssignAction) {
 		g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
 		return
 	}
-	rhs, err := g.emitExpr(a.RHS)
+	var rhs string
+	if g.Config.Target == "test" {
+		rhs, err = g.emitExprWithHeader(w, a.RHS)
+	} else {
+		rhs, err = g.emitExpr(a.RHS)
+	}
 	if err != nil {
 		g.unsupported(w, "unsupported assignment rhs: %s", err.Error())
 		return
@@ -236,6 +241,48 @@ func (g *Generator) openAssignmentLoopsBounded(w *cppWriter, lhs goivy.Expr, bod
 	return opened, true
 }
 
+func (g *Generator) assignmentLoopHeadersBounded(lhs goivy.Expr, body goivy.Expr) ([]string, bool) {
+	vars := goivy.VariablesAstList(lhs)
+	headers := make([]string, 0, len(vars))
+	for _, v := range vars {
+		var header string
+		var err error
+
+		if body != nil && cppIsAnyIntegerType(g, v.VSort) {
+			var bes []boundExpr
+			g.matchBoundExprs(v, body, true, &bes)
+			if len(bes) > 0 {
+				lo, hi, gerr := g.getBounds(v, nil, body, true)
+				if gerr == nil {
+					header, err = g.loopHeaderForSortBounds(v.VSort, varName(v.Name), lo, hi)
+				}
+			}
+		}
+
+		if header == "" {
+			header, err = g.loopHeaderForVar(v)
+		}
+		if err != nil {
+			return nil, false
+		}
+		headers = append(headers, header)
+	}
+	return headers, true
+}
+
+func emitPythonTestAssignmentLoopHeaders(w *cppWriter, headers []string) {
+	for _, h := range headers {
+		w.raw(h)
+		w.raw("\n")
+	}
+}
+
+func closePythonTestAssignmentLoopHeaders(w *cppWriter, headers []string) {
+	for range headers {
+		w.raw("}\n")
+	}
+}
+
 // canOpenAssignmentLoopsBounded performs a dry-run of
 // openAssignmentLoopsBounded without writing to a cppWriter. Used by
 // emitAssign to decide whether to take the bounded two-phase path or
@@ -285,6 +332,11 @@ func (g *Generator) actionsCfg() *goivy.ActionsConfig {
 // `f(X) := g(X)` is fine to do in-place but `f(X) := f(X) + 1` is not — and
 // we don't try to prove non-aliasing at codegen time.
 func (g *Generator) emitAssignTwoPhase(w *cppWriter, a *goivy.LogicAssignAction, vs []*goivy.LogicVariable) {
+	if g.Config.Target == "test" {
+		g.emitAssignTwoPhasePythonTest(w, a, vs)
+		return
+	}
+
 	// Build a fresh FunctionSort over the loop variables and the RHS sort.
 	sorts := make([]goivy.Sort, 0, len(vs)+1)
 	for _, v := range vs {
@@ -356,4 +408,65 @@ func (g *Generator) emitAssignTwoPhase(w *cppWriter, a *goivy.LogicAssignAction,
 	tmpRHS = g.maybeVariantUpcast(a.LHS.NodeSort(), a.RHS.NodeSort(), tmpRHS, "")
 	w.linef("%s = %s;", finalLHS, tmpRHS)
 	g.closeAssignmentLoops(w, loops)
+}
+
+func (g *Generator) emitAssignTwoPhasePythonTest(w *cppWriter, a *goivy.LogicAssignAction, vs []*goivy.LogicVariable) {
+	sorts := make([]goivy.Sort, 0, len(vs)+1)
+	for _, v := range vs {
+		sorts = append(sorts, v.VSort)
+	}
+	sorts = append(sorts, a.RHS.NodeSort())
+	tsort, err := goivy.NewFunctionSort(sorts...)
+	if err != nil {
+		g.unsupported(w, "unsupported temp function sort: %s", err.Error())
+		return
+	}
+	body := g.assignBoundsExpr(a)
+	headers, ok := g.assignmentLoopHeadersBounded(a.LHS, body)
+	if !ok {
+		g.emitAssignLarge(w, a, vs)
+		return
+	}
+	tmpName := g.nextTemp("__tmp")
+	tmpSym := goivy.NewConst(tmpName, tsort)
+	w.linef("%s;", g.cppStorageDecl(tmpName, tsort, ""))
+
+	tmpArgs := make([]goivy.Expr, len(vs))
+	for i, v := range vs {
+		tmpArgs[i] = v
+	}
+	tmpLHS := goivy.NewApplyUnchecked(tmpSym, tmpArgs...)
+
+	emitPythonTestAssignmentLoopHeaders(w, headers)
+	lhsCode, err := g.emitExpr(tmpLHS)
+	if err != nil {
+		g.unsupported(w, "unsupported temp lhs: %s", err.Error())
+		closePythonTestAssignmentLoopHeaders(w, headers)
+		return
+	}
+	rhsCode, err := g.emitExpr(a.RHS)
+	if err != nil {
+		g.unsupported(w, "unsupported assignment rhs: %s", err.Error())
+		closePythonTestAssignmentLoopHeaders(w, headers)
+		return
+	}
+	w.linef("%s = %s;", lhsCode, rhsCode)
+	closePythonTestAssignmentLoopHeaders(w, headers)
+
+	emitPythonTestAssignmentLoopHeaders(w, headers)
+	finalLHS, err := g.emitExpr(a.LHS)
+	if err != nil {
+		g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
+		closePythonTestAssignmentLoopHeaders(w, headers)
+		return
+	}
+	tmpRHS, err := g.emitExpr(tmpLHS)
+	if err != nil {
+		g.unsupported(w, "unsupported temp rhs: %s", err.Error())
+		closePythonTestAssignmentLoopHeaders(w, headers)
+		return
+	}
+	tmpRHS = g.maybeVariantUpcast(a.LHS.NodeSort(), a.RHS.NodeSort(), tmpRHS, "")
+	w.linef("%s = %s;", finalLHS, tmpRHS)
+	closePythonTestAssignmentLoopHeaders(w, headers)
 }

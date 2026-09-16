@@ -229,7 +229,13 @@ func (g *Generator) openAssignmentLoops(w *cppWriter, lhs goivy.Expr) (int, bool
 }
 
 func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label string) {
-	expr, err := g.emitExpr(closeFormula(f))
+	var expr string
+	var err error
+	if g.Config.Target == "test" {
+		expr, err = g.emitExprWithHeader(w, closeFormula(f))
+	} else {
+		expr, err = g.emitExpr(closeFormula(f))
+	}
 	if err != nil {
 		g.unsupported(w, "unsupported assertion expression: %s", err.Error())
 		return
@@ -261,7 +267,13 @@ func (g *Generator) emitIf(w *cppWriter, a *goivy.LogicIfAction) {
 		g.emitIfSome(w, a, some)
 		return
 	}
-	cond, err := g.emitExpr(a.GetCond())
+	var cond string
+	var err error
+	if g.Config.Target == "test" {
+		cond, err = g.emitExprWithHeader(w, a.GetCond())
+	} else {
+		cond, err = g.emitExpr(a.GetCond())
+	}
 	if err != nil {
 		g.unsupported(w, "unsupported if condition: %s", err.Error())
 		return
@@ -275,7 +287,12 @@ func (g *Generator) emitIf(w *cppWriter, a *goivy.LogicIfAction) {
 		g.emitAction(w, thenAct)
 	}
 	if elseAct, ok := a.ElseBody.(goivy.Action); ok {
-		w.close(" else {")
+		if g.Config.Target == "test" {
+			w.close("")
+			w.open("else {")
+		} else {
+			w.close(" else {")
+		}
 		g.emitAction(w, elseAct)
 		w.close("")
 		return

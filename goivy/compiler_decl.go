@@ -1063,6 +1063,9 @@ func (d *DomainSetup) Interpret(node Node) error {
 
 	// Python: self.domain.interps[lhs].append(thing)
 	mod.Interps[lhs] = append(mod.Interps[lhs], node)
+	if _, exists := interp[lhs]; !exists {
+		mod.InterpOrder = append(mod.InterpOrder, lhs)
+	}
 
 	// Python: if lhs in self.domain.native_types: raise IvyError(...)
 	if _, exists := mod.NativeTypes[lhs]; exists {
@@ -1811,5 +1814,6 @@ func (d *DomainSetup) Implementtype(node Node) error {
 	imprSort := sig.Sorts.Get(impr)
 	ImplementType(sig, impdSort, imprSort)
 	mod.Interps[impd] = append(mod.Interps[impd], node)
+	mod.InterpOrder = append(mod.InterpOrder, impd)
 	return nil
 }

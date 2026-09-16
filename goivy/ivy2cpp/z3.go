@@ -122,7 +122,6 @@ func (g *Generator) emitZ3EnumSolverConversion(w *cppWriter, s *goivy.LogicEnume
 		w.open(fmt.Sprintf("void  __randomize<%s>( gen &g, const  z3::expr &v, const std::string &sort_name){", typ))
 		w.line("__randomize<int>(g,v,sort_name);")
 		w.close("")
-		w.blank()
 		return
 	}
 	w.line("template <>")
@@ -685,7 +684,6 @@ func (g *Generator) emitPythonTestZ3GeneratorClasses(w *cppWriter) error {
 		names = append(names, name)
 		plans[name] = g.buildActionGenPlan(name, act)
 	}
-	sort.Strings(names)
 
 	if err := g.emitPythonTestInitGen(w); err != nil {
 		return err
@@ -724,11 +722,11 @@ public:
 	w.line("// std::cout << slvr << std::endl;")
 	w.line("bool __res = solve();")
 	w.open("if (__res) {")
-	w.blank()
 	if err := g.emitZ3InitialStateEvaluation(w, "obj"); err != nil {
 		return err
 	}
 	g.emitProgressCounterResets(w, "obj")
+	w.blank()
 	w.close("")
 	w.blank()
 	g.emitVariantCleanups(w)
@@ -915,20 +913,7 @@ func (g *Generator) pythonTestZ3SigSymbols() []stateSymbol {
 		}
 		regular = append(regular, sym)
 	}
-	if g.Mod != nil && g.Mod.SortDestructors != nil {
-		for _, sortName := range g.Mod.SortOrder {
-			destrs, ok := g.Mod.SortDestructors.Get2(sortName)
-			if !ok {
-				continue
-			}
-			for _, d := range destrs {
-				if d != nil {
-					add(stateSymbol{Name: d.Name, Sort: d.CSort})
-				}
-			}
-		}
-	}
-	for _, sym := range g.stateSymbols() {
+	for _, sym := range g.allStateSymbols() {
 		add(sym)
 	}
 	out := append([]stateSymbol{}, regular...)
@@ -963,16 +948,15 @@ func (g *Generator) emitPythonTestInitialConstraint(w *cppWriter) error {
 		return err
 	}
 	var smts []string
-	if len(constraints.Formulas) == 0 {
+	if g.Mod == nil || g.Mod.InitCond == nil || g.Mod.InitCond.IsTrue() {
 		smts = append(smts, "true")
-	} else {
-		for _, f := range constraints.Formulas {
-			smt, err := g.formulaToSmtlibErr(f)
-			if err != nil {
-				return fmt.Errorf("ivy2cpp: failed to translate initial constraint to SMT-LIB: %w", err)
-			}
-			smts = append(smts, smt)
+	}
+	for _, f := range constraints.Formulas {
+		smt, err := g.formulaToSmtlibErr(closeFormula(f))
+		if err != nil {
+			return fmt.Errorf("ivy2cpp: failed to translate initial constraint to SMT-LIB: %w", err)
 		}
+		smts = append(smts, smt)
 	}
 	indent := strings.Repeat("    ", w.indent)
 	w.raw(indent + "add(\"(assert (and\\\n")

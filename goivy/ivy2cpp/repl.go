@@ -10,35 +10,22 @@ import (
 )
 
 // enumSortsForArgSpecs returns the named, non-numeric, non-encoded enum
-// sorts in module sort order. Mirrors Python ivy_to_cpp.py:2419 +
-// per-loop filter `sort_name not in encoded_sorts`. These are the enums
-// for which Python emits `operator<<`, `_arg<T>`, `__ser<T>`,
-// `__deser<T>` (and, for test/gen, `__from_solver`/`__to_solver`/
-// `__randomize`).
+// sorts in lexicographic signature order. Python iterates
+// `sorted(il.sig.sorts)` for these helper blocks, independently of
+// module sort_order.
 func (g *Generator) enumSortsForArgSpecs() []*goivy.LogicEnumeratedSort {
 	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
 		return nil
 	}
 	encoded := g.encodedSortSet()
 	var out []*goivy.LogicEnumeratedSort
-	names := append([]string{}, g.Mod.SortOrder...)
-	seen := make(map[string]bool, len(names))
-	for _, name := range names {
-		seen[name] = true
-	}
-	var rest []string
+	var names []string
 	for name := range g.Mod.Sig.Sorts.All() {
-		if !seen[name] {
-			rest = append(rest, name)
-		}
+		names = append(names, name)
 	}
-	sort.Strings(rest)
-	names = append(names, rest...)
+	sort.Strings(names)
 	for _, name := range names {
 		if encoded != nil && encoded[name] {
-			continue
-		}
-		if !g.sortNeededForRuntimeSpecs(name) && !g.sortNeededForEmittedDestructorSpecs(name) {
 			continue
 		}
 		s, ok := g.Mod.Sig.Sorts.Get2(name)
@@ -116,35 +103,27 @@ func (g *Generator) emitEnumSortArgSpecDecls(w *cppWriter) {
 		} else {
 			w.linef("void __deser<%s>(ivy_deser &inp, %s &res);", cfsname, cfsname)
 		}
-	}
-	if gateZ3 {
-		if g.Config.Target != "test" {
-			w.line("#ifdef Z3PP_H_")
+		if gateZ3 && g.Config.Target == "test" {
+			w.line("template <>")
+			w.linef("void __from_solver<%s>( gen &g, const  z3::expr &v, %s &res);", cfsname, cfsname)
+			w.line("template <>")
+			w.linef("z3::expr __to_solver<%s>( gen &g, const  z3::expr &v, %s &val);", cfsname, cfsname)
+			w.line("template <>")
+			w.linef("void __randomize<%s>( gen &g, const  z3::expr &v, const std::string &sort_name);", cfsname)
 		}
+	}
+	if gateZ3 && g.Config.Target != "test" {
+		w.line("#ifdef Z3PP_H_")
 		for _, st := range enums {
 			cfsname := g.ClassName + "::" + varName(st.Name)
 			w.line("template <>")
-			if g.Config.Target == "test" {
-				w.linef("void __from_solver<%s>( gen &g, const  z3::expr &v, %s &res);", cfsname, cfsname)
-			} else {
-				w.linef("void __from_solver<%s>(gen &g, const z3::expr &v, %s &res);", cfsname, cfsname)
-			}
+			w.linef("void __from_solver<%s>(gen &g, const z3::expr &v, %s &res);", cfsname, cfsname)
 			w.line("template <>")
-			if g.Config.Target == "test" {
-				w.linef("z3::expr __to_solver<%s>( gen &g, const  z3::expr &v, %s &val);", cfsname, cfsname)
-			} else {
-				w.linef("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val);", cfsname, cfsname)
-			}
+			w.linef("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val);", cfsname, cfsname)
 			w.line("template <>")
-			if g.Config.Target == "test" {
-				w.linef("void __randomize<%s>( gen &g, const  z3::expr &v, const std::string &sort_name);", cfsname)
-			} else {
-				w.linef("void __randomize<%s>(gen &g, const z3::expr &v, const std::string &sort_name);", cfsname)
-			}
+			w.linef("void __randomize<%s>(gen &g, const z3::expr &v, const std::string &sort_name);", cfsname)
 		}
-		if g.Config.Target != "test" {
-			w.line("#endif")
-		}
+		w.line("#endif")
 	}
 }
 
@@ -184,6 +163,17 @@ func (g *Generator) emitEnumSortArgDeserImpls(w *cppWriter) {
 	}
 }
 
+func (g *Generator) emitEnumSortArgDeserZ3Impls(w *cppWriter) {
+	enums := g.enumSortsForArgSpecs()
+	for _, st := range enums {
+		g.emitEnumArg(w, st)
+		g.emitEnumDeser(w, st)
+		if g.usesZ3() {
+			g.emitZ3EnumSolverConversion(w, st)
+		}
+	}
+}
+
 // emitEnumOperatorOut mirrors Python ivy_to_cpp.py:2502-2506.
 func (g *Generator) emitEnumOperatorOut(w *cppWriter, st *goivy.LogicEnumeratedSort) {
 	cfsname := g.ClassName + "::" + varName(st.Name)
@@ -191,7 +181,7 @@ func (g *Generator) emitEnumOperatorOut(w *cppWriter, st *goivy.LogicEnumeratedS
 		w.linef("std::ostream &operator <<(std::ostream &s, const %s &t){", cfsname)
 		w.indent++
 		for _, sym := range st.Extension {
-			w.linef(`if (t == %s::%s) s<<%s;`, g.ClassName, varName(sym), strconv.Quote(sym))
+			w.linef(`if (t == %s::%s) s<<%s;`, g.ClassName, varName(sym), strconv.Quote(memName(sym)))
 		}
 		w.line("return s;")
 		w.indent--
@@ -200,7 +190,7 @@ func (g *Generator) emitEnumOperatorOut(w *cppWriter, st *goivy.LogicEnumeratedS
 	}
 	w.open(fmt.Sprintf("std::ostream &operator<<(std::ostream &s, const %s &t) {", cfsname))
 	for _, sym := range st.Extension {
-		w.linef(`if (t == %s::%s) s << %s;`, g.ClassName, varName(sym), strconv.Quote(sym))
+		w.linef(`if (t == %s::%s) s << %s;`, g.ClassName, varName(sym), strconv.Quote(memName(sym)))
 	}
 	w.line("return s;")
 	w.close("")
@@ -235,7 +225,7 @@ func (g *Generator) emitEnumArg(w *cppWriter, st *goivy.LogicEnumeratedSort) {
 		w.line("ivy_value &arg = args[idx];")
 		w.line("if (arg.atom.size() == 0 || arg.fields.size() != 0) throw out_of_bounds(idx,arg.pos);")
 		for _, sym := range st.Extension {
-			w.linef(`if(arg.atom == %s) return %s::%s;`, strconv.Quote(sym), g.ClassName, varName(sym))
+			w.linef(`if(arg.atom == %s) return %s::%s;`, strconv.Quote(memName(sym)), g.ClassName, varName(sym))
 		}
 		w.line(`throw out_of_bounds("bad value: " + arg.atom,arg.pos);`)
 		w.indent--
@@ -249,7 +239,7 @@ func (g *Generator) emitEnumArg(w *cppWriter, st *goivy.LogicEnumeratedSort) {
 	w.line("ivy_value &arg = args[idx];")
 	w.line("if (arg.atom.size() == 0 || arg.fields.size() != 0) throw out_of_bounds(idx, arg.pos);")
 	for _, sym := range st.Extension {
-		w.linef(`if (arg.atom == %s) return %s::%s;`, strconv.Quote(sym), g.ClassName, varName(sym))
+		w.linef(`if (arg.atom == %s) return %s::%s;`, strconv.Quote(memName(sym)), g.ClassName, varName(sym))
 	}
 	w.line(`throw out_of_bounds("bad value: " + arg.atom, arg.pos);`)
 	w.close("")
@@ -364,7 +354,7 @@ func (g *Generator) emitCmdReader(w *cppWriter) {
 }
 
 func (g *Generator) emitPythonTestCmdReaderRaw(w *cppWriter, readerClass, reprClass string) {
-	w.raw("\nclass " + readerClass + ": public stdin_reader {\n")
+	w.raw("\n\nclass " + readerClass + ": public stdin_reader {\n")
 	w.raw("    int lineno;\n")
 	w.raw("public:\n")
 	w.raw("    " + reprClass + " &ivy;    \n\n")

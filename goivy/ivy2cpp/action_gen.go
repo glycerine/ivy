@@ -93,6 +93,8 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 	plan.origPreClauses = preClauses
 	preClauses = goivy.TrimClauses(preClauses)
 	preClauses = expandFieldReferences(preClauses, g.Mod.DestructorSorts)
+	preClauses = g.filterActionGenDerivedStorageClauses(preClauses)
+	preClauses = normalizeActionGenNewFmlAliases(preClauses)
 
 	// Collect inputs from used local symbols + formal params (prefixed __).
 	var inputs []*goivy.Const
@@ -103,6 +105,9 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 			continue
 		}
 		if !isLocalSym(c, g.Mod.Sig) {
+			continue
+		}
+		if g.isDerivedStorageName(c.Name) {
 			continue
 		}
 		if goivy.IsNumeral(c) {
@@ -127,6 +132,8 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 
 	// Field extraction + defined parameters.
 	preClauses, inputs, plan.fsyms = extractInputFields(preClauses, inputs, g.Mod)
+	preClauses = normalizeActionGenNewFmlAliases(preClauses)
+	inputs = appendActionGenTsLocalInputs(preClauses, inputs, g.Mod)
 	plan.oldPreClauses = preClauses
 	preClauses, plan.paramDefs = extractDefinedParameters(preClauses, inputs)
 
@@ -191,6 +198,213 @@ func exprOfAction(a goivy.Action) goivy.Expr {
 	return nil
 }
 
+func (g *Generator) filterActionGenDerivedStorageClauses(clauses *goivy.Clauses) *goivy.Clauses {
+	if clauses == nil {
+		return clauses
+	}
+	keep := make([]goivy.Expr, 0, len(clauses.Fmlas))
+	for _, f := range clauses.Fmlas {
+		if g.formulaMentionsDerivedStorage(f) {
+			continue
+		}
+		keep = append(keep, f)
+	}
+	return goivy.NewClauses(keep, clauses.Defs, clauses.Annot)
+}
+
+func (g *Generator) formulaMentionsDerivedStorage(f goivy.Expr) bool {
+	if f == nil {
+		return false
+	}
+	for _, sym := range goivy.UsedSymbolsAst(f).All() {
+		c, ok := sym.(*goivy.Const)
+		if !ok {
+			continue
+		}
+		if g.isDerivedStorageName(c.Name) {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) isDerivedStorageName(name string) bool {
+	if name == "" {
+		return false
+	}
+	for _, prefix := range []string{"__new_", "__m_"} {
+		if strings.HasPrefix(name, prefix) && g.isDefinitionName(strings.TrimPrefix(name, prefix)) {
+			return true
+		}
+	}
+	return false
+}
+
+func normalizeActionGenNewFmlAliases(clauses *goivy.Clauses) *goivy.Clauses {
+	if clauses == nil {
+		return clauses
+	}
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	defs := make([]*goivy.IvyDefinition, 0, len(clauses.Defs))
+	for _, d := range clauses.Defs {
+		if d == nil {
+			continue
+		}
+		if c, ok := d.Defines().(*goivy.Const); ok && isActionGenNewFmlTemp(c.Name) {
+			subs[goivy.Key(c)] = d.Rhs
+			continue
+		}
+		defs = append(defs, d)
+	}
+	drop := make(map[int]bool)
+	for i, f := range clauses.Fmlas {
+		temp, repl, ok := actionGenNewFmlAlias(f)
+		if !ok {
+			if formulaMentionsActionGenNewFmlTemp(f) {
+				drop[i] = true
+			}
+			continue
+		}
+		subs[goivy.Key(temp)] = repl
+		drop[i] = true
+	}
+	if len(subs) == 0 && len(drop) == 0 {
+		return clauses
+	}
+	fmlas := make([]goivy.Expr, 0, len(clauses.Fmlas)-len(drop))
+	for i, f := range clauses.Fmlas {
+		if drop[i] {
+			continue
+		}
+		if nf, err := goivy.Substitute(f, subs); err == nil {
+			f = nf
+		}
+		fmlas = append(fmlas, f)
+	}
+	return goivy.NewClauses(fmlas, defs, clauses.Annot)
+}
+
+func actionGenNewFmlAlias(f goivy.Expr) (*goivy.Const, goivy.Expr, bool) {
+	eq, ok := f.(*goivy.Eq)
+	if !ok {
+		return nil, nil, false
+	}
+	if c, ok := eq.T1.(*goivy.Const); ok && isActionGenNewFmlTemp(c.Name) {
+		return c, eq.T2, true
+	}
+	if c, ok := eq.T2.(*goivy.Const); ok && isActionGenNewFmlTemp(c.Name) {
+		return c, eq.T1, true
+	}
+	return nil, nil, false
+}
+
+func isActionGenNewFmlTemp(name string) bool {
+	return strings.HasPrefix(name, "__ts") && strings.Contains(name, "__new_fml:")
+}
+
+func formulaMentionsActionGenNewFmlTemp(f goivy.Expr) bool {
+	if f == nil {
+		return false
+	}
+	for _, sym := range goivy.UsedSymbolsAst(f).All() {
+		c, ok := sym.(*goivy.Const)
+		if ok && isActionGenNewFmlTemp(c.Name) {
+			return true
+		}
+	}
+	return false
+}
+
+func appendActionGenTsLocalInputs(pre *goivy.Clauses, inputs []*goivy.Const, mod *goivy.Module) []*goivy.Const {
+	if pre == nil || mod == nil {
+		return inputs
+	}
+	seen := make(map[goivy.NodeKey]bool, len(inputs))
+	for _, in := range inputs {
+		if in != nil {
+			seen[goivy.Key(in)] = true
+		}
+	}
+	for _, sym := range goivy.UsedSymbolsClauses(pre).All() {
+		c, ok := sym.(*goivy.Const)
+		if !ok {
+			continue
+		}
+		if !strings.HasPrefix(c.Name, "__ts") || isActionGenNewFmlTemp(c.Name) {
+			continue
+		}
+		if !isLocalSym(c, mod.Sig) {
+			continue
+		}
+		k := goivy.Key(c)
+		if seen[k] {
+			continue
+		}
+		seen[k] = true
+		inputs = append(inputs, c)
+	}
+	return inputs
+}
+
+type actionGenTsLocalDeclMode int
+
+const (
+	actionGenTsLocalTop actionGenTsLocalDeclMode = iota
+	actionGenTsLocalNestedDecl
+	actionGenTsLocalNestedConst
+)
+
+func actionGenNestedTsLocal(name string) bool {
+	return strings.Count(name, "__") > 1
+}
+
+func actionGenTsLocalModeMatches(c *goivy.Const, mode actionGenTsLocalDeclMode) bool {
+	nested := actionGenNestedTsLocal(c.Name)
+	_, isDecl := c.CSort.(*goivy.LogicFunctionSort)
+	switch mode {
+	case actionGenTsLocalTop:
+		return !nested
+	case actionGenTsLocalNestedDecl:
+		return nested && isDecl
+	case actionGenTsLocalNestedConst:
+		return nested && !isDecl
+	default:
+		return false
+	}
+}
+
+func (g *Generator) emitActionGenTsLocalDecls(w *cppWriter, plan *actionGenPlan, declSet map[goivy.NodeKey]bool, mode actionGenTsLocalDeclMode) {
+	if plan == nil || plan.used == nil {
+		return
+	}
+	for _, sym := range plan.used.All() {
+		c, ok := sym.(*goivy.Const)
+		if !ok {
+			continue
+		}
+		if !strings.HasPrefix(c.Name, "__ts") || isActionGenNewFmlTemp(c.Name) {
+			continue
+		}
+		if !isLocalSym(c, g.Mod.Sig) {
+			continue
+		}
+		if !actionGenTsLocalModeMatches(c, mode) {
+			continue
+		}
+		k := goivy.Key(c)
+		if declSet[k] {
+			continue
+		}
+		declSet[k] = true
+		st := stateSymbol{Name: c.Name, Sort: c.CSort}
+		if g.Config.Target == "test" {
+			g.emitPythonTestDeclSolver(w, st, "")
+		} else {
+			g.emitDeclSolver(w, st)
+		}
+	}
+}
+
 // emitActionGenClassHeader emits the class declaration (members + method
 // decls) for one action_gen. Mirrors Python ivy_to_cpp.py:1246-1259.
 func (g *Generator) emitActionGenClassHeader(w *cppWriter, plan *actionGenPlan) {
@@ -235,6 +449,9 @@ func (g *Generator) emitActionGenMemberDecls(w *cppWriter, plan *actionGenPlan) 
 			if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
 				continue
 			}
+			if g.isDerivedStorageName(sym.Name) {
+				continue
+			}
 			if _, defidx := plan.oldPreClauses.DefIdx[goivy.Key(sym)]; defidx {
 				continue
 			}
@@ -261,20 +478,26 @@ func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
 	w.line("(void)obj;")
 	w.line("ivy2cpp_setup(*this);")
 	emitDeclSet := make(map[goivy.NodeKey]bool)
+	g.emitActionGenTsLocalDecls(w, plan, emitDeclSet, actionGenTsLocalTop)
 	for _, sym := range plan.inputs {
 		k := goivy.Key(sym)
 		if emitDeclSet[k] {
 			continue
 		}
-		emitDeclSet[k] = true
 		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
+			continue
+		}
+		if g.isDerivedStorageName(sym.Name) {
 			continue
 		}
 		if _, defidx := plan.oldPreClauses.DefIdx[k]; defidx {
 			continue
 		}
+		emitDeclSet[k] = true
 		g.emitDeclSolver(w, stateSymbol{Name: sym.Name, Sort: sym.CSort})
 	}
+	g.emitActionGenTsLocalDecls(w, plan, emitDeclSet, actionGenTsLocalNestedDecl)
+	g.emitActionGenTsLocalDecls(w, plan, emitDeclSet, actionGenTsLocalNestedConst)
 	for _, sym := range plan.used.All() {
 		c, ok := sym.(*goivy.Const)
 		if !ok {
@@ -322,6 +545,9 @@ func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
 		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
 			continue
 		}
+		if g.isDerivedStorageName(sym.Name) {
+			continue
+		}
 		if _, defidx := plan.oldPreClauses.DefIdx[goivy.Key(sym)]; defidx {
 			continue
 		}
@@ -337,11 +563,11 @@ func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
 	}
 	w.line("bool __res = solve();")
 	w.open("if (__res) {")
-	if g.Config.Target == "test" {
-		w.blank()
-	}
 	for _, sym := range plan.inputs {
 		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
+			continue
+		}
+		if g.isDerivedStorageName(sym.Name) {
 			continue
 		}
 		if _, defidx := plan.oldPreClauses.DefIdx[goivy.Key(sym)]; defidx {
@@ -372,6 +598,9 @@ func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
 		}
 		g.emitDefinedInputs(w, plan.paramDefs, plan.fsyms, ssyms)
 	}
+	if g.Config.Target == "test" {
+		w.blank()
+	}
 	w.close("")
 	w.line("cpptype_cleanup(*this);")
 	w.line("pop();")
@@ -393,20 +622,26 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 	w.open(fmt.Sprintf("%s::%s(%s &obj){", className, className, g.ClassName))
 	g.emitPythonTestZ3Sig(w, plan.inputs)
 	emitDeclSet := make(map[goivy.NodeKey]bool)
+	g.emitActionGenTsLocalDecls(w, plan, emitDeclSet, actionGenTsLocalTop)
 	for _, sym := range plan.inputs {
 		k := goivy.Key(sym)
 		if emitDeclSet[k] {
 			continue
 		}
-		emitDeclSet[k] = true
 		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
+			continue
+		}
+		if g.isDerivedStorageName(sym.Name) {
 			continue
 		}
 		if _, defidx := plan.oldPreClauses.DefIdx[k]; defidx {
 			continue
 		}
+		emitDeclSet[k] = true
 		g.emitPythonTestDeclSolver(w, stateSymbol{Name: sym.Name, Sort: sym.CSort}, "")
 	}
+	g.emitActionGenTsLocalDecls(w, plan, emitDeclSet, actionGenTsLocalNestedDecl)
+	g.emitActionGenTsLocalDecls(w, plan, emitDeclSet, actionGenTsLocalNestedConst)
 	for _, sym := range plan.used.All() {
 		c, ok := sym.(*goivy.Const)
 		if !ok || c.Name != "*>" {
@@ -428,7 +663,7 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 	}
 	if smt, ok := g.formulaToSmtlib(plan.preFmla); ok {
 		if !g.emitPythonTestVariantConstraintAdd(w, smt) {
-			w.linef("add(%s);", strconv.Quote("(assert "+smt+")"))
+			g.emitPythonTestContinuedSMTAdd(w, "(assert "+smt+")")
 		}
 	} else {
 		w.line("// ivy2cpp: failed to translate precondition to SMT-LIB; falling back to no constraint")
@@ -455,6 +690,9 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
 			continue
 		}
+		if g.isDerivedStorageName(sym.Name) {
+			continue
+		}
 		if _, defidx := plan.oldPreClauses.DefIdx[goivy.Key(sym)]; defidx {
 			continue
 		}
@@ -470,11 +708,11 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 	}
 	w.line("bool __res = solve();")
 	w.open("if (__res) {")
-	if g.Config.Target == "test" {
-		w.blank()
-	}
 	for _, sym := range plan.inputs {
 		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
+			continue
+		}
+		if g.isDerivedStorageName(sym.Name) {
 			continue
 		}
 		if _, defidx := plan.oldPreClauses.DefIdx[goivy.Key(sym)]; defidx {
@@ -501,6 +739,7 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 		}
 		g.emitDefinedInputs(w, plan.paramDefs, plan.fsyms, ssyms)
 	}
+	w.blank()
 	w.close("")
 	g.emitVariantCleanups(w)
 	w.line("pop();")
@@ -542,6 +781,11 @@ func (g *Generator) emitWeakActionGenerator(w *cppWriter, plan *actionGenPlan) {
 	w.line("return true;")
 	w.close("")
 	g.emitActionGenExecute(w, plan)
+}
+
+func (g *Generator) emitPythonTestContinuedSMTAdd(w *cppWriter, smt string) {
+	indent := strings.Repeat("    ", w.indent)
+	w.raw(indent + "add(\"" + pythonContinuedSMT(smt) + "\");\n")
 }
 
 // emitActionGenExecute writes the execute() body for plan.act, mirroring

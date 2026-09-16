@@ -304,7 +304,35 @@ func (g *Generator) bvWidthForSort(s goivy.Sort) (int, bool) {
 }
 
 func (g *Generator) maskBVExpr(expr string, it cppInterpType) string {
+	if inner, ok := stripOuterParens(expr); ok {
+		expr = inner
+	}
 	return fmt.Sprintf("((%s) & %s)", expr, bvMask(it.Bits))
+}
+
+func stripOuterParens(expr string) (string, bool) {
+	if len(expr) < 2 || expr[0] != '(' || expr[len(expr)-1] != ')' {
+		return expr, false
+	}
+	depth := 0
+	for i, r := range expr {
+		switch r {
+		case '(':
+			depth++
+		case ')':
+			depth--
+			if depth == 0 && i != len(expr)-1 {
+				return expr, false
+			}
+		}
+		if depth < 0 {
+			return expr, false
+		}
+	}
+	if depth != 0 {
+		return expr, false
+	}
+	return expr[1 : len(expr)-1], true
 }
 
 func bvSignMask(bits int) string {

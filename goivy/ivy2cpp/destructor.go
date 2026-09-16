@@ -2,6 +2,7 @@ package ivy2cpp
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -227,25 +228,22 @@ func (g *Generator) emitDestructorStructWriter(w *cppWriter, name string, destru
 	w.close("")
 }
 
-// destructorSortNames returns destructor sort names in module sort
-// order (the same order emitDestructorImpls uses, so forward decls
-// precede definitions). Encoded sorts are filtered out, matching Python
-// `if sort_name not in encoded_sorts` at ivy_to_cpp.py:2236.
+// destructorSortNames returns destructor sort names in lexicographic order,
+// matching Python's `sorted(im.module.sort_destructors)`. Encoded sorts are
+// filtered out, matching Python's `if sort_name not in encoded_sorts`.
 func (g *Generator) destructorSortNames() []string {
 	if g == nil || g.Mod == nil || g.Mod.SortDestructors == nil {
 		return nil
 	}
 	encoded := g.encodedSortSet()
 	var out []string
-	for _, name := range g.Mod.SortOrder {
-		if _, ok := g.Mod.SortDestructors.Get2(name); !ok {
-			continue
-		}
+	for name := range g.Mod.SortDestructors.All() {
 		if encoded != nil && encoded[name] {
 			continue
 		}
 		out = append(out, name)
 	}
+	sort.Strings(out)
 	return out
 }
 
@@ -299,7 +297,7 @@ func (g *Generator) emitDestructorImpls(w *cppWriter) {
 	if g == nil || g.Mod == nil || g.Mod.Sig == nil || g.Mod.SortDestructors == nil {
 		return
 	}
-	for _, name := range g.Mod.SortOrder {
+	for _, name := range g.destructorSortNames() {
 		if _, ok := g.Mod.SortDestructors.Get2(name); !ok {
 			continue
 		}
@@ -311,7 +309,7 @@ func (g *Generator) emitDestructorOutSerImpls(w *cppWriter) {
 	if g == nil || g.Mod == nil || g.Mod.Sig == nil || g.Mod.SortDestructors == nil {
 		return
 	}
-	for _, name := range g.Mod.SortOrder {
+	for _, name := range g.destructorSortNames() {
 		destrs := g.Mod.SortDestructors.Get(name)
 		if len(destrs) == 0 {
 			continue
@@ -326,7 +324,7 @@ func (g *Generator) emitDestructorArgDeserZ3Impls(w *cppWriter) {
 	if g == nil || g.Mod == nil || g.Mod.Sig == nil || g.Mod.SortDestructors == nil {
 		return
 	}
-	for _, name := range g.Mod.SortOrder {
+	for _, name := range g.destructorSortNames() {
 		destrs := g.Mod.SortDestructors.Get(name)
 		if len(destrs) == 0 {
 			continue

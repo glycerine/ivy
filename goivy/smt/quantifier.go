@@ -84,6 +84,7 @@ func NewZ3Context() *Z3Context {
 	c := C.Z3_mk_context_rc(cfg)
 
 	C.Z3_set_error_handler(c, (*C.Z3_error_handler)(C.goZ3BridgeErrorHandler))
+	C.Z3_set_ast_print_mode(c, C.Z3_PRINT_SMTLIB2_COMPLIANT)
 
 	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}
 

@@ -340,12 +340,12 @@ func (g *Generator) emitImpl() error {
 	g.emitRuntimeChoose(w)
 	var methodSection cppWriter
 	mw := &methodSection
-	g.emitInit(mw)
 	g.emitDefinitions(mw)
 	if err := errors.Join(g.errs...); err != nil {
 		return err
 	}
 	g.emitConstructors(mw)
+	g.emitInit(mw)
 	g.emitMethods(mw)
 	g.emitTick(mw)
 	w.raw(g.thunkDefs.String())
@@ -404,8 +404,7 @@ func (g *Generator) emitImpl() error {
 		}
 	case "test":
 		g.emitDestructorArgDeserZ3Impls(bw)
-		g.emitEnumSortArgDeserImpls(bw)
-		g.emitZ3SolverConversions(bw)
+		g.emitEnumSortArgDeserZ3Impls(bw)
 		g.emitAllCtuplesToSolver(bw)
 		g.emitReplSupport(bw)
 		if g.Config.EmitMain {
@@ -828,22 +827,36 @@ func (g *Generator) cardinalitySortNames() []string {
 	}
 	seen := map[string]bool{}
 	var names []string
-	add := func(name string) {
+	add := func(name string, requireInterp bool) {
 		if name == "" || name == "bool" || seen[name] {
 			return
+		}
+		if requireInterp {
+			if _, ok := g.Mod.Sig.Interp[name]; !ok {
+				return
+			}
 		}
 		seen[name] = true
 		names = append(names, name)
 	}
+	for _, name := range g.Mod.InterpOrder {
+		add(name, true)
+	}
+	var leftovers []string
 	for name := range g.Mod.Sig.Interp {
-		add(name)
+		if !seen[name] {
+			leftovers = append(leftovers, name)
+		}
+	}
+	sort.Strings(leftovers)
+	for _, name := range leftovers {
+		add(name, false)
 	}
 	for _, name := range g.Mod.SortOrder {
 		if g.isPlainVariantSubtypeName(name) {
-			add(name)
+			add(name, false)
 		}
 	}
-	sort.Strings(names)
 	return names
 }
 

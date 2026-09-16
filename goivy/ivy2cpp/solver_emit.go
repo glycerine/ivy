@@ -175,7 +175,7 @@ func (g *Generator) emitSetSolverCustom(w *cppWriter, sym stateSymbol, opts emit
 				w.indent++
 				opened++
 				vs[i] = name
-				domArgs[i] = z3ValueForSortWithPrefix(d, name, opts.prefix)
+				domArgs[i] = g.z3ValueForSort(d, name, opts.prefix)
 			}
 			if !ok {
 				for i := 0; i < opened; i++ {
@@ -221,26 +221,28 @@ func (g *Generator) emitSetSolverCustom(w *cppWriter, sym stateSymbol, opts emit
 	// Branch (3): default per-element loop.
 	args := make([]string, 0, len(domain))
 	domVarNames := make([]string, 0, len(domain))
-	opened := 0
+	var loopBlocks []bool
 	for i, d := range domain {
 		name := fmt.Sprintf("X%d", i)
-		header, ok := g.z3LoopHeaderForSort(d, name)
+		header, ok, block := g.z3SetLoopHeaderForSort(d, name, opts.prefix)
 		if !ok {
 			g.unsupportedEmitSet(w, sym, "domain not enumerable")
 			return
 		}
 		w.line(header)
 		w.indent++
-		opened++
-		args = append(args, z3ValueForSortWithPrefix(d, name, opts.prefix))
+		loopBlocks = append(loopBlocks, block)
+		args = append(args, g.z3ValueForSort(d, name, opts.prefix))
 		domVarNames = append(domVarNames, name)
 	}
 	lhs := z3ApplyCall(opts.prefix, opts.sname, args)
 	rhs := g.cppStorageAccessBase(opts.rhsBase(), sym.Sort, domVarNames)
 	opts.addConstraint(w, fmt.Sprintf("__to_solver(%s, %s, %s)", opts.gen, lhs, rhs))
-	for i := 0; i < opened; i++ {
+	for i := len(loopBlocks) - 1; i >= 0; i-- {
 		w.indent--
-		w.line("}")
+		if loopBlocks[i] {
+			w.line("}")
+		}
 	}
 }
 
@@ -341,7 +343,7 @@ func (g *Generator) emitSetFieldCustom(w *cppWriter, destr *goivy.Const, lhs, rh
 		w.indent++
 		opened++
 		vs[i] = name
-		domArgs[i] = z3ValueForSortWithPrefix(d, name, opts.prefix)
+		domArgs[i] = g.z3ValueForSort(d, name, opts.prefix)
 	}
 	field := varName(memName(destr.Name))
 	lhsArgs := append([]string{lhs}, domArgs...)
@@ -397,7 +399,7 @@ func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 			return nil
 		}
 		loopHeaders = append(loopHeaders, header)
-		args = append(args, fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name))
+		args = append(args, g.z3ValueForSort(d, name, ""))
 	}
 	if err := g.uninterpretedRandomizeRangeError(rng); err != nil {
 		return err
@@ -514,7 +516,7 @@ func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol
 			return nil
 		}
 		loopHeaders = append(loopHeaders, header)
-		applyArgs = append(applyArgs, fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name))
+		applyArgs = append(applyArgs, g.z3ValueForSort(d, name, ""))
 		evalArgs = append(evalArgs, fmt.Sprintf("static_cast<int>(%s)", name))
 		keyArgs = append(keyArgs, name)
 	}
@@ -847,6 +849,33 @@ func evalApplyFixedCall(name string, args []string) string {
 	default:
 		return fmt.Sprintf("([&](){ int __ivy_eval_args[%d] = {%s}; return eval_apply(%q, %d, __ivy_eval_args); })()", len(args), strings.Join(args, ", "), name, len(args))
 	}
+}
+
+func (g *Generator) z3ValueForSort(s goivy.Sort, name, prefix string) string {
+	if g != nil && g.Config.Target == "test" && prefix == "" {
+		return fmt.Sprintf("int_to_z3(sort(%q),%s)", z3SortName(s), name)
+	}
+	return z3ValueForSortWithPrefix(s, name, prefix)
+}
+
+func (g *Generator) z3SetLoopHeaderForSort(s goivy.Sort, name, prefix string) (string, bool, bool) {
+	if g != nil && g.Config.Target == "test" && prefix == "" {
+		if rs, ok := g.rangeSortFor(s); ok {
+			lo, hi, ok := numericRangeBounds(rs)
+			if !ok {
+				return "", false, false
+			}
+			return fmt.Sprintf("for (int %s = %s; %s <= %s; %s++)", name, lo, name, hi, name), true, false
+		}
+		if it, ok := g.cppInterpType(s); ok && it.Kind == cppInterpBV {
+			card := it.card()
+			if card > 0 && card <= largeThresh {
+				return fmt.Sprintf("for (int %s = 0; %s < %d; %s++)", name, name, card, name), true, false
+			}
+		}
+	}
+	header, ok := g.z3LoopHeaderForSort(s, name)
+	return header, ok, true
 }
 
 func z3ValueForSortWithPrefix(s goivy.Sort, name, prefix string) string {

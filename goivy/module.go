@@ -72,6 +72,7 @@ type Module struct {
 
 	// Interpretations and natives
 	Interps           map[string][]Node // type name → labeled interps
+	InterpOrder       []string          // first interpretation order, matching Python's ordered sig.interp
 	Natives           []Node
 	NativeDefinitions []*LabeledFormula
 	NativeTypes       map[string]*NativeType // sort name → NativeType
@@ -290,6 +291,7 @@ func (m *Module) Clear() {
 
 	m.Privates = make(map[string]bool)
 	m.Interps = make(map[string][]Node)
+	m.InterpOrder = nil
 	m.Natives = nil
 	m.NativeDefinitions = nil
 	m.Initializers = nil
@@ -499,6 +501,7 @@ func (m *Module) Copy() *Module {
 	for k, v := range m.Interps {
 		c.Interps[k] = append([]Node{}, v...)
 	}
+	c.InterpOrder = append([]string{}, m.InterpOrder...)
 
 	// Shared per-session pointers (Python: copy.copy does shallow copy)
 	c.CompCfg = m.CompCfg

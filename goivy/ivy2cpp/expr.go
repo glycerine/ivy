@@ -64,14 +64,14 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return "!(" + body + ")", nil
+		return "!" + body, nil
 	case *goivy.LogicLiteral:
 		body, err := g.emitExpr(n.Atom)
 		if err != nil {
 			return "", err
 		}
 		if n.Polarity == 0 {
-			return "!(" + body + ")", nil
+			return "!" + body, nil
 		}
 		return body, nil
 	case *goivy.LogicAnd:
@@ -87,7 +87,7 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return "(!(" + l + ") || (" + r + "))", nil
+		return "(!" + l + " || " + r + ")", nil
 	case *goivy.LogicIff:
 		l, err := g.emitExpr(n.T1)
 		if err != nil {
@@ -97,7 +97,7 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return "((" + l + ") == (" + r + "))", nil
+		return "(" + l + " == " + r + ")", nil
 	case *goivy.LogicIte:
 		c, err := g.emitExpr(n.Cond)
 		if err != nil {
@@ -111,7 +111,7 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return "((" + c + ") ? (" + t + ") : (" + f + "))", nil
+		return "(" + c + " ? " + t + " : " + f + ")", nil
 	case *goivy.ForAll:
 		return g.emitQuant(n.Variables, n.Body, true)
 	case *goivy.LogicExists:
@@ -129,6 +129,234 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 	default:
 		return "", fmt.Errorf("ivy2cpp: unsupported expression %T: %s", e, e.String())
 	}
+}
+
+func (g *Generator) emitExprWithHeader(w *cppWriter, e goivy.Expr) (string, error) {
+	if w == nil {
+		return g.emitExpr(e)
+	}
+	if e == nil {
+		return "", fmt.Errorf("ivy2cpp: nil expression")
+	}
+	if repl, ok := g.aliasForSymbol(e); ok {
+		return g.emitExprWithHeader(w, repl)
+	}
+	switch n := e.(type) {
+	case *goivy.Const:
+		if n.CSort == goivy.Boolean {
+			switch n.Name {
+			case "true":
+				return "true", nil
+			case "false":
+				return "false", nil
+			}
+		}
+		if code, ok := g.emitBVNumeral(n); ok {
+			return code, nil
+		}
+		if code, ok := g.emitRangeNumeral(n); ok {
+			return code, nil
+		}
+		if code, ok, err := g.emitStringInterpConst(n); ok || err != nil {
+			return code, err
+		}
+		if goivy.IsNumeral(n) && !goivy.IsLiteralString(n) {
+			return n.Name, nil
+		}
+		if g.isDefinitionName(n.Name) {
+			fn, err := funName(n.Name)
+			if err != nil {
+				return "", err
+			}
+			return fn + "()", nil
+		}
+		return varName(n.Name), nil
+	case *goivy.LogicVariable:
+		return varName(n.Name), nil
+	case *goivy.Apply:
+		return g.emitApplyWithHeader(w, n)
+	case *goivy.Eq:
+		l, err := g.emitExprWithHeader(w, n.T1)
+		if err != nil {
+			return "", err
+		}
+		r, err := g.emitExprWithHeader(w, n.T2)
+		if err != nil {
+			return "", err
+		}
+		return "(" + l + " == " + r + ")", nil
+	case *goivy.LogicNot:
+		body, err := g.emitExprWithHeader(w, n.Body)
+		if err != nil {
+			return "", err
+		}
+		return "!" + body, nil
+	case *goivy.LogicLiteral:
+		body, err := g.emitExprWithHeader(w, n.Atom)
+		if err != nil {
+			return "", err
+		}
+		if n.Polarity == 0 {
+			return "!" + body, nil
+		}
+		return body, nil
+	case *goivy.LogicAnd:
+		return g.emitNaryWithHeader(w, n.Terms, "&&", "true")
+	case *goivy.LogicOr:
+		return g.emitNaryWithHeader(w, n.Terms, "||", "false")
+	case *goivy.LogicImplies:
+		l, err := g.emitExprWithHeader(w, n.T1)
+		if err != nil {
+			return "", err
+		}
+		r, err := g.emitExprWithHeader(w, n.T2)
+		if err != nil {
+			return "", err
+		}
+		return "(!" + l + " || " + r + ")", nil
+	case *goivy.LogicIff:
+		l, err := g.emitExprWithHeader(w, n.T1)
+		if err != nil {
+			return "", err
+		}
+		r, err := g.emitExprWithHeader(w, n.T2)
+		if err != nil {
+			return "", err
+		}
+		return "(" + l + " == " + r + ")", nil
+	case *goivy.LogicIte:
+		c, err := g.emitExprWithHeader(w, n.Cond)
+		if err != nil {
+			return "", err
+		}
+		t, err := g.emitExprWithHeader(w, n.Then)
+		if err != nil {
+			return "", err
+		}
+		f, err := g.emitExprWithHeader(w, n.Else)
+		if err != nil {
+			return "", err
+		}
+		return "(" + c + " ? " + t + " : " + f + ")", nil
+	case *goivy.ForAll:
+		return g.emitQuantWithHeader(w, n.Variables, n.Body, true)
+	case *goivy.LogicExists:
+		return g.emitQuantWithHeader(w, n.Variables, n.Body, false)
+	case *goivy.LogicNativeExpr:
+		return g.emitNativeExpr(n)
+	case *goivy.LogicSome:
+		return g.emitSome(n)
+	case *goivy.LogicLet:
+		return g.emitLetExprWithHeader(w, n)
+	case *goivy.LogicNamedBinder:
+		return "", fmt.Errorf("ivy2cpp: named binder %q is not supported as a C++ expression: %s", n.Name, n.String())
+	case *goivy.LogicGlobally, *goivy.LogicEventually, *goivy.LogicWhenOperator:
+		return "", fmt.Errorf("ivy2cpp: temporal expression %T is not supported in C++ generation yet: %s", e, e.String())
+	default:
+		return "", fmt.Errorf("ivy2cpp: unsupported expression %T: %s", e, e.String())
+	}
+}
+
+func (g *Generator) emitNaryWithHeader(w *cppWriter, terms []goivy.Expr, op, ident string) (string, error) {
+	if len(terms) == 0 {
+		return ident, nil
+	}
+	parts := make([]string, len(terms))
+	for i, t := range terms {
+		s, err := g.emitExprWithHeader(w, t)
+		if err != nil {
+			return "", err
+		}
+		parts[i] = s
+	}
+	return "(" + strings.Join(parts, " "+op+" ") + ")", nil
+}
+
+func (g *Generator) emitApplyWithHeader(w *cppWriter, a *goivy.Apply) (string, error) {
+	if g != nil && g.Mod != nil && g.Mod.Cfg != nil && g.Mod.Cfg.IuCfg != nil &&
+		goivy.IsMacro(a, g.Mod.Cfg.IuCfg) {
+		return g.emitExprWithHeader(w, goivy.ExpandMacro(a))
+	}
+	fnExpr := a.Func
+	if repl, ok := g.aliasForSymbol(fnExpr); ok {
+		fnExpr = repl
+	}
+	name := goivy.ExprName(fnExpr)
+	if code, ok, err := g.emitCastApply(name, a); ok || err != nil {
+		return code, err
+	}
+	if code, ok, err := g.emitBVApply(name, a); ok || err != nil {
+		return code, err
+	}
+	if code, ok, err := g.emitNatMinusApply(name, a); ok || err != nil {
+		return code, err
+	}
+	if code, ok, err := g.emitRangeArithApply(name, a); ok || err != nil {
+		return code, err
+	}
+	if len(a.Terms) == 2 && isInfix(name) {
+		l, err := g.emitExprWithHeader(w, a.Terms[0])
+		if err != nil {
+			return "", err
+		}
+		r, err := g.emitExprWithHeader(w, a.Terms[1])
+		if err != nil {
+			return "", err
+		}
+		return "(" + l + " " + name + " " + r + ")", nil
+	}
+	if code, ok, err := g.emitVariantRelationWithHeader(w, name, a.Terms); ok || err != nil {
+		return code, err
+	}
+	if code, ok, err := g.emitDestructorApplyWithHeader(w, name, a.Terms); ok || err != nil {
+		return code, err
+	}
+	fn, err := funName(name)
+	if err != nil {
+		return "", err
+	}
+	if len(a.Terms) == 0 {
+		return fn, nil
+	}
+	args := make([]string, len(a.Terms))
+	for i, t := range a.Terms {
+		s, err := g.emitExprWithHeader(w, t)
+		if err != nil {
+			return "", err
+		}
+		args[i] = s
+	}
+	if g.isDefinitionName(name) {
+		return fn + "(" + strings.Join(args, ",") + ")", nil
+	}
+	return g.cppStorageAccess(name, fnExpr.NodeSort(), args, ""), nil
+}
+
+func (g *Generator) emitLetExprWithHeader(w *cppWriter, l *goivy.LogicLet) (string, error) {
+	if l == nil {
+		return "", fmt.Errorf("ivy2cpp: nil let expression")
+	}
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for _, d := range l.Defs {
+		def, ok := d.(*goivy.LogicDefinition)
+		if !ok {
+			return "", fmt.Errorf("ivy2cpp: let definition has unsupported shape %T: %s", d, d.String())
+		}
+		lhs := def.Lhs
+		switch sym := lhs.(type) {
+		case *goivy.Const:
+			subs[goivy.Key(sym)] = def.Rhs
+		case *goivy.LogicVariable:
+			subs[goivy.Key(sym)] = def.Rhs
+		default:
+			return "", fmt.Errorf("ivy2cpp: parametric let definition not yet supported: %s", lhs.String())
+		}
+	}
+	body, err := goivy.Substitute(l.Body, subs)
+	if err != nil {
+		return "", fmt.Errorf("ivy2cpp: let substitution: %w", err)
+	}
+	return g.emitExprWithHeader(w, body)
 }
 
 // emitLetExpr expands `let d1, d2, ... in body` into `body` after substituting
@@ -308,9 +536,9 @@ func (g *Generator) emitNary(terms []goivy.Expr, op, ident string) (string, erro
 		if err != nil {
 			return "", err
 		}
-		parts[i] = "(" + s + ")"
+		parts[i] = s
 	}
-	return strings.Join(parts, " "+op+" "), nil
+	return "(" + strings.Join(parts, " "+op+" ") + ")", nil
 }
 
 func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
@@ -371,7 +599,7 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 		args[i] = s
 	}
 	if g.isDefinitionName(name) {
-		return fn + "(" + strings.Join(args, ", ") + ")", nil
+		return fn + "(" + strings.Join(args, ",") + ")", nil
 	}
 	return g.cppStorageAccess(name, fnExpr.NodeSort(), args, ""), nil
 }
@@ -391,6 +619,29 @@ func (g *Generator) emitVariantRelation(name string, terms []goivy.Expr) (string
 		return "", true, err
 	}
 	rhs, err := g.emitExpr(terms[1])
+	if err != nil {
+		return "", true, err
+	}
+	idx := g.Mod.VariantIndex(terms[0].NodeSort(), terms[1].NodeSort())
+	downcast := g.variantDowncastExpr(lhs, terms[0].NodeSort(), terms[1].NodeSort(), "")
+	return fmt.Sprintf("(%s.tag == %d && %s == %s)", lhs, idx, downcast, rhs), true, nil
+}
+
+func (g *Generator) emitVariantRelationWithHeader(w *cppWriter, name string, terms []goivy.Expr) (string, bool, error) {
+	if name != "*>" {
+		return "", false, nil
+	}
+	if len(terms) != 2 {
+		return "", true, fmt.Errorf("ivy2cpp: variant relation *> expected 2 arguments, got %d", len(terms))
+	}
+	if g == nil || g.Mod == nil || !g.Mod.IsVariant(terms[0].NodeSort(), terms[1].NodeSort()) {
+		return "", true, fmt.Errorf("ivy2cpp: %s *> %s is not a known variant relation", terms[0].String(), terms[1].String())
+	}
+	lhs, err := g.emitExprWithHeader(w, terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	rhs, err := g.emitExprWithHeader(w, terms[1])
 	if err != nil {
 		return "", true, err
 	}
@@ -419,6 +670,30 @@ func (g *Generator) emitDestructorApply(name string, terms []goivy.Expr) (string
 	args := make([]string, 0, len(terms)-1)
 	for _, t := range terms[1:] {
 		s, err := g.emitExpr(t)
+		if err != nil {
+			return "", true, err
+		}
+		args = append(args, s)
+	}
+	return g.cppDestructorFieldAccess(field, dom, rng, args, obj), true, nil
+}
+
+func (g *Generator) emitDestructorApplyWithHeader(w *cppWriter, name string, terms []goivy.Expr) (string, bool, error) {
+	field, ok := g.destructorFieldName(name)
+	if !ok {
+		return "", false, nil
+	}
+	if len(terms) < 1 {
+		return "", true, fmt.Errorf("ivy2cpp: destructor %s expected at least 1 argument", name)
+	}
+	obj, err := g.emitExprWithHeader(w, terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	dom, rng := g.destructorFieldSig(name)
+	args := make([]string, 0, len(terms)-1)
+	for _, t := range terms[1:] {
+		s, err := g.emitExprWithHeader(w, t)
 		if err != nil {
 			return "", true, err
 		}
@@ -550,6 +825,122 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 		headers[i] = h
 	}
 	return g.emitQuantWithHeaders(vars, body, forall, headers, false)
+}
+
+func (g *Generator) emitQuantWithHeader(w *cppWriter, vars []*goivy.LogicVariable, body goivy.Expr, forall bool) (string, error) {
+	if len(vars) == 0 {
+		return g.emitExprWithHeader(w, body)
+	}
+	if !forall {
+		if code, ok, err := g.emitExistsVariantRelation(vars, body); ok || err != nil {
+			return code, err
+		}
+	}
+	v0 := vars[0]
+	if v0 == nil {
+		return "", fmt.Errorf("ivy2cpp: nil quantified variable")
+	}
+	rest := vars[1:]
+	exists := !forall
+
+	res := g.nextTemp("__tmp")
+	w.linef("int %s;", res)
+	if exists {
+		w.linef("%s = 0;", res)
+	} else {
+		w.linef("%s = 1;", res)
+	}
+
+	header, remaining, err := g.quantHeaderForFirstVar(v0, rest, body, exists)
+	if err != nil {
+		return "", err
+	}
+	w.line(header)
+	w.indent++
+
+	inner, err := g.emitQuantWithHeader(w, remaining, body, forall)
+	if err != nil {
+		return "", err
+	}
+	if exists {
+		w.linef("if (%s) %s = 1;", inner, res)
+	} else {
+		w.linef("if (!%s) %s = 0;", inner, res)
+	}
+
+	w.indent--
+	w.line("}")
+	return res, nil
+}
+
+func (g *Generator) quantHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, []*goivy.LogicVariable, error) {
+	if header, ok, err := g.quantIterableHeader(v0); ok || err != nil {
+		if err != nil {
+			return "", nil, err
+		}
+		return header, rest, nil
+	}
+	boundsErr := error(nil)
+	if lo, hi, err := g.getBounds(v0, rest, body, exists); err == nil && cppIsAnyIntegerType(g, v0.VSort) {
+		header, err := g.loopHeaderForSortBounds(v0.VSort, varName(v0.Name), lo, hi)
+		if err != nil {
+			return "", nil, err
+		}
+		return header, rest, nil
+	} else if err != nil {
+		boundsErr = err
+	}
+	if header, remaining, ok, err := g.extensionalHeaderForFirstVar(v0, rest, body, exists); ok || err != nil {
+		if err != nil {
+			return "", nil, err
+		}
+		return header, remaining, nil
+	}
+	if boundsErr != nil {
+		return "", nil, boundsErr
+	}
+	return "", nil, fmt.Errorf("ivy2cpp: cannot iterate over sort %s", sortName(v0.VSort))
+}
+
+func (g *Generator) extensionalHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, []*goivy.LogicVariable, bool, error) {
+	if v0 == nil || g == nil || g.Mod == nil {
+		return "", nil, false, nil
+	}
+	var ebnds []*goivy.Apply
+	g.matchExtensionalBoundExprs(v0, body, exists, &ebnds)
+	if len(ebnds) == 0 {
+		return "", nil, false, nil
+	}
+	ebnd := ebnds[0]
+	fs, ok := ebnd.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok {
+		return "", nil, false, nil
+	}
+	st := cppFunctionStorageFor(g, fs.Domain(), fs.Range(), "")
+	if st.Kind != cppStorageHashThunk {
+		return "", nil, false, nil
+	}
+	rel := varName(goivy.ExprName(ebnd.Func))
+	header := fmt.Sprintf("for(auto it=%s.memo.begin(),en=%s.memo.end(); it != en; ++it)if (it->second) { ", rel, rel)
+	remaining := append([]*goivy.LogicVariable(nil), rest...)
+	for _, term := range ebnd.Terms {
+		tv, ok := term.(*goivy.LogicVariable)
+		if !ok {
+			continue
+		}
+		remaining = removeQuantVarByName(remaining, tv.Name)
+	}
+	return header, remaining, true, nil
+}
+
+func removeQuantVarByName(vars []*goivy.LogicVariable, name string) []*goivy.LogicVariable {
+	out := vars[:0]
+	for _, v := range vars {
+		if v == nil || v.Name != name {
+			out = append(out, v)
+		}
+	}
+	return out
 }
 
 // emitQuantWithHeaders renders the IIFE body once the per-variable loop

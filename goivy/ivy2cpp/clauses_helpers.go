@@ -92,8 +92,8 @@ func keyOfConst(c *goivy.Const) goivy.NodeKey { return goivy.Key(c) }
 
 // extractDefinedParameters strips Eq formulas of the form Eq(input, expr)
 // from pre.Fmlas where input is in inputs and does not recur elsewhere.
-// Returns the trimmed clauses and the extracted parameter definitions
-// (each an Eq). Mirrors Python `extract_defined_parameters`.
+// Returns the trimmed clauses and the extracted parameter definitions.
+// Mirrors Python `extract_defined_parameters`.
 func extractDefinedParameters(pre *goivy.Clauses, inputs []*goivy.Const) (*goivy.Clauses, []goivy.Expr) {
 	if pre == nil {
 		return pre, nil
@@ -105,15 +105,11 @@ func extractDefinedParameters(pre *goivy.Clauses, inputs []*goivy.Const) (*goivy
 		}
 		inputSet[keyOfConst(in)] = true
 	}
-	// defmap : input -> Eq formula that defines it.
+	// defmap : input -> formula that defines it.
 	defmap := make(map[goivy.NodeKey]goivy.Expr)
 	for _, fmla := range pre.Fmlas {
-		eq, ok := fmla.(*goivy.Eq)
+		lhsConst, ok := definedParameterLHS(fmla)
 		if !ok {
-			continue
-		}
-		lhsConst, isConst := eq.T1.(*goivy.Const)
-		if !isConst {
 			continue
 		}
 		k := keyOfConst(lhsConst)
@@ -124,6 +120,20 @@ func extractDefinedParameters(pre *goivy.Clauses, inputs []*goivy.Const) (*goivy
 			continue
 		}
 		defmap[k] = fmla
+	}
+	for _, def := range pre.Defs {
+		lhsConst, ok := definedParameterLHS(def)
+		if !ok {
+			continue
+		}
+		k := keyOfConst(lhsConst)
+		if !inputSet[k] {
+			continue
+		}
+		if _, exists := defmap[k]; exists {
+			continue
+		}
+		defmap[k] = def
 	}
 	current := pre
 	var inpdefs []goivy.Expr
@@ -143,6 +153,9 @@ func extractDefinedParameters(pre *goivy.Clauses, inputs []*goivy.Const) (*goivy
 			}
 			if !recurs {
 				for _, d := range current.Defs {
+					if fmla == d {
+						continue
+					}
 					if symbolKeysContain(goivy.UsedSymbolsAst(d.Rhs), inKey) ||
 						symbolKeysContain(goivy.UsedSymbolsAst(d.Lhs), inKey) {
 						recurs = true
@@ -153,15 +166,22 @@ func extractDefinedParameters(pre *goivy.Clauses, inputs []*goivy.Const) (*goivy
 			if recurs {
 				continue
 			}
-			// Drop fmla from current.Fmlas.
-			newFmlas := make([]goivy.Expr, 0, len(current.Fmlas)-1)
+			// Drop fmla from current.Fmlas/current.Defs.
+			newFmlas := make([]goivy.Expr, 0, len(current.Fmlas))
 			for _, f := range current.Fmlas {
 				if f == fmla {
 					continue
 				}
 				newFmlas = append(newFmlas, f)
 			}
-			current = goivy.NewClauses(newFmlas, current.Defs, current.Annot)
+			newDefs := make([]*goivy.IvyDefinition, 0, len(current.Defs))
+			for _, d := range current.Defs {
+				if fmla == d {
+					continue
+				}
+				newDefs = append(newDefs, d)
+			}
+			current = goivy.NewClauses(newFmlas, newDefs, current.Annot)
 			current = goivy.TrimClauses(current)
 			delete(defmap, inKey)
 			inpdefs = append(inpdefs, fmla)
@@ -174,6 +194,22 @@ func extractDefinedParameters(pre *goivy.Clauses, inputs []*goivy.Const) (*goivy
 		inpdefs[i], inpdefs[j] = inpdefs[j], inpdefs[i]
 	}
 	return current, inpdefs
+}
+
+func definedParameterLHS(fmla goivy.Expr) (*goivy.Const, bool) {
+	switch t := fmla.(type) {
+	case *goivy.Eq:
+		c, ok := t.T1.(*goivy.Const)
+		return c, ok
+	case *goivy.LogicIff:
+		c, ok := t.T1.(*goivy.Const)
+		return c, ok
+	case *goivy.LogicDefinition:
+		c, ok := t.Defines().(*goivy.Const)
+		return c, ok
+	default:
+		return nil, false
+	}
 }
 
 func symbolKeysContain(m *goivy.InsMap[goivy.NodeKey, goivy.Expr], k goivy.NodeKey) bool {
