@@ -378,9 +378,7 @@ func (g *Generator) emitSetFieldCustom(w *cppWriter, destr *goivy.Const, lhs, rh
 // function domain it calls either __randomize<T>(*this, apply(...), "<sortname>")
 // (for destructor / native / cpptype ranges) or g.randomize(name, args, "<range>")
 // (for primitive / range / enum ranges). If a domain sort has no finite bounds,
-// Python returns without emitting anything; Go does the same. If the range sort
-// is uninterpreted, the current experimental Go generator assumes a finite
-// 0..100 universe for the sort and records a warning naming that sort.
+// Python returns without emitting anything; Go does the same.
 func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 	if g.Config.Target == "test" {
 		return g.emitPythonTestRandomizeSolver(w, sym)

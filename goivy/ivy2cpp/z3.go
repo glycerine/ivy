@@ -291,15 +291,6 @@ func (g *Generator) emitZ3RangeRandomHelper(w *cppWriter, s goivy.Sort, rs *goiv
 }
 
 func (g *Generator) emitZ3ExperimentalUninterpretedRandomHelper(w *cppWriter, s goivy.Sort) {
-	fn := z3RandomHelperName(s)
-	if fn == "" {
-		return
-	}
-	typ := g.cppQualifiedType(s, g.ClassName)
-	w.open(fmt.Sprintf("static %s %s(gen &g) {", typ, fn))
-	w.linef("return static_cast<%s>(g.random_index(%d, %d));", typ, experimentalUninterpretedSortLower, experimentalUninterpretedSortUpper)
-	w.close("")
-	w.blank()
 }
 
 func (g *Generator) emitZ3Setup(w *cppWriter) {
@@ -377,8 +368,6 @@ func (g *Generator) emitZ3SortRegistrations(w *cppWriter) {
 				} else {
 					w.linef("g.mk_int(%s);", strconv.Quote(zname))
 				}
-			} else if _, ok := g.experimentalUninterpretedRangeFor(s); ok {
-				w.linef("g.mk_int(%s, %d, %d);", strconv.Quote(zname), experimentalUninterpretedSortLower, experimentalUninterpretedSortUpper)
 			} else {
 				w.linef("g.mk_sort(%s);", strconv.Quote(zname))
 			}

@@ -168,7 +168,7 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 			continue
 		}
 		if _, ok := c.CSort.(*goivy.UninterpretedSort); ok {
-			if _, ok := g.experimentalUninterpretedSort(c.CSort); ok {
+			if g != nil && g.Mod != nil && g.Mod.Sig != nil && goivy.IsInterpretedSort(g.Mod.Sig, c.CSort) {
 				continue
 			}
 			err := fmt.Errorf("ivy2cpp: cannot compile numeral %s of uninterpreted sort %s", c.Name, c.CSort)
