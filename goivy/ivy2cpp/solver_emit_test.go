@@ -33,7 +33,7 @@ func TestEmitSetSolverLargeFunctionEmitsForall(t *testing.T) {
 	g.emitSetSolver(&w, sym, "obj")
 	body := w.String()
 	for _, want := range []string{
-		"std::vector<z3::expr> __quants;",
+		"z3::expr_vector __quants(ctx);",
 		`__quants.push_back(ctx.constant("X__0", sort("idx")));`,
 		`slvr.add(forall(__quants, __to_solver(*this,apply("bigf", ctx.constant("X__0", sort("idx"))),obj.bigf)));`,
 	} {

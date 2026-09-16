@@ -366,7 +366,11 @@ func (g *Generator) emitZ3InitialConstraints(w *cppWriter) error {
 		return err
 	}
 	for _, f := range constraints.Formulas {
-		if err := g.emitZ3AddInitialFormula(w, f, map[string]goivy.Sort{}); err != nil {
+		closed, ok := goivy.CloseEPR(f).(goivy.Expr)
+		if !ok || closed == nil {
+			closed = f
+		}
+		if err := g.emitZ3AddInitialFormula(w, closed, map[string]goivy.Sort{}); err != nil {
 			return err
 		}
 	}

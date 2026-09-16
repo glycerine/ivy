@@ -168,6 +168,9 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 			continue
 		}
 		if _, ok := c.CSort.(*goivy.UninterpretedSort); ok {
+			if _, ok := g.experimentalUninterpretedSort(c.CSort); ok {
+				continue
+			}
 			err := fmt.Errorf("ivy2cpp: cannot compile numeral %s of uninterpreted sort %s", c.Name, c.CSort)
 			g.errs = append(g.errs, err)
 			plan.fallback = true
@@ -703,12 +706,63 @@ func (g *Generator) formulaToSmtlibErr(fmla goivy.Expr) (string, error) {
 	if fmla == nil {
 		return "true", nil
 	}
-	solver := goivy.NewSolver(g.Mod, nil)
+	solver := goivy.NewSolver(g.moduleWithExperimentalInterps(fmla), nil)
 	z3expr, err := solver.FormulaToZ3(fmla)
 	if err != nil {
 		return "", err
 	}
 	return cleanSmtlib(z3expr.String()), nil
+}
+
+func (g *Generator) moduleWithExperimentalInterps(fmla goivy.Expr) *goivy.Module {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil || fmla == nil {
+		if g == nil {
+			return nil
+		}
+		return g.Mod
+	}
+	interps := map[string]*goivy.RangeSort{}
+	var collectSort func(goivy.Sort)
+	collectSort = func(s goivy.Sort) {
+		if s == nil {
+			return
+		}
+		if fs, ok := s.(*goivy.LogicFunctionSort); ok {
+			for _, d := range fs.Domain() {
+				collectSort(d)
+			}
+			collectSort(fs.Range())
+			return
+		}
+		rs, ok := g.experimentalUninterpretedRangeFor(s)
+		if !ok {
+			return
+		}
+		name := sortName(s)
+		if name != "" {
+			interps[name] = rs
+		}
+	}
+	collectSort(fmla.NodeSort())
+	for _, sym := range goivy.UsedSymbolsAst(fmla).All() {
+		collectSort(sym.NodeSort())
+	}
+	for _, v := range goivy.VariablesAST(fmla) {
+		collectSort(v.NodeSort())
+	}
+	if len(interps) == 0 {
+		return g.Mod
+	}
+	mod := g.Mod.Copy()
+	if mod.Sig == nil {
+		return mod
+	}
+	for name, rs := range interps {
+		if _, exists := mod.Sig.Interp[name]; !exists {
+			mod.Sig.Interp[name] = rs
+		}
+	}
+	return mod
 }
 
 // preDefinedNames returns the set of defining-symbol names for each

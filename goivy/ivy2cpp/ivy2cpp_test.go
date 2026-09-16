@@ -998,6 +998,16 @@ export step
 				if strings.Contains(out.Header, "virtual void ivy_assert(bool truth") {
 					t.Fatalf("gen target should not emit base assert member:\n%s", out.Header)
 				}
+				for _, want := range []string{
+					"void ivy_assert(bool truth, const char *msg)",
+					"void ivy_assume(bool truth, const char *msg)",
+					"void ivy_check_progress(int, int)",
+					"int choose(int, int)",
+				} {
+					if !strings.Contains(out.Impl, want) {
+						t.Fatalf("gen target should define standalone runtime hook %q:\n%s", want, out.Impl)
+					}
+				}
 			} else if !strings.Contains(out.Header, "virtual void ivy_assert(bool,const char *){}") {
 				t.Fatalf("%s target should emit no-op base assert member:\n%s", target, out.Header)
 			}
@@ -3808,6 +3818,29 @@ export step
 	}
 }
 
+func TestTargetTestInitialConstraintQuotesMultilineSMT(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation le(X:node,Y:node)
+axiom forall X:node,Y:node,Z:node . le(X,Y) & le(Y,Z) -> le(X,Z)
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "initmultiline"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if strings.Contains(out.Impl, "add(\"(assert (and\\\n") {
+		t.Fatalf("target=test initial constraint should emit one quoted C++ string, not a backslash-newline literal:\n%s", out.Impl)
+	}
+	if !strings.Contains(out.Impl, `add("(assert (and\n`) {
+		t.Fatalf("target=test initial constraint missing escaped newline SMT string:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestTargetGenInitialConstraintApplicationCanUseStateConstantArgument(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type ts = {start, other}
@@ -3842,6 +3875,37 @@ export step
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
+}
+
+func TestTargetGenInitialConstraintClosesFreeVariables(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation le(X:node,Y:node)
+axiom le(X,X)
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "initfree"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		`for (int X = 0; X <= 100; X++) {`,
+		`add(mk_apply_expr("le", {static_cast<int>(X), static_cast<int>(X)}));`,
+		`obj.le[initfree::__tup__int__int(__ivy_arg0, __ivy_arg1)] = (bool)eval_apply("le", {static_cast<int>(__ivy_arg0), static_cast<int>(__ivy_arg1)});`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("target=gen initial free-variable constraint missing %q:\n%s", want, out.Impl)
+		}
+	}
+	if strings.Contains(out.Impl, `init_gen::init_gen(initfree &obj) {
+    (void)obj;
+    ivy2cpp_setup(*this);
+    add(mk_apply_expr("le", {static_cast<int>(X), static_cast<int>(X)}));`) {
+		t.Fatalf("target=gen initial constraint emitted raw free variable X outside a binder:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
 }
 
 func TestEmitNativeActionAntiquotes(t *testing.T) {
@@ -5005,9 +5069,10 @@ func TestReplDispatchParsesUninterpretedArgs(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
 individual saved : node
+relation edge(X:node,Y:node)
 action set(n:node) = {
-    saved := n;
-    assert n = 7
+    assume edge(n,7);
+    saved := n
 }
 export set
 `)
@@ -5025,6 +5090,45 @@ export set
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
 		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetTestActionGenAllowsExperimentalUninterpretedNumeral(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+individual saved : node
+action set(n:node) = {
+    saved := n;
+    assert n = 7
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnode"})
+	if err != nil {
+		t.Fatalf("Generate target=test with uninterpreted numeral: %v", err)
+	}
+	if len(out.Warnings) != 1 {
+		t.Fatalf("warnings = %v, want exactly one uninterpreted-sort warning", out.Warnings)
+	}
+	if want := "ivy2cpp: warning: assuming uninterpreted sort node has experimental finite range 0..100"; out.Warnings[0] != want {
+		t.Fatalf("warning = %q, want %q", out.Warnings[0], want)
+	}
+	text := out.Header + out.Impl
+	for _, want := range []string{
+		`mk_int("node");`,
+		`int_ranges["node"] = std::pair<unsigned long long, unsigned long long>(0,(100+1)-1);`,
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in target=test output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if strings.Contains(text, "action_gen fallback") {
+		t.Fatalf("target=test should use strong action generator, not fallback:\n%s", text)
+	}
+	if strings.Contains(text, "1:node") {
+		t.Fatalf("target=test should emit numeric SMT-LIB for experimental node numeral, not an uninterpreted 1:node constant:\n%s", text)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
@@ -6031,6 +6135,26 @@ export step
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
+}
+
+func TestTargetTestBinaryDomainEvalApplyCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..1}
+relation edge(X:idx,Y:idx)
+axiom edge(0,1)
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "binaryeval"})
+	if err != nil {
+		t.Fatalf("Generate target=test with binary state: %v", err)
+	}
+	if !strings.Contains(out.Impl, `obj.edge[X0][X1] = (bool)eval_apply("edge", X0, X1);`) {
+		t.Fatalf("target=test binary eval should use fixed-arity eval_apply overload:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
 }
 
 func TestTargetTestAssumesExperimentalBoundForUninterpretedDomainAndRange(t *testing.T) {
@@ -8645,6 +8769,55 @@ export set
 	if !strings.Contains(body, "saved") || !strings.Contains(body, "red") {
 		t.Fatalf("set_gen constructor SMT-LIB missing references to ext_preconds saved/red:\n%s", body)
 	}
+}
+
+func TestTargetTestExtPrecondAllowsExperimentalUninterpretedNumeral(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+individual saved : node
+action set(n:node) = {
+    saved := n
+}
+export set
+`)
+	nodeSort, ok := mod.Sig.Sorts.Get2("node")
+	if !ok {
+		t.Fatalf("sort node not found")
+	}
+	if mod.ExtPreconds == nil {
+		mod.ExtPreconds = map[string]goivy.Expr{}
+	}
+	eq, err := goivy.NewEq(goivy.NewConst("saved", nodeSort), goivy.NewConst("1", nodeSort))
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	mod.ExtPreconds["set"] = eq
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "extun"})
+	if err != nil {
+		t.Fatalf("Generate target=test with uninterpreted numeral ext precondition: %v", err)
+	}
+	if len(out.Warnings) != 1 {
+		t.Fatalf("warnings = %v, want exactly one uninterpreted-sort warning", out.Warnings)
+	}
+	if want := "ivy2cpp: warning: assuming uninterpreted sort node has experimental finite range 0..100"; out.Warnings[0] != want {
+		t.Fatalf("warning = %q, want %q", out.Warnings[0], want)
+	}
+	text := out.Header + out.Impl
+	for _, want := range []string{
+		`mk_int("node");`,
+		`int_ranges["node"] = std::pair<unsigned long long, unsigned long long>(0,(100+1)-1);`,
+		`set_gen::set_gen(extun &obj)`,
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in target=test output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if strings.Contains(text, "action_gen fallback") {
+		t.Fatalf("target=test should use strong action generator, not fallback:\n%s", text)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
 }
 
 // --- TODO 021 tests: debug/trace output semantics ---

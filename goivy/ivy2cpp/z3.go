@@ -1006,11 +1006,14 @@ func (g *Generator) emitPythonTestInitialConstraint(w *cppWriter) error {
 			smts = append(smts, smt)
 		}
 	}
-	w.line(`add("(assert (and\`)
+	var b strings.Builder
+	b.WriteString("(assert (and")
 	for _, smt := range smts {
-		w.linef(`  %s\`, smt)
+		b.WriteString("\n  ")
+		b.WriteString(smt)
 	}
-	w.line(`))");`)
+	b.WriteString("\n))")
+	w.linef("add(%s);", strconv.Quote(b.String()))
 	return nil
 }
 

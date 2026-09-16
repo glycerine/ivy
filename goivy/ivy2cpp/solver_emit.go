@@ -210,7 +210,7 @@ func (g *Generator) emitSetSolverCustom(w *cppWriter, sym stateSymbol, opts emit
 			cvars[i] = fmt.Sprintf("%sctx.constant(%s, %ssort(%s))", opts.prefix, strconv.Quote(vs[i]), opts.prefix, strconv.Quote(z3SortName(d)))
 		}
 		w.open("{")
-		w.line("std::vector<z3::expr> __quants;")
+		w.linef("z3::expr_vector __quants(%sctx);", opts.prefix)
 		for i, d := range domain {
 			w.linef("__quants.push_back(%sctx.constant(%s, %ssort(%s)));", opts.prefix, strconv.Quote(vs[i]), opts.prefix, strconv.Quote(z3SortName(d)))
 		}
@@ -540,7 +540,7 @@ func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol
 		w.linef("__from_solver<%s>(*this, apply(%q, %s), %s);", typ, sym.Name, strings.Join(applyArgs, ", "), lvalue)
 	} else {
 		ctype := cppScalarTypeWith(g, rng, g.ClassName)
-		w.linef("%s = (%s)eval_apply(%q, %s);", lvalue, ctype, sym.Name, strings.Join(evalArgs, ", "))
+		w.linef("%s = (%s)%s;", lvalue, ctype, evalApplyCall(sym.Name, evalArgs))
 	}
 	for range loopHeaders {
 		w.indent--
@@ -713,7 +713,7 @@ func (g *Generator) emitPythonTestFromSolverLoop(w *cppWriter, obj string, sym s
 		w.linef("__from_solver<%s>(*this, apply(%q%s), %s);", typ, sym.Name, joinArgs(applyArgs), lvalue)
 	} else {
 		ctype := cppScalarTypeWith(g, rng, g.ClassName)
-		w.linef("%s = (%s)eval_apply(%q%s);", lvalue, ctype, sym.Name, joinArgs(keyArgs))
+		w.linef("%s = (%s)%s;", lvalue, ctype, evalApplyFixedCall(sym.Name, keyArgs))
 	}
 	for range loopHeaders {
 		w.indent--
@@ -831,6 +831,28 @@ func joinArgs(args []string) string {
 		return ""
 	}
 	return ", " + strings.Join(args, ", ")
+}
+
+func evalApplyCall(name string, args []string) string {
+	switch len(args) {
+	case 0:
+		return fmt.Sprintf("eval_apply(%q)", name)
+	case 1:
+		return fmt.Sprintf("eval_apply(%q, %s)", name, args[0])
+	default:
+		return fmt.Sprintf("eval_apply(%q, {%s})", name, strings.Join(args, ", "))
+	}
+}
+
+func evalApplyFixedCall(name string, args []string) string {
+	switch len(args) {
+	case 0:
+		return fmt.Sprintf("eval_apply(%q)", name)
+	case 1, 2, 3, 4:
+		return fmt.Sprintf("eval_apply(%q, %s)", name, strings.Join(args, ", "))
+	default:
+		return fmt.Sprintf("([&](){ int __ivy_eval_args[%d] = {%s}; return eval_apply(%q, %d, __ivy_eval_args); })()", len(args), strings.Join(args, ", "), name, len(args))
+	}
 }
 
 func z3ValueForSortWithPrefix(s goivy.Sort, name, prefix string) string {
