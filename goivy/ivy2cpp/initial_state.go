@@ -533,8 +533,8 @@ func (g *Generator) z3InitialConst(c *goivy.Const, env map[string]goivy.Sort) (s
 		}
 	}
 	name := goivy.ExprName(c)
-	if g.z3HasDecl(name) {
-		return fmt.Sprintf("mk_apply_expr(%q, {})", name), nil
+	if solverName, ok := g.z3DeclSolverName(name); ok {
+		return fmt.Sprintf("mk_apply_expr(%q, {})", solverName), nil
 	}
 	return "", fmt.Errorf("ivy2cpp: unsupported initial-state constant %s", c.String())
 }
@@ -564,11 +564,12 @@ func (g *Generator) z3InitialApply(a *goivy.Apply, env map[string]goivy.Sort) (s
 		}
 		return "(" + l + " " + name + " " + r + ")", nil
 	}
-	if !g.z3HasDecl(name) {
+	solverName, ok := g.z3DeclSolverName(name)
+	if !ok {
 		return "", fmt.Errorf("ivy2cpp: unsupported initial-state apply %s", a.String())
 	}
 	if len(a.Terms) == 0 {
-		return fmt.Sprintf("mk_apply_expr(%q, {})", name), nil
+		return fmt.Sprintf("mk_apply_expr(%q, {})", solverName), nil
 	}
 	intArgs := make([]string, len(a.Terms))
 	allIntArgs := true
@@ -581,7 +582,7 @@ func (g *Generator) z3InitialApply(a *goivy.Apply, env map[string]goivy.Sort) (s
 		intArgs[i] = arg
 	}
 	if allIntArgs {
-		return fmt.Sprintf("mk_apply_expr(%q, {%s})", name, strings.Join(intArgs, ", ")), nil
+		return fmt.Sprintf("mk_apply_expr(%q, {%s})", solverName, strings.Join(intArgs, ", ")), nil
 	}
 	exprArgs := make([]string, len(a.Terms))
 	for i, term := range a.Terms {
@@ -591,7 +592,7 @@ func (g *Generator) z3InitialApply(a *goivy.Apply, env map[string]goivy.Sort) (s
 		}
 		exprArgs[i] = arg
 	}
-	return fmt.Sprintf("apply(%q, %s)", name, strings.Join(exprArgs, ", ")), nil
+	return fmt.Sprintf("apply(%q, %s)", solverName, strings.Join(exprArgs, ", ")), nil
 }
 
 func (g *Generator) z3InitialApplyIntArg(e goivy.Expr, env map[string]goivy.Sort) (string, error) {
@@ -626,15 +627,20 @@ func (g *Generator) z3InitialApplyIntArg(e goivy.Expr, env map[string]goivy.Sort
 }
 
 func (g *Generator) z3HasDecl(name string) bool {
+	_, ok := g.z3DeclSolverName(name)
+	return ok
+}
+
+func (g *Generator) z3DeclSolverName(name string) (string, bool) {
 	if name == "" {
-		return false
+		return "", false
 	}
 	for _, sym := range g.z3DeclSymbols() {
 		if sym.Name == name {
-			return true
+			return g.z3SymbolName(sym.Name, sym.Sort), true
 		}
 	}
-	return false
+	return "", false
 }
 
 func (g *Generator) emitZ3InitialStateEvaluation(w *cppWriter, obj string) error {

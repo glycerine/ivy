@@ -480,10 +480,29 @@ func (g *Generator) isNumericOrEnumeratedConstant(sym goivy.Expr) bool {
 }
 
 func (g *Generator) thunkFastPathUsesToSolver(s goivy.Sort) bool {
-	if _, ok := g.cppInterpType(s); ok {
+	if g == nil || g.Mod == nil {
+		return false
+	}
+	if it, ok := g.cppInterpType(s); ok {
+		// Python excludes `interpret T -> bv[N]` from sort_to_cpptype, so
+		// primitive BV constants use the same int_to_z3 equality path as
+		// numeric ranges. Helper-class interpreted types still use their
+		// generated __to_solver specializations.
+		return it.Kind != cppInterpBV
+	}
+	if g.isDestructorRecordRange(s) {
 		return true
 	}
-	return g.isRecordRange(s)
+	name := sortName(s)
+	if name != "" && g.Mod.NativeTypes != nil {
+		if _, ok := g.Mod.NativeTypes[name]; ok {
+			return true
+		}
+	}
+	if name != "" && g.isVariantSuperName(name) {
+		return true
+	}
+	return false
 }
 
 func (g *Generator) isPrimitiveSort(s goivy.Sort) bool {

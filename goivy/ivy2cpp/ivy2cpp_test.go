@@ -3831,11 +3831,11 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if strings.Contains(out.Impl, "add(\"(assert (and\\\n") {
-		t.Fatalf("target=test initial constraint should emit one quoted C++ string, not a backslash-newline literal:\n%s", out.Impl)
+	if !strings.Contains(out.Impl, "add(\"(assert (and\\\n") {
+		t.Fatalf("target=test initial constraint should use Python's backslash-continued SMT literal:\n%s", out.Impl)
 	}
-	if !strings.Contains(out.Impl, `add("(assert (and\n`) {
-		t.Fatalf("target=test initial constraint missing escaped newline SMT string:\n%s", out.Impl)
+	if strings.Contains(out.Impl, `add("(assert (and\n`) {
+		t.Fatalf("target=test initial constraint should not use Go-only escaped-newline SMT string:\n%s", out.Impl)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
@@ -4728,6 +4728,9 @@ attribute set.weight = "3.0"
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in test main:\n%s", want, out.Impl)
 		}
+	}
+	if strings.Contains(out.Impl, "if (num_gens > 0)") {
+		t.Fatalf("target=test main should match Python's unconditional test loop:\n%s", out.Impl)
 	}
 }
 
@@ -6283,7 +6286,7 @@ export step
 	compileGeneratedCPP(t, out)
 }
 
-func TestTargetTestPrimitiveBVInterpActionInputDeclaresNestedType(t *testing.T) {
+func TestTargetTestPrimitiveBVInterpActionInputUsesScalarType(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type packet
 relation sent(X:packet)
@@ -6299,14 +6302,82 @@ interpret packet -> bv[16]
 	}
 	text := out.Header + out.Impl
 	for _, want := range []string{
-		"typedef unsigned packet;",
 		"hash_thunk<unsigned,bool> sent;",
-		`__randomize<bvpacket::packet>(*this, apply("__fml:x"), "packet");`,
-		`__from_solver<bvpacket::packet>(*this, apply("__fml:x"), x);`,
+		`randomize("__fml:x","packet");`,
+		`x = (unsigned)eval_apply("__fml:x");`,
 	} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("missing %q in target=test primitive-bv interpreted sort output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
+	}
+	for _, bad := range []string{
+		"typedef unsigned packet;",
+		"bvpacket::packet",
+	} {
+		if strings.Contains(text, bad) {
+			t.Fatalf("target=test primitive-bv interpreted sort should use Python's scalar C++ type, not %q:\nheader:\n%s\nimpl:\n%s", bad, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetTestBVReservedSolverNameUsesPythonRename(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type byte
+interpret byte -> bv[8]
+individual x : byte
+individual y : byte
+function bvxor(X:byte,Y:byte) : byte
+action step = {
+    x := bvxor(x,y)
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "bvreserved"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Header + out.Impl
+	for _, want := range []string{
+		"hash_thunk<__tup__unsigned__unsigned,unsigned> bvxor;",
+		`mk_decl("u__bvxor",2,`,
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in target=test BV reserved-name output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if strings.Contains(text, `mk_decl("bvxor"`) ||
+		strings.Contains(text, `randomize("bvxor"`) ||
+		strings.Contains(text, `eval_apply("bvxor"`) {
+		t.Fatalf("solver-facing BV reserved name should be auto-renamed to u__bvxor:\n%s", text)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetTestPrimitiveBVDomainUsesBVCardinality(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type byte
+interpret byte -> bv[8]
+function next(X:byte) : byte
+action step = {
+    next(0) := 1
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "bvloop"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "for (unsigned X__0 = 0; X__0 < 256; X__0++)") {
+		t.Fatalf("target=test primitive BV domain should use Python's bv cardinality loop:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, "X__0 <= 100") {
+		t.Fatalf("target=test primitive BV domain should not use experimental uninterpreted 0..100 loop:\n%s", out.Impl)
+	}
+	if len(out.Warnings) != 0 {
+		t.Fatalf("primitive BV interpreted sort should not trigger experimental uninterpreted warnings: %v", out.Warnings)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
@@ -6469,10 +6540,10 @@ export set
 		"obj.i = ivy2cpp_random_small((*this));",
 		"genbits::text y;",
 		"genbits::small z;",
-		`__randomize<genbits::word>(*this, apply("__fml:x"), "word");`,
+		`randomize("__fml:x", "word");`,
 		`__randomize<genbits::text>(*this, apply("__fml:y"), "text");`,
 		`__randomize<genbits::small>(*this, apply("__fml:z"), "small");`,
-		`__from_solver<genbits::word>(*this, apply("__fml:x"), x);`,
+		`x = (unsigned)eval_apply("__fml:x");`,
 		`__from_solver<genbits::text>(*this, apply("__fml:y"), y);`,
 		`__from_solver<genbits::small>(*this, apply("__fml:z"), z);`,
 	} {
@@ -7221,9 +7292,10 @@ individual saved : cell
 // TestEmitEvalBranchesByRangeKind asserts that emit_eval emits the
 // Python-faithful branched form (ivy_to_cpp.py:789-796):
 //
-//   - destructor / native / cpp-interp range → `__from_solver<class::T>
-//     (*this, apply("name", ...), lvalue);`
-//   - primitive range → `lvalue = (ctype)eval_apply("name", ...);`
+//   - destructor / native / helper-class cpp-interp range →
+//     `__from_solver<class::T>(*this, apply("name", ...), lvalue);`
+//   - primitive range and primitive `bv[N]` range →
+//     `lvalue = (ctype)eval_apply("name", ...);`
 //
 // Added as part of TODO 018 milestone 4.b.
 func TestEmitEvalBranchesByRangeKind(t *testing.T) {
@@ -7245,8 +7317,8 @@ export set
 		t.Fatalf("legacy unified __from_solver form should be gone:\n%s", out.Impl)
 	}
 
-	// Cpp-interp range (bv): __from_solver<class::T> via apply, NOT
-	// __from_solver<unsigned> (which would skip the type's specialization).
+	// Primitive BV interpretation: Python excludes `bv[N]` from
+	// sort_to_cpptype, so it takes the direct eval_apply path.
 	mod2 := compileIvySource(t, `#lang ivy1.7
 type word
 interpret word -> bv[8]
@@ -7258,8 +7330,25 @@ export set
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out2.Impl, `__from_solver<evalbr2::word>(*this, apply("__fml:x"), x);`) {
-		t.Fatalf("expected cpp-typed range to route to class-qualified __from_solver:\n%s", out2.Impl)
+	if !strings.Contains(out2.Impl, `x = (unsigned)eval_apply("__fml:x");`) {
+		t.Fatalf("expected primitive BV range to use direct eval_apply cast:\n%s", out2.Impl)
+	}
+
+	// Helper-class cpp-interp range: __from_solver<class::T> via apply,
+	// NOT __from_solver<std::string> (which would skip the type's specialization).
+	mod3 := compileIvySource(t, `#lang ivy1.7
+type text
+interpret text -> strbv[4]
+individual saved : text
+action set(x:text) = { saved := x }
+export set
+`)
+	out3, err := Generate(mod3, Config{Target: "gen", ClassName: "evalbr3"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out3.Impl, `__from_solver<evalbr3::text>(*this, apply("__fml:x"), x);`) {
+		t.Fatalf("expected helper-class cpp-interp range to route to class-qualified __from_solver:\n%s", out3.Impl)
 	}
 }
 
@@ -7320,7 +7409,7 @@ export step
 	}
 }
 
-func TestEnumZ3SpecializationsPrecedeRecordDestructors(t *testing.T) {
+func TestEnumZ3ForwardDeclsPrecedeRecordDestructorBodies(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type proto = {udp, tcp}
 type endpoint
@@ -7331,13 +7420,17 @@ destructor port(E:endpoint): bool
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	enumIdx := strings.Index(out.Impl, "z3::expr  __to_solver<enumrecord::proto>")
-	if enumIdx < 0 {
-		t.Fatalf("missing enum __to_solver specialization:\n%s", out.Impl)
+	enumDeclIdx := strings.Index(out.Impl, "z3::expr __to_solver<enumrecord::proto>")
+	if enumDeclIdx < 0 {
+		t.Fatalf("missing enum __to_solver forward declaration:\n%s", out.Impl)
 	}
-	recordIdx := strings.Index(out.Impl, "template <> z3::expr __to_solver<enumrecord::endpoint>")
-	if recordIdx < 0 {
+	recordDefIdx := strings.Index(out.Impl, "template <> z3::expr __to_solver<enumrecord::endpoint>")
+	if recordDefIdx < 0 {
 		t.Fatalf("missing record __to_solver specialization:\n%s", out.Impl)
+	}
+	enumDefIdx := strings.LastIndex(out.Impl, "z3::expr  __to_solver<enumrecord::proto>")
+	if enumDefIdx < 0 {
+		t.Fatalf("missing enum __to_solver definition:\n%s", out.Impl)
 	}
 	for _, terms := range [][]string{
 		{"enumrecord::proto", "_arg<enumrecord::proto>"},
@@ -7348,8 +7441,72 @@ destructor port(E:endpoint): bool
 			t.Fatalf("emitted record helpers require enum helper terms %v:\n%s", terms, out.Impl)
 		}
 	}
-	if enumIdx > recordIdx {
-		t.Fatalf("enum __to_solver must precede record __to_solver to avoid implicit template instantiation; enumIdx=%d recordIdx=%d\n%s", enumIdx, recordIdx, out.Impl)
+	if enumDeclIdx > recordDefIdx {
+		t.Fatalf("enum __to_solver declaration must precede record __to_solver to avoid implicit template instantiation; enumDeclIdx=%d recordDefIdx=%d\n%s", enumDeclIdx, recordDefIdx, out.Impl)
+	}
+	if recordDefIdx > enumDefIdx {
+		t.Fatalf("record __to_solver definition must precede enum __to_solver definition to match Python target=test order; recordDefIdx=%d enumDefIdx=%d\n%s", recordDefIdx, enumDefIdx, out.Impl)
+	}
+}
+
+func TestTargetTestDestructorArgBodiesPrecedeEnumArgBodies(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell): color
+destructor live(C:cell): bool
+action touch(c:cell) = {}
+export touch
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "helperorder"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	recordIdx := strings.LastIndex(out.Impl, "helperorder::cell _arg<helperorder::cell>")
+	if recordIdx < 0 {
+		t.Fatalf("missing cell _arg body:\n%s", out.Impl)
+	}
+	enumIdx := strings.LastIndex(out.Impl, "helperorder::color _arg<helperorder::color>")
+	if enumIdx < 0 {
+		t.Fatalf("missing color _arg body:\n%s", out.Impl)
+	}
+	if recordIdx > enumIdx {
+		t.Fatalf("target=test destructor _arg bodies must precede enum _arg bodies to match Python; recordIdx=%d enumIdx=%d\n%s", recordIdx, enumIdx, out.Impl)
+	}
+}
+
+func TestTargetTestVariantDestructorBodiesPrecedeEnumArgBodies(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type label = {leaf_label, node_label}
+type tree
+variant leaf of tree = struct {
+    value : label
+}
+variant node of tree = struct {
+    left : tree,
+    right : tree
+}
+action make_leaf(l:label) returns(t:tree) = {
+    var l2 : leaf;
+    l2.value := l;
+    t := l2
+}
+export make_leaf
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "variantorder"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	leafIdx := strings.LastIndex(out.Impl, "variantorder::leaf _arg<variantorder::leaf>")
+	if leafIdx < 0 {
+		t.Fatalf("missing leaf _arg body:\n%s", out.Impl)
+	}
+	enumIdx := strings.LastIndex(out.Impl, "variantorder::label _arg<variantorder::label>")
+	if enumIdx < 0 {
+		t.Fatalf("missing label _arg body:\n%s", out.Impl)
+	}
+	if leafIdx > enumIdx {
+		t.Fatalf("target=test variant destructor _arg bodies must precede enum _arg bodies to match Python; leafIdx=%d enumIdx=%d\n%s", leafIdx, enumIdx, out.Impl)
 	}
 }
 

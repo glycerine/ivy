@@ -141,7 +141,7 @@ func TestMakeThunkZ3ConstantNumericFastPath(t *testing.T) {
 	}
 }
 
-func TestMakeThunkZ3ConstantCPPInterpFastPath(t *testing.T) {
+func TestMakeThunkZ3ConstantPrimitiveBVInterpFastPath(t *testing.T) {
 	mod, node, _ := newThunkZ3TestModule(t)
 	word := &goivy.UninterpretedSort{Name: "word"}
 	mod.Sig.Sorts.Set("word", word)
@@ -156,8 +156,11 @@ func TestMakeThunkZ3ConstantCPPInterpFastPath(t *testing.T) {
 	_ = g.makeThunk(&w, []*goivy.LogicVariable{x}, goivy.NewConst("1", word))
 	got := normalizeCPP(w.String())
 
-	if !strings.Contains(got, "z3::expr res = __to_solver(g, v, ") {
-		t.Fatalf("cpp-interpreted constant fast path should use __to_solver:\n%s", got)
+	if !strings.Contains(got, `z3::expr res = v == g.int_to_z3(g.sort("word"), (int)(`) {
+		t.Fatalf("primitive BV interpreted constant fast path should match Python's int_to_z3 equality:\n%s", got)
+	}
+	if strings.Contains(got, "__to_solver(g, v, ") {
+		t.Fatalf("primitive BV interpreted constant fast path should not use the helper-class __to_solver path:\n%s", got)
 	}
 	if strings.Contains(got, "parse_expr") || strings.Contains(got, "__z3_rename") {
 		t.Fatalf("cpp-interpreted constant fast path should not emit general SMT path:\n%s", got)

@@ -56,7 +56,7 @@ func (g *Generator) emitDeclSolverWithName(w *cppWriter, sym stateSymbol, symNam
 		domains = append(domains, strconv.Quote(d))
 	}
 	if symNameExpr == "" {
-		symNameExpr = strconv.Quote(sym.Name)
+		symNameExpr = strconv.Quote(g.z3SymbolName(sym.Name, sym.Sort))
 	}
 	if g.Config.Target == "test" && prefix != "" {
 		if rng == "bool" {
@@ -105,7 +105,7 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 		obj:    obj,
 		prefix: "",
 		gen:    "*this",
-		sname:  strconv.Quote(sym.Name),
+		sname:  strconv.Quote(g.z3SymbolName(sym.Name, sym.Sort)),
 		cvalue: varName(sym.Name),
 		add:    add,
 	})
@@ -140,7 +140,7 @@ func (g *Generator) emitSetSolverCustom(w *cppWriter, sym stateSymbol, opts emit
 		opts.gen = "*this"
 	}
 	if opts.sname == "" {
-		opts.sname = strconv.Quote(sym.Name)
+		opts.sname = strconv.Quote(g.z3SymbolName(sym.Name, sym.Sort))
 	}
 	if opts.cvalue == "" {
 		opts.cvalue = varName(sym.Name)
@@ -385,7 +385,7 @@ func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 	if g.Config.Target == "test" {
 		return g.emitPythonTestRandomizeSolver(w, sym)
 	}
-	sname := strconv.Quote(sym.Name)
+	sname := strconv.Quote(g.z3SymbolName(sym.Name, sym.Sort))
 	fs, isFn := sym.Sort.(*goivy.LogicFunctionSort)
 	var domain []goivy.Sort
 	var rng goivy.Sort
@@ -491,6 +491,7 @@ func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol
 	} else {
 		rng = sym.Sort
 	}
+	sname := g.z3SymbolName(sym.Name, sym.Sort)
 	record := g.isRecordRange(rng)
 	if len(domain) == 0 {
 		lvalue := varName(sym.Name)
@@ -502,10 +503,10 @@ func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol
 		}
 		if record {
 			typ := g.recordRangeType(rng)
-			w.linef("__from_solver<%s>(*this, apply(%q), %s);", typ, sym.Name, lvalue)
+			w.linef("__from_solver<%s>(*this, apply(%q), %s);", typ, sname, lvalue)
 		} else {
 			ctype := cppScalarTypeWith(g, rng, g.ClassName)
-			w.linef("%s = (%s)eval_apply(%q);", lvalue, ctype, sym.Name)
+			w.linef("%s = (%s)eval_apply(%q);", lvalue, ctype, sname)
 		}
 		return nil
 	}
@@ -537,10 +538,10 @@ func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol
 	}
 	if record {
 		typ := g.recordRangeType(rng)
-		w.linef("__from_solver<%s>(*this, apply(%q, %s), %s);", typ, sym.Name, strings.Join(applyArgs, ", "), lvalue)
+		w.linef("__from_solver<%s>(*this, apply(%q, %s), %s);", typ, sname, strings.Join(applyArgs, ", "), lvalue)
 	} else {
 		ctype := cppScalarTypeWith(g, rng, g.ClassName)
-		w.linef("%s = (%s)%s;", lvalue, ctype, evalApplyCall(sym.Name, evalArgs))
+		w.linef("%s = (%s)%s;", lvalue, ctype, evalApplyCall(sname, evalArgs))
 	}
 	for range loopHeaders {
 		w.indent--
@@ -565,12 +566,14 @@ func (g *Generator) recordRangeType(s goivy.Sort) string {
 }
 
 // isRecordRange reports whether sort `s` is a destructor record, native
-// type, cpp-interp type, or variant supertype — i.e. a sort that has a
+// type, helper-class cpp-interp type, or variant supertype — i.e. a sort that has a
 // per-class `__from_solver<T>` / `__randomize<T>` specialization
 // emitted by ivy2cpp/destructor.go, ivy2cpp/variant.go,
 // ivy2cpp/cpp_types.go, or that is served by the generic template's
 // g.randomize fallback (native). Python's analogous predicate at
 // ivy_to_cpp.py:789 covers destructor / native / cpptype only —
+// primitive `bv[N]` interpretations are deliberately not cpptypes in
+// Python and take the direct randomize/eval path here too.
 // Python's variant supertype has a long-long-convertible constructor
 // so the direct `(T)eval_apply(...)` cast works for it. The Go variant
 // supertype struct (variant.go:emitVariantWrapperDecl) does not, so we
@@ -590,7 +593,10 @@ func (g *Generator) isRecordRange(s goivy.Sort) bool {
 			return true
 		}
 	}
-	if _, ok := g.cppInterpType(s); ok {
+	if it, ok := g.cppInterpType(s); ok {
+		if it.Kind == cppInterpBV && it.primitiveType() != "" {
+			return false
+		}
 		return true
 	}
 	if name != "" && g.isVariantSuperName(name) {
@@ -606,6 +612,9 @@ func (g *Generator) uninterpretedRandomizeRangeError(s goivy.Sort) error {
 	if _, ok := g.rangeSortFor(s); ok {
 		return nil
 	}
+	if _, ok := g.cppInterpType(s); ok {
+		return nil
+	}
 	if g.isRecordRange(s) {
 		return nil
 	}
@@ -616,7 +625,7 @@ func (g *Generator) uninterpretedRandomizeRangeError(s goivy.Sort) error {
 }
 
 func (g *Generator) emitPythonTestRandomizeSolver(w *cppWriter, sym stateSymbol) error {
-	sname := strconv.Quote(sym.Name)
+	sname := strconv.Quote(g.z3SymbolName(sym.Name, sym.Sort))
 	fs, isFn := sym.Sort.(*goivy.LogicFunctionSort)
 	var domain []goivy.Sort
 	var rng goivy.Sort
@@ -675,6 +684,7 @@ func (g *Generator) emitPythonTestFromSolverLoop(w *cppWriter, obj string, sym s
 	} else {
 		rng = sym.Sort
 	}
+	sname := g.z3SymbolName(sym.Name, sym.Sort)
 	record := g.isRecordRange(rng)
 	var keyArgs []string
 	loopHeaders := make([]string, 0, len(domain))
@@ -710,10 +720,10 @@ func (g *Generator) emitPythonTestFromSolverLoop(w *cppWriter, obj string, sym s
 		for i, d := range domain {
 			applyArgs[i] = g.pythonTestIntToZ3(d, keyArgs[i])
 		}
-		w.linef("__from_solver<%s>(*this, apply(%q%s), %s);", typ, sym.Name, joinArgs(applyArgs), lvalue)
+		w.linef("__from_solver<%s>(*this, apply(%q%s), %s);", typ, sname, joinArgs(applyArgs), lvalue)
 	} else {
 		ctype := cppScalarTypeWith(g, rng, g.ClassName)
-		w.linef("%s = (%s)%s;", lvalue, ctype, evalApplyFixedCall(sym.Name, keyArgs))
+		w.linef("%s = (%s)%s;", lvalue, ctype, evalApplyFixedCall(sname, keyArgs))
 	}
 	for range loopHeaders {
 		w.indent--

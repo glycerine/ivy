@@ -52,6 +52,9 @@ func (g *Generator) experimentalUninterpretedSort(s goivy.Sort) (*goivy.Uninterp
 	if _, ok := g.rangeSortFor(s); ok {
 		return nil, false
 	}
+	if _, ok := g.cppInterpType(s); ok {
+		return nil, false
+	}
 	if g.isRecordRange(s) || g.hasStringInterp(s) {
 		return nil, false
 	}

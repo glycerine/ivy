@@ -403,10 +403,10 @@ func (g *Generator) emitImpl() error {
 			g.emitReplMain(bw)
 		}
 	case "test":
-		g.emitAllCtuplesToSolver(bw)
+		g.emitDestructorArgDeserZ3Impls(bw)
 		g.emitEnumSortArgDeserImpls(bw)
 		g.emitZ3SolverConversions(bw)
-		g.emitDestructorArgDeserZ3Impls(bw)
+		g.emitAllCtuplesToSolver(bw)
 		g.emitReplSupport(bw)
 		if g.Config.EmitMain {
 			g.emitTestMain(bw)
@@ -503,7 +503,7 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 		}
 		emitted[name] = true
 		if it, ok := g.cppInterpType(s); ok {
-			if it.Kind == cppInterpBV && it.primitiveType() != "" && !g.usesZ3() {
+			if it.Kind == cppInterpBV && it.primitiveType() != "" {
 				return
 			}
 			if it.Kind == cppInterpIntBV && !emittedIntClass {
@@ -1755,7 +1755,6 @@ int %s(int argc, char **argv){
 #endif
     double frnd = 0.0;
     bool do_over = false;
-    if (num_gens > 0) {
     for(int cycle = 0; cycle < test_iters; cycle++) {
 
 //        std::cout << "totalweight = " << totalweight << std::endl;
@@ -1889,7 +1888,6 @@ int %s(int argc, char **argv){
             }
         }
     }
-    } // end if (num_gens > 0) — empty fixtures fall through to test_completed
 %s
 #ifdef _WIN32
                 Sleep(final_ms);  // HACK: wait for late responses

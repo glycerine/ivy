@@ -393,7 +393,7 @@ func (g *Generator) emitZ3DeclRegistrations(w *cppWriter) {
 		for _, d := range domain {
 			domains = append(domains, strconv.Quote(d))
 		}
-		w.linef("g.mk_decl(%s, {%s}, %s);", strconv.Quote(sym.Name), strings.Join(domains, ", "), strconv.Quote(rng))
+		w.linef("g.mk_decl(%s, {%s}, %s);", strconv.Quote(g.z3SymbolName(sym.Name, sym.Sort)), strings.Join(domains, ", "), strconv.Quote(rng))
 	}
 }
 
@@ -454,7 +454,7 @@ func (g *Generator) emitZ3Randomize(w *cppWriter) {
 func (g *Generator) emitZ3RandomizeSymbol(w *cppWriter, sym stateSymbol) {
 	fs, ok := sym.Sort.(*goivy.LogicFunctionSort)
 	if !ok || len(fs.Domain()) == 0 {
-		w.linef("g.randomize(%s, %s);", strconv.Quote(sym.Name), strconv.Quote(z3SortName(sym.Sort)))
+		w.linef("g.randomize(%s, %s);", strconv.Quote(g.z3SymbolName(sym.Name, sym.Sort)), strconv.Quote(z3SortName(sym.Sort)))
 		if value, ok := g.z3RandomValueExpr(sym.Sort); ok {
 			w.linef("ivy.%s = %s;", varName(sym.Name), value)
 		}
@@ -477,9 +477,9 @@ func (g *Generator) emitZ3RandomizeSymbol(w *cppWriter, sym stateSymbol) {
 	rng := strconv.Quote(z3SortName(fs.Range()))
 	switch len(args) {
 	case 1:
-		w.linef("g.randomize(%s, %s, %s);", strconv.Quote(sym.Name), args[0], rng)
+		w.linef("g.randomize(%s, %s, %s);", strconv.Quote(g.z3SymbolName(sym.Name, sym.Sort)), args[0], rng)
 	default:
-		w.linef("g.randomize(%s, {%s}, %s);", strconv.Quote(sym.Name), strings.Join(args, ", "), rng)
+		w.linef("g.randomize(%s, {%s}, %s);", strconv.Quote(g.z3SymbolName(sym.Name, sym.Sort)), strings.Join(args, ", "), rng)
 	}
 	if value, ok := g.z3RandomValueExpr(fs.Range()); ok {
 		w.linef("%s = %s;", g.cppStorageAccess(sym.Name, sym.Sort, keyArgs, "ivy"), value)
@@ -555,14 +555,14 @@ func (g *Generator) z3LoopHeaderForSort(s goivy.Sort, name string) (string, bool
 		}
 		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppQualifiedType(s, g.ClassName), name, lo, name, hi, name), true
 	}
-	if lo, hi, ok := g.experimentalUninterpretedBounds(s); ok {
-		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppQualifiedType(s, g.ClassName), name, lo, name, hi, name), true
-	}
 	if it, ok := g.cppInterpType(s); ok && it.Kind == cppInterpBV {
 		card := it.card()
 		if card > 0 && card <= largeThresh {
 			return fmt.Sprintf("for (%s %s = 0; %s < %d; %s++) {", g.cppQualifiedType(s, g.ClassName), name, name, card, name), true
 		}
+	}
+	if lo, hi, ok := g.experimentalUninterpretedBounds(s); ok {
+		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppQualifiedType(s, g.ClassName), name, lo, name, hi, name), true
 	}
 	return "", false
 }
@@ -974,7 +974,7 @@ func (g *Generator) emitPythonTestDeclSolver(w *cppWriter, sym stateSymbol, symN
 		rng = "Bool"
 	}
 	if symNameExpr == "" {
-		symNameExpr = strconv.Quote(sym.Name)
+		symNameExpr = strconv.Quote(g.z3SymbolName(sym.Name, sym.Sort))
 	}
 	if len(domain) == 0 {
 		w.linef("mk_const(%s,%s);", symNameExpr, strconv.Quote(rng))
@@ -1006,15 +1006,28 @@ func (g *Generator) emitPythonTestInitialConstraint(w *cppWriter) error {
 			smts = append(smts, smt)
 		}
 	}
-	var b strings.Builder
-	b.WriteString("(assert (and")
+	indent := strings.Repeat("    ", w.indent)
+	w.raw(indent + "add(\"(assert (and\\\n")
 	for _, smt := range smts {
-		b.WriteString("\n  ")
-		b.WriteString(smt)
+		w.raw(indent + "  " + pythonContinuedSMT(smt) + "\\\n")
 	}
-	b.WriteString("\n))")
-	w.linef("add(%s);", strconv.Quote(b.String()))
+	w.raw(indent + "))\");\n")
 	return nil
+}
+
+func pythonContinuedSMT(s string) string {
+	return strings.ReplaceAll(s, "\n", " \"\n\"")
+}
+
+func (g *Generator) z3SymbolName(name string, sort goivy.Sort) string {
+	if name == "" || sort == nil || g == nil || g.Mod == nil || g.Mod.Sig == nil {
+		return name
+	}
+	solverName, err := goivy.SolverName(goivy.NewConst(name, sort), g.Mod.Sig, nil)
+	if err != nil || solverName == "" {
+		return name
+	}
+	return solverName
 }
 
 func z3SortName(s goivy.Sort) string {
