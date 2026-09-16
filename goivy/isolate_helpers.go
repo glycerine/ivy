@@ -195,16 +195,17 @@ func setPrivatesPrefer(mod *Module, iso interface{}, preferred string) {
 	if !ok {
 		return
 	}
+	if mod.Privates == nil {
+		mod.Privates = make(map[string]bool)
+	}
 	verified := make(map[string]bool)
 	for _, v := range idef.VerifiedNames() {
 
 		verified[v] = true
 	}
-	suff := "impl"
+	suff := "spec"
 	if preferred == "spec" {
-		suff = "spec"
-	} else {
-		suff = "spec" // suff is the non-preferred
+		suff = "impl"
 	}
 
 	if !verified["this"] {
@@ -389,6 +390,14 @@ func definedSymbolName(node Expr) string {
 		return c.Name
 	}
 	return ""
+}
+
+func definedSymbolConstFromDefinition(node Expr) *Const {
+	type definer interface{ Defines() Expr }
+	if d, ok := node.(definer); ok {
+		return definedSymbolConst(d.Defines())
+	}
+	return definedSymbolConst(node)
 }
 
 func usedSymbolExprs(node Expr) *InsMap[NodeKey, Expr] {

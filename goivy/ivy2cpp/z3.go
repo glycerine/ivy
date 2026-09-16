@@ -967,9 +967,9 @@ func (g *Generator) emitPythonTestInitialConstraint(w *cppWriter) error {
 		smts = append(smts, "true")
 	} else {
 		for _, f := range constraints.Formulas {
-			smt, ok := g.formulaToSmtlib(f)
-			if !ok {
-				return fmt.Errorf("ivy2cpp: failed to translate initial constraint to SMT-LIB")
+			smt, err := g.formulaToSmtlibErr(f)
+			if err != nil {
+				return fmt.Errorf("ivy2cpp: failed to translate initial constraint to SMT-LIB: %w", err)
 			}
 			smts = append(smts, smt)
 		}

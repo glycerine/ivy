@@ -1010,6 +1010,63 @@ isolate app = {
 	}
 }
 
+func TestCreateIsolateReportsMissingReferencedDefinitionBeforePropertyDependency(t *testing.T) {
+	src := `#lang ivy1.7
+include order
+
+isolate proto = {
+    instance version : unbounded_sequence
+}
+`
+	mod := New()
+	mod.Cfg = NewConfig()
+	mod.Cfg.IsolateCfg.InterpretAllSorts = true
+	mod.Cfg.IsolateCfg.ConeOfInfluence = false
+	mod.Cfg.IsolateCfg.FilterSymbols = false
+	mod.Cfg.IsolateCfg.CreateImports = true
+	mod.Cfg.IsolateCfg.EnforceAxioms = true
+	mod.Cfg.IsolateCfg.AssumeInvariants = false
+	mod.Cfg.IsolateCfg.IsolateMode = "compile"
+	sig := NewSigOn(mod.Cfg.IuCfg)
+	if err := SourceString("missing_def.ivy", src, mod, sig, map[string]interface{}{"create_isolate": false}); err != nil {
+		t.Fatalf("SourceString: %v", err)
+	}
+
+	err := CreateIsolate("this", mod)
+	if err == nil {
+		t.Fatal("CreateIsolate succeeded, want Python-compatible missing definition error")
+	}
+	msg := err.Error()
+	if !strings.Contains(msg, "definition of proto.version.succ is referenced, but not present in extract") {
+		t.Fatalf("CreateIsolate error = %q, want missing definition for proto.version.succ", msg)
+	}
+	if strings.Contains(msg, "depends on abstracted object") {
+		t.Fatalf("CreateIsolate reported property dependency before missing definition: %q", msg)
+	}
+}
+
+func TestSetPrivatesPreferSpecHidesImplSide(t *testing.T) {
+	m := mkModule()
+	iso := m.Cfg.AstCfg.NewIsolateDef(
+		[]Node{m.Cfg.AstCfg.NewAtom("iso"), m.Cfg.AstCfg.NewAtom("this")},
+		0,
+	)
+	m.Hierarchy.Set("this", NewInsMap[string, bool]())
+	m.Hierarchy.Get("this").Set("app", true)
+	m.Hierarchy.Set("app", NewInsMap[string, bool]())
+	m.Hierarchy.Get("app").Set("spec", true)
+	m.Hierarchy.Get("app").Set("impl", true)
+
+	setPrivatesPrefer(m, iso, "spec")
+
+	if !m.Privates["app.impl"] {
+		t.Fatalf("prefer=spec should hide the impl side for app; privates=%v", m.Privates)
+	}
+	if m.Privates["app.spec"] {
+		t.Fatalf("prefer=spec should not hide the spec side for app; privates=%v", m.Privates)
+	}
+}
+
 // --- ConeOfInfluenceFilter (stubbed) ---
 
 func TestConeOfInfluenceFilterDisabled(t *testing.T) {

@@ -372,9 +372,9 @@ func (g *Generator) emitSetFieldCustom(w *cppWriter, destr *goivy.Const, lhs, rh
 // Python `emit_randomize` at ivy_to_cpp.py:979. For each value in the
 // function domain it calls either __randomize<T>(*this, apply(...), "<sortname>")
 // (for destructor / native / cpptype ranges) or g.randomize(name, args, "<range>")
-// (for primitive / range / enum ranges). Returns false if the range sort
-// is uninterpreted — Python raises IvyError; the Go side propagates an
-// error in the caller.
+// (for primitive / range / enum ranges). If a domain sort has no finite bounds,
+// Python returns without emitting anything; Go does the same. If the range sort
+// is uninterpreted, Python raises IvyError and Go propagates an error.
 func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 	if g.Config.Target == "test" {
 		return g.emitPythonTestRandomizeSolver(w, sym)
@@ -389,21 +389,23 @@ func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 	} else {
 		rng = sym.Sort
 	}
-	if err := g.uninterpretedRandomizeRangeError(rng); err != nil {
-		return err
-	}
 	args := make([]string, 0, len(domain))
-	opened := 0
+	loopHeaders := make([]string, 0, len(domain))
 	for i, d := range domain {
 		name := fmt.Sprintf("X%d", i)
 		header, ok := g.z3LoopHeaderForSort(d, name)
 		if !ok {
-			return fmt.Errorf("ivy2cpp: cannot enumerate domain of %s for emit_randomize", sym.Name)
+			return nil
 		}
+		loopHeaders = append(loopHeaders, header)
+		args = append(args, fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name))
+	}
+	if err := g.uninterpretedRandomizeRangeError(rng); err != nil {
+		return err
+	}
+	for _, header := range loopHeaders {
 		w.line(header)
 		w.indent++
-		opened++
-		args = append(args, fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name))
 	}
 	if g.isRecordRange(rng) {
 		// Python (ivy_to_cpp.py:997) always uses `classname::varname(rng)`,
@@ -424,7 +426,7 @@ func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 			w.linef("randomize(%s, {%s}, %s);", sname, strings.Join(args, ", "), rngName)
 		}
 	}
-	for i := 0; i < opened; i++ {
+	for range loopHeaders {
 		w.indent--
 		w.line("}")
 	}
@@ -504,19 +506,21 @@ func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol
 	var applyArgs []string
 	var keyArgs []string
 	var evalArgs []string
-	opened := 0
+	loopHeaders := make([]string, 0, len(domain))
 	for i, d := range domain {
 		name := fmt.Sprintf("__ivy_arg%d", i)
 		header, ok := g.z3LoopHeaderForSort(d, name)
 		if !ok {
-			return fmt.Errorf("ivy2cpp: cannot enumerate domain of %s for emit_eval", sym.Name)
+			return nil
 		}
-		w.line(header)
-		w.indent++
-		opened++
+		loopHeaders = append(loopHeaders, header)
 		applyArgs = append(applyArgs, fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name))
 		evalArgs = append(evalArgs, fmt.Sprintf("static_cast<int>(%s)", name))
 		keyArgs = append(keyArgs, name)
+	}
+	for _, header := range loopHeaders {
+		w.line(header)
+		w.indent++
 	}
 	lvalue := g.cppStorageAccess(sym.Name, sym.Sort, keyArgs, obj)
 	if lhsOverride != "" {
@@ -532,7 +536,7 @@ func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol
 		ctype := cppScalarTypeWith(g, rng, g.ClassName)
 		w.linef("%s = (%s)eval_apply(%q, %s);", lvalue, ctype, sym.Name, strings.Join(evalArgs, ", "))
 	}
-	for i := 0; i < opened; i++ {
+	for range loopHeaders {
 		w.indent--
 		w.line("}")
 	}
@@ -613,21 +617,23 @@ func (g *Generator) emitPythonTestRandomizeSolver(w *cppWriter, sym stateSymbol)
 	} else {
 		rng = sym.Sort
 	}
-	if err := g.uninterpretedRandomizeRangeError(rng); err != nil {
-		return err
-	}
 	var args []string
-	opened := 0
+	loopHeaders := make([]string, 0, len(domain))
 	for i, d := range domain {
 		name := fmt.Sprintf("X%d", i)
 		header, ok := g.pythonTestLoopHeaderForSort(d, name)
 		if !ok {
-			return fmt.Errorf("ivy2cpp: cannot enumerate domain of %s for emit_randomize", sym.Name)
+			return nil
 		}
+		loopHeaders = append(loopHeaders, header)
+		args = append(args, name)
+	}
+	if err := g.uninterpretedRandomizeRangeError(rng); err != nil {
+		return err
+	}
+	for _, header := range loopHeaders {
 		w.line(header)
 		w.indent++
-		opened++
-		args = append(args, name)
 	}
 	if g.isRecordRange(rng) {
 		typ := g.recordRangeType(rng)
@@ -644,7 +650,7 @@ func (g *Generator) emitPythonTestRandomizeSolver(w *cppWriter, sym stateSymbol)
 			w.linef("randomize(%s%s,%s);", sname, joinArgs(args), strconv.Quote(z3SortName(rng)))
 		}
 	}
-	for i := 0; i < opened; i++ {
+	for range loopHeaders {
 		w.indent--
 	}
 	return nil
@@ -662,17 +668,19 @@ func (g *Generator) emitPythonTestFromSolverLoop(w *cppWriter, obj string, sym s
 	}
 	record := g.isRecordRange(rng)
 	var keyArgs []string
-	opened := 0
+	loopHeaders := make([]string, 0, len(domain))
 	for i, d := range domain {
 		name := fmt.Sprintf("X%d", i)
 		header, ok := g.pythonTestLoopHeaderForSort(d, name)
 		if !ok {
-			return fmt.Errorf("ivy2cpp: cannot enumerate domain of %s for emit_eval", sym.Name)
+			return nil
 		}
+		loopHeaders = append(loopHeaders, header)
+		keyArgs = append(keyArgs, name)
+	}
+	for _, header := range loopHeaders {
 		w.line(header)
 		w.indent++
-		opened++
-		keyArgs = append(keyArgs, name)
 	}
 	lvalue := varName(sym.Name)
 	if len(domain) > 0 {
@@ -698,7 +706,7 @@ func (g *Generator) emitPythonTestFromSolverLoop(w *cppWriter, obj string, sym s
 		ctype := cppScalarTypeWith(g, rng, g.ClassName)
 		w.linef("%s = (%s)eval_apply(%q%s);", lvalue, ctype, sym.Name, joinArgs(keyArgs))
 	}
-	for i := 0; i < opened; i++ {
+	for range loopHeaders {
 		w.indent--
 	}
 	return nil

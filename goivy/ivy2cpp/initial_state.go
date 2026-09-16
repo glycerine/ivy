@@ -34,11 +34,7 @@ func (g *Generator) initialStateConstraints() (*initialStateConstraints, error) 
 	if g.Mod.InitCond != nil && !g.Mod.InitCond.IsTrue() {
 		formulas = append(formulas, g.Mod.InitCond.Fmlas...)
 	}
-	for _, lf := range g.Mod.LabeledAxioms {
-		if f, ok := lf.Formula.(goivy.Expr); ok && f != nil {
-			formulas = append(formulas, f)
-		}
-	}
+	formulas = append(formulas, g.Mod.Axioms()...)
 	used := usedSymbolNames(formulas)
 	for _, lf := range goivy.RelevantDefinitions(g.Mod, used) {
 		def, ok := lf.Formula.(*goivy.LogicDefinition)

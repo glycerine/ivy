@@ -692,15 +692,23 @@ func (g *Generator) emitPythonTestActionGenExecute(w *cppWriter, plan *actionGen
 // SMT-LIB textual form after Python's sanitization. Returns ok=false if
 // the translator errors out.
 func (g *Generator) formulaToSmtlib(fmla goivy.Expr) (string, bool) {
+	smt, err := g.formulaToSmtlibErr(fmla)
+	if err != nil {
+		return "", false
+	}
+	return smt, true
+}
+
+func (g *Generator) formulaToSmtlibErr(fmla goivy.Expr) (string, error) {
 	if fmla == nil {
-		return "true", true
+		return "true", nil
 	}
 	solver := goivy.NewSolver(g.Mod, nil)
 	z3expr, err := solver.FormulaToZ3(fmla)
 	if err != nil {
-		return "", false
+		return "", err
 	}
-	return cleanSmtlib(z3expr.String()), true
+	return cleanSmtlib(z3expr.String()), nil
 }
 
 // preDefinedNames returns the set of defining-symbol names for each

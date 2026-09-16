@@ -337,6 +337,9 @@ func (g *Generator) emitImpl() error {
 	mw := &methodSection
 	g.emitInit(mw)
 	g.emitDefinitions(mw)
+	if err := errors.Join(g.errs...); err != nil {
+		return err
+	}
 	g.emitConstructors(mw)
 	g.emitMethods(mw)
 	g.emitTick(mw)

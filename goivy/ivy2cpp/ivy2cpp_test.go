@@ -5945,6 +5945,90 @@ export step
 	compileGeneratedCPP(t, out)
 }
 
+func TestTargetTestInitGenSkipsTemporalAxioms(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+temporal axiom [always_marked] globally marked(red)
+after init {
+    marked(red) := true
+}
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "temporalinit"})
+	if err != nil {
+		t.Fatalf("Generate target=test with temporal axiom: %v", err)
+	}
+	if strings.Contains(out.Impl, "LogicGlobally") || strings.Contains(out.Impl, "always_marked") {
+		t.Fatalf("target=test init_gen should not emit temporal axiom as an initial constraint:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+}
+
+func TestTargetTestSkipsUsedStateWithUnboundedDomainLikePython(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation marked(N:node)
+axiom exists N. marked(N)
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "unboundedstate"})
+	if err != nil {
+		t.Fatalf("Generate target=test with unbounded-domain state: %v", err)
+	}
+	for _, unwanted := range []string{`randomize("marked"`, `eval_apply("marked"`} {
+		if strings.Contains(out.Impl, unwanted) {
+			t.Fatalf("target=test should skip %s for unbounded-domain state like Python:\n%s", unwanted, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+}
+
+func TestTargetTestSkipsUnboundedDomainBeforeUninterpretedRangeErrorLikePython(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+individual parent(N:node) : node
+axiom exists N. parent(N) = N
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "unboundedrange"})
+	if err != nil {
+		t.Fatalf("Generate target=test with unbounded-domain uninterpreted-range state: %v", err)
+	}
+	for _, unwanted := range []string{`randomize("parent"`, `eval_apply("parent"`} {
+		if strings.Contains(out.Impl, unwanted) {
+			t.Fatalf("target=test should skip %s for unbounded-domain state like Python:\n%s", unwanted, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+}
+
+func TestDerivedExistsOverUnboundedNatSortReportsUpperBound(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type ts
+type version
+interpret version -> nat
+relation ts_version(T:ts,V:version)
+relation same_version(T:ts,U:ts) = exists V. ts_version(T,V) & ts_version(U,V)
+action step = {
+}
+export step
+`)
+	_, err := Generate(mod, Config{Target: "test", ClassName: "unboundedversion"})
+	if err == nil {
+		t.Fatal("Generate succeeded, want unbounded quantifier error")
+	}
+	if !strings.Contains(err.Error(), "cannot find an upper bound for V:version") {
+		t.Fatalf("Generate error = %q, want upper-bound diagnostic for V:version", err)
+	}
+}
+
 func TestGeneratedGenFixtureHasExpectedShape(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}

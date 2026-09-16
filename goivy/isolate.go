@@ -1205,9 +1205,8 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		for _, dfn := range mod.Definitions {
 			if dfn.Formula != nil {
 				if expr, ok := dfn.Formula.(Expr); ok {
-					dname := definedSymbolName(expr)
-					if dname != "" {
-						determined[dname] = true
+					if defConst := definedSymbolConstFromDefinition(expr); defConst != nil {
+						determined[defConst.Name] = true
 					}
 				}
 			}
@@ -1283,11 +1282,11 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 				continue
 			}
 			if expr, ok := c.Formula.(Expr); ok {
-				dname := definedSymbolName(expr)
-				if dname != "" && symSetContainsName(allSyms, dname) {
+				defConst := definedSymbolConstFromDefinition(expr)
+				if defConst != nil {
 					// Check if the definition's label is not kept (i.e., dropped)
-					if !keepAx(isolateNodeToExpr(c.Label)) {
-						return fmt.Errorf("definition of %s is referenced, but not present in extract", dname)
+					if _, inAllSyms := allSyms.Get2(ConstSymKey(defConst)); inAllSyms && !keepAx(isolateNodeToExpr(c.Label)) {
+						return fmt.Errorf("definition of %s is referenced, but not present in extract", defConst.Name)
 					}
 				}
 			}
@@ -1444,17 +1443,17 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		}
 	}
 
-		// Phase B: action bodies.
-		// Python traverses only action.args here via lu.symbols_ilu_ast(action).
-		// The action.formal_params/formal_returns attributes are not in .args;
-		// they are handled by the explicit Phase D pass below.
-		// Python: _traced_add_syms(..., lu.symbols_ilu_ast(action))
-		for name, act := range mod.Actions.All() {
-			if xtracer.Enabled {
-				xtracer.Trace("%s.phaseB_action %s", as2, name)
-			}
-			collectSymbolsInto(as2, act, allSyms2)
+	// Phase B: action bodies.
+	// Python traverses only action.args here via lu.symbols_ilu_ast(action).
+	// The action.formal_params/formal_returns attributes are not in .args;
+	// they are handled by the explicit Phase D pass below.
+	// Python: _traced_add_syms(..., lu.symbols_ilu_ast(action))
+	for name, act := range mod.Actions.All() {
+		if xtracer.Enabled {
+			xtracer.Trace("%s.phaseB_action %s", as2, name)
 		}
+		collectSymbolsInto(as2, act, allSyms2)
+	}
 
 	// Phase C: params (if keep_destructors)
 	// Python: if opt_keep_destructors.get(): asts.extend(mod.params)

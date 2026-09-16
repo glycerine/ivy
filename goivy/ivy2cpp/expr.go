@@ -513,6 +513,7 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 		}
 		return g.emitQuantWithHeaders(vars, body, forall, []string{header}, true)
 	}
+	var boundsErr error
 	if cppIsAnyIntegerType(g, vars[0].VSort) {
 		if bounds, err := g.getAllBounds(vars, body, exists); err == nil {
 			headers := make([]string, len(vars))
@@ -527,10 +528,15 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 			if headers != nil {
 				return g.emitQuantWithHeaders(vars, body, forall, headers, false)
 			}
+		} else {
+			boundsErr = err
 		}
 	}
 	if code, ok, err := g.emitExtensionalQuant(vars, body, forall); ok || err != nil {
 		return code, err
+	}
+	if boundsErr != nil {
+		return "", boundsErr
 	}
 	// Last-resort: per-variable bounded loops over finite sorts. This is
 	// the same fallback path that existed before TODO 012; Python would
@@ -991,6 +997,16 @@ func nameIn(vars []*goivy.LogicVariable, n string) bool {
 	return false
 }
 
+func quantVarDiagnostic(v *goivy.LogicVariable) string {
+	if v == nil {
+		return "<nil>"
+	}
+	if name := sortName(v.VSort); name != "" {
+		return v.Name + ":" + name
+	}
+	return v.Name
+}
+
 // getBounds mirrors Python `get_bounds` (ivy_to_cpp.py:3301-3336).
 // Returns (lo, hi) as C++ expression strings, or an error if no bound
 // could be derived. `others` are sibling quantified variables that may
@@ -1059,14 +1075,14 @@ func (g *Generator) getBounds(v0 *goivy.LogicVariable, others []*goivy.LogicVari
 		}
 	}
 	if len(los) == 0 {
-		return "", "", fmt.Errorf("ivy2cpp: cannot find a lower bound for %s", v0.Name)
+		return "", "", fmt.Errorf("ivy2cpp: cannot find a lower bound for %s", quantVarDiagnostic(v0))
 	}
 	if len(his) == 0 {
 		// Python: if il.is_uninterpreted_sort(v0.sort) and compose(name,'cardinality') in attributes:
 		if hi, ok := g.sortCardinalityAttr(v0.VSort); ok {
 			his = append(his, hi)
 		} else {
-			return "", "", fmt.Errorf("ivy2cpp: cannot find an upper bound for %s", v0.Name)
+			return "", "", fmt.Errorf("ivy2cpp: cannot find an upper bound for %s", quantVarDiagnostic(v0))
 		}
 	}
 	return los[0], his[0], nil
