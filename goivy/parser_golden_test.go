@@ -561,6 +561,12 @@ func Test2hrOrdLive(t *testing.T) {
 	GoldenPathCompareIvyCheck(t, cfg) // verbose=false, diffStop=true
 }
 
+func TestHermesRMWo3(t *testing.T) {
+	path := "ivy-lang-examples/jea/hermes_rmw_o3.ivy"
+	cfg := &goldenConfig{path: path}
+	GoldenPathCompareIvyCheck(t, cfg) // verbose=false, diffStop=true
+}
+
 func TestGolden16All(t *testing.T) {
 	off := os.Getenv("XTRACE_OFF")
 	if off != "" {
