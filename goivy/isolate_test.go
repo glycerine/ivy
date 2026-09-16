@@ -1010,7 +1010,7 @@ isolate app = {
 	}
 }
 
-func TestCreateIsolateReportsMissingReferencedDefinitionBeforePropertyDependency(t *testing.T) {
+func TestCreateIsolateRetainsReferencedDefinitionOutsideSelectedExtract(t *testing.T) {
 	src := `#lang ivy1.7
 include order
 
@@ -1032,25 +1032,27 @@ isolate proto = {
 		t.Fatalf("SourceString: %v", err)
 	}
 
-	err := CreateIsolate("this", mod)
-	if err == nil {
-		t.Fatal("CreateIsolate succeeded, want Python-compatible missing definition error")
+	if err := CreateIsolate("this", mod); err != nil {
+		t.Fatalf("CreateIsolate should retain referenced definitions instead of producing a dangling extract: %v", err)
 	}
-	msg := err.Error()
-	if !strings.Contains(msg, "Definition of proto.version.succ is referenced, but not present in extract") {
-		t.Fatalf("CreateIsolate error = %q, want missing definition for proto.version.succ", msg)
+
+	var found *LabeledFormula
+	for _, lf := range mod.Definitions {
+		fmla, ok := lf.Formula.(Expr)
+		if !ok {
+			continue
+		}
+		if defConst := definedSymbolConstFromDefinition(fmla); defConst != nil && defConst.Name == "proto.version.succ" {
+			found = lf
+			break
+		}
 	}
-	if !strings.Contains(msg, "order.ivy: line 53: error: Definition of proto.version.succ is referenced, but not present in extract") {
-		t.Fatalf("CreateIsolate error = %q, want definition source line", msg)
+	if found == nil {
+		t.Fatalf("CreateIsolate dropped referenced definition proto.version.succ; kept definitions are %v", mod.Definitions)
 	}
-	if !strings.Contains(msg, "missing_def.ivy: line 5: error: instantiated here") {
-		t.Fatalf("CreateIsolate error = %q, want instantiation source line", msg)
-	}
-	if strings.Contains(msg, "missing_def.ivy: line 4: error: instantiated here") {
-		t.Fatalf("CreateIsolate error = %q, should not report enclosing isolate line as an instantiation frame", msg)
-	}
-	if strings.Contains(msg, "depends on abstracted object") {
-		t.Fatalf("CreateIsolate reported property dependency before missing definition: %q", msg)
+	loc := found.GetLineno()
+	if loc.Line != 5 || loc.Reference == nil || loc.Reference.Line != 53 {
+		t.Fatalf("kept proto.version.succ location = %#v, want instantiation line 5 referring to order.ivy line 53", loc)
 	}
 }
 

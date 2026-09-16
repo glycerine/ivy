@@ -237,10 +237,11 @@ export keep
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"struct __thunk__0 : z3_thunk<int, int>",
+		`int_ranges["key"] = std::pair<unsigned long long, unsigned long long>(0,(100+1)-1);`,
+		`int_ranges["value"] = std::pair<unsigned long long, unsigned long long>(0,(100+1)-1);`,
+		"struct __thunk__0 : z3_thunk<int,int>",
 		"z3::expr to_z3(gen &g, const z3::expr &v)",
-		"g.parse_expr",
-		"__z3_rename",
+		`g.int_to_z3(g.sort("value"),(int)(`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("generated general Z3 thunk missing %q:\n%s", want, out.Impl)

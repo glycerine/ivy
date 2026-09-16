@@ -1276,21 +1276,9 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 			}
 		}
 
-		// Python lines 1237-1239: Check definitions referenced but not present
-		for _, c := range mod.Definitions {
-			if c.Formula == nil {
-				continue
-			}
-			if expr, ok := c.Formula.(Expr); ok {
-				defConst := definedSymbolConstFromDefinition(expr)
-				if defConst != nil {
-					// Check if the definition's label is not kept (i.e., dropped)
-					if _, inAllSyms := allSyms.Get2(ConstSymKey(defConst)); inAllSyms && !keepAx(isolateNodeToExpr(c.Label)) {
-						return NewIvyError(c, fmt.Sprintf("Definition of %s is referenced, but not present in extract", defConst.Name))
-					}
-				}
-			}
-		}
+		// Python used to reject referenced definitions whose labels were outside
+		// the selected extract. The Go extractor retains those definitions below
+		// so the generated program is closed over the symbols it still uses.
 	}
 
 	// --- Filter definitions ---
@@ -1304,6 +1292,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	}
 
 	var filteredDefs []*LabeledFormula
+	retainedDefinitionDeps := make(map[string]bool)
 	for _, c := range mod.Definitions {
 		if c.Formula == nil {
 			continue
@@ -1312,18 +1301,18 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		if !ok {
 			continue
 		}
-		children := fmla.Children()
-		if len(children) < 1 {
-			continue
-		}
-		defName := definedSymbolName(children[0])
-		defConst := definedSymbolConst(children[0])
+		defConst := definedSymbolConstFromDefinition(fmla)
 		inAllSyms := false
 		if defConst != nil {
 			_, inAllSyms = allSyms.Get2(ConstSymKey(defConst))
 		}
-		if (keepAx(isolateNodeToExpr(c.Label)) || exactPresent[defName]) && inAllSyms {
+		if inAllSyms {
 			filteredDefs = append(filteredDefs, c)
+			if !keepAx(isolateNodeToExpr(c.Label)) {
+				for _, anc := range Ancestors(lfLabelName(c), mod.Cfg.IuCfg.ComposeCharacter) {
+					retainedDefinitionDeps[anc] = true
+				}
+			}
 		}
 	}
 	mod.Definitions = filteredDefs
@@ -1362,15 +1351,17 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 			if !ok {
 				continue
 			}
-			children := fmla.Children()
-			if len(children) >= 1 {
-				defConst := definedSymbolConst(children[0])
-				inAllSyms := false
-				if defConst != nil {
-					_, inAllSyms = allSyms.Get2(ConstSymKey(defConst))
-				}
-				if keepAx(isolateNodeToExpr(lf.Label)) && inAllSyms {
-					filteredNatDefs = append(filteredNatDefs, lf)
+			defConst := definedSymbolConstFromDefinition(fmla)
+			inAllSyms := false
+			if defConst != nil {
+				_, inAllSyms = allSyms.Get2(ConstSymKey(defConst))
+			}
+			if inAllSyms {
+				filteredNatDefs = append(filteredNatDefs, lf)
+				if !keepAx(isolateNodeToExpr(lf.Label)) {
+					for _, anc := range Ancestors(lfLabelName(lf), mod.Cfg.IuCfg.ComposeCharacter) {
+						retainedDefinitionDeps[anc] = true
+					}
 				}
 			}
 		}
@@ -1567,6 +1558,9 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	if isoCfg.EnforceAxioms && !isExtract {
 		for _, pd := range propDeps {
 			for _, d := range pd.Deps {
+				if retainedDefinitionDeps[d] {
+					continue
+				}
 				if !StartsWithEqSome(d, present, mod, implementationMap) {
 					// Check if any symbol of the property is in our signature
 					if pd.Prop.Formula != nil {

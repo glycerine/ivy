@@ -43,6 +43,7 @@ type Output struct {
 	Config          Config
 	ExtraFiles      map[string]string
 	LibSpecs        []string
+	Warnings        []string
 }
 
 type Generator struct {
@@ -103,6 +104,9 @@ type Generator struct {
 	// yet computed; readers should use numberFormat() which initializes it.
 	numberFormatCache    string
 	numberFormatComputed bool
+
+	warnings   []string
+	warningSet map[string]bool
 }
 
 func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
@@ -155,6 +159,7 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 		EmitMain:        cfg.EmitMain,
 		Config:          cfg,
 		LibSpecs:        moduleLibSpecs(mod),
+		Warnings:        append([]string(nil), g.warnings...),
 	}, nil
 }
 

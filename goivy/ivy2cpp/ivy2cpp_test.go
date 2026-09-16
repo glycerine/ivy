@@ -3808,6 +3808,42 @@ export step
 	}
 }
 
+func TestTargetGenInitialConstraintApplicationCanUseStateConstantArgument(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type ts = {start, other}
+individual init_ts : ts
+relation seen(T:ts)
+action step = {
+}
+export step
+`)
+	ts, ok := mod.Sig.Sorts.Get2("ts")
+	if !ok {
+		t.Fatal("missing ts sort")
+	}
+	seen, err := mod.Sig.FindSymbol("seen", false)
+	if err != nil {
+		t.Fatal("missing seen relation")
+	}
+	init, err := goivy.NewApply(goivy.NewConst("seen", seen.CSort), goivy.NewConst("init_ts", ts))
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	mod.InitCond = goivy.FormulaToClauses(init, nil)
+	mod.LabeledInits = []*goivy.LabeledFormula{mod.Cfg.AstCfg.NewLabeledFormula(nil, init)}
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "initstatearg"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	want := `add(apply("seen", mk_apply_expr("init_ts", {})));`
+	if !strings.Contains(out.Impl, want) {
+		t.Fatalf("target=gen initial constraint missing %q:\n%s", want, out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestEmitNativeActionAntiquotes(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -5967,7 +6003,7 @@ export step
 	assertNoUnsupportedCPP(t, out)
 }
 
-func TestTargetTestSkipsUsedStateWithUnboundedDomainLikePython(t *testing.T) {
+func TestTargetTestAssumesExperimentalBoundForUninterpretedDomain(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
 relation marked(N:node)
@@ -5980,15 +6016,24 @@ export step
 	if err != nil {
 		t.Fatalf("Generate target=test with unbounded-domain state: %v", err)
 	}
-	for _, unwanted := range []string{`randomize("marked"`, `eval_apply("marked"`} {
-		if strings.Contains(out.Impl, unwanted) {
-			t.Fatalf("target=test should skip %s for unbounded-domain state like Python:\n%s", unwanted, out.Impl)
+	if len(out.Warnings) != 1 {
+		t.Fatalf("warnings = %v, want exactly one experimental uninterpreted-sort warning", out.Warnings)
+	}
+	for _, want := range []string{
+		`mk_int("node");`,
+		`int_ranges["node"] = std::pair<unsigned long long, unsigned long long>(0,(100+1)-1);`,
+		`for (int X0 = 0; X0 < (100+1); X0++)`,
+		`randomize("marked", X0,"bool");`,
+		`obj.marked[X0] = (bool)eval_apply("marked", X0);`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("target=test missing %q for experimental uninterpreted-domain state:\n%s", want, out.Impl)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
 }
 
-func TestTargetTestSkipsUnboundedDomainBeforeUninterpretedRangeErrorLikePython(t *testing.T) {
+func TestTargetTestAssumesExperimentalBoundForUninterpretedDomainAndRange(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
 individual parent(N:node) : node
@@ -6001,15 +6046,24 @@ export step
 	if err != nil {
 		t.Fatalf("Generate target=test with unbounded-domain uninterpreted-range state: %v", err)
 	}
-	for _, unwanted := range []string{`randomize("parent"`, `eval_apply("parent"`} {
-		if strings.Contains(out.Impl, unwanted) {
-			t.Fatalf("target=test should skip %s for unbounded-domain state like Python:\n%s", unwanted, out.Impl)
+	if len(out.Warnings) != 1 {
+		t.Fatalf("warnings = %v, want exactly one experimental uninterpreted-sort warning", out.Warnings)
+	}
+	for _, want := range []string{
+		`mk_int("node");`,
+		`int_ranges["node"] = std::pair<unsigned long long, unsigned long long>(0,(100+1)-1);`,
+		`for (int X0 = 0; X0 < (100+1); X0++)`,
+		`randomize("parent", X0,"node");`,
+		`obj.parent[X0] = (int)eval_apply("parent", X0);`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("target=test missing %q for experimental uninterpreted-domain/range state:\n%s", want, out.Impl)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
 }
 
-func TestDerivedExistsOverUnboundedNatSortReportsUpperBound(t *testing.T) {
+func TestDerivedExistsOverNatSortUsesExperimentalBound(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type ts
 type version
@@ -6020,13 +6074,23 @@ action step = {
 }
 export step
 `)
-	_, err := Generate(mod, Config{Target: "test", ClassName: "unboundedversion"})
-	if err == nil {
-		t.Fatal("Generate succeeded, want unbounded quantifier error")
+	out, err := Generate(mod, Config{Target: "test", ClassName: "boundedversion"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(err.Error(), "cannot find an upper bound for V:version") {
-		t.Fatalf("Generate error = %q, want upper-bound diagnostic for V:version", err)
+	if len(out.Warnings) != 2 {
+		t.Fatalf("warnings = %v, want experimental warnings for ts and version", out.Warnings)
 	}
+	for _, want := range []string{
+		`int_ranges["ts"] = std::pair<unsigned long long, unsigned long long>(0,(100+1)-1);`,
+		`int_ranges["version"] = std::pair<unsigned long long, unsigned long long>(0,(100+1)-1);`,
+		`for (unsigned long long V = 0; V < (100)+1; V++)`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in nat/uninterpreted experimental-bound output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
 }
 
 func TestGeneratedGenFixtureHasExpectedShape(t *testing.T) {
@@ -7136,16 +7200,13 @@ destructor port(E:endpoint): bool
 	}
 }
 
-// TestEmitSetSolverLargeTypeForall asserts that emit_set on a state
-// symbol whose function-sort domain is "large" (Python is_large_type at
-// ivy_to_cpp.py:445-449) emits a forall-quantified __to_solver
-// constraint (Python lines 844-852) instead of unrolling the domain.
+// TestEmitSetSolverExperimentalUninterpretedDomainUnrolls asserts that the
+// experimental 0..100 universe for otherwise-uninterpreted sorts makes emit_set
+// unroll a plain uninterpreted domain instead of treating it as an unknown-size
+// large type.
 //
 // Added as part of TODO 018 milestone 2.
-func TestEmitSetSolverLargeTypeForall(t *testing.T) {
-	// `key` is uninterpreted with no cardinality, so the domain of
-	// `valueof : (key -> bool)` is non-integer/unsized and triggers the
-	// large-type branch.
+func TestEmitSetSolverExperimentalUninterpretedDomainUnrolls(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type key
 relation valueof(K:key)
@@ -7162,24 +7223,23 @@ relation valueof(K:key)
 	if sym.Name == "" {
 		t.Fatalf("valueof not found in stateSymbols")
 	}
-	if !g.isLargeType(sym.Sort) {
-		t.Fatalf("expected isLargeType=true for valueof : (key -> bool)")
+	if g.isLargeType(sym.Sort) {
+		t.Fatalf("expected experimental 0..100 key universe to keep valueof : (key -> bool) non-large")
 	}
 	w := &cppWriter{}
 	g.emitSetSolver(w, sym, "obj")
 	body := w.String()
 	for _, want := range []string{
-		"std::vector<z3::expr> __quants;",
-		`__quants.push_back(ctx.constant("X__0", sort("key")));`,
-		`slvr.add(forall(__quants, __to_solver(*this,apply("valueof", ctx.constant("X__0", sort("key"))),obj.valueof)));`,
+		`for (int X0 = 0; X0 <= 100; X0++) {`,
+		`apply("valueof", int_to_z3(sort("key"), static_cast<long long>(X0)))`,
+		`obj.valueof[X0]`,
 	} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("missing %q in emitSetSolver output:\n%s", want, body)
 		}
 	}
-	// Must not fall through to the default per-element loop.
-	if strings.Contains(body, `int_to_z3(sort("key"), static_cast<long long>`) {
-		t.Fatalf("large-type branch should not unroll into int_to_z3 calls:\n%s", body)
+	if strings.Contains(body, "std::vector<z3::expr> __quants;") || strings.Contains(body, "forall(") {
+		t.Fatalf("experimental uninterpreted domain should unroll instead of using forall:\n%s", body)
 	}
 }
 
@@ -7963,6 +8023,40 @@ action check = {
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
+}
+
+func TestEmitQuantExperimentalUninterpretedSortBound(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation marked(N:node)
+action check = {
+    assert exists N. marked(N)
+}
+export check
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "qnode"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if len(out.Warnings) != 1 {
+		t.Fatalf("warnings = %v, want exactly one experimental uninterpreted-sort warning", out.Warnings)
+	}
+	if !strings.Contains(out.Impl, "for (int N = 0; N < (100)+1; N++)") {
+		t.Fatalf("existential over node should use the experimental 0..100 bound:\n%s", out.Impl)
+	}
+	node, ok := mod.Sig.Sorts.Get2("node")
+	if !ok {
+		t.Fatal("node sort not found")
+	}
+	g := &Generator{Mod: mod, Config: Config{Target: "gen", ClassName: "qnode"}, ClassName: "qnode"}
+	header, err := g.loopHeaderForSort(node, "N")
+	if err != nil {
+		t.Fatalf("loopHeaderForSort(node): %v", err)
+	}
+	if header != "for (int N = 0; N <= 100; N++) {" {
+		t.Fatalf("loopHeaderForSort(node) = %q", header)
+	}
+	assertNoUnsupportedCPP(t, out)
 }
 
 func TestIssue57InitRequireClosesFreeVariables(t *testing.T) {
@@ -9362,7 +9456,7 @@ function src(K:key): endpoint
 	}
 }
 
-func TestRandomizeUninterpretedRangeErrorsLikePython(t *testing.T) {
+func TestRandomizeUninterpretedRangeAssumesExperimentalBound(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
 individual root : node
@@ -9372,13 +9466,37 @@ action pick(n:node) = {
 export pick
 `)
 	for _, target := range []string{"gen", "test"} {
-		_, err := Generate(mod, Config{Target: target, ClassName: "ung"})
-		if err == nil {
-			t.Fatalf("target=%s should reject uninterpreted-range action generator inputs like Python", target)
+		out, err := Generate(mod, Config{Target: target, ClassName: "ung"})
+		if err != nil {
+			t.Fatalf("target=%s Generate: %v", target, err)
 		}
-		if !strings.Contains(err.Error(), "cannot create test generator because type node is uninterpreted") {
-			t.Fatalf("target=%s wrong error for uninterpreted range: %v", target, err)
+		if len(out.Warnings) != 1 {
+			t.Fatalf("target=%s warnings = %v, want exactly one uninterpreted-sort warning", target, out.Warnings)
 		}
+		wantWarning := "ivy2cpp: warning: assuming uninterpreted sort node has experimental finite range 0..100"
+		if out.Warnings[0] != wantWarning {
+			t.Fatalf("target=%s warning = %q, want %q", target, out.Warnings[0], wantWarning)
+		}
+		text := out.Header + out.Impl
+		targetWants := map[string][]string{
+			"gen": {
+				`g.mk_int("node", 0, 100);`,
+				`static_cast<int>(g.random_index(0, 100))`,
+				`randomize("__fml:n", "node");`,
+			},
+			"test": {
+				`mk_int("node");`,
+				`int_ranges["node"] = std::pair<unsigned long long, unsigned long long>(0,(100+1)-1);`,
+				`(int)(__chacha8c_rng.Rand() % (((100+1))-(0)) + (0))`,
+				`randomize("__fml:n","node");`,
+			},
+		}
+		for _, want := range targetWants[target] {
+			if !strings.Contains(text, want) {
+				t.Fatalf("target=%s missing %q in output:\nheader:\n%s\nimpl:\n%s", target, want, out.Header, out.Impl)
+			}
+		}
+		assertNoUnsupportedCPP(t, out)
 	}
 }
 

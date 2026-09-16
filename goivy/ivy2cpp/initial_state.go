@@ -318,6 +318,20 @@ func (g *Generator) initialDomainValues(s goivy.Sort) ([]initialDomainValue, boo
 			}
 			return vals, true
 		}
+		if loText, hiText, ok := g.experimentalUninterpretedBounds(s); ok {
+			lo, _ := strconv.Atoi(loText)
+			hi, _ := strconv.Atoi(hiText)
+			vals := make([]initialDomainValue, 0, hi-lo+1)
+			for i := lo; i <= hi; i++ {
+				text := strconv.Itoa(i)
+				vals = append(vals, initialDomainValue{
+					Expr:  goivy.NewConst(text, s),
+					Cpp:   text,
+					Z3Int: text,
+				})
+			}
+			return vals, true
+		}
 		return nil, false
 	}
 }
@@ -549,18 +563,34 @@ func (g *Generator) z3InitialApply(a *goivy.Apply, env map[string]goivy.Sort) (s
 	if !g.z3HasDecl(name) {
 		return "", fmt.Errorf("ivy2cpp: unsupported initial-state apply %s", a.String())
 	}
-	args := make([]string, len(a.Terms))
+	if len(a.Terms) == 0 {
+		return fmt.Sprintf("mk_apply_expr(%q, {})", name), nil
+	}
+	intArgs := make([]string, len(a.Terms))
+	allIntArgs := true
 	for i, term := range a.Terms {
-		arg, err := g.z3InitialApplyArg(term, env)
+		arg, err := g.z3InitialApplyIntArg(term, env)
+		if err != nil {
+			allIntArgs = false
+			break
+		}
+		intArgs[i] = arg
+	}
+	if allIntArgs {
+		return fmt.Sprintf("mk_apply_expr(%q, {%s})", name, strings.Join(intArgs, ", ")), nil
+	}
+	exprArgs := make([]string, len(a.Terms))
+	for i, term := range a.Terms {
+		arg, err := g.z3InitialExpr(term, env)
 		if err != nil {
 			return "", err
 		}
-		args[i] = arg
+		exprArgs[i] = arg
 	}
-	return fmt.Sprintf("mk_apply_expr(%q, {%s})", name, strings.Join(args, ", ")), nil
+	return fmt.Sprintf("apply(%q, %s)", name, strings.Join(exprArgs, ", ")), nil
 }
 
-func (g *Generator) z3InitialApplyArg(e goivy.Expr, env map[string]goivy.Sort) (string, error) {
+func (g *Generator) z3InitialApplyIntArg(e goivy.Expr, env map[string]goivy.Sort) (string, error) {
 	switch n := e.(type) {
 	case *goivy.LogicVariable:
 		return "static_cast<int>(" + varName(n.Name) + ")", nil

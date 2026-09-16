@@ -267,6 +267,11 @@ func (g *Generator) isLargeType(s goivy.Sort) bool {
 	for _, d := range dom {
 		c := cppSortCard(g, d)
 		if c <= 0 {
+			if card, ok := g.experimentalUninterpretedCardinality(d); ok {
+				c = card
+			}
+		}
+		if c <= 0 {
 			return true
 		}
 		if product <= largeThresh {
@@ -374,7 +379,8 @@ func (g *Generator) emitSetFieldCustom(w *cppWriter, destr *goivy.Const, lhs, rh
 // (for destructor / native / cpptype ranges) or g.randomize(name, args, "<range>")
 // (for primitive / range / enum ranges). If a domain sort has no finite bounds,
 // Python returns without emitting anything; Go does the same. If the range sort
-// is uninterpreted, Python raises IvyError and Go propagates an error.
+// is uninterpreted, the current experimental Go generator assumes a finite
+// 0..100 universe for the sort and records a warning naming that sort.
 func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 	if g.Config.Target == "test" {
 		return g.emitPythonTestRandomizeSolver(w, sym)
@@ -603,6 +609,9 @@ func (g *Generator) uninterpretedRandomizeRangeError(s goivy.Sort) error {
 	if g.isRecordRange(s) {
 		return nil
 	}
+	if _, ok := g.experimentalUninterpretedRangeFor(s); ok {
+		return nil
+	}
 	return fmt.Errorf("ivy2cpp: cannot create test generator because type %s is uninterpreted", sortName(s))
 }
 
@@ -737,6 +746,9 @@ func (g *Generator) pythonTestRandExpr(s goivy.Sort) (string, bool) {
 				return fmt.Sprintf("(%s)(__chacha8c_rng.Rand() %% (((%s+1))-(%s)) + (%s))", typ, hi, lo, lo), true
 			}
 		}
+		if lo, hi, ok := g.experimentalUninterpretedBounds(s); ok {
+			return fmt.Sprintf("(%s)(__chacha8c_rng.Rand() %% (((%s+1))-(%s)) + (%s))", typ, hi, lo, lo), true
+		}
 	}
 	return "", false
 }
@@ -767,6 +779,9 @@ func (g *Generator) pythonTestSortBounds(s goivy.Sort) (string, string, bool) {
 			if ok {
 				return lo, "(" + hi + "+1)", true
 			}
+		}
+		if lo, hi, ok := g.experimentalUninterpretedBounds(s); ok {
+			return lo, "(" + hi + "+1)", true
 		}
 	}
 	return "", "", false

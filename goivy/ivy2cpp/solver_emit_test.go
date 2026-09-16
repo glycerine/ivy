@@ -46,7 +46,7 @@ func TestEmitSetSolverLargeFunctionEmitsForall(t *testing.T) {
 	}
 }
 
-func TestEmitSetSolverLargeDestructorRangeUsesForall(t *testing.T) {
+func TestEmitSetSolverExperimentalUninterpretedDestructorDomainUnrolls(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type key
 type cell
@@ -67,24 +67,25 @@ individual slot(K:key) : cell
 	if !g.isDestructorRecordRange(sym.Sort.(*goivy.LogicFunctionSort).Range()) {
 		t.Fatalf("slot range should be a destructor record")
 	}
-	if !g.isLargeType(sym.Sort) {
-		t.Fatalf("slot(key) should be large because key is uninterpreted")
+	if g.isLargeType(sym.Sort) {
+		t.Fatalf("slot(key) should use the experimental 0..100 key universe instead of the large-type branch")
 	}
 
 	var w cppWriter
 	g.emitSetSolver(&w, sym, "obj")
 	body := w.String()
 	for _, want := range []string{
-		"std::vector<z3::expr> __quants;",
-		`slvr.add(forall(__quants, __to_solver(*this,apply("slot", ctx.constant("X__0", sort("key"))),obj.slot)));`,
+		`for (int X__0 = 0; X__0 <= 100; X__0++) {`,
+		`apply("slot", int_to_z3(sort("key"), static_cast<long long>(X__0)))`,
+		`apply("shade"`,
 	} {
 		if !strings.Contains(body, want) {
-			t.Fatalf("missing %q in large destructor-range emit_set:\n%s", want, body)
+			t.Fatalf("missing %q in experimental destructor-range emit_set:\n%s", want, body)
 		}
 	}
-	for _, bad := range []string{"domain not enumerable", `apply("shade"`} {
+	for _, bad := range []string{"domain not enumerable", "std::vector<z3::expr> __quants;", "forall("} {
 		if strings.Contains(body, bad) {
-			t.Fatalf("large destructor-range emit_set should use the forall branch, found %q:\n%s", bad, body)
+			t.Fatalf("experimental destructor-range emit_set should unroll, found %q:\n%s", bad, body)
 		}
 	}
 }

@@ -163,12 +163,16 @@ func (g *Generator) emitZ3RandomValueHelpers(w *cppWriter) {
 			g.emitZ3EnumRandomHelper(w, st)
 			continue
 		}
-		if g.replNeedsNumericParser(s) {
-			g.emitZ3NumericRandomHelper(w, s)
-			continue
-		}
 		if rs, ok := g.rangeSortFor(s); ok {
 			g.emitZ3RangeRandomHelper(w, s, rs)
+			continue
+		}
+		if _, ok := g.experimentalUninterpretedRangeFor(s); ok {
+			g.emitZ3ExperimentalUninterpretedRandomHelper(w, s)
+			continue
+		}
+		if g.replNeedsNumericParser(s) {
+			g.emitZ3NumericRandomHelper(w, s)
 		}
 	}
 	for _, name := range g.Mod.SortOrder {
@@ -286,6 +290,18 @@ func (g *Generator) emitZ3RangeRandomHelper(w *cppWriter, s goivy.Sort, rs *goiv
 	w.blank()
 }
 
+func (g *Generator) emitZ3ExperimentalUninterpretedRandomHelper(w *cppWriter, s goivy.Sort) {
+	fn := z3RandomHelperName(s)
+	if fn == "" {
+		return
+	}
+	typ := g.cppQualifiedType(s, g.ClassName)
+	w.open(fmt.Sprintf("static %s %s(gen &g) {", typ, fn))
+	w.linef("return static_cast<%s>(g.random_index(%d, %d));", typ, experimentalUninterpretedSortLower, experimentalUninterpretedSortUpper)
+	w.close("")
+	w.blank()
+}
+
 func (g *Generator) emitZ3Setup(w *cppWriter) {
 	w.open("static void ivy2cpp_setup(gen &g) {")
 	g.emitZ3SortRegistrations(w)
@@ -361,6 +377,8 @@ func (g *Generator) emitZ3SortRegistrations(w *cppWriter) {
 				} else {
 					w.linef("g.mk_int(%s);", strconv.Quote(zname))
 				}
+			} else if _, ok := g.experimentalUninterpretedRangeFor(s); ok {
+				w.linef("g.mk_int(%s, %d, %d);", strconv.Quote(zname), experimentalUninterpretedSortLower, experimentalUninterpretedSortUpper)
 			} else {
 				w.linef("g.mk_sort(%s);", strconv.Quote(zname))
 			}
@@ -510,6 +528,12 @@ func (g *Generator) z3RandomValueExprFrom(s goivy.Sort, genExpr string) (string,
 				return fn + "(" + genExpr + ")", true
 			}
 		}
+		if _, ok := g.experimentalUninterpretedRangeFor(s); ok {
+			fn := z3RandomHelperName(s)
+			if fn != "" {
+				return fn + "(" + genExpr + ")", true
+			}
+		}
 		if g.replNeedsNumericParser(s) {
 			fn := z3RandomHelperName(s)
 			if fn != "" {
@@ -529,6 +553,9 @@ func (g *Generator) z3LoopHeaderForSort(s goivy.Sort, name string) (string, bool
 		if !ok {
 			return "", false
 		}
+		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppQualifiedType(s, g.ClassName), name, lo, name, hi, name), true
+	}
+	if lo, hi, ok := g.experimentalUninterpretedBounds(s); ok {
 		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppQualifiedType(s, g.ClassName), name, lo, name, hi, name), true
 	}
 	if it, ok := g.cppInterpType(s); ok && it.Kind == cppInterpBV {
@@ -892,6 +919,11 @@ func (g *Generator) emitPythonTestZ3SortRegistration(w *cppWriter, name string, 
 			w.linef("int_ranges[%s] = std::pair<unsigned long long, unsigned long long>(%s,(%s+1)-1);", strconv.Quote(name), lo, hi)
 			return
 		}
+	}
+	if lo, hi, ok := g.experimentalUninterpretedBounds(s); ok {
+		w.linef("mk_int(%s);", strconv.Quote(name))
+		w.linef("int_ranges[%s] = std::pair<unsigned long long, unsigned long long>(%s,(%s+1)-1);", strconv.Quote(name), lo, hi)
+		return
 	}
 	if g.hasStringInterp(s) {
 		w.linef("mk_string(%s);", strconv.Quote(name))

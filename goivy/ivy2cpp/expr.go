@@ -1074,6 +1074,10 @@ func (g *Generator) getBounds(v0 *goivy.LogicVariable, others []*goivy.LogicVari
 			his = append(his, "("+hi+")+1")
 		}
 	}
+	if lo, hi, ok := g.experimentalUninterpretedBounds(v0.VSort); ok {
+		los = append(los, lo)
+		his = append(his, "("+hi+")+1")
+	}
 	if len(los) == 0 {
 		return "", "", fmt.Errorf("ivy2cpp: cannot find a lower bound for %s", quantVarDiagnostic(v0))
 	}
@@ -1396,6 +1400,9 @@ func (g *Generator) loopHeaderForSort(s goivy.Sort, name string) (string, error)
 			return fmt.Sprintf("for (%s %s = %s; %s < (%s+1); %s++) {", g.cppType(s), name, loExpr, name, hiExpr, name), nil
 		}
 		return "", fmt.Errorf("ivy2cpp: cannot emit bounded loop over non-numeric range %s", sortName(s))
+	}
+	if lo, hi, ok := g.experimentalUninterpretedBounds(s); ok {
+		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppType(s), name, lo, name, hi, name), nil
 	}
 	if cppIsAnyIntegerType(g, s) {
 		card := cppSortCard(g, s)
