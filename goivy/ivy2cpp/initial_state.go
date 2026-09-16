@@ -318,20 +318,6 @@ func (g *Generator) initialDomainValues(s goivy.Sort) ([]initialDomainValue, boo
 			}
 			return vals, true
 		}
-		if loText, hiText, ok := g.experimentalUninterpretedBounds(s); ok {
-			lo, _ := strconv.Atoi(loText)
-			hi, _ := strconv.Atoi(hiText)
-			vals := make([]initialDomainValue, 0, hi-lo+1)
-			for i := lo; i <= hi; i++ {
-				text := strconv.Itoa(i)
-				vals = append(vals, initialDomainValue{
-					Expr:  goivy.NewConst(text, s),
-					Cpp:   text,
-					Z3Int: text,
-				})
-			}
-			return vals, true
-		}
 		return nil, false
 	}
 }

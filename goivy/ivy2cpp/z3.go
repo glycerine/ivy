@@ -167,10 +167,6 @@ func (g *Generator) emitZ3RandomValueHelpers(w *cppWriter) {
 			g.emitZ3RangeRandomHelper(w, s, rs)
 			continue
 		}
-		if _, ok := g.experimentalUninterpretedRangeFor(s); ok {
-			g.emitZ3ExperimentalUninterpretedRandomHelper(w, s)
-			continue
-		}
 		if g.replNeedsNumericParser(s) {
 			g.emitZ3NumericRandomHelper(w, s)
 		}
@@ -288,9 +284,6 @@ func (g *Generator) emitZ3RangeRandomHelper(w *cppWriter, s goivy.Sort, rs *goiv
 	w.linef("return static_cast<%s>(g.random_index(%s, %s));", g.cppQualifiedType(s, g.ClassName), lo, hi)
 	w.close("")
 	w.blank()
-}
-
-func (g *Generator) emitZ3ExperimentalUninterpretedRandomHelper(w *cppWriter, s goivy.Sort) {
 }
 
 func (g *Generator) emitZ3Setup(w *cppWriter) {
@@ -517,12 +510,6 @@ func (g *Generator) z3RandomValueExprFrom(s goivy.Sort, genExpr string) (string,
 				return fn + "(" + genExpr + ")", true
 			}
 		}
-		if _, ok := g.experimentalUninterpretedRangeFor(s); ok {
-			fn := z3RandomHelperName(s)
-			if fn != "" {
-				return fn + "(" + genExpr + ")", true
-			}
-		}
 		if g.replNeedsNumericParser(s) {
 			fn := z3RandomHelperName(s)
 			if fn != "" {
@@ -549,9 +536,6 @@ func (g *Generator) z3LoopHeaderForSort(s goivy.Sort, name string) (string, bool
 		if card > 0 && card <= largeThresh {
 			return fmt.Sprintf("for (%s %s = 0; %s < %d; %s++) {", g.cppQualifiedType(s, g.ClassName), name, name, card, name), true
 		}
-	}
-	if lo, hi, ok := g.experimentalUninterpretedBounds(s); ok {
-		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppQualifiedType(s, g.ClassName), name, lo, name, hi, name), true
 	}
 	return "", false
 }
@@ -908,11 +892,6 @@ func (g *Generator) emitPythonTestZ3SortRegistration(w *cppWriter, name string, 
 			w.linef("int_ranges[%s] = std::pair<unsigned long long, unsigned long long>(%s,(%s+1)-1);", strconv.Quote(name), lo, hi)
 			return
 		}
-	}
-	if lo, hi, ok := g.experimentalUninterpretedBounds(s); ok {
-		w.linef("mk_int(%s);", strconv.Quote(name))
-		w.linef("int_ranges[%s] = std::pair<unsigned long long, unsigned long long>(%s,(%s+1)-1);", strconv.Quote(name), lo, hi)
-		return
 	}
 	if g.hasStringInterp(s) {
 		w.linef("mk_string(%s);", strconv.Quote(name))
