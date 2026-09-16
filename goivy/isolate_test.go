@@ -1037,8 +1037,17 @@ isolate proto = {
 		t.Fatal("CreateIsolate succeeded, want Python-compatible missing definition error")
 	}
 	msg := err.Error()
-	if !strings.Contains(msg, "definition of proto.version.succ is referenced, but not present in extract") {
+	if !strings.Contains(msg, "Definition of proto.version.succ is referenced, but not present in extract") {
 		t.Fatalf("CreateIsolate error = %q, want missing definition for proto.version.succ", msg)
+	}
+	if !strings.Contains(msg, "order.ivy: line 53: error: Definition of proto.version.succ is referenced, but not present in extract") {
+		t.Fatalf("CreateIsolate error = %q, want definition source line", msg)
+	}
+	if !strings.Contains(msg, "missing_def.ivy: line 5: error: instantiated here") {
+		t.Fatalf("CreateIsolate error = %q, want instantiation source line", msg)
+	}
+	if strings.Contains(msg, "missing_def.ivy: line 4: error: instantiated here") {
+		t.Fatalf("CreateIsolate error = %q, should not report enclosing isolate line as an instantiation frame", msg)
 	}
 	if strings.Contains(msg, "depends on abstracted object") {
 		t.Fatalf("CreateIsolate reported property dependency before missing definition: %q", msg)

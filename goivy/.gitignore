@@ -52,3 +52,6 @@ tmp-ivy2go-check
 playpen
 log.golden6
 log.golden6.prev
+log.gold-hermes
+log.gold-hermes.prev
+.codex-gocache/

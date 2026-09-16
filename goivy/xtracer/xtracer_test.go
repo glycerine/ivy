@@ -20,3 +20,23 @@ func TestNormalizeLine_IvyExamples(t *testing.T) {
 		fmt.Printf("good: %v\n", line2)
 	}
 }
+
+func TestNormalizeLinePrefersMountedRepoExamplesPath(t *testing.T) {
+	line := filepath.Join(repo, "ivy-lang-examples/doc/examples/apple/ord_live.ivy")
+	got := NormalizeLine(line)
+	want := "<IVY_EXAMPLES>/doc/examples/apple/ord_live.ivy"
+	if got != want {
+		t.Fatalf("NormalizeLine(%q) = %q, want %q", line, got, want)
+	}
+
+	examplesDir := filepath.Join(repo, "ivy-lang-examples")
+	realExamplesDir, err := filepath.EvalSymlinks(examplesDir)
+	if err != nil {
+		t.Fatalf("EvalSymlinks(%q): %v", examplesDir, err)
+	}
+	realLine := filepath.Join(realExamplesDir, "doc/examples/apple/ord_live.ivy")
+	got = NormalizeLine(realLine)
+	if got != want {
+		t.Fatalf("NormalizeLine(%q) = %q, want %q", realLine, got, want)
+	}
+}

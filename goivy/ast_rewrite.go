@@ -857,6 +857,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		// Python: res = x.clone([arg0] + [ast_rewrite(y,rewrite) for y in x.args[1:]])
 		// Clone preserves all metadata (temporal, explicit, assumed, etc.).
 		res := n.Clone([]Node{arg0, newFmla}).(*LabeledFormula)
+		res.SetLineno(safeLinenoAddRef(n, n.GetLineno()))
 		return res
 
 	case *NativeDef:

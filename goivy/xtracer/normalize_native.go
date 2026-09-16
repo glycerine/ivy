@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strings"
 )
 
@@ -46,12 +47,39 @@ func init() {
 		filepath.Join(gopath, "/src/github.com/glycerine/ivy/ivy-lang-examples/ivy/include/"),
 		filepath.Join(gopath, "/src/github.com/glycerine/ivy/pyivy/ivy/ivy/include/"),
 	}
+	ivyIncludeDirs = appendCanonicalPathAliases(ivyIncludeDirs)
 	ivyExamplesDir = []string{
 		filepath.Join(home, "/ivy/ivy-lang-examples/"),
 		filepath.Join(repo, "/ivy-lang-examples/"),
 		filepath.Join(users, "/ivy/ivy-lang-examples/"),
 		filepath.Join(gopath, "/src/github.com/glycerine/ivy/ivy-lang-examples/"),
 	}
+	ivyExamplesDir = appendCanonicalPathAliases(ivyExamplesDir)
+	sort.Slice(ivyIncludeDirs, func(i, j int) bool {
+		return len(ivyIncludeDirs[i]) > len(ivyIncludeDirs[j])
+	})
+	sort.Slice(ivyExamplesDir, func(i, j int) bool {
+		return len(ivyExamplesDir[i]) > len(ivyExamplesDir[j])
+	})
+}
+
+func appendCanonicalPathAliases(paths []string) []string {
+	seen := make(map[string]bool, len(paths)*2)
+	var result []string
+	for _, p := range paths {
+		if p == "" {
+			continue
+		}
+		if !seen[p] {
+			seen[p] = true
+			result = append(result, p)
+		}
+		if real, err := filepath.EvalSymlinks(p); err == nil && real != "" && !seen[real] {
+			seen[real] = true
+			result = append(result, real)
+		}
+	}
+	return result
 }
 
 func NormalizeLine(line string) string {

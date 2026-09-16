@@ -13,9 +13,20 @@ type IvyError struct {
 
 func (e *IvyError) Error() string {
 	if e.HasLoc {
-		return fmt.Sprintf("%serror: %s", e.Loc, e.Msg)
+		return formatIvyErrorAt(e.Loc, e.Msg)
 	}
 	return e.Msg
+}
+
+func formatIvyErrorAt(loc Location, msg string) string {
+	if loc.Reference != nil {
+		return formatIvyErrorAt(*loc.Reference, msg) + "\n" + formatLocationWithoutReference(loc) + "error: instantiated here"
+	}
+	return formatLocationWithoutReference(loc) + "error: " + msg
+}
+
+func formatLocationWithoutReference(loc Location) string {
+	return Location{Filename: loc.Filename, Line: loc.Line}.String()
 }
 
 // NewIvyError creates an IvyError with location extracted from an AST node.

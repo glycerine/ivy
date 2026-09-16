@@ -1286,7 +1286,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 				if defConst != nil {
 					// Check if the definition's label is not kept (i.e., dropped)
 					if _, inAllSyms := allSyms.Get2(ConstSymKey(defConst)); inAllSyms && !keepAx(isolateNodeToExpr(c.Label)) {
-						return fmt.Errorf("definition of %s is referenced, but not present in extract", defConst.Name)
+						return NewIvyError(c, fmt.Sprintf("Definition of %s is referenced, but not present in extract", defConst.Name))
 					}
 				}
 			}
