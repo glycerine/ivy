@@ -253,7 +253,7 @@ func rankingInvariants(
 		args := eqLHSArgs(eq)
 		var cons []Expr
 		for _, v := range args {
-			if v.VSort != nil && !finiteSorts[v.VSort.String()] {
+			if v.VSort != nil && !l2sSortIsFinite(finiteSorts, v.VSort) {
 				d := L2sD(v.VSort)
 				app, _ := NewApply(d, v)
 				if app != nil {

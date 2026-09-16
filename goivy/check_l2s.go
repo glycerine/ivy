@@ -135,6 +135,13 @@ func checkMakeAnd(terms ...Expr) Expr {
 	return &LogicAnd{Terms: terms}
 }
 
+func l2sSortIsFinite(finiteSorts map[string]bool, sort Sort) bool {
+	if sort == nil {
+		return false
+	}
+	return finiteSorts[SortName(sort)]
+}
+
 func setLineno(a ActionsAction, loc Location) ActionsAction {
 	a.SetLineno(loc)
 	return a
@@ -660,7 +667,7 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 			if len(vb.Vars) > 0 {
 				var aConjs []Expr
 				for _, v := range vb.Vars {
-					if !finiteSorts[v.VSort.String()] {
+					if !l2sSortIsFinite(finiteSorts, v.VSort) {
 						aConjs = append(aConjs, checkMustApply(L2SA(v.VSort), v))
 					}
 				}
@@ -689,11 +696,11 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 			eq := &Eq{T1: savedApp, T2: vb.Body}
 			var aConjs []Expr
 			for _, v := range vb.Vars {
-				if !finiteSorts[v.VSort.String()] {
+				if !l2sSortIsFinite(finiteSorts, v.VSort) {
 					aConjs = append(aConjs, checkMustApply(L2SA(v.VSort), v))
 				}
 			}
-			if !finiteSorts[bodySort.String()] {
+			if !l2sSortIsFinite(finiteSorts, bodySort) {
 				aConjs = append(aConjs,
 					&LogicOr{Terms: []Expr{
 						checkMustApply(L2SA(bodySort), savedApp),

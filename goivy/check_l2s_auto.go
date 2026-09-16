@@ -282,7 +282,7 @@ func l2sAutoInvariants(
 		args := eqLHSArgs(eq)
 		var cons []Expr
 		for _, v := range args {
-			if v.VSort != nil && !finiteSorts[v.VSort.String()] {
+			if v.VSort != nil && !l2sSortIsFinite(finiteSorts, v.VSort) {
 				d := L2SD(v.VSort)
 				app, _ := NewApply(d, v)
 				if app != nil {
@@ -299,7 +299,7 @@ func l2sAutoInvariants(
 		args := eqLHSArgs(eq)
 		var cons []Expr
 		for _, v := range args {
-			if v.VSort != nil && !finiteSorts[v.VSort.String()] {
+			if v.VSort != nil && !l2sSortIsFinite(finiteSorts, v.VSort) {
 				a := L2SA(v.VSort)
 				app, _ := NewApply(a, v)
 				if app != nil {
@@ -473,7 +473,7 @@ func l2sAutoInvariants(
 			notIsDone := &LogicNot{Body: isDone}
 			var aCons []Expr
 			for _, v := range doneSubArgs {
-				if v.VSort != nil && !finiteSorts[v.VSort.String()] {
+				if v.VSort != nil && !l2sSortIsFinite(finiteSorts, v.VSort) {
 					a := L2SA(v.VSort)
 					app, _ := NewApply(a, v)
 					if app != nil {
