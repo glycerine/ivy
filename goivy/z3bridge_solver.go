@@ -10,6 +10,7 @@ package goivy
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -125,11 +126,22 @@ func (s *Solver) applyZ3SolverOptions(zs *smt.Z3Solver) {
 	if s == nil || s.opts == nil {
 		return
 	}
-	if s.opts.MacroFinder {
-		zs.SetParam("smt.macro_finder", "true")
-	} else {
-		zs.SetParam("smt.macro_finder", "false")
+	for key, value := range solverOptionParamValues(s.opts) {
+		zs.SetParam(key, value)
 	}
+}
+
+func solverOptionParamValues(opts *SolverOptions) map[string]string {
+	if opts == nil {
+		return nil
+	}
+	params := map[string]string{
+		"smt.macro_finder": strconv.FormatBool(opts.MacroFinder),
+	}
+	if opts.SeedSet || opts.Seed != 0 {
+		params["smt.random_seed"] = strconv.Itoa(opts.Seed)
+	}
+	return params
 }
 
 func (s *Solver) Close() error {

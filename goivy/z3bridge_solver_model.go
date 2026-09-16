@@ -140,6 +140,7 @@ func (s *Solver) GetSmallModelWithCond(
 	shrink bool,
 ) (*ModelResult, error) {
 	xtracer.Trace("ivy_solver.py:1339 get_small_model() ENTER shrink=%v", shrink)
+	s.showVCsBase(clauses)
 
 	z3solver := s.newZ3Solver()
 	zc, err := s.ClausesToZ3(clauses)
@@ -196,6 +197,7 @@ func (s *Solver) GetSmallModelWithCond(
 				if cond == nil {
 					continue
 				}
+				s.showVCsFinalCond("assume", cond)
 				zCond, err := s.ClausesToZ3(cond)
 				if err != nil {
 					continue
@@ -210,6 +212,7 @@ func (s *Solver) GetSmallModelWithCond(
 				if cond == nil {
 					continue
 				}
+				s.showVCsFinalCond("assert", cond)
 				zCond, err := s.ClausesToZ3(cond)
 				if err != nil {
 					continue
@@ -329,6 +332,34 @@ func (s *Solver) GetSmallModelWithCond(
 		Vocab:   vocab,
 		Context: s.tr.Ctx,
 	}, nil
+}
+
+func (s *Solver) showVCsEnabled() bool {
+	return s != nil && s.opts != nil && s.opts.ShowVCs
+}
+
+func (s *Solver) showVCsBase(clauses *Clauses) {
+	if !s.showVCsEnabled() || clauses == nil {
+		return
+	}
+	fmt.Println()
+	fmt.Println("definitions:")
+	for _, df := range clauses.Defs {
+		fmt.Println(df)
+		fmt.Println()
+	}
+	fmt.Println("axioms:")
+	for _, fmla := range clauses.Fmlas {
+		fmt.Println(fmla)
+		fmt.Println()
+	}
+}
+
+func (s *Solver) showVCsFinalCond(kind string, clauses *Clauses) {
+	if !s.showVCsEnabled() || clauses == nil {
+		return
+	}
+	fmt.Printf("\n%s: %v\n", kind, clauses)
 }
 
 // EvalFormula evaluates a formula in a model, returning true/false/unknown.

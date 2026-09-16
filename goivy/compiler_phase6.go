@@ -2071,11 +2071,11 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 	//           with ivy_logic.WithSymbols(self.args[0:-1]):      # P21
 	//               return self.clone(list(map(recur,self.args))) # P22
 	//       return self.clone(list(map(recur,self.args)))         # P23
-	var recur func(ActionsAction) ActionsAction
-	recur = func(act ActionsAction) ActionsAction {
+	var recur func(ActionsAction) (ActionsAction, error)
+	recur = func(act ActionsAction) (ActionsAction, error) {
 		// P1: def recur(self):
 		if act == nil {
-			return nil
+			return nil, nil
 		}
 		// P2-P3: if not isinstance(self, Action): return self
 		// Go: implicit — all args to recur are actions.ActionsAction by type signature.
@@ -2093,10 +2093,10 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 				// P8: return self.clone(self.args[:1]) — clone with proof stripped
 				stripped := NewAssertAction(a.Formula)
 				stripped.SetLineno(a.GetLineno())
-				return stripped
+				return stripped, nil
 			}
 			// P9: return self
-			return a
+			return a, nil
 		}
 		if a, ok := act.(*LogicRequiresAction); ok {
 			// P4-P9 for RequiresAction (subclass of AssertAction in Python)
@@ -2107,9 +2107,9 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 				// P8: self.clone(self.args[:1]) — preserves RequiresAction type
 				stripped := NewRequiresAction(a.Formula)
 				stripped.SetLineno(a.GetLineno())
-				return stripped
+				return stripped, nil
 			}
-			return a
+			return a, nil
 		}
 		if a, ok := act.(*LogicEnsuresAction); ok {
 			// P4-P9 for EnsuresAction (subclass of AssertAction in Python)
@@ -2120,9 +2120,9 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 				// P8: self.clone(self.args[:1]) — preserves EnsuresAction type
 				stripped := NewEnsuresAction(a.Formula)
 				stripped.SetLineno(a.GetLineno())
-				return stripped
+				return stripped, nil
 			}
-			return a
+			return a, nil
 		}
 		if a, ok := act.(*LogicSubgoalAction); ok {
 			// P4-P9 for SubgoalAction (subclass of AssertAction in Python)
@@ -2133,9 +2133,9 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 				// P8: self.clone(self.args[:1]) — preserves SubgoalAction type
 				stripped := NewSubgoalAction(a.Formula)
 				stripped.SetLineno(a.GetLineno())
-				return stripped
+				return stripped, nil
 			}
-			return a
+			return a, nil
 		}
 
 		// P10: if isinstance(self, WhileAction):
@@ -2151,7 +2151,11 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 					// Go: only call recur on Action args; keep others unchanged.
 					var r ActionsAction
 					if subAct, ok := inv.(ActionsAction); ok {
-						r = recur(subAct)
+						var err error
+						r, err = recur(subAct)
+						if err != nil {
+							return nil, err
+						}
 					}
 					if r == nil {
 						newInvars = append(newInvars, inv)
@@ -2170,11 +2174,15 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 				newCond := w.Cond
 				newBody := w.Body
 				if bodyAct, ok := w.Body.(ActionsAction); ok {
-					newBody = recur(bodyAct)
+					var err error
+					newBody, err = recur(bodyAct)
+					if err != nil {
+						return nil, err
+					}
 				}
 				res := NewWhileAction(newCond, newBody, newInvars...)
 				res.SetLineno(w.GetLineno())
-				return res
+				return res, nil
 			}
 			// WhileAction WITHOUT invariants falls through to P20/P23,
 			// matching Python where the inner 'if' block is skipped.
@@ -2195,12 +2203,16 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 			newArgs := make([]Expr, len(allArgs))
 			for i, arg := range allArgs {
 				if subAct, ok := arg.(ActionsAction); ok {
-					newArgs[i] = recur(subAct)
+					rewritten, err := recur(subAct)
+					if err != nil {
+						return nil, err
+					}
+					newArgs[i] = rewritten
 				} else {
 					newArgs[i] = arg
 				}
 			}
-			return la.ActionClone(newArgs)
+			return la.ActionClone(newArgs), nil
 		}
 
 		// P23: return self.clone(list(map(recur, self.args)))
@@ -2209,12 +2221,16 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 		newArgs := make([]Node, len(args))
 		for i, arg := range args {
 			if subAct, ok := arg.(ActionsAction); ok {
-				newArgs[i] = recur(subAct)
+				rewritten, err := recur(subAct)
+				if err != nil {
+					return nil, err
+				}
+				newArgs[i] = rewritten
 			} else {
 				newArgs[i] = arg
 			}
 		}
-		return act.Clone(newArgs).(ActionsAction)
+		return act.Clone(newArgs).(ActionsAction), nil
 	}
 
 	// Python: for actname in list(mod.actions.keys()):
@@ -2231,12 +2247,18 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 		if mod.Sig != nil && len(formals) > 0 {
 			ws := NewWithSymbols(mod.Sig, formals)
 			ws.Enter()
-			newAct := recur(act)
+			newAct, err := recur(act)
 			ws.Exit()
+			if err != nil {
+				return err
+			}
 			CopyFormalsTo(act, newAct)
 			mod.SetAction(actname, newAct)
 		} else {
-			newAct := recur(act)
+			newAct, err := recur(act)
+			if err != nil {
+				return err
+			}
 			CopyFormalsTo(act, newAct)
 			mod.SetAction(actname, newAct)
 		}
@@ -2255,16 +2277,16 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 // for callers (e.g. l2s) that have a proof object separate from the action.
 //
 // Mirrors Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:2192-2209).
-func ApplyAssertProofWith(mod *Module, a *LogicAssertAction, pf Node, prover ProofCheckerInterface) ActionsAction {
+func ApplyAssertProofWith(mod *Module, a *LogicAssertAction, pf Node, prover ProofCheckerInterface) (ActionsAction, error) {
 	if a == nil {
-		return nil
+		return nil, nil
 	}
 	return applyAssertProofActionWithProof(mod, a, a.Name(), prover, pf)
 }
 
 // Python: sga.kind = type(self) — preserves the originating action type.
 // Corresponds to Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:1924-1941).
-func applyAssertProofAction(mod *Module, a *LogicAssertAction, kindName string, prover ProofCheckerInterface) ActionsAction {
+func applyAssertProofAction(mod *Module, a *LogicAssertAction, kindName string, prover ProofCheckerInterface) (ActionsAction, error) {
 	// a.Proof is typed lg.Expr; pass it through as ast.Node (lg.Expr embeds ast.Node).
 	var pf Node
 	if a.Proof != nil {
@@ -2276,11 +2298,11 @@ func applyAssertProofAction(mod *Module, a *LogicAssertAction, kindName string, 
 // applyAssertProofActionWithProof is the shared implementation for both
 // applyAssertProofAction (proof read from a.Proof) and ApplyAssertProofWith
 // (proof passed in explicitly as an ast.Node, which may not be an lg.Expr).
-func applyAssertProofActionWithProof(mod *Module, a *LogicAssertAction, kindName string, prover ProofCheckerInterface, pf Node) ActionsAction {
+func applyAssertProofActionWithProof(mod *Module, a *LogicAssertAction, kindName string, prover ProofCheckerInterface, pf Node) (ActionsAction, error) {
 	if prover == nil {
 		assm := NewAssumeAction(a.Formula)
 		assm.SetLineno(a.GetLineno())
-		return assm
+		return assm, nil
 	}
 	cond := a.Formula
 	var goal *LabeledFormula
@@ -2298,7 +2320,7 @@ func applyAssertProofActionWithProof(mod *Module, a *LogicAssertAction, kindName
 	if pf == nil {
 		assm := NewAssumeAction(a.Formula)
 		assm.SetLineno(a.GetLineno())
-		return assm
+		return assm, nil
 	}
 	if wrapped, ok := pf.(*TacticNodeWrapper); ok {
 		pf = wrapped.Tactic
@@ -2306,11 +2328,12 @@ func applyAssertProofActionWithProof(mod *Module, a *LogicAssertAction, kindName
 
 	subgoals, err := prover.GetSubgoals(goal, pf)
 	if err != nil {
-		assm := NewAssumeAction(a.Formula)
-		assm.SetLineno(a.GetLineno())
-		return assm
+		return nil, err
 	}
-	subgoals = mapTheoremToProperty(subgoals, mod)
+	subgoals, err = mapTheoremToProperty(subgoals, mod)
+	if err != nil {
+		return nil, err
+	}
 
 	assm := NewAssumeAction(CloseFormula(cond))
 	assm.SetLineno(a.GetLineno())
@@ -2336,7 +2359,7 @@ func applyAssertProofActionWithProof(mod *Module, a *LogicAssertAction, kindName
 	seqArgs = append(seqArgs, assm)
 	seq := NewSequence(seqArgs...)
 	seq.SetLineno(a.GetLineno())
-	return seq
+	return seq, nil
 }
 
 // goalConcExpr extracts the conclusion expression from a LabeledFormula.
@@ -2345,12 +2368,16 @@ func goalConcExpr(modCfg *Config, g *LabeledFormula) Expr {
 }
 
 // mapTheoremToProperty converts a slice of LabeledFormula via TheoremToProperty.
-func mapTheoremToProperty(goals []*LabeledFormula, mod *Module) []*LabeledFormula {
+func mapTheoremToProperty(goals []*LabeledFormula, mod *Module) ([]*LabeledFormula, error) {
 	result := make([]*LabeledFormula, len(goals))
 	for i, g := range goals {
-		result[i] = TheoremToProperty(g, mod)
+		converted, err := TheoremToPropertyChecked(g, mod)
+		if err != nil {
+			return nil, err
+		}
+		result[i] = converted
 	}
-	return result
+	return result, nil
 }
 
 // CheckProperties runs the proof checking pass on properties.
@@ -2390,17 +2417,20 @@ func CheckProperties(mod *Module) error {
 		if !ok {
 			return prop
 		}
-		// Strip the outermost ForAll to get the variable
-		fmla := prop.Formula
-		fa, ok := fmla.(*ForAll)
+		propExpr, ok := prop.Formula.(Expr)
 		if !ok {
 			return prop
 		}
-		if len(fa.Variables) == 0 {
+		fmla := IvyDropUniversals(propExpr)
+		ex, ok := fmla.(*LogicExists)
+		if !ok {
 			return prop
 		}
-		v := fa.Variables[0]
-		body := fa.Body
+		if len(ex.Variables) == 0 {
+			return prop
+		}
+		v := ex.Variables[0]
+		body := ex.Body
 		subs := map[string]Expr{v.Name: name}
 		body = SubstituteByName(body, subs)
 		body = IvyDropUniversals(body)
@@ -2433,8 +2463,8 @@ func CheckProperties(mod *Module) error {
 			// Property has a proof — admit it via prover
 			pfNode, _ := pf.(Node)
 			var subgoals []*LabeledFormula
+			var err error
 			if prover != nil {
-				var err error
 				subgoals, err = prover.AdmitProposition(prop, pfNode)
 				if err != nil {
 					return err
@@ -2475,7 +2505,10 @@ func CheckProperties(mod *Module) error {
 			} else {
 				// Has subgoals — convert via TheoremToProperty
 				xtracer.Trace("compiler.CheckProperties.classify label=%s -> props (proved, %d subgoals)", propLabel, len(subgoals))
-				subgoals = mapTheoremToProperty(subgoals, mod)
+				subgoals, err = mapTheoremToProperty(subgoals, mod)
+				if err != nil {
+					return err
+				}
 				lb := NewLabeler(mod.Cfg.AstCfg)
 				for _, g := range subgoals {
 					if prop.Label == nil {

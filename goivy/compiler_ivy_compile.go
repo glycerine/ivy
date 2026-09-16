@@ -1536,7 +1536,7 @@ func CheckDefinitions(mod *Module) error {
 	}
 	// Python: for ldf, term in mod.named: checkdef(term.rep, ldf)
 	for _, ne := range mod.Named {
-		if sym, ok := ne.Name.(*Const); ok {
+		if sym, ok := namedEntryRepConst(ne.Name); ok {
 			if err := checkdef(Key(sym), sym.Name, sym, ne.Formula); err != nil {
 				return err
 			}
@@ -1723,6 +1723,18 @@ func defExprName(expr Expr) string {
 	return string(Key(expr))
 }
 
+func namedEntryRepConst(term Expr) (*Const, bool) {
+	switch t := term.(type) {
+	case *Const:
+		return t, true
+	case *Apply:
+		if sym, ok := t.Func.(*Const); ok {
+			return sym, true
+		}
+	}
+	return nil, false
+}
+
 // CreateConjActions creates conjecture actions for runtime verification.
 // Corresponds to Python's create_conj_actions (ivy_compiler.py:2404-2451).
 // For each conjecture, determines which actions must preserve it.
@@ -1898,11 +1910,19 @@ func HandleTemporals(mod *Module) {
 //
 // Otherwise returns the property unchanged.
 func TheoremToProperty(goal *LabeledFormula, mod *Module) *LabeledFormula {
+	result, err := TheoremToPropertyChecked(goal, mod)
+	if err != nil {
+		panic(err.Error())
+	}
+	return result
+}
+
+func TheoremToPropertyChecked(goal *LabeledFormula, mod *Module) (*LabeledFormula, error) {
 	if goal == nil {
-		return nil
+		return nil, nil
 	}
 	if _, ok := goal.Formula.(*SchemaBody); !ok {
-		return goal
+		return goal, nil
 	}
 
 	// Step A: Extract vocabulary and build rename match
@@ -1957,7 +1977,10 @@ func TheoremToProperty(goal *LabeledFormula, mod *Module) *LabeledFormula {
 			if lf.IsDefinition {
 				mod.Definitions = append(mod.Definitions, PropToDef(lf, mod).(*LabeledFormula))
 			} else if !lf.Explicit {
-				sub := TheoremToProperty(lf, mod)
+				sub, err := TheoremToPropertyChecked(lf, mod)
+				if err != nil {
+					return nil, err
+				}
 				if sub != nil {
 					prems = append(prems, sub.Formula)
 				}
@@ -1968,7 +1991,7 @@ func TheoremToProperty(goal *LabeledFormula, mod *Module) *LabeledFormula {
 	// Step D: Check conclusion is not a Definition
 	conc := sb.Conc()
 	if _, isDef := conc.(*LogicDefinition); isDef {
-		panic(fmt.Sprintf("definitional subgoal must be discharged"))
+		return nil, fmt.Errorf("definitional subgoal must be discharged")
 	}
 
 	// Step E: Build formula
@@ -1980,10 +2003,9 @@ func TheoremToProperty(goal *LabeledFormula, mod *Module) *LabeledFormula {
 			antecedent := &LogicAnd{Terms: premExprs}
 			impl, err := NewImplies(antecedent, concExpr)
 			if err != nil {
-				fmla = conc
-			} else {
-				fmla = impl
+				return nil, err
 			}
+			fmla = impl
 		} else {
 			fmla = conc
 		}
@@ -1993,7 +2015,7 @@ func TheoremToProperty(goal *LabeledFormula, mod *Module) *LabeledFormula {
 	acfg := mod.Cfg.AstCfg
 	result := acfg.NewLabeledFormula(prop.Label, fmla)
 	result.SetLineno(prop.GetLineno())
-	return result
+	return result, nil
 }
 
 // exprSlice converts a []ast.Node to []lg.Expr where possible.

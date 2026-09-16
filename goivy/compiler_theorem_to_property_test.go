@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -269,6 +270,23 @@ func TestTheoremToProperty_DefinitionConclusion(t *testing.T) {
 	}()
 
 	TheoremToProperty(goal, mod)
+}
+
+func TestTheoremToPropertyCheckedDefinitionConclusionReturnsErrorLikePython(t *testing.T) {
+	mod := makeT2PMod()
+
+	lhs := NewConst("lhs", Boolean)
+	rhs := True
+	def := NewDefinition(lhs, rhs)
+	goal := makeSchemaGoal(nil, nil, def)
+
+	result, err := TheoremToPropertyChecked(goal, mod)
+	if err == nil {
+		t.Fatalf("TheoremToPropertyChecked returned (%v, nil), want Python IvyError", result)
+	}
+	if !strings.Contains(err.Error(), "definitional subgoal must be discharged") {
+		t.Fatalf("TheoremToPropertyChecked error = %v, want definitional subgoal message", err)
+	}
 }
 
 // TestTheoremToProperty_ImplicationBuilt verifies that multiple non-explicit

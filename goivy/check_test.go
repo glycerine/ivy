@@ -2,6 +2,7 @@ package goivy
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -475,6 +476,28 @@ func TestGetPrioritizedActionsNil(t *testing.T) {
 	}
 }
 
+func TestGetPrioritizedActionsExplicitEmptyLikePython(t *testing.T) {
+	cfg := NewConfig()
+	cfg.PriorityActions = ""
+	cfg.PriorityActionsSet = true
+
+	result := GetPrioritizedActions(cfg)
+	if len(result) != 1 || result[0] != "ext:" {
+		t.Fatalf("expected explicit empty prioritize to produce [ext:], got %v", result)
+	}
+}
+
+func TestGetPrioritizedActionsPreservesWhitespaceLikePython(t *testing.T) {
+	cfg := NewConfig()
+	cfg.PriorityActions = "send, recv"
+	cfg.PriorityActionsSet = true
+
+	result := GetPrioritizedActions(cfg)
+	if len(result) != 2 || result[0] != "ext: recv" || result[1] != "ext:send" {
+		t.Fatalf("expected raw Python split/prefix/sort result [ext: recv ext:send], got %v", result)
+	}
+}
+
 // --- GetConjs tests ---
 
 func TestGetConjsEmpty(t *testing.T) {
@@ -731,12 +754,36 @@ func TestApplyConjProofs(t *testing.T) {
 	mod.LabeledConjs = []*LabeledFormula{
 		{Formula: True},
 	}
-	ApplyConjProofs(mod)
+	if err := ApplyConjProofs(mod); err != nil {
+		t.Fatalf("ApplyConjProofs returned unexpected error: %v", err)
+	}
 	if mod.ConjSubgoals == nil {
 		t.Error("ConjSubgoals should be set")
 	}
 	if len(mod.ConjSubgoals) != 1 {
 		t.Errorf("expected 1 subgoal, got %d", len(mod.ConjSubgoals))
+	}
+}
+
+func TestApplyConjProofsPropagatesProofErrorLikePython(t *testing.T) {
+	mod := New()
+	mod.Cfg.ProofCfg = TacticNewConfig()
+	wantErr := errors.New("sentinel proof failure")
+	mod.Cfg.ProofCfg.RegisterTactic("explode", func(pc ProofCheckerInterface, goals []*LabeledFormula, proof Node) ([]*LabeledFormula, error) {
+		return nil, wantErr
+	})
+
+	lf := mod.Cfg.AstCfg.NewLabeledFormula(mod.Cfg.AstCfg.NewAtom("conj"), True)
+	proof := mod.Cfg.AstCfg.NewTacticTactic(mod.Cfg.AstCfg.NewAtom("explode"), mod.Cfg.AstCfg.NewNoneAST(), nil)
+	mod.LabeledConjs = []*LabeledFormula{lf}
+	mod.Proofs = []ProofEntry{{Formula: lf, Proof: proof}}
+
+	err := ApplyConjProofs(mod)
+	if !errors.Is(err, wantErr) {
+		t.Fatalf("ApplyConjProofs error = %v, want sentinel proof error", err)
+	}
+	if mod.ConjSubgoals != nil {
+		t.Fatalf("ApplyConjProofs should not install fallback subgoals after proof failure, got %d", len(mod.ConjSubgoals))
 	}
 }
 
@@ -1471,7 +1518,9 @@ func TestCheckConjsInState(t *testing.T) {
 	mod.LabeledConjs = []*LabeledFormula{
 		{Formula: True},
 	}
-	ApplyConjProofs(mod)
+	if err := ApplyConjProofs(mod); err != nil {
+		t.Fatalf("ApplyConjProofs returned unexpected error: %v", err)
+	}
 	result := CheckConjsInState(mod, 8, nil)
 	if !result {
 		t.Error("should pass (stub)")

@@ -1485,14 +1485,48 @@ func (d *DomainSetup) Named(node Node) error {
 	}
 	rng := ex.Variables[0].VSort
 
-	// Build domain sorts from the lhs parameters
-	var domSorts []Sort
+	vmap := make(map[string]*LogicVariable)
+	for _, v := range VariablesAstList(cond) {
+		vmap[v.Name] = v
+	}
+	used := make(map[string]struct{}, len(lhs.Terms))
+	targs := make([]Expr, 0, len(lhs.Terms))
+
 	for _, arg := range lhs.Terms {
 		compiled, err := d.Compiler.Thing(arg)
 		if err != nil {
 			return err
 		}
-		domSorts = append(domSorts, compiled.NodeSort())
+		argName, argSort, ok := namedDeclArgNameSort(compiled)
+		if !ok {
+			return NewIvyError(arg, fmt.Sprintf("cannot infer sort for %T", compiled))
+		}
+		if _, dup := used[argName]; dup {
+			return NewIvyError(arg, fmt.Sprintf("repeat parameter: %s", argName))
+		}
+		used[argName] = struct{}{}
+		if v, found := vmap[argName]; found {
+			targs = append(targs, v)
+			if !IsTopSort(argSort) && SortEqual(argSort, v.VSort) {
+				return NewIvyError(arg, fmt.Sprintf("bad sort for %s", argName))
+			}
+		} else {
+			if IsTopSort(argSort) {
+				return NewIvyError(arg, fmt.Sprintf("cannot infer sort for %s", argName))
+			}
+			targs = append(targs, compiled)
+		}
+	}
+	for name := range vmap {
+		if _, ok := used[name]; !ok {
+			return NewIvyError(node, fmt.Sprintf("%s must be a parameter of %s", name, lhs.Rep))
+		}
+	}
+
+	// Build domain sorts from the matched parameters.
+	var domSorts []Sort
+	for _, arg := range targs {
+		domSorts = append(domSorts, arg.NodeSort())
 	}
 
 	sort := FuncConstSort(append(domSorts, rng)...)
@@ -1501,16 +1535,36 @@ func (d *DomainSetup) Named(node Node) error {
 		return err
 	}
 
-	// Python: self.domain.named.append((self.last_fact, sym(...)))
+	nameTerm := Expr(sym)
+	if len(targs) > 0 {
+		applied, err := NewApply(sym, targs...)
+		if err != nil {
+			return err
+		}
+		nameTerm = applied
+	}
+
+	// Python: self.domain.named.append((self.last_fact, sym(*targs) if targs else sym))
 	d.Compiler.Module.Named = append(d.Compiler.Module.Named, NamedEntry{
 		Formula: d.LastFact,
-		Name:    sym,
+		Name:    nameTerm,
 	})
 
 	// Python (ivy_compiler.py:1237): self.domain.updates.append(NamedUpdate(sym, cond))
 	d.Compiler.Module.Updates = append(d.Compiler.Module.Updates,
 		NewNamedUpdate(sym, cond))
 	return nil
+}
+
+func namedDeclArgNameSort(arg Expr) (string, Sort, bool) {
+	switch t := arg.(type) {
+	case *LogicVariable:
+		return t.Name, t.VSort, true
+	case *Const:
+		return t.Name, t.CSort, true
+	default:
+		return "", nil, false
+	}
 }
 
 // Theorem processes a theorem declaration.

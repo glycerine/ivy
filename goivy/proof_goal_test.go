@@ -358,6 +358,35 @@ func TestGoalAddPrem_PreservesTemporalModelsConclusion(t *testing.T) {
 	}
 }
 
+func TestCloseUnmatchedWrapsTemporalModelsConclusionLikePython(t *testing.T) {
+	s := proofMkSort("S")
+	x := proofMkVar("X", s)
+	fs, _ := NewFunctionSort(s, Boolean)
+	p := proofMkConst("p", fs)
+	px, err := NewApply(p, x)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	tm := proofTestAstCfg.NewTemporalModels(proofTestAstCfg.NewNoneAST(), px)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), tm)
+
+	result := CloseUnmatched(proofTestAstCfg, goal, nil)
+	conc := GoalConc(result)
+	fa, ok := conc.(*Forall)
+	if !ok {
+		t.Fatalf("Python wraps the raw TemporalModels conclusion in ast.Forall; got %T: %v", conc, conc)
+	}
+	if len(fa.Bounds) != 1 {
+		t.Fatalf("expected one closed variable, got %d", len(fa.Bounds))
+	}
+	if got, ok := fa.Bounds[0].(*LogicVariable); !ok || got.Name != "X" {
+		t.Fatalf("expected bound variable X, got %#v", fa.Bounds[0])
+	}
+	if _, ok := fa.Body.(*TemporalModels); !ok {
+		t.Fatalf("expected ast.Forall body to remain TemporalModels, got %T: %v", fa.Body, fa.Body)
+	}
+}
+
 func TestGoalRemovePrem_Found(t *testing.T) {
 	s := proofMkSort("S")
 	c := proofMkConst("c", s)

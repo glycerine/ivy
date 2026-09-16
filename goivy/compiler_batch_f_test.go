@@ -189,6 +189,36 @@ func TestCheckDefinitions_NamedRedefinitionError(t *testing.T) {
 	}
 }
 
+func TestCheckDefinitions_AppliedNamedRedefinitionErrorLikePython(t *testing.T) {
+	mod := New()
+	cfg := mod.Cfg.AstCfg
+
+	node := &UninterpretedSort{Name: "node"}
+	fSort, err := NewFunctionSort(node, Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	fSym := NewConst("f", fSort)
+	y := NewConst("Y", node)
+	fY, err := NewApply(fSym, y)
+	if err != nil {
+		t.Fatalf("NewApply(f, Y): %v", err)
+	}
+
+	defLF := cfg.NewLabeledFormula(cfg.NewAtom("def_f"), &LogicDefinition{Lhs: fY, Rhs: True})
+	namedLF := makeLabeledFormula(cfg, "named_f", True)
+	mod.LabeledProps = []*LabeledFormula{defLF}
+	mod.Named = []NamedEntry{{Formula: namedLF, Name: fY}}
+
+	err = CheckDefinitions(mod)
+	if err == nil {
+		t.Fatal("expected redefinition error for applied named entry f(Y), got nil")
+	}
+	if !strings.Contains(strings.ToLower(err.Error()), "redefinition") {
+		t.Fatalf("error = %v, want redefinition", err)
+	}
+}
+
 // Test 6: Two definitions forming a cycle: f→g and g→f. Should return error.
 func TestCheckDefinitions_CycleDetection(t *testing.T) {
 	mod := New()

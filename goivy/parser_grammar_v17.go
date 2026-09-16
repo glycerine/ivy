@@ -1623,7 +1623,8 @@ parser17default:
 		{
 			xtracer.Trace("parser.p_top_using_symbol ENTER (top)")
 			parser17VAL.accum = parser17Dollar[1].accum
-			// Python: importer(p[3]) and merge decls — deferred to post-parse
+			lex := parser17lex.(*parser17LexAdapter)
+			parserDeclareUsing(parser17Acfg(parser17lex), parser17VAL.accum, lex.importer, parser17Dollar[3].tok.Val, tokLineno(lex, parser17Dollar[2].tok))
 		}
 	case 3:
 		parser17Dollar = parser17S[parser17pt-3 : parser17pt+1]

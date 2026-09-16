@@ -84,14 +84,10 @@ func main() {
 
 	// Parse key=value parameters from command-line args.
 	// Python: ivy_init.read_params() extracts key=value pairs from sys.argv.
-	args := os.Args[1:]
-	params := make(map[string]string)
-	for len(args) > 0 && strings.Contains(args[0], "=") {
-		parts := strings.SplitN(args[0], "=", 2)
-		if len(parts) == 2 {
-			params[parts[0]] = parts[1]
-		}
-		args = args[1:]
+	params, args, err := goivy.ParseIvyCheckParams(myflags.Args())
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "usage: %s [key=value ...] file.ivy\n", os.Args[0])
+		os.Exit(1)
 	}
 
 	// Validate: exactly one .ivy file argument remaining.

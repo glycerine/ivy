@@ -108,3 +108,45 @@ func TestCheckPropertiesRelabelsGeneratedSubgoalsWithPreservingClone(t *testing.
 		t.Fatalf("relabelled generated subgoal should preserve an existing LF id; id=%d counter=%d", mod.LabeledProps[0].ID, cfg.LfCounter)
 	}
 }
+
+func TestCheckPropertiesNamedTransDropsOneElementAndLikePython(t *testing.T) {
+	mod := New()
+	cfg := mod.Cfg.AstCfg
+	s := &UninterpretedSort{Name: "node"}
+	mod.Sig.AddSort(s)
+	pSort, err := NewFunctionSort(s, Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	p := NewConst("p", pSort)
+	a := NewConst("a", s)
+	mod.Sig.AddSymbol(p.Name, p.CSort)
+	mod.Sig.AddSymbol(a.Name, a.CSort)
+
+	x, err := NewVariable("X", s)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	px, err := NewApply(p, x)
+	if err != nil {
+		t.Fatalf("NewApply(p, X): %v", err)
+	}
+	formula := &LogicAnd{Terms: []Expr{&LogicExists{Variables: []*LogicVariable{x}, Body: px}}}
+	prop := cfg.NewLabeledFormula(cfg.NewAtom("named_prop"), formula)
+	mod.LabeledProps = []*LabeledFormula{prop}
+	mod.Named = []NamedEntry{{Formula: prop, Name: a}}
+
+	if err := CheckProperties(mod); err != nil {
+		t.Fatalf("CheckProperties: %v", err)
+	}
+	if len(mod.LabeledProps) < 2 {
+		t.Fatalf("CheckProperties should add original and named-transformed props, got %d", len(mod.LabeledProps))
+	}
+	got, ok := mod.LabeledProps[1].Formula.(*Apply)
+	if !ok {
+		t.Fatalf("named transformed formula = %T, want *Apply p(a)", mod.LabeledProps[1].Formula)
+	}
+	if got.Func != p || len(got.Terms) != 1 || got.Terms[0] != a {
+		t.Fatalf("named transformed formula = %#v, want p(a)", got)
+	}
+}

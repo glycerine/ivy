@@ -229,6 +229,7 @@ func (s *Solver) Z3Function(name string, sig []Sort) (smt.FuncDecl, error) {
 func (s *Solver) SetSeed(seed int) {
 	xtracer.Trace("ivy_solver.py:37 set_seed() ENTER seed=%d", seed)
 	s.opts.Seed = seed
+	s.opts.SeedSet = true
 }
 
 // SetMacroFinder enables or disables the Z3 macro finder.

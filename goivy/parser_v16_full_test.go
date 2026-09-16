@@ -162,6 +162,54 @@ func TestParseV16UsingImportsWithPrefix(t *testing.T) {
 	}
 }
 
+func TestParseV17UsingImportsWithPrefixLikePython(t *testing.T) {
+	version := Version{1, 7}
+	var calls []string
+	var importer ImporterFunc
+	importer = func(name string, parent *ivyAccum) (*ParseResult, error) {
+		calls = append(calls, name)
+		if name != "util" {
+			t.Fatalf("unexpected import %q", name)
+		}
+		return Parse("type t\nindividual x:t\naction ping = { skip }", version,
+			WithImporter(importer),
+			WithParentAccum(parent),
+			WithNested(),
+			WithAstConfig(parent.astCfg),
+			WithFilename("util17.ivy"),
+		)
+	}
+
+	result, err := Parse("using util", version, WithImporter(importer), WithFilename("main_using17.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.7 using: %v", err)
+	}
+	if len(calls) != 1 || calls[0] != "util" {
+		t.Fatalf("using importer calls = %v, want [util]", calls)
+	}
+	var sawIndividual, sawAction bool
+	for _, decl := range result.Decls {
+		switch d := decl.(type) {
+		case *ConstantDecl:
+			if len(d.Args()) > 0 && NodeRep(d.Args()[0]) == "util.x" {
+				sawIndividual = true
+			}
+		case *ActionDecl:
+			if len(d.Args()) > 0 {
+				if def, ok := d.Args()[0].(*ActionDef); ok && NodeRep(def.Name) == "util.ping" {
+					sawAction = true
+				}
+			}
+		}
+	}
+	if !sawIndividual {
+		t.Fatalf("using did not declare prefixed util.x; decls = %v", result.Decls)
+	}
+	if !sawAction {
+		t.Fatalf("using did not declare prefixed util.ping; decls = %v", result.Decls)
+	}
+}
+
 func TestParseV16VarDeclaresConstant(t *testing.T) {
 	result, err := Parse("type t\nvar x:t", Version{1, 6}, WithFilename("var16.ivy"))
 	if err != nil {

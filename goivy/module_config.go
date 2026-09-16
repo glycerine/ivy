@@ -47,6 +47,9 @@ type Config struct {
 
 	// string packed with comma-separated action-names
 	PriorityActions string `json:"prioritize"` // ivy_check.py:195
+	// PriorityActionsSet distinguishes an absent prioritize parameter from an
+	// explicitly empty "prioritize=", matching Python's Parameter default None.
+	PriorityActionsSet bool `json:"prioritize_set"`
 
 	NoCheckGuarantees bool `json:"no_check_guarantees"`
 	Profiling         bool `json:"profile"`
@@ -168,6 +171,7 @@ type Config struct {
 // SolverOptions controls per-solver Z3 behavior.
 type SolverOptions struct {
 	Seed        int
+	SeedSet     bool
 	Incremental bool
 	MacroFinder bool
 	ShowVCs     bool

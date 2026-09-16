@@ -126,6 +126,46 @@ func TestZ3BridgeDefaultOptions(t *testing.T) {
 	}
 }
 
+func TestSolverOptionParamValuesIncludesExplicitSeedLikePython(t *testing.T) {
+	opts := DefaultSolverOptions()
+	params := solverOptionParamValues(opts)
+	if _, ok := params["smt.random_seed"]; ok {
+		t.Fatal("default seed should not set smt.random_seed; Python only calls set_seed when seed= is provided")
+	}
+
+	opts.Seed = 23
+	opts.SeedSet = true
+	params = solverOptionParamValues(opts)
+	if params["smt.random_seed"] != "23" {
+		t.Fatalf("explicit seed did not produce smt.random_seed=23, got %q in %v", params["smt.random_seed"], params)
+	}
+	if params["smt.macro_finder"] != "true" {
+		t.Fatalf("macro_finder parameter missing from option map: %v", params)
+	}
+}
+
+func TestGetSmallModelShowVCsPrintsFinalConditionsLikePython(t *testing.T) {
+	opts := DefaultSolverOptions()
+	opts.ShowVCs = true
+	s := NewSolver(nil, opts)
+	p := z3BoolConst("p")
+	base := NewClauses([]Expr{p}, nil, nil)
+	assumeFC := &z3BridgeTestFinalCond{cond: TrueClauses(nil), assume: true}
+	assertFC := &z3BridgeTestFinalCond{cond: NewClauses([]Expr{p}, nil, nil), ignoreSat: true}
+
+	out := captureActionUpdateStdout(t, func() {
+		if _, err := s.GetSmallModelWithCond(base, nil, nil, []FinalCond{assumeFC, assertFC}, false); err != nil {
+			t.Fatalf("GetSmallModelWithCond returned error: %v", err)
+		}
+	})
+
+	for _, want := range []string{"definitions:", "axioms:", "assume:", "assert:"} {
+		if !strings.Contains(out, want) {
+			t.Fatalf("show_vcs output missing %q; got:\n%s", want, out)
+		}
+	}
+}
+
 // --- Test: IsSat ---
 
 func TestZ3BridgeIsSatTrue(t *testing.T) {

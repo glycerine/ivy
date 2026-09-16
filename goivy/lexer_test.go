@@ -106,6 +106,16 @@ func TestVariableWithSubscript(t *testing.T) {
 	assertToken(t, tokens, 1, VARIABLE, "Y[abc]")
 }
 
+func TestVariableMalformedSubscriptStopsLikePython(t *testing.T) {
+	tokens := tok("X[abc Y[!]", v17)
+	assertToken(t, tokens, 0, VARIABLE, "X")
+	assertToken(t, tokens, 1, LB, "[")
+	assertToken(t, tokens, 2, SYMBOL, "abc")
+	assertToken(t, tokens, 3, VARIABLE, "Y")
+	assertToken(t, tokens, 4, LB, "[")
+	assertToken(t, tokens, 5, ERROR, "")
+}
+
 func TestQuotedString(t *testing.T) {
 	tokens := tok(`"hello" "world 123"`, v17)
 	assertToken(t, tokens, 0, SYMBOL, `"hello"`)
@@ -122,6 +132,15 @@ func TestUnderscoreStart(t *testing.T) {
 	tokens := tok("_foo _bar", v17)
 	assertToken(t, tokens, 0, SYMBOL, "_foo")
 	assertToken(t, tokens, 1, SYMBOL, "_bar")
+}
+
+func TestNonASCIIIdentifierCharactersRejectedLikePython(t *testing.T) {
+	tokens := tok("h\u00e9llo", v17)
+	assertToken(t, tokens, 0, SYMBOL, "h")
+	assertToken(t, tokens, 1, ERROR, "")
+
+	tokens = tok("\u00c9clair", v17)
+	assertToken(t, tokens, 0, ERROR, "")
 }
 
 // --- Keywords ---

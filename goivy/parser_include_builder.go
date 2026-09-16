@@ -28,6 +28,7 @@ func parserDeclareInclude(cfg *AstConfig, top *ivyAccum, current *ivyAccum, impo
 		mod, err := importer(name, top)
 		if err != nil {
 			xtracer.Trace("parser.include ERROR name=%s err=%v", name, err)
+			parserReportImportError(top, loc, err)
 		} else if mod != nil {
 			modDeclCount = len(mod.Decls)
 			for _, d := range mod.Decls {
@@ -51,6 +52,7 @@ func parserDeclareUsing(cfg *AstConfig, top *ivyAccum, importer ImporterFunc, na
 		mod, err := importer(name, top)
 		if err != nil {
 			xtracer.Trace("parser.using ERROR name=%s err=%v", name, err)
+			parserReportImportError(top, loc, err)
 		} else if mod != nil {
 			modDeclCount = len(mod.Decls)
 			module := &ivyAccum{
@@ -79,4 +81,15 @@ func parserDeclareUsing(cfg *AstConfig, top *ivyAccum, importer ImporterFunc, na
 		}
 	}
 	xtracer.Trace("parser.using EXIT name=%s decls=%d", name, modDeclCount)
+}
+
+func parserReportImportError(top *ivyAccum, loc Location, err error) {
+	if top == nil || err == nil {
+		return
+	}
+	top.reportError(&ParseError{
+		Filename: top.filename,
+		Lineno:   loc.Line,
+		Message:  err.Error(),
+	})
 }

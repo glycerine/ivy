@@ -297,7 +297,8 @@ top:
     {
         xtracer.Trace("parser.p_top_using_symbol ENTER (top)")
         $$ = $1
-        // Python: importer(p[3]) and merge decls — deferred to post-parse
+        lex := parser17lex.(*parser17LexAdapter)
+        parserDeclareUsing(parser17Acfg(parser17lex), $$, lex.importer, $3.Val, tokLineno(lex, $2))
     }
     | top PARSER_TOK_INCLUDE SYMBOLx
     {

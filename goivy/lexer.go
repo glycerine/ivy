@@ -2,7 +2,6 @@ package goivy
 
 import (
 	"fmt"
-	"unicode"
 	"unicode/utf8"
 )
 
@@ -448,12 +447,12 @@ func (l *Lexer) scan() Token {
 	}
 
 	// Uppercase identifier → VARIABLE (or reserved word)
-	if unicode.IsUpper(r) {
+	if isASCIIUpperRune(r) {
 		return l.scanVariable(line, col)
 	}
 
 	// Lowercase identifier or digit → SYMBOL or keyword
-	if r == '_' || unicode.IsLower(r) || unicode.IsDigit(r) {
+	if r == '_' || isASCIILowerRune(r) || isASCIIDigitRune(r) {
 		return l.scanSymbol(line, col)
 	}
 
@@ -482,7 +481,7 @@ func (l *Lexer) scanSymbol(line, col int) Token {
 	start := l.pos
 	for l.pos < len(l.input) {
 		r, _ := l.peekRune()
-		if r == '_' || unicode.IsLetter(r) || unicode.IsDigit(r) {
+		if r == '_' || isASCIILetterRune(r) || isASCIIDigitRune(r) {
 			l.advance()
 		} else {
 			break
@@ -501,17 +500,14 @@ func (l *Lexer) scanVariable(line, col int) Token {
 	l.advance()
 	for l.pos < len(l.input) {
 		r, _ := l.peekRune()
-		if r == '_' || unicode.IsLetter(r) || unicode.IsDigit(r) {
+		if r == '_' || isASCIILetterRune(r) || isASCIIDigitRune(r) {
 			l.advance()
 		} else if r == '[' {
-			// Allow bracketed subscripts: X[0], X[a]
-			l.advance()
-			for l.pos < len(l.input) {
-				r2, _ := l.peekRune()
-				if r2 == ']' {
-					l.advance()
-					break
-				}
+			end, ok := l.validVariableSubscriptEnd(l.pos)
+			if !ok {
+				break
+			}
+			for l.pos < end {
 				l.advance()
 			}
 		} else {
@@ -523,6 +519,43 @@ func (l *Lexer) scanVariable(line, col int) Token {
 		return Token{Type: tt, Value: val, Line: line, Column: col}
 	}
 	return Token{Type: VARIABLE, Value: val, Line: line, Column: col}
+}
+
+func (l *Lexer) validVariableSubscriptEnd(pos int) (int, bool) {
+	if pos >= len(l.input) || l.input[pos] != '[' {
+		return pos, false
+	}
+	i := pos + 1
+	for i < len(l.input) && isPythonVariableSubscriptByte(l.input[i]) {
+		i++
+	}
+	if i < len(l.input) && l.input[i] == ']' {
+		return i + 1, true
+	}
+	return pos, false
+}
+
+func isPythonVariableSubscriptByte(b byte) bool {
+	return b == '_' ||
+		('a' <= b && b <= 'z') ||
+		('A' <= b && b <= 'Z') ||
+		('0' <= b && b <= '9')
+}
+
+func isASCIILowerRune(r rune) bool {
+	return 'a' <= r && r <= 'z'
+}
+
+func isASCIIUpperRune(r rune) bool {
+	return 'A' <= r && r <= 'Z'
+}
+
+func isASCIIDigitRune(r rune) bool {
+	return '0' <= r && r <= '9'
+}
+
+func isASCIILetterRune(r rune) bool {
+	return isASCIILowerRune(r) || isASCIIUpperRune(r)
 }
 
 func (l *Lexer) scanNativeQuote(line, col int) Token {

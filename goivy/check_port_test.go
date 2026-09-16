@@ -326,7 +326,9 @@ func TestApplyConjProofsNoProofs(t *testing.T) {
 	mod := New()
 	lf := checkTestAstCfg.NewLabeledFormula(checkTestAstCfg.NewAtom("conj1"), &LogicAnd{})
 	mod.LabeledConjs = []*LabeledFormula{lf}
-	ApplyConjProofs(mod)
+	if err := ApplyConjProofs(mod); err != nil {
+		t.Fatalf("ApplyConjProofs returned unexpected error: %v", err)
+	}
 	if len(mod.ConjSubgoals) != 1 {
 		t.Errorf("expected 1 subgoal (passthrough), got %d", len(mod.ConjSubgoals))
 	}

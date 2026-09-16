@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"errors"
 	"strings"
 	"testing"
 )
@@ -11,6 +12,7 @@ type mockProofChecker struct {
 	gotProp  *LabeledFormula
 	gotProof Node
 	getCalls int
+	getErr   error
 }
 
 func (m *mockProofChecker) AdmitProposition(prop *LabeledFormula, proof Node, existingSubgoals ...*LabeledFormula) ([]*LabeledFormula, error) {
@@ -20,6 +22,9 @@ func (m *mockProofChecker) GetSubgoals(prop *LabeledFormula, proof Node) ([]*Lab
 	m.gotProp = prop
 	m.gotProof = proof
 	m.getCalls++
+	if m.getErr != nil {
+		return nil, m.getErr
+	}
 	return m.subgoals, nil
 }
 func (m *mockProofChecker) AdmitDefinition(defn *LabeledFormula, proof Node) ([]*LabeledFormula, error) {
@@ -119,6 +124,29 @@ func TestApplyAssertProofsWithProver_UsesExistingLFAndUnwrappedProof(t *testing.
 	}
 	if prover.gotProof != tactic {
 		t.Fatalf("GetSubgoals proof = %T/%p, want unwrapped %T/%p", prover.gotProof, prover.gotProof, tactic, tactic)
+	}
+}
+
+func TestApplyAssertProofsWithProverPropagatesProofErrorLikePython(t *testing.T) {
+	cfg := NewAstConfig()
+	mod := newTestModule(true)
+
+	aa := NewAssertAction(True)
+	aa.Proof = WrapTactic(cfg.NewComposeTactics(nil))
+	mod.Actions.Set("test_act", aa)
+
+	sentinel := errors.New("sentinel assert proof failure")
+	prover := &mockProofChecker{getErr: sentinel}
+
+	err := ApplyAssertProofsWithProver(mod, prover)
+	if !errors.Is(err, sentinel) {
+		t.Fatalf("ApplyAssertProofsWithProver error = %v, want sentinel proof error", err)
+	}
+	if prover.getCalls != 1 {
+		t.Fatalf("GetSubgoals calls = %d, want 1", prover.getCalls)
+	}
+	if got := mod.Actions.Get("test_act"); got != aa {
+		t.Fatalf("action after proof failure = %T, want original assert action still installed", got)
 	}
 }
 

@@ -352,7 +352,7 @@ func GetConjs(mod *Module) *Clauses {
 // Subgoals produced by proof tactics should ideally be run through
 // ivy_compiler.theorem_to_property, but until the compiler is wired
 // up, we simply collect them.
-func ApplyConjProofs(mod *Module) {
+func ApplyConjProofs(mod *Module) error {
 	// Python: pc = ivy_proof.ProofChecker(mod.labeled_axioms+mod.assumed_invariants, mod.definitions, mod.schemata)
 	// The proof package uses ast.LabeledFormula (with ast.Node fields) while
 	// module uses ast.LabeledFormula (with lg.Expr fields). These are separate
@@ -378,7 +378,7 @@ func ApplyConjProofs(mod *Module) {
 	}
 	pc := NewProofChecker(mod.Cfg.ProofCfg, mod, pcAxioms, pcDefs, ModuleSchemataToAst(mod.Schemata))
 
-	pmap := make(map[int64]interface{})
+	pmap := make(map[int64]Node)
 	for _, pe := range mod.Proofs {
 		pmap[pe.Formula.ID] = pe.Proof
 	}
@@ -388,27 +388,32 @@ func ApplyConjProofs(mod *Module) {
 		if p, hasProof := pmap[lf.ID]; hasProof {
 			// Python: subgoals = pc.admit_proposition(lf, proof)
 			astLF := ModuleLFToAstLF(lf)
-			astProof, _ := p.(Node)
-			if astLF != nil && astLF.Formula != nil {
-				// Python: subgoals = pc.admit_proposition(lf, proof)
-				subgoals, err := pc.AdmitProposition(astLF, astProof)
-				if err == nil && len(subgoals) > 0 {
-					// Python: subgoals = list(map(ivy_compiler.theorem_to_property, subgoals))
-					for _, sg := range subgoals {
-						modSG := AstLFToModuleLF(sg)
-						modSG = TheoremToProperty(modSG, mod)
-						conjs = append(conjs, modSG)
-					}
-					continue
-				}
+			if astLF == nil || astLF.Formula == nil {
+				return fmt.Errorf("cannot apply proof for conjecture %s: formula is not convertible to proof AST", lf.LabelName())
 			}
-			// If conversion or proof application fails, pass through unchanged
-			conjs = append(conjs, lf)
+			// Python: subgoals = pc.admit_proposition(lf, proof)
+			subgoals, err := pc.AdmitProposition(astLF, p)
+			if err != nil {
+				return err
+			}
+			// Python: subgoals = list(map(ivy_compiler.theorem_to_property, subgoals))
+			for _, sg := range subgoals {
+				modSG := AstLFToModuleLF(sg)
+				if modSG == nil {
+					return fmt.Errorf("cannot convert proof subgoal for conjecture %s back to module formula", lf.LabelName())
+				}
+				modSG, err = TheoremToPropertyChecked(modSG, mod)
+				if err != nil {
+					return err
+				}
+				conjs = append(conjs, modSG)
+			}
 		} else {
 			conjs = append(conjs, lf)
 		}
 	}
 	mod.ConjSubgoals = conjs
+	return nil
 }
 
 // CheckFcsInState checks formula checkers against a state.
@@ -752,13 +757,13 @@ func GetCheckedActions(mod *Module) []string {
 // GetPrioritizedActions returns the list of prioritized actions parsed
 // from the "prioritize" parameter. Each name is prefixed with "ext:".
 func GetPrioritizedActions(cfg *Config) []string {
-	if cfg.PriorityActions == "" {
+	if !cfg.PriorityActionsSet {
 		return nil
 	}
 	parts := strings.Split(cfg.PriorityActions, ",")
 	result := make([]string, len(parts))
 	for i, p := range parts {
-		result[i] = "ext:" + strings.TrimSpace(p)
+		result[i] = "ext:" + p
 	}
 	sort.Strings(result)
 	return result

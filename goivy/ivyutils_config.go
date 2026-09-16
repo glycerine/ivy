@@ -56,7 +56,9 @@ type IvyUtilsConfig struct {
 	// Parameter registry
 	UseNumerals bool
 	UseNewUI    bool
+	Catch       bool
 	DefaultUI   string
+	DefaultMode string
 	EnableDebug bool
 
 	// UI modules
@@ -83,7 +85,9 @@ func NewIvyUtilsConfig() *IvyUtilsConfig {
 		UIModules:             make(map[string]*UIModule),
 		UseNumerals:           true,
 		UseNewUI:              false,
+		Catch:                 true,
 		DefaultUI:             "cti",
+		DefaultMode:           "pdr",
 		EnableDebug:           false,
 		UsePolymorphicMacros:  true, // derived: default version 1.8 > 1.5
 		ForbidGhostInit:       true, // derived: default version 1.8 > 1.6

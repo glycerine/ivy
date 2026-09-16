@@ -204,7 +204,9 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 	}
 
 	// Apply conjecture proofs
-	ApplyConjProofs(mod)
+	if err := ApplyConjProofs(mod); err != nil {
+		return err
+	}
 
 	// Print isolate implementations
 	// Python: "{}implementation of {}".format(pretty_lineno(action), mixee)
@@ -326,7 +328,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 
 	if len(checkedActions) > 0 && len(checkedInvariants) > 0 {
 		fmt.Println("\n    The following set of external actions must preserve the invariant:")
-		if mod.Cfg.PriorityActions != "" {
+		if mod.Cfg.PriorityActionsSet {
 			var plist []string
 			for k := range prioritizedChecked {
 				plist = append(plist, k)
@@ -924,7 +926,10 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 
 		} else {
 			// Non-temporal branch (Python lines 765-776)
-			pgoal := TheoremToProperty(AstLFToModuleLF(goal), mod)
+			pgoal, err := TheoremToPropertyChecked(AstLFToModuleLF(goal), mod)
+			if err != nil {
+				return err
+			}
 			withLocalMod := mod.Copy()
 			withLocalMod.LabeledProps = []*LabeledFormula{pgoal}
 			withLocalMod.ConceptSpaces = nil

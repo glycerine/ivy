@@ -723,7 +723,11 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 	if tt, ok := pf.(*TacticTactic); ok {
 		if tp := tt.TacticProofNode(); tp != nil {
 			if assertAct, ok := assertNoFairCycleAction.(*LogicAssertAction); ok {
-				assertNoFairCycleAction = ApplyAssertProofWith(m, assertAct, tp, pc)
+				var err error
+				assertNoFairCycleAction, err = ApplyAssertProofWith(m, assertAct, tp, pc)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 	}

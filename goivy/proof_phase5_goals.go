@@ -816,11 +816,10 @@ func GoalApplyToPrem(cfg *AstConfig, goal *LabeledFormula, premName string, fn f
 // CloseUnmatched universally quantifies unmatched free variables in the conclusion.
 // Corresponds to Python's close_unmatched (ivy_proof.py:1835).
 //
-// Python wraps the conclusion directly in il.IvyForAll — for a TemporalModels
-// conc, the ForAll ends up wrapping the TemporalModels. Go's Expr type
-// system requires the ForAll body to be lg.Expr, so when rawConc is not
-// lg.Expr-convertible we leave it unwrapped (no known test exercises this
-// path; divergence would surface if it does).
+// Python wraps the conclusion directly in il.IvyForAll. For plain logic
+// conclusions we use the logic ForAll. For raw AST conclusions such as
+// TemporalModels, use the AST Forall so the quantifier wraps the raw
+// conclusion instead of being pushed inside it.
 func CloseUnmatched(cfg *AstConfig, goal *LabeledFormula, match map[NodeKey]Expr) *LabeledFormula {
 	xtracer.Trace("proof.CloseUnmatched ENTER label=%s nmatch=%d", goal.LabelForTrace(), len(match))
 	rawConc := GoalConc(goal)
@@ -855,33 +854,19 @@ func CloseUnmatched(cfg *AstConfig, goal *LabeledFormula, match map[NodeKey]Expr
 			}
 		}
 	}
-	// Python: for v in reversed(conc_vars): conc = il.IvyForAll([v], conc)
-	// Wrap directly without apply_to_conc, matching Python's trace output.
-	newConc := concExpr
-	for i := len(toClose) - 1; i >= 0; i-- {
-		newConc = IvyForAll([]*LogicVariable{toClose[i]}, newConc)
-	}
-	var finalConc Node = newConc
-	// If original rawConc was TemporalModels and we added wrappers, the
-	// unwrap-then-rewrap path of the original ApplyToConc placed the
-	// wrappers inside the TemporalModels. To stay close to prior Go
-	// behavior for TemporalModels, only swap to raw newConc if conc was
-	// already a plain lg.Expr.
-	if _, isTM := rawConc.(*TemporalModels); isTM && len(toClose) > 0 {
-		// Preserve prior behavior — wrap inside TM. Python semantics differ
-		// here, but no current test hits this branch with toClose > 0.
-		if tm, ok := rawConc.(*TemporalModels); ok {
-			if inner, ok := tm.Fmla.(Expr); ok {
-				wrapped := inner
-				for i := len(toClose) - 1; i >= 0; i-- {
-					wrapped = IvyForAll([]*LogicVariable{toClose[i]}, wrapped)
-				}
-				finalConc = tm.Clone([]Node{wrapped})
+	var finalConc Node = rawConc
+	if len(toClose) > 0 {
+		if _, isExpr := rawConc.(Expr); isExpr {
+			newConc := concExpr
+			for i := len(toClose) - 1; i >= 0; i-- {
+				newConc = IvyForAll([]*LogicVariable{toClose[i]}, newConc)
+			}
+			finalConc = newConc
+		} else {
+			for i := len(toClose) - 1; i >= 0; i-- {
+				finalConc = cfg.NewForall([]Node{toClose[i]}, finalConc)
 			}
 		}
-	}
-	if len(toClose) == 0 {
-		finalConc = rawConc
 	}
 	result := CloneGoal(cfg, goal, GoalPrems(goal), finalConc)
 	xtracer.Trace("proof.CloseUnmatched EXIT ntoClose=%d HASH canon=%v", len(toClose), result.Canon())

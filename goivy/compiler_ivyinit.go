@@ -30,8 +30,8 @@ func ReadParams(args []string, reg *ParameterRegistry) ([]string, error) {
 	ps := make(map[string]interface{})
 	remaining := args
 	for len(remaining) > 0 && strings.Contains(remaining[0], "=") {
-		parts := strings.SplitN(remaining[0], "=", 2)
-		if len(parts) != 2 {
+		parts := strings.Split(remaining[0], "=")
+		if len(parts) > 2 {
 			return nil, fmt.Errorf("bad parameter: %s", remaining[0])
 		}
 		ps[parts[0]] = parts[1]
