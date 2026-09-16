@@ -46,50 +46,6 @@ func TestEmitSetSolverLargeFunctionEmitsForall(t *testing.T) {
 	}
 }
 
-func TestEmitSetSolverExperimentalUninterpretedDestructorDomainUnrolls(t *testing.T) {
-	mod := compileIvySource(t, `#lang ivy1.7
-type key
-type cell
-destructor shade(C:cell) : bool
-individual slot(K:key) : cell
-`)
-	g := &Generator{Mod: mod, ClassName: "slots", Config: Config{Target: "test", ClassName: "slots"}}
-	var sym stateSymbol
-	for _, s := range g.stateSymbols() {
-		if s.Name == "slot" {
-			sym = s
-			break
-		}
-	}
-	if sym.Name == "" {
-		t.Fatalf("slot not found in stateSymbols")
-	}
-	if !g.isDestructorRecordRange(sym.Sort.(*goivy.LogicFunctionSort).Range()) {
-		t.Fatalf("slot range should be a destructor record")
-	}
-	if g.isLargeType(sym.Sort) {
-		t.Fatalf("slot(key) should use the experimental 0..100 key universe instead of the large-type branch")
-	}
-
-	var w cppWriter
-	g.emitSetSolver(&w, sym, "obj")
-	body := w.String()
-	for _, want := range []string{
-		`for (int X__0 = 0; X__0 <= 100; X__0++) {`,
-		`apply("slot", int_to_z3(sort("key"), static_cast<long long>(X__0)))`,
-		`apply("shade"`,
-	} {
-		if !strings.Contains(body, want) {
-			t.Fatalf("missing %q in experimental destructor-range emit_set:\n%s", want, body)
-		}
-	}
-	for _, bad := range []string{"domain not enumerable", "std::vector<z3::expr> __quants;", "forall("} {
-		if strings.Contains(body, bad) {
-			t.Fatalf("experimental destructor-range emit_set should unroll, found %q:\n%s", bad, body)
-		}
-	}
-}
-
 func TestEmitSetSolverLargeFunctionUsesThunkToZ3(t *testing.T) {
 	out := generateHashThunkSolverFixture(t, "thunkz3")
 	for _, want := range []string{

@@ -225,34 +225,6 @@ func TestIvyGoZ3RuntimeThunkHelpers(t *testing.T) {
 	}
 }
 
-func TestMakeThunkZ3GeneralGeneratedCPPCompiles(t *testing.T) {
-	mod := compileIvySource(t, `#lang ivy1.7
-type key
-type value
-function valueof(K:key) : value
-individual saved : value
-after init { valueof(K) := saved }
-action keep = { saved := saved }
-export keep
-`)
-	out, err := Generate(mod, Config{Target: "test", ClassName: "zthgen"})
-	if err != nil {
-		t.Fatalf("Generate: %v", err)
-	}
-	for _, want := range []string{
-		`int_ranges["key"] = std::pair<unsigned long long, unsigned long long>(0,(100+1)-1);`,
-		`int_ranges["value"] = std::pair<unsigned long long, unsigned long long>(0,(100+1)-1);`,
-		"struct __thunk__0 : z3_thunk<int,int>",
-		"z3::expr to_z3(gen &g, const z3::expr &v)",
-		`g.int_to_z3(g.sort("value"),(int)(`,
-	} {
-		if !strings.Contains(out.Impl, want) {
-			t.Fatalf("generated general Z3 thunk missing %q:\n%s", want, out.Impl)
-		}
-	}
-	compileGeneratedCPP(t, out)
-}
-
 func TestThunkEnvSymbolsExcludesDerivedDefinition(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type key
