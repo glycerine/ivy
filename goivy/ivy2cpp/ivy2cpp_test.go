@@ -6283,6 +6283,35 @@ export step
 	compileGeneratedCPP(t, out)
 }
 
+func TestTargetTestPrimitiveBVInterpActionInputDeclaresNestedType(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type packet
+relation sent(X:packet)
+action send(x:packet) = {
+    sent(x) := true
+}
+export send
+interpret packet -> bv[16]
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "bvpacket"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Header + out.Impl
+	for _, want := range []string{
+		"typedef unsigned packet;",
+		"hash_thunk<unsigned,bool> sent;",
+		`__randomize<bvpacket::packet>(*this, apply("__fml:x"), "packet");`,
+		`__from_solver<bvpacket::packet>(*this, apply("__fml:x"), x);`,
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in target=test primitive-bv interpreted sort output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestStringBitvectorHelperReplAndZ3Shape(t *testing.T) {
 	src := `#lang ivy1.7
 type text

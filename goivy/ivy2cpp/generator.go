@@ -503,7 +503,7 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 		}
 		emitted[name] = true
 		if it, ok := g.cppInterpType(s); ok {
-			if it.Kind == cppInterpBV && it.primitiveType() != "" && (!g.usesZ3() || g.Config.Target == "test") {
+			if it.Kind == cppInterpBV && it.primitiveType() != "" && !g.usesZ3() {
 				return
 			}
 			if it.Kind == cppInterpIntBV && !emittedIntClass {
