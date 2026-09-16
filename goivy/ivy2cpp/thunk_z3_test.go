@@ -71,6 +71,32 @@ func TestMakeThunkZ3GeneralSingleArgEnvEncoding(t *testing.T) {
 	}
 }
 
+func TestTargetTestLargeDomainFunctionInitThunkResultIndexRegression(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type key
+type val = {a,b}
+function f(K:key) : val
+function g(K:key) : val
+after init { f(K) := g(K) }
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "thunkresidx"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	assertNoUnsupportedCPP(t, out)
+	for _, want := range []string{
+		`struct __thunk__0 : z3_thunk<int, thunkresidx::val>`,
+		`g.mk_const("__thunk__0_arg_0","key");`,
+		`g.mk_const("__thunk__0_res_0","val");`,
+		`src.push_back(g.ctx.constant("__thunk__0_res_0", g.sort("val")));`,
+		`f = hash_thunk<int, val>(new __thunk__0(g));`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in generated impl:\n%s", want, out.Impl)
+		}
+	}
+}
+
 func TestMakeThunkZ3GeneralMultiArgSubstitutionAndFunctionEnv(t *testing.T) {
 	mod, node, color := newThunkZ3TestModule(t)
 	fnSort, err := goivy.NewFunctionSort(node, node, color)

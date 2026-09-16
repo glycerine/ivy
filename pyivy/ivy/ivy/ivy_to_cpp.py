@@ -475,7 +475,7 @@ def expr_to_z3(expr,prefix=''):
     return 'z3::expr(g.ctx,Z3_parse_smtlib2_string({}ctx, "{}", {}sort_names.size(), &{}sort_names[0], &{}sorts[0], {}decl_names.size(), &{}decl_names[0], &{}decls[0]))'.format(prefix,fmla,prefix,prefix,prefix,prefix,prefix,prefix)
 
 def expr_to_z3_no_type_cnst(expr,prefix=''):
-    fmla = '(assert ' + slv.formula_to_z3_int(expr).sexpr().replace('|!1','!1|').replace('\\|','').replace('\n',' "\n"') + ')'
+    fmla = '(assert ' + slv.formula_to_z3_int(expr, "expr_to_z3_no_type_cnst").sexpr().replace('|!1','!1|').replace('\\|','').replace('\n',' "\n"') + ')'
     return 'z3::expr(g.ctx,Z3_parse_smtlib2_string({}ctx, "{}", {}sort_names.size(), &{}sort_names[0], &{}sorts[0], {}decl_names.size(), &{}decl_names[0], &{}decls[0]))'.format(prefix,fmla,prefix,prefix,prefix,prefix,prefix,prefix)
 
 
@@ -558,7 +558,8 @@ def make_thunk(impl,vs,expr):
                     close_scope(impl)
                     return sym_name
                 vsyms = [il.Symbol(name+'_arg_{}'.format(idx),v.sort) for idx,v in enumerate(vs)]
-                rsym = il.Symbol(name+'_res_{}'.format(idx),expr.sort)
+                res_idx = len(vsyms) - 1 if vsyms else 0
+                rsym = il.Symbol(name+'_res_{}'.format(res_idx),expr.sort)
                 envsyms = [il.Symbol(name+'_env_{}'.format(idx),v.sort) for idx,v in enumerate(env)]
                 for v in vsyms+envsyms+[rsym]:
                     open_scope(impl,line='if (g.decls_by_name.find("{}") == g.decls_by_name.end())'.format(v.name))
@@ -592,7 +593,7 @@ def make_thunk(impl,vs,expr):
                     code_line(impl,'dst.push_back(v.arg({}));'.format(idx))
 #                code_line(impl,'std::cout << "check 3" << std::endl')
                 code_line(impl,'src.push_back(g.ctx.constant("{}",g.sort("{}")));'.format(rsym.name,rsym.sort.name))
-                code_line(impl,'dst.push_back(v);'.format(idx))
+                code_line(impl,'dst.push_back(v);')
                 code_line(impl,'g.ctx.check_error()')
                 code_line(impl,'res = the_expr.substitute(src,dst)')
 #                code_line(impl,'std::cout << "check 4" << std::endl')
