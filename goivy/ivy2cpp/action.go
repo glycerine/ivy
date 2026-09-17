@@ -3,6 +3,7 @@ package ivy2cpp
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -297,7 +298,17 @@ func closeFormula(f goivy.Expr) goivy.Expr {
 // matches Python's __str__ — but Python strips that suffix before
 // substituting into ivy_assert / ivy_assume labels (ivy_to_cpp.py:3794).
 func linenoStr(loc goivy.Location) string {
-	return denormalizeIvyCPPLabel(strings.TrimSuffix(loc.String(), ": "))
+	for loc.Reference != nil {
+		loc = *loc.Reference
+	}
+	label := ""
+	if loc.Filename != "" {
+		label += filepath.Base(denormalizeIvyCPPLabel(loc.Filename)) + ": "
+	}
+	if loc.Line > 0 {
+		label += fmt.Sprintf("line %d: ", loc.Line)
+	}
+	return strings.TrimSuffix(label, ": ")
 }
 
 func denormalizeIvyCPPLabel(label string) string {

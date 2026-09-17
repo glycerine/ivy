@@ -172,9 +172,9 @@ func TestOracleSingleTargetTest(t *testing.T) {
 }
 
 func TestOracleHermesRMWO3TargetTestDiffWE(t *testing.T) {
-	if !oracleTestEnabled() {
-		t.Skip("set ORACLE_TEST=1 to compare Hermes Go ivy2cpp output against Python ivy_to_cpp")
-	}
+	//if !oracleTestEnabled() {
+	//	t.Skip("set ORACLE_TEST=1 to compare Hermes Go ivy2cpp output against Python ivy_to_cpp")
+	//}
 	fixture := hermesRMWO3OracleFixturePath()
 	if _, err := os.Stat(fixture); err != nil {
 		t.Skipf("Hermes oracle fixture not available: %v", err)
@@ -189,9 +189,9 @@ func TestOracleHermesRMWO3TargetTestDiffWE(t *testing.T) {
 	panicOn(os.MkdirAll(goDir, 0755))
 	panicOn(os.MkdirAll(pyDir, 0755))
 	params := map[string]string{
-		"target":    "test",
-		"classname": className,
-		"outdir":    goDir,
+		"target": "test",
+		//"classname": className,
+		"outdir": goDir,
 	}
 	batch, err := CompileAndGenerateAll(fixture, params, Config{})
 	if err != nil {
@@ -204,8 +204,20 @@ func TestOracleHermesRMWO3TargetTestDiffWE(t *testing.T) {
 		t.Fatalf("Python generate: %v", err)
 	}
 
-	for _, ext := range []string{".h", ".cpp"} {
-		name := className + ext
+	goFiles, err := readGeneratedCPPFiles(goDir)
+	if err != nil {
+		t.Fatalf("read Go output: %v", err)
+	}
+	pyFiles, err := readGeneratedCPPFiles(pyDir)
+	if err != nil {
+		t.Fatalf("read Python output: %v", err)
+	}
+	goNames := sortedMapKeys(goFiles)
+	pyNames := sortedMapKeys(pyFiles)
+	if strings.Join(goNames, "\n") != strings.Join(pyNames, "\n") {
+		t.Fatalf("generated file set differs\nGo:\n%s\n\nPython:\n%s", strings.Join(goNames, "\n"), strings.Join(pyNames, "\n"))
+	}
+	for _, name := range goNames {
 		assertDiffWEEqual(t, filepath.Join(pyDir, name), filepath.Join(goDir, name))
 	}
 }
@@ -394,8 +406,10 @@ func oracleTesterArgsPath(fixture string) string {
 	return strings.TrimSuffix(oracleFixturePath(fixture), ".ivy") + ".test.args"
 }
 
+// this should always return true now.
 func oracleTestEnabled() bool {
 	return true
+	// was weak sauce:
 	//return os.Getenv("ORACLE_TEST") != ""
 }
 
@@ -502,9 +516,20 @@ func runPythonIvyToCPP(fixture, outDir, target, className string) error {
 	if err != nil {
 		return err
 	}
-	args := []string{"target=" + target, "classname=" + className, absFixture}
+	cmdDir := filepath.Dir(absFixture)
+	cmdFixture := filepath.Base(absFixture)
+	var args []string
+	absOutDir, err := filepath.Abs(outDir)
+	if err != nil {
+		return err
+	}
+	if className == "" {
+		args = []string{"target=" + target, "outdir=" + absOutDir, cmdFixture}
+	} else {
+		args = []string{"target=" + target, "classname=" + className, "outdir=" + absOutDir, cmdFixture}
+	}
 	cmd := exec.Command(tool, args...)
-	cmd.Dir = outDir
+	cmd.Dir = cmdDir
 	cmd.Env = append(os.Environ(), "PYTHONHASHSEED=0")
 	var buf bytes.Buffer
 	cmd.Stdout = &buf

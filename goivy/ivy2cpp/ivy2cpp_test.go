@@ -8555,6 +8555,13 @@ export check
 	}
 }
 
+func TestLinenoStrUsesBasename(t *testing.T) {
+	got := linenoStr(goivy.Location{Filename: "/tmp/specs/hermes_rmw_o3_testing.ivy", Line: 185})
+	if got != "hermes_rmw_o3_testing.ivy: line 185" {
+		t.Fatalf("linenoStr=%q", got)
+	}
+}
+
 // TestSubgoalNeverConvertedToAssume verifies that goivy.AssertToAssume
 // does NOT downgrade SubgoalAction even when "assert" is in kinds.
 // Python ivy_actions.py:396-403 compares type(self) to the kinds list;
