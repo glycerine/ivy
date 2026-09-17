@@ -180,9 +180,14 @@ func TestOracleHermesRMWO3TargetTestDiffWE(t *testing.T) {
 		t.Skipf("Hermes oracle fixture not available: %v", err)
 	}
 
-	className := "hermes_rmw_o3_testing"
-	goDir := t.TempDir()
-	pyDir := t.TempDir()
+	//className := "hermes_rmw_o3_testing"
+	className := ""                      // leave empty for all
+	goDir := "tmp.oracle.out.dir/go.out" // t.TempDir()
+	pyDir := "tmp.oracle.out.dir/py.out" // t.TempDir()
+	panicOn(os.RemoveAll(goDir))
+	panicOn(os.RemoveAll(pyDir))
+	panicOn(os.MkdirAll(goDir, 0755))
+	panicOn(os.MkdirAll(pyDir, 0755))
 	params := map[string]string{
 		"target":    "test",
 		"classname": className,
@@ -390,7 +395,8 @@ func oracleTesterArgsPath(fixture string) string {
 }
 
 func oracleTestEnabled() bool {
-	return os.Getenv("ORACLE_TEST") != ""
+	return true
+	//return os.Getenv("ORACLE_TEST") != ""
 }
 
 func oracleTargetTestEnabled() bool {
@@ -417,6 +423,7 @@ func assertDiffWEEqual(t *testing.T, left, right string) {
 		}
 		t.Fatalf("diff -w -E %s %s failed: %v\n%s", left, right, err, out)
 	}
+	vv("left='%v' right='%v' diff is: '%v'", left, right, buf.String())
 }
 
 func readOracleStatuses(t *testing.T) map[string]string {
@@ -525,10 +532,12 @@ func pythonIvyToCPPPath() (string, error) {
 			continue
 		}
 		if _, err := os.Stat(candidate); err == nil {
+			vv("using candidate = '%v'", candidate)
 			return candidate, nil
 		}
 	}
 	if path, err := exec.LookPath("ivy_to_cpp"); err == nil {
+		vv("using path = '%v'", path)
 		return path, nil
 	}
 	return "", fmt.Errorf("Python ivy_to_cpp not found; set IVY_TO_CPP")
