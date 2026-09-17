@@ -493,9 +493,9 @@ func generateGoOracleFixture(fixture, outDir, target string) (*BatchOutput, erro
 		return nil, err
 	}
 	params := map[string]string{
-		"target":    target,
-		"classname": oracleClassName(fixture),
-		"outdir":    outDir,
+		"target": target,
+		//"classname": oracleClassName(fixture),
+		"outdir": outDir,
 	}
 	batch, err := CompileAndGenerateAll(absFixture, params, Config{})
 	if err != nil {
@@ -528,6 +528,7 @@ func runPythonIvyToCPP(fixture, outDir, target, className string) error {
 	} else {
 		args = []string{"target=" + target, "classname=" + className, "outdir=" + absOutDir, cmdFixture}
 	}
+	vv("debug runPythonIvyToCPP() calling: tool: '%v' args='%#v'", tool, args)
 	cmd := exec.Command(tool, args...)
 	cmd.Dir = cmdDir
 	cmd.Env = append(os.Environ(), "PYTHONHASHSEED=0")
