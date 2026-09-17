@@ -478,6 +478,11 @@ func (g *Generator) hasNatInterp(s goivy.Sort) bool {
 	return ok && text == "nat"
 }
 
+func (g *Generator) hasIntOrNatInterp(s goivy.Sort) bool {
+	text, ok := g.sortInterpString(s)
+	return ok && (text == "int" || text == "nat")
+}
+
 func (g *Generator) destructorStructName(s goivy.Sort) (string, bool) {
 	if g == nil || g.Mod == nil || g.Mod.SortDestructors == nil {
 		return "", false

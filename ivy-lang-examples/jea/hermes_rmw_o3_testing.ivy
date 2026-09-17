@@ -2,7 +2,7 @@
 
 include order
 
-# ivy_check said OK.
+# ivy_check said OK. After maybe a day of checking! keep this version on ice. Freeze it. No changes allowed.
 # Single-key Hermes protocol model with O3 broadcast-ACK completion,
 # including RMW O3 completion guarded by the RMW conflict rule.
 #

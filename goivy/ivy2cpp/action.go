@@ -2,6 +2,7 @@ package ivy2cpp
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -231,19 +232,56 @@ func (g *Generator) openAssignmentLoops(w *cppWriter, lhs goivy.Expr) (int, bool
 func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label string) {
 	var expr string
 	var err error
-	if g.Config.Target == "test" {
-		expr, err = g.emitExprWithHeader(w, closeFormula(f))
-	} else {
-		expr, err = g.emitExpr(closeFormula(f))
-	}
+	expr, err = g.emitActionConditionExpr(w, closeFormula(f))
 	if err != nil {
-		g.unsupported(w, "unsupported assertion expression: %s", err.Error())
+		kind := "unsupported assertion expression"
+		if fn == "ivy_assume" {
+			kind = "unsupported assumption expression"
+		}
+		g.pythonUnsupported(w, kind, err, label)
 		return
 	}
 	if strings.TrimSpace(label) == "" {
 		label = fn
 	}
 	w.linef(`%s(%s, "%s");`, fn, expr, escapeString(label))
+}
+
+func pythonUnsupportedErrorMessage(err error, loc string) string {
+	msg := ""
+	if err != nil {
+		msg = err.Error()
+	}
+	msg = strings.TrimPrefix(msg, "ivy2cpp: ")
+	if msg != "" && !strings.HasPrefix(msg, "error: ") && !strings.Contains(msg, ": error: ") {
+		msg = "error: " + msg
+	}
+	if loc = strings.TrimSpace(loc); loc != "" {
+		msg = loc + ": " + msg
+	}
+	return msg
+}
+
+func (g *Generator) pythonUnsupported(w *cppWriter, kind string, err error, loc string) {
+	w.linef("/* ivy_to_cpp: %s: %s */", kind, escapeComment(pythonUnsupportedErrorMessage(err, loc)))
+}
+
+func (g *Generator) emitActionConditionExpr(w *cppWriter, e goivy.Expr) (string, error) {
+	if g.Config.Target != "test" {
+		return g.emitExpr(e)
+	}
+	var pre cppWriter
+	if w != nil {
+		pre.indent = w.indent
+	}
+	expr, err := g.emitExprWithHeader(&pre, e)
+	if err != nil {
+		return "", err
+	}
+	if w != nil {
+		w.raw(pre.String())
+	}
+	return expr, nil
 }
 
 func closeFormula(f goivy.Expr) goivy.Expr {
@@ -259,7 +297,15 @@ func closeFormula(f goivy.Expr) goivy.Expr {
 // matches Python's __str__ — but Python strips that suffix before
 // substituting into ivy_assert / ivy_assume labels (ivy_to_cpp.py:3794).
 func linenoStr(loc goivy.Location) string {
-	return strings.TrimSuffix(loc.String(), ": ")
+	return denormalizeIvyCPPLabel(strings.TrimSuffix(loc.String(), ": "))
+}
+
+func denormalizeIvyCPPLabel(label string) string {
+	home := strings.TrimRight(os.Getenv("HOME"), "/")
+	if home == "" {
+		return label
+	}
+	return strings.ReplaceAll(label, "<IVY_EXAMPLES>", home+"/ivy/ivy-lang-examples")
 }
 
 func (g *Generator) emitIf(w *cppWriter, a *goivy.LogicIfAction) {
@@ -269,13 +315,9 @@ func (g *Generator) emitIf(w *cppWriter, a *goivy.LogicIfAction) {
 	}
 	var cond string
 	var err error
-	if g.Config.Target == "test" {
-		cond, err = g.emitExprWithHeader(w, a.GetCond())
-	} else {
-		cond, err = g.emitExpr(a.GetCond())
-	}
+	cond, err = g.emitActionConditionExpr(w, a.GetCond())
 	if err != nil {
-		g.unsupported(w, "unsupported if condition: %s", err.Error())
+		g.pythonUnsupported(w, "unsupported if condition", err, "")
 		return
 	}
 	if g.Config.Target == "test" {
@@ -311,25 +353,22 @@ func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy
 	if g.emitIfSomeExtensional(w, a, some) {
 		return
 	}
-	found := g.nextTemp("__ivy_some")
-	w.linef("bool %s = false;", found)
 	headers, err := g.someConditionLoopHeaders(some)
 	if err != nil {
-		g.unsupported(w, "unsupported some parameter: %s", err.Error())
+		g.emitIfSomeUnsupported(w, some, err)
 		return
 	}
+	cond, err := g.emitExpr(some.Fmla)
+	if err != nil {
+		g.emitIfSomeUnsupported(w, some, err)
+		return
+	}
+	found := g.nextTemp("__ivy_some")
+	w.linef("bool %s = false;", found)
 	opened := 0
 	for _, h := range headers {
 		w.open(h)
 		opened++
-	}
-	cond, err := g.emitExpr(some.Fmla)
-	if err != nil {
-		g.unsupported(w, "unsupported some condition: %s", err.Error())
-		for i := 0; i < opened; i++ {
-			w.close("")
-		}
-		return
 	}
 	w.open(fmt.Sprintf("if (!%s && (%s)) {", found, cond))
 	w.linef("%s = true;", found)
@@ -345,6 +384,21 @@ func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy
 		g.emitAction(w, elseAct)
 		w.close("")
 	}
+}
+
+func (g *Generator) emitIfSomeUnsupported(w *cppWriter, some *goivy.SomeCondition, err error) {
+	_ = g.nextTemp("__ivy_some")
+	_ = g.nextTemp("__tmp")
+	_ = g.nextTemp("__tmp")
+	w.open("{")
+	for _, p := range some.Params {
+		if p == nil {
+			continue
+		}
+		w.linef("%s %s;", g.cppType(p.CSort), varName(p.Name))
+	}
+	g.pythonUnsupported(w, "unsupported if condition", err, "")
+	w.close("")
 }
 
 // someConditionLoopHeaders chooses per-parameter loop headers for an
@@ -405,7 +459,7 @@ func (g *Generator) someConditionLoopHeaders(some *goivy.SomeCondition) ([]strin
 // scan dispatch the THEN/ELSE bodies with the winning witness in scope.
 func (g *Generator) emitIfSomeMinMax(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) {
 	if some.Index == nil {
-		g.unsupported(w, "unsupported %s condition: missing index expression", some.Kind)
+		g.pythonUnsupported(w, "unsupported if condition", fmt.Errorf("missing index expression"), "")
 		return
 	}
 	found := g.nextTemp("__ivy_some")
@@ -423,7 +477,7 @@ func (g *Generator) emitIfSomeMinMax(w *cppWriter, a *goivy.LogicIfAction, some 
 	}
 	headers, herr := g.someConditionLoopHeaders(some)
 	if herr != nil {
-		g.unsupported(w, "unsupported some parameter: %s", herr.Error())
+		g.pythonUnsupported(w, "unsupported if condition", herr, "")
 		return
 	}
 	opened := 0
@@ -433,7 +487,7 @@ func (g *Generator) emitIfSomeMinMax(w *cppWriter, a *goivy.LogicIfAction, some 
 	}
 	cond, err := g.emitExpr(some.Fmla)
 	if err != nil {
-		g.unsupported(w, "unsupported some condition: %s", err.Error())
+		g.pythonUnsupported(w, "unsupported if condition", err, "")
 		for i := 0; i < opened; i++ {
 			w.close("")
 		}
@@ -443,7 +497,7 @@ func (g *Generator) emitIfSomeMinMax(w *cppWriter, a *goivy.LogicIfAction, some 
 	curIdx := g.nextTemp("__ivy_some_cur")
 	idxExpr, err := g.emitExpr(some.Index)
 	if err != nil {
-		g.unsupported(w, "unsupported some index: %s", err.Error())
+		g.pythonUnsupported(w, "unsupported if condition", err, "")
 		w.close("")
 		for i := 0; i < opened; i++ {
 			w.close("")
@@ -567,7 +621,7 @@ func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, 
 	}
 	cond, err := g.emitExpr(some.Fmla)
 	if err != nil {
-		g.unsupported(w, "unsupported some condition: %s", err.Error())
+		g.pythonUnsupported(w, "unsupported if condition", err, "")
 		w.close("")
 		return true
 	}
@@ -622,7 +676,7 @@ func (g *Generator) emitIfSomeVariantDowncast(w *cppWriter, a *goivy.LogicIfActi
 func (g *Generator) emitWhile(w *cppWriter, a *goivy.LogicWhileAction) {
 	cond, err := g.emitExpr(a.Cond)
 	if err != nil {
-		g.unsupported(w, "unsupported while condition: %s", err.Error())
+		g.pythonUnsupported(w, "unsupported while condition", err, "")
 		return
 	}
 	w.open("while (" + cond + ") {")

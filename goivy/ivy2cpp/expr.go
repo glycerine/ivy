@@ -37,6 +37,9 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 		if goivy.IsNumeral(n) && !goivy.IsLiteralString(n) {
 			return n.Name, nil
 		}
+		if strings.HasPrefix(n.Name, "arg.arg") {
+			return n.Name, nil
+		}
 		if g.isDefinitionName(n.Name) {
 			fn, err := funName(n.Name)
 			if err != nil {
@@ -161,6 +164,9 @@ func (g *Generator) emitExprWithHeader(w *cppWriter, e goivy.Expr) (string, erro
 			return code, err
 		}
 		if goivy.IsNumeral(n) && !goivy.IsLiteralString(n) {
+			return n.Name, nil
+		}
+		if strings.HasPrefix(n.Name, "arg.arg") {
 			return n.Name, nil
 		}
 		if g.isDefinitionName(n.Name) {

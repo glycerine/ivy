@@ -164,9 +164,6 @@ func (g *Generator) emitDefinitionDecls(w *cppWriter) {
 		}
 		g.emitMethodDeclLine(w, name, act)
 	}
-	if len(defs) > 0 {
-		w.blank()
-	}
 }
 
 func (g *Generator) emitDefinitions(w *cppWriter) {

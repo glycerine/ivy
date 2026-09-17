@@ -94,7 +94,6 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 	preClauses = goivy.TrimClauses(preClauses)
 	preClauses = expandFieldReferences(preClauses, g.Mod.DestructorSorts)
 	preClauses = g.filterActionGenDerivedStorageClauses(preClauses)
-	preClauses = normalizeActionGenNewFmlAliases(preClauses)
 
 	// Collect inputs from used local symbols + formal params (prefixed __).
 	var inputs []*goivy.Const
@@ -132,7 +131,6 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 
 	// Field extraction + defined parameters.
 	preClauses, inputs, plan.fsyms = extractInputFields(preClauses, inputs, g.Mod)
-	preClauses = normalizeActionGenNewFmlAliases(preClauses)
 	inputs = appendActionGenTsLocalInputs(preClauses, inputs, g.Mod)
 	plan.oldPreClauses = preClauses
 	preClauses, plan.paramDefs = extractDefinedParameters(preClauses, inputs)
@@ -330,7 +328,7 @@ func appendActionGenTsLocalInputs(pre *goivy.Clauses, inputs []*goivy.Const, mod
 		if !ok {
 			continue
 		}
-		if !strings.HasPrefix(c.Name, "__ts") || isActionGenNewFmlTemp(c.Name) {
+		if !strings.HasPrefix(c.Name, "__ts") {
 			continue
 		}
 		if !isLocalSym(c, mod.Sig) {
@@ -382,7 +380,7 @@ func (g *Generator) emitActionGenTsLocalDecls(w *cppWriter, plan *actionGenPlan,
 		if !ok {
 			continue
 		}
-		if !strings.HasPrefix(c.Name, "__ts") || isActionGenNewFmlTemp(c.Name) {
+		if !strings.HasPrefix(c.Name, "__ts") {
 			continue
 		}
 		if !isLocalSym(c, g.Mod.Sig) {
@@ -514,7 +512,7 @@ func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
 		g.emitDeclSolver(w, stateSymbol{Name: c.Name, Sort: c.CSort})
 	}
 	// Emit the precondition assertion in SMT-LIB textual form.
-	if smt, ok := g.formulaToSmtlib(plan.preFmla); ok {
+	if smt, ok := g.formulaToSmtlibWithTypeConstraints(plan.preFmla); ok {
 		w.linef("add(std::string(\"(assert \") + %s + std::string(\")\"));", strconv.Quote(smt))
 	} else {
 		w.line("// ivy2cpp: failed to translate precondition to SMT-LIB; falling back to no constraint")
@@ -661,7 +659,7 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 		}
 		g.emitPythonTestDeclSolver(w, stateSymbol{Name: c.Name, Sort: c.CSort}, symName)
 	}
-	if smt, ok := g.formulaToSmtlib(plan.preFmla); ok {
+	if smt, ok := g.formulaToSmtlibWithTypeConstraints(plan.preFmla); ok {
 		if !g.emitPythonTestVariantConstraintAdd(w, smt) {
 			g.emitPythonTestContinuedSMTAdd(w, "(assert "+smt+")")
 		}
@@ -956,6 +954,18 @@ func (g *Generator) formulaToSmtlibErr(fmla goivy.Expr) (string, error) {
 		return "", err
 	}
 	return cleanSmtlib(z3expr.String()), nil
+}
+
+func (g *Generator) formulaToSmtlibWithTypeConstraints(fmla goivy.Expr) (string, bool) {
+	if fmla == nil {
+		return "true", true
+	}
+	solver := goivy.NewSolver(g.Mod, nil)
+	z3expr, err := solver.ClausesToZ3(goivy.NewClauses([]goivy.Expr{fmla}, nil, nil))
+	if err != nil {
+		return "", false
+	}
+	return cleanSmtlib(z3expr.String()), true
 }
 
 // preDefinedNames returns the set of defining-symbol names for each

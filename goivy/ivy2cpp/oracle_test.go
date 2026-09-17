@@ -171,6 +171,40 @@ func TestOracleSingleTargetTest(t *testing.T) {
 	})
 }
 
+func TestOracleHermesRMWO3TargetTestDiffWE(t *testing.T) {
+	if !oracleTestEnabled() {
+		t.Skip("set ORACLE_TEST=1 to compare Hermes Go ivy2cpp output against Python ivy_to_cpp")
+	}
+	fixture := hermesRMWO3OracleFixturePath()
+	if _, err := os.Stat(fixture); err != nil {
+		t.Skipf("Hermes oracle fixture not available: %v", err)
+	}
+
+	className := "hermes_rmw_o3_testing"
+	goDir := t.TempDir()
+	pyDir := t.TempDir()
+	params := map[string]string{
+		"target":    "test",
+		"classname": className,
+		"outdir":    goDir,
+	}
+	batch, err := CompileAndGenerateAll(fixture, params, Config{})
+	if err != nil {
+		t.Fatalf("Go generate: %v", err)
+	}
+	if err := WriteBatchOutput(batch, goDir); err != nil {
+		t.Fatalf("write Go output: %v", err)
+	}
+	if err := runPythonIvyToCPP(fixture, pyDir, "test", className); err != nil {
+		t.Fatalf("Python generate: %v", err)
+	}
+
+	for _, ext := range []string{".h", ".cpp"} {
+		name := className + ext
+		assertDiffWEEqual(t, filepath.Join(pyDir, name), filepath.Join(goDir, name))
+	}
+}
+
 func TestOracleCompileGo(t *testing.T) {
 	if !SlowCppTest {
 		t.Skip("set SLOW_CPP_TEST=1 to compile oracle Go output")
@@ -361,6 +395,28 @@ func oracleTestEnabled() bool {
 
 func oracleTargetTestEnabled() bool {
 	return os.Getenv("ORACLE_TEST_TARGET_TEST") != ""
+}
+
+func hermesRMWO3OracleFixturePath() string {
+	if path := strings.TrimSpace(os.Getenv("HERMES_RMW_O3_TESTING_IVY")); path != "" {
+		return path
+	}
+	return filepath.Join(os.Getenv("HOME"), "ivy", "ivy-lang-examples", "jea", "hermes_rmw_o3_testing.ivy")
+}
+
+func assertDiffWEEqual(t *testing.T, left, right string) {
+	t.Helper()
+	cmd := exec.Command("diff", "-w", "-E", left, right)
+	var buf bytes.Buffer
+	cmd.Stdout = &buf
+	cmd.Stderr = &buf
+	if err := cmd.Run(); err != nil {
+		out := buf.String()
+		if len(out) > 12000 {
+			out = out[:12000] + "\n... diff truncated ..."
+		}
+		t.Fatalf("diff -w -E %s %s failed: %v\n%s", left, right, err, out)
+	}
 }
 
 func readOracleStatuses(t *testing.T) map[string]string {

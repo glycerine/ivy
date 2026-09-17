@@ -2,6 +2,12 @@
 
 include order
 
+# (goivy-venv) jaten@rog ~/ivy/ivy-lang-examples/jea (master) $ XTRACE_OFF=1 time ivy_check trace=true diagnose=true hermes_rmw_o3.ivy > log.shorter.hermes.ivy_check.out
+#
+#298.24user 0.48system 4:58.88elapsed 99%CPU (0avgtext+0avgdata 113928maxresident)k
+#0inputs+1264outputs (0major+73251minor)pagefaults 0swaps
+
+
 # ivy_check said OK. add to ~/ivy/ivy-lang-examples/jea/ because
 # goivy_check is divergencing from ivy_check and reporting
 # hermes_rmw_o3.ivy: line 698: l2s_created ... FAIL saying, apparently incorrectly?

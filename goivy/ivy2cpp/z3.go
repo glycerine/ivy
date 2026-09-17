@@ -332,6 +332,13 @@ func (g *Generator) emitZ3SortRegistrations(w *cppWriter) {
 			}
 			continue
 		}
+		if g.hasIntOrNatInterp(s) {
+			// Python emit_sorts registers both int and nat interpretations
+			// with mk_int(name); nat's non-negativity is carried by the
+			// formulas, not by a distinct Z3 sort.
+			w.linef("g.mk_int(%s);", strconv.Quote(zname))
+			continue
+		}
 		if g.hasStringInterp(s) {
 			// Python: enum_sorts.insert(name, <class>::<sortvar>::z3_sort(ctx))
 			// where z3_sort returns ctx.string_sort(). Go runtime equivalent:
@@ -883,6 +890,10 @@ func (g *Generator) emitPythonTestZ3SortRegistration(w *cppWriter, name string, 
 			w.linef("mk_bv(%s,%d);", strconv.Quote(name), it.Bits)
 			return
 		}
+	}
+	if g.hasIntOrNatInterp(s) {
+		w.linef("mk_int(%s);", strconv.Quote(name))
+		return
 	}
 	if rs, ok := g.rangeSortFor(s); ok {
 		if lo, hi, ok := numericRangeBounds(rs); ok {

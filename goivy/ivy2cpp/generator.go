@@ -64,6 +64,7 @@ type Generator struct {
 	thunkDefs       cppWriter
 	thunkMemo       map[string]string
 	fileScopeThunks bool
+	thunkWriter     *cppWriter
 
 	exprAliases    map[string]goivy.Expr
 	currentReturns []*goivy.Const
@@ -132,11 +133,10 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 		BaseName:  base,
 		ClassName: className,
 		Ctx:       NewCppContext(),
-		// Python make_thunk writes through the impl-level `thunks`
-		// buffer. Unit tests that call makeThunk directly leave this
-		// false and get the legacy inline writer for focused white-box
-		// assertions; full Generate uses the faithful file-scope path.
-		fileScopeThunks: true,
+		// Python make_thunk writes through the current action/init writer
+		// in the source-of-truth ivy_to_cpp used by the oracle. Keep
+		// generated thunk structs inline at their assignment site.
+		fileScopeThunks: false,
 	}
 	g.header = newCPPWriter(g.Ctx.Globals)
 	g.impl = newCPPWriter(g.Ctx.Impls)
@@ -269,6 +269,7 @@ func (g *Generator) emitHeader() error {
 	if err := g.emitClassMemberNatives(w); err != nil {
 		return err
 	}
+	g.emitDefinitionDecls(w)
 	if g.Config.Target == "test" {
 		w.raw("    " + g.constructorSignature(false) + ";\n")
 	} else {
@@ -279,7 +280,6 @@ func (g *Generator) emitHeader() error {
 	} else {
 		w.line("void __init();")
 	}
-	g.emitDefinitionDecls(w)
 	g.emitConstructorDecls(w)
 	g.emitMethodDecls(w)
 	w.line("void __tick(int timeout);")
@@ -637,21 +637,20 @@ func (g *Generator) emitCTupleDecls(w *cppWriter) {
 		for i, s := range dom {
 			w.linef("%s arg%d;", g.cppType(s), i)
 		}
-		w.linef("%s() {}", name)
 		params := make([]string, len(dom))
 		inits := make([]string, len(dom))
 		for i, s := range dom {
 			params[i] = fmt.Sprintf("const %s &arg%d", g.cppType(s), i)
 			inits[i] = fmt.Sprintf("arg%d(arg%d)", i, i)
 		}
-		w.linef("%s(%s) : %s {}", name, strings.Join(params, ", "), strings.Join(inits, ", "))
-		w.open("size_t __hash() const {")
-		w.line("size_t hv = 0;")
+		w.linef("%s(){}%s(%s) : %s{}",
+			name, name, strings.Join(params, ","), strings.Join(inits, ","))
+		w.line("size_t __hash() const { size_t hv = 0;")
 		for i, s := range dom {
 			w.linef("hv += hash_space::hash<%s>()(arg%d);", cppHashType(g, s), i)
 		}
 		w.line("return hv;")
-		w.close("")
+		w.line("}")
 		w.close(";")
 		w.blank()
 	}
@@ -674,7 +673,6 @@ func (g *Generator) emitCTupleHashDecls(w *cppWriter) {
 		w.close("")
 		w.indent--
 		w.close(";")
-		w.blank()
 	}
 }
 
@@ -689,9 +687,6 @@ func (g *Generator) emitCTupleEqualities(w *cppWriter) {
 		}
 		w.linef("return %s;", strings.Join(eqParts, " && "))
 		w.close("")
-	}
-	if len(g.cppCTuples()) > 0 {
-		w.blank()
 	}
 }
 
@@ -864,9 +859,6 @@ func (g *Generator) emitCardinalityDecls(w *cppWriter) {
 	names := g.cardinalitySortNames()
 	for _, name := range names {
 		w.linef("long long __CARD__%s;", varName(name))
-	}
-	if len(names) > 0 {
-		w.blank()
 	}
 }
 
@@ -1346,11 +1338,18 @@ func (g *Generator) emitMethods(w *cppWriter) {
 // definitions from TODO 010), and emitConstructors (sort constructors
 // from TODO 010).
 func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) {
+	var body cppWriter
+	bw := &body
+	prevThunkWriter := g.thunkWriter
+	g.thunkWriter = w
+	defer func() {
+		g.thunkWriter = prevThunkWriter
+	}()
 	openSig := g.methodSignature(name, act, true, false) + " {"
 	if g.Config.Target == "test" {
 		openSig = g.methodSignature(name, act, true, false) + "{"
 	}
-	w.open(openSig)
+	bw.open(openSig)
 	returns := act.GetFormalReturns()
 	_, rtypes := g.getParamTypes(name, act)
 	// Python emit_some_action (ivy_to_cpp.py:1604-1607): for imported
@@ -1359,9 +1358,9 @@ func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) 
 	// and `}` braces.
 	traceImportCaller := g.importCallers()[name]
 	if traceImportCaller {
-		g.emitTraceActionPrologue(w, name, act.GetFormalParams())
+		g.emitTraceActionPrologue(bw, name, act.GetFormalParams())
 		if g.Config.Trace {
-			w.linef(`__ivy_out%s << "{" << std::endl;`, g.numberFormat())
+			bw.linef(`__ivy_out%s << "{" << std::endl;`, g.numberFormat())
 		}
 	}
 	// When the primary return is a ReturnRefType, its storage IS
@@ -1376,21 +1375,22 @@ func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) 
 	prevReturns := g.currentReturns
 	g.currentReturns = returns
 	if len(returns) >= 1 && !firstIsReturnRef && !formalListContains(act.GetFormalParams(), returns[0]) {
-		w.linef("%s %s;", g.cppQualifiedType(returns[0].CSort, g.ClassName), varName(returns[0].Name))
-		g.mkNondetSym(w, returns[0], returns[0].Name, 0)
+		bw.linef("%s %s;", g.cppQualifiedType(returns[0].CSort, g.ClassName), varName(returns[0].Name))
+		g.mkNondetSym(bw, returns[0], returns[0].Name, 0)
 	}
-	g.emitAction(w, act)
+	g.emitAction(bw, act)
 	g.currentReturns = prevReturns
 	if traceImportCaller && g.Config.Trace {
-		w.linef(`__ivy_out%s << "}" << std::endl;`, g.numberFormat())
+		bw.linef(`__ivy_out%s << "}" << std::endl;`, g.numberFormat())
 	}
 	if len(returns) >= 1 && !firstIsReturnRef {
-		w.linef("return %s;", varName(returns[0].Name))
+		bw.linef("return %s;", varName(returns[0].Name))
 	}
-	w.close("")
+	bw.close("")
 	if g.Config.Target != "test" {
-		w.blank()
+		bw.blank()
 	}
+	w.raw(body.String())
 }
 
 // importCallers mirrors Python find_import_callers (ivy_to_cpp.py:1888-1897).

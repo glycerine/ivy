@@ -122,8 +122,12 @@ func TestMakeThunkZ3GeneralMultiArgSubstitutionAndFunctionEnv(t *testing.T) {
 	_ = g.makeThunk(&w, []*goivy.LogicVariable{x, y}, expr)
 	got := normalizeCPP(w.String())
 
+	if strings.Contains(got, "arg__arg") {
+		t.Fatalf("multi-arg thunk body must use tuple field access arg.argN, not varName-mangled arg__argN:\n%s", got)
+	}
 	for _, want := range []string{
 		`struct __thunk__0 : z3_thunk<__tup__int__int, color> {`,
+		`return f[zth::__tup__int__int(arg.arg1, arg.arg0)];`,
 		`g.mk_const("__thunk__0_arg_0","node");`,
 		`g.mk_const("__thunk__0_arg_1","node");`,
 		`g.mk_const("__thunk__0_res_1","color");`,

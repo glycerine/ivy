@@ -209,6 +209,18 @@ func (g *Generator) emitSetSolverCustom(w *cppWriter, sym stateSymbol, opts emit
 		for i, d := range domain {
 			cvars[i] = fmt.Sprintf("%sctx.constant(%s, %ssort(%s))", opts.prefix, strconv.Quote(vs[i]), opts.prefix, strconv.Quote(z3SortName(d)))
 		}
+		if g.Config.Target == "test" {
+			w.line("{")
+			w.indent++
+			w.line("std::vector<z3::expr> __quants;;")
+			for i, d := range domain {
+				w.linef("__quants.push_back(%sctx.constant(%s,%ssort(%s)));;", opts.prefix, strconv.Quote(vs[i]), opts.prefix, strconv.Quote(z3SortName(d)))
+			}
+			opts.addConstraint(w, fmt.Sprintf("forall(__quants,__to_solver(%s,%s,%s))", opts.gen, z3ApplyCall(opts.prefix, opts.sname, cvars), opts.rhsBase()))
+			w.indent--
+			w.line("}")
+			return
+		}
 		w.open("{")
 		w.linef("z3::expr_vector __quants(%sctx);", opts.prefix)
 		for i, d := range domain {
@@ -608,6 +620,9 @@ func (g *Generator) uninterpretedRandomizeRangeError(s goivy.Sort) error {
 		return nil
 	}
 	if _, ok := g.cppInterpType(s); ok {
+		return nil
+	}
+	if g.hasIntOrNatInterp(s) {
 		return nil
 	}
 	if g.isRecordRange(s) {
@@ -1188,7 +1203,7 @@ func (g *Generator) makePythonTestNondetThunk(w *cppWriter, domSorts []goivy.Sor
 
 func (g *Generator) pythonTestNondetZ3ValueExpr(s goivy.Sort, val string) string {
 	if _, ok := s.(*goivy.BooleanSort); ok {
-		return fmt.Sprintf("g.ctx.bool_val(%s)", val)
+		return fmt.Sprintf("g.int_to_z3(g.sort(\"bool\"),(int)(%s))", val)
 	}
 	return fmt.Sprintf("g.int_to_z3(g.sort(%q),(int)(%s))", z3SortName(s), val)
 }

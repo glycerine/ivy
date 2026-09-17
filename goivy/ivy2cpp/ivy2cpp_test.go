@@ -8132,6 +8132,53 @@ action check = {
 	compileGeneratedCPP(t, out)
 }
 
+func TestTargetTestNatInterpretedUnboundedSortMatchesPythonSoftFailures(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..1}
+type version
+interpret version -> nat
+
+individual cur : idx
+individual witness : version
+relation ts_version(I:idx,V:version)
+
+after init {
+    cur := 0;
+}
+
+action check(p:version) = {
+    if (exists V. ts_version(cur,V)) {
+        witness := p
+    };
+    assume forall UV. ts_version(cur,UV) -> cur = cur;
+}
+
+export check
+`)
+	out, err := Generate(mod, Config{ClassName: "natsoft", Target: "test"})
+	if err != nil {
+		t.Fatalf("Generate target=test should match Python soft unsupported comments, got: %v", err)
+	}
+	for _, want := range []string{
+		`mk_int("version");`,
+		`randomize("__fml:p","version");`,
+		`/* ivy_to_cpp: unsupported if condition: error: cannot find an upper bound for V:version */`,
+		`ivy_to_cpp: unsupported assumption expression:`,
+		`error: cannot find an upper bound for UV:version`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("target=test nat interpreted unbounded sort missing %q:\n%s", want, out.Impl)
+		}
+	}
+	if strings.Contains(out.Impl, `mk_sort("version");`) {
+		t.Fatalf("nat interpreted version should be registered as a Z3 int sort, not an uninterpreted sort:\n%s", out.Impl)
+	}
+	checkBody := generatedMethodBody(t, out.Impl, "void natsoft::check(unsigned long long p){", "void natsoft::__tick")
+	if strings.Contains(checkBody, "for (") {
+		t.Fatalf("soft unsupported action condition should discard partial emitExprWithHeader loops:\n%s", checkBody)
+	}
+}
+
 func TestIssue57InitRequireClosesFreeVariables(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type my_type_1

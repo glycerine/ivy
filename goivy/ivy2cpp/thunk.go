@@ -2,6 +2,7 @@ package ivy2cpp
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -35,11 +36,11 @@ func (g *Generator) makeThunk(w *cppWriter, vs []*goivy.LogicVariable, expr goiv
 	for i, v := range vs {
 		domSorts[i] = v.VSort
 	}
-	domT := cppCTupleNameWith(g, domSorts, "")
-	rangeT := g.cppType(expr.NodeSort())
+	domT := cppCTupleNameWith(g, domSorts, g.ClassName)
+	rangeT := g.cppQualifiedType(expr.NodeSort(), g.ClassName)
 	defDomT := domT
 	defRangeT := rangeT
-	defClassName := ""
+	defClassName := g.ClassName
 	if g.fileScopeThunks {
 		defClassName = g.ClassName
 		defDomT = cppCTupleNameWith(g, domSorts, g.ClassName)
@@ -72,6 +73,9 @@ func (g *Generator) makeThunk(w *cppWriter, vs []*goivy.LogicVariable, expr goiv
 		defW = &g.thunkDefs
 	} else {
 		name = g.nextThunkName()
+		if g.thunkWriter != nil {
+			defW = g.thunkWriter
+		}
 	}
 
 	if emitDefinition {
@@ -146,7 +150,6 @@ func (g *Generator) emitThunkStruct(w *cppWriter, name, thunkClass, domT, rangeT
 		g.emitThunkToZ3(w, name, vs, expr, envSyms)
 	}
 	w.close(";")
-	w.blank()
 }
 
 // emitThunkBody emits the C++ expression for `expr` with each loop
@@ -227,7 +230,30 @@ func (g *Generator) thunkEnvSymbols(w *cppWriter, vs []*goivy.LogicVariable, exp
 		seen[c.Name] = true
 		out = append(out, c)
 	}
+	sort.SliceStable(out, func(i, j int) bool {
+		ri, rj := pythonThunkEnvRank(out[i]), pythonThunkEnvRank(out[j])
+		if ri != rj {
+			return ri < rj
+		}
+		return out[i].Name < out[j].Name
+	})
 	return out
+}
+
+func pythonThunkEnvRank(c *goivy.Const) int {
+	if c == nil {
+		return 4
+	}
+	if strings.HasPrefix(c.Name, "fml:") {
+		return 0
+	}
+	if strings.HasPrefix(c.Name, "loc:") {
+		return 1
+	}
+	if _, ok := c.CSort.(*goivy.LogicFunctionSort); ok {
+		return 2
+	}
+	return 3
 }
 
 func appliedFunctionConstKeys(expr goivy.Expr) map[goivy.NodeKey]bool {
@@ -419,22 +445,29 @@ func (g *Generator) emitThunkToZ3(w *cppWriter, name string, vs []*goivy.LogicVa
 		})
 		w.linef("rn[%s] = %s.c_str();", strconv.Quote(envSymsLocal[i].Name), locv)
 	}
-	w.linef("z3::expr the_expr = g.parse_expr(std::string(\"(assert \") + %s + std::string(\")\"));", strconv.Quote(smt))
+	w.linef("z3::expr the_expr = z3::expr(g.ctx,Z3_parse_smtlib2_string(g.ctx, %s, g.sort_names.size(), &g.sort_names[0], &g.sorts[0], g.decl_names.size(), &g.decl_names[0], &g.decls[0]));", pythonZ3StringLiteral("(assert "+smt+")"))
 	w.line("the_expr = __z3_rename(the_expr, rn);")
 	w.line("g.ctx.check_error();")
 	w.line("z3::expr_vector src(g.ctx);")
 	w.line("z3::expr_vector dst(g.ctx);")
 	for i, v := range vs {
-		w.linef("src.push_back(g.ctx.constant(%s, g.sort(%s)));", strconv.Quote(vsyms[i].Name), strconv.Quote(z3SortName(v.VSort)))
-		w.linef("dst.push_back(v.arg(%d));", i)
+		w.linef("src.push_back(g.ctx.constant(%s,g.sort(%s)));;", strconv.Quote(vsyms[i].Name), strconv.Quote(z3SortName(v.VSort)))
+		w.linef("dst.push_back(v.arg(%d));;", i)
 	}
-	w.linef("src.push_back(g.ctx.constant(%s, g.sort(%s)));", strconv.Quote(rsym.Name), strconv.Quote(z3SortName(rsym.CSort)))
-	w.line("dst.push_back(v);")
+	w.linef("src.push_back(g.ctx.constant(%s,g.sort(%s)));;", strconv.Quote(rsym.Name), strconv.Quote(z3SortName(rsym.CSort)))
+	w.line("dst.push_back(v);;")
 	w.line("g.ctx.check_error();")
 	w.line("res = the_expr.substitute(src, dst);")
 	w.line("g.ctx.check_error();")
 	w.line("return res;")
 	w.close("")
+}
+
+func pythonZ3StringLiteral(s string) string {
+	s = strings.ReplaceAll(s, `\`, `\\`)
+	s = strings.ReplaceAll(s, `"`, `\"`)
+	s = strings.ReplaceAll(s, "\n", " \"\n\"")
+	return `"` + s + `"`
 }
 
 func (g *Generator) emitThunkLocalZ3Symbol(w *cppWriter, sym *goivy.Const) string {
