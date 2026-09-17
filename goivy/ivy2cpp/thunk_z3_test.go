@@ -54,11 +54,11 @@ func TestMakeThunkZ3GeneralSingleArgEnvEncoding(t *testing.T) {
 		`g.mk_decl(loc_savedv.c_str(), {}, "value");`,
 		`g.slvr.add(__to_solver(g, g.apply(loc_savedv.c_str()), savedv));`,
 		`rn["__thunk__0_env_0"] = loc_savedv.c_str();`,
-		`z3::expr the_expr = g.parse_expr(std::string("(assert ") + `,
+		`z3::expr the_expr = z3::expr(g.ctx,Z3_parse_smtlib2_string(g.ctx, "(assert (= __thunk__0_res_0 __thunk__0_env_0))"`,
 		`the_expr = __z3_rename(the_expr, rn);`,
-		`src.push_back(g.ctx.constant("__thunk__0_arg_0", g.sort("node")));`,
+		`src.push_back(g.ctx.constant("__thunk__0_arg_0",g.sort("node")));;`,
 		`dst.push_back(v.arg(0));`,
-		`src.push_back(g.ctx.constant("__thunk__0_res_0", g.sort("value")));`,
+		`src.push_back(g.ctx.constant("__thunk__0_res_0",g.sort("value")));;`,
 		`dst.push_back(v);`,
 		`res = the_expr.substitute(src, dst);`,
 	} {
@@ -88,8 +88,8 @@ after init { f(K) := g(K) }
 		`struct __thunk__0 : z3_thunk<int, thunkresidx::val>`,
 		`g.mk_const("__thunk__0_arg_0","key");`,
 		`g.mk_const("__thunk__0_res_0","val");`,
-		`src.push_back(g.ctx.constant("__thunk__0_res_0", g.sort("val")));`,
-		`f = hash_thunk<int, val>(new __thunk__0(g));`,
+		`src.push_back(g.ctx.constant("__thunk__0_res_0",g.sort("val")));;`,
+		`f = hash_thunk<int, thunkresidx::val>(new __thunk__0(g));`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in generated impl:\n%s", want, out.Impl)
@@ -126,7 +126,7 @@ func TestMakeThunkZ3GeneralMultiArgSubstitutionAndFunctionEnv(t *testing.T) {
 		t.Fatalf("multi-arg thunk body must use tuple field access arg.argN, not varName-mangled arg__argN:\n%s", got)
 	}
 	for _, want := range []string{
-		`struct __thunk__0 : z3_thunk<__tup__int__int, color> {`,
+		`struct __thunk__0 : z3_thunk<zth::__tup__int__int, zth::color> {`,
 		`return f[zth::__tup__int__int(arg.arg1, arg.arg0)];`,
 		`g.mk_const("__thunk__0_arg_0","node");`,
 		`g.mk_const("__thunk__0_arg_1","node");`,
@@ -134,14 +134,14 @@ func TestMakeThunkZ3GeneralMultiArgSubstitutionAndFunctionEnv(t *testing.T) {
 		`hash_map<std::string, std::string> rn;`,
 		`std::string loc_f = std::string("__loc_") + __ss.str() + std::string("__") + "f";`,
 		`g.mk_decl(loc_f.c_str(),2,`,
-		`__quants.push_back(g.ctx.constant("X__0", g.sort("node")));`,
-		`__quants.push_back(g.ctx.constant("X__1", g.sort("node")));`,
-		`g.slvr.add(forall(__quants, __to_solver(g, g.apply(loc_f.c_str(), g.ctx.constant("X__0", g.sort("node")), g.ctx.constant("X__1", g.sort("node"))), f)));`,
-		`src.push_back(g.ctx.constant("__thunk__0_arg_0", g.sort("node")));`,
+		`__quants.push_back(g.ctx.constant("X__0",g.sort("node")));;`,
+		`__quants.push_back(g.ctx.constant("X__1",g.sort("node")));;`,
+		`g.slvr.add(forall(__quants,__to_solver(g,g.apply(loc_f.c_str(), g.ctx.constant("X__0", g.sort("node")), g.ctx.constant("X__1", g.sort("node"))),f)));`,
+		`src.push_back(g.ctx.constant("__thunk__0_arg_0",g.sort("node")));;`,
 		`dst.push_back(v.arg(0));`,
-		`src.push_back(g.ctx.constant("__thunk__0_arg_1", g.sort("node")));`,
+		`src.push_back(g.ctx.constant("__thunk__0_arg_1",g.sort("node")));;`,
 		`dst.push_back(v.arg(1));`,
-		`src.push_back(g.ctx.constant("__thunk__0_res_1", g.sort("color")));`,
+		`src.push_back(g.ctx.constant("__thunk__0_res_1",g.sort("color")));;`,
 	} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("multi-arg Z3 thunk missing %q:\n%s", want, got)
@@ -232,7 +232,7 @@ func TestMakeThunkSkipsZ3MethodOutsideGenAndTest(t *testing.T) {
 		var w cppWriter
 		_ = g.makeThunk(&w, []*goivy.LogicVariable{x}, goivy.NewConst("saved", color))
 		got := normalizeCPP(w.String())
-		if !strings.Contains(got, "struct __thunk__0 : thunk<int, color> {") {
+		if !strings.Contains(got, "struct __thunk__0 : thunk<int, zth::color> {") {
 			t.Fatalf("target %q should emit plain thunk:\n%s", target, got)
 		}
 		if strings.Contains(got, "to_z3(") || strings.Contains(got, "__ident") {

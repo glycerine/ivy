@@ -50,7 +50,7 @@ export step
 
 func TestBVXorEmitsXor(t *testing.T) {
 	out := generateBVOperatorFixture(t, 8, "bvxor", 2)
-	if !strings.Contains(out.Impl, "z = (((x ^ y)) & 255);") {
+	if !strings.Contains(out.Impl, "z = ((x ^ y) & 255);") {
 		t.Fatalf("bvxor should lower to masked C++ xor:\n%s", out.Impl)
 	}
 	compileGeneratedCPP(t, out)
@@ -101,7 +101,7 @@ func TestBVArithmeticShiftRightSignExtends(t *testing.T) {
 
 func TestBVNegEmitsTwosComplement(t *testing.T) {
 	out := generateBVOperatorFixture(t, 8, "bvneg", 1)
-	if !strings.Contains(out.Impl, "z = (((-(x))) & 255);") {
+	if !strings.Contains(out.Impl, "z = ((-(x)) & 255);") {
 		t.Fatalf("bvneg should lower to masked two's-complement negation:\n%s", out.Impl)
 	}
 	compileGeneratedCPP(t, out)

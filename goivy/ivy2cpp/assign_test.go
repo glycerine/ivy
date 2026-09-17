@@ -51,9 +51,9 @@ func TestEmitAssignTwoPhaseSelfReferential(t *testing.T) {
 		t.Fatalf("expected temp declaration with __ivy_tmp0, got:\n%s", got)
 	}
 	// Phase 1 writes the temp, phase 2 writes r. Cheap structural check:
-	// the temp must be on the LHS of an assignment that contains !(r[X]).
-	if !strings.Contains(got, "__ivy_tmp0[X] = !(r[X])") {
-		t.Fatalf("expected phase-1 write `__ivy_tmp0[X] = !(r[X])`, got:\n%s", got)
+	// the temp must be on the LHS of an assignment that contains !r[X].
+	if !strings.Contains(got, "__ivy_tmp0[X] = !r[X]") {
+		t.Fatalf("expected phase-1 write `__ivy_tmp0[X] = !r[X]`, got:\n%s", got)
 	}
 	if !strings.Contains(got, "r[X] = __ivy_tmp0[X]") {
 		t.Fatalf("expected phase-2 copy-back `r[X] = __ivy_tmp0[X]`, got:\n%s", got)
@@ -203,9 +203,9 @@ func TestEmitAssignLargeThunkFallback(t *testing.T) {
 	if !strings.Contains(got, "bool operator()(const int &arg)") {
 		t.Fatalf("expected operator()(const int &arg), got:\n%s", got)
 	}
-	// The body should reference !(r[arg]) (loop var substituted by arg).
-	if !strings.Contains(got, "!(r[arg])") {
-		t.Fatalf("expected substituted body !(r[arg]), got:\n%s", got)
+	// The body should reference !r[arg] (loop var substituted by arg).
+	if !strings.Contains(got, "!r[arg]") {
+		t.Fatalf("expected substituted body !r[arg], got:\n%s", got)
 	}
 	// Construction expression.
 	if !strings.Contains(got, "r = hash_thunk<int, bool>(new __thunk__0(") {
@@ -300,7 +300,7 @@ export flip
 		"void test_sref::flip()",
 		"bool __ivy_tmp0[2];",
 		"for (color X : {red, green})",
-		"__ivy_tmp0[X] = !(marked[X]);",
+		"__ivy_tmp0[X] = !marked[X];",
 		"marked[X] = __ivy_tmp0[X];",
 	} {
 		if !strings.Contains(out.Impl, want) {

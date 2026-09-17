@@ -2042,7 +2042,7 @@ func TestEmitExprLiteral(t *testing.T) {
 	if err != nil {
 		t.Fatalf("emitExpr: %v", err)
 	}
-	if got != "!(flag)" {
+	if got != "!flag" {
 		t.Fatalf("literal code=%q", got)
 	}
 }
@@ -2062,7 +2062,7 @@ func TestEmitExprDisequality(t *testing.T) {
 	if err != nil {
 		t.Fatalf("emitExpr: %v", err)
 	}
-	if got != "!((x == y))" {
+	if got != "!(x == y)" {
 		t.Fatalf("disequality code=%q", got)
 	}
 }
@@ -2172,7 +2172,7 @@ action check = {
 		"for (auto it = marked.memo.begin(), en = marked.memo.end(); it != en; ++it)",
 		"if (!it->second) continue;",
 		"int X = it->first;",
-		"if (!((!(marked[X]) || (ok[X])))) return false;",
+		"if (!((!marked[X] || ok[X]))) return false;",
 		"return true;",
 	} {
 		if !strings.Contains(out.Impl, want) {
@@ -3993,7 +3993,7 @@ action step(x:idx,y:idx) = {
 	// `idx` is registered in NativeTypes via `interpret idx -> <<< int >>>`
 	// (compiler_decl.go:1047), so the derived definition's ptype policy
 	// gives ConstRefType for its parameters (annotateAction, ptype.go:103).
-	for _, want := range []string{"bool lt(const idx& x, const idx& y);", "bool nativedef::lt(const idx& x, const idx& y)", "val = x < y;", "return val;", "ivy_assert(lt(x, y)"} {
+	for _, want := range []string{"bool lt(const idx& x, const idx& y);", "bool nativedef::lt(const idx& x, const idx& y)", "val = x < y;", "return val;", "ivy_assert(lt(x,y)"} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
@@ -6111,11 +6111,11 @@ export step
 		"unsigned y;",
 		"unsigned n;",
 		"x = (300 & 255);",
-		"x = (((x & y)) & 255);",
-		"x = (((x | y)) & 255);",
-		"x = (((~x)) & 255);",
+		"x = ((x & y) & 255);",
+		"x = ((x | y) & 255);",
+		"x = ((~x) & 255);",
 		"x = ((static_cast<unsigned>(n)) & 255);",
-		"x = ((((static_cast<unsigned>(n)) << 4 | (static_cast<unsigned>(n)))) & 255);",
+		"x = (((static_cast<unsigned>(n)) << 4 | (static_cast<unsigned>(n))) & 255);",
 		"n = ((static_cast<unsigned>((x >> 0))) & 15);",
 	} {
 		if !strings.Contains(text, want) {
@@ -7117,7 +7117,7 @@ individual saved : cell
 	// dot-field per Python emit_set_field line 816).
 	for _, want := range []string{
 		"X__0 = 0; X__0 <= 3; X__0++",
-		`slvr.add(__to_solver(*this,apply("shade", apply("saved"), int_to_z3(sort("idx"), static_cast<long long>(X__0))),obj.saved[X__0].shade));`,
+		`slvr.add(__to_solver(*this,apply("shade", apply("saved"), int_to_z3(sort("idx"),X__0)),obj.saved[X__0].shade));`,
 	} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("missing %q in emitSetSolver output:\n%s", want, body)
@@ -8202,7 +8202,7 @@ extract executable_runner = node
 		t.Fatalf("Generate: %v", err)
 	}
 	initBody := generatedMethodBody(t, out.Impl, "void issue57::__init(){", "void issue57::__tick")
-	if !strings.Contains(initBody, "ivy_assert(([&]() {") && !strings.Contains(initBody, "ivy_assume(([&]() {") {
+	if !strings.Contains(initBody, "ivy_assert(__tmp0") && !strings.Contains(initBody, "ivy_assume(__tmp0") {
 		t.Fatalf("issue57 __init should close the require formula before emission:\n%s", initBody)
 	}
 	for _, want := range []string{
