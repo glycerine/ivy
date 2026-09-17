@@ -244,16 +244,13 @@ func pythonThunkEnvRank(c *goivy.Const) int {
 	if c == nil {
 		return 4
 	}
-	if strings.HasPrefix(c.Name, "fml:") {
+	if strings.HasPrefix(c.Name, "loc:") {
 		return 0
 	}
-	if strings.HasPrefix(c.Name, "loc:") {
+	if _, ok := c.CSort.(*goivy.LogicFunctionSort); ok {
 		return 1
 	}
-	if _, ok := c.CSort.(*goivy.LogicFunctionSort); ok {
-		return 2
-	}
-	return 3
+	return 2
 }
 
 func appliedFunctionConstKeys(expr goivy.Expr) map[goivy.NodeKey]bool {
