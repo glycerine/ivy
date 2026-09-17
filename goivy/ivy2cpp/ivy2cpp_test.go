@@ -6472,16 +6472,16 @@ export step
 	if err := WriteBatchOutput(batch, batch.Config.OutDir); err != nil {
 		t.Fatalf("WriteBatchOutput: %v", err)
 	}
-	headerPath := filepath.Join(dir, "tiny.h")
+	headerPath := filepath.Join(dir, "Tiny.h")
 	if _, err := os.Stat(headerPath); err != nil {
-		t.Fatalf("missing tiny.h: %v", err)
+		t.Fatalf("missing Tiny.h: %v", err)
 	}
-	if _, err := os.Stat(filepath.Join(dir, "tiny.cpp")); err != nil {
-		t.Fatalf("missing tiny.cpp: %v", err)
+	if _, err := os.Stat(filepath.Join(dir, "Tiny.cpp")); err != nil {
+		t.Fatalf("missing Tiny.cpp: %v", err)
 	}
 	header, err := os.ReadFile(headerPath)
 	if err != nil {
-		t.Fatalf("read tiny.h: %v", err)
+		t.Fatalf("read Tiny.h: %v", err)
 	}
 	if !strings.Contains(string(header), "class Tiny") {
 		t.Fatalf("classname parameter not reflected in header:\n%s", header)
@@ -6518,7 +6518,7 @@ export echo
 	if err != nil {
 		t.Fatalf("BuildPlanFor: %v", err)
 	}
-	if plan.CompileOnly || !strings.HasSuffix(plan.OutputPath, "tinybuild") {
+	if plan.CompileOnly || !strings.HasSuffix(plan.OutputPath, "TinyBuild") {
 		t.Fatalf("unexpected build plan: %#v", plan)
 	}
 	if !strings.Contains(batch.Outputs[0].Impl, "runner") && !strings.Contains(batch.Outputs[0].Impl, "TinyBuild") {

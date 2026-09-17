@@ -1015,14 +1015,17 @@ type stateSymbol struct {
 // definitions — Python filters those at consumer sites (`sym_is_member`,
 // `lhs.rep.name not in destructor_sorts`, etc).
 //
-// Multiple symbols can share a name when polymorphic; deduplicate by
-// name so callers can match relation names directly.
+// SymbolOrder is only an ordering hint. CreateIsolate filters Mod.Sig, and
+// Python's il.all_symbols() sees that filtered signature; stale declarations
+// left in Mod.SymbolOrder must not be emitted.
+//
+// Multiple symbols can share a name when polymorphic; deduplicate by name so
+// callers can match relation names directly.
 func (g *Generator) allStateSymbols() []stateSymbol {
 	if g == nil || g.Mod == nil {
 		return nil
 	}
 	seen := map[string]bool{}
-	knownSig := map[string]bool{}
 	var out []stateSymbol
 	add := func(name string, s goivy.Sort) {
 		if name == "" || seen[name] {
@@ -1038,11 +1041,28 @@ func (g *Generator) allStateSymbols() []stateSymbol {
 		out = append(out, stateSymbol{Name: name, Sort: s})
 	}
 	if g.Mod.Sig != nil {
+		for _, sym := range g.Mod.SymbolOrder {
+			if sym == nil {
+				continue
+			}
+			name := sym.Name
+			if name == "" || seen[name] {
+				continue
+			}
+			if !g.sigHasExactSymbol(name, sym.CSort) {
+				continue
+			}
+			if g.Mod.Sig.Constructors[name] || g.isSortConstructorName(name) {
+				continue
+			}
+			n, err := goivy.SolverName(sym, g.Mod.Sig, nil)
+			if err == nil && n == "" {
+				continue
+			}
+			add(name, sym.CSort)
+		}
 		for _, sym := range g.Mod.Sig.AllSymbols() {
 			name := sym.Name
-			if name != "" {
-				knownSig[name] = true
-			}
 			if name == "" || seen[name] {
 				continue
 			}
@@ -1059,23 +1079,26 @@ func (g *Generator) allStateSymbols() []stateSymbol {
 			add(name, sym.CSort)
 		}
 	}
-	if g.Mod.Relations != nil {
-		for key, s := range g.Mod.Relations.All() {
-			name := goivy.SymbolNameFromKey(key)
-			if !knownSig[name] {
-				add(name, s)
-			}
-		}
-	}
-	if g.Mod.Functions != nil {
-		for key, s := range g.Mod.Functions.All() {
-			name := goivy.SymbolNameFromKey(key)
-			if !knownSig[name] {
-				add(name, s)
-			}
-		}
-	}
 	return out
+}
+
+func (g *Generator) sigHasExactSymbol(name string, sort goivy.Sort) bool {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil || name == "" {
+		return false
+	}
+	entry, ok := g.Mod.Sig.Symbols.Get2(name)
+	if !ok || entry == nil {
+		return false
+	}
+	if entry.Union != nil {
+		for _, s := range entry.Union.Sorts {
+			if goivy.SortEqual(s, sort) {
+				return true
+			}
+		}
+		return false
+	}
+	return goivy.SortEqual(entry.Sort, sort)
 }
 
 func (g *Generator) stateSymbols() []stateSymbol {

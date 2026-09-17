@@ -34,9 +34,13 @@ func CompileAndGenerate(filename string, params map[string]string, cfg Config) (
 }
 
 func CompileAndGenerateAll(filename string, params map[string]string, cfg Config) (*BatchOutput, error) {
+	rawClassName, explicitClassName := compileClassNameParam(params, cfg)
 	cfg, ivyParams, err := mergeParams(params, cfg)
 	if err != nil {
 		return nil, err
+	}
+	if explicitClassName {
+		cfg.ClassName = varName(rawClassName)
 	}
 	mod := goivy.New()
 	mod.Cfg = goivy.NewConfig()
@@ -81,26 +85,30 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		}
 		prepareModuleForCPP(isoMod, cfg)
 		outCfg := cfg
-		if len(isolates) > 1 && isolate != "" {
-			suffix := "_" + varName(isolate)
-			isoMod.Name = moduleBaseName(isoMod) + suffix
-			if outCfg.ClassName != "" {
-				outCfg.ClassName += suffix
-			}
+		baseName := moduleBaseName(isoMod)
+		if explicitClassName {
+			baseName = rawClassName
+			outCfg.ClassName = varName(baseName)
 		}
+		if len(isolates) > 1 && isolate != "" {
+			baseName = baseName + "_" + isolate
+			outCfg.ClassName = varName(baseName)
+		}
+		isoMod.Name = baseName
 		out, err := Generate(isoMod, outCfg)
 		if err != nil {
 			return nil, err
 		}
+		out.BaseName = baseName
 		batch.Outputs = append(batch.Outputs, out)
 	}
 	if cfg.RequestedTarget == "repl" || cfg.RequestedTarget == "test" {
 		if dsc, err := descriptorJSON(mod, cfg, batch.Outputs, isolates); err != nil {
 			return nil, err
 		} else if dsc != "" {
-			name := cfg.ClassName
-			if name == "" {
-				name = moduleBaseName(mod)
+			name := moduleBaseName(mod)
+			if explicitClassName {
+				name = rawClassName
 			}
 			batch.ExtraFiles[name+".dsc"] = dsc
 		}
@@ -116,6 +124,18 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		}
 	}
 	return batch, nil
+}
+
+func compileClassNameParam(params map[string]string, cfg Config) (string, bool) {
+	if params != nil {
+		if raw := strings.TrimSpace(params["classname"]); raw != "" {
+			return raw, true
+		}
+	}
+	if raw := strings.TrimSpace(cfg.ClassName); raw != "" {
+		return raw, true
+	}
+	return "", false
 }
 
 func pruneStateStoresToSignature(mod *goivy.Module) {

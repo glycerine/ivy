@@ -35,6 +35,37 @@ const (
 	oracleStatusSkip         = "SKIP"
 )
 
+type oracleCase struct {
+	Name             string
+	Target           string
+	IncludeClassName bool
+	Build            bool
+}
+
+func oracleCasesForTarget(target string) []oracleCase {
+	cases := []oracleCase{
+		{Name: "no_class_no_build", Target: target},
+		{Name: "with_class_no_build", Target: target, IncludeClassName: true},
+	}
+	// Python target=impl build=true tries to link an implementation with no
+	// generated main and fails in the source-of-truth tool. The build flag is
+	// meaningful for generated executables such as target=test.
+	if target == "test" || target == "repl" {
+		cases = append(cases,
+			oracleCase{Name: "no_class_build", Target: target, Build: true},
+			oracleCase{Name: "with_class_build", Target: target, IncludeClassName: true, Build: true},
+		)
+	}
+	return cases
+}
+
+func (c oracleCase) className(fixture string) string {
+	if !c.IncludeClassName {
+		return ""
+	}
+	return "oracle_" + varName(oracleClassName(fixture))
+}
+
 func TestCompareCPPTokensStripsCommentsAndWhitespace(t *testing.T) {
 	left := `
 int main() {
@@ -132,8 +163,12 @@ func TestOracleSingle(t *testing.T) {
 				outcomes = append(outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "skip"})
 				t.Skip("fixture marked SKIP in STATUS.md")
 			}
-			err := compareOracleFixture(t, fixture, "impl")
-			recordOracleExpectation(t, fixture, status, err, &outcomes)
+			for _, tc := range oracleCasesForTarget("impl") {
+				t.Run(tc.Name, func(t *testing.T) {
+					err := compareOracleFixture(t, fixture, tc)
+					recordOracleExpectation(t, fixture, status, err, &outcomes)
+				})
+			}
 		})
 	}
 	t.Cleanup(func() {
@@ -162,8 +197,12 @@ func TestOracleSingleTargetTest(t *testing.T) {
 				outcomes = append(outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "tester skip"})
 				t.Skip(err.Error())
 			}
-			err := compareOracleFixture(t, fixture, "test")
-			recordOracleExpectation(t, fixture, status, err, &outcomes)
+			for _, tc := range oracleCasesForTarget("test") {
+				t.Run(tc.Name, func(t *testing.T) {
+					err := compareOracleFixture(t, fixture, tc)
+					recordOracleExpectation(t, fixture, status, err, &outcomes)
+				})
+			}
 		})
 	}
 	t.Cleanup(func() {
@@ -180,46 +219,25 @@ func TestOracleHermesRMWO3TargetTestDiffWE(t *testing.T) {
 		t.Skipf("Hermes oracle fixture not available: %v", err)
 	}
 
-	//className := "hermes_rmw_o3_testing"
-	className := ""                      // leave empty for all
-	goDir := "tmp.oracle.out.dir/go.out" // t.TempDir()
-	pyDir := "tmp.oracle.out.dir/py.out" // t.TempDir()
-	panicOn(os.RemoveAll(goDir))
-	panicOn(os.RemoveAll(pyDir))
-	panicOn(os.MkdirAll(goDir, 0755))
-	panicOn(os.MkdirAll(pyDir, 0755))
-	params := map[string]string{
-		"target": "test",
-		//"classname": className,
-		"outdir": goDir,
+	root := "tmp.oracle.out.dir"
+	panicOn(os.RemoveAll(root))
+	for _, tc := range oracleCasesForTarget("test") {
+		t.Run(tc.Name, func(t *testing.T) {
+			goDir, pyDir := hermesOracleDirs(root, tc)
+			panicOn(os.MkdirAll(goDir, 0755))
+			panicOn(os.MkdirAll(pyDir, 0755))
+			if err := compareOracleFixtureAtPaths(t, fixture, tc, goDir, pyDir, true); err != nil {
+				t.Fatalf("Hermes oracle %s failed: %v", tc.Name, err)
+			}
+		})
 	}
-	batch, err := CompileAndGenerateAll(fixture, params, Config{})
-	if err != nil {
-		t.Fatalf("Go generate: %v", err)
-	}
-	if err := WriteBatchOutput(batch, goDir); err != nil {
-		t.Fatalf("write Go output: %v", err)
-	}
-	if err := runPythonIvyToCPP(fixture, pyDir, "test", className); err != nil {
-		t.Fatalf("Python generate: %v", err)
-	}
+}
 
-	goFiles, err := readGeneratedCPPFiles(goDir)
-	if err != nil {
-		t.Fatalf("read Go output: %v", err)
+func hermesOracleDirs(root string, tc oracleCase) (string, string) {
+	if tc.Name == "no_class_no_build" {
+		return filepath.Join(root, "go.out"), filepath.Join(root, "py.out")
 	}
-	pyFiles, err := readGeneratedCPPFiles(pyDir)
-	if err != nil {
-		t.Fatalf("read Python output: %v", err)
-	}
-	goNames := sortedMapKeys(goFiles)
-	pyNames := sortedMapKeys(pyFiles)
-	if strings.Join(goNames, "\n") != strings.Join(pyNames, "\n") {
-		t.Fatalf("generated file set differs\nGo:\n%s\n\nPython:\n%s", strings.Join(goNames, "\n"), strings.Join(pyNames, "\n"))
-	}
-	for _, name := range goNames {
-		assertDiffWEEqual(t, filepath.Join(pyDir, name), filepath.Join(goDir, name))
-	}
+	return filepath.Join(root, tc.Name, "go.out"), filepath.Join(root, tc.Name, "py.out")
 }
 
 func TestOracleCompileGo(t *testing.T) {
@@ -426,6 +444,13 @@ func hermesRMWO3OracleFixturePath() string {
 
 func assertDiffWEEqual(t *testing.T, left, right string) {
 	t.Helper()
+	if err := diffWEEqual(left, right); err != nil {
+		t.Fatal(err)
+	}
+	vv("left='%v' right='%v' diff is: ''", left, right)
+}
+
+func diffWEEqual(left, right string) error {
 	cmd := exec.Command("diff", "-w", "-E", left, right)
 	var buf bytes.Buffer
 	cmd.Stdout = &buf
@@ -435,9 +460,10 @@ func assertDiffWEEqual(t *testing.T, left, right string) {
 		if len(out) > 12000 {
 			out = out[:12000] + "\n... diff truncated ..."
 		}
-		t.Fatalf("diff -w -E %s %s failed: %v\n%s", left, right, err, out)
+		return fmt.Errorf("diff -w -E %s %s failed: %w\n%s", left, right, err, out)
 	}
 	vv("left='%v' right='%v' diff is: '%v'", left, right, buf.String())
+	return nil
 }
 
 func readOracleStatuses(t *testing.T) map[string]string {
@@ -466,15 +492,23 @@ func readOracleStatuses(t *testing.T) map[string]string {
 	return statuses
 }
 
-func compareOracleFixture(t *testing.T, fixture, target string) error {
+func compareOracleFixture(t *testing.T, fixture string, tc oracleCase) error {
 	t.Helper()
 	goDir := t.TempDir()
 	pyDir := t.TempDir()
-	if _, err := generateGoOracleFixture(fixture, goDir, target); err != nil {
+	return compareOracleFixtureAtPaths(t, oracleFixturePath(fixture), tc, goDir, pyDir, false)
+}
+
+func compareOracleFixtureAtPaths(t *testing.T, fixture string, tc oracleCase, goDir, pyDir string, diffWE bool) error {
+	t.Helper()
+	if _, err := generateGoOracleFixtureAtPath(fixture, goDir, tc); err != nil {
 		return fmt.Errorf("Go generate: %w", err)
 	}
-	if err := runPythonIvyToCPP(oracleFixturePath(fixture), pyDir, target, oracleClassName(fixture)); err != nil {
+	if err := runPythonIvyToCPP(fixture, pyDir, tc); err != nil {
 		return fmt.Errorf("Python generate: %w", err)
+	}
+	if diffWE {
+		return compareGeneratedCPPFilesDiffWE(goDir, pyDir)
 	}
 	goFiles, err := readGeneratedCPPFiles(goDir)
 	if err != nil {
@@ -487,15 +521,29 @@ func compareOracleFixture(t *testing.T, fixture, target string) error {
 	return compareGeneratedCPPFiles(goFiles, pyFiles)
 }
 
-func generateGoOracleFixture(fixture, outDir, target string) (*BatchOutput, error) {
+func generateGoOracleFixture(fixture, outDir string, tc oracleCase) (*BatchOutput, error) {
 	absFixture, err := filepath.Abs(oracleFixturePath(fixture))
 	if err != nil {
 		return nil, err
 	}
+	return generateGoOracleFixtureAtPath(absFixture, outDir, tc)
+}
+
+func generateGoOracleFixtureAtPath(absFixture, outDir string, tc oracleCase) (*BatchOutput, error) {
+	var err error
+	absFixture, err = filepath.Abs(absFixture)
+	if err != nil {
+		return nil, err
+	}
 	params := map[string]string{
-		"target": target,
-		//"classname": oracleClassName(fixture),
+		"target": tc.Target,
 		"outdir": outDir,
+	}
+	if className := tc.className(absFixture); className != "" {
+		params["classname"] = className
+	}
+	if tc.Build {
+		params["build"] = "true"
 	}
 	batch, err := CompileAndGenerateAll(absFixture, params, Config{})
 	if err != nil {
@@ -504,10 +552,17 @@ func generateGoOracleFixture(fixture, outDir, target string) (*BatchOutput, erro
 	if err := WriteBatchOutput(batch, outDir); err != nil {
 		return nil, err
 	}
+	if tc.Build {
+		for _, out := range batch.Outputs {
+			if _, err := BuildOutput(out, outDir); err != nil {
+				return nil, err
+			}
+		}
+	}
 	return batch, nil
 }
 
-func runPythonIvyToCPP(fixture, outDir, target, className string) error {
+func runPythonIvyToCPP(fixture, outDir string, tc oracleCase) error {
 	tool, err := pythonIvyToCPPPath()
 	if err != nil {
 		return err
@@ -523,11 +578,24 @@ func runPythonIvyToCPP(fixture, outDir, target, className string) error {
 	if err != nil {
 		return err
 	}
-	if className == "" {
-		args = []string{"target=" + target, "outdir=" + absOutDir, cmdFixture}
+	if tc.Build {
+		cmdDir = absOutDir
+		cmdFixture = filepath.Base(absFixture)
+		raw, err := os.ReadFile(absFixture)
+		if err != nil {
+			return err
+		}
+		if err := os.WriteFile(filepath.Join(cmdDir, cmdFixture), raw, 0o644); err != nil {
+			return err
+		}
+		args = []string{"target=" + tc.Target, "build=true"}
 	} else {
-		args = []string{"target=" + target, "classname=" + className, "outdir=" + absOutDir, cmdFixture}
+		args = []string{"target=" + tc.Target, "outdir=" + absOutDir}
 	}
+	if className := tc.className(absFixture); className != "" {
+		args = append(args, "classname="+className)
+	}
+	args = append(args, cmdFixture)
 	vv("debug runPythonIvyToCPP() calling: tool: '%v' args='%#v'", tool, args)
 	cmd := exec.Command(tool, args...)
 	cmd.Dir = cmdDir
@@ -614,6 +682,28 @@ func compareGeneratedCPPFiles(goFiles, pyFiles map[string]string) error {
 	return nil
 }
 
+func compareGeneratedCPPFilesDiffWE(goDir, pyDir string) error {
+	goFiles, err := readGeneratedCPPFiles(goDir)
+	if err != nil {
+		return fmt.Errorf("read Go output: %w", err)
+	}
+	pyFiles, err := readGeneratedCPPFiles(pyDir)
+	if err != nil {
+		return fmt.Errorf("read Python output: %w", err)
+	}
+	goNames := sortedMapKeys(goFiles)
+	pyNames := sortedMapKeys(pyFiles)
+	if strings.Join(goNames, "\n") != strings.Join(pyNames, "\n") {
+		return fmt.Errorf("generated file set differs\nGo:\n%s\n\nPython:\n%s", strings.Join(goNames, "\n"), strings.Join(pyNames, "\n"))
+	}
+	for _, name := range goNames {
+		if err := diffWEEqual(filepath.Join(pyDir, name), filepath.Join(goDir, name)); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func sortedMapKeys(m map[string]string) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {
@@ -625,7 +715,7 @@ func sortedMapKeys(m map[string]string) []string {
 
 func compileGoOracleFixture(t *testing.T, fixture, target string) error {
 	t.Helper()
-	batch, err := generateGoOracleFixture(fixture, t.TempDir(), target)
+	batch, err := generateGoOracleFixture(fixture, t.TempDir(), oracleCase{Target: target})
 	if err != nil {
 		return err
 	}
@@ -645,7 +735,7 @@ func compileGoOracleFixture(t *testing.T, fixture, target string) error {
 func compilePythonOracleFixture(t *testing.T, fixture, target string) error {
 	t.Helper()
 	dir := t.TempDir()
-	if err := runPythonIvyToCPP(oracleFixturePath(fixture), dir, target, oracleClassName(fixture)); err != nil {
+	if err := runPythonIvyToCPP(oracleFixturePath(fixture), dir, oracleCase{Target: target}); err != nil {
 		return err
 	}
 	files, err := cppSourcePaths(dir)
@@ -833,7 +923,7 @@ func readOracleTesterArgs(fixture string) ([]string, error) {
 
 func buildGoOracleExecutableForTarget(t *testing.T, fixture, target string) (string, error) {
 	t.Helper()
-	batch, err := generateGoOracleFixture(fixture, t.TempDir(), target)
+	batch, err := generateGoOracleFixture(fixture, t.TempDir(), oracleCase{Target: target})
 	if err != nil {
 		return "", err
 	}
@@ -846,7 +936,7 @@ func buildGoOracleExecutableForTarget(t *testing.T, fixture, target string) (str
 func buildPythonOracleExecutableForTarget(t *testing.T, fixture, target string) (string, error) {
 	t.Helper()
 	dir := t.TempDir()
-	if err := runPythonIvyToCPP(oracleFixturePath(fixture), dir, target, oracleClassName(fixture)); err != nil {
+	if err := runPythonIvyToCPP(oracleFixturePath(fixture), dir, oracleCase{Target: target}); err != nil {
 		return "", err
 	}
 	cpps, err := cppSourcePaths(dir)

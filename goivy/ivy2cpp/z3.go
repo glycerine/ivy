@@ -924,6 +924,38 @@ func (g *Generator) pythonTestZ3SigSymbols() []stateSymbol {
 		}
 		regular = append(regular, sym)
 	}
+	if g.Mod != nil && g.Mod.SortDestructors != nil {
+		for _, sortName := range g.Mod.SortOrder {
+			destrs, ok := g.Mod.SortDestructors.Get2(sortName)
+			if !ok {
+				continue
+			}
+			for _, destr := range destrs {
+				if destr == nil {
+					continue
+				}
+				add(stateSymbol{Name: destr.Name, Sort: destr.CSort})
+			}
+		}
+		for sortName, destrs := range g.Mod.SortDestructors.All() {
+			seenSort := false
+			for _, ordered := range g.Mod.SortOrder {
+				if ordered == sortName {
+					seenSort = true
+					break
+				}
+			}
+			if seenSort {
+				continue
+			}
+			for _, destr := range destrs {
+				if destr == nil {
+					continue
+				}
+				add(stateSymbol{Name: destr.Name, Sort: destr.CSort})
+			}
+		}
+	}
 	for _, sym := range g.allStateSymbols() {
 		add(sym)
 	}
