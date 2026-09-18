@@ -1306,7 +1306,11 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		if defConst != nil {
 			_, inAllSyms = allSyms.Get2(ConstSymKey(defConst))
 		}
-		if inAllSyms {
+		keepByName := false
+		if defConst != nil {
+			keepByName = exactPresent[defConst.Name]
+		}
+		if (keepAx(isolateNodeToExpr(c.Label)) || keepByName) && inAllSyms {
 			filteredDefs = append(filteredDefs, c)
 			if !keepAx(isolateNodeToExpr(c.Label)) {
 				for _, anc := range Ancestors(lfLabelName(c), mod.Cfg.IuCfg.ComposeCharacter) {
@@ -1356,13 +1360,8 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 			if defConst != nil {
 				_, inAllSyms = allSyms.Get2(ConstSymKey(defConst))
 			}
-			if inAllSyms {
+			if keepAx(isolateNodeToExpr(lf.Label)) && inAllSyms {
 				filteredNatDefs = append(filteredNatDefs, lf)
-				if !keepAx(isolateNodeToExpr(lf.Label)) {
-					for _, anc := range Ancestors(lfLabelName(lf), mod.Cfg.IuCfg.ComposeCharacter) {
-						retainedDefinitionDeps[anc] = true
-					}
-				}
 			}
 		}
 	}

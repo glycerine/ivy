@@ -1010,7 +1010,7 @@ isolate app = {
 	}
 }
 
-func TestCreateIsolateRetainsReferencedDefinitionOutsideSelectedExtract(t *testing.T) {
+func TestCreateIsolateDropsReferencedDefinitionOutsideSelectedExtractLikePython(t *testing.T) {
 	src := `#lang ivy1.7
 include order
 
@@ -1024,7 +1024,7 @@ isolate proto = {
 	mod.Cfg.IsolateCfg.ConeOfInfluence = false
 	mod.Cfg.IsolateCfg.FilterSymbols = false
 	mod.Cfg.IsolateCfg.CreateImports = true
-	mod.Cfg.IsolateCfg.EnforceAxioms = true
+	mod.Cfg.IsolateCfg.EnforceAxioms = false
 	mod.Cfg.IsolateCfg.AssumeInvariants = false
 	mod.Cfg.IsolateCfg.IsolateMode = "compile"
 	sig := NewSigOn(mod.Cfg.IuCfg)
@@ -1033,7 +1033,7 @@ isolate proto = {
 	}
 
 	if err := CreateIsolate("this", mod); err != nil {
-		t.Fatalf("CreateIsolate should retain referenced definitions instead of producing a dangling extract: %v", err)
+		t.Fatalf("CreateIsolate: %v", err)
 	}
 
 	var found *LabeledFormula
@@ -1047,12 +1047,8 @@ isolate proto = {
 			break
 		}
 	}
-	if found == nil {
-		t.Fatalf("CreateIsolate dropped referenced definition proto.version.succ; kept definitions are %v", mod.Definitions)
-	}
-	loc := found.GetLineno()
-	if loc.Line != 5 || loc.Reference == nil || loc.Reference.Line != 53 {
-		t.Fatalf("kept proto.version.succ location = %#v, want instantiation line 5 referring to order.ivy line 53", loc)
+	if found != nil {
+		t.Fatalf("CreateIsolate retained outside definition proto.version.succ; Python drops definitions unless their label is present or their defined name is explicitly present")
 	}
 }
 
