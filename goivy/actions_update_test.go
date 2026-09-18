@@ -246,15 +246,15 @@ func TestAssertActionUpdate(t *testing.T) {
 	}
 }
 
-func TestAssertActionIntUpdateDoesNotUseDomainInstantiatorLikePython(t *testing.T) {
-	mod := New()
-	mod.Instantiator = func(gts []Expr) *Clauses {
+func TestAssertActionIntUpdateIgnoresStaleContextInstantiatorLikePython(t *testing.T) {
+	staleInstantiator := func(gts []Expr) *Clauses {
 		return NewClauses(nil, nil, nil)
 	}
+	mod := New()
 	ctx := &UpdateContext{
 		Domain:       mod,
 		ActCfg:       NewActionsConfig(),
-		Instantiator: mod.Instantiator,
+		Instantiator: staleInstantiator,
 	}
 	assert := NewAssertAction(NewConst("p", Boolean))
 
@@ -271,7 +271,35 @@ func TestAssertActionIntUpdateDoesNotUseDomainInstantiatorLikePython(t *testing.
 		t.Fatalf("missing AssertAction EXIT trace:\n%s", out)
 	}
 	if strings.Contains(out[enterIdx:exitIdx], "XTRACE: ops.ToOpenFormula") {
-		t.Fatalf("AssertAction.action_update used domain instantiator and emitted ToOpenFormula before EXIT; Python does not:\n%s", out)
+		t.Fatalf("AssertAction.action_update used stale copied ctx.Instantiator and emitted ToOpenFormula before EXIT; Python consults the current global instantiator:\n%s", out)
+	}
+}
+
+func TestAssertActionIntUpdateUsesCurrentDomainInstantiatorLikePython(t *testing.T) {
+	mod := New()
+	mod.Instantiator = func(gts []Expr) *Clauses {
+		return NewClauses(nil, nil, nil)
+	}
+	ctx := &UpdateContext{
+		Domain: mod,
+		ActCfg: NewActionsConfig(),
+	}
+	assert := NewAssertAction(NewConst("p", Boolean))
+
+	out := captureActionUpdateStdout(t, func() {
+		_ = IntUpdate(assert, ctx)
+	})
+
+	enterIdx := strings.Index(out, "XTRACE: actions.AssertAction.action_update ENTER")
+	if enterIdx < 0 {
+		t.Fatalf("missing AssertAction ENTER trace:\n%s", out)
+	}
+	exitIdx := strings.Index(out, "XTRACE: actions.AssertAction.action_update EXIT")
+	if exitIdx < 0 {
+		t.Fatalf("missing AssertAction EXIT trace:\n%s", out)
+	}
+	if !strings.Contains(out[enterIdx:exitIdx], "XTRACE: ops.ToOpenFormula") {
+		t.Fatalf("AssertAction.action_update did not use currently installed domain instantiator like Python's lu.instantiator:\n%s", out)
 	}
 }
 

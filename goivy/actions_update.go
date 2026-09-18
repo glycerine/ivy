@@ -50,6 +50,16 @@ type UpdateContext struct {
 	Instantiator func([]Expr) *Clauses
 }
 
+func (ctx *UpdateContext) CurrentInstantiator() func([]Expr) *Clauses {
+	if ctx == nil {
+		return nil
+	}
+	if ctx.Domain != nil {
+		return ctx.Domain.Instantiator
+	}
+	return ctx.Instantiator
+}
+
 // BackgroundTheory returns the background theory (axioms) for the domain.
 func (ctx *UpdateContext) BackgroundTheory() *Clauses {
 	if ctx.Domain == nil {
@@ -318,14 +328,11 @@ func (a *LogicAssumeAction) ActionUpdate(ctx *UpdateContext) *Update {
 	// Python: clauses = formula_to_clauses_tseitin(skolemize_formula(fmla))
 	//         clauses = unfold_definitions_clauses(clauses)
 	//         clauses = Clauses(clauses.fmlas, clauses.defs, EmptyAnnotation())
-	var skInst func([]Expr) *Clauses
-	if ctx != nil {
-		skInst = ctx.Instantiator
-	}
+	skInst := ctx.CurrentInstantiator()
 	fmla = SkolemizeFormula(fmla, nil, skInst)
 	clauses := FormulaToClauses(fmla, nil)
-	if ctx != nil && ctx.Instantiator != nil {
-		clauses = UnfoldDefinitionsClauses(clauses, ctx.Instantiator)
+	if skInst != nil {
+		clauses = UnfoldDefinitionsClauses(clauses, skInst)
 	}
 	clauses = NewClauses(clauses.Fmlas, clauses.Defs, EmptyAnnotation{})
 	return &Update{
@@ -382,7 +389,7 @@ func (a *LogicAssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 	// Only assertions that pass both filters get dual formula treatment
 	// Python: cl = formula_to_clauses(dual_formula(fmla))
 	//         cl = Clauses(cl.fmlas, cl.defs, EmptyAnnotation())
-	dual := DualFormula(fmla, nil, nil)
+	dual := DualFormula(fmla, nil, ctx.CurrentInstantiator())
 	cl := FormulaToClauses(dual, nil)
 	cl = NewClauses(cl.Fmlas, cl.Defs, EmptyAnnotation{})
 	return &Update{
