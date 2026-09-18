@@ -447,7 +447,7 @@ func assertDiffWEEqual(t *testing.T, left, right string) {
 	if err := diffWEEqual(left, right); err != nil {
 		t.Fatal(err)
 	}
-	vv("left='%v' right='%v' diff is: ''", left, right)
+	//vv("left='%v' right='%v' diff is: ''", left, right)
 }
 
 func diffWEEqual(left, right string) error {
@@ -462,7 +462,7 @@ func diffWEEqual(left, right string) error {
 		}
 		return fmt.Errorf("diff -w -E %s %s failed: %w\n%s", left, right, err, out)
 	}
-	vv("left='%v' right='%v' diff is: '%v'", left, right, buf.String())
+	//vv("left='%v' right='%v' diff is: '%v'", left, right, buf.String())
 	return nil
 }
 
@@ -596,7 +596,7 @@ func runPythonIvyToCPP(fixture, outDir string, tc oracleCase) error {
 		args = append(args, "classname="+className)
 	}
 	args = append(args, cmdFixture)
-	vv("debug runPythonIvyToCPP() calling: tool: '%v' args='%#v'", tool, args)
+	//vv("debug runPythonIvyToCPP() calling: tool: '%v' args='%#v'", tool, args)
 	cmd := exec.Command(tool, args...)
 	cmd.Dir = cmdDir
 	cmd.Env = append(os.Environ(), "PYTHONHASHSEED=0")
@@ -626,12 +626,12 @@ func pythonIvyToCPPPath() (string, error) {
 			continue
 		}
 		if _, err := os.Stat(candidate); err == nil {
-			vv("using candidate = '%v'", candidate)
+			//vv("using candidate = '%v'", candidate)
 			return candidate, nil
 		}
 	}
 	if path, err := exec.LookPath("ivy_to_cpp"); err == nil {
-		vv("using path = '%v'", path)
+		//vv("using path = '%v'", path)
 		return path, nil
 	}
 	return "", fmt.Errorf("Python ivy_to_cpp not found; set IVY_TO_CPP")
