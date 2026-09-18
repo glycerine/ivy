@@ -382,13 +382,7 @@ func (a *LogicAssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 	// Only assertions that pass both filters get dual formula treatment
 	// Python: cl = formula_to_clauses(dual_formula(fmla))
 	//         cl = Clauses(cl.fmlas, cl.defs, EmptyAnnotation())
-	// Python's dual_formula consults lu.instantiator (a module-level global);
-	// Go's literal port reads it from ctx.Instantiator (set from Domain.Instantiator).
-	var dualInst func([]Expr) *Clauses
-	if ctx != nil {
-		dualInst = ctx.Instantiator
-	}
-	dual := DualFormula(fmla, nil, dualInst)
+	dual := DualFormula(fmla, nil, nil)
 	cl := FormulaToClauses(dual, nil)
 	cl = NewClauses(cl.Fmlas, cl.Defs, EmptyAnnotation{})
 	return &Update{
