@@ -91,6 +91,21 @@ func TestLocationStringWithReference(t *testing.T) {
 	}
 }
 
+func TestLocationFileLineKeyIncludesReferenceLikePythonTupleEquality(t *testing.T) {
+	outer := Location{Filename: "inst.ivy", Line: 50}
+	loc1 := outer
+	loc1.Reference = &Location{Filename: "orig.ivy", Line: 10}
+	loc2 := outer
+	loc2.Reference = &Location{Filename: "orig.ivy", Line: 11}
+
+	if loc1.FileLineKey() == loc2.FileLineKey() {
+		t.Fatalf("FileLineKey should distinguish reference chains: %q", loc1.FileLineKey())
+	}
+	if got, want := loc1.FileLineKey(), "inst.ivy:50@orig.ivy:10"; got != want {
+		t.Fatalf("FileLineKey = %q, want %q", got, want)
+	}
+}
+
 // TestCopyAttributesAstRefUsesLinenoAddRef verifies that CopyAttributesAstRef
 // wraps lineno via LinenoAddRef when referenceLineno is set.
 func TestCopyAttributesAstRefUsesLinenoAddRef(t *testing.T) {

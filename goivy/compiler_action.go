@@ -262,16 +262,16 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 			// Python: compile_assert_action compiles args[0] as formula, args[1] as proof
 			if len(n.Terms) >= 1 {
 				if len(n.Terms) >= 2 {
-					return c.CompileAssertFormulaWithProof(n.Terms[0], n.Terms[1])
+					return c.compileAssertFormulaWithProofAt(n.Terms[0], n.Terms[1], node.GetLineno())
 				}
-				return c.CompileAssertFormula(n.Terms[0])
+				return c.compileAssertFormulaAt(n.Terms[0], node.GetLineno())
 			}
 			return nil, fmt.Errorf("assert needs a formula")
 
 		case "assume":
 			// B2-R1: Delegate to CompileAssumeFormula which uses ExprContext + Extract
 			if len(n.Terms) >= 1 {
-				return c.CompileAssumeFormula(n.Terms[0])
+				return c.compileAssumeFormulaAt(n.Terms[0], node.GetLineno())
 			}
 			return nil, fmt.Errorf("assume needs a formula")
 
@@ -406,9 +406,9 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		// Python: compile_assert_action — args[0] is the formula, args[1] is optional proof
 		if len(n.Elems) >= 1 {
 			if len(n.Elems) >= 2 {
-				return c.CompileAssertFormulaWithProof(n.Elems[0], n.Elems[1])
+				return c.compileAssertFormulaWithProofAt(n.Elems[0], n.Elems[1], n.GetLineno())
 			}
-			return c.CompileAssertFormula(n.Elems[0])
+			return c.compileAssertFormulaAt(n.Elems[0], n.GetLineno())
 		}
 		return nil, fmt.Errorf("assert needs a formula")
 
@@ -416,7 +416,7 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Python: compile_assert_action (same handler for both assert and assume)
 		if len(n.Elems) >= 1 {
-			return c.CompileAssumeFormula(n.Elems[0])
+			return c.compileAssumeFormulaAt(n.Elems[0], n.GetLineno())
 		}
 		return nil, fmt.Errorf("assume needs a formula")
 
@@ -425,9 +425,9 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		// Python: RequiresAction inherits compile_assert_action from AssertAction
 		if len(n.Elems) >= 1 {
 			if len(n.Elems) >= 2 {
-				return c.CompileRequiresFormulaWithProof(n.Elems[0], n.Elems[1])
+				return c.compileRequiresFormulaWithProofAt(n.Elems[0], n.Elems[1], n.GetLineno())
 			}
-			return c.CompileRequiresFormula(n.Elems[0])
+			return c.compileRequiresFormulaAt(n.Elems[0], n.GetLineno())
 		}
 		return nil, fmt.Errorf("require needs a formula")
 
@@ -436,9 +436,9 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		// Python: EnsuresAction inherits compile_assert_action from AssertAction
 		if len(n.Elems) >= 1 {
 			if len(n.Elems) >= 2 {
-				return c.CompileEnsuresFormulaWithProof(n.Elems[0], n.Elems[1])
+				return c.compileEnsuresFormulaWithProofAt(n.Elems[0], n.Elems[1], n.GetLineno())
 			}
-			return c.CompileEnsuresFormula(n.Elems[0])
+			return c.compileEnsuresFormulaAt(n.Elems[0], n.GetLineno())
 		}
 		return nil, fmt.Errorf("ensure needs a formula")
 
@@ -447,9 +447,9 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		// Python: SubgoalAction inherits compile_assert_action from AssertAction
 		if len(n.Elems) >= 1 {
 			if len(n.Elems) >= 2 {
-				return c.CompileSubgoalFormulaWithProof(n.Elems[0], n.Elems[1])
+				return c.compileSubgoalFormulaWithProofAt(n.Elems[0], n.Elems[1], n.GetLineno())
 			}
-			return c.CompileSubgoalFormula(n.Elems[0])
+			return c.compileSubgoalFormulaAt(n.Elems[0], n.GetLineno())
 		}
 		return nil, fmt.Errorf("subgoal needs a formula")
 
@@ -1457,11 +1457,11 @@ type assertLikeResult struct {
 
 // compileAssertLikeFormula compiles a formula node for any assert-like action type.
 // This is the shared logic from Python's compile_assert_action (ivy_compiler.py:781-797).
-func (c *Compiler) compileAssertLikeFormula(node Node, errLabel string) (*assertLikeResult, error) {
+func (c *Compiler) compileAssertLikeFormulaAt(node Node, errLabel string, actionLoc Location) (*assertLikeResult, error) {
 	// R6: Create ExprContext
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
-	loc := node.GetLineno()
+	loc := actionLoc
 	c.ExprCtx = &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
 
 	// Python: if isinstance(self.args[0], LabeledFormula): cond = self.args[0].compile()
@@ -1505,15 +1505,19 @@ func (c *Compiler) compileAssertLikeFormula(node Node, errLabel string) (*assert
 // CompileAssertFormula compiles an assert from a formula AST node.
 // Python: compile_assert_action (ivy_compiler.py:781-797)
 func (c *Compiler) CompileAssertFormula(node Node) (ActionsAction, error) {
+	return c.compileAssertFormulaAt(node, node.GetLineno())
+}
+
+func (c *Compiler) compileAssertFormulaAt(node Node, loc Location) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
-	r, err := c.compileAssertLikeFormula(node, "Assert")
+	r, err := c.compileAssertLikeFormulaAt(node, "Assert", loc)
 	if err != nil {
 		return nil, err
 	}
 	res := NewAssertAction(r.cond)
-	res.LF = r.compiledLF
+	res.SetLF(r.compiledLF)
 	res.Unprovable = r.unprovable
-	res.SetLineno(node.GetLineno())
+	res.SetLineno(loc)
 	// Python: ctx.code.append(asrt); res = ctx.extract()
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
@@ -1524,8 +1528,12 @@ func (c *Compiler) CompileAssertFormula(node Node) (ActionsAction, error) {
 }
 
 func (c *Compiler) CompileAssertFormulaWithProof(node Node, proof Node) (ActionsAction, error) {
+	return c.compileAssertFormulaWithProofAt(node, proof, node.GetLineno())
+}
+
+func (c *Compiler) compileAssertFormulaWithProofAt(node Node, proof Node, loc Location) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
-	r, err := c.compileAssertLikeFormula(node, "Assert")
+	r, err := c.compileAssertLikeFormulaAt(node, "Assert", loc)
 	if err != nil {
 		return nil, err
 	}
@@ -1534,10 +1542,10 @@ func (c *Compiler) CompileAssertFormulaWithProof(node Node, proof Node) (Actions
 		return nil, err
 	}
 	res := NewAssertAction(r.cond)
-	res.LF = r.compiledLF
+	res.SetLF(r.compiledLF)
 	res.Unprovable = r.unprovable
 	res.Proof = wrappedProof
-	res.SetLineno(node.GetLineno())
+	res.SetLineno(loc)
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
 	if act, ok := extracted.(ActionsAction); ok {
@@ -1549,15 +1557,19 @@ func (c *Compiler) CompileAssertFormulaWithProof(node Node, proof Node) (Actions
 // CompileRequiresFormula compiles a require (precondition) from a formula AST node.
 // Python: RequiresAction inherits compile_assert_action; self.clone() preserves type.
 func (c *Compiler) CompileRequiresFormula(node Node) (ActionsAction, error) {
+	return c.compileRequiresFormulaAt(node, node.GetLineno())
+}
+
+func (c *Compiler) compileRequiresFormulaAt(node Node, loc Location) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
-	r, err := c.compileAssertLikeFormula(node, "Requires")
+	r, err := c.compileAssertLikeFormulaAt(node, "Requires", loc)
 	if err != nil {
 		return nil, err
 	}
 	res := NewRequiresAction(r.cond)
-	res.LF = r.compiledLF
+	res.SetLF(r.compiledLF)
 	res.Unprovable = r.unprovable
-	res.SetLineno(node.GetLineno())
+	res.SetLineno(loc)
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
 	if act, ok := extracted.(ActionsAction); ok {
@@ -1567,8 +1579,12 @@ func (c *Compiler) CompileRequiresFormula(node Node) (ActionsAction, error) {
 }
 
 func (c *Compiler) CompileRequiresFormulaWithProof(node Node, proof Node) (ActionsAction, error) {
+	return c.compileRequiresFormulaWithProofAt(node, proof, node.GetLineno())
+}
+
+func (c *Compiler) compileRequiresFormulaWithProofAt(node Node, proof Node, loc Location) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
-	r, err := c.compileAssertLikeFormula(node, "Requires")
+	r, err := c.compileAssertLikeFormulaAt(node, "Requires", loc)
 	if err != nil {
 		return nil, err
 	}
@@ -1577,10 +1593,10 @@ func (c *Compiler) CompileRequiresFormulaWithProof(node Node, proof Node) (Actio
 		return nil, err
 	}
 	res := NewRequiresAction(r.cond)
-	res.LF = r.compiledLF
+	res.SetLF(r.compiledLF)
 	res.Unprovable = r.unprovable
 	res.Proof = wrappedProof
-	res.SetLineno(node.GetLineno())
+	res.SetLineno(loc)
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
 	if act, ok := extracted.(ActionsAction); ok {
@@ -1592,15 +1608,19 @@ func (c *Compiler) CompileRequiresFormulaWithProof(node Node, proof Node) (Actio
 // CompileEnsuresFormula compiles an ensure (postcondition) from a formula AST node.
 // Python: EnsuresAction inherits compile_assert_action; self.clone() preserves type.
 func (c *Compiler) CompileEnsuresFormula(node Node) (ActionsAction, error) {
+	return c.compileEnsuresFormulaAt(node, node.GetLineno())
+}
+
+func (c *Compiler) compileEnsuresFormulaAt(node Node, loc Location) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
-	r, err := c.compileAssertLikeFormula(node, "Ensures")
+	r, err := c.compileAssertLikeFormulaAt(node, "Ensures", loc)
 	if err != nil {
 		return nil, err
 	}
 	res := NewEnsuresAction(r.cond)
-	res.LF = r.compiledLF
+	res.SetLF(r.compiledLF)
 	res.Unprovable = r.unprovable
-	res.SetLineno(node.GetLineno())
+	res.SetLineno(loc)
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
 	if act, ok := extracted.(ActionsAction); ok {
@@ -1610,8 +1630,12 @@ func (c *Compiler) CompileEnsuresFormula(node Node) (ActionsAction, error) {
 }
 
 func (c *Compiler) CompileEnsuresFormulaWithProof(node Node, proof Node) (ActionsAction, error) {
+	return c.compileEnsuresFormulaWithProofAt(node, proof, node.GetLineno())
+}
+
+func (c *Compiler) compileEnsuresFormulaWithProofAt(node Node, proof Node, loc Location) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
-	r, err := c.compileAssertLikeFormula(node, "Ensures")
+	r, err := c.compileAssertLikeFormulaAt(node, "Ensures", loc)
 	if err != nil {
 		return nil, err
 	}
@@ -1620,10 +1644,10 @@ func (c *Compiler) CompileEnsuresFormulaWithProof(node Node, proof Node) (Action
 		return nil, err
 	}
 	res := NewEnsuresAction(r.cond)
-	res.LF = r.compiledLF
+	res.SetLF(r.compiledLF)
 	res.Unprovable = r.unprovable
 	res.Proof = wrappedProof
-	res.SetLineno(node.GetLineno())
+	res.SetLineno(loc)
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
 	if act, ok := extracted.(ActionsAction); ok {
@@ -1635,15 +1659,19 @@ func (c *Compiler) CompileEnsuresFormulaWithProof(node Node, proof Node) (Action
 // CompileSubgoalFormula compiles a subgoal assertion from a formula AST node.
 // Python: SubgoalAction inherits compile_assert_action; self.clone() preserves type+kind.
 func (c *Compiler) CompileSubgoalFormula(node Node) (ActionsAction, error) {
+	return c.compileSubgoalFormulaAt(node, node.GetLineno())
+}
+
+func (c *Compiler) compileSubgoalFormulaAt(node Node, loc Location) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
-	r, err := c.compileAssertLikeFormula(node, "Subgoal")
+	r, err := c.compileAssertLikeFormulaAt(node, "Subgoal", loc)
 	if err != nil {
 		return nil, err
 	}
 	res := NewSubgoalAction(r.cond)
-	res.LF = r.compiledLF
+	res.SetLF(r.compiledLF)
 	res.Unprovable = r.unprovable
-	res.SetLineno(node.GetLineno())
+	res.SetLineno(loc)
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
 	if act, ok := extracted.(ActionsAction); ok {
@@ -1653,8 +1681,12 @@ func (c *Compiler) CompileSubgoalFormula(node Node) (ActionsAction, error) {
 }
 
 func (c *Compiler) CompileSubgoalFormulaWithProof(node Node, proof Node) (ActionsAction, error) {
+	return c.compileSubgoalFormulaWithProofAt(node, proof, node.GetLineno())
+}
+
+func (c *Compiler) compileSubgoalFormulaWithProofAt(node Node, proof Node, loc Location) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
-	r, err := c.compileAssertLikeFormula(node, "Subgoal")
+	r, err := c.compileAssertLikeFormulaAt(node, "Subgoal", loc)
 	if err != nil {
 		return nil, err
 	}
@@ -1663,10 +1695,10 @@ func (c *Compiler) CompileSubgoalFormulaWithProof(node Node, proof Node) (Action
 		return nil, err
 	}
 	res := NewSubgoalAction(r.cond)
-	res.LF = r.compiledLF
+	res.SetLF(r.compiledLF)
 	res.Unprovable = r.unprovable
 	res.Proof = wrappedProof
-	res.SetLineno(node.GetLineno())
+	res.SetLineno(loc)
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
 	if act, ok := extracted.(ActionsAction); ok {
@@ -1678,19 +1710,23 @@ func (c *Compiler) CompileSubgoalFormulaWithProof(node Node, proof Node) (Action
 // CompileAssumeFormula compiles an assume from a formula AST node.
 // Python: AssumeAction.cmpl = compile_assert_action (same as assert)
 func (c *Compiler) CompileAssumeFormula(node Node) (ActionsAction, error) {
+	return c.compileAssumeFormulaAt(node, node.GetLineno())
+}
+
+func (c *Compiler) compileAssumeFormulaAt(node Node, loc Location) (ActionsAction, error) {
 	// sadly this will false alarm:
 	//xtracer.Trace("compiler.compile_assume_action ENTER")
 	// Since python uses the exact same code for both, (ivy_compiler.py:804-805);
 	// so we have to xtrace 'assert' here too.
 	xtracer.Trace("compiler.compile_assert_action ENTER")
-	r, err := c.compileAssertLikeFormula(node, "Assume")
+	r, err := c.compileAssertLikeFormulaAt(node, "Assume", loc)
 	if err != nil {
 		return nil, err
 	}
 	res := NewAssumeAction(r.cond)
-	res.LF = r.compiledLF
+	res.SetLF(r.compiledLF)
 	res.Unprovable = r.unprovable
-	res.SetLineno(node.GetLineno())
+	res.SetLineno(loc)
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
 	if act, ok := extracted.(ActionsAction); ok {

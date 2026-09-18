@@ -450,6 +450,29 @@ func TestSortifyAssertActionPreservesLabeledFormulaLikePython(t *testing.T) {
 	}
 }
 
+func TestCompileAssertActionPreservesActionLinenoLikePython(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+	c.Sig.Symbols.Set("p", &SymbolEntry{Name: "p", Sort: Boolean})
+
+	lf := cfg.NewLabeledFormula(cfg.NewAtom("asrt"), cfg.NewAtom("p"))
+	lf.SetLineno(Location{Filename: "formula.ivy", Line: 20})
+	inv := cfg.NewAssertAction(lf)
+	inv.SetLineno(Location{Filename: "action.ivy", Line: 10})
+
+	compiled, err := c.SortifyWithInference(inv)
+	if err != nil {
+		t.Fatalf("SortifyWithInference(assert LF) failed: %v", err)
+	}
+	act, ok := compiled.(*LogicAssertAction)
+	if !ok {
+		t.Fatalf("compiled assert = %T, want *LogicAssertAction", compiled)
+	}
+	if got := act.GetLineno().FileLineKey(); got != "action.ivy:10" {
+		t.Fatalf("compiled assert lineno = %q, want action.ivy:10", got)
+	}
+}
+
 func TestCompileWhilePreservesRankingWrapperLikePython(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()

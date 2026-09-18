@@ -168,6 +168,9 @@ func (a *LogicAssumeAction) SetLF(lf *LabeledFormula) {
 		a.Formula = fmla
 	}
 	a.Unprovable = lf.Unprovable
+	if !a.HasLineno() && lf.HasLocSet() {
+		a.SetLineno(lf.GetLineno())
+	}
 }
 
 func (a *LogicAssumeAction) Name() string       { return "assume" }
@@ -225,6 +228,9 @@ func (a *LogicAssertAction) SetLF(lf *LabeledFormula) {
 		a.Formula = fmla
 	}
 	a.Unprovable = lf.Unprovable
+	if !a.HasLineno() && lf.HasLocSet() {
+		a.SetLineno(lf.GetLineno())
+	}
 }
 
 func (a *LogicAssertAction) Name() string { return "assert" }
@@ -1726,6 +1732,9 @@ func (a *LogicSubgoalAction) ActionClone(args []Expr) ActionsAction {
 	r := &LogicSubgoalAction{
 		LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable},
 		SubgoalKind:       a.SubgoalKind,
+	}
+	if r.LF != nil {
+		r.Unprovable = r.LF.Unprovable
 	}
 	if len(args) > 1 {
 		r.Proof = args[1]
