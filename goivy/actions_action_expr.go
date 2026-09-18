@@ -117,6 +117,7 @@ func (a *LogicAssumeAction) Clone(args []Node) Node {
 		if lf, ok := args[0].(*LabeledFormula); ok {
 			r.Formula = lf.Formula.(Expr)
 			r.LF = lf
+			r.Unprovable = lf.Unprovable
 		} else {
 			r.Formula = args[0].(Expr)
 		}
@@ -155,6 +156,7 @@ func (a *LogicAssertAction) Clone(args []Node) Node {
 		if lf, ok := args[0].(*LabeledFormula); ok {
 			r.Formula = lf.Formula.(Expr)
 			r.LF = lf
+			r.Unprovable = lf.Unprovable
 		} else {
 			r.Formula = args[0].(Expr)
 		}
@@ -196,6 +198,7 @@ func (a *LogicRequiresAction) Clone(args []Node) Node {
 		if lf, ok := args[0].(*LabeledFormula); ok {
 			r.Formula = lf.Formula.(Expr)
 			r.LF = lf
+			r.Unprovable = lf.Unprovable
 		} else {
 			r.Formula = args[0].(Expr)
 		}
@@ -237,6 +240,7 @@ func (a *LogicEnsuresAction) Clone(args []Node) Node {
 		if lf, ok := args[0].(*LabeledFormula); ok {
 			r.Formula = lf.Formula.(Expr)
 			r.LF = lf
+			r.Unprovable = lf.Unprovable
 		} else {
 			r.Formula = args[0].(Expr)
 		}

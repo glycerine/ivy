@@ -158,13 +158,26 @@ func NewAssumeAction(fmla Expr) *LogicAssumeAction {
 // LabeledFormula on assert/assume actions. Args()/Clone() in action_expr.go
 // include LF as a first-class child for recursive tree-walking.
 
-func (a *LogicAssumeAction) GetLF() *LabeledFormula   { return a.LF }
-func (a *LogicAssumeAction) SetLF(lf *LabeledFormula) { a.LF = lf }
+func (a *LogicAssumeAction) GetLF() *LabeledFormula { return a.LF }
+func (a *LogicAssumeAction) SetLF(lf *LabeledFormula) {
+	a.LF = lf
+	if lf == nil {
+		return
+	}
+	if fmla, ok := lf.Formula.(Expr); ok {
+		a.Formula = fmla
+	}
+	a.Unprovable = lf.Unprovable
+}
 
 func (a *LogicAssumeAction) Name() string       { return "assume" }
 func (a *LogicAssumeAction) ActionArgs() []Expr { return []Expr{a.Formula} }
 func (a *LogicAssumeAction) ActionClone(args []Expr) ActionsAction {
-	return &LogicAssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Unprovable: a.Unprovable}
+	r := &LogicAssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Unprovable: a.Unprovable}
+	if r.LF != nil {
+		r.Unprovable = r.LF.Unprovable
+	}
+	return r
 }
 func (a *LogicAssumeAction) String() string {
 	return "assume " + actionFormulaString(a.LF, a.Formula)
@@ -202,8 +215,17 @@ func NewAssertAction(fmla Expr, proof ...Expr) *LogicAssertAction {
 	return a
 }
 
-func (a *LogicAssertAction) GetLF() *LabeledFormula   { return a.LF }
-func (a *LogicAssertAction) SetLF(lf *LabeledFormula) { a.LF = lf }
+func (a *LogicAssertAction) GetLF() *LabeledFormula { return a.LF }
+func (a *LogicAssertAction) SetLF(lf *LabeledFormula) {
+	a.LF = lf
+	if lf == nil {
+		return
+	}
+	if fmla, ok := lf.Formula.(Expr); ok {
+		a.Formula = fmla
+	}
+	a.Unprovable = lf.Unprovable
+}
 
 func (a *LogicAssertAction) Name() string { return "assert" }
 func (a *LogicAssertAction) ActionArgs() []Expr {
@@ -214,6 +236,9 @@ func (a *LogicAssertAction) ActionArgs() []Expr {
 }
 func (a *LogicAssertAction) ActionClone(args []Expr) ActionsAction {
 	r := &LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}
+	if r.LF != nil {
+		r.Unprovable = r.LF.Unprovable
+	}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
@@ -245,7 +270,10 @@ func NewRequiresAction(fmla Expr) *LogicRequiresAction {
 // Go: no Name() override here; inherited AssertAction.Name() returns "assert".
 func (a *LogicRequiresAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 func (a *LogicRequiresAction) ActionClone(args []Expr) ActionsAction {
-	r := &LogicRequiresAction{LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind}}
+	r := &LogicRequiresAction{LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}}
+	if r.LF != nil {
+		r.Unprovable = r.LF.Unprovable
+	}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
@@ -268,7 +296,10 @@ func NewEnsuresAction(fmla Expr) *LogicEnsuresAction {
 // Go: no Name() override here; inherited AssertAction.Name() returns "assert".
 func (a *LogicEnsuresAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 func (a *LogicEnsuresAction) ActionClone(args []Expr) ActionsAction {
-	r := &LogicEnsuresAction{LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind}}
+	r := &LogicEnsuresAction{LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}}
+	if r.LF != nil {
+		r.Unprovable = r.LF.Unprovable
+	}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}

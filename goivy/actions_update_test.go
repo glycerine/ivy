@@ -303,6 +303,27 @@ func TestAssertActionIntUpdateUsesCurrentDomainInstantiatorLikePython(t *testing
 	}
 }
 
+func TestAssertActionUpdateUsesLabeledFormulaUnprovableLikePython(t *testing.T) {
+	cfg := NewAstConfig()
+	p := NewConst("p", Boolean)
+	lf := cfg.NewLabeledFormula(nil, p)
+	lf.Unprovable = true
+
+	assert := NewAssertAction(p)
+	assert.SetLF(lf)
+
+	ctx := testCtx()
+	ctx.CheckUnprovable = false
+
+	u := assert.ActionUpdate(ctx)
+	if !u.TR.IsTrue() {
+		t.Fatal("normal unprovable-filter skip should leave TR true")
+	}
+	if !u.Pre.IsFalse() {
+		t.Fatalf("normal unprovable-filter skip should leave Pre false, got %s", u.Pre)
+	}
+}
+
 // --- AssignAction ---
 
 func TestAssignActionRejectsUnboundRHSVariablesLikePython(t *testing.T) {

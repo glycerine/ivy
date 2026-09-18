@@ -317,14 +317,21 @@ func (a *LogicAssumeAction) ActionUpdate(ctx *UpdateContext) *Update {
 	defer xtracer.Trace("actions.AssumeAction.action_update EXIT")
 	// Python: if isinstance(fmla, LabeledFormula) and fmla.unprovable: return skip
 	// Python returns true_clauses/false_clauses directly, not formula_to_clauses.
-	if a.Unprovable {
+	fmla := a.Formula
+	unprovable := a.Unprovable
+	if a.LF != nil {
+		if lfFmla, ok := a.LF.Formula.(Expr); ok {
+			fmla = lfFmla
+		}
+		unprovable = a.LF.Unprovable
+	}
+	if unprovable {
 		return &Update{
 			Modified: []*Const{},
 			TR:       TrueClauses(EmptyAnnotation{}),
 			Pre:      FalseClauses(EmptyAnnotation{}),
 		}
 	}
-	fmla := a.Formula
 	// Python: clauses = formula_to_clauses_tseitin(skolemize_formula(fmla))
 	//         clauses = unfold_definitions_clauses(clauses)
 	//         clauses = Clauses(clauses.fmlas, clauses.defs, EmptyAnnotation())
@@ -353,6 +360,12 @@ func (a *LogicAssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 	defer xtracer.Trace("actions.AssertAction.action_update EXIT")
 	fmla := a.Formula
 	unprovable := a.Unprovable
+	if a.LF != nil {
+		if lfFmla, ok := a.LF.Formula.(Expr); ok {
+			fmla = lfFmla
+		}
+		unprovable = a.LF.Unprovable
+	}
 
 	// Python: if check_unprovable.get() != unprovable: skip
 	// Python returns ([], true_clauses(annot=EmptyAnnotation()), false_clauses(annot=EmptyAnnotation()))
