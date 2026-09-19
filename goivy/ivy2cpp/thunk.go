@@ -114,16 +114,17 @@ func (g *Generator) emitThunkStruct(w *cppWriter, name, thunkClass, domT, rangeT
 		w.line("int __ident;")
 	}
 	// Env fields
-	for _, sym := range envSyms {
-		w.linef("%s;", g.cppStorageDecl(sym.Name, sym.CSort, className))
+	for i, sym := range envSyms {
+		w.linef("%s;", g.cppStorageDecl(thunkEnvFieldName(i), sym.CSort, className))
 	}
 	// Constructor: __thunk__N(<envDecls>) : env1(env1), env2(env2), ... {}
 	if len(envSyms) > 0 {
 		decls := make([]string, len(envSyms))
 		inits := make([]string, len(envSyms))
 		for i, sym := range envSyms {
-			decls[i] = g.cppStorageDecl(sym.Name, sym.CSort, className)
-			inits[i] = fmt.Sprintf("%s(%s)", varName(sym.Name), varName(sym.Name))
+			fieldName := thunkEnvFieldName(i)
+			decls[i] = g.cppStorageDecl(fieldName, sym.CSort, className)
+			inits[i] = fmt.Sprintf("%s(%s)", fieldName, fieldName)
 		}
 		w.open(fmt.Sprintf("%s(%s) : %s {", name, strings.Join(decls, ", "), strings.Join(inits, ", ")))
 	} else {
@@ -136,7 +137,7 @@ func (g *Generator) emitThunkStruct(w *cppWriter, name, thunkClass, domT, rangeT
 	w.close("")
 	// operator()(const D &arg) returns R
 	w.open(fmt.Sprintf("%s operator()(const %s &arg) {", rangeT, domT))
-	body, err := g.emitThunkBody(vs, expr)
+	body, err := g.emitThunkBody(vs, expr, envSyms)
 	if err != nil {
 		g.unsupported(w, "unsupported thunk body: %s", err.Error())
 		w.close("")
@@ -155,12 +156,32 @@ func (g *Generator) emitThunkStruct(w *cppWriter, name, thunkClass, domT, rangeT
 // variable v in vs substituted by `arg` (single-var case) or
 // `arg.arg<idx>` (multi-var case). Mirrors Python make_thunk's
 // substitute_ast at ivy_to_cpp.py:533-535.
-func (g *Generator) emitThunkBody(vs []*goivy.LogicVariable, expr goivy.Expr) (string, error) {
+func (g *Generator) emitThunkBody(vs []*goivy.LogicVariable, expr goivy.Expr, envSyms []*goivy.Const) (string, error) {
 	sub, err := g.thunkSubstituteArgs(vs, expr)
 	if err != nil {
 		return "", err
 	}
+	sub = g.thunkSubstituteEnvFields(sub, envSyms)
 	return g.emitExpr(sub)
+}
+
+func thunkEnvFieldName(i int) string {
+	return fmt.Sprintf("ivy_thunk_env_%d", i)
+}
+
+func thunkEnvFieldRef(i int) string {
+	return "this->" + thunkEnvFieldName(i)
+}
+
+func (g *Generator) thunkSubstituteEnvFields(expr goivy.Expr, envSyms []*goivy.Const) goivy.Expr {
+	if len(envSyms) == 0 || expr == nil {
+		return expr
+	}
+	rename := make(map[goivy.NodeKey]*goivy.Const, len(envSyms))
+	for i, sym := range envSyms {
+		rename[goivy.Key(sym)] = goivy.NewConst(thunkEnvFieldRef(i), sym.CSort)
+	}
+	return goivy.RenameAST(expr, rename)
 }
 
 func (g *Generator) thunkSubstituteArgs(vs []*goivy.LogicVariable, expr goivy.Expr) (goivy.Expr, error) {
@@ -333,6 +354,7 @@ func (g *Generator) emitThunkToZ3(w *cppWriter, name string, vs []*goivy.LogicVa
 		return
 	}
 	if len(goivy.VariablesAST(expr)) == 0 && g.allNumericOrEnumeratedConstants(goivy.UsedSymbolsAst(expr)) {
+		expr = g.thunkSubstituteEnvFields(expr, envSyms)
 		code, err := g.emitExpr(expr)
 		if err != nil {
 			w.line("return g.ctx.bool_val(true);")
@@ -414,7 +436,7 @@ func (g *Generator) emitThunkToZ3(w *cppWriter, name string, vs []*goivy.LogicVa
 			prefix: "g.",
 			gen:    "g",
 			sname:  locv + ".c_str()",
-			cvalue: varName(sym.Name),
+			cvalue: thunkEnvFieldRef(i),
 			add: func(w *cppWriter, text string) {
 				w.linef("g.slvr.add(%s);", text)
 			},

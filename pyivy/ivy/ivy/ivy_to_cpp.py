@@ -120,14 +120,14 @@ def indent_code(header,code):
     for line in code.split('\n'):
         header.append((indent_level * 4 + get_indent(line) - indent) * ' ' + line.strip() + '\n')
 
-def sym_decl(sym,c_type = None,skip_params=0,classname=None,isref=False,ival=None):
+def sym_decl(sym,c_type = None,skip_params=0,classname=None,isref=False,ival=None,cname=None):
     name, sort = sym.name,sym.sort
     dims = []
     the_c_type,dims = ctype_function(sort,skip_params=skip_params,classname=classname)
     res = (c_type or the_c_type) + ' '
     if isref:
         res += '(&'
-    res += memname(sym) if skip_params else varname(sym.name)
+    res += cname if cname is not None else (memname(sym) if skip_params else varname(sym.name))
     if isref:
         res += ')'
     for d in dims:
@@ -136,10 +136,10 @@ def sym_decl(sym,c_type = None,skip_params=0,classname=None,isref=False,ival=Non
         res += ' = '+ival;
     return res
     
-def declare_symbol(header,sym,c_type = None,skip_params=0,classname=None,isref=False,ival=None):
+def declare_symbol(header,sym,c_type = None,skip_params=0,classname=None,isref=False,ival=None,cname=None):
     if slv.solver_name(sym) == None:
         return # skip interpreted symbols
-    header.append('    '+sym_decl(sym,c_type,skip_params,classname=classname,isref=isref,ival=ival)+';\n')
+    header.append('    '+sym_decl(sym,c_type,skip_params,classname=classname,isref=isref,ival=ival,cname=cname)+';\n')
 
 special_names = {
     '<' : '__lt',
@@ -514,8 +514,13 @@ def make_thunk(impl,vs,expr):
     gather_referenced_symbols(expr,syms)
     env = [sym for sym in syms if sym not in is_derived]
     funs = [sym for sym in syms if sym in is_derived]
+    env_field_names = dict((sym,'ivy_thunk_env_{}'.format(idx)) for idx,sym in enumerate(env))
+    def env_field_ref(sym):
+        return 'this->' + env_field_names[sym]
+    def env_field_symbol(sym):
+        return il.Symbol(env_field_ref(sym),sym.sort)
     for sym in env:
-        declare_symbol(impl,sym,classname=the_classname)
+        declare_symbol(impl,sym,classname=the_classname,cname=env_field_names[sym])
     for fun in funs:
         ldf = is_derived[fun]
         if ldf is True:
@@ -523,8 +528,9 @@ def make_thunk(impl,vs,expr):
         else:
             with ivy_ast.ASTContext(ldf):
                 emit_derived(None,impl,ldf.formula,the_classname,inline=True)
-    envnames = [varname(sym) for sym in env]
-    open_scope(impl,line='{}({}) {} {}'.format(name,','.join(sym_decl(sym,classname=the_classname) for sym in env)
+    envargs = [varname(sym) for sym in env]
+    envnames = [env_field_names[sym] for sym in env]
+    open_scope(impl,line='{}({}) {} {}'.format(name,','.join(sym_decl(sym,classname=the_classname,cname=env_field_names[sym]) for sym in env)
                                              ,':' if envnames else ''
                                              ,','.join('{}({})'.format(n,n) for n in envnames))),
     if target.get() in ["gen","test"]:
@@ -535,6 +541,7 @@ def make_thunk(impl,vs,expr):
     subst = {vs[0].name:il.Symbol('arg',vs[0].sort)} if len(vs)==1 else dict((v.name,il.Symbol('arg@@arg{}'.format(idx),v.sort)) for idx,v in enumerate(vs))
     orig_expr = expr
     expr = ilu.substitute_ast(expr,subst)
+    expr = ilu.rename_ast(expr,dict((sym,env_field_symbol(sym)) for sym in env))
     code_line(impl,'return ' + code_eval(impl,expr))
     close_scope(impl)
     if target.get() in ["gen","test"]:
@@ -579,7 +586,7 @@ def make_thunk(impl,vs,expr):
                 code_line(impl,'hash_map<std::string,std::string> rn')
                 for sym,envsym in zip(env,envsyms):
                     locv = make_symbol(sym)
-                    emit_set(impl,sym,solver_add=solver_add,csname=locv+'.c_str()',cvalue=varname(sym),prefix='g.',obj='',gen='g') 
+                    emit_set(impl,sym,solver_add=solver_add,csname=locv+'.c_str()',cvalue=env_field_ref(sym),prefix='g.',obj='',gen='g') 
                     code_line(impl,'rn["{}"]={}.c_str()'.format(envsym.name,locv))
 #                code_line(impl,'std::cout << "check 1" << std::endl')
 #                code_line(impl,'g.ctx.check_error()')
@@ -604,7 +611,7 @@ def make_thunk(impl,vs,expr):
             code_line(impl,'return res')
         close_scope(impl)
     close_scope(impl,semi=True)
-    return 'hash_thunk<{},{}>(new {}({}))'.format(D,R,name,','.join(envnames))
+    return 'hash_thunk<{},{}>(new {}({}))'.format(D,R,name,','.join(envargs))
 
 # def struct_hash_fun(field_names,field_sorts):
 #     if len(field_names) == 0:
@@ -840,7 +847,7 @@ def emit_set(header,symbol,solver_add=solver_add_default,csname=None,cvalue=None
             vs = variables(domain)
             open_loop(header,vs)
             lhs = prefix+'apply('+sname+''.join(','+s for s in map(var_to_z3_val,vs)) + ')'
-            rhs = obj + varname(symbol) + ''.join('[{}]'.format(varname(v)) for v in vs)
+            rhs = obj + cname + ''.join('[{}]'.format(varname(v)) for v in vs)
             emit_set_field(header,destr,lhs,rhs,len(vs),solver_add,prefix,obj,gen)
             close_loop(header,vs)
         return
