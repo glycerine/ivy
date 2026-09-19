@@ -240,7 +240,7 @@ func TestOracleHermesRMWO3TargetTestDiffWE(t *testing.T) {
 	}
 
 	// allow simultaneous runs.
-	root, err := os.MkdirTemp("", "tmp.oracle.out.dir.")
+	root, err := os.MkdirTemp("", fmt.Sprintf("tmp.oracle.out.dir.%v", cryptoRandNonNegInt64()))
 	panicOn(err)
 	var bad bool
 	defer func() {
