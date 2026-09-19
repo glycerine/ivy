@@ -203,9 +203,10 @@ func TestEmitAssignLargeThunkFallback(t *testing.T) {
 	if !strings.Contains(got, "bool operator()(const int &arg)") {
 		t.Fatalf("expected operator()(const int &arg), got:\n%s", got)
 	}
-	// The body should reference !r[arg] (loop var substituted by arg).
-	if !strings.Contains(got, "!r[arg]") {
-		t.Fatalf("expected substituted body !r[arg], got:\n%s", got)
+	// The body should reference the generated thunk environment field
+	// with the loop var substituted by arg.
+	if !strings.Contains(got, "!this->ivy_thunk_env_0[arg]") {
+		t.Fatalf("expected substituted body !this->ivy_thunk_env_0[arg], got:\n%s", got)
 	}
 	// Construction expression.
 	if !strings.Contains(got, "r = hash_thunk<int, bool>(new __thunk__0(") {
@@ -213,8 +214,8 @@ func TestEmitAssignLargeThunkFallback(t *testing.T) {
 	}
 	// And the env captures r (the LHS function symbol referenced in
 	// the body) so the thunk can lazily compute results.
-	if !strings.Contains(got, "hash_thunk<int,bool> r;") {
-		t.Fatalf("expected r captured as env field, got:\n%s", got)
+	if !strings.Contains(got, "hash_thunk<int,bool> ivy_thunk_env_0;") {
+		t.Fatalf("expected generated env field for r, got:\n%s", got)
 	}
 }
 

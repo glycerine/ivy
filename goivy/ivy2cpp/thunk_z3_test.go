@@ -52,7 +52,7 @@ func TestMakeThunkZ3GeneralSingleArgEnvEncoding(t *testing.T) {
 		`std::map<std::string, std::string> rn;`,
 		`std::string loc_savedv = std::string("__loc_") + __ss.str() + std::string("__") + "savedv";`,
 		`g.mk_decl(loc_savedv.c_str(), {}, "value");`,
-		`g.slvr.add(__to_solver(g, g.apply(loc_savedv.c_str()), savedv));`,
+		`g.slvr.add(__to_solver(g, g.apply(loc_savedv.c_str()), this->ivy_thunk_env_0));`,
 		`rn["__thunk__0_env_0"] = loc_savedv.c_str();`,
 		`z3::expr the_expr = z3::expr(g.ctx,Z3_parse_smtlib2_string(g.ctx, "(assert (= __thunk__0_res_0 __thunk__0_env_0))"`,
 		`the_expr = __z3_rename(the_expr, rn);`,
@@ -127,7 +127,7 @@ func TestMakeThunkZ3GeneralMultiArgSubstitutionAndFunctionEnv(t *testing.T) {
 	}
 	for _, want := range []string{
 		`struct __thunk__0 : z3_thunk<zth::__tup__int__int, zth::color> {`,
-		`return f[zth::__tup__int__int(arg.arg1, arg.arg0)];`,
+		`return this->ivy_thunk_env_0[zth::__tup__int__int(arg.arg1, arg.arg0)];`,
 		`g.mk_const("__thunk__0_arg_0","node");`,
 		`g.mk_const("__thunk__0_arg_1","node");`,
 		`g.mk_const("__thunk__0_res_1","color");`,
@@ -136,7 +136,7 @@ func TestMakeThunkZ3GeneralMultiArgSubstitutionAndFunctionEnv(t *testing.T) {
 		`g.mk_decl(loc_f.c_str(),2,`,
 		`__quants.push_back(g.ctx.constant("X__0",g.sort("node")));;`,
 		`__quants.push_back(g.ctx.constant("X__1",g.sort("node")));;`,
-		`g.slvr.add(forall(__quants,__to_solver(g,g.apply(loc_f.c_str(), g.ctx.constant("X__0", g.sort("node")), g.ctx.constant("X__1", g.sort("node"))),f)));`,
+		`g.slvr.add(forall(__quants,__to_solver(g,g.apply(loc_f.c_str(), g.ctx.constant("X__0", g.sort("node")), g.ctx.constant("X__1", g.sort("node"))),this->ivy_thunk_env_0)));`,
 		`src.push_back(g.ctx.constant("__thunk__0_arg_0",g.sort("node")));;`,
 		`dst.push_back(v.arg(0));`,
 		`src.push_back(g.ctx.constant("__thunk__0_arg_1",g.sort("node")));;`,
@@ -271,11 +271,11 @@ after init { r(K) := p(K) }
 	if strings.Contains(thunk, " p;") || strings.Contains(thunk, " p(") {
 		t.Fatalf("derived symbol p should not be captured as a thunk field:\n%s", thunk)
 	}
-	if !strings.Contains(thunk, "hash_thunk<int,bool> q;") {
+	if !strings.Contains(thunk, "hash_thunk<int,bool> ivy_thunk_env_0;") {
 		t.Fatalf("expanded derived RHS should capture plain state q:\n%s", thunk)
 	}
-	if !strings.Contains(thunk, "return q[arg];") {
-		t.Fatalf("derived RHS should be inlined into thunk body as q[arg]:\n%s", thunk)
+	if !strings.Contains(thunk, "return this->ivy_thunk_env_0[arg];") {
+		t.Fatalf("derived RHS should be inlined into thunk body through generated env field:\n%s", thunk)
 	}
 	compileGeneratedCPP(t, out)
 }
@@ -295,7 +295,7 @@ func TestThunkEnvSymbolsIncludesPlainState(t *testing.T) {
 	var w cppWriter
 	_ = g.makeThunk(&w, []*goivy.LogicVariable{x}, flag)
 	got := normalizeCPP(w.String())
-	if !strings.Contains(got, "bool flag;") || !strings.Contains(got, "return flag;") {
+	if !strings.Contains(got, "bool ivy_thunk_env_0;") || !strings.Contains(got, "return this->ivy_thunk_env_0;") {
 		t.Fatalf("plain state flag should be captured:\n%s", got)
 	}
 }

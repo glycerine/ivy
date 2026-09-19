@@ -148,7 +148,7 @@ special_names = {
     '>=' : '__ge',
 }
 
-puncs = re.compile('[\.\[\]]')
+puncs = re.compile(r'[\.\[\]]')
 
 def varname(name):
     global special_names

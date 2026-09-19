@@ -240,8 +240,8 @@ func TestOracleHermesRMWO3TargetTestDiffWE(t *testing.T) {
 	}
 
 	// allow simultaneous runs.
-	root := "tmp.oracle.out.dir." + fmt.Sprintf("%v", cryptoRandNonNegInt64())
-	panicOn(os.RemoveAll(root))
+	root, err := os.MkdirTemp("", "tmp.oracle.out.dir.")
+	panicOn(err)
 	var bad bool
 	defer func() {
 		if !bad {
@@ -623,23 +623,21 @@ func runPythonIvyToCPP(fixture, outDir string, tc oracleCase) error {
 	if err != nil {
 		return err
 	}
-	cmdDir := filepath.Dir(absFixture)
 	cmdFixture := filepath.Base(absFixture)
 	var args []string
 	absOutDir, err := filepath.Abs(outDir)
 	if err != nil {
 		return err
 	}
+	cmdDir := absOutDir
+	raw, err := os.ReadFile(absFixture)
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile(filepath.Join(cmdDir, cmdFixture), raw, 0o644); err != nil {
+		return err
+	}
 	if tc.Build {
-		cmdDir = absOutDir
-		cmdFixture = filepath.Base(absFixture)
-		raw, err := os.ReadFile(absFixture)
-		if err != nil {
-			return err
-		}
-		if err := os.WriteFile(filepath.Join(cmdDir, cmdFixture), raw, 0o644); err != nil {
-			return err
-		}
 		args = []string{"target=" + tc.Target, "build=true"}
 	} else {
 		args = []string{"target=" + tc.Target, "outdir=" + absOutDir}
