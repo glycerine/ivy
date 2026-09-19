@@ -237,7 +237,7 @@ dylib_test: z3ivy
 	DYLD_LIBRARY_PATH=$(CURDIR)/z3ivy/lib:$$DYLD_LIBRARY_PATH go test ./... -count=1 # -tags web
 
 test:
-	XTRACE_OFF=1 go test ./... -count=1 -tags xtrace_off
+	XTRACE_OFF=1 go test -v ./... -count=1 -tags xtrace_off
 
 WEBUI_NODE_PLATFORM := $(shell node -e 'const h = process.report && process.report.getReport ? process.report.getReport().header : {}; let libc = ""; if (process.platform === "linux") libc = h.glibcVersionRuntime ? "gnu" : "musl"; console.log([process.platform, process.arch, libc].filter(Boolean).join("-"));' 2>/dev/null || printf '%s-%s\n' "$$(uname -s)" "$$(uname -m)")
 WEBUI_NODE_DEPS_STAMP := webui/node_modules/.platform-deps-$(WEBUI_NODE_PLATFORM).stamp
