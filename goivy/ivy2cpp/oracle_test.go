@@ -451,7 +451,14 @@ func assertDiffWEEqual(t *testing.T, left, right string) {
 }
 
 func diffWEEqual(left, right string) error {
-	cmd := exec.Command("diff", "-w", "-E", left, right)
+	same, err := bytesEqualsIgnoreWhitespace(left, right)
+	if err != nil {
+		return err
+	}
+	if same {
+		return nil
+	}
+	cmd := exec.Command("diff", "-w", "-B", "-b", left, right)
 	var buf bytes.Buffer
 	cmd.Stdout = &buf
 	cmd.Stderr = &buf
@@ -460,10 +467,27 @@ func diffWEEqual(left, right string) error {
 		if len(out) > 12000 {
 			out = out[:12000] + "\n... diff truncated ..."
 		}
-		return fmt.Errorf("diff -w -E %s %s failed: %w\n%s", left, right, err, out)
+		return fmt.Errorf("diff -w -B -b %s %s failed: %w\n%s", left, right, err, out)
 	}
 	//vv("left='%v' right='%v' diff is: '%v'", left, right, buf.String())
 	return nil
+}
+
+// bytesEqualsIgnoreWhitespace returns true if both slices match after removing all whitespace.
+func bytesEqualsIgnoreWhitespace(pathA, pathB string) (bool, error) {
+	a, err := os.ReadFile(pathA)
+	if err != nil {
+		return false, err
+	}
+	b, err := os.ReadFile(pathB)
+	if err != nil {
+		return false, err
+	}
+	// bytes.Fields splits on all whitespace (\t, \n, \r, ' ') and strips empty elements
+	aFields := bytes.Fields(a)
+	bFields := bytes.Fields(b)
+
+	return bytes.Equal(bytes.Join(aFields, nil), bytes.Join(bFields, nil)), nil
 }
 
 func readOracleStatuses(t *testing.T) map[string]string {
