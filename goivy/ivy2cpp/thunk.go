@@ -2,7 +2,6 @@ package ivy2cpp
 
 import (
 	"fmt"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -230,27 +229,7 @@ func (g *Generator) thunkEnvSymbols(w *cppWriter, vs []*goivy.LogicVariable, exp
 		seen[c.Name] = true
 		out = append(out, c)
 	}
-	sort.SliceStable(out, func(i, j int) bool {
-		ri, rj := pythonThunkEnvRank(out[i]), pythonThunkEnvRank(out[j])
-		if ri != rj {
-			return ri < rj
-		}
-		return out[i].Name < out[j].Name
-	})
 	return out
-}
-
-func pythonThunkEnvRank(c *goivy.Const) int {
-	if c == nil {
-		return 4
-	}
-	if strings.HasPrefix(c.Name, "loc:") {
-		return 0
-	}
-	if _, ok := c.CSort.(*goivy.LogicFunctionSort); ok {
-		return 1
-	}
-	return 2
 }
 
 func appliedFunctionConstKeys(expr goivy.Expr) map[goivy.NodeKey]bool {

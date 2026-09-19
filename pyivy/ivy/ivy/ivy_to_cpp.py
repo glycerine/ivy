@@ -484,7 +484,7 @@ def gather_referenced_symbols(expr,res,ignore=[]):
     for sym in ilu.used_symbols_ast(expr):
         if (not sym.is_numeral() and not slv.solver_name(sym) == None
             and sym.name not in im.module.destructor_sorts and sym not in res and sym not in ignore):
-            res.add(sym)
+            res[sym] = None
             if sym in is_derived:
                 ldf = is_derived[sym]
                 if ldf is not True:
@@ -508,7 +508,9 @@ def make_thunk(impl,vs,expr):
     open_scope(impl,line='struct {} : {}<{},{}>'.format(name,thunk_class,D,R))
     if target.get() in ["gen","test"]:
         code_line(impl,'int __ident')
-    syms = set()
+    # dict is used as an insertion-ordered set. Plain set iteration is
+    # hash-seed dependent and changes generated thunk environment numbering.
+    syms = dict()
     gather_referenced_symbols(expr,syms)
     env = [sym for sym in syms if sym not in is_derived]
     funs = [sym for sym in syms if sym in is_derived]

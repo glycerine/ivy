@@ -370,6 +370,53 @@ func TestThunkEnvSymbolsStableOrder(t *testing.T) {
 	}
 }
 
+func TestThunkEnvSymbolsHermesInsertionOrderIsStable(t *testing.T) {
+	mod := goivy.New()
+	ts := &goivy.UninterpretedSort{Name: "hermes_protocol.ts"}
+	version := &goivy.UninterpretedSort{Name: "hermes_protocol.version"}
+	mod.Sig.Sorts.Set(ts.Name, ts)
+	mod.Sig.Sorts.Set(version.Name, version)
+	fnSort, err := goivy.NewFunctionSort(ts, version, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	tsVersion := goivy.NewConst("hermes_protocol.ts_version", fnSort)
+	oldT, err := goivy.NewVariable("T", ts)
+	if err != nil {
+		t.Fatalf("NewVariable T: %v", err)
+	}
+	oldV, err := goivy.NewVariable("V", version)
+	if err != nil {
+		t.Fatalf("NewVariable V: %v", err)
+	}
+	localNewVer := goivy.NewConst("loc:new_ver", version)
+	fmlT := goivy.NewConst("fml:t", ts)
+	tEq, err := goivy.NewEq(oldT, fmlT)
+	if err != nil {
+		t.Fatalf("NewEq T: %v", err)
+	}
+	vEq, err := goivy.NewEq(oldV, localNewVer)
+	if err != nil {
+		t.Fatalf("NewEq V: %v", err)
+	}
+	newPoint, err := goivy.NewAnd(tEq, vEq)
+	if err != nil {
+		t.Fatalf("NewAnd: %v", err)
+	}
+	expr, err := goivy.NewOr(goivy.MustApply(tsVersion, oldT, oldV), newPoint)
+	if err != nil {
+		t.Fatalf("NewOr: %v", err)
+	}
+
+	g := &Generator{Mod: mod, Config: Config{Target: "test"}, ClassName: "hermes_rmw_o3_testing"}
+	var w cppWriter
+	got := strings.Join(thunkEnvNames(g.thunkEnvSymbols(&w, []*goivy.LogicVariable{oldT, oldV}, expr)), ",")
+	want := "hermes_protocol.ts_version,fml:t,loc:new_ver"
+	if got != want {
+		t.Fatalf("Hermes thunk capture order = %s, want %s", got, want)
+	}
+}
+
 func thunkEnvNames(env []*goivy.Const) []string {
 	names := make([]string, len(env))
 	for i, c := range env {
