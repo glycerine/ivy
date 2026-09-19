@@ -1030,7 +1030,7 @@ func (g *Generator) emitDefinedInputExpr(
 		}
 		// State function: obj.<fn>[X0]...[Xn].
 		if stateContext && ssyms[fc.Name] {
-			return "obj." + varName(fc.Name) + bracketize(args), true
+			return g.cppStorageAccess(fc.Name, fc.CSort, args, "obj"), true
 		}
 		// Plain function call (e.g. a binary operator like + would
 		// arrive as Apply with Func '+' and 2 terms; we don't support

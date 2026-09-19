@@ -857,12 +857,15 @@ func (g *Generator) emitQuantWithHeader(w *cppWriter, vars []*goivy.LogicVariabl
 		w.linef("%s = 1;", res)
 	}
 
-	header, remaining, err := g.quantHeaderForFirstVar(v0, rest, body, exists)
+	header, prefixLines, remaining, err := g.quantHeaderForFirstVar(v0, rest, body, exists)
 	if err != nil {
 		return "", err
 	}
 	w.line(header)
 	w.indent++
+	for _, line := range prefixLines {
+		w.line(line)
+	}
 
 	inner, err := g.emitQuantWithHeader(w, remaining, body, forall)
 	if err != nil {
@@ -879,64 +882,82 @@ func (g *Generator) emitQuantWithHeader(w *cppWriter, vars []*goivy.LogicVariabl
 	return res, nil
 }
 
-func (g *Generator) quantHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, []*goivy.LogicVariable, error) {
+func (g *Generator) quantHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, []string, []*goivy.LogicVariable, error) {
 	if header, ok, err := g.quantIterableHeader(v0); ok || err != nil {
 		if err != nil {
-			return "", nil, err
+			return "", nil, nil, err
 		}
-		return header, rest, nil
+		return header, nil, rest, nil
 	}
 	boundsErr := error(nil)
 	if lo, hi, err := g.getBounds(v0, rest, body, exists); err == nil && cppIsAnyIntegerType(g, v0.VSort) {
 		header, err := g.loopHeaderForSortBounds(v0.VSort, varName(v0.Name), lo, hi)
 		if err != nil {
-			return "", nil, err
+			return "", nil, nil, err
 		}
-		return header, rest, nil
+		return header, nil, rest, nil
 	} else if err != nil {
 		boundsErr = err
 	}
-	if header, remaining, ok, err := g.extensionalHeaderForFirstVar(v0, rest, body, exists); ok || err != nil {
+	if header, prefixLines, remaining, ok, err := g.extensionalHeaderForFirstVar(v0, rest, body, exists); ok || err != nil {
 		if err != nil {
-			return "", nil, err
+			return "", nil, nil, err
 		}
-		return header, remaining, nil
+		return header, prefixLines, remaining, nil
 	}
 	if boundsErr != nil {
-		return "", nil, boundsErr
+		return "", nil, nil, boundsErr
 	}
-	return "", nil, fmt.Errorf("ivy2cpp: cannot iterate over sort %s", sortName(v0.VSort))
+	return "", nil, nil, fmt.Errorf("ivy2cpp: cannot iterate over sort %s", sortName(v0.VSort))
 }
 
-func (g *Generator) extensionalHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, []*goivy.LogicVariable, bool, error) {
+func (g *Generator) extensionalHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, []string, []*goivy.LogicVariable, bool, error) {
 	if v0 == nil || g == nil || g.Mod == nil {
-		return "", nil, false, nil
+		return "", nil, nil, false, nil
 	}
 	var ebnds []*goivy.Apply
 	g.matchExtensionalBoundExprs(v0, body, exists, &ebnds)
 	if len(ebnds) == 0 {
-		return "", nil, false, nil
+		return "", nil, nil, false, nil
 	}
 	ebnd := ebnds[0]
 	fs, ok := ebnd.Func.NodeSort().(*goivy.LogicFunctionSort)
 	if !ok {
-		return "", nil, false, nil
+		return "", nil, nil, false, nil
 	}
 	st := cppFunctionStorageFor(g, fs.Domain(), fs.Range(), "")
 	if st.Kind != cppStorageHashThunk {
-		return "", nil, false, nil
+		return "", nil, nil, false, nil
 	}
 	rel := varName(goivy.ExprName(ebnd.Func))
 	header := fmt.Sprintf("for(auto it=%s.memo.begin(),en=%s.memo.end(); it != en; ++it)if (it->second) { ", rel, rel)
 	remaining := append([]*goivy.LogicVariable(nil), rest...)
-	for _, term := range ebnd.Terms {
+	var prefixLines []string
+	for pos, term := range ebnd.Terms {
 		tv, ok := term.(*goivy.LogicVariable)
 		if !ok {
 			continue
 		}
+		if tv.Name != v0.Name && !quantVarNameIn(rest, tv.Name) {
+			continue
+		}
+		if len(ebnd.Terms) == 1 {
+			prefixLines = append(prefixLines, fmt.Sprintf("auto %s = it->first;", varName(tv.Name)))
+		} else {
+			prefixLines = append(prefixLines, fmt.Sprintf("auto %s = it->first.arg%d;", varName(tv.Name), pos))
+		}
 		remaining = removeQuantVarByName(remaining, tv.Name)
 	}
-	return header, remaining, true, nil
+	return header, prefixLines, remaining, true, nil
+}
+
+func quantVarNameIn(vars []*goivy.LogicVariable, name string) bool {
+	for _, v := range vars {
+		if v != nil && v.Name == name {
+			return true
+		}
+	}
+	return false
 }
 
 func removeQuantVarByName(vars []*goivy.LogicVariable, name string) []*goivy.LogicVariable {
