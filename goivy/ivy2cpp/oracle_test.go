@@ -242,8 +242,11 @@ func TestOracleHermesRMWO3TargetTestDiffWE(t *testing.T) {
 	// allow simultaneous runs.
 	root := "tmp.oracle.out.dir." + fmt.Sprintf("%v", cryptoRandNonNegInt64())
 	panicOn(os.RemoveAll(root))
+	var bad bool
 	defer func() {
-		os.RemoveAll(root) // comment to manually inspect output.
+		if !bad {
+			os.RemoveAll(root) // comment to manually inspect output.
+		}
 	}()
 	for _, tc := range oracleCasesForTarget("test") {
 		t.Run(tc.Name, func(t *testing.T) {
@@ -251,6 +254,7 @@ func TestOracleHermesRMWO3TargetTestDiffWE(t *testing.T) {
 			panicOn(os.MkdirAll(goDir, 0755))
 			panicOn(os.MkdirAll(pyDir, 0755))
 			if err := compareOracleFixtureAtPaths(t, fixture, tc, goDir, pyDir, true); err != nil {
+				bad = true
 				t.Fatalf("Hermes oracle %s failed: %v", tc.Name, err)
 			}
 		})
