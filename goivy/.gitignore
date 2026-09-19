@@ -55,3 +55,4 @@ log.golden6.prev
 log.gold-hermes
 log.gold-hermes.prev
 .codex-gocache/
+ivy2cpp/tmp.oracle.out.dir.*

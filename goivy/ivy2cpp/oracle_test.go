@@ -2,8 +2,11 @@ package ivy2cpp
 
 import (
 	"bytes"
+	cryrand "crypto/rand"
+	"encoding/binary"
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -11,6 +14,23 @@ import (
 	"strings"
 	"testing"
 )
+
+// returns r >= 0
+func cryptoRandNonNegInt64() (r int64) {
+	b := make([]byte, 8)
+	_, err := cryrand.Read(b)
+	if err != nil {
+		panic(err)
+	}
+	r = int64(binary.LittleEndian.Uint64(b))
+	if r < 0 {
+		if r == math.MinInt64 {
+			return 0
+		}
+		r = -r
+	}
+	return r
+}
 
 var oracleFixtures = []string{
 	"empty.ivy",
@@ -219,8 +239,12 @@ func TestOracleHermesRMWO3TargetTestDiffWE(t *testing.T) {
 		t.Skipf("Hermes oracle fixture not available: %v", err)
 	}
 
-	root := "tmp.oracle.out.dir"
+	// allow simultaneous runs.
+	root := "tmp.oracle.out.dir." + fmt.Sprintf("%v", cryptoRandNonNegInt64())
 	panicOn(os.RemoveAll(root))
+	defer func() {
+		os.RemoveAll(root) // comment to manually inspect output.
+	}()
 	for _, tc := range oracleCasesForTarget("test") {
 		t.Run(tc.Name, func(t *testing.T) {
 			goDir, pyDir := hermesOracleDirs(root, tc)
