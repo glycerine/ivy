@@ -1318,6 +1318,32 @@ func TestConjectureActionReturnsDisplayTextForClientServerCTI(t *testing.T) {
 	}
 }
 
+func TestConjectureAfterGatherDoesNotTreatFalseAsInvariant(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-conjecture-after-gather")
+	if err := s.LoadFileContent("client_server_example.ivy", readClientServerExample(t)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	cr := s.RunCheck("induction")
+	if cr.Result != "fail" {
+		t.Fatalf("RunCheck induction result = %q, want fail; message=%s", cr.Result, cr.Message)
+	}
+
+	if _, err := s.ExecuteAction("gather", map[string]interface{}{"sheet_id": "sheet-1"}); err != nil {
+		t.Fatalf("gather: %v", err)
+	}
+	result, err := s.ExecuteAction("conjecture", map[string]interface{}{"sheet_id": "sheet-1"})
+	if err != nil {
+		t.Fatalf("conjecture: %v", err)
+	}
+	conjecture, _ := result["conjecture"].(string)
+	if strings.TrimSpace(conjecture) == "false" {
+		t.Fatalf("conjecture after gather reported false as a generated invariant: %#v", result)
+	}
+	if status, _ := result["status"].(string); status != "warning" {
+		t.Fatalf("conjecture after gather status = %q, want warning; result=%#v", status, result)
+	}
+}
+
 func TestInductionFailureUsedRelationsExcludeUnusedSignatureRelations(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-used-relations")
 	if err := s.LoadFileContent("test.ivy", []byte(ctiUsedRelationSample)); err != nil {
