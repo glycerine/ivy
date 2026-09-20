@@ -809,6 +809,9 @@ func (s *Session) selectConceptARGNode(sheetID, nodeID string) (selectedNode, st
 		}
 		s.syncAbstractValue()
 	}
+	if _, err := s.installStructureConceptGraphForSheetLocked(sheetID, state); err != nil {
+		return "", "", err
+	}
 	return fmt.Sprintf("state_%d", idx), ui.StateLabel(idx), nil
 }
 
@@ -842,12 +845,19 @@ func (s *Session) ensureConceptChecksForSheetLocked(sheetID string) *DisplayChec
 		return NewDisplayCheckboxes()
 	}
 	checks := w.G().Checks
-	if s.SimpleSess != nil && s.SimpleSess.Domain != nil {
-		for _, rel := range s.SimpleSess.Domain.RelationIDs() {
+	var domain *ConceptDomain
+	if conceptSessionHasRenderableDomain(w.G().ConceptSess) {
+		domain = conceptSessionDomain(w.G().ConceptSess)
+	}
+	if domain == nil {
+		domain = conceptSessionDomain(s.SimpleSess)
+	}
+	if domain != nil {
+		for _, rel := range domain.RelationIDs() {
 			checks.EnsureEdge(rel)
 			checks.EnsureNodeLabel(rel)
 		}
-		for _, label := range s.SimpleSess.Domain.DefaultLabelIDs() {
+		for _, label := range domain.DefaultLabelIDs() {
 			checks.SetNodeLabelCheckbox(label, NodeLabelNecessarily, true)
 		}
 	}
@@ -1149,6 +1159,18 @@ func conceptSessionCopy(src *ConceptSession) *ConceptSession {
 		dst.AbstractValue[k] = v
 	}
 	return dst
+}
+
+func conceptSessionDomain(cs *ConceptSession) *ConceptDomain {
+	if cs == nil || cs.Domain == nil {
+		return nil
+	}
+	return cs.Domain
+}
+
+func conceptSessionHasRenderableDomain(cs *ConceptSession) bool {
+	domain := conceptSessionDomain(cs)
+	return domain != nil && (len(domain.Nodes) > 0 || len(domain.Edges) > 0 || len(domain.NodeLabels) > 0)
 }
 
 func (s *Session) compiledSortMapLocked() map[string]goivy.Sort {
@@ -2101,10 +2123,10 @@ func (s *Session) setConceptSessionState(state *goivy.State) error {
 	return nil
 }
 
-func (s *Session) installStructureConceptGraph(state *goivy.State) (bool, error) {
+func (s *Session) structureConceptSessionForStateLocked(state *goivy.State) (*ConceptSession, bool, error) {
 	universe := structureUniverseConsts(state)
 	if len(universe) == 0 {
-		return false, nil
+		return nil, false, nil
 	}
 	stateFormula := goivy.True
 	if state != nil && state.Clauses != nil {
@@ -2112,20 +2134,43 @@ func (s *Session) installStructureConceptGraph(state *goivy.State) (bool, error)
 	}
 	cd, err := GetStructureConceptDomainE(stateFormula, universe, s.structureSignatureSymbols())
 	if err != nil {
-		return false, err
+		return nil, false, err
 	}
 	simple := NewConceptSession()
 	simple.Domain = simpleConceptDomainFromCD(cd)
 	simple.AbstractValue = GetStructureConceptAbstractValue(stateFormula, universe)
 	if simple.Domain == nil || len(simple.Domain.Nodes) == 0 {
-		return false, nil
+		return nil, false, nil
 	}
-	s.SimpleSess = simple
-	if w := s.ensureConceptGraphWidgetLocked(); w != nil && w.G() != nil {
-		w.G().ParentState = state
+	return simple, true, nil
+}
+
+func (s *Session) installStructureConceptGraphForSheetLocked(sheetID string, state *goivy.State) (bool, error) {
+	simple, ok, err := s.structureConceptSessionForStateLocked(state)
+	if err != nil || !ok {
+		return ok, err
 	}
-	s.ensureConceptChecksLocked()
+	s.SimpleSess = conceptSessionCopy(simple)
+	w := s.ensureConceptGraphWidgetForSheetLocked(sheetID)
+	if w != nil && w.G() != nil {
+		g := w.G()
+		g.ParentState = state
+		if state != nil && state.Clauses != nil {
+			g.State = state.Clauses.String()
+		} else {
+			g.State = ""
+		}
+		g.ConceptSess = conceptSessionCopy(simple)
+		s.ensureConceptChecksForSheetLocked(sheetID)
+		g.CyElems = RenderConceptGraph(g.ConceptSess, g.Checks)
+	} else {
+		s.ensureConceptChecksForSheetLocked(sheetID)
+	}
 	return true, nil
+}
+
+func (s *Session) installStructureConceptGraph(state *goivy.State) (bool, error) {
+	return s.installStructureConceptGraphForSheetLocked(rootSheetID, state)
 }
 
 func (s *Session) structureSignatureSymbols() map[string]*goivy.Const {

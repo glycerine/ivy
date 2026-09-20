@@ -1028,7 +1028,8 @@ func (g *Generator) emitDefinedInputExpr(
 			}
 			args[i] = s
 		}
-		// State function: obj.<fn>[X0]...[Xn].
+		// State function: use the same storage accessor as ordinary
+		// expression emission, including tuple keys for hash_thunk state.
 		if stateContext && ssyms[fc.Name] {
 			return g.cppStorageAccess(fc.Name, fc.CSort, args, "obj"), true
 		}

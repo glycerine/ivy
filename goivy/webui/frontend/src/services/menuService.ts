@@ -140,6 +140,9 @@ export function dispatchMenuDescriptorAction(app, region, item) {
   if ((item.action === 'show_reachable' || item.action === 'show_reachable_states') && typeof app.showReachableStates === 'function') {
     return app.showReachableStates();
   }
+  if (region === 'concept' && item.action === 'gather' && typeof app.gatherFacts === 'function') {
+    return app.gatherFacts();
+  }
   const ctiConceptActions = {
     gather_facts: 'cti_gather',
     cti_gather: 'cti_gather',

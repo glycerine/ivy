@@ -63,6 +63,22 @@ func loadClientServer(t *testing.T) (*Server, string) {
 	return srv, id
 }
 
+func loadTutorialClientServer(t *testing.T) (*Server, string) {
+	t.Helper()
+	cfg := goivy.NewConfig()
+	srv := NewServer(cfg, ":0")
+	id := createSession(t, srv)
+
+	sess, err := srv.backend.(*GoBackend).getSession(id)
+	if err != nil {
+		t.Fatalf("getSession: %v", err)
+	}
+	if err := sess.LoadFileContent("client_server_example.ivy", readClientServerExample(t)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	return srv, id
+}
+
 // getConceptJSON calls GET /api/session/{id}/concept and returns the parsed JSON.
 func getConceptJSON(t *testing.T, srv *Server, id string) map[string]interface{} {
 	t.Helper()
@@ -121,6 +137,19 @@ func setConceptToggle(t *testing.T, srv *Server, id, edge, displayClass string, 
 	if w.Code != 200 {
 		t.Fatalf("set toggle: status %d, body: %s", w.Code, w.Body.String())
 	}
+}
+
+func runTutorialInductionCheck(t *testing.T, srv *Server, id string) map[string]interface{} {
+	t.Helper()
+	w := doReq(t, srv, "POST", "/api/session/"+id+"/check", `{"mode":"induction"}`)
+	if w.Code != 200 {
+		t.Fatalf("check: status %d, body: %s", w.Code, w.Body.String())
+	}
+	var m map[string]interface{}
+	if err := json.Unmarshal(w.Body.Bytes(), &m); err != nil {
+		t.Fatalf("check json parse: %v\nbody: %s", err, w.Body.String())
+	}
+	return m
 }
 
 // --- Regression 1: Concept view must show BOTH "client" and "server" ---
@@ -274,6 +303,31 @@ func TestRegression_ConceptRouteUsesSelectedARGState(t *testing.T) {
 	}
 	if reflect.DeepEqual(state0["abstract_value"], state1["abstract_value"]) {
 		t.Fatalf("selected ARG states returned identical abstract_value maps")
+	}
+}
+
+func TestRegression_TutorialStateOneConceptGraphShowsBothConcreteLinks(t *testing.T) {
+	srv, id := loadTutorialClientServer(t)
+
+	check := runTutorialInductionCheck(t, srv, id)
+	if check["result"] != "fail" {
+		t.Fatalf("tutorial induction check result = %#v, want fail; check=%#v", check["result"], check)
+	}
+
+	setConceptToggle(t, srv, id, "link", EdgeDisplayAllToAll, true)
+	state1 := getConceptNodeJSON(t, srv, id, "state_1")
+	if state1["selected_node"] != "state_1" {
+		t.Fatalf("state_1 selected_node = %#v, want state_1", state1["selected_node"])
+	}
+	graph, _ := state1["graph"].(map[string]interface{})
+	graphState, _ := graph["state"].(string)
+	for _, want := range []string{"link(0,0) = true", "link(1,0) = true"} {
+		if !strings.Contains(graphState, want) {
+			t.Fatalf("state_1 graph state missing %q:\n%s", want, graphState)
+		}
+	}
+	if got := conceptEdgeCount(state1, "link"); got != 2 {
+		t.Fatalf("state_1 rendered %d link edges, want 2; graph_state=%q elements=%#v", got, graphState, state1["elements"])
 	}
 }
 

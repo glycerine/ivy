@@ -55,4 +55,13 @@ func TestMemberTargetTestGeneratedCPPRegression(t *testing.T) {
 			t.Fatalf("generated member target=test C++ missing tuple-keyed state read %q:\n%s", want, impl)
 		}
 	}
+
+	if SlowCppTest {
+		if _, err := BuildOutput(out, outDir); err != nil {
+			if isMissingZ3ToolchainError(err) {
+				t.Skip(err.Error())
+			}
+			t.Fatalf("build generated member target=test C++: %v", err)
+		}
+	}
 }

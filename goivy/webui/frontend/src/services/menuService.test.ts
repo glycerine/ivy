@@ -97,6 +97,18 @@ describe('menuService', () => {
     });
   });
 
+  it('routes reachability concept Gather through the graph gather command', async () => {
+    const app = {
+      gatherFacts: vi.fn(async () => ({ ok: true })),
+      runAction: vi.fn(async () => ({ ok: true })),
+    };
+
+    await dispatchMenuDescriptorAction(app, 'concept', { action: 'gather' });
+
+    expect(app.gatherFacts).toHaveBeenCalledTimes(1);
+    expect(app.runAction).not.toHaveBeenCalled();
+  });
+
   it('maps CTI concept BMC menu descriptors to the bounded-check dialog', async () => {
     const app = {
       ctiBoundedCheck: vi.fn(async () => ({ ok: true })),

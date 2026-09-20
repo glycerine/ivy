@@ -242,13 +242,17 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 		displayChecks = sess.ensureConceptChecksForSheetLocked(sheetID)
 		checks = displayChecks.Snapshot()
 		sess.toggles = checks
+		renderSession := sess.SimpleSess
 		if widget != nil {
 			facts = widget.ConstraintFacts()
+			if widget.G() != nil && conceptSessionHasRenderableDomain(widget.G().ConceptSess) {
+				renderSession = widget.G().ConceptSess
+			}
 		}
 		sess.mu.Unlock()
 
 		// Render concept graph with octagon nodes, edges, and per-sort colors.
-		cy := RenderConceptGraph(sess.SimpleSess, displayChecks)
+		cy := RenderConceptGraph(renderSession, displayChecks)
 		if cy.Elements == nil {
 			cy.Elements = []WebUICyElement{}
 		}
@@ -264,12 +268,12 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 		labelSorts := make(map[string]string)
 		edgeSorts := make(map[string][]string)
 
-		if sess.SimpleSess != nil && sess.SimpleSess.Domain != nil {
-			d := sess.SimpleSess.Domain
+		if renderSession != nil && renderSession.Domain != nil {
+			d := renderSession.Domain
 			nodes = append(nodes, d.Nodes...)
 			edges = append(edges, d.Edges...)
 			nodeLabels = append(nodeLabels, d.NodeLabels...)
-			relations = append(relations, sess.SimpleSess.RelationNames()...)
+			relations = append(relations, renderSession.RelationNames()...)
 			for _, lbl := range d.NodeLabels {
 				c := d.Concepts[lbl]
 				if c != nil && len(c.Sorts) > 0 {
@@ -304,23 +308,23 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 
 		// Include real abstract_value from the concept session (for node labels).
 		abstractValue := make(map[string]bool)
-		if sess.SimpleSess != nil {
-			for k, v := range sess.SimpleSess.AbstractValue {
+		if renderSession != nil {
+			for k, v := range renderSession.AbstractValue {
 				if strings.HasPrefix(k, "node_label|") {
 					abstractValue[k] = v
 				}
 			}
 		}
 
-		conceptDomain := NewConceptDomain() // non-nil fallback; SimpleSess is always set
-		if sess.SimpleSess != nil {
-			conceptDomain = sess.SimpleSess.Domain
+		conceptDomain := NewConceptDomain()
+		if renderSession != nil && renderSession.Domain != nil {
+			conceptDomain = renderSession.Domain
 		}
 		response := map[string]interface{}{
 			"abstract_value":              abstractValue,
 			"concept_domain":              conceptDomain,
 			"concept_interactive_session": conceptInteractiveSessionPayload(sess.ConceptSess),
-			"concept_session":             sess.SimpleSess,
+			"concept_session":             renderSession,
 			"display_checkboxes":          checks,
 			"edges":                       edges,
 			"edge_sorts":                  edgeSorts,
@@ -332,7 +336,7 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 			"node_labels":                 nodeLabels,
 			"nodes":                       nodes,
 			"relations":                   relations,
-			"relation_colors":             ConceptRelationColors(sess.SimpleSess),
+			"relation_colors":             ConceptRelationColors(renderSession),
 			"selected_node":               selectedNode,
 			"state_label":                 stateLabel,
 			"toggles":                     checks,
