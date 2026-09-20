@@ -281,7 +281,10 @@ test-control-browser: control/node_modules/.bin/playwright
 dylib_test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(CURDIR)/z3ivy/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
 
-test-web: $(WEBUI_NODE_DEPS_STAMP)
+webui-dist: $(WEBUI_NODE_DEPS_STAMP)
+	npm --prefix webui run build:webui
+
+test-web: $(WEBUI_NODE_DEPS_STAMP) webui-dist
 	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
 	cd webui && npm --prefix frontend run test
 
@@ -357,7 +360,7 @@ prod: webui-wasm-engine
 	go install -tags xtrace_off ./cmd/ivyweb
 	ivyweb
 
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webui-node-deps webui-wasm-graphviz unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE prod
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webui-node-deps webui-wasm-graphviz webui-dist unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE prod
 
 ivy2cpp-check:
 	go install -tags=xtrace_off ./cmd/ivy2cpp
