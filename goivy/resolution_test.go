@@ -29,6 +29,10 @@ func envString(env Env) string {
 	return strings.Join(parts, ", ")
 }
 
+func envValue(env Env, term ResolutionTerm) ResolutionTerm {
+	return env[resolutionKey(term)]
+}
+
 // TestEnvFindConstant tests that EnvFind returns a constant unchanged.
 func TestResolutionEnvFindConstant(t *testing.T) {
 	env := make(Env)
@@ -54,7 +58,7 @@ func TestResolutionEnvFindSingleStep(t *testing.T) {
 	env := make(Env)
 	x := resolutionMkVar("X")
 	a := resolutionMkConst("a")
-	env["X"] = a
+	env[resolutionKey(x)] = a
 	result := EnvFind(env, x)
 	if result != a {
 		t.Errorf("expected constant a, got %v", result)
@@ -67,8 +71,8 @@ func TestResolutionEnvFindChain(t *testing.T) {
 	x := resolutionMkVar("X")
 	y := resolutionMkVar("Y")
 	a := resolutionMkConst("a")
-	env["X"] = y
-	env["Y"] = a
+	env[resolutionKey(x)] = y
+	env[resolutionKey(y)] = a
 	result := EnvFind(env, x)
 	if result != a {
 		t.Errorf("expected constant a, got %v", result)
@@ -91,14 +95,14 @@ func TestResolutionTermsMGUPythonExample(t *testing.T) {
 		t.Fatal("expected match=true")
 	}
 	// Expected: X->a, Y->b, Z->b
-	if subs["X"].String() != "a" {
-		t.Errorf("X: expected a, got %s", subs["X"])
+	if envValue(subs, x).String() != "a" {
+		t.Errorf("X: expected a, got %s", envValue(subs, x))
 	}
-	if subs["Y"].String() != "b" {
-		t.Errorf("Y: expected b, got %s", subs["Y"])
+	if envValue(subs, y).String() != "b" {
+		t.Errorf("Y: expected b, got %s", envValue(subs, y))
 	}
-	if subs["Z"].String() != "b" {
-		t.Errorf("Z: expected b, got %s", subs["Z"])
+	if envValue(subs, z).String() != "b" {
+		t.Errorf("Z: expected b, got %s", envValue(subs, z))
 	}
 }
 
@@ -156,8 +160,8 @@ func TestResolutionTermsMGUVarToVar(t *testing.T) {
 	if len(subs) != 1 {
 		t.Fatalf("expected 1 substitution, got %d", len(subs))
 	}
-	if subs["X"].String() != "Y" {
-		t.Errorf("expected X->Y, got X->%s", subs["X"])
+	if envValue(subs, x).String() != "Y" {
+		t.Errorf("expected X->Y, got X->%s", envValue(subs, x))
 	}
 }
 
@@ -195,8 +199,8 @@ func TestResolutionMGUSameRelation(t *testing.T) {
 	if !match {
 		t.Fatal("expected match=true")
 	}
-	if subs["X"].String() != "a" {
-		t.Errorf("X: expected a, got %s", subs["X"])
+	if envValue(subs, x).String() != "a" {
+		t.Errorf("X: expected a, got %s", envValue(subs, x))
 	}
 }
 
@@ -224,8 +228,8 @@ func TestResolutionTermsMGUEqBasic(t *testing.T) {
 	if !match {
 		t.Fatal("expected match=true")
 	}
-	if subs["X"].String() != "a" {
-		t.Errorf("X: expected a, got %s", subs["X"])
+	if envValue(subs, x).String() != "a" {
+		t.Errorf("X: expected a, got %s", envValue(subs, x))
 	}
 	if len(eqs) != 1 {
 		t.Fatalf("expected 1 equality, got %d", len(eqs))
@@ -319,11 +323,11 @@ func TestResolutionTermsMGUTransitiveChain(t *testing.T) {
 	if !match {
 		t.Fatal("expected match=true")
 	}
-	if subs["X"].String() != "a" {
-		t.Errorf("X: expected a, got %s", subs["X"])
+	if envValue(subs, x).String() != "a" {
+		t.Errorf("X: expected a, got %s", envValue(subs, x))
 	}
-	if subs["Y"].String() != "a" {
-		t.Errorf("Y: expected a, got %s", subs["Y"])
+	if envValue(subs, y).String() != "a" {
+		t.Errorf("Y: expected a, got %s", envValue(subs, y))
 	}
 }
 
@@ -371,9 +375,10 @@ func FuzzTermsMGU(f *testing.F) {
 				_ = k
 				// The result should not be a variable that is also in the env
 				if vr, ok := v.(*LogicVariable); ok {
-					if _, found := subs[vr.Name]; found && vr.Name != k {
+					vk := resolutionKey(vr)
+					if _, found := subs[vk]; found && vk != k {
 						// This would indicate an un-resolved chain
-						t.Errorf("unresolved chain: %s -> %s -> ...", k, vr.Name)
+						t.Errorf("unresolved chain: %s -> %s -> ...", k, vk)
 					}
 				}
 			}

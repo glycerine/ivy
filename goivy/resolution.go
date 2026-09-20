@@ -7,7 +7,7 @@ package goivy
 // Term is an alias for logic.Expr (variables or constants).
 type ResolutionTerm = Expr
 
-// Env maps variable names to terms.
+// Env maps structural variable keys to terms.
 type Env map[string]ResolutionTerm
 
 // EnvFind follows the variable chain in env until a non-variable or
@@ -19,7 +19,7 @@ func EnvFind(env Env, t ResolutionTerm) ResolutionTerm {
 		if !ok {
 			return v
 		}
-		next, found := env[vr.Name]
+		next, found := env[resolutionKey(vr)]
 		if !found {
 			return v
 		}
@@ -33,16 +33,11 @@ func ResolutionIsConstant(n ResolutionTerm) bool {
 	return ok
 }
 
-// rep returns the name of a Var or Const.
-func rep(n ResolutionTerm) string {
-	switch t := n.(type) {
-	case *LogicVariable:
-		return t.Name
-	case *Const:
-		return t.Name
-	default:
-		return n.String()
+func resolutionKey(n ResolutionTerm) string {
+	if n == nil {
+		return "<nil>"
 	}
+	return string(n.Sexp())
 }
 
 // TermsMGU attempts to find a most general unifier for two lists of terms.
@@ -68,17 +63,17 @@ func TermsMGU(terms1, terms2 []ResolutionTerm) (bool, Env) {
 
 		if ResolutionIsConstant(v1) {
 			if ResolutionIsConstant(v2) {
-				if rep(v1) != rep(v2) {
+				if resolutionKey(v1) != resolutionKey(v2) {
 					return false, nil
 				}
 			} else {
 				// v2 must be a variable not already in env
-				env[rep(v2)] = v1
+				env[resolutionKey(v2)] = v1
 			}
 		} else {
 			// v1 is a variable
-			if ResolutionIsConstant(v2) || rep(v1) != rep(v2) {
-				env[rep(v1)] = v2
+			if ResolutionIsConstant(v2) || resolutionKey(v1) != resolutionKey(v2) {
+				env[resolutionKey(v1)] = v2
 			}
 		}
 	}
@@ -152,15 +147,15 @@ func TermsMGUEq(terms1, terms2 []ResolutionTerm) (bool, Env, []*ResolutionAtom) 
 
 		if ResolutionIsConstant(v1) {
 			if ResolutionIsConstant(v2) {
-				if rep(v1) != rep(v2) {
+				if resolutionKey(v1) != resolutionKey(v2) {
 					eqs = append(eqs, EqualityAtom(v1, v2))
 				}
 			} else {
-				env[rep(v2)] = v1
+				env[resolutionKey(v2)] = v1
 			}
 		} else {
-			if ResolutionIsConstant(v2) || rep(v1) != rep(v2) {
-				env[rep(v1)] = v2
+			if ResolutionIsConstant(v2) || resolutionKey(v1) != resolutionKey(v2) {
+				env[resolutionKey(v1)] = v2
 			}
 		}
 	}

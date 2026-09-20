@@ -92,10 +92,7 @@ func unitresSubstitutionKey(n Expr) string {
 }
 
 func unitresLookup(subs map[string]Expr, t Expr) (Expr, bool) {
-	if repl, ok := subs[unitresSubstitutionKey(t)]; ok {
-		return repl, true
-	}
-	repl, ok := subs[unitresRep(t)]
+	repl, ok := subs[unitresSubstitutionKey(t)]
 	return repl, ok
 }
 
@@ -310,7 +307,7 @@ func CanonizeLiteralUnique(lit *UnitResLiteral) *UnitResLiteral {
 // ---------- Substitution helpers ----------
 
 // SubstituteLit applies a variable substitution to a literal.
-// subs maps variable names to replacement terms.
+// subs maps structural variable keys to replacement terms.
 func SubstituteLit(lit *UnitResLiteral, subs Env) *UnitResLiteral {
 	terms := make([]Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
@@ -325,7 +322,7 @@ func SubstituteLit(lit *UnitResLiteral, subs Env) *UnitResLiteral {
 	return NewUnitResLiteral(lit.Polarity, NewAtom(lit.Atom.RelName, terms...))
 }
 
-// SubstituteConstantsLit substitutes constants by name in a literal.
+// SubstituteConstantsLit substitutes constants by structural key in a literal.
 func SubstituteConstantsLit(lit *UnitResLiteral, subs map[string]Expr) *UnitResLiteral {
 	terms := make([]Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
@@ -422,11 +419,7 @@ func (ur *UnitRes) findTerm(term Expr) Expr {
 // groundMatch yields keys in index.Children whose representative matches term's representative.
 func (ur *UnitRes) groundMatch(term Expr, children map[string]*IndexNode) []string {
 	if ur.EquationalTheory == nil {
-		key := unitresKey(term)
-		if _, ok := children[key]; ok {
-			return []string{key}
-		}
-		return []string{unitresRep(term)}
+		return []string{unitresKey(term)}
 	}
 	trep := ur.EquationalTheory.Find(term)
 	var result []string
@@ -576,15 +569,7 @@ func termSubsume(term1, term2 Expr, env map[string]Expr) bool {
 	if prev, ok := env[name]; ok {
 		return prev.Equal(term2)
 	}
-	if IsTopSort(term1.NodeSort()) {
-		if prev, ok := env[unitresRep(term1)]; ok {
-			return prev.Equal(term2)
-		}
-	}
 	env[name] = term2
-	if IsTopSort(term1.NodeSort()) {
-		env[unitresRep(term1)] = term2
-	}
 	return true
 }
 

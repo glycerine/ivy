@@ -76,17 +76,12 @@ func (cc *CongClos) Find(term CongClosTerm) CongClosTerm {
 	return cc.getRepNode(term).term
 }
 
-// FindByName looks up a constant by name (creating one if needed) and
+// FindByName looks up a TopSort constant by name (creating one if needed) and
 // returns its representative term.
 func (cc *CongClos) FindByName(name string) CongClosTerm {
 	term := NewConst(name, TopS)
 	n, ok := cc.tab[congClosKey(term)]
 	if !ok {
-		for _, existing := range cc.tab {
-			if nodeName(existing.term) == name {
-				return cc.getRepRec(existing).term
-			}
-		}
 		n = &node{term: term, rep: nil}
 		cc.tab[congClosKey(term)] = n
 	}

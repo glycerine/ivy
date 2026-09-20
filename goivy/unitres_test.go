@@ -178,8 +178,9 @@ func TestUnitResAtomEqual(t *testing.T) {
 // ---------- Substitution tests ----------
 
 func TestUnitResSubstituteLit(t *testing.T) {
-	lit := posLit("p", v("X"), c("b"))
-	subs := Env{"X": c("a")}
+	x := v("X")
+	lit := posLit("p", x, c("b"))
+	subs := Env{unitresSubstitutionKey(x): c("a")}
 	result := SubstituteLit(lit, subs)
 
 	if unitresRep(result.Atom.Args[0]) != "a" {
@@ -191,8 +192,9 @@ func TestUnitResSubstituteLit(t *testing.T) {
 }
 
 func TestUnitResSubstituteConstantsLit(t *testing.T) {
-	lit := posLit("p", c("a"), c("b"))
-	subs := map[string]Expr{"a": c("c")}
+	a := c("a")
+	lit := posLit("p", a, c("b"))
+	subs := map[string]Expr{unitresSubstitutionKey(a): c("c")}
 	result := SubstituteConstantsLit(lit, subs)
 
 	if unitresRep(result.Atom.Args[0]) != "c" {
@@ -373,15 +375,19 @@ func TestUnitResFindUnifying(t *testing.T) {
 
 func TestUnitResTermSubsume(t *testing.T) {
 	env := make(map[string]Expr)
-	if !termSubsume(v("X"), c("a"), env) {
+	x := v("X")
+	if !termSubsume(x, c("a"), env) {
 		t.Error("variable should subsume constant")
 	}
-	if env["X"] == nil || unitresRep(env["X"]) != "a" {
+	if env[unitresSubstitutionKey(x)] == nil || unitresRep(env[unitresSubstitutionKey(x)]) != "a" {
 		t.Error("env should map X to a")
+	}
+	if _, ok := env["X"]; ok {
+		t.Error("env should not contain a bare variable-name key")
 	}
 
 	// Same variable bound to different constant should fail
-	if termSubsume(v("X"), c("b"), env) {
+	if termSubsume(x, c("b"), env) {
 		t.Error("X already bound to a, should not match b")
 	}
 }
@@ -673,13 +679,15 @@ func TestUnitResTautologicalClauseNotAdded(t *testing.T) {
 func TestUnitResGroundMatchNoTheory(t *testing.T) {
 	// With nil equational theory, should return exact match
 	ur := &UnitRes{} // nil EquationalTheory
+	a := c("a")
+	aKey := unitresKey(a)
 	children := map[string]*IndexNode{
-		"a": newIndexNode(),
-		"b": newIndexNode(),
+		aKey:               newIndexNode(),
+		unitresKey(c("b")): newIndexNode(),
 	}
-	result := ur.groundMatch(c("a"), children)
-	if len(result) != 1 || result[0] != "a" {
-		t.Errorf("expected [a], got %v", result)
+	result := ur.groundMatch(a, children)
+	if len(result) != 1 || result[0] != aKey {
+		t.Errorf("expected [%s], got %v", aKey, result)
 	}
 }
 
@@ -700,11 +708,12 @@ func TestUnitResIsSkolemName(t *testing.T) {
 // ---------- SubstituteConstantsClause ----------
 
 func TestUnitResSubstituteConstantsClause(t *testing.T) {
+	a := c("a")
 	cl := []*UnitResLiteral{
-		posLit("p", c("a"), c("b")),
-		negLit("q", c("a")),
+		posLit("p", a, c("b")),
+		negLit("q", a),
 	}
-	subs := map[string]Expr{"a": c("c")}
+	subs := map[string]Expr{unitresSubstitutionKey(a): c("c")}
 	result := SubstituteConstantsClause(cl, subs)
 
 	if unitresRep(result[0].Atom.Args[0]) != "c" {

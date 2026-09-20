@@ -195,6 +195,23 @@ func TestCongClosFindByNameExisting(t *testing.T) {
 	}
 }
 
+func TestCongClosFindByNameDoesNotAliasTypedSameName(t *testing.T) {
+	cc := NewCongClos()
+	client := &UninterpretedSort{Name: "client"}
+	a := NewConst("a", client)
+	b := NewConst("b", client)
+	cc.Union(a, b)
+
+	rep := cc.FindByName("b")
+	want := NewConst("b", TopS)
+	if !rep.Equal(want) {
+		t.Fatalf("FindByName returned %s, want independent TopSort b", rep)
+	}
+	if cc.Find(b).String() != "a" {
+		t.Fatalf("typed b representative changed unexpectedly: %s", cc.Find(b))
+	}
+}
+
 // TestTheoryEmpty tests that an empty CongClos has empty theory.
 func TestCongClosTheoryEmpty(t *testing.T) {
 	cc := NewCongClos()
