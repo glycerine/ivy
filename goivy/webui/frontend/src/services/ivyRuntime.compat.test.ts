@@ -1549,6 +1549,50 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(runtime.controls.lastStatus).toEqual({ message: 'Recalculated', kind: 'success' });
   });
 
+  it('keeps concrete state edges visible after clicking an ARG state', async () => {
+    installSheetDom();
+    const runtime = makeRuntime();
+    runtime.argGraph = new FakeGraph('arg-graph');
+    runtime.conceptGraph = new FakeGraph('concept-graph');
+    runtime.registerSheet('sheet-1', runtime.argGraph, runtime.conceptGraph);
+    runtime.sheets['sheet-1'].reachabilityOnly = true;
+    runtime.uiDataModel.sheets['sheet-1'].reachabilityOnly = true;
+    runtime._applyEdgeVisibility = vi.fn();
+    runtime.api.getConceptGraph = vi.fn(async () => ({
+      selected_node: 'state_1',
+      state_label: '1',
+      elements: [
+        { group: 'nodes', data: { id: 'n0', obj: '0:client', label: '0:client', cluster: 'client' } },
+        { group: 'nodes', data: { id: 'n1', obj: '1:client', label: '1:client', cluster: 'client' } },
+        { group: 'nodes', data: { id: 'n2', obj: '0:server', label: '0:server', cluster: 'server' } },
+        {
+          group: 'edges',
+          data: { id: 'e0', obj: 'link', source: 'n0', target: 'n2', source_obj: '0:client', target_obj: '0:server' },
+          classes: 'all_to_all',
+        },
+        {
+          group: 'edges',
+          data: { id: 'e1', obj: 'link', source: 'n1', target: 'n2', source_obj: '1:client', target_obj: '0:server' },
+          classes: 'all_to_all',
+        },
+      ],
+      relations: ['link(X,Y)'],
+      toggles: {
+        edges: { link: { all_to_all: true } },
+        labels: {},
+      },
+    }));
+
+    await runtime.onArgNodeClick({ id: 'n1', obj: 'state_1', label: '1' }, 'sheet-1');
+
+    expect(runtime.api.getConceptGraph).toHaveBeenCalledWith('state_1', 'sheet-1');
+    const latestElements = runtime.conceptGraph.update.mock.calls.at(-1)[0];
+    expect(latestElements.filter((element) => element.group === 'edges' && element.data.obj === 'link')).toHaveLength(2);
+    const visibility = runtime._applyEdgeVisibility.mock.calls.at(-1)[1].edgeVisibilityById;
+    expect(visibility.e0).toBe(true);
+    expect(visibility.e1).toBe(true);
+  });
+
   it('resizes the active reachability-only sheet details pane', () => {
     installSheetDom();
     const runtime = makeRuntime();

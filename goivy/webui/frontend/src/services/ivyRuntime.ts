@@ -3448,11 +3448,13 @@ class IvyRuntime {
         var sheet = this.sheets && this.sheets[sheetId];
         var argGraph = (sheet && sheet.argGraph) || this.argGraph;
         var conceptGraph = (sheet && sheet.conceptGraph) || this.conceptGraph;
+        var sheetHasConceptGraph = !!(sheet && sheet.conceptGraph);
         if (sheetId !== this.activeSheetId && this.sheets && this.sheets[sheetId]) {
             this.switchSheet(sheetId);
             sheet = this.sheets[sheetId];
             argGraph = sheet.argGraph;
             conceptGraph = sheet.conceptGraph;
+            sheetHasConceptGraph = !!conceptGraph;
         }
         this.selectedArgNode = nodeData.id;
         this.uiDataStore.setSelectedArgNode(sheetId, nodeData.id);
@@ -3461,7 +3463,7 @@ class IvyRuntime {
             this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
             return;
         }
-        if (sheet && sheet.reachabilityOnly) {
+        if (sheet && sheet.reachabilityOnly && !sheetHasConceptGraph) {
             this.controls.setStatus('Viewing trace state ' + (nodeData.label || nodeData.id));
             return;
         }

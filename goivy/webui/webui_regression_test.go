@@ -331,6 +331,39 @@ func TestRegression_TutorialStateOneConceptGraphShowsBothConcreteLinks(t *testin
 	}
 }
 
+func TestRegression_TutorialStateOneConceptGraphKeepsUsedRelationVisibleAfterCheck(t *testing.T) {
+	srv, id := loadTutorialClientServer(t)
+
+	check := runTutorialInductionCheck(t, srv, id)
+	if check["result"] != "fail" {
+		t.Fatalf("tutorial induction check result = %#v, want fail; check=%#v", check["result"], check)
+	}
+	used, _ := check["used_relations"].([]interface{})
+	hasLink := false
+	for _, raw := range used {
+		if raw == "link" {
+			hasLink = true
+			break
+		}
+	}
+	if !hasLink {
+		t.Fatalf("tutorial induction used_relations = %#v, want link", check["used_relations"])
+	}
+
+	state1 := getConceptNodeJSON(t, srv, id, "state_1")
+	if state1["selected_node"] != "state_1" {
+		t.Fatalf("state_1 selected_node = %#v, want state_1", state1["selected_node"])
+	}
+	graph, _ := state1["graph"].(map[string]interface{})
+	graphState, _ := graph["state"].(string)
+	if val, ok := conceptToggleValue(state1, "edges", "link", EdgeDisplayAllToAll); !ok || !val {
+		t.Fatalf("state_1 link + toggle = (%v,%v), want present true; toggles=%#v", val, ok, state1["toggles"])
+	}
+	if got := conceptEdgeCount(state1, "link"); got != 2 {
+		t.Fatalf("state_1 rendered %d link edges after check, want 2; graph_state=%q elements=%#v", got, graphState, state1["elements"])
+	}
+}
+
 func TestRegression_ConceptTogglesAreBackendOwnedAndFilterRendering(t *testing.T) {
 	srv, id := loadClientServer(t)
 
