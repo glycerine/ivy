@@ -6018,13 +6018,13 @@ class IvyRuntime {
             var sheetId = this.activeSheetId || 'sheet-1';
             var result = await this.api.executeAction('conjecture', { sheet_id: sheetId });
             await this.refreshConceptGraph();
-            if (result && result.conjecture) {
+            if (result && (result.conjecture || result.details_text || result.constraints)) {
                 appendDetailsTextViaService(
                     result.message || 'Based on this goal and the known reached states, we can conjecture the following invariant:',
-                    result.conjecture,
+                    result.conjecture || result.details_text || result.constraints,
                 );
             }
-            this.controls.setStatus('Conjecture generated', 'success');
+            this.controls.setStatus(result && result.status === 'constraints' ? 'Constraints generated' : 'Conjecture generated', 'success');
         } catch (e) {
             this.controls.setStatus('Conjecture failed: ' + e.message, 'error');
         }

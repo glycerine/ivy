@@ -1291,7 +1291,34 @@ func TestCTICheckActionsReportSelectedTargetAndResultKind(t *testing.T) {
 	}
 }
 
-func TestConjectureActionReturnsDisplayTextForClientServerCTI(t *testing.T) {
+func assertConjectureConstraintsResult(t *testing.T, result map[string]interface{}, context string) {
+	t.Helper()
+	conjecture, _ := result["conjecture"].(string)
+	if strings.TrimSpace(conjecture) == "false" {
+		t.Fatalf("%s reported false as a generated invariant: %#v", context, result)
+	}
+	if strings.TrimSpace(conjecture) != "" {
+		t.Fatalf("%s should return constraints, not a conjecture: %#v", context, result)
+	}
+	if status, _ := result["status"].(string); status != "constraints" {
+		t.Fatalf("%s status = %q, want constraints; result=%#v", context, status, result)
+	}
+	if message, _ := result["message"].(string); message != "Constraints:" {
+		t.Fatalf("%s message = %q, want Constraints:; result=%#v", context, message, result)
+	}
+	constraints, _ := result["constraints"].(string)
+	if strings.TrimSpace(constraints) == "" || strings.TrimSpace(constraints) == "false" {
+		t.Fatalf("%s returned invalid constraints %q: %#v", context, constraints, result)
+	}
+	if detailsText, _ := result["details_text"].(string); detailsText != constraints {
+		t.Fatalf("%s details_text = %q, want constraints %q; result=%#v", context, detailsText, constraints, result)
+	}
+	if _, ok := result["concept"].(map[string]interface{}); !ok {
+		t.Fatalf("%s result missing refreshed concept graph: %#v", context, result["concept"])
+	}
+}
+
+func TestConjectureActionReturnsConstraintsForClientServerCTI(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-conjecture-display")
 	if err := s.LoadFileContent("client_server_example.ivy", readClientServerExample(t)); err != nil {
 		t.Fatalf("LoadFileContent: %v", err)
@@ -1305,17 +1332,7 @@ func TestConjectureActionReturnsDisplayTextForClientServerCTI(t *testing.T) {
 	if err != nil {
 		t.Fatalf("conjecture: %v", err)
 	}
-	message, _ := result["message"].(string)
-	if !strings.Contains(message, "conjecture") {
-		t.Fatalf("conjecture message = %q, want display prompt", message)
-	}
-	conjecture, _ := result["conjecture"].(string)
-	if strings.TrimSpace(conjecture) == "" {
-		t.Fatalf("conjecture result missing display text: %#v", result)
-	}
-	if _, ok := result["concept"].(map[string]interface{}); !ok {
-		t.Fatalf("conjecture result missing refreshed concept graph: %#v", result["concept"])
-	}
+	assertConjectureConstraintsResult(t, result, "conjecture")
 }
 
 func TestConjectureAfterGatherDoesNotTreatFalseAsInvariant(t *testing.T) {
@@ -1335,13 +1352,7 @@ func TestConjectureAfterGatherDoesNotTreatFalseAsInvariant(t *testing.T) {
 	if err != nil {
 		t.Fatalf("conjecture: %v", err)
 	}
-	conjecture, _ := result["conjecture"].(string)
-	if strings.TrimSpace(conjecture) == "false" {
-		t.Fatalf("conjecture after gather reported false as a generated invariant: %#v", result)
-	}
-	if status, _ := result["status"].(string); status != "warning" {
-		t.Fatalf("conjecture after gather status = %q, want warning; result=%#v", status, result)
-	}
+	assertConjectureConstraintsResult(t, result, "conjecture after gather")
 }
 
 func TestInductionFailureUsedRelationsExcludeUnusedSignatureRelations(t *testing.T) {

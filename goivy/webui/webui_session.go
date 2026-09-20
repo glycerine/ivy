@@ -1137,12 +1137,37 @@ func conceptGraphGoalClauses(w *GraphWidget, parentState *goivy.State) (*goivy.C
 }
 
 const conjectureGeneratedMessage = "Based on this goal and the known reached states, we can conjecture the following invariant:"
+const conjectureConstraintsMessage = "Constraints:"
 
 func conjectureDisplayString(clauses *goivy.Clauses) string {
 	if clauses == nil {
 		return ""
 	}
 	return goivy.PrettyFmla(goivy.ClausesToFormula(clauses))
+}
+
+func conjectureConstraintsDisplayString(clauses *goivy.Clauses) string {
+	if clauses == nil {
+		return ""
+	}
+	var parts []string
+	for _, f := range clauses.Fmlas {
+		parts = appendConjectureConstraintPart(parts, f)
+	}
+	return strings.Join(parts, "; ")
+}
+
+func appendConjectureConstraintPart(parts []string, f goivy.Expr) []string {
+	if f == nil || goivy.IvyIsTrue(f) {
+		return parts
+	}
+	if and, ok := f.(*goivy.LogicAnd); ok {
+		for _, term := range and.Terms {
+			parts = appendConjectureConstraintPart(parts, term)
+		}
+		return parts
+	}
+	return append(parts, goivy.PrettyFmla(f))
 }
 
 func conceptGraphConjectureClauses(w *GraphWidget, parentState *goivy.State) (*goivy.Clauses, error) {
@@ -1190,6 +1215,41 @@ func (s *Session) conjectureCurrentConceptGraphLocked(sheetID string) (map[strin
 		result["status"] = "warning"
 		result["message"] = "Cannot form a conjecture based on the known reached states and this goal."
 		result["concept"] = conceptGraphActionPayload(w)
+		return result, nil
+	}
+	if ri.Itp.IsFalse() {
+		core, coreErr := goivy.CaseConjectureGoalCore(goivy.ArtToInterpState(parentState), goalClauses)
+		if coreErr != nil {
+			return nil, fmt.Errorf("conjecture constraints: %w", coreErr)
+		}
+		if core == nil || core.IsFalse() || core.IsTrue() {
+			core = goalClauses
+		}
+		if core != nil && !core.IsFalse() && !core.IsTrue() {
+			w.Checkpoint(false)
+			g.SetFactsExpr(core.Fmlas)
+			if err := g.SetState(clausesDisplayString(core), true, false, false); err != nil {
+				return nil, err
+			}
+			if err := w.Update(); err != nil {
+				return nil, err
+			}
+			s.SimpleSess = conceptSessionCopy(g.ConceptSess)
+			s.toggles = g.Checks.Snapshot()
+		}
+		constraints := conjectureConstraintsDisplayString(core)
+		if constraints == "" {
+			constraints = conjectureDisplayString(core)
+		}
+		result["status"] = "constraints"
+		result["message"] = conjectureConstraintsMessage
+		result["constraints"] = constraints
+		result["details_text"] = constraints
+		result["concept"] = conceptGraphActionPayload(w)
+		s.emit(Event{Type: "conjecture_constraints", Data: map[string]interface{}{
+			"sheet_id":    resolvedSheetID,
+			"constraints": constraints,
+		}})
 		return result, nil
 	}
 

@@ -273,6 +273,14 @@ func CaseConjecture(state *InterpState, clauses *Clauses) *InterpolantResult {
 	return ri
 }
 
+// CaseConjectureGoalCore returns the goal-side case-clause core used while
+// trying to conjecture a separator. It does not mutate the state's conjectures.
+func CaseConjectureGoalCore(state *InterpState, clauses *Clauses) (*Clauses, error) {
+	pre := JoinUnders(state)
+	axioms := state.Domain.BackgroundTheory(state.InScope)
+	return InterpolantCaseGoalCore(state.Domain, pre, clauses, axioms)
+}
+
 // ---------------------------------------------------------------------------
 // Diagram
 // ---------------------------------------------------------------------------

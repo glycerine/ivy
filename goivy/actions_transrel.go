@@ -1514,6 +1514,30 @@ func InterpolantCase(mod *Module, preState *Clauses, post *Clauses, axioms *Clau
 	return Interpolant(mod, preState, filtered, axioms, interpreted)
 }
 
+// InterpolantCaseGoalCore returns a Z3 unsat core over the goal-side case
+// clauses used by InterpolantCase. This is useful for UI paths that need to
+// show the concrete gathered constraints instead of a vacuous false
+// interpolant.
+func InterpolantCaseGoalCore(mod *Module, preState *Clauses, post *Clauses, axioms *Clauses) (*Clauses, error) {
+	slv := NewSolver(mod, nil)
+	postCase, err := slv.ClausesCase(post)
+	if err != nil || postCase == nil {
+		return nil, err
+	}
+	filtered := caseClausesFilter(postCase)
+	if filtered == nil || filtered.IsTrue() || filtered.IsFalse() {
+		return filtered, nil
+	}
+	core, err := slv.UnsatCore(filtered, AndClausesTyped(preState, axioms), nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	if core != nil && !core.IsTrue() && !core.IsFalse() {
+		return core, nil
+	}
+	return filtered, nil
+}
+
 // InterpFromUnsatCore computes a Craig-style interpolant from an unsat core.
 //
 // Faithful port of Python interp_from_unsat_core (ivy_transrel.py:581-603):
