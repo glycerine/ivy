@@ -21,6 +21,21 @@ export function clearDetailsLog(app = null, {
   info.setAttribute('data-ivy-details-kind', 'placeholder');
 }
 
+export function appendDetailsText(title = '', text = '', {
+  doc = globalThis.document,
+} = {}) {
+  const info = activeDetailsElement(doc);
+  if (!info) return;
+  const addition = [title, text].map((part) => String(part || '').trim()).filter(Boolean).join('\n');
+  if (!addition) return;
+  const kind = info.getAttribute('data-ivy-details-kind') || '';
+  const current = (info.textContent || '').trim();
+  const prefix = kind === 'placeholder' || current === DETAILS_PLACEHOLDER ? '' : current;
+  info.innerHTML = '';
+  info.textContent = prefix ? `${prefix}\n\n${addition}` : addition;
+  info.setAttribute('data-ivy-details-kind', 'selection');
+}
+
 export function populateConstraintFacts(app, conceptData, {
   doc = globalThis.document,
 } = {}) {

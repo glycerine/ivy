@@ -80,6 +80,30 @@ func unitresRep(n Expr) string {
 	}
 }
 
+func unitresKey(n Expr) string {
+	if n == nil {
+		return "<nil>"
+	}
+	return string(n.Sexp())
+}
+
+func unitresSubstitutionKey(n Expr) string {
+	return unitresKey(n)
+}
+
+func unitresLookup(subs map[string]Expr, t Expr) (Expr, bool) {
+	if repl, ok := subs[unitresSubstitutionKey(t)]; ok {
+		return repl, true
+	}
+	repl, ok := subs[unitresRep(t)]
+	return repl, ok
+}
+
+func unitresIsCanonicalVarConst(n Expr) bool {
+	c, ok := n.(*Const)
+	return ok && strings.HasPrefix(c.Name, "__v")
+}
+
 // isVar returns true if the node is a *logic.Variable.
 func isVar(n Expr) bool {
 	_, ok := n.(*LogicVariable)
@@ -192,13 +216,13 @@ type LitConsing struct {
 type litKey struct {
 	polarity int
 	relname  string
-	argsKey  string // concatenation of unitresRep(arg) separated by \x00
+	argsKey  string // concatenation of unitresKey(arg) separated by \x00
 }
 
 func makeLitKey(lit *UnitResLiteral) litKey {
 	parts := make([]string, len(lit.Atom.Args))
 	for i, a := range lit.Atom.Args {
-		parts[i] = unitresRep(a)
+		parts[i] = unitresKey(a)
 	}
 	return litKey{
 		polarity: lit.Polarity,
@@ -233,7 +257,7 @@ func CanonizeLiteral(lit *UnitResLiteral) (*UnitResLiteral, map[string]*Const) {
 	terms := make([]Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
-			name := unitresRep(t)
+			name := unitresSubstitutionKey(t)
 			if _, ok := subs[name]; !ok {
 				subs[name] = NewConst(fmt.Sprintf("__v%d", i), TopS)
 			}
@@ -251,7 +275,7 @@ func CanonizeLiteralVars(lit *UnitResLiteral) *UnitResLiteral {
 	terms := make([]Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
-			name := unitresRep(t)
+			name := unitresSubstitutionKey(t)
 			if _, ok := subs[name]; !ok {
 				v, _ := NewVariable(fmt.Sprintf("V%d", i), t.NodeSort())
 				subs[name] = v
@@ -270,7 +294,7 @@ func CanonizeLiteralUnique(lit *UnitResLiteral) *UnitResLiteral {
 	terms := make([]Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
-			name := unitresRep(t)
+			name := unitresSubstitutionKey(t)
 			if _, ok := subs[name]; !ok {
 				v, _ := NewVariable(fmt.Sprintf("W%d", i), t.NodeSort())
 				subs[name] = v
@@ -291,7 +315,7 @@ func SubstituteLit(lit *UnitResLiteral, subs Env) *UnitResLiteral {
 	terms := make([]Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
-			if repl, ok := subs[unitresRep(t)]; ok {
+			if repl, ok := unitresLookup(subs, t); ok {
 				terms[i] = repl
 				continue
 			}
@@ -306,7 +330,7 @@ func SubstituteConstantsLit(lit *UnitResLiteral, subs map[string]Expr) *UnitResL
 	terms := make([]Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isConst(t) {
-			if repl, ok := subs[unitresRep(t)]; ok {
+			if repl, ok := unitresLookup(subs, t); ok {
 				terms[i] = repl
 				continue
 			}
@@ -378,7 +402,7 @@ func indexLookup(idx *Index, lit *UnitResLiteral) *IndexNode {
 	for _, t := range lit.Atom.Args {
 		key := "V"
 		if !isVar(t) {
-			key = unitresRep(t)
+			key = unitresKey(t)
 		}
 		node = node.getOrCreate(key)
 	}
@@ -398,12 +422,23 @@ func (ur *UnitRes) findTerm(term Expr) Expr {
 // groundMatch yields keys in index.Children whose representative matches term's representative.
 func (ur *UnitRes) groundMatch(term Expr, children map[string]*IndexNode) []string {
 	if ur.EquationalTheory == nil {
+		key := unitresKey(term)
+		if _, ok := children[key]; ok {
+			return []string{key}
+		}
 		return []string{unitresRep(term)}
 	}
 	trep := ur.EquationalTheory.Find(term)
 	var result []string
+	seen := make(map[string]bool)
+	trepKey := unitresKey(trep)
 	for key := range children {
-		if ur.EquationalTheory.FindByName(key) == trep {
+		if key == trepKey {
+			result = append(result, key)
+			seen[key] = true
+			continue
+		}
+		if crep, ok := ur.EquationalTheory.FindByKey(key); ok && crep.Equal(trep) && !seen[key] {
 			result = append(result, key)
 		}
 	}
@@ -460,7 +495,7 @@ func (ur *UnitRes) findUnifyingRec(node *IndexNode, terms []Expr, idx int) []*In
 	}
 	t := terms[idx]
 	var results []*IndexNode
-	if isVar(t) || (isConst(t) && strings.HasPrefix(unitresRep(t), "__v")) {
+	if isVar(t) || unitresIsCanonicalVarConst(t) {
 		for _, child := range node.Children {
 			results = append(results, ur.findUnifyingRec(child, terms, idx+1)...)
 		}
@@ -531,17 +566,25 @@ func (ur *UnitRes) litRep(lit *UnitResLiteral) *UnitResLiteral {
 // termSubsume tries to match term1 to term2 (env only operates on term1 variables).
 func termSubsume(term1, term2 Expr, env map[string]Expr) bool {
 	if isConst(term1) {
-		if !isConst(term2) || unitresRep(term1) != unitresRep(term2) {
+		if !isConst(term2) || unitresKey(term1) != unitresKey(term2) {
 			return false
 		}
 		return true
 	}
 	// term1 is a variable
-	name := unitresRep(term1)
+	name := unitresSubstitutionKey(term1)
 	if prev, ok := env[name]; ok {
 		return prev.Equal(term2)
 	}
+	if IsTopSort(term1.NodeSort()) {
+		if prev, ok := env[unitresRep(term1)]; ok {
+			return prev.Equal(term2)
+		}
+	}
 	env[name] = term2
+	if IsTopSort(term1.NodeSort()) {
+		env[unitresRep(term1)] = term2
+	}
 	return true
 }
 
@@ -582,7 +625,7 @@ func (ur *UnitRes) litSubsumeModEq(lit1, lit2 *UnitResLiteral, env map[string]Ex
 
 // rewriteClause substitutes variable v with term t in each literal of a clause.
 func rewriteClause(cl []*UnitResLiteral, v Expr, t Expr) []*UnitResLiteral {
-	subs := Env{unitresRep(v): t}
+	subs := Env{unitresSubstitutionKey(v): t}
 	result := make([]*UnitResLiteral, len(cl))
 	for i, lit := range cl {
 		result[i] = SubstituteLit(lit, subs)
@@ -834,7 +877,7 @@ func (ur *UnitRes) AddClause(cl []*UnitResLiteral, gen int) {
 			lhs, rhs := cl[i], cl[1-i]
 			if isDisequalityLit(lhs) && isEqualityLit(rhs) && len(lhs.Atom.Args) == 2 {
 				for j := 0; j < 2; j++ {
-					subs := map[string]Expr{unitresRep(lhs.Atom.Args[j]): lhs.Atom.Args[1-j]}
+					subs := map[string]Expr{unitresSubstitutionKey(lhs.Atom.Args[j]): lhs.Atom.Args[1-j]}
 					newRHS := SubstituteConstantsLit(rhs, subs)
 					if !LitEqual(rhs, newRHS) {
 						newCl := []*UnitResLiteral{lhs, newRHS}
@@ -878,7 +921,7 @@ func (ur *UnitRes) indexUnitTerms(i int) {
 	used := make(map[string]bool)
 	for _, t := range ur.UnitQueue[i].Atom.Args {
 		if !isVar(t) {
-			name := unitresRep(t)
+			name := unitresKey(t)
 			if !used[name] {
 				used[name] = true
 				ur.unitTermIndex[name] = append(ur.unitTermIndex[name], i)
@@ -897,7 +940,7 @@ func (ur *UnitRes) deindexUnitTerms(i int) {
 	used := make(map[string]bool)
 	for _, t := range ur.UnitQueue[i].Atom.Args {
 		if !isVar(t) {
-			name := unitresRep(t)
+			name := unitresKey(t)
 			if !used[name] {
 				used[name] = true
 				ur.unitTermIndex[name] = removeInt(ur.unitTermIndex[name], i)
@@ -917,16 +960,18 @@ func removeInt(s []int, val int) []int {
 	return s
 }
 
-func (ur *UnitRes) updateEquationalTheory(lit *UnitResLiteral) {
+func (ur *UnitRes) updateEquationalTheory(lit *UnitResLiteral) bool {
 	if lit.Polarity == 1 && lit.Atom.RelName == "=" && len(lit.Atom.Args) == 2 {
 		t0, t1 := lit.Atom.Args[0], lit.Atom.Args[1]
 		if isConst(t0) && isConst(t1) {
-			ur.EquationalTheory.Union(t0, t1)
+			changed := ur.EquationalTheory.Union(t0, t1)
 			if ur.Verbose {
 				fmt.Printf("merged %s %s\n", t0, t1)
 			}
+			return changed
 		}
 	}
+	return false
 }
 
 func (ur *UnitRes) unitSubsumedByUsed(lit *UnitResLiteral) bool {
@@ -963,7 +1008,7 @@ func (ur *UnitRes) allowEqs(lit *UnitResLiteral, eqs []*ResolutionAtom, isUnit b
 	}
 	allSpec := true
 	for _, atom := range eqs {
-		if len(atom.Args) < 2 || !strings.HasPrefix(unitresRep(atom.Args[0]), "__v") || strings.HasPrefix(unitresRep(atom.Args[1]), "__v") {
+		if len(atom.Args) < 2 || !unitresIsCanonicalVarConst(atom.Args[0]) || unitresIsCanonicalVarConst(atom.Args[1]) {
 			allSpec = false
 			break
 		}
@@ -984,12 +1029,14 @@ func (ur *UnitRes) PropagateEquality(lit *UnitResLiteral, gen int) {
 		return
 	}
 	t0, t1 := lit.Atom.Args[0], lit.Atom.Args[1]
-	if unitresRep(t0) < unitresRep(t1) {
+	if unitresKey(t0) < unitresKey(t1) {
 		t0, t1 = t1, t0
 	}
-	for _, litIdx := range copyInts(ur.unitTermIndex[unitresRep(t0)]) {
+	t0Key := unitresKey(t0)
+	t1Key := unitresKey(t1)
+	for _, litIdx := range copyInts(ur.unitTermIndex[t0Key]) {
 		lit2 := ur.UnitQueue[litIdx]
-		subs := map[string]Expr{unitresRep(t0): t1}
+		subs := map[string]Expr{unitresSubstitutionKey(t0): t1}
 		lit3 := SubstituteConstantsLit(lit2, subs)
 		if !LitEqual(lit2, lit3) {
 			newCl := []*UnitResLiteral{lit3}
@@ -1003,8 +1050,10 @@ func (ur *UnitRes) PropagateEquality(lit *UnitResLiteral, gen int) {
 			}
 		}
 	}
-	ur.updateEquationalTheory(lit)
-	for _, litIdx := range copyInts(ur.unitTermIndex[unitresRep(t1)]) {
+	if !ur.updateEquationalTheory(lit) {
+		return
+	}
+	for _, litIdx := range copyInts(ur.unitTermIndex[t1Key]) {
 		lit2 := ur.UnitQueue[litIdx]
 		if ur.Verbose {
 			fmt.Printf("re-propagate: %s\n", lit2)

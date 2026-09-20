@@ -89,7 +89,10 @@ import {
     toggleChecked,
     updateStateLabel as updateStateLabelViaService,
 } from './conceptVisibilityService.ts';
-import { populateConstraintFacts as populateConstraintFactsViaService } from './detailsService.ts';
+import {
+    appendDetailsText as appendDetailsTextViaService,
+    populateConstraintFacts as populateConstraintFactsViaService,
+} from './detailsService.ts';
 import {
     assertValidSheetId as assertValidSheetIdViaService,
     isValidSheetId as isValidSheetIdViaService,
@@ -6012,8 +6015,15 @@ class IvyRuntime {
     async makeConjecture() {
         this.controls.setStatus('Generating conjecture...');
         try {
-            var result = await this.api.executeAction('conjecture', {});
+            var sheetId = this.activeSheetId || 'sheet-1';
+            var result = await this.api.executeAction('conjecture', { sheet_id: sheetId });
             await this.refreshConceptGraph();
+            if (result && result.conjecture) {
+                appendDetailsTextViaService(
+                    result.message || 'Based on this goal and the known reached states, we can conjecture the following invariant:',
+                    result.conjecture,
+                );
+            }
             this.controls.setStatus('Conjecture generated', 'success');
         } catch (e) {
             this.controls.setStatus('Conjecture failed: ' + e.message, 'error');

@@ -1291,6 +1291,33 @@ func TestCTICheckActionsReportSelectedTargetAndResultKind(t *testing.T) {
 	}
 }
 
+func TestConjectureActionReturnsDisplayTextForClientServerCTI(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-conjecture-display")
+	if err := s.LoadFileContent("client_server_example.ivy", readClientServerExample(t)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	cr := s.RunCheck("induction")
+	if cr.Result != "fail" {
+		t.Fatalf("RunCheck induction result = %q, want fail; message=%s", cr.Result, cr.Message)
+	}
+
+	result, err := s.ExecuteAction("conjecture", map[string]interface{}{"sheet_id": "sheet-1"})
+	if err != nil {
+		t.Fatalf("conjecture: %v", err)
+	}
+	message, _ := result["message"].(string)
+	if !strings.Contains(message, "conjecture") {
+		t.Fatalf("conjecture message = %q, want display prompt", message)
+	}
+	conjecture, _ := result["conjecture"].(string)
+	if strings.TrimSpace(conjecture) == "" {
+		t.Fatalf("conjecture result missing display text: %#v", result)
+	}
+	if _, ok := result["concept"].(map[string]interface{}); !ok {
+		t.Fatalf("conjecture result missing refreshed concept graph: %#v", result["concept"])
+	}
+}
+
 func TestInductionFailureUsedRelationsExcludeUnusedSignatureRelations(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-used-relations")
 	if err := s.LoadFileContent("test.ivy", []byte(ctiUsedRelationSample)); err != nil {

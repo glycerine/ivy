@@ -2137,6 +2137,48 @@ func TestZ3BridgeNumeralRangeClamping(t *testing.T) {
 	}
 }
 
+func TestZ3BridgeClausesCaseKeepsSameNumeralNamesSortDistinct(t *testing.T) {
+	client := &UninterpretedSort{Name: "client"}
+	server := &UninterpretedSort{Name: "server"}
+	boolSort := Boolean
+	linkSort, err := NewFunctionSort(client, server, boolSort)
+	if err != nil {
+		t.Fatalf("link sort: %v", err)
+	}
+	semaphoreSort, err := NewFunctionSort(server, boolSort)
+	if err != nil {
+		t.Fatalf("semaphore sort: %v", err)
+	}
+
+	x := NewConst("@X", client)
+	z := NewConst("@Z", client)
+	y := NewConst("@Y", server)
+	client0 := NewConst("0", client)
+	client1 := NewConst("1", client)
+	server0 := NewConst("0", server)
+	link := NewConst("link", linkSort)
+	semaphore := NewConst("semaphore", semaphoreSort)
+
+	clauses := NewClauses([]Expr{
+		z3MustEq(t, x, client1),
+		z3MustEq(t, z, client0),
+		z3MustEq(t, y, server0),
+		z3MustEq(t, MustApply(semaphore, server0), True),
+		z3MustEq(t, MustApply(link, client0, server0), True),
+		z3MustEq(t, MustApply(link, client1, server0), False),
+	}, nil, nil)
+
+	s := NewSolver(nil, nil)
+	postCase, err := s.ClausesCase(clauses)
+	if err != nil {
+		t.Fatalf("ClausesCase: %v", err)
+	}
+	filtered := caseClausesFilter(postCase)
+	if _, err := s.ClausesToZ3(filtered); err != nil {
+		t.Fatalf("ClausesToZ3(filtered case): %v", err)
+	}
+}
+
 func TestZ3BridgeNatSubUsesZ3PyReflectedComparison(t *testing.T) {
 	sig := NewSig()
 	timeSort := &UninterpretedSort{Name: "time"}

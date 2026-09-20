@@ -1870,6 +1870,29 @@ describe('ivyRuntime compatibility behavior', () => {
     });
   });
 
+  it('appends generated conjectures to the active details pane', async () => {
+    installSheetDom();
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-7';
+    runtime.api.executeAction = vi.fn(async () => ({
+      message: 'Based on this goal and the known reached states, we can conjecture the following invariant:',
+      conjecture: 'forall X. link(X,Y) -> ~semaphore(Y)',
+    }));
+    runtime.refreshConceptGraph = vi.fn(async () => undefined);
+
+    await runtime.makeConjecture();
+
+    expect(runtime.api.executeAction).toHaveBeenCalledWith('conjecture', { sheet_id: 'sheet-7' });
+    const details = document.getElementById('info-content');
+    expect(details?.textContent).toContain('Based on this goal and the known reached states');
+    expect(details?.textContent).toContain('forall X. link(X,Y) -> ~semaphore(Y)');
+    expect(details?.getAttribute('data-ivy-details-kind')).toBe('selection');
+    expect(runtime.controls.lastStatus).toEqual({
+      message: 'Conjecture generated',
+      kind: 'success',
+    });
+  });
+
   it('submits accepted PDR interpolants through a Refine dialog', async () => {
     const runtime = makeRuntime();
     runtime.activeSheetId = 'sheet-7';

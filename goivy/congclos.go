@@ -62,11 +62,11 @@ func (cc *CongClos) getRepRec(n *node) *node {
 // getRepNode retrieves (or creates) the node for a term and returns its
 // representative node.
 func (cc *CongClos) getRepNode(term CongClosTerm) *node {
-	name := nodeName(term)
-	n, ok := cc.tab[name]
+	key := congClosKey(term)
+	n, ok := cc.tab[key]
 	if !ok {
 		n = &node{term: term, rep: nil}
-		cc.tab[name] = n
+		cc.tab[key] = n
 	}
 	return cc.getRepRec(n)
 }
@@ -79,29 +79,44 @@ func (cc *CongClos) Find(term CongClosTerm) CongClosTerm {
 // FindByName looks up a constant by name (creating one if needed) and
 // returns its representative term.
 func (cc *CongClos) FindByName(name string) CongClosTerm {
-	n, ok := cc.tab[name]
+	term := NewConst(name, TopS)
+	n, ok := cc.tab[congClosKey(term)]
 	if !ok {
-		n = &node{term: NewConst(name, TopS), rep: nil}
-		cc.tab[name] = n
+		for _, existing := range cc.tab {
+			if nodeName(existing.term) == name {
+				return cc.getRepRec(existing).term
+			}
+		}
+		n = &node{term: term, rep: nil}
+		cc.tab[congClosKey(term)] = n
 	}
 	return cc.getRepRec(n).term
 }
 
+func (cc *CongClos) FindByKey(key string) (CongClosTerm, bool) {
+	n, ok := cc.tab[key]
+	if !ok {
+		return nil, false
+	}
+	return cc.getRepRec(n).term, true
+}
+
 // Union merges the equivalence classes of term1 and term2.
 // The representative with the lexicographically smaller name wins.
-func (cc *CongClos) Union(term1, term2 CongClosTerm) {
+func (cc *CongClos) Union(term1, term2 CongClosTerm) bool {
 	rep1 := cc.getRepNode(term1)
 	rep2 := cc.getRepNode(term2)
 	if rep1 == rep2 {
-		return
+		return false
 	}
-	name1 := nodeName(rep1.term)
-	name2 := nodeName(rep2.term)
+	name1 := congClosOrderKey(rep1.term)
+	name2 := congClosOrderKey(rep2.term)
 	if name1 < name2 {
 		cc.setRep(rep2, rep1)
 	} else {
 		cc.setRep(rep1, rep2)
 	}
+	return true
 }
 
 // Literal wraps an atom with a polarity for Theory output.
@@ -151,7 +166,20 @@ func (cc *CongClos) Pop() {
 	}
 }
 
-// nodeName extracts the name used for table lookup from a term.
+func congClosKey(t CongClosTerm) string {
+	if t == nil {
+		return "<nil>"
+	}
+	return string(t.Sexp())
+}
+
+func congClosOrderKey(t CongClosTerm) string {
+	name := nodeName(t)
+	key := congClosKey(t)
+	return name + "\x00" + key
+}
+
+// nodeName extracts the human-readable name from a term.
 func nodeName(t CongClosTerm) string {
 	switch v := t.(type) {
 	case *LogicVariable:

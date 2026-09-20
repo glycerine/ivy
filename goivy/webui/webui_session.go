@@ -1136,6 +1136,93 @@ func conceptGraphGoalClauses(w *GraphWidget, parentState *goivy.State) (*goivy.C
 	return goivy.TrueClauses(nil), nil
 }
 
+const conjectureGeneratedMessage = "Based on this goal and the known reached states, we can conjecture the following invariant:"
+
+func conjectureDisplayString(clauses *goivy.Clauses) string {
+	if clauses == nil {
+		return ""
+	}
+	return goivy.PrettyFmla(goivy.ClausesToFormula(clauses))
+}
+
+func conceptGraphConjectureClauses(w *GraphWidget, parentState *goivy.State) (*goivy.Clauses, error) {
+	if w != nil {
+		exprs := w.GetActiveFactExprs()
+		if len(exprs) == 1 {
+			return goivy.FormulaToClauses(exprs[0], nil), nil
+		}
+		if len(exprs) > 1 {
+			and, err := goivy.NewAnd(exprs...)
+			if err != nil {
+				return nil, err
+			}
+			return goivy.FormulaToClauses(and, nil), nil
+		}
+		if g := w.G(); g != nil && g.InteractiveSess != nil && g.InteractiveSess.State != nil {
+			return goivy.FormulaToClauses(g.InteractiveSess.State, nil), nil
+		}
+	}
+	if parentState != nil && parentState.Clauses != nil {
+		return parentState.Clauses, nil
+	}
+	return goivy.TrueClauses(nil), nil
+}
+
+func (s *Session) conjectureCurrentConceptGraphLocked(sheetID string) (map[string]interface{}, error) {
+	_, resolvedSheetID, w, err := s.activeConceptGraphForActionLocked("conjecture", sheetID)
+	if err != nil {
+		return nil, err
+	}
+	g := w.G()
+	parentState, _ := g.ParentState.(*goivy.State)
+	if parentState == nil {
+		return nil, fmt.Errorf("conjecture: current concept graph has no parent ARG state")
+	}
+	goalClauses, err := conceptGraphConjectureClauses(w, parentState)
+	if err != nil {
+		return nil, fmt.Errorf("conjecture: %w", err)
+	}
+	ri := goivy.CaseConjecture(goivy.ArtToInterpState(parentState), goalClauses)
+	result := map[string]interface{}{
+		"sheet_id": resolvedSheetID,
+	}
+	if ri == nil || ri.Itp == nil {
+		result["status"] = "warning"
+		result["message"] = "Cannot form a conjecture based on the known reached states and this goal."
+		result["concept"] = conceptGraphActionPayload(w)
+		return result, nil
+	}
+
+	result["message"] = conjectureGeneratedMessage
+	result["conjecture"] = conjectureDisplayString(ri.Itp)
+
+	if ri.Core != nil {
+		w.Checkpoint(false)
+		core := ri.Core
+		if parentState.Domain != nil {
+			skolemizer := goivy.ModuleSkolemizer(parentState.Domain)
+			core = goivy.ReskolemizeClauses(core, func(v *goivy.LogicVariable) goivy.Expr {
+				return skolemizer(v)
+			})
+		}
+		g.SetFactsExpr(core.Fmlas)
+		if err := g.SetState(clausesDisplayString(core), true, false, false); err != nil {
+			return nil, err
+		}
+		if err := w.Update(); err != nil {
+			return nil, err
+		}
+		s.SimpleSess = conceptSessionCopy(g.ConceptSess)
+		s.toggles = g.Checks.Snapshot()
+	}
+	result["concept"] = conceptGraphActionPayload(w)
+	s.emit(Event{Type: "conjecture_generated", Data: map[string]interface{}{
+		"sheet_id":   resolvedSheetID,
+		"conjecture": result["conjecture"],
+	}})
+	return result, nil
+}
+
 func (s *Session) diagramDomainEmptyMessage() string {
 	filename := strings.TrimSpace(s.FilePath)
 	if filename == "" {
@@ -3004,18 +3091,13 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			err = s.ConceptSess.Undo()
 		}
 	case "conjecture":
-		// Generate a conjecture from the gathered facts
-		if s.ConceptSess != nil {
-			facts, factsErr := s.ConceptSess.GetFacts(nil)
-			if factsErr != nil {
-				err = factsErr
-				break
-			}
-			if len(facts) > 0 {
-				s.emit(Event{Type: "conjecture_generated", Data: map[string]interface{}{
-					"facts": len(facts),
-				}})
-			}
+		var conjResult map[string]interface{}
+		conjResult, err = s.conjectureCurrentConceptGraphLocked(actionStringArg(args, "sheet_id"))
+		if err != nil {
+			break
+		}
+		for k, v := range conjResult {
+			result[k] = v
 		}
 	case "remember":
 		name := actionStringArg(args, "name")
