@@ -1,5 +1,6 @@
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
 import { selectSheet, selectStateCheckboxRows } from '../models/uiDataSelectors.ts';
+import { normalizeArgNodeId } from '../models/uiDataModel.ts';
 import { beginRunContext, reportRunContextError, runWithContext } from './runContextService.ts';
 import { clearDetailsLog } from './detailsService.ts';
 
@@ -22,6 +23,96 @@ function traceSheetOptionsForResult(result) {
     reachabilityOnly: true,
     visualOnly: !(result && result.trace_sheet_id),
   };
+}
+
+function objectValue(value) {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value : null;
+}
+
+function fieldValue(value, names) {
+  const obj = objectValue(value);
+  if (!obj) return undefined;
+  for (const name of names) {
+    if (Object.prototype.hasOwnProperty.call(obj, name)) return obj[name];
+  }
+  return undefined;
+}
+
+function arrayField(value, names) {
+  const raw = fieldValue(value, names);
+  return Array.isArray(raw) ? raw : [];
+}
+
+function stringField(value, names) {
+  const raw = fieldValue(value, names);
+  return typeof raw === 'string' && raw ? raw : '';
+}
+
+function traceStartNodeId(argData) {
+  const explicit = stringField(argData, ['selected_node', 'selectedNode', 'selected_arg_node', 'selectedArgNode']);
+  if (explicit) return normalizeArgNodeId(explicit);
+
+  const graphState = objectValue(fieldValue(argData, ['analysis_graph_state', 'analysisGraphState']));
+  const states = arrayField(graphState, ['states', 'States']);
+  if (states.length > 0) {
+    const incoming = new Set();
+    for (const transition of arrayField(graphState, ['transitions', 'Transitions'])) {
+      const target = fieldValue(transition, ['target_id', 'targetId', 'TargetID']);
+      if (target !== undefined && target !== null) incoming.add(String(target));
+    }
+    const startState = states.find((state) => {
+      const id = fieldValue(state, ['id', 'ID']);
+      return id !== undefined && id !== null && !incoming.has(String(id));
+    }) || states[0];
+    const stateObj = stringField(startState, ['obj', 'Obj']);
+    if (stateObj) return normalizeArgNodeId(stateObj);
+    const stateId = fieldValue(startState, ['id', 'ID']);
+    if (stateId !== undefined && stateId !== null) return normalizeArgNodeId(String(stateId));
+    return normalizeArgNodeId(stringField(startState, ['label', 'Label']));
+  }
+
+  for (const element of arrayField(argData, ['elements', 'Elements'])) {
+    if (stringField(element, ['group', 'Group']) !== 'nodes') continue;
+    const data = objectValue(fieldValue(element, ['data', 'Data'])) || element;
+    const candidate =
+      stringField(data, ['obj', 'Obj']) ||
+      stringField(data, ['id', 'ID']) ||
+      stringField(data, ['label', 'Label']);
+    if (candidate) return normalizeArgNodeId(candidate);
+  }
+  return null;
+}
+
+function setSelectedArgNode(app, sheetId, nodeId) {
+  const selected = normalizeArgNodeId(nodeId);
+  if (!selected) return null;
+  if (app.sheets && app.sheets[sheetId]) app.sheets[sheetId].selectedArgNode = selected;
+  if (app.activeSheetId === sheetId || !app.activeSheetId) app.selectedArgNode = selected;
+  if (app.uiDataStore && typeof app.uiDataStore.setSelectedArgNode === 'function') {
+    app.uiDataStore.setSelectedArgNode(sheetId, selected);
+  }
+  return selected;
+}
+
+async function loadConceptForArgNode(app, sheetId, nodeId, requestOptions = undefined) {
+  const selected = normalizeArgNodeId(nodeId);
+  if (!selected || !app || !app.api || typeof app.api.getConceptGraph !== 'function') return null;
+  try {
+    const conceptData = await app.api.getConceptGraph(selected, sheetId, requestOptions);
+    if (conceptData && conceptData.elements) {
+      applyConceptSnapshot(app, sheetId, conceptData);
+    } else if (conceptData && typeof app.populateStateCheckboxes === 'function') {
+      app.populateStateCheckboxes(conceptData);
+    }
+    return conceptData;
+  } catch (err) {
+    console.error('Trace concept graph load error:', err);
+    return null;
+  }
+}
+
+function selectTraceStartNode(app, sheetId, argData) {
+  return setSelectedArgNode(app, sheetId, traceStartNodeId(argData));
 }
 
 function traceInfoElement(app, doc) {
@@ -90,6 +181,8 @@ export function openTraceArgFromResult(app, result, {
   if (!app || !result || !result.trace_arg) return false;
   if (typeof app.setUIMode === 'function') app.setUIMode('reachability');
   const sheetId = traceSheetIdForResult(app, result);
+  const options = traceSheetOptionsForResult(result);
+  let opened = false;
   // The "View error trace" button persists in the details pane, so it can be
   // clicked more than once for the same result. The backend hands back a stable
   // trace_sheet_id, so a second click would ask addSheet() to recreate a sheet
@@ -99,10 +192,16 @@ export function openTraceArgFromResult(app, result, {
     if (typeof app.setSheetTabBaseLabel === 'function') app.setSheetTabBaseLabel(sheetId, label);
     if (typeof app.applyArgSnapshot === 'function') app.applyArgSnapshot(sheetId, result.trace_arg || {});
     if (typeof app.switchSheet === 'function') app.switchSheet(sheetId);
-    return true;
+    opened = true;
+  } else {
+    app.openARGSheet(label, result.trace_arg, sheetId, options);
+    opened = true;
   }
-  app.openARGSheet(label, result.trace_arg, sheetId, traceSheetOptionsForResult(result));
-  return true;
+  const selected = selectTraceStartNode(app, sheetId, result.trace_arg);
+  if (opened && selected && !options.visualOnly) {
+    void loadConceptForArgNode(app, sheetId, selected);
+  }
+  return opened;
 }
 
 export function addTraceResultViewAction(app, result, {
@@ -309,14 +408,21 @@ export async function runCheck(app) {
       return result;
     }
 
+    const sheetId = app.activeSheetId || 'sheet-1';
     const argData = await app.api.getARG({}, requestOptions);
+    let selectedArgNode = null;
     if (argData && argData.elements) {
-      applyArgSnapshot(app, app.activeSheetId || 'sheet-1', argData);
+      applyArgSnapshot(app, sheetId, argData);
+      if ((result && (result.result || result.status)) === 'fail') {
+        selectedArgNode = selectTraceStartNode(app, sheetId, argData);
+      }
     }
 
-    const conceptData = await app.api.getConceptGraph(undefined, undefined, requestOptions);
+    const conceptData = selectedArgNode
+      ? await app.api.getConceptGraph(selectedArgNode, sheetId, requestOptions)
+      : await app.api.getConceptGraph(undefined, undefined, requestOptions);
     if (conceptData && conceptData.elements) {
-      applyConceptSnapshot(app, app.activeSheetId || 'sheet-1', conceptData);
+      applyConceptSnapshot(app, sheetId, conceptData);
     }
 
     if (result && result.used_relations) {

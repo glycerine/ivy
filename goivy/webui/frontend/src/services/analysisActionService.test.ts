@@ -97,6 +97,40 @@ describe('analysisActionService', () => {
     expect(app.uiDataStore.applyConceptSnapshot).not.toHaveBeenCalled();
   });
 
+  it('refreshes reachability-mode sheets that still have a concept graph runtime', async () => {
+    const concept = { elements: [{ group: 'edges', data: { id: 'link-edge', obj: 'link' } }] };
+    const app = {
+      activeSheetId: 'sheet-1',
+      selectedArgNode: 'state_2',
+      sheets: {
+        'sheet-1': {
+          reachabilityOnly: true,
+          conceptGraph: {},
+        },
+      },
+      uiDataModel: {
+        sheets: {
+          'sheet-1': {
+            selectedArgNode: 'state_2',
+            reachabilityOnly: true,
+          },
+        },
+      },
+      api: {
+        getConceptGraph: vi.fn(async () => concept),
+      },
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
+      },
+      populateStateCheckboxes: vi.fn(),
+    };
+
+    await refreshConceptGraph(app);
+
+    expect(app.api.getConceptGraph).toHaveBeenCalledWith('state_2', 'sheet-1');
+    expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', concept);
+  });
+
   it('executes simple refresh actions with expected status messages', async () => {
     const app = {
       api: {

@@ -302,6 +302,63 @@ describe('checkService', () => {
     }));
   });
 
+  it('renders the counterexample start state immediately after a failed check', async () => {
+    const traceArg = {
+      elements: [
+        { group: 'nodes', data: { id: 'state_2', obj: 'state_2', label: '2' } },
+        { group: 'nodes', data: { id: 'state_3', obj: 'state_3', label: '3' } },
+        { group: 'edges', data: { id: 't2_3', source: 'state_2', target: 'state_3' } },
+      ],
+      analysis_graph_state: {
+        states: [
+          { id: 2, label: '2' },
+          { id: 3, label: '3' },
+        ],
+        transitions: [
+          { source_id: 2, target_id: 3, label: 'step' },
+        ],
+      },
+    };
+    const concept = { selected_node: 'state_2', elements: [{ group: 'edges', data: { obj: 'link' } }] };
+    const app = {
+      getMode: vi.fn(() => 'induction'),
+      _persistedFileContent: 'ivy source',
+      _persistedFileName: 'model.ivy',
+      activeIsolate: '',
+      activeSheetId: 'sheet-1',
+      api: {
+        reloadContent: vi.fn(async () => ({ status: 'ok' })),
+        runCheck: vi.fn(async () => ({
+          result: 'fail',
+          mode: 'induction',
+          message: 'Counterexample found',
+        })),
+        getARG: vi.fn(async () => traceArg),
+        getConceptGraph: vi.fn(async () => concept),
+      },
+      controls: {
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        setStatus: vi.fn(),
+      },
+      uiDataStore: {
+        applyArgSnapshot: vi.fn(),
+        setSelectedArgNode: vi.fn(),
+        applyConceptSnapshot: vi.fn(),
+      },
+      showCheckResult: vi.fn(),
+      _autoCheckUsedRelations: vi.fn(),
+    };
+
+    await runCheck(app);
+
+    expect(app.uiDataStore.setSelectedArgNode).toHaveBeenCalledWith('sheet-1', 'state_2');
+    expect(app.api.getConceptGraph).toHaveBeenCalledWith('state_2', 'sheet-1', expect.objectContaining({
+      signal: expect.any(AbortSignal),
+    }));
+    expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', concept);
+  });
+
   it('passes the relations-to-minimize field to induction checks', async () => {
     document.body.innerHTML = '<input id="cti-relations-to-minimize" value="p q">';
     const app = {

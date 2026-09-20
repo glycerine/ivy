@@ -55,7 +55,8 @@ export async function runAction(app, actionName, args, options) {
 export async function refreshConceptGraph(app) {
   const sheetId = activeSheetId(app);
   const { modelSheet, runtimeSheet, reachabilityOnly, visualOnly } = sheetForRefresh(app, sheetId);
-  if (reachabilityOnly || visualOnly) return null;
+  const hasConceptGraph = !!((runtimeSheet && runtimeSheet.conceptGraph) || (!runtimeSheet && app && app.conceptGraph));
+  if (visualOnly || (reachabilityOnly && !hasConceptGraph)) return null;
   const selectedArgNode = normalizeArgNodeId(selectedArgNodeForRefresh(app, sheetId, modelSheet, runtimeSheet)) || undefined;
   try {
     const result = await app.api.getConceptGraph(selectedArgNode, sheetId);
