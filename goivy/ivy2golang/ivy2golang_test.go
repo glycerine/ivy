@@ -992,6 +992,50 @@ export set
 	compileGeneratedGo(t, out)
 }
 
+func TestTargetGenTraceWrapsActionGeneratorExecute(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action echo(c:color) returns(out:color) = {
+    out := c
+}
+export echo
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gentrace", Trace: true, TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	body := bodyAfterMarker(out.Source, "func (gen *Gentrace_echo_generator) execute()")
+	if body == "" {
+		t.Fatalf("echo generator execute body not found:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`fmt.Fprintf(__ivy_out, "> echo(%v)\n", gen.c)`,
+		`fmt.Fprintln(__ivy_out, "{")`,
+		`__res := ivy.echo(gen.c)`,
+		`fmt.Fprintln(__ivy_out, "}")`,
+		`fmt.Fprintf(__ivy_out, "= %v\n", __res)`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("traced gen execute body missing %q:\n%s", want, body)
+		}
+	}
+	compileGeneratedGo(t, out)
+
+	out2, err := Generate(mod, Config{Target: "gen", ClassName: "gentrace2", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate without trace: %v\n%s", err, outSource(out2))
+	}
+	body2 := bodyAfterMarker(out2.Source, "func (gen *Gentrace2_echo_generator) execute()")
+	if body2 == "" {
+		t.Fatalf("echo generator execute body not found without trace:\n%s", out2.Source)
+	}
+	if strings.Contains(body2, `fmt.Fprintln(__ivy_out, "{")`) ||
+		strings.Contains(body2, `fmt.Fprintln(__ivy_out, "}")`) ||
+		strings.Contains(body2, `__res := ivy.echo(gen.c)`) {
+		t.Fatalf("untraced gen execute body should not emit trace braces/capture:\n%s", body2)
+	}
+}
+
 func TestCompileAndGenerateDefaultTargetGenRunsRandomizedMain(t *testing.T) {
 	dir := t.TempDir()
 	file := filepath.Join(dir, "defaultgen.ivy")

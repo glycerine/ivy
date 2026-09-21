@@ -1511,6 +1511,9 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 	}
 	call := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(args, ", "))
 	w.line(g.actionTraceLine(name, args))
+	if g.Config.Trace {
+		w.line(`fmt.Fprintln(__ivy_out, "{")`)
+	}
 	w.line("ivy._generating = true")
 	if g.isTestImportCallback(name) {
 		switch nret := len(act.GetFormalReturns()); nret {
@@ -1532,10 +1535,22 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 	switch nret := len(act.GetFormalReturns()); nret {
 	case 0:
 		w.line(call)
+		if g.Config.Trace {
+			w.line(`fmt.Fprintln(__ivy_out, "}")`)
+		}
 	case 1:
-		w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %v\n", call)
+		if g.Config.Trace {
+			w.linef("__res := %s", call)
+			w.line(`fmt.Fprintln(__ivy_out, "}")`)
+			w.linef("fmt.Fprintf(__ivy_out, %q, __res)", "= %v\n")
+		} else {
+			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %v\n", call)
+		}
 	default:
 		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
+		if g.Config.Trace {
+			w.line(`fmt.Fprintln(__ivy_out, "}")`)
+		}
 	}
 	w.line("ivy._generating = false")
 }
