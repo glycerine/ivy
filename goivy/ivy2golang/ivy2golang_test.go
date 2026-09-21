@@ -933,6 +933,65 @@ export set
 	}
 }
 
+func TestTargetGenActionGeneratorUsesExtPreconds(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	savedEntry, ok := mod.Sig.Symbols.Get2("saved")
+	if !ok {
+		t.Fatalf("symbol saved not found")
+	}
+	redEntry, ok := mod.Sig.Symbols.Get2("red")
+	if !ok {
+		t.Fatalf("symbol red not found")
+	}
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatalf("action set not found")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	savedRed, err := goivy.NewEq(
+		goivy.NewConst("saved", savedEntry.Sort),
+		goivy.NewConst("red", redEntry.Sort),
+	)
+	if err != nil {
+		t.Fatalf("saved/red NewEq: %v", err)
+	}
+	paramRed, err := goivy.NewEq(params[0], goivy.NewConst("red", redEntry.Sort))
+	if err != nil {
+		t.Fatalf("param/red NewEq: %v", err)
+	}
+	pre, err := goivy.NewAnd(savedRed, paramRed)
+	if err != nil {
+		t.Fatalf("NewAnd: %v", err)
+	}
+	mod.ExtPreconds["set"] = pre
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "extpregen", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	for _, want := range []string{
+		`ivy.saved = color(ivy.___ivy_randomize(2, "randomize.saved", 0))`,
+		`gen.c = color(ivy.___ivy_randomize(2, "__fml:c", 0))`,
+		`if !((((ivy.saved == red)) && ((gen.c == red)))) {`,
+		`return false`,
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("gen ext-precondition source missing %q:\n%s", want, out.Source)
+		}
+	}
+	compileGeneratedGo(t, out)
+}
+
 func TestCompileAndGenerateDefaultTargetGenRunsRandomizedMain(t *testing.T) {
 	dir := t.TempDir()
 	file := filepath.Join(dir, "defaultgen.ivy")

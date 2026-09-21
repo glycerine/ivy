@@ -1262,7 +1262,7 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 	g.emitGenActionGeneratorRandomizeState(w)
 	if len(act.GetFormalParams()) == 0 {
 		w.line("_ = ivy")
-		g.emitGenActionGeneratorAssumeGuards(w, act)
+		g.emitGenActionGeneratorAssumeGuards(w, name, act)
 		w.line("return true")
 		return
 	}
@@ -1274,8 +1274,8 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 		}
 		w.linef("gen.%s = %s", goName(p.Name), expr)
 	}
-	g.emitGenActionGeneratorDefinedInputs(w, act)
-	g.emitGenActionGeneratorAssumeGuards(w, act)
+	g.emitGenActionGeneratorDefinedInputs(w, name, act)
+	g.emitGenActionGeneratorAssumeGuards(w, name, act)
 	w.line("return true")
 }
 
@@ -1323,8 +1323,8 @@ type genDefinedInput struct {
 	value goivy.Expr
 }
 
-func (g *Generator) emitGenActionGeneratorDefinedInputs(w *goWriter, act goivy.Action) {
-	defs := genActionGeneratorDefinedInputs(act)
+func (g *Generator) emitGenActionGeneratorDefinedInputs(w *goWriter, name string, act goivy.Action) {
+	defs := genActionGeneratorDefinedInputs(act, g.genActionPreconditionFormulas(name, act))
 	if len(defs) == 0 {
 		return
 	}
@@ -1340,13 +1340,13 @@ func (g *Generator) emitGenActionGeneratorDefinedInputs(w *goWriter, act goivy.A
 	}
 }
 
-func genActionGeneratorDefinedInputs(act goivy.Action) []genDefinedInput {
+func genActionGeneratorDefinedInputs(act goivy.Action, guards []goivy.Expr) []genDefinedInput {
 	params := genActionFormalParamMap(act)
 	if len(params) == 0 {
 		return nil
 	}
 	var defs []genDefinedInput
-	for _, guard := range leadingAssumeFormulas(act) {
+	for _, guard := range guards {
 		eq, ok := guard.(*goivy.Eq)
 		if !ok {
 			continue
@@ -1404,8 +1404,8 @@ func genActionFormalExprOverrides(act goivy.Action) map[string]string {
 	return overrides
 }
 
-func (g *Generator) emitGenActionGeneratorAssumeGuards(w *goWriter, act goivy.Action) {
-	guards := leadingAssumeFormulas(act)
+func (g *Generator) emitGenActionGeneratorAssumeGuards(w *goWriter, name string, act goivy.Action) {
+	guards := g.genActionPreconditionFormulas(name, act)
 	if len(guards) == 0 {
 		return
 	}
@@ -1421,6 +1421,17 @@ func (g *Generator) emitGenActionGeneratorAssumeGuards(w *goWriter, act goivy.Ac
 		w.line("return false")
 		w.close("")
 	}
+}
+
+func (g *Generator) genActionPreconditionFormulas(name string, act goivy.Action) []goivy.Expr {
+	var guards []goivy.Expr
+	if g != nil && g.Mod != nil && g.Mod.ExtPreconds != nil {
+		if pre := g.Mod.ExtPreconds[name]; pre != nil {
+			guards = append(guards, pre)
+		}
+	}
+	guards = append(guards, leadingAssumeFormulas(act)...)
+	return guards
 }
 
 func leadingAssumeFormulas(act goivy.Action) []goivy.Expr {
