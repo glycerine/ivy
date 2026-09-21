@@ -1,3 +1,4 @@
+import { Graphviz } from '@hpcc-js/wasm-graphviz';
 import {
   GraphPositionMap,
 } from '../models/uiDataModel.ts';
@@ -100,8 +101,7 @@ export function parseGraphvizPlainPositions(plain: string, idByDotId: Record<str
 }
 
 async function defaultGraphviz() {
-  const mod = await import('@hpcc-js/wasm-graphviz');
-  return mod.Graphviz.load();
+  return Graphviz.load();
 }
 
 export async function computeGraphvizDotPositions(elements: RawRecord[] = [], {

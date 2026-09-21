@@ -11,6 +11,8 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -115,6 +117,17 @@ func TestTutorialStaticDisablesBrowserCaching(t *testing.T) {
 	}
 	if got, want := w.Header().Get("Expires"), "0"; got != want {
 		t.Errorf("Expires = %q, want %q", got, want)
+	}
+}
+
+func TestRelayoutDotDoesNotDependOnDynamicGraphvizChunk(t *testing.T) {
+	bundlePath := filepath.Join(staticDir(), "dist", "ivyweb.js")
+	bundle, err := os.ReadFile(bundlePath)
+	if err != nil {
+		t.Fatalf("read built web UI bundle %s: %v", bundlePath, err)
+	}
+	if strings.Contains(string(bundle), `import("./ivyweb-index.js")`) {
+		t.Fatalf("Relayout (dot) depends on dynamically fetching /static/dist/ivyweb-index.js; bundle Graphviz into ivyweb.js instead")
 	}
 }
 
