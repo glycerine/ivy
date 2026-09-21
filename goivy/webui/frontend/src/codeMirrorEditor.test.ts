@@ -646,6 +646,38 @@ describe('codeMirrorEditor', () => {
     expect(editor.__ivyEmacsReplaceText).toBe('node\n');
   });
 
+  it('treats Query prompt inputs like Replace prompt inputs for Emacs yank keys', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    wrapper.innerHTML = '<div class="CodeMirror-dialog">Query: <input value=""></div>';
+    doc.body.appendChild(wrapper);
+    const editor: any = {
+      getOption: vi.fn(() => 'emacs'),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+    };
+    editor.__ivyEmacsYankBuffer = 'client';
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    const input = wrapper.querySelector('input') as HTMLInputElement;
+    const yank = new KeyboardEvent('keydown', {
+      key: 'y',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    input.dispatchEvent(yank);
+
+    expect(yank.defaultPrevented).toBe(true);
+    expect(input.value).toBe('client');
+    expect(editor.__ivyEmacsReplaceQueryText).toBe('client');
+  });
+
   it('maps Escape-y to yank-pop inside Emacs replace prompt inputs', () => {
     const doc = document.implementation.createHTMLDocument('');
     doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
@@ -1137,6 +1169,7 @@ describe('codeMirrorEditor', () => {
     doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
     const editor = {
       getCursor: vi.fn(() => ({ line: 4, ch: 2 })),
+      getLine: vi.fn(() => '  killed text'),
       getOption: vi.fn(() => 'emacs'),
       getSelection: vi.fn(() => 'old copied text'),
       hasFocus: vi.fn(() => true),
@@ -1173,10 +1206,50 @@ describe('codeMirrorEditor', () => {
     vi.runAllTimers();
 
     expect(killLine.defaultPrevented).toBe(false);
-    expect(yank.defaultPrevented).toBe(false);
-    expect(editor.replaceSelection).not.toHaveBeenCalled();
-    expect(editor.setCursor).toHaveBeenCalledTimes(1);
-    expect(editor.setCursor).toHaveBeenCalledWith(4, 2);
+    expect(yank.defaultPrevented).toBe(true);
+    expect(editor.replaceSelection).toHaveBeenCalledWith('killed text', 'end');
+    expect(editor.setCursor).toHaveBeenCalledTimes(2);
+  });
+
+  it('yanks text killed by Ctrl-k in the editor into the Emacs replace prompt', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    doc.body.appendChild(wrapper);
+    const editor = {
+      getCursor: vi.fn(() => ({ line: 0, ch: 5 })),
+      getLine: vi.fn(() => 'link := old_name'),
+      getOption: vi.fn(() => 'emacs'),
+      getWrapperElement: vi.fn(() => wrapper),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+      somethingSelected: vi.fn(() => false),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'k',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    }));
+    wrapper.innerHTML = '<div class="CodeMirror-dialog">Replace: <input value=""></div>';
+    const input = wrapper.querySelector('input') as HTMLInputElement;
+    const yank = new KeyboardEvent('keydown', {
+      key: 'y',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    input.dispatchEvent(yank);
+
+    expect(yank.defaultPrevented).toBe(true);
+    expect(input.value).toBe(':= old_name');
   });
 
   it('uses emacs as the default CodeMirror keymap', () => {

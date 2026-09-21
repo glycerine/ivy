@@ -244,7 +244,7 @@ function installEmacsYankSelectionCollapse({
   doc.addEventListener('keydown', (event) => {
     if (!isEditorFocused() || !isEmacsKeymap(editor)) return;
     if (isNativeEmacsKillCommand(event)) {
-      clearEmacsYankBuffer(editor);
+      captureNativeEmacsKillCommand(editor, event);
       return;
     }
     if (event.key !== 'y' || !event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return;
@@ -477,7 +477,10 @@ function replaceDialogForInput(input: HTMLInputElement): HTMLElement | null {
   const dialog = input.closest('.CodeMirror-dialog') as HTMLElement | null;
   if (!dialog) return null;
   const label = replaceDialogLabel(dialog);
-  if (label.startsWith('Replace:') || label.startsWith('With:') || label.startsWith('Replace with:')) {
+  if (label.startsWith('Query:')
+    || label.startsWith('Replace:')
+    || label.startsWith('With:')
+    || label.startsWith('Replace with:')) {
     return dialog;
   }
   return null;
@@ -605,7 +608,8 @@ function findReplaceDialog(editor: any, doc: Document): HTMLElement | null {
     const dialogs = Array.from(root.querySelectorAll('.CodeMirror-dialog')) as HTMLElement[];
     const dialog = dialogs.find((candidate) => {
       const text = (candidate.textContent || '').replace(/\s+/g, ' ').trim();
-      return text.startsWith('Replace:')
+      return text.startsWith('Query:')
+        || text.startsWith('Replace:')
         || text.startsWith('With:')
         || text.startsWith('Replace with:');
     });
@@ -732,7 +736,7 @@ function rememberReplaceDialogInput(editor: any, target: EventTarget | null) {
   const dialog = replaceDialogForInput(input);
   if (!dialog) return;
   const label = replaceDialogLabel(dialog);
-  if (label.startsWith('Replace:')) {
+  if (label.startsWith('Query:') || label.startsWith('Replace:')) {
     editor.__ivyEmacsReplaceQueryText = input.value;
   } else if (label.startsWith('With:') || label.startsWith('Replace with:')) {
     editor.__ivyEmacsReplaceText = parseCodeMirrorReplaceString(input.value);
@@ -1164,6 +1168,56 @@ function copySelectionToEmacsYankBuffer(editor: any) {
   }
   setEmacsYankBuffer(editor, selectedText);
   return true;
+}
+
+function captureNativeEmacsKillCommand(editor: any, event: KeyboardEvent) {
+  const killedText = nativeEmacsKillText(editor, event);
+  if (killedText) {
+    setEmacsYankBuffer(editor, killedText);
+  }
+}
+
+function nativeEmacsKillText(editor: any, event: KeyboardEvent) {
+  if (typeof editor.somethingSelected === 'function'
+    && editor.somethingSelected()
+    && typeof editor.getSelection === 'function') {
+    const selection = editor.getSelection();
+    if (typeof selection === 'string' && selection.length > 0) return selection;
+  }
+  const cursor = getEditorCursor(editor);
+  const line = Number.isFinite(cursor.line) ? cursor.line : 0;
+  const ch = Number.isFinite(cursor.ch) ? cursor.ch : 0;
+  const lineText = typeof editor.getLine === 'function' ? editor.getLine(line) || '' : '';
+  if (event.key === 'k' && event.ctrlKey && !event.altKey) {
+    if (ch < lineText.length) return lineText.slice(ch);
+    if (typeof editor.lastLine !== 'function' || line < editor.lastLine()) return '\n';
+    return '';
+  }
+  if (event.key === 'w' && event.ctrlKey && !event.altKey && typeof editor.getSelection === 'function') {
+    const selection = editor.getSelection();
+    return typeof selection === 'string' ? selection : '';
+  }
+  if (event.key === 'd' && event.altKey && !event.ctrlKey) {
+    return lineText.slice(ch, forwardWordEnd(lineText, ch));
+  }
+  if (event.key === 'Backspace' && event.altKey && !event.ctrlKey) {
+    return lineText.slice(backwardWordStart(lineText, ch), ch);
+  }
+  return '';
+}
+
+function forwardWordEnd(text: string, start: number) {
+  let pos = Math.max(0, Math.min(start, text.length));
+  while (pos < text.length && /\s/.test(text.charAt(pos))) pos += 1;
+  while (pos < text.length && !/\s/.test(text.charAt(pos))) pos += 1;
+  return pos;
+}
+
+function backwardWordStart(text: string, start: number) {
+  let pos = Math.max(0, Math.min(start, text.length));
+  while (pos > 0 && /\s/.test(text.charAt(pos - 1))) pos -= 1;
+  while (pos > 0 && !/\s/.test(text.charAt(pos - 1))) pos -= 1;
+  return pos;
 }
 
 function setEmacsYankBuffer(editor: any, text: string) {
