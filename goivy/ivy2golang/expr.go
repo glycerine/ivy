@@ -144,6 +144,9 @@ func (g *Generator) emitConst(c *goivy.Const) (string, error) {
 			}
 		}
 	}
+	if code, ok := g.exprOverride(c.Name); ok {
+		return code, nil
+	}
 	if g.isLocal(c.Name) {
 		return goName(c.Name), nil
 	}

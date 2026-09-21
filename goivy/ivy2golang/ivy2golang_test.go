@@ -773,6 +773,166 @@ export step
 	}
 }
 
+func TestTargetGenActionGeneratorsStoreRandomizedInputs(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type idx = {0..2}
+individual saved : color
+individual seen : idx
+individual ok : bool
+action set(c:color,b:bool,i:idx) = {
+    saved := c;
+    ok := b;
+    seen := i
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genparams", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	for _, want := range []string{
+		`type Genparams_set_generator struct {`,
+		`ivy *genparams`,
+		`c color`,
+		`b bool`,
+		`i int`,
+		`gen.c = color(ivy.___ivy_randomize(2, "__fml:c", 0))`,
+		`gen.b = ivy.___ivy_randomize(2, "__fml:b", 1) != 0`,
+		`gen.i = (0 + ivy.___ivy_randomize(3, "__fml:i", 2))`,
+		`return true`,
+		`fmt.Fprintf(__ivy_out, "> set(%v,%v,%v)\n", gen.c, gen.b, gen.i)`,
+		`ivy.set(gen.c, gen.b, gen.i)`,
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("gen parameter source missing %q:\n%s", want, out.Source)
+		}
+	}
+	if strings.Contains(out.Source, `__arg0 :=`) || strings.Contains(out.Source, `ivy.set(__arg0`) {
+		t.Fatalf("target=gen execute should use generator fields, not local randomized args:\n%s", out.Source)
+	}
+	bin := compileGeneratedGo(t, out)
+	stdout, stderr, err := runBinary(t, bin, "iters=30", "runs=1", "seed=1", "delay=0")
+	if err != nil {
+		t.Fatalf("run generated Go gen target: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
+	}
+	if !strings.Contains(stdout, "test_completed") {
+		t.Fatalf("run output missing completion marker:\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+}
+
+func TestTargetGenActionGeneratorAssumeGuard(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    assume c = green;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	for _, want := range []string{
+		`gen.c = color(ivy.___ivy_randomize(2, "__fml:c", 0))`,
+		`if !((gen.c == green)) {`,
+		`return false`,
+		`if set_generator.generate() {`,
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("gen assume-guard source missing %q:\n%s", want, out.Source)
+		}
+	}
+	bin := compileGeneratedGo(t, out)
+	stdout, stderr, err := runBinary(t, bin, "iters=20", "runs=1", "seed=1", "delay=0")
+	if err != nil {
+		t.Fatalf("run generated Go gen target: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
+	}
+	if strings.Contains(stderr, "assumption failed") || strings.Contains(stdout, "assumption_failed") {
+		t.Fatalf("generator guard should skip invalid inputs, not execute failed assumes\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+	if strings.Contains(stdout, "> set(red)") {
+		t.Fatalf("generator guard should not execute set(red)\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+	if !strings.Contains(stdout, "test_completed") {
+		t.Fatalf("run output missing completion marker:\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+}
+
+func TestTargetGenActionGeneratorRandomizesStateAndRetriesUnsat(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    assume c = green;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	for _, want := range []string{
+		`ivy.saved = color(ivy.___ivy_randomize(2, "randomize.saved", 0))`,
+		`ivy._generating = true`,
+		`if set_generator.generate() {`,
+		`set_generator.execute()`,
+		`} else {`,
+		`cycle--`,
+		`continue`,
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("gen state-randomization source missing %q:\n%s", want, out.Source)
+		}
+	}
+	compileGeneratedGo(t, out)
+}
+
+func TestTargetGenActionGeneratorExtractsDefinedInput(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..7}
+individual stored : idx
+action set(x:idx) = {
+    assume x = 3;
+    stored := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "defparam", TestIters: "3", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	for _, want := range []string{
+		`gen.x = (0 + ivy.___ivy_randomize(8, "__fml:x", 0))`,
+		`gen.x = 3`,
+		`if !((gen.x == 3)) {`,
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("gen defined-input source missing %q:\n%s", want, out.Source)
+		}
+	}
+	bin := compileGeneratedGo(t, out)
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "delay=0")
+	if err != nil {
+		t.Fatalf("run generated Go gen target: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
+	}
+	if strings.Contains(stdout, "> set(0)") ||
+		strings.Contains(stdout, "> set(1)") ||
+		strings.Contains(stdout, "> set(2)") ||
+		strings.Contains(stdout, "> set(4)") ||
+		strings.Contains(stdout, "> set(5)") ||
+		strings.Contains(stdout, "> set(6)") ||
+		strings.Contains(stdout, "> set(7)") {
+		t.Fatalf("defined input should force all executed calls to set(3)\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+	if !strings.Contains(stdout, "> set(3)") || !strings.Contains(stdout, "test_completed") {
+		t.Fatalf("run output missing defined call or completion marker\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+}
+
 func TestCompileAndGenerateDefaultTargetGenRunsRandomizedMain(t *testing.T) {
 	dir := t.TempDir()
 	file := filepath.Join(dir, "defaultgen.ivy")

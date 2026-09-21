@@ -56,6 +56,7 @@ type Generator struct {
 	extRel             map[string]bool
 	importCallersCache map[string]bool
 	exprAliases        map[string]goivy.Expr
+	exprOverrides      []map[string]string
 	defStack           map[string]bool
 }
 
@@ -1233,10 +1234,15 @@ func (g *Generator) emitGenActionGeneratorTypes(w *goWriter, runnable []string) 
 		typeName := g.goActionGeneratorTypeName(name)
 		w.open(fmt.Sprintf("type %s struct {", typeName))
 		w.linef("ivy *%s", g.ClassName)
+		if act != nil {
+			for _, p := range act.GetFormalParams() {
+				w.linef("%s %s", goName(p.Name), g.goType(p.CSort))
+			}
+		}
 		w.close("")
 		w.blank()
 		w.open(fmt.Sprintf("func (gen *%s) generate() bool {", typeName))
-		w.line("return true")
+		g.emitGenActionGeneratorGenerate(w, name, act)
 		w.close("")
 		w.blank()
 		w.open(fmt.Sprintf("func (gen *%s) execute() {", typeName))
@@ -1246,20 +1252,246 @@ func (g *Generator) emitGenActionGeneratorTypes(w *goWriter, runnable []string) 
 	}
 }
 
+func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act goivy.Action) {
+	w.line("ivy := gen.ivy")
+	if act == nil {
+		w.line("_ = ivy")
+		w.line("return true")
+		return
+	}
+	g.emitGenActionGeneratorRandomizeState(w)
+	if len(act.GetFormalParams()) == 0 {
+		w.line("_ = ivy")
+		g.emitGenActionGeneratorAssumeGuards(w, act)
+		w.line("return true")
+		return
+	}
+	for i, p := range act.GetFormalParams() {
+		expr, err := g.goActionParamRandomValueExpr(p.CSort, actionFormalGeneratorLabel(p), int64(i))
+		if err != nil {
+			g.unsupported(w, "unsupported action generator parameter: %s", err.Error())
+			continue
+		}
+		w.linef("gen.%s = %s", goName(p.Name), expr)
+	}
+	g.emitGenActionGeneratorDefinedInputs(w, act)
+	g.emitGenActionGeneratorAssumeGuards(w, act)
+	w.line("return true")
+}
+
+func (g *Generator) emitGenActionGeneratorRandomizeState(w *goWriter) {
+	for _, sym := range g.stateSymbols() {
+		if g.isParamName(sym.Name) {
+			continue
+		}
+		g.emitGenRandomizeSymbol(w, sym, "randomize")
+	}
+}
+
+func (g *Generator) emitGenRandomizeSymbol(w *goWriter, sym stateSymbol, label string) {
+	if g.isVariantSuperName(sortName(sym.Sort)) {
+		w.linef("ivy.%s = %s", goName(sym.Name), g.goZeroValue(sym.Sort))
+		return
+	}
+	if fs, ok := sym.Sort.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
+		if !g.canEnumerateDomain(fs.Domain()) {
+			base := "ivy." + goName(sym.Name)
+			w.linef("%s = %s", base, g.goFunctionStorageInit(fs.Domain(), fs.Range()))
+			g.emitNondetThunkBase(w, base, fs.Domain(), fs.Range(), label, 0)
+			return
+		}
+		g.emitDomainLoops(w, fs.Domain(), func(args []string) {
+			expr, err := g.goActionParamRandomValueExpr(fs.Range(), label+"."+sym.Name, int64(len(args)))
+			if err != nil {
+				g.unsupported(w, "%s", err.Error())
+				return
+			}
+			w.linef("%s = %s", g.goStorageAccess(sym.Name, sym.Sort, args, "ivy"), expr)
+		})
+		return
+	}
+	expr, err := g.goActionParamRandomValueExpr(sym.Sort, label+"."+sym.Name, 0)
+	if err != nil {
+		g.unsupported(w, "%s", err.Error())
+		return
+	}
+	w.linef("ivy.%s = %s", goName(sym.Name), expr)
+}
+
+type genDefinedInput struct {
+	param *goivy.Const
+	value goivy.Expr
+}
+
+func (g *Generator) emitGenActionGeneratorDefinedInputs(w *goWriter, act goivy.Action) {
+	defs := genActionGeneratorDefinedInputs(act)
+	if len(defs) == 0 {
+		return
+	}
+	g.pushExprOverrides(genActionFormalExprOverrides(act))
+	defer g.popExprOverrides()
+	for _, def := range defs {
+		expr, err := g.emitExpr(def.value)
+		if err != nil {
+			g.unsupported(w, "unsupported action generator defined input: %s", err.Error())
+			continue
+		}
+		w.linef("gen.%s = %s", goName(def.param.Name), expr)
+	}
+}
+
+func genActionGeneratorDefinedInputs(act goivy.Action) []genDefinedInput {
+	params := genActionFormalParamMap(act)
+	if len(params) == 0 {
+		return nil
+	}
+	var defs []genDefinedInput
+	for _, guard := range leadingAssumeFormulas(act) {
+		eq, ok := guard.(*goivy.Eq)
+		if !ok {
+			continue
+		}
+		if p, ok := genExprFormalParam(eq.T1, params); ok {
+			defs = append(defs, genDefinedInput{param: p, value: eq.T2})
+			continue
+		}
+		if p, ok := genExprFormalParam(eq.T2, params); ok {
+			defs = append(defs, genDefinedInput{param: p, value: eq.T1})
+		}
+	}
+	return defs
+}
+
+func genActionFormalParamMap(act goivy.Action) map[string]*goivy.Const {
+	params := map[string]*goivy.Const{}
+	if act == nil {
+		return params
+	}
+	for _, p := range act.GetFormalParams() {
+		if p == nil {
+			continue
+		}
+		for _, name := range formalExprOverrideNames(p.Name) {
+			params[name] = p
+		}
+	}
+	return params
+}
+
+func genExprFormalParam(e goivy.Expr, params map[string]*goivy.Const) (*goivy.Const, bool) {
+	c, ok := e.(*goivy.Const)
+	if !ok || c == nil {
+		return nil, false
+	}
+	p, ok := params[c.Name]
+	return p, ok
+}
+
+func genActionFormalExprOverrides(act goivy.Action) map[string]string {
+	overrides := map[string]string{}
+	if act == nil {
+		return overrides
+	}
+	for _, p := range act.GetFormalParams() {
+		if p == nil {
+			continue
+		}
+		field := "gen." + goName(p.Name)
+		for _, name := range formalExprOverrideNames(p.Name) {
+			overrides[name] = field
+		}
+	}
+	return overrides
+}
+
+func (g *Generator) emitGenActionGeneratorAssumeGuards(w *goWriter, act goivy.Action) {
+	guards := leadingAssumeFormulas(act)
+	if len(guards) == 0 {
+		return
+	}
+	g.pushExprOverrides(genActionFormalExprOverrides(act))
+	defer g.popExprOverrides()
+	for _, guard := range guards {
+		expr, err := g.emitExpr(goivy.CloseFormula(guard))
+		if err != nil {
+			g.unsupported(w, "unsupported action generator assume guard: %s", err.Error())
+			continue
+		}
+		w.open(fmt.Sprintf("if !(%s) {", expr))
+		w.line("return false")
+		w.close("")
+	}
+}
+
+func leadingAssumeFormulas(act goivy.Action) []goivy.Expr {
+	switch a := act.(type) {
+	case *goivy.LogicAssumeAction:
+		if a.Formula == nil {
+			return nil
+		}
+		return []goivy.Expr{a.Formula}
+	case *goivy.LogicSequence:
+		var guards []goivy.Expr
+		for _, elem := range a.Elems {
+			assume, ok := elem.(*goivy.LogicAssumeAction)
+			if !ok {
+				break
+			}
+			if assume.Formula != nil {
+				guards = append(guards, assume.Formula)
+			}
+		}
+		return guards
+	default:
+		return nil
+	}
+}
+
+func formalExprOverrideNames(name string) []string {
+	base := name
+	switch {
+	case strings.HasPrefix(name, "__fml:"):
+		base = strings.TrimPrefix(name, "__fml:")
+	case strings.HasPrefix(name, "fml:"):
+		base = strings.TrimPrefix(name, "fml:")
+	}
+	candidates := []string{name, base, "fml:" + base, "__fml:" + base}
+	names := make([]string, 0, len(candidates))
+	seen := map[string]bool{}
+	for _, candidate := range candidates {
+		if seen[candidate] {
+			continue
+		}
+		seen[candidate] = true
+		names = append(names, candidate)
+	}
+	return names
+}
+
+func actionFormalGeneratorLabel(p *goivy.Const) string {
+	if p == nil {
+		return "__fml:"
+	}
+	name := p.Name
+	switch {
+	case strings.HasPrefix(name, "__fml:"):
+		return name
+	case strings.HasPrefix(name, "fml:"):
+		return "__" + name
+	default:
+		return "__fml:" + name
+	}
+}
+
 func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act goivy.Action) {
 	w.line("ivy := gen.ivy")
 	if act == nil {
 		w.line("_ = ivy")
 		return
 	}
-	argExprs := g.randomActualArgs(name, act)
-	args := argExprs
-	if len(argExprs) > 0 {
-		args = make([]string, len(argExprs))
-		for i, arg := range argExprs {
-			args[i] = fmt.Sprintf("__arg%d", i)
-			w.linef("%s := %s", args[i], arg)
-		}
+	args := make([]string, 0, len(act.GetFormalParams()))
+	for _, p := range act.GetFormalParams() {
+		args = append(args, "gen."+goName(p.Name))
 	}
 	fn, err := funName(name)
 	if err != nil {
@@ -1328,8 +1560,16 @@ func (g *Generator) emitGenActionCycles(w *goWriter, runnable []string, testIter
 			w.close(fmt.Sprintf(" else if __choice < %s {", goFloatLiteral(cumulative)))
 			w.indent++
 		}
+		w.line("ivy._generating = true")
 		w.open(fmt.Sprintf("if %s.generate() {", genVar))
 		w.linef("%s.execute()", genVar)
+		w.line("ivy._generating = false")
+		w.close(" else {")
+		w.indent++
+		w.line("ivy._generating = false")
+		w.line("cycle--")
+		w.line("continue")
+		w.indent--
 		w.close("")
 	}
 	w.close("")
@@ -1776,6 +2016,28 @@ func (g *Generator) localSort(name string) (goivy.Sort, bool) {
 		}
 	}
 	return nil, false
+}
+
+func (g *Generator) pushExprOverrides(overrides map[string]string) {
+	g.exprOverrides = append(g.exprOverrides, overrides)
+}
+
+func (g *Generator) popExprOverrides() {
+	if len(g.exprOverrides) > 0 {
+		g.exprOverrides = g.exprOverrides[:len(g.exprOverrides)-1]
+	}
+}
+
+func (g *Generator) exprOverride(name string) (string, bool) {
+	if g == nil {
+		return "", false
+	}
+	for i := len(g.exprOverrides) - 1; i >= 0; i-- {
+		if code, ok := g.exprOverrides[i][name]; ok {
+			return code, true
+		}
+	}
+	return "", false
 }
 
 func (g *Generator) unsupported(w *goWriter, format string, args ...any) {
