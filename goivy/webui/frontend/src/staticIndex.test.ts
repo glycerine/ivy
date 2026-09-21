@@ -43,6 +43,7 @@ describe('static graph background controls', () => {
   it('keeps pane resize handles wired to the panes they can actually resize', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
     const editorHandle = doc.querySelector('#sheet-workspace > #editor-left-resize-handle');
+    const editorPanelRule = ivyCss.match(/#editor-panel\s*\{[^}]+\}/)?.[0] || '';
     const editorEdgeRule = ivyCss.match(/#editor-left-resize-handle\s*\{[^}]+\}/)?.[0] || '';
     const proofColumnDividerRule = ivyCss.match(/\.proof-crg-column-divider\s*\{[^}]+\}/)?.[0] || '';
     const proofRowDividerRule = ivyCss.match(/\.proof-crg-row-divider\s*\{[^}]+\}/)?.[0] || '';
@@ -51,6 +52,8 @@ describe('static graph background controls', () => {
     expect(doc.querySelector('#editor-panel > #editor-left-resize-handle')).toBeNull();
     expect(editorHandle).not.toBeNull();
     expect(editorHandle?.getAttribute('aria-label')).toBe('Resize editor');
+    expect(editorPanelRule).toContain('flex: 1 0 var(--sheet-pane-width);');
+    expect(editorPanelRule).not.toContain('margin-right:');
     expect(editorEdgeRule).toContain('flex: 0 0 4px;');
     expect(editorEdgeRule).toContain('width: 4px;');
     expect(editorEdgeRule).toContain('cursor: col-resize;');

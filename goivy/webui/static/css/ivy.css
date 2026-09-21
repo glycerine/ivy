@@ -485,11 +485,10 @@ body[data-event-viewer-only="true"] #outer-container {
 #editor-panel {
     --sheet-pane-width: 44rem;
     --sheet-pane-min-width: 460px;
-    flex: 0 0 var(--sheet-pane-width);
+    flex: 1 0 var(--sheet-pane-width);
     display: flex;
     flex-direction: column;
     min-width: var(--sheet-pane-min-width);
-    margin-right: 160px;
     overflow: hidden;
 }
 

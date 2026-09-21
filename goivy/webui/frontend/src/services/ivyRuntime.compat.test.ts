@@ -366,7 +366,7 @@ describe('ivyRuntime compatibility behavior', () => {
     log.mockRestore();
   });
 
-  it('keeps the editor width fixed while logging geometry after left-edge drags', () => {
+  it('does not set an inline editor width while logging geometry after left-edge drags', () => {
     document.body.innerHTML = [
       '<div id="sheet-area">',
       '  <div id="sheet-workspace" class="sheet-workspace">',
