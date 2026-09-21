@@ -107,7 +107,7 @@ func (g *Generator) emitAssign(w *goWriter, a *goivy.LogicAssignAction) {
 	if g.emitExtensionalRelationClear(w, a) {
 		return
 	}
-	vs := goivy.VariablesAstList(a.LHS)
+	vs := g.assignmentLoopVars(a.LHS)
 	if len(vs) == 0 {
 		g.emitAssignOne(w, a.LHS, a.RHS)
 		return
@@ -420,7 +420,7 @@ func setTargetAndValue(lit goivy.Expr) (goivy.Expr, string) {
 }
 
 func (g *Generator) emitAssertLike(w *goWriter, fn string, f goivy.Expr, label string) {
-	expr, err := g.emitExpr(goivy.CloseFormula(f))
+	expr, err := g.emitExpr(closeFormulaForGo(f))
 	if err != nil {
 		g.unsupported(w, "unsupported assertion expression: %s", err.Error())
 		return
@@ -432,7 +432,7 @@ func (g *Generator) emitAssertLike(w *goWriter, fn string, f goivy.Expr, label s
 }
 
 func (g *Generator) emitAssume(w *goWriter, f goivy.Expr, label string) {
-	expr, err := g.emitExpr(goivy.CloseFormula(f))
+	expr, err := g.emitExpr(closeFormulaForGo(f))
 	if err != nil {
 		g.unsupported(w, "unsupported assumption expression: %s", err.Error())
 		return
@@ -451,6 +451,28 @@ func (g *Generator) emitAssume(w *goWriter, f goivy.Expr, label string) {
 		w.line("return")
 	}
 	w.close("")
+}
+
+func closeFormulaForGo(f goivy.Expr) goivy.Expr {
+	closed := goivy.CloseFormula(f)
+	var vars []*goivy.LogicVariable
+	seen := map[string]bool{}
+	for _, sym := range goivy.UsedSymbolsAst(f).All() {
+		c, ok := sym.(*goivy.Const)
+		if !ok || c == nil || c.CSort == nil || !goParamConstName(c.Name) || seen[c.Name] {
+			continue
+		}
+		seen[c.Name] = true
+		vars = append(vars, &goivy.LogicVariable{Name: c.Name, VSort: c.CSort})
+	}
+	if len(vars) == 0 {
+		return closed
+	}
+	return goivy.IvyForAll(vars, closed)
+}
+
+func goParamConstName(name string) bool {
+	return strings.HasPrefix(name, "prm:") || strings.HasPrefix(name, "__prm:")
 }
 
 func (g *Generator) emitIf(w *goWriter, a *goivy.LogicIfAction) {

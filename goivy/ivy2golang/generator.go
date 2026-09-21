@@ -1412,7 +1412,7 @@ func (g *Generator) emitGenActionGeneratorAssumeGuards(w *goWriter, name string,
 	g.pushExprOverrides(genActionFormalExprOverrides(act))
 	defer g.popExprOverrides()
 	for _, guard := range guards {
-		expr, err := g.emitExpr(goivy.CloseFormula(guard))
+		expr, err := g.emitExpr(closeFormulaForGo(guard))
 		if err != nil {
 			g.unsupported(w, "unsupported action generator assume guard: %s", err.Error())
 			continue
@@ -1661,6 +1661,8 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 					w.linef("%s := %s", args[i], arg)
 				}
 			}
+			g.emitTestActionDefinedInputs(w, name, act, args)
+			g.emitTestActionAssumeGuards(w, name, act, args)
 			call := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(args, ", "))
 			trace := g.actionTraceLine(name, args)
 			w.line(trace)
@@ -1698,6 +1700,83 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 		w.close("")
 		w.close("")
 	}
+}
+
+func (g *Generator) emitTestActionDefinedInputs(w *goWriter, name string, act goivy.Action, args []string) {
+	defs := genActionGeneratorDefinedInputs(act, g.genActionPreconditionFormulas(name, act))
+	if len(defs) == 0 {
+		return
+	}
+	g.pushExprOverrides(actionFormalExprOverridesToArgs(act, args))
+	defer g.popExprOverrides()
+	argByParam := actionFormalArgMap(act, args)
+	for _, def := range defs {
+		lhs := argByParam[def.param]
+		if lhs == "" {
+			continue
+		}
+		expr, err := g.emitExpr(def.value)
+		if err != nil {
+			g.unsupported(w, "unsupported target=test defined input: %s", err.Error())
+			continue
+		}
+		w.linef("%s = %s", lhs, expr)
+	}
+}
+
+func (g *Generator) emitTestActionAssumeGuards(w *goWriter, name string, act goivy.Action, args []string) {
+	if act == nil || len(act.GetFormalParams()) == 0 {
+		return
+	}
+	guards := g.genActionPreconditionFormulas(name, act)
+	if len(guards) == 0 {
+		return
+	}
+	g.pushExprOverrides(actionFormalExprOverridesToArgs(act, args))
+	defer g.popExprOverrides()
+	for _, guard := range guards {
+		expr, err := g.emitExpr(closeFormulaForGo(guard))
+		if err != nil {
+			g.unsupported(w, "unsupported target=test assume guard: %s", err.Error())
+			continue
+		}
+		w.open(fmt.Sprintf("if !(%s) {", expr))
+		w.line("cycle--")
+		w.line("continue")
+		w.close("")
+	}
+}
+
+func actionFormalArgMap(act goivy.Action, args []string) map[*goivy.Const]string {
+	out := map[*goivy.Const]string{}
+	if act == nil {
+		return out
+	}
+	formals := act.GetFormalParams()
+	for i, p := range formals {
+		if p == nil || i >= len(args) {
+			continue
+		}
+		out[p] = args[i]
+	}
+	return out
+}
+
+func actionFormalExprOverridesToArgs(act goivy.Action, args []string) map[string]string {
+	overrides := map[string]string{}
+	if act == nil {
+		return overrides
+	}
+	formals := act.GetFormalParams()
+	for i, p := range formals {
+		if p == nil || i >= len(args) {
+			continue
+		}
+		for _, name := range formalExprOverrideNames(p.Name) {
+			overrides[name] = args[i]
+		}
+	}
+	return overrides
 }
 
 func (g *Generator) emitTestMainTail(w *goWriter, finalMsName string) {

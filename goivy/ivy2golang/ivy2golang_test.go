@@ -268,6 +268,102 @@ export step
 	}
 }
 
+func TestTargetTestLeadingAssumeGuardSkipsRejectedInputs(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    assume ~(c = red);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__arg0 := color(ivy.___ivy_randomize(2, "set.fml:c", 0))`,
+		`if !(!((__arg0 == red))) {`,
+		`cycle--`,
+		`continue`,
+		`fmt.Fprintf(__ivy_out, "> set(%v)\n", __arg0)`,
+	} {
+		if !strings.Contains(mainBody, want) {
+			t.Fatalf("target=test assume guard source missing %q:\n%s", want, mainBody)
+		}
+	}
+	guardIdx := strings.Index(mainBody, `if !(!((__arg0 == red))) {`)
+	traceIdx := strings.Index(mainBody, `fmt.Fprintf(__ivy_out, "> set(%v)\n", __arg0)`)
+	if guardIdx < 0 || traceIdx < 0 || guardIdx > traceIdx {
+		t.Fatalf("assume guard should run before action trace; guard=%d trace=%d\n%s", guardIdx, traceIdx, mainBody)
+	}
+
+	bin := compileGeneratedGo(t, out)
+	stdout, stderr, err := runBinary(t, bin, "iters=20", "runs=1", "seed=1", "delay=0")
+	if err != nil {
+		t.Fatalf("guarded target=test run should skip failed assumes\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", stdout, stderr, out.Source)
+	}
+	if strings.Contains(stdout, "assumption_failed") || strings.Contains(stderr, "assumption failed") {
+		t.Fatalf("leading assume guard should not execute failed assumes\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+	if strings.Contains(stdout, "> set(red)") {
+		t.Fatalf("leading assume guard should not trace rejected red inputs\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+	if !strings.Contains(stdout, "> set(green)") || !strings.Contains(stdout, "test_completed") {
+		t.Fatalf("guarded run missing accepted call or completion marker\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+}
+
+func TestTargetTestLeadingAssumeDefinedInput(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..7}
+individual stored : idx
+action set(x:idx) = {
+    assume x = 3;
+    stored := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdefparam", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__arg0 := (0 + ivy.___ivy_randomize(8, "set.fml:x", 0))`,
+		`__arg0 = 3`,
+		`if !((__arg0 == 3)) {`,
+		`fmt.Fprintf(__ivy_out, "> set(%v)\n", __arg0)`,
+	} {
+		if !strings.Contains(mainBody, want) {
+			t.Fatalf("target=test defined input source missing %q:\n%s", want, mainBody)
+		}
+	}
+	assignIdx := strings.Index(mainBody, `__arg0 = 3`)
+	traceIdx := strings.Index(mainBody, `fmt.Fprintf(__ivy_out, "> set(%v)\n", __arg0)`)
+	if assignIdx < 0 || traceIdx < 0 || assignIdx > traceIdx {
+		t.Fatalf("defined input should be assigned before action trace; assign=%d trace=%d\n%s", assignIdx, traceIdx, mainBody)
+	}
+
+	bin := compileGeneratedGo(t, out)
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "delay=0")
+	if err != nil {
+		t.Fatalf("defined-input target=test run failed\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", stdout, stderr, out.Source)
+	}
+	wantTrace := strings.Repeat("> set(3)\n", 3) + "test_completed\n"
+	if stdout != wantTrace {
+		t.Fatalf("defined input trace differs\nwant:\n%s\ngot:\n%s\nstderr:\n%s", wantTrace, stdout, stderr)
+	}
+}
+
 func TestSubgoalNeverConvertedToAssume(t *testing.T) {
 	cfg := goivy.NewConfig()
 	fmla := goivy.NewConst("p", goivy.Boolean)
@@ -1738,6 +1834,44 @@ export choose
 	}
 }
 
+func TestPrivateMultipleReturnActionCallEmitsTupleAssignment(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+individual ok : bool
+action split(c:color) returns (out:color, good:bool) = {
+    out := c;
+    good := true
+}
+action step = {
+    call saved, ok := split(green)
+}
+export step
+`)
+	mod.PublicActions.Set("split", false)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "multi_private", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	for _, want := range []string{
+		"func (ivy *multi_private) split(c color) (color, bool)",
+		"out := red",
+		"good := false",
+		"out = c",
+		"good = true",
+		"return out, good",
+		"ivy.saved, ivy.ok = ivy.split(green)",
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("private multi-return source missing %q:\n%s", want, out.Source)
+		}
+	}
+	if strings.Contains(out.Source, `fmt.Fprintln(__ivy_out, "> split")`) {
+		t.Fatalf("private split should not be directly randomized as a public action:\n%s", out.Source)
+	}
+	compileGeneratedGo(t, out)
+}
+
 func TestTraceLHSRuntimeOutputCompilesAndRuns(t *testing.T) {
 	src := `#lang ivy1.7
 type color = {red, green}
@@ -1992,6 +2126,7 @@ export trigger
 }
 
 func TestEnumDispatchTraceMatchesIvy2Cpp(t *testing.T) {
+	requireSlowTest(t)
 	fixture := filepath.Join("..", "ivy2cpp", "test_vec", "oracle", "enum_dispatch.ivy")
 	cppOut, err := ivy2cppgen.CompileAndGenerate(fixture, map[string]string{"target": "test", "classname": "enum_dispatch"}, ivy2cppgen.Config{})
 	if err != nil {
@@ -2810,6 +2945,90 @@ export step
 	compileGeneratedGo(t, out)
 }
 
+func TestIssue57InitRequireClosesFreeVariables(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type my_type_1
+type my_type_2 = { val1, val2 }
+type my_type_3
+
+interpret my_type_1 -> bv[2]
+interpret my_type_3 -> bv[8]
+
+object node(type_1:my_type_1) = {
+    relation voted(MY_TYPE_2:my_type_2, MY_TYPE_3:my_type_3)
+    after init {
+        require voted(MY_TYPE_2, MY_TYPE_3);
+    }
+}
+
+extract executable_runner = node
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "issue57", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	initBody := bodyAfterMarker(out.Source, "func (ivy *issue57) __init()")
+	if initBody == "" {
+		t.Fatalf("__init body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"for prm__V0 := 0; prm__V0 < 4; prm__V0++",
+		"for _, MY_TYPE_2 := range []my_type_2{val1, val2}",
+		"for MY_TYPE_3 := 0; MY_TYPE_3 < 256; MY_TYPE_3++",
+		"ivyAssert((func() bool {",
+		"if !(ivy.node__voted[struct{ A0 int; A1 my_type_2; A2 int }{prm__V0, MY_TYPE_2, MY_TYPE_3}]) {",
+	} {
+		if !strings.Contains(initBody, want) {
+			t.Fatalf("issue57 init require source missing %q:\n%s", want, initBody)
+		}
+	}
+	compileGeneratedGo(t, out)
+}
+
+func TestIssue60InterpretedRangeInitializerParamLoopUsesSymbolicBound(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.8
+type client_id
+
+module iterable = {
+    interpret this -> {0..max}
+}
+
+global {
+    instance client_id : iterable
+}
+
+object client(self:client_id) = {
+    var ready: bool
+    after init {
+        ready := false;
+    }
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "issue60init", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	initBody := bodyAfterMarker(out.Source, "func (ivy *issue60init) __init()")
+	if initBody == "" {
+		t.Fatalf("__init body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(initBody, "for prm__V0 := 0; prm__V0 < (ivy.client_id__max + 1); prm__V0++") {
+		t.Fatalf("interpreted range initializer loop missing symbolic bound:\n%s", initBody)
+	}
+	for _, want := range []string{
+		"__ivy_tmp0.Set(prm__V0, false)",
+		"ivy.client__ready.Set(prm__V0, __ivy_tmp0.Get(prm__V0))",
+	} {
+		if !strings.Contains(initBody, want) {
+			t.Fatalf("interpreted range initializer source missing %q:\n%s", want, initBody)
+		}
+	}
+	if strings.Contains(initBody, "[]int{") {
+		t.Fatalf("symbolic interpreted range should not expand to a literal slice:\n%s", initBody)
+	}
+	compileGeneratedGo(t, out)
+}
+
 func TestOracleVariantStructReturnsMatchTrace(t *testing.T) {
 	tests := []struct {
 		name      string
@@ -3206,6 +3425,7 @@ func TestIfSomeExtensionalRelationCompilesAndRuns(t *testing.T) {
 }
 
 func TestIfSomeExtensionalRelationMatchesIvy2Cpp(t *testing.T) {
+	requireSlowTest(t)
 	const src = `#lang ivy1.7
 type key
 interpret key -> <<< int >>>

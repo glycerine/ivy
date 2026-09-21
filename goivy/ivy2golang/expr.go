@@ -404,13 +404,21 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 	w.indent++
 	g.pushScope()
 	for _, v := range vars {
+		name := goName(v.Name)
+		g.addLocal(v.Name)
+		if header, ok, err := g.goFiniteLoopHeaderForSort(v.VSort, name); err != nil || ok {
+			if err != nil {
+				g.popScope()
+				return "", err
+			}
+			w.open(header)
+			continue
+		}
 		vals, ok := g.finiteValueExprs(v.VSort)
 		if !ok {
 			g.popScope()
 			return "", fmt.Errorf("ivy2golang: cannot enumerate quantified variable %s:%s", v.Name, sortName(v.VSort))
 		}
-		name := goName(v.Name)
-		g.addLocal(v.Name)
 		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(v.VSort), strings.Join(vals, ", ")))
 	}
 	expr, err := g.emitExpr(body)
@@ -580,6 +588,15 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 			continue
 		}
 		name := goName(v.Name)
+		if header, ok, err := g.goFiniteLoopHeaderForSort(v.VSort, name); err != nil || ok {
+			if err != nil {
+				g.popScope()
+				return "", true, err
+			}
+			w.open(header)
+			nestedOpened++
+			continue
+		}
 		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(v.VSort), strings.Join(remainingVals[v.Name], ", ")))
 		nestedOpened++
 	}

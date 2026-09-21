@@ -272,6 +272,77 @@ func (g *Generator) goBoundedLoopHeaderForSort(s goivy.Sort, name, lo, hi string
 	return fmt.Sprintf("for %s := %s; %s < %s; %s++ {", name, lo, name, hi, name), true, nil
 }
 
+func (g *Generator) goFiniteLoopHeaderForSort(s goivy.Sort, name string) (string, bool, error) {
+	if st, ok := s.(*goivy.LogicEnumeratedSort); ok && st.Name != "" {
+		return "", false, nil
+	}
+	if rs, ok := g.rangeSortFor(s); ok {
+		lo, hi, ok := numericRangeBounds(rs)
+		if ok {
+			if hi < lo {
+				return "", false, nil
+			}
+			return g.goBoundedLoopHeaderForSort(s, name, strconv.Itoa(lo), "("+strconv.Itoa(hi)+")+1")
+		}
+		loExpr, hiExpr, ok, err := g.goSymbolicRangeLoopBounds(rs)
+		if err != nil {
+			return "", false, err
+		}
+		if !ok {
+			return "", false, nil
+		}
+		return g.goBoundedLoopHeaderForSort(s, name, loExpr, "("+hiExpr+" + 1)")
+	}
+	if g.goScalarType(s) != "int" {
+		return "", false, nil
+	}
+	if !g.sortHasNegativeValues(s) {
+		if card := g.sortCard(s); card > 0 {
+			return g.goBoundedLoopHeaderForSort(s, name, "0", strconv.Itoa(card))
+		}
+		if hi, ok := g.sortCardinalityAttr(s); ok {
+			return g.goBoundedLoopHeaderForSort(s, name, "0", hi)
+		}
+	}
+	return "", false, nil
+}
+
+func (g *Generator) goSymbolicRangeLoopBounds(rs *goivy.RangeSort) (string, string, bool, error) {
+	if rs == nil || rs.Lb == nil || rs.Ub == nil {
+		return "", "", false, nil
+	}
+	lo, ok, err := g.goRangeLoopBoundExpr(rs.Lb)
+	if err != nil || !ok {
+		return "", "", false, err
+	}
+	hi, ok, err := g.goRangeLoopBoundExpr(rs.Ub)
+	if err != nil || !ok {
+		return "", "", false, err
+	}
+	return lo, hi, true, nil
+}
+
+func (g *Generator) goRangeLoopBoundExpr(b goivy.NumeralOrCompiledBound) (string, bool, error) {
+	if b == nil {
+		return "", false, nil
+	}
+	text := b.BoundString()
+	if text == "" {
+		return "", false, nil
+	}
+	if b.IsNumeral() {
+		return text, true, nil
+	}
+	if cb, ok := b.(goivy.CompiledBound); ok && cb.Expr != nil {
+		code, err := g.emitExpr(cb.Expr)
+		if err != nil {
+			return "", false, err
+		}
+		return code, true, nil
+	}
+	return goName(text), true, nil
+}
+
 func (g *Generator) goLoopHeadersForSome(vars []*goivy.LogicVariable, body goivy.Expr) ([]string, bool, error) {
 	headers := make([]string, len(vars))
 	if len(vars) > 0 && g.goIsAnyIntegerType(vars[0].VSort) {
@@ -294,11 +365,19 @@ func (g *Generator) goLoopHeadersForSome(vars []*goivy.LogicVariable, body goivy
 		}
 	}
 	for i, v := range vars {
+		name := goName(v.Name)
+		if header, ok, err := g.goFiniteLoopHeaderForSort(v.VSort, name); err != nil || ok {
+			if err != nil {
+				return nil, false, err
+			}
+			headers[i] = header
+			continue
+		}
 		vals, ok := g.finiteValueExprs(v.VSort)
 		if !ok {
 			return nil, false, fmt.Errorf("ivy2golang: cannot enumerate some variable %s:%s", v.Name, sortName(v.VSort))
 		}
-		headers[i] = fmt.Sprintf("for _, %s := range []%s{%s} {", goName(v.Name), g.goScalarType(v.VSort), strings.Join(vals, ", "))
+		headers[i] = fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(v.VSort), strings.Join(vals, ", "))
 	}
 	return headers, false, nil
 }
@@ -351,11 +430,19 @@ func (g *Generator) goLoopHeadersForSomeCondition(some *goivy.SomeCondition) ([]
 		if p == nil {
 			return nil, fmt.Errorf("ivy2golang: nil some parameter")
 		}
+		name := goName(p.Name)
+		if header, ok, err := g.goFiniteLoopHeaderForSort(p.CSort, name); err != nil || ok {
+			if err != nil {
+				return nil, err
+			}
+			headers[i] = header
+			continue
+		}
 		vals, ok := g.finiteValueExprs(p.CSort)
 		if !ok {
 			return nil, fmt.Errorf("ivy2golang: cannot enumerate some variable %s:%s", p.Name, sortName(p.CSort))
 		}
-		headers[i] = fmt.Sprintf("for _, %s := range []%s{%s} {", goName(p.Name), g.goScalarType(p.CSort), strings.Join(vals, ", "))
+		headers[i] = fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(p.CSort), strings.Join(vals, ", "))
 	}
 	return headers, nil
 }

@@ -40,7 +40,7 @@ func (g *Generator) actionsCfg() *goivy.ActionsConfig {
 }
 
 func (g *Generator) assignmentLoopHeadersBounded(lhs goivy.Expr, body goivy.Expr) ([]string, bool) {
-	vs := goivy.VariablesAstList(lhs)
+	vs := g.assignmentLoopVars(lhs)
 	headers := make([]string, len(vs))
 	for i, v := range vs {
 		if v == nil {
@@ -63,6 +63,13 @@ func (g *Generator) assignmentLoopHeadersBounded(lhs goivy.Expr, body goivy.Expr
 				}
 			}
 		}
+		if header, ok, err := g.goFiniteLoopHeaderForSort(v.VSort, goName(v.Name)); err != nil || ok {
+			if err != nil {
+				return nil, false
+			}
+			headers[i] = header
+			continue
+		}
 		vals, ok := g.finiteValueExprs(v.VSort)
 		if !ok {
 			return nil, false
@@ -70,6 +77,39 @@ func (g *Generator) assignmentLoopHeadersBounded(lhs goivy.Expr, body goivy.Expr
 		headers[i] = fmt.Sprintf("for _, %s := range []%s{%s} {", goName(v.Name), g.goScalarType(v.VSort), strings.Join(vals, ", "))
 	}
 	return headers, true
+}
+
+func (g *Generator) assignmentLoopVars(lhs goivy.Expr) []*goivy.LogicVariable {
+	var out []*goivy.LogicVariable
+	seen := map[string]bool{}
+	var walk func(goivy.Expr)
+	walk = func(e goivy.Expr) {
+		switch n := e.(type) {
+		case *goivy.LogicVariable:
+			if n != nil && !seen[n.Name] {
+				seen[n.Name] = true
+				out = append(out, n)
+			}
+		case *goivy.Const:
+			if n != nil && goParamConstName(n.Name) && !seen[n.Name] {
+				seen[n.Name] = true
+				out = append(out, &goivy.LogicVariable{Name: n.Name, VSort: n.CSort})
+			}
+		case *goivy.Apply:
+			for _, term := range n.Terms {
+				walk(term)
+			}
+		default:
+			if n == nil {
+				return
+			}
+			for _, child := range n.Children() {
+				walk(child)
+			}
+		}
+	}
+	walk(lhs)
+	return out
 }
 
 func (g *Generator) emitAssignLoopHeaders(w *goWriter, vs []*goivy.LogicVariable, headers []string) {
@@ -118,13 +158,6 @@ func (g *Generator) emitAssignTwoPhase(w *goWriter, a *goivy.LogicAssignAction, 
 	g.pushScope()
 	g.addLocalSort(tmpName, tmpSort)
 	g.emitAssignLoopHeaders(w, vs, headers)
-	tmpCode, err := g.emitExpr(tmpLHS)
-	if err != nil {
-		g.unsupported(w, "unsupported temp lhs: %s", err.Error())
-		g.closeAssignLoopHeaders(w, headers)
-		g.popScope()
-		return
-	}
 	rhsCode, err := g.emitExpr(a.RHS)
 	if err != nil {
 		g.unsupported(w, "unsupported assignment rhs: %s", err.Error())
@@ -132,17 +165,27 @@ func (g *Generator) emitAssignTwoPhase(w *goWriter, a *goivy.LogicAssignAction, 
 		g.popScope()
 		return
 	}
-	w.linef("%s = %s", tmpCode, rhsCode)
+	if call, ok, err := g.goStorageSet(tmpLHS, rhsCode); ok || err != nil {
+		if err != nil {
+			g.unsupported(w, "unsupported temp lhs: %s", err.Error())
+			g.closeAssignLoopHeaders(w, headers)
+			g.popScope()
+			return
+		}
+		w.line(call)
+	} else {
+		tmpCode, err := g.emitExpr(tmpLHS)
+		if err != nil {
+			g.unsupported(w, "unsupported temp lhs: %s", err.Error())
+			g.closeAssignLoopHeaders(w, headers)
+			g.popScope()
+			return
+		}
+		w.linef("%s = %s", tmpCode, rhsCode)
+	}
 	g.closeAssignLoopHeaders(w, headers)
 
 	g.emitAssignLoopHeaders(w, vs, headers)
-	lhsCode, err := g.emitExpr(a.LHS)
-	if err != nil {
-		g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
-		g.closeAssignLoopHeaders(w, headers)
-		g.popScope()
-		return
-	}
 	tmpRHS, err := g.emitExpr(tmpLHS)
 	if err != nil {
 		g.unsupported(w, "unsupported temp rhs: %s", err.Error())
@@ -151,7 +194,24 @@ func (g *Generator) emitAssignTwoPhase(w *goWriter, a *goivy.LogicAssignAction, 
 		return
 	}
 	tmpRHS = g.maybeVariantUpcastExpr(a.LHS.NodeSort(), a.RHS.NodeSort(), tmpRHS)
-	w.linef("%s = %s", lhsCode, tmpRHS)
+	if call, ok, err := g.goStorageSet(a.LHS, tmpRHS); ok || err != nil {
+		if err != nil {
+			g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
+			g.closeAssignLoopHeaders(w, headers)
+			g.popScope()
+			return
+		}
+		w.line(call)
+	} else {
+		lhsCode, err := g.emitExpr(a.LHS)
+		if err != nil {
+			g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
+			g.closeAssignLoopHeaders(w, headers)
+			g.popScope()
+			return
+		}
+		w.linef("%s = %s", lhsCode, tmpRHS)
+	}
 	g.closeAssignLoopHeaders(w, headers)
 	g.popScope()
 }

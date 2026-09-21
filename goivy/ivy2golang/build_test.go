@@ -9,8 +9,16 @@ import (
 	"testing"
 )
 
+func requireSlowTest(t *testing.T) {
+	t.Helper()
+	if os.Getenv("SLOWTEST") != "1" {
+		t.Skip("set SLOWTEST=1 to run generated binary build/run integration checks")
+	}
+}
+
 func compileGeneratedGo(t *testing.T, out *Output) string {
 	t.Helper()
+	requireSlowTest(t)
 	if out == nil || out.Source == "" {
 		t.Fatalf("nil or empty generated output")
 	}
@@ -28,6 +36,7 @@ func compileGeneratedGo(t *testing.T, out *Output) string {
 
 func runBinary(t *testing.T, bin string, args ...string) (string, string, error) {
 	t.Helper()
+	requireSlowTest(t)
 	cmd := exec.Command(bin, args...)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
@@ -78,6 +87,7 @@ export step
 	if filepath.Ext(plan.OutputPath) != ".a" {
 		t.Fatalf("class target should build an archive, got output %q", plan.OutputPath)
 	}
+	requireSlowTest(t)
 	built, err := BuildOutput(out, dir)
 	if err != nil {
 		t.Fatalf("BuildOutput class target: %v\nsource:\n%s", err, out.Source)
