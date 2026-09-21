@@ -629,7 +629,11 @@ func callbackActionName(mod *goivy.Module, arg goivy.Node) (string, bool) {
 	case interface{ Relname() string }:
 		name = n.Relname()
 	case goivy.Expr:
-		name = goivy.ExprName(n)
+		var ok bool
+		name, ok = exprNameIfSupported(n)
+		if !ok {
+			return "", false
+		}
 	}
 	if name == "" {
 		return "", false
@@ -641,6 +645,33 @@ func callbackActionName(mod *goivy.Module, arg goivy.Node) (string, bool) {
 		return "ext:" + name, true
 	}
 	return "", false
+}
+
+func exprNameIfSupported(e goivy.Expr) (string, bool) {
+	switch n := e.(type) {
+	case *goivy.Const:
+		return n.Name, true
+	case *goivy.LogicVariable:
+		return n.Name, true
+	case *goivy.UninterpretedSort:
+		return n.Name, true
+	case *goivy.BooleanSort:
+		return "bool", true
+	case *goivy.LogicEnumeratedSort:
+		return n.Name, true
+	case *goivy.RangeSort:
+		return n.Name, true
+	case *goivy.TopSort:
+		return n.Name, true
+	case *goivy.LogicWhenOperator:
+		return n.Name, true
+	case *goivy.LogicNamedBinder:
+		return n.Name, true
+	case *goivy.Apply:
+		return exprNameIfSupported(n.Func)
+	default:
+		return "", false
+	}
 }
 
 func prepareModuleForGo(mod *goivy.Module, cfg Config) {

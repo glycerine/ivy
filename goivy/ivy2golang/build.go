@@ -39,7 +39,10 @@ func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {
 	dir := outputDirectory(outDir)
 	goFile := filepath.Join(dir, out.BaseName+".go")
 	outputPath := filepath.Join(dir, out.BaseName)
-	if runtime.GOOS == "windows" {
+	compileOnly := out.Target == "class" || (!out.EmitMain && out.Target != "")
+	if compileOnly {
+		outputPath += ".a"
+	} else if runtime.GOOS == "windows" {
 		outputPath += ".exe"
 	}
 	cacheDir := filepath.Join(outputBaseDirectory(outDir), ".ivy2golang-gocache")

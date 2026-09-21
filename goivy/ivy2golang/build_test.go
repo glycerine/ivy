@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -47,5 +48,44 @@ func TestBuildPlanForUsesGoFile(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(dir, ".ivy2golang-gocache")); err != nil {
 		t.Fatalf("gocache not created: %v", err)
+	}
+}
+
+func TestGenerateTargetClassBuildsAsArchive(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "class", ClassName: "OnlyClass"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if out.Target != "class" || out.EffectiveTarget != "repl" || out.EmitMain {
+		t.Fatalf("class target metadata = target %q effective %q emitMain %v", out.Target, out.EffectiveTarget, out.EmitMain)
+	}
+	if !strings.Contains(out.Source, "package ivygenerated") {
+		t.Fatalf("class target should emit non-main package:\n%s", out.Source)
+	}
+	if strings.Contains(out.Source, "func main()") {
+		t.Fatalf("class target should not emit main:\n%s", out.Source)
+	}
+	dir := t.TempDir()
+	plan, err := BuildPlanFor(out, dir, out.Config)
+	if err != nil {
+		t.Fatalf("BuildPlanFor: %v", err)
+	}
+	if filepath.Ext(plan.OutputPath) != ".a" {
+		t.Fatalf("class target should build an archive, got output %q", plan.OutputPath)
+	}
+	built, err := BuildOutput(out, dir)
+	if err != nil {
+		t.Fatalf("BuildOutput class target: %v\nsource:\n%s", err, out.Source)
+	}
+	if built != plan.OutputPath {
+		t.Fatalf("BuildOutput path = %q, want %q", built, plan.OutputPath)
+	}
+	if _, err := os.Stat(built); err != nil {
+		t.Fatalf("archive not written: %v", err)
 	}
 }
