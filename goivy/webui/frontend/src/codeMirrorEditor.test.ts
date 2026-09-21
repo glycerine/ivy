@@ -598,6 +598,131 @@ describe('codeMirrorEditor', () => {
     expect(editor.focus).toHaveBeenCalled();
   });
 
+  it('yanks the Emacs yank buffer into Replace and With prompt inputs on Ctrl-y', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    wrapper.innerHTML = '<div class="CodeMirror-dialog">Replace: <input value="cl"></div>';
+    doc.body.appendChild(wrapper);
+    const editor: any = {
+      getOption: vi.fn(() => 'emacs'),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+    };
+    editor.__ivyEmacsYankBuffer = 'ient';
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    const replaceInput = wrapper.querySelector('input') as HTMLInputElement;
+    replaceInput.setSelectionRange(2, 2);
+    const replaceYank = new KeyboardEvent('keydown', {
+      key: 'y',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    replaceInput.dispatchEvent(replaceYank);
+
+    expect(replaceYank.defaultPrevented).toBe(true);
+    expect(replaceInput.value).toBe('client');
+    expect(editor.__ivyEmacsReplaceQueryText).toBe('client');
+
+    wrapper.innerHTML = '<div class="CodeMirror-dialog">With: <input value=""></div>';
+    editor.__ivyEmacsYankBuffer = 'node\\n';
+    const withInput = wrapper.querySelector('input') as HTMLInputElement;
+    const withYank = new KeyboardEvent('keydown', {
+      key: 'y',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    withInput.dispatchEvent(withYank);
+
+    expect(withYank.defaultPrevented).toBe(true);
+    expect(withInput.value).toBe('node\\n');
+    expect(editor.__ivyEmacsReplaceText).toBe('node\n');
+  });
+
+  it('maps Escape-y to yank-pop inside Emacs replace prompt inputs', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    wrapper.innerHTML = '<div class="CodeMirror-dialog">Replace: <input value=""></div>';
+    doc.body.appendChild(wrapper);
+    const editor: any = {
+      getOption: vi.fn(() => 'emacs'),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+    };
+    editor.__ivyEmacsYankBuffer = 'second';
+    editor.__ivyEmacsYankRing = ['second', 'first'];
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    const input = wrapper.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'y',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    }));
+    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    input.dispatchEvent(escape);
+    const yankPop = new KeyboardEvent('keydown', { key: 'y', bubbles: true, cancelable: true });
+    input.dispatchEvent(yankPop);
+
+    expect(escape.defaultPrevented).toBe(true);
+    expect(yankPop.defaultPrevented).toBe(true);
+    expect(input.value).toBe('first');
+    expect(editor.__ivyEmacsReplaceQueryText).toBe('first');
+  });
+
+  it('maps Ctrl-Shift-underscore to undo Emacs replace prompt input edits', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    wrapper.innerHTML = '<div class="CodeMirror-dialog">Replace: <input value="link"></div>';
+    doc.body.appendChild(wrapper);
+    const editor: any = {
+      getOption: vi.fn(() => 'emacs'),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+    };
+    editor.__ivyEmacsYankBuffer = '_copy';
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    const input = wrapper.querySelector('input') as HTMLInputElement;
+    input.setSelectionRange(4, 4);
+    input.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'y',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    }));
+    const undo = new KeyboardEvent('keydown', {
+      key: '_',
+      ctrlKey: true,
+      shiftKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    input.dispatchEvent(undo);
+
+    expect(undo.defaultPrevented).toBe(true);
+    expect(input.value).toBe('link');
+    expect(editor.__ivyEmacsReplaceQueryText).toBe('link');
+  });
+
   it('does not arm Escape-percent while Escape aborts an active replace input prompt', () => {
     const doc = document.implementation.createHTMLDocument('');
     doc.body.innerHTML = '<textarea id="model-editor"></textarea>';

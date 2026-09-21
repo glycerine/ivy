@@ -4817,6 +4817,13 @@ class IvyRuntime {
                 }
                 break;
 
+            case 'compiler_error':
+                var compilerError = event.data && (event.data.error || event.data.message) || 'Unknown compiler error';
+                if (this.controls.hideLoading) this.controls.hideLoading();
+                this.controls.setStatus('Compiler error: ' + compilerError, 'error');
+                this.controls.showInfo('Compiler Error', compilerError);
+                break;
+
             case 'toggles':
                 // Server is providing toggle configuration
                 if (event.data && event.data.edge_names) {

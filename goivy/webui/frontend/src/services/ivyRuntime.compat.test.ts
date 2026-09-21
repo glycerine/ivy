@@ -763,6 +763,27 @@ describe('ivyRuntime compatibility behavior', () => {
     );
   });
 
+  it('surfaces hosted compiler_error events in the web UI', () => {
+    const runtime = makeRuntime();
+
+    runtime.handleEvent({
+      type: 'compiler_error',
+      data: {
+        phase: 'compile',
+        error: 'unknown type: time',
+      },
+    });
+
+    expect(runtime.controls.lastStatus).toEqual({
+      message: 'Compiler error: unknown type: time',
+      kind: 'error',
+    });
+    expect(runtime.controls.lastInfo).toEqual({
+      shortInfo: 'Compiler Error',
+      longInfo: 'unknown type: time',
+    });
+  });
+
   it('reloads edited model content before model-dependent API calls', async () => {
     let apiInstance: any = null;
     class ReloadingAPI extends FakeAPI {

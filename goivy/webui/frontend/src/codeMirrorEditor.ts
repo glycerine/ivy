@@ -269,12 +269,52 @@ function installEmacsReplacePromptKeys({
   doc: Document;
 }) {
   if (!doc || !editor) return;
+  let lastReplaceInputEscapeAt = 0;
+  let lastReplaceInputEscapeTarget: HTMLInputElement | null = null;
+  let replaceInputEscapeTimer: ReturnType<typeof setTimeout> | null = null;
+  const clearReplaceInputEscape = () => {
+    lastReplaceInputEscapeAt = 0;
+    lastReplaceInputEscapeTarget = null;
+    if (replaceInputEscapeTimer) clearTimeout(replaceInputEscapeTimer);
+    replaceInputEscapeTimer = null;
+  };
+  const armReplaceInputEscape = (input: HTMLInputElement) => {
+    clearReplaceInputEscape();
+    lastReplaceInputEscapeAt = Date.now();
+    lastReplaceInputEscapeTarget = input;
+    replaceInputEscapeTimer = setTimeout(() => {
+      const dialog = replaceDialogForInput(input);
+      if (dialog) abortReplaceDialog(editor, dialog);
+      clearReplaceInputEscape();
+    }, 700);
+    const timer = replaceInputEscapeTimer as any;
+    if (timer && typeof timer.unref === 'function') timer.unref();
+  };
   doc.addEventListener('input', (event) => {
     rememberReplaceDialogInput(editor, event.target);
   }, true);
   doc.addEventListener('keydown', (event) => {
     rememberReplaceDialogInput(editor, event.target);
     if (!isEmacsKeymap(editor)) return;
+    const replaceInput = replaceDialogInputTarget(event.target);
+    if (replaceInput) {
+      const handledInputKey = handleEmacsReplaceInputKey({
+        editor,
+        input: replaceInput,
+        event,
+        lastEscapeAt: lastReplaceInputEscapeAt,
+        lastEscapeTarget: lastReplaceInputEscapeTarget,
+        armEscape: armReplaceInputEscape,
+        clearEscape: clearReplaceInputEscape,
+      });
+      if (handledInputKey) return;
+      if (shouldRecordReplaceInputUndoBeforeNative(event)) {
+        recordReplaceInputUndoSnapshot(replaceInput);
+        replaceInputYankState.delete(replaceInput);
+      }
+    } else {
+      clearReplaceInputEscape();
+    }
     if (isCtrlG(event)) {
       const replaceDialog = findReplaceDialog(editor, doc);
       if (!replaceDialog) return;
@@ -333,6 +373,223 @@ function isCtrlG(event: KeyboardEvent) {
     && !event.altKey
     && !event.metaKey
     && !event.shiftKey;
+}
+
+const replaceInputUndoStacks = new WeakMap<HTMLInputElement, Array<{
+  value: string;
+  selectionStart: number;
+  selectionEnd: number;
+}>>();
+
+const replaceInputYankState = new WeakMap<HTMLInputElement, {
+  start: number;
+  end: number;
+  ringIndex: number;
+}>();
+
+function handleEmacsReplaceInputKey({
+  editor,
+  input,
+  event,
+  lastEscapeAt,
+  lastEscapeTarget,
+  armEscape,
+  clearEscape,
+}: {
+  editor: any;
+  input: HTMLInputElement;
+  event: KeyboardEvent;
+  lastEscapeAt: number;
+  lastEscapeTarget: HTMLInputElement | null;
+  armEscape: (input: HTMLInputElement) => void;
+  clearEscape: () => void;
+}) {
+  const hasRecentEscape = lastEscapeTarget === input
+    && lastEscapeAt > 0
+    && Date.now() - lastEscapeAt <= 2000;
+  const isPlainEscape = event.key === 'Escape'
+    && !event.ctrlKey
+    && !event.altKey
+    && !event.metaKey
+    && !event.shiftKey;
+  const isCtrlY = event.key === 'y'
+    && event.ctrlKey
+    && !event.altKey
+    && !event.metaKey
+    && !event.shiftKey;
+  const isAltY = event.key === 'y'
+    && event.altKey
+    && !event.ctrlKey
+    && !event.metaKey
+    && !event.shiftKey;
+  const isEscapeY = event.key === 'y'
+    && hasRecentEscape
+    && !event.ctrlKey
+    && !event.altKey
+    && !event.metaKey
+    && !event.shiftKey;
+  const isUndo = event.key === '_'
+    && event.ctrlKey
+    && event.shiftKey
+    && !event.altKey
+    && !event.metaKey;
+
+  if (isPlainEscape) {
+    event.preventDefault();
+    event.stopPropagation();
+    armEscape(input);
+    return true;
+  }
+  if (isCtrlY) {
+    if (!yankIntoReplaceInput(editor, input)) return false;
+    event.preventDefault();
+    event.stopPropagation();
+    clearEscape();
+    return true;
+  }
+  if (isAltY || isEscapeY) {
+    if (!yankPopInReplaceInput(editor, input)) return false;
+    event.preventDefault();
+    event.stopPropagation();
+    clearEscape();
+    return true;
+  }
+  if (isUndo) {
+    if (!undoReplaceInputEdit(editor, input)) return false;
+    event.preventDefault();
+    event.stopPropagation();
+    clearEscape();
+    return true;
+  }
+  if (!event.altKey && !event.ctrlKey && !event.metaKey && event.key !== 'Shift') {
+    clearEscape();
+  }
+  return false;
+}
+
+function replaceDialogInputTarget(target: EventTarget | null): HTMLInputElement | null {
+  const input = target as HTMLInputElement | null;
+  if (!input || input.tagName !== 'INPUT') return null;
+  return replaceDialogForInput(input) ? input : null;
+}
+
+function replaceDialogForInput(input: HTMLInputElement): HTMLElement | null {
+  const dialog = input.closest('.CodeMirror-dialog') as HTMLElement | null;
+  if (!dialog) return null;
+  const label = replaceDialogLabel(dialog);
+  if (label.startsWith('Replace:') || label.startsWith('With:') || label.startsWith('Replace with:')) {
+    return dialog;
+  }
+  return null;
+}
+
+function replaceDialogLabel(dialog: HTMLElement) {
+  return (dialog.textContent || '').replace(/\s+/g, ' ').trim();
+}
+
+function shouldRecordReplaceInputUndoBeforeNative(event: KeyboardEvent) {
+  if (event.ctrlKey || event.altKey || event.metaKey) return false;
+  return event.key.length === 1
+    || event.key === 'Backspace'
+    || event.key === 'Delete';
+}
+
+function recordReplaceInputUndoSnapshot(input: HTMLInputElement) {
+  const stack = replaceInputUndoStacks.get(input) || [];
+  const snapshot = replaceInputSnapshot(input);
+  const last = stack[stack.length - 1];
+  if (!last
+    || last.value !== snapshot.value
+    || last.selectionStart !== snapshot.selectionStart
+    || last.selectionEnd !== snapshot.selectionEnd) {
+    stack.push(snapshot);
+    if (stack.length > 100) stack.shift();
+  }
+  replaceInputUndoStacks.set(input, stack);
+}
+
+function replaceInputSnapshot(input: HTMLInputElement) {
+  const caret = input.value.length;
+  return {
+    value: input.value,
+    selectionStart: input.selectionStart ?? caret,
+    selectionEnd: input.selectionEnd ?? caret,
+  };
+}
+
+function restoreReplaceInputSnapshot(input: HTMLInputElement, snapshot: {
+  value: string;
+  selectionStart: number;
+  selectionEnd: number;
+}) {
+  input.value = snapshot.value;
+  setReplaceInputSelection(input, snapshot.selectionStart, snapshot.selectionEnd);
+  replaceInputYankState.delete(input);
+  dispatchReplaceInputChanged(input);
+}
+
+function yankIntoReplaceInput(editor: any, input: HTMLInputElement) {
+  const ring = emacsYankRing(editor);
+  if (ring.length === 0) return false;
+  insertTextIntoReplaceInput(editor, input, ring[0], 0);
+  return true;
+}
+
+function yankPopInReplaceInput(editor: any, input: HTMLInputElement) {
+  const ring = emacsYankRing(editor);
+  if (ring.length === 0) return false;
+  const yankState = replaceInputYankState.get(input);
+  const ringIndex = yankState ? (yankState.ringIndex + 1) % ring.length : 0;
+  insertTextIntoReplaceInput(editor, input, ring[ringIndex], ringIndex, yankState);
+  return true;
+}
+
+function insertTextIntoReplaceInput(
+  editor: any,
+  input: HTMLInputElement,
+  text: string,
+  ringIndex: number,
+  yankState: { start: number; end: number; ringIndex: number } | undefined = undefined,
+) {
+  recordReplaceInputUndoSnapshot(input);
+  const value = input.value;
+  const start = yankState ? yankState.start : input.selectionStart ?? value.length;
+  const end = yankState ? yankState.end : input.selectionEnd ?? start;
+  const safeStart = Math.max(0, Math.min(start, value.length));
+  const safeEnd = Math.max(safeStart, Math.min(end, value.length));
+  input.value = value.slice(0, safeStart) + text + value.slice(safeEnd);
+  const caret = safeStart + text.length;
+  setReplaceInputSelection(input, caret, caret);
+  replaceInputYankState.set(input, { start: safeStart, end: caret, ringIndex });
+  dispatchReplaceInputChanged(input);
+}
+
+function undoReplaceInputEdit(editor: any, input: HTMLInputElement) {
+  const stack = replaceInputUndoStacks.get(input);
+  const snapshot = stack && stack.pop();
+  if (!snapshot) return false;
+  restoreReplaceInputSnapshot(input, snapshot);
+  rememberReplaceDialogInput(editor, input);
+  return true;
+}
+
+function dispatchReplaceInputChanged(input: HTMLInputElement) {
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function setReplaceInputSelection(input: HTMLInputElement, start: number, end: number) {
+  if (typeof input.setSelectionRange === 'function') {
+    input.setSelectionRange(start, end);
+  }
+}
+
+function emacsYankRing(editor: any): string[] {
+  const ring = Array.isArray(editor.__ivyEmacsYankRing)
+    ? editor.__ivyEmacsYankRing.filter((item: any) => typeof item === 'string' && item.length > 0)
+    : [];
+  if (ring.length > 0) return ring;
+  const yankText = editor.__ivyEmacsYankBuffer;
+  return typeof yankText === 'string' && yankText.length > 0 ? [yankText] : [];
 }
 
 function findReplaceDialog(editor: any, doc: Document): HTMLElement | null {
@@ -472,9 +729,9 @@ function currentReplaceText(editor: any): string | null {
 function rememberReplaceDialogInput(editor: any, target: EventTarget | null) {
   const input = target as HTMLInputElement | null;
   if (!input || input.tagName !== 'INPUT') return;
-  const dialog = input.closest('.CodeMirror-dialog') as HTMLElement | null;
+  const dialog = replaceDialogForInput(input);
   if (!dialog) return;
-  const label = (dialog.textContent || '').replace(/\s+/g, ' ').trim();
+  const label = replaceDialogLabel(dialog);
   if (label.startsWith('Replace:')) {
     editor.__ivyEmacsReplaceQueryText = input.value;
   } else if (label.startsWith('With:') || label.startsWith('Replace with:')) {
@@ -905,8 +1162,14 @@ function copySelectionToEmacsYankBuffer(editor: any) {
   if (typeof selectedText !== 'string' || selectedText.length === 0) {
     return false;
   }
-  editor.__ivyEmacsYankBuffer = selectedText;
+  setEmacsYankBuffer(editor, selectedText);
   return true;
+}
+
+function setEmacsYankBuffer(editor: any, text: string) {
+  editor.__ivyEmacsYankBuffer = text;
+  const ring = Array.isArray(editor.__ivyEmacsYankRing) ? editor.__ivyEmacsYankRing : [];
+  editor.__ivyEmacsYankRing = [text].concat(ring.filter((item: any) => item !== text)).slice(0, 32);
 }
 
 function yankFromEmacsYankBuffer(editor: any) {
@@ -923,6 +1186,7 @@ function yankFromEmacsYankBuffer(editor: any) {
 
 function clearEmacsYankBuffer(editor: any) {
   editor.__ivyEmacsYankBuffer = '';
+  editor.__ivyEmacsYankRing = [];
 }
 
 function isNativeEmacsKillCommand(event: KeyboardEvent) {
