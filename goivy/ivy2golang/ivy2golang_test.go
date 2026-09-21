@@ -2484,6 +2484,58 @@ export step
 	compileGeneratedGo(t, out)
 }
 
+func TestIssue60SetActionOverSymbolicRangeUsesRuntimeBoundLoop(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.8
+type client_id
+
+module iterable = {
+    interpret this -> {0..max}
+}
+
+global {
+    instance client_id : iterable
+}
+
+relation marked(C:client_id)
+action step = {
+}
+export step
+`)
+	clientID, ok := mod.Sig.Sorts.Get2("client_id")
+	if !ok {
+		t.Fatal("missing client_id sort")
+	}
+	marked, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
+		t.Fatalf("FindSymbol marked: %v", err)
+	}
+	c, err := goivy.NewVariable("C", clientID)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	markedApp, err := goivy.NewApply(goivy.NewConst("marked", marked.CSort), c)
+	if err != nil {
+		t.Fatalf("NewApply marked: %v", err)
+	}
+	mod.Actions.Set("step", goivy.NewSetAction(markedApp))
+	out, err := Generate(mod, Config{Target: "test", ClassName: "issue60set", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	for _, want := range []string{
+		"for C := 0; C < (ivy.client_id__max + 1); C++",
+		"ivy.marked.Set(C, true)",
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("symbolic range set source missing %q:\n%s", want, out.Source)
+		}
+	}
+	if strings.Contains(out.Source, "[]int{") {
+		t.Fatalf("symbolic range set should not expand to a literal slice:\n%s", out.Source)
+	}
+	compileGeneratedGo(t, out)
+}
+
 func TestEmitCrashActionEmitsNothing(t *testing.T) {
 	crash := goivy.NewCrashAction(goivy.NewConst("anything", goivy.TopS))
 	var w goWriter
@@ -2759,6 +2811,65 @@ export step
 	compileGeneratedGo(t, out)
 }
 
+func TestIssue60DebugPrintOverSymbolicRangeUsesRuntimeBoundLoop(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.8
+type client_id
+
+module iterable = {
+    interpret this -> {0..max}
+}
+
+global {
+    instance client_id : iterable
+}
+
+relation marked(C:client_id)
+action step = {
+}
+export step
+`)
+	clientID, ok := mod.Sig.Sorts.Get2("client_id")
+	if !ok {
+		t.Fatal("missing client_id sort")
+	}
+	marked, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
+		t.Fatalf("FindSymbol marked: %v", err)
+	}
+	c, err := goivy.NewVariable("C", clientID)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	markedApp, err := goivy.NewApply(goivy.NewConst("marked", marked.CSort), c)
+	if err != nil {
+		t.Fatalf("NewApply marked: %v", err)
+	}
+	dbg := goivy.NewDebugAction(goivy.NewConst(`"scan"`, goivy.TopS), markedApp)
+	dbg.WithNames = []string{"seen"}
+	mod.Actions.Set("step", dbg)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "issue60debug", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	for _, want := range []string{
+		`fmt.Fprint(__ivy_out, "[")`,
+		"__ivy_debug_idx0 := 0",
+		"for C := 0; C < (ivy.client_id__max + 1); C++",
+		"if __ivy_debug_idx0 > 0",
+		"fmt.Fprint(__ivy_out, ivy.marked.Get(C))",
+		"__ivy_debug_idx0++",
+		`fmt.Fprint(__ivy_out, "]")`,
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("symbolic range debug source missing %q:\n%s", want, out.Source)
+		}
+	}
+	if strings.Contains(out.Source, "[]int{") {
+		t.Fatalf("symbolic range debug should not expand to a literal slice:\n%s", out.Source)
+	}
+	compileGeneratedGo(t, out)
+}
+
 func TestInitialConditionEqualityEmitsAssignment(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -3027,6 +3138,62 @@ object client(self:client_id) = {
 		t.Fatalf("symbolic interpreted range should not expand to a literal slice:\n%s", initBody)
 	}
 	compileGeneratedGo(t, out)
+}
+
+func TestIssue60SymbolicRangeRandomizationUsesRuntimeBound(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.8
+type client_id
+
+module iterable = {
+    interpret this -> {0..max}
+}
+
+global {
+    instance client_id : iterable
+}
+
+individual last: client_id
+
+action touch(c:client_id) = {
+    last := c
+}
+export touch
+`)
+	testOut, err := Generate(mod, Config{Target: "test", ClassName: "issue60randomtest", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate target=test: %v\n%s", err, outSource(testOut))
+	}
+	for _, want := range []string{
+		`ivy.last = (0 + ivy.___ivy_choose((ivy.client_id__max + 1), "init.last", 0))`,
+		`__arg0 := (0 + ivy.___ivy_randomize((ivy.client_id__max + 1), "touch.fml:c", 0))`,
+	} {
+		if !strings.Contains(testOut.Source, want) {
+			t.Fatalf("target=test symbolic range randomization missing %q:\n%s", want, testOut.Source)
+		}
+	}
+
+	genOut, err := Generate(mod, Config{Target: "gen", ClassName: "issue60randomgen", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate target=gen: %v\n%s", err, outSource(genOut))
+	}
+	for _, want := range []string{
+		`ivy.last = (0 + ivy.___ivy_randomize((ivy.client_id__max + 1), "randomize.last", 0))`,
+		`gen.c = (0 + ivy.___ivy_randomize((ivy.client_id__max + 1), "__fml:c", 0))`,
+	} {
+		if !strings.Contains(genOut.Source, want) {
+			t.Fatalf("target=gen symbolic range randomization missing %q:\n%s", want, genOut.Source)
+		}
+	}
+
+	testBin := compileGeneratedGo(t, testOut)
+	stdout, stderr, err := runBinary(t, testBin, "2", "iters=1", "runs=1", "seed=1")
+	if err != nil {
+		t.Fatalf("run generated target=test Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
+	}
+	if !strings.Contains(stdout, "test_completed") {
+		t.Fatalf("generated target=test run did not complete\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+	compileGeneratedGo(t, genOut)
 }
 
 func TestOracleVariantStructReturnsMatchTrace(t *testing.T) {

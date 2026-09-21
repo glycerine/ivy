@@ -242,8 +242,11 @@ func (g *Generator) goRandomValueExprWithChooser(s goivy.Sort, name string, id i
 }
 
 func (g *Generator) goRandomValueExprWithChooserSeen(s goivy.Sort, name string, id int64, chooser string, seen map[string]bool) (string, error) {
-	call := func(rng int) string {
-		return fmt.Sprintf("ivy.%s(%d, %q, %d)", chooser, rng, name, id)
+	call := func(rng string) string {
+		return fmt.Sprintf("ivy.%s(%s, %q, %d)", chooser, rng, name, id)
+	}
+	callInt := func(rng int) string {
+		return call(strconv.Itoa(rng))
 	}
 	if expr, ok, err := g.goRandomVariantValueExprWithChooserSeen(s, name, id, chooser, seen); ok || err != nil {
 		return expr, err
@@ -275,33 +278,47 @@ func (g *Generator) goRandomValueExprWithChooserSeen(s goivy.Sort, name string, 
 	switch st := s.(type) {
 	case *goivy.BooleanSort:
 		_ = st
-		return fmt.Sprintf("%s != 0", call(2)), nil
+		return fmt.Sprintf("%s != 0", callInt(2)), nil
 	case *goivy.LogicEnumeratedSort:
 		if len(st.Extension) == 0 {
 			return g.goZeroValue(st), nil
 		}
 		if isNumericEnum(st) {
-			return fmt.Sprintf("[]int{%s}[%s]", strings.Join(st.Extension, ", "), call(len(st.Extension))), nil
+			return fmt.Sprintf("[]int{%s}[%s]", strings.Join(st.Extension, ", "), callInt(len(st.Extension))), nil
 		}
-		return fmt.Sprintf("%s(%s)", goName(st.Name), call(len(st.Extension))), nil
+		return fmt.Sprintf("%s(%s)", goName(st.Name), callInt(len(st.Extension))), nil
 	default:
 		if rs, ok := g.rangeSortFor(s); ok {
 			lo, hi, ok := numericRangeBounds(rs)
+			if ok {
+				width := hi - lo + 1
+				if width <= 0 {
+					return "", fmt.Errorf("ivy2golang: invalid range %s", sortName(s))
+				}
+				return fmt.Sprintf("(%d + %s)", lo, callInt(width)), nil
+			}
+			loExpr, hiExpr, ok, err := g.goSymbolicRangeLoopBounds(rs)
+			if err != nil {
+				return "", err
+			}
 			if !ok {
 				return "", fmt.Errorf("ivy2golang: cannot randomize symbolic range %s", sortName(s))
 			}
-			width := hi - lo + 1
-			if width <= 0 {
-				return "", fmt.Errorf("ivy2golang: invalid range %s", sortName(s))
-			}
-			return fmt.Sprintf("(%d + %s)", lo, call(width)), nil
+			return fmt.Sprintf("(%s + %s)", loExpr, call(goRangeRandomWidthExpr(loExpr, hiExpr))), nil
 		}
 		if card := g.sortCard(s); card > 0 {
-			return call(card), nil
+			return callInt(card), nil
 		}
 		g.warnOnce(fmt.Sprintf("ivy2golang: using zero value for non-enumerable sort %s", sortName(s)))
 		return g.goZeroValue(s), nil
 	}
+}
+
+func goRangeRandomWidthExpr(lo, hi string) string {
+	if strings.TrimSpace(lo) == "0" {
+		return "(" + hi + " + 1)"
+	}
+	return "((" + hi + ") - (" + lo + ") + 1)"
 }
 
 func (g *Generator) goRandomVariantValueExprWithChooserSeen(s goivy.Sort, name string, id int64, chooser string, seen map[string]bool) (string, bool, error) {

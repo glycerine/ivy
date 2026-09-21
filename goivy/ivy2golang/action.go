@@ -313,18 +313,23 @@ func (g *Generator) emitSet(w *goWriter, a *goivy.LogicSetAction) {
 		return
 	}
 	g.pushScope()
+	opened := 0
 	for _, v := range vs {
-		vals, ok := g.finiteValueExprs(v.VSort)
-		if !ok {
+		header, ok, err := g.goLoopHeaderForVar(v)
+		if err != nil || !ok {
 			g.unsupported(w, "unsupported set over free variable %s:%s", goName(v.Name), sortName(v.VSort))
+			for i := 0; i < opened; i++ {
+				w.close("")
+			}
 			g.popScope()
 			return
 		}
 		g.addLocal(v.Name)
-		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", goName(v.Name), g.goScalarType(v.VSort), strings.Join(vals, ", ")))
+		w.open(header)
+		opened++
 	}
 	g.emitAssignOne(w, target, goivy.NewConst(value, goivy.Boolean))
-	for range vs {
+	for i := 0; i < opened; i++ {
 		w.close("")
 	}
 	g.popScope()
@@ -370,36 +375,109 @@ func (g *Generator) emitDebug(w *goWriter, a *goivy.LogicDebugAction) {
 
 func (g *Generator) emitPrintExpr(w *goWriter, expr goivy.Expr) {
 	vs := goivy.VariablesAstList(expr)
-	opened := 0
+	var closers []string
 	for _, v := range vs {
-		vals, ok := g.finiteValueExprs(v.VSort)
-		if !ok {
+		idx := g.nextTemp("__ivy_debug_idx")
+		loop, ok, err := g.goIndexedLoopHeaderForVar(v, idx)
+		if err != nil || !ok {
 			g.unsupported(w, "unsupported debug print variable %s:%s", goName(v.Name), sortName(v.VSort))
-			for i := 0; i < opened; i++ {
-				w.close("")
-				w.line(`fmt.Fprint(__ivy_out, "]")`)
-			}
+			closePrintExprLoops(w, closers)
 			return
 		}
-		idx := g.nextTemp("__ivy_debug_idx")
+		if loop.pre != "" {
+			w.line(loop.pre)
+		}
 		w.line(`fmt.Fprint(__ivy_out, "[")`)
-		w.open(fmt.Sprintf("for %s, %s := range []%s{%s} {", idx, goName(v.Name), g.goScalarType(v.VSort), strings.Join(vals, ", ")))
+		w.open(loop.header)
 		w.open(fmt.Sprintf("if %s > 0 {", idx))
 		w.line(`fmt.Fprint(__ivy_out, ",")`)
 		w.close("")
-		opened++
+		closers = append(closers, loop.post)
 	}
 	value, err := g.emitExpr(expr)
 	if err != nil {
 		g.unsupported(w, "unsupported debug print expression: %s", err.Error())
-		for i := 0; i < opened; i++ {
-			w.close("")
-			w.line(`fmt.Fprint(__ivy_out, "]")`)
-		}
+		closePrintExprLoops(w, closers)
 		return
 	}
 	w.linef("fmt.Fprint(__ivy_out, %s)", value)
-	for i := 0; i < opened; i++ {
+	closePrintExprLoops(w, closers)
+}
+
+type goIndexedLoopHeader struct {
+	pre    string
+	header string
+	post   string
+}
+
+func (g *Generator) goLoopHeaderForVar(v *goivy.LogicVariable) (string, bool, error) {
+	if v == nil {
+		return "", false, fmt.Errorf("ivy2golang: nil loop variable")
+	}
+	if vals, ok := goLiteralFiniteValueExprs(v.VSort); ok {
+		return fmt.Sprintf("for _, %s := range []%s{%s} {", goName(v.Name), g.goScalarType(v.VSort), strings.Join(vals, ", ")), true, nil
+	}
+	if header, ok, err := g.goFiniteLoopHeaderForSort(v.VSort, goName(v.Name)); err != nil || ok {
+		return header, ok, err
+	}
+	if vals, ok := g.finiteValueExprs(v.VSort); ok {
+		return fmt.Sprintf("for _, %s := range []%s{%s} {", goName(v.Name), g.goScalarType(v.VSort), strings.Join(vals, ", ")), true, nil
+	}
+	return "", false, nil
+}
+
+func (g *Generator) goIndexedLoopHeaderForVar(v *goivy.LogicVariable, idx string) (goIndexedLoopHeader, bool, error) {
+	if v == nil {
+		return goIndexedLoopHeader{}, false, fmt.Errorf("ivy2golang: nil loop variable")
+	}
+	if vals, ok := goLiteralFiniteValueExprs(v.VSort); ok {
+		return goIndexedLoopHeader{
+			header: fmt.Sprintf("for %s, %s := range []%s{%s} {", idx, goName(v.Name), g.goScalarType(v.VSort), strings.Join(vals, ", ")),
+		}, true, nil
+	}
+	if header, ok, err := g.goFiniteLoopHeaderForSort(v.VSort, goName(v.Name)); err != nil || ok {
+		if err != nil || !ok {
+			return goIndexedLoopHeader{}, ok, err
+		}
+		return goIndexedLoopHeader{
+			pre:    fmt.Sprintf("%s := 0", idx),
+			header: header,
+			post:   idx + "++",
+		}, true, nil
+	}
+	if vals, ok := g.finiteValueExprs(v.VSort); ok {
+		return goIndexedLoopHeader{
+			header: fmt.Sprintf("for %s, %s := range []%s{%s} {", idx, goName(v.Name), g.goScalarType(v.VSort), strings.Join(vals, ", ")),
+		}, true, nil
+	}
+	return goIndexedLoopHeader{}, false, nil
+}
+
+func goLiteralFiniteValueExprs(s goivy.Sort) ([]string, bool) {
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		_ = st
+		return []string{"false", "true"}, true
+	case *goivy.LogicEnumeratedSort:
+		vals := make([]string, len(st.Extension))
+		for i, v := range st.Extension {
+			if isNumericEnum(st) {
+				vals[i] = v
+			} else {
+				vals[i] = goName(v)
+			}
+		}
+		return vals, true
+	default:
+		return nil, false
+	}
+}
+
+func closePrintExprLoops(w *goWriter, closers []string) {
+	for i := len(closers) - 1; i >= 0; i-- {
+		if closers[i] != "" {
+			w.line(closers[i])
+		}
 		w.close("")
 		w.line(`fmt.Fprint(__ivy_out, "]")`)
 	}
