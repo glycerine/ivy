@@ -204,6 +204,20 @@ func TestCommandBuildTrueHermesRMWO3FromTempDir(t *testing.T) {
 	if _, err := os.Stat(exe); err != nil {
 		t.Fatalf("missing generated Hermes executable: %v", err)
 	}
+	run := exec.Command(exe, "iters=10", "runs=1", "seed=1", "delay=0")
+	run.Dir = dir
+	var runStdout, runStderr strings.Builder
+	run.Stdout = &runStdout
+	run.Stderr = &runStderr
+	if err := run.Run(); err != nil {
+		t.Fatalf("run generated Hermes executable: %v\nstdout:\n%s\nstderr:\n%s", err, runStdout.String(), runStderr.String())
+	}
+	if strings.Contains(runStdout.String(), "assumption_failed") || strings.Contains(runStderr.String(), "assumption failed") {
+		t.Fatalf("generated Hermes run should not fail an assumption\nstdout:\n%s\nstderr:\n%s", runStdout.String(), runStderr.String())
+	}
+	if !strings.Contains(runStdout.String(), "test_completed") {
+		t.Fatalf("generated Hermes run missing completion marker\nstdout:\n%s\nstderr:\n%s", runStdout.String(), runStderr.String())
+	}
 }
 
 func buildIvy2GolangCommand(t *testing.T) string {

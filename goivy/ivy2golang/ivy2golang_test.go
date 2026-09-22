@@ -11351,6 +11351,105 @@ export check
 	}
 }
 
+func TestLocalWitnessFromLeadingAssumeUsesExtensionalRelation(t *testing.T) {
+	src := `#lang ivy1.7
+type node = {0..0}
+type version = {0..2}
+relation ts_version(N:node,V:version)
+after init {
+    ts_version(N,V) := false;
+    ts_version(0,1) := true
+}
+action inner(n:node) = {
+    var base:version;
+    assume ts_version(n,base)
+}
+action step = {
+    if exists BV:version. ts_version(0,BV) {
+        call inner(0)
+    }
+}
+export step
+`
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "local_witness", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	innerBody := bodyAfterMarker(out.Source, "func (ivy *local_witness) inner(")
+	if innerBody == "" {
+		t.Fatalf("inner method not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"for __ivy_witness_key, __ivy_witness_val := range ivy.ts_version {",
+		"if !__ivy_witness_val {",
+		"(__ivy_witness_key.A0 == n)",
+		"loc__base = __ivy_witness_key.A1",
+		"ivyAssume(ivy.ts_version[struct{ A0 int; A1 int }{n, loc__base}]",
+	} {
+		if !strings.Contains(innerBody, want) {
+			t.Fatalf("local witness source missing %q:\n%s", want, innerBody)
+		}
+	}
+	bin := compileGeneratedGo(t, out)
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "delay=0")
+	if err != nil {
+		t.Fatalf("local witness run failed\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", stdout, stderr, out.Source)
+	}
+	if strings.Contains(stdout, "assumption_failed") || strings.Contains(stderr, "assumption failed") {
+		t.Fatalf("local witness should satisfy the leading assume\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+}
+
+func TestTargetTestCallActionAssumeRejectsCandidateWithoutFailure(t *testing.T) {
+	src := `#lang ivy1.7
+type idx = {0..1}
+relation allowed(I:idx)
+after init {
+    allowed(I) := false;
+    allowed(1) := true
+}
+action inner(i:idx) = {
+    assume allowed(i)
+}
+action step(i:idx) = {
+    call inner(i)
+}
+export step
+`
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "trial_call", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"if __ivy_trial_rejected {",
+		"cycle--",
+		"ivy = __ivy_trial",
+	} {
+		if !strings.Contains(mainBody, want) {
+			t.Fatalf("trial call source missing %q:\n%s", want, mainBody)
+		}
+	}
+	bin := compileGeneratedGo(t, out)
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "delay=0")
+	if err != nil {
+		t.Fatalf("trial call run failed\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", stdout, stderr, out.Source)
+	}
+	if strings.Contains(stdout, "assumption_failed") || strings.Contains(stderr, "assumption failed") {
+		t.Fatalf("trial call should reject bad candidates without assumption failure\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+	if !strings.Contains(stdout, "test_completed") {
+		t.Fatalf("trial call run missing completion marker\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+}
+
 func TestExtensionalRelationDetectedFromInitializer(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -12123,6 +12222,34 @@ func TestOracleGeneratedTesterArgsCompileAndRunSlow(t *testing.T) {
 	}
 }
 
+func TestOracleGeneratedTargetGenCompilesSlow(t *testing.T) {
+	requireSlowTest(t)
+	for _, name := range goOracleFixtureNames {
+		t.Run(name, func(t *testing.T) {
+			out, err := CompileAndGenerate(goOracleFixturePath(name), map[string]string{"target": "gen", "classname": name}, Config{TestIters: "1"})
+			if err != nil {
+				t.Fatalf("CompileAndGenerate target=gen: %v\n%s", err, outSource(out))
+			}
+			assertNoUnsupportedGo(t, out.Source)
+			compileGeneratedGo(t, out)
+		})
+	}
+}
+
+func TestOracleGeneratedTargetReplCompilesSlow(t *testing.T) {
+	requireSlowTest(t)
+	for _, name := range goOracleFixtureNames {
+		t.Run(name, func(t *testing.T) {
+			out, err := CompileAndGenerate(goOracleFixturePath(name), map[string]string{"target": "repl", "classname": name}, Config{TestIters: "1"})
+			if err != nil {
+				t.Fatalf("CompileAndGenerate target=repl: %v\n%s", err, outSource(out))
+			}
+			assertNoUnsupportedGo(t, out.Source)
+			compileGeneratedGo(t, out)
+		})
+	}
+}
+
 func TestOracleFixturesGenerateWithoutUnsupportedComments(t *testing.T) {
 	for _, name := range goOracleFixtureNames {
 		t.Run(name, func(t *testing.T) {
@@ -12130,6 +12257,42 @@ func TestOracleFixturesGenerateWithoutUnsupportedComments(t *testing.T) {
 			batch, err := CompileAndGenerateAll(fixture, map[string]string{"target": "test", "classname": name}, Config{TestIters: "1"})
 			if err != nil {
 				t.Fatalf("CompileAndGenerateAll: %v", err)
+			}
+			if len(batch.Outputs) == 0 {
+				t.Fatalf("expected at least one generated output for %s", name)
+			}
+			for _, out := range batch.Outputs {
+				assertNoUnsupportedGo(t, out.Source)
+			}
+		})
+	}
+}
+
+func TestOracleFixturesGenerateTargetGenWithoutUnsupportedComments(t *testing.T) {
+	for _, name := range goOracleFixtureNames {
+		t.Run(name, func(t *testing.T) {
+			fixture := goOracleFixturePath(name)
+			batch, err := CompileAndGenerateAll(fixture, map[string]string{"target": "gen", "classname": name}, Config{TestIters: "1"})
+			if err != nil {
+				t.Fatalf("CompileAndGenerateAll target=gen: %v", err)
+			}
+			if len(batch.Outputs) == 0 {
+				t.Fatalf("expected at least one generated output for %s", name)
+			}
+			for _, out := range batch.Outputs {
+				assertNoUnsupportedGo(t, out.Source)
+			}
+		})
+	}
+}
+
+func TestOracleFixturesGenerateTargetReplWithoutUnsupportedComments(t *testing.T) {
+	for _, name := range goOracleFixtureNames {
+		t.Run(name, func(t *testing.T) {
+			fixture := goOracleFixturePath(name)
+			batch, err := CompileAndGenerateAll(fixture, map[string]string{"target": "repl", "classname": name}, Config{TestIters: "1"})
+			if err != nil {
+				t.Fatalf("CompileAndGenerateAll target=repl: %v", err)
 			}
 			if len(batch.Outputs) == 0 {
 				t.Fatalf("expected at least one generated output for %s", name)

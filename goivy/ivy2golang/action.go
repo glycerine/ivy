@@ -1073,6 +1073,11 @@ func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
 	}
 	w.open("{")
 	g.pushScope()
+	type localDecl struct {
+		name string
+		sort goivy.Sort
+	}
+	var locals []localDecl
 	for _, local := range a.Locals {
 		name, ok := exprNameOK(local)
 		if name == "" {
@@ -1084,6 +1089,7 @@ func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
 		}
 		sort := local.NodeSort()
 		g.addLocalSort(name, sort)
+		locals = append(locals, localDecl{name: name, sort: sort})
 		if g.emitLocalFunctionNondetAt(w, name, sort, a.UniqueID, loc) {
 			continue
 		}
@@ -1095,11 +1101,133 @@ func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
 		w.linef("%s := %s", localName, init)
 		w.linef("_ = %s", localName)
 	}
+	for _, local := range locals {
+		g.emitLocalWitnessInit(w, local.name, local.sort, a.Body)
+	}
 	if body, ok := a.Body.(goivy.Action); ok {
 		g.emitAction(w, body)
 	}
 	g.popScope()
 	w.close("")
+}
+
+func (g *Generator) emitLocalWitnessInit(w *goWriter, localName string, localSort goivy.Sort, body goivy.Expr) {
+	if g == nil || w == nil || localName == "" || body == nil {
+		return
+	}
+	app, pos, ok := g.localWitnessBoundApply(localName, localSort, body)
+	if !ok {
+		return
+	}
+	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok || len(fs.Domain()) == 0 || !isBooleanSort(fs.Range()) {
+		return
+	}
+	relName := goivy.ExprName(app.Func)
+	if relName == "" {
+		return
+	}
+	var conds []string
+	for i, term := range app.Terms {
+		if i == pos {
+			continue
+		}
+		expr, err := g.emitExpr(term)
+		if err != nil {
+			return
+		}
+		keyExpr := "__ivy_witness_key"
+		if len(app.Terms) != 1 {
+			keyExpr = fmt.Sprintf("__ivy_witness_key.A%d", i)
+		}
+		conds = append(conds, fmt.Sprintf("(%s == %s)", keyExpr, expr))
+	}
+	assignExpr := "__ivy_witness_key"
+	if len(app.Terms) != 1 {
+		assignExpr = fmt.Sprintf("__ivy_witness_key.A%d", pos)
+	}
+	w.open(fmt.Sprintf("for __ivy_witness_key, __ivy_witness_val := range %s {", g.goStorageRangeExpr(relName, fs, "ivy")))
+	w.open("if !__ivy_witness_val {")
+	w.line("continue")
+	w.close("")
+	if len(conds) > 0 {
+		w.open("if " + strings.Join(conds, " && ") + " {")
+	}
+	w.linef("%s = %s", goName(localName), assignExpr)
+	w.line("break")
+	if len(conds) > 0 {
+		w.close("")
+	}
+	w.close("")
+}
+
+func (g *Generator) localWitnessBoundApply(localName string, localSort goivy.Sort, body goivy.Expr) (*goivy.Apply, int, bool) {
+	act, ok := body.(goivy.Action)
+	if !ok {
+		return nil, -1, false
+	}
+	for _, f := range leadingAssumeFormulas(act) {
+		if app, pos, ok := g.findLocalWitnessApply(localName, localSort, f); ok {
+			return app, pos, true
+		}
+	}
+	return nil, -1, false
+}
+
+func (g *Generator) findLocalWitnessApply(localName string, localSort goivy.Sort, f goivy.Expr) (*goivy.Apply, int, bool) {
+	switch n := f.(type) {
+	case *goivy.LogicAnd:
+		for _, term := range n.Terms {
+			if app, pos, ok := g.findLocalWitnessApply(localName, localSort, term); ok {
+				return app, pos, true
+			}
+		}
+	case *goivy.LogicLiteral:
+		if n.Polarity != 0 {
+			return g.findLocalWitnessApply(localName, localSort, n.Atom)
+		}
+	case *goivy.Apply:
+		name := goivy.ExprName(n.Func)
+		if name == "" || !g.quantifierSupportRels()[name] {
+			return nil, -1, false
+		}
+		fs, ok := n.Func.NodeSort().(*goivy.LogicFunctionSort)
+		if !ok || len(fs.Domain()) != len(n.Terms) || !isBooleanSort(fs.Range()) {
+			return nil, -1, false
+		}
+		pos := -1
+		for i, term := range n.Terms {
+			if !exprHasName(term, localName) {
+				continue
+			}
+			if pos >= 0 || !sortsEqual(fs.Domain()[i], localSort) {
+				return nil, -1, false
+			}
+			pos = i
+		}
+		if pos >= 0 {
+			return n, pos, true
+		}
+	}
+	return nil, -1, false
+}
+
+func exprHasName(e goivy.Expr, name string) bool {
+	switch n := e.(type) {
+	case *goivy.Const:
+		return n.Name == name
+	case *goivy.LogicVariable:
+		return n.Name == name
+	default:
+		return false
+	}
+}
+
+func sortsEqual(a, b goivy.Sort) bool {
+	if a == nil || b == nil {
+		return a == b
+	}
+	return a.String() == b.String()
 }
 
 func (g *Generator) emitLocalFunctionNondet(w *goWriter, name string, sort goivy.Sort, id int64) bool {

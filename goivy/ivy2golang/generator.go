@@ -127,6 +127,7 @@ func (g *Generator) generate() (string, error) {
 	g.emitRuntime(&w)
 	g.emitStruct(&w)
 	g.emitConstructor(&w)
+	g.emitClone(&w)
 	g.emitInitialState(&w)
 	g.emitInit(&w)
 	g.emitMethods(&w)
@@ -289,7 +290,7 @@ func (g *Generator) emitImports(w *goWriter) {
 		imports = append(imports, "bufio")
 	}
 	if g.Config.Target == "test" {
-		imports = append(imports, "time")
+		imports = append(imports, "bytes", "time")
 	}
 	sort.Strings(imports)
 	for _, imp := range imports {
@@ -563,6 +564,8 @@ func (g *Generator) sortNeededForGoDecl(name string) bool {
 func (g *Generator) emitRuntime(w *goWriter) {
 	w.line("var __ivy_out io.Writer = os.Stdout")
 	w.line("var __ivy_rng = rand.NewChaCha8(ivySeedBytes(1))")
+	w.line("var __ivy_assume_rejecting bool")
+	w.line("var __ivy_assume_rejected bool")
 	w.blank()
 	w.open("type ivyOption struct {")
 	w.line("key string")
@@ -676,6 +679,10 @@ func (g *Generator) emitRuntime(w *goWriter) {
 	w.blank()
 	w.open("func ivyAssume(truth bool, msg string) bool {")
 	w.open("if !truth {")
+	w.open("if __ivy_assume_rejecting {")
+	w.line("__ivy_assume_rejected = true")
+	w.line("return false")
+	w.close("")
 	w.line(`ivyFailureEvent("assumption_failed", msg)`)
 	w.line(`fmt.Fprintf(os.Stderr, "%s: error: assumption failed\n", msg)`)
 	if g.Config.Target == "repl" && g.Config.Trace {
@@ -1119,6 +1126,63 @@ func (g *Generator) emitConstructor(w *goWriter) {
 	w.line("return ivyRandRange64(rng)")
 	w.close("")
 	w.blank()
+}
+
+func (g *Generator) emitClone(w *goWriter) {
+	w.open(fmt.Sprintf("func (ivy *%s) __ivy_clone() *%s {", g.ClassName, g.ClassName))
+	w.open("if ivy == nil {")
+	w.line("return nil")
+	w.close("")
+	w.line("clone := *ivy")
+	for _, sym := range g.stateSymbols() {
+		g.emitCloneStorage(w, sym.Name, sym.Sort)
+	}
+	for _, p := range g.progressDecls() {
+		g.emitCloneProgressStorage(w, p)
+	}
+	w.line("return &clone")
+	w.close("")
+	w.blank()
+}
+
+func (g *Generator) emitCloneStorage(w *goWriter, name string, s goivy.Sort) {
+	fs, ok := s.(*goivy.LogicFunctionSort)
+	if !ok || len(fs.Domain()) == 0 {
+		return
+	}
+	field := goName(name)
+	st := g.goFunctionStorageFor(fs.Domain(), fs.Range())
+	if st.Large {
+		w.linef("clone.%s = ivyThunkMap[%s, %s]{base: ivy.%s.base, zero: ivy.%s.zero}", field, st.KeyType, st.RangeType, field, field)
+		w.open(fmt.Sprintf("if ivy.%s.overrides != nil {", field))
+		w.linef("clone.%s.overrides = make(map[%s]%s, len(ivy.%s.overrides))", field, st.KeyType, st.RangeType, field)
+		w.open(fmt.Sprintf("for k, v := range ivy.%s.overrides {", field))
+		w.linef("clone.%s.overrides[k] = v", field)
+		w.close("")
+		w.close("")
+		return
+	}
+	w.open(fmt.Sprintf("if ivy.%s != nil {", field))
+	w.linef("clone.%s = make(map[%s]%s, len(ivy.%s))", field, st.KeyType, st.RangeType, field)
+	w.open(fmt.Sprintf("for k, v := range ivy.%s {", field))
+	w.linef("clone.%s[k] = v", field)
+	w.close("")
+	w.close("")
+}
+
+func (g *Generator) emitCloneProgressStorage(w *goWriter, p progressDecl) {
+	if len(p.Vars) == 0 {
+		return
+	}
+	name := goName(p.Name)
+	domain := progressDomain(p)
+	keyType := g.goMapKeyType(domain)
+	w.open(fmt.Sprintf("if ivy.%s != nil {", name))
+	w.linef("clone.%s = make(map[%s]int, len(ivy.%s))", name, keyType, name)
+	w.open(fmt.Sprintf("for k, v := range ivy.%s {", name))
+	w.linef("clone.%s[k] = v", name)
+	w.close("")
+	w.close("")
 }
 
 func (g *Generator) emitInitialState(w *goWriter) {
@@ -2942,9 +3006,9 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 			g.emitTestActionAssumeGuards(w, name, genAct, args)
 			call := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(args, ", "))
 			trace := g.actionTraceLine(name, args)
-			w.line(trace)
-			w.line("ivy._generating = true")
 			if g.isTestImportCallback(name) {
+				w.line(trace)
+				w.line("ivy._generating = true")
 				switch nret := len(act.GetFormalReturns()); nret {
 				case 0:
 				case 1:
@@ -2960,6 +3024,12 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 				w.line("ivy._generating = false")
 				continue
 			}
+			if testActionNeedsTrial(genAct) {
+				g.emitTestTrialActionCall(w, fn, act, args, trace)
+				continue
+			}
+			w.line(trace)
+			w.line("ivy._generating = true")
 			switch nret := len(act.GetFormalReturns()); nret {
 			case 0:
 				w.line(call)
@@ -2977,6 +3047,69 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 		w.close("")
 		w.close("")
 	}
+}
+
+func (g *Generator) emitTestTrialActionCall(w *goWriter, fn string, act goivy.Action, args []string, trace string) {
+	call := fmt.Sprintf("__ivy_trial.%s(%s)", fn, strings.Join(args, ", "))
+	w.line("__ivy_trial := ivy.__ivy_clone()")
+	w.line("var __ivy_trace bytes.Buffer")
+	w.line("__ivy_saved_out := __ivy_out")
+	w.line("__ivy_saved_assume_rejecting := __ivy_assume_rejecting")
+	w.line("__ivy_saved_assume_rejected := __ivy_assume_rejected")
+	w.line("__ivy_out = &__ivy_trace")
+	w.line("__ivy_assume_rejecting = true")
+	w.line("__ivy_assume_rejected = false")
+	w.line("__ivy_trial._generating = true")
+	nret := 0
+	if act != nil {
+		nret = len(act.GetFormalReturns())
+	}
+	switch nret {
+	case 0:
+		w.line(call)
+	case 1:
+		w.line("__ivy_result := " + call)
+	default:
+		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
+	}
+	w.line("__ivy_trial._generating = false")
+	w.line("__ivy_trial_rejected := __ivy_assume_rejected")
+	w.line("__ivy_out = __ivy_saved_out")
+	w.line("__ivy_assume_rejecting = __ivy_saved_assume_rejecting")
+	w.line("__ivy_assume_rejected = __ivy_saved_assume_rejected")
+	w.open("if __ivy_trial_rejected {")
+	w.line("cycle--")
+	w.line("continue")
+	w.close("")
+	w.line("ivy = __ivy_trial")
+	w.line(trace)
+	w.line("_, _ = io.Copy(__ivy_out, &__ivy_trace)")
+	if nret == 1 {
+		w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__ivy_result"))
+	}
+}
+
+func testActionNeedsTrial(act goivy.Action) bool {
+	return actionContainsCall(act)
+}
+
+func actionContainsCall(act goivy.Action) bool {
+	if act == nil {
+		return false
+	}
+	if _, ok := act.(*goivy.LogicCallAction); ok {
+		return true
+	}
+	for _, child := range act.ActionArgs() {
+		childAct, ok := child.(goivy.Action)
+		if !ok {
+			continue
+		}
+		if actionContainsCall(childAct) {
+			return true
+		}
+	}
+	return false
 }
 
 func (g *Generator) emitTestActionDefinedInputs(w *goWriter, name string, act goivy.Action, args []string) {
