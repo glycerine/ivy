@@ -289,6 +289,9 @@ func (g *Generator) goRandomValueExprWithChooserSeen(s goivy.Sort, name string, 
 		}
 		return fmt.Sprintf("%s{%s}", g.goScalarType(s), strings.Join(inits, ", ")), nil
 	}
+	if g.isVariantSubtypeName(sortName(s)) {
+		return g.goZeroValue(s), nil
+	}
 	switch st := s.(type) {
 	case *goivy.BooleanSort:
 		_ = st

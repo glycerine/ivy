@@ -1183,10 +1183,6 @@ func (g *Generator) emitRandomizeSymbol(w *goWriter, sym stateSymbol, label stri
 		w.line(`ivy._generating = ivy.___ivy_choose(0, "init", 0) != 0`)
 		return
 	}
-	if g.isVariantSuperName(sortName(sym.Sort)) {
-		w.linef("ivy.%s = %s", goName(sym.Name), g.goZeroValue(sym.Sort))
-		return
-	}
 	if fs, ok := sym.Sort.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
 		if !g.canEnumerateDomain(fs.Domain()) {
 			base := "ivy." + goName(sym.Name)
@@ -1293,38 +1289,76 @@ func (g *Generator) emitInitializerAction(w *goWriter, act goivy.Action) {
 		g.emitAction(w, act)
 		return
 	}
-	g.pushScope()
-	opened := 0
+	type initializerLoopHeader struct {
+		param  *goivy.Const
+		header string
+	}
+	var headers []initializerLoopHeader
 	for _, p := range act.GetFormalParams() {
 		if p == nil {
 			continue
 		}
 		header, ok, err := g.goLoopHeaderForSort(p.CSort, goName(p.Name))
 		if err != nil {
-			g.unsupported(w, "cannot enumerate initializer parameter %s: %s", p.Name, err.Error())
-			for i := 0; i < opened; i++ {
-				w.close("")
+			if initialActionCanEmitWithoutParamLoops(act) {
+				g.emitAction(w, act)
+			} else {
+				g.unsupportedAt(w, act.GetLineno(), "cannot enumerate initializer parameter %s: %s", p.Name, strings.TrimPrefix(err.Error(), "ivy2golang: "))
 			}
-			g.popScope()
 			return
 		}
 		if !ok {
-			g.unsupported(w, "cannot enumerate initializer parameter %s", p.Name)
-			for i := 0; i < opened; i++ {
-				w.close("")
+			if initialActionCanEmitWithoutParamLoops(act) {
+				g.emitAction(w, act)
+			} else {
+				g.unsupportedAt(w, act.GetLineno(), "cannot enumerate initializer parameter %s", p.Name)
 			}
-			g.popScope()
 			return
 		}
-		g.addLocalSort(p.Name, p.CSort)
-		w.open(header)
-		opened++
+		headers = append(headers, initializerLoopHeader{param: p, header: header})
+	}
+	g.pushScope()
+	for _, h := range headers {
+		g.addLocalSort(h.param.Name, h.param.CSort)
+		w.open(h.header)
 	}
 	g.emitAction(w, act)
-	for i := 0; i < opened; i++ {
+	for range headers {
 		w.close("")
 	}
 	g.popScope()
+}
+
+func initialActionCanEmitWithoutParamLoops(act goivy.Action) bool {
+	if act == nil {
+		return false
+	}
+	formals := act.GetFormalParams()
+	if len(formals) == 0 {
+		return true
+	}
+	varNames := map[string]bool{}
+	for _, sub := range act.IterSubactions() {
+		if sub == nil {
+			continue
+		}
+		for _, arg := range sub.ActionArgs() {
+			for _, v := range goivy.VariablesAstList(arg) {
+				if v != nil {
+					varNames[v.Name] = true
+				}
+			}
+		}
+	}
+	for _, p := range formals {
+		if p == nil {
+			continue
+		}
+		if !varNames[p.Name] {
+			return false
+		}
+	}
+	return true
 }
 
 func (g *Generator) emitMethods(w *goWriter) {

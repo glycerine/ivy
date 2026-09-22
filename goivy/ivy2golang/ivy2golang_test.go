@@ -3901,6 +3901,40 @@ export touch
 	compileGeneratedGo(t, out)
 }
 
+func TestTargetTestRandomizesVariantSuperState(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t
+variant a of t
+variant b of t
+individual wrapped : t
+action observe returns(out:t) = {
+    out := wrapped
+}
+export observe
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testvariantstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	initBody := bodyAfterMarker(out.Source, "func (ivy *testvariantstate) __initState()")
+	if initBody == "" {
+		t.Fatalf("__initState body not found:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`ivy.wrapped = func() t {`,
+		`switch ivy.___ivy_choose(2, "init.wrapped", 0) {`,
+		`return t{tag: 0, value: 0, valid: true}`,
+		`return t{tag: 1, value: 0, valid: true}`,
+	} {
+		if !strings.Contains(initBody, want) {
+			t.Fatalf("target=test variant state randomization missing %q:\n%s", want, initBody)
+		}
+	}
+	if strings.Contains(initBody, `ivy.wrapped = t{}`) {
+		t.Fatalf("target=test variant state should be randomized, not zeroed:\n%s", initBody)
+	}
+}
+
 func TestTargetGenRandomizesRangeSortWithOffsetAndWidth(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type rng = {2..7}
@@ -10197,6 +10231,82 @@ export step
 	_, err = Generate(mod, Config{Target: "test", ClassName: "parambad", TestIters: "1"})
 	if err == nil || !strings.Contains(err.Error(), `stripped parameter "initial"`) {
 		t.Fatalf("unexpected Generate error: %v", err)
+	}
+}
+
+func TestIssue73UnboundedInitializerUsesAssignmentFallback(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type key
+relation pending(K:key)
+`)
+	key, ok := mod.Sig.Sorts.Get2("key")
+	if !ok {
+		t.Fatal("missing key sort")
+	}
+	pendingEntry, ok := mod.Sig.Symbols.Get2("pending")
+	if !ok {
+		t.Fatal("missing pending symbol")
+	}
+	pending := goivy.NewConst("pending", pendingEntry.Sort)
+	k, err := goivy.NewVariable("K", key)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	assign := goivy.NewAssignAction(goivy.MustApply(pending, k), goivy.NewConst("false", goivy.Boolean))
+	assign.SetFormalParams([]*goivy.Const{goivy.NewConst("K", key)})
+
+	var w goWriter
+	(&Generator{Mod: mod, ClassName: "issue73", Config: Config{Target: "test"}}).emitInitializerAction(&w, assign)
+	got := w.String()
+	if strings.Contains(got, "cannot enumerate initializer parameter") {
+		t.Fatalf("unbounded initializer should fall through to assignment fallback:\n%s", got)
+	}
+	for _, want := range []string{
+		"ivy.pending = newIvyThunkMap",
+		"ivy.pending.base = func(",
+		"return false",
+	} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("unbounded initializer fallback missing %q:\n%s", want, got)
+		}
+	}
+}
+
+func TestIssue73UnboundedInitializerConcreteFormalStaysUnsupported(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type key
+relation pending(K:key)
+`)
+	key, ok := mod.Sig.Sorts.Get2("key")
+	if !ok {
+		t.Fatal("missing key sort")
+	}
+	pendingEntry, ok := mod.Sig.Symbols.Get2("pending")
+	if !ok {
+		t.Fatal("missing pending symbol")
+	}
+	pending := goivy.NewConst("pending", pendingEntry.Sort)
+	formal := goivy.NewConst("prm:M", key)
+	assign := goivy.NewAssignAction(goivy.MustApply(pending, formal), goivy.NewConst("false", goivy.Boolean))
+	assign.SetFormalParams([]*goivy.Const{formal})
+	assign.SetLineno(goivy.Location{Filename: "issue73.ivy", Line: 21})
+
+	var w goWriter
+	g := &Generator{Mod: mod, ClassName: "issue73", Config: Config{Target: "test"}}
+	g.emitInitializerAction(&w, assign)
+	if len(g.errs) == 0 {
+		t.Fatalf("concrete unbounded initializer formal should stay unsupported:\n%s", w.String())
+	}
+	for _, want := range []string{
+		"issue73.ivy: line 21:",
+		"cannot enumerate initializer parameter prm:M",
+	} {
+		if !strings.Contains(g.errs[0].Error(), want) {
+			t.Fatalf("concrete unbounded initializer error missing %q:\n%v", want, g.errs[0])
+		}
+	}
+	if strings.Contains(w.String(), "ivy.pending.Set(prm__M") {
+		t.Fatalf("concrete unbounded initializer formal must not be emitted unbound:\n%s", w.String())
 	}
 }
 
