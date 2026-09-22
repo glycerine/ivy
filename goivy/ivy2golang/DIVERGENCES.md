@@ -1287,6 +1287,17 @@ Progress:
   destructor field writes, so implication/OR/ITE rechecks such as
   `active -> shade(x) = green` activate the matching guarded update instead of
   forcing a hidden trial clone.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationElseGuardedAssignFieldActionSkipsTrialFast`.
+  The field-update proof now handles the else-branch mirror as well, so
+  disjunctive rechecks such as `active | shade(x) = green` activate the
+  false-branch guarded field write instead of falling back to a runtime trial.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationTwoSidedAssignFieldActionSkipsTrialFast`. The
+  same proof now records both branch-specific destructor field writes from an
+  `if/else`, allowing `ite(active, shade(x) = green, shade(x) = red)` style
+  rechecks to discharge against the matching branch update without hidden trial
+  machinery.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -2690,6 +2701,14 @@ Progress:
   `TestTargetTestLocalRelationGuardedAssignFieldActionSkipsTrialFast` for
   branch-sensitive destructor field updates and implication-style rechecks,
   again without building or running a generated tester binary.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationElseGuardedAssignFieldActionSkipsTrialFast` for
+  the else-branch/disjunctive spelling of the same destructor field update
+  proof.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationTwoSidedAssignFieldActionSkipsTrialFast` for the
+  two-sided `if/else` destructor field update case, keeping the `ite` recheck
+  coverage fast and in-process.
 - 2026-09-22: Strengthened that conditional local relation coverage to require
   branch-specific `if/else` relation scans, and added the target=test
   no-hidden-trial state-copy/recheck regression for the same conditional shape.

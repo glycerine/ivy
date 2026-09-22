@@ -10554,9 +10554,9 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 			}
 			return false
 		case *goivy.LogicIfAction:
-			if update, ok := g.localFieldUpdateFromIf(a, locals, modeledLocals); ok {
+			if updates, ok := g.localFieldUpdatesFromIf(a, locals, modeledLocals); ok {
 				witnessPhase = false
-				fieldUpdates = append(fieldUpdates, update)
+				fieldUpdates = append(fieldUpdates, updates...)
 				return true
 			}
 			if update, ok := localRelationPointUpdateFromIf(a, locals, modeledLocals); ok {
@@ -10857,36 +10857,53 @@ func (g *Generator) localFieldUpdateFromAction(act goivy.Action, locals map[stri
 }
 
 func (g *Generator) localFieldUpdateFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localFieldUpdate, bool) {
-	if a == nil || a.Cond == nil || a.ThenBody == nil {
+	updates, ok := g.localFieldUpdatesFromIf(a, locals, modeledLocals)
+	if !ok || len(updates) != 1 {
 		return localFieldUpdate{}, false
+	}
+	return updates[0], true
+}
+
+func (g *Generator) localFieldUpdatesFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) ([]localFieldUpdate, bool) {
+	if a == nil || a.Cond == nil || a.ThenBody == nil {
+		return nil, false
 	}
 	thenAct, thenOK := goivy.ToAction(a.ThenBody)
 	if !thenOK {
-		return localFieldUpdate{}, false
+		return nil, false
 	}
 	elseAct, elseOK := goivy.ToAction(a.ElseBody)
 	if a.ElseBody != nil && !elseOK {
-		return localFieldUpdate{}, false
+		return nil, false
 	}
 	if localWitnessDirectNoopAction(elseAct) {
 		update, ok := g.localFieldUpdateFromAction(thenAct, locals, modeledLocals)
 		if !ok {
-			return localFieldUpdate{}, false
+			return nil, false
 		}
 		update.guard = a.Cond
 		update.guardValue = true
-		return update, true
+		return []localFieldUpdate{update}, true
 	}
-	if !localWitnessDirectNoopAction(thenAct) {
-		return localFieldUpdate{}, false
+	if localWitnessDirectNoopAction(thenAct) {
+		update, ok := g.localFieldUpdateFromAction(elseAct, locals, modeledLocals)
+		if !ok {
+			return nil, false
+		}
+		update.guard = a.Cond
+		update.guardValue = false
+		return []localFieldUpdate{update}, true
 	}
-	update, ok := g.localFieldUpdateFromAction(elseAct, locals, modeledLocals)
-	if !ok {
-		return localFieldUpdate{}, false
+	thenUpdate, thenOK := g.localFieldUpdateFromAction(thenAct, locals, modeledLocals)
+	elseUpdate, elseOK := g.localFieldUpdateFromAction(elseAct, locals, modeledLocals)
+	if !thenOK || !elseOK {
+		return nil, false
 	}
-	update.guard = a.Cond
-	update.guardValue = false
-	return update, true
+	thenUpdate.guard = a.Cond
+	thenUpdate.guardValue = true
+	elseUpdate.guard = a.Cond
+	elseUpdate.guardValue = false
+	return []localFieldUpdate{thenUpdate, elseUpdate}, true
 }
 
 func localRelationPointUpdateFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {
@@ -11144,7 +11161,14 @@ func localFieldAssumeCovered(expr goivy.Expr, stateFromLocal map[goivy.NodeKey]s
 		return len(n.Terms) > 0
 	case *goivy.LogicImplies:
 		thenUpdates := localFieldUpdatesForIteBranch(updates, n.T1, true)
-		return localFieldAssumeCovered(n.T2, stateFromLocal, thenUpdates)
+		if localFieldAssumeCovered(n.T2, stateFromLocal, thenUpdates) {
+			return true
+		}
+		if cond, ok := localRelationPointNegatedGuardExpr(n.T1); ok {
+			elseUpdates := localFieldUpdatesForIteBranch(updates, cond, false)
+			return localFieldAssumeCovered(n.T2, stateFromLocal, elseUpdates)
+		}
+		return false
 	case *goivy.LogicOr:
 		for _, term := range n.Terms {
 			if localFieldAssumeCovered(term, stateFromLocal, updates) {
@@ -11162,6 +11186,17 @@ func localFieldAssumeCovered(expr goivy.Expr, stateFromLocal map[goivy.NodeKey]s
 					continue
 				}
 				if localFieldAssumeCovered(other, stateFromLocal, thenUpdates) {
+					return true
+				}
+			}
+		}
+		for i, term := range n.Terms {
+			elseUpdates := localFieldUpdatesForIteBranch(updates, term, false)
+			for j, other := range n.Terms {
+				if i == j {
+					continue
+				}
+				if localFieldAssumeCovered(other, stateFromLocal, elseUpdates) {
 					return true
 				}
 			}
