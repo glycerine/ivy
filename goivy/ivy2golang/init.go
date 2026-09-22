@@ -378,7 +378,11 @@ func (g *Generator) initialAxiomActionsFor(f goivy.Expr) []goivy.Action {
 	}
 	switch n := f.(type) {
 	case *goivy.ForAll:
-		return g.initialAxiomActionsFor(n.Body)
+		actions := g.initialMinimumElementActionsFor(n)
+		actions = append(actions, g.initialAxiomActionsFor(n.Body)...)
+		return actions
+	case *goivy.LogicExists:
+		return g.initialExistentialAxiomActionsFor(n)
 	case *goivy.LogicAnd:
 		var actions []goivy.Action
 		for _, term := range n.Terms {
@@ -394,18 +398,115 @@ func (g *Generator) initialAxiomActionsFor(f goivy.Expr) []goivy.Action {
 	}
 }
 
+func (g *Generator) initialMinimumElementActionsFor(fa *goivy.ForAll) []goivy.Action {
+	if fa == nil || fa.Body == nil {
+		return nil
+	}
+	app, ok := initialPositiveApply(fa.Body)
+	if !ok || len(app.Terms) != 2 {
+		return nil
+	}
+	minTerm := app.Terms[0]
+	if minTerm == nil || !g.isStateTarget(minTerm) || len(goivy.VariablesAstList(minTerm)) != 0 {
+		return nil
+	}
+	bound, ok := app.Terms[1].(*goivy.LogicVariable)
+	if !ok || bound == nil || !initialForAllBindsVariable(fa, bound) {
+		return nil
+	}
+	if !goivy.SortEqual(minTerm.NodeSort(), bound.VSort) {
+		return nil
+	}
+	values, ok := g.initialFiniteValueTerms(minTerm.NodeSort())
+	if !ok || len(values) == 0 {
+		return nil
+	}
+	return []goivy.Action{goivy.NewAssignAction(minTerm, values[0])}
+}
+
+func initialForAllBindsVariable(fa *goivy.ForAll, v *goivy.LogicVariable) bool {
+	if fa == nil || v == nil {
+		return false
+	}
+	for _, candidate := range fa.Variables {
+		if candidate != nil && candidate.Equal(v) {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) initialExistentialAxiomActionsFor(ex *goivy.LogicExists) []goivy.Action {
+	if ex == nil || ex.Body == nil || len(ex.Variables) == 0 {
+		return nil
+	}
+	subs := make(map[goivy.NodeKey]goivy.Expr, len(ex.Variables))
+	for _, v := range ex.Variables {
+		if v == nil {
+			return nil
+		}
+		values, ok := g.initialFiniteValueTerms(v.VSort)
+		if !ok || len(values) == 0 {
+			return nil
+		}
+		subs[goivy.Key(v)] = values[0]
+	}
+	body, err := goivy.Substitute(ex.Body, subs)
+	if err != nil {
+		return nil
+	}
+	return g.initialAxiomActionsFor(body)
+}
+
 func (g *Generator) initialStateRetryFormulas() []goivy.Expr {
 	if g == nil || g.Mod == nil || g.Config.Target != "test" {
 		return nil
 	}
+	constructedOrders := g.initialConstructedOrderRelations()
 	var formulas []goivy.Expr
 	for _, f := range g.Mod.Axioms() {
-		formulas = append(formulas, g.initialAxiomRetryFormulasFor(f)...)
+		formulas = append(formulas, g.initialAxiomRetryFormulasFor(f, constructedOrders)...)
 	}
 	return formulas
 }
 
-func (g *Generator) initialAxiomRetryFormulasFor(f goivy.Expr) []goivy.Expr {
+func (g *Generator) initialConstructedOrderRelations() map[string]bool {
+	out := map[string]bool{}
+	if g == nil || g.Mod == nil {
+		return out
+	}
+	for _, f := range g.Mod.Axioms() {
+		g.collectInitialConstructedOrderRelations(f, out)
+	}
+	return out
+}
+
+func (g *Generator) collectInitialConstructedOrderRelations(f goivy.Expr, out map[string]bool) {
+	if f == nil {
+		return
+	}
+	if expanded, ok, err := g.expandDefinitionExprOnce(f); ok || err != nil {
+		if err != nil {
+			return
+		}
+		g.collectInitialConstructedOrderRelations(expanded, out)
+		return
+	}
+	switch n := f.(type) {
+	case *goivy.ForAll:
+		g.collectInitialConstructedOrderRelations(n.Body, out)
+	case *goivy.LogicAnd:
+		for _, term := range n.Terms {
+			g.collectInitialConstructedOrderRelations(term, out)
+		}
+	case *goivy.LogicOr:
+		if name := initialTotalityOrderRelationName(n.Terms); name != "" {
+			out[name] = true
+		}
+	}
+}
+
+func (g *Generator) initialAxiomRetryFormulasFor(f goivy.Expr, constructedOrders map[string]bool) []goivy.Expr {
 	if f == nil {
 		return nil
 	}
@@ -413,14 +514,17 @@ func (g *Generator) initialAxiomRetryFormulasFor(f goivy.Expr) []goivy.Expr {
 		if err != nil {
 			return nil
 		}
-		return g.initialAxiomRetryFormulasFor(expanded)
+		return g.initialAxiomRetryFormulasFor(expanded, constructedOrders)
 	}
 	if and, ok := f.(*goivy.LogicAnd); ok {
 		var formulas []goivy.Expr
 		for _, term := range and.Terms {
-			formulas = append(formulas, g.initialAxiomRetryFormulasFor(term)...)
+			formulas = append(formulas, g.initialAxiomRetryFormulasFor(term, constructedOrders)...)
 		}
 		return formulas
+	}
+	if name := initialConstructedOrderCheckRelationName(f); name != "" && constructedOrders[name] {
+		return nil
 	}
 	if len(g.initialAxiomActionsFor(f)) > 0 {
 		return nil
@@ -433,6 +537,9 @@ func (g *Generator) initialConditionAction(f goivy.Expr) (goivy.Action, error) {
 	case *goivy.LogicImplies:
 		return g.initialGuardedConditionAction(n.T1, n.T2)
 	case *goivy.LogicOr:
+		if act, ok := g.initialTotalityOrderAction(n.Terms); ok {
+			return act, nil
+		}
 		return g.initialDisjunctiveConditionAction(n.Terms)
 	case *goivy.Eq:
 		if g.isStateTarget(n.T1) {
@@ -459,7 +566,7 @@ func (g *Generator) initialConditionAction(f goivy.Expr) (goivy.Action, error) {
 		if !g.isStateTarget(n.Atom) {
 			return nil, fmt.Errorf("initial literal is not mutable state: %s", n.Atom)
 		}
-		return goivy.NewSetAction(n), nil
+		return g.initialSetActionWithMinimum(n.Atom, goivy.NewSetAction(n)), nil
 	case *goivy.LogicNot:
 		if target, value, ok := g.initialNegatedEqualityAssignment(n.Body); ok {
 			return goivy.NewAssignAction(target, value), nil
@@ -472,10 +579,197 @@ func (g *Generator) initialConditionAction(f goivy.Expr) (goivy.Action, error) {
 		if !g.isStateTarget(f) {
 			return nil, fmt.Errorf("initial literal is not mutable state: %s", f)
 		}
-		return goivy.NewSetAction(f), nil
+		return g.initialSetActionWithMinimum(f, goivy.NewSetAction(f)), nil
 	default:
 		return nil, fmt.Errorf("unsupported initial formula %T: %s", f, f.String())
 	}
+}
+
+func (g *Generator) initialSetActionWithMinimum(target goivy.Expr, set goivy.Action) goivy.Action {
+	app, ok := target.(*goivy.Apply)
+	if !ok {
+		return set
+	}
+	min := g.initialMinimumElementActionForApply(app)
+	if min == nil {
+		return set
+	}
+	minExpr, minOK := min.(goivy.Expr)
+	setExpr, setOK := set.(goivy.Expr)
+	if !minOK || !setOK {
+		return set
+	}
+	return goivy.NewSequence(minExpr, setExpr)
+}
+
+func (g *Generator) initialMinimumElementActionForApply(app *goivy.Apply) goivy.Action {
+	if app == nil || len(app.Terms) != 2 {
+		return nil
+	}
+	minTerm := app.Terms[0]
+	if minTerm == nil || !g.isStateTarget(minTerm) || len(goivy.VariablesAstList(minTerm)) != 0 {
+		return nil
+	}
+	bound, ok := app.Terms[1].(*goivy.LogicVariable)
+	if !ok || bound == nil || !goivy.SortEqual(minTerm.NodeSort(), bound.VSort) {
+		return nil
+	}
+	values, ok := g.initialFiniteValueTerms(minTerm.NodeSort())
+	if !ok || len(values) == 0 {
+		return nil
+	}
+	return goivy.NewAssignAction(minTerm, values[0])
+}
+
+func (g *Generator) initialTotalityOrderAction(terms []goivy.Expr) (goivy.Action, bool) {
+	if initialTotalityOrderRelationName(terms) == "" {
+		return nil, false
+	}
+	if len(terms) != 2 {
+		return nil, false
+	}
+	left, ok := initialPositiveApply(terms[0])
+	if !ok {
+		return nil, false
+	}
+	right, ok := initialPositiveApply(terms[1])
+	if !ok {
+		return nil, false
+	}
+	if !g.isStateTarget(left) || len(left.Terms) != 2 || len(right.Terms) != 2 {
+		return nil, false
+	}
+	if !left.Func.Equal(right.Func) {
+		return nil, false
+	}
+	if !left.Terms[0].Equal(right.Terms[1]) || !left.Terms[1].Equal(right.Terms[0]) {
+		return nil, false
+	}
+	if !goivy.SortEqual(left.Terms[0].NodeSort(), left.Terms[1].NodeSort()) {
+		return nil, false
+	}
+	fs, err := goivy.NewFunctionSort(left.Terms[0].NodeSort(), left.Terms[1].NodeSort(), goivy.Boolean)
+	if err != nil {
+		return nil, false
+	}
+	order, err := goivy.NewApply(goivy.NewConst("<=", fs), left.Terms[0], left.Terms[1])
+	if err != nil {
+		return nil, false
+	}
+	return goivy.NewAssignAction(left, order), true
+}
+
+func initialTotalityOrderRelationName(terms []goivy.Expr) string {
+	if len(terms) != 2 {
+		return ""
+	}
+	left, ok := initialPositiveApply(terms[0])
+	if !ok {
+		return ""
+	}
+	right, ok := initialPositiveApply(terms[1])
+	if !ok || len(left.Terms) != 2 || len(right.Terms) != 2 {
+		return ""
+	}
+	if !left.Func.Equal(right.Func) {
+		return ""
+	}
+	if !left.Terms[0].Equal(right.Terms[1]) || !left.Terms[1].Equal(right.Terms[0]) {
+		return ""
+	}
+	if !goivy.SortEqual(left.Terms[0].NodeSort(), left.Terms[1].NodeSort()) {
+		return ""
+	}
+	return goivy.ExprName(left.Func)
+}
+
+func initialConstructedOrderCheckRelationName(f goivy.Expr) string {
+	if fa, ok := f.(*goivy.ForAll); ok {
+		return initialConstructedOrderCheckRelationName(fa.Body)
+	}
+	imp, ok := f.(*goivy.LogicImplies)
+	if !ok {
+		return ""
+	}
+	terms := initialAndTerms(imp.T1)
+	if len(terms) != 2 {
+		return ""
+	}
+	if name := initialTransitiveOrderCheckRelationName(terms[0], terms[1], imp.T2); name != "" {
+		return name
+	}
+	if name := initialTransitiveOrderCheckRelationName(terms[1], terms[0], imp.T2); name != "" {
+		return name
+	}
+	if name := initialAntisymmetricOrderCheckRelationName(terms[0], terms[1], imp.T2); name != "" {
+		return name
+	}
+	return initialAntisymmetricOrderCheckRelationName(terms[1], terms[0], imp.T2)
+}
+
+func initialAndTerms(e goivy.Expr) []goivy.Expr {
+	if and, ok := e.(*goivy.LogicAnd); ok {
+		return and.Terms
+	}
+	return nil
+}
+
+func initialTransitiveOrderCheckRelationName(aExpr, bExpr, cExpr goivy.Expr) string {
+	a, ok := initialPositiveApply(aExpr)
+	if !ok || len(a.Terms) != 2 {
+		return ""
+	}
+	b, ok := initialPositiveApply(bExpr)
+	if !ok || len(b.Terms) != 2 {
+		return ""
+	}
+	c, ok := initialPositiveApply(cExpr)
+	if !ok || len(c.Terms) != 2 {
+		return ""
+	}
+	if !a.Func.Equal(b.Func) || !a.Func.Equal(c.Func) {
+		return ""
+	}
+	if a.Terms[1].Equal(b.Terms[0]) && a.Terms[0].Equal(c.Terms[0]) && b.Terms[1].Equal(c.Terms[1]) {
+		return goivy.ExprName(a.Func)
+	}
+	return ""
+}
+
+func initialAntisymmetricOrderCheckRelationName(aExpr, bExpr, eqExpr goivy.Expr) string {
+	a, ok := initialPositiveApply(aExpr)
+	if !ok || len(a.Terms) != 2 {
+		return ""
+	}
+	b, ok := initialPositiveApply(bExpr)
+	if !ok || len(b.Terms) != 2 || !a.Func.Equal(b.Func) {
+		return ""
+	}
+	if !a.Terms[0].Equal(b.Terms[1]) || !a.Terms[1].Equal(b.Terms[0]) {
+		return ""
+	}
+	eq, ok := eqExpr.(*goivy.Eq)
+	if !ok {
+		return ""
+	}
+	if (eq.T1.Equal(a.Terms[0]) && eq.T2.Equal(a.Terms[1])) || (eq.T1.Equal(a.Terms[1]) && eq.T2.Equal(a.Terms[0])) {
+		return goivy.ExprName(a.Func)
+	}
+	return ""
+}
+
+func initialPositiveApply(e goivy.Expr) (*goivy.Apply, bool) {
+	switch n := e.(type) {
+	case *goivy.Apply:
+		return n, true
+	case *goivy.LogicLiteral:
+		if n.Polarity != 0 {
+			if app, ok := n.Atom.(*goivy.Apply); ok {
+				return app, true
+			}
+		}
+	}
+	return nil, false
 }
 
 func (g *Generator) initialDisjunctiveConditionAction(terms []goivy.Expr) (goivy.Action, error) {

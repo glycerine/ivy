@@ -637,6 +637,181 @@ export step
 	}
 }
 
+func TestTargetTestUnsupportedAssumeGuardErrorIncludesSourceLine(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	native := &goivy.LogicNativeExpr{
+		CompiledChildren: []goivy.Expr{goivy.NewConst(`"x"`, goivy.TopS)},
+	}
+	native.SetLineno(goivy.Location{Filename: "guards.ivy", Line: 41})
+	mod.ExtPreconds["step"] = native
+
+	_, err := Generate(mod, Config{Target: "test", ClassName: "badtestguard", TestIters: "1"})
+	if err == nil {
+		t.Fatal("Generate should reject unsupported target=test assume guard")
+	}
+	for _, want := range []string{
+		"guards.ivy: line 41:",
+		"unsupported target=test assume guard",
+		"native C++ expression is not translated to Go",
+	} {
+		if !strings.Contains(err.Error(), want) {
+			t.Fatalf("target=test assume guard error missing %q:\n%v", want, err)
+		}
+	}
+}
+
+func TestTargetTestUsesBeforeExportAssumeGuard(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatalf("action set not found")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	greenEntry, ok := mod.Sig.Symbols.Get2("green")
+	if !ok {
+		t.Fatalf("symbol green not found")
+	}
+	paramGreen, err := goivy.NewEq(params[0], goivy.NewConst("green", greenEntry.Sort))
+	if err != nil {
+		t.Fatalf("param/green NewEq: %v", err)
+	}
+	actionExpr, ok := action.(goivy.Expr)
+	if !ok {
+		t.Fatalf("action set does not implement Expr: %T", action)
+	}
+	before := goivy.NewSequence(goivy.NewAssumeAction(paramGreen), actionExpr)
+	before.SetLineno(action.GetLineno())
+	goivy.CopyFormalsTo(action, before)
+	mod.BeforeExport.Set("set", before)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "beforetest", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__arg0 := color(ivy.___ivy_randomize(2, "set.fml:c", 0))`,
+		`if !((__arg0 == green)) {`,
+		`cycle--`,
+		`continue`,
+		`ivy.set(__arg0)`,
+	} {
+		if !strings.Contains(mainBody, want) {
+			t.Fatalf("target=test before_export guard source missing %q:\n%s", want, mainBody)
+		}
+	}
+	guardIdx := strings.Index(mainBody, `if !((__arg0 == green)) {`)
+	traceIdx := strings.Index(mainBody, `fmt.Fprintf(__ivy_out, "> set(%s)\n", ivyTraceValue(__arg0, false))`)
+	if guardIdx < 0 || traceIdx < 0 || guardIdx > traceIdx {
+		t.Fatalf("before_export guard should run before action trace; guard=%d trace=%d\n%s", guardIdx, traceIdx, mainBody)
+	}
+}
+
+func TestTargetGenUnsupportedAssumeGuardErrorIncludesSourceLine(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	native := &goivy.LogicNativeExpr{
+		CompiledChildren: []goivy.Expr{goivy.NewConst(`"x"`, goivy.TopS)},
+	}
+	native.SetLineno(goivy.Location{Filename: "guards.ivy", Line: 43})
+	mod.ExtPreconds["step"] = native
+
+	_, err := Generate(mod, Config{Target: "gen", ClassName: "badgenguard", TestIters: "1"})
+	if err == nil {
+		t.Fatal("Generate should reject unsupported target=gen assume guard")
+	}
+	for _, want := range []string{
+		"guards.ivy: line 43:",
+		"unsupported action generator assume guard",
+		"native C++ expression is not translated to Go",
+	} {
+		if !strings.Contains(err.Error(), want) {
+			t.Fatalf("target=gen assume guard error missing %q:\n%v", want, err)
+		}
+	}
+}
+
+func TestDefinedInputUnsupportedErrorIncludesSourceLine(t *testing.T) {
+	makeModule := func(t *testing.T) *goivy.Module {
+		t.Helper()
+		mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..7}
+individual stored : idx
+action set(x:idx) = {
+    stored := x
+}
+export set
+`)
+		action, ok := mod.Actions.Get2("set")
+		if !ok {
+			t.Fatal("action set not found")
+		}
+		params := action.GetFormalParams()
+		if len(params) != 1 {
+			t.Fatalf("set params = %d, want 1", len(params))
+		}
+		native := &goivy.LogicNativeExpr{
+			CompiledChildren: []goivy.Expr{goivy.NewConst(`"x"`, goivy.TopS)},
+		}
+		loc := goivy.Location{Filename: "defined_inputs.ivy", Line: 47}
+		native.SetLineno(loc)
+		eq, err := goivy.NewEq(params[0], native)
+		if err != nil {
+			t.Fatalf("NewEq: %v", err)
+		}
+		eq.SetLineno(loc)
+		if mod.ExtPreconds == nil {
+			mod.ExtPreconds = map[string]goivy.Expr{}
+		}
+		mod.ExtPreconds["set"] = eq
+		return mod
+	}
+
+	for _, tc := range []struct {
+		name   string
+		target string
+		want   string
+	}{
+		{name: "target-test", target: "test", want: "unsupported target=test defined input"},
+		{name: "target-gen", target: "gen", want: "unsupported action generator defined input"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := Generate(makeModule(t), Config{Target: tc.target, ClassName: "baddefinput", TestIters: "1", TestRuns: "1"})
+			if err == nil {
+				t.Fatalf("Generate target=%s should reject unsupported defined input", tc.target)
+			}
+			for _, want := range []string{
+				"defined_inputs.ivy: line 47: " + tc.want,
+				"native C++ expression is not translated to Go",
+			} {
+				if !strings.Contains(err.Error(), want) {
+					t.Fatalf("target=%s defined input error missing %q:\n%v", tc.target, want, err)
+				}
+			}
+		})
+	}
+}
+
 func TestTargetTestLeadingAssumeDefinedInput(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type idx = {0..7}
@@ -2054,6 +2229,52 @@ export set
 	}
 	if strings.Contains(err.Error(), "using zero value for non-enumerable sort") {
 		t.Fatalf("opaque uninterpreted sort should hard-fail, not use zero fallback: %v", err)
+	}
+}
+
+func TestUnsupportedActionParamErrorIncludesSourceLine(t *testing.T) {
+	makeModule := func(t *testing.T) *goivy.Module {
+		t.Helper()
+		mod := compileIvySource(t, `#lang ivy1.7
+type data
+action set(d:data) = {
+}
+export set
+`)
+		action, ok := mod.Actions.Get2("set")
+		if !ok {
+			t.Fatal("action set not found")
+		}
+		params := action.GetFormalParams()
+		if len(params) != 1 {
+			t.Fatalf("set params = %d, want 1", len(params))
+		}
+		params[0].SetLineno(goivy.Location{Filename: "opaque_params.ivy", Line: 12})
+		return mod
+	}
+
+	for _, tc := range []struct {
+		name   string
+		target string
+		want   string
+	}{
+		{name: "target-test", target: "test", want: "opaque_params.ivy: line 12: cannot create test generator"},
+		{name: "target-gen", target: "gen", want: "opaque_params.ivy: line 12: unsupported action generator parameter"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := Generate(makeModule(t), Config{Target: tc.target, ClassName: "badparam", TestIters: "1", TestRuns: "1", Build: true})
+			if err == nil {
+				t.Fatalf("Generate target=%s should reject opaque action parameter", tc.target)
+			}
+			for _, want := range []string{
+				tc.want,
+				"cannot create test generator because type data is uninterpreted",
+			} {
+				if !strings.Contains(err.Error(), want) {
+					t.Fatalf("target=%s action parameter error missing %q:\n%v", tc.target, want, err)
+				}
+			}
+		})
 	}
 }
 
@@ -3753,6 +3974,65 @@ export set
 	}
 	if strings.Contains(stdout, "test_completed") || strings.Count(stdout, "> set(") > 1 {
 		t.Fatalf("gen target should be single-shot without completion marker\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesBeforeExport(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatalf("action set not found")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	greenEntry, ok := mod.Sig.Symbols.Get2("green")
+	if !ok {
+		t.Fatalf("symbol green not found")
+	}
+	paramGreen, err := goivy.NewEq(params[0], goivy.NewConst("green", greenEntry.Sort))
+	if err != nil {
+		t.Fatalf("param/green NewEq: %v", err)
+	}
+	actionExpr, ok := action.(goivy.Expr)
+	if !ok {
+		t.Fatalf("action set does not implement Expr: %T", action)
+	}
+	before := goivy.NewSequence(goivy.NewAssumeAction(paramGreen), actionExpr)
+	before.SetLineno(action.GetLineno())
+	goivy.CopyFormalsTo(action, before)
+	mod.BeforeExport.Set("set", before)
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "beforegen", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Beforegen_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not found:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c = color(ivy.___ivy_randomize(2, "__fml:c", 0))`,
+		`if !((gen.c == green)) {`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("before_export guard source missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `ivy.saved =`) {
+		t.Fatalf("before_export analysis action should only drive input generation, not inline execution:\n%s", genBody)
+	}
+	if !strings.Contains(out.Source, `ivy.set(gen.c)`) {
+		t.Fatalf("execute should still call the public action with generated formals:\n%s", out.Source)
 	}
 }
 
@@ -9461,7 +9741,7 @@ export step
 	}
 }
 
-func TestInitialFiniteAxiomRetryLoopGuardsRandomState(t *testing.T) {
+func TestInitialFiniteAxiomConstructsNestedExistentialWitness(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
 type quorum
@@ -9484,24 +9764,107 @@ export step
 		t.Fatalf("missing __initState:\n%s", out.Source)
 	}
 	for _, want := range []string{
-		"for __ivy_init_attempt := 0; ; __ivy_init_attempt++ {",
 		"for Q1 := 0; Q1 < 4; Q1++ {",
+		"ivy.member[struct{ A0 int; A1 int }{0, Q1}] = true",
 		"for Q2 := 0; Q2 < 4; Q2++ {",
-		"for N := 0; N < 4; N++ {",
-		"ivy.member[struct{ A0 int; A1 int }{N, Q1}]",
-		"ivy.member[struct{ A0 int; A1 int }{N, Q2}]",
-		`ivyAssume(false, "initial condition")`,
+		"ivy.member[struct{ A0 int; A1 int }{0, Q2}] = true",
 	} {
 		if !strings.Contains(body, want) {
-			t.Fatalf("initial retry source missing %q:\n%s", want, body)
+			t.Fatalf("nested existential initial axiom source missing %q:\n%s", want, body)
 		}
 	}
 	for _, bad := range []string{
+		"for __ivy_init_attempt := 0; ; __ivy_init_attempt++ {",
+		`ivyAssume(false, "initial condition")`,
 		"unsupported initial axiom retry condition",
 		"unsupported initial condition",
 	} {
 		if strings.Contains(out.Source, bad) {
-			t.Fatalf("initial retry should emit finite axiom check, found %q:\n%s", bad, out.Source)
+			t.Fatalf("nested existential initial axiom should construct a witness, found %q:\n%s", bad, out.Source)
+		}
+	}
+}
+
+func TestInitialExistentialAxiomConstructsFiniteWitness(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx
+interpret idx -> bv[5]
+
+relation rel(X:idx,Y:idx)
+axiom exists X:idx. forall Y:idx. rel(X,Y)
+
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "initexists", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	body := bodyAfterMarker(out.Source, "func (ivy *initexists) __initState()")
+	if body == "" {
+		t.Fatalf("missing __initState:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"for Y := 0; Y < 32; Y++ {",
+		"ivy.rel[struct{ A0 int; A1 int }{0, Y}] = true",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("finite existential initial axiom source missing %q:\n%s", want, body)
+		}
+	}
+	for _, bad := range []string{
+		"for __ivy_init_attempt := 0; ; __ivy_init_attempt++ {",
+		`ivyAssume(false, "initial condition")`,
+	} {
+		if strings.Contains(body, bad) {
+			t.Fatalf("finite existential initial axiom should construct a witness, found %q:\n%s", bad, body)
+		}
+	}
+}
+
+func TestInitialTotalOrderAxiomsConstructFiniteOrder(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type ts
+interpret ts -> bv[4]
+
+relation le(X:ts,Y:ts)
+individual init_ts : ts
+axiom le(X,X)
+axiom le(X,Y) & le(Y,Z) -> le(X,Z)
+axiom le(X,Y) & le(Y,X) -> X = Y
+axiom le(X,Y) | le(Y,X)
+axiom le(init_ts,T)
+
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "inittotalorder", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	body := bodyAfterMarker(out.Source, "func (ivy *inittotalorder) __initState()")
+	if body == "" {
+		t.Fatalf("missing __initState:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"ivy.init_ts = 0",
+		"for X := 0; X < 16; X++ {",
+		"for Y := 0; Y < 16; Y++ {",
+		"__ivy_tmp0[struct{ A0 int; A1 int }{X, Y}] = (((X < Y)) || ((X == Y)))",
+		"ivy.le[struct{ A0 int; A1 int }{X, Y}] = __ivy_tmp0[struct{ A0 int; A1 int }{X, Y}]",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("finite total-order initial axiom source missing %q:\n%s", want, body)
+		}
+	}
+	for _, bad := range []string{
+		"for __ivy_init_attempt := 0; ; __ivy_init_attempt++ {",
+		`ivyAssume(false, "initial condition")`,
+	} {
+		if strings.Contains(body, bad) {
+			t.Fatalf("finite total-order initial axioms should not retain retry guard %q:\n%s", bad, body)
 		}
 	}
 }

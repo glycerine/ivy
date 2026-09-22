@@ -2464,6 +2464,7 @@ func (g *Generator) emitGenInitGeneratorType(w *goWriter) {
 func (g *Generator) emitGenActionGeneratorTypes(w *goWriter, runnable []string) {
 	for _, name := range runnable {
 		act, _ := g.Mod.Actions.Get2(name)
+		genAct := g.actionGeneratorAnalysisAction(name, act)
 		typeName := g.goActionGeneratorTypeName(name)
 		w.open(fmt.Sprintf("type %s struct {", typeName))
 		w.linef("ivy *%s", g.ClassName)
@@ -2475,7 +2476,7 @@ func (g *Generator) emitGenActionGeneratorTypes(w *goWriter, runnable []string) 
 		w.close("")
 		w.blank()
 		w.open(fmt.Sprintf("func (gen *%s) generate() bool {", typeName))
-		g.emitGenActionGeneratorGenerate(w, name, act)
+		g.emitGenActionGeneratorGenerate(w, name, genAct)
 		w.close("")
 		w.blank()
 		w.open(fmt.Sprintf("func (gen *%s) execute() {", typeName))
@@ -2483,6 +2484,15 @@ func (g *Generator) emitGenActionGeneratorTypes(w *goWriter, runnable []string) 
 		w.close("")
 		w.blank()
 	}
+}
+
+func (g *Generator) actionGeneratorAnalysisAction(name string, act goivy.Action) goivy.Action {
+	if g != nil && g.Mod != nil && g.Mod.BeforeExport != nil {
+		if be, ok := g.Mod.BeforeExport.Get2(name); ok && be != nil {
+			return be
+		}
+	}
+	return act
 }
 
 func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act goivy.Action) {
@@ -2500,7 +2510,7 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 	for i, p := range act.GetFormalParams() {
 		expr, err := g.goActionParamRandomValueExpr(p.CSort, actionFormalGeneratorLabel(p), int64(i))
 		if err != nil {
-			g.unsupported(w, "unsupported action generator parameter: %s", err.Error())
+			g.unsupportedAt(w, p.GetLineno(), "unsupported action generator parameter: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
 			continue
 		}
 		w.linef("gen.%s = %s", goName(p.Name), expr)
@@ -2557,6 +2567,7 @@ func (g *Generator) emitGenRandomizeSymbol(w *goWriter, sym stateSymbol, label s
 type genDefinedInput struct {
 	lhs   goivy.Expr
 	value goivy.Expr
+	loc   goivy.Location
 }
 
 func (g *Generator) emitGenActionGeneratorDefinedInputs(w *goWriter, name string, act goivy.Action) {
@@ -2569,17 +2580,17 @@ func (g *Generator) emitGenActionGeneratorDefinedInputs(w *goWriter, name string
 	for _, def := range defs {
 		lhs, err := g.emitExpr(def.lhs)
 		if err != nil {
-			g.unsupported(w, "unsupported action generator defined input: %s", err.Error())
+			g.unsupportedAt(w, def.loc, "unsupported action generator defined input: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
 			continue
 		}
 		expr, err := g.emitExpr(def.value)
 		if err != nil {
-			g.unsupported(w, "unsupported action generator defined input: %s", err.Error())
+			g.unsupportedAt(w, def.loc, "unsupported action generator defined input: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
 			continue
 		}
 		if call, ok, err := g.goStorageSet(def.lhs, expr); ok || err != nil {
 			if err != nil {
-				g.unsupported(w, "unsupported action generator defined input: %s", err.Error())
+				g.unsupportedAt(w, def.loc, "unsupported action generator defined input: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
 				continue
 			}
 			w.line(call)
@@ -2601,11 +2612,11 @@ func (g *Generator) genActionGeneratorDefinedInputs(act goivy.Action, guards []g
 			continue
 		}
 		if g.genExprDefinedInputLHS(eq.T1, params) {
-			defs = append(defs, genDefinedInput{lhs: eq.T1, value: eq.T2})
+			defs = append(defs, genDefinedInput{lhs: eq.T1, value: eq.T2, loc: eq.GetLineno()})
 			continue
 		}
 		if g.genExprDefinedInputLHS(eq.T2, params) {
-			defs = append(defs, genDefinedInput{lhs: eq.T2, value: eq.T1})
+			defs = append(defs, genDefinedInput{lhs: eq.T2, value: eq.T1, loc: eq.GetLineno()})
 		}
 	}
 	return defs
@@ -2682,7 +2693,7 @@ func (g *Generator) emitGenActionGeneratorAssumeGuards(w *goWriter, name string,
 	for _, guard := range guards {
 		expr, err := g.emitExpr(closeFormulaForGo(guard))
 		if err != nil {
-			g.unsupported(w, "unsupported action generator assume guard: %s", err.Error())
+			g.unsupportedAt(w, guard.GetLineno(), "unsupported action generator assume guard: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
 			continue
 		}
 		w.open(fmt.Sprintf("if !(%s) {", expr))
@@ -2876,6 +2887,7 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 				g.errs = append(g.errs, err)
 			}
 			act, _ := g.Mod.Actions.Get2(name)
+			genAct := g.actionGeneratorAnalysisAction(name, act)
 			cumulative += g.actionWeight(name)
 			argExprs := g.randomActualArgs(name, act)
 			if i == 0 {
@@ -2892,8 +2904,8 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 					w.linef("%s := %s", args[i], arg)
 				}
 			}
-			g.emitTestActionDefinedInputs(w, name, act, args)
-			g.emitTestActionAssumeGuards(w, name, act, args)
+			g.emitTestActionDefinedInputs(w, name, genAct, args)
+			g.emitTestActionAssumeGuards(w, name, genAct, args)
 			call := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(args, ", "))
 			trace := g.actionTraceLine(name, args)
 			w.line(trace)
@@ -2943,17 +2955,17 @@ func (g *Generator) emitTestActionDefinedInputs(w *goWriter, name string, act go
 	for _, def := range defs {
 		lhs, err := g.emitExpr(def.lhs)
 		if err != nil {
-			g.unsupported(w, "unsupported target=test defined input: %s", err.Error())
+			g.unsupportedAt(w, def.loc, "unsupported target=test defined input: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
 			continue
 		}
 		expr, err := g.emitExpr(def.value)
 		if err != nil {
-			g.unsupported(w, "unsupported target=test defined input: %s", err.Error())
+			g.unsupportedAt(w, def.loc, "unsupported target=test defined input: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
 			continue
 		}
 		if call, ok, err := g.goStorageSet(def.lhs, expr); ok || err != nil {
 			if err != nil {
-				g.unsupported(w, "unsupported target=test defined input: %s", err.Error())
+				g.unsupportedAt(w, def.loc, "unsupported target=test defined input: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
 				continue
 			}
 			w.line(call)
@@ -2976,7 +2988,7 @@ func (g *Generator) emitTestActionAssumeGuards(w *goWriter, name string, act goi
 	for _, guard := range guards {
 		expr, err := g.emitExpr(closeFormulaForGo(guard))
 		if err != nil {
-			g.unsupported(w, "unsupported target=test assume guard: %s", err.Error())
+			g.unsupportedAt(w, guard.GetLineno(), "unsupported target=test assume guard: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
 			continue
 		}
 		w.open(fmt.Sprintf("if !(%s) {", expr))
@@ -3041,7 +3053,7 @@ func (g *Generator) randomActualArgs(actionName string, act goivy.Action) []stri
 		}
 		expr, err := g.goActionParamRandomValueExpr(p.CSort, actionName+"."+p.Name, int64(i))
 		if err != nil {
-			g.errs = append(g.errs, err)
+			g.errs = append(g.errs, errorAt(p.GetLineno(), err))
 			expr = g.goZeroValue(p.CSort)
 		}
 		args[i] = expr
@@ -3409,6 +3421,17 @@ func (g *Generator) unsupportedAt(w *goWriter, loc goivy.Location, format string
 		msg = prefix + ": " + strings.TrimPrefix(msg, "ivy2golang: ")
 	}
 	g.emitUnsupportedMessage(w, msg)
+}
+
+func errorAt(loc goivy.Location, err error) error {
+	if err == nil {
+		return nil
+	}
+	if prefix := linenoStr(loc); strings.TrimSpace(prefix) != "" {
+		msg := strings.TrimPrefix(err.Error(), "ivy2golang: ")
+		return fmt.Errorf("ivy2golang: %s: %s", prefix, msg)
+	}
+	return err
 }
 
 func (g *Generator) emitUnsupportedMessage(w *goWriter, msg string) {
