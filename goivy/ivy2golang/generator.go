@@ -10425,7 +10425,7 @@ func (g *Generator) testActionNeedsTrial(act goivy.Action) bool {
 }
 
 func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bool {
-	if g == nil || act == nil || len(act.GetFormalParams()) != 0 || actionContainsCall(act) {
+	if g == nil || act == nil || len(act.GetFormalParams()) != 0 {
 		return false
 	}
 	localDecls, body, ok := directWitnessLocalActionParts(act)
@@ -10447,6 +10447,7 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 	relationPointUpdates := []localRelationPointUpdate{}
 	fieldUpdates := []localFieldUpdate{}
 	stateFromLocal := map[goivy.NodeKey]string{}
+	seenCalls := map[string]bool{}
 	seenWitness := false
 	witnessPhase := true
 	var walk func(goivy.Action) bool
@@ -10527,7 +10528,7 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 			return true
 		case *goivy.LogicSetAction:
 			witnessPhase = false
-			if update, ok := localRelationPointUpdateFromAction(a, locals, modeledLocals); ok {
+			if update, ok := g.localRelationPointUpdateFromAction(a, locals, modeledLocals); ok {
 				relationPointUpdates = append(relationPointUpdates, update)
 				return true
 			}
@@ -10553,13 +10554,57 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 				return true
 			}
 			return false
+		case *goivy.LogicLetAction:
+			body, ok := localWitnessLetActionBody(a)
+			if !ok {
+				return false
+			}
+			return walk(body)
+		case *goivy.LogicCallAction:
+			if a == nil {
+				return false
+			}
+			name := a.CalleeName()
+			if name == "" || seenCalls[name] {
+				return false
+			}
+			substituted, ok := g.localPrivateCallBodyForDirectProof(a)
+			if !ok {
+				return false
+			}
+			seenCalls[name] = true
+			ok = walk(substituted)
+			delete(seenCalls, name)
+			return ok
+		case *goivy.LogicChoiceAction:
+			witnessPhase = false
+			if update, ok := g.localFieldUpdateFromChoice(a, locals, modeledLocals); ok {
+				fieldUpdates = append(fieldUpdates, update)
+				return true
+			}
+			if update, ok := g.localRelationPointUpdateFromChoice(a, locals, modeledLocals); ok {
+				relationPointUpdates = append(relationPointUpdates, update)
+				return true
+			}
+			return false
+		case *goivy.LogicEnvAction:
+			witnessPhase = false
+			if update, ok := g.localFieldUpdateFromChoice(&a.LogicChoiceAction, locals, modeledLocals); ok {
+				fieldUpdates = append(fieldUpdates, update)
+				return true
+			}
+			if update, ok := g.localRelationPointUpdateFromChoice(&a.LogicChoiceAction, locals, modeledLocals); ok {
+				relationPointUpdates = append(relationPointUpdates, update)
+				return true
+			}
+			return false
 		case *goivy.LogicIfAction:
 			if updates, ok := g.localFieldUpdatesFromIf(a, locals, modeledLocals); ok {
 				witnessPhase = false
 				fieldUpdates = append(fieldUpdates, updates...)
 				return true
 			}
-			if updates, ok := localRelationPointUpdatesFromIf(a, locals, modeledLocals); ok {
+			if updates, ok := g.localRelationPointUpdatesFromIf(a, locals, modeledLocals); ok {
 				witnessPhase = false
 				relationPointUpdates = append(relationPointUpdates, updates...)
 				return true
@@ -10578,6 +10623,21 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 		}
 	}
 	return walk(body) && seenWitness
+}
+
+func (g *Generator) localPrivateCallBodyForDirectProof(a *goivy.LogicCallAction) (goivy.Action, bool) {
+	if g == nil || a == nil {
+		return nil, false
+	}
+	callee, formalSubs, ok := g.callPreimageCalleeAndSubstitutions(a, newActionPreimageContext())
+	if !ok || actionContainsCall(callee) {
+		return nil, false
+	}
+	substituted, ok := goivy.SubstituteConstantsAction(callee, formalSubs).(goivy.Action)
+	if !ok {
+		return nil, false
+	}
+	return substituted, true
 }
 
 type localRelationPointUpdate struct {
@@ -10842,6 +10902,18 @@ func (g *Generator) localFieldUpdateFromAction(act goivy.Action, locals map[stri
 		return g.localFieldUpdateFromNullField(a, locals, modeledLocals)
 	case *goivy.LogicCopyFieldAction:
 		return localFieldUpdateFromCopyField(a, locals, modeledLocals)
+	case *goivy.LogicLetAction:
+		body, ok := localWitnessLetActionBody(a)
+		if !ok {
+			return localFieldUpdate{}, false
+		}
+		return g.localFieldUpdateFromAction(body, locals, modeledLocals)
+	case *goivy.LogicCallAction:
+		body, ok := g.localPrivateCallBodyForDirectProof(a)
+		if !ok {
+			return localFieldUpdate{}, false
+		}
+		return g.localFieldUpdateFromAction(body, locals, modeledLocals)
 	case *goivy.LogicSequence:
 		if a == nil || len(a.Elems) != 1 {
 			return localFieldUpdate{}, false
@@ -10854,6 +10926,33 @@ func (g *Generator) localFieldUpdateFromAction(act goivy.Action, locals map[stri
 	default:
 		return localFieldUpdate{}, false
 	}
+}
+
+func (g *Generator) localFieldUpdateFromChoice(a *goivy.LogicChoiceAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localFieldUpdate, bool) {
+	if a == nil || len(a.Branches) == 0 {
+		return localFieldUpdate{}, false
+	}
+	var first localFieldUpdate
+	haveFirst := false
+	for _, branch := range a.Branches {
+		act, ok := goivy.ToAction(branch)
+		if !ok {
+			return localFieldUpdate{}, false
+		}
+		update, ok := g.localFieldUpdateFromAction(act, locals, modeledLocals)
+		if !ok {
+			return localFieldUpdate{}, false
+		}
+		if !haveFirst {
+			first = update
+			haveFirst = true
+			continue
+		}
+		if !localFieldUpdateSamePoint(first, update) {
+			return localFieldUpdate{}, false
+		}
+	}
+	return first, haveFirst
 }
 
 func (g *Generator) localFieldUpdateFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localFieldUpdate, bool) {
@@ -10916,15 +11015,15 @@ func localFieldUpdateSamePoint(a, b localFieldUpdate) bool {
 		exprEqual(a.value, b.value)
 }
 
-func localRelationPointUpdateFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {
-	updates, ok := localRelationPointUpdatesFromIf(a, locals, modeledLocals)
+func (g *Generator) localRelationPointUpdateFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {
+	updates, ok := g.localRelationPointUpdatesFromIf(a, locals, modeledLocals)
 	if !ok || len(updates) != 1 {
 		return localRelationPointUpdate{}, false
 	}
 	return updates[0], true
 }
 
-func localRelationPointUpdatesFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) ([]localRelationPointUpdate, bool) {
+func (g *Generator) localRelationPointUpdatesFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) ([]localRelationPointUpdate, bool) {
 	if a == nil || a.Cond == nil || a.ThenBody == nil {
 		return nil, false
 	}
@@ -10937,7 +11036,7 @@ func localRelationPointUpdatesFromIf(a *goivy.LogicIfAction, locals map[string]g
 		return nil, false
 	}
 	if localWitnessDirectNoopAction(elseAct) {
-		update, ok := localRelationPointUpdateFromAction(thenAct, locals, modeledLocals)
+		update, ok := g.localRelationPointUpdateFromAction(thenAct, locals, modeledLocals)
 		if !ok {
 			return nil, false
 		}
@@ -10946,7 +11045,7 @@ func localRelationPointUpdatesFromIf(a *goivy.LogicIfAction, locals map[string]g
 		return []localRelationPointUpdate{update}, true
 	}
 	if localWitnessDirectNoopAction(thenAct) {
-		update, ok := localRelationPointUpdateFromAction(elseAct, locals, modeledLocals)
+		update, ok := g.localRelationPointUpdateFromAction(elseAct, locals, modeledLocals)
 		if !ok {
 			return nil, false
 		}
@@ -10954,8 +11053,8 @@ func localRelationPointUpdatesFromIf(a *goivy.LogicIfAction, locals map[string]g
 		update.guardValue = false
 		return []localRelationPointUpdate{update}, true
 	}
-	thenUpdate, thenOK := localRelationPointUpdateFromAction(thenAct, locals, modeledLocals)
-	elseUpdate, elseOK := localRelationPointUpdateFromAction(elseAct, locals, modeledLocals)
+	thenUpdate, thenOK := g.localRelationPointUpdateFromAction(thenAct, locals, modeledLocals)
+	elseUpdate, elseOK := g.localRelationPointUpdateFromAction(elseAct, locals, modeledLocals)
 	if !thenOK || !elseOK {
 		return nil, false
 	}
@@ -10984,7 +11083,34 @@ func localRelationPointUpdateSameCell(a, b localRelationPointUpdate) bool {
 	return true
 }
 
-func localRelationPointUpdateFromAction(act goivy.Action, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {
+func (g *Generator) localRelationPointUpdateFromChoice(a *goivy.LogicChoiceAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {
+	if a == nil || len(a.Branches) == 0 {
+		return localRelationPointUpdate{}, false
+	}
+	var first localRelationPointUpdate
+	haveFirst := false
+	for _, branch := range a.Branches {
+		act, ok := goivy.ToAction(branch)
+		if !ok {
+			return localRelationPointUpdate{}, false
+		}
+		update, ok := g.localRelationPointUpdateFromAction(act, locals, modeledLocals)
+		if !ok {
+			return localRelationPointUpdate{}, false
+		}
+		if !haveFirst {
+			first = update
+			haveFirst = true
+			continue
+		}
+		if !localRelationPointUpdateSameCell(first, update) {
+			return localRelationPointUpdate{}, false
+		}
+	}
+	return first, haveFirst
+}
+
+func (g *Generator) localRelationPointUpdateFromAction(act goivy.Action, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {
 	switch a := act.(type) {
 	case *goivy.LogicAssignAction:
 		return localRelationPointUpdateFromAssign(a, locals, modeledLocals)
@@ -10994,6 +11120,18 @@ func localRelationPointUpdateFromAction(act goivy.Action, locals map[string]goiv
 		}
 		target, value := setTargetAndValue(a.Lit)
 		return localRelationPointUpdateFromAssign(goivy.NewAssignAction(target, goivy.NewConst(value, goivy.Boolean)), locals, modeledLocals)
+	case *goivy.LogicLetAction:
+		body, ok := localWitnessLetActionBody(a)
+		if !ok {
+			return localRelationPointUpdate{}, false
+		}
+		return g.localRelationPointUpdateFromAction(body, locals, modeledLocals)
+	case *goivy.LogicCallAction:
+		body, ok := g.localPrivateCallBodyForDirectProof(a)
+		if !ok {
+			return localRelationPointUpdate{}, false
+		}
+		return g.localRelationPointUpdateFromAction(body, locals, modeledLocals)
 	case *goivy.LogicSequence:
 		if a == nil || len(a.Elems) != 1 {
 			return localRelationPointUpdate{}, false
@@ -11002,7 +11140,7 @@ func localRelationPointUpdateFromAction(act goivy.Action, locals map[string]goiv
 		if !ok {
 			return localRelationPointUpdate{}, false
 		}
-		return localRelationPointUpdateFromAction(child, locals, modeledLocals)
+		return g.localRelationPointUpdateFromAction(child, locals, modeledLocals)
 	default:
 		return localRelationPointUpdate{}, false
 	}

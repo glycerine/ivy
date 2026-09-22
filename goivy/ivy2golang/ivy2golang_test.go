@@ -5458,6 +5458,142 @@ export step
 	}
 }
 
+func TestTargetTestLocalVariantLetActionConditionalPointUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+relation seen(M:msg)
+action step = {
+}
+export step
+`)
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	x := goivy.NewConst("x", msg)
+	alias := goivy.NewConst("alias", msg)
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	q, err := goivy.NewVariable("Q", req)
+	if err != nil {
+		t.Fatalf("NewVariable Q: %v", err)
+	}
+	reqStarSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *> req: %v", err)
+	}
+	xReq := goivy.MustApply(goivy.NewConst("*>", reqStarSort), x, q)
+	xReqExists, err := goivy.NewExists([]*goivy.LogicVariable{q}, xReq)
+	if err != nil {
+		t.Fatalf("exists x *> Q: %v", err)
+	}
+	seenX := goivy.MustApply(goivy.NewConst("seen", goivy.LogicRelationSort([]goivy.Sort{msg})), x)
+	seenAlias := goivy.MustApply(goivy.NewConst("seen", goivy.LogicRelationSort([]goivy.Sort{msg})), alias)
+	recheck, err := goivy.NewImplies(active, seenX)
+	if err != nil {
+		t.Fatalf("NewImplies: %v", err)
+	}
+	letSet := goivy.NewLetAction(
+		goivy.NewDefinition(alias, x),
+		goivy.NewAssignAction(seenAlias, goivy.NewConst("true", goivy.Boolean)),
+	)
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(xReqExists),
+		goivy.NewIfAction(active, letSet, goivy.NewSequence()),
+		goivy.NewAssumeAction(recheck),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", x, body))
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantletifpoint", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantletifpoint) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`x = msg{tag: 0, value: 0, valid: true}`,
+		`if ivy.active {`,
+		`ivy.seen.Set(x, true)`,
+		`ivyAssume((!(ivy.active) || (ivy.seen.Get(x)))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant let-action conditional point-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant let-action conditional point update should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantPrivateCallConditionalPointUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+relation seen(M:msg)
+action helper(m:msg) = {
+    seen(m) := true
+}
+action step = {
+    var x : msg;
+    assume exists Q:req. x *> Q;
+    if active {
+        call helper(x)
+    };
+    assume active -> seen(x)
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantcallifpoint", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantcallifpoint) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__x = msg{tag: 0, value: 0, valid: true}`,
+		`if ivy.active {`,
+		`ivy.helper(loc__x)`,
+		`ivyAssume((!(ivy.active) || (ivy.seen.Get(loc__x)))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant private-call conditional point-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant private-call conditional point update should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
 func TestTargetTestLocalVariantConditionalPointUpdateImplicationSkipsTrialFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type msg
@@ -7370,6 +7506,249 @@ export step
 	} {
 		if strings.Contains(mainBody, bad) {
 			t.Fatalf("local variant let-action state update should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantChoicePointUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+relation seen(M:msg)
+action step = {
+}
+export step
+`)
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	x := goivy.NewConst("x", msg)
+	reqStarSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *> req: %v", err)
+	}
+	q, err := goivy.NewVariable("Q", req)
+	if err != nil {
+		t.Fatalf("NewVariable Q: %v", err)
+	}
+	xReq := goivy.MustApply(goivy.NewConst("*>", reqStarSort), x, q)
+	xReqExists, err := goivy.NewExists([]*goivy.LogicVariable{q}, xReq)
+	if err != nil {
+		t.Fatalf("exists x *> Q: %v", err)
+	}
+	seenX := goivy.MustApply(goivy.NewConst("seen", goivy.LogicRelationSort([]goivy.Sort{msg})), x)
+	choice := goivy.NewChoiceActionOn(
+		goivy.NewActionsConfig(),
+		goivy.NewAssignAction(seenX, goivy.NewConst("true", goivy.Boolean)),
+		goivy.NewAssignAction(seenX, goivy.NewConst("true", goivy.Boolean)),
+	)
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(xReqExists),
+		choice,
+		goivy.NewAssumeAction(seenX),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", x, body))
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantchoicepoint", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantchoicepoint) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`x = msg{tag: 0, value: 0, valid: true}`,
+		`__ivy_branch0 := ivy.___ivy_choose(0, "___branch", 0)`,
+		`ivy.seen.Set(x, true)`,
+		`ivyAssume(ivy.seen.Get(x)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant choice point-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant choice point update should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantEnvPointUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+relation seen(M:msg)
+action step = {
+}
+export step
+`)
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	x := goivy.NewConst("x", msg)
+	reqStarSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *> req: %v", err)
+	}
+	q, err := goivy.NewVariable("Q", req)
+	if err != nil {
+		t.Fatalf("NewVariable Q: %v", err)
+	}
+	xReq := goivy.MustApply(goivy.NewConst("*>", reqStarSort), x, q)
+	xReqExists, err := goivy.NewExists([]*goivy.LogicVariable{q}, xReq)
+	if err != nil {
+		t.Fatalf("exists x *> Q: %v", err)
+	}
+	seenX := goivy.MustApply(goivy.NewConst("seen", goivy.LogicRelationSort([]goivy.Sort{msg})), x)
+	env := goivy.NewEnvActionOn(
+		goivy.NewActionsConfig(),
+		goivy.NewAssignAction(seenX, goivy.NewConst("true", goivy.Boolean)),
+		goivy.NewAssignAction(seenX, goivy.NewConst("true", goivy.Boolean)),
+	)
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(xReqExists),
+		env,
+		goivy.NewAssumeAction(seenX),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", x, body))
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantenvironmentpoint", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantenvironmentpoint) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`x = msg{tag: 0, value: 0, valid: true}`,
+		`__ivy_branch0 := ivy.___ivy_choose(0, "___branch", 0)`,
+		`ivy.seen.Set(x, true)`,
+		`ivyAssume(ivy.seen.Get(x)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant env point-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant env point update should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantPrivateCallStateUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action helper(m:msg) = {
+    saved := m
+}
+action step = {
+    var x : msg;
+    assume exists Q:req. x *> Q;
+    call helper(x);
+    assume exists R:req. saved *> R
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantcallstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantcallstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__x = msg{tag: 0, value: 0, valid: true}`,
+		`ivy.helper(loc__x)`,
+		`ivyAssume((ivy.saved.valid && ivy.saved.tag == 0)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant private-call state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant private-call state update should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantPrivateReturnCallStateUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action helper(m:msg) returns(out:msg) = {
+    out := m
+}
+action step = {
+    var x : msg;
+    assume exists Q:req. x *> Q;
+    call saved := helper(x);
+    assume exists R:req. saved *> R
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantreturncallstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantreturncallstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__x = msg{tag: 0, value: 0, valid: true}`,
+		`ivy.helper(loc__x)`,
+		`ivy.saved = __ivy_ret`,
+		`ivyAssume((ivy.saved.valid && ivy.saved.tag == 0)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant private return-call state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant private return-call state update should execute without trial source %q:\n%s", bad, mainBody)
 		}
 	}
 }

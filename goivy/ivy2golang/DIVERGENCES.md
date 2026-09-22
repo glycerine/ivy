@@ -1273,6 +1273,45 @@ Progress:
   This covers `ite(active, seen(x), ~seen(x))` rechecks without hidden trial
   machinery or regression in the same-update branch case.
 - 2026-09-22: Added
+  `TestTargetTestLocalVariantLetActionStateUpdateSkipsTrialFast`. The
+  zero-formal direct-execution proof now expands action-level `let` bindings
+  with the same helper used for local witness discovery, so a let-wrapped local
+  variant witness copied into state and rechecked does not force a hidden trial
+  clone.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantLetActionConditionalPointUpdateSkipsTrialFast`.
+  Branch-local relation and destructor field update extraction now also expands
+  action-level `let` bindings before matching point updates, so let-wrapped
+  conditional updates participate in the no-trial proof.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantPrivateCallStateUpdateSkipsTrialFast`. The
+  zero-formal direct-execution proof now inlines non-recursive private calls
+  without return targets after substituting actuals for formals, so deterministic
+  helper calls that copy a local witness into state can be proven safe without a
+  hidden trial clone.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantPrivateCallConditionalPointUpdateSkipsTrialFast`.
+  Branch-local relation and destructor field update extraction now also inlines
+  non-recursive private calls without return targets, so helper-wrapped
+  conditional point updates are covered by the same no-trial proof.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantPrivateReturnCallStateUpdateSkipsTrialFast`. The
+  private-call direct-execution proof now also handles simple return targets by
+  using the existing formal/return substitution map, so helper return values
+  assigned into state can satisfy later local-witness rechecks without a hidden
+  trial clone.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantChoicePointUpdateSkipsTrialFast`. The zero-formal
+  direct-execution proof now models nondeterministic `choice` actions when every
+  branch has the same relation point or destructor field update, so local
+  witness-keyed relation cells can be set through a choice and rechecked without
+  hidden trial machinery.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantEnvPointUpdateSkipsTrialFast`. `LogicEnvAction`
+  now shares the same identical-branch update proof as `LogicChoiceAction`,
+  matching the generated action emitter's env-as-choice behavior for local
+  witness-keyed point updates.
+- 2026-09-22: Added
   `TestTargetTestLocalRelationAssignFieldActionSkipsTrialFast`. Local witness
   initialization now scans thunk-backed boolean relation overrides even when the
   relation is not classified as a global quantifier-support relation, and the
@@ -2699,6 +2738,35 @@ Progress:
   `TestTargetTestLocalVariantTwoSidedConditionalPointUpdateSkipsTrialFast` for
   the true/false relation-cell update case under `if/else`, plus the guarded
   update collapse needed to keep the existing identical-branch test fast.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantLetActionStateUpdateSkipsTrialFast` for
+  action-level `let` around local witness/state-update/recheck bodies, keeping
+  the coverage in-process while proving the target=test runner omits hidden
+  trial machinery.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantLetActionConditionalPointUpdateSkipsTrialFast` for
+  action-level `let` inside conditional branch updates, covering the relation
+  point-update extractor without launching generated binaries.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantPrivateCallStateUpdateSkipsTrialFast` for
+  non-recursive private helper calls that copy local witnesses into state before
+  a target=test recheck, keeping the no-hidden-trial guarantee in-process.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantPrivateCallConditionalPointUpdateSkipsTrialFast`
+  for private helper calls used as conditional branch updates, exercising the
+  relation point-update extractor through generated-source inspection only.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantPrivateReturnCallStateUpdateSkipsTrialFast` for
+  private helper calls whose return value is assigned into state before a local
+  witness recheck, keeping that coverage fast and in-process.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantChoicePointUpdateSkipsTrialFast` for
+  nondeterministic choice branches with the same local witness-keyed relation
+  point update, checking the no-hidden-trial guarantee through generated-source
+  inspection.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantEnvPointUpdateSkipsTrialFast` for the env-action
+  mirror of that identical-branch relation point-update proof.
 - 2026-09-22: Added
   `TestTargetTestLocalRelationAssignFieldActionSkipsTrialFast` for the
   destructor-field analogue of relation point updates, covering relation-backed
