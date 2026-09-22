@@ -466,6 +466,10 @@ export step
 	if !strings.Contains(out.Source, `ivyAssume(false, "test.ivy: line 3")`) {
 		t.Fatalf("assume action should carry source-line label:\n%s", out.Source)
 	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if strings.Contains(mainBody, "if !(false)") && strings.Contains(mainBody, "cycle--") {
+		t.Fatalf("returning action assume should execute and fail, not retry forever:\n%s", mainBody)
+	}
 	bin := compileGeneratedGo(t, out)
 	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
 	if err == nil {

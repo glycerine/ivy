@@ -290,7 +290,10 @@ func (g *Generator) emitImports(w *goWriter) {
 		imports = append(imports, "bufio")
 	}
 	if g.Config.Target == "test" {
-		imports = append(imports, "bytes", "time")
+		imports = append(imports, "time")
+		if g.testTargetEmitsTrial() {
+			imports = append(imports, "bytes")
+		}
 	}
 	sort.Strings(imports)
 	for _, imp := range imports {
@@ -299,6 +302,20 @@ func (g *Generator) emitImports(w *goWriter) {
 	w.indent--
 	w.line(")")
 	w.blank()
+}
+
+func (g *Generator) testTargetEmitsTrial() bool {
+	if g == nil || g.Config.Target != "test" {
+		return false
+	}
+	for _, name := range g.runnableActionNames() {
+		act, _ := g.Mod.Actions.Get2(name)
+		genAct := g.actionGeneratorAnalysisAction(name, act)
+		if testActionNeedsTrial(genAct) {
+			return true
+		}
+	}
+	return false
 }
 
 func (g *Generator) emitSortDecls(w *goWriter) {
@@ -3144,6 +3161,9 @@ func (g *Generator) emitTestActionDefinedInputs(w *goWriter, name string, act go
 
 func (g *Generator) emitTestActionAssumeGuards(w *goWriter, name string, act goivy.Action, args []string) {
 	if act == nil {
+		return
+	}
+	if len(act.GetFormalReturns()) > 0 {
 		return
 	}
 	guards := g.genActionPreconditionFormulas(name, act)
