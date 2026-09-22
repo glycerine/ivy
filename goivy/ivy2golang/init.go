@@ -4,13 +4,25 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy"
+	"github.com/glycerine/ivy/goivy/smt"
 )
 
 type initialLocatedError struct {
 	loc goivy.Location
 	err error
+}
+
+type initialStateConstraints struct {
+	Formulas []goivy.Expr
+	Used     map[string]bool
+}
+
+type initialDomainValue struct {
+	Expr goivy.Expr
+	Go   string
 }
 
 func (e *initialLocatedError) Error() string { return e.err.Error() }
@@ -37,6 +49,295 @@ func initialErrorLocation(err error) goivy.Location {
 		return located.loc
 	}
 	return goivy.Location{}
+}
+
+func (g *Generator) initialStateConstraints() (*initialStateConstraints, error) {
+	if g == nil || g.Mod == nil {
+		return &initialStateConstraints{Used: map[string]bool{}}, nil
+	}
+	if err := g.checkInitialStateParameters("initial condition", g.Mod.LabeledInits); err != nil {
+		return nil, err
+	}
+	if err := g.checkInitialStateParameters("axiom", g.Mod.LabeledAxioms); err != nil {
+		return nil, err
+	}
+	var formulas []goivy.Expr
+	if g.Mod.InitCond != nil && !g.Mod.InitCond.IsTrue() {
+		formulas = append(formulas, g.Mod.InitCond.Fmlas...)
+	}
+	formulas = append(formulas, g.Mod.Axioms()...)
+	if err := g.checkInitialStateParameterFormulas("initial condition", formulas); err != nil {
+		return nil, err
+	}
+	for _, lf := range goivy.RelevantDefinitions(g.Mod, initialUsedSymbolNames(formulas)) {
+		def, ok := lf.Formula.(*goivy.LogicDefinition)
+		if !ok || def == nil {
+			continue
+		}
+		formulas = append(formulas, goivy.DefinitionToConstraint(def))
+	}
+	return &initialStateConstraints{
+		Formulas: formulas,
+		Used:     initialUsedSymbolNames(formulas),
+	}, nil
+}
+
+func (g *Generator) emitSolvedInitialState(w *goWriter) error {
+	constraints, err := g.initialStateConstraints()
+	if err != nil {
+		return err
+	}
+	var slv *goivy.Solver
+	var model *smt.Model
+	if len(constraints.Formulas) > 0 {
+		slv = goivy.NewSolver(g.Mod, nil)
+		mr, err := slv.GetModelClauses(goivy.NewClauses(constraints.Formulas, nil, nil))
+		if err != nil {
+			return fmt.Errorf("ivy2golang: initial state solver failed: %w", err)
+		}
+		if mr == nil || mr.Model == nil {
+			return fmt.Errorf("ivy2golang: axioms and/or initial condition are inconsistent")
+		}
+		model = mr.Model
+	}
+	for _, sym := range g.stateSymbols() {
+		if g.isParamName(sym.Name) {
+			continue
+		}
+		if !constraints.Used[sym.Name] || model == nil {
+			g.emitRandomizeSymbol(w, sym, "init")
+			continue
+		}
+		if err := g.emitSolvedInitialStateSymbol(w, slv, model, sym); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (g *Generator) emitSolvedInitialStateSymbol(w *goWriter, slv *goivy.Solver, model *smt.Model, sym stateSymbol) error {
+	if slv == nil || model == nil {
+		g.emitRandomizeSymbol(w, sym, "init")
+		return nil
+	}
+	fs, ok := sym.Sort.(*goivy.LogicFunctionSort)
+	if !ok || len(fs.Domain()) == 0 {
+		term := initialStateSymbolTerm(sym, nil)
+		value, err := g.initialModelValue(slv, model, term, initialStateRange(sym.Sort))
+		if err != nil {
+			return fmt.Errorf("ivy2golang: initial value for %s: %w", sym.Name, err)
+		}
+		w.linef("ivy.%s = %s", goName(sym.Name), value)
+		return nil
+	}
+	tuples, ok := g.initialDomainTuples(fs.Domain())
+	if !ok {
+		return fmt.Errorf("ivy2golang: cannot enumerate initial-state domain of %s", sym.Name)
+	}
+	for _, tuple := range tuples {
+		args := make([]goivy.Expr, len(tuple))
+		goArgs := make([]string, len(tuple))
+		for i, v := range tuple {
+			args[i] = v.Expr
+			goArgs[i] = v.Go
+		}
+		term := initialStateSymbolTerm(sym, args)
+		value, err := g.initialModelValue(slv, model, term, fs.Range())
+		if err != nil {
+			return fmt.Errorf("ivy2golang: initial value for %s: %w", sym.Name, err)
+		}
+		if call, ok, err := g.goStorageSet(term, value); ok || err != nil {
+			if err != nil {
+				return fmt.Errorf("ivy2golang: initial value for %s: %w", sym.Name, err)
+			}
+			w.line(call)
+			continue
+		}
+		w.linef("%s = %s", g.goStorageAccess(sym.Name, sym.Sort, goArgs, "ivy"), value)
+	}
+	return nil
+}
+
+func initialStateRange(s goivy.Sort) goivy.Sort {
+	if fs, ok := s.(*goivy.LogicFunctionSort); ok {
+		return fs.Range()
+	}
+	return s
+}
+
+func initialStateSymbolTerm(sym stateSymbol, args []goivy.Expr) goivy.Expr {
+	c := goivy.NewConst(sym.Name, sym.Sort)
+	fs, ok := sym.Sort.(*goivy.LogicFunctionSort)
+	if !ok {
+		return c
+	}
+	if len(args) == 0 && len(fs.Domain()) == 0 {
+		app, err := goivy.NewApply(c)
+		if err == nil {
+			return app
+		}
+		return c
+	}
+	app, err := goivy.NewApply(c, args...)
+	if err != nil {
+		return c
+	}
+	return app
+}
+
+func (g *Generator) initialModelValue(slv *goivy.Solver, model *smt.Model, term goivy.Expr, s goivy.Sort) (string, error) {
+	zterm, err := slv.FormulaToZ3(term)
+	if err != nil {
+		return "", err
+	}
+	value, ok := model.Eval(zterm, true)
+	if !ok {
+		return "", fmt.Errorf("model did not evaluate %s", term.String())
+	}
+	return g.modelValueToGo(value, s)
+}
+
+func (g *Generator) modelValueToGo(value smt.Z3Expr, s goivy.Sort) (string, error) {
+	text := stripZ3Bars(strings.TrimSpace(value.String()))
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		switch text {
+		case "true", "1":
+			return "true", nil
+		case "false", "0":
+			return "false", nil
+		default:
+			return "", fmt.Errorf("expected bool model value, got %q", text)
+		}
+	case *goivy.LogicEnumeratedSort:
+		for i, name := range st.Extension {
+			if text == name || text == fmt.Sprintf("%s_%d", initialZ3SortName(st), i) {
+				return goName(name), nil
+			}
+		}
+		if idx, ok := parseTrailingModelIndex(text); ok && idx >= 0 && idx < len(st.Extension) {
+			return goName(st.Extension[idx]), nil
+		}
+		return "", fmt.Errorf("expected %s model value, got %q", sortName(s), text)
+	default:
+		if n, err := strconv.ParseInt(text, 10, 64); err == nil {
+			return strconv.FormatInt(n, 10), nil
+		}
+		if idx, ok := parseTrailingModelIndex(text); ok {
+			return strconv.Itoa(idx), nil
+		}
+		return "", fmt.Errorf("unsupported model value %q for sort %s", text, sortName(s))
+	}
+}
+
+func stripZ3Bars(s string) string {
+	if len(s) >= 2 && s[0] == '|' && s[len(s)-1] == '|' {
+		return s[1 : len(s)-1]
+	}
+	return s
+}
+
+func parseTrailingModelIndex(s string) (int, bool) {
+	pos := strings.LastIndexByte(s, '_')
+	if pos < 0 || pos+1 >= len(s) {
+		return 0, false
+	}
+	n, err := strconv.Atoi(s[pos+1:])
+	if err != nil {
+		return 0, false
+	}
+	return n, true
+}
+
+func (g *Generator) initialDomainTuples(domain []goivy.Sort) ([][]initialDomainValue, bool) {
+	tuples := [][]initialDomainValue{{}}
+	for _, s := range domain {
+		vals, ok := g.initialDomainValues(s)
+		if !ok {
+			return nil, false
+		}
+		var next [][]initialDomainValue
+		for _, tuple := range tuples {
+			for _, v := range vals {
+				cp := append([]initialDomainValue{}, tuple...)
+				cp = append(cp, v)
+				next = append(next, cp)
+			}
+		}
+		tuples = next
+	}
+	return tuples, true
+}
+
+func (g *Generator) initialDomainValues(s goivy.Sort) ([]initialDomainValue, bool) {
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		return []initialDomainValue{
+			{Expr: goivy.NewConst("false", goivy.Boolean), Go: "false"},
+			{Expr: goivy.NewConst("true", goivy.Boolean), Go: "true"},
+		}, true
+	case *goivy.LogicEnumeratedSort:
+		vals := make([]initialDomainValue, 0, len(st.Extension))
+		for _, name := range st.Extension {
+			vals = append(vals, initialDomainValue{
+				Expr: goivy.NewConst(name, st),
+				Go:   goName(name),
+			})
+		}
+		return vals, true
+	default:
+		if rs, ok := g.rangeSortFor(s); ok {
+			lo, hi, ok := numericRangeBounds(rs)
+			if !ok || hi < lo {
+				return nil, false
+			}
+			vals := make([]initialDomainValue, 0, hi-lo+1)
+			for i := lo; i <= hi; i++ {
+				text := strconv.Itoa(i)
+				vals = append(vals, initialDomainValue{
+					Expr: goivy.NewConst(text, s),
+					Go:   text,
+				})
+			}
+			return vals, true
+		}
+		if card := g.sortCard(s); card > 0 {
+			vals := make([]initialDomainValue, 0, card)
+			for i := 0; i < card; i++ {
+				text := strconv.Itoa(i)
+				vals = append(vals, initialDomainValue{
+					Expr: goivy.NewConst(text, s),
+					Go:   text,
+				})
+			}
+			return vals, true
+		}
+		return nil, false
+	}
+}
+
+func initialZ3SortName(s goivy.Sort) string {
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		return "bool"
+	case *goivy.LogicEnumeratedSort:
+		if st.Name == "" {
+			return "int"
+		}
+		return st.Name
+	case *goivy.RangeSort:
+		if st.Name == "" {
+			return "int"
+		}
+		return st.Name
+	case *goivy.UninterpretedSort:
+		if st.Name == "" {
+			return "int"
+		}
+		return st.Name
+	default:
+		return sortName(s)
+	}
 }
 
 func (g *Generator) initialConditionActions() ([]goivy.Action, error) {

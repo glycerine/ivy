@@ -356,16 +356,25 @@ func (g *Generator) emitSet(w *goWriter, a *goivy.LogicSetAction) {
 }
 
 func (g *Generator) emitNativeAction(w *goWriter, a *goivy.LogicNativeAction) {
-	g.warnOnce("ivy2golang: native C++ action code is emitted as a Go no-op")
-	w.line("// ivy native action omitted: C++ native code is not translated to Go")
 	if a == nil {
 		return
 	}
-	code, ok := a.Code.(*goivy.NativeCode)
-	if !ok {
-		return
+	if len(g.currentReturns) > 0 {
+		allRuntimeHandles := true
+		for _, ret := range g.currentReturns {
+			if ret == nil || !g.isRuntimeHandleSort(ret.CSort) {
+				allRuntimeHandles = false
+				break
+			}
+		}
+		if allRuntimeHandles {
+			w.line("// ivy native socket-handle action omitted: Go returns the zero runtime handle")
+			return
+		}
 	}
-	for _, line := range strings.Split(code.Code, "\n") {
+	code := nativeActionCode(a)
+	g.unsupportedAt(w, a.GetLineno(), "native C++ action code is not translated to Go: %s", strings.TrimSpace(code))
+	for _, line := range strings.Split(code, "\n") {
 		line = strings.TrimRight(line, "\r")
 		if strings.TrimSpace(line) == "" {
 			continue
@@ -988,48 +997,31 @@ func (g *Generator) emitCall(w *goWriter, a *goivy.LogicCallAction) {
 	}
 	call := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(argCodes, ", "))
 	if len(a.ActualReturns) == 0 {
+		w.linef("ivy.___ivy_push(%q)", name)
 		w.line(call)
+		w.line("ivy.___ivy_pop()")
 		return
 	}
 	if len(a.ActualReturns) == 1 {
-		g.emitCallReturnAssignAt(w, a.ActualReturns[0], call, loc)
+		tmp := goName(g.nextTemp("__ivy_ret"))
+		w.linef("ivy.___ivy_push(%q)", name)
+		w.linef("%s := %s", tmp, call)
+		w.line("ivy.___ivy_pop()")
+		g.emitCallReturnAssignAt(w, a.ActualReturns[0], tmp, loc)
 		return
 	}
-	needsTemps := false
-	for _, ret := range a.ActualReturns {
-		ok, err := g.isStorageSettable(ret)
-		if err != nil {
-			g.unsupportedAt(w, loc, "unsupported call return: %s", err.Error())
-			return
-		}
-		if ok {
-			needsTemps = true
-			break
-		}
+	tmpNames := make([]string, len(a.ActualReturns))
+	for i := range a.ActualReturns {
+		tmpNames[i] = goName(g.nextTemp("__ivy_ret"))
 	}
-	if needsTemps {
-		tmpNames := make([]string, len(a.ActualReturns))
-		for i := range a.ActualReturns {
-			tmpNames[i] = goName(g.nextTemp("__ivy_ret"))
-		}
-		w.linef("%s := %s", strings.Join(tmpNames, ", "), call)
-		for i, ret := range a.ActualReturns {
-			if !g.emitCallReturnAssignAt(w, ret, tmpNames[i], loc) {
-				return
-			}
-		}
-		return
-	}
-	lhs := make([]string, len(a.ActualReturns))
+	w.linef("ivy.___ivy_push(%q)", name)
+	w.linef("%s := %s", strings.Join(tmpNames, ", "), call)
+	w.line("ivy.___ivy_pop()")
 	for i, ret := range a.ActualReturns {
-		code, err := g.emitExpr(ret)
-		if err != nil {
-			g.unsupportedAt(w, loc, "unsupported call return: %s", err.Error())
+		if !g.emitCallReturnAssignAt(w, ret, tmpNames[i], loc) {
 			return
 		}
-		lhs[i] = code
 	}
-	w.linef("%s = %s", strings.Join(lhs, ", "), call)
 }
 
 func (g *Generator) emitCallReturnAssign(w *goWriter, target goivy.Expr, rhs string) bool {

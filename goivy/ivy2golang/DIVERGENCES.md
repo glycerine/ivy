@@ -85,6 +85,20 @@ Progress:
   `if c = red { assume false }` now emit implication guards like
   `c = red -> false` before the action trace. Branches that can mutate state are
   still intentionally outside this limited fix.
+- 2026-09-22: Added `TestTargetTestLocalAssumeUsesTrialGeneratorFast`. Actions
+  whose assumptions are not statically expressible as pre-action guards now run
+  on an `__ivy_clone` trial object first; rejected candidates suppress tracing
+  and leave the original state untouched. This keeps local/nested runtime assume
+  failures from surfacing as test failures while the full solver-backed
+  generator remains open.
+- 2026-09-22: Added `TestTargetTestUsesPerActionGeneratorFast` and refactored
+  `target=test` output to emit one `*_generator` type per runnable exported
+  action. The randomized formal generation, simple defined-input extraction,
+  and syntactic/preimage guard checks now live in each action's `generate()`
+  method; the main loop calls `generate()` and only traces/executes on success.
+  This restores the Python-style action-generator contract boundary while the
+  generator internals are still the limited Go analysis rather than the full Z3
+  reverse-image plan.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -121,6 +135,16 @@ Regression test:
   predicate rather than a direct leading assume. Compare generated Go and C++
   output for `seed=1`, or at least assert the Go source contains the
   solver-backed generator plan and not just `gen.x = random`.
+
+Progress:
+
+- 2026-09-22: Added `TestTargetGenAssignedStateAssumeUsesPreimageFast` and
+  wired `target=gen` precondition collection through the same limited
+  prefix/preimage assume analysis used by `target=test`. For simple top-level
+  assignments before an assume, `target=gen` now emits guards on generated
+  inputs (for example `gen.c == green`) instead of ignoring the assume or
+  checking stale current state. Full solver-backed generator parity remains tied
+  to item 1.
 
 ## 3. Initial state generation is retry/randomized, not Python's initial model
 
@@ -168,6 +192,26 @@ Regression test:
   `initial condition` failure. Compare the initial trace/state effect with
   `ivy2cpp` where practical.
 
+Progress:
+
+- 2026-09-22: Added
+  `TestInitialAxiomThreeValueDisequalityUsesSolverModelFast`. When the existing
+  initializer-action construction leaves unresolved retry formulas, generated Go
+  now falls back to the same generation-time SMT model shape used by
+  `ivy2cpp`: solve the initial constraints, assign concrete model values for
+  used state symbols, and keep normal nondeterministic initialization for
+  unconstrained state. This removes the 1000-attempt runtime retry loop for
+  satisfiable constraints such as `saved != red` over a three-value enum. Full
+  initial-state parity for every solver expression shape still depends on the
+  model-conversion coverage of this fallback.
+- 2026-09-22: Added
+  `TestTargetGenInitialAxiomThreeValueDisequalityUsesSolverModelFast`. The same
+  generation-time initial model fallback now applies to `target=gen` when
+  finite initial constraints exist and the initializer-action analysis emits no
+  actions, so satisfiable axioms are no longer silently ignored by the gen init
+  generator. The existing target=gen hard failure for unenumerable quantified
+  initial variables is preserved.
+
 ## 4. `modelfile` is accepted but not semantically implemented
 
 Python source behavior:
@@ -204,6 +248,15 @@ Regression test:
   with at least one satisfiable action generator, run with `modelfile=...`, and
   assert the file contains `begin check` and `begin sat` (or the agreed Go
   equivalent), not just that it exists.
+
+Progress:
+
+- 2026-09-22: Added fast source-shape coverage and slow runtime content checks
+  for `modelfile`. Until generated Go has solver-backed generators, the runtime
+  now writes `ivy2golang: modelfile solver logging is not implemented for
+  generated Go` to the requested file instead of silently creating an empty,
+  misleading log. Full `begin check` / `begin sat` parity remains tied to the
+  solver-backed generator work in items 1 and 2.
 
 ## 5. Native C++ blocks, actions, types, and definitions are silently weakened
 
@@ -249,6 +302,16 @@ Regression test:
   Go hook and match the C++ trace, or fail generation with a diagnostic naming
   the native block line. It must not compile a no-op/zero-value tester.
 
+Progress:
+
+- 2026-09-22: Added fast rejection coverage for native action weakening,
+  native type placeholder weakening, and native definition zero-value stubs.
+  `ivy2golang` now fails generation for behavior-affecting native C++ actions,
+  native type interpretations, and native expression definitions instead of
+  emitting no-op or zero-value Go. Top-level native blocks remain comments, and
+  the existing runtime socket-handle factory escape hatch is preserved only for
+  native-only actions returning runtime handle sorts.
+
 ## 6. Unsupported action/expression paths can remain soft comments in generated Go
 
 Python source behavior:
@@ -287,6 +350,16 @@ Regression test:
   than emitting a compilable Go program containing only an
   `ivy2golang: unsupported ...` comment.
 
+Progress:
+
+- 2026-09-22: Added `TestUnsupportedExportedAssumeAndIfConditionsAreFatal`.
+  Unsupported non-compat exported action conditions now fail generation with
+  source locations instead of compiling away behavior as comments. The existing
+  Python/C++-compatibility path for unenumerable quantified variables remains
+  soft and source-located, preserving the Hermes-style fallback behavior while
+  preventing native expressions and other unsupported conditions from silently
+  weakening tests.
+
 ## 7. Generated randomness ignores Python's call-stack-qualified choice labels
 
 Python source behavior:
@@ -324,6 +397,16 @@ Regression test:
   choice. With a fixed seed, compare the Go and C++ traces/state observations.
   The test should fail if the helper's choices are shared only by RNG order
   instead of stack-qualified call context.
+
+Progress:
+
+- 2026-09-22: Added
+  `TestGeneratedChoicesUseCallStackQualifiedLabelsFast`. Generated Go now
+  stores `__ivy_stack`, deep-copies it for trial clones, pushes/pops labels
+  around top-level and nested action calls, builds stack-qualified choice labels,
+  and mixes those labels into the direct RNG choice/randomize path. This stops
+  `___ivy_choose` / `___ivy_randomize` from discarding `name` and `id`.
+  Solver-generator replay parity is still part of the open items 1 and 2.
 
 ## 8. The generated test loop omits reader/timer event-loop semantics
 
@@ -364,6 +447,15 @@ Regression test:
   both generated testers with a small `iters`/`wait` and assert matching trace
   ordering and `test_completed`.
 
+Progress:
+
+- 2026-09-22: Added fast source checks for the concrete runtime pieces present
+  in `ivy2golang`: the randomized test loop now calls `ivy.__tick(sleepMs)`
+  instead of hard-coding `0`, and exported `ext:_finalize` runs between
+  generated `ivy.__lock()` / `ivy.__unlock()` stubs before final wait and
+  `test_completed`. Full reader/timer `select` parity remains open until the
+  Go runtime has generated reader/timer objects to schedule.
+
 ## 9. `before_export` analysis is only partially ported
 
 Python source behavior:
@@ -397,6 +489,17 @@ Regression test:
   Assert the generated Go chooses the constrained input and executes the public
   action, matching `ivy2cpp`.
 
+Progress:
+
+- 2026-09-22: Added
+  `TestTargetTestBeforeExportNonLeadingAssumeUsesPreimageFast`. The
+  `before_export` action now feeds the same target=test preimage guard path for
+  the simple assignment-before-assume shape, while execution still calls the
+  public exported action after the trial succeeds. `target=gen` already has
+  fast coverage for leading `before_export` assumes, and the item 2 fix gives it
+  the same simple preimage slice. Full `before_export` reverse-image analysis is
+  still part of the solver-backed generator work.
+
 ## 10. Existing parity tests should be expanded from source shape to oracle traces
 
 Current state:
@@ -420,3 +523,14 @@ Short test pattern:
 - Slow: build the Go and C++ generated testers, run both with the same
   `iters/runs/seed/delay`, and compare stdout/stderr plus any model log needed
   for the feature.
+
+Progress:
+
+- 2026-09-22: Added fast focused regressions for the fixed slices above:
+  target=test per-action generators and preimage guards, target=gen preimage
+  guards, initial-state SMT fallback for target=test and target=gen, native
+  weakening rejection, fatal unsupported exported conditions, stack-qualified
+  choices, modelfile unsupported-content markers, finalizer lock ordering, and
+  before_export preimage handling. The normal `ivy2golang` and
+  `cmd/ivy2golang` test run remains under five seconds; slow C++ oracle
+  expansion is left to the final `SLOWTEST=1` pass.

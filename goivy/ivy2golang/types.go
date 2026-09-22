@@ -687,6 +687,20 @@ func (g *Generator) hasNativeSocketFactory(prefix, socketSortName string) bool {
 			}
 		}
 	}
+	if prefix == "" {
+		for name, act := range g.Mod.Actions.All() {
+			if act == nil {
+				continue
+			}
+			actionName := strings.TrimPrefix(name, "ext:")
+			if !strings.HasSuffix(actionName, ".open") && !strings.HasSuffix(actionName, ".connect") {
+				continue
+			}
+			if actionReturnsSortName(act, socketSortName) && actionContainsNativeAction(act) {
+				return true
+			}
+		}
+	}
 	return false
 }
 

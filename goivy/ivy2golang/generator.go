@@ -92,6 +92,7 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 		ClassName: className,
 	}
 	g.validatePublicActions()
+	g.validateNativeSemantics()
 	if err := joinUniqueErrors(g.errs); err != nil {
 		return nil, err
 	}
@@ -227,6 +228,167 @@ func (g *Generator) validatePublicActions() {
 			g.errs = append(g.errs, fmt.Errorf("ivy2golang: cannot handle multiple output in exported actions: %s", name))
 		}
 	}
+}
+
+func (g *Generator) validateNativeSemantics() {
+	if g == nil || g.Mod == nil {
+		return
+	}
+	if len(g.Mod.NativeTypes) > 0 {
+		names := make([]string, 0, len(g.Mod.NativeTypes))
+		for name := range g.Mod.NativeTypes {
+			names = append(names, name)
+		}
+		sort.Strings(names)
+		for _, name := range names {
+			g.errs = append(g.errs, fmt.Errorf("ivy2golang: native C++ type interpretation is not translated to Go: %s", name))
+		}
+	}
+	for _, lf := range g.Mod.NativeDefinitions {
+		if lf == nil {
+			continue
+		}
+		name := "definition"
+		if def, ok := lf.Formula.(*goivy.LogicDefinition); ok && def != nil {
+			if defName := goivy.ExprName(def.Defines()); defName != "" {
+				name = defName
+			}
+		}
+		err := fmt.Errorf("ivy2golang: native C++ expression definition is not translated to Go: %s", name)
+		g.errs = append(g.errs, errorAt(labeledFormulaLocation(lf), err))
+	}
+	if g.Mod.Actions == nil {
+		return
+	}
+	for name, act := range g.Mod.Actions.All() {
+		if act == nil || !actionContainsNativeAction(act) || g.actionAllowsNativeRuntimeHandleFactory(act) {
+			continue
+		}
+		err := fmt.Errorf("ivy2golang: native C++ action code is not translated to Go in action %s", name)
+		if native := firstNativeAction(act); native != nil {
+			g.errs = append(g.errs, errorAt(native.GetLineno(), err))
+		} else {
+			g.errs = append(g.errs, err)
+		}
+	}
+}
+
+func labeledFormulaLocation(lf *goivy.LabeledFormula) goivy.Location {
+	if lf == nil {
+		return goivy.Location{}
+	}
+	if withLoc, ok := lf.Formula.(interface{ GetLineno() goivy.Location }); ok {
+		if loc := withLoc.GetLineno(); loc != (goivy.Location{}) {
+			return loc
+		}
+	}
+	if line := lf.Lineno(); line > 0 {
+		return goivy.Location{Line: line}
+	}
+	return goivy.Location{}
+}
+
+func firstNativeAction(act goivy.Action) *goivy.LogicNativeAction {
+	switch a := act.(type) {
+	case nil:
+		return nil
+	case *goivy.LogicNativeAction:
+		return a
+	}
+	for _, child := range act.ActionArgs() {
+		childAct, ok := child.(goivy.Action)
+		if !ok {
+			continue
+		}
+		if native := firstNativeAction(childAct); native != nil {
+			return native
+		}
+	}
+	return nil
+}
+
+func (g *Generator) actionAllowsNativeRuntimeHandleFactory(act goivy.Action) bool {
+	if g == nil || act == nil || !actionReturnsOnlyRuntimeHandles(g, act) {
+		return false
+	}
+	return actionContainsNativeAction(act)
+}
+
+func actionReturnsOnlyRuntimeHandles(g *Generator, act goivy.Action) bool {
+	if g == nil || act == nil {
+		return false
+	}
+	returns := act.GetFormalReturns()
+	if len(returns) == 0 {
+		return false
+	}
+	for _, ret := range returns {
+		if ret == nil || !g.isRuntimeHandleSort(ret.CSort) {
+			return false
+		}
+	}
+	return true
+}
+
+func nativeActionsAllMatchZeroHandleReturn(act goivy.Action, returns []*goivy.Const) bool {
+	switch a := act.(type) {
+	case nil:
+		return true
+	case *goivy.LogicNativeAction:
+		return nativeActionMatchesZeroHandleReturn(a, returns)
+	}
+	for _, child := range act.ActionArgs() {
+		childAct, ok := child.(goivy.Action)
+		if !ok {
+			continue
+		}
+		if !nativeActionsAllMatchZeroHandleReturn(childAct, returns) {
+			return false
+		}
+	}
+	return true
+}
+
+func nativeActionMatchesZeroHandleReturn(a *goivy.LogicNativeAction, returns []*goivy.Const) bool {
+	if a == nil || len(returns) == 0 {
+		return false
+	}
+	code := nativeActionCode(a)
+	if code == "" {
+		return false
+	}
+	norm := normalizeNativeCode(code)
+	for _, ret := range returns {
+		if ret == nil || ret.Name == "" {
+			return false
+		}
+		if !strings.Contains(norm, normalizeNativeCode(ret.Name+"=0;")) {
+			return false
+		}
+	}
+	return true
+}
+
+func nativeActionCode(a *goivy.LogicNativeAction) string {
+	if a == nil || a.Code == nil {
+		return ""
+	}
+	if code, ok := a.Code.(*goivy.NativeCode); ok && code != nil {
+		return code.Code
+	}
+	return a.Code.String()
+}
+
+func normalizeNativeCode(code string) string {
+	code = strings.ReplaceAll(code, "impure", "")
+	return strings.Map(func(r rune) rune {
+		switch r {
+		case ' ', '\t', '\n', '\r':
+			return -1
+		default:
+			return r
+		}
+	}, code)
 }
 
 // checkGeneratedNames mirrors ivy2cpp's member-name guard for actions, symbols,
@@ -1086,6 +1248,7 @@ func ivyAskRet(bound int) int {
 func (g *Generator) emitStruct(w *goWriter) {
 	w.open(fmt.Sprintf("type %s struct {", g.ClassName))
 	w.line("__argv []string")
+	w.line("__ivy_stack []string")
 	seen := map[string]bool{}
 	for _, sym := range g.stateSymbols() {
 		w.line(g.goStorageDecl(sym.Name, sym.Sort))
@@ -1129,18 +1292,54 @@ func (g *Generator) emitConstructor(w *goWriter) {
 	w.close("")
 	w.blank()
 	w.open(fmt.Sprintf("func (ivy *%s) ___ivy_choose(rng int, name string, id int) int {", g.ClassName))
-	w.line("_ = name")
-	w.line("_ = id")
+	w.line("label := ivy.___ivy_choice_label(name, id)")
 	w.open("if rng <= 0 {")
 	w.line("return 0")
 	w.close("")
-	w.line("return ivyRand31() % rng")
+	w.line("return (ivyRand31() + ivyLabelHash(label)) % rng")
 	w.close("")
 	w.blank()
 	w.open(fmt.Sprintf("func (ivy *%s) ___ivy_randomize(rng int, name string, id int) int {", g.ClassName))
-	w.line("_ = name")
-	w.line("_ = id")
-	w.line("return ivyRandRange64(rng)")
+	w.line("label := ivy.___ivy_choice_label(name, id)")
+	w.open("if rng <= 0 {")
+	w.line("return 0")
+	w.close("")
+	w.line("return (ivyRandRange64(rng) + ivyLabelHash(label)) % rng")
+	w.close("")
+	w.blank()
+	w.open(fmt.Sprintf("func (ivy *%s) ___ivy_push(id string) {", g.ClassName))
+	w.line("ivy.__ivy_stack = append(ivy.__ivy_stack, id)")
+	w.close("")
+	w.blank()
+	w.open(fmt.Sprintf("func (ivy *%s) ___ivy_pop() {", g.ClassName))
+	w.open("if len(ivy.__ivy_stack) > 0 {")
+	w.line("ivy.__ivy_stack = ivy.__ivy_stack[:len(ivy.__ivy_stack)-1]")
+	w.close("")
+	w.close("")
+	w.blank()
+	w.open(fmt.Sprintf("func (ivy *%s) ___ivy_choice_label(name string, id int) string {", g.ClassName))
+	w.line("leaf := fmt.Sprintf(\"%s:%d\", name, id)")
+	w.open("if len(ivy.__ivy_stack) == 0 {")
+	w.line("return leaf")
+	w.close("")
+	w.line("parts := append([]string{}, ivy.__ivy_stack...)")
+	w.line("parts = append(parts, leaf)")
+	w.line("return strings.Join(parts, \".\")")
+	w.close("")
+	w.blank()
+	w.open("func ivyLabelHash(label string) int {")
+	w.line("var h uint32 = 2166136261")
+	w.open("for i := 0; i < len(label); i++ {")
+	w.line("h ^= uint32(label[i])")
+	w.line("h *= 16777619")
+	w.close("")
+	w.line("return int(h & 0x7fffffff)")
+	w.close("")
+	w.blank()
+	w.open(fmt.Sprintf("func (ivy *%s) __lock() {", g.ClassName))
+	w.close("")
+	w.blank()
+	w.open(fmt.Sprintf("func (ivy *%s) __unlock() {", g.ClassName))
 	w.close("")
 	w.blank()
 }
@@ -1151,6 +1350,9 @@ func (g *Generator) emitClone(w *goWriter) {
 	w.line("return nil")
 	w.close("")
 	w.line("clone := *ivy")
+	w.open("if ivy.__ivy_stack != nil {")
+	w.line("clone.__ivy_stack = append([]string(nil), ivy.__ivy_stack...)")
+	w.close("")
 	for _, sym := range g.stateSymbols() {
 		g.emitCloneStorage(w, sym.Name, sym.Sort)
 	}
@@ -1205,6 +1407,36 @@ func (g *Generator) emitCloneProgressStorage(w *goWriter, p progressDecl) {
 func (g *Generator) emitInitialState(w *goWriter) {
 	w.open(fmt.Sprintf("func (ivy *%s) __initState() {", g.ClassName))
 	retryFormulas := g.initialStateRetryFormulas()
+	acts, err := g.initialConditionActions()
+	if err != nil {
+		if g.Config.Target != "gen" {
+			if solveErr := g.emitSolvedInitialState(w); solveErr == nil {
+				w.close("")
+				w.blank()
+				return
+			}
+		}
+		g.unsupportedAt(w, initialErrorLocation(err), "unsupported initial condition: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
+		w.close("")
+		w.blank()
+		return
+	}
+	if len(retryFormulas) > 0 {
+		if solveErr := g.emitSolvedInitialState(w); solveErr == nil {
+			w.close("")
+			w.blank()
+			return
+		}
+	}
+	if g.Config.Target == "gen" && len(acts) == 0 {
+		if constraints, constraintsErr := g.initialStateConstraints(); constraintsErr == nil && len(constraints.Formulas) > 0 {
+			if solveErr := g.emitSolvedInitialState(w); solveErr == nil {
+				w.close("")
+				w.blank()
+				return
+			}
+		}
+	}
 	if len(retryFormulas) > 0 {
 		w.open("for __ivy_init_attempt := 0; ; __ivy_init_attempt++ {")
 	}
@@ -1214,13 +1446,8 @@ func (g *Generator) emitInitialState(w *goWriter) {
 		}
 		g.emitRandomizeSymbol(w, sym, "init")
 	}
-	acts, err := g.initialConditionActions()
-	if err != nil {
-		g.unsupportedAt(w, initialErrorLocation(err), "unsupported initial condition: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
-	} else {
-		for _, act := range acts {
-			g.emitAction(w, act)
-		}
+	for _, act := range acts {
+		g.emitAction(w, act)
 	}
 	if len(retryFormulas) > 0 {
 		if expr, err := g.initialStateRetryExpr(retryFormulas); err != nil {
@@ -1813,6 +2040,7 @@ func (g *Generator) emitRuntimeFileOptionCases(w *goWriter) {
 	w.line("os.Exit(1)")
 	w.close("")
 	w.line("__ivy_modelfile_opened = true")
+	w.line(`fmt.Fprintln(__ivy_modelfile_file, "ivy2golang: modelfile solver logging is not implemented for generated Go")`)
 	w.line("defer __ivy_modelfile_file.Close()")
 	w.line("continue")
 	w.indent--
@@ -2490,6 +2718,7 @@ func (g *Generator) runnableActionNamesFrom(names []string) []string {
 
 func (g *Generator) emitTestMain(w *goWriter) {
 	runnable := g.runnableActionNames()
+	g.emitTestActionGeneratorTypes(w, runnable)
 	w.open(fmt.Sprintf("func %s() {", g.Config.MainName))
 	if len(g.Mod.Params) == 0 {
 		w.line("opts, rest, optArgs := parseIvyTestArgs(os.Args[1:])")
@@ -2514,6 +2743,60 @@ func (g *Generator) emitTestMain(w *goWriter) {
 	w.close("")
 	w.close("")
 	w.blank()
+}
+
+func (g *Generator) emitTestActionGeneratorTypes(w *goWriter, runnable []string) {
+	for _, name := range runnable {
+		act, _ := g.Mod.Actions.Get2(name)
+		genAct := g.actionGeneratorAnalysisAction(name, act)
+		typeName := g.goActionGeneratorTypeName(name)
+		w.open(fmt.Sprintf("type %s struct {", typeName))
+		w.linef("ivy *%s", g.ClassName)
+		if act != nil {
+			for _, p := range act.GetFormalParams() {
+				w.linef("%s %s", goName(p.Name), g.goType(p.CSort))
+			}
+		}
+		w.close("")
+		w.blank()
+		w.open(fmt.Sprintf("func (gen *%s) generate() bool {", typeName))
+		g.emitTestActionGeneratorGenerate(w, name, genAct)
+		w.close("")
+		w.blank()
+	}
+}
+
+func (g *Generator) emitTestActionGeneratorGenerate(w *goWriter, name string, act goivy.Action) {
+	w.line("ivy := gen.ivy")
+	w.line("_ = ivy")
+	if act == nil {
+		w.line("return true")
+		return
+	}
+	for i, p := range act.GetFormalParams() {
+		expr, err := g.goActionParamRandomValueExpr(p.CSort, name+"."+p.Name, int64(i))
+		if err != nil {
+			g.unsupportedAt(w, p.GetLineno(), "unsupported target=test action generator parameter: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
+			continue
+		}
+		w.linef("gen.%s = %s", goName(p.Name), expr)
+	}
+	args := g.testActionGeneratorArgs(act)
+	g.emitTestActionDefinedInputs(w, name, act, args)
+	g.emitTestActionGeneratorAssumeGuards(w, name, act, args)
+	w.line("return true")
+}
+
+func (g *Generator) testActionGeneratorArgs(act goivy.Action) []string {
+	if act == nil {
+		return nil
+	}
+	formals := act.GetFormalParams()
+	args := make([]string, 0, len(formals))
+	for _, p := range formals {
+		args = append(args, "gen."+goName(p.Name))
+	}
+	return args
 }
 
 func (g *Generator) emitGenMain(w *goWriter) {
@@ -2824,7 +3107,7 @@ func (g *Generator) genActionPreconditionFormulas(name string, act goivy.Action)
 			guards = append(guards, pre)
 		}
 	}
-	guards = append(guards, leadingAssumeFormulas(act)...)
+	guards = append(guards, g.testActionPrefixPreimageAssumeFormulas(act)...)
 	return guards
 }
 
@@ -3107,20 +3390,29 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 	}
 	switch nret := len(act.GetFormalReturns()); nret {
 	case 0:
+		w.linef("ivy.___ivy_push(%q)", name)
 		w.line(call)
+		w.line("ivy.___ivy_pop()")
 		if g.Config.Trace {
 			w.line(`fmt.Fprintln(__ivy_out, "}")`)
 		}
 	case 1:
 		if g.Config.Trace {
+			w.linef("ivy.___ivy_push(%q)", name)
 			w.linef("__res := %s", call)
+			w.line("ivy.___ivy_pop()")
 			w.line(`fmt.Fprintln(__ivy_out, "}")`)
 			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__res"))
 		} else {
-			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(call))
+			w.linef("ivy.___ivy_push(%q)", name)
+			w.linef("__res := %s", call)
+			w.line("ivy.___ivy_pop()")
+			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__res"))
 		}
 	default:
+		w.linef("ivy.___ivy_push(%q)", name)
 		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
+		w.line("ivy.___ivy_pop()")
 		if g.Config.Trace {
 			w.line(`fmt.Fprintln(__ivy_out, "}")`)
 		}
@@ -3183,23 +3475,27 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 			act, _ := g.Mod.Actions.Get2(name)
 			genAct := g.actionGeneratorAnalysisAction(name, act)
 			cumulative += g.actionWeight(name)
-			argExprs := g.randomActualArgs(name, act)
 			if i == 0 {
 				w.open(fmt.Sprintf("if __choice < %s {", goFloatLiteral(cumulative)))
 			} else {
 				w.close(fmt.Sprintf(" else if __choice < %s {", goFloatLiteral(cumulative)))
 				w.indent++
 			}
-			args := argExprs
-			if len(argExprs) > 0 {
-				args = make([]string, len(argExprs))
-				for i, arg := range argExprs {
+			genVar := g.goActionGeneratorVarName(name)
+			w.linef("%s := &%s{ivy: ivy}", genVar, g.goActionGeneratorTypeName(name))
+			w.open(fmt.Sprintf("if !%s.generate() {", genVar))
+			w.line("cycle--")
+			w.line("continue")
+			w.close("")
+			var args []string
+			if act != nil {
+				formals := act.GetFormalParams()
+				args = make([]string, len(formals))
+				for i, p := range formals {
 					args[i] = fmt.Sprintf("__arg%d", i)
-					w.linef("%s := %s", args[i], arg)
+					w.linef("%s := %s.%s", args[i], genVar, goName(p.Name))
 				}
 			}
-			g.emitTestActionDefinedInputs(w, name, genAct, args)
-			g.emitTestActionAssumeGuards(w, name, genAct, args)
 			call := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(args, ", "))
 			trace := g.actionTraceLine(name, args)
 			if g.isTestImportCallback(name) {
@@ -3228,16 +3524,23 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 			w.line("ivy._generating = true")
 			switch nret := len(act.GetFormalReturns()); nret {
 			case 0:
+				w.linef("ivy.___ivy_push(%q)", name)
 				w.line(call)
+				w.line("ivy.___ivy_pop()")
 			case 1:
-				w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(call))
+				w.linef("ivy.___ivy_push(%q)", name)
+				w.linef("__ivy_result := %s", call)
+				w.line("ivy.___ivy_pop()")
+				w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__ivy_result"))
 			default:
+				w.linef("ivy.___ivy_push(%q)", name)
 				w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
+				w.line("ivy.___ivy_pop()")
 			}
 			w.line("ivy._generating = false")
 		}
 		w.close("")
-		w.line("ivy.__tick(0)")
+		w.linef("ivy.__tick(%s)", sleepMsName)
 		w.open(fmt.Sprintf("if %s > 0 {", sleepMsName))
 		w.linef("time.Sleep(time.Duration(%s) * time.Millisecond)", sleepMsName)
 		w.close("")
@@ -3256,6 +3559,7 @@ func (g *Generator) emitTestTrialActionCall(w *goWriter, fn string, act goivy.Ac
 	w.line("__ivy_assume_rejecting = true")
 	w.line("__ivy_assume_rejected = false")
 	w.line("__ivy_trial._generating = true")
+	w.linef("__ivy_trial.___ivy_push(%q)", fn)
 	nret := 0
 	if act != nil {
 		nret = len(act.GetFormalReturns())
@@ -3268,6 +3572,7 @@ func (g *Generator) emitTestTrialActionCall(w *goWriter, fn string, act goivy.Ac
 	default:
 		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
 	}
+	w.line("__ivy_trial.___ivy_pop()")
 	w.line("__ivy_trial._generating = false")
 	w.line("__ivy_trial_rejected := __ivy_assume_rejected")
 	w.line("__ivy_out = __ivy_saved_out")
@@ -3286,7 +3591,7 @@ func (g *Generator) emitTestTrialActionCall(w *goWriter, fn string, act goivy.Ac
 }
 
 func testActionNeedsTrial(act goivy.Action) bool {
-	return actionContainsCall(act)
+	return actionContainsCall(act) || actionContainsAssume(act)
 }
 
 func actionContainsCall(act goivy.Action) bool {
@@ -3302,6 +3607,25 @@ func actionContainsCall(act goivy.Action) bool {
 			continue
 		}
 		if actionContainsCall(childAct) {
+			return true
+		}
+	}
+	return false
+}
+
+func actionContainsAssume(act goivy.Action) bool {
+	if act == nil {
+		return false
+	}
+	if _, ok := act.(*goivy.LogicAssumeAction); ok {
+		return true
+	}
+	for _, child := range act.ActionArgs() {
+		childAct, ok := child.(goivy.Action)
+		if !ok {
+			continue
+		}
+		if actionContainsAssume(childAct) {
 			return true
 		}
 	}
@@ -3364,6 +3688,31 @@ func (g *Generator) emitTestActionAssumeGuards(w *goWriter, name string, act goi
 	}
 }
 
+func (g *Generator) emitTestActionGeneratorAssumeGuards(w *goWriter, name string, act goivy.Action, args []string) {
+	if act == nil {
+		return
+	}
+	if len(act.GetFormalReturns()) > 0 {
+		return
+	}
+	guards := g.testActionPreconditionFormulas(name, act)
+	if len(guards) == 0 {
+		return
+	}
+	g.pushExprOverrides(actionFormalExprOverridesToArgs(act, args))
+	defer g.popExprOverrides()
+	for _, guard := range guards {
+		expr, err := g.emitExpr(closeFormulaForGo(guard))
+		if err != nil {
+			g.unsupportedAt(w, guard.GetLineno(), "unsupported target=test action generator assume guard: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
+			continue
+		}
+		w.open(fmt.Sprintf("if !(%s) {", expr))
+		w.line("return false")
+		w.close("")
+	}
+}
+
 func actionFormalExprOverridesToArgs(act goivy.Action, args []string) map[string]string {
 	overrides := map[string]string{}
 	if act == nil {
@@ -3384,7 +3733,9 @@ func actionFormalExprOverridesToArgs(act goivy.Action, args []string) map[string
 func (g *Generator) emitTestMainTail(w *goWriter, finalMsName string) {
 	if g.hasFinalizeExport() {
 		if fn, err := funName("ext:_finalize"); err == nil {
+			w.line("ivy.__lock()")
 			w.linef("ivy.%s()", fn)
+			w.line("ivy.__unlock()")
 		}
 	}
 	w.open(fmt.Sprintf("if %s > 0 {", finalMsName))
@@ -3829,7 +4180,20 @@ func escapeComment(s string) string {
 }
 
 func (g *Generator) softUnsupported(w *goWriter, kind string, err error, loc string) {
-	w.linef("// ivy2golang: %s: %s", kind, escapeComment(goSoftUnsupportedMessage(err, loc)))
+	msg := goSoftUnsupportedMessage(err, loc)
+	if !pythonCompatibleSoftUnsupported(err) {
+		g.emitUnsupportedMessage(w, fmt.Sprintf("%s: %s", kind, msg))
+		return
+	}
+	w.linef("// ivy2golang: %s: %s", kind, escapeComment(msg))
+}
+
+func pythonCompatibleSoftUnsupported(err error) bool {
+	if err == nil {
+		return false
+	}
+	msg := err.Error()
+	return strings.Contains(msg, "cannot enumerate quantified variable")
 }
 
 func (g *Generator) warnOnce(message string) {
