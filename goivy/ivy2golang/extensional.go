@@ -39,6 +39,27 @@ func (g *Generator) quantifierSupportRels() map[string]bool {
 	return res
 }
 
+func (g *Generator) localWitnessSupportRelation(name string, fs *goivy.LogicFunctionSort) bool {
+	if name == "" {
+		return false
+	}
+	if g.quantifierSupportRels()[name] {
+		return true
+	}
+	sort, ok := g.isStateSymbolName(name)
+	if !ok {
+		return false
+	}
+	stateFS, ok := sort.(*goivy.LogicFunctionSort)
+	if !ok || len(stateFS.Domain()) == 0 || !isBooleanSort(stateFS.Range()) {
+		return false
+	}
+	if fs != nil && (len(fs.Domain()) != len(stateFS.Domain()) || !isBooleanSort(fs.Range())) {
+		return false
+	}
+	return g.goFunctionStorageFor(stateFS.Domain(), stateFS.Range()).Large
+}
+
 func (g *Generator) sparseSupportRels() map[string]bool {
 	if g == nil {
 		return nil

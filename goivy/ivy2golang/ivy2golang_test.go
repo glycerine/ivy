@@ -5691,6 +5691,390 @@ export step
 	}
 }
 
+func TestTargetTestLocalFiniteAssignFieldActionSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+individual current : cell
+action step = {
+}
+export step
+`)
+	color := mod.Sig.Sorts.Get("color")
+	cell := mod.Sig.Sorts.Get("cell")
+	choice := goivy.NewConst("choice", color)
+	greenEntry, ok := mod.Sig.Symbols.Get2("green")
+	if !ok {
+		t.Fatal("symbol green not found")
+	}
+	green := goivy.NewConst("green", greenEntry.Sort)
+	choiceGreen, err := goivy.NewEq(choice, green)
+	if err != nil {
+		t.Fatalf("choice/green NewEq: %v", err)
+	}
+	fieldSort, err := goivy.NewFunctionSort(cell, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", fieldSort)
+	current := goivy.NewConst("current", cell)
+	shadeCurrent := goivy.MustApply(shade, current)
+	shadeGreen, err := goivy.NewEq(shadeCurrent, green)
+	if err != nil {
+		t.Fatalf("shade(current) = green: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(choiceGreen),
+		goivy.NewAssignFieldAction(shade, current, choice),
+		goivy.NewAssumeAction(shadeGreen),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", choice, body))
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalfinitefieldpoint", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalfinitefieldpoint) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_local_witness_values_choice := []color{red, green}`,
+		`ivy.current.shade = choice`,
+		`ivyAssume((ivy.current.shade == green)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local finite assign-field body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local finite assign-field action should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalRelationAssignFieldActionSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+relation allowed(C:cell)
+action step = {
+}
+export step
+`)
+	color := mod.Sig.Sorts.Get("color")
+	cell := mod.Sig.Sorts.Get("cell")
+	x := goivy.NewConst("x", cell)
+	greenEntry, ok := mod.Sig.Symbols.Get2("green")
+	if !ok {
+		t.Fatal("symbol green not found")
+	}
+	green := goivy.NewConst("green", greenEntry.Sort)
+	allowed, err := mod.Sig.FindSymbol("allowed", false)
+	if err != nil {
+		t.Fatalf("FindSymbol allowed: %v", err)
+	}
+	allowedX, err := goivy.NewApply(goivy.NewConst("allowed", allowed.CSort), x)
+	if err != nil {
+		t.Fatalf("NewApply allowed(x): %v", err)
+	}
+	fieldSort, err := goivy.NewFunctionSort(cell, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", fieldSort)
+	shadeX := goivy.MustApply(shade, x)
+	shadeGreen, err := goivy.NewEq(shadeX, green)
+	if err != nil {
+		t.Fatalf("shade(x) = green: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(allowedX),
+		goivy.NewAssignFieldAction(shade, x, green),
+		goivy.NewAssumeAction(shadeGreen),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", x, body))
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationfieldpoint", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationfieldpoint) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`x = __ivy_witness_key`,
+		`x.shade = green`,
+		`ivyAssume((x.shade == green)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local relation assign-field body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation assign-field action should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalRelationNullFieldActionSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+relation allowed(C:cell)
+action step = {
+}
+export step
+`)
+	color := mod.Sig.Sorts.Get("color")
+	cell := mod.Sig.Sorts.Get("cell")
+	x := goivy.NewConst("x", cell)
+	redEntry, ok := mod.Sig.Symbols.Get2("red")
+	if !ok {
+		t.Fatal("symbol red not found")
+	}
+	red := goivy.NewConst("red", redEntry.Sort)
+	allowed, err := mod.Sig.FindSymbol("allowed", false)
+	if err != nil {
+		t.Fatalf("FindSymbol allowed: %v", err)
+	}
+	allowedX, err := goivy.NewApply(goivy.NewConst("allowed", allowed.CSort), x)
+	if err != nil {
+		t.Fatalf("NewApply allowed(x): %v", err)
+	}
+	fieldSort, err := goivy.NewFunctionSort(cell, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", fieldSort)
+	shadeX := goivy.MustApply(shade, x)
+	shadeRed, err := goivy.NewEq(shadeX, red)
+	if err != nil {
+		t.Fatalf("shade(x) = red: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(allowedX),
+		goivy.NewNullFieldAction(shade, x),
+		goivy.NewAssumeAction(shadeRed),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", x, body))
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationnullfield", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationnullfield) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`x = __ivy_witness_key`,
+		`x.shade = red`,
+		`ivyAssume((x.shade == red)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local relation null-field body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation null-field action should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalRelationCopyFieldActionSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+relation allowed(C:cell)
+individual other : cell
+action step = {
+}
+export step
+`)
+	color := mod.Sig.Sorts.Get("color")
+	cell := mod.Sig.Sorts.Get("cell")
+	x := goivy.NewConst("x", cell)
+	other := goivy.NewConst("other", cell)
+	allowed, err := mod.Sig.FindSymbol("allowed", false)
+	if err != nil {
+		t.Fatalf("FindSymbol allowed: %v", err)
+	}
+	allowedX, err := goivy.NewApply(goivy.NewConst("allowed", allowed.CSort), x)
+	if err != nil {
+		t.Fatalf("NewApply allowed(x): %v", err)
+	}
+	fieldSort, err := goivy.NewFunctionSort(cell, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", fieldSort)
+	shadeX := goivy.MustApply(shade, x)
+	shadeOther := goivy.MustApply(shade, other)
+	shadeCopied, err := goivy.NewEq(shadeX, shadeOther)
+	if err != nil {
+		t.Fatalf("shade(x) = shade(other): %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(allowedX),
+		goivy.NewCopyFieldAction(x, shade, other, shade),
+		goivy.NewAssumeAction(shadeCopied),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", x, body))
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationcopyfield", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationcopyfield) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`x = __ivy_witness_key`,
+		`x.shade = ivy.other.shade`,
+		`ivyAssume((x.shade == ivy.other.shade)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local relation copy-field body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation copy-field action should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalRelationGuardedAssignFieldActionSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+relation allowed(C:cell)
+individual active : bool
+action step = {
+}
+export step
+`)
+	color := mod.Sig.Sorts.Get("color")
+	cell := mod.Sig.Sorts.Get("cell")
+	x := goivy.NewConst("x", cell)
+	activeEntry, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	active := goivy.NewConst("active", activeEntry.CSort)
+	greenEntry, ok := mod.Sig.Symbols.Get2("green")
+	if !ok {
+		t.Fatal("symbol green not found")
+	}
+	green := goivy.NewConst("green", greenEntry.Sort)
+	allowed, err := mod.Sig.FindSymbol("allowed", false)
+	if err != nil {
+		t.Fatalf("FindSymbol allowed: %v", err)
+	}
+	allowedX, err := goivy.NewApply(goivy.NewConst("allowed", allowed.CSort), x)
+	if err != nil {
+		t.Fatalf("NewApply allowed(x): %v", err)
+	}
+	fieldSort, err := goivy.NewFunctionSort(cell, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", fieldSort)
+	shadeX := goivy.MustApply(shade, x)
+	shadeGreen, err := goivy.NewEq(shadeX, green)
+	if err != nil {
+		t.Fatalf("shade(x) = green: %v", err)
+	}
+	recheck, err := goivy.NewImplies(active, shadeGreen)
+	if err != nil {
+		t.Fatalf("active -> shade(x)=green: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(allowedX),
+		goivy.NewIfAction(active, goivy.NewAssignFieldAction(shade, x, green), goivy.NewSequence()),
+		goivy.NewAssumeAction(recheck),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", x, body))
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationguardfield", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationguardfield) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`if ivy.active {`,
+		`x.shade = green`,
+		`ivyAssume((!(ivy.active) || ((x.shade == green)))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local relation guarded assign-field body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation guarded assign-field action should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
 func TestTargetTestLocalVariantFalsePointUpdateSkipsTrialFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type msg

@@ -1191,15 +1191,15 @@ func (g *Generator) emitLocalRelationGroupWitnessInits(w *goWriter, locals []loc
 				continue
 			}
 			relName := goivy.ExprName(app.Func)
-			if relName == "" || !g.quantifierSupportRels()[relName] {
-				continue
-			}
 			sort, ok := g.isStateSymbolName(relName)
 			if !ok {
 				continue
 			}
 			fs, ok := sort.(*goivy.LogicFunctionSort)
 			if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
+				continue
+			}
+			if !g.localWitnessSupportRelation(relName, fs) {
 				continue
 			}
 			type assignment struct {
@@ -1302,15 +1302,15 @@ func (g *Generator) emitLocalNegatedRelationGroupWitnessInits(w *goWriter, local
 				continue
 			}
 			relName := goivy.ExprName(app.Func)
-			if relName == "" || !g.quantifierSupportRels()[relName] {
-				continue
-			}
 			sort, ok := g.isStateSymbolName(relName)
 			if !ok {
 				continue
 			}
 			fs, ok := sort.(*goivy.LogicFunctionSort)
 			if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
+				continue
+			}
+			if !g.localWitnessSupportRelation(relName, fs) {
 				continue
 			}
 			type assignment struct {
@@ -1781,7 +1781,7 @@ func (g *Generator) emitLocalNegatedWitnessInit(w *goWriter, localName string, l
 		return false
 	}
 	relName := goivy.ExprName(app.Func)
-	if relName == "" || !g.quantifierSupportRels()[relName] {
+	if !g.localWitnessSupportRelation(relName, fs) {
 		return false
 	}
 	fallbackConds, hasFallback := g.localWitnessSmallIntFallbackConds(localName, localSort, body)
@@ -2172,12 +2172,12 @@ func (g *Generator) findLocalWitnessApply(localName string, localSort goivy.Sort
 			return g.findLocalWitnessApply(localName, localSort, n.Atom, ignored)
 		}
 	case *goivy.Apply:
-		name := goivy.ExprName(n.Func)
-		if name == "" || !g.quantifierSupportRels()[name] {
-			return nil, -1, nil, false
-		}
 		fs, ok := n.Func.NodeSort().(*goivy.LogicFunctionSort)
 		if !ok || len(fs.Domain()) != len(n.Terms) || !isBooleanSort(fs.Range()) {
+			return nil, -1, nil, false
+		}
+		name := goivy.ExprName(n.Func)
+		if !g.localWitnessSupportRelation(name, fs) {
 			return nil, -1, nil, false
 		}
 		pos := -1

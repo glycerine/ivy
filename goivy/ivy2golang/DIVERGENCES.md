@@ -1266,6 +1266,27 @@ Progress:
   relation updates as modeled point updates, so negative relation-set forms
   such as `~seen(x)` after a variant witness avoid the hidden runtime trial
   path just like assignment-form `seen(x) := false`.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationAssignFieldActionSkipsTrialFast`. Local witness
+  initialization now scans thunk-backed boolean relation overrides even when the
+  relation is not classified as a global quantifier-support relation, and the
+  zero-formal proof models destructor `AssignFieldAction` updates followed by
+  matching field equality assumes. This covers shapes like selecting `x` from
+  `allowed(x)`, assigning `shade(x) := green`, and rechecking
+  `shade(x) = green` without a hidden trial clone.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationNullFieldActionSkipsTrialFast` and
+  `TestTargetTestLocalRelationCopyFieldActionSkipsTrialFast`. The same
+  zero-formal field-update proof now lowers destructor `NullFieldAction` to the
+  field's Go zero value and `CopyFieldAction` to an ordinary field-reference
+  RHS, so relation-selected local objects can be nulled or copied and
+  immediately rechecked without a hidden trial clone.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationGuardedAssignFieldActionSkipsTrialFast`. The
+  zero-formal field-update proof is now branch-aware for one-sided conditional
+  destructor field writes, so implication/OR/ITE rechecks such as
+  `active -> shade(x) = green` activate the matching guarded update instead of
+  forcing a hidden trial clone.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -2657,6 +2678,18 @@ Progress:
   `TestTargetTestLocalVariantNegativeSetActionPointUpdateSkipsTrialFast` for
   the negative explicit `LogicSetAction` variant-local point-update shape,
   keeping that no-hidden-trial guarantee in the fast in-process suite.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationAssignFieldActionSkipsTrialFast` for the
+  destructor-field analogue of relation point updates, covering relation-backed
+  local witness selection and direct field rechecks without whole-process runs.
+- 2026-09-22: Added the null/copy companions
+  `TestTargetTestLocalRelationNullFieldActionSkipsTrialFast` and
+  `TestTargetTestLocalRelationCopyFieldActionSkipsTrialFast`, keeping the
+  destructor field-action coverage fast and in-process.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationGuardedAssignFieldActionSkipsTrialFast` for
+  branch-sensitive destructor field updates and implication-style rechecks,
+  again without building or running a generated tester binary.
 - 2026-09-22: Strengthened that conditional local relation coverage to require
   branch-specific `if/else` relation scans, and added the target=test
   no-hidden-trial state-copy/recheck regression for the same conditional shape.

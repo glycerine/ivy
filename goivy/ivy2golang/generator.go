@@ -10445,6 +10445,7 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 	relationGroupWitnesses := []localRelationGroupWitness{}
 	modeledLocals := map[string]bool{}
 	relationPointUpdates := []localRelationPointUpdate{}
+	fieldUpdates := []localFieldUpdate{}
 	stateFromLocal := map[goivy.NodeKey]string{}
 	seenWitness := false
 	witnessPhase := true
@@ -10466,7 +10467,8 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 			if g.localVariantStateAssumeCovered(a.Formula, stateFromLocal, witnesses) ||
 				localRelationStateAssumeCovered(a.Formula, stateFromLocal, relationWitnesses) ||
 				localRelationGroupStateAssumeCovered(a.Formula, stateFromLocal, relationGroupWitnesses) ||
-				localRelationPointAssumeCovered(a.Formula, stateFromLocal, relationPointUpdates) {
+				localRelationPointAssumeCovered(a.Formula, stateFromLocal, relationPointUpdates) ||
+				localFieldAssumeCovered(a.Formula, stateFromLocal, fieldUpdates) {
 				return true
 			}
 			if !witnessPhase {
@@ -10530,7 +10532,33 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 				return true
 			}
 			return false
+		case *goivy.LogicAssignFieldAction:
+			witnessPhase = false
+			if update, ok := localFieldUpdateFromAssignField(a, locals, modeledLocals); ok {
+				fieldUpdates = append(fieldUpdates, update)
+				return true
+			}
+			return false
+		case *goivy.LogicNullFieldAction:
+			witnessPhase = false
+			if update, ok := g.localFieldUpdateFromNullField(a, locals, modeledLocals); ok {
+				fieldUpdates = append(fieldUpdates, update)
+				return true
+			}
+			return false
+		case *goivy.LogicCopyFieldAction:
+			witnessPhase = false
+			if update, ok := localFieldUpdateFromCopyField(a, locals, modeledLocals); ok {
+				fieldUpdates = append(fieldUpdates, update)
+				return true
+			}
+			return false
 		case *goivy.LogicIfAction:
+			if update, ok := g.localFieldUpdateFromIf(a, locals, modeledLocals); ok {
+				witnessPhase = false
+				fieldUpdates = append(fieldUpdates, update)
+				return true
+			}
 			if update, ok := localRelationPointUpdateFromIf(a, locals, modeledLocals); ok {
 				witnessPhase = false
 				relationPointUpdates = append(relationPointUpdates, update)
@@ -10555,6 +10583,14 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 type localRelationPointUpdate struct {
 	app        *goivy.Apply
 	value      bool
+	guard      goivy.Expr
+	guardValue bool
+}
+
+type localFieldUpdate struct {
+	field      goivy.Expr
+	obj        goivy.Expr
+	value      goivy.Expr
 	guard      goivy.Expr
 	guardValue bool
 }
@@ -10594,15 +10630,15 @@ func (g *Generator) localRelationGroupWitness(expr goivy.Expr, locals map[string
 			continue
 		}
 		relName := goivy.ExprName(app.Func)
-		if relName == "" || !g.quantifierSupportRels()[relName] {
-			continue
-		}
 		sort, ok := g.isStateSymbolName(relName)
 		if !ok {
 			continue
 		}
 		fs, ok := sort.(*goivy.LogicFunctionSort)
 		if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
+			continue
+		}
+		if !g.localWitnessSupportRelation(relName, fs) {
 			continue
 		}
 		groupLocals := map[string]bool{}
@@ -10745,6 +10781,112 @@ func localRelationPointUpdateFromAssign(a *goivy.LogicAssignAction, locals map[s
 		}
 	}
 	return localRelationPointUpdate{app: app, value: value}, true
+}
+
+func localFieldUpdateFromAssignField(a *goivy.LogicAssignFieldAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localFieldUpdate, bool) {
+	if a == nil || a.Field == nil || a.Obj == nil || a.Value == nil {
+		return localFieldUpdate{}, false
+	}
+	fs, ok := a.Field.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok || len(fs.Domain()) == 0 {
+		return localFieldUpdate{}, false
+	}
+	localNames := map[string]bool{}
+	for name := range locals {
+		localNames[name] = true
+	}
+	name := goivy.ExprName(a.Obj)
+	if name != "" {
+		if _, isLocal := locals[name]; isLocal {
+			if !modeledLocals[name] || !sortsEqual(fs.Domain()[0], locals[name]) {
+				return localFieldUpdate{}, false
+			}
+			return localFieldUpdate{field: a.Field, obj: a.Obj, value: a.Value}, true
+		}
+		return localFieldUpdate{field: a.Field, obj: a.Obj, value: a.Value}, true
+	}
+	if exprReferencesAnyName(a.Obj, localNames) {
+		return localFieldUpdate{}, false
+	}
+	return localFieldUpdate{field: a.Field, obj: a.Obj, value: a.Value}, true
+}
+
+func (g *Generator) localFieldUpdateFromNullField(a *goivy.LogicNullFieldAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localFieldUpdate, bool) {
+	if a == nil || a.Field == nil || a.Obj == nil {
+		return localFieldUpdate{}, false
+	}
+	rng, err := fieldRangeSort(a.Field)
+	if err != nil {
+		return localFieldUpdate{}, false
+	}
+	zero, ok := g.preimageZeroValueExpr(rng)
+	if !ok {
+		return localFieldUpdate{}, false
+	}
+	return localFieldUpdateFromAssignField(goivy.NewAssignFieldAction(a.Field, a.Obj, zero), locals, modeledLocals)
+}
+
+func localFieldUpdateFromCopyField(a *goivy.LogicCopyFieldAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localFieldUpdate, bool) {
+	if a == nil || a.Field == nil || a.Dst == nil || a.SrcField == nil || a.Src == nil {
+		return localFieldUpdate{}, false
+	}
+	rhs := goivy.NewApplyUnchecked(a.SrcField, a.Src)
+	return localFieldUpdateFromAssignField(goivy.NewAssignFieldAction(a.Field, a.Dst, rhs), locals, modeledLocals)
+}
+
+func (g *Generator) localFieldUpdateFromAction(act goivy.Action, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localFieldUpdate, bool) {
+	switch a := act.(type) {
+	case *goivy.LogicAssignFieldAction:
+		return localFieldUpdateFromAssignField(a, locals, modeledLocals)
+	case *goivy.LogicNullFieldAction:
+		return g.localFieldUpdateFromNullField(a, locals, modeledLocals)
+	case *goivy.LogicCopyFieldAction:
+		return localFieldUpdateFromCopyField(a, locals, modeledLocals)
+	case *goivy.LogicSequence:
+		if a == nil || len(a.Elems) != 1 {
+			return localFieldUpdate{}, false
+		}
+		child, ok := a.Elems[0].(goivy.Action)
+		if !ok {
+			return localFieldUpdate{}, false
+		}
+		return g.localFieldUpdateFromAction(child, locals, modeledLocals)
+	default:
+		return localFieldUpdate{}, false
+	}
+}
+
+func (g *Generator) localFieldUpdateFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localFieldUpdate, bool) {
+	if a == nil || a.Cond == nil || a.ThenBody == nil {
+		return localFieldUpdate{}, false
+	}
+	thenAct, thenOK := goivy.ToAction(a.ThenBody)
+	if !thenOK {
+		return localFieldUpdate{}, false
+	}
+	elseAct, elseOK := goivy.ToAction(a.ElseBody)
+	if a.ElseBody != nil && !elseOK {
+		return localFieldUpdate{}, false
+	}
+	if localWitnessDirectNoopAction(elseAct) {
+		update, ok := g.localFieldUpdateFromAction(thenAct, locals, modeledLocals)
+		if !ok {
+			return localFieldUpdate{}, false
+		}
+		update.guard = a.Cond
+		update.guardValue = true
+		return update, true
+	}
+	if !localWitnessDirectNoopAction(thenAct) {
+		return localFieldUpdate{}, false
+	}
+	update, ok := g.localFieldUpdateFromAction(elseAct, locals, modeledLocals)
+	if !ok {
+		return localFieldUpdate{}, false
+	}
+	update.guard = a.Cond
+	update.guardValue = false
+	return update, true
 }
 
 func localRelationPointUpdateFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {
@@ -10984,6 +11126,101 @@ func localVariantWitnessForIteBranch(witness actionGeneratorVariantWitness, cond
 
 func localRelationPointAssumeCovered(expr goivy.Expr, stateFromLocal map[goivy.NodeKey]string, updates []localRelationPointUpdate) bool {
 	return localRelationPointAssumeCoveredValue(expr, nil, stateFromLocal, updates, true)
+}
+
+func localFieldAssumeCovered(expr goivy.Expr, stateFromLocal map[goivy.NodeKey]string, updates []localFieldUpdate) bool {
+	switch n := expr.(type) {
+	case *goivy.Eq:
+		return localFieldEqCovered(n.T1, n.T2, stateFromLocal, updates) ||
+			localFieldEqCovered(n.T2, n.T1, stateFromLocal, updates)
+	case *goivy.LogicLiteral:
+		return n.Polarity != 0 && localFieldAssumeCovered(n.Atom, stateFromLocal, updates)
+	case *goivy.LogicAnd:
+		for _, term := range n.Terms {
+			if !localFieldAssumeCovered(term, stateFromLocal, updates) {
+				return false
+			}
+		}
+		return len(n.Terms) > 0
+	case *goivy.LogicImplies:
+		thenUpdates := localFieldUpdatesForIteBranch(updates, n.T1, true)
+		return localFieldAssumeCovered(n.T2, stateFromLocal, thenUpdates)
+	case *goivy.LogicOr:
+		for _, term := range n.Terms {
+			if localFieldAssumeCovered(term, stateFromLocal, updates) {
+				return true
+			}
+		}
+		for i, term := range n.Terms {
+			cond, ok := localRelationPointNegatedGuardExpr(term)
+			if !ok {
+				continue
+			}
+			thenUpdates := localFieldUpdatesForIteBranch(updates, cond, true)
+			for j, other := range n.Terms {
+				if i == j {
+					continue
+				}
+				if localFieldAssumeCovered(other, stateFromLocal, thenUpdates) {
+					return true
+				}
+			}
+		}
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			if localFieldAssumeCovered(term, stateFromLocal, updates) {
+				return true
+			}
+		}
+	case *goivy.LogicIte:
+		thenUpdates := localFieldUpdatesForIteBranch(updates, n.Cond, true)
+		elseUpdates := localFieldUpdatesForIteBranch(updates, n.Cond, false)
+		return localFieldAssumeCovered(n.Then, stateFromLocal, thenUpdates) &&
+			localFieldAssumeCovered(n.Else, stateFromLocal, elseUpdates)
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return localFieldAssumeCovered(expanded, stateFromLocal, updates)
+		}
+	}
+	return false
+}
+
+func localFieldEqCovered(lhs, rhs goivy.Expr, stateFromLocal map[goivy.NodeKey]string, updates []localFieldUpdate) bool {
+	app, ok := lhs.(*goivy.Apply)
+	if !ok || app == nil || len(app.Terms) == 0 {
+		return false
+	}
+	for i := len(updates) - 1; i >= 0; i-- {
+		update := updates[i]
+		if update.guard != nil {
+			continue
+		}
+		if update.field == nil || goivy.Key(update.field) != goivy.Key(app.Func) || !exprEqual(update.value, rhs) {
+			continue
+		}
+		if localRelationPointTermCovered(update.obj, app.Terms[0], nil, stateFromLocal) {
+			return true
+		}
+	}
+	return false
+}
+
+func localFieldUpdatesForIteBranch(updates []localFieldUpdate, cond goivy.Expr, thenBranch bool) []localFieldUpdate {
+	if len(updates) == 0 {
+		return updates
+	}
+	out := make([]localFieldUpdate, 0, len(updates))
+	for _, update := range updates {
+		if update.guard != nil && exprEqual(update.guard, cond) {
+			if update.guardValue == thenBranch {
+				update.guard = nil
+				out = append(out, update)
+			}
+			continue
+		}
+		out = append(out, update)
+	}
+	return out
 }
 
 func localRelationPointAssumeCoveredValue(expr goivy.Expr, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string, updates []localRelationPointUpdate, want bool) bool {
