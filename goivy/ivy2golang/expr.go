@@ -427,6 +427,249 @@ func (g *Generator) emitVariantRelation(name string, terms []goivy.Expr) (string
 	return fmt.Sprintf("(%s.valid && %s.tag == %d && %s)", lhs, lhs, idx, g.goEqualExpr(downcast, rhs, terms[1].NodeSort())), true, nil
 }
 
+type existsVariantRelationMatch struct {
+	lhs   goivy.Expr
+	bound *goivy.LogicVariable
+	extra []goivy.Expr
+	loc   goivy.Location
+}
+
+func (g *Generator) matchExistsVariantRelation(vars []*goivy.LogicVariable, body goivy.Expr) (existsVariantRelationMatch, bool, error) {
+	if len(vars) != 1 || g == nil || g.Mod == nil {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	bound := vars[0]
+	if bound == nil {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	terms, ok := existsVariantRelationTerms(body)
+	if !ok {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	match := existsVariantRelationMatch{bound: bound}
+	found := false
+	for _, term := range terms {
+		app, loc, ok := variantRelationApply(term)
+		if !ok || goivy.ExprName(app.Func) != "*>" || len(app.Terms) != 2 || goivy.ExprName(app.Terms[1]) != bound.Name {
+			match.extra = append(match.extra, term)
+			continue
+		}
+		if found {
+			return existsVariantRelationMatch{}, false, nil
+		}
+		if !g.Mod.IsVariant(app.Terms[0].NodeSort(), bound.VSort) {
+			return existsVariantRelationMatch{}, true, fmt.Errorf("ivy2golang: %s *> %s is not a known variant relation", app.Terms[0].String(), bound.String())
+		}
+		match.lhs = app.Terms[0]
+		match.loc = loc
+		found = true
+	}
+	if !found {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	return match, true, nil
+}
+
+func variantRelationApply(expr goivy.Expr) (*goivy.Apply, goivy.Location, bool) {
+	switch n := expr.(type) {
+	case *goivy.Apply:
+		if n == nil {
+			return nil, goivy.Location{}, false
+		}
+		return n, n.GetLineno(), true
+	case *goivy.LogicLiteral:
+		if n.Polarity == 0 {
+			return nil, goivy.Location{}, false
+		}
+		app, ok := n.Atom.(*goivy.Apply)
+		if !ok || app == nil {
+			return nil, goivy.Location{}, false
+		}
+		return app, n.GetLineno(), true
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			app, ok := term.(*goivy.Apply)
+			if ok && app != nil {
+				return app, n.GetLineno(), true
+			}
+		}
+		return nil, goivy.Location{}, false
+	default:
+		return nil, goivy.Location{}, false
+	}
+}
+
+func (g *Generator) matchNegatedExistsVariantRelation(vars []*goivy.LogicVariable, body goivy.Expr) (existsVariantRelationMatch, bool, error) {
+	if len(vars) != 1 || g == nil || g.Mod == nil {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	bound := vars[0]
+	if bound == nil {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	terms, ok := existsVariantRelationTerms(body)
+	if !ok {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	match := existsVariantRelationMatch{bound: bound}
+	found := false
+	for _, term := range terms {
+		app, loc, ok := negatedVariantRelationApply(term)
+		if !ok || goivy.ExprName(app.Func) != "*>" || len(app.Terms) != 2 || goivy.ExprName(app.Terms[1]) != bound.Name {
+			match.extra = append(match.extra, term)
+			continue
+		}
+		if found {
+			return existsVariantRelationMatch{}, false, nil
+		}
+		if !g.Mod.IsVariant(app.Terms[0].NodeSort(), bound.VSort) {
+			return existsVariantRelationMatch{}, true, fmt.Errorf("ivy2golang: %s *> %s is not a known variant relation", app.Terms[0].String(), bound.String())
+		}
+		match.lhs = app.Terms[0]
+		match.loc = loc
+		found = true
+	}
+	if !found {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	return match, true, nil
+}
+
+func negatedVariantRelationApply(expr goivy.Expr) (*goivy.Apply, goivy.Location, bool) {
+	switch n := expr.(type) {
+	case *goivy.LogicNot:
+		app, ok := n.Body.(*goivy.Apply)
+		if !ok || app == nil {
+			return nil, goivy.Location{}, false
+		}
+		return app, n.GetLineno(), true
+	case *goivy.LogicLiteral:
+		if n.Polarity != 0 {
+			return nil, goivy.Location{}, false
+		}
+		app, ok := n.Atom.(*goivy.Apply)
+		if !ok || app == nil {
+			return nil, goivy.Location{}, false
+		}
+		return app, n.GetLineno(), true
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffNegativeTerms(n) {
+			app, ok := term.(*goivy.Apply)
+			if ok && app != nil {
+				return app, n.GetLineno(), true
+			}
+		}
+		return nil, goivy.Location{}, false
+	default:
+		return nil, goivy.Location{}, false
+	}
+}
+
+func existsVariantRelationTerms(expr goivy.Expr) ([]goivy.Expr, bool) {
+	switch n := expr.(type) {
+	case *goivy.LogicLet:
+		expanded, ok := actionGeneratorExpandLetExpr(n)
+		if !ok {
+			return nil, false
+		}
+		return existsVariantRelationTerms(expanded)
+	case *goivy.LogicAnd:
+		var out []goivy.Expr
+		for _, term := range n.Terms {
+			terms, ok := existsVariantRelationTerms(term)
+			if !ok {
+				return nil, false
+			}
+			out = append(out, terms...)
+		}
+		return out, true
+	default:
+		return []goivy.Expr{expr}, true
+	}
+}
+
+func (g *Generator) emitExistsVariantRelation(vars []*goivy.LogicVariable, body goivy.Expr) (string, bool, error) {
+	match, ok, err := g.matchExistsVariantRelation(vars, body)
+	if err != nil {
+		return "", true, err
+	}
+	if !ok {
+		negatedMatch, negatedOK, negatedErr := g.matchNegatedExistsVariantRelation(vars, body)
+		if negatedErr != nil {
+			return "", true, negatedErr
+		}
+		if !negatedOK {
+			return "", false, nil
+		}
+		lhs, err := g.emitExpr(negatedMatch.lhs)
+		if err != nil {
+			return "", true, err
+		}
+		idx := g.Mod.VariantIndex(negatedMatch.lhs.NodeSort(), negatedMatch.bound.VSort)
+		if idx < 0 {
+			return "", true, fmt.Errorf("ivy2golang: no variant index for %s in %s", sortName(negatedMatch.bound.VSort), sortName(negatedMatch.lhs.NodeSort()))
+		}
+		if len(negatedMatch.extra) != 0 {
+			rhs, ok := variantExistsExactPayloadWitness(negatedMatch.bound, negatedMatch.extra)
+			if !ok {
+				return "", false, nil
+			}
+			rhsExpr, err := g.emitExpr(rhs)
+			if err != nil {
+				return "", true, err
+			}
+			downcast := g.variantDowncastExpr(lhs, negatedMatch.bound.VSort)
+			return fmt.Sprintf("!((%s.valid && %s.tag == %d && %s))", lhs, lhs, idx, g.goEqualExpr(downcast, rhsExpr, negatedMatch.bound.VSort)), true, nil
+		}
+		return fmt.Sprintf("!((%s.valid && %s.tag == %d))", lhs, lhs, idx), true, nil
+	}
+	lhs, err := g.emitExpr(match.lhs)
+	if err != nil {
+		return "", true, err
+	}
+	idx := g.Mod.VariantIndex(match.lhs.NodeSort(), match.bound.VSort)
+	if idx < 0 {
+		return "", true, fmt.Errorf("ivy2golang: no variant index for %s in %s", sortName(match.bound.VSort), sortName(match.lhs.NodeSort()))
+	}
+	if len(match.extra) == 0 {
+		return fmt.Sprintf("(%s.valid && %s.tag == %d)", lhs, lhs, idx), true, nil
+	}
+	bodyExpr := match.extra[0]
+	if len(match.extra) > 1 {
+		and, err := goivy.NewAnd(match.extra...)
+		if err != nil {
+			return "", true, err
+		}
+		bodyExpr = and
+	}
+	var w goWriter
+	w.raw("func() bool {\n")
+	w.indent++
+	w.open(fmt.Sprintf("if !(%s.valid && %s.tag == %d) {", lhs, lhs, idx))
+	w.line("return false")
+	w.close("")
+	name := goName(match.bound.Name)
+	w.linef("%s := %s", name, g.variantDowncastExpr(lhs, match.bound.VSort))
+	w.linef("_ = %s", name)
+	expr, err := g.emitExpr(bodyExpr)
+	if err != nil {
+		return "", true, err
+	}
+	w.linef("return %s", expr)
+	w.indent--
+	w.raw("}")
+	return "(" + strings.TrimSpace(w.String()) + ")()", true, nil
+}
+
+func variantExistsExactPayloadWitness(bound *goivy.LogicVariable, exprs []goivy.Expr) (goivy.Expr, bool) {
+	for _, expr := range exprs {
+		if value, ok := variantExistsExactPayloadWitnessTerm(bound, expr); ok {
+			return value, true
+		}
+	}
+	return nil, false
+}
+
 func isInfix(name string) bool {
 	switch name {
 	case "+", "-", "*", "/", "%", "<", "<=", ">", ">=":
@@ -439,6 +682,11 @@ func isInfix(name string) bool {
 func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, forall bool) (string, error) {
 	if len(vars) == 0 {
 		return g.emitExpr(body)
+	}
+	if !forall {
+		if code, ok, err := g.emitExistsVariantRelation(vars, body); ok || err != nil {
+			return code, err
+		}
 	}
 	exists := !forall
 	if len(vars) > 0 && g.goIsAnyIntegerType(vars[0].VSort) {

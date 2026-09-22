@@ -1127,7 +1127,14 @@ func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
 		w.linef("_ = %s", localName)
 	}
 	g.emitLocalRelationGroupWitnessInits(w, locals, body)
+	g.emitLocalNegatedRelationGroupWitnessInits(w, locals, body)
 	for _, local := range locals {
+		if g.emitLocalVariantWitnessInit(w, local.name, local.sort, body) {
+			continue
+		}
+		if g.emitLocalNegatedWitnessInit(w, local.name, local.sort, body) {
+			continue
+		}
 		if g.emitLocalWitnessInit(w, local.name, local.sort, body) {
 			continue
 		}
@@ -1263,6 +1270,137 @@ func (g *Generator) emitLocalRelationGroupWitnessInits(w *goWriter, locals []loc
 	return emitted
 }
 
+func (g *Generator) emitLocalNegatedRelationGroupWitnessInits(w *goWriter, locals []localDecl, body goivy.Expr) bool {
+	if g == nil || w == nil || len(locals) < 2 || body == nil {
+		return false
+	}
+	if g.Config.Target != "test" && g.Config.Target != "gen" {
+		return false
+	}
+	act, ok := body.(goivy.Action)
+	if !ok {
+		return false
+	}
+	localByName := map[string]localDecl{}
+	allNames := map[string]bool{}
+	for _, local := range locals {
+		if local.name == "" || local.sort == nil {
+			continue
+		}
+		localByName[local.name] = local
+		allNames[local.name] = true
+	}
+	if len(localByName) < 2 {
+		return false
+	}
+	emitted := false
+	groupID := 0
+	for _, f := range localWitnessAssumeFormulas(act) {
+		for _, candidate := range actionGeneratorNegatedRelationWitnessGroupCandidates(f) {
+			app := candidate.app
+			if app == nil {
+				continue
+			}
+			relName := goivy.ExprName(app.Func)
+			if relName == "" || !g.quantifierSupportRels()[relName] {
+				continue
+			}
+			sort, ok := g.isStateSymbolName(relName)
+			if !ok {
+				continue
+			}
+			fs, ok := sort.(*goivy.LogicFunctionSort)
+			if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
+				continue
+			}
+			type assignment struct {
+				name string
+				pos  int
+			}
+			var assignments []assignment
+			seenTargets := map[string]bool{}
+			var conds []string
+			valid := true
+			for i, term := range app.Terms {
+				if name, ok := localWitnessBareLocalName(term, localByName); ok {
+					local := localByName[name]
+					if seenTargets[name] || !sortsEqual(fs.Domain()[i], local.sort) {
+						valid = false
+						break
+					}
+					seenTargets[name] = true
+					assignments = append(assignments, assignment{name: name, pos: i})
+					continue
+				}
+				if exprReferencesAnyNameIncludingVariables(term, allNames) {
+					valid = false
+					break
+				}
+				if exprReferencesAnyNameIncludingVariables(term, candidate.ignored) {
+					continue
+				}
+				expr, err := g.emitExpr(term)
+				if err != nil {
+					valid = false
+					break
+				}
+				keyExpr := fmt.Sprintf("__ivy_local_neg_group_witness_key_%d", groupID)
+				if len(app.Terms) != 1 {
+					keyExpr = fmt.Sprintf("%s.A%d", keyExpr, i)
+				}
+				conds = append(conds, fmt.Sprintf("(%s == %s)", keyExpr, expr))
+			}
+			if !valid || len(assignments) < 2 {
+				continue
+			}
+			bump := -1
+			for i, assignment := range assignments {
+				if g.goType(fs.Domain()[assignment.pos]) == "int" {
+					bump = i
+					break
+				}
+			}
+			if bump < 0 {
+				continue
+			}
+			key := fmt.Sprintf("__ivy_local_neg_group_witness_key_%d", groupID)
+			val := fmt.Sprintf("__ivy_local_neg_group_witness_val_%d", groupID)
+			w.open(fmt.Sprintf("for %s, %s := range %s {", key, val, g.goStorageRangeExpr(relName, fs, "ivy")))
+			if len(conds) > 0 {
+				w.open("if " + strings.Join(conds, " && ") + " {")
+			}
+			w.open(fmt.Sprintf("if %s {", val))
+			for i, assignment := range assignments {
+				rhs := key
+				if len(app.Terms) != 1 {
+					rhs = fmt.Sprintf("%s.A%d", key, assignment.pos)
+				}
+				if i == bump {
+					rhs += " + 1"
+				}
+				w.linef("%s = %s", goName(assignment.name), rhs)
+			}
+			w.close(" else {")
+			for _, assignment := range assignments {
+				rhs := key
+				if len(app.Terms) != 1 {
+					rhs = fmt.Sprintf("%s.A%d", key, assignment.pos)
+				}
+				w.linef("%s = %s", goName(assignment.name), rhs)
+			}
+			w.close("")
+			w.line("break")
+			if len(conds) > 0 {
+				w.close("")
+			}
+			w.close("")
+			emitted = true
+			groupID++
+		}
+	}
+	return emitted
+}
+
 func localWitnessBareLocalName(expr goivy.Expr, locals map[string]localDecl) (string, bool) {
 	switch n := expr.(type) {
 	case *goivy.Const:
@@ -1280,61 +1418,40 @@ func (g *Generator) emitLocalWitnessInit(w *goWriter, localName string, localSor
 	if g == nil || w == nil || localName == "" || body == nil {
 		return false
 	}
+	if cond, thenWitness, elseWitness, ok := g.localIteWitnessApply(localName, localSort, body); ok {
+		condExpr, err := g.emitExpr(cond)
+		if err != nil {
+			return false
+		}
+		thenPlan, ok := g.localWitnessScanPlan(thenWitness.app, thenWitness.pos, thenWitness.ignored)
+		if !ok {
+			return false
+		}
+		elsePlan, ok := g.localWitnessScanPlan(elseWitness.app, elseWitness.pos, elseWitness.ignored)
+		if !ok {
+			return false
+		}
+		w.open("if " + condExpr + " {")
+		g.emitLocalWitnessScanPlan(w, localName, thenPlan, "")
+		w.close(" else {")
+		g.emitLocalWitnessScanPlan(w, localName, elsePlan, "")
+		w.close("")
+		return true
+	}
 	app, pos, ignored, ok := g.localWitnessBoundApply(localName, localSort, body)
 	if !ok {
 		return false
 	}
-	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
-	if !ok || len(fs.Domain()) == 0 || !isBooleanSort(fs.Range()) {
+	plan, ok := g.localWitnessScanPlan(app, pos, ignored)
+	if !ok {
 		return false
-	}
-	relName := goivy.ExprName(app.Func)
-	if relName == "" {
-		return false
-	}
-	var conds []string
-	for i, term := range app.Terms {
-		if i == pos {
-			continue
-		}
-		if exprReferencesAnyNameIncludingVariables(term, ignored) {
-			continue
-		}
-		expr, err := g.emitExpr(term)
-		if err != nil {
-			return false
-		}
-		keyExpr := "__ivy_witness_key"
-		if len(app.Terms) != 1 {
-			keyExpr = fmt.Sprintf("__ivy_witness_key.A%d", i)
-		}
-		conds = append(conds, fmt.Sprintf("(%s == %s)", keyExpr, expr))
-	}
-	assignExpr := "__ivy_witness_key"
-	if len(app.Terms) != 1 {
-		assignExpr = fmt.Sprintf("__ivy_witness_key.A%d", pos)
 	}
 	fallbackConds, hasFallback := g.localWitnessSmallIntFallbackConds(localName, localSort, body)
 	foundName := "__ivy_local_witness_found_" + goName(localName)
 	if hasFallback {
 		w.linef("%s := false", foundName)
 	}
-	w.open(fmt.Sprintf("for __ivy_witness_key, __ivy_witness_val := range %s {", g.goStorageRangeExpr(relName, fs, "ivy")))
-	w.open("if !__ivy_witness_val {")
-	w.line("continue")
-	w.close("")
-	if len(conds) > 0 {
-		w.open("if " + strings.Join(conds, " && ") + " {")
-	}
-	w.linef("%s = %s", goName(localName), assignExpr)
-	if hasFallback {
-		w.linef("%s = true", foundName)
-	}
-	w.line("break")
-	if len(conds) > 0 {
-		w.close("")
-	}
-	w.close("")
+	g.emitLocalWitnessScanPlan(w, localName, plan, foundNameIf(hasFallback, foundName))
 	if hasFallback {
 		base := goName(localName)
 		candidateName := "__ivy_local_witness_fallback_" + base
@@ -1349,6 +1466,431 @@ func (g *Generator) emitLocalWitnessInit(w *goWriter, localName string, localSor
 		w.close("")
 	}
 	return true
+}
+
+type localWitnessApplyPlan struct {
+	app     *goivy.Apply
+	pos     int
+	ignored map[string]bool
+}
+
+type localWitnessScanPlan struct {
+	relName    string
+	sort       *goivy.LogicFunctionSort
+	conditions []string
+	assignExpr string
+}
+
+func foundNameIf(ok bool, name string) string {
+	if !ok {
+		return ""
+	}
+	return name
+}
+
+func (g *Generator) localIteWitnessApply(localName string, localSort goivy.Sort, body goivy.Expr) (goivy.Expr, localWitnessApplyPlan, localWitnessApplyPlan, bool) {
+	act, ok := body.(goivy.Action)
+	if !ok {
+		return nil, localWitnessApplyPlan{}, localWitnessApplyPlan{}, false
+	}
+	for _, f := range localWitnessAssumeFormulas(act) {
+		if cond, thenWitness, elseWitness, ok := g.localIteWitnessApplyFormula(localName, localSort, f, nil); ok {
+			return cond, thenWitness, elseWitness, true
+		}
+	}
+	return nil, localWitnessApplyPlan{}, localWitnessApplyPlan{}, false
+}
+
+func (g *Generator) localIteWitnessApplyFormula(localName string, localSort goivy.Sort, f goivy.Expr, ignored map[string]bool) (goivy.Expr, localWitnessApplyPlan, localWitnessApplyPlan, bool) {
+	switch n := f.(type) {
+	case *goivy.LogicIte:
+		thenApp, thenPos, thenIgnored, thenOK := g.findLocalWitnessApply(localName, localSort, n.Then, ignored)
+		elseApp, elsePos, elseIgnored, elseOK := g.findLocalWitnessApply(localName, localSort, n.Else, ignored)
+		if thenOK && elseOK {
+			return n.Cond,
+				localWitnessApplyPlan{app: thenApp, pos: thenPos, ignored: thenIgnored},
+				localWitnessApplyPlan{app: elseApp, pos: elsePos, ignored: elseIgnored},
+				true
+		}
+	case *goivy.LogicLiteral:
+		if n.Polarity != 0 {
+			return g.localIteWitnessApplyFormula(localName, localSort, n.Atom, ignored)
+		}
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return g.localIteWitnessApplyFormula(localName, localSort, expanded, ignored)
+		}
+	}
+	return nil, localWitnessApplyPlan{}, localWitnessApplyPlan{}, false
+}
+
+func (g *Generator) localWitnessScanPlan(app *goivy.Apply, pos int, ignored map[string]bool) (localWitnessScanPlan, bool) {
+	if app == nil {
+		return localWitnessScanPlan{}, false
+	}
+	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok || len(fs.Domain()) == 0 || !isBooleanSort(fs.Range()) {
+		return localWitnessScanPlan{}, false
+	}
+	relName := goivy.ExprName(app.Func)
+	if relName == "" {
+		return localWitnessScanPlan{}, false
+	}
+	var conds []string
+	for i, term := range app.Terms {
+		if i == pos {
+			continue
+		}
+		if exprReferencesAnyNameIncludingVariables(term, ignored) {
+			continue
+		}
+		expr, err := g.emitExpr(term)
+		if err != nil {
+			return localWitnessScanPlan{}, false
+		}
+		keyExpr := "__ivy_witness_key"
+		if len(app.Terms) != 1 {
+			keyExpr = fmt.Sprintf("__ivy_witness_key.A%d", i)
+		}
+		conds = append(conds, fmt.Sprintf("(%s == %s)", keyExpr, expr))
+	}
+	assignExpr := "__ivy_witness_key"
+	if len(app.Terms) != 1 {
+		assignExpr = fmt.Sprintf("__ivy_witness_key.A%d", pos)
+	}
+	return localWitnessScanPlan{
+		relName:    relName,
+		sort:       fs,
+		conditions: conds,
+		assignExpr: assignExpr,
+	}, true
+}
+
+func (g *Generator) emitLocalWitnessScanPlan(w *goWriter, localName string, plan localWitnessScanPlan, foundName string) {
+	w.open(fmt.Sprintf("for __ivy_witness_key, __ivy_witness_val := range %s {", g.goStorageRangeExpr(plan.relName, plan.sort, "ivy")))
+	w.open("if !__ivy_witness_val {")
+	w.line("continue")
+	w.close("")
+	if len(plan.conditions) > 0 {
+		w.open("if " + strings.Join(plan.conditions, " && ") + " {")
+	}
+	w.linef("%s = %s", goName(localName), plan.assignExpr)
+	if foundName != "" {
+		w.linef("%s = true", foundName)
+	}
+	w.line("break")
+	if len(plan.conditions) > 0 {
+		w.close("")
+	}
+	w.close("")
+}
+
+func (g *Generator) emitLocalVariantWitnessInit(w *goWriter, localName string, localSort goivy.Sort, body goivy.Expr) bool {
+	if g == nil || w == nil || body == nil || localName == "" {
+		return false
+	}
+	if g.Config.Target != "test" && g.Config.Target != "gen" {
+		return false
+	}
+	act, ok := body.(goivy.Action)
+	if !ok {
+		return false
+	}
+	var witness actionGeneratorVariantWitness
+	found := false
+	for _, f := range localWitnessAssumeFormulas(act) {
+		if witness, ok = g.localVariantWitness(localName, localSort, f); ok {
+			found = true
+			break
+		}
+	}
+	if !found {
+		return false
+	}
+	expr, err := g.emitActionGeneratorVariantWitnessExpr(witness)
+	if err != nil {
+		return false
+	}
+	w.linef("%s = %s", goName(localName), expr)
+	return true
+}
+
+func (g *Generator) localVariantWitness(localName string, localSort goivy.Sort, f goivy.Expr) (actionGeneratorVariantWitness, bool) {
+	switch n := f.(type) {
+	case *goivy.Apply:
+		if goivy.ExprName(n.Func) != "*>" || len(n.Terms) != 2 {
+			return actionGeneratorVariantWitness{}, false
+		}
+		lhs, rhs := n.Terms[0], n.Terms[1]
+		if !localVariantWitnessLHS(localName, localSort, lhs) || exprContainsLogicVariable(rhs) {
+			return actionGeneratorVariantWitness{}, false
+		}
+		super, sub := lhs.NodeSort(), rhs.NodeSort()
+		if !g.Mod.IsVariant(super, sub) {
+			return actionGeneratorVariantWitness{}, false
+		}
+		return actionGeneratorVariantWitness{
+			lhs:   lhs,
+			rhs:   rhs,
+			super: super,
+			sub:   sub,
+			loc:   n.GetLineno(),
+		}, true
+	case *goivy.LogicExists:
+		match, ok, err := g.matchExistsVariantRelation(n.Variables, n.Body)
+		if ok && err == nil && localVariantWitnessLHS(localName, localSort, match.lhs) {
+			rhs, rhsDelta := g.variantExistsPayloadWitness(match.bound, match.extra)
+			return actionGeneratorVariantWitness{
+				lhs:      match.lhs,
+				rhs:      rhs,
+				rhsDelta: rhsDelta,
+				super:    match.lhs.NodeSort(),
+				sub:      match.bound.VSort,
+				loc:      match.loc,
+			}, true
+		}
+		match, ok, err = g.matchNegatedExistsVariantRelation(n.Variables, n.Body)
+		if ok && err == nil && localVariantWitnessLHS(localName, localSort, match.lhs) {
+			if witness, ok := g.siblingLocalVariantWitness(match.lhs, match.bound.VSort, match.loc); ok {
+				return witness, true
+			}
+		}
+	case *goivy.LogicAnd:
+		for _, term := range n.Terms {
+			if witness, ok := g.localVariantWitness(localName, localSort, term); ok {
+				return witness, true
+			}
+		}
+	case *goivy.LogicOr:
+		for _, term := range n.Terms {
+			if witness, ok := g.localVariantWitness(localName, localSort, term); ok {
+				return witness, true
+			}
+		}
+	case *goivy.LogicImplies:
+		return g.localVariantWitness(localName, localSort, n.T2)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			if witness, ok := g.localVariantWitness(localName, localSort, term); ok {
+				return witness, true
+			}
+		}
+		for _, term := range actionGeneratorIffNegativeTerms(n) {
+			if witness, ok := g.localNegatedVariantWitness(localName, localSort, term, n.GetLineno()); ok {
+				return witness, true
+			}
+		}
+	case *goivy.LogicIte:
+		thenWitness, thenOK := g.localVariantWitness(localName, localSort, n.Then)
+		elseWitness, elseOK := g.localVariantWitness(localName, localSort, n.Else)
+		if !thenOK || !elseOK {
+			return actionGeneratorVariantWitness{}, false
+		}
+		return actionGeneratorIteVariantWitness(n.Cond, thenWitness, elseWitness, n.GetLineno())
+	case *goivy.LogicLiteral:
+		if n.Polarity != 0 {
+			return g.localVariantWitness(localName, localSort, n.Atom)
+		}
+		return g.localNegatedVariantWitness(localName, localSort, n.Atom, n.GetLineno())
+	case *goivy.LogicNot:
+		return g.localNegatedVariantWitness(localName, localSort, n.Body, n.GetLineno())
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return g.localVariantWitness(localName, localSort, expanded)
+		}
+	}
+	return actionGeneratorVariantWitness{}, false
+}
+
+func localVariantWitnessLHS(localName string, localSort goivy.Sort, lhs goivy.Expr) bool {
+	return lhs != nil && goivy.ExprName(lhs) == localName && sortsEqual(lhs.NodeSort(), localSort)
+}
+
+func (g *Generator) localNegatedVariantWitness(localName string, localSort goivy.Sort, expr goivy.Expr, loc goivy.Location) (actionGeneratorVariantWitness, bool) {
+	app, ok := expr.(*goivy.Apply)
+	if !ok || app == nil || goivy.ExprName(app.Func) != "*>" || len(app.Terms) != 2 {
+		return actionGeneratorVariantWitness{}, false
+	}
+	lhs, rhs := app.Terms[0], app.Terms[1]
+	if !localVariantWitnessLHS(localName, localSort, lhs) || exprContainsLogicVariable(rhs) {
+		return actionGeneratorVariantWitness{}, false
+	}
+	return g.siblingLocalVariantWitness(lhs, rhs.NodeSort(), loc)
+}
+
+func (g *Generator) siblingLocalVariantWitness(lhs goivy.Expr, forbidden goivy.Sort, loc goivy.Location) (actionGeneratorVariantWitness, bool) {
+	if lhs == nil || g == nil || g.Mod == nil {
+		return actionGeneratorVariantWitness{}, false
+	}
+	super := lhs.NodeSort()
+	if !g.Mod.IsVariant(super, forbidden) {
+		return actionGeneratorVariantWitness{}, false
+	}
+	for _, sub := range g.Mod.Variants[sortName(super)] {
+		if sortsEqual(sub, forbidden) {
+			continue
+		}
+		return actionGeneratorVariantWitness{lhs: lhs, super: super, sub: sub, loc: loc}, true
+	}
+	return actionGeneratorVariantWitness{}, false
+}
+
+func (g *Generator) emitLocalNegatedWitnessInit(w *goWriter, localName string, localSort goivy.Sort, body goivy.Expr) bool {
+	if g == nil || w == nil || localName == "" || body == nil {
+		return false
+	}
+	if g.Config.Target != "test" && g.Config.Target != "gen" {
+		return false
+	}
+	if g.goType(localSort) != "int" {
+		return false
+	}
+	act, ok := body.(goivy.Action)
+	if !ok {
+		return false
+	}
+	app, pos, ok := g.localNegatedWitnessApply(localName, localSort, act)
+	if !ok {
+		return false
+	}
+	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
+		return false
+	}
+	relName := goivy.ExprName(app.Func)
+	if relName == "" || !g.quantifierSupportRels()[relName] {
+		return false
+	}
+	fallbackConds, hasFallback := g.localWitnessSmallIntFallbackConds(localName, localSort, body)
+	var conds []string
+	for i, term := range app.Terms {
+		if i == pos {
+			continue
+		}
+		if exprReferencesAnyNameIncludingVariables(term, map[string]bool{localName: true}) {
+			return false
+		}
+		expr, err := g.emitExpr(term)
+		if err != nil {
+			return false
+		}
+		keyExpr := "__ivy_neg_witness_key"
+		if len(app.Terms) != 1 {
+			keyExpr = fmt.Sprintf("__ivy_neg_witness_key.A%d", i)
+		}
+		conds = append(conds, fmt.Sprintf("(%s == %s)", keyExpr, expr))
+	}
+	assignExpr := "__ivy_neg_witness_key"
+	if len(app.Terms) != 1 {
+		assignExpr = fmt.Sprintf("__ivy_neg_witness_key.A%d", pos)
+	}
+	foundName := "__ivy_local_neg_witness_found_" + goName(localName)
+	if hasFallback {
+		w.linef("%s := false", foundName)
+	}
+	if len(conds) > 0 {
+		w.open(fmt.Sprintf("for __ivy_neg_witness_key, __ivy_neg_witness_val := range %s {", g.goStorageRangeExpr(relName, fs, "ivy")))
+		w.open("if " + strings.Join(conds, " && ") + " {")
+	} else {
+		w.open(fmt.Sprintf("for __ivy_neg_witness_key, __ivy_neg_witness_val := range %s {", g.goStorageRangeExpr(relName, fs, "ivy")))
+	}
+	w.open("if __ivy_neg_witness_val {")
+	w.linef("%s = %s + 1", goName(localName), assignExpr)
+	w.close(" else {")
+	w.linef("%s = %s", goName(localName), assignExpr)
+	w.close("")
+	if hasFallback {
+		w.linef("%s = true", foundName)
+	}
+	w.line("break")
+	if len(conds) > 0 {
+		w.close("")
+	}
+	w.close("")
+	if hasFallback {
+		base := goName(localName)
+		candidateName := "__ivy_local_neg_witness_fallback_" + base
+		w.open(fmt.Sprintf("if !%s {", foundName))
+		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", candidateName, g.goType(localSort), strings.Join(actionGeneratorSmallIntFallbackValues(), ", ")))
+		w.linef("%s = %s", base, candidateName)
+		w.open("if " + strings.Join(fallbackConds, " && ") + " {")
+		w.linef("%s = true", foundName)
+		w.line("break")
+		w.close("")
+		w.close("")
+		w.close("")
+	}
+	return true
+}
+
+func (g *Generator) localNegatedWitnessApply(localName string, localSort goivy.Sort, act goivy.Action) (*goivy.Apply, int, bool) {
+	for _, f := range localWitnessAssumeFormulas(act) {
+		if app, pos, ok := g.findLocalNegatedWitnessApply(localName, localSort, f); ok {
+			return app, pos, true
+		}
+	}
+	return nil, -1, false
+}
+
+func (g *Generator) findLocalNegatedWitnessApply(localName string, localSort goivy.Sort, f goivy.Expr) (*goivy.Apply, int, bool) {
+	switch n := f.(type) {
+	case *goivy.LogicAnd:
+		for _, term := range n.Terms {
+			if app, pos, ok := g.findLocalNegatedWitnessApply(localName, localSort, term); ok {
+				return app, pos, true
+			}
+		}
+	case *goivy.LogicOr:
+		for _, term := range n.Terms {
+			if app, pos, ok := g.findLocalNegatedWitnessApply(localName, localSort, term); ok {
+				return app, pos, true
+			}
+		}
+	case *goivy.LogicImplies:
+		return g.findLocalNegatedWitnessApply(localName, localSort, n.T2)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffNegativeTerms(n) {
+			if app, pos, ok := g.findLocalNegatedWitnessApply(localName, localSort, term); ok {
+				return app, pos, true
+			}
+		}
+	case *goivy.LogicLiteral:
+		if n.Polarity == 0 {
+			return localNegatedWitnessApplyForLocal(localName, localSort, n.Atom)
+		}
+	case *goivy.LogicNot:
+		return localNegatedWitnessApplyForLocal(localName, localSort, n.Body)
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return g.findLocalNegatedWitnessApply(localName, localSort, expanded)
+		}
+	}
+	return nil, -1, false
+}
+
+func localNegatedWitnessApplyForLocal(localName string, localSort goivy.Sort, expr goivy.Expr) (*goivy.Apply, int, bool) {
+	app, ok := expr.(*goivy.Apply)
+	if !ok || app == nil {
+		return nil, -1, false
+	}
+	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
+		return nil, -1, false
+	}
+	pos := -1
+	for i, term := range app.Terms {
+		if !exprHasName(term, localName) {
+			continue
+		}
+		if pos >= 0 || !sortsEqual(fs.Domain()[i], localSort) {
+			return nil, -1, false
+		}
+		pos = i
+	}
+	if pos < 0 {
+		return nil, -1, false
+	}
+	return app, pos, true
 }
 
 func (g *Generator) localWitnessSmallIntFallbackConds(localName string, localSort goivy.Sort, body goivy.Expr) ([]string, bool) {
@@ -1398,10 +1940,6 @@ func (g *Generator) emitLocalScalarWitnessInit(w *goWriter, localName string, lo
 		return false
 	}
 	names := map[string]bool{localName: true}
-	values, ok := g.scalarWitnessValuesForNames(g.goType(localSort), names, localWitnessAssumeFormulas(act))
-	if !ok || len(values) == 0 {
-		return false
-	}
 	var conds []string
 	for _, f := range localWitnessAssumeFormulas(act) {
 		if !exprReferencesAnyName(f, names) {
@@ -1415,6 +1953,13 @@ func (g *Generator) emitLocalScalarWitnessInit(w *goWriter, localName string, lo
 	}
 	if len(conds) == 0 {
 		return false
+	}
+	values, ok := g.scalarWitnessValuesForNames(g.goType(localSort), names, localWitnessAssumeFormulas(act))
+	if !ok || len(values) == 0 {
+		if g.goType(localSort) != "int" {
+			return false
+		}
+		values = actionGeneratorSmallIntFallbackValues()
 	}
 	base := goName(localName)
 	valuesName := "__ivy_local_witness_values_" + base
@@ -1492,8 +2037,14 @@ func localWitnessAssumeFormulas(act goivy.Action) []goivy.Expr {
 			return nil
 		}
 		return []goivy.Expr{a.Formula}
-	case *goivy.LogicAssertAction:
+	case *goivy.LogicAssertAction, *goivy.LogicRequiresAction, *goivy.LogicEnsuresAction, *goivy.LogicSubgoalAction, *goivy.LogicDebugAction, *goivy.IgnoreAction:
 		return nil
+	case *goivy.LogicLetAction:
+		body, ok := localWitnessLetActionBody(a)
+		if !ok {
+			return nil
+		}
+		return localWitnessAssumeFormulas(body)
 	case *goivy.LogicSequence:
 		var guards []goivy.Expr
 		for _, elem := range a.Elems {
@@ -1502,7 +2053,7 @@ func localWitnessAssumeFormulas(act goivy.Action) []goivy.Expr {
 				break
 			}
 			switch child.(type) {
-			case *goivy.LogicAssumeAction, *goivy.LogicAssertAction, *goivy.LogicSequence:
+			case *goivy.LogicAssumeAction, *goivy.LogicAssertAction, *goivy.LogicRequiresAction, *goivy.LogicEnsuresAction, *goivy.LogicSubgoalAction, *goivy.LogicDebugAction, *goivy.IgnoreAction, *goivy.LogicLetAction, *goivy.LogicSequence:
 				guards = append(guards, localWitnessAssumeFormulas(child)...)
 			default:
 				return guards
@@ -1512,6 +2063,42 @@ func localWitnessAssumeFormulas(act goivy.Action) []goivy.Expr {
 	default:
 		return nil
 	}
+}
+
+func localWitnessLetActionBody(a *goivy.LogicLetAction) (goivy.Action, bool) {
+	if a == nil || a.Body == nil {
+		return nil, false
+	}
+	body, ok := a.Body.(goivy.Action)
+	if !ok {
+		return nil, false
+	}
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for _, binding := range a.Bindings {
+		if binding == nil {
+			return nil, false
+		}
+		children := binding.Children()
+		if len(children) < 2 {
+			return nil, false
+		}
+		switch lhs := children[0].(type) {
+		case *goivy.Const:
+			subs[goivy.Key(lhs)] = children[1]
+		case *goivy.LogicVariable:
+			subs[goivy.Key(lhs)] = children[1]
+		default:
+			return nil, false
+		}
+	}
+	if len(subs) == 0 {
+		return body, true
+	}
+	substituted, ok := goivy.SubstituteConstantsAction(body, subs).(goivy.Action)
+	if !ok {
+		return nil, false
+	}
+	return substituted, true
 }
 
 func (g *Generator) findLocalWitnessApply(localName string, localSort goivy.Sort, f goivy.Expr, ignored map[string]bool) (*goivy.Apply, int, map[string]bool, bool) {
@@ -1538,6 +2125,21 @@ func (g *Generator) findLocalWitnessApply(localName string, localSort goivy.Sort
 		return g.findLocalWitnessApply(localName, localSort, n.Body, nextIgnored)
 	case *goivy.LogicImplies:
 		return g.findLocalWitnessApply(localName, localSort, n.T2, ignored)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			if app, pos, nextIgnored, ok := g.findLocalWitnessApply(localName, localSort, term, ignored); ok {
+				return app, pos, nextIgnored, true
+			}
+		}
+	case *goivy.LogicIte:
+		if app, pos, nextIgnored, ok := g.findLocalWitnessApply(localName, localSort, n.Then, ignored); ok {
+			return app, pos, nextIgnored, true
+		}
+		return g.findLocalWitnessApply(localName, localSort, n.Else, ignored)
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return g.findLocalWitnessApply(localName, localSort, expanded, ignored)
+		}
 	case *goivy.LogicLiteral:
 		if n.Polarity != 0 {
 			return g.findLocalWitnessApply(localName, localSort, n.Atom, ignored)

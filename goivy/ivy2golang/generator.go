@@ -2925,6 +2925,7 @@ func (g *Generator) emitTestActionGeneratorGenerate(w *goWriter, name string, ac
 	args := g.testActionGeneratorArgs(act)
 	g.emitTestActionDefinedInputs(w, name, act, args)
 	g.emitTestActionVariantWitnesses(w, name, act, args)
+	g.emitTestActionScalarPairWitnesses(w, name, act, args)
 	g.emitTestActionGeneratorAssumeGuards(w, name, act, args)
 	w.line("return true")
 }
@@ -3042,6 +3043,12 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 		w.line("return true")
 		return
 	}
+	if g.hasBeforeExportAction(name) {
+		if _, ok := g.actionPreimageAssumeFormulasOK(act); !ok {
+			g.unsupportedAt(w, act.GetLineno(), "unsupported before_export action generator requires runtime trial for %s", name)
+			return
+		}
+	}
 	if len(act.GetFormalParams()) == 0 {
 		g.emitGenActionGeneratorAssumeGuards(w, name, act)
 		w.line("return true")
@@ -3057,6 +3064,7 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 	}
 	g.emitGenActionGeneratorDefinedInputs(w, name, act)
 	g.emitGenActionGeneratorVariantWitnesses(w, name, act)
+	g.emitGenActionGeneratorScalarPairWitnesses(w, name, act)
 	g.emitGenActionGeneratorAssumeGuards(w, name, act)
 	w.line("return true")
 }
@@ -3112,11 +3120,25 @@ type genDefinedInput struct {
 }
 
 type actionGeneratorVariantWitness struct {
-	lhs   goivy.Expr
-	rhs   goivy.Expr
-	super goivy.Sort
-	sub   goivy.Sort
-	loc   goivy.Location
+	lhs         goivy.Expr
+	rhs         goivy.Expr
+	rhsDelta    int
+	super       goivy.Sort
+	sub         goivy.Sort
+	cond        goivy.Expr
+	thenWitness *actionGeneratorVariantWitness
+	elseWitness *actionGeneratorVariantWitness
+	loc         goivy.Location
+}
+
+type actionGeneratorScalarPairWitness struct {
+	target      goivy.Expr
+	base        goivy.Expr
+	delta       int
+	cond        goivy.Expr
+	thenWitness *actionGeneratorScalarPairWitness
+	elseWitness *actionGeneratorScalarPairWitness
+	loc         goivy.Location
 }
 
 func (g *Generator) emitGenActionGeneratorDefinedInputs(w *goWriter, name string, act goivy.Action) {
@@ -3168,6 +3190,49 @@ func (g *Generator) collectGenActionGeneratorDefinedInputs(defs []genDefinedInpu
 			defs = g.collectGenActionGeneratorDefinedInputs(defs, term, params)
 		}
 		return defs
+	case *goivy.LogicOr:
+		for _, term := range n.Terms {
+			defs = g.collectGenActionGeneratorDefinedInputs(defs, term, params)
+		}
+		return defs
+	case *goivy.LogicIff:
+		loc := guard.GetLineno()
+		if g.genExprDefinedInputLHS(n.T1, params) {
+			defs = append(defs, genDefinedInput{lhs: n.T1, value: n.T2, loc: loc})
+		}
+		if g.genExprDefinedInputLHS(n.T2, params) {
+			defs = append(defs, genDefinedInput{lhs: n.T2, value: n.T1, loc: loc})
+		}
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			defs = g.collectGenActionGeneratorDefinedInputs(defs, term, params)
+		}
+		return defs
+	case *goivy.LogicImplies:
+		return g.collectGenActionGeneratorDefinedInputs(defs, n.T2, params)
+	case *goivy.LogicIte:
+		thenDef, thenOK := g.singleGenActionGeneratorDefinedInput(n.Then, params)
+		elseDef, elseOK := g.singleGenActionGeneratorDefinedInput(n.Else, params)
+		if !thenOK || !elseOK {
+			return defs
+		}
+		if exprEqual(thenDef.lhs, elseDef.lhs) {
+			value, err := goivy.NewIte(n.Cond, thenDef.value, elseDef.value)
+			if err != nil {
+				return defs
+			}
+			return append(defs, genDefinedInput{lhs: thenDef.lhs, value: value, loc: n.GetLineno()})
+		}
+		return append(defs, genActionGeneratorCrossTargetIteDefinedInputs(n.Cond, thenDef, elseDef, n.GetLineno())...)
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return g.collectGenActionGeneratorDefinedInputs(defs, expanded, params)
+		}
+		return defs
+	case *goivy.LogicLiteral:
+		if n.Polarity != 0 {
+			return g.collectGenActionGeneratorDefinedInputs(defs, n.Atom, params)
+		}
+		return defs
 	}
 	t1, t2, ok := actionGeneratorEqTerms(guard)
 	if !ok {
@@ -3181,6 +3246,61 @@ func (g *Generator) collectGenActionGeneratorDefinedInputs(defs []genDefinedInpu
 		return append(defs, genDefinedInput{lhs: t2, value: t1, loc: loc})
 	}
 	return defs
+}
+
+func (g *Generator) singleGenActionGeneratorDefinedInput(guard goivy.Expr, params map[string]*goivy.Const) (genDefinedInput, bool) {
+	switch n := guard.(type) {
+	case *goivy.LogicLiteral:
+		if n.Polarity != 0 {
+			return g.singleGenActionGeneratorDefinedInput(n.Atom, params)
+		}
+		return genDefinedInput{}, false
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return g.singleGenActionGeneratorDefinedInput(expanded, params)
+		}
+		return genDefinedInput{}, false
+	case *goivy.LogicIff:
+		loc := guard.GetLineno()
+		if g.genExprDefinedInputLHS(n.T1, params) {
+			return genDefinedInput{lhs: n.T1, value: n.T2, loc: loc}, true
+		}
+		if g.genExprDefinedInputLHS(n.T2, params) {
+			return genDefinedInput{lhs: n.T2, value: n.T1, loc: loc}, true
+		}
+	}
+	t1, t2, ok := actionGeneratorEqTerms(guard)
+	if !ok {
+		return genDefinedInput{}, false
+	}
+	loc := guard.GetLineno()
+	if g.genExprDefinedInputLHS(t1, params) {
+		return genDefinedInput{lhs: t1, value: t2, loc: loc}, true
+	}
+	if g.genExprDefinedInputLHS(t2, params) {
+		return genDefinedInput{lhs: t2, value: t1, loc: loc}, true
+	}
+	return genDefinedInput{}, false
+}
+
+func genActionGeneratorCrossTargetIteDefinedInputs(cond goivy.Expr, thenDef, elseDef genDefinedInput, loc goivy.Location) []genDefinedInput {
+	thenNames := genDefinedInputDependencyNames(thenDef.lhs)
+	elseNames := genDefinedInputDependencyNames(elseDef.lhs)
+	if exprReferencesAnyName(thenDef.value, elseNames) || exprReferencesAnyName(elseDef.value, thenNames) {
+		return nil
+	}
+	thenValue, err := goivy.NewIte(cond, thenDef.value, thenDef.lhs)
+	if err != nil {
+		return nil
+	}
+	elseValue, err := goivy.NewIte(cond, elseDef.lhs, elseDef.value)
+	if err != nil {
+		return nil
+	}
+	return []genDefinedInput{
+		{lhs: thenDef.lhs, value: thenValue, loc: loc},
+		{lhs: elseDef.lhs, value: elseValue, loc: loc},
+	}
 }
 
 func (g *Generator) emitGenActionGeneratorVariantWitnesses(w *goWriter, name string, act goivy.Action) {
@@ -3204,12 +3324,11 @@ func (g *Generator) emitActionGeneratorVariantWitnesses(w *goWriter, act goivy.A
 			g.unsupportedAt(w, witness.loc, "%s: %s", errKind, strings.TrimPrefix(err.Error(), "ivy2golang: "))
 			continue
 		}
-		rhs, err := g.emitExpr(witness.rhs)
+		expr, err := g.emitActionGeneratorVariantWitnessExpr(witness)
 		if err != nil {
 			g.unsupportedAt(w, witness.loc, "%s: %s", errKind, strings.TrimPrefix(err.Error(), "ivy2golang: "))
 			continue
 		}
-		expr := g.variantUpcastExpr(witness.super, witness.sub, rhs)
 		if call, ok, err := g.goStorageSet(witness.lhs, expr); ok || err != nil {
 			if err != nil {
 				g.unsupportedAt(w, witness.loc, "%s: %s", errKind, strings.TrimPrefix(err.Error(), "ivy2golang: "))
@@ -3222,6 +3341,42 @@ func (g *Generator) emitActionGeneratorVariantWitnesses(w *goWriter, act goivy.A
 	}
 }
 
+func (g *Generator) emitActionGeneratorVariantWitnessExpr(witness actionGeneratorVariantWitness) (string, error) {
+	if witness.cond != nil {
+		if witness.thenWitness == nil || witness.elseWitness == nil {
+			return "", fmt.Errorf("malformed conditional variant witness")
+		}
+		cond, err := g.emitExpr(witness.cond)
+		if err != nil {
+			return "", err
+		}
+		thenExpr, err := g.emitActionGeneratorVariantWitnessExpr(*witness.thenWitness)
+		if err != nil {
+			return "", err
+		}
+		elseExpr, err := g.emitActionGeneratorVariantWitnessExpr(*witness.elseWitness)
+		if err != nil {
+			return "", err
+		}
+		return fmt.Sprintf("ivyTernary(%s, %s, %s)", cond, thenExpr, elseExpr), nil
+	}
+	rhs := g.goZeroValue(witness.sub)
+	if witness.rhs != nil {
+		var err error
+		rhs, err = g.emitExpr(witness.rhs)
+		if err != nil {
+			return "", err
+		}
+		switch {
+		case witness.rhsDelta > 0:
+			rhs = fmt.Sprintf("%s + %d", rhs, witness.rhsDelta)
+		case witness.rhsDelta < 0:
+			rhs = fmt.Sprintf("%s - %d", rhs, -witness.rhsDelta)
+		}
+	}
+	return g.variantUpcastExpr(witness.super, witness.sub, rhs), nil
+}
+
 func (g *Generator) actionGeneratorVariantWitnesses(act goivy.Action, guards []goivy.Expr) []actionGeneratorVariantWitness {
 	params := genActionFormalParamMap(act)
 	if len(params) == 0 || g == nil || g.Mod == nil {
@@ -3232,6 +3387,349 @@ func (g *Generator) actionGeneratorVariantWitnesses(act goivy.Action, guards []g
 		out = g.collectActionGeneratorVariantWitnesses(out, guard, params)
 	}
 	return out
+}
+
+func (g *Generator) emitGenActionGeneratorScalarPairWitnesses(w *goWriter, name string, act goivy.Action) {
+	g.emitActionGeneratorScalarPairWitnesses(w, act, g.genActionPreconditionFormulas(name, act), genActionFormalExprOverrides(act), "unsupported action generator scalar pair witness")
+}
+
+func (g *Generator) emitTestActionScalarPairWitnesses(w *goWriter, name string, act goivy.Action, args []string) {
+	g.emitActionGeneratorScalarPairWitnesses(w, act, g.testActionPreconditionFormulas(name, act), actionFormalExprOverridesToArgs(act, args), "unsupported target=test scalar pair witness")
+}
+
+func (g *Generator) emitActionGeneratorScalarPairWitnesses(w *goWriter, act goivy.Action, guards []goivy.Expr, overrides map[string]string, errKind string) {
+	witnesses := g.actionGeneratorScalarPairWitnesses(act, guards)
+	if len(witnesses) == 0 {
+		return
+	}
+	g.pushExprOverrides(overrides)
+	defer g.popExprOverrides()
+	for _, witness := range witnesses {
+		target, err := g.emitExpr(witness.target)
+		if err != nil {
+			g.unsupportedAt(w, witness.loc, "%s: %s", errKind, strings.TrimPrefix(err.Error(), "ivy2golang: "))
+			continue
+		}
+		value, err := g.emitActionGeneratorScalarPairWitnessValue(witness)
+		if err != nil {
+			g.unsupportedAt(w, witness.loc, "%s: %s", errKind, strings.TrimPrefix(err.Error(), "ivy2golang: "))
+			continue
+		}
+		w.linef("%s = %s", target, value)
+	}
+}
+
+func (g *Generator) emitActionGeneratorScalarPairWitnessValue(witness actionGeneratorScalarPairWitness) (string, error) {
+	if witness.cond != nil {
+		if witness.thenWitness == nil || witness.elseWitness == nil {
+			return "", fmt.Errorf("malformed conditional scalar pair witness")
+		}
+		cond, err := g.emitExpr(witness.cond)
+		if err != nil {
+			return "", err
+		}
+		thenValue, err := g.emitActionGeneratorScalarPairWitnessValue(*witness.thenWitness)
+		if err != nil {
+			return "", err
+		}
+		elseValue, err := g.emitActionGeneratorScalarPairWitnessValue(*witness.elseWitness)
+		if err != nil {
+			return "", err
+		}
+		return fmt.Sprintf("ivyTernary(%s, %s, %s)", cond, thenValue, elseValue), nil
+	}
+	base, err := g.emitExpr(witness.base)
+	if err != nil {
+		return "", err
+	}
+	switch {
+	case witness.delta > 0:
+		return fmt.Sprintf("%s + %d", base, witness.delta), nil
+	case witness.delta < 0:
+		return fmt.Sprintf("%s - %d", base, -witness.delta), nil
+	default:
+		return base, nil
+	}
+}
+
+func (g *Generator) actionGeneratorScalarPairWitnesses(act goivy.Action, guards []goivy.Expr) []actionGeneratorScalarPairWitness {
+	params := genActionFormalParamMap(act)
+	if len(params) < 2 || g == nil {
+		return nil
+	}
+	var out []actionGeneratorScalarPairWitness
+	for _, guard := range guards {
+		out = g.collectActionGeneratorScalarPairWitnesses(out, guard, params)
+	}
+	return out
+}
+
+func (g *Generator) collectActionGeneratorScalarPairWitnesses(out []actionGeneratorScalarPairWitness, guard goivy.Expr, params map[string]*goivy.Const) []actionGeneratorScalarPairWitness {
+	switch n := guard.(type) {
+	case *goivy.Eq:
+		if witness, ok := g.actionGeneratorAffinePairEqualityWitness(n.T1, n.T2, params, n.GetLineno()); ok {
+			return append(out, witness)
+		}
+		return out
+	case *goivy.Apply:
+		if t1, t2, ok := actionGeneratorEqTerms(n); ok {
+			if witness, ok := g.actionGeneratorAffinePairEqualityWitness(t1, t2, params, n.GetLineno()); ok {
+				return append(out, witness)
+			}
+			return out
+		}
+		op := goivy.ExprName(n.Func)
+		if !goivy.IsInequalitySymbol(op) || len(n.Terms) != 2 {
+			return out
+		}
+		if witness, ok := g.actionGeneratorAffinePairInequalityWitness(op, n.Terms[0], n.Terms[1], params, n.GetLineno()); ok {
+			return append(out, witness)
+		}
+		leftParam, leftOK := genExprFormalParam(n.Terms[0], params)
+		rightParam, rightOK := genExprFormalParam(n.Terms[1], params)
+		if !leftOK || !rightOK || leftParam == rightParam || g.goType(leftParam.CSort) != "int" || g.goType(rightParam.CSort) != "int" {
+			return out
+		}
+		switch op {
+		case "<":
+			return append(out, actionGeneratorScalarPairWitness{target: n.Terms[1], base: n.Terms[0], delta: 1, loc: n.GetLineno()})
+		case "<=":
+			return append(out, actionGeneratorScalarPairWitness{target: n.Terms[1], base: n.Terms[0], delta: 0, loc: n.GetLineno()})
+		case ">":
+			return append(out, actionGeneratorScalarPairWitness{target: n.Terms[0], base: n.Terms[1], delta: 1, loc: n.GetLineno()})
+		case ">=":
+			return append(out, actionGeneratorScalarPairWitness{target: n.Terms[0], base: n.Terms[1], delta: 0, loc: n.GetLineno()})
+		}
+	case *goivy.LogicLiteral:
+		if n.Polarity == 0 {
+			return g.collectActionGeneratorScalarPairNegatedWitness(out, n.Atom, params, n.GetLineno())
+		}
+		if n.Polarity != 0 {
+			return g.collectActionGeneratorScalarPairWitnesses(out, n.Atom, params)
+		}
+	case *goivy.LogicNot:
+		return g.collectActionGeneratorScalarPairNegatedWitness(out, n.Body, params, n.GetLineno())
+	case *goivy.LogicAnd:
+		for _, term := range n.Terms {
+			out = g.collectActionGeneratorScalarPairWitnesses(out, term, params)
+		}
+		return out
+	case *goivy.LogicOr:
+		for _, term := range n.Terms {
+			out = g.collectActionGeneratorScalarPairWitnesses(out, term, params)
+		}
+		return out
+	case *goivy.LogicImplies:
+		return g.collectActionGeneratorScalarPairWitnesses(out, n.T2, params)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			out = g.collectActionGeneratorScalarPairWitnesses(out, term, params)
+		}
+		for _, term := range actionGeneratorIffNegativeTerms(n) {
+			out = g.collectActionGeneratorScalarPairNegatedWitness(out, term, params, n.GetLineno())
+		}
+	case *goivy.LogicIte:
+		thenWitness, thenOK := g.singleActionGeneratorScalarPairWitness(n.Then, params)
+		elseWitness, elseOK := g.singleActionGeneratorScalarPairWitness(n.Else, params)
+		if !thenOK || !elseOK {
+			return out
+		}
+		return append(out, actionGeneratorIteScalarPairWitnesses(n.Cond, thenWitness, elseWitness, n.GetLineno())...)
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return g.collectActionGeneratorScalarPairWitnesses(out, expanded, params)
+		}
+	}
+	return out
+}
+
+func (g *Generator) singleActionGeneratorScalarPairWitness(guard goivy.Expr, params map[string]*goivy.Const) (actionGeneratorScalarPairWitness, bool) {
+	witnesses := g.collectActionGeneratorScalarPairWitnesses(nil, guard, params)
+	if len(witnesses) != 1 {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	return witnesses[0], true
+}
+
+func (g *Generator) actionGeneratorAffinePairEqualityWitness(left, right goivy.Expr, params map[string]*goivy.Const, loc goivy.Location) (actionGeneratorScalarPairWitness, bool) {
+	leftParam, leftOffset, ok := actionGeneratorAffineParamTerm(left, params)
+	if !ok || leftParam == nil {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	rightParam, rightOffset, ok := actionGeneratorAffineParamTerm(right, params)
+	if !ok || rightParam == nil {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	if leftParam == rightParam || g.goType(leftParam.CSort) != "int" || g.goType(rightParam.CSort) != "int" {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	return actionGeneratorScalarPairWitness{target: rightParam, base: leftParam, delta: leftOffset - rightOffset, loc: loc}, true
+}
+
+func actionGeneratorIteScalarPairWitnesses(cond goivy.Expr, thenWitness, elseWitness actionGeneratorScalarPairWitness, loc goivy.Location) []actionGeneratorScalarPairWitness {
+	if exprEqual(thenWitness.target, elseWitness.target) {
+		return []actionGeneratorScalarPairWitness{actionGeneratorConditionalScalarPairWitness(cond, thenWitness.target, thenWitness, elseWitness, loc)}
+	}
+	thenKeep := actionGeneratorScalarPairWitness{target: thenWitness.target, base: thenWitness.target, loc: loc}
+	elseKeep := actionGeneratorScalarPairWitness{target: elseWitness.target, base: elseWitness.target, loc: loc}
+	return []actionGeneratorScalarPairWitness{
+		actionGeneratorConditionalScalarPairWitness(cond, thenWitness.target, thenWitness, thenKeep, loc),
+		actionGeneratorConditionalScalarPairWitness(cond, elseWitness.target, elseKeep, elseWitness, loc),
+	}
+}
+
+func actionGeneratorConditionalScalarPairWitness(cond goivy.Expr, target goivy.Expr, thenWitness, elseWitness actionGeneratorScalarPairWitness, loc goivy.Location) actionGeneratorScalarPairWitness {
+	thenCopy, elseCopy := thenWitness, elseWitness
+	return actionGeneratorScalarPairWitness{
+		target:      target,
+		cond:        cond,
+		thenWitness: &thenCopy,
+		elseWitness: &elseCopy,
+		loc:         loc,
+	}
+}
+
+func (g *Generator) actionGeneratorAffinePairInequalityWitness(op string, left, right goivy.Expr, params map[string]*goivy.Const, loc goivy.Location) (actionGeneratorScalarPairWitness, bool) {
+	leftParam, leftOffset, ok := actionGeneratorAffineParamTerm(left, params)
+	if !ok || leftParam == nil {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	rightParam, rightOffset, ok := actionGeneratorAffineParamTerm(right, params)
+	if !ok || rightParam == nil {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	if leftParam == rightParam || g.goType(leftParam.CSort) != "int" || g.goType(rightParam.CSort) != "int" {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	switch op {
+	case "<":
+		return actionGeneratorScalarPairWitness{target: rightParam, base: leftParam, delta: leftOffset - rightOffset + 1, loc: loc}, true
+	case "<=":
+		return actionGeneratorScalarPairWitness{target: rightParam, base: leftParam, delta: leftOffset - rightOffset, loc: loc}, true
+	case ">":
+		return actionGeneratorScalarPairWitness{target: leftParam, base: rightParam, delta: rightOffset - leftOffset + 1, loc: loc}, true
+	case ">=":
+		return actionGeneratorScalarPairWitness{target: leftParam, base: rightParam, delta: rightOffset - leftOffset, loc: loc}, true
+	}
+	return actionGeneratorScalarPairWitness{}, false
+}
+
+func actionGeneratorAffineParamTerm(expr goivy.Expr, params map[string]*goivy.Const) (*goivy.Const, int, bool) {
+	if p, ok := genExprFormalParam(expr, params); ok {
+		return p, 0, true
+	}
+	if v, ok := actionGeneratorNumeralInt(expr); ok {
+		return nil, v, true
+	}
+	app, ok := expr.(*goivy.Apply)
+	if !ok || app == nil || len(app.Terms) != 2 {
+		return nil, 0, false
+	}
+	leftParam, leftOffset, ok := actionGeneratorAffineParamTerm(app.Terms[0], params)
+	if !ok {
+		return nil, 0, false
+	}
+	rightParam, rightOffset, ok := actionGeneratorAffineParamTerm(app.Terms[1], params)
+	if !ok {
+		return nil, 0, false
+	}
+	switch goivy.ExprName(app.Func) {
+	case "+":
+		if leftParam != nil && rightParam != nil {
+			return nil, 0, false
+		}
+		if leftParam != nil {
+			return leftParam, leftOffset + rightOffset, true
+		}
+		return rightParam, leftOffset + rightOffset, true
+	case "-":
+		if rightParam != nil {
+			return nil, 0, false
+		}
+		return leftParam, leftOffset - rightOffset, true
+	}
+	return nil, 0, false
+}
+
+func (g *Generator) collectActionGeneratorScalarPairDisequalityWitness(out []actionGeneratorScalarPairWitness, expr goivy.Expr, params map[string]*goivy.Const, loc goivy.Location) []actionGeneratorScalarPairWitness {
+	t1, t2, ok := actionGeneratorEqTerms(expr)
+	if !ok {
+		return out
+	}
+	if witness, ok := g.actionGeneratorAffinePairDisequalityWitness(t1, t2, params, loc); ok {
+		return append(out, witness)
+	}
+	leftParam, leftOK := genExprFormalParam(t1, params)
+	rightParam, rightOK := genExprFormalParam(t2, params)
+	if !leftOK || !rightOK || leftParam == rightParam || g.goType(leftParam.CSort) != "int" || g.goType(rightParam.CSort) != "int" {
+		return out
+	}
+	return append(out, actionGeneratorScalarPairWitness{target: t2, base: t1, delta: 1, loc: loc})
+}
+
+func (g *Generator) collectActionGeneratorScalarPairNegatedWitness(out []actionGeneratorScalarPairWitness, expr goivy.Expr, params map[string]*goivy.Const, loc goivy.Location) []actionGeneratorScalarPairWitness {
+	out = g.collectActionGeneratorScalarPairDisequalityWitness(out, expr, params, loc)
+	if witness, ok := g.actionGeneratorNegatedAffinePairInequalityWitness(expr, params, loc); ok {
+		out = append(out, witness)
+	}
+	if witness, ok := g.actionGeneratorNegatedPairInequalityOrWitness(expr, params, loc); ok {
+		out = append(out, witness)
+	}
+	return out
+}
+
+func (g *Generator) actionGeneratorNegatedAffinePairInequalityWitness(expr goivy.Expr, params map[string]*goivy.Const, loc goivy.Location) (actionGeneratorScalarPairWitness, bool) {
+	app, ok := expr.(*goivy.Apply)
+	if !ok || app == nil || len(app.Terms) != 2 {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	op := actionGeneratorInvertInequality(goivy.ExprName(app.Func))
+	if op == "" {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	return g.actionGeneratorAffinePairInequalityWitness(op, app.Terms[0], app.Terms[1], params, loc)
+}
+
+func (g *Generator) actionGeneratorNegatedPairInequalityOrWitness(expr goivy.Expr, params map[string]*goivy.Const, loc goivy.Location) (actionGeneratorScalarPairWitness, bool) {
+	or, ok := expr.(*goivy.LogicOr)
+	if !ok || or == nil || len(or.Terms) != 2 {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	for i := 0; i < 2; i++ {
+		app, ok := or.Terms[i].(*goivy.Apply)
+		if !ok || app == nil || len(app.Terms) != 2 {
+			continue
+		}
+		op := goivy.ExprName(app.Func)
+		if op != "<" && op != ">" {
+			continue
+		}
+		eqLeft, eqRight, ok := actionGeneratorEqTerms(or.Terms[1-i])
+		if !ok || !sameExprPair(app.Terms[0], app.Terms[1], eqLeft, eqRight) {
+			continue
+		}
+		return g.actionGeneratorAffinePairInequalityWitness(actionGeneratorInvertInequality(op), app.Terms[0], app.Terms[1], params, loc)
+	}
+	return actionGeneratorScalarPairWitness{}, false
+}
+
+func sameExprPair(a1, a2, b1, b2 goivy.Expr) bool {
+	return (exprEqual(a1, b1) && exprEqual(a2, b2)) || (exprEqual(a1, b2) && exprEqual(a2, b1))
+}
+
+func (g *Generator) actionGeneratorAffinePairDisequalityWitness(left, right goivy.Expr, params map[string]*goivy.Const, loc goivy.Location) (actionGeneratorScalarPairWitness, bool) {
+	leftParam, leftOffset, ok := actionGeneratorAffineParamTerm(left, params)
+	if !ok || leftParam == nil {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	rightParam, rightOffset, ok := actionGeneratorAffineParamTerm(right, params)
+	if !ok || rightParam == nil {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	if leftParam == rightParam || g.goType(leftParam.CSort) != "int" || g.goType(rightParam.CSort) != "int" {
+		return actionGeneratorScalarPairWitness{}, false
+	}
+	return actionGeneratorScalarPairWitness{target: rightParam, base: leftParam, delta: leftOffset - rightOffset + 1, loc: loc}, true
 }
 
 func (g *Generator) collectActionGeneratorVariantWitnesses(out []actionGeneratorVariantWitness, guard goivy.Expr, params map[string]*goivy.Const) []actionGeneratorVariantWitness {
@@ -3259,6 +3757,9 @@ func (g *Generator) collectActionGeneratorVariantWitnesses(out []actionGenerator
 		if n.Polarity != 0 {
 			return g.collectActionGeneratorVariantWitnesses(out, n.Atom, params)
 		}
+		return g.collectActionGeneratorNegatedVariantWitnesses(out, n.Atom, params, n.GetLineno())
+	case *goivy.LogicNot:
+		return g.collectActionGeneratorNegatedVariantWitnesses(out, n.Body, params, n.GetLineno())
 	case *goivy.LogicAnd:
 		for _, term := range n.Terms {
 			out = g.collectActionGeneratorVariantWitnesses(out, term, params)
@@ -3271,8 +3772,452 @@ func (g *Generator) collectActionGeneratorVariantWitnesses(out []actionGenerator
 		return out
 	case *goivy.LogicImplies:
 		return g.collectActionGeneratorVariantWitnesses(out, n.T2, params)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			out = g.collectActionGeneratorVariantWitnesses(out, term, params)
+		}
+		for _, term := range actionGeneratorIffNegativeTerms(n) {
+			out = g.collectActionGeneratorNegatedVariantWitnesses(out, term, params, n.GetLineno())
+		}
+		return out
+	case *goivy.LogicIte:
+		thenWitness, thenOK := g.singleActionGeneratorVariantWitness(n.Then, params)
+		elseWitness, elseOK := g.singleActionGeneratorVariantWitness(n.Else, params)
+		if !thenOK || !elseOK {
+			return out
+		}
+		witness, ok := actionGeneratorIteVariantWitness(n.Cond, thenWitness, elseWitness, n.GetLineno())
+		if !ok {
+			return out
+		}
+		return append(out, witness)
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return g.collectActionGeneratorVariantWitnesses(out, expanded, params)
+		}
+	case *goivy.LogicExists:
+		match, ok, err := g.matchExistsVariantRelation(n.Variables, n.Body)
+		if ok && err == nil {
+			if !g.genExprDefinedInputLHS(match.lhs, params) {
+				return out
+			}
+			super, sub := match.lhs.NodeSort(), match.bound.VSort
+			if !g.Mod.IsVariant(super, sub) {
+				return out
+			}
+			rhs, rhsDelta := g.variantExistsPayloadWitness(match.bound, match.extra)
+			return append(out, actionGeneratorVariantWitness{
+				lhs:      match.lhs,
+				rhs:      rhs,
+				rhsDelta: rhsDelta,
+				super:    super,
+				sub:      sub,
+				loc:      match.loc,
+			})
+		}
+		match, ok, err = g.matchNegatedExistsVariantRelation(n.Variables, n.Body)
+		if !ok || err != nil {
+			return out
+		}
+		return g.collectActionGeneratorSiblingVariantWitness(out, match.lhs, match.bound.VSort, params, match.loc)
 	}
 	return out
+}
+
+func (g *Generator) singleActionGeneratorVariantWitness(guard goivy.Expr, params map[string]*goivy.Const) (actionGeneratorVariantWitness, bool) {
+	witnesses := g.collectActionGeneratorVariantWitnesses(nil, guard, params)
+	if len(witnesses) != 1 {
+		return actionGeneratorVariantWitness{}, false
+	}
+	return witnesses[0], true
+}
+
+func actionGeneratorIteVariantWitness(cond goivy.Expr, thenWitness, elseWitness actionGeneratorVariantWitness, loc goivy.Location) (actionGeneratorVariantWitness, bool) {
+	if !exprEqual(thenWitness.lhs, elseWitness.lhs) ||
+		!sortsEqual(thenWitness.super, elseWitness.super) {
+		return actionGeneratorVariantWitness{}, false
+	}
+	if sortsEqual(thenWitness.sub, elseWitness.sub) &&
+		thenWitness.rhs != nil &&
+		elseWitness.rhs != nil &&
+		thenWitness.rhsDelta == 0 &&
+		elseWitness.rhsDelta == 0 {
+		rhs, err := goivy.NewIte(cond, thenWitness.rhs, elseWitness.rhs)
+		if err != nil {
+			return actionGeneratorVariantWitness{}, false
+		}
+		return actionGeneratorVariantWitness{
+			lhs:   thenWitness.lhs,
+			rhs:   rhs,
+			super: thenWitness.super,
+			sub:   thenWitness.sub,
+			loc:   loc,
+		}, true
+	}
+	thenCopy := thenWitness
+	elseCopy := elseWitness
+	return actionGeneratorVariantWitness{
+		lhs:         thenWitness.lhs,
+		super:       thenWitness.super,
+		cond:        cond,
+		thenWitness: &thenCopy,
+		elseWitness: &elseCopy,
+		loc:         loc,
+	}, true
+}
+
+func (g *Generator) collectActionGeneratorNegatedVariantWitnesses(out []actionGeneratorVariantWitness, guard goivy.Expr, params map[string]*goivy.Const, loc goivy.Location) []actionGeneratorVariantWitness {
+	app, ok := guard.(*goivy.Apply)
+	if !ok || app == nil || goivy.ExprName(app.Func) != "*>" || len(app.Terms) != 2 {
+		return out
+	}
+	lhs, rhs := app.Terms[0], app.Terms[1]
+	if !g.genExprDefinedInputLHS(lhs, params) || exprContainsLogicVariable(rhs) {
+		return out
+	}
+	super, forbidden := lhs.NodeSort(), rhs.NodeSort()
+	if !g.Mod.IsVariant(super, forbidden) {
+		return out
+	}
+	return g.collectActionGeneratorSiblingVariantWitness(out, lhs, forbidden, params, loc)
+}
+
+func (g *Generator) collectActionGeneratorSiblingVariantWitness(out []actionGeneratorVariantWitness, lhs goivy.Expr, forbidden goivy.Sort, params map[string]*goivy.Const, loc goivy.Location) []actionGeneratorVariantWitness {
+	if !g.genExprDefinedInputLHS(lhs, params) {
+		return out
+	}
+	super := lhs.NodeSort()
+	if !g.Mod.IsVariant(super, forbidden) {
+		return out
+	}
+	for _, sub := range g.Mod.Variants[sortName(super)] {
+		if sortsEqual(sub, forbidden) {
+			continue
+		}
+		return append(out, actionGeneratorVariantWitness{
+			lhs:   lhs,
+			super: super,
+			sub:   sub,
+			loc:   loc,
+		})
+	}
+	return out
+}
+
+func (g *Generator) variantExistsPayloadWitness(bound *goivy.LogicVariable, exprs []goivy.Expr) (goivy.Expr, int) {
+	if bound == nil {
+		return nil, 0
+	}
+	for _, expr := range exprs {
+		if value, ok := variantExistsExactPayloadWitnessTerm(bound, expr); ok {
+			return value, 0
+		}
+	}
+	for _, expr := range exprs {
+		if value, delta, ok := g.variantExistsPayloadWitnessTerm(bound, expr); ok {
+			return value, delta
+		}
+	}
+	return nil, 0
+}
+
+func variantExistsExactPayloadWitnessTerm(bound *goivy.LogicVariable, expr goivy.Expr) (goivy.Expr, bool) {
+	switch n := expr.(type) {
+	case *goivy.Eq:
+		if variantExistsIsBoundVar(bound, n.T1) && !exprContainsLogicVariable(n.T2) && sortsEqual(n.T2.NodeSort(), bound.VSort) {
+			return n.T2, true
+		}
+		if variantExistsIsBoundVar(bound, n.T2) && !exprContainsLogicVariable(n.T1) && sortsEqual(n.T1.NodeSort(), bound.VSort) {
+			return n.T1, true
+		}
+	case *goivy.LogicLiteral:
+		if n.Polarity != 0 {
+			return variantExistsExactPayloadWitnessTerm(bound, n.Atom)
+		}
+	case *goivy.LogicAnd:
+		for _, term := range n.Terms {
+			if value, ok := variantExistsExactPayloadWitnessTerm(bound, term); ok {
+				return value, true
+			}
+		}
+	case *goivy.LogicOr:
+		for _, term := range n.Terms {
+			if value, ok := variantExistsExactPayloadWitnessTerm(bound, term); ok {
+				return value, true
+			}
+		}
+	case *goivy.LogicImplies:
+		return variantExistsExactPayloadWitnessTerm(bound, n.T2)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			if value, ok := variantExistsExactPayloadWitnessTerm(bound, term); ok {
+				return value, true
+			}
+		}
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return variantExistsExactPayloadWitnessTerm(bound, expanded)
+		}
+	case *goivy.LogicIte:
+		if exprContainsLogicVariable(n.Cond) {
+			return nil, false
+		}
+		thenValue, thenOK := variantExistsExactPayloadWitnessTerm(bound, n.Then)
+		elseValue, elseOK := variantExistsExactPayloadWitnessTerm(bound, n.Else)
+		if !thenOK || !elseOK {
+			return nil, false
+		}
+		value, err := goivy.NewIte(n.Cond, thenValue, elseValue)
+		if err != nil {
+			return nil, false
+		}
+		return value, true
+	}
+	return nil, false
+}
+
+func (g *Generator) variantExistsPayloadWitnessTerm(bound *goivy.LogicVariable, expr goivy.Expr) (goivy.Expr, int, bool) {
+	switch n := expr.(type) {
+	case *goivy.Eq:
+		if variantExistsIsBoundVar(bound, n.T1) && !exprContainsLogicVariable(n.T2) && sortsEqual(n.T2.NodeSort(), bound.VSort) {
+			return n.T2, 0, true
+		}
+		if variantExistsIsBoundVar(bound, n.T2) && !exprContainsLogicVariable(n.T1) && sortsEqual(n.T1.NodeSort(), bound.VSort) {
+			return n.T1, 0, true
+		}
+	case *goivy.Apply:
+		if g != nil && g.goType(bound.VSort) == "int" {
+			if value, ok := variantExistsPayloadInequalityWitnessTerm(bound, n); ok {
+				return value, 0, true
+			}
+		}
+	case *goivy.LogicLiteral:
+		if n.Polarity != 0 {
+			return g.variantExistsPayloadWitnessTerm(bound, n.Atom)
+		}
+		if g != nil && g.goType(bound.VSort) == "int" {
+			if value, ok := variantExistsPayloadDisequalityWitnessTerm(bound, n.Atom); ok {
+				return value, 1, true
+			}
+		}
+	case *goivy.LogicNot:
+		if g != nil && g.goType(bound.VSort) == "int" {
+			if value, ok := variantExistsPayloadDisequalityWitnessTerm(bound, n.Body); ok {
+				return value, 1, true
+			}
+		}
+	case *goivy.LogicAnd:
+		for _, term := range n.Terms {
+			if value, delta, ok := g.variantExistsPayloadWitnessTerm(bound, term); ok {
+				return value, delta, true
+			}
+		}
+	case *goivy.LogicOr:
+		for _, term := range n.Terms {
+			if value, delta, ok := g.variantExistsPayloadWitnessTerm(bound, term); ok {
+				return value, delta, true
+			}
+		}
+	case *goivy.LogicImplies:
+		return g.variantExistsPayloadWitnessTerm(bound, n.T2)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			if value, delta, ok := g.variantExistsPayloadWitnessTerm(bound, term); ok {
+				return value, delta, true
+			}
+		}
+		if g != nil && g.goType(bound.VSort) == "int" {
+			for _, term := range actionGeneratorIffNegativeTerms(n) {
+				if value, ok := variantExistsPayloadDisequalityWitnessTerm(bound, term); ok {
+					return value, 1, true
+				}
+			}
+		}
+	case *goivy.LogicIte:
+		if exprContainsLogicVariable(n.Cond) {
+			return nil, 0, false
+		}
+		thenValue, thenDelta, thenOK := g.variantExistsPayloadWitnessTerm(bound, n.Then)
+		elseValue, elseDelta, elseOK := g.variantExistsPayloadWitnessTerm(bound, n.Else)
+		if !thenOK || !elseOK {
+			return nil, 0, false
+		}
+		if thenDelta != elseDelta {
+			var ok bool
+			thenValue, ok = g.variantExistsPayloadValueWithDelta(bound, thenValue, thenDelta)
+			if !ok {
+				return nil, 0, false
+			}
+			elseValue, ok = g.variantExistsPayloadValueWithDelta(bound, elseValue, elseDelta)
+			if !ok {
+				return nil, 0, false
+			}
+			thenDelta, elseDelta = 0, 0
+		}
+		value, err := goivy.NewIte(n.Cond, thenValue, elseValue)
+		if err != nil {
+			return nil, 0, false
+		}
+		return value, thenDelta, true
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return g.variantExistsPayloadWitnessTerm(bound, expanded)
+		}
+	}
+	return nil, 0, false
+}
+
+func (g *Generator) variantExistsPayloadValueWithDelta(bound *goivy.LogicVariable, value goivy.Expr, delta int) (goivy.Expr, bool) {
+	if value == nil || bound == nil {
+		return nil, false
+	}
+	if delta == 0 {
+		return value, true
+	}
+	if g == nil || g.goType(bound.VSort) != "int" {
+		return nil, false
+	}
+	op := "+"
+	magnitude := delta
+	if delta < 0 {
+		op = "-"
+		magnitude = -delta
+	}
+	sort := bound.VSort
+	opSort, err := goivy.NewFunctionSort(sort, sort, sort)
+	if err != nil {
+		return nil, false
+	}
+	out, err := goivy.NewApply(goivy.NewConst(op, opSort), value, goivy.NewConst(strconv.Itoa(magnitude), sort))
+	if err != nil {
+		return nil, false
+	}
+	return out, true
+}
+
+func variantExistsPayloadDisequalityWitnessTerm(bound *goivy.LogicVariable, expr goivy.Expr) (goivy.Expr, bool) {
+	eq, ok := expr.(*goivy.Eq)
+	if !ok || eq == nil {
+		return nil, false
+	}
+	if variantExistsIsBoundVar(bound, eq.T1) && !exprContainsLogicVariable(eq.T2) && sortsEqual(eq.T2.NodeSort(), bound.VSort) {
+		return eq.T2, true
+	}
+	if variantExistsIsBoundVar(bound, eq.T2) && !exprContainsLogicVariable(eq.T1) && sortsEqual(eq.T1.NodeSort(), bound.VSort) {
+		return eq.T1, true
+	}
+	return nil, false
+}
+
+func variantExistsPayloadInequalityWitnessTerm(bound *goivy.LogicVariable, expr goivy.Expr) (goivy.Expr, bool) {
+	app, ok := expr.(*goivy.Apply)
+	if !ok || app == nil || len(app.Terms) != 2 || bound == nil {
+		return nil, false
+	}
+	op := goivy.ExprName(app.Func)
+	if !goivy.IsInequalitySymbol(op) {
+		return nil, false
+	}
+	if witness, ok := variantExistsPayloadAffineInequalityWitness(op, app.Terms[0], app.Terms[1], bound); ok {
+		return goivy.NewConst(strconv.Itoa(witness), bound.VSort), true
+	}
+	if variantExistsIsBoundVar(bound, app.Terms[0]) && !exprContainsLogicVariable(app.Terms[1]) {
+		v, ok := actionGeneratorNumeralInt(app.Terms[1])
+		if !ok {
+			return nil, false
+		}
+		witness, ok := actionGeneratorInequalityWitness(op, true, v)
+		if !ok {
+			return nil, false
+		}
+		return goivy.NewConst(strconv.Itoa(witness), bound.VSort), true
+	}
+	if variantExistsIsBoundVar(bound, app.Terms[1]) && !exprContainsLogicVariable(app.Terms[0]) {
+		v, ok := actionGeneratorNumeralInt(app.Terms[0])
+		if !ok {
+			return nil, false
+		}
+		witness, ok := actionGeneratorInequalityWitness(op, false, v)
+		if !ok {
+			return nil, false
+		}
+		return goivy.NewConst(strconv.Itoa(witness), bound.VSort), true
+	}
+	return nil, false
+}
+
+func variantExistsPayloadAffineInequalityWitness(op string, left, right goivy.Expr, bound *goivy.LogicVariable) (int, bool) {
+	leftCoeff, leftOffset, ok := variantExistsPayloadAffineTerm(left, bound)
+	if !ok {
+		return 0, false
+	}
+	rightCoeff, rightOffset, ok := variantExistsPayloadAffineTerm(right, bound)
+	if !ok {
+		return 0, false
+	}
+	coeff := leftCoeff - rightCoeff
+	offset := leftOffset - rightOffset
+	if coeff == 0 {
+		return 0, false
+	}
+	if coeff < 0 {
+		coeff = -coeff
+		offset = -offset
+		switch op {
+		case ">":
+			op = "<"
+		case ">=":
+			op = "<="
+		case "<":
+			op = ">"
+		case "<=":
+			op = ">="
+		}
+	}
+	switch op {
+	case ">":
+		return actionGeneratorFloorDiv(-offset, coeff) + 1, true
+	case ">=":
+		return actionGeneratorCeilDiv(-offset, coeff), true
+	case "<":
+		return actionGeneratorCeilDiv(-offset, coeff) - 1, true
+	case "<=":
+		return actionGeneratorFloorDiv(-offset, coeff), true
+	}
+	return 0, false
+}
+
+func variantExistsPayloadAffineTerm(expr goivy.Expr, bound *goivy.LogicVariable) (coeff int, offset int, ok bool) {
+	if variantExistsIsBoundVar(bound, expr) {
+		return 1, 0, true
+	}
+	if v, ok := actionGeneratorNumeralInt(expr); ok {
+		return 0, v, true
+	}
+	app, ok := expr.(*goivy.Apply)
+	if !ok || app == nil || len(app.Terms) != 2 {
+		return 0, 0, false
+	}
+	leftCoeff, leftOffset, ok := variantExistsPayloadAffineTerm(app.Terms[0], bound)
+	if !ok {
+		return 0, 0, false
+	}
+	rightCoeff, rightOffset, ok := variantExistsPayloadAffineTerm(app.Terms[1], bound)
+	if !ok {
+		return 0, 0, false
+	}
+	switch goivy.ExprName(app.Func) {
+	case "+":
+		return leftCoeff + rightCoeff, leftOffset + rightOffset, true
+	case "-":
+		return leftCoeff - rightCoeff, leftOffset - rightOffset, true
+	}
+	return 0, 0, false
+}
+
+func variantExistsIsBoundVar(bound *goivy.LogicVariable, expr goivy.Expr) bool {
+	v, ok := expr.(*goivy.LogicVariable)
+	return ok && v != nil && bound != nil && v.Name == bound.Name
 }
 
 func orderGenDefinedInputs(defs []genDefinedInput) []genDefinedInput {
@@ -3404,6 +4349,10 @@ func (g *Generator) emitGenActionGeneratorAssumeGuards(w *goWriter, name string,
 	for _, guard := range guards {
 		expr, err := g.emitExpr(closeFormulaForGo(guard))
 		if err != nil {
+			if g.hasBeforeExportAction(name) {
+				g.unsupportedAt(w, guard.GetLineno(), "unsupported before_export action generator requires runtime trial for %s: %s", name, strings.TrimPrefix(err.Error(), "ivy2golang: "))
+				continue
+			}
 			g.unsupportedAt(w, guard.GetLineno(), "unsupported action generator assume guard: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
 			continue
 		}
@@ -3444,12 +4393,12 @@ func (g *Generator) emitActionGeneratorFiniteSearch(w *goWriter, act goivy.Actio
 	var emitFallbackValues func(actionGeneratorFiniteSearchDim, func())
 	var emitRelationDim func(actionGeneratorFiniteSearchDim, func())
 	emitFallbackValues = func(dim actionGeneratorFiniteSearchDim, cont func()) {
-		if len(dim.fallbackValues) == 0 || dim.target == "" || dim.typ == "" {
+		if len(dim.fallbackValues) == 0 || (dim.target == "" && dim.setValue == nil) || dim.typ == "" {
 			return
 		}
 		value := "__ivy_search_fallback_" + dim.suffix
 		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", value, dim.typ, strings.Join(dim.fallbackValues, ", ")))
-		w.linef("%s = %s", dim.target, value)
+		emitActionGeneratorSearchSet(w, dim.target, dim.setValue, value)
 		cont()
 		w.close("")
 	}
@@ -3458,10 +4407,50 @@ func (g *Generator) emitActionGeneratorFiniteSearch(w *goWriter, act goivy.Actio
 		val := "__ivy_search_val_" + dim.suffix
 		w.open(fmt.Sprintf("for %s, %s := range %s {", key, val, dim.relationRange))
 		if dim.relationNegatedInt {
+			for _, cond := range dim.relationConds {
+				lhs := key
+				if dim.relationArity > 1 {
+					lhs = fmt.Sprintf("%s.A%d", key, cond.pos)
+				}
+				w.open(fmt.Sprintf("if !(%s) {", g.goEqualExpr(lhs, cond.expr, cond.sort)))
+				w.line("continue")
+				w.close("")
+			}
 			w.open(fmt.Sprintf("if %s {", val))
-			w.linef("%s = %s + 1", dim.target, key)
+			if len(dim.relationAssignments) > 0 {
+				for i, assignment := range dim.relationAssignments {
+					value := key
+					if dim.relationArity > 1 {
+						value = fmt.Sprintf("%s.A%d", key, assignment.pos)
+					}
+					if i == dim.relationNegatedBump {
+						value += " + 1"
+					}
+					emitActionGeneratorSearchSet(w, assignment.target, assignment.setValue, value)
+				}
+			} else {
+				value := key
+				if dim.relationArity > 1 {
+					value = fmt.Sprintf("%s.A%d", key, dim.relationFormalPos)
+				}
+				emitActionGeneratorSearchSet(w, dim.target, dim.setValue, value+" + 1")
+			}
 			w.close(" else {")
-			w.linef("%s = %s", dim.target, key)
+			if len(dim.relationAssignments) > 0 {
+				for _, assignment := range dim.relationAssignments {
+					value := key
+					if dim.relationArity > 1 {
+						value = fmt.Sprintf("%s.A%d", key, assignment.pos)
+					}
+					emitActionGeneratorSearchSet(w, assignment.target, assignment.setValue, value)
+				}
+			} else {
+				value := key
+				if dim.relationArity > 1 {
+					value = fmt.Sprintf("%s.A%d", key, dim.relationFormalPos)
+				}
+				emitActionGeneratorSearchSet(w, dim.target, dim.setValue, value)
+			}
 			w.close("")
 			cont()
 			w.close("")
@@ -3486,14 +4475,14 @@ func (g *Generator) emitActionGeneratorFiniteSearch(w *goWriter, act goivy.Actio
 				if dim.relationArity > 1 {
 					value = fmt.Sprintf("%s.A%d", key, assignment.pos)
 				}
-				w.linef("%s = %s", assignment.target, value)
+				emitActionGeneratorSearchSet(w, assignment.target, assignment.setValue, value)
 			}
 		} else {
 			value := key
 			if dim.relationArity > 1 {
 				value = fmt.Sprintf("%s.A%d", key, dim.relationFormalPos)
 			}
-			w.linef("%s = %s", dim.target, value)
+			emitActionGeneratorSearchSet(w, dim.target, dim.setValue, value)
 		}
 		cont()
 		w.close("")
@@ -3531,12 +4520,20 @@ func (g *Generator) emitActionGeneratorFiniteSearch(w *goWriter, act goivy.Actio
 			return
 		}
 		w.open(fmt.Sprintf("for __ivy_search_i_%s := 0; __ivy_search_i_%s < len(__ivy_search_values_%s); __ivy_search_i_%s++ {", dim.suffix, dim.suffix, dim.suffix, dim.suffix))
-		w.linef("%s = __ivy_search_values_%s[(__ivy_search_start_%s+__ivy_search_i_%s)%%len(__ivy_search_values_%s)]", dim.target, dim.suffix, dim.suffix, dim.suffix, dim.suffix)
+		emitActionGeneratorSearchSet(w, dim.target, dim.setValue, fmt.Sprintf("__ivy_search_values_%s[(__ivy_search_start_%s+__ivy_search_i_%s)%%len(__ivy_search_values_%s)]", dim.suffix, dim.suffix, dim.suffix, dim.suffix))
 		emitLoops(i + 1)
 		w.close("")
 	}
 	emitLoops(0)
 	return true
+}
+
+func emitActionGeneratorSearchSet(w *goWriter, target string, setValue func(string) string, value string) {
+	if setValue != nil {
+		w.line(setValue(value))
+		return
+	}
+	w.linef("%s = %s", target, value)
 }
 
 type actionGeneratorFiniteSearchDim struct {
@@ -3546,13 +4543,16 @@ type actionGeneratorFiniteSearchDim struct {
 	suffix              string
 	values              []string
 	fallbackValues      []string
+	setValue            func(string) string
 	relationRange       string
 	relationArity       int
 	relationFormalPos   int
 	relationConds       []actionGeneratorRelationWitnessCond
 	relationAssignments []actionGeneratorRelationWitnessAssignment
 	relationNegatedInt  bool
+	relationNegatedBump int
 	alternatives        []actionGeneratorFiniteSearchDim
+	coveredFormals      []int
 }
 
 type actionGeneratorRelationWitnessCond struct {
@@ -3565,6 +4565,7 @@ type actionGeneratorRelationWitnessAssignment struct {
 	formalIndex int
 	pos         int
 	target      string
+	setValue    func(string) string
 }
 
 type actionGeneratorRelationWitnessCandidate struct {
@@ -3582,9 +4583,16 @@ func (g *Generator) actionGeneratorFiniteSearchDims(act goivy.Action, formalBase
 	}
 	var dims []actionGeneratorFiniteSearchDim
 	product := 1
+	coveredFormals := map[int]bool{}
 	addDim := func(dim actionGeneratorFiniteSearchDim) bool {
+		markCovered := func() {
+			for _, idx := range dim.coveredFormals {
+				coveredFormals[idx] = true
+			}
+		}
 		if dim.relationRange != "" || len(dim.alternatives) > 0 {
 			dims = append(dims, dim)
+			markCovered()
 			return true
 		}
 		if len(dim.values) == 0 {
@@ -3597,10 +4605,37 @@ func (g *Generator) actionGeneratorFiniteSearchDims(act goivy.Action, formalBase
 			return false
 		}
 		dims = append(dims, dim)
+		markCovered()
 		return true
 	}
-	coveredFormals := map[int]bool{}
+	nameToFormal := map[string]int{}
+	for i, p := range formals {
+		if p == nil {
+			continue
+		}
+		for _, name := range formalExprOverrideNames(p.Name) {
+			nameToFormal[name] = i
+		}
+	}
 	for _, dim := range g.actionGeneratorRelationWitnessGroupDims(formals, guardFormulas, formalBaseLabel) {
+		if !addDim(dim) {
+			return nil, false
+		}
+		for _, assignment := range dim.relationAssignments {
+			coveredFormals[assignment.formalIndex] = true
+		}
+	}
+	for _, dim := range g.actionGeneratorNegatedRelationWitnessGroupDims(formals, guardFormulas, formalBaseLabel) {
+		skip := false
+		for _, assignment := range dim.relationAssignments {
+			if coveredFormals[assignment.formalIndex] {
+				skip = true
+				break
+			}
+		}
+		if skip {
+			continue
+		}
 		if !addDim(dim) {
 			return nil, false
 		}
@@ -3655,13 +4690,38 @@ func (g *Generator) actionGeneratorFiniteSearchDims(act goivy.Action, formalBase
 			}
 			continue
 		}
+		if g.goType(p.CSort) == "int" {
+			if !addDim(actionGeneratorFiniteSearchDim{
+				target: "gen." + goName(p.Name),
+				typ:    "int",
+				label:  baseLabel + ".smallsearch",
+				suffix: strconv.Itoa(i),
+				values: actionGeneratorSmallIntFallbackValues(),
+			}) {
+				return nil, false
+			}
+			continue
+		}
 		fields := g.destructorStructFieldInfos(sortName(p.CSort))
 		if len(fields) == 0 {
 			return nil, false
 		}
+		names := map[string]bool{}
+		for _, name := range formalExprOverrideNames(p.Name) {
+			names[name] = true
+		}
 		addedField := false
 		for _, field := range fields {
-			if field.Const == nil || field.Sort == nil || g.destructorFieldIsLarge(field) {
+			if field.Const == nil || field.Sort == nil {
+				continue
+			}
+			if g.destructorFieldIsLarge(field) {
+				for _, dim := range g.actionGeneratorLargeFieldSearchDims(p, field, guardFormulas, baseLabel, strconv.Itoa(i), names, nameToFormal) {
+					if !addDim(dim) {
+						return nil, false
+					}
+					addedField = true
+				}
 				continue
 			}
 			values, ok := g.finiteValueExprs(field.Sort.Range())
@@ -3698,6 +4758,12 @@ func (g *Generator) actionGeneratorFiniteSearchDims(act goivy.Action, formalBase
 				}
 				addedField = true
 			}
+		}
+		for _, dim := range g.actionGeneratorNestedFieldSearchDims(p, guardFormulas, baseLabel, strconv.Itoa(i), names) {
+			if !addDim(dim) {
+				return nil, false
+			}
+			addedField = true
 		}
 		if !addedField {
 			return nil, false
@@ -3794,58 +4860,173 @@ func (g *Generator) actionGeneratorRelationWitnessGroupDims(formals []*goivy.Con
 	return dims
 }
 
+func (g *Generator) actionGeneratorNegatedRelationWitnessGroupDims(formals []*goivy.Const, guards []goivy.Expr, formalBaseLabel func(*goivy.Const) string) []actionGeneratorFiniteSearchDim {
+	if g == nil || g.Mod == nil || len(formals) == 0 || len(guards) == 0 {
+		return nil
+	}
+	nameToFormal := map[string]int{}
+	allNames := map[string]bool{}
+	for i, p := range formals {
+		if p == nil {
+			continue
+		}
+		for _, name := range formalExprOverrideNames(p.Name) {
+			nameToFormal[name] = i
+			allNames[name] = true
+		}
+	}
+	covered := map[int]bool{}
+	var dims []actionGeneratorFiniteSearchDim
+	for _, guard := range guards {
+		for _, candidate := range actionGeneratorNegatedRelationWitnessGroupCandidates(guard) {
+			app := candidate.app
+			if app == nil {
+				continue
+			}
+			relName := goivy.ExprName(app.Func)
+			if relName == "" {
+				continue
+			}
+			sort, ok := g.isStateSymbolName(relName)
+			if !ok {
+				continue
+			}
+			fs, ok := sort.(*goivy.LogicFunctionSort)
+			if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
+				continue
+			}
+			var assignments []actionGeneratorRelationWitnessAssignment
+			var conds []actionGeneratorRelationWitnessCond
+			seenTargets := map[string]bool{}
+			valid := true
+			for i, term := range app.Terms {
+				if assignment, ok, referencesFormal := g.actionGeneratorRelationWitnessAssignmentForTerm(formals, term, fs.Domain()[i], nameToFormal, allNames); referencesFormal {
+					if !ok || covered[assignment.formalIndex] || seenTargets[assignment.target] {
+						valid = false
+						break
+					}
+					seenTargets[assignment.target] = true
+					assignment.pos = i
+					assignments = append(assignments, assignment)
+					continue
+				}
+				if exprReferencesAnyName(term, allNames) {
+					valid = false
+					break
+				}
+				if exprReferencesAnyNameIncludingVariables(term, candidate.ignored) {
+					continue
+				}
+				expr, err := g.emitExpr(term)
+				if err != nil {
+					valid = false
+					break
+				}
+				conds = append(conds, actionGeneratorRelationWitnessCond{pos: i, expr: expr, sort: fs.Domain()[i]})
+			}
+			if !valid || len(assignments) < 2 {
+				continue
+			}
+			bump := -1
+			for i, assignment := range assignments {
+				if g.goType(fs.Domain()[assignment.pos]) == "int" {
+					bump = i
+				}
+			}
+			if bump < 0 {
+				continue
+			}
+			var suffixParts []string
+			var coveredIdxs []int
+			for _, assignment := range assignments {
+				suffixParts = append(suffixParts, strconv.Itoa(assignment.formalIndex))
+				coveredIdxs = append(coveredIdxs, assignment.formalIndex)
+			}
+			dim := actionGeneratorFiniteSearchDim{
+				label:               formalBaseLabel(formals[assignments[0].formalIndex]) + ".negsearch",
+				suffix:              strings.Join(suffixParts, "_"),
+				relationRange:       g.goStorageRangeExpr(relName, sort, "ivy"),
+				relationArity:       len(app.Terms),
+				relationConds:       conds,
+				relationAssignments: assignments,
+				relationNegatedInt:  true,
+				relationNegatedBump: bump,
+				coveredFormals:      coveredIdxs,
+			}
+			dims = append(dims, dim)
+			for _, assignment := range assignments {
+				covered[assignment.formalIndex] = true
+			}
+		}
+	}
+	return dims
+}
+
 func (g *Generator) actionGeneratorRelationWitnessAssignmentForTerm(formals []*goivy.Const, term goivy.Expr, expectedSort goivy.Sort, nameToFormal map[string]int, allNames map[string]bool) (actionGeneratorRelationWitnessAssignment, bool, bool) {
 	if !exprReferencesAnyName(term, allNames) {
 		return actionGeneratorRelationWitnessAssignment{}, false, false
 	}
-	target, actualSort, formalIndex, ok := g.actionGeneratorRelationWitnessTargetPath(formals, term, nameToFormal, allNames)
+	target, actualSort, formalIndex, setValue, ok := g.actionGeneratorRelationWitnessTargetPath(formals, term, nameToFormal, allNames)
 	if !ok || !sortsEqual(actualSort, expectedSort) {
 		return actionGeneratorRelationWitnessAssignment{}, false, true
 	}
 	return actionGeneratorRelationWitnessAssignment{
 		formalIndex: formalIndex,
 		target:      target,
+		setValue:    setValue,
 	}, true, true
 }
 
-func (g *Generator) actionGeneratorRelationWitnessTargetPath(formals []*goivy.Const, term goivy.Expr, nameToFormal map[string]int, allNames map[string]bool) (string, goivy.Sort, int, bool) {
+func (g *Generator) actionGeneratorRelationWitnessTargetPath(formals []*goivy.Const, term goivy.Expr, nameToFormal map[string]int, allNames map[string]bool) (string, goivy.Sort, int, func(string) string, bool) {
 	if term == nil {
-		return "", nil, 0, false
+		return "", nil, 0, nil, false
 	}
 	if formalIndex, ok := actionGeneratorBareFormalIndex(term, nameToFormal); ok {
 		if formalIndex < 0 || formalIndex >= len(formals) || formals[formalIndex] == nil {
-			return "", nil, 0, false
+			return "", nil, 0, nil, false
 		}
-		return "gen." + goName(formals[formalIndex].Name), formals[formalIndex].CSort, formalIndex, true
+		return "gen." + goName(formals[formalIndex].Name), formals[formalIndex].CSort, formalIndex, nil, true
 	}
 	app, ok := term.(*goivy.Apply)
 	if !ok || app == nil {
-		return "", nil, 0, false
+		return "", nil, 0, nil, false
 	}
 	fn, ok := app.Func.(*goivy.Const)
 	if !ok || fn == nil {
-		return "", nil, 0, false
+		return "", nil, 0, nil, false
 	}
 	field, ok := g.destructorFieldInfo(fn.Name)
-	if !ok || field.Sort == nil || len(app.Terms) != len(field.Sort.Domain()) || g.destructorFieldIsLarge(field) {
-		return "", nil, 0, false
+	if !ok || field.Sort == nil || len(app.Terms) != len(field.Sort.Domain()) {
+		return "", nil, 0, nil, false
 	}
-	baseTarget, baseSort, formalIndex, ok := g.actionGeneratorRelationWitnessTargetPath(formals, app.Terms[0], nameToFormal, allNames)
+	baseTarget, baseSort, formalIndex, baseSetValue, ok := g.actionGeneratorRelationWitnessTargetPath(formals, app.Terms[0], nameToFormal, allNames)
 	if !ok || !sortsEqual(baseSort, field.Sort.Domain()[0]) {
-		return "", nil, 0, false
+		return "", nil, 0, nil, false
+	}
+	if baseSetValue != nil {
+		return "", nil, 0, nil, false
 	}
 	var indexes []string
 	for _, arg := range app.Terms[1:] {
 		if exprReferencesAnyName(arg, allNames) {
-			return "", nil, 0, false
+			return "", nil, 0, nil, false
 		}
 		expr, err := g.emitExpr(arg)
 		if err != nil {
-			return "", nil, 0, false
+			return "", nil, 0, nil, false
 		}
 		indexes = append(indexes, expr)
 	}
-	return baseTarget + "." + field.FieldName + goIndexSuffix(indexes), field.Sort.Range(), formalIndex, true
+	if g.destructorFieldIsLarge(field) {
+		key := g.goMapKeyValue(field.Sort.Domain()[1:], indexes)
+		zero := g.goZeroValue(field.Sort.Range())
+		target := fmt.Sprintf("%s.%s[%s]", baseTarget, field.FieldName, key)
+		setValue := func(value string) string {
+			return fmt.Sprintf("ivyThunkSet(&%s.%s, %s, %s, %s)", baseTarget, field.FieldName, key, value, zero)
+		}
+		return target, field.Sort.Range(), formalIndex, setValue, true
+	}
+	return baseTarget + "." + field.FieldName + goIndexSuffix(indexes), field.Sort.Range(), formalIndex, nil, true
 }
 
 func (g *Generator) actionGeneratorScalarWitnessValues(p *goivy.Const, guards []goivy.Expr) ([]string, bool) {
@@ -3865,13 +5046,15 @@ func (g *Generator) scalarWitnessValuesForNames(goTyp string, names map[string]b
 	}
 	seen := map[string]bool{}
 	var values []string
-	add := func(v int) {
-		text := strconv.Itoa(v)
+	addText := func(text string) {
 		if seen[text] {
 			return
 		}
 		seen[text] = true
 		values = append(values, text)
+	}
+	add := func(v int) {
+		addText(strconv.Itoa(v))
 	}
 	var visit func(goivy.Expr)
 	visit = func(expr goivy.Expr) {
@@ -3883,23 +5066,26 @@ func (g *Generator) scalarWitnessValuesForNames(goTyp string, names map[string]b
 		case *goivy.Apply:
 			if v, ok := actionGeneratorFormalNumeralIneqExpr(n, names); ok {
 				add(v)
+				return
+			}
+			if text, ok := g.actionGeneratorFormalExprIneqExpr(n, names); ok {
+				addText(text)
 			}
 		case *goivy.LogicLiteral:
-			v, ok := actionGeneratorFormalNumeralEqExpr(n.Atom, names)
-			if !ok {
-				if n.Polarity != 0 {
-					visit(n.Atom)
+			if n.Polarity == 0 {
+				if v, ok := actionGeneratorFormalNumeralNegatedExpr(n.Atom, names); ok {
+					add(v)
 				}
 				return
 			}
-			if n.Polarity == 0 {
-				add(v + 1)
-			} else {
+			if v, ok := actionGeneratorFormalNumeralEqExpr(n.Atom, names); ok {
 				add(v)
+				return
 			}
+			visit(n.Atom)
 		case *goivy.LogicNot:
-			if v, ok := actionGeneratorFormalNumeralEqExpr(n.Body, names); ok {
-				add(v + 1)
+			if v, ok := actionGeneratorFormalNumeralNegatedExpr(n.Body, names); ok {
+				add(v)
 			}
 		case *goivy.LogicAnd:
 			for _, term := range n.Terms {
@@ -3911,6 +5097,30 @@ func (g *Generator) scalarWitnessValuesForNames(goTyp string, names map[string]b
 			}
 		case *goivy.LogicImplies:
 			visit(n.T2)
+		case *goivy.LogicIff:
+			for _, term := range actionGeneratorIffPositiveTerms(n) {
+				visit(term)
+			}
+			for _, term := range actionGeneratorIffNegativeTerms(n) {
+				if v, ok := actionGeneratorFormalNumeralNegatedExpr(term, names); ok {
+					add(v)
+				}
+			}
+		case *goivy.LogicIte:
+			thenValues, thenOK := g.scalarWitnessValuesForNames(goTyp, names, []goivy.Expr{n.Then})
+			elseValues, elseOK := g.scalarWitnessValuesForNames(goTyp, names, []goivy.Expr{n.Else})
+			if !thenOK || !elseOK || len(thenValues) == 0 || len(elseValues) == 0 {
+				return
+			}
+			cond, err := g.emitExpr(n.Cond)
+			if err != nil {
+				return
+			}
+			addText(fmt.Sprintf("ivyTernary(%s, %s, %s)", cond, thenValues[0], elseValues[0]))
+		case *goivy.LogicLet:
+			if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+				visit(expanded)
+			}
 		}
 	}
 	for _, guard := range guards {
@@ -3919,10 +5129,90 @@ func (g *Generator) scalarWitnessValuesForNames(goTyp string, names map[string]b
 	return values, len(values) > 0
 }
 
+func (g *Generator) actionGeneratorFormalExprIneqExpr(app *goivy.Apply, names map[string]bool) (string, bool) {
+	if g == nil || app == nil || len(app.Terms) != 2 {
+		return "", false
+	}
+	op := goivy.ExprName(app.Func)
+	if !goivy.IsInequalitySymbol(op) {
+		return "", false
+	}
+	left, right := app.Terms[0], app.Terms[1]
+	leftTarget := actionGeneratorBareFormalInNames(left, names)
+	rightTarget := actionGeneratorBareFormalInNames(right, names)
+	if leftTarget == rightTarget {
+		return "", false
+	}
+	targetIsLeft := leftTarget
+	base := right
+	if rightTarget {
+		base = left
+	}
+	if exprReferencesAnyNameIncludingVariables(base, names) || g.goType(base.NodeSort()) != "int" {
+		return "", false
+	}
+	baseExpr, err := g.emitExpr(base)
+	if err != nil {
+		return "", false
+	}
+	switch op {
+	case "<":
+		if targetIsLeft {
+			return baseExpr + " - 1", true
+		}
+		return baseExpr + " + 1", true
+	case "<=":
+		return baseExpr, true
+	case ">":
+		if targetIsLeft {
+			return baseExpr + " + 1", true
+		}
+		return baseExpr + " - 1", true
+	case ">=":
+		return baseExpr, true
+	default:
+		return "", false
+	}
+}
+
+func actionGeneratorFormalNumeralNegatedExpr(expr goivy.Expr, names map[string]bool) (int, bool) {
+	if v, ok := actionGeneratorFormalNumeralEqExpr(expr, names); ok {
+		return v + 1, true
+	}
+	if v, ok := actionGeneratorFormalNumeralNegatedIneqExpr(expr, names); ok {
+		return v, true
+	}
+	if or, ok := expr.(*goivy.LogicOr); ok {
+		return actionGeneratorFormalNumeralNegatedOrExpr(or, names)
+	}
+	return 0, false
+}
+
+func actionGeneratorFormalNumeralNegatedOrExpr(or *goivy.LogicOr, names map[string]bool) (int, bool) {
+	if or == nil || len(or.Terms) != 2 {
+		return 0, false
+	}
+	for i := 0; i < 2; i++ {
+		eqVal, eqOK := actionGeneratorFormalNumeralEqExpr(or.Terms[i], names)
+		ineqVal, ineqOK := actionGeneratorFormalNumeralIneqExpr(or.Terms[1-i], names)
+		if !eqOK || !ineqOK || eqVal == ineqVal {
+			continue
+		}
+		if ineqVal < eqVal {
+			return eqVal + 1, true
+		}
+		return eqVal - 1, true
+	}
+	return 0, false
+}
+
 func actionGeneratorFormalNumeralEqExpr(expr goivy.Expr, names map[string]bool) (int, bool) {
 	t1, t2, ok := actionGeneratorEqTerms(expr)
 	if !ok {
 		return 0, false
+	}
+	if v, ok := actionGeneratorAffineEqualityWitness(t1, t2, names); ok {
+		return v, true
 	}
 	if actionGeneratorBareFormalInNames(t1, names) {
 		return actionGeneratorNumeralInt(t2)
@@ -3931,6 +5221,50 @@ func actionGeneratorFormalNumeralEqExpr(expr goivy.Expr, names map[string]bool) 
 		return actionGeneratorNumeralInt(t1)
 	}
 	return 0, false
+}
+
+func actionGeneratorFormalNumeralNegatedIneqExpr(expr goivy.Expr, names map[string]bool) (int, bool) {
+	app, ok := expr.(*goivy.Apply)
+	if !ok || app == nil || len(app.Terms) != 2 {
+		return 0, false
+	}
+	op := actionGeneratorInvertInequality(goivy.ExprName(app.Func))
+	if op == "" {
+		return 0, false
+	}
+	if v, ok := actionGeneratorAffineInequalityWitness(op, app.Terms[0], app.Terms[1], names); ok {
+		return v, true
+	}
+	if actionGeneratorBareFormalInNames(app.Terms[0], names) {
+		v, ok := actionGeneratorNumeralInt(app.Terms[1])
+		if !ok {
+			return 0, false
+		}
+		return actionGeneratorInequalityWitness(op, true, v)
+	}
+	if actionGeneratorBareFormalInNames(app.Terms[1], names) {
+		v, ok := actionGeneratorNumeralInt(app.Terms[0])
+		if !ok {
+			return 0, false
+		}
+		return actionGeneratorInequalityWitness(op, false, v)
+	}
+	return 0, false
+}
+
+func actionGeneratorInvertInequality(op string) string {
+	switch op {
+	case "<":
+		return ">="
+	case "<=":
+		return ">"
+	case ">":
+		return "<="
+	case ">=":
+		return "<"
+	default:
+		return ""
+	}
 }
 
 func actionGeneratorEqTerms(expr goivy.Expr) (goivy.Expr, goivy.Expr, bool) {
@@ -3948,6 +5282,55 @@ func actionGeneratorEqTerms(expr goivy.Expr) (goivy.Expr, goivy.Expr, bool) {
 	return nil, nil, false
 }
 
+func actionGeneratorAffineEqualityWitness(left, right goivy.Expr, names map[string]bool) (int, bool) {
+	leftCoeff, leftOffset, ok := actionGeneratorAffineTerm(left, names)
+	if !ok {
+		return 0, false
+	}
+	rightCoeff, rightOffset, ok := actionGeneratorAffineTerm(right, names)
+	if !ok {
+		return 0, false
+	}
+	coeff := leftCoeff - rightCoeff
+	offset := leftOffset - rightOffset
+	if coeff == 0 {
+		return 0, false
+	}
+	numerator := -offset
+	if numerator%coeff != 0 {
+		return 0, false
+	}
+	return numerator / coeff, true
+}
+
+func actionGeneratorAffineTerm(expr goivy.Expr, names map[string]bool) (coeff int, offset int, ok bool) {
+	if actionGeneratorBareFormalInNames(expr, names) {
+		return 1, 0, true
+	}
+	if v, ok := actionGeneratorNumeralInt(expr); ok {
+		return 0, v, true
+	}
+	app, ok := expr.(*goivy.Apply)
+	if !ok || app == nil || len(app.Terms) != 2 {
+		return 0, 0, false
+	}
+	leftCoeff, leftOffset, ok := actionGeneratorAffineTerm(app.Terms[0], names)
+	if !ok {
+		return 0, 0, false
+	}
+	rightCoeff, rightOffset, ok := actionGeneratorAffineTerm(app.Terms[1], names)
+	if !ok {
+		return 0, 0, false
+	}
+	switch goivy.ExprName(app.Func) {
+	case "+":
+		return leftCoeff + rightCoeff, leftOffset + rightOffset, true
+	case "-":
+		return leftCoeff - rightCoeff, leftOffset - rightOffset, true
+	}
+	return 0, 0, false
+}
+
 func actionGeneratorFormalNumeralIneqExpr(expr goivy.Expr, names map[string]bool) (int, bool) {
 	app, ok := expr.(*goivy.Apply)
 	if !ok || app == nil || len(app.Terms) != 2 {
@@ -3956,6 +5339,9 @@ func actionGeneratorFormalNumeralIneqExpr(expr goivy.Expr, names map[string]bool
 	op := goivy.ExprName(app.Func)
 	if !goivy.IsInequalitySymbol(op) {
 		return 0, false
+	}
+	if v, ok := actionGeneratorAffineInequalityWitness(op, app.Terms[0], app.Terms[1], names); ok {
+		return v, true
 	}
 	if actionGeneratorBareFormalInNames(app.Terms[0], names) {
 		v, ok := actionGeneratorNumeralInt(app.Terms[1])
@@ -3972,6 +5358,64 @@ func actionGeneratorFormalNumeralIneqExpr(expr goivy.Expr, names map[string]bool
 		return actionGeneratorInequalityWitness(op, false, v)
 	}
 	return 0, false
+}
+
+func actionGeneratorAffineInequalityWitness(op string, left, right goivy.Expr, names map[string]bool) (int, bool) {
+	leftCoeff, leftOffset, ok := actionGeneratorAffineTerm(left, names)
+	if !ok {
+		return 0, false
+	}
+	rightCoeff, rightOffset, ok := actionGeneratorAffineTerm(right, names)
+	if !ok {
+		return 0, false
+	}
+	coeff := leftCoeff - rightCoeff
+	offset := leftOffset - rightOffset
+	if coeff == 0 {
+		return 0, false
+	}
+	if coeff < 0 {
+		coeff = -coeff
+		offset = -offset
+		switch op {
+		case ">":
+			op = "<"
+		case ">=":
+			op = "<="
+		case "<":
+			op = ">"
+		case "<=":
+			op = ">="
+		}
+	}
+	switch op {
+	case ">":
+		return actionGeneratorFloorDiv(-offset, coeff) + 1, true
+	case ">=":
+		return actionGeneratorCeilDiv(-offset, coeff), true
+	case "<":
+		return actionGeneratorCeilDiv(-offset, coeff) - 1, true
+	case "<=":
+		return actionGeneratorFloorDiv(-offset, coeff), true
+	}
+	return 0, false
+}
+
+func actionGeneratorFloorDiv(a, b int) int {
+	if b < 0 {
+		a = -a
+		b = -b
+	}
+	q := a / b
+	r := a % b
+	if r != 0 && ((r < 0) != (b < 0)) {
+		q--
+	}
+	return q
+}
+
+func actionGeneratorCeilDiv(a, b int) int {
+	return -actionGeneratorFloorDiv(-a, b)
 }
 
 func actionGeneratorInequalityWitness(op string, formalLeft bool, v int) (int, bool) {
@@ -4027,7 +5471,11 @@ func (g *Generator) actionGeneratorNegatedRelationWitnessDim(p *goivy.Const, gua
 		names[name] = true
 	}
 	for _, guard := range guards {
-		for _, app := range actionGeneratorNegatedRelationWitnessApplyCandidates(guard, names) {
+		for _, candidate := range actionGeneratorNegatedRelationWitnessApplyCandidates(guard, names) {
+			app := candidate.app
+			if app == nil {
+				continue
+			}
 			relName := goivy.ExprName(app.Func)
 			if relName == "" {
 				continue
@@ -4037,10 +5485,32 @@ func (g *Generator) actionGeneratorNegatedRelationWitnessDim(p *goivy.Const, gua
 				continue
 			}
 			fs, ok := sort.(*goivy.LogicFunctionSort)
-			if !ok || len(fs.Domain()) != 1 || len(app.Terms) != 1 || !isBooleanSort(fs.Range()) || !sortsEqual(fs.Domain()[0], p.CSort) {
+			if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
 				continue
 			}
-			if !actionGeneratorBareFormalInNames(app.Terms[0], names) {
+			formalPos := -1
+			var conds []actionGeneratorRelationWitnessCond
+			valid := true
+			for i, term := range app.Terms {
+				if exprReferencesAnyName(term, names) {
+					if formalPos >= 0 || !actionGeneratorBareFormalInNames(term, names) || !sortsEqual(fs.Domain()[i], p.CSort) {
+						valid = false
+						break
+					}
+					formalPos = i
+					continue
+				}
+				if exprReferencesAnyNameIncludingVariables(term, candidate.ignored) {
+					continue
+				}
+				expr, err := g.emitExpr(term)
+				if err != nil {
+					valid = false
+					break
+				}
+				conds = append(conds, actionGeneratorRelationWitnessCond{pos: i, expr: expr, sort: fs.Domain()[i]})
+			}
+			if !valid || formalPos < 0 {
 				continue
 			}
 			return actionGeneratorAddSmallIntFallback(actionGeneratorFiniteSearchDim{
@@ -4049,7 +5519,9 @@ func (g *Generator) actionGeneratorNegatedRelationWitnessDim(p *goivy.Const, gua
 				label:              baseLabel + ".negsearch",
 				suffix:             suffix,
 				relationRange:      g.goStorageRangeExpr(relName, sort, "ivy"),
-				relationArity:      1,
+				relationArity:      len(app.Terms),
+				relationFormalPos:  formalPos,
+				relationConds:      conds,
 				relationNegatedInt: true,
 			}), true
 		}
@@ -4057,32 +5529,59 @@ func (g *Generator) actionGeneratorNegatedRelationWitnessDim(p *goivy.Const, gua
 	return actionGeneratorFiniteSearchDim{}, false
 }
 
-func actionGeneratorNegatedRelationWitnessApplyCandidates(expr goivy.Expr, names map[string]bool) []*goivy.Apply {
+func actionGeneratorNegatedRelationWitnessApplyCandidates(expr goivy.Expr, names map[string]bool) []actionGeneratorRelationWitnessCandidate {
+	return actionGeneratorNegatedRelationWitnessApplyCandidatesWithIgnored(expr, names, nil)
+}
+
+func actionGeneratorNegatedRelationWitnessApplyCandidatesWithIgnored(expr goivy.Expr, names map[string]bool, ignored map[string]bool) []actionGeneratorRelationWitnessCandidate {
 	switch n := expr.(type) {
 	case *goivy.LogicLiteral:
 		if n.Polarity == 0 {
 			if app, ok := n.Atom.(*goivy.Apply); ok && actionGeneratorApplyReferencesExactlyOneName(app, names) {
-				return []*goivy.Apply{app}
+				return []actionGeneratorRelationWitnessCandidate{{app: app, ignored: ignored}}
 			}
 		}
 	case *goivy.LogicNot:
 		if app, ok := n.Body.(*goivy.Apply); ok && actionGeneratorApplyReferencesExactlyOneName(app, names) {
-			return []*goivy.Apply{app}
+			return []actionGeneratorRelationWitnessCandidate{{app: app, ignored: ignored}}
 		}
 	case *goivy.LogicAnd:
-		var out []*goivy.Apply
+		var out []actionGeneratorRelationWitnessCandidate
 		for _, term := range n.Terms {
-			out = append(out, actionGeneratorNegatedRelationWitnessApplyCandidates(term, names)...)
+			out = append(out, actionGeneratorNegatedRelationWitnessApplyCandidatesWithIgnored(term, names, ignored)...)
 		}
 		return out
 	case *goivy.LogicOr:
-		var out []*goivy.Apply
+		var out []actionGeneratorRelationWitnessCandidate
 		for _, term := range n.Terms {
-			out = append(out, actionGeneratorNegatedRelationWitnessApplyCandidates(term, names)...)
+			out = append(out, actionGeneratorNegatedRelationWitnessApplyCandidatesWithIgnored(term, names, ignored)...)
 		}
 		return out
+	case *goivy.LogicIte:
+		var out []actionGeneratorRelationWitnessCandidate
+		out = append(out, actionGeneratorNegatedRelationWitnessApplyCandidatesWithIgnored(n.Then, names, ignored)...)
+		out = append(out, actionGeneratorNegatedRelationWitnessApplyCandidatesWithIgnored(n.Else, names, ignored)...)
+		return out
+	case *goivy.LogicExists:
+		nextIgnored := copyNameSet(ignored)
+		for _, v := range n.Variables {
+			if v != nil {
+				nextIgnored[v.Name] = true
+			}
+		}
+		return actionGeneratorNegatedRelationWitnessApplyCandidatesWithIgnored(n.Body, names, nextIgnored)
 	case *goivy.LogicImplies:
-		return actionGeneratorNegatedRelationWitnessApplyCandidates(n.T2, names)
+		return actionGeneratorNegatedRelationWitnessApplyCandidatesWithIgnored(n.T2, names, ignored)
+	case *goivy.LogicIff:
+		var out []actionGeneratorRelationWitnessCandidate
+		for _, term := range actionGeneratorIffNegativeTerms(n) {
+			out = append(out, actionGeneratorNegatedRelationWitnessApplyCandidatesWithIgnored(term, names, ignored)...)
+		}
+		return out
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return actionGeneratorNegatedRelationWitnessApplyCandidatesWithIgnored(expanded, names, ignored)
+		}
 	}
 	return nil
 }
@@ -4152,6 +5651,7 @@ func (g *Generator) actionGeneratorRelationWitnessDimForApply(p *goivy.Const, ap
 	}
 	formalPos := -1
 	target := "gen." + goName(p.Name)
+	var setValue func(string) string
 	typ := g.goType(p.CSort)
 	var conds []actionGeneratorRelationWitnessCond
 	valid := true
@@ -4161,12 +5661,13 @@ func (g *Generator) actionGeneratorRelationWitnessDimForApply(p *goivy.Const, ap
 				valid = false
 				break
 			}
-			relationTarget, relationTyp, ok := g.actionGeneratorRelationWitnessTargetForTerm(p, term, fs.Domain()[i], names)
+			relationTarget, relationTyp, relationSetValue, ok := g.actionGeneratorRelationWitnessTargetForTerm(p, term, fs.Domain()[i], names)
 			if !ok {
 				valid = false
 				break
 			}
 			target = relationTarget
+			setValue = relationSetValue
 			typ = relationTyp
 			formalPos = i
 			continue
@@ -4186,6 +5687,7 @@ func (g *Generator) actionGeneratorRelationWitnessDimForApply(p *goivy.Const, ap
 	}
 	return actionGeneratorAddSmallIntFallback(actionGeneratorFiniteSearchDim{
 		target:            target,
+		setValue:          setValue,
 		typ:               typ,
 		label:             baseLabel + ".search",
 		suffix:            suffix,
@@ -4196,19 +5698,19 @@ func (g *Generator) actionGeneratorRelationWitnessDimForApply(p *goivy.Const, ap
 	}), true
 }
 
-func (g *Generator) actionGeneratorRelationWitnessTargetForTerm(p *goivy.Const, term goivy.Expr, expectedSort goivy.Sort, names map[string]bool) (string, string, bool) {
+func (g *Generator) actionGeneratorRelationWitnessTargetForTerm(p *goivy.Const, term goivy.Expr, expectedSort goivy.Sort, names map[string]bool) (string, string, func(string) string, bool) {
 	if p == nil || term == nil {
-		return "", "", false
+		return "", "", nil, false
 	}
 	nameToFormal := map[string]int{}
 	for name := range names {
 		nameToFormal[name] = 0
 	}
-	target, actualSort, _, ok := g.actionGeneratorRelationWitnessTargetPath([]*goivy.Const{p}, term, nameToFormal, names)
+	target, actualSort, _, setValue, ok := g.actionGeneratorRelationWitnessTargetPath([]*goivy.Const{p}, term, nameToFormal, names)
 	if !ok || !sortsEqual(actualSort, expectedSort) {
-		return "", "", false
+		return "", "", nil, false
 	}
-	return target, g.goType(expectedSort), true
+	return target, g.goType(expectedSort), setValue, true
 }
 
 func actionGeneratorBareFormalIndex(expr goivy.Expr, nameToFormal map[string]int) (int, bool) {
@@ -4227,6 +5729,10 @@ type actionGeneratorRelationWitnessGroupCandidate struct {
 
 func actionGeneratorRelationWitnessGroupCandidates(expr goivy.Expr) []actionGeneratorRelationWitnessGroupCandidate {
 	return actionGeneratorRelationWitnessGroupCandidatesWithIgnored(expr, nil)
+}
+
+func actionGeneratorNegatedRelationWitnessGroupCandidates(expr goivy.Expr) []actionGeneratorRelationWitnessGroupCandidate {
+	return actionGeneratorNegatedRelationWitnessGroupCandidatesWithIgnored(expr, nil)
 }
 
 func actionGeneratorRelationWitnessGroupCandidatesWithIgnored(expr goivy.Expr, ignored map[string]bool) []actionGeneratorRelationWitnessGroupCandidate {
@@ -4249,6 +5755,11 @@ func actionGeneratorRelationWitnessGroupCandidatesWithIgnored(expr goivy.Expr, i
 			out = append(out, actionGeneratorRelationWitnessGroupCandidatesWithIgnored(term, ignored)...)
 		}
 		return out
+	case *goivy.LogicIte:
+		var out []actionGeneratorRelationWitnessGroupCandidate
+		out = append(out, actionGeneratorRelationWitnessGroupCandidatesWithIgnored(n.Then, ignored)...)
+		out = append(out, actionGeneratorRelationWitnessGroupCandidatesWithIgnored(n.Else, ignored)...)
+		return out
 	case *goivy.LogicExists:
 		nextIgnored := copyNameSet(ignored)
 		for _, v := range n.Variables {
@@ -4259,6 +5770,69 @@ func actionGeneratorRelationWitnessGroupCandidatesWithIgnored(expr goivy.Expr, i
 		return actionGeneratorRelationWitnessGroupCandidatesWithIgnored(n.Body, nextIgnored)
 	case *goivy.LogicImplies:
 		return actionGeneratorRelationWitnessGroupCandidatesWithIgnored(n.T2, ignored)
+	case *goivy.LogicIff:
+		var out []actionGeneratorRelationWitnessGroupCandidate
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			out = append(out, actionGeneratorRelationWitnessGroupCandidatesWithIgnored(term, ignored)...)
+		}
+		return out
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return actionGeneratorRelationWitnessGroupCandidatesWithIgnored(expanded, ignored)
+		}
+	}
+	return nil
+}
+
+func actionGeneratorNegatedRelationWitnessGroupCandidatesWithIgnored(expr goivy.Expr, ignored map[string]bool) []actionGeneratorRelationWitnessGroupCandidate {
+	switch n := expr.(type) {
+	case *goivy.LogicLiteral:
+		if n.Polarity == 0 {
+			if app, ok := n.Atom.(*goivy.Apply); ok {
+				return []actionGeneratorRelationWitnessGroupCandidate{{app: app, ignored: ignored}}
+			}
+		}
+	case *goivy.LogicNot:
+		if app, ok := n.Body.(*goivy.Apply); ok {
+			return []actionGeneratorRelationWitnessGroupCandidate{{app: app, ignored: ignored}}
+		}
+	case *goivy.LogicAnd:
+		var out []actionGeneratorRelationWitnessGroupCandidate
+		for _, term := range n.Terms {
+			out = append(out, actionGeneratorNegatedRelationWitnessGroupCandidatesWithIgnored(term, ignored)...)
+		}
+		return out
+	case *goivy.LogicOr:
+		var out []actionGeneratorRelationWitnessGroupCandidate
+		for _, term := range n.Terms {
+			out = append(out, actionGeneratorNegatedRelationWitnessGroupCandidatesWithIgnored(term, ignored)...)
+		}
+		return out
+	case *goivy.LogicIte:
+		var out []actionGeneratorRelationWitnessGroupCandidate
+		out = append(out, actionGeneratorNegatedRelationWitnessGroupCandidatesWithIgnored(n.Then, ignored)...)
+		out = append(out, actionGeneratorNegatedRelationWitnessGroupCandidatesWithIgnored(n.Else, ignored)...)
+		return out
+	case *goivy.LogicExists:
+		nextIgnored := copyNameSet(ignored)
+		for _, v := range n.Variables {
+			if v != nil {
+				nextIgnored[v.Name] = true
+			}
+		}
+		return actionGeneratorNegatedRelationWitnessGroupCandidatesWithIgnored(n.Body, nextIgnored)
+	case *goivy.LogicImplies:
+		return actionGeneratorNegatedRelationWitnessGroupCandidatesWithIgnored(n.T2, ignored)
+	case *goivy.LogicIff:
+		var out []actionGeneratorRelationWitnessGroupCandidate
+		for _, term := range actionGeneratorIffNegativeTerms(n) {
+			out = append(out, actionGeneratorNegatedRelationWitnessGroupCandidatesWithIgnored(term, ignored)...)
+		}
+		return out
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return actionGeneratorNegatedRelationWitnessGroupCandidatesWithIgnored(expanded, ignored)
+		}
 	}
 	return nil
 }
@@ -4303,6 +5877,11 @@ func actionGeneratorRelationWitnessApplyCandidatesWithIgnored(expr goivy.Expr, n
 			out = append(out, actionGeneratorRelationWitnessApplyCandidatesWithIgnored(term, names, ignored)...)
 		}
 		return out
+	case *goivy.LogicIte:
+		var out []actionGeneratorRelationWitnessCandidate
+		out = append(out, actionGeneratorRelationWitnessApplyCandidatesWithIgnored(n.Then, names, ignored)...)
+		out = append(out, actionGeneratorRelationWitnessApplyCandidatesWithIgnored(n.Else, names, ignored)...)
+		return out
 	case *goivy.LogicExists:
 		nextIgnored := copyNameSet(ignored)
 		for _, v := range n.Variables {
@@ -4313,8 +5892,84 @@ func actionGeneratorRelationWitnessApplyCandidatesWithIgnored(expr goivy.Expr, n
 		return actionGeneratorRelationWitnessApplyCandidatesWithIgnored(n.Body, names, nextIgnored)
 	case *goivy.LogicImplies:
 		return actionGeneratorRelationWitnessApplyCandidatesWithIgnored(n.T2, names, ignored)
+	case *goivy.LogicIff:
+		var out []actionGeneratorRelationWitnessCandidate
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			out = append(out, actionGeneratorRelationWitnessApplyCandidatesWithIgnored(term, names, ignored)...)
+		}
+		return out
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return actionGeneratorRelationWitnessApplyCandidatesWithIgnored(expanded, names, ignored)
+		}
 	}
 	return nil
+}
+
+func actionGeneratorExpandLetExpr(l *goivy.LogicLet) (goivy.Expr, bool) {
+	if l == nil {
+		return nil, false
+	}
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for _, d := range l.Defs {
+		def, ok := d.(*goivy.LogicDefinition)
+		if !ok || def == nil {
+			return nil, false
+		}
+		switch lhs := def.Lhs.(type) {
+		case *goivy.Const, *goivy.LogicVariable:
+			subs[goivy.Key(lhs)] = def.Rhs
+		default:
+			return nil, false
+		}
+	}
+	body, err := goivy.Substitute(l.Body, subs)
+	if err != nil {
+		return nil, false
+	}
+	return body, true
+}
+
+func actionGeneratorIffPositiveTerms(n *goivy.LogicIff) []goivy.Expr {
+	if n == nil {
+		return nil
+	}
+	switch {
+	case actionGeneratorIsTrueExpr(n.T1):
+		return []goivy.Expr{n.T2}
+	case actionGeneratorIsTrueExpr(n.T2):
+		return []goivy.Expr{n.T1}
+	}
+	return nil
+}
+
+func actionGeneratorIffNegativeTerms(n *goivy.LogicIff) []goivy.Expr {
+	if n == nil {
+		return nil
+	}
+	switch {
+	case actionGeneratorIsFalseExpr(n.T1):
+		return []goivy.Expr{n.T2}
+	case actionGeneratorIsFalseExpr(n.T2):
+		return []goivy.Expr{n.T1}
+	}
+	return nil
+}
+
+func actionGeneratorIsTrueExpr(expr goivy.Expr) bool {
+	if goivy.IsTrue(expr) {
+		return true
+	}
+	c, ok := expr.(*goivy.Const)
+	return ok && c != nil && c.Name == "true" && isBooleanSort(c.CSort)
+}
+
+func actionGeneratorIsFalseExpr(expr goivy.Expr) bool {
+	if goivy.IsFalse(expr) {
+		return true
+	}
+	c, ok := expr.(*goivy.Const)
+	return ok && c != nil && c.Name == "false" && isBooleanSort(c.CSort)
 }
 
 func copyNameSet(in map[string]bool) map[string]bool {
@@ -4345,6 +6000,160 @@ type actionGeneratorFiniteFieldIndexTuple struct {
 	exprs       []string
 	labelParts  []string
 	suffixParts []string
+}
+
+func (g *Generator) actionGeneratorNestedFieldSearchDims(p *goivy.Const, guards []goivy.Expr, baseLabel string, suffixBase string, names map[string]bool) []actionGeneratorFiniteSearchDim {
+	if g == nil || p == nil || len(guards) == 0 || len(names) == 0 {
+		return nil
+	}
+	nameToFormal := map[string]int{}
+	for name := range names {
+		nameToFormal[name] = 0
+	}
+	seen := map[string]bool{}
+	var dims []actionGeneratorFiniteSearchDim
+	for _, guard := range guards {
+		for _, app := range actionGeneratorAllApplyCandidates(guard) {
+			if app == nil || len(app.Terms) == 0 || !exprReferencesAnyName(app, names) {
+				continue
+			}
+			if actionGeneratorBareFormalInNames(app.Terms[0], names) {
+				continue
+			}
+			target, actualSort, _, setValue, ok := g.actionGeneratorRelationWitnessTargetPath([]*goivy.Const{p}, app, nameToFormal, names)
+			if !ok {
+				continue
+			}
+			values, ok := g.finiteValueExprs(actualSort)
+			if !ok || len(values) == 0 {
+				continue
+			}
+			key := target
+			if key == "" {
+				key = app.String()
+			}
+			if seen[key] {
+				continue
+			}
+			seen[key] = true
+			path := strings.TrimPrefix(target, "gen."+goName(p.Name)+".")
+			if path == "" || path == target {
+				path = actionGeneratorSearchIdentPart(app.String())
+			}
+			suffixPart := actionGeneratorSearchIdentPart(path)
+			dims = append(dims, actionGeneratorFiniteSearchDim{
+				target:   target,
+				setValue: setValue,
+				typ:      g.goType(actualSort),
+				label:    baseLabel + "." + strings.ReplaceAll(path, "_", ".") + ".search",
+				suffix:   fmt.Sprintf("%s_%s", suffixBase, suffixPart),
+				values:   values,
+			})
+		}
+	}
+	return dims
+}
+
+func (g *Generator) actionGeneratorLargeFieldSearchDims(p *goivy.Const, field goDestructorField, guards []goivy.Expr, baseLabel string, suffixBase string, names map[string]bool, nameToFormal map[string]int) []actionGeneratorFiniteSearchDim {
+	if g == nil || p == nil || field.Const == nil || field.Sort == nil || !g.destructorFieldIsLarge(field) || len(guards) == 0 {
+		return nil
+	}
+	values, ok := g.finiteValueExprs(field.Sort.Range())
+	if !ok || len(values) == 0 {
+		return nil
+	}
+	seen := map[string]bool{}
+	var dims []actionGeneratorFiniteSearchDim
+	for _, guard := range guards {
+		for _, app := range actionGeneratorFieldApplyCandidates(guard, field.Const.Name) {
+			if len(app.Terms) != len(field.Sort.Domain()) || len(app.Terms) == 0 {
+				continue
+			}
+			if !actionGeneratorBareFormalInNames(app.Terms[0], names) {
+				continue
+			}
+			var indexes []string
+			covered := map[int]bool{}
+			valid := true
+			for _, arg := range app.Terms[1:] {
+				if exprReferencesAnyName(arg, names) {
+					valid = false
+					break
+				}
+				for _, sym := range goivy.UsedSymbolsAst(arg).All() {
+					if idx, ok := nameToFormal[goivy.ExprName(sym)]; ok {
+						covered[idx] = true
+					}
+				}
+				expr, err := g.emitExpr(arg)
+				if err != nil {
+					valid = false
+					break
+				}
+				indexes = append(indexes, expr)
+			}
+			if !valid {
+				continue
+			}
+			key := g.goMapKeyValue(field.Sort.Domain()[1:], indexes)
+			if seen[key] {
+				continue
+			}
+			seen[key] = true
+			baseTarget := "gen." + goName(p.Name)
+			target := fmt.Sprintf("%s.%s[%s]", baseTarget, field.FieldName, key)
+			zero := g.goZeroValue(field.Sort.Range())
+			fieldName := field.FieldName
+			setValue := func(value string) string {
+				return fmt.Sprintf("ivyThunkSet(&%s.%s, %s, %s, %s)", baseTarget, fieldName, key, value, zero)
+			}
+			var coveredList []int
+			for idx := range covered {
+				coveredList = append(coveredList, idx)
+			}
+			sort.Ints(coveredList)
+			dims = append(dims, actionGeneratorFiniteSearchDim{
+				target:         target,
+				setValue:       setValue,
+				typ:            g.goType(field.Sort.Range()),
+				label:          baseLabel + "." + field.FieldName + ".hashsearch",
+				suffix:         fmt.Sprintf("%s_%s_hash%d", suffixBase, field.FieldName, len(dims)),
+				values:         values,
+				coveredFormals: coveredList,
+			})
+		}
+	}
+	return dims
+}
+
+func actionGeneratorAllApplyCandidates(expr goivy.Expr) []*goivy.Apply {
+	if expr == nil {
+		return nil
+	}
+	var out []*goivy.Apply
+	if app, ok := expr.(*goivy.Apply); ok {
+		out = append(out, app)
+	}
+	for _, child := range expr.Children() {
+		out = append(out, actionGeneratorAllApplyCandidates(child)...)
+	}
+	return out
+}
+
+func actionGeneratorFieldApplyCandidates(expr goivy.Expr, fieldName string) []*goivy.Apply {
+	if expr == nil || fieldName == "" {
+		return nil
+	}
+	var out []*goivy.Apply
+	if app, ok := expr.(*goivy.Apply); ok {
+		if goivy.ExprName(app.Func) == fieldName {
+			out = append(out, app)
+		}
+	}
+	for _, child := range expr.Children() {
+		out = append(out, actionGeneratorFieldApplyCandidates(child, fieldName)...)
+	}
+	return out
 }
 
 func (g *Generator) actionGeneratorFiniteFieldIndexTuples(domain []goivy.Sort) ([]actionGeneratorFiniteFieldIndexTuple, bool) {
@@ -4399,7 +6208,7 @@ func actionGeneratorSmallIntFallbackValues() []string {
 }
 
 func actionGeneratorAddSmallIntFallback(dim actionGeneratorFiniteSearchDim) actionGeneratorFiniteSearchDim {
-	if dim.target != "" && dim.typ == "int" && len(dim.relationAssignments) == 0 {
+	if (dim.target != "" || dim.setValue != nil) && dim.typ == "int" && len(dim.relationAssignments) == 0 {
 		dim.fallbackValues = actionGeneratorSmallIntFallbackValues()
 	}
 	return dim
@@ -5037,10 +6846,37 @@ func (g *Generator) collectTestActionPrefixPreimageAssumeFormulas(act goivy.Acti
 			guards = append(guards, childGuards...)
 		}
 		return guards, true
-	case *goivy.LogicAssertAction:
+	case *goivy.LogicAssertAction, *goivy.LogicRequiresAction, *goivy.LogicEnsuresAction, *goivy.LogicSubgoalAction, *goivy.IgnoreAction, *goivy.LogicDebugAction:
 		return nil, true
 	case *goivy.LogicAssignAction:
 		return nil, g.recordSimplePreimageAssign(a, ctx)
+	case *goivy.LogicAssignFieldAction:
+		if a.Field == nil || a.Obj == nil || a.Value == nil {
+			return nil, false
+		}
+		lhs := goivy.NewApplyUnchecked(a.Field, a.Obj)
+		return nil, g.recordSimplePreimageAssign(goivy.NewAssignAction(lhs, a.Value), ctx)
+	case *goivy.LogicNullFieldAction:
+		if a.Field == nil || a.Obj == nil {
+			return nil, false
+		}
+		rng, err := fieldRangeSort(a.Field)
+		if err != nil {
+			return nil, false
+		}
+		zero, ok := g.preimageZeroValueExpr(rng)
+		if !ok {
+			return nil, false
+		}
+		lhs := goivy.NewApplyUnchecked(a.Field, a.Obj)
+		return nil, g.recordSimplePreimageAssign(goivy.NewAssignAction(lhs, zero), ctx)
+	case *goivy.LogicCopyFieldAction:
+		if a.Field == nil || a.Dst == nil || a.SrcField == nil || a.Src == nil {
+			return nil, false
+		}
+		lhs := goivy.NewApplyUnchecked(a.Field, a.Dst)
+		rhs := goivy.NewApplyUnchecked(a.SrcField, a.Src)
+		return nil, g.recordSimplePreimageAssign(goivy.NewAssignAction(lhs, rhs), ctx)
 	case *goivy.LogicSetAction:
 		if a.Lit == nil {
 			return nil, false
@@ -5058,9 +6894,47 @@ func (g *Generator) collectTestActionPrefixPreimageAssumeFormulas(act goivy.Acti
 		return g.callPreimageAssumeGuards(a, ctx, seen)
 	case *goivy.LogicLocalAction:
 		return g.localPreimageAssumeGuardsSeen(a, ctx, seen)
+	case *goivy.LogicLetAction:
+		return g.letPreimageAssumeGuardsSeen(a, ctx, seen)
 	default:
 		return nil, false
 	}
+}
+
+func (g *Generator) letPreimageAssumeGuardsSeen(a *goivy.LogicLetAction, ctx *actionPreimageContext, seen map[string]bool) ([]goivy.Expr, bool) {
+	if a == nil || a.Body == nil {
+		return nil, false
+	}
+	body, ok := a.Body.(goivy.Action)
+	if !ok {
+		return nil, false
+	}
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for _, binding := range a.Bindings {
+		if binding == nil {
+			return nil, false
+		}
+		children := binding.Children()
+		if len(children) < 2 {
+			return nil, false
+		}
+		switch lhs := children[0].(type) {
+		case *goivy.Const:
+			subs[goivy.Key(lhs)] = children[1]
+		case *goivy.LogicVariable:
+			subs[goivy.Key(lhs)] = children[1]
+		default:
+			return nil, false
+		}
+	}
+	if len(subs) > 0 {
+		substituted, ok := goivy.SubstituteConstantsAction(body, subs).(goivy.Action)
+		if !ok {
+			return nil, false
+		}
+		body = substituted
+	}
+	return g.collectTestActionPrefixPreimageAssumeFormulas(body, ctx, seen)
 }
 
 func (g *Generator) localPreimageAssumeGuards(a *goivy.LogicLocalAction, ctx *actionPreimageContext) ([]goivy.Expr, bool) {
@@ -5109,6 +6983,21 @@ func (g *Generator) localPreimageAssumeGuardsSeen(a *goivy.LogicLocalAction, ctx
 	if !ok {
 		return nil, false
 	}
+	var localWitnessSubs map[goivy.NodeKey]goivy.Expr
+	guards, localWitnessSubs, ok = eliminateLocalEqualityWitnessGuards(guards, localNames, localKeys)
+	if !ok {
+		return nil, false
+	}
+	if len(localWitnessSubs) > 0 {
+		if !substitutePreimageContextLocalWitnesses(ctx, localWitnessSubs) {
+			return nil, false
+		}
+	}
+	guards = dropSingleLocalScalarWitnessGuard(g, guards, localNames, localKeys)
+	guards, ok = existentializeLocalWitnessGuards(guards, a.Locals, localNames, localKeys)
+	if !ok {
+		return nil, false
+	}
 	for _, guard := range guards {
 		if exprReferencesAnyName(guard, localNames) {
 			return nil, false
@@ -5118,6 +7007,275 @@ func (g *Generator) localPreimageAssumeGuardsSeen(a *goivy.LogicLocalAction, ctx
 		return nil, false
 	}
 	return guards, true
+}
+
+func dropSingleLocalScalarWitnessGuard(g *Generator, guards []goivy.Expr, localNames map[string]bool, localKeys map[goivy.NodeKey]bool) []goivy.Expr {
+	if len(guards) == 0 || len(localNames) == 0 || len(localKeys) == 0 {
+		return guards
+	}
+	localIdx := -1
+	for i, guard := range guards {
+		if exprReferencesAnyName(guard, localNames) {
+			if localIdx >= 0 {
+				return guards
+			}
+			localIdx = i
+		}
+	}
+	if localIdx < 0 || !isSimpleLocalScalarWitnessGuard(g, guards[localIdx], localNames, localKeys) {
+		return guards
+	}
+	out := make([]goivy.Expr, 0, len(guards)-1)
+	out = append(out, guards[:localIdx]...)
+	out = append(out, guards[localIdx+1:]...)
+	return out
+}
+
+func isSimpleLocalScalarWitnessGuard(g *Generator, guard goivy.Expr, localNames map[string]bool, localKeys map[goivy.NodeKey]bool) bool {
+	lit, ok := guard.(*goivy.LogicLiteral)
+	if ok {
+		if lit.Polarity == 0 {
+			return false
+		}
+		guard = lit.Atom
+	}
+	if let, ok := guard.(*goivy.LogicLet); ok {
+		if expanded, ok := actionGeneratorExpandLetExpr(let); ok {
+			return isSimpleLocalScalarWitnessGuard(g, expanded, localNames, localKeys)
+		}
+	}
+	app, ok := guard.(*goivy.Apply)
+	if !ok || app == nil || len(app.Terms) != 2 || !goivy.IsInequalitySymbol(goivy.ExprName(app.Func)) {
+		return false
+	}
+	leftLocal, leftOK := localScalarWitnessBareLocal(app.Terms[0], localKeys)
+	rightLocal, rightOK := localScalarWitnessBareLocal(app.Terms[1], localKeys)
+	if leftOK == rightOK {
+		return false
+	}
+	local := leftLocal
+	other := app.Terms[1]
+	if rightOK {
+		local = rightLocal
+		other = app.Terms[0]
+	}
+	return g != nil &&
+		g.goType(local.CSort) == "int" &&
+		g.goType(other.NodeSort()) == "int" &&
+		!exprReferencesAnyNameIncludingVariables(other, localNames)
+}
+
+func localScalarWitnessBareLocal(expr goivy.Expr, localKeys map[goivy.NodeKey]bool) (*goivy.Const, bool) {
+	c, ok := expr.(*goivy.Const)
+	if !ok || c == nil || !localKeys[goivy.Key(c)] {
+		return nil, false
+	}
+	return c, true
+}
+
+func substitutePreimageContextLocalWitnesses(ctx *actionPreimageContext, subs map[goivy.NodeKey]goivy.Expr) bool {
+	if ctx == nil || len(subs) == 0 {
+		return true
+	}
+	substitute := func(expr goivy.Expr) (goivy.Expr, bool) {
+		if expr == nil {
+			return nil, true
+		}
+		out, err := goivy.Substitute(expr, subs)
+		if err != nil {
+			return nil, false
+		}
+		return out, true
+	}
+	for key, expr := range ctx.subs {
+		out, ok := substitute(expr)
+		if !ok {
+			return false
+		}
+		ctx.subs[key] = out
+	}
+	for key, updates := range ctx.pointUpdate {
+		for i := range updates {
+			for j, arg := range updates[i].args {
+				out, ok := substitute(arg)
+				if !ok {
+					return false
+				}
+				updates[i].args[j] = out
+			}
+			out, ok := substitute(updates[i].value)
+			if !ok {
+				return false
+			}
+			updates[i].value = out
+			out, ok = substitute(updates[i].guard)
+			if !ok {
+				return false
+			}
+			updates[i].guard = out
+		}
+		ctx.pointUpdate[key] = updates
+	}
+	for key, values := range ctx.choiceSubs {
+		for i, value := range values {
+			out, ok := substitute(value)
+			if !ok {
+				return false
+			}
+			values[i] = out
+		}
+		ctx.choiceSubs[key] = values
+	}
+	return true
+}
+
+func existentializeLocalWitnessGuards(guards []goivy.Expr, locals []goivy.Expr, localNames map[string]bool, localKeys map[goivy.NodeKey]bool) ([]goivy.Expr, bool) {
+	if len(guards) == 0 || len(locals) == 0 || len(localKeys) == 0 {
+		return guards, true
+	}
+	used := map[goivy.NodeKey]bool{}
+	var localGuards []goivy.Expr
+	out := make([]goivy.Expr, 0, len(guards))
+	for _, guard := range guards {
+		if !exprReferencesAnyName(guard, localNames) {
+			out = append(out, guard)
+			continue
+		}
+		collectLocalConstKeys(guard, localKeys, used)
+		localGuards = append(localGuards, guard)
+	}
+	if len(localGuards) == 0 {
+		return guards, true
+	}
+	var vars []*goivy.LogicVariable
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	usedNames := map[string]bool{}
+	for _, local := range locals {
+		c, ok := local.(*goivy.Const)
+		if !ok || !used[goivy.Key(c)] {
+			continue
+		}
+		name := localWitnessQuantifierName(c.Name, len(vars), usedNames)
+		v := &goivy.LogicVariable{Name: name, VSort: c.CSort}
+		vars = append(vars, v)
+		subs[goivy.Key(c)] = v
+	}
+	if len(vars) == 0 {
+		return nil, false
+	}
+	existsTerms := make([]goivy.Expr, 0, len(localGuards))
+	for _, guard := range localGuards {
+		substituted, err := goivy.Substitute(guard, subs)
+		if err != nil {
+			return nil, false
+		}
+		existsTerms = append(existsTerms, substituted)
+	}
+	body := existsTerms[0]
+	if len(existsTerms) > 1 {
+		and, err := goivy.NewAnd(existsTerms...)
+		if err != nil {
+			return nil, false
+		}
+		body = and
+	}
+	ex, err := goivy.NewExists(vars, body)
+	if err != nil {
+		return nil, false
+	}
+	out = append(out, ex)
+	return out, true
+}
+
+func collectLocalConstKeys(expr goivy.Expr, localKeys map[goivy.NodeKey]bool, out map[goivy.NodeKey]bool) {
+	if expr == nil || len(localKeys) == 0 {
+		return
+	}
+	if c, ok := expr.(*goivy.Const); ok && localKeys[goivy.Key(c)] {
+		out[goivy.Key(c)] = true
+	}
+	for _, child := range expr.Children() {
+		collectLocalConstKeys(child, localKeys, out)
+	}
+}
+
+func localWitnessQuantifierName(name string, idx int, used map[string]bool) string {
+	var b strings.Builder
+	b.WriteByte('L')
+	for _, r := range name {
+		switch {
+		case r >= 'A' && r <= 'Z', r >= 'a' && r <= 'z', r >= '0' && r <= '9':
+			b.WriteRune(r)
+		default:
+			b.WriteByte('_')
+		}
+	}
+	if b.Len() == 1 {
+		b.WriteString(strconv.Itoa(idx))
+	}
+	base := b.String()
+	out := base
+	for n := 1; used[out]; n++ {
+		out = fmt.Sprintf("%s_%d", base, n)
+	}
+	used[out] = true
+	return out
+}
+
+func eliminateLocalEqualityWitnessGuards(guards []goivy.Expr, localNames map[string]bool, localKeys map[goivy.NodeKey]bool) ([]goivy.Expr, map[goivy.NodeKey]goivy.Expr, bool) {
+	if len(guards) == 0 || len(localKeys) == 0 {
+		return guards, nil, true
+	}
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for _, guard := range guards {
+		eq, ok := guard.(*goivy.Eq)
+		if !ok {
+			continue
+		}
+		local, value, ok := localEqualityWitnessTerm(eq.T1, eq.T2, localNames, localKeys, subs)
+		if !ok {
+			local, value, ok = localEqualityWitnessTerm(eq.T2, eq.T1, localNames, localKeys, subs)
+		}
+		if !ok {
+			continue
+		}
+		if _, exists := subs[goivy.Key(local)]; !exists {
+			subs[goivy.Key(local)] = value
+		}
+	}
+	if len(subs) == 0 {
+		return guards, nil, true
+	}
+	out := make([]goivy.Expr, 0, len(guards))
+	for _, guard := range guards {
+		substituted, err := goivy.Substitute(guard, subs)
+		if err != nil {
+			return nil, nil, false
+		}
+		if eq, ok := substituted.(*goivy.Eq); ok && exprEqual(eq.T1, eq.T2) {
+			continue
+		}
+		out = append(out, substituted)
+	}
+	return out, subs, true
+}
+
+func localEqualityWitnessTerm(candidate, value goivy.Expr, localNames map[string]bool, localKeys map[goivy.NodeKey]bool, subs map[goivy.NodeKey]goivy.Expr) (*goivy.Const, goivy.Expr, bool) {
+	local, ok := candidate.(*goivy.Const)
+	if !ok || !localKeys[goivy.Key(local)] {
+		return nil, nil, false
+	}
+	if len(subs) > 0 {
+		substituted, err := goivy.Substitute(value, subs)
+		if err != nil {
+			return nil, nil, false
+		}
+		value = substituted
+	}
+	if exprReferencesAnyNameIncludingVariables(value, localNames) {
+		return nil, nil, false
+	}
+	return local, value, true
 }
 
 func preimageContextReferencesAnyName(ctx *actionPreimageContext, names map[string]bool, localKeys map[goivy.NodeKey]bool) bool {
@@ -5585,7 +7743,7 @@ func (g *Generator) preconditionOnlyActionForPreimage(act goivy.Action, seen map
 	switch a := act.(type) {
 	case nil:
 		return true
-	case *goivy.LogicAssumeAction, *goivy.LogicAssertAction:
+	case *goivy.LogicAssumeAction, *goivy.LogicAssertAction, *goivy.LogicRequiresAction, *goivy.LogicEnsuresAction, *goivy.LogicSubgoalAction, *goivy.IgnoreAction, *goivy.LogicDebugAction:
 		return true
 	case *goivy.LogicCallAction:
 		return g.actionCallIsPreconditionOnly(a, seen)
@@ -5873,6 +8031,9 @@ func (g *Generator) rewritePointUpdatesForPreimage(expr goivy.Expr, ctx *actionP
 				return nil, fmt.Errorf("point update arity mismatch for %s", fn.Name)
 			}
 			for i := range terms {
+				if exprEqual(terms[i], update.args[i]) {
+					continue
+				}
 				eq, err := goivy.NewEq(terms[i], update.args[i])
 				if err != nil {
 					return nil, err
@@ -5889,9 +8050,13 @@ func (g *Generator) rewritePointUpdatesForPreimage(expr goivy.Expr, ctx *actionP
 				}
 				cond = and
 			}
-			cellUpdate, err := goivy.NewIte(cond, update.value, rewritten)
-			if err != nil {
-				return nil, err
+			cellUpdate := update.value
+			if !goivy.IsTrue(cond) {
+				var err error
+				cellUpdate, err = goivy.NewIte(cond, update.value, rewritten)
+				if err != nil {
+					return nil, err
+				}
 			}
 			if update.guard != nil {
 				rewritten, err = goivy.NewIte(update.guard, cellUpdate, rewritten)
@@ -6000,7 +8165,7 @@ func preconditionOnlyAction(act goivy.Action) bool {
 	switch a := act.(type) {
 	case nil:
 		return true
-	case *goivy.LogicAssumeAction, *goivy.LogicAssertAction:
+	case *goivy.LogicAssumeAction, *goivy.LogicAssertAction, *goivy.LogicRequiresAction, *goivy.LogicEnsuresAction, *goivy.LogicSubgoalAction, *goivy.IgnoreAction, *goivy.LogicDebugAction:
 		return true
 	case *goivy.LogicSequence:
 		for _, elem := range a.Elems {
@@ -6029,6 +8194,25 @@ func preconditionOnlyAction(act goivy.Action) bool {
 	}
 }
 
+func (g *Generator) preimageZeroValueExpr(s goivy.Sort) (goivy.Expr, bool) {
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		return goivy.NewConst("false", goivy.Boolean), true
+	case *goivy.LogicEnumeratedSort:
+		if len(st.Extension) == 0 {
+			return nil, false
+		}
+		return goivy.NewConst(st.Extension[0], st), true
+	case *goivy.UninterpretedSort:
+		if g != nil && (g.hasStringValuedInterp(st) || g.isVariantSuperName(st.Name) || g.destructorStructFields(st.Name) != nil) {
+			return nil, false
+		}
+		return goivy.NewConst("0", st), true
+	default:
+		return nil, false
+	}
+}
+
 func (g *Generator) recordSimplePreimageAssign(a *goivy.LogicAssignAction, ctx *actionPreimageContext) bool {
 	if a == nil || a.LHS == nil || a.RHS == nil || ctx == nil {
 		return false
@@ -6041,6 +8225,13 @@ func (g *Generator) recordSimplePreimageAssign(a *goivy.LogicAssignAction, ctx *
 		if _, isState := g.isStateSymbolName(lhsConst.Name); !isState {
 			if repl, ok := ctx.subs[goivy.Key(lhsConst)]; ok {
 				lhsExpr = repl
+				if _, ok := lhsExpr.(*goivy.Apply); ok {
+					rhs, ok := g.substituteExprForPreimage(a.RHS, ctx)
+					if !ok {
+						return false
+					}
+					return g.recordPointPreimageAssign(goivy.NewAssignAction(lhsExpr, rhs), ctx)
+				}
 			} else if ctx.localAlias[goivy.Key(lhsConst)] {
 				rhs, ok := g.substituteExprForPreimage(a.RHS, ctx)
 				if !ok {
@@ -6075,12 +8266,13 @@ func (g *Generator) recordPointPreimageAssign(a *goivy.LogicAssignAction, ctx *a
 	if !ok || fn == nil {
 		return false
 	}
-	sort, ok := g.isStateSymbolName(fn.Name)
-	if !ok {
-		return false
+	var fs *goivy.LogicFunctionSort
+	if sort, ok := g.isStateSymbolName(fn.Name); ok {
+		fs, _ = sort.(*goivy.LogicFunctionSort)
+	} else if field, ok := g.destructorFieldInfo(fn.Name); ok {
+		fs = field.Sort
 	}
-	fs, ok := sort.(*goivy.LogicFunctionSort)
-	if !ok || len(fs.Domain()) != len(lhs.Terms) {
+	if fs == nil || len(fs.Domain()) != len(lhs.Terms) {
 		return false
 	}
 	args := make([]goivy.Expr, len(lhs.Terms))
@@ -6475,8 +8667,741 @@ func (g *Generator) testActionNeedsTrial(act goivy.Action) bool {
 	if !actionContainsCall(act) && !actionContainsAssume(act) {
 		return false
 	}
+	if g.zeroFormalLocalVariantWitnessActionSafe(act) {
+		return false
+	}
 	_, ok := g.actionPreimageAssumeFormulasOK(act)
 	return !ok
+}
+
+func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bool {
+	if g == nil || act == nil || len(act.GetFormalParams()) != 0 || actionContainsCall(act) {
+		return false
+	}
+	localDecls, body, ok := directWitnessLocalActionParts(act)
+	if !ok || len(localDecls) == 0 {
+		return false
+	}
+	locals := map[string]goivy.Sort{}
+	for _, local := range localDecls {
+		name := goivy.ExprName(local)
+		if name == "" {
+			return false
+		}
+		locals[name] = local.NodeSort()
+	}
+	witnesses := map[string]actionGeneratorVariantWitness{}
+	relationWitnesses := map[string]localRelationWitness{}
+	relationGroupWitnesses := []localRelationGroupWitness{}
+	modeledLocals := map[string]bool{}
+	relationPointUpdates := []localRelationPointUpdate{}
+	stateFromLocal := map[goivy.NodeKey]string{}
+	seenWitness := false
+	witnessPhase := true
+	var walk func(goivy.Action) bool
+	walk = func(cur goivy.Action) bool {
+		switch a := cur.(type) {
+		case *goivy.LogicSequence:
+			for _, elem := range a.Elems {
+				child, ok := elem.(goivy.Action)
+				if !ok || !walk(child) {
+					return false
+				}
+			}
+			return true
+		case *goivy.LogicAssumeAction:
+			if a.Formula == nil {
+				return true
+			}
+			if g.localVariantStateAssumeCovered(a.Formula, stateFromLocal, witnesses) ||
+				localRelationStateAssumeCovered(a.Formula, stateFromLocal, relationWitnesses) ||
+				localRelationGroupStateAssumeCovered(a.Formula, stateFromLocal, relationGroupWitnesses) ||
+				localRelationPointAssumeCovered(a.Formula, stateFromLocal, relationPointUpdates) {
+				return true
+			}
+			if !witnessPhase {
+				return false
+			}
+			if groupWitness, ok := g.localRelationGroupWitness(a.Formula, locals); ok {
+				for name := range groupWitness.locals {
+					modeledLocals[name] = true
+				}
+				relationGroupWitnesses = append(relationGroupWitnesses, groupWitness)
+				seenWitness = true
+				witnessPhase = false
+				return true
+			}
+			for name, sort := range locals {
+				if witness, ok := g.localVariantWitness(name, sort, a.Formula); ok {
+					witnesses[name] = witness
+					modeledLocals[name] = true
+					seenWitness = true
+					witnessPhase = false
+					return true
+				}
+			}
+			for name, sort := range locals {
+				if witness, ok := g.localRelationWitness(name, sort, a.Formula); ok {
+					relationWitnesses[name] = witness
+					modeledLocals[name] = true
+					seenWitness = true
+					witnessPhase = false
+					return true
+				}
+			}
+			return false
+		case *goivy.LogicAssignAction:
+			witnessPhase = false
+			lhs, ok := a.LHS.(*goivy.Const)
+			if !ok || lhs == nil {
+				if update, ok := localRelationPointUpdateFromAssign(a, locals, modeledLocals); ok {
+					relationPointUpdates = append(relationPointUpdates, update)
+					return true
+				}
+				return false
+			}
+			rhs, ok := a.RHS.(*goivy.Const)
+			if !ok || rhs == nil {
+				delete(stateFromLocal, goivy.Key(lhs))
+				return true
+			}
+			if _, isLocal := locals[rhs.Name]; !isLocal {
+				delete(stateFromLocal, goivy.Key(lhs))
+				return true
+			}
+			stateFromLocal[goivy.Key(lhs)] = rhs.Name
+			return true
+		case *goivy.LogicAssertAction, *goivy.LogicRequiresAction, *goivy.LogicEnsuresAction, *goivy.LogicSubgoalAction, *goivy.IgnoreAction, *goivy.LogicDebugAction:
+			return true
+		default:
+			return false
+		}
+	}
+	return walk(body) && seenWitness
+}
+
+type localRelationPointUpdate struct {
+	app   *goivy.Apply
+	value bool
+}
+
+type localRelationWitness struct {
+	app         *goivy.Apply
+	pos         int
+	ignored     map[string]bool
+	cond        goivy.Expr
+	thenWitness *localRelationWitness
+	elseWitness *localRelationWitness
+}
+
+type localRelationGroupWitness struct {
+	app        *goivy.Apply
+	localByPos map[int]string
+	locals     map[string]bool
+	ignored    map[string]bool
+}
+
+func (g *Generator) localRelationGroupWitness(expr goivy.Expr, locals map[string]goivy.Sort) (localRelationGroupWitness, bool) {
+	if g == nil || len(locals) < 2 {
+		return localRelationGroupWitness{}, false
+	}
+	allNames := map[string]bool{}
+	for name := range locals {
+		if name != "" {
+			allNames[name] = true
+		}
+	}
+	if len(allNames) < 2 {
+		return localRelationGroupWitness{}, false
+	}
+	for _, candidate := range actionGeneratorRelationWitnessGroupCandidates(expr) {
+		app := candidate.app
+		if app == nil {
+			continue
+		}
+		relName := goivy.ExprName(app.Func)
+		if relName == "" || !g.quantifierSupportRels()[relName] {
+			continue
+		}
+		sort, ok := g.isStateSymbolName(relName)
+		if !ok {
+			continue
+		}
+		fs, ok := sort.(*goivy.LogicFunctionSort)
+		if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
+			continue
+		}
+		groupLocals := map[string]bool{}
+		localByPos := map[int]string{}
+		valid := true
+		for i, term := range app.Terms {
+			if name, ok := localWitnessBareSortLocalName(term, locals); ok {
+				if groupLocals[name] || !sortsEqual(fs.Domain()[i], locals[name]) {
+					valid = false
+					break
+				}
+				groupLocals[name] = true
+				localByPos[i] = name
+				continue
+			}
+			if exprReferencesAnyNameIncludingVariables(term, allNames) {
+				valid = false
+				break
+			}
+			if exprReferencesAnyNameIncludingVariables(term, candidate.ignored) {
+				continue
+			}
+			if _, err := g.emitExpr(term); err != nil {
+				valid = false
+				break
+			}
+		}
+		if valid && len(groupLocals) >= 2 {
+			return localRelationGroupWitness{
+				app:        app,
+				localByPos: localByPos,
+				locals:     groupLocals,
+				ignored:    copyNameSet(candidate.ignored),
+			}, true
+		}
+	}
+	return localRelationGroupWitness{}, false
+}
+
+func localWitnessBareSortLocalName(expr goivy.Expr, locals map[string]goivy.Sort) (string, bool) {
+	switch n := expr.(type) {
+	case *goivy.Const:
+		_, ok := locals[n.Name]
+		return n.Name, ok
+	case *goivy.LogicVariable:
+		_, ok := locals[n.Name]
+		return n.Name, ok
+	default:
+		return "", false
+	}
+}
+
+func (g *Generator) localRelationWitness(localName string, localSort goivy.Sort, expr goivy.Expr) (localRelationWitness, bool) {
+	if witness, ok := g.localConditionalRelationWitness(localName, localSort, expr); ok {
+		return witness, true
+	}
+	app, pos, ignored, ok := g.findLocalWitnessApply(localName, localSort, expr, nil)
+	if !ok {
+		return localRelationWitness{}, false
+	}
+	return localRelationWitness{app: app, pos: pos, ignored: copyNameSet(ignored)}, true
+}
+
+func (g *Generator) localConditionalRelationWitness(localName string, localSort goivy.Sort, expr goivy.Expr) (localRelationWitness, bool) {
+	switch n := expr.(type) {
+	case *goivy.LogicIte:
+		thenWitness, thenOK := g.localRelationWitness(localName, localSort, n.Then)
+		elseWitness, elseOK := g.localRelationWitness(localName, localSort, n.Else)
+		if !thenOK || !elseOK {
+			return localRelationWitness{}, false
+		}
+		thenCopy := thenWitness
+		elseCopy := elseWitness
+		return localRelationWitness{
+			cond:        n.Cond,
+			thenWitness: &thenCopy,
+			elseWitness: &elseCopy,
+		}, true
+	case *goivy.LogicLiteral:
+		if n.Polarity != 0 {
+			return g.localConditionalRelationWitness(localName, localSort, n.Atom)
+		}
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return g.localConditionalRelationWitness(localName, localSort, expanded)
+		}
+	}
+	return localRelationWitness{}, false
+}
+
+func localRelationPointUpdateFromAssign(a *goivy.LogicAssignAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {
+	if a == nil {
+		return localRelationPointUpdate{}, false
+	}
+	app, ok := a.LHS.(*goivy.Apply)
+	if !ok || app == nil || len(app.Terms) == 0 {
+		return localRelationPointUpdate{}, false
+	}
+	value := true
+	switch {
+	case actionGeneratorIsTrueExpr(a.RHS):
+		value = true
+	case actionGeneratorIsFalseExpr(a.RHS):
+		value = false
+	default:
+		return localRelationPointUpdate{}, false
+	}
+	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
+		return localRelationPointUpdate{}, false
+	}
+	localNames := map[string]bool{}
+	for name := range locals {
+		localNames[name] = true
+	}
+	for i, term := range app.Terms {
+		name := goivy.ExprName(term)
+		if name == "" {
+			if exprReferencesAnyName(term, localNames) {
+				return localRelationPointUpdate{}, false
+			}
+			continue
+		}
+		if _, isLocal := locals[name]; !isLocal {
+			continue
+		}
+		if !modeledLocals[name] || !sortsEqual(fs.Domain()[i], locals[name]) {
+			return localRelationPointUpdate{}, false
+		}
+	}
+	return localRelationPointUpdate{app: app, value: value}, true
+}
+
+func singleLocalActionForDirectWitness(act goivy.Action) *goivy.LogicLocalAction {
+	if local, ok := act.(*goivy.LogicLocalAction); ok {
+		return local
+	}
+	seq, ok := act.(*goivy.LogicSequence)
+	if !ok || len(seq.Elems) != 1 {
+		return nil
+	}
+	local, _ := seq.Elems[0].(*goivy.LogicLocalAction)
+	return local
+}
+
+func directWitnessLocalActionParts(act goivy.Action) ([]goivy.Expr, goivy.Action, bool) {
+	localAct := singleLocalActionForDirectWitness(act)
+	if localAct == nil {
+		return nil, nil, false
+	}
+	var locals []goivy.Expr
+	seen := map[string]bool{}
+	var bodyExpr goivy.Expr
+	for cur := localAct; cur != nil; {
+		for _, local := range cur.Locals {
+			name := goivy.ExprName(local)
+			if name == "" || seen[name] {
+				return nil, nil, false
+			}
+			seen[name] = true
+			locals = append(locals, local)
+		}
+		next, ok := nextConsecutiveLocalAction(cur.Body)
+		if !ok {
+			bodyExpr = cur.Body
+			break
+		}
+		cur = next
+	}
+	body, ok := bodyExpr.(goivy.Action)
+	if !ok {
+		return nil, nil, false
+	}
+	return locals, body, true
+}
+
+func (g *Generator) localVariantStateAssumeCovered(expr goivy.Expr, stateFromLocal map[goivy.NodeKey]string, witnesses map[string]actionGeneratorVariantWitness) bool {
+	switch n := expr.(type) {
+	case *goivy.Apply:
+		if n == nil || goivy.ExprName(n.Func) != "*>" || len(n.Terms) != 2 {
+			return false
+		}
+		lhs, ok := n.Terms[0].(*goivy.Const)
+		if !ok || lhs == nil {
+			return false
+		}
+		localName, ok := stateFromLocal[goivy.Key(lhs)]
+		if !ok {
+			return false
+		}
+		witness, ok := witnesses[localName]
+		if !ok || witness.rhs == nil || witness.rhsDelta != 0 {
+			return false
+		}
+		return sortsEqual(witness.sub, n.Terms[1].NodeSort()) && exprEqual(witness.rhs, n.Terms[1])
+	case *goivy.LogicExists:
+		if g == nil {
+			return false
+		}
+		match, ok, err := g.matchExistsVariantRelation(n.Variables, n.Body)
+		if !ok || err != nil {
+			return false
+		}
+		lhs, ok := match.lhs.(*goivy.Const)
+		if !ok || lhs == nil {
+			return false
+		}
+		localName, ok := stateFromLocal[goivy.Key(lhs)]
+		if !ok {
+			return false
+		}
+		witness, ok := witnesses[localName]
+		if !ok || !sortsEqual(witness.sub, match.bound.VSort) {
+			return false
+		}
+		if len(match.extra) == 0 {
+			return true
+		}
+		if witness.rhs == nil || witness.rhsDelta != 0 {
+			return false
+		}
+		rhs, ok := variantExistsExactPayloadWitness(match.bound, match.extra)
+		return ok && exprEqual(witness.rhs, rhs)
+	case *goivy.LogicLiteral:
+		return n.Polarity != 0 && g.localVariantStateAssumeCovered(n.Atom, stateFromLocal, witnesses)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			if g.localVariantStateAssumeCovered(term, stateFromLocal, witnesses) {
+				return true
+			}
+		}
+	case *goivy.LogicIte:
+		thenWitnesses := localVariantWitnessesForIteBranch(witnesses, n.Cond, true)
+		elseWitnesses := localVariantWitnessesForIteBranch(witnesses, n.Cond, false)
+		return g.localVariantStateAssumeCovered(n.Then, stateFromLocal, thenWitnesses) &&
+			g.localVariantStateAssumeCovered(n.Else, stateFromLocal, elseWitnesses)
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return g.localVariantStateAssumeCovered(expanded, stateFromLocal, witnesses)
+		}
+	}
+	return false
+}
+
+func localVariantWitnessesForIteBranch(witnesses map[string]actionGeneratorVariantWitness, cond goivy.Expr, thenBranch bool) map[string]actionGeneratorVariantWitness {
+	if len(witnesses) == 0 {
+		return witnesses
+	}
+	out := make(map[string]actionGeneratorVariantWitness, len(witnesses))
+	for name, witness := range witnesses {
+		out[name] = localVariantWitnessForIteBranch(witness, cond, thenBranch)
+	}
+	return out
+}
+
+func localVariantWitnessForIteBranch(witness actionGeneratorVariantWitness, cond goivy.Expr, thenBranch bool) actionGeneratorVariantWitness {
+	if witness.cond != nil && exprEqual(witness.cond, cond) {
+		if thenBranch && witness.thenWitness != nil {
+			return *witness.thenWitness
+		}
+		if !thenBranch && witness.elseWitness != nil {
+			return *witness.elseWitness
+		}
+	}
+	if witness.rhsDelta == 0 {
+		if rhs, ok := witness.rhs.(*goivy.LogicIte); ok && exprEqual(rhs.Cond, cond) {
+			out := witness
+			if thenBranch {
+				out.rhs = rhs.Then
+			} else {
+				out.rhs = rhs.Else
+			}
+			return out
+		}
+	}
+	return witness
+}
+
+func localRelationPointAssumeCovered(expr goivy.Expr, stateFromLocal map[goivy.NodeKey]string, updates []localRelationPointUpdate) bool {
+	return localRelationPointAssumeCoveredValue(expr, nil, stateFromLocal, updates, true)
+}
+
+func localRelationPointAssumeCoveredValue(expr goivy.Expr, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string, updates []localRelationPointUpdate, want bool) bool {
+	switch n := expr.(type) {
+	case *goivy.Apply:
+		return localRelationPointApplyCovered(n, ignored, stateFromLocal, updates, want)
+	case *goivy.LogicExists:
+		if !want {
+			return false
+		}
+		nextIgnored := copyNameSet(ignored)
+		for _, v := range n.Variables {
+			if v != nil {
+				nextIgnored[v.Name] = true
+			}
+		}
+		return localRelationPointAssumeCoveredValue(n.Body, nextIgnored, stateFromLocal, updates, want)
+	case *goivy.LogicLiteral:
+		if n.Polarity == 0 {
+			return localRelationPointAssumeCoveredValue(n.Atom, ignored, stateFromLocal, updates, !want)
+		}
+		return localRelationPointAssumeCoveredValue(n.Atom, ignored, stateFromLocal, updates, want)
+	case *goivy.LogicNot:
+		return localRelationPointAssumeCoveredValue(n.Body, ignored, stateFromLocal, updates, !want)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			if localRelationPointAssumeCoveredValue(term, ignored, stateFromLocal, updates, want) {
+				return true
+			}
+		}
+		for _, term := range actionGeneratorIffNegativeTerms(n) {
+			if localRelationPointAssumeCoveredValue(term, ignored, stateFromLocal, updates, !want) {
+				return true
+			}
+		}
+	case *goivy.LogicIte:
+		return localRelationPointAssumeCoveredValue(n.Then, ignored, stateFromLocal, updates, want) &&
+			localRelationPointAssumeCoveredValue(n.Else, ignored, stateFromLocal, updates, want)
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return localRelationPointAssumeCoveredValue(expanded, ignored, stateFromLocal, updates, want)
+		}
+	}
+	return false
+}
+
+func localRelationPointApplyCovered(app *goivy.Apply, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string, updates []localRelationPointUpdate, want bool) bool {
+	if app == nil || len(app.Terms) == 0 {
+		return false
+	}
+	for i := len(updates) - 1; i >= 0; i-- {
+		update := updates[i]
+		if update.app == nil || goivy.Key(update.app.Func) != goivy.Key(app.Func) || len(update.app.Terms) != len(app.Terms) {
+			continue
+		}
+		if update.value != want {
+			continue
+		}
+		ok := true
+		for j := range app.Terms {
+			if !localRelationPointTermCovered(update.app.Terms[j], app.Terms[j], ignored, stateFromLocal) {
+				ok = false
+				break
+			}
+		}
+		if ok {
+			return true
+		}
+	}
+	return false
+}
+
+func localRelationPointTermCovered(updateTerm, assumeTerm goivy.Expr, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string) bool {
+	if exprEqual(updateTerm, assumeTerm) {
+		return true
+	}
+	assumeName := goivy.ExprName(assumeTerm)
+	if assumeName != "" && ignored[assumeName] && sortsEqual(updateTerm.NodeSort(), assumeTerm.NodeSort()) {
+		return true
+	}
+	updateName := goivy.ExprName(updateTerm)
+	if updateName == "" {
+		return false
+	}
+	if assumeName != "" {
+		if updateState, ok := updateTerm.(*goivy.Const); ok && updateState != nil {
+			mappedLocal, ok := stateFromLocal[goivy.Key(updateState)]
+			if ok && mappedLocal == assumeName {
+				return true
+			}
+		}
+	}
+	state, ok := assumeTerm.(*goivy.Const)
+	if !ok || state == nil {
+		return false
+	}
+	mappedLocal, ok := stateFromLocal[goivy.Key(state)]
+	return ok && mappedLocal == updateName
+}
+
+func localRelationStateAssumeCovered(expr goivy.Expr, stateFromLocal map[goivy.NodeKey]string, witnesses map[string]localRelationWitness) bool {
+	return localRelationStateAssumeCoveredWithIgnored(expr, nil, stateFromLocal, witnesses)
+}
+
+func localRelationGroupStateAssumeCovered(expr goivy.Expr, stateFromLocal map[goivy.NodeKey]string, witnesses []localRelationGroupWitness) bool {
+	return localRelationGroupStateAssumeCoveredWithIgnored(expr, nil, stateFromLocal, witnesses)
+}
+
+func localRelationGroupStateAssumeCoveredWithIgnored(expr goivy.Expr, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string, witnesses []localRelationGroupWitness) bool {
+	switch n := expr.(type) {
+	case *goivy.Apply:
+		return localRelationGroupStateApplyCovered(n, ignored, stateFromLocal, witnesses)
+	case *goivy.LogicExists:
+		nextIgnored := copyNameSet(ignored)
+		for _, v := range n.Variables {
+			if v != nil {
+				nextIgnored[v.Name] = true
+			}
+		}
+		return localRelationGroupStateAssumeCoveredWithIgnored(n.Body, nextIgnored, stateFromLocal, witnesses)
+	case *goivy.LogicLiteral:
+		return n.Polarity != 0 && localRelationGroupStateAssumeCoveredWithIgnored(n.Atom, ignored, stateFromLocal, witnesses)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			if localRelationGroupStateAssumeCoveredWithIgnored(term, ignored, stateFromLocal, witnesses) {
+				return true
+			}
+		}
+	case *goivy.LogicIte:
+		return localRelationGroupStateAssumeCoveredWithIgnored(n.Then, ignored, stateFromLocal, witnesses) &&
+			localRelationGroupStateAssumeCoveredWithIgnored(n.Else, ignored, stateFromLocal, witnesses)
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return localRelationGroupStateAssumeCoveredWithIgnored(expanded, ignored, stateFromLocal, witnesses)
+		}
+	}
+	return false
+}
+
+func localRelationGroupStateApplyCovered(app *goivy.Apply, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string, witnesses []localRelationGroupWitness) bool {
+	if app == nil || len(app.Terms) == 0 {
+		return false
+	}
+	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
+		return false
+	}
+	for _, witness := range witnesses {
+		if !localRelationGroupWitnessCoversApply(witness, app, ignored, stateFromLocal) {
+			continue
+		}
+		return true
+	}
+	return false
+}
+
+func localRelationGroupWitnessCoversApply(witness localRelationGroupWitness, app *goivy.Apply, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string) bool {
+	if witness.app == nil || app == nil || len(witness.app.Terms) != len(app.Terms) ||
+		goivy.Key(witness.app.Func) != goivy.Key(app.Func) {
+		return false
+	}
+	for i, term := range app.Terms {
+		if localName, ok := witness.localByPos[i]; ok {
+			state, ok := term.(*goivy.Const)
+			if !ok || state == nil {
+				return false
+			}
+			mappedLocal, ok := stateFromLocal[goivy.Key(state)]
+			if !ok || mappedLocal != localName {
+				return false
+			}
+			continue
+		}
+		if !localRelationWitnessTermCovered(witness.app.Terms[i], witness.ignored, term, ignored) {
+			return false
+		}
+	}
+	return true
+}
+
+func localRelationStateAssumeCoveredWithIgnored(expr goivy.Expr, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string, witnesses map[string]localRelationWitness) bool {
+	switch n := expr.(type) {
+	case *goivy.Apply:
+		return localRelationStateApplyCovered(n, ignored, stateFromLocal, witnesses)
+	case *goivy.LogicExists:
+		nextIgnored := copyNameSet(ignored)
+		for _, v := range n.Variables {
+			if v != nil {
+				nextIgnored[v.Name] = true
+			}
+		}
+		return localRelationStateAssumeCoveredWithIgnored(n.Body, nextIgnored, stateFromLocal, witnesses)
+	case *goivy.LogicLiteral:
+		return n.Polarity != 0 && localRelationStateAssumeCoveredWithIgnored(n.Atom, ignored, stateFromLocal, witnesses)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			if localRelationStateAssumeCoveredWithIgnored(term, ignored, stateFromLocal, witnesses) {
+				return true
+			}
+		}
+	case *goivy.LogicIte:
+		thenWitnesses := localRelationWitnessesForIteBranch(witnesses, n.Cond, true)
+		elseWitnesses := localRelationWitnessesForIteBranch(witnesses, n.Cond, false)
+		return localRelationStateAssumeCoveredWithIgnored(n.Then, ignored, stateFromLocal, thenWitnesses) &&
+			localRelationStateAssumeCoveredWithIgnored(n.Else, ignored, stateFromLocal, elseWitnesses)
+	case *goivy.LogicLet:
+		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
+			return localRelationStateAssumeCoveredWithIgnored(expanded, ignored, stateFromLocal, witnesses)
+		}
+	}
+	return false
+}
+
+func localRelationWitnessesForIteBranch(witnesses map[string]localRelationWitness, cond goivy.Expr, thenBranch bool) map[string]localRelationWitness {
+	if len(witnesses) == 0 {
+		return witnesses
+	}
+	out := make(map[string]localRelationWitness, len(witnesses))
+	for name, witness := range witnesses {
+		out[name] = localRelationWitnessForIteBranch(witness, cond, thenBranch)
+	}
+	return out
+}
+
+func localRelationWitnessForIteBranch(witness localRelationWitness, cond goivy.Expr, thenBranch bool) localRelationWitness {
+	if witness.cond != nil && exprEqual(witness.cond, cond) {
+		if thenBranch && witness.thenWitness != nil {
+			return *witness.thenWitness
+		}
+		if !thenBranch && witness.elseWitness != nil {
+			return *witness.elseWitness
+		}
+	}
+	return witness
+}
+
+func localRelationStateApplyCovered(app *goivy.Apply, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string, witnesses map[string]localRelationWitness) bool {
+	if app == nil || len(app.Terms) == 0 {
+		return false
+	}
+	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok || len(fs.Domain()) != len(app.Terms) || !isBooleanSort(fs.Range()) {
+		return false
+	}
+	for localName, witness := range witnesses {
+		if !localRelationWitnessCoversApply(localName, witness, app, ignored, stateFromLocal) {
+			continue
+		}
+		return true
+	}
+	return false
+}
+
+func localRelationWitnessCoversApply(localName string, witness localRelationWitness, app *goivy.Apply, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string) bool {
+	if localName == "" || witness.app == nil || app == nil || witness.pos < 0 ||
+		witness.pos >= len(app.Terms) || len(witness.app.Terms) != len(app.Terms) ||
+		goivy.Key(witness.app.Func) != goivy.Key(app.Func) {
+		return false
+	}
+	for i, term := range app.Terms {
+		if i == witness.pos {
+			state, ok := term.(*goivy.Const)
+			if !ok || state == nil {
+				return false
+			}
+			mappedLocal, ok := stateFromLocal[goivy.Key(state)]
+			if !ok || mappedLocal != localName {
+				return false
+			}
+			continue
+		}
+		if !localRelationWitnessTermCovered(witness.app.Terms[i], witness.ignored, term, ignored) {
+			return false
+		}
+	}
+	return true
+}
+
+func localRelationWitnessTermCovered(witnessTerm goivy.Expr, witnessIgnored map[string]bool, term goivy.Expr, ignored map[string]bool) bool {
+	witnessUsesIgnored := exprReferencesAnyNameIncludingVariables(witnessTerm, witnessIgnored)
+	termUsesIgnored := exprReferencesAnyNameIncludingVariables(term, ignored)
+	if witnessUsesIgnored || termUsesIgnored {
+		return localRelationIgnoredTermsCompatible(witnessTerm, witnessIgnored, term, ignored)
+	}
+	return exprEqual(witnessTerm, term)
+}
+
+func localRelationIgnoredTermsCompatible(witnessTerm goivy.Expr, witnessIgnored map[string]bool, term goivy.Expr, ignored map[string]bool) bool {
+	witnessName := goivy.ExprName(witnessTerm)
+	termName := goivy.ExprName(term)
+	return witnessName != "" && termName != "" &&
+		witnessIgnored[witnessName] && ignored[termName] &&
+		sortsEqual(witnessTerm.NodeSort(), term.NodeSort())
 }
 
 func actionContainsCall(act goivy.Action) bool {
@@ -6590,6 +9515,10 @@ func (g *Generator) emitTestActionGeneratorAssumeGuards(w *goWriter, name string
 	for _, guard := range guards {
 		expr, err := g.emitExpr(closeFormulaForGo(guard))
 		if err != nil {
+			if g.hasBeforeExportAction(name) {
+				g.unsupportedAt(w, guard.GetLineno(), "unsupported before_export action generator requires runtime trial for %s: %s", name, strings.TrimPrefix(err.Error(), "ivy2golang: "))
+				continue
+			}
 			g.softUnsupported(w, "unsupported target=test action generator assume guard", err, linenoStr(guard.GetLineno()))
 			continue
 		}
