@@ -4952,7 +4952,7 @@ action step = {
 }
 export step
 `)
-	out, err := Generate(mod, Config{Target: "repl", ClassName: "thunkeq"})
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "thunkeq", Trace: true})
 	if err != nil {
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
@@ -4978,7 +4978,7 @@ export step
 	if err != nil {
 		t.Fatalf("run generated hash-thunk equality repl: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
-	if stdout != "> step\n" {
+	if !strings.HasPrefix(stdout, "step {\n") || !strings.HasSuffix(stdout, "}\n") || strings.Contains(stdout, "assertion_failed") {
 		t.Fatalf("hash-thunk equality repl output differs\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
 }
@@ -11502,7 +11502,7 @@ action step = {
 export step
 `
 	mod := compileIvySource(t, src)
-	out, err := Generate(mod, Config{Target: "repl", ClassName: "variant_record_eq"})
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "variant_record_eq", Trace: true})
 	if err != nil {
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
@@ -11537,7 +11537,7 @@ export step
 	if err != nil {
 		t.Fatalf("run generated variant record equality repl: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
-	if stdout != "> step\n" {
+	if !strings.HasPrefix(stdout, "step {\n") || !strings.HasSuffix(stdout, "}\n") || strings.Contains(stdout, "assertion_failed") {
 		t.Fatalf("variant record equality repl output differs\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
 }
