@@ -3,6 +3,7 @@ package ivy2golang
 import (
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"sort"
 	"strconv"
@@ -54,7 +55,9 @@ type Generator struct {
 	locals             []map[string]goivy.Sort
 	currentReturns     []*goivy.Const
 	extRel             map[string]bool
+	supportRel         map[string]bool
 	importCallersCache map[string]bool
+	importActionsCache map[string]bool
 	exprAliases        map[string]goivy.Expr
 	exprOverrides      []map[string]string
 	defStack           map[string]bool
@@ -75,8 +78,11 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 	base := moduleBaseName(mod)
 	className := cfg.ClassName
 	if className == "" {
-		className = goName(base)
+		className = goIdentifierName(base)
+	} else {
+		className = goIdentifierName(className)
 	}
+	cfg.ClassName = className
 	applySessionParameters(mod, cfg)
 	prepareModuleForGo(mod, cfg)
 	g := &Generator{
@@ -86,6 +92,12 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 		ClassName: className,
 	}
 	g.validatePublicActions()
+	if err := joinUniqueErrors(g.errs); err != nil {
+		return nil, err
+	}
+	if err := g.checkGeneratedNames(); err != nil {
+		return nil, err
+	}
 	src, err := g.generate()
 	if err != nil {
 		return nil, err
@@ -109,6 +121,8 @@ func (g *Generator) generate() (string, error) {
 	w.linef("package %s", g.packageName())
 	w.blank()
 	g.emitImports(&w)
+	g.emitTopLevelNativeComments(&w)
+	g.emitNativeTypeComments(&w)
 	g.emitSortDecls(&w)
 	g.emitRuntime(&w)
 	g.emitStruct(&w)
@@ -118,16 +132,86 @@ func (g *Generator) generate() (string, error) {
 	g.emitMethods(&w)
 	g.emitTick(&w)
 	if g.Config.EmitMain {
+		emittedMain := true
 		if g.Config.Target == "test" {
 			g.emitTestMain(&w)
 		} else if g.Config.Target == "gen" {
 			g.emitGenMain(&w)
+		} else if g.Config.Target == "repl" {
+			g.emitReplMain(&w)
 		} else {
-			g.emitSmokeMain(&w)
+			emittedMain = false
 		}
-		g.emitMainWrapper(&w)
+		if emittedMain {
+			g.emitMainWrapper(&w)
+		}
 	}
-	return w.String(), errors.Join(g.errs...)
+	return w.String(), joinUniqueErrors(g.errs)
+}
+
+func (g *Generator) emitTopLevelNativeComments(w *goWriter) {
+	if g == nil || g.Mod == nil || len(g.Mod.Natives) == 0 {
+		return
+	}
+	g.warnOnce("ivy2golang: top-level native C++ blocks are emitted as Go comments")
+	for _, node := range g.Mod.Natives {
+		if node == nil {
+			continue
+		}
+		args := node.Args()
+		if len(args) < 2 {
+			continue
+		}
+		code, ok := args[1].(*goivy.NativeCode)
+		if !ok || code == nil {
+			continue
+		}
+		w.line("// ivy top-level native block omitted: C++ native code is not translated to Go")
+		for _, line := range strings.Split(code.Code, "\n") {
+			line = strings.TrimSpace(strings.TrimRight(line, "\r"))
+			if line == "" {
+				continue
+			}
+			w.line("// native: " + line)
+		}
+		w.blank()
+	}
+}
+
+func (g *Generator) emitNativeTypeComments(w *goWriter) {
+	if g == nil || g.Mod == nil || len(g.Mod.NativeTypes) == 0 {
+		return
+	}
+	g.warnOnce("ivy2golang: native C++ type interpretations are represented as Go int placeholders")
+	names := make([]string, 0, len(g.Mod.NativeTypes))
+	for name := range g.Mod.NativeTypes {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	for _, name := range names {
+		w.linef("// ivy native type %s represented as Go int placeholder", name)
+	}
+	w.blank()
+}
+
+func joinUniqueErrors(errs []error) error {
+	if len(errs) == 0 {
+		return nil
+	}
+	seen := map[string]bool{}
+	uniq := make([]error, 0, len(errs))
+	for _, err := range errs {
+		if err == nil {
+			continue
+		}
+		msg := err.Error()
+		if seen[msg] {
+			continue
+		}
+		seen[msg] = true
+		uniq = append(uniq, err)
+	}
+	return errors.Join(uniq...)
 }
 
 func (g *Generator) validatePublicActions() {
@@ -144,6 +228,52 @@ func (g *Generator) validatePublicActions() {
 	}
 }
 
+// checkGeneratedNames mirrors ivy2cpp's member-name guard for actions, symbols,
+// and sorts, then adds the Go-specific package-level declarations emitted for
+// named enum elements and record/variant sorts.
+func (g *Generator) checkGeneratedNames() error {
+	if g == nil || g.Mod == nil {
+		return nil
+	}
+	names := map[string]bool{}
+	add := func(name string) {
+		if name != "" {
+			names[goName(name)] = true
+		}
+	}
+	if g.Mod.Sig != nil {
+		for name := range g.Mod.Sig.Symbols.All() {
+			add(name)
+		}
+		for name, s := range g.Mod.Sig.Sorts.All() {
+			add(name)
+			if st, ok := s.(*goivy.LogicEnumeratedSort); ok && st.Name != "" && !isNumericEnum(st) {
+				add(st.Name)
+				for _, sym := range st.Extension {
+					add(sym)
+				}
+			}
+		}
+	}
+	for _, name := range g.Mod.SortOrder {
+		if g.isVariantSuperName(name) || len(g.destructorStructFields(name)) > 0 {
+			add(name)
+		}
+	}
+	if g.Mod.Actions != nil {
+		for name := range g.Mod.Actions.All() {
+			add(name)
+		}
+	}
+	if names[g.ClassName] {
+		return fmt.Errorf(
+			"ivy2golang: cannot create Go type %s with generated name %s.\n"+
+				"Use command line option classname=... to change the type name",
+			g.ClassName, g.ClassName)
+	}
+	return nil
+}
+
 func (g *Generator) packageName() string {
 	if g != nil && !g.Config.EmitMain {
 		return "ivygenerated"
@@ -155,9 +285,13 @@ func (g *Generator) emitImports(w *goWriter) {
 	w.line("import (")
 	w.indent++
 	imports := []string{"fmt", "io", "math/rand/v2", "os", "strconv", "strings"}
-	if g.Config.Target == "test" || g.Config.Target == "gen" {
+	if g.Config.Target == "repl" && g.Config.EmitMain {
+		imports = append(imports, "bufio")
+	}
+	if g.Config.Target == "test" {
 		imports = append(imports, "time")
 	}
+	sort.Strings(imports)
 	for _, imp := range imports {
 		w.linef("%q", imp)
 	}
@@ -220,31 +354,37 @@ func (g *Generator) emitSortDecls(w *goWriter) {
 		g.emitVariantSuperDecl(w, name)
 	}
 	for _, name := range g.Mod.SortOrder {
-		fields := g.destructorStructFields(name)
+		fields := g.destructorStructFieldInfos(name)
 		if len(fields) == 0 {
 			continue
 		}
 		typeName := goName(name)
 		w.open(fmt.Sprintf("type %s struct {", typeName))
-		for _, d := range fields {
-			fs := d.CSort.(*goivy.LogicFunctionSort)
-			w.linef("%s %s", goName(memName(d.Name)), g.goScalarType(fs.Range()))
+		for _, field := range fields {
+			typ, _ := g.goDestructorFieldType(field.Sort)
+			w.linef("%s %s", field.FieldName, typ)
 		}
 		w.close("")
 		w.blank()
 		w.open(fmt.Sprintf("func (v %s) String() string {", typeName))
 		if len(fields) == 0 {
 			w.line(`return "{}"`)
+		} else if destructorStringNeedsBuilder(fields) {
+			g.emitDestructorStringBuilder(w, fields)
 		} else {
 			format := "{" + strings.Join(recordFormatLabels(fields), ",") + "}"
 			args := make([]string, len(fields))
-			for i, d := range fields {
-				args[i] = "v." + goName(memName(d.Name))
+			for i, field := range fields {
+				args[i] = "v." + field.FieldName
 			}
 			w.linef("return fmt.Sprintf(%q, %s)", format, strings.Join(args, ", "))
 		}
 		w.close("")
 		w.blank()
+		if g.destructorStructNeedsEqualMethod(fields) {
+			g.emitDestructorEqualMethod(w, typeName, fields)
+			w.blank()
+		}
 	}
 }
 
@@ -276,14 +416,125 @@ func (g *Generator) emitVariantSuperDecl(w *goWriter, name string) {
 	w.line(`return "{}"`)
 	w.close("")
 	w.blank()
+	g.emitVariantEqualMethod(w, typeName, variants)
+	w.blank()
 }
 
-func recordFormatLabels(fields []*goivy.Const) []string {
+func (g *Generator) emitVariantEqualMethod(w *goWriter, typeName string, variants []goivy.Sort) {
+	w.open(fmt.Sprintf("func (v %s) Equal(other %s) bool {", typeName, typeName))
+	w.open("if v.valid != other.valid {")
+	w.line("return false")
+	w.close("")
+	w.open("if !v.valid {")
+	w.line("return true")
+	w.close("")
+	w.open("if v.tag != other.tag {")
+	w.line("return false")
+	w.close("")
+	w.line("switch v.tag {")
+	w.indent++
+	for i, sub := range variants {
+		payloadType := g.goScalarType(sub)
+		lhs := fmt.Sprintf("v.value.(%s)", payloadType)
+		rhs := fmt.Sprintf("other.value.(%s)", payloadType)
+		w.linef("case %d:", i)
+		w.indent++
+		w.linef("return %s", g.goEqualExpr(lhs, rhs, sub))
+		w.indent--
+	}
+	w.indent--
+	w.line("}")
+	w.line("return true")
+	w.close("")
+}
+
+func recordFormatLabels(fields []goDestructorField) []string {
 	labels := make([]string, 0, len(fields))
-	for _, d := range fields {
-		labels = append(labels, fmt.Sprintf("%s:%%v", memName(d.Name)))
+	for _, field := range fields {
+		labels = append(labels, fmt.Sprintf("%s:%%v", memName(field.Const.Name)))
 	}
 	return labels
+}
+
+func destructorStringNeedsBuilder(fields []goDestructorField) bool {
+	for _, field := range fields {
+		if len(field.Sort.Domain()) > 1 {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) emitDestructorStringBuilder(w *goWriter, fields []goDestructorField) {
+	w.line("var __b strings.Builder")
+	w.line(`__b.WriteString("{")`)
+	for i, field := range fields {
+		if i > 0 {
+			w.line(`__b.WriteString(",")`)
+		}
+		w.linef("__b.WriteString(%q)", memName(field.Const.Name)+":")
+		if g.destructorFieldIsLarge(field) {
+			w.line(`__b.WriteString("<hash_thunk>")`)
+			continue
+		}
+		g.emitDestructorStringValue(w, "v."+field.FieldName, field.Sort.Domain()[1:], i, 0)
+	}
+	w.line(`__b.WriteString("}")`)
+	w.line("return __b.String()")
+}
+
+func (g *Generator) emitDestructorStringValue(w *goWriter, expr string, domain []goivy.Sort, fieldOrdinal int, depth int) {
+	if len(domain) == 0 {
+		w.linef("__b.WriteString(fmt.Sprintf(%q, %s))", "%v", expr)
+		return
+	}
+	idx := fmt.Sprintf("__i%d", depth)
+	first := fmt.Sprintf("__ivy_first%d_%d", fieldOrdinal, depth)
+	vals, ok := g.finiteValueExprs(domain[0])
+	if !ok {
+		g.unsupported(w, "cannot enumerate destructor string domain sort %s", sortName(domain[0]))
+		return
+	}
+	w.line(`__b.WriteString("[")`)
+	w.linef("%s := true", first)
+	w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", idx, g.goScalarType(domain[0]), strings.Join(vals, ", ")))
+	w.open(fmt.Sprintf("if !%s {", first))
+	w.line(`__b.WriteString(",")`)
+	w.close("")
+	w.linef("%s = false", first)
+	g.emitDestructorStringValue(w, expr+"["+idx+"]", domain[1:], fieldOrdinal, depth+1)
+	w.close("")
+	w.line(`__b.WriteString("]")`)
+}
+
+func (g *Generator) emitDestructorEqualMethod(w *goWriter, typeName string, fields []goDestructorField) {
+	w.open(fmt.Sprintf("func (v %s) Equal(other %s) bool {", typeName, typeName))
+	for i, field := range fields {
+		if g.destructorFieldIsLarge(field) {
+			continue
+		}
+		g.emitDestructorEqualValue(w, "v."+field.FieldName, "other."+field.FieldName, field.Sort.Domain()[1:], field.Sort.Range(), i, 0)
+	}
+	w.line("return true")
+	w.close("")
+}
+
+func (g *Generator) emitDestructorEqualValue(w *goWriter, left, right string, domain []goivy.Sort, rng goivy.Sort, fieldOrdinal int, depth int) {
+	if len(domain) == 0 {
+		w.open(fmt.Sprintf("if !(%s) {", g.goEqualExpr(left, right, rng)))
+		w.line("return false")
+		w.close("")
+		return
+	}
+	idx := fmt.Sprintf("__i%d", depth)
+	vals, ok := g.finiteValueExprs(domain[0])
+	if !ok {
+		g.unsupported(w, "cannot enumerate destructor equality domain sort %s", sortName(domain[0]))
+		return
+	}
+	w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", idx, g.goScalarType(domain[0]), strings.Join(vals, ", ")))
+	g.emitDestructorEqualValue(w, left+"["+idx+"]", right+"["+idx+"]", domain[1:], rng, fieldOrdinal, depth+1)
+	w.close("")
 }
 
 func (g *Generator) sortNeededForGoDecl(name string) bool {
@@ -313,12 +564,19 @@ func (g *Generator) emitRuntime(w *goWriter) {
 	w.line("var __ivy_out io.Writer = os.Stdout")
 	w.line("var __ivy_rng = rand.NewChaCha8(ivySeedBytes(1))")
 	w.blank()
-	w.open("func parseIvyTestArgs(args []string) (map[string]string, []string) {")
+	w.open("type ivyOption struct {")
+	w.line("key string")
+	w.line("value string")
+	w.close("")
+	w.blank()
+	w.open("func parseIvyTestArgs(args []string) (map[string]string, []string, []ivyOption) {")
 	w.line("opts := map[string]string{}")
 	w.line("var rest []string")
+	w.line("var optArgs []ivyOption")
 	w.open("for _, arg := range args {")
 	w.line(`if key, value, ok := strings.Cut(arg, "="); ok {`)
 	w.indent++
+	w.line("optArgs = append(optArgs, ivyOption{key: key, value: value})")
 	w.line("opts[key] = value")
 	w.indent--
 	w.line("} else {")
@@ -327,15 +585,44 @@ func (g *Generator) emitRuntime(w *goWriter) {
 	w.indent--
 	w.line("}")
 	w.close("")
-	w.line("return opts, rest")
+	w.line("return opts, rest, optArgs")
+	w.close("")
+	w.blank()
+	g.emitIvyValueParserRuntime(w)
+	g.emitReplAskRetRuntime(w)
+	w.open("func ivyAtoi(text string) int {")
+	w.line(`text = strings.TrimLeft(text, " \t\n\r\v\f")`)
+	w.line("sign := 1")
+	w.open(`if strings.HasPrefix(text, "+") {`)
+	w.line("text = text[1:]")
+	w.close(` else if strings.HasPrefix(text, "-") {`)
+	w.line("sign = -1")
+	w.line("text = text[1:]")
+	w.close("")
+	w.line("end := 0")
+	w.open("for end < len(text) && text[end] >= '0' && text[end] <= '9' {")
+	w.line("end++")
+	w.close("")
+	w.open("if end == 0 {")
+	w.line("return 0")
+	w.close("")
+	w.line("n, err := strconv.Atoi(text[:end])")
+	w.open("if err != nil {")
+	w.line("return 0")
+	w.close("")
+	w.line("return sign * n")
 	w.close("")
 	w.blank()
 	w.open("func ivyAtoiDefault(text string, def int) int {")
 	w.open(`if text == "" {`)
 	w.line("return def")
 	w.close("")
-	w.open("if n, err := strconv.Atoi(text); err == nil {")
-	w.line("return n")
+	w.line("return ivyAtoi(text)")
+	w.close("")
+	w.blank()
+	w.open("func ivyAtoiOption(opts map[string]string, key string, def int) int {")
+	w.open("if text, ok := opts[key]; ok {")
+	w.line("return ivyAtoi(text)")
 	w.close("")
 	w.line("return def")
 	w.close("")
@@ -365,6 +652,13 @@ func (g *Generator) emitRuntime(w *goWriter) {
 	w.line("return int(__ivy_rng.Uint64() % uint64(rng))")
 	w.close("")
 	w.blank()
+	w.open("func ivyBVShiftAmount(v int) int {")
+	w.open("if v < 0 {")
+	w.line("return 0")
+	w.close("")
+	w.line("return v")
+	w.close("")
+	w.blank()
 	w.open("func ivyFailureEvent(event, msg string) {")
 	w.line(`fmt.Fprintf(__ivy_out, "%s(%q)\n", event, msg)`)
 	w.close("")
@@ -373,6 +667,9 @@ func (g *Generator) emitRuntime(w *goWriter) {
 	w.open("if !truth {")
 	w.line(`ivyFailureEvent("assertion_failed", msg)`)
 	w.line(`fmt.Fprintf(os.Stderr, "%s: error: assertion failed\n", msg)`)
+	if g.Config.Target == "repl" && g.Config.Trace {
+		w.line(`fmt.Fprintln(__ivy_out, "}")`)
+	}
 	w.line("os.Exit(1)")
 	w.close("")
 	w.close("")
@@ -381,6 +678,9 @@ func (g *Generator) emitRuntime(w *goWriter) {
 	w.open("if !truth {")
 	w.line(`ivyFailureEvent("assumption_failed", msg)`)
 	w.line(`fmt.Fprintf(os.Stderr, "%s: error: assumption failed\n", msg)`)
+	if g.Config.Target == "repl" && g.Config.Trace {
+		w.line(`fmt.Fprintln(__ivy_out, "}")`)
+	}
 	w.line("os.Exit(1)")
 	w.line("return false")
 	w.close("")
@@ -491,13 +791,287 @@ func (g *Generator) emitRuntime(w *goWriter) {
 	w.line("m.overrides[key] = value")
 	w.close("")
 	w.blank()
+	w.open("func ivyThunkGet[K comparable, V any](m *ivyThunkMap[K, V], key K, zero V) V {")
+	w.open("if m == nil {")
+	w.line("return zero")
+	w.close("")
+	w.line("return m.Get(key)")
+	w.close("")
+	w.blank()
+	w.open("func ivyThunkSet[K comparable, V any](m **ivyThunkMap[K, V], key K, value V, zero V) {")
+	w.open("if *m == nil {")
+	w.line("tmp := newIvyThunkMap[K, V](zero)")
+	w.line("*m = &tmp")
+	w.close("")
+	w.line("(*m).Set(key, value)")
+	w.close("")
+	w.blank()
+}
+
+func (g *Generator) emitIvyValueParserRuntime(w *goWriter) {
+	w.raw(`type ivyValue struct {
+	pos int
+	atom string
+	fields []ivyValue
+}
+
+func ivyIsWhite(c byte) bool {
+	return c == ' ' || c == '\t' || c == '\n' || c == '\r'
+}
+
+func ivyIsIdent(c byte) bool {
+	return c == '_' || c == '.' || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')
+}
+
+func ivySkipWhite(text string, pos *int) {
+	for *pos < len(text) && ivyIsWhite(text[*pos]) {
+		*pos = *pos + 1
+	}
+}
+
+type ivySyntaxErr struct {
+	pos int
+}
+
+func (e ivySyntaxErr) Error() string {
+	return fmt.Sprintf("syntax error at %d", e.pos)
+}
+
+func ivySyntaxError(pos int) error {
+	return ivySyntaxErr{pos: pos}
+}
+
+func ivySyntaxErrorPos(err error) (int, bool) {
+	if e, ok := err.(ivySyntaxErr); ok {
+		return e.pos, true
+	}
+	return 0, false
+}
+
+func ivyGetIdent(text string, pos *int) (string, error) {
+	start := *pos
+	for *pos < len(text) && ivyIsIdent(text[*pos]) {
+		*pos = *pos + 1
+	}
+	if start == *pos {
+		return "", ivySyntaxError(*pos)
+	}
+	return text[start:*pos], nil
+}
+
+func ivyParseValueAt(text string, pos *int) (ivyValue, error) {
+	res := ivyValue{pos: *pos}
+	ivySkipWhite(text, pos)
+	if *pos < len(text) && text[*pos] == '[' {
+		for {
+			*pos = *pos + 1
+			ivySkipWhite(text, pos)
+			if *pos < len(text) && text[*pos] == ']' {
+				break
+			}
+			field, err := ivyParseValueAt(text, pos)
+			if err != nil {
+				return res, err
+			}
+			res.fields = append(res.fields, field)
+			ivySkipWhite(text, pos)
+			if *pos < len(text) && text[*pos] == ']' {
+				break
+			}
+			if !(*pos < len(text) && text[*pos] == ',') {
+				return res, ivySyntaxError(*pos)
+			}
+		}
+		*pos = *pos + 1
+		return res, nil
+	}
+	if *pos < len(text) && text[*pos] == '{' {
+		for {
+			field := ivyValue{}
+			*pos = *pos + 1
+			ivySkipWhite(text, pos)
+			atom, err := ivyGetIdent(text, pos)
+			if err != nil {
+				return res, err
+			}
+			field.atom = atom
+			ivySkipWhite(text, pos)
+			if !(*pos < len(text) && text[*pos] == ':') {
+				return res, ivySyntaxError(*pos)
+			}
+			*pos = *pos + 1
+			ivySkipWhite(text, pos)
+			value, err := ivyParseValueAt(text, pos)
+			if err != nil {
+				return res, err
+			}
+			field.fields = append(field.fields, value)
+			res.fields = append(res.fields, field)
+			ivySkipWhite(text, pos)
+			if *pos < len(text) && text[*pos] == '}' {
+				break
+			}
+			if !(*pos < len(text) && text[*pos] == ',') {
+				return res, ivySyntaxError(*pos)
+			}
+		}
+		*pos = *pos + 1
+		return res, nil
+	}
+	if *pos < len(text) && text[*pos] == '"' {
+		*pos = *pos + 1
+		for *pos < len(text) && text[*pos] != '"' {
+			c := text[*pos]
+			*pos = *pos + 1
+			if c == '\\' {
+				if *pos == len(text) {
+					return res, ivySyntaxError(*pos)
+				}
+				c = text[*pos]
+				*pos = *pos + 1
+				switch c {
+				case 'n':
+					c = 10
+				case 'r':
+					c = 13
+				case 't':
+					c = 9
+				}
+			}
+			res.atom += string(c)
+		}
+		if *pos == len(text) {
+			return res, ivySyntaxError(*pos)
+		}
+		*pos = *pos + 1
+		return res, nil
+	}
+	if *pos < len(text) && text[*pos] == '-' {
+		start := *pos
+		*pos = *pos + 1
+		if *pos == len(text) || text[*pos] < '0' || text[*pos] > '9' {
+			return res, ivySyntaxError(*pos)
+		}
+		for *pos < len(text) && text[*pos] >= '0' && text[*pos] <= '9' {
+			*pos = *pos + 1
+		}
+		res.atom = text[start:*pos]
+		return res, nil
+	}
+	atom, err := ivyGetIdent(text, pos)
+	if err != nil {
+		return res, err
+	}
+	res.atom = atom
+	return res, nil
+}
+
+func ivyParseValue(text string) (ivyValue, error) {
+	pos := 0
+	value, err := ivyParseValueAt(text, &pos)
+	if err != nil {
+		return value, err
+	}
+	ivySkipWhite(text, &pos)
+	if pos != len(text) {
+		return value, ivySyntaxError(pos)
+	}
+	return value, nil
+}
+
+func ivyParseCommand(text string) (string, []ivyValue, error) {
+	pos := 0
+	ivySkipWhite(text, &pos)
+	action, err := ivyGetIdent(text, &pos)
+	if err != nil {
+		return "", nil, err
+	}
+	ivySkipWhite(text, &pos)
+	if pos == len(text) {
+		return action, nil, nil
+	}
+	if text[pos] != '(' {
+		return "", nil, ivySyntaxError(pos)
+	}
+	pos = pos + 1
+	var args []ivyValue
+	ivySkipWhite(text, &pos)
+	for {
+		arg, err := ivyParseValueAt(text, &pos)
+		if err != nil {
+			return "", nil, err
+		}
+		args = append(args, arg)
+		ivySkipWhite(text, &pos)
+		if pos < len(text) && text[pos] == ',' {
+			pos = pos + 1
+			ivySkipWhite(text, &pos)
+			continue
+		}
+		if pos < len(text) && text[pos] == ')' {
+			pos = pos + 1
+			break
+		}
+		return "", nil, ivySyntaxError(pos)
+	}
+	ivySkipWhite(text, &pos)
+	if pos != len(text) {
+		return "", nil, ivySyntaxError(pos)
+	}
+	return action, args, nil
+}
+
+`)
+}
+
+func (g *Generator) emitReplAskRetRuntime(w *goWriter) {
+	w.raw(`type ivyLineScanner interface {
+	Scan() bool
+	Text() string
+	Err() error
+}
+
+var __ivy_repl_scanner ivyLineScanner
+
+func ivyAskRet(bound int) int {
+	for {
+		fmt.Fprint(__ivy_out, "? ")
+		if __ivy_repl_scanner == nil {
+			fmt.Fprintln(os.Stderr, "input error")
+			os.Exit(1)
+		}
+		if !__ivy_repl_scanner.Scan() {
+			if err := __ivy_repl_scanner.Err(); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+			} else {
+				fmt.Fprintln(os.Stderr, "unexpected end of input")
+			}
+			os.Exit(1)
+		}
+		res, err := strconv.Atoi(strings.TrimSpace(__ivy_repl_scanner.Text()))
+		if err == nil && res >= 0 && res < bound {
+			return res
+		}
+		fmt.Fprintln(os.Stderr, "value out of range")
+	}
+}
+
+`)
 }
 
 func (g *Generator) emitStruct(w *goWriter) {
 	w.open(fmt.Sprintf("type %s struct {", g.ClassName))
 	w.line("__argv []string")
+	seen := map[string]bool{}
 	for _, sym := range g.stateSymbols() {
 		w.line(g.goStorageDecl(sym.Name, sym.Sort))
+		seen[sym.Name] = true
+	}
+	for _, p := range g.Mod.Params {
+		if p == nil || seen[p.Name] {
+			continue
+		}
+		w.line(g.goStorageDecl(p.Name, p.CSort))
 	}
 	g.emitProgressCounterDecls(w)
 	w.close("")
@@ -514,8 +1088,10 @@ func (g *Generator) emitConstructor(w *goWriter) {
 		}
 		w.linef("ivy.%s = %s", goName(p.Name), goName(p.Name))
 	}
-	w.line("ivy.__initState()")
-	w.line("ivy.__init()")
+	if g.Config.Target != "gen" {
+		w.line("ivy.__initState()")
+		w.line("ivy.__init()")
+	}
 	w.line("return ivy")
 	w.close("")
 	w.blank()
@@ -547,6 +1123,10 @@ func (g *Generator) emitConstructor(w *goWriter) {
 
 func (g *Generator) emitInitialState(w *goWriter) {
 	w.open(fmt.Sprintf("func (ivy *%s) __initState() {", g.ClassName))
+	retryFormulas := g.initialStateRetryFormulas()
+	if len(retryFormulas) > 0 {
+		w.open("for __ivy_init_attempt := 0; ; __ivy_init_attempt++ {")
+	}
 	for _, sym := range g.stateSymbols() {
 		if g.isParamName(sym.Name) {
 			continue
@@ -555,14 +1135,46 @@ func (g *Generator) emitInitialState(w *goWriter) {
 	}
 	acts, err := g.initialConditionActions()
 	if err != nil {
-		g.unsupported(w, "unsupported initial condition: %s", err.Error())
+		g.unsupportedAt(w, initialErrorLocation(err), "unsupported initial condition: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
 	} else {
 		for _, act := range acts {
 			g.emitAction(w, act)
 		}
 	}
+	if len(retryFormulas) > 0 {
+		if expr, err := g.initialStateRetryExpr(retryFormulas); err != nil {
+			g.unsupportedAt(w, initialErrorLocation(err), "unsupported initial axiom retry condition: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
+		} else {
+			w.open("if " + expr + " {")
+			w.line("break")
+			w.close("")
+			w.open("if __ivy_init_attempt >= 999 {")
+			w.line(`ivyAssume(false, "initial condition")`)
+			w.line("break")
+			w.close("")
+		}
+		w.close("")
+	}
 	w.close("")
 	w.blank()
+}
+
+func (g *Generator) initialStateRetryExpr(formulas []goivy.Expr) (string, error) {
+	exprs := make([]string, 0, len(formulas))
+	for _, f := range formulas {
+		if f == nil {
+			continue
+		}
+		expr, err := g.emitExpr(closeFormulaForGo(f))
+		if err != nil {
+			return "", withInitialErrorLocation(f, err)
+		}
+		exprs = append(exprs, "("+expr+")")
+	}
+	if len(exprs) == 0 {
+		return "true", nil
+	}
+	return strings.Join(exprs, " && "), nil
 }
 
 func (g *Generator) emitRandomizeSymbol(w *goWriter, sym stateSymbol, label string) {
@@ -605,7 +1217,7 @@ func (g *Generator) emitNondetThunkBase(w *goWriter, base string, domain []goivy
 	if !st.Large {
 		return
 	}
-	expr, err := g.goLocalNondetValueExpr(rng, label, id)
+	expr, err := g.goNondetThunkValueExpr(rng, label, id)
 	if err != nil {
 		g.unsupported(w, "unsupported nondet thunk range: %s", err.Error())
 		return
@@ -614,6 +1226,13 @@ func (g *Generator) emitNondetThunkBase(w *goWriter, base string, domain []goivy
 	w.line("_ = __ivy_key")
 	w.linef("return %s", expr)
 	w.close("")
+}
+
+func (g *Generator) goNondetThunkValueExpr(s goivy.Sort, label string, id int64) (string, error) {
+	if len(g.destructorStructFieldInfos(sortName(s))) > 0 {
+		return g.goRandomValueExpr(s, label, id)
+	}
+	return g.goLocalNondetValueExpr(s, label, id)
 }
 
 func (g *Generator) emitDomainLoops(w *goWriter, domain []goivy.Sort, body func(args []string)) {
@@ -625,12 +1244,16 @@ func (g *Generator) emitDomainLoops(w *goWriter, domain []goivy.Sort, body func(
 			return
 		}
 		name := fmt.Sprintf("__i%d", i)
-		vals, ok := g.finiteValueExprs(domain[i])
+		header, ok, err := g.goLoopHeaderForSort(domain[i], name)
+		if err != nil {
+			g.unsupported(w, "cannot enumerate function domain sort %s: %s", sortName(domain[i]), err.Error())
+			return
+		}
 		if !ok {
 			g.unsupported(w, "cannot enumerate function domain sort %s", sortName(domain[i]))
 			return
 		}
-		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(domain[i]), strings.Join(vals, ", ")))
+		w.open(header)
 		args = append(args, name)
 		recur(i + 1)
 		args = args[:len(args)-1]
@@ -643,7 +1266,7 @@ func (g *Generator) emitInit(w *goWriter) {
 	w.open(fmt.Sprintf("func (ivy *%s) __init() {", g.ClassName))
 	if len(g.Mod.InitialActions) > 0 {
 		for _, act := range g.Mod.InitialActions {
-			g.emitAction(w, act)
+			g.emitInitializerAction(w, act)
 		}
 		w.close("")
 		w.blank()
@@ -651,13 +1274,13 @@ func (g *Generator) emitInit(w *goWriter) {
 	}
 	for _, na := range g.Mod.Initializers {
 		if act, ok := na.Action.(goivy.Action); ok {
-			g.emitAction(w, act)
+			g.emitInitializerAction(w, act)
 		}
 	}
 	if len(g.Mod.Initializers) == 0 && g.Mod.Actions != nil && g.Mod.Mixins != nil {
 		for _, mixin := range g.Mod.Mixins.Get("init") {
 			if act, ok := g.Mod.Actions.Get2(mixin.Mixer()); ok {
-				g.emitAction(w, act)
+				g.emitInitializerAction(w, act)
 			}
 		}
 	}
@@ -665,15 +1288,52 @@ func (g *Generator) emitInit(w *goWriter) {
 	w.blank()
 }
 
+func (g *Generator) emitInitializerAction(w *goWriter, act goivy.Action) {
+	if act == nil || len(act.GetFormalParams()) == 0 {
+		g.emitAction(w, act)
+		return
+	}
+	g.pushScope()
+	opened := 0
+	for _, p := range act.GetFormalParams() {
+		if p == nil {
+			continue
+		}
+		header, ok, err := g.goLoopHeaderForSort(p.CSort, goName(p.Name))
+		if err != nil {
+			g.unsupported(w, "cannot enumerate initializer parameter %s: %s", p.Name, err.Error())
+			for i := 0; i < opened; i++ {
+				w.close("")
+			}
+			g.popScope()
+			return
+		}
+		if !ok {
+			g.unsupported(w, "cannot enumerate initializer parameter %s", p.Name)
+			for i := 0; i < opened; i++ {
+				w.close("")
+			}
+			g.popScope()
+			return
+		}
+		g.addLocalSort(p.Name, p.CSort)
+		w.open(header)
+		opened++
+	}
+	g.emitAction(w, act)
+	for i := 0; i < opened; i++ {
+		w.close("")
+	}
+	g.popScope()
+}
+
 func (g *Generator) emitMethods(w *goWriter) {
+	g.emitConstructors(w)
+	g.emitNativeDefinitionMethods(w)
 	if g.Mod.Actions == nil {
 		return
 	}
-	initActions := g.initialMixinActionNames()
 	for name, act := range g.Mod.Actions.All() {
-		if initActions[name] {
-			continue
-		}
 		g.emitSomeAction(w, name, act)
 	}
 }
@@ -681,9 +1341,17 @@ func (g *Generator) emitMethods(w *goWriter) {
 func (g *Generator) emitSomeAction(w *goWriter, name string, act goivy.Action) {
 	sig, returnNames := g.methodSignature(name, act)
 	w.open(sig + " {")
+	if g.isReplImportCallback(name) {
+		g.emitReplImportCallbackBody(w, name, act)
+		w.close("")
+		w.blank()
+		return
+	}
 	g.pushScope()
+	declaredGoNames := map[string]bool{}
 	for _, p := range act.GetFormalParams() {
-		g.addLocal(p.Name)
+		g.addLocalSort(p.Name, p.CSort)
+		declaredGoNames[goName(p.Name)] = true
 	}
 	traceImportCaller := g.importCallers()[name]
 	if traceImportCaller {
@@ -696,8 +1364,13 @@ func (g *Generator) emitSomeAction(w *goWriter, name string, act goivy.Action) {
 	prevReturns := g.currentReturns
 	g.currentReturns = returns
 	for _, r := range returns {
-		g.addLocal(r.Name)
-		w.linef("%s := %s", goName(r.Name), g.goZeroValue(r.CSort))
+		g.addLocalSort(r.Name, r.CSort)
+		rName := goName(r.Name)
+		if declaredGoNames[rName] {
+			continue
+		}
+		declaredGoNames[rName] = true
+		w.linef("%s := %s", rName, g.goZeroValue(r.CSort))
 	}
 	g.emitAction(w, act)
 	g.currentReturns = prevReturns
@@ -758,6 +1431,85 @@ func (g *Generator) isTestImportCallback(name string) bool {
 		return false
 	}
 	return g.importCallers()[name]
+}
+
+func (g *Generator) isReplImportCallback(name string) bool {
+	if g == nil || g.Config.Target != "repl" {
+		return false
+	}
+	return g.importActions()[name]
+}
+
+func (g *Generator) importActions() map[string]bool {
+	if g.importActionsCache != nil {
+		return g.importActionsCache
+	}
+	out := map[string]bool{}
+	if g.Mod != nil && g.Mod.Actions != nil {
+		for _, imp := range g.Mod.Imports {
+			impDef, ok := imp.(*goivy.ImportDef)
+			if !ok {
+				continue
+			}
+			if atom, ok := impDef.Scope.(*goivy.Atom); ok && atom.Relname() != "" {
+				continue
+			}
+			name := ""
+			if atom, ok := impDef.Imported.(*goivy.Atom); ok {
+				name = atom.Relname()
+			}
+			if name == "" {
+				continue
+			}
+			if _, ok := g.Mod.Actions.Get2(name); !ok {
+				continue
+			}
+			out[name] = true
+		}
+	}
+	g.importActionsCache = out
+	return out
+}
+
+func (g *Generator) emitReplImportCallbackBody(w *goWriter, name string, act goivy.Action) {
+	formals := act.GetFormalParams()
+	display := actionDisplayName(name)
+	if len(formals) == 0 {
+		w.linef("fmt.Fprintln(__ivy_out, %q)", "< "+display)
+	} else {
+		args := make([]string, 0, len(formals))
+		for _, p := range formals {
+			args = append(args, g.traceValueExpr(goName(p.Name)))
+		}
+		format := "< " + display + "(" + strings.TrimSuffix(strings.Repeat("%s,", len(formals)), ",") + ")\n"
+		w.linef("fmt.Fprintf(__ivy_out, %q, %s)", format, strings.Join(args, ", "))
+	}
+	returns := act.GetFormalReturns()
+	if len(returns) == 0 {
+		return
+	}
+	zeros := make([]string, len(returns))
+	for i, r := range returns {
+		zeros[i] = g.replImportCallbackReturnExpr(r.CSort)
+	}
+	w.linef("return %s", strings.Join(zeros, ", "))
+}
+
+func (g *Generator) replImportCallbackReturnExpr(s goivy.Sort) string {
+	card := g.sortCard(s)
+	if card <= 0 {
+		return g.goZeroValue(s)
+	}
+	ask := fmt.Sprintf("ivyAskRet(%d)", card)
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		return ask + " != 0"
+	case *goivy.LogicEnumeratedSort:
+		if st.Name != "" && !isNumericEnum(st) {
+			return fmt.Sprintf("%s(%s)", g.goScalarType(s), ask)
+		}
+	}
+	return ask
 }
 
 func (g *Generator) emitTraceActionPrologue(w *goWriter, name string, formals []*goivy.Const) {
@@ -837,7 +1589,7 @@ func (g *Generator) constructorParamArgNames() []string {
 	return args
 }
 
-func (g *Generator) emitModuleParamSetup(w *goWriter, optsName, restName string) {
+func (g *Generator) emitModuleParamSetup(w *goWriter, optsName, restName, optArgsName string) {
 	if g == nil || g.Mod == nil || len(g.Mod.Params) == 0 {
 		return
 	}
@@ -852,11 +1604,13 @@ func (g *Generator) emitModuleParamSetup(w *goWriter, optsName, restName string)
 			positional++
 			continue
 		}
-		w.open(fmt.Sprintf("if __ivy_param, ok := %s[%q]; ok {", optsName, p.Name))
-		g.emitModuleParamParseAssign(w, local, "__ivy_param", p)
-		w.linef("delete(%s, %q)", optsName, p.Name)
-		w.close("")
+		if _, isFS := p.CSort.(*goivy.LogicFunctionSort); !isFS {
+			if defText := paramDefaultText(g.Mod.ParamDefaults[i]); defText != "" {
+				g.emitModuleParamParseAssign(w, local, strconv.Quote(defText), p, linenoStr(g.Mod.ParamDefaults[i].GetLineno()), false)
+			}
+		}
 	}
+	g.emitModuleParamOptionScan(w, optsName, optArgsName)
 	if positional == 0 {
 		g.emitZeroParamArgSetup(w, restName)
 		return
@@ -870,9 +1624,83 @@ func (g *Generator) emitModuleParamSetup(w *goWriter, optsName, restName string)
 		if p == nil || g.moduleParamHasDefault(i) {
 			continue
 		}
-		g.emitModuleParamParseAssign(w, "p__"+goName(p.Name), fmt.Sprintf("%s[%d]", restName, idx), p)
+		g.emitModuleParamParseAssign(w, "p__"+goName(p.Name), fmt.Sprintf("%s[%d]", restName, idx), p, "", true)
 		idx++
 	}
+}
+
+func (g *Generator) emitModuleParamOptionScan(w *goWriter, optsName, optArgsName string) {
+	g.emitRuntimeFileOptionScanPreamble(w)
+	w.open(fmt.Sprintf("for _, __ivy_opt := range %s {", optArgsName))
+	w.line("switch __ivy_opt.key {")
+	w.indent++
+	for i, p := range g.Mod.Params {
+		if p == nil || !g.moduleParamHasDefault(i) {
+			continue
+		}
+		if _, isFS := p.CSort.(*goivy.LogicFunctionSort); isFS {
+			continue
+		}
+		w.linef("case %q:", p.Name)
+		w.indent++
+		w.line("__ivy_param := __ivy_opt.value")
+		g.emitModuleParamParseAssign(w, "p__"+goName(p.Name), "__ivy_param", p, "", false)
+		w.linef("delete(%s, %q)", optsName, p.Name)
+		w.line("continue")
+		w.indent--
+	}
+	g.emitRuntimeFileOptionCases(w)
+	w.line(`case "iters", "runs", "seed", "delay", "wait":`)
+	w.indent++
+	w.line("continue")
+	w.indent--
+	w.line("default:")
+	w.indent++
+	w.line(`fmt.Fprintf(os.Stderr, "unknown option: %s\n", __ivy_opt.key)`)
+	w.line("os.Exit(1)")
+	w.indent--
+	w.indent--
+	w.line("}")
+	w.close("")
+}
+
+func (g *Generator) emitRuntimeFileOptionScanPreamble(w *goWriter) {
+	w.line("__ivy_out_opened := false")
+	w.line("__ivy_modelfile_opened := false")
+}
+
+func (g *Generator) emitRuntimeFileOptionCases(w *goWriter) {
+	w.line(`case "out":`)
+	w.indent++
+	w.open("if __ivy_out_opened {")
+	w.line(`fmt.Fprintf(os.Stderr, "cannot open to write: %s\n", __ivy_opt.value)`)
+	w.line("os.Exit(1)")
+	w.close("")
+	w.line("__ivy_out_file, err := os.Create(__ivy_opt.value)")
+	w.open("if err != nil {")
+	w.line(`fmt.Fprintf(os.Stderr, "cannot open to write: %s\n", __ivy_opt.value)`)
+	w.line("os.Exit(1)")
+	w.close("")
+	w.line("__ivy_out_opened = true")
+	w.line("defer __ivy_out_file.Close()")
+	w.line("__ivy_out = __ivy_out_file")
+	w.line("continue")
+	w.indent--
+	w.line(`case "modelfile":`)
+	w.indent++
+	w.open("if __ivy_modelfile_opened {")
+	w.line(`fmt.Fprintf(os.Stderr, "cannot open to write: %s\n", __ivy_opt.value)`)
+	w.line("os.Exit(1)")
+	w.close("")
+	w.line("__ivy_modelfile_file, err := os.Create(__ivy_opt.value)")
+	w.open("if err != nil {")
+	w.line(`fmt.Fprintf(os.Stderr, "cannot open to write: %s\n", __ivy_opt.value)`)
+	w.line("os.Exit(1)")
+	w.close("")
+	w.line("__ivy_modelfile_opened = true")
+	w.line("defer __ivy_modelfile_file.Close()")
+	w.line("continue")
+	w.indent--
 }
 
 func (g *Generator) emitZeroParamArgSetup(w *goWriter, restName string) {
@@ -922,6 +1750,12 @@ func (g *Generator) moduleParamHasDefault(i int) bool {
 func (g *Generator) moduleParamDefaultExpr(i int, p *goivy.Const) string {
 	if p == nil {
 		return "0"
+	}
+	if fs, ok := p.CSort.(*goivy.LogicFunctionSort); ok {
+		if g.moduleParamHasDefault(i) {
+			g.errs = append(g.errs, fmt.Errorf("ivy2golang: can't handle default values for function-sorted parameter %s", p.Name))
+		}
+		return g.goFunctionStorageInit(fs.Domain(), fs.Range())
 	}
 	if !g.moduleParamHasDefault(i) {
 		return g.goZeroValue(p.CSort)
@@ -977,11 +1811,18 @@ func (g *Generator) goParamLiteralExpr(s goivy.Sort, text string) (string, bool)
 			return text, true
 		}
 	case *goivy.UninterpretedSort:
-		if g.hasStringInterp(st) {
+		if g.hasStringValuedInterp(st) {
 			if strings.HasPrefix(text, `"`) && strings.HasSuffix(text, `"`) {
 				return text, true
 			}
 			return strconv.Quote(text), true
+		}
+		if g.hasNatInterp(st) {
+			n, err := strconv.Atoi(text)
+			if err == nil && n >= 0 {
+				return text, true
+			}
+			return "", false
 		}
 		if _, err := strconv.Atoi(text); err == nil {
 			return text, true
@@ -994,29 +1835,169 @@ func (g *Generator) goParamLiteralExpr(s goivy.Sort, text string) (string, bool)
 	return "", false
 }
 
-func (g *Generator) emitModuleParamParseAssign(w *goWriter, dst, text string, p *goivy.Const) {
+func (g *Generator) emitModuleParamParseAssign(w *goWriter, dst, text string, p *goivy.Const, lineLabel string, positional bool) {
 	if p == nil {
 		return
 	}
-	switch st := p.CSort.(type) {
+	if fs, ok := p.CSort.(*goivy.LogicFunctionSort); ok {
+		g.emitFunctionParamParseAssign(w, dst, text, p.Name, fs, lineLabel, positional)
+		return
+	}
+	g.emitScalarParamParseAssign(w, dst, text, p, lineLabel, positional)
+}
+
+func (g *Generator) emitScalarParamParseAssign(w *goWriter, dst, text string, p *goivy.Const, lineLabel string, positional bool) {
+	parsed := g.nextTemp("__ivy_param")
+	lo, hi := g.scalarParamBounds(p.CSort)
+	w.open("{")
+	w.linef("%s, err := ivyParseValue(%s)", parsed, text)
+	w.open("if err != nil {")
+	g.emitModuleParamSyntaxError(w, p.Name, lineLabel, positional)
+	w.close("")
+	g.emitIvyValueParamDecodeIntoBoundsWith(w, dst, parsed, p.CSort, p.Name, lo, hi, ivyValueDecodeContext{paramLine: lineLabel, positionalParam: positional})
+	w.close("")
+}
+
+func (g *Generator) scalarParamBounds(s goivy.Sort) (string, string) {
+	if rs, ok := g.rangeSortFor(s); ok {
+		if lo, hi, ok := numericRangeBounds(rs); ok {
+			return strconv.Itoa(lo), strconv.Itoa(hi)
+		}
+	}
+	switch st := s.(type) {
+	case *goivy.LogicEnumeratedSort:
+		if isNumericEnum(st) && len(st.Extension) > 0 {
+			return "0", strconv.Itoa(len(st.Extension) - 1)
+		}
+	case *goivy.UninterpretedSort:
+		if bits, ok := g.bvWidthForSort(st); ok {
+			mask, err := goBVMaskValue(bits)
+			if err == nil {
+				return "0", strconv.FormatInt(mask, 10)
+			}
+		}
+		if g.hasNatInterp(st) {
+			return "0", ""
+		}
+	}
+	return "", ""
+}
+
+func (g *Generator) emitFunctionParamParseAssign(w *goWriter, dst, text, name string, fs *goivy.LogicFunctionSort, lineLabel string, positional bool) {
+	parsed := g.nextTemp("__ivy_param")
+	w.open("{")
+	w.linef("%s, err := ivyParseValue(%s)", parsed, text)
+	w.open("if err != nil {")
+	g.emitModuleParamSyntaxError(w, name, lineLabel, positional)
+	w.close("")
+	g.emitIvyValueFunctionDecodeInto(w, dst, parsed, name, fs, ivyValueDecodeContext{paramLine: lineLabel, positionalParam: positional})
+	w.close("")
+}
+
+func (g *Generator) emitModuleParamSyntaxError(w *goWriter, name, lineLabel string, positional bool) {
+	if positional {
+		w.line(`fmt.Fprintf(os.Stderr, "syntax error in command argument\n")`)
+		w.line("os.Exit(1)")
+		return
+	}
+	g.emitParamParseError(w, "syntax error in parameter value", name, lineLabel)
+}
+
+func (g *Generator) emitIvyValueFunctionDecodeInto(w *goWriter, dst, valueExpr, name string, fs *goivy.LogicFunctionSort, ctx ivyValueDecodeContext) {
+	domain := fs.Domain()
+	rng := fs.Range()
+	if _, nested := rng.(*goivy.LogicFunctionSort); nested {
+		g.unsupported(w, "unsupported function-sorted parameter range %s", sortName(rng))
+		return
+	}
+	item := g.nextTemp("__ivy_param_item")
+	w.linef("%s = %s", dst, g.goFunctionStorageInit(domain, rng))
+	w.open(fmt.Sprintf("if %s.atom != \"\" {", valueExpr))
+	g.emitIvyValueOutOfBounds(w, ctx, valueExpr+".pos", name)
+	w.close("")
+	w.open(fmt.Sprintf("for _, %s := range %s.fields {", item, valueExpr))
+	w.open(fmt.Sprintf("if len(%s.fields) != %d {", item, len(domain)+1))
+	g.emitIvyValueOutOfBounds(w, ctx, item+".pos", name)
+	w.close("")
+	args := make([]string, 0, len(domain))
+	for i, s := range domain {
+		arg := g.emitIvyValueParamDecodeWith(w, fmt.Sprintf("%s.fields[%d]", item, i), s, name, ctx)
+		args = append(args, arg)
+	}
+	value := g.emitIvyValueParamDecodeWith(w, fmt.Sprintf("%s.fields[%d]", item, len(domain)), rng, name, ctx)
+	key := g.goMapKeyValue(domain, args)
+	if g.goFunctionStorageFor(domain, rng).Large {
+		w.linef("%s.Set(%s, %s)", dst, key, value)
+	} else {
+		w.linef("%s[%s] = %s", dst, key, value)
+	}
+	w.close("")
+}
+
+func (g *Generator) emitIvyValueParamDecode(w *goWriter, valueExpr string, s goivy.Sort, paramName string) string {
+	return g.emitIvyValueParamDecodeWith(w, valueExpr, s, paramName, ivyValueDecodeContext{})
+}
+
+func (g *Generator) emitIvyValueParamDecodeWith(w *goWriter, valueExpr string, s goivy.Sort, paramName string, ctx ivyValueDecodeContext) string {
+	dst := g.nextTemp("__ivy_arg")
+	w.linef("var %s %s", dst, g.goScalarType(s))
+	g.emitIvyValueParamDecodeIntoWith(w, dst, valueExpr, s, paramName, ctx)
+	return dst
+}
+
+func (g *Generator) emitIvyValueParamDecodeInto(w *goWriter, dst, valueExpr string, s goivy.Sort, paramName string) {
+	lo, hi := g.scalarParamBounds(s)
+	g.emitIvyValueParamDecodeIntoBoundsWith(w, dst, valueExpr, s, paramName, lo, hi, ivyValueDecodeContext{})
+}
+
+func (g *Generator) emitIvyValueParamDecodeIntoBounds(w *goWriter, dst, valueExpr string, s goivy.Sort, paramName, lo, hi string) {
+	g.emitIvyValueParamDecodeIntoBoundsWith(w, dst, valueExpr, s, paramName, lo, hi, ivyValueDecodeContext{})
+}
+
+func (g *Generator) emitIvyValueReplArgDecodeInto(w *goWriter, dst, valueExpr string, s goivy.Sort, argIndex int) {
+	lo, hi := g.scalarParamBounds(s)
+	g.emitIvyValueParamDecodeIntoBoundsWith(w, dst, valueExpr, s, "", lo, hi, ivyValueDecodeContext{replArg: true, argIndex: argIndex})
+}
+
+type ivyValueDecodeContext struct {
+	replArg         bool
+	argIndex        int
+	paramLine       string
+	positionalParam bool
+}
+
+func (g *Generator) emitIvyValueParamDecodeIntoBoundsWith(w *goWriter, dst, valueExpr string, s goivy.Sort, paramName, lo, hi string, ctx ivyValueDecodeContext) {
+	if g.emitIvyValueRecordParamDecode(w, dst, valueExpr, s, paramName, ctx) {
+		return
+	}
+	if g.emitIvyValueVariantParamDecode(w, dst, valueExpr, s, paramName, ctx) {
+		return
+	}
+	w.open(fmt.Sprintf("if len(%s.fields) != 0 {", valueExpr))
+	g.emitIvyValueOutOfBounds(w, ctx, valueExpr+".pos", paramName)
+	w.close("")
+	switch st := s.(type) {
 	case *goivy.BooleanSort:
-		w.open("switch strings.ToLower(" + text + ") {")
-		w.line(`case "true", "1":`)
+		w.open("switch " + valueExpr + ".atom {")
+		w.line(`case "true":`)
 		w.indent++
 		w.linef("%s = true", dst)
 		w.indent--
-		w.line(`case "false", "0":`)
+		w.line(`case "false":`)
 		w.indent++
 		w.linef("%s = false", dst)
 		w.indent--
 		w.line("default:")
 		w.indent++
-		g.emitParamParseError(w, "syntax error in parameter value", p.Name)
+		g.emitIvyValueOutOfBounds(w, ctx, valueExpr+".pos", paramName)
 		w.indent--
 		w.close("")
 	case *goivy.LogicEnumeratedSort:
 		if st.Name != "" && !isNumericEnum(st) {
-			w.open("switch " + text + " {")
+			w.open(fmt.Sprintf("if %s.atom == \"\" {", valueExpr))
+			g.emitIvyValueOutOfBounds(w, ctx, valueExpr+".pos", paramName)
+			w.close("")
+			w.open("switch " + valueExpr + ".atom {")
 			for _, elem := range st.Extension {
 				w.linef("case %q:", elem)
 				w.indent++
@@ -1025,63 +2006,213 @@ func (g *Generator) emitModuleParamParseAssign(w *goWriter, dst, text string, p 
 			}
 			w.line("default:")
 			w.indent++
-			g.emitParamParseError(w, "parameter out of bounds", p.Name)
+			g.emitIvyValueBadValueText(w, ctx, valueExpr+".pos", paramName, `"bad value: " + `+valueExpr+".atom")
 			w.indent--
 			w.close("")
 			return
 		}
-		g.emitNumericParamParseAssign(w, dst, text, p.Name, "", "")
+		g.emitIvyValueNumericParamDecodeBounds(w, dst, valueExpr, paramName, lo, hi, ctx)
 	case *goivy.RangeSort:
-		lo, hi, ok := numericRangeBounds(st)
-		if ok {
-			g.emitNumericParamParseAssign(w, dst, text, p.Name, strconv.Itoa(lo), strconv.Itoa(hi))
-		} else {
-			g.emitNumericParamParseAssign(w, dst, text, p.Name, "", "")
-		}
+		g.emitIvyValueNumericParamDecodeBounds(w, dst, valueExpr, paramName, lo, hi, ctx)
 	case *goivy.UninterpretedSort:
-		if g.hasStringInterp(st) {
-			w.linef("%s = %s", dst, text)
+		if g.hasStringValuedInterp(st) {
+			w.linef("%s = %s.atom", dst, valueExpr)
 			return
 		}
-		g.emitNumericParamParseAssign(w, dst, text, p.Name, "", "")
+		g.emitIvyValueNumericParamDecodeBounds(w, dst, valueExpr, paramName, lo, hi, ctx)
 	default:
-		g.emitNumericParamParseAssign(w, dst, text, p.Name, "", "")
+		g.emitIvyValueNumericParamDecodeBounds(w, dst, valueExpr, paramName, lo, hi, ctx)
 	}
 }
 
-func (g *Generator) emitNumericParamParseAssign(w *goWriter, dst, text, name, lo, hi string) {
+func (g *Generator) emitIvyValueRecordParamDecode(w *goWriter, dst, valueExpr string, s goivy.Sort, paramName string, ctx ivyValueDecodeContext) bool {
+	fields := g.destructorStructFieldInfos(sortName(s))
+	if len(fields) == 0 {
+		return false
+	}
+	fieldVar := g.nextTemp("__ivy_field")
 	w.open("{")
-	w.linef("__ivy_param, err := strconv.Atoi(%s)", text)
-	w.open("if err != nil {")
-	g.emitParamParseError(w, "syntax error in parameter value", name)
+	w.linef("%s = %s{}", dst, g.goScalarType(s))
+	w.open(fmt.Sprintf("for _, %s := range %s.fields {", fieldVar, valueExpr))
+	w.linef("switch %s.atom {", fieldVar)
+	w.indent++
+	for _, field := range fields {
+		fieldName := memName(field.Const.Name)
+		w.linef("case %q:", fieldName)
+		w.indent++
+		if len(field.Sort.Domain()) == 1 {
+			w.open(fmt.Sprintf("if len(%s.fields) != 1 {", fieldVar))
+			g.emitIvyValueOutOfBounds(w, ctx, fieldVar+".pos", paramName)
+			w.close("")
+			g.emitIvyValueParamDecodeIntoWith(w, dst+"."+field.FieldName, fmt.Sprintf("%s.fields[0]", fieldVar), field.Sort.Range(), paramName, ctx)
+		} else {
+			if g.destructorFieldIsLarge(field) {
+				g.emitIvyValueBadValueText(w, ctx, fieldVar+".pos", paramName, strconv.Quote("indexed field "+fieldName+" is not accepted in command arguments"))
+				w.indent--
+				continue
+			}
+			w.open(fmt.Sprintf("if len(%s.fields) != 1 {", fieldVar))
+			g.emitIvyValueOutOfBounds(w, ctx, fieldVar+".pos", paramName)
+			w.close("")
+			g.emitIvyValueDestructorArrayDecode(w, dst+"."+field.FieldName, fmt.Sprintf("%s.fields[0]", fieldVar), field.Sort.Domain()[1:], field.Sort.Range(), paramName, ctx)
+		}
+		w.indent--
+	}
+	w.line("default:")
+	w.indent++
+	g.emitIvyValueBadValueText(w, ctx, fieldVar+".pos", paramName, `"unexpected field: " + `+fieldVar+".atom")
+	w.indent--
+	w.indent--
+	w.line("}")
 	w.close("")
-	if lo != "" && hi != "" {
-		w.open(fmt.Sprintf("if __ivy_param < %s || __ivy_param > %s {", lo, hi))
-		g.emitParamParseError(w, "parameter out of bounds", name)
+	w.close("")
+	return true
+}
+
+func (g *Generator) emitIvyValueDestructorArrayDecode(w *goWriter, dst, valueExpr string, domain []goivy.Sort, rng goivy.Sort, paramName string, ctx ivyValueDecodeContext) {
+	if len(domain) == 0 {
+		g.emitIvyValueParamDecodeIntoWith(w, dst, valueExpr, rng, paramName, ctx)
+		return
+	}
+	vals, ok := g.finiteValueExprs(domain[0])
+	if !ok {
+		g.unsupported(w, "cannot enumerate indexed destructor field domain sort %s", sortName(domain[0]))
+		return
+	}
+	w.open("{")
+	w.open(fmt.Sprintf("if %s.atom != \"\" || len(%s.fields) != %d {", valueExpr, valueExpr, len(vals)))
+	g.emitIvyValueOutOfBounds(w, ctx, valueExpr+".pos", paramName)
+	w.close("")
+	for i, val := range vals {
+		g.emitIvyValueDestructorArrayDecode(w, dst+"["+val+"]", fmt.Sprintf("%s.fields[%d]", valueExpr, i), domain[1:], rng, paramName, ctx)
+	}
+	w.close("")
+}
+
+func (g *Generator) emitIvyValueVariantParamDecode(w *goWriter, dst, valueExpr string, s goivy.Sort, paramName string, ctx ivyValueDecodeContext) bool {
+	sortText := sortName(s)
+	if !g.isVariantSuperName(sortText) {
+		return false
+	}
+	variants := g.Mod.Variants[sortText]
+	fieldExpr := valueExpr + ".fields[0]"
+	w.open("{")
+	w.open(fmt.Sprintf("if %s.atom != \"\" {", valueExpr))
+	g.emitIvyValueBadValueText(w, ctx, valueExpr+".pos", paramName, strconv.Quote("unexpected value for sort "+sortText+": ")+" + "+valueExpr+".atom")
+	w.close("")
+	w.open(fmt.Sprintf("if len(%s.fields) > 1 {", valueExpr))
+	g.emitIvyValueBadValueText(w, ctx, valueExpr+".pos", paramName, strconv.Quote(fmt.Sprintf("too many fields for sort %s (expected one)", sortText)))
+	w.close("")
+	w.open(fmt.Sprintf("if len(%s.fields) == 0 {", valueExpr))
+	w.linef("%s = %s{}", dst, g.goScalarType(s))
+	w.close(" else {")
+	w.indent++
+	w.open(fmt.Sprintf("if len(%s.fields) != 1 {", fieldExpr))
+	g.emitIvyValueOutOfBounds(w, ctx, fieldExpr+".pos", paramName)
+	w.close("")
+	w.linef("switch %s.atom {", fieldExpr)
+	w.indent++
+	for _, sub := range variants {
+		tmp := g.nextTemp("__ivy_variant")
+		w.linef("case %q:", sortName(sub))
+		w.indent++
+		w.linef("var %s %s", tmp, g.goScalarType(sub))
+		g.emitIvyValueParamDecodeIntoWith(w, tmp, fieldExpr+".fields[0]", sub, paramName, ctx)
+		w.linef("%s = %s", dst, g.variantUpcastExpr(s, sub, tmp))
+		w.indent--
+	}
+	w.line("default:")
+	w.indent++
+	g.emitIvyValueBadValueText(w, ctx, valueExpr+".pos", paramName, `"unexpected field sort SORTNAME: " + `+fieldExpr+".atom")
+	w.indent--
+	w.indent--
+	w.line("}")
+	w.indent--
+	w.close("")
+	w.close("")
+	return true
+}
+
+func (g *Generator) emitIvyValueParamDecodeIntoWith(w *goWriter, dst, valueExpr string, s goivy.Sort, paramName string, ctx ivyValueDecodeContext) {
+	lo, hi := g.scalarParamBounds(s)
+	g.emitIvyValueParamDecodeIntoBoundsWith(w, dst, valueExpr, s, paramName, lo, hi, ctx)
+}
+
+func (g *Generator) emitIvyValueNumericParamDecodeBounds(w *goWriter, dst, valueExpr, paramName, lo, hi string, ctx ivyValueDecodeContext) {
+	w.open("{")
+	w.linef("__ivy_num, err := strconv.Atoi(%s.atom)", valueExpr)
+	w.open("if err != nil {")
+	g.emitIvyValueSyntaxError(w, ctx, valueExpr+".pos", paramName)
+	w.close("")
+	var bounds []string
+	if lo != "" {
+		bounds = append(bounds, fmt.Sprintf("__ivy_num < %s", lo))
+	}
+	if hi != "" {
+		bounds = append(bounds, fmt.Sprintf("__ivy_num > %s", hi))
+	}
+	if len(bounds) > 0 {
+		w.open("if " + strings.Join(bounds, " || ") + " {")
+		g.emitIvyValueOutOfBounds(w, ctx, valueExpr+".pos", paramName)
 		w.close("")
 	}
-	w.linef("%s = __ivy_param", dst)
+	w.linef("%s = __ivy_num", dst)
 	w.close("")
 }
 
-func (g *Generator) emitParamParseError(w *goWriter, prefix, name string) {
-	if prefix == "parameter out of bounds" {
-		w.linef("fmt.Fprintf(os.Stderr, %q)", fmt.Sprintf("parameter %s out of bounds\n", name))
+func (g *Generator) emitIvyValueSyntaxError(w *goWriter, ctx ivyValueDecodeContext, posExpr, paramName string) {
+	if ctx.replArg {
+		g.emitIvyValueBadValueText(w, ctx, posExpr, paramName, strconv.Quote(fmt.Sprintf("argument %d", ctx.argIndex+1)))
+		return
+	}
+	if ctx.positionalParam {
+		w.line(`fmt.Fprintf(os.Stderr, "syntax error in command argument\n")`)
 		w.line("os.Exit(1)")
 		return
 	}
-	w.linef("fmt.Fprintf(os.Stderr, %q)", fmt.Sprintf("%s %s\n", prefix, name))
+	g.emitParamParseError(w, "syntax error in parameter value", paramName, ctx.paramLine)
+}
+
+func (g *Generator) emitIvyValueOutOfBounds(w *goWriter, ctx ivyValueDecodeContext, posExpr, paramName string) {
+	g.emitIvyValueBadValueText(w, ctx, posExpr, paramName, strconv.Quote(fmt.Sprintf("argument %d", ctx.argIndex+1)))
+}
+
+func (g *Generator) emitIvyValueBadValueText(w *goWriter, ctx ivyValueDecodeContext, posExpr, paramName, textExpr string) {
+	if ctx.replArg {
+		w.linef("fmt.Fprintf(os.Stderr, %q, __ivy_lineno, %s, %s)", "line %d:%d: %s bad value\n", posExpr, textExpr)
+		w.line("os.Exit(1)")
+		return
+	}
+	g.emitParamParseError(w, "parameter out of bounds", paramName, ctx.paramLine)
+}
+
+func (g *Generator) emitParamParseError(w *goWriter, prefix, name, lineLabel string) {
+	var msg string
+	if prefix == "parameter out of bounds" {
+		msg = fmt.Sprintf("parameter %s out of bounds\n", name)
+	} else {
+		msg = fmt.Sprintf("%s %s\n", prefix, name)
+	}
+	if lineLabel != "" {
+		msg = lineLabel + ": " + msg
+	}
+	w.linef("fmt.Fprintf(os.Stderr, %q)", msg)
 	w.line("os.Exit(1)")
 }
 
-func (g *Generator) emitUnknownOptionCheck(w *goWriter) {
-	w.open(`for key := range opts {`)
-	w.line("switch key {")
+func (g *Generator) emitUnknownOptionCheck(w *goWriter, optArgsName string) {
+	g.emitRuntimeFileOptionScanPreamble(w)
+	w.open(fmt.Sprintf("for _, __ivy_opt := range %s {", optArgsName))
+	w.line("switch __ivy_opt.key {")
 	w.indent++
-	w.line(`case "out", "iters", "runs", "seed", "delay", "wait", "modelfile":`)
+	g.emitRuntimeFileOptionCases(w)
+	w.line(`case "iters", "runs", "seed", "delay", "wait":`)
+	w.indent++
+	w.line("continue")
+	w.indent--
 	w.line("default:")
 	w.indent++
-	w.line(`fmt.Fprintf(os.Stderr, "unknown option: %s\n", key)`)
+	w.line(`fmt.Fprintf(os.Stderr, "unknown option: %s\n", __ivy_opt.key)`)
 	w.line("os.Exit(1)")
 	w.indent--
 	w.indent--
@@ -1090,41 +2221,20 @@ func (g *Generator) emitUnknownOptionCheck(w *goWriter) {
 }
 
 func (g *Generator) emitRuntimeOptionSetup(w *goWriter, optsName string) {
-	w.linef("seed := ivyAtoiDefault(%s[%q], 1)", optsName, "seed")
+	w.linef("seed := ivyAtoiOption(%s, %q, 1)", optsName, "seed")
 	w.line("ivySetSeed(seed)")
-	g.emitRuntimeFilesSetup(w, optsName)
-}
-
-func (g *Generator) emitRuntimeFilesSetup(w *goWriter, optsName string) {
-	w.open(fmt.Sprintf(`if out := %s["out"]; out != "" {`, optsName))
-	w.line("f, err := os.Create(out)")
-	w.open("if err != nil {")
-	w.line(`fmt.Fprintf(os.Stderr, "cannot open to write: %s\n", out)`)
-	w.line("os.Exit(1)")
-	w.close("")
-	w.line("defer f.Close()")
-	w.line("__ivy_out = f")
-	w.close("")
-	w.open(fmt.Sprintf(`if modelfile := %s["modelfile"]; modelfile != "" {`, optsName))
-	w.line("f, err := os.Create(modelfile)")
-	w.open("if err != nil {")
-	w.line(`fmt.Fprintf(os.Stderr, "cannot open to write: %s\n", modelfile)`)
-	w.line("os.Exit(1)")
-	w.close("")
-	w.line("defer f.Close()")
-	w.close("")
 }
 
 func (g *Generator) emitSmokeMain(w *goWriter) {
 	w.open(fmt.Sprintf("func %s() {", g.Config.MainName))
-	w.line("opts, rest := parseIvyTestArgs(os.Args[1:])")
+	w.line("opts, rest, optArgs := parseIvyTestArgs(os.Args[1:])")
 	if len(g.Mod.Params) == 0 {
+		g.emitUnknownOptionCheck(w, "optArgs")
 		g.emitZeroParamArgSetup(w, "rest")
 	} else {
-		g.emitModuleParamSetup(w, "opts", "rest")
+		g.emitModuleParamSetup(w, "opts", "rest", "optArgs")
 	}
 	g.emitRuntimeOptionSetup(w, "opts")
-	g.emitUnknownOptionCheck(w)
 	w.linef("ivy := new%s(%s)", exportedishName(g.ClassName), strings.Join(g.constructorParamArgNames(), ", "))
 	w.line("ivy.__argv = append([]string{os.Args[0]}, rest...)")
 	w.line("_ = ivy")
@@ -1132,8 +2242,126 @@ func (g *Generator) emitSmokeMain(w *goWriter) {
 	w.blank()
 }
 
+func (g *Generator) emitReplMain(w *goWriter) {
+	w.open(fmt.Sprintf("func %s() {", g.Config.MainName))
+	w.line("opts, rest, optArgs := parseIvyTestArgs(os.Args[1:])")
+	if len(g.Mod.Params) == 0 {
+		g.emitUnknownOptionCheck(w, "optArgs")
+		g.emitZeroParamArgSetup(w, "rest")
+	} else {
+		g.emitModuleParamSetup(w, "opts", "rest", "optArgs")
+	}
+	g.emitRuntimeOptionSetup(w, "opts")
+	w.linef("ivy := new%s(%s)", exportedishName(g.ClassName), strings.Join(g.constructorParamArgNames(), ", "))
+	w.line("ivy.__argv = append([]string{os.Args[0]}, rest...)")
+	w.line("__ivy_repl_scanner = bufio.NewScanner(os.Stdin)")
+	w.line("__ivy_lineno := 0")
+	w.open("for __ivy_repl_scanner.Scan() {")
+	w.line("__ivy_lineno++")
+	w.line("__ivy_action, __ivy_args, err := ivyParseCommand(__ivy_repl_scanner.Text())")
+	w.line("_ = __ivy_args")
+	w.open("if err != nil {")
+	w.open("if __ivy_pos, ok := ivySyntaxErrorPos(err); ok {")
+	w.line(`fmt.Fprintf(os.Stderr, "line %d:%d: syntax error\n", __ivy_lineno, __ivy_pos)`)
+	w.close(" else {")
+	w.line(`fmt.Fprintf(os.Stderr, "line %d: syntax error\n", __ivy_lineno)`)
+	w.close("")
+	w.line("os.Exit(1)")
+	w.close("")
+	g.emitReplDispatch(w, "__ivy_action", "__ivy_args")
+	w.close("")
+	w.open("if err := __ivy_repl_scanner.Err(); err != nil {")
+	w.line("fmt.Fprintln(os.Stderr, err)")
+	w.line("os.Exit(1)")
+	w.close("")
+	w.close("")
+	w.blank()
+}
+
+func (g *Generator) emitReplDispatch(w *goWriter, actionVar, argsVar string) {
+	w.line("switch " + actionVar + " {")
+	w.indent++
+	for _, name := range g.publicActionNamesSorted() {
+		act, _ := g.Mod.Actions.Get2(name)
+		g.emitReplActionCase(w, name, act, actionVar, argsVar)
+	}
+	w.line("default:")
+	w.indent++
+	w.linef("fmt.Fprintf(os.Stderr, %q, %s)", "undefined action: %s\n", actionVar)
+	w.line("os.Exit(1)")
+	w.indent--
+	w.indent--
+	w.line("}")
+}
+
+func (g *Generator) emitReplActionCase(w *goWriter, name string, act goivy.Action, actionVar, argsVar string) {
+	w.linef("case %q:", actionDisplayName(name))
+	w.indent++
+	formals := act.GetFormalParams()
+	w.open(fmt.Sprintf("if len(%s) != %d {", argsVar, len(formals)))
+	w.linef("fmt.Fprintf(os.Stderr, %q, %s, %d)", "action %s takes %d input parameters\n", actionVar, len(formals))
+	w.line("os.Exit(1)")
+	w.close("")
+	args := make([]string, 0, len(formals))
+	for i, p := range formals {
+		arg := fmt.Sprintf("__ivy_arg%d", i)
+		if fs, ok := p.CSort.(*goivy.LogicFunctionSort); ok {
+			w.linef("var %s %s", arg, g.goType(p.CSort))
+			g.emitIvyValueFunctionDecodeInto(w, arg, fmt.Sprintf("%s[%d]", argsVar, i), p.Name, fs, ivyValueDecodeContext{replArg: true, argIndex: i})
+			args = append(args, arg)
+			continue
+		}
+		w.linef("var %s %s", arg, g.goScalarType(p.CSort))
+		g.emitIvyValueReplArgDecodeInto(w, arg, fmt.Sprintf("%s[%d]", argsVar, i), p.CSort, i)
+		args = append(args, arg)
+	}
+	fn, err := funName(name)
+	if err != nil {
+		fn = goName(name)
+		g.errs = append(g.errs, err)
+	}
+	call := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(args, ", "))
+	if g.Config.Trace {
+		w.line(g.replTraceOpenLine(name, args))
+	}
+	switch nret := len(act.GetFormalReturns()); nret {
+	case 0:
+		w.line(call)
+	case 1:
+		w.linef("__ivy_result := %s", call)
+		if g.Config.Trace {
+			w.line(`fmt.Fprintln(__ivy_out, "}")`)
+		}
+		w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__ivy_result"))
+	default:
+		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
+	}
+	if g.Config.Trace && len(act.GetFormalReturns()) == 0 {
+		w.line(`fmt.Fprintln(__ivy_out, "}")`)
+	}
+	w.indent--
+}
+
+func (g *Generator) replTraceOpenLine(name string, args []string) string {
+	display := actionDisplayName(name)
+	if len(args) == 0 {
+		return fmt.Sprintf("fmt.Fprintln(__ivy_out, %q)", display+" {")
+	}
+	format := display + "(" + strings.TrimSuffix(strings.Repeat("%s,", len(args)), ",") + ") {\n"
+	return fmt.Sprintf("fmt.Fprintf(__ivy_out, %q, %s)", format, strings.Join(g.traceValueExprs(args), ", "))
+}
+
 func (g *Generator) runnableActionNames() []string {
 	names := g.publicActionNamesSorted()
+	return g.runnableActionNamesFrom(names)
+}
+
+func (g *Generator) runnableActionNamesInOrder() []string {
+	names := g.publicActionNamesInOrder()
+	return g.runnableActionNamesFrom(names)
+}
+
+func (g *Generator) runnableActionNamesFrom(names []string) []string {
 	initActions := g.initialMixinActionNames()
 	var runnable []string
 	for _, name := range names {
@@ -1149,20 +2377,19 @@ func (g *Generator) emitTestMain(w *goWriter) {
 	runnable := g.runnableActionNames()
 	w.open(fmt.Sprintf("func %s() {", g.Config.MainName))
 	if len(g.Mod.Params) == 0 {
-		w.line("opts, rest := parseIvyTestArgs(os.Args[1:])")
+		w.line("opts, rest, optArgs := parseIvyTestArgs(os.Args[1:])")
+		g.emitUnknownOptionCheck(w, "optArgs")
 		g.emitZeroParamArgSetup(w, "rest")
 	} else {
-		w.line("opts, rest := parseIvyTestArgs(os.Args[1:])")
-		g.emitModuleParamSetup(w, "opts", "rest")
+		w.line("opts, rest, optArgs := parseIvyTestArgs(os.Args[1:])")
+		g.emitModuleParamSetup(w, "opts", "rest", "optArgs")
 	}
-	w.linef("testIters := ivyAtoiDefault(opts[%q], %s)", "iters", g.Config.TestIters)
-	w.linef("runs := ivyAtoiDefault(opts[%q], %s)", "runs", g.Config.TestRuns)
-	w.line(`seed := ivyAtoiDefault(opts["seed"], 1)`)
-	w.line(`sleepMs := ivyAtoiDefault(opts["delay"], 10)`)
-	w.line(`finalMs := ivyAtoiDefault(opts["wait"], 0)`)
+	w.linef("testIters := ivyAtoiOption(opts, %q, %s)", "iters", g.Config.TestIters)
+	w.linef("runs := ivyAtoiOption(opts, %q, %s)", "runs", g.Config.TestRuns)
+	w.line(`seed := ivyAtoiOption(opts, "seed", 1)`)
+	w.line(`sleepMs := ivyAtoiOption(opts, "delay", 10)`)
+	w.line(`finalMs := ivyAtoiOption(opts, "wait", 0)`)
 	w.line("ivySetSeed(seed)")
-	g.emitRuntimeFilesSetup(w, "opts")
-	g.emitUnknownOptionCheck(w)
 	w.open("for runidx := 0; runidx < runs; runidx++ {")
 	w.linef("ivy := new%s(%s)", exportedishName(g.ClassName), strings.Join(g.constructorParamArgNames(), ", "))
 	w.line("ivy.__argv = append([]string{os.Args[0]}, rest...)")
@@ -1175,38 +2402,39 @@ func (g *Generator) emitTestMain(w *goWriter) {
 }
 
 func (g *Generator) emitGenMain(w *goWriter) {
-	runnable := g.runnableActionNames()
+	runnable := g.runnableActionNamesInOrder()
 	g.emitGenInitGeneratorType(w)
 	g.emitGenActionGeneratorTypes(w, runnable)
-	w.open(fmt.Sprintf("func ivy2golangGenerate(ivy *%s, testIters int, sleepMs int) {", g.ClassName))
+	w.open(fmt.Sprintf("func ivy2golangGenerate(ivy *%s) {", g.ClassName))
+	g.emitGenActionGeneratorRandomizeState(w)
 	w.linef("init_generator := &%s{ivy: ivy}", g.goInitGeneratorTypeName())
 	w.line("_ = init_generator.generate()")
-	g.emitGenActionCycles(w, runnable, "testIters", "sleepMs")
+	g.emitGenActionInvocations(w, runnable)
 	w.close("")
 	w.blank()
 	w.open(fmt.Sprintf("func %s() {", g.Config.MainName))
 	if len(g.Mod.Params) == 0 {
-		w.line("opts, rest := parseIvyTestArgs(os.Args[1:])")
+		w.line("opts, rest, optArgs := parseIvyTestArgs(os.Args[1:])")
+		g.emitUnknownOptionCheck(w, "optArgs")
 		g.emitZeroParamArgSetup(w, "rest")
 	} else {
-		w.line("opts, rest := parseIvyTestArgs(os.Args[1:])")
-		g.emitModuleParamSetup(w, "opts", "rest")
+		w.line("opts, rest, optArgs := parseIvyTestArgs(os.Args[1:])")
+		g.emitModuleParamSetup(w, "opts", "rest", "optArgs")
 	}
-	w.linef("testIters := ivyAtoiDefault(opts[%q], %s)", "iters", g.Config.TestIters)
-	w.linef("runs := ivyAtoiDefault(opts[%q], %s)", "runs", g.Config.TestRuns)
-	w.line(`seed := ivyAtoiDefault(opts["seed"], 1)`)
-	w.line(`sleepMs := ivyAtoiDefault(opts["delay"], 10)`)
-	w.line(`finalMs := ivyAtoiDefault(opts["wait"], 0)`)
+	w.linef("testIters := ivyAtoiOption(opts, %q, %s)", "iters", g.Config.TestIters)
+	w.linef("runs := ivyAtoiOption(opts, %q, %s)", "runs", g.Config.TestRuns)
+	w.line(`seed := ivyAtoiOption(opts, "seed", 1)`)
+	w.line(`sleepMs := ivyAtoiOption(opts, "delay", 10)`)
+	w.line(`finalMs := ivyAtoiOption(opts, "wait", 0)`)
+	w.line("_ = testIters")
+	w.line("_ = runs")
+	w.line("_ = sleepMs")
+	w.line("_ = finalMs")
 	w.line("ivySetSeed(seed)")
-	g.emitRuntimeFilesSetup(w, "opts")
-	g.emitUnknownOptionCheck(w)
-	w.open("for runidx := 0; runidx < runs; runidx++ {")
 	w.linef("ivy := new%s(%s)", exportedishName(g.ClassName), strings.Join(g.constructorParamArgNames(), ", "))
 	w.line("ivy.__argv = append([]string{os.Args[0]}, rest...)")
 	w.line("ivy._generating = false")
-	w.line("ivy2golangGenerate(ivy, testIters, sleepMs)")
-	g.emitTestMainTail(w, "finalMs")
-	w.close("")
+	w.line("ivy2golangGenerate(ivy)")
 	w.close("")
 	w.blank()
 }
@@ -1218,7 +2446,12 @@ func (g *Generator) emitGenInitGeneratorType(w *goWriter) {
 	w.close("")
 	w.blank()
 	w.open(fmt.Sprintf("func (gen *%s) generate() bool {", typeName))
-	w.line("_ = gen.ivy")
+	w.line("ivy := gen.ivy")
+	w.open("if ivy == nil {")
+	w.line("return false")
+	w.close("")
+	w.line("ivy.__initState()")
+	w.line("ivy.__init()")
 	w.line("return true")
 	w.close("")
 	w.blank()
@@ -1254,14 +2487,12 @@ func (g *Generator) emitGenActionGeneratorTypes(w *goWriter, runnable []string) 
 
 func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act goivy.Action) {
 	w.line("ivy := gen.ivy")
+	w.line("_ = ivy")
 	if act == nil {
-		w.line("_ = ivy")
 		w.line("return true")
 		return
 	}
-	g.emitGenActionGeneratorRandomizeState(w)
 	if len(act.GetFormalParams()) == 0 {
-		w.line("_ = ivy")
 		g.emitGenActionGeneratorAssumeGuards(w, name, act)
 		w.line("return true")
 		return
@@ -1290,7 +2521,12 @@ func (g *Generator) emitGenActionGeneratorRandomizeState(w *goWriter) {
 
 func (g *Generator) emitGenRandomizeSymbol(w *goWriter, sym stateSymbol, label string) {
 	if g.isVariantSuperName(sortName(sym.Sort)) {
-		w.linef("ivy.%s = %s", goName(sym.Name), g.goZeroValue(sym.Sort))
+		expr, err := g.goActionParamRandomValueExpr(sym.Sort, label+"."+sym.Name, 0)
+		if err != nil {
+			g.unsupported(w, "%s", err.Error())
+			return
+		}
+		w.linef("ivy.%s = %s", goName(sym.Name), expr)
 		return
 	}
 	if fs, ok := sym.Sort.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
@@ -1319,28 +2555,41 @@ func (g *Generator) emitGenRandomizeSymbol(w *goWriter, sym stateSymbol, label s
 }
 
 type genDefinedInput struct {
-	param *goivy.Const
+	lhs   goivy.Expr
 	value goivy.Expr
 }
 
 func (g *Generator) emitGenActionGeneratorDefinedInputs(w *goWriter, name string, act goivy.Action) {
-	defs := genActionGeneratorDefinedInputs(act, g.genActionPreconditionFormulas(name, act))
+	defs := g.genActionGeneratorDefinedInputs(act, g.genActionPreconditionFormulas(name, act))
 	if len(defs) == 0 {
 		return
 	}
 	g.pushExprOverrides(genActionFormalExprOverrides(act))
 	defer g.popExprOverrides()
 	for _, def := range defs {
+		lhs, err := g.emitExpr(def.lhs)
+		if err != nil {
+			g.unsupported(w, "unsupported action generator defined input: %s", err.Error())
+			continue
+		}
 		expr, err := g.emitExpr(def.value)
 		if err != nil {
 			g.unsupported(w, "unsupported action generator defined input: %s", err.Error())
 			continue
 		}
-		w.linef("gen.%s = %s", goName(def.param.Name), expr)
+		if call, ok, err := g.goStorageSet(def.lhs, expr); ok || err != nil {
+			if err != nil {
+				g.unsupported(w, "unsupported action generator defined input: %s", err.Error())
+				continue
+			}
+			w.line(call)
+			continue
+		}
+		w.linef("%s = %s", lhs, expr)
 	}
 }
 
-func genActionGeneratorDefinedInputs(act goivy.Action, guards []goivy.Expr) []genDefinedInput {
+func (g *Generator) genActionGeneratorDefinedInputs(act goivy.Action, guards []goivy.Expr) []genDefinedInput {
 	params := genActionFormalParamMap(act)
 	if len(params) == 0 {
 		return nil
@@ -1351,12 +2600,12 @@ func genActionGeneratorDefinedInputs(act goivy.Action, guards []goivy.Expr) []ge
 		if !ok {
 			continue
 		}
-		if p, ok := genExprFormalParam(eq.T1, params); ok {
-			defs = append(defs, genDefinedInput{param: p, value: eq.T2})
+		if g.genExprDefinedInputLHS(eq.T1, params) {
+			defs = append(defs, genDefinedInput{lhs: eq.T1, value: eq.T2})
 			continue
 		}
-		if p, ok := genExprFormalParam(eq.T2, params); ok {
-			defs = append(defs, genDefinedInput{param: p, value: eq.T1})
+		if g.genExprDefinedInputLHS(eq.T2, params) {
+			defs = append(defs, genDefinedInput{lhs: eq.T2, value: eq.T1})
 		}
 	}
 	return defs
@@ -1385,6 +2634,25 @@ func genExprFormalParam(e goivy.Expr, params map[string]*goivy.Const) (*goivy.Co
 	}
 	p, ok := params[c.Name]
 	return p, ok
+}
+
+func (g *Generator) genExprDefinedInputLHS(e goivy.Expr, params map[string]*goivy.Const) bool {
+	if _, ok := genExprFormalParam(e, params); ok {
+		return true
+	}
+	ap, ok := e.(*goivy.Apply)
+	if !ok || len(ap.Terms) == 0 {
+		return false
+	}
+	fn, ok := ap.Func.(*goivy.Const)
+	if !ok {
+		return false
+	}
+	field, ok := g.destructorFieldInfo(fn.Name)
+	if !ok || len(ap.Terms) != len(field.Sort.Domain()) {
+		return false
+	}
+	return g.genExprDefinedInputLHS(ap.Terms[0], params)
 }
 
 func genActionFormalExprOverrides(act goivy.Action) map[string]string {
@@ -1519,7 +2787,7 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 		switch nret := len(act.GetFormalReturns()); nret {
 		case 0:
 		case 1:
-			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %v\n", g.goZeroValue(act.GetFormalReturns()[0].CSort))
+			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(g.goZeroValue(act.GetFormalReturns()[0].CSort)))
 		default:
 			lhs := strings.TrimSuffix(strings.Repeat("_, ", nret), ", ")
 			rhs := make([]string, nret)
@@ -1542,9 +2810,9 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 		if g.Config.Trace {
 			w.linef("__res := %s", call)
 			w.line(`fmt.Fprintln(__ivy_out, "}")`)
-			w.linef("fmt.Fprintf(__ivy_out, %q, __res)", "= %v\n")
+			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__res"))
 		} else {
-			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %v\n", call)
+			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(call))
 		}
 	default:
 		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
@@ -1555,55 +2823,18 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 	w.line("ivy._generating = false")
 }
 
-func (g *Generator) emitGenActionCycles(w *goWriter, runnable []string, testItersName, sleepMsName string) {
+func (g *Generator) emitGenActionInvocations(w *goWriter, runnable []string) {
 	if len(runnable) == 0 {
 		w.line("_ = ivy")
-		w.linef("_ = %s", testItersName)
-		w.linef("_ = %s", sleepMsName)
 		return
 	}
 	for _, name := range runnable {
-		w.linef("%s := &%s{ivy: ivy}", g.goActionGeneratorVarName(name), g.goActionGeneratorTypeName(name))
-	}
-	w.open(fmt.Sprintf("for cycle := 0; cycle < %s; cycle++ {", testItersName))
-	totalWeight := 0.0
-	for _, name := range runnable {
-		totalWeight += g.actionWeight(name)
-	}
-	w.linef("__choices := %s + 5.0", goFloatLiteral(totalWeight))
-	w.line("__choice := float64(ivyRand31()) * __choices / 2147483648.0")
-	w.open(fmt.Sprintf("if __choice >= %s {", goFloatLiteral(totalWeight)))
-	w.line("cycle--")
-	w.line("continue")
-	w.close("")
-	cumulative := 0.0
-	for i, name := range runnable {
 		genVar := g.goActionGeneratorVarName(name)
-		cumulative += g.actionWeight(name)
-		if i == 0 {
-			w.open(fmt.Sprintf("if __choice < %s {", goFloatLiteral(cumulative)))
-		} else {
-			w.close(fmt.Sprintf(" else if __choice < %s {", goFloatLiteral(cumulative)))
-			w.indent++
-		}
-		w.line("ivy._generating = true")
+		w.linef("%s := &%s{ivy: ivy}", genVar, g.goActionGeneratorTypeName(name))
 		w.open(fmt.Sprintf("if %s.generate() {", genVar))
 		w.linef("%s.execute()", genVar)
-		w.line("ivy._generating = false")
-		w.close(" else {")
-		w.indent++
-		w.line("ivy._generating = false")
-		w.line("cycle--")
-		w.line("continue")
-		w.indent--
 		w.close("")
 	}
-	w.close("")
-	w.line("ivy.__tick(0)")
-	w.open(fmt.Sprintf("if %s > 0 {", sleepMsName))
-	w.linef("time.Sleep(time.Duration(%s) * time.Millisecond)", sleepMsName)
-	w.close("")
-	w.close("")
 }
 
 func (g *Generator) goInitGeneratorTypeName() string {
@@ -1671,7 +2902,7 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 				switch nret := len(act.GetFormalReturns()); nret {
 				case 0:
 				case 1:
-					w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %v\n", g.goZeroValue(act.GetFormalReturns()[0].CSort))
+					w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(g.goZeroValue(act.GetFormalReturns()[0].CSort)))
 				default:
 					lhs := strings.TrimSuffix(strings.Repeat("_, ", nret), ", ")
 					rhs := make([]string, nret)
@@ -1687,7 +2918,7 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 			case 0:
 				w.line(call)
 			case 1:
-				w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %v\n", call)
+				w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(call))
 			default:
 				w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
 			}
@@ -1703,16 +2934,16 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 }
 
 func (g *Generator) emitTestActionDefinedInputs(w *goWriter, name string, act goivy.Action, args []string) {
-	defs := genActionGeneratorDefinedInputs(act, g.genActionPreconditionFormulas(name, act))
+	defs := g.genActionGeneratorDefinedInputs(act, g.genActionPreconditionFormulas(name, act))
 	if len(defs) == 0 {
 		return
 	}
 	g.pushExprOverrides(actionFormalExprOverridesToArgs(act, args))
 	defer g.popExprOverrides()
-	argByParam := actionFormalArgMap(act, args)
 	for _, def := range defs {
-		lhs := argByParam[def.param]
-		if lhs == "" {
+		lhs, err := g.emitExpr(def.lhs)
+		if err != nil {
+			g.unsupported(w, "unsupported target=test defined input: %s", err.Error())
 			continue
 		}
 		expr, err := g.emitExpr(def.value)
@@ -1720,12 +2951,20 @@ func (g *Generator) emitTestActionDefinedInputs(w *goWriter, name string, act go
 			g.unsupported(w, "unsupported target=test defined input: %s", err.Error())
 			continue
 		}
+		if call, ok, err := g.goStorageSet(def.lhs, expr); ok || err != nil {
+			if err != nil {
+				g.unsupported(w, "unsupported target=test defined input: %s", err.Error())
+				continue
+			}
+			w.line(call)
+			continue
+		}
 		w.linef("%s = %s", lhs, expr)
 	}
 }
 
 func (g *Generator) emitTestActionAssumeGuards(w *goWriter, name string, act goivy.Action, args []string) {
-	if act == nil || len(act.GetFormalParams()) == 0 {
+	if act == nil {
 		return
 	}
 	guards := g.genActionPreconditionFormulas(name, act)
@@ -1745,21 +2984,6 @@ func (g *Generator) emitTestActionAssumeGuards(w *goWriter, name string, act goi
 		w.line("continue")
 		w.close("")
 	}
-}
-
-func actionFormalArgMap(act goivy.Action, args []string) map[*goivy.Const]string {
-	out := map[*goivy.Const]string{}
-	if act == nil {
-		return out
-	}
-	formals := act.GetFormalParams()
-	for i, p := range formals {
-		if p == nil || i >= len(args) {
-			continue
-		}
-		out[p] = args[i]
-	}
-	return out
 }
 
 func actionFormalExprOverridesToArgs(act goivy.Action, args []string) map[string]string {
@@ -1830,8 +3054,20 @@ func (g *Generator) actionTraceLine(name string, args []string) string {
 	if len(args) == 0 {
 		return fmt.Sprintf("fmt.Fprintln(__ivy_out, %q)", "> "+display)
 	}
-	format := "> " + display + "(" + strings.TrimSuffix(strings.Repeat("%v,", len(args)), ",") + ")\n"
-	return fmt.Sprintf("fmt.Fprintf(__ivy_out, %q, %s)", format, strings.Join(args, ", "))
+	format := "> " + display + "(" + strings.TrimSuffix(strings.Repeat("%s,", len(args)), ",") + ")\n"
+	return fmt.Sprintf("fmt.Fprintf(__ivy_out, %q, %s)", format, strings.Join(g.traceValueExprs(args), ", "))
+}
+
+func (g *Generator) traceValueExpr(expr string) string {
+	return fmt.Sprintf("ivyTraceValue(%s, %t)", expr, g.traceHex())
+}
+
+func (g *Generator) traceValueExprs(args []string) []string {
+	out := make([]string, len(args))
+	for i, arg := range args {
+		out[i] = g.traceValueExpr(arg)
+	}
+	return out
 }
 
 func actionDisplayName(name string) string {
@@ -1855,10 +3091,27 @@ func (g *Generator) publicActionNamesSorted() []string {
 		return nil
 	}
 	var names []string
-	for name := range g.Mod.PublicActions.All() {
+	for name, exported := range g.Mod.PublicActions.All() {
+		if !exported {
+			continue
+		}
 		names = append(names, name)
 	}
 	sort.Strings(names)
+	return names
+}
+
+func (g *Generator) publicActionNamesInOrder() []string {
+	if g.Mod == nil || g.Mod.PublicActions == nil {
+		return nil
+	}
+	var names []string
+	for name, exported := range g.Mod.PublicActions.All() {
+		if !exported {
+			continue
+		}
+		names = append(names, name)
+	}
 	return names
 }
 
@@ -1881,8 +3134,8 @@ func (g *Generator) hasFinalizeExport() bool {
 	if g.Mod == nil || g.Mod.PublicActions == nil {
 		return false
 	}
-	for name := range g.Mod.PublicActions.All() {
-		if isFinalizeName(name) {
+	for name, exported := range g.Mod.PublicActions.All() {
+		if exported && isFinalizeName(name) {
 			return true
 		}
 	}
@@ -2146,9 +3399,48 @@ func (g *Generator) exprOverride(name string) (string, bool) {
 }
 
 func (g *Generator) unsupported(w *goWriter, format string, args ...any) {
-	err := fmt.Errorf("ivy2golang: "+format, args...)
+	msg := fmt.Sprintf(format, args...)
+	g.emitUnsupportedMessage(w, msg)
+}
+
+func (g *Generator) unsupportedAt(w *goWriter, loc goivy.Location, format string, args ...any) {
+	msg := fmt.Sprintf(format, args...)
+	if prefix := linenoStr(loc); strings.TrimSpace(prefix) != "" {
+		msg = prefix + ": " + strings.TrimPrefix(msg, "ivy2golang: ")
+	}
+	g.emitUnsupportedMessage(w, msg)
+}
+
+func (g *Generator) emitUnsupportedMessage(w *goWriter, msg string) {
+	if !strings.HasPrefix(msg, "ivy2golang: ") {
+		msg = "ivy2golang: " + msg
+	}
+	err := fmt.Errorf("%s", msg)
 	g.errs = append(g.errs, err)
 	w.linef("panic(%q)", err.Error())
+}
+
+func goSoftUnsupportedMessage(err error, loc string) string {
+	msg := ""
+	if err != nil {
+		msg = err.Error()
+	}
+	msg = strings.TrimPrefix(msg, "ivy2golang: ")
+	if msg != "" && !strings.HasPrefix(msg, "error: ") && !strings.Contains(msg, ": error: ") {
+		msg = "error: " + msg
+	}
+	if loc = strings.TrimSpace(loc); loc != "" {
+		msg = loc + ": " + msg
+	}
+	return msg
+}
+
+func escapeComment(s string) string {
+	return strings.ReplaceAll(s, "*/", "* /")
+}
+
+func (g *Generator) softUnsupported(w *goWriter, kind string, err error, loc string) {
+	w.linef("// ivy2golang: %s: %s", kind, escapeComment(goSoftUnsupportedMessage(err, loc)))
 }
 
 func (g *Generator) warnOnce(message string) {
@@ -2168,10 +3460,18 @@ func linenoStr(loc goivy.Location) string {
 	}
 	label := ""
 	if loc.Filename != "" {
-		label += filepath.Base(loc.Filename) + ": "
+		label += filepath.Base(denormalizeIvyExamplesLabel(loc.Filename)) + ": "
 	}
 	if loc.Line > 0 {
 		label += fmt.Sprintf("line %d: ", loc.Line)
 	}
 	return strings.TrimSuffix(label, ": ")
+}
+
+func denormalizeIvyExamplesLabel(label string) string {
+	home := strings.TrimRight(os.Getenv("HOME"), "/")
+	if home == "" {
+		return label
+	}
+	return strings.ReplaceAll(label, "<IVY_EXAMPLES>", home+"/ivy/ivy-lang-examples")
 }

@@ -36,8 +36,15 @@ func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {
 	if out == nil {
 		return nil, fmt.Errorf("ivy2golang: nil output")
 	}
-	dir := outputDirectory(outDir)
-	goFile := filepath.Join(dir, out.BaseName+".go")
+	dir, err := filepath.Abs(outputDirectory(outDir))
+	if err != nil {
+		return nil, err
+	}
+	baseDir, err := filepath.Abs(outputBaseDirectory(outDir))
+	if err != nil {
+		return nil, err
+	}
+	goFile := filepath.Join(dir, goSourceFileName(out.BaseName))
 	outputPath := filepath.Join(dir, out.BaseName)
 	compileOnly := out.Target == "class" || (!out.EmitMain && out.Target != "")
 	if compileOnly {
@@ -45,8 +52,8 @@ func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {
 	} else if runtime.GOOS == "windows" {
 		outputPath += ".exe"
 	}
-	cacheDir := filepath.Join(outputBaseDirectory(outDir), ".ivy2golang-gocache")
-	tmpDir := filepath.Join(outputBaseDirectory(outDir), ".ivy2golang-gotmp")
+	cacheDir := filepath.Join(baseDir, ".ivy2golang-gocache")
+	tmpDir := filepath.Join(baseDir, ".ivy2golang-gotmp")
 	if err := os.MkdirAll(cacheDir, 0o755); err != nil {
 		return nil, err
 	}

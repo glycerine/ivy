@@ -31,7 +31,7 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return "(" + l + " == " + r + ")", nil
+		return "(" + g.goEqualExpr(l, r, n.T1.NodeSort()) + ")", nil
 	case *goivy.LogicNot:
 		body, err := g.emitExpr(n.Body)
 		if err != nil {
@@ -119,6 +119,12 @@ func (g *Generator) emitConst(c *goivy.Const) (string, error) {
 	if goivy.IsLiteralString(c) {
 		return c.Name, nil
 	}
+	if code, ok, err := g.emitStringInterpConst(c); ok || err != nil {
+		return code, err
+	}
+	if code, ok, err := g.emitBVNumeral(c); ok || err != nil {
+		return code, err
+	}
 	if goivy.IsNumeral(c) {
 		if rs, ok := g.rangeSortFor(c.CSort); ok {
 			lo, hi, ok := numericRangeBounds(rs)
@@ -159,10 +165,40 @@ func (g *Generator) emitConst(c *goivy.Const) (string, error) {
 		}
 		return g.emitExpr(expr)
 	}
+	if g.isNativeDefinitionName(c.Name) {
+		fn, err := funName(c.Name)
+		if err != nil {
+			return "", err
+		}
+		return "ivy." + fn + "()", nil
+	}
+	if g.isSortConstructorName(c.Name) {
+		fn, err := funName(c.Name)
+		if err != nil {
+			return "", err
+		}
+		return "ivy." + fn + "()", nil
+	}
 	if _, ok := g.isStateSymbolName(c.Name); ok {
 		return "ivy." + goName(c.Name), nil
 	}
 	return goName(c.Name), nil
+}
+
+func (g *Generator) emitStringInterpConst(c *goivy.Const) (string, bool, error) {
+	if c == nil || !goivy.IsNumeral(c) || goivy.IsLiteralString(c) {
+		return "", false, nil
+	}
+	if g.hasStrBVInterp(c.CSort) {
+		return strconv.Quote(c.Name), true, nil
+	}
+	if !g.hasStringInterp(c.CSort) {
+		return "", false, nil
+	}
+	if c.Name == "0" {
+		return `""`, true, nil
+	}
+	return "", true, fmt.Errorf("ivy2golang: cannot compile numeral %s of string sort %s", c.Name, sortName(c.CSort))
 }
 
 func (g *Generator) emitNary(terms []goivy.Expr, op, ident string) (string, error) {
@@ -190,6 +226,9 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 		fnExpr = repl
 	}
 	name := goivy.ExprName(fnExpr)
+	if code, ok, err := g.emitBVApply(name, a); ok || err != nil {
+		return code, err
+	}
 	if code, ok, err := g.emitCastApply(name, a); ok || err != nil {
 		return code, err
 	}
@@ -224,11 +263,17 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 		return "", err
 	}
 	if len(a.Terms) == 0 {
+		if g.isSortConstructorName(name) {
+			return "ivy." + fn + "()", nil
+		}
 		if g.isLocal(name) {
 			return fn, nil
 		}
 		if _, ok := g.isStateSymbolName(name); ok {
 			return "ivy." + fn, nil
+		}
+		if g.isNativeDefinitionName(name) {
+			return "ivy." + fn + "()", nil
 		}
 		return fn, nil
 	}
@@ -240,8 +285,14 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 		}
 		args[i] = s
 	}
-	if field, ok := g.destructorFieldName(name); ok && len(args) == 1 {
-		return args[0] + "." + field, nil
+	if g.isSortConstructorName(name) {
+		return "ivy." + fn + "(" + strings.Join(args, ", ") + ")", nil
+	}
+	if g.isNativeDefinitionName(name) {
+		return "ivy." + fn + "(" + strings.Join(args, ", ") + ")", nil
+	}
+	if expr, ok, err := g.destructorFieldAccess(name, args); ok || err != nil {
+		return expr, err
 	}
 	if sort, ok := g.isStateSymbolName(name); ok {
 		return g.goStorageAccess(name, sort, args, "ivy"), nil
@@ -373,7 +424,7 @@ func (g *Generator) emitVariantRelation(name string, terms []goivy.Expr) (string
 	}
 	idx := g.Mod.VariantIndex(terms[0].NodeSort(), terms[1].NodeSort())
 	downcast := g.variantDowncastExpr(lhs, terms[1].NodeSort())
-	return fmt.Sprintf("(%s.valid && %s.tag == %d && %s == %s)", lhs, lhs, idx, downcast, rhs), true, nil
+	return fmt.Sprintf("(%s.valid && %s.tag == %d && %s)", lhs, lhs, idx, g.goEqualExpr(downcast, rhs, terms[1].NodeSort())), true, nil
 }
 
 func isInfix(name string) bool {
@@ -389,8 +440,9 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 	if len(vars) == 0 {
 		return g.emitExpr(body)
 	}
+	exists := !forall
 	if len(vars) > 0 && g.goIsAnyIntegerType(vars[0].VSort) {
-		if bounds, err := g.getAllBounds(vars, body, !forall); err == nil {
+		if bounds, err := g.getAllBounds(vars, body, exists); err == nil {
 			if code, ok, err := g.emitQuantWithBounds(vars, body, forall, bounds); ok || err != nil {
 				return code, err
 			}
@@ -403,10 +455,10 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 	w.raw("func() bool {\n")
 	w.indent++
 	g.pushScope()
-	for _, v := range vars {
+	for i, v := range vars {
 		name := goName(v.Name)
 		g.addLocal(v.Name)
-		if header, ok, err := g.goFiniteLoopHeaderForSort(v.VSort, name); err != nil || ok {
+		if header, ok, err := g.goFormulaLoopHeaderForVar(v, name, vars[i+1:], body, exists); err != nil || ok {
 			if err != nil {
 				g.popScope()
 				return "", err
@@ -414,12 +466,8 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 			w.open(header)
 			continue
 		}
-		vals, ok := g.finiteValueExprs(v.VSort)
-		if !ok {
-			g.popScope()
-			return "", fmt.Errorf("ivy2golang: cannot enumerate quantified variable %s:%s", v.Name, sortName(v.VSort))
-		}
-		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(v.VSort), strings.Join(vals, ", ")))
+		g.popScope()
+		return "", fmt.Errorf("ivy2golang: cannot enumerate quantified variable %s:%s", v.Name, sortName(v.VSort))
 	}
 	expr, err := g.emitExpr(body)
 	if err != nil {
@@ -546,18 +594,6 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 		return "", false, nil
 	}
 
-	remainingVals := map[string][]string{}
-	for _, v := range vars {
-		if v == nil || boundNames[v.Name] {
-			continue
-		}
-		vals, ok := g.finiteValueExprs(v.VSort)
-		if !ok {
-			return "", true, fmt.Errorf("ivy2golang: cannot enumerate quantified variable %s:%s", v.Name, sortName(v.VSort))
-		}
-		remainingVals[v.Name] = vals
-	}
-
 	var w goWriter
 	w.raw("func() bool {\n")
 	w.indent++
@@ -597,7 +633,12 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 			nestedOpened++
 			continue
 		}
-		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(v.VSort), strings.Join(remainingVals[v.Name], ", ")))
+		vals, ok := g.finiteValueExprs(v.VSort)
+		if !ok {
+			g.popScope()
+			return "", true, fmt.Errorf("ivy2golang: cannot enumerate quantified variable %s:%s", v.Name, sortName(v.VSort))
+		}
+		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(v.VSort), strings.Join(vals, ", ")))
 		nestedOpened++
 	}
 	expr, err := g.emitExpr(body)
@@ -779,6 +820,8 @@ func (g *Generator) emitLetExpr(l *goivy.LogicLet) (string, error) {
 		return "", fmt.Errorf("ivy2golang: nil let expression")
 	}
 	subs := map[goivy.NodeKey]goivy.Expr{}
+	applySubs := map[goivy.NodeKey]goivy.SubstituteApplyFunc{}
+	var substErr error
 	for _, d := range l.Defs {
 		def, ok := d.(*goivy.LogicDefinition)
 		if !ok {
@@ -789,6 +832,37 @@ func (g *Generator) emitLetExpr(l *goivy.LogicLet) (string, error) {
 			subs[goivy.Key(sym)] = def.Rhs
 		case *goivy.LogicVariable:
 			subs[goivy.Key(sym)] = def.Rhs
+		case *goivy.Apply:
+			formals := append([]goivy.Expr(nil), sym.Terms...)
+			rhs := def.Rhs
+			applySubs[goivy.Key(sym.Func)] = func(terms []goivy.Expr) goivy.Expr {
+				if substErr != nil {
+					return rhs
+				}
+				if len(terms) != len(formals) {
+					substErr = fmt.Errorf("ivy2golang: parametric let definition %s expected %d arguments, got %d", sym.String(), len(formals), len(terms))
+					return rhs
+				}
+				localSubs := make(map[goivy.NodeKey]goivy.Expr, len(subs)+len(formals))
+				for k, v := range subs {
+					localSubs[k] = v
+				}
+				for i, formal := range formals {
+					switch formal.(type) {
+					case *goivy.Const, *goivy.LogicVariable:
+						localSubs[goivy.Key(formal)] = terms[i]
+					default:
+						substErr = fmt.Errorf("ivy2golang: parametric let formal has unsupported shape %T: %s", formal, formal.String())
+						return rhs
+					}
+				}
+				out, err := goivy.Substitute(rhs, localSubs)
+				if err != nil {
+					substErr = fmt.Errorf("ivy2golang: parametric let substitution: %w", err)
+					return rhs
+				}
+				return out
+			}
 		default:
 			return "", fmt.Errorf("ivy2golang: parametric let definition not yet supported: %s", def.Lhs.String())
 		}
@@ -796,6 +870,10 @@ func (g *Generator) emitLetExpr(l *goivy.LogicLet) (string, error) {
 	body, err := goivy.Substitute(l.Body, subs)
 	if err != nil {
 		return "", fmt.Errorf("ivy2golang: let substitution: %w", err)
+	}
+	body = goivy.SubstituteApply(body, applySubs)
+	if substErr != nil {
+		return "", substErr
 	}
 	return g.emitExpr(body)
 }

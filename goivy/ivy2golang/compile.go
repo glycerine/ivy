@@ -40,7 +40,7 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		return nil, err
 	}
 	if explicitClassName {
-		cfg.ClassName = goName(rawClassName)
+		cfg.ClassName = goIdentifierName(rawClassName)
 	}
 	mod := goivy.New()
 	mod.Cfg = goivy.NewConfig()
@@ -84,11 +84,11 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		baseName := moduleBaseName(isoMod)
 		if explicitClassName {
 			baseName = rawClassName
-			outCfg.ClassName = goName(baseName)
+			outCfg.ClassName = goIdentifierName(baseName)
 		}
 		if len(isolates) > 1 && isolate != "" {
 			baseName = baseName + "_" + isolate
-			outCfg.ClassName = goName(baseName)
+			outCfg.ClassName = goIdentifierName(baseName)
 		}
 		isoMod.Name = baseName
 		out, err := Generate(isoMod, outCfg)
@@ -248,7 +248,7 @@ func WriteOutput(out *Output, outDir string) error {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return err
 	}
-	if err := os.WriteFile(filepath.Join(dir, out.BaseName+".go"), []byte(out.Source), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, goSourceFileName(out.BaseName)), []byte(out.Source), 0o644); err != nil {
 		return err
 	}
 	for name, text := range out.ExtraFiles {
@@ -257,6 +257,13 @@ func WriteOutput(out *Output, outDir string) error {
 		}
 	}
 	return nil
+}
+
+func goSourceFileName(base string) string {
+	if strings.HasSuffix(base, "_test") {
+		return base + "_main.go"
+	}
+	return base + ".go"
 }
 
 func WriteBatchOutput(batch *BatchOutput, outDir string) error {
@@ -299,7 +306,7 @@ func normalizeConfig(cfg Config) (Config, string, error) {
 		compiler = "default"
 	}
 	switch compiler {
-	case "default", "go", "g++", "cl":
+	case "default", "g++", "cl":
 	default:
 		return cfg, "", fmt.Errorf("ivy2golang: compiler %q is not supported", compiler)
 	}
@@ -314,6 +321,7 @@ func normalizeConfig(cfg Config) (Config, string, error) {
 	if cfg.MainName == "" {
 		cfg.MainName = "main"
 	}
+	cfg.MainName = goIdentifierName(cfg.MainName)
 	if cfg.TestIters == "" {
 		cfg.TestIters = "100"
 	}
@@ -529,6 +537,9 @@ func restoreSortForGoInterface(mod *goivy.Module, snap goInterfaceSnapshot, sort
 		}
 		if _, ok := mod.Sig.Interp[name]; !ok {
 			if interp, found := snap.Interps[name]; found {
+				if mod.Sig.Interp == nil {
+					mod.Sig.Interp = map[string]interface{}{}
+				}
 				mod.Sig.Interp[name] = interp
 			}
 		}
@@ -541,7 +552,10 @@ func restoreSortForGoInterface(mod *goivy.Module, snap goInterfaceSnapshot, sort
 	}
 	if name != "" {
 		destrs, ok := snap.SortDestructors[name]
-		if ok && mod.SortDestructors != nil {
+		if ok {
+			if mod.SortDestructors == nil {
+				mod.SortDestructors = goivy.NewInsMap[string, []*goivy.Const]()
+			}
 			if _, exists := mod.SortDestructors.Get2(name); !exists {
 				mod.SortDestructors.Set(name, append([]*goivy.Const(nil), destrs...))
 			}

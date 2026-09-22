@@ -242,18 +242,50 @@ func (g *Generator) getAllBounds(vars []*goivy.LogicVariable, body goivy.Expr, e
 	return res, nil
 }
 
+func (g *Generator) goFormulaLoopHeaderForVar(v *goivy.LogicVariable, loopName string, rest []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, bool, error) {
+	if v == nil {
+		return "", false, fmt.Errorf("ivy2golang: nil loop variable")
+	}
+	if loopName == "" {
+		loopName = goName(v.Name)
+	}
+	if g.goIsAnyIntegerType(v.VSort) {
+		if lo, hi, err := g.getBounds(v, rest, body, exists); err == nil {
+			if header, ok, err := g.goBoundedLoopHeaderForSort(v.VSort, loopName, lo, hi); err != nil || ok {
+				return header, ok, err
+			}
+		}
+	}
+	if header, ok, err := g.goFiniteLoopHeaderForSort(v.VSort, loopName); err != nil || ok {
+		return header, ok, err
+	}
+	if vals, ok := g.finiteValueExprs(v.VSort); ok {
+		return fmt.Sprintf("for _, %s := range []%s{%s} {", loopName, g.goScalarType(v.VSort), strings.Join(vals, ", ")), true, nil
+	}
+	return "", false, nil
+}
+
 func (g *Generator) goIsAnyIntegerType(s goivy.Sort) bool {
 	switch st := s.(type) {
 	case *goivy.RangeSort:
 		return true
 	case *goivy.LogicEnumeratedSort:
-		return isNumericEnum(st)
+		return true
 	case *goivy.UninterpretedSort:
 		if _, ok := g.rangeSortFor(st); ok {
 			return true
 		}
+		if it, ok := g.goInterpType(st); ok && it.Kind == goInterpBV {
+			return true
+		}
 		text, ok := g.sortInterpString(st)
-		return ok && (text == "int" || text == "nat")
+		if ok && (text == "int" || text == "nat") {
+			return true
+		}
+	}
+	switch g.goScalarType(s) {
+	case "bool", "int":
+		return true
 	default:
 		return false
 	}
@@ -365,19 +397,14 @@ func (g *Generator) goLoopHeadersForSome(vars []*goivy.LogicVariable, body goivy
 		}
 	}
 	for i, v := range vars {
-		name := goName(v.Name)
-		if header, ok, err := g.goFiniteLoopHeaderForSort(v.VSort, name); err != nil || ok {
-			if err != nil {
-				return nil, false, err
-			}
-			headers[i] = header
-			continue
+		header, ok, err := g.goFormulaLoopHeaderForVar(v, goName(v.Name), vars[i+1:], body, true)
+		if err != nil {
+			return nil, false, err
 		}
-		vals, ok := g.finiteValueExprs(v.VSort)
 		if !ok {
 			return nil, false, fmt.Errorf("ivy2golang: cannot enumerate some variable %s:%s", v.Name, sortName(v.VSort))
 		}
-		headers[i] = fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(v.VSort), strings.Join(vals, ", "))
+		headers[i] = header
 	}
 	return headers, false, nil
 }
@@ -387,62 +414,32 @@ func (g *Generator) goLoopHeadersForSomeCondition(some *goivy.SomeCondition) ([]
 		return nil, fmt.Errorf("ivy2golang: nil some condition")
 	}
 	headers := make([]string, len(some.Params))
-	if len(some.Params) > 0 && some.Params[0] != nil && g.goIsAnyIntegerType(some.Params[0].CSort) {
-		vars := make([]*goivy.LogicVariable, 0, len(some.Params))
-		subs := map[goivy.NodeKey]goivy.Expr{}
-		ok := true
-		for _, p := range some.Params {
-			if p == nil {
-				ok = false
-				break
-			}
-			v, err := goivy.NewVariable("X"+p.Name, p.CSort)
-			if err != nil {
-				ok = false
-				break
-			}
-			subs[goivy.Key(p)] = v
-			vars = append(vars, v)
-		}
-		if ok {
-			if fmla, err := goivy.Substitute(some.Fmla, subs); err == nil {
-				if bounds, berr := g.getAllBounds(vars, fmla, true); berr == nil {
-					allBounded := true
-					for i, p := range some.Params {
-						h, boundOK, herr := g.goBoundedLoopHeaderForSort(p.CSort, goName(p.Name), bounds[i][0], bounds[i][1])
-						if herr != nil {
-							return nil, herr
-						}
-						if !boundOK {
-							allBounded = false
-							break
-						}
-						headers[i] = h
-					}
-					if allBounded {
-						return headers, nil
-					}
-				}
-			}
-		}
-	}
-	for i, p := range some.Params {
+	vars := make([]*goivy.LogicVariable, 0, len(some.Params))
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for _, p := range some.Params {
 		if p == nil {
 			return nil, fmt.Errorf("ivy2golang: nil some parameter")
 		}
-		name := goName(p.Name)
-		if header, ok, err := g.goFiniteLoopHeaderForSort(p.CSort, name); err != nil || ok {
-			if err != nil {
-				return nil, err
-			}
-			headers[i] = header
-			continue
+		v, err := goivy.NewVariable("X"+p.Name, p.CSort)
+		if err != nil {
+			return nil, err
 		}
-		vals, ok := g.finiteValueExprs(p.CSort)
+		subs[goivy.Key(p)] = v
+		vars = append(vars, v)
+	}
+	fmla, err := goivy.Substitute(some.Fmla, subs)
+	if err != nil {
+		return nil, err
+	}
+	for i, p := range some.Params {
+		header, ok, err := g.goFormulaLoopHeaderForVar(vars[i], goName(p.Name), vars[i+1:], fmla, true)
+		if err != nil {
+			return nil, err
+		}
 		if !ok {
 			return nil, fmt.Errorf("ivy2golang: cannot enumerate some variable %s:%s", p.Name, sortName(p.CSort))
 		}
-		headers[i] = fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(p.CSort), strings.Join(vals, ", "))
+		headers[i] = header
 	}
 	return headers, nil
 }

@@ -2,7 +2,6 @@ package ivy2golang
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/glycerine/ivy/goivy"
 )
@@ -12,6 +11,7 @@ type progressDecl struct {
 	LHS  goivy.Expr
 	Cond goivy.Expr
 	Vars []*goivy.LogicVariable
+	Loc  goivy.Location
 }
 
 type relyDecl struct {
@@ -19,6 +19,7 @@ type relyDecl struct {
 	LHS     goivy.Expr
 	RHS     goivy.Expr
 	Implied bool
+	Loc     goivy.Location
 }
 
 func (g *Generator) progressDecls() []progressDecl {
@@ -72,7 +73,7 @@ func (g *Generator) progressDeclFrom(item any) (progressDecl, bool, error) {
 			vars = append(vars, v)
 		}
 	}
-	return progressDecl{Name: name, LHS: def.Lhs, Cond: def.Rhs, Vars: vars}, true, nil
+	return progressDecl{Name: name, LHS: def.Lhs, Cond: def.Rhs, Vars: vars, Loc: expr.GetLineno()}, true, nil
 }
 
 func progressTermVariable(term goivy.Expr) (*goivy.LogicVariable, error) {
@@ -117,13 +118,13 @@ func relyDeclFrom(expr goivy.Expr) (relyDecl, bool, error) {
 		if key == "" {
 			return relyDecl{}, false, fmt.Errorf("ivy2golang: rely antecedent has no progress symbol: %s", expr.String())
 		}
-		return relyDecl{Key: key, LHS: imp.T1, RHS: imp.T2, Implied: true}, true, nil
+		return relyDecl{Key: key, LHS: imp.T1, RHS: imp.T2, Implied: true, Loc: expr.GetLineno()}, true, nil
 	}
 	key := progressKey(expr)
 	if key == "" {
 		return relyDecl{}, false, fmt.Errorf("ivy2golang: rely declaration has no progress symbol: %s", expr.String())
 	}
-	return relyDecl{Key: key, LHS: expr, Implied: false}, true, nil
+	return relyDecl{Key: key, LHS: expr, Implied: false, Loc: expr.GetLineno()}, true, nil
 }
 
 func (g *Generator) emitProgressCounterDecls(w *goWriter) {
@@ -195,7 +196,7 @@ func (g *Generator) emitProgressTickUpdates(w *goWriter, progress []progressDecl
 		g.withProgressLoops(w, p, func() {
 			cond, err := g.emitExpr(p.Cond)
 			if err != nil {
-				g.unsupported(w, "unsupported progress condition %s: %s", p.Name, err.Error())
+				g.unsupportedAt(w, p.Loc, "unsupported progress condition %s: %s", p.Name, err.Error())
 				return
 			}
 			lhs := g.progressCounterLValue(p, "ivy")
@@ -256,14 +257,19 @@ func (g *Generator) emitRelyMax(w *goWriter, maxt string, p progressDecl, r rely
 	g.pushScope()
 	opened := 0
 	for _, rv := range renamed {
-		vals, ok := g.finiteValueExprs(rv.VSort)
+		header, ok, err := g.goLoopHeaderForVar(rv)
+		if err != nil {
+			g.unsupportedAt(w, r.Loc, "unsupported rely variable %s:%s: %s", goName(rv.Name), sortName(rv.VSort), err.Error())
+			g.popScope()
+			return
+		}
 		if !ok {
-			g.unsupported(w, "unsupported rely variable %s:%s", goName(rv.Name), sortName(rv.VSort))
+			g.unsupportedAt(w, r.Loc, "unsupported rely variable %s:%s", goName(rv.Name), sortName(rv.VSort))
 			g.popScope()
 			return
 		}
 		g.addLocal(rv.Name)
-		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", goName(rv.Name), g.goScalarType(rv.VSort), strings.Join(vals, ", ")))
+		w.open(header)
 		opened++
 	}
 	subs := map[goivy.NodeKey]goivy.Expr{}
@@ -277,7 +283,7 @@ func (g *Generator) emitRelyMax(w *goWriter, maxt string, p progressDecl, r rely
 	}
 	substituted, err := goivy.Substitute(r.RHS, subs)
 	if err != nil {
-		g.unsupported(w, "unsupported rely substitution for %s: %s", p.Name, err.Error())
+		g.unsupportedAt(w, r.Loc, "unsupported rely substitution for %s: %s", p.Name, err.Error())
 		for i := 0; i < opened; i++ {
 			w.close("")
 		}
@@ -286,7 +292,7 @@ func (g *Generator) emitRelyMax(w *goWriter, maxt string, p progressDecl, r rely
 	}
 	rhs, err := g.emitExpr(substituted)
 	if err != nil {
-		g.unsupported(w, "unsupported rely expression for %s: %s", p.Name, err.Error())
+		g.unsupportedAt(w, r.Loc, "unsupported rely expression for %s: %s", p.Name, err.Error())
 		for i := 0; i < opened; i++ {
 			w.close("")
 		}
@@ -338,14 +344,19 @@ func (g *Generator) withProgressLoops(w *goWriter, p progressDecl, body func()) 
 	g.pushScope()
 	opened := 0
 	for _, v := range p.Vars {
-		vals, ok := g.finiteValueExprs(v.VSort)
+		header, ok, err := g.goLoopHeaderForVar(v)
+		if err != nil {
+			g.unsupportedAt(w, p.Loc, "unsupported progress variable %s:%s: %s", goName(v.Name), sortName(v.VSort), err.Error())
+			g.popScope()
+			return
+		}
 		if !ok {
-			g.unsupported(w, "unsupported progress variable %s:%s", goName(v.Name), sortName(v.VSort))
+			g.unsupportedAt(w, p.Loc, "unsupported progress variable %s:%s", goName(v.Name), sortName(v.VSort))
 			g.popScope()
 			return
 		}
 		g.addLocal(v.Name)
-		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", goName(v.Name), g.goScalarType(v.VSort), strings.Join(vals, ", ")))
+		w.open(header)
 		opened++
 	}
 	body()

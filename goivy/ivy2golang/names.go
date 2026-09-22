@@ -41,6 +41,14 @@ var goKeywords = map[string]bool{
 }
 
 func goName(name any) string {
+	return goNameWithQuoted(name, true)
+}
+
+func goIdentifierName(name any) string {
+	return goNameWithQuoted(name, false)
+}
+
+func goNameWithQuoted(name any, preserveQuoted bool) string {
 	s := fmt.Sprint(name)
 	if n, ok := name.(interface{ GetName() string }); ok {
 		s = n.GetName()
@@ -48,7 +56,7 @@ func goName(name any) string {
 	if v, ok := specialNames[s]; ok {
 		return v
 	}
-	if strings.HasPrefix(s, "\"") {
+	if preserveQuoted && strings.HasPrefix(s, "\"") {
 		return s
 	}
 	repls := []struct{ old, new string }{

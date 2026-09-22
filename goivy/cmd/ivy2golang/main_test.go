@@ -156,6 +156,56 @@ export echo
 	}
 }
 
+func TestCommandBuildTrueHermesRMWO3FromTempDir(t *testing.T) {
+	bin := buildIvy2GolangCommand(t)
+	home, err := os.UserHomeDir()
+	if err != nil {
+		t.Fatalf("UserHomeDir: %v", err)
+	}
+	src := filepath.Join(home, "ivy", "ivy-lang-examples", "jea", "hermes_rmw_o3_testing.ivy")
+	data, err := os.ReadFile(src)
+	if err != nil {
+		t.Skipf("Hermes fixture not available at %s: %v", src, err)
+	}
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "hermes_rmw_o3_testing.ivy")
+	if err := os.WriteFile(spec, data, 0o644); err != nil {
+		t.Fatalf("copy Hermes fixture: %v", err)
+	}
+	cmd := exec.Command(bin, "build=true", "target=test", "hermes_rmw_o3_testing.ivy")
+	cmd.Dir = dir
+	cmd.Env = commandTestEnv(t)
+	var stdout, stderr strings.Builder
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		t.Fatalf("run ivy2golang Hermes build=true: %v\nstdout:\n%s\nstderr:\n%s", err, stdout.String(), stderr.String())
+	}
+	if stdout.String() != "" || stderr.String() != "" {
+		t.Fatalf("Hermes build should be quiet\nstdout:\n%s\nstderr:\n%s", stdout.String(), stderr.String())
+	}
+	goPath := filepath.Join(dir, "hermes_rmw_o3_testing.go")
+	data, err = os.ReadFile(goPath)
+	if err != nil {
+		t.Fatalf("missing generated Hermes Go: %v", err)
+	}
+	for _, bad := range []string{
+		"ivy2golang: unsupported",
+		"cannot enumerate quantified variable",
+	} {
+		if strings.Contains(string(data), bad) {
+			t.Fatalf("generated Hermes Go should not contain %q:\n%s", bad, data)
+		}
+	}
+	exe := filepath.Join(dir, "hermes_rmw_o3_testing")
+	if runtime.GOOS == "windows" {
+		exe += ".exe"
+	}
+	if _, err := os.Stat(exe); err != nil {
+		t.Fatalf("missing generated Hermes executable: %v", err)
+	}
+}
+
 func buildIvy2GolangCommand(t *testing.T) string {
 	t.Helper()
 	requireSlowCommandTest(t)
@@ -197,5 +247,6 @@ func commandTestEnv(t *testing.T) []string {
 	return append(base,
 		"GOCACHE="+cacheDir,
 		"GOTMPDIR="+tmpDir,
+		"XTRACE_OFF=1",
 	)
 }

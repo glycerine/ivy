@@ -38,6 +38,63 @@ func FuzzParseArgsDoesNotPanic(f *testing.F) {
 	})
 }
 
+func FuzzMergeParamsDriverSurfaceInvariants(f *testing.F) {
+	for _, seed := range []struct {
+		key   string
+		value string
+	}{
+		{"target", "test"},
+		{"target", "class"},
+		{"compiler", "g++"},
+		{"compiler", "cl"},
+		{"build", "true"},
+		{"trace", "yes"},
+		{"stdafx", "1"},
+		{"classname", "My.Ivy"},
+		{"main", "ivy-main"},
+		{"outdir", "out"},
+		{"test_iters", "7"},
+		{"test_runs", "3"},
+		{"isolate", "iso"},
+		{"unknown", "value"},
+	} {
+		f.Add(seed.key, seed.value)
+	}
+	f.Fuzz(func(t *testing.T, key, value string) {
+		cfg, ivyParams, err := mergeParams(map[string]string{key: value}, Config{})
+		if err != nil {
+			return
+		}
+		switch cfg.RequestedTarget {
+		case "impl", "repl", "test", "gen", "class":
+		default:
+			t.Fatalf("accepted target normalized to unsupported RequestedTarget %q from %q=%q", cfg.RequestedTarget, key, value)
+		}
+		if cfg.RequestedTarget == "class" {
+			if cfg.Target != "repl" || cfg.EmitMain {
+				t.Fatalf("class target normalized to target=%q EmitMain=%v", cfg.Target, cfg.EmitMain)
+			}
+		} else if cfg.Target != cfg.RequestedTarget || !cfg.EmitMain {
+			t.Fatalf("target %q normalized to target=%q EmitMain=%v", cfg.RequestedTarget, cfg.Target, cfg.EmitMain)
+		}
+		switch cfg.Compiler {
+		case "default", "g++", "cl":
+		default:
+			t.Fatalf("accepted compiler normalized to unsupported value %q from %q=%q", cfg.Compiler, key, value)
+		}
+		if cfg.MainName == "" || cfg.TestIters == "" || cfg.TestRuns == "" {
+			t.Fatalf("accepted config has empty main/test defaults: %+v", cfg)
+		}
+		if key == "isolate" {
+			if ivyParams["isolate"] != value {
+				t.Fatalf("isolate param not preserved: %q -> %#v", value, ivyParams)
+			}
+		} else if len(ivyParams) != 0 {
+			t.Fatalf("non-isolate param leaked Ivy params: %q=%q -> %#v", key, value, ivyParams)
+		}
+	})
+}
+
 func FuzzGenerateEmptyModuleDoesNotPanic(f *testing.F) {
 	for _, seed := range []struct {
 		target    string

@@ -346,6 +346,9 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 			return NewLambda(vars, body)
 		})
 
+	case *LogicSome:
+		return substituteSome(n, subs)
+
 	case *LogicNamedBinder:
 		return substituteNamedBinder(n, subs)
 
@@ -374,6 +377,40 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 	}
 }
 
+func substituteSome(s *LogicSome, subs map[NodeKey]Expr) (Expr, error) {
+	variables := s.BinderVars()
+	newsubs, err := substituteWithoutBoundVariables(variables, subs)
+	if err != nil {
+		return nil, err
+	}
+
+	fmla, err := substituteRec(s.Fmla, newsubs)
+	if err != nil {
+		return nil, err
+	}
+
+	var ifVal Expr
+	if s.IfVal != nil {
+		ifVal, err = substituteRec(s.IfVal, newsubs)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	var elseVal Expr
+	if s.ElseVal != nil {
+		elseVal, err = substituteRec(s.ElseVal, newsubs)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if ifVal != nil || elseVal != nil {
+		return NewSomeWithElse(s.Params, fmla, ifVal, elseVal), nil
+	}
+	return NewSome(s.Params, fmla), nil
+}
+
 // substituteBinder handles substitution into ForAll, Exists, Lambda.
 func substituteBinder(
 	variables []*LogicVariable,
@@ -381,32 +418,10 @@ func substituteBinder(
 	subs map[NodeKey]Expr,
 	construct func([]*LogicVariable, Expr) (Expr, error),
 ) (Expr, error) {
-	// Remove bound variables from substitution
-	newsubs := make(map[NodeKey]Expr)
-	varSet := make(map[NodeKey]struct{})
-	for _, v := range variables {
-		varSet[Key(v)] = struct{}{}
+	newsubs, err := substituteWithoutBoundVariables(variables, subs)
+	if err != nil {
+		return nil, err
 	}
-	for k, v := range subs {
-		if _, isBound := varSet[k]; !isBound {
-			newsubs[k] = v
-		}
-	}
-
-	// Check for variable capture
-	forbidden := make(map[NodeKey]Expr)
-	for _, v := range newsubs {
-		fv := FreeVariables(v)
-		for fvarKey, fvarNode := range fv.All() {
-			forbidden[fvarKey] = fvarNode
-		}
-	}
-	for _, v := range variables {
-		if _, captured := forbidden[Key(v)]; captured {
-			return nil, &LogicUtilCaptureError{Variables: []*LogicVariable{v}}
-		}
-	}
-
 	newBody, err := substituteRec(body, newsubs)
 	if err != nil {
 		return nil, err
@@ -415,9 +430,22 @@ func substituteBinder(
 }
 
 func substituteNamedBinder(nb *LogicNamedBinder, subs map[NodeKey]Expr) (Expr, error) {
+	newsubs, err := substituteWithoutBoundVariables(nb.Variables, subs)
+	if err != nil {
+		return nil, err
+	}
+
+	newBody, err := substituteRec(nb.Body, newsubs)
+	if err != nil {
+		return nil, err
+	}
+	return NewNamedBinder(nb.Name, nb.Variables, nb.Environ, newBody)
+}
+
+func substituteWithoutBoundVariables(variables []*LogicVariable, subs map[NodeKey]Expr) (map[NodeKey]Expr, error) {
 	newsubs := make(map[NodeKey]Expr)
 	varSet := make(map[NodeKey]struct{})
-	for _, v := range nb.Variables {
+	for _, v := range variables {
 		varSet[Key(v)] = struct{}{}
 	}
 	for k, v := range subs {
@@ -433,17 +461,12 @@ func substituteNamedBinder(nb *LogicNamedBinder, subs map[NodeKey]Expr) (Expr, e
 			forbidden[fvarKey] = fvarNode
 		}
 	}
-	for _, v := range nb.Variables {
+	for _, v := range variables {
 		if _, captured := forbidden[Key(v)]; captured {
 			return nil, &LogicUtilCaptureError{Variables: []*LogicVariable{v}}
 		}
 	}
-
-	newBody, err := substituteRec(nb.Body, newsubs)
-	if err != nil {
-		return nil, err
-	}
-	return NewNamedBinder(nb.Name, nb.Variables, nb.Environ, newBody)
+	return newsubs, nil
 }
 
 // IsTautologyEquality returns true if t is Eq(x, x) for some x.

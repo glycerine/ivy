@@ -78,16 +78,16 @@ func (g *Generator) emitAction(w *goWriter, act goivy.Action) {
 	case *goivy.LogicHavocAction:
 		g.emitHavoc(w, a)
 	case *goivy.LogicThunkAction:
-		g.unsupported(w, "thunk reached emit (Python ThunkAction has no emit; expected to be desugared upstream): %s at %s",
-			a.String(), a.GetLineno().String())
+		g.unsupportedAt(w, a.GetLineno(), "thunk reached emit (Python ThunkAction has no emit; expected to be desugared upstream): %s",
+			a.String())
 	case *goivy.LogicInstantiateAction:
-		g.unsupported(w, "instantiate reached emit (Python InstantiateAction has no emit; expected to be inlined upstream): %s at %s",
-			a.String(), a.GetLineno().String())
+		g.unsupportedAt(w, a.GetLineno(), "instantiate reached emit (Python InstantiateAction has no emit; expected to be inlined upstream): %s",
+			a.String())
 	case *goivy.LogicRanking:
-		g.unsupported(w, "ranking reached emit (Python Ranking has no emit; ranking/progress is enforced separately): %s at %s",
-			a.String(), a.GetLineno().String())
+		g.unsupportedAt(w, a.GetLineno(), "ranking reached emit (Python Ranking has no emit; ranking/progress is enforced separately): %s",
+			a.String())
 	default:
-		g.unsupported(w, "unsupported action %T: %s", act, act.String())
+		g.unsupportedAt(w, act.GetLineno(), "unsupported action %T: %s", act, act.String())
 	}
 }
 
@@ -96,11 +96,11 @@ func (g *Generator) emitHavoc(w *goWriter, a *goivy.LogicHavocAction) {
 	if a != nil && a.Target != nil {
 		target = a.Target.String()
 	}
-	lineno := ""
+	loc := goivy.Location{}
 	if a != nil {
-		lineno = a.GetLineno().String()
+		loc = a.GetLineno()
 	}
-	g.unsupported(w, "havoc reached emit (Python emit_havoc asserts False): %s at %s", target, lineno)
+	g.unsupportedAt(w, loc, "havoc reached emit (Python emit_havoc asserts False): %s", target)
 }
 
 func (g *Generator) emitAssign(w *goWriter, a *goivy.LogicAssignAction) {
@@ -109,7 +109,7 @@ func (g *Generator) emitAssign(w *goWriter, a *goivy.LogicAssignAction) {
 	}
 	vs := g.assignmentLoopVars(a.LHS)
 	if len(vs) == 0 {
-		g.emitAssignOne(w, a.LHS, a.RHS)
+		g.emitAssignOneAt(w, a.LHS, a.RHS, a.GetLineno())
 		return
 	}
 	g.emitAssignTwoPhase(w, a, vs)
@@ -178,28 +178,32 @@ func fieldRangeSort(field goivy.Expr) (goivy.Sort, error) {
 }
 
 func (g *Generator) emitAssignOne(w *goWriter, lhs, rhsExpr goivy.Expr) {
+	g.emitAssignOneAt(w, lhs, rhsExpr, goivy.Location{})
+}
+
+func (g *Generator) emitAssignOneAt(w *goWriter, lhs, rhsExpr goivy.Expr, loc goivy.Location) {
 	lhsCode, err := g.emitExpr(lhs)
 	if err != nil {
-		g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
+		g.unsupportedAt(w, loc, "unsupported assignment lhs: %s", err.Error())
 		return
 	}
 	rhs, err := g.emitExpr(rhsExpr)
 	if err != nil {
-		g.unsupported(w, "unsupported assignment rhs: %s", err.Error())
+		g.unsupportedAt(w, loc, "unsupported assignment rhs: %s", err.Error())
 		return
 	}
 	rhs = g.maybeVariantUpcastExpr(lhs.NodeSort(), rhsExpr.NodeSort(), rhs)
 	if g.Config.Trace && !lhsHasNamespacedName(lhs) {
 		trace, err := g.goTraceLHSExpr(lhs)
 		if err != nil {
-			g.unsupported(w, "unsupported assignment trace lhs: %s", err.Error())
+			g.unsupportedAt(w, loc, "unsupported assignment trace lhs: %s", err.Error())
 			return
 		}
 		w.linef("fmt.Fprintf(__ivy_out, %q, %s, ivyTraceValue(%s, %t))", "  write(%s,%s)\n", trace, rhs, g.traceHex())
 	}
 	if call, ok, err := g.goStorageSet(lhs, rhs); ok || err != nil {
 		if err != nil {
-			g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
+			g.unsupportedAt(w, loc, "unsupported assignment lhs: %s", err.Error())
 			return
 		}
 		w.line(call)
@@ -293,11 +297,19 @@ func (g *Generator) traceHex() bool {
 	if !ok {
 		return false
 	}
+	return traceHexValue(raw) == "16"
+}
+
+func traceHexValue(raw any) string {
 	switch v := raw.(type) {
 	case string:
-		return strings.Trim(v, `"`) == "16"
+		return strings.Trim(v, `"`)
+	case interface{ Relname() string }:
+		return v.Relname()
+	case goivy.Expr:
+		return string(v.Sexp())
 	default:
-		return fmt.Sprint(v) == "16"
+		return fmt.Sprint(v)
 	}
 }
 
@@ -316,12 +328,20 @@ func (g *Generator) emitSet(w *goWriter, a *goivy.LogicSetAction) {
 	opened := 0
 	for _, v := range vs {
 		header, ok, err := g.goLoopHeaderForVar(v)
-		if err != nil || !ok {
+		if err != nil {
 			g.unsupported(w, "unsupported set over free variable %s:%s", goName(v.Name), sortName(v.VSort))
 			for i := 0; i < opened; i++ {
 				w.close("")
 			}
 			g.popScope()
+			return
+		}
+		if !ok {
+			for i := 0; i < opened; i++ {
+				w.close("")
+			}
+			g.popScope()
+			g.emitAssign(w, goivy.NewAssignAction(target, goivy.NewConst(value, goivy.Boolean)))
 			return
 		}
 		g.addLocal(v.Name)
@@ -356,6 +376,7 @@ func (g *Generator) emitNativeAction(w *goWriter, a *goivy.LogicNativeAction) {
 
 func (g *Generator) emitDebug(w *goWriter, a *goivy.LogicDebugAction) {
 	event := debugEventName(a.DebugExpr)
+	loc := a.GetLineno()
 	w.line(`fmt.Fprintln(__ivy_out, "{")`)
 	w.linef("fmt.Fprintf(__ivy_out, %q, %q)", "    \"event\" : %q,\n", event)
 	for i, e := range a.WithExprs {
@@ -364,23 +385,31 @@ func (g *Generator) emitDebug(w *goWriter, a *goivy.LogicDebugAction) {
 			name = a.WithNames[i]
 		}
 		if name == "" {
-			name = goivy.ExprName(e)
+			if derived, ok := exprNameOK(e); ok && derived != "" {
+				name = derived
+			} else {
+				name = fmt.Sprintf("value%d", i)
+			}
 		}
 		w.linef("fmt.Fprintf(__ivy_out, %q, %q)", "    %q : ", name)
-		g.emitPrintExpr(w, e)
+		g.emitPrintExprAt(w, e, loc)
 		w.line(`fmt.Fprintln(__ivy_out, ",")`)
 	}
 	w.line(`fmt.Fprintln(__ivy_out, "}")`)
 }
 
 func (g *Generator) emitPrintExpr(w *goWriter, expr goivy.Expr) {
+	g.emitPrintExprAt(w, expr, goivy.Location{})
+}
+
+func (g *Generator) emitPrintExprAt(w *goWriter, expr goivy.Expr, loc goivy.Location) {
 	vs := goivy.VariablesAstList(expr)
 	var closers []string
 	for _, v := range vs {
 		idx := g.nextTemp("__ivy_debug_idx")
 		loop, ok, err := g.goIndexedLoopHeaderForVar(v, idx)
 		if err != nil || !ok {
-			g.unsupported(w, "unsupported debug print variable %s:%s", goName(v.Name), sortName(v.VSort))
+			g.unsupportedAt(w, loc, "unsupported debug print variable %s:%s", goName(v.Name), sortName(v.VSort))
 			closePrintExprLoops(w, closers)
 			return
 		}
@@ -396,7 +425,7 @@ func (g *Generator) emitPrintExpr(w *goWriter, expr goivy.Expr) {
 	}
 	value, err := g.emitExpr(expr)
 	if err != nil {
-		g.unsupported(w, "unsupported debug print expression: %s", err.Error())
+		g.unsupportedAt(w, loc, "unsupported debug print expression: %s", err.Error())
 		closePrintExprLoops(w, closers)
 		return
 	}
@@ -414,14 +443,18 @@ func (g *Generator) goLoopHeaderForVar(v *goivy.LogicVariable) (string, bool, er
 	if v == nil {
 		return "", false, fmt.Errorf("ivy2golang: nil loop variable")
 	}
-	if vals, ok := goLiteralFiniteValueExprs(v.VSort); ok {
-		return fmt.Sprintf("for _, %s := range []%s{%s} {", goName(v.Name), g.goScalarType(v.VSort), strings.Join(vals, ", ")), true, nil
+	return g.goLoopHeaderForSort(v.VSort, goName(v.Name))
+}
+
+func (g *Generator) goLoopHeaderForSort(s goivy.Sort, name string) (string, bool, error) {
+	if vals, ok := goLiteralFiniteValueExprs(s); ok {
+		return fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(s), strings.Join(vals, ", ")), true, nil
 	}
-	if header, ok, err := g.goFiniteLoopHeaderForSort(v.VSort, goName(v.Name)); err != nil || ok {
+	if header, ok, err := g.goFiniteLoopHeaderForSort(s, name); err != nil || ok {
 		return header, ok, err
 	}
-	if vals, ok := g.finiteValueExprs(v.VSort); ok {
-		return fmt.Sprintf("for _, %s := range []%s{%s} {", goName(v.Name), g.goScalarType(v.VSort), strings.Join(vals, ", ")), true, nil
+	if vals, ok := g.finiteValueExprs(s); ok {
+		return fmt.Sprintf("for _, %s := range []%s{%s} {", name, g.goScalarType(s), strings.Join(vals, ", ")), true, nil
 	}
 	return "", false, nil
 }
@@ -500,7 +533,11 @@ func setTargetAndValue(lit goivy.Expr) (goivy.Expr, string) {
 func (g *Generator) emitAssertLike(w *goWriter, fn string, f goivy.Expr, label string) {
 	expr, err := g.emitExpr(closeFormulaForGo(f))
 	if err != nil {
-		g.unsupported(w, "unsupported assertion expression: %s", err.Error())
+		kind := "unsupported assertion expression"
+		if fn == "ivyAssume" {
+			kind = "unsupported assumption expression"
+		}
+		g.softUnsupported(w, kind, err, label)
 		return
 	}
 	if strings.TrimSpace(label) == "" {
@@ -512,7 +549,7 @@ func (g *Generator) emitAssertLike(w *goWriter, fn string, f goivy.Expr, label s
 func (g *Generator) emitAssume(w *goWriter, f goivy.Expr, label string) {
 	expr, err := g.emitExpr(closeFormulaForGo(f))
 	if err != nil {
-		g.unsupported(w, "unsupported assumption expression: %s", err.Error())
+		g.softUnsupported(w, "unsupported assumption expression", err, label)
 		return
 	}
 	if strings.TrimSpace(label) == "" {
@@ -560,7 +597,7 @@ func (g *Generator) emitIf(w *goWriter, a *goivy.LogicIfAction) {
 	}
 	cond, err := g.emitExpr(a.Cond)
 	if err != nil {
-		g.unsupported(w, "unsupported if condition: %s", err.Error())
+		g.softUnsupported(w, "unsupported if condition", err, linenoStr(a.GetLineno()))
 		return
 	}
 	w.open("if " + cond + " {")
@@ -583,7 +620,7 @@ func (g *Generator) emitIf(w *goWriter, a *goivy.LogicIfAction) {
 func (g *Generator) emitWhile(w *goWriter, a *goivy.LogicWhileAction) {
 	cond, err := g.emitExpr(a.Cond)
 	if err != nil {
-		g.unsupported(w, "unsupported while condition: %s", err.Error())
+		g.softUnsupported(w, "unsupported while condition", err, linenoStr(a.GetLineno()))
 		return
 	}
 	w.open("for " + cond + " {")
@@ -596,7 +633,7 @@ func (g *Generator) emitWhile(w *goWriter, a *goivy.LogicWhileAction) {
 func (g *Generator) emitIfSome(w *goWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) {
 	if some.Kind == "some_min" || some.Kind == "some_max" {
 		if err := g.emitIfSomeMinMax(w, a, some); err != nil {
-			g.unsupported(w, "unsupported %s condition: %s", some.Kind, err.Error())
+			g.softUnsupported(w, "unsupported if condition", err, linenoStr(a.GetLineno()))
 		}
 		return
 	}
@@ -608,11 +645,11 @@ func (g *Generator) emitIfSome(w *goWriter, a *goivy.LogicIfAction, some *goivy.
 	}
 	if ok, err := g.emitIfSomeFinite(w, a, some); ok || err != nil {
 		if err != nil {
-			g.unsupported(w, "unsupported some condition: %s", err.Error())
+			g.softUnsupported(w, "unsupported if condition", err, linenoStr(a.GetLineno()))
 		}
 		return
 	}
-	g.unsupported(w, "unsupported some condition: %s", some.String())
+	g.softUnsupported(w, "unsupported if condition", fmt.Errorf("%s", some.String()), linenoStr(a.GetLineno()))
 }
 
 func (g *Generator) emitIfSomeExtensional(w *goWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) bool {
@@ -661,7 +698,7 @@ func (g *Generator) emitIfSomeExtensional(w *goWriter, a *goivy.LogicIfAction, s
 	cond, err := g.emitExpr(some.Fmla)
 	if err != nil {
 		g.popScope()
-		g.unsupported(w, "unsupported if condition: %s", err.Error())
+		g.softUnsupported(w, "unsupported if condition", err, linenoStr(a.GetLineno()))
 		return true
 	}
 	found := g.nextTemp("__ivy_some")
@@ -711,7 +748,7 @@ func (g *Generator) emitIfSomeVariantDowncast(w *goWriter, a *goivy.LogicIfActio
 	}
 	lhs, err := g.emitExpr(app.Terms[0])
 	if err != nil {
-		g.unsupported(w, "unsupported variant downcast receiver: %s", err.Error())
+		g.softUnsupported(w, "unsupported if condition", err, linenoStr(a.GetLineno()))
 		return true
 	}
 	idx := g.Mod.VariantIndex(app.Terms[0].NodeSort(), v.CSort)
@@ -906,6 +943,7 @@ func (g *Generator) emitChoice(w *goWriter, a *goivy.LogicChoiceAction) {
 }
 
 func (g *Generator) emitCall(w *goWriter, a *goivy.LogicCallAction) {
+	loc := a.GetLineno()
 	name := a.CalleeName()
 	args := callArgs(a.Callee)
 	argCodes := make([]string, len(args))
@@ -920,7 +958,7 @@ func (g *Generator) emitCall(w *goWriter, a *goivy.LogicCallAction) {
 	for i, arg := range args {
 		code, err := g.emitExpr(arg)
 		if err != nil {
-			g.unsupported(w, "unsupported call argument: %s", err.Error())
+			g.unsupportedAt(w, loc, "unsupported call argument: %s", err.Error())
 			return
 		}
 		if i < len(formals) {
@@ -932,27 +970,20 @@ func (g *Generator) emitCall(w *goWriter, a *goivy.LogicCallAction) {
 		if len(a.ActualReturns) == 0 {
 			return
 		}
-		lhs := make([]string, len(a.ActualReturns))
-		rhs := make([]string, len(a.ActualReturns))
 		for i, ret := range a.ActualReturns {
-			code, err := g.emitExpr(ret)
-			if err != nil {
-				g.unsupported(w, "unsupported call return: %s", err.Error())
+			rhs := "0"
+			if i < len(returns) {
+				rhs = g.goZeroValue(returns[i].CSort)
+			}
+			if !g.emitCallReturnAssignAt(w, ret, rhs, loc) {
 				return
 			}
-			lhs[i] = code
-			if i < len(returns) {
-				rhs[i] = g.goZeroValue(returns[i].CSort)
-			} else {
-				rhs[i] = "0"
-			}
 		}
-		w.linef("%s = %s", strings.Join(lhs, ", "), strings.Join(rhs, ", "))
 		return
 	}
 	fn, err := funName(name)
 	if err != nil {
-		g.unsupported(w, "%s", err.Error())
+		g.unsupportedAt(w, loc, "%s", err.Error())
 		return
 	}
 	call := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(argCodes, ", "))
@@ -960,16 +991,72 @@ func (g *Generator) emitCall(w *goWriter, a *goivy.LogicCallAction) {
 		w.line(call)
 		return
 	}
+	if len(a.ActualReturns) == 1 {
+		g.emitCallReturnAssignAt(w, a.ActualReturns[0], call, loc)
+		return
+	}
+	needsTemps := false
+	for _, ret := range a.ActualReturns {
+		ok, err := g.isStorageSettable(ret)
+		if err != nil {
+			g.unsupportedAt(w, loc, "unsupported call return: %s", err.Error())
+			return
+		}
+		if ok {
+			needsTemps = true
+			break
+		}
+	}
+	if needsTemps {
+		tmpNames := make([]string, len(a.ActualReturns))
+		for i := range a.ActualReturns {
+			tmpNames[i] = goName(g.nextTemp("__ivy_ret"))
+		}
+		w.linef("%s := %s", strings.Join(tmpNames, ", "), call)
+		for i, ret := range a.ActualReturns {
+			if !g.emitCallReturnAssignAt(w, ret, tmpNames[i], loc) {
+				return
+			}
+		}
+		return
+	}
 	lhs := make([]string, len(a.ActualReturns))
 	for i, ret := range a.ActualReturns {
 		code, err := g.emitExpr(ret)
 		if err != nil {
-			g.unsupported(w, "unsupported call return: %s", err.Error())
+			g.unsupportedAt(w, loc, "unsupported call return: %s", err.Error())
 			return
 		}
 		lhs[i] = code
 	}
 	w.linef("%s = %s", strings.Join(lhs, ", "), call)
+}
+
+func (g *Generator) emitCallReturnAssign(w *goWriter, target goivy.Expr, rhs string) bool {
+	return g.emitCallReturnAssignAt(w, target, rhs, goivy.Location{})
+}
+
+func (g *Generator) emitCallReturnAssignAt(w *goWriter, target goivy.Expr, rhs string, loc goivy.Location) bool {
+	if call, ok, err := g.goStorageSet(target, rhs); ok || err != nil {
+		if err != nil {
+			g.unsupportedAt(w, loc, "unsupported call return: %s", err.Error())
+			return false
+		}
+		w.line(call)
+		return true
+	}
+	lhs, err := g.emitExpr(target)
+	if err != nil {
+		g.unsupportedAt(w, loc, "unsupported call return: %s", err.Error())
+		return false
+	}
+	w.linef("%s = %s", lhs, rhs)
+	return true
+}
+
+func (g *Generator) isStorageSettable(target goivy.Expr) (bool, error) {
+	_, ok, err := g.goStorageSet(target, "__ivy_value")
+	return ok, err
 }
 
 func callArgs(callee goivy.Expr) []goivy.Expr {
@@ -980,24 +1067,33 @@ func callArgs(callee goivy.Expr) []goivy.Expr {
 }
 
 func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
+	loc := goivy.Location{}
+	if a != nil {
+		loc = a.GetLineno()
+	}
 	w.open("{")
 	g.pushScope()
 	for _, local := range a.Locals {
-		name := goivy.ExprName(local)
+		name, ok := exprNameOK(local)
 		if name == "" {
-			g.unsupported(w, "unsupported local declaration %T: %s", local, local.String())
+			ok = false
+		}
+		if !ok {
+			g.unsupportedAt(w, loc, "unsupported local declaration %T: %s", local, fmt.Sprint(local))
 			continue
 		}
 		sort := local.NodeSort()
 		g.addLocalSort(name, sort)
-		if g.emitLocalFunctionNondet(w, name, sort, a.UniqueID) {
+		if g.emitLocalFunctionNondetAt(w, name, sort, a.UniqueID, loc) {
 			continue
 		}
 		init := g.goZeroValue(sort)
-		if expr, err := g.goLocalNondetValueExpr(sort, name, a.UniqueID); err == nil {
+		if expr, err := g.goLocalNondetValueExprAt(sort, name, a.UniqueID, loc); err == nil {
 			init = expr
 		}
-		w.linef("%s := %s", goName(name), init)
+		localName := goName(name)
+		w.linef("%s := %s", localName, init)
+		w.linef("_ = %s", localName)
 	}
 	if body, ok := a.Body.(goivy.Action); ok {
 		g.emitAction(w, body)
@@ -1007,19 +1103,28 @@ func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
 }
 
 func (g *Generator) emitLocalFunctionNondet(w *goWriter, name string, sort goivy.Sort, id int64) bool {
+	return g.emitLocalFunctionNondetAt(w, name, sort, id, goivy.Location{})
+}
+
+func (g *Generator) emitLocalFunctionNondetAt(w *goWriter, name string, sort goivy.Sort, id int64, loc goivy.Location) bool {
 	fs, ok := sort.(*goivy.LogicFunctionSort)
 	if !ok || len(fs.Domain()) == 0 {
 		return false
 	}
-	w.linef("%s := %s", goName(name), g.goFunctionStorageInit(fs.Domain(), fs.Range()))
+	localName := goName(name)
+	w.linef("%s := %s", localName, g.goFunctionStorageInit(fs.Domain(), fs.Range()))
+	w.linef("_ = %s", localName)
+	if g.localNondetSkipsSort(fs.Range()) {
+		return true
+	}
 	if !g.canEnumerateDomain(fs.Domain()) {
-		g.emitNondetThunkBase(w, goName(name), fs.Domain(), fs.Range(), name, id)
+		g.emitLocalNondetThunkBaseSeenAt(w, localName, fs.Domain(), fs.Range(), name, id, map[string]bool{}, loc)
 		return true
 	}
 	g.emitDomainLoops(w, fs.Domain(), func(args []string) {
-		expr, err := g.goLocalNondetValueExpr(fs.Range(), name, id)
+		expr, err := g.goLocalNondetValueExprAt(fs.Range(), name, id, loc)
 		if err != nil {
-			g.unsupported(w, "unsupported local function range: %s", err.Error())
+			g.unsupportedAt(w, loc, "unsupported local function range: %s", err.Error())
 			return
 		}
 		w.linef("%s = %s", g.goStorageAccess(name, sort, args, ""), expr)
@@ -1028,7 +1133,22 @@ func (g *Generator) emitLocalFunctionNondet(w *goWriter, name string, sort goivy
 }
 
 func (g *Generator) goLocalNondetValueExpr(s goivy.Sort, name string, id int64) (string, error) {
+	return g.goLocalNondetValueExprAt(s, name, id, goivy.Location{})
+}
+
+func (g *Generator) goLocalNondetValueExprAt(s goivy.Sort, name string, id int64, loc goivy.Location) (string, error) {
+	return g.goLocalNondetValueExprSeenAt(s, name, id, map[string]bool{}, loc)
+}
+
+func (g *Generator) goLocalNondetValueExprSeen(s goivy.Sort, name string, id int64, seen map[string]bool) (string, error) {
+	return g.goLocalNondetValueExprSeenAt(s, name, id, seen, goivy.Location{})
+}
+
+func (g *Generator) goLocalNondetValueExprSeenAt(s goivy.Sort, name string, id int64, seen map[string]bool, loc goivy.Location) (string, error) {
 	call := fmt.Sprintf("ivy.___ivy_choose(0, %q, %d)", name, id)
+	if fs, ok := s.(*goivy.LogicFunctionSort); ok {
+		return g.goLocalNondetFunctionValueExprSeenAt(fs, name, id, seen, loc)
+	}
 	switch st := s.(type) {
 	case *goivy.BooleanSort:
 		return call + " != 0", nil
@@ -1040,11 +1160,20 @@ func (g *Generator) goLocalNondetValueExpr(s goivy.Sort, name string, id int64) 
 	case *goivy.RangeSort:
 		return call, nil
 	case *goivy.UninterpretedSort:
-		if g.isVariantSuperName(st.Name) || g.destructorStructFields(st.Name) != nil {
-			return g.goRandomValueExpr(s, name, id)
+		if g.isVariantSuperName(st.Name) {
+			return g.goZeroValue(s), nil
 		}
-		if g.hasStringInterp(st) {
-			return `""`, nil
+		if fields := g.destructorStructFieldInfos(st.Name); len(fields) > 0 {
+			key := "struct:" + st.Name
+			if seen[key] {
+				return g.goZeroValue(s), nil
+			}
+			seen[key] = true
+			defer delete(seen, key)
+			return g.goLocalNondetStructValueExprWithSeenAt(s, fields, name, id, seen, loc)
+		}
+		if g.localNondetSkipsSort(st) {
+			return g.goZeroValue(s), nil
 		}
 		return call, nil
 	default:
@@ -1052,7 +1181,131 @@ func (g *Generator) goLocalNondetValueExpr(s goivy.Sort, name string, id int64) 
 	}
 }
 
+func (g *Generator) localNondetSkipsSort(s goivy.Sort) bool {
+	if g == nil || s == nil {
+		return false
+	}
+	if g.isNativeTypeSort(s) || g.hasStringInterp(s) {
+		return true
+	}
+	if it, ok := g.goInterpType(s); ok {
+		return it.Kind == goInterpStrBV || it.Kind == goInterpIntBV
+	}
+	return false
+}
+
+func (g *Generator) goLocalNondetStructValueExprWithSeen(s goivy.Sort, fields []goDestructorField, name string, id int64, seen map[string]bool) (string, error) {
+	return g.goLocalNondetStructValueExprWithSeenAt(s, fields, name, id, seen, goivy.Location{})
+}
+
+func (g *Generator) goLocalNondetStructValueExprWithSeenAt(s goivy.Sort, fields []goDestructorField, name string, id int64, seen map[string]bool, loc goivy.Location) (string, error) {
+	if g.destructorStructNeedsInitFunc(fields) {
+		tmp := g.nextTemp("__ivy_rec")
+		var w goWriter
+		w.raw(fmt.Sprintf("func() %s {\n", g.goScalarType(s)))
+		w.indent++
+		w.linef("var %s %s", tmp, g.goScalarType(s))
+		for i, field := range fields {
+			label := name + "." + memName(field.Const.Name)
+			domain := field.Sort.Domain()
+			if g.destructorFieldIsLarge(field) {
+				extra := domain[1:]
+				tmpThunk := g.nextTemp("__ivy_thunk")
+				w.linef("%s := %s", tmpThunk, g.goFunctionStorageInit(extra, field.Sort.Range()))
+				g.emitLocalNondetThunkBaseSeenAt(&w, tmpThunk, extra, field.Sort.Range(), label, int64(i), seen, loc)
+				w.linef("%s.%s = &%s", tmp, field.FieldName, tmpThunk)
+				continue
+			}
+			if len(domain) == 1 {
+				expr, err := g.goLocalNondetValueExprSeenAt(field.Sort.Range(), label, int64(i), seen, loc)
+				if err != nil {
+					return "", err
+				}
+				w.linef("%s.%s = %s", tmp, field.FieldName, expr)
+				continue
+			}
+			extra := domain[1:]
+			g.emitDomainLoops(&w, extra, func(args []string) {
+				expr, err := g.goLocalNondetValueExprSeenAt(field.Sort.Range(), label, int64(i), seen, loc)
+				if err != nil {
+					g.unsupportedAt(&w, loc, "unsupported destructor field local nondet value: %s", err.Error())
+					return
+				}
+				w.linef("%s.%s%s = %s", tmp, field.FieldName, goIndexSuffix(args), expr)
+			})
+		}
+		w.linef("return %s", tmp)
+		w.indent--
+		w.raw("}()")
+		return w.String(), nil
+	}
+	inits := make([]string, 0, len(fields))
+	for i, field := range fields {
+		expr, err := g.goLocalNondetValueExprSeenAt(field.Sort.Range(), name+"."+memName(field.Const.Name), int64(i), seen, loc)
+		if err != nil {
+			return "", err
+		}
+		inits = append(inits, field.FieldName+": "+expr)
+	}
+	return fmt.Sprintf("%s{%s}", g.goScalarType(s), strings.Join(inits, ", ")), nil
+}
+
+func (g *Generator) goLocalNondetFunctionValueExprSeen(fs *goivy.LogicFunctionSort, name string, id int64, seen map[string]bool) (string, error) {
+	return g.goLocalNondetFunctionValueExprSeenAt(fs, name, id, seen, goivy.Location{})
+}
+
+func (g *Generator) goLocalNondetFunctionValueExprSeenAt(fs *goivy.LogicFunctionSort, name string, id int64, seen map[string]bool, loc goivy.Location) (string, error) {
+	domain := fs.Domain()
+	rng := fs.Range()
+	if len(domain) == 0 {
+		return g.goLocalNondetValueExprSeenAt(rng, name, id, seen, loc)
+	}
+	st := g.goFunctionStorageFor(domain, rng)
+	tmp := g.nextTemp("__ivy_fn")
+	var w goWriter
+	w.raw(fmt.Sprintf("func() %s {\n", st.Type))
+	w.indent++
+	w.linef("%s := %s", tmp, g.goFunctionStorageInit(domain, rng))
+	if st.Large {
+		g.emitLocalNondetThunkBaseSeenAt(&w, tmp, domain, rng, name, id, seen, loc)
+	} else {
+		g.emitDomainLoops(&w, domain, func(args []string) {
+			expr, err := g.goLocalNondetValueExprSeenAt(rng, name, id, seen, loc)
+			if err != nil {
+				g.unsupportedAt(&w, loc, "unsupported function-sorted local nondet value range: %s", err.Error())
+				return
+			}
+			w.linef("%s[%s] = %s", tmp, g.goMapKeyValue(domain, args), expr)
+		})
+	}
+	w.linef("return %s", tmp)
+	w.indent--
+	w.raw("}()")
+	return w.String(), nil
+}
+
+func (g *Generator) emitLocalNondetThunkBaseSeen(w *goWriter, base string, domain []goivy.Sort, rng goivy.Sort, label string, id int64, seen map[string]bool) {
+	g.emitLocalNondetThunkBaseSeenAt(w, base, domain, rng, label, id, seen, goivy.Location{})
+}
+
+func (g *Generator) emitLocalNondetThunkBaseSeenAt(w *goWriter, base string, domain []goivy.Sort, rng goivy.Sort, label string, id int64, seen map[string]bool, loc goivy.Location) {
+	st := g.goFunctionStorageFor(domain, rng)
+	if !st.Large {
+		return
+	}
+	expr, err := g.goLocalNondetValueExprSeenAt(rng, label, id, seen, loc)
+	if err != nil {
+		g.unsupportedAt(w, loc, "unsupported nondet thunk range: %s", err.Error())
+		return
+	}
+	w.open(fmt.Sprintf("%s.base = func(__ivy_key %s) %s {", base, st.KeyType, st.RangeType))
+	w.line("_ = __ivy_key")
+	w.linef("return %s", expr)
+	w.close("")
+}
+
 func (g *Generator) emitLet(w *goWriter, a *goivy.LogicLetAction) {
+	loc := a.GetLineno()
 	prev := g.exprAliases
 	next := make(map[string]goivy.Expr, len(prev)+len(a.Bindings))
 	for k, v := range prev {
@@ -1061,12 +1314,12 @@ func (g *Generator) emitLet(w *goWriter, a *goivy.LogicLetAction) {
 	for _, binding := range a.Bindings {
 		children := binding.Children()
 		if len(children) < 2 {
-			g.unsupported(w, "unsupported let binding %T: %s", binding, binding.String())
+			g.unsupportedAt(w, loc, "unsupported let binding %T: %s", binding, binding.String())
 			continue
 		}
 		name := goivy.ExprName(children[0])
 		if name == "" {
-			g.unsupported(w, "unsupported let binding lhs %T: %s", children[0], children[0].String())
+			g.unsupportedAt(w, loc, "unsupported let binding lhs %T: %s", children[0], children[0].String())
 			continue
 		}
 		next[name] = children[1]
@@ -1081,30 +1334,60 @@ func (g *Generator) emitLet(w *goWriter, a *goivy.LogicLetAction) {
 		w.close("")
 		return
 	}
-	g.unsupported(w, "unsupported let action body %T", a.Body)
+	g.unsupportedAt(w, loc, "unsupported let action body %T", a.Body)
 	w.close("")
 }
 
 func (g *Generator) emitBindOlds(w *goWriter, a *goivy.LogicBindOldsAction) {
 	inner := "<nil>"
-	lineno := ""
+	loc := goivy.Location{}
 	if a != nil {
 		if a.Inner != nil {
 			inner = fmt.Sprintf("%T", a.Inner)
 		}
-		lineno = a.GetLineno().String()
+		loc = a.GetLineno()
 	}
-	g.unsupported(w, "bindolds reached emit (Python has no emit_bind_olds): inner=%s at %s", inner, lineno)
+	g.unsupportedAt(w, loc, "bindolds reached emit (Python has no emit_bind_olds): inner=%s", inner)
 }
 
 func debugEventName(e goivy.Expr) string {
 	if e == nil {
 		return "debug"
 	}
-	name := goivy.ExprName(e)
+	name, ok := exprNameOK(e)
+	if !ok {
+		return "debug"
+	}
 	name = strings.Trim(name, `"`)
 	if strings.TrimSpace(name) == "" {
 		return "debug"
 	}
 	return name
+}
+
+func exprNameOK(e goivy.Expr) (string, bool) {
+	switch t := e.(type) {
+	case *goivy.Const:
+		return t.Name, true
+	case *goivy.LogicVariable:
+		return t.Name, true
+	case *goivy.UninterpretedSort:
+		return t.Name, true
+	case *goivy.BooleanSort:
+		return "bool", true
+	case *goivy.LogicEnumeratedSort:
+		return t.Name, true
+	case *goivy.RangeSort:
+		return t.Name, true
+	case *goivy.TopSort:
+		return t.Name, true
+	case *goivy.LogicWhenOperator:
+		return t.Name, true
+	case *goivy.LogicNamedBinder:
+		return t.Name, true
+	case *goivy.Apply:
+		return exprNameOK(t.Func)
+	default:
+		return "", false
+	}
 }

@@ -23,6 +23,254 @@ func (g *Generator) extensionalRels() map[string]bool {
 	return g.extRel
 }
 
+type sparseSupportSummary struct {
+	PreserveOld bool
+	Points      [][]goivy.Expr
+}
+
+func (g *Generator) quantifierSupportRels() map[string]bool {
+	res := map[string]bool{}
+	for name := range g.extensionalRels() {
+		res[name] = true
+	}
+	for name := range g.sparseSupportRels() {
+		res[name] = true
+	}
+	return res
+}
+
+func (g *Generator) sparseSupportRels() map[string]bool {
+	if g == nil {
+		return nil
+	}
+	if g.supportRel != nil {
+		return g.supportRel
+	}
+	g.supportRel = g.sparseSupportRelations()
+	if g.supportRel == nil {
+		g.supportRel = map[string]bool{}
+	}
+	return g.supportRel
+}
+
+func (g *Generator) sparseSupportRelations() map[string]bool {
+	if g == nil || g.Mod == nil {
+		return nil
+	}
+	candidates := map[string]bool{}
+	for _, sym := range g.stateSymbols() {
+		fs, ok := sym.Sort.(*goivy.LogicFunctionSort)
+		if !ok || len(fs.Domain()) == 0 || !isBooleanSort(fs.Range()) {
+			continue
+		}
+		if g.goFunctionStorageFor(fs.Domain(), fs.Range()).Large {
+			candidates[sym.Name] = true
+		}
+	}
+	established := map[string]bool{}
+	bad := map[string]bool{}
+
+	checkAssign := func(a *goivy.LogicAssignAction, init bool) {
+		name, summary, ok, touched := g.classifySparseSupportAssign(a, candidates)
+		if !touched {
+			return
+		}
+		if !ok {
+			bad[name] = true
+			return
+		}
+		if init && !summary.PreserveOld {
+			established[name] = true
+		}
+	}
+	for _, ini := range g.Mod.Initializers {
+		if ini.Action == nil {
+			continue
+		}
+		for _, sub := range ini.Action.IterSubactions() {
+			if a, ok := sub.(*goivy.LogicAssignAction); ok {
+				checkAssign(a, true)
+			}
+		}
+	}
+	if len(g.Mod.Initializers) == 0 && g.Mod.Actions != nil && g.Mod.Mixins != nil {
+		for _, mixin := range g.Mod.Mixins.Get("init") {
+			if act, ok := g.Mod.Actions.Get2(mixin.Mixer()); ok {
+				if action, ok := act.(goivy.Action); ok {
+					for _, sub := range action.IterSubactions() {
+						if a, ok := sub.(*goivy.LogicAssignAction); ok {
+							checkAssign(a, true)
+						}
+					}
+				}
+			}
+		}
+	}
+	if g.Mod.Actions != nil {
+		for _, action := range g.Mod.Actions.All() {
+			if action == nil {
+				continue
+			}
+			for _, sub := range action.IterSubactions() {
+				if a, ok := sub.(*goivy.LogicAssignAction); ok {
+					checkAssign(a, false)
+				}
+			}
+		}
+	}
+
+	res := map[string]bool{}
+	for name := range candidates {
+		if established[name] && !bad[name] {
+			res[name] = true
+		}
+	}
+	return res
+}
+
+func (g *Generator) classifySparseSupportAssign(a *goivy.LogicAssignAction, candidates map[string]bool) (string, sparseSupportSummary, bool, bool) {
+	if a == nil {
+		return "", sparseSupportSummary{}, false, false
+	}
+	app, ok := a.LHS.(*goivy.Apply)
+	if !ok {
+		return "", sparseSupportSummary{}, false, false
+	}
+	name := goivy.ExprName(app.Func)
+	if name == "" || !candidates[name] {
+		return "", sparseSupportSummary{}, false, false
+	}
+	if allArgsNonVariable(app.Terms) {
+		return name, sparseSupportSummary{}, true, true
+	}
+	summary, ok := g.sparseSupportAssignment(name, app.Terms, a.RHS)
+	return name, summary, ok, true
+}
+
+func (g *Generator) sparseSupportAssignment(name string, lhsTerms []goivy.Expr, rhs goivy.Expr) (sparseSupportSummary, bool) {
+	vars, ok := supportVarsForTerms(lhsTerms)
+	if !ok {
+		return sparseSupportSummary{}, false
+	}
+	return sparseSupportExpr(name, vars, rhs)
+}
+
+func sparseSupportExpr(name string, vars []*goivy.LogicVariable, expr goivy.Expr) (sparseSupportSummary, bool) {
+	if goivy.IsFalse(expr) {
+		return sparseSupportSummary{}, true
+	}
+	if relationAppMatchesVars(expr, name, vars) {
+		return sparseSupportSummary{PreserveOld: true}, true
+	}
+	if point, ok := pointForVars(vars, expr); ok {
+		return sparseSupportSummary{Points: [][]goivy.Expr{point}}, true
+	}
+	if or, ok := expr.(*goivy.LogicOr); ok {
+		var summary sparseSupportSummary
+		for _, term := range or.Terms {
+			part, ok := sparseSupportExpr(name, vars, term)
+			if !ok {
+				return sparseSupportSummary{}, false
+			}
+			if part.PreserveOld {
+				summary.PreserveOld = true
+			}
+			summary.Points = append(summary.Points, part.Points...)
+		}
+		return summary, true
+	}
+	return sparseSupportSummary{}, false
+}
+
+func supportVarsForTerms(terms []goivy.Expr) ([]*goivy.LogicVariable, bool) {
+	vars := make([]*goivy.LogicVariable, len(terms))
+	seen := map[string]bool{}
+	for i, term := range terms {
+		v, ok := term.(*goivy.LogicVariable)
+		if !ok || v == nil || seen[v.Name] {
+			return nil, false
+		}
+		seen[v.Name] = true
+		vars[i] = v
+	}
+	return vars, true
+}
+
+func relationAppMatchesVars(expr goivy.Expr, name string, vars []*goivy.LogicVariable) bool {
+	app, ok := expr.(*goivy.Apply)
+	if !ok || goivy.ExprName(app.Func) != name || len(app.Terms) != len(vars) {
+		return false
+	}
+	for i, term := range app.Terms {
+		v, ok := term.(*goivy.LogicVariable)
+		if !ok || v == nil || vars[i] == nil || v.Name != vars[i].Name {
+			return false
+		}
+	}
+	return true
+}
+
+func pointForVars(vars []*goivy.LogicVariable, expr goivy.Expr) ([]goivy.Expr, bool) {
+	terms := []goivy.Expr{expr}
+	if and, ok := expr.(*goivy.LogicAnd); ok {
+		terms = and.Terms
+	}
+	values := make([]goivy.Expr, len(vars))
+	seen := make([]bool, len(vars))
+	for _, term := range terms {
+		idx, value, ok := pointEqForVars(vars, term)
+		if !ok || seen[idx] {
+			return nil, false
+		}
+		values[idx] = value
+		seen[idx] = true
+	}
+	for _, ok := range seen {
+		if !ok {
+			return nil, false
+		}
+	}
+	return values, true
+}
+
+func pointEqForVars(vars []*goivy.LogicVariable, expr goivy.Expr) (int, goivy.Expr, bool) {
+	eq, ok := expr.(*goivy.Eq)
+	if !ok || eq == nil {
+		return 0, nil, false
+	}
+	if idx, ok := varIndex(vars, eq.T1); ok && !mentionsVars(eq.T2, vars) {
+		return idx, eq.T2, true
+	}
+	if idx, ok := varIndex(vars, eq.T2); ok && !mentionsVars(eq.T1, vars) {
+		return idx, eq.T1, true
+	}
+	return 0, nil, false
+}
+
+func varIndex(vars []*goivy.LogicVariable, expr goivy.Expr) (int, bool) {
+	v, ok := expr.(*goivy.LogicVariable)
+	if !ok || v == nil {
+		return 0, false
+	}
+	for i, candidate := range vars {
+		if candidate != nil && candidate.Name == v.Name {
+			return i, true
+		}
+	}
+	return 0, false
+}
+
+func mentionsVars(expr goivy.Expr, vars []*goivy.LogicVariable) bool {
+	for _, found := range goivy.VariablesAstList(expr) {
+		for _, v := range vars {
+			if found != nil && v != nil && found.Name == v.Name {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 // extensionalRelations mirrors Python ivy_to_cpp.py:44-76, via the trusted
 // ivy2cpp port. A relation is extensional when it is state, initialized to
 // all-false, and only updated to false or at concrete points.
@@ -287,13 +535,42 @@ func (g *Generator) definitionByName(name string) (derivedDefinition, bool) {
 	return derivedDefinition{}, false
 }
 
+func (g *Generator) derivedDefinitionByName(name string) (derivedDefinition, bool) {
+	if name == "" {
+		return derivedDefinition{}, false
+	}
+	for _, d := range g.derivedDefinitions() {
+		if d.Name == name {
+			return d, true
+		}
+	}
+	return derivedDefinition{}, false
+}
+
+func (g *Generator) nativeDefinitionByName(name string) (derivedDefinition, bool) {
+	if name == "" {
+		return derivedDefinition{}, false
+	}
+	for _, d := range g.nativeDefinitions() {
+		if d.Name == name {
+			return d, true
+		}
+	}
+	return derivedDefinition{}, false
+}
+
 func (g *Generator) isDefinitionName(name string) bool {
 	_, ok := g.definitionByName(name)
 	return ok
 }
 
+func (g *Generator) isNativeDefinitionName(name string) bool {
+	_, ok := g.nativeDefinitionByName(name)
+	return ok
+}
+
 func (g *Generator) expandDefinitionApplication(name string, terms []goivy.Expr) (goivy.Expr, bool, error) {
-	def, ok := g.definitionByName(name)
+	def, ok := g.derivedDefinitionByName(name)
 	if !ok {
 		return nil, false, nil
 	}
@@ -378,7 +655,7 @@ func (g *Generator) matchExtensionalBoundExprs(v0 *goivy.LogicVariable, body goi
 	app, isApp := body.(*goivy.Apply)
 	if isApp {
 		name := goivy.ExprName(app.Func)
-		if name != "" && g.extensionalRels()[name] && exists && containsVariableByName(app.Terms, v0.Name) {
+		if name != "" && g.quantifierSupportRels()[name] && exists && containsVariableByName(app.Terms, v0.Name) {
 			*res = append(*res, app)
 		}
 	}

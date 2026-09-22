@@ -8,9 +8,17 @@ import (
 	"github.com/glycerine/ivy/goivy"
 )
 
+const goLargeThresh = 1024
+
 type stateSymbol struct {
 	Name string
 	Sort goivy.Sort
+}
+
+type goDestructorField struct {
+	Const     *goivy.Const
+	Sort      *goivy.LogicFunctionSort
+	FieldName string
 }
 
 func sortName(s goivy.Sort) string {
@@ -67,7 +75,7 @@ func (g *Generator) goScalarType(s goivy.Sort) string {
 		if g.destructorStructFields(st.Name) != nil {
 			return goName(st.Name)
 		}
-		if g.hasStringInterp(st) {
+		if g.hasStringValuedInterp(st) {
 			return "string"
 		}
 		return "int"
@@ -148,6 +156,9 @@ func (g *Generator) goStorageSet(lhs goivy.Expr, rhs string) (string, bool, erro
 	if name == "" {
 		return "", false, nil
 	}
+	if call, ok, err := g.goDestructorFieldSet(app, name, rhs); ok || err != nil {
+		return call, ok, err
+	}
 	sort, owner := g.storageSortAndOwner(name)
 	if sort == nil {
 		return "", false, nil
@@ -220,7 +231,7 @@ func (g *Generator) goZeroValue(s goivy.Sort) string {
 		if g.destructorStructFields(st.Name) != nil {
 			return goName(st.Name) + "{}"
 		}
-		if g.hasStringInterp(st) {
+		if g.hasStringValuedInterp(st) {
 			return `""`
 		}
 		return "0"
@@ -248,32 +259,35 @@ func (g *Generator) goRandomValueExprWithChooserSeen(s goivy.Sort, name string, 
 	callInt := func(rng int) string {
 		return call(strconv.Itoa(rng))
 	}
+	if fs, ok := s.(*goivy.LogicFunctionSort); ok {
+		return g.goRandomFunctionValueExprWithChooserSeen(fs, name, id, chooser, seen)
+	}
 	if expr, ok, err := g.goRandomVariantValueExprWithChooserSeen(s, name, id, chooser, seen); ok || err != nil {
 		return expr, err
 	}
-	if fields := g.destructorStructFields(sortName(s)); len(fields) > 0 {
+	if fields := g.destructorStructFieldInfos(sortName(s)); len(fields) > 0 {
 		key := "struct:" + sortName(s)
 		if seen[key] {
 			return g.goZeroValue(s), nil
 		}
 		seen[key] = true
 		defer delete(seen, key)
-		inits := make([]string, 0, len(fields))
-		for i, d := range fields {
-			fs, ok := d.CSort.(*goivy.LogicFunctionSort)
-			if !ok || len(fs.Domain()) != 1 {
-				continue
-			}
-			field := goName(memName(d.Name))
-			expr, err := g.goRandomValueExprWithChooserSeen(fs.Range(), name+"."+memName(d.Name), int64(i), chooser, seen)
+		if g.destructorStructNeedsInitFunc(fields) {
+			expr, err := g.goRandomDestructorStructValueExprWithChooserSeen(s, fields, name, id, chooser, seen)
 			if err != nil {
 				return "", err
 			}
-			inits = append(inits, field+": "+expr)
+			return expr, nil
 		}
-		if len(inits) == len(fields) {
-			return fmt.Sprintf("%s{%s}", g.goScalarType(s), strings.Join(inits, ", ")), nil
+		inits := make([]string, 0, len(fields))
+		for i, field := range fields {
+			expr, err := g.goRandomValueExprWithChooserSeen(field.Sort.Range(), name+"."+memName(field.Const.Name), int64(i), chooser, seen)
+			if err != nil {
+				return "", err
+			}
+			inits = append(inits, field.FieldName+": "+expr)
 		}
+		return fmt.Sprintf("%s{%s}", g.goScalarType(s), strings.Join(inits, ", ")), nil
 	}
 	switch st := s.(type) {
 	case *goivy.BooleanSort:
@@ -307,11 +321,124 @@ func (g *Generator) goRandomValueExprWithChooserSeen(s goivy.Sort, name string, 
 			return fmt.Sprintf("(%s + %s)", loExpr, call(goRangeRandomWidthExpr(loExpr, hiExpr))), nil
 		}
 		if card := g.sortCard(s); card > 0 {
+			if g.hasStrBVInterp(s) {
+				return fmt.Sprintf("strconv.Itoa(%s)", callInt(card)), nil
+			}
 			return callInt(card), nil
 		}
-		g.warnOnce(fmt.Sprintf("ivy2golang: using zero value for non-enumerable sort %s", sortName(s)))
+		if g.hasIntOrNatInterp(s) {
+			return callInt(5), nil
+		}
+		if err := g.testGeneratorZeroFallbackError(s); err != nil {
+			return "", err
+		}
+		if g.warnsOnNonEnumerableZeroFallback() {
+			g.warnOnce(fmt.Sprintf("ivy2golang: using zero value for non-enumerable sort %s", sortName(s)))
+		}
 		return g.goZeroValue(s), nil
 	}
+}
+
+func (g *Generator) warnsOnNonEnumerableZeroFallback() bool {
+	if g == nil {
+		return false
+	}
+	return g.Config.Target == "test" || g.Config.Target == "gen"
+}
+
+func (g *Generator) destructorStructNeedsInitFunc(fields []goDestructorField) bool {
+	for _, field := range fields {
+		if len(field.Sort.Domain()) > 1 {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) goRandomDestructorStructValueExprWithChooserSeen(s goivy.Sort, fields []goDestructorField, name string, id int64, chooser string, seen map[string]bool) (string, error) {
+	tmp := g.nextTemp("__ivy_rec")
+	var w goWriter
+	w.raw(fmt.Sprintf("func() %s {\n", g.goScalarType(s)))
+	w.indent++
+	w.linef("var %s %s", tmp, g.goScalarType(s))
+	for i, field := range fields {
+		domain := field.Sort.Domain()
+		if g.destructorFieldIsLarge(field) {
+			extra := domain[1:]
+			tmpThunk := g.nextTemp("__ivy_thunk")
+			w.linef("%s := %s", tmpThunk, g.goFunctionStorageInit(extra, field.Sort.Range()))
+			g.emitRandomThunkBaseWithChooserSeen(&w, tmpThunk, extra, field.Sort.Range(), name+"."+memName(field.Const.Name), int64(i), chooser, seen)
+			w.linef("%s.%s = &%s", tmp, field.FieldName, tmpThunk)
+			continue
+		}
+		if len(domain) == 1 {
+			expr, err := g.goRandomValueExprWithChooserSeen(field.Sort.Range(), name+"."+memName(field.Const.Name), int64(i), chooser, seen)
+			if err != nil {
+				return "", err
+			}
+			w.linef("%s.%s = %s", tmp, field.FieldName, expr)
+			continue
+		}
+		extra := domain[1:]
+		g.emitDomainLoops(&w, extra, func(args []string) {
+			expr, err := g.goRandomValueExprWithChooserSeen(field.Sort.Range(), name+"."+memName(field.Const.Name), int64(i), chooser, seen)
+			if err != nil {
+				g.unsupported(&w, "unsupported destructor field random value: %s", err.Error())
+				return
+			}
+			w.linef("%s.%s%s = %s", tmp, field.FieldName, goIndexSuffix(args), expr)
+		})
+	}
+	w.linef("return %s", tmp)
+	w.indent--
+	w.raw("}()")
+	return w.String(), nil
+}
+
+func (g *Generator) goRandomFunctionValueExprWithChooserSeen(fs *goivy.LogicFunctionSort, name string, id int64, chooser string, seen map[string]bool) (string, error) {
+	domain := fs.Domain()
+	rng := fs.Range()
+	if len(domain) == 0 {
+		return g.goRandomValueExprWithChooserSeen(rng, name, id, chooser, seen)
+	}
+	st := g.goFunctionStorageFor(domain, rng)
+	tmp := g.nextTemp("__ivy_fn")
+	var w goWriter
+	w.raw(fmt.Sprintf("func() %s {\n", st.Type))
+	w.indent++
+	w.linef("%s := %s", tmp, g.goFunctionStorageInit(domain, rng))
+	if st.Large {
+		g.emitRandomThunkBaseWithChooserSeen(&w, tmp, domain, rng, name, id, chooser, seen)
+	} else {
+		g.emitDomainLoops(&w, domain, func(args []string) {
+			expr, err := g.goRandomValueExprWithChooserSeen(rng, name, id, chooser, seen)
+			if err != nil {
+				g.unsupported(&w, "unsupported function-sorted random value range: %s", err.Error())
+				return
+			}
+			w.linef("%s[%s] = %s", tmp, g.goMapKeyValue(domain, args), expr)
+		})
+	}
+	w.linef("return %s", tmp)
+	w.indent--
+	w.raw("}()")
+	return w.String(), nil
+}
+
+func (g *Generator) emitRandomThunkBaseWithChooserSeen(w *goWriter, base string, domain []goivy.Sort, rng goivy.Sort, label string, id int64, chooser string, seen map[string]bool) {
+	st := g.goFunctionStorageFor(domain, rng)
+	if !st.Large {
+		return
+	}
+	expr, err := g.goRandomValueExprWithChooserSeen(rng, label, id, chooser, seen)
+	if err != nil {
+		g.unsupported(w, "unsupported nondet thunk range: %s", err.Error())
+		return
+	}
+	w.open(fmt.Sprintf("%s.base = func(__ivy_key %s) %s {", base, st.KeyType, st.RangeType))
+	w.line("_ = __ivy_key")
+	w.linef("return %s", expr)
+	w.close("")
 }
 
 func goRangeRandomWidthExpr(lo, hi string) string {
@@ -375,6 +502,17 @@ func (g *Generator) finiteValueExprs(s goivy.Sort) ([]string, bool) {
 		}
 		return vals, true
 	default:
+		if g.hasStrBVInterp(s) {
+			card := g.sortCard(s)
+			if card <= 0 {
+				return nil, false
+			}
+			vals := make([]string, card)
+			for i := range vals {
+				vals[i] = strconv.Quote(strconv.Itoa(i))
+			}
+			return vals, true
+		}
 		if rs, ok := g.rangeSortFor(s); ok {
 			lo, hi, ok := numericRangeBounds(rs)
 			if !ok || hi < lo {
@@ -398,12 +536,35 @@ func (g *Generator) finiteValueExprs(s goivy.Sort) ([]string, bool) {
 }
 
 func (g *Generator) canEnumerateDomain(domain []goivy.Sort) bool {
+	product := 1
 	for _, s := range domain {
-		if _, ok := g.finiteValueExprs(s); !ok {
+		card, ok := g.eagerDomainCardinality(s)
+		if !ok || card <= 0 {
 			return false
 		}
+		if product <= goLargeThresh {
+			product *= card
+		}
 	}
-	return true
+	return product <= goLargeThresh
+}
+
+func (g *Generator) eagerDomainCardinality(s goivy.Sort) (int, bool) {
+	if vals, ok := goLiteralFiniteValueExprs(s); ok {
+		return len(vals), len(vals) > 0
+	}
+	if dim, ok := g.goFiniteIndexDimension(s); ok {
+		return dim, dim > 0
+	}
+	if rs, ok := g.rangeSortFor(s); ok {
+		lo, hi, ok := numericRangeBounds(rs)
+		if !ok || hi < lo {
+			return 0, false
+		}
+		return hi - lo + 1, true
+	}
+	vals, ok := g.finiteValueExprs(s)
+	return len(vals), ok && len(vals) > 0
 }
 
 func (g *Generator) rangeSortFor(s goivy.Sort) (*goivy.RangeSort, bool) {
@@ -452,12 +613,157 @@ func (g *Generator) hasStringInterp(s goivy.Sort) bool {
 	return ok && text == "strlit"
 }
 
+func (g *Generator) hasStrBVInterp(s goivy.Sort) bool {
+	it, ok := g.goInterpType(s)
+	return ok && it.Kind == goInterpStrBV
+}
+
+func (g *Generator) hasStringValuedInterp(s goivy.Sort) bool {
+	return g.hasStringInterp(s) || g.hasStrBVInterp(s)
+}
+
 func (g *Generator) hasNatInterp(s goivy.Sort) bool {
 	text, ok := g.sortInterpString(s)
 	return ok && text == "nat"
 }
 
+func (g *Generator) hasIntInterp(s goivy.Sort) bool {
+	text, ok := g.sortInterpString(s)
+	return ok && text == "int"
+}
+
+func (g *Generator) hasIntOrNatInterp(s goivy.Sort) bool {
+	return g.hasIntInterp(s) || g.hasNatInterp(s)
+}
+
+func (g *Generator) isNativeTypeSort(s goivy.Sort) bool {
+	if g == nil || g.Mod == nil || g.Mod.NativeTypes == nil {
+		return false
+	}
+	_, ok := g.Mod.NativeTypes[sortName(s)]
+	return ok
+}
+
+func (g *Generator) isRuntimeHandleSort(s goivy.Sort) bool {
+	return g.isRuntimeSocketSort(s)
+}
+
+func (g *Generator) isRuntimeSocketSort(s goivy.Sort) bool {
+	if _, ok := s.(*goivy.UninterpretedSort); !ok {
+		return false
+	}
+	name := sortName(s)
+	if name == "" {
+		return false
+	}
+	if name == "socket" {
+		return g.hasNativeSocketFactory("", name)
+	}
+	if !strings.HasSuffix(name, ".socket") {
+		return false
+	}
+	return g.hasNativeSocketFactory(strings.TrimSuffix(name, ".socket"), name)
+}
+
+func (g *Generator) hasNativeSocketFactory(prefix, socketSortName string) bool {
+	if g == nil || g.Mod == nil || g.Mod.Actions == nil {
+		return false
+	}
+	names := []string{"open", "connect"}
+	if prefix != "" {
+		names = []string{prefix + ".open", prefix + ".connect"}
+	}
+	for _, baseName := range names {
+		for _, name := range []string{baseName, "ext:" + baseName} {
+			act, ok := g.Mod.Actions.Get2(name)
+			if !ok || act == nil {
+				continue
+			}
+			if actionReturnsSortName(act, socketSortName) && actionContainsNativeAction(act) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func actionReturnsSortName(act goivy.Action, sortNameText string) bool {
+	if act == nil {
+		return false
+	}
+	for _, ret := range act.GetFormalReturns() {
+		if ret != nil && sortName(ret.CSort) == sortNameText {
+			return true
+		}
+	}
+	return false
+}
+
+func actionContainsNativeAction(act goivy.Action) bool {
+	if act == nil {
+		return false
+	}
+	if _, ok := act.(*goivy.LogicNativeAction); ok {
+		return true
+	}
+	iter, ok := act.(interface {
+		IterSubactions() []goivy.ActionsAction
+	})
+	if !ok {
+		return false
+	}
+	for _, sub := range iter.IterSubactions() {
+		if _, ok := sub.(*goivy.LogicNativeAction); ok {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) uninterpretedTestGeneratorError(s goivy.Sort) error {
+	if _, ok := s.(*goivy.UninterpretedSort); !ok {
+		return nil
+	}
+	if _, ok := g.rangeSortFor(s); ok {
+		return nil
+	}
+	if _, ok := g.goInterpType(s); ok {
+		return nil
+	}
+	if g.hasIntOrNatInterp(s) || g.hasStringInterp(s) {
+		return nil
+	}
+	if g.isVariantSuperName(sortName(s)) || g.isVariantSubtypeName(sortName(s)) || g.destructorStructFields(sortName(s)) != nil {
+		return nil
+	}
+	if g.isNativeTypeSort(s) {
+		return nil
+	}
+	if g.isRuntimeHandleSort(s) {
+		return nil
+	}
+	return fmt.Errorf("ivy2golang: cannot create test generator because type %s is uninterpreted", sortName(s))
+}
+
+func (g *Generator) testGeneratorZeroFallbackError(s goivy.Sort) error {
+	if g == nil || !(g.Config.Build && (g.Config.Target == "test" || g.Config.Target == "gen")) {
+		return nil
+	}
+	if err := g.uninterpretedTestGeneratorError(s); err != nil {
+		return err
+	}
+	if g.isNativeTypeSort(s) || g.isRuntimeHandleSort(s) {
+		return nil
+	}
+	return fmt.Errorf("ivy2golang: cannot create test generator because type %s is non-enumerable", sortName(s))
+}
+
 func (g *Generator) sortCard(s goivy.Sort) int {
+	if it, ok := g.goInterpType(s); ok {
+		if card := it.card(); card > 0 {
+			return card
+		}
+	}
 	if g != nil && g.Mod != nil {
 		if card := g.Mod.SortCard(s); card > 0 {
 			return card
@@ -516,6 +822,18 @@ func (g *Generator) isVariantSubtypeName(name string) bool {
 }
 
 func (g *Generator) destructorStructFields(name string) []*goivy.Const {
+	infos := g.destructorStructFieldInfos(name)
+	if len(infos) == 0 {
+		return nil
+	}
+	out := make([]*goivy.Const, 0, len(infos))
+	for _, info := range infos {
+		out = append(out, info.Const)
+	}
+	return out
+}
+
+func (g *Generator) destructorStructFieldInfos(name string) []goDestructorField {
 	if g == nil || g.Mod == nil || g.Mod.SortDestructors == nil || name == "" {
 		return nil
 	}
@@ -523,18 +841,170 @@ func (g *Generator) destructorStructFields(name string) []*goivy.Const {
 	if !ok || len(fields) == 0 {
 		return nil
 	}
-	out := make([]*goivy.Const, 0, len(fields))
+	out := make([]goDestructorField, 0, len(fields))
 	for _, d := range fields {
 		if d == nil {
 			return nil
 		}
 		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
-		if !ok || len(fs.Domain()) != 1 || sortName(fs.Domain()[0]) != name {
+		if !ok || len(fs.Domain()) == 0 || sortName(fs.Domain()[0]) != name {
 			return nil
 		}
-		out = append(out, d)
+		if !g.destructorFieldExtraDomainsRepresentable(fs) {
+			continue
+		}
+		out = append(out, goDestructorField{
+			Const:     d,
+			Sort:      fs,
+			FieldName: goName(memName(d.Name)),
+		})
 	}
 	return out
+}
+
+func (g *Generator) destructorFieldExtraDomainsRepresentable(fs *goivy.LogicFunctionSort) bool {
+	if fs == nil || len(fs.Domain()) == 0 {
+		return false
+	}
+	domain := fs.Domain()[1:]
+	if len(domain) == 0 {
+		return true
+	}
+	if !g.canEnumerateDomain(domain) {
+		return g.goFunctionStorageFor(domain, fs.Range()).Large
+	}
+	for _, s := range domain {
+		if _, ok := g.goFiniteIndexDimension(s); !ok {
+			return false
+		}
+	}
+	return true
+}
+
+func (g *Generator) goDestructorFieldType(fs *goivy.LogicFunctionSort) (string, bool) {
+	if fs == nil || len(fs.Domain()) == 0 {
+		return "", false
+	}
+	typ := g.goScalarType(fs.Range())
+	domain := fs.Domain()[1:]
+	if len(domain) > 0 && !g.canEnumerateDomain(domain) {
+		st := g.goFunctionStorageFor(domain, fs.Range())
+		if !st.Large {
+			return "", false
+		}
+		return "*" + st.Type, true
+	}
+	for i := len(domain) - 1; i >= 0; i-- {
+		dim, ok := g.goFiniteIndexDimension(domain[i])
+		if !ok {
+			return "", false
+		}
+		typ = fmt.Sprintf("[%d]%s", dim, typ)
+	}
+	return typ, true
+}
+
+func (g *Generator) destructorFieldIsLarge(field goDestructorField) bool {
+	if field.Sort == nil {
+		return false
+	}
+	domain := field.Sort.Domain()
+	if len(domain) <= 1 {
+		return false
+	}
+	return !g.canEnumerateDomain(domain[1:])
+}
+
+func (g *Generator) destructorStructNeedsEqualMethod(fields []goDestructorField) bool {
+	for _, field := range fields {
+		if field.Sort == nil {
+			continue
+		}
+		if g.destructorFieldIsLarge(field) {
+			return true
+		}
+		if g.sortNeedsCustomEquality(field.Sort.Range()) {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) sortNeedsCustomEquality(s goivy.Sort) bool {
+	return g.sortNeedsCustomEqualitySeen(s, map[string]bool{})
+}
+
+func (g *Generator) sortNeedsCustomEqualitySeen(s goivy.Sort, seen map[string]bool) bool {
+	if s == nil {
+		return false
+	}
+	name := sortName(s)
+	if name == "" || seen[name] {
+		return false
+	}
+	if g.isVariantSuperName(name) {
+		return true
+	}
+	fields := g.destructorStructFieldInfos(name)
+	if len(fields) == 0 {
+		return false
+	}
+	seen[name] = true
+	for _, field := range fields {
+		if field.Sort == nil {
+			continue
+		}
+		if g.destructorFieldIsLarge(field) {
+			return true
+		}
+		if g.sortNeedsCustomEqualitySeen(field.Sort.Range(), seen) {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) goFiniteIndexDimension(s goivy.Sort) (int, bool) {
+	switch st := s.(type) {
+	case *goivy.LogicEnumeratedSort:
+		if len(st.Extension) == 0 {
+			return 0, false
+		}
+		if !isNumericEnum(st) {
+			return len(st.Extension), true
+		}
+		max := -1
+		for _, elem := range st.Extension {
+			n, err := strconv.Atoi(elem)
+			if err != nil || n < 0 {
+				return 0, false
+			}
+			if n > max {
+				max = n
+			}
+		}
+		return max + 1, true
+	case *goivy.RangeSort:
+		lo, hi, ok := numericRangeBounds(st)
+		if !ok || lo < 0 || hi < lo {
+			return 0, false
+		}
+		return hi + 1, true
+	case *goivy.UninterpretedSort:
+		if rs, ok := g.rangeSortFor(st); ok {
+			lo, hi, ok := numericRangeBounds(rs)
+			if !ok || lo < 0 || hi < lo {
+				return 0, false
+			}
+			return hi + 1, true
+		}
+		if !g.hasStringValuedInterp(st) && !g.isVariantSuperName(st.Name) {
+			if card := g.sortCard(st); card > 0 {
+				return card, true
+			}
+		}
+	}
+	return 0, false
 }
 
 func (g *Generator) destructorRecordFields(name string) []*goivy.Const {
@@ -545,17 +1015,80 @@ func (g *Generator) destructorRecordFields(name string) []*goivy.Const {
 }
 
 func (g *Generator) destructorFieldName(name string) (string, bool) {
-	if g == nil || g.Mod == nil || g.Mod.DestructorSorts == nil || name == "" {
-		return "", false
-	}
-	sort, ok := g.Mod.DestructorSorts[name]
+	field, ok := g.destructorFieldInfo(name)
 	if !ok {
 		return "", false
 	}
-	if len(g.destructorStructFields(sortName(sort))) == 0 {
-		return "", false
+	return field.FieldName, true
+}
+
+func (g *Generator) destructorFieldInfo(name string) (goDestructorField, bool) {
+	if g == nil || g.Mod == nil || g.Mod.DestructorSorts == nil || name == "" {
+		return goDestructorField{}, false
 	}
-	return goName(memName(name)), true
+	sort, ok := g.Mod.DestructorSorts[name]
+	if !ok {
+		return goDestructorField{}, false
+	}
+	for _, field := range g.destructorStructFieldInfos(sortName(sort)) {
+		if field.Const != nil && field.Const.Name == name {
+			return field, true
+		}
+	}
+	return goDestructorField{}, false
+}
+
+func (g *Generator) destructorFieldAccess(name string, args []string) (string, bool, error) {
+	field, ok := g.destructorFieldInfo(name)
+	if !ok {
+		return "", false, nil
+	}
+	if len(args) != len(field.Sort.Domain()) {
+		return "", true, fmt.Errorf("ivy2golang: destructor %s expected %d arguments, got %d", name, len(field.Sort.Domain()), len(args))
+	}
+	expr := args[0] + "." + field.FieldName
+	if g.destructorFieldIsLarge(field) {
+		key := g.goMapKeyValue(field.Sort.Domain()[1:], args[1:])
+		return fmt.Sprintf("ivyThunkGet(%s, %s, %s)", expr, key, g.goZeroValue(field.Sort.Range())), true, nil
+	}
+	if len(args) > 1 {
+		expr += goIndexSuffix(args[1:])
+	}
+	return expr, true, nil
+}
+
+func (g *Generator) goDestructorFieldSet(app *goivy.Apply, name string, rhs string) (string, bool, error) {
+	field, ok := g.destructorFieldInfo(name)
+	if !ok || !g.destructorFieldIsLarge(field) {
+		return "", false, nil
+	}
+	if len(app.Terms) != len(field.Sort.Domain()) {
+		return "", true, fmt.Errorf("ivy2golang: destructor %s expected %d arguments, got %d", name, len(field.Sort.Domain()), len(app.Terms))
+	}
+	obj, err := g.emitExpr(app.Terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	args := make([]string, len(app.Terms)-1)
+	for i, term := range app.Terms[1:] {
+		code, err := g.emitExpr(term)
+		if err != nil {
+			return "", true, err
+		}
+		args[i] = code
+	}
+	key := g.goMapKeyValue(field.Sort.Domain()[1:], args)
+	return fmt.Sprintf("ivyThunkSet(&%s.%s, %s, %s, %s)", obj, field.FieldName, key, rhs, g.goZeroValue(field.Sort.Range())), true, nil
+}
+
+func goIndexSuffix(args []string) string {
+	var b strings.Builder
+	for _, arg := range args {
+		b.WriteByte('[')
+		b.WriteString(arg)
+		b.WriteByte(']')
+	}
+	return b.String()
 }
 
 func (g *Generator) variantUpcastExpr(super, sub goivy.Sort, expr string) string {
@@ -582,4 +1115,11 @@ func (g *Generator) goLessExpr(left, right string, s goivy.Sort) string {
 		return fmt.Sprintf("ivyBoolOrd(%s) < ivyBoolOrd(%s)", left, right)
 	}
 	return fmt.Sprintf("%s < %s", left, right)
+}
+
+func (g *Generator) goEqualExpr(left, right string, s goivy.Sort) string {
+	if g.sortNeedsCustomEquality(s) {
+		return fmt.Sprintf("(%s).Equal(%s)", left, right)
+	}
+	return fmt.Sprintf("%s == %s", left, right)
 }
