@@ -1954,14 +1954,14 @@ func (g *Generator) emitLocalScalarWitnessInit(w *goWriter, localName string, lo
 	if len(conds) == 0 {
 		return false
 	}
-	values, ok := g.scalarWitnessValuesForNames(g.goType(localSort), names, localWitnessAssumeFormulas(act))
+	base := goName(localName)
+	values, ok := g.scalarWitnessValuesForNames(g.goType(localSort), names, localWitnessAssumeFormulas(act), base)
 	if !ok || len(values) == 0 {
 		if g.goType(localSort) != "int" {
 			return false
 		}
 		values = actionGeneratorSmallIntFallbackValues()
 	}
-	base := goName(localName)
 	valuesName := "__ivy_local_witness_values_" + base
 	candidateName := "__ivy_local_witness_" + base
 	w.linef("%s := []%s{%s}", valuesName, g.goType(localSort), strings.Join(values, ", "))

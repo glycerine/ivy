@@ -5704,10 +5704,10 @@ func (g *Generator) actionGeneratorScalarWitnessValues(p *goivy.Const, guards []
 	for _, name := range formalExprOverrideNames(p.Name) {
 		names[name] = true
 	}
-	return g.scalarWitnessValuesForNames(g.goType(p.CSort), names, guards)
+	return g.scalarWitnessValuesForNames(g.goType(p.CSort), names, guards, "gen."+goName(p.Name))
 }
 
-func (g *Generator) scalarWitnessValuesForNames(goTyp string, names map[string]bool, guards []goivy.Expr) ([]string, bool) {
+func (g *Generator) scalarWitnessValuesForNames(goTyp string, names map[string]bool, guards []goivy.Expr, keepValue string) ([]string, bool) {
 	if len(guards) == 0 || len(names) == 0 || goTyp != "int" {
 		return nil, false
 	}
@@ -5806,10 +5806,22 @@ func (g *Generator) scalarWitnessValuesForNames(goTyp string, names map[string]b
 				}
 			}
 		case *goivy.LogicIte:
-			thenValues, thenOK := g.scalarWitnessValuesForNames(goTyp, names, []goivy.Expr{n.Then})
-			elseValues, elseOK := g.scalarWitnessValuesForNames(goTyp, names, []goivy.Expr{n.Else})
-			if !thenOK || !elseOK || len(thenValues) == 0 || len(elseValues) == 0 {
+			thenValues, thenOK := g.scalarWitnessValuesForNames(goTyp, names, []goivy.Expr{n.Then}, keepValue)
+			elseValues, elseOK := g.scalarWitnessValuesForNames(goTyp, names, []goivy.Expr{n.Else}, keepValue)
+			if (!thenOK || len(thenValues) == 0) && (!elseOK || len(elseValues) == 0) {
 				return
+			}
+			if !thenOK || len(thenValues) == 0 {
+				if keepValue == "" {
+					return
+				}
+				thenValues = []string{keepValue}
+			}
+			if !elseOK || len(elseValues) == 0 {
+				if keepValue == "" {
+					return
+				}
+				elseValues = []string{keepValue}
 			}
 			cond, err := g.emitExpr(n.Cond)
 			if err != nil {
