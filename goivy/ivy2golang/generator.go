@@ -4460,7 +4460,7 @@ func (g *Generator) variantExistsPayloadWitness(bound *goivy.LogicVariable, expr
 		return nil, 0
 	}
 	for _, expr := range exprs {
-		if value, ok := variantExistsExactPayloadWitnessTerm(bound, expr); ok {
+		if value, ok := g.variantExistsExactPayloadWitnessTerm(bound, expr); ok {
 			return value, 0
 		}
 	}
@@ -4477,7 +4477,7 @@ func (g *Generator) variantExistsUniquePayloadWitness(bound *goivy.LogicVariable
 		return nil, 0, false
 	}
 	for _, expr := range exprs {
-		if value, ok := variantExistsExactPayloadWitnessTerm(bound, expr); ok {
+		if value, ok := g.variantExistsExactPayloadWitnessTerm(bound, expr); ok {
 			return value, 0, true
 		}
 	}
@@ -4489,7 +4489,17 @@ func (g *Generator) variantExistsUniquePayloadWitness(bound *goivy.LogicVariable
 	return nil, 0, false
 }
 
-func variantExistsExactPayloadWitnessTerm(bound *goivy.LogicVariable, expr goivy.Expr) (goivy.Expr, bool) {
+func (g *Generator) variantExistsDefaultPayloadWitness(bound *goivy.LogicVariable) (goivy.Expr, bool) {
+	if bound == nil || bound.VSort == nil {
+		return nil, false
+	}
+	if value, ok := g.preimageZeroValueExpr(bound.VSort); ok {
+		return value, true
+	}
+	return goivy.NewConst("0", bound.VSort), true
+}
+
+func (g *Generator) variantExistsExactPayloadWitnessTerm(bound *goivy.LogicVariable, expr goivy.Expr) (goivy.Expr, bool) {
 	switch n := expr.(type) {
 	case *goivy.Eq:
 		if variantExistsIsBoundVar(bound, n.T1) && !exprContainsLogicVariable(n.T2) && sortsEqual(n.T2.NodeSort(), bound.VSort) {
@@ -4500,40 +4510,54 @@ func variantExistsExactPayloadWitnessTerm(bound *goivy.LogicVariable, expr goivy
 		}
 	case *goivy.LogicLiteral:
 		if n.Polarity != 0 {
-			return variantExistsExactPayloadWitnessTerm(bound, n.Atom)
+			return g.variantExistsExactPayloadWitnessTerm(bound, n.Atom)
 		}
 	case *goivy.LogicAnd:
 		for _, term := range n.Terms {
-			if value, ok := variantExistsExactPayloadWitnessTerm(bound, term); ok {
+			if value, ok := g.variantExistsExactPayloadWitnessTerm(bound, term); ok {
 				return value, true
 			}
 		}
 	case *goivy.LogicOr:
 		for _, term := range n.Terms {
-			if value, ok := variantExistsExactPayloadWitnessTerm(bound, term); ok {
+			if value, ok := g.variantExistsExactPayloadWitnessTerm(bound, term); ok {
 				return value, true
 			}
 		}
 	case *goivy.LogicImplies:
-		return variantExistsExactPayloadWitnessTerm(bound, n.T2)
+		return g.variantExistsExactPayloadWitnessTerm(bound, n.T2)
 	case *goivy.LogicIff:
 		for _, term := range actionGeneratorIffPositiveTerms(n) {
-			if value, ok := variantExistsExactPayloadWitnessTerm(bound, term); ok {
+			if value, ok := g.variantExistsExactPayloadWitnessTerm(bound, term); ok {
 				return value, true
 			}
 		}
 	case *goivy.LogicLet:
 		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
-			return variantExistsExactPayloadWitnessTerm(bound, expanded)
+			return g.variantExistsExactPayloadWitnessTerm(bound, expanded)
 		}
 	case *goivy.LogicIte:
 		if exprContainsLogicVariable(n.Cond) {
 			return nil, false
 		}
-		thenValue, thenOK := variantExistsExactPayloadWitnessTerm(bound, n.Then)
-		elseValue, elseOK := variantExistsExactPayloadWitnessTerm(bound, n.Else)
-		if !thenOK || !elseOK {
+		thenValue, thenOK := g.variantExistsExactPayloadWitnessTerm(bound, n.Then)
+		elseValue, elseOK := g.variantExistsExactPayloadWitnessTerm(bound, n.Else)
+		if !thenOK && !elseOK {
 			return nil, false
+		}
+		if !thenOK {
+			var ok bool
+			thenValue, ok = g.variantExistsDefaultPayloadWitness(bound)
+			if !ok {
+				return nil, false
+			}
+		}
+		if !elseOK {
+			var ok bool
+			elseValue, ok = g.variantExistsDefaultPayloadWitness(bound)
+			if !ok {
+				return nil, false
+			}
 		}
 		value, err := goivy.NewIte(n.Cond, thenValue, elseValue)
 		if err != nil {
@@ -4578,8 +4602,24 @@ func (g *Generator) variantExistsAffineEqualityPayloadWitnessTerm(bound *goivy.L
 		}
 		thenValue, thenDelta, thenOK := g.variantExistsAffineEqualityPayloadWitnessTerm(bound, n.Then)
 		elseValue, elseDelta, elseOK := g.variantExistsAffineEqualityPayloadWitnessTerm(bound, n.Else)
-		if !thenOK || !elseOK {
+		if !thenOK && !elseOK {
 			return nil, 0, false
+		}
+		if !thenOK {
+			var ok bool
+			thenValue, ok = g.variantExistsDefaultPayloadWitness(bound)
+			if !ok {
+				return nil, 0, false
+			}
+			thenDelta = 0
+		}
+		if !elseOK {
+			var ok bool
+			elseValue, ok = g.variantExistsDefaultPayloadWitness(bound)
+			if !ok {
+				return nil, 0, false
+			}
+			elseDelta = 0
 		}
 		if thenDelta != elseDelta {
 			var ok bool
@@ -4672,8 +4712,24 @@ func (g *Generator) variantExistsPayloadWitnessTerm(bound *goivy.LogicVariable, 
 		}
 		thenValue, thenDelta, thenOK := g.variantExistsPayloadWitnessTerm(bound, n.Then)
 		elseValue, elseDelta, elseOK := g.variantExistsPayloadWitnessTerm(bound, n.Else)
-		if !thenOK || !elseOK {
+		if !thenOK && !elseOK {
 			return nil, 0, false
+		}
+		if !thenOK {
+			var ok bool
+			thenValue, ok = g.variantExistsDefaultPayloadWitness(bound)
+			if !ok {
+				return nil, 0, false
+			}
+			thenDelta = 0
+		}
+		if !elseOK {
+			var ok bool
+			elseValue, ok = g.variantExistsDefaultPayloadWitness(bound)
+			if !ok {
+				return nil, 0, false
+			}
+			elseDelta = 0
 		}
 		if thenDelta != elseDelta {
 			var ok bool

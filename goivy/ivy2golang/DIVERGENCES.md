@@ -1050,6 +1050,11 @@ Progress:
   `ivyTernary(ivy.active, ivy.req0, ivy.req1)` before rechecking the
   quantified guard.
 - 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesItePartialConstrainedExistsVariantRelationWitnessFast`.
+  Exact existential variant payload extraction now also handles one-branch
+  `ite` constraints, using the subtype zero payload on the unconstrained
+  branch while preserving the branch-sensitive guard.
+- 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesDisequalExistsVariantRelationWitnessFast`.
   Existential variant payload witnesses now handle simple integer-like payload
   disequality constraints, so `exists Q:req. x *> Q & Q ~= req0` constructs
@@ -1066,6 +1071,11 @@ Progress:
   witnesses, so `exists Q:req. x *> Q & ite(active, Q > 10, Q > 20)`
   constructs a payload like `ivyTernary(ivy.active, 11, 21)` before the guard
   downcast and recheck.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesItePartialInequalityExistsVariantRelationWitnessFast`.
+  Conditional existential payload inequality witnesses now also tolerate a
+  payload constraint on only one branch, constructing values such as
+  `ivyTernary(ivy.active, 11, 0)` before the complete quantified guard check.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesIteMixedDeltaExistsVariantRelationWitnessFast`.
   Conditional existential payload witnesses now materialize per-branch integer
@@ -1812,6 +1822,11 @@ Progress:
   one-shot generators construct subtype payloads from branch constraints with a
   generated `ivyTernary` expression before the full guard check.
 - 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesItePartialConstrainedExistsVariantRelationWitnessFast`.
+  The one-branch conditional exact-payload extraction is shared by `target=gen`,
+  so one-shot generators keep the unconstrained existential payload at the
+  subtype zero value while satisfying the constrained branch.
+- 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesDisequalExistsVariantRelationWitnessFast`.
   The simple disequal existential variant payload witness is shared by
   `target=gen`, so one-shot generators use a nearby integer-like payload such
@@ -1826,6 +1841,10 @@ Progress:
   The conditional inequality payload witness merge is shared by `target=gen`,
   so one-shot generators can construct branch-dependent numeric subtype
   payloads before rechecking the full quantified guard.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesItePartialInequalityExistsVariantRelationWitnessFast`.
+  The one-branch conditional inequality payload witness merge is shared by
+  `target=gen`, preserving the subtype zero payload on unconstrained branches.
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesIteMixedDeltaExistsVariantRelationWitnessFast`.
   The per-branch delta materialization is shared by `target=gen`, so one-shot
@@ -2572,9 +2591,15 @@ Progress:
 - 2026-09-22: Added target=test and target=gen conditional exact-payload
   existential variant witness source-shape tests for quantified `ite`
   constraints merged into one generated `ivyTernary` payload.
+- 2026-09-22: Added target=test and target=gen partial conditional
+  exact-payload existential variant source-shape tests, covering `ite` payload
+  constraints where only one branch restricts the quantified payload.
 - 2026-09-22: Added target=test and target=gen conditional inequality-payload
   existential variant witness source-shape tests for quantified `ite`
   constraints merged into one generated numeric `ivyTernary` payload.
+- 2026-09-22: Added target=test and target=gen partial conditional
+  inequality-payload existential variant source-shape tests, covering
+  branch-local numeric payload witnesses.
 - 2026-09-22: Added target=test and target=gen conditional mixed-delta
   existential variant witness source-shape tests for branch payload witnesses
   that need different integer offsets before the generated `ivyTernary`.

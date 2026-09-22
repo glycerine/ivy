@@ -665,9 +665,9 @@ func (g *Generator) emitExistsVariantRelation(vars []*goivy.LogicVariable, body 
 	return "(" + strings.TrimSpace(w.String()) + ")()", true, nil
 }
 
-func variantExistsExactPayloadWitness(bound *goivy.LogicVariable, exprs []goivy.Expr) (goivy.Expr, bool) {
+func (g *Generator) variantExistsExactPayloadWitness(bound *goivy.LogicVariable, exprs []goivy.Expr) (goivy.Expr, bool) {
 	for _, expr := range exprs {
-		if value, ok := variantExistsExactPayloadWitnessTerm(bound, expr); ok {
+		if value, ok := g.variantExistsExactPayloadWitnessTerm(bound, expr); ok {
 			return value, true
 		}
 	}

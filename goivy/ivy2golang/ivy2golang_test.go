@@ -8661,6 +8661,26 @@ func TestTargetTestActionGeneratorUsesIteConstrainedExistsVariantRelationWitness
 	}
 }
 
+func TestTargetTestActionGeneratorUsesItePartialConstrainedExistsVariantRelationWitnessFast(t *testing.T) {
+	out := generateItePartialConstrainedExistsVariantWitness(t, "test", "testitepartialconstrainedexistsvariant")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testitepartialconstrainedexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivyTernary(ivy.active, ivy.req0, 0), valid: true}`
+	guard := `ivyTernary(ivy.active, (Q == ivy.req0), true)`
+	for _, want := range []string{assign, `Q := gen.x.value.(int)`, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test partial ITE constrained exists variant witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `Q := gen.x.value.(int)`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("partial ITE constrained exists variant witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
 func TestTargetTestActionGeneratorUsesInequalityExistsVariantRelationWitnessFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type msg
@@ -8716,6 +8736,26 @@ func TestTargetTestActionGeneratorUsesIteInequalityExistsVariantRelationWitnessF
 	guardIdx := strings.Index(genBody, `Q := gen.x.value.(int)`)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("ITE inequality exists variant witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesItePartialInequalityExistsVariantRelationWitnessFast(t *testing.T) {
+	out := generateItePartialInequalityExistsVariantWitness(t, "test", "testitepartialineqexistsvariant")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testitepartialineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivyTernary(ivy.active, 11, 0), valid: true}`
+	guard := `ivyTernary(ivy.active, (10 < Q), true)`
+	for _, want := range []string{assign, `Q := gen.x.value.(int)`, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test partial ITE inequality exists variant witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `Q := gen.x.value.(int)`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("partial ITE inequality exists variant witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
 	}
 }
 
@@ -16347,6 +16387,71 @@ export set
 	return out
 }
 
+func generateItePartialConstrainedExistsVariantWitness(t *testing.T, target, className string) *Output {
+	t.Helper()
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	starSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *>: %v", err)
+	}
+	req0Sym, err := mod.Sig.FindSymbol("req0", false)
+	if err != nil {
+		t.Fatalf("FindSymbol req0: %v", err)
+	}
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	q := &goivy.LogicVariable{Name: "Q", VSort: req}
+	rel := goivy.MustApply(goivy.NewConst("*>", starSort), params[0], q)
+	req0 := goivy.NewConst("req0", req0Sym.CSort)
+	qReq0, err := goivy.NewEq(q, req0)
+	if err != nil {
+		t.Fatalf("Q = req0: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, qReq0, goivy.True)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	body, err := goivy.NewAnd(rel, ite)
+	if err != nil {
+		t.Fatalf("variant exists body: %v", err)
+	}
+	exists, err := goivy.NewExists([]*goivy.LogicVariable{q}, body)
+	if err != nil {
+		t.Fatalf("exists variant body: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(exists), goivy.NewAssignAction(goivy.NewConst("saved", msg), params[0]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+	out, err := Generate(mod, Config{Target: target, ClassName: className, TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	return out
+}
+
 func generateIteInequalityExistsVariantWitness(t *testing.T, target, className string) *Output {
 	t.Helper()
 	mod := compileIvySource(t, `#lang ivy1.7
@@ -16387,6 +16492,66 @@ export set
 	gt20 := goivy.MustApply(goivy.NewConst(">", gtSort), q, goivy.NewConst("20", req))
 	active := goivy.NewConst("active", activeSym.CSort)
 	ite, err := goivy.NewIte(active, gt10, gt20)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	body, err := goivy.NewAnd(rel, ite)
+	if err != nil {
+		t.Fatalf("variant exists body: %v", err)
+	}
+	exists, err := goivy.NewExists([]*goivy.LogicVariable{q}, body)
+	if err != nil {
+		t.Fatalf("exists variant body: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(exists), goivy.NewAssignAction(goivy.NewConst("saved", msg), params[0]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+	out, err := Generate(mod, Config{Target: target, ClassName: className, TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	return out
+}
+
+func generateItePartialInequalityExistsVariantWitness(t *testing.T, target, className string) *Output {
+	t.Helper()
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	starSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *>: %v", err)
+	}
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	q := &goivy.LogicVariable{Name: "Q", VSort: req}
+	rel := goivy.MustApply(goivy.NewConst("*>", starSort), params[0], q)
+	gtSort, err := goivy.NewFunctionSort(req, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort >: %v", err)
+	}
+	gt10 := goivy.MustApply(goivy.NewConst(">", gtSort), q, goivy.NewConst("10", req))
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, gt10, goivy.True)
 	if err != nil {
 		t.Fatalf("NewIte: %v", err)
 	}
@@ -17272,6 +17437,26 @@ func TestTargetGenActionGeneratorUsesIteConstrainedExistsVariantRelationWitnessF
 	}
 }
 
+func TestTargetGenActionGeneratorUsesItePartialConstrainedExistsVariantRelationWitnessFast(t *testing.T) {
+	out := generateItePartialConstrainedExistsVariantWitness(t, "gen", "genitepartialconstrainedexistsvariant")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genitepartialconstrainedexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivyTernary(ivy.active, ivy.req0, 0), valid: true}`
+	guard := `ivyTernary(ivy.active, (Q == ivy.req0), true)`
+	for _, want := range []string{assign, `Q := gen.x.value.(int)`, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen partial ITE constrained exists variant witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `Q := gen.x.value.(int)`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen partial ITE constrained exists variant witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
 func TestTargetGenActionGeneratorUsesInequalityExistsVariantRelationWitnessFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type msg
@@ -17327,6 +17512,26 @@ func TestTargetGenActionGeneratorUsesIteInequalityExistsVariantRelationWitnessFa
 	guardIdx := strings.Index(genBody, `Q := gen.x.value.(int)`)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("target=gen ITE inequality exists variant witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesItePartialInequalityExistsVariantRelationWitnessFast(t *testing.T) {
+	out := generateItePartialInequalityExistsVariantWitness(t, "gen", "genitepartialineqexistsvariant")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genitepartialineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivyTernary(ivy.active, 11, 0), valid: true}`
+	guard := `ivyTernary(ivy.active, (10 < Q), true)`
+	for _, want := range []string{assign, `Q := gen.x.value.(int)`, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen partial ITE inequality exists variant witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `Q := gen.x.value.(int)`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen partial ITE inequality exists variant witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
 	}
 }
 
