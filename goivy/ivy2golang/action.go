@@ -1094,7 +1094,10 @@ func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
 		w.linef("_ = %s", localName)
 	}
 	for _, local := range locals {
-		g.emitLocalWitnessInit(w, local.name, local.sort, a.Body)
+		if g.emitLocalWitnessInit(w, local.name, local.sort, a.Body) {
+			continue
+		}
+		g.emitLocalFiniteWitnessInit(w, local.name, local.sort, a.Body)
 	}
 	if body, ok := a.Body.(goivy.Action); ok {
 		g.emitAction(w, body)
@@ -1103,21 +1106,21 @@ func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
 	w.close("")
 }
 
-func (g *Generator) emitLocalWitnessInit(w *goWriter, localName string, localSort goivy.Sort, body goivy.Expr) {
+func (g *Generator) emitLocalWitnessInit(w *goWriter, localName string, localSort goivy.Sort, body goivy.Expr) bool {
 	if g == nil || w == nil || localName == "" || body == nil {
-		return
+		return false
 	}
 	app, pos, ok := g.localWitnessBoundApply(localName, localSort, body)
 	if !ok {
-		return
+		return false
 	}
 	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
 	if !ok || len(fs.Domain()) == 0 || !isBooleanSort(fs.Range()) {
-		return
+		return false
 	}
 	relName := goivy.ExprName(app.Func)
 	if relName == "" {
-		return
+		return false
 	}
 	var conds []string
 	for i, term := range app.Terms {
@@ -1126,7 +1129,7 @@ func (g *Generator) emitLocalWitnessInit(w *goWriter, localName string, localSor
 		}
 		expr, err := g.emitExpr(term)
 		if err != nil {
-			return
+			return false
 		}
 		keyExpr := "__ivy_witness_key"
 		if len(app.Terms) != 1 {
@@ -1151,6 +1154,50 @@ func (g *Generator) emitLocalWitnessInit(w *goWriter, localName string, localSor
 		w.close("")
 	}
 	w.close("")
+	return true
+}
+
+func (g *Generator) emitLocalFiniteWitnessInit(w *goWriter, localName string, localSort goivy.Sort, body goivy.Expr) bool {
+	if g == nil || w == nil || body == nil || localName == "" {
+		return false
+	}
+	if g.Config.Target != "test" && g.Config.Target != "gen" {
+		return false
+	}
+	values, ok := g.finiteValueExprs(localSort)
+	if !ok || len(values) == 0 || len(values) > goLargeThresh {
+		return false
+	}
+	act, ok := body.(goivy.Action)
+	if !ok {
+		return false
+	}
+	names := map[string]bool{localName: true}
+	var conds []string
+	for _, f := range localWitnessAssumeFormulas(act) {
+		if !exprReferencesAnyName(f, names) {
+			continue
+		}
+		cond, err := g.emitExpr(closeFormulaForGo(f))
+		if err != nil {
+			return false
+		}
+		conds = append(conds, cond)
+	}
+	if len(conds) == 0 {
+		return false
+	}
+	base := goName(localName)
+	valuesName := "__ivy_local_witness_values_" + base
+	candidateName := "__ivy_local_witness_" + base
+	w.linef("%s := []%s{%s}", valuesName, g.goType(localSort), strings.Join(values, ", "))
+	w.open(fmt.Sprintf("for _, %s := range %s {", candidateName, valuesName))
+	w.linef("%s = %s", base, candidateName)
+	w.open("if " + strings.Join(conds, " && ") + " {")
+	w.line("break")
+	w.close("")
+	w.close("")
+	return true
 }
 
 func (g *Generator) localWitnessBoundApply(localName string, localSort goivy.Sort, body goivy.Expr) (*goivy.Apply, int, bool) {
@@ -1158,12 +1205,41 @@ func (g *Generator) localWitnessBoundApply(localName string, localSort goivy.Sor
 	if !ok {
 		return nil, -1, false
 	}
-	for _, f := range leadingAssumeFormulas(act) {
+	for _, f := range localWitnessAssumeFormulas(act) {
 		if app, pos, ok := g.findLocalWitnessApply(localName, localSort, f); ok {
 			return app, pos, true
 		}
 	}
 	return nil, -1, false
+}
+
+func localWitnessAssumeFormulas(act goivy.Action) []goivy.Expr {
+	switch a := act.(type) {
+	case *goivy.LogicAssumeAction:
+		if a.Formula == nil {
+			return nil
+		}
+		return []goivy.Expr{a.Formula}
+	case *goivy.LogicAssertAction:
+		return nil
+	case *goivy.LogicSequence:
+		var guards []goivy.Expr
+		for _, elem := range a.Elems {
+			child, ok := elem.(goivy.Action)
+			if !ok {
+				break
+			}
+			switch child.(type) {
+			case *goivy.LogicAssumeAction, *goivy.LogicAssertAction, *goivy.LogicSequence:
+				guards = append(guards, localWitnessAssumeFormulas(child)...)
+			default:
+				return guards
+			}
+		}
+		return guards
+	default:
+		return nil
+	}
 }
 
 func (g *Generator) findLocalWitnessApply(localName string, localSort goivy.Sort, f goivy.Expr) (*goivy.Apply, int, bool) {

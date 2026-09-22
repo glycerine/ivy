@@ -124,6 +124,13 @@ Progress:
   guards. Guards that actually depend on the local symbol still fall back to the
   runtime trial path until local solver witnesses are modeled.
 - 2026-09-22: Added
+  `TestTargetTestAssignedLocalAssumeUsesGeneratorGuardFast`. Deterministic
+  local scalar assignments now act as aliases during `target=test` preimage
+  analysis, so `var scratch; scratch := c; assume scratch = green` emits a
+  generator guard on `c = green` without exposing `scratch`. Local aliases that
+  would leak into final guards or state updates still fall back to the trial
+  path.
+- 2026-09-22: Added
   `TestTargetTestCallAssignmentPreimageUsesGeneratorGuardFast`. The
   `target=test` prefix/preimage walker now carries one substitution map through
   nested analysis and inlines simple private calls with formal-to-actual
@@ -157,6 +164,86 @@ Progress:
   same point-update preimage recorder as explicit assignments, so source-level
   relation set statements contribute generator guards instead of forcing the
   runtime trial path.
+- 2026-09-22: Added
+  `TestTargetTestConditionalPointAssignmentPreimageUsesIteGuardFast`.
+  Branch-local relation/function point updates are now merged back into the
+  caller as guarded point updates, so `if c = red { marked(c) := true };
+  assume marked(green)` emits a generator guard that applies the cell update
+  only under the branch condition. Unsupported branch-local point-update shapes
+  still fall back to the trial path.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorSearchesFiniteDomainFast`. `target=test`
+  per-action generators now keep the initial randomized candidate but, when a
+  guard rejects it and all formal parameters have small finite domains, search
+  the finite formal tuple space from randomized offsets before returning
+  `false`. This narrows the gap with Python's solver-backed generators for
+  simple finite constraints that are not direct defined-parameter equalities.
+  Local solver witnesses, large/unbounded domains, and the full Z3
+  reverse-image plan remain open.
+- 2026-09-22: Added
+  `TestTargetTestLocalFiniteAssumeChoosesWitnessFast`. Generated `target=test`
+  / `target=gen` action bodies now initialize finite scalar locals by scanning
+  their finite value set when leading assumes mention the local, so simple local
+  witness constraints such as `var choice : color; assume choice = green` do not
+  depend on a single lucky nondeterministic draw. This is still a finite
+  generated-code witness search, not the full Python SMT local-input model.
+- 2026-09-22: Added
+  `TestTargetTestChoiceAssumePreimageUsesDisjunctiveGuardFast`. The
+  `target=test` preimage walker now handles pure nondeterministic choices by
+  OR-ing the branch assume preconditions, so a choice between `assume c = green`
+  and `assume c = blue` emits a generator guard for the disjunction. Branches
+  that leave different state updates still fall back to the trial path until the
+  full reverse-image choice merge is ported.
+- 2026-09-22: Added
+  `TestTargetTestBulkRelationAssignmentUsesReverseImageGuardFast`. When the
+  syntactic preimage walker cannot express an action, `target=test`/`target=gen`
+  generator guard collection now falls back to Go's shared
+  `GetUpdateForArt`/`ReverseImage` machinery and inlines simple reverse-image
+  temporary definitions before emitting Go. This covers bulk relation
+  assignments such as `marked(C) := C = c; assume marked(green)`, producing a
+  guard equivalent to `c = green` instead of relying on a trial run. The fallback
+  is best-effort and deliberately returns no guard if the shared update builder
+  rejects an action shape.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorSearchesFiniteDestructorFieldFast`. Finite
+  fallback search now also enumerates small finite destructor fields on
+  structured formals instead of requiring the whole structured sort to be
+  enumerable. This covers simple field constraints such as `shade(c) ~= red`
+  by scanning generated `gen.c.shade` values from randomized offsets. Nested
+  field models and unbounded fields still require the full Python-style solver
+  generator.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorSearchesFiniteDestructorArrayFieldFast`. Finite
+  fallback search now expands finite indexed destructor fields into per-cell
+  search dimensions, e.g. `shade(c,1) ~= red` can search
+  `gen.c.shade[1]` instead of rejecting after one randomized structured value.
+  Hash-thunk destructor fields remain outside this finite search path.
+- 2026-09-22: Added
+  `TestTargetTestLocalFiniteAssumeAfterTransparentAssertChoosesWitnessFast`.
+  Local finite witness selection now scans assumption prefixes through
+  assertion-only steps, so a harmless `assert true` before
+  `assume choice = green` no longer leaves the local value to a single random
+  draw. This is still a finite witness scan for generated Go, not the full SMT
+  local-input model.
+- 2026-09-22: Added
+  `TestTargetTestReturningActionGeneratorSearchesFiniteDomainFast`.
+  `target=test` generators for returning actions with finite formal inputs now
+  use the same guard and finite-search path as non-returning actions. The
+  zero-formal returning-action guard skip is intentionally preserved to avoid
+  reintroducing the old `assume false` retry hang.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorSearchesRelevantFiniteFormalOnlyFast`.
+  Finite fallback search now plans dimensions only for formals referenced by
+  the guard formulas, so a constrained finite formal can be solved even when
+  the action also has an irrelevant unbounded formal that remains randomized or
+  zero-valued. Referenced unbounded formals still require a stronger solver
+  model.
+- 2026-09-22: Added `TestTargetTestSolvedAssumeGeneratorSkipsTrialFast` and
+  updated the before-export/call-preimage tests to expect direct execution once
+  `generate()` succeeds. The trial clone path is now reserved for actions whose
+  calls/assumes are not covered by the syntactic preimage walker; covered
+  simple assumes, before-export guards, and inlined private-call preconditions
+  no longer import `bytes` or execute a hidden trial action.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -203,8 +290,20 @@ Progress:
   inputs (for example `gen.c == green`) instead of ignoring the assume or
   checking stale current state. Full solver-backed generator parity remains tied
   to item 1.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorSearchesFiniteDomainFast`. `target=gen`
+  per-action generators now mirror the `target=test` finite-search fallback:
+  after a randomized candidate fails a guard, small finite formal domains are
+  searched from randomized offsets before the one-shot generator returns
+  `false`. This improves non-equality finite constraints but still is not the
+  Python SMT generator.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorSearchesRelevantFiniteFormalOnlyFast`. The
+  shared finite-search planner now also lets `target=gen` solve constrained
+  finite formals without requiring irrelevant unbounded formals to become
+  search dimensions.
 
-## 3. Initial state generation is retry/randomized, not Python's initial model
+## 3. FIXED Initial state generation is retry/randomized, not Python's initial model
 
 Python source behavior:
 
@@ -259,9 +358,9 @@ Progress:
   `ivy2cpp`: solve the initial constraints, assign concrete model values for
   used state symbols, and keep normal nondeterministic initialization for
   unconstrained state. This removes the 1000-attempt runtime retry loop for
-  satisfiable constraints such as `saved != red` over a three-value enum. Full
-  initial-state parity for every solver expression shape still depends on the
-  model-conversion coverage of this fallback.
+  satisfiable constraints such as `saved != red` over a three-value enum.
+  Unsupported model-conversion shapes now fail generation instead of emitting a
+  probabilistic retry.
 - 2026-09-22: Added
   `TestTargetGenInitialAxiomThreeValueDisequalityUsesSolverModelFast`. The same
   generation-time initial model fallback now applies to `target=gen` when
@@ -270,7 +369,7 @@ Progress:
   generator. The existing target=gen hard failure for unenumerable quantified
   initial variables is preserved.
 
-## 4. `modelfile` is accepted but not semantically implemented
+## 4. FIXED `modelfile` is accepted but not semantically implemented
 
 Python source behavior:
 
@@ -317,7 +416,7 @@ Progress:
   misleading log. Full `begin check` / `begin sat` parity remains tied to the
   solver-backed generator work in items 1 and 2.
 
-## 5. Native C++ blocks, actions, types, and definitions are silently weakened
+## 5. FIXED Native C++ blocks, actions, types, and definitions are silently weakened
 
 Python source behavior:
 
@@ -370,8 +469,16 @@ Progress:
   emitting no-op or zero-value Go. Top-level native blocks remain comments, and
   the existing runtime socket-handle factory escape hatch is preserved only for
   native-only actions returning runtime handle sorts.
+- 2026-09-22: Added
+  `TestTopLevelNativeHeaderIncludesWarnAndEmitGoComments` and
+  `TestTopLevelNativeMemberAndInitRejectWeakening`. Top-level native blocks are
+  now classified: harmless `header` blocks containing only C++ includes/comments
+  are preserved as Go comments with a warning, while behavior-affecting
+  `member`, `init`, or other native blocks fail generation with a source-located
+  diagnostic. Together with the existing native action/type/definition
+  rejections, this closes the silent native weakening gap.
 
-## 6. Unsupported action/expression paths can remain soft comments in generated Go
+## 6. FIXED Unsupported action/expression paths can remain soft comments in generated Go
 
 Python source behavior:
 
@@ -419,7 +526,7 @@ Progress:
   preventing native expressions and other unsupported conditions from silently
   weakening tests.
 
-## 7. Generated randomness ignores Python's call-stack-qualified choice labels
+## 7. FIXED Generated randomness ignores Python's call-stack-qualified choice labels
 
 Python source behavior:
 
@@ -554,10 +661,14 @@ Progress:
   `TestTargetTestBeforeExportNonLeadingAssumeUsesPreimageFast`. The
   `before_export` action now feeds the same target=test preimage guard path for
   the simple assignment-before-assume shape, while execution still calls the
-  public exported action after the trial succeeds. `target=gen` already has
+  public exported action after generator success. `target=gen` already has
   fast coverage for leading `before_export` assumes, and the item 2 fix gives it
-  the same simple preimage slice. Full `before_export` reverse-image analysis is
-  still part of the solver-backed generator work.
+  the same simple preimage slice.
+- 2026-09-22: Updated before-export source-shape tests after
+  `TestTargetTestSolvedAssumeGeneratorSkipsTrialFast`: covered before-export
+  guards now skip the runtime trial clone and call the public action directly
+  after tracing. Full `before_export` reverse-image analysis remains tied to
+  the remaining solver-backed generator work.
 
 ## 10. Existing parity tests should be expanded from source shape to oracle traces
 

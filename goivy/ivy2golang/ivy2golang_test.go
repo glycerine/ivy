@@ -778,6 +778,39 @@ export set
 	}
 }
 
+func TestTargetTestAssignedLocalAssumeUsesGeneratorGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    var scratch : color;
+    scratch := c;
+    assume scratch = green;
+    saved := scratch
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testassignedlocalguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testassignedlocalguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if !((gen.c == green)) {`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test assigned-local assume missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "scratch") {
+		t.Fatalf("target=test assigned-local guard should not expose local in generator:\n%s", genBody)
+	}
+}
+
 func TestTargetTestCallAssignmentPreimageUsesGeneratorGuardFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -997,6 +1030,72 @@ export set
 	}
 }
 
+func TestTargetTestBulkRelationAssignmentUsesReverseImageGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+action set(c:color) = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	markedSym, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
+		t.Fatalf("FindSymbol marked: %v", err)
+	}
+	marked := goivy.NewConst("marked", markedSym.CSort)
+	C, err := goivy.NewVariable("C", color)
+	if err != nil {
+		t.Fatalf("NewVariable C: %v", err)
+	}
+	markedC, err := goivy.NewApply(marked, C)
+	if err != nil {
+		t.Fatalf("marked(C): %v", err)
+	}
+	rhs, err := goivy.NewEq(C, c)
+	if err != nil {
+		t.Fatalf("C = c: %v", err)
+	}
+	green := goivy.NewConst("green", color)
+	markedGreen, err := goivy.NewApply(marked, green)
+	if err != nil {
+		t.Fatalf("marked(green): %v", err)
+	}
+	act := goivy.NewSequence(
+		goivy.NewAssignAction(markedC, rhs),
+		goivy.NewAssumeAction(markedGreen),
+	)
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testbulkreverse", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testbulkreverse_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !((((green == gen.c)))) {`) {
+		t.Fatalf("bulk relation assignment should use reverse-image guard on c = green:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "__new_marked") {
+		t.Fatalf("reverse-image temporary definition leaked into generated Go:\n%s", genBody)
+	}
+}
+
 func TestTargetTestUsesPerActionGeneratorFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -1040,6 +1139,190 @@ export set
 	}
 	if strings.Contains(mainBody, `color(ivy.___ivy_randomize(2, "set.fml:c", 0))`) {
 		t.Fatalf("target=test main should use the per-action generator field, not direct randomization:\n%s", mainBody)
+	}
+}
+
+func TestTargetTestSolvedAssumeGeneratorSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    assume c = green;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testsolvedguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testsolvedguard_set_generator) generate() bool")
+	if !strings.Contains(genBody, `if !((gen.c == green)) {`) {
+		t.Fatalf("solved assume should still be checked in generator:\n%s", genBody)
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if strings.Contains(mainBody, `__ivy_trial := ivy.__ivy_clone()`) {
+		t.Fatalf("solved generator guard should not need runtime trial execution:\n%s", mainBody)
+	}
+	if strings.Contains(out.Source, `"bytes"`) {
+		t.Fatalf("target=test should not import bytes when no action needs trial:\n%s", out.Source)
+	}
+}
+
+func TestTargetTestActionGeneratorSearchesFiniteDomainFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = {
+    assume c ~= red;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testsearchactiongen", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testsearchactiongen_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []color{red, green, blue}`,
+		`__ivy_search_start_0 := ivy.___ivy_randomize(len(__ivy_search_values_0), "set.fml:c.search", 0)`,
+		`gen.c = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test finite-domain action generator search missing %q:\n%s", want, genBody)
+		}
+	}
+	searchIdx := strings.Index(genBody, `__ivy_search_values_0 := []color{red, green, blue}`)
+	rejectIdx := strings.LastIndex(genBody, `return false`)
+	if searchIdx < 0 || rejectIdx < 0 || searchIdx > rejectIdx {
+		t.Fatalf("finite-domain search should run before the generator rejects; search=%d reject=%d\n%s", searchIdx, rejectIdx, genBody)
+	}
+}
+
+func TestTargetTestReturningActionGeneratorSearchesFiniteDomainFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+action set(c:color) returns(ok:bool) = {
+    assume c ~= red;
+    ok := true
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testreturnsearchactiongen", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testreturnsearchactiongen_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test returning action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`!((gen.c == red))`,
+		`__ivy_search_values_0 := []color{red, green, blue}`,
+		`gen.c = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test returning finite-domain generator search missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorSearchesRelevantFiniteFormalOnlyFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+type node
+individual saved : color
+action set(c:color, n:node) = {
+    assume c ~= red;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testrelevantsearchactiongen", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testrelevantsearchactiongen_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.n = 0`,
+		`__ivy_search_values_0 := []color{red, green, blue}`,
+		`gen.c = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test relevant finite formal search missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `__ivy_search_values_1`) {
+		t.Fatalf("irrelevant unbounded formal should not be required as a search dimension:\n%s", genBody)
+	}
+}
+
+func TestTargetTestChoiceAssumePreimageUsesDisjunctiveGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	greenGuard, err := goivy.NewEq(c, green)
+	if err != nil {
+		t.Fatalf("green guard: %v", err)
+	}
+	blueGuard, err := goivy.NewEq(c, blue)
+	if err != nil {
+		t.Fatalf("blue guard: %v", err)
+	}
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewAssumeAction(greenGuard),
+		goivy.NewAssumeAction(blueGuard),
+	)
+	choice.SetFormalParams(formals)
+	mod.Actions.Set("set", choice)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testchoiceguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testchoiceguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if !((((gen.c == green)) || ((gen.c == blue)))) {`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test choice assume preimage missing %q:\n%s", want, genBody)
+		}
 	}
 }
 
@@ -1135,6 +1418,81 @@ export step
 	traceIdx := strings.Index(mainBody, `fmt.Fprintln(__ivy_out, "> step")`)
 	if trialIdx < 0 || traceIdx < 0 || trialIdx > traceIdx {
 		t.Fatalf("local-assume trial should execute before public trace; trial=%d trace=%d\n%s", trialIdx, traceIdx, mainBody)
+	}
+}
+
+func TestTargetTestLocalFiniteAssumeChoosesWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step = {
+    var choice : color;
+    assume choice = green;
+    saved := choice
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalfinitewitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalfinitewitness) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_local_witness_values_loc__choice := []color{red, green}`,
+		`for _, __ivy_local_witness_loc__choice := range __ivy_local_witness_values_loc__choice {`,
+		`loc__choice = __ivy_local_witness_loc__choice`,
+		`if (loc__choice == green) {`,
+		`break`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local finite witness source missing %q:\n%s", want, stepBody)
+		}
+	}
+	witnessIdx := strings.Index(stepBody, `__ivy_local_witness_values_loc__choice := []color{red, green}`)
+	assumeIdx := strings.Index(stepBody, `ivyAssume((loc__choice == green)`)
+	if witnessIdx < 0 || assumeIdx < 0 || witnessIdx > assumeIdx {
+		t.Fatalf("local witness search should precede the assume; witness=%d assume=%d\n%s", witnessIdx, assumeIdx, stepBody)
+	}
+}
+
+func TestTargetTestLocalFiniteAssumeAfterTransparentAssertChoosesWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step = {
+    var choice : color;
+    assert true;
+    assume choice = green;
+    saved := choice
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalfiniteafterassert", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalfiniteafterassert) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_local_witness_values_loc__choice := []color{red, green}`,
+		`loc__choice = __ivy_local_witness_loc__choice`,
+		`if (loc__choice == green) {`,
+		`break`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local finite witness after transparent assert missing %q:\n%s", want, stepBody)
+		}
+	}
+	witnessIdx := strings.Index(stepBody, `__ivy_local_witness_values_loc__choice := []color{red, green}`)
+	assertIdx := strings.Index(stepBody, `ivyAssert(true`)
+	assumeIdx := strings.Index(stepBody, `ivyAssume((loc__choice == green)`)
+	if witnessIdx < 0 || assertIdx < 0 || assumeIdx < 0 || witnessIdx > assertIdx || witnessIdx > assumeIdx {
+		t.Fatalf("local witness search should precede the transparent assert and assume; witness=%d assert=%d assume=%d\n%s", witnessIdx, assertIdx, assumeIdx, stepBody)
 	}
 }
 
@@ -1303,20 +1661,23 @@ export set
 		`cycle--`,
 		`continue`,
 		`__arg0 := set_generator.c`,
-		`__ivy_trial.set(__arg0)`,
+		`ivy.set(__arg0)`,
 	} {
 		if !strings.Contains(mainBody, want) {
 			t.Fatalf("target=test before_export guard source missing %q:\n%s", want, mainBody)
 		}
 	}
 	guardIdx := strings.Index(mainBody, `if !set_generator.generate() {`)
-	callIdx := strings.Index(mainBody, `__ivy_trial.set(__arg0)`)
+	callIdx := strings.Index(mainBody, `ivy.set(__arg0)`)
 	traceIdx := strings.Index(mainBody, `fmt.Fprintf(__ivy_out, "> set(%s)\n", ivyTraceValue(__arg0, false))`)
 	if guardIdx < 0 || traceIdx < 0 || guardIdx > traceIdx {
 		t.Fatalf("before_export guard should run before action trace; guard=%d trace=%d\n%s", guardIdx, traceIdx, mainBody)
 	}
-	if callIdx < 0 || guardIdx > callIdx || callIdx > traceIdx {
-		t.Fatalf("before_export guard should run before trial action and trace after commit; guard=%d call=%d trace=%d\n%s", guardIdx, callIdx, traceIdx, mainBody)
+	if callIdx < 0 || traceIdx > callIdx {
+		t.Fatalf("before_export trace should precede direct action call; trace=%d call=%d\n%s", traceIdx, callIdx, mainBody)
+	}
+	if strings.Contains(mainBody, `__ivy_trial.set(__arg0)`) {
+		t.Fatalf("covered before_export guard should not need trial execution:\n%s", mainBody)
 	}
 }
 
@@ -1384,7 +1745,7 @@ export set
 	for _, want := range []string{
 		`if !set_generator.generate() {`,
 		`__arg0 := set_generator.c`,
-		`__ivy_trial.set(__arg0)`,
+		`ivy.set(__arg0)`,
 		`fmt.Fprintf(__ivy_out, "> set(%s)\n", ivyTraceValue(__arg0, false))`,
 	} {
 		if !strings.Contains(mainBody, want) {
@@ -1392,10 +1753,13 @@ export set
 		}
 	}
 	guardIdx := strings.Index(mainBody, `if !set_generator.generate() {`)
-	callIdx := strings.Index(mainBody, `__ivy_trial.set(__arg0)`)
+	callIdx := strings.Index(mainBody, `ivy.set(__arg0)`)
 	traceIdx := strings.Index(mainBody, `fmt.Fprintf(__ivy_out, "> set(%s)\n", ivyTraceValue(__arg0, false))`)
-	if guardIdx < 0 || callIdx < 0 || traceIdx < 0 || guardIdx > callIdx || callIdx > traceIdx {
-		t.Fatalf("before_export preimage guard should precede trial call and public trace; guard=%d call=%d trace=%d\n%s", guardIdx, callIdx, traceIdx, mainBody)
+	if guardIdx < 0 || callIdx < 0 || traceIdx < 0 || guardIdx > traceIdx || traceIdx > callIdx {
+		t.Fatalf("before_export preimage guard should precede public trace and direct call; guard=%d trace=%d call=%d\n%s", guardIdx, traceIdx, callIdx, mainBody)
+	}
+	if strings.Contains(mainBody, `__ivy_trial.set(__arg0)`) {
+		t.Fatalf("covered before_export preimage should not need trial execution:\n%s", mainBody)
 	}
 }
 
@@ -4727,6 +5091,72 @@ export set
 	}
 }
 
+func TestTargetGenActionGeneratorSearchesFiniteDomainFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = {
+    assume c ~= red;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gensearchactiongen", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gensearchactiongen_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []color{red, green, blue}`,
+		`__ivy_search_start_0 := ivy.___ivy_randomize(len(__ivy_search_values_0), "__fml:c.search", 0)`,
+		`gen.c = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen finite-domain action generator search missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorSearchesRelevantFiniteFormalOnlyFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+type node
+individual saved : color
+action set(c:color, n:node) = {
+    assume c ~= red;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genrelevantsearchactiongen", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genrelevantsearchactiongen_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.n = 0`,
+		`__ivy_search_values_0 := []color{red, green, blue}`,
+		`gen.c = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen relevant finite formal search missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `__ivy_search_values_1`) {
+		t.Fatalf("irrelevant unbounded formal should not be required as a target=gen search dimension:\n%s", genBody)
+	}
+}
+
 func TestTargetGenAssignedStateAssumeUsesPreimageFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -5053,6 +5483,80 @@ export set
 	}
 	if !strings.Contains(stdout, "> set({shade:red,") || strings.Contains(stdout, "test_completed") {
 		t.Fatalf("gen target should execute the field-constrained action once without completion marker\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+}
+
+func TestTargetTestActionGeneratorSearchesFiniteDestructorFieldFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+type cell
+destructor shade(C:cell) : color
+destructor valid(C:cell) : bool
+individual saved : color
+action set(c:cell) = {
+    assume shade(c) ~= red;
+    saved := shade(c)
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "fieldsearchtest", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Fieldsearchtest_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0_shade := []color{red, green, blue}`,
+		`__ivy_search_start_0_shade := ivy.___ivy_randomize(len(__ivy_search_values_0_shade), "set.fml:c.shade.search", 0)`,
+		`gen.c.shade = __ivy_search_values_0_shade[(__ivy_search_start_0_shade+__ivy_search_i_0_shade)%len(__ivy_search_values_0_shade)]`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test finite destructor field search missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `__ivy_search_values_0 := []cell`) {
+		t.Fatalf("structured formal search should enumerate finite fields, not whole cells:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSearchesFiniteDestructorArrayFieldFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+type idx = {0..2}
+type cell
+destructor shade(C:cell, I:idx) : color
+individual saved : color
+action set(c:cell) = {
+    assume shade(c,1) ~= red;
+    saved := shade(c,1)
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "fieldarraysearchtest", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Fieldarraysearchtest_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0_shade_1 := []color{red, green, blue}`,
+		`__ivy_search_start_0_shade_1 := ivy.___ivy_randomize(len(__ivy_search_values_0_shade_1), "set.fml:c.shade.1.search", 1)`,
+		`gen.c.shade[1] = __ivy_search_values_0_shade_1[(__ivy_search_start_0_shade_1+__ivy_search_i_0_shade_1)%len(__ivy_search_values_0_shade_1)]`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test finite destructor array field search missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `__ivy_search_values_0 := []cell`) {
+		t.Fatalf("structured formal search should enumerate finite array fields, not whole cells:\n%s", genBody)
 	}
 }
 
@@ -8583,16 +9087,10 @@ func TestOracleNativeActionsRejectBehaviorWeakening(t *testing.T) {
 	}
 }
 
-func TestTopLevelNativeBlocksWarnAndEmitGoComments(t *testing.T) {
+func TestTopLevelNativeHeaderIncludesWarnAndEmitGoComments(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 <<< header
 #include <sstream>
->>>
-<<< member
-int native_counter;
->>>
-<<< init
-native_counter = 7;
 >>>
 action step = {
 }
@@ -8605,20 +9103,65 @@ export step
 	if !strings.Contains(strings.Join(out.Warnings, "\n"), "top-level native C++ blocks") {
 		t.Fatalf("expected top-level native warning, got %v", out.Warnings)
 	}
-	if got := strings.Count(out.Source, "ivy top-level native block omitted"); got != 3 {
-		t.Fatalf("top-level native marker count=%d, want 3:\n%s", got, out.Source)
+	if got := strings.Count(out.Source, "ivy top-level native block omitted"); got != 1 {
+		t.Fatalf("top-level native marker count=%d, want 1:\n%s", got, out.Source)
 	}
 	for _, want := range []string{
 		"// native: header",
 		"// native: #include <sstream>",
-		"// native: member",
-		"// native: int native_counter;",
-		"// native: init",
-		"// native: native_counter = 7;",
 	} {
 		if !strings.Contains(out.Source, want) {
 			t.Fatalf("top-level native source missing %q:\n%s", want, out.Source)
 		}
+	}
+}
+
+func TestTopLevelNativeMemberAndInitRejectWeakening(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		src  string
+		want string
+	}{
+		{
+			name: "member",
+			src: `#lang ivy1.7
+<<< member
+int native_counter;
+>>>
+action step = {
+}
+export step
+`,
+			want: "member",
+		},
+		{
+			name: "init",
+			src: `#lang ivy1.7
+<<< init
+native_counter = 7;
+>>>
+action step = {
+}
+export step
+`,
+			want: "init",
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			mod := compileIvySource(t, tc.src)
+			out, err := Generate(mod, Config{Target: "test", ClassName: "native_" + tc.name, TestIters: "1"})
+			if err == nil {
+				t.Fatalf("Generate should reject top-level native %s weakening:\n%s", tc.name, outSource(out))
+			}
+			for _, want := range []string{
+				"top-level native C++ block is not translated to Go",
+				tc.want,
+			} {
+				if !strings.Contains(err.Error(), want) {
+					t.Fatalf("top-level native rejection missing %q:\n%v", want, err)
+				}
+			}
+		})
 	}
 }
 
@@ -12283,20 +12826,36 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Trial_call_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"if !(ivy.allowed[gen.i]) {",
+		"__ivy_search_values_0 := []int{0, 1}",
+		"gen.i = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]",
+		"if __ivy_generator_candidate_ok {",
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("call preimage generator source missing %q:\n%s", want, genBody)
+		}
+	}
 	mainBody := bodyAfterMarker(out.Source, "func main()")
 	if mainBody == "" {
 		t.Fatalf("main body not emitted:\n%s", out.Source)
 	}
 	for _, want := range []string{
-		"__ivy_trial := ivy.__ivy_clone()",
-		"__ivy_assume_rejecting = true",
-		"if __ivy_trial_rejected {",
+		"if !step_generator.generate() {",
 		"cycle--",
-		"ivy = __ivy_trial",
+		"continue",
+		"ivy.step(__arg0)",
 	} {
 		if !strings.Contains(mainBody, want) {
-			t.Fatalf("trial call source missing %q:\n%s", want, mainBody)
+			t.Fatalf("call preimage source missing %q:\n%s", want, mainBody)
 		}
+	}
+	if strings.Contains(mainBody, "__ivy_trial := ivy.__ivy_clone()") {
+		t.Fatalf("covered call preimage should not need trial execution:\n%s", mainBody)
 	}
 	bin := compileGeneratedGo(t, out)
 	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "delay=0")
