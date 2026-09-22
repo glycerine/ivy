@@ -4908,6 +4908,73 @@ export set
 	}
 }
 
+func TestTargetTestGuardedInternalChoiceUsesTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	savedSym, err := mod.Sig.FindSymbol("saved", false)
+	if err != nil {
+		t.Fatalf("FindSymbol saved: %v", err)
+	}
+	saved := goivy.NewConst("saved", savedSym.CSort)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	greenGuard, err := goivy.NewEq(c, green)
+	if err != nil {
+		t.Fatalf("green guard: %v", err)
+	}
+	blueGuard, err := goivy.NewEq(c, blue)
+	if err != nil {
+		t.Fatalf("blue guard: %v", err)
+	}
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewSequence(goivy.NewAssumeAction(greenGuard), goivy.NewAssignAction(saved, green)),
+		goivy.NewSequence(goivy.NewAssumeAction(blueGuard), goivy.NewAssignAction(saved, blue)),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssumeAction(greenGuard))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testguardedchoiceusestrial", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testguardedchoiceusestrial_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `gen.c == green`) {
+		t.Fatalf("guarded choice generator should still constrain the formal before trial execution:\n%s", genBody)
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	for _, want := range []string{
+		`__ivy_trial := ivy.__ivy_clone()`,
+		`__ivy_assume_rejecting = true`,
+		`if __ivy_trial_rejected {`,
+	} {
+		if !strings.Contains(mainBody, want) {
+			t.Fatalf("guarded internal choice should use hidden trial path missing %q:\n%s", want, mainBody)
+		}
+	}
+}
+
 func TestTargetGenChoiceStateUpdatePreimageUsesReverseImageGuardFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green, blue}
@@ -5164,6 +5231,77 @@ export set
 	}
 	if !strings.Contains(genBody, `!(ivy.active)`) && !strings.Contains(genBody, `!ivy.active`) {
 		t.Fatalf("target=gen guarded choice point-update preimage missing inactive branch guard:\n%s", genBody)
+	}
+}
+
+func TestTargetGenGuardedInternalChoiceUsesTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	savedSym, err := mod.Sig.FindSymbol("saved", false)
+	if err != nil {
+		t.Fatalf("FindSymbol saved: %v", err)
+	}
+	saved := goivy.NewConst("saved", savedSym.CSort)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	greenGuard, err := goivy.NewEq(c, green)
+	if err != nil {
+		t.Fatalf("green guard: %v", err)
+	}
+	blueGuard, err := goivy.NewEq(c, blue)
+	if err != nil {
+		t.Fatalf("blue guard: %v", err)
+	}
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewSequence(goivy.NewAssumeAction(greenGuard), goivy.NewAssignAction(saved, green)),
+		goivy.NewSequence(goivy.NewAssumeAction(blueGuard), goivy.NewAssignAction(saved, blue)),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssumeAction(greenGuard))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genguardedchoiceusestrial", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genguardedchoiceusestrial_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `gen.c == green`) {
+		t.Fatalf("guarded choice generator should still constrain the formal before trial execution:\n%s", genBody)
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genguardedchoiceusestrial_set_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("set generator execute body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_trial := ivy.__ivy_clone()`,
+		`__ivy_assume_rejecting = true`,
+		`if __ivy_trial_rejected {`,
+		`return`,
+	} {
+		if !strings.Contains(executeBody, want) {
+			t.Fatalf("target=gen guarded internal choice should use rejecting trial path missing %q:\n%s", want, executeBody)
+		}
 	}
 }
 

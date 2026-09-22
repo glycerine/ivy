@@ -518,6 +518,9 @@ func (g *Generator) emitImports(w *goWriter) {
 			imports = append(imports, "bytes")
 		}
 	}
+	if g.Config.Target == "gen" && g.genTargetEmitsTrial() {
+		imports = append(imports, "bytes")
+	}
 	sort.Strings(imports)
 	for _, imp := range imports {
 		w.linef("%q", imp)
@@ -535,6 +538,19 @@ func (g *Generator) testTargetEmitsTrial() bool {
 		act, _ := g.Mod.Actions.Get2(name)
 		genAct := g.actionGeneratorAnalysisAction(name, act)
 		if g.testActionNeedsTrial(genAct) {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) genTargetEmitsTrial() bool {
+	if g == nil || g.Config.Target != "gen" {
+		return false
+	}
+	for _, name := range g.runnableActionNamesInOrder() {
+		act, _ := g.Mod.Actions.Get2(name)
+		if g.actionContainsGuardedInternalChoice(act, map[string]bool{}) {
 			return true
 		}
 	}
@@ -10714,6 +10730,10 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 		g.errs = append(g.errs, err)
 	}
 	call := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(args, ", "))
+	if g.actionContainsGuardedInternalChoice(act, map[string]bool{}) {
+		g.emitGenTrialActionExecute(w, name, fn, act, args)
+		return
+	}
 	w.line(g.actionTraceLine(name, args))
 	if g.Config.Trace {
 		w.line(`fmt.Fprintln(__ivy_out, "{")`)
@@ -10765,6 +10785,51 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 		}
 	}
 	w.line("ivy._generating = false")
+}
+
+func (g *Generator) emitGenTrialActionExecute(w *goWriter, name, fn string, act goivy.Action, args []string) {
+	trialCall := fmt.Sprintf("__ivy_trial.%s(%s)", fn, strings.Join(args, ", "))
+	w.line("__ivy_trial := ivy.__ivy_clone()")
+	w.line("var __ivy_trace bytes.Buffer")
+	w.line("__ivy_saved_out := __ivy_out")
+	w.line("__ivy_saved_assume_rejecting := __ivy_assume_rejecting")
+	w.line("__ivy_saved_assume_rejected := __ivy_assume_rejected")
+	w.line("__ivy_out = &__ivy_trace")
+	w.line("__ivy_assume_rejecting = true")
+	w.line("__ivy_assume_rejected = false")
+	w.line("__ivy_trial._generating = true")
+	w.linef("__ivy_trial.___ivy_push(%q)", name)
+	nret := 0
+	if act != nil {
+		nret = len(act.GetFormalReturns())
+	}
+	switch nret {
+	case 0:
+		w.line(trialCall)
+	case 1:
+		if g.Config.Trace {
+			w.line("__ivy_result := " + trialCall)
+		} else {
+			w.line("_ = " + trialCall)
+		}
+	default:
+		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + trialCall)
+	}
+	w.line("__ivy_trial.___ivy_pop()")
+	w.line("__ivy_trial._generating = false")
+	w.line("__ivy_trial_rejected := __ivy_assume_rejected")
+	w.line("__ivy_out = __ivy_saved_out")
+	w.line("__ivy_assume_rejecting = __ivy_saved_assume_rejecting")
+	w.line("__ivy_assume_rejected = __ivy_saved_assume_rejected")
+	w.open("if __ivy_trial_rejected {")
+	w.line("return")
+	w.close("")
+	w.line("*ivy = *__ivy_trial")
+	w.line(g.actionTraceLine(name, args))
+	w.line("_, _ = io.Copy(__ivy_out, &__ivy_trace)")
+	if nret == 1 && g.Config.Trace {
+		w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__ivy_result"))
+	}
 }
 
 func (g *Generator) emitGenActionInvocations(w *goWriter, runnable []string) {
@@ -10994,6 +11059,9 @@ func (g *Generator) emitTestTrialActionCall(w *goWriter, fn string, act goivy.Ac
 func (g *Generator) testActionNeedsTrial(act goivy.Action) bool {
 	if !actionContainsCall(act) && !actionContainsAssume(act) {
 		return false
+	}
+	if g.actionContainsGuardedInternalChoice(act, map[string]bool{}) {
+		return true
 	}
 	if g.zeroFormalLocalVariantWitnessActionSafe(act) {
 		return false
@@ -12428,6 +12496,66 @@ func actionContainsAssume(act goivy.Action) bool {
 			continue
 		}
 		if actionContainsAssume(childAct) {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) actionContainsGuardedInternalChoice(act goivy.Action, seen map[string]bool) bool {
+	if act == nil {
+		return false
+	}
+	switch a := act.(type) {
+	case *goivy.LogicChoiceAction:
+		if choiceBranchesContainAssume(a) {
+			return true
+		}
+	case *goivy.LogicEnvAction:
+		if choiceBranchesContainAssume(&a.LogicChoiceAction) {
+			return true
+		}
+	case *goivy.LogicCallAction:
+		if g == nil || g.Mod == nil || g.Mod.Actions == nil {
+			return false
+		}
+		name := a.CalleeName()
+		if name == "" || seen[name] {
+			return false
+		}
+		callee, ok := g.Mod.Actions.Get2(name)
+		if !ok || callee == nil {
+			return false
+		}
+		seen[name] = true
+		ok = g.actionContainsGuardedInternalChoice(callee, seen)
+		delete(seen, name)
+		if ok {
+			return true
+		}
+	}
+	for _, child := range act.ActionArgs() {
+		childAct, ok := child.(goivy.Action)
+		if !ok {
+			continue
+		}
+		if g.actionContainsGuardedInternalChoice(childAct, seen) {
+			return true
+		}
+	}
+	return false
+}
+
+func choiceBranchesContainAssume(a *goivy.LogicChoiceAction) bool {
+	if a == nil {
+		return false
+	}
+	for _, branch := range a.Branches {
+		branchAct, ok := goivy.ToAction(branch)
+		if !ok {
+			continue
+		}
+		if actionContainsAssume(branchAct) {
 			return true
 		}
 	}

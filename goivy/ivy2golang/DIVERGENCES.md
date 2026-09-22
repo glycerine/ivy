@@ -1363,6 +1363,12 @@ Progress:
   the corresponding point-update alternative, so later assumes are guarded as
   `branch_guard & rewritten_later_guard` instead of falling back to an
   unconditional generator.
+- 2026-09-22: Added `TestTargetTestGuardedInternalChoiceUsesTrialFast`.
+  `target=test` actions with internal choice/env branches containing runtime
+  assumes now use the hidden rejecting trial path after generator success. This
+  prevents a visible `assumption_failed` from an unlucky internal branch choice
+  while Go still lacks ivy2cpp's solver-controlled internal `___branch`
+  generator choices.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -2183,6 +2189,11 @@ Progress:
   `TestTargetGenChoiceGuardedPointUpdatePreimageUsesGuardFast`. The guarded
   branch point-update alternative path is shared by `target=gen`, preserving
   branch-local assume guards when one-shot generators build later assume guards.
+- 2026-09-22: Added `TestTargetGenGuardedInternalChoiceUsesTrialFast`.
+  `target=gen` now mirrors the target=test interim safety behavior for
+  internal choice/env branches with runtime assumes: execute on a clone with
+  assumption rejection enabled, skip the one-shot action on rejection, and copy
+  back accepted state before emitting the public trace.
 
 ## 3. FIXED Initial state generation is retry/randomized, not Python's initial model
 
@@ -3043,3 +3054,9 @@ Progress:
 - 2026-09-22: Added target=test and target=gen guarded choice point-update
   tests, covering branch-local assume guards attached to branch-specific
   relation/function cell writes before a later assume.
+- 2026-09-22: Added a fast target=test guarded-internal-choice trial-path
+  regression, covering the interim safety contract that branch-assume choices
+  must not execute directly until internal branch choices are model-controlled.
+- 2026-09-22: Added the matching target=gen guarded-internal-choice trial-path
+  regression, covering one-shot generated actions that must skip rejected
+  internal branch choices instead of surfacing `assumption_failed`.
