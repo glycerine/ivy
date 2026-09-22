@@ -64,6 +64,28 @@ Regression test:
   generator `generate()` methods for `target=test` and does not emit the direct
   random-actuals path for exported actions.
 
+Progress:
+
+- 2026-09-22: Added
+  `TestTargetTestNonLeadingAssumeGuardSkipsRejectedInputsFast` and fixed the
+  narrow transparent-prefix case: in `target=test`, assumes after non-mutating
+  assertions are now emitted as pre-action reject guards before tracing or
+  executing the action. This prevents a direct runtime `assumption_failed` for
+  that subset. The full reverse-image/action-generator port described above is
+  still open.
+- 2026-09-22: Added `TestTargetTestAssignedStateAssumeUsesPreimageFast` and
+  fixed a second narrow reverse-image slice: top-level scalar state assignments
+  before an assume are now substituted into the assume guard for `target=test`.
+  For example, `saved := c; assume saved = green` emits a pre-action guard on
+  `c = green`. This is still limited to simple top-level assignments and does
+  not replace the full solver-backed action generator.
+- 2026-09-22: Added
+  `TestTargetTestConditionalAssumeUsesImplicationGuardFast` and fixed a third
+  narrow reverse-image slice: precondition-only branches such as
+  `if c = red { assume false }` now emit implication guards like
+  `c = red -> false` before the action trace. Branches that can mutate state are
+  still intentionally outside this limited fix.
+
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
 Python source behavior:

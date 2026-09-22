@@ -2828,6 +2828,17 @@ func (g *Generator) genActionPreconditionFormulas(name string, act goivy.Action)
 	return guards
 }
 
+func (g *Generator) testActionPreconditionFormulas(name string, act goivy.Action) []goivy.Expr {
+	var guards []goivy.Expr
+	if g != nil && g.Mod != nil && g.Mod.ExtPreconds != nil {
+		if pre := g.Mod.ExtPreconds[name]; pre != nil {
+			guards = append(guards, pre)
+		}
+	}
+	guards = append(guards, g.testActionPrefixPreimageAssumeFormulas(act)...)
+	return guards
+}
+
 func leadingAssumeFormulas(act goivy.Action) []goivy.Expr {
 	switch a := act.(type) {
 	case *goivy.LogicAssumeAction:
@@ -2850,6 +2861,174 @@ func leadingAssumeFormulas(act goivy.Action) []goivy.Expr {
 	default:
 		return nil
 	}
+}
+
+func (g *Generator) testActionPrefixPreimageAssumeFormulas(act goivy.Action) []goivy.Expr {
+	switch a := act.(type) {
+	case *goivy.LogicAssumeAction:
+		if a.Formula == nil {
+			return nil
+		}
+		return []goivy.Expr{a.Formula}
+	case *goivy.LogicSequence:
+		var guards []goivy.Expr
+		subs := map[goivy.NodeKey]goivy.Expr{}
+		for _, elem := range a.Elems {
+			switch e := elem.(type) {
+			case *goivy.LogicAssumeAction:
+				if e.Formula == nil {
+					continue
+				}
+				guard := e.Formula
+				if len(subs) > 0 {
+					substituted, err := goivy.Substitute(guard, subs)
+					if err != nil {
+						return guards
+					}
+					guard = substituted
+				}
+				guards = append(guards, guard)
+			case *goivy.LogicAssertAction:
+				continue
+			case *goivy.LogicAssignAction:
+				if !g.recordSimplePreimageAssign(e, subs) {
+					return guards
+				}
+			case *goivy.LogicIfAction:
+				branchGuards, ok := g.conditionalPreimageAssumeGuards(e, subs)
+				if !ok {
+					return guards
+				}
+				guards = append(guards, branchGuards...)
+			default:
+				return guards
+			}
+		}
+		return guards
+	default:
+		return nil
+	}
+}
+
+func (g *Generator) conditionalPreimageAssumeGuards(a *goivy.LogicIfAction, subs map[goivy.NodeKey]goivy.Expr) ([]goivy.Expr, bool) {
+	if a == nil || a.Cond == nil {
+		return nil, false
+	}
+	cond := a.Cond
+	if len(subs) > 0 {
+		substituted, err := goivy.Substitute(cond, subs)
+		if err != nil {
+			return nil, false
+		}
+		cond = substituted
+	}
+	var guards []goivy.Expr
+	if a.ThenBody != nil {
+		thenAct, ok := goivy.ToAction(a.ThenBody)
+		if !ok || !preconditionOnlyAction(thenAct) {
+			return nil, false
+		}
+		for _, guard := range g.testActionPrefixPreimageAssumeFormulas(thenAct) {
+			guard, ok = substituteGuardForPreimage(guard, subs)
+			if !ok {
+				return nil, false
+			}
+			impl, err := goivy.NewImplies(cond, guard)
+			if err != nil {
+				return nil, false
+			}
+			guards = append(guards, impl)
+		}
+	}
+	if a.ElseBody != nil {
+		elseAct, ok := goivy.ToAction(a.ElseBody)
+		if !ok || !preconditionOnlyAction(elseAct) {
+			return nil, false
+		}
+		notCond, err := goivy.NewNot(cond)
+		if err != nil {
+			return nil, false
+		}
+		for _, guard := range g.testActionPrefixPreimageAssumeFormulas(elseAct) {
+			guard, ok = substituteGuardForPreimage(guard, subs)
+			if !ok {
+				return nil, false
+			}
+			impl, err := goivy.NewImplies(notCond, guard)
+			if err != nil {
+				return nil, false
+			}
+			guards = append(guards, impl)
+		}
+	}
+	return guards, true
+}
+
+func substituteGuardForPreimage(guard goivy.Expr, subs map[goivy.NodeKey]goivy.Expr) (goivy.Expr, bool) {
+	if guard == nil || len(subs) == 0 {
+		return guard, true
+	}
+	substituted, err := goivy.Substitute(guard, subs)
+	if err != nil {
+		return nil, false
+	}
+	return substituted, true
+}
+
+func preconditionOnlyAction(act goivy.Action) bool {
+	switch a := act.(type) {
+	case nil:
+		return true
+	case *goivy.LogicAssumeAction, *goivy.LogicAssertAction:
+		return true
+	case *goivy.LogicSequence:
+		for _, elem := range a.Elems {
+			child, ok := elem.(goivy.Action)
+			if !ok || !preconditionOnlyAction(child) {
+				return false
+			}
+		}
+		return true
+	case *goivy.LogicIfAction:
+		if a.ThenBody != nil {
+			thenAct, ok := goivy.ToAction(a.ThenBody)
+			if !ok || !preconditionOnlyAction(thenAct) {
+				return false
+			}
+		}
+		if a.ElseBody != nil {
+			elseAct, ok := goivy.ToAction(a.ElseBody)
+			if !ok || !preconditionOnlyAction(elseAct) {
+				return false
+			}
+		}
+		return true
+	default:
+		return false
+	}
+}
+
+func (g *Generator) recordSimplePreimageAssign(a *goivy.LogicAssignAction, subs map[goivy.NodeKey]goivy.Expr) bool {
+	if a == nil || a.LHS == nil || a.RHS == nil {
+		return false
+	}
+	lhs, ok := a.LHS.(*goivy.Const)
+	if !ok {
+		return false
+	}
+	if _, ok := g.isStateSymbolName(lhs.Name); !ok {
+		return false
+	}
+	rhs := a.RHS
+	if len(subs) > 0 {
+		substituted, err := goivy.Substitute(rhs, subs)
+		if err != nil {
+			return false
+		}
+		rhs = substituted
+	}
+	subs[goivy.Key(lhs)] = rhs
+	return true
 }
 
 func formalExprOverrideNames(name string) []string {
@@ -3130,7 +3309,7 @@ func actionContainsCall(act goivy.Action) bool {
 }
 
 func (g *Generator) emitTestActionDefinedInputs(w *goWriter, name string, act goivy.Action, args []string) {
-	defs := g.genActionGeneratorDefinedInputs(act, g.genActionPreconditionFormulas(name, act))
+	defs := g.genActionGeneratorDefinedInputs(act, g.testActionPreconditionFormulas(name, act))
 	if len(defs) == 0 {
 		return
 	}
@@ -3166,7 +3345,7 @@ func (g *Generator) emitTestActionAssumeGuards(w *goWriter, name string, act goi
 	if len(act.GetFormalReturns()) > 0 {
 		return
 	}
-	guards := g.genActionPreconditionFormulas(name, act)
+	guards := g.testActionPreconditionFormulas(name, act)
 	if len(guards) == 0 {
 		return
 	}

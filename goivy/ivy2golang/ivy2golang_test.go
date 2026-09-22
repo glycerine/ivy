@@ -582,6 +582,129 @@ export set
 	}
 }
 
+func TestTargetTestNonLeadingAssumeGuardSkipsRejectedInputsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+after init {
+    saved := red
+}
+action set(c:color) = {
+    assert c = c;
+    assume c = green;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnonguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	guard := `if !((__arg0 == green)) {`
+	trace := `fmt.Fprintf(__ivy_out, "> set(%s)\n", ivyTraceValue(__arg0, false))`
+	for _, want := range []string{
+		guard,
+		`cycle--`,
+		`continue`,
+		trace,
+	} {
+		if !strings.Contains(mainBody, want) {
+			t.Fatalf("target=test non-leading assume guard source missing %q:\n%s", want, mainBody)
+		}
+	}
+	guardIdx := strings.Index(mainBody, guard)
+	traceIdx := strings.Index(mainBody, trace)
+	if guardIdx < 0 || traceIdx < 0 || guardIdx > traceIdx {
+		t.Fatalf("non-leading assume guard should run before action trace; guard=%d trace=%d\n%s", guardIdx, traceIdx, mainBody)
+	}
+}
+
+func TestTargetTestAssignedStateAssumeUsesPreimageFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+after init {
+    saved := red
+}
+action set(c:color) = {
+    saved := c;
+    assume saved = green
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testpreimage", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	guard := `if !((__arg0 == green)) {`
+	trace := `fmt.Fprintf(__ivy_out, "> set(%s)\n", ivyTraceValue(__arg0, false))`
+	for _, want := range []string{
+		guard,
+		`cycle--`,
+		`continue`,
+		trace,
+	} {
+		if !strings.Contains(mainBody, want) {
+			t.Fatalf("target=test assigned-state assume preimage source missing %q:\n%s", want, mainBody)
+		}
+	}
+	guardIdx := strings.Index(mainBody, guard)
+	traceIdx := strings.Index(mainBody, trace)
+	if guardIdx < 0 || traceIdx < 0 || guardIdx > traceIdx {
+		t.Fatalf("assigned-state assume guard should run before action trace; guard=%d trace=%d\n%s", guardIdx, traceIdx, mainBody)
+	}
+}
+
+func TestTargetTestConditionalAssumeUsesImplicationGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+after init {
+    saved := red
+}
+action set(c:color) = {
+    if c = red {
+        assume false
+    };
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	guardExpr := `(!((__arg0 == red)) || (false))`
+	trace := `fmt.Fprintf(__ivy_out, "> set(%s)\n", ivyTraceValue(__arg0, false))`
+	for _, want := range []string{
+		guardExpr,
+		`cycle--`,
+		`continue`,
+		trace,
+	} {
+		if !strings.Contains(mainBody, want) {
+			t.Fatalf("target=test conditional assume guard source missing %q:\n%s", want, mainBody)
+		}
+	}
+	guardIdx := strings.Index(mainBody, guardExpr)
+	traceIdx := strings.Index(mainBody, trace)
+	if guardIdx < 0 || traceIdx < 0 || guardIdx > traceIdx {
+		t.Fatalf("conditional assume guard should run before action trace; guard=%d trace=%d\n%s", guardIdx, traceIdx, mainBody)
+	}
+}
+
 func TestTargetTestLeadingAssumeGuardOnZeroArgAction(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 action step = {
