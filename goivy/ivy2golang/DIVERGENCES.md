@@ -317,6 +317,17 @@ Progress:
   same modeled local witness, so branch-wrapped point updates no longer force a
   hidden trial clone.
 - 2026-09-22: Added
+  `TestTargetTestLocalVariantOneSidedConditionalPointUpdateSkipsTrialFast`.
+  One-sided conditional relation point updates are now recorded with their
+  branch guard, so `if active { seen(x) := true }` can satisfy a later
+  `ite(active, seen(x), true)` recheck without making the guarded update prove
+  unconditional `seen(x)` assumptions.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantElseSidedConditionalPointUpdateSkipsTrialFast`.
+  Guarded relation point updates now record the branch polarity too, so the
+  mirror case `if active { } else { seen(x) := true }` proves
+  `ite(active, true, seen(x))` without a hidden trial clone.
+- 2026-09-22: Added
   `TestTargetTestLocalRelationPointUpdateExistsSkipsTrialFast`. Positive
   relation point updates now also cover existential ignored columns in the
   later recheck, e.g. `edge(x,n8) := true; assume exists M. edge(x,M)` when
@@ -2538,6 +2549,15 @@ Progress:
   identical-branch conditional point-update pattern, checking that a modeled
   local witness still avoids the hidden trial path when the update is wrapped
   in an `if/else`.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantOneSidedConditionalPointUpdateSkipsTrialFast` for
+  guarded one-sided point updates, checking that the proof is branch-aware for
+  `ite(active, seen(x), true)` but does not treat guarded writes as
+  unconditional.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantElseSidedConditionalPointUpdateSkipsTrialFast` for
+  the else-branch mirror, proving branch polarity is part of the guarded
+  point-update coverage.
 - 2026-09-22: Added
   `TestTargetTestLocalRelationPointUpdateExistsSkipsTrialFast` for the
   existential-column point-update recheck shape, proving the generated action

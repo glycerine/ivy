@@ -5207,6 +5207,251 @@ export step
 	}
 }
 
+func TestTargetTestLocalVariantOneSidedConditionalPointUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+relation seen(M:msg)
+action step = {
+}
+export step
+`)
+	installOneSidedConditionalVariantPointUpdateStep(t, mod)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantonesidedifpoint", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantonesidedifpoint) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`x = msg{tag: 0, value: 0, valid: true}`,
+		`if ivy.active {`,
+		`ivy.seen.Set(x, true)`,
+		`} else {`,
+		`ivyAssume(ivyTernary(ivy.active, ivy.seen.Get(x), true)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant one-sided conditional point-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant one-sided conditional point update should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func installOneSidedConditionalVariantPointUpdateStep(t *testing.T, mod *goivy.Module) {
+	t.Helper()
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	local := goivy.NewConst("x", msg)
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	q, err := goivy.NewVariable("Q", req)
+	if err != nil {
+		t.Fatalf("NewVariable Q: %v", err)
+	}
+	reqStarSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *> req: %v", err)
+	}
+	xReq := goivy.MustApply(goivy.NewConst("*>", reqStarSort), local, q)
+	xReqExists, err := goivy.NewExists([]*goivy.LogicVariable{q}, xReq)
+	if err != nil {
+		t.Fatalf("exists x *> Q: %v", err)
+	}
+	seen := goivy.MustApply(goivy.NewConst("seen", goivy.LogicRelationSort([]goivy.Sort{msg})), local)
+	recheck, err := goivy.NewIte(active, seen, goivy.True)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(xReqExists),
+		goivy.NewIfAction(active, goivy.NewAssignAction(seen, goivy.NewConst("true", goivy.Boolean)), goivy.NewSequence()),
+		goivy.NewAssumeAction(recheck),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", local, body))
+}
+
+func TestTargetTestLocalVariantElseSidedConditionalPointUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+relation seen(M:msg)
+action step = {
+}
+export step
+`)
+	installElseSidedConditionalVariantPointUpdateStep(t, mod)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantelsesidedifpoint", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantelsesidedifpoint) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`x = msg{tag: 0, value: 0, valid: true}`,
+		`if ivy.active {`,
+		`} else {`,
+		`ivy.seen.Set(x, true)`,
+		`ivyAssume(ivyTernary(ivy.active, true, ivy.seen.Get(x))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant else-sided conditional point-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant else-sided conditional point update should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func installElseSidedConditionalVariantPointUpdateStep(t *testing.T, mod *goivy.Module) {
+	t.Helper()
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	local := goivy.NewConst("x", msg)
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	q, err := goivy.NewVariable("Q", req)
+	if err != nil {
+		t.Fatalf("NewVariable Q: %v", err)
+	}
+	reqStarSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *> req: %v", err)
+	}
+	xReq := goivy.MustApply(goivy.NewConst("*>", reqStarSort), local, q)
+	xReqExists, err := goivy.NewExists([]*goivy.LogicVariable{q}, xReq)
+	if err != nil {
+		t.Fatalf("exists x *> Q: %v", err)
+	}
+	seen := goivy.MustApply(goivy.NewConst("seen", goivy.LogicRelationSort([]goivy.Sort{msg})), local)
+	recheck, err := goivy.NewIte(active, goivy.True, seen)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(xReqExists),
+		goivy.NewIfAction(active, goivy.NewSequence(), goivy.NewAssignAction(seen, goivy.NewConst("true", goivy.Boolean))),
+		goivy.NewAssumeAction(recheck),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", local, body))
+}
+
+func TestTargetTestLocalVariantConditionalPointUpdateImplicationSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+relation seen(M:msg)
+action step = {
+}
+export step
+`)
+	installImplicationConditionalVariantPointUpdateStep(t, mod)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantifpointimpl", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantifpointimpl) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`x = msg{tag: 0, value: 0, valid: true}`,
+		`if ivy.active {`,
+		`ivy.seen.Set(x, true)`,
+		`ivyAssume((!(ivy.active) || ivy.seen.Get(x))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant conditional point-update implication body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant conditional point update implication should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func installImplicationConditionalVariantPointUpdateStep(t *testing.T, mod *goivy.Module) {
+	t.Helper()
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	local := goivy.NewConst("x", msg)
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	q, err := goivy.NewVariable("Q", req)
+	if err != nil {
+		t.Fatalf("NewVariable Q: %v", err)
+	}
+	reqStarSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *> req: %v", err)
+	}
+	xReq := goivy.MustApply(goivy.NewConst("*>", reqStarSort), local, q)
+	xReqExists, err := goivy.NewExists([]*goivy.LogicVariable{q}, xReq)
+	if err != nil {
+		t.Fatalf("exists x *> Q: %v", err)
+	}
+	seen := goivy.MustApply(goivy.NewConst("seen", goivy.LogicRelationSort([]goivy.Sort{msg})), local)
+	recheck, err := goivy.NewImplies(active, seen)
+	if err != nil {
+		t.Fatalf("NewImplies: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(xReqExists),
+		goivy.NewIfAction(active, goivy.NewAssignAction(seen, goivy.NewConst("true", goivy.Boolean)), goivy.NewSequence()),
+		goivy.NewAssumeAction(recheck),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", local, body))
+}
+
 func TestTargetTestLocalRelationPointUpdateExistsSkipsTrialFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type msg

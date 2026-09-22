@@ -10521,6 +10521,11 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 		case *goivy.LogicAssertAction, *goivy.LogicRequiresAction, *goivy.LogicEnsuresAction, *goivy.LogicSubgoalAction, *goivy.IgnoreAction, *goivy.LogicDebugAction:
 			return true
 		case *goivy.LogicIfAction:
+			if update, ok := localRelationPointUpdateFromIf(a, locals, modeledLocals); ok {
+				witnessPhase = false
+				relationPointUpdates = append(relationPointUpdates, update)
+				return true
+			}
 			if a.ThenBody == nil || a.ElseBody == nil {
 				return false
 			}
@@ -10538,8 +10543,10 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 }
 
 type localRelationPointUpdate struct {
-	app   *goivy.Apply
-	value bool
+	app        *goivy.Apply
+	value      bool
+	guard      goivy.Expr
+	guardValue bool
 }
 
 type localRelationWitness struct {
@@ -10728,6 +10735,85 @@ func localRelationPointUpdateFromAssign(a *goivy.LogicAssignAction, locals map[s
 		}
 	}
 	return localRelationPointUpdate{app: app, value: value}, true
+}
+
+func localRelationPointUpdateFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {
+	if a == nil || a.Cond == nil || a.ThenBody == nil {
+		return localRelationPointUpdate{}, false
+	}
+	thenAct, thenOK := goivy.ToAction(a.ThenBody)
+	if !thenOK {
+		return localRelationPointUpdate{}, false
+	}
+	elseAct, elseOK := goivy.ToAction(a.ElseBody)
+	if a.ElseBody != nil && !elseOK {
+		return localRelationPointUpdate{}, false
+	}
+	if localWitnessDirectNoopAction(elseAct) {
+		update, ok := localRelationPointUpdateFromAction(thenAct, locals, modeledLocals)
+		if !ok {
+			return localRelationPointUpdate{}, false
+		}
+		update.guard = a.Cond
+		update.guardValue = true
+		return update, true
+	}
+	if !localWitnessDirectNoopAction(thenAct) {
+		return localRelationPointUpdate{}, false
+	}
+	update, ok := localRelationPointUpdateFromAction(elseAct, locals, modeledLocals)
+	if !ok {
+		return localRelationPointUpdate{}, false
+	}
+	update.guard = a.Cond
+	update.guardValue = false
+	return update, true
+}
+
+func localRelationPointUpdateFromAction(act goivy.Action, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {
+	switch a := act.(type) {
+	case *goivy.LogicAssignAction:
+		return localRelationPointUpdateFromAssign(a, locals, modeledLocals)
+	case *goivy.LogicSetAction:
+		if a == nil || a.Lit == nil {
+			return localRelationPointUpdate{}, false
+		}
+		target, value := setTargetAndValue(a.Lit)
+		return localRelationPointUpdateFromAssign(goivy.NewAssignAction(target, goivy.NewConst(value, goivy.Boolean)), locals, modeledLocals)
+	case *goivy.LogicSequence:
+		if a == nil || len(a.Elems) != 1 {
+			return localRelationPointUpdate{}, false
+		}
+		child, ok := a.Elems[0].(goivy.Action)
+		if !ok {
+			return localRelationPointUpdate{}, false
+		}
+		return localRelationPointUpdateFromAction(child, locals, modeledLocals)
+	default:
+		return localRelationPointUpdate{}, false
+	}
+}
+
+func localWitnessDirectNoopAction(act goivy.Action) bool {
+	switch a := act.(type) {
+	case nil:
+		return true
+	case *goivy.LogicSequence:
+		if a == nil {
+			return true
+		}
+		for _, elem := range a.Elems {
+			child, ok := elem.(goivy.Action)
+			if !ok || !localWitnessDirectNoopAction(child) {
+				return false
+			}
+		}
+		return true
+	case *goivy.IgnoreAction, *goivy.LogicDebugAction:
+		return true
+	default:
+		return false
+	}
 }
 
 func singleLocalActionForDirectWitness(act goivy.Action) *goivy.LogicLocalAction {
@@ -10930,8 +11016,10 @@ func localRelationPointAssumeCoveredValue(expr goivy.Expr, ignored map[string]bo
 			}
 		}
 	case *goivy.LogicIte:
-		return localRelationPointAssumeCoveredValue(n.Then, ignored, stateFromLocal, updates, want) &&
-			localRelationPointAssumeCoveredValue(n.Else, ignored, stateFromLocal, updates, want)
+		thenUpdates := localRelationPointUpdatesForIteBranch(updates, n.Cond, true)
+		elseUpdates := localRelationPointUpdatesForIteBranch(updates, n.Cond, false)
+		return localRelationPointAssumeCoveredValue(n.Then, ignored, stateFromLocal, thenUpdates, want) &&
+			localRelationPointAssumeCoveredValue(n.Else, ignored, stateFromLocal, elseUpdates, want)
 	case *goivy.LogicLet:
 		if expanded, ok := actionGeneratorExpandLetExpr(n); ok {
 			return localRelationPointAssumeCoveredValue(expanded, ignored, stateFromLocal, updates, want)
@@ -10946,6 +11034,9 @@ func localRelationPointApplyCovered(app *goivy.Apply, ignored map[string]bool, s
 	}
 	for i := len(updates) - 1; i >= 0; i-- {
 		update := updates[i]
+		if update.guard != nil {
+			continue
+		}
 		if update.app == nil || goivy.Key(update.app.Func) != goivy.Key(app.Func) || len(update.app.Terms) != len(app.Terms) {
 			continue
 		}
@@ -10964,6 +11055,24 @@ func localRelationPointApplyCovered(app *goivy.Apply, ignored map[string]bool, s
 		}
 	}
 	return false
+}
+
+func localRelationPointUpdatesForIteBranch(updates []localRelationPointUpdate, cond goivy.Expr, thenBranch bool) []localRelationPointUpdate {
+	if len(updates) == 0 {
+		return updates
+	}
+	out := make([]localRelationPointUpdate, 0, len(updates))
+	for _, update := range updates {
+		if update.guard != nil && exprEqual(update.guard, cond) {
+			if update.guardValue == thenBranch {
+				update.guard = nil
+				out = append(out, update)
+			}
+			continue
+		}
+		out = append(out, update)
+	}
+	return out
 }
 
 func localRelationPointTermCovered(updateTerm, assumeTerm goivy.Expr, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string) bool {
