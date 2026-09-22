@@ -582,6 +582,12 @@ Progress:
   guards such as `ite(active, n > 10, n > 20)` try
   `ivyTernary(ivy.active, 11, 21)` before falling back to broader small search.
 - 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesItePartialNumericWitnessFast`. Conditional
+  scalar numeric guards with a witness on only one branch now synthesize the
+  constrained branch value while keeping the randomized generated formal on the
+  unconstrained branch, e.g. `ite(active, n > 10, true)` emits
+  `ivyTernary(ivy.active, 11, gen.n)`.
+- 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesNumericAffineEqualityWitnessFast`. Simple
   affine integer equalities over one generated formal now produce deterministic
   scalar witnesses, so `n + 1 = 7` tries `6` before rejecting the randomized
@@ -1312,6 +1318,11 @@ Progress:
   The conditional numeric branch witness merge is shared by `target=gen`, so
   one-shot generators can try `ivyTernary(ivy.active, 11, 21)` for guards such
   as `ite(active, n > 10, n > 20)`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesItePartialNumericWitnessFast`. The
+  one-branch conditional scalar numeric witness merge is shared by `target=gen`,
+  so one-shot generators preserve unconstrained branch values for guards like
+  `ite(active, n > 10, true)`.
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesNumericAffineEqualityWitnessFast`. The
   affine scalar equality witness extraction is shared by `target=gen`, so
@@ -2693,6 +2704,9 @@ Progress:
 - 2026-09-22: Added target=test and target=gen partial conditional
   defined-input tests, covering ITE guards where only one branch constrains a
   generated input.
+- 2026-09-22: Added target=test and target=gen partial conditional scalar
+  numeric witness tests, covering ITE guards where only one branch constrains
+  an integer-like generated formal.
 - 2026-09-22: Added target=test and target=gen conditional multi-pair numeric
   witness tests, covering ITE guards whose branches contain multiple pairwise
   constraints over the same generated targets.
