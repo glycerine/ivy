@@ -4640,6 +4640,274 @@ export set
 	}
 }
 
+func TestTargetTestChoicePointUpdatePreimageUsesReverseImageGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+relation marked(C:color)
+action set(c:color) = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	markedSym, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
+		t.Fatalf("FindSymbol marked: %v", err)
+	}
+	marked := goivy.NewConst("marked", markedSym.CSort)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, green), goivy.NewConst("true", goivy.Boolean)),
+		goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, blue), goivy.NewConst("true", goivy.Boolean)),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssumeAction(goivy.NewApplyUnchecked(marked, c)))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testchoicepointguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testchoicepointguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c == green`,
+		`gen.c == blue`,
+		`ivy.marked[gen.c]`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test choice point-update preimage missing %q:\n%s", want, genBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if strings.Contains(mainBody, "__ivy_trial") || strings.Contains(mainBody, "clone") || strings.Contains(mainBody, "bytes.Buffer") {
+		t.Fatalf("target=test choice point-update preimage should not need trial execution:\n%s", mainBody)
+	}
+}
+
+func TestTargetTestChoiceMixedStateAndPointUpdatePreimageUsesGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+relation marked(C:color)
+action set(c:color) = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	savedSym, err := mod.Sig.FindSymbol("saved", false)
+	if err != nil {
+		t.Fatalf("FindSymbol saved: %v", err)
+	}
+	markedSym, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
+		t.Fatalf("FindSymbol marked: %v", err)
+	}
+	saved := goivy.NewConst("saved", savedSym.CSort)
+	marked := goivy.NewConst("marked", markedSym.CSort)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewSequence(
+			goivy.NewAssignAction(saved, green),
+			goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, green), goivy.NewConst("true", goivy.Boolean)),
+		),
+		goivy.NewSequence(
+			goivy.NewAssignAction(saved, blue),
+			goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, blue), goivy.NewConst("true", goivy.Boolean)),
+		),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssumeAction(goivy.NewApplyUnchecked(marked, c)))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testchoicemixedguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testchoicemixedguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c == green`,
+		`gen.c == blue`,
+		`ivy.marked[gen.c]`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test mixed choice preimage missing %q:\n%s", want, genBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if strings.Contains(mainBody, "__ivy_trial") || strings.Contains(mainBody, "clone") || strings.Contains(mainBody, "bytes.Buffer") {
+		t.Fatalf("target=test mixed choice preimage should not need trial execution:\n%s", mainBody)
+	}
+}
+
+func TestTargetTestChoiceMixedStateAndPointUpdateKeepsBranchCorrelationFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+relation marked(C:color)
+action set = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	savedSym, err := mod.Sig.FindSymbol("saved", false)
+	if err != nil {
+		t.Fatalf("FindSymbol saved: %v", err)
+	}
+	markedSym, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
+		t.Fatalf("FindSymbol marked: %v", err)
+	}
+	saved := goivy.NewConst("saved", savedSym.CSort)
+	marked := goivy.NewConst("marked", markedSym.CSort)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewSequence(
+			goivy.NewAssignAction(saved, green),
+			goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, blue), goivy.NewConst("true", goivy.Boolean)),
+		),
+		goivy.NewSequence(
+			goivy.NewAssignAction(saved, blue),
+			goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, green), goivy.NewConst("true", goivy.Boolean)),
+		),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssumeAction(goivy.NewApplyUnchecked(marked, saved)))
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testchoicecorrelatedguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testchoicecorrelatedguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`ivy.marked[green]`,
+		`ivy.marked[blue]`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test correlated mixed choice preimage missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `if !((true))`) || !strings.Contains(genBody, `if !(`) {
+		t.Fatalf("target=test correlated mixed choice should emit a real guard, not unconditional success:\n%s", genBody)
+	}
+}
+
+func TestTargetTestChoiceGuardedPointUpdatePreimageUsesGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual active : bool
+relation marked(C:color)
+action set(c:color) = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	markedSym, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
+		t.Fatalf("FindSymbol marked: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	marked := goivy.NewConst("marked", markedSym.CSort)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	notActive, err := goivy.NewNot(active)
+	if err != nil {
+		t.Fatalf("not active: %v", err)
+	}
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewSequence(
+			goivy.NewAssumeAction(active),
+			goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, green), goivy.NewConst("true", goivy.Boolean)),
+		),
+		goivy.NewSequence(
+			goivy.NewAssumeAction(notActive),
+			goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, blue), goivy.NewConst("true", goivy.Boolean)),
+		),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssumeAction(goivy.NewApplyUnchecked(marked, c)))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testchoiceguardedpoint", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testchoiceguardedpoint_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`ivy.active`,
+		`gen.c == green`,
+		`gen.c == blue`,
+		`ivy.marked[gen.c]`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test guarded choice point-update preimage missing %q:\n%s", want, genBody)
+		}
+	}
+	if !strings.Contains(genBody, `!(ivy.active)`) && !strings.Contains(genBody, `!ivy.active`) {
+		t.Fatalf("target=test guarded choice point-update preimage missing inactive branch guard:\n%s", genBody)
+	}
+}
+
 func TestTargetGenChoiceStateUpdatePreimageUsesReverseImageGuardFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green, blue}
@@ -4696,6 +4964,206 @@ export set
 		if !strings.Contains(genBody, want) {
 			t.Fatalf("target=gen choice state-update preimage missing %q:\n%s", want, genBody)
 		}
+	}
+}
+
+func TestTargetGenChoicePointUpdatePreimageUsesReverseImageGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+relation marked(C:color)
+action set(c:color) = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	markedSym, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
+		t.Fatalf("FindSymbol marked: %v", err)
+	}
+	marked := goivy.NewConst("marked", markedSym.CSort)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, green), goivy.NewConst("true", goivy.Boolean)),
+		goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, blue), goivy.NewConst("true", goivy.Boolean)),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssumeAction(goivy.NewApplyUnchecked(marked, c)))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genchoicepointguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genchoicepointguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c == green`,
+		`gen.c == blue`,
+		`ivy.marked[gen.c]`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen choice point-update preimage missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenChoiceMixedStateAndPointUpdatePreimageUsesGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+relation marked(C:color)
+action set(c:color) = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	savedSym, err := mod.Sig.FindSymbol("saved", false)
+	if err != nil {
+		t.Fatalf("FindSymbol saved: %v", err)
+	}
+	markedSym, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
+		t.Fatalf("FindSymbol marked: %v", err)
+	}
+	saved := goivy.NewConst("saved", savedSym.CSort)
+	marked := goivy.NewConst("marked", markedSym.CSort)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewSequence(
+			goivy.NewAssignAction(saved, green),
+			goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, green), goivy.NewConst("true", goivy.Boolean)),
+		),
+		goivy.NewSequence(
+			goivy.NewAssignAction(saved, blue),
+			goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, blue), goivy.NewConst("true", goivy.Boolean)),
+		),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssumeAction(goivy.NewApplyUnchecked(marked, c)))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genchoicemixedguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genchoicemixedguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c == green`,
+		`gen.c == blue`,
+		`ivy.marked[gen.c]`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen mixed choice preimage missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenChoiceGuardedPointUpdatePreimageUsesGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual active : bool
+relation marked(C:color)
+action set(c:color) = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	markedSym, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
+		t.Fatalf("FindSymbol marked: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	marked := goivy.NewConst("marked", markedSym.CSort)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	notActive, err := goivy.NewNot(active)
+	if err != nil {
+		t.Fatalf("not active: %v", err)
+	}
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewSequence(
+			goivy.NewAssumeAction(active),
+			goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, green), goivy.NewConst("true", goivy.Boolean)),
+		),
+		goivy.NewSequence(
+			goivy.NewAssumeAction(notActive),
+			goivy.NewAssignAction(goivy.NewApplyUnchecked(marked, blue), goivy.NewConst("true", goivy.Boolean)),
+		),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssumeAction(goivy.NewApplyUnchecked(marked, c)))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genchoiceguardedpoint", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genchoiceguardedpoint_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`ivy.active`,
+		`gen.c == green`,
+		`gen.c == blue`,
+		`ivy.marked[gen.c]`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen guarded choice point-update preimage missing %q:\n%s", want, genBody)
+		}
+	}
+	if !strings.Contains(genBody, `!(ivy.active)`) && !strings.Contains(genBody, `!ivy.active`) {
+		t.Fatalf("target=gen guarded choice point-update preimage missing inactive branch guard:\n%s", genBody)
 	}
 }
 

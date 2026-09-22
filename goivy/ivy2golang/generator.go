@@ -7761,10 +7761,12 @@ func inlinePreimageDefinitionExprs(exprs []goivy.Expr, defs map[goivy.NodeKey]pr
 }
 
 type actionPreimageContext struct {
-	subs        map[goivy.NodeKey]goivy.Expr
-	choiceSubs  map[goivy.NodeKey][]goivy.Expr
-	pointUpdate map[goivy.NodeKey][]preimagePointUpdate
-	localAlias  map[goivy.NodeKey]bool
+	subs               map[goivy.NodeKey]goivy.Expr
+	choiceSubs         map[goivy.NodeKey][]goivy.Expr
+	pointUpdate        map[goivy.NodeKey][]preimagePointUpdate
+	choiceContexts     []preimageContextChoice
+	choicePointUpdates []preimagePointUpdateChoice
+	localAlias         map[goivy.NodeKey]bool
 }
 
 type preimagePointUpdate struct {
@@ -7772,6 +7774,20 @@ type preimagePointUpdate struct {
 	args  []goivy.Expr
 	value goivy.Expr
 	guard goivy.Expr
+}
+
+type preimagePointUpdateChoice struct {
+	alternatives []map[goivy.NodeKey][]preimagePointUpdate
+}
+
+type preimageContextChoice struct {
+	alternatives []preimageContextAlternative
+}
+
+type preimageContextAlternative struct {
+	subs        map[goivy.NodeKey]goivy.Expr
+	pointUpdate map[goivy.NodeKey][]preimagePointUpdate
+	guard       goivy.Expr
 }
 
 func newActionPreimageContext() *actionPreimageContext {
@@ -7797,8 +7813,70 @@ func (ctx *actionPreimageContext) copy() *actionPreimageContext {
 	for key, updates := range ctx.pointUpdate {
 		out.pointUpdate[key] = append([]preimagePointUpdate(nil), updates...)
 	}
+	out.choiceContexts = copyPreimageContextChoices(ctx.choiceContexts)
+	out.choicePointUpdates = copyPreimagePointUpdateChoices(ctx.choicePointUpdates)
 	for key, value := range ctx.localAlias {
 		out.localAlias[key] = value
+	}
+	return out
+}
+
+func copyPreimageContextChoices(in []preimageContextChoice) []preimageContextChoice {
+	if len(in) == 0 {
+		return nil
+	}
+	out := make([]preimageContextChoice, len(in))
+	for i, choice := range in {
+		if len(choice.alternatives) == 0 {
+			continue
+		}
+		out[i].alternatives = make([]preimageContextAlternative, len(choice.alternatives))
+		for j, alt := range choice.alternatives {
+			out[i].alternatives[j] = preimageContextAlternative{
+				subs:        copyPreimageExprMap(alt.subs),
+				pointUpdate: copyPreimagePointUpdateMap(alt.pointUpdate),
+				guard:       alt.guard,
+			}
+		}
+	}
+	return out
+}
+
+func copyPreimageExprMap(in map[goivy.NodeKey]goivy.Expr) map[goivy.NodeKey]goivy.Expr {
+	if len(in) == 0 {
+		return nil
+	}
+	out := make(map[goivy.NodeKey]goivy.Expr, len(in))
+	for key, value := range in {
+		out[key] = value
+	}
+	return out
+}
+
+func copyPreimagePointUpdateChoices(in []preimagePointUpdateChoice) []preimagePointUpdateChoice {
+	if len(in) == 0 {
+		return nil
+	}
+	out := make([]preimagePointUpdateChoice, len(in))
+	for i, choice := range in {
+		if len(choice.alternatives) == 0 {
+			continue
+		}
+		out[i].alternatives = make([]map[goivy.NodeKey][]preimagePointUpdate, len(choice.alternatives))
+		for j, alt := range choice.alternatives {
+			out[i].alternatives[j] = copyPreimagePointUpdateMap(alt)
+		}
+	}
+	return out
+}
+
+func copyPreimagePointUpdateMap(in map[goivy.NodeKey][]preimagePointUpdate) map[goivy.NodeKey][]preimagePointUpdate {
+	if len(in) == 0 {
+		return nil
+	}
+	out := make(map[goivy.NodeKey][]preimagePointUpdate, len(in))
+	for key, updates := range in {
+		out[key] = append([]preimagePointUpdate(nil), updates...)
 	}
 	return out
 }
@@ -8039,6 +8117,74 @@ func removePreimageContextLocalRefs(ctx *actionPreimageContext, localNames map[s
 			ctx.pointUpdate[key] = out
 		}
 	}
+	for ci := range ctx.choiceContexts {
+		alts := ctx.choiceContexts[ci].alternatives[:0]
+		for _, alt := range ctx.choiceContexts[ci].alternatives {
+			cleanSubs := map[goivy.NodeKey]goivy.Expr{}
+			for key, expr := range alt.subs {
+				if !exprReferencesAnyNameIncludingVariables(expr, localNames) {
+					cleanSubs[key] = expr
+				}
+			}
+			guard := alt.guard
+			if exprReferencesAnyNameIncludingVariables(guard, localNames) {
+				guard = nil
+			}
+			cleanPoint := map[goivy.NodeKey][]preimagePointUpdate{}
+			for key, updates := range alt.pointUpdate {
+				out := updates[:0]
+				for _, update := range updates {
+					hasLocal := false
+					for _, arg := range update.args {
+						if exprReferencesAnyNameIncludingVariables(arg, localNames) {
+							hasLocal = true
+							break
+						}
+					}
+					if !hasLocal && (exprReferencesAnyNameIncludingVariables(update.value, localNames) || exprReferencesAnyNameIncludingVariables(update.guard, localNames)) {
+						hasLocal = true
+					}
+					if !hasLocal {
+						out = append(out, update)
+					}
+				}
+				if len(out) > 0 {
+					cleanPoint[key] = out
+				}
+			}
+			alts = append(alts, preimageContextAlternative{subs: cleanSubs, pointUpdate: cleanPoint, guard: guard})
+		}
+		ctx.choiceContexts[ci].alternatives = alts
+	}
+	for ci := range ctx.choicePointUpdates {
+		alts := ctx.choicePointUpdates[ci].alternatives[:0]
+		for _, alt := range ctx.choicePointUpdates[ci].alternatives {
+			cleanAlt := map[goivy.NodeKey][]preimagePointUpdate{}
+			for key, updates := range alt {
+				out := updates[:0]
+				for _, update := range updates {
+					hasLocal := false
+					for _, arg := range update.args {
+						if exprReferencesAnyNameIncludingVariables(arg, localNames) {
+							hasLocal = true
+							break
+						}
+					}
+					if !hasLocal && (exprReferencesAnyNameIncludingVariables(update.value, localNames) || exprReferencesAnyNameIncludingVariables(update.guard, localNames)) {
+						hasLocal = true
+					}
+					if !hasLocal {
+						out = append(out, update)
+					}
+				}
+				if len(out) > 0 {
+					cleanAlt[key] = out
+				}
+			}
+			alts = append(alts, cleanAlt)
+		}
+		ctx.choicePointUpdates[ci].alternatives = alts
+	}
 	for key, values := range ctx.choiceSubs {
 		out := values[:0]
 		for _, value := range values {
@@ -8160,6 +8306,72 @@ func substitutePreimageContextLocalWitnesses(ctx *actionPreimageContext, subs ma
 			updates[i].guard = out
 		}
 		ctx.pointUpdate[key] = updates
+	}
+	for ci := range ctx.choiceContexts {
+		for ai, alt := range ctx.choiceContexts[ci].alternatives {
+			for key, expr := range alt.subs {
+				out, ok := substitute(expr)
+				if !ok {
+					return false
+				}
+				alt.subs[key] = out
+			}
+			out, ok := substitute(alt.guard)
+			if !ok {
+				return false
+			}
+			alt.guard = out
+			for key, updates := range alt.pointUpdate {
+				for i := range updates {
+					for j, arg := range updates[i].args {
+						out, ok := substitute(arg)
+						if !ok {
+							return false
+						}
+						updates[i].args[j] = out
+					}
+					out, ok := substitute(updates[i].value)
+					if !ok {
+						return false
+					}
+					updates[i].value = out
+					out, ok = substitute(updates[i].guard)
+					if !ok {
+						return false
+					}
+					updates[i].guard = out
+				}
+				alt.pointUpdate[key] = updates
+			}
+			ctx.choiceContexts[ci].alternatives[ai] = alt
+		}
+	}
+	for ci := range ctx.choicePointUpdates {
+		for ai, alt := range ctx.choicePointUpdates[ci].alternatives {
+			for key, updates := range alt {
+				for i := range updates {
+					for j, arg := range updates[i].args {
+						out, ok := substitute(arg)
+						if !ok {
+							return false
+						}
+						updates[i].args[j] = out
+					}
+					out, ok := substitute(updates[i].value)
+					if !ok {
+						return false
+					}
+					updates[i].value = out
+					out, ok = substitute(updates[i].guard)
+					if !ok {
+						return false
+					}
+					updates[i].guard = out
+				}
+				alt[key] = updates
+			}
+			ctx.choicePointUpdates[ci].alternatives[ai] = alt
+		}
 	}
 	for key, values := range ctx.choiceSubs {
 		for i, value := range values {
@@ -8980,6 +9192,49 @@ func preimageContextReferencesAnyName(ctx *actionPreimageContext, names map[stri
 			}
 		}
 	}
+	for _, choice := range ctx.choiceContexts {
+		for _, alt := range choice.alternatives {
+			for key, expr := range alt.subs {
+				if localKeys[key] {
+					continue
+				}
+				if exprReferencesAnyName(expr, names) {
+					return true
+				}
+			}
+			if exprReferencesAnyName(alt.guard, names) {
+				return true
+			}
+			for _, updates := range alt.pointUpdate {
+				for _, update := range updates {
+					for _, arg := range update.args {
+						if exprReferencesAnyName(arg, names) {
+							return true
+						}
+					}
+					if exprReferencesAnyName(update.value, names) || exprReferencesAnyName(update.guard, names) {
+						return true
+					}
+				}
+			}
+		}
+	}
+	for _, choice := range ctx.choicePointUpdates {
+		for _, alt := range choice.alternatives {
+			for _, updates := range alt {
+				for _, update := range updates {
+					for _, arg := range update.args {
+						if exprReferencesAnyName(arg, names) {
+							return true
+						}
+					}
+					if exprReferencesAnyName(update.value, names) || exprReferencesAnyName(update.guard, names) {
+						return true
+					}
+				}
+			}
+		}
+	}
 	for key, values := range ctx.choiceSubs {
 		if localKeys[key] {
 			continue
@@ -9044,6 +9299,7 @@ func (g *Generator) choicePreimageAssumeGuards(a *goivy.LogicChoiceAction, ctx *
 	}
 	baseCtx := ctx.copy()
 	var branchTerms []goivy.Expr
+	var branchTermsByIndex []goivy.Expr
 	var branchCtxs []*actionPreimageContext
 	for _, branch := range a.Branches {
 		branchAct, ok := goivy.ToAction(branch)
@@ -9060,6 +9316,7 @@ func (g *Generator) choicePreimageAssumeGuards(a *goivy.LogicChoiceAction, ctx *
 			return nil, false
 		}
 		branchCtxs = append(branchCtxs, branchCtx)
+		branchTermsByIndex = append(branchTermsByIndex, term)
 		if goivy.IsTrue(term) {
 			continue
 		}
@@ -9079,7 +9336,9 @@ func (g *Generator) choicePreimageAssumeGuards(a *goivy.LogicChoiceAction, ctx *
 		return nil, g.mergeChoicePreimageSubstitutions(baseCtx, branchCtxs, ctx)
 	}
 	if !contextsEqual {
-		return nil, false
+		if !g.mergeChoicePreimageContexts(baseCtx, branchCtxs, branchTermsByIndex, ctx) {
+			return nil, false
+		}
 	}
 	if len(branchTerms) == 1 {
 		return []goivy.Expr{branchTerms[0]}, true
@@ -9101,7 +9360,9 @@ func (g *Generator) mergeChoicePreimageSubstitutions(baseCtx *actionPreimageCont
 		if branchCtx == nil {
 			return false
 		}
-		if !preimagePointUpdateMapsEqual(baseCtx.pointUpdate, branchCtx.pointUpdate) || !preimageLocalAliasMapsEqual(baseCtx.localAlias, branchCtx.localAlias) || len(branchCtx.choiceSubs) != len(baseCtx.choiceSubs) {
+		if !preimageLocalAliasMapsEqual(baseCtx.localAlias, branchCtx.localAlias) ||
+			len(branchCtx.choiceSubs) != len(baseCtx.choiceSubs) ||
+			!preimagePointUpdateChoicesEqual(baseCtx.choicePointUpdates, branchCtx.choicePointUpdates) {
 			return false
 		}
 		for key := range branchCtx.choiceSubs {
@@ -9120,6 +9381,7 @@ func (g *Generator) mergeChoicePreimageSubstitutions(baseCtx *actionPreimageCont
 			}
 		}
 	}
+	stateChoiceValues := map[goivy.NodeKey][]goivy.Expr{}
 	for key := range keys {
 		state := stateConsts[key]
 		if state == nil {
@@ -9154,8 +9416,191 @@ func (g *Generator) mergeChoicePreimageSubstitutions(baseCtx *actionPreimageCont
 		}
 		delete(out.subs, key)
 		out.choiceSubs[key] = values
+		stateChoiceValues[key] = values
+	}
+	pointChoice, hasPointChoice, ok := preimagePointUpdateChoiceFromBranches(baseCtx, branchCtxs)
+	if !ok {
+		return false
+	}
+	if hasPointChoice {
+		if len(stateChoiceValues) > 0 {
+			for key := range stateChoiceValues {
+				delete(out.choiceSubs, key)
+			}
+			out.choiceContexts = append(out.choiceContexts, preimageContextChoiceFromBranchParts(stateChoiceValues, pointChoice))
+		} else {
+			out.choicePointUpdates = append(out.choicePointUpdates, pointChoice)
+		}
 	}
 	return true
+}
+
+func preimageContextChoiceFromBranchParts(stateChoices map[goivy.NodeKey][]goivy.Expr, pointChoice preimagePointUpdateChoice) preimageContextChoice {
+	var choice preimageContextChoice
+	n := len(pointChoice.alternatives)
+	choice.alternatives = make([]preimageContextAlternative, n)
+	for i := 0; i < n; i++ {
+		subs := map[goivy.NodeKey]goivy.Expr{}
+		for key, values := range stateChoices {
+			if i < len(values) && values[i] != nil {
+				subs[key] = values[i]
+			}
+		}
+		choice.alternatives[i] = preimageContextAlternative{
+			subs:        subs,
+			pointUpdate: copyPreimagePointUpdateMap(pointChoice.alternatives[i]),
+		}
+	}
+	return choice
+}
+
+func (g *Generator) mergeChoicePreimageContexts(baseCtx *actionPreimageContext, branchCtxs []*actionPreimageContext, branchGuards []goivy.Expr, out *actionPreimageContext) bool {
+	if g == nil || baseCtx == nil || out == nil || len(branchCtxs) == 0 || len(branchGuards) != len(branchCtxs) {
+		return false
+	}
+	stateConsts := g.preimageStateConstsByKey()
+	keys := map[goivy.NodeKey]bool{}
+	for _, branchCtx := range branchCtxs {
+		if branchCtx == nil {
+			return false
+		}
+		if !preimageLocalAliasMapsEqual(baseCtx.localAlias, branchCtx.localAlias) ||
+			len(branchCtx.choiceSubs) != len(baseCtx.choiceSubs) ||
+			!preimageContextChoicesEqual(baseCtx.choiceContexts, branchCtx.choiceContexts) ||
+			!preimagePointUpdateChoicesEqual(baseCtx.choicePointUpdates, branchCtx.choicePointUpdates) {
+			return false
+		}
+		for key := range branchCtx.choiceSubs {
+			if !preimageExprSlicesEqual(baseCtx.choiceSubs[key], branchCtx.choiceSubs[key]) {
+				return false
+			}
+		}
+		for key := range branchCtx.subs {
+			if stateConsts[key] != nil && !exprEqual(branchCtx.subs[key], baseCtx.subs[key]) {
+				keys[key] = true
+			}
+		}
+		for key := range baseCtx.subs {
+			if stateConsts[key] != nil && !exprEqual(branchCtx.subs[key], baseCtx.subs[key]) {
+				keys[key] = true
+			}
+		}
+	}
+	stateChoiceValues := map[goivy.NodeKey][]goivy.Expr{}
+	for key := range keys {
+		state := stateConsts[key]
+		if state == nil {
+			return false
+		}
+		var values []goivy.Expr
+		allSame := true
+		var first goivy.Expr
+		for i, branchCtx := range branchCtxs {
+			value := branchCtx.subs[key]
+			if value == nil {
+				value = baseCtx.subs[key]
+			}
+			if value == nil {
+				value = state
+			}
+			values = append(values, value)
+			if i == 0 {
+				first = value
+			} else if !exprEqual(first, value) {
+				allSame = false
+			}
+		}
+		if allSame {
+			if exprEqual(first, state) && baseCtx.subs[key] == nil {
+				delete(out.subs, key)
+			} else {
+				out.subs[key] = first
+			}
+			delete(out.choiceSubs, key)
+			continue
+		}
+		stateChoiceValues[key] = values
+	}
+	pointChoice, hasPointChoice, ok := preimagePointUpdateChoiceFromBranches(baseCtx, branchCtxs)
+	if !ok {
+		return false
+	}
+	choice := preimageContextChoiceFromBranchParts(stateChoiceValues, pointChoice)
+	if !hasPointChoice {
+		choice = preimageContextChoiceFromBranchParts(stateChoiceValues, preimagePointUpdateChoice{alternatives: make([]map[goivy.NodeKey][]preimagePointUpdate, len(branchCtxs))})
+	}
+	for i := range choice.alternatives {
+		if !goivy.IsTrue(branchGuards[i]) {
+			choice.alternatives[i].guard = branchGuards[i]
+		}
+	}
+	out.choiceContexts = append(out.choiceContexts, choice)
+	return true
+}
+
+func preimagePointUpdateChoiceFromBranches(baseCtx *actionPreimageContext, branchCtxs []*actionPreimageContext) (preimagePointUpdateChoice, bool, bool) {
+	var choice preimagePointUpdateChoice
+	if baseCtx == nil || len(branchCtxs) == 0 {
+		return choice, false, false
+	}
+	hasPointChoice := false
+	choice.alternatives = make([]map[goivy.NodeKey][]preimagePointUpdate, len(branchCtxs))
+	for i, branchCtx := range branchCtxs {
+		additions, ok := preimagePointUpdateBranchAdditions(baseCtx, branchCtx)
+		if !ok {
+			return choice, false, false
+		}
+		if len(additions) > 0 {
+			hasPointChoice = true
+		}
+		choice.alternatives[i] = additions
+	}
+	if !hasPointChoice {
+		return preimagePointUpdateChoice{}, false, true
+	}
+	return choice, true, true
+}
+
+func preimagePointUpdateBranchAdditions(baseCtx, branchCtx *actionPreimageContext) (map[goivy.NodeKey][]preimagePointUpdate, bool) {
+	if baseCtx == nil || branchCtx == nil {
+		return nil, false
+	}
+	additions := map[goivy.NodeKey][]preimagePointUpdate{}
+	for key, baseUpdates := range baseCtx.pointUpdate {
+		branchUpdates, ok := branchCtx.pointUpdate[key]
+		if !ok {
+			if len(baseUpdates) == 0 {
+				continue
+			}
+			return nil, false
+		}
+		if len(branchUpdates) < len(baseUpdates) {
+			return nil, false
+		}
+		for i := range baseUpdates {
+			if !preimagePointUpdatesEqual(baseUpdates[i], branchUpdates[i]) {
+				return nil, false
+			}
+		}
+	}
+	for key, branchUpdates := range branchCtx.pointUpdate {
+		baseUpdates := baseCtx.pointUpdate[key]
+		if len(branchUpdates) < len(baseUpdates) {
+			return nil, false
+		}
+		for i := range baseUpdates {
+			if !preimagePointUpdatesEqual(baseUpdates[i], branchUpdates[i]) {
+				return nil, false
+			}
+		}
+		if len(branchUpdates) > len(baseUpdates) {
+			additions[key] = append([]preimagePointUpdate(nil), branchUpdates[len(baseUpdates):]...)
+		}
+	}
+	if len(additions) == 0 {
+		return nil, true
+	}
+	return additions, true
 }
 
 func preimagePointUpdateMapsEqual(a, b map[goivy.NodeKey][]preimagePointUpdate) bool {
@@ -9169,6 +9614,54 @@ func preimagePointUpdateMapsEqual(a, b map[goivy.NodeKey][]preimagePointUpdate) 
 		}
 		for i := range av {
 			if !preimagePointUpdatesEqual(av[i], bv[i]) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func preimageContextChoicesEqual(a, b []preimageContextChoice) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if len(a[i].alternatives) != len(b[i].alternatives) {
+			return false
+		}
+		for j := range a[i].alternatives {
+			if !preimageExprMapsEqual(a[i].alternatives[j].subs, b[i].alternatives[j].subs) ||
+				!preimagePointUpdateMapsEqual(a[i].alternatives[j].pointUpdate, b[i].alternatives[j].pointUpdate) ||
+				!exprEqual(a[i].alternatives[j].guard, b[i].alternatives[j].guard) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func preimageExprMapsEqual(a, b map[goivy.NodeKey]goivy.Expr) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for key, av := range a {
+		if !exprEqual(av, b[key]) {
+			return false
+		}
+	}
+	return true
+}
+
+func preimagePointUpdateChoicesEqual(a, b []preimagePointUpdateChoice) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if len(a[i].alternatives) != len(b[i].alternatives) {
+			return false
+		}
+		for j := range a[i].alternatives {
+			if !preimagePointUpdateMapsEqual(a[i].alternatives[j], b[i].alternatives[j]) {
 				return false
 			}
 		}
@@ -9219,7 +9712,9 @@ func preimageContextsEqual(a, b *actionPreimageContext) bool {
 	if a == nil || b == nil {
 		return a == b
 	}
-	if len(a.subs) != len(b.subs) || len(a.pointUpdate) != len(b.pointUpdate) || len(a.localAlias) != len(b.localAlias) {
+	if len(a.subs) != len(b.subs) || len(a.pointUpdate) != len(b.pointUpdate) || len(a.localAlias) != len(b.localAlias) ||
+		!preimageContextChoicesEqual(a.choiceContexts, b.choiceContexts) ||
+		!preimagePointUpdateChoicesEqual(a.choicePointUpdates, b.choicePointUpdates) {
 		return false
 	}
 	if len(a.choiceSubs) != len(b.choiceSubs) {
@@ -9620,12 +10115,95 @@ func (g *Generator) substituteExprForPreimage(expr goivy.Expr, ctx *actionPreima
 		}
 		expr = substituted
 	}
+	return g.substitutePreimageChoicesAfterSubs(expr, ctx)
+}
+
+func (g *Generator) substitutePreimageChoicesAfterSubs(expr goivy.Expr, ctx *actionPreimageContext) (goivy.Expr, bool) {
+	if ctx == nil {
+		return expr, true
+	}
+	if len(ctx.choiceContexts) > 0 {
+		choice := ctx.choiceContexts[0]
+		if len(choice.alternatives) == 0 {
+			return nil, false
+		}
+		var terms []goivy.Expr
+		for _, alt := range choice.alternatives {
+			branchExpr := expr
+			if len(alt.subs) > 0 {
+				substituted, err := goivy.Substitute(branchExpr, alt.subs)
+				if err != nil {
+					return nil, false
+				}
+				branchExpr = substituted
+			}
+			branchCtx := ctx.copy()
+			branchCtx.choiceContexts = copyPreimageContextChoices(ctx.choiceContexts[1:])
+			for key, updates := range alt.pointUpdate {
+				branchCtx.pointUpdate[key] = append(branchCtx.pointUpdate[key], updates...)
+			}
+			rewritten, ok := g.substitutePreimageChoicesAfterSubs(branchExpr, branchCtx)
+			if !ok {
+				return nil, false
+			}
+			if alt.guard != nil && !goivy.IsTrue(alt.guard) {
+				and, err := goivy.NewAnd(alt.guard, rewritten)
+				if err != nil {
+					return nil, false
+				}
+				rewritten = and
+			}
+			terms = append(terms, rewritten)
+		}
+		if len(terms) == 1 {
+			return terms[0], true
+		}
+		or, err := goivy.NewOr(terms...)
+		if err != nil {
+			return nil, false
+		}
+		return or, true
+	}
 	if len(ctx.choiceSubs) > 0 {
 		expanded, ok := expandChoiceSubstitutionsForPreimage(expr, ctx.choiceSubs)
 		if !ok {
 			return nil, false
 		}
 		expr = expanded
+	}
+	return g.substitutePointUpdatesForPreimage(expr, ctx)
+}
+
+func (g *Generator) substitutePointUpdatesForPreimage(expr goivy.Expr, ctx *actionPreimageContext) (goivy.Expr, bool) {
+	if ctx == nil {
+		return expr, true
+	}
+	if len(ctx.choicePointUpdates) > 0 {
+		choice := ctx.choicePointUpdates[0]
+		if len(choice.alternatives) == 0 {
+			return nil, false
+		}
+		var terms []goivy.Expr
+		for _, alt := range choice.alternatives {
+			branchCtx := ctx.copy()
+			branchCtx.choicePointUpdates = copyPreimagePointUpdateChoices(ctx.choicePointUpdates[1:])
+			for key, updates := range alt {
+				branchCtx.pointUpdate[key] = append(branchCtx.pointUpdate[key], updates...)
+			}
+			rewritten, ok := g.substitutePointUpdatesForPreimage(expr, branchCtx)
+			if !ok {
+				return nil, false
+			}
+			terms = append(terms, rewritten)
+		}
+		if len(terms) == 1 {
+			return terms[0], true
+		}
+		or, err := goivy.NewOr(terms...)
+		if err != nil {
+			return nil, false
+		}
+		return or, true
 	}
 	if len(ctx.pointUpdate) == 0 {
 		return expr, true

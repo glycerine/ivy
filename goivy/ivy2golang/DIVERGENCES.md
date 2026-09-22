@@ -1343,6 +1343,26 @@ Progress:
   `if/else`, allowing `ite(active, shade(x) = green, shade(x) = red)` style
   rechecks to discharge against the matching branch update without hidden trial
   machinery.
+- 2026-09-22: Added
+  `TestTargetTestChoicePointUpdatePreimageUsesReverseImageGuardFast`.
+  Nondeterministic choices whose branches update different relation/function
+  cells now retain those branch point updates as alternatives in the preimage
+  context, so a later assume such as `marked(c)` becomes a generated guard over
+  the branch-specific rewritten formulas instead of an unconditional generator
+  or hidden trial.
+- 2026-09-22: Added
+  `TestTargetTestChoiceMixedStateAndPointUpdatePreimageUsesGuardFast` and
+  `TestTargetTestChoiceMixedStateAndPointUpdateKeepsBranchCorrelationFast`.
+  Choices whose branches change both scalar state substitutions and point
+  updates now use correlated branch alternatives, preserving Python
+  reverse-image semantics for later guards instead of independently OR-ing
+  state and cell updates.
+- 2026-09-22: Added
+  `TestTargetTestChoiceGuardedPointUpdatePreimageUsesGuardFast`. Choice
+  branches with their own assume guards now keep those branch guards attached to
+  the corresponding point-update alternative, so later assumes are guarded as
+  `branch_guard & rewritten_later_guard` instead of falling back to an
+  unconditional generator.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -2149,6 +2169,20 @@ Progress:
   chained local equality point-update substitution is shared by `target=gen`,
   so one-shot generators also reduce chained locals to generated-formal guards
   before execution.
+- 2026-09-22: Added
+  `TestTargetGenChoicePointUpdatePreimageUsesReverseImageGuardFast`. The
+  choice point-update preimage alternative handling is shared by `target=gen`,
+  so one-shot generators also preserve branch-specific relation/function cell
+  writes when building guards for later assumes.
+- 2026-09-22: Added
+  `TestTargetGenChoiceMixedStateAndPointUpdatePreimageUsesGuardFast`. The
+  correlated mixed choice alternative path is shared by `target=gen`, so
+  one-shot generators keep scalar state choices and relation/function cell
+  writes paired by branch when building later assume guards.
+- 2026-09-22: Added
+  `TestTargetGenChoiceGuardedPointUpdatePreimageUsesGuardFast`. The guarded
+  branch point-update alternative path is shared by `target=gen`, preserving
+  branch-local assume guards when one-shot generators build later assume guards.
 
 ## 3. FIXED Initial state generation is retry/randomized, not Python's initial model
 
@@ -2998,3 +3032,14 @@ Progress:
 - 2026-09-22: Added target=test and target=gen partial conditional variant
   witness tests, covering ITE guards where only one branch constrains a
   generated variant value.
+- 2026-09-22: Added target=test and target=gen choice point-update preimage
+  tests, covering nondeterministic branch alternatives that write different
+  relation/function cells before a later assume, using only generated-source
+  inspection inside the single Go test binary.
+- 2026-09-22: Added target=test and target=gen mixed choice state/point-update
+  tests, including a branch-correlation guardrail that ensures generated guards
+  are not over-approximated by independently combining unrelated branch state
+  and relation/function cell writes.
+- 2026-09-22: Added target=test and target=gen guarded choice point-update
+  tests, covering branch-local assume guards attached to branch-specific
+  relation/function cell writes before a later assume.
