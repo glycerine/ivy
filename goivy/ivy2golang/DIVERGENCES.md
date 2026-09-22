@@ -192,8 +192,14 @@ Progress:
   `target=test` preimage walker now handles pure nondeterministic choices by
   OR-ing the branch assume preconditions, so a choice between `assume c = green`
   and `assume c = blue` emits a generator guard for the disjunction. Branches
-  that leave different state updates still fall back to the trial path until the
-  full reverse-image choice merge is ported.
+  that leave different state updates are covered separately below.
+- 2026-09-22: Added
+  `TestTargetTestChoiceStateUpdatePreimageUsesReverseImageGuardFast`. Simple
+  nondeterministic choices whose branches assign different scalar state values
+  now carry those alternatives forward in the preimage context, so a later guard
+  like `choice { saved := green } { saved := blue }; assume saved = c` emits the
+  disjunctive generator guard `green = c | blue = c` instead of treating the
+  action as always enabled.
 - 2026-09-22: Added
   `TestTargetTestBulkRelationAssignmentUsesReverseImageGuardFast`. When the
   syntactic preimage walker cannot express an action, `target=test`/`target=gen`
@@ -204,14 +210,20 @@ Progress:
   guard equivalent to `c = green` instead of relying on a trial run. The fallback
   is best-effort and deliberately returns no guard if the shared update builder
   rejects an action shape.
+- 2026-09-22: Extended
+  `TestTargetTestBulkRelationAssignmentUsesReverseImageGuardFast` to assert
+  that reverse-image-solved actions execute directly after `generate()` succeeds
+  instead of falling back to a hidden public-action trial. The `target=test`
+  trial decision now accepts either the syntactic preimage path or the
+  reverse-image fallback, but rejects reverse-image formulas that still contain
+  non-formal local solver symbols because those require a real model.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorSearchesFiniteDestructorFieldFast`. Finite
   fallback search now also enumerates small finite destructor fields on
   structured formals instead of requiring the whole structured sort to be
   enumerable. This covers simple field constraints such as `shade(c) ~= red`
   by scanning generated `gen.c.shade` values from randomized offsets. Nested
-  field models and unbounded fields still require the full Python-style solver
-  generator.
+  field models still require the full Python-style solver generator.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorSearchesFiniteDestructorArrayFieldFast`. Finite
   fallback search now expands finite indexed destructor fields into per-cell
@@ -226,6 +238,18 @@ Progress:
   draw. This is still a finite witness scan for generated Go, not the full SMT
   local-input model.
 - 2026-09-22: Added
+  `TestTargetTestLocalNumericInequalityChoosesWitnessFast`. Local unbounded
+  integer-like choices now reuse the simple scalar witness extractor, so a local
+  `var n : node; assume n > 10` tries `11` before executing the assume instead
+  of depending on the small nondeterministic local draw.
+- 2026-09-22: Added
+  `TestLocalWitnessUsesSmallIntFallbackForRelationBaseFast`. Local witnesses
+  over unbounded relation guards now keep the extensional override scan but, for
+  non-finite integer-like locals, also try the same bounded small-integer
+  fallback used by action generators. This lets action bodies satisfy
+  `var n; assume allowed(n)` when `allowed` is supplied by a thunk base such as
+  `allowed(N) := N = 7`.
+- 2026-09-22: Added
   `TestTargetTestReturningActionGeneratorSearchesFiniteDomainFast`.
   `target=test` generators for returning actions with finite formal inputs now
   use the same guard and finite-search path as non-returning actions. The
@@ -238,12 +262,99 @@ Progress:
   the action also has an irrelevant unbounded formal that remains randomized or
   zero-valued. Referenced unbounded formals still require a stronger solver
   model.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesNumericDisequalityWitnessForUnboundedFormalFast`.
+  Bare unbounded integer-like formals constrained by simple numeral
+  equality/disequality guards now get a small generated witness search. For
+  example, `assume n ~= 0` tries `1` after a rejecting randomized candidate and
+  rechecks the full guard before accepting. This covers a narrow scalar-model
+  slice without adding a runtime SMT dependency.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesNumericInequalityWitnessForUnboundedFormalFast`.
+  The same scalar witness path now recognizes simple numeral inequalities such
+  as `n > 10` (including Ivy's normalized `10 < n` shape) and tries a nearby
+  satisfying integer like `11` before rejecting the action generator candidate.
 - 2026-09-22: Added `TestTargetTestSolvedAssumeGeneratorSkipsTrialFast` and
   updated the before-export/call-preimage tests to expect direct execution once
   `generate()` succeeds. The trial clone path is now reserved for actions whose
   calls/assumes are not covered by the syntactic preimage walker; covered
   simple assumes, before-export guards, and inlined private-call preconditions
   no longer import `bytes` or execute a hidden trial action.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationWitnessForUnboundedFormalFast`.
+  When a referenced formal is unbounded but appears as the sole argument to a
+  boolean state relation guard such as `allowed(n)`, the `target=test`
+  generator now scans the relation's true stored keys as candidate witnesses
+  instead of relying on one random draw. This ports a small but important piece
+  of Python's input-field/model extraction behavior for relation-backed
+  enabledness.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationTupleWitnessForUnboundedFormalFast`.
+  The relation-witness search now also handles tuple-key relation cells when
+  exactly one tuple field is the unbounded formal and the other tuple fields are
+  fixed by finite/evaluable guard terms, e.g. `allowed(green,n)`. The generated
+  action generator scans true stored relation cells, filters the fixed tuple
+  fields, assigns the formal from the matching key field, and then rechecks the
+  full guard.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationPairWitnessForUnboundedFormalsFast`.
+  Multi-formal relation witnesses now use one stored-relation scan when a guard
+  constrains several unbounded formals together, e.g. `allowed(a,b)`. The
+  generated search assigns all covered formals from the same true tuple key
+  before rechecking the full guard, instead of nesting per-formal scans that
+  were still pinned to the other randomized formal.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationWitnessInsideOrFast`. Unary
+  relation-witness discovery now looks through disjunctive guards, so
+  `allowed(n) | n = 99` can scan true `allowed` cells before rejecting the
+  randomized candidate.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesAlternativeRelationWitnessesInsideOrFast`.
+  If a guard contains several usable relation-witness candidates for the same
+  unbounded formal, such as `allowed(n) | permitted(n)`, the generated search
+  now tries the relation scans sequentially as alternatives and rechecks the
+  complete guard after each candidate. This avoids depending on the first
+  relation alone.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationWitnessInsideExistsFast`. Unary
+  relation-witness discovery now looks through existential guards and treats the
+  quantified variables as wildcard tuple fields, so `exists M. edge(n,M)` can
+  choose `n` from the first component of a true stored `edge` key before
+  rechecking the full extensional existential guard.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationWitnessForUnboundedDestructorFieldFast`.
+  Relation-witness extraction now recognizes destructor-field arguments rooted
+  at a structured formal, so `allowed(node_id(c))` can scan true `allowed`
+  cells and assign `gen.c.node_id` from the stored relation key before
+  rechecking the complete guard. This ports another slice of Python's
+  field-input/model extraction behavior for unbounded structured fields.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationWitnessForUnboundedDestructorFieldPairFast`.
+  Joint relation-witness extraction now also handles several destructor-field
+  arguments rooted at the same structured formal, so `edge(src(c),dst(c))`
+  scans true `edge` tuple keys and assigns both `gen.c.src` and `gen.c.dst`
+  from one model tuple before rechecking the guard.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesNegatedRelationWitnessForUnboundedFormalFast`.
+  For unbounded integer-like formals guarded by a negated unary state relation,
+  e.g. `assume ~banned(n)`, the `target=test` generator now scans stored
+  relation keys and tries a nearby value known to differ from a true banned key
+  before rechecking the complete guard. This is still a narrow relation-backed
+  witness heuristic, not the full solver model.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesSmallIntFallbackForRelationBaseFast`.
+  Relation-witness scans over thunk-backed unbounded relations now keep the
+  stored-override scan but also try a deterministic small integer range after
+  the scan. This lets guards like `allowed(n)` find relation truth supplied by a
+  base function such as `allowed(N) := N = 7`, then recheck the complete guard.
+  It is a bounded generated-code fallback, not a replacement for Python's SMT
+  model.
+- 2026-09-22: Added
+  `TestTargetTestDefinedInputDependenciesUsePythonOrderFast`. Defined-input
+  extraction now orders dependent generated-input assignments like Python's
+  reversed `extract_defined_parameters` result, so clauses such as `x = y; y =
+  3` emit `gen.y = 3` before `gen.x = gen.y` in `target=test` generators and
+  finite-search retries.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -302,6 +413,92 @@ Progress:
   shared finite-search planner now also lets `target=gen` solve constrained
   finite formals without requiring irrelevant unbounded formals to become
   search dimensions.
+- 2026-09-22: Added
+  `TestTargetGenChoiceStateUpdatePreimageUsesReverseImageGuardFast`. The choice
+  alternative preimage context is shared by `target=gen`, so one-shot generators
+  also honor disjunctive enabledness produced by nondeterministic branch state
+  updates before a later assume.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesNumericDisequalityWitnessForUnboundedFormalFast`.
+  The same simple numeral equality/disequality witness search is shared by
+  `target=gen`, so one-shot generators can choose deterministic scalar
+  witnesses such as `1` for `n ~= 0` before returning `false`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesNumericInequalityWitnessForUnboundedFormalFast`.
+  The inequality witness extraction is shared by `target=gen`, giving one-shot
+  generators deterministic nearby integer witnesses for simple bounds such as
+  `n > 10`.
+- 2026-09-22: Added `TestTargetGenLocalNumericInequalityChoosesWitnessFast`.
+  Generated action bodies share the local scalar witness initialization in
+  `target=gen`, preventing one-shot generated traces from failing simple local
+  numeric assumes that Python's solver-backed generator can satisfy.
+- 2026-09-22: Added
+  `TestLocalWitnessUsesSmallIntFallbackForRelationBaseFast`. The relation-base
+  fallback for local witnesses is shared by `target=gen`, reducing runtime
+  `assumption_failed` cases where the one-shot action body needs an unbounded
+  local value satisfying a thunk-backed relation guard.
+- 2026-09-22: Added `TestTargetGenDerivedAssumeUsesGeneratorGuardFast`.
+  `target=gen` now has explicit coverage for the audit's derived-predicate
+  case: generated action guards inline definitions such as `is_green(c)` to
+  `gen.c == green` instead of leaving a stale definition call or relying on one
+  random draw.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationWitnessForUnboundedFormalFast`.
+  The relation-key witness search added for `target=test` is shared with
+  `target=gen`, so one-shot generators can choose unbounded inputs from true
+  relation cells for simple unary relation guards.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationTupleWitnessForUnboundedFormalFast`.
+  The shared relation-witness path now covers tuple-key relation cells for
+  `target=gen` as well, so constraints like `allowed(green,n)` can obtain an
+  unbounded generated input from stored true relation cells before executing the
+  public action.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationPairWitnessForUnboundedFormalsFast`.
+  The same joint tuple-key witness search is shared by `target=gen`, so
+  one-shot generators can choose several unbounded inputs from one true
+  relation cell and are no longer dependent on lucky randomized companion
+  formals.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationWitnessInsideOrFast`. The shared
+  unary relation-witness finder now handles disjunctive guards for `target=gen`
+  too, rechecking the full guard after assigning a candidate from the stored
+  relation key.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesAlternativeRelationWitnessesInsideOrFast`.
+  The alternative relation-witness search is shared by `target=gen`, so
+  one-shot generators can try multiple relation-backed sources for the same
+  unbounded formal before returning `false`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationWitnessInsideExistsFast`. The
+  exists-aware relation-witness discovery is shared by `target=gen`, letting
+  one-shot generators derive an unbounded formal from a true relation tuple even
+  when the relation appears under an existential quantifier.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationWitnessForUnboundedDestructorFieldFast`.
+  The destructor-field relation witness path is shared by `target=gen`, so
+  one-shot generators can populate unbounded fields inside structured formals
+  from relation-backed model evidence before returning `false`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationWitnessForUnboundedDestructorFieldPairFast`.
+  The same joint structured-field relation witness search is shared by
+  `target=gen`, covering tuple relation guards over multiple unbounded fields
+  of the same generated formal.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesNegatedRelationWitnessForUnboundedFormalFast`.
+  The negated unary relation witness heuristic is shared by `target=gen`, so
+  one-shot generators can avoid known true cells such as `banned(n)` by trying a
+  neighboring integer-like value and then rechecking the full generated guard.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesSmallIntFallbackForRelationBaseFast`. The
+  same bounded small-integer fallback is shared by `target=gen`, so one-shot
+  generators are no longer limited to relation override maps when a thunk base
+  function supplies the satisfying relation value.
+- 2026-09-22: Added
+  `TestTargetGenDefinedInputDependenciesUsePythonOrderFast`. The same
+  dependency ordering is shared by `target=gen`, preventing one-shot generators
+  from assigning `x` from a stale randomized `y` before applying the definition
+  that fixes `y`.
 
 ## 3. FIXED Initial state generation is retry/randomized, not Python's initial model
 
@@ -574,7 +771,7 @@ Progress:
   `___ivy_choose` / `___ivy_randomize` from discarding `name` and `id`.
   Solver-generator replay parity is still part of the open items 1 and 2.
 
-## 8. The generated test loop omits reader/timer event-loop semantics
+## 8. FIXED The generated test loop omits reader/timer event-loop semantics
 
 Python source behavior:
 
@@ -619,10 +816,32 @@ Progress:
   in `ivy2golang`: the randomized test loop now calls `ivy.__tick(sleepMs)`
   instead of hard-coding `0`, and exported `ext:_finalize` runs between
   generated `ivy.__lock()` / `ivy.__unlock()` stubs before final wait and
-  `test_completed`. Full reader/timer `select` parity remains open until the
-  Go runtime has generated reader/timer objects to schedule.
+  `test_completed`. At this point, full reader/timer `select` parity still
+  needed the generated reader/timer scheduling surface added below.
+- 2026-09-22: Added
+  `TestGeneratedTestMainIncludesReaderTimerEventLoopFast`. Generated
+  `target=test` code now includes reader/timer interfaces, per-instance
+  reader/timer lists, reader binding, timeout callbacks, and Python-style
+  cycle accounting for timeout/read/background-do-over branches. Specs with no
+  installed readers or timers remain inert, but the generated loop now has a
+  real scheduling surface for reader/timer hooks instead of immediately
+  discarding the non-action choice branch. Native reader installation and true
+  file-descriptor `select` parity were addressed by the follow-up bullets.
+- 2026-09-22: Extended
+  `TestGeneratedTestMainIncludesReaderTimerEventLoopFast` to require generated
+  `__installReader` / `__installTimer` hooks. Runtime/native code now has a
+  concrete generated registration surface for event-loop readers and timers;
+  fd-backed reader scheduling was added in the follow-up bullet.
+- 2026-09-22: Extended
+  `TestGeneratedTestMainIncludesReaderTimerEventLoopFast` again to require
+  fd-backed reader scheduling. Generated `target=test` code now gives readers a
+  `fdes()` hook, builds `syscall.FdSet` values, waits with `syscall.Select`,
+  tests selected descriptors with generated fd-set helpers, and preserves the
+  existing timer timeout, cycle decrement/re-increment, random ready-reader
+  choice, and background do-over accounting. Mock/in-process readers can still
+  return `-1` from `fdes()` and use `ready()`.
 
-## 9. `before_export` analysis is only partially ported
+## 9. FIXED `before_export` analysis is only partially ported
 
 Python source behavior:
 
@@ -669,6 +888,19 @@ Progress:
   guards now skip the runtime trial clone and call the public action directly
   after tracing. Full `before_export` reverse-image analysis remains tied to
   the remaining solver-backed generator work.
+- 2026-09-22: Added
+  `TestTargetGenBeforeExportNonLeadingAssumeUsesPreimageFast`. `target=gen`
+  now has explicit coverage for the same simple non-leading before-export
+  preimage slice as `target=test`: the analysis action constrains generated
+  formals, while `execute()` still calls the public exported action.
+- 2026-09-22: Added
+  `TestTargetTestBeforeExportTrialFallbackIsFatalFast`. If a `before_export`
+  action still falls outside the shared generator/preimage analysis and would
+  require the old runtime trial fallback, `target=test` now fails generation
+  with a source-located diagnostic instead of trialing the public action and
+  silently skipping the `before_export` enabledness. Remaining full solver
+  coverage for before-export bodies is tracked by the shared open action
+  generator work in items 1 and 2.
 
 ## 10. Existing parity tests should be expanded from source shape to oracle traces
 

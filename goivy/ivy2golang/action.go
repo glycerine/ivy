@@ -1097,6 +1097,9 @@ func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
 		if g.emitLocalWitnessInit(w, local.name, local.sort, a.Body) {
 			continue
 		}
+		if g.emitLocalScalarWitnessInit(w, local.name, local.sort, a.Body) {
+			continue
+		}
 		g.emitLocalFiniteWitnessInit(w, local.name, local.sort, a.Body)
 	}
 	if body, ok := a.Body.(goivy.Action); ok {
@@ -1141,6 +1144,11 @@ func (g *Generator) emitLocalWitnessInit(w *goWriter, localName string, localSor
 	if len(app.Terms) != 1 {
 		assignExpr = fmt.Sprintf("__ivy_witness_key.A%d", pos)
 	}
+	fallbackConds, hasFallback := g.localWitnessSmallIntFallbackConds(localName, localSort, body)
+	foundName := "__ivy_local_witness_found_" + goName(localName)
+	if hasFallback {
+		w.linef("%s := false", foundName)
+	}
 	w.open(fmt.Sprintf("for __ivy_witness_key, __ivy_witness_val := range %s {", g.goStorageRangeExpr(relName, fs, "ivy")))
 	w.open("if !__ivy_witness_val {")
 	w.line("continue")
@@ -1149,10 +1157,104 @@ func (g *Generator) emitLocalWitnessInit(w *goWriter, localName string, localSor
 		w.open("if " + strings.Join(conds, " && ") + " {")
 	}
 	w.linef("%s = %s", goName(localName), assignExpr)
+	if hasFallback {
+		w.linef("%s = true", foundName)
+	}
 	w.line("break")
 	if len(conds) > 0 {
 		w.close("")
 	}
+	w.close("")
+	if hasFallback {
+		base := goName(localName)
+		candidateName := "__ivy_local_witness_fallback_" + base
+		w.open(fmt.Sprintf("if !%s {", foundName))
+		w.open(fmt.Sprintf("for _, %s := range []%s{%s} {", candidateName, g.goType(localSort), strings.Join(actionGeneratorSmallIntFallbackValues(), ", ")))
+		w.linef("%s = %s", base, candidateName)
+		w.open("if " + strings.Join(fallbackConds, " && ") + " {")
+		w.linef("%s = true", foundName)
+		w.line("break")
+		w.close("")
+		w.close("")
+		w.close("")
+	}
+	return true
+}
+
+func (g *Generator) localWitnessSmallIntFallbackConds(localName string, localSort goivy.Sort, body goivy.Expr) ([]string, bool) {
+	if g == nil || body == nil || localName == "" {
+		return nil, false
+	}
+	if g.Config.Target != "test" && g.Config.Target != "gen" {
+		return nil, false
+	}
+	if g.goType(localSort) != "int" {
+		return nil, false
+	}
+	if values, ok := g.finiteValueExprs(localSort); ok && len(values) > 0 {
+		return nil, false
+	}
+	act, ok := body.(goivy.Action)
+	if !ok {
+		return nil, false
+	}
+	names := map[string]bool{localName: true}
+	var conds []string
+	for _, f := range localWitnessAssumeFormulas(act) {
+		if !exprReferencesAnyName(f, names) {
+			continue
+		}
+		cond, err := g.emitExpr(closeFormulaForGo(f))
+		if err != nil {
+			return nil, false
+		}
+		conds = append(conds, cond)
+	}
+	if len(conds) == 0 {
+		return nil, false
+	}
+	return conds, true
+}
+
+func (g *Generator) emitLocalScalarWitnessInit(w *goWriter, localName string, localSort goivy.Sort, body goivy.Expr) bool {
+	if g == nil || w == nil || body == nil || localName == "" {
+		return false
+	}
+	if g.Config.Target != "test" && g.Config.Target != "gen" {
+		return false
+	}
+	act, ok := body.(goivy.Action)
+	if !ok {
+		return false
+	}
+	names := map[string]bool{localName: true}
+	values, ok := g.scalarWitnessValuesForNames(g.goType(localSort), names, localWitnessAssumeFormulas(act))
+	if !ok || len(values) == 0 {
+		return false
+	}
+	var conds []string
+	for _, f := range localWitnessAssumeFormulas(act) {
+		if !exprReferencesAnyName(f, names) {
+			continue
+		}
+		cond, err := g.emitExpr(closeFormulaForGo(f))
+		if err != nil {
+			return false
+		}
+		conds = append(conds, cond)
+	}
+	if len(conds) == 0 {
+		return false
+	}
+	base := goName(localName)
+	valuesName := "__ivy_local_witness_values_" + base
+	candidateName := "__ivy_local_witness_" + base
+	w.linef("%s := []%s{%s}", valuesName, g.goType(localSort), strings.Join(values, ", "))
+	w.open(fmt.Sprintf("for _, %s := range %s {", candidateName, valuesName))
+	w.linef("%s = %s", base, candidateName)
+	w.open("if " + strings.Join(conds, " && ") + " {")
+	w.line("break")
+	w.close("")
 	w.close("")
 	return true
 }
