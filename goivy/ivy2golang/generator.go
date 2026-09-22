@@ -3147,75 +3147,339 @@ func leadingAssumeFormulas(act goivy.Action) []goivy.Expr {
 }
 
 func (g *Generator) testActionPrefixPreimageAssumeFormulas(act goivy.Action) []goivy.Expr {
-	switch a := act.(type) {
-	case *goivy.LogicAssumeAction:
-		if a.Formula == nil {
-			return nil
-		}
-		return []goivy.Expr{a.Formula}
-	case *goivy.LogicSequence:
-		var guards []goivy.Expr
-		subs := map[goivy.NodeKey]goivy.Expr{}
-		for _, elem := range a.Elems {
-			switch e := elem.(type) {
-			case *goivy.LogicAssumeAction:
-				if e.Formula == nil {
-					continue
-				}
-				guard := e.Formula
-				if len(subs) > 0 {
-					substituted, err := goivy.Substitute(guard, subs)
-					if err != nil {
-						return guards
-					}
-					guard = substituted
-				}
-				guards = append(guards, guard)
-			case *goivy.LogicAssertAction:
-				continue
-			case *goivy.LogicAssignAction:
-				if !g.recordSimplePreimageAssign(e, subs) {
-					return guards
-				}
-			case *goivy.LogicIfAction:
-				branchGuards, ok := g.conditionalPreimageAssumeGuards(e, subs)
-				if !ok {
-					return guards
-				}
-				guards = append(guards, branchGuards...)
-			default:
-				return guards
-			}
-		}
-		return guards
-	default:
-		return nil
+	guards, _ := g.collectTestActionPrefixPreimageAssumeFormulas(act, newActionPreimageContext(), map[string]bool{})
+	return guards
+}
+
+type actionPreimageContext struct {
+	subs        map[goivy.NodeKey]goivy.Expr
+	pointUpdate map[goivy.NodeKey][]preimagePointUpdate
+}
+
+type preimagePointUpdate struct {
+	fn    *goivy.Const
+	args  []goivy.Expr
+	value goivy.Expr
+}
+
+func newActionPreimageContext() *actionPreimageContext {
+	return &actionPreimageContext{
+		subs:        map[goivy.NodeKey]goivy.Expr{},
+		pointUpdate: map[goivy.NodeKey][]preimagePointUpdate{},
 	}
 }
 
-func (g *Generator) conditionalPreimageAssumeGuards(a *goivy.LogicIfAction, subs map[goivy.NodeKey]goivy.Expr) ([]goivy.Expr, bool) {
+func (ctx *actionPreimageContext) copy() *actionPreimageContext {
+	if ctx == nil {
+		return newActionPreimageContext()
+	}
+	out := newActionPreimageContext()
+	for key, value := range ctx.subs {
+		out.subs[key] = value
+	}
+	for key, updates := range ctx.pointUpdate {
+		out.pointUpdate[key] = append([]preimagePointUpdate(nil), updates...)
+	}
+	return out
+}
+
+func (g *Generator) collectTestActionPrefixPreimageAssumeFormulas(act goivy.Action, ctx *actionPreimageContext, seen map[string]bool) ([]goivy.Expr, bool) {
+	if ctx == nil {
+		ctx = newActionPreimageContext()
+	}
+	switch a := act.(type) {
+	case *goivy.LogicAssumeAction:
+		if a.Formula == nil {
+			return nil, true
+		}
+		guard, ok := g.substituteExprForPreimage(a.Formula, ctx)
+		if !ok {
+			return nil, false
+		}
+		return []goivy.Expr{guard}, true
+	case *goivy.LogicSequence:
+		var guards []goivy.Expr
+		for _, elem := range a.Elems {
+			child, ok := elem.(goivy.Action)
+			if !ok {
+				return guards, false
+			}
+			childGuards, ok := g.collectTestActionPrefixPreimageAssumeFormulas(child, ctx, seen)
+			if !ok {
+				return guards, false
+			}
+			guards = append(guards, childGuards...)
+		}
+		return guards, true
+	case *goivy.LogicAssertAction:
+		return nil, true
+	case *goivy.LogicAssignAction:
+		return nil, g.recordSimplePreimageAssign(a, ctx)
+	case *goivy.LogicSetAction:
+		if a.Lit == nil {
+			return nil, false
+		}
+		target, value := setTargetAndValue(a.Lit)
+		return nil, g.recordSimplePreimageAssign(goivy.NewAssignAction(target, goivy.NewConst(value, goivy.Boolean)), ctx)
+	case *goivy.LogicIfAction:
+		guards, ok := g.conditionalPreimageAssumeGuards(a, ctx, seen)
+		return guards, ok
+	case *goivy.LogicCallAction:
+		return g.callPreimageAssumeGuards(a, ctx, seen)
+	case *goivy.LogicLocalAction:
+		return g.localPreimageAssumeGuardsSeen(a, ctx, seen)
+	default:
+		return nil, false
+	}
+}
+
+func (g *Generator) localPreimageAssumeGuards(a *goivy.LogicLocalAction, ctx *actionPreimageContext) ([]goivy.Expr, bool) {
+	return g.localPreimageAssumeGuardsSeen(a, ctx, map[string]bool{})
+}
+
+func (g *Generator) localPreimageAssumeGuardsSeen(a *goivy.LogicLocalAction, ctx *actionPreimageContext, seen map[string]bool) ([]goivy.Expr, bool) {
+	if a == nil || a.Body == nil {
+		return nil, false
+	}
+	body, ok := a.Body.(goivy.Action)
+	if !ok {
+		return nil, false
+	}
+	localNames := map[string]bool{}
+	for _, local := range a.Locals {
+		if name := goivy.ExprName(local); name != "" {
+			localNames[name] = true
+		}
+	}
+	guards, ok := g.collectTestActionPrefixPreimageAssumeFormulas(body, ctx, seen)
+	if !ok {
+		return nil, false
+	}
+	for _, guard := range guards {
+		if exprReferencesAnyName(guard, localNames) {
+			return nil, false
+		}
+	}
+	return guards, true
+}
+
+func exprReferencesAnyName(expr goivy.Expr, names map[string]bool) bool {
+	if expr == nil || len(names) == 0 {
+		return false
+	}
+	for _, sym := range goivy.UsedSymbolsAst(expr).All() {
+		if names[goivy.ExprName(sym)] {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) callPreimageAssumeGuards(a *goivy.LogicCallAction, ctx *actionPreimageContext, seen map[string]bool) ([]goivy.Expr, bool) {
+	name := ""
+	if a != nil {
+		name = a.CalleeName()
+	}
+	if name == "" || seen[name] {
+		return nil, false
+	}
+	callee, formalSubs, ok := g.callPreimageCalleeAndSubstitutions(a, ctx)
+	if !ok {
+		return nil, false
+	}
+	previous := make(map[goivy.NodeKey]goivy.Expr, len(formalSubs))
+	hadPrevious := make(map[goivy.NodeKey]bool, len(formalSubs))
+	for key, value := range formalSubs {
+		prev, had := ctx.subs[key]
+		previous[key] = prev
+		hadPrevious[key] = had
+		ctx.subs[key] = value
+	}
+	seen[name] = true
+	guards, ok := g.collectTestActionPrefixPreimageAssumeFormulas(callee, ctx, seen)
+	delete(seen, name)
+	for key := range formalSubs {
+		if hadPrevious[key] {
+			ctx.subs[key] = previous[key]
+		} else {
+			delete(ctx.subs, key)
+		}
+	}
+	return guards, ok
+}
+
+func (g *Generator) callPreimageCalleeAndSubstitutions(a *goivy.LogicCallAction, ctx *actionPreimageContext) (goivy.Action, map[goivy.NodeKey]goivy.Expr, bool) {
+	if g == nil || g.Mod == nil || g.Mod.Actions == nil || a == nil {
+		return nil, nil, false
+	}
+	name := a.CalleeName()
+	callee, ok := g.Mod.Actions.Get2(name)
+	if !ok || callee == nil {
+		return nil, nil, false
+	}
+	args := callArgs(a.Callee)
+	formals := callee.GetFormalParams()
+	returns := callee.GetFormalReturns()
+	if len(args) != len(formals) || len(a.ActualReturns) != len(returns) {
+		return nil, nil, false
+	}
+	formalSubs := map[goivy.NodeKey]goivy.Expr{}
+	for i, formal := range formals {
+		if formal == nil {
+			return nil, nil, false
+		}
+		actual := args[i]
+		if substituted, ok := g.substituteExprForPreimage(actual, ctx); ok {
+			actual = substituted
+		} else {
+			return nil, nil, false
+		}
+		formalSubs[goivy.Key(formal)] = actual
+	}
+	for i, ret := range returns {
+		if ret == nil {
+			return nil, nil, false
+		}
+		formalSubs[goivy.Key(ret)] = a.ActualReturns[i]
+	}
+	return callee, formalSubs, true
+}
+
+func (g *Generator) transparentCallPreimageAssumeGuards(a *goivy.LogicCallAction, subs map[goivy.NodeKey]goivy.Expr) ([]goivy.Expr, bool) {
+	if a == nil || !g.actionCallIsPreconditionOnly(a, map[string]bool{}) {
+		return nil, false
+	}
+	name := a.CalleeName()
+	callee, ok := g.Mod.Actions.Get2(name)
+	if !ok || callee == nil {
+		return nil, false
+	}
+	args := callArgs(a.Callee)
+	formals := callee.GetFormalParams()
+	if len(args) != len(formals) {
+		return nil, false
+	}
+	formalSubs := map[goivy.NodeKey]goivy.Expr{}
+	for i, formal := range formals {
+		if formal == nil {
+			return nil, false
+		}
+		actual := args[i]
+		if len(subs) > 0 {
+			substituted, err := goivy.Substitute(actual, subs)
+			if err != nil {
+				return nil, false
+			}
+			actual = substituted
+		}
+		formalSubs[goivy.Key(formal)] = actual
+	}
+	var guards []goivy.Expr
+	for _, guard := range g.testActionPrefixPreimageAssumeFormulas(callee) {
+		if guard == nil {
+			continue
+		}
+		var err error
+		if len(formalSubs) > 0 {
+			guard, err = goivy.Substitute(guard, formalSubs)
+			if err != nil {
+				return nil, false
+			}
+		}
+		tmpCtx := newActionPreimageContext()
+		for key, value := range subs {
+			tmpCtx.subs[key] = value
+		}
+		guard, ok = g.substituteExprForPreimage(guard, tmpCtx)
+		if !ok {
+			return nil, false
+		}
+		guards = append(guards, guard)
+	}
+	return guards, true
+}
+
+func (g *Generator) actionCallIsPreconditionOnly(a *goivy.LogicCallAction, seen map[string]bool) bool {
+	if g == nil || g.Mod == nil || g.Mod.Actions == nil || a == nil {
+		return false
+	}
+	if len(a.ActualReturns) > 0 {
+		return false
+	}
+	name := a.CalleeName()
+	if seen[name] {
+		return false
+	}
+	callee, ok := g.Mod.Actions.Get2(name)
+	if !ok || callee == nil || len(callee.GetFormalReturns()) > 0 {
+		return false
+	}
+	seen[name] = true
+	ok = g.preconditionOnlyActionForPreimage(callee, seen)
+	delete(seen, name)
+	return ok
+}
+
+func (g *Generator) preconditionOnlyActionForPreimage(act goivy.Action, seen map[string]bool) bool {
+	switch a := act.(type) {
+	case nil:
+		return true
+	case *goivy.LogicAssumeAction, *goivy.LogicAssertAction:
+		return true
+	case *goivy.LogicCallAction:
+		return g.actionCallIsPreconditionOnly(a, seen)
+	case *goivy.LogicLocalAction:
+		_, ok := g.localPreimageAssumeGuards(a, nil)
+		return ok
+	case *goivy.LogicSequence:
+		for _, elem := range a.Elems {
+			child, ok := elem.(goivy.Action)
+			if !ok || !g.preconditionOnlyActionForPreimage(child, seen) {
+				return false
+			}
+		}
+		return true
+	case *goivy.LogicIfAction:
+		if a.ThenBody != nil {
+			thenAct, ok := goivy.ToAction(a.ThenBody)
+			if !ok || !g.preconditionOnlyActionForPreimage(thenAct, seen) {
+				return false
+			}
+		}
+		if a.ElseBody != nil {
+			elseAct, ok := goivy.ToAction(a.ElseBody)
+			if !ok || !g.preconditionOnlyActionForPreimage(elseAct, seen) {
+				return false
+			}
+		}
+		return true
+	default:
+		return false
+	}
+}
+
+func (g *Generator) conditionalPreimageAssumeGuards(a *goivy.LogicIfAction, ctx *actionPreimageContext, seen map[string]bool) ([]goivy.Expr, bool) {
 	if a == nil || a.Cond == nil {
 		return nil, false
 	}
-	cond := a.Cond
-	if len(subs) > 0 {
-		substituted, err := goivy.Substitute(cond, subs)
-		if err != nil {
-			return nil, false
-		}
-		cond = substituted
+	cond, ok := g.substituteExprForPreimage(a.Cond, ctx)
+	if !ok {
+		return nil, false
 	}
+	baseCtx := ctx.copy()
+	thenCtx := ctx.copy()
+	elseCtx := ctx.copy()
 	var guards []goivy.Expr
 	if a.ThenBody != nil {
 		thenAct, ok := goivy.ToAction(a.ThenBody)
-		if !ok || !preconditionOnlyAction(thenAct) {
+		if !ok {
 			return nil, false
 		}
-		for _, guard := range g.testActionPrefixPreimageAssumeFormulas(thenAct) {
-			guard, ok = substituteGuardForPreimage(guard, subs)
-			if !ok {
-				return nil, false
-			}
+		thenGuards, ok := g.collectTestActionPrefixPreimageAssumeFormulas(thenAct, thenCtx, seen)
+		if !ok {
+			return nil, false
+		}
+		for _, guard := range thenGuards {
 			impl, err := goivy.NewImplies(cond, guard)
 			if err != nil {
 				return nil, false
@@ -3225,18 +3489,18 @@ func (g *Generator) conditionalPreimageAssumeGuards(a *goivy.LogicIfAction, subs
 	}
 	if a.ElseBody != nil {
 		elseAct, ok := goivy.ToAction(a.ElseBody)
-		if !ok || !preconditionOnlyAction(elseAct) {
+		if !ok {
 			return nil, false
 		}
 		notCond, err := goivy.NewNot(cond)
 		if err != nil {
 			return nil, false
 		}
-		for _, guard := range g.testActionPrefixPreimageAssumeFormulas(elseAct) {
-			guard, ok = substituteGuardForPreimage(guard, subs)
-			if !ok {
-				return nil, false
-			}
+		elseGuards, ok := g.collectTestActionPrefixPreimageAssumeFormulas(elseAct, elseCtx, seen)
+		if !ok {
+			return nil, false
+		}
+		for _, guard := range elseGuards {
 			impl, err := goivy.NewImplies(notCond, guard)
 			if err != nil {
 				return nil, false
@@ -3244,18 +3508,239 @@ func (g *Generator) conditionalPreimageAssumeGuards(a *goivy.LogicIfAction, subs
 			guards = append(guards, impl)
 		}
 	}
+	if !g.mergeConditionalPreimageSubstitutions(cond, baseCtx.subs, thenCtx.subs, elseCtx.subs, ctx.subs) {
+		return nil, false
+	}
 	return guards, true
 }
 
-func substituteGuardForPreimage(guard goivy.Expr, subs map[goivy.NodeKey]goivy.Expr) (goivy.Expr, bool) {
-	if guard == nil || len(subs) == 0 {
-		return guard, true
+func (g *Generator) mergeConditionalPreimageSubstitutions(cond goivy.Expr, baseSubs, thenSubs, elseSubs, out map[goivy.NodeKey]goivy.Expr) bool {
+	if cond == nil || out == nil {
+		return false
 	}
-	substituted, err := goivy.Substitute(guard, subs)
+	stateConsts := g.preimageStateConstsByKey()
+	keys := map[goivy.NodeKey]bool{}
+	for key := range thenSubs {
+		if stateConsts[key] != nil {
+			keys[key] = true
+		}
+	}
+	for key := range elseSubs {
+		if stateConsts[key] != nil {
+			keys[key] = true
+		}
+	}
+	for key := range keys {
+		state := stateConsts[key]
+		oldValue := baseSubs[key]
+		hadBase := oldValue != nil
+		if oldValue == nil {
+			oldValue = state
+		}
+		thenValue := thenSubs[key]
+		if thenValue == nil {
+			thenValue = oldValue
+		}
+		elseValue := elseSubs[key]
+		if elseValue == nil {
+			elseValue = oldValue
+		}
+		if exprEqual(thenValue, elseValue) {
+			if hadBase || !exprEqual(thenValue, state) {
+				out[key] = thenValue
+			}
+			continue
+		}
+		ite, err := goivy.NewIte(cond, thenValue, elseValue)
+		if err != nil {
+			return false
+		}
+		out[key] = ite
+	}
+	return true
+}
+
+func (g *Generator) preimageStateConstsByKey() map[goivy.NodeKey]*goivy.Const {
+	out := map[goivy.NodeKey]*goivy.Const{}
+	for _, sym := range g.stateSymbols() {
+		c := goivy.NewConst(sym.Name, sym.Sort)
+		out[goivy.Key(c)] = c
+	}
+	return out
+}
+
+func exprEqual(a, b goivy.Expr) bool {
+	if a == nil || b == nil {
+		return a == b
+	}
+	return a.Equal(b)
+}
+
+func (g *Generator) substituteExprForPreimage(expr goivy.Expr, ctx *actionPreimageContext) (goivy.Expr, bool) {
+	if expr == nil {
+		return nil, true
+	}
+	if ctx == nil {
+		return expr, true
+	}
+	if len(ctx.subs) > 0 {
+		substituted, err := goivy.Substitute(expr, ctx.subs)
+		if err != nil {
+			return nil, false
+		}
+		expr = substituted
+	}
+	if len(ctx.pointUpdate) == 0 {
+		return expr, true
+	}
+	rewritten, err := g.rewritePointUpdatesForPreimage(expr, ctx)
 	if err != nil {
 		return nil, false
 	}
-	return substituted, true
+	return rewritten, true
+}
+
+func (g *Generator) rewritePointUpdatesForPreimage(expr goivy.Expr, ctx *actionPreimageContext) (goivy.Expr, error) {
+	switch n := expr.(type) {
+	case nil, *goivy.Const, *goivy.LogicVariable:
+		return expr, nil
+	case *goivy.Apply:
+		terms := make([]goivy.Expr, len(n.Terms))
+		for i, term := range n.Terms {
+			rewritten, err := g.rewritePointUpdatesForPreimage(term, ctx)
+			if err != nil {
+				return nil, err
+			}
+			terms[i] = rewritten
+		}
+		rewrittenApply, err := goivy.NewApply(n.Func, terms...)
+		if err != nil {
+			return nil, err
+		}
+		var rewritten goivy.Expr = rewrittenApply
+		fn, ok := n.Func.(*goivy.Const)
+		if !ok {
+			return rewritten, nil
+		}
+		for _, update := range ctx.pointUpdate[goivy.Key(fn)] {
+			var conds []goivy.Expr
+			if len(terms) != len(update.args) {
+				return nil, fmt.Errorf("point update arity mismatch for %s", fn.Name)
+			}
+			for i := range terms {
+				eq, err := goivy.NewEq(terms[i], update.args[i])
+				if err != nil {
+					return nil, err
+				}
+				conds = append(conds, eq)
+			}
+			var cond goivy.Expr = goivy.True
+			if len(conds) == 1 {
+				cond = conds[0]
+			} else if len(conds) > 1 {
+				and, err := goivy.NewAnd(conds...)
+				if err != nil {
+					return nil, err
+				}
+				cond = and
+			}
+			rewritten, err = goivy.NewIte(cond, update.value, rewritten)
+			if err != nil {
+				return nil, err
+			}
+		}
+		return rewritten, nil
+	case *goivy.Eq:
+		t1, err := g.rewritePointUpdatesForPreimage(n.T1, ctx)
+		if err != nil {
+			return nil, err
+		}
+		t2, err := g.rewritePointUpdatesForPreimage(n.T2, ctx)
+		if err != nil {
+			return nil, err
+		}
+		return goivy.NewEq(t1, t2)
+	case *goivy.LogicNot:
+		body, err := g.rewritePointUpdatesForPreimage(n.Body, ctx)
+		if err != nil {
+			return nil, err
+		}
+		return goivy.NewNot(body)
+	case *goivy.LogicLiteral:
+		atom, err := g.rewritePointUpdatesForPreimage(n.Atom, ctx)
+		if err != nil {
+			return nil, err
+		}
+		return &goivy.LogicLiteral{Atom: atom, Polarity: n.Polarity}, nil
+	case *goivy.LogicAnd:
+		terms := make([]goivy.Expr, len(n.Terms))
+		for i, term := range n.Terms {
+			rewritten, err := g.rewritePointUpdatesForPreimage(term, ctx)
+			if err != nil {
+				return nil, err
+			}
+			terms[i] = rewritten
+		}
+		return goivy.NewAnd(terms...)
+	case *goivy.LogicOr:
+		terms := make([]goivy.Expr, len(n.Terms))
+		for i, term := range n.Terms {
+			rewritten, err := g.rewritePointUpdatesForPreimage(term, ctx)
+			if err != nil {
+				return nil, err
+			}
+			terms[i] = rewritten
+		}
+		return goivy.NewOr(terms...)
+	case *goivy.LogicImplies:
+		t1, err := g.rewritePointUpdatesForPreimage(n.T1, ctx)
+		if err != nil {
+			return nil, err
+		}
+		t2, err := g.rewritePointUpdatesForPreimage(n.T2, ctx)
+		if err != nil {
+			return nil, err
+		}
+		return goivy.NewImplies(t1, t2)
+	case *goivy.LogicIff:
+		t1, err := g.rewritePointUpdatesForPreimage(n.T1, ctx)
+		if err != nil {
+			return nil, err
+		}
+		t2, err := g.rewritePointUpdatesForPreimage(n.T2, ctx)
+		if err != nil {
+			return nil, err
+		}
+		return goivy.NewIff(t1, t2)
+	case *goivy.LogicIte:
+		cond, err := g.rewritePointUpdatesForPreimage(n.Cond, ctx)
+		if err != nil {
+			return nil, err
+		}
+		thenExpr, err := g.rewritePointUpdatesForPreimage(n.Then, ctx)
+		if err != nil {
+			return nil, err
+		}
+		elseExpr, err := g.rewritePointUpdatesForPreimage(n.Else, ctx)
+		if err != nil {
+			return nil, err
+		}
+		return goivy.NewIte(cond, thenExpr, elseExpr)
+	case *goivy.ForAll:
+		body, err := g.rewritePointUpdatesForPreimage(n.Body, ctx)
+		if err != nil {
+			return nil, err
+		}
+		return goivy.IvyForAll(n.Variables, body), nil
+	case *goivy.LogicExists:
+		body, err := g.rewritePointUpdatesForPreimage(n.Body, ctx)
+		if err != nil {
+			return nil, err
+		}
+		return goivy.IvyExists(n.Variables, body), nil
+	default:
+		return expr, nil
+	}
 }
 
 func preconditionOnlyAction(act goivy.Action) bool {
@@ -3291,26 +3776,67 @@ func preconditionOnlyAction(act goivy.Action) bool {
 	}
 }
 
-func (g *Generator) recordSimplePreimageAssign(a *goivy.LogicAssignAction, subs map[goivy.NodeKey]goivy.Expr) bool {
-	if a == nil || a.LHS == nil || a.RHS == nil {
+func (g *Generator) recordSimplePreimageAssign(a *goivy.LogicAssignAction, ctx *actionPreimageContext) bool {
+	if a == nil || a.LHS == nil || a.RHS == nil || ctx == nil {
 		return false
 	}
-	lhs, ok := a.LHS.(*goivy.Const)
+	if g.recordPointPreimageAssign(a, ctx) {
+		return true
+	}
+	lhsExpr := a.LHS
+	if lhsConst, ok := lhsExpr.(*goivy.Const); ok {
+		if _, isState := g.isStateSymbolName(lhsConst.Name); !isState {
+			if repl, ok := ctx.subs[goivy.Key(lhsConst)]; ok {
+				lhsExpr = repl
+			}
+		}
+	}
+	lhs, ok := lhsExpr.(*goivy.Const)
 	if !ok {
 		return false
 	}
 	if _, ok := g.isStateSymbolName(lhs.Name); !ok {
 		return false
 	}
-	rhs := a.RHS
-	if len(subs) > 0 {
-		substituted, err := goivy.Substitute(rhs, subs)
-		if err != nil {
+	rhs, ok := g.substituteExprForPreimage(a.RHS, ctx)
+	if !ok {
+		return false
+	}
+	ctx.subs[goivy.Key(lhs)] = rhs
+	return true
+}
+
+func (g *Generator) recordPointPreimageAssign(a *goivy.LogicAssignAction, ctx *actionPreimageContext) bool {
+	lhs, ok := a.LHS.(*goivy.Apply)
+	if !ok || len(goivy.UsedVariablesAST(lhs)) > 0 || len(goivy.UsedVariablesAST(a.RHS)) > 0 {
+		return false
+	}
+	fn, ok := lhs.Func.(*goivy.Const)
+	if !ok || fn == nil {
+		return false
+	}
+	sort, ok := g.isStateSymbolName(fn.Name)
+	if !ok {
+		return false
+	}
+	fs, ok := sort.(*goivy.LogicFunctionSort)
+	if !ok || len(fs.Domain()) != len(lhs.Terms) {
+		return false
+	}
+	args := make([]goivy.Expr, len(lhs.Terms))
+	for i, arg := range lhs.Terms {
+		substituted, ok := g.substituteExprForPreimage(arg, ctx)
+		if !ok {
 			return false
 		}
-		rhs = substituted
+		args[i] = substituted
 	}
-	subs[goivy.Key(lhs)] = rhs
+	value, ok := g.substituteExprForPreimage(a.RHS, ctx)
+	if !ok {
+		return false
+	}
+	key := goivy.Key(fn)
+	ctx.pointUpdate[key] = append(ctx.pointUpdate[key], preimagePointUpdate{fn: fn, args: args, value: value})
 	return true
 }
 
@@ -3704,7 +4230,7 @@ func (g *Generator) emitTestActionGeneratorAssumeGuards(w *goWriter, name string
 	for _, guard := range guards {
 		expr, err := g.emitExpr(closeFormulaForGo(guard))
 		if err != nil {
-			g.unsupportedAt(w, guard.GetLineno(), "unsupported target=test action generator assume guard: %s", strings.TrimPrefix(err.Error(), "ivy2golang: "))
+			g.softUnsupported(w, "unsupported target=test action generator assume guard", err, linenoStr(guard.GetLineno()))
 			continue
 		}
 		w.open(fmt.Sprintf("if !(%s) {", expr))

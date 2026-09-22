@@ -9,6 +9,19 @@ This document records behavior gaps in `ivy2golang` relative to the Python
 were useful while bringing up the port. The goal is to make the remaining
 divergences visible and testable.
 
+Workflow for fixing this list:
+
+- Work items in order.
+- For each item, first add a fast in-process Go unit test. The test must run
+  inside the `go test` process by compiling Ivy source, running generator
+  analysis, or inspecting generated source; it must not build generated Go,
+  invoke `ivy2cpp`, or launch a separate tester process.
+- Fix the implementation until the focused fast test and the normal
+  `ivy2golang` / `cmd/ivy2golang` tests pass.
+- When an item is fully fixed, put `FIXED` on the item's heading line.
+- Run the full slow end-to-end verification only after every item below is
+  marked fixed.
+
 ## 1. `target=test` does not use Python's solver-backed action generators
 
 Python source behavior:
@@ -38,8 +51,8 @@ Risk:
 - Any constraint introduced by a non-leading assume, nested call, local witness,
   assignment preimage, relevant definition, variant axiom, or field extractor can
   be missed or approximated. This can cause spurious `assumption_failed`,
-  skipped enabled transitions, trace drift from `ivy2cpp`, or retry-heavy slow
-  tests.
+  skipped enabled transitions, trace drift from `ivy2cpp`, or retry-heavy
+  generated testers.
 
 How to conform:
 
@@ -57,12 +70,9 @@ Regression test:
 
 - Add a small `target=test` spec with an exported action whose enabledness
   depends on a non-leading assume after a nested call and on a derived
-  definition. Build both `ivy2cpp` and `ivy2golang` outputs with the same
-  `iters/runs/seed`, then assert the Go trace matches the C++ trace and contains
-  no `assumption_failed`.
-- Keep a fast source-shape unit test that the generated Go has per-action
-  generator `generate()` methods for `target=test` and does not emit the direct
-  random-actuals path for exported actions.
+  definition. As a fast test, inspect the generated Go and generator analysis to
+  prove `target=test` uses per-action `generate()` methods and no longer emits
+  the direct random-actuals path for exported actions.
 
 Progress:
 
@@ -99,6 +109,54 @@ Progress:
   This restores the Python-style action-generator contract boundary while the
   generator internals are still the limited Go analysis rather than the full Z3
   reverse-image plan.
+- 2026-09-22: Added
+  `TestTargetTestDerivedAssumeAfterTransparentCallUsesGeneratorGuardFast`.
+  `target=test` precondition analysis now treats calls to precondition-only
+  private actions as transparent, substitutes callee formals with actual
+  arguments, and carries derived-definition assumes such as `is_green(c)` into
+  the per-action generator guard. Calls that can mutate state still fall back to
+  the trial path; the full solver-backed reverse-image plan remains open.
+- 2026-09-22: Added
+  `TestTargetTestFormalAssumeInsideIrrelevantLocalUsesGeneratorGuardFast`.
+  Local-action wrappers whose collected guards do not reference the local
+  symbols are now transparent to `target=test` generator precondition analysis,
+  so formal-only assumes inside harmless local declarations become generator
+  guards. Guards that actually depend on the local symbol still fall back to the
+  runtime trial path until local solver witnesses are modeled.
+- 2026-09-22: Added
+  `TestTargetTestCallAssignmentPreimageUsesGeneratorGuardFast`. The
+  `target=test` prefix/preimage walker now carries one substitution map through
+  nested analysis and inlines simple private calls with formal-to-actual
+  substitutions. This lets a callee assignment such as `saved := c` feed a
+  later caller guard like `assume saved = green`, producing a generator guard on
+  `c = green`. Recursive calls and unsupported callee shapes still fall back to
+  the trial path.
+- 2026-09-22: Added
+  `TestTargetTestCallReturnPreimageUsesGeneratorGuardFast`. Simple private
+  calls with return values now map callee return formals onto the actual return
+  targets during `target=test` preimage analysis, so `call saved := helper(c);
+  assume saved = green` produces the same generator guard on `c = green`.
+  Recursive calls and complex return targets remain outside this narrow slice.
+- 2026-09-22: Added
+  `TestTargetTestConditionalAssignmentPreimageUsesIteGuardFast`. Conditional
+  branches now collect preimage substitutions in branch-local maps and merge
+  state-symbol updates back into the caller with `LogicIte`, so a later guard
+  sees shapes such as `if c = red { saved := c }; assume saved = green` as a
+  generator guard on `ite(c = red, c, saved) = green`. Unsupported branch
+  actions still fall back to the trial path.
+- 2026-09-22: Added
+  `TestTargetTestRelationPointAssignmentPreimageUsesIteGuardFast`. The
+  `target=test` preimage context now carries ordered point updates for
+  state-function and relation cells, so `marked(c) := true; assume
+  marked(green)` emits a generator guard equivalent to
+  `ite(green = c, true, marked(green))`. Bulk quantified relation assignments
+  and unsupported point-update shapes still fall back to the trial path.
+- 2026-09-22: Added
+  `TestTargetTestSetActionPreimageUsesPointUpdateGuardFast`. Relation
+  `SetAction` forms such as `marked(c)` and `~marked(c)` now lower through the
+  same point-update preimage recorder as explicit assignments, so source-level
+  relation set statements contribute generator guards instead of forcing the
+  runtime trial path.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -132,9 +190,9 @@ How to conform:
 Regression test:
 
 - Add a tiny `target=gen` spec where the only enabled input satisfies a derived
-  predicate rather than a direct leading assume. Compare generated Go and C++
-  output for `seed=1`, or at least assert the Go source contains the
-  solver-backed generator plan and not just `gen.x = random`.
+  predicate rather than a direct leading assume. As a fast test, assert the Go
+  source contains the solver-backed generator plan and not just `gen.x =
+  random`.
 
 Progress:
 
@@ -187,10 +245,10 @@ How to conform:
 Regression test:
 
 - Use a small spec with an initial axiom that determines a relation through a
-  derived predicate and is unlikely to be satisfied by random retry. Run the
-  generated Go with `iters=0 runs=1 seed=1` and assert no
-  `initial condition` failure. Compare the initial trace/state effect with
-  `ivy2cpp` where practical.
+  derived predicate and is unlikely to be satisfied by random retry. As a fast
+  test, inspect generated initialization code and/or the generation-time model
+  assignments to prove the random retry path is not used for satisfiable initial
+  constraints.
 
 Progress:
 
@@ -244,15 +302,16 @@ How to conform:
 
 Regression test:
 
-- Tighten `TestGeneratedTestMainHonorsSpecialRuntimeOptions`: generate a spec
-  with at least one satisfiable action generator, run with `modelfile=...`, and
-  assert the file contains `begin check` and `begin sat` (or the agreed Go
-  equivalent), not just that it exists.
+- Tighten `TestGeneratedTestMainHonorsSpecialRuntimeOptions` with fast
+  source-shape coverage: generate a spec with at least one satisfiable action
+  generator and assert the emitted code writes meaningful model-log content
+  (`begin check` / `begin sat`, or the agreed Go equivalent) instead of merely
+  creating a file.
 
 Progress:
 
-- 2026-09-22: Added fast source-shape coverage and slow runtime content checks
-  for `modelfile`. Until generated Go has solver-backed generators, the runtime
+- 2026-09-22: Added fast source-shape coverage for `modelfile`. Until generated
+  Go has solver-backed generators, the runtime
   now writes `ivy2golang: modelfile solver logging is not implemented for
   generated Go` to the requested file instead of silently creating an empty,
   misleading log. Full `begin check` / `begin sat` parity remains tied to the
@@ -443,9 +502,9 @@ How to conform:
 Regression test:
 
 - Add a small Ivy spec with a timer-driven exported action or imported callback
-  that changes trace-visible state without a normal exported action firing. Run
-  both generated testers with a small `iters`/`wait` and assert matching trace
-  ordering and `test_completed`.
+  that changes trace-visible state without a normal exported action firing. As a
+  fast test, inspect the emitted event-loop code and assert it contains the
+  reader/timer scheduling and cycle-accounting paths needed for parity.
 
 Progress:
 
@@ -510,19 +569,18 @@ Current state:
 
 Recommended direction:
 
-- For every fix above, add one fast unit test that checks the generator analysis
-  or emitted source shape, and one slow `SLOWTEST=1` oracle test only when it
-  must build/run `ivy2cpp`.
-- Prefer tiny inline specs over large external examples. Use `hermes`-style
-  regressions only as slow end-to-end sentinels.
+- For every fix above, add one fast in-process unit test that checks the
+  generator analysis or emitted source shape.
+- Prefer tiny inline specs over large external examples. Use larger regressions
+  only as final end-to-end sentinels.
 
 Short test pattern:
 
 - Fast: `compileIvySource`, `Generate`, inspect the relevant generated function
   body with `bodyAfterMarker`, and assert the old divergent construct is absent.
-- Slow: build the Go and C++ generated testers, run both with the same
-  `iters/runs/seed/delay`, and compare stdout/stderr plus any model log needed
-  for the feature.
+- Final end-to-end verification: after all items are marked fixed, build and run
+  generated testers as needed with matching `iters/runs/seed/delay`, and compare
+  stdout/stderr plus any model log needed for the feature.
 
 Progress:
 
@@ -532,5 +590,5 @@ Progress:
   weakening rejection, fatal unsupported exported conditions, stack-qualified
   choices, modelfile unsupported-content markers, finalizer lock ordering, and
   before_export preimage handling. The normal `ivy2golang` and
-  `cmd/ivy2golang` test run remains under five seconds; slow C++ oracle
-  expansion is left to the final `SLOWTEST=1` pass.
+  `cmd/ivy2golang` test run remains under five seconds; C++ oracle expansion is
+  left to the final `SLOWTEST=1` pass.

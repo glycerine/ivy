@@ -701,6 +701,302 @@ export set
 	}
 }
 
+func TestTargetTestDerivedAssumeAfterTransparentCallUsesGeneratorGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+definition is_green(C:color) = C = green
+action helper = {
+    assert true
+}
+action set(c:color) = {
+    call helper;
+    assume is_green(c);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testderivedcallguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testderivedcallguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if !((gen.c == green)) {`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test derived assume after transparent call missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `ivy.is_green`) || strings.Contains(genBody, `is_green(gen.c)`) {
+		t.Fatalf("target=test generator should inline derived guard instead of calling definition:\n%s", genBody)
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	guardIdx := strings.Index(mainBody, `if !set_generator.generate() {`)
+	traceIdx := strings.Index(mainBody, `fmt.Fprintf(__ivy_out, "> set(%s)\n", ivyTraceValue(__arg0, false))`)
+	if guardIdx < 0 || traceIdx < 0 || guardIdx > traceIdx {
+		t.Fatalf("derived transparent-call guard should run before action trace; guard=%d trace=%d\n%s", guardIdx, traceIdx, mainBody)
+	}
+}
+
+func TestTargetTestFormalAssumeInsideIrrelevantLocalUsesGeneratorGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    var scratch : color;
+    assume c = green;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalwrapperguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalwrapperguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if !((gen.c == green)) {`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test assume inside irrelevant local missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "scratch") {
+		t.Fatalf("target=test formal-only guard should not expose irrelevant local in generator:\n%s", genBody)
+	}
+}
+
+func TestTargetTestCallAssignmentPreimageUsesGeneratorGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action helper(c:color) = {
+    saved := c
+}
+action set(c:color) = {
+    call helper(c);
+    assume saved = green
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testcallpreimage", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testcallpreimage_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if !((gen.c == green)) {`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test call assignment preimage missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `ivy.saved == green`) {
+		t.Fatalf("target=test call assignment guard should use call preimage, not current state:\n%s", genBody)
+	}
+}
+
+func TestTargetTestCallReturnPreimageUsesGeneratorGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action helper(c:color) returns(out:color) = {
+    out := c
+}
+action set(c:color) = {
+    call saved := helper(c);
+    assume saved = green
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testcallretpreimage", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testcallretpreimage_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if !((gen.c == green)) {`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test call return preimage missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `ivy.saved == green`) {
+		t.Fatalf("target=test call return guard should use call preimage, not current state:\n%s", genBody)
+	}
+}
+
+func TestTargetTestConditionalAssignmentPreimageUsesIteGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+after init {
+    saved := red
+}
+action set(c:color) = {
+    if c = red {
+        saved := c
+    };
+    assume saved = green
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifassignpreimage", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifassignpreimage_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if !((ivyTernary((gen.c == red), gen.c, ivy.saved) == green)) {`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test conditional assignment preimage missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestRelationPointAssignmentPreimageUsesIteGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+after init {
+    marked(C) := false
+}
+action set(c:color) = {
+    marked(c) := true;
+    assume marked(green)
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testpointpreimage", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testpointpreimage_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if !(ivyTernary((green == gen.c), true, ivy.marked[green])) {`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test relation point assignment preimage missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestSetActionPreimageUsesPointUpdateGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+action set(c:color) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatalf("action set not found")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	marked, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
+		t.Fatalf("FindSymbol marked: %v", err)
+	}
+	greenEntry, ok := mod.Sig.Symbols.Get2("green")
+	if !ok {
+		t.Fatalf("symbol green not found")
+	}
+	markedApp, err := goivy.NewApply(goivy.NewConst("marked", marked.CSort), params[0])
+	if err != nil {
+		t.Fatalf("NewApply marked(c): %v", err)
+	}
+	greenApp, err := goivy.NewApply(goivy.NewConst("marked", marked.CSort), goivy.NewConst("green", greenEntry.Sort))
+	if err != nil {
+		t.Fatalf("NewApply marked(green): %v", err)
+	}
+	body := goivy.NewSequence(goivy.NewSetAction(markedApp), goivy.NewAssumeAction(greenApp))
+	goivy.CopyFormalsTo(action, body)
+	mod.Actions.Set("set", body)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testsetpreimage", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testsetpreimage_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if !(ivyTernary((green == gen.c), true, ivy.marked[green])) {`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test set-action preimage missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestConditionalPointAssignmentPreimageUsesIteGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+after init {
+    marked(C) := false
+}
+action set(c:color) = {
+    if c = red {
+        marked(c) := true
+    };
+    assume marked(green)
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifpointpreimage", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifpointpreimage_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if !(ivyTernary((gen.c == red), ivyTernary((green == gen.c), true, ivy.marked[green]), ivy.marked[green])) {`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test conditional point assignment preimage missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
 func TestTargetTestUsesPerActionGeneratorFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
