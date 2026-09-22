@@ -1647,6 +1647,43 @@ export set
 	}
 }
 
+func TestTargetTestActionGeneratorUsesRelationPairWitnessInsideOrFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation edge(A:node, B:node)
+individual saved : node
+after init {
+    edge(2,4) := true
+}
+action set(a:node, b:node) = {
+    assume edge(a,b) | a = 99;
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testrelationpairorwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testrelationpairorwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.edge.overrides {`,
+		`if !__ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test relation pair witness inside disjunction missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
 func TestTargetTestActionGeneratorUsesRelationWitnessInsideExistsFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -1679,6 +1716,81 @@ export set
 	} {
 		if !strings.Contains(genBody, want) {
 			t.Fatalf("target=test relation witness inside exists missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesRelationPairWitnessInsideExistsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation edge(A:node, B:node, C:node)
+individual saved : node
+after init {
+    edge(2,4,6) := true
+}
+action set(a:node, b:node) = {
+    assume exists C:node. edge(a,b,C);
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testrelationpairexistswitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testrelationpairexistswitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.edge.overrides {`,
+		`if !__ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test relation pair witness inside exists missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesRelationWitnessInsideImplicationFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation allowed(N:node)
+individual saved : node
+after init {
+    active := true;
+    allowed(9) := true
+}
+action set(n:node) = {
+    assume active -> allowed(n);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testrelationimplwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testrelationimplwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0, __ivy_search_val_0 := range ivy.allowed.overrides {`,
+		`if !__ivy_search_val_0 {`,
+		`gen.n = __ivy_search_key_0`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test relation witness inside implication missing %q:\n%s", want, genBody)
 		}
 	}
 }
@@ -2575,6 +2687,66 @@ export set
 	xIdx := strings.Index(genBody, `gen.x = gen.y`)
 	if yIdx < 0 || xIdx < 0 || yIdx > xIdx {
 		t.Fatalf("defined-input dependencies should assign y before x; y=%d x=%d\n%s", yIdx, xIdx, genBody)
+	}
+}
+
+func TestTargetTestConjunctiveDefinedInputDependenciesUsePythonOrderFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..7}
+individual stored : idx
+action set(x:idx, y:idx) = {
+    assume x = y & y = 3;
+    stored := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdefdepsand", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdefdepsand_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	yIdx := strings.Index(genBody, `gen.y = 3`)
+	xIdx := strings.Index(genBody, `gen.x = gen.y`)
+	if yIdx < 0 || xIdx < 0 || yIdx > xIdx {
+		t.Fatalf("conjunctive defined-input dependencies should assign y before x; y=%d x=%d\n%s", yIdx, xIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume x *> req0;
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testvariantrelationwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testvariantrelationwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0, valid: true}`
+	guard := `if !((gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0)) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
 	}
 }
 
@@ -6290,6 +6462,43 @@ export set
 	}
 }
 
+func TestTargetGenActionGeneratorUsesRelationPairWitnessInsideOrFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation edge(A:node, B:node)
+individual saved : node
+after init {
+    edge(2,4) := true
+}
+action set(a:node, b:node) = {
+    assume edge(a,b) | a = 99;
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genrelationpairorwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genrelationpairorwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.edge.overrides {`,
+		`if !__ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen relation pair witness inside disjunction missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
 func TestTargetGenActionGeneratorUsesRelationWitnessInsideExistsFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -6322,6 +6531,81 @@ export set
 	} {
 		if !strings.Contains(genBody, want) {
 			t.Fatalf("target=gen relation witness inside exists missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesRelationPairWitnessInsideExistsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation edge(A:node, B:node, C:node)
+individual saved : node
+after init {
+    edge(2,4,6) := true
+}
+action set(a:node, b:node) = {
+    assume exists C:node. edge(a,b,C);
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genrelationpairexistswitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genrelationpairexistswitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.edge.overrides {`,
+		`if !__ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen relation pair witness inside exists missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesRelationWitnessInsideImplicationFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation allowed(N:node)
+individual saved : node
+after init {
+    active := true;
+    allowed(9) := true
+}
+action set(n:node) = {
+    assume active -> allowed(n);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genrelationimplwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genrelationimplwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0, __ivy_search_val_0 := range ivy.allowed.overrides {`,
+		`if !__ivy_search_val_0 {`,
+		`gen.n = __ivy_search_key_0`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen relation witness inside implication missing %q:\n%s", want, genBody)
 		}
 	}
 }
@@ -6676,6 +6960,66 @@ export set
 	}
 }
 
+func TestTargetGenConjunctiveDefinedInputDependenciesUsePythonOrderFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..7}
+individual stored : idx
+action set(x:idx, y:idx) = {
+    assume x = y & y = 3;
+    stored := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gendefdepsand", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gendefdepsand_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	yIdx := strings.Index(genBody, `gen.y = 3`)
+	xIdx := strings.Index(genBody, `gen.x = gen.y`)
+	if yIdx < 0 || xIdx < 0 || yIdx > xIdx {
+		t.Fatalf("conjunctive defined-input dependencies should assign y before x; y=%d x=%d\n%s", yIdx, xIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume x *> req0;
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genvariantrelationwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genvariantrelationwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0, valid: true}`
+	guard := `if !((gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0)) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
 func TestActionGeneratorsDefineFormalDestructorField(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -6899,6 +7243,170 @@ export set
 	}
 	if strings.Contains(genBody, `__ivy_search_values_0_node_id`) {
 		t.Fatalf("unbounded target=gen destructor field should use relation keys, not finite field value lists:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesRelationWitnessForNestedDestructorFieldFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+type payload
+destructor node_id(P:payload) : node
+type cell
+destructor inner(C:cell) : payload
+relation allowed(N:node)
+individual saved : node
+after init {
+    allowed(5) := true
+}
+action set(c:cell) = {
+    assume allowed(node_id(inner(c)));
+    saved := node_id(inner(c))
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "nestedfieldrelationwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Nestedfieldrelationwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0, __ivy_search_val_0 := range ivy.allowed.overrides {`,
+		`if !__ivy_search_val_0 {`,
+		`gen.c.inner.node_id = __ivy_search_key_0`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test relation witness for nested destructor field missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesRelationWitnessForNestedDestructorFieldFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+type payload
+destructor node_id(P:payload) : node
+type cell
+destructor inner(C:cell) : payload
+relation allowed(N:node)
+individual saved : node
+after init {
+    allowed(5) := true
+}
+action set(c:cell) = {
+    assume allowed(node_id(inner(c)));
+    saved := node_id(inner(c))
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennestedfieldrelationwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennestedfieldrelationwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0, __ivy_search_val_0 := range ivy.allowed.overrides {`,
+		`if !__ivy_search_val_0 {`,
+		`gen.c.inner.node_id = __ivy_search_key_0`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen relation witness for nested destructor field missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesRelationWitnessForNestedDestructorFieldPairFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+type payload
+destructor src(P:payload) : node
+destructor dst(P:payload) : node
+type cell
+destructor inner(C:cell) : payload
+relation edge(A:node, B:node)
+individual saved : node
+after init {
+    edge(5,6) := true
+}
+action set(c:cell) = {
+    assume edge(src(inner(c)),dst(inner(c)));
+    saved := src(inner(c))
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "nestedfieldpairrelationwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Nestedfieldpairrelationwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_0, __ivy_search_val_0_0 := range ivy.edge.overrides {`,
+		`if !__ivy_search_val_0_0 {`,
+		`gen.c.inner.src = __ivy_search_key_0_0.A0`,
+		`gen.c.inner.dst = __ivy_search_key_0_0.A1`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test relation witness for nested destructor field pair missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesRelationWitnessForNestedDestructorFieldPairFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+type payload
+destructor src(P:payload) : node
+destructor dst(P:payload) : node
+type cell
+destructor inner(C:cell) : payload
+relation edge(A:node, B:node)
+individual saved : node
+after init {
+    edge(5,6) := true
+}
+action set(c:cell) = {
+    assume edge(src(inner(c)),dst(inner(c)));
+    saved := src(inner(c))
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennestedfieldpairrelationwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennestedfieldpairrelationwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_0, __ivy_search_val_0_0 := range ivy.edge.overrides {`,
+		`if !__ivy_search_val_0_0 {`,
+		`gen.c.inner.src = __ivy_search_key_0_0.A0`,
+		`gen.c.inner.dst = __ivy_search_key_0_0.A1`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen relation witness for nested destructor field pair missing %q:\n%s", want, genBody)
+		}
 	}
 }
 
@@ -14225,6 +14733,111 @@ export step
 	}
 	if strings.Contains(stdout, "assumption_failed") || strings.Contains(stderr, "assumption failed") {
 		t.Fatalf("local witness should satisfy the leading assume\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	}
+}
+
+func TestLocalWitnessFromExistsUsesExtensionalRelationFast(t *testing.T) {
+	src := `#lang ivy1.7
+type node
+interpret node -> int
+relation edge(A:node,B:node)
+individual saved : node
+after init {
+    edge(3,4) := true
+}
+action step = {
+    var n:node;
+    assume exists M:node. edge(n,M);
+    saved := n
+}
+export step
+`
+	for _, tc := range []struct {
+		target string
+		class  string
+	}{
+		{target: "test", class: "local_witness_exists_test"},
+		{target: "gen", class: "local_witness_exists_gen"},
+	} {
+		t.Run(tc.target, func(t *testing.T) {
+			mod := compileIvySource(t, src)
+			out, err := Generate(mod, Config{Target: tc.target, ClassName: tc.class, TestIters: "1"})
+			if err != nil {
+				t.Fatalf("Generate: %v\n%s", err, outSource(out))
+			}
+			stepBody := bodyAfterMarker(out.Source, fmt.Sprintf("func (ivy *%s) step()", tc.class))
+			if stepBody == "" {
+				t.Fatalf("step method not emitted:\n%s", out.Source)
+			}
+			for _, want := range []string{
+				"for __ivy_witness_key, __ivy_witness_val := range ivy.edge.overrides {",
+				"if !__ivy_witness_val {",
+				"loc__n = __ivy_witness_key.A0",
+				"ivy.edge.Get(struct{ A0 int; A1 int }{loc__n, M})",
+			} {
+				if !strings.Contains(stepBody, want) {
+					t.Fatalf("local exists witness source missing %q:\n%s", want, stepBody)
+				}
+			}
+			if strings.Contains(stepBody, "__ivy_witness_key.A1 == M") {
+				t.Fatalf("local exists witness should treat M as a wildcard, not a search-loop condition:\n%s", stepBody)
+			}
+		})
+	}
+}
+
+func TestLocalWitnessPairUsesOneExtensionalRelationTupleFast(t *testing.T) {
+	src := `#lang ivy1.7
+type node
+interpret node -> int
+relation edge(A:node,B:node)
+individual saved : node
+after init {
+    edge(3,4) := true
+}
+action step = {
+    var a:node;
+    var b:node;
+    assume edge(a,b);
+    saved := a
+}
+export step
+`
+	for _, tc := range []struct {
+		target string
+		class  string
+	}{
+		{target: "test", class: "local_witness_pair_test"},
+		{target: "gen", class: "local_witness_pair_gen"},
+	} {
+		t.Run(tc.target, func(t *testing.T) {
+			mod := compileIvySource(t, src)
+			out, err := Generate(mod, Config{Target: tc.target, ClassName: tc.class, TestIters: "1"})
+			if err != nil {
+				t.Fatalf("Generate: %v\n%s", err, outSource(out))
+			}
+			stepBody := bodyAfterMarker(out.Source, fmt.Sprintf("func (ivy *%s) step()", tc.class))
+			if stepBody == "" {
+				t.Fatalf("step method not emitted:\n%s", out.Source)
+			}
+			for _, want := range []string{
+				"for __ivy_local_group_witness_key_0, __ivy_local_group_witness_val_0 := range ivy.edge.overrides {",
+				"if !__ivy_local_group_witness_val_0 {",
+				"loc__a = __ivy_local_group_witness_key_0.A0",
+				"loc__b = __ivy_local_group_witness_key_0.A1",
+				"ivyAssume(ivy.edge.Get(struct{ A0 int; A1 int }{loc__a, loc__b})",
+			} {
+				if !strings.Contains(stepBody, want) {
+					t.Fatalf("local pair witness source missing %q:\n%s", want, stepBody)
+				}
+			}
+			assignAIdx := strings.Index(stepBody, "loc__a = __ivy_local_group_witness_key_0.A0")
+			assignBIdx := strings.Index(stepBody, "loc__b = __ivy_local_group_witness_key_0.A1")
+			assumeIdx := strings.Index(stepBody, "ivyAssume(ivy.edge.Get")
+			if assignAIdx < 0 || assignBIdx < 0 || assumeIdx < 0 || assignAIdx > assumeIdx || assignBIdx > assumeIdx {
+				t.Fatalf("local pair witness assignments should precede assume; a=%d b=%d assume=%d\n%s", assignAIdx, assignBIdx, assumeIdx, stepBody)
+			}
+		})
 	}
 }
 

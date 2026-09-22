@@ -250,6 +250,17 @@ Progress:
   `var n; assume allowed(n)` when `allowed` is supplied by a thunk base such as
   `allowed(N) := N = 7`.
 - 2026-09-22: Added
+  `TestLocalWitnessFromExistsUsesExtensionalRelationFast`. Local relation-backed
+  witness selection now descends through existential guards and treats
+  quantified variables as wildcard tuple fields, so `var n; assume exists M.
+  edge(n,M)` can pick `n` from a true stored relation tuple without leaking `M`
+  into generated search-loop conditions.
+- 2026-09-22: Added
+  `TestLocalWitnessPairUsesOneExtensionalRelationTupleFast`. Consecutive local
+  declarations are flattened for witness planning, and local relation witnesses
+  can now assign several locals from one true relation tuple, e.g. `var a; var
+  b; assume edge(a,b)`, before the normal assume check runs.
+- 2026-09-22: Added
   `TestTargetTestReturningActionGeneratorSearchesFiniteDomainFast`.
   `target=test` generators for returning actions with finite formal inputs now
   use the same guard and finite-search path as non-returning actions. The
@@ -316,11 +327,27 @@ Progress:
   complete guard after each candidate. This avoids depending on the first
   relation alone.
 - 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationPairWitnessInsideOrFast`. Joint
+  tuple-key relation witness discovery now looks through disjunctions as well,
+  so `edge(a,b) | a = 99` can assign both unbounded formals from one true
+  stored `edge` tuple before rechecking the full guard.
+- 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesRelationWitnessInsideExistsFast`. Unary
   relation-witness discovery now looks through existential guards and treats the
   quantified variables as wildcard tuple fields, so `exists M. edge(n,M)` can
   choose `n` from the first component of a true stored `edge` key before
   rechecking the full extensional existential guard.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationPairWitnessInsideExistsFast`.
+  Grouped tuple-key relation witness discovery now also carries existentially
+  quantified variables as wildcard tuple fields, so `exists C. edge(a,b,C)` can
+  assign both generated formals from one true relation tuple without leaking
+  `C` into generated search-loop conditions.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationWitnessInsideImplicationFast`.
+  Relation-witness discovery now also looks through implication consequents, so
+  guards like `active -> allowed(n)` can scan true `allowed` cells when the
+  initial randomized candidate fails the full implication guard.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesRelationWitnessForUnboundedDestructorFieldFast`.
   Relation-witness extraction now recognizes destructor-field arguments rooted
@@ -334,6 +361,16 @@ Progress:
   arguments rooted at the same structured formal, so `edge(src(c),dst(c))`
   scans true `edge` tuple keys and assigns both `gen.c.src` and `gen.c.dst`
   from one model tuple before rechecking the guard.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationWitnessForNestedDestructorFieldFast`
+  and
+  `TestTargetTestActionGeneratorUsesRelationWitnessForNestedDestructorFieldPairFast`.
+  Relation-witness extraction now follows assignable destructor chains rooted
+  at a generated formal, so `allowed(node_id(inner(c)))` and
+  `edge(src(inner(c)),dst(inner(c)))` scan stored relation keys and assign
+  nested fields such as `gen.c.inner.node_id`, `gen.c.inner.src`, and
+  `gen.c.inner.dst` before rechecking the guard. Hash-thunk destructor fields
+  still need a setter-aware model path.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesNegatedRelationWitnessForUnboundedFormalFast`.
   For unbounded integer-like formals guarded by a negated unary state relation,
@@ -350,11 +387,28 @@ Progress:
   It is a bounded generated-code fallback, not a replacement for Python's SMT
   model.
 - 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationWitnessThroughDerivedDefinitionFast`.
+  `target=test` now expands derived definitions before action-generator witness
+  planning, so a guard such as `ok(n)` with `definition ok(N) = allowed(N)`
+  contributes the same relation-key scan as the inlined `allowed(n)` guard.
+- 2026-09-22: Added
   `TestTargetTestDefinedInputDependenciesUsePythonOrderFast`. Defined-input
   extraction now orders dependent generated-input assignments like Python's
   reversed `extract_defined_parameters` result, so clauses such as `x = y; y =
   3` emit `gen.y = 3` before `gen.x = gen.y` in `target=test` generators and
   finite-search retries.
+- 2026-09-22: Added
+  `TestTargetTestConjunctiveDefinedInputDependenciesUsePythonOrderFast`.
+  Defined-input extraction now descends into conjunctive guard formulas, so a
+  single guard such as `x = y & y = 3` produces the same ordered generated-input
+  assignments as the equivalent pair of separate assume clauses.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesVariantRelationWitnessFast`. Positive
+  variant-relation guards over generated inputs now construct the constrained
+  variant value before checking the guard; for example `assume x *> req0` emits
+  `gen.x = msg{tag: 0, value: ivy.req0, valid: true}`. This covers a focused
+  slice of Python's variant-axiom solver behavior, but existential variant
+  witnesses and general SMT variant reasoning remain open.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -437,6 +491,16 @@ Progress:
   fallback for local witnesses is shared by `target=gen`, reducing runtime
   `assumption_failed` cases where the one-shot action body needs an unbounded
   local value satisfying a thunk-backed relation guard.
+- 2026-09-22: Added
+  `TestLocalWitnessFromExistsUsesExtensionalRelationFast`. The existential
+  wildcard local-witness path is shared by `target=gen`, allowing one-shot
+  generated action bodies to choose local relation witnesses under `exists`
+  guards without relying on a lucky random local value.
+- 2026-09-22: Added
+  `TestLocalWitnessPairUsesOneExtensionalRelationTupleFast`. The grouped local
+  tuple witness path is shared by `target=gen`, so one-shot generated action
+  bodies can seed several adjacent local variables from the same relation cell
+  before executing the assume.
 - 2026-09-22: Added `TestTargetGenDerivedAssumeUsesGeneratorGuardFast`.
   `target=gen` now has explicit coverage for the audit's derived-predicate
   case: generated action guards inline definitions such as `is_green(c)` to
@@ -470,10 +534,25 @@ Progress:
   one-shot generators can try multiple relation-backed sources for the same
   unbounded formal before returning `false`.
 - 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationPairWitnessInsideOrFast`. The
+  grouped tuple-key relation witness search is shared by `target=gen` and now
+  handles disjunctive guards, preserving one-model-tuple assignment for several
+  generated formals.
+- 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesRelationWitnessInsideExistsFast`. The
   exists-aware relation-witness discovery is shared by `target=gen`, letting
   one-shot generators derive an unbounded formal from a true relation tuple even
   when the relation appears under an existential quantifier.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationPairWitnessInsideExistsFast`. The
+  grouped existential wildcard handling is shared by `target=gen`, preserving
+  one relation-tuple model assignment for several generated formals under
+  `exists` guards.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationWitnessInsideImplicationFast`. The
+  implication-consequent relation-witness path is shared by `target=gen`, so
+  one-shot generators can use relation-backed candidates for guards such as
+  `active -> allowed(n)` and still recheck the complete guard before accepting.
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesRelationWitnessForUnboundedDestructorFieldFast`.
   The destructor-field relation witness path is shared by `target=gen`, so
@@ -485,6 +564,14 @@ Progress:
   `target=gen`, covering tuple relation guards over multiple unbounded fields
   of the same generated formal.
 - 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationWitnessForNestedDestructorFieldFast`
+  and
+  `TestTargetGenActionGeneratorUsesRelationWitnessForNestedDestructorFieldPairFast`.
+  The recursive destructor-chain witness target logic is shared by
+  `target=gen`, so one-shot generators can populate nested structured fields
+  from unary or tuple relation evidence instead of relying on one randomized
+  nested-field value.
+- 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesNegatedRelationWitnessForUnboundedFormalFast`.
   The negated unary relation witness heuristic is shared by `target=gen`, so
   one-shot generators can avoid known true cells such as `banned(n)` by trying a
@@ -495,10 +582,25 @@ Progress:
   generators are no longer limited to relation override maps when a thunk base
   function supplies the satisfying relation value.
 - 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationWitnessThroughDerivedDefinitionFast`.
+  The same pre-planning definition expansion is shared by `target=gen`, so
+  one-shot generated action generators can discover relation-backed witnesses
+  through derived predicates instead of depending on one randomized candidate.
+- 2026-09-22: Added
   `TestTargetGenDefinedInputDependenciesUsePythonOrderFast`. The same
   dependency ordering is shared by `target=gen`, preventing one-shot generators
   from assigning `x` from a stale randomized `y` before applying the definition
   that fixes `y`.
+- 2026-09-22: Added
+  `TestTargetGenConjunctiveDefinedInputDependenciesUsePythonOrderFast`. The
+  conjunctive defined-input extraction is shared by `target=gen`, so one-shot
+  generators define dependent inputs from `and` formulas before checking the
+  full guard.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesVariantRelationWitnessFast`. The positive
+  variant-relation witness assignment is shared by `target=gen`, letting
+  one-shot generators satisfy simple `*>` guards by constructing the required
+  variant value before execution.
 
 ## 3. FIXED Initial state generation is retry/randomized, not Python's initial model
 
