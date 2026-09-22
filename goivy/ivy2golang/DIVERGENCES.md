@@ -2344,12 +2344,11 @@ Progress:
   fd-backed reader scheduling was added in the follow-up bullet.
 - 2026-09-22: Extended
   `TestGeneratedTestMainIncludesReaderTimerEventLoopFast` again to require
-  fd-backed reader scheduling. Generated `target=test` code now gives readers a
-  `fdes()` hook, builds `syscall.FdSet` values, waits with `syscall.Select`,
-  tests selected descriptors with generated fd-set helpers, and preserves the
+  portable reader scheduling. Generated `target=test` code now polls reader
+  `ready()` hooks, sleeps via `time` when nothing is ready, and preserves the
   existing timer timeout, cycle decrement/re-increment, random ready-reader
-  choice, and background do-over accounting. Mock/in-process readers can still
-  return `-1` from `fdes()` and use `ready()`.
+  choice, and background do-over accounting without importing `syscall` or
+  `unsafe`.
 
 ## 9. FIXED `before_export` analysis is only partially ported
 

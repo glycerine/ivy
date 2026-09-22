@@ -10283,7 +10283,7 @@ export step
 	}
 	for _, want := range []string{
 		"type ivyTestReader interface {",
-		"fdes() int",
+		"ready() bool",
 		"type ivyTestTimer interface {",
 		"__ivy_readers []ivyTestReader",
 		"__ivy_timers []ivyTestTimer",
@@ -10291,11 +10291,14 @@ export step
 		"func (ivy *eventlooptest) __installReader(reader ivyTestReader)",
 		"func (ivy *eventlooptest) __installTimer(timer ivyTestTimer)",
 		"func (ivy *eventlooptest) __timeout(ms int) bool",
-		"func ivyFdSet(fd int, set *syscall.FdSet)",
-		"func ivyFdIsSet(fd int, set *syscall.FdSet) bool",
 	} {
 		if !strings.Contains(out.Source, want) {
 			t.Fatalf("event-loop runtime source missing %q:\n%s", want, out.Source)
+		}
+	}
+	for _, bad := range []string{`"syscall"`, `"unsafe"`, "syscall.", "ivyFdSet", "ivyFdIsSet", "fdes() int"} {
+		if strings.Contains(out.Source, bad) {
+			t.Fatalf("event-loop runtime source should not use non-portable %q:\n%s", bad, out.Source)
 		}
 	}
 	mainBody := bodyAfterMarker(out.Source, "func main()")
@@ -10307,10 +10310,6 @@ export step
 		"__ivy_do_over := false",
 		"if __ivy_do_over {",
 		"__ivy_timer_min := 5",
-		"var __ivy_read_fds syscall.FdSet",
-		"__ivy_select_count, __ivy_select_err = syscall.Select(__ivy_max_fd+1, &__ivy_read_fds, nil, nil, &__ivy_timeout)",
-		"if __ivy_select_err != nil {",
-		"ivyFdIsSet(__ivy_reader_fd, &__ivy_read_fds)",
 		"__ivy_reader_count := 0",
 		"for _, __ivy_reader := range ivy.__ivy_readers {",
 		"if __ivy_reader.ready() {",
@@ -10318,6 +10317,7 @@ export step
 		"cycle--",
 		"if ivy.__timeout(__ivy_timer_min) {",
 		"cycle++",
+		"time.Sleep(time.Duration(__ivy_timer_min) * time.Millisecond)",
 		"__ivy_reader_target := ivyRandRange64(__ivy_reader_count)",
 		"__ivy_reader.read()",
 		"if __ivy_reader.background() {",
