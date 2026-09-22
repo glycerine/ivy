@@ -2194,6 +2194,11 @@ Progress:
   internal choice/env branches with runtime assumes: execute on a clone with
   assumption rejection enabled, skip the one-shot action on rejection, and copy
   back accepted state before emitting the public trace.
+- 2026-09-22: Added
+  `TestTargetGenGuardedInternalChoiceTrialPreservesTraceBracesFast`. Accepted
+  `target=gen` trial executions with action tracing enabled now preserve the
+  same `{` / `}` trace envelope as the direct action path while still keeping
+  rejected trials silent.
 
 ## 3. FIXED Initial state generation is retry/randomized, not Python's initial model
 
@@ -3060,3 +3065,6 @@ Progress:
 - 2026-09-22: Added the matching target=gen guarded-internal-choice trial-path
   regression, covering one-shot generated actions that must skip rejected
   internal branch choices instead of surfacing `assumption_failed`.
+- 2026-09-22: Added a target=gen guarded-internal-choice trace-envelope
+  regression, covering the accepted trial path so captured internal trace output
+  remains bracketed like direct target=gen execution.

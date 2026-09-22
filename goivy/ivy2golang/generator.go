@@ -10826,7 +10826,13 @@ func (g *Generator) emitGenTrialActionExecute(w *goWriter, name, fn string, act 
 	w.close("")
 	w.line("*ivy = *__ivy_trial")
 	w.line(g.actionTraceLine(name, args))
+	if g.Config.Trace {
+		w.line(`fmt.Fprintln(__ivy_out, "{")`)
+	}
 	w.line("_, _ = io.Copy(__ivy_out, &__ivy_trace)")
+	if g.Config.Trace {
+		w.line(`fmt.Fprintln(__ivy_out, "}")`)
+	}
 	if nret == 1 && g.Config.Trace {
 		w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__ivy_result"))
 	}
@@ -10941,7 +10947,7 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 					g.unsupportedAt(w, genAct.GetLineno(), "unsupported before_export action generator requires runtime trial for %s", name)
 					continue
 				}
-				g.emitTestTrialActionCall(w, fn, act, args, trace)
+				g.emitTestTrialActionCall(w, name, fn, act, args, trace)
 				continue
 			}
 			w.line(trace)
@@ -11014,7 +11020,7 @@ func (g *Generator) emitTestEventLoopChoice(w *goWriter) {
 	w.close("")
 }
 
-func (g *Generator) emitTestTrialActionCall(w *goWriter, fn string, act goivy.Action, args []string, trace string) {
+func (g *Generator) emitTestTrialActionCall(w *goWriter, name, fn string, act goivy.Action, args []string, trace string) {
 	call := fmt.Sprintf("__ivy_trial.%s(%s)", fn, strings.Join(args, ", "))
 	w.line("__ivy_trial := ivy.__ivy_clone()")
 	w.line("var __ivy_trace bytes.Buffer")
@@ -11025,7 +11031,7 @@ func (g *Generator) emitTestTrialActionCall(w *goWriter, fn string, act goivy.Ac
 	w.line("__ivy_assume_rejecting = true")
 	w.line("__ivy_assume_rejected = false")
 	w.line("__ivy_trial._generating = true")
-	w.linef("__ivy_trial.___ivy_push(%q)", fn)
+	w.linef("__ivy_trial.___ivy_push(%q)", name)
 	nret := 0
 	if act != nil {
 		nret = len(act.GetFormalReturns())

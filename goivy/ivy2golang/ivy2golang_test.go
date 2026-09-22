@@ -5305,6 +5305,131 @@ export set
 	}
 }
 
+func TestTargetGenGuardedInternalChoiceTrialPreservesTraceBracesFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = {
+}
+export set
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	savedSym, err := mod.Sig.FindSymbol("saved", false)
+	if err != nil {
+		t.Fatalf("FindSymbol saved: %v", err)
+	}
+	saved := goivy.NewConst("saved", savedSym.CSort)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	greenGuard, err := goivy.NewEq(c, green)
+	if err != nil {
+		t.Fatalf("green guard: %v", err)
+	}
+	blueGuard, err := goivy.NewEq(c, blue)
+	if err != nil {
+		t.Fatalf("blue guard: %v", err)
+	}
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewSequence(goivy.NewAssumeAction(greenGuard), goivy.NewAssignAction(saved, green)),
+		goivy.NewSequence(goivy.NewAssumeAction(blueGuard), goivy.NewAssignAction(saved, blue)),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssumeAction(greenGuard))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genguardedchoicetrace", Trace: true, TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genguardedchoicetrace_set_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("set generator execute body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`fmt.Fprintln(__ivy_out, "{")`,
+		`_, _ = io.Copy(__ivy_out, &__ivy_trace)`,
+		`fmt.Fprintln(__ivy_out, "}")`,
+	} {
+		if !strings.Contains(executeBody, want) {
+			t.Fatalf("target=gen guarded trial trace missing %q:\n%s", want, executeBody)
+		}
+	}
+}
+
+func TestTargetTestTrialUsesOriginalActionNameForStackFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+object client = {
+    action open(c:color) = {
+    }
+}
+export client.open
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	base, ok := mod.Actions.Get2("client.open")
+	if !ok {
+		t.Fatal("missing client.open action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("client.open formals=%d, want 1", len(formals))
+	}
+	c := formals[0]
+	savedSym, err := mod.Sig.FindSymbol("saved", false)
+	if err != nil {
+		t.Fatalf("FindSymbol saved: %v", err)
+	}
+	saved := goivy.NewConst("saved", savedSym.CSort)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	greenGuard, err := goivy.NewEq(c, green)
+	if err != nil {
+		t.Fatalf("green guard: %v", err)
+	}
+	blueGuard, err := goivy.NewEq(c, blue)
+	if err != nil {
+		t.Fatalf("blue guard: %v", err)
+	}
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewSequence(goivy.NewAssumeAction(greenGuard), goivy.NewAssignAction(saved, green)),
+		goivy.NewSequence(goivy.NewAssumeAction(blueGuard), goivy.NewAssignAction(saved, blue)),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssumeAction(greenGuard))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("client.open", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "trialstackname", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(mainBody, `__ivy_trial.___ivy_push("client.open")`) {
+		t.Fatalf("target=test trial should push original Ivy action name:\n%s", mainBody)
+	}
+	if strings.Contains(mainBody, `__ivy_trial.___ivy_push("client__open")`) {
+		t.Fatalf("target=test trial must not push mangled Go function name:\n%s", mainBody)
+	}
+}
+
 func TestTargetTestConditionalAssumeUsesImplicationGuardFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
