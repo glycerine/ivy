@@ -251,6 +251,9 @@ func (g *Generator) validateNativeSemantics() {
 		}
 		sort.Strings(names)
 		for _, name := range names {
+			if g.nativeTypeNameTranslatesAsGoInt(name, g.Mod.NativeTypes[name]) {
+				continue
+			}
 			g.errs = append(g.errs, fmt.Errorf("ivy2golang: native C++ type interpretation is not translated to Go: %s", name))
 		}
 	}
@@ -1374,11 +1377,11 @@ func (g *Generator) emitConstructor(w *goWriter) {
 	w.close("")
 	w.blank()
 	w.open(fmt.Sprintf("func (ivy *%s) ___ivy_randomize(rng int, name string, id int) int {", g.ClassName))
-	w.line("label := ivy.___ivy_choice_label(name, id)")
+	w.line("_ = ivy.___ivy_choice_label(name, id)")
 	w.open("if rng <= 0 {")
 	w.line("return 0")
 	w.close("")
-	w.line("return (ivyRandRange64(rng) + ivyLabelHash(label)) % rng")
+	w.line("return ivyRandRange64(rng)")
 	w.close("")
 	w.blank()
 	w.open(fmt.Sprintf("func (ivy *%s) ___ivy_push(id string) {", g.ClassName))
@@ -10520,6 +10523,13 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 			return true
 		case *goivy.LogicAssertAction, *goivy.LogicRequiresAction, *goivy.LogicEnsuresAction, *goivy.LogicSubgoalAction, *goivy.IgnoreAction, *goivy.LogicDebugAction:
 			return true
+		case *goivy.LogicSetAction:
+			witnessPhase = false
+			if update, ok := localRelationPointUpdateFromAction(a, locals, modeledLocals); ok {
+				relationPointUpdates = append(relationPointUpdates, update)
+				return true
+			}
+			return false
 		case *goivy.LogicIfAction:
 			if update, ok := localRelationPointUpdateFromIf(a, locals, modeledLocals); ok {
 				witnessPhase = false
@@ -11004,6 +11014,37 @@ func localRelationPointAssumeCoveredValue(expr goivy.Expr, ignored map[string]bo
 		return localRelationPointAssumeCoveredValue(n.Atom, ignored, stateFromLocal, updates, want)
 	case *goivy.LogicNot:
 		return localRelationPointAssumeCoveredValue(n.Body, ignored, stateFromLocal, updates, !want)
+	case *goivy.LogicImplies:
+		if !want {
+			return false
+		}
+		thenUpdates := localRelationPointUpdatesForIteBranch(updates, n.T1, true)
+		return localRelationPointAssumeCoveredValue(n.T2, ignored, stateFromLocal, thenUpdates, true)
+	case *goivy.LogicOr:
+		if !want {
+			return false
+		}
+		for _, term := range n.Terms {
+			if actionGeneratorIsTrueExpr(term) ||
+				localRelationPointAssumeCoveredValue(term, ignored, stateFromLocal, updates, true) {
+				return true
+			}
+		}
+		for i, term := range n.Terms {
+			cond, ok := localRelationPointNegatedGuardExpr(term)
+			if !ok {
+				continue
+			}
+			thenUpdates := localRelationPointUpdatesForIteBranch(updates, cond, true)
+			for j, other := range n.Terms {
+				if i == j {
+					continue
+				}
+				if localRelationPointAssumeCoveredValue(other, ignored, stateFromLocal, thenUpdates, true) {
+					return true
+				}
+			}
+		}
 	case *goivy.LogicIff:
 		for _, term := range actionGeneratorIffPositiveTerms(n) {
 			if localRelationPointAssumeCoveredValue(term, ignored, stateFromLocal, updates, want) {
@@ -11026,6 +11067,18 @@ func localRelationPointAssumeCoveredValue(expr goivy.Expr, ignored map[string]bo
 		}
 	}
 	return false
+}
+
+func localRelationPointNegatedGuardExpr(expr goivy.Expr) (goivy.Expr, bool) {
+	switch n := expr.(type) {
+	case *goivy.LogicNot:
+		return n.Body, n.Body != nil
+	case *goivy.LogicLiteral:
+		if n.Polarity == 0 && n.Atom != nil {
+			return n.Atom, true
+		}
+	}
+	return nil, false
 }
 
 func localRelationPointApplyCovered(app *goivy.Apply, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string, updates []localRelationPointUpdate, want bool) bool {

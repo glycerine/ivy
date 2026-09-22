@@ -2298,7 +2298,7 @@ func (g *Generator) localNondetSkipsSort(s goivy.Sort) bool {
 	if g == nil || s == nil {
 		return false
 	}
-	if g.isNativeTypeSort(s) || g.hasStringInterp(s) {
+	if (g.isNativeTypeSort(s) && !g.nativeTypeSortTranslatesAsGoInt(s)) || g.hasStringInterp(s) {
 		return true
 	}
 	if it, ok := g.goInterpType(s); ok {

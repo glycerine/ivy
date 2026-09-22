@@ -328,6 +328,16 @@ Progress:
   mirror case `if active { } else { seen(x) := true }` proves
   `ite(active, true, seen(x))` without a hidden trial clone.
 - 2026-09-22: Added
+  `TestTargetTestLocalVariantConditionalPointUpdateImplicationSkipsTrialFast`.
+  Guarded relation point-update coverage now also handles the implication
+  spelling `active -> seen(x)` by proving the consequent under the antecedent's
+  true branch, matching the equivalent `ite(active, seen(x), true)` case.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantConditionalPointUpdateOrSkipsTrialFast`. The
+  desugared implication spelling `~active | seen(x)` now follows the same
+  guarded point-update proof path, so source-level OR guards do not reintroduce
+  the hidden trial clone.
+- 2026-09-22: Added
   `TestTargetTestLocalRelationPointUpdateExistsSkipsTrialFast`. Positive
   relation point updates now also cover existential ignored columns in the
   later recheck, e.g. `edge(x,n8) := true; assume exists M. edge(x,M)` when
@@ -1250,6 +1260,12 @@ Progress:
   substitutions through each other before point-update preimage rewriting, so
   `scratch = mid; mid = c; marked(scratch) := true` emits a guard over
   `marked(c)` without exposing locals or using a hidden trial.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantNegativeSetActionPointUpdateSkipsTrialFast`.
+  The zero-formal local witness proof now treats explicit `LogicSetAction`
+  relation updates as modeled point updates, so negative relation-set forms
+  such as `~seen(x)` after a variant witness avoid the hidden runtime trial
+  path just like assignment-form `seen(x) := false`.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -2279,6 +2295,13 @@ Progress:
   soft and source-located, preserving the Hermes-style fallback behavior while
   preventing native expressions and other unsupported conditions from silently
   weakening tests.
+- 2026-09-22: Allowed the exact native type interpretation
+  `interpret T -> <<< int >>>` to lower to Go `int`, matching the C++
+  `typedef int T` behavior used by extensional relation oracles, while keeping
+  opaque native bodies such as `<<< primitive int >>>` on the unsupported-native
+  diagnostic path covered by `TestNativeTypeInterpretRejectsIntPlaceholderWeakening`.
+  `TestNativePlainIntInterpretLowersToGoIntFast` now covers this translatable
+  native-int exception without building or running generated code.
 
 ## 7. FIXED Generated randomness ignores Python's call-stack-qualified choice labels
 
@@ -2323,10 +2346,14 @@ Progress:
 - 2026-09-22: Added
   `TestGeneratedChoicesUseCallStackQualifiedLabelsFast`. Generated Go now
   stores `__ivy_stack`, deep-copies it for trial clones, pushes/pops labels
-  around top-level and nested action calls, builds stack-qualified choice labels,
-  and mixes those labels into the direct RNG choice/randomize path. This stops
-  `___ivy_choose` / `___ivy_randomize` from discarding `name` and `id`.
-  Solver-generator replay parity is still part of the open items 1 and 2.
+  around top-level and nested action calls, and builds stack-qualified choice
+  labels. `___ivy_choose` mixes those labels into the direct RNG choice path.
+  Later oracle work corrected `___ivy_randomize` to keep accepting the same
+  label parameters but return the raw `ivyRandRange64` value, matching C++
+  action-formal and record-field randomization traces for range and destructor
+  record fixtures. `TestGeneratedRandomizeUsesRawRangeStreamFast` guards that
+  shape in-process. Solver-generator replay parity is still part of the open
+  items 1 and 2.
 
 ## 8. FIXED The generated test loop omits reader/timer event-loop semantics
 
@@ -2559,6 +2586,13 @@ Progress:
   the else-branch mirror, proving branch polarity is part of the guarded
   point-update coverage.
 - 2026-09-22: Added
+  `TestTargetTestLocalVariantConditionalPointUpdateImplicationSkipsTrialFast`
+  for the implication spelling of a guarded point-update recheck, keeping the
+  coverage fast and source-shape based.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantConditionalPointUpdateOrSkipsTrialFast` for the
+  desugared OR spelling of the same guarded point-update recheck.
+- 2026-09-22: Added
   `TestTargetTestLocalRelationPointUpdateExistsSkipsTrialFast` for the
   existential-column point-update recheck shape, proving the generated action
   can avoid a hidden trial clone when the positive update itself supplies the
@@ -2606,6 +2640,23 @@ Progress:
 - 2026-09-22: Added target=test and target=gen partial conditional local
   relation-witness source-shape coverage for `ite` guards where only one branch
   constrains the local relation witness.
+- 2026-09-22: Repaired the `log.red2` oracle regressions with focused coverage:
+  `TestEnumDispatchTraceMatchesIvy2Cpp`,
+  `TestOracleRangeBoundsCompilesAndRuns`, and
+  `TestOracleDestructorRecordCompilesAndMatchesTrace` now agree with C++ after
+  removing label-hash offsetting from `___ivy_randomize`; the extensional
+  `<<< int >>>` native-type oracle now generates by translating that exact
+  native type to Go `int`; and
+  `TestTargetGenInitGeneratorRunsInitAfterRandomize` now requests traced
+  target=gen output when it needs to observe a returned value.
+- 2026-09-22: Added
+  `TestTargetTestLocalFiniteSetActionPointUpdateSkipsTrialFast` as a fast
+  companion to the assignment-form point-update regression, covering the
+  explicit `LogicSetAction` AST form without launching a generated tester.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantNegativeSetActionPointUpdateSkipsTrialFast` for
+  the negative explicit `LogicSetAction` variant-local point-update shape,
+  keeping that no-hidden-trial guarantee in the fast in-process suite.
 - 2026-09-22: Strengthened that conditional local relation coverage to require
   branch-specific `if/else` relation scans, and added the target=test
   no-hidden-trial state-copy/recheck regression for the same conditional shape.

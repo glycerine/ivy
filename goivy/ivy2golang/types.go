@@ -647,6 +647,42 @@ func (g *Generator) isNativeTypeSort(s goivy.Sort) bool {
 	return ok
 }
 
+func (g *Generator) nativeTypeSortTranslatesAsGoInt(s goivy.Sort) bool {
+	if g == nil || g.Mod == nil || g.Mod.NativeTypes == nil {
+		return false
+	}
+	name := sortName(s)
+	if name == "" {
+		return false
+	}
+	return g.nativeTypeNameTranslatesAsGoInt(name, g.Mod.NativeTypes[name])
+}
+
+func (g *Generator) nativeTypeNameTranslatesAsGoInt(name string, nt *goivy.NativeType) bool {
+	if g == nil || g.Mod == nil || name == "" {
+		return false
+	}
+	return nativeTypeIsPlainInt(nt)
+}
+
+func nativeTypeIsPlainInt(nt *goivy.NativeType) bool {
+	if nt == nil || len(nt.Elems) != 1 {
+		return false
+	}
+	switch n := nt.Elems[0].(type) {
+	case *goivy.NativeCode:
+		return strings.TrimSpace(n.Code) == "int"
+	case *goivy.Atom:
+		return strings.TrimSpace(n.Rep) == "int"
+	case *goivy.Symbol:
+		return strings.TrimSpace(n.Rep) == "int"
+	case *goivy.Const:
+		return strings.TrimSpace(n.Name) == "int"
+	default:
+		return false
+	}
+}
+
 func (g *Generator) isRuntimeHandleSort(s goivy.Sort) bool {
 	return g.isRuntimeSocketSort(s)
 }
