@@ -5747,6 +5747,52 @@ export step
 	}
 }
 
+func TestLocalVariantPartialIteAssumeChoosesConditionalWitnessFast(t *testing.T) {
+	src := `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual req0 : req
+individual saved : msg
+action step = {
+}
+export step
+`
+	for _, tt := range []struct {
+		target string
+		class  string
+	}{
+		{target: "test", class: "testlocalpartialitevariant"},
+		{target: "gen", class: "genlocalpartialitevariant"},
+	} {
+		t.Run(tt.target, func(t *testing.T) {
+			mod := compileIvySource(t, src)
+			installPartialIteLocalVariantWitnessStep(t, mod)
+			out, err := Generate(mod, Config{Target: tt.target, ClassName: tt.class, TestIters: "1", TestRuns: "1"})
+			if err != nil {
+				t.Fatalf("%s Generate: %v\n%s", tt.target, err, outSource(out))
+			}
+			stepBody := bodyAfterMarker(out.Source, fmt.Sprintf("func (ivy *%s) step()", tt.class))
+			if stepBody == "" {
+				t.Fatalf("%s step body not emitted:\n%s", tt.target, out.Source)
+			}
+			assign := `x = ivyTernary(ivy.active, msg{tag: 0, value: ivy.req0, valid: true}, x)`
+			assume := `ivyAssume(ivyTernary(ivy.active, (x.valid && x.tag == 0 && x.value.(int) == ivy.req0), true)`
+			for _, want := range []string{assign, assume} {
+				if !strings.Contains(stepBody, want) {
+					t.Fatalf("%s local partial ITE variant witness source missing %q:\n%s", tt.target, want, stepBody)
+				}
+			}
+			assignIdx := strings.Index(stepBody, assign)
+			assumeIdx := strings.Index(stepBody, assume)
+			if assignIdx < 0 || assumeIdx < 0 || assignIdx > assumeIdx {
+				t.Fatalf("%s local partial ITE variant witness should assign before assume; assign=%d assume=%d\n%s", tt.target, assignIdx, assumeIdx, stepBody)
+			}
+		})
+	}
+}
+
 func installIteLocalVariantWitnessStep(t *testing.T, mod *goivy.Module) {
 	t.Helper()
 	msg := mod.Sig.Sorts.Get("msg")
@@ -5777,6 +5823,36 @@ func installIteLocalVariantWitnessStep(t *testing.T, mod *goivy.Module) {
 	xAck0 := goivy.MustApply(goivy.NewConst("*>", ackStarSort), local, goivy.NewConst("ack0", ack0Sym.CSort))
 	active := goivy.NewConst("active", activeSym.CSort)
 	ite, err := goivy.NewIte(active, xReq0, xAck0)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(ite),
+		goivy.NewAssignAction(goivy.NewConst("saved", msg), local),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", local, body))
+}
+
+func installPartialIteLocalVariantWitnessStep(t *testing.T, mod *goivy.Module) {
+	t.Helper()
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	local := goivy.NewConst("x", msg)
+	req0Sym, err := mod.Sig.FindSymbol("req0", false)
+	if err != nil {
+		t.Fatalf("FindSymbol req0: %v", err)
+	}
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	reqStarSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *> req: %v", err)
+	}
+	xReq0 := goivy.MustApply(goivy.NewConst("*>", reqStarSort), local, goivy.NewConst("req0", req0Sym.CSort))
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, xReq0, goivy.True)
 	if err != nil {
 		t.Fatalf("NewIte: %v", err)
 	}
@@ -5903,6 +5979,84 @@ func installIteLocalRelationStateUpdateStep(t *testing.T, mod *goivy.Module) {
 		t.Fatalf("local NewIte: %v", err)
 	}
 	savedIte, err := goivy.NewIte(active, savedEdge, savedPermitted)
+	if err != nil {
+		t.Fatalf("saved NewIte: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(localIte),
+		goivy.NewAssignAction(saved, local),
+		goivy.NewAssumeAction(savedIte),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", local, body))
+}
+
+func TestTargetTestLocalRelationPartialIteStateUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation edge(A:node,B:node)
+individual saved : node
+after init {
+    active := true;
+    edge(3,4) := true
+}
+action step = {
+}
+export step
+`)
+	installPartialIteLocalRelationStateUpdateStep(t, mod)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationpartialitestate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationpartialitestate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if ivy.active {`,
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.edge.overrides {`,
+		`n = __ivy_witness_key.A0`,
+		`ivy.saved = n`,
+		`ivyAssume(ivyTernary(ivy.active`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local relation partial ITE state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation partial ITE witness should let zero-formal action execute directly without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func installPartialIteLocalRelationStateUpdateStep(t *testing.T, mod *goivy.Module) {
+	t.Helper()
+	node := mod.Sig.Sorts.Get("node")
+	local := goivy.NewConst("n", node)
+	saved := goivy.NewConst("saved", node)
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	localEdge := localRelationExists(t, node, "edge", local)
+	savedEdge := localRelationExists(t, node, "edge", saved)
+	localIte, err := goivy.NewIte(active, localEdge, goivy.True)
+	if err != nil {
+		t.Fatalf("local NewIte: %v", err)
+	}
+	savedIte, err := goivy.NewIte(active, savedEdge, goivy.True)
 	if err != nil {
 		t.Fatalf("saved NewIte: %v", err)
 	}
@@ -6759,6 +6913,131 @@ func installIteLocalNumericFormalStateUpdateSet(t *testing.T, mod *goivy.Module)
 		t.Fatalf("local NewIte: %v", err)
 	}
 	savedIte, err := goivy.NewIte(active, savedGT, savedEq)
+	if err != nil {
+		t.Fatalf("saved NewIte: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(localIte),
+		goivy.NewAssignAction(saved, local),
+		goivy.NewAssumeAction(savedIte),
+	)
+	act := goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", local, body)
+	act.SetLineno(action.GetLineno())
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+}
+
+func TestTargetTestLocalNumericFormalPartialIteSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node) = {
+}
+export set
+`)
+	installPartialIteLocalNumericFormalStateUpdateSet(t, mod)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalnumericformalpartialite", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalnumericformalpartialite) set(c int)")
+	if stepBody == "" {
+		t.Fatalf("set body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_local_witness_values_scratch := []int{ivyTernary(ivy.active, c + 1, scratch)}`,
+		`ivy.saved = scratch`,
+		`ivyAssume(ivyTernary(ivy.active`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local formal partial ITE witness body missing %q:\n%s", want, stepBody)
+		}
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalnumericformalpartialite_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test set generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "unsupported action generator assume guard") {
+		t.Fatalf("target=test local partial ITE generator should not emit unsupported guard:\n%s", genBody)
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(mainBody, "__ivy_trial") {
+		t.Fatalf("target=test local formal partial ITE should execute without trial source:\n%s", mainBody)
+	}
+}
+
+func TestTargetGenLocalNumericFormalPartialIteFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node) = {
+}
+export set
+`)
+	installPartialIteLocalNumericFormalStateUpdateSet(t, mod)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalnumericformalpartialite", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *genlocalnumericformalpartialite) set(c int)")
+	if stepBody == "" {
+		t.Fatalf("set body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_local_witness_values_scratch := []int{ivyTernary(ivy.active, c + 1, scratch)}`,
+		`ivy.saved = scratch`,
+		`ivyAssume(ivyTernary(ivy.active`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("target=gen local formal partial ITE witness body missing %q:\n%s", want, stepBody)
+		}
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalnumericformalpartialite_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen set generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "unsupported action generator assume guard") {
+		t.Fatalf("target=gen local partial ITE generator should not emit unsupported guard:\n%s", genBody)
+	}
+}
+
+func installPartialIteLocalNumericFormalStateUpdateSet(t *testing.T, mod *goivy.Module) {
+	t.Helper()
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatalf("action set not found")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	node := mod.Sig.Sorts.Get("node")
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	savedSym, err := mod.Sig.FindSymbol("saved", false)
+	if err != nil {
+		t.Fatalf("FindSymbol saved: %v", err)
+	}
+	local := goivy.NewConst("scratch", node)
+	saved := goivy.NewConst("saved", savedSym.CSort)
+	active := goivy.NewConst("active", activeSym.CSort)
+	gt := goivy.NewConst(">", goivy.LogicRelationSort([]goivy.Sort{node, node}))
+	localGT := goivy.MustApply(gt, local, params[0])
+	savedGT := goivy.MustApply(gt, saved, params[0])
+	localIte, err := goivy.NewIte(active, localGT, goivy.True)
+	if err != nil {
+		t.Fatalf("local NewIte: %v", err)
+	}
+	savedIte, err := goivy.NewIte(active, savedGT, goivy.True)
 	if err != nil {
 		t.Fatalf("saved NewIte: %v", err)
 	}
@@ -11020,11 +11299,18 @@ func TestTargetGenRandomizesFunctionSortedActionParam(t *testing.T) {
 		`for __i0 := 0; __i0 < (1)+1; __i0++ {`,
 		`ivy.___ivy_randomize(2, "__fml:tbl", 0)`,
 		`fmt.Fprintf(__ivy_out, "> read(%s)\n", ivyTraceValue(gen.tbl, false))`,
-		`__res := ivy.read(gen.tbl)`,
-		`fmt.Fprintf(__ivy_out, "= %s\n", ivyTraceValue(__res, false))`,
+		`ivy.read(gen.tbl)`,
 	} {
 		if !strings.Contains(out.Source, want) {
 			t.Fatalf("target=gen function-sorted action parameter source missing %q:\n%s", want, out.Source)
+		}
+	}
+	for _, bad := range []string{
+		`__res := ivy.read(gen.tbl)`,
+		`fmt.Fprintf(__ivy_out, "= %s\n", ivyTraceValue(__res, false))`,
+	} {
+		if strings.Contains(out.Source, bad) {
+			t.Fatalf("target=gen function-sorted action parameter source should not contain %q:\n%s", bad, out.Source)
 		}
 	}
 	if strings.Contains(out.Source, `gen.tbl = 0`) {
@@ -19504,8 +19790,7 @@ export set
 		`gen.c = color(ivy.___ivy_randomize(2, "__fml:c", 0))`,
 		`if !((((ivy.saved == red)) && ((gen.c == red)))) {`,
 		`return false`,
-		`__res := ivy.set(gen.c)`,
-		`fmt.Fprintf(__ivy_out, "= %s\n", ivyTraceValue(__res, false))`,
+		`ivy.set(gen.c)`,
 	} {
 		if !strings.Contains(out.Source, want) {
 			t.Fatalf("gen ext-precondition returning source missing %q:\n%s", want, out.Source)
@@ -19514,6 +19799,8 @@ export set
 	for _, bad := range []string{
 		`ivy.set()`,
 		`ivy.set(__arg0`,
+		`__res := ivy.set(gen.c)`,
+		`fmt.Fprintf(__ivy_out, "= %s\n", ivyTraceValue(__res, false))`,
 		`unsupported action generator parameter`,
 	} {
 		if strings.Contains(out.Source, bad) {
@@ -26517,6 +26804,55 @@ export step
 	}
 }
 
+func TestLocalWitnessFromPartialIteUsesExtensionalRelationFast(t *testing.T) {
+	src := `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation edge(A:node,B:node)
+individual saved : node
+after init {
+    active := true;
+    edge(3,4) := true
+}
+action step = {
+}
+export step
+`
+	for _, tc := range []struct {
+		target string
+		class  string
+	}{
+		{target: "test", class: "local_witness_partial_ite_test"},
+		{target: "gen", class: "local_witness_partial_ite_gen"},
+	} {
+		t.Run(tc.target, func(t *testing.T) {
+			mod := compileIvySource(t, src)
+			installPartialIteLocalWitnessStep(t, mod)
+			out, err := Generate(mod, Config{Target: tc.target, ClassName: tc.class, TestIters: "1"})
+			if err != nil {
+				t.Fatalf("Generate: %v\n%s", err, outSource(out))
+			}
+			stepBody := bodyAfterMarker(out.Source, fmt.Sprintf("func (ivy *%s) step()", tc.class))
+			if stepBody == "" {
+				t.Fatalf("step method not emitted:\n%s", out.Source)
+			}
+			for _, want := range []string{
+				"if ivy.active {",
+				"for __ivy_witness_key, __ivy_witness_val := range ivy.edge.overrides {",
+				"if !__ivy_witness_val {",
+				"n = __ivy_witness_key.A0",
+				"ivyTernary(ivy.active",
+				"ivy.edge.Get(struct{ A0 int; A1 int }{n, M})",
+			} {
+				if !strings.Contains(stepBody, want) {
+					t.Fatalf("local partial ITE witness source missing %q:\n%s", want, stepBody)
+				}
+			}
+		})
+	}
+}
+
 func installIteLocalWitnessStep(t *testing.T, mod *goivy.Module) {
 	t.Helper()
 	node := mod.Sig.Sorts.Get("node")
@@ -26546,6 +26882,36 @@ func installIteLocalWitnessStep(t *testing.T, mod *goivy.Module) {
 	}
 	active := goivy.NewConst("active", activeSym.CSort)
 	ite, err := goivy.NewIte(active, edgeExists, permittedExists)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(ite),
+		goivy.NewAssignAction(goivy.NewConst("saved", node), local),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", local, body))
+}
+
+func installPartialIteLocalWitnessStep(t *testing.T, mod *goivy.Module) {
+	t.Helper()
+	node := mod.Sig.Sorts.Get("node")
+	local := goivy.NewConst("n", node)
+	mEdge, err := goivy.NewVariable("M", node)
+	if err != nil {
+		t.Fatalf("NewVariable M: %v", err)
+	}
+	relSort := goivy.LogicRelationSort([]goivy.Sort{node, node})
+	edgeBody := goivy.MustApply(goivy.NewConst("edge", relSort), local, mEdge)
+	edgeExists, err := goivy.NewExists([]*goivy.LogicVariable{mEdge}, edgeBody)
+	if err != nil {
+		t.Fatalf("edge exists: %v", err)
+	}
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, edgeExists, goivy.True)
 	if err != nil {
 		t.Fatalf("NewIte: %v", err)
 	}

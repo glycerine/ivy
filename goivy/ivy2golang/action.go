@@ -1423,18 +1423,28 @@ func (g *Generator) emitLocalWitnessInit(w *goWriter, localName string, localSor
 		if err != nil {
 			return false
 		}
-		thenPlan, ok := g.localWitnessScanPlan(thenWitness.app, thenWitness.pos, thenWitness.ignored)
-		if !ok {
-			return false
+		var thenPlan localWitnessScanPlan
+		if !thenWitness.keep {
+			thenPlan, ok = g.localWitnessScanPlan(thenWitness.app, thenWitness.pos, thenWitness.ignored)
+			if !ok {
+				return false
+			}
 		}
-		elsePlan, ok := g.localWitnessScanPlan(elseWitness.app, elseWitness.pos, elseWitness.ignored)
-		if !ok {
-			return false
+		var elsePlan localWitnessScanPlan
+		if !elseWitness.keep {
+			elsePlan, ok = g.localWitnessScanPlan(elseWitness.app, elseWitness.pos, elseWitness.ignored)
+			if !ok {
+				return false
+			}
 		}
 		w.open("if " + condExpr + " {")
-		g.emitLocalWitnessScanPlan(w, localName, thenPlan, "")
-		w.close(" else {")
-		g.emitLocalWitnessScanPlan(w, localName, elsePlan, "")
+		if !thenWitness.keep {
+			g.emitLocalWitnessScanPlan(w, localName, thenPlan, "")
+		}
+		if !elseWitness.keep {
+			w.close(" else {")
+			g.emitLocalWitnessScanPlan(w, localName, elsePlan, "")
+		}
 		w.close("")
 		return true
 	}
@@ -1472,6 +1482,7 @@ type localWitnessApplyPlan struct {
 	app     *goivy.Apply
 	pos     int
 	ignored map[string]bool
+	keep    bool
 }
 
 type localWitnessScanPlan struct {
@@ -1506,12 +1517,18 @@ func (g *Generator) localIteWitnessApplyFormula(localName string, localSort goiv
 	case *goivy.LogicIte:
 		thenApp, thenPos, thenIgnored, thenOK := g.findLocalWitnessApply(localName, localSort, n.Then, ignored)
 		elseApp, elsePos, elseIgnored, elseOK := g.findLocalWitnessApply(localName, localSort, n.Else, ignored)
-		if thenOK && elseOK {
-			return n.Cond,
-				localWitnessApplyPlan{app: thenApp, pos: thenPos, ignored: thenIgnored},
-				localWitnessApplyPlan{app: elseApp, pos: elsePos, ignored: elseIgnored},
-				true
+		if !thenOK && !elseOK {
+			return nil, localWitnessApplyPlan{}, localWitnessApplyPlan{}, false
 		}
+		thenPlan := localWitnessApplyPlan{keep: true}
+		if thenOK {
+			thenPlan = localWitnessApplyPlan{app: thenApp, pos: thenPos, ignored: thenIgnored}
+		}
+		elsePlan := localWitnessApplyPlan{keep: true}
+		if elseOK {
+			elsePlan = localWitnessApplyPlan{app: elseApp, pos: elsePos, ignored: elseIgnored}
+		}
+		return n.Cond, thenPlan, elsePlan, true
 	case *goivy.LogicLiteral:
 		if n.Polarity != 0 {
 			return g.localIteWitnessApplyFormula(localName, localSort, n.Atom, ignored)
@@ -1683,8 +1700,14 @@ func (g *Generator) localVariantWitness(localName string, localSort goivy.Sort, 
 	case *goivy.LogicIte:
 		thenWitness, thenOK := g.localVariantWitness(localName, localSort, n.Then)
 		elseWitness, elseOK := g.localVariantWitness(localName, localSort, n.Else)
-		if !thenOK || !elseOK {
+		if !thenOK && !elseOK {
 			return actionGeneratorVariantWitness{}, false
+		}
+		if !thenOK {
+			thenWitness = actionGeneratorVariantKeepWitness(elseWitness)
+		}
+		if !elseOK {
+			elseWitness = actionGeneratorVariantKeepWitness(thenWitness)
 		}
 		return actionGeneratorIteVariantWitness(n.Cond, thenWitness, elseWitness, n.GetLineno())
 	case *goivy.LogicLiteral:

@@ -238,6 +238,11 @@ Progress:
   assigning a conditional upcast, e.g. `ite(active, x *> req0, x *> ack0)`
   emits `x = ivyTernary(active, req-upcast, ack-upcast)` before the runtime
   assume instead of leaving `x` invalid or hard-coding one branch.
+- 2026-09-22: Added
+  `TestLocalVariantPartialIteAssumeChoosesConditionalWitnessFast`. Local
+  variant-super witnesses now also handle conditional guards where only one
+  branch constrains the local variant, keeping the existing local value on the
+  unconstrained branch.
 - 2026-09-22: Added `TestLocalVariantNegatedConcreteAssumeChoosesWitnessFast`.
   Local variant-super witnesses now choose a sibling subtype for negated
   concrete membership guards, so `var x:msg; assume ~(x *> req0)` constructs an
@@ -475,6 +480,13 @@ Progress:
   guard in the per-action generator, so branch-dependent local assumes no
   longer execute after an unconditional generator success.
 - 2026-09-22: Added
+  `TestTargetTestLocalNumericFormalPartialIteSkipsTrialFast`. Conditional
+  local scalar witnesses with a tautological unconstrained branch now use a
+  closed default value for that branch in the target=test direct-execution
+  proof, while the generated action body still keeps the local runtime value on
+  the unconstrained branch. This removes the hidden trial clone for
+  `ite(active, scratch > c, true)` copied into state and rechecked.
+- 2026-09-22: Added
   `TestTargetTestLocalNumericFormalLetAndPreservesGuardSkipsTrialFast`.
   Expression-level `LogicLet` guards are now expanded before preimage
   substitution, so aliased local scalar witnesses such as
@@ -530,6 +542,11 @@ Progress:
   local assume such as `ite(active, exists M. edge(n,M), exists M.
   permitted(n,M))` can seed `n` from an extensional relation witness instead of
   falling back to a broad bounded integer scan.
+- 2026-09-22: Added
+  `TestLocalWitnessFromPartialIteUsesExtensionalRelationFast`. Single-local
+  relation witnesses now also handle conditional guards where only one branch
+  constrains the local, scanning the relation on the constrained branch and
+  leaving the local untouched on the unconstrained branch.
 - 2026-09-22: Strengthened
   `TestLocalWitnessFromIteUsesExtensionalRelationFast` and added
   `TestTargetTestLocalRelationIteStateUpdateSkipsTrialFast`. Conditional local
@@ -537,6 +554,13 @@ Progress:
   `target=test` direct-execution proof projects the same conditional witness
   across matching state recheck branches, avoiding both wrong-branch local
   seeds and hidden trial clones.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationPartialIteStateUpdateSkipsTrialFast`.
+  Conditional local relation witnesses whose other branch is syntactic `true`
+  now remain valid for the `target=test` direct-execution proof: the
+  constrained branch projects its relation witness through the matching state
+  recheck, while the tautological branch is treated as already covered instead
+  of forcing a hidden trial clone.
 - 2026-09-22: Added
   `TestLocalWitnessPairUsesOneExtensionalRelationTupleFast`. Consecutive local
   declarations are flattened for witness planning, and local relation witnesses
@@ -1502,6 +1526,10 @@ Progress:
   local scalar witness path is shared by `target=gen`, so one-shot generated
   action bodies use `ivyTernary` local witnesses and generated action
   generators keep the corresponding conditional guard.
+- 2026-09-22: Added `TestTargetGenLocalNumericFormalPartialIteFast`. The
+  partial conditional local scalar witness path is shared by `target=gen`, so
+  one-shot generated action bodies can satisfy `ite(active, scratch > c, true)`
+  without emitting an unsupported existential local guard.
 - 2026-09-22: Added
   `TestTargetGenLocalNumericFormalLetAndPreservesGuardFast`. The
   expression-level `LogicLet` preimage expansion is shared by `target=gen`,
@@ -1520,6 +1548,10 @@ Progress:
   local variant-membership witness is shared by `target=gen`, so one-shot
   generated action bodies construct `ivyTernary` variant locals for either
   branch of guards like `ite(active, x *> req0, x *> ack0)`.
+- 2026-09-22: Added
+  `TestLocalVariantPartialIteAssumeChoosesConditionalWitnessFast`. The
+  one-branch conditional local variant witness is shared by `target=gen`, so
+  one-shot generated action bodies keep unconstrained branch locals unchanged.
 - 2026-09-22: Added `TestLocalVariantNegatedConcreteAssumeChoosesWitnessFast`.
   The sibling-subtype local negated variant witness is shared by `target=gen`,
   so one-shot generated action bodies satisfy guards like `~(x *> req0)`
@@ -1573,6 +1605,10 @@ Progress:
   conditional local relation-witness path is shared by `target=gen`, so
   one-shot generated action bodies can seed locals from extensional relation
   witnesses inside `ite` guards before executing the assume.
+- 2026-09-22: Added
+  `TestLocalWitnessFromPartialIteUsesExtensionalRelationFast`. The one-branch
+  conditional local relation-witness path is shared by `target=gen`, so
+  unconstrained branches no longer force a broad local fallback scan.
 - 2026-09-22: Strengthened
   `TestLocalWitnessFromIteUsesExtensionalRelationFast` to assert the shared
   `target=gen` path emits branch-specific relation scans under the generated
@@ -2547,13 +2583,25 @@ Progress:
 - 2026-09-22: Added target=test and target=gen conditional local
   relation-witness source-shape coverage for `ite` guards seeded from
   extensional relation cells instead of only the broad bounded fallback.
+- 2026-09-22: Added target=test and target=gen partial conditional local
+  relation-witness source-shape coverage for `ite` guards where only one branch
+  constrains the local relation witness.
 - 2026-09-22: Strengthened that conditional local relation coverage to require
   branch-specific `if/else` relation scans, and added the target=test
   no-hidden-trial state-copy/recheck regression for the same conditional shape.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationPartialIteStateUpdateSkipsTrialFast`, the
+  tautological-branch companion for the conditional local relation
+  state-copy/recheck coverage. It asserts both the partial branch witness scan
+  in the generated action body and the absence of hidden trial machinery in the
+  target=test runner.
 - 2026-09-22: Added target=test and target=gen conditional local
   variant-witness source-shape coverage for `ite` guards, asserting that the
   local variant assignment itself is conditional and precedes the generated
   assume.
+- 2026-09-22: Added target=test and target=gen partial conditional local
+  variant-witness source-shape coverage for `ite` guards where only one branch
+  constrains the local variant.
 - 2026-09-22: Added target=test and target=gen inequality existential variant
   payload witness tests, covering the source-shape guarantee that generated
   action generators construct a satisfying subtype payload before rechecking
@@ -2731,6 +2779,9 @@ Progress:
 - 2026-09-22: Added target=test and target=gen partial conditional scalar
   numeric witness tests, covering ITE guards where only one branch constrains
   an integer-like generated formal.
+- 2026-09-22: Added target=test and target=gen partial conditional local
+  scalar witness tests, covering ITE guards where only one branch constrains a
+  generated action-local value before it is copied into state and rechecked.
 - 2026-09-22: Added target=test and target=gen conditional multi-pair numeric
   witness tests, covering ITE guards whose branches contain multiple pairwise
   constraints over the same generated targets.

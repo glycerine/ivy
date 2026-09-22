@@ -8419,14 +8419,47 @@ func (g *Generator) localIteWitnessGuardTerm(guard goivy.Expr, localNames map[st
 	}
 	thenLocal, thenValue, thenOK := g.localIteBranchWitnessGuardTerm(ite.Then, localNames, localKeys, subs)
 	elseLocal, elseValue, elseOK := g.localIteBranchWitnessGuardTerm(ite.Else, localNames, localKeys, subs)
-	if !thenOK || !elseOK || thenLocal == nil || elseLocal == nil || goivy.Key(thenLocal) != goivy.Key(elseLocal) {
+	if !thenOK && !actionGeneratorIsTrueExpr(ite.Then) {
+		return nil, nil, false
+	}
+	if !elseOK && !actionGeneratorIsTrueExpr(ite.Else) {
+		return nil, nil, false
+	}
+	local := thenLocal
+	if local == nil {
+		local = elseLocal
+	}
+	if local == nil {
+		return nil, nil, false
+	}
+	if thenOK && thenLocal != nil && goivy.Key(thenLocal) != goivy.Key(local) {
+		return nil, nil, false
+	}
+	if elseOK && elseLocal != nil && goivy.Key(elseLocal) != goivy.Key(local) {
+		return nil, nil, false
+	}
+	if !thenOK {
+		zero, ok := g.preimageZeroValueExpr(local.CSort)
+		if !ok {
+			return nil, nil, false
+		}
+		thenValue = zero
+	}
+	if !elseOK {
+		zero, ok := g.preimageZeroValueExpr(local.CSort)
+		if !ok {
+			return nil, nil, false
+		}
+		elseValue = zero
+	}
+	if thenValue == nil || elseValue == nil {
 		return nil, nil, false
 	}
 	value, err := goivy.NewIte(ite.Cond, thenValue, elseValue)
 	if err != nil {
 		return nil, nil, false
 	}
-	return thenLocal, value, true
+	return local, value, true
 }
 
 func (g *Generator) localLetWitnessGuardTerm(guard goivy.Expr, localNames map[string]bool, localKeys map[goivy.NodeKey]bool, subs map[goivy.NodeKey]goivy.Expr) (*goivy.Const, goivy.Expr, bool) {
@@ -10139,9 +10172,8 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__res"))
 		} else {
 			w.linef("ivy.___ivy_push(%q)", name)
-			w.linef("__res := %s", call)
+			w.line(call)
 			w.line("ivy.___ivy_pop()")
-			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__res"))
 		}
 	default:
 		w.linef("ivy.___ivy_push(%q)", name)
@@ -10622,15 +10654,26 @@ func (g *Generator) localConditionalRelationWitness(localName string, localSort 
 	case *goivy.LogicIte:
 		thenWitness, thenOK := g.localRelationWitness(localName, localSort, n.Then)
 		elseWitness, elseOK := g.localRelationWitness(localName, localSort, n.Else)
-		if !thenOK || !elseOK {
+		if !thenOK && !actionGeneratorIsTrueExpr(n.Then) {
 			return localRelationWitness{}, false
 		}
-		thenCopy := thenWitness
-		elseCopy := elseWitness
+		if !elseOK && !actionGeneratorIsTrueExpr(n.Else) {
+			return localRelationWitness{}, false
+		}
+		var thenPtr *localRelationWitness
+		if thenOK {
+			thenCopy := thenWitness
+			thenPtr = &thenCopy
+		}
+		var elsePtr *localRelationWitness
+		if elseOK {
+			elseCopy := elseWitness
+			elsePtr = &elseCopy
+		}
 		return localRelationWitness{
 			cond:        n.Cond,
-			thenWitness: &thenCopy,
-			elseWitness: &elseCopy,
+			thenWitness: thenPtr,
+			elseWitness: elsePtr,
 		}, true
 	case *goivy.LogicLiteral:
 		if n.Polarity != 0 {
@@ -10731,6 +10774,12 @@ func directWitnessLocalActionParts(act goivy.Action) ([]goivy.Expr, goivy.Action
 }
 
 func (g *Generator) localVariantStateAssumeCovered(expr goivy.Expr, stateFromLocal map[goivy.NodeKey]string, witnesses map[string]actionGeneratorVariantWitness) bool {
+	if actionGeneratorIsTrueExpr(expr) {
+		return true
+	}
+	if actionGeneratorIsFalseExpr(expr) {
+		return false
+	}
 	switch n := expr.(type) {
 	case *goivy.Apply:
 		if n == nil || goivy.ExprName(n.Func) != "*>" || len(n.Terms) != 2 {
@@ -10842,6 +10891,12 @@ func localRelationPointAssumeCovered(expr goivy.Expr, stateFromLocal map[goivy.N
 }
 
 func localRelationPointAssumeCoveredValue(expr goivy.Expr, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string, updates []localRelationPointUpdate, want bool) bool {
+	if actionGeneratorIsTrueExpr(expr) {
+		return want
+	}
+	if actionGeneratorIsFalseExpr(expr) {
+		return !want
+	}
 	switch n := expr.(type) {
 	case *goivy.Apply:
 		return localRelationPointApplyCovered(n, ignored, stateFromLocal, updates, want)
@@ -10948,6 +11003,12 @@ func localRelationGroupStateAssumeCovered(expr goivy.Expr, stateFromLocal map[go
 }
 
 func localRelationGroupStateAssumeCoveredWithIgnored(expr goivy.Expr, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string, witnesses []localRelationGroupWitness) bool {
+	if actionGeneratorIsTrueExpr(expr) {
+		return true
+	}
+	if actionGeneratorIsFalseExpr(expr) {
+		return false
+	}
 	switch n := expr.(type) {
 	case *goivy.Apply:
 		return localRelationGroupStateApplyCovered(n, ignored, stateFromLocal, witnesses)
@@ -11020,6 +11081,12 @@ func localRelationGroupWitnessCoversApply(witness localRelationGroupWitness, app
 }
 
 func localRelationStateAssumeCoveredWithIgnored(expr goivy.Expr, ignored map[string]bool, stateFromLocal map[goivy.NodeKey]string, witnesses map[string]localRelationWitness) bool {
+	if actionGeneratorIsTrueExpr(expr) {
+		return true
+	}
+	if actionGeneratorIsFalseExpr(expr) {
+		return false
+	}
 	switch n := expr.(type) {
 	case *goivy.Apply:
 		return localRelationStateApplyCovered(n, ignored, stateFromLocal, witnesses)
