@@ -2036,7 +2036,11 @@ func localWitnessAssumeFormulas(act goivy.Action) []goivy.Expr {
 		if a.Formula == nil {
 			return nil
 		}
-		return []goivy.Expr{a.Formula}
+		formula := a.Formula
+		if simplified, ok := simplifyActionGeneratorGuardQuantifiers(formula); ok {
+			formula = simplified
+		}
+		return []goivy.Expr{formula}
 	case *goivy.LogicAssertAction, *goivy.LogicRequiresAction, *goivy.LogicEnsuresAction, *goivy.LogicSubgoalAction, *goivy.LogicDebugAction, *goivy.IgnoreAction:
 		return nil
 	case *goivy.LogicLetAction:
