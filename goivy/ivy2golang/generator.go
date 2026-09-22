@@ -10559,9 +10559,9 @@ func (g *Generator) zeroFormalLocalVariantWitnessActionSafe(act goivy.Action) bo
 				fieldUpdates = append(fieldUpdates, updates...)
 				return true
 			}
-			if update, ok := localRelationPointUpdateFromIf(a, locals, modeledLocals); ok {
+			if updates, ok := localRelationPointUpdatesFromIf(a, locals, modeledLocals); ok {
 				witnessPhase = false
-				relationPointUpdates = append(relationPointUpdates, update)
+				relationPointUpdates = append(relationPointUpdates, updates...)
 				return true
 			}
 			if a.ThenBody == nil || a.ElseBody == nil {
@@ -10899,6 +10899,9 @@ func (g *Generator) localFieldUpdatesFromIf(a *goivy.LogicIfAction, locals map[s
 	if !thenOK || !elseOK {
 		return nil, false
 	}
+	if localFieldUpdateSamePoint(thenUpdate, elseUpdate) {
+		return []localFieldUpdate{thenUpdate}, true
+	}
 	thenUpdate.guard = a.Cond
 	thenUpdate.guardValue = true
 	elseUpdate.guard = a.Cond
@@ -10906,37 +10909,79 @@ func (g *Generator) localFieldUpdatesFromIf(a *goivy.LogicIfAction, locals map[s
 	return []localFieldUpdate{thenUpdate, elseUpdate}, true
 }
 
+func localFieldUpdateSamePoint(a, b localFieldUpdate) bool {
+	return a.field != nil && b.field != nil &&
+		goivy.Key(a.field) == goivy.Key(b.field) &&
+		exprEqual(a.obj, b.obj) &&
+		exprEqual(a.value, b.value)
+}
+
 func localRelationPointUpdateFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {
-	if a == nil || a.Cond == nil || a.ThenBody == nil {
+	updates, ok := localRelationPointUpdatesFromIf(a, locals, modeledLocals)
+	if !ok || len(updates) != 1 {
 		return localRelationPointUpdate{}, false
+	}
+	return updates[0], true
+}
+
+func localRelationPointUpdatesFromIf(a *goivy.LogicIfAction, locals map[string]goivy.Sort, modeledLocals map[string]bool) ([]localRelationPointUpdate, bool) {
+	if a == nil || a.Cond == nil || a.ThenBody == nil {
+		return nil, false
 	}
 	thenAct, thenOK := goivy.ToAction(a.ThenBody)
 	if !thenOK {
-		return localRelationPointUpdate{}, false
+		return nil, false
 	}
 	elseAct, elseOK := goivy.ToAction(a.ElseBody)
 	if a.ElseBody != nil && !elseOK {
-		return localRelationPointUpdate{}, false
+		return nil, false
 	}
 	if localWitnessDirectNoopAction(elseAct) {
 		update, ok := localRelationPointUpdateFromAction(thenAct, locals, modeledLocals)
 		if !ok {
-			return localRelationPointUpdate{}, false
+			return nil, false
 		}
 		update.guard = a.Cond
 		update.guardValue = true
-		return update, true
+		return []localRelationPointUpdate{update}, true
 	}
-	if !localWitnessDirectNoopAction(thenAct) {
-		return localRelationPointUpdate{}, false
+	if localWitnessDirectNoopAction(thenAct) {
+		update, ok := localRelationPointUpdateFromAction(elseAct, locals, modeledLocals)
+		if !ok {
+			return nil, false
+		}
+		update.guard = a.Cond
+		update.guardValue = false
+		return []localRelationPointUpdate{update}, true
 	}
-	update, ok := localRelationPointUpdateFromAction(elseAct, locals, modeledLocals)
-	if !ok {
-		return localRelationPointUpdate{}, false
+	thenUpdate, thenOK := localRelationPointUpdateFromAction(thenAct, locals, modeledLocals)
+	elseUpdate, elseOK := localRelationPointUpdateFromAction(elseAct, locals, modeledLocals)
+	if !thenOK || !elseOK {
+		return nil, false
 	}
-	update.guard = a.Cond
-	update.guardValue = false
-	return update, true
+	if localRelationPointUpdateSameCell(thenUpdate, elseUpdate) {
+		return []localRelationPointUpdate{thenUpdate}, true
+	}
+	thenUpdate.guard = a.Cond
+	thenUpdate.guardValue = true
+	elseUpdate.guard = a.Cond
+	elseUpdate.guardValue = false
+	return []localRelationPointUpdate{thenUpdate, elseUpdate}, true
+}
+
+func localRelationPointUpdateSameCell(a, b localRelationPointUpdate) bool {
+	if a.app == nil || b.app == nil ||
+		goivy.Key(a.app.Func) != goivy.Key(b.app.Func) ||
+		len(a.app.Terms) != len(b.app.Terms) ||
+		a.value != b.value {
+		return false
+	}
+	for i := range a.app.Terms {
+		if !exprEqual(a.app.Terms[i], b.app.Terms[i]) {
+			return false
+		}
+	}
+	return true
 }
 
 func localRelationPointUpdateFromAction(act goivy.Action, locals map[string]goivy.Sort, modeledLocals map[string]bool) (localRelationPointUpdate, bool) {

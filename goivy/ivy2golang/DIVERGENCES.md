@@ -1267,6 +1267,12 @@ Progress:
   such as `~seen(x)` after a variant witness avoid the hidden runtime trial
   path just like assignment-form `seen(x) := false`.
 - 2026-09-22: Added
+  `TestTargetTestLocalVariantTwoSidedConditionalPointUpdateSkipsTrialFast`.
+  Conditional relation point-update proof now records both branch-specific cell
+  writes, while collapsing identical branch writes back to an unguarded update.
+  This covers `ite(active, seen(x), ~seen(x))` rechecks without hidden trial
+  machinery or regression in the same-update branch case.
+- 2026-09-22: Added
   `TestTargetTestLocalRelationAssignFieldActionSkipsTrialFast`. Local witness
   initialization now scans thunk-backed boolean relation overrides even when the
   relation is not classified as a global quantifier-support relation, and the
@@ -2689,6 +2695,10 @@ Progress:
   `TestTargetTestLocalVariantNegativeSetActionPointUpdateSkipsTrialFast` for
   the negative explicit `LogicSetAction` variant-local point-update shape,
   keeping that no-hidden-trial guarantee in the fast in-process suite.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantTwoSidedConditionalPointUpdateSkipsTrialFast` for
+  the true/false relation-cell update case under `if/else`, plus the guarded
+  update collapse needed to keep the existing identical-branch test fast.
 - 2026-09-22: Added
   `TestTargetTestLocalRelationAssignFieldActionSkipsTrialFast` for the
   destructor-field analogue of relation point updates, covering relation-backed
