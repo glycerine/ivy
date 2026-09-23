@@ -1428,7 +1428,7 @@ func (g *Generator) emitConstructor(w *goWriter) {
 	w.close("")
 	w.blank()
 	w.open(fmt.Sprintf("func (ivy *%s) ___ivy_rand(rng int, name string, id int) int {", g.ClassName))
-	w.line("_, _ = name, id")
+	w.line("_ = ivy.___ivy_choice_label(name, id)")
 	w.open("if rng <= 0 {")
 	w.line("return 0")
 	w.close("")
@@ -2961,6 +2961,7 @@ func (g *Generator) emitTestActionGeneratorGenerate(w *goWriter, name string, ac
 		w.line("return true")
 		w.close("")
 		w.line("return false")
+		return
 	}
 	for i, p := range act.GetFormalParams() {
 		expr, err := g.goActionParamRandomValueExpr(p.CSort, name+"."+p.Name, int64(i))
@@ -3134,6 +3135,7 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 		w.line("return true")
 		w.close("")
 		w.line("return false")
+		return
 	}
 	if len(act.GetFormalParams()) == 0 {
 		g.emitGenActionGeneratorAssumeGuards(w, name, act)

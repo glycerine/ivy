@@ -53,6 +53,7 @@ func (g *Generator) runtimeActionSolverPlan(name string, act goivy.Action) (_ *r
 	if g == nil || g.Mod == nil || act == nil {
 		return nil, false
 	}
+	return nil, false
 	if len(g.actionGeneratorChoiceOverridePlans(act)) > 0 {
 		return nil, false
 	}

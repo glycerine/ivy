@@ -40,9 +40,6 @@ func (g *Generator) quantifierSupportRels() map[string]bool {
 }
 
 func (g *Generator) actionQuantifierSupportRels() map[string]bool {
-	if g != nil && g.actionExprStrict {
-		return g.extensionalRels()
-	}
 	return g.quantifierSupportRels()
 }
 

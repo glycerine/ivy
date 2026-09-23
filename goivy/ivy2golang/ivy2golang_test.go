@@ -1905,6 +1905,18 @@ export set
 	if genBody == "" {
 		t.Fatalf("set generator body not emitted:\n%s", out.Source)
 	}
+	if strings.Contains(genBody, "__ivy_generate_with_solver") {
+		solverBody := bodyAfterMarker(out.Source, "func (gen *Testimplieddefinput_set_generator) __ivy_generate_with_solver() bool")
+		if solverBody == "" {
+			t.Fatalf("solver generator body not emitted:\n%s", out.Source)
+		}
+		for _, want := range []string{`gen.__ivy_solver_pre = goivy.NewClauses`, `ivy.active`, `green`, `hm.EvalToConstant(goivy.NewConst("__fml:x"`} {
+			if !strings.Contains(solverBody, want) {
+				t.Fatalf("target=test implied defined input solver body missing %q:\n%s", want, solverBody)
+			}
+		}
+		return
+	}
 	assign := `gen.x = green`
 	guard := `return false`
 	for _, want := range []string{assign, `ivy.active`, `gen.x == green`, guard} {
@@ -1937,6 +1949,18 @@ export set
 	genBody := bodyAfterMarker(out.Source, "func (gen *Testordefinput_set_generator) generate() bool")
 	if genBody == "" {
 		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "__ivy_generate_with_solver") {
+		solverBody := bodyAfterMarker(out.Source, "func (gen *Testordefinput_set_generator) __ivy_generate_with_solver() bool")
+		if solverBody == "" {
+			t.Fatalf("solver generator body not emitted:\n%s", out.Source)
+		}
+		for _, want := range []string{`gen.__ivy_solver_pre = goivy.NewClauses`, `ivy.active`, `green`, `hm.EvalToConstant(goivy.NewConst("__fml:x"`} {
+			if !strings.Contains(solverBody, want) {
+				t.Fatalf("target=test disjunctive defined input solver body missing %q:\n%s", want, solverBody)
+			}
+		}
+		return
 	}
 	assign := `gen.x = green`
 	guard := `return false`
@@ -7327,7 +7351,17 @@ export step
 	if genBody == "" {
 		t.Fatalf("step generator not emitted:\n%s", out.Source)
 	}
-	if !strings.Contains(genBody, `if !(ivy.active) {`) {
+	if strings.Contains(genBody, "__ivy_generate_with_solver") {
+		solverBody := bodyAfterMarker(out.Source, "func (gen *Testlocalrelationexistsguardstate_step_generator) __ivy_generate_with_solver() bool")
+		if solverBody == "" {
+			t.Fatalf("solver generator body not emitted:\n%s", out.Source)
+		}
+		for _, want := range []string{`gen.__ivy_solver_pre = goivy.NewClauses`, `ivy.active`, `edge`} {
+			if !strings.Contains(solverBody, want) {
+				t.Fatalf("local relation existential state update solver body missing %q:\n%s", want, solverBody)
+			}
+		}
+	} else if !strings.Contains(genBody, `if !(ivy.active) {`) {
 		t.Fatalf("local relation existential state update should preserve active guard in generator:\n%s", genBody)
 	}
 	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationexistsguardstate) step()")
@@ -7385,7 +7419,17 @@ export step
 	if genBody == "" {
 		t.Fatalf("step generator not emitted:\n%s", out.Source)
 	}
-	if !strings.Contains(genBody, `if !(ivy.active) {`) {
+	if strings.Contains(genBody, "__ivy_generate_with_solver") {
+		solverBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationexistsguardstate_step_generator) __ivy_generate_with_solver() bool")
+		if solverBody == "" {
+			t.Fatalf("solver generator body not emitted:\n%s", out.Source)
+		}
+		for _, want := range []string{`gen.__ivy_solver_pre = goivy.NewClauses`, `ivy.active`, `edge`} {
+			if !strings.Contains(solverBody, want) {
+				t.Fatalf("target=gen local relation existential state update solver body missing %q:\n%s", want, solverBody)
+			}
+		}
+	} else if !strings.Contains(genBody, `if !(ivy.active) {`) {
 		t.Fatalf("target=gen local relation existential state update should preserve active guard in generator:\n%s", genBody)
 	}
 	stepBody := bodyAfterMarker(out.Source, "func (ivy *genlocalrelationexistsguardstate) step()")
@@ -23767,6 +23811,18 @@ export set
 	if genBody == "" {
 		t.Fatalf("set generator body not emitted:\n%s", out.Source)
 	}
+	if strings.Contains(genBody, "__ivy_generate_with_solver") {
+		solverBody := bodyAfterMarker(out.Source, "func (gen *Genimplieddefinput_set_generator) __ivy_generate_with_solver() bool")
+		if solverBody == "" {
+			t.Fatalf("solver generator body not emitted:\n%s", out.Source)
+		}
+		for _, want := range []string{`gen.__ivy_solver_pre = goivy.NewClauses`, `ivy.active`, `green`, `hm.EvalToConstant(goivy.NewConst("__fml:x"`} {
+			if !strings.Contains(solverBody, want) {
+				t.Fatalf("target=gen implied defined input solver body missing %q:\n%s", want, solverBody)
+			}
+		}
+		return
+	}
 	assign := `gen.x = green`
 	guard := `return false`
 	for _, want := range []string{assign, `ivy.active`, `gen.x == green`, guard} {
@@ -23799,6 +23855,18 @@ export set
 	genBody := bodyAfterMarker(out.Source, "func (gen *Genordefinput_set_generator) generate() bool")
 	if genBody == "" {
 		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "__ivy_generate_with_solver") {
+		solverBody := bodyAfterMarker(out.Source, "func (gen *Genordefinput_set_generator) __ivy_generate_with_solver() bool")
+		if solverBody == "" {
+			t.Fatalf("solver generator body not emitted:\n%s", out.Source)
+		}
+		for _, want := range []string{`gen.__ivy_solver_pre = goivy.NewClauses`, `ivy.active`, `green`, `hm.EvalToConstant(goivy.NewConst("__fml:x"`} {
+			if !strings.Contains(solverBody, want) {
+				t.Fatalf("target=gen disjunctive defined input solver body missing %q:\n%s", want, solverBody)
+			}
+		}
+		return
 	}
 	assign := `gen.x = green`
 	guard := `return false`
