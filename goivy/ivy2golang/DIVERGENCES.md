@@ -1805,6 +1805,14 @@ Progress:
   hidden `target=test` trials now copy clone state back into the existing Ivy
   object instead of swapping the local pointer, matching the `target=gen` trial
   commit shape and preserving reader/timer receiver identity after setup.
+- 2026-09-23: Runtime solver-backed action generators now avoid routing
+  trivially true reverse-image plans through Z3 and, for nontrivial plans, add
+  C++-style randomized equality constraints for generated inputs before
+  solving. This fixes the Hermes smoke-test stall where unconstrained actions
+  such as `client_write_arrive` could hang in the solver. Full item parity is
+  still open: generated Go does not yet match the Python/C++ `init_gen`
+  lifecycle closely enough for exact first-action trace parity, and remaining
+  solver extraction cases still need conformance work.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -2957,6 +2965,11 @@ Progress:
   runtime assumes are not covered by the syntactic preimage walker execute on a
   rejecting clone and silently skip rejected one-shot actions instead of calling
   the public action directly.
+- 2026-09-23: The shared runtime solver generator path now also benefits
+  `target=gen`: trivial reverse-image plans fall back to the cheap direct
+  generator, and nontrivial plans constrain randomized inputs before solving.
+  This is still not FIXED because `target=gen` needs the same remaining
+  solver-backed generator parity work as `target=test`.
 
 ## 3. FIXED Initial state generation is retry/randomized, not Python's initial model
 

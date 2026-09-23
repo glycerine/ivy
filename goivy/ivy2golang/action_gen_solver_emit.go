@@ -17,8 +17,10 @@ type runtimeActionSolverPlan struct {
 }
 
 type runtimeActionSolverAssign struct {
-	input  *goivy.Const
-	formal *goivy.Const
+	input   *goivy.Const
+	target  string
+	sort    goivy.Sort
+	declare bool
 }
 
 func (g *Generator) actionGeneratorUsesRuntimeSolver() bool {
@@ -48,7 +50,7 @@ func (g *Generator) runtimeActionSolverPlan(name string, act goivy.Action) (_ *r
 	}
 	oldErrs := len(g.errs)
 	plan := g.buildActionGenPlan(name, act)
-	if plan == nil || plan.fallback || plan.preFmla == nil || (goivy.IsTrue(plan.preFmla) && len(plan.paramDefs) == 0) {
+	if plan == nil || plan.fallback || plan.preFmla == nil || runtimeActionSolverFormulaIsTrue(plan.preFmla) {
 		g.errs = g.errs[:oldErrs]
 		return nil, false
 	}
@@ -65,6 +67,12 @@ func (g *Generator) runtimeActionSolverPlan(name string, act goivy.Action) (_ *r
 			formals[alias] = p
 		}
 	}
+	declaredTargets := map[string]bool{}
+	for _, p := range act.GetFormalParams() {
+		if p != nil {
+			declaredTargets[goName(p.Name)] = true
+		}
+	}
 	var assigns []runtimeActionSolverAssign
 	for _, in := range plan.inputs {
 		if in == nil || strings.HasPrefix(in.Name, "__ts") || in.Name == "*>" || g.isDerivedStorageName(in.Name) {
@@ -73,16 +81,18 @@ func (g *Generator) runtimeActionSolverPlan(name string, act goivy.Action) (_ *r
 		if actionGenStrictDefIdx(in, plan) {
 			continue
 		}
-		p, found := formals[in.Name]
-		if !found {
+		if p, found := formals[in.Name]; found {
+			assigns = append(assigns, runtimeActionSolverAssign{input: in, target: goName(p.Name), sort: p.CSort})
+			continue
+		}
+		if !g.runtimeSolverSupportsScalarSort(in.CSort) {
 			g.errs = g.errs[:oldErrs]
 			return nil, false
 		}
-		assigns = append(assigns, runtimeActionSolverAssign{input: in, formal: p})
-	}
-	if len(assigns) == 0 {
-		g.errs = g.errs[:oldErrs]
-		return nil, false
+		target := goName(in.Name)
+		declare := !declaredTargets[target]
+		declaredTargets[target] = true
+		assigns = append(assigns, runtimeActionSolverAssign{input: in, target: target, sort: in.CSort, declare: declare})
 	}
 	preUsed := goivy.UsedSymbolsAst(plan.preFmla)
 	defNames := preDefinedNames(plan.oldPreClauses)
@@ -101,6 +111,22 @@ func (g *Generator) runtimeActionSolverPlan(name string, act goivy.Action) (_ *r
 	}
 	g.errs = g.errs[:oldErrs]
 	return &runtimeActionSolverPlan{plan: plan, assigns: assigns, stateSyms: stateSyms, needsState: needsState}, true
+}
+
+func runtimeActionSolverFormulaIsTrue(f goivy.Expr) bool {
+	if goivy.IsTrue(f) {
+		return true
+	}
+	and, ok := f.(*goivy.LogicAnd)
+	if !ok {
+		return false
+	}
+	for _, term := range and.Terms {
+		if !runtimeActionSolverFormulaIsTrue(term) {
+			return false
+		}
+	}
+	return true
 }
 
 func (g *Generator) runtimeSolverSupportsScalarSort(s goivy.Sort) bool {
@@ -137,6 +163,9 @@ func (g *Generator) runtimeSolverSupportsScalarSort(s goivy.Sort) bool {
 
 func (g *Generator) runtimeSolverSupportsStateSymbol(sym stateSymbol) bool {
 	if fs, ok := sym.Sort.(*goivy.LogicFunctionSort); ok {
+		if g.runtimeSolverSupportsSparseBoolStateSymbol(sym, fs) {
+			return true
+		}
 		if !g.runtimeSolverSupportsScalarSort(fs.Range()) {
 			return false
 		}
@@ -154,6 +183,21 @@ func (g *Generator) runtimeSolverSupportsStateSymbol(sym stateSymbol) bool {
 		return true
 	}
 	return g.runtimeSolverSupportsScalarSort(sym.Sort)
+}
+
+func (g *Generator) runtimeSolverSupportsSparseBoolStateSymbol(sym stateSymbol, fs *goivy.LogicFunctionSort) bool {
+	if fs == nil || !isBooleanSort(fs.Range()) {
+		return false
+	}
+	if !g.goFunctionStorageFor(fs.Domain(), fs.Range()).Large {
+		return false
+	}
+	for _, d := range fs.Domain() {
+		if !g.runtimeSolverSupportsScalarSort(d) {
+			return false
+		}
+	}
+	return true
 }
 
 func (g *Generator) emitRuntimeSolverSupport(w *goWriter) {
@@ -178,6 +222,9 @@ func (g *Generator) emitRuntimeSolverSupport(w *goWriter) {
 		}
 		w.linef("_ = mod.Sig.AddSort(%s)", g.goIvySortExpr(s))
 	}
+	for _, interp := range g.runtimeSolverInterps() {
+		w.linef("mod.Sig.Interp[%q] = %s", interp.name, interp.valueExpr)
+	}
 	for _, c := range g.runtimeSolverSymbols() {
 		w.linef("_, _ = mod.Sig.AddSymbol(%q, %s)", c.Name, g.goIvySortExpr(c.CSort))
 		if es, ok := c.CSort.(*goivy.LogicEnumeratedSort); ok {
@@ -192,6 +239,38 @@ func (g *Generator) emitRuntimeSolverSupport(w *goWriter) {
 	w.line("return mod")
 	w.close("")
 	w.blank()
+}
+
+type runtimeSolverInterp struct {
+	name      string
+	valueExpr string
+}
+
+func (g *Generator) runtimeSolverInterps() []runtimeSolverInterp {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
+		return nil
+	}
+	out := make([]runtimeSolverInterp, 0, len(g.Mod.Sig.Interp))
+	for name, value := range g.Mod.Sig.Interp {
+		expr, ok := g.goIvyInterpValueExpr(value)
+		if !ok {
+			continue
+		}
+		out = append(out, runtimeSolverInterp{name: name, valueExpr: expr})
+	}
+	sort.SliceStable(out, func(i, j int) bool { return out[i].name < out[j].name })
+	return out
+}
+
+func (g *Generator) goIvyInterpValueExpr(value any) (string, bool) {
+	switch v := value.(type) {
+	case string:
+		return strconv.Quote(v), true
+	case goivy.Sort:
+		return g.goIvySortExpr(v), true
+	default:
+		return "", false
+	}
 }
 
 func (g *Generator) runtimeSolverSorts() []goivy.Sort {
@@ -405,19 +484,26 @@ func (g *Generator) emitRuntimeActionSolverMethod(w *goWriter, typeName string, 
 	w.open("if ivy == nil {")
 	w.line("return false")
 	w.close("")
-	w.line("mod := __ivy_solver_module()")
-	w.line("solver := goivy.NewSolver(mod, nil)")
-	w.linef("clauses := goivy.NewClauses([]goivy.Expr{%s}, nil, nil)", preExpr)
+	w.open("if gen.__ivy_solver == nil {")
+	w.line("gen.__ivy_solver = goivy.NewSolver(__ivy_solver_module(), nil)")
+	w.close("")
+	w.open("if gen.__ivy_solver_pre == nil {")
+	w.linef("gen.__ivy_solver_pre = goivy.NewClauses([]goivy.Expr{%s}, nil, nil)", preExpr)
 	for _, def := range rsp.plan.paramDefs {
 		defExpr, ok := g.goIvyExprExpr(def)
 		if !ok {
-			w.line("return false")
 			continue
 		}
-		w.linef("clauses.Fmlas = append(clauses.Fmlas, %s)", defExpr)
+		w.linef("gen.__ivy_solver_pre.Fmlas = append(gen.__ivy_solver_pre.Fmlas, %s)", defExpr)
 	}
+	w.close("")
+	w.line("solver := gen.__ivy_solver")
+	w.line("clauses := gen.__ivy_solver_pre.Copy()")
 	for _, sym := range rsp.stateSyms {
 		g.emitRuntimeActionSolverStateEquality(w, sym)
+	}
+	for i, assign := range rsp.assigns {
+		g.emitRuntimeActionSolverRandomInputEquality(w, assign, i)
 	}
 	w.line("model, err := solver.GetModelClauses(clauses)")
 	w.open("if err != nil || model == nil {")
@@ -430,15 +516,60 @@ func (g *Generator) emitRuntimeActionSolverMethod(w *goWriter, typeName string, 
 			w.line("return false")
 			continue
 		}
-		g.emitRuntimeActionSolverAssignModelValue(w, "gen."+goName(assign.formal.Name), assign.formal.CSort, fmt.Sprintf("hm.EvalToConstant(%s)", inputExpr))
+		g.emitRuntimeActionSolverAssignModelValue(w, "gen."+assign.target, assign.sort, fmt.Sprintf("hm.EvalToConstant(%s)", inputExpr))
 	}
 	w.line("return true")
 	w.close("")
 	w.blank()
 }
 
+func (g *Generator) emitRuntimeActionSolverRandomInputEquality(w *goWriter, assign runtimeActionSolverAssign, idx int) {
+	if assign.input == nil || assign.target == "" || assign.sort == nil {
+		w.line("return false")
+		return
+	}
+	randExpr, err := g.goActionParamRandomValueExpr(assign.sort, assign.input.Name, int64(idx))
+	if err != nil {
+		g.unsupported(w, "unsupported runtime solver random input %s: %s", assign.input.Name, strings.TrimPrefix(err.Error(), "ivy2golang: "))
+		w.line("return false")
+		return
+	}
+	inputExpr, ok := g.goIvyExprExpr(assign.input)
+	if !ok {
+		w.line("return false")
+		return
+	}
+	w.linef("gen.%s = %s", assign.target, randExpr)
+	rhsExpr, ok := g.runtimeActionSolverValueExpr("gen."+assign.target, assign.sort)
+	if !ok {
+		w.line("return false")
+		return
+	}
+	w.linef("clauses.Fmlas = append(clauses.Fmlas, &goivy.Eq{T1: %s, T2: %s})", inputExpr, rhsExpr)
+}
+
+func (g *Generator) emitRuntimeActionSolverExtraFields(w *goWriter, rsp *runtimeActionSolverPlan) {
+	if rsp == nil {
+		return
+	}
+	w.line("__ivy_solver *goivy.Solver")
+	w.line("__ivy_solver_pre *goivy.Clauses")
+	seen := map[string]bool{}
+	for _, assign := range rsp.assigns {
+		if !assign.declare || assign.target == "" || seen[assign.target] {
+			continue
+		}
+		seen[assign.target] = true
+		w.linef("%s %s", assign.target, g.goType(assign.sort))
+	}
+}
+
 func (g *Generator) emitRuntimeActionSolverStateEquality(w *goWriter, sym stateSymbol) {
 	if fs, ok := sym.Sort.(*goivy.LogicFunctionSort); ok {
+		if g.runtimeSolverSupportsSparseBoolStateSymbol(sym, fs) {
+			g.emitRuntimeActionSolverSparseBoolRelation(w, sym, fs)
+			return
+		}
 		g.emitRuntimeActionSolverFunctionStateEqualities(w, sym, fs, nil, nil)
 		return
 	}
@@ -449,6 +580,55 @@ func (g *Generator) emitRuntimeActionSolverStateEquality(w *goWriter, sym stateS
 		return
 	}
 	w.linef("clauses.Fmlas = append(clauses.Fmlas, &goivy.Eq{T1: %s, T2: %s})", lhs, rhs)
+}
+
+func (g *Generator) emitRuntimeActionSolverSparseBoolRelation(w *goWriter, sym stateSymbol, fs *goivy.LogicFunctionSort) {
+	domain := fs.Domain()
+	if len(domain) == 0 {
+		w.line("return false")
+		return
+	}
+	w.open("{")
+	w.line("__ivy_sparse_vars := []*goivy.LogicVariable{")
+	w.indent++
+	for i, d := range domain {
+		w.linef("&goivy.LogicVariable{Name: %q, VSort: %s},", fmt.Sprintf("__ivy_sparse_%d", i), g.goIvySortExpr(d))
+	}
+	w.indent--
+	w.line("}")
+	w.line("__ivy_sparse_args := make([]goivy.Expr, len(__ivy_sparse_vars))")
+	w.open("for __ivy_sparse_idx, __ivy_sparse_var := range __ivy_sparse_vars {")
+	w.line("__ivy_sparse_args[__ivy_sparse_idx] = __ivy_sparse_var")
+	w.close("")
+	w.line("__ivy_sparse_terms := []goivy.Expr{}")
+	w.open(fmt.Sprintf("for __ivy_sparse_key, __ivy_sparse_val := range ivy.%s.overrides {", goName(sym.Name)))
+	w.open("if !__ivy_sparse_val {")
+	w.line("continue")
+	w.close("")
+	w.line("__ivy_sparse_eqs := []goivy.Expr{}")
+	for i, d := range domain {
+		keyExpr := "__ivy_sparse_key"
+		if len(domain) != 1 {
+			keyExpr = fmt.Sprintf("__ivy_sparse_key.A%d", i)
+		}
+		valueExpr, ok := g.runtimeActionSolverValueExpr(keyExpr, d)
+		if !ok {
+			w.line("return false")
+			continue
+		}
+		w.linef("__ivy_sparse_eqs = append(__ivy_sparse_eqs, &goivy.Eq{T1: __ivy_sparse_vars[%d], T2: %s})", i, valueExpr)
+	}
+	w.line("__ivy_sparse_terms = append(__ivy_sparse_terms, &goivy.LogicAnd{Terms: __ivy_sparse_eqs})")
+	w.close("")
+	w.line(`var __ivy_sparse_support goivy.Expr = goivy.NewConst("false", goivy.Boolean)`)
+	w.open("if len(__ivy_sparse_terms) == 1 {")
+	w.line("__ivy_sparse_support = __ivy_sparse_terms[0]")
+	w.close(" else if len(__ivy_sparse_terms) > 1 {")
+	w.line("__ivy_sparse_support = &goivy.LogicOr{Terms: __ivy_sparse_terms}")
+	w.close("")
+	w.linef("__ivy_sparse_app := goivy.MustApply(goivy.NewConst(%q, %s), __ivy_sparse_args...)", sym.Name, g.goIvySortExpr(sym.Sort))
+	w.line("clauses.Fmlas = append(clauses.Fmlas, &goivy.ForAll{Variables: __ivy_sparse_vars, Body: &goivy.LogicIff{T1: __ivy_sparse_app, T2: __ivy_sparse_support}})")
+	w.close("")
 }
 
 func (g *Generator) emitRuntimeActionSolverFunctionStateEqualities(w *goWriter, sym stateSymbol, fs *goivy.LogicFunctionSort, goArgs []string, ivyArgs []string) {

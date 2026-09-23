@@ -39,6 +39,13 @@ func (g *Generator) quantifierSupportRels() map[string]bool {
 	return res
 }
 
+func (g *Generator) actionQuantifierSupportRels() map[string]bool {
+	if g != nil && g.actionExprStrict {
+		return g.extensionalRels()
+	}
+	return g.quantifierSupportRels()
+}
+
 func (g *Generator) localWitnessSupportRelation(name string, fs *goivy.LogicFunctionSort) bool {
 	if name == "" {
 		return false
@@ -676,7 +683,7 @@ func (g *Generator) matchExtensionalBoundExprs(v0 *goivy.LogicVariable, body goi
 	app, isApp := body.(*goivy.Apply)
 	if isApp {
 		name := goivy.ExprName(app.Func)
-		if name != "" && g.quantifierSupportRels()[name] && exists && containsVariableByName(app.Terms, v0.Name) {
+		if name != "" && g.actionQuantifierSupportRels()[name] && exists && containsVariableByName(app.Terms, v0.Name) {
 			*res = append(*res, app)
 		}
 	}

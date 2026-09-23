@@ -9,6 +9,15 @@ import (
 )
 
 func (g *Generator) emitAction(w *goWriter, act goivy.Action) {
+	oldActionExprStrict := g.actionExprStrict
+	g.actionExprStrict = true
+	defer func() {
+		g.actionExprStrict = oldActionExprStrict
+	}()
+	g.emitActionBody(w, act)
+}
+
+func (g *Generator) emitActionBody(w *goWriter, act goivy.Action) {
 	if act == nil {
 		return
 	}
@@ -16,7 +25,7 @@ func (g *Generator) emitAction(w *goWriter, act goivy.Action) {
 	case *goivy.LogicSequence:
 		for _, child := range a.Elems {
 			if childAct, ok := child.(goivy.Action); ok {
-				g.emitAction(w, childAct)
+				g.emitActionBody(w, childAct)
 			} else {
 				g.unsupported(w, "unsupported sequence child %T: %s", child, fmt.Sprint(child))
 			}

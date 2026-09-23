@@ -62,6 +62,7 @@ type Generator struct {
 	exprOverrides         []map[string]string
 	defStack              map[string]bool
 	relationOverrideQuant bool
+	actionExprStrict      bool
 }
 
 func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
@@ -1373,7 +1374,7 @@ func (g *Generator) emitConstructor(w *goWriter) {
 		}
 		w.linef("ivy.%s = %s", goName(p.Name), goName(p.Name))
 	}
-	if g.Config.Target != "gen" {
+	if g.Config.Target != "gen" && g.Config.Target != "test" {
 		w.line("ivy.__initState()")
 		w.line("ivy.__init()")
 	}
@@ -2873,6 +2874,7 @@ func (g *Generator) runnableActionNamesFrom(names []string) []string {
 
 func (g *Generator) emitTestMain(w *goWriter) {
 	runnable := g.runnableActionNames()
+	g.emitGenInitGeneratorType(w)
 	g.emitTestActionGeneratorTypes(w, runnable)
 	w.open(fmt.Sprintf("func %s() {", g.Config.MainName))
 	if len(g.Mod.Params) == 0 {
@@ -2894,6 +2896,8 @@ func (g *Generator) emitTestMain(w *goWriter) {
 	w.line("ivy.__argv = append([]string{os.Args[0]}, rest...)")
 	w.line("ivy._generating = false")
 	w.line("ivy.__bindReaders()")
+	w.linef("init_generator := &%s{ivy: ivy}", g.goInitGeneratorTypeName())
+	w.line("_ = init_generator.generate()")
 	g.emitRandomizedActionCycles(w, runnable, "testIters", "sleepMs")
 	g.emitTestMainTail(w, "finalMs")
 	w.close("")
@@ -2914,6 +2918,9 @@ func (g *Generator) emitTestActionGeneratorTypes(w *goWriter, runnable []string)
 				w.linef("%s %s", goName(p.Name), g.goType(p.CSort))
 			}
 		}
+		if hasRuntimeSolver {
+			g.emitRuntimeActionSolverExtraFields(w, rsp)
+		}
 		w.close("")
 		w.blank()
 		w.open(fmt.Sprintf("func (gen *%s) generate() bool {", typeName))
@@ -2933,6 +2940,12 @@ func (g *Generator) emitTestActionGeneratorGenerate(w *goWriter, name string, ac
 		w.line("return true")
 		return
 	}
+	if hasRuntimeSolver {
+		w.open("if gen.__ivy_generate_with_solver() {")
+		w.line("return true")
+		w.close("")
+		w.line("return false")
+	}
 	for i, p := range act.GetFormalParams() {
 		expr, err := g.goActionParamRandomValueExpr(p.CSort, name+"."+p.Name, int64(i))
 		if err != nil {
@@ -2940,12 +2953,6 @@ func (g *Generator) emitTestActionGeneratorGenerate(w *goWriter, name string, ac
 			continue
 		}
 		w.linef("gen.%s = %s", goName(p.Name), expr)
-	}
-	if hasRuntimeSolver {
-		w.open("if gen.__ivy_generate_with_solver() {")
-		w.line("return true")
-		w.close("")
-		w.line("return false")
 	}
 	args := g.testActionGeneratorArgs(act)
 	g.emitTestActionDefinedInputs(w, name, act, args)
@@ -3041,6 +3048,9 @@ func (g *Generator) emitGenActionGeneratorTypes(w *goWriter, runnable []string) 
 				w.linef("%s %s", goName(p.Name), g.goType(p.CSort))
 			}
 		}
+		if hasRuntimeSolver {
+			g.emitRuntimeActionSolverExtraFields(w, rsp)
+		}
 		w.close("")
 		w.blank()
 		w.open(fmt.Sprintf("func (gen *%s) generate() bool {", typeName))
@@ -3079,6 +3089,12 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 			return
 		}
 	}
+	if hasRuntimeSolver {
+		w.open("if gen.__ivy_generate_with_solver() {")
+		w.line("return true")
+		w.close("")
+		w.line("return false")
+	}
 	if len(act.GetFormalParams()) == 0 {
 		g.emitGenActionGeneratorAssumeGuards(w, name, act)
 		g.emitGenActionGeneratorChoiceOverrides(w, act)
@@ -3092,12 +3108,6 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 			continue
 		}
 		w.linef("gen.%s = %s", goName(p.Name), expr)
-	}
-	if hasRuntimeSolver {
-		w.open("if gen.__ivy_generate_with_solver() {")
-		w.line("return true")
-		w.close("")
-		w.line("return false")
 	}
 	g.emitGenActionGeneratorDefinedInputs(w, name, act)
 	g.emitGenActionGeneratorVariantWitnesses(w, name, act)
@@ -13280,6 +13290,9 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 		w.linef("_ = %s", sleepMsName)
 	} else {
 		w.line("__ivy_do_over := false")
+		for _, name := range runnable {
+			w.linef("%s := &%s{ivy: ivy}", g.goActionGeneratorVarName(name), g.goActionGeneratorTypeName(name))
+		}
 		w.open(fmt.Sprintf("for cycle := 0; cycle < %s; cycle++ {", testItersName))
 		totalWeight := 0.0
 		for _, name := range runnable {
@@ -13314,7 +13327,6 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 				w.indent++
 			}
 			genVar := g.goActionGeneratorVarName(name)
-			w.linef("%s := &%s{ivy: ivy}", genVar, g.goActionGeneratorTypeName(name))
 			w.open(fmt.Sprintf("if !%s.generate() {", genVar))
 			w.line("cycle--")
 			w.line("continue")
