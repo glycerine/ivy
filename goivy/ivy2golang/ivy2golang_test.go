@@ -3,11 +3,6 @@ package ivy2golang
 import (
 	"encoding/json"
 	"fmt"
-	"go/ast"
-	"go/importer"
-	"go/parser"
-	"go/token"
-	"go/types"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -33912,14 +33907,20 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	g.emitRuntimeActionSolverDefinedInputs(&w, rsp)
 	got := w.String()
 
-	if unused := firstUnreadDeclaredSyntheticTemp(strings.Join([]string{
+	badBody := strings.Join([]string{
 		"var __ts0__ts0_c bool",
 		"__ts0__ts0_c = true",
 		"var __ts0__new_v_a int",
 		"__ts0__new_v_a = 1",
 		"_ = __ts0__new_v_a",
-	}, "\n")); unused != "__ts0__ts0_c" {
+	}, "\n")
+	if unused := firstUnreadDeclaredSyntheticTemp(badBody); unused != "__ts0__ts0_c" {
 		t.Fatalf("synthetic solver temp checker missed assigned-but-unread temp: %q", unused)
+	}
+	if _, err := buildGeneratedFunctionBody(t, badBody); err == nil {
+		t.Fatalf("Go compiler accepted assigned-but-unread synthetic temp:\n%s", badBody)
+	} else if !strings.Contains(err.Error(), "declared and not used") {
+		t.Fatalf("Go compiler rejected assigned-but-unread synthetic temp for wrong reason: %v", err)
 	}
 	if line := firstBareUndeclaredSyntheticTempAssignment(got); line != "" {
 		t.Fatalf("synthetic solver temp assigned before declaration: %s", line)
@@ -33936,10 +33937,18 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	if unused := firstUnreadDeclaredSyntheticTemp(got); unused != "" {
 		t.Fatalf("synthetic solver temp declared but never read: %s\n%s", unused, got)
 	}
-	typeCheckGeneratedFunctionBody(t, got, "result := false", "defer func() { _ = result }()")
+	compileGeneratedFunctionBody(t, got, "result := false", "defer func() { _ = result }()")
 }
 
-func typeCheckGeneratedFunctionBody(t *testing.T, body string, prelude ...string) {
+func compileGeneratedFunctionBody(t *testing.T, body string, prelude ...string) {
+	t.Helper()
+	src, err := buildGeneratedFunctionBody(t, body, prelude...)
+	if err != nil {
+		t.Fatalf("compile generated function body: %v\n%s", err, src)
+	}
+}
+
+func buildGeneratedFunctionBody(t *testing.T, body string, prelude ...string) (string, error) {
 	t.Helper()
 	src := "package main\nfunc __probe() bool {\n"
 	for _, line := range prelude {
@@ -33947,15 +33956,9 @@ func typeCheckGeneratedFunctionBody(t *testing.T, body string, prelude ...string
 	}
 	src += body
 	src += "\nreturn true\n}\n"
-	fset := token.NewFileSet()
-	file, err := parser.ParseFile(fset, "generated_probe.go", src, 0)
-	if err != nil {
-		t.Fatalf("parse generated function body: %v\n%s", err, src)
-	}
-	conf := types.Config{Importer: importer.Default()}
-	if _, err := conf.Check("generated_probe", fset, []*ast.File{file}, nil); err != nil {
-		t.Fatalf("type-check generated function body: %v\n%s", err, src)
-	}
+	src += "func main() { _ = __probe }\n"
+	_, err := buildOutputForTest(t, &Output{BaseName: "generated_probe", Source: src}, t.TempDir())
+	return src, err
 }
 
 func firstBareUndeclaredSyntheticTempAssignment(src string) string {
