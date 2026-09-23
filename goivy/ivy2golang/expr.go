@@ -1639,11 +1639,14 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 	if len(vars) == 0 || g == nil || g.Mod == nil {
 		return "", false, nil
 	}
+	exists := !forall
+	if g.ifConditionExpr && !g.relationOverrideQuant && !g.quantifierVarsEnumerableByFormula(vars, body, exists) {
+		return "", false, nil
+	}
 	v0 := vars[0]
 	if v0 == nil {
 		return "", false, nil
 	}
-	exists := !forall
 	var ebnds []*goivy.Apply
 	g.matchExtensionalBoundExprs(v0, body, exists, &ebnds)
 	if len(ebnds) == 0 {
@@ -1756,6 +1759,18 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 	g.popScope()
 	w.close("")
 	return "(" + strings.TrimSpace(w.String()) + ")()", true, nil
+}
+
+func (g *Generator) quantifierVarsEnumerableByFormula(vars []*goivy.LogicVariable, body goivy.Expr, exists bool) bool {
+	for i, v := range vars {
+		if v == nil {
+			return false
+		}
+		if _, ok, err := g.goFormulaLoopHeaderForVar(v, goName(v.Name), vars[i+1:], body, exists); err != nil || !ok {
+			return false
+		}
+	}
+	return true
 }
 
 func (g *Generator) emitRelationOverrideQuant(vars []*goivy.LogicVariable, body goivy.Expr, forall bool) (string, bool, error) {

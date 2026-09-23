@@ -3938,6 +3938,15 @@ Progress:
   now reports the same unsupported generator parameter shape during generation
   instead of emitting Go that later fails to compile with a missing `goivy`
   import.
+- 2026-09-23: Matched C++ soft-unsupported behavior for direct exported
+  `if`/`if some` conditions whose condition contains an otherwise unenumerable
+  sparse relation quantifier. Generated Go no longer rescues these specific
+  action-body conditions by scanning relation overrides, which had made Hermes
+  scenario actions mutate state even though ivy2cpp emits only an unsupported
+  condition comment. Fast regressions now compare the small plain-`exists` and
+  finite-witness `if some` shapes against ivy2cpp source. A scratch
+  `hermes_rmw_o3_testing.ivy` `target=test build=true` smoke now matches C++
+  for `iters=10 runs=1 seed=1 delay=0`.
 
 ## 7. FIXED Generated randomness ignores Python's call-stack-qualified choice labels
 

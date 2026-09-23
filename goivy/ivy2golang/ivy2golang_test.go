@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
 
@@ -33774,7 +33775,7 @@ export check
 	}
 }
 
-func TestSparseUnboundedRelationQuantifierUsesThunkSupport(t *testing.T) {
+func TestSparseUnboundedRelationQuantifierMatchesCppActionBodyAndGeneratorSupport(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type ts = {0..3}
 type version
@@ -33810,28 +33811,37 @@ export check
 	for _, want := range []string{
 		"ts_version ivyThunkMap[struct{ A0 int; A1 int }, bool]",
 		"ivy.ts_version.Set(struct{ A0 int; A1 int }{ivy.init_ts, 0}, true)",
-		"for __ivy_quant_key",
 		"range ivy.ts_version.overrides",
-		"BV := __ivy_quant_key",
+		"UV := __ivy_quant_key",
 		".A1",
-		"ivy.found = true",
 	} {
 		if !strings.Contains(out.Source, want) {
 			t.Fatalf("sparse support source missing %q:\n%s", want, out.Source)
 		}
 	}
-	for _, bad := range []string{
+	checkBody := bodyAfterMarker(out.Source, "func (ivy *sparse_support) check(")
+	if checkBody == "" {
+		t.Fatalf("check body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
 		"unsupported if condition",
-		"unsupported assumption expression",
-		"cannot enumerate quantified variable",
+		"cannot enumerate quantified variable BV:version",
 	} {
-		if strings.Contains(out.Source, bad) {
-			t.Fatalf("sparse support quantifier should not fall through to %q:\n%s", bad, out.Source)
+		if !strings.Contains(checkBody, want) {
+			t.Fatalf("sparse action body should mirror ivy2cpp unsupported expression, missing %q:\n%s", want, checkBody)
+		}
+	}
+	for _, bad := range []string{
+		"BV := __ivy_quant_key",
+		"ivy.found = true",
+	} {
+		if strings.Contains(checkBody, bad) {
+			t.Fatalf("sparse action body should not execute Go-only relation scan %q:\n%s", bad, checkBody)
 		}
 	}
 }
 
-func TestHermesStyleUnboundedVersionQuantifierUsesRelationSupport(t *testing.T) {
+func TestHermesStyleUnboundedVersionQuantifierMatchesCppActionBodyAndGeneratorSupport(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type ts
 type version
@@ -33867,20 +33877,155 @@ export check
 		"UV := __ivy_quant_key",
 		".A0",
 		".A1",
-		"ivy.lt.Get(struct{ A0 int; A1 int }{t, U})",
-		"ivy.found = true",
+		"ivy.lt.Get(struct{ A0 int; A1 int }{gen.t, U})",
 	} {
 		if !strings.Contains(out.Source, want) {
 			t.Fatalf("Hermes-style support source missing %q:\n%s", want, out.Source)
 		}
 	}
-	for _, bad := range []string{
+	checkBody := bodyAfterMarker(out.Source, "func (ivy *hermes_quant_support) check(")
+	if checkBody == "" {
+		t.Fatalf("check body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
 		"unsupported if condition",
-		"unsupported assumption expression",
-		"cannot enumerate quantified variable",
+		"cannot enumerate quantified variable BV:version",
 	} {
-		if strings.Contains(out.Source, bad) {
-			t.Fatalf("Hermes-style support should not fall through to %q:\n%s", bad, out.Source)
+		if !strings.Contains(checkBody, want) {
+			t.Fatalf("Hermes-style action body should mirror ivy2cpp unsupported expression, missing %q:\n%s", want, checkBody)
+		}
+	}
+	for _, bad := range []string{
+		"BV := __ivy_quant_key",
+		"ivy.found = true",
+	} {
+		if strings.Contains(checkBody, bad) {
+			t.Fatalf("Hermes-style action body should not execute Go-only relation scan %q:\n%s", bad, checkBody)
+		}
+	}
+}
+
+func TestIfSomeSparseUnboundedRelationMatchesIvy2CppUnsupportedFast(t *testing.T) {
+	const src = `#lang ivy1.7
+type ts
+type version
+interpret version -> nat
+
+individual init_ts : ts
+relation ts_version(T:ts,V:version)
+individual found : bool
+
+after init {
+    ts_version(T,V) := T = init_ts & V = 0
+}
+
+action step = {
+    if (exists BV. ts_version(init_ts,BV)) {
+        found := true
+    }
+}
+export step
+`
+	cppMod := compileIvySource(t, src)
+	cppOut, err := ivy2cppgen.Generate(cppMod, ivy2cppgen.Config{ClassName: "some_sparse_cpp_parity", Target: "test", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("ivy2cpp Generate: %v", err)
+	}
+	cppSource := cppOut.Header + "\n" + cppOut.Impl
+	if !strings.Contains(cppSource, "unsupported if condition") ||
+		!strings.Contains(cppSource, "cannot find an upper bound for BV:version") {
+		t.Fatalf("test expects ivy2cpp to leave sparse unbounded if-exists unsupported:\n%s", cppSource)
+	}
+
+	goMod := compileIvySource(t, src)
+	goOut, err := Generate(goMod, Config{ClassName: "some_sparse_cpp_parity", Target: "test", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("ivy2golang Generate: %v\n%s", err, outSource(goOut))
+	}
+	body := bodyAfterMarker(goOut.Source, "func (ivy *some_sparse_cpp_parity) step()")
+	if body == "" {
+		t.Fatalf("step body not emitted:\n%s", goOut.Source)
+	}
+	for _, want := range []string{
+		"unsupported if condition",
+		"cannot enumerate quantified variable BV:version",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("sparse unbounded if-exists should mirror ivy2cpp unsupported body, missing %q:\n%s", want, body)
+		}
+	}
+	for _, bad := range []string{
+		"range ivy.ts_version.overrides",
+		"ivy.found = true",
+	} {
+		if strings.Contains(body, bad) {
+			t.Fatalf("sparse unbounded if-exists should not execute Go-only relation scan %q:\n%s", bad, body)
+		}
+	}
+}
+
+func TestIfSomeFiniteWitnessNestedSparseExistsMatchesIvy2CppUnsupportedFast(t *testing.T) {
+	const src = `#lang ivy1.7
+type node = {0..1}
+type ts = {0..3}
+type version
+interpret version -> nat
+
+individual cur_ts(N:node) : ts
+relation ts_version(T:ts,V:version)
+individual found : bool
+
+after init {
+    cur_ts(N) := 0;
+    ts_version(T,V) := T = 0 & V = 0
+}
+
+action step = {
+    if some (n:node,t:ts)
+        cur_ts(n) = t &
+        (exists BV. ts_version(t,BV)) {
+        found := true
+    } else {
+        assume false
+    }
+}
+export step
+`
+	cppMod := compileIvySource(t, src)
+	cppOut, err := ivy2cppgen.Generate(cppMod, ivy2cppgen.Config{ClassName: "some_nested_cpp_parity", Target: "test", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("ivy2cpp Generate: %v", err)
+	}
+	cppSource := cppOut.Header + "\n" + cppOut.Impl
+	if !strings.Contains(cppSource, "unsupported if condition") ||
+		!strings.Contains(cppSource, "cannot find an upper bound for BV:version") {
+		t.Fatalf("test expects ivy2cpp to leave nested sparse if-some unsupported:\n%s", cppSource)
+	}
+
+	goMod := compileIvySource(t, src)
+	goOut, err := Generate(goMod, Config{ClassName: "some_nested_cpp_parity", Target: "test", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("ivy2golang Generate: %v\n%s", err, outSource(goOut))
+	}
+	body := bodyAfterMarker(goOut.Source, "func (ivy *some_nested_cpp_parity) step()")
+	if body == "" {
+		t.Fatalf("step body not emitted:\n%s", goOut.Source)
+	}
+	for _, want := range []string{
+		"unsupported if condition",
+		"cannot enumerate quantified variable BV:version",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("nested sparse if-some should mirror ivy2cpp unsupported body, missing %q:\n%s", want, body)
+		}
+	}
+	for _, bad := range []string{
+		"range ivy.ts_version.overrides",
+		"ivy.found = true",
+		"ivyAssume(false",
+	} {
+		if strings.Contains(body, bad) {
+			t.Fatalf("nested sparse if-some should not execute Go-only branch/else code %q:\n%s", bad, body)
 		}
 	}
 }
@@ -33910,17 +34055,39 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	badBody := strings.Join([]string{
 		"var __ts0__ts0_c bool",
 		"__ts0__ts0_c = true",
+		"var __ts0__new_t_a int",
+		"__ts0__new_t_a = 1",
+		"var __ts0__new_s_a int",
+		"__ts0__new_s_a = 2",
+		"var __ts0__new_n_a int",
+		"__ts0__new_n_a = 3",
+		"var __ts0_a int",
+		"__ts0_a = 4",
 		"var __ts0__new_v_a int",
-		"__ts0__new_v_a = 1",
+		"__ts0__new_v_a = 5",
 		"_ = __ts0__new_v_a",
 	}, "\n")
-	if unused := firstUnreadDeclaredSyntheticTemp(badBody); unused != "__ts0__ts0_c" {
-		t.Fatalf("synthetic solver temp checker missed assigned-but-unread temp: %q", unused)
+	wantUnused := []string{"__ts0__new_n_a", "__ts0__new_s_a", "__ts0__new_t_a", "__ts0__ts0_c", "__ts0_a"}
+	if unused := unreadDeclaredSyntheticTemps(badBody); !reflect.DeepEqual(unused, wantUnused) {
+		t.Fatalf("synthetic solver temp checker missed assigned-but-unread temps:\ngot  %v\nwant %v", unused, wantUnused)
 	}
 	if _, err := buildGeneratedFunctionBody(t, badBody); err == nil {
 		t.Fatalf("Go compiler accepted assigned-but-unread synthetic temp:\n%s", badBody)
 	} else if !strings.Contains(err.Error(), "declared and not used") {
 		t.Fatalf("Go compiler rejected assigned-but-unread synthetic temp for wrong reason: %v", err)
+	}
+	undefinedBody := strings.Join([]string{
+		"__ts0__ts0_c = true",
+		"__ts0__new_t_a := 1",
+		"_ = __ts0__new_t_a",
+	}, "\n")
+	if line := firstBareUndeclaredSyntheticTempAssignment(undefinedBody); line != "__ts0__ts0_c = true" {
+		t.Fatalf("synthetic solver temp checker missed assignment-before-declaration: %q", line)
+	}
+	if _, err := buildGeneratedFunctionBody(t, undefinedBody); err == nil {
+		t.Fatalf("Go compiler accepted assignment-before-declaration synthetic temp:\n%s", undefinedBody)
+	} else if !strings.Contains(err.Error(), "undefined: __ts0__ts0_c") {
+		t.Fatalf("Go compiler rejected assignment-before-declaration synthetic temp for wrong reason: %v", err)
 	}
 	if line := firstBareUndeclaredSyntheticTempAssignment(got); line != "" {
 		t.Fatalf("synthetic solver temp assigned before declaration: %s", line)
@@ -33934,8 +34101,8 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	if !strings.Contains(got, "var __ts0_live bool") {
 		t.Fatalf("live synthetic solver temp declaration missing:\n%s", got)
 	}
-	if unused := firstUnreadDeclaredSyntheticTemp(got); unused != "" {
-		t.Fatalf("synthetic solver temp declared but never read: %s\n%s", unused, got)
+	if unused := unreadDeclaredSyntheticTemps(got); len(unused) != 0 {
+		t.Fatalf("synthetic solver temps declared but never read: %v\n%s", unused, got)
 	}
 	compileGeneratedFunctionBody(t, got, "result := false", "defer func() { _ = result }()")
 }
@@ -33986,7 +34153,7 @@ func firstBareUndeclaredSyntheticTempAssignment(src string) string {
 	return ""
 }
 
-func firstUnreadDeclaredSyntheticTemp(src string) string {
+func unreadDeclaredSyntheticTemps(src string) []string {
 	declared := map[string]bool{}
 	read := map[string]bool{}
 	for _, line := range strings.Split(src, "\n") {
@@ -34008,12 +34175,14 @@ func firstUnreadDeclaredSyntheticTemp(src string) string {
 			read[name] = true
 		}
 	}
+	var unread []string
 	for name := range declared {
 		if !read[name] {
-			return name
+			unread = append(unread, name)
 		}
 	}
-	return ""
+	sort.Strings(unread)
+	return unread
 }
 
 func syntheticTempAssignedWith(line, op string) (string, bool) {

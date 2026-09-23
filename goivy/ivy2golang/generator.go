@@ -63,6 +63,7 @@ type Generator struct {
 	defStack                     map[string]bool
 	relationOverrideQuant        bool
 	actionExprStrict             bool
+	ifConditionExpr              bool
 	runtimeActionSolverPlanCache map[string]runtimeActionSolverPlanCacheEntry
 }
 

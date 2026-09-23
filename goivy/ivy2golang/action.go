@@ -631,7 +631,10 @@ func (g *Generator) emitIf(w *goWriter, a *goivy.LogicIfAction) {
 		g.emitIfSome(w, a, some)
 		return
 	}
+	oldIfConditionExpr := g.ifConditionExpr
+	g.ifConditionExpr = true
 	cond, err := g.emitExpr(a.Cond)
+	g.ifConditionExpr = oldIfConditionExpr
 	if err != nil {
 		g.softUnsupported(w, "unsupported if condition", err, linenoStr(a.GetLineno()))
 		return
@@ -731,7 +734,10 @@ func (g *Generator) emitIfSomeExtensional(w *goWriter, a *goivy.LogicIfAction, s
 	}
 	g.pushScope()
 	g.addLocal(p.Name)
+	oldIfConditionExpr := g.ifConditionExpr
+	g.ifConditionExpr = true
 	cond, err := g.emitExpr(some.Fmla)
+	g.ifConditionExpr = oldIfConditionExpr
 	if err != nil {
 		g.popScope()
 		g.softUnsupported(w, "unsupported if condition", err, linenoStr(a.GetLineno()))
@@ -818,7 +824,10 @@ func (g *Generator) emitIfSomeFinite(w *goWriter, a *goivy.LogicIfAction, some *
 	for _, p := range some.Params {
 		g.addLocal(p.Name)
 	}
+	oldIfConditionExpr := g.ifConditionExpr
+	g.ifConditionExpr = true
 	cond, err := g.emitExpr(some.Fmla)
+	g.ifConditionExpr = oldIfConditionExpr
 	if err != nil {
 		g.popScope()
 		return true, err
@@ -865,7 +874,10 @@ func (g *Generator) emitIfSomeMinMax(w *goWriter, a *goivy.LogicIfAction, some *
 	for _, p := range some.Params {
 		g.addLocal(p.Name)
 	}
+	oldIfConditionExpr := g.ifConditionExpr
+	g.ifConditionExpr = true
 	cond, err := g.emitExpr(some.Fmla)
+	g.ifConditionExpr = oldIfConditionExpr
 	if err != nil {
 		g.popScope()
 		return err
