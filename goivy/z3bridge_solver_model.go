@@ -4,6 +4,7 @@ package goivy
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/glycerine/ivy/goivy/smt"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -69,6 +70,108 @@ func (s *Solver) GetModelClauses(clauses *Clauses) (*ModelResult, error) {
 		}
 	}
 
+	return &ModelResult{
+		Solver:  z3solver,
+		Model:   m,
+		Vocab:   vocab,
+		Context: s.tr.Ctx,
+	}, nil
+}
+
+// GetModelClausesWithSoftAssumptions checks clauses together with soft formulas.
+// Each soft formula is guarded by a fresh assumption literal. If the assumptions
+// are unsatisfiable, one literal from the unsat core is removed using choose,
+// mirroring the generated C++ ivy_z3_gen::solve loop.
+func (s *Solver) GetModelClausesWithSoftAssumptions(clauses *Clauses, soft []Expr, choose func(int) int) (*ModelResult, error) {
+	xtracer.Trace("ivy_solver.py:get_model_clauses_with_soft_assumptions ENTER")
+	debugSoft := os.Getenv("GOIVY_DEBUG_SOFT_SOLVER") != ""
+	if debugSoft {
+		fmt.Fprintf(os.Stderr, "soft-solver start fmlas=%d defs=%d soft=%d\n", len(clauses.Fmlas), len(clauses.Defs), len(soft))
+	}
+	z3solver := s.newZ3Solver()
+	zc, err := s.ClausesToZ3(clauses)
+	if err != nil {
+		if debugSoft {
+			fmt.Fprintf(os.Stderr, "soft-solver base-error: %v\n", err)
+		}
+		return nil, err
+	}
+	z3solver.Assert(zc)
+	var assumptions []smt.Z3Expr
+	ctx := s.tr.Ctx
+	for i, f := range soft {
+		if f == nil {
+			continue
+		}
+		zf, err := s.tr.Translate(f)
+		if err != nil {
+			if debugSoft {
+				fmt.Fprintf(os.Stderr, "soft-solver soft-error %d: %v\n", i, err)
+			}
+			return nil, err
+		}
+		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
+		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
+		assumptions = append(assumptions, alit)
+	}
+	deletes := 0
+	for {
+		result := s.checkZ3Assumptions(z3solver, assumptions)
+		if result == smt.Sat {
+			if debugSoft {
+				fmt.Fprintf(os.Stderr, "soft-solver sat deletes=%d remaining=%d\n", deletes, len(assumptions))
+			}
+			break
+		}
+		if result == smt.Unknown {
+			if debugSoft {
+				fmt.Fprintf(os.Stderr, "soft-solver unknown deletes=%d remaining=%d\n", deletes, len(assumptions))
+			}
+			return nil, &IvyError{Msg: "Solver produced inconclusive result"}
+		}
+		core := z3solver.UnsatCore()
+		if len(core) == 0 {
+			if debugSoft {
+				fmt.Fprintf(os.Stderr, "soft-solver empty-core deletes=%d remaining=%d\n", deletes, len(assumptions))
+			}
+			return nil, nil
+		}
+		idx := 0
+		if choose != nil {
+			idx = choose(len(core))
+		}
+		if idx < 0 || idx >= len(core) {
+			idx = 0
+		}
+		toDelete := core[idx]
+		if debugSoft && deletes < 20 {
+			fmt.Fprintf(os.Stderr, "soft-solver delete[%d] core=%d idx=%d alit=%s\n", deletes, len(core), idx, toDelete.String())
+		}
+		for i, alit := range assumptions {
+			if alit.Equal(toDelete) {
+				assumptions[i] = assumptions[len(assumptions)-1]
+				assumptions = assumptions[:len(assumptions)-1]
+				break
+			}
+		}
+		deletes++
+	}
+	m := z3solver.Model()
+	if m == nil {
+		return nil, fmt.Errorf("solver returned sat but no model")
+	}
+	symSet := clauses.Symbols()
+	for _, f := range soft {
+		for k, sym := range UsedSymbolsAst(f).All() {
+			symSet.Set(k, sym)
+		}
+	}
+	vocab := make([]*Const, 0, symSet.Len())
+	for _, sym := range symSet.All() {
+		if c, ok := sym.(*Const); ok {
+			vocab = append(vocab, c)
+		}
+	}
 	return &ModelResult{
 		Solver:  z3solver,
 		Model:   m,

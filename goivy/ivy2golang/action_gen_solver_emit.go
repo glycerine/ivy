@@ -36,6 +36,14 @@ func (g *Generator) actionGeneratorUsesRuntimeSolver() bool {
 	return false
 }
 
+func (g *Generator) initGeneratorUsesRuntimeSolver() bool {
+	if g == nil || g.Config.Target != "test" {
+		return false
+	}
+	constraints, err := g.initialStateConstraints()
+	return err == nil && constraints != nil && len(constraints.Formulas) > 0
+}
+
 func (g *Generator) runtimeActionSolverPlan(name string, act goivy.Action) (_ *runtimeActionSolverPlan, ok bool) {
 	defer func() {
 		if recover() != nil {
@@ -201,7 +209,7 @@ func (g *Generator) runtimeSolverSupportsSparseBoolStateSymbol(sym stateSymbol, 
 }
 
 func (g *Generator) emitRuntimeSolverSupport(w *goWriter) {
-	if !g.actionGeneratorUsesRuntimeSolver() {
+	if !g.actionGeneratorUsesRuntimeSolver() && !g.initGeneratorUsesRuntimeSolver() {
 		return
 	}
 	w.open("func __ivy_solver_func_sort(sorts ...goivy.Sort) goivy.Sort {")
@@ -239,6 +247,153 @@ func (g *Generator) emitRuntimeSolverSupport(w *goWriter) {
 	w.line("return mod")
 	w.close("")
 	w.blank()
+}
+
+func (g *Generator) emitRuntimeInitGeneratorGenerate(w *goWriter) bool {
+	constraints, err := g.initialStateConstraints()
+	if err != nil || constraints == nil || len(constraints.Formulas) == 0 {
+		return false
+	}
+	parts := make([]string, 0, len(constraints.Formulas))
+	for _, f := range constraints.Formulas {
+		closed, ok := goivy.CloseEPR(f).(goivy.Expr)
+		if !ok || closed == nil {
+			closed = f
+		}
+		expr, ok := g.goIvyExprExpr(closed)
+		if !ok {
+			return false
+		}
+		parts = append(parts, expr)
+	}
+	w.line("solver := goivy.NewSolver(__ivy_solver_module(), nil)")
+	w.line("clauses := goivy.NewClauses(nil, nil, nil)")
+	w.linef("clauses.Fmlas = append(clauses.Fmlas, %s)", strings.Join(parts, ", "))
+	w.line("soft := []goivy.Expr{}")
+	used := constraints.Used
+	for _, sym := range g.stateSymbols() {
+		if g.isParamName(sym.Name) {
+			continue
+		}
+		if used[sym.Name] {
+			g.emitRuntimeInitSoftRandomizeSymbol(w, sym)
+			continue
+		}
+		g.emitRandomizeSymbolWithChooser(w, sym, "init", "___ivy_rand")
+	}
+	w.line("model, err := solver.GetModelClausesWithSoftAssumptions(clauses, soft, func(n int) int { if n <= 0 { return 0 }; return ivyRand31() % n })")
+	w.open("if err != nil || model == nil {")
+	w.line("ivy.__init()")
+	w.line("return false")
+	w.close("")
+	w.line("hm := goivy.NewHerbrandModel(solver, model.Solver, model.Model, model.Vocab)")
+	for _, sym := range g.stateSymbols() {
+		if g.isParamName(sym.Name) || !used[sym.Name] {
+			continue
+		}
+		g.emitRuntimeInitEvalStateSymbol(w, sym)
+	}
+	w.line("ivy.__init()")
+	w.line("return true")
+	return true
+}
+
+func (g *Generator) emitRuntimeInitSoftRandomizeSymbol(w *goWriter, sym stateSymbol) {
+	if fs, ok := sym.Sort.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
+		g.emitRuntimeInitSoftRandomizeFunction(w, sym, fs, nil, nil)
+		return
+	}
+	lhs := fmt.Sprintf("goivy.NewConst(%q, %s)", sym.Name, g.goIvySortExpr(sym.Sort))
+	g.emitRuntimeInitSoftRandomizeTerm(w, lhs, sym.Sort, sym.Name, 0)
+}
+
+func (g *Generator) emitRuntimeInitSoftRandomizeFunction(w *goWriter, sym stateSymbol, fs *goivy.LogicFunctionSort, goArgs []string, ivyArgs []string) {
+	depth := len(goArgs)
+	domain := fs.Domain()
+	if depth < len(domain) {
+		values, ok := g.finiteValueExprs(domain[depth])
+		if !ok {
+			w.line("return false")
+			return
+		}
+		for _, value := range values {
+			argExpr, ok := g.runtimeActionSolverValueExpr(value, domain[depth])
+			if !ok {
+				w.line("return false")
+				return
+			}
+			g.emitRuntimeInitSoftRandomizeFunction(
+				w,
+				sym,
+				fs,
+				append(append([]string(nil), goArgs...), value),
+				append(append([]string(nil), ivyArgs...), argExpr),
+			)
+		}
+		return
+	}
+	lhs := fmt.Sprintf("goivy.MustApply(goivy.NewConst(%q, %s), %s)", sym.Name, g.goIvySortExpr(sym.Sort), strings.Join(ivyArgs, ", "))
+	label := sym.Name
+	if len(goArgs) > 0 {
+		label += "." + strings.Join(goArgs, ".")
+	}
+	g.emitRuntimeInitSoftRandomizeTerm(w, lhs, fs.Range(), label, int64(len(goArgs)))
+}
+
+func (g *Generator) emitRuntimeInitSoftRandomizeTerm(w *goWriter, lhs string, sort goivy.Sort, label string, id int64) {
+	randExpr, err := g.goActionParamRandomValueExpr(sort, label, id)
+	if err != nil {
+		g.unsupported(w, "unsupported runtime init random input %s: %s", label, strings.TrimPrefix(err.Error(), "ivy2golang: "))
+		w.line("return false")
+		return
+	}
+	tmp := g.nextTemp("__ivy_init_rand")
+	w.linef("%s := %s", tmp, randExpr)
+	rhs, ok := g.runtimeActionSolverValueExpr(tmp, sort)
+	if !ok {
+		w.line("return false")
+		return
+	}
+	w.linef("soft = append(soft, &goivy.Eq{T1: %s, T2: %s})", lhs, rhs)
+}
+
+func (g *Generator) emitRuntimeInitEvalStateSymbol(w *goWriter, sym stateSymbol) {
+	if fs, ok := sym.Sort.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
+		g.emitRuntimeInitEvalFunctionStateSymbol(w, sym, fs, nil, nil)
+		return
+	}
+	term := fmt.Sprintf("goivy.NewConst(%q, %s)", sym.Name, g.goIvySortExpr(sym.Sort))
+	g.emitRuntimeActionSolverAssignModelValue(w, "ivy."+goName(sym.Name), sym.Sort, fmt.Sprintf("hm.EvalToConstant(%s)", term))
+}
+
+func (g *Generator) emitRuntimeInitEvalFunctionStateSymbol(w *goWriter, sym stateSymbol, fs *goivy.LogicFunctionSort, goArgs []string, ivyArgs []string) {
+	depth := len(goArgs)
+	domain := fs.Domain()
+	if depth < len(domain) {
+		values, ok := g.finiteValueExprs(domain[depth])
+		if !ok {
+			w.line("return false")
+			return
+		}
+		for _, value := range values {
+			argExpr, ok := g.runtimeActionSolverValueExpr(value, domain[depth])
+			if !ok {
+				w.line("return false")
+				return
+			}
+			g.emitRuntimeInitEvalFunctionStateSymbol(
+				w,
+				sym,
+				fs,
+				append(append([]string(nil), goArgs...), value),
+				append(append([]string(nil), ivyArgs...), argExpr),
+			)
+		}
+		return
+	}
+	term := fmt.Sprintf("goivy.MustApply(goivy.NewConst(%q, %s), %s)", sym.Name, g.goIvySortExpr(sym.Sort), strings.Join(ivyArgs, ", "))
+	target := g.goStorageAccess(sym.Name, sym.Sort, goArgs, "ivy")
+	g.emitRuntimeActionSolverAssignModelValue(w, target, fs.Range(), fmt.Sprintf("hm.EvalToConstant(%s)", term))
 }
 
 type runtimeSolverInterp struct {

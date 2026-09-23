@@ -511,7 +511,7 @@ func (g *Generator) emitImports(w *goWriter) {
 	w.line("import (")
 	w.indent++
 	imports := []string{"fmt", "io", "math/rand/v2", "os", "strconv", "strings"}
-	if g.actionGeneratorUsesRuntimeSolver() {
+	if g.actionGeneratorUsesRuntimeSolver() || g.initGeneratorUsesRuntimeSolver() {
 		imports = append(imports, "github.com/glycerine/ivy/goivy")
 	}
 	if g.Config.Target == "repl" && g.Config.EmitMain {
@@ -1427,6 +1427,14 @@ func (g *Generator) emitConstructor(w *goWriter) {
 	w.line("return ivyRandRange64(rng)")
 	w.close("")
 	w.blank()
+	w.open(fmt.Sprintf("func (ivy *%s) ___ivy_rand(rng int, name string, id int) int {", g.ClassName))
+	w.line("_, _ = name, id")
+	w.open("if rng <= 0 {")
+	w.line("return 0")
+	w.close("")
+	w.line("return ivyRand31() % rng")
+	w.close("")
+	w.blank()
 	w.open(fmt.Sprintf("func (ivy *%s) ___ivy_push(id string) {", g.ClassName))
 	w.line("ivy.__ivy_stack = append(ivy.__ivy_stack, id)")
 	w.close("")
@@ -1642,9 +1650,17 @@ func (g *Generator) initialStateRetryExpr(formulas []goivy.Expr) (string, error)
 }
 
 func (g *Generator) emitRandomizeSymbol(w *goWriter, sym stateSymbol, label string) {
+	g.emitRandomizeSymbolWithChooser(w, sym, label, "___ivy_choose")
+}
+
+func (g *Generator) emitRandomizeSymbolWithChooser(w *goWriter, sym stateSymbol, label, chooser string) {
 	if sym.Name == "_generating" {
-		w.line(`_ = ivy.___ivy_randomize(2, "init._generating", 0)`)
-		w.line(`ivy._generating = ivy.___ivy_choose(0, "init", 0) != 0`)
+		if chooser == "___ivy_rand" {
+			w.line(`ivy._generating = ivy.___ivy_rand(2, "init._generating", 0) != 0`)
+		} else {
+			w.line(`_ = ivy.___ivy_randomize(2, "init._generating", 0)`)
+			w.line(`ivy._generating = ivy.___ivy_choose(0, "init", 0) != 0`)
+		}
 		return
 	}
 	if fs, ok := sym.Sort.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
@@ -1655,7 +1671,7 @@ func (g *Generator) emitRandomizeSymbol(w *goWriter, sym stateSymbol, label stri
 			return
 		}
 		g.emitDomainLoops(w, fs.Domain(), func(args []string) {
-			expr, err := g.goRandomValueExpr(fs.Range(), label+"."+sym.Name, int64(len(args)))
+			expr, err := g.goRandomValueExprWithChooser(fs.Range(), label+"."+sym.Name, int64(len(args)), chooser)
 			if err != nil {
 				g.unsupported(w, "%s", err.Error())
 				return
@@ -1664,7 +1680,7 @@ func (g *Generator) emitRandomizeSymbol(w *goWriter, sym stateSymbol, label stri
 		})
 		return
 	}
-	expr, err := g.goRandomValueExpr(sym.Sort, label+"."+sym.Name, 0)
+	expr, err := g.goRandomValueExprWithChooser(sym.Sort, label+"."+sym.Name, 0, chooser)
 	if err != nil {
 		g.unsupported(w, "%s", err.Error())
 		return
@@ -2874,7 +2890,7 @@ func (g *Generator) runnableActionNamesFrom(names []string) []string {
 
 func (g *Generator) emitTestMain(w *goWriter) {
 	runnable := g.runnableActionNames()
-	g.emitGenInitGeneratorType(w)
+	g.emitTestInitGeneratorType(w)
 	g.emitTestActionGeneratorTypes(w, runnable)
 	w.open(fmt.Sprintf("func %s() {", g.Config.MainName))
 	if len(g.Mod.Params) == 0 {
@@ -3027,6 +3043,30 @@ func (g *Generator) emitGenInitGeneratorType(w *goWriter) {
 	w.line("ivy.__initState()")
 	w.line("ivy.__init()")
 	w.line("return true")
+	w.close("")
+	w.blank()
+	w.open(fmt.Sprintf("func (gen *%s) execute() {", typeName))
+	w.line("_ = gen.ivy")
+	w.close("")
+	w.blank()
+}
+
+func (g *Generator) emitTestInitGeneratorType(w *goWriter) {
+	typeName := g.goInitGeneratorTypeName()
+	w.open(fmt.Sprintf("type %s struct {", typeName))
+	w.linef("ivy *%s", g.ClassName)
+	w.close("")
+	w.blank()
+	w.open(fmt.Sprintf("func (gen *%s) generate() bool {", typeName))
+	w.line("ivy := gen.ivy")
+	w.open("if ivy == nil {")
+	w.line("return false")
+	w.close("")
+	if !g.emitRuntimeInitGeneratorGenerate(w) {
+		w.line("ivy.__initState()")
+		w.line("ivy.__init()")
+		w.line("return true")
+	}
 	w.close("")
 	w.blank()
 	w.open(fmt.Sprintf("func (gen *%s) execute() {", typeName))
