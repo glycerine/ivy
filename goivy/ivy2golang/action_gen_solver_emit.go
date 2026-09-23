@@ -1274,6 +1274,7 @@ func (g *Generator) emitRuntimeActionSolverDefinedInputs(w *goWriter, rsp *runti
 	overrides := g.runtimeActionSolverExprOverrides(rsp)
 	g.pushExprOverrides(overrides)
 	defer g.popExprOverrides()
+	declaredGeneratedLocals := map[string]bool{}
 	for _, def := range rsp.plan.paramDefs {
 		lhs, rhs, ok := runtimeActionSolverDefinedInputTerms(def)
 		if !ok {
@@ -1294,6 +1295,7 @@ func (g *Generator) emitRuntimeActionSolverDefinedInputs(w *goWriter, rsp *runti
 			w.line("return false")
 			continue
 		}
+		g.emitRuntimeActionSolverDefinedLocalDecl(w, declaredGeneratedLocals, lhs, lhsExpr)
 		if call, ok, err := g.goStorageSet(lhs, rhsExpr); ok || err != nil {
 			if err != nil {
 				w.line("return false")
@@ -1304,6 +1306,22 @@ func (g *Generator) emitRuntimeActionSolverDefinedInputs(w *goWriter, rsp *runti
 		}
 		w.linef("%s = %s", lhsExpr, rhsExpr)
 	}
+}
+
+func (g *Generator) emitRuntimeActionSolverDefinedLocalDecl(w *goWriter, declared map[string]bool, lhs goivy.Expr, lhsExpr string) {
+	if lhsExpr == "" || declared[lhsExpr] {
+		return
+	}
+	c, ok := exprAsConst(lhs)
+	if !ok || c == nil || !actionGenGeneratedLocalName(c.Name) {
+		return
+	}
+	sort := c.CSort
+	if sort == nil {
+		sort = lhs.NodeSort()
+	}
+	w.linef("var %s %s", lhsExpr, g.goType(sort))
+	declared[lhsExpr] = true
 }
 
 func (g *Generator) runtimeActionSolverExprOverrides(rsp *runtimeActionSolverPlan) map[string]string {

@@ -33851,6 +33851,65 @@ export check
 	}
 }
 
+func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
+	g := newGoTestGeneratorWithInterps(nil)
+	temp := goivy.NewConst("__ts0_c", goivy.Boolean)
+	rsp := &runtimeActionSolverPlan{
+		plan: &actionGenPlan{
+			paramDefs: []goivy.Expr{
+				&goivy.LogicIff{T1: temp, T2: goivy.True},
+			},
+		},
+	}
+	var w goWriter
+	g.emitRuntimeActionSolverDefinedInputs(&w, rsp)
+	got := w.String()
+
+	if line := firstBareUndeclaredSyntheticTempAssignment(got); line != "" {
+		t.Fatalf("synthetic solver temp assigned before declaration: %s", line)
+	}
+	if !strings.Contains(got, "var __ts0_c bool") {
+		t.Fatalf("synthetic solver temp declaration missing:\n%s", got)
+	}
+}
+
+func firstBareUndeclaredSyntheticTempAssignment(src string) string {
+	declared := map[string]bool{}
+	for _, line := range strings.Split(src, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "var __ts") {
+			fields := strings.Fields(trimmed)
+			if len(fields) >= 3 {
+				declared[fields[1]] = true
+			}
+			continue
+		}
+		if !strings.HasPrefix(trimmed, "__ts") {
+			continue
+		}
+		if name, ok := syntheticTempAssignedWith(trimmed, ":="); ok {
+			declared[name] = true
+			continue
+		}
+		if name, ok := syntheticTempAssignedWith(trimmed, "="); ok && !declared[name] {
+			return trimmed
+		}
+	}
+	return ""
+}
+
+func syntheticTempAssignedWith(line, op string) (string, bool) {
+	idx := strings.Index(line, op)
+	if idx < 0 {
+		return "", false
+	}
+	name := strings.TrimSpace(line[:idx])
+	if name == "" || strings.ContainsAny(name, " \t.([{") {
+		return "", false
+	}
+	return name, true
+}
+
 func TestEmitLetExpression(t *testing.T) {
 	sort := &goivy.UninterpretedSort{Name: "int"}
 	x := goivy.NewConst("x", sort)
