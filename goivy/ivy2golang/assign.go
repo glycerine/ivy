@@ -477,7 +477,7 @@ func (g *Generator) emitAssignLargeSolverBase(w *goWriter, base, lhsName string,
 		if fs, ok := capture.sort.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
 			fnExpr := fmt.Sprintf("goivy.NewConst(%q, %s)", capture.temp, g.goIvySortExpr(capture.sort))
 			if g.goFunctionStorageFor(fs.Domain(), fs.Range()).Large {
-				g.emitRuntimeActionSolverSparseThunkValue(w, "__ivy_solver_terms", fnExpr, capture.temp, fs)
+				g.emitRuntimeActionSolverSparseThunkValueWithReturn(w, "__ivy_solver_terms", fnExpr, capture.temp, fs, "return nil")
 			} else {
 				g.emitRuntimeActionSolverFunctionValueEqualities(w, "__ivy_solver_terms", fnExpr, capture.temp, fs, nil, nil)
 			}

@@ -18,6 +18,10 @@ type BuildPlan struct {
 }
 
 func BuildOutput(out *Output, outDir string) (string, error) {
+	return buildOutputWithEnv(out, outDir, nil)
+}
+
+func buildOutputWithEnv(out *Output, outDir string, env []string) (string, error) {
 	plan, err := BuildPlanFor(out, outDir, out.Config)
 	if err != nil {
 		return "", err
@@ -28,8 +32,11 @@ func BuildOutput(out *Output, outDir string) (string, error) {
 	if err := formatGoOutputFile(plan.GoFile); err != nil {
 		return "", err
 	}
+	if env == nil {
+		env = plan.Env
+	}
 	cmd := exec.Command("go", plan.Args...)
-	cmd.Env = append(os.Environ(), plan.Env...)
+	cmd.Env = append(os.Environ(), env...)
 	data, err := cmd.CombinedOutput()
 	if err != nil {
 		return "", fmt.Errorf("ivy2golang: go build failed: %w\n%s", err, string(data))

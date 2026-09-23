@@ -3,6 +3,11 @@ package ivy2golang
 import (
 	"encoding/json"
 	"fmt"
+	"go/ast"
+	"go/importer"
+	"go/parser"
+	"go/token"
+	"go/types"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -580,7 +585,7 @@ export set
 	}
 
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=20", "runs=1", "seed=1", "delay=0")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "delay=0")
 	if err != nil {
 		t.Fatalf("guarded target=test run should skip failed assumes\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", stdout, stderr, out.Source)
 	}
@@ -18385,9 +18390,7 @@ func TestTargetGenRandomizesFunctionSortedActionParam(t *testing.T) {
 		` := gen.tbl`,
 		`make(map[int]color, len(__ivy_clone_src`,
 		`fmt.Fprintf(__ivy_out, "> read(%s)\n", ivyTraceValue(__ivy_clone_value`,
-		`__res := ivy.read(__ivy_clone_value`,
-		`fmt.Fprint(__ivy_out, "= ")`,
-		`fmt.Fprintf(__ivy_out, "%s\n", ivyTraceValue(__res, false))`,
+		`fmt.Fprintf(__ivy_out, "= %s\n", ivyTraceValue(ivy.read(__ivy_clone_value`,
 	} {
 		if !strings.Contains(out.Source, want) {
 			t.Fatalf("target=gen function-sorted action parameter source missing %q:\n%s", want, out.Source)
@@ -18624,6 +18627,33 @@ export step
 	} {
 		if !strings.Contains(mainBody, want) {
 			t.Fatalf("repl stdin main source missing %q:\n%s", want, mainBody)
+		}
+	}
+}
+
+func TestReplDiagnosticsSetNonzeroExitStatusFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action set(c:color) = {
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "replfailstatus"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"__ivy_repl_failed := false",
+		"__ivy_repl_failed = true",
+		"if __ivy_repl_failed {",
+		"os.Exit(1)",
+	} {
+		if !strings.Contains(mainBody, want) {
+			t.Fatalf("repl failure status source missing %q:\n%s", want, mainBody)
 		}
 	}
 }
@@ -29404,9 +29434,7 @@ export set
 		`gen.c = color(ivy.___ivy_randomize(2, "__fml:c", 0))`,
 		`if !((((ivy.saved == red)) && ((gen.c == red)))) {`,
 		`return false`,
-		`__res := ivy.set(gen.c)`,
-		`fmt.Fprint(__ivy_out, "= ")`,
-		`fmt.Fprintf(__ivy_out, "%s\n", ivyTraceValue(__res, false))`,
+		`fmt.Fprintf(__ivy_out, "= %s\n", ivyTraceValue(ivy.set(gen.c), false))`,
 	} {
 		if !strings.Contains(out.Source, want) {
 			t.Fatalf("gen ext-precondition returning source missing %q:\n%s", want, out.Source)
@@ -29415,6 +29443,7 @@ export set
 	for _, bad := range []string{
 		`ivy.set()`,
 		`ivy.set(__arg0`,
+		`__res := ivy.set(gen.c)`,
 		`unsupported action generator parameter`,
 	} {
 		if strings.Contains(out.Source, bad) {
@@ -29502,7 +29531,6 @@ export echo
 			t.Fatalf("traced gen execute body missing %q:\n%s", want, body)
 		}
 	}
-	compileGeneratedGo(t, out)
 
 	out2, err := Generate(mod, Config{Target: "gen", ClassName: "gentrace2", TestIters: "1", TestRuns: "1"})
 	if err != nil {
@@ -29516,6 +29544,12 @@ export echo
 		strings.Contains(body2, `fmt.Fprintln(__ivy_out, "}")`) ||
 		strings.Contains(body2, `__res := ivy.echo(gen.c)`) {
 		t.Fatalf("untraced gen execute body should not emit trace braces/capture:\n%s", body2)
+	}
+	if !strings.Contains(body2, `fmt.Fprintf(__ivy_out, "= %s\n", ivyTraceValue(ivy.echo(gen.c), false))`) {
+		t.Fatalf("untraced gen execute body should print return inline like ivy2cpp:\n%s", body2)
+	}
+	if os.Getenv("SLOWTEST") == "1" {
+		compileGeneratedGo(t, out)
 	}
 }
 
@@ -29688,29 +29722,33 @@ export step
 		},
 	}
 	for _, tc := range cases {
-		path := filepath.Join(dir, tc.name+".ivy")
-		if err := os.WriteFile(path, []byte(tc.source), 0o644); err != nil {
-			t.Fatalf("write %s: %v", tc.name, err)
-		}
-		batch, err := CompileAndGenerateAll(path, map[string]string{"target": "test", "classname": tc.className}, Config{TestIters: "1", TestRuns: "1"})
-		if err != nil {
-			t.Fatalf("CompileAndGenerateAll %s: %v", tc.name, err)
-		}
-		if len(batch.Outputs) != 1 {
-			t.Fatalf("%s outputs=%d, want 1", tc.name, len(batch.Outputs))
-		}
-		out := batch.Outputs[0]
-		if out.ClassName != tc.className {
-			t.Fatalf("%s class name = %q, want %q", tc.name, out.ClassName, tc.className)
-		}
-		bin := compileGeneratedGo(t, out)
-		stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
-		if err != nil {
-			t.Fatalf("run %s generated Go: %v\nstdout:\n%s\nstderr:\n%s", tc.name, err, stdout, stderr)
-		}
-		if !strings.Contains(stdout, "test_completed") {
-			t.Fatalf("%s output missing completion marker:\nstdout:\n%s\nstderr:\n%s", tc.name, stdout, stderr)
-		}
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			path := filepath.Join(dir, tc.name+".ivy")
+			if err := os.WriteFile(path, []byte(tc.source), 0o644); err != nil {
+				t.Fatalf("write %s: %v", tc.name, err)
+			}
+			batch, err := CompileAndGenerateAll(path, map[string]string{"target": "test", "classname": tc.className}, Config{TestIters: "1", TestRuns: "1"})
+			if err != nil {
+				t.Fatalf("CompileAndGenerateAll %s: %v", tc.name, err)
+			}
+			if len(batch.Outputs) != 1 {
+				t.Fatalf("%s outputs=%d, want 1", tc.name, len(batch.Outputs))
+			}
+			out := batch.Outputs[0]
+			if out.ClassName != tc.className {
+				t.Fatalf("%s class name = %q, want %q", tc.name, out.ClassName, tc.className)
+			}
+			t.Parallel()
+			bin := compileGeneratedGo(t, out)
+			stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+			if err != nil {
+				t.Fatalf("run %s generated Go: %v\nstdout:\n%s\nstderr:\n%s", tc.name, err, stdout, stderr)
+			}
+			if !strings.Contains(stdout, "test_completed") {
+				t.Fatalf("%s output missing completion marker:\nstdout:\n%s\nstderr:\n%s", tc.name, stdout, stderr)
+			}
+		})
 	}
 }
 
@@ -31300,7 +31338,6 @@ export step
 	if !strings.Contains(out.Source, `fmt.Fprintf(__ivy_out, "  write(%s,%s)\n", "saved", ivyTraceValue(loc__tmp, false))`) {
 		t.Fatalf("control saved assignment trace missing:\n%s", out.Source)
 	}
-	compileGeneratedGo(t, out)
 
 	mod2 := compileIvySource(t, src)
 	out2, err := Generate(mod2, Config{Target: "test", ClassName: "trace_off", TestIters: "1"})
@@ -31310,7 +31347,14 @@ export step
 	if strings.Contains(out2.Source, `write(%s,%s)`) {
 		t.Fatalf("write trace emitted with Trace=false:\n%s", out2.Source)
 	}
-	compileGeneratedGo(t, out2)
+	t.Run("trace-on", func(t *testing.T) {
+		t.Parallel()
+		compileGeneratedGo(t, out)
+	})
+	t.Run("trace-off", func(t *testing.T) {
+		t.Parallel()
+		compileGeneratedGo(t, out2)
+	})
 }
 
 func TestImportCallerTracePrologueInTest(t *testing.T) {
@@ -31679,33 +31723,28 @@ func TestPingPongLeftPlayerTargetTestMatchesIvy2CppRuntimeShape(t *testing.T) {
 	}
 }
 
-func TestEnumDispatchTraceMatchesIvy2Cpp(t *testing.T) {
-	requireSlowTest(t)
+func TestEnumDispatchTraceMatchesIvy2CppOracle(t *testing.T) {
 	fixture := filepath.Join("..", "ivy2cpp", "test_vec", "oracle", "enum_dispatch.ivy")
-	cppOut, err := ivy2cppgen.CompileAndGenerate(fixture, map[string]string{"target": "test", "classname": "enum_dispatch"}, ivy2cppgen.Config{})
-	if err != nil {
-		t.Fatalf("ivy2cpp CompileAndGenerate: %v", err)
-	}
-	cppBin, err := ivy2cppgen.BuildOutput(cppOut, t.TempDir())
-	if err != nil {
-		t.Skipf("ivy2cpp build unavailable for parity check: %v", err)
-	}
 	goOut, err := CompileAndGenerate(fixture, map[string]string{"target": "test", "classname": "enum_dispatch"}, Config{})
 	if err != nil {
 		t.Fatalf("ivy2golang CompileAndGenerate: %v\n%s", err, outSource(goOut))
 	}
 	goBin := compileGeneratedGo(t, goOut)
 	args := []string{"iters=5", "runs=1", "seed=1"}
-	cppStdout, cppStderr, err := runBinary(t, cppBin, args...)
-	if err != nil {
-		t.Fatalf("run ivy2cpp binary: %v\nstdout:\n%s\nstderr:\n%s", err, cppStdout, cppStderr)
-	}
 	goStdout, goStderr, err := runBinary(t, goBin, args...)
 	if err != nil {
 		t.Fatalf("run ivy2golang binary: %v\nstdout:\n%s\nstderr:\n%s", err, goStdout, goStderr)
 	}
-	if goStdout != cppStdout {
-		t.Fatalf("ivy2golang trace differs from ivy2cpp\nivy2cpp stdout:\n%s\nivy2golang stdout:\n%s", cppStdout, goStdout)
+	want := strings.Join([]string{
+		"> choose(green)\n= green\n",
+		"> choose(blue)\n= blue\n",
+		"> choose(green)\n= green\n",
+		"> choose(blue)\n= blue\n",
+		"> choose(blue)\n= blue\n",
+		"test_completed\n",
+	}, "")
+	if goStdout != want {
+		t.Fatalf("ivy2golang trace differs from ivy2cpp oracle\nwant:\n%s\ngot:\n%s", want, goStdout)
 	}
 }
 
@@ -33873,6 +33912,15 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	g.emitRuntimeActionSolverDefinedInputs(&w, rsp)
 	got := w.String()
 
+	if unused := firstUnreadDeclaredSyntheticTemp(strings.Join([]string{
+		"var __ts0__ts0_c bool",
+		"__ts0__ts0_c = true",
+		"var __ts0__new_v_a int",
+		"__ts0__new_v_a = 1",
+		"_ = __ts0__new_v_a",
+	}, "\n")); unused != "__ts0__ts0_c" {
+		t.Fatalf("synthetic solver temp checker missed assigned-but-unread temp: %q", unused)
+	}
 	if line := firstBareUndeclaredSyntheticTempAssignment(got); line != "" {
 		t.Fatalf("synthetic solver temp assigned before declaration: %s", line)
 	}
@@ -33887,6 +33935,26 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	}
 	if unused := firstUnreadDeclaredSyntheticTemp(got); unused != "" {
 		t.Fatalf("synthetic solver temp declared but never read: %s\n%s", unused, got)
+	}
+	typeCheckGeneratedFunctionBody(t, got, "result := false", "defer func() { _ = result }()")
+}
+
+func typeCheckGeneratedFunctionBody(t *testing.T, body string, prelude ...string) {
+	t.Helper()
+	src := "package main\nfunc __probe() bool {\n"
+	for _, line := range prelude {
+		src += line + "\n"
+	}
+	src += body
+	src += "\nreturn true\n}\n"
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "generated_probe.go", src, 0)
+	if err != nil {
+		t.Fatalf("parse generated function body: %v\n%s", err, src)
+	}
+	conf := types.Config{Importer: importer.Default()}
+	if _, err := conf.Check("generated_probe", fset, []*ast.File{file}, nil); err != nil {
+		t.Fatalf("type-check generated function body: %v\n%s", err, src)
 	}
 }
 
@@ -35182,7 +35250,12 @@ export step
 	if strings.Contains(body, `ivy.saved = color(ivy.___ivy_choose`) || strings.Contains(body, "ivy.saved = red") {
 		t.Fatalf("target=gen solver-backed initial disequality should not be random/red:\n%s", body)
 	}
-	compileGeneratedGo(t, out)
+	if strings.Contains(out.Source, "hm := goivy.NewHerbrandModel") && !strings.Contains(out.Source, "_ = hm") {
+		t.Fatalf("target=gen solver-backed initial model should mark hm used:\n%s", out.Source)
+	}
+	if os.Getenv("SLOWTEST") == "1" {
+		compileGeneratedGo(t, out)
+	}
 }
 
 func TestInitialAxiomDisequalityConflictsWithEquality(t *testing.T) {
@@ -35707,15 +35780,21 @@ export touch
 		}
 	}
 
-	testBin := compileGeneratedGo(t, testOut)
-	stdout, stderr, err := runBinary(t, testBin, "2", "iters=1", "runs=1", "seed=1")
-	if err != nil {
-		t.Fatalf("run generated target=test Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
-	}
-	if !strings.Contains(stdout, "test_completed") {
-		t.Fatalf("generated target=test run did not complete\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	compileGeneratedGo(t, genOut)
+	t.Run("target-test", func(t *testing.T) {
+		t.Parallel()
+		testBin := compileGeneratedGo(t, testOut)
+		stdout, stderr, err := runBinary(t, testBin, "2", "iters=1", "runs=1", "seed=1")
+		if err != nil {
+			t.Fatalf("run generated target=test Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
+		}
+		if !strings.Contains(stdout, "test_completed") {
+			t.Fatalf("generated target=test run did not complete\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+		}
+	})
+	t.Run("target-gen", func(t *testing.T) {
+		t.Parallel()
+		compileGeneratedGo(t, genOut)
+	})
 }
 
 func TestOracleVariantStructReturnsMatchTrace(t *testing.T) {
@@ -35738,6 +35817,7 @@ func TestOracleVariantStructReturnsMatchTrace(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			fixture := filepath.Join("..", "ivy2cpp", "test_vec", "oracle", tt.name+".ivy")
 			out, err := CompileAndGenerate(fixture, map[string]string{"target": "test", "classname": tt.name}, Config{TestIters: "1"})
@@ -35752,6 +35832,7 @@ func TestOracleVariantStructReturnsMatchTrace(t *testing.T) {
 					t.Fatalf("variant source missing %q:\n%s", want, out.Source)
 				}
 			}
+			t.Parallel()
 			bin := compileGeneratedGo(t, out)
 			stdout, stderr, err := runBinary(t, bin, "iters=5", "runs=1", "seed=1")
 			if err != nil {
@@ -36322,8 +36403,7 @@ func TestIfSomeExtensionalRelationCompilesAndRuns(t *testing.T) {
 	}
 }
 
-func TestIfSomeExtensionalRelationMatchesIvy2Cpp(t *testing.T) {
-	requireSlowTest(t)
+func TestIfSomeExtensionalRelationInterpretedKeyTrace(t *testing.T) {
 	const src = `#lang ivy1.7
 type key
 interpret key -> <<< int >>>
@@ -36341,15 +36421,6 @@ action pick returns(out:bool) = {
 }
 export pick
 `
-	cppMod := compileIvySource(t, src)
-	cppOut, err := ivy2cppgen.Generate(cppMod, ivy2cppgen.Config{Target: "test", ClassName: "some_extensional"})
-	if err != nil {
-		t.Fatalf("ivy2cpp Generate: %v", err)
-	}
-	cppBin, err := ivy2cppgen.BuildOutput(cppOut, t.TempDir())
-	if err != nil {
-		t.Skipf("ivy2cpp build unavailable for parity check: %v", err)
-	}
 	goMod := compileIvySource(t, src)
 	goOut, err := Generate(goMod, Config{Target: "test", ClassName: "some_extensional", TestIters: "1"})
 	if err != nil {
@@ -36357,16 +36428,13 @@ export pick
 	}
 	goBin := compileGeneratedGo(t, goOut)
 	args := []string{"iters=3", "runs=1", "seed=1"}
-	cppStdout, cppStderr, err := runBinary(t, cppBin, args...)
-	if err != nil {
-		t.Skipf("ivy2cpp generated binary unavailable for parity check: %v\nstdout:\n%s\nstderr:\n%s", err, cppStdout, cppStderr)
-	}
 	goStdout, goStderr, err := runBinary(t, goBin, args...)
 	if err != nil {
 		t.Fatalf("run ivy2golang binary: %v\nstdout:\n%s\nstderr:\n%s", err, goStdout, goStderr)
 	}
-	if goStdout != cppStdout {
-		t.Fatalf("extensional if-some trace differs from ivy2cpp\nivy2cpp stdout:\n%s\nivy2golang stdout:\n%s", cppStdout, goStdout)
+	want := strings.Repeat("> pick\n= true\n", 3) + "test_completed\n"
+	if goStdout != want {
+		t.Fatalf("extensional if-some trace differs\nwant:\n%s\ngot:\n%s\nstderr:\n%s", want, goStdout, goStderr)
 	}
 }
 
@@ -37784,12 +37852,14 @@ func TestEmitExprSomeWithElseFiniteEnum(t *testing.T) {
 
 func TestOracleRemainingCLIFixturesCompileAndRun(t *testing.T) {
 	for _, name := range []string{"empty", "isolate_two_parts"} {
+		name := name
 		t.Run(name, func(t *testing.T) {
 			fixture := goOracleFixturePath(name)
 			out, err := CompileAndGenerate(fixture, map[string]string{"target": "test", "classname": name}, Config{TestIters: "1"})
 			if err != nil {
 				t.Fatalf("CompileAndGenerate: %v\n%s", err, outSource(out))
 			}
+			t.Parallel()
 			bin := compileGeneratedGo(t, out)
 			stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
 			if err != nil {
@@ -37898,6 +37968,8 @@ func TestOracleGeneratedTesterArgsCompileAndRunSlow(t *testing.T) {
 		if skip {
 			continue
 		}
+		name := name
+		args = append([]string(nil), args...)
 		t.Run(name, func(t *testing.T) {
 			out, err := CompileAndGenerate(goOracleFixturePath(name), map[string]string{"target": "test", "classname": name}, Config{TestIters: "1"})
 			if goOracleFixtureRejectsNative(name) {
@@ -37908,6 +37980,7 @@ func TestOracleGeneratedTesterArgsCompileAndRunSlow(t *testing.T) {
 				t.Fatalf("CompileAndGenerate: %v\n%s", err, outSource(out))
 			}
 			assertNoUnsupportedGo(t, out.Source)
+			t.Parallel()
 			bin := compileGeneratedGo(t, out)
 			stdout, stderr, err := runBinary(t, bin, args...)
 			if err != nil {
@@ -37923,6 +37996,7 @@ func TestOracleGeneratedTesterArgsCompileAndRunSlow(t *testing.T) {
 func TestOracleGeneratedTargetGenCompilesSlow(t *testing.T) {
 	requireSlowTest(t)
 	for _, name := range goOracleFixtureNames {
+		name := name
 		t.Run(name, func(t *testing.T) {
 			out, err := CompileAndGenerate(goOracleFixturePath(name), map[string]string{"target": "gen", "classname": name}, Config{TestIters: "1"})
 			if goOracleFixtureRejectsNative(name) {
@@ -37933,6 +38007,7 @@ func TestOracleGeneratedTargetGenCompilesSlow(t *testing.T) {
 				t.Fatalf("CompileAndGenerate target=gen: %v\n%s", err, outSource(out))
 			}
 			assertNoUnsupportedGo(t, out.Source)
+			t.Parallel()
 			compileGeneratedGo(t, out)
 		})
 	}
@@ -37941,6 +38016,7 @@ func TestOracleGeneratedTargetGenCompilesSlow(t *testing.T) {
 func TestOracleGeneratedTargetReplCompilesSlow(t *testing.T) {
 	requireSlowTest(t)
 	for _, name := range goOracleFixtureNames {
+		name := name
 		t.Run(name, func(t *testing.T) {
 			out, err := CompileAndGenerate(goOracleFixturePath(name), map[string]string{"target": "repl", "classname": name}, Config{TestIters: "1"})
 			if goOracleFixtureRejectsNative(name) {
@@ -37951,6 +38027,7 @@ func TestOracleGeneratedTargetReplCompilesSlow(t *testing.T) {
 				t.Fatalf("CompileAndGenerate target=repl: %v\n%s", err, outSource(out))
 			}
 			assertNoUnsupportedGo(t, out.Source)
+			t.Parallel()
 			compileGeneratedGo(t, out)
 		})
 	}

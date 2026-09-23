@@ -59,6 +59,19 @@ func (g *Generator) initGeneratorUsesRuntimeSolver() bool {
 	return err == nil && constraints != nil && len(constraints.Formulas) > 0
 }
 
+func (g *Generator) assignmentUsesRuntimeSolverSupport() bool {
+	if g == nil {
+		return false
+	}
+	for _, sym := range g.stateSymbols() {
+		fs, ok := sym.Sort.(*goivy.LogicFunctionSort)
+		if ok && len(fs.Domain()) > 0 && g.goFunctionStorageFor(fs.Domain(), fs.Range()).Large {
+			return true
+		}
+	}
+	return false
+}
+
 func (g *Generator) runtimeActionSolverPlan(name string, act goivy.Action) (res *runtimeActionSolverPlan, ok bool) {
 	cacheKey := ""
 	oldErrs := 0
@@ -384,7 +397,7 @@ func (g *Generator) runtimeSolverSupportsSparseThunkStateSymbol(sym stateSymbol,
 }
 
 func (g *Generator) emitRuntimeSolverSupport(w *goWriter) {
-	if !g.actionGeneratorUsesRuntimeSolver() && !g.initGeneratorUsesRuntimeSolver() {
+	if !g.actionGeneratorUsesRuntimeSolver() && !g.initGeneratorUsesRuntimeSolver() && !g.assignmentUsesRuntimeSolverSupport() {
 		return
 	}
 	if g.actionGeneratorUsesRuntimeSolver() {
@@ -600,6 +613,7 @@ func (g *Generator) emitRuntimeInitGeneratorGenerate(w *goWriter) bool {
 	w.close("")
 	g.emitRuntimeSolverSatModelLog(w)
 	w.line("hm := goivy.NewHerbrandModel(solver, model.Solver, model.Model, model.Vocab)")
+	w.line("_ = hm")
 	for _, sym := range g.stateSymbols() {
 		if g.isParamName(sym.Name) || !used[sym.Name] {
 			continue
@@ -1913,9 +1927,13 @@ func (g *Generator) emitRuntimeActionSolverStateEquality(w *goWriter, sym stateS
 }
 
 func (g *Generator) emitRuntimeActionSolverSparseThunkValue(w *goWriter, dst string, fnExpr string, valueBase string, fs *goivy.LogicFunctionSort) {
+	g.emitRuntimeActionSolverSparseThunkValueWithReturn(w, dst, fnExpr, valueBase, fs, "return false")
+}
+
+func (g *Generator) emitRuntimeActionSolverSparseThunkValueWithReturn(w *goWriter, dst string, fnExpr string, valueBase string, fs *goivy.LogicFunctionSort, failStmt string) {
 	domain := fs.Domain()
 	if len(domain) == 0 {
-		w.line("return false")
+		w.line(failStmt)
 		return
 	}
 	w.open("{")
@@ -1942,8 +1960,9 @@ func (g *Generator) emitRuntimeActionSolverSparseThunkValue(w *goWriter, dst str
 		if len(domain) != 1 {
 			keyExpr = fmt.Sprintf("__ivy_sparse_key.A%d", i)
 		}
-		if !g.emitRuntimeActionSolverAppendValueEquality(w, "__ivy_sparse_eqs", fmt.Sprintf("__ivy_sparse_vars[%d]", i), keyExpr, d) {
-			w.line("return false")
+		if !g.emitRuntimeActionSolverAppendStorageValueEquality(w, "__ivy_sparse_eqs", fmt.Sprintf("__ivy_sparse_vars[%d]", i), keyExpr, d) {
+			w.line("_ = __ivy_sparse_key")
+			w.line(failStmt)
 			continue
 		}
 	}
@@ -1951,7 +1970,7 @@ func (g *Generator) emitRuntimeActionSolverSparseThunkValue(w *goWriter, dst str
 	w.line("__ivy_sparse_disj = append(__ivy_sparse_disj, __ivy_sparse_cond)")
 	valueExpr, ok := g.emitRuntimeActionSolverValueTerm(w, "clauses.Fmlas", "__ivy_sparse_val", fs.Range(), `"__ivy_sparse_val_" + strconv.Itoa(__ivy_sparse_value_index)`)
 	if !ok {
-		w.line("return false")
+		w.line(failStmt)
 		w.close("")
 		w.close("")
 		return
@@ -2081,6 +2100,23 @@ func (g *Generator) emitRuntimeActionSolverAppendValueEquality(w *goWriter, dst 
 	return true
 }
 
+func (g *Generator) emitRuntimeActionSolverAppendStorageValueEquality(w *goWriter, dst string, lhs string, value string, s goivy.Sort) bool {
+	expr, ok := g.emitRuntimeActionSolverStorageValueConstraintExpr(lhs, value, s)
+	if !ok {
+		return false
+	}
+	w.linef("%s = append(%s, %s)", dst, dst, expr)
+	return true
+}
+
+func (g *Generator) emitRuntimeActionSolverStorageValueConstraintExpr(lhs string, value string, s goivy.Sort) (string, bool) {
+	rhs, ok := g.runtimeActionSolverStorageValueExpr(value, s)
+	if !ok {
+		return "", false
+	}
+	return fmt.Sprintf("&goivy.Eq{T1: %s, T2: %s}", lhs, rhs), true
+}
+
 func (g *Generator) emitRuntimeActionSolverValueConstraintExpr(w *goWriter, dst string, lhs string, value string, s goivy.Sort) (string, bool) {
 	if fields := g.destructorStructFieldInfos(sortName(s)); len(fields) > 0 {
 		return g.emitRuntimeActionSolverRecordConstraintExpr(w, dst, lhs, value, s, fields), true
@@ -2090,6 +2126,19 @@ func (g *Generator) emitRuntimeActionSolverValueConstraintExpr(w *goWriter, dst 
 		return "", false
 	}
 	return fmt.Sprintf("&goivy.Eq{T1: %s, T2: %s}", lhs, rhs), true
+}
+
+func (g *Generator) runtimeActionSolverStorageValueExpr(value string, s goivy.Sort) (string, bool) {
+	if expr, ok := g.runtimeActionSolverValueExpr(value, s); ok {
+		return expr, true
+	}
+	if _, ok := s.(*goivy.UninterpretedSort); ok &&
+		!g.hasStringValuedInterp(s) &&
+		len(g.destructorStructFieldInfos(sortName(s))) == 0 &&
+		!g.isVariantSuperName(sortName(s)) {
+		return fmt.Sprintf("goivy.NewConst(strconv.Itoa(int(%s)), %s)", value, g.goIvySortExpr(s)), true
+	}
+	return "", false
 }
 
 func (g *Generator) emitRuntimeActionSolverValueTerm(w *goWriter, dst string, value string, s goivy.Sort, nameExpr string) (string, bool) {

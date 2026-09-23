@@ -4461,7 +4461,7 @@ Progress:
   `some` tests, covering recursive definition expansion and duplicate
   equality-bound existential simplification after lowering.
 - 2026-09-22: Repaired the `log.red2` oracle regressions with focused coverage:
-  `TestEnumDispatchTraceMatchesIvy2Cpp`,
+  `TestEnumDispatchTraceMatchesIvy2CppOracle`,
   `TestOracleRangeBoundsCompilesAndRuns`, and
   `TestOracleDestructorRecordCompilesAndMatchesTrace` now agree with C++ after
   removing label-hash offsetting from `___ivy_randomize`; the extensional

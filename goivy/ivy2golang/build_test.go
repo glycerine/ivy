@@ -6,8 +6,24 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
 )
+
+var (
+	generatedBuildTestEnvOnce sync.Once
+	generatedBuildTestEnv     []string
+	generatedBuildTestRoot    string
+	generatedBuildTestEnvErr  error
+)
+
+func TestMain(m *testing.M) {
+	code := m.Run()
+	if generatedBuildTestRoot != "" {
+		_ = os.RemoveAll(generatedBuildTestRoot)
+	}
+	os.Exit(code)
+}
 
 func requireSlowTest(t *testing.T) {
 	t.Helper()
@@ -23,7 +39,7 @@ func compileGeneratedGo(t *testing.T, out *Output) string {
 		t.Fatalf("nil or empty generated output")
 	}
 	dir := t.TempDir()
-	bin, err := BuildOutput(out, dir)
+	bin, err := buildOutputForTest(t, out, dir)
 	if err != nil {
 		srcPath := filepath.Join(dir, goSourceFileName(out.BaseName))
 		t.Fatalf("compile generated Go: %v\nsource: %s", err, srcPath)
@@ -32,6 +48,46 @@ func compileGeneratedGo(t *testing.T, out *Output) string {
 		t.Fatalf("empty binary path")
 	}
 	return bin
+}
+
+func buildOutputForTest(t *testing.T, out *Output, dir string) (string, error) {
+	t.Helper()
+	return buildOutputWithEnv(out, dir, generatedBuildEnvForTest(t))
+}
+
+func generatedBuildEnvForTest(t *testing.T) []string {
+	t.Helper()
+	generatedBuildTestEnvOnce.Do(func() {
+		cacheDir := os.Getenv("GOCACHE")
+		tmpDir := os.Getenv("GOTMPDIR")
+		if cacheDir == "" || tmpDir == "" {
+			parent := os.Getenv("GOTMPDIR")
+			if parent == "" {
+				parent = os.TempDir()
+			}
+			generatedBuildTestRoot, generatedBuildTestEnvErr = os.MkdirTemp(parent, "ivy2golang-generated-build-*")
+			if generatedBuildTestEnvErr != nil {
+				return
+			}
+			if cacheDir == "" {
+				cacheDir = filepath.Join(generatedBuildTestRoot, "gocache")
+			}
+			if tmpDir == "" {
+				tmpDir = filepath.Join(generatedBuildTestRoot, "gotmp")
+			}
+		}
+		for _, dir := range []string{cacheDir, tmpDir} {
+			if err := os.MkdirAll(dir, 0o755); err != nil {
+				generatedBuildTestEnvErr = err
+				return
+			}
+		}
+		generatedBuildTestEnv = []string{"GOCACHE=" + cacheDir, "GOTMPDIR=" + tmpDir}
+	})
+	if generatedBuildTestEnvErr != nil {
+		t.Fatalf("prepare shared generated-build cache: %v", generatedBuildTestEnvErr)
+	}
+	return generatedBuildTestEnv
 }
 
 func runBinary(t *testing.T, bin string, args ...string) (string, string, error) {
@@ -161,7 +217,7 @@ export step
 		t.Fatalf("class target should build an archive, got output %q", plan.OutputPath)
 	}
 	requireSlowTest(t)
-	built, err := BuildOutput(out, dir)
+	built, err := buildOutputForTest(t, out, dir)
 	if err != nil {
 		t.Fatalf("BuildOutput class target: %v\nsource:\n%s", err, out.Source)
 	}

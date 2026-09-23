@@ -1934,7 +1934,12 @@ func (g *Generator) emitCloneDestructorValue(w *goWriter, dst, src string, field
 		fieldDst := dst + "." + field.FieldName
 		fieldSrc := src + "." + field.FieldName
 		if g.destructorFieldIsLarge(field) {
-			g.emitCloneFunctionValue(w, fieldDst, fieldSrc, field.Sort, true)
+			extraSort, err := goivy.NewFunctionSort(append(append([]goivy.Sort{}, domain[1:]...), field.Sort.Range())...)
+			if err != nil {
+				g.unsupported(w, "unsupported destructor clone field sort: %s", err.Error())
+				continue
+			}
+			g.emitCloneFunctionValue(w, fieldDst, fieldSrc, extraSort, true)
 			continue
 		}
 		rng := field.Sort.Range()
@@ -3177,6 +3182,7 @@ func (g *Generator) emitIvyValueOutOfBounds(w *goWriter, ctx ivyValueDecodeConte
 func (g *Generator) emitIvyValueBadValueText(w *goWriter, ctx ivyValueDecodeContext, posExpr, paramName, textExpr string) {
 	if ctx.replArg {
 		w.linef("fmt.Fprintf(os.Stderr, %q, __ivy_lineno, %s, %s)", "line %d:%d: %s bad value\n", posExpr, textExpr)
+		w.line("__ivy_repl_failed = true")
 		w.line("continue __ivy_repl_loop")
 		return
 	}
@@ -3253,6 +3259,7 @@ func (g *Generator) emitReplMain(w *goWriter) {
 	w.line("ivy.__argv = append([]string{os.Args[0]}, rest...)")
 	w.line("__ivy_repl_scanner = bufio.NewScanner(os.Stdin)")
 	w.line("__ivy_lineno := 0")
+	w.line("__ivy_repl_failed := false")
 	w.line("__ivy_repl_loop:")
 	w.open("for __ivy_repl_scanner.Scan() {")
 	w.line("__ivy_lineno++")
@@ -3264,12 +3271,16 @@ func (g *Generator) emitReplMain(w *goWriter) {
 	w.close(" else {")
 	w.line(`fmt.Fprintf(os.Stderr, "line %d: syntax error\n", __ivy_lineno)`)
 	w.close("")
+	w.line("__ivy_repl_failed = true")
 	w.line("continue __ivy_repl_loop")
 	w.close("")
 	g.emitReplDispatch(w, "__ivy_action", "__ivy_args")
 	w.close("")
 	w.open("if err := __ivy_repl_scanner.Err(); err != nil {")
 	w.line("fmt.Fprintln(os.Stderr, err)")
+	w.line("os.Exit(1)")
+	w.close("")
+	w.open("if __ivy_repl_failed {")
 	w.line("os.Exit(1)")
 	w.close("")
 	w.close("")
@@ -3286,6 +3297,7 @@ func (g *Generator) emitReplDispatch(w *goWriter, actionVar, argsVar string) {
 	w.line("default:")
 	w.indent++
 	w.linef("fmt.Fprintf(os.Stderr, %q, %s)", "undefined action: %q\n", actionVar)
+	w.line("__ivy_repl_failed = true")
 	w.line("continue __ivy_repl_loop")
 	w.indent--
 	w.indent--
@@ -3298,6 +3310,7 @@ func (g *Generator) emitReplActionCase(w *goWriter, name string, act goivy.Actio
 	formals := act.GetFormalParams()
 	w.open(fmt.Sprintf("if len(%s) != %d {", argsVar, len(formals)))
 	w.linef("fmt.Fprintf(os.Stderr, %q, %s, %d)", "action %q takes %d input parameters\n", actionVar, len(formals))
+	w.line("__ivy_repl_failed = true")
 	w.line("continue __ivy_repl_loop")
 	w.close("")
 	args := make([]string, 0, len(formals))
@@ -13883,9 +13896,7 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 			w.line(`fmt.Fprintln(__ivy_out, "}")`)
 			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__res"))
 		} else {
-			w.line(`fmt.Fprint(__ivy_out, "= ")`)
-			w.linef("__res := %s", call)
-			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "%s\n", g.traceValueExpr("__res"))
+			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(call))
 		}
 	default:
 		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
