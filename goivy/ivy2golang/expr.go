@@ -470,6 +470,45 @@ func (g *Generator) matchExistsVariantRelation(vars []*goivy.LogicVariable, body
 	return match, true, nil
 }
 
+func (g *Generator) matchOrExistsVariantRelation(vars []*goivy.LogicVariable, body goivy.Expr) (existsVariantRelationMatch, bool, error) {
+	if len(vars) != 1 || g == nil || g.Mod == nil {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	bound := vars[0]
+	if bound == nil {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	terms, ok := existsVariantRelationOrTerms(body)
+	if !ok {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	match := existsVariantRelationMatch{bound: bound}
+	found := false
+	for _, term := range terms {
+		app, loc, ok := variantRelationApply(term)
+		if !ok || goivy.ExprName(app.Func) != "*>" || len(app.Terms) != 2 || goivy.ExprName(app.Terms[1]) != bound.Name {
+			if existsVariantExprReferencesBound(term, bound.Name) {
+				return existsVariantRelationMatch{}, false, nil
+			}
+			match.extra = append(match.extra, term)
+			continue
+		}
+		if found {
+			return existsVariantRelationMatch{}, false, nil
+		}
+		if !g.Mod.IsVariant(app.Terms[0].NodeSort(), bound.VSort) {
+			return existsVariantRelationMatch{}, true, fmt.Errorf("ivy2golang: %s *> %s is not a known variant relation", app.Terms[0].String(), bound.String())
+		}
+		match.lhs = app.Terms[0]
+		match.loc = loc
+		found = true
+	}
+	if !found || len(match.extra) == 0 {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	return match, true, nil
+}
+
 func variantRelationApply(expr goivy.Expr) (*goivy.Apply, goivy.Location, bool) {
 	switch n := expr.(type) {
 	case *goivy.Apply:
@@ -535,6 +574,45 @@ func (g *Generator) matchNegatedExistsVariantRelation(vars []*goivy.LogicVariabl
 	return match, true, nil
 }
 
+func (g *Generator) matchOrNegatedExistsVariantRelation(vars []*goivy.LogicVariable, body goivy.Expr) (existsVariantRelationMatch, bool, error) {
+	if len(vars) != 1 || g == nil || g.Mod == nil {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	bound := vars[0]
+	if bound == nil {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	terms, ok := existsVariantRelationOrTerms(body)
+	if !ok {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	match := existsVariantRelationMatch{bound: bound}
+	found := false
+	for _, term := range terms {
+		app, loc, ok := negatedVariantRelationApply(term)
+		if !ok || goivy.ExprName(app.Func) != "*>" || len(app.Terms) != 2 || goivy.ExprName(app.Terms[1]) != bound.Name {
+			if existsVariantExprReferencesBound(term, bound.Name) {
+				return existsVariantRelationMatch{}, false, nil
+			}
+			match.extra = append(match.extra, term)
+			continue
+		}
+		if found {
+			return existsVariantRelationMatch{}, false, nil
+		}
+		if !g.Mod.IsVariant(app.Terms[0].NodeSort(), bound.VSort) {
+			return existsVariantRelationMatch{}, true, fmt.Errorf("ivy2golang: %s *> %s is not a known variant relation", app.Terms[0].String(), bound.String())
+		}
+		match.lhs = app.Terms[0]
+		match.loc = loc
+		found = true
+	}
+	if !found || len(match.extra) == 0 {
+		return existsVariantRelationMatch{}, false, nil
+	}
+	return match, true, nil
+}
+
 func negatedVariantRelationApply(expr goivy.Expr) (*goivy.Apply, goivy.Location, bool) {
 	switch n := expr.(type) {
 	case *goivy.LogicNot:
@@ -583,6 +661,82 @@ func existsVariantRelationTerms(expr goivy.Expr) ([]goivy.Expr, bool) {
 			out = append(out, terms...)
 		}
 		return out, true
+	case *goivy.LogicIte:
+		switch {
+		case actionGeneratorIsFalseExpr(n.Else):
+			terms, ok := existsVariantRelationTerms(n.Then)
+			if !ok {
+				return nil, false
+			}
+			out := make([]goivy.Expr, 0, len(terms)+1)
+			out = append(out, n.Cond)
+			out = append(out, terms...)
+			return out, true
+		case actionGeneratorIsFalseExpr(n.Then):
+			terms, ok := existsVariantRelationTerms(n.Else)
+			if !ok {
+				return nil, false
+			}
+			out := make([]goivy.Expr, 0, len(terms)+1)
+			out = append(out, &goivy.LogicNot{Body: n.Cond})
+			out = append(out, terms...)
+			return out, true
+		}
+		return []goivy.Expr{expr}, true
+	default:
+		return []goivy.Expr{expr}, true
+	}
+}
+
+func existsVariantRelationOrTerms(expr goivy.Expr) ([]goivy.Expr, bool) {
+	switch n := expr.(type) {
+	case *goivy.LogicLet:
+		expanded, ok := actionGeneratorExpandLetExpr(n)
+		if !ok {
+			return nil, false
+		}
+		return existsVariantRelationOrTerms(expanded)
+	case *goivy.LogicOr:
+		var out []goivy.Expr
+		for _, term := range n.Terms {
+			terms, ok := existsVariantRelationOrTerms(term)
+			if !ok {
+				return nil, false
+			}
+			out = append(out, terms...)
+		}
+		return out, true
+	case *goivy.LogicImplies:
+		terms, ok := existsVariantRelationOrTerms(n.T2)
+		if !ok {
+			return nil, false
+		}
+		out := make([]goivy.Expr, 0, len(terms)+1)
+		out = append(out, &goivy.LogicNot{Body: n.T1})
+		out = append(out, terms...)
+		return out, true
+	case *goivy.LogicIte:
+		switch {
+		case actionGeneratorIsTrueExpr(n.Else):
+			terms, ok := existsVariantRelationOrTerms(n.Then)
+			if !ok {
+				return nil, false
+			}
+			out := make([]goivy.Expr, 0, len(terms)+1)
+			out = append(out, &goivy.LogicNot{Body: n.Cond})
+			out = append(out, terms...)
+			return out, true
+		case actionGeneratorIsTrueExpr(n.Then):
+			terms, ok := existsVariantRelationOrTerms(n.Else)
+			if !ok {
+				return nil, false
+			}
+			out := make([]goivy.Expr, 0, len(terms)+1)
+			out = append(out, n.Cond)
+			out = append(out, terms...)
+			return out, true
+		}
+		return nil, false
 	default:
 		return []goivy.Expr{expr}, true
 	}
@@ -594,6 +748,52 @@ func (g *Generator) emitExistsVariantRelation(vars []*goivy.LogicVariable, body 
 		return "", true, err
 	}
 	if !ok {
+		orMatch, orOK, orErr := g.matchOrExistsVariantRelation(vars, body)
+		if orErr != nil {
+			return "", true, orErr
+		}
+		if orOK {
+			lhs, err := g.emitExpr(orMatch.lhs)
+			if err != nil {
+				return "", true, err
+			}
+			idx := g.Mod.VariantIndex(orMatch.lhs.NodeSort(), orMatch.bound.VSort)
+			if idx < 0 {
+				return "", true, fmt.Errorf("ivy2golang: no variant index for %s in %s", sortName(orMatch.bound.VSort), sortName(orMatch.lhs.NodeSort()))
+			}
+			terms := []string{fmt.Sprintf("(%s.valid && %s.tag == %d)", lhs, lhs, idx)}
+			for _, extra := range orMatch.extra {
+				expr, err := g.emitExpr(extra)
+				if err != nil {
+					return "", true, err
+				}
+				terms = append(terms, expr)
+			}
+			return "(" + strings.Join(terms, " || ") + ")", true, nil
+		}
+		negatedOrMatch, negatedOrOK, negatedOrErr := g.matchOrNegatedExistsVariantRelation(vars, body)
+		if negatedOrErr != nil {
+			return "", true, negatedOrErr
+		}
+		if negatedOrOK {
+			lhs, err := g.emitExpr(negatedOrMatch.lhs)
+			if err != nil {
+				return "", true, err
+			}
+			idx := g.Mod.VariantIndex(negatedOrMatch.lhs.NodeSort(), negatedOrMatch.bound.VSort)
+			if idx < 0 {
+				return "", true, fmt.Errorf("ivy2golang: no variant index for %s in %s", sortName(negatedOrMatch.bound.VSort), sortName(negatedOrMatch.lhs.NodeSort()))
+			}
+			terms := []string{fmt.Sprintf("!((%s.valid && %s.tag == %d))", lhs, lhs, idx)}
+			for _, extra := range negatedOrMatch.extra {
+				expr, err := g.emitExpr(extra)
+				if err != nil {
+					return "", true, err
+				}
+				terms = append(terms, expr)
+			}
+			return "(" + strings.Join(terms, " || ") + ")", true, nil
+		}
 		negatedMatch, negatedOK, negatedErr := g.matchNegatedExistsVariantRelation(vars, body)
 		if negatedErr != nil {
 			return "", true, negatedErr
@@ -610,20 +810,42 @@ func (g *Generator) emitExistsVariantRelation(vars []*goivy.LogicVariable, body 
 			return "", true, fmt.Errorf("ivy2golang: no variant index for %s in %s", sortName(negatedMatch.bound.VSort), sortName(negatedMatch.lhs.NodeSort()))
 		}
 		if len(negatedMatch.extra) != 0 {
-			rhs, rhsDelta, ok := g.variantExistsUniquePayloadWitness(negatedMatch.bound, negatedMatch.extra)
-			if !ok {
+			var residual []string
+			residualOnly := true
+			for _, extra := range negatedMatch.extra {
+				if existsVariantExprReferencesBound(extra, negatedMatch.bound.Name) {
+					residualOnly = false
+					continue
+				}
+				expr, err := g.emitExpr(extra)
+				if err != nil {
+					return "", true, err
+				}
+				residual = append(residual, expr)
+			}
+			if rhs, rhsDelta, ok := g.variantExistsUniquePayloadWitness(negatedMatch.bound, negatedMatch.extra); ok {
+				rhs, ok = g.variantExistsPayloadValueWithDelta(negatedMatch.bound, rhs, rhsDelta)
+				if !ok {
+					return "", false, nil
+				}
+				rhsExpr, err := g.emitExpr(rhs)
+				if err != nil {
+					return "", true, err
+				}
+				downcast := g.variantDowncastExpr(lhs, negatedMatch.bound.VSort)
+				base := fmt.Sprintf("!((%s.valid && %s.tag == %d && %s))", lhs, lhs, idx, g.goEqualExpr(downcast, rhsExpr, negatedMatch.bound.VSort))
+				if len(residual) == 0 {
+					return base, true, nil
+				}
+				terms := append([]string{base}, residual...)
+				return "(" + strings.Join(terms, " && ") + ")", true, nil
+			}
+			if !residualOnly {
 				return "", false, nil
 			}
-			rhs, ok = g.variantExistsPayloadValueWithDelta(negatedMatch.bound, rhs, rhsDelta)
-			if !ok {
-				return "", false, nil
-			}
-			rhsExpr, err := g.emitExpr(rhs)
-			if err != nil {
-				return "", true, err
-			}
-			downcast := g.variantDowncastExpr(lhs, negatedMatch.bound.VSort)
-			return fmt.Sprintf("!((%s.valid && %s.tag == %d && %s))", lhs, lhs, idx, g.goEqualExpr(downcast, rhsExpr, negatedMatch.bound.VSort)), true, nil
+			base := fmt.Sprintf("!((%s.valid && %s.tag == %d))", lhs, lhs, idx)
+			terms := append([]string{base}, residual...)
+			return "(" + strings.Join(terms, " && ") + ")", true, nil
 		}
 		return fmt.Sprintf("!((%s.valid && %s.tag == %d))", lhs, lhs, idx), true, nil
 	}
@@ -691,6 +913,9 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 		if code, ok, err := g.emitExistsVariantRelation(vars, body); ok || err != nil {
 			return code, err
 		}
+		if code, ok, err := g.emitExistsNonSingletonDisequality(vars, body); ok || err != nil {
+			return code, err
+		}
 	}
 	if code, ok, err := g.emitEqualityBoundQuant(vars, body, forall); ok || err != nil {
 		return code, err
@@ -756,6 +981,213 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 	return "(" + strings.TrimSpace(w.String()) + ")()", nil
 }
 
+func (g *Generator) emitExistsNonSingletonDisequality(vars []*goivy.LogicVariable, body goivy.Expr) (string, bool, error) {
+	rest, ok := g.existsNonSingletonDisequalityBody(vars, body)
+	if !ok {
+		return "", false, nil
+	}
+	code, err := g.emitExpr(rest)
+	return code, true, err
+}
+
+func (g *Generator) existsNonSingletonDisequalityBody(vars []*goivy.LogicVariable, body goivy.Expr) (goivy.Expr, bool) {
+	if len(vars) != 1 || vars[0] == nil || body == nil {
+		return nil, false
+	}
+	bound := vars[0]
+	if !g.sortHasKnownDisequalityWitness(bound.VSort) {
+		return nil, false
+	}
+	if imp, ok := body.(*goivy.LogicImplies); ok && imp != nil {
+		if existsVariantExprReferencesBound(imp.T1, bound.Name) {
+			return nil, false
+		}
+		rest, ok := g.existsNonSingletonDisequalityBody(vars, imp.T2)
+		if !ok {
+			return nil, false
+		}
+		if actionGeneratorIsTrueExpr(rest) {
+			return goivy.True, true
+		}
+		impliedRest, err := goivy.NewImplies(imp.T1, rest)
+		if err != nil {
+			return nil, false
+		}
+		return impliedRest, true
+	}
+	if or, ok := body.(*goivy.LogicOr); ok && or != nil {
+		residuals := make([]goivy.Expr, 0, len(or.Terms))
+		changed := false
+		for _, term := range or.Terms {
+			rest, ok := g.existsNonSingletonDisequalityBody(vars, term)
+			if ok {
+				changed = true
+				if actionGeneratorIsTrueExpr(rest) {
+					return goivy.True, true
+				}
+				residuals = append(residuals, rest)
+				continue
+			}
+			if existsVariantExprReferencesBound(term, bound.Name) {
+				return nil, false
+			}
+			residuals = append(residuals, term)
+		}
+		if !changed {
+			return nil, false
+		}
+		if len(residuals) == 0 {
+			return goivy.True, true
+		}
+		if len(residuals) == 1 {
+			return residuals[0], true
+		}
+		rest, err := goivy.NewOr(residuals...)
+		if err != nil {
+			return nil, false
+		}
+		return rest, true
+	}
+	if ite, ok := body.(*goivy.LogicIte); ok && ite != nil {
+		if existsVariantExprReferencesBound(ite.Cond, bound.Name) {
+			return nil, false
+		}
+		thenRest, thenOK := g.existsNonSingletonDisequalityBody(vars, ite.Then)
+		elseRest, elseOK := g.existsNonSingletonDisequalityBody(vars, ite.Else)
+		if !thenOK || !elseOK {
+			return nil, false
+		}
+		if actionGeneratorIsTrueExpr(thenRest) && actionGeneratorIsTrueExpr(elseRest) {
+			return goivy.True, true
+		}
+		rest, err := goivy.NewIte(ite.Cond, thenRest, elseRest)
+		if err != nil {
+			return nil, false
+		}
+		return rest, true
+	}
+	var terms []goivy.Expr
+	if and, ok := body.(*goivy.LogicAnd); ok && and != nil {
+		terms = and.Terms
+	} else {
+		terms = []goivy.Expr{body}
+	}
+	usedWitness := false
+	residuals := make([]goivy.Expr, 0, len(terms))
+	for _, term := range terms {
+		if !usedWitness && existsDisequalityWitnessTerm(bound, term) {
+			usedWitness = true
+			continue
+		}
+		if existsVariantExprReferencesBound(term, bound.Name) {
+			return nil, false
+		}
+		residuals = append(residuals, term)
+	}
+	if !usedWitness {
+		return nil, false
+	}
+	if len(residuals) == 0 {
+		return goivy.True, true
+	}
+	if len(residuals) == 1 {
+		return residuals[0], true
+	}
+	rest, err := goivy.NewAnd(residuals...)
+	if err != nil {
+		return nil, false
+	}
+	return rest, true
+}
+
+func (g *Generator) sortHasKnownDisequalityWitness(s goivy.Sort) bool {
+	if s == nil {
+		return false
+	}
+	if isBooleanSort(s) {
+		return true
+	}
+	if g.hasIntInterp(s) || g.hasNatInterp(s) {
+		return true
+	}
+	if rs, ok := g.rangeSortFor(s); ok {
+		lo, hi, ok := numericRangeBounds(rs)
+		return ok && hi > lo
+	}
+	if st, ok := s.(*goivy.LogicEnumeratedSort); ok {
+		return len(st.Extension) > 1
+	}
+	if vals, ok := g.finiteValueExprs(s); ok {
+		return len(vals) > 1
+	}
+	return false
+}
+
+func existsDisequalityWitnessTerm(bound *goivy.LogicVariable, expr goivy.Expr) bool {
+	if bound == nil || expr == nil {
+		return false
+	}
+	switch n := expr.(type) {
+	case *goivy.LogicNot:
+		left, right, ok := actionGeneratorEqTerms(n.Body)
+		return ok && existsDisequalityWitnessSides(bound, left, right)
+	case *goivy.LogicLiteral:
+		if n.Polarity != 0 {
+			return false
+		}
+		left, right, ok := actionGeneratorEqTerms(n.Atom)
+		return ok && existsDisequalityWitnessSides(bound, left, right)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			if existsDisequalityWitnessTerm(bound, term) {
+				return true
+			}
+		}
+		for _, term := range actionGeneratorIffNegativeTerms(n) {
+			if existsDisequalityWitnessTerm(bound, term) || existsEqualityWitnessTerm(bound, term) {
+				return true
+			}
+		}
+		return false
+	default:
+		return false
+	}
+}
+
+func existsEqualityWitnessTerm(bound *goivy.LogicVariable, expr goivy.Expr) bool {
+	if bound == nil || expr == nil {
+		return false
+	}
+	switch n := expr.(type) {
+	case *goivy.LogicLiteral:
+		if n.Polarity != 1 {
+			return false
+		}
+		return existsEqualityWitnessTerm(bound, n.Atom)
+	default:
+		left, right, ok := actionGeneratorEqTerms(expr)
+		return ok && existsDisequalityWitnessSides(bound, left, right)
+	}
+}
+
+func existsDisequalityWitnessSides(bound *goivy.LogicVariable, left, right goivy.Expr) bool {
+	if existsDisequalityWitnessSide(bound, left, right) {
+		return true
+	}
+	return existsDisequalityWitnessSide(bound, right, left)
+}
+
+func existsDisequalityWitnessSide(bound *goivy.LogicVariable, lhs, rhs goivy.Expr) bool {
+	v, ok := lhs.(*goivy.LogicVariable)
+	if !ok || v == nil || bound == nil || v.Name != bound.Name {
+		return false
+	}
+	if !sortsEqual(v.VSort, bound.VSort) || rhs == nil || !sortsEqual(rhs.NodeSort(), bound.VSort) {
+		return false
+	}
+	return !existsVariantExprReferencesBound(rhs, bound.Name)
+}
+
 func (g *Generator) emitEqualityBoundQuant(vars []*goivy.LogicVariable, body goivy.Expr, forall bool) (string, bool, error) {
 	if len(vars) == 0 || body == nil {
 		return "", false, nil
@@ -812,6 +1244,85 @@ func equalityBoundForallBody(vars []*goivy.LogicVariable, body goivy.Expr) (map[
 }
 
 func equalityBoundExistsBody(vars []*goivy.LogicVariable, body goivy.Expr) (map[goivy.NodeKey]goivy.Expr, goivy.Expr, bool) {
+	if or, ok := body.(*goivy.LogicOr); ok && or != nil {
+		var firstSubs map[goivy.NodeKey]goivy.Expr
+		var disjuncts []goivy.Expr
+		for _, term := range or.Terms {
+			subs, rest, ok := equalityBoundExistsBranch(vars, term)
+			if !ok {
+				return nil, nil, false
+			}
+			if firstSubs == nil {
+				firstSubs = subs
+			}
+			if actionGeneratorIsTrueExpr(rest) {
+				return subs, goivy.True, true
+			}
+			disjuncts = append(disjuncts, rest)
+		}
+		if firstSubs != nil && len(disjuncts) > 0 {
+			if len(disjuncts) == 1 {
+				return firstSubs, disjuncts[0], true
+			}
+			rest, err := goivy.NewOr(disjuncts...)
+			if err != nil {
+				return nil, nil, false
+			}
+			return firstSubs, rest, true
+		}
+	}
+	if imp, ok := body.(*goivy.LogicImplies); ok && imp != nil {
+		if equalityBoundExprReferencesAnyVar(imp.T1, vars) {
+			return nil, nil, false
+		}
+		subs, rest, ok := equalityBoundExistsBranch(vars, imp.T2)
+		if !ok {
+			return nil, nil, false
+		}
+		if actionGeneratorIsTrueExpr(rest) {
+			return subs, goivy.True, true
+		}
+		impliedRest, err := goivy.NewImplies(imp.T1, rest)
+		if err != nil {
+			return nil, nil, false
+		}
+		return subs, impliedRest, true
+	}
+	if ite, ok := body.(*goivy.LogicIte); ok && ite != nil {
+		thenSubs, thenRest, thenOK := equalityBoundExistsBranch(vars, ite.Then)
+		elseSubs, elseRest, elseOK := equalityBoundExistsBranch(vars, ite.Else)
+		if thenOK && elseOK {
+			if actionGeneratorIsTrueExpr(thenRest) && actionGeneratorIsTrueExpr(elseRest) {
+				return thenSubs, goivy.True, true
+			}
+			rest, err := goivy.NewIte(ite.Cond, thenRest, elseRest)
+			if err != nil {
+				return nil, nil, false
+			}
+			if thenSubs != nil {
+				return thenSubs, rest, true
+			}
+			return elseSubs, rest, true
+		}
+	}
+	if iff, ok := body.(*goivy.LogicIff); ok && iff != nil {
+		for _, term := range actionGeneratorIffPositiveTerms(iff) {
+			subs, rest, ok := equalityBoundExistsBranch(vars, term)
+			if ok {
+				return subs, rest, true
+			}
+		}
+		for _, term := range actionGeneratorIffNegativeTerms(iff) {
+			negated, err := goivy.NewNot(term)
+			if err != nil {
+				return nil, nil, false
+			}
+			subs, rest, ok := equalityBoundExistsBranch(vars, negated)
+			if ok {
+				return subs, rest, true
+			}
+		}
+	}
 	and, ok := body.(*goivy.LogicAnd)
 	if !ok || and == nil {
 		subs, ok := equalityBoundsFromExpr(vars, body)
@@ -829,7 +1340,8 @@ func equalityBoundExistsBody(vars []*goivy.LogicVariable, body goivy.Expr) (map[
 	for _, term := range and.Terms {
 		if key, value, ok := equalityBoundTermForVars(boundMap, term); ok {
 			if _, exists := subs[key]; exists {
-				return nil, nil, false
+				terms = append(terms, term)
+				continue
 			}
 			subs[key] = value
 			continue
@@ -853,6 +1365,38 @@ func equalityBoundExistsBody(vars []*goivy.LogicVariable, body goivy.Expr) (map[
 		return nil, nil, false
 	}
 	return subs, rest, true
+}
+
+func equalityBoundExistsBranch(vars []*goivy.LogicVariable, branch goivy.Expr) (map[goivy.NodeKey]goivy.Expr, goivy.Expr, bool) {
+	subs, extra, ok := equalityBoundsAndRemainderFromExpr(vars, branch)
+	if !ok || len(subs) != len(vars) {
+		return nil, nil, false
+	}
+	if len(extra) == 0 {
+		return subs, goivy.True, true
+	}
+	rest := extra[0]
+	if len(extra) > 1 {
+		and, err := goivy.NewAnd(extra...)
+		if err != nil {
+			return nil, nil, false
+		}
+		rest = and
+	}
+	substituted, err := goivy.Substitute(rest, subs)
+	if err != nil {
+		return nil, nil, false
+	}
+	return subs, substituted, true
+}
+
+func equalityBoundExprReferencesAnyVar(expr goivy.Expr, vars []*goivy.LogicVariable) bool {
+	for _, v := range vars {
+		if v != nil && existsVariantExprReferencesBound(expr, v.Name) {
+			return true
+		}
+	}
+	return false
 }
 
 func equalityBoundTermsContainVariantMembership(terms []goivy.Expr, vars []*goivy.LogicVariable) bool {
@@ -910,7 +1454,8 @@ func equalityBoundsAndRemainderFromExpr(vars []*goivy.LogicVariable, expr goivy.
 	for _, term := range terms {
 		if key, value, ok := equalityBoundTermForVars(boundMap, term); ok {
 			if _, exists := subs[key]; exists {
-				return nil, nil, false
+				extra = append(extra, term)
+				continue
 			}
 			subs[key] = value
 			continue
@@ -935,13 +1480,7 @@ func equalityBoundVarMap(vars []*goivy.LogicVariable) map[string]*goivy.LogicVar
 }
 
 func equalityBoundTermForVars(vars map[string]*goivy.LogicVariable, expr goivy.Expr) (goivy.NodeKey, goivy.Expr, bool) {
-	if lit, ok := expr.(*goivy.LogicLiteral); ok {
-		if lit.Polarity == 0 {
-			return goivy.NodeKey(""), nil, false
-		}
-		expr = lit.Atom
-	}
-	eq, ok := expr.(*goivy.Eq)
+	eq, ok := equalityBoundPositiveEq(expr)
 	if !ok || eq == nil {
 		return goivy.NodeKey(""), nil, false
 	}
@@ -949,6 +1488,52 @@ func equalityBoundTermForVars(vars map[string]*goivy.LogicVariable, expr goivy.E
 		return key, value, true
 	}
 	return equalityBoundSideForVars(vars, eq.T2, eq.T1)
+}
+
+func equalityBoundPositiveEq(expr goivy.Expr) (*goivy.Eq, bool) {
+	switch n := expr.(type) {
+	case *goivy.Eq:
+		return n, true
+	case *goivy.LogicLiteral:
+		if n.Polarity != 1 {
+			return nil, false
+		}
+		return equalityBoundPositiveEq(n.Atom)
+	case *goivy.LogicNot:
+		return equalityBoundNegativeEq(n.Body)
+	case *goivy.LogicIff:
+		for _, term := range actionGeneratorIffPositiveTerms(n) {
+			if eq, ok := equalityBoundPositiveEq(term); ok {
+				return eq, true
+			}
+		}
+		for _, term := range actionGeneratorIffNegativeTerms(n) {
+			negated, err := goivy.NewNot(term)
+			if err != nil {
+				return nil, false
+			}
+			if eq, ok := equalityBoundPositiveEq(negated); ok {
+				return eq, true
+			}
+		}
+		return nil, false
+	default:
+		return nil, false
+	}
+}
+
+func equalityBoundNegativeEq(expr goivy.Expr) (*goivy.Eq, bool) {
+	switch n := expr.(type) {
+	case *goivy.LogicNot:
+		return equalityBoundPositiveEq(n.Body)
+	case *goivy.LogicLiteral:
+		if n.Polarity == 0 {
+			return equalityBoundPositiveEq(n.Atom)
+		}
+		return nil, false
+	default:
+		return nil, false
+	}
 }
 
 func equalityBoundSideForVars(vars map[string]*goivy.LogicVariable, lhs, rhs goivy.Expr) (goivy.NodeKey, goivy.Expr, bool) {
@@ -1376,8 +1961,13 @@ func relationOverrideForallBoundApp(vars []*goivy.LogicVariable, body goivy.Expr
 			}
 			return find(n.T2, positive)
 		case *goivy.LogicIff:
-			for _, term := range actionGeneratorIffNegativeTerms(n) {
+			for _, term := range actionGeneratorIffPositiveTerms(n) {
 				if app, ok := find(term, positive); ok {
+					return app, true
+				}
+			}
+			for _, term := range actionGeneratorIffNegativeTerms(n) {
+				if app, ok := find(term, !positive); ok {
 					return app, true
 				}
 			}

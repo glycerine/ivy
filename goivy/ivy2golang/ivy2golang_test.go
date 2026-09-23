@@ -829,6 +829,88 @@ export set
 	}
 }
 
+func TestPreimageWalkerLocalRelationPairStateUpdateKeepsResidualGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation edge(A:node,B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    edge(3,4) := true
+}
+action step = {
+    var a:node;
+    var b:node;
+    assume edge(a,b);
+    saved_a := a;
+    saved_b := b;
+    assume edge(saved_a,saved_b) & active
+}
+export step
+`)
+	action, ok := mod.Actions.Get2("step")
+	if !ok {
+		t.Fatal("missing step action")
+	}
+	guards, ok := (&Generator{Mod: mod}).testActionPrefixPreimageAssumeFormulasOK(action)
+	if !ok {
+		if local, isLocal := action.(*goivy.LogicLocalAction); isLocal {
+			names := make([]string, 0, len(local.Locals))
+			for _, localDecl := range local.Locals {
+				names = append(names, goivy.ExprName(localDecl))
+			}
+			t.Fatalf("pair relation local preimage should keep a residual guard for action %T locals=%v body=%T", action, names, local.Body)
+		}
+		t.Fatalf("pair relation local preimage should keep a residual guard for action %T", action)
+	}
+	active := goivy.NewConst("active", goivy.Boolean)
+	if len(guards) != 1 || !guards[0].Equal(active) {
+		t.Fatalf("unexpected guards: got %#v want %s", guards, active)
+	}
+}
+
+func TestDropLocalRelationGroupWitnessGuardTermsKeepsResidualFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation edge(A:node,B:node)
+action step = {}
+export step
+`)
+	node := mod.Sig.Sorts.Get("node")
+	a := goivy.NewConst("a", node)
+	b := goivy.NewConst("b", node)
+	active := goivy.NewConst("active", goivy.Boolean)
+	edgeSort, err := goivy.NewFunctionSort(node, node, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("edge sort: %v", err)
+	}
+	edge := goivy.NewConst("edge", edgeSort)
+	edgeAB, err := goivy.NewApply(edge, a, b)
+	if err != nil {
+		t.Fatalf("edge(a,b): %v", err)
+	}
+	recheck, err := goivy.NewAnd(edgeAB, active)
+	if err != nil {
+		t.Fatalf("edge(a,b) & active: %v", err)
+	}
+	g := &Generator{Mod: mod}
+	guards, changed := g.dropLocalRelationGroupWitnessGuardTerms(
+		[]goivy.Expr{edgeAB, recheck},
+		[]goivy.Expr{a, b},
+		map[string]bool{"a": true, "b": true},
+	)
+	if !changed {
+		t.Fatalf("group relation witness guard terms should change")
+	}
+	if len(guards) != 1 || !guards[0].Equal(active) {
+		t.Fatalf("unexpected guards: got %#v want %s", guards, active)
+	}
+}
+
 func TestPreimageWalkerLowersAssignFieldActionFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -2880,6 +2962,45 @@ export set
 	}
 }
 
+func TestTargetTestActionGeneratorUsesIffFalseProductStateInequalityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual target : node
+individual saved_a : node
+individual saved_b : node
+action set(a:node, b:node) = {
+    assume (a * b <= target) <-> false;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseproductstateineqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseproductstateineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.a = (ivy.target + 1)`,
+		`gen.b = 1`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false product state inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignAIdx := strings.Index(genBody, `gen.a = (ivy.target + 1)`)
+	assignBIdx := strings.Index(genBody, `gen.b = 1`)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignAIdx < 0 || assignBIdx < 0 || guardIdx < 0 || assignAIdx > guardIdx || assignBIdx > guardIdx {
+		t.Fatalf("target=test IFF-false product state inequality witness should assign both formals before checking guard; a=%d b=%d guard=%d\n%s", assignAIdx, assignBIdx, guardIdx, genBody)
+	}
+}
+
 func TestTargetTestActionGeneratorUsesProductStateDisequalityWitnessFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -2916,6 +3037,45 @@ export set
 	guardIdx := strings.Index(genBody, `if !(`)
 	if assignAIdx < 0 || assignBIdx < 0 || guardIdx < 0 || assignAIdx > guardIdx || assignBIdx > guardIdx {
 		t.Fatalf("target=test product state disequality witness should assign both formals before checking guard; a=%d b=%d guard=%d\n%s", assignAIdx, assignBIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseProductStateEqualityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual target : node
+individual saved_a : node
+individual saved_b : node
+action set(a:node, b:node) = {
+    assume (a * b = target) <-> false;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseproductstateeqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseproductstateeqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.a = (ivy.target + 1)`,
+		`gen.b = 1`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false product state equality witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignAIdx := strings.Index(genBody, `gen.a = (ivy.target + 1)`)
+	assignBIdx := strings.Index(genBody, `gen.b = 1`)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignAIdx < 0 || assignBIdx < 0 || guardIdx < 0 || assignAIdx > guardIdx || assignBIdx > guardIdx {
+		t.Fatalf("target=test IFF-false product state equality witness should assign both formals before checking guard; a=%d b=%d guard=%d\n%s", assignAIdx, assignBIdx, guardIdx, genBody)
 	}
 }
 
@@ -3170,6 +3330,158 @@ export set
 	}
 }
 
+func TestTargetTestActionGeneratorUsesIffFalseNegatedNumericInequalityWitnessForUnboundedFormalFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(n:node) = {
+    assume ~(n > 10) <-> false;
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnumericifffalsenegineqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnumericifffalsenegineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []int{11}`,
+		`gen.n = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false negated numeric inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseImplicationNumericInequalityWitnessForUnboundedFormalFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(n:node) = {
+    assume ((active -> n > 10) <-> false);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnumericifffalseimpineqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnumericifffalseimpineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []int{10}`,
+		`gen.n = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`ivy.active`,
+		`10 < gen.n`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false implication numeric inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseOrNumericInequalityWitnessForUnboundedFormalFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(n:node) = {
+    assume ((active | n > 10) <-> false);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnumericifffalseorineqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnumericifffalseorineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []int{10}`,
+		`gen.n = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`ivy.active`,
+		`10 < gen.n`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false OR numeric inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseAndNumericInequalityWitnessForUnboundedFormalFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(n:node) = {
+    assume ((active & n > 10) <-> false);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnumericifffalseandineqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnumericifffalseandineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []int{10}`,
+		`gen.n = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`ivy.active`,
+		`10 < gen.n`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false AND numeric inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseIteNumericInequalityWitnessForUnboundedFormalFast(t *testing.T) {
+	out := generateIffFalseIteNumericWitness(t, "test", "testnumericifffalseiteineqwitness")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnumericifffalseiteineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []int{ivyTernary(ivy.active, 10, 20)}`,
+		`gen.n = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`ivyTernary(ivy.active, (10 < gen.n), (20 < gen.n))`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false ITE numeric inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
 func TestTargetTestActionGeneratorUsesNumericAffineEqualityWitnessFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -3347,6 +3659,158 @@ export set
 	guardIdx := strings.Index(genBody, guard)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("negated numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseNegatedNumericPairInequalityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(a:node, b:node) = {
+    assume ~(a < b) <-> false;
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalsenegnumericpairwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalsenegnumericpairwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.b = gen.a + 1`
+	guard := `if !((!((gen.a < gen.b)) == false)) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false negated numeric pair witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=test IFF-false negated numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseImplicationNumericPairInequalityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(a:node, b:node) = {
+    assume ((active -> a < b) <-> false);
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseimppairwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseimppairwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.a = gen.b`
+	for _, want := range []string{assign, `ivy.active`, `gen.a < gen.b`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false implication numeric pair witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=test IFF-false implication numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseOrNumericPairInequalityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(a:node, b:node) = {
+    assume ((active | a < b) <-> false);
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseorpairwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseorpairwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.a = gen.b`
+	for _, want := range []string{assign, `ivy.active`, `gen.a < gen.b`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false OR numeric pair witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=test IFF-false OR numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseAndNumericPairInequalityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(a:node, b:node) = {
+    assume ((active & a < b) <-> false);
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseandpairwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseandpairwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.a = gen.b`
+	for _, want := range []string{assign, `ivy.active`, `gen.a < gen.b`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false AND numeric pair witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=test IFF-false AND numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseIteNumericPairInequalityWitnessFast(t *testing.T) {
+	out := generateIffFalseIteNumericPairWitness(t, "test", "testifffalseitepairwitness")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseitepairwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.a = ivyTernary(ivy.active, gen.b, gen.b - 2)`
+	guard := `ivyTernary(ivy.active, (gen.a < gen.b), ((gen.a + 2) < gen.b))`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false ITE numeric pair witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=test IFF-false ITE numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
 	}
 }
 
@@ -3884,6 +4348,133 @@ export set
 	}
 }
 
+func TestTargetTestActionGeneratorUsesNegatedRelationTupleWitnessInsideIffActiveFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation banned(A:node, B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    active := true;
+    banned(3,4) := true
+}
+action set(a:node, b:node) = {
+    assume ~banned(a,b) <-> active;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnegrelationtupleiffactivewitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnegrelationtupleiffactivewitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.banned.overrides {`,
+		`if __ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1 + 1`,
+		`} else {`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`ivy.active`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test negated relation tuple IFF-active witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseRelationTupleWitnessForUnboundedFormalsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation banned(A:node, B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    banned(3,4) := true
+}
+action set(a:node, b:node) = {
+    assume banned(a,b) <-> false;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalserelationtuplewitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalserelationtuplewitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.banned.overrides {`,
+		`if __ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1 + 1`,
+		`} else {`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false relation tuple witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseNegatedRelationTupleWitnessForUnboundedFormalsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation banned(A:node, B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    banned(3,4) := true
+}
+action set(a:node, b:node) = {
+    assume ~banned(a,b) <-> false;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalsenegrelationtuplewitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalsenegrelationtuplewitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.banned.overrides {`,
+		`if !__ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false negated relation tuple witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `gen.b = __ivy_search_key_0_1.A1 + 1`) {
+		t.Fatalf("IFF-false negated relation tuple should require a true tuple, not the negated nearby witness:\n%s", genBody)
+	}
+}
+
 func TestTargetTestActionGeneratorUsesNegatedRelationTupleWitnessWithFixedFieldFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -4005,6 +4596,51 @@ export set
 	}
 	if strings.Contains(genBody, `__ivy_search_values_0`) || strings.Contains(genBody, `__ivy_search_values_1`) {
 		t.Fatalf("unbounded relation pair witness should scan relation keys, not finite value lists:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesRelationPairWitnessInsideIffActiveFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation allowed(A:node, B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    active := true;
+    allowed(3,4) := true
+}
+action set(a:node, b:node) = {
+    assume allowed(a,b) <-> active;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testrelationpairiffactivewitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testrelationpairiffactivewitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.allowed.overrides {`,
+		`if !__ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`ivy.active`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test relation pair IFF-active witness search missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `__ivy_search_values_0`) || strings.Contains(genBody, `__ivy_search_values_1`) {
+		t.Fatalf("unbounded relation pair IFF-active witness should scan relation keys, not finite value lists:\n%s", genBody)
 	}
 }
 
@@ -4193,6 +4829,78 @@ export set
 	}
 }
 
+func TestTargetTestActionGeneratorUsesIffTrueRelationOverrideForallGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation banned(X:node,Y:node)
+individual saved : node
+action set(c:node) = {
+    assume forall X:node. (~banned(X,c) <-> true);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testrelationforallifftrueguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testrelationforallifftrueguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`range ivy.banned.overrides`,
+		`if !__ivy_quant_val`,
+		`X := __ivy_quant_key`,
+		`!(ivy.banned.Get(struct{ A0 int; A1 int }{X, gen.c})) == true`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-true relation forall guard missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("target=test IFF-true relation forall guard should not fall through to finite enumeration:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseRelationOverrideForallGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation banned(X:node,Y:node)
+individual saved : node
+action set(c:node) = {
+    assume forall X:node. (banned(X,c) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testrelationforallifffalseguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testrelationforallifffalseguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`range ivy.banned.overrides`,
+		`if !__ivy_quant_val`,
+		`X := __ivy_quant_key`,
+		`ivy.banned.Get(struct{ A0 int; A1 int }{X, gen.c}) == false`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false relation forall guard missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("target=test IFF-false relation forall guard should not fall through to finite enumeration:\n%s", genBody)
+	}
+}
+
 func TestTargetTestActionGeneratorUsesEqualityBoundForallGuardFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -4227,6 +4935,43 @@ export set
 	mainBody := bodyAfterMarker(out.Source, "func main()")
 	if strings.Contains(mainBody, "__ivy_trial") {
 		t.Fatalf("target=test equality-bound forall guard should not need trial execution:\n%s", mainBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseDisequalityBoundForallGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation allowed(N:node)
+individual saved : node
+action set(c:node) = {
+    assume forall X:node. ((X ~= c) <-> false) -> allowed(X);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalsediseqboundforall", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalsediseqboundforall_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`ivy.allowed.Get(gen.c)`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false disequality-bound forall guard missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test IFF-false disequality-bound forall guard should not enumerate X:\n%s", genBody)
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if strings.Contains(mainBody, "__ivy_trial") {
+		t.Fatalf("target=test IFF-false disequality-bound forall guard should not need trial execution:\n%s", mainBody)
 	}
 }
 
@@ -4343,6 +5088,253 @@ export set
 	}
 }
 
+func TestTargetTestActionGeneratorSimplifiesUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. X ~= c;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testunboundedexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testunboundedexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesIffTrueUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. ((X ~= c) <-> true);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifftrueexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifftrueexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test IFF-true unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesIffFalseEqualityUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. ((X = c) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseeqexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseeqexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test IFF-false equality unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesImpliedUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. active -> X ~= c;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testimpliedexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testimpliedexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test implied unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=test implied unbounded exists disequality should simplify to true without residual active guard:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesOrUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. X ~= c | active;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testorexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testorexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test OR unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=test OR unbounded exists disequality should simplify to true without residual active guard:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesIteUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node,n:node) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 2 {
+		t.Fatalf("set params = %d, want 2", len(params))
+	}
+	node := mod.Sig.Sorts.Get("node")
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	x := &goivy.LogicVariable{Name: "X", VSort: node}
+	xC, err := goivy.NewEq(x, params[0])
+	if err != nil {
+		t.Fatalf("X = c: %v", err)
+	}
+	notXC, err := goivy.NewNot(xC)
+	if err != nil {
+		t.Fatalf("X ~= c: %v", err)
+	}
+	xN, err := goivy.NewEq(x, params[1])
+	if err != nil {
+		t.Fatalf("X = n: %v", err)
+	}
+	notXN, err := goivy.NewNot(xN)
+	if err != nil {
+		t.Fatalf("X ~= n: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, notXC, notXN)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	exists, err := goivy.NewExists([]*goivy.LogicVariable{x}, ite)
+	if err != nil {
+		t.Fatalf("exists: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(exists), goivy.NewAssignAction(goivy.NewConst("saved", node), params[1]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testiteexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testiteexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test ITE unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=test ITE unbounded exists disequality should simplify to true without residual active guard:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesUnboundedExistsDisequalityResidualWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node,n:node) = {
+    assume exists X:node. X ~= c & n > 10;
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testunboundedexistsdiseqresid", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testunboundedexistsdiseqresid_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	witness := `__ivy_search_values_1 := []int{11}`
+	guard := `(10 < gen.n)`
+	for _, want := range []string{witness, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test unbounded exists disequality residual witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, `gen.n = __ivy_search_values_1`)
+	guardIdx := strings.LastIndex(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=test unbounded exists disequality residual witness should assign before guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test unbounded exists disequality residual should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
 func TestTargetTestActionGeneratorUsesEqualityBoundForallNumericWitnessFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -4412,6 +5404,269 @@ export set
 	}
 	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "for X :=") {
 		t.Fatalf("target=test equality-bound exists numeric guard should not enumerate X:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesEqualityBoundExistsOrFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node,n:node) = {
+    assume exists X:node. X = c | n > X;
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testeqboundexistsor", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testeqboundexistsor_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "unsupported target=test action generator assume guard") || strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test equality-bound exists OR guard should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "gen.n = gen.c + 1") || strings.Contains(genBody, "gen.c < gen.n") {
+		t.Fatalf("target=test equality-bound exists OR guard should simplify to true, not constrain n:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesGuardedEqualityBoundExistsOrFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual enabled : bool
+individual saved : node
+action set(c:node,n:node) = {
+    assume exists X:node. (X = c & active) | (X = n & enabled);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testguardedeqboundexistsor", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testguardedeqboundexistsor_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{`ivy.active`, `ivy.enabled`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test guarded equality-bound exists OR guard missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "unsupported target=test action generator assume guard") || strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test guarded equality-bound exists OR guard should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "gen.c < gen.n") || strings.Contains(genBody, "gen.n = gen.c + 1") {
+		t.Fatalf("target=test guarded equality-bound exists OR guard should not invent numeric witnesses:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesEqualityBoundExistsIteFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node,n:node) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 2 {
+		t.Fatalf("set params = %d, want 2", len(params))
+	}
+	node := mod.Sig.Sorts.Get("node")
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	x := &goivy.LogicVariable{Name: "X", VSort: node}
+	xC, err := goivy.NewEq(x, params[0])
+	if err != nil {
+		t.Fatalf("X = c: %v", err)
+	}
+	xN, err := goivy.NewEq(x, params[1])
+	if err != nil {
+		t.Fatalf("X = n: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, xC, xN)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	exists, err := goivy.NewExists([]*goivy.LogicVariable{x}, ite)
+	if err != nil {
+		t.Fatalf("exists: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(exists), goivy.NewAssignAction(goivy.NewConst("saved", node), params[1]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testeqboundexistsite", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testeqboundexistsite_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "unsupported target=test action generator assume guard") || strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test equality-bound exists ITE guard should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "gen.c < gen.n") || strings.Contains(genBody, "gen.n = gen.c + 1") {
+		t.Fatalf("target=test equality-bound exists ITE guard should simplify to true, not invent numeric witnesses:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesEqualityBoundExistsIffTrueFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. ((X = c) <-> true);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testeqboundexistsifftrue", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testeqboundexistsifftrue_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "unsupported target=test action generator assume guard") || strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test equality-bound exists IFF-true guard should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "gen.c <") || strings.Contains(genBody, "gen.c + 1") {
+		t.Fatalf("target=test equality-bound exists IFF-true guard should simplify to true, not invent numeric witnesses:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesEqualityBoundExistsImplicationFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. active -> X = c;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testeqboundexistsimplies", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testeqboundexistsimplies_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test equality-bound exists implication guard should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "ivy.active") || strings.Contains(genBody, "gen.c <") || strings.Contains(genBody, "gen.c + 1") {
+		t.Fatalf("target=test equality-bound exists implication guard should simplify to true without residual witnesses:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesEqualityBoundExistsImplicationResidualFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node,n:node) = {
+    assume exists X:node. active -> (X = c & n > X);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testeqboundexistsimpliesresid", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testeqboundexistsimpliesresid_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{`gen.n = gen.c + 1`, `ivy.active`, `(gen.c < gen.n)`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test equality-bound exists implication residual missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test equality-bound exists implication residual should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesNegatedDisequalityBoundExistsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. ~(X ~= c);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnegdiseqboundexists", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnegdiseqboundexists_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test negated-disequality bound exists should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorSimplifiesIffFalseDisequalityBoundExistsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. ((X ~= c) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalsediseqboundexists", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalsediseqboundexists_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=test IFF-false disequality bound exists should simplify without enumerating X:\n%s", genBody)
 	}
 }
 
@@ -4578,6 +5833,65 @@ export set
 		if !strings.Contains(genBody, want) {
 			t.Fatalf("target=test choice assume preimage missing %q:\n%s", want, genBody)
 		}
+	}
+}
+
+func TestTargetTestChoiceWithTrueBranchDoesNotEmitFalseGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+}
+export set
+`)
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	savedSym, err := mod.Sig.FindSymbol("saved", false)
+	if err != nil {
+		t.Fatalf("FindSymbol saved: %v", err)
+	}
+	saved := goivy.NewConst("saved", savedSym.CSort)
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewAssumeAction(goivy.False),
+		goivy.NewSequence(),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssignAction(saved, formals[0]))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testchoicetruebranch", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testchoicetruebranch_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		`if !(false) {`,
+		`return false`,
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("choice with an enabled branch should not emit rejecting false guard %q:\n%s", bad, genBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `ivy.___ivy_set_choice("___branch",`) ||
+		!strings.Contains(genBody, `, 1)`) {
+		t.Fatalf("choice with one enabled branch should set a branch override:\n%s", genBody)
+	}
+	if strings.Contains(mainBody, `__ivy_trial := ivy.__ivy_clone()`) ||
+		strings.Contains(mainBody, `__ivy_assume_rejecting = true`) {
+		t.Fatalf("choice with generated branch override should execute directly, not by trial:\n%s", mainBody)
 	}
 }
 
@@ -4908,7 +6222,7 @@ export set
 	}
 }
 
-func TestTargetTestGuardedInternalChoiceUsesTrialFast(t *testing.T) {
+func TestTargetTestGuardedInternalChoiceUsesBranchOverrideFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green, blue}
 individual saved : color
@@ -4952,26 +6266,90 @@ export set
 	act.SetFormalParams(formals)
 	mod.Actions.Set("set", act)
 
-	out, err := Generate(mod, Config{Target: "test", ClassName: "testguardedchoiceusestrial", TestIters: "1", TestRuns: "1"})
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testguardedchoiceoverride", TestIters: "1", TestRuns: "1"})
 	if err != nil {
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
-	genBody := bodyAfterMarker(out.Source, "func (gen *Testguardedchoiceusestrial_set_generator) generate() bool")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testguardedchoiceoverride_set_generator) generate() bool")
 	if genBody == "" {
 		t.Fatalf("set generator body not emitted:\n%s", out.Source)
 	}
 	if !strings.Contains(genBody, `gen.c == green`) {
-		t.Fatalf("guarded choice generator should still constrain the formal before trial execution:\n%s", genBody)
+		t.Fatalf("guarded choice generator should still constrain the formal before execution:\n%s", genBody)
+	}
+	for _, want := range []string{
+		`ivy.___ivy_set_choice("___branch",`,
+		`, 0)`,
+		`, 1)`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("guarded choice generator should set branch override missing %q:\n%s", want, genBody)
+		}
 	}
 	mainBody := bodyAfterMarker(out.Source, "func main()")
-	for _, want := range []string{
-		`__ivy_trial := ivy.__ivy_clone()`,
-		`__ivy_assume_rejecting = true`,
-		`if __ivy_trial_rejected {`,
+	if strings.Contains(mainBody, `__ivy_trial := ivy.__ivy_clone()`) ||
+		strings.Contains(mainBody, `__ivy_assume_rejecting = true`) ||
+		strings.Contains(mainBody, `if __ivy_trial_rejected {`) {
+		t.Fatalf("guarded internal choice with generated branch override should execute directly, not by trial:\n%s", mainBody)
+	}
+}
+
+func TestTargetGenChoiceWithTrueBranchDoesNotEmitFalseGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+}
+export set
+`)
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+	savedSym, err := mod.Sig.FindSymbol("saved", false)
+	if err != nil {
+		t.Fatalf("FindSymbol saved: %v", err)
+	}
+	saved := goivy.NewConst("saved", savedSym.CSort)
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewAssumeAction(goivy.False),
+		goivy.NewSequence(),
+	)
+	act := goivy.NewSequence(choice, goivy.NewAssignAction(saved, formals[0]))
+	act.SetFormalParams(formals)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genchoicetruebranch", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genchoicetruebranch_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		`if !(false) {`,
+		`return false`,
 	} {
-		if !strings.Contains(mainBody, want) {
-			t.Fatalf("guarded internal choice should use hidden trial path missing %q:\n%s", want, mainBody)
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=gen choice with an enabled branch should not emit rejecting false guard %q:\n%s", bad, genBody)
 		}
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genchoicetruebranch_set_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("set generator execute body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `ivy.___ivy_set_choice("___branch",`) ||
+		!strings.Contains(genBody, `, 1)`) {
+		t.Fatalf("target=gen choice with one enabled branch should set a branch override:\n%s", genBody)
+	}
+	if strings.Contains(executeBody, `__ivy_trial := ivy.__ivy_clone()`) ||
+		strings.Contains(executeBody, `__ivy_assume_rejecting = true`) {
+		t.Fatalf("target=gen choice with generated branch override should execute directly, not by trial:\n%s", executeBody)
 	}
 }
 
@@ -5234,7 +6612,7 @@ export set
 	}
 }
 
-func TestTargetGenGuardedInternalChoiceUsesTrialFast(t *testing.T) {
+func TestTargetGenGuardedInternalChoiceUsesBranchOverrideFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green, blue}
 individual saved : color
@@ -5278,20 +6656,58 @@ export set
 	act.SetFormalParams(formals)
 	mod.Actions.Set("set", act)
 
-	out, err := Generate(mod, Config{Target: "gen", ClassName: "genguardedchoiceusestrial", TestIters: "1", TestRuns: "1"})
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genguardedchoiceoverride", TestIters: "1", TestRuns: "1"})
 	if err != nil {
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
-	genBody := bodyAfterMarker(out.Source, "func (gen *Genguardedchoiceusestrial_set_generator) generate() bool")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genguardedchoiceoverride_set_generator) generate() bool")
 	if genBody == "" {
 		t.Fatalf("set generator body not emitted:\n%s", out.Source)
 	}
 	if !strings.Contains(genBody, `gen.c == green`) {
-		t.Fatalf("guarded choice generator should still constrain the formal before trial execution:\n%s", genBody)
+		t.Fatalf("guarded choice generator should still constrain the formal before execution:\n%s", genBody)
 	}
-	executeBody := bodyAfterMarker(out.Source, "func (gen *Genguardedchoiceusestrial_set_generator) execute()")
+	for _, want := range []string{
+		`ivy.___ivy_set_choice("___branch",`,
+		`, 0)`,
+		`, 1)`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("guarded choice generator should set branch override missing %q:\n%s", want, genBody)
+		}
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genguardedchoiceoverride_set_generator) execute()")
 	if executeBody == "" {
 		t.Fatalf("set generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, `__ivy_trial := ivy.__ivy_clone()`) ||
+		strings.Contains(executeBody, `__ivy_assume_rejecting = true`) ||
+		strings.Contains(executeBody, `if __ivy_trial_rejected {`) {
+		t.Fatalf("target=gen guarded internal choice with generated branch override should execute directly, not by trial:\n%s", executeBody)
+	}
+}
+
+func TestTargetGenUnsupportedPreimageAssumeUsesTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual flag : bool
+after init {
+    flag := true
+}
+action step = {
+    while flag {
+        assume false;
+        flag := false
+    }
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genunsupportedpreimagetrial", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genunsupportedpreimagetrial_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
 	}
 	for _, want := range []string{
 		`__ivy_trial := ivy.__ivy_clone()`,
@@ -5300,12 +6716,15 @@ export set
 		`return`,
 	} {
 		if !strings.Contains(executeBody, want) {
-			t.Fatalf("target=gen guarded internal choice should use rejecting trial path missing %q:\n%s", want, executeBody)
+			t.Fatalf("target=gen action with unproved runtime assume should use rejecting trial path missing %q:\n%s", want, executeBody)
 		}
+	}
+	if strings.Contains(executeBody, "unsupported action generator assume guard") {
+		t.Fatalf("target=gen should trial unproved runtime assumes, not emit unsupported guard comments:\n%s", executeBody)
 	}
 }
 
-func TestTargetGenGuardedInternalChoiceTrialPreservesTraceBracesFast(t *testing.T) {
+func TestTargetGenGuardedInternalChoiceBranchOverridePreservesTraceBracesFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green, blue}
 individual saved : color
@@ -5359,29 +6778,39 @@ export set
 	}
 	for _, want := range []string{
 		`fmt.Fprintln(__ivy_out, "{")`,
-		`_, _ = io.Copy(__ivy_out, &__ivy_trace)`,
+		`ivy.___ivy_push("set")`,
+		`ivy.set(gen.c)`,
+		`ivy.___ivy_pop()`,
 		`fmt.Fprintln(__ivy_out, "}")`,
 	} {
 		if !strings.Contains(executeBody, want) {
-			t.Fatalf("target=gen guarded trial trace missing %q:\n%s", want, executeBody)
+			t.Fatalf("target=gen guarded branch-override trace missing %q:\n%s", want, executeBody)
 		}
+	}
+	if strings.Contains(executeBody, `__ivy_trial := ivy.__ivy_clone()`) ||
+		strings.Contains(executeBody, `_, _ = io.Copy(__ivy_out, &__ivy_trace)`) {
+		t.Fatalf("target=gen guarded branch override should not use trial trace buffering:\n%s", executeBody)
 	}
 }
 
 func TestTargetTestTrialUsesOriginalActionNameForStackFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green, blue}
+individual flag : bool
 individual saved : color
+after init {
+    flag := true
+}
 object client = {
     action open(c:color) = {
+        while flag {
+            assume false;
+            flag := false
+        }
     }
 }
 export client.open
 `)
-	color, ok := mod.Sig.Sorts.Get2("color")
-	if !ok {
-		t.Fatal("missing color sort")
-	}
 	base, ok := mod.Actions.Get2("client.open")
 	if !ok {
 		t.Fatal("missing client.open action")
@@ -5390,29 +6819,6 @@ export client.open
 	if len(formals) != 1 {
 		t.Fatalf("client.open formals=%d, want 1", len(formals))
 	}
-	c := formals[0]
-	savedSym, err := mod.Sig.FindSymbol("saved", false)
-	if err != nil {
-		t.Fatalf("FindSymbol saved: %v", err)
-	}
-	saved := goivy.NewConst("saved", savedSym.CSort)
-	green := goivy.NewConst("green", color)
-	blue := goivy.NewConst("blue", color)
-	greenGuard, err := goivy.NewEq(c, green)
-	if err != nil {
-		t.Fatalf("green guard: %v", err)
-	}
-	blueGuard, err := goivy.NewEq(c, blue)
-	if err != nil {
-		t.Fatalf("blue guard: %v", err)
-	}
-	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
-		goivy.NewSequence(goivy.NewAssumeAction(greenGuard), goivy.NewAssignAction(saved, green)),
-		goivy.NewSequence(goivy.NewAssumeAction(blueGuard), goivy.NewAssignAction(saved, blue)),
-	)
-	act := goivy.NewSequence(choice, goivy.NewAssumeAction(greenGuard))
-	act.SetFormalParams(formals)
-	mod.Actions.Set("client.open", act)
 
 	out, err := Generate(mod, Config{Target: "test", ClassName: "trialstackname", TestIters: "1", TestRuns: "1"})
 	if err != nil {
@@ -5427,6 +6833,47 @@ export client.open
 	}
 	if strings.Contains(mainBody, `__ivy_trial.___ivy_push("client__open")`) {
 		t.Fatalf("target=test trial must not push mangled Go function name:\n%s", mainBody)
+	}
+}
+
+func TestTargetTestTrialCommitsByStateCopyFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual flag : bool
+individual saved : color
+after init {
+    flag := true
+}
+action set(c:color) = {
+    while flag {
+        assume false;
+        flag := false
+    }
+}
+export set
+`)
+	base, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	formals := base.GetFormalParams()
+	if len(formals) != 1 {
+		t.Fatalf("set formals=%d, want 1", len(formals))
+	}
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "trialstatecopy", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(mainBody, `*ivy = *__ivy_trial`) {
+		t.Fatalf("target=test trial should commit accepted state by copying into the existing Ivy object:\n%s", mainBody)
+	}
+	if strings.Contains(mainBody, `ivy = __ivy_trial`) {
+		t.Fatalf("target=test trial must not swap the Ivy pointer after readers/timers are bound:\n%s", mainBody)
 	}
 }
 
@@ -5481,6 +6928,78 @@ export set
 	traceIdx := strings.Index(mainBody, trace)
 	if guardIdx < 0 || traceIdx < 0 || guardIdx > traceIdx {
 		t.Fatalf("conditional assume guard should run before action trace; guard=%d trace=%d\n%s", guardIdx, traceIdx, mainBody)
+	}
+}
+
+func TestTargetTestIfSomeConditionPreimageUsesExistentialGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action set(c:color) = {
+    if some (x:color) x = green {
+        assume c = green
+    }
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifsomepreimage", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifsomepreimage_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c == green`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test if-some preimage guard missing %q:\n%s", want, genBody)
+		}
+	}
+	for _, bad := range []string{
+		"unsupported target=test action generator assume guard",
+		"SomeCondition",
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=test if-some preimage should lower the condition before guard emission, found %q:\n%s", bad, genBody)
+		}
+	}
+}
+
+func TestTargetGenIfSomeConditionPreimageUsesExistentialGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action set(c:color) = {
+    if some (x:color) x = green {
+        assume c = green
+    }
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifsomepreimage", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifsomepreimage_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c == green`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen if-some preimage guard missing %q:\n%s", want, genBody)
+		}
+	}
+	for _, bad := range []string{
+		"unsupported action generator assume guard",
+		"SomeCondition",
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=gen if-some preimage should lower the condition before guard emission, found %q:\n%s", bad, genBody)
+		}
 	}
 }
 
@@ -5619,6 +7138,120 @@ export step
 	}
 }
 
+func TestTargetGenLocalRelationStateUpdateFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation allowed(N:node)
+individual saved : node
+after init {
+    allowed(7) := true
+}
+action step = {
+    var n : node;
+    assume allowed(n);
+    saved := n;
+    assume allowed(saved)
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalrelationstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *genlocalrelationstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`loc__n = __ivy_witness_key`,
+		`ivy.saved = loc__n`,
+		`ivyAssume(ivy.allowed.Get(ivy.saved)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("target=gen local relation witness state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"unsupported action generator assume guard",
+		"cannot enumerate quantified variable",
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=gen local relation state update generator leaked %q:\n%s", bad, genBody)
+		}
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationstate_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, "__ivy_trial") {
+		t.Fatalf("target=gen local relation state update should execute without trial source:\n%s", executeBody)
+	}
+}
+
+func TestTargetTestLocalRelationStateUpdatePreservesResidualGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation allowed(N:node)
+individual active : bool
+individual saved : node
+after init {
+    allowed(7) := true
+}
+action step = {
+    var n : node;
+    assume allowed(n);
+    saved := n;
+    assume allowed(saved) & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationstateguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalrelationstateguard_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !(ivy.active) {`) {
+		t.Fatalf("local relation state update should preserve active guard in generator:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationstateguard) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`loc__n = __ivy_witness_key`,
+		`ivy.saved = loc__n`,
+		`ivyAssume(((ivy.allowed.Get(ivy.saved)) && (ivy.active))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local relation residual state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation residual state update should execute directly after generator success, without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
 func TestTargetTestLocalRelationExistsStateUpdateSkipsTrialFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -5665,6 +7298,116 @@ export step
 		if strings.Contains(mainBody, bad) {
 			t.Fatalf("local relation existential witness should let zero-formal action execute directly without trial source %q:\n%s", bad, mainBody)
 		}
+	}
+}
+
+func TestTargetTestLocalRelationExistsStateUpdatePreservesResidualGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation edge(N:node, M:node)
+individual active : bool
+individual saved : node
+after init {
+    edge(7,8) := true
+}
+action step = {
+    var n : node;
+    assume exists M:node. edge(n,M);
+    saved := n;
+    assume exists M:node. edge(saved,M) & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationexistsguardstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalrelationexistsguardstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !(ivy.active) {`) {
+		t.Fatalf("local relation existential state update should preserve active guard in generator:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationexistsguardstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.edge.overrides {`,
+		`loc__n = __ivy_witness_key.A0`,
+		`ivy.saved = loc__n`,
+		`if ((ivy.edge.Get(struct{ A0 int; A1 int }{ivy.saved, M})) && (ivy.active)) {`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local relation existential residual state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation existential residual state update should execute directly after generator success, without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetGenLocalRelationExistsStateUpdatePreservesResidualGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation edge(N:node, M:node)
+individual active : bool
+individual saved : node
+after init {
+    edge(7,8) := true
+}
+action step = {
+    var n : node;
+    assume exists M:node. edge(n,M);
+    saved := n;
+    assume exists M:node. edge(saved,M) & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalrelationexistsguardstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationexistsguardstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !(ivy.active) {`) {
+		t.Fatalf("target=gen local relation existential state update should preserve active guard in generator:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *genlocalrelationexistsguardstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.edge.overrides {`,
+		`loc__n = __ivy_witness_key.A0`,
+		`ivy.saved = loc__n`,
+		`if ((ivy.edge.Get(struct{ A0 int; A1 int }{ivy.saved, M})) && (ivy.active)) {`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("target=gen local relation existential residual state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationexistsguardstate_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, "__ivy_trial") {
+		t.Fatalf("target=gen local relation existential residual state update should execute without trial source:\n%s", executeBody)
 	}
 }
 
@@ -5717,6 +7460,110 @@ export step
 	}
 }
 
+func TestTargetTestLocalRelationIffFalseNegatedStateUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation allowed(N:node)
+individual saved : node
+after init {
+    allowed(7) := true
+}
+action step = {
+    var n : node;
+    assume allowed(n);
+    saved := n;
+    assume (~allowed(saved) <-> false)
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationifffalsestate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationifffalsestate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`loc__n = __ivy_witness_key`,
+		`ivy.saved = loc__n`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local relation IFF-false state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation IFF-false witness should let zero-formal action execute directly without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetGenLocalRelationIffFalseNegatedStateUpdateFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation allowed(N:node)
+individual saved : node
+after init {
+    allowed(7) := true
+}
+action step = {
+    var n : node;
+    assume allowed(n);
+    saved := n;
+    assume (~allowed(saved) <-> false)
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalrelationifffalsestate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *genlocalrelationifffalsestate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`loc__n = __ivy_witness_key`,
+		`ivy.saved = loc__n`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("target=gen local relation IFF-false state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationifffalsestate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"unsupported action generator assume guard",
+		"cannot enumerate quantified variable",
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=gen local relation IFF-false generator leaked %q:\n%s", bad, genBody)
+		}
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationifffalsestate_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, "__ivy_trial") {
+		t.Fatalf("target=gen local relation IFF-false state update should execute without trial source:\n%s", executeBody)
+	}
+}
+
 func TestTargetTestLocalRelationPointUpdateSkipsTrialFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -5764,6 +7611,62 @@ export step
 		if strings.Contains(mainBody, bad) {
 			t.Fatalf("local relation point update should let zero-formal action execute directly without trial source %q:\n%s", bad, mainBody)
 		}
+	}
+}
+
+func TestTargetGenLocalRelationPointUpdateFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation allowed(N:node)
+relation seen(N:node)
+after init {
+    allowed(7) := true
+}
+action step = {
+    var n : node;
+    assume allowed(n);
+    seen(n) := true;
+    assume seen(n)
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalrelationpoint", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *genlocalrelationpoint) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`loc__n = __ivy_witness_key`,
+		`ivy.seen.Set(loc__n, true)`,
+		`ivyAssume(ivy.seen.Get(loc__n)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("target=gen local relation point-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationpoint_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"unsupported action generator assume guard",
+		"cannot enumerate quantified variable",
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=gen local relation point update generator leaked %q:\n%s", bad, genBody)
+		}
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationpoint_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, "__ivy_trial") {
+		t.Fatalf("target=gen local relation point update should execute without trial source:\n%s", executeBody)
 	}
 }
 
@@ -6793,6 +8696,90 @@ export step
 	}
 }
 
+func TestTargetTestLocalRelationAssignFieldActionIffFalseNegatedRecheckSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+relation allowed(C:cell)
+action step = {
+}
+export step
+`)
+	color := mod.Sig.Sorts.Get("color")
+	cell := mod.Sig.Sorts.Get("cell")
+	x := goivy.NewConst("x", cell)
+	greenEntry, ok := mod.Sig.Symbols.Get2("green")
+	if !ok {
+		t.Fatal("symbol green not found")
+	}
+	green := goivy.NewConst("green", greenEntry.Sort)
+	allowed, err := mod.Sig.FindSymbol("allowed", false)
+	if err != nil {
+		t.Fatalf("FindSymbol allowed: %v", err)
+	}
+	allowedX, err := goivy.NewApply(goivy.NewConst("allowed", allowed.CSort), x)
+	if err != nil {
+		t.Fatalf("NewApply allowed(x): %v", err)
+	}
+	fieldSort, err := goivy.NewFunctionSort(cell, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", fieldSort)
+	shadeX := goivy.MustApply(shade, x)
+	shadeGreen, err := goivy.NewEq(shadeX, green)
+	if err != nil {
+		t.Fatalf("shade(x) = green: %v", err)
+	}
+	notShadeGreen, err := goivy.NewNot(shadeGreen)
+	if err != nil {
+		t.Fatalf("not shade(x) = green: %v", err)
+	}
+	iffFalse, err := goivy.NewIff(notShadeGreen, goivy.False)
+	if err != nil {
+		t.Fatalf("not shade(x) = green iff false: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(allowedX),
+		goivy.NewAssignFieldAction(shade, x, green),
+		goivy.NewAssumeAction(iffFalse),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", x, body))
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationfieldifffalseneg", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationfieldifffalseneg) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`x = __ivy_witness_key`,
+		`x.shade = green`,
+		`ivyAssume((!((x.shade == green)) == false)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local relation assign-field IFF-false negated body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation assign-field IFF-false negated recheck should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
 func TestTargetTestLocalRelationNullFieldActionSkipsTrialFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -7029,6 +9016,180 @@ export step
 	}
 }
 
+func TestTargetGenLocalRelationGuardedAssignFieldActionFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+relation allowed(C:cell)
+individual active : bool
+action step = {
+}
+export step
+`)
+	color := mod.Sig.Sorts.Get("color")
+	cell := mod.Sig.Sorts.Get("cell")
+	x := goivy.NewConst("x", cell)
+	activeEntry, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	active := goivy.NewConst("active", activeEntry.CSort)
+	greenEntry, ok := mod.Sig.Symbols.Get2("green")
+	if !ok {
+		t.Fatal("symbol green not found")
+	}
+	green := goivy.NewConst("green", greenEntry.Sort)
+	allowed, err := mod.Sig.FindSymbol("allowed", false)
+	if err != nil {
+		t.Fatalf("FindSymbol allowed: %v", err)
+	}
+	allowedX, err := goivy.NewApply(goivy.NewConst("allowed", allowed.CSort), x)
+	if err != nil {
+		t.Fatalf("NewApply allowed(x): %v", err)
+	}
+	fieldSort, err := goivy.NewFunctionSort(cell, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", fieldSort)
+	shadeX := goivy.MustApply(shade, x)
+	shadeGreen, err := goivy.NewEq(shadeX, green)
+	if err != nil {
+		t.Fatalf("shade(x) = green: %v", err)
+	}
+	recheck, err := goivy.NewImplies(active, shadeGreen)
+	if err != nil {
+		t.Fatalf("active -> shade(x)=green: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(allowedX),
+		goivy.NewIfAction(active, goivy.NewAssignFieldAction(shade, x, green), goivy.NewSequence()),
+		goivy.NewAssumeAction(recheck),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", x, body))
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalrelationguardfield", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationguardfield_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=gen guarded relation field update should preserve active residual guard:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *genlocalrelationguardfield) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`if ivy.active {`,
+		`x.shade = green`,
+		`ivyAssume((!(ivy.active) || ((x.shade == green)))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("target=gen local relation guarded assign-field body missing %q:\n%s", want, stepBody)
+		}
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationguardfield_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, "__ivy_trial") {
+		t.Fatalf("target=gen local relation guarded assign-field action should execute without trial source:\n%s", executeBody)
+	}
+}
+
+func TestTargetGenLocalRelationElseGuardedAssignFieldActionFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+relation allowed(C:cell)
+individual active : bool
+action step = {
+}
+export step
+`)
+	color := mod.Sig.Sorts.Get("color")
+	cell := mod.Sig.Sorts.Get("cell")
+	x := goivy.NewConst("x", cell)
+	activeEntry, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	active := goivy.NewConst("active", activeEntry.CSort)
+	greenEntry, ok := mod.Sig.Symbols.Get2("green")
+	if !ok {
+		t.Fatal("symbol green not found")
+	}
+	green := goivy.NewConst("green", greenEntry.Sort)
+	allowed, err := mod.Sig.FindSymbol("allowed", false)
+	if err != nil {
+		t.Fatalf("FindSymbol allowed: %v", err)
+	}
+	allowedX, err := goivy.NewApply(goivy.NewConst("allowed", allowed.CSort), x)
+	if err != nil {
+		t.Fatalf("NewApply allowed(x): %v", err)
+	}
+	fieldSort, err := goivy.NewFunctionSort(cell, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", fieldSort)
+	shadeX := goivy.MustApply(shade, x)
+	shadeGreen, err := goivy.NewEq(shadeX, green)
+	if err != nil {
+		t.Fatalf("shade(x) = green: %v", err)
+	}
+	recheck, err := goivy.NewOr(active, shadeGreen)
+	if err != nil {
+		t.Fatalf("active | shade(x)=green: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(allowedX),
+		goivy.NewIfAction(active, goivy.NewSequence(), goivy.NewAssignFieldAction(shade, x, green)),
+		goivy.NewAssumeAction(recheck),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", x, body))
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalrelationelseguardfield", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationelseguardfield_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=gen else-guarded relation field update should preserve active residual guard:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *genlocalrelationelseguardfield) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`} else {`,
+		`x.shade = green`,
+		`ivyAssume(((ivy.active) || ((x.shade == green)))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("target=gen local relation else-guarded assign-field body missing %q:\n%s", want, stepBody)
+		}
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationelseguardfield_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, "__ivy_trial") {
+		t.Fatalf("target=gen local relation else-guarded assign-field action should execute without trial source:\n%s", executeBody)
+	}
+}
+
 func TestTargetTestLocalRelationElseGuardedAssignFieldActionSkipsTrialFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -7209,6 +9370,110 @@ export step
 		if strings.Contains(mainBody, bad) {
 			t.Fatalf("local relation two-sided assign-field action should execute without trial source %q:\n%s", bad, mainBody)
 		}
+	}
+}
+
+func TestTargetGenLocalRelationTwoSidedAssignFieldActionFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+relation allowed(C:cell)
+individual active : bool
+action step = {
+}
+export step
+`)
+	color := mod.Sig.Sorts.Get("color")
+	cell := mod.Sig.Sorts.Get("cell")
+	x := goivy.NewConst("x", cell)
+	activeEntry, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	active := goivy.NewConst("active", activeEntry.CSort)
+	greenEntry, ok := mod.Sig.Symbols.Get2("green")
+	if !ok {
+		t.Fatal("symbol green not found")
+	}
+	green := goivy.NewConst("green", greenEntry.Sort)
+	redEntry, ok := mod.Sig.Symbols.Get2("red")
+	if !ok {
+		t.Fatal("symbol red not found")
+	}
+	red := goivy.NewConst("red", redEntry.Sort)
+	allowed, err := mod.Sig.FindSymbol("allowed", false)
+	if err != nil {
+		t.Fatalf("FindSymbol allowed: %v", err)
+	}
+	allowedX, err := goivy.NewApply(goivy.NewConst("allowed", allowed.CSort), x)
+	if err != nil {
+		t.Fatalf("NewApply allowed(x): %v", err)
+	}
+	fieldSort, err := goivy.NewFunctionSort(cell, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", fieldSort)
+	shadeX := goivy.MustApply(shade, x)
+	shadeGreen, err := goivy.NewEq(shadeX, green)
+	if err != nil {
+		t.Fatalf("shade(x) = green: %v", err)
+	}
+	shadeRed, err := goivy.NewEq(shadeX, red)
+	if err != nil {
+		t.Fatalf("shade(x) = red: %v", err)
+	}
+	recheck, err := goivy.NewIte(active, shadeGreen, shadeRed)
+	if err != nil {
+		t.Fatalf("ite(active, shade(x)=green, shade(x)=red): %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(allowedX),
+		goivy.NewIfAction(active, goivy.NewAssignFieldAction(shade, x, green), goivy.NewAssignFieldAction(shade, x, red)),
+		goivy.NewAssumeAction(recheck),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", x, body))
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalrelationtwosidefield", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationtwosidefield_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"unsupported action generator assume guard",
+		"cannot enumerate quantified variable",
+		"__ivy_trial",
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=gen two-sided relation field update generator leaked %q:\n%s", bad, genBody)
+		}
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *genlocalrelationtwosidefield) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_witness_key, __ivy_witness_val := range ivy.allowed.overrides {`,
+		`if ivy.active {`,
+		`x.shade = green`,
+		`} else {`,
+		`x.shade = red`,
+		`ivyAssume(ivyTernary(ivy.active, (x.shade == green), (x.shade == red))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("target=gen local relation two-sided assign-field body missing %q:\n%s", want, stepBody)
+		}
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationtwosidefield_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, "__ivy_trial") {
+		t.Fatalf("target=gen local relation two-sided assign-field action should execute without trial source:\n%s", executeBody)
 	}
 }
 
@@ -7486,6 +9751,382 @@ export step
 	}
 }
 
+func TestTargetTestLocalRelationPairIffFalseNegatedStateUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation edge(A:node,B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    edge(3,4) := true
+}
+action step = {
+    var a:node;
+    var b:node;
+    assume edge(a,b);
+    saved_a := a;
+    saved_b := b;
+    assume (~edge(saved_a,saved_b) <-> false)
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationpairifffalsestate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationpairifffalsestate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__a = __ivy_local_group_witness_key_0.A0`,
+		`loc__b = __ivy_local_group_witness_key_0.A1`,
+		`ivy.saved_a = loc__a`,
+		`ivy.saved_b = loc__b`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local relation pair IFF-false state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation pair IFF-false state update should let zero-formal action execute directly without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetGenLocalRelationPairIffFalseNegatedStateUpdateFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation edge(A:node,B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    edge(3,4) := true
+}
+action step = {
+    var a:node;
+    var b:node;
+    assume edge(a,b);
+    saved_a := a;
+    saved_b := b;
+    assume (~edge(saved_a,saved_b) <-> false)
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalrelationpairifffalsestate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *genlocalrelationpairifffalsestate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__a = __ivy_local_group_witness_key_0.A0`,
+		`loc__b = __ivy_local_group_witness_key_0.A1`,
+		`ivy.saved_a = loc__a`,
+		`ivy.saved_b = loc__b`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("target=gen local relation pair IFF-false state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationpairifffalsestate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"unsupported action generator assume guard",
+		"cannot enumerate quantified variable",
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=gen local relation pair IFF-false generator leaked %q:\n%s", bad, genBody)
+		}
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationpairifffalsestate_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, "__ivy_trial") {
+		t.Fatalf("target=gen local relation pair IFF-false state update should execute without trial source:\n%s", executeBody)
+	}
+}
+
+func TestTargetTestLocalRelationPairStateUpdatePreservesResidualGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation edge(A:node,B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    edge(3,4) := true
+}
+action step = {
+    var a:node;
+    var b:node;
+    assume edge(a,b);
+    saved_a := a;
+    saved_b := b;
+    assume edge(saved_a,saved_b) & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationpairresidualstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalrelationpairresidualstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=test pair state residual guard should preserve active in generator:\n%s", genBody)
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation pair residual state update should let zero-formal action execute directly without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetGenLocalRelationPairStateUpdatePreservesResidualGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation edge(A:node,B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    edge(3,4) := true
+}
+action step = {
+    var a:node;
+    var b:node;
+    assume edge(a,b);
+    saved_a := a;
+    saved_b := b;
+    assume edge(saved_a,saved_b) & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalrelationpairresidualstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationpairresidualstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=gen pair state residual guard should preserve active in generator:\n%s", genBody)
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationpairresidualstate_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, "__ivy_trial") {
+		t.Fatalf("target=gen local relation pair residual state update should execute without trial source:\n%s", executeBody)
+	}
+}
+
+func TestTargetTestLocalRelationPairIffFalseStateUpdatePreservesResidualGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation edge(A:node,B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    edge(3,4) := true
+}
+action step = {
+    var a:node;
+    var b:node;
+    assume edge(a,b);
+    saved_a := a;
+    saved_b := b;
+    assume (~edge(saved_a,saved_b) <-> false) & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationpairifffalseresidualstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalrelationpairifffalseresidualstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=test pair IFF-false residual guard should preserve active in generator:\n%s", genBody)
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation pair IFF-false residual state update should let zero-formal action execute directly without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetGenLocalRelationPairIffFalseStateUpdatePreservesResidualGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation edge(A:node,B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    edge(3,4) := true
+}
+action step = {
+    var a:node;
+    var b:node;
+    assume edge(a,b);
+    saved_a := a;
+    saved_b := b;
+    assume (~edge(saved_a,saved_b) <-> false) & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalrelationpairifffalseresidualstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationpairifffalseresidualstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=gen pair IFF-false residual guard should preserve active in generator:\n%s", genBody)
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationpairifffalseresidualstate_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, "__ivy_trial") {
+		t.Fatalf("target=gen local relation pair IFF-false residual state update should execute without trial source:\n%s", executeBody)
+	}
+}
+
+func TestTargetTestLocalRelationPairIffActiveStateUpdatePreservesResidualGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation edge(A:node,B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    edge(3,4) := true
+}
+action step = {
+    var a:node;
+    var b:node;
+    assume edge(a,b);
+    saved_a := a;
+    saved_b := b;
+    assume edge(saved_a,saved_b) <-> active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationpairiffactiveresidualstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalrelationpairiffactiveresidualstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=test pair IFF-active residual guard should preserve active in generator:\n%s", genBody)
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation pair IFF-active residual state update should let zero-formal action execute directly without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetGenLocalRelationPairIffActiveStateUpdatePreservesResidualGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation edge(A:node,B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    edge(3,4) := true
+}
+action step = {
+    var a:node;
+    var b:node;
+    assume edge(a,b);
+    saved_a := a;
+    saved_b := b;
+    assume edge(saved_a,saved_b) <-> active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalrelationpairiffactiveresidualstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationpairiffactiveresidualstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator body not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=gen pair IFF-active residual guard should preserve active in generator:\n%s", genBody)
+	}
+	executeBody := bodyAfterMarker(out.Source, "func (gen *Genlocalrelationpairiffactiveresidualstate_step_generator) execute()")
+	if executeBody == "" {
+		t.Fatalf("step generator execute body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(executeBody, "__ivy_trial") {
+		t.Fatalf("target=gen local relation pair IFF-active residual state update should execute without trial source:\n%s", executeBody)
+	}
+}
+
 func TestTargetTestLocalRelationPairStateUpdateIteRecheckSkipsTrialFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -7536,6 +10177,64 @@ export step
 	}
 }
 
+func TestTargetTestLocalRelationPairIteWitnessStateUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation edge(A:node,B:node)
+relation permitted(A:node,B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    edge(3,4) := true;
+    permitted(5,6) := true
+}
+action step = {
+}
+export step
+`)
+	installIteLocalRelationPairWitnessStateUpdateStep(t, mod)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalrelationpairitewitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalrelationpairitewitness) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`if ivy.active {`,
+		`for __ivy_local_group_witness_key_0, __ivy_local_group_witness_val_0 := range ivy.edge.overrides {`,
+		`a = __ivy_local_group_witness_key_0.A0`,
+		`b = __ivy_local_group_witness_key_0.A1`,
+		`} else {`,
+		`for __ivy_local_group_witness_key_1, __ivy_local_group_witness_val_1 := range ivy.permitted.overrides {`,
+		`a = __ivy_local_group_witness_key_1.A0`,
+		`b = __ivy_local_group_witness_key_1.A1`,
+		`ivy.saved_a = a`,
+		`ivy.saved_b = b`,
+		`ivyAssume(ivyTernary(ivy.active, ivy.edge.Get(struct{ A0 int; A1 int }{ivy.saved_a, ivy.saved_b}), ivy.permitted.Get(struct{ A0 int; A1 int }{ivy.saved_a, ivy.saved_b}))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local relation pair ITE witness body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local relation pair ITE witness state update should execute without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
 func installIteLocalRelationPairStateUpdateStep(t *testing.T, mod *goivy.Module) {
 	t.Helper()
 	node := mod.Sig.Sorts.Get("node")
@@ -7560,6 +10259,40 @@ func installIteLocalRelationPairStateUpdateStep(t *testing.T, mod *goivy.Module)
 		goivy.NewAssignAction(savedA, a),
 		goivy.NewAssignAction(savedB, b),
 		goivy.NewAssumeAction(recheck),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", a, b, body))
+}
+
+func installIteLocalRelationPairWitnessStateUpdateStep(t *testing.T, mod *goivy.Module) {
+	t.Helper()
+	node := mod.Sig.Sorts.Get("node")
+	a := goivy.NewConst("a", node)
+	b := goivy.NewConst("b", node)
+	savedA := goivy.NewConst("saved_a", node)
+	savedB := goivy.NewConst("saved_b", node)
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	relSort := goivy.LogicRelationSort([]goivy.Sort{node, node})
+	edgeAB := goivy.MustApply(goivy.NewConst("edge", relSort), a, b)
+	permittedAB := goivy.MustApply(goivy.NewConst("permitted", relSort), a, b)
+	edgeSaved := goivy.MustApply(goivy.NewConst("edge", relSort), savedA, savedB)
+	permittedSaved := goivy.MustApply(goivy.NewConst("permitted", relSort), savedA, savedB)
+	localIte, err := goivy.NewIte(active, edgeAB, permittedAB)
+	if err != nil {
+		t.Fatalf("local NewIte: %v", err)
+	}
+	savedIte, err := goivy.NewIte(active, edgeSaved, permittedSaved)
+	if err != nil {
+		t.Fatalf("saved NewIte: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(localIte),
+		goivy.NewAssignAction(savedA, a),
+		goivy.NewAssignAction(savedB, b),
+		goivy.NewAssumeAction(savedIte),
 	)
 	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", a, b, body))
 }
@@ -8118,6 +10851,340 @@ export step
 	}
 }
 
+func TestTargetTestLocalVariantConjunctiveStateUpdatePreservesGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual active : bool
+individual saved : msg
+action step = {
+    var x : msg;
+    assume x *> req0;
+    saved := x;
+    assume saved *> req0 & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantandstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalvariantandstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !(ivy.active) {`) {
+		t.Fatalf("local variant conjunctive state update should preserve active guard in generator:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantandstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__x = msg{tag: 0, value: ivy.req0, valid: true}`,
+		`ivy.saved = loc__x`,
+		`ivyAssume((((ivy.saved.valid && ivy.saved.tag == 0 && ivy.saved.value.(int) == ivy.req0)) && (ivy.active))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant conjunctive state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant conjunctive state update should execute directly after generator success, without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantImplicationStateUpdateSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual active : bool
+individual saved : msg
+action step = {
+    var x : msg;
+    assume x *> req0;
+    saved := x;
+    assume active -> saved *> req0
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantimplstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalvariantimplstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `return true`) {
+		t.Fatalf("covered local variant implication recheck should not add a rejecting generator guard:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantimplstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__x = msg{tag: 0, value: ivy.req0, valid: true}`,
+		`ivy.saved = loc__x`,
+		`ivyAssume((!(ivy.active) || ((ivy.saved.valid && ivy.saved.tag == 0 && ivy.saved.value.(int) == ivy.req0)))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant implication state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant implication state update should execute directly after generator success, without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantImplicationMismatchStateUpdatePreservesGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual ack0 : ack
+individual active : bool
+individual saved : msg
+action step = {
+    var x : msg;
+    assume x *> req0;
+    saved := x;
+    assume active -> saved *> ack0
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantimplmismatchstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalvariantimplmismatchstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !(!(ivy.active)) {`) {
+		t.Fatalf("local variant implication mismatch should preserve negated active guard in generator:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantimplmismatchstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__x = msg{tag: 0, value: ivy.req0, valid: true}`,
+		`ivy.saved = loc__x`,
+		`ivyAssume((!(ivy.active) || ((ivy.saved.valid && ivy.saved.tag == 1 && ivy.saved.value.(int) == ivy.ack0)))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant implication mismatch state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant implication mismatch state update should execute directly after generator success, without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantDisjunctiveMismatchStateUpdatePreservesGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual ack0 : ack
+individual active : bool
+individual saved : msg
+action step = {
+    var x : msg;
+    assume x *> req0;
+    saved := x;
+    assume saved *> ack0 | active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantorstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalvariantorstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !(ivy.active) {`) {
+		t.Fatalf("local variant disjunctive mismatch should preserve active guard in generator:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantorstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__x = msg{tag: 0, value: ivy.req0, valid: true}`,
+		`ivy.saved = loc__x`,
+		`ivyAssume((((ivy.saved.valid && ivy.saved.tag == 1 && ivy.saved.value.(int) == ivy.ack0)) || (ivy.active))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant disjunctive mismatch state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant disjunctive mismatch state update should execute directly after generator success, without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantNegatedSiblingStateUpdatePreservesGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual ack0 : ack
+individual active : bool
+individual saved : msg
+action step = {
+    var x : msg;
+    assume x *> req0;
+    saved := x;
+    assume ~(saved *> ack0) & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantnotsiblingstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalvariantnotsiblingstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !(ivy.active) {`) {
+		t.Fatalf("local variant negated sibling recheck should preserve active guard in generator:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantnotsiblingstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__x = msg{tag: 0, value: ivy.req0, valid: true}`,
+		`ivy.saved = loc__x`,
+		`ivyAssume(((!((ivy.saved.valid && ivy.saved.tag == 1 && ivy.saved.value.(int) == ivy.ack0))) && (ivy.active))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant negated sibling state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant negated sibling state update should execute directly after generator success, without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantIffFalseSiblingStateUpdatePreservesGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual ack0 : ack
+individual active : bool
+individual saved : msg
+action step = {
+    var x : msg;
+    assume x *> req0;
+    saved := x;
+    assume ((saved *> ack0) <-> false) & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantifffalsestate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalvariantifffalsestate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !(ivy.active) {`) {
+		t.Fatalf("local variant IFF false sibling recheck should preserve active guard in generator:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantifffalsestate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__x = msg{tag: 0, value: ivy.req0, valid: true}`,
+		`ivy.saved = loc__x`,
+		`ivyAssume(((((ivy.saved.valid && ivy.saved.tag == 1 && ivy.saved.value.(int) == ivy.ack0) == false)) && (ivy.active))`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant IFF false sibling state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant IFF false sibling state update should execute directly after generator success, without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
 func TestTargetTestLocalVariantExistsStateUpdateSkipsTrialFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type msg
@@ -8160,6 +11227,104 @@ export step
 	} {
 		if strings.Contains(mainBody, bad) {
 			t.Fatalf("local variant existential witness should let zero-formal action execute directly without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantExistsStateUpdatePreservesResidualGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual active : bool
+individual saved : msg
+action step = {
+    var x : msg;
+    assume x *> req0;
+    saved := x;
+    assume exists R:req. saved *> R & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantexistsguardstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalvariantexistsguardstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !(ivy.active) {`) {
+		t.Fatalf("local variant existential state recheck should preserve active guard in generator:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantexistsguardstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`loc__x = msg{tag: 0, value: ivy.req0, valid: true}`,
+		`ivy.saved = loc__x`,
+		`return ivy.active`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant existential residual state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant existential residual state update should execute directly after generator success, without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
+func TestTargetTestLocalVariantNegatedExistsSiblingStateUpdatePreservesResidualGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual ack0 : ack
+individual active : bool
+individual saved : msg
+action step = {
+    var x : msg;
+    assume x *> req0;
+    saved := x;
+    assume exists A:ack. ~(saved *> A) & active
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantnegexistsguardstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalvariantnegexistsguardstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !(ivy.active) {`) {
+		t.Fatalf("local variant negated existential sibling recheck should preserve active guard in generator:\n%s", genBody)
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant negated existential residual state update should execute directly after generator success, without trial source %q:\n%s", bad, mainBody)
 		}
 	}
 }
@@ -8624,6 +11789,99 @@ export step
 	}
 }
 
+func TestTargetTestLocalVariantIteMismatchStateUpdatePreservesGuardSkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual req0 : req
+individual ack0 : ack
+individual saved : msg
+action step = {
+}
+export step
+`)
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	ack := mod.Sig.Sorts.Get("ack")
+	local := goivy.NewConst("x", msg)
+	saved := goivy.NewConst("saved", msg)
+	req0Sym, err := mod.Sig.FindSymbol("req0", false)
+	if err != nil {
+		t.Fatalf("FindSymbol req0: %v", err)
+	}
+	ack0Sym, err := mod.Sig.FindSymbol("ack0", false)
+	if err != nil {
+		t.Fatalf("FindSymbol ack0: %v", err)
+	}
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	reqStarSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *> req: %v", err)
+	}
+	ackStarSort, err := goivy.NewFunctionSort(msg, ack, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *> ack: %v", err)
+	}
+	req0 := goivy.NewConst("req0", req0Sym.CSort)
+	ack0 := goivy.NewConst("ack0", ack0Sym.CSort)
+	active := goivy.NewConst("active", activeSym.CSort)
+	localReq0 := goivy.MustApply(goivy.NewConst("*>", reqStarSort), local, req0)
+	savedAck0 := goivy.MustApply(goivy.NewConst("*>", ackStarSort), saved, ack0)
+	savedIte, err := goivy.NewIte(active, savedAck0, goivy.True)
+	if err != nil {
+		t.Fatalf("saved NewIte: %v", err)
+	}
+	body := goivy.NewSequence(
+		goivy.NewAssumeAction(localReq0),
+		goivy.NewAssignAction(saved, local),
+		goivy.NewAssumeAction(savedIte),
+	)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(mod.Cfg.ActCfg, "test", local, body))
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalvariantitemismatchstate", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testlocalvariantitemismatchstate_step_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("step generator not emitted:\n%s", out.Source)
+	}
+	if !strings.Contains(genBody, `if !(!(ivy.active)) {`) {
+		t.Fatalf("local variant ITE mismatch should preserve negated active guard in generator:\n%s", genBody)
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalvariantitemismatchstate) step()")
+	if stepBody == "" {
+		t.Fatalf("step body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`x = msg{tag: 0, value: ivy.req0, valid: true}`,
+		`ivy.saved = x`,
+		`ivyAssume(ivyTernary(ivy.active, (ivy.saved.valid && ivy.saved.tag == 1 && ivy.saved.value.(int) == ivy.ack0), true)`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local variant ITE mismatch state-update body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_assume_rejecting = true",
+		"__ivy_trial_rejected",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("local variant ITE mismatch state update should execute directly after generator success, without trial source %q:\n%s", bad, mainBody)
+		}
+	}
+}
+
 func installIteLocalVariantStateUpdateStep(t *testing.T, mod *goivy.Module) {
 	t.Helper()
 	msg := mod.Sig.Sorts.Get("msg")
@@ -8976,6 +12234,44 @@ export set
 	}
 	if strings.Contains(mainBody, "__ivy_trial") {
 		t.Fatalf("target=test local formal IFF-false inequality should execute without trial source:\n%s", mainBody)
+	}
+}
+
+func TestTargetTestLocalNumericFormalIffFalseNegatedInequalitySkipsTrialFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    var scratch : node;
+    assume (~(scratch > c)) <-> false;
+    saved := scratch;
+    assume (~(saved > c)) <-> false
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testlocalnumericformalifffalsenegineq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *testlocalnumericformalifffalsenegineq) set(c int)")
+	if stepBody == "" {
+		t.Fatalf("set body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_local_witness_values_loc__scratch := []int{c + 1}`,
+		`ivy.saved = loc__scratch`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("local formal IFF-false negated inequality witness body missing %q:\n%s", want, stepBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(mainBody, "__ivy_trial") {
+		t.Fatalf("target=test local formal IFF-false negated inequality should execute without trial source:\n%s", mainBody)
 	}
 }
 
@@ -9822,6 +13118,44 @@ export set
 	}
 }
 
+func TestTargetGenLocalNumericFormalIffFalseNegatedInequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    var scratch : node;
+    assume (~(scratch > c)) <-> false;
+    saved := scratch;
+    assume (~(saved > c)) <-> false
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genlocalnumericformalifffalsenegineq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *genlocalnumericformalifffalsenegineq) set(c int)")
+	if stepBody == "" {
+		t.Fatalf("set body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_local_witness_values_loc__scratch := []int{c + 1}`,
+		`ivy.saved = loc__scratch`,
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("target=gen local formal IFF-false negated inequality witness body missing %q:\n%s", want, stepBody)
+		}
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genlocalnumericformalifffalsenegineq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen set generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "unsupported action generator assume guard") {
+		t.Fatalf("target=gen local formal IFF-false negated inequality should not emit unsupported guard:\n%s", genBody)
+	}
+}
+
 func TestTargetGenLocalNumericFormalIffFalseAffineEqualityFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -10247,6 +13581,151 @@ export step
 	}
 }
 
+func TestTargetTestExtPreconditionSomeConditionUsesExistentialGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	mod.ExtPreconds["set"] = extPrecondSomeChoiceEqualsGreen(t, mod, "set")
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testextpresome", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testextpresome_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c`,
+		`green`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test ext-precondition some guard missing %q:\n%s", want, genBody)
+		}
+	}
+	for _, bad := range []string{
+		"unsupported target=test action generator assume guard",
+		"SomeCondition",
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=test ext-precondition some guard should be lowered before emission, found %q:\n%s", bad, genBody)
+		}
+	}
+}
+
+func TestTargetTestExtPreconditionSomeConditionExpandsDefinitionsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+definition good(X:color, C:color) = X = C & X = green
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	mod.ExtPreconds["set"] = extPrecondSomeDerivedChoiceEqualsGreen(t, mod, "set")
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testextpresomedef", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testextpresomedef_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c == green`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test ext-precondition derived some guard missing %q:\n%s", want, genBody)
+		}
+	}
+	for _, bad := range []string{
+		`ivy.good`,
+		`good(`,
+		`SomeCondition`,
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=test ext-precondition derived some guard should be expanded, found %q:\n%s", bad, genBody)
+		}
+	}
+}
+
+func extPrecondSomeChoiceEqualsGreen(t *testing.T, mod *goivy.Module, actionName string) goivy.Expr {
+	t.Helper()
+	action, ok := mod.Actions.Get2(actionName)
+	if !ok {
+		t.Fatalf("action %s not found", actionName)
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("%s params = %d, want 1", actionName, len(params))
+	}
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	greenEntry, ok := mod.Sig.Symbols.Get2("green")
+	if !ok {
+		t.Fatal("missing green symbol")
+	}
+	choice := goivy.NewConst("choice", color)
+	choiceParam, err := goivy.NewEq(choice, params[0])
+	if err != nil {
+		t.Fatalf("choice/param NewEq: %v", err)
+	}
+	choiceGreen, err := goivy.NewEq(choice, goivy.NewConst("green", greenEntry.Sort))
+	if err != nil {
+		t.Fatalf("choice/green NewEq: %v", err)
+	}
+	body, err := goivy.NewAnd(choiceParam, choiceGreen)
+	if err != nil {
+		t.Fatalf("some body NewAnd: %v", err)
+	}
+	return &goivy.SomeCondition{
+		Params: []*goivy.Const{choice},
+		Fmla:   body,
+		Kind:   "some",
+	}
+}
+
+func extPrecondSomeDerivedChoiceEqualsGreen(t *testing.T, mod *goivy.Module, actionName string) goivy.Expr {
+	t.Helper()
+	action, ok := mod.Actions.Get2(actionName)
+	if !ok {
+		t.Fatalf("action %s not found", actionName)
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("%s params = %d, want 1", actionName, len(params))
+	}
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	good, err := mod.Sig.FindSymbol("good", false)
+	if err != nil {
+		t.Fatalf("FindSymbol good: %v", err)
+	}
+	choice := goivy.NewConst("choice", color)
+	body, err := goivy.NewApply(goivy.NewConst("good", good.CSort), choice, params[0])
+	if err != nil {
+		t.Fatalf("good(choice,c) NewApply: %v", err)
+	}
+	return &goivy.SomeCondition{
+		Params: []*goivy.Const{choice},
+		Fmla:   body,
+		Kind:   "some",
+	}
+}
+
 func TestTargetTestUnsupportedAssumeGuardErrorIncludesSourceLine(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 action step = {
@@ -10497,6 +13976,80 @@ export set
 	if strings.Contains(mainBody, `__ivy_trial.set(__arg0)`) ||
 		strings.Contains(mainBody, "unsupported before_export action generator requires runtime trial") {
 		t.Fatalf("before_export local relation witness should execute public action directly after generate:\n%s", mainBody)
+	}
+}
+
+func TestTargetTestBeforeExportGuardedChoiceExecutesPublicActionDirectlyFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatalf("action set not found")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	paramGreen, err := goivy.NewEq(params[0], green)
+	if err != nil {
+		t.Fatalf("param/green NewEq: %v", err)
+	}
+	paramBlue, err := goivy.NewEq(params[0], blue)
+	if err != nil {
+		t.Fatalf("param/blue NewEq: %v", err)
+	}
+	before := goivy.NewChoiceActionOn(goivy.NewActionsConfig(),
+		goivy.NewAssumeAction(paramGreen),
+		goivy.NewAssumeAction(paramBlue),
+	)
+	before.SetLineno(action.GetLineno())
+	goivy.CopyFormalsTo(action, before)
+	mod.BeforeExport.Set("set", before)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "beforechoiceguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Beforechoiceguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c == green`,
+		`gen.c == blue`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test before_export guarded choice missing %q:\n%s", want, genBody)
+		}
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main body not emitted:\n%s", out.Source)
+	}
+	for _, bad := range []string{
+		"unsupported before_export action generator requires runtime trial",
+		"__ivy_trial := ivy.__ivy_clone()",
+		"__ivy_trial.set(__arg0)",
+	} {
+		if strings.Contains(mainBody, bad) {
+			t.Fatalf("before_export guarded choice should execute public action directly, found %q:\n%s", bad, mainBody)
+		}
+	}
+	if !strings.Contains(mainBody, `ivy.set(__arg0)`) {
+		t.Fatalf("before_export guarded choice should still call the public action:\n%s", mainBody)
 	}
 }
 
@@ -10799,6 +14352,346 @@ export set
 	}
 }
 
+func TestTargetTestIffFalseDisequalityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    assume ((c ~= green) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdefifffalsediseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdefifffalsediseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = green`
+	guard := `if !((!((gen.c == green)) == false)) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false disequality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false disequality defined input should assign before guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestIffFalseEqualityFiniteDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    assume ((c = green) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdefifffalseeq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdefifffalseeq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = red`
+	guard := `if !(((gen.c == green) == false)) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false finite equality defined input should assign before guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestConjunctiveFiniteDisequalityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = {
+    assume c ~= red & c ~= green;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdefconjdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdefconjdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = blue`
+	guard := `if !(((!((gen.c == red))) && (!((gen.c == green))))) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test conjunctive finite disequality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `gen.c = red`) || strings.Contains(genBody, `gen.c = green`) {
+		t.Fatalf("target=test conjunctive finite disequality should not emit conflicting alternates:\n%s", genBody)
+	}
+}
+
+func TestTargetTestConjunctiveIffFalseFiniteEqualityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = {
+    assume ((c = red) <-> false) & ((c = green) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdefconjifffalseeq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdefconjifffalseeq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = blue`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test conjunctive IFF-false finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `gen.c = red`) || strings.Contains(genBody, `gen.c = green`) {
+		t.Fatalf("target=test conjunctive IFF-false finite equality should not emit conflicting alternates:\n%s", genBody)
+	}
+}
+
+func TestTargetTestIffFalseImplicationFiniteEqualityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual active : bool
+individual saved : color
+after init {
+    active := true
+}
+action set(c:color) = {
+    assume ((active -> c = red) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdefifffalseimp", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdefifffalseimp_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = green`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false implication finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=test IFF-false implication assignment should precede guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestIffFalseOrFiniteEqualityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual active : bool
+individual saved : color
+after init {
+    active := false
+}
+action set(c:color) = {
+    assume ((active | c = red) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdefifffalseor", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdefifffalseor_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = green`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false OR finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=test IFF-false OR assignment should precede guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestIffFalseIteFiniteEqualityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual active : bool
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	installIffFalseIteFiniteEqualitySet(t, mod)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdefifffalseite", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdefifffalseite_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = ivyTernary(ivy.active, green, red)`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false ITE finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=test IFF-false ITE assignment should precede guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestIffFalseAndFiniteEqualityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual active : bool
+individual saved : color
+after init {
+    active := true
+}
+action set(c:color) = {
+    assume ((active & c = red) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdefifffalseand", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdefifffalseand_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = green`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false AND finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=test IFF-false AND assignment should precede guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func installIffFalseIteFiniteEqualitySet(t *testing.T, mod *goivy.Module) {
+	t.Helper()
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	c := params[0]
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	savedSym, err := mod.Sig.FindSymbol("saved", false)
+	if err != nil {
+		t.Fatalf("FindSymbol saved: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	saved := goivy.NewConst("saved", savedSym.CSort)
+	red := goivy.NewConst("red", color)
+	green := goivy.NewConst("green", color)
+	redEq, err := goivy.NewEq(c, red)
+	if err != nil {
+		t.Fatalf("c = red: %v", err)
+	}
+	greenEq, err := goivy.NewEq(c, green)
+	if err != nil {
+		t.Fatalf("c = green: %v", err)
+	}
+	ite, err := goivy.NewIte(active, redEq, greenEq)
+	if err != nil {
+		t.Fatalf("ite: %v", err)
+	}
+	iffFalse, err := goivy.NewIff(ite, goivy.False)
+	if err != nil {
+		t.Fatalf("ite iff false: %v", err)
+	}
+	replacement := goivy.NewSequence(goivy.NewAssumeAction(iffFalse), goivy.NewAssignAction(saved, c))
+	replacement.SetFormalParams(params)
+	mod.Actions.Set("set", replacement)
+}
+
+func TestTargetTestDoubleNegatedDisequalityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    assume ~(c ~= green);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdefdoublenegdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdefdoublenegdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = green`
+	guard := `if !(!(!((gen.c == green)))) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test double-negated disequality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("double-negated disequality defined input should assign before guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
 func TestTargetTestBooleanIffDefinedInputFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 individual active : bool
@@ -10828,6 +14721,56 @@ export set
 	guardIdx := strings.Index(genBody, guard)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("boolean IFF defined input should assign before guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestBooleanLiteralDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual saved : bool
+action set(x:bool) = {
+    assume x;
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testboolliteraldef", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testboolliteraldef_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = true`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test boolean literal defined input missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestNegatedBooleanLiteralDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual saved : bool
+action set(x:bool) = {
+    assume ~x;
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnegboolliteraldef", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnegboolliteraldef_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=test action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = false`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test negated boolean literal defined input missing %q:\n%s", want, genBody)
+		}
 	}
 }
 
@@ -10983,6 +14926,166 @@ export set
 	}
 }
 
+func TestTargetTestActionGeneratorUsesIffFalseNegatedVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume ~(x *> req0) <-> false;
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalsenegvariantrelationwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalsenegvariantrelationwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0, valid: true}`
+	guard := `if !((!((gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0)) == false)) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false negated variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false negated variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseImplicationVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume ((active -> x *> req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseimpvariantwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseimpvariantwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 1, value: 0, valid: true}`
+	for _, want := range []string{assign, `ivy.active`, `gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false implication variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false implication variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseOrVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume ((active | x *> req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseorvariantwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseorvariantwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 1, value: 0, valid: true}`
+	for _, want := range []string{assign, `ivy.active`, `gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false OR variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false OR variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseAndVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume ((active & x *> req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseandvariantwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseandvariantwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 1, value: 0, valid: true}`
+	for _, want := range []string{assign, `ivy.active`, `gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false AND variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false AND variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseIteVariantRelationWitnessFast(t *testing.T) {
+	out := generateIffFalseIteVariantRelationWitness(t, "test", "testifffalseitevariantwitness")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseitevariantwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = ivyTernary(ivy.active, msg{tag: 1, value: 0, valid: true}, msg{tag: 0, value: 0, valid: true})`
+	guard := `ivyTernary(ivy.active, (gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0), (gen.x.valid && gen.x.tag == 1 && gen.x.value.(int) == ivy.ack0))`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false ITE variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false ITE variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
 func TestTargetTestActionGeneratorUsesNegatedExistsVariantRelationWitnessFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type msg
@@ -11014,6 +15117,49 @@ export set
 	guardIdx := strings.Index(genBody, guard)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("negated exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesNegatedExistsVariantResidualGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. ~(x *> Q) & active;
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnegexistsvariantresidual", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnegexistsvariantresidual_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 1, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`!((gen.x.valid && gen.x.tag == 0))`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test negated exists variant residual guard missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("negated exists variant residual guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `!((gen.x.valid && gen.x.tag == 0))`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("negated exists variant residual witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
 	}
 }
 
@@ -11152,6 +15298,283 @@ export set
 	guardIdx := strings.Index(genBody, guard)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesOrMembershipExistsVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. (x *> Q | active);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdisjexistsvariantrelationwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdisjexistsvariantrelationwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`gen.x.valid && gen.x.tag == 0`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test disjunctive exists variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("disjunctive exists variant guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `gen.x.valid && gen.x.tag == 0`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("disjunctive exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesNegatedOrMembershipExistsVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. (~(x *> Q) | active);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnegormembershipexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnegormembershipexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 1, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`!((gen.x.valid && gen.x.tag == 0))`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test negated OR-membership exists variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("negated OR-membership exists variant guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `!((gen.x.valid && gen.x.tag == 0))`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("negated OR-membership exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesImpliedMembershipExistsVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. (active -> x *> Q);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testimpliedmembershipexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testimpliedmembershipexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`gen.x.valid && gen.x.tag == 0`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test implied membership exists variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("implied membership exists variant guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `gen.x.valid && gen.x.tag == 0`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("implied membership exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIteMembershipExistsVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	starSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *>: %v", err)
+	}
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	q := &goivy.LogicVariable{Name: "Q", VSort: req}
+	rel := goivy.MustApply(goivy.NewConst("*>", starSort), params[0], q)
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, rel, goivy.True)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	exists, err := goivy.NewExists([]*goivy.LogicVariable{q}, ite)
+	if err != nil {
+		t.Fatalf("exists variant body: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(exists), goivy.NewAssignAction(goivy.NewConst("saved", msg), params[0]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testitemembershipexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testitemembershipexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`gen.x.valid && gen.x.tag == 0`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test ITE membership exists variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("ITE membership exists variant guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `gen.x.valid && gen.x.tag == 0`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("ITE membership exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIteFalseMembershipExistsVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	starSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *>: %v", err)
+	}
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	q := &goivy.LogicVariable{Name: "Q", VSort: req}
+	rel := goivy.MustApply(goivy.NewConst("*>", starSort), params[0], q)
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, rel, goivy.False)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	exists, err := goivy.NewExists([]*goivy.LogicVariable{q}, ite)
+	if err != nil {
+		t.Fatalf("exists variant body: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(exists), goivy.NewAssignAction(goivy.NewConst("saved", msg), params[0]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testitefalsemembershipexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testitefalsemembershipexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`gen.x.valid && gen.x.tag == 0`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test false-branch ITE membership exists variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported target=test action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("false-branch ITE membership exists variant guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `gen.x.valid && gen.x.tag == 0`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("false-branch ITE membership exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
 	}
 }
 
@@ -11478,6 +15901,241 @@ export set
 	}
 	if strings.Contains(genBody, `gen.x = msg{tag: 0, value: 0, valid: true}`) {
 		t.Fatalf("disequal exists variant witness should not default payload to zero:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseDisequalExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ((Q ~= req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalsedisequalexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalsedisequalexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0, valid: true}`
+	bad := `gen.x = msg{tag: 0, value: ivy.req0 + 1, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false disequal exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, bad) {
+		t.Fatalf("target=test IFF-false disequal payload should use exact req0, not disequality offset:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesDoubleNegatedDisequalExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ~(Q ~= req0);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testdoublenegdisequalexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testdoublenegdisequalexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0, valid: true}`
+	bad := `gen.x = msg{tag: 0, value: ivy.req0 + 1, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test double-negated disequal exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, bad) {
+		t.Fatalf("target=test double-negated disequal payload should use exact req0, not disequality offset:\n%s", genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseAffineDisequalExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ((Q + 1 ~= req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseaffinedisequalexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseaffinedisequalexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0 - 1, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false affine disequal exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseInequalityExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ((Q <= 10) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseineqexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 11, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false inequality exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseNegatedInequalityExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & (~(Q > 10) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalsenegineqexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalsenegineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 11, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false negated inequality exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesNegatedInequalityExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ~(Q <= 10);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnegineqexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnegineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 11, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test negated inequality exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesNegatedAffineInequalityExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ~(Q + 1 <= 10);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testnegaffineineqexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testnegaffineineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 10, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test negated affine inequality exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseAffineInequalityExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ((Q + 1 <= 10) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalseaffineineqexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalseaffineineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 10, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false affine inequality exists variant payload witness missing %q:\n%s", want, genBody)
+		}
 	}
 }
 
@@ -11943,6 +16601,45 @@ export set
 	guardIdx := strings.Index(genBody, `Q := gen.x.value.(int)`)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("IFF exists variant witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetTestActionGeneratorUsesIffFalseNegatedExactExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & (~(Q = req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testifffalsenegexactexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Testifffalsenegexactexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`Q := gen.x.value.(int)`,
+		`Q == ivy.req0`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=test IFF-false negated exact exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `Q := gen.x.value.(int)`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=test IFF-false negated exact exists variant witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
 	}
 }
 
@@ -15599,6 +20296,45 @@ export set
 	}
 }
 
+func TestTargetGenActionGeneratorUsesIffFalseProductStateInequalityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual target : node
+individual saved_a : node
+individual saved_b : node
+action set(a:node, b:node) = {
+    assume (a * b <= target) <-> false;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseproductstateineqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseproductstateineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.a = (ivy.target + 1)`,
+		`gen.b = 1`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false product state inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignAIdx := strings.Index(genBody, `gen.a = (ivy.target + 1)`)
+	assignBIdx := strings.Index(genBody, `gen.b = 1`)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignAIdx < 0 || assignBIdx < 0 || guardIdx < 0 || assignAIdx > guardIdx || assignBIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false product state inequality witness should assign both formals before checking guard; a=%d b=%d guard=%d\n%s", assignAIdx, assignBIdx, guardIdx, genBody)
+	}
+}
+
 func TestTargetGenActionGeneratorUsesProductStateDisequalityWitnessFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -15635,6 +20371,45 @@ export set
 	guardIdx := strings.Index(genBody, `if !(`)
 	if assignAIdx < 0 || assignBIdx < 0 || guardIdx < 0 || assignAIdx > guardIdx || assignBIdx > guardIdx {
 		t.Fatalf("target=gen product state disequality witness should assign both formals before checking guard; a=%d b=%d guard=%d\n%s", assignAIdx, assignBIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseProductStateEqualityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual target : node
+individual saved_a : node
+individual saved_b : node
+action set(a:node, b:node) = {
+    assume (a * b = target) <-> false;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseproductstateeqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseproductstateeqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.a = (ivy.target + 1)`,
+		`gen.b = 1`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false product state equality witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignAIdx := strings.Index(genBody, `gen.a = (ivy.target + 1)`)
+	assignBIdx := strings.Index(genBody, `gen.b = 1`)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignAIdx < 0 || assignBIdx < 0 || guardIdx < 0 || assignAIdx > guardIdx || assignBIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false product state equality witness should assign both formals before checking guard; a=%d b=%d guard=%d\n%s", assignAIdx, assignBIdx, guardIdx, genBody)
 	}
 }
 
@@ -15889,6 +20664,158 @@ export set
 	}
 }
 
+func TestTargetGenActionGeneratorUsesIffFalseNegatedNumericInequalityWitnessForUnboundedFormalFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(n:node) = {
+    assume ~(n > 10) <-> false;
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennumericifffalsenegineqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennumericifffalsenegineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []int{11}`,
+		`gen.n = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false negated numeric inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseImplicationNumericInequalityWitnessForUnboundedFormalFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(n:node) = {
+    assume ((active -> n > 10) <-> false);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennumericifffalseimpineqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennumericifffalseimpineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []int{10}`,
+		`gen.n = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`ivy.active`,
+		`10 < gen.n`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false implication numeric inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseOrNumericInequalityWitnessForUnboundedFormalFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(n:node) = {
+    assume ((active | n > 10) <-> false);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennumericifffalseorineqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennumericifffalseorineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []int{10}`,
+		`gen.n = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`ivy.active`,
+		`10 < gen.n`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false OR numeric inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseAndNumericInequalityWitnessForUnboundedFormalFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(n:node) = {
+    assume ((active & n > 10) <-> false);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennumericifffalseandineqwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennumericifffalseandineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []int{10}`,
+		`gen.n = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`ivy.active`,
+		`10 < gen.n`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false AND numeric inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseIteNumericInequalityWitnessForUnboundedFormalFast(t *testing.T) {
+	out := generateIffFalseIteNumericWitness(t, "gen", "gennumericifffalseiteineqwitness")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennumericifffalseiteineqwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`__ivy_search_values_0 := []int{ivyTernary(ivy.active, 10, 20)}`,
+		`gen.n = __ivy_search_values_0[(__ivy_search_start_0+__ivy_search_i_0)%len(__ivy_search_values_0)]`,
+		`ivyTernary(ivy.active, (10 < gen.n), (20 < gen.n))`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false ITE numeric inequality witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
 func TestTargetGenActionGeneratorUsesNumericAffineEqualityWitnessFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -16066,6 +20993,158 @@ export set
 	guardIdx := strings.Index(genBody, guard)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("target=gen negated numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseNegatedNumericPairInequalityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(a:node, b:node) = {
+    assume ~(a < b) <-> false;
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalsenegnumericpairwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalsenegnumericpairwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.b = gen.a + 1`
+	guard := `if !((!((gen.a < gen.b)) == false)) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false negated numeric pair witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false negated numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseImplicationNumericPairInequalityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(a:node, b:node) = {
+    assume ((active -> a < b) <-> false);
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseimppairwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseimppairwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.a = gen.b`
+	for _, want := range []string{assign, `ivy.active`, `gen.a < gen.b`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false implication numeric pair witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false implication numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseOrNumericPairInequalityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(a:node, b:node) = {
+    assume ((active | a < b) <-> false);
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseorpairwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseorpairwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.a = gen.b`
+	for _, want := range []string{assign, `ivy.active`, `gen.a < gen.b`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false OR numeric pair witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false OR numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseAndNumericPairInequalityWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(a:node, b:node) = {
+    assume ((active & a < b) <-> false);
+    saved := a
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseandpairwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseandpairwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.a = gen.b`
+	for _, want := range []string{assign, `ivy.active`, `gen.a < gen.b`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false AND numeric pair witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false AND numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseIteNumericPairInequalityWitnessFast(t *testing.T) {
+	out := generateIffFalseIteNumericPairWitness(t, "gen", "genifffalseitepairwitness")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseitepairwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.a = ivyTernary(ivy.active, gen.b, gen.b - 2)`
+	guard := `ivyTernary(ivy.active, (gen.a < gen.b), ((gen.a + 2) < gen.b))`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false ITE numeric pair witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false ITE numeric pair witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
 	}
 }
 
@@ -16603,6 +21682,133 @@ export set
 	}
 }
 
+func TestTargetGenActionGeneratorUsesNegatedRelationTupleWitnessInsideIffActiveFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation banned(A:node, B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    active := true;
+    banned(3,4) := true
+}
+action set(a:node, b:node) = {
+    assume ~banned(a,b) <-> active;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennegrelationtupleiffactivewitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennegrelationtupleiffactivewitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.banned.overrides {`,
+		`if __ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1 + 1`,
+		`} else {`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`ivy.active`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen negated relation tuple IFF-active witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseRelationTupleWitnessForUnboundedFormalsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation banned(A:node, B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    banned(3,4) := true
+}
+action set(a:node, b:node) = {
+    assume banned(a,b) <-> false;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalserelationtuplewitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalserelationtuplewitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.banned.overrides {`,
+		`if __ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1 + 1`,
+		`} else {`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false relation tuple witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseNegatedRelationTupleWitnessForUnboundedFormalsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation banned(A:node, B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    banned(3,4) := true
+}
+action set(a:node, b:node) = {
+    assume ~banned(a,b) <-> false;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalsenegrelationtuplewitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalsenegrelationtuplewitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.banned.overrides {`,
+		`if !__ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false negated relation tuple witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `gen.b = __ivy_search_key_0_1.A1 + 1`) {
+		t.Fatalf("target=gen IFF-false negated relation tuple should require a true tuple, not the negated nearby witness:\n%s", genBody)
+	}
+}
+
 func TestTargetGenActionGeneratorUsesNegatedRelationTupleWitnessWithFixedFieldFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -16724,6 +21930,51 @@ export set
 	}
 	if strings.Contains(genBody, `__ivy_search_values_0`) || strings.Contains(genBody, `__ivy_search_values_1`) {
 		t.Fatalf("unbounded target=gen relation pair witness should scan relation keys, not finite value lists:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesRelationPairWitnessInsideIffActiveFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+relation allowed(A:node, B:node)
+individual saved_a : node
+individual saved_b : node
+after init {
+    active := true;
+    allowed(3,4) := true
+}
+action set(a:node, b:node) = {
+    assume allowed(a,b) <-> active;
+    saved_a := a;
+    saved_b := b
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genrelationpairiffactivewitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genrelationpairiffactivewitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`for __ivy_search_key_0_1, __ivy_search_val_0_1 := range ivy.allowed.overrides {`,
+		`if !__ivy_search_val_0_1 {`,
+		`gen.a = __ivy_search_key_0_1.A0`,
+		`gen.b = __ivy_search_key_0_1.A1`,
+		`ivy.active`,
+		`if __ivy_generator_candidate_ok {`,
+		`return true`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen relation pair IFF-active witness search missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `__ivy_search_values_0`) || strings.Contains(genBody, `__ivy_search_values_1`) {
+		t.Fatalf("unbounded target=gen relation pair IFF-active witness should scan relation keys, not finite value lists:\n%s", genBody)
 	}
 }
 
@@ -17015,6 +22266,78 @@ export set
 	}
 }
 
+func TestTargetGenActionGeneratorUsesIffTrueRelationOverrideForallGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation banned(X:node,Y:node)
+individual saved : node
+action set(c:node) = {
+    assume forall X:node. (~banned(X,c) <-> true);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genrelationforallifftrueguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genrelationforallifftrueguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`range ivy.banned.overrides`,
+		`if !__ivy_quant_val`,
+		`X := __ivy_quant_key`,
+		`!(ivy.banned.Get(struct{ A0 int; A1 int }{X, gen.c})) == true`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-true relation forall guard missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("target=gen IFF-true relation forall guard should not fall through to finite enumeration:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseRelationOverrideForallGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation banned(X:node,Y:node)
+individual saved : node
+action set(c:node) = {
+    assume forall X:node. (banned(X,c) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genrelationforallifffalseguard", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genrelationforallifffalseguard_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`range ivy.banned.overrides`,
+		`if !__ivy_quant_val`,
+		`X := __ivy_quant_key`,
+		`ivy.banned.Get(struct{ A0 int; A1 int }{X, gen.c}) == false`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false relation forall guard missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("target=gen IFF-false relation forall guard should not fall through to finite enumeration:\n%s", genBody)
+	}
+}
+
 func TestTargetGenActionGeneratorUsesEqualityBoundForallGuardFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -17045,6 +22368,39 @@ export set
 	}
 	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "for X :=") {
 		t.Fatalf("target=gen equality-bound forall guard should not enumerate X:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseDisequalityBoundForallGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+relation allowed(N:node)
+individual saved : node
+action set(c:node) = {
+    assume forall X:node. ((X ~= c) <-> false) -> allowed(X);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalsediseqboundforall", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalsediseqboundforall_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`ivy.allowed.Get(gen.c)`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false disequality-bound forall guard missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen IFF-false disequality-bound forall guard should not enumerate X:\n%s", genBody)
 	}
 }
 
@@ -17149,6 +22505,253 @@ export set
 	}
 }
 
+func TestTargetGenActionGeneratorSimplifiesUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. X ~= c;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genunboundedexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genunboundedexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesIffTrueUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. ((X ~= c) <-> true);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifftrueexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifftrueexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen IFF-true unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesIffFalseEqualityUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. ((X = c) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseeqexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseeqexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen IFF-false equality unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesImpliedUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. active -> X ~= c;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genimpliedexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genimpliedexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen implied unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=gen implied unbounded exists disequality should simplify to true without residual active guard:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesOrUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. X ~= c | active;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genorexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genorexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen OR unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=gen OR unbounded exists disequality should simplify to true without residual active guard:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesIteUnboundedExistsDisequalityFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node,n:node) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 2 {
+		t.Fatalf("set params = %d, want 2", len(params))
+	}
+	node := mod.Sig.Sorts.Get("node")
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	x := &goivy.LogicVariable{Name: "X", VSort: node}
+	xC, err := goivy.NewEq(x, params[0])
+	if err != nil {
+		t.Fatalf("X = c: %v", err)
+	}
+	notXC, err := goivy.NewNot(xC)
+	if err != nil {
+		t.Fatalf("X ~= c: %v", err)
+	}
+	xN, err := goivy.NewEq(x, params[1])
+	if err != nil {
+		t.Fatalf("X = n: %v", err)
+	}
+	notXN, err := goivy.NewNot(xN)
+	if err != nil {
+		t.Fatalf("X ~= n: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, notXC, notXN)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	exists, err := goivy.NewExists([]*goivy.LogicVariable{x}, ite)
+	if err != nil {
+		t.Fatalf("exists: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(exists), goivy.NewAssignAction(goivy.NewConst("saved", node), params[1]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "geniteexistsdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Geniteexistsdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen ITE unbounded exists disequality should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "ivy.active") {
+		t.Fatalf("target=gen ITE unbounded exists disequality should simplify to true without residual active guard:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesUnboundedExistsDisequalityResidualWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node,n:node) = {
+    assume exists X:node. X ~= c & n > 10;
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genunboundedexistsdiseqresid", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genunboundedexistsdiseqresid_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	witness := `__ivy_search_values_1 := []int{11}`
+	guard := `(10 < gen.n)`
+	for _, want := range []string{witness, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen unbounded exists disequality residual witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, `gen.n = __ivy_search_values_1`)
+	guardIdx := strings.LastIndex(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen unbounded exists disequality residual witness should assign before guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen unbounded exists disequality residual should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
 func TestTargetGenActionGeneratorUsesEqualityBoundForallNumericWitnessFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
@@ -17218,6 +22821,269 @@ export set
 	}
 	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "for X :=") {
 		t.Fatalf("target=gen equality-bound exists numeric guard should not enumerate X:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesEqualityBoundExistsOrFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node,n:node) = {
+    assume exists X:node. X = c | n > X;
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "geneqboundexistsor", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Geneqboundexistsor_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "unsupported action generator assume guard") || strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen equality-bound exists OR guard should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "gen.n = gen.c + 1") || strings.Contains(genBody, "gen.c < gen.n") {
+		t.Fatalf("target=gen equality-bound exists OR guard should simplify to true, not constrain n:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesGuardedEqualityBoundExistsOrFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual enabled : bool
+individual saved : node
+action set(c:node,n:node) = {
+    assume exists X:node. (X = c & active) | (X = n & enabled);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genguardedeqboundexistsor", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genguardedeqboundexistsor_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{`ivy.active`, `ivy.enabled`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen guarded equality-bound exists OR guard missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "unsupported action generator assume guard") || strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen guarded equality-bound exists OR guard should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "gen.c < gen.n") || strings.Contains(genBody, "gen.n = gen.c + 1") {
+		t.Fatalf("target=gen guarded equality-bound exists OR guard should not invent numeric witnesses:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesEqualityBoundExistsIteFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node,n:node) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 2 {
+		t.Fatalf("set params = %d, want 2", len(params))
+	}
+	node := mod.Sig.Sorts.Get("node")
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	x := &goivy.LogicVariable{Name: "X", VSort: node}
+	xC, err := goivy.NewEq(x, params[0])
+	if err != nil {
+		t.Fatalf("X = c: %v", err)
+	}
+	xN, err := goivy.NewEq(x, params[1])
+	if err != nil {
+		t.Fatalf("X = n: %v", err)
+	}
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, xC, xN)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	exists, err := goivy.NewExists([]*goivy.LogicVariable{x}, ite)
+	if err != nil {
+		t.Fatalf("exists: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(exists), goivy.NewAssignAction(goivy.NewConst("saved", node), params[1]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "geneqboundexistsite", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Geneqboundexistsite_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "unsupported action generator assume guard") || strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen equality-bound exists ITE guard should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "gen.c < gen.n") || strings.Contains(genBody, "gen.n = gen.c + 1") {
+		t.Fatalf("target=gen equality-bound exists ITE guard should simplify to true, not invent numeric witnesses:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesEqualityBoundExistsIffTrueFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. ((X = c) <-> true);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "geneqboundexistsifftrue", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Geneqboundexistsifftrue_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") || strings.Contains(genBody, "unsupported action generator assume guard") || strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen equality-bound exists IFF-true guard should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "gen.c <") || strings.Contains(genBody, "gen.c + 1") {
+		t.Fatalf("target=gen equality-bound exists IFF-true guard should simplify to true, not invent numeric witnesses:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesEqualityBoundExistsImplicationFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. active -> X = c;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "geneqboundexistsimplies", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Geneqboundexistsimplies_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen equality-bound exists implication guard should simplify without enumerating X:\n%s", genBody)
+	}
+	if strings.Contains(genBody, "ivy.active") || strings.Contains(genBody, "gen.c <") || strings.Contains(genBody, "gen.c + 1") {
+		t.Fatalf("target=gen equality-bound exists implication guard should simplify to true without residual witnesses:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesEqualityBoundExistsImplicationResidualFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(c:node,n:node) = {
+    assume exists X:node. active -> (X = c & n > X);
+    saved := n
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "geneqboundexistsimpliesresid", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Geneqboundexistsimpliesresid_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{`gen.n = gen.c + 1`, `ivy.active`, `(gen.c < gen.n)`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen equality-bound exists implication residual missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen equality-bound exists implication residual should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesNegatedDisequalityBoundExistsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. ~(X ~= c);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennegdiseqboundexists", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennegdiseqboundexists_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen negated-disequality bound exists should simplify without enumerating X:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorSimplifiesIffFalseDisequalityBoundExistsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual saved : node
+action set(c:node) = {
+    assume exists X:node. ((X ~= c) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalsediseqboundexists", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalsediseqboundexists_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	if strings.Contains(genBody, "cannot enumerate quantified variable") ||
+		strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "for X :=") {
+		t.Fatalf("target=gen IFF-false disequality bound exists should simplify without enumerating X:\n%s", genBody)
 	}
 }
 
@@ -18559,6 +24425,298 @@ export set
 	}
 }
 
+func TestTargetGenIffFalseDisequalityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    assume ((c ~= green) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gendefifffalsediseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gendefifffalsediseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = green`
+	guard := `if !((!((gen.c == green)) == false)) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false disequality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false target=gen disequality defined input should assign before guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenIffFalseEqualityFiniteDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    assume ((c = green) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gendefifffalseeq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gendefifffalseeq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = red`
+	guard := `if !(((gen.c == green) == false)) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false target=gen finite equality defined input should assign before guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenConjunctiveFiniteDisequalityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = {
+    assume c ~= red & c ~= green;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gendefconjdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gendefconjdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = blue`
+	guard := `if !(((!((gen.c == red))) && (!((gen.c == green))))) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen conjunctive finite disequality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `gen.c = red`) || strings.Contains(genBody, `gen.c = green`) {
+		t.Fatalf("target=gen conjunctive finite disequality should not emit conflicting alternates:\n%s", genBody)
+	}
+}
+
+func TestTargetGenConjunctiveIffFalseFiniteEqualityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = {
+    assume ((c = red) <-> false) & ((c = green) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gendefconjifffalseeq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gendefconjifffalseeq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = blue`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen conjunctive IFF-false finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, `gen.c = red`) || strings.Contains(genBody, `gen.c = green`) {
+		t.Fatalf("target=gen conjunctive IFF-false finite equality should not emit conflicting alternates:\n%s", genBody)
+	}
+}
+
+func TestTargetGenIffFalseImplicationFiniteEqualityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual active : bool
+individual saved : color
+after init {
+    active := true
+}
+action set(c:color) = {
+    assume ((active -> c = red) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gendefifffalseimp", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gendefifffalseimp_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = green`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false implication finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false implication assignment should precede guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenIffFalseOrFiniteEqualityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual active : bool
+individual saved : color
+after init {
+    active := false
+}
+action set(c:color) = {
+    assume ((active | c = red) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gendefifffalseor", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gendefifffalseor_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = green`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false OR finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false OR assignment should precede guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenIffFalseIteFiniteEqualityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual active : bool
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	installIffFalseIteFiniteEqualitySet(t, mod)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gendefifffalseite", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gendefifffalseite_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = ivyTernary(ivy.active, green, red)`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false ITE finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false ITE assignment should precede guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenIffFalseAndFiniteEqualityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual active : bool
+individual saved : color
+after init {
+    active := true
+}
+action set(c:color) = {
+    assume ((active & c = red) <-> false);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gendefifffalseand", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gendefifffalseand_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = green`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false AND finite equality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false AND assignment should precede guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenDoubleNegatedDisequalityDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    assume ~(c ~= green);
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gendefdoublenegdiseq", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gendefdoublenegdiseq_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.c = green`
+	guard := `if !(!(!((gen.c == green)))) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen double-negated disequality defined input missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("double-negated target=gen disequality defined input should assign before guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
 func TestTargetGenBooleanIffDefinedInputFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 individual active : bool
@@ -18588,6 +24746,56 @@ export set
 	guardIdx := strings.Index(genBody, guard)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("target=gen boolean IFF defined input should assign before guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenBooleanLiteralDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual saved : bool
+action set(x:bool) = {
+    assume x;
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genboolliteraldef", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genboolliteraldef_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = true`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen boolean literal defined input missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenNegatedBooleanLiteralDefinedInputFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual saved : bool
+action set(x:bool) = {
+    assume ~x;
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennegboolliteraldef", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennegboolliteraldef_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("target=gen action generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = false`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen negated boolean literal defined input missing %q:\n%s", want, genBody)
+		}
 	}
 }
 
@@ -18897,6 +25105,74 @@ export set
 		t.Fatalf("NewIte: %v", err)
 	}
 	act := goivy.NewSequence(goivy.NewAssumeAction(ite), goivy.NewAssignAction(goivy.NewConst("saved", msg), params[0]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+	out, err := Generate(mod, Config{Target: target, ClassName: className, TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	return out
+}
+
+func generateIffFalseIteVariantRelationWitness(t *testing.T, target, className string) *Output {
+	t.Helper()
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual req0 : req
+individual ack0 : ack
+individual saved : msg
+action set(x:msg) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	ack := mod.Sig.Sorts.Get("ack")
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	req0Sym, err := mod.Sig.FindSymbol("req0", false)
+	if err != nil {
+		t.Fatalf("FindSymbol req0: %v", err)
+	}
+	ack0Sym, err := mod.Sig.FindSymbol("ack0", false)
+	if err != nil {
+		t.Fatalf("FindSymbol ack0: %v", err)
+	}
+	reqStarSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *> req: %v", err)
+	}
+	ackStarSort, err := goivy.NewFunctionSort(msg, ack, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *> ack: %v", err)
+	}
+	req0 := goivy.NewConst("req0", req0Sym.CSort)
+	ack0 := goivy.NewConst("ack0", ack0Sym.CSort)
+	xReq0 := goivy.MustApply(goivy.NewConst("*>", reqStarSort), params[0], req0)
+	xAck0 := goivy.MustApply(goivy.NewConst("*>", ackStarSort), params[0], ack0)
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, xReq0, xAck0)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	iffFalse, err := goivy.NewIff(ite, goivy.False)
+	if err != nil {
+		t.Fatalf("NewIff false: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(iffFalse), goivy.NewAssignAction(goivy.NewConst("saved", msg), params[0]))
 	goivy.CopyFormalsTo(action, act)
 	mod.Actions.Set("set", act)
 	out, err := Generate(mod, Config{Target: target, ClassName: className, TestIters: "1", TestRuns: "1"})
@@ -19276,6 +25552,103 @@ export set
 		t.Fatalf("NewIte: %v", err)
 	}
 	act := goivy.NewSequence(goivy.NewAssumeAction(ite), goivy.NewAssignAction(goivy.NewConst("saved", node), params[0]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+	out, err := Generate(mod, Config{Target: target, ClassName: className, TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	return out
+}
+
+func generateIffFalseIteNumericPairWitness(t *testing.T, target, className string) *Output {
+	t.Helper()
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(a:node, b:node) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 2 {
+		t.Fatalf("set params = %d, want 2", len(params))
+	}
+	node := mod.Sig.Sorts.Get("node")
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	lt := goivy.NewConst("<", goivy.LogicRelationSort([]goivy.Sort{node, node}))
+	aLessB := goivy.MustApply(lt, params[0], params[1])
+	plusSort, err := goivy.NewFunctionSort(node, node, node)
+	if err != nil {
+		t.Fatalf("NewFunctionSort +: %v", err)
+	}
+	aPlus2 := goivy.MustApply(goivy.NewConst("+", plusSort), params[0], goivy.NewConst("2", node))
+	aPlus2LessB := goivy.MustApply(lt, aPlus2, params[1])
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, aLessB, aPlus2LessB)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	iffFalse, err := goivy.NewIff(ite, goivy.False)
+	if err != nil {
+		t.Fatalf("NewIff false: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(iffFalse), goivy.NewAssignAction(goivy.NewConst("saved", node), params[0]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+	out, err := Generate(mod, Config{Target: target, ClassName: className, TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	return out
+}
+
+func generateIffFalseIteNumericWitness(t *testing.T, target, className string) *Output {
+	t.Helper()
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+interpret node -> int
+individual active : bool
+individual saved : node
+action set(n:node) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	node := mod.Sig.Sorts.Get("node")
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	gt := goivy.NewConst(">", goivy.LogicRelationSort([]goivy.Sort{node, node}))
+	nGreater10 := goivy.MustApply(gt, params[0], goivy.NewConst("10", node))
+	nGreater20 := goivy.MustApply(gt, params[0], goivy.NewConst("20", node))
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, nGreater10, nGreater20)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	iffFalse, err := goivy.NewIff(ite, goivy.False)
+	if err != nil {
+		t.Fatalf("NewIff false: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(iffFalse), goivy.NewAssignAction(goivy.NewConst("saved", node), params[0]))
 	goivy.CopyFormalsTo(action, act)
 	mod.Actions.Set("set", act)
 	out, err := Generate(mod, Config{Target: target, ClassName: className, TestIters: "1", TestRuns: "1"})
@@ -19766,6 +26139,166 @@ export set
 	}
 }
 
+func TestTargetGenActionGeneratorUsesIffFalseNegatedVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume ~(x *> req0) <-> false;
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalsenegvariantrelationwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalsenegvariantrelationwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0, valid: true}`
+	guard := `if !((!((gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0)) == false)) {`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false negated variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false negated variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseImplicationVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume ((active -> x *> req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseimpvariantwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseimpvariantwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 1, value: 0, valid: true}`
+	for _, want := range []string{assign, `ivy.active`, `gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false implication variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false target=gen implication variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseOrVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume ((active | x *> req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseorvariantwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseorvariantwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 1, value: 0, valid: true}`
+	for _, want := range []string{assign, `ivy.active`, `gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false OR variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false target=gen OR variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseAndVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume ((active & x *> req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseandvariantwitness", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseandvariantwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 1, value: 0, valid: true}`
+	for _, want := range []string{assign, `ivy.active`, `gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0`, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false AND variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `if !(`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false target=gen AND variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseIteVariantRelationWitnessFast(t *testing.T) {
+	out := generateIffFalseIteVariantRelationWitness(t, "gen", "genifffalseitevariantwitness")
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseitevariantwitness_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = ivyTernary(ivy.active, msg{tag: 1, value: 0, valid: true}, msg{tag: 0, value: 0, valid: true})`
+	guard := `ivyTernary(ivy.active, (gen.x.valid && gen.x.tag == 0 && gen.x.value.(int) == ivy.req0), (gen.x.valid && gen.x.tag == 1 && gen.x.value.(int) == ivy.ack0))`
+	for _, want := range []string{assign, guard, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false ITE variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, guard)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("IFF-false target=gen ITE variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
 func TestTargetGenActionGeneratorUsesNegatedExistsVariantRelationWitnessFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type msg
@@ -19797,6 +26330,49 @@ export set
 	guardIdx := strings.Index(genBody, guard)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("target=gen negated exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesNegatedExistsVariantResidualGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. ~(x *> Q) & active;
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennegexistsvariantresidual", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennegexistsvariantresidual_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 1, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`!((gen.x.valid && gen.x.tag == 0))`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen negated exists variant residual guard missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("target=gen negated exists variant residual guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `!((gen.x.valid && gen.x.tag == 0))`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen negated exists variant residual witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
 	}
 }
 
@@ -19935,6 +26511,283 @@ export set
 	guardIdx := strings.Index(genBody, guard)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("target=gen exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesOrMembershipExistsVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. (x *> Q | active);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genormembershipexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genormembershipexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`gen.x.valid && gen.x.tag == 0`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen OR-membership exists variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("target=gen OR-membership exists variant guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `gen.x.valid && gen.x.tag == 0`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen OR-membership exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesNegatedOrMembershipExistsVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. (~(x *> Q) | active);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennegormembershipexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennegormembershipexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 1, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`!((gen.x.valid && gen.x.tag == 0))`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen negated OR-membership exists variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("target=gen negated OR-membership exists variant guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `!((gen.x.valid && gen.x.tag == 0))`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen negated OR-membership exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesImpliedMembershipExistsVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. (active -> x *> Q);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genimpliedmembershipexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genimpliedmembershipexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`gen.x.valid && gen.x.tag == 0`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen implied membership exists variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("target=gen implied membership exists variant guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `gen.x.valid && gen.x.tag == 0`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen implied membership exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIteMembershipExistsVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	starSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *>: %v", err)
+	}
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	q := &goivy.LogicVariable{Name: "Q", VSort: req}
+	rel := goivy.MustApply(goivy.NewConst("*>", starSort), params[0], q)
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, rel, goivy.True)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	exists, err := goivy.NewExists([]*goivy.LogicVariable{q}, ite)
+	if err != nil {
+		t.Fatalf("exists variant body: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(exists), goivy.NewAssignAction(goivy.NewConst("saved", msg), params[0]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genitemembershipexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genitemembershipexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`gen.x.valid && gen.x.tag == 0`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen ITE membership exists variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("target=gen ITE membership exists variant guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `gen.x.valid && gen.x.tag == 0`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen ITE membership exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIteFalseMembershipExistsVariantRelationWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual active : bool
+individual saved : msg
+action set(x:msg) = {
+}
+export set
+`)
+	action, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatal("missing set action")
+	}
+	params := action.GetFormalParams()
+	if len(params) != 1 {
+		t.Fatalf("set params = %d, want 1", len(params))
+	}
+	msg := mod.Sig.Sorts.Get("msg")
+	req := mod.Sig.Sorts.Get("req")
+	starSort, err := goivy.NewFunctionSort(msg, req, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort *>: %v", err)
+	}
+	activeSym, err := mod.Sig.FindSymbol("active", false)
+	if err != nil {
+		t.Fatalf("FindSymbol active: %v", err)
+	}
+	q := &goivy.LogicVariable{Name: "Q", VSort: req}
+	rel := goivy.MustApply(goivy.NewConst("*>", starSort), params[0], q)
+	active := goivy.NewConst("active", activeSym.CSort)
+	ite, err := goivy.NewIte(active, rel, goivy.False)
+	if err != nil {
+		t.Fatalf("NewIte: %v", err)
+	}
+	exists, err := goivy.NewExists([]*goivy.LogicVariable{q}, ite)
+	if err != nil {
+		t.Fatalf("exists variant body: %v", err)
+	}
+	act := goivy.NewSequence(goivy.NewAssumeAction(exists), goivy.NewAssignAction(goivy.NewConst("saved", msg), params[0]))
+	goivy.CopyFormalsTo(action, act)
+	mod.Actions.Set("set", act)
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genitefalsemembershipexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genitefalsemembershipexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`gen.x.valid && gen.x.tag == 0`,
+		`ivy.active`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen false-branch ITE membership exists variant relation witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, "unsupported action generator assume guard") ||
+		strings.Contains(genBody, "cannot enumerate quantified variable") {
+		t.Fatalf("target=gen false-branch ITE membership exists variant guard should not fall back to unsupported quantifier emission:\n%s", genBody)
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `gen.x.valid && gen.x.tag == 0`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen false-branch ITE membership exists variant relation witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
 	}
 }
 
@@ -20261,6 +27114,241 @@ export set
 	}
 	if strings.Contains(genBody, `gen.x = msg{tag: 0, value: 0, valid: true}`) {
 		t.Fatalf("target=gen disequal exists variant witness should not default payload to zero:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseDisequalExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ((Q ~= req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalsedisequalexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalsedisequalexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0, valid: true}`
+	bad := `gen.x = msg{tag: 0, value: ivy.req0 + 1, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false disequal exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, bad) {
+		t.Fatalf("target=gen IFF-false disequal payload should use exact req0, not disequality offset:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesDoubleNegatedDisequalExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ~(Q ~= req0);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gendoublenegdisequalexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gendoublenegdisequalexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0, valid: true}`
+	bad := `gen.x = msg{tag: 0, value: ivy.req0 + 1, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen double-negated disequal exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+	if strings.Contains(genBody, bad) {
+		t.Fatalf("target=gen double-negated disequal payload should use exact req0, not disequality offset:\n%s", genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseAffineDisequalExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ((Q + 1 ~= req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseaffinedisequalexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseaffinedisequalexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0 - 1, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false affine disequal exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseInequalityExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ((Q <= 10) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseineqexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 11, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false inequality exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseNegatedInequalityExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & (~(Q > 10) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalsenegineqexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalsenegineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 11, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false negated inequality exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesNegatedInequalityExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ~(Q <= 10);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennegineqexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennegineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 11, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen negated inequality exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesNegatedAffineInequalityExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ~(Q + 1 <= 10);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennegaffineineqexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Gennegaffineineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 10, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen negated affine inequality exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseAffineInequalityExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & ((Q + 1 <= 10) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalseaffineineqexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalseaffineineqexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: 10, valid: true}`
+	for _, want := range []string{assign, `return false`} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false affine inequality exists variant payload witness missing %q:\n%s", want, genBody)
+		}
 	}
 }
 
@@ -20726,6 +27814,45 @@ export set
 	guardIdx := strings.Index(genBody, `Q := gen.x.value.(int)`)
 	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
 		t.Fatalf("target=gen IFF exists variant witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
+	}
+}
+
+func TestTargetGenActionGeneratorUsesIffFalseNegatedExactExistsVariantPayloadWitnessFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+variant req of msg
+variant ack of msg
+individual req0 : req
+individual saved : msg
+action set(x:msg) = {
+    assume exists Q:req. x *> Q & (~(Q = req0) <-> false);
+    saved := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genifffalsenegexactexistsvariant", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genifffalsenegexactexistsvariant_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	assign := `gen.x = msg{tag: 0, value: ivy.req0, valid: true}`
+	for _, want := range []string{
+		assign,
+		`Q := gen.x.value.(int)`,
+		`Q == ivy.req0`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen IFF-false negated exact exists variant payload witness missing %q:\n%s", want, genBody)
+		}
+	}
+	assignIdx := strings.Index(genBody, assign)
+	guardIdx := strings.Index(genBody, `Q := gen.x.value.(int)`)
+	if assignIdx < 0 || guardIdx < 0 || assignIdx > guardIdx {
+		t.Fatalf("target=gen IFF-false negated exact exists variant witness should assign before checking guard; assign=%d guard=%d\n%s", assignIdx, guardIdx, genBody)
 	}
 }
 
@@ -22043,6 +29170,83 @@ export set
 		}
 	}
 	compileGeneratedGo(t, out)
+}
+
+func TestTargetGenExtPreconditionSomeConditionUsesExistentialGuardFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	mod.ExtPreconds["set"] = extPrecondSomeChoiceEqualsGreen(t, mod, "set")
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genextpresome", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genextpresome_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c`,
+		`green`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen ext-precondition some guard missing %q:\n%s", want, genBody)
+		}
+	}
+	for _, bad := range []string{
+		"unsupported action generator assume guard",
+		"SomeCondition",
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=gen ext-precondition some guard should be lowered before emission, found %q:\n%s", bad, genBody)
+		}
+	}
+}
+
+func TestTargetGenExtPreconditionSomeConditionExpandsDefinitionsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+definition good(X:color, C:color) = X = C & X = green
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	mod.ExtPreconds["set"] = extPrecondSomeDerivedChoiceEqualsGreen(t, mod, "set")
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genextpresomedef", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	genBody := bodyAfterMarker(out.Source, "func (gen *Genextpresomedef_set_generator) generate() bool")
+	if genBody == "" {
+		t.Fatalf("set generator body not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		`gen.c == green`,
+		`return false`,
+	} {
+		if !strings.Contains(genBody, want) {
+			t.Fatalf("target=gen ext-precondition derived some guard missing %q:\n%s", want, genBody)
+		}
+	}
+	for _, bad := range []string{
+		`ivy.good`,
+		`good(`,
+		`SomeCondition`,
+	} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("target=gen ext-precondition derived some guard should be expanded, found %q:\n%s", bad, genBody)
+		}
+	}
 }
 
 func TestTargetGenExtPreconditionPreservesReturningActionFormals(t *testing.T) {

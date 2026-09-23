@@ -95,6 +95,24 @@ Progress:
   `if c = red { assume false }` now emit implication guards like
   `c = red -> false` before the action trace. Branches that can mutate state are
   still intentionally outside this limited fix.
+- 2026-09-22: Added
+  `TestTargetTestIfSomeConditionPreimageUsesExistentialGuardFast`. `if some`
+  conditions in preimage guards now lower to ordinary existential formulas
+  before substitution/emission, so conditional assumes guarded by Ivy `some`
+  syntax are kept in the per-action generator instead of becoming unsupported
+  `SomeCondition` expressions.
+- 2026-09-22: Added
+  `TestTargetTestExtPreconditionSomeConditionUsesExistentialGuardFast`.
+  Ext-precondition guards now share the same `SomeCondition` lowering, so
+  externally supplied `some` constraints over generated formals are emitted as
+  ordinary existential generator guards instead of being rejected as unsupported
+  expressions.
+- 2026-09-22: Added
+  `TestTargetTestExtPreconditionSomeConditionExpandsDefinitionsFast`.
+  Lowered ext-precondition `some` guards now re-enter the normal
+  guard-definition expander, so derived predicates inside the existential body
+  are inlined and duplicate equality bindings simplify to residual formal
+  guards such as `gen.c == green`.
 - 2026-09-22: Added `TestTargetTestSolvedLocalAssumeSkipsTrialGeneratorFast`.
   Local finite witness initialization now makes simple local assumes such as
   `var choice : color; assume choice = green` safe to execute directly after
@@ -254,11 +272,58 @@ Progress:
   intentionally narrow: it requires a concrete local membership witness and the
   later state membership assume to match that same concrete payload.
 - 2026-09-22: Added
+  `TestTargetTestLocalVariantConjunctiveStateUpdatePreservesGuardSkipsTrialFast`.
+  Copied local-variant state rechecks under conjunctions now strip the covered
+  local membership term while preserving non-local residual guards such as
+  `active` in the per-action generator. The no-trial proof likewise accepts the
+  covered local term without treating the residual generator guard as a hidden
+  trial requirement.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantDisjunctiveMismatchStateUpdatePreservesGuardSkipsTrialFast`
+  plus implication-wrapper coverage. Copied local-variant state rechecks under
+  OR now use variant-tag reasoning for sibling subtypes, reducing a refuted
+  branch such as `saved *> ack0` to `false` while preserving the residual
+  non-local branch such as `active` as the generator guard; direct execution is
+  still limited to wrappers whose local-dependent terms are covered or refuted.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantImplicationMismatchStateUpdatePreservesGuardSkipsTrialFast`.
+  Implication wrappers now use the same copied local-variant refutation fact:
+  `active -> saved *> ack0` reduces to the residual generator guard `~active`
+  when the copied witness is known to be a `req` value.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantNegatedSiblingStateUpdatePreservesGuardSkipsTrialFast`.
+  Negated copied local-variant sibling rechecks now use the same variant-tag
+  reasoning, reducing `~(saved *> ack0)` to `true` when the local witness built
+  a `req` value and preserving residual non-local conjuncts as generator
+  guards.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantIffFalseSiblingStateUpdatePreservesGuardSkipsTrialFast`.
+  IFF-with-false wrappers around sibling copied local-variant rechecks now
+  normalize through the same refutation path, so
+  `(saved *> ack0) <-> false` behaves like `~(saved *> ack0)` for generator
+  guards and no-trial proof.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantIteMismatchStateUpdatePreservesGuardSkipsTrialFast`.
+  Conditional copied local-variant rechecks now reduce branch-local refutations
+  such as `ite(active, saved *> ack0, true)` to the residual guard `~active`,
+  preserving Python reverse-image behavior for this finite variant branch.
+- 2026-09-22: Added
   `TestTargetTestLocalVariantExistsStateUpdateSkipsTrialFast`. The same
   direct-execution shortcut now also covers subtype-only existential variant
   rechecks such as `exists R:req. saved *> R` after a local `msg` witness has
   been copied into state. Exact-payload existential rechecks still require the
   previously generated concrete payload to match.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantExistsStateUpdatePreservesResidualGuardSkipsTrialFast`.
+  Existential copied local-variant rechecks now consume the covered membership
+  atom while preserving residual non-bound terms such as `active` as generator
+  guards, e.g. `exists R:req. saved *> R & active` reduces to `active`.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantNegatedExistsSiblingStateUpdatePreservesResidualGuardSkipsTrialFast`.
+  Negated existential copied local-variant rechecks over sibling subtypes now
+  use the copied witness's variant tag to prove the negated membership and keep
+  residual non-bound guards, e.g. `exists A:ack. ~(saved *> A) & active`
+  reduces to `active` when `saved` was copied from a `req` witness.
 - 2026-09-22: Added
   `TestTargetTestLocalVariantAffineEqualityStateUpdateSkipsTrialFast`. The
   copied-local variant direct-execution proof now compares quantified payload
@@ -273,6 +338,15 @@ Progress:
   narrow: it requires the same relation symbol and unchanged non-witness
   arguments, with the copied state value occupying the witnessed local's
   argument position.
+- 2026-09-22: Added `TestTargetGenLocalRelationStateUpdateFast`. The same
+  copied local-relation state recheck is now covered for `target=gen`, proving
+  the one-shot action keeps the direct relation witness scan and generator
+  execution avoids hidden trial machinery.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationStateUpdatePreservesResidualGuardSkipsTrialFast`.
+  Copied local-relation state rechecks under conjunctions now strip the covered
+  relation witness atom while preserving non-local residual guards such as
+  `active` in the per-action generator.
 - 2026-09-22: Added
   `TestTargetTestLocalRelationExistsStateUpdateSkipsTrialFast`. The relation
   state-update proof now also handles existentially ignored relation columns on
@@ -281,10 +355,45 @@ Progress:
   arguments still must match literally; ignored columns are only considered
   covered when both sides are existential.
 - 2026-09-22: Added
+  `TestTargetTestLocalRelationExistsStateUpdatePreservesResidualGuardSkipsTrialFast`.
+  Existential copied local-relation state rechecks now descend through
+  quantified ignored tuple fields, strip the covered relation witness atom, and
+  preserve residual non-local guards such as `active`.
+- 2026-09-22: Added
   `TestTargetTestLocalRelationIffStateUpdateSkipsTrialFast`. The same
   relation state-update proof now normalizes the `p <-> true` spelling used by
   the witness collectors, so a local relation witness copied into state and
   rechecked as `allowed(saved) <-> true` no longer forces a hidden trial clone.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationIffFalseNegatedStateUpdateSkipsTrialFast`. The
+  same copied local-relation state proof now has explicit coverage for the
+  equivalent IFF-false spelling `~allowed(saved) <-> false`, keeping that
+  direct-execution path out of hidden trial machinery.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationPairIffFalseNegatedStateUpdateSkipsTrialFast`.
+  The grouped copied local-relation state proof now refutes negative IFF terms
+  in the same narrow way, so a tuple witness copied into two state fields and
+  rechecked as `~edge(saved_a,saved_b) <-> false` avoids the hidden trial path.
+- 2026-09-22: Added
+  `TestPreimageWalkerLocalRelationPairStateUpdateKeepsResidualGuardFast`,
+  `TestDropLocalRelationGroupWitnessGuardTermsKeepsResidualFast`, and
+  `TestTargetTestLocalRelationPairStateUpdatePreservesResidualGuardSkipsTrialFast`.
+  The local preimage walker now flattens consecutive nested local declarations
+  before cleanup, and grouped relation-witness cleanup strips only the covered
+  tuple atom while preserving residual non-local guards such as `active`.
+  The same flattening keeps the existing chained-local equality point-update
+  tests green by allowing bare local-to-local equality witnesses and resolving
+  substitutions transitively before point-update preimage rewriting.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationPairIffFalseStateUpdatePreservesResidualGuardSkipsTrialFast`
+  for the combined grouped tuple/IFF-false/residual-guard shape, ensuring the
+  copied witness still reduces to the residual `active` guard without a hidden
+  trial clone.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationPairIffActiveStateUpdatePreservesResidualGuardSkipsTrialFast`
+  for the non-constant IFF shape `edge(saved_a,saved_b) <-> active`, proving
+  grouped tuple witness cleanup preserves the residual `active` guard and still
+  avoids hidden trial execution.
 - 2026-09-22: Added
   `TestTargetTestLocalVariantIffStateUpdateSkipsTrialFast`. The local variant
   state-update proof now also normalizes concrete membership guards written as
@@ -305,6 +414,10 @@ Progress:
   already have a modeled relation witness; later local assumes must be covered
   by a recorded state or point update rather than being treated as unrelated
   fresh witnesses.
+- 2026-09-22: Added `TestTargetGenLocalRelationPointUpdateFast` as the
+  `target=gen` companion for the same relation-backed local point-update shape,
+  proving one-shot generated execution stays on the direct path without local
+  existential generator guards.
 - 2026-09-22: Added
   `TestTargetTestLocalVariantPointUpdateSkipsTrialFast`. The same positive
   relation point-update proof now also accepts local arguments with modeled
@@ -376,11 +489,23 @@ Progress:
   when both branches are covered by the same recorded tuple witness, avoiding a
   hidden trial clone for branch-wrapped state relation rechecks.
 - 2026-09-22: Added
+  `TestTargetTestLocalRelationPairIteWitnessStateUpdateSkipsTrialFast`.
+  Conditional grouped relation tuple witnesses now retain their branch
+  alternatives for the direct-execution proof, so a witness chosen from
+  `ite(active, edge(a,b), permitted(a,b))` can be copied into state and
+  rechecked under the same branch condition without a hidden trial clone.
+- 2026-09-22: Added
   `TestTargetTestChoiceAssumePreimageUsesDisjunctiveGuardFast`. The
   `target=test` preimage walker now handles pure nondeterministic choices by
   OR-ing the branch assume preconditions, so a choice between `assume c = green`
   and `assume c = blue` emits a generator guard for the disjunction. Branches
   that leave different state updates are covered separately below.
+- 2026-09-22: Added
+  `TestTargetTestChoiceWithTrueBranchDoesNotEmitFalseGuardFast`. Choice
+  preimage disjunctions now preserve the identity element correctly: when any
+  branch is unconditionally enabled, the choice itself is enabled and the
+  generator no longer emits a rejecting `false` guard while still keeping
+  branch contexts available for later assumes.
 - 2026-09-22: Added
   `TestTargetTestChoiceStateUpdatePreimageUsesReverseImageGuardFast`. Simple
   nondeterministic choices whose branches assign different scalar state values
@@ -478,7 +603,10 @@ Progress:
   `TestTargetTestLocalNumericFormalIffFalseInequalitySkipsTrialFast`. The
   local-preimage eliminator now normalizes IFF-with-false inequality witnesses,
   so `(scratch <= c) <-> false` uses the same `c + 1` witness and direct
-  state-copy proof as the equivalent negated inequality.
+  state-copy proof as the equivalent negated inequality. Added
+  `TestTargetTestLocalNumericFormalIffFalseNegatedInequalitySkipsTrialFast`
+  for false-of-negation spellings such as `(~(scratch > c)) <-> false`,
+  proving the copied-state recheck without hidden trial execution.
 - 2026-09-22: Added
   `TestTargetTestLocalNumericFormalIffFalseAffineEqualitySkipsTrialFast`.
   IFF-with-false affine equality witnesses now use the same formal-dependent
@@ -622,6 +750,31 @@ Progress:
   Scalar witness discovery now routes IFF-with-false terms through the same
   negated-bound extractor, so `(n <= 10) <-> false` gets the complementary
   witness instead of depending on a rejecting randomized value.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseNegatedNumericInequalityWitnessForUnboundedFormalFast`.
+  The IFF-with-false negated scalar mirror now treats `~(n > 10) <-> false` as
+  the positive bound `n > 10`, producing the narrow witness `11` instead of
+  relying on the broad small-integer fallback scan.
+- 2026-09-23: Added
+  `TestTargetTestActionGeneratorUsesIffFalseImplicationNumericInequalityWitnessForUnboundedFormalFast`.
+  False-of-implication scalar numeric witnesses now keep the antecedent as a
+  positive guard and invert the consequent, so `(active -> n > 10) <-> false`
+  tries the boundary witness `10` before the broad small-integer fallback.
+- 2026-09-23: Added
+  `TestTargetTestActionGeneratorUsesIffFalseOrNumericInequalityWitnessForUnboundedFormalFast`.
+  False-of-OR scalar numeric witnesses now descend into each disjunct, so
+  `(active | n > 10) <-> false` tries the inverted bound witness `10` before
+  the broad fallback.
+- 2026-09-23: Added
+  `TestTargetTestActionGeneratorUsesIffFalseAndNumericInequalityWitnessForUnboundedFormalFast`.
+  False-of-AND scalar numeric witnesses now collect false-conjunct witnesses,
+  so `(active & n > 10) <-> false` can try the boundary witness `10` before
+  rechecking the complete guard.
+- 2026-09-23: Added
+  `TestTargetTestActionGeneratorUsesIffFalseIteNumericInequalityWitnessForUnboundedFormalFast`.
+  False-of-ITE scalar numeric witnesses now merge branch-local inverted bounds,
+  so `ite(active, n > 10, n > 20) <-> false` emits a focused conditional
+  witness such as `ivyTernary(ivy.active, 10, 20)`.
 - 2026-09-22: Added `TestTargetTestActionGeneratorUsesIteNumericWitnessFast`.
   Scalar witness discovery now merges conditional numeric branch witnesses, so
   guards such as `ite(active, n > 10, n > 20)` try
@@ -656,6 +809,31 @@ Progress:
   Pairwise numeric witness discovery now handles negated normalized bounds such
   as `~(a <= b)` (`~((a < b) | (a = b))`) by inverting the strict inequality
   and assigning a deterministic satisfying pair such as `gen.a = gen.b + 1`.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseNegatedNumericPairInequalityWitnessFast`.
+  The IFF-with-false pairwise mirror now treats `~(a < b) <-> false` as the
+  positive pair bound `a < b`, emitting the single pair assignment
+  `gen.b = gen.a + 1` instead of falling back to nested per-formal searches.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseImplicationNumericPairInequalityWitnessFast`.
+  False-of-implication pairwise numeric witnesses now invert the consequent
+  bound, so `(active -> a < b) <-> false` emits a deterministic pair assignment
+  such as `gen.a = gen.b` before rechecking the full guard.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseOrNumericPairInequalityWitnessFast`.
+  False-of-OR pairwise numeric witnesses now descend into every disjunct, so
+  `(active | a < b) <-> false` emits the inverted pair witness before the final
+  guard recheck.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseAndNumericPairInequalityWitnessFast`.
+  False-of-AND pairwise numeric witnesses now use a satisfiable false-conjunct
+  witness, so `(active & a < b) <-> false` can emit `gen.a = gen.b` before
+  rechecking enabledness.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseIteNumericPairInequalityWitnessFast`.
+  False-of-ITE pairwise numeric witnesses now merge branch-local inverted
+  bounds, so `ite(active, a < b, a + 2 < b) <-> false` emits a conditional
+  assignment such as `gen.a = ivyTernary(ivy.active, gen.b, gen.b - 2)`.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesNumericAffinePairInequalityWitnessFast`.
   Pairwise numeric inequality witnesses now handle simple affine terms on each
@@ -726,12 +904,16 @@ Progress:
   `TestTargetTestActionGeneratorUsesProductStateInequalityWitnessFast`.
   Product inequalities over two unbounded integer-like formals now get boundary
   witnesses too; for example `a * b > target` seeds `a = target + 1` and
-  `b = 1` before checking the normalized guard.
+  `b = 1` before checking the normalized guard. Added
+  `TestTargetTestActionGeneratorUsesIffFalseProductStateInequalityWitnessFast`
+  for the equivalent IFF-with-false spelling `(a * b <= target) <-> false`.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesProductStateDisequalityWitnessFast`.
   Negated product equalities now get a nearby distinct product witness, so
   `a * b ~= target` seeds `a = target + 1` and `b = 1` before the final guard
-  recheck.
+  recheck. Added
+  `TestTargetTestActionGeneratorUsesIffFalseProductStateEqualityWitnessFast`
+  for the equivalent false-equality spelling `(a * b = target) <-> false`.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesSumStateEqualityWitnessFast`. Additive
   two-formal equalities with an integer-like RHS now get a simple model witness
@@ -832,10 +1014,26 @@ Progress:
   preserving the Python solver-style enabledness check for this stored-relation
   slice.
 - 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffTrueRelationOverrideForallGuardFast`.
+  The relation-override forall scanner now normalizes IFF-with-true wrappers
+  around negative relation guards, so `forall X. (~banned(X,c) <-> true)` uses
+  the same override-map recheck path as the direct spelling.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseRelationOverrideForallGuardFast`.
+  The relation-override forall scanner now also treats IFF-with-false around a
+  positive relation as a negative relation occurrence, so
+  `forall X. (banned(X,c) <-> false)` uses the override-map recheck path instead
+  of falling back to unbounded quantifier enumeration.
+- 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesEqualityBoundForallGuardFast`. Single
   equality-bound quantifiers now simplify before code emission, so
   `forall X. X = c -> allowed(X)` becomes a direct generated guard on
   `allowed(c)` instead of trying to enumerate an unbounded quantified variable.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseDisequalityBoundForallGuardFast`.
+  Equality-bound forall antecedents now also recognize
+  `((X ~= c) <-> false)` as a positive binding of `X` to `c`, emitting the
+  direct `allowed(c)` guard instead of enumerating `X`.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesMultiEqualityBoundForallGuardFast`.
   Equality-bound quantifier simplification now collects one binding per
@@ -854,6 +1052,25 @@ Progress:
   the solver-trivial satisfiable case instead of emitting a soft unsupported
   unbounded quantifier comment.
 - 2026-09-22: Added
+  `TestTargetTestActionGeneratorSimplifiesUnboundedExistsDisequalityFast`.
+  Existential disequality over a sort with a known alternate value, e.g.
+  `exists X:int. X ~= c`, now simplifies to `true` instead of trying to
+  enumerate the unbounded witness. Added
+  `TestTargetTestActionGeneratorSimplifiesIffTrueUnboundedExistsDisequalityFast`
+  for the equivalent `((X ~= c) <-> true)` spelling, and
+  `TestTargetTestActionGeneratorSimplifiesImpliedUnboundedExistsDisequalityFast`
+  for implication consequents such as `exists X. active -> X ~= c`. Added
+  `TestTargetTestActionGeneratorSimplifiesOrUnboundedExistsDisequalityFast`
+  for satisfiable disequality disjuncts such as `exists X. X ~= c | active`.
+  Added
+  `TestTargetTestActionGeneratorSimplifiesIteUnboundedExistsDisequalityFast`
+  for branch-local conditional disequality witnesses. Added
+  `TestTargetTestActionGeneratorUsesUnboundedExistsDisequalityResidualWitnessFast`
+  to prove residual guards such as `n > 10` are exposed to the existing scalar
+  witness planner. Added
+  `TestTargetTestActionGeneratorSimplifiesIffFalseEqualityUnboundedExistsDisequalityFast`
+  for the equivalent `(X = c) <-> false` spelling.
+- 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesEqualityBoundForallNumericWitnessFast`.
   Equality-bound quantifier simplification now runs on the action-generator
   guard AST before witness planning as well as during expression emission, so
@@ -866,6 +1083,46 @@ Progress:
   `exists X. X = c & n > X` feeds the scalar witness extractor as `n > c`
   while variant-membership existential guards remain on their specialized
   downcast path.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorSimplifiesEqualityBoundExistsOrFast`.
+  Equality-bound existential guards with a satisfiable equality disjunct now
+  simplify to `true`, so `exists X. X = c | n > X` avoids quantified
+  enumeration and does not spuriously constrain `n`.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorSimplifiesGuardedEqualityBoundExistsOrFast`.
+  Equality-bound existential OR guards now substitute each equality-bound
+  disjunct independently, so
+  `exists X. (X = c & active) | (X = n & enabled)` becomes the direct
+  residual guard `active | enabled` without enumerating `X`.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorSimplifiesEqualityBoundExistsIteFast`.
+  Equality-bound existential ITE guards now substitute each branch
+  independently, so `exists X. ite(active, X = c, X = n)` is recognized as
+  solver-trivial instead of enumerating the unbounded quantified variable.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorSimplifiesEqualityBoundExistsIffTrueFast`.
+  Equality-bound existential guards wrapped in IFF-with-true now normalize to
+  the positive equality branch, so `exists X. ((X = c) <-> true)` is handled as
+  solver-trivial without quantified enumeration.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorSimplifiesEqualityBoundExistsImplicationFast`.
+  Equality-bound existential guards with a bound consequent now simplify
+  conservative implication cases, so `exists X. active -> X = c` is treated as
+  solver-trivial without enumerating `X`. Added
+  `TestTargetTestActionGeneratorSimplifiesEqualityBoundExistsImplicationResidualFast`
+  to lock down the non-trivial residual case
+  `exists X. active -> (X = c & n > X)`, which reduces to
+  `active -> n > c` and feeds the existing scalar witness planner.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorSimplifiesNegatedDisequalityBoundExistsFast`.
+  Equality-bound existential recognition now treats double-negated
+  disequality, e.g. `exists X. ~(X ~= c)`, as the same positive binding as
+  `X = c` instead of falling through to unbounded quantified enumeration.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorSimplifiesIffFalseDisequalityBoundExistsFast`.
+  Equality-bound existential recognition now also routes IFF-with-false
+  disequality forms such as `exists X. ((X ~= c) <-> false)` through the same
+  positive binding path.
 - 2026-09-22: Added
   `TestTargetTestLocalEqualityBoundExistsNumericWitnessSkipsTrialFast`. Local
   witness assume collection now shares the equality-bound quantifier
@@ -889,6 +1146,12 @@ Progress:
   positive guard, so `allowed(n) <-> true` can scan true stored relation cells
   for unbounded generated formals before rechecking the complete IFF guard.
   Equivalence with `false` is routed to the negated-relation witness path.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesRelationPairWitnessInsideIffActiveFast`.
+  Relation tuple-witness discovery now also treats non-constant IFFs as
+  residual-guard contexts, so `allowed(a,b) <-> active` can scan true stored
+  tuple cells for the unbounded generated formals and still recheck `active`
+  before accepting the candidate.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesRelationWitnessInsideIteFast`.
   Relation-witness discovery now also descends into conditional branches, so
@@ -943,6 +1206,22 @@ Progress:
   full guard. This covers simple `~banned(a,b)` shapes without depending on two
   lucky randomized values.
 - 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesNegatedRelationTupleWitnessInsideIffActiveFast`.
+  Negated tuple relation-witness discovery now also treats non-constant IFFs as
+  residual-guard contexts, so `~banned(a,b) <-> active` can try a tuple-derived
+  nearby value and still recheck the complete equivalence before accepting it.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseRelationTupleWitnessForUnboundedFormalsFast`.
+  IFF-with-false relation tuple guards such as `banned(a,b) <-> false` now use
+  the same negated tuple nearby-value witness path as `~banned(a,b)`, while
+  keeping the full guard recheck before accepting.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseNegatedRelationTupleWitnessForUnboundedFormalsFast`.
+  The opposite IFF-with-false polarity is now covered too:
+  `~banned(a,b) <-> false` requires a true relation tuple, so the generator
+  scans true `banned` cells and assigns the generated formals directly instead
+  of using the nearby-value negated-relation path.
+- 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesNegatedRelationTupleWitnessWithFixedFieldFast`.
   The negated relation witness path now also handles larger relation tuples
   with fixed/evaluable fields, e.g. `~banned(green,n)`: generated code filters
@@ -977,11 +1256,58 @@ Progress:
   now treats equivalence with `true` as a positive guard, so IFF-wrapped
   equalities such as `(x = y) <-> true` assign `gen.x = gen.y` before the guard
   check instead of relying on two matching random unbounded inputs.
+- 2026-09-22: Added
+  `TestTargetTestIffFalseDisequalityDefinedInputFast`. Defined-input extraction
+  now treats IFF-with-false around disequality as an equality definition, so
+  `((c ~= green) <-> false)` assigns `gen.c = green` before checking the guard
+  instead of relying on finite fallback search. Added
+  `TestTargetTestDoubleNegatedDisequalityDefinedInputFast` for the direct
+  `~(c ~= green)` spelling.
+- 2026-09-22: Added
+  `TestTargetTestIffFalseEqualityFiniteDefinedInputFast`. Negated finite
+  equality definitions such as `((c = green) <-> false)` now choose a concrete
+  alternate finite value, e.g. `gen.c = red`, before rechecking the full guard
+  instead of relying on the finite-search retry loop.
+- 2026-09-22: Added
+  `TestTargetTestConjunctiveFiniteDisequalityDefinedInputFast`. Conjunctive
+  finite exclusions for the same generated formal are now grouped before
+  choosing a defined input, so `c ~= red & c ~= green` picks `blue` instead of
+  emitting conflicting `green` then `red` assignments.
+- 2026-09-22: Added
+  `TestTargetTestConjunctiveIffFalseFiniteEqualityDefinedInputFast`. The same
+  grouping now recognizes IFF-with-false equality exclusions inside
+  conjunctions, so `(c = red) <-> false` and `(c = green) <-> false` combine
+  into one `blue` assignment instead of conflicting alternates.
+- 2026-09-22: Added
+  `TestTargetTestIffFalseImplicationFiniteEqualityDefinedInputFast`. False of
+  implication now contributes positive defined inputs from the antecedent and
+  false-defined inputs from the consequent, so `((active -> c = red) <-> false)`
+  picks the finite alternate for `c` before rechecking the complete guard.
+- 2026-09-22: Added
+  `TestTargetTestIffFalseOrFiniteEqualityDefinedInputFast`. False of OR now
+  contributes false-defined inputs from each disjunct, grouping finite equality
+  exclusions where needed, so `((active | c = red) <-> false)` assigns the
+  alternate finite value for `c` before checking the residual state guard.
+- 2026-09-22: Added
+  `TestTargetTestIffFalseIteFiniteEqualityDefinedInputFast`. False of ITE now
+  merges branch-specific false-defined inputs with the existing ITE defined-input
+  helper, so `ite(active, c = red, c = green) <-> false` assigns
+  `ivyTernary(active, green, red)` before the full guard recheck.
+- 2026-09-22: Added
+  `TestTargetTestIffFalseAndFiniteEqualityDefinedInputFast`. False of AND now
+  uses a false-defined input from one satisfiable conjunct, so
+  `((active & c = red) <-> false)` can assign the finite alternate for `c`
+  before the complete guard is rechecked.
 - 2026-09-22: Added `TestTargetTestBooleanIffDefinedInputFast`. Boolean
   defined-input extraction now also handles direct `LogicIff(input, expr)`
   formulas such as `x <-> active`, matching Python's
   `extract_defined_parameters` treatment of IFF parameter definitions instead
   of falling back to finite boolean search.
+- 2026-09-22: Added `TestTargetTestBooleanLiteralDefinedInputFast` and
+  `TestTargetTestNegatedBooleanLiteralDefinedInputFast`. Boolean generated
+  formals are now treated as direct positive/negative defined inputs, so
+  `assume x` emits `gen.x = true` and `assume ~x` emits `gen.x = false` before
+  the guard recheck instead of relying on finite boolean search.
 - 2026-09-22: Added `TestTargetTestImpliedDefinedInputUsesGeneratorGuardFast`.
   Defined-input extraction now also descends into implication consequents, so
   constraints such as `active -> x = green` assign `gen.x = green` before the
@@ -1045,10 +1371,42 @@ Progress:
   emits an alternate variant such as `ack` instead of depending on the initial
   randomized variant tag.
 - 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseNegatedVariantRelationWitnessFast`.
+  The IFF-with-false negated variant mirror now treats
+  `~(x *> req0) <-> false` as the positive membership guard, constructing the
+  concrete `req0` variant before the full equivalence check.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseImplicationVariantRelationWitnessFast`.
+  False-of-implication variant guards now use positive witnesses from the
+  antecedent and sibling-subtype witnesses from the consequent, so
+  `(active -> x *> req0) <-> false` constructs an alternate variant before the
+  full guard recheck instead of relying on one randomized variant tag.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseOrVariantRelationWitnessFast`.
+  False-of-OR variant guards now descend into every disjunct, so
+  `(active | x *> req0) <-> false` constructs the sibling variant needed to
+  make the membership disjunct false before rechecking the full guard.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseAndVariantRelationWitnessFast`.
+  False-of-AND variant guards now use a satisfiable false-conjunct witness, so
+  `(active & x *> req0) <-> false` can construct a sibling variant and let the
+  full guard recheck decide enabledness.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseIteVariantRelationWitnessFast`.
+  False-of-ITE variant guards now merge branch-local sibling witnesses, so
+  `ite(active, x *> req0, x *> ack0) <-> false` assigns a branch-dependent
+  alternate variant before rechecking the conditional guard.
+- 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesNegatedExistsVariantRelationWitnessFast`.
   Negated existential variant memberships now use the same sibling-subtype
   witness path, so `exists Q:req. ~(x *> Q)` constructs an alternate variant
   for generated inputs before evaluating the quantified guard.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesNegatedExistsVariantResidualGuardFast`.
+  Negated existential variant memberships with non-bound residual guards now
+  emit the direct sibling-tag check conjoined with the residual, so
+  `exists Q:req. ~(x *> Q) & active` no longer falls back to quantified
+  enumeration after constructing the sibling witness.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesConstrainedNegatedExistsVariantRelationWitnessFast`.
   Negated existential variant memberships with a concrete payload equality now
@@ -1075,6 +1433,34 @@ Progress:
   direct validity/tag check and the `target=test` generator constructs a
   zero-payload `req` variant for `x` before checking that guard. More complex
   existential bodies still remain outside this small variant-axiom slice.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesOrMembershipExistsVariantRelationWitnessFast`.
+  Positive existential variant memberships under a disjunction with non-bound
+  alternatives now lower to a direct OR guard and still construct the subtype
+  witness before checking the guard, e.g. `exists Q:req. (x *> Q | active)`
+  emits the `req` witness for `x` and avoids unenumerable quantifier fallback.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesNegatedOrMembershipExistsVariantRelationWitnessFast`.
+  Negated existential variant memberships under a disjunction with non-bound
+  alternatives now lower to a direct negated-tag OR guard and construct a
+  sibling subtype witness, e.g. `exists Q:req. (~(x *> Q) | active)`.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesImpliedMembershipExistsVariantRelationWitnessFast`.
+  Implication-wrapped existential variant memberships now share the same OR
+  lowering, so `exists Q:req. (active -> x *> Q)` emits a direct
+  `!active || tag(x, req)` guard and constructs the subtype witness before
+  rechecking it.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIteMembershipExistsVariantRelationWitnessFast`.
+  One-sided conditional existential variant memberships now normalize through
+  the same OR path, so `exists Q:req. ite(active, x *> Q, true)` emits the
+  direct inactive-or-tag guard and constructs the subtype witness first.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIteFalseMembershipExistsVariantRelationWitnessFast`.
+  One-sided false-branch conditional existential memberships now normalize
+  through the conjunction matcher, so `exists Q:req. ite(active, x *> Q,
+  false)` emits the active-and-tag guard and constructs the subtype witness
+  first.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesIffTrueExistsVariantRelationWitnessFast`.
   Positive existential variant matching now also recognizes Ivy's
@@ -1106,10 +1492,34 @@ Progress:
   the `req` variant with `ivy.req0 + 1` instead of defaulting the payload to
   zero and immediately failing the guard when `req0` is zero.
 - 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseDisequalExistsVariantPayloadWitnessFast`.
+  Exact existential variant payload extraction now recognizes
+  `(Q ~= req0) <-> false` as an equality witness and constructs the payload
+  from `req0` before rechecking the full IFF guard. Added
+  `TestTargetTestActionGeneratorUsesDoubleNegatedDisequalExistsVariantPayloadWitnessFast`
+  for the direct `~(Q ~= req0)` spelling. Added
+  `TestTargetTestActionGeneratorUsesIffFalseAffineDisequalExistsVariantPayloadWitnessFast`
+  for the affine spelling `(Q + 1 ~= req0) <-> false`, which constructs
+  `req0 - 1`.
+- 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesInequalityExistsVariantRelationWitnessFast`.
   Existential variant payload witnesses now also handle simple integer-like
   inequality constraints, so `exists Q:req. x *> Q & Q > 10` constructs a
   satisfying payload such as `11` before rechecking the quantified guard.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseInequalityExistsVariantPayloadWitnessFast`.
+  Variant payload witnesses now handle IFF-with-false inequality spellings
+  such as `(Q <= 10) <-> false`, including Ivy's lowered OR form, and construct
+  the corresponding negated-bound witness. Added
+  `TestTargetTestActionGeneratorUsesNegatedInequalityExistsVariantPayloadWitnessFast`
+  for the direct `~(Q <= 10)` spelling. Added
+  `TestTargetTestActionGeneratorUsesNegatedAffineInequalityExistsVariantPayloadWitnessFast`
+  for the direct affine negation `~(Q + 1 <= 10)`. Added
+  `TestTargetTestActionGeneratorUsesIffFalseAffineInequalityExistsVariantPayloadWitnessFast`
+  for affine lowered bounds such as `(Q + 1 <= 10) <-> false`. Added
+  `TestTargetTestActionGeneratorUsesIffFalseNegatedInequalityExistsVariantPayloadWitnessFast`
+  for the false-of-negation spelling `(~(Q > 10)) <-> false`, routing it back
+  to the positive payload inequality witness.
 - 2026-09-22: Added
   `TestTargetTestActionGeneratorUsesIteInequalityExistsVariantRelationWitnessFast`.
   Conditional existential payload inequality witnesses now merge branch
@@ -1333,16 +1743,32 @@ Progress:
   `active -> shade(x) = green` activate the matching guarded update instead of
   forcing a hidden trial clone.
 - 2026-09-22: Added
+  `TestTargetGenLocalRelationGuardedAssignFieldActionFast`. The same
+  branch-aware destructor field update shape is now covered for `target=gen`:
+  generator preconditions reduce the local field recheck to the non-local
+  residual guard such as `active`, instead of emitting an unenumerable local
+  existential guard or using hidden trial execution.
+- 2026-09-22: Added
   `TestTargetTestLocalRelationElseGuardedAssignFieldActionSkipsTrialFast`.
   The field-update proof now handles the else-branch mirror as well, so
   disjunctive rechecks such as `active | shade(x) = green` activate the
   false-branch guarded field write instead of falling back to a runtime trial.
+- 2026-09-22: Added
+  `TestTargetGenLocalRelationElseGuardedAssignFieldActionFast` as the
+  `target=gen` companion for that else-branch destructor field update shape,
+  preserving the non-local residual guard while avoiding an existential local
+  generator guard.
 - 2026-09-22: Added
   `TestTargetTestLocalRelationTwoSidedAssignFieldActionSkipsTrialFast`. The
   same proof now records both branch-specific destructor field writes from an
   `if/else`, allowing `ite(active, shade(x) = green, shade(x) = red)` style
   rechecks to discharge against the matching branch update without hidden trial
   machinery.
+- 2026-09-22: Added
+  `TestTargetGenLocalRelationTwoSidedAssignFieldActionFast` for the `target=gen`
+  mirror where both `if/else` branches write the destructor field. The generated
+  one-shot action keeps the direct relation witness scan and does not leak local
+  existential guards or trial execution into the generator.
 - 2026-09-22: Added
   `TestTargetTestChoicePointUpdatePreimageUsesReverseImageGuardFast`.
   Nondeterministic choices whose branches update different relation/function
@@ -1363,12 +1789,22 @@ Progress:
   the corresponding point-update alternative, so later assumes are guarded as
   `branch_guard & rewritten_later_guard` instead of falling back to an
   unconditional generator.
-- 2026-09-22: Added `TestTargetTestGuardedInternalChoiceUsesTrialFast`.
-  `target=test` actions with internal choice/env branches containing runtime
-  assumes now use the hidden rejecting trial path after generator success. This
-  prevents a visible `assumption_failed` from an unlucky internal branch choice
-  while Go still lacks ivy2cpp's solver-controlled internal `___branch`
-  generator choices.
+- 2026-09-22: Replaced the interim guarded-choice trial expectation with
+  `TestTargetTestGuardedInternalChoiceUsesBranchOverrideFast`. For simple
+  internal choice/env branches whose branch assumptions have expressible
+  preimage guards, the action generator now emits `___ivy_set_choice` and
+  generated `___ivy_choose` consumes that one-shot branch override before
+  falling back to deterministic random choice. Unsupported guarded choices
+  still use the hidden rejecting trial path.
+- 2026-09-22: Added
+  `TestTargetTestTrialUsesOriginalActionNameForStackFast`. The hidden
+  `target=test` trial path now pushes the original Ivy action name, not the
+  mangled Go method name, so stack-qualified deterministic choice labels stay
+  aligned with the direct action path for dotted actions such as `client.open`.
+- 2026-09-22: Added `TestTargetTestTrialCommitsByStateCopyFast`. Accepted
+  hidden `target=test` trials now copy clone state back into the existing Ivy
+  object instead of swapping the local pointer, matching the `target=gen` trial
+  commit shape and preserving reader/timer receiver identity after setup.
 
 ## 2. `target=gen` action generators are syntactic guards, not solver generators
 
@@ -1416,6 +1852,22 @@ Progress:
   checking stale current state. Full solver-backed generator parity remains tied
   to item 1.
 - 2026-09-22: Added
+  `TestTargetGenIfSomeConditionPreimageUsesExistentialGuardFast`. The `if
+  some` condition lowering is shared by `target=gen`, so one-shot generators
+  preserve existentially guarded conditional assumes instead of dropping them
+  through unsupported guard emission.
+- 2026-09-22: Added
+  `TestTargetGenExtPreconditionSomeConditionUsesExistentialGuardFast`. The
+  shared guard-definition expander now lowers `SomeCondition` ext-preconditions
+  for `target=gen` too, keeping one-shot generators aligned with the
+  target=test existential guard path.
+- 2026-09-22: Added
+  `TestTargetGenExtPreconditionSomeConditionExpandsDefinitionsFast`. The
+  recursive expansion and duplicate-equality simplification for lowered
+  ext-precondition `some` guards is shared by `target=gen`, so derived
+  predicates inside the existential body become ordinary generated-formal
+  guards before one-shot execution.
+- 2026-09-22: Added
   `TestTargetGenActionGeneratorSearchesFiniteDomainFast`. `target=gen`
   per-action generators now mirror the `target=test` finite-search fallback:
   after a randomized candidate fails a guard, small finite formal domains are
@@ -1432,6 +1884,11 @@ Progress:
   alternative preimage context is shared by `target=gen`, so one-shot generators
   also honor disjunctive enabledness produced by nondeterministic branch state
   updates before a later assume.
+- 2026-09-22: Added
+  `TestTargetGenChoiceWithTrueBranchDoesNotEmitFalseGuardFast`. The fixed
+  choice-preimage identity handling is shared by `target=gen`, so one-shot
+  generators do not reject an action just because another nondeterministic
+  branch has an impossible assume.
 - 2026-09-22: Added
   `TestTargetGenCallReturnPointTargetPreimageUsesGeneratorGuardFast`. The call
   return point-target preimage fix is shared by `target=gen`, so one-shot
@@ -1478,6 +1935,29 @@ Progress:
   `TestTargetGenActionGeneratorUsesIffFalseNumericInequalityWitnessForUnboundedFormalFast`.
   The IFF-with-false scalar negation path is shared by `target=gen`, so
   one-shot generators can model `(n <= 10) <-> false` as a negated bound.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseNegatedNumericInequalityWitnessForUnboundedFormalFast`.
+  The IFF-with-false negated scalar mirror is shared by `target=gen`, so
+  `~(n > 10) <-> false` gets the direct positive-bound witness rather than the
+  broad small-integer fallback.
+- 2026-09-23: Added
+  `TestTargetGenActionGeneratorUsesIffFalseImplicationNumericInequalityWitnessForUnboundedFormalFast`.
+  The false-of-implication scalar numeric witness path is shared by
+  `target=gen`, so `(active -> n > 10) <-> false` tries the inverted
+  consequent boundary `10` before the broad fallback.
+- 2026-09-23: Added
+  `TestTargetGenActionGeneratorUsesIffFalseOrNumericInequalityWitnessForUnboundedFormalFast`.
+  The false-of-OR scalar numeric witness path is shared by `target=gen`, so
+  one-shot generators can try the inverted disjunct bound before falling back.
+- 2026-09-23: Added
+  `TestTargetGenActionGeneratorUsesIffFalseAndNumericInequalityWitnessForUnboundedFormalFast`.
+  The false-of-AND scalar numeric witness path is shared by `target=gen`, so
+  one-shot generators can use a false-conjunct boundary witness and then
+  recheck enabledness.
+- 2026-09-23: Added
+  `TestTargetGenActionGeneratorUsesIffFalseIteNumericInequalityWitnessForUnboundedFormalFast`.
+  The false-of-ITE scalar numeric witness merge is shared by `target=gen`, so
+  branch-dependent inverted bounds are preserved as an `ivyTernary` witness.
 - 2026-09-22: Added `TestTargetGenActionGeneratorUsesIteNumericWitnessFast`.
   The conditional numeric branch witness merge is shared by `target=gen`, so
   one-shot generators can try `ivyTernary(ivy.active, 11, 21)` for guards such
@@ -1510,6 +1990,30 @@ Progress:
   The negated pairwise numeric-bound witness extraction is shared by
   `target=gen`, so one-shot generators can satisfy normalized guards such as
   `~(a <= b)` with a deterministic pair assignment.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseNegatedNumericPairInequalityWitnessFast`.
+  The IFF-with-false negated pair mirror is shared by `target=gen`, so
+  `~(a < b) <-> false` uses the same direct pair assignment as `a < b`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseImplicationNumericPairInequalityWitnessFast`.
+  The false-of-implication pairwise numeric witness is shared by `target=gen`,
+  so one-shot generators can make the implication consequent false with a
+  deterministic pair assignment before checking enabledness.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseOrNumericPairInequalityWitnessFast`.
+  The false-of-OR pairwise numeric witness is shared by `target=gen`, so
+  one-shot generators can invert pair bounds inside OR guards before rechecking
+  enabledness.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseAndNumericPairInequalityWitnessFast`.
+  The false-of-AND pairwise numeric witness is shared by `target=gen`, so
+  one-shot generators can falsify a pair-bound conjunct before the full guard
+  check.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseIteNumericPairInequalityWitnessFast`.
+  The false-of-ITE pairwise numeric witness merge is shared by `target=gen`, so
+  one-shot generators preserve branch-dependent inverted pair bounds before
+  rechecking enabledness.
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesNumericAffinePairInequalityWitnessFast`.
   The affine pair inequality witness assignment is shared by `target=gen`, so
@@ -1569,12 +2073,16 @@ Progress:
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesProductStateInequalityWitnessFast`. The
   product inequality boundary witness is shared by `target=gen`, preserving
-  the same simple two-formal model extraction for one-shot generators.
+  the same simple two-formal model extraction for one-shot generators. Added
+  `TestTargetGenActionGeneratorUsesIffFalseProductStateInequalityWitnessFast`
+  for IFF-with-false product bounds.
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesProductStateDisequalityWitnessFast`. The
   product disequality witness is shared by `target=gen`, so one-shot
   generators also seed a nearby distinct product before checking the negated
-  equality guard.
+  equality guard. Added
+  `TestTargetGenActionGeneratorUsesIffFalseProductStateEqualityWitnessFast`
+  for IFF-with-false product equalities.
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesSumStateEqualityWitnessFast`. The additive
   two-formal equality witness is shared by `target=gen`, so one-shot generators
@@ -1637,6 +2145,8 @@ Progress:
   `TestTargetGenLocalNumericFormalIffFalseInequalityFast`. The IFF-with-false
   local inequality normalization is shared by `target=gen`, preserving the same
   deterministic witness and avoiding unsupported existential guard fallback.
+  Added `TestTargetGenLocalNumericFormalIffFalseNegatedInequalityFast` for the
+  `target=gen` false-of-negation spelling.
 - 2026-09-22: Added
   `TestTargetGenLocalNumericFormalIffFalseAffineEqualityFast`. The
   IFF-with-false affine equality witness is shared by `target=gen`, so one-shot
@@ -1743,6 +2253,50 @@ Progress:
   `TestLocalWitnessFromIteUsesExtensionalRelationFast` to assert the shared
   `target=gen` path emits branch-specific relation scans under the generated
   `if/else`, rather than always seeding the local from the first ITE branch.
+- 2026-09-22: Added `TestTargetGenLocalRelationStateUpdateFast`. The simple
+  copied local-relation state-recheck path is now explicitly covered for
+  `target=gen`, so one-shot generated actions keep the relation witness scan and
+  avoid hidden trial execution for `saved := n; assume allowed(saved)`.
+- 2026-09-22: Added
+  `TestTargetGenLocalRelationIffFalseNegatedStateUpdateFast`. The local
+  relation preimage guard simplifier now propagates covered relation witnesses
+  through boolean wrappers including `~` and `<-> false`, so `target=gen`
+  drops the local witness guard for `~allowed(saved) <-> false` instead of
+  trying to enumerate the local variable in the generated guard.
+- 2026-09-22: Added
+  `TestTargetGenLocalRelationPairIffFalseNegatedStateUpdateFast`. The
+  zero-formal direct-execution proof shared by `target=gen` now covers the
+  grouped relation version of the same IFF-false copied-state recheck, keeping
+  generated `execute()` on the direct call path rather than the rejecting trial
+  clone.
+- 2026-09-22: Added
+  `TestTargetGenLocalRelationPairStateUpdatePreservesResidualGuardFast`. The
+  grouped local-relation preimage cleanup is shared by `target=gen`, so one-shot
+  generators preserve residual guards after removing covered tuple witnesses
+  and still execute directly without the hidden trial clone.
+  The transitive local equality substitution normalization is shared here too,
+  preserving `TestTargetGenLocalEqualityChainPointUpdateUsesGeneratorGuardFast`
+  after nested local declarations are flattened.
+- 2026-09-22: Added
+  `TestTargetGenLocalRelationPairIffFalseStateUpdatePreservesResidualGuardFast`
+  for the same grouped tuple/IFF-false/residual-guard cross-product in
+  `target=gen`.
+- 2026-09-22: Added
+  `TestTargetGenLocalRelationPairIffActiveStateUpdatePreservesResidualGuardFast`
+  for the same non-constant grouped tuple IFF residual in `target=gen`.
+- 2026-09-22: Added
+  `TestTargetGenLocalRelationExistsStateUpdatePreservesResidualGuardFast`.
+  The existential copied local-relation state-recheck path is shared by
+  `target=gen`: generated action bodies still seed the wildcard relation
+  witness, and one-shot generators preserve residual non-local guards such as
+  `active` without hidden trial execution.
+- 2026-09-22: Added
+  `TestTargetGenLocalRelationGuardedAssignFieldActionFast`,
+  `TestTargetGenLocalRelationElseGuardedAssignFieldActionFast`, and
+  `TestTargetGenLocalRelationTwoSidedAssignFieldActionFast`. The branch-aware
+  destructor-field update proof is now explicitly covered for `target=gen`,
+  preserving residual non-local guards for one-sided updates and avoiding
+  existential local generator guards when both branches are covered.
 - 2026-09-22: Added
   `TestLocalWitnessPairUsesOneExtensionalRelationTupleFast`. The grouped local
   tuple witness path is shared by `target=gen`, so one-shot generated action
@@ -1805,6 +2359,25 @@ Progress:
   relation-witness path is shared by `target=gen`, so one-shot generators can
   use stored relation evidence for guards such as `allowed(n) <-> true` instead
   of rejecting after one randomized unbounded input.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesRelationPairWitnessInsideIffActiveFast`.
+  The non-constant IFF relation tuple-witness path is shared by `target=gen`,
+  so one-shot generators can use stored tuple evidence for guards such as
+  `allowed(a,b) <-> active` and still recheck the full equivalence.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesNegatedRelationTupleWitnessInsideIffActiveFast`.
+  The non-constant IFF negated tuple-witness path is shared by `target=gen`, so
+  one-shot generators can use nearby tuple-derived candidates for guards such
+  as `~banned(a,b) <-> active`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseRelationTupleWitnessForUnboundedFormalsFast`.
+  The IFF-with-false relation tuple nearby-value witness path is shared by
+  `target=gen`, covering guards such as `banned(a,b) <-> false`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseNegatedRelationTupleWitnessForUnboundedFormalsFast`.
+  The IFF-with-false negated-relation mirror is shared by `target=gen`, so
+  `~banned(a,b) <-> false` scans true relation tuples instead of using the
+  nearby-value negated tuple witness.
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesRelationWitnessInsideIteFast`. The
   conditional-branch relation-witness path is shared by `target=gen`, so
@@ -1886,10 +2459,51 @@ Progress:
 - 2026-09-22: Added `TestTargetGenIffDefinedInputUsesPythonOrderFast`. The
   IFF defined-input extraction is shared by `target=gen`, so one-shot generators
   can derive inputs from `(x = y) <-> true` before evaluating the complete guard.
+- 2026-09-22: Added `TestTargetGenIffFalseDisequalityDefinedInputFast`. The
+  IFF-with-false disequality defined-input extraction is shared by `target=gen`,
+  so one-shot generators assign the exact value before evaluating the guard.
+  Added `TestTargetGenDoubleNegatedDisequalityDefinedInputFast` for the direct
+  double-negated spelling.
+- 2026-09-22: Added
+  `TestTargetGenIffFalseEqualityFiniteDefinedInputFast`. The finite alternate
+  value extraction for negated equality definitions is shared by `target=gen`,
+  so one-shot generators avoid relying on finite-search retries for
+  `((c = green) <-> false)`.
+- 2026-09-22: Added
+  `TestTargetGenConjunctiveFiniteDisequalityDefinedInputFast`. The grouped
+  finite-exclusion defined-input extraction is shared by `target=gen`, avoiding
+  contradictory one-shot assignments for conjunctions such as
+  `c ~= red & c ~= green`.
+- 2026-09-22: Added
+  `TestTargetGenConjunctiveIffFalseFiniteEqualityDefinedInputFast`. The
+  IFF-with-false finite equality grouping is shared by `target=gen`, so wrapped
+  finite exclusions also produce one consistent alternate value.
+- 2026-09-22: Added
+  `TestTargetGenIffFalseImplicationFiniteEqualityDefinedInputFast`. The false
+  implication defined-input extraction is shared by `target=gen`, so one-shot
+  generators synthesize the same finite alternate before checking the guard.
+- 2026-09-22: Added
+  `TestTargetGenIffFalseOrFiniteEqualityDefinedInputFast`. The false-OR
+  defined-input extraction is shared by `target=gen`, so one-shot generators
+  can synthesize finite alternates for disjuncts under IFF-with-false before the
+  full guard check.
+- 2026-09-22: Added
+  `TestTargetGenIffFalseIteFiniteEqualityDefinedInputFast`. The false-ITE
+  branch merge is shared by `target=gen`, giving one-shot generators the same
+  branch-dependent finite alternate assignment before guard evaluation.
+- 2026-09-22: Added
+  `TestTargetGenIffFalseAndFiniteEqualityDefinedInputFast`. The false-AND
+  defined-input extraction is shared by `target=gen`, so one-shot generators can
+  use one finite alternate-producing conjunct to satisfy the negated
+  conjunction before rechecking the full guard.
 - 2026-09-22: Added `TestTargetGenBooleanIffDefinedInputFast`. The direct
   boolean `LogicIff(input, expr)` parameter-definition path is shared by
   `target=gen`, so one-shot generators assign boolean generated inputs from
   state expressions before checking the IFF guard.
+- 2026-09-22: Added `TestTargetGenBooleanLiteralDefinedInputFast` and
+  `TestTargetGenNegatedBooleanLiteralDefinedInputFast`. Direct positive and
+  negated boolean formal extraction is shared by `target=gen`, so one-shot
+  generators set boolean inputs deterministically before guard evaluation.
 - 2026-09-22: Added `TestTargetGenImpliedDefinedInputUsesGeneratorGuardFast`.
   The implication-consequent defined-input extraction is shared by
   `target=gen`, so one-shot generators assign generated inputs from simple
@@ -1946,10 +2560,39 @@ Progress:
   one-shot generators choose a sibling subtype before evaluating guards such as
   `~(x *> req0)`.
 - 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseNegatedVariantRelationWitnessFast`.
+  The IFF-with-false negated variant mirror is shared by `target=gen`, so
+  `~(x *> req0) <-> false` constructs the positive `req0` membership witness.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseImplicationVariantRelationWitnessFast`.
+  The false-of-implication variant witness path is shared by `target=gen`, so
+  one-shot generators construct a sibling subtype for guards such as
+  `(active -> x *> req0) <-> false` before rechecking enabledness.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseOrVariantRelationWitnessFast`.
+  The false-of-OR variant witness path is shared by `target=gen`, so one-shot
+  generators also choose a sibling subtype for guards such as
+  `(active | x *> req0) <-> false`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseAndVariantRelationWitnessFast`.
+  The false-of-AND variant witness path is shared by `target=gen`, so one-shot
+  generators can falsify a variant-membership conjunct before rechecking the
+  full equivalence guard.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseIteVariantRelationWitnessFast`.
+  The false-of-ITE variant witness merge is shared by `target=gen`, so one-shot
+  generators construct branch-dependent sibling variants for conditional
+  membership guards before rechecking enabledness.
+- 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesNegatedExistsVariantRelationWitnessFast`.
   The negated existential variant-membership witness is shared by `target=gen`,
   so one-shot generators choose a sibling subtype before evaluating guards such
   as `exists Q:req. ~(x *> Q)`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesNegatedExistsVariantResidualGuardFast`.
+  The non-bound residual guard emission for negated existential variant
+  memberships is shared by `target=gen`, so one-shot generators preserve guards
+  such as `active` while avoiding quantified enumeration.
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesConstrainedNegatedExistsVariantRelationWitnessFast`.
   The concrete-payload negated existential variant guard lowering is shared by
@@ -1971,6 +2614,35 @@ Progress:
   existential variant membership witness is shared by `target=gen`, so one-shot
   generators can satisfy `exists Q:req. x *> Q` without relying on a random tag
   choice.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesOrMembershipExistsVariantRelationWitnessFast`.
+  The OR-membership existential variant lowering is shared by `target=gen`, so
+  one-shot generators can satisfy guards such as
+  `exists Q:req. (x *> Q | active)` without emitting an unsupported quantified
+  guard.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesNegatedOrMembershipExistsVariantRelationWitnessFast`.
+  The negated OR-membership existential variant lowering is shared by
+  `target=gen`, so one-shot generators can satisfy
+  `exists Q:req. (~(x *> Q) | active)` with a sibling subtype witness instead
+  of quantifier enumeration.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesImpliedMembershipExistsVariantRelationWitnessFast`.
+  The implication-wrapped existential variant lowering is shared by
+  `target=gen`, so one-shot generators can satisfy
+  `exists Q:req. (active -> x *> Q)` without quantifier enumeration.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIteMembershipExistsVariantRelationWitnessFast`.
+  The one-sided conditional existential variant lowering is shared by
+  `target=gen`, so one-shot generators can satisfy
+  `exists Q:req. ite(active, x *> Q, true)` without unsupported quantified
+  guard emission.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIteFalseMembershipExistsVariantRelationWitnessFast`.
+  The false-branch one-sided conditional existential variant lowering is shared
+  by `target=gen`, so one-shot generators can satisfy
+  `exists Q:req. ite(active, x *> Q, false)` without unsupported quantified
+  guard emission.
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesIffTrueExistsVariantRelationWitnessFast`.
   The IFF-with-true positive existential variant membership spelling is shared
@@ -1998,10 +2670,31 @@ Progress:
   `target=gen`, so one-shot generators use a nearby integer-like payload such
   as `ivy.req0 + 1` before evaluating `Q ~= req0`.
 - 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseDisequalExistsVariantPayloadWitnessFast`.
+  The IFF-with-false disequality payload normalization is shared by
+  `target=gen`, constructing the exact `req0` payload for
+  `(Q ~= req0) <-> false`. Added
+  `TestTargetGenActionGeneratorUsesDoubleNegatedDisequalExistsVariantPayloadWitnessFast`
+  for direct double negation. Added
+  `TestTargetGenActionGeneratorUsesIffFalseAffineDisequalExistsVariantPayloadWitnessFast`
+  for the affine `target=gen` case.
+- 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesInequalityExistsVariantRelationWitnessFast`.
   The simple inequality existential variant payload witness is shared by
   `target=gen`, so one-shot generators can construct integer-like subtype
   payloads for guards such as `exists Q:req. x *> Q & Q > 10`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseInequalityExistsVariantPayloadWitnessFast`.
+  The IFF-with-false inequality payload witness is shared by `target=gen`.
+  Added
+  `TestTargetGenActionGeneratorUsesNegatedInequalityExistsVariantPayloadWitnessFast`
+  for direct negation. Added
+  `TestTargetGenActionGeneratorUsesNegatedAffineInequalityExistsVariantPayloadWitnessFast`
+  for direct affine negation. Added
+  `TestTargetGenActionGeneratorUsesIffFalseAffineInequalityExistsVariantPayloadWitnessFast`
+  for the affine companion case. Added
+  `TestTargetGenActionGeneratorUsesIffFalseNegatedInequalityExistsVariantPayloadWitnessFast`
+  for false-of-negation payload guards such as `(~(Q > 10)) <-> false`.
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesIteInequalityExistsVariantRelationWitnessFast`.
   The conditional inequality payload witness merge is shared by `target=gen`,
@@ -2079,10 +2772,23 @@ Progress:
   quantifiers is shared by `target=gen`, so one-shot generators no longer fail
   generation for guards such as `forall X. ~banned(X,c)`.
 - 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffTrueRelationOverrideForallGuardFast`.
+  The IFF-with-true relation-override forall normalization is shared by
+  `target=gen`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseRelationOverrideForallGuardFast`.
+  The IFF-with-false relation-override forall normalization is shared by
+  `target=gen`, avoiding generated errors for
+  `forall X. (banned(X,c) <-> false)`.
+- 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesEqualityBoundForallGuardFast`. The
   equality-bound quantifier simplifier is shared by `target=gen`, so one-shot
   generators can emit direct guards for solver-trivial formulas such as
   `forall X. X = c -> allowed(X)`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorUsesIffFalseDisequalityBoundForallGuardFast`.
+  The IFF-false disequality equality-binding normalizer is shared by
+  `target=gen` forall antecedents.
 - 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesMultiEqualityBoundForallGuardFast`. The
   multi-variable equality-bound quantifier simplifier is shared by
@@ -2099,6 +2805,18 @@ Progress:
   generators no longer fail generation for solver-trivial satisfiable
   existential equalities.
 - 2026-09-22: Added
+  `TestTargetGenActionGeneratorSimplifiesUnboundedExistsDisequalityFast` and
+  `TestTargetGenActionGeneratorSimplifiesIffTrueUnboundedExistsDisequalityFast`
+  plus `TestTargetGenActionGeneratorSimplifiesImpliedUnboundedExistsDisequalityFast`
+  and `TestTargetGenActionGeneratorSimplifiesOrUnboundedExistsDisequalityFast`
+  and `TestTargetGenActionGeneratorSimplifiesIteUnboundedExistsDisequalityFast`
+  and `TestTargetGenActionGeneratorUsesUnboundedExistsDisequalityResidualWitnessFast`.
+  The conservative non-singleton existential disequality simplifier is shared
+  by `target=gen`, including residual-guard exposure to scalar witness
+  planning. Added
+  `TestTargetGenActionGeneratorSimplifiesIffFalseEqualityUnboundedExistsDisequalityFast`
+  for the same `(X = c) <-> false` spelling in one-shot generators.
+- 2026-09-22: Added
   `TestTargetGenActionGeneratorUsesEqualityBoundForallNumericWitnessFast`. The
   AST-level equality-bound quantifier simplification is shared by `target=gen`,
   letting one-shot generators use existing scalar witness extraction after the
@@ -2108,6 +2826,42 @@ Progress:
   non-variant equality-bound existential simplifier is shared by `target=gen`,
   preserving variant-specific witness emission while reducing scalar
   existential guards for witness planning.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorSimplifiesEqualityBoundExistsOrFast`. The
+  equality-bound existential OR simplifier is shared by `target=gen`, so
+  one-shot generators treat satisfiable equality disjuncts as solver-trivial
+  and avoid unnecessary input constraints.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorSimplifiesGuardedEqualityBoundExistsOrFast`.
+  The per-disjunct equality-bound OR simplifier is shared by `target=gen`, so
+  one-shot generators preserve residual guards such as `active | enabled`
+  without quantified enumeration.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorSimplifiesEqualityBoundExistsIteFast`. The
+  per-branch equality-bound ITE simplifier is shared by `target=gen`, so
+  one-shot generators avoid unsupported quantified guards for solver-trivial
+  conditional bindings.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorSimplifiesEqualityBoundExistsIffTrueFast`. The
+  IFF-with-true equality-bound existential simplifier is shared by
+  `target=gen`, preserving the solver-trivial treatment for one-shot
+  generators.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorSimplifiesEqualityBoundExistsImplicationFast`.
+  The conservative equality-bound implication simplifier is shared by
+  `target=gen`, so one-shot generators avoid unsupported quantified guards for
+  `exists X. active -> X = c`. Added
+  `TestTargetGenActionGeneratorSimplifiesEqualityBoundExistsImplicationResidualFast`
+  for the same target=gen residual implication path.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorSimplifiesNegatedDisequalityBoundExistsFast`.
+  The double-negated disequality equality-binding normalizer is shared by
+  `target=gen`, avoiding unbounded quantifier diagnostics for
+  `exists X. ~(X ~= c)`.
+- 2026-09-22: Added
+  `TestTargetGenActionGeneratorSimplifiesIffFalseDisequalityBoundExistsFast`.
+  The IFF-with-false disequality equality-binding normalizer is shared by
+  `target=gen` for one-shot generators.
 - 2026-09-22: Added
   `TestTargetGenLocalEqualityBoundExistsNumericWitnessFast`. The local
   equality-bound existential simplifier is shared by `target=gen`, so one-shot
@@ -2189,16 +2943,20 @@ Progress:
   `TestTargetGenChoiceGuardedPointUpdatePreimageUsesGuardFast`. The guarded
   branch point-update alternative path is shared by `target=gen`, preserving
   branch-local assume guards when one-shot generators build later assume guards.
-- 2026-09-22: Added `TestTargetGenGuardedInternalChoiceUsesTrialFast`.
-  `target=gen` now mirrors the target=test interim safety behavior for
-  internal choice/env branches with runtime assumes: execute on a clone with
-  assumption rejection enabled, skip the one-shot action on rejection, and copy
-  back accepted state before emitting the public trace.
+- 2026-09-22: Replaced the interim guarded-choice trial expectation with
+  `TestTargetGenGuardedInternalChoiceUsesBranchOverrideFast` and
+  `TestTargetGenGuardedInternalChoiceBranchOverridePreservesTraceBracesFast`.
+  For simple internal choice/env branches whose branch assumptions have
+  expressible preimage guards, `target=gen` now emits `___ivy_set_choice` in the
+  one-shot generator and executes the public action directly; traced execution
+  keeps the direct `{` / `}` envelope without trial buffering. Unsupported
+  guarded choices still use the hidden rejecting trial path.
 - 2026-09-22: Added
-  `TestTargetGenGuardedInternalChoiceTrialPreservesTraceBracesFast`. Accepted
-  `target=gen` trial executions with action tracing enabled now preserve the
-  same `{` / `}` trace envelope as the direct action path while still keeping
-  rejected trials silent.
+  `TestTargetGenUnsupportedPreimageAssumeUsesTrialFast`. `target=gen`
+  execution now shares the target=test trial-needed predicate, so actions whose
+  runtime assumes are not covered by the syntactic preimage walker execute on a
+  rejecting clone and silently skip rejected one-shot actions instead of calling
+  the public action directly.
 
 ## 3. FIXED Initial state generation is retry/randomized, not Python's initial model
 
@@ -2615,6 +3373,13 @@ Progress:
   translatable to Go, such as native C++ expressions, still fail generation via
   the existing source-located unsupported guard tests; the former local
   relation-witness fatal case has been moved into the supported slice above.
+- 2026-09-22: Added
+  `TestTargetTestBeforeExportGuardedChoiceExecutesPublicActionDirectlyFast`.
+  `target=test` now decides whether a hidden runtime trial is needed from the
+  public action that will actually execute, not from the `before_export`
+  analysis action. This lets guarded-choice `before_export` bodies constrain the
+  generator while still tracing and calling the public action directly, matching
+  Python's separation between generator planning and execution.
 
 ## 10. Existing parity tests should be expanded from source shape to oracle traces
 
@@ -2682,6 +3447,37 @@ Progress:
 - 2026-09-22: Added `TestTargetTestLocalRelationIffStateUpdateSkipsTrialFast`
   to cover the `relation(...) <-> true` spelling of the local relation
   state-update recheck without a hidden trial clone.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationIffFalseNegatedStateUpdateSkipsTrialFast` and
+  `TestTargetGenLocalRelationIffFalseNegatedStateUpdateFast` for the
+  equivalent `~relation(...) <-> false` copied-state recheck, covering the
+  no-hidden-trial target=test path and the target=gen local-preimage guard
+  simplification.
+- 2026-09-22: Added
+  `TestTargetTestActionGeneratorUsesIffFalseNegatedRelationTupleWitnessForUnboundedFormalsFast`
+  and
+  `TestTargetGenActionGeneratorUsesIffFalseNegatedRelationTupleWitnessForUnboundedFormalsFast`
+  for the generated-formal tuple polarity case: `relation(...) <-> false`
+  should use the negated nearby-value witness, while `~relation(...) <-> false`
+  should use true relation tuple evidence.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationPairIffFalseNegatedStateUpdateSkipsTrialFast` and
+  `TestTargetGenLocalRelationPairIffFalseNegatedStateUpdateFast` for the
+  grouped tuple version of that copied-state IFF-false recheck.
+- 2026-09-22: Added fast internal and source-shape coverage for grouped
+  local-relation copied-state residual guards:
+  `TestPreimageWalkerLocalRelationPairStateUpdateKeepsResidualGuardFast`,
+  `TestDropLocalRelationGroupWitnessGuardTermsKeepsResidualFast`,
+  `TestTargetTestLocalRelationPairStateUpdatePreservesResidualGuardSkipsTrialFast`,
+  and `TestTargetGenLocalRelationPairStateUpdatePreservesResidualGuardFast`.
+- 2026-09-22: Added target=test and target=gen cross-product coverage for
+  grouped copied-relation IFF-false rechecks with residual guards:
+  `TestTargetTestLocalRelationPairIffFalseStateUpdatePreservesResidualGuardSkipsTrialFast`
+  and `TestTargetGenLocalRelationPairIffFalseStateUpdatePreservesResidualGuardFast`.
+- 2026-09-22: Added target=test and target=gen coverage for non-constant
+  grouped copied-relation IFF residual guards:
+  `TestTargetTestLocalRelationPairIffActiveStateUpdatePreservesResidualGuardSkipsTrialFast`
+  and `TestTargetGenLocalRelationPairIffActiveStateUpdatePreservesResidualGuardFast`.
 - 2026-09-22: Added `TestTargetTestLocalVariantIffStateUpdateSkipsTrialFast`
   for the same no-hidden-trial direct-execution check on concrete variant
   membership written as an IFF-with-true guard.
@@ -2694,6 +3490,8 @@ Progress:
   point-update version of the local witness pattern, asserting that a modeled
   local relation witness can set and recheck a relation cell without emitting a
   hidden trial clone.
+- 2026-09-22: Added `TestTargetGenLocalRelationPointUpdateFast` as target=gen
+  companion coverage for the same modeled local relation point-update pattern.
 - 2026-09-22: Added
   `TestTargetTestLocalVariantPointUpdateSkipsTrialFast` for the variant
   witness version of the relation point-update pattern, again checking that no
@@ -2750,6 +3548,10 @@ Progress:
   grouped tuple state-copy recheck under `ite`, requiring both conditional
   branches to be covered before removing the hidden trial path.
 - 2026-09-22: Added
+  `TestTargetTestLocalRelationPairIteWitnessStateUpdateSkipsTrialFast` for
+  branch-dependent grouped tuple witnesses, covering direct execution after the
+  same conditional relation choice is copied into state and rechecked.
+- 2026-09-22: Added
   `TestTargetTestLocalRelationDirectRecheckSkipsTrialFast` for the already
   modeled single-local relation direct recheck, plus target=test and target=gen
   nonlinear numeric fallback coverage for bounded small-model search. Added
@@ -2767,6 +3569,15 @@ Progress:
 - 2026-09-22: Added target=test and target=gen partial conditional local
   relation-witness source-shape coverage for `ite` guards where only one branch
   constrains the local relation witness.
+- 2026-09-22: Added target=test and target=gen `if some` conditional-preimage
+  tests, covering the lowering of Ivy `SomeCondition` guards to existential
+  formulas before generated guard emission.
+- 2026-09-22: Added target=test and target=gen ext-precondition `some` tests,
+  covering the same `SomeCondition` lowering when the guard comes from
+  `ExtPreconds` rather than from an action preimage.
+- 2026-09-22: Added target=test and target=gen ext-precondition derived
+  `some` tests, covering recursive definition expansion and duplicate
+  equality-bound existential simplification after lowering.
 - 2026-09-22: Repaired the `log.red2` oracle regressions with focused coverage:
   `TestEnumDispatchTraceMatchesIvy2Cpp`,
   `TestOracleRangeBoundsCompilesAndRuns`, and
@@ -2776,6 +3587,62 @@ Progress:
   native type to Go `int`; and
   `TestTargetGenInitGeneratorRunsInitAfterRandomize` now requests traced
   target=gen output when it needs to observe a returned value.
+- 2026-09-22: Added fast source-shape coverage for solver-controlled internal
+  branch choices:
+  `TestTargetTestGuardedInternalChoiceUsesBranchOverrideFast`,
+  `TestTargetGenGuardedInternalChoiceUsesBranchOverrideFast`, and
+  `TestTargetGenGuardedInternalChoiceBranchOverridePreservesTraceBracesFast`
+  check the generated branch override path without invoking generated tester
+  binaries.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantConjunctiveStateUpdatePreservesGuardSkipsTrialFast`
+  as a fast source-shape regression for copied local-variant state rechecks
+  with residual non-local guards, ensuring the generator emits the residual
+  guard and the target=test runner avoids hidden trial machinery.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantDisjunctiveMismatchStateUpdatePreservesGuardSkipsTrialFast`
+  and `TestTargetTestLocalVariantImplicationStateUpdateSkipsTrialFast` for
+  copied local-variant state rechecks under OR/implication wrappers, covering
+  residual generator guards without whole-process oracle runs.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantImplicationMismatchStateUpdatePreservesGuardSkipsTrialFast`
+  for the implication spelling where the copied local-variant consequent is
+  refuted and the antecedent's negation remains as the residual generator guard.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantNegatedSiblingStateUpdatePreservesGuardSkipsTrialFast`
+  for negated sibling-subtype copied local-variant rechecks with residual
+  generator guards.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantIffFalseSiblingStateUpdatePreservesGuardSkipsTrialFast`
+  for the IFF-with-false spelling of the same sibling-subtype copied
+  local-variant recheck.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantIteMismatchStateUpdatePreservesGuardSkipsTrialFast`
+  for the conditional spelling where one copied local-variant branch is refuted
+  and the branch condition's negation remains as the residual generator guard.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantExistsStateUpdatePreservesResidualGuardSkipsTrialFast`
+  for existential copied local-variant rechecks that have non-bound residual
+  generator guards.
+- 2026-09-22: Added
+  `TestTargetTestLocalVariantNegatedExistsSiblingStateUpdatePreservesResidualGuardSkipsTrialFast`
+  for the sibling-subtype negated existential form with residual generator
+  guards.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationStateUpdatePreservesResidualGuardSkipsTrialFast`
+  for copied local-relation state rechecks with non-local residual generator
+  guards.
+- 2026-09-22: Added `TestTargetGenLocalRelationStateUpdateFast` as target=gen
+  companion coverage for copied local-relation state rechecks without residual
+  guards.
+- 2026-09-22: Added
+  `TestTargetTestLocalRelationExistsStateUpdatePreservesResidualGuardSkipsTrialFast`
+  for existential copied local-relation state rechecks with residual generator
+  guards.
+- 2026-09-22: Added
+  `TestTargetGenLocalRelationExistsStateUpdatePreservesResidualGuardFast` as the
+  target=gen companion coverage for existential copied local-relation state
+  rechecks with residual generator guards.
 - 2026-09-22: Added
   `TestTargetTestLocalFiniteSetActionPointUpdateSkipsTrialFast` as a fast
   companion to the assignment-form point-update regression, covering the
@@ -2830,13 +3697,23 @@ Progress:
   branch-sensitive destructor field updates and implication-style rechecks,
   again without building or running a generated tester binary.
 - 2026-09-22: Added
+  `TestTargetGenLocalRelationGuardedAssignFieldActionFast` as the `target=gen`
+  companion for one-sided guarded destructor field updates, checking residual
+  generator guards through generated-source inspection only.
+- 2026-09-22: Added
   `TestTargetTestLocalRelationElseGuardedAssignFieldActionSkipsTrialFast` for
   the else-branch/disjunctive spelling of the same destructor field update
   proof.
 - 2026-09-22: Added
+  `TestTargetGenLocalRelationElseGuardedAssignFieldActionFast` as the target=gen
+  companion for the else-branch destructor field update proof.
+- 2026-09-22: Added
   `TestTargetTestLocalRelationTwoSidedAssignFieldActionSkipsTrialFast` for the
   two-sided `if/else` destructor field update case, keeping the `ite` recheck
   coverage fast and in-process.
+- 2026-09-22: Added
+  `TestTargetGenLocalRelationTwoSidedAssignFieldActionFast` as the target=gen
+  companion for the two-sided destructor field update case.
 - 2026-09-22: Strengthened that conditional local relation coverage to require
   branch-specific `if/else` relation scans, and added the target=test
   no-hidden-trial state-copy/recheck regression for the same conditional shape.
@@ -2857,6 +3734,10 @@ Progress:
   payload witness tests, covering the source-shape guarantee that generated
   action generators construct a satisfying subtype payload before rechecking
   quantified guards such as `exists Q:req. x *> Q & Q > 10`.
+- 2026-09-22: Added target=test and target=gen false-of-negation inequality
+  existential variant payload witness tests, covering `(~(Q > 10)) <-> false`
+  so the generated subtype payload is constructed from the positive bound
+  witness instead of defaulting to zero.
 - 2026-09-22: Extended that existential variant payload coverage to affine
   integer inequalities such as `Q + 1 > 10` for both generator targets.
 - 2026-09-22: Added target=test and target=gen conditional defined-input
@@ -2871,6 +3752,9 @@ Progress:
 - 2026-09-22: Added target=test and target=gen conditional scalar-pair witness
   source-shape tests for same-target branch inequalities merged into one
   generated `ivyTernary` assignment.
+- 2026-09-22: Added target=test and target=gen IFF-with-false negated
+  scalar-pair witness tests, covering `~(a < b) <-> false` as the positive
+  pair-bound witness instead of nested per-formal fallback searches.
 - 2026-09-22: Added target=test and target=gen cross-target conditional
   scalar-pair witness source-shape tests for branch inequalities that need
   guarded assignments to two different generated formals.
@@ -2883,9 +3767,32 @@ Progress:
 - 2026-09-22: Added target=test and target=gen conditional variant witness
   source-shape tests for same-subtype `ite` membership guards merged into one
   generated `ivyTernary` payload assignment.
+- 2026-09-22: Added target=test and target=gen IFF-with-false negated variant
+  witness tests, covering `~(x *> req0) <-> false` as a positive membership
+  witness rather than randomized variant construction.
 - 2026-09-22: Added target=test and target=gen cross-subtype conditional
   variant witness source-shape tests for `ite` guards merged into one generated
   `ivyTernary` over complete variant values.
+- 2026-09-22: Added target=test and target=gen OR-membership existential
+  variant source-shape tests, covering quantified disjunctions such as
+  `exists Q:req. (x *> Q | active)` with direct tag-OR guard emission and a
+  generated subtype witness.
+- 2026-09-22: Added target=test and target=gen negated OR-membership
+  existential variant source-shape tests, covering quantified disjunctions such
+  as `exists Q:req. (~(x *> Q) | active)` with direct negated-tag OR guard
+  emission and a sibling subtype witness.
+- 2026-09-22: Added target=test and target=gen implication-wrapped existential
+  variant source-shape tests, covering quantified guards such as
+  `exists Q:req. (active -> x *> Q)` as direct `!active || tag` emission with
+  a generated subtype witness.
+- 2026-09-22: Added target=test and target=gen one-sided conditional
+  existential variant source-shape tests, covering AST-level guards such as
+  `exists Q:req. ite(active, x *> Q, true)` as direct inactive-or-tag emission
+  with a generated subtype witness.
+- 2026-09-22: Added target=test and target=gen false-branch one-sided
+  conditional existential variant source-shape tests, covering AST-level guards
+  such as `exists Q:req. ite(active, x *> Q, false)` as direct active-and-tag
+  emission with a generated subtype witness.
 - 2026-09-22: Added target=test and target=gen conditional exact-payload
   existential variant witness source-shape tests for quantified `ite`
   constraints merged into one generated `ivyTernary` payload.
@@ -2910,6 +3817,9 @@ Progress:
 - 2026-09-22: Added target=test and target=gen affine constrained negated
   existential variant source-shape tests, covering direct forbidden-payload
   guards for unique affine payload equalities under negated membership.
+- 2026-09-22: Added target=test and target=gen negated existential variant
+  residual-guard source-shape tests, covering sibling subtype witnesses plus
+  non-bound residuals such as `exists Q:req. ~(x *> Q) & active`.
 - 2026-09-22: Added target=test and target=gen local numeric affine equality
   state-copy tests, covering direct local witness construction from
   formal-dependent affine equalities and preimage substitution without hidden
@@ -2923,6 +3833,9 @@ Progress:
 - 2026-09-22: Added target=test and target=gen local numeric IFF-false
   inequality tests, covering the equivalent IFF spelling of negated
   formal-dependent bounds.
+- 2026-09-22: Added target=test and target=gen local numeric IFF-false
+  false-of-negation tests, covering `(~(scratch > c)) <-> false` as the
+  positive bound witness plus direct state-copy proof.
 - 2026-09-22: Added target=test and target=gen local numeric IFF-false affine
   equality tests, covering the equivalent IFF spelling of formal-dependent
   disequality witnesses.
@@ -2972,6 +3885,9 @@ Progress:
 - 2026-09-22: Added target=test and target=gen relation override forall guard
   tests, covering unbounded negative relation quantifiers in generated action
   guards with fast source-shape checks.
+- 2026-09-22: Added target=test and target=gen IFF-with-true relation override
+  forall tests, covering the positive-equivalence spelling of the same
+  unbounded negative relation quantifier path.
 - 2026-09-22: Added target=test and target=gen equality-bound forall guard
   tests, covering solver-trivial quantified formulas that should simplify to
   direct generated guards.
@@ -2984,12 +3900,57 @@ Progress:
 - 2026-09-22: Added target=test and target=gen equality-only exists guard
   tests, covering satisfiable existential equality bindings that simplify to
   true.
+- 2026-09-22: Added target=test and target=gen unbounded existential
+  disequality tests, covering non-singleton quantified witnesses that simplify
+  to true, the IFF-with-true and implication-consequent spellings of the same
+  disequality, OR disjuncts with a satisfiable disequality witness,
+  branch-local ITE disequality witnesses, and residual guards that still feed
+  scalar witness planning.
 - 2026-09-22: Added target=test and target=gen equality-bound forall numeric
   witness tests, covering guard-AST simplification before scalar witness
   planning.
+- 2026-09-22: Added target=test and target=gen non-constant IFF relation tuple
+  witness tests, covering relation-backed generated-formal candidates under
+  residual boolean guards such as `allowed(a,b) <-> active`.
+- 2026-09-22: Added target=test and target=gen non-constant IFF negated tuple
+  witness tests, covering tuple-derived nearby candidates under residual
+  boolean guards such as `~banned(a,b) <-> active`.
+- 2026-09-22: Added target=test and target=gen IFF-with-false relation tuple
+  witness tests, covering the `banned(a,b) <-> false` spelling of negated tuple
+  generated-formal guards.
+- 2026-09-22: Added target=test and target=gen IFF-with-false negated numeric
+  inequality witness tests, covering the polarity mirror where
+  `~(n > 10) <-> false` should use the positive numeric-bound witness rather
+  than a broad fallback search.
 - 2026-09-22: Added target=test and target=gen equality-bound exists numeric
   witness tests, covering non-variant residual existential bodies after
   equality substitution.
+- 2026-09-22: Added target=test and target=gen equality-bound exists OR tests,
+  covering satisfiable equality disjuncts that simplify the whole existential
+  guard to true without process-level runs.
+- 2026-09-22: Added target=test and target=gen guarded equality-bound exists
+  OR tests, covering independent substitution of each equality-bound disjunct
+  into its residual guard without process-level runs.
+- 2026-09-22: Added target=test and target=gen equality-bound exists ITE
+  tests, covering independent per-branch substitution for conditional
+  quantified equality bindings without process-level runs.
+- 2026-09-22: Added target=test and target=gen equality-bound exists
+  IFF-with-true tests, covering positive equality normalization without
+  process-level runs.
+- 2026-09-22: Added target=test and target=gen equality-bound exists
+  implication tests, covering consequent-side equality bindings whose
+  antecedent does not reference the quantified variable without process-level
+  runs. Companion residual tests cover implication consequents with extra
+  substituted guards such as `n > c`.
+- 2026-09-22: Added target=test and target=gen equality-bound exists
+  negated-disequality tests, covering `~(X ~= c)` normalization to a positive
+  equality binding without process-level runs.
+- 2026-09-22: Added target=test and target=gen equality-bound exists
+  IFF-false disequality tests, covering `((X ~= c) <-> false)` normalization to
+  the same positive equality binding without process-level runs.
+- 2026-09-22: Added target=test and target=gen equality-bound forall
+  IFF-false disequality tests, covering the same positive equality
+  normalization in universal antecedents without process-level runs.
 - 2026-09-22: Added target=test and target=gen local equality-bound exists
   numeric witness tests, covering action-body local witness initialization from
   simplified existential residual guards without process-level runs.
@@ -3005,9 +3966,14 @@ Progress:
 - 2026-09-22: Added target=test and target=gen product inequality tests with
   state-expression bounds, covering strict-boundary two-formal product
   witnesses.
+- 2026-09-22: Added target=test and target=gen IFF-with-false product
+  inequality tests, covering false-term normalization before product witness
+  extraction.
 - 2026-09-22: Added target=test and target=gen product disequality tests with
   state-expression forbidden values, covering negated product equality witness
   extraction.
+- 2026-09-22: Added target=test and target=gen IFF-with-false product equality
+  tests, covering false equality as the same product disequality witness.
 - 2026-09-22: Added target=test and target=gen additive equality tests with
   state-expression RHS values, covering another small two-formal arithmetic
   model slice with source-shape checks only.
@@ -3052,6 +4018,10 @@ Progress:
   tests, covering nondeterministic branch alternatives that write different
   relation/function cells before a later assume, using only generated-source
   inspection inside the single Go test binary.
+- 2026-09-22: Added target=test and target=gen choice true-branch preimage
+  tests, covering the boolean identity case where an impossible branch must not
+  turn an otherwise enabled nondeterministic choice into a generated `false`
+  guard.
 - 2026-09-22: Added target=test and target=gen mixed choice state/point-update
   tests, including a branch-correlation guardrail that ensures generated guards
   are not over-approximated by independently combining unrelated branch state
@@ -3068,3 +4038,16 @@ Progress:
 - 2026-09-22: Added a target=gen guarded-internal-choice trace-envelope
   regression, covering the accepted trial path so captured internal trace output
   remains bracketed like direct target=gen execution.
+- 2026-09-22: Added a target=gen unsupported-preimage runtime-assume
+  regression, covering action bodies whose assumes are not discharged by the
+  syntactic reverse-image walker so one-shot generation uses the rejecting trial
+  path instead of direct public-action execution.
+- 2026-09-22: Added a target=test hidden-trial stack-label regression, covering
+  dotted action names so retry/trial execution preserves the same deterministic
+  choice label prefix as direct action execution.
+- 2026-09-22: Added a target=test hidden-trial state-copy regression, covering
+  accepted clone commits so generated testers do not replace the bound Ivy
+  object after readers and timers have been installed.
+- 2026-09-22: Added a target=test before-export guarded-choice regression,
+  covering the analysis/execution split so branch-local analysis assumes do not
+  force unsupported runtime-trial handling of the public exported action.
