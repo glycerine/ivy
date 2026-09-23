@@ -54,6 +54,18 @@ type Z3Context struct {
 	z3Merkle string // MerkleState
 }
 
+// SMTLIBSortDecl provides a sort binding for ParseSMTLIB2String.
+type SMTLIBSortDecl struct {
+	Name string
+	Sort Z3Sort
+}
+
+// SMTLIBFuncDecl provides a function/constant binding for ParseSMTLIB2String.
+type SMTLIBFuncDecl struct {
+	Name string
+	Decl FuncDecl
+}
+
 //export goZ3BridgeErrorHandler
 func goZ3BridgeErrorHandler(ctx C.Z3_context, e C.Z3_error_code) {
 	// Z3 invokes this synchronously while still inside its C API frame. Do not
@@ -240,6 +252,61 @@ func (ctx *Z3Context) newExpr(c C.Z3_ast) Z3Expr {
 	ctx.checkError("expr inc_ref")
 	e := Z3Expr{ctx: ctx, c: c}
 	return e
+}
+
+// ParseSMTLIB2String parses an SMT-LIB2 formula using the supplied sort and
+// function declarations. It mirrors Z3_parse_smtlib2_string, which is the path
+// used by the generated C++ tester runtime.
+func (ctx *Z3Context) ParseSMTLIB2String(input string, sortDecls []SMTLIBSortDecl, funcDecls []SMTLIBFuncDecl) (expr Z3Expr, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("parse SMT-LIB2: %v", r)
+		}
+	}()
+	cinput := C.CString(input)
+	defer C.free(unsafe.Pointer(cinput))
+
+	cSortNames := make([]C.Z3_symbol, len(sortDecls))
+	cSorts := make([]C.Z3_sort, len(sortDecls))
+	for i, d := range sortDecls {
+		cSortNames[i] = ctx.symbol(d.Name)
+		cSorts[i] = d.Sort.c
+	}
+	cDeclNames := make([]C.Z3_symbol, len(funcDecls))
+	cDecls := make([]C.Z3_func_decl, len(funcDecls))
+	for i, d := range funcDecls {
+		cDeclNames[i] = ctx.symbol(d.Name)
+		cDecls[i] = d.Decl.c
+	}
+
+	ctx.do(func() {
+		var sortNamesPtr *C.Z3_symbol
+		var sortsPtr *C.Z3_sort
+		if len(cSortNames) > 0 {
+			sortNamesPtr = &cSortNames[0]
+			sortsPtr = &cSorts[0]
+		}
+		var declNamesPtr *C.Z3_symbol
+		var declsPtr *C.Z3_func_decl
+		if len(cDeclNames) > 0 {
+			declNamesPtr = &cDeclNames[0]
+			declsPtr = &cDecls[0]
+		}
+		ast := C.Z3_parse_smtlib2_string(
+			ctx.c,
+			cinput,
+			C.uint(len(cSortNames)),
+			sortNamesPtr,
+			sortsPtr,
+			C.uint(len(cDeclNames)),
+			declNamesPtr,
+			declsPtr,
+		)
+		expr = ctx.newExpr(ast)
+	})
+	runtime.KeepAlive(sortDecls)
+	runtime.KeepAlive(funcDecls)
+	return expr, nil
 }
 
 // String returns the S-expression representation.

@@ -171,6 +171,18 @@ type Z3Context struct {
 	z3Merkle string // MerkleState
 }
 
+// SMTLIBSortDecl provides a sort binding for ParseSMTLIB2String.
+type SMTLIBSortDecl struct {
+	Name string
+	Sort Z3Sort
+}
+
+// SMTLIBFuncDecl provides a function/constant binding for ParseSMTLIB2String.
+type SMTLIBFuncDecl struct {
+	Name string
+	Decl FuncDecl
+}
+
 // NewZ3Context creates a new Z3 context.
 // The js/wasm browser bridge runs this Z3 context behind a single worker
 // execution lane, so there is no Go-side mutex or OS-thread pinning here.
@@ -336,6 +348,12 @@ func (ctx *Z3Context) newExpr(c z3AST) Z3Expr {
 	ctx.checkError("expr inc_ref")
 	e := Z3Expr{ctx: ctx, c: c}
 	return e
+}
+
+// ParseSMTLIB2String parses an SMT-LIB2 formula using supplied declarations.
+// The browser Z3 bridge does not currently expose Z3_parse_smtlib2_string.
+func (ctx *Z3Context) ParseSMTLIB2String(input string, sortDecls []SMTLIBSortDecl, funcDecls []SMTLIBFuncDecl) (Z3Expr, error) {
+	return Z3Expr{}, fmt.Errorf("parse SMT-LIB2 is not implemented for wasm Z3 bridge")
 }
 
 // String returns the S-expression representation.

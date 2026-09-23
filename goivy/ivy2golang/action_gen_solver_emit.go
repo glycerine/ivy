@@ -212,6 +212,13 @@ func (g *Generator) emitRuntimeSolverSupport(w *goWriter) {
 	if !g.actionGeneratorUsesRuntimeSolver() && !g.initGeneratorUsesRuntimeSolver() {
 		return
 	}
+	w.open("func __ivy_solver_bool_expr(v bool) goivy.Expr {")
+	w.open("if v {")
+	w.line("return goivy.True")
+	w.close("")
+	w.line("return goivy.False")
+	w.close("")
+	w.blank()
 	w.open("func __ivy_solver_func_sort(sorts ...goivy.Sort) goivy.Sort {")
 	w.line("s, err := goivy.NewFunctionSort(sorts...)")
 	w.open("if err != nil {")
@@ -254,21 +261,12 @@ func (g *Generator) emitRuntimeInitGeneratorGenerate(w *goWriter) bool {
 	if err != nil || constraints == nil || len(constraints.Formulas) == 0 {
 		return false
 	}
-	parts := make([]string, 0, len(constraints.Formulas))
-	for _, f := range constraints.Formulas {
-		closed, ok := goivy.CloseEPR(f).(goivy.Expr)
-		if !ok || closed == nil {
-			closed = f
-		}
-		expr, ok := g.goIvyExprExpr(closed)
-		if !ok {
-			return false
-		}
-		parts = append(parts, expr)
+	baseSMT, err := g.runtimeInitialSMTLIBAssertion(constraints)
+	if err != nil {
+		return false
 	}
 	w.line("solver := goivy.NewSolver(__ivy_solver_module(), nil)")
-	w.line("clauses := goivy.NewClauses(nil, nil, nil)")
-	w.linef("clauses.Fmlas = append(clauses.Fmlas, %s)", strings.Join(parts, ", "))
+	w.linef("baseSMT := %s", strconv.Quote(baseSMT))
 	w.line("soft := []goivy.Expr{}")
 	used := constraints.Used
 	for _, sym := range g.stateSymbols() {
@@ -281,7 +279,7 @@ func (g *Generator) emitRuntimeInitGeneratorGenerate(w *goWriter) bool {
 		}
 		g.emitRandomizeSymbolWithChooser(w, sym, "init", "___ivy_rand")
 	}
-	w.line("model, err := solver.GetModelClausesWithSoftAssumptions(clauses, soft, func(n int) int { if n <= 0 { return 0 }; return ivyRand31() % n })")
+	w.line("model, err := solver.GetModelSMTLIBWithSoftAssumptions(baseSMT, soft, func(n int) int { if n <= 0 { return 0 }; return ivyRand31() % n })")
 	w.open("if err != nil || model == nil {")
 	w.line("ivy.__init()")
 	w.line("return false")
@@ -296,6 +294,49 @@ func (g *Generator) emitRuntimeInitGeneratorGenerate(w *goWriter) bool {
 	w.line("ivy.__init()")
 	w.line("return true")
 	return true
+}
+
+func (g *Generator) runtimeInitialSMTLIBAssertion(constraints *initialStateConstraints) (string, error) {
+	if constraints == nil {
+		return "(assert true)", nil
+	}
+	var smts []string
+	if g.Mod == nil || g.Mod.InitCond == nil || g.Mod.InitCond.IsTrue() {
+		smts = append(smts, "true")
+	}
+	for _, f := range constraints.Formulas {
+		smt, err := g.formulaToSmtlibErr(closeFormulaForSMTLIB(f))
+		if err != nil {
+			return "", err
+		}
+		smts = append(smts, smt)
+	}
+	return "(assert (and\n  " + strings.Join(smts, "\n  ") + "\n))", nil
+}
+
+func (g *Generator) formulaToSmtlibErr(fmla goivy.Expr) (string, error) {
+	if fmla == nil {
+		return "true", nil
+	}
+	solver := goivy.NewSolver(g.Mod, nil)
+	z3expr, err := solver.FormulaToZ3(fmla)
+	if err != nil {
+		return "", err
+	}
+	return cleanSmtlib(z3expr.String()), nil
+}
+
+func cleanSmtlib(s string) string {
+	s = strings.ReplaceAll(s, "|!1", "!1|")
+	s = strings.ReplaceAll(s, `\|`, "")
+	return s
+}
+
+func closeFormulaForSMTLIB(f goivy.Expr) goivy.Expr {
+	if f == nil {
+		return nil
+	}
+	return goivy.IvyForAll(goivy.FreeVariablesList(f), f)
 }
 
 func (g *Generator) emitRuntimeInitSoftRandomizeSymbol(w *goWriter, sym stateSymbol) {
@@ -657,10 +698,11 @@ func (g *Generator) emitRuntimeActionSolverMethod(w *goWriter, typeName string, 
 	for _, sym := range rsp.stateSyms {
 		g.emitRuntimeActionSolverStateEquality(w, sym)
 	}
+	w.line("soft := []goivy.Expr{}")
 	for i, assign := range rsp.assigns {
 		g.emitRuntimeActionSolverRandomInputEquality(w, assign, i)
 	}
-	w.line("model, err := solver.GetModelClauses(clauses)")
+	w.line("model, err := solver.GetModelClausesWithSoftAssumptions(clauses, soft, func(n int) int { if n <= 0 { return 0 }; return ivyRand31() % n })")
 	w.open("if err != nil || model == nil {")
 	w.line("return false")
 	w.close("")
@@ -700,7 +742,7 @@ func (g *Generator) emitRuntimeActionSolverRandomInputEquality(w *goWriter, assi
 		w.line("return false")
 		return
 	}
-	w.linef("clauses.Fmlas = append(clauses.Fmlas, &goivy.Eq{T1: %s, T2: %s})", inputExpr, rhsExpr)
+	w.linef("soft = append(soft, &goivy.Eq{T1: %s, T2: %s})", inputExpr, rhsExpr)
 }
 
 func (g *Generator) emitRuntimeActionSolverExtraFields(w *goWriter, rsp *runtimeActionSolverPlan) {
@@ -775,7 +817,7 @@ func (g *Generator) emitRuntimeActionSolverSparseBoolRelation(w *goWriter, sym s
 	}
 	w.line("__ivy_sparse_terms = append(__ivy_sparse_terms, &goivy.LogicAnd{Terms: __ivy_sparse_eqs})")
 	w.close("")
-	w.line(`var __ivy_sparse_support goivy.Expr = goivy.NewConst("false", goivy.Boolean)`)
+	w.line(`var __ivy_sparse_support goivy.Expr = goivy.False`)
 	w.open("if len(__ivy_sparse_terms) == 1 {")
 	w.line("__ivy_sparse_support = __ivy_sparse_terms[0]")
 	w.close(" else if len(__ivy_sparse_terms) > 1 {")
@@ -825,7 +867,7 @@ func (g *Generator) runtimeActionSolverValueExpr(value string, s goivy.Sort) (st
 	switch st := s.(type) {
 	case *goivy.BooleanSort:
 		_ = st
-		return fmt.Sprintf("goivy.NewConst(strconv.FormatBool(%s), goivy.Boolean)", value), true
+		return fmt.Sprintf("__ivy_solver_bool_expr(%s)", value), true
 	case *goivy.LogicEnumeratedSort:
 		sortExpr := g.goIvySortExpr(s)
 		var b strings.Builder
