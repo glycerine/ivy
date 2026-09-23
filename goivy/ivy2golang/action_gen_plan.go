@@ -499,39 +499,42 @@ func actionGenStrictDefIdx(sym *goivy.Const, plan *actionGenPlan) bool {
 	return defidx
 }
 
-func preDefinedNames(clauses *goivy.Clauses) map[string]bool {
-	out := make(map[string]bool)
+func preDefinedKeys(clauses *goivy.Clauses) map[goivy.NodeKey]bool {
+	out := make(map[goivy.NodeKey]bool)
 	if clauses == nil {
 		return out
 	}
-	for _, d := range clauses.Defs {
-		if c, ok := d.Defines().(*goivy.Const); ok {
-			out[c.Name] = true
-		}
+	for key := range clauses.DefIdx {
+		out[key] = true
 	}
 	return out
 }
 
-func preUsedContains(used *goivy.InsMap[goivy.NodeKey, goivy.Expr], name string) bool {
+func preUsedContainsStateSymbol(used *goivy.InsMap[goivy.NodeKey, goivy.Expr], sym stateSymbol) bool {
 	if used == nil {
 		return false
 	}
-	for _, sym := range used.All() {
-		if c, ok := sym.(*goivy.Const); ok && c.Name == name {
+	key := stateSymbolNodeKey(sym)
+	for _, usedSym := range used.All() {
+		if c, ok := usedSym.(*goivy.Const); ok && goivy.Key(c) == key {
 			return true
 		}
 	}
 	return false
 }
 
+func stateSymbolNodeKey(sym stateSymbol) goivy.NodeKey {
+	return goivy.Key(goivy.NewConst(sym.Name, sym.Sort))
+}
+
 func (p *actionGenPlan) defedParamSet() map[goivy.NodeKey]bool {
 	out := make(map[goivy.NodeKey]bool, len(p.paramDefs))
 	for _, pd := range p.paramDefs {
-		eq, ok := pd.(*goivy.Eq)
+		lhs, _, ok := runtimeActionSolverDefinedInputTerms(pd)
 		if !ok {
 			continue
 		}
-		if c, ok := eq.T1.(*goivy.Const); ok {
+		if c, ok := exprAsConst(lhs); ok {
 			out[goivy.Key(c)] = true
 		}
 	}

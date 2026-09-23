@@ -2,6 +2,7 @@ package ivy2golang
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -166,6 +167,7 @@ func (g *Generator) emitAssignTwoPhase(w *goWriter, a *goivy.LogicAssignAction, 
 		g.popScope()
 		return
 	}
+	rhsCode = g.emitClonedValueExpr(w, rhsCode, a.RHS.NodeSort())
 	if call, ok, err := g.goStorageSet(tmpLHS, rhsCode); ok || err != nil {
 		if err != nil {
 			g.unsupportedAt(w, loc, "unsupported temp lhs: %s", err.Error())
@@ -195,6 +197,7 @@ func (g *Generator) emitAssignTwoPhase(w *goWriter, a *goivy.LogicAssignAction, 
 		return
 	}
 	tmpRHS = g.maybeVariantUpcastExpr(a.LHS.NodeSort(), a.RHS.NodeSort(), tmpRHS)
+	tmpRHS = g.emitClonedValueExpr(w, tmpRHS, a.LHS.NodeSort())
 	if call, ok, err := g.goStorageSet(a.LHS, tmpRHS); ok || err != nil {
 		if err != nil {
 			g.unsupportedAt(w, loc, "unsupported assignment lhs: %s", err.Error())
@@ -308,12 +311,16 @@ func (g *Generator) emitAssignLarge(w *goWriter, a *goivy.LogicAssignAction, lhs
 	oldName := g.nextTemp("__ivy_old_" + goName(name))
 	w.linef("%s := %s", oldName, base)
 	w.linef("_ = %s", oldName)
+	captures := g.emitAssignLargeStateCaptures(w, expr, name)
 	w.linef("%s = %s", base, g.goFunctionStorageInit(fs.Domain(), fs.Range()))
 	keyName := g.nextTemp("__ivy_key")
 	st := g.goFunctionStorageFor(fs.Domain(), fs.Range())
 	w.open(fmt.Sprintf("%s.base = func(%s %s) %s {", base, keyName, st.KeyType, st.RangeType))
 	g.pushScope()
 	g.addLocalSort(oldName, sort)
+	for _, capture := range captures {
+		g.addLocalSort(capture.temp, capture.sort)
+	}
 	for i, v := range vsPrime {
 		if v == nil {
 			continue
@@ -332,6 +339,9 @@ func (g *Generator) emitAssignLarge(w *goWriter, a *goivy.LogicAssignAction, lhs
 		nextAliases[k] = v
 	}
 	nextAliases[name] = goivy.NewConst(oldName, sort)
+	for _, capture := range captures {
+		nextAliases[capture.source] = goivy.NewConst(capture.temp, capture.sort)
+	}
 	g.exprAliases = nextAliases
 	body, err := g.emitExpr(expr)
 	g.exprAliases = prevAliases
@@ -344,10 +354,183 @@ func (g *Generator) emitAssignLarge(w *goWriter, a *goivy.LogicAssignAction, lhs
 	w.linef("return %s", body)
 	g.popScope()
 	w.close("")
+	solverCaptures := captures
+	if exprUsesSymbol(expr, name) {
+		solverCaptures = append([]assignLargeStateCapture{{source: name, temp: oldName, sort: sort}}, captures...)
+	}
+	g.emitAssignLargeSolverBase(w, base, name, expr, vsPrime, nextAliases, solverCaptures)
 	if summary, ok := g.sparseSupportAssignment(name, lhsApp.Terms, a.RHS); ok && g.sparseSupportRels()[name] && isBooleanSort(fs.Range()) {
 		g.emitSparseSupportUpdates(w, base, oldName, st, summary)
 	}
 	_ = lhsVs
+}
+
+type assignLargeStateCapture struct {
+	source     string
+	temp       string
+	sort       goivy.Sort
+	solverExpr string
+}
+
+func (g *Generator) emitAssignLargeStateCaptures(w *goWriter, expr goivy.Expr, lhsName string) []assignLargeStateCapture {
+	if g == nil || expr == nil {
+		return nil
+	}
+	seen := map[string]*goivy.Const{}
+	for _, sym := range goivy.UsedSymbolsAst(expr).All() {
+		c, ok := sym.(*goivy.Const)
+		if !ok || c == nil || c.Name == "" || c.Name == lhsName {
+			continue
+		}
+		stateSort, isState := g.isStateSymbolName(c.Name)
+		if !isState || stateSort == nil {
+			continue
+		}
+		if !g.assignLargeCanCaptureStateSort(c.Name, stateSort) {
+			continue
+		}
+		seen[c.Name] = goivy.NewConst(c.Name, stateSort)
+	}
+	names := make([]string, 0, len(seen))
+	for name := range seen {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	captures := make([]assignLargeStateCapture, 0, len(names))
+	for _, name := range names {
+		c := seen[name]
+		temp := g.nextTemp("__ivy_thunk_env_" + goName(name))
+		g.emitAssignLargeCaptureValue(w, temp, "ivy."+goName(name), c.CSort)
+		solverExpr, _ := g.runtimeActionSolverValueExpr(temp, c.CSort)
+		captures = append(captures, assignLargeStateCapture{
+			source:     name,
+			temp:       temp,
+			sort:       c.CSort,
+			solverExpr: solverExpr,
+		})
+	}
+	return captures
+}
+
+func exprUsesSymbol(expr goivy.Expr, name string) bool {
+	if expr == nil || name == "" {
+		return false
+	}
+	for _, sym := range goivy.UsedSymbolsAst(expr).All() {
+		if c, ok := sym.(*goivy.Const); ok && c != nil && c.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) assignLargeCanCaptureStateSort(name string, s goivy.Sort) bool {
+	if fs, ok := s.(*goivy.LogicFunctionSort); ok {
+		return g.runtimeSolverSupportsStateSymbol(stateSymbol{Name: name, Sort: fs})
+	}
+	return g.runtimeSolverSupportsScalarSort(s)
+}
+
+func (g *Generator) emitAssignLargeCaptureValue(w *goWriter, dst, src string, s goivy.Sort) {
+	if fs, ok := s.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
+		g.emitAssignLargeCaptureFunctionValue(w, dst, src, fs)
+		return
+	}
+	if g.sortNeedsDeepClone(s) {
+		w.linef("var %s %s", dst, g.goType(s))
+		g.emitCloneValue(w, dst, src, s)
+		w.linef("_ = %s", dst)
+		return
+	}
+	w.linef("%s := %s", dst, src)
+	w.linef("_ = %s", dst)
+}
+
+func (g *Generator) emitAssignLargeCaptureFunctionValue(w *goWriter, dst, src string, fs *goivy.LogicFunctionSort) {
+	w.linef("var %s %s", dst, g.goType(fs))
+	g.emitCloneFunctionValue(w, dst, src, fs, false)
+	w.linef("_ = %s", dst)
+}
+
+func (g *Generator) emitAssignLargeSolverBase(w *goWriter, base, lhsName string, expr goivy.Expr, vars []*goivy.LogicVariable, aliases map[string]goivy.Expr, captures []assignLargeStateCapture) {
+	if g == nil || expr == nil || g.assignLargeSolverBaseHasUncapturedState(expr, lhsName, captures) {
+		return
+	}
+	overrides := make(map[string]string, len(vars)+len(captures))
+	for i, v := range vars {
+		if v == nil {
+			continue
+		}
+		overrides[v.Name] = fmt.Sprintf("__ivy_solver_args[%d]", i)
+	}
+	for _, capture := range captures {
+		if capture.solverExpr != "" {
+			overrides[capture.temp] = capture.solverExpr
+		}
+	}
+	w.open(fmt.Sprintf("%s.solverBase = func(__ivy_solver_args []goivy.Expr, __ivy_solver_app goivy.Expr) []goivy.Expr {", base))
+	w.open(fmt.Sprintf("if len(__ivy_solver_args) != %d {", len(vars)))
+	w.line("return nil")
+	w.close("")
+	w.line("__ivy_solver_terms := []goivy.Expr{}")
+	for _, capture := range captures {
+		if fs, ok := capture.sort.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
+			fnExpr := fmt.Sprintf("goivy.NewConst(%q, %s)", capture.temp, g.goIvySortExpr(capture.sort))
+			if g.goFunctionStorageFor(fs.Domain(), fs.Range()).Large {
+				g.emitRuntimeActionSolverSparseThunkValue(w, "__ivy_solver_terms", fnExpr, capture.temp, fs)
+			} else {
+				g.emitRuntimeActionSolverFunctionValueEqualities(w, "__ivy_solver_terms", fnExpr, capture.temp, fs, nil, nil)
+			}
+			continue
+		}
+		if capture.solverExpr != "" {
+			continue
+		}
+		term, ok := g.emitRuntimeActionSolverValueTerm(w, "__ivy_solver_terms", capture.temp, capture.sort, "")
+		if !ok {
+			w.line("return nil")
+			w.close("")
+			return
+		}
+		overrides[capture.temp] = term
+	}
+	prevAliases := g.exprAliases
+	g.exprAliases = aliases
+	g.pushExprOverrides(overrides)
+	rhs, ok := g.goIvyExprExpr(expr)
+	g.popExprOverrides()
+	g.exprAliases = prevAliases
+	if !ok {
+		w.line("return nil")
+		w.close("")
+		return
+	}
+	w.linef("__ivy_solver_terms = append(__ivy_solver_terms, &goivy.Eq{T1: __ivy_solver_app, T2: %s})", rhs)
+	w.line("return __ivy_solver_terms")
+	w.close("")
+}
+
+func (g *Generator) assignLargeSolverBaseHasUncapturedState(expr goivy.Expr, lhsName string, captures []assignLargeStateCapture) bool {
+	if g == nil || expr == nil {
+		return true
+	}
+	captured := map[string]bool{}
+	for _, capture := range captures {
+		captured[capture.source] = true
+	}
+	for _, sym := range goivy.UsedSymbolsAst(expr).All() {
+		c, ok := sym.(*goivy.Const)
+		if !ok || c == nil {
+			continue
+		}
+		if c.Name == lhsName && !captured[c.Name] {
+			return true
+		}
+		if _, isState := g.isStateSymbolName(c.Name); isState && !captured[c.Name] {
+			return true
+		}
+	}
+	return false
 }
 
 func (g *Generator) emitSparseSupportUpdates(w *goWriter, base, oldName string, st goFunctionStorage, summary sparseSupportSummary) {

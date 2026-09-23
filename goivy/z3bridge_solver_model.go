@@ -27,6 +27,67 @@ type ModelResult struct {
 	Context *smt.Z3Context
 }
 
+// SMTLIBBaseSolver is a persistent solver containing an SMT-LIB base
+// assertion. Generated action generators use this to mirror ivy2cpp's
+// constructor-loaded Z3 generator plus per-generate push/pop constraints.
+type SMTLIBBaseSolver struct {
+	Solver *smt.Z3Solver
+}
+
+// SoftAssumptionLogger observes the same soft-assumption events that the
+// generated C++ ivy_z3_gen runtime writes to modelfile. Kind is "add" for a
+// new soft predicate/assumption literal, "begin" for the solver state before
+// the loop, "check" for each solver check, "sat" for the solver state before
+// returning a SAT model, and "delete" for an unsat-core pruning decision.
+type SoftAssumptionLogger func(kind, pred, alit string, core []string, toDelete string)
+
+func clausesHaveHardContent(clauses *Clauses) bool {
+	return clauses != nil && (len(clauses.Fmlas) != 0 || len(clauses.Defs) != 0)
+}
+
+func logSoftAssumptionAdd(log SoftAssumptionLogger, pred, alit smt.Z3Expr) {
+	if log == nil {
+		return
+	}
+	log("add", pred.String(), alit.String(), nil, "")
+}
+
+func logSoftAssumptionCheck(log SoftAssumptionLogger, z3solver *smt.Z3Solver, assumptions []smt.Z3Expr) {
+	if log == nil {
+		return
+	}
+	alits := make([]string, 0, len(assumptions))
+	for _, expr := range assumptions {
+		alits = append(alits, expr.String())
+	}
+	log("check", z3solver.String(), "", alits, "")
+}
+
+func logSoftAssumptionBegin(log SoftAssumptionLogger, z3solver *smt.Z3Solver) {
+	if log == nil {
+		return
+	}
+	log("begin", z3solver.String(), "", nil, "")
+}
+
+func logSoftAssumptionSat(log SoftAssumptionLogger, z3solver *smt.Z3Solver) {
+	if log == nil {
+		return
+	}
+	log("sat", z3solver.String(), "", nil, "")
+}
+
+func logSoftAssumptionDeletion(log SoftAssumptionLogger, core []smt.Z3Expr, toDelete smt.Z3Expr) {
+	if log == nil {
+		return
+	}
+	coreStrings := make([]string, 0, len(core))
+	for _, expr := range core {
+		coreStrings = append(coreStrings, expr.String())
+	}
+	log("delete", "", "", coreStrings, toDelete.String())
+}
+
 // Eval evaluates a Z3 expression in the model with completion.
 func (mr *ModelResult) Eval(e smt.Z3Expr) (smt.Z3Expr, bool) {
 	return mr.Model.Eval(e, true)
@@ -83,13 +144,23 @@ func (s *Solver) GetModelClauses(clauses *Clauses) (*ModelResult, error) {
 // are unsatisfiable, one literal from the unsat core is removed using choose,
 // mirroring the generated C++ ivy_z3_gen::solve loop.
 func (s *Solver) GetModelClausesWithSoftAssumptions(clauses *Clauses, soft []Expr, choose func(int) int) (*ModelResult, error) {
+	return s.GetModelClausesWithSoftAssumptionsLogged(clauses, soft, choose, nil)
+}
+
+// GetModelClausesWithSoftAssumptionsLogged is
+// GetModelClausesWithSoftAssumptions plus an optional modelfile logger for
+// C++-style unsat-core pruning transcript lines.
+func (s *Solver) GetModelClausesWithSoftAssumptionsLogged(clauses *Clauses, soft []Expr, choose func(int) int, log SoftAssumptionLogger) (*ModelResult, error) {
 	xtracer.Trace("ivy_solver.py:get_model_clauses_with_soft_assumptions ENTER")
+	debugSoft := os.Getenv("GOIVY_DEBUG_SOFT_SOLVER") != ""
 	z3solver := s.newZ3Solver()
-	zc, err := s.ClausesToZ3(clauses)
-	if err != nil {
-		return nil, err
+	if clausesHaveHardContent(clauses) {
+		zc, err := s.ClausesToZ3(clauses)
+		if err != nil {
+			return nil, err
+		}
+		z3solver.Assert(zc)
 	}
-	z3solver.Assert(zc)
 	var assumptions []smt.Z3Expr
 	ctx := s.tr.Ctx
 	for i, f := range soft {
@@ -102,11 +173,20 @@ func (s *Solver) GetModelClausesWithSoftAssumptions(clauses *Clauses, soft []Exp
 		}
 		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
 		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
+		logSoftAssumptionAdd(log, zf, alit)
 		assumptions = append(assumptions, alit)
 	}
+	if debugSoft {
+		fmt.Fprintf(os.Stderr, "soft-solver clauses-start soft=%d\n", len(assumptions))
+	}
+	logSoftAssumptionBegin(log, z3solver)
 	for {
+		logSoftAssumptionCheck(log, z3solver, assumptions)
 		result := s.checkZ3Assumptions(z3solver, assumptions)
 		if result == smt.Sat {
+			if debugSoft {
+				fmt.Fprintf(os.Stderr, "soft-solver clauses-sat remaining=%d\n", len(assumptions))
+			}
 			break
 		}
 		if result == smt.Unknown {
@@ -114,6 +194,9 @@ func (s *Solver) GetModelClausesWithSoftAssumptions(clauses *Clauses, soft []Exp
 		}
 		core := z3solver.UnsatCore()
 		if len(core) == 0 {
+			if debugSoft {
+				fmt.Fprintf(os.Stderr, "soft-solver clauses-unsat-empty-core remaining=%d\n", len(assumptions))
+			}
 			return nil, nil
 		}
 		idx := 0
@@ -124,6 +207,10 @@ func (s *Solver) GetModelClausesWithSoftAssumptions(clauses *Clauses, soft []Exp
 			idx = 0
 		}
 		toDelete := core[idx]
+		if debugSoft && len(soft)-len(assumptions) < 20 {
+			fmt.Fprintf(os.Stderr, "soft-solver clauses-delete[%d] core=%d idx=%d alit=%s\n", len(soft)-len(assumptions), len(core), idx, toDelete.String())
+		}
+		logSoftAssumptionDeletion(log, core, toDelete)
 		for i, alit := range assumptions {
 			if alit.Equal(toDelete) {
 				assumptions[i] = assumptions[len(assumptions)-1]
@@ -132,6 +219,7 @@ func (s *Solver) GetModelClausesWithSoftAssumptions(clauses *Clauses, soft []Exp
 			}
 		}
 	}
+	logSoftAssumptionSat(log, z3solver)
 	m := z3solver.Model()
 	if m == nil {
 		return nil, fmt.Errorf("solver returned sat but no model")
@@ -156,10 +244,32 @@ func (s *Solver) GetModelClausesWithSoftAssumptions(clauses *Clauses, soft []Exp
 	}, nil
 }
 
+// NewSMTLIBBaseSolver parses and asserts an SMT-LIB2 base assertion into a
+// reusable solver. Callers can then push temporary hard/soft constraints on top
+// of this base without reparsing the static assertion.
+func (s *Solver) NewSMTLIBBaseSolver(smtlib string) (*SMTLIBBaseSolver, error) {
+	z3solver := s.newZ3Solver()
+	if smtlib != "" {
+		base, err := s.ParseSMTLIB2Assertion(smtlib)
+		if err != nil {
+			return nil, err
+		}
+		z3solver.Assert(base)
+	}
+	return &SMTLIBBaseSolver{Solver: z3solver}, nil
+}
+
 // GetModelSMTLIBWithSoftAssumptions checks an SMT-LIB2 assertion together
 // with soft formulas. The SMT-LIB path mirrors the generated C++ tester
 // runtime, which preloads declarations and calls Z3_parse_smtlib2_string.
 func (s *Solver) GetModelSMTLIBWithSoftAssumptions(smtlib string, soft []Expr, choose func(int) int) (*ModelResult, error) {
+	return s.GetModelSMTLIBWithSoftAssumptionsLogged(smtlib, soft, choose, nil)
+}
+
+// GetModelSMTLIBWithSoftAssumptionsLogged is
+// GetModelSMTLIBWithSoftAssumptions plus an optional modelfile logger for
+// C++-style unsat-core pruning transcript lines.
+func (s *Solver) GetModelSMTLIBWithSoftAssumptionsLogged(smtlib string, soft []Expr, choose func(int) int, log SoftAssumptionLogger) (*ModelResult, error) {
 	xtracer.Trace("ivy_solver.py:get_model_smtlib_with_soft_assumptions ENTER")
 	debugSoft := os.Getenv("GOIVY_DEBUG_SOFT_SOLVER") != ""
 	z3solver := s.newZ3Solver()
@@ -188,9 +298,12 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptions(smtlib string, soft []Expr, c
 		}
 		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
 		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
+		logSoftAssumptionAdd(log, zf, alit)
 		assumptions = append(assumptions, alit)
 	}
+	logSoftAssumptionBegin(log, z3solver)
 	for {
+		logSoftAssumptionCheck(log, z3solver, assumptions)
 		result := s.checkZ3Assumptions(z3solver, assumptions)
 		if result == smt.Sat {
 			if debugSoft {
@@ -216,6 +329,7 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptions(smtlib string, soft []Expr, c
 		if debugSoft && len(soft)-len(assumptions) < 20 {
 			fmt.Fprintf(os.Stderr, "soft-solver smtlib-delete[%d] core=%d idx=%d alit=%s\n", len(soft)-len(assumptions), len(core), idx, toDelete.String())
 		}
+		logSoftAssumptionDeletion(log, core, toDelete)
 		for i, alit := range assumptions {
 			if alit.Equal(toDelete) {
 				assumptions[i] = assumptions[len(assumptions)-1]
@@ -224,6 +338,7 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptions(smtlib string, soft []Expr, c
 			}
 		}
 	}
+	logSoftAssumptionSat(log, z3solver)
 	m := z3solver.Model()
 	if m == nil {
 		return nil, fmt.Errorf("solver returned sat but no model")
@@ -234,6 +349,248 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptions(smtlib string, soft []Expr, c
 			if sym != nil {
 				symSet[Key(sym)] = sym
 			}
+		}
+	}
+	for _, f := range soft {
+		for k, sym := range UsedSymbolsAst(f).All() {
+			symSet[k] = sym
+		}
+	}
+	vocab := make([]*Const, 0, len(symSet))
+	for _, sym := range symSet {
+		if c, ok := sym.(*Const); ok {
+			vocab = append(vocab, c)
+		}
+	}
+	return &ModelResult{
+		Solver:  z3solver,
+		Model:   m,
+		Vocab:   vocab,
+		Context: s.tr.Ctx,
+	}, nil
+}
+
+// GetModelSMTLIBBaseClausesWithSoftAssumptions checks a reusable SMT-LIB base
+// solver under a temporary push frame containing additional hard clauses and
+// soft formulas.
+func (s *Solver) GetModelSMTLIBBaseClausesWithSoftAssumptions(base *SMTLIBBaseSolver, clauses *Clauses, soft []Expr, choose func(int) int) (*ModelResult, error) {
+	return s.GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(base, clauses, soft, choose, nil)
+}
+
+// GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged is
+// GetModelSMTLIBBaseClausesWithSoftAssumptions plus an optional modelfile
+// logger for C++-style unsat-core pruning transcript lines.
+func (s *Solver) GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(base *SMTLIBBaseSolver, clauses *Clauses, soft []Expr, choose func(int) int, log SoftAssumptionLogger) (*ModelResult, error) {
+	xtracer.Trace("ivy_solver.py:get_model_smtlib_base_clauses_with_soft_assumptions ENTER")
+	debugSoft := os.Getenv("GOIVY_DEBUG_SOFT_SOLVER") != ""
+	if base == nil || base.Solver == nil {
+		return nil, fmt.Errorf("nil SMT-LIB base solver")
+	}
+	z3solver := base.Solver
+	z3solver.Push()
+	defer z3solver.Pop()
+	if clausesHaveHardContent(clauses) {
+		zc, err := s.ClausesToZ3(clauses)
+		if err != nil {
+			return nil, err
+		}
+		z3solver.Assert(zc)
+	}
+	if debugSoft {
+		fmt.Fprintf(os.Stderr, "soft-solver smtlib-base-clauses-start soft=%d\n", len(soft))
+	}
+	var assumptions []smt.Z3Expr
+	ctx := s.tr.Ctx
+	for i, f := range soft {
+		if f == nil {
+			continue
+		}
+		zf, err := s.tr.Translate(f)
+		if err != nil {
+			return nil, err
+		}
+		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
+		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
+		logSoftAssumptionAdd(log, zf, alit)
+		assumptions = append(assumptions, alit)
+	}
+	logSoftAssumptionBegin(log, z3solver)
+	for {
+		logSoftAssumptionCheck(log, z3solver, assumptions)
+		result := s.checkZ3Assumptions(z3solver, assumptions)
+		if result == smt.Sat {
+			if debugSoft {
+				fmt.Fprintf(os.Stderr, "soft-solver smtlib-base-clauses-sat remaining=%d\n", len(assumptions))
+			}
+			break
+		}
+		if result == smt.Unknown {
+			return nil, &IvyError{Msg: "Solver produced inconclusive result"}
+		}
+		core := z3solver.UnsatCore()
+		if len(core) == 0 {
+			return nil, nil
+		}
+		idx := 0
+		if choose != nil {
+			idx = choose(len(core))
+		}
+		if idx < 0 || idx >= len(core) {
+			idx = 0
+		}
+		toDelete := core[idx]
+		if debugSoft && len(soft)-len(assumptions) < 20 {
+			fmt.Fprintf(os.Stderr, "soft-solver smtlib-base-clauses-delete[%d] core=%d idx=%d alit=%s\n", len(soft)-len(assumptions), len(core), idx, toDelete.String())
+		}
+		logSoftAssumptionDeletion(log, core, toDelete)
+		for i, alit := range assumptions {
+			if alit.Equal(toDelete) {
+				assumptions[i] = assumptions[len(assumptions)-1]
+				assumptions = assumptions[:len(assumptions)-1]
+				break
+			}
+		}
+	}
+	logSoftAssumptionSat(log, z3solver)
+	m := z3solver.Model()
+	if m == nil {
+		return nil, fmt.Errorf("solver returned sat but no model")
+	}
+	symSet := make(map[NodeKey]Expr)
+	if s.sig != nil {
+		for _, sym := range s.sig.AllSymbols() {
+			if sym != nil {
+				symSet[Key(sym)] = sym
+			}
+		}
+	}
+	if clausesHaveHardContent(clauses) {
+		for _, sym := range clauses.Symbols().All() {
+			symSet[Key(sym)] = sym
+		}
+	}
+	for _, f := range soft {
+		for k, sym := range UsedSymbolsAst(f).All() {
+			symSet[k] = sym
+		}
+	}
+	vocab := make([]*Const, 0, len(symSet))
+	for _, sym := range symSet {
+		if c, ok := sym.(*Const); ok {
+			vocab = append(vocab, c)
+		}
+	}
+	return &ModelResult{
+		Solver:  z3solver,
+		Model:   m,
+		Vocab:   vocab,
+		Context: s.tr.Ctx,
+	}, nil
+}
+
+// GetModelSMTLIBClausesWithSoftAssumptions checks an SMT-LIB2 assertion and
+// additional hard clauses together with soft formulas. This is the generated
+// action-generator analogue of Python/C++'s preloaded SMT-LIB precondition plus
+// per-generate emit_set constraints.
+func (s *Solver) GetModelSMTLIBClausesWithSoftAssumptions(smtlib string, clauses *Clauses, soft []Expr, choose func(int) int) (*ModelResult, error) {
+	return s.GetModelSMTLIBClausesWithSoftAssumptionsLogged(smtlib, clauses, soft, choose, nil)
+}
+
+// GetModelSMTLIBClausesWithSoftAssumptionsLogged is
+// GetModelSMTLIBClausesWithSoftAssumptions plus an optional modelfile logger
+// for C++-style unsat-core pruning transcript lines.
+func (s *Solver) GetModelSMTLIBClausesWithSoftAssumptionsLogged(smtlib string, clauses *Clauses, soft []Expr, choose func(int) int, log SoftAssumptionLogger) (*ModelResult, error) {
+	xtracer.Trace("ivy_solver.py:get_model_smtlib_clauses_with_soft_assumptions ENTER")
+	debugSoft := os.Getenv("GOIVY_DEBUG_SOFT_SOLVER") != ""
+	z3solver := s.newZ3Solver()
+	if smtlib != "" {
+		base, err := s.ParseSMTLIB2Assertion(smtlib)
+		if err != nil {
+			if debugSoft {
+				fmt.Fprintf(os.Stderr, "soft-solver smt-clauses-parse-error: %v\n", err)
+			}
+			return nil, err
+		}
+		z3solver.Assert(base)
+	}
+	if clausesHaveHardContent(clauses) {
+		zc, err := s.ClausesToZ3(clauses)
+		if err != nil {
+			return nil, err
+		}
+		z3solver.Assert(zc)
+	}
+	if debugSoft {
+		fmt.Fprintf(os.Stderr, "soft-solver smtlib-clauses-start soft=%d\n", len(soft))
+	}
+	var assumptions []smt.Z3Expr
+	ctx := s.tr.Ctx
+	for i, f := range soft {
+		if f == nil {
+			continue
+		}
+		zf, err := s.tr.Translate(f)
+		if err != nil {
+			return nil, err
+		}
+		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
+		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
+		logSoftAssumptionAdd(log, zf, alit)
+		assumptions = append(assumptions, alit)
+	}
+	logSoftAssumptionBegin(log, z3solver)
+	for {
+		logSoftAssumptionCheck(log, z3solver, assumptions)
+		result := s.checkZ3Assumptions(z3solver, assumptions)
+		if result == smt.Sat {
+			if debugSoft {
+				fmt.Fprintf(os.Stderr, "soft-solver smtlib-clauses-sat remaining=%d\n", len(assumptions))
+			}
+			break
+		}
+		if result == smt.Unknown {
+			return nil, &IvyError{Msg: "Solver produced inconclusive result"}
+		}
+		core := z3solver.UnsatCore()
+		if len(core) == 0 {
+			return nil, nil
+		}
+		idx := 0
+		if choose != nil {
+			idx = choose(len(core))
+		}
+		if idx < 0 || idx >= len(core) {
+			idx = 0
+		}
+		toDelete := core[idx]
+		if debugSoft && len(soft)-len(assumptions) < 20 {
+			fmt.Fprintf(os.Stderr, "soft-solver smtlib-clauses-delete[%d] core=%d idx=%d alit=%s\n", len(soft)-len(assumptions), len(core), idx, toDelete.String())
+		}
+		logSoftAssumptionDeletion(log, core, toDelete)
+		for i, alit := range assumptions {
+			if alit.Equal(toDelete) {
+				assumptions[i] = assumptions[len(assumptions)-1]
+				assumptions = assumptions[:len(assumptions)-1]
+				break
+			}
+		}
+	}
+	logSoftAssumptionSat(log, z3solver)
+	m := z3solver.Model()
+	if m == nil {
+		return nil, fmt.Errorf("solver returned sat but no model")
+	}
+	symSet := make(map[NodeKey]Expr)
+	if s.sig != nil {
+		for _, sym := range s.sig.AllSymbols() {
+			if sym != nil {
+				symSet[Key(sym)] = sym
+			}
+		}
+	}
+	if clauses != nil {
+		for _, sym := range clauses.Symbols().All() {
+			symSet[Key(sym)] = sym
 		}
 	}
 	for _, f := range soft {

@@ -158,6 +158,23 @@ func (g *Generator) emitCopyField(w *goWriter, a *goivy.LogicCopyFieldAction) {
 		g.unsupported(w, "unsupported copy field rhs: %s", err.Error())
 		return
 	}
+	if field, ok := g.destructorFieldInfo(goivy.ExprName(a.Field)); ok && field.Sort != nil {
+		domain := field.Sort.Domain()
+		if g.destructorFieldIsLarge(field) {
+			extraSort, err := goivy.NewFunctionSort(append(append([]goivy.Sort{}, domain[1:]...), field.Sort.Range())...)
+			if err != nil {
+				g.unsupported(w, "unsupported copy field sort: %s", err.Error())
+				return
+			}
+			g.emitCloneFunctionValue(w, lhs, rhs, extraSort, true)
+			return
+		}
+		if len(domain) > 1 && g.sortNeedsDeepClone(field.Sort.Range()) {
+			g.emitCloneIndexedDestructorField(w, lhs, rhs, domain[1:], field.Sort.Range())
+			return
+		}
+		rhs = g.emitClonedValueExpr(w, rhs, field.Sort.Range())
+	}
 	w.linef("%s = %s", lhs, rhs)
 }
 
@@ -202,6 +219,7 @@ func (g *Generator) emitAssignOneAt(w *goWriter, lhs, rhsExpr goivy.Expr, loc go
 		return
 	}
 	rhs = g.maybeVariantUpcastExpr(lhs.NodeSort(), rhsExpr.NodeSort(), rhs)
+	rhs = g.emitClonedValueExpr(w, rhs, lhs.NodeSort())
 	if g.Config.Trace && !lhsHasNamespacedName(lhs) {
 		trace, err := g.goTraceLHSExpr(lhs)
 		if err != nil {
@@ -981,6 +999,7 @@ func (g *Generator) emitCall(w *goWriter, a *goivy.LogicCallAction) {
 		}
 		if i < len(formals) {
 			code = g.maybeVariantUpcastExpr(formals[i].CSort, arg.NodeSort(), code)
+			code = g.emitClonedValueExpr(w, code, formals[i].CSort)
 		}
 		argCodes[i] = code
 	}
@@ -1006,14 +1025,14 @@ func (g *Generator) emitCall(w *goWriter, a *goivy.LogicCallAction) {
 	}
 	call := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(argCodes, ", "))
 	if len(a.ActualReturns) == 0 {
-		w.linef("ivy.___ivy_push(%q)", name)
+		w.linef("ivy.___ivy_push(%d)", a.UniqueID)
 		w.line(call)
 		w.line("ivy.___ivy_pop()")
 		return
 	}
 	if len(a.ActualReturns) == 1 {
 		tmp := goName(g.nextTemp("__ivy_ret"))
-		w.linef("ivy.___ivy_push(%q)", name)
+		w.linef("ivy.___ivy_push(%d)", a.UniqueID)
 		w.linef("%s := %s", tmp, call)
 		w.line("ivy.___ivy_pop()")
 		g.emitCallReturnAssignAt(w, a.ActualReturns[0], tmp, loc)
@@ -1023,7 +1042,7 @@ func (g *Generator) emitCall(w *goWriter, a *goivy.LogicCallAction) {
 	for i := range a.ActualReturns {
 		tmpNames[i] = goName(g.nextTemp("__ivy_ret"))
 	}
-	w.linef("ivy.___ivy_push(%q)", name)
+	w.linef("ivy.___ivy_push(%d)", a.UniqueID)
 	w.linef("%s := %s", strings.Join(tmpNames, ", "), call)
 	w.line("ivy.___ivy_pop()")
 	for i, ret := range a.ActualReturns {
@@ -1038,6 +1057,7 @@ func (g *Generator) emitCallReturnAssign(w *goWriter, target goivy.Expr, rhs str
 }
 
 func (g *Generator) emitCallReturnAssignAt(w *goWriter, target goivy.Expr, rhs string, loc goivy.Location) bool {
+	rhs = g.emitClonedValueExpr(w, rhs, target.NodeSort())
 	if call, ok, err := g.goStorageSet(target, rhs); ok || err != nil {
 		if err != nil {
 			g.unsupportedAt(w, loc, "unsupported call return: %s", err.Error())

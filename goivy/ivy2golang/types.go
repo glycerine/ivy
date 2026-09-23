@@ -245,6 +245,9 @@ func (g *Generator) goRandomValueExpr(s goivy.Sort, name string, id int64) (stri
 }
 
 func (g *Generator) goActionParamRandomValueExpr(s goivy.Sort, name string, id int64) (string, error) {
+	if g.hasStringInterp(s) {
+		return "", fmt.Errorf("ivy2golang: cannot create test generator because type %s is uninterpreted", sortName(s))
+	}
 	return g.goRandomValueExprWithChooser(s, name, id, "___ivy_randomize")
 }
 
@@ -324,10 +327,21 @@ func (g *Generator) goRandomValueExprWithChooserSeen(s goivy.Sort, name string, 
 			return fmt.Sprintf("(%s + %s)", loExpr, call(goRangeRandomWidthExpr(loExpr, hiExpr))), nil
 		}
 		if card := g.sortCard(s); card > 0 {
+			if it, ok := g.goInterpType(s); ok && it.Kind == goInterpIntBV {
+				return fmt.Sprintf("(%d + %s)", it.Lo, callInt(card)), nil
+			}
 			if g.hasStrBVInterp(s) {
+				if g.Config.Target == "gen" {
+					if it, ok := g.goInterpType(s); ok {
+						return fmt.Sprintf("ivyStrBVBVToX(%q, %d, %s)", sortName(s), it.Bits, callInt(card)), nil
+					}
+				}
 				return fmt.Sprintf("strconv.Itoa(%s)", callInt(card)), nil
 			}
 			return callInt(card), nil
+		}
+		if g.hasStringInterp(s) {
+			return fmt.Sprintf("[]string{%q, %q}[%s]", "b", "a", callInt(2)), nil
 		}
 		if g.hasIntOrNatInterp(s) {
 			return callInt(5), nil
@@ -505,6 +519,16 @@ func (g *Generator) finiteValueExprs(s goivy.Sort) ([]string, bool) {
 		}
 		return vals, true
 	default:
+		if it, ok := g.goInterpType(s); ok && it.Kind == goInterpIntBV {
+			if it.Hi < it.Lo {
+				return nil, false
+			}
+			vals := make([]string, 0, it.Hi-it.Lo+1)
+			for i := it.Lo; i <= it.Hi; i++ {
+				vals = append(vals, strconv.Itoa(i))
+			}
+			return vals, true
+		}
 		if g.hasStrBVInterp(s) {
 			card := g.sortCard(s)
 			if card <= 0 {
@@ -636,7 +660,7 @@ func (g *Generator) hasIntInterp(s goivy.Sort) bool {
 }
 
 func (g *Generator) hasIntOrNatInterp(s goivy.Sort) bool {
-	return g.hasIntInterp(s) || g.hasNatInterp(s)
+	return g.hasIntInterp(s) || g.hasNatInterp(s) || g.nativeTypeSortTranslatesAsGoInt(s)
 }
 
 func (g *Generator) isNativeTypeSort(s goivy.Sort) bool {
