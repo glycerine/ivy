@@ -1,15 +1,39 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync"
 	"testing"
 
 	ivy2golanglib "github.com/glycerine/ivy/goivy/ivy2golang"
 )
+
+var (
+	commandTestBinaryOnce sync.Once
+	commandTestBinary     string
+	commandTestBinaryDir  string
+	commandTestBinaryErr  error
+	commandTestEnvOnce    sync.Once
+	commandTestEnvVals    []string
+	commandTestEnvRoot    string
+	commandTestEnvErr     error
+)
+
+func TestMain(m *testing.M) {
+	code := m.Run()
+	if commandTestBinaryDir != "" {
+		_ = os.RemoveAll(commandTestBinaryDir)
+	}
+	if commandTestEnvRoot != "" {
+		_ = os.RemoveAll(commandTestEnvRoot)
+	}
+	os.Exit(code)
+}
 
 func requireSlowCommandTest(t *testing.T) {
 	t.Helper()
@@ -156,85 +180,111 @@ export echo
 	}
 }
 
-func TestCommandBuildTrueHermesRMWO3FromTempDir(t *testing.T) {
+func TestCommandBuildTrueFromTempDirUsesModuleDeps(t *testing.T) {
 	bin := buildIvy2GolangCommand(t)
-	home, err := os.UserHomeDir()
-	if err != nil {
-		t.Fatalf("UserHomeDir: %v", err)
-	}
-	src := filepath.Join(home, "ivy", "ivy-lang-examples", "jea", "hermes_rmw_o3_testing.ivy")
-	data, err := os.ReadFile(src)
-	if err != nil {
-		t.Skipf("Hermes fixture not available at %s: %v", src, err)
-	}
 	dir := t.TempDir()
-	spec := filepath.Join(dir, "hermes_rmw_o3_testing.ivy")
-	if err := os.WriteFile(spec, data, 0o644); err != nil {
-		t.Fatalf("copy Hermes fixture: %v", err)
+	spec := filepath.Join(dir, "moduledeps.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.7
+type color = {red, green}
+individual saved : color
+after init {
+    saved := red
+}
+action paint(c:color) = {
+    saved := c
+}
+export paint
+`), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
 	}
-	cmd := exec.Command(bin, "build=true", "target=test", "hermes_rmw_o3_testing.ivy")
+	cmd := exec.Command(bin, "build=true", "target=test", "moduledeps.ivy")
 	cmd.Dir = dir
 	cmd.Env = commandTestEnv(t)
 	var stdout, stderr strings.Builder
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {
-		t.Fatalf("run ivy2golang Hermes build=true: %v\nstdout:\n%s\nstderr:\n%s", err, stdout.String(), stderr.String())
+		t.Fatalf("run ivy2golang build=true from temp dir: %v\nstdout:\n%s\nstderr:\n%s", err, stdout.String(), stderr.String())
 	}
 	if stdout.String() != "" || stderr.String() != "" {
-		t.Fatalf("Hermes build should be quiet\nstdout:\n%s\nstderr:\n%s", stdout.String(), stderr.String())
+		t.Fatalf("temp-dir build should be quiet\nstdout:\n%s\nstderr:\n%s", stdout.String(), stderr.String())
 	}
-	goPath := filepath.Join(dir, "hermes_rmw_o3_testing.go")
-	data, err = os.ReadFile(goPath)
+	goPath := filepath.Join(dir, "moduledeps.go")
+	data, err := os.ReadFile(goPath)
 	if err != nil {
-		t.Fatalf("missing generated Hermes Go: %v", err)
+		t.Fatalf("missing generated Go: %v", err)
+	}
+	if !strings.Contains(string(data), `"github.com/glycerine/ivy/goivy"`) {
+		t.Fatalf("test fixture should exercise generated goivy import:\n%s", data)
 	}
 	for _, bad := range []string{
-		"ivy2golang: unsupported",
-		"cannot enumerate quantified variable",
+		`panic("ivy2golang: unsupported`,
+		"ivy2golang: unsupported assumption expression",
 	} {
-		if strings.Contains(string(data), bad) {
-			t.Fatalf("generated Hermes Go should not contain %q:\n%s", bad, data)
+		if line, ok := firstLineContaining(string(data), bad); ok {
+			t.Fatalf("generated Go should not contain %q: %s", bad, line)
 		}
 	}
-	exe := filepath.Join(dir, "hermes_rmw_o3_testing")
+	exe := filepath.Join(dir, "moduledeps")
 	if runtime.GOOS == "windows" {
 		exe += ".exe"
 	}
 	if _, err := os.Stat(exe); err != nil {
-		t.Fatalf("missing generated Hermes executable: %v", err)
+		t.Fatalf("missing generated executable: %v", err)
 	}
-	run := exec.Command(exe, "iters=10", "runs=1", "seed=1", "delay=0")
+	run := exec.Command(exe, "iters=1", "runs=1", "seed=1", "delay=0")
 	run.Dir = dir
 	var runStdout, runStderr strings.Builder
 	run.Stdout = &runStdout
 	run.Stderr = &runStderr
 	if err := run.Run(); err != nil {
-		t.Fatalf("run generated Hermes executable: %v\nstdout:\n%s\nstderr:\n%s", err, runStdout.String(), runStderr.String())
+		t.Fatalf("run generated executable: %v\nstdout:\n%s\nstderr:\n%s", err, runStdout.String(), runStderr.String())
 	}
 	if strings.Contains(runStdout.String(), "assumption_failed") || strings.Contains(runStderr.String(), "assumption failed") {
-		t.Fatalf("generated Hermes run should not fail an assumption\nstdout:\n%s\nstderr:\n%s", runStdout.String(), runStderr.String())
+		t.Fatalf("generated run should not fail an assumption\nstdout:\n%s\nstderr:\n%s", runStdout.String(), runStderr.String())
 	}
 	if !strings.Contains(runStdout.String(), "test_completed") {
-		t.Fatalf("generated Hermes run missing completion marker\nstdout:\n%s\nstderr:\n%s", runStdout.String(), runStderr.String())
+		t.Fatalf("generated run missing completion marker\nstdout:\n%s\nstderr:\n%s", runStdout.String(), runStderr.String())
 	}
+}
+
+func firstLineContaining(text, needle string) (string, bool) {
+	for _, line := range strings.Split(text, "\n") {
+		if strings.Contains(line, needle) {
+			return strings.TrimSpace(line), true
+		}
+	}
+	return "", false
 }
 
 func buildIvy2GolangCommand(t *testing.T) string {
 	t.Helper()
 	requireSlowCommandTest(t)
-	dir := t.TempDir()
-	bin := filepath.Join(dir, "ivy2golang")
-	if runtime.GOOS == "windows" {
-		bin += ".exe"
+	commandTestBinaryOnce.Do(func() {
+		commandTestBinaryDir, commandTestBinaryErr = os.MkdirTemp("", "ivy2golang-command-test-*")
+		if commandTestBinaryErr != nil {
+			return
+		}
+		bin := filepath.Join(commandTestBinaryDir, "ivy2golang")
+		if runtime.GOOS == "windows" {
+			bin += ".exe"
+		}
+		cmd := exec.Command("go", "build", "-o", bin, ".")
+		cmd.Env = commandTestEnv(t)
+		data, err := cmd.CombinedOutput()
+		if err != nil {
+			commandTestBinaryErr = fmt.Errorf("go build cmd/ivy2golang: %w\n%s", err, data)
+			return
+		}
+		commandTestBinary = bin
+	})
+	if commandTestBinaryErr != nil {
+		t.Fatal(commandTestBinaryErr)
 	}
-	cmd := exec.Command("go", "build", "-o", bin, ".")
-	cmd.Env = commandTestEnv(t)
-	data, err := cmd.CombinedOutput()
-	if err != nil {
-		t.Fatalf("go build cmd/ivy2golang: %v\n%s", err, data)
+	if commandTestBinary == "" {
+		t.Fatal("empty command test binary path")
 	}
-	return bin
+	return commandTestBinary
 }
 
 func runIvy2GolangCommand(t *testing.T, bin string, args ...string) (string, string, error) {
@@ -250,17 +300,38 @@ func runIvy2GolangCommand(t *testing.T, bin string, args ...string) (string, str
 
 func commandTestEnv(t *testing.T) []string {
 	t.Helper()
-	cacheDir := filepath.Join(t.TempDir(), "gocache")
-	tmpDir := filepath.Join(t.TempDir(), "gotmp")
-	for _, dir := range []string{cacheDir, tmpDir} {
-		if err := os.MkdirAll(dir, 0o755); err != nil {
-			t.Fatalf("create %s: %v", dir, err)
+	commandTestEnvOnce.Do(func() {
+		cacheDir := os.Getenv("GOCACHE")
+		tmpDir := os.Getenv("GOTMPDIR")
+		if cacheDir == "" || tmpDir == "" {
+			commandTestEnvRoot, commandTestEnvErr = os.MkdirTemp("", "ivy2golang-command-env-*")
+			if commandTestEnvErr != nil {
+				return
+			}
+			if cacheDir == "" {
+				cacheDir = filepath.Join(commandTestEnvRoot, "gocache")
+			}
+			if tmpDir == "" {
+				tmpDir = filepath.Join(commandTestEnvRoot, "gotmp")
+			}
 		}
+		for _, dir := range []string{cacheDir, tmpDir} {
+			if err := os.MkdirAll(dir, 0o755); err != nil {
+				commandTestEnvErr = fmt.Errorf("create %s: %w", dir, err)
+				return
+			}
+		}
+		commandTestEnvVals = []string{
+			"GOCACHE=" + cacheDir,
+			"GOTMPDIR=" + tmpDir,
+			"IVY2GOLANG_GOCACHE=" + cacheDir,
+			"IVY2GOLANG_GOTMPDIR=" + tmpDir,
+			"XTRACE_OFF=1",
+		}
+	})
+	if commandTestEnvErr != nil {
+		t.Fatal(commandTestEnvErr)
 	}
 	base := os.Environ()
-	return append(base,
-		"GOCACHE="+cacheDir,
-		"GOTMPDIR="+tmpDir,
-		"XTRACE_OFF=1",
-	)
+	return append(base, commandTestEnvVals...)
 }

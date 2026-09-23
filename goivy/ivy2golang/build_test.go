@@ -186,6 +186,57 @@ func TestBuildPlanForRelativeDirUsesAbsoluteGoCache(t *testing.T) {
 	}
 }
 
+func TestBuildPlanForUsesModuleRootWorkDirFast(t *testing.T) {
+	out := &Output{BaseName: "x", Source: "package main\nfunc main(){}\n"}
+	plan, err := BuildPlanFor(out, t.TempDir(), Config{})
+	if err != nil {
+		t.Fatalf("BuildPlanFor: %v", err)
+	}
+	root := moduleRootForGeneratedBuild()
+	if root == "" {
+		t.Skip("module source root not available in this build")
+	}
+	if plan.WorkDir != root {
+		t.Fatalf("WorkDir=%q, want module root %q", plan.WorkDir, root)
+	}
+	if _, err := os.Stat(filepath.Join(plan.WorkDir, "go.mod")); err != nil {
+		t.Fatalf("WorkDir should contain go.mod: %v", err)
+	}
+}
+
+func TestBuildPlanForGeneratedBuildCacheEnvOverrideFast(t *testing.T) {
+	dir := t.TempDir()
+	cacheDir := filepath.Join(dir, "shared-cache")
+	tmpDir := filepath.Join(dir, "shared-tmp")
+	t.Setenv("IVY2GOLANG_GOCACHE", cacheDir)
+	t.Setenv("IVY2GOLANG_GOTMPDIR", tmpDir)
+	out := &Output{BaseName: "x", Source: "package main\nfunc main(){}\n"}
+	plan, err := BuildPlanFor(out, filepath.Join(dir, "out"), Config{})
+	if err != nil {
+		t.Fatalf("BuildPlanFor: %v", err)
+	}
+	wantEnv := []string{"GOCACHE=" + cacheDir, "GOTMPDIR=" + tmpDir}
+	for _, want := range wantEnv {
+		if !containsString(plan.Env, want) {
+			t.Fatalf("BuildPlanFor env missing %q in %#v", want, plan.Env)
+		}
+	}
+	for _, want := range []string{cacheDir, tmpDir} {
+		if _, err := os.Stat(want); err != nil {
+			t.Fatalf("expected generated build dir %s: %v", want, err)
+		}
+	}
+}
+
+func containsString(values []string, want string) bool {
+	for _, value := range values {
+		if value == want {
+			return true
+		}
+	}
+	return false
+}
+
 func TestGenerateTargetClassBuildsAsArchive(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 action step = {
