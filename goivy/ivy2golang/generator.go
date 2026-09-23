@@ -127,6 +127,7 @@ func (g *Generator) generate() (string, error) {
 	g.emitNativeTypeComments(&w)
 	g.emitSortDecls(&w)
 	g.emitRuntime(&w)
+	g.emitRuntimeSolverSupport(&w)
 	g.emitStruct(&w)
 	g.emitConstructor(&w)
 	g.emitClone(&w)
@@ -509,6 +510,9 @@ func (g *Generator) emitImports(w *goWriter) {
 	w.line("import (")
 	w.indent++
 	imports := []string{"fmt", "io", "math/rand/v2", "os", "strconv", "strings"}
+	if g.actionGeneratorUsesRuntimeSolver() {
+		imports = append(imports, "github.com/glycerine/ivy/goivy")
+	}
 	if g.Config.Target == "repl" && g.Config.EmitMain {
 		imports = append(imports, "bufio")
 	}
@@ -2901,6 +2905,7 @@ func (g *Generator) emitTestActionGeneratorTypes(w *goWriter, runnable []string)
 	for _, name := range runnable {
 		act, _ := g.Mod.Actions.Get2(name)
 		genAct := g.actionGeneratorAnalysisAction(name, act)
+		rsp, hasRuntimeSolver := g.runtimeActionSolverPlan(name, genAct)
 		typeName := g.goActionGeneratorTypeName(name)
 		w.open(fmt.Sprintf("type %s struct {", typeName))
 		w.linef("ivy *%s", g.ClassName)
@@ -2912,13 +2917,16 @@ func (g *Generator) emitTestActionGeneratorTypes(w *goWriter, runnable []string)
 		w.close("")
 		w.blank()
 		w.open(fmt.Sprintf("func (gen *%s) generate() bool {", typeName))
-		g.emitTestActionGeneratorGenerate(w, name, genAct)
+		g.emitTestActionGeneratorGenerate(w, name, genAct, hasRuntimeSolver)
 		w.close("")
 		w.blank()
+		if hasRuntimeSolver {
+			g.emitRuntimeActionSolverMethod(w, typeName, rsp)
+		}
 	}
 }
 
-func (g *Generator) emitTestActionGeneratorGenerate(w *goWriter, name string, act goivy.Action) {
+func (g *Generator) emitTestActionGeneratorGenerate(w *goWriter, name string, act goivy.Action, hasRuntimeSolver bool) {
 	w.line("ivy := gen.ivy")
 	w.line("_ = ivy")
 	if act == nil {
@@ -2932,6 +2940,12 @@ func (g *Generator) emitTestActionGeneratorGenerate(w *goWriter, name string, ac
 			continue
 		}
 		w.linef("gen.%s = %s", goName(p.Name), expr)
+	}
+	if hasRuntimeSolver {
+		w.open("if gen.__ivy_generate_with_solver() {")
+		w.line("return true")
+		w.close("")
+		w.line("return false")
 	}
 	args := g.testActionGeneratorArgs(act)
 	g.emitTestActionDefinedInputs(w, name, act, args)
@@ -3018,6 +3032,7 @@ func (g *Generator) emitGenActionGeneratorTypes(w *goWriter, runnable []string) 
 	for _, name := range runnable {
 		act, _ := g.Mod.Actions.Get2(name)
 		genAct := g.actionGeneratorAnalysisAction(name, act)
+		rsp, hasRuntimeSolver := g.runtimeActionSolverPlan(name, genAct)
 		typeName := g.goActionGeneratorTypeName(name)
 		w.open(fmt.Sprintf("type %s struct {", typeName))
 		w.linef("ivy *%s", g.ClassName)
@@ -3029,9 +3044,12 @@ func (g *Generator) emitGenActionGeneratorTypes(w *goWriter, runnable []string) 
 		w.close("")
 		w.blank()
 		w.open(fmt.Sprintf("func (gen *%s) generate() bool {", typeName))
-		g.emitGenActionGeneratorGenerate(w, name, genAct)
+		g.emitGenActionGeneratorGenerate(w, name, genAct, hasRuntimeSolver)
 		w.close("")
 		w.blank()
+		if hasRuntimeSolver {
+			g.emitRuntimeActionSolverMethod(w, typeName, rsp)
+		}
 		w.open(fmt.Sprintf("func (gen *%s) execute() {", typeName))
 		g.emitGenActionGeneratorExecute(w, name, act)
 		w.close("")
@@ -3048,7 +3066,7 @@ func (g *Generator) actionGeneratorAnalysisAction(name string, act goivy.Action)
 	return act
 }
 
-func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act goivy.Action) {
+func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act goivy.Action, hasRuntimeSolver bool) {
 	w.line("ivy := gen.ivy")
 	w.line("_ = ivy")
 	if act == nil {
@@ -3074,6 +3092,12 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 			continue
 		}
 		w.linef("gen.%s = %s", goName(p.Name), expr)
+	}
+	if hasRuntimeSolver {
+		w.open("if gen.__ivy_generate_with_solver() {")
+		w.line("return true")
+		w.close("")
+		w.line("return false")
 	}
 	g.emitGenActionGeneratorDefinedInputs(w, name, act)
 	g.emitGenActionGeneratorVariantWitnesses(w, name, act)
@@ -5805,7 +5829,145 @@ func (g *Generator) emitActionGeneratorGuardExpr(guard goivy.Expr) (string, erro
 	defer func() {
 		g.relationOverrideQuant = old
 	}()
-	return g.emitExpr(closeFormulaForGo(guard))
+	return g.emitExpr(g.simplifyActionGeneratorGuardShape(closeFormulaForGo(guard)))
+}
+
+func (g *Generator) simplifyActionGeneratorGuardShape(expr goivy.Expr) goivy.Expr {
+	return g.simplifyActionGeneratorGuardShapeAt(expr, true)
+}
+
+func (g *Generator) simplifyActionGeneratorGuardShapeAt(expr goivy.Expr, topLevel bool) goivy.Expr {
+	switch n := expr.(type) {
+	case *goivy.Eq:
+		_ = topLevel
+	case *goivy.LogicAnd:
+		terms := g.simplifyActionGeneratorGuardShapeTerms(n.Terms)
+		if terms == nil {
+			return goivy.True
+		}
+		if changedExprTerms(n.Terms, terms) {
+			out := &goivy.LogicAnd{Base: n.Base, Terms: terms}
+			return out
+		}
+	case *goivy.LogicOr:
+		terms := g.simplifyActionGeneratorGuardShapeTerms(n.Terms)
+		if terms == nil {
+			return goivy.False
+		}
+		if changedExprTerms(n.Terms, terms) {
+			out := &goivy.LogicOr{Base: n.Base, Terms: terms}
+			return out
+		}
+	case *goivy.LogicNot:
+		body := g.simplifyActionGeneratorGuardShapeAt(n.Body, false)
+		if body != n.Body {
+			out := &goivy.LogicNot{Base: n.Base, Body: body}
+			return out
+		}
+	case *goivy.LogicLiteral:
+		atom := g.simplifyActionGeneratorGuardShapeAt(n.Atom, false)
+		if atom != n.Atom {
+			return &goivy.LogicLiteral{Base: n.Base, Atom: atom, Polarity: n.Polarity}
+		}
+	case *goivy.LogicImplies:
+		t1 := g.simplifyActionGeneratorGuardShapeAt(n.T1, false)
+		t2 := g.simplifyActionGeneratorGuardShapeAt(n.T2, false)
+		if t1 != n.T1 || t2 != n.T2 {
+			out := &goivy.LogicImplies{Base: n.Base, T1: t1, T2: t2}
+			return out
+		}
+	case *goivy.LogicIff:
+		t1 := g.simplifyActionGeneratorGuardShapeAt(n.T1, false)
+		t2 := g.simplifyActionGeneratorGuardShapeAt(n.T2, false)
+		if t1 != n.T1 || t2 != n.T2 {
+			out := &goivy.LogicIff{Base: n.Base, T1: t1, T2: t2}
+			return out
+		}
+	case *goivy.LogicIte:
+		cond := g.simplifyActionGeneratorGuardShapeAt(n.Cond, false)
+		thenExpr := g.simplifyActionGeneratorGuardShapeAt(n.Then, false)
+		elseExpr := g.simplifyActionGeneratorGuardShapeAt(n.Else, false)
+		if cond != n.Cond || thenExpr != n.Then || elseExpr != n.Else {
+			out := &goivy.LogicIte{Base: n.Base, Cond: cond, Then: thenExpr, Else: elseExpr}
+			return out
+		}
+	case *goivy.ForAll:
+		body := g.simplifyActionGeneratorGuardShapeAt(n.Body, false)
+		if body != n.Body {
+			return goivy.IvyForAll(n.Variables, body)
+		}
+	case *goivy.LogicExists:
+		body := g.simplifyActionGeneratorGuardShapeAt(n.Body, false)
+		if body != n.Body {
+			return goivy.IvyExists(n.Variables, body)
+		}
+	}
+	return expr
+}
+
+func (g *Generator) simplifyActionGeneratorGuardShapeTerms(terms []goivy.Expr) []goivy.Expr {
+	if len(terms) == 0 {
+		return nil
+	}
+	out := make([]goivy.Expr, len(terms))
+	for i, term := range terms {
+		out[i] = g.simplifyActionGeneratorGuardShapeAt(term, false)
+	}
+	return out
+}
+
+func (g *Generator) actionGeneratorEqPrefersSwap(left, right goivy.Expr) bool {
+	leftName, leftOK := actionGeneratorConstLikeName(left)
+	rightName, rightOK := actionGeneratorConstLikeName(right)
+	if !leftOK || !rightOK {
+		return false
+	}
+	if rightName == "" {
+		return false
+	}
+	if _, ok := g.exprOverride(rightName); !ok {
+		return false
+	}
+	if leftName == "" {
+		return false
+	}
+	if _, ok := g.exprOverride(leftName); ok {
+		return false
+	}
+	return true
+}
+
+func actionGeneratorConstLikeName(expr goivy.Expr) (string, bool) {
+	switch n := expr.(type) {
+	case *goivy.Const:
+		if n == nil {
+			return "", false
+		}
+		return n.Name, true
+	case *goivy.Apply:
+		if n == nil || len(n.Terms) != 0 {
+			return "", false
+		}
+		c, ok := n.Func.(*goivy.Const)
+		if !ok || c == nil {
+			return "", false
+		}
+		return c.Name, true
+	default:
+		return "", false
+	}
+}
+
+func changedExprTerms(a, b []goivy.Expr) bool {
+	if len(a) != len(b) {
+		return true
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return true
+		}
+	}
+	return false
 }
 
 func (g *Generator) emitGenActionGeneratorFiniteSearch(w *goWriter, name string, act goivy.Action, guardFormulas []goivy.Expr, guardExprs []string) bool {
@@ -6274,7 +6436,15 @@ func (g *Generator) actionGeneratorRelationWitnessGroupDims(formals []*goivy.Con
 					break
 				}
 				if exprReferencesAnyNameIncludingVariables(term, candidate.ignored) {
+					if exprContainsLogicVariableOutsideNames(term, candidate.ignored) {
+						valid = false
+						break
+					}
 					continue
+				}
+				if exprContainsLogicVariableOutsideNames(term, nil) {
+					valid = false
+					break
 				}
 				expr, err := g.emitExpr(term)
 				if err != nil {
@@ -6362,7 +6532,15 @@ func (g *Generator) actionGeneratorNegatedRelationWitnessGroupDims(formals []*go
 					break
 				}
 				if exprReferencesAnyNameIncludingVariables(term, candidate.ignored) {
+					if exprContainsLogicVariableOutsideNames(term, candidate.ignored) {
+						valid = false
+						break
+					}
 					continue
+				}
+				if exprContainsLogicVariableOutsideNames(term, nil) {
+					valid = false
+					break
 				}
 				expr, err := g.emitExpr(term)
 				if err != nil {
@@ -7152,7 +7330,15 @@ func (g *Generator) actionGeneratorNegatedRelationWitnessDim(p *goivy.Const, gua
 					continue
 				}
 				if exprReferencesAnyNameIncludingVariables(term, candidate.ignored) {
+					if exprContainsLogicVariableOutsideNames(term, candidate.ignored) {
+						valid = false
+						break
+					}
 					continue
+				}
+				if exprContainsLogicVariableOutsideNames(term, nil) {
+					valid = false
+					break
 				}
 				expr, err := g.emitExpr(term)
 				if err != nil {
@@ -7353,7 +7539,15 @@ func (g *Generator) actionGeneratorRelationWitnessDimForApply(p *goivy.Const, ap
 			continue
 		}
 		if exprReferencesAnyNameIncludingVariables(term, ignored) {
+			if exprContainsLogicVariableOutsideNames(term, ignored) {
+				valid = false
+				break
+			}
 			continue
+		}
+		if exprContainsLogicVariableOutsideNames(term, nil) {
+			valid = false
+			break
 		}
 		expr, err := g.emitExpr(term)
 		if err != nil {
@@ -7976,25 +8170,51 @@ func actionGeneratorAddSmallIntFallback(dim actionGeneratorFiniteSearchDim) acti
 }
 
 func (g *Generator) genActionPreconditionFormulas(name string, act goivy.Action) []goivy.Expr {
-	var guards []goivy.Expr
-	if g != nil && g.Mod != nil && g.Mod.ExtPreconds != nil {
-		if pre := g.Mod.ExtPreconds[name]; pre != nil {
-			guards = append(guards, pre)
-		}
-	}
-	guards = append(guards, g.actionPreimageAssumeFormulas(act)...)
-	return g.expandActionGeneratorGuardDefinitions(guards)
+	return g.actionGeneratorPreconditionFormulas(name, act)
 }
 
 func (g *Generator) testActionPreconditionFormulas(name string, act goivy.Action) []goivy.Expr {
-	var guards []goivy.Expr
+	return g.actionGeneratorPreconditionFormulas(name, act)
+}
+
+func (g *Generator) actionGeneratorPreconditionFormulas(name string, act goivy.Action) []goivy.Expr {
 	if g != nil && g.Mod != nil && g.Mod.ExtPreconds != nil {
 		if pre := g.Mod.ExtPreconds[name]; pre != nil {
-			guards = append(guards, pre)
+			guards := []goivy.Expr{pre}
+			guards = append(guards, g.actionPreimageAssumeFormulas(act)...)
+			return g.expandActionGeneratorGuardDefinitions(guards)
 		}
 	}
-	guards = append(guards, g.actionPreimageAssumeFormulas(act)...)
-	return g.expandActionGeneratorGuardDefinitions(guards)
+	if prefixGuards, ok := g.testActionPrefixPreimageAssumeFormulasOK(act); ok {
+		return g.expandActionGeneratorGuardDefinitions(prefixGuards)
+	}
+	if planGuards, ok := g.actionGenPlanPreconditionFormulasOK(name, act); ok {
+		return g.expandActionGeneratorGuardDefinitions(planGuards)
+	}
+	return g.expandActionGeneratorGuardDefinitions(g.actionPreimageAssumeFormulas(act))
+}
+
+func (g *Generator) actionGenPlanPreconditionFormulasOK(name string, act goivy.Action) (guards []goivy.Expr, ok bool) {
+	defer func() {
+		if recover() != nil {
+			guards = nil
+			ok = false
+		}
+	}()
+	if g == nil || g.Mod == nil || act == nil {
+		return nil, true
+	}
+	plan := g.buildActionGenPlan(name, act)
+	if plan == nil || plan.fallback {
+		return nil, false
+	}
+	if plan.preFmla == nil || goivy.IsTrue(plan.preFmla) {
+		return nil, true
+	}
+	if g.reverseImageGuardHasLocalSymbol(plan.preFmla, plan.act) {
+		return nil, false
+	}
+	return []goivy.Expr{plan.preFmla}, true
 }
 
 func (g *Generator) expandActionGeneratorGuardDefinitions(guards []goivy.Expr) []goivy.Expr {
@@ -11399,6 +11619,21 @@ func exprReferencesAnyNameIncludingVariables(expr goivy.Expr, names map[string]b
 	return false
 }
 
+func exprContainsLogicVariableOutsideNames(expr goivy.Expr, names map[string]bool) bool {
+	if expr == nil {
+		return false
+	}
+	if v, ok := expr.(*goivy.LogicVariable); ok {
+		return names == nil || !names[v.Name]
+	}
+	for _, child := range expr.Children() {
+		if exprContainsLogicVariableOutsideNames(child, names) {
+			return true
+		}
+	}
+	return false
+}
+
 func exprReferencesAnyNodeKey(expr goivy.Expr, keys map[goivy.NodeKey]bool) bool {
 	if expr == nil || len(keys) == 0 {
 		return false
@@ -12858,7 +13093,7 @@ func formalExprOverrideNames(name string) []string {
 	case strings.HasPrefix(name, "fml:"):
 		base = strings.TrimPrefix(name, "fml:")
 	}
-	candidates := []string{name, base, "fml:" + base, "__fml:" + base}
+	candidates := []string{name, base, "__" + base, "fml:" + base, "__fml:" + base}
 	names := make([]string, 0, len(candidates))
 	seen := map[string]bool{}
 	for _, candidate := range candidates {
