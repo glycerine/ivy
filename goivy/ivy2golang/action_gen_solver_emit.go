@@ -1275,15 +1275,15 @@ func (g *Generator) emitRuntimeActionSolverDefinedInputs(w *goWriter, rsp *runti
 	g.pushExprOverrides(overrides)
 	defer g.popExprOverrides()
 	declaredGeneratedLocals := map[string]bool{}
+	neededGeneratedLocals := g.runtimeActionSolverNeededGeneratedLocalNames(rsp)
 	for _, def := range rsp.plan.paramDefs {
 		lhs, rhs, ok := runtimeActionSolverDefinedInputTerms(def)
 		if !ok {
 			continue
 		}
-		if c, ok := exprAsConst(lhs); ok {
-			if mapped, found := rsp.plan.fsyms[goivy.Key(c)]; found {
-				lhs = mapped
-			}
+		lhs = g.runtimeActionSolverMappedDefinedInputLHS(rsp, lhs)
+		if name, ok := runtimeActionSolverGeneratedLocalDefinitionName(lhs); ok && !neededGeneratedLocals[name] {
+			continue
 		}
 		lhsExpr, err := g.emitExpr(lhs)
 		if err != nil {
@@ -1308,12 +1308,101 @@ func (g *Generator) emitRuntimeActionSolverDefinedInputs(w *goWriter, rsp *runti
 	}
 }
 
+func (g *Generator) runtimeActionSolverMappedDefinedInputLHS(rsp *runtimeActionSolverPlan, lhs goivy.Expr) goivy.Expr {
+	if rsp == nil || rsp.plan == nil || lhs == nil {
+		return lhs
+	}
+	if c, ok := exprAsConst(lhs); ok {
+		if mapped, found := rsp.plan.fsyms[goivy.Key(c)]; found {
+			return mapped
+		}
+	}
+	return lhs
+}
+
+func (g *Generator) runtimeActionSolverNeededGeneratedLocalNames(rsp *runtimeActionSolverPlan) map[string]bool {
+	out := map[string]bool{}
+	if rsp == nil || rsp.plan == nil {
+		return out
+	}
+	type defInfo struct {
+		lhs  goivy.Expr
+		rhs  goivy.Expr
+		name string
+		gen  bool
+	}
+	var defs []defInfo
+	for _, def := range rsp.plan.paramDefs {
+		lhs, rhs, ok := runtimeActionSolverDefinedInputTerms(def)
+		if !ok {
+			continue
+		}
+		lhs = g.runtimeActionSolverMappedDefinedInputLHS(rsp, lhs)
+		name, gen := runtimeActionSolverGeneratedLocalDefinitionName(lhs)
+		defs = append(defs, defInfo{lhs: lhs, rhs: rhs, name: name, gen: gen})
+		if gen {
+			continue
+		}
+		runtimeActionSolverAddUsedGeneratedLocalNames(out, lhs, "")
+		runtimeActionSolverAddUsedGeneratedLocalNames(out, rhs, "")
+	}
+	changed := true
+	for changed {
+		changed = false
+		for _, def := range defs {
+			if !def.gen || !out[def.name] {
+				continue
+			}
+			before := len(out)
+			runtimeActionSolverAddUsedGeneratedLocalNames(out, def.lhs, def.name)
+			runtimeActionSolverAddUsedGeneratedLocalNames(out, def.rhs, "")
+			changed = changed || len(out) != before
+		}
+	}
+	return out
+}
+
+func runtimeActionSolverGeneratedLocalDefinitionName(lhs goivy.Expr) (string, bool) {
+	c, ok := runtimeActionSolverDefinitionHeadConst(lhs)
+	if !ok || c == nil || !runtimeActionSolverGeneratedLocalName(c.Name) {
+		return "", false
+	}
+	return c.Name, true
+}
+
+func runtimeActionSolverDefinitionHeadConst(lhs goivy.Expr) (*goivy.Const, bool) {
+	if c, ok := exprAsConst(lhs); ok {
+		return c, true
+	}
+	if app, ok := lhs.(*goivy.Apply); ok && app != nil {
+		return exprAsConst(app.Func)
+	}
+	return nil, false
+}
+
+func runtimeActionSolverAddUsedGeneratedLocalNames(out map[string]bool, expr goivy.Expr, exclude string) {
+	if expr == nil {
+		return
+	}
+	for _, sym := range goivy.UsedSymbolsAst(expr).All() {
+		c, ok := sym.(*goivy.Const)
+		if !ok || c == nil || c.Name == exclude || !runtimeActionSolverGeneratedLocalName(c.Name) {
+			continue
+		}
+		out[c.Name] = true
+	}
+}
+
+func runtimeActionSolverGeneratedLocalName(name string) bool {
+	return strings.HasPrefix(name, "__new_loc:") || actionGenGeneratedLocalName(name)
+}
+
 func (g *Generator) emitRuntimeActionSolverDefinedLocalDecl(w *goWriter, declared map[string]bool, lhs goivy.Expr, lhsExpr string) {
 	if lhsExpr == "" || declared[lhsExpr] {
 		return
 	}
 	c, ok := exprAsConst(lhs)
-	if !ok || c == nil || !actionGenGeneratedLocalName(c.Name) {
+	if !ok || c == nil || !runtimeActionSolverGeneratedLocalName(c.Name) {
 		return
 	}
 	sort := c.CSort

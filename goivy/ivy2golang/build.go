@@ -1,7 +1,9 @@
 package ivy2golang
 
 import (
+	"bytes"
 	"fmt"
+	"go/format"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -23,6 +25,9 @@ func BuildOutput(out *Output, outDir string) (string, error) {
 	if err := WriteOutput(out, outDir); err != nil {
 		return "", err
 	}
+	if err := formatGoOutputFile(plan.GoFile); err != nil {
+		return "", err
+	}
 	cmd := exec.Command("go", plan.Args...)
 	cmd.Env = append(os.Environ(), plan.Env...)
 	data, err := cmd.CombinedOutput()
@@ -30,6 +35,21 @@ func BuildOutput(out *Output, outDir string) (string, error) {
 		return "", fmt.Errorf("ivy2golang: go build failed: %w\n%s", err, string(data))
 	}
 	return plan.OutputPath, nil
+}
+
+func formatGoOutputFile(path string) error {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	formatted, err := format.Source(data)
+	if err != nil {
+		return fmt.Errorf("ivy2golang: gofmt generated Go failed for %s: %w", path, err)
+	}
+	if bytes.Equal(data, formatted) {
+		return nil
+	}
+	return os.WriteFile(path, formatted, 0o644)
 }
 
 func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {

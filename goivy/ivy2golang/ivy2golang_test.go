@@ -33853,11 +33853,19 @@ export check
 
 func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	g := newGoTestGeneratorWithInterps(nil)
-	temp := goivy.NewConst("__ts0_c", goivy.Boolean)
+	deadTemp := goivy.NewConst("__ts0_dead", goivy.Boolean)
+	deadDependency := goivy.NewConst("__ts0_dead_dep", goivy.Boolean)
+	generatedRel := goivy.NewConst("__ts0__m_rel", goivy.LogicRelationSort([]goivy.Sort{goivy.Boolean}))
+	liveTemp := goivy.NewConst("__ts0_live", goivy.Boolean)
+	result := goivy.NewConst("result", goivy.Boolean)
 	rsp := &runtimeActionSolverPlan{
 		plan: &actionGenPlan{
 			paramDefs: []goivy.Expr{
-				&goivy.LogicIff{T1: temp, T2: goivy.True},
+				&goivy.LogicIff{T1: deadTemp, T2: goivy.True},
+				&goivy.LogicIff{T1: deadDependency, T2: goivy.True},
+				&goivy.LogicIff{T1: goivy.MustApply(generatedRel, goivy.True), T2: deadDependency},
+				&goivy.LogicIff{T1: liveTemp, T2: goivy.True},
+				&goivy.LogicIff{T1: result, T2: liveTemp},
 			},
 		},
 	}
@@ -33868,8 +33876,17 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	if line := firstBareUndeclaredSyntheticTempAssignment(got); line != "" {
 		t.Fatalf("synthetic solver temp assigned before declaration: %s", line)
 	}
-	if !strings.Contains(got, "var __ts0_c bool") {
-		t.Fatalf("synthetic solver temp declaration missing:\n%s", got)
+	if strings.Contains(got, "__ts0_dead") {
+		t.Fatalf("dead synthetic solver temp should not be emitted:\n%s", got)
+	}
+	if strings.Contains(got, "__ts0__m_rel") {
+		t.Fatalf("dead synthetic solver function definition should not be emitted:\n%s", got)
+	}
+	if !strings.Contains(got, "var __ts0_live bool") {
+		t.Fatalf("live synthetic solver temp declaration missing:\n%s", got)
+	}
+	if unused := firstUnreadDeclaredSyntheticTemp(got); unused != "" {
+		t.Fatalf("synthetic solver temp declared but never read: %s\n%s", unused, got)
 	}
 }
 
@@ -33893,6 +33910,36 @@ func firstBareUndeclaredSyntheticTempAssignment(src string) string {
 		}
 		if name, ok := syntheticTempAssignedWith(trimmed, "="); ok && !declared[name] {
 			return trimmed
+		}
+	}
+	return ""
+}
+
+func firstUnreadDeclaredSyntheticTemp(src string) string {
+	declared := map[string]bool{}
+	read := map[string]bool{}
+	for _, line := range strings.Split(src, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "var __ts") {
+			fields := strings.Fields(trimmed)
+			if len(fields) >= 3 {
+				declared[fields[1]] = true
+			}
+			continue
+		}
+		for name := range declared {
+			if !strings.Contains(trimmed, name) {
+				continue
+			}
+			if strings.HasPrefix(trimmed, name+" =") || strings.HasPrefix(trimmed, name+" :=") {
+				continue
+			}
+			read[name] = true
+		}
+	}
+	for name := range declared {
+		if !read[name] {
+			return name
 		}
 	}
 	return ""

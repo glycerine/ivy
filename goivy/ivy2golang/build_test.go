@@ -57,6 +57,24 @@ func runBinaryWithInput(t *testing.T, bin, input string, args ...string) (string
 	return stdout.String(), stderr.String(), err
 }
 
+func TestFormatGoOutputFileFast(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "x.go")
+	const unformatted = "package main\nfunc main(){println(\"x\")}\n"
+	if err := os.WriteFile(path, []byte(unformatted), 0o644); err != nil {
+		t.Fatalf("write source: %v", err)
+	}
+	if err := formatGoOutputFile(path); err != nil {
+		t.Fatalf("formatGoOutputFile: %v", err)
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read source: %v", err)
+	}
+	if string(data) == unformatted || !strings.Contains(string(data), "func main() { println(\"x\") }\n") {
+		t.Fatalf("generated Go was not gofmt-formatted:\n%s", data)
+	}
+}
+
 func TestBuildPlanForUsesGoFile(t *testing.T) {
 	out := &Output{BaseName: "x", Source: "package main\nfunc main(){}\n"}
 	dir := t.TempDir()
