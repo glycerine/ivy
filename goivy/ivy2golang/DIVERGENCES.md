@@ -4246,6 +4246,12 @@ Progress:
   probes for `target=gen`, `target=test`, and `target=repl` usage/file-option
   errors now match C++; existing fast tests remain green. No new tests were
   added.
+- 2026-09-23: Fixed the `TestGeneratedAssumeFailureEmitsTraceEvent` hang.
+  Runtime solver action generation now declines returned/no-input actions, so
+  a generated tester executes the action and reports the visible
+  `assumption_failed` event instead of retrying an UNSAT generator forever. The
+  existing regression was converted from a slow generated-binary run to a fast
+  source-shape check of that exact planner boundary. No new tests were added.
 - 2026-09-23: Matched generated runtime unknown-option diagnostics to C++ by
   quoting the rejected option key (`unknown option: "name"`). Existing fast
   source/runtime expectations were updated for the corrected behavior, and

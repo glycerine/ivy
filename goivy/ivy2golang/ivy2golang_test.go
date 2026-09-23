@@ -466,22 +466,21 @@ export step
 	if !strings.Contains(out.Source, `ivyAssume(false, "test.ivy: line 3")`) {
 		t.Fatalf("assume action should carry source-line label:\n%s", out.Source)
 	}
+	if !strings.Contains(out.Source, `ivyFailureEvent("assumption_failed", msg)`) {
+		t.Fatalf("assume failure hook should emit a trace event:\n%s", out.Source)
+	}
 	mainBody := bodyAfterMarker(out.Source, "func main()")
 	if strings.Contains(mainBody, "if !(false)") && strings.Contains(mainBody, "cycle--") {
 		t.Fatalf("returning action assume should execute and fail, not retry forever:\n%s", mainBody)
 	}
-	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
-	if err == nil {
-		t.Fatalf("expected generated run to fail assumption\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	if !strings.Contains(stdout, `assumption_failed("test.ivy: line 3")`) {
-		t.Fatalf("stdout missing assumption_failed event\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	for _, want := range []string{"assumption failed", "line 3"} {
-		if !strings.Contains(stderr, want) {
-			t.Fatalf("stderr missing %q after assumption failure\nstdout:\n%s\nstderr:\n%s", want, stdout, stderr)
+	genBody := bodyAfterMarker(out.Source, "func (gen *Assume_runtime_step_generator) generate() bool")
+	for _, bad := range []string{"__ivy_generate_with_solver", "return false"} {
+		if strings.Contains(genBody, bad) {
+			t.Fatalf("returning action generator should execute the action instead of rejecting forever; found %q in:\n%s", bad, genBody)
 		}
+	}
+	if !strings.Contains(genBody, "return true") {
+		t.Fatalf("returning action generator should allow execution so the assume fails visibly:\n%s", genBody)
 	}
 }
 

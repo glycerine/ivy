@@ -89,6 +89,9 @@ func (g *Generator) runtimeActionSolverPlan(name string, act goivy.Action) (res 
 	if g == nil || g.Mod == nil || act == nil {
 		return nil, false
 	}
+	if len(act.GetFormalReturns()) > 0 && len(act.GetFormalParams()) == 0 {
+		return nil, false
+	}
 	plan := g.buildActionGenPlan(name, act)
 	if plan == nil || plan.fallback || plan.preFmla == nil {
 		g.errs = g.errs[:oldErrs]
