@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"testing"
@@ -46,7 +47,14 @@ func configureSlowTestParallelism() {
 	}
 	limit := os.Getenv("IVY2GOLANG_SLOWTEST_PARALLEL")
 	if limit == "" {
-		limit = "4"
+		n := runtime.GOMAXPROCS(0)
+		if n < 4 {
+			n = 4
+		}
+		if n > 8 {
+			n = 8
+		}
+		limit = strconv.Itoa(n)
 	}
 	_ = flag.Set("test.parallel", limit)
 }

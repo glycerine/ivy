@@ -146,7 +146,7 @@ func (f *RawForAll) Args() []Node { return []Node{f.Body} }
 func (f *RawForAll) Clone(args []Node) Node {
 	cp := make([]*LogicVariable, len(f.Variables))
 	copy(cp, f.Variables)
-	return &RawForAll{Variables: cp, Body: args[0].(Expr)}
+	return &RawForAll{Variables: cp, Body: args[0].(Expr), RawNames: f.RawNames}
 }
 
 func (e *LogicExists) Args() []Node { return []Node{e.Body} }

@@ -33916,6 +33916,18 @@ export check
 			t.Fatalf("Hermes-style action body should not execute Go-only relation scan %q:\n%s", bad, checkBody)
 		}
 	}
+	if _, err := parser.ParseFile(token.NewFileSet(), out.BaseName+".go", out.Source, 0); err != nil {
+		t.Fatalf("Hermes-style generated source should parse as Go: %v\n%s", err, out.Source)
+	}
+	if leaks := syntheticTempGoLocalLines(out.Source); len(leaks) != 0 {
+		t.Fatalf("Hermes-style SMT temps leaked as Go locals: %v\n%s", leaks, out.Source)
+	}
+	if line := firstBareUndeclaredSyntheticTempAssignment(out.Source); line != "" {
+		t.Fatalf("Hermes-style generated source assigned synthetic temp before declaration: %s", line)
+	}
+	if unused := unreadDeclaredSyntheticTemps(out.Source); len(unused) != 0 {
+		t.Fatalf("Hermes-style generated source declared unread synthetic temps: %v", unused)
+	}
 }
 
 func TestLargeFunctionSolverBaseUsesSymbolicScalarCaptureFast(t *testing.T) {
@@ -33942,7 +33954,8 @@ after init {
 	}
 	for _, want := range []string{
 		"__ivy_thunk_env_init_ts",
-		`goivy.NewConst("__ivy_thunk_env_init_ts`,
+		`goivy.NewConst("__loc_" + strconv.Itoa(__ivy_z3_thunk_ident`,
+		`"__" + "init_ts"`,
 		`T2: goivy.NewConst(strconv.Itoa(int(__ivy_thunk_env_init_ts`,
 	} {
 		if !strings.Contains(body, want) {
@@ -34005,6 +34018,8 @@ export start
 		t.Fatalf("solver relation serialization should skip support overrides already represented by the thunk base, missing %q:\n%s", want, body)
 	}
 	for _, want := range []string{
+		`&goivy.LogicVariable{Name: "X__0"`,
+		`&goivy.LogicVariable{Name: "X__1"`,
 		"__ivy_sparse_terms := []goivy.Expr{goivy.True}",
 		"__ivy_sparse_disj := []goivy.Expr{goivy.False}",
 		"for _, __ivy_sparse_base_term := range __ivy_sparse_base_terms {",
@@ -34018,7 +34033,7 @@ export start
 			t.Fatalf("solver relation serialization should mirror ivy2cpp hash_thunk support shape, missing %q:\n%s", want, body)
 		}
 	}
-	if !strings.Contains(body, "&goivy.RawForAll{Variables: __ivy_sparse_vars, Body: __ivy_sparse_body}") {
+	if !strings.Contains(body, "&goivy.RawForAll{Variables: __ivy_sparse_vars, Body: __ivy_sparse_body, RawNames: true}") {
 		t.Fatalf("solver relation serialization should emit raw unguarded sparse-state forall like ivy2cpp:\n%s", body)
 	}
 	if strings.Contains(body, "&goivy.ForAll{Variables: __ivy_sparse_vars, Body: __ivy_sparse_body}") {
@@ -34196,6 +34211,29 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 		t.Fatalf("Go compiler accepted assigned-but-unread synthetic temp:\n%s", badBody)
 	} else if !strings.Contains(err.Error(), "declared and not used") {
 		t.Fatalf("Go compiler rejected assigned-but-unread synthetic temp for wrong reason: %v", err)
+	}
+	fullyUnusedHermesBody := strings.Join([]string{
+		"var __ts0__ts0_c bool",
+		"__ts0__ts0_c = true",
+		"var __ts0__new_v_a int",
+		"__ts0__new_v_a = 5",
+		"var __ts0__new_t_a int",
+		"__ts0__new_t_a = 1",
+		"var __ts0__new_n_a int",
+		"__ts0__new_n_a = 3",
+		"var __ts0__new_s_a int",
+		"__ts0__new_s_a = 2",
+		"var __ts0_a int",
+		"__ts0_a = 4",
+	}, "\n")
+	wantFullyUnused := []string{"__ts0__new_n_a", "__ts0__new_s_a", "__ts0__new_t_a", "__ts0__new_v_a", "__ts0__ts0_c", "__ts0_a"}
+	if unused := unreadDeclaredSyntheticTemps(fullyUnusedHermesBody); !reflect.DeepEqual(unused, wantFullyUnused) {
+		t.Fatalf("synthetic solver temp checker missed fully unused Hermes-style temps:\ngot  %v\nwant %v", unused, wantFullyUnused)
+	}
+	if _, err := buildGeneratedFunctionBody(t, fullyUnusedHermesBody); err == nil {
+		t.Fatalf("Go compiler accepted fully unused Hermes-style synthetic temps:\n%s", fullyUnusedHermesBody)
+	} else if !strings.Contains(err.Error(), "declared and not used") {
+		t.Fatalf("Go compiler rejected fully unused Hermes-style synthetic temps for wrong reason: %v", err)
 	}
 	scopedUnreadBody := strings.Join([]string{
 		"{",

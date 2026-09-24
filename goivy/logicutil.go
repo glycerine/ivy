@@ -360,7 +360,7 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 
 	case *RawForAll:
 		return substituteBinder(n.Variables, n.Body, subs, func(vars []*LogicVariable, body Expr) (Expr, error) {
-			return &RawForAll{Variables: deduplicateAndSortVars(vars), Body: body}, nil
+			return &RawForAll{Variables: deduplicateAndSortVars(vars), Body: body, RawNames: n.RawNames}, nil
 		})
 
 	case *LogicExists:

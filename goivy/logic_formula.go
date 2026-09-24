@@ -412,6 +412,7 @@ type RawForAll struct {
 	Base
 	Variables []*LogicVariable
 	Body      Expr
+	RawNames  bool
 }
 
 func (f *RawForAll) NodeSort() Sort   { return Boolean }
@@ -419,7 +420,7 @@ func (f *RawForAll) Children() []Expr { return []Expr{f.Body} }
 func (f *RawForAll) String() string   { return PrettyFmla(f) }
 func (f *RawForAll) Equal(n Expr) bool {
 	if o, ok := n.(*RawForAll); ok {
-		return varSliceEqual(f.Variables, o.Variables) && f.Body.Equal(o.Body)
+		return f.RawNames == o.RawNames && varSliceEqual(f.Variables, o.Variables) && f.Body.Equal(o.Body)
 	}
 	return false
 }

@@ -23,6 +23,102 @@ func intSort() *RangeSort {
 	return &RangeSort{Name: "int", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "0"}}
 }
 
+func TestSoftSolverHermesStyleCoreOrderMatchesCppFast(t *testing.T) {
+	mod := New()
+	node := &UninterpretedSort{Name: "hermes_protocol.node"}
+	ts := &UninterpretedSort{Name: "hermes_protocol.ts"}
+	version := &UninterpretedSort{Name: "hermes_protocol.version"}
+	value := &UninterpretedSort{Name: "hermes_protocol.value"}
+	for name, sort := range map[string]Sort{
+		node.Name:    node,
+		ts.Name:      ts,
+		version.Name: version,
+		value.Name:   value,
+	} {
+		mod.Sig.Sorts.Set(name, sort)
+	}
+	mod.Sig.Interp[node.Name] = "bv[2]"
+	mod.Sig.Interp[ts.Name] = "bv[4]"
+	mod.Sig.Interp[version.Name] = "int"
+	mod.Sig.Interp[value.Name] = "bv[4]"
+	solver := NewSolver(mod, nil)
+
+	base := `
+(declare-datatypes ((hermes_protocol.hstate 0)) ((hermes_protocol.hstate (hermes_protocol.hs_valid) (hermes_protocol.hs_invalid))))
+(declare-fun |__fml:n| () (_ BitVec 2))
+(declare-fun |__fml:t| () (_ BitVec 4))
+(declare-fun |__fml:v| () (_ BitVec 4))
+(declare-fun |__loc:base_ver| () Int)
+(declare-fun __ts0_a () Bool)
+(declare-fun hermes_protocol.live ((_ BitVec 2)) Bool)
+(declare-fun hermes_protocol.pending ((_ BitVec 2)) Bool)
+(declare-fun hermes_protocol.state ((_ BitVec 2)) hermes_protocol.hstate)
+(declare-fun hermes_protocol.cur_ts ((_ BitVec 2)) (_ BitVec 4))
+(declare-fun hermes_protocol.seen_ts ((_ BitVec 4)) Bool)
+(declare-fun hermes_protocol.lt ((_ BitVec 4) (_ BitVec 4)) Bool)
+(declare-fun hermes_protocol.ts_version ((_ BitVec 4) Int) Bool)
+(assert (forall ((N (_ BitVec 2))) (= (hermes_protocol.live N) (= N #b01))))
+(assert (forall ((N (_ BitVec 2))) (= (hermes_protocol.pending N) false)))
+(assert (forall ((N (_ BitVec 2))) (= (hermes_protocol.state N) hermes_protocol.hs_valid)))
+(assert (forall ((N (_ BitVec 2))) (= (hermes_protocol.cur_ts N) #x2)))
+(assert (forall ((T (_ BitVec 4))) (= (hermes_protocol.seen_ts T) (not (= T #x5)))))
+(assert (forall ((T (_ BitVec 4))) (= (hermes_protocol.lt #x2 T) (= T #x5))))
+(assert (forall ((T (_ BitVec 4)) (V Int)) (= (hermes_protocol.ts_version T V) (and (= T #x2) (= V 0)))))
+(assert (let ((a!1 (exists ((|BV:hermes_protocol.version| Int))
+             (and (<= 0 |BV:hermes_protocol.version|)
+                  (hermes_protocol.ts_version
+                    (hermes_protocol.cur_ts |__fml:n|)
+                    |BV:hermes_protocol.version|)))))
+(let ((a!2 (and (hermes_protocol.live |__fml:n|)
+                (not (hermes_protocol.pending |__fml:n|))
+                (or (= (hermes_protocol.state |__fml:n|)
+                       hermes_protocol.hs_valid)
+                    (= (hermes_protocol.state |__fml:n|)
+                       hermes_protocol.hs_invalid))
+                (hermes_protocol.lt
+                  (hermes_protocol.cur_ts |__fml:n|)
+                  |__fml:t|)
+                (not (hermes_protocol.seen_ts |__fml:t|))
+                a!1)))
+  (and (= __ts0_a a!2)
+       (or (not __ts0_a) (hermes_protocol.live |__fml:n|))
+       (or (not __ts0_a) (not (hermes_protocol.pending |__fml:n|)))
+       (or (not __ts0_a)
+           (hermes_protocol.lt (hermes_protocol.cur_ts |__fml:n|) |__fml:t|))
+       (or (not __ts0_a) (not (hermes_protocol.seen_ts |__fml:t|)))
+       (or (not __ts0_a)
+           (hermes_protocol.ts_version
+             (hermes_protocol.cur_ts |__fml:n|)
+             |__loc:base_ver|))
+       (not (> 0 |__loc:base_ver|))))))
+`
+	soft := []Expr{
+		&Eq{T1: NewConst("__fml:n", node), T2: NewConst("1", node)},
+		&Eq{T1: NewConst("__fml:t", ts), T2: NewConst("5", ts)},
+		&Eq{T1: NewConst("__loc:base_ver", version), T2: NewConst("2", version)},
+		&Eq{T1: NewConst("__fml:v", value), T2: NewConst("11", value)},
+	}
+
+	var firstCore []string
+	_, err := solver.GetModelSMTLIBWithSoftAssumptionsLogged(
+		base,
+		soft,
+		func(n int) int { return 0 },
+		func(kind, pred, alit string, core []string, toDelete string) {
+			if kind == "delete" && firstCore == nil {
+				firstCore = append([]string(nil), core...)
+			}
+		},
+	)
+	if err != nil {
+		t.Fatalf("GetModelSMTLIBWithSoftAssumptionsLogged: %v", err)
+	}
+	want := []string{"|alit:1|", "|alit:0|", "|alit:2|"}
+	if strings.Join(firstCore, ",") != strings.Join(want, ",") {
+		t.Fatalf("Hermes-style soft core order = %v, want C++ order %v", firstCore, want)
+	}
+}
+
 func z3BoolVar(name string) *LogicVariable {
 	v, _ := NewVariable(name, Boolean)
 	return v

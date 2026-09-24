@@ -1940,7 +1940,7 @@ func (g *Generator) emitRuntimeActionSolverSparseThunkValueWithReturn(w *goWrite
 	w.line("__ivy_sparse_vars := []*goivy.LogicVariable{")
 	w.indent++
 	for i, d := range domain {
-		w.linef("&goivy.LogicVariable{Name: %q, VSort: %s},", fmt.Sprintf("__ivy_sparse_%d", i), g.goIvySortExpr(d))
+		w.linef("&goivy.LogicVariable{Name: %q, VSort: %s},", fmt.Sprintf("X__%d", i), g.goIvySortExpr(d))
 	}
 	w.indent--
 	w.line("}")
@@ -2005,7 +2005,7 @@ func (g *Generator) emitRuntimeActionSolverSparseThunkValueWithReturn(w *goWrite
 	w.line("__ivy_sparse_terms = append(__ivy_sparse_terms, &goivy.LogicOr{Terms: []goivy.Expr{&goivy.LogicOr{Terms: __ivy_sparse_disj}, __ivy_sparse_base}})")
 	w.open("if len(__ivy_sparse_terms) > 0 {")
 	w.line("__ivy_sparse_body := goivy.Expr(&goivy.LogicAnd{Terms: __ivy_sparse_terms})")
-	w.linef("%s = append(%s, &goivy.RawForAll{Variables: __ivy_sparse_vars, Body: __ivy_sparse_body})", dst, dst)
+	w.linef("%s = append(%s, &goivy.RawForAll{Variables: __ivy_sparse_vars, Body: __ivy_sparse_body, RawNames: true})", dst, dst)
 	w.close("")
 	w.close("")
 }

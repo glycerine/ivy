@@ -369,7 +369,6 @@ type assignLargeStateCapture struct {
 	source          string
 	temp            string
 	sort            goivy.Sort
-	solverExpr      string
 	solverValueExpr string
 }
 
@@ -403,15 +402,10 @@ func (g *Generator) emitAssignLargeStateCaptures(w *goWriter, expr goivy.Expr, l
 		temp := g.nextTemp("__ivy_thunk_env_" + goName(name))
 		g.emitAssignLargeCaptureValue(w, temp, "ivy."+goName(name), c.CSort)
 		solverValueExpr, _ := g.runtimeActionSolverValueExpr(temp, c.CSort)
-		solverExpr := ""
-		if solverValueExpr != "" {
-			solverExpr = fmt.Sprintf("goivy.NewConst(%q, %s)", temp, g.goIvySortExpr(c.CSort))
-		}
 		captures = append(captures, assignLargeStateCapture{
 			source:          name,
 			temp:            temp,
 			sort:            c.CSort,
-			solverExpr:      solverExpr,
 			solverValueExpr: solverValueExpr,
 		})
 	}
@@ -462,6 +456,12 @@ func (g *Generator) emitAssignLargeSolverBase(w *goWriter, base, lhsName string,
 	if g == nil || expr == nil || g.assignLargeSolverBaseHasUncapturedState(expr, lhsName, captures) {
 		return
 	}
+	thunkIdent := g.nextTemp("__ivy_z3_thunk_ident")
+	w.linef("%s := __ivy_next_z3_thunk_ident()", thunkIdent)
+	w.linef("_ = %s", thunkIdent)
+	solverCaptureExpr := func(capture assignLargeStateCapture) string {
+		return fmt.Sprintf("goivy.NewConst(\"__loc_\" + strconv.Itoa(%s) + \"__\" + %q, %s)", thunkIdent, capture.source, g.goIvySortExpr(capture.sort))
+	}
 	overrides := make(map[string]string, len(vars)+len(captures))
 	for i, v := range vars {
 		if v == nil {
@@ -470,8 +470,8 @@ func (g *Generator) emitAssignLargeSolverBase(w *goWriter, base, lhsName string,
 		overrides[v.Name] = fmt.Sprintf("__ivy_solver_args[%d]", i)
 	}
 	for _, capture := range captures {
-		if capture.solverExpr != "" {
-			overrides[capture.temp] = capture.solverExpr
+		if capture.solverValueExpr != "" {
+			overrides[capture.temp] = solverCaptureExpr(capture)
 		}
 	}
 	w.open(fmt.Sprintf("%s.solverBase = func(__ivy_solver_args []goivy.Expr, __ivy_solver_app goivy.Expr) []goivy.Expr {", base))
@@ -481,7 +481,7 @@ func (g *Generator) emitAssignLargeSolverBase(w *goWriter, base, lhsName string,
 	w.line("__ivy_solver_terms := []goivy.Expr{}")
 	for _, capture := range captures {
 		if fs, ok := capture.sort.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
-			fnExpr := fmt.Sprintf("goivy.NewConst(%q, %s)", capture.temp, g.goIvySortExpr(capture.sort))
+			fnExpr := solverCaptureExpr(capture)
 			if g.goFunctionStorageFor(fs.Domain(), fs.Range()).Large {
 				g.emitRuntimeActionSolverSparseThunkValueWithReturn(w, "__ivy_solver_terms", fnExpr, capture.temp, fs, "return nil")
 			} else {
@@ -489,10 +489,8 @@ func (g *Generator) emitAssignLargeSolverBase(w *goWriter, base, lhsName string,
 			}
 			continue
 		}
-		if capture.solverExpr != "" {
-			if capture.solverValueExpr != "" {
-				w.linef("__ivy_solver_terms = append(__ivy_solver_terms, &goivy.Eq{T1: %s, T2: %s})", capture.solverExpr, capture.solverValueExpr)
-			}
+		if capture.solverValueExpr != "" {
+			w.linef("__ivy_solver_terms = append(__ivy_solver_terms, &goivy.Eq{T1: %s, T2: %s})", solverCaptureExpr(capture), capture.solverValueExpr)
 			continue
 		}
 		term, ok := g.emitRuntimeActionSolverValueTerm(w, "__ivy_solver_terms", capture.temp, capture.sort, "")

@@ -348,7 +348,11 @@ func (ctx *Z3Context) IntVal(val int64) Z3Expr {
 	var e Z3Expr
 	ctx.do(func() {
 		sort := C.Z3_mk_int_sort(ctx.c)
-		e = ctx.newExpr(C.Z3_mk_int64(ctx.c, C.int64_t(val), sort))
+		if z3FitsCInt(val) {
+			e = ctx.newExpr(C.Z3_mk_int(ctx.c, C.int(val), sort))
+		} else {
+			e = ctx.newExpr(C.Z3_mk_int64(ctx.c, C.int64_t(val), sort))
+		}
 	})
 	return e
 }
@@ -705,9 +709,21 @@ func (ctx *Z3Context) BvVal(val int64, width int) Z3Expr {
 	var e Z3Expr
 	ctx.do(func() {
 		sort := C.Z3_mk_bv_sort(ctx.c, C.unsigned(width))
-		e = ctx.newExpr(C.Z3_mk_int64(ctx.c, C.int64_t(val), sort))
+		if z3FitsCInt(val) {
+			e = ctx.newExpr(C.Z3_mk_int(ctx.c, C.int(val), sort))
+		} else {
+			e = ctx.newExpr(C.Z3_mk_int64(ctx.c, C.int64_t(val), sort))
+		}
 	})
 	return e
+}
+
+func z3FitsCInt(val int64) bool {
+	const (
+		cIntMin = -1 << 31
+		cIntMax = 1<<31 - 1
+	)
+	return val >= cIntMin && val <= cIntMax
 }
 
 // BvAnd returns bitwise AND of two bit-vectors.

@@ -56,7 +56,7 @@ func CloneNode(n Expr, args []Expr) Expr {
 		return t
 	case *RawForAll:
 		if len(args) == 1 {
-			return &RawForAll{Variables: t.Variables, Body: args[0]}
+			return &RawForAll{Variables: t.Variables, Body: args[0], RawNames: t.RawNames}
 		}
 		return t
 	case *LogicExists:
@@ -131,7 +131,7 @@ func CloneBinder(n Expr, vars []*LogicVariable, body Expr) Expr {
 	case *ForAll:
 		return &ForAll{Variables: deduplicateAndSortVars(vars), Body: body}
 	case *RawForAll:
-		return &RawForAll{Variables: deduplicateAndSortVars(vars), Body: body}
+		return &RawForAll{Variables: deduplicateAndSortVars(vars), Body: body, RawNames: t.RawNames}
 	case *LogicExists:
 		return &LogicExists{Variables: deduplicateAndSortVars(vars), Body: body}
 	case *Lambda:

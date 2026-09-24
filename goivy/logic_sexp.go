@@ -174,7 +174,11 @@ func (f *ForAll) Sexp() NodeKey {
 }
 
 func (f *RawForAll) Sexp() NodeKey {
-	return NodeKey("(RawForAll vars:" + VarsSexp(f.Variables) + " body:" + string(f.Body.Sexp()) + ")")
+	raw := "false"
+	if f.RawNames {
+		raw = "true"
+	}
+	return NodeKey("(RawForAll raw:" + raw + " vars:" + VarsSexp(f.Variables) + " body:" + string(f.Body.Sexp()) + ")")
 }
 
 func (e *LogicExists) Sexp() NodeKey {

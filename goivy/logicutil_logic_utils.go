@@ -580,7 +580,7 @@ func cloneNode(n Expr, children []Expr) Expr {
 		}
 	case *RawForAll:
 		if len(children) >= 1 {
-			return &RawForAll{Variables: t.Variables, Body: children[0]}
+			return &RawForAll{Variables: t.Variables, Body: children[0], RawNames: t.RawNames}
 		}
 	case *LogicExists:
 		if len(children) >= 1 {
@@ -640,7 +640,7 @@ func substituteByNameRec(ast Expr, subs map[string]Expr) Expr {
 	case *RawForAll:
 		newsubs := removeBoundNames(subs, t.Variables)
 		body := substituteByNameRec(t.Body, newsubs)
-		return &RawForAll{Variables: t.Variables, Body: body}
+		return &RawForAll{Variables: t.Variables, Body: body, RawNames: t.RawNames}
 	case *LogicExists:
 		newsubs := removeBoundNames(subs, t.Variables)
 		body := substituteByNameRec(t.Body, newsubs)
@@ -1841,7 +1841,7 @@ func substituteApplyChildren(t Expr, subs map[NodeKey]SubstituteApplyFunc) Expr 
 	case *RawForAll:
 		newSubs := filterSubs(subs, n.Variables)
 		body := substituteApplyRec(n.Body, newSubs)
-		return &RawForAll{Variables: n.Variables, Body: body}
+		return &RawForAll{Variables: n.Variables, Body: body, RawNames: n.RawNames}
 
 	case *LogicExists:
 		newSubs := filterSubs(subs, n.Variables)

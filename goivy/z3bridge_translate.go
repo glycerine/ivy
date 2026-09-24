@@ -743,7 +743,7 @@ func (t *Translator) translateCore(n Expr, caller string) (smt.Z3Expr, error) {
 		return t.translateQuantifier(true, node.Variables, node.Body)
 
 	case *RawForAll:
-		return t.translateRawForAll(node.Variables, node.Body)
+		return t.translateRawForAll(node.Variables, node.Body, node.RawNames)
 
 	case *LogicExists:
 		return t.translateQuantifier(false, node.Variables, node.Body)
@@ -1461,8 +1461,66 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*LogicVariab
 	return t.translateQuantifierWithConstraints(isForall, variables, body, true)
 }
 
-func (t *Translator) translateRawForAll(variables []*LogicVariable, body Expr) (smt.Z3Expr, error) {
+func (t *Translator) translateRawForAll(variables []*LogicVariable, body Expr, rawNames bool) (smt.Z3Expr, error) {
+	if rawNames {
+		return t.translateRawForAllRawNames(variables, body)
+	}
 	return t.translateQuantifierWithConstraints(true, variables, body, false)
+}
+
+func (t *Translator) translateRawForAllRawNames(variables []*LogicVariable, body Expr) (smt.Z3Expr, error) {
+	if len(variables) == 0 {
+		return t.Formula_to_z3_int(body, "translateRawForAllRawNames() no variables")
+	}
+	type savedConst struct {
+		key NodeKey
+		old smt.Z3Expr
+		had bool
+	}
+	saved := make([]savedConst, 0, len(variables))
+	bound := make([]smt.Z3Expr, len(variables))
+	for i, v := range variables {
+		sort := v.VSort
+		sortName := sortDisplayName(sort)
+		var zs *smt.Z3Sort
+		if result := t.LookupNative(sortName, sort, "sort"); result != nil {
+			if zsVal, ok := result.(smt.Z3Sort); ok {
+				zs = &zsVal
+			}
+		}
+		if zs == nil {
+			zsVal, err := t.TranslateSort(sort)
+			if err != nil {
+				return smt.Z3Expr{}, err
+			}
+			zs = &zsVal
+		}
+		z3Var := t.Ctx.Const(v.Name, *zs)
+		key := NodeKey(v.Name + ":" + string(v.VSort.Sexp()))
+		old, had := t.cache.consts[key]
+		saved = append(saved, savedConst{key: key, old: old, had: had})
+		t.cache.consts[key] = z3Var
+		bound[i] = z3Var
+	}
+	restore := func() {
+		for _, item := range saved {
+			if item.had {
+				t.cache.consts[item.key] = item.old
+			} else {
+				delete(t.cache.consts, item.key)
+			}
+		}
+	}
+	zBody, err := t.Formula_to_z3_int(body, "translateRawForAllRawNames() body")
+	restore()
+	if err != nil {
+		return smt.Z3Expr{}, err
+	}
+	bodySort := zBody.ExprSort()
+	if bodySort.Kind() != smt.SortBool {
+		return smt.Z3Expr{}, fmt.Errorf("quantifier body must be Bool, got sort %s", bodySort.String())
+	}
+	return t.Ctx.ForAll(bound, zBody), nil
 }
 
 func (t *Translator) translateQuantifierWithConstraints(isForall bool, variables []*LogicVariable, body Expr, addConstraints bool) (smt.Z3Expr, error) {

@@ -314,7 +314,7 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 				vars[i] = v
 			}
 		}
-		return &RawForAll{Variables: vars, Body: body}
+		return &RawForAll{Variables: vars, Body: body, RawNames: t.RawNames}
 
 	case *LogicExists:
 		// Python processes body BEFORE variables (ivy_logic.py:1434-1436).

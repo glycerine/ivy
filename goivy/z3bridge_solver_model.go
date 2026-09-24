@@ -181,9 +181,9 @@ func (s *Solver) GetModelClausesWithSoftAssumptionsLogged(clauses *Clauses, soft
 			return nil, err
 		}
 		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
+		assumptions = append(assumptions, alit)
 		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
 		logSoftAssumptionAdd(log, zf, alit)
-		assumptions = append(assumptions, alit)
 	}
 	if debugSoft {
 		fmt.Fprintf(os.Stderr, "soft-solver clauses-start soft=%d\n", len(assumptions))
@@ -306,9 +306,9 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptionsLogged(smtlib string, soft []E
 			return nil, err
 		}
 		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
+		assumptions = append(assumptions, alit)
 		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
 		logSoftAssumptionAdd(log, zf, alit)
-		assumptions = append(assumptions, alit)
 	}
 	logSoftAssumptionBegin(log, z3solver)
 	for {
@@ -417,9 +417,9 @@ func (s *Solver) GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(base *SMTLIB
 			return nil, err
 		}
 		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
+		assumptions = append(assumptions, alit)
 		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
 		logSoftAssumptionAdd(log, zf, alit)
-		assumptions = append(assumptions, alit)
 	}
 	logSoftAssumptionBegin(log, z3solver)
 	for {
@@ -539,9 +539,9 @@ func (s *Solver) GetModelSMTLIBClausesWithSoftAssumptionsLogged(smtlib string, c
 			return nil, err
 		}
 		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
+		assumptions = append(assumptions, alit)
 		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
 		logSoftAssumptionAdd(log, zf, alit)
-		assumptions = append(assumptions, alit)
 	}
 	logSoftAssumptionBegin(log, z3solver)
 	for {
