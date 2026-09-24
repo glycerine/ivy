@@ -34336,6 +34336,32 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 			t.Fatalf("dead Hermes-style generated temp %s should not be emitted:\n%s", name, reportedDead)
 		}
 	}
+	reportedDeadMethodPlan := &runtimeActionSolverPlan{
+		baseSMT: "(assert (and __ts0__ts0_c __ts0__new_t_a __ts0__new_s_a __ts0__new_n_a __ts0_a __ts0__new_v_a))",
+		plan:    reportedDeadPlan.plan,
+	}
+	var reportedDeadMethod goWriter
+	g.emitRuntimeActionSolverMethod(&reportedDeadMethod, "RuntimeSolverReportedDeadTempsProbe", reportedDeadMethodPlan)
+	reportedDeadMethodSrc := reportedDeadMethod.String()
+	if !strings.Contains(reportedDeadMethodSrc, "__ts0__ts0_c") {
+		t.Fatalf("method regression setup should preserve reported temps in baseSMT:\n%s", reportedDeadMethodSrc)
+	}
+	if leaks := syntheticTempGoLocalLines(reportedDeadMethodSrc); len(leaks) != 0 {
+		t.Fatalf("dead Hermes-style generated temps leaked as Go locals in solver method: %v\n%s", leaks, reportedDeadMethodSrc)
+	}
+	if line := firstBareUndeclaredSyntheticTempAssignment(reportedDeadMethodSrc); line != "" {
+		t.Fatalf("dead Hermes-style generated temp assigned before declaration in solver method: %s\n%s", line, reportedDeadMethodSrc)
+	}
+	if unused := unreadDeclaredSyntheticTemps(reportedDeadMethodSrc); len(unused) != 0 {
+		t.Fatalf("dead Hermes-style generated temps declared unread in solver method: %v\n%s", unused, reportedDeadMethodSrc)
+	}
+	for _, name := range reportedUnusedNames {
+		for _, bad := range []string{"\nvar " + name + " ", "\n\tvar " + name + " ", "\n" + name + " ="} {
+			if strings.Contains(reportedDeadMethodSrc, bad) {
+				t.Fatalf("solver method would emit reported unread local %s via %q:\n%s", name, bad, reportedDeadMethodSrc)
+			}
+		}
+	}
 
 	liveReported := goivy.NewConst("__ts0__new_v_a", goivy.Boolean)
 	liveReportedPlan := &runtimeActionSolverPlan{
