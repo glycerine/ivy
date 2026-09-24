@@ -34005,13 +34005,17 @@ export start
 		t.Fatalf("solver relation serialization should skip support overrides already represented by the thunk base, missing %q:\n%s", want, body)
 	}
 	for _, want := range []string{
+		"__ivy_sparse_terms := []goivy.Expr{goivy.True}",
+		"__ivy_sparse_disj := []goivy.Expr{goivy.False}",
 		"for _, __ivy_sparse_base_term := range __ivy_sparse_base_terms {",
 		"if len(goivy.FreeVariablesList(__ivy_sparse_base_term)) == 0 {",
 		"clauses.Fmlas = append(clauses.Fmlas, __ivy_sparse_base_term)",
 		"__ivy_sparse_quant_terms = append(__ivy_sparse_quant_terms, __ivy_sparse_base_term)",
+		"__ivy_sparse_base := goivy.Expr(goivy.True)",
+		"__ivy_sparse_terms = append(__ivy_sparse_terms, &goivy.LogicOr{Terms: []goivy.Expr{&goivy.LogicOr{Terms: __ivy_sparse_disj}, __ivy_sparse_base}})",
 	} {
 		if !strings.Contains(body, want) {
-			t.Fatalf("solver relation serialization should hoist non-quantified thunk capture terms, missing %q:\n%s", want, body)
+			t.Fatalf("solver relation serialization should mirror ivy2cpp hash_thunk support shape, missing %q:\n%s", want, body)
 		}
 	}
 	if !strings.Contains(body, "&goivy.RawForAll{Variables: __ivy_sparse_vars, Body: __ivy_sparse_body}") {
@@ -34192,6 +34196,24 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 		t.Fatalf("Go compiler accepted assigned-but-unread synthetic temp:\n%s", badBody)
 	} else if !strings.Contains(err.Error(), "declared and not used") {
 		t.Fatalf("Go compiler rejected assigned-but-unread synthetic temp for wrong reason: %v", err)
+	}
+	scopedUnreadBody := strings.Join([]string{
+		"{",
+		"var __ts0_shadow bool",
+		"__ts0_shadow = true",
+		"}",
+		"{",
+		"var __ts0_shadow bool",
+		"_ = __ts0_shadow",
+		"}",
+	}, "\n")
+	if unused := unreadDeclaredSyntheticTemps(scopedUnreadBody); !reflect.DeepEqual(unused, []string{"__ts0_shadow"}) {
+		t.Fatalf("synthetic solver temp checker missed unread declaration shadowed by later read:\ngot  %v\nwant %v", unused, []string{"__ts0_shadow"})
+	}
+	if _, err := buildGeneratedFunctionBody(t, scopedUnreadBody); err == nil {
+		t.Fatalf("Go compiler accepted wrong-scope unread synthetic temp:\n%s", scopedUnreadBody)
+	} else if !strings.Contains(err.Error(), "declared and not used") {
+		t.Fatalf("Go compiler rejected wrong-scope unread synthetic temp for wrong reason: %v", err)
 	}
 	undefinedBody := strings.Join([]string{
 		"__ts0__ts0_c = true",
@@ -34507,21 +34529,38 @@ func unreadDeclaredSyntheticTempsAST(src string) ([]string, bool) {
 	if !ok {
 		return nil, false
 	}
-	declared := map[string]bool{}
-	read := map[string]bool{}
+	declared := map[*ast.Object]string{}
+	fallbackDeclared := map[string]bool{}
+	read := map[*ast.Object]bool{}
+	fallbackRead := map[string]bool{}
 	skipRead := map[token.Pos]bool{}
+	recordDeclared := func(id *ast.Ident) {
+		if id == nil || !strings.HasPrefix(id.Name, "__ts") {
+			return
+		}
+		if id.Obj != nil {
+			declared[id.Obj] = id.Name
+		} else {
+			fallbackDeclared[id.Name] = true
+		}
+		skipRead[id.Pos()] = true
+	}
 	ast.Inspect(file, func(n ast.Node) bool {
 		switch n := n.(type) {
 		case *ast.ValueSpec:
 			for _, name := range n.Names {
-				if name == nil || !strings.HasPrefix(name.Name, "__ts") {
-					continue
-				}
-				declared[name.Name] = true
-				skipRead[name.Pos()] = true
+				recordDeclared(name)
 			}
 		case *ast.AssignStmt:
-			if n.Tok == token.ASSIGN || n.Tok == token.DEFINE {
+			if n.Tok == token.DEFINE {
+				for _, lhs := range n.Lhs {
+					if id, ok := lhs.(*ast.Ident); ok {
+						recordDeclared(id)
+					}
+				}
+				break
+			}
+			if n.Tok == token.ASSIGN {
 				for _, lhs := range n.Lhs {
 					if id, ok := lhs.(*ast.Ident); ok && id != nil && strings.HasPrefix(id.Name, "__ts") {
 						skipRead[id.Pos()] = true
@@ -34529,7 +34568,15 @@ func unreadDeclaredSyntheticTempsAST(src string) ([]string, bool) {
 				}
 			}
 		case *ast.RangeStmt:
-			if n.Tok == token.ASSIGN || n.Tok == token.DEFINE {
+			if n.Tok == token.DEFINE {
+				for _, expr := range []ast.Expr{n.Key, n.Value} {
+					if id, ok := expr.(*ast.Ident); ok {
+						recordDeclared(id)
+					}
+				}
+				break
+			}
+			if n.Tok == token.ASSIGN {
 				for _, expr := range []ast.Expr{n.Key, n.Value} {
 					if id, ok := expr.(*ast.Ident); ok && id != nil && strings.HasPrefix(id.Name, "__ts") {
 						skipRead[id.Pos()] = true
@@ -34541,17 +34588,34 @@ func unreadDeclaredSyntheticTempsAST(src string) ([]string, bool) {
 	})
 	ast.Inspect(file, func(n ast.Node) bool {
 		id, ok := n.(*ast.Ident)
-		if !ok || id == nil || !declared[id.Name] || skipRead[id.Pos()] {
+		if !ok || id == nil || !strings.HasPrefix(id.Name, "__ts") || skipRead[id.Pos()] {
 			return true
 		}
-		read[id.Name] = true
+		if id.Obj != nil {
+			if _, ok := declared[id.Obj]; ok {
+				read[id.Obj] = true
+			}
+			return true
+		}
+		if fallbackDeclared[id.Name] {
+			fallbackRead[id.Name] = true
+		}
 		return true
 	})
-	var unread []string
-	for name := range declared {
-		if !read[name] {
-			unread = append(unread, name)
+	unreadSet := map[string]bool{}
+	for obj, name := range declared {
+		if !read[obj] {
+			unreadSet[name] = true
 		}
+	}
+	for name := range fallbackDeclared {
+		if !fallbackRead[name] {
+			unreadSet[name] = true
+		}
+	}
+	var unread []string
+	for name := range unreadSet {
+		unread = append(unread, name)
 	}
 	sort.Strings(unread)
 	return unread, true
