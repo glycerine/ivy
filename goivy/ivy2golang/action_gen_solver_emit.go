@@ -481,6 +481,12 @@ func (g *Generator) emitRuntimeSolverSupport(w *goWriter) {
 	w.line("return mod")
 	w.close("")
 	w.blank()
+	w.open("func ivyRuntimeSolverOptions() *goivy.SolverOptions {")
+	w.line("opts := goivy.DefaultSolverOptions()")
+	w.line("opts.MacroFinder = false")
+	w.line("return opts")
+	w.close("")
+	w.blank()
 }
 
 func (g *Generator) emitRuntimeSolverModuleMetadata(w *goWriter) {
@@ -580,7 +586,7 @@ func (g *Generator) emitRuntimeInitGeneratorGenerate(w *goWriter) bool {
 	if err != nil {
 		return false
 	}
-	w.line("solver := goivy.NewSolver(__ivy_solver_module(), nil)")
+	w.line("solver := goivy.NewSolver(__ivy_solver_module(), ivyRuntimeSolverOptions())")
 	if useClauses {
 		w.linef("clauses := %s", clausesExpr)
 	} else {
@@ -1235,7 +1241,7 @@ func (g *Generator) emitRuntimeActionSolverMethod(w *goWriter, typeName string, 
 	w.close("")
 	w.line("defer func() { ivy.___ivy_gen = gen }()")
 	w.open("if gen.__ivy_solver == nil {")
-	w.line("gen.__ivy_solver = goivy.NewSolver(__ivy_solver_module(), nil)")
+	w.line("gen.__ivy_solver = goivy.NewSolver(__ivy_solver_module(), ivyRuntimeSolverOptions())")
 	w.close("")
 	w.linef("baseSMT := %s", strconv.Quote(baseSMT))
 	w.line("solver := gen.__ivy_solver")

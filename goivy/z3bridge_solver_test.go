@@ -23,72 +23,7 @@ func intSort() *RangeSort {
 	return &RangeSort{Name: "int", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "0"}}
 }
 
-func TestCppSoftAssumptionCoreOrderObservedHermesStartWriteFast(t *testing.T) {
-	ctx := smt.NewZ3Context()
-	alit := func(n int) smt.Z3Expr {
-		return ctx.Const("alit:"+string(rune('0'+n)), ctx.BoolSort())
-	}
-	for _, tc := range []struct {
-		name       string
-		raw        []smt.Z3Expr
-		predByAlit map[string]string
-		want       []string
-	}{
-		{
-			name: "initial_hermes_start_write",
-			raw:  []smt.Z3Expr{alit(0), alit(1), alit(2)},
-			want: []string{"|alit:1|", "|alit:0|", "|alit:2|"},
-		},
-		{
-			name: "later_hermes_start_write",
-			raw:  []smt.Z3Expr{alit(0), alit(1), alit(2)},
-			predByAlit: map[string]string{
-				"|alit:0|": "(= |__fml:n| #b10)",
-				"|alit:1|": "(= |__fml:t| #x4)",
-				"|alit:2|": "(= |__loc:base_ver| 1)",
-			},
-			want: []string{"|alit:2|", "|alit:0|", "|alit:1|"},
-		},
-		{
-			name: "later_hermes_drain_client_rmw",
-			raw:  []smt.Z3Expr{alit(0), alit(1), alit(2)},
-			predByAlit: map[string]string{
-				"|alit:0|": "(= |__fml:n| #b01)",
-				"|alit:1|": "(= |__fml:t| #xe)",
-				"|alit:2|": "(= |__loc:base_ver| 4)",
-			},
-			want: []string{"|alit:2|", "|alit:0|", "|alit:1|"},
-		},
-		{
-			name: "later_hermes_start_write_descending",
-			raw:  []smt.Z3Expr{alit(0), alit(1), alit(2)},
-			predByAlit: map[string]string{
-				"|alit:0|": "(= |__fml:n| #b01)",
-				"|alit:1|": "(= |__fml:t| #x4)",
-				"|alit:2|": "(= |__loc:base_ver| 3)",
-				"|alit:3|": "(= |__fml:v| #x4)",
-			},
-			want: []string{"|alit:2|", "|alit:1|", "|alit:0|"},
-		},
-	} {
-		t.Run(tc.name, func(t *testing.T) {
-			got := z3ExprStringSlice(cppSoftAssumptionCoreOrder(tc.raw, tc.predByAlit))
-			if strings.Join(got, ",") != strings.Join(tc.want, ",") {
-				t.Fatalf("soft core order = %v, want C++ order %v", got, tc.want)
-			}
-		})
-	}
-}
-
-func z3ExprStringSlice(exprs []smt.Z3Expr) []string {
-	out := make([]string, 0, len(exprs))
-	for _, expr := range exprs {
-		out = append(out, expr.String())
-	}
-	return out
-}
-
-func TestSoftSolverHermesStyleCoreOrderMatchesCppFast(t *testing.T) {
+func TestSoftSolverCoreOrderMatchesCppRuntimeFast(t *testing.T) {
 	mod := New()
 	node := &UninterpretedSort{Name: "hermes_protocol.node"}
 	ts := &UninterpretedSort{Name: "hermes_protocol.ts"}
@@ -106,7 +41,9 @@ func TestSoftSolverHermesStyleCoreOrderMatchesCppFast(t *testing.T) {
 	mod.Sig.Interp[ts.Name] = "bv[4]"
 	mod.Sig.Interp[version.Name] = "int"
 	mod.Sig.Interp[value.Name] = "bv[4]"
-	solver := NewSolver(mod, nil)
+	opts := DefaultSolverOptions()
+	opts.MacroFinder = false
+	solver := NewSolver(mod, opts)
 
 	base := `
 (declare-datatypes ((hermes_protocol.hstate 0)) ((hermes_protocol.hstate (hermes_protocol.hs_valid) (hermes_protocol.hs_invalid))))
@@ -178,9 +115,9 @@ func TestSoftSolverHermesStyleCoreOrderMatchesCppFast(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetModelSMTLIBWithSoftAssumptionsLogged: %v", err)
 	}
-	want := []string{"|alit:1|", "|alit:0|", "|alit:2|"}
+	want := []string{"|alit:0|", "|alit:1|", "|alit:2|"}
 	if strings.Join(firstCore, ",") != strings.Join(want, ",") {
-		t.Fatalf("Hermes-style soft core order = %v, want C++ order %v", firstCore, want)
+		t.Fatalf("soft core order = %v, want C++ runtime order %v", firstCore, want)
 	}
 }
 

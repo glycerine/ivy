@@ -6,6 +6,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"go/types"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -34180,6 +34181,36 @@ export step
 	}
 }
 
+func TestGeneratedRuntimeSolverUsesCppSolverOptionProfileFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+
+action set(c:color) = {
+    assume c = green;
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{ClassName: "solver_opts", Target: "test", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	for _, want := range []string{
+		"func ivyRuntimeSolverOptions() *goivy.SolverOptions {",
+		"opts := goivy.DefaultSolverOptions()",
+		"opts.MacroFinder = false",
+		"goivy.NewSolver(__ivy_solver_module(), ivyRuntimeSolverOptions())",
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("generated runtime solver support missing %q:\n%s", want, out.Source)
+		}
+	}
+	if strings.Contains(out.Source, "goivy.NewSolver(__ivy_solver_module(), nil)") {
+		t.Fatalf("generated runtime solver should not use library-default solver options:\n%s", out.Source)
+	}
+}
+
 func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	g := newGoTestGeneratorWithInterps(nil)
 	deadTemp := goivy.NewConst("__ts0_dead", goivy.Boolean)
@@ -34465,6 +34496,10 @@ func TestRuntimeSolverBaseSMTGeneratedTempsDoNotLeakAsGoLocalsFast(t *testing.T)
 	if unused := unreadDeclaredSyntheticTemps(liveMethodSrc); len(unused) != 0 {
 		t.Fatalf("live solver method declares unread synthetic temps: %v\n%s", unused, liveMethodSrc)
 	}
+	typeCheckGeneratedRuntimeSolverMethods(t, map[string]string{
+		"RuntimeSolverDeadTempsProbe": methodSrc,
+		"RuntimeSolverLiveTempsProbe": liveMethodSrc,
+	})
 }
 
 func compileGeneratedFunctionBody(t *testing.T, body string, prelude ...string) {
@@ -34486,6 +34521,62 @@ func buildGeneratedFunctionBody(t *testing.T, body string, prelude ...string) (s
 	src += "func main() { _ = __probe }\n"
 	_, err := buildOutputForTest(t, &Output{BaseName: "generated_probe", Source: src}, t.TempDir())
 	return src, err
+}
+
+func typeCheckGeneratedRuntimeSolverMethods(t *testing.T, methods map[string]string) {
+	t.Helper()
+	var src strings.Builder
+	src.WriteString("package main\n\n")
+	src.WriteString("type Module struct{}\n")
+	src.WriteString("type Solver struct{}\n")
+	src.WriteString("type SMTLIBBaseSolver struct{}\n")
+	src.WriteString("type Clauses struct{}\n")
+	src.WriteString("type Expr interface{}\n")
+	src.WriteString("type ModelResult struct{ Solver interface{}; Model interface{}; Vocab interface{} }\n")
+	src.WriteString("func NewSolver(*Module, interface{}) *Solver { return nil }\n")
+	src.WriteString("func (s *Solver) NewSMTLIBBaseSolver(string) (*SMTLIBBaseSolver, error) { return nil, nil }\n")
+	src.WriteString("func (s *Solver) GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(*SMTLIBBaseSolver, *Clauses, []Expr, func(int) int, func(string, string, string, []string, string)) (*ModelResult, error) { return nil, nil }\n")
+	src.WriteString("func (m *ModelResult) String() string { return \"\" }\n")
+	src.WriteString("func NewClauses([]Expr, interface{}, interface{}) *Clauses { return nil }\n")
+	src.WriteString("func (c *Clauses) Copy() *Clauses { return nil }\n")
+	src.WriteString("func NewHerbrandModel(*Solver, interface{}, interface{}, interface{}) interface{} { return nil }\n")
+	src.WriteString("type __ivyRuntimeSolverProbe struct { ___ivy_gen interface{} }\n")
+	for typeName := range methods {
+		src.WriteString("type " + typeName + " struct {\n")
+		src.WriteString("ivy *__ivyRuntimeSolverProbe\n")
+		src.WriteString("__ivy_solver *Solver\n")
+		src.WriteString("__ivy_solver_base *SMTLIBBaseSolver\n")
+		src.WriteString("__ivy_solver_pre *Clauses\n")
+		src.WriteString("}\n")
+	}
+	src.WriteString("var result bool\n")
+	src.WriteString("func __ivy_solver_module() *Module { return nil }\n")
+	src.WriteString("func ivyRuntimeSolverOptions() interface{} { return nil }\n")
+	src.WriteString("func ivyRand31() int { return 0 }\n")
+	src.WriteString("func ivySoftAssumptionModelLog(kind, pred, alit string, core []string, toDelete string) {}\n")
+	src.WriteString("func __ivy_solver_choice_symbol(name string) string { return name }\n")
+	keys := make([]string, 0, len(methods))
+	for typeName := range methods {
+		keys = append(keys, typeName)
+	}
+	sort.Strings(keys)
+	for _, typeName := range keys {
+		src.WriteString(strings.ReplaceAll(methods[typeName], "goivy.", ""))
+		src.WriteString("\n")
+	}
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, "generated_runtime_solver_probe.go", src.String(), 0)
+	if err != nil {
+		t.Fatalf("parse emitted runtime solver methods: %v\n%s", err, src.String())
+	}
+	var errs []string
+	conf := types.Config{Error: func(err error) { errs = append(errs, err.Error()) }}
+	if _, err := conf.Check("generated_runtime_solver_probe", fset, []*ast.File{file}, nil); err != nil {
+		if len(errs) == 0 {
+			errs = append(errs, err.Error())
+		}
+		t.Fatalf("type-check emitted runtime solver methods: %s\n%s", strings.Join(errs, "\n"), src.String())
+	}
 }
 
 func firstBareUndeclaredSyntheticTempAssignment(src string) string {

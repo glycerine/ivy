@@ -4242,15 +4242,17 @@ Short test pattern:
 
 Progress:
 
-- 2026-09-23: Fixed the Hermes-style soft-assumption pruning order that split
-  generated Go from generated C++ at `start_write` with `seed=1`. The Go
-  soft-solver loop now applies a narrow C++-compatibility ordering for the
-  first `alit:0`/`alit:1` core before choosing and deleting a soft assumption.
-  The existing fast root regression
-  `TestSoftSolverHermesStyleCoreOrderMatchesCppFast` is green, the normal fast
-  `ivy2golang` and `cmd/ivy2golang` suites remain green, and a scratch
-  `hermes_rmw_o3_testing.ivy` generated-binary comparison now matches C++
-  through `iters=30 runs=1 seed=1`.
+- 2026-09-24: Removed the Hermes/formula-specific soft-assumption core-order
+  shim. Scratch z3++ probes against the same vendored Z3 runtime showed that
+  `ivy_z3_gen`-style assumption checks return the native core order
+  `alit:0, alit:1, alit:2` for the focused Hermes-shaped formula, matching the
+  Go bridge once the shim is gone. Generated runtime solvers now call
+  `goivy.NewSolver(__ivy_solver_module(), ivyRuntimeSolverOptions())`, where
+  `ivyRuntimeSolverOptions` disables `smt.macro_finder` to match the plain
+  C++ runtime solver profile. The focused regression is now
+  `TestSoftSolverCoreOrderMatchesCppRuntimeFast`; focused solver tests, the
+  normal fast `ivy2golang` / `cmd/ivy2golang` suites, and the root package
+  tests are green.
 - 2026-09-23: Matched C++ REPL command-reader recovery for syntax, arity,
   undefined-action, and argument bad-value errors. Generated Go now labels the
   scanner loop and continues after command-reader diagnostics instead of

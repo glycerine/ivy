@@ -5,7 +5,6 @@ package goivy
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/glycerine/ivy/goivy/smt"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -100,82 +99,6 @@ func logSoftAssumptionDeletion(log SoftAssumptionLogger, core []smt.Z3Expr, toDe
 	log("delete", "", "", coreStrings, toDelete.String())
 }
 
-func cppSoftAssumptionCoreOrder(core []smt.Z3Expr, predByAlit map[string]string) []smt.Z3Expr {
-	if len(core) < 2 {
-		return core
-	}
-	// The generated C++ ivy_z3_gen loop observes some Hermes-style soft cores
-	// through z3::expr_vector in a different order than the Go C API wrapper.
-	// Match those runtime orderings before applying the deterministic/random
-	// deletion choice so equal seeds prune the same assumptions.
-	if softCoreOrderIs(core, "|alit:0|", "|alit:1|", "|alit:2|") && cppSoftAssumptionHermesBaseVersionDescending(predByAlit) {
-		out := append([]smt.Z3Expr(nil), core...)
-		out[0], out[1], out[2] = out[2], out[1], out[0]
-		return out
-	}
-	if softCoreOrderIs(core, "|alit:0|", "|alit:1|", "|alit:2|") && cppSoftAssumptionHermesBaseVersionFirst(predByAlit) {
-		out := append([]smt.Z3Expr(nil), core...)
-		out[0], out[1], out[2] = out[2], out[0], out[1]
-		return out
-	}
-	if core[0].String() == "|alit:0|" && core[1].String() == "|alit:1|" {
-		out := append([]smt.Z3Expr(nil), core...)
-		out[0], out[1] = out[1], out[0]
-		return out
-	}
-	if len(core) >= 3 &&
-		core[0].String() == "|alit:1|" &&
-		core[1].String() == "|alit:0|" &&
-		core[2].String() == "|alit:2|" {
-		out := append([]smt.Z3Expr(nil), core...)
-		out[0], out[2] = out[2], out[0]
-		return out
-	}
-	return core
-}
-
-func softCoreOrderIs(core []smt.Z3Expr, names ...string) bool {
-	if len(core) < len(names) {
-		return false
-	}
-	for i, name := range names {
-		if core[i].String() != name {
-			return false
-		}
-	}
-	return true
-}
-
-func cppSoftAssumptionHermesBaseVersionFirst(predByAlit map[string]string) bool {
-	if predByAlit == nil {
-		return false
-	}
-	return softPredSetMatches(predByAlit, "#b10", "#x4", " 1") ||
-		softPredSetMatches(predByAlit, "#b01", "#xe", " 4")
-}
-
-func cppSoftAssumptionHermesBaseVersionDescending(predByAlit map[string]string) bool {
-	if predByAlit == nil {
-		return false
-	}
-	return softPredSetMatches(predByAlit, "#b01", "#x4", " 3")
-}
-
-func softPredSetMatches(predByAlit map[string]string, n, t, baseVer string) bool {
-	return softPredContains(predByAlit["|alit:0|"], "|__fml:n|", n) &&
-		softPredContains(predByAlit["|alit:1|"], "|__fml:t|", t) &&
-		softPredContains(predByAlit["|alit:2|"], "|__loc:base_ver|", baseVer)
-}
-
-func softPredContains(pred string, parts ...string) bool {
-	for _, part := range parts {
-		if !strings.Contains(pred, part) {
-			return false
-		}
-	}
-	return true
-}
-
 // Eval evaluates a Z3 expression in the model with completion.
 func (mr *ModelResult) Eval(e smt.Z3Expr) (smt.Z3Expr, bool) {
 	return mr.Model.Eval(e, true)
@@ -248,7 +171,6 @@ func (s *Solver) GetModelClausesWithSoftAssumptionsLogged(clauses *Clauses, soft
 		}
 	}
 	var assumptions []smt.Z3Expr
-	predByAlit := map[string]string{}
 	ctx := s.tr.Ctx
 	for i, f := range soft {
 		if f == nil {
@@ -261,7 +183,6 @@ func (s *Solver) GetModelClausesWithSoftAssumptionsLogged(clauses *Clauses, soft
 		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
 		assumptions = append(assumptions, alit)
 		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
-		predByAlit[alit.String()] = zf.String()
 		logSoftAssumptionAdd(log, zf, alit)
 	}
 	if debugSoft {
@@ -287,7 +208,6 @@ func (s *Solver) GetModelClausesWithSoftAssumptionsLogged(clauses *Clauses, soft
 			}
 			return nil, nil
 		}
-		core = cppSoftAssumptionCoreOrder(core, predByAlit)
 		idx := 0
 		if choose != nil {
 			idx = choose(len(core))
@@ -376,7 +296,6 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptionsLogged(smtlib string, soft []E
 		fmt.Fprintf(os.Stderr, "soft-solver smtlib-start soft=%d\n", len(soft))
 	}
 	var assumptions []smt.Z3Expr
-	predByAlit := map[string]string{}
 	ctx := s.tr.Ctx
 	for i, f := range soft {
 		if f == nil {
@@ -389,7 +308,6 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptionsLogged(smtlib string, soft []E
 		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
 		assumptions = append(assumptions, alit)
 		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
-		predByAlit[alit.String()] = zf.String()
 		logSoftAssumptionAdd(log, zf, alit)
 	}
 	logSoftAssumptionBegin(log, z3solver)
@@ -409,7 +327,6 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptionsLogged(smtlib string, soft []E
 		if len(core) == 0 {
 			return nil, nil
 		}
-		core = cppSoftAssumptionCoreOrder(core, predByAlit)
 		idx := 0
 		if choose != nil {
 			idx = choose(len(core))
@@ -490,7 +407,6 @@ func (s *Solver) GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(base *SMTLIB
 		fmt.Fprintf(os.Stderr, "soft-solver smtlib-base-clauses-start soft=%d\n", len(soft))
 	}
 	var assumptions []smt.Z3Expr
-	predByAlit := map[string]string{}
 	ctx := s.tr.Ctx
 	for i, f := range soft {
 		if f == nil {
@@ -503,7 +419,6 @@ func (s *Solver) GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(base *SMTLIB
 		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
 		assumptions = append(assumptions, alit)
 		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
-		predByAlit[alit.String()] = zf.String()
 		logSoftAssumptionAdd(log, zf, alit)
 	}
 	logSoftAssumptionBegin(log, z3solver)
@@ -523,7 +438,6 @@ func (s *Solver) GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(base *SMTLIB
 		if len(core) == 0 {
 			return nil, nil
 		}
-		core = cppSoftAssumptionCoreOrder(core, predByAlit)
 		idx := 0
 		if choose != nil {
 			idx = choose(len(core))
@@ -615,7 +529,6 @@ func (s *Solver) GetModelSMTLIBClausesWithSoftAssumptionsLogged(smtlib string, c
 		fmt.Fprintf(os.Stderr, "soft-solver smtlib-clauses-start soft=%d\n", len(soft))
 	}
 	var assumptions []smt.Z3Expr
-	predByAlit := map[string]string{}
 	ctx := s.tr.Ctx
 	for i, f := range soft {
 		if f == nil {
@@ -628,7 +541,6 @@ func (s *Solver) GetModelSMTLIBClausesWithSoftAssumptionsLogged(smtlib string, c
 		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
 		assumptions = append(assumptions, alit)
 		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
-		predByAlit[alit.String()] = zf.String()
 		logSoftAssumptionAdd(log, zf, alit)
 	}
 	logSoftAssumptionBegin(log, z3solver)
@@ -648,7 +560,6 @@ func (s *Solver) GetModelSMTLIBClausesWithSoftAssumptionsLogged(smtlib string, c
 		if len(core) == 0 {
 			return nil, nil
 		}
-		core = cppSoftAssumptionCoreOrder(core, predByAlit)
 		idx := 0
 		if choose != nil {
 			idx = choose(len(core))
