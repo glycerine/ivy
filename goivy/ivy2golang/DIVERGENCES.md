@@ -12,15 +12,17 @@ divergences visible and testable.
 Workflow for fixing this list:
 
 - Work items in order.
-- Current instruction: do not add new tests during this conformance push. Keep
-  the existing fast `ivy2golang` and `cmd/ivy2golang` tests green after each
-  behavior change; the regression-test notes below remain design notes for when
-  test writing resumes.
-- Fix the implementation until the focused fast test and the normal
-  `ivy2golang` / `cmd/ivy2golang` tests pass.
+- Use TDD for new conformance work: add or tighten a fast focused test that
+  runs inside the Go test binary, make it fail for the current divergence, then
+  fix the implementation.
+- Keep the normal fast `ivy2golang` and `cmd/ivy2golang` tests green after each
+  behavior change.
+- Fix the implementation until the focused fast test and the normal fast
+  package tests pass.
 - When an item is fully fixed, put `FIXED` on the item's heading line.
-- Run the full slow end-to-end verification only after every item below is
-  marked fixed.
+- Use `SLOWTEST=1` as a verification gate when behavior changes could affect
+  generated build/run behavior; individual slow tests should remain under about
+  two seconds so the full slow suite is useful during active development.
 
 ## 1. FIXED `target=test` does not use Python's solver-backed action generators
 
@@ -4212,19 +4214,17 @@ Current state:
 
 - There are useful source-shape tests and some C++ oracle comparisons in
   `ivy2golang/ivy2golang_test.go`.
-- Current instruction supersedes the original "add one fast unit test per fix"
-  recommendation for this conformance push: do not add new tests while closing
-  items 1 and 2. Keep the existing fast `ivy2golang` and `cmd/ivy2golang`
-  tests green after behavior changes, and leave broader oracle expansion to a
-  later test-focused pass.
+- The current workflow is again TDD-driven for new conformance work: prefer
+  fast in-process unit or oracle tests first, keep the normal fast package
+  tests green after each change, and reserve generated-process slow checks for
+  focused verification.
 
 Recommended direction:
 
-- No additional test-writing work remains in this divergence item for the
-  current feature-conformance push.
-- After item 1 is fixed, run the existing slow/end-to-end verification exactly
-  as requested by the user. New oracle coverage can be planned in a separate
-  pass after the current no-new-tests constraint is lifted.
+- Continue expanding oracle coverage only where it directly proves a current
+  behavior gap. Prefer tests that compile/generate in-process and avoid whole
+  generated-process runs unless the behavior being tested is specifically a
+  runtime/build/run contract.
 
 Short test pattern:
 

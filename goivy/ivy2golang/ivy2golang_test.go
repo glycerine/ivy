@@ -34105,6 +34105,63 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 		t.Fatalf("synthetic solver temps declared but never read: %v\n%s", unused, got)
 	}
 	compileGeneratedFunctionBody(t, got, "result := false", "defer func() { _ = result }()")
+
+	reportedUnusedNames := []string{
+		"__ts0__ts0_c",
+		"__ts0__new_t_a",
+		"__ts0__new_s_a",
+		"__ts0__new_n_a",
+		"__ts0_a",
+		"__ts0__new_v_a",
+	}
+	reportedDeadPlan := &runtimeActionSolverPlan{plan: &actionGenPlan{}}
+	for _, name := range reportedUnusedNames {
+		reportedDeadPlan.plan.paramDefs = append(reportedDeadPlan.plan.paramDefs,
+			&goivy.LogicIff{T1: goivy.NewConst(name, goivy.Boolean), T2: goivy.True})
+	}
+	var reportedDeadBody goWriter
+	g.emitRuntimeActionSolverDefinedInputs(&reportedDeadBody, reportedDeadPlan)
+	reportedDead := reportedDeadBody.String()
+	for _, name := range reportedUnusedNames {
+		if strings.Contains(reportedDead, name) {
+			t.Fatalf("dead Hermes-style generated temp %s should not be emitted:\n%s", name, reportedDead)
+		}
+	}
+	compileGeneratedFunctionBody(t, reportedDead)
+
+	liveReported := goivy.NewConst("__ts0__new_v_a", goivy.Boolean)
+	liveReportedPlan := &runtimeActionSolverPlan{
+		plan: &actionGenPlan{
+			paramDefs: []goivy.Expr{
+				&goivy.LogicIff{T1: goivy.NewConst("__ts0__ts0_c", goivy.Boolean), T2: goivy.True},
+				&goivy.LogicIff{T1: goivy.NewConst("__ts0__new_t_a", goivy.Boolean), T2: goivy.True},
+				&goivy.LogicIff{T1: goivy.NewConst("__ts0__new_s_a", goivy.Boolean), T2: goivy.NewConst("__ts0__new_t_a", goivy.Boolean)},
+				&goivy.LogicIff{T1: goivy.NewConst("__ts0__new_n_a", goivy.Boolean), T2: goivy.True},
+				&goivy.LogicIff{T1: goivy.NewConst("__ts0_a", goivy.Boolean), T2: goivy.True},
+				&goivy.LogicIff{T1: liveReported, T2: goivy.True},
+				&goivy.LogicIff{T1: result, T2: liveReported},
+			},
+		},
+	}
+	var liveReportedBody goWriter
+	g.emitRuntimeActionSolverDefinedInputs(&liveReportedBody, liveReportedPlan)
+	liveReportedGot := liveReportedBody.String()
+	for _, deadName := range reportedUnusedNames[:len(reportedUnusedNames)-1] {
+		if strings.Contains(liveReportedGot, deadName) {
+			t.Fatalf("unread Hermes-style generated temp %s should not be emitted beside a live temp:\n%s", deadName, liveReportedGot)
+		}
+	}
+	if !strings.Contains(liveReportedGot, "var __ts0__new_v_a bool") ||
+		!strings.Contains(liveReportedGot, "result = __ts0__new_v_a") {
+		t.Fatalf("live Hermes-style generated temp should be declared and read:\n%s", liveReportedGot)
+	}
+	if line := firstBareUndeclaredSyntheticTempAssignment(liveReportedGot); line != "" {
+		t.Fatalf("live Hermes-style synthetic temp assigned before declaration: %s\n%s", line, liveReportedGot)
+	}
+	if unused := unreadDeclaredSyntheticTemps(liveReportedGot); len(unused) != 0 {
+		t.Fatalf("live Hermes-style synthetic temps declared but never read: %v\n%s", unused, liveReportedGot)
+	}
+	compileGeneratedFunctionBody(t, liveReportedGot, "result := false", "defer func() { _ = result }()")
 }
 
 func compileGeneratedFunctionBody(t *testing.T, body string, prelude ...string) {
