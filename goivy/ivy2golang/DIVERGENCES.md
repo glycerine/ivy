@@ -24,6 +24,386 @@ Workflow for fixing this list:
   generated build/run behavior; individual slow tests should remain under about
   two seconds so the full slow suite is useful during active development.
 
+Current verification status:
+
+- All ten audited divergence headings are marked `FIXED`.
+- 2026-09-24: Current slow verification passed with
+  `XTRACE_OFF=1 SLOWTEST=1 go test -timeout=0 -count=1 -json ./ivy2golang`;
+  package time is 27.837s. No tests failed and no individual test event was at
+  or above two seconds; the slowest event was 1.950s
+  (`TestEnumDispatchTraceMatchesIvy2CppOracle`). That trace oracle now passes
+  explicit `wait=0 delay=0`, preserving the same deterministic five-action
+  trace check while removing the generated runtime's default 10ms sleep.
+- 2026-09-24: Current fast verification after the trace-oracle speed tweak
+  passed with `XTRACE_OFF=1 go test -count=1 ./ivy2golang` at 4.966s and
+  `XTRACE_OFF=1 go test -count=1 ./cmd/ivy2golang` at 0.012s.
+- 2026-09-24: Parallelized the fixture-level subtests in
+  `TestOracleFixtureBatchMetadataMatchesCurrentIvy2CppFast`, preserving the
+  same per-fixture/per-target metadata coverage while cutting the focused test
+  from about 0.38s to 0.155s. Current fast verification is green with
+  `XTRACE_OFF=1 go test -count=1 ./ivy2golang` at 4.698s and
+  `XTRACE_OFF=1 go test -count=1 ./cmd/ivy2golang` at 0.010s. The full
+  `XTRACE_OFF=1 SLOWTEST=1 go test -timeout=0 -count=1 -json ./ivy2golang`
+  gate is green at 27.708s with no individual test event at or above two
+  seconds; the slowest event is 1.960s
+  (`TestEnumDispatchTraceMatchesIvy2CppOracle`).
+- 2026-09-24: Removed accidental generated-runtime sleeps from slow tests that
+  are not testing timer behavior by adding explicit `wait=0 delay=0` to
+  positive-iteration generated binary runs that already fixed `seed=1`. Current
+  fast verification is green with
+  `XTRACE_OFF=1 go test -count=1 ./ivy2golang` at 4.760s and
+  `XTRACE_OFF=1 go test -count=1 ./cmd/ivy2golang` at 0.011s. The full
+  `XTRACE_OFF=1 SLOWTEST=1 go test -timeout=0 -count=1 -json ./ivy2golang`
+  gate is green at 27.550s with no individual test event at or above two
+  seconds; the slowest event is 1.980s
+  (`TestEnumDispatchTraceMatchesIvy2CppOracle`). A source scan confirms no
+  positive-iteration `runBinary` / `runBinaryWithInput` calls remain without an
+  explicit `delay=` argument.
+- 2026-09-24: Re-probed the target=gen variant external-oracle exclusion in
+  `/mnt/oldrog/tmp/ivy2golang-gen-variant-probe.PjdsDa`. Current
+  `ivy2golang build=true` succeeds for both `variant_simple.ivy` and
+  `variant_recursive.ivy`, while current `ivy2cpp build=true` still fails to
+  link both before runtime comparison with missing subtype `_arg` and
+  `__deser` specializations. The target=gen variant binary exclusion remains a
+  C++ oracle availability limit, not a Go build/runtime mismatch.
+- 2026-09-24: Probed a compact parameterized target=test binary oracle in
+  `/mnt/oldrog/tmp/ivy2golang-param-oracle.exuvbF`. Fresh `ivy2cpp` and
+  `ivy2golang` wrappers generated and built a spec with defaulted enum/range
+  module parameters; default runs, named overrides, and the current positional
+  usage-failure path matched byte-for-byte on stdout and stderr.
+- 2026-09-24: Probed the same parameterized surface for `target=repl` in
+  `/mnt/oldrog/tmp/ivy2golang-param-repl-oracle.Q7nYB0`. Command-file REPL
+  runs with default parameters, named overrides, and a bad enum override all
+  matched current `ivy2cpp` byte-for-byte on stdout, stderr, and exit status.
+- 2026-09-24: Re-probed the parameterized surface for `target=gen` in
+  `/mnt/oldrog/tmp/ivy2golang-param-gen-oracle.urlbAn`. Current
+  `ivy2golang build=true` succeeds for the defaulted enum/range parameter
+  fixture, but current `ivy2cpp build=true` fails before runtime comparison
+  because the generated C++ references missing `parse_value` / `syntax_error`
+  helpers. Parameterized `target=gen` binaries remain another C++ oracle
+  availability limit rather than a demonstrated Go mismatch.
+- 2026-09-24: Earlier fast verification passed with
+  `XTRACE_OFF=1 go test -count=1 ./ivy2golang`; package time is 4.171s.
+- 2026-09-24: Earlier full slow verification passed with
+  `XTRACE_OFF=1 SLOWTEST=1 go test -timeout=0` in `ivy2golang`; package time is
+  38.666s. A follow-up JSON timing pass also passed in 29.369s, with no
+  individual test over two seconds; the slowest individual test was 1.950s
+  (`TestEnumDispatchTraceMatchesIvy2CppOracle`).
+- 2026-09-24: Refreshed slow timing after the Hermes sanity-oracle fixes. The
+  first JSON pass was green but charged a cold generated-binary build to
+  `TestIssue60SymbolicRangeRandomizationUsesRuntimeBound/target-test` at
+  10.970s. That subtest now validates the generated source in-process instead
+  of launching a generated binary, because its unique regression surface is the
+  emitted runtime-bound randomization expression. The refreshed full slow JSON
+  pass is green with
+  `XTRACE_OFF=1 SLOWTEST=1 go test -timeout=0 -count=1 -json ./ivy2golang`;
+  package time is 27.657s and no individual test event exceeds two seconds.
+  The slowest events are 1.920s
+  (`TestGenerateBasicAssignCompilesAndRuns` and
+  `TestEnumDispatchTraceMatchesIvy2CppOracle`). The normal fast
+  `./ivy2golang`, `./cmd/ivy2golang`, and focused root soft-core ordering tests
+  are green after the speed fix.
+- 2026-09-24: Current Hermes sanity oracle is green for the 200-iteration
+  sweep against independently generated `ivy2cpp` and `ivy2golang` binaries for
+  `hermes_rmw_o3_testing.ivy`. Fresh wrappers in
+  `/mnt/oldrog/tmp/ivy2golang-sanity-oracle.wYX53B` generated and built both
+  testers cleanly. With `iters=200 runs=1 delay=0`, seeds 1, 2, and 3 now match
+  `ivy2cpp` byte-for-byte on stdout, stderr, and exit status; each run emitted
+  201 stdout lines and empty stderr.
+- 2026-09-24: Additional target=test fixture probes passed against
+  independently generated `ivy2cpp` binaries: `basic_assign.ivy`,
+  `forall_assign.ivy`, and `hash_thunk_assign.ivy` matched byte-for-byte for
+  `iters=5 runs=1 seed=1 wait=0 delay=0`; `basic_assign.ivy` and
+  `forall_assign.ivy` also matched for the multi-run check
+  `iters=2 runs=2 seed=1 wait=0 delay=0`.
+- 2026-09-24: Additional target=gen fixture probes passed against independently
+  generated `ivy2cpp` binaries: `enum_dispatch.ivy`, `range_bounds.ivy`, and
+  `destructor_record.ivy` matched byte-for-byte for `seed=1`, covering enum,
+  numeric range, and record/destructor one-shot randomization.
+- 2026-09-24: A target=repl enum-dispatch oracle exposed and fixed a status
+  and diagnostic divergence in recoverable command-reader errors. Generated Go
+  now matches C++ for valid commands and for recoverable undefined-action,
+  bad-arity, bad enum-value, blank-line syntax, and dangling-open-paren syntax
+  transcripts, comparing stdout, stderr, and exit status byte-for-byte.
+- 2026-09-24: Fresh sanity oracle rerun passed after the REPL diagnostic fixes.
+  With `XTRACE_OFF=1`, independently generated `ivy2cpp` and `ivy2golang`
+  binaries matched stdout, stderr, and exit status byte-for-byte for the Hermes
+  fixed-seed check, the target=test fixture probes (`basic_assign`,
+  `forall_assign`, `hash_thunk_assign`, including the two multi-run probes),
+  the target=gen fixture probes (`enum_dispatch`, `range_bounds`,
+  `destructor_record`), and the REPL enum-dispatch valid/error transcript
+  matrix.
+- 2026-09-24: Post-`SLOWTEST=1` sanity oracle passed. Fresh wrappers built from
+  this tree generated clean `ivy2cpp` and `ivy2golang` testers for
+  `hermes_rmw_o3_testing.ivy`; the binaries matched byte-for-byte on stdout,
+  stderr, and exit status for `iters=200 runs=1 seed=1 delay=0` with 201 stdout
+  lines and empty stderr. The small-fixture sweep also matched byte-for-byte:
+  target=test `basic_assign`, `forall_assign`, and `hash_thunk_assign` for
+  `iters=5 runs=1 seed=1 wait=0 delay=0`, the two multi-run checks for
+  `basic_assign` and `forall_assign`, target=gen `enum_dispatch`,
+  `range_bounds`, and `destructor_record` for `seed=1`, and the enum-dispatch
+  REPL valid/error transcript matrix.
+- 2026-09-24: Repaired stale shortened-run expectations in the slow
+  `range_bounds` and `destructor_record` oracle tests. Focused slow tests,
+  normal fast tests, and the full slow JSON pass are green; no individual slow
+  test exceeded two seconds.
+- 2026-09-24: Expanded the scratch binary oracle sweep. Fresh wrappers built
+  from this tree produced byte-identical stdout, stderr, and exit status for
+  target=test at `iters=3 runs=1 seed=1 wait=0 delay=0` on `basic_assign`,
+  `forall_assign`, `bv_arithmetic`, `enum_dispatch`, `range_bounds`,
+  `destructor_record`, `variant_recursive`, `hash_thunk_assign`,
+  `progress_property`, and `isolate_two_parts`. Target=gen also matched
+  byte-for-byte at `seed=1` for `empty`, `basic_assign`, `forall_assign`,
+  `bv_arithmetic`, `enum_dispatch`, `range_bounds`, `destructor_record`,
+  `hash_thunk_assign`, `progress_property`, and `isolate_two_parts`. The
+  target=gen variant fixtures were not comparable as binaries because
+  `ivy2cpp build=true` failed to link missing `_arg` / `__deser` specializations
+  for the generated variant payload types before `ivy2golang` was involved.
+- 2026-09-24: Probed the local public fixtures that the fast suite uses for
+  target=test generation smoke coverage. `end2end/data/enum_types.ivy` was
+  comparable and matched `ivy2cpp` byte-for-byte for `iters=3 runs=1 seed=1
+  wait=0 delay=0`. The remaining local fixtures in that set were not runtime
+  comparable because both tools fail generation/build on the same
+  uninterpreted-generator surface, such as `client`, `server`, or `node`
+  action-generator parameters.
+- 2026-09-24: Expanded target=repl runtime oracle coverage. Fresh wrappers
+  built from this tree produced byte-identical stdout, stderr, and exit status
+  for scripted command-file transcripts on `basic_assign`, `forall_assign`,
+  `bv_arithmetic`, `enum_dispatch`, `range_bounds`, `destructor_record`,
+  `hash_thunk_assign`, `progress_property`, `variant_simple`, and
+  `variant_recursive`. The matrix covers zero-argument actions, enum/range
+  parameters, bitvector actions, record arguments, hash-thunk updates, progress
+  actions, and variant return formatting.
+- 2026-09-24: Verified multi-output `isolate=all` parity for
+  `isolate_two_parts.ivy`. Fresh `ivy2cpp` and `ivy2golang` wrappers generated
+  byte-identical `isoparts.dsc` descriptor JSON and identical generation
+  stdout/stderr. All four emitted process binaries (`isoparts_iso_client`,
+  `isoparts_iso_impl`, `isoparts_iso_server`, and `isoparts_this`) matched
+  byte-for-byte on stdout, stderr, and exit status for
+  `iters=3 runs=1 seed=1 wait=0 delay=0`.
+- 2026-09-24: Broadened randomized seed coverage. Fresh wrappers built from
+  this tree matched byte-for-byte for target=test at
+  `iters=3 runs=1 wait=0 delay=0` with `seed=2` and `seed=3` on
+  `basic_assign`, `forall_assign`, `bv_arithmetic`, `enum_dispatch`,
+  `range_bounds`, `destructor_record`, `variant_recursive`,
+  `hash_thunk_assign`, `progress_property`, and `isolate_two_parts`. The same
+  seed sweep matched target=gen at `seed=2` and `seed=3` on `empty`,
+  `basic_assign`, `forall_assign`, `bv_arithmetic`, `enum_dispatch`,
+  `range_bounds`, `destructor_record`, `hash_thunk_assign`,
+  `progress_property`, and `isolate_two_parts`; target=gen variant binaries
+  remain excluded because current `ivy2cpp build=true` cannot link those
+  fixtures.
+- 2026-09-24: Slow-test speed hygiene pass. The full
+  `XTRACE_OFF=1 SLOWTEST=1 go test -timeout=0 -count=1 -json ./ivy2golang`
+  run passed in 29.392s, and no individual test case reported over two seconds
+  after replacing the cross-version same-process test's four external
+  generated-binary build/runs with in-process generated-Go parsing and source
+  assertions. The focused cross-version slow-enabled run now passes in 0.025s,
+  with subtests at 0.00-0.01s. The normal fast package run remains green at
+  5.050s on this machine/cache.
+- 2026-09-24: Post-slow-test Hermes sanity oracle rerun was refreshed again
+  after the final soft-core ordering fixes. Fresh `ivy2cpp` and `ivy2golang`
+  wrappers built from this tree in
+  `/mnt/oldrog/tmp/ivy2golang-sanity-oracle.wYX53B` generated and built
+  `hermes_rmw_o3_testing.ivy` successfully. With `iters=200 runs=1 delay=0`,
+  seeds 1, 2, and 3 match `ivy2cpp` byte-for-byte on stdout, stderr, and exit
+  status, with 201 stdout lines and empty stderr per seed. Focused root
+  soft-core ordering tests and the normal fast `ivy2golang` and
+  `cmd/ivy2golang` package tests are green; the full slow suite was reported
+  green immediately before this sanity pass.
+- 2026-09-24: Broadened the fast in-process fixture sidecar oracle into
+  `TestOracleFixtureBatchMetadataMatchesCurrentIvy2CppFast`. It compares
+  batch config, output count/order, basenames, class names, effective targets,
+  `EmitMain`, `LibSpecs`, warnings, per-output extra-file contents, batch
+  extra-file keys, and normalized descriptor JSON against current `ivy2cpp`
+  across every supported oracle fixture for `target=test` and `target=repl`;
+  it also checks a representative variant fixture for
+  `target=gen` metadata and representative simple fixtures for `target=impl`
+  and `target=class` metadata. Native C++ weakening fixtures remain
+  intentionally skipped.
+  Focused coverage passed in 0.129s, and the normal fast
+  `./ivy2golang` and `./cmd/ivy2golang` package tests remain green.
+- 2026-09-24: Added fast in-process `isolate=all` batch parity coverage with
+  `TestCompileAndGenerateAllIsolateAllMatchesCurrentIvy2CppFast`. For
+  `target=test`, it compares output count/order, basenames, class names,
+  effective targets, `EmitMain`, extra-file keys, and normalized descriptor JSON
+  against current `ivy2cpp`. For `target=repl`, it records that both current
+  tools reject the synthetic `isolate=all` shape with the same diagnostic. The
+  focused test passed in 0.023s; the full `XTRACE_OFF=1 SLOWTEST=1` pass is
+  green at 27.723s with no individual event over two seconds, and the normal
+  fast `./ivy2golang` / `./cmd/ivy2golang` checks are green at 4.979s / 0.009s.
+- 2026-09-24: Added fast driver-surface parity coverage with
+  `TestDriverSurfaceMatchesCurrentIvy2CppFast`. It compares `ParseArgs`
+  behavior, accepted shared parameters, normalized batch config for
+  `target=gen`, `target=test`, `target=repl`, and `target=class`, plus
+  rejection classes for bad target/compiler/unknown flags and multi-output
+  `CompileAndGenerate isolate=all` wrapper calls against current `ivy2cpp`.
+  The focused test passed in 0.028s. A refreshed full
+  `XTRACE_OFF=1 SLOWTEST=1` pass is green at 27.528s with no individual event
+  over two seconds; the normal fast `./ivy2golang` / `./cmd/ivy2golang` checks
+  are green at 4.833s / 0.010s.
+- 2026-09-24: Refreshed verification after the batch-metadata oracle
+  broadening. The full `XTRACE_OFF=1 SLOWTEST=1` pass is green at 27.736s with
+  no individual event over two seconds; the normal fast `./ivy2golang` and
+  `./cmd/ivy2golang` checks are green at 4.801s and 0.010s after replacing the
+  remaining generated `go build` probes in
+  `TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast` with parse-only syntax
+  checks plus the existing static undefined/unused-temp assertions.
+- 2026-09-24: Refreshed verification after adding representative `target=class`
+  coverage to the batch metadata oracle. The full `XTRACE_OFF=1 SLOWTEST=1`
+  pass is green at 27.460s with no individual event over two seconds; the
+  focused metadata oracle is green at 0.129s, and the normal fast
+  `./ivy2golang` / `./cmd/ivy2golang` checks are green at 4.798s / 0.011s.
+- 2026-09-24: Added representative `target=impl` coverage to the same batch
+  metadata oracle. The full `XTRACE_OFF=1 SLOWTEST=1` pass is green at 27.377s
+  with no individual event over two seconds; the focused metadata oracle is
+  green at 0.176s, and the normal fast `./ivy2golang` / `./cmd/ivy2golang`
+  checks are green at 4.800s / 0.012s.
+- 2026-09-24: Added fast `WriteBatchOutput` layout parity coverage with
+  `TestWriteBatchOutputLayoutMatchesCurrentIvy2CppFast`. It writes matching
+  `target=test` batches from current `ivy2golang` and `ivy2cpp`, compares
+  descriptor file placement/content, and verifies generated source files land
+  in the same output subdirectory shape after accounting for Go versus C++
+  extensions. The focused test passed in 0.014s. The full
+  `XTRACE_OFF=1 SLOWTEST=1` pass is green at 27.430s with no individual event
+  over two seconds; the normal fast `./ivy2golang` / `./cmd/ivy2golang` checks
+  are green at 4.798s / 0.010s.
+- 2026-09-24: Refreshed the external sanity oracle after the user-reported
+  green `SLOWTEST=1` pass. Fresh wrappers in
+  `/mnt/oldrog/tmp/ivy2golang-sanity-oracle.TKPz9U` generated, built, and ran
+  independent C++ and Go testers for the Hermes fixture, target=test fixture
+  seed sweeps, target=gen fixture seed sweeps, scripted target=repl
+  transcripts, and `isolate=all` descriptor/process outputs. All compared
+  stdout, stderr, and exit status byte-for-byte; the pass completed in 771s.
+  The oracle exposed and fixed two REPL diagnostic nits before the final green
+  pass: C++'s command reader only advances its diagnostic line counter on
+  recoverable error paths, and generic argument bad-value text prints quoted
+  (`"argument N"`) like `ivy2cpp`. Normal fast checks are green at
+  `./ivy2golang` 4.779s and `./cmd/ivy2golang` 0.009s; the affected
+  slow-enabled REPL diagnostics focused run is green at 1.597s.
+- 2026-09-24: Re-ran the full `XTRACE_OFF=1 SLOWTEST=1 go test -timeout=0
+  -count=1 -json ./ivy2golang` gate after the sanity-oracle fixes. The package
+  is green at 27.361s with no individual test event over two seconds; the
+  slowest event is `TestEnumDispatchTraceMatchesIvy2CppOracle` at 1.92s. Added
+  fast in-process source-shape guards to pin the oracle-found REPL diagnostic
+  behavior: the generated command reader initializes the diagnostic counter at
+  one, does not increment before parsing each scanned line, increments only on
+  recoverable diagnostic branches before continuing, and uses the EOF-adjusting
+  `ivySyntaxErrorAt` path for missing close-paren syntax errors. Focused fast
+  REPL checks pass in 0.042s; normal fast `./ivy2golang` / `./cmd/ivy2golang`
+  checks are green at 4.838s / 0.009s.
+- 2026-09-24: Re-ran the full slow gate after adding the fast REPL guards. The
+  package remains green at 27.465s; no test failed and no individual event
+  exceeded the two-second budget. `TestEnumDispatchTraceMatchesIvy2CppOracle`
+  rounded to 2.00s in the contended full run, and a focused rerun is green at
+  1.85s, so its runtime trace coverage is still retained. A scratch
+  `variant_simple.ivy` target=test oracle probe also showed current `ivy2cpp`
+  and `ivy2golang` both generate/build cleanly and match byte-for-byte for
+  `iters=3 runs=1 seed=1 wait=0 delay=0`.
+- 2026-09-24: Promoted `variant_simple.ivy` into the generated tester args
+  slow sweep instead of leaving its `.test.args` marked `SKIP`. The status table
+  already marks this fixture `PASS`, and fresh C++/Go probes show the target=test
+  runtime is comparable for `iters=3 runs=1 seed=1 wait=0 delay=0`. Added
+  `TestOracleVariantSimpleTesterArgsEnabledFast` to keep the PASS fixture from
+  silently regressing to a skipped tester-args entry. Focused fast fixture
+  coverage is green at 0.028s, the focused slow generated-tester subtest is
+  green at 1.54s, normal fast `./ivy2golang` / `./cmd/ivy2golang` checks are
+  green at 4.844s / 0.011s, and the full slow suite is green at 27.512s with no
+  individual event over two seconds.
+- 2026-09-24: Added `TestOraclePassFixturesHaveEnabledTesterArgsFast` so the
+  Go oracle fixture list, `STATUS.md`, and `.test.args` files stay consistent:
+  every fixture listed for Go oracle coverage must be `PASS`, every `PASS`
+  fixture in `STATUS.md` must be covered, and no `PASS` fixture may silently
+  use a skipped generated-tester args entry. The focused oracle metadata checks
+  are green at 0.032s, normal fast `./ivy2golang` / `./cmd/ivy2golang` checks
+  are green at 4.758s / 0.009s, and the full `SLOWTEST=1` gate is green at
+  27.183s with no individual event at or above two seconds.
+- 2026-09-24: Rechecked the target=gen variant binary exclusion after the
+  generated-tester coverage cleanup. Current `ivy2golang` builds
+  `variant_simple.ivy` and `variant_recursive.ivy` for target=gen, but current
+  `ivy2cpp build=true` still fails before runtime comparison with missing
+  subtype `_arg` / `__deser` specializations, so those target=gen variant
+  binaries remain excluded from byte-for-byte external oracle sweeps for now.
+- 2026-09-24: Broadened the fast in-process batch metadata oracle beyond
+  representative samples. `TestOracleFixtureBatchMetadataMatchesCurrentIvy2CppFast`
+  now compares every non-native oracle fixture against current `ivy2cpp` for
+  `target=gen`, `target=impl`, `target=test`, `target=repl`, and
+  `target=class`, covering metadata, `LibSpecs`, warnings, extra-file keys,
+  and normalized descriptor JSON without requiring generated C++ binaries to
+  link. The focused metadata oracle is green at 0.399s, normal fast
+  `./ivy2golang` / `./cmd/ivy2golang` checks are green at 4.972s / 0.009s, and
+  the full `SLOWTEST=1` gate is green at 27.603s with no individual event at or
+  above two seconds.
+- 2026-09-24: Broadened generated-tester runtime-loop coverage. Added
+  `TestOracleTesterArgsExerciseExportedNonNativeFixturesFast` so exported,
+  non-native PASS fixtures cannot hide behind `iters=0`, `runs=0`, or `SKIP`
+  tester args, and enabled the remaining non-native `.test.args` entries with
+  real one-iteration runs. The focused fixture-args checks are green at 0.040s,
+  the focused slow generated-tester sweep is green with the slowest subtest at
+  1.84s, normal fast `./ivy2golang` / `./cmd/ivy2golang` checks are green at
+  4.975s / 0.010s, and the refreshed full `SLOWTEST=1` gate is green at
+  27.857s with no individual event at or above two seconds.
+- 2026-09-24: Post-`SLOWTEST=1` external sanity oracle passed again. Fresh
+  wrappers built in `/mnt/oldrog/tmp/ivy2golang-sanity-oracle.0FK7w8`
+  generated, built, and ran independent `ivy2cpp` and `ivy2golang` binaries for
+  the Hermes fixture, target=test fixture seed sweeps, target=gen fixture seed
+  sweeps, the scripted target=repl transcript matrix, and `isolate=all`
+  descriptor/process outputs. All compared stdout, stderr, and exit status
+  byte-for-byte; the pass recorded 162 run status files, covering 81 paired
+  C++/Go binary run comparisons.
+- 2026-09-24: Refreshed the post-slow external sanity oracle after the user
+  reported `SLOWTEST=1` green. Fresh wrappers built in
+  `/mnt/oldrog/tmp/ivy2golang-sanity-oracle.h1qRWR` generated, built, and ran
+  independent `ivy2cpp` and `ivy2golang` binaries for Hermes, target=test
+  fixture seed sweeps, target=gen fixture seed sweeps, scripted target=repl
+  transcripts, and `isolate=all` descriptor/process outputs. The REPL matrix
+  now includes a newline-only transcript for the no-public-actions `empty.ivy`
+  case; generated Go now mirrors C++ by exiting without installing a command
+  scanner or importing `bufio` when there are no public actions to dispatch.
+  All compared stdout, stderr, and exit status byte-for-byte; the pass recorded
+  168 run status files, covering 84 paired C++/Go binary run comparisons.
+- 2026-09-24: Re-ran the same post-`SLOWTEST=1` external sanity oracle after
+  the latest green slow pass. Fresh wrappers built in
+  `/mnt/oldrog/tmp/ivy2golang-sanity-oracle.fRkXEo` generated, built, and ran
+  independent `ivy2cpp` and `ivy2golang` binaries for Hermes, target=test
+  fixture seed sweeps, target=gen fixture seed sweeps, scripted target=repl
+  transcripts, and `isolate=all` descriptor/process outputs. All compared
+  stdout, stderr, and exit status byte-for-byte; the pass recorded 168 run
+  status files, covering 84 paired C++/Go binary run comparisons.
+- 2026-09-24: Fixed another target=repl command-reader parity detail found
+  while extending the sanity checks. C++ prints `> ` prompts only when the
+  command reader's stdin is a TTY, including after recoverable syntax, arity,
+  undefined-action, and argument bad-value diagnostics; generated Go now checks
+  `os.Stdin` after command-file redirection and emits the same interactive-only
+  prompts. The fast in-process regression is
+  `TestReplMainEmitsInteractivePromptLikeIvy2CppFast`. Focused REPL tests and
+  normal fast `./ivy2golang` / `./cmd/ivy2golang` checks are green; the full
+  `XTRACE_OFF=1 SLOWTEST=1` JSON pass is green at 27.733s with no individual
+  test event at or above two seconds.
+- 2026-09-24: Refreshed targeted runtime oracles for surfaces not covered by
+  the ordinary command-file transcript matrix. A PTY-backed `target=repl`
+  `enum_dispatch.ivy` oracle matched C++ byte-for-byte for interactive prompts,
+  successful returns, undefined-action diagnostics, bad enum-value diagnostics,
+  and the `out=...` split between terminal diagnostics and output-file prompts.
+  Separate generated-binary probes matched C++ for `out=...` plus
+  `modelfile=...` side effects in both `target=test` and `target=gen`, and for
+  `trace=true` output ordering in `target=test`, `target=gen`, and
+  `target=repl`. These probes found no new implementation gap; the external
+  scratch directories were `/mnt/oldrog/tmp/ivy2golang-pty-repl.9uAdGi`,
+  `/mnt/oldrog/tmp/ivy2golang-fileopt-oracle.wQUofQ`, and
+  `/mnt/oldrog/tmp/ivy2golang-trace-oracle.2cnzfO`.
+- 2026-09-24: Probed the generation-time `trace=false` surface separately from
+  the default and `trace=true` runtime sweeps. Fresh paired generated binaries
+  for `enum_dispatch.ivy` matched C++ byte-for-byte on stdout, stderr, and exit
+  status for `target=test`, `target=gen`, and `target=repl`; the scratch
+  directory was `/mnt/oldrog/tmp/ivy2golang-tracefalse-oracle.VWnUZz`.
+
+The per-item audit bodies preserve the original review text for traceability.
+That means older `Current Go behavior`, `Risk`, `How to conform`, and dated
+`Progress` entries may describe work as open or deferred at the time they were
+written. The item headings and this current verification block supersede those
+historical notes.
+
 ## 1. FIXED `target=test` does not use Python's solver-backed action generators
 
 Python source behavior:
@@ -4236,12 +4616,129 @@ Short test pattern:
 
 - Fast: `compileIvySource`, `Generate`, inspect the relevant generated function
   body with `bodyAfterMarker`, and assert the old divergent construct is absent.
-- Final end-to-end verification: after all items are marked fixed, build and run
-  generated testers as needed with matching `iters/runs/seed/delay`, and compare
-  stdout/stderr plus any model log needed for the feature.
+- End-to-end verification: after items are marked fixed, build and run generated
+  testers as needed with matching `iters/runs/seed/delay`, and compare
+  stdout/stderr plus any model log needed for the feature. The 2026-09-24 full
+  slow pass and Hermes sanity oracle are the current final verification evidence
+  for this checklist.
 
 Progress:
 
+- 2026-09-24: Full slow verification passed with
+  `XTRACE_OFF=1 SLOWTEST=1 go test -timeout=0 -json .` in `ivy2golang`; the
+  captured package time was 33.931s, no tests failed, and no individual test
+  exceeded two seconds. The fixed-seed Hermes oracle also passed: clean
+  `ivy2cpp` and `ivy2golang` generated binaries for `hermes_rmw_o3_testing.ivy`
+  produced byte-identical 73-line traces for
+  `iters=72 runs=1 seed=1 delay=0`.
+- 2026-09-24: Broadened the sanity oracle sweep with small target=test
+  fixtures. Clean `ivy2cpp` and `ivy2golang` generated binaries matched
+  byte-for-byte for `basic_assign.ivy`, `forall_assign.ivy`, and
+  `hash_thunk_assign.ivy` with `iters=5 runs=1 seed=1 wait=0 delay=0`; the
+  `basic_assign.ivy` and `forall_assign.ivy` binaries also matched for
+  `iters=2 runs=2 seed=1 wait=0 delay=0`, covering the cross-run RNG stream.
+- 2026-09-24: Broadened the target=gen sanity sweep as well. Clean `ivy2cpp`
+  and `ivy2golang` generated binaries matched byte-for-byte for
+  `enum_dispatch.ivy`, `range_bounds.ivy`, and `destructor_record.ivy` with
+  `seed=1`, covering enum, numeric range, and record/destructor one-shot
+  randomization.
+- 2026-09-24: Added and then broadened a fast in-process fixture sidecar oracle
+  into `TestOracleFixtureBatchMetadataMatchesCurrentIvy2CppFast`, covering
+  every supported oracle fixture's `target=test` and `target=repl` batch
+  metadata, `LibSpecs`, warnings, per-output extra-file contents, and `.dsc`
+  sidecars against current `ivy2cpp`, plus representative `target=gen`
+  metadata for a variant fixture and representative `target=impl` and
+  `target=class` metadata for simple fixtures. The test stays inside the Go
+  test binary and finished in 0.176s, extending sidecar and wrapper-envelope
+  parity coverage without adding slow generated process work. The same pass removed redundant negative
+  and positive `go build` probes from the synthetic-temp declaration
+  regression, replacing them with parse-only syntax checks while preserving the
+  static undefined/unused-temp assertions.
+- 2026-09-24: Added `TestCompileAndGenerateAllIsolateAllMatchesCurrentIvy2CppFast`
+  as another fast in-process oracle. It compares `isolate=all` batch metadata
+  and descriptor content against current `ivy2cpp` for generated `target=test`
+  outputs, and asserts matching diagnostics for the current `target=repl`
+  unsupported shape. This guards multi-output wrapper metadata without adding a
+  generated-binary slow test.
+- 2026-09-24: Added `TestDriverSurfaceMatchesCurrentIvy2CppFast` to guard the
+  shared command-line parameter surface against current `ivy2cpp`: parse
+  results, normalized compile config, error classes for rejected flags, and the
+  single-output wrapper rejection for `isolate=all`. This keeps flag and
+  wrapper parity under fast in-process coverage instead of relying on
+  generated-process command tests.
+- 2026-09-24: Added `TestWriteBatchOutputLayoutMatchesCurrentIvy2CppFast` to
+  guard file-writing layout against current `ivy2cpp`: descriptor sidecars stay
+  at the output root with matching JSON content, while generated source files
+  follow the same root-versus-`build/` placement convention after normalizing
+  language-specific source extensions.
+- 2026-09-24: Fixed target=repl command-reader recovery parity. C++ reports
+  syntax, bad-value, arity, and undefined-action diagnostics from the command
+  reader but continues processing and exits zero at EOF. Generated Go no longer
+  carries a sticky `__ivy_repl_failed` flag for those recoverable diagnostics,
+  named-enum bad-value text now uses the same quoted C++ wording, and blank or
+  dangling-EOF syntax errors now use C++'s EOF column convention. The focused
+  fast regressions are `TestReplDiagnosticsDoNotPoisonExitStatusFast`,
+  `TestReplMainDispatchParsesEnumBoolRangeArgs`, and
+  `TestReplParserRejectsBlankLinesByShape`; the normal fast `ivy2golang` and
+  `cmd/ivy2golang` suites are green. A fresh target=repl `enum_dispatch.ivy`
+  oracle matched C++ byte-for-byte for valid, undefined-action, bad-arity, bad
+  enum-value, blank-line, and dangling-open-paren transcripts across stdout,
+  stderr, and exit status.
+- 2026-09-24: A broader post-slow sanity oracle exposed two remaining REPL
+  diagnostic differences and then passed after both were fixed. Generated Go now
+  mirrors C++'s command-reader line counter: successful commands do not advance
+  the diagnostic counter, while recoverable syntax, bad-value, arity, and
+  undefined-action errors advance after reporting. The parser also reports EOF
+  after a missing close paren using C++'s one-past-final-character column, and
+  generic argument bad-value text now includes the C++ quote characters
+  (`"argument N"`). Fresh wrappers in
+  `/mnt/oldrog/tmp/ivy2golang-sanity-oracle.TKPz9U` matched `ivy2cpp`
+  byte-for-byte on stdout, stderr, and exit status for Hermes seeds 1-3 at
+  `iters=200`, target=test fixture seeds 1-3, target=gen fixture seeds 1-3,
+  scripted target=repl transcripts, and `isolate=all` descriptor/process
+  outputs. The normal fast `./ivy2golang` / `./cmd/ivy2golang` checks are green
+  at 4.779s / 0.009s; the affected slow-enabled REPL diagnostics focused run is
+  green at 1.597s.
+- 2026-09-24: Added fast in-process guards for the same REPL diagnostic
+  semantics so future regressions do not need the external oracle to catch
+  them. `TestReplDiagnosticsDoNotPoisonExitStatusFast` now pins the
+  C++-style diagnostic counter shape, including no pre-parse increment and
+  branch-local increments before recoverable-error continues.
+  `TestReplSyntaxErrorsIncludeLineAndPositionByShape` now pins the
+  EOF-adjusting `ivySyntaxErrorAt` path for missing close parens. The full
+  slow suite is green at 27.361s with no individual event over two seconds, and
+  the normal fast `./ivy2golang` / `./cmd/ivy2golang` checks are green at
+  4.838s / 0.009s.
+- 2026-09-24: Enabled the `variant_simple.ivy` generated-tester args fixture
+  now that current `ivy2cpp` and `ivy2golang` both generate, build, and match
+  for the short target=test runtime probe. `variant_simple.test.args` now uses
+  `iters=3 runs=1 seed=1 wait=0 delay=0`, and
+  `TestOracleVariantSimpleTesterArgsEnabledFast` guards that the PASS fixture
+  remains enabled. The focused slow subtest
+  `TestOracleGeneratedTesterArgsCompileAndRunSlow/variant_simple` is green at
+  1.54s, and the full slow suite remains green at 27.512s with no individual
+  event over two seconds.
+- 2026-09-24: Added `TestOraclePassFixturesHaveEnabledTesterArgsFast` as a
+  fast metadata guard for oracle coverage. It prevents a passing fixture from
+  being left out of `goOracleFixtureNames`, prevents a Go-listed fixture from
+  drifting away from `PASS` status, and prevents stale `SKIP` tester args from
+  hiding generated-binary coverage. Focused oracle metadata checks are green at
+  0.032s; the full slow suite remains green at 27.183s with no individual event
+  at or above two seconds.
+- 2026-09-24: Re-probed the remaining target=gen variant external-oracle
+  exclusion. `ivy2golang` still builds `variant_simple.ivy` and
+  `variant_recursive.ivy`, but current `ivy2cpp build=true` fails to link both
+  before runtime comparison because generated C++ lacks the subtype `_arg` /
+  `__deser` specializations. The exclusion is still a C++ oracle availability
+  limit, not a current Go runtime mismatch.
+- 2026-09-24: Expanded
+  `TestOracleFixtureBatchMetadataMatchesCurrentIvy2CppFast` from representative
+  `target=gen` / `target=impl` / `target=class` fixtures to every non-native
+  oracle fixture for all five supported metadata targets. This gives broad
+  in-process coverage of wrapper/batch envelopes even for generated C++ binary
+  shapes that are not currently externally comparable. The focused metadata
+  oracle is green at 0.399s and the full slow suite remains green at 27.603s
+  with no individual event at or above two seconds.
 - 2026-09-24: Removed the Hermes/formula-specific soft-assumption core-order
   shim. Scratch z3++ probes against the same vendored Z3 runtime showed that
   `ivy_z3_gen`-style assumption checks return the native core order
@@ -4312,16 +4809,16 @@ Progress:
 - 2026-09-23: Marked this item fixed for the current conformance push by
   reconciling it with the active user instruction to stop adding tests. This is
   now a verification policy item rather than a blocker on item 1 feature work:
-  existing fast tests must remain green after each behavior change, and broad
-  oracle expansion is deferred until after the current no-new-tests phase.
+  existing fast tests must remain green after each behavior change. The later
+  2026-09-24 full slow pass and Hermes sanity oracle supersede the former
+  broad-oracle deferral.
 - 2026-09-22: Added fast focused regressions for the fixed slices above:
   target=test per-action generators and preimage guards, target=gen preimage
   guards, initial-state SMT fallback for target=test and target=gen, native
   weakening rejection, fatal unsupported exported conditions, stack-qualified
   choices, modelfile unsupported-content markers, finalizer lock ordering, and
-  before_export preimage handling. The normal `ivy2golang` and
-  `cmd/ivy2golang` test run remains under five seconds; C++ oracle expansion is
-  left to the final `SLOWTEST=1` pass.
+  before_export preimage handling. The later 2026-09-24 verification records
+  the completed full `SLOWTEST=1` pass.
 - 2026-09-22: Added fast coverage twins for already-modeled shared generator
   behavior: `TestTargetTestCallReturnDestructorFieldPreimageUsesGeneratorGuardFast`,
   `TestTargetGenCallReturnDestructorFieldPreimageUsesGeneratorGuardFast`, and
@@ -4331,8 +4828,8 @@ Progress:
   spellings, constrained negated existential variant payload guards, and local
   variant-super witnesses for existential, concrete, and negated concrete
   membership assumptions. These remain source-shape/generator-analysis tests;
-  slow generated-binary oracle comparisons are still deferred until the final
-  `SLOWTEST=1` verification pass.
+  generated-binary coverage is handled by the slow oracle suite noted in the
+  current verification block.
 - 2026-09-22: Added fast coverage for the local variant state-update
   direct-execution slice:
   `TestTargetTestLocalVariantStateUpdateSkipsTrialFast` checks that the

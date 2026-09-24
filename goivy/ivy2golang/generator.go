@@ -513,7 +513,7 @@ func (g *Generator) emitImports(w *goWriter) {
 	w.line("import (")
 	w.indent++
 	imports := []string{"fmt", "io", "math/rand/v2", "os", "strconv", "strings", "github.com/glycerine/ivy/goivy"}
-	if g.Config.Target == "repl" && g.Config.EmitMain {
+	if g.replMainInstallsCommandScanner() {
 		imports = append(imports, "bufio")
 	}
 	if g.Config.Target == "test" {
@@ -1420,6 +1420,13 @@ func ivySyntaxError(pos int) error {
 	return ivySyntaxErr{pos: pos}
 }
 
+func ivySyntaxErrorAt(text string, pos int) error {
+	if pos == len(text) {
+		return ivySyntaxError(pos + 1)
+	}
+	return ivySyntaxError(pos)
+}
+
 func ivySyntaxErrorPos(err error) (int, bool) {
 	if e, ok := err.(ivySyntaxErr); ok {
 		return e.pos, true
@@ -1433,6 +1440,9 @@ func ivyGetIdent(text string, pos *int) (string, error) {
 		*pos = *pos + 1
 	}
 	if start == *pos {
+		if *pos == len(text) {
+			return "", ivySyntaxError(*pos + 1)
+		}
 		return "", ivySyntaxError(*pos)
 	}
 	return text[start:*pos], nil
@@ -1591,7 +1601,7 @@ func ivyParseCommand(text string) (string, []ivyValue, error) {
 			pos = pos + 1
 			break
 		}
-		return "", nil, ivySyntaxError(pos)
+		return "", nil, ivySyntaxErrorAt(text, pos)
 	}
 	ivySkipWhite(text, &pos)
 	if pos != len(text) {
@@ -3016,7 +3026,7 @@ func (g *Generator) emitIvyValueParamDecodeIntoBoundsWith(w *goWriter, dst, valu
 			}
 			w.line("default:")
 			w.indent++
-			g.emitIvyValueBadValueText(w, ctx, valueExpr+".pos", paramName, `"bad value: " + `+valueExpr+".atom")
+			g.emitIvyValueBadValueText(w, ctx, valueExpr+".pos", paramName, `strconv.Quote("bad value: "+`+valueExpr+".atom)")
 			w.indent--
 			w.close("")
 			return
@@ -3172,7 +3182,7 @@ func (g *Generator) emitIvyValueNumericParamDecodeBounds(w *goWriter, dst, value
 
 func (g *Generator) emitIvyValueSyntaxError(w *goWriter, ctx ivyValueDecodeContext, posExpr, paramName string) {
 	if ctx.replArg {
-		g.emitIvyValueBadValueText(w, ctx, posExpr, paramName, strconv.Quote(fmt.Sprintf("argument %d", ctx.argIndex+1)))
+		g.emitIvyValueBadValueText(w, ctx, posExpr, paramName, quotedReplArgumentTextExpr(ctx.argIndex))
 		return
 	}
 	if ctx.positionalParam {
@@ -3184,13 +3194,18 @@ func (g *Generator) emitIvyValueSyntaxError(w *goWriter, ctx ivyValueDecodeConte
 }
 
 func (g *Generator) emitIvyValueOutOfBounds(w *goWriter, ctx ivyValueDecodeContext, posExpr, paramName string) {
-	g.emitIvyValueBadValueText(w, ctx, posExpr, paramName, strconv.Quote(fmt.Sprintf("argument %d", ctx.argIndex+1)))
+	g.emitIvyValueBadValueText(w, ctx, posExpr, paramName, quotedReplArgumentTextExpr(ctx.argIndex))
+}
+
+func quotedReplArgumentTextExpr(argIndex int) string {
+	return strconv.Quote(strconv.Quote(fmt.Sprintf("argument %d", argIndex+1)))
 }
 
 func (g *Generator) emitIvyValueBadValueText(w *goWriter, ctx ivyValueDecodeContext, posExpr, paramName, textExpr string) {
 	if ctx.replArg {
 		w.linef("fmt.Fprintf(os.Stderr, %q, __ivy_lineno, %s, %s)", "line %d:%d: %s bad value\n", posExpr, textExpr)
-		w.line("__ivy_repl_failed = true")
+		g.emitReplPromptIfInteractive(w)
+		w.line("__ivy_lineno++")
 		w.line("continue __ivy_repl_loop")
 		return
 	}
@@ -3265,12 +3280,21 @@ func (g *Generator) emitReplMain(w *goWriter) {
 	g.emitRuntimeOptionSetup(w, "opts")
 	w.linef("ivy := new%s(%s)", exportedishName(g.ClassName), strings.Join(g.constructorParamArgNames(), ", "))
 	w.line("ivy.__argv = append([]string{os.Args[0]}, rest...)")
+	if !g.replMainInstallsCommandScanner() {
+		w.line("_ = ivy")
+		w.close("")
+		w.blank()
+		return
+	}
 	w.line("__ivy_repl_scanner = bufio.NewScanner(os.Stdin)")
-	w.line("__ivy_lineno := 0")
-	w.line("__ivy_repl_failed := false")
+	w.line("__ivy_repl_interactive := false")
+	w.open("if __ivy_repl_stat, err := os.Stdin.Stat(); err == nil && (__ivy_repl_stat.Mode()&os.ModeCharDevice) != 0 {")
+	w.line("__ivy_repl_interactive = true")
+	w.line(`fmt.Fprint(__ivy_out, "> ")`)
+	w.close("")
+	w.line("__ivy_lineno := 1")
 	w.line("__ivy_repl_loop:")
 	w.open("for __ivy_repl_scanner.Scan() {")
-	w.line("__ivy_lineno++")
 	w.line("__ivy_action, __ivy_args, err := ivyParseCommand(__ivy_repl_scanner.Text())")
 	w.line("_ = __ivy_args")
 	w.open("if err != nil {")
@@ -3279,7 +3303,8 @@ func (g *Generator) emitReplMain(w *goWriter) {
 	w.close(" else {")
 	w.line(`fmt.Fprintf(os.Stderr, "line %d: syntax error\n", __ivy_lineno)`)
 	w.close("")
-	w.line("__ivy_repl_failed = true")
+	g.emitReplPromptIfInteractive(w)
+	w.line("__ivy_lineno++")
 	w.line("continue __ivy_repl_loop")
 	w.close("")
 	g.emitReplDispatch(w, "__ivy_action", "__ivy_args")
@@ -3288,11 +3313,18 @@ func (g *Generator) emitReplMain(w *goWriter) {
 	w.line("fmt.Fprintln(os.Stderr, err)")
 	w.line("os.Exit(1)")
 	w.close("")
-	w.open("if __ivy_repl_failed {")
-	w.line("os.Exit(1)")
-	w.close("")
 	w.close("")
 	w.blank()
+}
+
+func (g *Generator) replMainInstallsCommandScanner() bool {
+	return g != nil && g.Config.Target == "repl" && g.Config.EmitMain && len(g.publicActionNamesSorted()) > 0
+}
+
+func (g *Generator) emitReplPromptIfInteractive(w *goWriter) {
+	w.open("if __ivy_repl_interactive {")
+	w.line(`fmt.Fprint(__ivy_out, "> ")`)
+	w.close("")
 }
 
 func (g *Generator) emitReplDispatch(w *goWriter, actionVar, argsVar string) {
@@ -3305,7 +3337,8 @@ func (g *Generator) emitReplDispatch(w *goWriter, actionVar, argsVar string) {
 	w.line("default:")
 	w.indent++
 	w.linef("fmt.Fprintf(os.Stderr, %q, %s)", "undefined action: %q\n", actionVar)
-	w.line("__ivy_repl_failed = true")
+	g.emitReplPromptIfInteractive(w)
+	w.line("__ivy_lineno++")
 	w.line("continue __ivy_repl_loop")
 	w.indent--
 	w.indent--
@@ -3318,7 +3351,8 @@ func (g *Generator) emitReplActionCase(w *goWriter, name string, act goivy.Actio
 	formals := act.GetFormalParams()
 	w.open(fmt.Sprintf("if len(%s) != %d {", argsVar, len(formals)))
 	w.linef("fmt.Fprintf(os.Stderr, %q, %s, %d)", "action %q takes %d input parameters\n", actionVar, len(formals))
-	w.line("__ivy_repl_failed = true")
+	g.emitReplPromptIfInteractive(w)
+	w.line("__ivy_lineno++")
 	w.line("continue __ivy_repl_loop")
 	w.close("")
 	args := make([]string, 0, len(formals))

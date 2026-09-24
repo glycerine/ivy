@@ -330,6 +330,31 @@ func (ctx *Z3Context) Const(name string, sort Z3Sort) Z3Expr {
 	return e
 }
 
+// BoolConst creates a named Boolean constant without materializing a Go
+// Z3Sort wrapper for the Boolean sort. This mirrors z3::context::bool_const
+// more closely for generated runtime assumption literals.
+func (ctx *Z3Context) BoolConst(name string) Z3Expr {
+	sym := ctx.symbol(name)
+	var e Z3Expr
+	ctx.do(func() {
+		e = ctx.newExpr(C.Z3_mk_const(ctx.c, sym, C.Z3_mk_bool_sort(ctx.c)))
+	})
+	return e
+}
+
+// Release drops this Go wrapper's reference to a Z3 AST. Callers should only
+// use it for short-lived expressions they created and no longer need; solver
+// assertions and models keep their own Z3 references.
+func (e Z3Expr) Release() {
+	if e.ctx == nil || e.c == nil {
+		return
+	}
+	e.ctx.do(func() {
+		C.Z3_dec_ref(e.ctx.c, e.c)
+	})
+	runtime.KeepAlive(e)
+}
+
 // BoolVal returns a boolean literal.
 func (ctx *Z3Context) BoolVal(val bool) Z3Expr {
 	var e Z3Expr
@@ -1296,6 +1321,18 @@ func (m *Model) String() string {
 	})
 	runtime.KeepAlive(m)
 	return res
+}
+
+// Release drops this wrapper's model reference. Callers should only use it
+// when they own the model lifetime and no later Eval/String calls will use it.
+func (m *Model) Release() {
+	if m == nil || m.ctx == nil || m.c == nil {
+		return
+	}
+	m.ctx.do(func() {
+		C.Z3_model_dec_ref(m.ctx.c, m.c)
+	})
+	runtime.KeepAlive(m)
 }
 
 // --- IC3/PDR extensions ---

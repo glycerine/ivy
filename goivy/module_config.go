@@ -170,23 +170,35 @@ type Config struct {
 
 // SolverOptions controls per-solver Z3 behavior.
 type SolverOptions struct {
-	Seed        int
-	SeedSet     bool
-	Incremental bool
-	MacroFinder bool
-	ShowVCs     bool
-	UseZ3Enums  bool
+	Seed           int
+	SeedSet        bool
+	Incremental    bool
+	MacroFinder    bool
+	MacroFinderSet bool
+	ShowVCs        bool
+	UseZ3Enums     bool
 }
 
 // DefaultSolverOptions returns the default solver options.
 func DefaultSolverOptions() *SolverOptions {
 	return &SolverOptions{
-		Seed:        0,
-		Incremental: true,
-		MacroFinder: true,
-		ShowVCs:     false,
-		UseZ3Enums:  true,
+		Seed:           0,
+		Incremental:    true,
+		MacroFinder:    true,
+		MacroFinderSet: true,
+		ShowVCs:        false,
+		UseZ3Enums:     true,
 	}
+}
+
+// CppRuntimeSolverOptions returns the plain solver profile used by the
+// generated C++ ivy_z3_gen runtime: construct a solver and leave Z3's solver
+// parameters unset unless a caller explicitly supplies one.
+func CppRuntimeSolverOptions() *SolverOptions {
+	opts := DefaultSolverOptions()
+	opts.MacroFinder = false
+	opts.MacroFinderSet = false
+	return opts
 }
 
 // IsolateConfig holds per-session isolate configuration. It replaces

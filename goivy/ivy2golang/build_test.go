@@ -2,6 +2,8 @@ package ivy2golang
 
 import (
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"flag"
 	"go/parser"
 	"go/token"
@@ -20,6 +22,10 @@ var (
 	generatedBuildTestEnv     []string
 	generatedBuildTestRoot    string
 	generatedBuildTestEnvErr  error
+	generatedBinaryRootOnce   sync.Once
+	generatedBinaryRoot       string
+	generatedBinaryRootErr    error
+	generatedBinaryBuilds     sync.Map
 	slowTestParallelized      sync.Map
 )
 
@@ -28,6 +34,9 @@ func TestMain(m *testing.M) {
 	code := m.Run()
 	if generatedBuildTestRoot != "" {
 		_ = os.RemoveAll(generatedBuildTestRoot)
+	}
+	if generatedBinaryRoot != "" && generatedBinaryRoot != generatedBuildTestRoot {
+		_ = os.RemoveAll(generatedBinaryRoot)
 	}
 	os.Exit(code)
 }
@@ -51,8 +60,8 @@ func configureSlowTestParallelism() {
 		if n < 4 {
 			n = 4
 		}
-		if n > 8 {
-			n = 8
+		if n > 9 {
+			n = 9
 		}
 		limit = strconv.Itoa(n)
 	}
@@ -88,6 +97,23 @@ func compileGeneratedGo(t *testing.T, out *Output) string {
 	}
 	validateGeneratedGoForTest(t, srcPath)
 	return srcPath
+}
+
+func validateGeneratedGoSourceForTest(t *testing.T, out *Output) {
+	t.Helper()
+	if out == nil || out.Source == "" {
+		t.Fatalf("nil or empty generated output")
+	}
+	fset := token.NewFileSet()
+	if _, err := parser.ParseFile(fset, goSourceFileName(out.BaseName), out.Source, 0); err != nil {
+		t.Fatalf("parse generated Go: %v\nsource:\n%s", err, out.Source)
+	}
+	if line := firstBareUndeclaredSyntheticTempAssignment(out.Source); line != "" {
+		t.Fatalf("generated Go assigns synthetic temp before declaration: %s\nsource:\n%s", line, out.Source)
+	}
+	if unused := unreadDeclaredSyntheticTemps(out.Source); len(unused) != 0 {
+		t.Fatalf("generated Go declares unread synthetic temps: %v\nsource:\n%s", unused, out.Source)
+	}
 }
 
 func validateGeneratedGoForTest(t *testing.T, srcPath string) {
@@ -179,21 +205,62 @@ func ensureGeneratedBinaryForTest(t *testing.T, path string) string {
 	if !strings.HasSuffix(path, ".go") {
 		return path
 	}
-	bin := strings.TrimSuffix(path, ".go")
-	if runtime.GOOS == "windows" {
-		bin += ".exe"
-	}
-	if st, err := os.Stat(bin); err == nil && st.Mode().IsRegular() {
-		return bin
-	}
-	cmd := exec.Command("go", "build", "-o", bin, path)
-	cmd.Env = append(os.Environ(), generatedBuildEnvForTest(t)...)
-	cmd.Dir = moduleRootForGeneratedBuild()
-	data, err := cmd.CombinedOutput()
+	src, err := os.ReadFile(path)
 	if err != nil {
-		t.Fatalf("build generated Go for run: %v\n%s\nsource: %s", err, string(data), path)
+		t.Fatalf("read generated Go before build: %v\nsource: %s", err, path)
 	}
-	return bin
+	sum := sha256.Sum256(src)
+	key := runtime.GOOS + "-" + runtime.GOARCH + "-" + hex.EncodeToString(sum[:])
+	build := generatedBinaryBuildForTest(t, key)
+	build.once.Do(func() {
+		bin := filepath.Join(generatedBinaryRootForTest(t), "generated-"+key)
+		if runtime.GOOS == "windows" {
+			bin += ".exe"
+		}
+		build.path = bin
+		if st, err := os.Stat(bin); err == nil && st.Mode().IsRegular() {
+			return
+		}
+		cmd := exec.Command("go", "build", "-o", bin, path)
+		cmd.Env = append(os.Environ(), generatedBuildEnvForTest(t)...)
+		cmd.Dir = moduleRootForGeneratedBuild()
+		build.output, build.err = cmd.CombinedOutput()
+	})
+	if build.err != nil {
+		t.Fatalf("build generated Go for run: %v\n%s\nsource: %s", build.err, string(build.output), path)
+	}
+	if build.path == "" {
+		t.Fatalf("build generated Go produced empty binary path\nsource: %s", path)
+	}
+	return build.path
+}
+
+type generatedBinaryBuild struct {
+	once   sync.Once
+	path   string
+	output []byte
+	err    error
+}
+
+func generatedBinaryBuildForTest(t *testing.T, key string) *generatedBinaryBuild {
+	t.Helper()
+	value, _ := generatedBinaryBuilds.LoadOrStore(key, &generatedBinaryBuild{})
+	return value.(*generatedBinaryBuild)
+}
+
+func generatedBinaryRootForTest(t *testing.T) string {
+	t.Helper()
+	generatedBinaryRootOnce.Do(func() {
+		parent := os.Getenv("GOTMPDIR")
+		if parent == "" {
+			parent = os.TempDir()
+		}
+		generatedBinaryRoot, generatedBinaryRootErr = os.MkdirTemp(parent, "ivy2golang-generated-bin-*")
+	})
+	if generatedBinaryRootErr != nil {
+		t.Fatalf("prepare shared generated binary cache: %v", generatedBinaryRootErr)
+	}
+	return generatedBinaryRoot
 }
 
 func TestFormatGoOutputFileFast(t *testing.T) {

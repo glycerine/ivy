@@ -377,6 +377,23 @@ func (ctx *Z3Context) Const(name string, sort Z3Sort) Z3Expr {
 	return e
 }
 
+func (ctx *Z3Context) BoolConst(name string) Z3Expr {
+	sym := ctx.symbol(name)
+	var e Z3Expr
+
+	e = ctx.newExpr(z3_mk_const(ctx.c, sym, z3_mk_bool_sort(ctx.c)))
+
+	return e
+}
+
+func (e Z3Expr) Release() {
+	if e.ctx == nil || e.c == 0 {
+		return
+	}
+	z3_dec_ref(e.ctx.c, e.c)
+	runtime.KeepAlive(e)
+}
+
 // BoolVal returns a boolean literal.
 func (ctx *Z3Context) BoolVal(val bool) Z3Expr {
 	var e Z3Expr
@@ -1254,6 +1271,14 @@ func (m *Model) String() string {
 
 	runtime.KeepAlive(m)
 	return res
+}
+
+func (m *Model) Release() {
+	if m == nil || m.ctx == nil || m.c == 0 {
+		return
+	}
+	z3Model_dec_ref(m.ctx.c, m.c)
+	runtime.KeepAlive(m)
 }
 
 // --- IC3/PDR extensions ---

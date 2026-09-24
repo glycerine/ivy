@@ -135,8 +135,9 @@ func solverOptionParamValues(opts *SolverOptions) map[string]string {
 	if opts == nil {
 		return nil
 	}
-	params := map[string]string{
-		"smt.macro_finder": strconv.FormatBool(opts.MacroFinder),
+	params := map[string]string{}
+	if opts.MacroFinderSet {
+		params["smt.macro_finder"] = strconv.FormatBool(opts.MacroFinder)
 	}
 	if opts.SeedSet || opts.Seed != 0 {
 		params["smt.random_seed"] = strconv.Itoa(opts.Seed)

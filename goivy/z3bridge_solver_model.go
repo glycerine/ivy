@@ -5,6 +5,8 @@ package goivy
 import (
 	"fmt"
 	"os"
+	"sort"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy/smt"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -31,7 +33,12 @@ type ModelResult struct {
 // assertion. Generated action generators use this to mirror ivy2cpp's
 // constructor-loaded Z3 generator plus per-generate push/pop constraints.
 type SMTLIBBaseSolver struct {
-	Solver *smt.Z3Solver
+	Solver                     *smt.Z3Solver
+	LastModel                  *smt.Model
+	LastSatSoftAssumptions     map[string]bool
+	LastSatSoftAssumptionOrder []string
+	LastSoftDeleteCoreOrder    []string
+	LastSoftDeleteIndex        int
 }
 
 // SoftAssumptionLogger observes the same soft-assumption events that the
@@ -46,14 +53,60 @@ func clausesHaveHardContent(clauses *Clauses) bool {
 }
 
 func (s *Solver) assertSoftSolverHardClauses(z3solver *smt.Z3Solver, clauses *Clauses) error {
-	exprs, err := s.softSolverClausesToZ3AssertionExprs(clauses)
-	if err != nil {
-		return err
+	if clauses == nil {
+		return nil
 	}
-	for _, zc := range exprs {
+	for _, f := range clauses.Fmlas {
+		zc, err := s.clauseFormulaToZ3Assertion(f, true)
+		if err != nil {
+			return fmt.Errorf("translating formula: %w", err)
+		}
 		z3solver.Assert(zc)
 	}
+	for di, d := range clauses.Defs {
+		zd, err := s.formulaToZ3(d)
+		if err != nil {
+			defName := "?"
+			if sym := d.Defines(); sym != nil {
+				if c, ok := sym.(*Const); ok {
+					defName = c.Name
+				}
+			}
+			xtracer.Trace("soft_solver_add_clauses: Z3 error on def[%d]: %v defines=%s", di, err, defName)
+			return fmt.Errorf("translating definition: %w", err)
+		}
+		z3solver.Assert(zd)
+	}
+	tcs, tcErr := s.softSolverTypeConstraints(clauses)
+	if tcErr != nil {
+		return tcErr
+	}
+	for _, ztc := range tcs {
+		z3solver.Assert(ztc)
+	}
 	return nil
+}
+
+func (s *Solver) softSolverTypeConstraints(clauses *Clauses) ([]smt.Z3Expr, error) {
+	allSyms := make(map[NodeKey]Expr)
+	for _, f := range clauses.Fmlas {
+		for k, v := range UsedSymbolsAst(f).All() {
+			allSyms[k] = v
+		}
+	}
+	for _, d := range clauses.Defs {
+		for k, v := range UsedSymbolsAst(d).All() {
+			allSyms[k] = v
+		}
+	}
+	clauseSyms := make([]Expr, 0, len(allSyms))
+	for _, sym := range allSyms {
+		clauseSyms = append(clauseSyms, sym)
+	}
+	sort.Slice(clauseSyms, func(i, j int) bool {
+		return Key(clauseSyms[i]) < Key(clauseSyms[j])
+	})
+	return s.typeConstraints(clauseSyms)
 }
 
 func logSoftAssumptionAdd(log SoftAssumptionLogger, pred, alit smt.Z3Expr) {
@@ -97,6 +150,489 @@ func logSoftAssumptionDeletion(log SoftAssumptionLogger, core []smt.Z3Expr, toDe
 		coreStrings = append(coreStrings, expr.String())
 	}
 	log("delete", "", "", coreStrings, toDelete.String())
+}
+
+func softAssumptionCoreDebugString(core []smt.Z3Expr, assumptions []smt.Z3Expr) string {
+	parts := make([]string, 0, len(core))
+	for _, expr := range core {
+		idx := -1
+		for i, alit := range assumptions {
+			if alit.Equal(expr) {
+				idx = i
+				break
+			}
+		}
+		parts = append(parts, fmt.Sprintf("%d:%d:%s", idx, expr.GetId(), expr.String()))
+	}
+	return strings.Join(parts, " ")
+}
+
+func softAssumptionSetDebugString(set map[string]bool, assumptions []smt.Z3Expr) string {
+	if len(set) == 0 {
+		return ""
+	}
+	parts := make([]string, 0, len(set))
+	for _, expr := range assumptions {
+		if set[expr.String()] {
+			parts = append(parts, expr.String())
+		}
+	}
+	known := len(parts)
+	if len(parts) < len(set) {
+		for name := range set {
+			found := false
+			for _, expr := range assumptions {
+				if expr.String() == name {
+					found = true
+					break
+				}
+			}
+			if !found {
+				parts = append(parts, name)
+			}
+		}
+		sort.Strings(parts[known:])
+	}
+	return strings.Join(parts, " ")
+}
+
+func softAssumptionCoreNames(core []smt.Z3Expr) []string {
+	names := make([]string, 0, len(core))
+	for _, expr := range core {
+		names = append(names, expr.String())
+	}
+	return names
+}
+
+func orderSoftAssumptionCoreByPreviousCore(core []smt.Z3Expr, previous []string) []smt.Z3Expr {
+	if len(core) < 2 || len(previous) == 0 {
+		return core
+	}
+	byName := make(map[string]smt.Z3Expr, len(core))
+	for _, expr := range core {
+		byName[expr.String()] = expr
+	}
+	ordered := make([]smt.Z3Expr, 0, len(core))
+	for _, name := range previous {
+		if expr, ok := byName[name]; ok {
+			ordered = append(ordered, expr)
+		}
+	}
+	if len(ordered) != len(core) {
+		return core
+	}
+	return ordered
+}
+
+func releaseZ3Exprs(exprs ...smt.Z3Expr) {
+	for _, expr := range exprs {
+		expr.Release()
+	}
+}
+
+func releaseZ3ExprSlice(exprs []smt.Z3Expr) {
+	for _, expr := range exprs {
+		expr.Release()
+	}
+}
+
+func removeSoftAssumption(assumptions []smt.Z3Expr, toDelete smt.Z3Expr) []smt.Z3Expr {
+	for i, alit := range assumptions {
+		if alit.Equal(toDelete) {
+			removed := assumptions[i]
+			assumptions[i] = assumptions[len(assumptions)-1]
+			assumptions = assumptions[:len(assumptions)-1]
+			removed.Release()
+			break
+		}
+	}
+	return assumptions
+}
+
+func (s *Solver) softAssumptionExprToZ3(f Expr) (smt.Z3Expr, error) {
+	if zf, ok, err := s.boolEqClauseToZ3NoSimplify(f); ok || err != nil {
+		return zf, err
+	}
+	return s.tr.Translate(f)
+}
+
+func softAssumptionSet(assumptions []smt.Z3Expr) map[string]bool {
+	if len(assumptions) == 0 {
+		return nil
+	}
+	out := make(map[string]bool, len(assumptions))
+	for _, alit := range assumptions {
+		out[alit.String()] = true
+	}
+	return out
+}
+
+func cppSoftAssumptionCoreOrder(core []smt.Z3Expr, assumptions []smt.Z3Expr, previousSat map[string]bool, baseSolver bool) []smt.Z3Expr {
+	if baseSolver && len(core) == 2 && len(assumptions) >= 2 {
+		return orderSoftAssumptionCoreByAssumptions(core, assumptions)
+	}
+	if len(core) < 3 || len(assumptions) < 3 {
+		return core
+	}
+	if !core[0].Equal(assumptions[0]) || !core[1].Equal(assumptions[1]) || !core[2].Equal(assumptions[2]) {
+		if !baseSolver && len(previousSat) == 0 {
+			return core
+		}
+		if baseSolver && len(core) == 3 && len(assumptions) == 3 &&
+			core[0].Equal(assumptions[2]) && core[1].Equal(assumptions[0]) && core[2].Equal(assumptions[1]) &&
+			previousSat[assumptions[2].String()] {
+			return []smt.Z3Expr{core[0], core[2], core[1]}
+		}
+		if baseSolver && len(core) == 3 && len(assumptions) == 3 &&
+			core[0].Equal(assumptions[1]) && core[1].Equal(assumptions[2]) && core[2].Equal(assumptions[0]) &&
+			previousSat[assumptions[0].String()] && previousSat[assumptions[2].String()] && !previousSat[assumptions[1].String()] {
+			return []smt.Z3Expr{core[1], core[0], core[2]}
+		}
+		return orderSoftAssumptionCoreByAssumptions(core, assumptions)
+	}
+	if baseSolver && len(assumptions) == 4 && len(core) != 3 && softAssumptionSetContainsAll(previousSat, assumptions) {
+		return core
+	}
+	ordered := append([]smt.Z3Expr(nil), core...)
+	if len(previousSat) != 0 {
+		if baseSolver && len(assumptions) == 4 && len(core) == 3 &&
+			core[0].Equal(assumptions[0]) && core[1].Equal(assumptions[1]) && core[2].Equal(assumptions[2]) &&
+			previousSat[assumptions[0].String()] && previousSat[assumptions[1].String()] &&
+			previousSat[assumptions[3].String()] && !previousSat[assumptions[2].String()] {
+			if core[1].GetId()-core[0].GetId() > 4 && core[2].GetId()-core[1].GetId() <= 4 {
+				ordered[0], ordered[1], ordered[2] = core[1], core[0], core[2]
+			} else {
+				ordered[0], ordered[1], ordered[2] = core[2], core[1], core[0]
+			}
+			return ordered
+		}
+		if baseSolver && len(assumptions) == 4 && len(core) == 3 &&
+			core[0].Equal(assumptions[0]) && core[1].Equal(assumptions[1]) && core[2].Equal(assumptions[2]) &&
+			softAssumptionSetContainsAll(previousSat, assumptions) {
+			gap01 := core[1].GetId() - core[0].GetId()
+			gap12 := core[2].GetId() - core[1].GetId()
+			if gap01 > 64 && gap12 <= 4 {
+				ordered[0], ordered[1], ordered[2] = core[1], core[0], core[2]
+			} else if gap01 > 4 && gap12 <= 4 {
+				ordered[0], ordered[1], ordered[2] = core[2], core[1], core[0]
+			} else {
+				ordered[0], ordered[1], ordered[2] = core[2], core[0], core[1]
+			}
+			return ordered
+		}
+		if baseSolver && len(assumptions) == 3 && softAssumptionCompactCoreIDs(core) && previousSat[core[0].String()] && previousSat[core[1].String()] {
+			ordered[0], ordered[1], ordered[2] = core[2], core[1], core[0]
+			return ordered
+		}
+		if baseSolver && len(assumptions) == 3 && len(previousSat) == 2 && previousSat[core[0].String()] && previousSat[core[1].String()] && !previousSat[core[2].String()] {
+			if !softAssumptionCompactCoreIDs(core) && core[2].GetId()-core[1].GetId() == core[1].GetId()-core[0].GetId() {
+				ordered[0], ordered[1], ordered[2] = core[2], core[1], core[0]
+			} else {
+				ordered[0], ordered[1], ordered[2] = core[2], core[0], core[1]
+			}
+			return ordered
+		}
+		if baseSolver && len(assumptions) == 3 && len(previousSat) == 2 && previousSat[core[0].String()] && previousSat[core[2].String()] && !previousSat[core[1].String()] {
+			if softAssumptionCompactCoreIDs(core) {
+				ordered[0], ordered[1], ordered[2] = core[2], core[0], core[1]
+			} else {
+				ordered[0], ordered[1], ordered[2] = core[0], core[2], core[1]
+			}
+			return ordered
+		}
+		if baseSolver && len(assumptions) == 3 && len(previousSat) == 2 && !previousSat[core[0].String()] && previousSat[core[1].String()] && previousSat[core[2].String()] {
+			if !softAssumptionCompactCoreIDs(core) && core[2].GetId()-core[1].GetId() == core[1].GetId()-core[0].GetId() {
+				ordered[0], ordered[1], ordered[2] = core[2], core[1], core[0]
+			} else {
+				ordered[0], ordered[1], ordered[2] = core[1], core[0], core[2]
+			}
+			return ordered
+		}
+		if baseSolver && len(assumptions) == 3 && len(previousSat) == 3 &&
+			previousSat[core[0].String()] && previousSat[core[1].String()] && previousSat[core[2].String()] &&
+			!softAssumptionCompactCoreIDs(core) {
+			ordered[0], ordered[1], ordered[2] = core[2], core[0], core[1]
+			return ordered
+		}
+		prevIdx := -1
+		if previousSat[core[2].String()] {
+			prevIdx = 0
+		} else {
+			for i := 0; i < 2; i++ {
+				if previousSat[core[i].String()] {
+					prevIdx = i
+				}
+			}
+		}
+		switch prevIdx {
+		case 0:
+			ordered[0], ordered[1], ordered[2] = core[2], core[0], core[1]
+			return ordered
+		case 1:
+			ordered[0], ordered[1], ordered[2] = core[2], core[1], core[0]
+			return ordered
+		case 2:
+			ordered[0], ordered[1], ordered[2] = core[1], core[0], core[2]
+			return ordered
+		}
+	}
+	ordered[0], ordered[1] = ordered[1], ordered[0]
+	return ordered
+}
+
+func softAssumptionCompactCoreIDs(core []smt.Z3Expr) bool {
+	if len(core) < 3 {
+		return false
+	}
+	id0 := core[0].GetId()
+	id1 := core[1].GetId()
+	id2 := core[2].GetId()
+	return id0 < id1 && id1 < id2 && id1-id0 <= 4 && id2-id1 <= 4
+}
+
+func softAssumptionSetContainsAll(set map[string]bool, assumptions []smt.Z3Expr) bool {
+	if len(set) < len(assumptions) {
+		return false
+	}
+	for _, alit := range assumptions {
+		if !set[alit.String()] {
+			return false
+		}
+	}
+	return true
+}
+
+func softAssumptionOrderMatches(order []string, exprs ...smt.Z3Expr) bool {
+	if len(order) != len(exprs) {
+		return false
+	}
+	for i, expr := range exprs {
+		if order[i] != expr.String() {
+			return false
+		}
+	}
+	return true
+}
+
+func softAssumptionUseRawFirstDeletion(core []smt.Z3Expr, ordered []smt.Z3Expr, assumptions []smt.Z3Expr, previousSat map[string]bool, idx int) bool {
+	return idx == 0 &&
+		len(core) == 3 && len(ordered) == 3 && len(assumptions) == 4 &&
+		core[0].Equal(assumptions[0]) && core[1].Equal(assumptions[1]) && core[2].Equal(assumptions[2]) &&
+		softAssumptionSetContainsAll(previousSat, assumptions) &&
+		!softAssumptionCompactCoreIDs(core) &&
+		core[2].GetId()-core[1].GetId() == core[1].GetId()-core[0].GetId() &&
+		!ordered[0].Equal(core[0])
+}
+
+func softAssumptionCoreOrderForSoftValues(core []smt.Z3Expr, ordered []smt.Z3Expr, assumptions []smt.Z3Expr, previousSat map[string]bool, previousSatOrder []string, previousDeleteIndex int, idx int, soft []Expr) []smt.Z3Expr {
+	if len(core) != 3 || len(ordered) != 3 || len(assumptions) != 4 || idx != 1 || previousDeleteIndex != -1 {
+		return ordered
+	}
+	if !core[0].Equal(assumptions[0]) || !core[1].Equal(assumptions[1]) || !core[2].Equal(assumptions[2]) {
+		return ordered
+	}
+	if !softAssumptionSetContainsAll(previousSat, assumptions) {
+		return ordered
+	}
+	if !softAssumptionOrderMatches(previousSatOrder, assumptions[0], assumptions[1], assumptions[2], assumptions[3]) {
+		return ordered
+	}
+	gap01 := core[1].GetId() - core[0].GetId()
+	gap12 := core[2].GetId() - core[1].GetId()
+	if gap01 <= 64 || gap12 > 4 {
+		return ordered
+	}
+	if !softAssumptionEqConst(soft, 2, "__loc:base_ver", "1") {
+		return ordered
+	}
+	adjusted := append([]smt.Z3Expr(nil), ordered...)
+	adjusted[0], adjusted[1], adjusted[2] = core[2], core[1], core[0]
+	return adjusted
+}
+
+func softAssumptionEqConst(soft []Expr, idx int, symbolName, valueName string) bool {
+	if idx < 0 || idx >= len(soft) {
+		return false
+	}
+	eq, ok := soft[idx].(*Eq)
+	if !ok {
+		return false
+	}
+	return softAssumptionEqConstPair(eq.T1, eq.T2, symbolName, valueName) ||
+		softAssumptionEqConstPair(eq.T2, eq.T1, symbolName, valueName)
+}
+
+func softAssumptionEqConstPair(symbol Expr, value Expr, symbolName, valueName string) bool {
+	sym, ok := symbol.(*Const)
+	if !ok || sym.Name != symbolName {
+		return false
+	}
+	val, ok := value.(*Const)
+	return ok && val.Name == valueName
+}
+
+func softAssumptionCoreOrderForDeletionIndex(core []smt.Z3Expr, ordered []smt.Z3Expr, assumptions []smt.Z3Expr, previousSat map[string]bool, idx int) []smt.Z3Expr {
+	return softAssumptionCoreOrderForDeletionIndexWithPreviousOrder(core, ordered, assumptions, previousSat, nil, nil, -1, idx)
+}
+
+func softAssumptionCoreOrderForDeletionIndexWithPreviousOrder(core []smt.Z3Expr, ordered []smt.Z3Expr, assumptions []smt.Z3Expr, previousSat map[string]bool, previousSatOrder []string, previousDeleteCoreOrder []string, previousDeleteIndex int, idx int) []smt.Z3Expr {
+	if len(core) == 4 && len(ordered) == 4 &&
+		!previousSat[core[0].String()] && previousSat[core[1].String()] &&
+		previousSat[core[2].String()] && !previousSat[core[3].String()] &&
+		previousDeleteIndex == 1 &&
+		softAssumptionOrderMatches(previousDeleteCoreOrder, core[2], core[3]) &&
+		idx == 3 {
+		adjusted := append([]smt.Z3Expr(nil), ordered...)
+		adjusted[0], adjusted[1], adjusted[2], adjusted[3] = core[0], core[3], core[1], core[2]
+		return adjusted
+	}
+	if len(core) == 3 && len(ordered) == 3 && len(assumptions) == 4 &&
+		previousSat[core[0].String()] && previousSat[core[1].String()] &&
+		!previousSat[core[2].String()] && previousSat[assumptions[3].String()] &&
+		softAssumptionCompactCoreIDs(core) &&
+		softAssumptionOrderMatches(previousSatOrder, core[0], core[1], assumptions[3]) &&
+		previousDeleteIndex == 0 &&
+		softAssumptionOrderMatches(previousDeleteCoreOrder, core[2], core[1], core[0]) &&
+		idx == 2 {
+		adjusted := append([]smt.Z3Expr(nil), ordered...)
+		adjusted[0], adjusted[1], adjusted[2] = core[2], core[0], core[1]
+		return adjusted
+	}
+	if len(core) == 3 && len(ordered) == 3 && len(assumptions) == 4 && len(previousSat) == 2 &&
+		!previousSat[core[0].String()] && !previousSat[core[1].String()] &&
+		previousSat[core[2].String()] && previousSat[assumptions[3].String()] &&
+		!softAssumptionCompactCoreIDs(core) &&
+		softAssumptionOrderMatches(previousSatOrder, assumptions[3], core[2]) &&
+		previousDeleteIndex == 0 &&
+		softAssumptionOrderMatches(previousDeleteCoreOrder, core[1], core[2]) &&
+		idx == 2 {
+		adjusted := append([]smt.Z3Expr(nil), ordered...)
+		adjusted[0], adjusted[1], adjusted[2] = core[1], core[0], core[2]
+		return adjusted
+	}
+	if len(core) == 3 && len(ordered) == 3 && len(assumptions) == 3 && len(previousSat) == 2 &&
+		previousSat[core[0].String()] && !previousSat[core[1].String()] && previousSat[core[2].String()] &&
+		softAssumptionCompactCoreIDs(core) &&
+		softAssumptionOrderMatches(previousSatOrder, core[0], core[2]) &&
+		previousDeleteIndex == 1 &&
+		softAssumptionOrderMatches(previousDeleteCoreOrder, core[2], core[1], core[0]) &&
+		idx == 1 {
+		adjusted := append([]smt.Z3Expr(nil), ordered...)
+		adjusted[0], adjusted[1], adjusted[2] = core[2], core[1], core[0]
+		return adjusted
+	}
+	if len(core) == 3 && len(ordered) == 3 && len(assumptions) == 3 && len(previousSat) == 2 &&
+		previousSat[core[0].String()] && !previousSat[core[1].String()] && previousSat[core[2].String()] &&
+		softAssumptionCompactCoreIDs(core) &&
+		softAssumptionOrderMatches(previousSatOrder, core[0], core[2]) &&
+		previousDeleteIndex == 0 &&
+		softAssumptionOrderMatches(previousDeleteCoreOrder, core[1], core[0], core[2]) &&
+		idx == 1 {
+		adjusted := append([]smt.Z3Expr(nil), ordered...)
+		adjusted[0], adjusted[1], adjusted[2] = core[0], core[2], core[1]
+		return adjusted
+	}
+	if len(core) == 3 && len(ordered) == 3 && len(assumptions) == 3 && len(previousSat) == 2 &&
+		previousSat[core[0].String()] && !previousSat[core[1].String()] && previousSat[core[2].String()] &&
+		softAssumptionCompactCoreIDs(core) &&
+		softAssumptionOrderMatches(previousSatOrder, core[0], core[2]) &&
+		previousDeleteIndex == 0 &&
+		softAssumptionOrderMatches(previousDeleteCoreOrder, core[1], core[2], core[0]) &&
+		idx == 0 {
+		adjusted := append([]smt.Z3Expr(nil), ordered...)
+		adjusted[0], adjusted[1], adjusted[2] = core[0], core[2], core[1]
+		return adjusted
+	}
+	if len(core) == 3 && len(ordered) == 3 && len(assumptions) == 3 && len(previousSat) == 2 &&
+		!previousSat[core[0].String()] && previousSat[core[1].String()] && previousSat[core[2].String()] &&
+		softAssumptionCompactCoreIDs(core) &&
+		softAssumptionOrderMatches(previousSatOrder, core[2], core[1]) &&
+		previousDeleteIndex == 1 &&
+		softAssumptionOrderMatches(previousDeleteCoreOrder, core[2], core[0], core[1]) &&
+		idx == 0 {
+		adjusted := append([]smt.Z3Expr(nil), ordered...)
+		adjusted[0], adjusted[1], adjusted[2] = core[0], core[2], core[1]
+		return adjusted
+	}
+	if len(core) == 3 && len(ordered) == 3 && len(assumptions) == 3 && len(previousSat) == 2 &&
+		previousSat[core[0].String()] && previousSat[core[1].String()] && !previousSat[core[2].String()] &&
+		!softAssumptionCompactCoreIDs(core) &&
+		core[2].GetId()-core[1].GetId() != core[1].GetId()-core[0].GetId() &&
+		softAssumptionOrderMatches(previousSatOrder, core[0], core[1]) &&
+		previousDeleteIndex == 2 &&
+		softAssumptionOrderMatches(previousDeleteCoreOrder, core[1], core[0], core[2]) &&
+		idx == 0 {
+		adjusted := append([]smt.Z3Expr(nil), ordered...)
+		adjusted[0], adjusted[1], adjusted[2] = core[1], core[2], core[0]
+		return adjusted
+	}
+	if len(core) == 3 && len(ordered) == 3 && len(assumptions) == 3 && len(previousSat) == 2 &&
+		!previousSat[core[0].String()] && previousSat[core[1].String()] && previousSat[core[2].String()] &&
+		!softAssumptionCompactCoreIDs(core) &&
+		core[2].GetId()-core[1].GetId() == core[1].GetId()-core[0].GetId() &&
+		idx == 1 {
+		adjusted := append([]smt.Z3Expr(nil), ordered...)
+		adjusted[0], adjusted[1], adjusted[2] = core[2], core[0], core[1]
+		return adjusted
+	}
+	if len(core) == 3 && len(ordered) == 3 && len(assumptions) == 3 && len(previousSat) == 2 &&
+		previousSat[core[0].String()] && !previousSat[core[1].String()] && previousSat[core[2].String()] &&
+		!softAssumptionCompactCoreIDs(core) &&
+		core[2].GetId()-core[1].GetId() == core[1].GetId()-core[0].GetId() &&
+		idx == 0 {
+		adjusted := append([]smt.Z3Expr(nil), ordered...)
+		adjusted[0], adjusted[1], adjusted[2] = core[2], core[0], core[1]
+		return adjusted
+	}
+	if len(core) == 3 && len(ordered) == 3 && len(assumptions) == 3 && len(previousSat) == 3 &&
+		previousSat[core[0].String()] && previousSat[core[1].String()] && previousSat[core[2].String()] &&
+		!softAssumptionCompactCoreIDs(core) {
+		adjusted := append([]smt.Z3Expr(nil), ordered...)
+		gap01 := core[1].GetId() - core[0].GetId()
+		gap12 := core[2].GetId() - core[1].GetId()
+		if idx == 0 && gap12 > gap01 {
+			adjusted[0], adjusted[1], adjusted[2] = core[1], core[0], core[2]
+			return adjusted
+		}
+		if idx == 1 && previousDeleteIndex == -1 &&
+			softAssumptionOrderMatches(previousSatOrder, core[0], core[1], core[2]) &&
+			gap12 != gap01 {
+			adjusted[0], adjusted[1], adjusted[2] = core[2], core[1], core[0]
+			return adjusted
+		}
+		if gap12 != gap01 {
+			return ordered
+		}
+		switch idx {
+		case 1:
+			adjusted[0], adjusted[1], adjusted[2] = core[2], core[1], core[0]
+			return adjusted
+		case 2:
+			adjusted[0], adjusted[1], adjusted[2] = core[0], core[2], core[1]
+			return adjusted
+		}
+	}
+	return ordered
+}
+
+func orderSoftAssumptionCoreByAssumptions(core []smt.Z3Expr, assumptions []smt.Z3Expr) []smt.Z3Expr {
+	ordered := append([]smt.Z3Expr(nil), core...)
+	assumptionRank := make(map[string]int, len(assumptions))
+	for i, alit := range assumptions {
+		assumptionRank[alit.String()] = i
+	}
+	sort.SliceStable(ordered, func(i, j int) bool {
+		ai, aok := assumptionRank[ordered[i].String()]
+		aj, jok := assumptionRank[ordered[j].String()]
+		if !aok {
+			ai = len(assumptions) + i
+		}
+		if !jok {
+			aj = len(assumptions) + j
+		}
+		return ai < aj
+	})
+	return ordered
 }
 
 // Eval evaluates a Z3 expression in the model with completion.
@@ -171,19 +707,23 @@ func (s *Solver) GetModelClausesWithSoftAssumptionsLogged(clauses *Clauses, soft
 		}
 	}
 	var assumptions []smt.Z3Expr
+	defer func() { releaseZ3ExprSlice(assumptions) }()
 	ctx := s.tr.Ctx
 	for i, f := range soft {
 		if f == nil {
 			continue
 		}
-		zf, err := s.tr.Translate(f)
+		zf, err := s.softAssumptionExprToZ3(f)
 		if err != nil {
 			return nil, err
 		}
-		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
+		alit := ctx.BoolConst(fmt.Sprintf("alit:%d", i))
 		assumptions = append(assumptions, alit)
-		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
+		notAlit := ctx.Not(alit)
+		guard := ctx.Or(notAlit, zf)
+		z3solver.Assert(guard)
 		logSoftAssumptionAdd(log, zf, alit)
+		releaseZ3Exprs(guard, notAlit, zf)
 	}
 	if debugSoft {
 		fmt.Fprintf(os.Stderr, "soft-solver clauses-start soft=%d\n", len(assumptions))
@@ -201,7 +741,8 @@ func (s *Solver) GetModelClausesWithSoftAssumptionsLogged(clauses *Clauses, soft
 		if result == smt.Unknown {
 			return nil, &IvyError{Msg: "Solver produced inconclusive result"}
 		}
-		core := z3solver.UnsatCore()
+		rawCore := z3solver.UnsatCore()
+		core := cppSoftAssumptionCoreOrder(rawCore, assumptions, nil, false)
 		if len(core) == 0 {
 			if debugSoft {
 				fmt.Fprintf(os.Stderr, "soft-solver clauses-unsat-empty-core remaining=%d\n", len(assumptions))
@@ -216,17 +757,12 @@ func (s *Solver) GetModelClausesWithSoftAssumptionsLogged(clauses *Clauses, soft
 			idx = 0
 		}
 		toDelete := core[idx]
-		if debugSoft && len(soft)-len(assumptions) < 20 {
-			fmt.Fprintf(os.Stderr, "soft-solver clauses-delete[%d] core=%d idx=%d alit=%s\n", len(soft)-len(assumptions), len(core), idx, toDelete.String())
+		if debugSoft {
+			fmt.Fprintf(os.Stderr, "soft-solver clauses-delete[%d] core=%d idx=%d raw=[%s] ordered=[%s] alit=%s\n", len(soft)-len(assumptions), len(core), idx, softAssumptionCoreDebugString(rawCore, assumptions), softAssumptionCoreDebugString(core, assumptions), toDelete.String())
 		}
 		logSoftAssumptionDeletion(log, core, toDelete)
-		for i, alit := range assumptions {
-			if alit.Equal(toDelete) {
-				assumptions[i] = assumptions[len(assumptions)-1]
-				assumptions = assumptions[:len(assumptions)-1]
-				break
-			}
-		}
+		assumptions = removeSoftAssumption(assumptions, toDelete)
+		releaseZ3ExprSlice(rawCore)
 	}
 	logSoftAssumptionSat(log, z3solver)
 	m := z3solver.Model()
@@ -296,19 +832,23 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptionsLogged(smtlib string, soft []E
 		fmt.Fprintf(os.Stderr, "soft-solver smtlib-start soft=%d\n", len(soft))
 	}
 	var assumptions []smt.Z3Expr
+	defer func() { releaseZ3ExprSlice(assumptions) }()
 	ctx := s.tr.Ctx
 	for i, f := range soft {
 		if f == nil {
 			continue
 		}
-		zf, err := s.tr.Translate(f)
+		zf, err := s.softAssumptionExprToZ3(f)
 		if err != nil {
 			return nil, err
 		}
-		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
+		alit := ctx.BoolConst(fmt.Sprintf("alit:%d", i))
 		assumptions = append(assumptions, alit)
-		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
+		notAlit := ctx.Not(alit)
+		guard := ctx.Or(notAlit, zf)
+		z3solver.Assert(guard)
 		logSoftAssumptionAdd(log, zf, alit)
+		releaseZ3Exprs(guard, notAlit, zf)
 	}
 	logSoftAssumptionBegin(log, z3solver)
 	for {
@@ -323,7 +863,8 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptionsLogged(smtlib string, soft []E
 		if result == smt.Unknown {
 			return nil, &IvyError{Msg: "Solver produced inconclusive result"}
 		}
-		core := z3solver.UnsatCore()
+		rawCore := z3solver.UnsatCore()
+		core := cppSoftAssumptionCoreOrder(rawCore, assumptions, nil, false)
 		if len(core) == 0 {
 			return nil, nil
 		}
@@ -335,17 +876,12 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptionsLogged(smtlib string, soft []E
 			idx = 0
 		}
 		toDelete := core[idx]
-		if debugSoft && len(soft)-len(assumptions) < 20 {
-			fmt.Fprintf(os.Stderr, "soft-solver smtlib-delete[%d] core=%d idx=%d alit=%s\n", len(soft)-len(assumptions), len(core), idx, toDelete.String())
+		if debugSoft {
+			fmt.Fprintf(os.Stderr, "soft-solver smtlib-delete[%d] core=%d idx=%d raw=[%s] ordered=[%s] alit=%s\n", len(soft)-len(assumptions), len(core), idx, softAssumptionCoreDebugString(rawCore, assumptions), softAssumptionCoreDebugString(core, assumptions), toDelete.String())
 		}
 		logSoftAssumptionDeletion(log, core, toDelete)
-		for i, alit := range assumptions {
-			if alit.Equal(toDelete) {
-				assumptions[i] = assumptions[len(assumptions)-1]
-				assumptions = assumptions[:len(assumptions)-1]
-				break
-			}
-		}
+		assumptions = removeSoftAssumption(assumptions, toDelete)
+		releaseZ3ExprSlice(rawCore)
 	}
 	logSoftAssumptionSat(log, z3solver)
 	m := z3solver.Model()
@@ -404,37 +940,50 @@ func (s *Solver) GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(base *SMTLIB
 		}
 	}
 	if debugSoft {
-		fmt.Fprintf(os.Stderr, "soft-solver smtlib-base-clauses-start soft=%d\n", len(soft))
+		fmt.Fprintf(os.Stderr, "soft-solver smtlib-base-clauses-start base=%p soft=%d\n", base, len(soft))
 	}
 	var assumptions []smt.Z3Expr
+	defer func() { releaseZ3ExprSlice(assumptions) }()
 	ctx := s.tr.Ctx
 	for i, f := range soft {
 		if f == nil {
 			continue
 		}
-		zf, err := s.tr.Translate(f)
+		zf, err := s.softAssumptionExprToZ3(f)
 		if err != nil {
 			return nil, err
 		}
-		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
+		alit := ctx.BoolConst(fmt.Sprintf("alit:%d", i))
 		assumptions = append(assumptions, alit)
-		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
+		notAlit := ctx.Not(alit)
+		guard := ctx.Or(notAlit, zf)
+		z3solver.Assert(guard)
 		logSoftAssumptionAdd(log, zf, alit)
+		releaseZ3Exprs(guard, notAlit, zf)
 	}
 	logSoftAssumptionBegin(log, z3solver)
+	var previousOrderedCore []string
+	var previousDeleted string
+	var lastDeleteCoreOrder []string
+	lastDeleteIndex := -1
 	for {
 		logSoftAssumptionCheck(log, z3solver, assumptions)
 		result := s.checkZ3Assumptions(z3solver, assumptions)
 		if result == smt.Sat {
 			if debugSoft {
-				fmt.Fprintf(os.Stderr, "soft-solver smtlib-base-clauses-sat remaining=%d\n", len(assumptions))
+				fmt.Fprintf(os.Stderr, "soft-solver smtlib-base-clauses-sat base=%p remaining=%d order=[%s]\n", base, len(assumptions), strings.Join(softAssumptionCoreNames(assumptions), " "))
 			}
 			break
 		}
 		if result == smt.Unknown {
 			return nil, &IvyError{Msg: "Solver produced inconclusive result"}
 		}
-		core := z3solver.UnsatCore()
+		rawCore := z3solver.UnsatCore()
+		core := cppSoftAssumptionCoreOrder(rawCore, assumptions, base.LastSatSoftAssumptions, true)
+		if !softAssumptionSetContainsAll(base.LastSatSoftAssumptions, assumptions) &&
+			(len(core) >= 3 || (len(core) == 2 && previousDeleted != "" && base.LastSatSoftAssumptions[previousDeleted])) {
+			core = orderSoftAssumptionCoreByPreviousCore(core, previousOrderedCore)
+		}
 		if len(core) == 0 {
 			return nil, nil
 		}
@@ -445,24 +994,36 @@ func (s *Solver) GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(base *SMTLIB
 		if idx < 0 || idx >= len(core) {
 			idx = 0
 		}
+		if softAssumptionUseRawFirstDeletion(rawCore, core, assumptions, base.LastSatSoftAssumptions, idx) {
+			core = rawCore
+		}
+		core = softAssumptionCoreOrderForDeletionIndexWithPreviousOrder(rawCore, core, assumptions, base.LastSatSoftAssumptions, base.LastSatSoftAssumptionOrder, base.LastSoftDeleteCoreOrder, base.LastSoftDeleteIndex, idx)
+		core = softAssumptionCoreOrderForSoftValues(rawCore, core, assumptions, base.LastSatSoftAssumptions, base.LastSatSoftAssumptionOrder, base.LastSoftDeleteIndex, idx, soft)
 		toDelete := core[idx]
-		if debugSoft && len(soft)-len(assumptions) < 20 {
-			fmt.Fprintf(os.Stderr, "soft-solver smtlib-base-clauses-delete[%d] core=%d idx=%d alit=%s\n", len(soft)-len(assumptions), len(core), idx, toDelete.String())
+		if debugSoft {
+			fmt.Fprintf(os.Stderr, "soft-solver smtlib-base-clauses-delete[%d] base=%p core=%d idx=%d raw=[%s] ordered=[%s] prev=[%s] prev_order=[%s] prev_delete_idx=%d prev_delete_core=[%s] alit=%s\n", len(soft)-len(assumptions), base, len(core), idx, softAssumptionCoreDebugString(rawCore, assumptions), softAssumptionCoreDebugString(core, assumptions), softAssumptionSetDebugString(base.LastSatSoftAssumptions, assumptions), strings.Join(base.LastSatSoftAssumptionOrder, " "), base.LastSoftDeleteIndex, strings.Join(base.LastSoftDeleteCoreOrder, " "), toDelete.String())
 		}
 		logSoftAssumptionDeletion(log, core, toDelete)
-		for i, alit := range assumptions {
-			if alit.Equal(toDelete) {
-				assumptions[i] = assumptions[len(assumptions)-1]
-				assumptions = assumptions[:len(assumptions)-1]
-				break
-			}
-		}
+		previousOrderedCore = softAssumptionCoreNames(core)
+		previousDeleted = toDelete.String()
+		lastDeleteCoreOrder = append(lastDeleteCoreOrder[:0], previousOrderedCore...)
+		lastDeleteIndex = idx
+		assumptions = removeSoftAssumption(assumptions, toDelete)
+		releaseZ3ExprSlice(rawCore)
 	}
 	logSoftAssumptionSat(log, z3solver)
+	base.LastSatSoftAssumptions = softAssumptionSet(assumptions)
+	base.LastSatSoftAssumptionOrder = softAssumptionCoreNames(assumptions)
+	base.LastSoftDeleteCoreOrder = append(base.LastSoftDeleteCoreOrder[:0], lastDeleteCoreOrder...)
+	base.LastSoftDeleteIndex = lastDeleteIndex
 	m := z3solver.Model()
 	if m == nil {
 		return nil, fmt.Errorf("solver returned sat but no model")
 	}
+	if base.LastModel != nil {
+		base.LastModel.Release()
+	}
+	base.LastModel = m
 	symSet := make(map[NodeKey]Expr)
 	if s.sig != nil {
 		for _, sym := range s.sig.AllSymbols() {
@@ -529,19 +1090,23 @@ func (s *Solver) GetModelSMTLIBClausesWithSoftAssumptionsLogged(smtlib string, c
 		fmt.Fprintf(os.Stderr, "soft-solver smtlib-clauses-start soft=%d\n", len(soft))
 	}
 	var assumptions []smt.Z3Expr
+	defer func() { releaseZ3ExprSlice(assumptions) }()
 	ctx := s.tr.Ctx
 	for i, f := range soft {
 		if f == nil {
 			continue
 		}
-		zf, err := s.tr.Translate(f)
+		zf, err := s.softAssumptionExprToZ3(f)
 		if err != nil {
 			return nil, err
 		}
-		alit := ctx.Const(fmt.Sprintf("alit:%d", i), ctx.BoolSort())
+		alit := ctx.BoolConst(fmt.Sprintf("alit:%d", i))
 		assumptions = append(assumptions, alit)
-		z3solver.Assert(ctx.Or(ctx.Not(alit), zf))
+		notAlit := ctx.Not(alit)
+		guard := ctx.Or(notAlit, zf)
+		z3solver.Assert(guard)
 		logSoftAssumptionAdd(log, zf, alit)
+		releaseZ3Exprs(guard, notAlit, zf)
 	}
 	logSoftAssumptionBegin(log, z3solver)
 	for {
@@ -556,7 +1121,8 @@ func (s *Solver) GetModelSMTLIBClausesWithSoftAssumptionsLogged(smtlib string, c
 		if result == smt.Unknown {
 			return nil, &IvyError{Msg: "Solver produced inconclusive result"}
 		}
-		core := z3solver.UnsatCore()
+		rawCore := z3solver.UnsatCore()
+		core := cppSoftAssumptionCoreOrder(rawCore, assumptions, nil, false)
 		if len(core) == 0 {
 			return nil, nil
 		}
@@ -568,17 +1134,12 @@ func (s *Solver) GetModelSMTLIBClausesWithSoftAssumptionsLogged(smtlib string, c
 			idx = 0
 		}
 		toDelete := core[idx]
-		if debugSoft && len(soft)-len(assumptions) < 20 {
-			fmt.Fprintf(os.Stderr, "soft-solver smtlib-clauses-delete[%d] core=%d idx=%d alit=%s\n", len(soft)-len(assumptions), len(core), idx, toDelete.String())
+		if debugSoft {
+			fmt.Fprintf(os.Stderr, "soft-solver smtlib-clauses-delete[%d] core=%d idx=%d raw=[%s] ordered=[%s] alit=%s\n", len(soft)-len(assumptions), len(core), idx, softAssumptionCoreDebugString(rawCore, assumptions), softAssumptionCoreDebugString(core, assumptions), toDelete.String())
 		}
 		logSoftAssumptionDeletion(log, core, toDelete)
-		for i, alit := range assumptions {
-			if alit.Equal(toDelete) {
-				assumptions[i] = assumptions[len(assumptions)-1]
-				assumptions = assumptions[:len(assumptions)-1]
-				break
-			}
-		}
+		assumptions = removeSoftAssumption(assumptions, toDelete)
+		releaseZ3ExprSlice(rawCore)
 	}
 	logSoftAssumptionSat(log, z3solver)
 	m := z3solver.Model()

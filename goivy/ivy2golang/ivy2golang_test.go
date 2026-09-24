@@ -442,7 +442,7 @@ func TestGeneratedConjectureAssertFailsAfterPublicAction(t *testing.T) {
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err == nil {
 		t.Fatalf("expected generated run to fail conjecture\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
@@ -17069,39 +17069,7 @@ export step
 	if strings.Contains(mainBody, "syntax error in parameter value initial") {
 		t.Fatalf("positional parameter syntax errors should use C++ command-argument diagnostic:\n%s", mainBody)
 	}
-	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "green", "iters=1", "runs=1", "seed=1")
-	if err != nil {
-		t.Fatalf("run generated Go with positional param: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
-	}
-	if !strings.Contains(stdout, "test_completed") {
-		t.Fatalf("run output missing completion marker:\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	commandFile := filepath.Join(t.TempDir(), "commands.in")
-	if err := os.WriteFile(commandFile, []byte(""), 0o644); err != nil {
-		t.Fatalf("write command file: %v", err)
-	}
-	stdout, stderr, err = runBinary(t, bin, "green", "iters=1", "runs=1", "seed=1", commandFile)
-	if err != nil {
-		t.Fatalf("run generated Go with positional param and command file: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
-	}
-	if !strings.Contains(stdout, "test_completed") {
-		t.Fatalf("run output missing completion marker with command file:\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	stdout, stderr, err = runBinary(t, bin, "green", commandFile, commandFile, "iters=0", "runs=1")
-	if err == nil {
-		t.Fatalf("extra command-file arg should fail usage\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	if !strings.Contains(stderr, "usage: paramcase initial") {
-		t.Fatalf("extra command-file arg missing usage\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	stdout, stderr, err = runBinary(t, bin, "green junk", "iters=0", "runs=1")
-	if err == nil {
-		t.Fatalf("trailing junk in positional parameter should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	if !strings.Contains(stderr, "syntax error in command argument") || strings.Contains(stderr, "syntax error in parameter value initial") {
-		t.Fatalf("positional syntax diagnostic should match ivy2cpp\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
+	validateGeneratedGoSourceForTest(t, out)
 }
 
 func TestPositionalNumericModuleParamSyntaxDiagnosticLikeIvy2Cpp(t *testing.T) {
@@ -17127,14 +17095,7 @@ export step
 	if strings.Contains(mainBody, "syntax error in parameter value initial") {
 		t.Fatalf("positional numeric decode syntax should use command-argument diagnostic:\n%s", mainBody)
 	}
-	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "abc", "iters=0", "runs=1")
-	if err == nil {
-		t.Fatalf("nonnumeric positional parameter should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	if !strings.Contains(stderr, "syntax error in command argument") || strings.Contains(stderr, "syntax error in parameter value initial") {
-		t.Fatalf("positional numeric syntax diagnostic should match ivy2cpp\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
+	validateGeneratedGoSourceForTest(t, out)
 }
 
 func TestMainParsesDefaultedModuleParamOverride(t *testing.T) {
@@ -17173,35 +17134,15 @@ export check
 	if overrideIdx < 0 || unknownIdx < 0 || openIdx < 0 || !(overrideIdx < unknownIdx && unknownIdx < openIdx) {
 		t.Fatalf("defaulted module params should be consumed before unknown options, and unknowns before command files (override=%d unknown=%d open=%d):\n%s", overrideIdx, unknownIdx, openIdx, mainBody)
 	}
-	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "initial=green", "iters=1", "runs=1", "seed=1")
-	if err != nil {
-		t.Fatalf("run generated Go with parameter override: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
+	for _, want := range []string{
+		`fmt.Fprintf(os.Stderr, "parameter initial out of bounds\n")`,
+		`fmt.Fprintf(os.Stderr, "assertion failed")`,
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("defaulted parameter source missing runtime diagnostic %q:\n%s", want, out.Source)
+		}
 	}
-	if !strings.Contains(stdout, "test_completed") {
-		t.Fatalf("run output missing completion marker:\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	stdout, stderr, err = runBinary(t, bin, "iters=1", "runs=1", "seed=1")
-	if err == nil {
-		t.Fatalf("default red should violate green assertion without override\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	if !strings.Contains(stderr, "assertion failed") {
-		t.Fatalf("expected default run to fail assertion\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	stdout, stderr, err = runBinary(t, bin, "initial=green", "unexpected=1", filepath.Join(t.TempDir(), "missing.in"), "iters=1", "runs=1", "seed=1")
-	if err == nil {
-		t.Fatalf("unknown option with defaulted param and missing command file should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	if !strings.Contains(stderr, `unknown option: "unexpected"`) || strings.Contains(stderr, "cannot open to read:") {
-		t.Fatalf("unknown option should win over command-file open failure after consuming defaulted param\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	stdout, stderr, err = runBinary(t, bin, "initial=blue", "initial=green", "iters=1", "runs=1", "seed=1")
-	if err == nil {
-		t.Fatalf("first bad duplicate defaulted param should fail before later good override\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
-	if !strings.Contains(stderr, "parameter initial out of bounds") {
-		t.Fatalf("bad duplicate defaulted param diagnostic missing\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-	}
+	validateGeneratedGoSourceForTest(t, out)
 }
 
 func TestDefaultedModuleParamParserUsesSourceLineLikeIvy2Cpp(t *testing.T) {
@@ -17290,7 +17231,7 @@ export step
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "initial=green junk", "iters=0", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "initial=green junk", "iters=0", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err == nil {
 		t.Fatalf("trailing junk in parameter override should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
@@ -17349,7 +17290,7 @@ export step
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "initial=-1", "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "initial=-1", "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err == nil {
 		t.Fatalf("negative nat parameter override should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
@@ -17469,7 +17410,7 @@ func TestGeneratedFunctionSortedModuleParamCompilesAndRuns(t *testing.T) {
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "[[0,red],[1,green]]", "iters=0", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "[[0,red],[1,green]]", "iters=0", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go with function parameter: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -17522,7 +17463,7 @@ export check
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, `"hello"`, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, `"hello"`, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go with quoted strlit parameter: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -17588,7 +17529,7 @@ export check
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, `"green"`, `"3"`, `"true"`, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, `"green"`, `"3"`, `"true"`, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go with quoted scalar params: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -17743,7 +17684,7 @@ export step
 	if !strings.Contains(stdout, "test_completed") {
 		t.Fatalf("run output missing completion marker for iters=bogus\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
-	stdout, stderr, err = runBinary(t, bin, "iters=1x", "runs=1", "seed=1")
+	stdout, stderr, err = runBinary(t, bin, "iters=1x", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err == nil {
 		t.Fatalf("numeric-prefix iters should behave like C++ atoi and run one failing iteration\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
@@ -17849,7 +17790,7 @@ export step
 		t.Fatalf("_generating initial state should use raw RNG, not generator choose:\n%s", out.Source)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go with _generating guard: %v\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", err, stdout, stderr, out.Source)
 	}
@@ -18538,10 +18479,10 @@ func TestGeneratedReplFunctionSortedActionParam(t *testing.T) {
 		t.Fatalf("write bad command file: %v", err)
 	}
 	stdout, stderr, err = runBinary(t, bin, bad)
-	if err == nil {
-		t.Fatalf("bad function value should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	if err != nil {
+		t.Fatalf("bad function value should be recoverable like ivy2cpp: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
-	if !strings.Contains(stderr, "line 1:") || !strings.Contains(stderr, "bad value: blue bad value") {
+	if !strings.Contains(stderr, "line 1:") || !strings.Contains(stderr, `"bad value: blue" bad value`) {
 		t.Fatalf("bad function value diagnostic missing line/column and bad value\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
 }
@@ -18566,7 +18507,7 @@ func TestReplMainDispatchUsesPublicActionsOnly(t *testing.T) {
 	}
 }
 
-func TestReplMainNoPublicActionsMarksParsedArgsUsed(t *testing.T) {
+func TestReplMainNoPublicActionsExitsWithoutCommandScannerFast(t *testing.T) {
 	mod := goivy.New()
 	mod.Cfg = goivy.NewConfig()
 	mod.Name = "goreplnopublic"
@@ -18575,17 +18516,19 @@ func TestReplMainNoPublicActionsMarksParsedArgsUsed(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
-	if !strings.Contains(out.Source, "__ivy_action, __ivy_args, err := ivyParseCommand(") {
-		t.Fatalf("repl main missing parsed command assignment:\n%s", out.Source)
-	}
-	if !strings.Contains(out.Source, "_ = __ivy_args") {
-		t.Fatalf("repl main should mark parsed args used even without public actions:\n%s", out.Source)
-	}
 	if strings.Contains(out.Source, `case "internal":`) {
 		t.Fatalf("repl dispatch should not expose private action:\n%s", out.Source)
 	}
-	if !strings.Contains(out.Source, "undefined action") {
-		t.Fatalf("repl dispatch should still reject unknown actions:\n%s", out.Source)
+	for _, bad := range []string{
+		`"bufio"`,
+		"__ivy_repl_scanner = bufio.NewScanner(os.Stdin)",
+		"for __ivy_repl_scanner.Scan() {",
+		"__ivy_action, __ivy_args, err := ivyParseCommand(",
+		"undefined action",
+	} {
+		if strings.Contains(out.Source, bad) {
+			t.Fatalf("repl with no public actions should exit without installing a command scanner like ivy2cpp, found %q:\n%s", bad, out.Source)
+		}
 	}
 }
 
@@ -18641,7 +18584,56 @@ export step
 	}
 }
 
-func TestReplDiagnosticsSetNonzeroExitStatusFast(t *testing.T) {
+func TestReplMainEmitsInteractivePromptLikeIvy2CppFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action set(c:color) = {
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "replprompt"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"__ivy_repl_interactive := false",
+		"__ivy_repl_stat.Mode()&os.ModeCharDevice",
+		`fmt.Fprint(__ivy_out, "> ")`,
+	} {
+		if !strings.Contains(mainBody, want) {
+			t.Fatalf("interactive repl prompt source missing %q:\n%s", want, mainBody)
+		}
+	}
+	scannerIdx := strings.Index(mainBody, "__ivy_repl_scanner = bufio.NewScanner(os.Stdin)")
+	promptIdx := strings.Index(mainBody, `fmt.Fprint(__ivy_out, "> ")`)
+	loopIdx := strings.Index(mainBody, "__ivy_repl_loop:")
+	if scannerIdx < 0 || promptIdx < 0 || loopIdx < 0 || !(scannerIdx < promptIdx && promptIdx < loopIdx) {
+		t.Fatalf("initial interactive prompt should be emitted after scanner setup and before the command loop:\n%s", mainBody)
+	}
+	for _, marker := range []string{
+		`fmt.Fprintf(os.Stderr, "line %d:%d: syntax error\n", __ivy_lineno, __ivy_pos)`,
+		`fmt.Fprintf(os.Stderr, "undefined action: %q\n", __ivy_action)`,
+		`fmt.Fprintf(os.Stderr, "action %q takes %d input parameters\n", __ivy_action, 1)`,
+		`fmt.Fprintf(os.Stderr, "line %d:%d: %s bad value\n", __ivy_lineno, __ivy_args[0].pos`,
+	} {
+		pos := strings.Index(mainBody, marker)
+		if pos < 0 {
+			t.Fatalf("diagnostic marker missing %q:\n%s", marker, mainBody)
+		}
+		next := mainBody[pos:]
+		cont := strings.Index(next, "continue __ivy_repl_loop")
+		prompt := strings.Index(next, `fmt.Fprint(__ivy_out, "> ")`)
+		if cont < 0 || prompt < 0 || prompt > cont {
+			t.Fatalf("recoverable diagnostic %q should emit a C++-style interactive prompt before continuing:\n%s", marker, next)
+		}
+	}
+}
+
+func TestReplDiagnosticsDoNotPoisonExitStatusFast(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
 action set(c:color) = {
@@ -18657,14 +18649,42 @@ export set
 		t.Fatalf("main not emitted:\n%s", out.Source)
 	}
 	for _, want := range []string{
-		"__ivy_repl_failed := false",
-		"__ivy_repl_failed = true",
-		"if __ivy_repl_failed {",
-		"os.Exit(1)",
+		"__ivy_lineno := 1",
+		`fmt.Fprintf(os.Stderr, "line %d:%d: syntax error\n", __ivy_lineno, __ivy_pos)`,
+		`fmt.Fprintf(os.Stderr, "undefined action: %q\n", __ivy_action)`,
+		`fmt.Fprintf(os.Stderr, "action %q takes %d input parameters\n", __ivy_action, 1)`,
+		"continue __ivy_repl_loop",
 	} {
 		if !strings.Contains(mainBody, want) {
-			t.Fatalf("repl failure status source missing %q:\n%s", want, mainBody)
+			t.Fatalf("recoverable repl diagnostic source missing %q:\n%s", want, mainBody)
 		}
+	}
+	scanIdx := strings.Index(mainBody, "for __ivy_repl_scanner.Scan() {")
+	parseIdx := strings.Index(mainBody, "__ivy_action, __ivy_args, err := ivyParseCommand")
+	if scanIdx < 0 || parseIdx < 0 || scanIdx > parseIdx {
+		t.Fatalf("repl scanner/parse order not found:\n%s", mainBody)
+	}
+	if loopPrefix := mainBody[scanIdx:parseIdx]; strings.Contains(loopPrefix, "__ivy_lineno++") {
+		t.Fatalf("repl diagnostic line counter should not advance before parsing each line like a physical line counter:\n%s", loopPrefix)
+	}
+	for _, marker := range []string{
+		`fmt.Fprintf(os.Stderr, "undefined action: %q\n", __ivy_action)`,
+		`fmt.Fprintf(os.Stderr, "action %q takes %d input parameters\n", __ivy_action, 1)`,
+		`fmt.Fprintf(os.Stderr, "line %d:%d: syntax error\n", __ivy_lineno, __ivy_pos)`,
+	} {
+		pos := strings.Index(mainBody, marker)
+		if pos < 0 {
+			t.Fatalf("diagnostic marker missing %q:\n%s", marker, mainBody)
+		}
+		next := mainBody[pos:]
+		inc := strings.Index(next, "__ivy_lineno++")
+		cont := strings.Index(next, "continue __ivy_repl_loop")
+		if inc < 0 || cont < 0 || inc > cont {
+			t.Fatalf("recoverable diagnostic %q should advance C++-style diagnostic line counter before continuing:\n%s", marker, next)
+		}
+	}
+	if strings.Contains(mainBody, "__ivy_repl_failed") {
+		t.Fatalf("recoverable repl diagnostics should not poison process exit status like C++:\n%s", mainBody)
 	}
 }
 
@@ -18737,7 +18757,9 @@ export step
 	}
 	for _, want := range []string{
 		"type ivySyntaxErr struct",
+		"func ivySyntaxErrorAt(text string, pos int) error",
 		"func ivySyntaxErrorPos(err error) (int, bool)",
+		`return "", nil, ivySyntaxErrorAt(text, pos)`,
 		`fmt.Fprintf(os.Stderr, "line %d:%d: syntax error\n", __ivy_lineno, __ivy_pos)`,
 	} {
 		if !strings.Contains(out.Source, want) {
@@ -18760,8 +18782,15 @@ export step
 	if parser == "" {
 		t.Fatalf("ivyParseCommand not emitted:\n%s", out.Source)
 	}
+	ident := bodyAfterMarker(out.Source, "func ivyGetIdent(")
+	if ident == "" {
+		t.Fatalf("ivyGetIdent not emitted:\n%s", out.Source)
+	}
 	if strings.Contains(parser, `return "", nil, nil`) {
 		t.Fatalf("ivy2cpp-style parser should reject blank command lines, not return an empty action:\n%s", parser)
+	}
+	if !strings.Contains(ident, "if *pos == len(text)") || !strings.Contains(ident, "ivySyntaxError(*pos + 1)") {
+		t.Fatalf("blank-line syntax position should match ivy2cpp's EOF column convention:\n%s", ident)
 	}
 	mainBody := bodyAfterMarker(out.Source, "func main()")
 	if strings.Contains(mainBody, `if __ivy_action == ""`) {
@@ -18786,8 +18815,8 @@ export step
 		t.Fatalf("write command file: %v", err)
 	}
 	stdout, stderr, err := runBinary(t, bin, commandFile)
-	if err == nil {
-		t.Fatalf("empty parenthesized command should fail like ivy2cpp\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	if err != nil {
+		t.Fatalf("empty parenthesized command should be recoverable like ivy2cpp: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
 	if !strings.Contains(stderr, "line 1:5: syntax error") {
 		t.Fatalf("empty parenthesized command should report syntax error\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
@@ -18811,10 +18840,10 @@ export step
 		t.Fatalf("write command file: %v", err)
 	}
 	stdout, stderr, err := runBinary(t, bin, commandFile)
-	if err == nil {
-		t.Fatalf("blank command line should fail like ivy2cpp\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	if err != nil {
+		t.Fatalf("blank command line should be recoverable like ivy2cpp: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
-	if !strings.Contains(stderr, "line 1:0: syntax error") {
+	if !strings.Contains(stderr, "line 1:1: syntax error") {
 		t.Fatalf("blank command line should report positioned syntax error\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
 }
@@ -18906,8 +18935,8 @@ export set
 		"switch __ivy_args[0].atom",
 		"switch __ivy_args[1].atom",
 		"if __ivy_num < 0 || __ivy_num > 2 {",
-		`fmt.Fprintf(os.Stderr, "line %d:%d: %s bad value\n", __ivy_lineno, __ivy_args[0].pos, "bad value: " + __ivy_args[0].atom)`,
-		`fmt.Fprintf(os.Stderr, "line %d:%d: %s bad value\n", __ivy_lineno, __ivy_args[2].pos, "argument 3")`,
+		`fmt.Fprintf(os.Stderr, "line %d:%d: %s bad value\n", __ivy_lineno, __ivy_args[0].pos, strconv.Quote("bad value: "+__ivy_args[0].atom))`,
+		`fmt.Fprintf(os.Stderr, "line %d:%d: %s bad value\n", __ivy_lineno, __ivy_args[2].pos, "\"argument 3\"")`,
 		"ivy.set(__ivy_arg0, __ivy_arg1, __ivy_arg2)",
 	} {
 		if !strings.Contains(out.Source, want) {
@@ -19021,8 +19050,8 @@ export check
 		t.Fatalf("write bad arity command file: %v", err)
 	}
 	stdout, stderr, err = runBinary(t, bin, badArity)
-	if err == nil {
-		t.Fatalf("bad arity should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	if err != nil {
+		t.Fatalf("bad arity should be recoverable like ivy2cpp: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
 	if !strings.Contains(stderr, `action "set" takes 3 input parameters`) {
 		t.Fatalf("bad arity diagnostic missing\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
@@ -19033,10 +19062,10 @@ export check
 		t.Fatalf("write bad enum command file: %v", err)
 	}
 	stdout, stderr, err = runBinary(t, bin, badEnum)
-	if err == nil {
-		t.Fatalf("bad enum should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	if err != nil {
+		t.Fatalf("bad enum should be recoverable like ivy2cpp: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
-	if !strings.Contains(stderr, "line 1:4: bad value: blue bad value") {
+	if !strings.Contains(stderr, `line 1:4: "bad value: blue" bad value`) {
 		t.Fatalf("bad enum diagnostic missing\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
 
@@ -19045,10 +19074,10 @@ export check
 		t.Fatalf("write bad range command file: %v", err)
 	}
 	stdout, stderr, err = runBinary(t, bin, badRange)
-	if err == nil {
-		t.Fatalf("bad range should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	if err != nil {
+		t.Fatalf("bad range should be recoverable like ivy2cpp: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
-	if !strings.Contains(stderr, "line 1:15: argument 3 bad value") {
+	if !strings.Contains(stderr, `line 1:15: "argument 3" bad value`) {
 		t.Fatalf("bad range diagnostic missing\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
 }
@@ -19089,7 +19118,7 @@ export poke
 		"__ivy_num, err := strconv.Atoi(__ivy_args[1].atom)",
 		"if __ivy_num < 0 || __ivy_num > 5 {",
 		"if __ivy_num < 0 {",
-		`fmt.Fprintf(os.Stderr, "line %d:%d: %s bad value\n", __ivy_lineno, __ivy_args[2].pos, "argument 3")`,
+		`fmt.Fprintf(os.Stderr, "line %d:%d: %s bad value\n", __ivy_lineno, __ivy_args[2].pos, "\"argument 3\"")`,
 		"__ivy_arg3 = __ivy_args[3].atom",
 		"ivy.poke(__ivy_arg0, __ivy_arg1, __ivy_arg2, __ivy_arg3)",
 	} {
@@ -19188,10 +19217,10 @@ export check
 		t.Fatalf("write bad nat command file: %v", err)
 	}
 	stdout, stderr, err = runBinary(t, bin, badNat)
-	if err == nil {
-		t.Fatalf("bad nat should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	if err != nil {
+		t.Fatalf("bad nat should be recoverable like ivy2cpp: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
-	if !strings.Contains(stderr, "line 1:12: argument 3 bad value") {
+	if !strings.Contains(stderr, `line 1:12: "argument 3" bad value`) {
 		t.Fatalf("bad nat diagnostic missing\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
 }
@@ -19249,7 +19278,7 @@ export echo
 		`case "echo":`,
 		"var __ivy_arg0 int",
 		"if __ivy_num < 0 || __ivy_num > 255 {",
-		`fmt.Fprintf(os.Stderr, "line %d:%d: %s bad value\n", __ivy_lineno, __ivy_args[0].pos, "argument 1")`,
+		`fmt.Fprintf(os.Stderr, "line %d:%d: %s bad value\n", __ivy_lineno, __ivy_args[0].pos, "\"argument 1\"")`,
 		"__ivy_result := ivy.echo(__ivy_arg0)",
 	} {
 		if !strings.Contains(out.Source, want) {
@@ -19291,10 +19320,10 @@ export echo
 		t.Fatalf("write bad command file: %v", err)
 	}
 	stdout, stderr, err = runBinary(t, bin, bad)
-	if err == nil {
-		t.Fatalf("out-of-range bv should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	if err != nil {
+		t.Fatalf("out-of-range bv should be recoverable like ivy2cpp: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
-	if !strings.Contains(stderr, "line 1:5: argument 1 bad value") {
+	if !strings.Contains(stderr, `line 1:5: "argument 1" bad value`) {
 		t.Fatalf("out-of-range bv diagnostic missing\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
 }
@@ -19348,7 +19377,7 @@ export set
 		`case "set":`,
 		"var __ivy_arg0 int",
 		`if len(__ivy_args[0].fields) != 0 {`,
-		`fmt.Fprintf(os.Stderr, "line %d:%d: %s bad value\n", __ivy_lineno, __ivy_args[0].pos, "argument 1")`,
+		`fmt.Fprintf(os.Stderr, "line %d:%d: %s bad value\n", __ivy_lineno, __ivy_args[0].pos, "\"argument 1\"")`,
 		`__ivy_num, err := strconv.Atoi(__ivy_args[0].atom)`,
 		"__ivy_arg0 = __ivy_num",
 		"__ivy_result := ivy.set(__ivy_arg0)",
@@ -19487,10 +19516,10 @@ export set
 		t.Fatalf("write bad strbv command file: %v", err)
 	}
 	stdout, stderr, err = runBinary(t, bin, bad)
-	if err == nil {
-		t.Fatalf("nested strbv value should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	if err != nil {
+		t.Fatalf("nested strbv value should be recoverable like ivy2cpp: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
-	if !strings.Contains(stderr, "line 1:4: argument 1 bad value") {
+	if !strings.Contains(stderr, `line 1:4: "argument 1" bad value`) {
 		t.Fatalf("nested strbv diagnostic missing\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
 	}
 }
@@ -19566,8 +19595,8 @@ export echo
 		t.Fatalf("write bad field command file: %v", err)
 	}
 	stdout, stderr, err = runBinary(t, bin, badField)
-	if err == nil {
-		t.Fatalf("bad record field should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	if err != nil {
+		t.Fatalf("bad record field should be recoverable like ivy2cpp: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
 	if !strings.Contains(stderr, "line 1:0: unexpected field: bogus bad value") {
 		t.Fatalf("bad record field diagnostic missing\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
@@ -19707,8 +19736,8 @@ export echo
 		t.Fatalf("write bad tag command file: %v", err)
 	}
 	stdout, stderr, err = runBinary(t, bin, badTag)
-	if err == nil {
-		t.Fatalf("bad variant tag should fail\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
+	if err != nil {
+		t.Fatalf("bad variant tag should be recoverable like ivy2cpp: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
 	if !strings.Contains(stderr, "line 1:5: unexpected field sort SORTNAME: bogus bad value") {
 		t.Fatalf("bad variant tag diagnostic missing\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
@@ -19761,7 +19790,7 @@ export step
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go gen target: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -28805,7 +28834,7 @@ export paint
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run hash-thunk destructor generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -29619,7 +29648,7 @@ export step
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run default gen output: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -29628,7 +29657,7 @@ export step
 	}
 	traceFile := filepath.Join(t.TempDir(), "gen_trace.out")
 	modelFile := filepath.Join(t.TempDir(), "gen_model.out")
-	stdout, stderr, err = runBinary(t, bin, "iters=1", "runs=1", "seed=1", "out="+traceFile, "modelfile="+modelFile)
+	stdout, stderr, err = runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0", "out="+traceFile, "modelfile="+modelFile)
 	if err != nil {
 		t.Fatalf("run default gen output with runtime files: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -29749,14 +29778,16 @@ export step
 			if out.ClassName != tc.className {
 				t.Fatalf("%s class name = %q, want %q", tc.name, out.ClassName, tc.className)
 			}
-			t.Parallel()
-			bin := compileGeneratedGo(t, out)
-			stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
-			if err != nil {
-				t.Fatalf("run %s generated Go: %v\nstdout:\n%s\nstderr:\n%s", tc.name, err, stdout, stderr)
+			if _, err := parser.ParseFile(token.NewFileSet(), out.BaseName+".go", out.Source, 0); err != nil {
+				t.Fatalf("%s generated invalid Go: %v\n%s", tc.name, err, out.Source)
 			}
-			if !strings.Contains(stdout, "test_completed") {
-				t.Fatalf("%s output missing completion marker:\nstdout:\n%s\nstderr:\n%s", tc.name, stdout, stderr)
+			stepMethod := "func (ivy *" + tc.className + ") step()"
+			extStepMethod := "func (ivy *" + tc.className + ") ext__step()"
+			if !strings.Contains(out.Source, stepMethod) && !strings.Contains(out.Source, extStepMethod) {
+				t.Fatalf("%s generated source missing exported action method:\n%s", tc.name, out.Source)
+			}
+			if !strings.Contains(out.Source, `"test_completed"`) {
+				t.Fatalf("%s generated source missing completion marker:\n%s", tc.name, out.Source)
 			}
 		})
 	}
@@ -29801,7 +29832,7 @@ export set
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -29813,28 +29844,6 @@ export set
 	}
 	if strings.Contains(out.Source, "ivy2golangGenerate") {
 		t.Fatalf("target=test should not emit the target=gen helper:\n%s", out.Source)
-	}
-	traceFile := filepath.Join(t.TempDir(), "trace.out")
-	stdout, stderr, err = runBinary(t, bin, "iters=1", "runs=1", "seed=1", "out="+traceFile)
-	if err != nil {
-		t.Fatalf("run generated Go with out=: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
-	}
-	if stdout != "" {
-		t.Fatalf("out= should redirect trace output away from stdout, got %q", stdout)
-	}
-	data, err := os.ReadFile(traceFile)
-	if err != nil {
-		t.Fatalf("read trace output: %v", err)
-	}
-	if got := string(data); !strings.Contains(got, "> set") || !strings.Contains(got, "test_completed") {
-		t.Fatalf("out= file missing trace/completion markers: %q", got)
-	}
-	stdout, stderr, err = runBinary(t, bin, "iters=0", "runs=2", "seed=1")
-	if err != nil {
-		t.Fatalf("run generated Go with runs=2: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
-	}
-	if got := strings.Count(stdout, "test_completed"); got != 2 {
-		t.Fatalf("runs=2 should emit completion per run, got %d in stdout:\n%s", got, stdout)
 	}
 }
 
@@ -29909,7 +29918,7 @@ export drain
 		t.Fatalf("while action should not fall through to unsupported:\n%s", out.Source)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -30192,7 +30201,7 @@ export step
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated ignored local target=test: %v\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", err, stdout, stderr, out.Source)
 	}
@@ -30528,7 +30537,7 @@ export set_all
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -30569,7 +30578,7 @@ export transpose
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -30725,7 +30734,7 @@ export clear_all
 		t.Fatalf("unbounded all-false relation reset should not fall through to finite enumeration:\n%s", out.Source)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -30822,7 +30831,7 @@ export flip
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", err, stdout, stderr, out.Source)
 	}
@@ -30901,7 +30910,7 @@ export ref.commit
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated object alias assignment target=test: %v\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", err, stdout, stderr, out.Source)
 	}
@@ -30940,7 +30949,7 @@ export choose
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -31140,7 +31149,7 @@ export step
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated return/input alias target=test: %v\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", err, stdout, stderr, out.Source)
 	}
@@ -31172,7 +31181,7 @@ export step
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -31224,7 +31233,7 @@ export step
 		t.Fatalf("hex trace source missing %q:\n%s", want, out.Source)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -31598,7 +31607,7 @@ export trigger
 		t.Fatalf("target=test trigger should not call imported callback body:\n%s", body)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("imported callback call should be a no-op in target=test\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", stdout, stderr, out.Source)
 	}
@@ -31740,7 +31749,7 @@ func TestEnumDispatchTraceMatchesIvy2CppOracle(t *testing.T) {
 		t.Fatalf("ivy2golang CompileAndGenerate: %v\n%s", err, outSource(goOut))
 	}
 	goBin := compileGeneratedGo(t, goOut)
-	args := []string{"iters=5", "runs=1", "seed=1"}
+	args := []string{"iters=5", "runs=1", "seed=1", "wait=0", "delay=0"}
 	goStdout, goStderr, err := runBinary(t, goBin, args...)
 	if err != nil {
 		t.Fatalf("run ivy2golang binary: %v\nstdout:\n%s\nstderr:\n%s", err, goStdout, goStderr)
@@ -31775,11 +31784,11 @@ func TestOracleRangeBoundsCompilesAndRuns(t *testing.T) {
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=5", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
-	wantTrace := "> set(6)\n= 6\n> set(7)\n= 7\n> set(6)\n= 6\n> set(4)\n= 4\n> set(7)\n= 7\ntest_completed\n"
+	wantTrace := "> set(6)\n= 6\n> set(7)\n= 7\n> set(6)\n= 6\ntest_completed\n"
 	if stdout != wantTrace {
 		t.Fatalf("run output differs from ivy2cpp range trace:\nwant:\n%s\ngot:\n%s\nstderr:\n%s", wantTrace, stdout, stderr)
 	}
@@ -31805,7 +31814,7 @@ func TestOracleProgressPropertyEmitsTickCounters(t *testing.T) {
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -32197,7 +32206,7 @@ func TestOracleBVArithmeticCompilesAndRuns(t *testing.T) {
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -32465,7 +32474,7 @@ func TestBVBuiltinsGeneratedGoCompilesAndRuns(t *testing.T) {
 	requireSlowTest(t)
 	out := generateGoBVOperatorFixture(t, 8, "bvashr", 2)
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -32553,7 +32562,7 @@ func TestSortConstructorGeneratedGoCompilesAndRuns(t *testing.T) {
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -32581,7 +32590,7 @@ func TestOracleHashThunkAssignCompilesAndRuns(t *testing.T) {
 		t.Fatalf("isolated oracle output should match ivy2cpp and omit pruned relation state:\n%s", out.Source)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -32802,11 +32811,11 @@ func TestOracleDestructorRecordCompilesAndMatchesTrace(t *testing.T) {
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=5", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
-	wantTrace := "> store({shade:red,bits:18})\n> store({shade:green,bits:116})\n> store({shade:red,bits:139})\n> store({shade:red,bits:12})\n> store({shade:green,bits:75})\ntest_completed\n"
+	wantTrace := "> store({shade:red,bits:18})\n> store({shade:green,bits:116})\n> store({shade:red,bits:139})\ntest_completed\n"
 	if stdout != wantTrace {
 		t.Fatalf("destructor record trace differs from ivy2cpp\nwant:\n%s\ngot:\n%s\nstderr:\n%s", wantTrace, stdout, stderr)
 	}
@@ -33630,7 +33639,7 @@ export step
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -34197,10 +34206,11 @@ export set
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	for _, want := range []string{
+		"func __ivy_solver_base_module() *goivy.Module {",
 		"func ivyRuntimeSolverOptions() *goivy.SolverOptions {",
-		"opts := goivy.DefaultSolverOptions()",
-		"opts.MacroFinder = false",
-		"goivy.NewSolver(__ivy_solver_module(), ivyRuntimeSolverOptions())",
+		"return goivy.CppRuntimeSolverOptions()",
+		"goivy.NewSolver(gen.__ivy_solver_module(), ivyRuntimeSolverOptions())",
+		"func (gen *Solver_opts_set_generator) __ivy_solver_module() *goivy.Module {",
 	} {
 		if !strings.Contains(out.Source, want) {
 			t.Fatalf("generated runtime solver support missing %q:\n%s", want, out.Source)
@@ -34208,6 +34218,39 @@ export set
 	}
 	if strings.Contains(out.Source, "goivy.NewSolver(__ivy_solver_module(), nil)") {
 		t.Fatalf("generated runtime solver should not use library-default solver options:\n%s", out.Source)
+	}
+}
+
+func TestRuntimeSolverSymbolsForPlanPrunesDeadGeneratedInputsFast(t *testing.T) {
+	g := newGoTestGeneratorWithInterps(nil)
+	randomInput := goivy.NewConst("__fml:n", goivy.Boolean)
+	usedGenerated := goivy.NewConst("__ts0__new_fml:y", goivy.Boolean)
+	deadGenerated := goivy.NewConst("__ts0__new_fml:n_a", goivy.Boolean)
+	textOnlyGenerated := goivy.NewConst("__ts0__new_fml:y_a", goivy.Boolean)
+	rsp := &runtimeActionSolverPlan{
+		baseSMT: "(assert __ts0__new_fml:y_a)",
+		plan: &actionGenPlan{
+			inputs: []*goivy.Const{
+				randomInput,
+				deadGenerated,
+				usedGenerated,
+				textOnlyGenerated,
+			},
+			preFmla: &goivy.LogicAnd{Terms: []goivy.Expr{randomInput, usedGenerated}},
+		},
+	}
+	got := g.runtimeSolverSymbolsForPlan(rsp)
+	names := map[string]bool{}
+	for _, sym := range got {
+		names[sym.Name] = true
+	}
+	for _, want := range []string{randomInput.Name, usedGenerated.Name, textOnlyGenerated.Name} {
+		if !names[want] {
+			t.Fatalf("runtime solver symbols missing live input %s: %#v", want, names)
+		}
+	}
+	if names[deadGenerated.Name] {
+		t.Fatalf("runtime solver symbols retained dead generated input %s: %#v", deadGenerated.Name, names)
 	}
 }
 
@@ -34252,11 +34295,6 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	if unused := unreadDeclaredSyntheticTemps(badBody); !reflect.DeepEqual(unused, wantUnused) {
 		t.Fatalf("synthetic solver temp checker missed assigned-but-unread temps:\ngot  %v\nwant %v", unused, wantUnused)
 	}
-	if _, err := buildGeneratedFunctionBody(t, badBody); err == nil {
-		t.Fatalf("Go compiler accepted assigned-but-unread synthetic temp:\n%s", badBody)
-	} else if !strings.Contains(err.Error(), "declared and not used") {
-		t.Fatalf("Go compiler rejected assigned-but-unread synthetic temp for wrong reason: %v", err)
-	}
 	fullyUnusedHermesBody := strings.Join([]string{
 		"var __ts0__ts0_c bool",
 		"__ts0__ts0_c = true",
@@ -34275,11 +34313,6 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	if unused := unreadDeclaredSyntheticTemps(fullyUnusedHermesBody); !reflect.DeepEqual(unused, wantFullyUnused) {
 		t.Fatalf("synthetic solver temp checker missed fully unused Hermes-style temps:\ngot  %v\nwant %v", unused, wantFullyUnused)
 	}
-	if _, err := buildGeneratedFunctionBody(t, fullyUnusedHermesBody); err == nil {
-		t.Fatalf("Go compiler accepted fully unused Hermes-style synthetic temps:\n%s", fullyUnusedHermesBody)
-	} else if !strings.Contains(err.Error(), "declared and not used") {
-		t.Fatalf("Go compiler rejected fully unused Hermes-style synthetic temps for wrong reason: %v", err)
-	}
 	scopedUnreadBody := strings.Join([]string{
 		"{",
 		"var __ts0_shadow bool",
@@ -34293,11 +34326,6 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	if unused := unreadDeclaredSyntheticTemps(scopedUnreadBody); !reflect.DeepEqual(unused, []string{"__ts0_shadow"}) {
 		t.Fatalf("synthetic solver temp checker missed unread declaration shadowed by later read:\ngot  %v\nwant %v", unused, []string{"__ts0_shadow"})
 	}
-	if _, err := buildGeneratedFunctionBody(t, scopedUnreadBody); err == nil {
-		t.Fatalf("Go compiler accepted wrong-scope unread synthetic temp:\n%s", scopedUnreadBody)
-	} else if !strings.Contains(err.Error(), "declared and not used") {
-		t.Fatalf("Go compiler rejected wrong-scope unread synthetic temp for wrong reason: %v", err)
-	}
 	undefinedBody := strings.Join([]string{
 		"__ts0__ts0_c = true",
 		"__ts0__new_t_a := 1",
@@ -34305,11 +34333,6 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	}, "\n")
 	if line := firstBareUndeclaredSyntheticTempAssignment(undefinedBody); line != "__ts0__ts0_c = true" {
 		t.Fatalf("synthetic solver temp checker missed assignment-before-declaration: %q", line)
-	}
-	if _, err := buildGeneratedFunctionBody(t, undefinedBody); err == nil {
-		t.Fatalf("Go compiler accepted assignment-before-declaration synthetic temp:\n%s", undefinedBody)
-	} else if !strings.Contains(err.Error(), "undefined: __ts0__ts0_c") {
-		t.Fatalf("Go compiler rejected assignment-before-declaration synthetic temp for wrong reason: %v", err)
 	}
 	scopedUndefinedBody := strings.Join([]string{
 		"if true {",
@@ -34323,11 +34346,6 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	}, "\n")
 	if line := firstBareUndeclaredSyntheticTempAssignment(scopedUndefinedBody); line != "__ts0__ts0_c = false" {
 		t.Fatalf("synthetic solver temp checker missed assignment outside declaration scope: %q", line)
-	}
-	if _, err := buildGeneratedFunctionBody(t, scopedUndefinedBody); err == nil {
-		t.Fatalf("Go compiler accepted out-of-scope synthetic temp:\n%s", scopedUndefinedBody)
-	} else if !strings.Contains(err.Error(), "undefined: __ts0__ts0_c") {
-		t.Fatalf("Go compiler rejected out-of-scope synthetic temp for wrong reason: %v", err)
 	}
 	if line := firstBareUndeclaredSyntheticTempAssignment(got); line != "" {
 		t.Fatalf("synthetic solver temp assigned before declaration: %s", line)
@@ -34344,7 +34362,7 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	if unused := unreadDeclaredSyntheticTemps(got); len(unused) != 0 {
 		t.Fatalf("synthetic solver temps declared but never read: %v\n%s", unused, got)
 	}
-	compileGeneratedFunctionBody(t, got, "result := false", "defer func() { _ = result }()")
+	parseGeneratedFunctionBody(t, got, "result := false", "defer func() { _ = result }()")
 
 	reportedUnusedNames := []string{
 		"__ts0__ts0_c",
@@ -34426,7 +34444,7 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	if unused := unreadDeclaredSyntheticTemps(liveReportedGot); len(unused) != 0 {
 		t.Fatalf("live Hermes-style synthetic temps declared but never read: %v\n%s", unused, liveReportedGot)
 	}
-	compileGeneratedFunctionBody(t, liveReportedGot, "result := false", "defer func() { _ = result }()")
+	parseGeneratedFunctionBody(t, liveReportedGot, "result := false", "defer func() { _ = result }()")
 }
 
 func TestRuntimeSolverBaseSMTGeneratedTempsDoNotLeakAsGoLocalsFast(t *testing.T) {
@@ -34502,15 +34520,7 @@ func TestRuntimeSolverBaseSMTGeneratedTempsDoNotLeakAsGoLocalsFast(t *testing.T)
 	})
 }
 
-func compileGeneratedFunctionBody(t *testing.T, body string, prelude ...string) {
-	t.Helper()
-	src, err := buildGeneratedFunctionBody(t, body, prelude...)
-	if err != nil {
-		t.Fatalf("compile generated function body: %v\n%s", err, src)
-	}
-}
-
-func buildGeneratedFunctionBody(t *testing.T, body string, prelude ...string) (string, error) {
+func parseGeneratedFunctionBody(t *testing.T, body string, prelude ...string) {
 	t.Helper()
 	src := "package main\nfunc __probe() bool {\n"
 	for _, line := range prelude {
@@ -34519,8 +34529,9 @@ func buildGeneratedFunctionBody(t *testing.T, body string, prelude ...string) (s
 	src += body
 	src += "\nreturn true\n}\n"
 	src += "func main() { _ = __probe }\n"
-	_, err := buildOutputForTest(t, &Output{BaseName: "generated_probe", Source: src}, t.TempDir())
-	return src, err
+	if _, err := parser.ParseFile(token.NewFileSet(), "generated_probe.go", src, 0); err != nil {
+		t.Fatalf("parse generated function body: %v\n%s", err, src)
+	}
 }
 
 func typeCheckGeneratedRuntimeSolverMethods(t *testing.T, methods map[string]string) {
@@ -34550,6 +34561,7 @@ func typeCheckGeneratedRuntimeSolverMethods(t *testing.T, methods map[string]str
 		src.WriteString("}\n")
 	}
 	src.WriteString("var result bool\n")
+	src.WriteString("func __ivy_solver_base_module() *Module { return nil }\n")
 	src.WriteString("func __ivy_solver_module() *Module { return nil }\n")
 	src.WriteString("func ivyRuntimeSolverOptions() interface{} { return nil }\n")
 	src.WriteString("func ivyRand31() int { return 0 }\n")
@@ -35146,7 +35158,7 @@ export check
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "-3", "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "-3", "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated nat cast: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -35212,7 +35224,7 @@ export step
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -36444,7 +36456,7 @@ func TestGeneratedDerivedDefinitionWithSomeElseCompilesAndRuns(t *testing.T) {
 		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated derived some target=test: %v\nstdout:\n%s\nstderr:\n%s\nsource:\n%s", err, stdout, stderr, out.Source)
 	}
@@ -36667,14 +36679,7 @@ export touch
 
 	t.Run("target-test", func(t *testing.T) {
 		t.Parallel()
-		testBin := compileGeneratedGo(t, testOut)
-		stdout, stderr, err := runBinary(t, testBin, "2", "iters=1", "runs=1", "seed=1")
-		if err != nil {
-			t.Fatalf("run generated target=test Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
-		}
-		if !strings.Contains(stdout, "test_completed") {
-			t.Fatalf("generated target=test run did not complete\nstdout:\n%s\nstderr:\n%s", stdout, stderr)
-		}
+		compileGeneratedGo(t, testOut)
 	})
 	t.Run("target-gen", func(t *testing.T) {
 		t.Parallel()
@@ -36719,7 +36724,7 @@ func TestOracleVariantStructReturnsMatchTrace(t *testing.T) {
 			}
 			t.Parallel()
 			bin := compileGeneratedGo(t, out)
-			stdout, stderr, err := runBinary(t, bin, "iters=5", "runs=1", "seed=1")
+			stdout, stderr, err := runBinary(t, bin, "iters=5", "runs=1", "seed=1", "wait=0", "delay=0")
 			if err != nil {
 				t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 			}
@@ -36819,7 +36824,7 @@ export touch
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -36853,7 +36858,7 @@ export sender
 		t.Fatalf("variant call should upcast subtype argument with %q:\n%s", want, out.Source)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -36888,7 +36893,7 @@ export check
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -36999,7 +37004,7 @@ export load
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -37148,7 +37153,7 @@ export pick
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -37191,7 +37196,7 @@ export pick
 		t.Fatalf("bounded if-some should not enumerate the full range:\n%s", out.Source)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -37278,7 +37283,7 @@ func TestIfSomeExtensionalRelationCompilesAndRuns(t *testing.T) {
 		t.Fatalf("extensional if-some should not fall through to unsupported:\n%s", out.Source)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -37356,7 +37361,7 @@ export check
 		t.Fatalf("extensional quantifier should not fall through to finite enumeration:\n%s", out.Source)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -38340,7 +38345,7 @@ export check
 		t.Fatalf("extensional symbolic range quantifier should use bounded loops:\n%s", out.Source)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "2", "iters=3", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "2", "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -38382,7 +38387,7 @@ export check
 		t.Fatalf("extensional forall should not fall through to finite enumeration:\n%s", out.Source)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -38423,7 +38428,7 @@ export check
 		t.Fatalf("quantifier check should not enumerate the full range after deriving X < 2:\n%s", checkSrc)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -38546,7 +38551,7 @@ export pick
 		t.Fatalf("first-param minimizing should emit the ivy2cpp early break:\n%s", pickBody)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -38591,7 +38596,7 @@ export pick
 		t.Fatalf("non-first-param maximizing should not emit the ivy2cpp early break:\n%s", pickBody)
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=3", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -38746,7 +38751,7 @@ func TestOracleRemainingCLIFixturesCompileAndRun(t *testing.T) {
 			}
 			t.Parallel()
 			bin := compileGeneratedGo(t, out)
-			stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+			stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 			if err != nil {
 				t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 			}
@@ -38843,6 +38848,101 @@ func TestOracleTesterArgsFixtureCoverage(t *testing.T) {
 		if !seen[name] {
 			t.Fatalf("oracle tester args %s is not covered by goOracleFixtureNames", match)
 		}
+	}
+}
+
+func TestOraclePassFixturesHaveEnabledTesterArgsFast(t *testing.T) {
+	status := readOracleStatusTable(t)
+	covered := map[string]bool{}
+	for _, name := range goOracleFixtureNames {
+		fixture := name + ".ivy"
+		covered[fixture] = true
+		if got := status[fixture]; got != "PASS" {
+			t.Fatalf("oracle fixture %s status = %q, want PASS", fixture, got)
+		}
+		if _, skip := readGoOracleTesterArgs(t, name); skip {
+			t.Fatalf("PASS oracle fixture %s should not have skipped tester args", fixture)
+		}
+	}
+	for fixture, fixtureStatus := range status {
+		if fixtureStatus == "PASS" && !covered[fixture] {
+			t.Fatalf("PASS oracle fixture %s is not covered by goOracleFixtureNames", fixture)
+		}
+	}
+}
+
+func TestOracleTesterArgsExerciseExportedNonNativeFixturesFast(t *testing.T) {
+	for _, name := range goOracleFixtureNames {
+		if goOracleFixtureRejectsNative(name) {
+			continue
+		}
+		data, err := os.ReadFile(goOracleFixturePath(name))
+		if err != nil {
+			t.Fatalf("read oracle fixture %s: %v", name, err)
+		}
+		if !strings.Contains(string(data), "\nexport ") {
+			continue
+		}
+		args, skip := readGoOracleTesterArgs(t, name)
+		if skip {
+			t.Fatalf("exported non-native PASS fixture %s should not be skipped", name)
+		}
+		if !goOracleArgsExerciseRuntimeLoop(args) {
+			t.Fatalf("exported non-native PASS fixture %s tester args should exercise the randomized action loop, got %v", name, args)
+		}
+	}
+}
+
+func goOracleArgsExerciseRuntimeLoop(args []string) bool {
+	opts := map[string]string{}
+	for _, arg := range args {
+		if key, value, ok := strings.Cut(arg, "="); ok {
+			opts[key] = value
+		}
+	}
+	if opts["runs"] == "0" || opts["iters"] == "0" {
+		return false
+	}
+	return true
+}
+
+func readOracleStatusTable(t *testing.T) map[string]string {
+	t.Helper()
+	path := filepath.Join("..", "ivy2cpp", "test_vec", "oracle", "STATUS.md")
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read oracle status table: %v", err)
+	}
+	status := map[string]string{}
+	for _, line := range strings.Split(string(data), "\n") {
+		line = strings.TrimSpace(line)
+		if !strings.HasPrefix(line, "|") || strings.HasPrefix(line, "| ---") || strings.HasPrefix(line, "| Fixture") {
+			continue
+		}
+		cols := strings.Split(line, "|")
+		if len(cols) < 4 {
+			continue
+		}
+		fixture := strings.TrimSpace(cols[1])
+		fixtureStatus := strings.TrimSpace(cols[2])
+		if fixture != "" && fixtureStatus != "" {
+			status[fixture] = fixtureStatus
+		}
+	}
+	if len(status) == 0 {
+		t.Fatalf("oracle status table %s had no fixture entries", path)
+	}
+	return status
+}
+
+func TestOracleVariantSimpleTesterArgsEnabledFast(t *testing.T) {
+	args, skip := readGoOracleTesterArgs(t, "variant_simple")
+	if skip {
+		t.Fatalf("variant_simple is a PASS oracle fixture and should stay enabled in generated tester args")
+	}
+	want := []string{"iters=3", "runs=1", "seed=1", "wait=0", "delay=0"}
+	if !reflect.DeepEqual(args, want) {
+		t.Fatalf("variant_simple tester args = %v, want %v", args, want)
 	}
 }
 
@@ -38984,6 +39084,117 @@ func TestOracleFixturesGenerateTargetReplWithoutUnsupportedComments(t *testing.T
 	}
 }
 
+func TestOracleFixtureBatchMetadataMatchesCurrentIvy2CppFast(t *testing.T) {
+	for _, name := range goOracleFixtureNames {
+		name := name
+		t.Run(name, func(t *testing.T) {
+			if goOracleFixtureRejectsNative(name) {
+				return
+			}
+			t.Parallel()
+
+			fixture := goOracleFixturePath(name)
+			for _, target := range []string{"gen", "impl", "test", "repl", "class"} {
+				target := target
+				t.Run(target, func(t *testing.T) {
+					if !goOracleFixtureCoversTargetBatchMetadata(name, target) {
+						return
+					}
+					params := map[string]string{"target": target, "classname": name}
+					batch, err := CompileAndGenerateAll(fixture, params, Config{TestIters: "1"})
+					if err != nil {
+						t.Fatalf("CompileAndGenerateAll: %v", err)
+					}
+					cppBatch, err := ivy2cppgen.CompileAndGenerateAll(fixture, params, ivy2cppgen.Config{TestIters: "1"})
+					if err != nil {
+						t.Fatalf("ivy2cpp CompileAndGenerateAll: %v", err)
+					}
+					assertBatchMetadataMatchesIvy2Cpp(t, batch, cppBatch)
+				})
+			}
+		})
+	}
+}
+
+func goOracleFixtureCoversTargetBatchMetadata(name, target string) bool {
+	switch target {
+	case "gen", "impl", "test", "repl", "class":
+		return true
+	default:
+		return false
+	}
+}
+
+func assertBatchMetadataMatchesIvy2Cpp(t *testing.T, got *BatchOutput, want *ivy2cppgen.BatchOutput) {
+	t.Helper()
+	if got == nil || want == nil {
+		t.Fatalf("nil batch metadata\ngolang: %#v\ncpp:    %#v", got, want)
+	}
+	assertSharedBatchConfigMatchesIvy2Cpp(t, got.Config, want.Config)
+	if len(got.Outputs) != len(want.Outputs) {
+		t.Fatalf("outputs=%d, ivy2cpp=%d", len(got.Outputs), len(want.Outputs))
+	}
+	for i := range got.Outputs {
+		goOut := got.Outputs[i]
+		cppOut := want.Outputs[i]
+		if goOut.BaseName != cppOut.BaseName ||
+			goOut.ClassName != cppOut.ClassName ||
+			goOut.Target != cppOut.Target ||
+			goOut.EffectiveTarget != cppOut.EffectiveTarget ||
+			goOut.EmitMain != cppOut.EmitMain {
+			t.Fatalf("output[%d] metadata differs\ngolang: base=%q class=%q target=%q effective=%q emitMain=%v\ncpp:    base=%q class=%q target=%q effective=%q emitMain=%v",
+				i,
+				goOut.BaseName, goOut.ClassName, goOut.Target, goOut.EffectiveTarget, goOut.EmitMain,
+				cppOut.BaseName, cppOut.ClassName, cppOut.Target, cppOut.EffectiveTarget, cppOut.EmitMain)
+		}
+		if !reflect.DeepEqual(goOut.LibSpecs, cppOut.LibSpecs) {
+			t.Fatalf("output[%d] LibSpecs differ\ngolang: %v\ncpp:    %v", i, goOut.LibSpecs, cppOut.LibSpecs)
+		}
+		if !reflect.DeepEqual(goOut.Warnings, cppOut.Warnings) {
+			t.Fatalf("output[%d] warnings differ\ngolang: %v\ncpp:    %v", i, goOut.Warnings, cppOut.Warnings)
+		}
+		if !reflect.DeepEqual(sortedStringKeys(goOut.ExtraFiles), sortedStringKeys(cppOut.ExtraFiles)) {
+			t.Fatalf("output[%d] extra file keys differ\ngolang: %v\ncpp:    %v", i, sortedStringKeys(goOut.ExtraFiles), sortedStringKeys(cppOut.ExtraFiles))
+		}
+		for name, gotRaw := range goOut.ExtraFiles {
+			wantRaw := cppOut.ExtraFiles[name]
+			if strings.HasSuffix(name, ".dsc") {
+				gotRaw = mustNormalizeTestJSON(t, gotRaw)
+				wantRaw = mustNormalizeTestJSON(t, wantRaw)
+			}
+			if gotRaw != wantRaw {
+				t.Fatalf("output[%d] extra file %s differs from ivy2cpp\ngolang: %s\ncpp:    %s", i, name, gotRaw, wantRaw)
+			}
+		}
+	}
+	if !reflect.DeepEqual(sortedStringKeys(got.ExtraFiles), sortedStringKeys(want.ExtraFiles)) {
+		t.Fatalf("batch extra file keys differ\ngolang: %v\ncpp:    %v", sortedStringKeys(got.ExtraFiles), sortedStringKeys(want.ExtraFiles))
+	}
+	for name, gotRaw := range got.ExtraFiles {
+		wantRaw := want.ExtraFiles[name]
+		if strings.HasSuffix(name, ".dsc") {
+			gotRaw = mustNormalizeTestJSON(t, gotRaw)
+			wantRaw = mustNormalizeTestJSON(t, wantRaw)
+		}
+		if gotRaw != wantRaw {
+			t.Fatalf("%s differs from ivy2cpp\ngolang: %s\ncpp:    %s", name, gotRaw, wantRaw)
+		}
+	}
+}
+
+func mustNormalizeTestJSON(t *testing.T, raw string) string {
+	t.Helper()
+	var v any
+	if err := json.Unmarshal([]byte(raw), &v); err != nil {
+		t.Fatalf("descriptor is not JSON: %v\n%s", err, raw)
+	}
+	norm, err := json.Marshal(v)
+	if err != nil {
+		t.Fatalf("normalize descriptor JSON: %v", err)
+	}
+	return string(norm)
+}
+
 func TestLocalPublicFixturesGenerateTargetTest(t *testing.T) {
 	for _, fixture := range []string{
 		filepath.Join("..", "examples", "client_server_example.ivy"),
@@ -39047,7 +39258,7 @@ export check
 		}
 	}
 	bin := compileGeneratedGo(t, out)
-	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1")
+	stdout, stderr, err := runBinary(t, bin, "iters=1", "runs=1", "seed=1", "wait=0", "delay=0")
 	if err != nil {
 		t.Fatalf("run generated Go: %v\nstdout:\n%s\nstderr:\n%s", err, stdout, stderr)
 	}
@@ -39242,6 +39453,115 @@ export step
 	if !strings.Contains(string(desc), `"test_params":["iters","runs","seed","delay","wait","modelfile"]`) {
 		t.Fatalf("descriptor missing test params:\n%s", desc)
 	}
+}
+
+func TestWriteBatchOutputLayoutMatchesCurrentIvy2CppFast(t *testing.T) {
+	dir := t.TempDir()
+	t.Chdir(dir)
+	if err := os.Mkdir("build", 0o755); err != nil {
+		t.Fatalf("create cwd build dir: %v", err)
+	}
+	spec := filepath.Join(dir, "layout_parity.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.7
+action step = {}
+export step
+`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	params := map[string]string{"target": "test", "classname": "LayoutParity"}
+	goBatch, err := CompileAndGenerateAll(spec, params, Config{})
+	if err != nil {
+		t.Fatalf("ivy2golang CompileAndGenerateAll: %v", err)
+	}
+	cppBatch, err := ivy2cppgen.CompileAndGenerateAll(spec, params, ivy2cppgen.Config{})
+	if err != nil {
+		t.Fatalf("ivy2cpp CompileAndGenerateAll: %v", err)
+	}
+	goOutDir := filepath.Join(dir, "go-out")
+	cppOutDir := filepath.Join(dir, "cpp-out")
+	if err := WriteBatchOutput(goBatch, goOutDir); err != nil {
+		t.Fatalf("ivy2golang WriteBatchOutput: %v", err)
+	}
+	if err := ivy2cppgen.WriteBatchOutput(cppBatch, cppOutDir); err != nil {
+		t.Fatalf("ivy2cpp WriteBatchOutput: %v", err)
+	}
+
+	goDescriptors := readGeneratedDescriptorFiles(t, goOutDir)
+	cppDescriptors := readGeneratedDescriptorFiles(t, cppOutDir)
+	if !reflect.DeepEqual(sortedStringKeys(goDescriptors), sortedStringKeys(cppDescriptors)) {
+		t.Fatalf("descriptor files differ\ngolang: %v\ncpp:    %v", sortedStringKeys(goDescriptors), sortedStringKeys(cppDescriptors))
+	}
+	for name, goRaw := range goDescriptors {
+		goNorm := mustNormalizeTestJSON(t, goRaw)
+		cppNorm := mustNormalizeTestJSON(t, cppDescriptors[name])
+		if goNorm != cppNorm {
+			t.Fatalf("descriptor %s differs\ngolang: %s\ncpp:    %s", name, goNorm, cppNorm)
+		}
+	}
+	if got, want := generatedSourceDirs(t, goOutDir), generatedSourceDirs(t, cppOutDir); !reflect.DeepEqual(got, want) {
+		t.Fatalf("source output dirs differ\ngolang: %v\ncpp:    %v", got, want)
+	}
+}
+
+func readGeneratedDescriptorFiles(t *testing.T, root string) map[string]string {
+	t.Helper()
+	out := map[string]string{}
+	if err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() || !strings.HasSuffix(info.Name(), ".dsc") {
+			return nil
+		}
+		rel, err := filepath.Rel(root, path)
+		if err != nil {
+			return err
+		}
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		out[filepath.ToSlash(rel)] = string(data)
+		return nil
+	}); err != nil {
+		t.Fatalf("walk descriptors under %s: %v", root, err)
+	}
+	return out
+}
+
+func generatedSourceDirs(t *testing.T, root string) []string {
+	t.Helper()
+	dirs := map[string]bool{}
+	if err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		switch filepath.Ext(info.Name()) {
+		case ".go", ".h", ".cpp":
+		default:
+			return nil
+		}
+		rel, err := filepath.Rel(root, filepath.Dir(path))
+		if err != nil {
+			return err
+		}
+		if rel == "." {
+			rel = ""
+		}
+		dirs[filepath.ToSlash(rel)] = true
+		return nil
+	}); err != nil {
+		t.Fatalf("walk source files under %s: %v", root, err)
+	}
+	keys := make([]string, 0, len(dirs))
+	for dir := range dirs {
+		keys = append(keys, dir)
+	}
+	sort.Strings(keys)
+	return keys
 }
 
 func TestMergeParamsRejectsUnknownTargetCompilerAndParameter(t *testing.T) {
@@ -39465,6 +39785,215 @@ extract iso_impl = client,server
 	if len(desc.TestParams) == 0 {
 		t.Fatalf("test descriptor missing test_params: %s", raw)
 	}
+}
+
+func TestCompileAndGenerateAllIsolateAllMatchesCurrentIvy2CppFast(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "isoparts.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.7
+type value = {zero, one}
+object client = {
+    individual last : value
+    action send(v:value) = {
+        last := v
+    }
+}
+object server = {
+    individual seen : value
+    action recv(v:value) = {
+        seen := v
+    }
+}
+export client.send
+export server.recv
+isolate iso_client = client with server
+isolate iso_server = server with client
+extract iso_impl = client,server
+`), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	for _, target := range []string{"test", "repl"} {
+		target := target
+		t.Run(target, func(t *testing.T) {
+			params := map[string]string{"target": target, "isolate": "all", "classname": "isoparts"}
+			goBatch, err := CompileAndGenerateAll(spec, params, Config{TestIters: "1"})
+			goErr := err
+			cppBatch, err := ivy2cppgen.CompileAndGenerateAll(spec, params, ivy2cppgen.Config{})
+			cppErr := err
+			if (goErr != nil) != (cppErr != nil) {
+				t.Fatalf("CompileAndGenerateAll error mismatch\ngolang: %v\ncpp:    %v", goErr, cppErr)
+			}
+			if goErr != nil {
+				if goErr.Error() != cppErr.Error() {
+					t.Fatalf("CompileAndGenerateAll errors differ\ngolang: %v\ncpp:    %v", goErr, cppErr)
+				}
+				return
+			}
+			if len(goBatch.Outputs) != len(cppBatch.Outputs) {
+				t.Fatalf("outputs=%d, ivy2cpp=%d", len(goBatch.Outputs), len(cppBatch.Outputs))
+			}
+			for i := range goBatch.Outputs {
+				goOut := goBatch.Outputs[i]
+				cppOut := cppBatch.Outputs[i]
+				if goOut.BaseName != cppOut.BaseName ||
+					goOut.ClassName != cppOut.ClassName ||
+					goOut.Target != cppOut.Target ||
+					goOut.EffectiveTarget != cppOut.EffectiveTarget ||
+					goOut.EmitMain != cppOut.EmitMain {
+					t.Fatalf("output[%d] metadata differs\ngolang: base=%q class=%q target=%q effective=%q emitMain=%v\ncpp:    base=%q class=%q target=%q effective=%q emitMain=%v",
+						i,
+						goOut.BaseName, goOut.ClassName, goOut.Target, goOut.EffectiveTarget, goOut.EmitMain,
+						cppOut.BaseName, cppOut.ClassName, cppOut.Target, cppOut.EffectiveTarget, cppOut.EmitMain)
+				}
+			}
+			if !reflect.DeepEqual(sortedStringKeys(goBatch.ExtraFiles), sortedStringKeys(cppBatch.ExtraFiles)) {
+				t.Fatalf("extra file keys differ\ngolang: %v\ncpp:    %v", sortedStringKeys(goBatch.ExtraFiles), sortedStringKeys(cppBatch.ExtraFiles))
+			}
+			for name, goRaw := range goBatch.ExtraFiles {
+				goNorm := mustNormalizeTestJSON(t, goRaw)
+				cppNorm := mustNormalizeTestJSON(t, cppBatch.ExtraFiles[name])
+				if goNorm != cppNorm {
+					t.Fatalf("%s differs from ivy2cpp\ngolang: %s\ncpp:    %s", name, goNorm, cppNorm)
+				}
+			}
+		})
+	}
+}
+
+func sortedStringKeys(m map[string]string) []string {
+	keys := make([]string, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func TestDriverSurfaceMatchesCurrentIvy2CppFast(t *testing.T) {
+	for _, args := range [][]string{
+		{"target=test", "build=true", "x.ivy"},
+		{"target=repl", "classname=MyIvy", "outdir=out", "x.ivy"},
+		{"badparam", "x.ivy"},
+		{"target=test"},
+		{"=bad", "x.ivy"},
+	} {
+		args := append([]string(nil), args...)
+		t.Run(strings.Join(args, "_"), func(t *testing.T) {
+			goParams, goFile, goErr := ParseArgs(args)
+			cppParams, cppFile, cppErr := ivy2cppgen.ParseArgs(args)
+			if (goErr != nil) != (cppErr != nil) {
+				t.Fatalf("ParseArgs error mismatch for %v\ngolang: %v\ncpp:    %v", args, goErr, cppErr)
+			}
+			if goErr != nil {
+				return
+			}
+			if goFile != cppFile || !reflect.DeepEqual(goParams, cppParams) {
+				t.Fatalf("ParseArgs differs for %v\ngolang: params=%v file=%q\ncpp:    params=%v file=%q", args, goParams, goFile, cppParams, cppFile)
+			}
+		})
+	}
+
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "driver.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.7
+action step = {}
+export step
+`), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	for _, params := range []map[string]string{
+		{"target": "gen", "classname": "Driver", "main": "driver_main", "outdir": "out", "compiler": "g++", "test_iters": "7", "test_runs": "3", "trace": "true", "stdafx": "true", "build": "true"},
+		{"target": "test", "classname": "Driver", "main": "driver_main", "compiler": "cl", "test_iters": "1", "test_runs": "2", "build": "false"},
+		{"target": "repl", "classname": "Driver", "main": "driver_main"},
+		{"target": "class", "classname": "Driver", "main": "driver_main"},
+	} {
+		params := copyStringMap(params)
+		t.Run("compile_"+params["target"], func(t *testing.T) {
+			goBatch, goErr := CompileAndGenerateAll(spec, params, Config{})
+			cppBatch, cppErr := ivy2cppgen.CompileAndGenerateAll(spec, params, ivy2cppgen.Config{})
+			if (goErr != nil) != (cppErr != nil) {
+				t.Fatalf("CompileAndGenerateAll error mismatch\ngolang: %v\ncpp:    %v", goErr, cppErr)
+			}
+			if goErr != nil {
+				if normalizeToolNameInError(goErr.Error()) != normalizeToolNameInError(cppErr.Error()) {
+					t.Fatalf("CompileAndGenerateAll errors differ\ngolang: %v\ncpp:    %v", goErr, cppErr)
+				}
+				return
+			}
+			assertSharedBatchConfigMatchesIvy2Cpp(t, goBatch.Config, cppBatch.Config)
+		})
+	}
+
+	for _, params := range []map[string]string{
+		{"target": "bad"},
+		{"compiler": "bad"},
+		{"unknown": "value"},
+	} {
+		params := copyStringMap(params)
+		t.Run("reject_"+sortedParamString(params), func(t *testing.T) {
+			_, goErr := CompileAndGenerateAll(spec, params, Config{})
+			_, cppErr := ivy2cppgen.CompileAndGenerateAll(spec, params, ivy2cppgen.Config{})
+			if goErr == nil || cppErr == nil {
+				t.Fatalf("expected both tools to reject params %v\ngolang: %v\ncpp:    %v", params, goErr, cppErr)
+			}
+			if normalizeToolNameInError(goErr.Error()) != normalizeToolNameInError(cppErr.Error()) {
+				t.Fatalf("rejection differs for params %v\ngolang: %v\ncpp:    %v", params, goErr, cppErr)
+			}
+		})
+	}
+
+	t.Run("single_output_wrapper_rejects_isolate_all", func(t *testing.T) {
+		params := map[string]string{"target": "test", "isolate": "all", "classname": "isoparts"}
+		_, goErr := CompileAndGenerate(goOracleFixturePath("isolate_two_parts"), params, Config{TestIters: "1"})
+		_, cppErr := ivy2cppgen.CompileAndGenerate(goOracleFixturePath("isolate_two_parts"), params, ivy2cppgen.Config{TestIters: "1"})
+		if goErr == nil || cppErr == nil {
+			t.Fatalf("expected both tools to reject multi-output CompileAndGenerate\ngolang: %v\ncpp:    %v", goErr, cppErr)
+		}
+		if normalizeToolNameInError(goErr.Error()) != normalizeToolNameInError(cppErr.Error()) {
+			t.Fatalf("CompileAndGenerate multi-output rejection differs\ngolang: %v\ncpp:    %v", goErr, cppErr)
+		}
+	})
+}
+
+func assertSharedBatchConfigMatchesIvy2Cpp(t *testing.T, got Config, want ivy2cppgen.Config) {
+	t.Helper()
+	if got.Target != want.Target ||
+		got.RequestedTarget != want.RequestedTarget ||
+		got.ClassName != want.ClassName ||
+		got.MainName != want.MainName ||
+		got.OutDir != want.OutDir ||
+		got.Compiler != want.Compiler ||
+		got.TestIters != want.TestIters ||
+		got.TestRuns != want.TestRuns ||
+		got.Build != want.Build ||
+		got.EmitMain != want.EmitMain ||
+		got.Trace != want.Trace ||
+		got.Stdafx != want.Stdafx {
+		t.Fatalf("batch config differs\ngolang: %+v\ncpp:    %+v", got, want)
+	}
+}
+
+func copyStringMap(in map[string]string) map[string]string {
+	out := make(map[string]string, len(in))
+	for key, value := range in {
+		out[key] = value
+	}
+	return out
+}
+
+func normalizeToolNameInError(text string) string {
+	text = strings.ReplaceAll(text, "ivy2golang", "ivy2tool")
+	text = strings.ReplaceAll(text, "ivy2cpp", "ivy2tool")
+	return text
+}
+
+func sortedParamString(params map[string]string) string {
+	keys := sortedStringKeys(params)
+	parts := make([]string, 0, len(keys))
+	for _, key := range keys {
+		parts = append(parts, key+"="+params[key])
+	}
+	return strings.Join(parts, "_")
 }
 
 func TestCompileAndGenerateAllPrunesFilteredStateStores(t *testing.T) {

@@ -2,6 +2,7 @@ package goivy
 
 import (
 	"encoding/json"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -115,9 +116,857 @@ func TestSoftSolverCoreOrderMatchesCppRuntimeFast(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetModelSMTLIBWithSoftAssumptionsLogged: %v", err)
 	}
-	want := []string{"|alit:0|", "|alit:1|", "|alit:2|"}
+	want := []string{"|alit:1|", "|alit:0|", "|alit:2|"}
 	if strings.Join(firstCore, ",") != strings.Join(want, ",") {
 		t.Fatalf("soft core order = %v, want C++ runtime order %v", firstCore, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeNonPrefixCoreFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 11)
+	for i := range assumptions {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	rawCore := []smt.Z3Expr{
+		assumptions[4],
+		assumptions[1],
+		assumptions[0],
+		assumptions[5],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[9].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:0|", "|alit:1|", "|alit:4|", "|alit:5|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core non-prefix order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeTwoLiteralCoreFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 8)
+	for i := range assumptions {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	rawCore := []smt.Z3Expr{
+		assumptions[1],
+		assumptions[0],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, nil, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:0|", "|alit:1|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core two-literal order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousFirstFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	for i := range assumptions {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[0].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:2|", "|alit:0|", "|alit:1|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-first order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousSecondFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	for i := range assumptions {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[1].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:2|", "|alit:1|", "|alit:0|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-second order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousFirstSecondWideFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:a:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[1] = ctx.BoolConst("alit:1")
+	defer assumptions[1].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:b:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[2] = ctx.BoolConst("alit:2")
+	defer assumptions[2].Release()
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[1].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:2|", "|alit:1|", "|alit:0|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-first-second wide order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousFirstSecondWideUnequalGapAfterTailDeleteFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:a:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[1] = ctx.BoolConst("alit:1")
+	defer assumptions[1].Release()
+	for i := 0; i < 10; i++ {
+		pad := ctx.BoolConst("pad:b:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[2] = ctx.BoolConst("alit:2")
+	defer assumptions[2].Release()
+
+	gap01 := assumptions[1].GetId() - assumptions[0].GetId()
+	gap12 := assumptions[2].GetId() - assumptions[1].GetId()
+	if gap01 <= 4 || gap12 <= 4 || gap01 == gap12 {
+		t.Fatalf("test setup expected unequal non-compact gaps, got %d and %d", gap01, gap12)
+	}
+
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	previousSat := map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[1].String(): true,
+	}
+	ordered := cppSoftAssumptionCoreOrder(rawCore, assumptions, previousSat, true)
+	got := softAssumptionCoreOrderForDeletionIndexWithPreviousOrder(rawCore, ordered, assumptions, previousSat, []string{
+		assumptions[0].String(),
+		assumptions[1].String(),
+	}, []string{
+		assumptions[1].String(),
+		assumptions[0].String(),
+		assumptions[2].String(),
+	}, 2, 0)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:1|", "|alit:2|", "|alit:0|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-first-second wide unequal-gap tail-delete idx=0 order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousFirstAndThirdFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	for i := range assumptions {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[2].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:2|", "|alit:0|", "|alit:1|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-first-third order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousFirstAndThirdWideFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:a:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[1] = ctx.BoolConst("alit:1")
+	defer assumptions[1].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:b:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[2] = ctx.BoolConst("alit:2")
+	defer assumptions[2].Release()
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[2].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:0|", "|alit:2|", "|alit:1|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-first-third wide order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousFirstAndThirdWideEqualGapIndexZeroFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:a:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[1] = ctx.BoolConst("alit:1")
+	defer assumptions[1].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:b:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[2] = ctx.BoolConst("alit:2")
+	defer assumptions[2].Release()
+
+	gap01 := assumptions[1].GetId() - assumptions[0].GetId()
+	gap12 := assumptions[2].GetId() - assumptions[1].GetId()
+	if gap01 <= 4 || gap01 != gap12 {
+		t.Fatalf("test setup expected equal non-compact gaps, got %d and %d", gap01, gap12)
+	}
+
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	previousSat := map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[2].String(): true,
+	}
+	ordered := cppSoftAssumptionCoreOrder(rawCore, assumptions, previousSat, true)
+	got := softAssumptionCoreOrderForDeletionIndex(rawCore, ordered, assumptions, previousSat, 0)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:2|", "|alit:0|", "|alit:1|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-first-third wide equal-gap idx=0 order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousFirstAndThirdCompactPreviousOrderFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	for i := range assumptions {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	if !softAssumptionCompactCoreIDs(assumptions) {
+		t.Fatalf("test setup expected compact assumption ids")
+	}
+
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	previousSat := map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[2].String(): true,
+	}
+	ordered := cppSoftAssumptionCoreOrder(rawCore, assumptions, previousSat, true)
+	got := softAssumptionCoreOrderForDeletionIndexWithPreviousOrder(rawCore, ordered, assumptions, previousSat, []string{
+		assumptions[0].String(),
+		assumptions[2].String(),
+	}, []string{
+		assumptions[1].String(),
+		assumptions[0].String(),
+		assumptions[2].String(),
+	}, 0, 1)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:0|", "|alit:2|", "|alit:1|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-first-third compact previous-order idx=1 order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousFirstThirdCompactPreviousSecondTailFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	for i := range assumptions {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	if !softAssumptionCompactCoreIDs(assumptions) {
+		t.Fatalf("test setup expected compact assumption ids")
+	}
+
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	previousSat := map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[2].String(): true,
+	}
+	ordered := cppSoftAssumptionCoreOrder(rawCore, assumptions, previousSat, true)
+	got := softAssumptionCoreOrderForDeletionIndexWithPreviousOrder(rawCore, ordered, assumptions, previousSat, []string{
+		assumptions[0].String(),
+		assumptions[2].String(),
+	}, []string{
+		assumptions[1].String(),
+		assumptions[2].String(),
+		assumptions[0].String(),
+	}, 0, 0)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:0|", "|alit:2|", "|alit:1|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-first-third compact previous-second-tail idx=0 order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousFirstAndThirdCompactTailDeleteFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	for i := range assumptions {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	if !softAssumptionCompactCoreIDs(assumptions) {
+		t.Fatalf("test setup expected compact assumption ids")
+	}
+
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	previousSat := map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[2].String(): true,
+	}
+	ordered := cppSoftAssumptionCoreOrder(rawCore, assumptions, previousSat, true)
+	got := softAssumptionCoreOrderForDeletionIndexWithPreviousOrder(rawCore, ordered, assumptions, previousSat, []string{
+		assumptions[0].String(),
+		assumptions[2].String(),
+	}, []string{
+		assumptions[0].String(),
+		assumptions[2].String(),
+		assumptions[1].String(),
+	}, 2, 1)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:2|", "|alit:0|", "|alit:1|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-first-third compact tail-delete idx=1 order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousSecondAndThirdFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	for i := range assumptions {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[1].String(): true,
+		assumptions[2].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:1|", "|alit:0|", "|alit:2|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-second-third order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousSecondThirdCompactAfterMiddleDeleteFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	for i := range assumptions {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	if !softAssumptionCompactCoreIDs(assumptions) {
+		t.Fatalf("test setup expected compact assumption ids")
+	}
+
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	previousSat := map[string]bool{
+		assumptions[1].String(): true,
+		assumptions[2].String(): true,
+	}
+	ordered := cppSoftAssumptionCoreOrder(rawCore, assumptions, previousSat, true)
+	got := softAssumptionCoreOrderForDeletionIndexWithPreviousOrder(rawCore, ordered, assumptions, previousSat, []string{
+		assumptions[2].String(),
+		assumptions[1].String(),
+	}, []string{
+		assumptions[2].String(),
+		assumptions[0].String(),
+		assumptions[1].String(),
+	}, 1, 0)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:0|", "|alit:2|", "|alit:1|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-second-third compact middle-delete idx=0 order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousSecondAndThirdWideFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:a:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[1] = ctx.BoolConst("alit:1")
+	defer assumptions[1].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:b:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[2] = ctx.BoolConst("alit:2")
+	defer assumptions[2].Release()
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[1].String(): true,
+		assumptions[2].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:2|", "|alit:1|", "|alit:0|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-second-third wide order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousAllWideEqualGapsFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:a:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[1] = ctx.BoolConst("alit:1")
+	defer assumptions[1].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:b:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[2] = ctx.BoolConst("alit:2")
+	defer assumptions[2].Release()
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	previousSat := map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[1].String(): true,
+		assumptions[2].String(): true,
+	}
+	ordered := cppSoftAssumptionCoreOrder(rawCore, assumptions, previousSat, true)
+	for _, tc := range []struct {
+		idx  int
+		want []string
+	}{
+		{idx: 1, want: []string{"|alit:2|", "|alit:1|", "|alit:0|"}},
+		{idx: 2, want: []string{"|alit:0|", "|alit:2|", "|alit:1|"}},
+	} {
+		got := softAssumptionCoreOrderForDeletionIndex(rawCore, ordered, assumptions, previousSat, tc.idx)
+		gotNames := make([]string, len(got))
+		for i, expr := range got {
+			gotNames[i] = expr.String()
+		}
+		if strings.Join(gotNames, ",") != strings.Join(tc.want, ",") {
+			t.Fatalf("soft core base prefix previous-all wide equal-gap idx=%d order = %v, want C++ runtime order %v", tc.idx, gotNames, tc.want)
+		}
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBasePrefixPreviousAllWideUnequalGapNoPreviousDeleteFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 3)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:a:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[1] = ctx.BoolConst("alit:1")
+	defer assumptions[1].Release()
+	for i := 0; i < 10; i++ {
+		pad := ctx.BoolConst("pad:b:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[2] = ctx.BoolConst("alit:2")
+	defer assumptions[2].Release()
+
+	gap01 := assumptions[1].GetId() - assumptions[0].GetId()
+	gap12 := assumptions[2].GetId() - assumptions[1].GetId()
+	if gap01 <= 4 || gap12 <= 4 || gap01 == gap12 {
+		t.Fatalf("test setup expected unequal non-compact gaps, got %d and %d", gap01, gap12)
+	}
+
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	previousSat := map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[1].String(): true,
+		assumptions[2].String(): true,
+	}
+	ordered := cppSoftAssumptionCoreOrder(rawCore, assumptions, previousSat, true)
+	got := softAssumptionCoreOrderForDeletionIndexWithPreviousOrder(rawCore, ordered, assumptions, previousSat, []string{
+		assumptions[0].String(),
+		assumptions[1].String(),
+		assumptions[2].String(),
+	}, nil, -1, 1)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:2|", "|alit:1|", "|alit:0|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base prefix previous-all wide unequal-gap no-previous-delete idx=1 order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBaseFourPreviousFirstSecondFourthFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 4)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 5; i++ {
+		pad := ctx.BoolConst("pad:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	for i := 1; i < len(assumptions); i++ {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[1].String(): true,
+		assumptions[3].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:1|", "|alit:0|", "|alit:2|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base four previous-first-second-fourth order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBaseFourPreviousThirdFourthFarFirstGapTailIndexFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 4)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:far:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[1] = ctx.BoolConst("alit:1")
+	defer assumptions[1].Release()
+	assumptions[2] = ctx.BoolConst("alit:2")
+	defer assumptions[2].Release()
+	assumptions[3] = ctx.BoolConst("alit:3")
+	defer assumptions[3].Release()
+
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	if softAssumptionCompactCoreIDs(rawCore) {
+		t.Fatalf("test setup expected non-compact core ids")
+	}
+	previousSat := map[string]bool{
+		assumptions[2].String(): true,
+		assumptions[3].String(): true,
+	}
+	ordered := cppSoftAssumptionCoreOrder(rawCore, assumptions, previousSat, true)
+	got := softAssumptionCoreOrderForDeletionIndexWithPreviousOrder(rawCore, ordered, assumptions, previousSat, []string{
+		assumptions[3].String(),
+		assumptions[2].String(),
+	}, []string{
+		assumptions[1].String(),
+		assumptions[2].String(),
+	}, 0, 2)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:1|", "|alit:0|", "|alit:2|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base four previous-third-fourth far-first-gap tail-index order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBaseFourPreviousAllFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 4)
+	for i := range assumptions {
+		assumptions[i] = ctx.BoolConst("alit:" + strconv.Itoa(i))
+		defer assumptions[i].Release()
+	}
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[1].String(): true,
+		assumptions[2].String(): true,
+		assumptions[3].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:2|", "|alit:0|", "|alit:1|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base four previous-all order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBaseFourPreviousAllNonCompactEqualGapsFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 4)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:a:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[1] = ctx.BoolConst("alit:1")
+	defer assumptions[1].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:b:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[2] = ctx.BoolConst("alit:2")
+	defer assumptions[2].Release()
+	assumptions[3] = ctx.BoolConst("alit:3")
+	defer assumptions[3].Release()
+
+	gap01 := assumptions[1].GetId() - assumptions[0].GetId()
+	gap12 := assumptions[2].GetId() - assumptions[1].GetId()
+	if gap01 <= 4 || gap01 != gap12 {
+		t.Fatalf("test setup expected equal non-compact gaps, got %d and %d", gap01, gap12)
+	}
+
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[1].String(): true,
+		assumptions[2].String(): true,
+		assumptions[3].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:2|", "|alit:0|", "|alit:1|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base four previous-all non-compact equal-gap order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBaseFourPreviousAllNonCompactSkewedGapsFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 4)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 8; i++ {
+		pad := ctx.BoolConst("pad:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[1] = ctx.BoolConst("alit:1")
+	defer assumptions[1].Release()
+	assumptions[2] = ctx.BoolConst("alit:2")
+	defer assumptions[2].Release()
+	assumptions[3] = ctx.BoolConst("alit:3")
+	defer assumptions[3].Release()
+
+	gap01 := assumptions[1].GetId() - assumptions[0].GetId()
+	gap12 := assumptions[2].GetId() - assumptions[1].GetId()
+	if gap01 <= 4 || gap12 > 4 {
+		t.Fatalf("test setup expected skewed non-compact gaps, got %d and %d", gap01, gap12)
+	}
+
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[1].String(): true,
+		assumptions[2].String(): true,
+		assumptions[3].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:2|", "|alit:1|", "|alit:0|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base four previous-all non-compact skewed-gap order = %v, want C++ runtime order %v", gotNames, want)
+	}
+}
+
+func TestSoftSolverCoreOrderMatchesCppRuntimeBaseFourPreviousAllFarFirstGapFast(t *testing.T) {
+	ctx := smt.NewZ3Context()
+	assumptions := make([]smt.Z3Expr, 4)
+	assumptions[0] = ctx.BoolConst("alit:0")
+	defer assumptions[0].Release()
+	for i := 0; i < 200; i++ {
+		pad := ctx.BoolConst("pad:far:" + strconv.Itoa(i))
+		defer pad.Release()
+	}
+	assumptions[1] = ctx.BoolConst("alit:1")
+	defer assumptions[1].Release()
+	assumptions[2] = ctx.BoolConst("alit:2")
+	defer assumptions[2].Release()
+	assumptions[3] = ctx.BoolConst("alit:3")
+	defer assumptions[3].Release()
+
+	gap01 := assumptions[1].GetId() - assumptions[0].GetId()
+	gap12 := assumptions[2].GetId() - assumptions[1].GetId()
+	if gap01 <= 64 || gap12 > 4 {
+		t.Fatalf("test setup expected far first gap and compact second gap, got %d and %d", gap01, gap12)
+	}
+
+	rawCore := []smt.Z3Expr{
+		assumptions[0],
+		assumptions[1],
+		assumptions[2],
+	}
+	got := cppSoftAssumptionCoreOrder(rawCore, assumptions, map[string]bool{
+		assumptions[0].String(): true,
+		assumptions[1].String(): true,
+		assumptions[2].String(): true,
+		assumptions[3].String(): true,
+	}, true)
+	gotNames := make([]string, len(got))
+	for i, expr := range got {
+		gotNames[i] = expr.String()
+	}
+	want := []string{"|alit:1|", "|alit:0|", "|alit:2|"}
+	if strings.Join(gotNames, ",") != strings.Join(want, ",") {
+		t.Fatalf("soft core base four previous-all far-first-gap order = %v, want C++ runtime order %v", gotNames, want)
 	}
 }
 

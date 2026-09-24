@@ -1,10 +1,6 @@
 package goivy
 
-import (
-	"sort"
-
-	"github.com/glycerine/ivy/goivy/smt"
-)
+import "github.com/glycerine/ivy/goivy/smt"
 
 // ParseSMTLIB2Assertion parses an SMT-LIB2 assertion using this solver's
 // signature as the declaration environment. This mirrors the generated C++
@@ -40,13 +36,30 @@ func (s *Solver) smtlibParseSortDecls() ([]smt.SMTLIBSortDecl, []smt.SMTLIBFuncD
 		sort Sort
 	}
 	var sorts []namedSort
+	seenInput := map[string]bool{}
+	if s.mod != nil {
+		for _, name := range s.mod.SortOrder {
+			if name == "" || seenInput[name] {
+				continue
+			}
+			st, ok := s.sig.Sorts.Get2(name)
+			if !ok || st == nil {
+				continue
+			}
+			sorts = append(sorts, namedSort{name: name, sort: st})
+			seenInput[name] = true
+		}
+	}
 	for name, st := range s.sig.Sorts.All() {
+		if seenInput[name] {
+			continue
+		}
 		if name == "" || name == "bool" || name == "int" || st == nil {
 			continue
 		}
 		sorts = append(sorts, namedSort{name: name, sort: st})
+		seenInput[name] = true
 	}
-	sort.SliceStable(sorts, func(i, j int) bool { return sorts[i].name < sorts[j].name })
 
 	var sortDecls []smt.SMTLIBSortDecl
 	var funcDecls []smt.SMTLIBFuncDecl
@@ -87,12 +100,6 @@ func (s *Solver) smtlibParseFuncDecls() ([]smt.SMTLIBFuncDecl, error) {
 		}
 		syms = append(syms, sym)
 	}
-	sort.SliceStable(syms, func(i, j int) bool {
-		if syms[i].Name != syms[j].Name {
-			return syms[i].Name < syms[j].Name
-		}
-		return string(syms[i].CSort.Sexp()) < string(syms[j].CSort.Sexp())
-	})
 
 	seen := map[string]bool{}
 	var out []smt.SMTLIBFuncDecl
