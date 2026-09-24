@@ -29,6 +29,11 @@ func logicutilUsedVariablesRec(t Expr, result map[NodeKey]Expr) {
 			result[Key(v)] = v
 		}
 		logicutilUsedVariablesRec(n.Body, result)
+	case *RawForAll:
+		for _, v := range n.Variables {
+			result[Key(v)] = v
+		}
+		logicutilUsedVariablesRec(n.Body, result)
 	case *LogicExists:
 		for _, v := range n.Variables {
 			result[Key(v)] = v
@@ -91,6 +96,12 @@ func freeVariablesRec(t Expr, result *Omap[NodeKey, Expr], bound map[NodeKey]Exp
 			newBound[Key(v)] = v
 		}
 		freeVariablesRec(n.Body, result, newBound)
+	case *RawForAll:
+		newBound := copyVarSet(bound)
+		for _, v := range n.Variables {
+			newBound[Key(v)] = v
+		}
+		freeVariablesRec(n.Body, result, newBound)
 	case *LogicExists:
 		newBound := copyVarSet(bound)
 		for _, v := range n.Variables {
@@ -123,6 +134,12 @@ func freeVariablesByNameRec(t Expr, result map[string]struct{}, bound map[string
 			result[n.Name] = struct{}{}
 		}
 	case *ForAll:
+		newBound := logicutilCopyStringSet(bound)
+		for _, v := range n.Variables {
+			newBound[v.Name] = struct{}{}
+		}
+		freeVariablesByNameRec(n.Body, result, newBound)
+	case *RawForAll:
 		newBound := logicutilCopyStringSet(bound)
 		for _, v := range n.Variables {
 			newBound[v.Name] = struct{}{}
@@ -165,6 +182,11 @@ func boundVariablesRec(t Expr, result map[NodeKey]Expr) {
 	case *LogicVariable:
 		// leaf — no bound variables
 	case *ForAll:
+		for _, v := range n.Variables {
+			result[Key(v)] = v
+		}
+		boundVariablesRec(n.Body, result)
+	case *RawForAll:
 		for _, v := range n.Variables {
 			result[Key(v)] = v
 		}
@@ -334,6 +356,11 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 	case *ForAll:
 		return substituteBinder(n.Variables, n.Body, subs, func(vars []*LogicVariable, body Expr) (Expr, error) {
 			return NewForAll(vars, body)
+		})
+
+	case *RawForAll:
+		return substituteBinder(n.Variables, n.Body, subs, func(vars []*LogicVariable, body Expr) (Expr, error) {
+			return &RawForAll{Variables: deduplicateAndSortVars(vars), Body: body}, nil
 		})
 
 	case *LogicExists:
@@ -697,6 +724,12 @@ func variablesAstRec(t Expr, result *[]*LogicVariable, seen map[NodeKey]bool, bo
 			newBound[Key(v)] = true
 		}
 		variablesAstRec(n.Body, result, seen, newBound)
+	case *RawForAll:
+		newBound := copyBoolKeySet(bound)
+		for _, v := range n.Variables {
+			newBound[Key(v)] = true
+		}
+		variablesAstRec(n.Body, result, seen, newBound)
 	case *LogicExists:
 		newBound := copyBoolKeySet(bound)
 		for _, v := range n.Variables {
@@ -757,6 +790,12 @@ func variablesAstOccurrencesRec(t Expr, result *[]*LogicVariable, bound map[Node
 			*result = append(*result, n)
 		}
 	case *ForAll:
+		newBound := copyBoolKeySet(bound)
+		for _, v := range n.Variables {
+			newBound[Key(v)] = true
+		}
+		variablesAstOccurrencesRec(n.Body, result, newBound)
+	case *RawForAll:
 		newBound := copyBoolKeySet(bound)
 		for _, v := range n.Variables {
 			newBound[Key(v)] = true

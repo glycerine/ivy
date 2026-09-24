@@ -406,6 +406,24 @@ func (f *ForAll) Equal(n Expr) bool {
 	return false
 }
 
+// RawForAll is an internal solver helper quantifier. Unlike ordinary Ivy
+// ForAll, the Z3 translator must not add interpreted-sort domain constraints.
+type RawForAll struct {
+	Base
+	Variables []*LogicVariable
+	Body      Expr
+}
+
+func (f *RawForAll) NodeSort() Sort   { return Boolean }
+func (f *RawForAll) Children() []Expr { return []Expr{f.Body} }
+func (f *RawForAll) String() string   { return PrettyFmla(f) }
+func (f *RawForAll) Equal(n Expr) bool {
+	if o, ok := n.(*RawForAll); ok {
+		return varSliceEqual(f.Variables, o.Variables) && f.Body.Equal(o.Body)
+	}
+	return false
+}
+
 // --- Exists ---
 
 type LogicExists struct {

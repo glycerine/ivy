@@ -3,6 +3,9 @@ package ivy2golang
 import (
 	"encoding/json"
 	"fmt"
+	"go/ast"
+	"go/parser"
+	"go/token"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -7384,9 +7387,14 @@ export step
 		if solverBody == "" {
 			t.Fatalf("solver generator body not emitted:\n%s", out.Source)
 		}
-		for _, want := range []string{`gen.__ivy_solver_pre = goivy.NewClauses`, `ivy.active`, `edge`} {
+		for _, want := range []string{`gen.__ivy_solver_pre = goivy.NewClauses`, `edge`, `goivy.FreeVariablesList(__ivy_sparse_base_term)`} {
 			if !strings.Contains(solverBody, want) {
 				t.Fatalf("local relation existential state update solver body missing %q:\n%s", want, solverBody)
+			}
+		}
+		for _, want := range []string{`goivy.NewConst("active", goivy.Boolean)`, `__ivy_solver_bool_expr(ivy.active)`} {
+			if !strings.Contains(out.Source, want) {
+				t.Fatalf("local relation existential state update solver source missing captured active state %q:\n%s", want, out.Source)
 			}
 		}
 	} else if !strings.Contains(genBody, `if !(ivy.active) {`) {
@@ -7452,9 +7460,14 @@ export step
 		if solverBody == "" {
 			t.Fatalf("solver generator body not emitted:\n%s", out.Source)
 		}
-		for _, want := range []string{`gen.__ivy_solver_pre = goivy.NewClauses`, `ivy.active`, `edge`} {
+		for _, want := range []string{`gen.__ivy_solver_pre = goivy.NewClauses`, `edge`, `goivy.FreeVariablesList(__ivy_sparse_base_term)`} {
 			if !strings.Contains(solverBody, want) {
 				t.Fatalf("target=gen local relation existential state update solver body missing %q:\n%s", want, solverBody)
+			}
+		}
+		for _, want := range []string{`goivy.NewConst("active", goivy.Boolean)`, `__ivy_solver_bool_expr(ivy.active)`} {
+			if !strings.Contains(out.Source, want) {
+				t.Fatalf("target=gen local relation existential state update solver source missing captured active state %q:\n%s", want, out.Source)
 			}
 		}
 	} else if !strings.Contains(genBody, `if !(ivy.active) {`) {
@@ -33905,6 +33918,110 @@ export check
 	}
 }
 
+func TestLargeFunctionSolverBaseUsesSymbolicScalarCaptureFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type ts = {0..3}
+type version
+interpret version -> nat
+
+individual init_ts : ts
+relation ts_version(T:ts,V:version)
+
+after init {
+    init_ts := 2;
+    ts_version(T,V) := T = init_ts & V = 0
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "solverbase_scalar_capture", Target: "test", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	body := bodyAfterMarker(out.Source, "ivy.ts_version.solverBase = func")
+	if body == "" {
+		t.Fatalf("solverBase not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"__ivy_thunk_env_init_ts",
+		`goivy.NewConst("__ivy_thunk_env_init_ts`,
+		`T2: goivy.NewConst(strconv.Itoa(int(__ivy_thunk_env_init_ts`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("solverBase scalar capture missing %q:\n%s", want, body)
+		}
+	}
+	rhsIdx := strings.LastIndex(body, "T1: __ivy_solver_app")
+	concreteIdx := strings.LastIndex(body, "T1: goivy.NewConst(strconv.Itoa(int(__ivy_thunk_env_init_ts")
+	if concreteIdx >= 0 && (rhsIdx < 0 || concreteIdx < rhsIdx) {
+		t.Fatalf("solverBase RHS should use symbolic captured scalar, not concrete Go value:\n%s", body)
+	}
+}
+
+func TestSparseThunkSolverSkipsBaseEquivalentSupportOverridesFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type ts = {0..3}
+type version
+interpret version -> nat
+
+individual init_ts : ts
+relation ts_version(T:ts,V:version)
+
+after init {
+    init_ts := 2;
+    ts_version(T,V) := T = init_ts & V = 0
+}
+
+action start(t:ts,v:version) = {
+    assume ts_version(t,v);
+    ts_version(T,V) := ts_version(T,V) | (T = t & V = v);
+    init_ts := t
+}
+export start
+`)
+	out, err := Generate(mod, Config{ClassName: "sparsethunksupport", Target: "test", TestIters: "1", TestRuns: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	if !strings.Contains(out.Source, "ivy.ts_version.Set") {
+		t.Fatalf("test setup should emit sparse support overrides:\n%s", out.Source)
+	}
+	if _, err := parser.ParseFile(token.NewFileSet(), out.BaseName+".go", out.Source, 0); err != nil {
+		t.Fatalf("sparse thunk generated source should parse as Go after nested solverBase emission: %v\n%s", err, out.Source)
+	}
+	if line := firstBareUndeclaredSyntheticTempAssignment(out.Source); line != "" {
+		t.Fatalf("sparse thunk generated source assigned synthetic temp before declaration: %s", line)
+	}
+	if unused := unreadDeclaredSyntheticTemps(out.Source); len(unused) != 0 {
+		t.Fatalf("sparse thunk generated source declared unread synthetic temps: %v", unused)
+	}
+	if !strings.Contains(out.Source, `goivy.NewConst("__ivy_old_ts_version`) {
+		t.Fatalf("test setup should exercise nested sparse thunk solverBase serialization:\n%s", out.Source)
+	}
+	body := bodyAfterMarker(out.Source, "func (gen *Sparsethunksupport_start_generator) __ivy_generate_with_solver() bool")
+	if body == "" {
+		t.Fatalf("solver-backed action generator not emitted:\n%s", out.Source)
+	}
+	want := "if ivy.ts_version.base != nil && ivy.ts_version.base(__ivy_sparse_key) == __ivy_sparse_val {"
+	if !strings.Contains(body, want) {
+		t.Fatalf("solver relation serialization should skip support overrides already represented by the thunk base, missing %q:\n%s", want, body)
+	}
+	for _, want := range []string{
+		"for _, __ivy_sparse_base_term := range __ivy_sparse_base_terms {",
+		"if len(goivy.FreeVariablesList(__ivy_sparse_base_term)) == 0 {",
+		"clauses.Fmlas = append(clauses.Fmlas, __ivy_sparse_base_term)",
+		"__ivy_sparse_quant_terms = append(__ivy_sparse_quant_terms, __ivy_sparse_base_term)",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("solver relation serialization should hoist non-quantified thunk capture terms, missing %q:\n%s", want, body)
+		}
+	}
+	if !strings.Contains(body, "&goivy.RawForAll{Variables: __ivy_sparse_vars, Body: __ivy_sparse_body}") {
+		t.Fatalf("solver relation serialization should emit raw unguarded sparse-state forall like ivy2cpp:\n%s", body)
+	}
+	if strings.Contains(body, "&goivy.ForAll{Variables: __ivy_sparse_vars, Body: __ivy_sparse_body}") {
+		t.Fatalf("solver relation serialization should not use guarded ForAll for sparse state:\n%s", body)
+	}
+}
+
 func TestIfSomeSparseUnboundedRelationMatchesIvy2CppUnsupportedFast(t *testing.T) {
 	const src = `#lang ivy1.7
 type ts
@@ -34089,6 +34206,24 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	} else if !strings.Contains(err.Error(), "undefined: __ts0__ts0_c") {
 		t.Fatalf("Go compiler rejected assignment-before-declaration synthetic temp for wrong reason: %v", err)
 	}
+	scopedUndefinedBody := strings.Join([]string{
+		"if true {",
+		"var __ts0__ts0_c bool",
+		"__ts0__ts0_c = true",
+		"}",
+		"__ts0__ts0_c = false",
+		"var __ts0__new_t_a bool",
+		"__ts0__new_t_a = __ts0__ts0_c",
+		"_ = __ts0__new_t_a",
+	}, "\n")
+	if line := firstBareUndeclaredSyntheticTempAssignment(scopedUndefinedBody); line != "__ts0__ts0_c = false" {
+		t.Fatalf("synthetic solver temp checker missed assignment outside declaration scope: %q", line)
+	}
+	if _, err := buildGeneratedFunctionBody(t, scopedUndefinedBody); err == nil {
+		t.Fatalf("Go compiler accepted out-of-scope synthetic temp:\n%s", scopedUndefinedBody)
+	} else if !strings.Contains(err.Error(), "undefined: __ts0__ts0_c") {
+		t.Fatalf("Go compiler rejected out-of-scope synthetic temp for wrong reason: %v", err)
+	}
 	if line := firstBareUndeclaredSyntheticTempAssignment(got); line != "" {
 		t.Fatalf("synthetic solver temp assigned before declaration: %s", line)
 	}
@@ -34127,7 +34262,6 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 			t.Fatalf("dead Hermes-style generated temp %s should not be emitted:\n%s", name, reportedDead)
 		}
 	}
-	compileGeneratedFunctionBody(t, reportedDead)
 
 	liveReported := goivy.NewConst("__ts0__new_v_a", goivy.Boolean)
 	liveReportedPlan := &runtimeActionSolverPlan{
@@ -34164,6 +34298,75 @@ func TestRuntimeSolverDefinedTempsDeclaredBeforeUseFast(t *testing.T) {
 	compileGeneratedFunctionBody(t, liveReportedGot, "result := false", "defer func() { _ = result }()")
 }
 
+func TestRuntimeSolverBaseSMTGeneratedTempsDoNotLeakAsGoLocalsFast(t *testing.T) {
+	g := newGoTestGeneratorWithInterps(nil)
+	result := goivy.NewConst("result", goivy.Boolean)
+	reportedUnusedNames := []string{
+		"__ts0__ts0_c",
+		"__ts0__new_t_a",
+		"__ts0__new_s_a",
+		"__ts0__new_n_a",
+		"__ts0_a",
+		"__ts0__new_v_a",
+	}
+	rsp := &runtimeActionSolverPlan{
+		baseSMT: "(assert (and __ts0__ts0_c __ts0__new_t_a __ts0__new_s_a __ts0__new_n_a __ts0_a __ts0__new_v_a))",
+		plan: &actionGenPlan{
+			paramDefs: []goivy.Expr{
+				&goivy.LogicIff{T1: goivy.NewConst("__ts0__ts0_c", goivy.Boolean), T2: goivy.True},
+				&goivy.LogicIff{T1: goivy.NewConst("__ts0__new_t_a", goivy.Boolean), T2: goivy.True},
+				&goivy.LogicIff{T1: goivy.NewConst("__ts0__new_s_a", goivy.Boolean), T2: goivy.NewConst("__ts0__new_t_a", goivy.Boolean)},
+				&goivy.LogicIff{T1: goivy.NewConst("__ts0__new_n_a", goivy.Boolean), T2: goivy.NewConst("__ts0__new_s_a", goivy.Boolean)},
+				&goivy.LogicIff{T1: goivy.NewConst("__ts0_a", goivy.Boolean), T2: goivy.NewConst("__ts0__new_n_a", goivy.Boolean)},
+				&goivy.LogicIff{T1: goivy.NewConst("__ts0__new_v_a", goivy.Boolean), T2: goivy.NewConst("__ts0_a", goivy.Boolean)},
+			},
+		},
+	}
+	var method goWriter
+	g.emitRuntimeActionSolverMethod(&method, "RuntimeSolverDeadTempsProbe", rsp)
+	methodSrc := method.String()
+	if !strings.Contains(methodSrc, "__ts0__ts0_c") {
+		t.Fatalf("test setup did not preserve synthetic temps in baseSMT:\n%s", methodSrc)
+	}
+	if leaks := syntheticTempGoLocalLines(methodSrc); len(leaks) != 0 {
+		t.Fatalf("SMT-only synthetic temps leaked as Go locals in solver method: %v\n%s", leaks, methodSrc)
+	}
+	for _, name := range reportedUnusedNames {
+		if strings.Contains(methodSrc, "var "+name) || strings.Contains(methodSrc, "\n"+name+" =") {
+			t.Fatalf("SMT-only generated temp %s should not be emitted as Go code:\n%s", name, methodSrc)
+		}
+	}
+
+	liveRsp := &runtimeActionSolverPlan{
+		baseSMT: rsp.baseSMT,
+		plan: &actionGenPlan{
+			paramDefs: append(append([]goivy.Expr{}, rsp.plan.paramDefs...),
+				&goivy.LogicIff{T1: result, T2: goivy.NewConst("__ts0__new_v_a", goivy.Boolean)}),
+		},
+	}
+	var liveMethod goWriter
+	g.emitRuntimeActionSolverMethod(&liveMethod, "RuntimeSolverLiveTempsProbe", liveRsp)
+	liveMethodSrc := liveMethod.String()
+	for _, want := range []string{
+		"var __ts0__new_t_a bool",
+		"var __ts0__new_s_a bool",
+		"var __ts0__new_n_a bool",
+		"var __ts0_a bool",
+		"var __ts0__new_v_a bool",
+		"result = __ts0__new_v_a",
+	} {
+		if !strings.Contains(liveMethodSrc, want) {
+			t.Fatalf("live synthetic temp chain missing %q:\n%s", want, liveMethodSrc)
+		}
+	}
+	if strings.Contains(liveMethodSrc, "var __ts0__ts0_c bool") {
+		t.Fatalf("unread synthetic temp should stay pruned even beside a live chain:\n%s", liveMethodSrc)
+	}
+	if unused := unreadDeclaredSyntheticTemps(liveMethodSrc); len(unused) != 0 {
+		t.Fatalf("live solver method declares unread synthetic temps: %v\n%s", unused, liveMethodSrc)
+	}
+}
+
 func compileGeneratedFunctionBody(t *testing.T, body string, prelude ...string) {
 	t.Helper()
 	src, err := buildGeneratedFunctionBody(t, body, prelude...)
@@ -34186,6 +34389,9 @@ func buildGeneratedFunctionBody(t *testing.T, body string, prelude ...string) (s
 }
 
 func firstBareUndeclaredSyntheticTempAssignment(src string) string {
+	if line, ok := firstBareUndeclaredSyntheticTempAssignmentAST(src); ok {
+		return line
+	}
 	declared := map[string]bool{}
 	for _, line := range strings.Split(src, "\n") {
 		trimmed := strings.TrimSpace(line)
@@ -34210,7 +34416,61 @@ func firstBareUndeclaredSyntheticTempAssignment(src string) string {
 	return ""
 }
 
+func firstBareUndeclaredSyntheticTempAssignmentAST(src string) (string, bool) {
+	fset, file, parsedSource, ok := parseSyntheticTempProbeSource(src)
+	if !ok {
+		return "", false
+	}
+	var found string
+	ast.Inspect(file, func(n ast.Node) bool {
+		if found != "" {
+			return false
+		}
+		assign, ok := n.(*ast.AssignStmt)
+		if !ok || assign == nil || assign.Tok != token.ASSIGN {
+			return true
+		}
+		for _, lhs := range assign.Lhs {
+			id, ok := lhs.(*ast.Ident)
+			if !ok || id == nil || !strings.HasPrefix(id.Name, "__ts") {
+				continue
+			}
+			if id.Obj != nil {
+				continue
+			}
+			pos := fset.Position(id.Pos())
+			found = syntheticTempSourceLine(parsedSource, pos.Line)
+			if found == "" {
+				found = id.Name + " ="
+			}
+			return false
+		}
+		return true
+	})
+	return found, true
+}
+
+func syntheticTempGoLocalLines(src string) []string {
+	var out []string
+	for _, line := range strings.Split(src, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "var __ts") {
+			out = append(out, trimmed)
+			continue
+		}
+		if strings.HasPrefix(trimmed, "__ts") {
+			if _, ok := syntheticTempAssignedWith(trimmed, "="); ok {
+				out = append(out, trimmed)
+			}
+		}
+	}
+	return out
+}
+
 func unreadDeclaredSyntheticTemps(src string) []string {
+	if unread, ok := unreadDeclaredSyntheticTempsAST(src); ok {
+		return unread
+	}
 	declared := map[string]bool{}
 	read := map[string]bool{}
 	for _, line := range strings.Split(src, "\n") {
@@ -34242,6 +34502,95 @@ func unreadDeclaredSyntheticTemps(src string) []string {
 	return unread
 }
 
+func unreadDeclaredSyntheticTempsAST(src string) ([]string, bool) {
+	file, ok := parseSyntheticTempProbe(src)
+	if !ok {
+		return nil, false
+	}
+	declared := map[string]bool{}
+	read := map[string]bool{}
+	skipRead := map[token.Pos]bool{}
+	ast.Inspect(file, func(n ast.Node) bool {
+		switch n := n.(type) {
+		case *ast.ValueSpec:
+			for _, name := range n.Names {
+				if name == nil || !strings.HasPrefix(name.Name, "__ts") {
+					continue
+				}
+				declared[name.Name] = true
+				skipRead[name.Pos()] = true
+			}
+		case *ast.AssignStmt:
+			if n.Tok == token.ASSIGN || n.Tok == token.DEFINE {
+				for _, lhs := range n.Lhs {
+					if id, ok := lhs.(*ast.Ident); ok && id != nil && strings.HasPrefix(id.Name, "__ts") {
+						skipRead[id.Pos()] = true
+					}
+				}
+			}
+		case *ast.RangeStmt:
+			if n.Tok == token.ASSIGN || n.Tok == token.DEFINE {
+				for _, expr := range []ast.Expr{n.Key, n.Value} {
+					if id, ok := expr.(*ast.Ident); ok && id != nil && strings.HasPrefix(id.Name, "__ts") {
+						skipRead[id.Pos()] = true
+					}
+				}
+			}
+		}
+		return true
+	})
+	ast.Inspect(file, func(n ast.Node) bool {
+		id, ok := n.(*ast.Ident)
+		if !ok || id == nil || !declared[id.Name] || skipRead[id.Pos()] {
+			return true
+		}
+		read[id.Name] = true
+		return true
+	})
+	var unread []string
+	for name := range declared {
+		if !read[name] {
+			unread = append(unread, name)
+		}
+	}
+	sort.Strings(unread)
+	return unread, true
+}
+
+func parseSyntheticTempProbe(src string) (*ast.File, bool) {
+	_, file, _, ok := parseSyntheticTempProbeSource(src)
+	return file, ok
+}
+
+func parseSyntheticTempProbeSource(src string) (*token.FileSet, *ast.File, string, bool) {
+	candidates := []string{src}
+	if !strings.Contains(src, "package ") {
+		candidates = append(candidates,
+			"package main\n"+src,
+			"package main\nfunc __probe() bool {\n"+src+"\nreturn true\n}\n",
+		)
+	}
+	fset := token.NewFileSet()
+	for _, candidate := range candidates {
+		file, err := parser.ParseFile(fset, "synthetic_temps.go", candidate, 0)
+		if err == nil {
+			return fset, file, candidate, true
+		}
+	}
+	return nil, nil, "", false
+}
+
+func syntheticTempSourceLine(src string, line int) string {
+	if line <= 0 {
+		return ""
+	}
+	lines := strings.Split(src, "\n")
+	if line > len(lines) {
+		return ""
+	}
+	return strings.TrimSpace(lines[line-1])
+}
+
 func syntheticTempAssignedWith(line, op string) (string, bool) {
 	idx := strings.Index(line, op)
 	if idx < 0 {
@@ -34252,6 +34601,80 @@ func syntheticTempAssignedWith(line, op string) (string, bool) {
 		return "", false
 	}
 	return name, true
+}
+
+func TestSoftSolverAssertsHardClausesIndividuallyFast(t *testing.T) {
+	solver := goivy.NewSolver(nil, nil)
+	a := goivy.NewConst("a", goivy.Boolean)
+	b := goivy.NewConst("b", goivy.Boolean)
+	clauses := goivy.NewClauses([]goivy.Expr{a, b}, nil, nil)
+
+	var begin string
+	_, err := solver.GetModelClausesWithSoftAssumptionsLogged(
+		clauses,
+		[]goivy.Expr{a},
+		func(n int) int { return 0 },
+		func(kind, pred, alit string, core []string, toDelete string) {
+			if kind == "begin" {
+				begin = pred
+			}
+		},
+	)
+	if err != nil {
+		t.Fatalf("GetModelClausesWithSoftAssumptionsLogged: %v", err)
+	}
+	if strings.Contains(begin, "(assert (and a b))") || strings.Contains(begin, "(assert (and b a))") {
+		t.Fatalf("soft solver should assert hard clauses separately, not as one conjunction:\n%s", begin)
+	}
+	for _, want := range []string{
+		"(assert a)",
+		"(assert b)",
+	} {
+		if !strings.Contains(begin, want) {
+			t.Fatalf("soft solver begin log missing separate hard assertion %q:\n%s", want, begin)
+		}
+	}
+}
+
+func TestSoftSolverHardBooleanEqualitiesMatchCppShapeFast(t *testing.T) {
+	solver := goivy.NewSolver(nil, nil)
+	p := goivy.NewConst("p", goivy.Boolean)
+	q := goivy.NewConst("q", goivy.Boolean)
+	clauses := goivy.NewClauses([]goivy.Expr{
+		&goivy.Eq{T1: p, T2: goivy.True},
+		&goivy.Eq{T1: q, T2: goivy.False},
+	}, nil, nil)
+
+	var begin string
+	_, err := solver.GetModelClausesWithSoftAssumptionsLogged(
+		clauses,
+		[]goivy.Expr{p},
+		func(n int) int { return 0 },
+		func(kind, pred, alit string, core []string, toDelete string) {
+			if kind == "begin" {
+				begin = pred
+			}
+		},
+	)
+	if err != nil {
+		t.Fatalf("GetModelClausesWithSoftAssumptionsLogged: %v", err)
+	}
+	for _, bad := range []string{
+		"(assert p)",
+		"(assert (not q))",
+	} {
+		if strings.Contains(begin, bad) {
+			t.Fatalf("soft-solver hard Boolean equality should match ivy2cpp equality assertion shape, found %q:\n%s", bad, begin)
+		}
+	}
+	for _, want := range []string{
+		"(assert (= p true))",
+		"(assert (= q false))",
+	} {
+		if !strings.Contains(begin, want) {
+			t.Fatalf("soft solver begin log missing C++-shaped hard assertion %q:\n%s", want, begin)
+		}
+	}
 }
 
 func TestEmitLetExpression(t *testing.T) {

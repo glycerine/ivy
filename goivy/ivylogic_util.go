@@ -54,6 +54,11 @@ func CloneNode(n Expr, args []Expr) Expr {
 			return &ForAll{Variables: t.Variables, Body: args[0]}
 		}
 		return t
+	case *RawForAll:
+		if len(args) == 1 {
+			return &RawForAll{Variables: t.Variables, Body: args[0]}
+		}
+		return t
 	case *LogicExists:
 		if len(args) == 1 {
 			return &LogicExists{Variables: t.Variables, Body: args[0]}
@@ -125,6 +130,8 @@ func CloneBinder(n Expr, vars []*LogicVariable, body Expr) Expr {
 	switch t := n.(type) {
 	case *ForAll:
 		return &ForAll{Variables: deduplicateAndSortVars(vars), Body: body}
+	case *RawForAll:
+		return &RawForAll{Variables: deduplicateAndSortVars(vars), Body: body}
 	case *LogicExists:
 		return &LogicExists{Variables: deduplicateAndSortVars(vars), Body: body}
 	case *Lambda:
@@ -151,6 +158,8 @@ func BinderVars(n Expr) []*LogicVariable {
 	switch t := n.(type) {
 	case *ForAll:
 		return t.Variables
+	case *RawForAll:
+		return t.Variables
 	case *LogicExists:
 		return t.Variables
 	case *Lambda:
@@ -174,6 +183,8 @@ func BinderVars(n Expr) []*LogicVariable {
 func BinderBody(n Expr) Expr {
 	switch t := n.(type) {
 	case *ForAll:
+		return t.Body
+	case *RawForAll:
 		return t.Body
 	case *LogicExists:
 		return t.Body
@@ -211,6 +222,8 @@ func NodeArgs(n Expr) []Expr {
 	case *LogicIte:
 		return []Expr{t.Cond, t.Then, t.Else}
 	case *ForAll:
+		return []Expr{t.Body}
+	case *RawForAll:
 		return []Expr{t.Body}
 	case *LogicExists:
 		return []Expr{t.Body}

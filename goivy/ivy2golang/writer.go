@@ -42,6 +42,14 @@ func (w *goWriter) close(suffix string) {
 	w.line("}" + suffix)
 }
 
+func (w *goWriter) nextBranch(suffix string) {
+	if w.indent > 0 {
+		w.indent--
+	}
+	w.line("}" + suffix)
+	w.indent++
+}
+
 func (w *goWriter) String() string {
 	return w.buf.String()
 }

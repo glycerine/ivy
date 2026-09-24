@@ -329,8 +329,32 @@ func (s *Solver) ClausesToZ3(clauses *Clauses) (smt.Z3Expr, error) {
 	}
 	xtracer.Trace("solver.ClausesToZ3 ENTER fmlas=%d defs=%d", len(clauses.Fmlas), len(clauses.Defs))
 
-	var exprs []smt.Z3Expr
+	exprs, err := s.clausesToZ3AssertionExprs(clauses)
+	if err != nil {
+		return smt.Z3Expr{}, err
+	}
 
+	xtracer.Trace("solver.ClausesToZ3 EXIT exprs=%d", len(exprs))
+	// Mirror Python ivy_solver.py:681 `res = z3.And(z3_clauses)`. Python
+	// wraps unconditionally — even with 0 or 1 clauses. We must do the
+	// same: a 1-clause unwrap shortcut would change the Z3 AST shape and
+	// break the z3.check canon hash comparison.
+	return s.tr.Ctx.AndApp(exprs...), nil
+}
+
+func (s *Solver) clausesToZ3AssertionExprs(clauses *Clauses) ([]smt.Z3Expr, error) {
+	return s.clausesToZ3AssertionExprsWithMode(clauses, false)
+}
+
+func (s *Solver) softSolverClausesToZ3AssertionExprs(clauses *Clauses) ([]smt.Z3Expr, error) {
+	return s.clausesToZ3AssertionExprsWithMode(clauses, true)
+}
+
+func (s *Solver) clausesToZ3AssertionExprsWithMode(clauses *Clauses, preserveBoolEq bool) ([]smt.Z3Expr, error) {
+	if clauses == nil {
+		return nil, nil
+	}
+	var exprs []smt.Z3Expr
 	// Match Python clauses_to_z3: a `for` loop emits the per-fmla sort traces,
 	// THEN a separate list comprehension calls conj_to_z3 on each formula.
 	// We must mirror that two-pass structure so the xtraces interleave the
@@ -340,9 +364,9 @@ func (s *Solver) ClausesToZ3(clauses *Clauses) (smt.Z3Expr, error) {
 	}
 	// Translate formulas via conjToZ3 matching Python: [conj_to_z3(cl) for cl in clauses.fmlas]
 	for _, f := range clauses.Fmlas {
-		zf, err := s.conjToZ3(f)
+		zf, err := s.clauseFormulaToZ3Assertion(f, preserveBoolEq)
 		if err != nil {
-			return smt.Z3Expr{}, fmt.Errorf("translating formula: %w", err)
+			return nil, fmt.Errorf("translating formula: %w", err)
 		}
 		exprs = append(exprs, zf)
 	}
@@ -358,7 +382,7 @@ func (s *Solver) ClausesToZ3(clauses *Clauses) (smt.Z3Expr, error) {
 				}
 			}
 			xtracer.Trace("clauses_to_z3: Z3 error on def[%d]: %v defines=%s", di, err, defName)
-			return smt.Z3Expr{}, fmt.Errorf("translating definition: %w", err)
+			return nil, fmt.Errorf("translating definition: %w", err)
 		}
 		exprs = append(exprs, zd)
 	}
@@ -385,16 +409,42 @@ func (s *Solver) ClausesToZ3(clauses *Clauses) (smt.Z3Expr, error) {
 	})
 	tcs, tcErr := s.typeConstraints(clauseSyms)
 	if tcErr != nil {
-		return smt.Z3Expr{}, tcErr
+		return nil, tcErr
 	}
 	exprs = append(exprs, tcs...)
 
-	xtracer.Trace("solver.ClausesToZ3 EXIT exprs=%d", len(exprs))
-	// Mirror Python ivy_solver.py:681 `res = z3.And(z3_clauses)`. Python
-	// wraps unconditionally — even with 0 or 1 clauses. We must do the
-	// same: a 1-clause unwrap shortcut would change the Z3 AST shape and
-	// break the z3.check canon hash comparison.
-	return s.tr.Ctx.AndApp(exprs...), nil
+	return exprs, nil
+}
+
+func (s *Solver) clauseFormulaToZ3Assertion(f Expr, preserveBoolEq bool) (smt.Z3Expr, error) {
+	if preserveBoolEq {
+		if zf, ok, err := s.boolEqClauseToZ3NoSimplify(f); ok || err != nil {
+			return zf, err
+		}
+	}
+	return s.conjToZ3(f)
+}
+
+func (s *Solver) boolEqClauseToZ3NoSimplify(f Expr) (smt.Z3Expr, bool, error) {
+	eq, ok := f.(*Eq)
+	if !ok || eq == nil {
+		return smt.Z3Expr{}, false, nil
+	}
+	if _, ok := eq.T1.NodeSort().(*BooleanSort); !ok {
+		return smt.Z3Expr{}, false, nil
+	}
+	if _, ok := eq.T2.NodeSort().(*BooleanSort); !ok {
+		return smt.Z3Expr{}, false, nil
+	}
+	z1, err := s.tr.translateCore(eq.T1, "soft_solver_bool_eq_lhs")
+	if err != nil {
+		return smt.Z3Expr{}, true, err
+	}
+	z2, err := s.tr.translateCore(eq.T2, "soft_solver_bool_eq_rhs")
+	if err != nil {
+		return smt.Z3Expr{}, true, err
+	}
+	return s.tr.Ctx.Eq(z1, z2), true, nil
 }
 
 // buildConstraintTerm builds a term for type constraints.

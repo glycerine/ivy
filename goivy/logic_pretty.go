@@ -77,6 +77,8 @@ func ugly(n Expr, prec int) string {
 		return naryUgly("when"+t.Name, []Expr{t.T1, t.T2}, 2, prec)
 	case *ForAll:
 		return quantUgly("forall", t.Variables, t.Body, prec)
+	case *RawForAll:
+		return quantUgly("forall", t.Variables, t.Body, prec)
 	case *LogicExists:
 		return quantUgly("exists", t.Variables, t.Body, prec)
 	case *Lambda:
@@ -300,6 +302,19 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 			}
 		}
 		return &ForAll{Variables: vars, Body: body}
+
+	case *RawForAll:
+		body := dropAnnotations(t.Body, true, annotatedVars)
+		vars := make([]*LogicVariable, len(t.Variables))
+		for i, v := range t.Variables {
+			dv := dropAnnotations(v, false, annotatedVars)
+			if vv, ok := dv.(*LogicVariable); ok {
+				vars[i] = vv
+			} else {
+				vars[i] = v
+			}
+		}
+		return &RawForAll{Variables: vars, Body: body}
 
 	case *LogicExists:
 		// Python processes body BEFORE variables (ivy_logic.py:1434-1436).

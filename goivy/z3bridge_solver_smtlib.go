@@ -72,6 +72,8 @@ func formulaToSMTLIB2(node Expr) string {
 		return "|" + n.Name + "|"
 	case *ForAll:
 		return "(forall (...) " + formulaToSMTLIB2(n.Body) + ")"
+	case *RawForAll:
+		return "(forall (...) " + formulaToSMTLIB2(n.Body) + ")"
 	case *LogicExists:
 		return "(exists (...) " + formulaToSMTLIB2(n.Body) + ")"
 	default:

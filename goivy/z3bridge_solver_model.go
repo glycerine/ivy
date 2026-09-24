@@ -45,6 +45,17 @@ func clausesHaveHardContent(clauses *Clauses) bool {
 	return clauses != nil && (len(clauses.Fmlas) != 0 || len(clauses.Defs) != 0)
 }
 
+func (s *Solver) assertSoftSolverHardClauses(z3solver *smt.Z3Solver, clauses *Clauses) error {
+	exprs, err := s.softSolverClausesToZ3AssertionExprs(clauses)
+	if err != nil {
+		return err
+	}
+	for _, zc := range exprs {
+		z3solver.Assert(zc)
+	}
+	return nil
+}
+
 func logSoftAssumptionAdd(log SoftAssumptionLogger, pred, alit smt.Z3Expr) {
 	if log == nil {
 		return
@@ -155,11 +166,9 @@ func (s *Solver) GetModelClausesWithSoftAssumptionsLogged(clauses *Clauses, soft
 	debugSoft := os.Getenv("GOIVY_DEBUG_SOFT_SOLVER") != ""
 	z3solver := s.newZ3Solver()
 	if clausesHaveHardContent(clauses) {
-		zc, err := s.ClausesToZ3(clauses)
-		if err != nil {
+		if err := s.assertSoftSolverHardClauses(z3solver, clauses); err != nil {
 			return nil, err
 		}
-		z3solver.Assert(zc)
 	}
 	var assumptions []smt.Z3Expr
 	ctx := s.tr.Ctx
@@ -390,11 +399,9 @@ func (s *Solver) GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(base *SMTLIB
 	z3solver.Push()
 	defer z3solver.Pop()
 	if clausesHaveHardContent(clauses) {
-		zc, err := s.ClausesToZ3(clauses)
-		if err != nil {
+		if err := s.assertSoftSolverHardClauses(z3solver, clauses); err != nil {
 			return nil, err
 		}
-		z3solver.Assert(zc)
 	}
 	if debugSoft {
 		fmt.Fprintf(os.Stderr, "soft-solver smtlib-base-clauses-start soft=%d\n", len(soft))
@@ -514,11 +521,9 @@ func (s *Solver) GetModelSMTLIBClausesWithSoftAssumptionsLogged(smtlib string, c
 		z3solver.Assert(base)
 	}
 	if clausesHaveHardContent(clauses) {
-		zc, err := s.ClausesToZ3(clauses)
-		if err != nil {
+		if err := s.assertSoftSolverHardClauses(z3solver, clauses); err != nil {
 			return nil, err
 		}
-		z3solver.Assert(zc)
 	}
 	if debugSoft {
 		fmt.Fprintf(os.Stderr, "soft-solver smtlib-clauses-start soft=%d\n", len(soft))

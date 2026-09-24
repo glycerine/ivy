@@ -266,6 +266,24 @@ func (u *Z3Utils) toZ3Internal(x Expr) (any, error) {
 		}
 		return u.Ctx.ForAll(bound, body), nil
 
+	case *RawForAll:
+		if len(node.Variables) == 0 {
+			return u.ToZ3Expr(node.Body)
+		}
+		bound := make([]smt.Z3Expr, len(node.Variables))
+		for i, v := range node.Variables {
+			b, err := u.ToZ3Expr(v)
+			if err != nil {
+				return nil, err
+			}
+			bound[i] = b
+		}
+		body, err := u.ToZ3Expr(node.Body)
+		if err != nil {
+			return nil, err
+		}
+		return u.Ctx.ForAll(bound, body), nil
+
 	case *LogicExists:
 		if len(node.Variables) == 0 {
 			return u.ToZ3Expr(node.Body)

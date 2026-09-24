@@ -2,9 +2,13 @@ package ivy2golang
 
 import (
 	"bytes"
+	"flag"
+	"go/parser"
+	"go/token"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"testing"
@@ -15,9 +19,11 @@ var (
 	generatedBuildTestEnv     []string
 	generatedBuildTestRoot    string
 	generatedBuildTestEnvErr  error
+	slowTestParallelized      sync.Map
 )
 
 func TestMain(m *testing.M) {
+	configureSlowTestParallelism()
 	code := m.Run()
 	if generatedBuildTestRoot != "" {
 		_ = os.RemoveAll(generatedBuildTestRoot)
@@ -25,10 +31,36 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
+func configureSlowTestParallelism() {
+	if os.Getenv("SLOWTEST") != "1" {
+		return
+	}
+	explicit := false
+	flag.Visit(func(f *flag.Flag) {
+		if f.Name == "test.parallel" {
+			explicit = true
+		}
+	})
+	if explicit {
+		return
+	}
+	limit := os.Getenv("IVY2GOLANG_SLOWTEST_PARALLEL")
+	if limit == "" {
+		limit = "4"
+	}
+	_ = flag.Set("test.parallel", limit)
+}
+
 func requireSlowTest(t *testing.T) {
 	t.Helper()
 	if os.Getenv("SLOWTEST") != "1" {
 		t.Skip("set SLOWTEST=1 to run generated binary build/run integration checks")
+	}
+	if strings.Contains(t.Name(), "/") {
+		return
+	}
+	if _, loaded := slowTestParallelized.LoadOrStore(t.Name(), true); !loaded {
+		t.Parallel()
 	}
 }
 
@@ -39,15 +71,34 @@ func compileGeneratedGo(t *testing.T, out *Output) string {
 		t.Fatalf("nil or empty generated output")
 	}
 	dir := t.TempDir()
-	bin, err := buildOutputForTest(t, out, dir)
+	if err := WriteOutput(out, dir); err != nil {
+		t.Fatalf("write generated Go: %v", err)
+	}
+	srcPath := filepath.Join(dir, goSourceFileName(out.BaseName))
+	if err := formatGoOutputFile(srcPath); err != nil {
+		t.Fatalf("format generated Go: %v\nsource: %s", err, srcPath)
+	}
+	validateGeneratedGoForTest(t, srcPath)
+	return srcPath
+}
+
+func validateGeneratedGoForTest(t *testing.T, srcPath string) {
+	t.Helper()
+	fset := token.NewFileSet()
+	if _, err := parser.ParseFile(fset, srcPath, nil, 0); err != nil {
+		t.Fatalf("parse generated Go: %v\nsource: %s", err, srcPath)
+	}
+	data, err := os.ReadFile(srcPath)
 	if err != nil {
-		srcPath := filepath.Join(dir, goSourceFileName(out.BaseName))
-		t.Fatalf("compile generated Go: %v\nsource: %s", err, srcPath)
+		t.Fatalf("read generated Go: %v\nsource: %s", err, srcPath)
 	}
-	if bin == "" {
-		t.Fatalf("empty binary path")
+	src := string(data)
+	if line := firstBareUndeclaredSyntheticTempAssignment(src); line != "" {
+		t.Fatalf("generated Go assigns synthetic temp before declaration: %s\nsource: %s", line, srcPath)
 	}
-	return bin
+	if unused := unreadDeclaredSyntheticTemps(src); len(unused) != 0 {
+		t.Fatalf("generated Go declares unread synthetic temps: %v\nsource: %s", unused, srcPath)
+	}
 }
 
 func buildOutputForTest(t *testing.T, out *Output, dir string) (string, error) {
@@ -93,6 +144,7 @@ func generatedBuildEnvForTest(t *testing.T) []string {
 func runBinary(t *testing.T, bin string, args ...string) (string, string, error) {
 	t.Helper()
 	requireSlowTest(t)
+	bin = ensureGeneratedBinaryForTest(t, bin)
 	cmd := exec.Command(bin, args...)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
@@ -104,6 +156,7 @@ func runBinary(t *testing.T, bin string, args ...string) (string, string, error)
 func runBinaryWithInput(t *testing.T, bin, input string, args ...string) (string, string, error) {
 	t.Helper()
 	requireSlowTest(t)
+	bin = ensureGeneratedBinaryForTest(t, bin)
 	cmd := exec.Command(bin, args...)
 	cmd.Stdin = strings.NewReader(input)
 	var stdout, stderr bytes.Buffer
@@ -111,6 +164,28 @@ func runBinaryWithInput(t *testing.T, bin, input string, args ...string) (string
 	cmd.Stderr = &stderr
 	err := cmd.Run()
 	return stdout.String(), stderr.String(), err
+}
+
+func ensureGeneratedBinaryForTest(t *testing.T, path string) string {
+	t.Helper()
+	if !strings.HasSuffix(path, ".go") {
+		return path
+	}
+	bin := strings.TrimSuffix(path, ".go")
+	if runtime.GOOS == "windows" {
+		bin += ".exe"
+	}
+	if st, err := os.Stat(bin); err == nil && st.Mode().IsRegular() {
+		return bin
+	}
+	cmd := exec.Command("go", "build", "-o", bin, path)
+	cmd.Env = append(os.Environ(), generatedBuildEnvForTest(t)...)
+	cmd.Dir = moduleRootForGeneratedBuild()
+	data, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("build generated Go for run: %v\n%s\nsource: %s", err, string(data), path)
+	}
+	return bin
 }
 
 func TestFormatGoOutputFileFast(t *testing.T) {

@@ -529,7 +529,7 @@ func isBoolRange(s Sort) bool {
 
 func isQuantifier(n Expr) bool {
 	switch n.(type) {
-	case *ForAll, *LogicExists:
+	case *ForAll, *RawForAll, *LogicExists:
 		return true
 	}
 	return false
@@ -577,6 +577,10 @@ func cloneNode(n Expr, children []Expr) Expr {
 	case *ForAll:
 		if len(children) >= 1 {
 			return &ForAll{Variables: t.Variables, Body: children[0]}
+		}
+	case *RawForAll:
+		if len(children) >= 1 {
+			return &RawForAll{Variables: t.Variables, Body: children[0]}
 		}
 	case *LogicExists:
 		if len(children) >= 1 {
@@ -633,6 +637,10 @@ func substituteByNameRec(ast Expr, subs map[string]Expr) Expr {
 		newsubs := removeBoundNames(subs, t.Variables)
 		body := substituteByNameRec(t.Body, newsubs)
 		return &ForAll{Variables: t.Variables, Body: body}
+	case *RawForAll:
+		newsubs := removeBoundNames(subs, t.Variables)
+		body := substituteByNameRec(t.Body, newsubs)
+		return &RawForAll{Variables: t.Variables, Body: body}
 	case *LogicExists:
 		newsubs := removeBoundNames(subs, t.Variables)
 		body := substituteByNameRec(t.Body, newsubs)
@@ -702,6 +710,13 @@ func freeVariablesInOrderRec(ast Expr, result *[]*LogicVariable, seen map[string
 		}
 		freeVariablesInOrderRec(t.Body, result, seen, newBound)
 		return
+	case *RawForAll:
+		newBound := copyBoundSet(bound)
+		for _, v := range t.Variables {
+			newBound[v.Name] = true
+		}
+		freeVariablesInOrderRec(t.Body, result, seen, newBound)
+		return
 	case *LogicExists:
 		newBound := copyBoundSet(bound)
 		for _, v := range t.Variables {
@@ -756,6 +771,15 @@ func usedVariablesInOrderRec(ast Expr, result *[]*LogicVariable, seen map[string
 	}
 	switch t := ast.(type) {
 	case *ForAll:
+		for _, v := range t.Variables {
+			if !seen[v.Name] {
+				seen[v.Name] = true
+				*result = append(*result, v)
+			}
+		}
+		usedVariablesInOrderRec(t.Body, result, seen)
+		return
+	case *RawForAll:
 		for _, v := range t.Variables {
 			if !seen[v.Name] {
 				seen[v.Name] = true
@@ -1813,6 +1837,11 @@ func substituteApplyChildren(t Expr, subs map[NodeKey]SubstituteApplyFunc) Expr 
 		newSubs := filterSubs(subs, n.Variables)
 		body := substituteApplyRec(n.Body, newSubs)
 		return &ForAll{Variables: n.Variables, Body: body}
+
+	case *RawForAll:
+		newSubs := filterSubs(subs, n.Variables)
+		body := substituteApplyRec(n.Body, newSubs)
+		return &RawForAll{Variables: n.Variables, Body: body}
 
 	case *LogicExists:
 		newSubs := filterSubs(subs, n.Variables)

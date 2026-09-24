@@ -2126,6 +2126,11 @@ Progress:
   with the same `disj || bg` structure C++ uses. The follow-up parity gap is to
   populate that hook from generated large-function assignments; until then,
   non-memoized symbolic bases are deliberately not over-constrained.
+- 2026-09-23: Runtime sparse/thunk-backed state serialization now appends a
+  `goivy.RawForAll` clause for the override/base formula, so interpreted-sort
+  nat/range guards are not injected around the generated state equality.
+  This matches C++ `hash_thunk::__to_solver`, which emits the runtime state
+  `forall` directly rather than through Ivy's guarded quantifier helper.
 - 2026-09-23: Large-function assignments now populate the generated
   `solverBase` hook when the RHS can be emitted as a solver AST over the thunk
   key variables without capturing other state. This covers the key-local slice
@@ -2136,12 +2141,13 @@ Progress:
   symbols as captured values.
 - 2026-09-23: Large-function assignments now also capture scalar state symbols
   referenced by the RHS before installing the generated Go thunk closure,
-  matching C++'s generated thunk environment for that slice. The same captured
-  scalar values are exposed to `solverBase` as concrete solver terms, so base
-  formulas like key-local arithmetic or comparisons against captured scalar
-  state no longer drift by reading live mutable state. Function-valued,
-  destructor-record, variant, and self-referential environment captures remain
-  open follow-up work.
+  matching C++'s generated thunk environment for that slice. The solver-base
+  path now exposes each captured scalar as a fresh solver symbol constrained by
+  an equality to the captured Go value, so base formulas keep C++'s local
+  captured-symbol shape instead of inlining concrete values into the thunk RHS.
+  Function-valued, destructor-record, variant, and self-referential environment
+  captures remained follow-up work at this point and are closed by the entries
+  below.
 - 2026-09-23: The generated thunk environment capture now extends to supported
   destructor-record and variant-supertype state values. Runtime execution
   captures the concrete Go value before the thunk closure is installed, and the

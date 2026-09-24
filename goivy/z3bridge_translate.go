@@ -742,6 +742,9 @@ func (t *Translator) translateCore(n Expr, caller string) (smt.Z3Expr, error) {
 	case *ForAll:
 		return t.translateQuantifier(true, node.Variables, node.Body)
 
+	case *RawForAll:
+		return t.translateRawForAll(node.Variables, node.Body)
+
 	case *LogicExists:
 		return t.translateQuantifier(false, node.Variables, node.Body)
 
@@ -1455,6 +1458,14 @@ func (t *Translator) makeFuncDecl(name string, fs *LogicFunctionSort) (smt.FuncD
 }
 
 func (t *Translator) translateQuantifier(isForall bool, variables []*LogicVariable, body Expr) (smt.Z3Expr, error) {
+	return t.translateQuantifierWithConstraints(isForall, variables, body, true)
+}
+
+func (t *Translator) translateRawForAll(variables []*LogicVariable, body Expr) (smt.Z3Expr, error) {
+	return t.translateQuantifierWithConstraints(true, variables, body, false)
+}
+
+func (t *Translator) translateQuantifierWithConstraints(isForall bool, variables []*LogicVariable, body Expr, addConstraints bool) (smt.Z3Expr, error) {
 	if len(variables) == 0 {
 		return t.Formula_to_z3_int(body, "translateQuantifier() no variables")
 	}
@@ -1503,7 +1514,13 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*LogicVariab
 	// Matches Python: formula_to_z3_int calls forall()/exists() after
 	// translating body and variables.
 	if isForall {
+		if !addConstraints {
+			return t.Ctx.ForAll(bound, zBody), nil
+		}
 		return t.forall(variables, bound, zBody), nil
+	}
+	if !addConstraints {
+		return t.Ctx.Exists(bound, zBody), nil
 	}
 	return t.exists(variables, bound, zBody), nil
 }

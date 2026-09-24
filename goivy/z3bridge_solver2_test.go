@@ -53,6 +53,33 @@ func TestQuantConstraints_NatForAll(t *testing.T) {
 	}
 }
 
+func TestRawForAllSkipsNatQuantConstraints(t *testing.T) {
+	sig := NewSig()
+	sig.Interp["mynat"] = "nat"
+	s := NewSolverFromSig(sig, nil)
+
+	natSort := &UninterpretedSort{Name: "mynat"}
+	x, _ := NewVariable("X", natSort)
+	p := relConst("P", natSort)
+	pApp := MustApply(p, x)
+
+	fmla := &RawForAll{Variables: []*LogicVariable{x}, Body: pApp}
+
+	z3expr, err := s.FormulaToZ3(fmla)
+	if err != nil {
+		t.Fatalf("translate RawForAll: %v", err)
+	}
+
+	ctx := s.Context()
+	slv := ctx.NewZ3Solver()
+	slv.Assert(z3expr)
+	pDecl := ctx.Function("P", []smt.Z3Sort{ctx.IntSort()}, ctx.BoolSort())
+	slv.Assert(ctx.Not(pDecl.Apply(ctx.IntVal(-1))))
+	if res := slv.Check(); res != smt.Unsat {
+		t.Fatalf("RawForAll should quantify over raw solver sort without nat guard, got %v", res)
+	}
+}
+
 // TestQuantConstraints_NatExists checks that Exists(X:nat, P(X))
 // translates to Exists(X, And(0<=X, P(X))).
 func TestQuantConstraints_NatExists(t *testing.T) {

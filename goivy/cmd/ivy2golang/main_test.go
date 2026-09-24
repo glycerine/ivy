@@ -22,23 +22,41 @@ var (
 	commandTestEnvVals    []string
 	commandTestEnvRoot    string
 	commandTestEnvErr     error
+	commandSlowParallel   sync.Map
 )
 
 func TestMain(m *testing.M) {
+	if os.Getenv("SLOWTEST") == "1" {
+		if err := prepareIvy2GolangCommandBinary(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			cleanupCommandTestState()
+			os.Exit(1)
+		}
+	}
 	code := m.Run()
+	cleanupCommandTestState()
+	os.Exit(code)
+}
+
+func cleanupCommandTestState() {
 	if commandTestBinaryDir != "" {
 		_ = os.RemoveAll(commandTestBinaryDir)
 	}
 	if commandTestEnvRoot != "" {
 		_ = os.RemoveAll(commandTestEnvRoot)
 	}
-	os.Exit(code)
 }
 
 func requireSlowCommandTest(t *testing.T) {
 	t.Helper()
 	if os.Getenv("SLOWTEST") != "1" {
 		t.Skip("set SLOWTEST=1 to build and run the ivy2golang command binary")
+	}
+	if strings.Contains(t.Name(), "/") {
+		return
+	}
+	if _, loaded := commandSlowParallel.LoadOrStore(t.Name(), true); !loaded {
+		t.Parallel()
 	}
 }
 
@@ -260,6 +278,16 @@ func firstLineContaining(text, needle string) (string, bool) {
 func buildIvy2GolangCommand(t *testing.T) string {
 	t.Helper()
 	requireSlowCommandTest(t)
+	if err := prepareIvy2GolangCommandBinary(); err != nil {
+		t.Fatal(err)
+	}
+	if commandTestBinary == "" {
+		t.Fatal("empty command test binary path")
+	}
+	return commandTestBinary
+}
+
+func prepareIvy2GolangCommandBinary() error {
 	commandTestBinaryOnce.Do(func() {
 		commandTestBinaryDir, commandTestBinaryErr = os.MkdirTemp("", "ivy2golang-command-test-*")
 		if commandTestBinaryErr != nil {
@@ -270,7 +298,12 @@ func buildIvy2GolangCommand(t *testing.T) string {
 			bin += ".exe"
 		}
 		cmd := exec.Command("go", "build", "-o", bin, ".")
-		cmd.Env = commandTestEnv(t)
+		env, err := commandTestEnvValues()
+		if err != nil {
+			commandTestBinaryErr = err
+			return
+		}
+		cmd.Env = env
 		data, err := cmd.CombinedOutput()
 		if err != nil {
 			commandTestBinaryErr = fmt.Errorf("go build cmd/ivy2golang: %w\n%s", err, data)
@@ -278,13 +311,7 @@ func buildIvy2GolangCommand(t *testing.T) string {
 		}
 		commandTestBinary = bin
 	})
-	if commandTestBinaryErr != nil {
-		t.Fatal(commandTestBinaryErr)
-	}
-	if commandTestBinary == "" {
-		t.Fatal("empty command test binary path")
-	}
-	return commandTestBinary
+	return commandTestBinaryErr
 }
 
 func runIvy2GolangCommand(t *testing.T, bin string, args ...string) (string, string, error) {
@@ -300,6 +327,14 @@ func runIvy2GolangCommand(t *testing.T, bin string, args ...string) (string, str
 
 func commandTestEnv(t *testing.T) []string {
 	t.Helper()
+	env, err := commandTestEnvValues()
+	if err != nil {
+		t.Fatal(err)
+	}
+	return env
+}
+
+func commandTestEnvValues() ([]string, error) {
 	commandTestEnvOnce.Do(func() {
 		cacheDir := os.Getenv("GOCACHE")
 		tmpDir := os.Getenv("GOTMPDIR")
@@ -330,8 +365,8 @@ func commandTestEnv(t *testing.T) []string {
 		}
 	})
 	if commandTestEnvErr != nil {
-		t.Fatal(commandTestEnvErr)
+		return nil, commandTestEnvErr
 	}
 	base := os.Environ()
-	return append(base, commandTestEnvVals...)
+	return append(base, commandTestEnvVals...), nil
 }
