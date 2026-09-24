@@ -17136,7 +17136,8 @@ export check
 	}
 	for _, want := range []string{
 		`fmt.Fprintf(os.Stderr, "parameter initial out of bounds\n")`,
-		`fmt.Fprintf(os.Stderr, "assertion failed")`,
+		`ivyAssert((ivy.saved == green), "test.ivy: line 9")`,
+		`fmt.Fprintf(os.Stderr, "%s: error: assertion failed\n", msg)`,
 	} {
 		if !strings.Contains(out.Source, want) {
 			t.Fatalf("defaulted parameter source missing runtime diagnostic %q:\n%s", want, out.Source)

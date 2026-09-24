@@ -397,6 +397,17 @@ Current verification status:
   for `enum_dispatch.ivy` matched C++ byte-for-byte on stdout, stderr, and exit
   status for `target=test`, `target=gen`, and `target=repl`; the scratch
   directory was `/mnt/oldrog/tmp/ivy2golang-tracefalse-oracle.VWnUZz`.
+- 2026-09-24: Refreshed the post-`SLOWTEST=1` external sanity oracle after the
+  user-reported green slow gate. Fresh wrappers in
+  `/mnt/oldrog/tmp/ivy2golang-sanity-oracle.XaSoxW` generated, built, and ran
+  independent `ivy2cpp` and `ivy2golang` binaries for Hermes, target=test
+  fixture seed sweeps, target=gen fixture seed sweeps, scripted target=repl
+  transcripts, and `isolate=all` descriptor/process outputs. All compared
+  stdout, stderr, and exit status byte-for-byte; the pass recorded 168 run
+  status files, covering 84 paired C++/Go binary run comparisons. Normal fast
+  `./ivy2golang` / `./cmd/ivy2golang` checks are green at 4.756s / 0.009s
+  after tightening the defaulted-module-parameter source-shape assertion to the
+  generated `ivyAssert` helper form.
 
 The per-item audit bodies preserve the original review text for traceability.
 That means older `Current Go behavior`, `Risk`, `How to conform`, and dated
