@@ -33928,6 +33928,20 @@ export check
 	if unused := unreadDeclaredSyntheticTemps(out.Source); len(unused) != 0 {
 		t.Fatalf("Hermes-style generated source declared unread synthetic temps: %v", unused)
 	}
+	for _, name := range []string{
+		"__ts0__ts0_c",
+		"__ts0__new_v_a",
+		"__ts0__new_t_a",
+		"__ts0__new_n_a",
+		"__ts0__new_s_a",
+		"__ts0_a",
+	} {
+		for _, bad := range []string{"\nvar " + name + " ", "\n\tvar " + name + " ", "\n" + name + " ="} {
+			if strings.Contains(out.Source, bad) {
+				t.Fatalf("Hermes-style generated source would emit reported unread local %s via %q:\n%s", name, bad, out.Source)
+			}
+		}
+	}
 }
 
 func TestLargeFunctionSolverBaseUsesSymbolicScalarCaptureFast(t *testing.T) {

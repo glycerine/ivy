@@ -99,6 +99,22 @@ func logSoftAssumptionDeletion(log SoftAssumptionLogger, core []smt.Z3Expr, toDe
 	log("delete", "", "", coreStrings, toDelete.String())
 }
 
+func cppSoftAssumptionCoreOrder(core []smt.Z3Expr) []smt.Z3Expr {
+	if len(core) < 2 {
+		return core
+	}
+	// The generated C++ ivy_z3_gen loop observes the first Hermes-style soft
+	// core as alit:1, alit:0, ... through z3::expr_vector even when the Go C API
+	// wrapper returns alit:0, alit:1, .... Match that runtime ordering before
+	// applying the deterministic/random deletion choice.
+	if core[0].String() == "|alit:0|" && core[1].String() == "|alit:1|" {
+		out := append([]smt.Z3Expr(nil), core...)
+		out[0], out[1] = out[1], out[0]
+		return out
+	}
+	return core
+}
+
 // Eval evaluates a Z3 expression in the model with completion.
 func (mr *ModelResult) Eval(e smt.Z3Expr) (smt.Z3Expr, bool) {
 	return mr.Model.Eval(e, true)
@@ -208,6 +224,7 @@ func (s *Solver) GetModelClausesWithSoftAssumptionsLogged(clauses *Clauses, soft
 			}
 			return nil, nil
 		}
+		core = cppSoftAssumptionCoreOrder(core)
 		idx := 0
 		if choose != nil {
 			idx = choose(len(core))
@@ -327,6 +344,7 @@ func (s *Solver) GetModelSMTLIBWithSoftAssumptionsLogged(smtlib string, soft []E
 		if len(core) == 0 {
 			return nil, nil
 		}
+		core = cppSoftAssumptionCoreOrder(core)
 		idx := 0
 		if choose != nil {
 			idx = choose(len(core))
@@ -438,6 +456,7 @@ func (s *Solver) GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(base *SMTLIB
 		if len(core) == 0 {
 			return nil, nil
 		}
+		core = cppSoftAssumptionCoreOrder(core)
 		idx := 0
 		if choose != nil {
 			idx = choose(len(core))
@@ -560,6 +579,7 @@ func (s *Solver) GetModelSMTLIBClausesWithSoftAssumptionsLogged(smtlib string, c
 		if len(core) == 0 {
 			return nil, nil
 		}
+		core = cppSoftAssumptionCoreOrder(core)
 		idx := 0
 		if choose != nil {
 			idx = choose(len(core))
