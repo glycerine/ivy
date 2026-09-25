@@ -1638,6 +1638,12 @@ def goal_free_vars(goal):
 def var_subst_goal(goal,subst):
     """ Apply a variable substitution to a goal. """
     if __debug__: xtracer.trace("proof.varSubstGoal ENTER label=%s nsubs=%d" % (_goal_label_trace(goal), len(subst)))
+    # these next two lines, starting with "if isinstance(goal, ia.ConstantDecl):", are from
+    # upsteam 8f7763fdf643d8fd75ed9bc061f6e977742f45d6 "Sat Jun 8 12:33:54 2024 -0700"
+    # and are pulled from upstream since our original pyivy fork was just before this (we do have the
+    # prior commit, 925cedadc9cb67ec211df8e7f137e9a227c03230 from "Mon Apr 8 17:49:18 2024 -0500").
+    if isinstance(goal, ia.ConstantDecl):
+        return goal
     prems = [var_subst_goal(prem,subst) for prem in goal_prems(goal)]
     conc = goal_conc(goal)
     if not isinstance(conc,ia.SchemaBody):
