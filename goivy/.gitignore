@@ -56,3 +56,6 @@ log.gold-hermes
 log.gold-hermes.prev
 .codex-gocache/
 ivy2cpp/tmp.oracle.out.dir.*
+tmp-ivy2golang-check/
+.codex-gotmp/
+.ivy2golang-gocache/
