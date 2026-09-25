@@ -319,10 +319,9 @@ func outerVarsInFormula(fmla Expr, outer []*LogicVariable) []*LogicVariable {
 }
 
 // varSubstGoal applies a variable substitution to a goal.
-// Mirrors Python ivy_proof.py var_subst_goal. The Python function is
-// duck-typed: it traces _goal_label_trace(goal), then immediately asks
-// goal_prems(goal) for goal.formula. Keep that order so non-goal premises
-// such as ConstantDecl fail at the same dynamic attribute access point.
+// Mirrors Python ivy_proof.py var_subst_goal. Upstream Python Ivy
+// 8f7763fdf643d8fd75ed9bc061f6e977742f45d6 returns ConstantDecl
+// premises unchanged before asking for goal.formula.
 func varSubstGoal(cfg *AstConfig, goal *LabeledFormula, subs map[NodeKey]Expr) (*LabeledFormula, error) {
 	result, err := varSubstGoalNode(cfg, goal, subs)
 	if err != nil {
@@ -337,6 +336,9 @@ func varSubstGoal(cfg *AstConfig, goal *LabeledFormula, subs map[NodeKey]Expr) (
 
 func varSubstGoalNode(cfg *AstConfig, goal Node, subs map[NodeKey]Expr) (Node, error) {
 	xtracer.Trace("proof.varSubstGoal ENTER label=%s nsubs=%d", goalLabelTrace(goal), len(subs))
+	if _, ok := goal.(*ConstantDecl); ok {
+		return goal, nil
+	}
 	prems, err := goalPremsPy(goal)
 	if err != nil {
 		return nil, err
