@@ -1,0 +1,1080 @@
+analysis date: 2026 Sept 25:
+
+subject: compare the upstream
+
+https://github.com/kenmcmil/ivy
+
+against what we have in our
+
+https://github.com/glycerine/ivy  subdir /pyivy fork; what we
+might want to pull in for bug fixes...
+
+
+commit a5ecac6e49e074e726533ac4f9892478540eae56
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Sep 10 18:20:55 2026 -0700
+
+    ivy_check: guard the zero-delay-dependency visibility check against unlabeled conjectures
+    
+    The `with`-dependency visibility/deps check in check_conjs_in_state reads
+    `x.name` over `conjs` (which now includes postconditions and can include
+    unlabeled invariants). `x.name` dereferences the label, crashing with
+    AttributeError on an unlabeled conjecture (args[0] is None). This regressed any
+    file with an unlabeled conjecture reaching that loop (e.g. ifstar1,
+    modparam_example). Filter to labeled entries -- an unlabeled conjecture has no
+    name and cannot be a named dependency anyway.
+    
+    Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+ ivy/ivy_check.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 901af252c5d1684cf553e1ba96e5a93e20a0ee39
+Author: Kenneth McMillan <you@example.com>
+Date:   Wed Sep 9 17:21:11 2026 -0700
+
+    dual_issue_cpu_ref.ivy: cpu invariants check fast because of derived invariants. ic has has errors.
+
+ doc/examples/hardware/dual_issue_cpu_ref.ivy | 36 ++++++++++++++++--------------------
+ 1 file changed, 16 insertions(+), 20 deletions(-)
+
+commit 0b1561ecf5f2583595bc1769324f8bdb808bdd55
+Author: Kenneth McMillan <you@example.com>
+Date:   Wed Sep 9 17:19:13 2026 -0700
+
+    ivy_check: derived invariants
+    
+    Add "derived invariants" (doc/projects/derived_invar.md): an invariant that is
+    IMPLIED by the normal invariants, so it needs no consecution check -- only a
+    one-state implication (assume the normal invariants, prove the derived one).
+    Derived invariants are assumed in the pre-state of the normal invariants'
+    consecution checks, so they serve as freely-usable supporting lemmas.
+    
+    Syntax: `derived invariant [name] <formula> {with ...} {using ...}`.
+    
+    Dependency rule: a derived invariant may depend at zero delay on all the normal
+    invariants (implicitly) and on other derived invariants (via `with`/`using`); a
+    NORMAL invariant may NOT depend on a derived one at zero delay (via `with`), as
+    that closes a zero-delay cycle -- this is checked and reported as an error.
+    
+    Implementation:
+      - ivy_ast: a `derived` flag on LabeledFormula (mirrors `explicit`).
+      - ivy_parser: a `derived invariant ...` rule reusing the with/using clauses.
+      - ivy_check: check_conjs_in_state gains a `derived` parameter that selects the
+        normal set (consecution) or the derived set (implication), and raises an
+        error on a normal->derived `with` dependency; a new derived pass checks the
+        derived invariants by a one-state implication against get_conjs_normal (the
+        normal invariants only, so a derived is not trivially self-assumed); the
+        consecution pass runs only when there is a normal invariant.
+    
+    Tests (test/derived1..4): an implied derived passes; an unimplied one gives a
+    counterexample; a normal-on-derived `with` errors; a derived-on-derived `with`
+    and a normal `using` a derived both pass. Added to test/ivy_tests.py.
+    
+    Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+ ivy/ivy_ast.py    |  5 +++++
+ ivy/ivy_check.py  | 53 ++++++++++++++++++++++++++++++++++++++++++++++++-----
+ ivy/ivy_parser.py | 16 ++++++++++++++++
+ test/derived1.ivy | 20 +++++++++++++-------
+ test/derived2.ivy | 22 +++++++++++++---------
+ test/derived3.ivy | 34 +++++++++++++---------------------
+ test/derived4.ivy | 16 ++++++++++++++++
+ test/ivy_tests.py | 14 ++++++++++++++
+ 8 files changed, 138 insertions(+), 42 deletions(-)
+
+
+commit 8c68700393f8e406e94c25f16b43d2554cae8956
+Author: Kenneth McMillan <you@example.com>
+Date:   Fri Sep 4 17:07:03 2026 -0700
+
+    ivy_check: `using` clause and `patdef` for choosing inductive hypotheses
+    
+    Add fine-grained control over which inductive hypotheses a consecution check
+    uses (doc/projects/invariant_choice.md). By default every consecution check
+    uses all available hypotheses; when consecution fails, unneeded hypotheses
+    constrain the CTI and slow the solver. The user can now name a subset.
+    
+    Features:
+      - `invariant [i] ... using pat` restricts invariant i's consecution check to
+        the hypotheses whose names match the name-pattern `pat`. With no `using`
+        clause the default is unchanged (use all).
+      - `patdef name = pat` defines a named pattern, referenceable in later `using`
+        clauses and patdefs (no forward references).
+      - Pattern language: `|` (union), `-` (difference, binds tighter), `*`
+        (wildcard for an arbitrary string), `$` (anchor at the root), parentheses.
+        A leaf is matched against a hypothesis name anchored at any ancestor of the
+        invariant's object, so `x` matches `x`, `a.x`, `a.b.x`, ... Name resolution
+        qualifies exact leaves to their nearest-enclosing invariant and leaves
+        wildcards raw.
+    
+    Implementation:
+      - ivy_lexer: `patdef` keyword.
+      - ivy_ast: PatDiff, UsingPat/UsingPatDecl, PatDef/PatDefDecl (PatDef.defines
+        reports the pattern name so a duplicate patdef is caught as a redefinition).
+      - ivy_parser: pattern grammar, `optusing` on the invariant rule, `patdef` top
+        rule (one new shift/reduce, the greedy leaf munch, resolved as intended).
+      - ivy_module: usingpats, patdefs maps.
+      - ivy_compiler: usingpat/patdef handlers and expand_patrefs (eager expansion
+        of pattern references).
+      - ivy_check: get_conjs_gated gates each named hypothesis h in the pre-state
+        with a fresh assertion literal (a_h -> h); each invariant's check is
+        conditioned on the conjunction of the literals its pattern selects (all of
+        them if it has no `using` clause). Engaged only when `using` clauses are
+        present, so proofs without them are unaffected.
+    
+    Tests (test/): usingpat1..5 exercise selection, the |/-/* operators, patdef
+    (chained and with difference), and `$`; patdef1..3 cover duplicate detection
+    and object/module-scoped patdefs. All added to test/ivy_tests.py.
+    
+    Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+ ivy/ivy_ast.py      | 34 ++++++++++++++++++++++++++++++++++
+ ivy/ivy_check.py    | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ ivy/ivy_compiler.py | 28 ++++++++++++++++++++++++++++
+ ivy/ivy_lexer.py    |  1 +
+ ivy/ivy_module.py   |  2 ++
+ ivy/ivy_parser.py   | 80 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ test/ivy_tests.py   | 18 ++++++++++++++++++
+ test/patdef1.ivy    |  6 ++++++
+ test/patdef2.ivy    | 22 ++++++++++++++++++++++
+ test/patdef3.ivy    | 26 ++++++++++++++++++++++++++
+ test/usingpat1.ivy  | 13 +++++++++++++
+ test/usingpat2.ivy  | 12 ++++++++++++
+ test/usingpat3.ivy  | 19 +++++++++++++++++++
+ test/usingpat4.ivy  | 17 +++++++++++++++++
+ test/usingpat5.ivy  | 12 ++++++++++++
+ 15 files changed, 365 insertions(+), 6 deletions(-)
+
+
+commit 2129b5cccf689bd0127e962aec23a806784ecfa1
+Author: Kenneth McMillan <you@example.com>
+Date:   Mon Aug 31 16:46:24 2026 -0700
+
+    ivy_check: error on an invisible zero-delay (`with`) dependency
+    
+    When an invariant's `with` clause names a dependency that is not visible
+    in the isolate -- typically because the isolate's own `with` clause omits
+    the isolate that owns it -- the dependency was silently dropped and the
+    invariant was checked without it (a silent mis-proof). In
+    check_conjs_in_state, verify every name in the invariant's zero-delay
+    dependency set is present among the isolate's assumed invariants; if not,
+    raise an IvyError anchored at the invariant, naming the missing dependency
+    and noting the likely missing `with` entry.
+    
+    Verified: the hardware examples (the only ones using zero-delay
+    dependencies) all still check OK; a deliberately-broken `with` clause now
+    reports the missing dependency instead of silently mis-proving.
+    
+    Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+ ivy/ivy_check.py | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+
+commit cefc289f54ea8fc026120b2df28afafc9b194e2b
+Author: Kenneth McMillan <you@example.com>
+Date:   Fri Aug 28 14:18:39 2026 -0700
+
+    docs: note where an assume/guarantee invariant must be placed
+    
+    An invariant guaranteed by stage x and assumed by stage y must live in
+    the shared interface isolate x_props to be visible to y; a stage's own
+    isolate holds only invariants used solely to prove that stage's
+    guarantees. Add this to the decomp.md tutorial and, as a general
+    assume/guarantee lesson, to the reference-tagging skill (grounded in the
+    5stage_bp_cpu_dec case where d_pred_branch had to move from if_stage into
+    if_id.if_props before id_ex.id_props.e_pred_branch could assume it).
+    
+    Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+ .claude/skills/reference-tagging/SKILL.md | 21 +++++++++++++++++++++
+ doc/examples/hardware/decomp.md           |  5 +++++
+ 2 files changed, 26 insertions(+)
+
+commit 8b3abf741835982fe190ca27386740487c337de2
+Author: Kenneth McMillan <you@example.com>
+Date:   Fri Aug 28 14:09:47 2026 -0700
+
+    decomp.md: speculation section; add 5stage_spec_cpu_dec + regression tests
+    
+    Complete the "Speculation pattern" section of the pipeline-decomposition
+    tutorial in two steps, and add the missing regression entries.
+    
+    Write-up (decomp.md):
+      - "Speculating with a fixed prediction": the changes from the stalling
+        5stage_cpu_dec to 5stage_spec_cpu_dec -- stall replaced by flush +
+        squash, the spec_wrong trace-step gate, pc_reserved reused as the
+        shadow bit, and tracking only real (valid & non-shadowed) IF/ID
+        instructions.
+      - "Adding a branch predictor": the changes to 5stage_bp_cpu_dec --
+        carrying the prediction/pc down the pipe, two-sided misprediction
+        repair, the take_branch -> (pred ~= take_branch) substitution, the
+        "a predicted-taken instruction is a branch" invariants, and the
+        predictor as an isolate with no interface spec (correct for any
+        prediction). Closes with a note that the predictor's learning is a
+        performance property outside the proof and must be validated by
+        simulation.
+    
+    New file:
+      - 5stage_spec_cpu_dec.ivy: the fixed-prediction speculating pipeline
+        (the always-"not taken" step), verifies OK.
+    
+    Tests (ivy_tests.py):
+      - check tests for 5stage_spec_cpu_dec and 5stage_bp_cpu_dec.
+      - to_rtl sim tests (group rtl) that simulate prog.hex and check the
+        contrasting pc traces: _spec mispredicts every iteration, _bp
+        mispredicts once then predicts correctly (the learning signature the
+        doc says must be checked by simulation).
+    
+    Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+ doc/examples/hardware/5stage_spec_cpu_dec.ivy | 1028 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ doc/examples/hardware/decomp.md               |  352 ++++++++++++++++++++++++-
+ doc/examples/hardware/ivy_tests.py            |   26 ++
+ 3 files changed, 1401 insertions(+), 5 deletions(-)
+
+
+commit 117dd30cf15bda9883265923aee9ab51df6cc171
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Aug 27 15:13:04 2026 -0700
+
+    Fixed interference problem by making an invariant private in isolate rfn. This problem was caught because of a fix to the interference check in Ivy that finds interference with assumed invariants.
+
+ doc/examples/apple/ord_live.ivy | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+commit c1795273aa8dc210cdef24e84cfcb4a77c5b01e3
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Aug 27 15:10:57 2026 -0700
+
+    removed debugging print
+
+ ivy/ivy_l2s.py | 4 ----
+ 1 file changed, 4 deletions(-)
+
+
+commit 01d1ace4f0793d044ce5df92f2d5b893b2c1c517
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Aug 27 14:26:43 2026 -0700
+
+    allow forward references in definition statements
+
+ ivy/ivy_compiler.py | 50 ++++++++++++++++++++++++++++++++------------------
+ 1 file changed, 32 insertions(+), 18 deletions(-)
+
+
+
+commit bba0acf0c0547e05b9f3b5a985c9fe57d865bb4c
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Aug 20 17:20:15 2026 -0700
+
+    added register feature, fixed issue with assumed_invariants not included in
+    interference check, fixed issue with wires being updated in case of updates to multiple dependencies,
+    fixed issue with pure actions being treated as impure, fixed issue with detection of isolate exports,
+    fixed issue with empty and operator in smtlib confusing other tools
+
+ ivy/ivy_actions.py    |  23 ++++++++++++++++-
+ ivy/ivy_ast.py        |   4 +++
+ ivy/ivy_compiler.py   |   5 ++++
+ ivy/ivy_isolate.py    | 136 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----------------
+ ivy/ivy_lexer.py      |   3 ++-
+ ivy/ivy_module.py     |  10 ++++++++
+ ivy/ivy_parser.py     |  21 ++++++++++++++++
+ ivy/ivy_printer.py    |   1 +
+ ivy/ivy_solver.py     |  32 ++++++++++++++++--------
+ lib/emacs/ivy-mode.el |   1 +
+ 10 files changed, 202 insertions(+), 34 deletions(-)
+
+
+commit 45b2f13d133de22fc11ec942f3af703f2eef4666
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Jul 9 17:12:52 2026 -0700
+
+    Add Verilog-style bfe/concat sugar (ivy1.8+): a<<i:j>> and a::b
+    
+    Introduce two infix notations for bit-vector operations, since `bfe` and
+    `concat` look unfamiliar to hardware designers:
+    
+      a<<i:j>>          desugars to  bfe[j][i](a)   (Verilog-style high:low
+                                                     part-select; note the index
+                                                     order is reversed vs bfe)
+      a1 :: a2 :: ... :: an   desugars to  concat(a1, a2, ..., an)
+    
+    The lexer gains tokens for '<<', '>>' and '::' (all existing occurrences of
+    these are inside <<<...>>> native-quote tokens, so nothing else is affected).
+    The parser adds two rules, gated to language version 1.8 and later, that
+    return the desugared bfe/concat application directly -- no new AST classes,
+    and the rest of Ivy is unaware of the surface syntax. A chain of '::' flattens
+    into a single variadic concat (parenthesized concats are left intact). As with
+    plain `concat`, a concatenation still needs a sort annotation where its width
+    cannot be inferred.
+    
+    Documents the sugar in basics.md and adds a regression test
+    (bfe_concat_sugar.ivy) checking it emits the same RTL as the explicit
+    bfe_concat.ivy.
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ doc/examples/hardware/basics.md            |  8 ++++++++
+ doc/examples/hardware/bfe_concat_sugar.ivy | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ doc/examples/hardware/ivy_tests.py         | 10 ++++++++++
+ ivy/ivy_lexer.py                           | 11 +++++++++++
+ ivy/ivy_logic_parser.py                    | 33 ++++++++++++++++++++++++++++++++-
+ ivy/ivy_parser.py                          |  4 +++-
+ 6 files changed, 118 insertions(+), 2 deletions(-)
+
+
+commit 9cb5cb9e7a74f73bda46b381b88abe847bdc06b3
+Author: Kenneth McMillan <you@example.com>
+Date:   Wed Jul 8 17:16:57 2026 -0700
+
+    ivy: make concat variadic and interpret it only when widths add up
+    
+    Previously concat was fixed at two arguments, so a packed value had to be built
+    with nested concats -- and Ivy could not infer the intermediate widths, forcing
+    awkward workarounds (e.g. splitting a cache line into separate field arrays).
+    concat is now variadic.
+    
+    - compile_app builds the concat application with a function sort of the right
+      arity (fresh TopSorts); HM inference unifies each argument sort and leaves the
+      result sort to context, exactly as for the binary case. So
+      `concat(full, dirty, hi, data) : line` type-checks directly.
+    - The polymorphic table's arity-2 template is unchanged; type_inference already
+      uses the symbol's own (now arity-N) sort per occurrence.
+    - Z3 encoding uses variadic z3.Concat; ivy_to_cpp emits an N-way shift/or fold;
+      ivy_to_rtl already emitted a brace list, so it was already variadic.
+    
+    concat is added to the interpreted polymorphic symbols, but is encoded as z3's
+    Concat only when it is *safe and meaningful*:
+    - every argument sort and the result sort must be interpreted as a bit-vector;
+      otherwise (e.g. inside an isolate that does not interpret one of the sorts)
+      concat stays an uninterpreted function -- still sound by congruence. This also
+      fixes a latent issue: previously binary concat was a single uninterpreted
+      symbol regardless of its argument sorts; it now gets a per-signature name.
+    - when all sorts are bit-vectors but the result width does not equal the sum of
+      the argument widths, concat is likewise left uninterpreted and a warning is
+      emitted (once per signature), rather than crashing z3 with a sort mismatch.
+    
+    Verified: the full normal suite (135 tests) and the hardware suite (check +
+    to_rtl) pass; focused tests confirm all-bv concat round-trips through bfe,
+    non-bv concat stays uninterpreted, and a width mismatch warns and stays
+    uninterpreted.
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ ivy/ivy_compiler.py |  8 ++++++++
+ ivy/ivy_solver.py   | 49 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ ivy/ivy_to_cpp.py   | 30 +++++++++++++++++++++---------
+ ivy/ivy_utils.py    |  1 +
+ 4 files changed, 78 insertions(+), 10 deletions(-)
+
+
+commit 18ccb0008f9198a2f659c106869a0ecb1b940e8f
+Author: Kenneth McMillan <you@example.com>
+Date:   Wed Jul 8 09:44:58 2026 -0700
+
+    fixed regression on unnamed assertions in ivy1.5
+
+ ivy/ivy_actions.py | 3 ++-
+ ivy/ivy_check.py   | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+
+commit 44770493355173408f54aeec7aef6d0cd40dad32
+Author: Kenneth McMillan <you@example.com>
+Date:   Mon Jul 6 16:17:32 2026 -0700
+
+    Add trace_dir= to save a counterexample for every failing check
+    
+    ivy_check gains a `trace_dir=<dir>` option: instead of stopping at the first
+    failing check (as `trace=true`/`out=` do), it computes a counterexample for
+    every failing check and writes each to <dir>/<name>.a2g, where <name> is the
+    check's name (as used by check=). Each check is queried on its own so its trace
+    is a genuine counterexample to that check; the first counterexample found for a
+    given name is kept. The directory must not already exist and is created, so
+    traces from a previous run are never overwritten.
+    
+    This supports tooling -- e.g. a Proof-General-style editor integration -- that
+    annotates each failing property with its counterexample.
+    
+    Implementation reuses the existing trace-generation machinery (factored out as
+    build_trace_handler): the trace_dir branch of check_fcs_in_state loops over the
+    checks, builds a trace per failing one, and writes it, without exiting.
+    Program-assertion checks are named via check_safety_in_state's new name
+    argument. Checker.fail() now also retains the model under trace_dir, and
+    build_trace_handler tolerates a null trace_hook (it is called more than once
+    now). The out= and trace= behaviors are unchanged.
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ doc/commands.md  |  14 +++++++++++
+ ivy/ivy_check.py | 137 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------
+ 2 files changed, 125 insertions(+), 26 deletions(-)
+
+commit 054188a5789d78f95eb3c93697890e017f5e387f
+Author: Kenneth McMillan <you@example.com>
+Date:   Mon Jul 6 15:12:25 2026 -0700
+
+    Add check= option to select checks by name; fix assert= extension handling
+    
+    ivy_check gains a `check=pat,...,pat` option that restricts the checks
+    performed (invariants, properties, program assertions) to those whose name
+    matches one of the given glob-like patterns. A pattern matches as a substring
+    of the fully-qualified check name (e.g. `cpu.invar12`); '.' is a literal dot
+    (so `cpu.` selects the components of `cpu` but not `cpufoo`) and '?' matches
+    any single character. Unselected checks are still assumed, just not verified --
+    useful for focusing on one failing invariant while debugging.
+    
+    This generalizes the existing `assert=<file>:<lineno>` option, which selects a
+    single check by source location. Both are implemented as filters that turn
+    unselected checks into assumptions: the name filter (check_name_selected) is
+    applied in AssertAction.action_update alongside the existing lineno filter, and
+    in ivy_check when enumerating properties, conjectures and guarantees. The two
+    filters are conjoined, so assert= continues to work as before.
+    
+    Also fix assert=: it silently checked nothing when the file name was given with
+    its '.ivy' extension (it unconditionally appended '.ivy', producing a name that
+    matched no source location). It now accepts the file name with or without the
+    extension.
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ doc/commands.md    | 32 ++++++++++++++++++++++++++++++++
+ ivy/ivy_actions.py | 50 ++++++++++++++++++++++++++++++++++++++++++++------
+ ivy/ivy_check.py   | 13 +++++++++++++
+ 3 files changed, 89 insertions(+), 6 deletions(-)
+
+
+commit 44eb960100f55c539643f0da32218b2425593a99
+Merge: d5e30fb f5dffa7
+Author: Kenneth McMillan <you@example.com>
+Date:   Mon Jul 6 14:03:11 2026 -0700
+
+    Merge branch 'replay'
+    
+    # Conflicts:
+    #       ivy/ivy_check.py
+
+commit d5e30fb67a6470caddeae597b7d1d87deb2ccec0
+Author: Kenneth McMillan <you@example.com>
+Date:   Sat Jul 4 14:33:10 2026 -0700
+
+    Fix two type/wire compiler bugs affecting the hardware models
+    
+    Sort ascriptions on applications were dropped by compile_app (except for
+    numerals), so a polymorphic operator whose result sort is not determined by
+    its arguments -- e.g. `bfe[i][j](x) : t` -- could not be sort-inferred even
+    when the argument sort was known from context. Apply the ascription as a
+    constraint on the compiled term: for an application, fix the range of the
+    (possibly polymorphic) head symbol; for a bare constant, set its sort. HM
+    inference then enforces it (and still catches a conflicting ascription).
+    
+    Wires were not frozen during actions when declared and defined separately
+    (`wire x : t` + `definition x = e`). The `definition` handler unconditionally
+    registered a DerivedUpdate, so a wire depending on a register would be threaded
+    through sequential composition and read its post-update value (e.g.
+    `pc := pc+1; ir := fetched` read fetched at the new pc). Skip the DerivedUpdate
+    when the defined symbol is a wire, mirroring the inline `wire x = e` case.
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ ivy/ivy_compiler.py | 45 ++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 40 insertions(+), 5 deletions(-)
+
+
+commit 0b959984716b2852072721b6fb4f575c8ac056cc
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Jul 2 17:10:40 2026 -0700
+
+    Add apple regression tests; mark number_theory unreliable
+    
+    Add doc/examples/apple/ivy_tests.py with two long-running ivy_check tests
+    (ord_live, ord_live2, group 'long'), and mark number_theory in
+    doc/examples as group 'unreliable'. Both are skipped by the default
+    '^normal$' group filter.
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ doc/examples/apple/ivy_tests.py | 5 +++++
+ doc/examples/ivy_tests.py       | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+
+
+
+commit 532fc86aca6744dfe1f224965f3853f188c73a7b
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Jul 2 09:53:54 2026 -0700
+
+    Fix wire-feature regression misclassifying actions as external
+    
+    Determining an isolate's exported actions from the "wire" feature could
+    incorrectly treat certain actions as external calls into the isolate.
+    Restrict the mixin-based export check to actions actually present in the
+    isolate, and add exported actions (with a mixer in the isolate) via an
+    explicit pass over mod.exports.
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ ivy/ivy_isolate.py | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+commit dfb65f3704e2033858a7c4984be37717d3f38e44
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Jul 2 09:53:54 2026 -0700
+
+    Fix crash in circular-compositional check on unlabeled invariants
+    
+    The invariant-dependency lookup for the "circular compositional" feature
+    used the conjecture's name to index mod.invardeps, which crashed when the
+    invariant had no label (name is None). Only consult invardeps when the
+    conjecture is labeled; otherwise it has no dependencies.
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ ivy/ivy_check.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+
+commit c84930320bca1e7923324f5d670a10454217e80a
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Jul 2 09:47:09 2026 -0700
+
+    Fix Z3 usage in generated test code for current Z3 / macOS
+    
+    Get test generation (ivy_to_cpp target=test/gen) working with a
+    python-installed Z3 on macOS:
+    
+    - prefer the Z3 headers/libs bundled with the pip `z3` package (search
+      z3.__file__ before the Ivy tree), since the old embedded Z3 no longer
+      compiles on macOS;
+    - locate OpenSSL via a find_openssl() helper that queries Homebrew
+      (brew --prefix) and falls back to MacPorts / common prefixes, instead
+      of a hard-coded /usr/local/opt/openssl path;
+    - Z3_parse_smtlib2_string now returns a Z3_ast_vector of assertions
+      rather than a single expression, so wrap it in a z3::expr_vector and
+      conjoin with z3::mk_and (in the emitted `add` method and in
+      expr_to_z3 / expr_to_z3_no_type_cnst);
+    - compare Z3_get_numeral_* results against Z3_L_TRUE (they return a
+      Z3_lbool now, not Z3_bool_opt).
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ ivy/ivy_to_cpp.py | 87 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 74 insertions(+), 13 deletions(-)
+
+commit 46cd023ebd6c2d57253fa5e5e252e5a424f732b4
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Jul 2 09:46:29 2026 -0700
+
+    Bind test sockets to loopback instead of INADDR_ANY
+    
+    The UDP and TCP standard-library implementations bound their sockets to
+    INADDR_ANY. Bind to INADDR_LOOPBACK (127.0.0.1) instead, so generated
+    tests communicate over the loopback interface rather than on all
+    interfaces.
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ ivy/include/1.6/udp.ivy      | 2 +-
+ ivy/include/1.7/tcp_impl.ivy | 2 +-
+ ivy/include/1.7/udp.ivy      | 2 +-
+ ivy/include/1.8/tcp_impl.ivy | 2 +-
+ ivy/include/1.8/udp.ivy      | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+
+commit ea9a5149ab593611f73ea2714ce172523054263c
+Author: Kenneth McMillan <you@example.com>
+Date:   Tue Jun 30 17:08:29 2026 -0700
+
+    Add bfe/concat hardware example and enable the concat operator
+    
+    Add bfe_concat, a registered nibble-swapper that exercises the
+    bit-field-extract and concat operators:
+    
+        out := old( concat(inp[3:0], inp[7:4]) )
+    
+    The combinational submodule swaps the two 4-bit halves of the input
+    using bfe[0][3]/bfe[4][7] and concat, and a register latches the result.
+    
+    The concat operator was present in the solver's z3 mapping but was not
+    recognized at the logic level, so it could not be used in Ivy source
+    ('unknown symbol: concat'). Add it to polymorphic_symbols_list with
+    independent argument/result sorts (like arrsel), so concat(bv[j],bv[k])
+    elaborates to bv[j+k].
+    
+    The emitter already handled both operators (bfe as a sigspec slice,
+    concat as a sigspec concatenation). The generated bfe_concat.il passes
+    yosys read_rtlil/hierarchy/check and is proven sequentially equivalent
+    (from reset) to a reference registered nibble-swap. The existing
+    test_to_rtl and refinement3 outputs are unchanged.
+    
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+ doc/examples/hardware/bfe_concat.il  | 57 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ doc/examples/hardware/bfe_concat.ivy | 59 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ ivy/ivy_logic.py                     |  1 +
+ 3 files changed, 117 insertions(+)
+
+
+commit 001da592c1738ff18b62eee07672249eb2c10a96
+Author: Kenneth McMillan <you@example.com>
+Date:   Fri Jun 26 16:45:30 2026 -0700
+
+    adding invariant dependencies
+
+ ivy/ivy_ast.py      | 10 ++++++++++
+ ivy/ivy_check.py    | 11 +++++++++--
+ ivy/ivy_compiler.py |  7 ++++---
+ ivy/ivy_module.py   |  1 +
+ ivy/ivy_parser.py   | 25 ++++++++++++++++++++++---
+ 5 files changed, 46 insertions(+), 8 deletions(-)
+
+commit 3893ae6e97fd375a7ce0b56c84d2164873e8d302
+Author: Kenneth McMillan <you@example.com>
+Date:   Fri Jun 26 09:27:04 2026 -0700
+
+    added wire
+
+ ivy/ivy_actions.py    |  6 ++++++
+ ivy/ivy_ast.py        | 13 ++++++++++---
+ ivy/ivy_compiler.py   | 12 ++++++++++++
+ ivy/ivy_isolate.py    | 66 +++++++++++++++++++++++++++++++++++++++++++++++++-----------------
+ ivy/ivy_lexer.py      |  3 ++-
+ ivy/ivy_module.py     |  1 +
+ ivy/ivy_parser.py     | 31 +++++++++++++++++++++++++++++++
+ lib/emacs/ivy-mode.el |  1 +
+ 8 files changed, 112 insertions(+), 21 deletions(-)
+
+commit 737e6b0ab620e8585c522ef854c2f54db7c4b009
+Author: Kenneth McMillan <you@example.com>
+Date:   Tue Jun 23 15:43:22 2026 -0700
+
+    updated GUI to eliminate Tix
+
+ ivy/ivy_ev_viewer.py | 162 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------------------------
+ ivy/ivy_graph_ui.py  |   2 +-
+ ivy/ivy_graphviz.py  |   1 +
+ ivy/ivy_ui_util.py   |  28 +++++++++++++++++-
+ ivy/tk_cy.py         |   1 -
+ ivy/tk_graph_ui.py   |  45 ++++++++++++++++++++++++++--
+ ivy/tk_ui.py         |  27 +++++++++++------
+ 7 files changed, 190 insertions(+), 76 deletions(-)
+
+commit f5dffa7a8bbb36c75527765d878f7961e08cb80d
+Author: Kenneth McMillan <you@example.com>
+Date:   Thu Apr 30 16:46:23 2026 -0500
+
+    adding trace replay
+
+ doc/commands.md             | 101 ++++++++++++++++++++++++++-------------------
+ ivy/ivy.py                  |  28 +++++++++++--
+ ivy/ivy_art.py              |   8 ++++
+ ivy/ivy_check.py            |  54 +++++++++++++++---------
+ ivy/ivy_fragment.py         |   2 +-
+ ivy/ivy_init.py             |  15 +++++--
+ ivy/ivy_interp.py           |  10 +++++
+ ivy/ivy_l2s.py              |  19 +++++----
+ ivy/ivy_logic_parser_gen.py |   8 +++-
+ ivy/ivy_logic_utils.py      |  18 +++++---
+ ivy/ivy_proof.py            |   1 +
+ ivy/ivy_ranking.py          | 208 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ ivy/ivy_solver.py           |   4 +-
+ ivy/ivy_trace.py            |  87 ++++++++++++++++++++++++++++++++-------
+ ivy/ivy_ui.py               |   5 +--
+ ivy/ivy_ui_cti.py           |   1 +
+ ivy/ivy_utils.py            |  15 +++++++
+ ivy/tk_ui.py                |   5 ++-
+ 18 files changed, 472 insertions(+), 117 deletions(-)
+
+commit 912e29603ee6b92502d4d1d82197f0683eacdc4e
+Author: Kenneth McMillan <you@example.com>
+Date:   Fri Mar 27 17:49:40 2026 -0500
+
+    added ticket_ranking example
+
+ doc/examples/liveness/ticket_ranking.ivy | 207 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ ivy/ivy_isolate.py                       |  12 +++--
+ 2 files changed, 216 insertions(+), 3 deletions(-)
+
+
+commit f5ac0875253aaafaef96493305af54f550db598d
+Author: Kenneth McMillan <you@example.com>
+Date:   Wed Feb 25 16:05:28 2026 -0600
+
+    adding cav2020 examples
+
+ doc/examples/cav2020/README.md                                        |  146 ++++++
+ doc/examples/cav2020/borrow.ivy                                       |   96 ++++
+ doc/examples/cav2020/cav-18/README.md                                 |   22 +
+ doc/examples/cav2020/cav-18/flash_inv.ivy                             |  577 ++++++++++++++++++++++
+ doc/examples/cav2020/cav-18/flash_mc.ivy                              |  484 +++++++++++++++++++
+ doc/examples/cav2020/cav-18/german_inv.ivy                            |  143 ++++++
+ doc/examples/cav2020/cav-18/german_mc.ivy                             |  133 ++++++
+ doc/examples/cav2020/cav-18/tomasulo_inv.ivy                          |  292 ++++++++++++
+ doc/examples/cav2020/cav-18/tomasulo_mc.ivy                           |  281 +++++++++++
+ doc/examples/cav2020/cav-18/vs_paxos_inv.ivy                          |  299 ++++++++++++
+ doc/examples/cav2020/cav-18/vs_paxos_mc.ivy                           |  262 ++++++++++
+ doc/examples/cav2020/german_bmc_bug.ivy                               |  159 +++++++
+ doc/examples/cav2020/german_mc_bug.ivy                                |  159 +++++++
+ doc/examples/cav2020/leader_tutorial.ivy                              |  167 +++++++
+ doc/examples/cav2020/leader_tutorial.md                               |  657 +++++++++++++++++++++++++
+ doc/examples/cav2020/leader_tutorial_without_proof.ivy                |  161 +++++++
+ doc/examples/cav2020/liveness.ivy                                     |   58 +++
+ doc/examples/cav2020/liveness/README.md                               |   19 +
+ doc/examples/cav2020/liveness/ticket.ivy                              |  231 +++++++++
+ doc/examples/cav2020/liveness/ticket_nested.ivy                       |  291 +++++++++++
+ doc/examples/cav2020/modular                                          |  Bin 0 -> 330528 bytes
+ doc/examples/cav2020/modular.ivy                                      |   93 ++++
+ doc/examples/cav2020/modular_expect.py                                |   17 +
+ doc/examples/cav2020/modular_mc.ivy                                   |   74 +++
+ doc/examples/cav2020/natural_deduction.ivy                            |  615 ++++++++++++++++++++++++
+ doc/examples/cav2020/pldi-18/README.md                                |   28 ++
+ doc/examples/cav2020/pldi-18/indexset.ivy                             |  268 +++++++++++
+ doc/examples/cav2020/pldi-18/multi_paxos/README.md                    |  211 ++++++++
+ doc/examples/cav2020/pldi-18/multi_paxos/array_segment.ivy            |  122 +++++
+ doc/examples/cav2020/pldi-18/multi_paxos/common.ivy                   |   28 ++
+ doc/examples/cav2020/pldi-18/multi_paxos/multi_paxos_protocol.ivy     |  120 +++++
+ doc/examples/cav2020/pldi-18/multi_paxos/multi_paxos_system.ivy       |  718 ++++++++++++++++++++++++++++
+ doc/examples/cav2020/pldi-18/multi_paxos/network_shim_tcp.ivy         |  127 +++++
+ doc/examples/cav2020/pldi-18/multi_paxos/nodes.ivy                    |   83 ++++
+ doc/examples/cav2020/pldi-18/multi_paxos/relarray.ivy                 |  239 ++++++++++
+ doc/examples/cav2020/pldi-18/multi_paxos/votemap_segment.ivy          |   52 ++
+ doc/examples/cav2020/pldi-18/toy_consensus.ivy                        |  431 +++++++++++++++++
+ doc/examples/cav2020/queue.ivy                                        |   31 ++
+ doc/examples/cav2020/run_expects.py                                   |  237 +++++++++
+ doc/examples/cav2020/run_expects3.py                                  |  237 +++++++++
+ doc/examples/cav2020/seqnum.ivy                                       |   18 +
+ doc/examples/cav2020/sigcomm-19/README.md                             |  178 +++++++
+ doc/examples/cav2020/sigcomm-19/byte_stream.ivy                       |   19 +
+ doc/examples/cav2020/sigcomm-19/file.ivy                              |  112 +++++
+ doc/examples/cav2020/sigcomm-19/http_request_file.txt                 |    2 +
+ doc/examples/cav2020/sigcomm-19/http_response_file.txt                |    1 +
+ doc/examples/cav2020/sigcomm-19/leaf_cert.key                         |   28 ++
+ doc/examples/cav2020/sigcomm-19/leaf_cert.pem                         |   83 ++++
+ doc/examples/cav2020/sigcomm-19/leaf_cert.pkcs8                       |  Bin 0 -> 1217 bytes
+ doc/examples/cav2020/sigcomm-19/leaf_cert.req                         |   19 +
+ doc/examples/cav2020/sigcomm-19/quic_application.ivy                  |  169 +++++++
+ doc/examples/cav2020/sigcomm-19/quic_client_test.ivy                  |  649 +++++++++++++++++++++++++
+ doc/examples/cav2020/sigcomm-19/quic_client_test_max.ivy              |   40 ++
+ doc/examples/cav2020/sigcomm-19/quic_codec.ivy                        |  277 +++++++++++
+ doc/examples/cav2020/sigcomm-19/quic_connection.ivy                   |   38 ++
+ doc/examples/cav2020/sigcomm-19/quic_deser.ivy                        |  503 ++++++++++++++++++++
+ doc/examples/cav2020/sigcomm-19/quic_frame.ivy                        | 1297 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ doc/examples/cav2020/sigcomm-19/quic_gen.ivy                          |  143 ++++++
+ doc/examples/cav2020/sigcomm-19/quic_infer.ivy                        |   70 +++
+ doc/examples/cav2020/sigcomm-19/quic_interp.ivy                       |    7 +
+ doc/examples/cav2020/sigcomm-19/quic_locale.ivy                       |   16 +
+ doc/examples/cav2020/sigcomm-19/quic_monitor.ivy                      |   57 +++
+ doc/examples/cav2020/sigcomm-19/quic_packet.ivy                       |  586 +++++++++++++++++++++++
+ doc/examples/cav2020/sigcomm-19/quic_protection.ivy                   |  403 ++++++++++++++++
+ doc/examples/cav2020/sigcomm-19/quic_security.ivy                     |  267 +++++++++++
+ doc/examples/cav2020/sigcomm-19/quic_ser.ivy                          |  455 ++++++++++++++++++
+ doc/examples/cav2020/sigcomm-19/quic_serdes_test.ivy                  |   80 ++++
+ doc/examples/cav2020/sigcomm-19/quic_server_test.ivy                  |  500 +++++++++++++++++++
+ doc/examples/cav2020/sigcomm-19/quic_server_test_connection_close.ivy |    8 +
+ doc/examples/cav2020/sigcomm-19/quic_server_test_max.ivy              |   40 ++
+ doc/examples/cav2020/sigcomm-19/quic_server_test_reset_stream.ivy     |    6 +
+ doc/examples/cav2020/sigcomm-19/quic_server_test_stream.ivy           |    6 +
+ doc/examples/cav2020/sigcomm-19/quic_shim.ivy                         |  280 +++++++++++
+ doc/examples/cav2020/sigcomm-19/quic_stream.ivy                       |   20 +
+ doc/examples/cav2020/sigcomm-19/quic_tls.ivy                          |   39 ++
+ doc/examples/cav2020/sigcomm-19/quic_tls_deser.ivy                    |  148 ++++++
+ doc/examples/cav2020/sigcomm-19/quic_transport_parameters.ivy         |  128 +++++
+ doc/examples/cav2020/sigcomm-19/quic_types.ivy                        |  141 ++++++
+ doc/examples/cav2020/sigcomm-19/test/test.py                          |  316 ++++++++++++
+ doc/examples/cav2020/sigcomm-19/tls_deser.ivy                         |  355 ++++++++++++++
+ doc/examples/cav2020/sigcomm-19/tls_protocol.ivy                      |   49 ++
+ doc/examples/cav2020/sigcomm-19/tls_record.ivy                        |  244 ++++++++++
+ doc/examples/cav2020/sigcomm-19/tls_test.ivy                          |   31 ++
+ doc/examples/cav2020/tactic.ivy                                       |   91 ++++
+ doc/examples/cav2020/token_ring.ivy                                   |  192 ++++++++
+ doc/examples/cav2020/trans.ivy                                        |  152 ++++++
+ 86 files changed, 16631 insertions(+)
+
+commit 992566a0de84a2163aa8b0005ce512dd409c85da
+Author: Kenneth McMillan <you@example.com>
+Date:   Wed Feb 25 16:03:23 2026 -0600
+
+    fix install instructions a ivy command
+
+ doc/install.md      | 9 ++++-----
+ ivy/ivy_compiler.py | 6 +++---
+ 2 files changed, 7 insertions(+), 8 deletions(-)
+
+commit 346fe2d7a0c55baf337c21bcb589fa8daf6cd810
+Author: Kenneth McMillan <you@example.com>
+Date:   Wed Feb 25 15:32:31 2026 -0600
+
+    fixing setup
+
+ .github/workflows/build-publish.yml | 2 +-
+ build_submodules.py                 | 4 ++--
+ ivy/ivy_solver.py                   | 3 ++-
+ setup.py                            | 2 +-
+ submodules/z3                       | 2 +-
+ 5 files changed, 7 insertions(+), 6 deletions(-)
+
+commit 06cbcf362d8ae261d0629e7605e7ef7f9b3251b7
+Author: Kenneth McMillan <you@example.com>
+Date:   Wed Feb 25 15:31:55 2026 -0600
+
+    merge
+
+ .gitmodules          |  6 +++---
+ build_submodules.py  |  2 +-
+ doc/install.md       | 55 ++++++++++++++++++++++++-------------------------------
+ ivy/ivy_alpha.py     |  2 +-
+ ivy/ivy_core.py      |  2 +-
+ ivy/ivy_duoai.py     |  2 +-
+ ivy/ivy_interp.py    |  2 +-
+ ivy/ivy_mypyvy.py    |  2 +-
+ ivy/ivy_solver.py    | 10 +++++++---
+ ivy/ivy_vmt.py       |  2 +-
+ ivy/ivy_z3_utils.py  |  2 +-
+ ivy/mypyvy_syntax.py |  2 +-
+ ivy/z3_utils.py      |  2 +-
+ setup.py             |  1 +
+ submodules/z3        |  2 +-
+ 15 files changed, 46 insertions(+), 48 deletions(-)
+
+commit c94e3286afb8cb320cae8c1e854c942e6fdac2d0
+Author: Kenneth McMillan <you@example.com>
+Date:   Mon Feb 16 13:49:17 2026 -0600
+
+    fixed bug in VC generator for assignments
+
+ ivy/ivy_actions.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 7431454b44e4e60511e6eea3d825c345e6e9c5ff
+Author: Kenneth McMillan <you@example.com>
+Date:   Wed Feb 18 16:31:48 2026 -0600
+
+    adding shrink option
+
+ ivy/ivy_solver.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 2dfa55f94c112e57bb9d43b613478f7d1db70a5c
+Author: Kenneth McMillan <you@example.com>
+Date:   Sun Sep 14 12:28:40 2025 -0500
+
+    removing ext: tags from action names
+
+ ivy/ivy_isolate.py | 11 +++++++++++
+ ivy/ivy_module.py  | 10 ++++++++++
+ ivy/ivy_to_cpp.py  |  5 +++--
+ 3 files changed, 24 insertions(+), 2 deletions(-)
+
+commit f141f5fdf45c4400e50bbe9eac28ac50534a35db
+Author: Kenneth McMillan <you@example.com>
+Date:   Sun Sep 14 11:04:37 2025 -0500
+
+    remove debug solver state file in ivy_solver
+
+ ivy/ivy_solver.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit dd87dde9e60de72021710b954056fb60fd0ce1f1
+Author: Kenneth McMillan <you@example.com>
+Date:   Sun Sep 14 11:02:49 2025 -0500
+
+    remove debug print in ivy_solver
+
+ ivy/ivy_solver.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit e34f3cd8fe5f6d581805d53ae6b007aed5113213
+Author: Kenneth McMillan <you@example.com>
+Date:   Wed Sep 10 11:56:41 2025 -0500
+
+    fixing bug in ivy_ranking when helpful condition has temporal operators
+
+ ivy/ivy_ranking.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit df843284e0c535a7b3e30c3416af413c38f77e4b
+Author: Ken McMillan <kenmcm@A44831-kenmcm.local>
+Date:   Mon Jul 28 15:38:41 2025 -0700
+
+    passes regressions after merging vmt work
+
+ ivy/ivy_actions.py   |   39 +++
+ ivy/ivy_check.py     |   36 +-
+ ivy/ivy_compiler.py  |    2 +-
+ ivy/ivy_duoai.py     |  124 +++++++
+ ivy/ivy_fragment.py  |    5 +-
+ ivy/ivy_mypyvy.py    |  966 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ ivy/ivy_printer.py   |    2 +-
+ ivy/ivy_solver.py    |   10 +-
+ ivy/ivy_vmt.py       |   24 +-
+ ivy/ivy_z3_utils.py  |   61 ++++
+ ivy/logic.py         |    3 +-
+ ivy/mypyvy_syntax.py | 1869 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ ivy/mypyvy_utils.py  |  339 ++++++++++++++++++
+ setup.py             |    1 +
+ submodules/z3        |    2 +-
+ test/frag10.ivy      |    2 +-
+ test/frag7.ivy       |    2 +-
+ test/frag8.ivy       |    2 +-
+ 18 files changed, 3468 insertions(+), 21 deletions(-)
+
+commit d8e4ea35effd3a419a5ed5674db7f06ba3c59bee
+Merge: 4e47477 33fbdea
+Author: Ken McMillan <kenmcm@wireless-10-150-222-137.public.utexas.edu>
+Date:   Thu May 15 16:53:10 2025 -0500
+
+    merge
+
+commit 33fbdea22d742230c35d847e3bdc3d7b4552af92
+Author: Ken McMillan <kenmcm@wireless-10-150-222-137.public.utexas.edu>
+Date:   Thu May 15 16:44:03 2025 -0500
+
+    working on vmt, datatypes and structs
+
+ ivy/include/1.8/ip.ivy      |   2 +-
+ ivy/include/1.8/network.ivy |   2 +-
+ ivy/ivy_actions.py          |  66 +++++++++++++++++++++++++-
+ ivy/ivy_check.py            |  23 ++++++---
+ ivy/ivy_compiler.py         |   3 +-
+ ivy/ivy_fragment.py         |  31 +++++++++---
+ ivy/ivy_isolate.py          |   2 +
+ ivy/ivy_logic.py            |   3 ++
+ ivy/ivy_module.py           |  12 +++++
+ ivy/ivy_proof.py            |   5 ++
+ ivy/ivy_solver.py           |   7 ++-
+ ivy/ivy_tactics.py          | 239 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ ivy/ivy_temporal.py         |  18 ++++---
+ ivy/ivy_vmt.py              |  38 ++++++++++++---
+ 14 files changed, 418 insertions(+), 33 deletions(-)
+
+commit 4e4747745a98ffba5ec6254f4fb0034f3c408c89
+Merge: 18c08b3 c7f10b9
+Author: Ken McMillan <kenmcm@wireless-10-150-222-137.public.utexas.edu>
+Date:   Thu May 15 16:43:12 2025 -0500
+
+    merge
+
+commit c7f10b9127ef0b86dc40ec3df0dae545b9447b21
+Author: Ken McMillan <kenmcm@wireless-10-150-22-12.public.utexas.edu>
+Date:   Mon Apr 14 14:13:51 2025 -0500
+
+    fixed some bugs in older tcp model
+
+ ivy/include/1.8/network.ivy | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2189d68a484f9c5028f135a8bc7a5c2d123d5982
+Author: Ken McMillan <kenmcm@wireless-10-150-167-154.public.utexas.edu>
+Date:   Fri Mar 14 11:12:36 2025 -0500
+
+    forgotten file
+
+ ivy/ivy_ranking_infer.py | 82 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+
+commit 494e37692d005aefce651a3ed7b4cba0e2654643
+Author: Ken McMillan <kenmcm@a44831-kenmcm.lan>
+Date:   Sat Mar 8 16:29:59 2025 -0600
+
+    adding ranking_infer tactic (forgotten test file)
+
+ test/ranking_infer1.ivy | 110 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+
+commit 435635b23220193a1e6cc353b875824ea3fd3cc3
+Author: Ken McMillan <kenmcm@a44831-kenmcm.lan>
+Date:   Sat Mar 8 16:29:31 2025 -0600
+
+    adding ranking_infer tactic
+
+ ivy/ivy_check.py     | 10 +++++++---
+ ivy/ivy_parser.py    | 15 +++++++++++++++
+ ivy/ivy_printer.py   |  2 ++
+ ivy/ivy_ranking.py   | 11 ++++++++++-
+ ivy/ivy_solver.py    |  2 +-
+ ivy/ivy_temporal.py  | 35 +++++++++++++++++++++++++++++++++++
+ ivy/ivy_vmt.py       | 50 +++++++++++++++++++++++++++++++++++---------------
+ test/unprovable1.ivy |  2 ++
+ 8 files changed, 107 insertions(+), 20 deletions(-)
+
+commit 18c08b3c42179781bf99291764539e43a7e46128
+Author: Ken McMillan <kenmcm@wireless-10-150-12-113.public.utexas.edu>
+Date:   Fri Jan 24 11:54:09 2025 -0600
+
+    vmt translation with lambda
+
+ ivy/ivy_check.py  |  2 ++
+ ivy/ivy_solver.py | 21 ++++++++++++++-------
+ ivy/ivy_vmt.py    | 47 ++++++++++++++++++++++++++++++++++++++---------
+ submodules/z3     |  2 +-
+ 4 files changed, 55 insertions(+), 17 deletions(-)
+
+commit 3a2feca0abeddc308ba7696e1cfb139f0240600c
+Author: Ken McMillan <kenmcm@a44831-kenmcm.lan>
+Date:   Sun Dec 29 14:19:34 2024 -0600
+
+    starting to add lambda to vmt
+
+ ivy/ivy_check.py  |   3 +++
+ ivy/ivy_solver.py |   9 +++++++--
+ ivy/ivy_vmt.py    | 102 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------
+ 3 files changed, 82 insertions(+), 32 deletions(-)
+
+commit 4773d57ba991351ade8d495a5f24ea986c062d3c
+Author: Ken McMillan <kenmcm@wireless-10-150-58-185.public.utexas.edu>
+Date:   Tue Oct 29 15:00:20 2024 -0500
+
+    adding axioms and uninterpreted symbols to ivy_vmt
+
+ ivy/ivy_solver.py |   4 ++++
+ ivy/ivy_vmt.py    | 120 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------------
+ 2 files changed, 95 insertions(+), 29 deletions(-)
+
+commit 1f8039cc26ae7aeb123b14e08692e53f3a30559c
+Author: Ken McMillan <kenmcm@A44831-kenmcm.local>
+Date:   Fri Jun 14 10:34:56 2024 -0700
+
+    switching to Coles ivy_vmt
+
+ ivy/ivy_vmt.py | 200 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 157 insertions(+), 43 deletions(-)
+
+commit 28cce61b66695ea5c3ac561d24d6c881b4929bcf
+Author: Ken McMillan <kenmcm@A44831-kenmcm.local>
+Date:   Sat Jun 8 14:24:33 2024 -0700
+
+    fix for proof [this]
+
+ ivy/ivy_compiler.py     | 2 +-
+ ivy/ivy_logic_parser.py | 4 ++++
+ test/vcgen1.ivy         | 3 ++-
+ 3 files changed, 7 insertions(+), 2 deletions(-)
+
+
+WE DO NOT HAVE THIS NEXT CHANGE! seems like the first point of divergence:
+(It was, BUT now we pulled it in. as of 2026 sept 25; commit ec7a3f82 in github.com/glycerine/ivy).
+
+commit 8f7763fdf643d8fd75ed9bc061f6e977742f45d6
+Author: Ken McMillan <kenmcm@A44831-kenmcm.local>
+Date:   Sat Jun 8 12:33:54 2024 -0700
+
+    fix for var_subst_goal
+
+ ivy/ivy_proof.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+yay. have this:
+
+commit 925cedadc9cb67ec211df8e7f137e9a227c03230
+Author: Ken McMillan <kenmcm@a44831-kenmcm.lan>
+Date:   Mon Apr 8 17:49:18 2024 -0500
+
+    working on CAV2024 artifact
+
+ doc/examples/apple/README.md   | 34 ++++++++++++++++++++++++++++++++++
+ doc/examples/cav2024/README.md |  6 ++++++
+ 2 files changed, 40 insertions(+)
