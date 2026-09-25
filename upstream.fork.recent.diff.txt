@@ -9,6 +9,13 @@ against what we have in our
 https://github.com/glycerine/ivy  subdir /pyivy fork; what we
 might want to pull in for bug fixes...
 
+note: currently, our fork is just after the upstream 8f7763fdf643d8fd75ed9bc061f6e977742f45d6
+of Sat Jun 8 12:33:54 2024 -0700; we have that commit now. See the end of this file.
+
+note 2: we omit most of the new hardware, wire, and ivy_to_vmt features from the following
+set of commits to simplify the checking for bug-fixes to our fork.
+
+
 
 commit a5ecac6e49e074e726533ac4f9892478540eae56
 Author: Kenneth McMillan <you@example.com>
