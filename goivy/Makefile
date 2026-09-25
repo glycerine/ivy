@@ -380,3 +380,15 @@ ivy2go-check:
 	@file tmp-ivy2go-check/pingpong/pingpong
 	@echo "run with:"
 	@echo "tmp-ivy2go-check/pingpong/pingpong"
+
+ivy2golang-check:
+	go install -tags=xtrace_off ./cmd/ivy2golang
+	rm -rf tmp-ivy2golang-check
+	mkdir tmp-ivy2golang-check
+	cp ../ivy-lang-examples/doc/examples/pingpong.ivy tmp-ivy2golang-check/
+	cd tmp-ivy2golang-check && XTRACE_OFF=1 ivy2golang isolate=left_player target=test build=true pingpong.ivy
+	@echo
+	@echo "built binary: tmp-ivy2golang-check/pingpong"
+	@file tmp-ivy2golang-check/pingpong
+	@echo "run with:"
+	@echo "tmp-ivy2golang-check/pingpong"
