@@ -98,8 +98,8 @@ func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {
 	return &BuildPlan{
 		GoFile:     goFile,
 		OutputPath: outputPath,
-		Args:       []string{"build", "-o", outputPath, goFile},
-		Env:        []string{"GOCACHE=" + cacheDir, "GOTMPDIR=" + tmpDir},
+		Args:       []string{"build", "-tags=xtrace_off", "-o", outputPath, goFile},
+		Env:        []string{"GOCACHE=" + cacheDir, "GOTMPDIR=" + tmpDir, "XTRACE_OFF=1"},
 		WorkDir:    moduleRootForGeneratedBuild(),
 	}, nil
 }

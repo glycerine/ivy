@@ -329,6 +329,9 @@ func TestBuildPlanForRelativeDirUsesAbsoluteGoCache(t *testing.T) {
 		t.Fatalf("build plan paths should be absolute: %#v", plan)
 	}
 	for _, env := range plan.Env {
+		if strings.HasPrefix(env, "XTRACE_OFF=") {
+			continue
+		}
 		parts := strings.SplitN(env, "=", 2)
 		if len(parts) != 2 || !filepath.IsAbs(parts[1]) {
 			t.Fatalf("build env path should be absolute, got %q in %#v", env, plan.Env)
