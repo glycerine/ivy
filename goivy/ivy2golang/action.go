@@ -1015,7 +1015,7 @@ func (g *Generator) emitCall(w *goWriter, a *goivy.LogicCallAction) {
 		}
 		argCodes[i] = code
 	}
-	if g.isTestImportCallback(name) {
+	if g.isTestImportedActionBody(name) {
 		if len(a.ActualReturns) == 0 {
 			return
 		}

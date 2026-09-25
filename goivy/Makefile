@@ -369,14 +369,14 @@ ivy2cpp-check:
 	cp ../ivy-lang-examples/doc/examples/pingpong.ivy tmp-ivy2cpp-check/
 	cd tmp-ivy2cpp-check && XTRACE_OFF=1 ivy2cpp isolate=left_player target=test build=true pingpong.ivy
 
-ivy2golang-check:
-	go install -tags=xtrace_off ./cmd/ivy2golang
-	rm -rf tmp-ivy2golang-check
-	mkdir tmp-ivy2golang-check
-	cp ../ivy-lang-examples/doc/examples/pingpong.ivy tmp-ivy2golang-check/
-	cd tmp-ivy2golang-check && XTRACE_OFF=1 ivy2golang isolate=left_player target=test package=main build=true pingpong.ivy
+ivy2go-check:
+	go install -tags=xtrace_off ./cmd/ivy2go
+	rm -rf tmp-ivy2go-check
+	mkdir tmp-ivy2go-check
+	cp ../ivy-lang-examples/doc/examples/pingpong.ivy tmp-ivy2go-check/
+	cd tmp-ivy2go-check && XTRACE_OFF=1 ivy2go isolate=left_player target=test package=main build=true pingpong.ivy
 	@echo
-	@echo "built binary: tmp-ivy2golang-check/pingpong/pingpong"
-	@file tmp-ivy2golang-check/pingpong/pingpong
+	@echo "built binary: tmp-ivy2go-check/pingpong/pingpong"
+	@file tmp-ivy2go-check/pingpong/pingpong
 	@echo "run with:"
-	@echo "tmp-ivy2golang-check/pingpong/pingpong"
+	@echo "tmp-ivy2go-check/pingpong/pingpong"

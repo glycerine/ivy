@@ -2452,6 +2452,13 @@ func (g *Generator) isTestImportCallback(name string) bool {
 	return g.importCallers()[name]
 }
 
+func (g *Generator) isTestImportedActionBody(name string) bool {
+	if g == nil || g.Config.Target != "test" {
+		return false
+	}
+	return g.importActions()[name]
+}
+
 func (g *Generator) isReplImportCallback(name string) bool {
 	if g == nil || g.Config.Target != "repl" {
 		return false
@@ -13909,7 +13916,7 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 		w.line(`fmt.Fprintln(__ivy_out, "{")`)
 	}
 	w.line("ivy._generating = true")
-	if g.isTestImportCallback(name) {
+	if g.isTestImportedActionBody(name) {
 		switch nret := len(act.GetFormalReturns()); nret {
 		case 0:
 		case 1:
@@ -14091,7 +14098,7 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 			_, hasRuntimeSolver := g.runtimeActionSolverPlan(name, genAct)
 			call := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(args, ", "))
 			trace := g.actionTraceLine(name, args)
-			if g.isTestImportCallback(name) {
+			if g.isTestImportedActionBody(name) {
 				w.line(trace)
 				switch nret := len(act.GetFormalReturns()); nret {
 				case 0:
