@@ -142,7 +142,7 @@ The distinguishing intellectual contribution is the commitment to *decidable* lo
 
 Ivy is a multi-modal verification tool supporting modular specification, implementation, and proof. It supports proving safety and liveness properties of parameterized and infinite-state systems via three modes: deductive verification using an SMT solver, abstraction and model checking, and manual proofs using natural deduction. It also supports lightweight formal methods via compositional specification-based testing and bounded model checking. Ivy can extract executable distributed programs by translation to efficient C++ code.
 
-The language design deliberately limits expressiveness to maintain decidability. There are no looping constructs in Ivy, because loops would make important verification problems undecidable. This is a philosophically interesting trade-off: accept a less convenient programming model in exchange for guarantees that your verification conditions can actually be discharged algorithmically.
+The language design deliberately limits expressiveness to maintain decidability. There are limited looping constructs in Ivy (while, not for); and they are discouraged -- because loops can make important verification problems undecidable. This is a philosophically interesting trade-off: accept a less convenient programming model in exchange for guarantees that your verification conditions can actually be discharged algorithmically.
 
 ---
 
