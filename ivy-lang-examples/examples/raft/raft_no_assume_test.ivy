@@ -1,0 +1,22 @@
+#lang ivy1.6
+
+# Concrete randomized-test wrapper for raft_no_assume.ivy.
+#
+# The verification model leaves node/quorum/log/value/etc. abstract. That is
+# useful for proof, but the randomized tester needs finite lower bounds for
+# existential witnesses such as the quorum in choosable. Keep those bounds here
+# so raft_no_assume.ivy remains the proof-oriented source.
+
+include raft_no_assume
+
+# Four nodes keeps the state space small while still exercising real quorum
+# intersection. Logs get a slightly larger finite domain because the spec builds
+# fresh log snapshots.
+interpret node -> bv[2]
+interpret quorum -> bv[4]
+interpret term -> bv[3]
+interpret index -> bv[3]
+interpret log -> bv[4]
+interpret value -> bv[2]
+interpret option_index -> bv[4]
+interpret option_term -> bv[4]

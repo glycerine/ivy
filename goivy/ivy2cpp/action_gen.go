@@ -1156,17 +1156,21 @@ func (g *Generator) emitActionGenExecute(w *cppWriter, plan *actionGenPlan) {
 			w.linef(`__ivy_out%s << "= " << %s << std::endl;`, nf, callExpr)
 		}
 	} else {
-		// Multi-return: pre-declare extras, call into obj, then close
-		// braces. Multi-return + trace is rarely exercised; we still
-		// honor the brace ordering.
-		for _, r := range returns {
+		var outNames []string
+		for _, r := range returns[1:] {
 			nm := varName(r.Name)
 			w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), nm, g.cppZeroValueInScope(r.CSort))
 			args = append(args, nm)
+			outNames = append(outNames, nm)
 		}
-		w.linef("obj.%s(%s);", fn, strings.Join(args, ", "))
+		retType := g.cppQualifiedType(returns[0].CSort, g.ClassName)
+		w.linef("%s __res = obj.%s(%s);", retType, fn, strings.Join(args, ", "))
 		if g.Config.Trace {
 			w.linef(`__ivy_out%s << "}" << std::endl;`, nf)
+		}
+		w.linef(`__ivy_out%s << "= " << __res << std::endl;`, nf)
+		for _, on := range outNames {
+			w.linef(`__ivy_out%s << %s << std::endl;`, nf, on)
 		}
 	}
 	w.close("")
@@ -1214,12 +1218,19 @@ func (g *Generator) emitPythonTestActionGenExecute(w *cppWriter, plan *actionGen
 	} else if len(returns) == 1 {
 		w.linef(`__ivy_out%s << "= " << %s << std::endl;`, nf, callExpr)
 	} else {
-		for _, r := range returns {
+		var outNames []string
+		for _, r := range returns[1:] {
 			nm := varName(r.Name)
 			w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), nm, g.cppZeroValueInScope(r.CSort))
 			args = append(args, nm)
+			outNames = append(outNames, nm)
 		}
-		w.linef("obj.%s(%s);", fn, strings.Join(args, ", "))
+		retType := g.cppQualifiedType(returns[0].CSort, g.ClassName)
+		w.linef("%s __res = obj.%s(%s);", retType, fn, strings.Join(args, ", "))
+		w.linef(`__ivy_out%s << "= " << __res << std::endl;`, nf)
+		for _, on := range outNames {
+			w.linef(`__ivy_out%s << %s << std::endl;`, nf, on)
+		}
 	}
 	w.close("")
 	if g.Config.Target != "test" {

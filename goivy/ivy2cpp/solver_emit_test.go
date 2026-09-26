@@ -46,6 +46,44 @@ func TestEmitSetSolverLargeFunctionEmitsForall(t *testing.T) {
 	}
 }
 
+func TestEmitSetSolverLargeRelationUsesVectorApplyForAritySix(t *testing.T) {
+	idx := &goivy.RangeSort{
+		Name: "idx",
+		Lb:   goivy.NumeralBound{Value: "0"},
+		Ub:   goivy.NumeralBound{Value: "3"},
+	}
+	fnSort, err := goivy.NewFunctionSort(idx, idx, idx, idx, idx, idx, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	mod := goivy.New()
+	if err := mod.Sig.AddSort(idx); err != nil {
+		t.Fatalf("AddSort(idx): %v", err)
+	}
+	mod.Functions.Set(goivy.FunctionKey("sixrel", fnSort), fnSort)
+	g := &Generator{Mod: mod, ClassName: "sixrel", Config: Config{Target: "test", ClassName: "sixrel"}}
+	sym := stateSymbol{Name: "sixrel", Sort: fnSort}
+	if !g.isLargeType(sym.Sort) {
+		t.Fatalf("expected idx^6 cardinality to exceed largeThresh=%d", largeThresh)
+	}
+
+	var w cppWriter
+	g.emitSetSolver(&w, sym, "obj")
+	body := w.String()
+	for _, want := range []string{
+		"std::vector<z3::expr> __ivy_apply_args;",
+		`__ivy_apply_args.push_back(ctx.constant("X__5", sort("idx")));`,
+		`return apply("sixrel", __ivy_apply_args);`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("missing %q in large relation emit_set:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, `apply("sixrel", ctx.constant("X__0", sort("idx")), ctx.constant("X__1", sort("idx")), ctx.constant("X__2", sort("idx")), ctx.constant("X__3", sort("idx")), ctx.constant("X__4", sort("idx")), ctx.constant("X__5", sort("idx")))`) {
+		t.Fatalf("arity-six apply should not use unsupported fixed-arity overload:\n%s", body)
+	}
+}
+
 func TestEmitSetSolverLargeFunctionUsesThunkToZ3(t *testing.T) {
 	out := generateHashThunkSolverFixture(t, "thunkz3")
 	for _, want := range []string{

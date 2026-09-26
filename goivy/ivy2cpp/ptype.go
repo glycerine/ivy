@@ -77,15 +77,23 @@ func (g *Generator) annotateAction(name string, act goivy.Action) {
 	params := act.GetFormalParams()
 	returns := act.GetFormalReturns()
 
-	// Public actions: all-ValueType (Python lines 1481-1484).
+	// Public actions: inputs are still passed by value at the external
+	// boundary, but multiple returns use the normal C++ lowering: first
+	// return by value, later returns as trailing output references.
 	if g.Mod != nil && g.Mod.PublicActions != nil && g.Mod.PublicActions.Get(name) {
 		paramTypes := make([]Ptype, len(params))
 		for i := range paramTypes {
 			paramTypes[i] = ValueType{}
 		}
 		returnTypes := make([]Ptype, len(returns))
+		nextArgPos := len(params)
 		for i := range returnTypes {
-			returnTypes[i] = ValueType{}
+			if i == 0 {
+				returnTypes[i] = ValueType{}
+				continue
+			}
+			returnTypes[i] = ReturnRefType{Pos: nextArgPos}
+			nextArgPos++
 		}
 		g.ptypeCache[name] = ptypeCacheEntry{Params: paramTypes, Returns: returnTypes}
 		return

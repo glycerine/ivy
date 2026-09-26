@@ -391,13 +391,28 @@ func (g *Generator) emitPythonTestCmdReaderRaw(w *cppWriter, readerClass, reprCl
 		if ok && act != nil {
 			argExprs = g.emitDispatchArgExprs(act)
 		}
-		call := "ivy." + fn + "(" + strings.Join(argExprs, ", ") + ")"
-		returns := 0
+		returns := []*goivy.Const(nil)
 		if ok && act != nil {
-			returns = len(act.GetFormalReturns())
+			returns = act.GetFormalReturns()
 		}
-		if returns == 1 {
+		call := "ivy." + fn + "(" + strings.Join(argExprs, ", ") + ")"
+		if len(returns) == 1 {
 			w.raw("                    __ivy_out  << \"= \" << " + call + " << std::endl;\n")
+		} else if len(returns) > 1 {
+			extraArgs := make([]string, 0, len(returns)-1)
+			outNames := make([]string, 0, len(returns)-1)
+			for _, r := range returns[1:] {
+				rname := varName(r.Name)
+				w.raw(fmt.Sprintf("                    %s %s = %s;\n", g.cppQualifiedType(r.CSort, g.ClassName), rname, g.cppZeroValueInScope(r.CSort)))
+				extraArgs = append(extraArgs, rname)
+				outNames = append(outNames, rname)
+			}
+			call = "ivy." + fn + "(" + strings.Join(append(append([]string{}, argExprs...), extraArgs...), ", ") + ")"
+			w.raw(fmt.Sprintf("                    %s __ivy_result = %s;\n", g.cppQualifiedType(returns[0].CSort, g.ClassName), call))
+			w.raw("                    __ivy_out  << \"= \" << __ivy_result << std::endl;\n")
+			for _, on := range outNames {
+				w.raw(fmt.Sprintf("                    __ivy_out << %s << std::endl;\n", on))
+			}
 		} else {
 			w.raw("                    " + call + ";\n")
 		}
@@ -468,23 +483,20 @@ func (g *Generator) emitCmdReaderDispatchChain(w *cppWriter) {
 			w.linef("%s __ivy_result = %s;", retType, callExpr)
 			w.linef(`__ivy_out << "= " << __ivy_result << std::endl;`)
 		default:
-			// Multi-return: trailing return-ref args.
 			var outNames []string
-			extraArgs := make([]string, 0, len(returns))
-			for _, r := range returns {
+			extraArgs := make([]string, 0, len(returns)-1)
+			for _, r := range returns[1:] {
 				rname := varName(r.Name)
 				w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), rname, g.cppZeroValueInScope(r.CSort))
 				extraArgs = append(extraArgs, rname)
 				outNames = append(outNames, rname)
 			}
 			callExpr = fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(append(append([]string{}, argExprs...), extraArgs...), ", "))
-			w.linef("%s;", callExpr)
-			for i, on := range outNames {
-				if i == 0 {
-					w.linef(`__ivy_out << "= " << %s << std::endl;`, on)
-				} else {
-					w.linef(`__ivy_out << %s << std::endl;`, on)
-				}
+			retType := g.cppQualifiedType(returns[0].CSort, g.ClassName)
+			w.linef("%s __ivy_result = %s;", retType, callExpr)
+			w.linef(`__ivy_out << "= " << __ivy_result << std::endl;`)
+			for _, on := range outNames {
+				w.linef(`__ivy_out << %s << std::endl;`, on)
 			}
 		}
 		if g.Config.Trace {
@@ -534,21 +546,19 @@ func (g *Generator) emitPythonTestCmdReaderDispatchChain(w *cppWriter) {
 			w.linef(`__ivy_out << "= " << %s << std::endl;`, callExpr)
 		default:
 			var outNames []string
-			extraArgs := make([]string, 0, len(returns))
-			for _, r := range returns {
+			extraArgs := make([]string, 0, len(returns)-1)
+			for _, r := range returns[1:] {
 				rname := varName(r.Name)
 				w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), rname, g.cppZeroValueInScope(r.CSort))
 				extraArgs = append(extraArgs, rname)
 				outNames = append(outNames, rname)
 			}
 			callExpr = fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(append(append([]string{}, argExprs...), extraArgs...), ", "))
-			w.linef("%s;", callExpr)
-			for i, on := range outNames {
-				if i == 0 {
-					w.linef(`__ivy_out << "= " << %s << std::endl;`, on)
-				} else {
-					w.linef(`__ivy_out << %s << std::endl;`, on)
-				}
+			retType := g.cppQualifiedType(returns[0].CSort, g.ClassName)
+			w.linef("%s __ivy_result = %s;", retType, callExpr)
+			w.linef(`__ivy_out << "= " << __ivy_result << std::endl;`)
+			for _, on := range outNames {
+				w.linef(`__ivy_out << %s << std::endl;`, on)
 			}
 		}
 		if g.Config.Trace {

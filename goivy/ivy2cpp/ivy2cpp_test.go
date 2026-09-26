@@ -5180,10 +5180,6 @@ export echo
 }
 
 func TestReplDispatchWritesMultipleReturns(t *testing.T) {
-	// Mirrors Python ivy_to_cpp.py:1565-1567: exporting a multi-return
-	// action is rejected with "cannot handle multiple output in exported
-	// actions". The previous Go behavior accepted it; TODO 009 brings the
-	// port back in line with Python.
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
 action split(c:color) returns (out:color, good:bool) = {
@@ -5192,13 +5188,51 @@ action split(c:color) returns (out:color, good:bool) = {
 }
 export split
 `)
-	_, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
-	if err == nil {
-		t.Fatal("Generate should reject exporting a multi-return action")
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(err.Error(), "cannot handle multiple output in exported actions: split") {
-		t.Fatalf("expected multi-output rejection error, got: %v", err)
+	for _, want := range []string{
+		`virtual color split(color c, bool& good);`,
+		`runner::color runner::split(color c, bool& good) {`,
+		`bool good = false;`,
+		`runner::color __ivy_result = ivy.split(_arg<runner::color>(args, 0, 2), good);`,
+		`__ivy_out << "= " << __ivy_result << std::endl;`,
+		`__ivy_out << good << std::endl;`,
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q in repl output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
 	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestPythonTestCmdReaderWritesMultipleReturns(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action split(c:color) returns (out:color, good:bool) = {
+    out := c;
+    good := true
+}
+export split
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		`virtual color split(color c, bool& good);`,
+		`runner::color runner::split(color c, bool& good){`,
+		`bool good = false;`,
+		`runner::color __ivy_result = ivy.split(_arg<runner::color>(args, 0, 2), good);`,
+		`__ivy_out  << "= " << __ivy_result << std::endl;`,
+		`__ivy_out << good << std::endl;`,
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q in test output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
 }
 
 func TestReplParameterizedActionShape(t *testing.T) {

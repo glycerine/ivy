@@ -901,6 +901,15 @@ func z3ApplyCall(prefix, nameExpr string, args []string) string {
 	if len(args) == 0 {
 		return fmt.Sprintf("%sapply(%s)", prefix, nameExpr)
 	}
+	if len(args) > 5 {
+		var b strings.Builder
+		fmt.Fprintf(&b, "([&](){ std::vector<z3::expr> __ivy_apply_args; __ivy_apply_args.reserve(%d);", len(args))
+		for _, arg := range args {
+			fmt.Fprintf(&b, " __ivy_apply_args.push_back(%s);", arg)
+		}
+		fmt.Fprintf(&b, " return %sapply(%s, __ivy_apply_args); })()", prefix, nameExpr)
+		return b.String()
+	}
 	return fmt.Sprintf("%sapply(%s, %s)", prefix, nameExpr, strings.Join(args, ", "))
 }
 
