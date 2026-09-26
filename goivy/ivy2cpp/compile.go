@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -202,7 +203,11 @@ func mergeParams(params map[string]string, cfg Config) (Config, map[string]strin
 		case "trace":
 			cfg.Trace = parseBool(v)
 		case "debug":
-			cfg.Debug = parseBool(v)
+			level, err := parseDebugLevel(v)
+			if err != nil {
+				return cfg, nil, err
+			}
+			cfg.Debug = level
 		case "stdafx":
 			cfg.Stdafx = parseBool(v)
 		case "build":
@@ -313,6 +318,9 @@ func normalizeConfig(cfg Config) (Config, string, error) {
 	}
 	cfg.RequestedTarget = requested
 	cfg.Target = requested
+	if cfg.Debug < 0 {
+		return cfg, "", fmt.Errorf("ivy2cpp: debug level must be non-negative, got %d", cfg.Debug)
+	}
 	if requested == "class" {
 		cfg.Target = "repl"
 		cfg.EmitMain = false
@@ -880,4 +888,12 @@ func parseBool(v string) bool {
 	default:
 		return false
 	}
+}
+
+func parseDebugLevel(v string) (int, error) {
+	level, err := strconv.Atoi(strings.TrimSpace(v))
+	if err != nil || level < 0 {
+		return 0, fmt.Errorf("ivy2cpp: debug level must be a non-negative integer, got %q", v)
+	}
+	return level, nil
 }

@@ -190,7 +190,7 @@ func setTargetAndValue(lit goivy.Expr) (goivy.Expr, string) {
 // loops can be opened or we need the thunk-based fallback. The simple,
 // two-phase, and large emission bodies live in assign.go / thunk.go.
 func (g *Generator) emitAssign(w *cppWriter, a *goivy.LogicAssignAction) {
-	if g != nil && g.Config.Debug {
+	if g != nil && g.Config.Debug > 0 {
 		label := assignmentDebugLabel(a.LHS)
 		g.emitDebugVV(w, "assign ENTER "+label)
 		defer g.emitDebugVV(w, "assign EXIT "+label)
@@ -252,7 +252,7 @@ func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label 
 	if strings.TrimSpace(label) == "" {
 		label = fn
 	}
-	if g != nil && g.Config.Debug {
+	if g != nil && g.Config.Debug > 0 {
 		g.emitDebugVV(w, fn+" ENTER "+label)
 		defer g.emitDebugVV(w, fn+" EXIT "+label)
 	}

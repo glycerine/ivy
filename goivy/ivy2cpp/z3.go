@@ -654,7 +654,7 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 	g.emitDebugVV(w, "init_gen::generate after state randomization")
 	g.emitDebugVV(w, "init_gen::generate before solve")
 	w.line("bool __res = solve();")
-	if g.Config.Debug {
+	if g.Config.Debug > 0 {
 		w.line(`vv(std::string("init_gen::generate after solve sat=") + (__res ? "true" : "false"));`)
 	}
 	w.open("if (__res) {")
@@ -755,7 +755,7 @@ public:
 	w.line("// std::cout << slvr << std::endl;")
 	g.emitDebugVV(w, "init_gen::generate before solve")
 	w.line("bool __res = solve();")
-	if g.Config.Debug {
+	if g.Config.Debug > 0 {
 		w.line(`vv(std::string("init_gen::generate after solve sat=") + (__res ? "true" : "false"));`)
 	}
 	w.open("if (__res) {")

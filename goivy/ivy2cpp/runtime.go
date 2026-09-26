@@ -178,7 +178,7 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.line("#include <string.h>")
 	w.line("#include <stdio.h>")
 	w.line("#include <string>")
-	if g.Config.Debug {
+	if g.Config.Debug > 0 {
 		w.line("#include <chrono>")
 		w.line("#include <ctime>")
 		w.line("#include <iomanip>")
@@ -191,7 +191,7 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.line("std::ofstream __ivy_out;")
 	w.line("std::ofstream __ivy_modelfile;")
 	w.line("void __ivy_exit(int code){exit(code);}")
-	if g.Config.Debug {
+	if g.Config.Debug > 0 {
 		g.emitCppVV(w)
 	}
 	if g.Config.Target == "gen" {
@@ -271,13 +271,35 @@ static void vv(const std::string &msg) {
     std::cerr << ivy2cpp_vv_timestamp() << " " << msg << std::endl;
 }
 `)
+	if g.Config.Debug >= 2 {
+		w.raw(`
+static void vv_progress(const std::string &msg, unsigned long long count, unsigned long long step) {
+    if (step == 0 || (count % step) == 0) {
+        std::ostringstream out;
+        out << msg << " count=" << count;
+        vv(out.str());
+    }
+}
+`)
+	}
 }
 
 func (g *Generator) emitDebugVV(w *cppWriter, msg string) {
-	if g == nil || !g.Config.Debug {
+	if g == nil || g.Config.Debug <= 0 {
 		return
 	}
 	w.linef("vv(%s);", strconv.Quote(msg))
+}
+
+func (g *Generator) emitDebugQuantProgress(w *cppWriter, counter string, forall bool) {
+	if g == nil || g.Config.Debug < 2 || counter == "" {
+		return
+	}
+	kind := "exists"
+	if forall {
+		kind = "forall"
+	}
+	w.linef("vv_progress(%s, %s++, 100000);", strconv.Quote("quant "+kind+" leaf"), counter)
 }
 
 func (g *Generator) emitZ3Boilerplate1(w *cppWriter) {

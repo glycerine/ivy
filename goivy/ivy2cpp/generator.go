@@ -23,7 +23,7 @@ type Config struct {
 	Build           bool
 	EmitMain        bool
 	Trace           bool
-	Debug           bool
+	Debug           int
 	Stdafx          bool
 	// HostOS overrides the build-host detection used for the header
 	// preamble. Python `ivy_to_cpp.py:1948` checks `platform.system()`
@@ -1662,7 +1662,7 @@ func (g *Generator) emitPythonZeroParamTestMain(w *cppWriter) {
 	initDebugLine := ""
 	actionBeforeDebugLine := ""
 	actionAfterDebugLine := ""
-	if g.Config.Debug {
+	if g.Config.Debug > 0 {
 		initDebugLine = `        vv("test main before init_gen construction");` + "\n"
 		actionBeforeDebugLine = `            vv("test main before action generate");` + "\n"
 		actionAfterDebugLine = `            vv(std::string("test main after action generate sat=") + (sat ? "true" : "false"));` + "\n"
@@ -2086,7 +2086,7 @@ func (g *Generator) emitTestLoopGenBranch(w *cppWriter) {
 	w.line("ivy._generating = true;")
 	g.emitDebugVV(w, "test main before action generate")
 	w.line("bool sat = g.generate(ivy);")
-	if g.Config.Debug {
+	if g.Config.Debug > 0 {
 		w.line(`vv(std::string("test main after action generate sat=") + (sat ? "true" : "false"));`)
 	}
 	w.line("#ifdef _WIN32")

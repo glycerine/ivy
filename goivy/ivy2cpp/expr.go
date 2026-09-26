@@ -782,17 +782,19 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 			return code, err
 		}
 	}
-	// Try iterable-attribute / inequality-derived bounds before the
-	// extensional-relation fallback. Python `emit_quant`
-	// (ivy_to_cpp.py:3403-3435) handles iterable first, then computes
-	// numeric bounds via `get_bounds` for integer-typed vars; only when
-	// both fail does it look for extensional relations (line 3437-3453).
+	// Try iterable-attribute bounds first, then prefer an extensional
+	// relation antecedent before finite numeric bounds. For hash_thunk
+	// relations this avoids proving `R(x) -> ...` by touching every tuple
+	// in a finite product and populating the memo with false entries.
 	exists := !forall
 	if header, ok, err := g.quantIterableHeader(vars[0]); ok || err != nil {
 		if err != nil {
 			return "", err
 		}
 		return g.emitQuantWithHeaders(vars, body, forall, []string{header}, true)
+	}
+	if code, ok, err := g.emitExtensionalQuant(vars, body, forall); ok || err != nil {
+		return code, err
 	}
 	var boundsErr error
 	if cppIsAnyIntegerType(g, vars[0].VSort) {
@@ -813,9 +815,6 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 			boundsErr = err
 		}
 	}
-	if code, ok, err := g.emitExtensionalQuant(vars, body, forall); ok || err != nil {
-		return code, err
-	}
 	if boundsErr != nil {
 		return "", boundsErr
 	}
@@ -834,7 +833,17 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 }
 
 func (g *Generator) emitQuantWithHeader(w *cppWriter, vars []*goivy.LogicVariable, body goivy.Expr, forall bool) (string, error) {
+	debugCounter := ""
+	if g != nil && g.Config.Debug >= 2 && len(vars) > 0 {
+		debugCounter = g.nextTemp("__ivy_dbg_quant")
+		w.linef("unsigned long long %s = 0;", debugCounter)
+	}
+	return g.emitQuantWithHeaderCounter(w, vars, body, forall, debugCounter)
+}
+
+func (g *Generator) emitQuantWithHeaderCounter(w *cppWriter, vars []*goivy.LogicVariable, body goivy.Expr, forall bool, debugCounter string) (string, error) {
 	if len(vars) == 0 {
+		g.emitDebugQuantProgress(w, debugCounter, forall)
 		return g.emitExprWithHeader(w, body)
 	}
 	if !forall {
@@ -867,7 +876,7 @@ func (g *Generator) emitQuantWithHeader(w *cppWriter, vars []*goivy.LogicVariabl
 		w.line(line)
 	}
 
-	inner, err := g.emitQuantWithHeader(w, remaining, body, forall)
+	inner, err := g.emitQuantWithHeaderCounter(w, remaining, body, forall, debugCounter)
 	if err != nil {
 		return "", err
 	}
@@ -889,6 +898,12 @@ func (g *Generator) quantHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goiv
 		}
 		return header, nil, rest, nil
 	}
+	if header, prefixLines, remaining, ok, err := g.extensionalHeaderForFirstVar(v0, rest, body, exists); ok || err != nil {
+		if err != nil {
+			return "", nil, nil, err
+		}
+		return header, prefixLines, remaining, nil
+	}
 	boundsErr := error(nil)
 	if lo, hi, err := g.getBounds(v0, rest, body, exists); err == nil && cppIsAnyIntegerType(g, v0.VSort) {
 		header, err := g.loopHeaderForSortBounds(v0.VSort, varName(v0.Name), lo, hi)
@@ -898,12 +913,6 @@ func (g *Generator) quantHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goiv
 		return header, nil, rest, nil
 	} else if err != nil {
 		boundsErr = err
-	}
-	if header, prefixLines, remaining, ok, err := g.extensionalHeaderForFirstVar(v0, rest, body, exists); ok || err != nil {
-		if err != nil {
-			return "", nil, nil, err
-		}
-		return header, prefixLines, remaining, nil
 	}
 	if boundsErr != nil {
 		return "", nil, nil, boundsErr
@@ -933,6 +942,7 @@ func (g *Generator) extensionalHeaderForFirstVar(v0 *goivy.LogicVariable, rest [
 	header := fmt.Sprintf("for(auto it=%s.memo.begin(),en=%s.memo.end(); it != en; ++it)if (it->second) { ", rel, rel)
 	remaining := append([]*goivy.LogicVariable(nil), rest...)
 	var prefixLines []string
+	boundNames := map[string]bool{}
 	for pos, term := range ebnd.Terms {
 		tv, ok := term.(*goivy.LogicVariable)
 		if !ok {
@@ -941,6 +951,13 @@ func (g *Generator) extensionalHeaderForFirstVar(v0 *goivy.LogicVariable, rest [
 		if tv.Name != v0.Name && !quantVarNameIn(rest, tv.Name) {
 			continue
 		}
+		if boundNames[tv.Name] {
+			if len(ebnd.Terms) > 1 {
+				prefixLines = append(prefixLines, fmt.Sprintf("if (!(%s == it->first.arg%d)) continue;", varName(tv.Name), pos))
+			}
+			continue
+		}
+		boundNames[tv.Name] = true
 		if len(ebnd.Terms) == 1 {
 			prefixLines = append(prefixLines, fmt.Sprintf("auto %s = it->first;", varName(tv.Name)))
 		} else {
@@ -1123,7 +1140,13 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 				break
 			}
 		}
-		if matched == nil || boundNames[matched.Name] {
+		if matched == nil {
+			continue
+		}
+		if boundNames[matched.Name] {
+			if len(ebnd.Terms) > 1 {
+				w.linef("if (!(%s == it->first.arg%d)) continue;", varName(matched.Name), pos)
+			}
 			continue
 		}
 		boundNames[matched.Name] = true

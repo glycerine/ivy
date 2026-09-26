@@ -1197,8 +1197,8 @@ func TestMergeParamsAcceptsPythonDriverSurfaceAndDefaultsToGen(t *testing.T) {
 	if !cfg.Trace || !cfg.Stdafx || !cfg.Build {
 		t.Fatalf("bool params not merged: %+v", cfg)
 	}
-	if !cfg.Debug {
-		t.Fatalf("debug param not merged: %+v", cfg)
+	if cfg.Debug != 1 {
+		t.Fatalf("debug param = %d, want 1: %+v", cfg.Debug, cfg)
 	}
 	if ivyParams["isolate"] != "iso" {
 		t.Fatalf("isolate param = %q, want iso", ivyParams["isolate"])
@@ -2185,6 +2185,95 @@ action check = {
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
+}
+
+func TestEmitExprForallPrefersExtensionalAntecedentOverFiniteBounds(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+relation append_msg(A:idx, B:idx, C:idx, D:idx, E:idx, F:idx)
+after init {
+    append_msg(A, B, C, D, E, F) := false
+}
+action check = {
+    assert forall A:idx, B:idx, C:idx, D:idx, E:idx, F:idx. append_msg(A, B, C, D, E, F) -> A = B
+}
+export check
+`)
+	out, err := Generate(mod, Config{ClassName: "extfinite"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	checkIdx := strings.Index(out.Impl, "void extfinite::check()")
+	if checkIdx < 0 {
+		t.Fatalf("missing check action:\n%s", out.Impl)
+	}
+	tail := out.Impl[checkIdx:]
+	for _, want := range []string{
+		"for (auto it = append_msg.memo.begin(), en = append_msg.memo.end(); it != en; ++it) {",
+		"unsigned A = it->first.arg0;",
+		"unsigned F = it->first.arg5;",
+	} {
+		if !strings.Contains(tail, want) {
+			t.Fatalf("check action missing extensional finite-sort quantifier %q:\n%s", want, tail)
+		}
+	}
+	if strings.Contains(tail, "for (unsigned A = 0; A < 4; A++)") {
+		t.Fatalf("check action should not prefer finite product bounds over extensional memo iteration:\n%s", tail)
+	}
+
+	testOut, err := Generate(mod, Config{Target: "test", ClassName: "extfinite_test"})
+	if err != nil {
+		t.Fatalf("Generate target=test: %v", err)
+	}
+	checkIdx = strings.Index(testOut.Impl, "void extfinite_test::check()")
+	if checkIdx < 0 {
+		t.Fatalf("missing target=test check action:\n%s", testOut.Impl)
+	}
+	tail = testOut.Impl[checkIdx:]
+	for _, want := range []string{
+		"for(auto it=append_msg.memo.begin(),en=append_msg.memo.end(); it != en; ++it)if (it->second) {",
+		"auto A = it->first.arg0;",
+		"auto F = it->first.arg5;",
+	} {
+		if !strings.Contains(tail, want) {
+			t.Fatalf("target=test check action missing extensional finite-sort quantifier %q:\n%s", want, tail)
+		}
+	}
+	if strings.Contains(tail, "for (unsigned A = 0; A < 4; A++)") {
+		t.Fatalf("target=test check action should not prefer finite product bounds over extensional memo iteration:\n%s", tail)
+	}
+}
+
+func TestEmitExprExtensionalAntecedentDoesNotRedeclareRepeatedVariable(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+relation rel(A:idx, B:idx, C:idx, D:idx, E:idx, F:idx)
+after init {
+    rel(A, B, C, D, E, F) := false
+}
+action check = {
+    assert forall A:idx, B:idx, C:idx, D:idx, E:idx. rel(A, B, C, A, D, E) -> false
+}
+export check
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "extrepeat"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	checkIdx := strings.Index(out.Impl, "void extrepeat::check()")
+	if checkIdx < 0 {
+		t.Fatalf("missing check action:\n%s", out.Impl)
+	}
+	tail := out.Impl[checkIdx:]
+	if strings.Count(tail, "auto A = it->first.arg0;") != 1 {
+		t.Fatalf("repeated variable should be bound once from its first tuple position:\n%s", tail)
+	}
+	if strings.Contains(tail, "auto A = it->first.arg3;") {
+		t.Fatalf("repeated variable should not be redeclared from the second tuple position:\n%s", tail)
+	}
+	if !strings.Contains(tail, "if (!(A == it->first.arg3)) continue;") {
+		t.Fatalf("repeated variable should guard later tuple positions:\n%s", tail)
+	}
 }
 
 func TestQuantifierBoundSkipsExpressionReferencingLaterVariable(t *testing.T) {
@@ -4802,7 +4891,7 @@ action step = {
 export step
 conjecture saved
 `)
-	out, err := Generate(mod, Config{Target: "test", ClassName: "debuginit", Debug: true})
+	out, err := Generate(mod, Config{Target: "test", ClassName: "debuginit", Debug: 1})
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
@@ -4853,6 +4942,45 @@ conjecture saved
 	}
 	if progressIdx > generateIdx {
 		t.Fatalf("init debug breadcrumb must be printed before init generation:\n%s", out.Impl)
+	}
+}
+
+func TestTargetTestDebugFlagEmitsQuantifierProgress(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+relation marked(I:idx)
+after init {
+    marked(I) := false
+}
+action check = {
+    assert forall I:idx. marked(I) -> false
+}
+export check
+`)
+	level1, err := Generate(mod, Config{Target: "test", ClassName: "debugquant1", Debug: 1})
+	if err != nil {
+		t.Fatalf("Generate debug=1: %v", err)
+	}
+	for _, unwanted := range []string{
+		"static void vv_progress(const std::string &msg, unsigned long long count, unsigned long long step)",
+		`vv_progress("quant forall leaf",`,
+	} {
+		if strings.Contains(level1.Impl, unwanted) {
+			t.Fatalf("debug=1 output should not include quantifier progress %q:\n%s", unwanted, level1.Impl)
+		}
+	}
+	out, err := Generate(mod, Config{Target: "test", ClassName: "debugquant2", Debug: 2})
+	if err != nil {
+		t.Fatalf("Generate debug=2: %v", err)
+	}
+	for _, want := range []string{
+		"static void vv_progress(const std::string &msg, unsigned long long count, unsigned long long step)",
+		"unsigned long long __ivy_dbg_quant",
+		`vv_progress("quant forall leaf", __ivy_dbg_quant`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("debug target=test output missing quantifier progress %q:\n%s", want, out.Impl)
+		}
 	}
 }
 
