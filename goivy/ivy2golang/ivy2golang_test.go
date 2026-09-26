@@ -367,6 +367,36 @@ conjecture r
 	}
 }
 
+func TestConjectureInitChecksRunAfterAfterInitAssignments(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+relation r
+after init { r := false }
+action step = {}
+export step
+conjecture ~r
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "conj_init_order", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	initBody := bodyAfterMarker(out.Source, "func (ivy *conj_init_order) __init()")
+	if initBody == "" {
+		t.Fatalf("missing __init body:\n%s", out.Source)
+	}
+	assignIdx := strings.Index(initBody, "ivy.r = false")
+	assertIdx := strings.Index(initBody, "ivyAssert(!(ivy.r)")
+	if assignIdx < 0 {
+		t.Fatalf("missing after-init assignment in __init:\n%s", initBody)
+	}
+	if assertIdx < 0 {
+		t.Fatalf("missing conjecture assertion in __init:\n%s", initBody)
+	}
+	if assignIdx > assertIdx {
+		t.Fatalf("conjecture assertion runs before after-init assignment:\n%s", initBody)
+	}
+	validateGeneratedGoSourceForTest(t, out)
+}
+
 func TestPropertyMovedIntoAxioms(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 relation r
