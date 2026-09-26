@@ -610,7 +610,6 @@ func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, 
 	// the Const back to a fresh Variable in the formula before searching.
 	vars := make([]*goivy.LogicVariable, 0, len(some.Params))
 	subs := make(map[goivy.NodeKey]goivy.Expr, len(some.Params))
-	paramByVarName := make(map[string]*goivy.Const, len(some.Params))
 	for _, p := range some.Params {
 		if p == nil {
 			return false
@@ -621,7 +620,6 @@ func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, 
 		}
 		vars = append(vars, v)
 		subs[goivy.Key(p)] = v
-		paramByVarName[v.Name] = p
 	}
 	fmla, err := goivy.Substitute(some.Fmla, subs)
 	if err != nil {
@@ -646,46 +644,27 @@ func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, 
 	if st.Kind != cppStorageHashThunk {
 		return false
 	}
-	bindsSomeParam := false
-	for _, t := range app.Terms {
-		if tv, ok := t.(*goivy.LogicVariable); ok && paramByVarName[tv.Name] != nil {
-			bindsSomeParam = true
-			break
-		}
-	}
-	if !bindsSomeParam {
-		return false
-	}
 	relName := goivy.ExprName(app.Func)
 	rel := varName(relName)
 	found := g.nextTemp("__ivy_some")
 	w.linef("bool %s = false;", found)
 	w.open(fmt.Sprintf("for (auto it = %s.memo.begin(), en = %s.memo.end(); it != en; ++it) {", rel, rel))
 	w.line("if (!it->second) continue;")
-	// Emit using the original local-const names so downstream emitAction
-	// sees the identifiers it expects when it expands the `then` body.
-	boundNames := map[string]bool{}
-	for pos, term := range app.Terms {
-		tv, isVar := term.(*goivy.LogicVariable)
-		if !isVar {
-			continue
-		}
-		p := paramByVarName[tv.Name]
-		if p == nil {
-			continue
-		}
-		if boundNames[tv.Name] {
-			if len(app.Terms) > 1 {
-				w.linef("if (!(%s == it->first.arg%d)) continue;", varName(p.Name), pos)
-			}
-			continue
-		}
-		boundNames[tv.Name] = true
-		if len(app.Terms) == 1 {
-			w.linef("%s %s = it->first;", g.cppType(p.CSort), varName(p.Name))
-		} else {
-			w.linef("%s %s = it->first.arg%d;", g.cppType(p.CSort), varName(p.Name), pos)
-		}
+	bindings := make(map[string]extensionalLoopBinding, len(some.Params))
+	reverseSubs := make(map[goivy.NodeKey]goivy.Expr, len(some.Params))
+	for i, v := range vars {
+		p := some.Params[i]
+		bindings[v.Name] = extensionalLoopBinding{EmitName: varName(p.Name), Sort: p.CSort, DeclType: g.cppType(p.CSort)}
+		reverseSubs[goivy.Key(v)] = p
+	}
+	prefixLines, boundNames, err := g.extensionalLoopPrefixLines(app, bindings)
+	if err != nil {
+		g.pythonUnsupported(w, "unsupported if condition", err, "")
+		w.close("")
+		return true
+	}
+	for _, line := range prefixLines {
+		w.line(line)
 	}
 	opened := 0
 	for i, p := range some.Params {
@@ -701,7 +680,17 @@ func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, 
 		w.open(h)
 		opened++
 	}
-	cond, err := g.emitExpr(some.Fmla)
+	originalApp, err := goivy.Substitute(app, reverseSubs)
+	if err != nil {
+		g.pythonUnsupported(w, "unsupported if condition", err, "")
+		for i := 0; i < opened; i++ {
+			w.close("")
+		}
+		w.close("")
+		return true
+	}
+	condFmla := replaceExprExact(some.Fmla, originalApp, goivy.True)
+	cond, err := g.emitExpr(condFmla)
 	if err != nil {
 		g.pythonUnsupported(w, "unsupported if condition", err, "")
 		for i := 0; i < opened; i++ {

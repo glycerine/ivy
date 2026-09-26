@@ -2164,11 +2164,14 @@ action check = {
 		"for (auto it = marked.memo.begin(), en = marked.memo.end(); it != en; ++it)",
 		"if (!it->second) continue;",
 		"int X = it->first;",
-		"if (marked[X]) return true;",
+		"if (true) return true;",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in extensional quantifier:\n%s", want, out.Impl)
 		}
+	}
+	if strings.Contains(out.Impl, "marked[X]") {
+		t.Fatalf("extensional quantifier should not re-check matched relation through operator[]:\n%s", out.Impl)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
@@ -2193,11 +2196,15 @@ action check = {
 	for _, want := range []string{
 		"for (auto it = edge.memo.begin(), en = edge.memo.end(); it != en; ++it)",
 		"int X = it->first.arg0;",
-		"if (edge[extq2::__tup__int__int(X, dst)]) return true;",
+		"if (!(dst == it->first.arg1)) continue;",
+		"if (true) return true;",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in binary extensional quantifier:\n%s", want, out.Impl)
 		}
+	}
+	if strings.Contains(out.Impl, "edge[") {
+		t.Fatalf("extensional quantifier should not re-check matched relation through operator[]:\n%s", out.Impl)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
@@ -2224,12 +2231,15 @@ action check = {
 		"for (auto it = marked.memo.begin(), en = marked.memo.end(); it != en; ++it)",
 		"if (!it->second) continue;",
 		"int X = it->first;",
-		"if (!((!marked[X] || ok[X]))) return false;",
+		"if (!((!true || ok[X]))) return false;",
 		"return true;",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in forall extensional quantifier:\n%s", want, out.Impl)
 		}
+	}
+	if strings.Contains(out.Impl, "marked[X]") {
+		t.Fatalf("extensional quantifier should not re-check matched relation through operator[]:\n%s", out.Impl)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
@@ -3096,6 +3106,53 @@ export pick
 	compileGeneratedCPP(t, out)
 }
 
+func TestGeneratedIfSomeExtensionalRelationGuardsFixedTupleArgs(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+individual dst : idx
+relation edge(A:idx, B:idx, C:idx, D:idx, E:idx, F:idx)
+individual saved : idx
+after init {
+    edge(A, B, C, D, E, F) := false;
+}
+action pick = {
+    if some x:idx. edge(x, dst, dst, dst, dst, dst) {
+        saved := x
+    }
+}
+export pick
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "someextguard"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	pickIdx := strings.Index(out.Impl, "void someextguard::pick()")
+	if pickIdx < 0 {
+		t.Fatalf("missing pick action:\n%s", out.Impl)
+	}
+	tail := out.Impl[pickIdx:]
+	if tickIdx := strings.Index(tail, "\nvoid someextguard::__tick"); tickIdx >= 0 {
+		tail = tail[:tickIdx]
+	}
+	for _, want := range []string{
+		"for (auto it = edge.memo.begin(), en = edge.memo.end(); it != en; ++it)",
+		"if (!it->second) continue;",
+		"unsigned loc__x = it->first.arg0;",
+		"if (!(dst == it->first.arg1)) continue;",
+		"if (!__ivy_some0 && (true))",
+		"saved = loc__x;",
+	} {
+		if !strings.Contains(tail, want) {
+			t.Fatalf("missing %q in guarded extensional if some:\n%s", want, tail)
+		}
+	}
+	if strings.Contains(tail, "edge[") {
+		t.Fatalf("guarded extensional if some should not re-check edge through operator[]:\n%s", tail)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestGeneratedIfSomeUsesExtensionalRelationMapForTupleWitnesses(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type idx = {0..3}
@@ -3144,6 +3201,9 @@ export receive
 		if strings.Contains(tail, bad) {
 			t.Fatalf("multi-witness extensional if some should not full-scan relation tuple with %q:\n%s", bad, tail)
 		}
+	}
+	if strings.Contains(tail, "append_msg[") {
+		t.Fatalf("multi-witness extensional if some should not re-check append_msg through operator[]:\n%s", tail)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)

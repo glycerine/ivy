@@ -866,7 +866,7 @@ func (g *Generator) emitQuantWithHeaderCounter(w *cppWriter, vars []*goivy.Logic
 		w.linef("%s = 1;", res)
 	}
 
-	header, prefixLines, remaining, err := g.quantHeaderForFirstVar(v0, rest, body, exists)
+	header, prefixLines, remaining, loopBody, err := g.quantHeaderForFirstVar(v0, rest, body, exists)
 	if err != nil {
 		return "", err
 	}
@@ -876,7 +876,7 @@ func (g *Generator) emitQuantWithHeaderCounter(w *cppWriter, vars []*goivy.Logic
 		w.line(line)
 	}
 
-	inner, err := g.emitQuantWithHeaderCounter(w, remaining, body, forall, debugCounter)
+	inner, err := g.emitQuantWithHeaderCounter(w, remaining, loopBody, forall, debugCounter)
 	if err != nil {
 		return "", err
 	}
@@ -891,90 +891,225 @@ func (g *Generator) emitQuantWithHeaderCounter(w *cppWriter, vars []*goivy.Logic
 	return res, nil
 }
 
-func (g *Generator) quantHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, []string, []*goivy.LogicVariable, error) {
+func (g *Generator) quantHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, []string, []*goivy.LogicVariable, goivy.Expr, error) {
 	if header, ok, err := g.quantIterableHeader(v0); ok || err != nil {
 		if err != nil {
-			return "", nil, nil, err
+			return "", nil, nil, nil, err
 		}
-		return header, nil, rest, nil
+		return header, nil, rest, body, nil
 	}
-	if header, prefixLines, remaining, ok, err := g.extensionalHeaderForFirstVar(v0, rest, body, exists); ok || err != nil {
+	if header, prefixLines, remaining, loopBody, ok, err := g.extensionalHeaderForFirstVar(v0, rest, body, exists); ok || err != nil {
 		if err != nil {
-			return "", nil, nil, err
+			return "", nil, nil, nil, err
 		}
-		return header, prefixLines, remaining, nil
+		return header, prefixLines, remaining, loopBody, nil
 	}
 	boundsErr := error(nil)
 	if lo, hi, err := g.getBounds(v0, rest, body, exists); err == nil && cppIsAnyIntegerType(g, v0.VSort) {
 		header, err := g.loopHeaderForSortBounds(v0.VSort, varName(v0.Name), lo, hi)
 		if err != nil {
-			return "", nil, nil, err
+			return "", nil, nil, nil, err
 		}
-		return header, nil, rest, nil
+		return header, nil, rest, body, nil
 	} else if err != nil {
 		boundsErr = err
 	}
 	if boundsErr != nil {
-		return "", nil, nil, boundsErr
+		return "", nil, nil, nil, boundsErr
 	}
-	return "", nil, nil, fmt.Errorf("ivy2cpp: cannot iterate over sort %s", sortName(v0.VSort))
+	return "", nil, nil, nil, fmt.Errorf("ivy2cpp: cannot iterate over sort %s", sortName(v0.VSort))
 }
 
-func (g *Generator) extensionalHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, []string, []*goivy.LogicVariable, bool, error) {
+func (g *Generator) extensionalHeaderForFirstVar(v0 *goivy.LogicVariable, rest []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, []string, []*goivy.LogicVariable, goivy.Expr, bool, error) {
 	if v0 == nil || g == nil || g.Mod == nil {
-		return "", nil, nil, false, nil
+		return "", nil, nil, nil, false, nil
 	}
 	var ebnds []*goivy.Apply
 	g.matchExtensionalBoundExprs(v0, body, exists, &ebnds)
 	if len(ebnds) == 0 {
-		return "", nil, nil, false, nil
+		return "", nil, nil, nil, false, nil
 	}
 	ebnd := ebnds[0]
 	fs, ok := ebnd.Func.NodeSort().(*goivy.LogicFunctionSort)
 	if !ok {
-		return "", nil, nil, false, nil
+		return "", nil, nil, nil, false, nil
 	}
 	st := cppFunctionStorageFor(g, fs.Domain(), fs.Range(), "")
 	if st.Kind != cppStorageHashThunk {
-		return "", nil, nil, false, nil
+		return "", nil, nil, nil, false, nil
 	}
 	rel := varName(goivy.ExprName(ebnd.Func))
 	header := fmt.Sprintf("for(auto it=%s.memo.begin(),en=%s.memo.end(); it != en; ++it)if (it->second) { ", rel, rel)
 	remaining := append([]*goivy.LogicVariable(nil), rest...)
-	var prefixLines []string
-	boundNames := map[string]bool{}
-	for pos, term := range ebnd.Terms {
-		tv, ok := term.(*goivy.LogicVariable)
-		if !ok {
-			continue
-		}
-		if tv.Name != v0.Name && !quantVarNameIn(rest, tv.Name) {
-			continue
-		}
-		if boundNames[tv.Name] {
-			if len(ebnd.Terms) > 1 {
-				prefixLines = append(prefixLines, fmt.Sprintf("if (!(%s == it->first.arg%d)) continue;", varName(tv.Name), pos))
-			}
-			continue
-		}
-		boundNames[tv.Name] = true
-		if len(ebnd.Terms) == 1 {
-			prefixLines = append(prefixLines, fmt.Sprintf("auto %s = it->first;", varName(tv.Name)))
-		} else {
-			prefixLines = append(prefixLines, fmt.Sprintf("auto %s = it->first.arg%d;", varName(tv.Name), pos))
-		}
-		remaining = removeQuantVarByName(remaining, tv.Name)
+	bindings := map[string]extensionalLoopBinding{
+		v0.Name: {EmitName: varName(v0.Name), Sort: v0.VSort, DeclType: "auto"},
 	}
-	return header, prefixLines, remaining, true, nil
+	for _, v := range rest {
+		if v != nil {
+			bindings[v.Name] = extensionalLoopBinding{EmitName: varName(v.Name), Sort: v.VSort, DeclType: "auto"}
+		}
+	}
+	prefixLines, boundNames, err := g.extensionalLoopPrefixLines(ebnd, bindings)
+	if err != nil {
+		return "", nil, nil, nil, true, err
+	}
+	for name := range boundNames {
+		if name != v0.Name {
+			remaining = removeQuantVarByName(remaining, name)
+		}
+	}
+	loopBody := replaceExprExact(body, ebnd, goivy.True)
+	return header, prefixLines, remaining, loopBody, true, nil
 }
 
-func quantVarNameIn(vars []*goivy.LogicVariable, name string) bool {
-	for _, v := range vars {
-		if v != nil && v.Name == name {
-			return true
+type extensionalLoopBinding struct {
+	EmitName string
+	Sort     goivy.Sort
+	DeclType string
+}
+
+func (g *Generator) extensionalLoopPrefixLines(app *goivy.Apply, bindings map[string]extensionalLoopBinding) ([]string, map[string]bool, error) {
+	if app == nil {
+		return nil, nil, fmt.Errorf("ivy2cpp: nil extensional bound")
+	}
+	var lines []string
+	boundNames := map[string]bool{}
+	for pos, term := range app.Terms {
+		key := extensionalTupleKeyAccess(app, pos)
+		if tv, ok := term.(*goivy.LogicVariable); ok {
+			if binding, ok := bindings[tv.Name]; ok {
+				if boundNames[tv.Name] {
+					lines = append(lines, fmt.Sprintf("if (!(%s == %s)) continue;", binding.EmitName, key))
+					continue
+				}
+				boundNames[tv.Name] = true
+				declType := binding.DeclType
+				if declType == "" {
+					declType = g.cppType(binding.Sort)
+				}
+				lines = append(lines, fmt.Sprintf("%s %s = %s;", declType, binding.EmitName, key))
+				continue
+			}
+		}
+		termCode, err := g.emitExpr(term)
+		if err != nil {
+			return nil, nil, err
+		}
+		lines = append(lines, fmt.Sprintf("if (!(%s == %s)) continue;", termCode, key))
+	}
+	return lines, boundNames, nil
+}
+
+func extensionalTupleKeyAccess(app *goivy.Apply, pos int) string {
+	if app == nil || len(app.Terms) == 1 {
+		return "it->first"
+	}
+	return fmt.Sprintf("it->first.arg%d", pos)
+}
+
+func replaceExprExact(expr, target, replacement goivy.Expr) goivy.Expr {
+	if expr == nil || target == nil || replacement == nil {
+		return expr
+	}
+	if goivy.Key(expr) == goivy.Key(target) {
+		return replacement
+	}
+	switch n := expr.(type) {
+	case *goivy.Apply:
+		changed := false
+		terms := make([]goivy.Expr, len(n.Terms))
+		for i, term := range n.Terms {
+			terms[i] = replaceExprExact(term, target, replacement)
+			if terms[i] != term {
+				changed = true
+			}
+		}
+		if changed {
+			return goivy.CloneApplyTerms(n, terms)
+		}
+		return expr
+	case *goivy.Eq:
+		t1 := replaceExprExact(n.T1, target, replacement)
+		t2 := replaceExprExact(n.T2, target, replacement)
+		if t1 != n.T1 || t2 != n.T2 {
+			return &goivy.Eq{T1: t1, T2: t2}
+		}
+		return expr
+	case *goivy.LogicNot:
+		body := replaceExprExact(n.Body, target, replacement)
+		if body != n.Body {
+			return &goivy.LogicNot{Body: body}
+		}
+		return expr
+	case *goivy.LogicLiteral:
+		atom := replaceExprExact(n.Atom, target, replacement)
+		if atom != n.Atom {
+			return &goivy.LogicLiteral{Polarity: n.Polarity, Atom: atom}
+		}
+		return expr
+	case *goivy.LogicAnd:
+		terms, changed := replaceExprListExact(n.Terms, target, replacement)
+		if changed {
+			return &goivy.LogicAnd{Terms: terms}
+		}
+		return expr
+	case *goivy.LogicOr:
+		terms, changed := replaceExprListExact(n.Terms, target, replacement)
+		if changed {
+			return &goivy.LogicOr{Terms: terms}
+		}
+		return expr
+	case *goivy.LogicImplies:
+		t1 := replaceExprExact(n.T1, target, replacement)
+		t2 := replaceExprExact(n.T2, target, replacement)
+		if t1 != n.T1 || t2 != n.T2 {
+			return &goivy.LogicImplies{T1: t1, T2: t2}
+		}
+		return expr
+	case *goivy.LogicIff:
+		t1 := replaceExprExact(n.T1, target, replacement)
+		t2 := replaceExprExact(n.T2, target, replacement)
+		if t1 != n.T1 || t2 != n.T2 {
+			return &goivy.LogicIff{T1: t1, T2: t2}
+		}
+		return expr
+	case *goivy.LogicIte:
+		cond := replaceExprExact(n.Cond, target, replacement)
+		thenExpr := replaceExprExact(n.Then, target, replacement)
+		elseExpr := replaceExprExact(n.Else, target, replacement)
+		if cond != n.Cond || thenExpr != n.Then || elseExpr != n.Else {
+			return &goivy.LogicIte{ISort: n.ISort, Cond: cond, Then: thenExpr, Else: elseExpr}
+		}
+		return expr
+	case *goivy.ForAll:
+		body := replaceExprExact(n.Body, target, replacement)
+		if body != n.Body {
+			return &goivy.ForAll{Variables: n.Variables, Body: body}
+		}
+		return expr
+	case *goivy.LogicExists:
+		body := replaceExprExact(n.Body, target, replacement)
+		if body != n.Body {
+			return &goivy.LogicExists{Variables: n.Variables, Body: body}
+		}
+		return expr
+	}
+	return expr
+}
+
+func replaceExprListExact(exprs []goivy.Expr, target, replacement goivy.Expr) ([]goivy.Expr, bool) {
+	if len(exprs) == 0 {
+		return exprs, false
+	}
+	changed := false
+	out := make([]goivy.Expr, len(exprs))
+	for i, expr := range exprs {
+		out[i] = replaceExprExact(expr, target, replacement)
+		if out[i] != expr {
+			changed = true
 		}
 	}
-	return false
+	return out, changed
 }
 
 func removeQuantVarByName(vars []*goivy.LogicVariable, name string) []*goivy.LogicVariable {
@@ -1125,36 +1260,18 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 	w.open(fmt.Sprintf("for (auto it = %s.memo.begin(), en = %s.memo.end(); it != en; ++it) {", rel, rel))
 	w.line("if (!it->second) continue;")
 
-	// Bind every quantified variable that appears as an argument of
-	// ebnd. Python: `if v == v0 or v in variables`.
-	boundNames := map[string]bool{}
-	for pos, term := range ebnd.Terms {
-		tv, isVar := term.(*goivy.LogicVariable)
-		if !isVar {
-			continue
+	bindings := make(map[string]extensionalLoopBinding, len(vars))
+	for _, v := range vars {
+		if v != nil {
+			bindings[v.Name] = extensionalLoopBinding{EmitName: varName(v.Name), Sort: v.VSort, DeclType: g.cppType(v.VSort)}
 		}
-		var matched *goivy.LogicVariable
-		for _, v := range vars {
-			if v != nil && v.Name == tv.Name {
-				matched = v
-				break
-			}
-		}
-		if matched == nil {
-			continue
-		}
-		if boundNames[matched.Name] {
-			if len(ebnd.Terms) > 1 {
-				w.linef("if (!(%s == it->first.arg%d)) continue;", varName(matched.Name), pos)
-			}
-			continue
-		}
-		boundNames[matched.Name] = true
-		if len(ebnd.Terms) == 1 {
-			w.linef("%s %s = it->first;", g.cppType(matched.VSort), varName(matched.Name))
-		} else {
-			w.linef("%s %s = it->first.arg%d;", g.cppType(matched.VSort), varName(matched.Name), pos)
-		}
+	}
+	prefixLines, boundNames, err := g.extensionalLoopPrefixLines(ebnd, bindings)
+	if err != nil {
+		return "", true, err
+	}
+	for _, line := range prefixLines {
+		w.line(line)
 	}
 
 	// Emit per-variable loops for any quantified variable that wasn't
@@ -1175,7 +1292,8 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 		nestedOpened++
 	}
 
-	expr, err := g.emitExpr(body)
+	loopBody := replaceExprExact(body, ebnd, goivy.True)
+	expr, err := g.emitExpr(loopBody)
 	if err != nil {
 		return "", true, err
 	}
