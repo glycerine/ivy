@@ -397,6 +397,42 @@ conjecture ~r
 	validateGeneratedGoSourceForTest(t, out)
 }
 
+func TestInitialActionsPreserveExtensionalAllFalseThunkInit(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type key
+relation seen(K:key)
+relation ready
+after init {
+    seen(K) := false;
+    ready := false
+}
+action step = {}
+export step
+conjecture ~ready
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "conj_init_extensional", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	initBody := bodyAfterMarker(out.Source, "func (ivy *conj_init_extensional) __init()")
+	if initBody == "" {
+		t.Fatalf("missing __init body:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"ivy.seen = newIvyThunkMap[int, bool](false)",
+		"ivy.ready = false",
+		"ivyAssert(!(ivy.ready)",
+	} {
+		if !strings.Contains(initBody, want) {
+			t.Fatalf("initializer rewrite should preserve %q:\n%s", want, initBody)
+		}
+	}
+	if strings.Index(initBody, "ivy.ready = false") > strings.Index(initBody, "ivyAssert(!(ivy.ready)") {
+		t.Fatalf("ready initializer should run before conjecture check:\n%s", initBody)
+	}
+	validateGeneratedGoSourceForTest(t, out)
+}
+
 func TestPropertyMovedIntoAxioms(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 relation r
@@ -16977,6 +17013,50 @@ action internal = {}
 	}
 	if strings.Contains(mainBody, `> internal`) || strings.Contains(mainBody, `ivy.internal()`) {
 		t.Fatalf("target=test randomized actions should ignore explicitly private actions:\n%s", mainBody)
+	}
+}
+
+func TestTargetTestRandomizedActionsUseExplicitExportsFast(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual x : bool
+after init {
+    x := false
+}
+action helper = {
+    x := false
+}
+action step = {
+    call helper;
+    x := true
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "export_probe", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	mainBody := bodyAfterMarker(out.Source, "func main()")
+	if mainBody == "" {
+		t.Fatalf("main not emitted:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"func (ivy *export_probe) helper()",
+		"type Export_probe_step_generator struct",
+		`fmt.Fprintln(__ivy_out, "> step")`,
+		"ivy.step()",
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("generated target=test output missing %q:\n%s", want, out.Source)
+		}
+	}
+	for _, bad := range []string{
+		"type Export_probe_helper_generator struct",
+		`fmt.Fprintln(__ivy_out, "> helper")`,
+		"helper_generator := &Export_probe_helper_generator",
+	} {
+		if strings.Contains(out.Source, bad) {
+			t.Fatalf("target=test should not expose unexported helper via %q:\n%s", bad, out.Source)
+		}
 	}
 }
 

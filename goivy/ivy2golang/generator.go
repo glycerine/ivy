@@ -16402,6 +16402,10 @@ func goFloatLiteral(f float64) string {
 }
 
 func (g *Generator) publicActionNamesSorted() []string {
+	if names, ok := g.explicitExportedActionNames(); ok {
+		sort.Strings(names)
+		return names
+	}
 	if g.Mod == nil || g.Mod.PublicActions == nil {
 		return nil
 	}
@@ -16417,6 +16421,9 @@ func (g *Generator) publicActionNamesSorted() []string {
 }
 
 func (g *Generator) publicActionNamesInOrder() []string {
+	if names, ok := g.explicitExportedActionNames(); ok {
+		return names
+	}
 	if g.Mod == nil || g.Mod.PublicActions == nil {
 		return nil
 	}
@@ -16428,6 +16435,34 @@ func (g *Generator) publicActionNamesInOrder() []string {
 		names = append(names, name)
 	}
 	return names
+}
+
+func (g *Generator) explicitExportedActionNames() ([]string, bool) {
+	if g == nil || g.Mod == nil || len(g.Mod.Exports) == 0 {
+		return nil, false
+	}
+	seen := map[string]bool{}
+	var names []string
+	for _, exp := range g.Mod.Exports {
+		if exp == nil || exp.Scope() != "" {
+			continue
+		}
+		name := exp.Exported()
+		if name == "" || seen[name] {
+			continue
+		}
+		if g.Mod.Actions != nil {
+			if _, ok := g.Mod.Actions.Get2(name); !ok {
+				continue
+			}
+		}
+		seen[name] = true
+		names = append(names, name)
+	}
+	if len(names) == 0 {
+		return nil, false
+	}
+	return names, true
 }
 
 func (g *Generator) initialMixinActionNames() map[string]bool {
@@ -16446,6 +16481,14 @@ func isFinalizeName(name string) bool {
 }
 
 func (g *Generator) hasFinalizeExport() bool {
+	if names, ok := g.explicitExportedActionNames(); ok {
+		for _, name := range names {
+			if isFinalizeName(name) {
+				return true
+			}
+		}
+		return false
+	}
 	if g.Mod == nil || g.Mod.PublicActions == nil {
 		return false
 	}
