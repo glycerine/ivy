@@ -1107,3 +1107,51 @@ This is exactly why Ivy complains about function cycles and not, say, predicate 
 EPR forbids function symbols entirely (only constants and predicates), which trivially makes the function-sort graph have no edges, hence no cycles, hence bounded Herbrand universes. FAU is more permissive: it allows functions, but enforces the acyclicity condition on the sort graph. Both fragments are decidable for exactly this reason.
 
 This is also why your earlier instinct about EPR being "effectively propositional" lands: with no nesting possible, the Herbrand universe is finite, and the whole problem reduces to a finite (large but finite) propositional SAT problem on the ground instances. The decidability of EPR is, in a real sense, the decidability of SAT scaled up to a known-finite term space.
+
+## Python `ivy_to_cpp` fixes for concrete Raft randomized testing
+
+On September 26, 2026, we made two minimal Python Ivy fixes in
+`pyivy/ivy/ivy/ivy_to_cpp.py` so that the original Python `ivy_to_cpp` can
+build generated C++ for the concrete Raft randomized tester:
+
+```sh
+cd ~/ivy/ivy-lang-examples/examples/raft
+XTRACE_OFF=1 ivy_to_cpp target=test build=true raft_no_assume_test.ivy
+```
+
+The first fix is in `get_bounds`. The previous guard only rejected a candidate
+bound when the other side of the inequality was directly one of the later
+quantified variables. That missed compound terms such as `oi_index(OLI)`, so
+the emitter could generate a loop for `I` with a lower bound using `OLI` before
+`OLI` had been declared:
+
+```cpp
+for (unsigned I = (oi_index[OLI])+1; I < 8; I++) {
+```
+
+The fix asks `lu.used_variables(...)` whether the candidate bound expression
+mentions either the current variable or any later quantified variable. If it
+does, that inequality is not used as a loop bound and the ordinary finite-sort
+bound is used instead. In the Raft output this changes the bad loop to:
+
+```cpp
+for (unsigned I = 0; I < 8; I++) {
+```
+
+The second fix is in the `is_large_type(sort)` branch of `emit_set`. For large
+relations, Python generated a call like:
+
+```cpp
+apply("append_msg", X0, X1, X2, X3, X4, X5)
+```
+
+but our `ivy_z3_gen.hpp` helper only provides direct `apply` overloads through
+five Z3 expression arguments. It also provides a vector overload. The fix reuses
+the already-created `std::vector<z3::expr> __quants` and emits:
+
+```cpp
+apply("append_msg", __quants)
+```
+
+Together these keep the Python emitter close to its original behavior while
+allowing the generated C++ for `raft_no_assume_test.ivy` to compile.

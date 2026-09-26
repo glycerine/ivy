@@ -853,12 +853,11 @@ def emit_set(header,symbol,solver_add=solver_add_default,csname=None,cvalue=None
         return
     if is_large_type(sort):
         vs = variables(sort.dom)
-        cvars = ','.join('{}ctx.constant("{}",{}sort("{}"))'.format(prefix,varname(v),prefix,v.sort.name) for v in vs)
         open_scope(header)
         code_line(header,'std::vector<z3::expr> __quants;');
         for v in vs:
             code_line(header,'__quants.push_back({}ctx.constant("{}",{}sort("{}")));'.format(prefix,varname(v),prefix,v.sort.name));
-        solver_add(header,'forall({},__to_solver({},{}apply({},{}),{}{}))'.format("__quants",gen,prefix,sname,cvars,obj,cname))
+        solver_add(header,'forall({},__to_solver({},{}apply({},{}),{}{}))'.format("__quants",gen,prefix,sname,"__quants",obj,cname))
         close_scope(header)
         return
     for idx,dsort in enumerate(domain):
@@ -3370,10 +3369,12 @@ def get_bounds(header,v0,variables,body,exists,varname=None):
         if neg:
             strict = not strict
             args = [args[1],args[0]]
-        if args[0] == v0 and args[1] != v0 and args[1] not in variables:
+        rhs_vars = lu.used_variables(args[1])
+        lhs_vars = lu.used_variables(args[0])
+        if args[0] == v0 and args[1] != v0 and v0 not in rhs_vars and not any(v in rhs_vars for v in variables):
             e = code_eval(header,args[1])
             his.append('('+e+')+1' if not strict else e)
-        if args[1] == v0 and args[0] != v0 and args[0] not in variables:
+        if args[1] == v0 and args[0] != v0 and v0 not in lhs_vars and not any(v in lhs_vars for v in variables):
             e = code_eval(header,args[0])
             los.append('('+e+')+1' if strict else e)
     if not sort_has_negative_values(v0.sort):
