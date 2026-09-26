@@ -1176,6 +1176,7 @@ func TestMergeParamsAcceptsPythonDriverSurfaceAndDefaultsToGen(t *testing.T) {
 		"trace":      "true",
 		"stdafx":     "yes",
 		"build":      "1",
+		"debug":      "1",
 		"isolate":    "iso",
 		"test_iters": "7",
 		"test_runs":  "3",
@@ -1195,6 +1196,9 @@ func TestMergeParamsAcceptsPythonDriverSurfaceAndDefaultsToGen(t *testing.T) {
 	}
 	if !cfg.Trace || !cfg.Stdafx || !cfg.Build {
 		t.Fatalf("bool params not merged: %+v", cfg)
+	}
+	if !cfg.Debug {
+		t.Fatalf("debug param not merged: %+v", cfg)
 	}
 	if ivyParams["isolate"] != "iso" {
 		t.Fatalf("isolate param = %q, want iso", ivyParams["isolate"])
@@ -4752,6 +4756,103 @@ attribute set.weight = "3.0"
 	}
 	if strings.Contains(out.Impl, "if (num_gens > 0)") {
 		t.Fatalf("target=test main should match Python's unconditional test loop:\n%s", out.Impl)
+	}
+}
+
+func TestTargetTestOmitsCppVVByDefault(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual saved : bool
+after init {
+    saved := false;
+    saved := true
+}
+action step = {
+    saved := true
+}
+export step
+conjecture saved
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "nodebug"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, unwanted := range []string{
+		"static void vv(",
+		"ivy2cpp_vv_timestamp",
+		`vv("test main before init_gen construction")`,
+		`vv("init_gen::generate before solve")`,
+		`__ivy_out << "> init" << std::endl;`,
+	} {
+		if strings.Contains(out.Impl, unwanted) {
+			t.Fatalf("default target=test output should not include debug helper/breadcrumb %q:\n%s", unwanted, out.Impl)
+		}
+	}
+}
+
+func TestTargetTestDebugFlagEmitsCppVVAndInitBreadcrumbs(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual saved : bool
+after init {
+    saved := false;
+    saved := true
+}
+action step = {
+    saved := true
+}
+export step
+conjecture saved
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "debuginit", Debug: true})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"#include <chrono>",
+		"#include <iomanip>",
+		"static std::string ivy2cpp_vv_timestamp()",
+		"static void vv(const std::string &msg)",
+		`std::cerr << ivy2cpp_vv_timestamp() << " " << msg << std::endl;`,
+		`vv("test main before init_gen construction");`,
+		`vv("init_gen::init_gen ENTER");`,
+		`vv("init_gen::init_gen after initial constraints");`,
+		`vv("init_gen::generate ENTER");`,
+		`vv("init_gen::generate before state randomization");`,
+		`vv("init_gen::generate after state randomization");`,
+		`vv("init_gen::generate before solve");`,
+		`vv(std::string("init_gen::generate after solve sat=") + (__res ? "true" : "false"));`,
+		`vv("init_gen::generate before obj.__init");`,
+		`vv("init_gen::generate after obj.__init");`,
+		`vv("__init ENTER");`,
+		`vv("__init before initial action 0");`,
+		`vv("__init after initial action 0");`,
+		`vv("__init EXIT");`,
+		`vv("action sequence child 0 ENTER *goivy.LogicAssignAction");`,
+		`vv("action sequence child 0 EXIT *goivy.LogicAssignAction");`,
+		`vv("assign ENTER saved");`,
+		`vv("assign EXIT saved");`,
+		`vv("ivy_assert ENTER test.ivy: line`,
+		`vv("ivy_assert EXIT test.ivy: line`,
+		`vv("test main before action generate");`,
+		`vv(std::string("test main after action generate sat=") + (sat ? "true" : "false"));`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("debug target=test output missing %q:\n%s", want, out.Impl)
+		}
+	}
+	progressIdx := strings.Index(out.Impl, `vv("test main before init_gen construction");`)
+	constructIdx := strings.Index(out.Impl, "init_gen my_init_gen(ivy);")
+	if constructIdx < 0 {
+		t.Fatalf("target=test main missing init generator construction:\n%s", out.Impl)
+	}
+	if progressIdx > constructIdx {
+		t.Fatalf("init debug breadcrumb must be printed before init generator construction:\n%s", out.Impl)
+	}
+	generateIdx := strings.Index(out.Impl, "my_init_gen.generate(ivy);")
+	if generateIdx < 0 {
+		t.Fatalf("target=test main missing init generator call:\n%s", out.Impl)
+	}
+	if progressIdx > generateIdx {
+		t.Fatalf("init debug breadcrumb must be printed before init generation:\n%s", out.Impl)
 	}
 }
 
@@ -9332,6 +9433,36 @@ conjecture ~r
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
+}
+
+func TestInitialActionsPreserveExtensionalAllFalseHashThunkClear(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type key
+relation seen(K:key)
+relation ready
+after init {
+    seen(K) := false;
+    ready := false
+}
+action step = {}
+export step
+conjecture ~ready
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	initIdx := strings.Index(out.Impl, "void oracle::__init(){")
+	if initIdx < 0 {
+		t.Fatalf("missing __init body:\n%s", out.Impl)
+	}
+	initBody := out.Impl[initIdx:]
+	if !strings.Contains(initBody, "seen.memo.clear();") {
+		t.Fatalf("all-false hash_thunk initializer in InitialActions should use memo.clear shortcut:\n%s", initBody)
+	}
+	if strings.Contains(initBody, "seen = hash_thunk<int, bool>(new") {
+		t.Fatalf("all-false hash_thunk initializer should not build a false thunk after conjecture init rewrite:\n%s", initBody)
+	}
 }
 
 // TestPropertyMovedIntoAxioms mirrors Python ivy_to_cpp.py:4635-4636 —

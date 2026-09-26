@@ -201,6 +201,8 @@ func mergeParams(params map[string]string, cfg Config) (Config, map[string]strin
 			}
 		case "trace":
 			cfg.Trace = parseBool(v)
+		case "debug":
+			cfg.Debug = parseBool(v)
 		case "stdafx":
 			cfg.Stdafx = parseBool(v)
 		case "build":

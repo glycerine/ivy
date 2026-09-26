@@ -51,6 +51,9 @@ func (g *Generator) extensionalRelations() map[string]bool {
 	}
 
 	inited := map[string]bool{}
+	for _, action := range g.Mod.InitialActions {
+		g.collectInitedExtensional(action, inited)
+	}
 	for _, ini := range g.Mod.Initializers {
 		g.collectInitedExtensional(ini.Action, inited)
 	}

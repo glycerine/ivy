@@ -3,6 +3,7 @@ package ivy2cpp
 import (
 	"fmt"
 	"runtime"
+	"strconv"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -177,6 +178,11 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.line("#include <string.h>")
 	w.line("#include <stdio.h>")
 	w.line("#include <string>")
+	if g.Config.Debug {
+		w.line("#include <chrono>")
+		w.line("#include <ctime>")
+		w.line("#include <iomanip>")
+	}
 	w.line("#if __cplusplus < 201103L")
 	w.line("#else")
 	w.line("#include <cstdint>")
@@ -185,6 +191,9 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.line("std::ofstream __ivy_out;")
 	w.line("std::ofstream __ivy_modelfile;")
 	w.line("void __ivy_exit(int code){exit(code);}")
+	if g.Config.Debug {
+		g.emitCppVV(w)
+	}
 	if g.Config.Target == "gen" {
 		w.line("#ifndef IVY2CPP_NO_DEFAULT_GEN_HOOKS")
 		w.open("void ivy_assert(bool truth, const char *msg) {")
@@ -236,6 +245,39 @@ func (g *Generator) emitRuntimeValueIncludes(w *cppWriter) {
 	if g.Config.Target != "test" {
 		w.blank()
 	}
+}
+
+func (g *Generator) emitCppVV(w *cppWriter) {
+	w.raw(`
+static std::string ivy2cpp_vv_timestamp() {
+    using namespace std::chrono;
+    system_clock::time_point now = system_clock::now();
+    std::time_t sec = system_clock::to_time_t(now);
+    long long usec = duration_cast<microseconds>(now.time_since_epoch()).count() % 1000000;
+    std::tm tmv;
+#ifdef _WIN32
+    localtime_s(&tmv, &sec);
+#else
+    localtime_r(&sec, &tmv);
+#endif
+    char buf[32];
+    std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &tmv);
+    std::ostringstream out;
+    out << buf << "." << std::setw(6) << std::setfill('0') << usec;
+    return out.str();
+}
+
+static void vv(const std::string &msg) {
+    std::cerr << ivy2cpp_vv_timestamp() << " " << msg << std::endl;
+}
+`)
+}
+
+func (g *Generator) emitDebugVV(w *cppWriter, msg string) {
+	if g == nil || !g.Config.Debug {
+		return
+	}
+	w.linef("vv(%s);", strconv.Quote(msg))
 }
 
 func (g *Generator) emitZ3Boilerplate1(w *cppWriter) {

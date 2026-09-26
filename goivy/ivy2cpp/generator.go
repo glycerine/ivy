@@ -23,6 +23,7 @@ type Config struct {
 	Build           bool
 	EmitMain        bool
 	Trace           bool
+	Debug           bool
 	Stdafx          bool
 	// HostOS overrides the build-host detection used for the header
 	// preamble. Python `ivy_to_cpp.py:1948` checks `platform.system()`
@@ -1258,10 +1259,14 @@ func (g *Generator) emitInit(w *cppWriter) {
 	} else {
 		w.open(fmt.Sprintf("void %s::__init() {", g.ClassName))
 	}
+	g.emitDebugVV(w, "__init ENTER")
+	actionIdx := 0
 	if len(g.Mod.InitialActions) > 0 {
 		for _, act := range g.Mod.InitialActions {
-			g.emitInitialAction(w, act)
+			g.emitInitialActionWithDebug(w, act, actionIdx)
+			actionIdx++
 		}
+		g.emitDebugVV(w, "__init EXIT")
 		w.close("")
 		if g.Config.Target != "test" {
 			w.blank()
@@ -1270,20 +1275,29 @@ func (g *Generator) emitInit(w *cppWriter) {
 	}
 	for _, na := range g.Mod.Initializers {
 		if act, ok := na.Action.(goivy.Action); ok {
-			g.emitInitialAction(w, act)
+			g.emitInitialActionWithDebug(w, act, actionIdx)
+			actionIdx++
 		}
 	}
 	if len(g.Mod.Initializers) == 0 && g.Mod.Actions != nil && g.Mod.Mixins != nil {
 		for _, mixin := range g.Mod.Mixins.Get("init") {
 			if act, ok := g.Mod.Actions.Get2(mixin.Mixer()); ok {
-				g.emitInitialAction(w, act)
+				g.emitInitialActionWithDebug(w, act, actionIdx)
+				actionIdx++
 			}
 		}
 	}
+	g.emitDebugVV(w, "__init EXIT")
 	w.close("")
 	if g.Config.Target != "test" {
 		w.blank()
 	}
+}
+
+func (g *Generator) emitInitialActionWithDebug(w *cppWriter, act goivy.Action, idx int) {
+	g.emitDebugVV(w, fmt.Sprintf("__init before initial action %d", idx))
+	g.emitInitialAction(w, act)
+	g.emitDebugVV(w, fmt.Sprintf("__init after initial action %d", idx))
 }
 
 func (g *Generator) emitInitialAction(w *cppWriter, act goivy.Action) {
@@ -1645,6 +1659,14 @@ func (g *Generator) emitPythonZeroParamTestMain(w *cppWriter) {
 	if g.hasFinalizeExport() {
 		finalizeLine = "    ivy.__lock(); ivy.ext___finalize(); ivy.__unlock();\n"
 	}
+	initDebugLine := ""
+	actionBeforeDebugLine := ""
+	actionAfterDebugLine := ""
+	if g.Config.Debug {
+		initDebugLine = `        vv("test main before init_gen construction");` + "\n"
+		actionBeforeDebugLine = `            vv("test main before action generate");` + "\n"
+		actionAfterDebugLine = `            vv(std::string("test main after action generate sat=") + (sat ? "true" : "false"));` + "\n"
+	}
 	w.raw(fmt.Sprintf(`
 
 int %s(int argc, char **argv){
@@ -1776,6 +1798,7 @@ int %s(int argc, char **argv){
             readers[rdridx]->bind();
         }
                     
+%s
         init_gen my_init_gen(ivy);
         my_init_gen.generate(ivy);
         std::vector<gen *> generators;
@@ -1818,7 +1841,9 @@ int %s(int argc, char **argv){
             QueryPerformanceCounter(&before);
 #endif
             ivy._generating = true;
+%s
             bool sat = g.generate(ivy);
+%s
 #ifdef _WIN32
             LARGE_INTEGER after;
             QueryPerformanceCounter(&after);
@@ -1948,7 +1973,7 @@ int %s(int argc, char **argv){
     }
     return 0;
 }
-`, mainName, g.Config.TestIters, g.Config.TestRuns, g.ClassName, g.ClassName, genLines.String(), pythonFloatLiteral(totalweight), numGens, finalizeLine))
+`, mainName, g.Config.TestIters, g.Config.TestRuns, g.ClassName, g.ClassName, initDebugLine, genLines.String(), pythonFloatLiteral(totalweight), numGens, actionBeforeDebugLine, actionAfterDebugLine, finalizeLine))
 }
 
 // emitTestLoopBody emits the body of the per-run test driver, mirroring
@@ -1956,6 +1981,7 @@ int %s(int argc, char **argv){
 // build init_gen, weighted action generators, then loop test_iters
 // times choosing among generators / readers / timers via select().
 func (g *Generator) emitTestLoopBody(w *cppWriter) {
+	g.emitDebugVV(w, "test main before init_gen construction")
 	w.line("init_gen my_init_gen(ivy);")
 	w.line("my_init_gen.generate(ivy);")
 	w.line("std::vector<gen *> generators;")
@@ -2058,7 +2084,11 @@ func (g *Generator) emitTestLoopGenBranch(w *cppWriter) {
 	w.line("QueryPerformanceCounter(&before);")
 	w.line("#endif")
 	w.line("ivy._generating = true;")
+	g.emitDebugVV(w, "test main before action generate")
 	w.line("bool sat = g.generate(ivy);")
+	if g.Config.Debug {
+		w.line(`vv(std::string("test main after action generate sat=") + (sat ? "true" : "false"));`)
+	}
 	w.line("#ifdef _WIN32")
 	w.line("LARGE_INTEGER after;")
 	w.line("QueryPerformanceCounter(&after);")

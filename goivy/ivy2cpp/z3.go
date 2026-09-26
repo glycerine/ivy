@@ -631,31 +631,49 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 	}
 
 	w.open(fmt.Sprintf("init_gen::init_gen(%s &obj) {", g.ClassName))
+	g.emitDebugVV(w, "init_gen::init_gen ENTER")
 	w.line("(void)obj;")
 	w.line("ivy2cpp_setup(*this);")
+	g.emitDebugVV(w, "init_gen::init_gen after ivy2cpp_setup")
 	if err := g.emitZ3InitialConstraints(w); err != nil {
 		return err
 	}
+	g.emitDebugVV(w, "init_gen::init_gen after initial constraints")
+	g.emitDebugVV(w, "init_gen::init_gen EXIT")
 	w.close("")
 	w.open(fmt.Sprintf("bool init_gen::generate(%s &obj) {", g.ClassName))
+	g.emitDebugVV(w, "init_gen::generate ENTER")
 	w.line("ivy2cpp_progress(*this, \"init_gen\");")
 	w.line("cpptype_prepare(*this);")
+	g.emitDebugVV(w, "init_gen::generate after prepare")
 	w.line("alits.clear();")
+	g.emitDebugVV(w, "init_gen::generate before state randomization")
 	if err := g.emitInitGenPerSymbolDispatch(w, "obj"); err != nil {
 		return err
 	}
+	g.emitDebugVV(w, "init_gen::generate after state randomization")
+	g.emitDebugVV(w, "init_gen::generate before solve")
 	w.line("bool __res = solve();")
+	if g.Config.Debug {
+		w.line(`vv(std::string("init_gen::generate after solve sat=") + (__res ? "true" : "false"));`)
+	}
 	w.open("if (__res) {")
+	g.emitDebugVV(w, "init_gen::generate before initial state eval")
 	if err := g.emitZ3InitialStateEvaluation(w, "obj"); err != nil {
 		return err
 	}
 	g.emitProgressCounterResets(w, "obj")
+	g.emitDebugVV(w, "init_gen::generate after initial state eval")
 	w.close("")
 	w.line("cpptype_cleanup(*this);")
+	g.emitDebugVV(w, "init_gen::generate after cleanup")
 	w.line("obj.___ivy_gen = this;")
 	w.open("if (__res) {")
+	g.emitDebugVV(w, "init_gen::generate before obj.__init")
 	w.line("obj.__init();")
+	g.emitDebugVV(w, "init_gen::generate after obj.__init")
 	w.close("")
+	g.emitDebugVV(w, "init_gen::generate EXIT")
 	w.line("return __res;")
 	w.close("")
 	w.open(fmt.Sprintf("void init_gen::execute(%s &obj) {", g.ClassName))
@@ -713,32 +731,50 @@ public:
 `, g.ClassName, g.ClassName, g.ClassName))
 
 	w.open(fmt.Sprintf("init_gen::init_gen(%s &obj){", g.ClassName))
+	g.emitDebugVV(w, "init_gen::init_gen ENTER")
 	g.emitPythonTestZ3Sig(w, nil)
+	g.emitDebugVV(w, "init_gen::init_gen after signature")
 	if err := g.emitPythonTestInitialConstraint(w); err != nil {
 		return err
 	}
+	g.emitDebugVV(w, "init_gen::init_gen after initial constraints")
+	g.emitDebugVV(w, "init_gen::init_gen EXIT")
 	w.close("")
 
 	w.open(fmt.Sprintf("bool init_gen::generate(%s& obj) {", g.ClassName))
+	g.emitDebugVV(w, "init_gen::generate ENTER")
 	g.emitVariantPrepares(w)
+	g.emitDebugVV(w, "init_gen::generate after prepare")
 	w.line("alits.clear();")
+	g.emitDebugVV(w, "init_gen::generate before state randomization")
 	if err := g.emitInitGenPerSymbolDispatch(w, "obj"); err != nil {
 		return err
 	}
+	g.emitDebugVV(w, "init_gen::generate after state randomization")
 	w.blank()
 	w.line("// std::cout << slvr << std::endl;")
+	g.emitDebugVV(w, "init_gen::generate before solve")
 	w.line("bool __res = solve();")
+	if g.Config.Debug {
+		w.line(`vv(std::string("init_gen::generate after solve sat=") + (__res ? "true" : "false"));`)
+	}
 	w.open("if (__res) {")
+	g.emitDebugVV(w, "init_gen::generate before initial state eval")
 	if err := g.emitZ3InitialStateEvaluation(w, "obj"); err != nil {
 		return err
 	}
 	g.emitProgressCounterResets(w, "obj")
+	g.emitDebugVV(w, "init_gen::generate after initial state eval")
 	w.blank()
 	w.close("")
 	w.blank()
 	g.emitVariantCleanups(w)
+	g.emitDebugVV(w, "init_gen::generate after cleanup")
 	w.line("obj.___ivy_gen = this;")
+	g.emitDebugVV(w, "init_gen::generate before obj.__init")
 	w.line("obj.__init();")
+	g.emitDebugVV(w, "init_gen::generate after obj.__init")
+	g.emitDebugVV(w, "init_gen::generate EXIT")
 	w.line("return __res;")
 	w.close("")
 	return nil

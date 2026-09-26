@@ -16,9 +16,12 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 	switch a := act.(type) {
 	case *goivy.LogicSequence:
 		w.open("{")
-		for _, child := range a.Elems {
+		for idx, child := range a.Elems {
 			if childAct, ok := child.(goivy.Action); ok {
+				typ := fmt.Sprintf("%T", childAct)
+				g.emitDebugVV(w, fmt.Sprintf("action sequence child %d ENTER %s", idx, typ))
 				g.emitAction(w, childAct)
+				g.emitDebugVV(w, fmt.Sprintf("action sequence child %d EXIT %s", idx, typ))
 			} else {
 				g.unsupported(w, "unsupported sequence child %T: %s", child, fmt.Sprint(child))
 			}
@@ -187,6 +190,11 @@ func setTargetAndValue(lit goivy.Expr) (goivy.Expr, string) {
 // loops can be opened or we need the thunk-based fallback. The simple,
 // two-phase, and large emission bodies live in assign.go / thunk.go.
 func (g *Generator) emitAssign(w *cppWriter, a *goivy.LogicAssignAction) {
+	if g != nil && g.Config.Debug {
+		label := assignmentDebugLabel(a.LHS)
+		g.emitDebugVV(w, "assign ENTER "+label)
+		defer g.emitDebugVV(w, "assign EXIT "+label)
+	}
 	// All-false extensional-relation reset becomes `r.memo.clear();`.
 	// Python falls through to emit_assign_large for this shape; the clear
 	// is observationally equivalent for hash_thunk storage.
@@ -204,6 +212,16 @@ func (g *Generator) emitAssign(w *cppWriter, a *goivy.LogicAssignAction) {
 		return
 	}
 	g.emitAssignTwoPhase(w, a, vs)
+}
+
+func assignmentDebugLabel(e goivy.Expr) string {
+	if e == nil {
+		return "<nil>"
+	}
+	if name := goivy.ExprName(e); name != "" {
+		return name
+	}
+	return e.String()
 }
 
 func (g *Generator) closeAssignmentLoops(w *cppWriter, loops int) {
@@ -231,6 +249,13 @@ func (g *Generator) openAssignmentLoops(w *cppWriter, lhs goivy.Expr) (int, bool
 }
 
 func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label string) {
+	if strings.TrimSpace(label) == "" {
+		label = fn
+	}
+	if g != nil && g.Config.Debug {
+		g.emitDebugVV(w, fn+" ENTER "+label)
+		defer g.emitDebugVV(w, fn+" EXIT "+label)
+	}
 	var expr string
 	var err error
 	expr, err = g.emitActionConditionExpr(w, closeFormula(f))
@@ -241,9 +266,6 @@ func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label 
 		}
 		g.pythonUnsupported(w, kind, err, label)
 		return
-	}
-	if strings.TrimSpace(label) == "" {
-		label = fn
 	}
 	w.linef(`%s(%s, "%s");`, fn, expr, escapeString(label))
 }
