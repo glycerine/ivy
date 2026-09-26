@@ -77,13 +77,16 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		isoMod.Cfg.IsolateCfg.CompileWithInvariants =
 			cfg.Target == "test" && languageVersionAfter(isoMod, "1.7")
 		cppIface := snapshotCPPInterface(isoMod)
-		if isolate != "" || languageVersionAtLeast(isoMod, "1.7") {
-			if err := goivy.CreateIsolate(isolate, isoMod); err != nil {
-				return nil, err
-			}
-			pruneStateStoresToSignature(isoMod)
-			restoreCPPInterface(isoMod, cppIface)
+		// Python ivy_to_cpp.py always runs iso.create_isolate(isolate),
+		// including the Ivy 1.6 default isolate=None case. That pass
+		// narrows public_actions to explicit top-level exports when exports
+		// are present, so internal helper actions stay callable but are not
+		// exposed to repl/target=test randomization.
+		if err := goivy.CreateIsolate(isolate, isoMod); err != nil {
+			return nil, err
 		}
+		pruneStateStoresToSignature(isoMod)
+		restoreCPPInterface(isoMod, cppIface)
 		prepareModuleForCPP(isoMod, cfg)
 		outCfg := cfg
 		baseName := moduleBaseName(isoMod)

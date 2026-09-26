@@ -1308,6 +1308,54 @@ export step
 	}
 }
 
+func TestCompileAndGenerateV16TargetTestRandomizesOnlyExplicitExports(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "export_probe.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.6
+individual x : bool
+after init {
+    x := false
+}
+action helper = {
+    x := false
+}
+action step = {
+    call helper;
+    x := true
+}
+export step
+`), 0o600); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	batch, err := CompileAndGenerateAll(spec, map[string]string{"target": "test", "classname": "ExportProbe"}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	if len(batch.Outputs) != 1 {
+		t.Fatalf("outputs = %d, want 1", len(batch.Outputs))
+	}
+	impl := batch.Outputs[0].Impl
+	for _, want := range []string{
+		"void ExportProbe::helper()",
+		"class step_gen : public gen",
+		`if (action == "step")`,
+		"generators.push_back(new step_gen(ivy));",
+	} {
+		if !strings.Contains(impl, want) {
+			t.Fatalf("generated target=test output missing %q:\n%s", want, impl)
+		}
+	}
+	for _, bad := range []string{
+		"class helper_gen : public gen",
+		`if (action == "helper")`,
+		"generators.push_back(new helper_gen(ivy));",
+	} {
+		if strings.Contains(impl, bad) {
+			t.Fatalf("Ivy 1.6 target=test should not expose unexported helper via %q:\n%s", bad, impl)
+		}
+	}
+}
+
 func TestCompileAndGenerateAllPrunesFilteredStateStores(t *testing.T) {
 	dir := t.TempDir()
 	spec := filepath.Join(dir, "pruned.ivy")
