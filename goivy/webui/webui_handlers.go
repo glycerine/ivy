@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -17,6 +19,97 @@ func writeBackendErr(w http.ResponseWriter, err error) {
 	} else {
 		writeErr(w, http.StatusBadRequest, err.Error())
 	}
+}
+
+type uploadedProjectFile struct {
+	Path string `json:"path"`
+	Data string `json:"data"`
+}
+
+func cleanUploadedProjectPath(path string) (string, error) {
+	path = strings.ReplaceAll(strings.TrimSpace(path), "\\", "/")
+	if path == "" {
+		return "", fmt.Errorf("empty project file path")
+	}
+	if strings.HasPrefix(path, "/") {
+		return "", fmt.Errorf("absolute project file path %q", path)
+	}
+	parts := strings.Split(path, "/")
+	clean := make([]string, 0, len(parts))
+	for _, part := range parts {
+		if part == "" || part == "." {
+			continue
+		}
+		if part == ".." {
+			return "", fmt.Errorf("parent reference in project file path %q", path)
+		}
+		clean = append(clean, part)
+	}
+	if len(clean) == 0 {
+		return "", fmt.Errorf("empty project file path")
+	}
+	return filepath.Join(clean...), nil
+}
+
+func projectRelativeFilename(filename string) (string, bool, error) {
+	filename = strings.ReplaceAll(strings.TrimSpace(filename), "\\", "/")
+	if filename == "/project" {
+		return "", true, fmt.Errorf("project filename must name a file")
+	}
+	if !strings.HasPrefix(filename, "/project/") {
+		return filename, false, nil
+	}
+	rel, err := cleanUploadedProjectPath(strings.TrimPrefix(filename, "/project/"))
+	return rel, true, err
+}
+
+func stageUploadedProjectFiles(filename string, content []byte, rawProjectFiles string) (string, func(), error) {
+	rawProjectFiles = strings.TrimSpace(rawProjectFiles)
+	if rawProjectFiles == "" {
+		return filename, nil, nil
+	}
+	relFilename, isProjectFilename, err := projectRelativeFilename(filename)
+	if err != nil {
+		return "", nil, err
+	}
+	if !isProjectFilename {
+		return filename, nil, nil
+	}
+	var files []uploadedProjectFile
+	if err := json.Unmarshal([]byte(rawProjectFiles), &files); err != nil {
+		return "", nil, fmt.Errorf("invalid project_files: %w", err)
+	}
+	dir, err := os.MkdirTemp("", "goivy-web-project-*")
+	if err != nil {
+		return "", nil, err
+	}
+	cleanup := func() { _ = os.RemoveAll(dir) }
+	for _, file := range files {
+		rel, err := cleanUploadedProjectPath(file.Path)
+		if err != nil {
+			cleanup()
+			return "", nil, err
+		}
+		path := filepath.Join(dir, rel)
+		if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
+			cleanup()
+			return "", nil, err
+		}
+		if err := os.WriteFile(path, []byte(file.Data), 0o600); err != nil {
+			cleanup()
+			return "", nil, err
+		}
+	}
+	mappedFilename := filepath.Join(dir, relFilename)
+	if err := os.MkdirAll(filepath.Dir(mappedFilename), 0o700); err != nil {
+		cleanup()
+		return "", nil, err
+	}
+	if err := os.WriteFile(mappedFilename, content, 0o600); err != nil {
+		cleanup()
+		return "", nil, err
+	}
+	return mappedFilename, cleanup, nil
 }
 
 // apiNewSession handles POST /api/session/new.
@@ -46,7 +139,7 @@ func (s *Server) apiLoad(w http.ResponseWriter, r *http.Request, sessionID strin
 
 	// Multipart file upload from the browser.
 	if strings.HasPrefix(ct, "multipart/form-data") {
-		if err := r.ParseMultipartForm(10 << 20); err != nil { // 10 MB max
+		if err := r.ParseMultipartForm(50 << 20); err != nil { // 50 MB max
 			writeErr(w, http.StatusBadRequest, "invalid multipart form: "+err.Error())
 			return
 		}
@@ -65,6 +158,15 @@ func (s *Server) apiLoad(w http.ResponseWriter, r *http.Request, sessionID strin
 		if filename == "" {
 			filename = header.Filename
 		}
+		stagedFilename, cleanup, err := stageUploadedProjectFiles(filename, content, r.FormValue("project_files"))
+		if err != nil {
+			writeErr(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		if cleanup != nil {
+			defer cleanup()
+		}
+		filename = stagedFilename
 		data, err := s.backend.Load(sessionID, filename, content, r.FormValue("isolate"))
 		if err != nil {
 			writeBackendErr(w, err)

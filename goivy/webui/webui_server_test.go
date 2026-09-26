@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	goivy "github.com/glycerine/ivy/goivy"
 	"io"
 	"mime/multipart"
@@ -248,6 +249,117 @@ func TestAPILoadMultipartPrefersFilenameFieldOverUploadBasename(t *testing.T) {
 	}
 	if be.filename != path {
 		t.Fatalf("backend filename = %q, want %q", be.filename, path)
+	}
+}
+
+type projectFilesLoadBackend struct {
+	Backend
+	filename string
+}
+
+func (b *projectFilesLoadBackend) NewSession(cfg *goivy.Config) ([]byte, error) {
+	return canonicalJSON(map[string]string{"session_id": "s1"})
+}
+
+func (b *projectFilesLoadBackend) Load(sessionID, filename string, content []byte, isolate string) ([]byte, error) {
+	b.filename = filename
+	if filepath.Base(filename) != "raft_no_assume_test.ivy" {
+		return nil, fmt.Errorf("backend filename basename = %q", filepath.Base(filename))
+	}
+	if string(content) != "#lang ivy1.6\ninclude raft_no_assume\n" {
+		return nil, fmt.Errorf("top-level content = %q", string(content))
+	}
+	sibling, err := os.ReadFile(filepath.Join(filepath.Dir(filename), "raft_no_assume.ivy"))
+	if err != nil {
+		return nil, fmt.Errorf("read staged sibling: %w", err)
+	}
+	if string(sibling) != "#lang ivy1.6\n" {
+		return nil, fmt.Errorf("staged sibling content = %q", string(sibling))
+	}
+	return canonicalJSON(map[string]interface{}{
+		"status":   "ok",
+		"filename": filename,
+		"isolate":  isolate,
+		"isolates": []string{isolate},
+	})
+}
+
+func TestAPILoadMultipartStagesProjectFilesForProjectFilename(t *testing.T) {
+	cfg := goivy.NewConfig()
+	be := &projectFilesLoadBackend{}
+	srv := NewServer(cfg, ":0", be)
+	id := createSession(t, srv)
+
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
+	if err := writer.WriteField("filename", "/project/raft_no_assume_test.ivy"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("project_files", `[{"path":"raft_no_assume.ivy","data":"#lang ivy1.6\n"},{"path":"raft_no_assume_test.ivy","data":"#lang ivy1.6\ninclude raft_no_assume\n"}]`); err != nil {
+		t.Fatal(err)
+	}
+	part, err := writer.CreateFormFile("file", "raft_no_assume_test.ivy")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := part.Write([]byte("#lang ivy1.6\ninclude raft_no_assume\n")); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	req := httptest.NewRequest("POST", "/api/session/"+id+"/load", &body)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	w := httptest.NewRecorder()
+	srv.ServeHTTP(w, req)
+	if w.Code != 200 {
+		t.Fatalf("status = %d, body: %s", w.Code, w.Body.String())
+	}
+	if be.filename == "/project/raft_no_assume_test.ivy" {
+		t.Fatalf("backend filename was not remapped away from browser virtual path: %q", be.filename)
+	}
+}
+
+func TestAPILoadMultipartProjectFilesCompileSiblingInclude(t *testing.T) {
+	cfg := goivy.NewConfig()
+	srv := NewServer(cfg, ":0")
+	id := createSession(t, srv)
+
+	mainSource := "#lang ivy1.7\ninclude sibling\nrelation seen(X:included)\nafter init { seen(X) := false }\n"
+	projectFiles, err := json.Marshal([]uploadedProjectFile{
+		{Path: "sibling.ivy", Data: "#lang ivy1.7\ntype included\n"},
+		{Path: "main.ivy", Data: mainSource},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
+	if err := writer.WriteField("filename", "/project/main.ivy"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("project_files", string(projectFiles)); err != nil {
+		t.Fatal(err)
+	}
+	part, err := writer.CreateFormFile("file", "main.ivy")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := part.Write([]byte(mainSource)); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	req := httptest.NewRequest("POST", "/api/session/"+id+"/load", &body)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	w := httptest.NewRecorder()
+	srv.ServeHTTP(w, req)
+	if w.Code != 200 {
+		t.Fatalf("status = %d, body: %s", w.Code, w.Body.String())
 	}
 }
 

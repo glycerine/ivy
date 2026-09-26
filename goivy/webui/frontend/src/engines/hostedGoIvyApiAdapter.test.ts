@@ -66,6 +66,26 @@ describe('HostedGoIvyApiAdapter', () => {
     expect(form.get('file')).toBe(file);
   });
 
+  it('sends authorized project files with hosted model loads', async () => {
+    const fetchImpl = vi.fn(async () => jsonResponse({ ok: true }));
+    const api = new HostedGoIvyApiAdapter({ client: new IvyHttpClient({ fetchImpl }) });
+    api.sessionId = 'abc';
+
+    await api.reloadContent('include raft_no_assume\n', '/project/raft_no_assume_test.ivy', {
+      projectFiles: [
+        { path: 'raft_no_assume.ivy', data: '#lang ivy1.6\n' },
+        { path: 'raft_no_assume_test.ivy', data: '#lang ivy1.6\ninclude raft_no_assume\n' },
+      ],
+    });
+
+    const form = fetchImpl.mock.calls[0][1].body;
+    expect(form.get('filename')).toBe('/project/raft_no_assume_test.ivy');
+    expect(form.get('project_files')).toBe(JSON.stringify([
+      { path: 'raft_no_assume.ivy', data: '#lang ivy1.6\n' },
+      { path: 'raft_no_assume_test.ivy', data: '#lang ivy1.6\ninclude raft_no_assume\n' },
+    ]));
+  });
+
   it('keeps graph calls behind snapshot requests', async () => {
     const fetchImpl = vi.fn(async (url) => jsonResponse({ url }));
     const api = new HostedGoIvyApiAdapter({ client: new IvyHttpClient({ fetchImpl }) });

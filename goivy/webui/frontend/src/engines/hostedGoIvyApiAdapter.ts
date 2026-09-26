@@ -3,6 +3,17 @@ import { IvyApiAdapter } from './ivyApiAdapter.ts';
 
 type AnyRecord = Record<string, any>;
 
+function normalizeProjectFiles(files: any): Array<{ path: string; data: string }> {
+  if (!Array.isArray(files)) return [];
+  return files.flatMap((file) => {
+    if (!file || typeof file.path !== 'string' || !file.path.trim()) return [];
+    const data = typeof file.data === 'string'
+      ? file.data
+      : (typeof file.text === 'string' ? file.text : '');
+    return [{ path: file.path, data }];
+  });
+}
+
 function toFormDataFromModel(model: AnyRecord = {}) {
   const formData = new FormData();
   if (model.isolate != null && String(model.isolate).trim() !== '') {
@@ -10,6 +21,10 @@ function toFormDataFromModel(model: AnyRecord = {}) {
   }
   const filename = model.filename || model.path || (model.file && model.file.name) || 'model.ivy';
   formData.append('filename', String(filename));
+  const projectFiles = normalizeProjectFiles(model.projectFiles);
+  if (projectFiles.length > 0) {
+    formData.append('project_files', JSON.stringify(projectFiles));
+  }
   if (model.file) {
     formData.append('file', model.file);
     return formData;

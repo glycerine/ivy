@@ -670,9 +670,19 @@ export async function checkInduction(app) {
     setCheckControlsRunning(false);
     finishRunContextOnce();
   };
-  app.controls.setStatus('Checking induction...');
+  app.controls.setStatus('Recompiling editor content...');
   try {
     const requestOptions = controller ? { signal: controller.signal } : {};
+    const editorContent = app.cmEditor ? app.cmEditor.getValue() : app._persistedFileContent;
+    if (editorContent && app.api && typeof app.api.reloadContent === 'function') {
+      await app.api.reloadContent(
+        editorContent,
+        app._persistedFilePath || app._persistedFileName || 'model.ivy',
+        modelLoadOptionsForApp(app, { isolate: app.activeIsolate || '' }),
+        requestOptions,
+      );
+    }
+    app.controls.setStatus('Checking induction...');
     const result = await app.api.runCheck('induction', {}, requestOptions);
     if (active.cancelled || result?.result === 'cancelled') {
       app.controls.setStatus('induction check cancelled', 'warning');

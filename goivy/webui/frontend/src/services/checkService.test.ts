@@ -70,6 +70,51 @@ describe('checkService', () => {
     }));
   });
 
+  it('reloads the current project model before the invariant induction command runs on a new backend', async () => {
+    const calls: string[] = [];
+    const projectFiles = [
+      { path: 'raft_no_assume_test.ivy', data: 'include raft_no_assume\n' },
+      { path: 'raft_no_assume.ivy', data: 'type node\n' },
+    ];
+    const app = {
+      cmEditor: { getValue: vi.fn(() => 'include raft_no_assume\n') },
+      _persistedFileName: 'raft_no_assume_test.ivy',
+      _persistedFilePath: '/project/raft_no_assume_test.ivy',
+      _projectFiles: projectFiles,
+      activeIsolate: 'raft_iso',
+      jobSubmissionMode: 'remote',
+      api: {
+        reloadContent: vi.fn(async () => {
+          calls.push('reload');
+          return { status: 'ok' };
+        }),
+        runCheck: vi.fn(async () => {
+          calls.push('check');
+          return { result: 'pass', message: 'Inductive invariant found:\ntrue' };
+        }),
+      },
+      controls: {
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        setStatus: vi.fn(),
+      },
+      showTextDialog: vi.fn(),
+    };
+
+    await checkInduction(app);
+
+    expect(app.api.reloadContent).toHaveBeenCalledWith(
+      'include raft_no_assume\n',
+      '/project/raft_no_assume_test.ivy',
+      { isolate: 'raft_iso', projectFiles },
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+    );
+    expect(calls).toEqual(['reload', 'check']);
+    expect(app.api.runCheck).toHaveBeenCalledWith('induction', {}, expect.objectContaining({
+      signal: expect.any(AbortSignal),
+    }));
+  });
+
   it('lets the overlay cancel button abort the invariant induction command', async () => {
     document.body.innerHTML = [
       '<button id="btn-check"></button>',
