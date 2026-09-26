@@ -14,6 +14,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -118,6 +119,53 @@ func TestTutorialStaticDisablesBrowserCaching(t *testing.T) {
 	}
 	if got, want := w.Header().Get("Expires"), "0"; got != want {
 		t.Errorf("Expires = %q, want %q", got, want)
+	}
+}
+
+func TestAPITutorialSearchDocs(t *testing.T) {
+	cfg := goivy.NewConfig()
+	srv := NewServer(cfg, ":0")
+	w := doReq(t, srv, "GET", "/api/tutorial/search-docs", "")
+	if w.Code != 200 {
+		t.Fatalf("status = %d, want 200\nbody: %s", w.Code, w.Body.String())
+	}
+	var resp struct {
+		Documents []struct {
+			ID    string `json:"id"`
+			Title string `json:"title"`
+			URL   string `json:"url"`
+			Body  string `json:"body"`
+		} `json:"documents"`
+	}
+	if err := json.Unmarshal(w.Body.Bytes(), &resp); err != nil {
+		t.Fatalf("bad json: %v\nbody: %s", err, w.Body.String())
+	}
+	if len(resp.Documents) == 0 {
+		t.Fatal("no tutorial search documents")
+	}
+	var languageDoc *struct {
+		ID    string `json:"id"`
+		Title string `json:"title"`
+		URL   string `json:"url"`
+		Body  string `json:"body"`
+	}
+	for i := range resp.Documents {
+		if resp.Documents[i].URL == "/static/tutorial/kenmcmil.github.io/ivy/language.html" {
+			languageDoc = &resp.Documents[i]
+			break
+		}
+	}
+	if languageDoc == nil {
+		t.Fatalf("language tutorial document missing from %#v", resp.Documents[:min(len(resp.Documents), 3)])
+	}
+	if languageDoc.ID == "" || languageDoc.Title == "" || languageDoc.Body == "" {
+		t.Fatalf("language tutorial document has empty fields: %#v", languageDoc)
+	}
+	if regexp.MustCompile(`<[A-Za-z/][^>]*>`).MatchString(languageDoc.Body) {
+		t.Fatalf("language tutorial body should be stripped text, got %q", languageDoc.Body[:min(len(languageDoc.Body), 120)])
+	}
+	if !strings.Contains(strings.ToLower(languageDoc.Body), "ivy") {
+		t.Fatalf("language tutorial body does not look searchable: %q", languageDoc.Body[:min(len(languageDoc.Body), 120)])
 	}
 }
 

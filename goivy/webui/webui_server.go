@@ -8,11 +8,15 @@ import (
 	"encoding/json"
 	"fmt"
 	goivy "github.com/glycerine/ivy/goivy"
+	"html"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"runtime"
+	"sort"
 	"strings"
 )
 
@@ -23,6 +27,21 @@ type Server struct {
 	backend Backend
 	mux     *http.ServeMux
 }
+
+type tutorialSearchDocument struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+	URL   string `json:"url"`
+	Body  string `json:"body"`
+}
+
+var (
+	tutorialTitleRE   = regexp.MustCompile(`(?is)<title[^>]*>(.*?)</title>`)
+	tutorialScriptRE  = regexp.MustCompile(`(?is)<script[^>]*>.*?</script>`)
+	tutorialStyleRE   = regexp.MustCompile(`(?is)<style[^>]*>.*?</style>`)
+	tutorialCommentRE = regexp.MustCompile(`(?is)<!--.*?-->`)
+	tutorialTagRE     = regexp.MustCompile(`(?is)<[^>]+>`)
+)
 
 // NewServer creates a Server that will listen on addr (e.g. ":8080").
 // If backend is nil, a default GoBackend is used.
@@ -149,6 +168,11 @@ func (s *Server) handleAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(parts) == 2 && parts[0] == "tutorial" && parts[1] == "search-docs" {
+		s.apiTutorialSearchDocs(w, r)
+		return
+	}
+
 	// All remaining routes require a session id at parts[1].
 	if len(parts) < 3 || parts[0] != "session" {
 		writeErr(w, http.StatusNotFound, "unknown api endpoint")
@@ -203,6 +227,80 @@ func (s *Server) handleAPI(w http.ResponseWriter, r *http.Request) {
 	default:
 		writeErr(w, http.StatusNotFound, "unknown api endpoint")
 	}
+}
+
+func (s *Server) apiTutorialSearchDocs(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		writeErr(w, http.StatusMethodNotAllowed, "method not allowed")
+		return
+	}
+	docs, err := tutorialSearchDocs()
+	if err != nil {
+		writeErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	writeJSON(w, map[string][]tutorialSearchDocument{"documents": docs})
+}
+
+func tutorialSearchDocs() ([]tutorialSearchDocument, error) {
+	root := filepath.Join(staticDir(), "tutorial")
+	var docs []tutorialSearchDocument
+	err := filepath.WalkDir(root, func(path string, d fs.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if d.IsDir() || strings.ToLower(filepath.Ext(path)) != ".html" {
+			return nil
+		}
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		rel, err := filepath.Rel(root, path)
+		if err != nil {
+			return err
+		}
+		rel = filepath.ToSlash(rel)
+		url := "/static/tutorial/" + rel
+		title, body := tutorialSearchText(string(data), rel)
+		if body == "" {
+			return nil
+		}
+		docs = append(docs, tutorialSearchDocument{
+			ID:    url,
+			Title: title,
+			URL:   url,
+			Body:  body,
+		})
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	sort.Slice(docs, func(i, j int) bool {
+		return docs[i].URL < docs[j].URL
+	})
+	return docs, nil
+}
+
+func tutorialSearchText(src, fallbackTitle string) (string, string) {
+	title := fallbackTitle
+	if match := tutorialTitleRE.FindStringSubmatch(src); len(match) > 1 {
+		if text := normalizeTutorialSearchText(match[1]); text != "" {
+			title = text
+		}
+	}
+	text := tutorialScriptRE.ReplaceAllString(src, " ")
+	text = tutorialStyleRE.ReplaceAllString(text, " ")
+	text = tutorialCommentRE.ReplaceAllString(text, " ")
+	text = tutorialTagRE.ReplaceAllString(text, " ")
+	body := normalizeTutorialSearchText(text)
+	return title, body
+}
+
+func normalizeTutorialSearchText(src string) string {
+	text := html.UnescapeString(src)
+	return strings.Join(strings.Fields(text), " ")
 }
 
 // writeJSON marshals v as JSON to w.

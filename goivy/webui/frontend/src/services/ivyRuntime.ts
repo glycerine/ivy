@@ -152,6 +152,7 @@ import {
     flashAndClose as flashAndCloseViaService,
     positionDropdownContent as positionDropdownContentViaService,
 } from './menuService.ts';
+import { setupTutorialSearch as setupTutorialSearchViaService } from './tutorialSearchService.ts';
 import {
     analysisStateLimits as analysisStateLimitsViaService,
     buildAnalysisState as buildAnalysisStateViaService,
@@ -3362,6 +3363,15 @@ class IvyRuntime {
                 // Cross-origin or error page — don't cache
             }
             updateNavButtons();
+        });
+
+        this.tutorialSearch = setupTutorialSearchViaService({
+            navigateTo: function (url) { navigateTo(url); },
+            setStatus: function (message, kind) {
+                if (self.controls && typeof self.controls.setStatus === 'function') {
+                    self.controls.setStatus(message, kind);
+                }
+            },
         });
 
         updateNavButtons();

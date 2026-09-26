@@ -23,6 +23,35 @@ describe('static index toolbar', () => {
     expect(item?.textContent).toBe('Open project folder...');
   });
 
+  it('places tutorial help search in the mini-browser URL bar', () => {
+    const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
+    const urlBar = doc.querySelector('.tutorial-url-bar');
+    const urlInput = doc.getElementById('tutorial-url');
+    const searchWrap = doc.querySelector('.tutorial-search');
+    const searchInput = doc.getElementById('tutorial-search') as HTMLInputElement | null;
+    const searchResults = doc.getElementById('tutorial-search-results');
+    const close = doc.getElementById('tutorial-close');
+    const children = Array.from(urlBar?.children || []);
+    const searchWrapRule = ivyCss.match(/\.tutorial-search\s*\{[^}]+\}/)?.[0] || '';
+    const searchResultsRule = ivyCss.match(/\.tutorial-search-results\s*\{[^}]+\}/)?.[0] || '';
+    const urlInputRule = ivyCss.match(/\.tutorial-url-input\s*\{[^}]+\}/)?.[0] || '';
+
+    expect(urlBar).not.toBeNull();
+    expect(searchWrap).not.toBeNull();
+    expect(searchInput).not.toBeNull();
+    expect(searchInput?.getAttribute('type')).toBe('search');
+    expect(searchInput?.getAttribute('aria-label')).toBe('Search tutorial help');
+    expect(searchResults).not.toBeNull();
+    expect(searchResults?.getAttribute('hidden')).toBe('');
+    expect(children.indexOf(urlInput!)).toBeLessThan(children.indexOf(searchWrap!));
+    expect(children.indexOf(searchWrap!)).toBeLessThan(children.indexOf(close!));
+    expect(urlInputRule).toContain('min-width: 120px;');
+    expect(searchWrapRule).toContain('flex: 0 1 260px;');
+    expect(searchWrapRule).toContain('position: relative;');
+    expect(searchResultsRule).toContain('position: absolute;');
+    expect(searchResultsRule).toContain('z-index: 50;');
+  });
+
   it('keeps the right-side isolate, settings, and tutorial controls protected from long filenames', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
     const right = doc.querySelector('#menubar .menu-right');
