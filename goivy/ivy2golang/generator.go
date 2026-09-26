@@ -218,14 +218,6 @@ func (g *Generator) validatePublicActions() {
 	if g == nil || g.Mod == nil || g.Mod.Actions == nil || g.Mod.PublicActions == nil {
 		return
 	}
-	for name, act := range g.Mod.Actions.All() {
-		if !g.Mod.PublicActions.Get(name) || act == nil {
-			continue
-		}
-		if len(act.GetFormalReturns()) > 1 {
-			g.errs = append(g.errs, fmt.Errorf("ivy2golang: cannot handle multiple output in exported actions: %s", name))
-		}
-	}
 }
 
 func (g *Generator) validateNativeSemantics() {
@@ -3396,12 +3388,49 @@ func (g *Generator) emitReplActionCase(w *goWriter, name string, act goivy.Actio
 			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__ivy_result"))
 		}
 	default:
-		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
+		resultNames := goMultiReturnResultNames(nret)
+		w.linef("%s := %s", strings.Join(resultNames, ", "), call)
+		g.emitActionResultLines(w, resultNames)
+		if g.Config.Trace {
+			w.line(`fmt.Fprintln(__ivy_out, "}")`)
+		}
 	}
 	if g.Config.Trace && len(act.GetFormalReturns()) == 0 {
 		w.line(`fmt.Fprintln(__ivy_out, "}")`)
 	}
 	w.indent--
+}
+
+func goMultiReturnResultNames(n int) []string {
+	if n <= 0 {
+		return nil
+	}
+	names := make([]string, n)
+	names[0] = "__ivy_result"
+	for i := 1; i < n; i++ {
+		names[i] = fmt.Sprintf("__ivy_out%d", i)
+	}
+	return names
+}
+
+func (g *Generator) emitActionResultLines(w *goWriter, names []string) {
+	if len(names) == 0 {
+		return
+	}
+	w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(names[0]))
+	for _, name := range names[1:] {
+		w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "%s\n", g.traceValueExpr(name))
+	}
+}
+
+func (g *Generator) emitZeroActionResultLines(w *goWriter, returns []*goivy.Const) {
+	if len(returns) == 0 {
+		return
+	}
+	w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(g.goZeroValue(returns[0].CSort)))
+	for _, ret := range returns[1:] {
+		w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "%s\n", g.traceValueExpr(g.goZeroValue(ret.CSort)))
+	}
 }
 
 func (g *Generator) replTraceOpenLine(name string, args []string) string {
@@ -13917,17 +13946,16 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 	}
 	w.line("ivy._generating = true")
 	if g.isTestImportedActionBody(name) {
-		switch nret := len(act.GetFormalReturns()); nret {
+		returns := act.GetFormalReturns()
+		switch nret := len(returns); nret {
 		case 0:
 		case 1:
-			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(g.goZeroValue(act.GetFormalReturns()[0].CSort)))
+			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(g.goZeroValue(returns[0].CSort)))
 		default:
-			lhs := strings.TrimSuffix(strings.Repeat("_, ", nret), ", ")
-			rhs := make([]string, nret)
-			for i := range rhs {
-				rhs[i] = "0"
-			}
-			w.line(lhs + " = " + strings.Join(rhs, ", "))
+			g.emitZeroActionResultLines(w, returns)
+		}
+		if g.Config.Trace {
+			w.line(`fmt.Fprintln(__ivy_out, "}")`)
 		}
 		w.line("ivy._generating = false")
 		w.line("return")
@@ -13948,10 +13976,12 @@ func (g *Generator) emitGenActionGeneratorExecute(w *goWriter, name string, act 
 			w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(call))
 		}
 	default:
-		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
+		resultNames := goMultiReturnResultNames(nret)
+		w.linef("%s := %s", strings.Join(resultNames, ", "), call)
 		if g.Config.Trace {
 			w.line(`fmt.Fprintln(__ivy_out, "}")`)
 		}
+		g.emitActionResultLines(w, resultNames)
 	}
 	w.line("ivy._generating = false")
 }
@@ -13978,7 +14008,8 @@ func (g *Generator) emitGenTrialActionExecute(w *goWriter, name, fn string, act 
 	case 1:
 		w.line("__ivy_result := " + trialCall)
 	default:
-		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + trialCall)
+		resultNames := goMultiReturnResultNames(nret)
+		w.linef("%s := %s", strings.Join(resultNames, ", "), trialCall)
 	}
 	w.line("__ivy_trial._generating = false")
 	w.line("__ivy_trial_rejected := __ivy_assume_rejected")
@@ -14000,6 +14031,8 @@ func (g *Generator) emitGenTrialActionExecute(w *goWriter, name, fn string, act 
 	}
 	if nret == 1 {
 		w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__ivy_result"))
+	} else if nret > 1 {
+		g.emitActionResultLines(w, goMultiReturnResultNames(nret))
 	}
 }
 
@@ -14100,17 +14133,13 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 			trace := g.actionTraceLine(name, args)
 			if g.isTestImportedActionBody(name) {
 				w.line(trace)
-				switch nret := len(act.GetFormalReturns()); nret {
+				returns := act.GetFormalReturns()
+				switch nret := len(returns); nret {
 				case 0:
 				case 1:
-					w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(g.goZeroValue(act.GetFormalReturns()[0].CSort)))
+					w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr(g.goZeroValue(returns[0].CSort)))
 				default:
-					lhs := strings.TrimSuffix(strings.Repeat("_, ", nret), ", ")
-					rhs := make([]string, nret)
-					for i := range rhs {
-						rhs[i] = "0"
-					}
-					w.line(lhs + " = " + strings.Join(rhs, ", "))
+					g.emitZeroActionResultLines(w, returns)
 				}
 				w.line("ivy._generating = false")
 				w.line("ivy.__unlock()")
@@ -14129,7 +14158,9 @@ func (g *Generator) emitRandomizedActionCycles(w *goWriter, runnable []string, t
 				w.linef("__ivy_result := %s", call)
 				w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "%s\n", g.traceValueExpr("__ivy_result"))
 			default:
-				w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
+				resultNames := goMultiReturnResultNames(nret)
+				w.linef("%s := %s", strings.Join(resultNames, ", "), call)
+				g.emitActionResultLines(w, resultNames)
 			}
 			w.line("ivy._generating = false")
 			w.line("ivy.__unlock()")
@@ -14207,7 +14238,8 @@ func (g *Generator) emitTestTrialActionCall(w *goWriter, name, fn string, act go
 	case 1:
 		w.line("__ivy_result := " + call)
 	default:
-		w.line(strings.TrimSuffix(strings.Repeat("_, ", nret), ", ") + " = " + call)
+		resultNames := goMultiReturnResultNames(nret)
+		w.linef("%s := %s", strings.Join(resultNames, ", "), call)
 	}
 	w.line("__ivy_trial._generating = false")
 	w.line("__ivy_trial_rejected := __ivy_assume_rejected")
@@ -14226,6 +14258,8 @@ func (g *Generator) emitTestTrialActionCall(w *goWriter, name, fn string, act go
 	w.line("_, _ = io.Copy(__ivy_out, &__ivy_trace)")
 	if nret == 1 {
 		w.linef("fmt.Fprintf(__ivy_out, %q, %s)", "= %s\n", g.traceValueExpr("__ivy_result"))
+	} else if nret > 1 {
+		g.emitActionResultLines(w, goMultiReturnResultNames(nret))
 	}
 	w.line("ivy._generating = false")
 	w.line("ivy.__unlock()")

@@ -17010,7 +17010,7 @@ attribute light.weight = "100.0"
 	}
 }
 
-func TestPublicMultipleReturnActionRejected(t *testing.T) {
+func TestPublicMultipleReturnActionGeneratesTargetTestDispatcher(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
 action split(c:color) returns (out:color, good:bool) = {
@@ -17020,15 +17020,25 @@ action split(c:color) returns (out:color, good:bool) = {
 export split
 `)
 	out, err := Generate(mod, Config{Target: "test", ClassName: "multi_public", TestIters: "1"})
-	if err == nil {
-		t.Fatal("Generate should reject exporting a multi-return action")
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
 	}
-	if !strings.Contains(err.Error(), "cannot handle multiple output in exported actions: split") {
-		t.Fatalf("expected multi-output rejection error, got: %v", err)
+	for _, want := range []string{
+		"func (ivy *multi_public) split(c color) (color, bool)",
+		"out := red",
+		"good := false",
+		"out = c",
+		"good = true",
+		"return out, good",
+		"__ivy_result, __ivy_out1 := ivy.split(__arg0)",
+		`fmt.Fprintf(__ivy_out, "= %s\n", ivyTraceValue(__ivy_result, false))`,
+		`fmt.Fprintf(__ivy_out, "%s\n", ivyTraceValue(__ivy_out1, false))`,
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("public multi-return target=test source missing %q:\n%s", want, out.Source)
+		}
 	}
-	if out != nil {
-		t.Fatalf("multi-output rejection should not return partial generated source:\n%s", out.Source)
-	}
+	compileGeneratedGo(t, out)
 }
 
 func TestConstructorInitializesModuleParams(t *testing.T) {
@@ -37245,6 +37255,44 @@ export pick
 	}
 }
 
+func TestIfSomeSiblingBoundUsesDeclaredWitnessNameFast(t *testing.T) {
+	src := `#lang ivy1.7
+type term = {0..7}
+individual saved : term
+
+action step = {
+    if some (t:term,t2:term) t <= t2 {
+        saved := t2
+    }
+}
+export step
+`
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "some_sibling_bound", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	stepBody := bodyAfterMarker(out.Source, "func (ivy *some_sibling_bound) step()")
+	if stepBody == "" {
+		t.Fatalf("missing step body:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"for loc__t := 0; loc__t < 8; loc__t++ {",
+		"for loc__t2 := loc__t; loc__t2 < 8; loc__t2++ {",
+		"loc__t < loc__t2",
+		"loc__t == loc__t2",
+		"ivy.saved = loc__t2",
+	} {
+		if !strings.Contains(stepBody, want) {
+			t.Fatalf("if-some sibling bound source missing %q:\n%s", want, stepBody)
+		}
+	}
+	if strings.Contains(stepBody, "Xloc__") {
+		t.Fatalf("if-some sibling bound leaked synthetic witness name:\n%s", stepBody)
+	}
+	validateGeneratedGoSourceForTest(t, out)
+}
+
 const ifSomeExtensionalRelationSource = `#lang ivy1.7
 type key
 relation seen(K:key)
@@ -38472,6 +38520,42 @@ export check
 	if strings.Contains(checkSrc, "for X := 0; X < Y; X++") {
 		t.Fatalf("outer quantified variable must not use quantified sibling Y as its upper bound:\n%s", checkSrc)
 	}
+}
+
+func TestQuantifierSkipsForwardSiblingFunctionBoundFast(t *testing.T) {
+	src := `#lang ivy1.7
+type idx = {0..7}
+type opt = {0..3}
+function idx_of(O:opt): idx
+relation marked(I:idx, O:opt)
+
+action check = {
+    assert forall I:idx, O:opt. I > idx_of(O) -> marked(I,O)
+}
+export check
+`
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "quant_forward_bound", TestIters: "1"})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	checkSrc := bodyAfterMarker(out.Source, "func (ivy *quant_forward_bound) check()")
+	if checkSrc == "" {
+		t.Fatalf("missing check method:\n%s", out.Source)
+	}
+	for _, want := range []string{
+		"for I := 0; I < 8; I++ {",
+		"for O := 0; O < 4; O++ {",
+		"ivy.idx_of[O] < I",
+	} {
+		if !strings.Contains(checkSrc, want) {
+			t.Fatalf("forward sibling bound source missing %q:\n%s", want, checkSrc)
+		}
+	}
+	if strings.Contains(checkSrc, "for I := (ivy.idx_of[O]) + 1; I < 8; I++") {
+		t.Fatalf("quantifier loop used later sibling O before declaration:\n%s", checkSrc)
+	}
+	validateGeneratedGoSourceForTest(t, out)
 }
 
 func TestIfSomeMinUsesInequalityBound(t *testing.T) {

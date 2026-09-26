@@ -122,10 +122,21 @@ func quantVarDiagnostic(v *goivy.LogicVariable) string {
 	return v.Name
 }
 
+func logicVariableNames(vars []*goivy.LogicVariable) map[string]bool {
+	names := make(map[string]bool, len(vars))
+	for _, v := range vars {
+		if v != nil && v.Name != "" {
+			names[v.Name] = true
+		}
+	}
+	return names
+}
+
 func (g *Generator) getBounds(v0 *goivy.LogicVariable, others []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, string, error) {
 	var bes []boundExpr
 	g.matchBoundExprs(v0, body, exists, &bes)
 	var los, his []string
+	otherNames := logicVariableNames(others)
 	for _, be := range bes {
 		op := goivy.ExprName(be.app.Func)
 		strict := op == "<" || op == ">"
@@ -142,7 +153,7 @@ func (g *Generator) getBounds(v0 *goivy.LogicVariable, others []*goivy.LogicVari
 		}
 		ln := nameOfTerm(args[0])
 		rn := nameOfTerm(args[1])
-		if ln == v0.Name && rn != v0.Name && !nameIn(others, rn) {
+		if ln == v0.Name && rn != v0.Name && !nameIn(others, rn) && !exprReferencesAnyNameIncludingVariables(args[1], otherNames) {
 			e, err := g.emitExpr(args[1])
 			if err != nil {
 				return "", "", err
@@ -153,7 +164,7 @@ func (g *Generator) getBounds(v0 *goivy.LogicVariable, others []*goivy.LogicVari
 				his = append(his, "("+e+")+1")
 			}
 		}
-		if rn == v0.Name && ln != v0.Name && !nameIn(others, ln) {
+		if rn == v0.Name && ln != v0.Name && !nameIn(others, ln) && !exprReferencesAnyNameIncludingVariables(args[0], otherNames) {
 			e, err := g.emitExpr(args[0])
 			if err != nil {
 				return "", "", err
@@ -438,6 +449,9 @@ func (g *Generator) goLoopHeadersForSomeCondition(some *goivy.SomeCondition) ([]
 		}
 		if !ok {
 			return nil, fmt.Errorf("ivy2golang: cannot enumerate some variable %s:%s", p.Name, sortName(p.CSort))
+		}
+		for _, q := range some.Params {
+			header = strings.ReplaceAll(header, goName("X"+q.Name), goName(q.Name))
 		}
 		headers[i] = header
 	}
