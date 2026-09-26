@@ -767,6 +767,19 @@ func (gbe *GoBackend) Events(sessionID string) (ch <-chan Event, err error) {
 	return
 }
 
+func (gbe *GoBackend) SetEventSink(sessionID string, sink func(Event)) (err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		sess.SetEventSink(sink)
+		return nil
+	})
+	return
+}
+
 func (gbe *GoBackend) Close() error {
 	//vv("gbe = %p Close()", gbe)
 	return gbe.sst.Close()

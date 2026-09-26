@@ -2,9 +2,11 @@ package webengine
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	goivy "github.com/glycerine/ivy/goivy"
+	"github.com/glycerine/ivy/goivy/webui"
 )
 
 const clientServerModel = `#lang ivy1.7
@@ -95,6 +97,48 @@ func TestEngineHonorsCancelledContextBeforeBackendWork(t *testing.T) {
 
 	if _, err := engine.NewSession(ctx); err == nil {
 		t.Fatal("NewSession with cancelled context succeeded")
+	}
+}
+
+func TestEngineMirrorsCheckProgressToEventSink(t *testing.T) {
+	ctx := context.Background()
+	engine := New(goivy.NewConfig())
+	defer engine.Close()
+
+	session, err := engine.NewSession(ctx)
+	if err != nil {
+		t.Fatalf("NewSession: %v", err)
+	}
+	if _, err := engine.LoadModel(ctx, session.ID, "client_server_example.ivy", []byte(clientServerModel)); err != nil {
+		t.Fatalf("LoadModel: %v", err)
+	}
+
+	var progress []webui.Event
+	if err := engine.SetEventSink(ctx, session.ID, func(event webui.Event) {
+		if event.Type == "check_progress" {
+			progress = append(progress, event)
+		}
+	}); err != nil {
+		t.Fatalf("SetEventSink: %v", err)
+	}
+
+	if _, err := engine.Check(ctx, session.ID, CheckRequest{Mode: "induction"}); err != nil {
+		t.Fatalf("Check: %v", err)
+	}
+
+	if len(progress) == 0 {
+		t.Fatal("expected induction check_progress events mirrored to event sink")
+	}
+	foundConjectureProgress := false
+	for _, event := range progress {
+		data, _ := event.Data.(map[string]interface{})
+		message, _ := data["message"].(string)
+		if strings.Contains(message, "Checking conjecture 1 of 1:") {
+			foundConjectureProgress = true
+		}
+	}
+	if !foundConjectureProgress {
+		t.Fatalf("missing conjecture progress event; got %#v", progress)
 	}
 }
 

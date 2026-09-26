@@ -31,6 +31,7 @@ type Session struct {
 	SimpleSess          *ConceptSession            // legacy simple session (for API compat)
 	SavedConceptDomains map[string]*ConceptDomain  // browser-visible saved concept domains
 	Events              chan Event                 // buffered SSE channel
+	EventSink           func(Event)                // optional in-process event mirror for js/wasm
 	mu                  sync.Mutex
 	FilePath            string // last loaded file path
 	FileContent         string // file content (when uploaded via browser)
@@ -77,6 +78,10 @@ func NewSession(cfg *goivy.Config, id string) *Session {
 		sheetCounter:        1,
 		EventViewer:         NewEventTraceViewer(),
 	}
+}
+
+func (s *Session) SetEventSink(sink func(Event)) {
+	s.EventSink = sink
 }
 
 func cloneWebUIConfigForLoad(base *goivy.Config, isolate string) *goivy.Config {
@@ -5204,6 +5209,14 @@ func (s *Session) runUPDR() (bool, error) {
 
 // emit sends an event on the SSE channel (non-blocking drop if full).
 func (s *Session) emit(e Event) {
+	if s.EventSink != nil {
+		func() {
+			defer func() {
+				_ = recover()
+			}()
+			s.EventSink(e)
+		}()
+	}
 	select {
 	case s.Events <- e:
 	default:

@@ -98,6 +98,12 @@ func handle(req wasmRequest) wasmResponse {
 }
 
 func runCommand(ctx context.Context, req wasmRequest) (any, error) {
+	cleanup, err := installEventSink(ctx, req.SessionID)
+	if err != nil {
+		return nil, err
+	}
+	defer cleanup()
+
 	commandID := req.Intent.CommandID
 	args := req.Intent.Args
 	if args == nil {
@@ -149,6 +155,32 @@ func runCommand(ctx context.Context, req wasmRequest) (any, error) {
 			Action: commandID,
 			Args:   args,
 		})
+	}
+}
+
+func installEventSink(ctx context.Context, sessionID string) (func(), error) {
+	if sessionID == "" {
+		return func() {}, nil
+	}
+	if err := engine.SetEventSink(ctx, sessionID, wasmEventSink(sessionID)); err != nil {
+		return nil, err
+	}
+	return func() {
+		_ = engine.SetEventSink(context.Background(), sessionID, nil)
+	}, nil
+}
+
+func wasmEventSink(sessionID string) func(webui.Event) {
+	return func(event webui.Event) {
+		postEvent := js.Global().Get("goivyWebEnginePostEvent")
+		if postEvent.Type() != js.TypeFunction {
+			return
+		}
+		data, err := json.Marshal(event)
+		if err != nil {
+			return
+		}
+		postEvent.Invoke(sessionID, string(data))
 	}
 }
 

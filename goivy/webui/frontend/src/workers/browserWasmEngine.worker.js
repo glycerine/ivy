@@ -184,6 +184,7 @@ async function loadWebEngineWasm() {
     go.importObject.smt_z3 = createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory });
     const result = await instantiateWasm(`${assetBaseUrl}goivy-webengine.wasm`, go.importObject);
     wasmMemory = result.instance.exports.mem || null;
+    installWasmEventBridge();
     let runPromise;
     try {
       runPromise = go.run(result.instance);
@@ -205,6 +206,23 @@ function discardWasmRuntime(error) {
   wasmRuntimeError = error || null;
   fsHost = null;
   globalThis.goivyWebEngineDispatch = undefined;
+  globalThis.goivyWebEnginePostEvent = undefined;
+}
+
+function installWasmEventBridge() {
+  globalThis.goivyWebEnginePostEvent = (sessionId, rawEvent) => {
+    const sid = String(sessionId || '');
+    try {
+      postEvent(sid, parseMessage(rawEvent));
+    } catch (error) {
+      postEvent(sid, {
+        type: 'error',
+        data: {
+          message: `Browser WASM progress event failed: ${errorMessage(error)}`,
+        },
+      });
+    }
+  };
 }
 
 function resetWasmRuntime(generation, error, reason = 'Go runtime exited') {

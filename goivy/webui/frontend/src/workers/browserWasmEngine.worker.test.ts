@@ -110,6 +110,50 @@ function installNoResponseGoRuntime() {
   });
 }
 
+function installProgressEventGoRuntime() {
+  vi.stubGlobal('Go', class FakeGo {
+    argv = [];
+    env = {};
+    importObject = {};
+
+    run() {
+      (globalThis as any).goivyWebEngineDispatch = (raw) => {
+        const request = JSON.parse(raw);
+        if (request.type === 'new-session') {
+          return JSON.stringify({
+            type: 'session',
+            requestId: request.requestId,
+            value: { id: 'browser-s1' },
+          });
+        }
+        if (request.type === 'run-command') {
+          if (typeof (globalThis as any).goivyWebEnginePostEvent !== 'function') {
+            throw new Error('missing browser wasm progress bridge');
+          }
+          (globalThis as any).goivyWebEnginePostEvent(request.sessionId, JSON.stringify({
+            type: 'check_progress',
+            data: {
+              level: 'info',
+              message: 'Checking conjecture 1 of 2: inv0',
+            },
+          }));
+          return JSON.stringify({
+            type: 'command-result',
+            requestId: request.requestId,
+            value: { result: 'pass', message: 'done' },
+          });
+        }
+        return JSON.stringify({
+          type: request.type,
+          requestId: request.requestId,
+          value: { ok: true },
+        });
+      };
+      return new Promise(() => {});
+    }
+  });
+}
+
 function stubWasmRuntimeAssets() {
   vi.stubGlobal('fetch', vi.fn(async (url) => {
     const text = String(url);
@@ -206,5 +250,45 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
     expect((thrown as Error).message).toContain('goivy webengine wasm returned no response');
     expect((thrown as Error).message).not.toContain('"undefined" is not valid JSON');
     expect((globalThis as any).__fakeGoRunCount).toBe(2);
+  });
+
+  it('forwards Go session progress events while a browser wasm command is still running', async () => {
+    installProgressEventGoRuntime();
+    const harness = installWorkerHarness();
+    stubWasmRuntimeAssets();
+
+    await import('./browserWasmEngine.worker.js');
+    (globalThis as any).self = undefined;
+
+    await expect(harness.send({
+      type: 'init',
+      requestId: 'init-1',
+      assetBaseUrl: '/static/wasm/',
+      includeRoot: '/include',
+    })).resolves.toEqual({ ok: true });
+    await expect(harness.send({
+      type: 'new-session',
+      requestId: 'new-session-1',
+      projectId: 'webui',
+    })).resolves.toEqual({ id: 'browser-s1' });
+
+    await expect(harness.send({
+      type: 'run-command',
+      requestId: 'run-command-1',
+      sessionId: 'browser-s1',
+      intent: { commandId: 'check.induction', args: { mode: 'induction' } },
+    })).resolves.toEqual({ result: 'pass', message: 'done' });
+
+    const progressIndex = harness.messages.findIndex((message) => (
+      message.type === 'event' &&
+      message.sessionId === 'browser-s1' &&
+      message.event?.type === 'check_progress' &&
+      message.event?.data?.message === 'Checking conjecture 1 of 2: inv0'
+    ));
+    const resultIndex = harness.messages.findIndex((message) => (
+      message.type === 'command-result' && message.requestId === 'run-command-1'
+    ));
+    expect(progressIndex).toBeGreaterThanOrEqual(0);
+    expect(resultIndex).toBeGreaterThan(progressIndex);
   });
 });

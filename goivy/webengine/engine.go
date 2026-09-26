@@ -69,6 +69,10 @@ type ProofActionRequest struct {
 
 type Payload map[string]any
 
+type eventSinkBackend interface {
+	SetEventSink(sessionID string, sink func(webui.Event)) error
+}
+
 func New(cfg *goivy.Config, backend ...webui.Backend) *Engine {
 	if cfg == nil {
 		cfg = goivy.NewConfig()
@@ -262,6 +266,17 @@ func (e *Engine) Events(ctx context.Context, sessionID string) (<-chan webui.Eve
 		return nil, err
 	}
 	return e.backend.Events(sessionID)
+}
+
+func (e *Engine) SetEventSink(ctx context.Context, sessionID string, sink func(webui.Event)) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	backend, ok := e.backend.(eventSinkBackend)
+	if !ok {
+		return fmt.Errorf("webengine: backend does not support event sinks")
+	}
+	return backend.SetEventSink(sessionID, sink)
 }
 
 func (e *Engine) Close() error {
