@@ -484,30 +484,40 @@ func TestSkolemizenp_WithProofChecker(t *testing.T) {
 	}
 }
 
-func TestSkolemizenpSchemaBodyConstantPremisePythonError(t *testing.T) {
+func TestSkolemizenpSchemaBodyConstantPremisePythonErrorFixed(t *testing.T) {
 	tm := tacticsTestAstCfg.NewTemporalModels(&NormalProgram{}, True)
 	prem := tacticsTestAstCfg.NewConstantDecl(NewConst("c", Boolean))
 	goal := MakeGoal(tacticsTestAstCfg, Location{}, tacticsTestAstCfg.NewAtom("g"), []Node{prem}, tm)
 
 	var err error
+	var result []*LabeledFormula
 	out := captureTacticsStdout(t, func() {
-		_, err = Skolemizenp(nil, []*LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
+		result, err = Skolemizenp(nil, []*LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
 	})
-	if err == nil {
-		t.Fatal("expected Python-compatible ConstantDecl formula error")
+	if err != nil {
+		t.Fatalf("Skolemizenp returned error: %v", err)
 	}
-	want := "'ConstantDecl' object has no attribute 'formula'"
-	if err.Error() != want {
-		t.Fatalf("error = %q, want %q", err.Error(), want)
+	if len(result) != 1 {
+		t.Fatalf("Expected 1 goal, got %d", len(result))
+	}
+	prems := GoalPrems(result[0])
+	if len(prems) != 1 || prems[0] != prem {
+		t.Fatalf("ConstantDecl premise was not preserved: %#v", prems)
+	}
+	if _, ok := GoalConc(result[0]).(*TemporalModels); !ok {
+		t.Fatalf("expected TemporalModels conclusion to remain, got %T", GoalConc(result[0]))
 	}
 	if !strings.Contains(out, "XTRACE: proof.varSubstGoal ENTER label=g nsubs=0\n") {
 		t.Fatalf("missing outer varSubstGoal trace:\n%s", out)
 	}
 	if !strings.Contains(out, "XTRACE: proof.varSubstGoal ENTER label=N/A nsubs=0\n") {
-		t.Fatalf("missing Python-style ConstantDecl recursive trace:\n%s", out)
+		t.Fatalf("missing ConstantDecl recursive trace:\n%s", out)
 	}
 	if strings.Contains(out, "object has no attribute 'label'") {
 		t.Fatalf("varSubstGoal still fails at the eager Go label check:\n%s", out)
+	}
+	if strings.Contains(out, "object has no attribute 'formula'") {
+		t.Fatalf("varSubstGoal still fails on ConstantDecl premise:\n%s", out)
 	}
 }
 
