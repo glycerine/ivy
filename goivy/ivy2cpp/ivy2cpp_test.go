@@ -3156,6 +3156,51 @@ export pick
 	compileGeneratedCPP(t, out)
 }
 
+func TestGeneratedIfSomeExtensionalRelationDeclaresWitnessBeforeDerivedGuard(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+function next(I:idx): idx
+relation edge(A:idx, B:idx, C:idx, D:idx, E:idx, F:idx)
+individual saved : idx
+after init {
+    edge(A, B, C, D, E, F) := false;
+}
+action pick = {
+    if some x:idx. edge(next(x), x, x, x, x, x) {
+        saved := x
+    }
+}
+export pick
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "someextorder"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	pickIdx := strings.Index(out.Impl, "void someextorder::pick()")
+	if pickIdx < 0 {
+		t.Fatalf("missing pick action:\n%s", out.Impl)
+	}
+	tail := out.Impl[pickIdx:]
+	if tickIdx := strings.Index(tail, "\nvoid someextorder::__tick"); tickIdx >= 0 {
+		tail = tail[:tickIdx]
+	}
+	decl := "unsigned loc__x = it->first.arg1;"
+	guard := "if (!(next[loc__x] == it->first.arg0)) continue;"
+	declIdx := strings.Index(tail, decl)
+	guardIdx := strings.Index(tail, guard)
+	if declIdx < 0 || guardIdx < 0 {
+		t.Fatalf("missing declaration %q or guard %q in derived-guard extensional if some:\n%s", decl, guard, tail)
+	}
+	if guardIdx < declIdx {
+		t.Fatalf("derived guard should be emitted after witness declaration:\n%s", tail)
+	}
+	if strings.Contains(tail, "edge[") {
+		t.Fatalf("derived-guard extensional if some should not re-check edge through operator[]:\n%s", tail)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestGeneratedIfSomeUsesExtensionalRelationMapForTupleWitnesses(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type idx = {0..3}

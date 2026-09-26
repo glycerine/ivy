@@ -974,12 +974,14 @@ func (g *Generator) extensionalLoopPrefixLines(app *goivy.Apply, bindings map[st
 	}
 	var lines []string
 	boundNames := map[string]bool{}
+	nameRewrites := make(map[string]string, len(bindings))
+	for name, binding := range bindings {
+		nameRewrites[varName(name)] = binding.EmitName
+	}
 	for pos, term := range app.Terms {
-		key := extensionalTupleKeyAccess(app, pos)
 		if tv, ok := term.(*goivy.LogicVariable); ok {
 			if binding, ok := bindings[tv.Name]; ok {
 				if boundNames[tv.Name] {
-					lines = append(lines, fmt.Sprintf("if (!(%s == %s)) continue;", binding.EmitName, key))
 					continue
 				}
 				boundNames[tv.Name] = true
@@ -987,7 +989,25 @@ func (g *Generator) extensionalLoopPrefixLines(app *goivy.Apply, bindings map[st
 				if declType == "" {
 					declType = g.cppType(binding.Sort)
 				}
-				lines = append(lines, fmt.Sprintf("%s %s = %s;", declType, binding.EmitName, key))
+				lines = append(lines, fmt.Sprintf("%s %s = %s;", declType, binding.EmitName, extensionalTupleKeyAccess(app, pos)))
+			}
+		}
+	}
+	for pos, term := range app.Terms {
+		key := extensionalTupleKeyAccess(app, pos)
+		if tv, ok := term.(*goivy.LogicVariable); ok {
+			if binding, ok := bindings[tv.Name]; ok {
+				firstPos := -1
+				for i, candidate := range app.Terms[:pos] {
+					if cv, ok := candidate.(*goivy.LogicVariable); ok && cv.Name == tv.Name {
+						firstPos = i
+						break
+					}
+				}
+				if firstPos < 0 {
+					continue
+				}
+				lines = append(lines, fmt.Sprintf("if (!(%s == %s)) continue;", binding.EmitName, key))
 				continue
 			}
 		}
@@ -995,6 +1015,7 @@ func (g *Generator) extensionalLoopPrefixLines(app *goivy.Apply, bindings map[st
 		if err != nil {
 			return nil, nil, err
 		}
+		termCode = rewriteCPPIdentifiers(termCode, nameRewrites)
 		lines = append(lines, fmt.Sprintf("if (!(%s == %s)) continue;", termCode, key))
 	}
 	return lines, boundNames, nil
