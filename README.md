@@ -1157,3 +1157,47 @@ apply("append_msg", __quants)
 
 Together these keep the Python emitter close to its original behavior while
 allowing the generated C++ for `raft_no_assume_test.ivy` to compile.
+
+Follow-up runtime hang fix, also in `pyivy/ivy/ivy/ivy_to_cpp.py`: after the
+C++ built successfully, running `./raft_no_assume_test` still hung before or
+during the first few action traces because large extensional relations were
+being materialized through `hash_thunk::operator[]`.
+
+The first runtime issue was universal initialization such as:
+
+```ivy
+append_msg(T, PLI, PLT, EI, ET, EV) := false;
+append_reply_msg(F, T, EI, ET) := false;
+request_vote_msg(C, T, LI, LT) := false;
+```
+
+The old assignment path expanded these over the full finite product, filling
+large `hash_thunk` memo tables. The fix restores the existing
+`emit_assign_large` path for large relation assignments with free variables, so
+these initializations install lazy thunks instead of eager per-tuple writes.
+
+The second runtime issue was quantified invariant checking. Even after lazy
+initialization, generated assertions like `request_vote_msg(...) -> ...` and
+`append_msg(...) -> ...` used finite loops and called `operator[]` on every
+tuple. The fix makes `emit_quant` prefer large extensional relation memo
+iteration before numeric finite bounds, binds tuple fields from `it->first`,
+adds equality guards for repeated variables or concrete tuple positions, and
+rewrites the selected extensional atom to `true` in the loop body.
+
+The third runtime issue was ordinary `some`/existential searches inside action
+bodies, for example `receive_append_msg`, which still scanned the whole
+`append_msg` product. The fix routes ordinary `emit_some` searches through the
+same bounded-loop chooser, so large extensional guards are driven by
+`append_msg.memo` or `request_vote_msg.memo`. `SomeMin`/`SomeMax` keep their
+ordered finite loops.
+
+Verification used:
+
+```sh
+cd ~/trash/tmp
+XTRACE_OFF=1 ivy_to_cpp build=true target=test raft_no_assume_test.ivy
+timeout 30 ./raft_no_assume_test
+```
+
+The generated tester printed randomized action traces and reached
+`test_completed` with exit status 0.

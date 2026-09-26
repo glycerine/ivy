@@ -3436,6 +3436,45 @@ def get_extensional_bound_exprs(v0,body,exists,res):
             thing = ilu.substitute_ast(ldf.formula.args[1],subst)
             get_extensional_bound_exprs(v0,thing,exists,res)
 
+def get_extensional_bound(v0,body,exists,large_only=False):
+    ebnds = []
+    get_extensional_bound_exprs(v0,body,exists,ebnds)
+    if large_only:
+        ebnds = [ebnd for ebnd in ebnds if is_large_type(ebnd.rep.sort)]
+    return ebnds[0] if ebnds else None
+
+def replace_ast_exact(ast,target,replacement):
+    if ast == target:
+        return replacement
+    if not hasattr(ast,'args') or not ast.args:
+        return ast
+    args = [replace_ast_exact(arg,target,replacement) for arg in ast.args]
+    if all(old == new for old,new in zip(ast.args,args)):
+        return ast
+    return ast.clone(args)
+
+def extensional_tuple_key(ebnd,pos):
+    return 'it->first' if len(ebnd.args) == 1 else 'it->first.arg' + str(pos)
+
+def open_extensional_bound_loop(header,ebnd,variables):
+    indent(header)
+    header.append('for(auto it={}.memo.begin(),en={}.memo.end(); it != en; ++it)if (it->second) {{ \n'.format(varname(ebnd.rep),varname(ebnd.rep)))
+    bound = []
+    bound_names = set()
+    for pos,v in enumerate(ebnd.args):
+        if il.is_variable(v) and v in variables and v.name not in bound_names:
+            header.append('    auto ' + varname(v.name) + ' = ' + extensional_tuple_key(ebnd,pos) + ';\n')
+            bound.append(v)
+            bound_names.add(v.name)
+    for pos,v in enumerate(ebnd.args):
+        key = extensional_tuple_key(ebnd,pos)
+        if il.is_variable(v) and v in variables:
+            if ebnd.args.index(v) != pos:
+                header.append('    if (!(' + varname(v.name) + ' == ' + key + ')) continue;\n')
+        elif v not in variables:
+            header.append('    if (!(' + code_eval(header,v) + ' == ' + key + ')) continue;\n')
+    return [v for v in variables if v not in bound]
+
 
 def emit_quant(variables,body,header,code,exists=False):
     global indent_level
@@ -3486,29 +3525,24 @@ def emit_quant(variables,body,header,code,exists=False):
         header.append('); !' + varname(iu.compose_names(iter,'is_end')) + '(' + idx + ');' 
                        + idx + '=' + varname(iu.compose_names(iter,'next')) + '(' + idx + ')) {\n')
     else:
-        
-        berr = get_bounds(header,v0,variables,body,exists)
-        if not isinstance(berr,BoundsError) and is_any_integer_type(v0.sort):
+        ebnd = get_extensional_bound(v0,body,exists,large_only=True)
+        berr = None
+        if ebnd is not None:
+            variables = open_extensional_bound_loop(header,ebnd,[v0] + variables)
+            body = replace_ast_exact(body,ebnd,il.And())
+        else:
+            berr = get_bounds(header,v0,variables,body,exists)
+        if ebnd is None and not isinstance(berr,BoundsError) and is_any_integer_type(v0.sort):
             lo,hi = berr
             header.append(bounded_for_header(v0.sort,idx,lo,hi))
-        else:
-            ebnds = []
-            get_extensional_bound_exprs(v0,body,exists,ebnds)
-            if not ebnds:
+        elif ebnd is None:
+            ebnd = get_extensional_bound(v0,body,exists)
+            if ebnd is None:
                 if not isinstance(berr,BoundsError):
                     berr = BoundsError(None,"cannot iterate over sort {}".format(v0.sort))
                 berr.throw()
-            ebnd = ebnds[0]
-            header.append('for(auto it={}.memo.begin(),en={}.memo.end(); it != en; ++it)if (it->second) {{ \n'.format(varname(ebnd.rep),varname(ebnd.rep)))
-            for pos,v in enumerate(ebnd.args):
-                if v == v0 or v in variables:
-                    ct = ctype(v.sort)
-                    ct = 'auto'
-                    if len(ebnd.args) > 1:
-                        header.append('    ' + ct + ' ' + v.name + ' = it->first.arg' + str(pos) + ';\n')
-                    else:
-                        header.append('    ' + ct + ' ' + v.name + ' = it->first;\n')
-            variables = [v for v in variables if v not in ebnd.args]
+            variables = open_extensional_bound_loop(header,ebnd,[v0] + variables)
+            body = replace_ast_exact(body,ebnd,il.And())
 
     indent_level += 1
     subcode = []
@@ -3572,7 +3606,13 @@ def emit_some(self,header,code):
     code_asgn(header,some,'0')
     if isinstance(self,ivy_ast.SomeMinMax):
         minmax = new_temp(header)
-    open_loop(header,vs,bounds=get_all_bounds(header,vs,fmla,True,self.params()))
+        open_loop(header,vs,bounds=get_all_bounds(header,vs,fmla,True,self.params()))
+        loops = None
+    else:
+        loops = open_bounded_loops(vs,fmla,True)
+        if isinstance(loops,BoundsError):
+            loops.throw()
+        header.extend(loops)
     open_if(header,code_eval(header,fmla))
     if isinstance(self,ivy_ast.SomeMinMax):
         index = new_temp(header)
@@ -3597,7 +3637,10 @@ def emit_some(self,header,code):
     if isinstance(self,ivy_ast.SomeMinMax) and self.params()[0] == self.index():
         code_line(header,'break')
     close_scope(header)
-    close_loop(header,vs)
+    if loops is None:
+        close_loop(header,vs)
+    else:
+        close_bounded_loops(header,loops)
     if isinstance(self,ivy_ast.Some):
         code.append(some)
        
@@ -3726,28 +3769,22 @@ def open_bounded_loops(variables,body,exists=True):
         v0 = variables[0]
         idx = v0.name
         variables = variables[1:]
+        ebnd = get_extensional_bound(v0,body,exists,large_only=True)
+        berr = None
+        if ebnd is not None:
+            variables = open_extensional_bound_loop(header,ebnd,[v0] + variables)
+            continue
         berr = get_bounds(header,v0,variables,body,exists)
         if not isinstance(berr,BoundsError) and is_any_integer_type(v0.sort):
             lo,hi = berr
             header.append(bounded_for_header(v0.sort,idx,lo,hi))
         else:
-            ebnds = []
-            get_extensional_bound_exprs(v0,body,exists,ebnds)
-            if not ebnds:
+            ebnd = get_extensional_bound(v0,body,exists)
+            if ebnd is None:
                 if not isinstance(berr,BoundsError):
                     berr = BoundsError(None,"cannot iterate over sort {}".format(v0.sort))
                 return berr
-            ebnd = ebnds[0]
-            header.append('for(auto it={}.memo.begin(),en={}.memo.end(); it != en; ++it)if (it->second) {{\n'.format(varname(ebnd.rep),varname(ebnd.rep)))
-            for pos,v in enumerate(ebnd.args):
-                if v == v0 or v in variables:
-                    ct = ctype(v.sort)
-                    ct = 'auto'
-                    if len(ebnd.args) > 1:
-                        header.append('    ' + ct + ' ' + v.name + ' = it->first.arg' + str(pos) + ';\n')
-                    else:
-                        header.append('    ' + ct + ' ' + v.name + ' = it->first;\n')
-            variables = [v for v in variables if v not in ebnd.args]
+            variables = open_extensional_bound_loop(header,ebnd,[v0] + variables)
     return header
 
 def close_bounded_loops(header,loops):
