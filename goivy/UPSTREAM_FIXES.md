@@ -108,7 +108,7 @@ Upstream subject: `fixed bug in VC generator for assignments`
 
 Why it matters: the old VC construction used placeholder arguments for the mutated relation/function instead of the actual receiver/index arguments being assigned through. That can make the generated transition relation too weak or about the wrong update point.
 
-Python patch:
+Python patch from `ivy/ivy_actions.py`:
 
 ```diff
  def destr_asgn_val(lhs,fmlas):
@@ -146,7 +146,7 @@ TDD test guidance:
 
 Upstream subject: `Add check= option to select checks by name; fix assert= extension handling`
 
-Bug patch:
+Bug patch from `ivy/ivy_actions.py`:
 
 ```diff
  def p_c_a(s):
@@ -173,7 +173,7 @@ TDD test guidance:
 
 Upstream subject: `Fix two type/wire compiler bugs affecting the hardware models`
 
-Relevant Python patch:
+Relevant Python patch from `ivy/ivy_compiler.py`:
 
 ```diff
 +def ascribe_result_sort(term,sort):
@@ -233,7 +233,7 @@ TDD test guidance:
 
 Upstream subject: `allow forward references in definition statements`
 
-Patch shape:
+Patch shape from `ivy/ivy_compiler.py`:
 
 ```diff
  class IvyDomainSetup(IvyDeclInterp):
@@ -275,7 +275,7 @@ Patch shape:
              fix_constructors(mod)
 ```
 
-Also stringifies dependency-cycle SCC elements:
+Also in `ivy/ivy_compiler.py`, the same commit stringifies dependency-cycle SCC elements:
 
 ```diff
 - raise iu.IvyError(None,'these definitions form a dependency cycle: {}'.format(','.join(scc)))
@@ -299,7 +299,7 @@ TDD test guidance:
 
 Upstream subject: `fixed regression on unnamed assertions in ivy1.5`
 
-Patch:
+Patch from `ivy/ivy_actions.py`:
 
 ```diff
  class AssertAction(Action):
@@ -314,7 +314,7 @@ Patch:
              fmla = fmla.formula
 ```
 
-Related name helper pattern:
+Related name-filter pattern from `ivy/ivy_check.py`:
 
 ```diff
 - if args and isinstance(args[0], LabeledFormula):
@@ -337,12 +337,16 @@ TDD test guidance:
 
 Upstream subject: `Fix Z3 usage in generated test code for current Z3 / macOS`
 
-Key patches:
+Key patches from `ivy/ivy_to_cpp.py`:
+
+From `ivy/ivy_to_cpp.py`, `expr_to_z3`/`expr_to_z3_no_type_cnst` should wrap parsed SMTLIB assertions with `z3::mk_and`:
 
 ```diff
 -    return 'z3::expr(g.ctx,Z3_parse_smtlib2_string({}ctx, "{}", ...))'.format(...)
 +    return 'z3::mk_and(z3::expr_vector(g.ctx,Z3_parse_smtlib2_string({}ctx, "{}", ...)))'.format(...)
 ```
+
+From `ivy/ivy_to_cpp.py`, the generated C++ `gen::add` helper should parse a `Z3_ast_vector` and conjoin it:
 
 ```diff
      void add(const std::string &z3inp) {
@@ -354,6 +358,8 @@ Key patches:
          slvr.add(fmla);
      }
 ```
+
+From `ivy/ivy_to_cpp.py`, generated numeral extraction checks should compare against `Z3_L_TRUE`:
 
 ```diff
 - if (Z3_get_numeral_int(ctx,foo,&v) != Z3_TRUE) {
@@ -377,7 +383,7 @@ TDD test guidance:
 
 ### P1 `28cce61b66695ea5c3ac561d24d6c881b4929bcf`: `proof [this]`
 
-Patch:
+Patch from `ivy/ivy_compiler.py`:
 
 ```diff
 -            elif lab in mod.isolates:
@@ -398,7 +404,7 @@ TDD test guidance:
 
 ### P1 `e34f3cd8fe5f6d581805d53ae6b007aed5113213`: ranking helpful condition with temporal operators
 
-Patch:
+Patch from `ivy/ivy_ranking.py`:
 
 ```diff
          D = 0
@@ -422,12 +428,16 @@ TDD test guidance:
 
 ### P1 Python-side `06cbcf362d8ae261d0629e7605e7ef7f9b3251b7` and `346fe2d7a0c55baf337c21bcb589fa8daf6cd810`: Z3 import/cache/context
 
-Relevant patches:
+Relevant patches by file:
+
+From `ivy/ivy_solver.py` in `06cbcf362d8ae261d0629e7605e7ef7f9b3251b7`, import the external Z3 package:
 
 ```diff
 -import ivy.z3 as z3
 +import z3
 ```
+
+From `ivy/ivy_solver.py` in `06cbcf362d8ae261d0629e7605e7ef7f9b3251b7`, reset the enum-sort cache in `clear()`:
 
 ```diff
  def clear():
@@ -436,6 +446,8 @@ Relevant patches:
 @@
 +    z3_enums = dict()
 ```
+
+From `ivy/ivy_solver.py` in `06cbcf362d8ae261d0629e7605e7ef7f9b3251b7`, cache enum sorts by name:
 
 ```diff
  def enumeratedsort(es):
@@ -447,15 +459,21 @@ Relevant patches:
      return res
 ```
 
+From `ivy/ivy_solver.py` in `346fe2d7a0c55baf337c21bcb589fa8daf6cd810`, reset Z3's main context in `clear()`:
+
 ```diff
  def clear():
 +    z3.z3._main_ctx = z3.Context()
 ```
 
+From `build_submodules.py` in `346fe2d7a0c55baf337c21bcb589fa8daf6cd810`, use `python3` when building Z3:
+
 ```diff
 -        cmd = 'python scripts/mk_make.py --python --prefix {} --pypkgdir {}/'.format(cwd,ivydir)
 +        cmd = 'python3 scripts/mk_make.py --python --prefix {} --pypkgdir {}/'.format(cwd,ivydir)
 ```
+
+The same upstream area also touches `setup.py` for packaging metadata (`z3-solver` dependency and version bump), but no setup metadata diff is shown here because it has no direct Go translation.
 
 Go translation:
 
@@ -464,7 +482,7 @@ Go translation:
 
 ### Done `8f7763fdf643d8fd75ed9bc061f6e977742f45d6`: `var_subst_goal` and `ConstantDecl`
 
-Patch:
+Patch from `ivy/ivy_proof.py`:
 
 ```diff
  def var_subst_goal(goal,subst):
@@ -484,14 +502,14 @@ Affected commits: `001da592`, `dfb65f37`, `2129b5cc`, `a5ecac6e`, `0b1561ec`, `8
 
 Current local status: no local `invardeps` found, so these are not immediate bug ports. If invariant dependencies are imported later, apply these fixes immediately.
 
-Crash fix for unlabeled invariants:
+Crash fix for unlabeled invariants from `ivy/ivy_check.py`:
 
 ```diff
 -        depnames = set(mod.invardeps.get(c.name,[]))
 +        depnames = set(mod.invardeps.get(c.name,[])) if c.label is not None else set([])
 ```
 
-Invisible dependency error:
+Invisible dependency error from `ivy/ivy_check.py`:
 
 ```diff
 -        deps = [x.formula for x in mod.assumed_invariants if x.name in depnames]
@@ -505,7 +523,7 @@ Invisible dependency error:
 +        deps = [x.formula for x in mod.assumed_invariants if x.name in depnames]
 ```
 
-Unlabeled conjectures/postconditions in visibility check:
+Unlabeled conjectures/postconditions in visibility check from `ivy/ivy_check.py`:
 
 ```diff
 -        available = set(x.name for x in mod.assumed_invariants)
@@ -528,14 +546,14 @@ Go guidance if feature is adopted:
 
 Do not port the register feature wholesale. Separable fixes:
 
-Non-wire background theory for sequential composition:
+Non-wire background theory for sequential composition from `ivy/ivy_actions.py`:
 
 ```diff
 -        axioms = domain.background_theory(pvars)
 +        axioms = domain.non_wire_background_theory(pvars)
 ```
 
-Assumed invariants included in interference symbol collection:
+Assumed invariants included in interference symbol collection from `ivy/ivy_isolate.py`:
 
 ```diff
 -    for x in [mod.labeled_axioms,mod.labeled_props,mod.labeled_inits,mod.labeled_conjs,non_wires]:
@@ -544,7 +562,7 @@ Assumed invariants included in interference symbol collection:
          asts.extend(y.formula for y in x if not isinstance(y.formula,ivy_ast.SchemaBody))
 ```
 
-Safer `z3_and` helper:
+Safer `z3_and` helper from `ivy/ivy_solver.py`:
 
 ```diff
 +def z3_and(*args):
@@ -563,14 +581,14 @@ Port each only if the corresponding Go area lacks the behavior or tests show the
 
 Filtered commits: `18c08b3`, `3a2feca`, `4773d57`, `1f8039c`, `33fbdea`, `df843284`.
 
-The tempting general bug in `18c08b3` is:
+The tempting general bug in `18c08b3` is from `ivy/ivy_solver.py`:
 
 ```diff
 -        q = forall if ivy_logic.is_forall(fmla) else exists if ivy_logic.is_forall(fmla) else mylambda
 +        q = forall if ivy_logic.is_forall(fmla) else exists if ivy_logic.is_exists(fmla) else mylambda
 ```
 
-But the local Python fork currently has the simpler non-lambda branch:
+But the local Python fork currently has the simpler non-lambda branch in `pyivy/ivy/ivy/ivy_solver.py`:
 
 ```python
 q = forall if ivy_logic.is_forall(fmla) else exists
