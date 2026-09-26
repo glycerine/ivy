@@ -3042,15 +3042,14 @@ action split(c:color) returns (out:color, good:bool) = {
 }
 action step = {
     call saved, ok := split(green)
-}
-export step
-`)
+	}
+	export step
+	`)
 	// compileIvySource runs with create_isolate=false so the parser
 	// leaves every action public. Trim to mirror what create_isolate
-	// would do (ivy_isolate.py:1674-1678) — only the exported action
-	// stays public. Without this, split (multi-return) gets the public
-	// ValueType-only annotation, which Python rejects with IvyError
-	// (ivy_to_cpp.py:1565-1567).
+	// would do (ivy_isolate.py:1674-1678): only the exported action
+	// stays public. This keeps the test focused on private multi-return
+	// call lowering.
 	mod.PublicActions.Set("split", false)
 	out, err := Generate(mod, Config{ClassName: "multi"})
 	if err != nil {
