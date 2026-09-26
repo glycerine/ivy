@@ -3759,11 +3759,9 @@ def close_bounded_loops(header,loops):
 def emit_assign(self,header):
     global indent_level
     with ivy_ast.ASTContext(self):
-#        if is_large_type(self.args[0].rep.sort) and lu.free_variables(self.args[0]):
-#        if is_large_lhs(self.args[0]):
-#            
-#            emit_assign_large(self,header)
-#            return
+        if is_large_type(self.args[0].rep.sort) and lu.free_variables(self.args[0]):
+            emit_assign_large(self,header)
+            return
         vs = ordered_free_variables(self.args[0])
 #        for v in vs:
 #            check_iterable_sort(v.sort)
