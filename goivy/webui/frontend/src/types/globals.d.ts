@@ -12,6 +12,7 @@ declare global {
     CONCEPT_STYLE?: any;
     ARG_STYLE?: any;
     PROOF_STYLE?: any;
+    showDirectoryPicker?: any;
     showOpenFilePicker?: any;
     showSaveFilePicker?: any;
   }

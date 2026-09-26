@@ -44,6 +44,7 @@ describe('ivyRuntime public surface', () => {
       'chooseAndLoadAnalysisStateFile',
       'chooseAndLoadEventTraceFile',
       'chooseAndLoadModelFile',
+      'chooseAndLoadProjectFolder',
       'clearDialogAnswers',
       'clearEventPatterns',
       'clearSavedSessionData',

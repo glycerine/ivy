@@ -3,6 +3,7 @@ import { selectSheet, selectStateCheckboxRows } from '../models/uiDataSelectors.
 import { normalizeArgNodeId } from '../models/uiDataModel.ts';
 import { beginRunContext, reportRunContextError, runWithContext } from './runContextService.ts';
 import { clearDetailsLog } from './detailsService.ts';
+import { modelLoadOptionsForApp } from './fileService.ts';
 
 function activeCheckLabel(app) {
   const mode = app && typeof app.getMode === 'function' ? app.getMode() : 'verification';
@@ -395,9 +396,12 @@ export async function runCheck(app) {
     const requestOptions = controller ? { signal: controller.signal } : {};
     const editorContent = app.cmEditor ? app.cmEditor.getValue() : app._persistedFileContent;
     if (editorContent) {
-      await app.api.reloadContent(editorContent, app._persistedFilePath || app._persistedFileName || 'model.ivy', {
-        isolate: app.activeIsolate || '',
-      }, requestOptions);
+      await app.api.reloadContent(
+        editorContent,
+        app._persistedFilePath || app._persistedFileName || 'model.ivy',
+        modelLoadOptionsForApp(app, { isolate: app.activeIsolate || '' }),
+        requestOptions,
+      );
     }
     app.controls.setStatus(`Running ${mode} check...`);
     const result = await app.api.runCheck(mode, analysisControllerOptions(), requestOptions);

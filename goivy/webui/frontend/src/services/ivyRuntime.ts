@@ -47,6 +47,7 @@ import {
 } from './uiDataRenderService.ts';
 import {
     chooseAndLoadModelFile as chooseAndLoadModelFileViaService,
+    chooseAndLoadProjectFolder as chooseAndLoadProjectFolderViaService,
     closeCurrentFile as closeCurrentFileViaService,
     confirmNoExternalChangeBeforeSave as confirmNoExternalChangeBeforeSaveViaService,
     downloadModel as downloadModelViaService,
@@ -55,6 +56,7 @@ import {
     ensureFileHandleWritable,
     loadModelFile,
     mergeDiskVersionIntoEditBuffer,
+    modelLoadOptionsForApp,
     newModel as newModelViaService,
     preparePrimarySheetForModelLoad,
     readFileHandleContent,
@@ -479,9 +481,11 @@ class IvyRuntime {
         });
         this._modelStateRefreshInProgress = true;
         try {
-            var result = await this.api.reloadContent(content, this._persistedFilePath || this._persistedFileName || 'model.ivy', {
-                isolate: this.activeIsolate || '',
-            });
+            var result = await this.api.reloadContent(
+                content,
+                this._persistedFilePath || this._persistedFileName || 'model.ivy',
+                modelLoadOptionsForApp(this, { isolate: this.activeIsolate || '' }),
+            );
             if (!this._isCurrentModelLoad(modelLoad)) return false;
             modelLoad.loadResult = result;
             await refreshLoadedModelSnapshots(this, { modelLoad: modelLoad });
@@ -1512,6 +1516,10 @@ class IvyRuntime {
         return chooseAndLoadModelFileViaService(this);
     }
 
+    async chooseAndLoadProjectFolder() {
+        return chooseAndLoadProjectFolderViaService(this, runtimeDeps.IvyPersist);
+    }
+
     async chooseAndLoadEventTraceFile() {
         var eventFileInput = document.getElementById('event-file-input');
         if (window.showOpenFilePicker) {
@@ -1587,6 +1595,14 @@ class IvyRuntime {
             e.preventDefault();
             self.flashAndClose(this, async function () {
                 await self.chooseAndLoadModelFile();
+            });
+        });
+
+        var openProjectFolder = document.getElementById('file-open-project-folder');
+        if (openProjectFolder) openProjectFolder.addEventListener('click', function (e) {
+            e.preventDefault();
+            self.flashAndClose(this, async function () {
+                await self.chooseAndLoadProjectFolder();
             });
         });
 
@@ -1885,9 +1901,11 @@ class IvyRuntime {
                     filename: this._persistedFileName || 'model.ivy',
                     content: content,
                 });
-                var loadResult = await next.reloadContent(content, this._persistedFilePath || this._persistedFileName || 'model.ivy', {
-                    isolate: this._modelStateInvalid ? '' : (this.activeIsolate || ''),
-                });
+                var loadResult = await next.reloadContent(
+                    content,
+                    this._persistedFilePath || this._persistedFileName || 'model.ivy',
+                    modelLoadOptionsForApp(this, { isolate: this._modelStateInvalid ? '' : (this.activeIsolate || '') }),
+                );
                 if (this._isCurrentModelLoad(modelLoad)) {
                     modelLoad.loadResult = loadResult;
                     await refreshLoadedModelSnapshots(this, { modelLoad: modelLoad });
@@ -4282,7 +4300,7 @@ class IvyRuntime {
         });
         try {
             var filename = this._persistedFilePath || this._persistedFileName || 'model.ivy';
-            var result = await this.api.reloadContent(content, filename, { isolate: selected });
+            var result = await this.api.reloadContent(content, filename, modelLoadOptionsForApp(this, { isolate: selected }));
             if (!this._isCurrentModelLoad(modelLoad)) return;
             modelLoad.loadResult = result;
             this._persistedFileContent = content;
@@ -4562,7 +4580,11 @@ class IvyRuntime {
             // server checks exactly what the user sees, not a stale cache.
             var editorContent = this.cmEditor ? this.cmEditor.getValue() : this._persistedFileContent;
             if (editorContent) {
-                await this.api.reloadContent(editorContent, this._persistedFilePath || this._persistedFileName || 'model.ivy');
+                await this.api.reloadContent(
+                    editorContent,
+                    this._persistedFilePath || this._persistedFileName || 'model.ivy',
+                    modelLoadOptionsForApp(this),
+                );
             }
             this.controls.setStatus('Running ' + mode + ' check...');
             var result = await this.api.runCheck(mode);

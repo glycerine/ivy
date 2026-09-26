@@ -78,6 +78,34 @@ describe('BrowserWasmIvyApiAdapter', () => {
     await expect(load).resolves.toEqual({ status: 'ok' });
   });
 
+  it('passes project files through to the worker model snapshot', async () => {
+    const { api, workers } = makeAdapter();
+    const session = api.createSession();
+    await flushAsync();
+    workers[0].reply(workers[0].requests[1], 'session', { id: 'browser-s1' });
+    await session;
+
+    const projectFiles = [
+      { path: 'raft_no_assume.ivy', data: '#lang ivy1.6\n' },
+      { path: 'nested/helper.ivy', text: '#lang ivy1.7\n' },
+    ];
+    const load = api.reloadContent('include raft_no_assume\n', '/project/raft_no_assume_test.ivy', {
+      projectFiles,
+    });
+    await flushAsync();
+
+    const loadRequest = workers[0].requests[2];
+    expect(loadRequest.model).toMatchObject({
+      filename: '/project/raft_no_assume_test.ivy',
+      projectFiles: [
+        { path: 'raft_no_assume.ivy', data: '#lang ivy1.6\n' },
+        { path: 'nested/helper.ivy', data: '#lang ivy1.7\n' },
+      ],
+    });
+    workers[0].reply(loadRequest, 'load-result', { status: 'ok' });
+    await expect(load).resolves.toEqual({ status: 'ok' });
+  });
+
   it('hard-cancels browser jobs by terminating the worker and hydrates the next worker from the last model', async () => {
     const { api, workers } = makeAdapter();
     const session = api.createSession();

@@ -5,6 +5,7 @@ import {
   selectStateToggles,
 } from '../models/uiDataSelectors.ts';
 import { analysisStateSuggestedName, saveMimeType, savePickerOptions } from './saveDialogService.ts';
+import { modelLoadOptionsForApp } from './fileService.ts';
 
 function rawRecord(value) {
   return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
@@ -69,6 +70,8 @@ export function buildAnalysisState(app, persist) {
     fileName: app._persistedFileName || '',
     filePath: app._persistedFilePath || app._persistedFileName || '',
     fileContent: app._editorContent ? app._editorContent() : (app._persistedFileContent || ''),
+    projectRootName: app._projectRootName || '',
+    projectFiles: Array.isArray(app._projectFiles) ? app._projectFiles : [],
     activeIsolate: app.activeIsolate || '',
     availableIsolates: Array.isArray(app.availableIsolates) ? app.availableIsolates.slice() : [],
     editorKeymap: app.getEditorKeymap ? app.getEditorKeymap() : (app._editorKeymap || 'emacs'),
@@ -219,6 +222,8 @@ export async function loadAnalysisStateObject(app, state, persist, options: any 
   app._persistedFileName = state.fileName || '';
   app._persistedFilePath = state.filePath || state.fileName || '';
   app._persistedFileContent = state.fileContent || '';
+  app._projectRootName = state.projectRootName || '';
+  app._projectFiles = Array.isArray(state.projectFiles) ? state.projectFiles : [];
   app._savedFileContent = app._persistedFileContent;
 
   if (app.setEditorContent) {
@@ -231,7 +236,7 @@ export async function loadAnalysisStateObject(app, state, persist, options: any 
     const loadResult = await app.api.reloadContent(
       app._persistedFileContent,
       app._persistedFilePath || app._persistedFileName || 'restored.ivy',
-      { isolate: state.activeIsolate || '' },
+      modelLoadOptionsForApp(app, { isolate: state.activeIsolate || '' }),
     );
     if (app.setIsolates) {
       app.setIsolates(

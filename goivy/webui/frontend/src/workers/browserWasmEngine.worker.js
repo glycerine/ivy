@@ -11,6 +11,7 @@ let wasmRuntimeError = null;
 let wasmRuntimeCrashReported = false;
 let runtimeLogEntries = [];
 let sequence = 0;
+let fsHost = null;
 const sessions = new Map();
 const workerScope = globalThis.self || globalThis;
 
@@ -57,6 +58,9 @@ async function handleMessage(request) {
         requireInit();
         const session = requireSession(request.sessionId);
         session.currentModel = request.model || null;
+        if (fsHost && typeof fsHost.setProjectFiles === 'function') {
+          fsHost.setProjectFiles((request.model && request.model.projectFiles) || []);
+        }
         postEvent(session.id, {
           type: 'job-progress',
           data: {
@@ -149,7 +153,7 @@ async function loadWebEngineWasm() {
     ]);
     const includeTree = await loadIncludeTree();
     const z3 = await loadZ3();
-    const fsHost = installGoIvyNodeFS({
+    fsHost = installGoIvyNodeFS({
       includeRoot,
       includeTree,
       stdout: (bytes) => {
@@ -199,6 +203,7 @@ async function loadWebEngineWasm() {
 function discardWasmRuntime(error) {
   wasmReady = null;
   wasmRuntimeError = error || null;
+  fsHost = null;
   globalThis.goivyWebEngineDispatch = undefined;
 }
 

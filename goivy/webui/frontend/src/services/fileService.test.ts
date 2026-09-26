@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
+  chooseAndLoadProjectFolder,
   confirmNoExternalChangeBeforeSave,
   downloadModelForUnsupportedSave,
   ensureFileHandleWritable,
@@ -31,6 +32,29 @@ function abortError() {
   const err = new Error('The user aborted a request.');
   err.name = 'AbortError';
   return err;
+}
+
+function fileHandle(data: string) {
+  return {
+    kind: 'file',
+    async getFile() {
+      return {
+        async text() {
+          return data;
+        },
+      };
+    },
+  };
+}
+
+function directoryHandle(name: string, entries: Array<[string, any]>) {
+  return {
+    kind: 'directory',
+    name,
+    async *entries() {
+      for (const entry of entries) yield entry;
+    },
+  };
 }
 
 function makeSaveApp({
@@ -180,6 +204,110 @@ describe('fileService', () => {
       {
         isolate: '',
         filename: '/home/jaten/ivy/ivy-lang-examples/examples/raft/raft_no_assume_test.ivy',
+      },
+    );
+  });
+
+  it('loads browser-WASM project files from an authorized folder and recompiles the current model from /project', async () => {
+    const content = '#lang ivy1.6\ninclude raft_no_assume\n';
+    const projectFiles = [
+      { path: 'raft_no_assume.ivy', data: '#lang ivy1.6\n' },
+      { path: 'raft_no_assume_test.ivy', data: content },
+      { path: 'sub/nested.ivy', data: '#lang ivy1.7\n' },
+    ];
+    const folder = directoryHandle('raft', [
+      ['raft_no_assume.ivy', fileHandle(projectFiles[0].data)],
+      ['raft_no_assume_test.ivy', fileHandle(projectFiles[1].data)],
+      ['notes.txt', fileHandle('not ivy')],
+      ['sub', directoryHandle('sub', [
+        ['nested.ivy', fileHandle(projectFiles[2].data)],
+      ])],
+    ]);
+    const controls = {
+      showLoading: vi.fn(),
+      hideLoading: vi.fn(),
+      setStatus: vi.fn(),
+    };
+    const app: any = {
+      controls,
+      _persistedFileName: 'raft_no_assume_test.ivy',
+      _persistedFilePath: 'raft_no_assume_test.ivy',
+      _persistedFileContent: content,
+      activeIsolate: '',
+      setIsolates: vi.fn(),
+      api: {
+        reloadContent: vi.fn(async () => ({ isolates: [], isolate: '' })),
+        getARG: vi.fn(async () => null),
+        getConceptGraph: vi.fn(async () => null),
+      },
+    };
+    const persist = makePersist();
+
+    await expect(chooseAndLoadProjectFolder(app, persist, {
+      win: { showDirectoryPicker: vi.fn(async () => folder) },
+    })).resolves.toBe(true);
+
+    expect(app._projectRootName).toBe('raft');
+    expect(app._projectFiles).toEqual(projectFiles);
+    expect(app._persistedFilePath).toBe('/project/raft_no_assume_test.ivy');
+    expect(app.api.reloadContent).toHaveBeenCalledWith(
+      content,
+      '/project/raft_no_assume_test.ivy',
+      { isolate: '', projectFiles },
+    );
+    expect(persist.setFileName).toHaveBeenCalledWith('raft_no_assume_test.ivy', '/project/raft_no_assume_test.ivy');
+    expect(persist.save).toHaveBeenCalledWith(app);
+    expect(controls.setStatus).toHaveBeenLastCalledWith('Opened project folder: raft (3 Ivy files)', 'success');
+  });
+
+  it('uses an authorized project filename and project snapshot when loading a matching browser file', async () => {
+    const content = '#lang ivy1.6\ninclude raft_no_assume\n';
+    const projectFiles = [
+      { path: 'raft_no_assume.ivy', data: '#lang ivy1.6\n' },
+      { path: 'raft_no_assume_test.ivy', data: content },
+    ];
+    const controls = {
+      showLoading: vi.fn(),
+      hideLoading: vi.fn(),
+      setStatus: vi.fn(),
+    };
+    const app: any = {
+      controls,
+      _fileHandle: null,
+      _projectFiles: projectFiles,
+      setIsolates: vi.fn(),
+      setEditorContent: vi.fn(),
+      api: {
+        loadFile: vi.fn(async () => ({ isolates: [], isolate: '' })),
+        getARG: vi.fn(async () => null),
+        getConceptGraph: vi.fn(async () => null),
+      },
+    };
+    const persist = makePersist();
+    class FakeFileReader {
+      result = '';
+      onload: null | (() => void) = null;
+      onerror: null | (() => void) = null;
+      readAsText(file: any) {
+        this.result = file.content;
+        if (this.onload) this.onload();
+      }
+    }
+
+    await loadModelFile(
+      app,
+      { name: 'raft_no_assume_test.ivy', content },
+      persist,
+      { win: { FileReader: FakeFileReader } },
+    );
+
+    expect(app._persistedFilePath).toBe('/project/raft_no_assume_test.ivy');
+    expect(app.api.loadFile).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'raft_no_assume_test.ivy' }),
+      {
+        isolate: '',
+        projectFiles,
+        filename: '/project/raft_no_assume_test.ivy',
       },
     );
   });

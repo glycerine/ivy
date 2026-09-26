@@ -15,6 +15,14 @@ describe('static index toolbar', () => {
     expect(doc.getElementById('btn-cancel-loading')).not.toBeNull();
   });
 
+  it('exposes an Open project folder choice in the File menu', () => {
+    const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
+    const item = doc.querySelector('#file-menu #file-open-project-folder');
+
+    expect(item).not.toBeNull();
+    expect(item?.textContent).toBe('Open project folder...');
+  });
+
   it('keeps the right-side isolate, settings, and tutorial controls protected from long filenames', () => {
     const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
     const right = doc.querySelector('#menubar .menu-right');

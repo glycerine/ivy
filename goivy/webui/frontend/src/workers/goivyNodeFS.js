@@ -83,7 +83,7 @@ function normalizeAbsolute(path, cwd = '/') {
   return '/' + parts.join('/');
 }
 
-function buildIncludeRoot(tree) {
+function buildFileRoot(tree, treeName = 'file tree') {
   const root = new VNode('dir', '');
 
   function childDir(parent, name) {
@@ -93,7 +93,7 @@ function buildIncludeRoot(tree) {
       parent.children.set(name, child);
     }
     if (child.kind !== 'dir') {
-      throw new Error('include tree path component is already a file: ' + name);
+      throw new Error(treeName + ' path component is already a file: ' + name);
     }
     return child;
   }
@@ -108,10 +108,34 @@ function buildIncludeRoot(tree) {
     for (const part of parts) {
       dir = childDir(dir, part);
     }
-    dir.children.set(filename, new VNode('file', filename, dir, textEncoder.encode(String(file.data || ''))));
+    const data = file.data instanceof Uint8Array ? file.data : textEncoder.encode(String(file.data || ''));
+    dir.children.set(filename, new VNode('file', filename, dir, data));
   }
 
   return root;
+}
+
+function lookupMount(normalized, mountRoot, mountNode) {
+  if (normalized === mountRoot) {
+    return { node: mountNode, path: normalized };
+  }
+  const prefix = mountRoot.endsWith('/') ? mountRoot : mountRoot + '/';
+  if (!normalized.startsWith(prefix)) {
+    return { miss: true };
+  }
+  const rel = normalized.slice(prefix.length);
+  let node = mountNode;
+  for (const part of splitPath(rel)) {
+    if (node.kind !== 'dir') {
+      return { err: 'ENOTDIR', path: normalized };
+    }
+    const child = node.children.get(part);
+    if (!child) {
+      return { err: 'ENOENT', path: normalized };
+    }
+    node = child;
+  }
+  return { node, path: normalized };
 }
 
 function makeStat(node) {
@@ -139,8 +163,10 @@ function makeStat(node) {
 export function installGoIvyNodeFS(options = {}) {
   const includeTree = options.includeTree || { files: [] };
   const includeRoot = normalizeAbsolute(options.includeRoot || includeTree.root || '/include');
+  const projectRoot = normalizeAbsolute(options.projectRoot || '/project');
   const cwdState = { value: normalizeAbsolute(options.cwd || '/') || '/' };
-  const rootNode = buildIncludeRoot(includeTree);
+  const rootNode = buildFileRoot(includeTree, 'include tree');
+  let projectNode = buildFileRoot({ files: options.projectFiles || [] }, 'project tree');
   let nextFd = 10;
   const openFiles = new Map();
   const stdout = typeof options.stdout === 'function' ? options.stdout : () => {};
@@ -152,26 +178,16 @@ export function installGoIvyNodeFS(options = {}) {
     if (normalized === '') {
       return { err: 'EINVAL' };
     }
-    if (normalized === includeRoot) {
-      return { node: rootNode, path: normalized };
-    }
-    const prefix = includeRoot.endsWith('/') ? includeRoot : includeRoot + '/';
-    if (!normalized.startsWith(prefix)) {
-      return { err: 'ENOENT', path: normalized };
-    }
-    const rel = normalized.slice(prefix.length);
-    let node = rootNode;
-    for (const part of splitPath(rel)) {
-      if (node.kind !== 'dir') {
-        return { err: 'ENOTDIR', path: normalized };
+    for (const mount of [
+      { root: includeRoot, node: rootNode },
+      { root: projectRoot, node: projectNode },
+    ]) {
+      const found = lookupMount(normalized, mount.root, mount.node);
+      if (!found.miss) {
+        return found;
       }
-      const child = node.children.get(part);
-      if (!child) {
-        return { err: 'ENOENT', path: normalized };
-      }
-      node = child;
     }
-    return { node, path: normalized };
+    return { err: 'ENOENT', path: normalized };
   }
 
   function writeBytes(fd, bytes) {
@@ -350,6 +366,10 @@ export function installGoIvyNodeFS(options = {}) {
 
   return {
     includeRoot,
+    projectRoot,
+    setProjectFiles(files = []) {
+      projectNode = buildFileRoot({ files: Array.isArray(files) ? files : [] }, 'project tree');
+    },
     decode(bytes) {
       return textDecoder.decode(bytes, { stream: true });
     },

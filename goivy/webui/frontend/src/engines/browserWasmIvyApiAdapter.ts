@@ -40,6 +40,17 @@ function modeFromCommand(commandId: string, args: AnyRecord = {}) {
   return args.mode || 'pdr';
 }
 
+function normalizeProjectFiles(files: any): Array<{ path: string; data: string }> {
+  if (!Array.isArray(files)) return [];
+  return files.flatMap((file) => {
+    if (!file || typeof file.path !== 'string' || !file.path.trim()) return [];
+    const data = typeof file.data === 'string'
+      ? file.data
+      : (typeof file.text === 'string' ? file.text : '');
+    return [{ path: file.path, data }];
+  });
+}
+
 async function normalizeModelDocument(model: AnyRecord = {}, revision: number): Promise<AnyRecord> {
   if (model.file && typeof model.file.text === 'function') {
     const text = await model.file.text();
@@ -49,6 +60,7 @@ async function normalizeModelDocument(model: AnyRecord = {}, revision: number): 
       filename: model.filename || model.file.name || 'model.ivy',
       text,
       isolate: model.isolate || '',
+      projectFiles: normalizeProjectFiles(model.projectFiles),
       engineRevision: revision,
     };
   }
@@ -58,6 +70,7 @@ async function normalizeModelDocument(model: AnyRecord = {}, revision: number): 
     filename: model.filename || model.path || 'model.ivy',
     text: model.content || model.text || '',
     isolate: model.isolate || '',
+    projectFiles: normalizeProjectFiles(model.projectFiles),
     engineRevision: revision,
   };
 }

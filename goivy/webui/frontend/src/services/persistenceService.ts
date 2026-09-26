@@ -6,6 +6,7 @@ import {
   selectStateToggles,
 } from '../models/uiDataSelectors.ts';
 import { normalizeArgNodeId } from '../models/uiDataModel.ts';
+import { modelLoadOptionsForApp } from './fileService.ts';
 
 const STORAGE_SESSIONS = 'ivy_sessions';
 const STORAGE_LAST_SESSION = 'ivy_last_session';
@@ -87,6 +88,8 @@ export function createIvyPersist(winArg = globalThis.window) {
           fileName: app._persistedFileName || '',
           filePath: app._persistedFilePath || app._persistedFileName || '',
           fileContent: app._persistedFileContent || '',
+          projectRootName: app._projectRootName || '',
+          projectFiles: Array.isArray(app._projectFiles) ? app._projectFiles : [],
           activeIsolate: app.activeIsolate || '',
           availableIsolates: Array.isArray(app.availableIsolates) ? app.availableIsolates.slice() : [],
           editorKeymap: typeof app.getEditorKeymap === 'function' ? app.getEditorKeymap() : persist._getEditorKeymap(),
@@ -313,6 +316,8 @@ export function createIvyPersist(winArg = globalThis.window) {
       try {
         app._persistedFileName = state.fileName;
         app._persistedFilePath = state.filePath || state.fileName || '';
+        app._projectRootName = state.projectRootName || '';
+        app._projectFiles = Array.isArray(state.projectFiles) ? state.projectFiles : [];
         app._fileHandle = await persist.loadFileHandle(state);
         let restoredContent = state.fileContent || '';
         if (app._fileHandle) {
@@ -347,7 +352,7 @@ export function createIvyPersist(winArg = globalThis.window) {
           const blob = new BlobCtor([restoredContent], { type: 'text/plain' });
           const file = new FileCtor([blob], app._persistedFileName || state.fileName || 'restored.ivy');
           const loadResult = await app.api.loadFile(file, {
-            isolate: state.activeIsolate || '',
+            ...modelLoadOptionsForApp(app, { isolate: state.activeIsolate || '' }),
             filename: app._persistedFilePath || app._persistedFileName || state.fileName || 'restored.ivy',
           });
           if (modelLoad) modelLoad.loadResult = loadResult;

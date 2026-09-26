@@ -5,6 +5,82 @@ import { logStateRelationTableClear } from './conceptVisibilityService.ts';
 import { saveMimeType, savePickerOptions } from './saveDialogService.ts';
 
 export const NEW_MODEL_STARTER_CONTENT = '#lang ivy1.8\n\n';
+export const PROJECT_ROOT = '/project';
+
+function normalizeProjectRelativePath(path) {
+  const parts = String(path || '')
+    .replace(/\\/g, '/')
+    .split('/')
+    .filter((part) => part && part !== '.');
+  const normalized = [];
+  for (const part of parts) {
+    if (part === '..') {
+      normalized.pop();
+      continue;
+    }
+    normalized.push(part);
+  }
+  return normalized.join('/');
+}
+
+function projectVirtualPath(relativePath) {
+  const rel = normalizeProjectRelativePath(relativePath);
+  return rel ? `${PROJECT_ROOT}/${rel}` : '';
+}
+
+function basename(path) {
+  const rel = normalizeProjectRelativePath(path);
+  const parts = rel.split('/').filter(Boolean);
+  return parts.length > 0 ? parts[parts.length - 1] : '';
+}
+
+function projectFilesForApp(app) {
+  return Array.isArray(app && app._projectFiles) ? app._projectFiles : [];
+}
+
+export function modelLoadOptionsForApp(app, options = {}) {
+  const projectFiles = projectFilesForApp(app);
+  if (projectFiles.length === 0) return { ...options };
+  return { ...options, projectFiles };
+}
+
+function findProjectFile(projectFiles, file, content) {
+  if (!Array.isArray(projectFiles) || !file) return null;
+  const webkitRelativePath = normalizeProjectRelativePath(file.webkitRelativePath || '');
+  if (webkitRelativePath) {
+    const exact = projectFiles.find((candidate) => candidate.path === webkitRelativePath);
+    if (exact) return exact;
+  }
+  const fileName = file.name || basename(file.path || '');
+  if (!fileName) return null;
+  const sameName = projectFiles.filter((candidate) => basename(candidate.path) === fileName);
+  const sameContent = sameName.filter((candidate) => candidate.data === content);
+  if (sameContent.length === 1) return sameContent[0];
+  if (sameName.length === 1) return sameName[0];
+  return null;
+}
+
+function projectFilenameForBrowserFile(app, file, content) {
+  const match = findProjectFile(projectFilesForApp(app), file, content);
+  return match ? projectVirtualPath(match.path) : '';
+}
+
+async function readProjectDirectory(dirHandle, prefix = '') {
+  const files = [];
+  if (!dirHandle || typeof dirHandle.entries !== 'function') return files;
+  for await (const [name, handle] of dirHandle.entries()) {
+    const relativePath = normalizeProjectRelativePath(prefix ? `${prefix}/${name}` : name);
+    if (!relativePath) continue;
+    if (handle.kind === 'directory') {
+      files.push(...await readProjectDirectory(handle, relativePath));
+    } else if (handle.kind === 'file' && relativePath.endsWith('.ivy') && typeof handle.getFile === 'function') {
+      const file = await handle.getFile();
+      files.push({ path: relativePath, data: await file.text() });
+    }
+  }
+  files.sort((a, b) => (a.path < b.path ? -1 : (a.path > b.path ? 1 : 0)));
+  return files;
+}
 
 export function rememberLastOpenFile(app, persist) {
   const name = app._persistedFileName || (app._fileHandle && app._fileHandle.name) || '';
@@ -156,6 +232,57 @@ export async function chooseAndLoadModelFile(app, {
   }
 }
 
+export async function chooseAndLoadProjectFolder(app, persist, {
+  win = globalThis.window,
+} = {}) {
+  if (!win || typeof win.showDirectoryPicker !== 'function') {
+    app.controls.setStatus('Open project folder requires a browser with directory picker support', 'error');
+    return false;
+  }
+  try {
+    if (app.controls.showLoading) app.controls.showLoading('Opening project folder...');
+    const handle = await win.showDirectoryPicker({ mode: 'read' });
+    const projectFiles = await readProjectDirectory(handle);
+    app._projectDirectoryHandle = handle;
+    app._projectRootName = handle.name || 'project';
+    app._projectFiles = projectFiles;
+
+    const currentFile = {
+      name: app._persistedFileName || basename(app._persistedFilePath || ''),
+      path: app._persistedFilePath || '',
+    };
+    const currentMatch = findProjectFile(projectFiles, currentFile, app._persistedFileContent || '');
+    if (currentMatch) {
+      app._persistedFilePath = projectVirtualPath(currentMatch.path);
+      if (app.api && typeof app.api.reloadContent === 'function' && app._persistedFileContent) {
+        const loadResult = await app.api.reloadContent(
+          app._persistedFileContent,
+          app._persistedFilePath,
+          modelLoadOptionsForApp(app, { isolate: app.activeIsolate || '' }),
+        );
+        if (app.setIsolates) {
+          app.setIsolates(loadResult && loadResult.isolates, loadResult && loadResult.isolate);
+        }
+        await refreshLoadedModelSnapshots(app);
+      }
+    }
+
+    if (persist && typeof persist.setFileName === 'function' && app._persistedFileName) {
+      persist.setFileName(app._persistedFileName, app._persistedFilePath || app._persistedFileName);
+    }
+    if (persist && typeof persist.save === 'function') persist.save(app);
+    app.controls.setStatus(`Opened project folder: ${app._projectRootName} (${projectFiles.length} Ivy files)`, 'success');
+    return true;
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      app.controls.setStatus(`Open project folder failed: ${err.message}`, 'error');
+    }
+    return false;
+  } finally {
+    if (app.controls.hideLoading) app.controls.hideLoading();
+  }
+}
+
 export function readBrowserFileText(file, win = globalThis.window) {
   return new Promise((resolve, reject) => {
     const reader = new win.FileReader();
@@ -246,7 +373,7 @@ export async function loadModelFile(app, file, persist, { win = globalThis.windo
     if (modelLoad && typeof app._isCurrentModelLoad === 'function' && !app._isCurrentModelLoad(modelLoad)) return;
     if (modelLoad) modelLoad.content = fileContent;
     app._persistedFileName = file.name;
-    app._persistedFilePath = file.path || file.webkitRelativePath || file.name;
+    app._persistedFilePath = projectFilenameForBrowserFile(app, file, fileContent) || file.path || file.webkitRelativePath || file.name;
     app._persistedFileContent = fileContent;
     if (app._fileHandle) {
       await persist.saveFileHandle(app);
@@ -256,7 +383,7 @@ export async function loadModelFile(app, file, persist, { win = globalThis.windo
     app.setEditorContent(fileContent);
 
     const loadResult = await app.api.loadFile(file, {
-      isolate: '',
+      ...modelLoadOptionsForApp(app, { isolate: '' }),
       filename: app._persistedFilePath || file.name,
     });
     if (modelLoad && typeof app._isCurrentModelLoad === 'function' && !app._isCurrentModelLoad(modelLoad)) return;

@@ -2,6 +2,7 @@ import { registerMethodCommands, requiredMethods } from './commandRegistrationHe
 
 export const FILE_COMMANDS = [
   { command: 'file.load', method: 'chooseAndLoadModelFile' },
+  { command: 'file.openProjectFolder', method: 'chooseAndLoadProjectFolder' },
   { command: 'file.save', method: 'save' },
   { command: 'file.saveAs', method: 'saveAs' },
   { command: 'file.download', method: 'downloadModel' },
@@ -9,6 +10,7 @@ export const FILE_COMMANDS = [
   { command: 'file.new', method: 'newModel' },
   { command: 'file.reopenLast', method: 'reopenLastFile' },
   'chooseAndLoadModelFile',
+  'chooseAndLoadProjectFolder',
   'chooseAndLoadEventTraceFile',
   'chooseAndLoadAnalysisStateFile',
   'loadFile',

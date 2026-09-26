@@ -933,6 +933,7 @@ describe('ivyRuntime compatibility behavior', () => {
       '<input id="analysis-state-file-input" type="file">',
       '<button id="btn-toggle-tutorial"></button>',
       '<a id="file-load" href="#"></a>',
+      '<a id="file-open-project-folder" href="#"></a>',
       '<a id="file-open-event-trace" href="#"></a>',
       '<a id="file-save-as" href="#"></a>',
       '<a id="file-download" href="#"></a>',
@@ -949,6 +950,7 @@ describe('ivyRuntime compatibility behavior', () => {
     runtime.setUIMode = vi.fn();
     runtime.closeAllDropdowns = vi.fn();
     runtime.chooseAndLoadModelFile = vi.fn(async () => true);
+    runtime.chooseAndLoadProjectFolder = vi.fn(async () => true);
     runtime.chooseAndLoadEventTraceFile = vi.fn(async () => true);
     runtime.saveAs = vi.fn();
     runtime.downloadModel = vi.fn();
@@ -961,6 +963,7 @@ describe('ivyRuntime compatibility behavior', () => {
     runtime.setupEventHandlers();
 
     document.getElementById('file-load')!.click();
+    document.getElementById('file-open-project-folder')!.click();
     document.getElementById('file-open-event-trace')!.click();
     document.getElementById('file-save-as')!.click();
     document.getElementById('file-download')!.click();
@@ -971,6 +974,7 @@ describe('ivyRuntime compatibility behavior', () => {
     vi.advanceTimersByTime(50);
 
     expect(runtime.chooseAndLoadModelFile).toHaveBeenCalledTimes(1);
+    expect(runtime.chooseAndLoadProjectFolder).toHaveBeenCalledTimes(1);
     expect(runtime.chooseAndLoadEventTraceFile).toHaveBeenCalledTimes(1);
     expect(runtime.saveAs).toHaveBeenCalledTimes(1);
     expect(runtime.downloadModel).toHaveBeenCalledTimes(1);
