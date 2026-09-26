@@ -65,7 +65,49 @@ describe('checkService', () => {
 
     await checkInduction(app);
 
-    expect(app.api.runCheck).toHaveBeenCalledWith('induction');
+    expect(app.api.runCheck).toHaveBeenCalledWith('induction', {}, expect.objectContaining({
+      signal: expect.any(AbortSignal),
+    }));
+  });
+
+  it('lets the overlay cancel button abort the invariant induction command', async () => {
+    document.body.innerHTML = [
+      '<button id="btn-check"></button>',
+      '<button id="btn-cancel-loading" hidden>Cancel</button>',
+    ].join('');
+    const app = {
+      api: {
+        runCheck: vi.fn((_mode, _options, requestOptions) => new Promise((_resolve, reject) => {
+          requestOptions.signal.addEventListener('abort', () => {
+            reject(Object.assign(new Error('aborted'), { name: 'AbortError' }));
+          });
+        })),
+      },
+      controls: {
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        setStatus: vi.fn(),
+      },
+      showTextDialog: vi.fn(),
+    };
+
+    const running = checkInduction(app);
+    await Promise.resolve();
+
+    expect(app.api.runCheck).toHaveBeenCalledWith('induction', {}, expect.objectContaining({
+      signal: expect.any(AbortSignal),
+    }));
+    expect((document.getElementById('btn-cancel-loading') as HTMLButtonElement).hidden).toBe(false);
+
+    const cancelled = cancelActiveCheck(app);
+    await running;
+
+    expect(cancelled).toBe(true);
+    expect(app.controls.setStatus).toHaveBeenCalledWith('Cancelling induction check...', 'warning');
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('induction check cancelled', 'warning');
+    expect(app.controls.hideLoading).toHaveBeenCalled();
+    expect(app._activeCheck).toBeNull();
+    expect((document.getElementById('btn-cancel-loading') as HTMLButtonElement).hidden).toBe(true);
   });
 
   it('clears stale details before CTI check commands start executing', async () => {
@@ -266,6 +308,38 @@ describe('checkService', () => {
     expect(app.controls.hideLoading).toHaveBeenCalled();
     expect(app._activeCheck).toBeNull();
     // The underlying promise stays pending; that's fine - the browser is usable again.
+    void running;
+  });
+
+  it('recovers the UI on cancel even if recompiling the editor never settles', async () => {
+    const app = {
+      getMode: vi.fn(() => 'induction'),
+      _persistedFileContent: 'ivy source',
+      _persistedFileName: 'model.ivy',
+      activeIsolate: '',
+      api: {
+        // Simulates a wedged compile/reload before the actual check request starts.
+        reloadContent: vi.fn(() => new Promise(() => {})),
+        runCheck: vi.fn(),
+      },
+      controls: {
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        setStatus: vi.fn(),
+      },
+    };
+
+    const running = runCheck(app);
+    await Promise.resolve();
+    expect(app.api.reloadContent).toHaveBeenCalled();
+    expect(app.api.runCheck).not.toHaveBeenCalled();
+    expect(app._activeCheck).not.toBeNull();
+
+    const cancelled = cancelActiveCheck(app);
+
+    expect(cancelled).toBe(true);
+    expect(app.controls.hideLoading).toHaveBeenCalled();
+    expect(app._activeCheck).toBeNull();
     void running;
   });
 

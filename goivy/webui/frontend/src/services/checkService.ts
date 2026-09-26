@@ -635,31 +635,95 @@ async function showCtiCheckDetails(app, actionName, result) {
 }
 
 export async function checkInduction(app) {
-  clearDetailsLog(app);
-  app.controls.setStatus('Checking induction...');
-  const result = await runWithContext(app, {
-    busyMessage: 'Checking inductiveness...',
-    failurePrefix: 'Induction check failed',
-  }, () => app.api.runCheck('induction'));
-  if (!result) return null;
-  if (result.result === 'fail' && result.failed_conjecture) {
-    app.showTextDialog(
-      'ivyweb',
-      result.message || 'The following conjecture is not relatively inductive:',
-      result.failed_conjecture,
-    );
-    app.controls.setStatus('Induction check: not inductive');
-  } else if (result.result === 'pass') {
-    app.showTextDialog(
-      'ivyweb',
-      'Inductive invariant found:',
-      result.message.replace('Inductive invariant found:\n', ''),
-    );
-    app.controls.setStatus('Induction check: PASSED', 'success');
-  } else {
-    app.controls.setStatus(`Induction check: ${result.message || result.result}`);
+  if (app._activeCheck) {
+    app.controls.setStatus(`${app._activeCheck.label || activeCheckLabel(app)} is already running`, 'warning');
+    return null;
   }
-  return result;
+  clearDetailsLog(app);
+  const controller = makeCheckAbortController();
+  const active = {
+    controller,
+    cancelled: false,
+    label: 'induction check',
+    jobId: `check-${Date.now()}`,
+    forceRecoverUI: null as null | (() => void),
+  };
+  app._activeCheck = active;
+  upsertJob(app, {
+    id: active.jobId,
+    label: active.label,
+    status: 'running',
+    backend: app.jobSubmissionMode || (app.api && app.api.kind) || 'backend',
+    filename: app._persistedFileName || 'model.ivy',
+    isolate: app.activeIsolate || '',
+    mode: 'induction',
+  });
+  setCheckControlsRunning(true);
+  const finishRunContext = beginRunContext(app, { busyMessage: 'Checking inductiveness...' });
+  let runContextFinished = false;
+  const finishRunContextOnce = () => {
+    if (runContextFinished) return;
+    runContextFinished = true;
+    finishRunContext();
+  };
+  active.forceRecoverUI = () => {
+    setCheckControlsRunning(false);
+    finishRunContextOnce();
+  };
+  app.controls.setStatus('Checking induction...');
+  try {
+    const requestOptions = controller ? { signal: controller.signal } : {};
+    const result = await app.api.runCheck('induction', {}, requestOptions);
+    if (active.cancelled || result?.result === 'cancelled') {
+      app.controls.setStatus('induction check cancelled', 'warning');
+      upsertJob(app, { id: active.jobId, status: 'cancelled' });
+      return result;
+    }
+    if (!result) return null;
+    if (result.result === 'fail' && result.failed_conjecture) {
+      app.showTextDialog(
+        'ivyweb',
+        result.message || 'The following conjecture is not relatively inductive:',
+        result.failed_conjecture,
+      );
+      app.controls.setStatus('Induction check: not inductive');
+    } else if (result.result === 'pass') {
+      app.showTextDialog(
+        'ivyweb',
+        'Inductive invariant found:',
+        result.message.replace('Inductive invariant found:\n', ''),
+      );
+      app.controls.setStatus('Induction check: PASSED', 'success');
+    } else {
+      app.controls.setStatus(`Induction check: ${result.message || result.result}`);
+    }
+    upsertJob(app, {
+      id: active.jobId,
+      status: (result && (result.result || result.status)) || 'complete',
+      mode: (result && result.mode) || 'induction',
+      z3Contacted: result && result.z3_contacted,
+      failedLabel: result && result.failed_label,
+      message: result && result.message,
+    });
+    return result;
+  } catch (err) {
+    if (active.cancelled || isAbortError(err)) {
+      app.controls.setStatus('induction check cancelled', 'warning');
+      upsertJob(app, { id: active.jobId, status: 'cancelled' });
+      finishRunContextOnce();
+      return null;
+    }
+    finishRunContextOnce();
+    await reportRunContextError(app, err, { prefix: 'Induction check failed' });
+    upsertJob(app, { id: active.jobId, status: 'error', message: err.message });
+    return null;
+  } finally {
+    if (app._activeCheck === active) {
+      app._activeCheck = null;
+    }
+    setCheckControlsRunning(false);
+    finishRunContextOnce();
+  }
 }
 
 export async function boundedCheck(app) {
