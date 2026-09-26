@@ -1110,6 +1110,8 @@ This is also why your earlier instinct about EPR being "effectively propositiona
 
 ## Python `ivy_to_cpp` fixes for concrete Raft randomized testing
 
+git commit: 098080f62d4a042d41cda7e89b2e1d97cb6ba81f
+
 On September 26, 2026, we made two minimal Python Ivy fixes in
 `pyivy/ivy/ivy/ivy_to_cpp.py` so that the original Python `ivy_to_cpp` can
 build generated C++ for the concrete Raft randomized tester:
