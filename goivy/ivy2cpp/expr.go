@@ -1415,6 +1415,74 @@ func nameIn(vars []*goivy.LogicVariable, n string) bool {
 	return false
 }
 
+func exprMentionsVarName(e goivy.Expr, name string) bool {
+	if e == nil || name == "" {
+		return false
+	}
+	for _, v := range goivy.VariablesAstList(e) {
+		if v != nil && v.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
+func exprMentionsAnyVar(e goivy.Expr, vars []*goivy.LogicVariable) bool {
+	if e == nil || len(vars) == 0 {
+		return false
+	}
+	names := make(map[string]bool, len(vars))
+	for _, v := range vars {
+		if v != nil && v.Name != "" {
+			names[v.Name] = true
+		}
+	}
+	if len(names) == 0 {
+		return false
+	}
+	for _, v := range goivy.VariablesAstList(e) {
+		if v != nil && names[v.Name] {
+			return true
+		}
+	}
+	return false
+}
+
+func rewriteCPPIdentifiers(s string, repl map[string]string) string {
+	if s == "" || len(repl) == 0 {
+		return s
+	}
+	var b strings.Builder
+	for i := 0; i < len(s); {
+		ch := s[i]
+		if isCPPIdentifierStart(ch) {
+			start := i
+			i++
+			for i < len(s) && isCPPIdentifierPart(s[i]) {
+				i++
+			}
+			tok := s[start:i]
+			if r, ok := repl[tok]; ok {
+				b.WriteString(r)
+			} else {
+				b.WriteString(tok)
+			}
+			continue
+		}
+		b.WriteByte(ch)
+		i++
+	}
+	return b.String()
+}
+
+func isCPPIdentifierStart(ch byte) bool {
+	return ch == '_' || (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')
+}
+
+func isCPPIdentifierPart(ch byte) bool {
+	return isCPPIdentifierStart(ch) || (ch >= '0' && ch <= '9')
+}
+
 func quantVarDiagnostic(v *goivy.LogicVariable) string {
 	if v == nil {
 		return "<nil>"
@@ -1452,7 +1520,7 @@ func (g *Generator) getBounds(v0 *goivy.LogicVariable, others []*goivy.LogicVari
 		ln := nameOfTerm(args[0])
 		rn := nameOfTerm(args[1])
 		// Python: if args[0] == v0 and args[1] != v0 and args[1] not in variables:
-		if ln == v0.Name && rn != v0.Name && !nameIn(others, rn) {
+		if ln == v0.Name && rn != v0.Name && !exprMentionsVarName(args[1], v0.Name) && !exprMentionsAnyVar(args[1], others) {
 			e, err := g.emitExpr(args[1])
 			if err != nil {
 				return "", "", err
@@ -1464,7 +1532,7 @@ func (g *Generator) getBounds(v0 *goivy.LogicVariable, others []*goivy.LogicVari
 			}
 		}
 		// Python: if args[1] == v0 and args[0] != v0 and args[0] not in variables:
-		if rn == v0.Name && ln != v0.Name && !nameIn(others, ln) {
+		if rn == v0.Name && ln != v0.Name && !exprMentionsVarName(args[0], v0.Name) && !exprMentionsAnyVar(args[0], others) {
 			e, err := g.emitExpr(args[0])
 			if err != nil {
 				return "", "", err

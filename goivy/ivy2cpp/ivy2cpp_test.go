@@ -2183,6 +2183,33 @@ action check = {
 	compileGeneratedCPP(t, out)
 }
 
+func TestQuantifierBoundSkipsExpressionReferencingLaterVariable(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type index
+type option_index
+interpret index -> bv[3]
+interpret option_index -> bv[4]
+function oi_index(OI:option_index): index
+relation request(I:index, OI:option_index)
+action check = {
+    assert forall I:index, OI:option_index. I > oi_index(OI) -> ~request(I, OI)
+}
+export check
+`)
+	out, err := Generate(mod, Config{ClassName: "qbound"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if strings.Contains(out.Impl, "for (unsigned I = (oi_index[OI])+1;") {
+		t.Fatalf("I loop lower bound references OI before OI is declared:\n%s", out.Impl)
+	}
+	if !strings.Contains(out.Impl, "for (unsigned I = 0; I < 8; I++)") {
+		t.Fatalf("expected I to fall back to its finite sort bounds:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 // TODO 008 tests: verify Python-faithful extensional-relation analysis.
 
 func TestExtensionalRelationDetectedFromInitializer(t *testing.T) {
@@ -2863,6 +2890,32 @@ export step
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestGeneratedIfSomeBoundUsesEmittedLocalName(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type term
+interpret term -> bv[3]
+individual hit : bool
+action step = {
+    if some t:term, t2:term. t2 >= t {
+        hit := true
+    }
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "somebounds"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if strings.Contains(out.Impl, "Xloc__t") {
+		t.Fatalf("if-some bound leaked substituted helper name instead of emitted local name:\n%s", out.Impl)
+	}
+	if !strings.Contains(out.Impl, "for (unsigned loc__t2 = loc__t; loc__t2 < 8; loc__t2++)") {
+		t.Fatalf("expected t2 lower bound to reference emitted t loop variable:\n%s", out.Impl)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)

@@ -424,6 +424,7 @@ func (g *Generator) someConditionLoopHeaders(some *goivy.SomeCondition) ([]strin
 	if len(some.Params) > 0 && cppIsAnyIntegerType(g, some.Params[0].CSort) {
 		vars := make([]*goivy.LogicVariable, 0, len(some.Params))
 		subs := map[goivy.NodeKey]goivy.Expr{}
+		helperNames := map[string]string{}
 		ok := true
 		for _, p := range some.Params {
 			v, err := goivy.NewVariable("X"+p.Name, p.CSort)
@@ -433,6 +434,7 @@ func (g *Generator) someConditionLoopHeaders(some *goivy.SomeCondition) ([]strin
 			}
 			subs[goivy.Key(p)] = v
 			vars = append(vars, v)
+			helperNames[varName(v.Name)] = varName(p.Name)
 		}
 		if ok {
 			fmla, err := goivy.Substitute(some.Fmla, subs)
@@ -440,7 +442,9 @@ func (g *Generator) someConditionLoopHeaders(some *goivy.SomeCondition) ([]strin
 				if bounds, berr := g.getAllBounds(vars, fmla, true); berr == nil {
 					useBounds = true
 					for i, p := range some.Params {
-						h, herr := g.loopHeaderForSortBounds(p.CSort, varName(p.Name), bounds[i][0], bounds[i][1])
+						lo := rewriteCPPIdentifiers(bounds[i][0], helperNames)
+						hi := rewriteCPPIdentifiers(bounds[i][1], helperNames)
+						h, herr := g.loopHeaderForSortBounds(p.CSort, varName(p.Name), lo, hi)
 						if herr != nil {
 							useBounds = false
 							break
