@@ -241,7 +241,7 @@ test:
 
 WEBUI_NODE_PLATFORM := $(shell node -e 'const h = process.report && process.report.getReport ? process.report.getReport().header : {}; let libc = ""; if (process.platform === "linux") libc = h.glibcVersionRuntime ? "gnu" : "musl"; console.log([process.platform, process.arch, libc].filter(Boolean).join("-"));' 2>/dev/null || printf '%s-%s\n' "$$(uname -s)" "$$(uname -m)")
 WEBUI_NODE_DEPS_STAMP := webui/node_modules/.platform-deps-$(WEBUI_NODE_PLATFORM).stamp
-WEBUI_NODE_DEPS_CHECK := node --input-type=module -e "await import('rollup'); const graphviz = await import('@hpcc-js/wasm-graphviz'); await graphviz.Graphviz.load();"
+WEBUI_NODE_DEPS_CHECK := node --input-type=module -e "await import('rollup'); await import('minisearch'); const graphviz = await import('@hpcc-js/wasm-graphviz'); await graphviz.Graphviz.load();"
 
 webui/node_modules/.package-lock.stamp: webui/package.json webui/package-lock.json
 	cd webui && npm ci
@@ -352,7 +352,7 @@ nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 install-wasm-opt:
 	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make -j8 && sudo make install
 
-prod: webui-wasm-engine
+prod: webui-node-deps webui-wasm-engine
 	cd webui && npm run typecheck:webui # run tsc compiler
 	cd webui && npm --prefix frontend run typecheck # type check the frontend/ dir
 	cd webui/frontend && npm run build
