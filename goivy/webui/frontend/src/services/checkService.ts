@@ -395,7 +395,7 @@ export async function runCheck(app) {
     const requestOptions = controller ? { signal: controller.signal } : {};
     const editorContent = app.cmEditor ? app.cmEditor.getValue() : app._persistedFileContent;
     if (editorContent) {
-      await app.api.reloadContent(editorContent, app._persistedFileName || 'model.ivy', {
+      await app.api.reloadContent(editorContent, app._persistedFilePath || app._persistedFileName || 'model.ivy', {
         isolate: app.activeIsolate || '',
       }, requestOptions);
     }

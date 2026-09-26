@@ -61,7 +61,11 @@ func (s *Server) apiLoad(w http.ResponseWriter, r *http.Request, sessionID strin
 			writeErr(w, http.StatusBadRequest, "reading file: "+err.Error())
 			return
 		}
-		data, err := s.backend.Load(sessionID, header.Filename, content, r.FormValue("isolate"))
+		filename := strings.TrimSpace(r.FormValue("filename"))
+		if filename == "" {
+			filename = header.Filename
+		}
+		data, err := s.backend.Load(sessionID, filename, content, r.FormValue("isolate"))
 		if err != nil {
 			writeBackendErr(w, err)
 			return

@@ -1392,6 +1392,24 @@ func TestLoadFileContentInvalidatesCachedModelStateBeforeCompile(t *testing.T) {
 	}
 }
 
+func TestLoadFileContentResolvesIncludesRelativeToNamedSourceFile(t *testing.T) {
+	dir := t.TempDir()
+	includedPath := filepath.Join(dir, "sibling.ivy")
+	if err := os.WriteFile(includedPath, []byte("#lang ivy1.7\ntype included\n"), 0644); err != nil {
+		t.Fatalf("write included module: %v", err)
+	}
+	mainPath := filepath.Join(dir, "main.ivy")
+	mainSource := "#lang ivy1.7\ninclude sibling\nrelation seen(X:included)\nafter init { seen(X) := false }\n"
+
+	sess := NewSession(goivy.NewConfig(), "test-include-relative-to-named-source")
+	if err := sess.LoadFileContent(mainPath, []byte(mainSource)); err != nil {
+		t.Fatalf("LoadFileContent should resolve sibling include beside %s: %v", mainPath, err)
+	}
+	if sess.CompiledModule == nil {
+		t.Fatal("CompiledModule should be non-nil")
+	}
+}
+
 func TestShowVerificationFromTestVectors(t *testing.T) {
 	path := filepath.Join("..", "test_vectors", "bmc_minimal.ivy")
 	if _, err := os.Stat(path); err != nil {

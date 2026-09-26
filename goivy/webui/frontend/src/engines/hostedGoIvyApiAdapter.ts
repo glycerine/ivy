@@ -8,12 +8,13 @@ function toFormDataFromModel(model: AnyRecord = {}) {
   if (model.isolate != null && String(model.isolate).trim() !== '') {
     formData.append('isolate', String(model.isolate).trim());
   }
+  const filename = model.filename || model.path || (model.file && model.file.name) || 'model.ivy';
+  formData.append('filename', String(filename));
   if (model.file) {
     formData.append('file', model.file);
     return formData;
   }
   const content = model.content || '';
-  const filename = model.filename || model.path || 'model.ivy';
   const blob = new Blob([content], { type: 'text/plain' });
   formData.append('file', blob, filename);
   return formData;

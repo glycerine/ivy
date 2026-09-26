@@ -346,7 +346,10 @@ export function createIvyPersist(winArg = globalThis.window) {
           const FileCtor = win.File || globalThis.File;
           const blob = new BlobCtor([restoredContent], { type: 'text/plain' });
           const file = new FileCtor([blob], app._persistedFileName || state.fileName || 'restored.ivy');
-          const loadResult = await app.api.loadFile(file, { isolate: state.activeIsolate || '' });
+          const loadResult = await app.api.loadFile(file, {
+            isolate: state.activeIsolate || '',
+            filename: app._persistedFilePath || app._persistedFileName || state.fileName || 'restored.ivy',
+          });
           if (modelLoad) modelLoad.loadResult = loadResult;
           if (!modelLoad && app.setIsolates) {
             app.setIsolates(

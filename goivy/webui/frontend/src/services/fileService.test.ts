@@ -131,9 +131,57 @@ describe('fileService', () => {
     expect(app.setIsolates).toHaveBeenNthCalledWith(1, [], '');
     expect(app.api.loadFile).toHaveBeenCalledWith(
       expect.objectContaining({ name: 'echo.ivy' }),
-      { isolate: '' },
+      { isolate: '', filename: 'echo.ivy' },
     );
     expect(app.setIsolates).toHaveBeenLastCalledWith(['protocol', 'service'], 'protocol');
+  });
+
+  it('passes an exposed browser file path as the hosted filename hint', async () => {
+    const controls = {
+      showLoading: vi.fn(),
+      hideLoading: vi.fn(),
+      setStatus: vi.fn(),
+    };
+    const app: any = {
+      controls,
+      _fileHandle: null,
+      setIsolates: vi.fn(),
+      setEditorContent: vi.fn(),
+      api: {
+        loadFile: vi.fn(async () => ({ isolates: [], isolate: '' })),
+        getARG: vi.fn(async () => null),
+        getConceptGraph: vi.fn(async () => null),
+      },
+    };
+    const persist = makePersist();
+    class FakeFileReader {
+      result = '';
+      onload: null | (() => void) = null;
+      onerror: null | (() => void) = null;
+      readAsText(file: any) {
+        this.result = file.content;
+        if (this.onload) this.onload();
+      }
+    }
+
+    await loadModelFile(
+      app,
+      {
+        name: 'raft_no_assume_test.ivy',
+        path: '/home/jaten/ivy/ivy-lang-examples/examples/raft/raft_no_assume_test.ivy',
+        content: '#lang ivy1.6\ninclude raft_no_assume\n',
+      },
+      persist,
+      { win: { FileReader: FakeFileReader } },
+    );
+
+    expect(app.api.loadFile).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'raft_no_assume_test.ivy' }),
+      {
+        isolate: '',
+        filename: '/home/jaten/ivy/ivy-lang-examples/examples/raft/raft_no_assume_test.ivy',
+      },
+    );
   });
 
   it('loads a new model onto the primary sheet instead of preserving stale reachability-only layout', async () => {

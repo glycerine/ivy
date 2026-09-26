@@ -236,7 +236,7 @@ describe('analysisStateService', () => {
 
     await loadAnalysisStateObject(app, state, persist);
 
-    expect(app.api.reloadContent).toHaveBeenCalledWith('ivy source', 'client.ivy', { isolate: '' });
+    expect(app.api.reloadContent).toHaveBeenCalledWith('ivy source', '/tmp/client.ivy', { isolate: '' });
     expect(app.setEditorContent).toHaveBeenCalledWith('ivy source');
     expect(app.setEditorKeymap).toHaveBeenCalledWith('vim', { save: false });
     expect(app.setMode).toHaveBeenCalledWith('bounded');

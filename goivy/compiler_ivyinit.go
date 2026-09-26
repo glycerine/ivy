@@ -241,22 +241,26 @@ func importModuleWithParent(name string, cfg *Config, parent *ivyAccum) (res *Pa
 
 	fname := name + ".ivy"
 	if !ivyReadableFileExists(fname) {
-		if cfg != nil && cfg.StandardLibrary != nil && cfg.IuCfg != nil {
-			if cachedName, source, ok := cfg.StandardLibrary.includeSource(cfg.IuCfg.GetStringVersion(), name); ok {
-				var result *ParseResult
-				var resultErr error
-				cfg.IuCfg.WithSourceFile(cachedName, func() {
-					result, resultErr = readModuleFromNamedStringWithParent(cachedName, source, true, cfg, parent)
-				})
-				return result, resultErr
+		if sourceRelative, ok := importFilenameRelativeToCurrentSource(fname, cfg); ok {
+			fname = sourceRelative
+		} else {
+			if cfg != nil && cfg.StandardLibrary != nil && cfg.IuCfg != nil {
+				if cachedName, source, ok := cfg.StandardLibrary.includeSource(cfg.IuCfg.GetStringVersion(), name); ok {
+					var result *ParseResult
+					var resultErr error
+					cfg.IuCfg.WithSourceFile(cachedName, func() {
+						result, resultErr = readModuleFromNamedStringWithParent(cachedName, source, true, cfg, parent)
+					})
+					return result, resultErr
+				}
 			}
-		}
 
-		// Try standard include directory
-		stdDir := cfg.IuCfg.GetStdIncludeDir()
-		fname = filepath.Join(stdDir, fname)
-		if !ivyReadableFileExists(fname) {
-			return nil, fmt.Errorf("module %s not found in current directory or module path", name)
+			// Try standard include directory
+			stdDir := cfg.IuCfg.GetStdIncludeDir()
+			fname = filepath.Join(stdDir, fname)
+			if !ivyReadableFileExists(fname) {
+				return nil, fmt.Errorf("module %s not found in current directory or module path", name)
+			}
 		}
 	}
 	// Python: with iu.SourceFile(fname): mod = read_module(f, nested=True)
@@ -267,6 +271,25 @@ func importModuleWithParent(name string, cfg *Config, parent *ivyAccum) (res *Pa
 		result, resultErr = readModuleWithParent(fname, true, cfg, parent)
 	})
 	return result, resultErr
+}
+
+func importFilenameRelativeToCurrentSource(fname string, cfg *Config) (string, bool) {
+	if cfg == nil || cfg.IuCfg == nil {
+		return "", false
+	}
+	current := strings.TrimSpace(cfg.IuCfg.Filename)
+	if current == "" {
+		return "", false
+	}
+	dir := filepath.Dir(current)
+	if dir == "" || dir == "." {
+		return "", false
+	}
+	candidate := filepath.Join(dir, fname)
+	if ivyReadableFileExists(candidate) {
+		return candidate, true
+	}
+	return "", false
 }
 
 // SourceFile compiles an Ivy source file.

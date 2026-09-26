@@ -255,7 +255,10 @@ export async function loadModelFile(app, file, persist, { win = globalThis.windo
     if (app.setIsolates) app.setIsolates([], '');
     app.setEditorContent(fileContent);
 
-    const loadResult = await app.api.loadFile(file, { isolate: '' });
+    const loadResult = await app.api.loadFile(file, {
+      isolate: '',
+      filename: app._persistedFilePath || file.name,
+    });
     if (modelLoad && typeof app._isCurrentModelLoad === 'function' && !app._isCurrentModelLoad(modelLoad)) return;
     if (modelLoad) modelLoad.loadResult = loadResult;
     if (!modelLoad && app.setIsolates) app.setIsolates(loadResult && loadResult.isolates, loadResult && loadResult.isolate);

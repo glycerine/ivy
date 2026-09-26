@@ -479,7 +479,7 @@ class IvyRuntime {
         });
         this._modelStateRefreshInProgress = true;
         try {
-            var result = await this.api.reloadContent(content, this._persistedFileName || 'model.ivy', {
+            var result = await this.api.reloadContent(content, this._persistedFilePath || this._persistedFileName || 'model.ivy', {
                 isolate: this.activeIsolate || '',
             });
             if (!this._isCurrentModelLoad(modelLoad)) return false;
@@ -1885,7 +1885,7 @@ class IvyRuntime {
                     filename: this._persistedFileName || 'model.ivy',
                     content: content,
                 });
-                var loadResult = await next.reloadContent(content, this._persistedFileName || 'model.ivy', {
+                var loadResult = await next.reloadContent(content, this._persistedFilePath || this._persistedFileName || 'model.ivy', {
                     isolate: this._modelStateInvalid ? '' : (this.activeIsolate || ''),
                 });
                 if (this._isCurrentModelLoad(modelLoad)) {
@@ -4281,7 +4281,7 @@ class IvyRuntime {
             content: content,
         });
         try {
-            var filename = this._persistedFileName || 'model.ivy';
+            var filename = this._persistedFilePath || this._persistedFileName || 'model.ivy';
             var result = await this.api.reloadContent(content, filename, { isolate: selected });
             if (!this._isCurrentModelLoad(modelLoad)) return;
             modelLoad.loadResult = result;
@@ -4562,7 +4562,7 @@ class IvyRuntime {
             // server checks exactly what the user sees, not a stale cache.
             var editorContent = this.cmEditor ? this.cmEditor.getValue() : this._persistedFileContent;
             if (editorContent) {
-                await this.api.reloadContent(editorContent, this._persistedFileName || 'model.ivy');
+                await this.api.reloadContent(editorContent, this._persistedFilePath || this._persistedFileName || 'model.ivy');
             }
             this.controls.setStatus('Running ' + mode + ' check...');
             var result = await this.api.runCheck(mode);

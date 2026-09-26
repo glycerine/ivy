@@ -48,6 +48,24 @@ describe('HostedGoIvyApiAdapter', () => {
     expect(form.get('isolate')).toBe('cf_live');
   });
 
+  it('sends path-like filenames as explicit multipart metadata', async () => {
+    const fetchImpl = vi.fn(async () => jsonResponse({ ok: true }));
+    const api = new HostedGoIvyApiAdapter({ client: new IvyHttpClient({ fetchImpl }) });
+    api.sessionId = 'abc';
+    const file = new File(['#lang ivy1.6\ninclude raft_no_assume\n'], 'raft_no_assume_test.ivy', {
+      type: 'text/plain',
+    });
+
+    await api.loadModel({
+      file,
+      filename: '/home/jaten/ivy/ivy-lang-examples/examples/raft/raft_no_assume_test.ivy',
+    });
+
+    const form = fetchImpl.mock.calls[0][1].body;
+    expect(form.get('filename')).toBe('/home/jaten/ivy/ivy-lang-examples/examples/raft/raft_no_assume_test.ivy');
+    expect(form.get('file')).toBe(file);
+  });
+
   it('keeps graph calls behind snapshot requests', async () => {
     const fetchImpl = vi.fn(async (url) => jsonResponse({ url }));
     const api = new HostedGoIvyApiAdapter({ client: new IvyHttpClient({ fetchImpl }) });

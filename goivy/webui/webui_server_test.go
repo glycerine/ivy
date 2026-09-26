@@ -216,6 +216,41 @@ func TestAPILoadMultipartPassesIsolate(t *testing.T) {
 	}
 }
 
+func TestAPILoadMultipartPrefersFilenameFieldOverUploadBasename(t *testing.T) {
+	cfg := goivy.NewConfig()
+	be := &loadIsolateBackend{}
+	srv := NewServer(cfg, ":0", be)
+	id := createSession(t, srv)
+
+	path := "/home/jaten/ivy/ivy-lang-examples/examples/raft/raft_no_assume_test.ivy"
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
+	if err := writer.WriteField("filename", path); err != nil {
+		t.Fatal(err)
+	}
+	part, err := writer.CreateFormFile("file", "raft_no_assume_test.ivy")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := part.Write([]byte("#lang ivy1.6\ninclude raft_no_assume\n")); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	req := httptest.NewRequest("POST", "/api/session/"+id+"/load", &body)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	w := httptest.NewRecorder()
+	srv.ServeHTTP(w, req)
+	if w.Code != 200 {
+		t.Fatalf("status = %d, body: %s", w.Code, w.Body.String())
+	}
+	if be.filename != path {
+		t.Fatalf("backend filename = %q, want %q", be.filename, path)
+	}
+}
+
 func TestAPILoadFileEmpty(t *testing.T) {
 	cfg := goivy.NewConfig()
 	srv := NewServer(cfg, ":0")

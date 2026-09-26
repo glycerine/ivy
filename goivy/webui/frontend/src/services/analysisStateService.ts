@@ -228,9 +228,11 @@ export async function loadAnalysisStateObject(app, state, persist, options: any 
   if (state.editorKeymap && app.setEditorKeymap) app.setEditorKeymap(state.editorKeymap, { save: false });
   if (app.setIsolates) app.setIsolates(state.availableIsolates || [], state.activeIsolate || '');
   if (!options.skipReloadContent && app.api && app.api.reloadContent && app._persistedFileContent) {
-    const loadResult = await app.api.reloadContent(app._persistedFileContent, app._persistedFileName || 'restored.ivy', {
-      isolate: state.activeIsolate || '',
-    });
+    const loadResult = await app.api.reloadContent(
+      app._persistedFileContent,
+      app._persistedFilePath || app._persistedFileName || 'restored.ivy',
+      { isolate: state.activeIsolate || '' },
+    );
     if (app.setIsolates) {
       app.setIsolates(
         (loadResult && loadResult.isolates) || state.availableIsolates || [],
