@@ -759,10 +759,27 @@ func addConjsToActions(mod *goivy.Module) {
 			mod.Actions.Set(name, goivy.AppendToAction(action, seq))
 		}
 	}
+	initialActions := append([]goivy.Action(nil), mod.InitialActions...)
+	if len(initialActions) == 0 {
+		for _, init := range mod.Initializers {
+			if act, ok := init.Action.(goivy.Action); ok {
+				initialActions = append(initialActions, act)
+			}
+		}
+		if len(initialActions) == 0 && mod.Actions != nil && mod.Mixins != nil {
+			for _, mixin := range mod.Mixins.Get("init") {
+				if act, ok := mod.Actions.Get2(mixin.Mixer()); ok {
+					if action, ok := act.(goivy.Action); ok {
+						initialActions = append(initialActions, action)
+					}
+				}
+			}
+		}
+	}
 	mod.Initializers = append(mod.Initializers, goivy.NamedAction{Name: "__check_invariants", Action: seq})
 	initSeq := goivy.NewSequence(asserts...)
 	initSeq.SetFormalParams([]*goivy.Const{})
-	mod.InitialActions = append(mod.InitialActions, initSeq)
+	mod.InitialActions = append(initialActions, initSeq)
 }
 
 func descriptorJSON(mod *goivy.Module, cfg Config, outputs []*Output, isolates []string) (string, error) {

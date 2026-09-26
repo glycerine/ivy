@@ -9302,6 +9302,38 @@ conjecture r
 	}
 }
 
+func TestConjectureInitChecksRunAfterAfterInitAssignments(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+relation r
+after init { r := false }
+action step = {}
+export step
+conjecture ~r
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	initIdx := strings.Index(out.Impl, "void oracle::__init(){")
+	if initIdx < 0 {
+		t.Fatalf("missing __init body:\n%s", out.Impl)
+	}
+	initBody := out.Impl[initIdx:]
+	assignIdx := strings.Index(initBody, "r = false;")
+	assertIdx := strings.Index(initBody, "ivy_assert(!r")
+	if assignIdx < 0 {
+		t.Fatalf("missing after-init assignment in __init:\n%s", initBody)
+	}
+	if assertIdx < 0 {
+		t.Fatalf("missing conjecture assertion in __init:\n%s", initBody)
+	}
+	if assignIdx > assertIdx {
+		t.Fatalf("conjecture assertion runs before after-init assignment:\n%s", initBody)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 // TestPropertyMovedIntoAxioms mirrors Python ivy_to_cpp.py:4635-4636 —
 // labeled_props are appended to labeled_axioms and then cleared.
 func TestPropertyMovedIntoAxioms(t *testing.T) {
