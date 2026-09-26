@@ -601,25 +601,39 @@ func firstParamIsIndex(some *goivy.SomeCondition) bool {
 }
 
 func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) bool {
-	if len(some.Params) != 1 {
+	if len(some.Params) == 0 {
 		return false
 	}
-	p := some.Params[0]
 	// `some` parameters compile to local Const symbols in goivy (e.g.
 	// "loc:x"), while matchExtensionalBoundExprs follows Python's
 	// is_variable semantics and only matches LogicVariable. Substitute
 	// the Const back to a fresh Variable in the formula before searching.
-	boundVar, err := goivy.NewVariable("X"+p.Name, p.CSort)
-	if err != nil {
-		return false
+	vars := make([]*goivy.LogicVariable, 0, len(some.Params))
+	subs := make(map[goivy.NodeKey]goivy.Expr, len(some.Params))
+	paramByVarName := make(map[string]*goivy.Const, len(some.Params))
+	for _, p := range some.Params {
+		if p == nil {
+			return false
+		}
+		v, err := goivy.NewVariable("X"+p.Name, p.CSort)
+		if err != nil {
+			return false
+		}
+		vars = append(vars, v)
+		subs[goivy.Key(p)] = v
+		paramByVarName[v.Name] = p
 	}
-	subs := map[goivy.NodeKey]goivy.Expr{goivy.Key(p): boundVar}
 	fmla, err := goivy.Substitute(some.Fmla, subs)
 	if err != nil {
 		return false
 	}
 	var ebnds []*goivy.Apply
-	g.matchExtensionalBoundExprs(boundVar, fmla, true, &ebnds)
+	for _, v := range vars {
+		g.matchExtensionalBoundExprs(v, fmla, true, &ebnds)
+		if len(ebnds) > 0 {
+			break
+		}
+	}
 	if len(ebnds) == 0 {
 		return false
 	}
@@ -632,14 +646,14 @@ func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, 
 	if st.Kind != cppStorageHashThunk {
 		return false
 	}
-	argIndex := -1
-	for i, t := range app.Terms {
-		if tv, ok := t.(*goivy.LogicVariable); ok && tv.Name == boundVar.Name {
-			argIndex = i
+	bindsSomeParam := false
+	for _, t := range app.Terms {
+		if tv, ok := t.(*goivy.LogicVariable); ok && paramByVarName[tv.Name] != nil {
+			bindsSomeParam = true
 			break
 		}
 	}
-	if argIndex < 0 {
+	if !bindsSomeParam {
 		return false
 	}
 	relName := goivy.ExprName(app.Func)
@@ -648,17 +662,51 @@ func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, 
 	w.linef("bool %s = false;", found)
 	w.open(fmt.Sprintf("for (auto it = %s.memo.begin(), en = %s.memo.end(); it != en; ++it) {", rel, rel))
 	w.line("if (!it->second) continue;")
-	// Emit using p.Name (the original local-const name) so that the
-	// downstream emitAction sees the same identifier when it expands
-	// the `then` body.
-	if len(app.Terms) == 1 {
-		w.linef("%s %s = it->first;", g.cppType(p.CSort), varName(p.Name))
-	} else {
-		w.linef("%s %s = it->first.arg%d;", g.cppType(p.CSort), varName(p.Name), argIndex)
+	// Emit using the original local-const names so downstream emitAction
+	// sees the identifiers it expects when it expands the `then` body.
+	boundNames := map[string]bool{}
+	for pos, term := range app.Terms {
+		tv, isVar := term.(*goivy.LogicVariable)
+		if !isVar {
+			continue
+		}
+		p := paramByVarName[tv.Name]
+		if p == nil {
+			continue
+		}
+		if boundNames[tv.Name] {
+			if len(app.Terms) > 1 {
+				w.linef("if (!(%s == it->first.arg%d)) continue;", varName(p.Name), pos)
+			}
+			continue
+		}
+		boundNames[tv.Name] = true
+		if len(app.Terms) == 1 {
+			w.linef("%s %s = it->first;", g.cppType(p.CSort), varName(p.Name))
+		} else {
+			w.linef("%s %s = it->first.arg%d;", g.cppType(p.CSort), varName(p.Name), pos)
+		}
+	}
+	opened := 0
+	for i, p := range some.Params {
+		if p == nil || boundNames[vars[i].Name] {
+			continue
+		}
+		h, err := g.loopHeaderForSort(p.CSort, varName(p.Name))
+		if err != nil {
+			g.pythonUnsupported(w, "unsupported if condition", err, "")
+			w.close("")
+			return true
+		}
+		w.open(h)
+		opened++
 	}
 	cond, err := g.emitExpr(some.Fmla)
 	if err != nil {
 		g.pythonUnsupported(w, "unsupported if condition", err, "")
+		for i := 0; i < opened; i++ {
+			w.close("")
+		}
 		w.close("")
 		return true
 	}
@@ -668,6 +716,9 @@ func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, 
 		g.emitAction(w, thenAct)
 	}
 	w.close("")
+	for i := 0; i < opened; i++ {
+		w.close("")
+	}
 	w.close("")
 	if elseAct, ok := a.ElseBody.(goivy.Action); ok {
 		w.open(fmt.Sprintf("if (!%s) {", found))

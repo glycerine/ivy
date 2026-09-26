@@ -3096,6 +3096,59 @@ export pick
 	compileGeneratedCPP(t, out)
 }
 
+func TestGeneratedIfSomeUsesExtensionalRelationMapForTupleWitnesses(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+relation append_msg(A:idx, B:idx, C:idx, D:idx, E:idx, F:idx)
+individual saved : idx
+after init {
+    append_msg(A, B, C, D, E, F) := false;
+}
+action receive = {
+    if some t:idx, t2:idx, opi:idx, opt:idx, ei:idx, et:idx, ev:idx.
+            append_msg(t2, opi, opt, ei, et, ev) & t2 >= t {
+        saved := ev
+    }
+}
+export receive
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "someexttuple"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	receiveIdx := strings.Index(out.Impl, "void someexttuple::receive()")
+	if receiveIdx < 0 {
+		t.Fatalf("missing receive action:\n%s", out.Impl)
+	}
+	tail := out.Impl[receiveIdx:]
+	if tickIdx := strings.Index(tail, "\nvoid someexttuple::__tick"); tickIdx >= 0 {
+		tail = tail[:tickIdx]
+	}
+	for _, want := range []string{
+		"for (auto it = append_msg.memo.begin(), en = append_msg.memo.end(); it != en; ++it)",
+		"if (!it->second) continue;",
+		"unsigned loc__t2 = it->first.arg0;",
+		"unsigned loc__ev = it->first.arg5;",
+		"for (unsigned loc__t = 0; loc__t <= 3; loc__t++)",
+		"saved = loc__ev;",
+	} {
+		if !strings.Contains(tail, want) {
+			t.Fatalf("missing %q in multi-witness extensional if some:\n%s", want, tail)
+		}
+	}
+	for _, bad := range []string{
+		"for (unsigned loc__t2 = 0; loc__t2 < 4; loc__t2++)",
+		"for (unsigned loc__opi = 0; loc__opi < 4; loc__opi++)",
+		"for (unsigned loc__ev = 0; loc__ev < 4; loc__ev++)",
+	} {
+		if strings.Contains(tail, bad) {
+			t.Fatalf("multi-witness extensional if some should not full-scan relation tuple with %q:\n%s", bad, tail)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestReturnAndIgnoreActionsCompileInVoidMethod(t *testing.T) {
 	mod := goivy.New()
 	mod.Name = "markers"
