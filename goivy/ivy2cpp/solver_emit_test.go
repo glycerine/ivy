@@ -35,7 +35,7 @@ func TestEmitSetSolverLargeFunctionEmitsForall(t *testing.T) {
 	for _, want := range []string{
 		"std::vector<z3::expr> __quants;;",
 		`__quants.push_back(ctx.constant("X__0",sort("idx")));;`,
-		`slvr.add(forall(__quants,__to_solver(*this,apply("bigf", ctx.constant("X__0", sort("idx"))),obj.bigf)));`,
+		`slvr.add(forall(__quants,__to_solver(*this,apply("bigf",__quants),obj.bigf)));`,
 	} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("missing %q in large-function emit_set:\n%s", want, body)
@@ -71,13 +71,16 @@ func TestEmitSetSolverLargeRelationUsesVectorApplyForAritySix(t *testing.T) {
 	g.emitSetSolver(&w, sym, "obj")
 	body := w.String()
 	for _, want := range []string{
-		"std::vector<z3::expr> __ivy_apply_args;",
-		`__ivy_apply_args.push_back(ctx.constant("X__5", sort("idx")));`,
-		`return apply("sixrel", __ivy_apply_args);`,
+		"std::vector<z3::expr> __quants;;",
+		`__quants.push_back(ctx.constant("X__5",sort("idx")));;`,
+		`slvr.add(forall(__quants,__to_solver(*this,apply("sixrel",__quants),obj.sixrel)));`,
 	} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("missing %q in large relation emit_set:\n%s", want, body)
 		}
+	}
+	if strings.Contains(body, "__ivy_apply_args") {
+		t.Fatalf("large relation emit_set should reuse __quants, not synthesize a temporary apply vector:\n%s", body)
 	}
 	if strings.Contains(body, `apply("sixrel", ctx.constant("X__0", sort("idx")), ctx.constant("X__1", sort("idx")), ctx.constant("X__2", sort("idx")), ctx.constant("X__3", sort("idx")), ctx.constant("X__4", sort("idx")), ctx.constant("X__5", sort("idx")))`) {
 		t.Fatalf("arity-six apply should not use unsupported fixed-arity overload:\n%s", body)

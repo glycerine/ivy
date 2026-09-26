@@ -216,7 +216,7 @@ func (g *Generator) emitSetSolverCustom(w *cppWriter, sym stateSymbol, opts emit
 			for i, d := range domain {
 				w.linef("__quants.push_back(%sctx.constant(%s,%ssort(%s)));;", opts.prefix, strconv.Quote(vs[i]), opts.prefix, strconv.Quote(z3SortName(d)))
 			}
-			opts.addConstraint(w, fmt.Sprintf("forall(__quants,__to_solver(%s,%s,%s))", opts.gen, z3ApplyCall(opts.prefix, opts.sname, cvars), opts.rhsBase()))
+			opts.addConstraint(w, fmt.Sprintf("forall(__quants,__to_solver(%s,%sapply(%s,__quants),%s))", opts.gen, opts.prefix, opts.sname, opts.rhsBase()))
 			w.indent--
 			w.line("}")
 			return

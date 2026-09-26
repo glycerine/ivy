@@ -136,7 +136,7 @@ func TestMakeThunkZ3GeneralMultiArgSubstitutionAndFunctionEnv(t *testing.T) {
 		`g.mk_decl(loc_f.c_str(),2,`,
 		`__quants.push_back(g.ctx.constant("X__0",g.sort("node")));;`,
 		`__quants.push_back(g.ctx.constant("X__1",g.sort("node")));;`,
-		`g.slvr.add(forall(__quants,__to_solver(g,g.apply(loc_f.c_str(), g.ctx.constant("X__0", g.sort("node")), g.ctx.constant("X__1", g.sort("node"))),this->ivy_thunk_env_0)));`,
+		`g.slvr.add(forall(__quants,__to_solver(g,g.apply(loc_f.c_str(),__quants),this->ivy_thunk_env_0)));`,
 		`src.push_back(g.ctx.constant("__thunk__0_arg_0",g.sort("node")));;`,
 		`dst.push_back(v.arg(0));`,
 		`src.push_back(g.ctx.constant("__thunk__0_arg_1",g.sort("node")));;`,
