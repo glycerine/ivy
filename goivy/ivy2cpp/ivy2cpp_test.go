@@ -3095,12 +3095,15 @@ export pick
 		"for (auto it = marked.memo.begin(), en = marked.memo.end(); it != en; ++it)",
 		"if (!it->second) continue;",
 		"int loc__x = it->first;",
-		"if (!__ivy_some0 && (marked[loc__x]))",
+		"if (!__ivy_some0 && (true))",
 		"saved = loc__x;",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in extensional if some:\n%s", want, out.Impl)
 		}
+	}
+	if strings.Contains(out.Impl, "marked[loc__x]") {
+		t.Fatalf("extensional if some should not re-check matched relation through operator[]:\n%s", out.Impl)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
