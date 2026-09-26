@@ -555,25 +555,21 @@ func destrAsgnVal(lhs Expr, fmlas *[]Expr, domain *Module) (Expr, *Clauses, *Con
 		// Base case: mut is the root mutable symbol
 		// Python: nondet = mut_n.suffix("_nd").skolem()
 		skSym := NewConst("__"+mutN.Name+"_nd", mutN.CSort)
-		phs := SymPlaceholders(mutN)
-		phNodes := actionsVarsToNodes(phs)
-		// Python: new_clauses = mk_assign_clauses(mut_n, nondet(*sym_placeholders(mut_n)))
+		mutArgs := nodeArgs(mut)
+		mutArgNodes := make([]Expr, len(mutArgs))
+		copy(mutArgNodes, mutArgs)
+
+		// Python upstream c94e3286: new_clauses =
+		// mk_assign_clauses(mut, nondet(*mut.args)).
 		var skApplied Expr
-		if len(phNodes) > 0 {
-			skApplied = applyToNodes(skSym, phNodes)
+		if len(mutArgNodes) > 0 {
+			skApplied = applyToNodes(skSym, mutArgNodes)
 		} else {
 			skApplied = skSym
 		}
-		newClauses = mkAssignClauses(mutN, skApplied).TR
+		newClauses = mkAssignClauses(mut, skApplied).TR
 		// Python: lval = nondet(*mut.args)
-		mutArgs := nodeArgs(mut)
-		if len(mutArgs) > 0 {
-			mutArgNodes := make([]Expr, len(mutArgs))
-			copy(mutArgNodes, mutArgs)
-			lval = applyToNodes(skSym, mutArgNodes)
-		} else {
-			lval = skSym
-		}
+		lval = skApplied
 		mutated = mutN
 	}
 

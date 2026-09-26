@@ -225,32 +225,22 @@ func DestrAsgnVal(lhs Expr, fmlas *[]Expr, m *Module) (Expr, *Clauses, *Const) {
 			// Python: Symbol.skolem() → Symbol("__"+name, sort)
 			nondetSym := NewConst("__"+mutSym.Name+"_nd", mutSym.CSort)
 
-			// Python: new_clauses = mk_assign_clauses(mut_n, nondet(*sym_placeholders(mut_n)))
-			// In Python, mk_assign_clauses takes a symbol-like lhs (mut_n) and rhs.
-			// Go's mkAssignClauses returns *Update; we extract .TR (the Clauses).
-			phs := SymPlaceholders(mutSym)
-			phNodes := make([]Expr, len(phs))
-			for i, v := range phs {
-				phNodes[i] = v
-			}
+			// Python upstream c94e3286: new_clauses =
+			// mk_assign_clauses(mut, nondet(*mut.args)).
+			mutArgs := nodeArgs(mut)
+			mutArgNodes := make([]Expr, len(mutArgs))
+			copy(mutArgNodes, mutArgs)
 			var nondetApp Expr
-			if len(phNodes) > 0 {
-				nondetApp, _ = NewApply(nondetSym, phNodes...)
+			if len(mutArgNodes) > 0 {
+				nondetApp, _ = NewApply(nondetSym, mutArgNodes...)
 			} else {
 				nondetApp = nondetSym
 			}
-			assignUpd := mkAssignClauses(mutSym, nondetApp)
+			assignUpd := mkAssignClauses(mut, nondetApp)
 			newClauses = assignUpd.TR
 
 			// Python: lval = nondet(*mut.args)
-			mutArgs := nodeArgs(mut)
-			if len(mutArgs) > 0 {
-				mutArgNodes := make([]Expr, len(mutArgs))
-				copy(mutArgNodes, mutArgs)
-				lval, _ = NewApply(nondetSym, mutArgNodes...)
-			} else {
-				lval = nondetSym
-			}
+			lval = nondetApp
 
 			mutated = mutSym
 		}

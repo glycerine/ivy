@@ -430,6 +430,41 @@ func TestDestrAsgnVal_SimpleDestructor(t *testing.T) {
 	// (frame conditions only fire for sibling destructors != n)
 }
 
+func TestDestrAsgnVal_IndexedMutableBaseUsesConcreteArgsInAssignClauses(t *testing.T) {
+	mod := mkTestModule()
+	sortKey := actionsMkSort("Key")
+	sortT := actionsMkSort("T")
+	sortS := actionsMkSort("S")
+
+	rootSym := NewConst("root", mkFuncSort([]Sort{sortKey}, sortT))
+	keySym := NewConst("k", sortKey)
+	fldSym := NewConst("fld", mkFuncSort([]Sort{sortT}, sortS))
+
+	mod.DestructorSorts["fld"] = sortT
+	mod.SortDestructors.Set("T", []*Const{fldSym})
+
+	rootAtKey := MustApply(rootSym, keySym)
+	lhs := MustApply(fldSym, rootAtKey)
+
+	var fmlas []Expr
+	_, clauses, mutated := destrAsgnVal(lhs, &fmlas, mod)
+
+	if mutated == nil || mutated.Name != "root" {
+		t.Fatalf("mutated should be root, got %v", mutated)
+	}
+	if clauses == nil || len(clauses.Defs) != 1 {
+		t.Fatalf("expected one base assignment definition, got %v", clauses)
+	}
+
+	def := clauses.Defs[0]
+	if _, ok := def.Rhs.(*LogicIte); !ok {
+		t.Fatalf("base assignment should be guarded for concrete root(k), got %T: %s", def.Rhs, def.Rhs)
+	}
+	if got := def.Rhs.String(); !strings.Contains(got, "k") || !strings.Contains(got, "__root_nd(k)") {
+		t.Fatalf("base assignment should use concrete root(k) args, got %s", got)
+	}
+}
+
 func TestDestrAsgnVal_WithSiblingDestructor(t *testing.T) {
 	// Setup: sort "T" with destructors "fld1" and "fld2"
 	mod := mkTestModule()

@@ -16,7 +16,7 @@ Priority legend:
 ## Local Observations
 
 - Go `actions_phase3.go:PCA` still appends `.ivy` unconditionally. Upstream `054188a` is relevant.
-- Go `actions_phase3.go:DestrAsgnVal` still uses `SymPlaceholders(mutSym)` and `mkAssignClauses(mutSym, ...)`, matching the pre-`c94e328` Python bug.
+- FIXED: Go `actions_phase3.go:DestrAsgnVal` and `actions_update.go:destrAsgnVal` now use the upstream `c94e328` shape: `mkAssignClauses(mut, nondet(mut.args))`.
 - Go `compiler.go:CompileApp` applies explicit result-sort ascription only to numerals. It does not have upstream `ascribe_result_sort` for general applications/constants.
 - Go `compiler_decl.go:DefinitionDecl` still compiles definitions immediately and appends `DerivedUpdate` immediately. There is no `fix_definitions(mod)` pass like upstream `01d1ace`.
 - Go `compiler_ivy_compile.go:AttachProofs` accepts labels found in props/conjs or `mod.Isolates`; it does not explicitly accept `lab == "this"` like upstream `28cce61`.
@@ -26,7 +26,7 @@ Priority legend:
 
 ## Recommended First Wave
 
-1. P0 `c94e3286afb8cb320cae8c1e854c942e6fdac2d0`: assignment VC generator bug in destructor-chain assignments.
+1. P0 FIXED `c94e3286afb8cb320cae8c1e854c942e6fdac2d0`: assignment VC generator bug in destructor-chain assignments.
 2. P1 `054188a5789d78f95eb3c93697890e017f5e387f`: `assert=file.ivy:line` should not become `file.ivy.ivy`.
 3. P1 `d5e30fb67a6470caddeae597b7d1d87deb2ccec0`: explicit result-sort ascriptions are dropped except for numerals.
 4. P1 `01d1ace4f0793d044ce5df92f2d5b893b2c1c517`: definitions are compiled too early, rejecting valid forward references.
@@ -78,7 +78,7 @@ Conditional but severe if their feature is adopted:
 | 31 | `992566a0de84a2163aa8b0005ce512dd409c85da` | Skip | Documentation and local variable rename. |
 | 32 | `346fe2d7a0c55baf337c21bcb589fa8daf6cd810` | P1 Python | Python setup/Z3 context reset. Mostly Python-side. |
 | 33 | `06cbcf362d8ae261d0629e7605e7ef7f9b3251b7` | P1 Python | External `z3`, enum-sort cache, reset enum cache. Mostly Python-side. |
-| 34 | `c94e3286afb8cb320cae8c1e854c942e6fdac2d0` | P0 | Assignment VC generator bug. |
+| 34 | `c94e3286afb8cb320cae8c1e854c942e6fdac2d0` | P0 FIXED | Assignment VC generator bug. |
 | 35 | `7431454b44e4e60511e6eea3d825c345e6e9c5ff` | Skip | Shrink option feature. |
 | 36 | `2dfa55f94c112e57bb9d43b613478f7d1db70a5c` | P2 | Strip/remove `ext:` tags in generated naming. |
 | 37 | `f141f5fdf45c4400e50bbe9eac28ac50534a35db` | P2 | Remove debug solver-state file emission. |
@@ -102,7 +102,7 @@ Conditional but severe if their feature is adopted:
 
 ## Detailed Fix Candidates
 
-### P0 `c94e3286afb8cb320cae8c1e854c942e6fdac2d0`: assignment VC generator
+### P0 FIXED `c94e3286afb8cb320cae8c1e854c942e6fdac2d0`: assignment VC generator
 
 Upstream subject: `fixed bug in VC generator for assignments`
 
@@ -589,7 +589,7 @@ So the local fork does not appear to have that exact existential-as-lambda bug. 
 
 ## Suggested Future Fix Order
 
-1. `c94e328` P0 assignment VC generator.
+1. `c94e328` P0 FIXED assignment VC generator.
 2. `054188` P1 `PCA`/`assert=` filename normalization.
 3. `d5e30` P1 result-sort ascription, keeping the wire half separate.
 4. `01d1ace` P1 deferred definition compilation.
