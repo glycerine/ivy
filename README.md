@@ -38,8 +38,8 @@ than non-deterministic set containers to enable trace comparison;
 and c) to fix bugs present in the original python Ivy. Since there
 are so many bugs left un-addressed after many years in the original python Ivy
 (https://github.com/kenmcmil/ivy/issues), we stopped
-bothering to report further fixes. See the end of this
-README.md for a couple of notable (critical) bugs. 
+bothering to report further fixes. See [the end of this
+README.md for a couple of notable (critical) bugs](#bug-fixes-of-interest-to-python-ivy).
 
 The file https://github.com/glycerine/ivy/blob/master/goivy/UPSTREAM_FIXES.md
 summarizes the current differences of GoIvy from the upstream python Ivy.
