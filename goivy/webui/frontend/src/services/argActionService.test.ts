@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
+import { UIDataModel } from '../models/uiDataModel.ts';
 import { executeArgEdgeAction, executeArgNodeAction, prepareArgNodeActionArgs } from './argActionService.ts';
+import { installUIDataModelStore } from './uiDataRenderService.ts';
 
 describe('argActionService', () => {
   it('prompts for missing conjecture choices', async () => {
@@ -105,6 +107,54 @@ describe('argActionService', () => {
 
     expect(app.uiDataStore.applyArgSnapshot).toHaveBeenCalledWith('sheet-1', { elements: ['arg'], positions: null });
     expect(app.controls.setStatus).toHaveBeenLastCalledWith('No new connect transition from state 0 was found.', 'warning');
+    expect(app.controls.setStatus).not.toHaveBeenCalledWith('Action complete: execute_action', 'success');
+  });
+
+  it('warns when a concrete ARG action returns an unchanged rendered graph', async () => {
+    const unchangedArg = {
+      elements: [
+        { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+        { group: 'nodes', data: { id: 'state_1', obj: 'state_1', label: '1' } },
+        {
+          group: 'edges',
+          classes: 'transition_action',
+          data: {
+            id: 'e0',
+            obj: 'tr_0_1',
+            source: 'state_0',
+            target: 'state_1',
+            source_obj: 'state_0',
+            target_obj: 'state_1',
+            label: 'connect(0:client, 0:server)',
+          },
+        },
+      ],
+      positions: null,
+    };
+    const app = {
+      uiDataModel: new UIDataModel(),
+      activeSheetId: 'sheet-1',
+      isVisualOnlySheet: vi.fn(() => false),
+      prepareArgNodeActionArgs: (node, action, args) => args,
+      api: {
+        argNodeAction: vi.fn(async () => ({ arg: unchangedArg })),
+      },
+      sheets: {
+        'sheet-1': { id: 'sheet-1', type: 'analysis', argGraph: null, conceptGraph: null },
+      },
+      controls: { setStatus: vi.fn() },
+    };
+    installUIDataModelStore(app);
+    app.uiDataStore.applyArgSnapshot('sheet-1', unchangedArg);
+
+    await executeArgNodeAction(
+      app,
+      { id: 'state_1' },
+      { id: 'execute_action', args: { action_name: 'ext:connect' } },
+      'sheet-1',
+    );
+
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('No new visible transition was added for connect.', 'warning');
     expect(app.controls.setStatus).not.toHaveBeenCalledWith('Action complete: execute_action', 'success');
   });
 

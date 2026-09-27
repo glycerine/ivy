@@ -160,6 +160,87 @@ function showArgNodeExhaustedResult(app, result) {
   return true;
 }
 
+function fieldValue(obj, names, fallback = '') {
+  if (!obj) return fallback;
+  for (const name of names) {
+    if (Object.prototype.hasOwnProperty.call(obj, name) && obj[name] !== undefined && obj[name] !== null) {
+      return obj[name];
+    }
+  }
+  return fallback;
+}
+
+function safeStableString(value) {
+  if (value === undefined || value === null) return '';
+  if (typeof value === 'string') return value;
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return String(value);
+  }
+}
+
+function snapshotElements(snapshot) {
+  if (!snapshot) return null;
+  if (Array.isArray(snapshot.elements)) return snapshot.elements;
+  if (snapshot.render && Array.isArray(snapshot.render.elements)) return snapshot.render.elements;
+  return null;
+}
+
+function renderedARGSignature(snapshot) {
+  const elements = snapshotElements(snapshot);
+  if (!elements) return null;
+  const keys = elements.map((element) => {
+    const data = element && element.data ? element.data : {};
+    return JSON.stringify({
+      group: fieldValue(element, ['group']),
+      classes: fieldValue(element, ['classes']),
+      id: fieldValue(data, ['id']),
+      obj: fieldValue(data, ['obj']),
+      source: fieldValue(data, ['source']),
+      target: fieldValue(data, ['target']),
+      sourceObj: fieldValue(data, ['source_obj', 'sourceObj']),
+      targetObj: fieldValue(data, ['target_obj', 'targetObj']),
+      label: fieldValue(data, ['label']),
+      shortInfo: fieldValue(data, ['short_info', 'shortInfo']),
+      longInfo: safeStableString(fieldValue(data, ['long_info', 'longInfo'], '')),
+    });
+  });
+  keys.sort();
+  return JSON.stringify(keys);
+}
+
+function currentARGSignature(app, sheetId) {
+  const sheet = app && app.uiDataModel && app.uiDataModel.sheets && app.uiDataModel.sheets[sheetId];
+  if (!sheet || !sheet.arg) return null;
+  return renderedARGSignature(sheet.arg);
+}
+
+function cleanActionDisplayName(name) {
+  return String(name || '')
+    .replace(/^ext:/, '')
+    .replace(/^call:\s*/, '')
+    .replace(/^call\s+/, '')
+    .trim();
+}
+
+function concreteActionDisplayName(actionName, args) {
+  if (actionName === 'execute_action' && args && args.action_name) {
+    return cleanActionDisplayName(args.action_name) || 'action';
+  }
+  return cleanActionDisplayName(actionName) || 'action';
+}
+
+function showUnchangedExecuteActionResult(app, actionName, args, beforeSignature, result, appliedSnapshot) {
+  if (actionName !== 'execute_action') return false;
+  if (beforeSignature === null || beforeSignature === undefined) return false;
+  const afterSignature = renderedARGSignature(appliedSnapshot || (result && result.arg));
+  if (afterSignature === null || afterSignature !== beforeSignature) return false;
+  const message = (result && result.message) || `No new visible transition was added for ${concreteActionDisplayName(actionName, args)}.`;
+  app.controls.setStatus(message, 'warning');
+  return true;
+}
+
 function highlightReturnedSourceInEditor(app, result) {
   if (!result || !result.lineno || typeof app.scrollEditorToLine !== 'function') return false;
   app.scrollEditorToLine(result.lineno);
@@ -212,18 +293,23 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
       app.controls.setStatus(`Action cancelled: ${actionName}`, 'warning');
       return null;
     }
+    const beforeArgSignature = actionName === 'execute_action' ? currentARGSignature(app, targetSheetId) : null;
     const result = await runWithContext(app, {
       busyMessage: `Executing: ${actionName}...`,
       failurePrefix: 'Action failed',
     }, () => app.api.argNodeAction(nodeData.obj || nodeData.id, actionName, args));
     if (!result) return null;
+    let appliedArgSnapshot = null;
     if (result && result.arg) {
-      applyArgSnapshot(app, targetSheetId, result.arg);
+      appliedArgSnapshot = applyArgSnapshot(app, targetSheetId, result.arg);
     }
     if (result && result.concept) {
       applyConceptSnapshot(app, targetSheetId, result.concept);
     }
     if (showArgNodeExhaustedResult(app, result)) {
+      return result;
+    }
+    if (showUnchangedExecuteActionResult(app, actionName, args, beforeArgSignature, result, appliedArgSnapshot)) {
       return result;
     }
     if (actionName === 'check_safety') {

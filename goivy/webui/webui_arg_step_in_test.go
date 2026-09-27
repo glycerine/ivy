@@ -754,6 +754,70 @@ func TestARGExecuteActionSkipsNoOpSelfStateTransition(t *testing.T) {
 	}
 }
 
+func TestARGExecuteActionNoVisibleSuccessFromSuccessor(t *testing.T) {
+	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
+	if err != nil {
+		t.Fatalf("read client_server_example_new.ivy: %v", err)
+	}
+	s := NewSession(goivy.NewConfig(), "test-client-server-no-silent-successor-noop")
+	if err := s.LoadFileContent("client_server_example_new.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+
+	_, err = s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
+		"sheet_id":    rootSheetID,
+		"action_name": "ext:connect",
+	})
+	if err != nil {
+		t.Fatalf("first execute_action: %v", err)
+	}
+	if len(s.AG.Transitions) == 0 {
+		t.Fatalf("first execute_action produced no transition")
+	}
+	firstPostID := s.AG.Transitions[len(s.AG.Transitions)-1].Post.ID
+	successorID := fmt.Sprintf("state_%d", firstPostID)
+	beforeLabels := argPayloadTransitionLabelsFrom(t, AnalysisUIARGPayload(s.AGUI), firstPostID)
+	drainEvents(s)
+
+	second, err := s.ArgNodeAction(successorID, "execute_action", map[string]interface{}{
+		"sheet_id":    rootSheetID,
+		"action_name": "ext:connect",
+	})
+	if err != nil {
+		t.Fatalf("second execute_action from %s: %v", successorID, err)
+	}
+	afterLabels := argPayloadTransitionLabelsFrom(t, requireArgPayload(t, second), firstPostID)
+	if len(afterLabels) > len(beforeLabels) {
+		return
+	}
+	if exhausted, _ := second["exhausted"].(bool); !exhausted {
+		t.Fatalf("execute_action from %s made no visible ARG change but did not report exhaustion: before=%v after=%v result=%#v", successorID, beforeLabels, afterLabels, second)
+	}
+	message, _ := second["message"].(string)
+	if message == "" {
+		t.Fatalf("exhausted execute_action from %s did not include a user message: %#v", successorID, second)
+	}
+	events := collectSessionEvents(s)
+	foundWarning := false
+	for _, ev := range events {
+		switch ev.Type {
+		case "status":
+			if eventDataString(ev.Data, "message") == message && eventDataString(ev.Data, "level") == "warning" {
+				foundWarning = true
+			}
+		case "action_completed":
+			if eventDataString(ev.Data, "action") == "execute_action" {
+				t.Fatalf("exhausted execute_action from %s emitted generic completion after warning; events=%#v", successorID, events)
+			}
+		}
+	}
+	if !foundWarning {
+		t.Fatalf("exhausted execute_action from %s did not emit warning status %q; events=%#v", successorID, message, events)
+	}
+}
+
 func TestARGExecuteActionProducesSatisfiableNovelPostState(t *testing.T) {
 	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
 	if err != nil {
