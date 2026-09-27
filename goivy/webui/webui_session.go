@@ -4606,6 +4606,93 @@ type WebUICheckResult struct {
 	CounterexampleDetails string   `json:"counterexample_details,omitempty"`
 }
 
+type webUIConjChecker struct {
+	session        *Session
+	mod            *goivy.Module
+	lf             *goivy.LabeledFormula
+	conj           *goivy.Clauses
+	cond           *goivy.Clauses
+	index          int
+	total          int
+	label          string
+	displayFormula string
+	failed         bool
+	onStart        func(*webUIConjChecker)
+}
+
+func newWebUIConjChecker(session *Session, mod *goivy.Module, lf *goivy.LabeledFormula, index, total int) (*webUIConjChecker, error) {
+	if lf == nil || lf.Formula == nil {
+		return nil, fmt.Errorf("nil conjecture")
+	}
+	fmla, ok := lf.Formula.(goivy.Expr)
+	if !ok {
+		return nil, fmt.Errorf("conjecture formula has type %T, want goivy.Expr", lf.Formula)
+	}
+	conj := goivy.FormulaToClauses(fmla, nil)
+	witness := func(v *goivy.LogicVariable) goivy.Expr {
+		return goivy.VarToSkolem("@", v)
+	}
+	cond := goivy.DualClauses(conj, witness, mod.Instantiator)
+	label := ""
+	if lf.Label != nil {
+		label = fmt.Sprint(lf.Label)
+	}
+	return &webUIConjChecker{
+		session:        session,
+		mod:            mod,
+		lf:             lf,
+		conj:           conj,
+		cond:           cond,
+		index:          index,
+		total:          total,
+		label:          label,
+		displayFormula: goivy.PrettyFmla(goivy.DropUniversals(conj.ToFormula())),
+	}, nil
+}
+
+func (c *webUIConjChecker) Cond() *goivy.Clauses { return c.cond }
+func (c *webUIConjChecker) Start() {
+	if c.onStart != nil {
+		c.onStart(c)
+	}
+	conjName := c.displayFormula
+	if c.label != "" {
+		conjName = c.label
+	}
+	if c.session != nil {
+		c.session.checkProgress("induction", fmt.Sprintf("Checking conjecture %d of %d: %s", c.index+1, c.total, conjName), map[string]interface{}{
+			"current":      c.index + 1,
+			"total":        c.total,
+			"conjecture":   c.displayFormula,
+			"label":        c.label,
+			"z3_contacted": true,
+		})
+	}
+}
+func (c *webUIConjChecker) Sat() bool {
+	if c.mod != nil && c.mod.Cfg != nil && c.mod.Cfg.OnlyCheckUnprovable {
+		return true
+	}
+	c.failed = true
+	return false
+}
+func (c *webUIConjChecker) Unsat() bool {
+	if c.mod != nil && c.mod.Cfg != nil && c.mod.Cfg.OnlyCheckUnprovable {
+		c.failed = true
+		return false
+	}
+	return true
+}
+func (c *webUIConjChecker) Assume() bool { return false }
+func (c *webUIConjChecker) Fail() bool {
+	c.failed = true
+	return false
+}
+func (c *webUIConjChecker) Pass() bool                        { return true }
+func (c *webUIConjChecker) GetAnnot() *goivy.ActionAnnotation { return c.lf.Annot }
+func (c *webUIConjChecker) Failed() bool                      { return c.failed }
+func (c *webUIConjChecker) GetLF() *goivy.LabeledFormula      { return c.lf }
+
 // RunCheck runs verification in the specified mode using the compiled module and Z3.
 func (s *Session) RunCheck(mode string) *WebUICheckResult {
 	return s.RunCheckWithOptions(mode, CheckOptions{})
@@ -4693,9 +4780,9 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 		// Check inductiveness of conjectures using Z3.
 		// Matches Python ivy_ui_cti.py check_inductiveness():
 		//   1. make_check_art(precond=conjectures) — build pre-state with conjectures
-		//   2. For each conjecture, dual_clauses(conj) → negate it
-		//   3. check_final_cond(ag, post, negated_conj) → Z3 check
-		//   4. If SAT → conjecture not inductive, show it
+		//   2. Convert each conjecture to a final-condition checker
+		//   3. Check final conditions incrementally against the post-state
+		//   4. If SAT → conjecture not inductive, reconstruct and show its trace
 		conjs := s.CompiledModule.LabeledConjs
 		if len(conjs) == 0 {
 			return &WebUICheckResult{Result: "pass", Message: "No conjectures to check"}
@@ -4737,130 +4824,128 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 			relsToMin = strings.Fields(s.CTIUI.RelationsToMinimize)
 		}
 
-		// Test each conjecture. Matches Python ivy_ui_cti.py check_inductiveness lines 120-174:
-		//   for conj in to_test:
-		//     clauses = dual_clauses(conj, witness)
-		//     res = check_final_cond(ag, post, clauses)
+		var webCheckers []*webUIConjChecker
+		var checkers []goivy.Checker
+		var activeChecker *webUIConjChecker
 		for i, lc := range conjs {
-			if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
-				return cancelled
-			}
-			if lc.Formula == nil || i >= len(conjClauses) {
+			if lc.Formula == nil {
 				continue
 			}
-			conj := conjClauses[i]
-
-			// Get display text: Python uses str(il.drop_universals(conj.to_formula()))
-			// str() calls pretty_fmla which does drop_annotations then ugly(0).
-			displayFormula := goivy.PrettyFmla(goivy.DropUniversals(conj.ToFormula()))
-			label := ""
-			if lc.Label != nil {
-				label = fmt.Sprint(lc.Label)
+			checker, err := newWebUIConjChecker(s, s.CompiledModule, lc, i, len(conjs))
+			if err != nil {
+				return &WebUICheckResult{Result: "error", Message: err.Error()}
 			}
-			conjName := displayFormula
-			if label != "" {
-				conjName = label
+			checker.onStart = func(c *webUIConjChecker) {
+				activeChecker = c
 			}
-			s.checkProgress(mode, fmt.Sprintf("Checking conjecture %d of %d: %s", i+1, len(conjs), conjName), map[string]interface{}{
-				"current":      i + 1,
-				"total":        len(conjs),
-				"conjecture":   displayFormula,
-				"label":        label,
-				"z3_contacted": true,
-			})
+			webCheckers = append(webCheckers, checker)
+			checkers = append(checkers, checker)
+		}
 
-			// dual_clauses(conj, witness): Skolemize variables then negate.
-			// Python: clauses = dual_clauses(conj, witness)
-			//   witness = lambda v: lg.Const('@' + v.name, v.sort)
-			// DualClauses replaces universals with Skolem constants, then negates.
-			witness := func(v *goivy.LogicVariable) goivy.Expr {
-				return goivy.VarToSkolem("@", v)
+		var z3err error
+		checksPassed := true
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					dispName := ""
+					if activeChecker != nil {
+						dispName = activeChecker.label
+						if dispName == "" {
+							dispName = activeChecker.displayFormula
+						}
+					}
+					if dispName == "" {
+						z3err = fmt.Errorf("Z3 error checking conjectures: %v", r)
+					} else {
+						z3err = fmt.Errorf("Z3 error checking conjecture %q: %v", dispName, r)
+					}
+					fmt.Printf("checkInduction: %v\n", z3err)
+				}
+			}()
+			checksPassed = goivy.CheckFcsInStateWithAG(s.CompiledModule, ag, postState, checkers)
+		}()
+		if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
+			cancelled.Z3Contacted = true
+			return cancelled
+		}
+		if z3err != nil {
+			failedConj := ""
+			failedLabel := ""
+			if activeChecker != nil {
+				failedConj = activeChecker.displayFormula
+				failedLabel = activeChecker.label
 			}
-			finalCond := goivy.DualClauses(conj, witness, s.CompiledModule.Instantiator)
-
-			// Concretize sorts in the final condition for Z3.
-			var sortErr error
-			for fi, f := range finalCond.Fmlas {
-				cf, cerr := goivy.ConcretizeSorts(f, nil)
-				if cerr == nil {
-					finalCond.Fmlas[fi] = cf
-				} else {
-					sortErr = fmt.Errorf("sort inference failed for conjecture %q: %w", displayFormula, cerr)
-					fmt.Printf("checkInduction: %v\n", sortErr)
+			return &WebUICheckResult{
+				Z3Contacted:      true,
+				Result:           "fail",
+				Message:          fmt.Sprintf("Could not check conjecture (solver error): %v", z3err),
+				FailedConjecture: failedConj,
+				FailedLabel:      failedLabel,
+			}
+		}
+		if !checksPassed {
+			var failed *webUIConjChecker
+			for _, checker := range webCheckers {
+				if checker.Failed() {
+					failed = checker
+					break
 				}
 			}
-
-			if sortErr != nil {
+			if failed == nil {
 				return &WebUICheckResult{
-					Z3Contacted:      true,
-					Result:           "fail",
-					Message:          fmt.Sprintf("Could not check conjecture (sort inference error): %v", sortErr),
-					FailedConjecture: displayFormula,
-					FailedLabel:      label,
+					Z3Contacted: true,
+					Result:      "fail",
+					Message:     "Induction check failed, but no failing conjecture was reported.",
 				}
 			}
 
-			formula := displayFormula
-
-			// check_final_cond: uses the post-state + axioms + negated conjecture
-			// If SAT → counterexample found → conjecture is not inductive
 			var cexTrace *goivy.TraceBase
-			var z3err error
+			z3err = nil
 			func() {
 				defer func() {
 					if r := recover(); r != nil {
-						dispName := label
+						dispName := failed.label
 						if dispName == "" {
-							dispName = formula
+							dispName = failed.displayFormula
 						}
-						// SAFETY: Z3 errors must NOT be treated as "inductive".
-						// A panic means we could not check the conjecture, so
-						// we must report failure rather than silently passing.
-						z3err = fmt.Errorf("Z3 error checking conjecture %q: %v", dispName, r)
+						z3err = fmt.Errorf("Z3 error reconstructing counterexample for conjecture %q: %v", dispName, r)
 						fmt.Printf("checkInduction: %v\n", z3err)
 					}
 				}()
-				// Check: post_state_with_TR & ~conjecture satisfiable?
-				// Matches Python: check_final_cond(ag, post, dual_clauses(conj))
-				cexTrace = goivy.CheckFinalCond(ag, postState, finalCond, relsToMin, true)
+				cexTrace = goivy.CheckFinalCond(ag, postState, failed.cond, relsToMin, true)
 			}()
 			if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
 				cancelled.Z3Contacted = true
 				return cancelled
 			}
-
 			if z3err != nil {
-				// Z3 error — cannot determine inductiveness. Report as failure
-				// rather than silently declaring the conjecture inductive.
 				return &WebUICheckResult{
 					Z3Contacted:      true,
 					Result:           "fail",
-					Message:          fmt.Sprintf("Could not check conjecture (solver error): %v", z3err),
-					FailedConjecture: formula,
-					FailedLabel:      label,
+					Message:          fmt.Sprintf("Could not reconstruct counterexample (solver error): %v", z3err),
+					FailedConjecture: failed.displayFormula,
+					FailedLabel:      failed.label,
 				}
 			}
 
+			traceText := ""
+			cexDetails := ""
 			if cexTrace != nil {
-				// Counterexample found — conjecture is not inductive.
-				// Python assigns the reconstructed counterexample trace:
-				//   res = ivy_trace.check_final_cond(...)
-				//   self.g = res
-				currentConj := conj
-				traceText, cexDetails, feedbackErr := s.installCounterexampleFeedback(cexTrace, finalCond, currentConj)
+				var feedbackErr error
+				traceText, cexDetails, feedbackErr = s.installCounterexampleFeedback(cexTrace, failed.cond, failed.conj)
 				if feedbackErr != nil {
 					return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: feedbackErr.Error()}
 				}
-				return &WebUICheckResult{
-					Z3Contacted:           true,
-					Result:                "fail",
-					Message:               "The following conjecture is not relatively inductive:",
-					FailedConjecture:      formula,
-					FailedLabel:           label,
-					UsedRelations:         relationNamesUsedByClauses(s.CompiledModule, finalCond),
-					CounterexampleTrace:   traceText,
-					CounterexampleDetails: cexDetails,
-				}
+			}
+			return &WebUICheckResult{
+				Z3Contacted:           true,
+				Result:                "fail",
+				Message:               "The following conjecture is not relatively inductive:",
+				FailedConjecture:      failed.displayFormula,
+				FailedLabel:           failed.label,
+				UsedRelations:         relationNamesUsedByClauses(s.CompiledModule, failed.cond),
+				CounterexampleTrace:   traceText,
+				CounterexampleDetails: cexDetails,
 			}
 		}
 
@@ -4874,11 +4959,11 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 		// → pretty_fmla(And(*fmlas)) → ugly(And(*fmlas), 0)
 		// For a single formula, And(fmla) through nary_paren produces "(fmla_str)".
 		var lines []string
-		for i := range conjs {
-			if i < len(conjClauses) && conjClauses[i] != nil {
+		for _, checker := range webCheckers {
+			if checker.conj != nil {
 				// ToOpenFormula returns And(*fmlas) — matching Python's to_let path.
 				// PrettyFmla on And(fmla) produces "(fmla_str)" via nary_paren.
-				openFmla := conjClauses[i].ToOpenFormula()
+				openFmla := checker.conj.ToOpenFormula()
 				lines = append(lines, goivy.PrettyFmla(openFmla))
 			}
 		}
