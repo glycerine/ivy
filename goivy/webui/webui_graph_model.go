@@ -240,6 +240,9 @@ type Graph struct {
 	// CyElems is the last computed Cytoscape element set.
 	CyElems *WebUICyElements
 
+	// FactExprs are the constraints shown in the details pane.
+	FactExprs []goivy.Expr
+
 	// Attributes are string tags on this graph (e.g. "backtrack_point").
 	Attributes []string
 
@@ -369,8 +372,11 @@ func (g *Graph) NewRelation(concept *Concept) {
 func (g *Graph) SetState(clauses string, recomp bool, clearConstraints bool, reset bool) error {
 	g.mu.Lock()
 	g.State = clauses
-	if clearConstraints && g.InteractiveSess != nil {
-		g.InteractiveSess.SupposeConstraints = nil
+	if clearConstraints {
+		g.FactExprs = nil
+		if g.InteractiveSess != nil {
+			g.InteractiveSess.SupposeConstraints = nil
+		}
 	}
 	if reset {
 		g.mu.Unlock()
@@ -497,6 +503,7 @@ func (g *Graph) Copy() *Graph {
 		State:        g.State,
 		Concrete:     g.Concrete,
 		CyElems:      g.CyElems,
+		FactExprs:    append([]goivy.Expr{}, g.FactExprs...),
 		Attributes:   make([]string, len(g.Attributes)),
 	}
 	copy(c.Sorts, g.Sorts)
@@ -649,15 +656,17 @@ func (g *Graph) AddConstraintsExpr(constraints []goivy.Expr, recompute bool) err
 func (g *Graph) SetFacts(facts []string) error {
 	g.mu.Lock()
 	defer g.mu.Unlock()
-	if g.InteractiveSess != nil {
-		g.InteractiveSess.SupposeConstraints = nil
-		for _, f := range facts {
-			expr, err := parseConstraintString(f)
-			if err != nil {
-				return fmt.Errorf("parse fact %q: %w", f, err)
-			}
-			g.InteractiveSess.SupposeConstraints = append(g.InteractiveSess.SupposeConstraints, expr)
+	exprs := make([]goivy.Expr, 0, len(facts))
+	for _, f := range facts {
+		expr, err := parseConstraintString(f)
+		if err != nil {
+			return fmt.Errorf("parse fact %q: %w", f, err)
 		}
+		exprs = append(exprs, expr)
+	}
+	g.FactExprs = exprs
+	if g.InteractiveSess != nil {
+		g.InteractiveSess.SupposeConstraints = append([]goivy.Expr{}, exprs...)
 	}
 	return nil
 }
@@ -666,8 +675,9 @@ func (g *Graph) SetFacts(facts []string) error {
 func (g *Graph) SetFactsExpr(facts []goivy.Expr) {
 	g.mu.Lock()
 	defer g.mu.Unlock()
+	g.FactExprs = append([]goivy.Expr{}, facts...)
 	if g.InteractiveSess != nil {
-		g.InteractiveSess.SupposeConstraints = append([]goivy.Expr{}, facts...)
+		g.InteractiveSess.SupposeConstraints = append([]goivy.Expr{}, g.FactExprs...)
 	}
 }
 
@@ -681,6 +691,7 @@ func (g *Graph) GetFacts(definite bool) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
+		g.FactExprs = append([]goivy.Expr{}, facts...)
 		g.InteractiveSess.SupposeConstraints = append([]goivy.Expr{}, facts...)
 		result := make([]string, 0, len(facts))
 		for _, f := range facts {

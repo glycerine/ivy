@@ -667,11 +667,14 @@ func (w *GraphWidget) SetFactSelected(index int, selected bool) error {
 
 func (w *GraphWidget) constraintExprs() []goivy.Expr {
 	g := w.G()
-	if g == nil || g.InteractiveSess == nil {
+	if g == nil {
 		return nil
 	}
 	g.mu.RLock()
 	defer g.mu.RUnlock()
+	if len(g.FactExprs) > 0 || g.InteractiveSess == nil {
+		return append([]goivy.Expr{}, g.FactExprs...)
+	}
 	return append([]goivy.Expr{}, g.InteractiveSess.SupposeConstraints...)
 }
 

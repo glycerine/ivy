@@ -1440,6 +1440,51 @@ func TestCTIDiagramActionReportsPreStateContext(t *testing.T) {
 	}
 }
 
+func TestClientServerDiagramReturnsConstraintFactsForDetailsPane(t *testing.T) {
+	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
+	if err != nil {
+		t.Fatalf("read client_server_example_new.ivy: %v", err)
+	}
+	s := NewSession(goivy.NewConfig(), "test-client-server-diagram-details")
+	if err := s.LoadFileContent("client_server_example_new.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	cr := s.RunCheck("induction")
+	if cr.Result != "fail" {
+		t.Fatalf("RunCheck induction result = %q, want fail; message=%s", cr.Result, cr.Message)
+	}
+
+	result, err := s.ExecuteAction("diagram", map[string]interface{}{"sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("diagram action: %v", err)
+	}
+	concept, ok := result["concept"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("concept payload missing or wrong type: %#v", result["concept"])
+	}
+	facts, ok := concept["facts"].([]FactSelection)
+	if !ok {
+		t.Fatalf("concept facts missing or wrong type: %#v", concept["facts"])
+	}
+	if len(facts) == 0 {
+		t.Fatalf("diagram concept facts are empty; result=%#v", result)
+	}
+	texts := make([]string, 0, len(facts))
+	for _, fact := range facts {
+		texts = append(texts, fact.Text)
+	}
+	joined := strings.Join(texts, "\n")
+	for _, want := range []string{
+		"0:client ~= 1",
+		"semaphore(0)",
+		"link(1,0)",
+	} {
+		if !strings.Contains(joined, want) {
+			t.Fatalf("diagram facts missing %q in:\n%s\nresult=%#v", want, joined, result)
+		}
+	}
+}
+
 func TestReachabilityDomainActionsReturnConceptSnapshots(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-domain-actions")
 	if err := s.LoadFileContent("test.ivy", []byte(executeActionMenuSample)); err != nil {
