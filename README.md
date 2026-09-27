@@ -28,13 +28,26 @@ against all known Ivy specs using this xtrace (our tracing library) approach.
 It takes about 10 hours to run, and we run it after any changes to
 the port logic. 
 
-Our patches to the original python Ivy have been 
+Our patches to the original python Ivy (here in
+https://github.com/glycerine/ivy/tree/master/pyivy) have been 
 kept minimal, only to: a) add tracing; b) use deterministic dict rather
 than non-deterministic set containers to enable trace comparison;
 and c) to fix bugs present in the original python Ivy. Since there
-are so many bugs left un-addressed after many years in the original python Ivy,
-we stopped bothering to report further fixes. See the end of this
-READEM.md for a couple of notable (critical) bugs.
+are so many bugs left un-addressed after many years in the original python Ivy
+(https://github.com/kenmcmil/ivy/issues), we stopped
+bothering to report further fixes. See the end of this
+README.md for a couple of notable (critical) bugs. 
+
+The file https://github.com/glycerine/ivy/blob/master/goivy/UPSTREAM_FIXES.md
+summarizes the current differences of GoIvy from the upstream python Ivy.
+
+In short, we try to make GoIvy as correct as possible while omitting
+upstream features that are under active research development.
+We thus avoid moving targets that detract from making the Ivy language
+and approach more broadly usable. Hence we have not yet added ivy_to_vmt,
+hardware register/wire syntax, trace replay, dervied invariants, 
+and using/patdef. The upstream python Ivy is open source and you
+will need to use it to experiment with those features.
 
 GoIvy installation steps:
 
