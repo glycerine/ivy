@@ -210,11 +210,12 @@ func mergeParams(params map[string]string, cfg Config) (Config, map[string]strin
 		case "trace":
 			cfg.Trace = parseBool(v)
 		case "debug":
-			level, err := parseDebugLevel(v)
+			level, debugAssert, err := parseDebugParam(v)
 			if err != nil {
 				return cfg, nil, err
 			}
 			cfg.Debug = level
+			cfg.DebugAssert = debugAssert
 		case "stdafx":
 			cfg.Stdafx = parseBool(v)
 		case "build":
@@ -939,10 +940,14 @@ func parseBool(v string) bool {
 	}
 }
 
-func parseDebugLevel(v string) (int, error) {
-	level, err := strconv.Atoi(strings.TrimSpace(v))
-	if err != nil || level < 0 {
-		return 0, fmt.Errorf("ivy2cpp: debug level must be a non-negative integer, got %q", v)
+func parseDebugParam(v string) (int, bool, error) {
+	s := strings.ToLower(strings.TrimSpace(v))
+	if s == "assert" {
+		return 0, true, nil
 	}
-	return level, nil
+	level, err := strconv.Atoi(s)
+	if err != nil || level < 0 {
+		return 0, false, fmt.Errorf("ivy2cpp: debug must be a non-negative integer or assert, got %q", v)
+	}
+	return level, false, nil
 }

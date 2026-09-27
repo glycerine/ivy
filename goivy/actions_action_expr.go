@@ -112,7 +112,7 @@ func (a *LogicAssumeAction) Args() []Node {
 	return []Node{a.Formula}
 }
 func (a *LogicAssumeAction) Clone(args []Node) Node {
-	r := &LogicAssumeAction{ActionBase: a.ActionBase, Unprovable: a.Unprovable}
+	r := &LogicAssumeAction{ActionBase: a.ActionBase, Kind: a.Kind, Unprovable: a.Unprovable}
 	if len(args) >= 1 {
 		if lf, ok := args[0].(*LabeledFormula); ok {
 			r.Formula = lf.Formula.(Expr)

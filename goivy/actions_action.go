@@ -147,6 +147,7 @@ type LogicAssumeAction struct {
 	//                                 Matches Python: isinstance(self.args[0], LabeledFormula).
 	//                                 Formula holds the unwrapped inner logic expression;
 	//                                 LF preserves the label, id, and metadata.
+	Kind       string
 	Unprovable bool // from LabeledFormula.unprovable; if true, skip in action_update
 }
 
@@ -176,7 +177,7 @@ func (a *LogicAssumeAction) SetLF(lf *LabeledFormula) {
 func (a *LogicAssumeAction) Name() string       { return "assume" }
 func (a *LogicAssumeAction) ActionArgs() []Expr { return []Expr{a.Formula} }
 func (a *LogicAssumeAction) ActionClone(args []Expr) ActionsAction {
-	r := &LogicAssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Unprovable: a.Unprovable}
+	r := &LogicAssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}
 	if r.LF != nil {
 		r.Unprovable = r.LF.Unprovable
 	}

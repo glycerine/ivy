@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -38,15 +39,15 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 	case *goivy.LogicSetAction:
 		g.emitSet(w, a)
 	case *goivy.LogicAssertAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "assert", a.GetLineno())
 	case *goivy.LogicRequiresAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno())
 	case *goivy.LogicEnsuresAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno())
 	case *goivy.LogicSubgoalAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno())
 	case *goivy.LogicAssumeAction:
-		g.emitAssertLike(w, "ivy_assume", a.Formula, linenoStr(a.GetLineno()))
+		g.emitAssertLike(w, "ivy_assume", a.Formula, linenoStr(a.GetLineno()), a.Kind, a.GetLineno())
 	case *goivy.LogicIfAction:
 		g.emitIf(w, a)
 	case *goivy.LogicWhileAction:
@@ -248,7 +249,7 @@ func (g *Generator) openAssignmentLoops(w *cppWriter, lhs goivy.Expr) (int, bool
 	return opened, true
 }
 
-func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label string) {
+func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label, debugKind string, loc goivy.Location) {
 	if strings.TrimSpace(label) == "" {
 		label = fn
 	}
@@ -267,7 +268,90 @@ func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label 
 		g.pythonUnsupported(w, kind, err, label)
 		return
 	}
+	g.emitAssertDebugPrint(w, debugKind, loc, f)
 	w.linef(`%s(%s, "%s");`, fn, expr, escapeString(label))
+}
+
+func (g *Generator) emitAssertDebugPrint(w *cppWriter, kind string, loc goivy.Location, f goivy.Expr) {
+	if g == nil || !g.Config.DebugAssert || kind != "assert" {
+		return
+	}
+	text := "debug: "
+	if where := debugAssertLocation(loc); where != "" {
+		text += where + " "
+	}
+	text += debugAssertText(kind, loc, f)
+	w.linef("std::cout << %s << std::endl;", strconv.Quote(text))
+}
+
+func debugAssertLocation(loc goivy.Location) string {
+	for loc.Reference != nil {
+		loc = *loc.Reference
+	}
+	file := filepath.Base(denormalizeIvyCPPLabel(loc.Filename))
+	if file == "." || file == string(filepath.Separator) {
+		file = ""
+	}
+	switch {
+	case file != "" && loc.Line > 0:
+		return fmt.Sprintf("%s:%d", file, loc.Line)
+	case file != "":
+		return file
+	case loc.Line > 0:
+		return fmt.Sprintf("%d", loc.Line)
+	default:
+		return ""
+	}
+}
+
+func debugAssertText(kind string, loc goivy.Location, f goivy.Expr) string {
+	if src := debugAssertSourceLine(kind, loc); src != "" {
+		return src
+	}
+	return kind + " " + debugAssertFormulaText(f)
+}
+
+func debugAssertSourceLine(kind string, loc goivy.Location) string {
+	for loc.Reference != nil {
+		loc = *loc.Reference
+	}
+	if loc.Filename == "" || loc.Line <= 0 {
+		return ""
+	}
+	data, err := os.ReadFile(denormalizeIvyCPPLabel(loc.Filename))
+	if err != nil {
+		return ""
+	}
+	lines := strings.Split(string(data), "\n")
+	if loc.Line > len(lines) {
+		return ""
+	}
+	line := strings.TrimSpace(lines[loc.Line-1])
+	if idx := strings.Index(line, "#"); idx >= 0 {
+		line = strings.TrimSpace(line[:idx])
+	}
+	line = strings.TrimSpace(strings.TrimSuffix(line, ";"))
+	if line == kind || strings.HasPrefix(line, kind+" ") {
+		return line
+	}
+	return ""
+}
+
+func debugAssertFormulaText(f goivy.Expr) string {
+	if f == nil {
+		return ""
+	}
+	text := goivy.PrettyFmla(f)
+	replacer := strings.NewReplacer(
+		"__new_fml:", "new_",
+		"__fml:", "",
+		"fml:", "",
+		"__prm:", "",
+		"prm:", "",
+		"loc:", "",
+		"ret:", "",
+	)
+	return replacer.Replace(text)
 }
 
 func pythonUnsupportedErrorMessage(err error, loc string) string {

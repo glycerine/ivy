@@ -24,6 +24,7 @@ type Config struct {
 	EmitMain        bool
 	Trace           bool
 	Debug           int
+	DebugAssert     bool
 	Stdafx          bool
 	// HostOS overrides the build-host detection used for the header
 	// preamble. Python `ivy_to_cpp.py:1948` checks `platform.system()`

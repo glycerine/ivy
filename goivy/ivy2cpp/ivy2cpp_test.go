@@ -1205,6 +1205,50 @@ func TestMergeParamsAcceptsPythonDriverSurfaceAndDefaultsToGen(t *testing.T) {
 	}
 }
 
+func TestTargetReplDebugAssertParamEmitsAssertPrint(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "debug_assert.ivy")
+	src := strings.Join([]string{
+		"#lang ivy1.7",
+		"individual ok : bool",
+		"action step = {",
+		"    assert ok",
+		"}",
+		"export step",
+		"",
+	}, "\n")
+	if err := os.WriteFile(spec, []byte(src), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	batch, err := CompileAndGenerateAll(spec, map[string]string{
+		"target":    "repl",
+		"classname": "DbgAssert",
+		"debug":     "assert",
+	}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	if len(batch.Outputs) != 1 {
+		t.Fatalf("expected one output, got %d", len(batch.Outputs))
+	}
+	body := bodyAfterMarker(batch.Outputs[0].Impl, "DbgAssert::ext__step(")
+	if body == "" {
+		t.Fatalf("missing ext step body:\n%s", batch.Outputs[0].Impl)
+	}
+	debugLine := `std::cout << "debug: debug_assert.ivy:4 assert ok" << std::endl;`
+	if !strings.Contains(body, debugLine) {
+		t.Fatalf("debug=assert output missing %q:\n%s", debugLine, body)
+	}
+	checkAt := strings.Index(body, "ivy_assume(")
+	if checkAt < 0 {
+		checkAt = strings.Index(body, "ivy_assert(")
+	}
+	printAt := strings.Index(body, debugLine)
+	if checkAt >= 0 && printAt > checkAt {
+		t.Fatalf("debug assertion print should precede runtime check:\n%s", body)
+	}
+}
+
 func TestMergeParamsRejectsUnknownTargetAndCompiler(t *testing.T) {
 	for _, params := range []map[string]string{
 		{"target": "bad"},

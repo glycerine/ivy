@@ -10,6 +10,32 @@ links and references.
 
 A quick aside: Note that this project has nothing to do with Rob Pike's Ivy https://github.com/robpike/ivy calculator project. The repeat of the name Ivy is a mere coincidence. McMillan and Padon were thinking of "[I]nteractive [V]erification", and I doubt they were even aware of Mr. Pike's arbitrary-precision APL-like calculator project in Go.
 
+* A note on the verification of the port-to-Golang of the verification tools
+
+The lock-step versus golden traced-verification approach I used to port from python
+to Go is broadly useful and gives us high confidence in the port.  
+
+When ivy_check or ivy_to_cpp is run, a trace of the program's behavior
+is printed to standard out along with a canonical serialization of the current
+data it is handling. The data is accompanied by the data's cryptographic hash for
+quick comparison. This lets us validate that the behavior and the data
+processed by the Go ports (goivy_check; ivy2cpp) matches the behavior of
+the original python. Run under "python -O" or use the env var XTRACE_OFF=1 to disable the
+tracing output on either side (or build the Go with -tags xtrace_off). 
+
+The goivy/Makefile target "make golden-all" checks the Go port 
+against all known Ivy specs using this xtrace (our tracing library) approach.
+It takes about 10 hours to run, and we run it after any changes to
+the port logic. 
+
+Our patches to the original python Ivy have been 
+kept minimal, only to: a) add tracing; b) use deterministic dict rather
+than non-deterministic set containers to enable trace comparison;
+and c) to fix bugs present in the original python Ivy. Since there
+are so many bugs left un-addressed after many years in the original python Ivy,
+we stopped bothering to report further fixes. See the end of this
+READEM.md for a couple of notable (critical) bugs.
+
 GoIvy installation steps:
 
 # binary installation (pre-built for amd64)
@@ -1221,9 +1247,9 @@ Date:   Sun Sep 27 14:18:23 2026 -0500
 
 See ivy/goivy/test_vectors/bank17.ivy (referenced from http://kenmcmil.github.io/ivy/examples/helloworld.html
 
-manual test scenario:
+manual test scenario: (either the original ivy_to_cpp.py or its port ivy2cpp in Go was borked here)
 ~~~
-XTRACE_OFF=1 ivy2cpp target=repl build=true bank17.ivy
+XTRACE_OFF=1 ivy_to_cpp target=repl build=true bank17.ivy
 ./bank17
 > account.withdraw(1) # should assert, but hangs or accepts instead.
 > account.deposit(65532)
