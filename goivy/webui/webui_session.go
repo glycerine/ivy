@@ -4633,6 +4633,14 @@ func newWebUIConjChecker(session *Session, mod *goivy.Module, lf *goivy.LabeledF
 		return goivy.VarToSkolem("@", v)
 	}
 	cond := goivy.DualClauses(conj, witness, mod.Instantiator)
+	displayFormula := goivy.PrettyFmla(goivy.DropUniversals(conj.ToFormula()))
+	for fi, f := range cond.Fmlas {
+		cf, err := goivy.ConcretizeSorts(f, nil)
+		if err != nil {
+			return nil, fmt.Errorf("sort inference failed for conjecture %q: %w", displayFormula, err)
+		}
+		cond.Fmlas[fi] = cf
+	}
 	label := ""
 	if lf.Label != nil {
 		label = fmt.Sprint(lf.Label)
@@ -4646,7 +4654,7 @@ func newWebUIConjChecker(session *Session, mod *goivy.Module, lf *goivy.LabeledF
 		index:          index,
 		total:          total,
 		label:          label,
-		displayFormula: goivy.PrettyFmla(goivy.DropUniversals(conj.ToFormula())),
+		displayFormula: displayFormula,
 	}, nil
 }
 
@@ -4692,6 +4700,23 @@ func (c *webUIConjChecker) Pass() bool                        { return true }
 func (c *webUIConjChecker) GetAnnot() *goivy.ActionAnnotation { return c.lf.Annot }
 func (c *webUIConjChecker) Failed() bool                      { return c.failed }
 func (c *webUIConjChecker) GetLF() *goivy.LabeledFormula      { return c.lf }
+
+func (s *Session) recheckCounterexampleWithShrink(ag *goivy.AnalysisGraph, postState *goivy.State, checker *webUIConjChecker, relsToMin []string) *goivy.TraceBase {
+	var trace *goivy.TraceBase
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				dispName := checker.label
+				if dispName == "" {
+					dispName = checker.displayFormula
+				}
+				fmt.Printf("checkInduction: Z3 error minimizing counterexample for conjecture %q: %v\n", dispName, r)
+			}
+		}()
+		trace = goivy.CheckFinalCond(ag, postState, checker.cond, relsToMin, true)
+	}()
+	return trace
+}
 
 // RunCheck runs verification in the specified mode using the compiled module and Z3.
 func (s *Session) RunCheck(mode string) *WebUICheckResult {
@@ -4780,8 +4805,8 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 		// Check inductiveness of conjectures using Z3.
 		// Matches Python ivy_ui_cti.py check_inductiveness():
 		//   1. make_check_art(precond=conjectures) — build pre-state with conjectures
-		//   2. Convert each conjecture to a final-condition checker
-		//   3. Check final conditions incrementally against the post-state
+		//   2. Convert each conjecture to its negated final condition
+		//   3. Check final conditions against the post-state without shrinking
 		//   4. If SAT → conjecture not inductive, reconstruct and show its trace
 		conjs := s.CompiledModule.LabeledConjs
 		if len(conjs) == 0 {
@@ -4825,8 +4850,6 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 		}
 
 		var webCheckers []*webUIConjChecker
-		var checkers []goivy.Checker
-		var activeChecker *webUIConjChecker
 		for i, lc := range conjs {
 			if lc.Formula == nil {
 				continue
@@ -4835,13 +4858,16 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 			if err != nil {
 				return &WebUICheckResult{Result: "error", Message: err.Error()}
 			}
+			webCheckers = append(webCheckers, checker)
+		}
+
+		useDirectFallback := false
+		var activeChecker *webUIConjChecker
+		for _, checker := range webCheckers {
 			checker.onStart = func(c *webUIConjChecker) {
 				activeChecker = c
 			}
-			webCheckers = append(webCheckers, checker)
-			checkers = append(checkers, checker)
 		}
-
 		var z3err error
 		checksPassed := true
 		func() {
@@ -4859,9 +4885,12 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 					} else {
 						z3err = fmt.Errorf("Z3 error checking conjecture %q: %v", dispName, r)
 					}
-					fmt.Printf("checkInduction: %v\n", z3err)
 				}
 			}()
+			checkers := make([]goivy.Checker, 0, len(webCheckers))
+			for _, checker := range webCheckers {
+				checkers = append(checkers, checker)
+			}
 			checksPassed = goivy.CheckFcsInStateWithAG(s.CompiledModule, ag, postState, checkers)
 		}()
 		if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
@@ -4869,21 +4898,12 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 			return cancelled
 		}
 		if z3err != nil {
-			failedConj := ""
-			failedLabel := ""
-			if activeChecker != nil {
-				failedConj = activeChecker.displayFormula
-				failedLabel = activeChecker.label
+			useDirectFallback = true
+			for _, checker := range webCheckers {
+				checker.failed = false
+				checker.onStart = nil
 			}
-			return &WebUICheckResult{
-				Z3Contacted:      true,
-				Result:           "fail",
-				Message:          fmt.Sprintf("Could not check conjecture (solver error): %v", z3err),
-				FailedConjecture: failedConj,
-				FailedLabel:      failedLabel,
-			}
-		}
-		if !checksPassed {
+		} else if !checksPassed {
 			var failed *webUIConjChecker
 			for _, checker := range webCheckers {
 				if checker.Failed() {
@@ -4898,7 +4918,6 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 					Message:     "Induction check failed, but no failing conjecture was reported.",
 				}
 			}
-
 			var cexTrace *goivy.TraceBase
 			z3err = nil
 			func() {
@@ -4927,7 +4946,6 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 					FailedLabel:      failed.label,
 				}
 			}
-
 			traceText := ""
 			cexDetails := ""
 			if cexTrace != nil {
@@ -4946,6 +4964,68 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 				UsedRelations:         relationNamesUsedByClauses(s.CompiledModule, failed.cond),
 				CounterexampleTrace:   traceText,
 				CounterexampleDetails: cexDetails,
+			}
+		}
+
+		if useDirectFallback {
+			for _, checker := range webCheckers {
+				if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
+					return cancelled
+				}
+				checker.Start()
+				var cexTrace *goivy.TraceBase
+				var z3err error
+				func() {
+					defer func() {
+						if r := recover(); r != nil {
+							dispName := checker.label
+							if dispName == "" {
+								dispName = checker.displayFormula
+							}
+							z3err = fmt.Errorf("Z3 error checking conjecture %q: %v", dispName, r)
+							fmt.Printf("checkInduction: %v\n", z3err)
+						}
+					}()
+					cexTrace = goivy.CheckFinalCond(ag, postState, checker.cond, relsToMin, false)
+				}()
+				if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
+					cancelled.Z3Contacted = true
+					return cancelled
+				}
+				if z3err != nil {
+					return &WebUICheckResult{
+						Z3Contacted:      true,
+						Result:           "fail",
+						Message:          fmt.Sprintf("Could not check conjecture (solver error): %v", z3err),
+						FailedConjecture: checker.displayFormula,
+						FailedLabel:      checker.label,
+					}
+				}
+				if cexTrace != nil {
+					checker.failed = true
+					if len(relsToMin) > 0 {
+						if minimizedTrace := s.recheckCounterexampleWithShrink(ag, postState, checker, relsToMin); minimizedTrace != nil {
+							cexTrace = minimizedTrace
+						}
+					}
+					traceText := ""
+					cexDetails := ""
+					var feedbackErr error
+					traceText, cexDetails, feedbackErr = s.installCounterexampleFeedback(cexTrace, checker.cond, checker.conj)
+					if feedbackErr != nil {
+						return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: feedbackErr.Error()}
+					}
+					return &WebUICheckResult{
+						Z3Contacted:           true,
+						Result:                "fail",
+						Message:               "The following conjecture is not relatively inductive:",
+						FailedConjecture:      checker.displayFormula,
+						FailedLabel:           checker.label,
+						UsedRelations:         relationNamesUsedByClauses(s.CompiledModule, checker.cond),
+						CounterexampleTrace:   traceText,
+						CounterexampleDetails: cexDetails,
+					}
+				}
 			}
 		}
 
