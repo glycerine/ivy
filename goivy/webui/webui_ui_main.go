@@ -1730,12 +1730,19 @@ func (ui *AnalysisGraphUI) executeConcreteFreshAction(nodeID int, state *goivy.S
 	if model == nil {
 		return true, &ExhaustedARGActionError{StateID: nodeID, ActionName: actionName}
 	}
-	_, postClauses := goivy.ExtractPrePostModel(domain, domain.Cfg.IuCfg, query, model, update.Modified)
+	knownActuals := ui.knownConcreteActionActuals(state, resolvedName, formals)
+	postClauses := concretePostClausesFromModel(slv, domain, query, model, update.Modified, formals, state.Clauses, knownActuals)
+	usedDirectPostClauses := postClauses != nil
+	if !usedDirectPostClauses {
+		_, postClauses = goivy.ExtractPrePostModel(domain, domain.Cfg.IuCfg, query, model, update.Modified)
+	}
 	postState := goivy.NewState(domain, postClauses)
 	postState.Pred = state
 	postState.Action = action
 	postState.ActionName = resolvedName
-	postState.Clauses = ui.stabilizeConcreteActionActuals(slv, model, postState, state, resolvedName, formals)
+	if !usedDirectPostClauses {
+		postState.Clauses = ui.stabilizeConcreteActionActuals(slv, model, postState, state, resolvedName, formals)
+	}
 	app := goivy.NewActionApp(action, state)
 	app.ActionName = resolvedName
 	ui.AG.Add(postState, app)
@@ -1777,6 +1784,203 @@ func (ui *AnalysisGraphUI) concreteActionQuery(state *goivy.State, action goivy.
 	}
 	parts := []*goivy.Clauses{state.Clauses, update.TR, domain.BackgroundTheory(state.InScope)}
 	return goivy.AndClausesTyped(parts...), update, nil
+}
+
+func concretePostClausesFromModel(slv *goivy.Solver, domain *goivy.Module, query *goivy.Clauses, model *goivy.ModelResult, modified []*goivy.Const, formals []*goivy.Const, preClauses *goivy.Clauses, knownActuals map[string][]*goivy.Const) *goivy.Clauses {
+	if slv == nil || domain == nil || query == nil || model == nil || model.Model == nil {
+		return nil
+	}
+	modifiedByName := make(map[string]bool, len(modified))
+	for _, sym := range modified {
+		if sym != nil {
+			modifiedByName[sym.Name] = true
+		}
+	}
+	known := concreteKnownConstantsBySort(preClauses)
+	for sortName, actuals := range knownActuals {
+		for _, actual := range actuals {
+			known[sortName] = appendKnownConcreteConst(known[sortName], actual)
+		}
+	}
+	nextBySort := nextConcreteActualIndexBySort(known)
+	var fmlas []goivy.Expr
+	seenFmlas := make(map[goivy.NodeKey]bool)
+	addFact := func(f goivy.Expr) {
+		if f == nil {
+			return
+		}
+		key := goivy.Key(f)
+		if seenFmlas[key] {
+			return
+		}
+		seenFmlas[key] = true
+		fmlas = append(fmlas, f)
+	}
+	for _, formal := range formals {
+		if formal == nil {
+			continue
+		}
+		sortName := goivy.IvySortName(formal.CSort)
+		actual := concreteStableActualForModelValue(slv, model, formal, known[sortName], &nextBySort)
+		if actual == nil {
+			continue
+		}
+		known[sortName] = appendKnownConcreteConst(known[sortName], actual)
+		eq, err := goivy.NewEq(formal, actual)
+		if err == nil {
+			addFact(eq)
+		}
+	}
+	for _, rel := range concretePostRelationSymbols(domain, modified) {
+		evalRel := rel
+		if modifiedByName[rel.Name] {
+			evalRel = goivy.NewActionConst(rel)
+		}
+		for _, fact := range concreteRelationFactsFromModel(slv, model, rel, evalRel, known) {
+			addFact(fact)
+		}
+	}
+	if len(fmlas) == 0 {
+		return nil
+	}
+	clauses := goivy.NewClauses(fmlas, nil, nil)
+	return goivy.RemoveTautEqsClauses(clauses)
+}
+
+func concreteKnownConstantsBySort(clauses *goivy.Clauses) map[string][]*goivy.Const {
+	known := make(map[string][]*goivy.Const)
+	if clauses == nil {
+		return known
+	}
+	for _, sym := range clauses.Symbols().All() {
+		c, ok := sym.(*goivy.Const)
+		if !ok {
+			continue
+		}
+		if c == nil || goivy.IsFunctionSort(c.CSort) || goivy.SortEqual(c.CSort, goivy.Boolean) {
+			continue
+		}
+		sortName := goivy.IvySortName(c.CSort)
+		known[sortName] = appendKnownConcreteConst(known[sortName], c)
+	}
+	return known
+}
+
+func appendKnownConcreteConst(constants []*goivy.Const, c *goivy.Const) []*goivy.Const {
+	if c == nil {
+		return constants
+	}
+	key := goivy.Key(c)
+	for _, existing := range constants {
+		if existing != nil && goivy.Key(existing) == key {
+			return constants
+		}
+	}
+	return append(constants, c)
+}
+
+func concretePostRelationSymbols(domain *goivy.Module, modified []*goivy.Const) []*goivy.Const {
+	var out []*goivy.Const
+	seen := make(map[string]bool)
+	add := func(sym *goivy.Const) {
+		if sym == nil || !goivy.IsRelationalSort(sym.CSort) {
+			return
+		}
+		if seen[sym.Name] {
+			return
+		}
+		seen[sym.Name] = true
+		out = append(out, sym)
+	}
+	if domain != nil {
+		for _, relExpr := range domain.AllRelations {
+			if rel, ok := relExpr.(*goivy.Const); ok {
+				add(rel)
+			}
+		}
+	}
+	for _, sym := range modified {
+		add(sym)
+	}
+	return out
+}
+
+func concreteRelationFactsFromModel(slv *goivy.Solver, model *goivy.ModelResult, rel, evalRel *goivy.Const, known map[string][]*goivy.Const) []goivy.Expr {
+	if slv == nil || model == nil || model.Model == nil || rel == nil || evalRel == nil || !goivy.IsRelationalSort(rel.CSort) {
+		return nil
+	}
+	fs, ok := rel.CSort.(*goivy.LogicFunctionSort)
+	if !ok || fs.Arity() == 0 {
+		return concreteBoolRelationFactFromModel(slv, model, rel, evalRel)
+	}
+	domain := fs.Domain()
+	tuples := concreteKnownTuplesForSorts(domain, known)
+	var facts []goivy.Expr
+	for _, tuple := range tuples {
+		evalApp, err := goivy.NewApply(evalRel, tuple...)
+		if err != nil {
+			continue
+		}
+		baseApp, err := goivy.NewApply(rel, tuple...)
+		if err != nil {
+			continue
+		}
+		value, err := slv.EvalFormula(model.Model, evalApp)
+		if err != nil {
+			continue
+		}
+		if value {
+			facts = append(facts, baseApp)
+			continue
+		}
+		neg, err := goivy.NewNot(baseApp)
+		if err == nil {
+			facts = append(facts, neg)
+		}
+	}
+	return facts
+}
+
+func concreteBoolRelationFactFromModel(slv *goivy.Solver, model *goivy.ModelResult, rel, evalRel *goivy.Const) []goivy.Expr {
+	value, err := slv.EvalFormula(model.Model, evalRel)
+	if err != nil {
+		return nil
+	}
+	if value {
+		return []goivy.Expr{rel}
+	}
+	neg, err := goivy.NewNot(rel)
+	if err != nil {
+		return nil
+	}
+	return []goivy.Expr{neg}
+}
+
+func concreteKnownTuplesForSorts(sorts []goivy.Sort, known map[string][]*goivy.Const) [][]goivy.Expr {
+	if len(sorts) == 0 {
+		return [][]goivy.Expr{{}}
+	}
+	first := known[goivy.IvySortName(sorts[0])]
+	if len(first) == 0 {
+		return nil
+	}
+	rest := concreteKnownTuplesForSorts(sorts[1:], known)
+	if len(rest) == 0 {
+		return nil
+	}
+	var out [][]goivy.Expr
+	for _, c := range first {
+		if c == nil {
+			continue
+		}
+		for _, tail := range rest {
+			tuple := make([]goivy.Expr, 0, 1+len(tail))
+			tuple = append(tuple, c)
+			tuple = append(tuple, tail...)
+			out = append(out, tuple)
+		}
+	}
+	return out
 }
 
 func concreteActionNonSelfConstraint(update *goivy.Update) (goivy.Expr, bool) {

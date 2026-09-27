@@ -671,6 +671,119 @@ func TestARGExecuteActionSkipsNoOpSelfStateTransition(t *testing.T) {
 	}
 }
 
+func TestARGExecuteActionProducesSatisfiableNovelPostState(t *testing.T) {
+	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
+	if err != nil {
+		t.Fatalf("read client_server_example_new.ivy: %v", err)
+	}
+	s := NewSession(goivy.NewConfig(), "test-client-server-sat-novel-post-state")
+	if err := s.LoadFileContent("client_server_example_new.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+
+	pre := clientServerManualState(t, s.CompiledModule)
+	s.AG.Add(pre, nil)
+	s.syncARGToGraph()
+
+	beforeTransitions := len(s.AG.Transitions)
+	result, err := s.ArgNodeAction(fmt.Sprintf("state_%d", pre.ID), "execute_action", map[string]interface{}{
+		"sheet_id":    rootSheetID,
+		"action_name": "ext:connect",
+	})
+	if err != nil {
+		t.Fatalf("execute_action from injected state: %v", err)
+	}
+	if exhausted, _ := result["exhausted"].(bool); exhausted {
+		t.Fatalf("execute_action unexpectedly exhausted from satisfiable injected state: %#v", result)
+	}
+	if len(s.AG.Transitions) != beforeTransitions+1 {
+		t.Fatalf("execute_action transition count = %d, want %d; result=%#v", len(s.AG.Transitions), beforeTransitions+1, result)
+	}
+	post := s.AG.Transitions[len(s.AG.Transitions)-1].Post
+	solver := goivy.NewSolver(s.CompiledModule, nil)
+	sat, err := solver.ClausesSat(post.Clauses)
+	if err != nil {
+		t.Fatalf("ClausesSat(post): %v\npost=%s", err, post.Clauses)
+	}
+	if !sat {
+		t.Fatalf("execute_action produced contradictory post-state clauses:\n%s", post.Clauses)
+	}
+	postCoversPre, _ := goivy.ModuleOrder(goivy.ArtToInterpState(post), goivy.ArtToInterpState(pre))
+	preCoversPost, _ := goivy.ModuleOrder(goivy.ArtToInterpState(pre), goivy.ArtToInterpState(post))
+	if postCoversPre && preCoversPost {
+		t.Fatalf("execute_action produced a post-state equivalent to its pre-state:\npre=%s\npost=%s", pre.Clauses, post.Clauses)
+	}
+}
+
+func clientServerManualState(t *testing.T, mod *goivy.Module) *goivy.State {
+	t.Helper()
+	link := moduleSymbol(t, mod, "link")
+	semaphore := moduleSymbol(t, mod, "semaphore")
+	clientSort := moduleSort(t, mod, "client")
+	serverSort := moduleSort(t, mod, "server")
+	c0 := goivy.NewConst("0", clientSort)
+	c1 := goivy.NewConst("1", clientSort)
+	s0 := goivy.NewConst("0", serverSort)
+	link00 := mustApplyExpr(t, link, c0, s0)
+	link10 := mustApplyExpr(t, link, c1, s0)
+	sem0 := mustApplyExpr(t, semaphore, s0)
+	notLink10 := mustNotExpr(t, link10)
+	c0NeqC1 := mustNotExpr(t, mustEqExpr(t, c0, c1))
+	clauses := goivy.NewClauses([]goivy.Expr{c0NeqC1, link00, notLink10, sem0}, nil, nil)
+	return goivy.NewState(mod, clauses)
+}
+
+func moduleSymbol(t *testing.T, mod *goivy.Module, name string) *goivy.Const {
+	t.Helper()
+	if mod == nil || mod.Sig == nil {
+		t.Fatalf("compiled module/signature is nil")
+	}
+	entry, ok := mod.Sig.Symbols.Get2(name)
+	if !ok {
+		t.Fatalf("symbol %q not found", name)
+	}
+	return goivy.NewConst(name, entry.Sort)
+}
+
+func moduleSort(t *testing.T, mod *goivy.Module, name string) goivy.Sort {
+	t.Helper()
+	if mod == nil || mod.Sig == nil {
+		t.Fatalf("compiled module/signature is nil")
+	}
+	sort, ok := mod.Sig.Sorts.Get2(name)
+	if !ok {
+		t.Fatalf("sort %q not found", name)
+	}
+	return sort
+}
+
+func mustApplyExpr(t *testing.T, fn goivy.Expr, args ...goivy.Expr) goivy.Expr {
+	t.Helper()
+	app, err := goivy.NewApply(fn, args...)
+	if err != nil {
+		t.Fatalf("NewApply(%v, %v): %v", fn, args, err)
+	}
+	return app
+}
+
+func mustNotExpr(t *testing.T, expr goivy.Expr) goivy.Expr {
+	t.Helper()
+	not, err := goivy.NewNot(expr)
+	if err != nil {
+		t.Fatalf("NewNot(%v): %v", expr, err)
+	}
+	return not
+}
+
+func mustEqExpr(t *testing.T, left, right goivy.Expr) goivy.Expr {
+	t.Helper()
+	eq, err := goivy.NewEq(left, right)
+	if err != nil {
+		t.Fatalf("NewEq(%v, %v): %v", left, right, err)
+	}
+	return eq
+}
+
 func TestClientServerInitialARGPayloadKeepsConcreteActualLabels(t *testing.T) {
 	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
 	if err != nil {
