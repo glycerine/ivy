@@ -1213,6 +1213,12 @@ The generated tester printed randomized action traces and reached
 
 ## ivy 1.7 repl was broken, ignored specification asserts
 
+fix in:
+~~~
+commit 3eb9530bca345fc4e83ad5eeecd67bd11f00dd4a (HEAD -> master)
+Date:   Sun Sep 27 14:18:23 2026 -0500
+~~~
+
 See ivy/goivy/test_vectors/bank17.ivy (referenced from http://kenmcmil.github.io/ivy/examples/helloworld.html
 
 manual test scenario:
