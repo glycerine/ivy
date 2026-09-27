@@ -1715,6 +1715,9 @@ func (ui *AnalysisGraphUI) executeConcreteFreshAction(nodeID int, state *goivy.S
 	if err != nil {
 		return true, err
 	}
+	if nonSelf, ok := concreteActionNonSelfConstraint(update); ok {
+		query = goivy.AndClausesTyped(query, goivy.FormulaToClauses(nonSelf, nil))
+	}
 	blockers := ui.concreteActionTupleBlockers(state, resolvedName, formals)
 	if len(blockers) > 0 {
 		query = goivy.AndClausesTyped(query, goivy.FormulaToClauses(&goivy.LogicAnd{Terms: blockers}, nil))
@@ -1774,6 +1777,79 @@ func (ui *AnalysisGraphUI) concreteActionQuery(state *goivy.State, action goivy.
 	}
 	parts := []*goivy.Clauses{state.Clauses, update.TR, domain.BackgroundTheory(state.InScope)}
 	return goivy.AndClausesTyped(parts...), update, nil
+}
+
+func concreteActionNonSelfConstraint(update *goivy.Update) (goivy.Expr, bool) {
+	if update == nil || update.ModifiedAll || len(update.Modified) == 0 {
+		return nil, false
+	}
+	diffs := make([]goivy.Expr, 0, len(update.Modified))
+	for i, sym := range update.Modified {
+		if diff, ok := concreteSymbolChangedConstraint(sym, i); ok {
+			diffs = append(diffs, diff)
+		}
+	}
+	if len(diffs) == 0 {
+		return nil, false
+	}
+	if len(diffs) == 1 {
+		return diffs[0], true
+	}
+	disj, err := goivy.NewOr(diffs...)
+	if err != nil {
+		return nil, false
+	}
+	return disj, true
+}
+
+func concreteSymbolChangedConstraint(sym *goivy.Const, symbolIndex int) (goivy.Expr, bool) {
+	if sym == nil {
+		return nil, false
+	}
+	newSym := goivy.NewActionConst(sym)
+	domain := goivy.SortDomain(sym.CSort)
+	if len(domain) == 0 {
+		return concreteTermsDifferConstraint(sym, newSym)
+	}
+	vars := make([]*goivy.LogicVariable, 0, len(domain))
+	args := make([]goivy.Expr, 0, len(domain))
+	for i, sort := range domain {
+		v, err := goivy.NewVariable(fmt.Sprintf("__arg_diff_%d_%d", symbolIndex, i), sort)
+		if err != nil {
+			return nil, false
+		}
+		vars = append(vars, v)
+		args = append(args, v)
+	}
+	oldApp, err := goivy.NewApply(sym, args...)
+	if err != nil {
+		return nil, false
+	}
+	newApp, err := goivy.NewApply(newSym, args...)
+	if err != nil {
+		return nil, false
+	}
+	body, ok := concreteTermsDifferConstraint(oldApp, newApp)
+	if !ok {
+		return nil, false
+	}
+	exists, err := goivy.NewExists(vars, body)
+	if err != nil {
+		return nil, false
+	}
+	return exists, true
+}
+
+func concreteTermsDifferConstraint(pre, post goivy.Expr) (goivy.Expr, bool) {
+	eq, err := goivy.NewEq(pre, post)
+	if err != nil {
+		return nil, false
+	}
+	neq, err := goivy.NewNot(eq)
+	if err != nil {
+		return nil, false
+	}
+	return neq, true
 }
 
 func (ui *AnalysisGraphUI) concreteActionTupleBlockers(state *goivy.State, actionName string, formals []*goivy.Const) []goivy.Expr {

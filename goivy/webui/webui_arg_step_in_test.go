@@ -618,6 +618,59 @@ func TestARGExecuteActionDoesNotDuplicateExistingConcreteTransition(t *testing.T
 	}
 }
 
+func TestARGExecuteActionSkipsNoOpSelfStateTransition(t *testing.T) {
+	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
+	if err != nil {
+		t.Fatalf("read client_server_example_new.ivy: %v", err)
+	}
+	s := NewSession(goivy.NewConfig(), "test-client-server-no-noop-self-transition")
+	if err := s.LoadFileContent("client_server_example_new.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+
+	first, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
+		"sheet_id":    rootSheetID,
+		"action_name": "ext:connect",
+	})
+	if err != nil {
+		t.Fatalf("first execute_action: %v", err)
+	}
+	if len(s.AG.Transitions) == 0 {
+		t.Fatalf("first execute_action produced no transitions")
+	}
+	firstPostID := s.AG.Transitions[len(s.AG.Transitions)-1].Post.ID
+	firstLabel := argPayloadTransitionLabel(t, requireArgPayload(t, first), 0, firstPostID)
+
+	beforeStates := len(s.AG.States)
+	beforeTransitions := len(s.AG.Transitions)
+	second, err := s.ArgNodeAction(fmt.Sprintf("state_%d", firstPostID), "execute_action", map[string]interface{}{
+		"sheet_id":    rootSheetID,
+		"action_name": "ext:connect",
+	})
+	if err != nil {
+		t.Fatalf("second execute_action from state_%d: %v", firstPostID, err)
+	}
+	if len(s.AG.Transitions) == beforeTransitions {
+		if exhausted, _ := second["exhausted"].(bool); !exhausted {
+			t.Fatalf("second execute_action added no transition but did not report exhaustion: %#v", second)
+		}
+		if len(s.AG.States) != beforeStates {
+			t.Fatalf("second execute_action reported exhaustion but state count changed from %d to %d", beforeStates, len(s.AG.States))
+		}
+		return
+	}
+	if len(s.AG.Transitions) != beforeTransitions+1 {
+		t.Fatalf("second execute_action transition count = %d, want %d or exhausted result %#v", len(s.AG.Transitions), beforeTransitions+1, second)
+	}
+	secondPostID := s.AG.Transitions[len(s.AG.Transitions)-1].Post.ID
+	secondLabel := argPayloadTransitionLabel(t, requireArgPayload(t, second), firstPostID, secondPostID)
+	if secondLabel == firstLabel {
+		t.Fatalf("execute_action repeated %q from its own successor, creating a no-op self-state move", secondLabel)
+	}
+}
+
 func TestClientServerInitialARGPayloadKeepsConcreteActualLabels(t *testing.T) {
 	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
 	if err != nil {
