@@ -26,6 +26,14 @@ export connect
 conjecture link(X,Y) -> ~semaphore(Y)
 `
 
+const exhaustedExecuteActionSample = `#lang ivy1.7
+type node
+relation p(X:node)
+after init { p(X) := false }
+action use(x:node) = { require p(x); p(x) := false }
+export use
+`
+
 const ctiUsedRelationSample = `#lang ivy1.7
 type node
 relation p(X:node)
@@ -134,6 +142,30 @@ func clientServerExampleWithConcreteIndividuals(t *testing.T) []byte {
 		t.Fatalf("client_server_example.ivy did not contain expected type server declaration")
 	}
 	return []byte(withIndividuals)
+}
+
+func collectSessionEvents(s *Session) []Event {
+	var events []Event
+	for {
+		select {
+		case ev := <-s.Events:
+			events = append(events, ev)
+		default:
+			return events
+		}
+	}
+}
+
+func eventDataString(data interface{}, key string) string {
+	switch m := data.(type) {
+	case map[string]string:
+		return m[key]
+	case map[string]interface{}:
+		if v, ok := m[key].(string); ok {
+			return v
+		}
+	}
+	return ""
 }
 
 func pythonIvyDiagramDomainNodes(t *testing.T, content []byte) []string {
@@ -534,6 +566,57 @@ func TestARGExecuteActionMenuEntriesRenderAndDispatch(t *testing.T) {
 		t.Fatalf("execute_action result missing arg update: %#v", result)
 	}
 	assertARGPayloadTransitionEdgeLabelsDrawnFromModel(t, requireArgPayload(t, result), s.CompiledModule)
+}
+
+func TestARGExecuteActionExhaustionLeavesWarningStatus(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-exhausted-action-status")
+	if err := s.LoadFileContent("exhausted_action.ivy", []byte(exhaustedExecuteActionSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+	drainEvents(s)
+
+	beforeStates := len(s.AG.States)
+	beforeTransitions := len(s.AG.Transitions)
+	result, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
+		"sheet_id":    rootSheetID,
+		"action_name": "ext:use",
+	})
+	if err != nil {
+		t.Fatalf("ArgNodeAction execute_action: %v", err)
+	}
+	if exhausted, _ := result["exhausted"].(bool); !exhausted {
+		t.Fatalf("execute_action result did not report exhaustion: %#v", result)
+	}
+	if len(s.AG.States) != beforeStates {
+		t.Fatalf("exhausted execute_action changed state count from %d to %d", beforeStates, len(s.AG.States))
+	}
+	if len(s.AG.Transitions) != beforeTransitions {
+		t.Fatalf("exhausted execute_action changed transition count from %d to %d", beforeTransitions, len(s.AG.Transitions))
+	}
+	message, _ := result["message"].(string)
+	if message == "" {
+		t.Fatalf("exhausted execute_action did not return a message: %#v", result)
+	}
+
+	events := collectSessionEvents(s)
+	foundWarning := false
+	for _, ev := range events {
+		switch ev.Type {
+		case "status":
+			if eventDataString(ev.Data, "message") == message && eventDataString(ev.Data, "level") == "warning" {
+				foundWarning = true
+			}
+		case "action_completed":
+			if eventDataString(ev.Data, "action") == "execute_action" {
+				t.Fatalf("exhausted execute_action emitted generic completion after warning; events=%#v", events)
+			}
+		}
+	}
+	if !foundWarning {
+		t.Fatalf("exhausted execute_action did not emit warning status %q; events=%#v", message, events)
+	}
 }
 
 func TestARGExecuteActionLabelsIncludeConcreteActuals(t *testing.T) {

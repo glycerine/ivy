@@ -4140,6 +4140,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 	}
 
 	var err error
+	emitCompletion := true
 	sheetID := actionStringArg(args, "sheet_id")
 	ui, resolvedSheetID, uiErr := s.requireAnalysisUIForSheetLocked(sheetID)
 	if uiErr == nil {
@@ -4321,6 +4322,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 				result["message"] = exhausted.DialogMessage()
 				result["arg"] = AnalysisUIARGPayload(ui)
 				s.emit(Event{Type: "status", Data: map[string]string{"message": exhausted.DialogMessage(), "level": "warning"}})
+				emitCompletion = false
 				break
 			}
 			err = execErr
@@ -4530,7 +4532,9 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 	if err != nil {
 		return result, err
 	}
-	s.emit(Event{Type: "action_completed", Data: map[string]string{"action": action}})
+	if emitCompletion {
+		s.emit(Event{Type: "action_completed", Data: map[string]string{"action": action}})
+	}
 	return result, nil
 }
 

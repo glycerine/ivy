@@ -3620,59 +3620,10 @@ class IvyRuntime {
      */
     async executeArgNodeAction(nodeData, action, sheetId) {
         return executeArgNodeActionViaService(this, nodeData, action, sheetId);
-        sheetId = sheetId || this.activeSheetId || 'sheet-1';
-        if (this.isVisualOnlySheet(sheetId)) {
-            this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
-            return null;
-        }
-        var actionName = action.action || action.id || action[0] || action.name;
-        this.controls.setStatus('Executing: ' + actionName + '...');
-        try {
-            var args = Object.assign({}, action.args || {});
-            args.sheet_id = sheetId;
-            args = await this.prepareArgNodeActionArgs(nodeData, actionName, args, sheetId);
-            if (args === null) {
-                this.controls.setStatus('Action cancelled: ' + actionName, 'warning');
-                return;
-            }
-            var result = await this.api.argNodeAction(nodeData.obj || nodeData.id, actionName, args);
-            if (result && result.arg) {
-                this.applyArgSnapshot(sheetId, result.arg);
-            }
-            if (result && result.concept) {
-                this.applyConceptSnapshot(sheetId, result.concept);
-            }
-            this.controls.setStatus('Action complete: ' + actionName, 'success');
-        } catch (e) {
-            this.controls.setStatus('Action failed: ' + e.message, 'error');
-            console.error('ARG action error:', e);
-        }
     }
 
     async prepareArgNodeActionArgs(nodeData, actionName, args, sheetId) {
         return prepareArgNodeActionArgsViaService(this, nodeData, actionName, args, sheetId);
-        if (actionName === 'try_conjecture' && !args.conjecture) {
-            var conjChoices = await this.api.argNodeAction(nodeData.obj || nodeData.id, 'try_conjecture_choices', { sheet_id: sheetId });
-            var selectedConj = await this.listboxDialog(
-                'Try conjecture',
-                'Choose a conjecture to prove:',
-                conjChoices.choices || [],
-                { cancel: true }
-            );
-            if (selectedConj == null) return null;
-            args.conjecture = selectedConj;
-        } else if (actionName === 'try_remembered' && !args.goal) {
-            var goalChoices = await this.api.argNodeAction(nodeData.obj || nodeData.id, 'try_remembered_choices', { sheet_id: sheetId });
-            var selectedGoal = await this.listboxDialog(
-                'Try remembered goal',
-                'Choose a remembered goal:',
-                goalChoices.choices || [],
-                { cancel: true }
-            );
-            if (selectedGoal == null) return null;
-            args.goal = selectedGoal;
-        }
-        return args;
     }
 
     /**
