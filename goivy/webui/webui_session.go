@@ -4314,6 +4314,15 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 			break
 		}
 		if execErr := ui.ExecuteAction(stateIdx, actionName); execErr != nil {
+			var exhausted *ExhaustedARGActionError
+			if errors.As(execErr, &exhausted) {
+				result["executed_action"] = actionName
+				result["exhausted"] = true
+				result["message"] = exhausted.DialogMessage()
+				result["arg"] = AnalysisUIARGPayload(ui)
+				s.emit(Event{Type: "status", Data: map[string]string{"message": exhausted.DialogMessage(), "level": "info"}})
+				break
+			}
 			err = execErr
 			break
 		}

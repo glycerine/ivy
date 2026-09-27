@@ -210,8 +210,8 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if s.Graph == nil || len(s.Graph.Transitions) == 0 {
 		t.Fatalf("induction failure did not populate rendered ARG transitions")
 	}
-	if got := s.Graph.Transitions[0].Label; got != "bad" {
-		t.Fatalf("rendered ARG transition label = %q, want %q", got, "bad")
+	if got := s.Graph.Transitions[0].Label; got != "bad" && !regexp.MustCompile(`^bad\([0-9]+:node\)$`).MatchString(got) {
+		t.Fatalf("rendered ARG transition label = %q, want bad with optional typed concrete actual", got)
 	}
 	if cr.CounterexampleDetails == "" || !strings.Contains(cr.CounterexampleDetails, "Counterexample trace") {
 		t.Fatalf("induction failure did not return counterexample details: %#v", cr.CounterexampleDetails)
@@ -565,6 +565,89 @@ func TestARGExecuteActionLabelsIncludeConcreteActuals(t *testing.T) {
 	}
 }
 
+func TestARGExecuteActionDoesNotDuplicateExistingConcreteTransition(t *testing.T) {
+	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
+	if err != nil {
+		t.Fatalf("read client_server_example_new.ivy: %v", err)
+	}
+	s := NewSession(goivy.NewConfig(), "test-client-server-no-duplicate-action-edge")
+	if err := s.LoadFileContent("client_server_example_new.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+
+	first, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
+		"sheet_id":    rootSheetID,
+		"action_name": "ext:connect",
+	})
+	if err != nil {
+		t.Fatalf("first execute_action: %v", err)
+	}
+	firstLabels := argPayloadTransitionLabelsFrom(t, requireArgPayload(t, first), 0)
+	if len(firstLabels) != 1 {
+		t.Fatalf("first execute_action produced labels from state_0 = %v, want exactly one", firstLabels)
+	}
+	firstLabel := firstLabels[0]
+
+	beforeStates := len(s.AG.States)
+	beforeTransitions := len(s.AG.Transitions)
+	second, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
+		"sheet_id":    rootSheetID,
+		"action_name": "ext:connect",
+	})
+	if err != nil {
+		t.Fatalf("second execute_action: %v", err)
+	}
+	if len(s.AG.States) != beforeStates+1 {
+		t.Fatalf("second execute_action state count = %d, want %d because another concrete connect move is viable; result=%#v", len(s.AG.States), beforeStates+1, second)
+	}
+	if len(s.AG.Transitions) != beforeTransitions+1 {
+		t.Fatalf("second execute_action transition count = %d, want %d because another concrete connect move is viable; result=%#v", len(s.AG.Transitions), beforeTransitions+1, second)
+	}
+	secondLabels := argPayloadTransitionLabelsFrom(t, requireArgPayload(t, second), 0)
+	seen := make(map[string]bool, len(secondLabels))
+	for _, label := range secondLabels {
+		if seen[label] {
+			t.Fatalf("second execute_action duplicated visible edge label %q from state_0; labels=%v", label, secondLabels)
+		}
+		seen[label] = true
+	}
+	if secondLabels[len(secondLabels)-1] == firstLabel {
+		t.Fatalf("second execute_action added the same transition label %q again; labels=%v", firstLabel, secondLabels)
+	}
+}
+
+func TestClientServerInitialARGPayloadKeepsConcreteActualLabels(t *testing.T) {
+	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
+	if err != nil {
+		t.Fatalf("read client_server_example_new.ivy: %v", err)
+	}
+	s := NewSession(goivy.NewConfig(), "test-client-server-initial-actual-labels")
+	if err := s.LoadFileContent("client_server_example_new.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	cr := s.RunCheck("induction")
+	if cr.Result != "fail" {
+		t.Fatalf("RunCheck induction result = %q, want fail; message: %s", cr.Result, cr.Message)
+	}
+	payload := AnalysisUIARGPayload(s.AGUI)
+	labels := argPayloadTransitionLabelsFrom(t, payload, 0)
+	if len(labels) == 0 {
+		t.Fatalf("initial ARG payload has no transition labels from state_0: %#v", payload["elements"])
+	}
+	actualConnect := regexp.MustCompile(`^connect\([0-9]+:client, [0-9]+:server\)$`)
+	for _, label := range labels {
+		if label == "connect" {
+			t.Fatalf("initial ARG payload regressed to bare transition label %q; labels=%v", label, labels)
+		}
+		if actualConnect.MatchString(label) {
+			return
+		}
+	}
+	t.Fatalf("initial ARG payload labels from state_0 = %v, want a connect edge with typed concrete actuals", labels)
+}
+
 func TestClientServerDiagramDetailsIncludeTransitionContextLabel(t *testing.T) {
 	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
 	if err != nil {
@@ -686,6 +769,23 @@ func argPayloadTransitionLabel(t *testing.T, payload map[string]interface{}, sou
 	}
 	t.Fatalf("ARG payload missing transition %s -> %s: %#v", source, target, payload["elements"])
 	return ""
+}
+
+func argPayloadTransitionLabelsFrom(t *testing.T, payload map[string]interface{}, sourceID int) []string {
+	t.Helper()
+	source := fmt.Sprintf("state_%d", sourceID)
+	var labels []string
+	for _, edge := range transitionEdgeDataFromPayload(t, payload) {
+		if edge["source_obj"] != source {
+			continue
+		}
+		label, _ := edge["label"].(string)
+		if label == "" {
+			t.Fatalf("transition from %s has no label: %#v", source, edge)
+		}
+		labels = append(labels, label)
+	}
+	return labels
 }
 
 func TestARGChoiceBackedCommandsExposeConjecturesAndRememberedGraphs(t *testing.T) {

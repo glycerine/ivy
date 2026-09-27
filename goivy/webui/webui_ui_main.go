@@ -8,6 +8,7 @@ import (
 	goivy "github.com/glycerine/ivy/goivy"
 	"reflect"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 )
@@ -84,6 +85,32 @@ func (e *ClosedStateError) Error() string {
 
 func (e *ClosedStateError) DialogMessage() string {
 	return fmt.Sprintf("State %d is closed.", e.StateID)
+}
+
+type ExhaustedARGActionError struct {
+	StateID    int
+	ActionName string
+	Label      string
+}
+
+func (e *ExhaustedARGActionError) Error() string {
+	if e == nil {
+		return "ARG action exhausted"
+	}
+	if e.Label != "" {
+		return fmt.Sprintf("ARG action %q at state %d only reproduced existing transition %q", e.ActionName, e.StateID, e.Label)
+	}
+	return fmt.Sprintf("ARG action %q at state %d produced no new transition", e.ActionName, e.StateID)
+}
+
+func (e *ExhaustedARGActionError) DialogMessage() string {
+	if e == nil {
+		return "No new transition was found."
+	}
+	if e.Label != "" {
+		return fmt.Sprintf("No new %s transition from state %d was found.", cleanARGActionDisplayName(e.ActionName), e.StateID)
+	}
+	return fmt.Sprintf("No new transition from state %d was found.", e.StateID)
 }
 
 // AnalysisGraphUI manages the ARG display and user interactions
@@ -760,28 +787,284 @@ func cleanARGActionDisplayName(label string) string {
 }
 
 func argTransitionDisplayLabelWithActuals(t goivy.Transition, base string) string {
-	if t.Op == nil || base == "" {
+	if base == "" {
 		return ""
 	}
-	formals := t.Op.GetFormalParams()
+	formals := argTransitionFormalParams(t)
 	if len(formals) == 0 {
 		return ""
+	}
+	if actuals := argTransitionActualsFromFormalEqualities(t.Post, formals); len(actuals) == len(formals) {
+		return argTransitionFormatActualLabel(base, actuals)
 	}
 	consts := argTransitionPostConstants(t)
 	if len(consts) == 0 {
 		return ""
 	}
-	actuals := make([]string, 0, len(formals))
-	aliases := make(map[goivy.NodeKey]string)
-	nextBySort := make(map[string]int)
+	if actuals := argTransitionActualsByFormalName(formals, consts); len(actuals) == len(formals) {
+		return argTransitionFormatActualLabel(base, actuals)
+	}
+	if actuals := argTransitionActualsFromStateDiff(t, formals); len(actuals) == len(formals) {
+		return argTransitionFormatActualLabel(base, actuals)
+	}
+	return ""
+}
+
+func argTransitionActualsFromFormalEqualities(state *goivy.State, formals []*goivy.Const) []*goivy.Const {
+	if state == nil || state.Clauses == nil || len(formals) == 0 {
+		return nil
+	}
+	actualByFormal := make(map[goivy.NodeKey]*goivy.Const, len(formals))
+	visit := func(expr goivy.Expr) {
+		if eq, ok := expr.(*goivy.Eq); ok {
+			argTransitionRecordFormalEquality(eq.T1, eq.T2, formals, actualByFormal)
+			argTransitionRecordFormalEquality(eq.T2, eq.T1, formals, actualByFormal)
+		}
+	}
+	for _, fmla := range state.Clauses.Fmlas {
+		visit(fmla)
+	}
+	for _, def := range state.Clauses.Defs {
+		if def != nil {
+			visit(def)
+		}
+	}
+	actuals := make([]*goivy.Const, 0, len(formals))
+	for _, formal := range formals {
+		actual := actualByFormal[goivy.Key(formal)]
+		if actual == nil {
+			return nil
+		}
+		actuals = append(actuals, actual)
+	}
+	return actuals
+}
+
+func argTransitionRecordFormalEquality(lhs, rhs goivy.Expr, formals []*goivy.Const, actualByFormal map[goivy.NodeKey]*goivy.Const) {
+	lhsConst, ok := lhs.(*goivy.Const)
+	if !ok || lhsConst == nil {
+		return
+	}
+	rhsConst, ok := rhs.(*goivy.Const)
+	if !ok || rhsConst == nil {
+		return
+	}
+	for _, formal := range formals {
+		if formal == nil || !lhsConst.Equal(formal) || !sameARGSortName(lhsConst.CSort, rhsConst.CSort) {
+			continue
+		}
+		actualByFormal[goivy.Key(formal)] = rhsConst
+		return
+	}
+}
+
+func argTransitionActualsByFormalName(formals []*goivy.Const, consts []*goivy.Const) []*goivy.Const {
+	resolved := make([]*goivy.Const, 0, len(formals))
 	for _, formal := range formals {
 		actual := argTransitionFindFormalActual(formal, consts)
 		if actual == nil {
-			return ""
+			return nil
 		}
-		actuals = append(actuals, argTransitionActualDisplay(actual, aliases, nextBySort))
+		resolved = append(resolved, actual)
 	}
-	return fmt.Sprintf("%s(%s)", base, strings.Join(actuals, ", "))
+	return resolved
+}
+
+func argTransitionFormatActualLabel(base string, actuals []*goivy.Const) string {
+	labels := make([]string, 0, len(actuals))
+	aliases := make(map[goivy.NodeKey]string)
+	nextBySort := make(map[string]int)
+	for _, actual := range actuals {
+		labels = append(labels, argTransitionActualDisplay(actual, aliases, nextBySort))
+	}
+	return fmt.Sprintf("%s(%s)", base, strings.Join(labels, ", "))
+}
+
+type argTransitionRelationFact struct {
+	Key      goivy.NodeKey
+	Args     []*goivy.Const
+	Positive bool
+}
+
+func argTransitionActualsFromStateDiff(t goivy.Transition, formals []*goivy.Const) []*goivy.Const {
+	if t.Pre == nil || t.Post == nil || t.Pre.Clauses == nil || t.Post.Clauses == nil {
+		return nil
+	}
+	preFacts := make(map[goivy.NodeKey]bool)
+	for _, fact := range argTransitionRelationFacts(t.Pre.Clauses) {
+		preFacts[fact.Key] = fact.Positive
+	}
+	for _, fact := range argTransitionRelationFacts(t.Post.Clauses) {
+		if positive, ok := preFacts[fact.Key]; ok && positive == fact.Positive {
+			continue
+		}
+		if actuals := argTransitionFactActuals(formals, fact.Args); len(actuals) == len(formals) {
+			return actuals
+		}
+	}
+	return nil
+}
+
+func argTransitionRelationFacts(clauses *goivy.Clauses) []argTransitionRelationFact {
+	if clauses == nil {
+		return nil
+	}
+	var facts []argTransitionRelationFact
+	for _, fmla := range clauses.Fmlas {
+		if fact, ok := argTransitionRelationFactFromExpr(fmla); ok {
+			facts = append(facts, fact)
+		}
+	}
+	for _, def := range clauses.Defs {
+		if def == nil {
+			continue
+		}
+		if fact, ok := argTransitionRelationFactFromExpr(def); ok {
+			facts = append(facts, fact)
+		}
+	}
+	return facts
+}
+
+func argTransitionRelationFactFromExpr(expr goivy.Expr) (argTransitionRelationFact, bool) {
+	switch e := expr.(type) {
+	case *goivy.Eq:
+		if app, ok := argTransitionRelationApp(e.T1); ok {
+			if value, ok := argTransitionBoolValue(e.T2); ok {
+				return argTransitionBuildRelationFact(app, value)
+			}
+		}
+		if app, ok := argTransitionRelationApp(e.T2); ok {
+			if value, ok := argTransitionBoolValue(e.T1); ok {
+				return argTransitionBuildRelationFact(app, value)
+			}
+		}
+	case *goivy.LogicDefinition:
+		if app, ok := argTransitionRelationApp(e.Lhs); ok {
+			if value, ok := argTransitionBoolValue(e.Rhs); ok {
+				return argTransitionBuildRelationFact(app, value)
+			}
+		}
+	case *goivy.Apply:
+		if app, ok := argTransitionRelationApp(e); ok {
+			return argTransitionBuildRelationFact(app, true)
+		}
+	case *goivy.LogicNot:
+		if app, ok := argTransitionRelationApp(e.Body); ok {
+			return argTransitionBuildRelationFact(app, false)
+		}
+	}
+	return argTransitionRelationFact{}, false
+}
+
+func argTransitionRelationApp(expr goivy.Expr) (*goivy.Apply, bool) {
+	app, ok := expr.(*goivy.Apply)
+	if !ok || app == nil || !goivy.SortEqual(app.NodeSort(), goivy.Boolean) {
+		return nil, false
+	}
+	for _, term := range app.Terms {
+		if _, ok := term.(*goivy.Const); !ok {
+			return nil, false
+		}
+	}
+	return app, true
+}
+
+func argTransitionBuildRelationFact(app *goivy.Apply, positive bool) (argTransitionRelationFact, bool) {
+	if app == nil {
+		return argTransitionRelationFact{}, false
+	}
+	args := make([]*goivy.Const, 0, len(app.Terms))
+	for _, term := range app.Terms {
+		c, ok := term.(*goivy.Const)
+		if !ok {
+			return argTransitionRelationFact{}, false
+		}
+		args = append(args, c)
+	}
+	return argTransitionRelationFact{
+		Key:      goivy.Key(app),
+		Args:     args,
+		Positive: positive,
+	}, true
+}
+
+func argTransitionBoolValue(expr goivy.Expr) (bool, bool) {
+	if goivy.IsTrue(expr) {
+		return true, true
+	}
+	if goivy.IsFalse(expr) {
+		return false, true
+	}
+	return false, false
+}
+
+func argTransitionFactActuals(formals []*goivy.Const, args []*goivy.Const) []*goivy.Const {
+	if len(formals) == 0 || len(args) < len(formals) {
+		return nil
+	}
+	actuals := make([]*goivy.Const, 0, len(formals))
+	used := make([]bool, len(args))
+	for _, formal := range formals {
+		found := -1
+		for i, arg := range args {
+			if used[i] || arg == nil || formal == nil || !sameARGSortName(arg.CSort, formal.CSort) {
+				continue
+			}
+			found = i
+			break
+		}
+		if found < 0 {
+			return nil
+		}
+		used[found] = true
+		actuals = append(actuals, args[found])
+	}
+	return actuals
+}
+
+func argTransitionFormalParams(t goivy.Transition) []*goivy.Const {
+	if t.Op != nil {
+		if formals := t.Op.GetFormalParams(); len(formals) > 0 {
+			return formals
+		}
+	}
+	mod := argTransitionModule(t)
+	if mod == nil || mod.Actions == nil {
+		return nil
+	}
+	for _, name := range argTransitionActionNameCandidates(t.ActionName) {
+		if action, ok := mod.Actions.Get2(name); ok && action != nil {
+			if formals := action.GetFormalParams(); len(formals) > 0 {
+				return formals
+			}
+		}
+	}
+	return nil
+}
+
+func argTransitionActionNameCandidates(actionName string) []string {
+	actionName = strings.TrimSpace(actionName)
+	if actionName == "" {
+		return nil
+	}
+	raw := []string{actionName}
+	if strings.HasPrefix(actionName, "ext:") {
+		raw = append(raw, strings.TrimPrefix(actionName, "ext:"))
+	} else {
+		raw = append(raw, "ext:"+actionName)
+	}
+	seen := make(map[string]bool, len(raw))
+	var out []string
+	for _, name := range raw {
+		name = strings.TrimSpace(name)
+		if name == "" || seen[name] {
+			continue
+		}
+		seen[name] = true
+		out = append(out, name)
+	}
+	return out
 }
 
 func argTransitionPostConstants(t goivy.Transition) []*goivy.Const {
@@ -1388,12 +1671,298 @@ func (ui *AnalysisGraphUI) ExecuteAction(nodeID int, actionName string) error {
 	if err != nil {
 		return err
 	}
+	if handled, err := ui.executeConcreteFreshAction(nodeID, state, actionName); handled || err != nil {
+		return err
+	}
+	existingLabels := ui.transitionLabelsFromState(state)
+	beforeStates := len(ui.AG.States)
+	beforeTransitions := len(ui.AG.Transitions)
 	_, err = ui.AG.ExecuteAction(false, ui.resolveActionName(actionName), state, ui.getAlpha())
 	if err != nil {
 		return err
 	}
+	if duplicateLabel, ok := ui.newTransitionDuplicatesExistingLabel(state, beforeTransitions, existingLabels); ok {
+		ui.AG.States = ui.AG.States[:beforeStates]
+		ui.AG.Transitions = ui.AG.Transitions[:beforeTransitions]
+		ui.sync()
+		return &ExhaustedARGActionError{StateID: nodeID, ActionName: actionName, Label: duplicateLabel}
+	}
 	ui.sync()
 	return nil
+}
+
+func (ui *AnalysisGraphUI) executeConcreteFreshAction(nodeID int, state *goivy.State, actionName string) (bool, error) {
+	if ui == nil || ui.AG == nil || state == nil {
+		return false, nil
+	}
+	domain := ui.Mod
+	if domain == nil {
+		domain = ui.AG.Domain
+	}
+	if domain == nil || domain.Actions == nil || domain.Cfg == nil {
+		return false, nil
+	}
+	resolvedName := ui.resolveActionName(actionName)
+	action, ok := domain.Actions.Get2(resolvedName)
+	if !ok || action == nil {
+		return false, nil
+	}
+	formals := action.GetFormalParams()
+	if len(formals) == 0 {
+		return false, nil
+	}
+	query, update, err := ui.concreteActionQuery(state, action, formals)
+	if err != nil {
+		return true, err
+	}
+	blockers := ui.concreteActionTupleBlockers(state, resolvedName, formals)
+	if len(blockers) > 0 {
+		query = goivy.AndClausesTyped(query, goivy.FormulaToClauses(&goivy.LogicAnd{Terms: blockers}, nil))
+	}
+	slv := goivy.NewSolver(domain, nil)
+	model, err := slv.GetModelClauses(query)
+	if err != nil {
+		return true, err
+	}
+	if model == nil {
+		return true, &ExhaustedARGActionError{StateID: nodeID, ActionName: actionName}
+	}
+	_, postClauses := goivy.ExtractPrePostModel(domain, domain.Cfg.IuCfg, query, model, update.Modified)
+	postState := goivy.NewState(domain, postClauses)
+	postState.Pred = state
+	postState.Action = action
+	postState.ActionName = resolvedName
+	postState.Clauses = ui.stabilizeConcreteActionActuals(slv, model, postState, state, resolvedName, formals)
+	app := goivy.NewActionApp(action, state)
+	app.ActionName = resolvedName
+	ui.AG.Add(postState, app)
+	ui.sync()
+	return true, nil
+}
+
+func (ui *AnalysisGraphUI) concreteActionQuery(state *goivy.State, action goivy.ActionsAction, formals []*goivy.Const) (*goivy.Clauses, *goivy.Update, error) {
+	if ui == nil || state == nil || action == nil {
+		return nil, nil, fmt.Errorf("concrete action query: missing action context")
+	}
+	domain := ui.Mod
+	if domain == nil && ui.AG != nil {
+		domain = ui.AG.Domain
+	}
+	if domain == nil || domain.Cfg == nil {
+		return nil, nil, fmt.Errorf("concrete action query: missing module")
+	}
+	ctx := &goivy.UpdateContext{
+		Domain:          domain,
+		PVars:           state.InScope,
+		ActCfg:          domain.Cfg.ActCfg,
+		Instantiator:    domain.Instantiator,
+		CheckUnprovable: domain.Cfg.OnlyCheckUnprovable,
+		CheckedAssert:   domain.Cfg.CheckLineno,
+		GetAction: func(name string) goivy.ActionsAction {
+			if domain.Actions == nil {
+				return nil
+			}
+			if a, ok := domain.Actions.Get2(name); ok {
+				return a
+			}
+			return nil
+		},
+	}
+	update := goivy.BindOldsUpdate(goivy.IntUpdate(action, ctx))
+	if update == nil || update.TR == nil {
+		return nil, nil, fmt.Errorf("concrete action query: action update is empty")
+	}
+	parts := []*goivy.Clauses{state.Clauses, update.TR, domain.BackgroundTheory(state.InScope)}
+	return goivy.AndClausesTyped(parts...), update, nil
+}
+
+func (ui *AnalysisGraphUI) concreteActionTupleBlockers(state *goivy.State, actionName string, formals []*goivy.Const) []goivy.Expr {
+	if ui == nil || ui.AG == nil || state == nil || len(formals) == 0 {
+		return nil
+	}
+	var blockers []goivy.Expr
+	for _, tr := range ui.AG.Transitions {
+		if !argTransitionStartsAtState(tr, state) || strings.TrimSpace(tr.ActionName) != actionName {
+			continue
+		}
+		actuals := argTransitionActualsFromFormalEqualities(tr.Post, formals)
+		if len(actuals) != len(formals) {
+			continue
+		}
+		blocker, ok := concreteActionTupleBlocker(formals, actuals)
+		if ok {
+			blockers = append(blockers, blocker)
+		}
+	}
+	return blockers
+}
+
+func concreteActionTupleBlocker(formals, actuals []*goivy.Const) (goivy.Expr, bool) {
+	if len(formals) == 0 || len(formals) != len(actuals) {
+		return nil, false
+	}
+	eqs := make([]goivy.Expr, 0, len(formals))
+	for i := range formals {
+		eq, err := goivy.NewEq(formals[i], actuals[i])
+		if err != nil {
+			return nil, false
+		}
+		eqs = append(eqs, eq)
+	}
+	conj, err := goivy.NewAnd(eqs...)
+	if err != nil {
+		return nil, false
+	}
+	neg, err := goivy.NewNot(conj)
+	if err != nil {
+		return nil, false
+	}
+	return neg, true
+}
+
+func (ui *AnalysisGraphUI) stabilizeConcreteActionActuals(slv *goivy.Solver, model *goivy.ModelResult, postState *goivy.State, preState *goivy.State, actionName string, formals []*goivy.Const) *goivy.Clauses {
+	if slv == nil || model == nil || model.Model == nil || postState == nil || postState.Clauses == nil || len(formals) == 0 {
+		if postState != nil {
+			return postState.Clauses
+		}
+		return nil
+	}
+	actuals := argTransitionActualsFromFormalEqualities(postState, formals)
+	if len(actuals) != len(formals) {
+		return postState.Clauses
+	}
+	known := ui.knownConcreteActionActuals(preState, actionName, formals)
+	nextBySort := nextConcreteActualIndexBySort(known)
+	subs := make(map[goivy.NodeKey]goivy.Expr)
+	for i, formal := range formals {
+		stable := concreteStableActualForModelValue(slv, model, formal, known[goivy.IvySortName(formal.CSort)], &nextBySort)
+		if stable == nil {
+			continue
+		}
+		subs[goivy.Key(actuals[i])] = stable
+		known[goivy.IvySortName(formal.CSort)] = append(known[goivy.IvySortName(formal.CSort)], stable)
+	}
+	if len(subs) == 0 {
+		return postState.Clauses
+	}
+	return goivy.SubstituteConstantsClauses(postState.Clauses, subs)
+}
+
+func (ui *AnalysisGraphUI) knownConcreteActionActuals(state *goivy.State, actionName string, formals []*goivy.Const) map[string][]*goivy.Const {
+	known := make(map[string][]*goivy.Const)
+	if ui == nil || ui.AG == nil || state == nil {
+		return known
+	}
+	seen := make(map[goivy.NodeKey]bool)
+	for _, tr := range ui.AG.Transitions {
+		if !argTransitionStartsAtState(tr, state) || strings.TrimSpace(tr.ActionName) != actionName {
+			continue
+		}
+		actuals := argTransitionActualsFromFormalEqualities(tr.Post, formals)
+		for _, actual := range actuals {
+			if actual == nil {
+				continue
+			}
+			key := goivy.Key(actual)
+			if seen[key] {
+				continue
+			}
+			seen[key] = true
+			sortName := goivy.IvySortName(actual.CSort)
+			known[sortName] = append(known[sortName], actual)
+		}
+	}
+	return known
+}
+
+func nextConcreteActualIndexBySort(known map[string][]*goivy.Const) map[string]int {
+	next := make(map[string]int, len(known))
+	for sortName, actuals := range known {
+		for _, actual := range actuals {
+			if actual == nil {
+				continue
+			}
+			idx, err := strconv.Atoi(strings.TrimSpace(actual.Name))
+			if err != nil {
+				continue
+			}
+			if idx >= next[sortName] {
+				next[sortName] = idx + 1
+			}
+		}
+	}
+	return next
+}
+
+func concreteStableActualForModelValue(slv *goivy.Solver, model *goivy.ModelResult, formal *goivy.Const, known []*goivy.Const, nextBySort *map[string]int) *goivy.Const {
+	formalValue := concreteModelValueString(slv, model, formal)
+	if formalValue == "" {
+		return nil
+	}
+	for _, actual := range known {
+		if actual == nil || !sameARGSortName(actual.CSort, formal.CSort) {
+			continue
+		}
+		if concreteModelValueString(slv, model, actual) == formalValue {
+			return actual
+		}
+	}
+	sortName := goivy.IvySortName(formal.CSort)
+	idx := (*nextBySort)[sortName]
+	(*nextBySort)[sortName] = idx + 1
+	return goivy.NewConst(strconv.Itoa(idx), formal.CSort)
+}
+
+func concreteModelValueString(slv *goivy.Solver, model *goivy.ModelResult, sym *goivy.Const) string {
+	if slv == nil || model == nil || model.Model == nil || sym == nil {
+		return ""
+	}
+	values, err := slv.ModelValues(model.Model, []*goivy.Const{sym})
+	if err != nil {
+		return ""
+	}
+	if value, ok := values[sym.Name]; ok {
+		return value.String()
+	}
+	return ""
+}
+
+func (ui *AnalysisGraphUI) transitionLabelsFromState(state *goivy.State) map[string]bool {
+	labels := make(map[string]bool)
+	if ui == nil || ui.AG == nil || state == nil {
+		return labels
+	}
+	for _, tr := range ui.AG.Transitions {
+		if !argTransitionStartsAtState(tr, state) {
+			continue
+		}
+		labels[argTransitionDisplayLabel(tr)] = true
+	}
+	return labels
+}
+
+func (ui *AnalysisGraphUI) newTransitionDuplicatesExistingLabel(state *goivy.State, firstNewTransition int, existing map[string]bool) (string, bool) {
+	if ui == nil || ui.AG == nil || state == nil || firstNewTransition >= len(ui.AG.Transitions) {
+		return "", false
+	}
+	for _, tr := range ui.AG.Transitions[firstNewTransition:] {
+		if !argTransitionStartsAtState(tr, state) {
+			continue
+		}
+		label := argTransitionDisplayLabel(tr)
+		if existing[label] {
+			return label, true
+		}
+		existing[label] = true
+	}
+	return "", false
+}
+
+func argTransitionStartsAtState(tr goivy.Transition, state *goivy.State) bool {
+	if tr.Pre == nil || state == nil {
+		return false
+	}
+	return tr.Pre == state || tr.Pre.ID == state.ID
 }
 
 func (ui *AnalysisGraphUI) resolveActionName(actionName string) string {
