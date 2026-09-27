@@ -108,7 +108,7 @@ goivy_check (equivalent to python ivy_check, but
 
 # for compositional testing
 ivy2cpp
-ivy2go
+ivy2golang
 ~~~
 
 ----
