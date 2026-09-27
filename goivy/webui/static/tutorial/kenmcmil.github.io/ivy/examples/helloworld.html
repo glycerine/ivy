@@ -222,7 +222,7 @@ world
 <p>That was exciting. To make things more interesting, let’s try computing a value.
 Here’s a simple program modeling a bank account:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.6
 
 type money
 
@@ -263,7 +263,7 @@ We need to make <code class="language-plaintext highlighter-rouge">money</code> 
 values of this type. For example, we can use 16-bit binary numbers to
 represent <code class="language-plaintext highlighter-rouge">money</code>, using this declaration:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>intrepret money -&gt; bv[16]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>interpret money -&gt; bv[16]
 </code></pre></div></div>
 
 <p>Now we try compiling again:</p>

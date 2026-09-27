@@ -1,0 +1,45 @@
+#lang ivy1.6
+
+# note: in  lang ivy1.7, the assert does not fire for preventing over-draft!
+
+type money
+
+# did not fix.
+#function (X:money + Y:money) : money
+
+object account = {
+
+    individual balance : money
+    after init {
+        balance := 0
+    }
+
+    action deposit(x:money) = {
+        balance := balance + x
+    }
+
+    action withdraw(x:money) = {
+        balance := balance - x
+    }
+
+    action get_balance returns(x:money) = {
+        x := balance
+    }
+
+  object spec = {
+    before deposit {
+       assert x >= 0;
+       assert balance + x >= balance;
+    }
+    before withdraw {
+       assert x <= balance;
+    }
+  }
+}
+
+
+export account.deposit
+export account.withdraw
+export account.get_balance
+
+interpret money -> bv[16]
