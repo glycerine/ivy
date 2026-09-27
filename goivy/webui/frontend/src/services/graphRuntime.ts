@@ -69,8 +69,9 @@ export const CONCEPT_STYLE = [
       'target-arrow-shape': 'triangle',
       'target-arrow-fill': 'filled',
       'source-arrow-fill': 'filled',
-      'line-outline-width': '3px',
-      'line-outline-color': CONCEPT_EDGE_OUTLINE_COLOR,
+      'underlay-color': CONCEPT_EDGE_OUTLINE_COLOR,
+      'underlay-opacity': 1,
+      'underlay-padding': 3,
       'curve-style': 'bezier',
       'text-wrap': 'wrap',
     },
@@ -114,8 +115,9 @@ export const CONCEPT_STYLE = [
       'line-color': CONCEPT_SELECTED_EDGE_COLOR,
       'target-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
       'source-arrow-color': CONCEPT_SELECTED_EDGE_COLOR,
-      'line-outline-width': '3px',
-      'line-outline-color': CONCEPT_SELECTED_EDGE_COLOR,
+      'underlay-color': CONCEPT_SELECTED_EDGE_COLOR,
+      'underlay-opacity': 1,
+      'underlay-padding': 3,
     },
   },
   {
@@ -611,8 +613,9 @@ export class IvyGraph {
         edge.style('line-color', CONCEPT_SELECTED_EDGE_COLOR);
         edge.style('target-arrow-color', CONCEPT_SELECTED_EDGE_COLOR);
         edge.style('source-arrow-color', CONCEPT_SELECTED_EDGE_COLOR);
-        edge.style('line-outline-width', '3px');
-        edge.style('line-outline-color', CONCEPT_SELECTED_EDGE_COLOR);
+        edge.style('underlay-color', CONCEPT_SELECTED_EDGE_COLOR);
+        edge.style('underlay-opacity', 1);
+        edge.style('underlay-padding', 3);
         return;
       }
       const lineColor = visibleConceptEdgeColor(edge.data('line_color') || edge.data('color'));

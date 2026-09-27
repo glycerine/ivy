@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ARG_STYLE, CONCEPT_STYLE, IvyGraph, installGraphGlobalsForCompatibility } from './graphRuntime.ts';
+import { ARG_STYLE, CONCEPT_STYLE, IvyGraph, PROOF_STYLE, installGraphGlobalsForCompatibility } from './graphRuntime.ts';
 
 function makeFakeCy() {
   const nodes = [];
@@ -108,6 +108,15 @@ describe('graphRuntime', () => {
     expect(marked?.style['background-color']).toBe('#b73535');
   });
 
+  it('does not use invalid Cytoscape line outline edge style properties', () => {
+    for (const style of [ARG_STYLE, CONCEPT_STYLE, PROOF_STYLE]) {
+      for (const entry of style) {
+        expect(entry.style).not.toHaveProperty('line-outline-width');
+        expect(entry.style).not.toHaveProperty('line-outline-color');
+      }
+    }
+  });
+
   it('keeps semantic graph style affordances covered', () => {
     const styleFor = (style, selector) => style.find((entry) => entry.selector === selector)?.style || {};
 
@@ -139,8 +148,9 @@ describe('graphRuntime', () => {
     expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['line-color']).toBe('rgba(0, 255, 213, 0.5)');
     expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['target-arrow-color']).toBe('rgba(0, 255, 213, 0.5)');
     expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['source-arrow-color']).toBe('rgba(0, 255, 213, 0.5)');
-    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['line-outline-width']).toBe('3px');
-    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['line-outline-color']).toBe('rgba(0, 255, 213, 0.5)');
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['underlay-padding']).toBe(3);
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['underlay-opacity']).toBe(1);
+    expect(styleFor(CONCEPT_STYLE, 'edge.selected_edge')['underlay-color']).toBe('rgba(0, 255, 213, 0.5)');
   });
 
   it('wraps semantic graph edge labels for long actions and relations', () => {
@@ -152,8 +162,9 @@ describe('graphRuntime', () => {
     expect(styleFor(ARG_STYLE, 'edge')['text-max-width']).toBeUndefined();
     expect(styleFor(ARG_STYLE, 'edge[text_max_width]')['text-max-width']).toBe('data(text_max_width)');
     expect(styleFor(CONCEPT_STYLE, 'edge').content).toBeUndefined();
-    expect(styleFor(CONCEPT_STYLE, 'edge')['line-outline-width']).toBe('3px');
-    expect(styleFor(CONCEPT_STYLE, 'edge')['line-outline-color']).toBe('rgba(204, 255, 0, 0.5)');
+    expect(styleFor(CONCEPT_STYLE, 'edge')['underlay-padding']).toBe(3);
+    expect(styleFor(CONCEPT_STYLE, 'edge')['underlay-opacity']).toBe(1);
+    expect(styleFor(CONCEPT_STYLE, 'edge')['underlay-color']).toBe('rgba(204, 255, 0, 0.5)');
     expect(styleFor(CONCEPT_STYLE, 'edge[label]').content).toBe('data(label)');
     expect(styleFor(CONCEPT_STYLE, 'edge[label]').color).toBe('#000');
     expect(styleFor(CONCEPT_STYLE, 'edge[label]')['text-outline-width']).toBe('3px');
@@ -396,8 +407,11 @@ describe('graphRuntime', () => {
     expect(edge.style).toHaveBeenCalledWith('line-color', 'rgba(0, 255, 213, 0.5)');
     expect(edge.style).toHaveBeenCalledWith('target-arrow-color', 'rgba(0, 255, 213, 0.5)');
     expect(edge.style).toHaveBeenCalledWith('source-arrow-color', 'rgba(0, 255, 213, 0.5)');
-    expect(edge.style).toHaveBeenCalledWith('line-outline-width', '3px');
-    expect(edge.style).toHaveBeenCalledWith('line-outline-color', 'rgba(0, 255, 213, 0.5)');
+    expect(edge.style).toHaveBeenCalledWith('underlay-color', 'rgba(0, 255, 213, 0.5)');
+    expect(edge.style).toHaveBeenCalledWith('underlay-opacity', 1);
+    expect(edge.style).toHaveBeenCalledWith('underlay-padding', 3);
+    expect(edge.style).not.toHaveBeenCalledWith('line-outline-width', '3px');
+    expect(edge.style).not.toHaveBeenCalledWith('line-outline-color', 'rgba(0, 255, 213, 0.5)');
     expect(edge.style).not.toHaveBeenCalledWith('line-color', '#0000ff');
   });
 
