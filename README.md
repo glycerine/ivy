@@ -4,7 +4,9 @@ GoIvy (Ivy in Go/as a Web application backed by a Go server)
 ![an ivy covered place](https://github.com/glycerine/ivy/blob/master/reference/new_ivy_icon_starting_large.png)
 
 This is a port of the Ivy formal verification toolchain to Go and a Web app, based
-on the original python and Tk by Ken McMillan and Oded Padon et al. 
+on the original python and Tk by Ken McMillan and Oded Padon et al. It 
+includes many critical bug fixes and a usable web app in place of
+the orignal python/Tk GUI prototype, which appears abandoned.
 
 This port supports Ivy language versions 1.6 and up (so 1.6, 1.7, and 1.8). [See the Q & A below for
 overview, more links, and references](#questions-and-answers).
