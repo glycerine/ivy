@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 	//iu "github.com/glycerine/ivy/goivy/ivyutils"
 )
 
@@ -4701,6 +4702,84 @@ func (c *webUIConjChecker) GetAnnot() *goivy.ActionAnnotation { return c.lf.Anno
 func (c *webUIConjChecker) Failed() bool                      { return c.failed }
 func (c *webUIConjChecker) GetLF() *goivy.LabeledFormula      { return c.lf }
 
+type webUIInductionHeartbeat struct {
+	session *Session
+	mode    string
+	done    chan struct{}
+	once    sync.Once
+	mu      sync.Mutex
+	active  *webUIConjChecker
+	started time.Time
+}
+
+func startWebUIInductionHeartbeat(session *Session, mode string) *webUIInductionHeartbeat {
+	h := &webUIInductionHeartbeat{
+		session: session,
+		mode:    mode,
+		done:    make(chan struct{}),
+	}
+	go h.run()
+	return h
+}
+
+func (h *webUIInductionHeartbeat) Stop() {
+	h.once.Do(func() {
+		close(h.done)
+	})
+}
+
+func (h *webUIInductionHeartbeat) SetActive(checker *webUIConjChecker) {
+	h.mu.Lock()
+	h.active = checker
+	h.started = time.Now()
+	h.mu.Unlock()
+}
+
+func (h *webUIInductionHeartbeat) Active() *webUIConjChecker {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	return h.active
+}
+
+func (h *webUIInductionHeartbeat) run() {
+	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-h.done:
+			return
+		case <-ticker.C:
+			h.emit()
+		}
+	}
+}
+
+func (h *webUIInductionHeartbeat) emit() {
+	h.mu.Lock()
+	checker := h.active
+	started := h.started
+	h.mu.Unlock()
+	if checker == nil || started.IsZero() {
+		return
+	}
+	elapsed := time.Since(started)
+	if elapsed < time.Second {
+		return
+	}
+	conjName := checker.displayFormula
+	if checker.label != "" {
+		conjName = checker.label
+	}
+	h.session.checkProgress(h.mode, fmt.Sprintf("Still checking conjecture %d of %d: %s (%ds)", checker.index+1, checker.total, conjName, int(elapsed.Seconds())), map[string]interface{}{
+		"current":      checker.index + 1,
+		"total":        checker.total,
+		"conjecture":   checker.displayFormula,
+		"label":        checker.label,
+		"elapsed_ms":   elapsed.Milliseconds(),
+		"z3_contacted": true,
+	})
+}
+
 func (s *Session) recheckCounterexampleWithShrink(ag *goivy.AnalysisGraph, postState *goivy.State, checker *webUIConjChecker, relsToMin []string) *goivy.TraceBase {
 	var trace *goivy.TraceBase
 	func() {
@@ -4862,11 +4941,10 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 		}
 
 		useDirectFallback := false
-		var activeChecker *webUIConjChecker
+		heartbeat := startWebUIInductionHeartbeat(s, mode)
+		defer heartbeat.Stop()
 		for _, checker := range webCheckers {
-			checker.onStart = func(c *webUIConjChecker) {
-				activeChecker = c
-			}
+			checker.onStart = heartbeat.SetActive
 		}
 		var z3err error
 		checksPassed := true
@@ -4874,7 +4952,7 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 			defer func() {
 				if r := recover(); r != nil {
 					dispName := ""
-					if activeChecker != nil {
+					if activeChecker := heartbeat.Active(); activeChecker != nil {
 						dispName = activeChecker.label
 						if dispName == "" {
 							dispName = activeChecker.displayFormula
@@ -4901,7 +4979,7 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 			useDirectFallback = true
 			for _, checker := range webCheckers {
 				checker.failed = false
-				checker.onStart = nil
+				checker.onStart = heartbeat.SetActive
 			}
 		} else if !checksPassed {
 			var failed *webUIConjChecker
