@@ -1401,18 +1401,18 @@ func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
 	}
 }
 
-func TestShowReachableStatesOpensReachableARGSheet(t *testing.T) {
+func TestShowReachableStatesCanReuseCurrentAnalysisSheet(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-show-reachable")
 	if err := s.LoadFileContent("test.ivy", []byte(executeActionMenuSample)); err != nil {
 		t.Fatalf("LoadFileContent: %v", err)
 	}
-	result, err := s.ExecuteAction("show_reachable", nil)
+	result, err := s.ExecuteAction("show_reachable", map[string]interface{}{"sheet_id": "sheet-1"})
 	if err != nil {
 		t.Fatalf("show_reachable: %v", err)
 	}
 	sheetID, _ := result["sheet_id"].(string)
-	if sheetID == "" || sheetID == "sheet-1" {
-		t.Fatalf("sheet_id = %#v, want new reachable sheet", result["sheet_id"])
+	if sheetID != "sheet-1" {
+		t.Fatalf("sheet_id = %#v, want current sheet-1", result["sheet_id"])
 	}
 	arg, ok := result["arg"].(map[string]interface{})
 	if !ok {
@@ -1426,7 +1426,7 @@ func TestShowReachableStatesOpensReachableARGSheet(t *testing.T) {
 	ui := s.analysisUIForSheetLocked(sheetID)
 	s.mu.Unlock()
 	if ui == nil || ui != s.ReachableUI {
-		t.Fatalf("reachable sheet %q not registered to reachable UI", sheetID)
+		t.Fatalf("current sheet %q not registered to reachable UI", sheetID)
 	}
 }
 

@@ -5864,24 +5864,18 @@ class IvyRuntime {
     }
 
     async showReachableStates() {
-        this.controls.setStatus('Opening reachable states...');
+        this.controls.setStatus('Showing reachable states...');
         try {
-            var result = await this.api.executeAction('show_reachable', {});
-            if (result.sheet_id && this.sheetExists(result.sheet_id)) {
-                this.setSheetTabBaseLabel(result.sheet_id, 'Reachable states');
-                var sheet = this.sheets && this.sheets[result.sheet_id];
-                if (sheet) {
-                    sheet.reachabilityOnly = true;
-                    sheet.conceptGraph = null;
-                }
-                var modelSheet = this.uiDataModel && this.uiDataModel.sheets && this.uiDataModel.sheets[result.sheet_id];
-                if (modelSheet) modelSheet.reachabilityOnly = true;
-                this.applyArgSnapshot(result.sheet_id, result.arg || {});
-                this.switchSheet(result.sheet_id);
+            var sheetId = this.activeSheetId || 'sheet-1';
+            var result = await this.api.executeAction('show_reachable', { sheet_id: sheetId });
+            var targetSheetId = (result && result.sheet_id) || sheetId;
+            if (targetSheetId && this.sheetExists(targetSheetId)) {
+                this.applyArgSnapshot(targetSheetId, result.arg || {});
+                if (targetSheetId !== this.activeSheetId) this.switchSheet(targetSheetId);
             } else {
-                this.openARGSheet('Reachable states', result.arg, result.sheet_id, { reachabilityOnly: true });
+                this.openARGSheet('Reachable states', result.arg, targetSheetId, { reachabilityOnly: true });
             }
-            this.controls.setStatus('Reachable states opened', 'success');
+            this.controls.setStatus('Reachable states shown', 'success');
         } catch (e) {
             this.controls.setStatus('Show reachable states failed: ' + e.message, 'error');
         }

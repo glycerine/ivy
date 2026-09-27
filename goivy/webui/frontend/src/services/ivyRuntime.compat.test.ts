@@ -1713,12 +1713,14 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(runtime.nextLocalSheetId('trace')).toBe('trace-3');
   });
 
-  it('reuses an existing sheet when backend reachable-state id collides with an old local trace id', async () => {
+  it('renders reachable states into the active sheet reachability graph without opening a new tab', async () => {
     installSheetDom();
     const runtime = makeRuntime();
-    runtime.addSheet('Error trace', 'sheet-2', { reachabilityOnly: true });
+    runtime.registerSheet('sheet-1', new FakeGraph('arg-graph'), new FakeGraph('concept-graph'));
+    const originalArgGraph = runtime.sheets['sheet-1'].argGraph;
+    const originalConceptGraph = runtime.sheets['sheet-1'].conceptGraph;
     runtime.api.executeAction = vi.fn(async () => ({
-      sheet_id: 'sheet-2',
+      sheet_id: 'sheet-1',
       arg: {
         elements: [
           { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
@@ -1728,12 +1730,18 @@ describe('ivyRuntime compatibility behavior', () => {
 
     await runtime.showReachableStates();
 
-    expect(runtime.api.executeAction).toHaveBeenCalledWith('show_reachable', {});
-    expect(runtime.activeSheetId).toBe('sheet-2');
-    expect(runtime.tabLabelForSheet('sheet-2')).toBe('Reachable states');
-    expect(runtime.sheets['sheet-2'].reachabilityOnly).toBe(true);
+    expect(runtime.api.executeAction).toHaveBeenCalledWith('show_reachable', { sheet_id: 'sheet-1' });
+    expect(runtime.activeSheetId).toBe('sheet-1');
+    expect(document.querySelectorAll('.sheet-tab')).toHaveLength(1);
+    expect(runtime.tabLabelForSheet('sheet-1')).toBe('Sheet 1');
+    expect(runtime.sheets['sheet-1'].reachabilityOnly).toBe(false);
+    expect(runtime.sheets['sheet-1'].argGraph).toBe(originalArgGraph);
+    expect(runtime.sheets['sheet-1'].conceptGraph).toBe(originalConceptGraph);
+    expect(originalArgGraph.update).toHaveBeenCalledWith([
+      { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+    ], null);
     expect(runtime.controls.lastStatus).toEqual({
-      message: 'Reachable states opened',
+      message: 'Reachable states shown',
       kind: 'success',
     });
   });

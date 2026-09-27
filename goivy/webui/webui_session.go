@@ -618,7 +618,7 @@ func (s *Session) ensureRootAnalysisUIRegisteredLocked() {
 	if s.sheetCounter < 1 {
 		s.sheetCounter = 1
 	}
-	if s.AGUI != nil {
+	if s.AGUI != nil && s.SheetUIs[rootSheetID] == nil {
 		s.SheetUIs[rootSheetID] = s.AGUI
 	}
 }
@@ -656,6 +656,20 @@ func (s *Session) nextAnalysisSheetIDLocked() string {
 
 func (s *Session) registerAnalysisSheetLocked(ui *AnalysisGraphUI) string {
 	sheetID := s.nextAnalysisSheetIDLocked()
+	s.SheetUIs[sheetID] = ui
+	return sheetID
+}
+
+func (s *Session) registerAnalysisSheetAsLocked(sheetID string, ui *AnalysisGraphUI) string {
+	if sheetID == "" {
+		return s.registerAnalysisSheetLocked(ui)
+	}
+	s.ensureRootAnalysisUIRegisteredLocked()
+	if strings.HasPrefix(sheetID, "sheet-") {
+		if n, err := strconv.Atoi(strings.TrimPrefix(sheetID, "sheet-")); err == nil && n > s.sheetCounter {
+			s.sheetCounter = n
+		}
+	}
 	s.SheetUIs[sheetID] = ui
 	return sheetID
 }
@@ -3345,7 +3359,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			ag.AddInitialState(nil, nil)
 			s.ReachableUI = s.newAnalysisGraphUIForGraphLocked(ag)
 		}
-		sheetID := s.registerAnalysisSheetLocked(s.ReachableUI)
+		sheetID := s.registerAnalysisSheetAsLocked(actionStringArg(args, "sheet_id"), s.ReachableUI)
 		result["sheet_id"] = sheetID
 		result["arg"] = AnalysisUIARGPayload(s.ReachableUI)
 
