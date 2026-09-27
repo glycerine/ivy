@@ -1108,6 +1108,10 @@ EPR forbids function symbols entirely (only constants and predicates), which tri
 
 This is also why your earlier instinct about EPR being "effectively propositional" lands: with no nesting possible, the Herbrand universe is finite, and the whole problem reduces to a finite (large but finite) propositional SAT problem on the ground instances. The decidability of EPR is, in a real sense, the decidability of SAT scaled up to a known-finite term space.
 
+---------------------------
+
+# bug fixes of interest to python Ivy
+
 ## Python ivy_to_cpp.py fixes for concrete Raft randomized testing
 
 git commit: 098080f62d4a042d41cda7e89b2e1d97cb6ba81f
@@ -1158,7 +1162,7 @@ apply("append_msg", __quants)
 Together these keep the Python emitter close to its original behavior while
 allowing the generated C++ for `raft_no_assume_test.ivy` to compile.
 
-## second patch to ivy_to_cppy.py
+## second patch to ivy_to_cpp.py
 
 git commit 87759be390a93a236890d200ce8fe1f369881f0a
 
