@@ -43,6 +43,8 @@ type Session struct {
 	ProofMgr            *goivy.ProofManager // live proof state (goals + reachability graph)
 	CompiledModule      *goivy.Module       // populated by full compiler pipeline
 	CompiledSig         *goivy.Sig          // populated by full compiler pipeline
+	InductionModule     *goivy.Module       // proof-checking module; may differ from concrete test wrappers
+	InductionSig        *goivy.Sig          // signature for InductionModule
 	SourceModule        *goivy.Module       // pre-isolate compile used for source-level UI operations
 	SourceSig           *goivy.Sig          // pre-isolate signature used by Diagram Domain
 	OriginalConjs       []*goivy.LabeledFormula
@@ -152,6 +154,93 @@ func (s *Session) compileIvySourceWithCreateIsolate(filename string, content []b
 	return mod, sig, nil
 }
 
+func (s *Session) compileAbstractInductionWrapperSource(filename string, content []byte, isolate string) (*goivy.Module, *goivy.Sig, int, error) {
+	if s.Cfg != nil && s.Cfg.StandardLibrary == nil {
+		_ = goivy.PreloadStandardLibrary(s.Cfg)
+	}
+	sig := goivy.NewSig()
+	mod := goivy.New()
+	cfg := cloneWebUIConfigForLoad(s.Cfg, isolate)
+	if cfg.ExtAction == "" {
+		cfg.ExtAction = CompileKwargs["ext"]
+	}
+	mod.Cfg = cfg
+	mod.Sig = sig
+
+	goivy.RegisterTactics(mod.Cfg.ProofCfg, mod)
+	var result *goivy.ParseResult
+	var parseErr error
+	cfg.IuCfg.WithSourceFile(filename, func() {
+		result, parseErr = goivy.ReadModuleFromNamedString(filename, webUIIvySource(content), false, cfg)
+	})
+	if parseErr != nil {
+		return nil, nil, 0, parseErr
+	}
+	decls, stripped := webUIStripLocalInterpretOnlyWrapperDecls(filename, result.Decls)
+	if stripped == 0 {
+		return nil, nil, 0, nil
+	}
+	if err := goivy.IvyCompile(decls, mod, true); err != nil {
+		return nil, nil, 0, err
+	}
+	return mod, sig, stripped, nil
+}
+
+func webUIStripLocalInterpretOnlyWrapperDecls(filename string, decls []goivy.Node) ([]goivy.Node, int) {
+	if filename == "" || len(decls) == 0 {
+		return decls, 0
+	}
+	kept := make([]goivy.Node, 0, len(decls))
+	localDecls := 0
+	localInterprets := 0
+	includedDecls := 0
+	for _, decl := range decls {
+		if webUINodeIsFromFile(decl, filename) {
+			localDecls++
+			if _, ok := decl.(*goivy.InterpretDecl); ok {
+				localInterprets++
+				continue
+			}
+			return decls, 0
+		}
+		includedDecls++
+		kept = append(kept, decl)
+	}
+	if localInterprets == 0 || localDecls != localInterprets || includedDecls == 0 {
+		return decls, 0
+	}
+	return kept, localInterprets
+}
+
+func webUINodeIsFromFile(node goivy.Node, filename string) bool {
+	if node == nil {
+		return false
+	}
+	return webUISameFilename(node.GetLineno().Filename, filename)
+}
+
+func webUISameFilename(a, b string) bool {
+	if a == "" || b == "" {
+		return false
+	}
+	if filepath.Clean(a) == filepath.Clean(b) {
+		return true
+	}
+	aa, errA := filepath.Abs(a)
+	bb, errB := filepath.Abs(b)
+	return errA == nil && errB == nil && filepath.Clean(aa) == filepath.Clean(bb)
+}
+
+func (s *Session) inductionCheckModule() *goivy.Module {
+	if s != nil && s.InductionModule != nil {
+		return s.InductionModule
+	}
+	if s == nil {
+		return nil
+	}
+	return s.CompiledModule
+}
+
 func webUIIvySource(content []byte) string {
 	source := string(content)
 	source = strings.TrimPrefix(source, "\ufeff")
@@ -242,6 +331,8 @@ func (s *Session) invalidateCachedModelStateLocked() {
 	s.ProofMgr = nil
 	s.CompiledModule = nil
 	s.CompiledSig = nil
+	s.InductionModule = nil
+	s.InductionSig = nil
 	s.SourceModule = nil
 	s.SourceSig = nil
 	s.OriginalConjs = nil
@@ -422,8 +513,25 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	}
 
 	// Step 6: Store the compiled module for verification operations.
+	inductionMod := mod
+	inductionSig := sig
+	inductionIsolate := activeIsolate
+	if inductionIsolate == NoIsolatesFoundChoice {
+		inductionIsolate = ""
+	}
+	if abstractMod, abstractSig, stripped, err := s.compileAbstractInductionWrapperSource(filename, content, inductionIsolate); err != nil {
+		s.emit(Event{Type: "status", Data: map[string]string{
+			"message": "Could not prepare abstract induction wrapper model: " + err.Error(),
+			"level":   "warning",
+		}})
+	} else if stripped > 0 {
+		inductionMod = abstractMod
+		inductionSig = abstractSig
+	}
 	s.CompiledModule = mod
 	s.CompiledSig = sig
+	s.InductionModule = inductionMod
+	s.InductionSig = inductionSig
 	s.SourceModule = mod
 	s.SourceSig = sig
 	if sourceMod != nil && sourceSig != nil {
@@ -4814,15 +4922,20 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 
 func (s *Session) watchCheckCancellation(ctx context.Context) func() {
 	done := make(chan struct{})
-	var z3ctx interface{ Interrupt() }
+	var z3ctxs []interface{ Interrupt() }
 	if s.CompiledModule != nil {
-		z3ctx = goivy.Z3ContextForModule(s.CompiledModule)
+		z3ctxs = append(z3ctxs, goivy.Z3ContextForModule(s.CompiledModule))
+	}
+	if s.InductionModule != nil && s.InductionModule != s.CompiledModule {
+		z3ctxs = append(z3ctxs, goivy.Z3ContextForModule(s.InductionModule))
 	}
 	go func() {
 		select {
 		case <-ctx.Done():
-			if z3ctx != nil {
-				z3ctx.Interrupt()
+			for _, z3ctx := range z3ctxs {
+				if z3ctx != nil {
+					z3ctx.Interrupt()
+				}
 			}
 		case <-done:
 		}
@@ -4867,6 +4980,10 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 
 	switch mode {
 	case "induction":
+		checkMod := s.inductionCheckModule()
+		if checkMod == nil {
+			return &WebUICheckResult{Result: "error", Message: "No module loaded — load an .ivy file first"}
+		}
 		// Check inductiveness of conjectures using Z3.
 		// Matches Python ivy_ui_cti.py check_inductiveness():
 		// tests each conjecture against init + all conjectures as background.
@@ -4887,7 +5004,7 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 		//   2. Convert each conjecture to its negated final condition
 		//   3. Check final conditions against the post-state without shrinking
 		//   4. If SAT → conjecture not inductive, reconstruct and show its trace
-		conjs := s.CompiledModule.LabeledConjs
+		conjs := checkMod.LabeledConjs
 		if len(conjs) == 0 {
 			return &WebUICheckResult{Result: "pass", Message: "No conjectures to check"}
 		}
@@ -4916,7 +5033,7 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 			"current": 0,
 			"total":   len(conjs),
 		})
-		ag, postState, _, err := goivy.MakeCheckArt(s.CompiledModule, "", conjClauses)
+		ag, postState, _, err := goivy.MakeCheckArt(checkMod, "", conjClauses)
 		if err != nil {
 			return &WebUICheckResult{Result: "error", Message: fmt.Sprintf("MakeCheckArt: %v", err)}
 		}
@@ -4933,7 +5050,7 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 			if lc.Formula == nil {
 				continue
 			}
-			checker, err := newWebUIConjChecker(s, s.CompiledModule, lc, i, len(conjs))
+			checker, err := newWebUIConjChecker(s, checkMod, lc, i, len(conjs))
 			if err != nil {
 				return &WebUICheckResult{Result: "error", Message: err.Error()}
 			}
@@ -4969,7 +5086,7 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 			for _, checker := range webCheckers {
 				checkers = append(checkers, checker)
 			}
-			checksPassed = goivy.CheckFcsInStateWithAG(s.CompiledModule, ag, postState, checkers)
+			checksPassed = goivy.CheckFcsInStateWithAG(checkMod, ag, postState, checkers)
 		}()
 		if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
 			cancelled.Z3Contacted = true
@@ -5039,7 +5156,7 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 				Message:               "The following conjecture is not relatively inductive:",
 				FailedConjecture:      failed.displayFormula,
 				FailedLabel:           failed.label,
-				UsedRelations:         relationNamesUsedByClauses(s.CompiledModule, failed.cond),
+				UsedRelations:         relationNamesUsedByClauses(checkMod, failed.cond),
 				CounterexampleTrace:   traceText,
 				CounterexampleDetails: cexDetails,
 			}
@@ -5099,7 +5216,7 @@ func (s *Session) runCheckWithContext(ctx context.Context, mode string, options 
 						Message:               "The following conjecture is not relatively inductive:",
 						FailedConjecture:      checker.displayFormula,
 						FailedLabel:           checker.label,
-						UsedRelations:         relationNamesUsedByClauses(s.CompiledModule, checker.cond),
+						UsedRelations:         relationNamesUsedByClauses(checkMod, checker.cond),
 						CounterexampleTrace:   traceText,
 						CounterexampleDetails: cexDetails,
 					}
