@@ -8,7 +8,10 @@ import (
 )
 
 func TestMemberTargetTestGeneratedCPPRegression(t *testing.T) {
-	fixture := filepath.Join(os.Getenv("HOME"), "ivy", "ivy-lang-examples", "jea", "member_test_ivy2cpp.ivy")
+	wd, err := os.Getwd()
+	panicOn(err)
+	parent := filepath.Dir(wd)
+	fixture := filepath.Join(parent, "test_vectors", "member_test_ivy2cpp.ivy")
 	if _, err := os.Stat(fixture); err != nil {
 		t.Skipf("member ivy fixture not available: %v", err)
 	}
