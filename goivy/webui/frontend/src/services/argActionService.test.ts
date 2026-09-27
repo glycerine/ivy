@@ -158,6 +158,84 @@ describe('argActionService', () => {
     expect(app.controls.setStatus).not.toHaveBeenCalledWith('Action complete: execute_action', 'success');
   });
 
+  it('warns for client-server state 1 right-click connect when the graph widget stays unchanged', async () => {
+    const clientServerAfterFirstConnectArg = {
+      elements: [
+        {
+          group: 'nodes',
+          classes: 'state',
+          data: {
+            id: 'state_0',
+            obj: 'state_0',
+            label: '0',
+            short_info: '0',
+            long_info: 'Clauses{fmlas=[link(0,0) = false, semaphore(0) = true]}',
+          },
+        },
+        {
+          group: 'nodes',
+          classes: 'state',
+          data: {
+            id: 'state_1',
+            obj: 'state_1',
+            label: '1',
+            short_info: '1',
+            long_info: 'Clauses{fmlas=[fml:x = 0, fml:y = 0, link(0,0), ~semaphore(0)]}',
+          },
+        },
+        {
+          group: 'edges',
+          classes: 'transition_action',
+          data: {
+            id: 'e0',
+            obj: 'tr_0_1',
+            source: 'state_0',
+            target: 'state_1',
+            source_obj: 'state_0',
+            target_obj: 'state_1',
+            label: 'connect(0:client, 0:server)',
+          },
+        },
+      ],
+      positions: null,
+    };
+    const argGraph = {
+      cy: {
+        json: vi.fn(() => ({ elements: clientServerAfterFirstConnectArg.elements })),
+      },
+      update: vi.fn(),
+    };
+    const app = {
+      uiDataModel: new UIDataModel(),
+      activeSheetId: 'sheet-1',
+      isVisualOnlySheet: vi.fn(() => false),
+      prepareArgNodeActionArgs: (node, action, args) => args,
+      api: {
+        argNodeAction: vi.fn(async () => ({ arg: clientServerAfterFirstConnectArg })),
+      },
+      sheets: {
+        'sheet-1': { id: 'sheet-1', type: 'analysis', argGraph, conceptGraph: null },
+      },
+      controls: { setStatus: vi.fn() },
+    };
+    installUIDataModelStore(app);
+
+    await executeArgNodeAction(
+      app,
+      { id: 'state_1', obj: 'state_1' },
+      { id: 'execute_action', label: 'ext:connect', args: { action_name: 'ext:connect', action_label: 'ext:connect' } },
+      'sheet-1',
+    );
+
+    expect(app.api.argNodeAction).toHaveBeenCalledWith('state_1', 'execute_action', expect.objectContaining({
+      action_name: 'ext:connect',
+      sheet_id: 'sheet-1',
+    }));
+    expect(argGraph.cy.json).toHaveBeenCalled();
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('No new visible transition was added for connect.', 'warning');
+    expect(app.controls.setStatus).not.toHaveBeenCalledWith('Action complete: execute_action', 'success');
+  });
+
   it('loads source and concept returned by ARG try-conjecture actions', async () => {
     const app = {
       activeSheetId: 'sheet-1',

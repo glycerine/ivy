@@ -183,6 +183,11 @@ function safeStableString(value) {
 function snapshotElements(snapshot) {
   if (!snapshot) return null;
   if (Array.isArray(snapshot.elements)) return snapshot.elements;
+  if (snapshot.elements && typeof snapshot.elements === 'object') {
+    const nodes = Array.isArray(snapshot.elements.nodes) ? snapshot.elements.nodes : [];
+    const edges = Array.isArray(snapshot.elements.edges) ? snapshot.elements.edges : [];
+    if (nodes.length || edges.length) return [...nodes, ...edges];
+  }
   if (snapshot.render && Array.isArray(snapshot.render.elements)) return snapshot.render.elements;
   return null;
 }
@@ -216,6 +221,34 @@ function currentARGSignature(app, sheetId) {
   return renderedARGSignature(sheet.arg);
 }
 
+function argGraphForSheet(app, sheetId) {
+  const sheet = app && app.sheets && app.sheets[sheetId];
+  if (sheet && sheet.argGraph) return sheet.argGraph;
+  if (app && app.activeSheetId === sheetId && app.argGraph) return app.argGraph;
+  return null;
+}
+
+function graphRenderedARGSignature(graph) {
+  const cy = graph && graph.cy;
+  if (!cy) return null;
+  if (typeof cy.json === 'function') {
+    const raw = cy.json();
+    const sig = renderedARGSignature(raw);
+    if (sig !== null) return sig;
+  }
+  if (typeof cy.elements === 'function') {
+    const collection = cy.elements();
+    if (collection && typeof collection.jsons === 'function') {
+      return renderedARGSignature({ elements: collection.jsons() });
+    }
+  }
+  return null;
+}
+
+function currentVisibleARGSignature(app, sheetId) {
+  return graphRenderedARGSignature(argGraphForSheet(app, sheetId));
+}
+
 function cleanActionDisplayName(name) {
   return String(name || '')
     .replace(/^ext:/, '')
@@ -231,11 +264,11 @@ function concreteActionDisplayName(actionName, args) {
   return cleanActionDisplayName(actionName) || 'action';
 }
 
-function showUnchangedExecuteActionResult(app, actionName, args, beforeSignature, result, appliedSnapshot) {
+function showUnchangedExecuteActionResult(app, actionName, args, beforeSignature, result, appliedSnapshot, afterSignature) {
   if (actionName !== 'execute_action') return false;
   if (beforeSignature === null || beforeSignature === undefined) return false;
-  const afterSignature = renderedARGSignature(appliedSnapshot || (result && result.arg));
-  if (afterSignature === null || afterSignature !== beforeSignature) return false;
+  const visibleOrResultSignature = afterSignature || renderedARGSignature(appliedSnapshot || (result && result.arg));
+  if (visibleOrResultSignature === null || visibleOrResultSignature !== beforeSignature) return false;
   const message = (result && result.message) || `No new visible transition was added for ${concreteActionDisplayName(actionName, args)}.`;
   app.controls.setStatus(message, 'warning');
   return true;
@@ -293,7 +326,9 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
       app.controls.setStatus(`Action cancelled: ${actionName}`, 'warning');
       return null;
     }
-    const beforeArgSignature = actionName === 'execute_action' ? currentARGSignature(app, targetSheetId) : null;
+    const beforeArgSignature = actionName === 'execute_action'
+      ? (currentVisibleARGSignature(app, targetSheetId) || currentARGSignature(app, targetSheetId))
+      : null;
     const result = await runWithContext(app, {
       busyMessage: `Executing: ${actionName}...`,
       failurePrefix: 'Action failed',
@@ -309,7 +344,8 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
     if (showArgNodeExhaustedResult(app, result)) {
       return result;
     }
-    if (showUnchangedExecuteActionResult(app, actionName, args, beforeArgSignature, result, appliedArgSnapshot)) {
+    const afterArgSignature = actionName === 'execute_action' ? currentVisibleARGSignature(app, targetSheetId) : null;
+    if (showUnchangedExecuteActionResult(app, actionName, args, beforeArgSignature, result, appliedArgSnapshot, afterArgSignature)) {
       return result;
     }
     if (actionName === 'check_safety') {
