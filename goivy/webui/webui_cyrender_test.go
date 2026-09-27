@@ -731,6 +731,15 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), "edge")["line-outline-width"]; got != "3px" {
 		t.Fatalf("base concept edge line-outline-width = %q, want 3px", got)
 	}
+	if got := cyStyleForTest(ConceptStyle(), "edge")["line-color"]; got != "#888" {
+		t.Fatalf("base concept edge line-color = %q, want #888", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), "edge")["target-arrow-color"]; got != "#888" {
+		t.Fatalf("base concept edge target-arrow-color = %q, want #888", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), "edge")["source-arrow-color"]; got != "#888" {
+		t.Fatalf("base concept edge source-arrow-color = %q, want #888", got)
+	}
 	if got := cyStyleForTest(ConceptStyle(), "edge")["line-outline-color"]; got != "rgba(204, 255, 0, 0.5)" {
 		t.Fatalf("base concept edge line-outline-color = %q, want rgba(204, 255, 0, 0.5)", got)
 	}

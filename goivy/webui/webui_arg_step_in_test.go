@@ -607,6 +607,70 @@ func TestClientServerDiagramDetailsIncludeTransitionContextLabel(t *testing.T) {
 	}
 }
 
+func TestGetConceptPreservesTransitionContextLabelForSelectedARGState(t *testing.T) {
+	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
+	if err != nil {
+		t.Fatalf("read client_server_example_new.ivy: %v", err)
+	}
+	cfg := goivy.NewConfig()
+	be := NewGoBackend(cfg)
+	defer be.Close()
+	sessionJSON, err := be.NewSession(cfg)
+	if err != nil {
+		t.Fatalf("NewSession: %v", err)
+	}
+	var session map[string]string
+	if err := json.Unmarshal(sessionJSON, &session); err != nil {
+		t.Fatalf("session json: %v", err)
+	}
+	sessionID := session["session_id"]
+	be.mu.RLock()
+	s := be.sessions[sessionID]
+	be.mu.RUnlock()
+	if s == nil {
+		t.Fatalf("session %q not found", sessionID)
+	}
+	if err := s.LoadFileContent("client_server_example_new.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+
+	executed, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
+		"sheet_id":    rootSheetID,
+		"action_name": "ext:connect",
+	})
+	if err != nil {
+		t.Fatalf("ArgNodeAction execute_action: %v", err)
+	}
+	if len(s.AG.Transitions) == 0 {
+		t.Fatalf("execute_action produced no transitions")
+	}
+	postID := s.AG.Transitions[len(s.AG.Transitions)-1].Post.ID
+	wantLabel := argPayloadTransitionLabel(t, requireArgPayload(t, executed), 0, postID)
+	if _, err := s.ArgNodeAction(fmt.Sprintf("state_%d", postID), "view_state", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
+		t.Fatalf("view_state post-state: %v", err)
+	}
+	if _, err := s.ExecuteAction("diagram", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
+		t.Fatalf("diagram action: %v", err)
+	}
+
+	conceptJSON, err := be.GetConcept(sessionID, rootSheetID, fmt.Sprintf("state_%d", postID))
+	if err != nil {
+		t.Fatalf("GetConcept: %v", err)
+	}
+	var concept map[string]interface{}
+	if err := json.Unmarshal(conceptJSON, &concept); err != nil {
+		t.Fatalf("concept json: %v", err)
+	}
+	if got, _ := concept["context_label"].(string); got != wantLabel {
+		t.Fatalf("GetConcept context_label = %q, want %q; concept=%#v", got, wantLabel, concept)
+	}
+	if facts, ok := concept["facts"].([]interface{}); !ok || len(facts) == 0 {
+		t.Fatalf("GetConcept facts missing/empty: %#v", concept["facts"])
+	}
+}
+
 func argPayloadTransitionLabel(t *testing.T, payload map[string]interface{}, sourceID, targetID int) string {
 	t.Helper()
 	source := fmt.Sprintf("state_%d", sourceID)

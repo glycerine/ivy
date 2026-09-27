@@ -1,5 +1,9 @@
 import { BrowserWasmIvyApiAdapter, HostedGoIvyApiAdapter } from '../engines/index.ts';
 
+function isRawClauseDump(text: string) {
+  return /^Clauses[{(]/.test(String(text || '').trim());
+}
+
 export class IvyAPIShim extends HostedGoIvyApiAdapter {
   baseURL: string;
 
@@ -120,6 +124,13 @@ export class IvyControlsShim {
       else pushInfoLine(longInfo);
     }
     const text = lines.join('\n');
+    if (
+      info.getAttribute('data-ivy-details-kind') === 'constraints' &&
+      lines.length > 0 &&
+      lines.every(isRawClauseDump)
+    ) {
+      return;
+    }
     info.textContent = text || 'Select a node or edge to see details';
     info.setAttribute('data-ivy-details-kind', text ? 'selection' : 'placeholder');
   }

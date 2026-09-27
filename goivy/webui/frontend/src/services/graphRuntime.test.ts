@@ -353,6 +353,29 @@ describe('graphRuntime', () => {
     expect(edge.style).toHaveBeenCalledWith('source-arrow-color', '#0000ff');
   });
 
+  it('keeps black concept relation colors visible on the default dark graph background', () => {
+    const cy = makeFakeCy();
+    window.cytoscape = vi.fn(() => cy);
+    document.body.innerHTML = '<div id="concept-graph"></div>';
+    const graph = new IvyGraph('concept-graph', CONCEPT_STYLE);
+
+    graph.update([
+      { group: 'nodes', data: { id: 'n0', obj: 'Client', label: 'Client' } },
+      { group: 'nodes', data: { id: 'n1', obj: 'Server', label: 'Server' } },
+      {
+        group: 'edges',
+        classes: 'all_to_all',
+        data: { id: 'e0', obj: 'link', source: 'n0', target: 'n1', line_color: '#000000' },
+      },
+    ], null);
+
+    const edge = cy.edges().find((candidate) => candidate.id() === 'e0');
+    expect(edge.style).toHaveBeenCalledWith('line-color', '#888');
+    expect(edge.style).toHaveBeenCalledWith('target-arrow-color', '#888');
+    expect(edge.style).toHaveBeenCalledWith('source-arrow-color', '#888');
+    expect(edge.style).not.toHaveBeenCalledWith('line-color', '#000000');
+  });
+
   it('keeps selected concept edges fluorescent over relation line colors', () => {
     const cy = makeFakeCy();
     window.cytoscape = vi.fn(() => cy);

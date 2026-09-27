@@ -47,4 +47,28 @@ describe('IvyControlsShim', () => {
 
     expect(document.getElementById('info-content')?.textContent).toBe('State 0\ninit');
   });
+
+  it('does not replace rendered transition constraints with a raw clause dump', () => {
+    document.body.innerHTML = [
+      '<div class="sheet-content active">',
+      '  <div class="info-panel">',
+      '    <div id="info-content" data-ivy-details-kind="constraints">',
+      '      <div class="constraint-context-label">connect(0:client, 0:server)</div>',
+      '      <div class="constraint-facts-title">Constraints:</div>',
+      '      <button class="constraint-fact">link(0,0)</button>',
+      '    </div>',
+      '  </div>',
+      '</div>',
+    ].join('');
+    const controls = new IvyControlsShim({});
+
+    controls.showInfo('Clauses{defs=[__semaphore(V0) = true]}', 'Clauses{defs=[link(V0,V1) = false]}');
+
+    const text = document.getElementById('info-content')?.textContent || '';
+    expect(text).toContain('connect(0:client, 0:server)');
+    expect(text).toContain('Constraints:');
+    expect(text).toContain('link(0,0)');
+    expect(text).not.toContain('Clauses{');
+    expect(document.getElementById('info-content')?.getAttribute('data-ivy-details-kind')).toBe('constraints');
+  });
 });

@@ -87,6 +87,9 @@ func ConceptStyle() []CyStyleEntry {
 		{
 			Selector: "edge",
 			Style: map[string]string{
+				"line-color":         "#888",
+				"target-arrow-color": "#888",
+				"source-arrow-color": "#888",
 				"target-arrow-shape": "triangle",
 				"target-arrow-fill":  "filled",
 				"source-arrow-fill":  "filled",

@@ -1,5 +1,15 @@
+const CONCEPT_VISIBLE_EDGE_COLOR = '#888';
 const CONCEPT_EDGE_OUTLINE_COLOR = 'rgba(204, 255, 0, 0.5)';
 const CONCEPT_SELECTED_EDGE_COLOR = 'rgba(0, 255, 213, 0.5)';
+
+function visibleConceptEdgeColor(color: any) {
+  if (!color) return color;
+  const normalized = String(color).trim().toLowerCase().replace(/\s+/g, '');
+  if (normalized === 'black' || normalized === '#000' || normalized === '#000000' || normalized === 'rgb(0,0,0)' || normalized === 'rgba(0,0,0,1)') {
+    return CONCEPT_VISIBLE_EDGE_COLOR;
+  }
+  return color;
+}
 
 export const CONCEPT_STYLE = [
   {
@@ -53,9 +63,9 @@ export const CONCEPT_STYLE = [
     selector: 'edge',
     style: {
       width: '3px',
-      'line-color': '#888',
-      'target-arrow-color': '#888',
-      'source-arrow-color': '#888',
+      'line-color': CONCEPT_VISIBLE_EDGE_COLOR,
+      'target-arrow-color': CONCEPT_VISIBLE_EDGE_COLOR,
+      'source-arrow-color': CONCEPT_VISIBLE_EDGE_COLOR,
       'target-arrow-shape': 'triangle',
       'target-arrow-fill': 'filled',
       'source-arrow-fill': 'filled',
@@ -605,7 +615,7 @@ export class IvyGraph {
         edge.style('line-outline-color', CONCEPT_SELECTED_EDGE_COLOR);
         return;
       }
-      const lineColor = edge.data('line_color') || edge.data('color');
+      const lineColor = visibleConceptEdgeColor(edge.data('line_color') || edge.data('color'));
       if (!lineColor) return;
       edge.style('line-color', lineColor);
       edge.style('target-arrow-color', lineColor);

@@ -237,6 +237,7 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 		var checks *Toggles
 		var facts []FactSelection
 		var displayChecks *DisplayCheckboxes
+		var contextLabel string
 		sess.mu.Lock()
 		widget := sess.ensureConceptGraphWidgetForSheetLocked(sheetID)
 		displayChecks = sess.ensureConceptChecksForSheetLocked(sheetID)
@@ -245,6 +246,7 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 		renderSession := sess.SimpleSess
 		if widget != nil {
 			facts = widget.ConstraintFacts()
+			contextLabel = graphWidgetContextLabel(widget)
 			if widget.G() != nil && conceptSessionHasRenderableDomain(widget.G().ConceptSess) {
 				renderSession = widget.G().ConceptSess
 			}
@@ -325,6 +327,7 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 			"concept_domain":              conceptDomain,
 			"concept_interactive_session": conceptInteractiveSessionPayload(sess.ConceptSess),
 			"concept_session":             renderSession,
+			"context_label":               contextLabel,
 			"display_checkboxes":          checks,
 			"edges":                       edges,
 			"edge_sorts":                  edgeSorts,
