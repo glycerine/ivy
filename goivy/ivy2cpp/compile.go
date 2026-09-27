@@ -53,7 +53,8 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 	if err := goivy.SourceFile(filename, mod, sig, map[string]interface{}{"create_isolate": false}); err != nil {
 		return nil, err
 	}
-	isolates := selectedIsolates(mod, ivyParams["isolate"])
+	requestedIsolate := strings.TrimSpace(ivyParams["isolate"])
+	isolates := selectedIsolates(mod, requestedIsolate)
 	if len(isolates) == 0 {
 		isolates = []string{""}
 	}
@@ -70,6 +71,9 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 			if iso, ok := isoMod.Isolates[isolate]; ok && iso != nil && !iso.IsExtract() {
 				iso.Kind = "extract"
 				iso.WithArgs = len(iso.Elems)
+			}
+			if requestedIsolate == "" && isolate == "this" {
+				addDefaultReplSpecMixinPresents(isoMod, isoMod.Isolates[isolate])
 			}
 		}
 		// Python ivy_to_cpp.py:4620-4622 — compile_with_invariants is
@@ -362,6 +366,48 @@ func selectedIsolates(mod *goivy.Module, requested string) []string {
 		}
 	}
 	return []string{""}
+}
+
+func addDefaultReplSpecMixinPresents(mod *goivy.Module, iso *goivy.IsolateDef) {
+	if mod == nil || iso == nil || mod.Mixins == nil || mod.Cfg == nil || mod.Cfg.AstCfg == nil || mod.Cfg.IuCfg == nil {
+		return
+	}
+	present := make(map[string]bool)
+	for _, name := range iso.VerifiedNames() {
+		present[name] = true
+	}
+	for _, name := range iso.PresentNames() {
+		present[name] = true
+	}
+	queued := make(map[string]bool)
+	var names []string
+	for _, exp := range mod.Exports {
+		if exp == nil || exp.Scope() != "" {
+			continue
+		}
+		for _, mixin := range mod.Mixins.Get(exp.Exported()) {
+			if mixin == nil {
+				continue
+			}
+			parent := mod.Cfg.IuCfg.ParentChildName(mixin.Mixer())[0]
+			if parent == "" || parent == "this" {
+				continue
+			}
+			pc := mod.Cfg.IuCfg.ParentChildName(parent)
+			if pc[1] != "spec" {
+				continue
+			}
+			if present[parent] || queued[parent] {
+				continue
+			}
+			queued[parent] = true
+			names = append(names, parent)
+		}
+	}
+	for _, name := range names {
+		iso.Elems = append(iso.Elems, mod.Cfg.AstCfg.NewAtom(name))
+		iso.WithArgs++
+	}
 }
 
 func languageVersionAtLeast(mod *goivy.Module, want string) bool {

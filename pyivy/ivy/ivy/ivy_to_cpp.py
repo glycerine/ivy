@@ -4624,6 +4624,29 @@ def add_conjs_to_actions():
     im.module.initial_actions.append(seq)
         
 
+def add_default_repl_spec_mixin_presents(the_iso):
+    """Keep nested object spec monitors in the implicit Ivy 1.7 REPL extract."""
+    present = set(a.relname for a in the_iso.verified())
+    present.update(a.relname for a in the_iso.present())
+    queued = set()
+    names = []
+    for exp in im.module.exports:
+        if exp.scope():
+            continue
+        for mixin in im.module.mixins.get(exp.exported(), []):
+            parent = iu.parent_child_name(mixin.mixer())[0]
+            if parent == 'this':
+                continue
+            if iu.parent_child_name(parent)[1] != 'spec':
+                continue
+            if parent in present or parent in queued:
+                continue
+            queued.add(parent)
+            names.append(parent)
+    for name in names:
+        the_iso.args = tuple(list(the_iso.args) + [ivy_ast.Atom(name)])
+        the_iso.with_args += 1
+
 
 def main():
     main_int(False)
@@ -4676,6 +4699,7 @@ def main_int(is_ivyc):
             iso.set_interpret_all_sorts(True)
 
         isolate = ic.isolate.get()
+        requested_isolate = isolate
 
         if is_ivyc:
             if isolate != None:
@@ -4737,6 +4761,8 @@ def main_int(is_ivyc):
                             the_iso = ivy_ast.ExtractDef(*the_iso.args)
                             the_iso.with_args = len(the_iso.args)
                             im.module.isolates[isolate] = the_iso
+                        if requested_isolate is None and isolate == 'this':
+                            add_default_repl_spec_mixin_presents(the_iso)
                         
                     iso.compile_with_invariants.set("true" if target.get()=='test'
                                                     and not iu.version_le(iu.get_string_version(),"1.7")

@@ -1210,3 +1210,90 @@ XTRACE_OFF=1 ivy_to_cpp build=true target=test raft_no_assume_test.ivy
 
 The generated tester printed randomized action traces and reached
 `test_completed` with exit status 0.
+
+## ivy 1.7 repl was broken, ignored specification asserts
+
+See ivy/goivy/test_vectors/bank17.ivy (referenced from http://kenmcmil.github.io/ivy/examples/helloworld.html
+
+manual test scenario:
+~~~
+XTRACE_OFF=1 ivy2cpp target=repl build=true bank17.ivy
+./bank17
+> account.withdraw(1) # should assert, but hangs or accepts instead.
+> account.deposit(65532)
+> account.deposit(65532) # should overflow the interpret money -> bv[16], firing the other assert. 
+~~~
+
+We added a new unit test in ivy/goivy/ivy2cpp/ivy2cpp_test.go:9167.
+
+It failed before the fix because bank17repl::ext__account__withdraw
+only updated balance and had no ivy_assume.
+
+The fix is in ivy/goivy/ivy2cpp/compile.go:70: for implicit Ivy 1.7+ target=repl 
+default extraction of this, it now includes nested *.spec objects that provide
+mixins for exported actions, so the before withdraw monitor survives extraction.
+
+We also mirrored the minimal source-of-truth Python fix in ivy/pyivy/ivy/ivy/ivy_to_cpp.py:4627,
+since the original Python ivy_to_cpp repro had the same bug.
+
+  Verified:
+
+  - Red test reproduced the missing guard before the fix.
+  - XTRACE_OFF=1 go test ./ivy2cpp -run TestIvy17ReplDefaultExtractKeepsNestedSpecBeforeMixin -count=1 -v passes.
+  - XTRACE_OFF=1 go test ./ivy2cpp -count=1 passes.
+  - Python-only repro now correctly rejects account.withdraw(4) with bank17.ivy: line 35: error: assumption failed.
+
+details of the ivy_to_cpp.py fix:
+~~~
+diff --git a/pyivy/ivy/ivy/ivy_to_cpp.py b/pyivy/ivy/ivy/ivy_to_cpp.py
+index a208c620..91b32106 100755
+--- a/pyivy/ivy/ivy/ivy_to_cpp.py
++++ b/pyivy/ivy/ivy/ivy_to_cpp.py
+@@ -4624,6 +4624,29 @@ def add_conjs_to_actions():
+     im.module.initial_actions.append(seq)
+         
+ 
++def add_default_repl_spec_mixin_presents(the_iso):
++    """Keep nested object spec monitors in the implicit Ivy 1.7 REPL extract."""
++    present = set(a.relname for a in the_iso.verified())
++    present.update(a.relname for a in the_iso.present())
++    queued = set()
++    names = []
++    for exp in im.module.exports:
++        if exp.scope():
++            continue
++        for mixin in im.module.mixins.get(exp.exported(), []):
++            parent = iu.parent_child_name(mixin.mixer())[0]
++            if parent == 'this':
++                continue
++            if iu.parent_child_name(parent)[1] != 'spec':
++                continue
++            if parent in present or parent in queued:
++                continue
++            queued.add(parent)
++            names.append(parent)
++    for name in names:
++        the_iso.args = tuple(list(the_iso.args) + [ivy_ast.Atom(name)])
++        the_iso.with_args += 1
++
+ 
+ def main():
+     main_int(False)
+@@ -4676,6 +4699,7 @@ def main_int(is_ivyc):
+             iso.set_interpret_all_sorts(True)
+ 
+         isolate = ic.isolate.get()
++        requested_isolate = isolate
+ 
+         if is_ivyc:
+             if isolate != None:
+@@ -4737,6 +4761,8 @@ def main_int(is_ivyc):
+                             the_iso = ivy_ast.ExtractDef(*the_iso.args)
+                             the_iso.with_args = len(the_iso.args)
+                             im.module.isolates[isolate] = the_iso
++                        if requested_isolate is None and isolate == 'this':
++                            add_default_repl_spec_mixin_presents(the_iso)
+                         
+                     iso.compile_with_invariants.set("true" if target.get()=='test'
+                                                     and not iu.version_le(iu.get_string_version(),"1.7")
+~~~

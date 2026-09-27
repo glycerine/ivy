@@ -9164,6 +9164,35 @@ export step
 	}
 }
 
+func TestIvy17ReplDefaultExtractKeepsNestedSpecBeforeMixin(t *testing.T) {
+	spec := filepath.Join("..", "test_vectors", "bank17.ivy")
+	batch, err := CompileAndGenerateAll(spec, map[string]string{
+		"target":    "repl",
+		"classname": "bank17repl",
+	}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	if len(batch.Outputs) != 1 {
+		t.Fatalf("expected one output, got %d", len(batch.Outputs))
+	}
+	body := bodyAfterMarker(batch.Outputs[0].Impl, "bank17repl::ext__account__withdraw(")
+	if body == "" {
+		t.Fatalf("missing ext account withdraw body:\n%s", batch.Outputs[0].Impl)
+	}
+	if !strings.Contains(body, "ivy_assume(") {
+		t.Fatalf("#lang ivy1.7 repl default extraction dropped account.spec before withdraw guard:\n%s", body)
+	}
+	if !strings.Contains(body, "account__balance") || !strings.Contains(body, "x") {
+		t.Fatalf("withdraw guard should mention balance and argument x:\n%s", body)
+	}
+	assumeAt := strings.Index(body, "ivy_assume(")
+	assignAt := strings.Index(body, "account__balance =")
+	if assignAt >= 0 && assumeAt > assignAt {
+		t.Fatalf("withdraw guard should run before balance is updated:\n%s", body)
+	}
+}
+
 // bodyAfterMarker returns the substring from the first '{' after the
 // marker up to the matching closing brace. Used to extract one method
 // body from emitted C++ for the TODO 020 tests.
