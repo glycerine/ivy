@@ -153,6 +153,13 @@ function showReturnedSource(app, result) {
   return true;
 }
 
+function showArgNodeExhaustedResult(app, result) {
+  if (!result || result.exhausted !== true) return false;
+  const message = result.message || 'No valid action could be found.';
+  app.controls.setStatus(message, 'warning');
+  return true;
+}
+
 function highlightReturnedSourceInEditor(app, result) {
   if (!result || !result.lineno || typeof app.scrollEditorToLine !== 'function') return false;
   app.scrollEditorToLine(result.lineno);
@@ -215,6 +222,9 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
     }
     if (result && result.concept) {
       applyConceptSnapshot(app, targetSheetId, result.concept);
+    }
+    if (showArgNodeExhaustedResult(app, result)) {
+      return result;
     }
     if (actionName === 'check_safety') {
       showArgNodeSafetyResult(app, result);

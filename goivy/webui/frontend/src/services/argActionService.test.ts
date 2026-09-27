@@ -77,6 +77,37 @@ describe('argActionService', () => {
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', { elements: ['concept'], positions: null });
   });
 
+  it('reports exhausted concrete ARG actions instead of generic success', async () => {
+    const app = {
+      activeSheetId: 'sheet-1',
+      isVisualOnlySheet: vi.fn(() => false),
+      prepareArgNodeActionArgs: (node, action, args) => args,
+      api: {
+        argNodeAction: vi.fn(async () => ({
+          exhausted: true,
+          message: 'No new connect transition from state 0 was found.',
+          arg: { elements: ['arg'], positions: null },
+        })),
+      },
+      sheets: {},
+      uiDataStore: {
+        applyArgSnapshot: vi.fn(),
+      },
+      controls: { setStatus: vi.fn() },
+    };
+
+    await executeArgNodeAction(
+      app,
+      { id: 'state_0' },
+      { id: 'execute_action', args: { action_name: 'ext:connect' } },
+      'sheet-1',
+    );
+
+    expect(app.uiDataStore.applyArgSnapshot).toHaveBeenCalledWith('sheet-1', { elements: ['arg'], positions: null });
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('No new connect transition from state 0 was found.', 'warning');
+    expect(app.controls.setStatus).not.toHaveBeenCalledWith('Action complete: execute_action', 'success');
+  });
+
   it('loads source and concept returned by ARG try-conjecture actions', async () => {
     const app = {
       activeSheetId: 'sheet-1',

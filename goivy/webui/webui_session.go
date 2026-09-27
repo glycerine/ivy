@@ -4320,7 +4320,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 				result["exhausted"] = true
 				result["message"] = exhausted.DialogMessage()
 				result["arg"] = AnalysisUIARGPayload(ui)
-				s.emit(Event{Type: "status", Data: map[string]string{"message": exhausted.DialogMessage(), "level": "info"}})
+				s.emit(Event{Type: "status", Data: map[string]string{"message": exhausted.DialogMessage(), "level": "warning"}})
 				break
 			}
 			err = execErr
