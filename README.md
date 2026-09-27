@@ -4,9 +4,11 @@ GoIvy (Ivy in Go/as a Web application backed by a Go server)
 ![an ivy covered place](https://github.com/glycerine/ivy/blob/master/reference/new_ivy_icon_starting_large.png)
 
 This is a port of the Ivy formal verification toolchain to Go and a Web app, based
-on the original python and Tk by Oded Padon and Ken McMillan et al 2016. It supports Ivy
-language versions 1.6 and up (so 1.6, 1.7, and 1.8). See the Q & A below for
-links and references.
+on the original python and Tk by Ken McMillan and Oded Padon et al. 
+See [the credits page](https://github.com/glycerine/ivy/blob/master/goivy/webui/static/tutorial/kenmcmil.github.io/ivy/credits.html) for full credits and citations.
+
+This port supports Ivy language versions 1.6 and up (so 1.6, 1.7, and 1.8). [See the Q & A below for
+links and references](#questions-and-answers).
 
 A quick aside: Note that this project has nothing to do with Rob Pike's Ivy https://github.com/robpike/ivy calculator project. The repeat of the name Ivy is a mere coincidence. McMillan and Padon were thinking of "[I]nteractive [V]erification", and I doubt they were even aware of Mr. Pike's arbitrary-precision APL-like calculator project in Go.
 
