@@ -259,6 +259,10 @@ export function selectConstraintFacts(sheet: SheetModel | null | undefined): Fac
   return sheet && sheet.concept ? sheet.concept.facts : [];
 }
 
+export function selectConstraintContextLabel(sheet: SheetModel | null | undefined): string {
+  return sheet && sheet.concept ? sheet.concept.contextLabel : '';
+}
+
 export function selectStateLabel(sheet: SheetModel | null | undefined): string | null {
   if (!sheet) return null;
   if (sheet.concept && sheet.concept.stateLabel) return sheet.concept.stateLabel;

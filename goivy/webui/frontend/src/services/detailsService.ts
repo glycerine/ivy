@@ -54,6 +54,13 @@ export function populateConstraintFacts(app, conceptData, {
 
   info.innerHTML = '';
   info.setAttribute('data-ivy-details-kind', 'constraints');
+  const contextLabel = conceptData && (conceptData.context_label || conceptData.contextLabel);
+  if (typeof contextLabel === 'string' && contextLabel.trim()) {
+    const context = doc.createElement('div');
+    context.className = 'constraint-context-label';
+    context.textContent = contextLabel.trim();
+    info.appendChild(context);
+  }
   const title = doc.createElement('div');
   title.className = 'constraint-facts-title';
   title.textContent = 'Constraints:';

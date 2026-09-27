@@ -471,13 +471,18 @@ func argTransitionDisplayLabelCandidate(t goivy.Transition) string {
 	if actionName == "" {
 		return ""
 	}
+	var base string
 	if display := actionDisplayNameForModelActionName(argTransitionModule(t), actionName); display != "" {
-		return display
+		base = display
+	} else if display := cleanARGActionDisplayName(actionName); display != "" {
+		base = display
+	} else {
+		base = actionName
 	}
-	if display := cleanARGActionDisplayName(actionName); display != "" {
-		return display
+	if withActuals := argTransitionDisplayLabelWithActuals(t, base); withActuals != "" {
+		return withActuals
 	}
-	return actionName
+	return base
 }
 
 func mustARGTransitionDisplayLabel(label string, t goivy.Transition) string {
@@ -752,6 +757,137 @@ func cleanARGActionDisplayName(label string) string {
 		return ""
 	}
 	return label
+}
+
+func argTransitionDisplayLabelWithActuals(t goivy.Transition, base string) string {
+	if t.Op == nil || base == "" {
+		return ""
+	}
+	formals := t.Op.GetFormalParams()
+	if len(formals) == 0 {
+		return ""
+	}
+	consts := argTransitionPostConstants(t)
+	if len(consts) == 0 {
+		return ""
+	}
+	actuals := make([]string, 0, len(formals))
+	aliases := make(map[goivy.NodeKey]string)
+	nextBySort := make(map[string]int)
+	for _, formal := range formals {
+		actual := argTransitionFindFormalActual(formal, consts)
+		if actual == nil {
+			return ""
+		}
+		actuals = append(actuals, argTransitionActualDisplay(actual, aliases, nextBySort))
+	}
+	return fmt.Sprintf("%s(%s)", base, strings.Join(actuals, ", "))
+}
+
+func argTransitionPostConstants(t goivy.Transition) []*goivy.Const {
+	var consts []*goivy.Const
+	seen := make(map[goivy.NodeKey]bool)
+	add := func(expr goivy.Expr) {
+		argTransitionCollectConstants(expr, &consts, seen)
+	}
+	if t.Post != nil && t.Post.Clauses != nil {
+		for _, fmla := range t.Post.Clauses.Fmlas {
+			add(fmla)
+		}
+		for _, def := range t.Post.Clauses.Defs {
+			add(def)
+		}
+	}
+	sort.Slice(consts, func(i, j int) bool {
+		if consts[i].Name == consts[j].Name {
+			return goivy.IvySortName(consts[i].CSort) < goivy.IvySortName(consts[j].CSort)
+		}
+		return consts[i].Name < consts[j].Name
+	})
+	return consts
+}
+
+func argTransitionCollectConstants(expr goivy.Expr, out *[]*goivy.Const, seen map[goivy.NodeKey]bool) {
+	if expr == nil {
+		return
+	}
+	if c, ok := expr.(*goivy.Const); ok {
+		key := goivy.Key(c)
+		if !seen[key] {
+			seen[key] = true
+			*out = append(*out, c)
+		}
+	}
+	for _, child := range expr.Children() {
+		argTransitionCollectConstants(child, out, seen)
+	}
+}
+
+func argTransitionFindFormalActual(formal *goivy.Const, consts []*goivy.Const) *goivy.Const {
+	if formal == nil {
+		return nil
+	}
+	formalName := strings.TrimSpace(formal.Name)
+	shortFormalName := strings.TrimPrefix(formalName, "fml:")
+	var fallback *goivy.Const
+	for _, c := range consts {
+		if c == nil || !sameARGSortName(c.CSort, formal.CSort) {
+			continue
+		}
+		name := strings.TrimSpace(c.Name)
+		if name == formalName || name == "__"+formalName {
+			return c
+		}
+		if strings.HasSuffix(name, formalName) && strings.Contains(name, "fml:") {
+			if fallback == nil {
+				fallback = c
+			}
+			continue
+		}
+		if shortFormalName != "" && strings.HasSuffix(name, shortFormalName) && strings.Contains(name, "fml:") {
+			if fallback == nil {
+				fallback = c
+			}
+		}
+	}
+	return fallback
+}
+
+func sameARGSortName(a, b goivy.Sort) bool {
+	if a == nil || b == nil {
+		return a == b
+	}
+	return goivy.IvySortName(a) == goivy.IvySortName(b)
+}
+
+func argTransitionActualDisplay(actual *goivy.Const, aliases map[goivy.NodeKey]string, nextBySort map[string]int) string {
+	if actual == nil {
+		return ""
+	}
+	key := goivy.Key(actual)
+	if alias := aliases[key]; alias != "" {
+		return alias
+	}
+	sortName := goivy.IvySortName(actual.CSort)
+	name := strings.TrimSpace(actual.Name)
+	if argTransitionConstNeedsDiagramAlias(name) {
+		idx := nextBySort[sortName]
+		nextBySort[sortName] = idx + 1
+		alias := fmt.Sprintf("%d:%s", idx, sortName)
+		aliases[key] = alias
+		return alias
+	}
+	if sortName != "" && sortName != "Top" && sortName != "alpha" && !strings.Contains(name, ":") {
+		return fmt.Sprintf("%s:%s", name, sortName)
+	}
+	return fmt.Sprint(actual)
+}
+
+func argTransitionConstNeedsDiagramAlias(name string) bool {
+	return strings.Contains(name, "fml:") ||
+		strings.HasPrefix(name, "__") ||
+		strings.HasPrefix(name, "new_") ||
+		strings.HasPrefix(name, "old_")
 }
 
 func applyCounterexampleTraceTransitionLabels(trace *goivy.TraceBase) {

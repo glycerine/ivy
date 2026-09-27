@@ -2,6 +2,7 @@ import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 import {
   selectArgGraphView,
   selectConceptGraphView,
+  selectConstraintContextLabel,
   selectConstraintFacts,
   selectSheet,
   selectStateCheckboxRows,
@@ -109,7 +110,7 @@ function renderActivePanels(app, sheetId, {
   if (!isAnalysisSheet(app, sheetId)) return;
   const sheet = selectSheet(app.uiDataModel, sheetId);
   renderStateCheckboxes(app, selectStateCheckboxRows(sheet), { doc });
-  populateConstraintFacts(app, { facts: selectConstraintFacts(sheet) }, { doc });
+  populateConstraintFacts(app, { context_label: selectConstraintContextLabel(sheet), facts: selectConstraintFacts(sheet) }, { doc });
   updateStateLabel(selectStateLabel(sheet), { doc });
 }
 

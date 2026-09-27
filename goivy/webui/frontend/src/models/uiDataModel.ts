@@ -837,6 +837,7 @@ export class ConceptSnapshot extends RawBackedModel<unknown> {
   readonly sheetId: string;
   readonly selectedNode: string | null;
   readonly stateLabel: string;
+  readonly contextLabel: string;
 
   constructor(raw: unknown = {}) {
     super(raw);
@@ -864,6 +865,7 @@ export class ConceptSnapshot extends RawBackedModel<unknown> {
     const selected = pick(raw, 'selected_node', 'selectedNode');
     this.selectedNode = typeof selected === 'string' ? selected : null;
     this.stateLabel = stringValue(pick(raw, 'cti_state_label', 'ctiStateLabel', 'state_label', 'stateLabel'));
+    this.contextLabel = stringValue(pick(raw, 'context_label', 'contextLabel'));
   }
 }
 

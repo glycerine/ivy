@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -533,6 +534,94 @@ func TestARGExecuteActionMenuEntriesRenderAndDispatch(t *testing.T) {
 		t.Fatalf("execute_action result missing arg update: %#v", result)
 	}
 	assertARGPayloadTransitionEdgeLabelsDrawnFromModel(t, requireArgPayload(t, result), s.CompiledModule)
+}
+
+func TestARGExecuteActionLabelsIncludeConcreteActuals(t *testing.T) {
+	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
+	if err != nil {
+		t.Fatalf("read client_server_example_new.ivy: %v", err)
+	}
+	s := NewSession(goivy.NewConfig(), "test-client-server-actual-labels")
+	if err := s.LoadFileContent("client_server_example_new.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+
+	result, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
+		"sheet_id":    rootSheetID,
+		"action_name": "ext:connect",
+	})
+	if err != nil {
+		t.Fatalf("ArgNodeAction execute_action: %v", err)
+	}
+	if len(s.AG.Transitions) == 0 {
+		t.Fatalf("execute_action produced no transitions")
+	}
+	postID := s.AG.Transitions[len(s.AG.Transitions)-1].Post.ID
+	label := argPayloadTransitionLabel(t, requireArgPayload(t, result), 0, postID)
+	if !regexp.MustCompile(`^connect\([0-9]+:client, [0-9]+:server\)$`).MatchString(label) {
+		t.Fatalf("execute_action edge label = %q, want connect with typed concrete actuals", label)
+	}
+}
+
+func TestClientServerDiagramDetailsIncludeTransitionContextLabel(t *testing.T) {
+	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
+	if err != nil {
+		t.Fatalf("read client_server_example_new.ivy: %v", err)
+	}
+	s := NewSession(goivy.NewConfig(), "test-client-server-diagram-transition-label")
+	if err := s.LoadFileContent("client_server_example_new.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+
+	executed, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
+		"sheet_id":    rootSheetID,
+		"action_name": "ext:connect",
+	})
+	if err != nil {
+		t.Fatalf("ArgNodeAction execute_action: %v", err)
+	}
+	if len(s.AG.Transitions) == 0 {
+		t.Fatalf("execute_action produced no transitions")
+	}
+	postID := s.AG.Transitions[len(s.AG.Transitions)-1].Post.ID
+	wantLabel := argPayloadTransitionLabel(t, requireArgPayload(t, executed), 0, postID)
+	if _, err := s.ArgNodeAction(fmt.Sprintf("state_%d", postID), "view_state", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
+		t.Fatalf("view_state post-state: %v", err)
+	}
+
+	diagram, err := s.ExecuteAction("diagram", map[string]interface{}{"sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("diagram action: %v", err)
+	}
+	concept, ok := diagram["concept"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("concept payload missing or wrong type: %#v", diagram["concept"])
+	}
+	got, _ := concept["context_label"].(string)
+	if got != wantLabel {
+		t.Fatalf("diagram context_label = %q, want %q; concept=%#v", got, wantLabel, concept)
+	}
+}
+
+func argPayloadTransitionLabel(t *testing.T, payload map[string]interface{}, sourceID, targetID int) string {
+	t.Helper()
+	source := fmt.Sprintf("state_%d", sourceID)
+	target := fmt.Sprintf("state_%d", targetID)
+	for _, edge := range transitionEdgeDataFromPayload(t, payload) {
+		if edge["source_obj"] == source && edge["target_obj"] == target {
+			label, _ := edge["label"].(string)
+			if label == "" {
+				t.Fatalf("transition %s -> %s has no label: %#v", source, target, edge)
+			}
+			return label
+		}
+	}
+	t.Fatalf("ARG payload missing transition %s -> %s: %#v", source, target, payload["elements"])
+	return ""
 }
 
 func TestARGChoiceBackedCommandsExposeConjecturesAndRememberedGraphs(t *testing.T) {

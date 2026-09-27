@@ -1000,6 +1000,7 @@ func conceptGraphActionPayload(w *GraphWidget) map[string]interface{} {
 	return map[string]interface{}{
 		"concept_domain":  w.G().ConceptSess.Domain,
 		"concept_session": w.G().ConceptSess,
+		"context_label":   graphWidgetContextLabel(w),
 		"elements":        cy.Elements,
 		"facts":           w.ConstraintFacts(),
 		"graph":           conceptGraphPayload(w.G(), w.GraphStack),
@@ -1007,6 +1008,36 @@ func conceptGraphActionPayload(w *GraphWidget) map[string]interface{} {
 		"relation_colors": ConceptRelationColors(w.G().ConceptSess),
 		"toggles":         w.G().Checks.Snapshot(),
 	}
+}
+
+func graphWidgetContextLabel(w *GraphWidget) string {
+	if w == nil || w.G() == nil {
+		return ""
+	}
+	state, _ := w.G().ParentState.(*goivy.State)
+	if state == nil {
+		return ""
+	}
+	ui, _ := w.Parent.(*AnalysisGraphUI)
+	if ui == nil || ui.AG == nil {
+		return ""
+	}
+	var fallback string
+	for _, tr := range ui.AG.Transitions {
+		if tr.Post == nil {
+			continue
+		}
+		if tr.Post == state || tr.Post.ID == state.ID {
+			label := argTransitionDisplayLabel(tr)
+			if tr.Pre != nil && state.Pred != nil && tr.Pre.ID == state.Pred.ID {
+				return label
+			}
+			if fallback == "" {
+				fallback = label
+			}
+		}
+	}
+	return fallback
 }
 
 func ctiPreStateLabel(ui *CTIAnalysisGraphUI) string {

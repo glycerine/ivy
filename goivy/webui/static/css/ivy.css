@@ -2159,6 +2159,12 @@ body[data-event-viewer-only="true"] #outer-container {
     word-break: break-word;
 }
 
+.constraint-context-label {
+    color: #f0f0f0;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
 .constraint-facts-title {
     color: #c8c8c8;
     margin-bottom: 2px;

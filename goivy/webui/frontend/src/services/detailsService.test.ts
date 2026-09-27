@@ -42,6 +42,24 @@ describe('detailsService', () => {
     expect(fact.classList.contains('inactive')).toBe(false);
   });
 
+  it('renders transition context above the constraints header', () => {
+    document.body.innerHTML = '<div id="info-content"></div>';
+    const app = {
+      api: { executeAction: vi.fn() },
+      controls: { setStatus: vi.fn() },
+    };
+
+    populateConstraintFacts(app, {
+      context_label: 'connect(0:client, 0:server)',
+      facts: [{ index: 0, text: 'link(0,0)', selected: true }],
+    }, { doc: document });
+
+    const info = document.getElementById('info-content');
+    expect(info?.firstElementChild?.className).toBe('constraint-context-label');
+    expect(info?.firstElementChild?.textContent).toBe('connect(0:client, 0:server)');
+    expect(document.querySelector('.constraint-facts-title')?.textContent).toBe('Constraints:');
+  });
+
   it('applies returned concept snapshots after fact selection changes', async () => {
     document.body.innerHTML = '<div id="info-content"></div>';
     const concept = { sheet_id: 'sheet-7', elements: [], facts: [{ index: 0, text: 'link(X,Y)', selected: true }] };

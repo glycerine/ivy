@@ -245,7 +245,8 @@ func assertARGPayloadTransitionEdgeLabelsDrawnFromModel(t *testing.T, payload ma
 
 func assertARGTransitionLabelDrawnFromModel(t *testing.T, label string, modelLabels map[string]bool) {
 	t.Helper()
-	if label == "sequence" {
+	baseLabel := argTransitionLabelBaseForTest(label)
+	if baseLabel == "sequence" {
 		t.Fatalf("reachability graph edge label %q is an internal action node name, not a model action label; model labels=%#v", label, modelLabels)
 	}
 	if strings.Contains(label, "goivy.") || strings.Contains(label, "@0x") {
@@ -254,9 +255,17 @@ func assertARGTransitionLabelDrawnFromModel(t *testing.T, label string, modelLab
 	if strings.Contains(label, "call ext") || strings.Contains(label, "call:ext") {
 		t.Fatalf("reachability graph edge label %q kept a generic external-call label; model labels=%#v", label, modelLabels)
 	}
-	if !modelLabels[label] {
+	if !modelLabels[baseLabel] {
 		t.Fatalf("reachability graph edge label = %q, want one of the model action labels %#v", label, modelLabels)
 	}
+}
+
+func argTransitionLabelBaseForTest(label string) string {
+	label = strings.TrimSpace(label)
+	if idx := strings.Index(label, "("); idx >= 0 {
+		return strings.TrimSpace(label[:idx])
+	}
+	return label
 }
 
 func modelActionDisplayLabels(mod *goivy.Module) map[string]bool {
