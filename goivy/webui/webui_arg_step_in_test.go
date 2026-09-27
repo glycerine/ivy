@@ -903,6 +903,69 @@ func TestARGConnectPostStateGroundsSelectedServerSemaphoreFalse(t *testing.T) {
 	}
 }
 
+func TestARGExecuteActionConnectFromSuccessorChangesOnlySelectedFacts(t *testing.T) {
+	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
+	if err != nil {
+		t.Fatalf("read client_server_example_new.ivy: %v", err)
+	}
+	s := NewSession(goivy.NewConfig(), "test-client-server-connect-successor-frame")
+	if err := s.LoadFileContent("client_server_example_new.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+
+	pre := clientServerManualConnectedState(t, s.CompiledModule)
+	s.AG.Add(pre, nil)
+	s.syncARGToGraph()
+
+	resolvedName := s.AGUI.resolveActionName("ext:connect")
+	action, ok := s.CompiledModule.Actions.Get2(resolvedName)
+	if !ok {
+		t.Fatalf("action %q not found", resolvedName)
+	}
+	formals := action.GetFormalParams()
+	if len(formals) != 2 {
+		t.Fatalf("connect formals = %d, want 2", len(formals))
+	}
+	query, update, err := s.AGUI.concreteActionQuery(pre, action, formals)
+	if err != nil {
+		t.Fatalf("concreteActionQuery: %v", err)
+	}
+	if nonSelf, ok := concreteActionNonSelfConstraint(update); ok {
+		query = goivy.AndClausesTyped(query, goivy.FormulaToClauses(nonSelf, nil))
+	}
+	clientSort := moduleSort(t, s.CompiledModule, "client")
+	serverSort := moduleSort(t, s.CompiledModule, "server")
+	c0 := goivy.NewConst("0", clientSort)
+	s1 := goivy.NewConst("1", serverSort)
+	xIs0, err := goivy.NewEq(formals[0], c0)
+	if err != nil {
+		t.Fatalf("NewEq(x,0): %v", err)
+	}
+	yIs1, err := goivy.NewEq(formals[1], s1)
+	if err != nil {
+		t.Fatalf("NewEq(y,1): %v", err)
+	}
+	selectedActuals, err := goivy.NewAnd(xIs0, yIs1)
+	if err != nil {
+		t.Fatalf("NewAnd(selected actuals): %v", err)
+	}
+	query = goivy.AndClausesTyped(query, goivy.FormulaToClauses(selectedActuals, nil))
+	solver := goivy.NewSolver(s.CompiledModule, nil)
+	model, err := solver.GetModelClauses(query)
+	if err != nil {
+		t.Fatalf("GetModelClauses: %v", err)
+	}
+	if model == nil {
+		t.Fatalf("connect(0,1) query was unexpectedly unsatisfiable")
+	}
+	postClauses := concretePostClausesFromModel(solver, s.CompiledModule, query, model, update.Modified, formals, pre.Clauses, nil)
+	if postClauses == nil {
+		t.Fatalf("concretePostClausesFromModel returned nil")
+	}
+	post := goivy.NewState(s.CompiledModule, postClauses)
+	assertClientServerConnect01PostOnlyChangesSelectedFacts(t, s.CompiledModule, post)
+}
+
 func assertConnectPostStateGroundsSelectedServerSemaphoreFalse(t *testing.T, mod *goivy.Module, post *goivy.State, label, serverName string) {
 	t.Helper()
 	postText := post.Clauses.String()
@@ -924,6 +987,57 @@ func assertConnectPostStateGroundsSelectedServerSemaphoreFalse(t *testing.T, mod
 	}
 }
 
+func assertClientServerConnect01PostOnlyChangesSelectedFacts(t *testing.T, mod *goivy.Module, post *goivy.State) {
+	t.Helper()
+	postText := post.Clauses.String()
+	if strings.Contains(postText, "@") {
+		t.Fatalf("connect(0,1) post-state leaked symbolic model constants:\n%s", postText)
+	}
+	solver := goivy.NewSolver(mod, nil)
+	sat, err := solver.ClausesSat(post.Clauses)
+	if err != nil {
+		t.Fatalf("ClausesSat(post): %v\npost=%s", err, post.Clauses)
+	}
+	if !sat {
+		t.Fatalf("connect(0,1) post-state is contradictory:\n%s", post.Clauses)
+	}
+
+	link := moduleSymbol(t, mod, "link")
+	semaphore := moduleSymbol(t, mod, "semaphore")
+	clientSort := moduleSort(t, mod, "client")
+	serverSort := moduleSort(t, mod, "server")
+	c0 := goivy.NewConst("0", clientSort)
+	c1 := goivy.NewConst("1", clientSort)
+	s0 := goivy.NewConst("0", serverSort)
+	s1 := goivy.NewConst("1", serverSort)
+
+	assertClientServerPostEntailsGroundFact(t, mod, post, mustApplyExpr(t, link, c0, s0), true)
+	assertClientServerPostEntailsGroundFact(t, mod, post, mustApplyExpr(t, link, c1, s0), true)
+	assertClientServerPostEntailsGroundFact(t, mod, post, mustApplyExpr(t, link, c0, s1), true)
+	assertClientServerPostEntailsGroundFact(t, mod, post, mustApplyExpr(t, link, c1, s1), false)
+	assertClientServerPostEntailsGroundFact(t, mod, post, mustApplyExpr(t, semaphore, s0), false)
+	assertClientServerPostEntailsGroundFact(t, mod, post, mustApplyExpr(t, semaphore, s1), false)
+}
+
+func assertClientServerPostEntailsGroundFact(t *testing.T, mod *goivy.Module, post *goivy.State, fact goivy.Expr, want bool) {
+	t.Helper()
+	var blocker goivy.Expr
+	if want {
+		blocker = mustNotExpr(t, fact)
+	} else {
+		blocker = fact
+	}
+	query := goivy.AndClausesTyped(post.Clauses, goivy.FormulaToClauses(blocker, nil))
+	solver := goivy.NewSolver(mod, nil)
+	sat, err := solver.ClausesSat(query)
+	if err != nil {
+		t.Fatalf("ClausesSat(post with %s): %v\npost=%s", blocker, err, post.Clauses)
+	}
+	if sat {
+		t.Fatalf("post-state does not force %s == %t:\n%s", fact, want, post.Clauses)
+	}
+}
+
 func clientServerManualState(t *testing.T, mod *goivy.Module) *goivy.State {
 	t.Helper()
 	link := moduleSymbol(t, mod, "link")
@@ -939,6 +1053,23 @@ func clientServerManualState(t *testing.T, mod *goivy.Module) *goivy.State {
 	notLink10 := mustNotExpr(t, link10)
 	c0NeqC1 := mustNotExpr(t, mustEqExpr(t, c0, c1))
 	clauses := goivy.NewClauses([]goivy.Expr{c0NeqC1, link00, notLink10, sem0}, nil, nil)
+	return goivy.NewState(mod, clauses)
+}
+
+func clientServerManualConnectedState(t *testing.T, mod *goivy.Module) *goivy.State {
+	t.Helper()
+	link := moduleSymbol(t, mod, "link")
+	semaphore := moduleSymbol(t, mod, "semaphore")
+	clientSort := moduleSort(t, mod, "client")
+	serverSort := moduleSort(t, mod, "server")
+	c0 := goivy.NewConst("0", clientSort)
+	c1 := goivy.NewConst("1", clientSort)
+	s0 := goivy.NewConst("0", serverSort)
+	link00 := mustApplyExpr(t, link, c0, s0)
+	link10 := mustApplyExpr(t, link, c1, s0)
+	sem0 := mustApplyExpr(t, semaphore, s0)
+	c0NeqC1 := mustNotExpr(t, mustEqExpr(t, c0, c1))
+	clauses := goivy.NewClauses([]goivy.Expr{c0NeqC1, link00, link10, mustNotExpr(t, sem0)}, nil, nil)
 	return goivy.NewState(mod, clauses)
 }
 

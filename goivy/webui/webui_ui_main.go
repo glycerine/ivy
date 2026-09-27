@@ -1797,6 +1797,7 @@ func concretePostClausesFromModel(slv *goivy.Solver, domain *goivy.Module, query
 		}
 	}
 	known, evalTerms := concreteKnownConstantsBySort(preClauses)
+	preKnownKeys := concreteKnownConstKeySet(known)
 	for sortName, actuals := range knownActuals {
 		for _, actual := range actuals {
 			known[sortName] = appendKnownConcreteConst(known[sortName], actual)
@@ -1805,6 +1806,7 @@ func concretePostClausesFromModel(slv *goivy.Solver, domain *goivy.Module, query
 	}
 	nextBySort := nextConcreteActualIndexBySort(known)
 	var fmlas []goivy.Expr
+	var formalEqFacts []goivy.Expr
 	seenFmlas := make(map[goivy.NodeKey]bool)
 	addFact := func(f goivy.Expr) {
 		if f == nil {
@@ -1834,14 +1836,19 @@ func concretePostClausesFromModel(slv *goivy.Solver, domain *goivy.Module, query
 		eq, err := goivy.NewEq(formal, actual)
 		if err == nil {
 			addFact(eq)
+			formalEqFacts = append(formalEqFacts, eq)
 		}
+	}
+	pinnedQuery := query
+	if len(formalEqFacts) > 0 {
+		pinnedQuery = goivy.AndClausesTyped(query, goivy.NewClauses(formalEqFacts, nil, nil))
 	}
 	for _, rel := range concretePostRelationSymbols(domain, modified) {
 		evalRel := rel
 		if modifiedByName[rel.Name] {
 			evalRel = goivy.NewActionConst(rel)
 		}
-		for _, fact := range concreteRelationFactsFromModel(slv, model, rel, evalRel, known, evalTerms) {
+		for _, fact := range concreteRelationFactsFromModel(slv, model, pinnedQuery, rel, evalRel, known, evalTerms, preKnownKeys) {
 			addFact(fact)
 		}
 	}
@@ -1871,6 +1878,18 @@ func concreteKnownConstantsBySort(clauses *goivy.Clauses) (map[string][]*goivy.C
 		evalTerms[goivy.Key(c)] = c
 	}
 	return known, evalTerms
+}
+
+func concreteKnownConstKeySet(known map[string][]*goivy.Const) map[goivy.NodeKey]bool {
+	keys := make(map[goivy.NodeKey]bool)
+	for _, constants := range known {
+		for _, c := range constants {
+			if c != nil {
+				keys[goivy.Key(c)] = true
+			}
+		}
+	}
+	return keys
 }
 
 func concreteDisplayActualConst(c *goivy.Const) bool {
@@ -1926,7 +1945,7 @@ func concretePostRelationSymbols(domain *goivy.Module, modified []*goivy.Const) 
 	return out
 }
 
-func concreteRelationFactsFromModel(slv *goivy.Solver, model *goivy.ModelResult, rel, evalRel *goivy.Const, known map[string][]*goivy.Const, evalTerms map[goivy.NodeKey]goivy.Expr) []goivy.Expr {
+func concreteRelationFactsFromModel(slv *goivy.Solver, model *goivy.ModelResult, query *goivy.Clauses, rel, evalRel *goivy.Const, known map[string][]*goivy.Const, evalTerms map[goivy.NodeKey]goivy.Expr, preKnownKeys map[goivy.NodeKey]bool) []goivy.Expr {
 	if slv == nil || model == nil || model.Model == nil || rel == nil || evalRel == nil || !goivy.IsRelationalSort(rel.CSort) {
 		return nil
 	}
@@ -1952,6 +1971,13 @@ func concreteRelationFactsFromModel(slv *goivy.Solver, model *goivy.ModelResult,
 			continue
 		}
 		if value {
+			if concreteTupleHasFreshActual(tuple, preKnownKeys) && !concreteQueryForcesFormula(slv, query, evalApp) {
+				neg, err := goivy.NewNot(baseApp)
+				if err == nil {
+					facts = append(facts, neg)
+				}
+				continue
+			}
 			facts = append(facts, baseApp)
 			continue
 		}
@@ -1961,6 +1987,31 @@ func concreteRelationFactsFromModel(slv *goivy.Solver, model *goivy.ModelResult,
 		}
 	}
 	return facts
+}
+
+func concreteTupleHasFreshActual(tuple []goivy.Expr, preKnownKeys map[goivy.NodeKey]bool) bool {
+	for _, term := range tuple {
+		c, ok := term.(*goivy.Const)
+		if !ok || !concreteDisplayActualConst(c) {
+			continue
+		}
+		if !preKnownKeys[goivy.Key(c)] {
+			return true
+		}
+	}
+	return false
+}
+
+func concreteQueryForcesFormula(slv *goivy.Solver, query *goivy.Clauses, fmla goivy.Expr) bool {
+	if slv == nil || query == nil || fmla == nil {
+		return false
+	}
+	neg, err := goivy.NewNot(fmla)
+	if err != nil {
+		return false
+	}
+	sat, err := slv.ClausesSat(goivy.AndClausesTyped(query, goivy.FormulaToClauses(neg, nil)))
+	return err == nil && !sat
 }
 
 func concreteEvalTuple(tuple []goivy.Expr, evalTerms map[goivy.NodeKey]goivy.Expr) []goivy.Expr {
