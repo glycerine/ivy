@@ -728,9 +728,6 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), "edge")["content"]; got != "" {
 		t.Fatalf("base concept edge content = %q, want no label mapper on broad selector", got)
 	}
-	if got := cyStyleForTest(ConceptStyle(), "edge")["line-outline-width"]; got != "3px" {
-		t.Fatalf("base concept edge line-outline-width = %q, want 3px", got)
-	}
 	if got := cyStyleForTest(ConceptStyle(), "edge")["line-color"]; got != "#888" {
 		t.Fatalf("base concept edge line-color = %q, want #888", got)
 	}
@@ -740,8 +737,14 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), "edge")["source-arrow-color"]; got != "#888" {
 		t.Fatalf("base concept edge source-arrow-color = %q, want #888", got)
 	}
-	if got := cyStyleForTest(ConceptStyle(), "edge")["line-outline-color"]; got != "rgba(204, 255, 0, 0.5)" {
-		t.Fatalf("base concept edge line-outline-color = %q, want rgba(204, 255, 0, 0.5)", got)
+	if got := cyStyleForTest(ConceptStyle(), "edge")["underlay-color"]; got != "rgba(204, 255, 0, 0.5)" {
+		t.Fatalf("base concept edge underlay-color = %q, want rgba(204, 255, 0, 0.5)", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), "edge")["underlay-opacity"]; got != "1" {
+		t.Fatalf("base concept edge underlay-opacity = %q, want 1", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), "edge")["underlay-padding"]; got != "3px" {
+		t.Fatalf("base concept edge underlay-padding = %q, want 3px", got)
 	}
 	if got := cyStyleForTest(ConceptStyle(), "edge[label]")["content"]; got != "data(label)" {
 		t.Fatalf("concept edge[label] content = %q, want data(label)", got)
@@ -764,11 +767,25 @@ func TestConceptStyleJSON(t *testing.T) {
 	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["target-arrow-color"]; got != "rgba(0, 255, 213, 0.5)" {
 		t.Fatalf("concept selected edge target-arrow-color = %q, want rgba(0, 255, 213, 0.5)", got)
 	}
-	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["line-outline-color"]; got != "rgba(0, 255, 213, 0.5)" {
-		t.Fatalf("concept selected edge line-outline-color = %q, want rgba(0, 255, 213, 0.5)", got)
+	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["underlay-color"]; got != "rgba(0, 255, 213, 0.5)" {
+		t.Fatalf("concept selected edge underlay-color = %q, want rgba(0, 255, 213, 0.5)", got)
 	}
-	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["line-outline-width"]; got != "3px" {
-		t.Fatalf("concept selected edge line-outline-width = %q, want 3px", got)
+	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["underlay-opacity"]; got != "1" {
+		t.Fatalf("concept selected edge underlay-opacity = %q, want 1", got)
+	}
+	if got := cyStyleForTest(ConceptStyle(), conceptSelectedEdgeSelector)["underlay-padding"]; got != "3px" {
+		t.Fatalf("concept selected edge underlay-padding = %q, want 3px", got)
+	}
+}
+
+func TestConceptStyleUsesOnlyValidCytoscapeEdgeOutlineProperties(t *testing.T) {
+	for _, entry := range ConceptStyle() {
+		if got := entry.Style["line-outline-width"]; got != "" {
+			t.Fatalf("%s has invalid Cytoscape style line-outline-width=%q", entry.Selector, got)
+		}
+		if got := entry.Style["line-outline-color"]; got != "" {
+			t.Fatalf("%s has invalid Cytoscape style line-outline-color=%q", entry.Selector, got)
+		}
 	}
 }
 

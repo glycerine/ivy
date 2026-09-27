@@ -20,8 +20,9 @@ func selectedConceptEdgeStyle() CyStyleEntry {
 			"line-color":         conceptSelectedEdgeColor,
 			"target-arrow-color": conceptSelectedEdgeColor,
 			"source-arrow-color": conceptSelectedEdgeColor,
-			"line-outline-width": "3px",
-			"line-outline-color": conceptSelectedEdgeColor,
+			"underlay-color":     conceptSelectedEdgeColor,
+			"underlay-opacity":   "1",
+			"underlay-padding":   "3px",
 		},
 	}
 }
@@ -93,8 +94,9 @@ func ConceptStyle() []CyStyleEntry {
 				"target-arrow-shape": "triangle",
 				"target-arrow-fill":  "filled",
 				"source-arrow-fill":  "filled",
-				"line-outline-width": "3px",
-				"line-outline-color": conceptEdgeOutlineColor,
+				"underlay-color":     conceptEdgeOutlineColor,
+				"underlay-opacity":   "1",
+				"underlay-padding":   "3px",
 				"text-wrap":          "wrap",
 			},
 		},
