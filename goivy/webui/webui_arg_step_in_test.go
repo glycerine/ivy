@@ -715,6 +715,68 @@ func TestARGExecuteActionProducesSatisfiableNovelPostState(t *testing.T) {
 	}
 }
 
+func TestARGConnectPostStateGroundsSelectedServerSemaphoreFalse(t *testing.T) {
+	content, err := os.ReadFile(filepath.Join("..", "test_vectors", "client_server_example_new.ivy"))
+	if err != nil {
+		t.Fatalf("read client_server_example_new.ivy: %v", err)
+	}
+	s := NewSession(goivy.NewConfig(), "test-client-server-connect-post-ground-semaphore")
+	if err := s.LoadFileContent("client_server_example_new.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+
+	seenServerOne := false
+	for step := 0; step < 4; step++ {
+		beforeTransitions := len(s.AG.Transitions)
+		result, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
+			"sheet_id":    rootSheetID,
+			"action_name": "ext:connect",
+		})
+		if err != nil {
+			t.Fatalf("execute_action %d from initial state: %v", step+1, err)
+		}
+		if exhausted, _ := result["exhausted"].(bool); exhausted {
+			break
+		}
+		if len(s.AG.Transitions) != beforeTransitions+1 {
+			t.Fatalf("execute_action %d transition count = %d, want %d; result=%#v", step+1, len(s.AG.Transitions), beforeTransitions+1, result)
+		}
+		post := s.AG.Transitions[len(s.AG.Transitions)-1].Post
+		label := argPayloadTransitionLabel(t, requireArgPayload(t, result), 0, post.ID)
+		serverName := selectedServerNameFromConnectLabel(t, label)
+		if serverName == "1" {
+			seenServerOne = true
+		}
+		assertConnectPostStateGroundsSelectedServerSemaphoreFalse(t, s.CompiledModule, post, label, serverName)
+	}
+	if !seenServerOne {
+		t.Fatalf("repeated connect actions from state_0 never produced a server 1 transition; labels=%v", argPayloadTransitionLabelsFrom(t, AnalysisUIARGPayload(s.AGUI), 0))
+	}
+}
+
+func assertConnectPostStateGroundsSelectedServerSemaphoreFalse(t *testing.T, mod *goivy.Module, post *goivy.State, label, serverName string) {
+	t.Helper()
+	postText := post.Clauses.String()
+	if strings.Contains(postText, "@") {
+		t.Fatalf("connect post-state leaked symbolic model constants for %s:\n%s", label, postText)
+	}
+	semaphore := moduleSymbol(t, mod, "semaphore")
+	serverSort := moduleSort(t, mod, "server")
+	server := goivy.NewConst(serverName, serverSort)
+	semServer := mustApplyExpr(t, semaphore, server)
+	solver := goivy.NewSolver(mod, nil)
+	postAndSem := goivy.AndClausesTyped(post.Clauses, goivy.FormulaToClauses(semServer, nil))
+	sat, err := solver.ClausesSat(postAndSem)
+	if err != nil {
+		t.Fatalf("ClausesSat(post & semaphore(%s)): %v\npost=%s", serverName, err, post.Clauses)
+	}
+	if sat {
+		t.Fatalf("connect post-state does not force semaphore(%s) false for %s:\n%s", serverName, label, post.Clauses)
+	}
+}
+
 func clientServerManualState(t *testing.T, mod *goivy.Module) *goivy.State {
 	t.Helper()
 	link := moduleSymbol(t, mod, "link")
@@ -731,6 +793,16 @@ func clientServerManualState(t *testing.T, mod *goivy.Module) *goivy.State {
 	c0NeqC1 := mustNotExpr(t, mustEqExpr(t, c0, c1))
 	clauses := goivy.NewClauses([]goivy.Expr{c0NeqC1, link00, notLink10, sem0}, nil, nil)
 	return goivy.NewState(mod, clauses)
+}
+
+func selectedServerNameFromConnectLabel(t *testing.T, label string) string {
+	t.Helper()
+	re := regexp.MustCompile(`^connect\([^,]+,\s*([^:),]+):server\)$`)
+	matches := re.FindStringSubmatch(label)
+	if len(matches) != 2 {
+		t.Fatalf("could not parse selected server from connect label %q", label)
+	}
+	return matches[1]
 }
 
 func moduleSymbol(t *testing.T, mod *goivy.Module, name string) *goivy.Const {
