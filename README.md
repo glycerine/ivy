@@ -18,11 +18,11 @@ A quick aside: Note that this project has nothing to do with Rob Pike's Ivy http
 The lock-step versus golden traced-verification approach I used to port from python
 to Go is broadly useful and gives us high confidence in the port.  
 
-When ivy_check or ivy_to_cpp is run, a trace of the program's behavior
+When ivy_check is run, a trace of the program's behavior
 is printed to standard out along with a canonical serialization of the current
 data it is handling. The data is accompanied by the data's cryptographic hash for
 quick comparison. This lets us validate that the behavior and the data
-processed by the Go ports (goivy_check; ivy2cpp) matches the behavior of
+processed by the Go ports (goivy_check) matches the behavior of
 the original python. Run under "python -O" or use the env var XTRACE_OFF=1 to disable the
 tracing output on either side (or build the Go with -tags xtrace_off). 
 
