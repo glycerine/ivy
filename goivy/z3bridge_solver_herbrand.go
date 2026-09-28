@@ -288,6 +288,9 @@ func (h *HerbrandModel) Check(lit *LogicLiteral) ([]*LogicVariable, [][]*Const) 
 	var rows [][]*Const
 	h.enumerateAssignments(ranges, 0, make([]smt.Z3Expr, len(vs)),
 		func(assignment []smt.Z3Expr) {
+			if !z3AssignmentSortsMatch(zVs, assignment) {
+				return
+			}
 			// Substitute assignment into the formula
 			fact := h.tr.Ctx.Substitute(zfmla, zVs, assignment)
 			val, ok := h.model.Eval(fact, true)
@@ -313,6 +316,20 @@ func (h *HerbrandModel) enumerateAssignments(ranges [][]smt.Z3Expr, depth int, c
 		current[depth] = val
 		h.enumerateAssignments(ranges, depth+1, current, f)
 	}
+}
+
+func z3AssignmentSortsMatch(vars []smt.Z3Expr, vals []smt.Z3Expr) bool {
+	if len(vars) != len(vals) {
+		return false
+	}
+	for i := range vars {
+		varSort := vars[i].ExprSort()
+		valSort := vals[i].ExprSort()
+		if varSort.GetId() != valSort.GetId() {
+			return false
+		}
+	}
+	return true
 }
 
 // variableRange returns the Z3 universe for a variable's sort.
