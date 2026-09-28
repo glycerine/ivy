@@ -22,6 +22,8 @@ type Config struct {
 	TestIters       string
 	TestRuns        string
 	Build           bool
+	Debug           int
+	DebugAssert     bool
 	EmitMain        bool
 	Trace           bool
 	Stdafx          bool

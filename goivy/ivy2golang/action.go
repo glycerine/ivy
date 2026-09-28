@@ -2,6 +2,8 @@ package ivy2golang
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -41,15 +43,15 @@ func (g *Generator) emitActionBody(w *goWriter, act goivy.Action) {
 	case *goivy.LogicSetAction:
 		g.emitSet(w, a)
 	case *goivy.LogicAssertAction:
-		g.emitAssertLike(w, "ivyAssert", a.Formula, linenoStr(a.GetLineno()))
+		g.emitAssertLike(w, "ivyAssert", a.Formula, linenoStr(a.GetLineno()), "assert", a.GetLineno(), a.Annotation)
 	case *goivy.LogicRequiresAction:
-		g.emitAssertLike(w, "ivyAssert", a.Formula, linenoStr(a.GetLineno()))
+		g.emitAssertLike(w, "ivyAssert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno(), "")
 	case *goivy.LogicEnsuresAction:
-		g.emitAssertLike(w, "ivyAssert", a.Formula, linenoStr(a.GetLineno()))
+		g.emitAssertLike(w, "ivyAssert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno(), "")
 	case *goivy.LogicSubgoalAction:
-		g.emitAssertLike(w, "ivyAssert", a.Formula, linenoStr(a.GetLineno()))
+		g.emitAssertLike(w, "ivyAssert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno(), "")
 	case *goivy.LogicAssumeAction:
-		g.emitAssume(w, a.Formula, linenoStr(a.GetLineno()))
+		g.emitAssume(w, a.Formula, linenoStr(a.GetLineno()), a.Kind, a.GetLineno(), a.Annotation)
 	case *goivy.LogicIfAction:
 		g.emitIf(w, a)
 	case *goivy.LogicWhileAction:
@@ -566,7 +568,14 @@ func setTargetAndValue(lit goivy.Expr) (goivy.Expr, string) {
 	}
 }
 
-func (g *Generator) emitAssertLike(w *goWriter, fn string, f goivy.Expr, label string) {
+func (g *Generator) emitAssertLike(w *goWriter, fn string, f goivy.Expr, label, debugKind string, loc goivy.Location, annotation string) {
+	if strings.TrimSpace(label) == "" {
+		label = fn
+	}
+	if annotation != "" && debugKind == "assert" {
+		g.emitAssertDebugPrint(w, debugKind, loc, f, annotation)
+		return
+	}
 	expr, err := g.emitExpr(closeFormulaForGo(f))
 	if err != nil {
 		kind := "unsupported assertion expression"
@@ -576,21 +585,24 @@ func (g *Generator) emitAssertLike(w *goWriter, fn string, f goivy.Expr, label s
 		g.softUnsupported(w, kind, err, label)
 		return
 	}
-	if strings.TrimSpace(label) == "" {
-		label = fn
-	}
+	g.emitAssertDebugPrint(w, debugKind, loc, f, annotation)
 	w.linef("%s(%s, %q)", fn, expr, label)
 }
 
-func (g *Generator) emitAssume(w *goWriter, f goivy.Expr, label string) {
+func (g *Generator) emitAssume(w *goWriter, f goivy.Expr, label, debugKind string, loc goivy.Location, annotation string) {
+	if strings.TrimSpace(label) == "" {
+		label = "assume"
+	}
+	if annotation != "" && debugKind == "assert" {
+		g.emitAssertDebugPrint(w, debugKind, loc, f, annotation)
+		return
+	}
 	expr, err := g.emitExpr(closeFormulaForGo(f))
 	if err != nil {
 		g.softUnsupported(w, "unsupported assumption expression", err, label)
 		return
 	}
-	if strings.TrimSpace(label) == "" {
-		label = "assume"
-	}
+	g.emitAssertDebugPrint(w, debugKind, loc, f, annotation)
 	w.open("if !ivyAssume(" + expr + ", " + strconv.Quote(label) + ") {")
 	if len(g.currentReturns) > 0 {
 		names := make([]string, len(g.currentReturns))
@@ -602,6 +614,166 @@ func (g *Generator) emitAssume(w *goWriter, f goivy.Expr, label string) {
 		w.line("return")
 	}
 	w.close("")
+}
+
+func (g *Generator) emitAssertDebugPrint(w *goWriter, kind string, loc goivy.Location, f goivy.Expr, annotation string) {
+	if g == nil || !g.Config.DebugAssert || kind != "assert" {
+		return
+	}
+	text := "debug: "
+	if where := debugAssertLocation(loc); where != "" {
+		text += where + " "
+	}
+	if context := debugAssertEnclosingContext(loc); context != "" {
+		text += "[" + context + "] "
+	}
+	text += debugAssertText(kind, loc, f, annotation)
+	w.linef("fmt.Fprintf(__ivy_out, %q)", text+"\n")
+}
+
+func debugAssertLocation(loc goivy.Location) string {
+	for loc.Reference != nil {
+		loc = *loc.Reference
+	}
+	file := filepath.Base(denormalizeIvyExamplesLabel(loc.Filename))
+	if file == "." || file == string(filepath.Separator) {
+		file = ""
+	}
+	switch {
+	case file != "" && loc.Line > 0:
+		return fmt.Sprintf("%s:%d", file, loc.Line)
+	case file != "":
+		return file
+	case loc.Line > 0:
+		return fmt.Sprintf("%d", loc.Line)
+	default:
+		return ""
+	}
+}
+
+func debugAssertEnclosingContext(loc goivy.Location) string {
+	for loc.Reference != nil {
+		loc = *loc.Reference
+	}
+	if loc.Filename == "" || loc.Line <= 1 {
+		return ""
+	}
+	data, err := os.ReadFile(denormalizeIvyExamplesLabel(loc.Filename))
+	if err != nil {
+		return ""
+	}
+	lines := strings.Split(string(data), "\n")
+	start := loc.Line - 2
+	if start >= len(lines) {
+		start = len(lines) - 1
+	}
+	for i := start; i >= 0; i-- {
+		if context, ok := debugAssertContextFromLine(lines[i]); ok {
+			return context
+		}
+	}
+	return ""
+}
+
+func debugAssertContextFromLine(line string) (string, bool) {
+	line = strings.TrimSpace(line)
+	if idx := strings.Index(line, "#"); idx >= 0 {
+		line = strings.TrimSpace(line[:idx])
+	}
+	if idx := strings.Index(line, "{"); idx >= 0 {
+		line = strings.TrimSpace(line[:idx])
+	}
+	line = strings.TrimSpace(strings.TrimSuffix(line, ";"))
+	if line == "" {
+		return "", false
+	}
+	fields := strings.Fields(line)
+	if len(fields) == 0 {
+		return "", false
+	}
+	switch fields[0] {
+	case "action", "method":
+		if len(fields) < 2 {
+			return "", false
+		}
+		return fields[0] + " " + debugAssertContextName(fields[1]), true
+	case "before", "after":
+		if len(fields) < 2 {
+			return "", false
+		}
+		return fields[0] + " " + debugAssertContextName(fields[1]), true
+	case "around":
+		if len(fields) >= 3 && (fields[1] == "before" || fields[1] == "after") {
+			return fields[0] + " " + fields[1] + " " + debugAssertContextName(fields[2]), true
+		}
+		if len(fields) >= 2 {
+			return fields[0] + " " + debugAssertContextName(fields[1]), true
+		}
+	}
+	return "", false
+}
+
+func debugAssertContextName(name string) string {
+	name = strings.TrimSpace(name)
+	for _, sep := range []string{"(", "="} {
+		if idx := strings.Index(name, sep); idx >= 0 {
+			name = strings.TrimSpace(name[:idx])
+		}
+	}
+	return strings.TrimRight(name, ",;")
+}
+
+func debugAssertText(kind string, loc goivy.Location, f goivy.Expr, annotation string) string {
+	if src := debugAssertSourceLine(kind, loc); src != "" {
+		return src
+	}
+	if annotation != "" {
+		return kind + " " + annotation
+	}
+	return kind + " " + debugAssertFormulaText(f)
+}
+
+func debugAssertSourceLine(kind string, loc goivy.Location) string {
+	for loc.Reference != nil {
+		loc = *loc.Reference
+	}
+	if loc.Filename == "" || loc.Line <= 0 {
+		return ""
+	}
+	data, err := os.ReadFile(denormalizeIvyExamplesLabel(loc.Filename))
+	if err != nil {
+		return ""
+	}
+	lines := strings.Split(string(data), "\n")
+	if loc.Line > len(lines) {
+		return ""
+	}
+	line := strings.TrimSpace(lines[loc.Line-1])
+	if idx := strings.Index(line, "#"); idx >= 0 {
+		line = strings.TrimSpace(line[:idx])
+	}
+	line = strings.TrimSpace(strings.TrimSuffix(line, ";"))
+	if line == kind || strings.HasPrefix(line, kind+" ") {
+		return line
+	}
+	return ""
+}
+
+func debugAssertFormulaText(f goivy.Expr) string {
+	if f == nil {
+		return ""
+	}
+	text := goivy.PrettyFmla(f)
+	replacer := strings.NewReplacer(
+		"__new_fml:", "new_",
+		"__fml:", "",
+		"fml:", "",
+		"__prm:", "",
+		"prm:", "",
+		"loc:", "",
+		"ret:", "",
+	)
+	return replacer.Replace(text)
 }
 
 func closeFormulaForGo(f goivy.Expr) goivy.Expr {

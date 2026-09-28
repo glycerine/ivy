@@ -39553,6 +39553,7 @@ func TestMergeParamsAcceptsIvy2CppDriverSurfaceAndDefaultsToGen(t *testing.T) {
 		"trace":      "true",
 		"stdafx":     "yes",
 		"build":      "1",
+		"debug":      "1",
 		"isolate":    "iso",
 		"test_iters": "7",
 		"test_runs":  "3",
@@ -39573,8 +39574,93 @@ func TestMergeParamsAcceptsIvy2CppDriverSurfaceAndDefaultsToGen(t *testing.T) {
 	if !cfg.Trace || !cfg.Stdafx || !cfg.Build {
 		t.Fatalf("bool params not merged: %+v", cfg)
 	}
+	if cfg.Debug != 1 {
+		t.Fatalf("debug param = %d, want 1: %+v", cfg.Debug, cfg)
+	}
 	if ivyParams["isolate"] != "iso" {
 		t.Fatalf("isolate param = %q, want iso", ivyParams["isolate"])
+	}
+}
+
+func TestTargetReplDebugAssertParamEmitsAssertPrint(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "debug_assert.ivy")
+	src := strings.Join([]string{
+		"#lang ivy1.7",
+		"individual ok : bool",
+		"action step = {",
+		"    assert ok",
+		"}",
+		"export step",
+		"",
+	}, "\n")
+	if err := os.WriteFile(spec, []byte(src), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	batch, err := CompileAndGenerateAll(spec, map[string]string{
+		"target":    "repl",
+		"classname": "DbgAssert",
+		"debug":     "assert",
+	}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	if len(batch.Outputs) != 1 {
+		t.Fatalf("expected one output, got %d", len(batch.Outputs))
+	}
+	body := bodyAfterMarker(batch.Outputs[0].Source, "func (ivy *DbgAssert) ext__step(")
+	if body == "" {
+		t.Fatalf("missing ext step body:\n%s", batch.Outputs[0].Source)
+	}
+	debugLine := `fmt.Fprintf(__ivy_out, "debug: debug_assert.ivy:4 [action step] assert ok\n")`
+	if !strings.Contains(body, debugLine) {
+		t.Fatalf("debug=assert output missing %q:\n%s", debugLine, body)
+	}
+	checkAt := strings.Index(body, "ivyAssume(")
+	if checkAt < 0 {
+		checkAt = strings.Index(body, "ivyAssert(")
+	}
+	printAt := strings.Index(body, debugLine)
+	if checkAt >= 0 && printAt > checkAt {
+		t.Fatalf("debug assertion print should precede runtime check:\n%s", body)
+	}
+}
+
+func TestTargetReplDebugAssertAllowsLiteralStringAnnotation(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "assert_annotation.ivy")
+	src := strings.Join([]string{
+		"#lang ivy1.7",
+		"action step = {",
+		`    assert "at the end of action step";`,
+		"}",
+		"export step",
+		"",
+	}, "\n")
+	if err := os.WriteFile(spec, []byte(src), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	batch, err := CompileAndGenerateAll(spec, map[string]string{
+		"target":    "repl",
+		"classname": "DbgAssertAnnotation",
+		"debug":     "assert",
+	}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	if len(batch.Outputs) != 1 {
+		t.Fatalf("expected one output, got %d", len(batch.Outputs))
+	}
+	body := bodyAfterMarker(batch.Outputs[0].Source, "func (ivy *DbgAssertAnnotation) ext__step(")
+	if body == "" {
+		t.Fatalf("missing ext step body:\n%s", batch.Outputs[0].Source)
+	}
+	debugLine := `fmt.Fprintf(__ivy_out, "debug: assert_annotation.ivy:3 [action step] assert \"at the end of action step\"\n")`
+	if !strings.Contains(body, debugLine) {
+		t.Fatalf("debug=assert output missing literal-string annotation %q:\n%s", debugLine, body)
+	}
+	if strings.Contains(body, "ivyAssert(") || strings.Contains(body, "ivyAssume(") {
+		t.Fatalf("literal-string assert annotation should not emit a boolean runtime check:\n%s", body)
 	}
 }
 
