@@ -281,7 +281,7 @@ func (g *Generator) emitAssertDebugPrint(w *cppWriter, kind string, loc goivy.Lo
 		text += where + " "
 	}
 	text += debugAssertText(kind, loc, f)
-	w.linef("std::cout << %s << std::endl;", strconv.Quote(text))
+	w.linef("std::cout << %s << \"\\n\";", strconv.Quote(text))
 }
 
 func debugAssertLocation(loc goivy.Location) string {

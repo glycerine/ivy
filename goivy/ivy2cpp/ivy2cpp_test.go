@@ -898,7 +898,7 @@ action set(c:color) = {
 }
 export set
 `,
-			want: []string{`if (action == "set")`, "small_repl_repl ivy;"},
+			want: []string{`if (!__ivy_handled && action == "set")`, "small_repl_repl ivy;"},
 		},
 	}
 	for _, tc := range fixtures {
@@ -1235,7 +1235,7 @@ func TestTargetReplDebugAssertParamEmitsAssertPrint(t *testing.T) {
 	if body == "" {
 		t.Fatalf("missing ext step body:\n%s", batch.Outputs[0].Impl)
 	}
-	debugLine := `std::cout << "debug: debug_assert.ivy:4 assert ok" << std::endl;`
+	debugLine := `std::cout << "debug: debug_assert.ivy:4 assert ok" << "\n";`
 	if !strings.Contains(body, debugLine) {
 		t.Fatalf("debug=assert output missing %q:\n%s", debugLine, body)
 	}
@@ -4719,7 +4719,7 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, `if (action == "step")`) {
+	if !strings.Contains(out.Impl, `if (!__ivy_handled && action == "step")`) {
 		t.Fatalf("missing repl dispatch:\n%s", out.Impl)
 	}
 }
@@ -4760,7 +4760,7 @@ func TestReplIgnoresInternalAction(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, `if (action == "step")`) {
+	if !strings.Contains(out.Impl, `if (!__ivy_handled && action == "step")`) {
 		t.Fatalf("missing exported dispatch:\n%s", out.Impl)
 	}
 	if strings.Contains(out.Impl, `if (action == "internal")`) {
@@ -4782,7 +4782,7 @@ export set
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		`if (action == "set")`,
+		`if (!__ivy_handled && action == "set")`,
 		`check_arity(args, 1, action);`,
 		`ivy.set(_arg<runner::color>(args, 0, 2));`,
 	} {
@@ -4920,15 +4920,48 @@ export set
 		"virtual void process(const std::string &cmd) {",
 		"parse_command(cmd, action, args);",
 		"ivy.__lock();",
-		`if (action == "set") {`,
+		"bool __ivy_handled = false;",
+		`if (!__ivy_handled && action == "set") {`,
+		"__ivy_handled = true;",
 		"check_arity(args, 1, action);",
 		`ivy.set(_arg<runner::color>(args, 0, 2));`,
 		"ivy.__unlock();",
+		"if (!__ivy_handled) {",
 		`std::cerr << "undefined action: " << action << std::endl;`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in cmd_reader impl:\n%s", want, out.Impl)
 		}
+	}
+}
+
+func TestReplCmdReaderPromptsAfterSuccessfulAction(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual ok : bool
+action step = {
+    assert ok
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner", DebugAssert: true})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	body := bodyAfterMarker(out.Impl, "virtual void process(const std::string &cmd)")
+	if body == "" {
+		t.Fatalf("missing cmd_reader process body:\n%s", out.Impl)
+	}
+	if strings.Contains(body, "return;") {
+		t.Fatalf("cmd_reader process must fall through to the common prompt tail after successful actions:\n%s", body)
+	}
+	promptTail := `__ivy_out << "> ";`
+	promptAt := strings.LastIndex(body, promptTail)
+	if promptAt < 0 {
+		t.Fatalf("cmd_reader process missing prompt tail %q:\n%s", promptTail, body)
+	}
+	unlockAt := strings.LastIndex(body[:promptAt], "ivy.__unlock();")
+	if unlockAt < 0 {
+		t.Fatalf("cmd_reader prompt should follow common unlock after action dispatch:\n%s", body)
 	}
 }
 

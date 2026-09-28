@@ -313,6 +313,9 @@ func (g *Generator) emitCmdReader(w *cppWriter) {
 	w.open("try {")
 	w.line("parse_command(cmd, action, args);")
 	w.line("ivy.__lock();")
+	if g.Config.Target != "test" {
+		w.line("bool __ivy_handled = false;")
+	}
 	if g.Config.Target == "test" {
 		g.emitPythonTestCmdReaderDispatchChain(w)
 		w.open("{")
@@ -320,7 +323,9 @@ func (g *Generator) emitCmdReader(w *cppWriter) {
 		w.close("")
 	} else {
 		g.emitCmdReaderDispatchChain(w)
+		w.open("if (!__ivy_handled) {")
 		w.line(`std::cerr << "undefined action: " << action << std::endl;`)
+		w.close("")
 	}
 	w.line("ivy.__unlock();")
 	w.close(" catch (syntax_error &err) {")
@@ -458,12 +463,11 @@ func (g *Generator) emitCmdReaderDispatchChain(w *cppWriter) {
 		username := strings.TrimPrefix(name, "ext:")
 		fn, _ := funName(name)
 		act, ok := g.Mod.Actions.Get2(name)
-		w.open(fmt.Sprintf(`if (action == "%s") {`, username))
+		w.open(fmt.Sprintf(`if (!__ivy_handled && action == "%s") {`, username))
+		w.line("__ivy_handled = true;")
 		if !ok {
 			w.linef("check_arity(args, 0, action);")
 			w.linef("ivy.%s();", fn)
-			w.line("ivy.__unlock();")
-			w.line("return;")
 			w.close("")
 			continue
 		}
@@ -502,8 +506,6 @@ func (g *Generator) emitCmdReaderDispatchChain(w *cppWriter) {
 		if g.Config.Trace {
 			w.linef(`__ivy_out%s << "}" << std::endl;`, g.numberFormat())
 		}
-		w.line("ivy.__unlock();")
-		w.line("return;")
 		w.close("")
 	}
 }
