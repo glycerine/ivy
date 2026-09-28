@@ -75,6 +75,34 @@ func TestAssertActionStringUsesLabeledFormula(t *testing.T) {
 	}
 }
 
+func TestAssertAndAssumeActionCanonExcludesDebugAnnotation(t *testing.T) {
+	fmla := actionsMkConst("q")
+	for _, tc := range []struct {
+		name string
+		act  interface{ Canon() Canonical }
+	}{
+		{
+			name: "assert",
+			act: &LogicAssertAction{
+				Formula:    fmla,
+				Annotation: `"debug annotation"`,
+			},
+		},
+		{
+			name: "assume",
+			act: &LogicAssumeAction{
+				Formula:    fmla,
+				Annotation: `"debug annotation"`,
+			},
+		},
+	} {
+		got := string(tc.act.Canon())
+		if strings.Contains(got, "annotation") || strings.Contains(got, "debug annotation") {
+			t.Fatalf("%s Canon() leaked Go-only assert debug annotation: %s", tc.name, got)
+		}
+	}
+}
+
 func TestAssertLikeActionSexpIncludesProofWhenLabeledFormulaPresent(t *testing.T) {
 	cfg := NewAstConfig()
 	fmla := actionsMkConst("q")
