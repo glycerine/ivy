@@ -288,11 +288,10 @@ func (h *HerbrandModel) Check(lit *LogicLiteral) ([]*LogicVariable, [][]*Const) 
 	var rows [][]*Const
 	h.enumerateAssignments(ranges, 0, make([]smt.Z3Expr, len(vs)),
 		func(assignment []smt.Z3Expr) {
-			if !z3AssignmentSortsMatch(zVs, assignment) {
+			fact, ok := h.substituteAssignment(zfmla, zVs, assignment)
+			if !ok {
 				return
 			}
-			// Substitute assignment into the formula
-			fact := h.tr.Ctx.Substitute(zfmla, zVs, assignment)
 			val, ok := h.model.Eval(fact, true)
 			if ok && val.String() == "true" {
 				row := make([]*Const, len(vs))
@@ -316,6 +315,23 @@ func (h *HerbrandModel) enumerateAssignments(ranges [][]smt.Z3Expr, depth int, c
 		current[depth] = val
 		h.enumerateAssignments(ranges, depth+1, current, f)
 	}
+}
+
+func (h *HerbrandModel) substituteAssignment(zfmla smt.Z3Expr, vars []smt.Z3Expr, vals []smt.Z3Expr) (fact smt.Z3Expr, ok bool) {
+	if !z3AssignmentSortsMatch(vars, vals) {
+		return smt.Z3Expr{}, false
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			if _, isZ3Err := r.(*smt.ErrMsg); isZ3Err {
+				fact = smt.Z3Expr{}
+				ok = false
+				return
+			}
+			panic(r)
+		}
+	}()
+	return h.tr.Ctx.Substitute(zfmla, vars, vals), true
 }
 
 func z3AssignmentSortsMatch(vars []smt.Z3Expr, vals []smt.Z3Expr) bool {

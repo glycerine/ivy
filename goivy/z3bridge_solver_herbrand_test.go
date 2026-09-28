@@ -38,3 +38,39 @@ func TestHerbrandCheckSkipsWrongSortAssignments(t *testing.T) {
 		t.Fatalf("rows = %v, want no rows for skipped wrong-sort assignment", rows)
 	}
 }
+
+func TestHerbrandCheckSkipsForeignContextAssignments(t *testing.T) {
+	sortA := &UninterpretedSort{Name: "A"}
+	sig := NewSig()
+	sig.Sorts.Set("A", sortA)
+	slv := NewSolverFromSig(sig, nil)
+	x, _ := NewVariable("X", sortA)
+	p := NewConst("p", LogicRelationSort([]Sort{sortA}))
+
+	foreignSortA := &UninterpretedSort{Name: "A"}
+	foreignSig := NewSig()
+	foreignSig.Sorts.Set("A", foreignSortA)
+	foreignSlv := NewSolverFromSig(foreignSig, nil)
+	zForeign, err := foreignSlv.Translator().Translate(NewConst("a0", foreignSortA))
+	if err != nil {
+		t.Fatalf("translate foreign-context constant: %v", err)
+	}
+
+	h := &HerbrandModel{
+		constants: map[string][]smt.Z3Expr{
+			"A": []smt.Z3Expr{zForeign},
+		},
+		tr: slv.Translator(),
+	}
+	lit := NewLiteral(1, MustApply(p, x))
+
+	defer func() {
+		if r := recover(); r != nil {
+			t.Fatalf("HerbrandModel.Check panicked on foreign-context assignment: %v", r)
+		}
+	}()
+	_, rows := h.Check(lit)
+	if len(rows) != 0 {
+		t.Fatalf("rows = %v, want no rows for skipped foreign-context assignment", rows)
+	}
+}
