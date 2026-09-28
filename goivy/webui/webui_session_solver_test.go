@@ -351,6 +351,32 @@ func TestSolverSaveAbstraction(t *testing.T) {
 	}
 }
 
+func TestSolverSaveAbstractionExportsPredicateRefinements(t *testing.T) {
+	s := loadTestSession(t)
+	drainEvents(s)
+	if _, err := s.ExecuteAction("refine_with_interpolant", map[string]interface{}{
+		"sheet_id":    "sheet-1",
+		"interpolant": "link(X,Y) -> ~semaphore(Y)",
+	}); err != nil {
+		t.Fatalf("refine_with_interpolant: %v", err)
+	}
+
+	result, err := s.ExecuteAction("save_abstraction", nil)
+	if err != nil {
+		t.Fatalf("save_abstraction error: %v", err)
+	}
+	content, ok := result["content"].(string)
+	if !ok || content == "" {
+		t.Fatalf("result should contain non-empty 'content': %#v", result)
+	}
+	if !strings.Contains(content, "# abstraction predicates") {
+		t.Fatalf("saved abstraction missing predicate refinement section:\n%s", content)
+	}
+	if !strings.Contains(content, "link(X,Y)") || !strings.Contains(content, "semaphore(Y)") {
+		t.Fatalf("saved abstraction missing refined predicate formula:\n%s", content)
+	}
+}
+
 func TestSolverSaveAbstractionNoModule(t *testing.T) {
 	cfg := goivy.NewConfig()
 	s := NewSession(cfg, "test-no-mod")

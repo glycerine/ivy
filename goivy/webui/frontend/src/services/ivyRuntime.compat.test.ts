@@ -1927,6 +1927,7 @@ describe('ivyRuntime compatibility behavior', () => {
   });
 
   it('submits accepted PDR interpolants through a Refine dialog', async () => {
+    installSheetDom();
     const runtime = makeRuntime();
     runtime.activeSheetId = 'sheet-7';
     runtime.api.executeAction = vi.fn(async (action) => {
@@ -1944,7 +1945,10 @@ describe('ivyRuntime compatibility behavior', () => {
       }
       return {
         sheet_id: 'sheet-7',
-        message: 'Refinement applied.',
+        message: 'Predicate refinement applied.',
+        refinement_kind: 'predicate',
+        interpolant: 'p(X)',
+        details_text: 'PDR abstraction predicate added:\np(X)',
         concept: { sheet_id: 'sheet-7', graph: {}, elements: ['refined'] },
       };
     });
@@ -1970,6 +1974,10 @@ describe('ivyRuntime compatibility behavior', () => {
       graph: {},
       elements: ['refined'],
     });
+    const details = document.getElementById('info-content');
+    expect(details?.textContent).toContain('Predicate refinement applied');
+    expect(details?.textContent).toContain('p(X)');
+    expect(details?.getAttribute('data-ivy-details-kind')).toBe('selection');
   });
 
   it('submits edited PDR interpolants as text instead of reusing the original id', async () => {

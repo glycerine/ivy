@@ -5843,6 +5843,12 @@ class IvyRuntime {
                             refinementResult.concept,
                         );
                     }
+                    if (refinementResult && (refinementResult.details_text || refinementResult.interpolant)) {
+                        appendDetailsTextViaService(
+                            refinementResult.message || 'Refinement applied.',
+                            refinementResult.details_text || refinementResult.interpolant,
+                        );
+                    }
                 }
             } else if (result && result.interpolant && typeof this.showTextDialog === 'function') {
                 this.showTextDialog('ivyweb', result.message || 'The pre-state is vacuous.', result.interpolant);
