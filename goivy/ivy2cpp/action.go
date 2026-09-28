@@ -280,6 +280,9 @@ func (g *Generator) emitAssertDebugPrint(w *cppWriter, kind string, loc goivy.Lo
 	if where := debugAssertLocation(loc); where != "" {
 		text += where + " "
 	}
+	if context := debugAssertEnclosingContext(loc); context != "" {
+		text += "[" + context + "] "
+	}
 	text += debugAssertText(kind, loc, f)
 	w.linef("std::cout << %s << \"\\n\";", strconv.Quote(text))
 }
@@ -302,6 +305,78 @@ func debugAssertLocation(loc goivy.Location) string {
 	default:
 		return ""
 	}
+}
+
+func debugAssertEnclosingContext(loc goivy.Location) string {
+	for loc.Reference != nil {
+		loc = *loc.Reference
+	}
+	if loc.Filename == "" || loc.Line <= 1 {
+		return ""
+	}
+	data, err := os.ReadFile(denormalizeIvyCPPLabel(loc.Filename))
+	if err != nil {
+		return ""
+	}
+	lines := strings.Split(string(data), "\n")
+	start := loc.Line - 2
+	if start >= len(lines) {
+		start = len(lines) - 1
+	}
+	for i := start; i >= 0; i-- {
+		if context, ok := debugAssertContextFromLine(lines[i]); ok {
+			return context
+		}
+	}
+	return ""
+}
+
+func debugAssertContextFromLine(line string) (string, bool) {
+	line = strings.TrimSpace(line)
+	if idx := strings.Index(line, "#"); idx >= 0 {
+		line = strings.TrimSpace(line[:idx])
+	}
+	if idx := strings.Index(line, "{"); idx >= 0 {
+		line = strings.TrimSpace(line[:idx])
+	}
+	line = strings.TrimSpace(strings.TrimSuffix(line, ";"))
+	if line == "" {
+		return "", false
+	}
+	fields := strings.Fields(line)
+	if len(fields) == 0 {
+		return "", false
+	}
+	switch fields[0] {
+	case "action", "method":
+		if len(fields) < 2 {
+			return "", false
+		}
+		return fields[0] + " " + debugAssertContextName(fields[1]), true
+	case "before", "after":
+		if len(fields) < 2 {
+			return "", false
+		}
+		return fields[0] + " " + debugAssertContextName(fields[1]), true
+	case "around":
+		if len(fields) >= 3 && (fields[1] == "before" || fields[1] == "after") {
+			return fields[0] + " " + fields[1] + " " + debugAssertContextName(fields[2]), true
+		}
+		if len(fields) >= 2 {
+			return fields[0] + " " + debugAssertContextName(fields[1]), true
+		}
+	}
+	return "", false
+}
+
+func debugAssertContextName(name string) string {
+	name = strings.TrimSpace(name)
+	for _, sep := range []string{"(", "="} {
+		if idx := strings.Index(name, sep); idx >= 0 {
+			name = strings.TrimSpace(name[:idx])
+		}
+	}
+	return strings.TrimRight(name, ",;")
 }
 
 func debugAssertText(kind string, loc goivy.Location, f goivy.Expr) string {

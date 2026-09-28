@@ -1235,7 +1235,7 @@ func TestTargetReplDebugAssertParamEmitsAssertPrint(t *testing.T) {
 	if body == "" {
 		t.Fatalf("missing ext step body:\n%s", batch.Outputs[0].Impl)
 	}
-	debugLine := `std::cout << "debug: debug_assert.ivy:4 assert ok" << "\n";`
+	debugLine := `std::cout << "debug: debug_assert.ivy:4 [action step] assert ok" << "\n";`
 	if !strings.Contains(body, debugLine) {
 		t.Fatalf("debug=assert output missing %q:\n%s", debugLine, body)
 	}
@@ -1246,6 +1246,51 @@ func TestTargetReplDebugAssertParamEmitsAssertPrint(t *testing.T) {
 	printAt := strings.Index(body, debugLine)
 	if checkAt >= 0 && printAt > checkAt {
 		t.Fatalf("debug assertion print should precede runtime check:\n%s", body)
+	}
+}
+
+func TestTargetReplDebugAssertPrintIncludesNearestMixin(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "debug_assert_before.ivy")
+	src := strings.Join([]string{
+		"#lang ivy1.7",
+		"type money",
+		"object account = {",
+		"    individual balance : money",
+		"    action withdraw(x:money) = {",
+		"        balance := balance - x",
+		"    }",
+		"    object spec = {",
+		"        before withdraw {",
+		"            assert x <= balance;",
+		"        }",
+		"    }",
+		"}",
+		"export account.withdraw",
+		"interpret money -> bv[16]",
+		"",
+	}, "\n")
+	if err := os.WriteFile(spec, []byte(src), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	batch, err := CompileAndGenerateAll(spec, map[string]string{
+		"target":    "repl",
+		"classname": "DbgAssertBefore",
+		"debug":     "assert",
+	}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	if len(batch.Outputs) != 1 {
+		t.Fatalf("expected one output, got %d", len(batch.Outputs))
+	}
+	body := bodyAfterMarker(batch.Outputs[0].Impl, "DbgAssertBefore::ext__account__withdraw(")
+	if body == "" {
+		t.Fatalf("missing ext withdraw body:\n%s", batch.Outputs[0].Impl)
+	}
+	debugLine := `std::cout << "debug: debug_assert_before.ivy:10 [before withdraw] assert x <= balance" << "\n";`
+	if !strings.Contains(body, debugLine) {
+		t.Fatalf("debug=assert output missing nearest mixin label %q:\n%s", debugLine, body)
 	}
 }
 
