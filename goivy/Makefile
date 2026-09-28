@@ -369,6 +369,9 @@ ivy2cpp-check:
 	cp ../ivy-lang-examples/doc/examples/pingpong.ivy tmp-ivy2cpp-check/
 	cd tmp-ivy2cpp-check && XTRACE_OFF=1 ivy2cpp isolate=left_player target=test build=true pingpong.ivy
 
+ivy2cpp-test:
+	cd ivy2cpp && make
+
 ivy2go-check:
 	go install -tags=xtrace_off ./cmd/ivy2go
 	rm -rf tmp-ivy2go-check
