@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { createBrowserWasmEngineWorker } from './browserWasmEngine.worker.js';
 
 vi.mock('./smtZ3Imports.js', () => ({
   createSmtZ3Imports: vi.fn(() => ({})),
@@ -47,9 +48,10 @@ function installWorkerHarness() {
       }
     },
   };
-  vi.stubGlobal('self', scope);
+  const worker = createBrowserWasmEngineWorker({ scope });
   return {
     messages,
+    dispose: worker.dispose,
     send(request) {
       const onmessage = scope.onmessage;
       if (typeof onmessage !== 'function') {
@@ -63,7 +65,7 @@ function installWorkerHarness() {
   };
 }
 
-function installFakeGoRuntime() {
+function installStaleDispatcherGoRuntime() {
   (globalThis as any).__fakeGoRunCount = 0;
   vi.stubGlobal('Go', class FakeGo {
     argv = [];
@@ -80,7 +82,7 @@ function installFakeGoRuntime() {
         (globalThis as any).goivyWebEngineDispatch = () => {
           throw new Error('Go program has already exited');
         };
-        return Promise.resolve();
+        return new Promise(() => {});
       }
       (globalThis as any).goivyWebEngineDispatch = (raw) => {
         const request = JSON.parse(raw);
@@ -179,15 +181,6 @@ function stubWasmRuntimeAssets() {
   });
 }
 
-async function waitForMessage(messages, predicate) {
-  for (let i = 0; i < 50; i += 1) {
-    const found = messages.find(predicate);
-    if (found) return found;
-    await Promise.resolve();
-  }
-  throw new Error('timed out waiting for worker message');
-}
-
 describe('browserWasmEngine worker runtime lifecycle', () => {
   beforeEach(() => {
     vi.useRealTimers();
@@ -195,17 +188,18 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    delete (globalThis as any).goivyWebEngineDispatch;
+    delete (globalThis as any).goivyWebEnginePostEvent;
+    delete (globalThis as any).__fakeGoRunCount;
+    delete (globalThis as any).fs;
     vi.unstubAllGlobals();
     vi.resetModules();
   });
 
   it('restarts the Go runtime instead of reusing a dispatcher after wasm_exec reports exit', async () => {
-    installFakeGoRuntime();
+    installStaleDispatcherGoRuntime();
     const harness = installWorkerHarness();
     stubWasmRuntimeAssets();
-
-    await import('./browserWasmEngine.worker.js');
-    (globalThis as any).self = undefined;
 
     await expect(harness.send({
       type: 'init',
@@ -213,9 +207,6 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
       assetBaseUrl: '/static/wasm/',
       includeRoot: '/include',
     })).resolves.toEqual({ ok: true });
-    const crashEvent = await waitForMessage(harness.messages, (message) => (
-      message.type === 'event' && message.event?.type === 'browser_wasm_runtime_crash'
-    ));
 
     await expect(harness.send({
       type: 'new-session',
@@ -223,7 +214,11 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
       projectId: 'webui',
     })).resolves.toEqual({ id: 'browser-s2' });
     expect((globalThis as any).__fakeGoRunCount).toBe(2);
-    expect(crashEvent?.event.data.message).toContain('goivy webengine wasm exited');
+    const crashEvent = harness.messages.find((message) => (
+      message.type === 'event' && message.event?.type === 'browser_wasm_runtime_crash'
+    ));
+    expect(crashEvent?.event.data.reason).toContain('stale dispatcher while handling new-session');
+    expect(crashEvent?.event.data.message).toContain('Go program has already exited');
     expect(crashEvent?.event.data.recent_output).toContain('panic: fake Go wasm crash');
     expect(crashEvent?.event.data.recent_output).toContain('fake stack frame');
   });
@@ -232,9 +227,6 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
     installNoResponseGoRuntime();
     const harness = installWorkerHarness();
     stubWasmRuntimeAssets();
-
-    await import('./browserWasmEngine.worker.js');
-    (globalThis as any).self = undefined;
 
     await expect(harness.send({
       type: 'init',
@@ -263,9 +255,6 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
     installProgressEventGoRuntime();
     const harness = installWorkerHarness();
     stubWasmRuntimeAssets();
-
-    await import('./browserWasmEngine.worker.js');
-    (globalThis as any).self = undefined;
 
     await expect(harness.send({
       type: 'init',

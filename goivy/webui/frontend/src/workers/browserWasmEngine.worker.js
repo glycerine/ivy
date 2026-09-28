@@ -2,6 +2,15 @@ const DEFAULT_ASSET_BASE_URL = '/static/wasm/';
 const DEFAULT_INCLUDE_ROOT = '/include';
 const MAX_RUNTIME_LOG_CHARS = 20000;
 
+export function createBrowserWasmEngineWorker(options = {}) {
+const hostGlobal = options.globalObject || globalThis;
+const workerScope = options.scope || hostGlobal.self || hostGlobal;
+const loadDependencies = options.loadDependencies || (async () => Promise.all([
+  import('./smtZ3Imports.js'),
+  import('./goivyNodeFS.js'),
+]));
+const loadWasmExec = options.loadWasmExec || ((url) => import(/* @vite-ignore */ url));
+
 let assetBaseUrl = DEFAULT_ASSET_BASE_URL;
 let includeRoot = DEFAULT_INCLUDE_ROOT;
 let initialized = false;
@@ -13,11 +22,11 @@ let runtimeLogEntries = [];
 let sequence = 0;
 let fsHost = null;
 const sessions = new Map();
-const workerScope = globalThis.self || globalThis;
 
-workerScope.onmessage = (event) => {
+const onWorkerMessage = (event) => {
   void handleMessage(parseMessage(event.data));
 };
+workerScope.onmessage = onWorkerMessage;
 
 function parseMessage(data) {
   if (typeof data === 'string') return JSON.parse(data);
@@ -147,10 +156,7 @@ async function loadWebEngineWasm() {
   wasmRuntimeCrashReported = false;
   runtimeLogEntries = [];
   wasmReady = (async () => {
-    const [{ createSmtZ3Imports }, { installGoIvyNodeFS }] = await Promise.all([
-      import('./smtZ3Imports.js'),
-      import('./goivyNodeFS.js'),
-    ]);
+    const [{ createSmtZ3Imports }, { installGoIvyNodeFS }] = await loadDependencies();
     const includeTree = await loadIncludeTree();
     const z3 = await loadZ3();
     fsHost = installGoIvyNodeFS({
@@ -167,14 +173,14 @@ async function loadWebEngineWasm() {
         post({ type: 'stderr', value: text });
       },
     });
-    if (typeof globalThis.Go !== 'function') {
-      await import(/* @vite-ignore */ `${assetBaseUrl}wasm_exec-go1.25.6.js`);
+    if (typeof hostGlobal.Go !== 'function') {
+      await loadWasmExec(`${assetBaseUrl}wasm_exec-go1.25.6.js`);
     }
-    if (typeof globalThis.Go !== 'function') {
+    if (typeof hostGlobal.Go !== 'function') {
       throw new Error('wasm_exec-go1.25.6.js did not expose Go');
     }
     let wasmMemory = null;
-    const go = new globalThis.Go();
+    const go = new hostGlobal.Go();
     go.argv = ['goivy-webengine-wasm'];
     go.env = {
       GOIVY_INCLUDE: includeRoot,
@@ -205,12 +211,12 @@ function discardWasmRuntime(error) {
   wasmReady = null;
   wasmRuntimeError = error || null;
   fsHost = null;
-  globalThis.goivyWebEngineDispatch = undefined;
-  globalThis.goivyWebEnginePostEvent = undefined;
+  hostGlobal.goivyWebEngineDispatch = undefined;
+  hostGlobal.goivyWebEnginePostEvent = undefined;
 }
 
 function installWasmEventBridge() {
-  globalThis.goivyWebEnginePostEvent = (sessionId, rawEvent) => {
+  hostGlobal.goivyWebEnginePostEvent = (sessionId, rawEvent) => {
     const sid = String(sessionId || '');
     try {
       postEvent(sid, parseMessage(rawEvent));
@@ -284,18 +290,18 @@ function reportWasmRuntimeCrash(error, reason) {
 
 async function instantiateWasm(url, imports) {
   try {
-    return await WebAssembly.instantiateStreaming(fetch(url), imports);
+    return await hostGlobal.WebAssembly.instantiateStreaming(hostGlobal.fetch(url), imports);
   } catch (_err) {
-    const response = await fetch(url);
+    const response = await hostGlobal.fetch(url);
     if (!response.ok) {
       throw new Error(`failed to load Go Ivy wasm: ${response.status} ${response.statusText}`);
     }
-    return WebAssembly.instantiate(await response.arrayBuffer(), imports);
+    return hostGlobal.WebAssembly.instantiate(await response.arrayBuffer(), imports);
   }
 }
 
 async function loadIncludeTree() {
-  const response = await fetch(`${assetBaseUrl}include-tree.json`);
+  const response = await hostGlobal.fetch(`${assetBaseUrl}include-tree.json`);
   if (!response.ok) {
     throw new Error(`failed to load Ivy include tree: ${response.status} ${response.statusText}`);
   }
@@ -304,7 +310,7 @@ async function loadIncludeTree() {
 }
 
 async function loadZ3() {
-  const source = await (await fetch(`${assetBaseUrl}z3-471-api.js`)).text();
+  const source = await (await hostGlobal.fetch(`${assetBaseUrl}z3-471-api.js`)).text();
   const initZ3 = new Function(`${source}; return initZ3;`)();
   return initZ3({
     print(text) {
@@ -328,7 +334,7 @@ async function waitForDispatch(runtimeError) {
   for (let i = 0; i < 2000; i += 1) {
     const error = runtimeError && runtimeError();
     if (error) throw error;
-    if (typeof globalThis.goivyWebEngineDispatch === 'function') return;
+    if (typeof hostGlobal.goivyWebEngineDispatch === 'function') return;
     await new Promise((resolve) => setTimeout(resolve, 5));
   }
   throw new Error('goivy webengine wasm did not register its dispatcher');
@@ -336,7 +342,7 @@ async function waitForDispatch(runtimeError) {
 
 async function callWasm(request, retryOnExited = true) {
   await loadWebEngineWasm();
-  const dispatch = globalThis.goivyWebEngineDispatch;
+  const dispatch = hostGlobal.goivyWebEngineDispatch;
   if (typeof dispatch !== 'function') {
     if (retryOnExited) {
       discardWasmRuntime(new Error('goivy webengine wasm dispatcher is unavailable'));
@@ -458,4 +464,23 @@ function resultLevel(value) {
 
 function post(response) {
   workerScope.postMessage(response);
+}
+
+return {
+  handleMessage,
+  dispose() {
+    if (workerScope.onmessage === onWorkerMessage) {
+      workerScope.onmessage = null;
+    }
+  },
+};
+}
+
+function shouldAutoStartWorker() {
+  const scope = globalThis.self || globalThis;
+  return typeof globalThis.document === 'undefined' && typeof scope.postMessage === 'function';
+}
+
+if (shouldAutoStartWorker()) {
+  createBrowserWasmEngineWorker();
 }
