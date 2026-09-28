@@ -763,6 +763,71 @@ def emit_decl(header,symbol,sym_name=None,prefix=''):
             header.append('{}mk_decl({},{},{}_domain,"{}");\n'.format(prefix,sym_name,card,tname,rng_name))
         else:
             header.append('{}mk_decl("{}",{},{}_domain,"{}");\n'.format(prefix,sname,card,tname,rng_name))
+
+def variant_pto_symbols():
+    res = []
+    for sort_name in sorted(im.module.variants):
+        sort_variants = im.module.variants[sort_name]
+        if any(v.name in im.module.sig.sorts for v in sort_variants) and sort_name in im.module.sig.sorts:
+            super_sort = im.module.sig.sorts[sort_name]
+            for sub_sort in sort_variants:
+                res.append(il.Symbol('*>',il.RelationSort([super_sort,sub_sort])))
+    return res
+
+def variant_solver_relation_name(super_sort,sub_sort):
+    return slv.solver_name(il.Symbol('*>',il.RelationSort([super_sort,sub_sort])))
+
+def variant_smt_var(name,sort):
+    return '|{}:{}|'.format(name,sort.name)
+
+def variant_axiom_assertion_smt(super_sort,variants):
+    parts = []
+    sup = super_sort.name
+    for sub in variants:
+        sub_name = sub.name
+        rel = '|{}|'.format(variant_solver_relation_name(super_sort,sub))
+        x = variant_smt_var('X',super_sort)
+        y = variant_smt_var('Y',sub)
+        z = variant_smt_var('Z',sub)
+        parts.append('(forall (({} {}) ({} {}) ({} {}))\n  (=> (and ({} {} {})\n           ({} {} {}))\n      (= {} {})))'.format(x,sup,y,sub_name,z,sub_name,rel,x,y,rel,x,z,y,z))
+    for sub in variants:
+        sub_name = sub.name
+        rel = '|{}|'.format(variant_solver_relation_name(super_sort,sub))
+        x = variant_smt_var('X',super_sort)
+        y = variant_smt_var('Y',super_sort)
+        z = variant_smt_var('Z',sub)
+        parts.append('(forall (({} {}) ({} {}) ({} {}))\n  (=> (and ({} {} {})\n           ({} {} {}))\n      (= {} {})))'.format(x,sup,y,sup,z,sub_name,rel,x,z,rel,y,z,x,y))
+    for i1,sub1 in enumerate(variants):
+        for sub2 in variants[:i1]:
+            sub1_name = sub1.name
+            sub2_name = sub2.name
+            rel1 = '|{}|'.format(variant_solver_relation_name(super_sort,sub1))
+            rel2 = '|{}|'.format(variant_solver_relation_name(super_sort,sub2))
+            x = variant_smt_var('X',super_sort)
+            y = variant_smt_var('Y',sub1)
+            z = variant_smt_var('Z',sub2)
+            parts.append('(forall (({} {}) ({} {}) ({} {}))\n  (not (and ({} {} {})\n            ({} {} {}))))'.format(x,sup,y,sub1_name,z,sub2_name,rel1,x,y,rel2,x,z))
+    if not parts:
+        return None
+    return '(assert (and\n  ' + '\n  '.join(parts) + '))'
+
+def variant_axiom_assertions_smt():
+    res = []
+    for sort_name in sorted(im.module.variants):
+        sort_variants = im.module.variants[sort_name]
+        if any(v.name in im.module.sig.sorts for v in sort_variants) and sort_name in im.module.sig.sorts:
+            smt = variant_axiom_assertion_smt(im.module.sig.sorts[sort_name],sort_variants)
+            if smt is not None:
+                res.append(smt)
+    return res
+
+def cpp_smt_string(s):
+    return s.replace('\\','\\\\').replace('"','\\"').replace('\n',' "\n"')
+
+def emit_variant_axiom_assertions(impl):
+    for smt in variant_axiom_assertions_smt():
+        indent(impl)
+        impl.append('add("{}");\n'.format(cpp_smt_string(smt)))
         
 def emit_sig(header):
     emit_sorts(header)
@@ -1247,7 +1312,10 @@ def emit_action_gen(header,impl,name,action,classname):
     pre_clauses, param_defs = extract_defined_parameters(pre_clauses,inputs)
     rdefs = im.relevant_definitions(ilu.symbols_clauses(pre_clauses))
     pre_clauses = ilu.and_clauses(pre_clauses,ilu.Clauses([fix_definition(ldf.formula).to_constraint() for ldf in rdefs]))
-    pre_clauses = ilu.and_clauses(pre_clauses,ilu.Clauses(im.module.variant_axioms()))
+    solver_pre_clauses = pre_clauses
+    variant_axioms = im.module.variant_axioms()
+    pre_clauses = ilu.and_clauses(pre_clauses,ilu.Clauses(variant_axioms))
+    solver_pre = solver_pre_clauses.to_formula()
     pre = pre_clauses.to_formula()
     used = list(ilu.used_symbols_ast(pre))
     used_names = set(varname(s) for s in used)
@@ -1273,20 +1341,22 @@ def emit_action_gen(header,impl,name,action,classname):
     impl.append(caname + "_gen::" + caname + "_gen(" + classname + " &obj){\n");
     indent_level += 1
     emit_sig(impl)
-    to_decl = list(iu.unique(list(syms) + [s for s in used if s.name == '*>']))
+    to_decl = list(iu.unique(list(syms) + [s for s in used if s.name == '*>'] + variant_pto_symbols()))
     for sym in to_decl:
         emit_decl(impl,sym)
     indent(impl)
     import platform
-    if platform.system() == 'Windows':
-        winfmla = slv.formula_to_z3(pre).sexpr().replace('|!1','!1|').replace('\\|','')
-        impl.append('std::string winfmla = "(assert ";\n');
-        for winline in winfmla.split('\n'):
-            impl.append('winfmla.append("{} ");\n'.format(winline))
-        impl.append('winfmla.append(")");\n')
-        impl.append('add(winfmla);\n')
-    else:
-        impl.append('add("(assert {})");\n'.format(slv.formula_to_z3(pre).sexpr().replace('|!1','!1|').replace('\\|','').replace('\n',' "\n"')))
+    if not (variant_axioms and il.is_true(solver_pre)):
+        if platform.system() == 'Windows':
+            winfmla = slv.formula_to_z3(solver_pre).sexpr().replace('|!1','!1|').replace('\\|','')
+            impl.append('std::string winfmla = "(assert ";\n');
+            for winline in winfmla.split('\n'):
+                impl.append('winfmla.append("{} ");\n'.format(winline))
+            impl.append('winfmla.append(")");\n')
+            impl.append('add(winfmla);\n')
+        else:
+            impl.append('add("(assert {})");\n'.format(slv.formula_to_z3(solver_pre).sexpr().replace('|!1','!1|').replace('\\|','').replace('\n',' "\n"')))
+    emit_variant_axiom_assertions(impl)
 #    impl.append('__ivy_modelfile << slvr << std::endl;\n')
     indent_level -= 1
     impl.append("}\n");

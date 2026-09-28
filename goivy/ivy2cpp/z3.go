@@ -942,6 +942,10 @@ func (g *Generator) emitPythonTestZ3SortRegistration(w *cppWriter, name string, 
 		w.linef("mk_string(%s);", strconv.Quote(name))
 		return
 	}
+	if g.isPlainVariantSubtypeName(name) {
+		w.linef("mk_int(%s);", strconv.Quote(name))
+		return
+	}
 	w.linef("mk_sort(%s);", strconv.Quote(name))
 }
 

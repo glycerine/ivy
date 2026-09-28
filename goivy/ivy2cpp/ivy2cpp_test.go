@@ -6272,6 +6272,86 @@ export set
 	compileGeneratedCPP(t, out)
 }
 
+func TestTargetTestVariantConstraintAddHandlesThreeVariants(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+type color = {red, green}
+variant req of msg = struct {
+    shade : color
+}
+variant ack of msg
+variant done of msg
+individual saved : msg
+action make_req returns(out:msg) = {
+    var r : req;
+    r.shade := green;
+    saved := r;
+    out := saved
+}
+export make_req
+`)
+	g := &Generator{Mod: mod, Config: Config{Target: "test"}, ClassName: "variantconstraints"}
+	w := &cppWriter{}
+	smt := "(and (|*>:msg:req| |X:msg| |Y:req|) (|*>:msg:ack| |X:msg| |Y:ack|) (|*>:msg:done| |X:msg| |Y:done|))"
+	if !g.emitPythonTestVariantConstraintAdd(w, smt) {
+		t.Fatalf("target=test variant constraint emitter did not handle three variants")
+	}
+	body := w.String()
+	for _, want := range []string{
+		"|*>:msg:req|",
+		"|*>:msg:ack|",
+		"|*>:msg:done|",
+		"(|Y:req| req)",
+		"(|Y:ack| ack)",
+		"(|Y:done| done)",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("three-variant constraint output missing %q:\n%s", want, body)
+		}
+	}
+}
+
+func TestTargetTestPlainVariantSubtypesRegisterAsIntSorts(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+type color = {red, green}
+variant req of msg = struct {
+    shade : color
+}
+variant ack of msg
+variant done of msg
+individual saved : msg
+action make_req returns(out:msg) = {
+    var r : req;
+    r.shade := green;
+    saved := r;
+    out := saved
+}
+export make_req
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "variantsorts"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		`mk_sort("req");`,
+		`mk_int("ack");`,
+		`mk_int("done");`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("target=test Z3 sort registration missing %q:\n%s", want, out.Impl)
+		}
+	}
+	for _, unwanted := range []string{
+		`mk_sort("ack");`,
+		`mk_sort("done");`,
+	} {
+		if strings.Contains(out.Impl, unwanted) {
+			t.Fatalf("plain variant subtype should match Python int registration, found %q:\n%s", unwanted, out.Impl)
+		}
+	}
+}
+
 func TestTargetGenChecksSolverBeforeExecute(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}

@@ -52,55 +52,105 @@ func variantSolverRelationName(super, sub goivy.Sort) string {
 	return "*>:" + sortName(super) + ":" + sortName(sub)
 }
 
-func (g *Generator) emitPythonTestVariantConstraintAdd(w *cppWriter, smt string) bool {
-	if g.Config.Target != "test" || !strings.Contains(smt, "|*>:") {
+func variantSMTVar(name string, sort goivy.Sort) string {
+	return fmt.Sprintf("|%s:%s|", name, sortName(sort))
+}
+
+func variantAxiomAssertionSMT(super goivy.Sort, variants []goivy.Sort) string {
+	if len(variants) == 0 {
+		return ""
+	}
+	var parts []string
+	sup := sortName(super)
+	for _, sub := range variants {
+		subName := sortName(sub)
+		rel := "|" + variantSolverRelationName(super, sub) + "|"
+		x := variantSMTVar("X", super)
+		y := variantSMTVar("Y", sub)
+		z := variantSMTVar("Z", sub)
+		parts = append(parts, fmt.Sprintf("(forall ((%s %s) (%s %s) (%s %s))\n  (=> (and (%s %s %s)\n           (%s %s %s))\n      (= %s %s)))", x, sup, y, subName, z, subName, rel, x, y, rel, x, z, y, z))
+	}
+	for _, sub := range variants {
+		subName := sortName(sub)
+		rel := "|" + variantSolverRelationName(super, sub) + "|"
+		x := variantSMTVar("X", super)
+		y := variantSMTVar("Y", super)
+		z := variantSMTVar("Z", sub)
+		parts = append(parts, fmt.Sprintf("(forall ((%s %s) (%s %s) (%s %s))\n  (=> (and (%s %s %s)\n           (%s %s %s))\n      (= %s %s)))", x, sup, y, sup, z, subName, rel, x, z, rel, y, z, x, y))
+	}
+	for i, sub1 := range variants {
+		for _, sub2 := range variants[:i] {
+			sub1Name := sortName(sub1)
+			sub2Name := sortName(sub2)
+			rel1 := "|" + variantSolverRelationName(super, sub1) + "|"
+			rel2 := "|" + variantSolverRelationName(super, sub2) + "|"
+			x := variantSMTVar("X", super)
+			y := variantSMTVar("Y", sub1)
+			z := variantSMTVar("Z", sub2)
+			parts = append(parts, fmt.Sprintf("(forall ((%s %s) (%s %s) (%s %s))\n  (not (and (%s %s %s)\n            (%s %s %s))))", x, sup, y, sub1Name, z, sub2Name, rel1, x, y, rel2, x, z))
+		}
+	}
+	return "(assert (and\n  " + strings.Join(parts, "\n  ") + "))"
+}
+
+func (g *Generator) shouldEmitVariantAxiomsFor(super goivy.Sort, variants []goivy.Sort, smt string) bool {
+	if smt == "" {
+		return true
+	}
+	for _, sub := range variants {
+		if strings.Contains(smt, "|"+variantSolverRelationName(super, sub)+"|") {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Generator) forEachVariantAxiomAssertion(smt string, emit func(string)) bool {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
 		return false
 	}
-	if g.Mod == nil || g.Mod.Sig == nil {
-		return false
-	}
+	emitted := false
 	for _, superName := range g.Mod.SortOrder {
 		variants := g.Mod.Variants[superName]
-		if len(variants) != 2 {
+		if len(variants) == 0 {
 			continue
 		}
 		super, ok := g.Mod.Sig.Sorts.Get2(superName)
-		if !ok {
+		if !ok || !g.shouldEmitVariantAxiomsFor(super, variants, smt) {
 			continue
 		}
-		sub0 := variants[0]
-		sub1 := variants[1]
-		sup := sortName(super)
-		a := sortName(sub0)
-		b := sortName(sub1)
-		relA := variantSolverRelationName(super, sub0)
-		relB := variantSolverRelationName(super, sub1)
-		if !strings.Contains(smt, "|"+relA+"|") || !strings.Contains(smt, "|"+relB+"|") {
+		assertion := variantAxiomAssertionSMT(super, variants)
+		if assertion == "" {
 			continue
 		}
-		w.linef("add(\"(assert (let ((a!1 (forall ((|X:%s| %s) (|Y:%s| %s) (|Z:%s| %s)) \"", sup, sup, a, a, a, a)
-		w.linef("\"             (=> (and (|%s| |X:%s| |Y:%s|) \"", relA, sup, a)
-		w.linef("\"                      (|%s| |X:%s| |Z:%s|)) \"", relA, sup, a)
-		w.linef("\"                 (= |Y:%s| |Z:%s|)))) \"", a, a)
-		w.linef("\"      (a!2 (forall ((|X:%s| %s) (|Y:%s| %s) (|Z:%s| %s)) \"", sup, sup, b, b, b, b)
-		w.linef("\"             (=> (and (|%s| |X:%s| |Y:%s|) \"", relB, sup, b)
-		w.linef("\"                      (|%s| |X:%s| |Z:%s|)) \"", relB, sup, b)
-		w.linef("\"                 (= |Y:%s| |Z:%s|)))) \"", b, b)
-		w.linef("\"      (a!3 (forall ((|X:%s| %s) (|Y:%s| %s) (|Z:%s| %s)) \"", sup, sup, sup, sup, a, a)
-		w.linef("\"             (=> (and (|%s| |X:%s| |Z:%s|) \"", relA, sup, a)
-		w.linef("\"                      (|%s| |Y:%s| |Z:%s|)) \"", relA, sup, a)
-		w.linef("\"                 (= |X:%s| |Y:%s|)))) \"", sup, sup)
-		w.linef("\"      (a!4 (forall ((|X:%s| %s) (|Y:%s| %s) (|Z:%s| %s)) \"", sup, sup, sup, sup, b, b)
-		w.linef("\"             (=> (and (|%s| |X:%s| |Z:%s|) \"", relB, sup, b)
-		w.linef("\"                      (|%s| |Y:%s| |Z:%s|)) \"", relB, sup, b)
-		w.linef("\"                 (= |X:%s| |Y:%s|)))) \"", sup, sup)
-		w.linef("\"      (a!5 (forall ((|X:%s| %s) (|Y:%s| %s) (|Z:%s| %s)) \"", sup, sup, b, b, a, a)
-		w.linef("\"             (not (and (|%s| |X:%s| |Y:%s|) \"", relB, sup, b)
-		w.linef("\"                       (|%s| |X:%s| |Z:%s|)))))) \"", relA, sup, a)
-		w.line("\"  (and a!1 a!2 a!3 a!4 a!5)))\");")
-		return true
+		emit(assertion)
+		emitted = true
 	}
-	return false
+	return emitted
+}
+
+func (g *Generator) emitVariantConstraintAdds(w *cppWriter) bool {
+	return g.forEachVariantAxiomAssertion("", func(assertion string) {
+		w.linef("add(%s);", strconv.Quote(assertion))
+	})
+}
+
+func (g *Generator) skipTrivialSolverPreconditionWithVariantAxioms(plan *actionGenPlan) bool {
+	if plan == nil || plan.solverPreFmla == nil || !goivy.IsTrue(plan.solverPreFmla) {
+		return false
+	}
+	return g.forEachVariantAxiomAssertion("", func(string) {})
+}
+
+func (g *Generator) emitPythonTestVariantConstraintAdd(w *cppWriter, smt string) bool {
+	if g.Config.Target != "test" || !strings.Contains(smt, "|*>:") {
+		if smt != "" {
+			return false
+		}
+	}
+	return g.forEachVariantAxiomAssertion(smt, func(assertion string) {
+		g.emitPythonTestContinuedSMTAdd(w, assertion)
+	})
 }
 
 func (g *Generator) emitVariantWrapperDecl(w *cppWriter, name string) {

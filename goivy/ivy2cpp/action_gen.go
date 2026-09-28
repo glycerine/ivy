@@ -39,6 +39,7 @@ type actionGenPlan struct {
 	paramDefs      []goivy.Expr
 	oldPreClauses  *goivy.Clauses // pre-AND of relevant_definitions / variant_axioms
 	origPreClauses *goivy.Clauses
+	solverPreFmla  goivy.Expr // precondition before adding variant axioms
 	preFmla        goivy.Expr
 	used           *goivy.InsMap[goivy.NodeKey, goivy.Expr]
 	fallback       bool
@@ -154,6 +155,7 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 	if len(rdefFmlas) > 0 {
 		preClauses = goivy.AndClausesTyped(preClauses, goivy.NewClauses(rdefFmlas, nil, nil))
 	}
+	plan.solverPreFmla = preClauses.ToFormula()
 	varAxioms := g.Mod.VariantAxioms()
 	if len(varAxioms) > 0 {
 		preClauses = goivy.AndClausesTyped(preClauses, goivy.NewClauses(varAxioms, nil, nil))
@@ -809,11 +811,14 @@ func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
 		g.emitDeclSolver(w, stateSymbol{Name: c.Name, Sort: c.CSort})
 	}
 	// Emit the precondition assertion in SMT-LIB textual form.
-	if smt, ok := g.formulaToSmtlibWithTypeConstraints(plan.preFmla); ok {
-		w.linef("add(std::string(\"(assert \") + %s + std::string(\")\"));", strconv.Quote(smt))
-	} else {
-		w.line("// ivy2cpp: failed to translate precondition to SMT-LIB; falling back to no constraint")
+	if !g.skipTrivialSolverPreconditionWithVariantAxioms(plan) {
+		if smt, ok := g.formulaToSmtlibWithTypeConstraints(plan.solverPreFmla); ok {
+			w.linef("add(std::string(\"(assert \") + %s + std::string(\")\"));", strconv.Quote(smt))
+		} else {
+			w.line("// ivy2cpp: failed to translate precondition to SMT-LIB; falling back to no constraint")
+		}
 	}
+	g.emitVariantConstraintAdds(w)
 	w.close("")
 
 	// generate() body.
@@ -953,13 +958,14 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 		}
 		g.emitPythonTestDeclSolver(w, stateSymbol{Name: c.Name, Sort: c.CSort}, symName)
 	}
-	if smt, ok := g.formulaToSmtlibWithTypeConstraints(plan.preFmla); ok {
-		if !g.emitPythonTestVariantConstraintAdd(w, smt) {
+	if !g.skipTrivialSolverPreconditionWithVariantAxioms(plan) {
+		if smt, ok := g.formulaToSmtlibWithTypeConstraints(plan.solverPreFmla); ok {
 			g.emitPythonTestContinuedSMTAdd(w, "(assert "+smt+")")
+		} else {
+			w.line("// ivy2cpp: failed to translate precondition to SMT-LIB; falling back to no constraint")
 		}
-	} else {
-		w.line("// ivy2cpp: failed to translate precondition to SMT-LIB; falling back to no constraint")
 	}
+	g.emitPythonTestVariantConstraintAdd(w, "")
 	w.close("")
 
 	w.open(fmt.Sprintf("bool %s::generate(%s& obj) {", className, g.ClassName))
