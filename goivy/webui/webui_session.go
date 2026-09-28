@@ -57,9 +57,17 @@ type Session struct {
 	TransitionLogFile   string
 	ReachableUI         *AnalysisGraphUI
 	EventViewer         *EventTraceViewer
+
+	pendingInterpolants       map[string]pendingInterpolant
+	pendingInterpolantCounter int
 }
 
 const rootSheetID = "sheet-1"
+
+type pendingInterpolant struct {
+	Expr    goivy.Expr
+	Display string
+}
 
 // NoIsolatesFoundChoice is a Web UI/API sentinel, not an Ivy isolate name.
 // Ivy 1.7 creates an implicit internal "this" isolate even when the source
@@ -80,6 +88,7 @@ func NewSession(cfg *goivy.Config, id string) *Session {
 		SheetUIs:            make(map[string]*AnalysisGraphUI),
 		sheetCounter:        1,
 		EventViewer:         NewEventTraceViewer(),
+		pendingInterpolants: make(map[string]pendingInterpolant),
 	}
 }
 
@@ -1893,12 +1902,13 @@ func (s *Session) diagramCurrentConceptGraphLocked(sheetID string) (map[string]i
 }
 
 type pdrReverseOutcome struct {
-	status       string
-	message      string
-	interpolant  string
-	reverseFalse bool
-	parentState  *goivy.State
-	clauses      *goivy.Clauses
+	status          string
+	message         string
+	interpolant     string
+	interpolantExpr goivy.Expr
+	reverseFalse    bool
+	parentState     *goivy.State
+	clauses         *goivy.Clauses
 }
 
 func interpolantRefinementMessage(kind string) string {
@@ -1934,6 +1944,31 @@ func (s *Session) parseInterpolantExprLocked(text string) (goivy.Expr, error) {
 		return nil, fmt.Errorf("interpolant is not a logic expression")
 	}
 	return expr, nil
+}
+
+func (s *Session) rememberPendingInterpolantLocked(expr goivy.Expr, display string) string {
+	if expr == nil {
+		return ""
+	}
+	if s.pendingInterpolants == nil {
+		s.pendingInterpolants = make(map[string]pendingInterpolant)
+	}
+	s.pendingInterpolantCounter++
+	id := fmt.Sprintf("itp-%d", s.pendingInterpolantCounter)
+	s.pendingInterpolants[id] = pendingInterpolant{Expr: expr, Display: display}
+	return id
+}
+
+func (s *Session) takePendingInterpolantLocked(id string) (goivy.Expr, bool) {
+	if id == "" || s.pendingInterpolants == nil {
+		return nil, false
+	}
+	itp, ok := s.pendingInterpolants[id]
+	if !ok {
+		return nil, false
+	}
+	delete(s.pendingInterpolants, id)
+	return itp.Expr, true
 }
 
 func unusedConceptSpaceName(mod *goivy.Module, base string) string {
@@ -2002,13 +2037,23 @@ func conceptSpaceFromInterpolant(name string, expr goivy.Expr) goivy.ConceptSpac
 	}
 }
 
-func (s *Session) refineWithInterpolantLocked(sheetID, interpolant string) (map[string]interface{}, error) {
+func (s *Session) refineWithInterpolantLocked(sheetID, interpolant, interpolantID string) (map[string]interface{}, error) {
 	if s.CompiledModule == nil {
 		return nil, fmt.Errorf("refine_with_interpolant: no compiled module")
 	}
-	expr, err := s.parseInterpolantExprLocked(interpolant)
-	if err != nil {
-		return nil, err
+	var expr goivy.Expr
+	if interpolantID != "" {
+		var ok bool
+		expr, ok = s.takePendingInterpolantLocked(interpolantID)
+		if !ok {
+			return nil, fmt.Errorf("refine_with_interpolant: unknown interpolant id %q", interpolantID)
+		}
+	} else {
+		var err error
+		expr, err = s.parseInterpolantExprLocked(interpolant)
+		if err != nil {
+			return nil, err
+		}
 	}
 	ui, resolvedSheetID, uiErr := s.requireAnalysisUIForSheetLocked(sheetID)
 	if uiErr != nil {
@@ -2109,6 +2154,9 @@ func (s *Session) pdrStepConceptGraphLocked(sheetID string) (map[string]interfac
 	}
 	if outcome.interpolant != "" {
 		result["interpolant"] = outcome.interpolant
+		if interpolantID := s.rememberPendingInterpolantLocked(outcome.interpolantExpr, outcome.interpolant); interpolantID != "" {
+			result["interpolant_id"] = interpolantID
+		}
 		result["refinement_action"] = "refine_with_interpolant"
 		refinementKind := "concept"
 		if ui.GetMode() == ModePDR {
@@ -2140,9 +2188,10 @@ func (s *Session) reverseConceptGraphGoalLocked(w *GraphWidget, parentState *goi
 	}
 
 	var (
-		nextParent     *goivy.State
-		reverseClauses *goivy.Clauses
-		interpolant    string
+		nextParent      *goivy.State
+		reverseClauses  *goivy.Clauses
+		interpolant     string
+		interpolantExpr goivy.Expr
 	)
 
 	if parentState.Pred != nil {
@@ -2156,7 +2205,8 @@ func (s *Session) reverseConceptGraphGoalLocked(w *GraphWidget, parentState *goi
 			}
 			reverseClauses = goivy.FalseClauses(nil)
 			if uc.Itp != nil {
-				interpolant = goivy.PrettyFmla(uc.Itp.ToFormula())
+				interpolantExpr = uc.Itp.ToFormula()
+				interpolant = goivy.PrettyFmla(interpolantExpr)
 			}
 		}
 	} else if len(parentState.JoinOf) > 0 {
@@ -2169,7 +2219,8 @@ func (s *Session) reverseConceptGraphGoalLocked(w *GraphWidget, parentState *goi
 			reverseClauses = goivy.FalseClauses(nil)
 			nextParent = parentState.JoinOf[0]
 			if uc.Itp != nil {
-				interpolant = goivy.PrettyFmla(uc.Itp.ToFormula())
+				interpolantExpr = uc.Itp.ToFormula()
+				interpolant = goivy.PrettyFmla(interpolantExpr)
 			}
 		}
 	} else {
@@ -2208,12 +2259,13 @@ func (s *Session) reverseConceptGraphGoalLocked(w *GraphWidget, parentState *goi
 		message = "The pre-state is vacuous."
 	}
 	return &pdrReverseOutcome{
-		status:       status,
-		message:      message,
-		interpolant:  interpolant,
-		reverseFalse: reverseClauses.IsFalse(),
-		parentState:  nextParent,
-		clauses:      reverseClauses,
+		status:          status,
+		message:         message,
+		interpolant:     interpolant,
+		interpolantExpr: interpolantExpr,
+		reverseFalse:    reverseClauses.IsFalse(),
+		parentState:     nextParent,
+		clauses:         reverseClauses,
 	}, nil
 }
 
@@ -3382,6 +3434,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		refineResult, refineErr := s.refineWithInterpolantLocked(
 			actionStringArg(args, "sheet_id"),
 			actionStringArg(args, "interpolant"),
+			actionStringArg(args, "interpolant_id"),
 		)
 		if refineErr != nil {
 			err = refineErr

@@ -98,7 +98,7 @@ func TestRefineWithInterpolantPDRAddsPredicate(t *testing.T) {
 	before := len(s.CompiledModule.AbstractionPredicates)
 
 	result, err := s.ExecuteAction("refine_with_interpolant", map[string]interface{}{
-		"sheet_id":     "sheet-1",
+		"sheet_id":    "sheet-1",
 		"interpolant": "link(X,Y) -> ~semaphore(Y)",
 	})
 	if err != nil {
@@ -115,6 +115,56 @@ func TestRefineWithInterpolantPDRAddsPredicate(t *testing.T) {
 	}
 }
 
+func TestRefineWithInterpolantUsesIdBeforeParsingDisplayedText(t *testing.T) {
+	s := loadTestSession(t)
+	drainEvents(s)
+	s.AGUI.SetMode(ModePDR)
+	displayedInterpolant := "(((~semaphore(@Y) & (semaphore(0) <-> semaphore(@Y))) | (~(forall X. X:server = @Y) & ((forall X. X = 0) <-> (forall X. X = @Y)))))"
+
+	_, err := s.ExecuteAction("refine_with_interpolant", map[string]interface{}{
+		"sheet_id":       "sheet-1",
+		"interpolant_id": "missing-itp",
+		"interpolant":    displayedInterpolant,
+	})
+	if err == nil {
+		t.Fatalf("refine_with_interpolant unexpectedly succeeded with a missing interpolant id")
+	}
+	if strings.Contains(err.Error(), "parse interpolant") || strings.Contains(err.Error(), "LALR parse error") {
+		t.Fatalf("refine_with_interpolant parsed display text before honoring interpolant_id: %v", err)
+	}
+}
+
+func TestRefineWithInterpolantIDAcceptsParserHostileDisplayedText(t *testing.T) {
+	s := loadTestSession(t)
+	drainEvents(s)
+	s.AGUI.SetMode(ModePDR)
+	displayedInterpolant := "(((~semaphore(@Y) & (semaphore(0) <-> semaphore(@Y))) | (~(forall X. X:server = @Y) & ((forall X. X = 0) <-> (forall X. X = @Y)))))"
+	expr, err := s.parseInterpolantExprLocked("link(X,Y) -> ~semaphore(Y)")
+	if err != nil {
+		t.Fatalf("parse seed interpolant: %v", err)
+	}
+	interpolantID := s.rememberPendingInterpolantLocked(expr, displayedInterpolant)
+	before := len(s.CompiledModule.AbstractionPredicates)
+
+	result, err := s.ExecuteAction("refine_with_interpolant", map[string]interface{}{
+		"sheet_id":       "sheet-1",
+		"interpolant_id": interpolantID,
+		"interpolant":    displayedInterpolant,
+	})
+	if err != nil {
+		t.Fatalf("refine_with_interpolant: %v", err)
+	}
+	if got := len(s.CompiledModule.AbstractionPredicates); got != before+1 {
+		t.Fatalf("abstraction predicates = %d, want %d", got, before+1)
+	}
+	if result["refinement_kind"] != "predicate" {
+		t.Fatalf("refinement_kind = %#v, want predicate", result["refinement_kind"])
+	}
+	if _, ok := s.pendingInterpolants[interpolantID]; ok {
+		t.Fatalf("interpolant id %q was not consumed", interpolantID)
+	}
+}
+
 func TestRefineWithInterpolantNonPDRAddsConceptSpaceAndGraphConcept(t *testing.T) {
 	s := loadTestSession(t)
 	drainEvents(s)
@@ -127,7 +177,7 @@ func TestRefineWithInterpolantNonPDRAddsConceptSpaceAndGraphConcept(t *testing.T
 	before := len(s.CompiledModule.ConceptSpaces)
 
 	result, err := s.ExecuteAction("refine_with_interpolant", map[string]interface{}{
-		"sheet_id":     "sheet-1",
+		"sheet_id":    "sheet-1",
 		"interpolant": "link(X,Y) -> ~semaphore(Y)",
 	})
 	if err != nil {

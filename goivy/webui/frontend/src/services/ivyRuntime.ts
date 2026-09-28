@@ -5827,10 +5827,16 @@ class IvyRuntime {
                     { okLabel: 'Refine', cancel: true, primaryFirst: true },
                 );
                 if (acceptedInterpolant !== null) {
-                    refinementResult = await this.api.executeAction(result.refinement_action, {
+                    var refinementArgs: { sheet_id: string; interpolant: string; interpolant_id?: string } = {
                         sheet_id: result.sheet_id || this.activeSheetId || 'sheet-1',
                         interpolant: acceptedInterpolant || result.interpolant,
-                    });
+                    };
+                    var originalInterpolant = result.interpolant || '';
+                    var interpolantId = result.interpolant_id || result.interpolantId || '';
+                    if (interpolantId && (acceptedInterpolant === originalInterpolant || acceptedInterpolant === '' || acceptedInterpolant === undefined)) {
+                        refinementArgs.interpolant_id = interpolantId;
+                    }
+                    refinementResult = await this.api.executeAction(result.refinement_action, refinementArgs);
                     if (refinementResult && refinementResult.concept) {
                         this.applyConceptSnapshot(
                             refinementResult.concept.sheet_id || refinementResult.sheet_id || result.sheet_id || this.activeSheetId || 'sheet-1',
