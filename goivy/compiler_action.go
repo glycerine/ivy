@@ -1510,6 +1510,11 @@ func (c *Compiler) CompileAssertFormula(node Node) (ActionsAction, error) {
 
 func (c *Compiler) compileAssertFormulaAt(node Node, loc Location) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_assert_action ENTER")
+	if annotation, ok := literalStringAssertAnnotation(node); ok {
+		res := NewAssertAnnotationAction(annotation)
+		res.SetLineno(loc)
+		return res, nil
+	}
 	r, err := c.compileAssertLikeFormulaAt(node, "Assert", loc)
 	if err != nil {
 		return nil, err
@@ -1525,6 +1530,30 @@ func (c *Compiler) compileAssertFormulaAt(node Node, loc Location) (ActionsActio
 		return act, nil
 	}
 	return res, nil
+}
+
+func literalStringAssertAnnotation(node Node) (string, bool) {
+	if lf, ok := node.(*LabeledFormula); ok {
+		return literalStringAssertAnnotation(lf.Formula)
+	}
+	var rep string
+	switch n := node.(type) {
+	case *Atom:
+		if len(n.Terms) != 0 {
+			return "", false
+		}
+		rep = n.Rep
+	case *App:
+		if len(n.Terms) != 0 {
+			return "", false
+		}
+		rep = n.Relname()
+	case *Symbol:
+		rep = n.Rep
+	default:
+		return "", false
+	}
+	return rep, strings.HasPrefix(rep, `"`)
 }
 
 func (c *Compiler) CompileAssertFormulaWithProof(node Node, proof Node) (ActionsAction, error) {

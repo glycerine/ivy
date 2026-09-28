@@ -1294,6 +1294,44 @@ func TestTargetReplDebugAssertPrintIncludesNearestMixin(t *testing.T) {
 	}
 }
 
+func TestTargetReplDebugAssertAllowsLiteralStringAnnotation(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "assert_annotation.ivy")
+	src := strings.Join([]string{
+		"#lang ivy1.7",
+		"action step = {",
+		`    assert "at the end of action step";`,
+		"}",
+		"export step",
+		"",
+	}, "\n")
+	if err := os.WriteFile(spec, []byte(src), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	batch, err := CompileAndGenerateAll(spec, map[string]string{
+		"target":    "repl",
+		"classname": "DbgAssertAnnotation",
+		"debug":     "assert",
+	}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	if len(batch.Outputs) != 1 {
+		t.Fatalf("expected one output, got %d", len(batch.Outputs))
+	}
+	body := bodyAfterMarker(batch.Outputs[0].Impl, "DbgAssertAnnotation::ext__step(")
+	if body == "" {
+		t.Fatalf("missing ext step body:\n%s", batch.Outputs[0].Impl)
+	}
+	debugLine := `std::cout << "debug: assert_annotation.ivy:3 [action step] assert \"at the end of action step\"" << "\n";`
+	if !strings.Contains(body, debugLine) {
+		t.Fatalf("debug=assert output missing literal-string annotation %q:\n%s", debugLine, body)
+	}
+	if strings.Contains(body, "ivy_assert(") || strings.Contains(body, "ivy_assume(") {
+		t.Fatalf("literal-string assert annotation should not emit a boolean runtime check:\n%s", body)
+	}
+}
+
 func TestMergeParamsRejectsUnknownTargetAndCompiler(t *testing.T) {
 	for _, params := range []map[string]string{
 		{"target": "bad"},

@@ -148,6 +148,7 @@ type LogicAssumeAction struct {
 	//                                 Formula holds the unwrapped inner logic expression;
 	//                                 LF preserves the label, id, and metadata.
 	Kind       string
+	Annotation string
 	Unprovable bool // from LabeledFormula.unprovable; if true, skip in action_update
 }
 
@@ -177,7 +178,7 @@ func (a *LogicAssumeAction) SetLF(lf *LabeledFormula) {
 func (a *LogicAssumeAction) Name() string       { return "assume" }
 func (a *LogicAssumeAction) ActionArgs() []Expr { return []Expr{a.Formula} }
 func (a *LogicAssumeAction) ActionClone(args []Expr) ActionsAction {
-	r := &LogicAssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}
+	r := &LogicAssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Annotation: a.Annotation, Unprovable: a.Unprovable}
 	if r.LF != nil {
 		r.Unprovable = r.LF.Unprovable
 	}
@@ -208,6 +209,7 @@ type LogicAssertAction struct {
 	//                                 LF preserves the label, id, and metadata.
 	Proof      Expr   // optional proof term
 	Kind       string // optional kind tag for assert_to_assume
+	Annotation string // quoted-string assert annotation; Formula is inert true when set
 	Unprovable bool   // from LabeledFormula.unprovable; used by checked_assert filtering
 }
 
@@ -217,6 +219,10 @@ func NewAssertAction(fmla Expr, proof ...Expr) *LogicAssertAction {
 		a.Proof = proof[0]
 	}
 	return a
+}
+
+func NewAssertAnnotationAction(text string) *LogicAssertAction {
+	return &LogicAssertAction{Formula: True, Annotation: text}
 }
 
 func (a *LogicAssertAction) GetLF() *LabeledFormula { return a.LF }
@@ -242,7 +248,7 @@ func (a *LogicAssertAction) ActionArgs() []Expr {
 	return []Expr{a.Formula}
 }
 func (a *LogicAssertAction) ActionClone(args []Expr) ActionsAction {
-	r := &LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}
+	r := &LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Annotation: a.Annotation, Unprovable: a.Unprovable}
 	if r.LF != nil {
 		r.Unprovable = r.LF.Unprovable
 	}
@@ -277,7 +283,7 @@ func NewRequiresAction(fmla Expr) *LogicRequiresAction {
 // Go: no Name() override here; inherited AssertAction.Name() returns "assert".
 func (a *LogicRequiresAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 func (a *LogicRequiresAction) ActionClone(args []Expr) ActionsAction {
-	r := &LogicRequiresAction{LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}}
+	r := &LogicRequiresAction{LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Annotation: a.Annotation, Unprovable: a.Unprovable}}
 	if r.LF != nil {
 		r.Unprovable = r.LF.Unprovable
 	}
@@ -303,7 +309,7 @@ func NewEnsuresAction(fmla Expr) *LogicEnsuresAction {
 // Go: no Name() override here; inherited AssertAction.Name() returns "assert".
 func (a *LogicEnsuresAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 func (a *LogicEnsuresAction) ActionClone(args []Expr) ActionsAction {
-	r := &LogicEnsuresAction{LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}}
+	r := &LogicEnsuresAction{LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Annotation: a.Annotation, Unprovable: a.Unprovable}}
 	if r.LF != nil {
 		r.Unprovable = r.LF.Unprovable
 	}
@@ -1731,7 +1737,7 @@ func NewSubgoalAction(fmla Expr) *LogicSubgoalAction {
 func (a *LogicSubgoalAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
 func (a *LogicSubgoalAction) ActionClone(args []Expr) ActionsAction {
 	r := &LogicSubgoalAction{
-		LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable},
+		LogicAssertAction: LogicAssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Annotation: a.Annotation, Unprovable: a.Unprovable},
 		SubgoalKind:       a.SubgoalKind,
 	}
 	if r.LF != nil {

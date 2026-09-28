@@ -23,7 +23,8 @@ object account = {
     }
 
     action get_balance returns(x:money) = {
-        x := balance
+        x := balance;
+	assert "at the end of action get_balance";
     }
 
   object spec = {

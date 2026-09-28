@@ -46,6 +46,7 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg *IvyUtils
 			assume.ActionBase = a.ActionBase
 			assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
 			assume.Kind = "require"
+			assume.Annotation = a.Annotation
 			return assume
 		}
 		return a
@@ -74,6 +75,7 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg *IvyUtils
 			assume.ActionBase = a.ActionBase
 			assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
 			assume.Kind = "ensure"
+			assume.Annotation = a.Annotation
 			return assume
 		}
 		return assertToAssumeChildren(a, kinds, iuCfg)
@@ -91,6 +93,7 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg *IvyUtils
 			assume.ActionBase = a.ActionBase
 			assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
 			assume.Kind = "subgoal"
+			assume.Annotation = a.Annotation
 			return assume
 		}
 		return a
@@ -102,6 +105,7 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg *IvyUtils
 			assume.ActionBase = a.ActionBase
 			assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
 			assume.Kind = "assert"
+			assume.Annotation = a.Annotation
 			return assume
 		}
 		return a

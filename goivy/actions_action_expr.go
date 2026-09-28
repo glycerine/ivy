@@ -112,7 +112,7 @@ func (a *LogicAssumeAction) Args() []Node {
 	return []Node{a.Formula}
 }
 func (a *LogicAssumeAction) Clone(args []Node) Node {
-	r := &LogicAssumeAction{ActionBase: a.ActionBase, Kind: a.Kind, Unprovable: a.Unprovable}
+	r := &LogicAssumeAction{ActionBase: a.ActionBase, Kind: a.Kind, Annotation: a.Annotation, Unprovable: a.Unprovable}
 	if len(args) >= 1 {
 		if lf, ok := args[0].(*LabeledFormula); ok {
 			r.Formula = lf.Formula.(Expr)
@@ -130,9 +130,9 @@ func (a *LogicAssumeAction) Equal(other Expr) bool    { return a.Sexp() == other
 func (a *LogicAssumeAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicAssumeAction) Sexp() NodeKey {
 	if a.LF != nil {
-		return NodeKey(fmt.Sprintf("(assumeAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
+		return NodeKey(fmt.Sprintf("(assumeAction%v annotation:%q elems:[%v])", a.CanonFields(), a.Annotation, string(a.LF.Canon())))
 	}
-	return NodeKey(fmt.Sprintf("(assumeAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
+	return NodeKey(fmt.Sprintf("(assumeAction%v annotation:%q elems:%v)", a.CanonFields(), a.Annotation, sliceSexp(a.ActionArgs())))
 }
 func (a *LogicAssumeAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
@@ -151,7 +151,7 @@ func (a *LogicAssertAction) Args() []Node {
 	return []Node{first}
 }
 func (a *LogicAssertAction) Clone(args []Node) Node {
-	r := &LogicAssertAction{ActionBase: a.ActionBase, Kind: a.Kind, Unprovable: a.Unprovable}
+	r := &LogicAssertAction{ActionBase: a.ActionBase, Kind: a.Kind, Annotation: a.Annotation, Unprovable: a.Unprovable}
 	if len(args) >= 1 {
 		if lf, ok := args[0].(*LabeledFormula); ok {
 			r.Formula = lf.Formula.(Expr)
@@ -171,7 +171,7 @@ func (a *LogicAssertAction) NodeSort() Sort           { return ActionS }
 func (a *LogicAssertAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicAssertAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicAssertAction) Sexp() NodeKey {
-	return NodeKey(fmt.Sprintf("(assertAction%v elems:%v)", a.CanonFields(), actionFormulaProofSexp(a.LF, a.Formula, a.Proof)))
+	return NodeKey(fmt.Sprintf("(assertAction%v annotation:%q elems:%v)", a.CanonFields(), a.Annotation, actionFormulaProofSexp(a.LF, a.Formula, a.Proof)))
 }
 func (a *LogicAssertAction) Canon() Canonical { return Canonical(a.Sexp()) }
 

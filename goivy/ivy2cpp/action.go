@@ -39,15 +39,15 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 	case *goivy.LogicSetAction:
 		g.emitSet(w, a)
 	case *goivy.LogicAssertAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "assert", a.GetLineno())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "assert", a.GetLineno(), a.Annotation)
 	case *goivy.LogicRequiresAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno(), "")
 	case *goivy.LogicEnsuresAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno(), "")
 	case *goivy.LogicSubgoalAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()), "", a.GetLineno(), "")
 	case *goivy.LogicAssumeAction:
-		g.emitAssertLike(w, "ivy_assume", a.Formula, linenoStr(a.GetLineno()), a.Kind, a.GetLineno())
+		g.emitAssertLike(w, "ivy_assume", a.Formula, linenoStr(a.GetLineno()), a.Kind, a.GetLineno(), a.Annotation)
 	case *goivy.LogicIfAction:
 		g.emitIf(w, a)
 	case *goivy.LogicWhileAction:
@@ -249,13 +249,17 @@ func (g *Generator) openAssignmentLoops(w *cppWriter, lhs goivy.Expr) (int, bool
 	return opened, true
 }
 
-func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label, debugKind string, loc goivy.Location) {
+func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label, debugKind string, loc goivy.Location, annotation string) {
 	if strings.TrimSpace(label) == "" {
 		label = fn
 	}
 	if g != nil && g.Config.Debug > 0 {
 		g.emitDebugVV(w, fn+" ENTER "+label)
 		defer g.emitDebugVV(w, fn+" EXIT "+label)
+	}
+	if annotation != "" && debugKind == "assert" {
+		g.emitAssertDebugPrint(w, debugKind, loc, f, annotation)
+		return
 	}
 	var expr string
 	var err error
@@ -268,11 +272,11 @@ func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label,
 		g.pythonUnsupported(w, kind, err, label)
 		return
 	}
-	g.emitAssertDebugPrint(w, debugKind, loc, f)
+	g.emitAssertDebugPrint(w, debugKind, loc, f, annotation)
 	w.linef(`%s(%s, "%s");`, fn, expr, escapeString(label))
 }
 
-func (g *Generator) emitAssertDebugPrint(w *cppWriter, kind string, loc goivy.Location, f goivy.Expr) {
+func (g *Generator) emitAssertDebugPrint(w *cppWriter, kind string, loc goivy.Location, f goivy.Expr, annotation string) {
 	if g == nil || !g.Config.DebugAssert || kind != "assert" {
 		return
 	}
@@ -283,7 +287,7 @@ func (g *Generator) emitAssertDebugPrint(w *cppWriter, kind string, loc goivy.Lo
 	if context := debugAssertEnclosingContext(loc); context != "" {
 		text += "[" + context + "] "
 	}
-	text += debugAssertText(kind, loc, f)
+	text += debugAssertText(kind, loc, f, annotation)
 	w.linef("std::cout << %s << \"\\n\";", strconv.Quote(text))
 }
 
@@ -379,9 +383,12 @@ func debugAssertContextName(name string) string {
 	return strings.TrimRight(name, ",;")
 }
 
-func debugAssertText(kind string, loc goivy.Location, f goivy.Expr) string {
+func debugAssertText(kind string, loc goivy.Location, f goivy.Expr, annotation string) string {
 	if src := debugAssertSourceLine(kind, loc); src != "" {
 		return src
+	}
+	if annotation != "" {
+		return kind + " " + annotation
 	}
 	return kind + " " + debugAssertFormulaText(f)
 }
