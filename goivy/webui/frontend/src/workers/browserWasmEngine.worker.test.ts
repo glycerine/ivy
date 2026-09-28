@@ -180,10 +180,10 @@ function stubWasmRuntimeAssets() {
 }
 
 async function waitForMessage(messages, predicate) {
-  for (let i = 0; i < 100; i += 1) {
+  for (let i = 0; i < 50; i += 1) {
     const found = messages.find(predicate);
     if (found) return found;
-    await new Promise((resolve) => setTimeout(resolve, 1));
+    await Promise.resolve();
   }
   throw new Error('timed out waiting for worker message');
 }
