@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('./smtZ3Imports.js', () => ({
   createSmtZ3Imports: vi.fn(() => ({})),
@@ -179,14 +179,22 @@ function stubWasmRuntimeAssets() {
   });
 }
 
-async function flushAsync() {
-  await Promise.resolve();
-  await Promise.resolve();
-  await Promise.resolve();
+async function waitForMessage(messages, predicate) {
+  for (let i = 0; i < 100; i += 1) {
+    const found = messages.find(predicate);
+    if (found) return found;
+    await new Promise((resolve) => setTimeout(resolve, 1));
+  }
+  throw new Error('timed out waiting for worker message');
 }
 
 describe('browserWasmEngine worker runtime lifecycle', () => {
+  beforeEach(() => {
+    vi.useRealTimers();
+  });
+
   afterEach(() => {
+    vi.useRealTimers();
     vi.unstubAllGlobals();
     vi.resetModules();
   });
@@ -205,7 +213,9 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
       assetBaseUrl: '/static/wasm/',
       includeRoot: '/include',
     })).resolves.toEqual({ ok: true });
-    await flushAsync();
+    const crashEvent = await waitForMessage(harness.messages, (message) => (
+      message.type === 'event' && message.event?.type === 'browser_wasm_runtime_crash'
+    ));
 
     await expect(harness.send({
       type: 'new-session',
@@ -213,9 +223,6 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
       projectId: 'webui',
     })).resolves.toEqual({ id: 'browser-s2' });
     expect((globalThis as any).__fakeGoRunCount).toBe(2);
-    const crashEvent = harness.messages.find((message) => (
-      message.type === 'event' && message.event?.type === 'browser_wasm_runtime_crash'
-    ));
     expect(crashEvent?.event.data.message).toContain('goivy webengine wasm exited');
     expect(crashEvent?.event.data.recent_output).toContain('panic: fake Go wasm crash');
     expect(crashEvent?.event.data.recent_output).toContain('fake stack frame');
