@@ -134,6 +134,31 @@ isolate parametrized(n:key) = {
 	}
 }
 
+func TestRegression_MethodCallStructFieldProjectionInDefinition(t *testing.T) {
+	src := `#lang ivy1.7
+type epoch
+relation lt(X:epoch, Y:epoch)
+
+object ts = {
+    type this = struct {
+        version : epoch,
+        cid     : epoch
+    }
+}
+
+function ts_gt(X:ts, Y:ts) = lt(Y.version, X.version) | ((X.version = Y.version) & lt(Y.cid, X.cid))
+`
+	mod := New()
+	mod.Cfg = NewConfig()
+	sig := NewSigOn(mod.Cfg.IuCfg)
+	if err := SourceString("timestamp_method_app.ivy", src, mod, sig, map[string]interface{}{"create_isolate": false}); err != nil {
+		if strings.Contains(err.Error(), "unsupported method node type: *goivy.App") {
+			t.Fatalf("struct field projection in a definition should compile, got old method-node bug: %v", err)
+		}
+		t.Fatalf("SourceString: %v", err)
+	}
+}
+
 // TestRegression_ImmutableSymbolAssigned verifies that mutable symbols
 // (like boolean vars assigned inside action bodies) are not incorrectly
 // flagged as immutable during compilation.

@@ -1018,6 +1018,17 @@ func (c *Compiler) compileMethodCall(n *MethodCall) (Expr, error) {
 			}
 			methodArgs[i] = r
 		}
+	case *App:
+		childName = m.Relname()
+		methodArgs = make([]Expr, len(m.Terms))
+		for i, a := range m.Terms {
+			r, err := c.Thing(a)
+			if err != nil {
+				c.ReturnCtx = saved
+				return nil, err
+			}
+			methodArgs[i] = r
+		}
 	case *Symbol:
 		childName = m.Rep
 	default:
