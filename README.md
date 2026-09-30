@@ -26,6 +26,10 @@ see
 * a playground https://try.veil.dev/
 * a community channel within the Lean Zulip https://leanprover.zulipchat.com/#narrow/channel/537982-Veil
 
+interesting undergrad thesis from the same lab: translating TLA+ to Ivy:
+* https://github.com/markyuen/tlaplus-to-ivy/blob/main/report.pdf
+
+... now back to your regularly scheduled README ...
 
 ![an ivy covered place](https://github.com/glycerine/ivy/blob/master/reference/new_ivy_icon_starting_large.png)
 
