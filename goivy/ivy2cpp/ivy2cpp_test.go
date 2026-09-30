@@ -1911,6 +1911,98 @@ action step = {
 	compileGeneratedCPP(t, out)
 }
 
+func TestTargetTestObjectNativeBVDefinitionsMatchPythonShape(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type epoch
+
+object epoch_svc = {
+    relation lt(X:epoch, Y:epoch)
+    relation succ(X:epoch, Y:epoch)
+    individual zero : epoch
+    individual next_epoch : epoch
+
+    action fresh_epoch returns (e:epoch)
+
+    specification {
+        axiom lt(X,Y) & lt(Y,Z) -> lt(X,Z)
+        axiom ~lt(X,X)
+        axiom lt(X,Y) | X = Y | lt(Y,X)
+        axiom ~lt(X, zero)
+        axiom succ(X,Y) <-> (lt(X,Y) & ~(lt(X,Z) & lt(Z,Y)))
+
+        after init { next_epoch := zero }
+
+        after fresh_epoch returns (e:epoch) {
+            ensure succ(e, next_epoch)
+        }
+    }
+
+    implementation {
+        interpret epoch -> bv[63]
+        definition lt(X,Y) = X < Y
+        definition zero = 0
+        definition succ(X,Y) = (Y = X + 1)
+
+        implement fresh_epoch returns (e:epoch) {
+            assume next_epoch < 9223372036854775807;
+            e := next_epoch;
+            next_epoch := next_epoch + 1
+        }
+    }
+}
+
+import action report(e:epoch)
+export action tick = {
+   var x := epoch_svc.fresh_epoch;
+   call report(x)
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "member_native_epoch_cpp"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	assertNoUnsupportedCPP(t, out)
+
+	combined := out.Header + "\n" + out.Impl
+	for _, bad := range []string{
+		"cannot create test generator because type epoch is non-enumerable",
+		"emit_assign_large unknown storage symbol epoch_svc.succ",
+		"cannot enumerate quantified variable X:epoch",
+		"unsupported initial axiom retry condition",
+		`mk_decl("epoch_svc__lt"`,
+		`mk_decl("epoch_svc__succ"`,
+		`mk_const("epoch_svc__zero"`,
+		"epoch_svc__lt.memo",
+		"epoch_svc__succ.memo",
+	} {
+		if strings.Contains(combined, bad) {
+			t.Fatalf("target=test object native bv definition output should not contain %q:\nheader:\n%s\nimpl:\n%s", bad, out.Header, out.Impl)
+		}
+	}
+	for _, want := range []string{
+		"unsigned long long epoch_svc__next_epoch;",
+		"virtual bool epoch_svc__lt(unsigned long long X, unsigned long long Y);",
+		"virtual unsigned long long epoch_svc__zero();",
+		"virtual bool epoch_svc__succ(unsigned long long X, unsigned long long Y);",
+		"bool member_native_epoch_cpp::epoch_svc__lt(unsigned long long X, unsigned long long Y)",
+		"val = (X < Y);",
+		"unsigned long long member_native_epoch_cpp::epoch_svc__zero()",
+		"val = (0 & 9223372036854775807ULL);",
+		"bool member_native_epoch_cpp::epoch_svc__succ(unsigned long long X, unsigned long long Y)",
+		"val = (Y == ((X + (1 & 9223372036854775807ULL)) & 9223372036854775807ULL));",
+		"epoch_svc__next_epoch = epoch_svc__zero();",
+		"ivy_assert(epoch_svc__succ(e,epoch_svc__next_epoch)",
+		`mk_decl("epoch_svc.lt"`,
+		`mk_const("epoch_svc.zero","epoch")`,
+		`mk_decl("epoch_svc.succ"`,
+		"obj.epoch_svc__next_epoch = 0;",
+	} {
+		if !strings.Contains(combined, want) {
+			t.Fatalf("target=test object native bv definition output missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+}
+
 func TestImplBeforeAfterMixinShape(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 individual flag : bool
