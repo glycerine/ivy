@@ -33,6 +33,10 @@ their rationale:
 > eventually, you will need to resort to interactive proofs.
 > -- https://verse-lab.org/papers/veil-dafny26.pdf (page 2)
 
+the tradeoff: (Figure 5 of https://verse-lab.org/papers/veil-cav25.pdf )
+
+![image](reference/veil_cost.png)
+
 see
 * homepage https://veil.dev/
 
