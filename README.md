@@ -6,12 +6,32 @@ NEWS: 2026 Sept 29
 In a "same language, but with better infrastructure" approach: Veil is Ivy but backed by the Lean theorem prover. This means fewer bugs, and more automtation (users do less), at the expense 
 of being somewhat slower (e.g. 5 minutes intead of 5 seconds).
 
-> "The language of Veil is almost a verbatim port of RML, the specification
+> The language of Veil is almost a verbatim port of RML, the specification
 > language of Ivy [37], while its bounded model checking capability is inspired
 > by a similar feature of mypyvy [53]. Unlike these tools, Veil is a foundational
 > verification framework with a formal soundness proof of its VC generator, offering
-> the full power of interactive proofs in Lean, its extensibility, and libraries."
+> the full power of interactive proofs in Lean, its extensibility, and libraries.
 > -- https://verse-lab.org/papers/veil-cav25.pdf (page 10)
+
+their rationale:
+
+> Zawinski’s Law humorously states that "every program
+> attempts to expand until it can read mail. Those programs
+> which cannot so expand are replaced by ones which can." [1]
+>
+> Unfortuantely, something similar is happening with program
+> verifiers. We half-jokingly postulate the following law:
+>
+>     Every verifier expands until it contains an ad hoc,
+>     bug-ridden, unusable implementation of half of an
+>     interactive theorem prover. Those verifiers which cannot
+>     so expand are replaced by ones which can.
+>
+> There is a good reason for this: testing and automated
+> verification is what people want. The more you can automate,
+> the better. But you cannot automate everything, and
+> eventually, you will need to resort to interactive proofs.
+> -- https://verse-lab.org/papers/veil-dafny26.pdf (page 2)
 
 see
 * homepage https://veil.dev/
