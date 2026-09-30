@@ -388,7 +388,7 @@ run afoul of the fragment checker.</p>
 <p>Tricky: this is a bit of aspect-orientation. It turns the type <code class="language-plaintext highlighter-rouge">set</code> into a struct
 with just one field called <code class="language-plaintext highlighter-rouge">repr</code>. This field gives the concrete representation of a
 set as an array. To an isolate that doesn’t use the definition of <code class="language-plaintext highlighter-rouge">member</code> below,
-the tpye <code class="language-plaintext highlighter-rouge">set</code> will still appear to be uninterpreted.</p>
+the type <code class="language-plaintext highlighter-rouge">set</code> will still appear to be uninterpreted.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	    destructor repr(X:set) : arr.t
 
