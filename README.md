@@ -67,6 +67,9 @@ interesting undergrad thesis from the same lab: translating TLA+ to Ivy:
 
 ... now back to your regularly scheduled README ...
 
+GoIvy
+=====
+
 ![an ivy covered place](https://github.com/glycerine/ivy/blob/master/reference/new_ivy_icon_starting_large.png)
 
 This is a port of the Ivy formal verification toolchain to Go and a Web app, based
