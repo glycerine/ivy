@@ -55,6 +55,14 @@ see
 interesting undergrad thesis from the same lab: translating TLA+ to Ivy:
 * https://github.com/markyuen/tlaplus-to-ivy/blob/main/report.pdf
 
+# conclusion - why I recommend Veil instead of Ivy for any serious future work
+
+* the interactive part of Ivy (the Tk GUI) has been abandonded and unusable for many years. My efforts in webivy to resurrect it look great and are kind of fun, but ultimtely have been constrained because I cannot figure out what it was supposed to do. Moreover, bug reports and email to authors requesting a few minutes help to revive it go unanswered.
+
+* realistically your LLM will be interacting with the verification system as much as possible. You don't want two flaky parts (LLM + Ivy) if you can have just one (LLM).
+
+* Lean is a way more general and capable and well supported foundation to build on. Waiting longer is a small price for more automated verification with less human problem-solving required.
+
 ... now back to your regularly scheduled README ...
 
 ![an ivy covered place](https://github.com/glycerine/ivy/blob/master/reference/new_ivy_icon_starting_large.png)
