@@ -308,6 +308,12 @@ func (g *Generator) goRandomValueExprWithChooserSeen(s goivy.Sort, name string, 
 		}
 		return fmt.Sprintf("%s(%s)", goName(st.Name), callInt(len(st.Extension))), nil
 	default:
+		if it, ok := g.goInterpType(s); ok && it.Kind == goInterpBV {
+			if card := it.card(); card > 0 {
+				return callInt(card), nil
+			}
+			return callInt(0), nil
+		}
 		if rs, ok := g.rangeSortFor(s); ok {
 			lo, hi, ok := numericRangeBounds(rs)
 			if ok {

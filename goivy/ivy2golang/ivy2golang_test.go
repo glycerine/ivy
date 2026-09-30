@@ -35949,6 +35949,81 @@ export step
 	}
 }
 
+func TestInitialObjectNativeBVDefinitionAxiomsDoNotBecomeState(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type epoch
+
+object epoch_svc = {
+    relation lt(X:epoch, Y:epoch)
+    relation succ(X:epoch, Y:epoch)
+    individual zero : epoch
+    individual next_epoch : epoch
+
+    action fresh_epoch returns (e:epoch)
+
+    specification {
+        axiom lt(X,Y) & lt(Y,Z) -> lt(X,Z)
+        axiom ~lt(X,X)
+        axiom lt(X,Y) | X = Y | lt(Y,X)
+        axiom ~lt(X, zero)
+        axiom succ(X,Y) <-> (lt(X,Y) & ~(lt(X,Z) & lt(Z,Y)))
+
+        after init { next_epoch := zero }
+
+        after fresh_epoch returns (e:epoch) {
+            ensure succ(e, next_epoch)
+        }
+    }
+
+    implementation {
+        interpret epoch -> bv[63]
+        definition lt(X,Y) = X < Y
+        definition zero = 0
+        definition succ(X,Y) = (Y = X + 1)
+
+        implement fresh_epoch returns (e:epoch) {
+            assume next_epoch < 9223372036854775807;
+            e := next_epoch;
+            next_epoch := next_epoch + 1
+        }
+    }
+}
+
+import action report(e:epoch)
+export action tick = {
+   var x := epoch_svc.fresh_epoch;
+   call report(x)
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "member_native_epoch", TestIters: "1", Build: true})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	validateGeneratedGoSourceForTest(t, out)
+	for _, bad := range []string{
+		"cannot create test generator because type epoch is non-enumerable",
+		"emit_assign_large unknown storage symbol epoch_svc.succ",
+		"cannot enumerate quantified variable X:epoch",
+		"unsupported initial axiom retry condition",
+		"epoch_svc__lt ivyThunkMap",
+		"epoch_svc__succ ivyThunkMap",
+		"func (ivy *member_native_epoch) epoch_svc__succ",
+	} {
+		if strings.Contains(out.Source, bad) {
+			t.Fatalf("native bv definition-backed initial axioms should not emit %q:\n%s", bad, out.Source)
+		}
+	}
+	for _, want := range []string{
+		"ivy.epoch_svc__next_epoch = 0",
+		"ivyAssert((ivy.epoch_svc__next_epoch == ((e + 1) & 9223372036854775807))",
+		"ivy.epoch_svc__next_epoch = ((ivy.epoch_svc__next_epoch + 1) & 9223372036854775807)",
+	} {
+		if !strings.Contains(out.Source, want) {
+			t.Fatalf("native bv definition source missing %q:\n%s", want, out.Source)
+		}
+	}
+}
+
 func TestUnsupportedInitialAxiomRetryConditionErrorIncludesSourceLine(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 action step = {

@@ -86,7 +86,7 @@ func (g *Generator) goInterpType(s goivy.Sort) (goInterpType, bool) {
 func (it goInterpType) card() int {
 	switch it.Kind {
 	case goInterpBV, goInterpStrBV:
-		if it.Bits < 0 || it.Bits >= strconv.IntSize {
+		if it.Bits < 0 || it.Bits >= strconv.IntSize-1 {
 			return -1
 		}
 		return 1 << it.Bits

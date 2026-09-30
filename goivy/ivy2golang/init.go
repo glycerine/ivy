@@ -641,6 +641,45 @@ func (g *Generator) exprReferencesState(e goivy.Expr) bool {
 	return false
 }
 
+func (g *Generator) exprReferencesStateThroughDefinitions(e goivy.Expr, seen map[string]bool) bool {
+	if e == nil {
+		return false
+	}
+	if g.exprReferencesState(e) {
+		return true
+	}
+	for _, sym := range goivy.UsedSymbolsAst(e).All() {
+		name := goivy.ExprName(sym)
+		if name == "" || seen[name] {
+			continue
+		}
+		def, ok := g.definitionByName(name)
+		if !ok {
+			continue
+		}
+		seen[name] = true
+		if g.exprReferencesStateThroughDefinitions(def.RHS, seen) {
+			return true
+		}
+	}
+	return false
+}
+
+func exprContainsNativeExpr(e goivy.Expr) bool {
+	if e == nil {
+		return false
+	}
+	if _, ok := e.(*goivy.LogicNativeExpr); ok {
+		return true
+	}
+	for _, child := range e.Children() {
+		if exprContainsNativeExpr(child) {
+			return true
+		}
+	}
+	return false
+}
+
 func (g *Generator) initialConditionActionsFor(f goivy.Expr) ([]goivy.Action, error) {
 	if expanded, ok, err := g.expandDefinitionExprOnce(f); ok || err != nil {
 		if err != nil {
@@ -828,6 +867,9 @@ func (g *Generator) initialAxiomRetryFormulasFor(f goivy.Expr, constructedOrders
 		return nil
 	}
 	if len(g.initialAxiomActionsFor(f)) > 0 {
+		return nil
+	}
+	if !g.exprReferencesStateThroughDefinitions(f, map[string]bool{}) && !exprContainsNativeExpr(f) {
 		return nil
 	}
 	return []goivy.Expr{f}
@@ -1337,6 +1379,9 @@ func (g *Generator) isStateTarget(e goivy.Expr) bool {
 		return false
 	}
 	if g.isSortConstructorName(name) {
+		return false
+	}
+	if g.isDefinitionName(name) {
 		return false
 	}
 	if g.Mod.DestructorSorts != nil {
