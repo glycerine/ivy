@@ -34,6 +34,7 @@ their rationale:
 > -- https://verse-lab.org/papers/veil-dafny26.pdf (page 2)
 
 the tradeoff: (Figure 5 of https://verse-lab.org/papers/veil-cav25.pdf )
+(Ivy is much faster, but could not complete two of the tasks on its own).
 
 ![image](reference/veil_cost.png)
 
