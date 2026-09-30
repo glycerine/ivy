@@ -63,7 +63,7 @@ interesting undergrad thesis from the same lab: translating TLA+ to Ivy:
 
 * Lean is a way more general and capable and well supported foundation to build on. Waiting longer is a small price for more automated verification with less human problem-solving required.
 
-* GoIvy is in a great place. It is much less buggy than upstream python Ivy, and twice as fast. The ivy_to_cpp (ivy2cpp, ivy2golang) tools remain useful for randomized testing (fuzzing) your spec before you have a proof. The compositional testing ideas are cutting edge. Every systems designer should watch [Ken McMillan's tutorial on this topic](https://youtu.be/6WVL-Vpm5RY). It will blow your mind and change for the better how you do things.
+* GoIvy is in a great place. It is much less buggy than upstream python Ivy, and twice as fast. The ivy_to_cpp (ivy2cpp, ivy2golang) tools remain useful for randomized testing (fuzzing) your spec before you have a proof. The compositional testing ideas are cutting edge. Every system designer should watch [Ken McMillan's tutorial on Compositional Testing](https://youtu.be/6WVL-Vpm5RY). It will blow your mind and change for the better how you build.
 
 ... now back to your regularly scheduled README ...
 
