@@ -17,7 +17,7 @@ their rationale:
 
 > Zawinski’s Law humorously states that "every program
 > attempts to expand until it can read mail. Those programs
-> which cannot so expand are replaced by ones which can." [1]
+> which cannot so expand are replaced by ones which can."
 >
 > Unfortuantely, something similar is happening with program
 > verifiers. We half-jokingly postulate the following law:
