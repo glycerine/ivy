@@ -1,6 +1,32 @@
 GoIvy (Ivy in Go/as a Web application backed by a Go server)
 ======================================================
 
+NEWS: 2026 Sept 29
+
+In a "same language, but with better infrastructure" approach: Veil is Ivy but backed by the Lean theorem prover. This means fewer bugs, and more automtation (users do less), at the expense 
+of being somewhat slower (e.g. 5 minutes intead of 5 seconds).
+
+> "The language of Veil is almost a verbatim port of RML, the specification
+> language of Ivy [37], while its bounded model checking capability is inspired
+> by a similar feature of mypyvy [53]. Unlike these tools, Veil is a foundational
+> verification framework with a formal soundness proof of its VC generator, offering
+> the full power of interactive proofs in Lean, its extensibility, and libraries."
+> -- https://verse-lab.org/papers/veil-cav25.pdf (page 10)
+
+see
+* homepage https://veil.dev/
+
+* list of papers https://veil.dev/publications/
+
+* https://verse-lab.org/papers/veil-dafny26.pdf
+* https://verse-lab.org/papers/veil-cav25.pdf
+* https://verse-lab.org/papers/loom-popl26.pdf
+
+* a github repo https://github.com/verse-lab/veil
+* a playground https://try.veil.dev/
+* a community channel within the Lean Zulip https://leanprover.zulipchat.com/#narrow/channel/537982-Veil
+
+
 ![an ivy covered place](https://github.com/glycerine/ivy/blob/master/reference/new_ivy_icon_starting_large.png)
 
 This is a port of the Ivy formal verification toolchain to Go and a Web app, based
