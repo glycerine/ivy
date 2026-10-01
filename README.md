@@ -60,7 +60,7 @@ interesting undergrad thesis from the same lab: translating TLA+ to Ivy:
 
 # conclusion - once it matures, I would recommend checking out Veil
 
-* the interactive part of Ivy (the Tk GUI) has been abandonded and unusable for many years. My efforts in webivy to resurrect it look great and are kind of fun, but ultimtely have been constrained because I cannot figure out what it was supposed to do. Moreover, bug reports and email to authors requesting a few minutes help to revive it go unanswered.
+* the interactive part of Ivy (the Tk GUI) has been abandonded and unusable for many years. My efforts in ivyweb to resurrect it look great and are kind of fun, but ultimtely have been constrained because I cannot figure out what it was supposed to do. Moreover, bug reports and email to the upstream authors requesting a few minutes help to revive it go unanswered.
 
 * realistically your LLM will be interacting with the verification system as much as possible anyway. When the spec falls outside of what the Ivy language can handle (EPR or FAU logic), your agent has a stronger fallback position. The LLM can change the spec to stay decidable, which may not always be tenable; or it can try to a write you a custom proof anyway and see if Lean can verify it.
 
