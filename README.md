@@ -1,6 +1,8 @@
 GoIvy (Ivy in Go/as a Web application backed by a Go server)
 ======================================================
 
+![image](reference/screenshot.png)
+
 <details>
 <summary>NEWS: 2026 Sept 29: Veil on Lean, the new Ivy on the block (click to expand) </summary>
 
