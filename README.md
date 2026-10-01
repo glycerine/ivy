@@ -102,7 +102,7 @@ tracing output on either side (or build the Go with -tags xtrace_off).
 
 The goivy/Makefile target "make golden-all" checks the Go port 
 against all known Ivy specs using this xtrace (our tracing library) approach.
-It takes about 10 hours to run, and we run it after any changes to
+It takes about 15 hours to run, and we run it after any changes to
 the port logic. 
 
 Our patches to the original python Ivy (here in
