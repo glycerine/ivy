@@ -9377,6 +9377,64 @@ export set
 	}
 }
 
+func TestActionGenExplicitIsolatedExportRequireDrivesGenerator(t *testing.T) {
+	src := `#lang ivy1.7
+type epoch
+interpret epoch -> bv[1]
+
+type ts = struct {
+    version : epoch,
+    cid     : epoch
+}
+
+isolate test_timestamp = {
+    action send_ts(a:ts)
+
+    relation seen(X:ts)
+
+    implementation {
+        implement send_ts(a:ts) {
+            require ~seen(a);
+            seen(a) := true;
+            call report_ts_a(a)
+        }
+    }
+}
+
+import action report_ts_a(a:ts)
+export test_timestamp.send_ts
+`
+	path := filepath.Join(t.TempDir(), "action_gen_precondition.ivy")
+	if err := os.WriteFile(path, []byte(src), 0644); err != nil {
+		t.Fatalf("write test ivy: %v", err)
+	}
+	out, err := CompileAndGenerate(path, map[string]string{"isolate": "test_timestamp"}, Config{
+		Target:    "test",
+		ClassName: "action_gen_precondition",
+	})
+	if err != nil {
+		t.Fatalf("CompileAndGenerate: %v", err)
+	}
+	constructor := generatedMethodBody(t, out.Impl,
+		"ext__test_timestamp__send_ts_gen::ext__test_timestamp__send_ts_gen",
+		"bool ext__test_timestamp__send_ts_gen::generate",
+	)
+	if !strings.Contains(constructor, "test_timestamp.seen") {
+		t.Fatalf("action generator constructor should assert the require/seen precondition:\n%s", constructor)
+	}
+	if strings.Contains(constructor, `add("(assert true)")`) {
+		t.Fatalf("action generator constructor must not solve true after dropping the require:\n%s", constructor)
+	}
+	generateBody := generatedMethodBody(t, out.Impl,
+		"bool ext__test_timestamp__send_ts_gen::generate",
+		"void ext__test_timestamp__send_ts_gen::execute",
+	)
+	if !strings.Contains(generateBody, "assumption_unsatisfied") ||
+		!strings.Contains(generateBody, "action generator precondition cannot be satisfied") {
+		t.Fatalf("action generator should report an unsatisfied precondition when solve has no model:\n%s", generateBody)
+	}
+}
+
 // TestAssertLabelStripsTrailingColonSpace verifies that the C++ label
 // passed to ivy_assert mirrors Python's iu.lineno_str (ivy_utils.py:285-
 // 291), which strips the trailing ": " from Location.String(). Without

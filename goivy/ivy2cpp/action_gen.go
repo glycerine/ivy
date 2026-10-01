@@ -58,9 +58,10 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 		act:       act,
 	}
 
-	// Python: action = im.module.before_export.get(name, action)
+	// Python source-of-truth ignores the empty before_export clone used for
+	// explicit verified exports, so the real ext: wrapper drives action_gen.
 	if g.Mod.BeforeExport != nil {
-		if be, ok := g.Mod.BeforeExport.Get2(name); ok && be != nil {
+		if be, ok := g.Mod.BeforeExport.Get2(name); ok && be != nil && !actionGenIsEmptySequence(be) {
 			plan.act = be
 		}
 	}
@@ -187,6 +188,11 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 		}
 	}
 	return plan
+}
+
+func actionGenIsEmptySequence(act goivy.Action) bool {
+	seq, ok := act.(*goivy.LogicSequence)
+	return ok && len(seq.Elems) == 0
 }
 
 func (g *Generator) orderActionGenGeneratedInputsByFormula(inputs []*goivy.Const, fmla goivy.Expr, actionName string) []*goivy.Const {
@@ -862,6 +868,7 @@ func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
 		w.line("// std::cout << slvr << std::endl;")
 	}
 	w.line("bool __res = solve();")
+	g.emitActionGenUnsatisfiedPreconditionReport(w, plan)
 	w.open("if (__res) {")
 	for _, sym := range plan.inputs {
 		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
@@ -1005,6 +1012,7 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 		w.line("// std::cout << slvr << std::endl;")
 	}
 	w.line("bool __res = solve();")
+	g.emitActionGenUnsatisfiedPreconditionReport(w, plan)
 	w.open("if (__res) {")
 	for _, sym := range plan.inputs {
 		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
@@ -1046,6 +1054,23 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 	w.close("")
 
 	g.emitActionGenExecute(w, plan)
+}
+
+func (g *Generator) emitActionGenUnsatisfiedPreconditionReport(w *cppWriter, plan *actionGenPlan) {
+	displayName := actionGenDisplayName(plan.name)
+	msg := displayName + ": action generator precondition cannot be satisfied"
+	w.open("if (!__res) {")
+	w.linef(`__ivy_out << "assumption_unsatisfied(\"%s\")" << std::endl;`, escapeString(msg))
+	w.linef(`std::cerr << "%s: error: action generator precondition cannot be satisfied\n";`, escapeString(displayName))
+	w.line("__ivy_exit(1);")
+	w.close("")
+}
+
+func actionGenDisplayName(name string) string {
+	if idx := strings.LastIndex(name, ":"); idx >= 0 {
+		return name[idx+1:]
+	}
+	return name
 }
 
 // emitWeakActionGenerator emits the pre-M4 fallback shape: randomize
