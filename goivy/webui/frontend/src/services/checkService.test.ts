@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
   addCheckResultViewActions,
+  analysisControllerOptions,
   autoCheckUsedRelations,
   boundedCheck,
   checkInduction,
@@ -534,6 +535,24 @@ describe('checkService', () => {
         signal: expect.any(AbortSignal),
       }));
     }
+  });
+
+  it('ignores tutorial help URLs restored into the transition log field', () => {
+    document.body.innerHTML = [
+      '<input id="transition-log-file" value="/static/tutorial/kenmcmil.github.io/ivy/examples/values.html">',
+    ].join('');
+
+    expect(analysisControllerOptions()).toEqual({});
+  });
+
+  it('passes a real transition log file through analysis controller options', () => {
+    document.body.innerHTML = [
+      '<input id="transition-log-file" value="model.log">',
+    ].join('');
+
+    expect(analysisControllerOptions()).toEqual({
+      transition_log_file: 'model.log',
+    });
   });
 
   it('adds CTI details and trace actions for failed checks', () => {

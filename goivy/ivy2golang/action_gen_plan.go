@@ -39,10 +39,8 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 		plan.fallbackReason = "nil generator, module, or action"
 		return plan
 	}
-	if g.Mod.BeforeExport != nil {
-		if be, ok := g.Mod.BeforeExport.Get2(name); ok && be != nil {
-			plan.act = be
-		}
+	if be, ok := g.actionGeneratorBeforeExportAction(name); ok {
+		plan.act = be
 	}
 	if g.Mod.ExtPreconds != nil {
 		if pre, ok := g.Mod.ExtPreconds[name]; ok && pre != nil {

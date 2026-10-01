@@ -110,6 +110,10 @@ func (g *Generator) runtimeActionSolverPlan(name string, act goivy.Action) (res 
 		g.errs = g.errs[:oldErrs]
 		return nil, false
 	}
+	if !g.addRuntimeActionSolverPrefixPreconditions(plan) {
+		g.errs = g.errs[:oldErrs]
+		return nil, false
+	}
 	baseSMT, ok := g.runtimeActionSolverSMTLIBAssertion(plan.preFmla)
 	if !ok {
 		g.errs = g.errs[:oldErrs]
@@ -193,6 +197,55 @@ func (g *Generator) runtimeActionSolverPlan(name string, act goivy.Action) (res 
 	}
 	g.errs = g.errs[:oldErrs]
 	return &runtimeActionSolverPlan{plan: plan, baseSMT: baseSMT, assigns: assigns, stateSyms: stateSyms, needsState: needsState}, true
+}
+
+func (g *Generator) addRuntimeActionSolverPrefixPreconditions(plan *actionGenPlan) bool {
+	if g == nil || plan == nil || plan.act == nil {
+		return true
+	}
+	guards, ok := g.testActionPrefixPreimageAssumeFormulasOK(plan.act)
+	if !ok || len(guards) == 0 {
+		return ok
+	}
+	guards = g.expandActionGeneratorGuardDefinitions(guards)
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for _, p := range plan.act.GetFormalParams() {
+		if p == nil || p.CSort == nil {
+			continue
+		}
+		repl := goivy.NewConst(actionFormalGeneratorLabel(p), p.CSort)
+		for _, name := range formalExprOverrideNames(p.Name) {
+			if name == repl.Name {
+				continue
+			}
+			subs[goivy.Key(goivy.NewConst(name, p.CSort))] = repl
+		}
+	}
+	terms := make([]goivy.Expr, 0, len(guards)+1)
+	if plan.preFmla != nil && !goivy.IsTrue(plan.preFmla) {
+		terms = append(terms, plan.preFmla)
+	}
+	for _, guard := range guards {
+		if guard == nil || goivy.IsTrue(guard) {
+			continue
+		}
+		if len(subs) > 0 {
+			substituted, err := goivy.Substitute(guard, subs)
+			if err != nil {
+				return false
+			}
+			guard = substituted
+		}
+		terms = append(terms, guard)
+	}
+	fmla, ok := preimageConjunctionOrTrue(terms)
+	if !ok {
+		return false
+	}
+	plan.preFmla = fmla
+	plan.used = goivy.UsedSymbolsAst(plan.preFmla)
+	plan.inputs = g.orderActionGenGeneratedInputsByFormula(plan.inputs, plan.preFmla, plan.name)
+	return true
 }
 
 func (g *Generator) runtimeActionSolverNeedsRangeBoundParam(sym stateSymbol) bool {
@@ -1279,6 +1332,7 @@ func (g *Generator) emitRuntimeActionSolverMethod(w *goWriter, typeName string, 
 	w.open("if ivy == nil {")
 	w.line("return false")
 	w.close("")
+	w.line(`gen.__ivy_solver_failure = ""`)
 	w.line("defer func() { ivy.___ivy_gen = gen }()")
 	w.open("if gen.__ivy_solver == nil {")
 	w.line("gen.__ivy_solver = goivy.NewSolver(gen.__ivy_solver_module(), ivyRuntimeSolverOptions())")
@@ -1289,6 +1343,7 @@ func (g *Generator) emitRuntimeActionSolverMethod(w *goWriter, typeName string, 
 	w.line("var err error")
 	w.line("gen.__ivy_solver_base, err = solver.NewSMTLIBBaseSolver(baseSMT)")
 	w.open("if err != nil {")
+	w.line(`gen.__ivy_solver_failure = fmt.Sprintf("action generator solver setup failed: %v", err)`)
 	w.line("return false")
 	w.close("")
 	w.close("")
@@ -1304,7 +1359,12 @@ func (g *Generator) emitRuntimeActionSolverMethod(w *goWriter, typeName string, 
 		g.emitRuntimeActionSolverRandomInputEquality(w, rsp, assign, i)
 	}
 	w.line("model, err := solver.GetModelSMTLIBBaseClausesWithSoftAssumptionsLogged(gen.__ivy_solver_base, clauses, soft, func(n int) int { if n <= 0 { return 0 }; return ivyRand31() % n }, ivySoftAssumptionModelLog)")
-	w.open("if err != nil || model == nil {")
+	w.open("if err != nil {")
+	w.line(`gen.__ivy_solver_failure = fmt.Sprintf("action generator solver failed: %v", err)`)
+	w.line("return false")
+	w.close("")
+	w.open("if model == nil {")
+	w.line(`gen.__ivy_solver_failure = "action generator precondition cannot be satisfied"`)
 	w.line("return false")
 	w.close("")
 	g.emitRuntimeSolverSatModelLog(w)
@@ -1609,9 +1669,19 @@ func runtimeActionSolverDefinedInputTerms(def goivy.Expr) (goivy.Expr, goivy.Exp
 	}
 }
 
-func (g *Generator) emitRuntimeActionSolverGenerateReturn(w *goWriter) {
+func (g *Generator) emitRuntimeActionSolverGenerateReturn(w *goWriter, name string) {
 	w.open("if gen.__ivy_generate_with_solver() {")
 	w.line("return true")
+	w.close("")
+	w.open(`if gen.__ivy_solver_failure != "" {`)
+	w.line("__ivy_solver_failure := gen.__ivy_solver_failure")
+	w.line(`gen.__ivy_solver_failure = ""`)
+	w.linef(`__ivy_solver_msg := fmt.Sprintf("%%s: %%s", %q, __ivy_solver_failure)`, actionDisplayName(name))
+	if g.Config.Target != "gen" {
+		w.line(`ivyFailureEvent("assumption_unsatisfied", __ivy_solver_msg)`)
+	}
+	w.linef(`fmt.Fprintf(os.Stderr, "%%s: error: %%s\n", %q, __ivy_solver_failure)`, actionDisplayName(name))
+	w.line("os.Exit(1)")
 	w.close("")
 	w.line("return false")
 }
@@ -1900,6 +1970,7 @@ func (g *Generator) emitRuntimeActionSolverExtraFields(w *goWriter, rsp *runtime
 	w.line("__ivy_solver *goivy.Solver")
 	w.line("__ivy_solver_base *goivy.SMTLIBBaseSolver")
 	w.line("__ivy_solver_pre *goivy.Clauses")
+	w.line("__ivy_solver_failure string")
 	for _, member := range g.runtimeActionSolverGeneratedMembers(rsp) {
 		w.linef("%s %s", member.target, g.goType(member.sort))
 	}

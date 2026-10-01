@@ -1163,6 +1163,16 @@ func (g *Generator) emitRuntime(w *goWriter) {
 	w.line("return int(__ivy_rng.Uint64() % uint64(rng))")
 	w.close("")
 	w.blank()
+	w.open("func ivyBVRandom(bits int) int {")
+	w.open("if bits <= 0 {")
+	w.line("return 0")
+	w.close("")
+	w.open("if bits >= strconv.IntSize-1 {")
+	w.line("return int(__ivy_rng.Uint64() & uint64(^uint(0)>>1))")
+	w.close("")
+	w.line("return int(__ivy_rng.Uint64() & ((uint64(1) << bits) - 1))")
+	w.close("")
+	w.blank()
 	w.open("func ivyBVShiftAmount(v int) int {")
 	w.open("if v < 0 {")
 	w.line("return 0")
@@ -3561,7 +3571,7 @@ func (g *Generator) emitTestActionGeneratorGenerate(w *goWriter, name string, ac
 	if hasRuntimeSolver {
 		w.close("")
 		g.discardUnreachableSolverGeneratorErrors(oldErrs)
-		g.emitRuntimeActionSolverGenerateReturn(w)
+		g.emitRuntimeActionSolverGenerateReturn(w, name)
 	}
 }
 
@@ -3712,12 +3722,26 @@ func (g *Generator) emitGenActionGeneratorTypes(w *goWriter, runnable []string) 
 }
 
 func (g *Generator) actionGeneratorAnalysisAction(name string, act goivy.Action) goivy.Action {
-	if g != nil && g.Mod != nil && g.Mod.BeforeExport != nil {
-		if be, ok := g.Mod.BeforeExport.Get2(name); ok && be != nil {
-			return be
-		}
+	if be, ok := g.actionGeneratorBeforeExportAction(name); ok {
+		return be
 	}
 	return act
+}
+
+func (g *Generator) actionGeneratorBeforeExportAction(name string) (goivy.Action, bool) {
+	if g == nil || g.Mod == nil || g.Mod.BeforeExport == nil {
+		return nil, false
+	}
+	be, ok := g.Mod.BeforeExport.Get2(name)
+	if !ok || be == nil || actionIsEmptySequence(be) {
+		return nil, false
+	}
+	return be, true
+}
+
+func actionIsEmptySequence(act goivy.Action) bool {
+	seq, ok := act.(*goivy.LogicSequence)
+	return ok && len(seq.Elems) == 0
 }
 
 func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act goivy.Action, hasRuntimeSolver bool) {
@@ -3747,7 +3771,7 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 		if hasRuntimeSolver {
 			w.close("")
 			g.discardUnreachableSolverGeneratorErrors(oldErrs)
-			g.emitRuntimeActionSolverGenerateReturn(w)
+			g.emitRuntimeActionSolverGenerateReturn(w, name)
 		}
 		return
 	}
@@ -3768,7 +3792,7 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 	if hasRuntimeSolver {
 		w.close("")
 		g.discardUnreachableSolverGeneratorErrors(oldErrs)
-		g.emitRuntimeActionSolverGenerateReturn(w)
+		g.emitRuntimeActionSolverGenerateReturn(w, name)
 	}
 }
 
@@ -9969,6 +9993,18 @@ func (g *Generator) collectTestActionPrefixPreimageAssumeFormulas(act goivy.Acti
 			return nil, false
 		}
 		return []goivy.Expr{guard}, true
+	case *goivy.LogicRequiresAction:
+		if a.Formula == nil {
+			return nil, true
+		}
+		if residuals, ok := g.preimageLocalFieldAssumeResidualGuards(a.Formula, ctx); ok {
+			return residuals, true
+		}
+		guard, ok := g.substituteExprForPreimage(a.Formula, ctx)
+		if !ok {
+			return nil, false
+		}
+		return []goivy.Expr{guard}, true
 	case *goivy.LogicSequence:
 		var guards []goivy.Expr
 		for _, elem := range a.Elems {
@@ -9983,7 +10019,7 @@ func (g *Generator) collectTestActionPrefixPreimageAssumeFormulas(act goivy.Acti
 			guards = append(guards, childGuards...)
 		}
 		return guards, true
-	case *goivy.LogicAssertAction, *goivy.LogicRequiresAction, *goivy.LogicEnsuresAction, *goivy.LogicSubgoalAction, *goivy.IgnoreAction, *goivy.LogicDebugAction:
+	case *goivy.LogicAssertAction, *goivy.LogicEnsuresAction, *goivy.LogicSubgoalAction, *goivy.IgnoreAction, *goivy.LogicDebugAction:
 		return nil, true
 	case *goivy.LogicAssignAction:
 		return nil, g.recordSimplePreimageAssign(a, ctx)
@@ -16449,14 +16485,12 @@ func (g *Generator) explicitExportedActionNames() ([]string, bool) {
 		if exp == nil || exp.Scope() != "" {
 			continue
 		}
-		name := exp.Exported()
-		if name == "" || seen[name] {
+		name, ok := g.canonicalExplicitExportActionName(exp.Exported())
+		if !ok {
 			continue
 		}
-		if g.Mod.Actions != nil {
-			if _, ok := g.Mod.Actions.Get2(name); !ok {
-				continue
-			}
+		if name == "" || seen[name] {
+			continue
 		}
 		seen[name] = true
 		names = append(names, name)
@@ -16465,6 +16499,31 @@ func (g *Generator) explicitExportedActionNames() ([]string, bool) {
 		return nil, false
 	}
 	return names, true
+}
+
+func (g *Generator) canonicalExplicitExportActionName(exported string) (string, bool) {
+	if g == nil || g.Mod == nil || exported == "" {
+		return "", false
+	}
+	if g.Mod.PublicActions != nil && g.Mod.PublicActions.Len() > 0 {
+		if !strings.HasPrefix(exported, "ext:") {
+			extName := "ext:" + exported
+			if isPublic, ok := g.Mod.PublicActions.Get2(extName); ok && isPublic {
+				return extName, true
+			}
+		}
+		if isPublic, ok := g.Mod.PublicActions.Get2(exported); ok && isPublic {
+			return exported, true
+		}
+		return "", false
+	}
+	if g.Mod.Actions == nil {
+		return "", false
+	}
+	if _, ok := g.Mod.Actions.Get2(exported); ok {
+		return exported, true
+	}
+	return "", false
 }
 
 func (g *Generator) initialMixinActionNames() map[string]bool {

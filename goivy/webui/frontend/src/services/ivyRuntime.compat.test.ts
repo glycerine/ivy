@@ -925,6 +925,18 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.getElementById('job-control-page').classList.contains('open')).toBe(false);
   });
 
+  it('clears tutorial URL browser restore cross-talk from the transition log field', () => {
+    document.body.innerHTML = [
+      '<input id="transition-log-file" value="/static/tutorial/kenmcmil.github.io/ivy/examples/values.html">',
+    ].join('');
+    const runtime = makeRuntime();
+
+    runtime._setupAnalysisControllerControls();
+
+    expect(runtime.transitionLogFile).toBe('');
+    expect((document.getElementById('transition-log-file') as HTMLInputElement).value).toBe('');
+  });
+
   it('binds every visible static File menu item to a controller command', () => {
     vi.useFakeTimers();
     document.body.innerHTML = [

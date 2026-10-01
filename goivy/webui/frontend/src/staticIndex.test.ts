@@ -41,6 +41,8 @@ describe('static index toolbar', () => {
     expect(searchInput).not.toBeNull();
     expect(searchInput?.getAttribute('type')).toBe('search');
     expect(searchInput?.getAttribute('aria-label')).toBe('Search tutorial help');
+    expect(urlInput?.getAttribute('name')).toBe('ivy-tutorial-url');
+    expect(urlInput?.getAttribute('autocomplete')).toBe('off');
     expect(searchResults).not.toBeNull();
     expect(searchResults?.getAttribute('hidden')).toBe('');
     expect(children.indexOf(urlInput!)).toBeLessThan(children.indexOf(searchWrap!));
@@ -254,6 +256,8 @@ describe('static job control', () => {
     expect(logLabel?.textContent).toBe('Log');
     expect(logFile?.getAttribute('aria-label')).toBe('Transition log file');
     expect(logFile?.getAttribute('placeholder')).toBe('model.log');
+    expect(logFile?.getAttribute('name')).toBe('ivy-transition-log-file');
+    expect(logFile?.getAttribute('autocomplete')).toBe('off');
     expect(logFile?.closest('#job-control-page')).not.toBeNull();
     expect(children.indexOf(logField!)).toBeLessThan(children.indexOf(toggle!));
     expect(status).not.toBeNull();

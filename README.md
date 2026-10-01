@@ -2,12 +2,12 @@ GoIvy (Ivy in Go/as a Web application backed by a Go server)
 ======================================================
 
 <details>
-<summary>NEWS: 2026 Sept 29: Veil on Lean, the new Ivy on the block</summary>
+<summary>NEWS: 2026 Sept 29: Veil on Lean, the new Ivy on the block (click to expand) </summary>
 
 --------
 In a "same language (well, kind of Ivy 1.6 since Veil as yet lacks the modules -- which are class templates in C++ parlance -- of Ivy 1.7), but has very strong backing/infrastructure" idea rocket: 
 
-Veil is the Ivy 1.6 language of Ivy but backed by the Lean theorem prover. This means more automtation (users do less), at the expense of being somewhat slower (e.g. 5 minutes intead of 5 seconds).
+Veil is the Ivy 1.6 language of Ivy but backed by the Lean theorem prover. This means more automation for users (users do less manual work), at the expense of being somewhat slower (e.g. 5 minutes intead of 5 seconds).
 
 > The language of Veil is almost a verbatim port of RML, the specification
 > language of Ivy [37], while its bounded model checking capability is inspired
@@ -154,6 +154,7 @@ Note that the required Z3 fork is vendored in this repo, in ivy/goivy/z3vendor/z
 and is compiled below (building Z3 takes about 10-20 minutes, be patient).
 
 ~~~
+
 export GOPATH=/home/yourUserName/go # where "go install" will put the goivy_check and ivyweb binaries
 
 git clone https://github.com/glycerine/ivy
@@ -1419,3 +1420,66 @@ index a208c620..91b32106 100755
                      iso.compile_with_invariants.set("true" if target.get()=='test'
                                                      and not iu.version_le(iu.get_string_version(),"1.7")
 ~~~
+
+## Python ivy_to_cpp.py target=test dropped requires for explicit isolated exports
+
+The original Python `ivy_to_cpp.py` had the same `target=test` action-generator
+bug that showed up while fixing GoIvy's `ivy2golang` port for
+`timestamp.ivy`-style tests with native bit-vector epochs.
+
+Minimal shape:
+
+```ivy
+#lang ivy1.7
+type epoch
+interpret epoch -> bv[1]
+
+type ts = struct { version : epoch, cid : epoch }
+
+isolate test_timestamp = {
+    action send_ts(a:ts)
+    relation seen(X:ts)
+
+    implementation {
+        implement send_ts(a:ts) {
+            require ~seen(a);
+            seen(a) := true;
+            call report_ts_a(a)
+        }
+    }
+}
+
+import action report_ts_a(a:ts)
+export test_timestamp.send_ts
+```
+
+Before the fix, the generated `ext__test_timestamp__send_ts_gen` constructor
+contained `add("(assert true)")` instead of a formula mentioning
+`test_timestamp.seen`. The randomized tester could therefore generate a
+previously seen timestamp and report an action-body `assumption_failed`, hiding
+the real bug: the action generator had ignored the exported wrapper's
+`require`.
+
+The cause was that `ivy_isolate.py` puts the real public wrapper in
+`module.actions["ext:..."]`, with `RequiresAction` converted to an assumption
+for generator analysis, but `ivy_to_cpp.py:emit_action_gen` unconditionally
+replaced that wrapper with `module.before_export[name]`. For explicit verified
+exports, `before_export[name]` is only an empty clone, and explicit exports do
+not get a separate `ext_preconds` entry. So the generator solved `true`.
+
+The fix keeps non-empty `before_export` actions, but ignores the empty explicit
+export clone so the real `ext:` wrapper drives the reverse-image formula. The
+generated C++ action generator now also reports
+`action generator precondition cannot be satisfied` when the solver cannot find
+a model, instead of letting the action body fail later with an ambiguous
+assumption failure.
+
+Regression coverage:
+
+```sh
+cd ~/ivy/pyivy/ivy
+XTRACE_OFF=1 ../goivy-venv/bin/python test/action_gen_precondition_test.py
+
+cd ~/ivy/goivy
+XTRACE_OFF=1 go test ./ivy2golang -run 'TestTargetTestStructFieldNativeBVActionArgsRandomizeWideEpoch|TestTargetTestSolverRandomizesStructFieldNativeBVActionArgs' -count=1 -v
+```

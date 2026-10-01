@@ -824,6 +824,9 @@ def variant_axiom_assertions_smt():
 def cpp_smt_string(s):
     return s.replace('\\','\\\\').replace('"','\\"').replace('\n',' "\n"')
 
+def cpp_string(s):
+    return s.replace('\\','\\\\').replace('"','\\"').replace('\n','\\n')
+
 def emit_variant_axiom_assertions(impl):
     for smt in variant_axiom_assertions_smt():
         indent(impl)
@@ -1271,13 +1274,15 @@ def get_support_include_dir():
     repo_root = os.path.dirname(os.path.dirname(os.path.dirname(ivy_py_dir)))
     return os.path.join(repo_root, 'include2cpp')
 
+def is_empty_sequence_action(action):
+    return isinstance(action,ia.Sequence) and len(action.args) == 0
 
 def emit_action_gen(header,impl,name,action,classname):
     global indent_level
     global global_classname
     global_classname = classname
     caname = varname(name)
-    if name in im.module.before_export:
+    if name in im.module.before_export and not is_empty_sequence_action(im.module.before_export[name]):
         action = im.module.before_export[name]
     def card(sort):
 #        res = sort_card(sort)
@@ -1383,6 +1388,14 @@ def emit_action_gen(header,impl,name,action,classname):
     impl.append("""
     // std::cout << slvr << std::endl;
     bool __res = solve();
+""")
+    action_display_name = name.split(':')[-1]
+    impl.append('    if (!__res) {\n')
+    impl.append('        __ivy_out << "assumption_unsatisfied(\\"{}: action generator precondition cannot be satisfied\\")" << std::endl;\n'.format(cpp_string(action_display_name)))
+    impl.append('        std::cerr << "{}: error: action generator precondition cannot be satisfied\\n";\n'.format(cpp_string(action_display_name)))
+    impl.append('        __ivy_exit(1);\n')
+    impl.append('    }\n')
+    impl.append("""
     if (__res) {
 """)
     indent_level += 1

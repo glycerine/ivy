@@ -961,12 +961,12 @@ func parseBool(v string) bool {
 	}
 }
 
-func parseDebugParam(v string) (int, bool, error) {
+func parseDebugParam(v string) (level int, isAssert bool, err error) {
 	s := strings.ToLower(strings.TrimSpace(v))
 	if s == "assert" {
 		return 0, true, nil
 	}
-	level, err := strconv.Atoi(s)
+	level, err = strconv.Atoi(s)
 	if err != nil || level < 0 {
 		return 0, false, fmt.Errorf("ivy2golang: debug must be a non-negative integer or assert, got %q", v)
 	}

@@ -312,7 +312,7 @@ func (g *Generator) goRandomValueExprWithChooserSeen(s goivy.Sort, name string, 
 			if card := it.card(); card > 0 {
 				return callInt(card), nil
 			}
-			return callInt(0), nil
+			return fmt.Sprintf("ivyBVRandom(%d)", it.Bits), nil
 		}
 		if rs, ok := g.rangeSortFor(s); ok {
 			lo, hi, ok := numericRangeBounds(rs)

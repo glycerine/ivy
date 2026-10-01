@@ -143,6 +143,21 @@ function readInputValue(doc, id) {
   return input ? input.value : '';
 }
 
+function isTutorialHelpPath(value: string) {
+  if (!value) return false;
+  if (value.startsWith('/static/tutorial/')) return true;
+  try {
+    return new URL(value, 'http://ivy.local').pathname.startsWith('/static/tutorial/');
+  } catch (_err) {
+    return false;
+  }
+}
+
+export function normalizeTransitionLogFileValue(value) {
+  const trimmed = String(value || '').trim();
+  return isTutorialHelpPath(trimmed) ? '' : trimmed;
+}
+
 function readBmcBound(doc) {
   const raw = readSelectValue(doc, 'analysis-bmc-bound');
   if (raw === '') return undefined;
@@ -170,7 +185,7 @@ export function analysisControllerOptions({
     Object.assign(options, relationsToMinimizeOptions({ doc }));
   }
   if (includeTransitionLog) {
-    const transitionLogFile = readInputValue(doc, 'transition-log-file').trim();
+    const transitionLogFile = normalizeTransitionLogFileValue(readInputValue(doc, 'transition-log-file'));
     if (transitionLogFile) options.transition_log_file = transitionLogFile;
   }
   return options;

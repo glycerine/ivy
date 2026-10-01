@@ -132,6 +132,7 @@ import {
     checkInduction as checkInductionViaService,
     ctiBoundedCheck as ctiBoundedCheckViaService,
     ctiConceptAction as ctiConceptActionViaService,
+    normalizeTransitionLogFileValue,
     runCheck as runCheckViaService,
     showCheckResult as showCheckResultViaService,
     weakenInvariant as weakenInvariantViaService,
@@ -4339,10 +4340,14 @@ class IvyRuntime {
         }
         var logEl = document.getElementById('transition-log-file') as HTMLInputElement | null;
         if (logEl) {
-            this.transitionLogFile = logEl.value || '';
-            logEl.addEventListener('input', function () {
-                self.transitionLogFile = this.value || '';
-            });
+            var syncTransitionLogFile = function () {
+                var raw = logEl.value || '';
+                var normalized = normalizeTransitionLogFileValue(raw);
+                if (raw && !normalized) logEl.value = '';
+                self.transitionLogFile = normalized;
+            };
+            syncTransitionLogFile();
+            logEl.addEventListener('input', syncTransitionLogFile);
         }
     }
 
