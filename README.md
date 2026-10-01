@@ -2,13 +2,12 @@ GoIvy (Ivy in Go/as a Web application backed by a Go server)
 ======================================================
 
 <details>
-<summary>NEWS: 2026 Sept 29: Veil on Lean is new but seems a stronger foundataion... click to expand</summary>
+<summary>NEWS: 2026 Sept 29: Veil on Lean, the new Ivy on the block</summary>
 
 --------
 In a "same language (well, kind of Ivy 1.6 since Veil as yet lacks the modules -- which are class templates in C++ parlance -- of Ivy 1.7), but has very strong backing/infrastructure" idea rocket: 
 
-Veil is the Ivy 1.6 language of Ivy but backed by the Lean theorem prover. This means fewer bugs, and more automtation (users do less), at the expense 
-of being somewhat slower (e.g. 5 minutes intead of 5 seconds).
+Veil is the Ivy 1.6 language of Ivy but backed by the Lean theorem prover. This means more automtation (users do less), at the expense of being somewhat slower (e.g. 5 minutes intead of 5 seconds).
 
 > The language of Veil is almost a verbatim port of RML, the specification
 > language of Ivy [37], while its bounded model checking capability is inspired
@@ -59,7 +58,7 @@ see
 interesting undergrad thesis from the same lab: translating TLA+ to Ivy:
 * https://github.com/markyuen/tlaplus-to-ivy/blob/main/report.pdf
 
-# conclusion - why I recommend Veil instead of Ivy for any serious future work
+# conclusion - once it matures, I would recommend checking out Veil
 
 * the interactive part of Ivy (the Tk GUI) has been abandonded and unusable for many years. My efforts in webivy to resurrect it look great and are kind of fun, but ultimtely have been constrained because I cannot figure out what it was supposed to do. Moreover, bug reports and email to authors requesting a few minutes help to revive it go unanswered.
 
@@ -67,7 +66,7 @@ interesting undergrad thesis from the same lab: translating TLA+ to Ivy:
 
 * Lean is a way more general and capable and well supported foundation to build on. Waiting longer is a small price for more automated verification with less human problem-solving required.
 
-* GoIvy is in a great place. It is much less buggy than upstream python Ivy, and twice as fast. The ivy_to_cpp (ivy2cpp, ivy2golang) tools remain useful for randomized testing (fuzzing) your spec before you have a proof. The compositional testing ideas are cutting edge. Every system designer should watch [Ken McMillan's 2017 ETAPS tutorial on Compositional Testing](https://youtu.be/6WVL-Vpm5RY). It will blow your mind and change for the better how you build.
+* All that said, GoIvy is in a great place. It is much less buggy than upstream python Ivy, and twice as fast. The ivy_to_cpp (ivy2cpp, ivy2golang) tools remain useful for randomized testing (fuzzing) your spec before you have a proof. The compositional testing ideas are cutting edge. Every system designer should watch [Ken McMillan's 2017 ETAPS tutorial on Compositional Testing](https://youtu.be/6WVL-Vpm5RY). It will blow your mind and change for the better how you build.
 
 ... now back to your regularly scheduled README ...
 
