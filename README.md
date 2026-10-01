@@ -4,7 +4,10 @@ GoIvy (Ivy in Go/as a Web application backed by a Go server)
 <details>
 <summary>NEWS: 2026 Sept 29: Veil on Lean is new but seems a stronger foundataion... click to expand</summary>
 
-In a "same language, but with better infrastructure" approach: Veil is Ivy but backed by the Lean theorem prover. This means fewer bugs, and more automtation (users do less), at the expense 
+--------
+In a "same language (well, Ivy 1.6 without modules), but with better infrastructure" approach: 
+
+Veil is Ivy but backed by the Lean theorem prover. This means fewer bugs, and more automtation (users do less), at the expense 
 of being somewhat slower (e.g. 5 minutes intead of 5 seconds).
 
 > The language of Veil is almost a verbatim port of RML, the specification
