@@ -1333,6 +1333,7 @@ func (g *Generator) emitRuntimeActionSolverMethod(w *goWriter, typeName string, 
 	w.line("return false")
 	w.close("")
 	w.line(`gen.__ivy_solver_failure = ""`)
+	w.linef(`gen.__ivy_solver_failure_label = %q`, actionDisplayName(rsp.plan.name))
 	w.line("defer func() { ivy.___ivy_gen = gen }()")
 	w.open("if gen.__ivy_solver == nil {")
 	w.line("gen.__ivy_solver = goivy.NewSolver(gen.__ivy_solver_module(), ivyRuntimeSolverOptions())")
@@ -1365,6 +1366,7 @@ func (g *Generator) emitRuntimeActionSolverMethod(w *goWriter, typeName string, 
 	w.close("")
 	w.open("if model == nil {")
 	w.line(`gen.__ivy_solver_failure = "action generator precondition cannot be satisfied"`)
+	w.linef(`gen.__ivy_solver_failure_label = %q`, g.actionGenPreconditionFailureLabel(rsp.plan))
 	w.line("return false")
 	w.close("")
 	g.emitRuntimeSolverSatModelLog(w)
@@ -1675,12 +1677,17 @@ func (g *Generator) emitRuntimeActionSolverGenerateReturn(w *goWriter, name stri
 	w.close("")
 	w.open(`if gen.__ivy_solver_failure != "" {`)
 	w.line("__ivy_solver_failure := gen.__ivy_solver_failure")
+	w.line("__ivy_solver_failure_label := gen.__ivy_solver_failure_label")
 	w.line(`gen.__ivy_solver_failure = ""`)
-	w.linef(`__ivy_solver_msg := fmt.Sprintf("%%s: %%s", %q, __ivy_solver_failure)`, actionDisplayName(name))
+	w.line(`gen.__ivy_solver_failure_label = ""`)
+	w.open(`if __ivy_solver_failure_label == "" {`)
+	w.linef(`__ivy_solver_failure_label = %q`, actionDisplayName(name))
+	w.close("")
+	w.line(`__ivy_solver_msg := fmt.Sprintf("%s: %s", __ivy_solver_failure_label, __ivy_solver_failure)`)
 	if g.Config.Target != "gen" {
 		w.line(`ivyFailureEvent("assumption_unsatisfied", __ivy_solver_msg)`)
 	}
-	w.linef(`fmt.Fprintf(os.Stderr, "%%s: error: %%s\n", %q, __ivy_solver_failure)`, actionDisplayName(name))
+	w.line(`fmt.Fprintf(os.Stderr, "%s: error: %s\n", __ivy_solver_failure_label, __ivy_solver_failure)`)
 	w.line("os.Exit(1)")
 	w.close("")
 	w.line("return false")
@@ -1971,6 +1978,7 @@ func (g *Generator) emitRuntimeActionSolverExtraFields(w *goWriter, rsp *runtime
 	w.line("__ivy_solver_base *goivy.SMTLIBBaseSolver")
 	w.line("__ivy_solver_pre *goivy.Clauses")
 	w.line("__ivy_solver_failure string")
+	w.line("__ivy_solver_failure_label string")
 	for _, member := range g.runtimeActionSolverGeneratedMembers(rsp) {
 		w.linef("%s %s", member.target, g.goType(member.sort))
 	}
@@ -2233,6 +2241,13 @@ func (g *Generator) emitRuntimeActionSolverAppendValueEquality(w *goWriter, dst 
 }
 
 func (g *Generator) emitRuntimeActionSolverAppendStorageValueEquality(w *goWriter, dst string, lhs string, value string, s goivy.Sort) bool {
+	if g.isVariantSuperName(sortName(s)) {
+		return g.emitRuntimeActionSolverAppendVariantEquality(w, dst, lhs, value, s)
+	}
+	if fields := g.destructorStructFieldInfos(sortName(s)); len(fields) > 0 {
+		g.emitRuntimeActionSolverAppendRecordValueEquality(w, dst, lhs, value, fields)
+		return true
+	}
 	expr, ok := g.emitRuntimeActionSolverStorageValueConstraintExpr(lhs, value, s)
 	if !ok {
 		return false
@@ -2315,12 +2330,11 @@ func (g *Generator) emitRuntimeActionSolverAppendRecordValueEquality(w *goWriter
 }
 
 func (g *Generator) emitRuntimeActionSolverRecordConstraintExpr(w *goWriter, dst string, lhs string, value string, s goivy.Sort, fields []goDestructorField) string {
-	tmp := g.nextTemp("__ivy_solver_record")
-	w.linef("%s := goivy.NewConst(%q, %s)", tmp, tmp, g.goIvySortExpr(s))
+	_ = s
 	for _, field := range fields {
-		g.emitRuntimeActionSolverAppendRecordFieldEquality(w, dst, tmp, value, field, nil, nil)
+		g.emitRuntimeActionSolverAppendRecordFieldEquality(w, dst, lhs, value, field, nil, nil)
 	}
-	return fmt.Sprintf("&goivy.Eq{T1: %s, T2: %s}", lhs, tmp)
+	return "goivy.True"
 }
 
 func (g *Generator) emitRuntimeActionSolverAppendVariantEquality(w *goWriter, dst string, lhs string, value string, s goivy.Sort) bool {

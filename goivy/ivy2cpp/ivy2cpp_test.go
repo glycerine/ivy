@@ -7715,10 +7715,9 @@ export step
 		`g.apply("shade", v, g.int_to_z3(g.sort("idx"), X__0))`,
 		"res.shade[X__0]",
 		"template <> z3::expr __to_solver<heap::cell>(gen &g, const z3::expr &v, heap::cell &val) {",
-		"std::string fname = g.fresh_name();",
-		`z3::expr tmp = g.ctx.constant(fname.c_str(), g.sort("cell"));`,
-		`g.slvr.add(__to_solver(g, g.apply("shade", tmp, g.int_to_z3(g.sort("idx"), X__0)), val.shade[X__0]));`,
-		"return v == tmp;",
+		"z3::expr res = g.ctx.bool_val(true);",
+		`res = res && __to_solver(g, g.apply("shade", v, g.int_to_z3(g.sort("idx"), X__0)), val.shade[X__0]);`,
+		"return res;",
 		"template <> void __randomize<heap::cell>(gen &g, const z3::expr &v, const std::string &sort_name) {",
 		`__randomize<heap::color>(g, g.apply("shade", v, g.int_to_z3(g.sort("idx"), X__0)), "color");`,
 		`mk_decl("shade",2,`,
@@ -9432,6 +9431,78 @@ export test_timestamp.send_ts
 	if !strings.Contains(generateBody, "assumption_unsatisfied") ||
 		!strings.Contains(generateBody, "action generator precondition cannot be satisfied") {
 		t.Fatalf("action generator should report an unsatisfied precondition when solve has no model:\n%s", generateBody)
+	}
+	if !strings.Contains(generateBody, "action_gen_precondition.ivy: line 17") {
+		t.Fatalf("action generator should report the unsatisfied require source line:\n%s", generateBody)
+	}
+}
+
+func TestActionGenRecordToSolverUsesInputTermFields(t *testing.T) {
+	src := `#lang ivy1.7
+type epoch
+interpret epoch -> bv[1]
+
+type ts = struct {
+    version : epoch,
+    cid     : epoch
+}
+
+isolate test_timestamp = {
+    action send_ts(a:ts)
+
+    relation seen(X:ts)
+
+    implementation {
+        implement send_ts(a:ts) {
+            require ~seen(a);
+            seen(a) := true;
+            call report_ts_a(a)
+        }
+    }
+}
+
+import action report_ts_a(a:ts)
+export test_timestamp.send_ts
+`
+	path := filepath.Join(t.TempDir(), "action_gen_precondition.ivy")
+	if err := os.WriteFile(path, []byte(src), 0644); err != nil {
+		t.Fatalf("write test ivy: %v", err)
+	}
+	out, err := CompileAndGenerate(path, map[string]string{"isolate": "test_timestamp"}, Config{
+		Target:    "test",
+		ClassName: "action_gen_precondition",
+	})
+	if err != nil {
+		t.Fatalf("CompileAndGenerate: %v", err)
+	}
+	start := strings.Index(out.Impl, "template <> z3::expr __to_solver<action_gen_precondition::ts>")
+	if start < 0 {
+		t.Fatalf("missing ts __to_solver specialization:\n%s", out.Impl)
+	}
+	end := strings.Index(out.Impl[start:], "template <> void __randomize<action_gen_precondition::ts>")
+	if end < 0 {
+		t.Fatalf("missing ts __randomize specialization after __to_solver:\n%s", out.Impl[start:])
+	}
+	body := out.Impl[start : start+end]
+	for _, want := range []string{
+		"z3::expr res = g.ctx.bool_val(true);",
+		`g.apply("version", v)`,
+		`g.apply("cid", v)`,
+		"return res;",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("record __to_solver should structurally constrain field %q:\n%s", want, body)
+		}
+	}
+	for _, bad := range []string{
+		"std::string fname = g.fresh_name();",
+		"return v == tmp;",
+		`g.apply("version", tmp)`,
+		`g.apply("cid", tmp)`,
+	} {
+		if strings.Contains(body, bad) {
+			t.Fatalf("record __to_solver should not use fresh abstract records %q:\n%s", bad, body)
+		}
 	}
 }
 

@@ -1,10 +1,14 @@
 package ivy2golang
 
 import (
+	"bytes"
+	"context"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestTargetTestStructFieldNativeBVActionArgsRandomizeWideEpoch(t *testing.T) {
@@ -140,12 +144,92 @@ export test_timestamp.send_ts
 	}
 	for _, want := range []string{
 		`__ivy_solver_failure string`,
+		`__ivy_solver_failure_label string`,
 		`ivyFailureEvent("assumption_unsatisfied", __ivy_solver_msg)`,
-		`fmt.Fprintf(os.Stderr, "%s: error: %s\n", "test_timestamp.send_ts", __ivy_solver_failure)`,
+		`fmt.Fprintf(os.Stderr, "%s: error: %s\n", __ivy_solver_failure_label, __ivy_solver_failure)`,
 		`os.Exit(1)`,
 	} {
 		if !strings.Contains(out.Source, want) {
 			t.Fatalf("native bv timestamp generator missing unsatisfied precondition report %q:\n%s", want, out.Source)
 		}
+	}
+	if !strings.Contains(out.Source, `gen.__ivy_solver_failure_label = "native_bv_ts_require.ivy: line 32"`) {
+		t.Fatalf("native bv timestamp generator should report the unsatisfied require source line:\n%s", out.Source)
+	}
+}
+
+func TestTargetTestSolverReportsExhaustedStructNativeBVRequireAtRuntime(t *testing.T) {
+	src := `#lang ivy1.7
+object epoch = {
+    type this
+    implementation {
+        interpret this -> bv[1]
+    }
+}
+
+type ts = struct {
+    version : epoch,
+    cid     : epoch
+}
+
+isolate test_timestamp = {
+    action send_ts(a:ts)
+
+    relation seen(X:ts)
+
+    implementation {
+        implement send_ts(a:ts) {
+            require ~seen(a);
+            seen(a) := true;
+            call report_ts_a(a)
+        }
+    }
+}
+
+import action report_ts_a(a:ts)
+export test_timestamp.send_ts
+`
+	path := filepath.Join(t.TempDir(), "native_bv_ts_runtime_require.ivy")
+	if err := os.WriteFile(path, []byte(src), 0644); err != nil {
+		t.Fatalf("write test ivy: %v", err)
+	}
+	out, err := CompileAndGenerate(path, map[string]string{"isolate": "test_timestamp"}, Config{
+		Target:    "test",
+		ClassName: "native_bv_ts_runtime_require",
+		TestIters: "5",
+		Build:     true,
+	})
+	if err != nil {
+		t.Fatalf("Generate: %v\n%s", err, outSource(out))
+	}
+	bin, err := buildOutputForTest(t, out, t.TempDir())
+	if err != nil {
+		t.Fatalf("build generated Go: %v\n%s", err, out.Source)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, bin, "iters=5", "runs=1", "seed=1", "wait=0", "delay=0")
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err = cmd.Run()
+	if ctx.Err() == context.DeadlineExceeded {
+		t.Fatalf("generated timestamp test hung instead of reporting exhausted require\nstdout:\n%s\nstderr:\n%s", stdout.String(), stderr.String())
+	}
+	if err == nil {
+		t.Fatalf("generated timestamp test should fail once all struct values have been seen\nstdout:\n%s\nstderr:\n%s", stdout.String(), stderr.String())
+	}
+	combined := stdout.String() + stderr.String()
+	for _, want := range []string{
+		"native_bv_ts_runtime_require.ivy: line 21",
+		"action generator precondition cannot be satisfied",
+		"assumption_unsatisfied",
+	} {
+		if !strings.Contains(combined, want) {
+			t.Fatalf("generated timestamp test missing %q\nstdout:\n%s\nstderr:\n%s", want, stdout.String(), stderr.String())
+		}
+	}
+	if strings.Contains(combined, "assumption_failed") {
+		t.Fatalf("generated timestamp test should report exhausted generator precondition, not action-body assumption failure\nstdout:\n%s\nstderr:\n%s", stdout.String(), stderr.String())
 	}
 }

@@ -1277,6 +1277,39 @@ def get_support_include_dir():
 def is_empty_sequence_action(action):
     return isinstance(action,ia.Sequence) and len(action.args) == 0
 
+def action_gen_lineno_label(node):
+    if node is None:
+        return ''
+    if hasattr(node,'lineno'):
+        res = iu.lineno_str(node)
+        if res:
+            return res
+    if hasattr(node,'args'):
+        for arg in node.args:
+            res = action_gen_lineno_label(arg)
+            if res:
+                return res
+    return ''
+
+def action_gen_precondition_label(name,action):
+    if name in im.module.ext_preconds:
+        res = action_gen_lineno_label(im.module.ext_preconds[name])
+        if res:
+            return res
+    if action is not None:
+        for sub in action.iter_subactions():
+            kind = getattr(sub,'kind',None)
+            if isinstance(sub,ia.RequiresAction) or (isinstance(sub,ia.AssumeAction) and (kind is ia.RequiresAction or kind == 'require')):
+                res = action_gen_lineno_label(sub)
+                if res:
+                    return res
+        for sub in action.iter_subactions():
+            if isinstance(sub,ia.AssumeAction):
+                res = action_gen_lineno_label(sub)
+                if res:
+                    return res
+    return name.split(':')[-1]
+
 def emit_action_gen(header,impl,name,action,classname):
     global indent_level
     global global_classname
@@ -1389,10 +1422,11 @@ def emit_action_gen(header,impl,name,action,classname):
     // std::cout << slvr << std::endl;
     bool __res = solve();
 """)
-    action_display_name = name.split(':')[-1]
+    precondition_display_name = action_gen_precondition_label(name,action)
+    precondition_msg = precondition_display_name + ': action generator precondition cannot be satisfied'
     impl.append('    if (!__res) {\n')
-    impl.append('        __ivy_out << "assumption_unsatisfied(\\"{}: action generator precondition cannot be satisfied\\")" << std::endl;\n'.format(cpp_string(action_display_name)))
-    impl.append('        std::cerr << "{}: error: action generator precondition cannot be satisfied\\n";\n'.format(cpp_string(action_display_name)))
+    impl.append('        __ivy_out << "assumption_unsatisfied(\\"{}\\")" << std::endl;\n'.format(cpp_string(precondition_msg)))
+    impl.append('        std::cerr << "{}: error: action generator precondition cannot be satisfied\\n";\n'.format(cpp_string(precondition_display_name)))
     impl.append('        __ivy_exit(1);\n')
     impl.append('    }\n')
     impl.append("""
@@ -2726,19 +2760,17 @@ void CLASSNAME::install_timer(timer *r) {
                     close_scope(impl)
                     impl.append('template <>\n')
                     open_scope(impl,line='z3::expr  __to_solver<' + cfsname + '>( gen &g, const  z3::expr &v,' + cfsname + ' &val)')
-                    code_line(impl,'std::string fname = g.fresh_name()')
-                    code_line(impl,'z3::expr tmp = g.ctx.constant(fname.c_str(),g.sort("{}"))'.format(sort.name))
-#                    code_line(impl,'z3::expr res = g.ctx.bool_val(1)')
+                    code_line(impl,'z3::expr res = g.ctx.bool_val(true)')
                     for idx,sym in enumerate(destrs):
                         fname = memname(sym)
                         vs = variables(sym.sort.dom[1:])
                         for v in vs:
                             open_loop(impl,[v])
                         sname = slv.solver_name(sym)
-                        code_line(impl,'g.slvr.add(__to_solver(g,g.apply("'+sname+'",tmp'+ ''.join(',g.int_to_z3(g.sort("'+v.sort.name+'"),'+varname(v)+')' for v in vs)+'),val.'+fname+''.join('[{}]'.format(varname(v)) for v in vs) + '))')
+                        code_line(impl,'res = res && __to_solver(g,g.apply("'+sname+'",v'+ ''.join(',g.int_to_z3(g.sort("'+v.sort.name+'"),'+varname(v)+')' for v in vs)+'),val.'+fname+''.join('[{}]'.format(varname(v)) for v in vs) + ')')
                         for v in vs:
                             close_loop(impl,[v])
-                    code_line(impl,'return v==tmp')
+                    code_line(impl,'return res')
                     close_scope(impl)
                     impl.append('template <>\n')
                     open_scope(impl,line='void  __randomize<' + cfsname + '>( gen &g, const  z3::expr &v, const std::string &sort_name)')

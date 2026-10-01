@@ -426,6 +426,102 @@ func appendActionGenTsLocalInputs(pre *goivy.Clauses, inputs []*goivy.Const, mod
 	return inputs
 }
 
+func (g *Generator) actionGenPreconditionFailureLabel(plan *actionGenPlan) string {
+	loc := g.actionGenPreconditionFailureLocation(plan)
+	if label := linenoStr(loc); label != "" {
+		return label
+	}
+	if plan != nil {
+		return actionDisplayName(plan.name)
+	}
+	return ""
+}
+
+func (g *Generator) actionGenPreconditionFailureLocation(plan *actionGenPlan) goivy.Location {
+	if plan == nil {
+		return goivy.Location{}
+	}
+	if g != nil && g.Mod != nil && g.Mod.ExtPreconds != nil {
+		if pre := g.Mod.ExtPreconds[plan.name]; pre != nil {
+			if loc := actionGenExprLocation(pre); loc != (goivy.Location{}) {
+				return loc
+			}
+		}
+	}
+	for _, act := range []goivy.Action{plan.act, plan.origAct} {
+		if loc := actionGenRequireLocation(act); loc != (goivy.Location{}) {
+			return loc
+		}
+	}
+	if plan.act != nil {
+		return plan.act.GetLineno()
+	}
+	if plan.origAct != nil {
+		return plan.origAct.GetLineno()
+	}
+	return goivy.Location{}
+}
+
+func actionGenRequireLocation(act goivy.Action) goivy.Location {
+	if act == nil {
+		return goivy.Location{}
+	}
+	for _, sub := range act.IterSubactions() {
+		switch a := sub.(type) {
+		case *goivy.LogicRequiresAction:
+			if loc := actionGenActionLocation(a); loc != (goivy.Location{}) {
+				return loc
+			}
+			if loc := actionGenExprLocation(a.Formula); loc != (goivy.Location{}) {
+				return loc
+			}
+		case *goivy.LogicAssumeAction:
+			if a.Kind != "require" {
+				continue
+			}
+			if loc := actionGenActionLocation(a); loc != (goivy.Location{}) {
+				return loc
+			}
+			if loc := actionGenExprLocation(a.Formula); loc != (goivy.Location{}) {
+				return loc
+			}
+		}
+	}
+	for _, sub := range act.IterSubactions() {
+		if a, ok := sub.(*goivy.LogicAssumeAction); ok {
+			if loc := actionGenActionLocation(a); loc != (goivy.Location{}) {
+				return loc
+			}
+			if loc := actionGenExprLocation(a.Formula); loc != (goivy.Location{}) {
+				return loc
+			}
+		}
+	}
+	return goivy.Location{}
+}
+
+func actionGenActionLocation(act goivy.Action) goivy.Location {
+	if act == nil {
+		return goivy.Location{}
+	}
+	loc := act.GetLineno()
+	if linenoStr(loc) == "" {
+		return goivy.Location{}
+	}
+	return loc
+}
+
+func actionGenExprLocation(expr goivy.Expr) goivy.Location {
+	if expr == nil {
+		return goivy.Location{}
+	}
+	loc := expr.GetLineno()
+	if linenoStr(loc) == "" {
+		return goivy.Location{}
+	}
+	return loc
+}
+
 func actionGenGeneratedLocalName(name string) bool {
 	if strings.HasPrefix(name, "__ts") || strings.HasPrefix(name, "__new_fml:") {
 		return true

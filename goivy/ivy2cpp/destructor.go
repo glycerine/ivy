@@ -638,7 +638,6 @@ func (g *Generator) emitZeroAssign(w *cppWriter, lhs string, s goivy.Sort) {
 // template specializations gated to `gen`/`test` targets. Mirrors Python
 // ivy_to_cpp.py:2585-2630.
 func (g *Generator) emitDestructorZ3Impl(w *cppWriter, name, typeName string, destrs []*goivy.Const) {
-	sortText := name
 	if g.Config.Target != "test" {
 		w.line("#ifdef Z3PP_H_")
 	}
@@ -677,8 +676,7 @@ func (g *Generator) emitDestructorZ3Impl(w *cppWriter, name, typeName string, de
 	} else {
 		w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val) {", typeName, typeName))
 	}
-	w.line("std::string fname = g.fresh_name();")
-	w.linef("z3::expr tmp = g.ctx.constant(fname.c_str(), g.sort(%s));", strconv.Quote(sortText))
+	w.line("z3::expr res = g.ctx.bool_val(true);")
 	for _, d := range destrs {
 		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
 		if !ok {
@@ -694,14 +692,14 @@ func (g *Generator) emitDestructorZ3Impl(w *cppWriter, name, typeName string, de
 		field := varName(memName(d.Name))
 		sname := g.destructorSolverName(d)
 		vs, closer := g.emitDomainLoops(w, domain)
-		applyArgs := []string{"tmp"}
+		applyArgs := []string{"v"}
 		for i, v := range vs {
 			applyArgs = append(applyArgs, fmt.Sprintf(`g.int_to_z3(g.sort(%s), %s)`, strconv.Quote(sortName(domain[i])), v))
 		}
-		w.linef("g.slvr.add(__to_solver(g, g.apply(%s, %s), val.%s%s));", strconv.Quote(sname), strings.Join(applyArgs, ", "), field, cppIndexSuffix(vs))
+		w.linef("res = res && __to_solver(g, g.apply(%s, %s), val.%s%s);", strconv.Quote(sname), strings.Join(applyArgs, ", "), field, cppIndexSuffix(vs))
 		closer()
 	}
-	w.line("return v == tmp;")
+	w.line("return res;")
 	w.close("")
 	w.blank()
 

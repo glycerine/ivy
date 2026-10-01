@@ -1467,12 +1467,27 @@ replaced that wrapper with `module.before_export[name]`. For explicit verified
 exports, `before_export[name]` is only an empty clone, and explicit exports do
 not get a separate `ext_preconds` entry. So the generator solved `true`.
 
-The fix keeps non-empty `before_export` actions, but ignores the empty explicit
-export clone so the real `ext:` wrapper drives the reverse-image formula. The
-generated C++ action generator now also reports
+The first fix keeps non-empty `before_export` actions, but ignores the empty
+explicit export clone so the real `ext:` wrapper drives the reverse-image
+formula.
+
+A second runtime bug remained after that source-level fix: generated
+`__to_solver<record>` encoded a concrete C++ record by creating a fresh
+abstract SMT record and returning `v == tmp`, with side constraints on
+`field(tmp)`. For native bit-vector record fields, Z3 could pick a fresh
+abstract record whose fields matched a previously seen C++ key while the SMT
+precondition still considered it unequal to that key. The action generator
+then read the model back as a duplicate C++ record and the action body reported
+`assumption_failed`.
+
+The record encoder now returns a conjunction on the fields of `v` itself, so
+SMT equality for generator preconditions matches the C++ record key equality.
+The generated C++ action generator also reports
 `action generator precondition cannot be satisfied` when the solver cannot find
 a model, instead of letting the action body fail later with an ambiguous
-assumption failure.
+assumption failure. That diagnostic is source-scoped to the unsatisfied
+precondition line, for example `spec.ivy: line N`, rather than only naming the
+exported action.
 
 Regression coverage:
 
@@ -1481,5 +1496,6 @@ cd ~/ivy/pyivy/ivy
 XTRACE_OFF=1 ../goivy-venv/bin/python test/action_gen_precondition_test.py
 
 cd ~/ivy/goivy
-XTRACE_OFF=1 go test ./ivy2golang -run 'TestTargetTestStructFieldNativeBVActionArgsRandomizeWideEpoch|TestTargetTestSolverRandomizesStructFieldNativeBVActionArgs' -count=1 -v
+XTRACE_OFF=1 go test ./ivy2cpp -run 'TestActionGenExplicitIsolatedExportRequireDrivesGenerator|TestActionGenRecordToSolverUsesInputTermFields|TestDestructorZ3ImplShape' -count=1 -v
+XTRACE_OFF=1 go test ./ivy2golang -run 'TestTargetTestSolverRandomizesStructFieldNativeBVActionArgs|TestTargetTestSolverReportsExhaustedStructNativeBVRequireAtRuntime' -count=1 -v
 ```

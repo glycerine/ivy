@@ -1058,12 +1058,112 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 
 func (g *Generator) emitActionGenUnsatisfiedPreconditionReport(w *cppWriter, plan *actionGenPlan) {
 	displayName := actionGenDisplayName(plan.name)
-	msg := displayName + ": action generator precondition cannot be satisfied"
+	preconditionLabel := g.actionGenPreconditionFailureLabel(plan)
+	if preconditionLabel == "" {
+		preconditionLabel = displayName
+	}
+	msg := preconditionLabel + ": action generator precondition cannot be satisfied"
 	w.open("if (!__res) {")
 	w.linef(`__ivy_out << "assumption_unsatisfied(\"%s\")" << std::endl;`, escapeString(msg))
-	w.linef(`std::cerr << "%s: error: action generator precondition cannot be satisfied\n";`, escapeString(displayName))
+	w.linef(`std::cerr << "%s: error: action generator precondition cannot be satisfied\n";`, escapeString(preconditionLabel))
 	w.line("__ivy_exit(1);")
 	w.close("")
+}
+
+func (g *Generator) actionGenPreconditionFailureLabel(plan *actionGenPlan) string {
+	loc := g.actionGenPreconditionFailureLocation(plan)
+	if label := linenoStr(loc); label != "" {
+		return label
+	}
+	if plan != nil {
+		return actionGenDisplayName(plan.name)
+	}
+	return ""
+}
+
+func (g *Generator) actionGenPreconditionFailureLocation(plan *actionGenPlan) goivy.Location {
+	if plan == nil {
+		return goivy.Location{}
+	}
+	if g != nil && g.Mod != nil && g.Mod.ExtPreconds != nil {
+		if pre := g.Mod.ExtPreconds[plan.name]; pre != nil {
+			if loc := actionGenExprLocation(pre); loc != (goivy.Location{}) {
+				return loc
+			}
+		}
+	}
+	for _, act := range []goivy.Action{plan.act, plan.origAct} {
+		if loc := actionGenRequireLocation(act); loc != (goivy.Location{}) {
+			return loc
+		}
+	}
+	if plan.act != nil {
+		return plan.act.GetLineno()
+	}
+	if plan.origAct != nil {
+		return plan.origAct.GetLineno()
+	}
+	return goivy.Location{}
+}
+
+func actionGenRequireLocation(act goivy.Action) goivy.Location {
+	if act == nil {
+		return goivy.Location{}
+	}
+	for _, sub := range act.IterSubactions() {
+		switch a := sub.(type) {
+		case *goivy.LogicRequiresAction:
+			if loc := actionGenActionLocation(a); loc != (goivy.Location{}) {
+				return loc
+			}
+			if loc := actionGenExprLocation(a.Formula); loc != (goivy.Location{}) {
+				return loc
+			}
+		case *goivy.LogicAssumeAction:
+			if a.Kind != "require" {
+				continue
+			}
+			if loc := actionGenActionLocation(a); loc != (goivy.Location{}) {
+				return loc
+			}
+			if loc := actionGenExprLocation(a.Formula); loc != (goivy.Location{}) {
+				return loc
+			}
+		}
+	}
+	for _, sub := range act.IterSubactions() {
+		if a, ok := sub.(*goivy.LogicAssumeAction); ok {
+			if loc := actionGenActionLocation(a); loc != (goivy.Location{}) {
+				return loc
+			}
+			if loc := actionGenExprLocation(a.Formula); loc != (goivy.Location{}) {
+				return loc
+			}
+		}
+	}
+	return goivy.Location{}
+}
+
+func actionGenActionLocation(act goivy.Action) goivy.Location {
+	if act == nil {
+		return goivy.Location{}
+	}
+	loc := act.GetLineno()
+	if linenoStr(loc) == "" {
+		return goivy.Location{}
+	}
+	return loc
+}
+
+func actionGenExprLocation(expr goivy.Expr) goivy.Location {
+	if expr == nil {
+		return goivy.Location{}
+	}
+	loc := expr.GetLineno()
+	if linenoStr(loc) == "" {
+		return goivy.Location{}
+	}
+	return loc
 }
 
 func actionGenDisplayName(name string) string {
