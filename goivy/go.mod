@@ -24,6 +24,7 @@ require (
 
 require (
 	4d63.com/embedfiles v0.0.0-20190311033909-995e0740726f // indirect
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/glycerine/fwd v1.1.4-beta.jea // indirect
 	github.com/glycerine/one_tree_rwmut v1.0.0 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect

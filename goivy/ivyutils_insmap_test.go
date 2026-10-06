@@ -77,7 +77,7 @@ func TestInsMap_DeleteAndReinsertMovesToEnd(t *testing.T) {
 	m.Set("Z", 30)
 
 	// Delete the middle element
-	found, _ := m.Delkey("Y")
+	found := m.Delkey("Y")
 	if !found {
 		t.Fatal("expected to find 'Y' for deletion")
 	}
@@ -159,7 +159,7 @@ func TestInsMap_StructKeys(t *testing.T) {
 	// Proving the generics `comparable` constraint works for structs
 	type Point struct{ X, Y int }
 
-	m := NewInsMap[Point, string]()
+	m := NewInsMapFunc[Point, string](func(p Point) uint64 { return Mix64(uint64(p.X)) + Mix64(uint64(p.Y)) })
 
 	p1 := Point{0, 0}
 	p2 := Point{10, 10}
@@ -226,7 +226,7 @@ func TestInsMapRandomizedAgainstStdMap(t *testing.T) {
 
 		case 3: // Delete
 			_, alreadyExists := std[key]
-			found, _ := d.Delkey(key)
+			found := d.Delkey(key)
 
 			if found != alreadyExists {
 				t.Fatalf("op %d: Delkey mismatch for %s. InsMap found: %v, std found: %v", i, key, found, alreadyExists)
