@@ -373,9 +373,9 @@ func (d *InsMap[K, V]) DeleteAll() {
 // with Del during an All iteration.
 //
 // After many deletions, to vacuum tombstones, you should call Pack
-// manually, or use juse regularly use DelPackFalse instead of Del.
+// manually, or use juse regularly use DelPackMaybe instead of Del.
 //
-// DelPackFalse is a convenient alternative to Del
+// DelPackMaybe is a convenient alternative to Del
 // that will automatically compact based on heuristics -- if you
 // don't want to think about this very hard about when to Pack but still want
 // your table to get Packed at some point.
@@ -398,13 +398,13 @@ func (d *InsMap[K, V]) Delkey(k K) (found bool) {
 	return true
 }
 
-// DelPackFalse is a convenience wrapper that calls
+// DelPackMaybe is a convenience wrapper that calls
 // Del(k) followed by Pack(force=false).
 // As a replacement for Del, it can save the user from having
 // to think too hard about when to Pack away their tombstones.
 // However it cannot be intermixed with All iteration safely
 // as it calls Pack; see the comments on All.
-func (d *InsMap[K, V]) DelPackFalse(k K) (found bool) {
+func (d *InsMap[K, V]) DelPackMaybe(k K) (found bool) {
 	found = d.Delkey(k)
 	d.Pack(false)
 	return
