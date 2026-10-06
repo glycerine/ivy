@@ -34659,6 +34659,7 @@ func typeCheckGeneratedRuntimeSolverMethods(t *testing.T, methods map[string]str
 	t.Helper()
 	var src strings.Builder
 	src.WriteString("package main\n\n")
+	src.WriteString("var fmt = struct{ Sprintf func(string, ...interface{}) string }{}\n")
 	src.WriteString("type Module struct{}\n")
 	src.WriteString("type Solver struct{}\n")
 	src.WriteString("type SMTLIBBaseSolver struct{}\n")
@@ -34676,6 +34677,8 @@ func typeCheckGeneratedRuntimeSolverMethods(t *testing.T, methods map[string]str
 	for typeName := range methods {
 		src.WriteString("type " + typeName + " struct {\n")
 		src.WriteString("ivy *__ivyRuntimeSolverProbe\n")
+		src.WriteString("__ivy_solver_failure string\n")
+		src.WriteString("__ivy_solver_failure_label string\n")
 		src.WriteString("__ivy_solver *Solver\n")
 		src.WriteString("__ivy_solver_base *SMTLIBBaseSolver\n")
 		src.WriteString("__ivy_solver_pre *Clauses\n")
@@ -38279,7 +38282,9 @@ export beta
 			t.Fatalf("call-stack choice source missing %q:\n%s", want, out.Source)
 		}
 	}
-	if strings.Contains(out.Source, "_ = name") || strings.Contains(out.Source, "_ = id") {
+	chooseBody := bodyAfterMarker(out.Source, "func (ivy *stackchoice) ___ivy_choose(")
+	randomizeBody := bodyAfterMarker(out.Source, "func (ivy *stackchoice) ___ivy_randomize(")
+	if strings.Contains(chooseBody+randomizeBody, "_ = name") || strings.Contains(chooseBody+randomizeBody, "_ = id") {
 		t.Fatalf("choice/randomize labels should not be discarded:\n%s", out.Source)
 	}
 }

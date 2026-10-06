@@ -3754,7 +3754,7 @@ func (g *Generator) emitGenActionGeneratorGenerate(w *goWriter, name string, act
 		w.line("return true")
 		return
 	}
-	if !hasRuntimeSolver && g.hasBeforeExportAction(name) {
+	if !hasRuntimeSolver && g.hasBeforeExportAction(name) && g.genActionNeedsTrial(act) {
 		if _, ok := g.actionPreimageAssumeFormulasOK(act); !ok {
 			g.unsupportedAt(w, act.GetLineno(), "unsupported before_export action generator requires runtime trial for %s", name)
 			return
@@ -9994,7 +9994,7 @@ func (g *Generator) collectTestActionPrefixPreimageAssumeFormulas(act goivy.Acti
 		}
 		return []goivy.Expr{guard}, true
 	case *goivy.LogicRequiresAction:
-		if a.Formula == nil {
+		if a.Formula == nil || goivy.IsTrue(a.Formula) || a.Formula.Equal(goivy.NewConst("true", goivy.Boolean)) {
 			return nil, true
 		}
 		if residuals, ok := g.preimageLocalFieldAssumeResidualGuards(a.Formula, ctx); ok {
@@ -16497,6 +16497,15 @@ func (g *Generator) explicitExportedActionNames() ([]string, bool) {
 	}
 	if len(names) == 0 {
 		return nil, false
+	}
+	// Isolates also expose environment actions that are not source-level exports.
+	if g.Mod.PublicActions != nil {
+		for name, exported := range g.Mod.PublicActions.All() {
+			if exported && strings.HasPrefix(name, "ext:") && !seen[name] {
+				seen[name] = true
+				names = append(names, name)
+			}
+		}
 	}
 	return names, true
 }

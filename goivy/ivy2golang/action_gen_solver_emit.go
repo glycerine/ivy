@@ -203,7 +203,7 @@ func (g *Generator) addRuntimeActionSolverPrefixPreconditions(plan *actionGenPla
 	if g == nil || plan == nil || plan.act == nil {
 		return true
 	}
-	guards, ok := g.testActionPrefixPreimageAssumeFormulasOK(plan.act)
+	guards, ok := g.actionPreimageAssumeFormulasOK(plan.act)
 	if !ok || len(guards) == 0 {
 		return ok
 	}
