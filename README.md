@@ -152,6 +152,25 @@ to build Z3. I used Apple clang version 15.0.0 (clang-1500.3.9.4) on darwin.
 also be run on the server). emcc --version should show that emcc 3.1.50 is on your path;
 emar and emmake and wasm-opt should all be on your $PATH.
 
+https://emscripten.org/docs/tools_reference/emsdk.html
+
+something like:
+~~~
+mkdir -p ~/go/src/github.com/emscripten-core
+cd ~/go/src/github.com/emscripten-core
+git clone git@github.com:emscripten-core/emsdk
+cd emsdk
+./emsdk install 3.1.50
+./emsdk activate 3.1.50
+source ./emsdk_env.sh
+
+command -v emcc em++ emar
+emcc --version
+
+## append to your ~/.bashrc (adjust to whatever shell you use)
+## export PATH=$HOME/go/src/github.com/emscripten-core/emsdk:$HOME/go/src/github.com/emscripten-core/emsdk/upstream/emscripten:$PATH
+~~~
+
 Note that the required Z3 fork is vendored in this repo, in ivy/goivy/z3vendor/z3 (Z3 v4.7.1_425291ee2)
 and is compiled below (building Z3 takes about 10-20 minutes, be patient).
 

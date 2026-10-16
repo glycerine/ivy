@@ -96,7 +96,7 @@ get_goyacc:
 z3ivy: z3vendor/native_lib/libz3.a #z3vendor/z3/build/libz3.a
 	echo "must manually build static libz3.a using z3vendor/z3/compile.sh and z3vendor/z3/compile-wasm.sh"
 
-z3ivy/lib/libz3.dylib: $(HOME)/pyivy/ivy/submodules/z3/build/libz3.dylib
+z3ivy/lib/libz3.dylib: $(HOME)/ivy/pyivy/ivy/submodules/z3/native.build/libz3.dylib
 	@mkdir -p z3ivy/include z3ivy/lib
 	@for h in z3.h z3_api.h z3_macros.h z3_v1.h z3_algebraic.h \
 		z3_ast_containers.h z3_fixedpoint.h z3_fpa.h z3_interp.h \
@@ -108,7 +108,7 @@ z3ivy/lib/libz3.dylib: $(HOME)/pyivy/ivy/submodules/z3/build/libz3.dylib
 
 # Build the Z3 fork from the submodule (only needed if not already built).
 z3-build:
-	@if [ ! -f $(HOME)/pyivy/ivy/submodules/z3/build/libz3.dylib ]; then \
+	@if [ ! -f $(HOME)/ivy/pyivy/ivy/submodules/z3/native.build/libz3.dylib ]; then \
 		echo "Building Z3 fork from $(HOME)/pyivy/ivy/submodules/z3..."; \
 		cd $(HOME)/pyivy/ivy/submodules/z3 && \
                 python3 scripts/mk_make.py --python --prefix=$(HOME)/pyivy/ivy; \
