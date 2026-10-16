@@ -18,7 +18,8 @@ make -j8
 
 # 5. Copy the artifact out so wasm can build too.
 cp -p libz3.a ../../native_lib/
-cp -p libz3.so ../../native_lib/
+cp -p libz3.so ../../native_lib/ || true
+cp -p libz3.dylib ../../native_lib/ || true
 cp -p z3 ../../native_lib/
 
 cd ..
