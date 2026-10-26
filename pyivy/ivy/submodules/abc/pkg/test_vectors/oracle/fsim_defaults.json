@@ -1,0 +1,1 @@
+{"simulation":{"words":8,"iterations":32,"timeLimit":60,"checkMiter":0,"verbose":1,"compressAIG":0},"switching":{"words":1,"iterations":48,"prefixFrames":16,"randomPITransition":0,"probabilityOne":1,"probabilitySwitch":1,"verbose":1}}

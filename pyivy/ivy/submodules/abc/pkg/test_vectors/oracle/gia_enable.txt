@@ -1,0 +1,4 @@
+Flops with set/reset =      2. Flops with enable =      0.
+Enable signals (total = 0  driven = 0)
+Flops with set/reset =      0. Flops with enable =      2.
+Enable signals (total = 1  driven = 2)

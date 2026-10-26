@@ -1,0 +1,60 @@
+{
+  "binary_sha256": "568cf196cf415362ef1404add3fd02c96a98f559009dc4b0ef59a931f5693a4e",
+  "cases": [
+    {
+      "arguments": [
+        "-s",
+        "-c",
+        "read_aiger input.aig; pdr; write_aiger_cex witness.out"
+      ],
+      "expected": "proved",
+      "input_hex": "616967203220312031203120300a300a340a",
+      "input_sha256": "f6d7293b099c6e8ecad27b9f554d408f83da641530aa6cd330f4a29e5166f467",
+      "name": "safe-zero-latch",
+      "observed": "proved",
+      "passed": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "ABC command line: \"read_aiger input.aig; pdr; write_aiger_cex witness.out\".\n\nInvariant F[1] : 1 clauses with 1 flops (out of 1) (cex = 0, ave = 1.00)\nVerification of invariant with 1 clauses was successful.  Time =     0.00 sec\nProperty proved.  Time =     0.01 sec\nThere is no current CEX.\n",
+      "witness": null
+    },
+    {
+      "arguments": [
+        "-s",
+        "-c",
+        "read_aiger input.aig; pdr; write_aiger_cex witness.out"
+      ],
+      "expected": "unsafe",
+      "input_hex": "616967203220312031203120300a320a340a",
+      "input_sha256": "79ea4a3f6c97029c367ce372c5d20fb73429424e13f1750b0a362c07d599658f",
+      "name": "unsafe-copy-input",
+      "observed": "unsafe",
+      "passed": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "ABC command line: \"read_aiger input.aig; pdr; write_aiger_cex witness.out\".\n\nOutput 0 of miter \"input\" was asserted in frame 1.  Time =     0.01 sec\n",
+      "witness": "1\n0 1 0 1\n1 0 1 0\n"
+    },
+    {
+      "arguments": [
+        "-s",
+        "-c",
+        "read_aiger input.aig; pdr; write_aiger_cex witness.out"
+      ],
+      "expected": "unsafe",
+      "input_hex": "616967203220312031203120300a300a350a",
+      "input_sha256": "46c104c921bfcae001ed778641c026f7d9589ddea4053baad67df376d7989a09",
+      "name": "unsafe-frame-zero",
+      "observed": "unsafe",
+      "passed": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "ABC command line: \"read_aiger input.aig; pdr; write_aiger_cex witness.out\".\n\nOutput 0 of miter \"input\" was asserted in frame 0.  Time =     0.01 sec\n",
+      "witness": "1\n0 0 1 0\n"
+    }
+  ],
+  "host": "Linux-6.17.0-35-generic-x86_64-with-glibc2.39",
+  "schema_version": 1,
+  "source_correspondence": "matched isolated snapshot; see reference_build.json",
+  "startup_files": "disabled with -s"
+}
