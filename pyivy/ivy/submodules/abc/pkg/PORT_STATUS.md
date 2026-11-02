@@ -10,6 +10,61 @@ remain unfinished. A basic PDR solving loop now returns replayed witnesses
 or independently checked inductive invariants. Full ABC PDR feature parity
 and larger-design validation remain outstanding.
 
+## Skeleton pass (structs and stubbed methods)
+
+To speed up the port, every C struct and function in the files the ledger
+marks `unstarted` now has a Go skeleton in `skel_*.go` (382 files, 280 struct
+types, 3,093 methods on those structs and 4,547 free functions). Structs keep
+their C field names with mapped Go types (`any` where the C type is not yet
+modelled). Functions whose first parameter is a skeleton struct pointer are
+methods on it; every body is `panic("TODO, stubbed")` so an unported call can
+never pass silently. Static C functions are prefixed with their file stem.
+These stubs carry no tests and do **not** change the coverage ledger: a file
+stays `unstarted` until its real port replaces the skeleton. When porting a
+file, delete its `skel_*` counterpart (or the relevant stubs) in the same
+change. The first draft was machine-generated; the generator has been
+deleted, so `skel_*.go` is now hand-maintained and is being corrected by
+hand against the C source until every struct and signature is faithful.
+
+Hand-checked so far (header says "Hand-checked skeleton" / "Hand-written
+skeleton"): all of `src/proof/` (fra, ssw, pdr, abs, live), `src/bdd/cudd`,
+`src/opt/{fret,res,cut,dar,sbd,mfs,sfm,lpk}`, `src/phys/place`, the
+`src/sat/{bsat2,glucose,glucose2}` headers, `src/map/{cov,mpm,mio,fpga,mapper,scl}`,
+`src/base/io`, `src/bool/kit`, `src/aig/aig`, `src/misc/bzlib` and
+`src/misc/zlib`, `src/base/wlc`, `src/map/if`, `src/bdd/llb`, `src/aig/saig`,
+`src/aig/gia` and `src/base/abci`. Files that are not listed in their directory's
+`module.make` (for example `llb4Cluster.c`, `saigGla*.c`, `giaProp.c`, `abcFpga.c`)
+are comment-only skeletons. The C++ directories `src/sat/{bsat2,glucose,glucose2}`
+are skeletoned too (`skel_sat_<dir>_<File>_h.go` / `_cpp.go`): templates
+(`vec`, `Heap`, `Queue`, `Map`, `OccLists`, `CMap`, `bqueue`, the sort and
+algorithm templates, the DIMACS/parse templates) are Go generics, functor
+arguments are interfaces with a `Call` method, classes are structs (public
+members exported, protected/private verbatim), C++ overloads get a descriptive
+suffix, `SimpSolver` embeds `Solver`, and the namespace is a name prefix
+(`Minisat`, `Gluco`, `Gluco2`). The conventions are written at the top of
+`skel_sat_bsat2_Vec_h.go`. Member functions defined in a `.cpp` are stubbed as
+methods next to the class declaration in the matching `_h.go`; the `_cpp.go`
+holds only the file-level statics, option objects, free functions and the
+`extern "C"` entry points. The glucose and glucose2 utility headers are
+textually the bsat2 ones apart from the namespace, `copyTo_`,
+`RegionAllocator::free_`/`clear`, `parseDouble` and `Int64Option`; the
+differences were read from the headers. Files still
+carrying "Skeleton generated from" are unchecked first-draft output and must
+not be trusted (none remain). Defects found in the first draft, now checked for in every
+directory: `any` and bare-slice types for ported or known types, names mangled
+by underscore removal, functions silently dropped by name deduplication (and
+different structs with the same C name in two files merged into one), dead
+`#if 0`/`#ifdef` branches kept in place of the live one, and element types of
+`Vec_Ptr_t` guessed instead of read from the C. Rules: C types map to the
+validated ports (`IntVector`, `PointerVector[X]` for `Vec_Ptr_t` of `X *`,
+`AigObject`, `AigManager`, `GiaObject`, `GiaManager`, `ABCNetwork`,
+`ABCNetworkObject`, `Counterexample`, `SatSolver`, `MainFrame`, ...), other
+types are hand-declared from the C struct, `const char *` is `string`,
+`void *` is `any`, bitfields are plain integers with the width in a comment,
+a function's first parameter being a manager or skeleton struct makes it a
+method, and a name keeps its C spelling with only the first underscore removed
+(`Fra_Clau_rec` is `FraClau_rec`).
+
 ## Current work
 
 Current inventory: 1,757 tracked source, header, asset and build files, with
