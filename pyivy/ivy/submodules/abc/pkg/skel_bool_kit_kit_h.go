@@ -83,11 +83,6 @@ type KitDsdMan struct {
 }
 
 // Kit_DsdObjOffset (static inline)
-// C: unsigned Kit_DsdObjOffset( int nFans )
-func kitDsdObjOffset(nFans int) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_DsdObjTruth (static inline; returns a pointer into the object, or NULL)
 // C: unsigned * Kit_DsdObjTruth( Kit_DsdObj_t * pObj )
 func kitDsdObjTruth(pObj *KitDsdObj) []uint32 {
@@ -95,155 +90,30 @@ func kitDsdObjTruth(pObj *KitDsdObj) []uint32 {
 }
 
 // Kit_DsdNtkObjNum (static inline)
-// C: int Kit_DsdNtkObjNum( Kit_DsdNtk_t * pNtk )
-func kitDsdNtkObjNum(pNtk *KitDsdNtk) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_DsdNtkObj (static inline)
-// C: Kit_DsdObj_t * Kit_DsdNtkObj( Kit_DsdNtk_t * pNtk, int Id )
-func kitDsdNtkObj(pNtk *KitDsdNtk, Id int) *KitDsdObj {
-	panic("TODO, stubbed")
-}
-
 // Kit_DsdNtkRoot (static inline)
-// C: Kit_DsdObj_t * Kit_DsdNtkRoot( Kit_DsdNtk_t * pNtk )
-func kitDsdNtkRoot(pNtk *KitDsdNtk) *KitDsdObj {
-	panic("TODO, stubbed")
-}
-
 // Kit_DsdLitIsLeaf (static inline)
-// C: int Kit_DsdLitIsLeaf( Kit_DsdNtk_t * pNtk, int Lit )
-func kitDsdLitIsLeaf(pNtk *KitDsdNtk, Lit int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_DsdLitSupport (static inline)
-// C: unsigned Kit_DsdLitSupport( Kit_DsdNtk_t * pNtk, int Lit )
-func kitDsdLitSupport(pNtk *KitDsdNtk, Lit int) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_CubeHasLit (static inline)
-// C: int Kit_CubeHasLit( unsigned uCube, int i )
-func kitCubeHasLit(uCube uint32, i int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_CubeSetLit (static inline)
-// C: unsigned Kit_CubeSetLit( unsigned uCube, int i )
-func kitCubeSetLit(uCube uint32, i int) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_CubeXorLit (static inline)
-// C: unsigned Kit_CubeXorLit( unsigned uCube, int i )
-func kitCubeXorLit(uCube uint32, i int) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_CubeRemLit (static inline)
-// C: unsigned Kit_CubeRemLit( unsigned uCube, int i )
-func kitCubeRemLit(uCube uint32, i int) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_CubeContains (static inline)
-// C: int Kit_CubeContains( unsigned uLarge, unsigned uSmall )
-func kitCubeContains(uLarge uint32, uSmall uint32) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_CubeSharp (static inline)
-// C: unsigned Kit_CubeSharp( unsigned uCube, unsigned uMask )
-func kitCubeSharp(uCube uint32, uMask uint32) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_CubeMask (static inline)
-// C: unsigned Kit_CubeMask( int nVar )
-func kitCubeMask(nVar int) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_CubeIsMarked (static inline)
-// C: int Kit_CubeIsMarked( unsigned uCube )
-func kitCubeIsMarked(uCube uint32) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_CubeMark (static inline)
-// C: unsigned Kit_CubeMark( unsigned uCube )
-func kitCubeMark(uCube uint32) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_CubeUnmark (static inline)
-// C: unsigned Kit_CubeUnmark( unsigned uCube )
-func kitCubeUnmark(uCube uint32) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_SopCubeNum (static inline)
-// C: int Kit_SopCubeNum( Kit_Sop_t * cSop )
-func kitSopCubeNum(cSop *KitSop) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_SopCube (static inline)
-// C: unsigned Kit_SopCube( Kit_Sop_t * cSop, int i )
-func kitSopCube(cSop *KitSop, i int) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_SopShrink (static inline)
-// C: void Kit_SopShrink( Kit_Sop_t * cSop, int nCubesNew )
-func kitSopShrink(cSop *KitSop, nCubesNew int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_SopPushCube (static inline)
-// C: void Kit_SopPushCube( Kit_Sop_t * cSop, unsigned uCube )
-func kitSopPushCube(cSop *KitSop, uCube uint32) {
-	panic("TODO, stubbed")
-}
-
 // Kit_SopWriteCube (static inline)
-// C: void Kit_SopWriteCube( Kit_Sop_t * cSop, unsigned uCube, int i )
-func kitSopWriteCube(cSop *KitSop, uCube uint32, i int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_EdgeCreate (static inline)
-// C: Kit_Edge_t Kit_EdgeCreate( int Node, int fCompl )
-func kitEdgeCreate(Node int, fCompl int) KitEdge {
-	panic("TODO, stubbed")
-}
-
 // Kit_EdgeToInt (static inline)
-// C: unsigned Kit_EdgeToInt( Kit_Edge_t eEdge )
-func kitEdgeToInt(eEdge KitEdge) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_IntToEdge (static inline)
-// C: Kit_Edge_t Kit_IntToEdge( unsigned Edge )
-func kitIntToEdge(Edge uint32) KitEdge {
-	panic("TODO, stubbed")
-}
-
 // Kit_EdgeToInt_ (static inline; reinterprets the edge through a union)
-// C: unsigned Kit_EdgeToInt_( Kit_Edge_t m )
-func kitEdgeToInt_(m KitEdge) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_IntToEdge_ (static inline; reinterprets the integer through a union)
-// C: Kit_Edge_t Kit_IntToEdge_( unsigned m )
-func kitIntToEdge_(m uint32) KitEdge {
-	panic("TODO, stubbed")
-}
-
 // Kit_GraphIsConst (static inline)
 // C: int Kit_GraphIsConst( Kit_Graph_t * pGraph )
 func kitGraphIsConst(pGraph *KitGraph) int {
@@ -353,217 +223,38 @@ func kitGraphRootLevel(pGraph *KitGraph) int {
 }
 
 // Kit_SuppIsMinBase (static inline)
-// C: int Kit_SuppIsMinBase( int Supp )
-func kitSuppIsMinBase(Supp int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_BitWordNum (static inline)
-// C: int Kit_BitWordNum( int nBits )
-func kitBitWordNum(nBits int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthWordNum (static inline)
-// C: int Kit_TruthWordNum( int nVars )
-func kitTruthWordNum(nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_BitMask (static inline)
-// C: unsigned Kit_BitMask( int nBits )
-func kitBitMask(nBits int) uint32 {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthSetBit (static inline)
-// C: void Kit_TruthSetBit( unsigned * p, int Bit )
-func kitTruthSetBit(p []uint32, Bit int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthXorBit (static inline)
-// C: void Kit_TruthXorBit( unsigned * p, int Bit )
-func kitTruthXorBit(p []uint32, Bit int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthHasBit (static inline)
-// C: int Kit_TruthHasBit( unsigned * p, int Bit )
-func kitTruthHasBit(p []uint32, Bit int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_WordFindFirstBit (static inline)
-// C: int Kit_WordFindFirstBit( unsigned uWord )
-func kitWordFindFirstBit(uWord uint32) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_WordHasOneBit (static inline)
-// C: int Kit_WordHasOneBit( unsigned uWord )
-func kitWordHasOneBit(uWord uint32) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_WordCountOnes (static inline)
-// C: int Kit_WordCountOnes( unsigned uWord )
-func kitWordCountOnes(uWord uint32) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthCountOnes (static inline)
-// C: int Kit_TruthCountOnes( unsigned * pIn, int nVars )
-func kitTruthCountOnes(pIn []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthFindFirstBit (static inline)
-// C: int Kit_TruthFindFirstBit( unsigned * pIn, int nVars )
-func kitTruthFindFirstBit(pIn []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthFindFirstZero (static inline)
-// C: int Kit_TruthFindFirstZero( unsigned * pIn, int nVars )
-func kitTruthFindFirstZero(pIn []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthIsEqual (static inline)
-// C: int Kit_TruthIsEqual( unsigned * pIn0, unsigned * pIn1, int nVars )
-func kitTruthIsEqual(pIn0 []uint32, pIn1 []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthIsEqualWithCare (static inline)
-// C: int Kit_TruthIsEqualWithCare( unsigned * pIn0, unsigned * pIn1, unsigned * pCare, int nVars )
-func kitTruthIsEqualWithCare(pIn0 []uint32, pIn1 []uint32, pCare []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthIsOpposite (static inline)
-// C: int Kit_TruthIsOpposite( unsigned * pIn0, unsigned * pIn1, int nVars )
-func kitTruthIsOpposite(pIn0 []uint32, pIn1 []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthIsEqualWithPhase (static inline)
-// C: int Kit_TruthIsEqualWithPhase( unsigned * pIn0, unsigned * pIn1, int nVars )
-func kitTruthIsEqualWithPhase(pIn0 []uint32, pIn1 []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthIsConst0 (static inline)
-// C: int Kit_TruthIsConst0( unsigned * pIn, int nVars )
-func kitTruthIsConst0(pIn []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthIsConst1 (static inline)
-// C: int Kit_TruthIsConst1( unsigned * pIn, int nVars )
-func kitTruthIsConst1(pIn []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthIsImply (static inline)
-// C: int Kit_TruthIsImply( unsigned * pIn1, unsigned * pIn2, int nVars )
-func kitTruthIsImply(pIn1 []uint32, pIn2 []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthIsDisjoint (static inline)
-// C: int Kit_TruthIsDisjoint( unsigned * pIn1, unsigned * pIn2, int nVars )
-func kitTruthIsDisjoint(pIn1 []uint32, pIn2 []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthIsDisjoint3 (static inline)
-// C: int Kit_TruthIsDisjoint3( unsigned * pIn1, unsigned * pIn2, unsigned * pIn3, int nVars )
-func kitTruthIsDisjoint3(pIn1 []uint32, pIn2 []uint32, pIn3 []uint32, nVars int) int {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthCopy (static inline)
-// C: void Kit_TruthCopy( unsigned * pOut, unsigned * pIn, int nVars )
-func kitTruthCopy(pOut []uint32, pIn []uint32, nVars int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthClear (static inline)
-// C: void Kit_TruthClear( unsigned * pOut, int nVars )
-func kitTruthClear(pOut []uint32, nVars int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthFill (static inline)
-// C: void Kit_TruthFill( unsigned * pOut, int nVars )
-func kitTruthFill(pOut []uint32, nVars int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthNot (static inline)
-// C: void Kit_TruthNot( unsigned * pOut, unsigned * pIn, int nVars )
-func kitTruthNot(pOut []uint32, pIn []uint32, nVars int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthAnd (static inline)
-// C: void Kit_TruthAnd( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )
-func kitTruthAnd(pOut []uint32, pIn0 []uint32, pIn1 []uint32, nVars int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthOr (static inline)
-// C: void Kit_TruthOr( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )
-func kitTruthOr(pOut []uint32, pIn0 []uint32, pIn1 []uint32, nVars int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthXor (static inline)
-// C: void Kit_TruthXor( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )
-func kitTruthXor(pOut []uint32, pIn0 []uint32, pIn1 []uint32, nVars int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthSharp (static inline)
-// C: void Kit_TruthSharp( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )
-func kitTruthSharp(pOut []uint32, pIn0 []uint32, pIn1 []uint32, nVars int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthNand (static inline)
-// C: void Kit_TruthNand( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )
-func kitTruthNand(pOut []uint32, pIn0 []uint32, pIn1 []uint32, nVars int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthAndPhase (static inline)
-// C: void Kit_TruthAndPhase( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars, int fCompl0, int fCompl1 )
-func kitTruthAndPhase(pOut []uint32, pIn0 []uint32, pIn1 []uint32, nVars int, fCompl0 int, fCompl1 int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthOrPhase (static inline)
-// C: void Kit_TruthOrPhase( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars, int fCompl0, int fCompl1 )
-func kitTruthOrPhase(pOut []uint32, pIn0 []uint32, pIn1 []uint32, nVars int, fCompl0 int, fCompl1 int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthMux (static inline)
-// C: void Kit_TruthMux( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, unsigned * pCtrl, int nVars )
-func kitTruthMux(pOut []uint32, pIn0 []uint32, pIn1 []uint32, pCtrl []uint32, nVars int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthMuxPhase (static inline)
-// C: void Kit_TruthMuxPhase( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, unsigned * pCtrl, int nVars, int fComp0 )
-func kitTruthMuxPhase(pOut []uint32, pIn0 []uint32, pIn1 []uint32, pCtrl []uint32, nVars int, fComp0 int) {
-	panic("TODO, stubbed")
-}
-
 // Kit_TruthIthVar (static inline)
-// C: void Kit_TruthIthVar( unsigned * pTruth, int nVars, int iVar )
-func kitTruthIthVar(pTruth []uint32, nVars int, iVar int) {
-	panic("TODO, stubbed")
-}

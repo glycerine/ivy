@@ -11009,3 +11009,23 @@ Inventory is now 393 validated, 39 partial and 1,325 unstarted files. The full
 suite passes in 18.820s, the race suite in 96.043s, vet is clean, and the
 native-source, package-header, `testdata/`, symlink and tool-allowlist audits
 pass. `pkg/tools/` contains only `source_manifest.py`.
+
+## Real porting progress (replacing `panic("TODO, stubbed")`)
+
+Ported (non-`skel_` files, one per C++ header/source, tests alongside):
+`src/sat/bsat2` (all of Vec/Alg/Heap/Queue/Sort/Map/Alloc/XAlloc/SolverTypes/Solver/SimpSolver/
+Options/ParseUtils/Dimacs/System/MainSat/MainSimp: `sat_bsat2_*.go`, tests
+`sat_bsat2_solver_test.go` cross-check Solver and SimpSolver against brute force and a
+pigeonhole instance); `src/sat/glucose` and `src/sat/glucose2` (the same containers derived
+from the bsat2 port plus the real differences, BoundedQueue, the LBD Solver/SimpSolver, the
+glucose2 circuit-justification extension in `sat_glucose2_justify.go`, and the SimpSolver
+based `bmcg_sat_solver_*` entry points plus the CNF driver in `sat_glucose*_abc.go`).
+Also `AbcClock` (`misc_util_clock.go`). Porting notes: a `Clause` is a view onto the 32-bit
+words of the `ClauseAllocator` region (`unsafe` casts for the `Lit`/`float` union members);
+C++ `lbool` equality ignores bit 0 of undefined values, so the Go `lbool` normalises
+undefined results to 2; C++ `throw OutOfMemoryException` and `assert` are `panic`s that
+are never recovered; virtual `garbageCollect` is modelled by the `virtGC` hook.
+Still stubbed in these directories because they need the Gia/CNF/Abc_Frame ports:
+`Glucose_SolverFromAig*`, `Glucose_GenerateCubes`, `bmcg_sat_solver_sop/quantify*/equiv_overlap_check`,
+`Glucose_SolveAig`, `Glucose_QuantifyAigTest`, `Glucose_CheckTwoNodesTest` and the `&glucose`
+command (`AbcGlucoseCmd*.cpp`).

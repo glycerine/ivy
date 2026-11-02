@@ -9,77 +9,17 @@ package abc
 // class members).
 
 // glucose2_solver_start
-// C: SimpSolver * glucose2_solver_start()
-func glucose2_solver_start() *Gluco2SimpSolver {
-	panic("TODO, stubbed")
-}
-
 // glucose2_solver_stop
-// C: void glucose2_solver_stop(Gluco2::SimpSolver* S)
-func glucose2_solver_stop(S *Gluco2SimpSolver) {
-	panic("TODO, stubbed")
-}
-
 // glucose2_solver_reset
-// C: void glucose2_solver_reset(Gluco2::SimpSolver* S)
-func glucose2_solver_reset(S *Gluco2SimpSolver) {
-	panic("TODO, stubbed")
-}
-
 // glucose2_solver_addclause
-// C: int glucose2_solver_addclause(Gluco2::SimpSolver* S, int * plits, int nlits)
-func glucose2_solver_addclause(S *Gluco2SimpSolver, plits []int, nlits int) int {
-	panic("TODO, stubbed")
-}
-
 // glucose2_solver_setcallback
-// C: void glucose2_solver_setcallback(Gluco2::SimpSolver* S, void * pman, int(*pfunc)(void*, int, int*))
-func glucose2_solver_setcallback(S *Gluco2SimpSolver, pman any, pfunc func(any, int, []int) int) {
-	panic("TODO, stubbed")
-}
-
 // glucose2_solver_solve
-// C: int glucose2_solver_solve(Gluco2::SimpSolver* S, int * plits, int nlits)
-func glucose2_solver_solve(S *Gluco2SimpSolver, plits []int, nlits int) int {
-	panic("TODO, stubbed")
-}
-
 // glucose2_solver_addvar
-// C: int glucose2_solver_addvar(Gluco2::SimpSolver* S)
-func glucose2_solver_addvar(S *Gluco2SimpSolver) int {
-	panic("TODO, stubbed")
-}
-
 // glucose2_solver_read_cex
-// C: int * glucose2_solver_read_cex(Gluco2::SimpSolver* S )
-func glucose2_solver_read_cex(S *Gluco2SimpSolver) []int {
-	panic("TODO, stubbed")
-}
-
 // glucose2_solver_read_cex_varvalue
-// C: int glucose2_solver_read_cex_varvalue(Gluco2::SimpSolver* S, int ivar)
-func glucose2_solver_read_cex_varvalue(S *Gluco2SimpSolver, ivar int) int {
-	panic("TODO, stubbed")
-}
-
 // glucose2_solver_setstop
-// C: void glucose2_solver_setstop(Gluco2::SimpSolver* S, int * pstop)
-func glucose2_solver_setstop(S *Gluco2SimpSolver, pstop *int) {
-	panic("TODO, stubbed")
-}
-
 // glucose2_print_stats
-// C: void glucose2_print_stats(SimpSolver& s, abctime clk)
-func glucose2_print_stats(s *Gluco2SimpSolver, clk int64) {
-	panic("TODO, stubbed")
-}
-
 // Glucose_ReadDimacs
-// C: void Glucose_ReadDimacs( char * pFileName, SimpSolver& s )
-func GlucoseReadDimacs_glucose2(pFileName string, s *Gluco2SimpSolver) {
-	panic("TODO, stubbed")
-}
-
 // Glucose_SolverFromAig
 // C: Vec_Int_t * Glucose_SolverFromAig( Gia_Man_t * p, SimpSolver& s )
 func (p *GiaManager) GlucoseSolverFromAig_glucose2(s *Gluco2SimpSolver) *IntVector {

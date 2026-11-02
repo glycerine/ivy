@@ -9,83 +9,18 @@ package abc
 // class members).
 
 // glucose_solver_start
-// C: SimpSolver * glucose_solver_start()
-func glucose_solver_start() *GlucoSimpSolver {
-	panic("TODO, stubbed")
-}
-
 // glucose_solver_stop
-// C: void glucose_solver_stop(Gluco::SimpSolver* S)
-func glucose_solver_stop(S *GlucoSimpSolver) {
-	panic("TODO, stubbed")
-}
-
 // glucose_solver_reset
-// C: void glucose_solver_reset(Gluco::SimpSolver* S)
-func glucose_solver_reset(S *GlucoSimpSolver) {
-	panic("TODO, stubbed")
-}
-
 // glucose_solver_addclause
-// C: int glucose_solver_addclause(Gluco::SimpSolver* S, int * plits, int nlits)
-func glucose_solver_addclause(S *GlucoSimpSolver, plits []int, nlits int) int {
-	panic("TODO, stubbed")
-}
-
 // glucose_solver_setcallback
-// C: void glucose_solver_setcallback(Gluco::SimpSolver* S, void * pman, int(*pfunc)(void*, int, int*))
-func glucose_solver_setcallback(S *GlucoSimpSolver, pman any, pfunc func(any, int, []int) int) {
-	panic("TODO, stubbed")
-}
-
 // glucose_solver_solve
-// C: int glucose_solver_solve(Gluco::SimpSolver* S, int * plits, int nlits)
-func glucose_solver_solve(S *GlucoSimpSolver, plits []int, nlits int) int {
-	panic("TODO, stubbed")
-}
-
 // glucose_solver_addvar
-// C: int glucose_solver_addvar(Gluco::SimpSolver* S)
-func glucose_solver_addvar(S *GlucoSimpSolver) int {
-	panic("TODO, stubbed")
-}
-
 // glucose_solver_read_cex
-// C: int * glucose_solver_read_cex(Gluco::SimpSolver* S )
-func glucose_solver_read_cex(S *GlucoSimpSolver) []int {
-	panic("TODO, stubbed")
-}
-
 // glucose_solver_read_cex_varvalue
-// C: int glucose_solver_read_cex_varvalue(Gluco::SimpSolver* S, int ivar)
-func glucose_solver_read_cex_varvalue(S *GlucoSimpSolver, ivar int) int {
-	panic("TODO, stubbed")
-}
-
 // glucose_solver_setstop
-// C: void glucose_solver_setstop(Gluco::SimpSolver* S, int * pstop)
-func glucose_solver_setstop(S *GlucoSimpSolver, pstop *int) {
-	panic("TODO, stubbed")
-}
-
 // bmcg_solver_add_xor (the C file defines this name; the header declares bmcg_sat_solver_add_xor)
-// C: int bmcg_solver_add_xor( bmcg_sat_solver * pSat, int iVarA, int iVarB, int iVarC, int fCompl )
-func bmcg_solver_add_xor(pSat BmcgSatSolver, iVarA int, iVarB int, iVarC int, fCompl int) int {
-	panic("TODO, stubbed")
-}
-
 // glucose_print_stats
-// C: void glucose_print_stats(SimpSolver& s, abctime clk)
-func glucose_print_stats(s *GlucoSimpSolver, clk int64) {
-	panic("TODO, stubbed")
-}
-
 // Glucose_ReadDimacs
-// C: void Glucose_ReadDimacs( char * pFileName, SimpSolver& s )
-func GlucoseReadDimacs(pFileName string, s *GlucoSimpSolver) {
-	panic("TODO, stubbed")
-}
-
 // Glucose_SolverFromAig
 // C: Vec_Int_t * Glucose_SolverFromAig( Gia_Man_t * p, SimpSolver& s )
 func (p *GiaManager) GlucoseSolverFromAig(s *GlucoSimpSolver) *IntVector {
