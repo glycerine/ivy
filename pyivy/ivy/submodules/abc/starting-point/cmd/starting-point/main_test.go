@@ -144,7 +144,7 @@ func TestFallbackDetailsPrinted(t *testing.T) {
 	}
 	var output bytes.Buffer
 	printTreeReport(&output, report)
-	for _, want := range []string{"1 source-preserving fallbacks", "commented original source; analysis failed", "broken.c -> broken.go: unterminated comment at byte 0"} {
+	for _, want := range []string{"1 source-preserving fallbacks", "commented original source; analysis failed", "broken.c -> broken.go: unterminated comment at source line 1, column 1 (byte offset 0)"} {
 		if !strings.Contains(output.String(), want) {
 			t.Fatal(output.String())
 		}
@@ -157,7 +157,10 @@ func TestFallbackDetailsPrinted(t *testing.T) {
 	if err = json.Unmarshal(data, &saved); err != nil {
 		t.Fatal(err)
 	}
-	if saved.Files[0].FallbackReason != "unterminated comment at byte 0" {
+	if saved.Files[0].FallbackLocation == nil || saved.Files[0].FallbackLocation.Line != 1 || saved.Files[0].FallbackLocation.Column != 1 || saved.Files[0].FallbackLocation.ByteOffset != 0 {
+		t.Fatal(saved)
+	}
+	if saved.Files[0].FallbackReason != "unterminated comment at source line 1, column 1 (byte offset 0)" {
 		t.Fatal(saved)
 	}
 	output.Reset()

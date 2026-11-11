@@ -118,7 +118,13 @@ func ResolvePackage(path, override string) (string, error) {
 	return name, nil
 }
 
-func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
+func AnalyzeWithOptions(path, source string, opts Options) (result Result, resultErr error) {
+	sourceChecked := false
+	defer func() {
+		if sourceChecked && resultErr != nil {
+			resultErr = fmt.Errorf("transformed draft for %s (not original-source coordinates): %w", path, resultErr)
+		}
+	}()
 	r := Result{Schema: 2, Path: path, SHA256: fmt.Sprintf("%x", sha256.Sum256([]byte(source)))}
 	var err error
 	opts.Package, err = ResolvePackage(path, opts.Package)
@@ -127,12 +133,13 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 	}
 	ts, err := Lex(source)
 	if err != nil {
-		return r, err
+		return r, sourceError(source, err)
 	}
 	pairs, err := MatchDelimiters(ts)
 	if err != nil {
-		return r, err
+		return r, sourceError(source, err)
 	}
+	sourceChecked = true
 	mask := Mask(ts)
 	ends := map[int]int{}
 	for a, b := range pairs {

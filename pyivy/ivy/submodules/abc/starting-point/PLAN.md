@@ -1051,3 +1051,31 @@ untouched. A fresh single-file result is saved in
 `experiments/satoko/_draft-v24/cuddInt.go`. This is a generated draft, not a claim
 that the entire header is now valid Go. The next full-tree generation will no
 longer need the cuddInt.h source-preserving fallback.
+
+
+### Source line/column diagnostics — prototype-25
+
+Lexer/delimiter errors now carry structured byte offsets. Initial analysis maps
+those offsets against the unchanged original input, reporting 1-based source
+line and byte-column numbers plus the zero-based byte offset. Tabs count as one
+byte; CRLF and UTF-8 byte widths are handled consistently. Tree run.json records
+FallbackLocation as structured fields alongside FallbackReason. CLI output and
+per-file diagnostic messages include the coordinates. Errors arising after
+rewriting are explicitly labelled transformed-draft coordinates rather than
+being falsely mapped to original source.
+
+Read-only recheck of current fallback locations:
+
+| Source | Line | Column | Byte offset |
+| --- | --- | --- | --- |
+| src/bdd/cudd/cuddExport.c | 285 | 80 | 10985 |
+| src/bdd/cudd/cuddZddMisc.c | 206 | 39 | 7207 |
+| src/bdd/mtr/mtrBasic.c | 437 | 64 | 12622 |
+| src/misc/zlib/inflate.c | 1196 | 9 | 43923 |
+| src/misc/zlib/trees.c | 911 | 1 | 33407 |
+| src/proof/int2/int2Bmc.c | 270 | 56 | 9267 |
+
+Updated the installed command. All tests pass, including UTF-8/CRLF/tab location
+checks, unterminated multiline comments, printed fallback messages, and structured
+location persistence. Source locations must be looked up in original C/C++ files,
+not in transformed .go files whose inserted/removed lines change coordinates.

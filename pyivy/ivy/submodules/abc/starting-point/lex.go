@@ -44,7 +44,7 @@ func Lex(s string) ([]Token, error) {
 			kind = "comment"
 			end := strings.Index(s[i+2:], "*/")
 			if end < 0 {
-				return nil, fmt.Errorf("unterminated comment at byte %d", i)
+				return nil, &syntaxError{"unterminated comment", i}
 			}
 			i += end + 4
 		case rawPrefix(s[i:]) != "":
@@ -53,11 +53,11 @@ func Lex(s string) ([]Token, error) {
 			d := i + len(p)
 			k := strings.IndexByte(s[d:], '(')
 			if k < 0 || k > 16 || strings.ContainsAny(s[d:d+k], " \t\r\n\\)") {
-				return nil, fmt.Errorf("invalid raw string at byte %d", i)
+				return nil, &syntaxError{"invalid raw string", i}
 			}
 			end := strings.Index(s[d+k+1:], ")"+s[d:d+k]+"\"")
 			if end < 0 {
-				return nil, fmt.Errorf("unterminated raw string at byte %d", i)
+				return nil, &syntaxError{"unterminated raw string", i}
 			}
 			i = d + k + 1 + end + 1 + k + 1
 		case s[i] == '"' || s[i] == '\'':
@@ -78,7 +78,7 @@ func Lex(s string) ([]Token, error) {
 				i++
 			}
 			if !closed {
-				return nil, fmt.Errorf("unterminated literal at byte %d", start)
+				return nil, &syntaxError{"unterminated literal", start}
 			}
 		case s[i] == '#':
 			kind = "directive"
@@ -146,18 +146,18 @@ func MatchDelimiters(ts []Token) (map[int]int, error) {
 		}
 		if strings.Contains(")]}", t.Text) {
 			if len(stack) == 0 {
-				return nil, fmt.Errorf("unmatched %s at %d", t.Text, t.Start)
+				return nil, &syntaxError{fmt.Sprintf("unmatched %s", t.Text), t.Start}
 			}
 			j := stack[len(stack)-1]
 			stack = stack[:len(stack)-1]
 			if strings.Index("([{", ts[j].Text) != strings.Index(")]}", t.Text) {
-				return nil, fmt.Errorf("mismatched delimiter at %d", t.Start)
+				return nil, &syntaxError{"mismatched delimiter", t.Start}
 			}
 			m[j] = i
 		}
 	}
 	if len(stack) > 0 {
-		return nil, fmt.Errorf("unclosed delimiter at %d", ts[stack[0]].Start)
+		return nil, &syntaxError{"unclosed delimiter", ts[stack[0]].Start}
 	}
 	return m, nil
 }
@@ -202,7 +202,7 @@ func directiveEnd(s string, start int) (int, error) {
 		if strings.HasPrefix(s[i:], "/*") {
 			end := strings.Index(s[i+2:], "*/")
 			if end < 0 {
-				return 0, fmt.Errorf("unterminated comment at byte %d", i)
+				return 0, &syntaxError{"unterminated comment", i}
 			}
 			i += end + 4
 			continue

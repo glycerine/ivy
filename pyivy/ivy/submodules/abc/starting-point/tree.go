@@ -3,6 +3,7 @@ package startingpoint
 import (
 	"crypto/sha256"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/fs"
 	"os"
@@ -12,13 +13,14 @@ import (
 )
 
 type TreeFile struct {
-	Source         string
-	Output         string
-	Package        string
-	SHA256         string
-	Issues         int
-	Fallback       bool
-	FallbackReason string `json:",omitempty"`
+	Source           string
+	Output           string
+	Package          string
+	SHA256           string
+	Issues           int
+	Fallback         bool
+	FallbackReason   string          `json:",omitempty"`
+	FallbackLocation *SourceLocation `json:",omitempty"`
 }
 type TreeReport struct {
 	Source     string
@@ -116,6 +118,12 @@ func TranslateTree(source, destination string, opts Options) (TreeReport, error)
 		result, analyzeErr := AnalyzeWithOptions(path, string(bytes), fileOpts)
 		fallback := analyzeErr != nil
 		reason := ""
+		var location *SourceLocation
+		var diagnostic *SourceError
+		if errors.As(analyzeErr, &diagnostic) {
+			loc := diagnostic.Location
+			location = &loc
+		}
 		if fallback {
 			reason = analyzeErr.Error()
 		}
@@ -151,7 +159,7 @@ func TranslateTree(source, destination string, opts Options) (TreeReport, error)
 		if err = os.WriteFile(meta+".json", append(data, '\n'), 0644); err != nil {
 			return r, err
 		}
-		r.Files = append(r.Files, TreeFile{Source: path, Output: outputNames[i], Package: pkg, SHA256: result.SHA256, Issues: len(result.Issues), Fallback: fallback, FallbackReason: reason})
+		r.Files = append(r.Files, TreeFile{Source: path, Output: outputNames[i], Package: pkg, SHA256: result.SHA256, Issues: len(result.Issues), Fallback: fallback, FallbackReason: reason, FallbackLocation: location})
 	}
 	r.DurationNS = time.Since(start).Nanoseconds()
 	data, err := json.MarshalIndent(r, "", "  ")

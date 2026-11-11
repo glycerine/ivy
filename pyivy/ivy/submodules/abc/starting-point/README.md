@@ -121,3 +121,8 @@ nondecimal literals). For example, `#define NUMBER1 3716960521u` becomes
 
 The lexer retains multiline block comments inside preprocessor directives, so
 comment punctuation does not participate in code delimiter matching.
+
+Fallback diagnostics include original-source line and byte column (both 1-based)
+and byte offset (0-based). `run.json` also contains structured `FallbackLocation`
+fields. Look these up in the original source, not the generated Go draft. Errors
+from later rewriting stages are explicitly labelled as transformed-draft errors.
