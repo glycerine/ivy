@@ -13,6 +13,8 @@ import (
 )
 
 type TreeFile struct {
+	LibraryConverted int                 `json:",omitempty"`
+	LibraryReview    int                 `json:",omitempty"`
 	Conditionals     []ConditionalReview `json:",omitempty"`
 	Source           string
 	Output           string
@@ -160,7 +162,15 @@ func TranslateTree(source, destination string, opts Options) (TreeReport, error)
 		if err = os.WriteFile(meta+".json", append(data, '\n'), 0644); err != nil {
 			return r, err
 		}
-		r.Files = append(r.Files, TreeFile{Conditionals: result.Conditionals, Source: path, Output: outputNames[i], Package: pkg, SHA256: result.SHA256, Issues: len(result.Issues), Fallback: fallback, FallbackReason: reason, FallbackLocation: location})
+		converted, review := 0, 0
+		for _, change := range result.Library {
+			if change.Status == "converted" {
+				converted++
+			} else {
+				review++
+			}
+		}
+		r.Files = append(r.Files, TreeFile{LibraryConverted: converted, LibraryReview: review, Conditionals: result.Conditionals, Source: path, Output: outputNames[i], Package: pkg, SHA256: result.SHA256, Issues: len(result.Issues), Fallback: fallback, FallbackReason: reason, FallbackLocation: location})
 	}
 	r.DurationNS = time.Since(start).Nanoseconds()
 	data, err := json.MarshalIndent(r, "", "  ")

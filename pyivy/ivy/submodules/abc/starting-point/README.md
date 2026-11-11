@@ -173,3 +173,41 @@ Conventional C main functions become `func main()`. Their argv/argc parameters
 map to os.Args/len(os.Args), with an os import when needed. Zero returns become
 bare returns; other exit statuses use os.Exit. Package selection still follows
 the directory name or `-package` override.
+
+
+## Standard-library conversion
+
+The library pass now has a documented catalog of 302 C-library names, classified
+as implemented, conditional on recognizable argument shapes/types, or retained
+for review. See [STDLIB.md](STDLIB.md) for the C11 header survey, references,
+conversion policy, full rule table, and validation details.
+
+The pass runs automatically during ordinary translation. It covers literal-mode
+fopen, fclose, bounded fgets into known byte buffers, atoi/atol/atoll numeric
+prefixes, standard streams/status constants, byte I/O and file positioning,
+selected string/memory operations, ASCII character classification, and common
+float/double math. It manages imports and preserves single argument evaluation.
+Cases such as raw allocation, pointer-returning searches, C stream error state,
+complex scanning, shell commands, CPU clocks, locale, and sorting remain explicit
+review records instead of misleading substitutions.
+
+The Go API exposes `LibraryRules()` and
+`RewriteStandardLibrary(draft) (string, []LibraryChange, error)`.
+`Result.Library` contains per-call decisions, source-line excerpts, and labeled
+pre-library-draft line/column/byte locations. Tree run.json contains per-file
+converted/review counts; the directory CLI prints an aggregate summary. Full
+review details remain in `_starting-point/<source>.json`, keeping console output
+manageable and independent of `-pre`.
+
+Conversions are drafts, not proof of equivalence. The tests compile and execute
+small generated programs and compare a translated C consumer against native C.
+The latest whole-src coverage is recorded in
+[prototype-41-summary.json](experiments/stdlib/prototype-41-summary.json).
+
+
+Timing queries use the Go time package: time(NULL) becomes time.Now().Unix(),
+and time(&value) also stores the timestamp. clock() uses an explicitly recorded
+wall-time policy: time.Now().UnixNano(), int64 clock_t, and time.Second for
+CLOCKS_PER_SEC. This changes CPU-time semantics; time.Time/time.Since is the
+preferred later repair for monotonic elapsed timing. Calendar/struct tm routines
+still require representation decisions.

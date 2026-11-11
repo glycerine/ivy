@@ -62,11 +62,16 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 			}
 		}
 	}
-	formatted, err := rewriteLibraryCalls(r.Draft, true)
+	formatted, library, err := rewriteStandardLibrary(r.Draft, true)
 	if err != nil {
 		return r, transformedDiagnostic(path, "library-call rewrite", r.Draft, err)
 	}
+	r.Library = library
 	r.Draft = formatted
+	libraryContext, err := newLibraryEnvironment(r.Draft)
+	if err != nil {
+		return r, transformedDiagnostic(path, "library metadata", r.Draft, err)
+	}
 	r.Draft = restoreRegions(r.Draft, regions)
 	for i := range r.Functions {
 		f := &r.Functions[i]
@@ -74,7 +79,7 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 		f.End = originalOffset(f.End, regions)
 		f.BodyStart = originalOffset(f.BodyStart, regions)
 		f.Original = source[f.Start:f.End]
-		formatted, err = rewriteLibraryCalls(f.Draft, false)
+		formatted, _, err = rewriteStandardLibraryContext(f.Draft, false, libraryContext)
 		if err != nil {
 			return r, transformedDiagnostic(path, "library-call rewrite of function "+f.Name, f.Draft, err)
 		}

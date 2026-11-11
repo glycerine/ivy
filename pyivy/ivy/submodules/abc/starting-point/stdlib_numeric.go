@@ -1,0 +1,149 @@
+package startingpoint
+
+import "strings"
+
+var mathCalls = map[string]string{
+	"acos": "Acos", "asin": "Asin", "atan": "Atan", "atan2": "Atan2", "cos": "Cos", "sin": "Sin", "tan": "Tan",
+	"acosh": "Acosh", "asinh": "Asinh", "atanh": "Atanh", "cosh": "Cosh", "sinh": "Sinh", "tanh": "Tanh",
+	"exp": "Exp", "exp2": "Exp2", "expm1": "Expm1", "log": "Log", "log10": "Log10", "log1p": "Log1p", "log2": "Log2",
+	"sqrt": "Sqrt", "cbrt": "Cbrt", "pow": "Pow", "hypot": "Hypot", "ceil": "Ceil", "floor": "Floor", "trunc": "Trunc", "round": "Round",
+	"fabs": "Abs", "fmod": "Mod", "remainder": "Remainder", "copysign": "Copysign", "erf": "Erf", "erfc": "Erfc", "tgamma": "Gamma",
+}
+var asciiPredicates = map[string]string{
+	"isdigit":  "spC >= '0' && spC <= '9'",
+	"isalpha":  "(spC >= 'a' && spC <= 'z') || (spC >= 'A' && spC <= 'Z')",
+	"isalnum":  "(spC >= 'a' && spC <= 'z') || (spC >= 'A' && spC <= 'Z') || (spC >= '0' && spC <= '9')",
+	"isblank":  "spC == ' ' || spC == '\\t'",
+	"isspace":  "spC == ' ' || (spC >= '\\t' && spC <= '\\r')",
+	"iscntrl":  "(spC >= 0 && spC < 32) || spC == 127",
+	"isgraph":  "spC >= 33 && spC <= 126",
+	"islower":  "spC >= 'a' && spC <= 'z'",
+	"isupper":  "spC >= 'A' && spC <= 'Z'",
+	"isprint":  "spC >= 32 && spC <= 126",
+	"ispunct":  "(spC >= 33 && spC <= 47) || (spC >= 58 && spC <= 64) || (spC >= 91 && spC <= 96) || (spC >= 123 && spC <= 126)",
+	"isxdigit": "(spC >= '0' && spC <= '9') || (spC >= 'a' && spC <= 'f') || (spC >= 'A' && spC <= 'F')",
+}
+
+func (p *libraryPass) convertNumeric(c libraryCall) (string, string, bool) {
+	a := c.args
+	if strings.HasSuffix(c.name, "f") && p.rules[c.name].Header == "math.h" {
+		base := strings.TrimSuffix(c.name, "f")
+		if p.rules[base].Header == "math.h" {
+			inner := c
+			inner.name = base
+			result, note, ok := p.convertNumeric(inner)
+			if ok {
+				return "float32(" + result + ")", note + " Float result rounded to float32; verify exact rounding requirements.", true
+			}
+			return result, note, ok
+		}
+	}
+	if target, ok := mathCalls[c.name]; ok {
+		n := 1
+		switch c.name {
+		case "atan2", "pow", "hypot", "fmod", "remainder", "copysign":
+			n = 2
+		}
+		if len(a) != n {
+			return "", arity(c, n), false
+		}
+		args := make([]string, n)
+		for i := range args {
+			args[i] = "float64(" + a[i] + ")"
+		}
+		return p.imports.use("math") + target + "(" + strings.Join(args, ", ") + ")", "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.", true
+	}
+	if condition, ok := asciiPredicates[c.name]; ok {
+		if len(a) != 1 {
+			return "", arity(c, 1), false
+		}
+		// The template strings encode character escapes, not literal whitespace.
+		condition = strings.ReplaceAll(condition, `\\`, `\`)
+		return iife("spC int32", "int32", "if "+condition+" { return 1 }; return 0", "int32("+a[0]+")"), "ASCII C-locale classification; non-C locale behavior must be selected explicitly.", true
+	}
+	switch c.name {
+	case "atoi", "atol", "atoll":
+		if len(a) != 1 {
+			return "", arity(c, 1), false
+		}
+		bits, typ := "32", "int32"
+		if c.name != "atoi" {
+			bits, typ = "64", "int64"
+		}
+		text := a[0]
+		if v, ok := p.text(text); ok {
+			text = v
+		}
+		st, sc := p.imports.use("strings"), p.imports.use("strconv")
+		body := "spText = " + st + "TrimLeft(spText, \" \\t\\n\\r\\v\\f\")\nspEnd := 0\nif len(spText) > 0 && (spText[0] == '+' || spText[0] == '-') { spEnd++ }\nspDigits := spEnd\nfor spEnd < len(spText) && spText[spEnd] >= '0' && spText[spEnd] <= '9' { spEnd++ }\nif spEnd == spDigits { return 0 }\nspValue, _ := " + sc + "ParseInt(spText[:spEnd], 10, " + bits + ") // Review overflow; C conversion is undefined outside range.\nreturn " + typ + "(spValue)"
+		return iife("spText string", typ, body, text), "Decimal prefix, sign and ASCII whitespace retained; LP64 widths, overflow and locale require review.", true
+	case "abs", "labs", "llabs":
+		if len(a) != 1 {
+			return "", arity(c, 1), false
+		}
+		typ := "int32"
+		if c.name != "abs" {
+			typ = "int64"
+		}
+		return iife("spValue "+typ, typ, "if spValue < 0 { return -spValue }; return spValue", typ+"("+a[0]+")"), "Integer absolute value; minimum signed value remains outside the defined C domain.", true
+	case "tolower", "toupper":
+		if len(a) != 1 {
+			return "", arity(c, 1), false
+		}
+		body := "if spC >= 'A' && spC <= 'Z' { return spC + ('a' - 'A') }; return spC"
+		if c.name == "toupper" {
+			body = "if spC >= 'a' && spC <= 'z' { return spC - ('a' - 'A') }; return spC"
+		}
+		return iife("spC int32", "int32", body, "int32("+a[0]+")"), "ASCII C-locale case conversion; EOF/other values are preserved.", true
+	case "fmin", "fmax", "fdim":
+		if len(a) != 2 {
+			return "", arity(c, 2), false
+		}
+		ma := p.imports.use("math")
+		body := ""
+		if c.name == "fdim" {
+			body = "if " + ma + "IsNaN(spA) || " + ma + "IsNaN(spB) { return " + ma + "NaN() }; if spA > spB { return spA-spB }; return 0"
+		} else {
+			target := "Min"
+			if c.name == "fmax" {
+				target = "Max"
+			}
+			body = "if " + ma + "IsNaN(spA) { return spB }; if " + ma + "IsNaN(spB) { return spA }; return " + ma + target + "(spA, spB)"
+		}
+		return iife("spA, spB float64", "float64", body, "float64("+a[0]+")", "float64("+a[1]+")"), "Double math with explicit C NaN handling; errno/fenv still require review.", true
+	case "lgamma":
+		if len(a) != 1 {
+			return "", arity(c, 1), false
+		}
+		return iife("spX float64", "float64", "spValue, _ := "+p.imports.use("math")+"Lgamma(spX); return spValue", "float64("+a[0]+")"), "Log-gamma value only; any signgam/global sign use requires repair.", true
+	case "exit", "_Exit":
+		if len(a) != 1 {
+			return "", arity(c, 1), false
+		}
+		return p.imports.use("os") + "Exit(int(" + a[0] + "))", "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.", true
+	case "getenv":
+		if len(a) != 1 {
+			return "", arity(c, 1), false
+		}
+		text := a[0]
+		if v, ok := p.text(text); ok {
+			text = v
+		}
+		return p.imports.use("os") + "Getenv(" + text + ")", "Missing environment values now return empty string, not NULL. Use LookupEnv where absence matters.", true
+	case "assert":
+		if len(a) != 1 {
+			return "", arity(c, 1), false
+		}
+		if !c.standalone {
+			return "", "assert in an expression requires control-flow repair.", false
+		}
+		// Only already-boolean Go/C comparisons; bare C integer/pointer truth values
+		// must not become invalid !integer code or suppress side effects.
+		condition := a[0]
+		if !strings.Contains(condition, "==") && !strings.Contains(condition, "!=") && !strings.Contains(condition, "<") && !strings.Contains(condition, ">") {
+			return "", "assert condition needs C-to-Go truth-value conversion before lowering.", false
+		}
+		return "if !(" + condition + ") { panic(\"C assertion failed\") }", "Always-on Go panic; C NDEBUG/abort and assertion messages require review.", true
+	}
+	return "", "", false
+}

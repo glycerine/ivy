@@ -109,7 +109,7 @@ func run(args []string) error {
 		Package    string
 		DurationNS int64
 		Files      []startingpoint.Result
-	}{"prototype-40", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
+	}{"prototype-42", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -139,6 +139,14 @@ func resolveSourceArgument(arg, cwd string) (string, bool, error) {
 
 func printTreeReport(w io.Writer, report startingpoint.TreeReport, pre bool) {
 	fmt.Fprintf(w, "Translated %d files into %s (%d source-preserving fallbacks)\n", len(report.Files), report.Output, report.Fallbacks)
+	converted, review := 0, 0
+	for _, file := range report.Files {
+		converted += file.LibraryConverted
+		review += file.LibraryReview
+	}
+	if converted+review > 0 {
+		fmt.Fprintf(w, "Standard library: %d converted sites, %d retained review sites (details in _starting-point/*.json)\n", converted, review)
+	}
 	if report.Fallbacks > 0 {
 		fmt.Fprintln(w, "Fallbacks (commented original source; analysis failed):")
 	}

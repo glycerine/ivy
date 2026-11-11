@@ -47,6 +47,7 @@ type Issue struct {
 type Result struct {
 	Schema       int
 	Path, SHA256 string
+	Library      []LibraryChange     `json:",omitempty"`
 	Conditionals []ConditionalReview `json:",omitempty"`
 	Functions    []Function
 	Issues       []Issue
@@ -74,6 +75,12 @@ func goType(s string) string {
 		return "*" + goType(base)
 	}
 	switch s {
+	case "clock_t", "time_t":
+		return "int64"
+	case "float":
+		return "float32"
+	case "double":
+		return "float64"
 	case "char":
 		return "byte"
 	case "unsigned":

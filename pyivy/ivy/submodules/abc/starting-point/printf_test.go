@@ -17,7 +17,7 @@ func TestFormattedCalls(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{`import "fmt"`, `// printf("unchanged");`, `fmt.Printf("value %d", value());`, `fmt.Fprintf(out, "value %d", value());`, `buffer = fmt.Sprintf( "%d", value());`, `count = sprintf(buffer, "%d", value());`, `obj.printf("method");`} {
+	for _, want := range []string{`import "fmt"`, `// printf("unchanged");`, `fmt.Printf("value %d", value());`, `fmt.Fprintf(out, "value %d", value());`, `buffer = fmt.Sprintf("%d", value());`, `count = sprintf(buffer, "%d", value());`, `obj.printf("method");`} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatalf("missing %q:\n%s", want, r.Draft)
 		}

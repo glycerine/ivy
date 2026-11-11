@@ -2,9 +2,11 @@
 
 Last updated: 2026-11-11
 
-Status: first bounded C experiment validated. A source-preserving prototype and
-repaired Satoko heap/vector port exist. Broader structural parsing and C++ support
-remain unimplemented; speedup over an LLM-only baseline is not established.
+Status: the bounded Satoko experiment is validated. Token-based drafts now cover
+ordinary C declarations/functions, protected preprocessing regions, and a
+catalog-driven standard-library conversion pass with native-C differential tests.
+Full C/C++ semantics and whole-project compilation remain incomplete; speedup
+over an LLM-only baseline is not established.
 
 ## Purpose
 
@@ -1419,3 +1421,115 @@ All Go tests pass, including declarations across those contexts and import
 protection/deduplication. Installed prototype-40 and generated
 `experiments/satoko/_draft-v40-starter/starter.go`: pFile and pOutput are now
 *os.File. stdout and C file-operation calls remain separate conversion work.
+
+## Systematic standard-library facility — prototype-41
+
+Milestones completed:
+
+- [x] Survey C11 header families and document Go directions and incompatibilities.
+  [STDLIB.md](STDLIB.md) contains primary-source links, the full mapping inventory,
+  explicit representation policies, and follow-up priorities. Some standards
+  sites were unavailable; accessible implementation documentation plus native-C
+  differential tests were used rather than claiming unavailable pages were read.
+- [x] Expose a reusable token-driven API, `RewriteStandardLibrary`, and an
+  executable `LibraryRules()` catalog. The catalog covers 301 names: 117 with
+  implemented rule paths, 23 conditional on call shapes/known representations,
+  and 161 explicitly retained for review. These are candidate mappings, not
+  unconditional semantic-equivalence claims.
+- [x] Integrate the pass after structural/type rewriting and before restoring
+  opaque preprocessor regions; update function metadata as well as file drafts.
+- [x] Support nested arguments, evaluate arguments once, preserve comments and
+  literals, protect source-defined/shadowed names and qualified calls, and manage
+  deterministic imports (including aliases, conflicts and blank imports).
+- [x] Add per-site `Result.Library` decisions with messages, source-line excerpts,
+  and line/column/byte locations explicitly labeled as pre-library Go-draft
+  coordinates. Add tree JSON per-file counts and a concise CLI aggregate summary.
+  This is independent of `-pre`; thousands of review locations are not dumped to
+  the terminal by default.
+- [x] Compile and run generated Go fixtures, compare a complete translated C
+  consumer with native C, run the repository tests, and validate the whole ABC
+  src tree for analysis regressions.
+
+Implemented families include literal-mode fopen/OpenFile, fclose, bounded fgets
+for byte buffers, byte I/O, binary element-count I/O for known byte arrays/slices,
+file positioning and standard streams; atoi/atol/atoll decimal-prefix conversion;
+integer abs; ASCII/C-locale character classification/case conversion; common
+float/double math; string comparison/value operations; bounded byte memory
+operations; format normalization and count/status handling; process-status
+constants, exit, and explicitly qualified getenv/assert drafts.
+
+Important decisions and conclusions:
+
+1. Name-only replacement is inadequate for the main examples. atoi must accept
+   numeric prefixes, and fgets must preserve n-1, newline, NUL and partial-EOF
+   behavior. A fresh buffered reader on each fgets call would lose prefetched
+   bytes; Scanner would change record semantics. The initial bounded File.Read
+   loop is explicit and correct for the tested single-stream cases, but should
+   later be optimized through coordinated buffering/locking.
+2. Small immediately invoked functions preserve C one-result status conventions
+   while exposing Go value/error operations, without introducing a hidden C
+   runtime or colliding locals around goto-heavy code. They increase draft size;
+   the repair pass can promote them into ordinary statements or shared helpers.
+3. Known byte buffers get NUL-aware strlen/string handling. Raw pointers,
+   arbitrary slices and struct layouts are not silently treated as byte slices.
+   Negative C int-to-byte conversions happen at runtime, avoiding Go's rejection
+   of a negative constant cast directly to byte.
+4. Locale, long-double precision, ferror/feof/errno state, raw allocation and
+   ownership, pointer-returning string searches, atof/strto* end pointers,
+   qsort/bsearch, random sequences, CPU clocks, shell execution and threading
+   remain explicit repair work. C double/float types now map to float64/float32
+   to make the supported math conversions usable.
+5. Package/type context is reused for function metadata and import transactions
+   avoid copying the full source identifier set per call. This reduced the
+   initial full-tree prototype run from 227 seconds to about one minute.
+
+Validation evidence:
+
+- `go -C starting-point test ./...` passes, including generated-program execution.
+- Native-C versus fully translated-Go consumer outputs agree for empty inputs,
+  long lines, newline-only input, a final line without newline, and embedded NUL.
+- Generated runtime fixtures cover numeric prefixes and widths, nested calls and
+  argument side effects, math, ASCII EOF handling, format verbs and counts,
+  byte memory, negative byte values, repeated bounded reads, append, EOF,
+  seeking, missing-file behavior, rename/remove and import aliasing.
+- Full src validation: 1,625 files, zero source-preserving fallbacks; 33,530
+  converted library/standard-object sites and 7,908 retained review sites.
+  The converted count includes semantic review obligations and is not a count
+  of proven-equivalent calls. The largest retained families are assertion truth
+  values, raw memset/memcpy, sprintf result/destination shapes, clocks, strtok,
+  allocation/free, qsort, binary buffers and atof.
+- All 1,563 reported opaque conditional spans in the release run were preserved
+  verbatim, with no temporary projection markers leaked into generated files.
+- Coverage details are saved in
+  `experiments/stdlib/prototype-41-summary.json`; the focused starter output is
+  `experiments/satoko/_draft-v41-starter-final/starter.go`.
+
+Starter's focused result has 45 converted sites and seven retained review sites
+(assert truth values, clock, free, malloc, strcpy, system). Its requested fopen,
+atoi and fgets paths now have Go drafts, but pthread code, C truth values and
+remaining representation mismatches still prevent treating the entire program
+as a finished port. Whole-ABC compilation and an LLM speedup benchmark remain
+outside this validation claim.
+
+## Go time package — prototype-42
+
+Added time(NULL)/time(0)/time(nil) -> time.Now().Unix(), and an expression-safe
+output-pointer form that evaluates/writes once and returns the same timestamp.
+C time_t now maps to int64. difftime computes the signed difference of Unix
+seconds without signed-overflow or time.Duration-range problems.
+
+Per the user's request, clock() is no longer retained as an unresolved call:
+it becomes time.Now().UnixNano(), clock_t maps to int64, and CLOCKS_PER_SEC maps
+to int64(time.Second). The per-call record explicitly says this changes C CPU
+time to wall time and recommends time.Now/time.Since for later monotonic elapsed
+measurement. Source overrides of CLOCKS_PER_SEC retain clock for unit review.
+Calendar/struct tm operations remain separate coordinated conversion work.
+
+The import planner does not mistake the C time() callee for a source variable
+named time; genuine variable/import name collisions still receive an alias.
+All tests pass, including actual generated-Go execution, pointer output, positive
+and negative difftime, extreme signed endpoints, consistent clock units,
+import collisions, conditional preservation, and real starter.c coverage.
+Installed prototype-42 and generated `experiments/satoko/_draft-v42-starter/`:
+`var clk int64 = time.Now().UnixNano()` and the final clock()-clk expression now
+use the same nanosecond policy. Updated the 302-name catalog and its references.

@@ -219,3 +219,38 @@ func TestConditionalLocationsPrintedAndSaved(t *testing.T) {
 		t.Fatal(output.String())
 	}
 }
+
+func TestLibraryReviewCountsPersistAndPrint(t *testing.T) {
+	root := t.TempDir()
+	source := filepath.Join(root, "src")
+	out := filepath.Join(root, "out")
+	if err := os.Mkdir(source, 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(source, "input.c"), []byte("int f(char *s) { int n = atoi(s); malloc(n); return n; }"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	report, err := startingpoint.TranslateTree(source, out, startingpoint.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(report.Files) != 1 || report.Files[0].LibraryConverted != 1 || report.Files[0].LibraryReview != 1 {
+		t.Fatal(report)
+	}
+	var output bytes.Buffer
+	printTreeReport(&output, report, false)
+	if !strings.Contains(output.String(), "Standard library: 1 converted sites, 1 retained review sites") {
+		t.Fatal(output.String())
+	}
+	data, err := os.ReadFile(filepath.Join(out, "_starting-point", "input.c.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var result startingpoint.Result
+	if err = json.Unmarshal(data, &result); err != nil {
+		t.Fatal(err)
+	}
+	if len(result.Library) != 2 || result.Library[0].Location.Line < 1 || result.Library[0].SourceLine == "" {
+		t.Fatal(result.Library)
+	}
+}
