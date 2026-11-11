@@ -118,7 +118,7 @@ func ResolvePackage(path, override string) (string, error) {
 	return name, nil
 }
 
-func AnalyzeWithOptions(path, source string, opts Options) (result Result, resultErr error) {
+func analyzeCore(path, source string, opts Options) (result Result, resultErr error) {
 	sourceChecked := false
 	defer func() {
 		if sourceChecked && resultErr != nil {
@@ -162,7 +162,7 @@ func AnalyzeWithOptions(path, source string, opts Options) (result Result, resul
 	for _, loc := range signature.FindAllStringSubmatchIndex(mask, -1) {
 		start, open := loc[0], loc[1]-1
 		end, ok := ends[open]
-		if !ok {
+		if !ok || insideOpaque(start, opts.opaque) || insideOpaque(open, opts.opaque) || insideOpaque(end-1, opts.opaque) {
 			continue
 		}
 		ret, name, args := mask[loc[2]:loc[3]], mask[loc[4]:loc[5]], mask[loc[6]:loc[7]]

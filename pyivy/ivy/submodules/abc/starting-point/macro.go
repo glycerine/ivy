@@ -12,6 +12,7 @@ type MacroTypes struct {
 	Result     string
 }
 type Options struct {
+	opaque  []opaqueRegion
 	Package string
 	Macros  map[string]MacroTypes
 }
