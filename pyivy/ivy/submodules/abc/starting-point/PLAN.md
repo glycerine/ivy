@@ -1406,3 +1406,16 @@ deduplication, zero/nonzero returns, and parsing the resulting Go fixture.
 Installed prototype-39 and generated `experiments/satoko/_draft-v39-starter/`.
 The real starter draft has `func main()`, os.Args references, and exit status 1
 on its usage path. Remaining C constructs in its body still require repair.
+
+## FILE pointers — prototype-40
+
+Recognized C FILE pointers now map to *os.File in parameters, return types,
+local/package variables, and struct fields; additional pointer levels are
+preserved. Generated os.File references trigger an os import even in files
+without main, without duplicating main's import. Comments, strings, and opaque
+conditional regions do not trigger imports.
+
+All Go tests pass, including declarations across those contexts and import
+protection/deduplication. Installed prototype-40 and generated
+`experiments/satoko/_draft-v40-starter/starter.go`: pFile and pOutput are now
+*os.File. stdout and C file-operation calls remain separate conversion work.

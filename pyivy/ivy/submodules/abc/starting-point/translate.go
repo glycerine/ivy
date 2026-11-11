@@ -54,6 +54,7 @@ type Result struct {
 }
 
 var signature = regexp.MustCompile(`\b([A-Za-z_][A-Za-z_0-9 \t*]*?)\s*\b([A-Za-z_]\w*)\s*\(([^{};]*)\)\s*\{`)
+var osFileReference = regexp.MustCompile(`\bos\.File\b`)
 var declaration = regexp.MustCompile(`\b([A-Za-z_]\w*)(\s*\*+|\s+)\s*([A-Za-z_]\w*)\s*(=|;)`)
 var namedType = regexp.MustCompile(`^\s*([A-Za-z_]\w*)\s*(\**)\s*([A-Za-z_]\w*)((?:\s*\[[^\[\]]*\])*)\s*$`)
 
@@ -61,6 +62,9 @@ func goType(s string) string {
 	s = strings.TrimSpace(s)
 	if strings.HasSuffix(s, "*") {
 		base := strings.TrimSpace(strings.TrimSuffix(s, "*"))
+		if base == "FILE" {
+			return "*os.File"
+		}
 		if base == "char" {
 			return "string"
 		}
@@ -307,7 +311,11 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 		}
 		if err == nil {
 			r.Draft = "package " + opts.Package + "\n\n" + r.Draft
-			if needsOS {
+			draftTokens, lexErr := Lex(r.Draft)
+			if lexErr != nil {
+				return r, lexErr
+			}
+			if needsOS || osFileReference.MatchString(Mask(draftTokens)) {
 				r.Draft, err = ensureOSImport(r.Draft)
 			}
 		}
