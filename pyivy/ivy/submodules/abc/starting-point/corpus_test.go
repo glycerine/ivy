@@ -99,11 +99,7 @@ func TestABCAllIfBodiesBraced(t *testing.T) {
 				continue
 			}
 			count++
-			if i+1 >= len(tokens) || tokens[i+1].Text != "(" {
-				t.Fatalf("%s: unrecognized if at byte %d", name, tok.Start)
-			}
-			end, ok := pairs[i+1]
-			if !ok || end+1 >= len(tokens) || tokens[end+1].Text != "{" {
+			if ifBodyIndex(tokens, pairs, i) < 0 {
 				t.Fatalf("%s: unbraced if at byte %d", name, tok.Start)
 			}
 		}
@@ -140,4 +136,19 @@ func TestABCFunctionSignaturesTranslated(t *testing.T) {
 	if count != 95 {
 		t.Fatalf("expected 95 inventoried functions, got %d", count)
 	}
+}
+
+func ifBodyIndex(tokens []Token, pairs map[int]int, start int) int {
+	for j := start + 1; j < len(tokens); j++ {
+		switch tokens[j].Text {
+		case "{":
+			return j
+		case ";", "}", "if", "return", "break", "continue":
+			return -1
+		}
+		if end, ok := pairs[j]; ok && end > j {
+			j = end
+		}
+	}
+	return -1
 }

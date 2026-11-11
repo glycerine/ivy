@@ -152,3 +152,9 @@ in a separate header. For example, `struct Aig_MmFixed_t_` becomes a Go struct
 with that tag name; `typedef struct Aig_MmFixed_t_ Aig_MmFixed_t;` becomes
 `type Aig_MmFixed_t = Aig_MmFixed_t_`. Simple pointer/scalar fields are reordered
 without deleting comments; complex fields still require review.
+
+Simple direct printf/fprintf calls become fmt.Printf/fmt.Fprintf with a fmt import
+added only when needed. Standalone `sprintf(buffer, format, ...)` calls with a
+named buffer become `buffer = fmt.Sprintf(format, ...)`; uses of the C count
+result remain for review. Format specifiers, FILE pointers, and destination
+buffer types can still need semantic repair.

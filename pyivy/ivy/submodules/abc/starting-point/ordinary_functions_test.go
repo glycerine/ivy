@@ -27,7 +27,7 @@ extern int k(void) { return 3; }
 	if len(r.Functions) != 4 {
 		t.Fatalf("functions: %d\n%s", len(r.Functions), r.Draft)
 	}
-	for _, want := range []string{"func f(n int32) {", "for i = 0; i < n; i++ {", "if (n) { // keep condition comment", "func g() int32 {", "func h() int32 {", "func k() int32 {"} {
+	for _, want := range []string{"func f(n int32) {", "for i = 0; i < n; i++ {", "if n { // keep condition comment", "func g() int32 {", "func h() int32 {", "func k() int32 {"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatalf("missing %q:\n%s", want, r.Draft)
 		}
@@ -61,17 +61,17 @@ func TestInt2BmcOrdinaryFunctions(t *testing.T) {
 		t.Fatal(err)
 	}
 	for i, tok := range significant {
-		if tok.Text == "if" && i+1 < len(significant) && significant[i+1].Text == "(" {
-			end := pairs[i+1]
-			if end+1 >= len(significant) || significant[end+1].Text != "{" {
+		if tok.Text == "if" {
+			brace := ifBodyIndex(significant, pairs, i)
+			if brace < 0 {
 				t.Fatalf("unbraced if at %d", tok.Start)
 			}
-			if strings.Contains(r.Draft[significant[end].End:significant[end+1].Start], "\n") {
+			if strings.Contains(r.Draft[significant[brace-1].End:significant[brace].Start], "\n") {
 				t.Fatalf("brace on following line at %d", tok.Start)
 			}
 		}
 	}
-	for _, want := range []string{"var i, Lit, RetValue int32;", "var pSat *sat_solver;", "func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {", "for  i = Vec_PtrSize(p.vMapFrames); i <= iFrame; i++  {", "if ( f == 0 ) {"} {
+	for _, want := range []string{"var i, Lit, RetValue int32;", "var pSat *sat_solver;", "func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {", "for  i = Vec_PtrSize(p.vMapFrames); i <= iFrame; i++  {", "if f == 0 {"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatalf("missing %q", want)
 		}
@@ -111,7 +111,7 @@ func TestIfInsideIteratorMacroBlock(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{"if (i) { continue; }", "if (i == 2) { return; }"} {
+	for _, want := range []string{"if i { continue; }", "if i == 2 { return; }"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatalf("missing %q: %s", want, r.Draft)
 		}

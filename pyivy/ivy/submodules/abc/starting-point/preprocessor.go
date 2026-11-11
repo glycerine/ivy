@@ -62,6 +62,10 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 			}
 		}
 	}
+	r.Draft, err = rewriteFormattedCalls(r.Draft, true)
+	if err != nil {
+		return r, err
+	}
 	r.Draft = restoreRegions(r.Draft, regions)
 	for i := range r.Functions {
 		f := &r.Functions[i]
@@ -69,6 +73,10 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 		f.End = originalOffset(f.End, regions)
 		f.BodyStart = originalOffset(f.BodyStart, regions)
 		f.Original = source[f.Start:f.End]
+		f.Draft, err = rewriteFormattedCalls(f.Draft, false)
+		if err != nil {
+			return r, err
+		}
 		f.Draft = restoreRegions(f.Draft, regions)
 	}
 	for i := range r.Issues {

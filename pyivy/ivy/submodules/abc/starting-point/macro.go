@@ -66,7 +66,7 @@ func macroDraft(t Token, opts Options) (name, draft, message string, ok bool) {
 	if converted, err := braceStatements(replacement); err == nil {
 		replacement = converted
 	}
-	if converted, err := unwrapForHeaders(replacement); err == nil {
+	if converted, err := unwrapControlHeaders(replacement); err == nil {
 		replacement = converted
 	}
 	draft = original + "func " + name + "(" + strings.Join(params, ", ") + ")" + result + " {" + note + "\n" + replacement + "\n}\n"

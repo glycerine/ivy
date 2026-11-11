@@ -374,5 +374,5 @@ func rewriteBody(body string, localTypes map[string]bool) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return unwrapForHeaders(converted)
+	return unwrapControlHeaders(converted)
 }

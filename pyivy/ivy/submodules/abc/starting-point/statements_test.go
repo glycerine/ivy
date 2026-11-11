@@ -37,7 +37,7 @@ func TestIfBracesInDraft(t *testing.T) {
     if (cap < 0) return cap > -10 ? -10 : cap;
     return cap;
 }`, Options{Package: "p"})
-	if !strings.Contains(r.Draft, "if (cap > 0 && cap < 16) { cap = 16; }") {
+	if !strings.Contains(r.Draft, "if cap > 0 && cap < 16 { cap = 16; }") {
 		t.Fatal(r.Draft)
 	}
 	if strings.Contains(r.Draft, "?") {
@@ -140,7 +140,7 @@ func TestQualifiedSignatureKeepsBodyBraces(t *testing.T) {
 	if !strings.Contains(r.Draft, "func compare(p1 any, p2 any) int32 {") {
 		t.Fatal("qualified signature was not translated")
 	}
-	for _, want := range []string{"if (*p1 > *p2) {", "if (*p1 < *p2) {"} {
+	for _, want := range []string{"if *p1 > *p2 {", "if *p1 < *p2 {"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatal(r.Draft)
 		}
@@ -152,7 +152,7 @@ func TestMacroIfBraces(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(r.Draft, "if (x) { act(); } else { other(); }") {
+	if !strings.Contains(r.Draft, "if x { act(); } else { other(); }") {
 		t.Fatal(r.Draft)
 	}
 }

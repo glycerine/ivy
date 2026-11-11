@@ -1242,3 +1242,37 @@ settings, and saved focused aig.h/aigMem.c output under
 `experiments/satoko/_draft-v31-aig/`. This was a focused validation, not a new
 full-tree run. C char remains the current draft type `char`; representation
 selection and complex field declarators remain later work.
+
+## Formatted output calls — prototype-32
+
+Direct printf/fprintf calls in executable blocks now become fmt.Printf/fmt.Fprintf.
+Standalone sprintf calls with a simple named destination become assignments,
+`buffer = fmt.Sprintf(format, args...)`, since Go returns the formatted string.
+Expression uses of sprintf's C character-count result and complex destinations
+remain for repair. C format-specifier differences, buffer representation, and
+FILE-pointer-to-io.Writer conversion are still semantic review tasks.
+
+The file receives one fmt import when conversion requires it. Existing single,
+grouped, aliased, dot, and blank fmt imports are handled without adding duplicate
+paths. Comments, literals, qualified methods, and opaque preprocessor regions
+are protected. Function draft metadata receives the call rewrites too.
+
+All tests pass, covering all three calls, count-result preservation, imports,
+idempotence, comments, and conditional isolation. Installed prototype-32 and
+saved `experiments/satoko/_draft-v32-int2/int2Bmc.go`: one fmt import and both
+printf calls converted. Full-tree snapshots were not regenerated.
+
+## If header parentheses — prototype-33
+
+The header-unwrapping pass previously handled only for loops. It now removes
+the outer C parentheses from if and else-if headers after bodies are braced,
+including macro function drafts. Nested expression/call parentheses remain,
+and whitespace just inside the removed if delimiters is trimmed. Opaque
+preprocessor regions remain unchanged.
+
+Updated brace audits to inspect Go-style conditions rather than requiring C
+parentheses. All tests pass, including nested grouping, else-if, multiline
+headers, comments/literals, and the real Aig_ManPackAddPatternTry condition.
+Installed prototype-33 and generated
+`experiments/satoko/_draft-v33-aig/aigPack.go`; the example now reads
+`if Aig_ManPackAddPatternTry( p, k, vLits ) {`.

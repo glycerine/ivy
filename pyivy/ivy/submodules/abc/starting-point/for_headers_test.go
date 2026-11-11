@@ -2,6 +2,7 @@ package startingpoint
 
 import (
 	"go/format"
+	"os"
 	"strings"
 	"testing"
 )
@@ -16,7 +17,7 @@ func TestForHeaderParentheses(t *testing.T) {
 		{"for /*keep*/ (i=0; i<n; i++) {}", "for /*keep*/ i=0; i<n; i++ {}"},
 		{`log("for (x)"); // for (x)`, `log("for (x)"); // for (x)`},
 	} {
-		got, err := unwrapForHeaders(tc.source)
+		got, err := unwrapControlHeaders(tc.source)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -42,5 +43,35 @@ func TestGeneratedFindCanBeFormatted(t *testing.T) {
 	}
 	if _, err := format.Source([]byte(r.Draft)); err != nil {
 		t.Fatalf("gofmt: %v\n%s", err, r.Draft)
+	}
+}
+
+func TestIfHeaderParentheses(t *testing.T) {
+	for _, tc := range []struct{ source, want string }{
+		{"if ( ready(p, k) ) { break; }", "if ready(p, k) { break; }"},
+		{"if(x) {} else if ((a || b) && c) {}", "if x {} else if (a || b) && c {}"},
+		{"if (a || b) && c {}", "if (a || b) && c {}"},
+		{"if (\n ready()\n) {}", "if ready() {}"},
+		{"if /* keep */ (ready()) {}", "if /* keep */ ready() {}"},
+		{`log("if (x)"); // if (x)`, `log("if (x)"); // if (x)`},
+	} {
+		got, err := unwrapControlHeaders(tc.source)
+		if err != nil || got != tc.want {
+			t.Fatalf("got %q, want %q: %v", got, tc.want, err)
+		}
+	}
+}
+
+func TestAigPackIfHeader(t *testing.T) {
+	source, err := os.ReadFile("../src/aig/aig/aigPack.c")
+	if err != nil {
+		t.Fatal(err)
+	}
+	r, err := Analyze("aigPack.c", string(source))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(r.Draft, "if Aig_ManPackAddPatternTry( p, k, vLits ) {") {
+		t.Fatal("AIG condition not unwrapped")
 	}
 }
