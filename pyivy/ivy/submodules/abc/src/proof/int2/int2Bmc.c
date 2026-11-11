@@ -267,7 +267,7 @@ void Int2_ManCreateFrames( Int2_Man_t * p, int iFrame, Vec_Int_t * vPrefCos )
         }
         else if ( Gia_ObjIsCo(pObj) )
         {
-            int iObjF = Gia_ObjFaninId0(p->pGia, iObj) );
+            int iObjF = Gia_ObjFaninId0(p->pGia, iObj);
             int iLit = Int2_ManCheckFrames( p, iFrame, iObjF );
             if ( iLit >= 0 )
                 Int2_ManWriteFrames( p, iFrame, iObj, Abc_LitNotCond(iLit, Gia_ObjFaninC0(pObj)) );
