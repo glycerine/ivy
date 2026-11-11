@@ -74,42 +74,14 @@ func structEdits(source string, ts []Token, ends map[int]int, path string) ([]Ed
 			continue
 		}
 		edits = append(edits, Edit{header[0].Start, header[0].End, "type"}, Edit{header[1].Start, header[1].End, alias + " struct"}, Edit{tail, tail + 1, ""})
-		// Only ordinary scalar/pointer fields are recognized. Complex declarations
-		// stay visible in the otherwise transformed struct for second-pass repair.
-		start, depth := open+1, 0
-		for _, t := range ts {
-			if t.Start < start || t.Start >= end-1 {
-				continue
-			}
-			if t.Kind == "punct" {
-				if strings.Contains("([{", t.Text) {
-					depth++
-				}
-				if strings.Contains(")]}", t.Text) {
-					depth--
-				}
-			}
-			if t.Text != ";" || t.Kind != "punct" || depth != 0 {
-				continue
-			}
-			var field []Token
-			for _, f := range ts {
-				if f.Start >= start && f.End <= t.Start && f.Kind != "space" && f.Kind != "comment" {
-					field = append(field, f)
-				}
-			}
-			if len(field) > 0 {
-				fe, valid := fieldEdits(field, tag, alias)
-				if valid {
-					edits = append(edits, fe...)
-				} else {
-					issues = append(issues, Issue{path + "::struct::" + alias + "::" + strings.TrimSpace(source[start:t.End]), "struct-field-review", alias, "open", "Complex field declaration retained verbatim; repair its Go type and representation.", start, t.End})
-				}
-			}
-			start = t.End
-		}
+		fe, fi := structFieldEdits(source, ts, open, end, tag, alias, path)
+		edits = append(edits, fe...)
+		issues = append(issues, fi...)
 		issues = append(issues, Issue{path + "::struct::" + alias, "struct-review", alias, "open", "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.", a[0], tail + 1})
 	}
+	se, si := standaloneStructEdits(source, ts, ends, path, edits)
+	edits = append(edits, se...)
+	issues = append(issues, si...)
 	return edits, issues
 }
 
@@ -151,4 +123,44 @@ func fieldEdits(f []Token, tag, alias string) ([]Edit, bool) {
 	}
 	edits = append(edits, Edit{name.Start, name.End, sep + stars + goType(base)})
 	return edits, true
+}
+
+func structFieldEdits(source string, ts []Token, open, end int, tag, alias, path string) ([]Edit, []Issue) {
+	var edits []Edit
+	var issues []Issue
+	// Only ordinary scalar/pointer fields are recognized. Complex declarations
+	// stay visible in the otherwise transformed struct for second-pass repair.
+	start, depth := open+1, 0
+	for _, t := range ts {
+		if t.Start < start || t.Start >= end-1 {
+			continue
+		}
+		if t.Kind == "punct" {
+			if strings.Contains("([{", t.Text) {
+				depth++
+			}
+			if strings.Contains(")]}", t.Text) {
+				depth--
+			}
+		}
+		if t.Text != ";" || t.Kind != "punct" || depth != 0 {
+			continue
+		}
+		var field []Token
+		for _, f := range ts {
+			if f.Start >= start && f.End <= t.Start && f.Kind != "space" && f.Kind != "comment" {
+				field = append(field, f)
+			}
+		}
+		if len(field) > 0 {
+			fe, valid := fieldEdits(field, tag, alias)
+			if valid {
+				edits = append(edits, fe...)
+			} else {
+				issues = append(issues, Issue{path + "::struct::" + alias + "::" + strings.TrimSpace(source[start:t.End]), "struct-field-review", alias, "open", "Complex field declaration retained verbatim; repair its Go type and representation.", start, t.End})
+			}
+		}
+		start = t.End
+	}
+	return edits, issues
 }

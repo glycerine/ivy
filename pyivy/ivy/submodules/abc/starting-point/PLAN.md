@@ -1219,3 +1219,26 @@ nonzero initializers, mixed pointer types, comments, and ordinary assignments.
 Installed prototype-30 and saved fresh output in
 `experiments/satoko/_draft-v30-int2/int2Bmc.go` (the requested declaration is at
 line 99). Full-tree snapshots were not regenerated for this focused change.
+
+## Optional preprocessor listings and standalone structs — prototype-31
+
+- Added `-pre`, default false, to both directory and file-batch CLI modes.
+  `starting-point -pre abc` prints preserved conditional locations. JSON metadata
+  always retains them; analysis-failure reporting remains independent.
+- The aigMem.c struct bodies lacked adjacent typedefs: their aliases live in
+  aig.h. Standalone named structs now become `type TAG struct { ... }`; unpaired
+  `typedef struct TAG ALIAS;` declarations become `type ALIAS = TAG`, connecting
+  header aliases to definitions without guessing from trailing underscores or
+  requiring include expansion. Existing adjacent-pair conversion still works.
+- Reused scalar/pointer field conversion and review issues. Original comments
+  remain intact, multiple pointer levels survive, and standalone opening braces
+  join the type header line. Struct definitions inside opaque #if regions stay
+  untouched; aliases outside those regions may be translated independently.
+
+All tests pass, including standalone/nonadjacent definitions, header aliases,
+real aigMem.c fields and comment preservation, configuration boundaries, and
+preprocessor output suppression. Installed the command, exercised both flag
+settings, and saved focused aig.h/aigMem.c output under
+`experiments/satoko/_draft-v31-aig/`. This was a focused validation, not a new
+full-tree run. C char remains the current draft type `char`; representation
+selection and complex field declarators remain later work.

@@ -143,11 +143,16 @@ func TestFallbackDetailsPrinted(t *testing.T) {
 		t.Fatal(err)
 	}
 	var output bytes.Buffer
-	printTreeReport(&output, report)
+	printTreeReport(&output, report, true)
 	for _, want := range []string{"1 source-preserving fallbacks", "commented original source; analysis failed", "broken.c -> broken.go: unterminated comment at source line 1, column 1 (byte offset 0)"} {
 		if !strings.Contains(output.String(), want) {
 			t.Fatal(output.String())
 		}
+	}
+	output.Reset()
+	printTreeReport(&output, report, false)
+	if strings.Contains(output.String(), "choose branch") {
+		t.Fatal("preprocessor listing enabled by default")
 	}
 	data, err := os.ReadFile(filepath.Join(out, "run.json"))
 	if err != nil {
@@ -164,7 +169,7 @@ func TestFallbackDetailsPrinted(t *testing.T) {
 		t.Fatal(saved)
 	}
 	output.Reset()
-	printTreeReport(&output, startingpoint.TreeReport{})
+	printTreeReport(&output, startingpoint.TreeReport{}, false)
 	if strings.Contains(output.String(), "Fallbacks (") {
 		t.Fatal("unexpected fallback listing")
 	}
@@ -186,11 +191,16 @@ func TestConditionalLocationsPrintedAndSaved(t *testing.T) {
 		t.Fatal(err)
 	}
 	var output bytes.Buffer
-	printTreeReport(&output, report)
+	printTreeReport(&output, report, true)
 	for _, want := range []string{"0 source-preserving fallbacks", "branch decisions required", "choice.c:2:3 -> choice.go: preserved #if OUTER", "choice.c:3:1 -> choice.go: preserved #if INNER"} {
 		if !strings.Contains(output.String(), want) {
 			t.Fatalf("missing %q:\n%s", want, output.String())
 		}
+	}
+	output.Reset()
+	printTreeReport(&output, report, false)
+	if strings.Contains(output.String(), "choose branch") {
+		t.Fatal("preprocessor listing enabled by default")
 	}
 	data, err := os.ReadFile(filepath.Join(out, "run.json"))
 	if err != nil {

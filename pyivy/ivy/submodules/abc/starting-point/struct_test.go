@@ -1,6 +1,7 @@
 package startingpoint
 
 import (
+	"os"
 	"strings"
 	"testing"
 )
@@ -66,7 +67,51 @@ func TestStructPairDoesNotCrossDirective(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if r.Draft != "package p\n\n"+s {
+	if r.Draft != "package p\n\ntype s = s_;\n#if FLAG\nstruct s_ { int value; };\n#endif\n" {
 		t.Fatal("crossed configuration boundary", r.Draft)
+	}
+}
+
+func TestStandaloneStructAndSeparateAlias(t *testing.T) {
+	checkedDraft(t, `typedef struct node_ node;
+ var unrelated int32
+ struct node_
+ {
+  // fields
+  int count; // count note
+  struct node_ *next;
+  int **chunks;
+ };`, Options{Package: "p"})
+}
+
+func TestAigMemoryStructs(t *testing.T) {
+	source, err := os.ReadFile("../src/aig/aig/aigMem.c")
+	if err != nil {
+		t.Fatal(err)
+	}
+	r, err := Analyze("aigMem.c", string(source))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{"type Aig_MmFixed_t_ struct {", "nEntrySize", "**char", "// the size of one entry", "// the allocated memory"} {
+		if !strings.Contains(r.Draft, want) {
+			t.Fatalf("missing %q", want)
+		}
+	}
+	tokens, _ := Lex(string(source))
+	for _, tok := range tokens {
+		if tok.Kind == "comment" && !strings.Contains(r.Draft, tok.Text) {
+			t.Fatalf("lost comment %q", tok.Text)
+		}
+	}
+	if strings.Contains(r.Draft, "int           nEntrySize") {
+		t.Fatal("untranslated field")
+	}
+	alias, err := Analyze("aig.h", "typedef struct Aig_MmFixed_t_ Aig_MmFixed_t;")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(alias.Draft, "type Aig_MmFixed_t = Aig_MmFixed_t_;") {
+		t.Fatal(alias.Draft)
 	}
 }

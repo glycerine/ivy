@@ -139,8 +139,16 @@ body rewrites as static-inline helpers. Unsupported declarators still require
 review. Existing control-flow braces are moved onto their header lines, and
 statement traversal includes blocks following iterator macros.
 
-Preserved preprocessor conditionals are listed on the command line with original
+With `-pre` (for example, `starting-point -pre abc`), preserved preprocessor
+conditionals are listed on the command line with original
 source `path:line:column`, byte offset, directive text, and destination file.
 Nested conditional openers are included; removed include guards are not.
 These branch-decision entries also appear as `Conditionals` in JSON metadata,
-independently of whole-file analysis failures.
+independently of whole-file analysis failures. The flag defaults to false;
+JSON locations remain available even without it.
+
+Standalone named struct definitions are translated even when their typedef is
+in a separate header. For example, `struct Aig_MmFixed_t_` becomes a Go struct
+with that tag name; `typedef struct Aig_MmFixed_t_ Aig_MmFixed_t;` becomes
+`type Aig_MmFixed_t = Aig_MmFixed_t_`. Simple pointer/scalar fields are reordered
+without deleting comments; complex fields still require review.

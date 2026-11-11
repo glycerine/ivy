@@ -22,6 +22,7 @@ func main() {
 func run(args []string) error {
 	flags := flag.NewFlagSet("starting-point", flag.ContinueOnError)
 	out := flags.String("out", "", "new output directory (must not exist)")
+	pre := flags.Bool("pre", false, "list preserved preprocessor choices requiring review")
 	pkg := flags.String("package", "", "Go package override (default: first source file directory name, shared by all outputs)")
 	if err := flags.Parse(args); err != nil {
 		return err
@@ -47,7 +48,7 @@ func run(args []string) error {
 			if err != nil {
 				return err
 			}
-			printTreeReport(os.Stdout, report)
+			printTreeReport(os.Stdout, report, *pre)
 			return nil
 		}
 		if *out == "" {
@@ -98,7 +99,9 @@ func run(args []string) error {
 		if err = os.WriteFile(filepath.Join(*out, names[i]), []byte(r.Draft), 0644); err != nil {
 			return err
 		}
-		printConditionals(os.Stdout, path, names[i], r.Conditionals)
+		if *pre {
+			printConditionals(os.Stdout, path, names[i], r.Conditionals)
+		}
 		results = append(results, r)
 	}
 	data, err := json.MarshalIndent(struct {
@@ -106,7 +109,7 @@ func run(args []string) error {
 		Package    string
 		DurationNS int64
 		Files      []startingpoint.Result
-	}{"prototype-30", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
+	}{"prototype-31", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -134,7 +137,7 @@ func resolveSourceArgument(arg, cwd string) (string, bool, error) {
 	return path, false, nil
 }
 
-func printTreeReport(w io.Writer, report startingpoint.TreeReport) {
+func printTreeReport(w io.Writer, report startingpoint.TreeReport, pre bool) {
 	fmt.Fprintf(w, "Translated %d files into %s (%d source-preserving fallbacks)\n", len(report.Files), report.Output, report.Fallbacks)
 	if report.Fallbacks > 0 {
 		fmt.Fprintln(w, "Fallbacks (commented original source; analysis failed):")
@@ -148,6 +151,9 @@ func printTreeReport(w io.Writer, report startingpoint.TreeReport) {
 			path = file.Source
 		}
 		fmt.Fprintf(w, "  %s -> %s: %s\n", filepath.ToSlash(path), filepath.ToSlash(file.Output), file.FallbackReason)
+	}
+	if !pre {
+		return
 	}
 	heading := false
 	for _, file := range report.Files {
