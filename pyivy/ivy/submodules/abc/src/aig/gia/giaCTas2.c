@@ -175,30 +175,6 @@ Tas_Var_t * Tas_ManCreateVar( Tas_Man_t * p )
     return pVar;
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Tas_Var_t * Tas_ManObj2Var( Tas_Man_t * p, Gia_Obj_t * pObj )
-{
-    Tas_Var_t * pVar;
-    assert( !Gia_ObjIsComplement(pObj) );
-    if ( pObj->Value == 0 )
-    {
-        pVar = Tas_ManCreateVar( p );
-        pVar->
-
-    }
-    return Tas_ManVar( p, pObj->Value );
-}
-
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
