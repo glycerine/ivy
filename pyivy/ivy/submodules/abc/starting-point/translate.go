@@ -1,5 +1,5 @@
-// Package cpp2go produces source-preserving drafts, not verified translations.
-package cpp2go
+// Package startingpoint produces source-preserving drafts, not verified translations.
+package startingpoint
 
 import (
 	"crypto/sha256"
@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"unicode"
 )
 
 type Edit struct {
@@ -58,7 +59,11 @@ var namedType = regexp.MustCompile(`^\s*([A-Za-z_]\w*)\s*(\*?)\s*([A-Za-z_]\w*)\
 func goType(s string) string {
 	s = strings.TrimSpace(s)
 	if strings.HasSuffix(s, "*") {
-		return "*" + goType(strings.TrimSpace(strings.TrimSuffix(s, "*")))
+		base := strings.TrimSpace(strings.TrimSuffix(s, "*"))
+		if base == "void" {
+			return "any"
+		}
+		return "*" + goType(base)
 	}
 	switch s {
 	case "unsigned":
@@ -90,6 +95,22 @@ func ResolvePackage(path, override string) (string, error) {
 			return "", fmt.Errorf("resolve source directory: %w", err)
 		}
 		name = filepath.Base(dir)
+		name = strings.Map(func(r rune) rune {
+			if r == '_' || unicode.IsLetter(r) || unicode.IsDigit(r) {
+				return r
+			}
+			return '_'
+		}, name)
+		if name == "" || name == "_" {
+			name = "pkg"
+		}
+		if !token.IsIdentifier(name) {
+			if token.Lookup(name).IsKeyword() {
+				name += "_"
+			} else {
+				name = "pkg_" + name
+			}
+		}
 	}
 	if !token.IsIdentifier(name) || name == "_" {
 		return "", fmt.Errorf("invalid Go package name %q; supply an explicit package override", name)
@@ -138,6 +159,16 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 			continue
 		}
 		ret, name, args := mask[loc[2]:loc[3]], mask[loc[4]:loc[5]], mask[loc[6]:loc[7]]
+		// Normalize qualifiers before parsing the signature, rather than only
+		// removing them from the final draft after a failed parse.
+		args, err = stripConstQualifiers(args)
+		if err != nil {
+			return r, err
+		}
+		ret, err = stripConstQualifiers(ret)
+		if err != nil {
+			return r, err
+		}
 		var params []string
 		valid := true
 		if strings.TrimSpace(args) != "" && strings.TrimSpace(args) != "void" {
@@ -161,13 +192,25 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 		if err != nil {
 			return r, err
 		}
-		draft := "func " + name + "(" + strings.Join(params, ", ") + ") " + goType(ret) + " " + converted
+		resultType := goType(ret)
+		resultSuffix := ""
+		if resultType != "" {
+			resultSuffix = " " + resultType
+		}
+		draft := "func " + name + "(" + strings.Join(params, ", ") + ")" + resultSuffix + " " + converted
+		if strings.Contains(strings.Join(params, " "), " any") || resultType == "any" {
+			r.Issues = append(r.Issues, Issue{path + "::void-pointer::" + name, "void-pointer-review", name, "open", "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.", start, end})
+		}
 		message := "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go."
 		if !valid {
 			draft = source[start:open] + converted
 			message = "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved."
 		}
 		draft, err = stripConstQualifiers(draft)
+		if err != nil {
+			return r, err
+		}
+		draft, err = SanitizeCommentUTF8(draft)
 		if err != nil {
 			return r, err
 		}
@@ -187,6 +230,9 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 			return r, err
 		}
 		r.Draft, err = commentScaffolding(r.Draft)
+		if err == nil {
+			r.Draft, err = SanitizeCommentUTF8(r.Draft)
+		}
 		if err == nil {
 			r.Draft = "package " + opts.Package + "\n\n" + r.Draft
 		}
@@ -244,5 +290,9 @@ func rewriteBody(body string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return lowerConditionals(converted)
+	converted, err = lowerConditionals(converted)
+	if err != nil {
+		return "", err
+	}
+	return unwrapForHeaders(converted)
 }

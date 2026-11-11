@@ -1,4 +1,4 @@
-# cpp2go implementation and experiment plan
+# starting-point implementation and experiment plan
 
 Last updated: 2026-11-11
 
@@ -8,8 +8,8 @@ remain unimplemented; speedup over an LLM-only baseline is not established.
 
 ## Purpose
 
-Build a portable Go library in `cpp2go/`, with a thin command-line wrapper in
-`cpp2go/cmd/cpp2go/main.go`, that mechanically converts C and C++ into readable
+Build a portable Go library in `starting-point/`, with a thin command-line wrapper in
+`starting-point/cmd/starting-point/main.go`, that mechanically converts C and C++ into readable
 draft Go. An LLM completes the port using the original source, generated drafts,
 explicit representation decisions, and a structured list of unresolved work.
 
@@ -255,7 +255,7 @@ apart from explicitly volatile metadata such as timing.
 
 ### M3 — Complete the container and consumer experiment
 
-- [x] Generate drafts through cpp2go rather than hand-authoring the initial port.
+- [x] Generate drafts through starting-point rather than hand-authoring the initial port.
 - [x] Package original source, dependency declarations, and decisions for repair.
 - [x] Record LLM/human repairs and elapsed effort separately from tool development.
 - [x] Compile the repaired Go and resolve all active stubs in the selected scope.
@@ -336,7 +336,7 @@ properties where available, rather than assuming textual output equality.
 
 | ID | Decision | Status | Rationale / follow-up |
 | --- | --- | --- | --- |
-| D01 | Go library with thin CLI under cpp2go/ | accepted | User-specified structure |
+| D01 | Go library with thin CLI under starting-point/ | accepted | User-specified structure |
 | D02 | No mandatory Clang dependency | accepted | Portability and source preservation |
 | D03 | Regex plus lossless lexical/structural support | accepted direction | Avoid unsafe whole-file substitution |
 | D04 | Preserve source naming and flow initially | accepted direction | Reduce review and repair cost |
@@ -380,7 +380,7 @@ Conclusion and next milestone:
 
 ### Artifacts and reproducibility
 
-- [Prototype library](translate.go), [lexer](lex.go), and [CLI](cmd/cpp2go/main.go).
+- [Prototype library](translate.go), [lexer](lex.go), and [CLI](cmd/starting-point/main.go).
 - [Frozen generated drafts and handoff](experiments/satoko/_draft-v1/run.json).
   The four `.original` and `.go.txt` files retain full source, including comments,
   directives, macros, and declarations outside the recognized subset.
@@ -401,8 +401,8 @@ Conclusion and next milestone:
 Run from the repository root:
 
 ```sh
-go -C cpp2go test -v ./...
-go -C cpp2go run ./cmd/cpp2go -out /tmp/cpp2go-new-run \
+go -C starting-point test -v ./...
+go -C starting-point run ./cmd/starting-point -out /tmp/starting-point-new-run \
   ../src/sat/satoko/utils/vec/vec_uint.h \
   ../src/sat/satoko/utils/vec/vec_int.h \
   ../src/sat/satoko/utils/vec/vec_sdbl.h \
@@ -467,7 +467,7 @@ claimed. These are why M2 remains in progress despite the bounded M3 success.
 | Comment checks | Original comments retained in all four drafts; protected literals, signature comments, raw strings, continued comments tested |
 | Fresh related case | `vec_char_size` and `vec_char_clear` drafts parse and type-check without repairs; not a behavioral port of vec_char |
 | Toolchains | Go 1.27.3 linux/amd64; GCC 13.3.0; module declares Go 1.22 (not separately tested with that compiler) |
-| Test command | `go -C cpp2go test -v ./...` passed |
+| Test command | `go -C starting-point test -v ./...` passed |
 
 Timing was not instrumented separately for reasoning, repair, and review in this
 first run. Observed timestamps bound initial inspection at 18:37:12 UTC, reference
@@ -556,7 +556,7 @@ Implemented in prototype-2:
   with `package satoko`. Frozen v1 artifacts are historical evidence, not current
   generator output, and were not rewritten.
 
-Validation: `go -C cpp2go test -v ./...` passes, including typed macro draft
+Validation: `go -C starting-point test -v ./...` passes, including typed macro draft
 parse/type checks, package-name checks, comment preservation, execution of nested
 ternary branches with call counters, and the existing C/Go differential suite.
 The four new draft files were checked for their leading package declarations.
@@ -620,7 +620,7 @@ and typedef comments are retained instead of being discarded with the C syntax.
 requested heap_t Go struct; all three vector declarations are converted as well.
 Previous drafts remain historical artifacts.
 
-Validation: `go -C cpp2go test ./...` passes, including parse/type checks of
+Validation: `go -C starting-point test ./...` passes, including parse/type checks of
 converted structs, exact heap field lines, comments, self-pointers, complex-field
 diagnostics, preprocessor boundaries, and the existing differential suite.
 
@@ -650,7 +650,7 @@ policy. Unsupported statement syntax remains second-pass work.
 
 [Draft v5](experiments/satoko/_draft-v5/00_vec_uint.h.go.txt) demonstrates braces
 around the vector capacity guard and includes the macro argument TODO annotations.
-Validation: `go -C cpp2go test ./...` passes, covering exact requested output,
+Validation: `go -C starting-point test ./...` passes, covering exact requested output,
 nested/dangling else, comments, multiline else, loop bodies, idempotence,
 parse/type checking, and existing C/Go differential tests.
 
@@ -666,7 +666,7 @@ ambiguous patterns remain unchanged.
 
 Generated `experiments/satoko/_draft-v6/`; all four Satoko header guards are absent
 from their Go drafts. Tests cover nested directives and negative matches.
-`go -C cpp2go test ./...` passes, including the C/Go differential suite.
+`go -C starting-point test ./...` passes, including the C/Go differential suite.
 
 
 ### Ternary indentation — prototype-7
@@ -680,7 +680,7 @@ Existing expression/comment contents are not globally reformatted.
 
 Generated `experiments/satoko/_draft-v7/`. Exact-output tests cover the requested
 allocation example, nested tab-indented branches, and variable initializers.
-`go -C cpp2go test ./...` passes, including lazy-branch execution and differential
+`go -C starting-point test ./...` passes, including lazy-branch execution and differential
 checks. No gofmt invocation on incomplete draft output is required.
 
 
@@ -695,7 +695,7 @@ nonempty bodies, comments, and literals remain unchanged.
 Generated `experiments/satoko/_draft-v8/`; the vector foreach macro functions now
 contain explicit empty loop bodies. Tests cover bodyless headers, null bodies,
 comments, existing bodies, protected literals, and repeated application.
-`go -C cpp2go test ./...` passes, including the C/Go differential suite.
+`go -C starting-point test ./...` passes, including the C/Go differential suite.
 
 
 ### Includes and standalone markers — prototype-9
@@ -710,7 +710,7 @@ resolution. Source copies remain unchanged.
 
 Generated `experiments/satoko/_draft-v9/`. Tests cover the exact requested include
 block, continued includes, idempotence, and preservation of multiline code.
-`go -C cpp2go test ./...` passes, including the differential suite.
+`go -C starting-point test ./...` passes, including the differential suite.
 
 
 ### Consistent package per output directory — prototype-10
@@ -727,7 +727,7 @@ because vec_uint.h is the first source. Older mixed-package draft directories
 remain historical experiment records. CLI tests cover inputs from different
 source directories, a differently named destination, an explicit override,
 recorded metadata, and invalid-name rejection before output creation.
-`go -C cpp2go test ./...` passes.
+`go -C starting-point test ./...` passes.
 
 
 ### Nonempty for-loop bodies — prototype-11
@@ -740,7 +740,7 @@ already-braced bodies, and macro replacement policy are preserved.
 Generated `experiments/satoko/_draft-v11/`; vec_uint_find now has braces around
 its loop, with the final return 0 outside it. The batch retains a shared vec
 package. Tests cover the reported example, nested else/comments, and idempotence.
-`go -C cpp2go test ./...` passes. C for-header syntax remains draft syntax for a
+`go -C starting-point test ./...` passes. C for-header syntax remains draft syntax for a
 separate transformation; this change fixes body structure.
 
 
@@ -756,7 +756,7 @@ specified copying policy.
 Generated `experiments/satoko/_draft-v12/`; both heap percolation loops now use for.
 Tests cover braced/unbraced bodies, nested if, comments/literals, do/while
 boundaries, idempotence, and parse/type checking of generated Go.
-`go -C cpp2go test ./...` passes.
+`go -C starting-point test ./...` passes.
 
 
 ### Go output extension — prototype-13
@@ -768,7 +768,7 @@ four `.go` drafts. This saved experiment has a separate go.mod so its incomplete
 syntax does not break the translator's module tests; the CLI does not generate
 module files automatically. Earlier artifacts retain their historical filenames.
 
-Validation: `go -C cpp2go test ./...` passes. This filename change enables direct
+Validation: `go -C starting-point test ./...` passes. This filename change enables direct
 Go tooling; it does not assert the full ABC drafts compile or format yet.
 
 
@@ -795,7 +795,7 @@ Generated `experiments/satoko/_draft-v14/`. Added regression tests for unsupport
 signatures and macro if/else plus a token-based audit of all four assembled ABC
 drafts: all 54 if statements have braced bodies. This audit includes functions
 with retained C signatures and excludes comments/literals. It is corpus evidence,
-not a claim of complete C++ grammar coverage. `go -C cpp2go test ./...` passes.
+not a claim of complete C++ grammar coverage. `go -C starting-point test ./...` passes.
 
 
 ### C/C++ const qualifiers — prototype-15
@@ -808,4 +808,125 @@ for removing legitimate Go const declarations from arbitrary Go source.
 
 Generated `experiments/satoko/_draft-v15/`. Tests cover qualifier positions,
 comments/strings, retained comparator signatures, macro bodies, and metadata.
-`go -C cpp2go test ./...` passes.
+`go -C starting-point test ./...` passes.
+
+
+### For-header parentheses — prototype-16
+
+Removed the matched outer parentheses from C-style for headers after body
+bracing, in both ordinary function drafts and macro-generated functions. Nested
+expression parentheses, comments, and literals are retained. Condition-only for
+loops produced from while are cleaned up too. The pass only removes a pair whose
+closing delimiter immediately precedes the body, avoiding partial-expression
+rewrites in already-unwrapped headers.
+
+Generated `experiments/satoko/_draft-v16/`. Tests cover three-clause and
+condition-only loops, nested grouping, comments, and protected strings. A
+vec_uint_find-shaped generated function now passes go/format directly.
+`go -C starting-point test ./...` passes. Other unresolved C syntax can still prevent
+formatting an entire ABC draft file.
+
+
+### Qualified function signatures — prototype-17
+
+Fixed parameter parsing to remove const qualifiers before recognizing the
+signature, rather than only after fallback to the C declaration. Functions such
+as vec_uint_duplicate and vec_uint_copy now use func, name/type parameter order,
+no static/inline/void return keyword, and an opening brace on the signature line.
+Void-return signatures also no longer contain a redundant extra space.
+
+C void-pointer parameters now use any as a draft representation, with an explicit
+void-pointer-review issue to recover concrete types and repair casts/dereferences
+from call sites. This avoids generating an invalid bare pointer type while
+allowing comparator signatures to become Go functions too.
+
+Generated `experiments/satoko/_draft-v17/`. A corpus regression confirms all 95
+inventoried functions across the four headers now have func signatures with
+same-line opening braces. Targeted signatures pass Go parse/type checks.
+`go -C starting-point test ./...` passes, including prior bracing and differential checks.
+
+
+## Project rename and recursive translation — prototype-18
+
+Renamed the project directory, CLI, module, and Go library:
+
+- Project: `starting-point/`.
+- Command: `starting-point/cmd/starting-point/main.go`.
+- Module: `github.com/glycerine/abc/starting-point`.
+- Go package: `startingpoint` (the hyphen cannot appear in a Go identifier).
+
+`starting-point abc` now creates `starting-point-cpp2go-abc` in the current
+working directory and mirrors source-containing directories for every `.c`,
+`.cpp`, and `.h` file. Output retains the input extension before `.go`, avoiding
+same-stem collisions. Tree packages derive from their destination directory;
+invalid identifier characters are normalized to underscores, leading digits
+receive a prefix, and keywords receive a suffix. `-package` overrides the entire
+tree. Flat file-list mode retains its existing shared-package behavior.
+
+`TranslateTree` is the library entry point. It inventories before creating output,
+refuses existing destinations, skips symlinks/version-control metadata/prior
+output trees, writes a run report plus per-file reports and source snapshots,
+and emits a commented-source fallback for analysis failures. Filesystem errors
+still stop a run. The output folder is caller-owned; no module is generated.
+
+Validation:
+
+- `go -C starting-point test ./...` passes, including recursive mirroring,
+  extension collisions, per-directory packages, package overrides, fallback
+  preservation, existing-output refusal, and destination-inside-source behavior.
+- Installed `/home/jaten/go/bin/starting-point` and verified that the exact
+  `starting-point abc` invocation creates the expected output tree in a temporary
+  fixture, with all three requested source extensions.
+- Full ABC run: `/tmp/starting-point .` produced 1,630 `.go` outputs in
+  `../starting-point-cpp2go-abc/` in 15.85 seconds. The inventory comprised 1,292
+  `.c`, 319 `.h`, and 19 `.cpp` files, including the experiment reference harness.
+- Verified every generated file's package declaration against its run record.
+  All files in each output directory use the same deterministic package name.
+- Seven files required commented-source fallbacks; other outputs remain drafts
+  with unresolved constructs. This is not a whole-ABC semantic port or compile
+  success claim.
+
+Fallback source files and diagnostics:
+
+| Source | Diagnostic |
+| --- | --- |
+| src/bdd/cudd/cuddExport.c | mismatched delimiter at byte 10985 |
+| src/bdd/cudd/cuddInt.h | unmatched closing parenthesis at byte 4965 |
+| src/bdd/cudd/cuddZddMisc.c | mismatched delimiter at byte 7207 |
+| src/bdd/mtr/mtrBasic.c | mismatched delimiter at byte 12622 |
+| src/misc/zlib/inflate.c | mismatched delimiter at byte 43923 |
+| src/misc/zlib/trees.c | unclosed delimiter at byte 33407 |
+| src/proof/int2/int2Bmc.c | mismatched delimiter at byte 9267 |
+
+These are analyzer diagnostics, not claims that the original C is malformed;
+conditional compilation is not evaluated by the current delimiter matcher.
+
+Four original files contain non-UTF-8 bytes, retained in the generated drafts:
+
+- `src/aig/gia/giaEmbed.c`
+- `src/opt/dau/dauCanon.c`
+- `src/proof/int/int.h`
+- `src/proof/int2/int2.h`
+
+Conclusion: tree traversal, project naming, and output/package organization are
+validated on the complete ABC inventory. Next translation improvements should
+address conditional-compilation-aware structural analysis and an explicit input
+encoding policy. Existing per-function semantic limitations remain; this run
+measures batch coverage and generation, not correctness of the full port.
+
+
+### Invalid UTF-8 bytes in comments — prototype-19
+
+Added token-aware cleanup that replaces each invalid UTF-8 byte in an output
+comment with `_`. Valid Unicode (including an actual U+FFFD character), code,
+string/character literals, and original snapshots are unchanged. One-byte
+substitutions preserve byte offsets. Cleanup applies to full drafts, per-function
+draft metadata, and commented-source fallback output.
+
+All four previously identified source files had their invalid bytes in comments.
+Refreshed their existing mirrored `.go` files and metadata after verifying that
+regeneration differed only by this cleanup, and updated the installed command.
+All 1,630 generated `.go` files now decode as UTF-8. Verified original snapshot
+hashes for the four affected files remain unchanged. Tests cover valid Unicode,
+invalid bytes inside and outside comments, macro/function metadata, and all four
+real ABC files. `go -C starting-point test ./...` passes.

@@ -1,4 +1,4 @@
-package cpp2go
+package startingpoint
 
 // stripConstQualifiers removes C/C++ const tokens without touching comments,
 // literals or preprocessor text. This pass processes C-derived drafts, not

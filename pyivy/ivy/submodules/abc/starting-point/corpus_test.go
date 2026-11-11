@@ -1,4 +1,4 @@
-package cpp2go
+package startingpoint
 
 import (
 	"go/ast"
@@ -112,4 +112,32 @@ func TestABCAllIfBodiesBraced(t *testing.T) {
 		t.Fatal("audit found no if statements")
 	}
 	t.Logf("audited %d if statements across four assembled drafts", count)
+}
+
+func TestABCFunctionSignaturesTranslated(t *testing.T) {
+	count := 0
+	for _, name := range []string{"heap.h", "vec/vec_uint.h", "vec/vec_int.h", "vec/vec_sdbl.h"} {
+		path := "../src/sat/satoko/utils/" + name
+		source, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		r, err := Analyze(path, string(source))
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, f := range r.Functions {
+			count++
+			if !strings.HasPrefix(f.Draft, "func "+f.Name+"(") {
+				t.Fatalf("untranslated signature: %s", f.Draft)
+			}
+			brace := strings.Index(f.Draft, "{")
+			if brace < 0 || strings.Contains(f.Draft[:brace], "\n") {
+				t.Fatalf("brace not on signature line: %s", f.Draft)
+			}
+		}
+	}
+	if count != 95 {
+		t.Fatalf("expected 95 inventoried functions, got %d", count)
+	}
 }

@@ -1,4 +1,4 @@
-package cpp2go
+package startingpoint
 
 import "testing"
 

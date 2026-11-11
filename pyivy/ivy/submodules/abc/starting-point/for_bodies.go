@@ -1,4 +1,4 @@
-package cpp2go
+package startingpoint
 
 // emptyForBodies fills null statements and, for macro fragments, a trailing
 // bodyless for-header. Existing nonempty loop bodies remain untouched.

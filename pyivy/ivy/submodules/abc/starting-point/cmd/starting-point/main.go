@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/glycerine/abc/cpp2go"
+	"github.com/glycerine/abc/starting-point"
 )
 
 func main() {
@@ -18,16 +18,34 @@ func main() {
 	}
 }
 func run(args []string) error {
-	flags := flag.NewFlagSet("cpp2go", flag.ContinueOnError)
+	flags := flag.NewFlagSet("starting-point", flag.ContinueOnError)
 	out := flags.String("out", "", "new output directory (must not exist)")
 	pkg := flags.String("package", "", "Go package override (default: first source file directory name, shared by all outputs)")
 	if err := flags.Parse(args); err != nil {
 		return err
 	}
-	if *out == "" || flags.NArg() == 0 {
-		return fmt.Errorf("usage: cpp2go -out NEW_DIRECTORY source.h ...")
+	if flags.NArg() == 1 {
+		info, err := os.Stat(flags.Arg(0))
+		if err == nil && info.IsDir() {
+			destination := *out
+			if destination == "" {
+				destination, err = startingpoint.DefaultTreeOutput(flags.Arg(0))
+				if err != nil {
+					return err
+				}
+			}
+			report, err := startingpoint.TranslateTree(flags.Arg(0), destination, startingpoint.Options{Package: *pkg})
+			if err != nil {
+				return err
+			}
+			fmt.Printf("Translated %d files into %s (%d source-preserving fallbacks)\n", len(report.Files), report.Output, report.Fallbacks)
+			return nil
+		}
 	}
-	packageName, err := cpp2go.ResolvePackage(flags.Arg(0), *pkg)
+	if *out == "" || flags.NArg() == 0 {
+		return fmt.Errorf("usage: starting-point [-package NAME] [-out NEW_DIRECTORY] SOURCE_DIRECTORY; or starting-point -out NEW_DIRECTORY source.h ...")
+	}
+	packageName, err := startingpoint.ResolvePackage(flags.Arg(0), *pkg)
 	if err != nil {
 		return err
 	}
@@ -36,13 +54,13 @@ func run(args []string) error {
 		return err
 	}
 	start := time.Now()
-	var results []cpp2go.Result
+	var results []startingpoint.Result
 	for i, path := range flags.Args() {
 		s, err := os.ReadFile(path)
 		if err != nil {
 			return err
 		}
-		r, err := cpp2go.AnalyzeWithOptions(path, string(s), cpp2go.Options{Package: packageName})
+		r, err := startingpoint.AnalyzeWithOptions(path, string(s), startingpoint.Options{Package: packageName})
 		if err != nil {
 			return err
 		}
@@ -59,8 +77,8 @@ func run(args []string) error {
 		Version    string
 		Package    string
 		DurationNS int64
-		Files      []cpp2go.Result
-	}{"prototype-15", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
+		Files      []startingpoint.Result
+	}{"prototype-19", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
 	if err != nil {
 		return err
 	}

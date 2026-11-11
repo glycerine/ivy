@@ -1,4 +1,4 @@
-package cpp2go
+package startingpoint
 
 import (
 	"strings"
@@ -45,7 +45,7 @@ func TestSignatureCommentsAndMalformedInput(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if r.Draft != "package cpp2go\n\n"+s {
+	if r.Draft != "package starting_point\n\n"+s {
 		t.Fatal("signature comment changed")
 	}
 	for _, s := range []string{"/*", "\"unfinished", `R"tag(unfinished`, "{]"} {
@@ -110,9 +110,13 @@ func TestPackageFromSourceDirectory(t *testing.T) {
 	if r.Draft != "package satoko\n\n" {
 		t.Fatal(r.Draft)
 	}
-	for _, path := range []string{"src/bad-name/file.c", "src/for/file.c"} {
-		if _, err := Analyze(path, ""); err == nil {
-			t.Fatalf("invalid inferred package accepted: %s", path)
+	for path, want := range map[string]string{"src/bad-name/file.c": "bad_name", "src/for/file.c": "for_"} {
+		r, err := Analyze(path, "")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if r.Draft != "package "+want+"\n\n" {
+			t.Fatal(r.Draft)
 		}
 	}
 }

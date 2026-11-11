@@ -1,4 +1,4 @@
-package cpp2go
+package startingpoint
 
 import (
 	"strings"
@@ -125,7 +125,7 @@ func TestWhileBecomesFor(t *testing.T) {
 }`, Options{Package: "p"})
 }
 
-func TestUnsupportedSignatureKeepsBodyBraces(t *testing.T) {
+func TestQualifiedSignatureKeepsBodyBraces(t *testing.T) {
 	source := `static inline int compare(const void *p1, const void *p2) {
     if (*p1 > *p2)
         return 1;
@@ -137,8 +137,8 @@ func TestUnsupportedSignatureKeepsBodyBraces(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(r.Draft, "static inline int compare(void *p1, void *p2)") {
-		t.Fatal("lost retained signature")
+	if !strings.Contains(r.Draft, "func compare(p1 any, p2 any) int32 {") {
+		t.Fatal("qualified signature was not translated")
 	}
 	for _, want := range []string{"if (*p1 > *p2) {", "if (*p1 < *p2) {"} {
 		if !strings.Contains(r.Draft, want) {

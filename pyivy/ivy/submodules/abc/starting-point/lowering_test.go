@@ -1,4 +1,4 @@
-package cpp2go
+package startingpoint
 
 import (
 	"go/ast"
@@ -111,11 +111,11 @@ func TestIteratorMacroMechanicalFunction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := "func vec_uint_foreach(vec int, entry int, i int) { //TODO: argument types were guessed, go compiler should tell us the correction.\n" + body + " {}\n}"
+	want := "func vec_uint_foreach(vec int, entry int, i int) { //TODO: argument types were guessed, go compiler should tell us the correction.\n" + "for " + strings.TrimSuffix(strings.TrimPrefix(body, "for ("), ")") + " {}\n}"
 	if !strings.Contains(r.Draft, want) {
 		t.Fatal(r.Draft)
 	}
-	if !strings.Contains(r.Draft, "i++) {}") {
+	if !strings.Contains(r.Draft, "i++ {}") {
 		t.Fatal("missing empty loop body")
 	}
 }

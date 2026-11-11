@@ -66,10 +66,37 @@ func TestSharedOutputPackage(t *testing.T) {
 
 func TestInvalidPackageBeforeOutputCreation(t *testing.T) {
 	out := filepath.Join(t.TempDir(), "output")
-	if err := run([]string{"-out", out, "bad-name/file.h"}); err == nil {
+	if err := run([]string{"-out", out, "-package", "bad-name", "file.h"}); err == nil {
 		t.Fatal("expected invalid package error")
 	}
 	if _, err := os.Stat(out); !os.IsNotExist(err) {
 		t.Fatal("created output before validating package", err)
+	}
+}
+
+func TestDirectoryCommand(t *testing.T) {
+	root := t.TempDir()
+	source := filepath.Join(root, "abc")
+	out := filepath.Join(root, "out")
+	for _, dir := range []string{"vec", "utils"} {
+		path := filepath.Join(source, dir, "input.h")
+		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte("static inline int f() { return 1; }"), 0644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := run([]string{"-out", out, source}); err != nil {
+		t.Fatal(err)
+	}
+	for _, dir := range []string{"vec", "utils"} {
+		data, err := os.ReadFile(filepath.Join(out, dir, "input.h.go"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !strings.HasPrefix(string(data), "package "+dir+"\n") {
+			t.Fatal(string(data))
+		}
 	}
 }
