@@ -12,12 +12,13 @@ import (
 )
 
 type TreeFile struct {
-	Source   string
-	Output   string
-	Package  string
-	SHA256   string
-	Issues   int
-	Fallback bool
+	Source         string
+	Output         string
+	Package        string
+	SHA256         string
+	Issues         int
+	Fallback       bool
+	FallbackReason string `json:",omitempty"`
 }
 type TreeReport struct {
 	Source     string
@@ -85,15 +86,23 @@ func TranslateTree(source, destination string, opts Options) (TreeReport, error)
 	if err != nil {
 		return r, err
 	}
-	if err = os.Mkdir(r.Output, 0755); err != nil {
-		return r, err
-	}
-	for _, path := range files {
-		rel, err := filepath.Rel(r.Source, path)
+	rels := make([]string, len(files))
+	for i, path := range files {
+		rels[i], err = filepath.Rel(r.Source, path)
 		if err != nil {
 			return r, err
 		}
-		target := filepath.Join(r.Output, rel+".go")
+	}
+	outputNames, err := PlanGoFilenames(rels)
+	if err != nil {
+		return r, err
+	}
+	if err = os.Mkdir(r.Output, 0755); err != nil {
+		return r, err
+	}
+	for i, path := range files {
+		rel := rels[i]
+		target := filepath.Join(r.Output, outputNames[i])
 		pkg, err := ResolvePackage(target, opts.Package)
 		if err != nil {
 			return r, err
@@ -106,6 +115,10 @@ func TranslateTree(source, destination string, opts Options) (TreeReport, error)
 		fileOpts.Package = pkg
 		result, analyzeErr := AnalyzeWithOptions(path, string(bytes), fileOpts)
 		fallback := analyzeErr != nil
+		reason := ""
+		if fallback {
+			reason = analyzeErr.Error()
+		}
 		if fallback {
 			r.Fallbacks++
 			result = Result{Schema: 2, Path: path, SHA256: fmt.Sprintf("%x", sha256.Sum256(bytes)),
@@ -138,7 +151,7 @@ func TranslateTree(source, destination string, opts Options) (TreeReport, error)
 		if err = os.WriteFile(meta+".json", append(data, '\n'), 0644); err != nil {
 			return r, err
 		}
-		r.Files = append(r.Files, TreeFile{path, rel + ".go", pkg, result.SHA256, len(result.Issues), fallback})
+		r.Files = append(r.Files, TreeFile{Source: path, Output: outputNames[i], Package: pkg, SHA256: result.SHA256, Issues: len(result.Issues), Fallback: fallback, FallbackReason: reason})
 	}
 	r.DurationNS = time.Since(start).Nanoseconds()
 	data, err := json.MarshalIndent(r, "", "  ")

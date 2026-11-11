@@ -229,12 +229,24 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 		if err != nil {
 			return r, err
 		}
+		r.Draft, err = integerDefines(r.Draft)
+		if err != nil {
+			return r, err
+		}
 		r.Draft, err = commentScaffolding(r.Draft)
 		if err == nil {
 			r.Draft, err = SanitizeCommentUTF8(r.Draft)
 		}
 		if err == nil {
 			r.Draft = "package " + opts.Package + "\n\n" + r.Draft
+		}
+	}
+	if err == nil {
+		for i := range r.Functions {
+			r.Functions[i].Draft, err = integerDefines(r.Functions[i].Draft)
+			if err != nil {
+				return r, err
+			}
 		}
 	}
 	return r, err

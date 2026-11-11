@@ -49,7 +49,7 @@ func TestConditionalNotMistakenForGuard(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if r.Draft != "package p\n\n"+source {
+		if r.Draft != "package p\n\n"+strings.ReplaceAll(source, "#define A 1", "const A = 1") {
 			t.Fatalf("removed unrelated conditional: %s", r.Draft)
 		}
 	}

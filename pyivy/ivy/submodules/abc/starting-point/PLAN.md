@@ -930,3 +930,124 @@ All 1,630 generated `.go` files now decode as UTF-8. Verified original snapshot
 hashes for the four affected files remain unchanged. Tests cover valid Unicode,
 invalid bytes inside and outside comments, macro/function metadata, and all four
 real ABC files. `go -C starting-point test ./...` passes.
+
+
+### Project-name invocation inside the checkout — prototype-20
+
+Reproduced the reported `starting-point abc` usage error from inside the ABC
+checkout: `abc` there is the bundled executable, not a source subdirectory. The
+CLI previously fell through to file-list mode and hid the reason behind usage.
+
+The resolver now prefers an actual directory argument, then accepts a bare name
+matching the current checkout directory as shorthand for that checkout (including
+when a same-named executable exists). Other missing paths and file/directory
+mismatches receive specific diagnostics. Existing destinations remain protected.
+Tests reproduce both parent-directory and inside-checkout invocation and the
+same-named executable collision. Updated the installed command; all tests pass.
+
+Verified the installed command with the exact `starting-point abc` invocation
+from inside this checkout: it successfully generated all 1,630 outputs with the
+same seven explicitly reported analysis fallbacks.
+
+
+### Idiomatic output filenames — prototype-21
+
+Unique source stems now produce `stem.go` rather than `stem.c.go`/`stem.h.go`.
+Names are planned for the complete destination inventory before writing. Shared
+stems retain source extensions; promotion is checked repeatedly for secondary
+collisions (for example x.c, x.h, x.c.cpp). Destination-directory names are also
+reserved. Flat batches use the same rule, with numeric disambiguation when
+identical basenames come from different source directories.
+
+Updated the installed command and renamed the existing full ABC output using
+filesystem renames, preserving contents and updating run.json. Of 1,630 outputs,
+1,456 now use short names and 174 retain collision-qualified names. Verified all
+manifest paths exist and are distinct; src/aig/gia/giaSim.go is present. Detailed
+metadata and original snapshots retain source-based names and remain unchanged.
+Tests cover unique/shared stems, independent directories, secondary collisions,
+directory collisions, mirroring, and flat batches. All tests pass.
+
+
+### Integer object-macro constants — prototype-22
+
+Simple integer `#define NAME literal` directives now become Go const declarations.
+C suffixes are removed from the literal but their width/signedness is represented
+in the declaration under the existing ABC LP64 assumptions: int=32, long=64,
+long long=64. For example NUMBER1 3716960521u becomes
+`const NUMBER1 uint32 = 3716960521`, rather than architecture-dependent Go uint.
+
+Plain U selects uint32 when the value fits, otherwise uint64. UL/ULL select
+uint64; L/LL select int64, with large nondecimal literals selecting uint64 when
+required by C's candidate types. Unary minus on unsigned literals wraps at the
+selected width. Unsuffixed integers remain untyped Go constants. Unsupported
+replacement expressions and values outside the supported literal range remain
+unchanged. Comments and surrounding spacing are preserved. Conversion occurs
+after C qualifier cleanup so generated Go const keywords survive, including
+per-function draft metadata.
+
+Updated the installed command. `go -C starting-point test ./...` passes, including
+Go parse/type checks, suffix-width boundaries, unsigned negation, comment
+preservation, and retained unsupported macros. Generated examples in
+`experiments/satoko/_draft-v22/{giaUtil,aigUtil}.go` confirm NUMBER1 and NUMBER2
+are uint32 constants. This draft contains those two utility sources, rather than
+the earlier four-header Satoko fixture. Full-tree outputs will adopt the rule on
+the next generation run. LLP64/other target integer-width profiles remain future
+work; suffix interpretation is explicitly LP64, not inferred from Go's uint.
+
+
+### Visible fallback diagnostics — prototype-23
+
+The CLI now lists every source-preserving fallback after the run summary, with
+source-relative path, generated output path, and the analysis diagnostic. The
+heading explicitly says these are commented original sources whose analysis
+failed. TreeFile/run.json also record FallbackReason, so callers do not need to
+open per-file reports to identify the cause. Zero-fallback runs omit the list.
+Installed the updated command. Tests verify the printed paths/reason, persisted
+manifest diagnostic, and zero-fallback behavior; all tests pass.
+
+
+### Investigated causes of the seven fallbacks
+
+Read-only inspection distinguishes three causes (no ABC sources changed):
+
+- Five files fail because delimiter matching reads both alternatives of a
+  preprocessor conditional as one token stream. cuddExport.c:281–286,
+  cuddZddMisc.c:198–207, and mtrBasic.c:427–438 each open fprintf once but contain
+  an alternative argument list/closing parenthesis in each SIZEOF_VOID_P branch.
+  inflate.c:630–634 has alternative if-condition openings under GUNZIP with a
+  shared continuation; the unmatched opening is reported much later at line 1196.
+  trees.c:954–974 similarly has alternative block openings under FORCE_STORED
+  and FORCE_STATIC. These are analyzer/preprocessor limitations, not evidence
+  that those five C files are malformed.
+- cuddInt.h:138–139 exposes a lexer bug: a multiline block comment starts on a
+  #define line, but directive scanning stops at the physical newline. The next
+  comment line is incorrectly scanned as code, including its closing parenthesis.
+- int2Bmc.c:270 contains an actual extra closing parenthesis in the visible source:
+  `int iObjF = Gia_ObjFaninId0(p->pGia, iObj) );`. Similar spellings occur later.
+  This case requires source-level repair/review rather than solely preprocessor
+  handling; no original file has been edited.
+
+Next targeted fixes: track block-comment state across directive newlines, then
+make structural matching aware of conditional branches instead of concatenating
+mutually exclusive code. The final case should retain a precise repair diagnostic.
+
+
+### Multiline directive-comment lexer fix — prototype-24
+
+Directive scanning now tracks block comments across physical newlines, keeping
+comment text inside the directive token until its closing delimiter. Quoted
+literals and line comments protect comment-like text; continued lines and CRLF
+are handled. Unterminated block comments receive a precise lexical diagnostic.
+Token round-trip text and offsets remain unchanged.
+
+`cuddInt.h` now analyzes successfully, including its multiline #define comments
+and integer constant conversions. Added LF/CRLF, comment-marker-in-literal,
+line-comment, unterminated-comment, and real cuddInt.h regressions. All tests pass;
+the installed command is updated. Rechecked the original seven fallback sources:
+cuddInt.h succeeds and the other six retain their prior diagnostics.
+
+Earlier full-tree outputs were renamed externally to .0/.1/.2 and were left
+untouched. A fresh single-file result is saved in
+`experiments/satoko/_draft-v24/cuddInt.go`. This is a generated draft, not a claim
+that the entire header is now valid Go. The next full-tree generation will no
+longer need the cuddInt.h source-preserving fallback.

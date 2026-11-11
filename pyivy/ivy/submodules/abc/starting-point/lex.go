@@ -82,21 +82,11 @@ func Lex(s string) ([]Token, error) {
 			}
 		case s[i] == '#':
 			kind = "directive"
-			i++
-			for i < len(s) {
-				if s[i] == '\\' && i+1 < len(s) && s[i+1] == '\n' {
-					i += 2
-					continue
-				}
-				if s[i] == '\\' && i+2 < len(s) && s[i+1:i+3] == "\r\n" {
-					i += 3
-					continue
-				}
-				if s[i] == '\n' {
-					break
-				}
-				i++
+			end, err := directiveEnd(s, i)
+			if err != nil {
+				return nil, err
 			}
+			i = end
 		case ident(s[i]):
 			kind = "word"
 			i++
@@ -170,4 +160,57 @@ func MatchDelimiters(ts []Token) (map[int]int, error) {
 		return nil, fmt.Errorf("unclosed delimiter at %d", ts[stack[0]].Start)
 	}
 	return m, nil
+}
+
+// directiveEnd keeps multiline comments inside the directive token. Literal
+// and line-comment state prevents comment-like text from opening a block.
+func directiveEnd(s string, start int) (int, error) {
+	quote := byte(0)
+	lineComment := false
+	for i := start + 1; i < len(s); {
+		if s[i] == '\\' && i+1 < len(s) && s[i+1] == '\n' {
+			i += 2
+			continue
+		}
+		if s[i] == '\\' && i+2 < len(s) && s[i+1:i+3] == "\r\n" {
+			i += 3
+			continue
+		}
+		if s[i] == '\n' {
+			return i, nil
+		}
+		if lineComment {
+			i++
+			continue
+		}
+		if quote != 0 {
+			if s[i] == '\\' && i+1 < len(s) {
+				i += 2
+				continue
+			}
+			if s[i] == quote {
+				quote = 0
+			}
+			i++
+			continue
+		}
+		if strings.HasPrefix(s[i:], "//") {
+			lineComment = true
+			i += 2
+			continue
+		}
+		if strings.HasPrefix(s[i:], "/*") {
+			end := strings.Index(s[i+2:], "*/")
+			if end < 0 {
+				return 0, fmt.Errorf("unterminated comment at byte %d", i)
+			}
+			i += end + 4
+			continue
+		}
+		if s[i] == '"' || s[i] == '\'' {
+			quote = s[i]
+		}
+		i++
+	}
+	return len(s), nil
 }

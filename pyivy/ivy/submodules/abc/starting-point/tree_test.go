@@ -33,6 +33,11 @@ func TestTranslateTree(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	for _, name := range []string{"top.go", "src/vec/x.c.go", "src/vec/x.h.go", "src/logic/x.go", "src/bad-name/y.go", "src/broken/bad.go"} {
+		if _, err := os.Stat(filepath.Join(out, name)); err != nil {
+			t.Fatal(err)
+		}
+	}
 	if len(report.Files) != 6 || report.Fallbacks != 1 {
 		t.Fatalf("%+v", report)
 	}
@@ -44,13 +49,13 @@ func TestTranslateTree(t *testing.T) {
 		if !strings.HasPrefix(string(bytes), "package "+f.Package+"\n") {
 			t.Fatal(f)
 		}
-		if f.Output == "top.h.go" && f.Package != "starting_point_cpp2go_abc" {
+		if f.Output == "top.go" && f.Package != "starting_point_cpp2go_abc" {
 			t.Fatal(f)
 		}
 		if strings.HasPrefix(f.Output, "src/vec/") && f.Package != "vec" {
 			t.Fatal(f)
 		}
-		if f.Output == "src/bad-name/y.h.go" && f.Package != "bad_name" {
+		if f.Output == "src/bad-name/y.go" && f.Package != "bad_name" {
 			t.Fatal(f)
 		}
 		if f.Fallback && !strings.Contains(string(bytes), "// /* unterminated") {

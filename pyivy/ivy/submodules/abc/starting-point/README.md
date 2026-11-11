@@ -18,16 +18,23 @@ From a directory containing `abc/`:
 starting-point abc
 ```
 
+The same `starting-point abc` command also works from inside a checkout named
+`abc`: if there is no `abc/` subdirectory, the bare name denotes the current
+checkout, even when it contains an executable also named `abc`. `starting-point .`
+is an explicit alternative.
+
 This creates `starting-point-cpp2go-abc/` in the current working directory:
 
 ```text
 abc/src/sat/example.c  -> starting-point-cpp2go-abc/src/sat/example.c.go
 abc/src/sat/example.h  -> starting-point-cpp2go-abc/src/sat/example.h.go
-abc/src/opt/example.cpp -> starting-point-cpp2go-abc/src/opt/example.cpp.go
+abc/src/opt/example.cpp -> starting-point-cpp2go-abc/src/opt/example.go
 ```
 
-The traversal handles `.c`, `.cpp`, and `.h` files (case-insensitive). Original
-extensions are retained before `.go`, preventing same-stem collisions. Directories
+The traversal handles `.c`, `.cpp`, and `.h` files (case-insensitive). Unique stems use simple `.go` names, such as `giaSim.c` → `giaSim.go`.
+When sources in the same output directory share a stem, their extensions are
+retained (`example.c.go`, `example.h.go`). Names are checked again to avoid
+secondary collisions with dotted stems or destination directories. Directories
 containing source files are mirrored. Existing destinations are refused. Symlinks,
 version-control metadata directories, and prior `starting-point-cpp2go-*` output
 trees are skipped. Inventory happens before output creation, so an output inside
@@ -55,7 +62,9 @@ starting-point -out /tmp/new-draft ../src/sat/satoko/utils/vec/vec_uint.h ../src
 ```
 
 All files in a flat batch use the explicit `-package` value or the first input's
-source-directory name. Files have indexed names such as `00_vec_uint.h.go`.
+source-directory name. The same collision-aware naming applies. Identical basenames from separate
+source directories receive numeric prefixes to distinguish them in the flat
+destination.
 
 ## Reports and recovery
 
@@ -66,7 +75,9 @@ ignored by Go's recursive package discovery.
 
 If analysis fails, the corresponding `.go` file still exists: it contains its
 package declaration, an explanatory TODO, and commented original source. The
-specific diagnostic is recorded in its report. Other files continue translating.
+specific diagnostic is recorded in its report and in `run.json`. The CLI lists
+each fallback source, output, and diagnostic after its summary so failures are
+visible immediately. Other files continue translating.
 Filesystem errors stop the run and can leave partial output. Use a fresh output
 directory for a subsequent run.
 
@@ -101,3 +112,12 @@ lexing, macro function scaffolds, typedef/struct pairs, signature conversion,
 if/for braces, while-to-for conversion, ternary lowering, header guard removal,
 and commenting out includes and standalone namespace markers. Full C++ parsing
 and preprocessor evaluation are not implemented.
+
+Simple integer object macros become Go constants. C integer suffixes determine
+explicit types under the current ABC LP64 target: U uses uint32 or uint64 by
+value, UL/ULL use uint64, and L/LL use int64 (or uint64 for sufficiently large
+nondecimal literals). For example, `#define NUMBER1 3716960521u` becomes
+`const NUMBER1 uint32 = 3716960521`. Unsuffixed literals remain untyped constants.
+
+The lexer retains multiline block comments inside preprocessor directives, so
+comment punctuation does not participate in code delimiter matching.
