@@ -39,3 +39,13 @@ func sourceError(source string, err error) error {
 	prefix := source[:offset]
 	return &SourceError{Message: syntax.Message, Location: SourceLocation{Line: strings.Count(prefix, "\n") + 1, Column: offset - strings.LastIndex(prefix, "\n"), ByteOffset: offset}, cause: err}
 }
+
+// Transformed locations must not masquerade as coordinates in the C input.
+func transformedDiagnostic(path, phase, draft string, err error) error {
+	var syntax *syntaxError
+	if errors.As(err, &syntax) && syntax.Offset >= 0 && syntax.Offset <= len(draft) {
+		prefix := draft[:syntax.Offset]
+		return fmt.Errorf("%s in transformed draft for %s (not original-source coordinates): line %d, column %d: %w", phase, path, strings.Count(prefix, "\n")+1, syntax.Offset-strings.LastIndex(prefix, "\n"), err)
+	}
+	return fmt.Errorf("%s in transformed draft for %s: %w", phase, path, err)
+}

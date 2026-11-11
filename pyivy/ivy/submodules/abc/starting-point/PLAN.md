@@ -1276,3 +1276,28 @@ headers, comments/literals, and the real Aig_ManPackAddPatternTry condition.
 Installed prototype-33 and generated
 `experiments/satoko/_draft-v33-aig/aigPack.go`; the example now reads
 `if Aig_ManPackAddPatternTry( p, k, vLits ) {`.
+
+## Macro hash lexer regression and diagnostic coordinates — prototype-34
+
+The full-tree run reported new failures in casCore.c, casDec.c, and fretFlow.c.
+The formatted-call pass introduced in prototype-32 re-lexed assembled drafts;
+it exposed an existing lexer bug that treated any # as a directive start.
+Generated macro functions contained `printf(#f ...)` or `xe##_dist`, so the
+lexer hid the remainder of those lines, including closing parentheses. The
+prototype-33 if-parenthesis removal was not the cause.
+
+Directives now require first-non-trivia position on a logical line. Mid-line
+stringification/token-pasting hashes remain punctuation in drafts, preserving
+balanced delimiters without pretending to implement their macro semantics.
+Added regression coverage for all three real source files, hash operators,
+comments before directives, and transformed diagnostic coordinates.
+
+Errors from the formatted-call pass now include line and column as well as byte
+offset. They are explicitly labeled transformed-draft coordinates (and function
+name for a function-fragment failure), rather than incorrectly reporting those
+positions as original C source locations. Original-source syntax diagnostics
+retain their existing original line/column/offset reporting.
+
+All Go tests pass and the updated command is installed. Full src-tree validation
+completed in `/tmp/starting-point-src-v34`: all 1,625 files translated with zero
+source-preserving fallbacks. Existing user output is untouched.

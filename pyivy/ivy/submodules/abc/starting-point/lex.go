@@ -80,7 +80,7 @@ func Lex(s string) ([]Token, error) {
 			if !closed {
 				return nil, &syntaxError{"unterminated literal", start}
 			}
-		case s[i] == '#':
+		case s[i] == '#' && directiveStart(out):
 			kind = "directive"
 			end, err := directiveEnd(s, i)
 			if err != nil {
@@ -213,4 +213,23 @@ func directiveEnd(s string, start int) (int, error) {
 		i++
 	}
 	return len(s), nil
+}
+
+// Directives start at the first non-trivia token on a logical line. Hashes
+// within macro replacement drafts are stringification/token-pasting operators.
+func directiveStart(tokens []Token) bool {
+	for i := len(tokens) - 1; i >= 0; i-- {
+		t := tokens[i]
+		if t.Kind != "space" && t.Kind != "comment" {
+			return false
+		}
+		if strings.Contains(t.Text, "\n") {
+			if t.Kind == "space" && i > 0 && tokens[i-1].Text == "\\" && strings.Count(t.Text, "\n") == 1 {
+				i--
+				continue
+			}
+			return true
+		}
+	}
+	return true
 }

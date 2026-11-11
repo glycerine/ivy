@@ -62,10 +62,11 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 			}
 		}
 	}
-	r.Draft, err = rewriteFormattedCalls(r.Draft, true)
+	formatted, err := rewriteFormattedCalls(r.Draft, true)
 	if err != nil {
-		return r, err
+		return r, transformedDiagnostic(path, "formatted-call rewrite", r.Draft, err)
 	}
+	r.Draft = formatted
 	r.Draft = restoreRegions(r.Draft, regions)
 	for i := range r.Functions {
 		f := &r.Functions[i]
@@ -73,10 +74,11 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 		f.End = originalOffset(f.End, regions)
 		f.BodyStart = originalOffset(f.BodyStart, regions)
 		f.Original = source[f.Start:f.End]
-		f.Draft, err = rewriteFormattedCalls(f.Draft, false)
+		formatted, err = rewriteFormattedCalls(f.Draft, false)
 		if err != nil {
-			return r, err
+			return r, transformedDiagnostic(path, "formatted-call rewrite of function "+f.Name, f.Draft, err)
 		}
+		f.Draft = formatted
 		f.Draft = restoreRegions(f.Draft, regions)
 	}
 	for i := range r.Issues {
