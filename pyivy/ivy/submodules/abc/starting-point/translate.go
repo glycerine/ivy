@@ -54,19 +54,24 @@ type Result struct {
 }
 
 var signature = regexp.MustCompile(`\b([A-Za-z_][A-Za-z_0-9 \t*]*?)\s*\b([A-Za-z_]\w*)\s*\(([^{};]*)\)\s*\{`)
-var declaration = regexp.MustCompile(`\b([A-Za-z_]\w*)\s+(\*?)\s*([A-Za-z_]\w*)\s*(=|;)`)
-var namedType = regexp.MustCompile(`^\s*([A-Za-z_]\w*)\s*(\*?)\s*([A-Za-z_]\w*)\s*$`)
+var declaration = regexp.MustCompile(`\b([A-Za-z_]\w*)(\s*\*+|\s+)\s*([A-Za-z_]\w*)\s*(=|;)`)
+var namedType = regexp.MustCompile(`^\s*([A-Za-z_]\w*)\s*(\**)\s*([A-Za-z_]\w*)((?:\s*\[[^\[\]]*\])*)\s*$`)
 
 func goType(s string) string {
 	s = strings.TrimSpace(s)
 	if strings.HasSuffix(s, "*") {
 		base := strings.TrimSpace(strings.TrimSuffix(s, "*"))
+		if base == "char" {
+			return "string"
+		}
 		if base == "void" {
 			return "any"
 		}
 		return "*" + goType(base)
 	}
 	switch s {
+	case "char":
+		return "byte"
 	case "unsigned":
 		return "uint32"
 	case "int":
@@ -179,6 +184,12 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 		}
 	}
 	localTypes := declarationTypes(mask, topLevelSignatures)
+	globalEdits, err := packageVariableEdits(source, ts, localTypes, opts.opaque)
+	if err != nil {
+		return r, err
+	}
+	edits = append(edits, globalEdits...)
+	needsOS := false
 	for _, loc := range functionSignatures {
 		start, open := loc[0], loc[1]-1
 		end, ok := ends[open]
@@ -210,7 +221,7 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 					valid = false
 					break
 				}
-				params = append(params, m[3]+" "+goType(m[1]+m[2]))
+				params = append(params, m[3]+" "+arrayType(goType(m[1]+m[2]), m[4], true))
 			}
 		}
 		// A comment inside a signature must not disappear through regeneration.
@@ -240,6 +251,16 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 			return r, err
 		}
 		resultType := goType(ret)
+		if name == "main" && valid && (len(params) == 0 || len(params) == 2) {
+			var usesOS bool
+			converted, usesOS, err = rewriteMainBody(converted, params)
+			if err != nil {
+				return r, err
+			}
+			needsOS = needsOS || usesOS
+			params = nil
+			resultType = ""
+		}
 		resultSuffix := ""
 		if resultType != "" {
 			resultSuffix = " " + resultType
@@ -286,6 +307,9 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 		}
 		if err == nil {
 			r.Draft = "package " + opts.Package + "\n\n" + r.Draft
+			if needsOS {
+				r.Draft, err = ensureOSImport(r.Draft)
+			}
 		}
 	}
 	if err == nil {

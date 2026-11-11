@@ -93,7 +93,7 @@ func TestAigMemoryStructs(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{"type Aig_MmFixed_t_ struct {", "nEntrySize", "**char", "// the size of one entry", "// the allocated memory"} {
+	for _, want := range []string{"type Aig_MmFixed_t_ struct {", "nEntrySize", "*string", "// the size of one entry", "// the allocated memory"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatalf("missing %q", want)
 		}

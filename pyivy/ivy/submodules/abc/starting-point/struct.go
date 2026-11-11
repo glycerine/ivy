@@ -122,7 +122,7 @@ func fieldEdits(f []Token, tag, alias string) ([]Edit, bool) {
 	if adjacent {
 		sep = " "
 	}
-	edits = append(edits, Edit{name.Start, name.End, sep + stars + goType(base)})
+	edits = append(edits, Edit{name.Start, name.End, sep + goType(base+stars)})
 	return edits, true
 }
 

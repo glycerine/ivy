@@ -33,14 +33,14 @@ func TestFormattedCalls(t *testing.T) {
 func TestExistingFmtImports(t *testing.T) {
 	for _, imp := range []string{`import "fmt"`, "import (\n\"fmt\"\n)", `import f "fmt"`, `import . "fmt"`, `import _ "fmt"`} {
 		source := "package p\n" + imp + "\nfunc f() { printf(\"hi\"); }"
-		got, err := rewriteFormattedCalls(source, true)
+		got, err := rewriteLibraryCalls(source, true)
 		if err != nil {
 			t.Fatal(err)
 		}
 		if strings.Count(got, `"fmt"`) != 1 || strings.Contains(got, `printf(`) {
 			t.Fatal(got)
 		}
-		again, err := rewriteFormattedCalls(got, true)
+		again, err := rewriteLibraryCalls(got, true)
 		if err != nil || again != got {
 			t.Fatal("not idempotent", again, err)
 		}

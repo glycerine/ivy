@@ -62,9 +62,9 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 			}
 		}
 	}
-	formatted, err := rewriteFormattedCalls(r.Draft, true)
+	formatted, err := rewriteLibraryCalls(r.Draft, true)
 	if err != nil {
-		return r, transformedDiagnostic(path, "formatted-call rewrite", r.Draft, err)
+		return r, transformedDiagnostic(path, "library-call rewrite", r.Draft, err)
 	}
 	r.Draft = formatted
 	r.Draft = restoreRegions(r.Draft, regions)
@@ -74,9 +74,9 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 		f.End = originalOffset(f.End, regions)
 		f.BodyStart = originalOffset(f.BodyStart, regions)
 		f.Original = source[f.Start:f.End]
-		formatted, err = rewriteFormattedCalls(f.Draft, false)
+		formatted, err = rewriteLibraryCalls(f.Draft, false)
 		if err != nil {
-			return r, transformedDiagnostic(path, "formatted-call rewrite of function "+f.Name, f.Draft, err)
+			return r, transformedDiagnostic(path, "library-call rewrite of function "+f.Name, f.Draft, err)
 		}
 		f.Draft = formatted
 		f.Draft = restoreRegions(f.Draft, regions)

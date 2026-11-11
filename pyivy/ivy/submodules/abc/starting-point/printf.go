@@ -1,9 +1,9 @@
 package startingpoint
 
-// rewriteFormattedCalls handles direct C formatting calls in executable blocks.
+// rewriteLibraryCalls handles direct C formatting and strlen calls in executable blocks.
 // sprintf is lowered only as a standalone write into a simple named buffer;
 // uses of its C character-count result need separate repair.
-func rewriteFormattedCalls(source string, addImport bool) (string, error) {
+func rewriteLibraryCalls(source string, addImport bool) (string, error) {
 	all, err := Lex(source)
 	if err != nil {
 		return "", err
@@ -62,7 +62,7 @@ func rewriteFormattedCalls(source string, addImport bool) (string, error) {
 			depth--
 			continue
 		}
-		if depth == 0 || t.Kind != "word" || (t.Text != "printf" && t.Text != "fprintf" && t.Text != "sprintf") {
+		if depth == 0 || t.Kind != "word" || (t.Text != "printf" && t.Text != "fprintf" && t.Text != "sprintf" && t.Text != "strlen") {
 			continue
 		}
 		if i > 0 && (ts[i-1].Text == "." || ts[i-1].Text == "->" || ts[i-1].Text == "::") {
@@ -76,6 +76,9 @@ func rewriteFormattedCalls(source string, addImport bool) (string, error) {
 			continue
 		}
 		replacement := qualifier + "Printf"
+		if t.Text == "strlen" {
+			replacement = "len"
+		}
 		if t.Text == "fprintf" {
 			replacement = qualifier + "Fprintf"
 		}
@@ -90,7 +93,7 @@ func rewriteFormattedCalls(source string, addImport bool) (string, error) {
 			edits = append(edits, Edit{ts[i+2].Start, ts[i+2].End, ""}, Edit{ts[i+3].Start, ts[i+3].End, ""})
 		}
 		edits = append(edits, Edit{t.Start, t.End, replacement})
-		changed = true
+		changed = changed || t.Text != "strlen"
 	}
 	if changed && addImport && !imported {
 		// Upgrade a blank fmt import rather than introducing a duplicate path.

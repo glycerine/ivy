@@ -10,7 +10,7 @@ var typedefName = regexp.MustCompile(`\btypedef\s+[^;{}]+\b([A-Za-z_]\w*)\s*;`)
 // declarationTypes learns ordinary named types from signatures and simple
 // typedefs, without treating arbitrary multiplication expressions as declarations.
 func declarationTypes(mask string, signatures [][]int) map[string]bool {
-	types := map[string]bool{"int": true, "unsigned": true, "char": true, "short": true, "long": true, "float": true, "double": true, "bool": true, "sdbl_t": true}
+	types := map[string]bool{"FILE": true, "int": true, "unsigned": true, "char": true, "short": true, "long": true, "float": true, "double": true, "bool": true, "sdbl_t": true}
 	add := func(text string) {
 		text = strings.ReplaceAll(text, "*", " ")
 		for _, word := range strings.Fields(text) {

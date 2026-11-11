@@ -5,6 +5,10 @@ import "strings"
 // lowerLocalDeclarations groups simple declarators whose zero values suffice,
 // or emits separate declarations to retain initializer order and pointer types.
 func lowerLocalDeclarations(source string, types map[string]bool) (string, error) {
+	return lowerDeclarations(source, types, false)
+}
+
+func lowerDeclarations(source string, types map[string]bool, allInitializers bool) (string, error) {
 	all, err := Lex(source)
 	if err != nil {
 		return "", err
@@ -53,6 +57,7 @@ func lowerLocalDeclarations(source string, types map[string]bool) (string, error
 		type decl struct{ name, typ, value string }
 		var declarations []decl
 		valid, allZero := true, true
+		hasArray := false
 		for _, part := range parts {
 			j, stars := part[0], ""
 			for j < part[1] && ts[j].Text == "*" {
@@ -65,6 +70,23 @@ func lowerLocalDeclarations(source string, types map[string]bool) (string, error
 			}
 			d := decl{name: ts[j].Text, typ: goType(t.Text + stars)}
 			j++
+			suffix := ""
+			for j < part[1] && ts[j].Text == "[" {
+				close, ok := pairs[j]
+				if !ok || close >= part[1] {
+					valid = false
+					break
+				}
+				suffix += source[ts[j].Start:ts[close].End]
+				j = close + 1
+			}
+			if !valid {
+				break
+			}
+			if suffix != "" {
+				hasArray = true
+				d.typ = arrayType(d.typ, suffix, false)
+			}
 			if j < part[1] {
 				if ts[j].Text != "=" || j+1 >= part[1] {
 					valid = false
@@ -78,7 +100,7 @@ func lowerLocalDeclarations(source string, types map[string]bool) (string, error
 			allZero = allZero && d.value == ""
 			declarations = append(declarations, d)
 		}
-		if !valid || len(declarations) == 0 || (len(declarations) == 1 && !allZero) {
+		if !valid || len(declarations) == 0 || (len(declarations) == 1 && !allZero && !allInitializers && !hasArray) {
 			continue
 		}
 		// Preserve comments exactly by leaving commented declarations to the repair pass.

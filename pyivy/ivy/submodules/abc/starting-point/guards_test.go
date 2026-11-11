@@ -49,7 +49,8 @@ func TestConditionalNotMistakenForGuard(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if r.Draft != "package p\n\n"+source {
+		want := strings.NewReplacer("int outside;", "var outside int32;", "int before;", "var before int32;").Replace(source)
+		if r.Draft != "package p\n\n"+want {
 			t.Fatalf("removed unrelated conditional: %s", r.Draft)
 		}
 	}

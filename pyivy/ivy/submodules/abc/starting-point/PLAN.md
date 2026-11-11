@@ -1311,3 +1311,78 @@ of them when necessary. Regression tests parse/type-check simple examples and
 check both Xyz structs from src/template.c. All tests pass. Installed the command
 and generated `experiments/satoko/_draft-v35-template/template.go`, containing
 `type Xyz_ParTry_t struct {` and `type Xyz_ManTry_t struct {`.
+
+## Package-level variables — prototype-36
+
+starter.c exposed a scope gap: storage-class removal and local declaration/zero
+initialization rules never ran on file-scope variables. A new package-variable
+pass now routes simple top-level declarations through the shared lowering logic.
+It removes static/const qualifiers on recognized definitions, emits Go var/type
+ordering, omits literal-zero initializers, and retains nonzero initializers.
+
+Verified starter output:
+- `static int nThreadsRunning = 0;` -> `var nThreadsRunning int32;`
+- `pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;` ->
+  `var mutex pthread_mutex_t = PTHREAD_MUTEX_INITIALIZER;`
+
+The scanner skips nested groups (including multiline function parameter lists),
+struct bodies and declarations intersecting opaque preprocessing regions.
+Comments within unsupported declarations remain available for repair. Existing
+local behavior is unchanged, and initializer constants still need their own
+representation decisions.
+
+All Go tests pass, including package zeros, nonzero values, declaration lists,
+prototype preservation, conditional isolation, and the real starter.c examples.
+Installed the command and generated `experiments/satoko/_draft-v36-starter/`.
+Full src-tree validation completed in `/tmp/starting-point-src-v36`: all 1,625
+files translated with zero source-preserving fallbacks.
+
+## String pointer defaults and strlen — prototype-37
+
+C char-pointer types now default to Go string in recognized function parameters,
+returns, package/local variables, and struct fields, including compact `char*`
+spelling. Further pointer levels use the same mapping recursively (`char **`
+becomes `*string` pending representation review). The local declaration matcher
+also accepts an adjacent star without requiring whitespace after the base type.
+
+Direct strlen calls become len calls in code and function metadata, without
+adding fmt imports. Comments, literals, qualified methods, and opaque #if regions
+remain intact. The shared library-call pass still handles formatted output.
+
+All tests pass, including real starter.c coverage and a strlen-only file with no
+fmt import. Installed the command and generated
+`experiments/satoko/_draft-v37-starter/starter.go`, with
+`func Abc_UtilStrsav(s string) string` and `malloc(len(s)+1)` in its draft body.
+This does not yet repair strcpy/malloc, C truth-value conditions, nil string
+returns, mutable byte buffers, or integer-width differences in len results.
+
+## Array parameters and variables; mixed FILE declarations — prototype-38
+
+The main signature was retained because `char *argv[]` was outside the recognized
+parameter grammar. Parameter parsing now accepts pointer levels and array
+suffixes. The outer array parameter dimension becomes a Go slice (C parameters
+decay); inner dimensions retain their bounds. Ordinary local/package arrays keep
+fixed bounds and dimension order. Plain char now maps to byte, so char buffers
+become byte arrays while char pointers retain the string default.
+
+Added FILE to known declaration types so existing mixed-declarator splitting
+handles `FILE *pFile, *pOutput = stdout;` without losing the initializer. The
+starter draft now contains:
+
+```go
+func main(argc int32, argv []string) int32 {
+    var pFile *FILE;
+    var pOutput *FILE = stdout;
+    var ThreadIds [MAX_COMM_NUM]pthread_t;
+    var pBufferCopy string;
+    var Buffer [MAX_COMM_NUM]byte;
+```
+
+C main's arguments/result are intentionally retained in this mechanical draft;
+a proper Go entry point, FILE/stdout representation, string/byte-array interop,
+complex array initializers, and array struct fields still need further work.
+All Go tests pass, including multidimensional arrays, sized/unsized array
+parameters, package arrays, mixed initializers, and real starter.c coverage.
+Installed prototype-38 and generated `experiments/satoko/_draft-v38-starter/`.
+Full src-tree validation completed in `/tmp/starting-point-src-v38`: all 1,625
+files translated with zero source-preserving fallbacks.

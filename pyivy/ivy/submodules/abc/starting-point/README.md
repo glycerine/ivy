@@ -158,3 +158,13 @@ added only when needed. Standalone `sprintf(buffer, format, ...)` calls with a
 named buffer become `buffer = fmt.Sprintf(format, ...)`; uses of the C count
 result remain for review. Format specifiers, FILE pointers, and destination
 buffer types can still need semantic repair.
+
+Recognized `char *` types now default to Go `string`, and direct `strlen` calls
+become `len`. Mutable buffers, allocation/copy routines, C null/truth-value
+semantics, and additional pointer levels still require representation review.
+
+Simple array parameters become slices in their outer dimension (`char *argv[]`
+becomes `argv []string`), and fixed local/package arrays retain their bounds
+(`pthread_t ids[N]` becomes `var ids [N]pthread_t`). Plain char buffers use byte
+arrays. Mixed declarations with initializers are split into separate var lines
+in source order, including FILE pointers.
