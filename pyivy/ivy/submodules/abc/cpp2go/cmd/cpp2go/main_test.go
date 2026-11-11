@@ -36,7 +36,7 @@ func TestSharedOutputPackage(t *testing.T) {
 			if want == "" {
 				want = "vec"
 			}
-			files, err := filepath.Glob(filepath.Join(out, "*.go.txt"))
+			files, err := filepath.Glob(filepath.Join(out, "*.go"))
 			if err != nil || len(files) != 2 {
 				t.Fatal(files, err)
 			}

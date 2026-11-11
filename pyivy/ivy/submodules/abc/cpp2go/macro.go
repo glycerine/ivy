@@ -62,7 +62,10 @@ func macroDraft(t Token, opts Options) (name, draft, message string, ok bool) {
 	if converted, err := emptyForBodies(replacement, true); err == nil {
 		replacement = converted
 	}
+	if converted, err := braceStatements(replacement); err == nil {
+		replacement = converted
+	}
 	draft = original + "func " + name + "(" + strings.Join(params, ", ") + ")" + result + " {" + note + "\n" + replacement + "\n}\n"
-	message = "Mechanical macro function draft: replacement text copied after directive line splicing, with empty for-loop bodies made explicit. Repair parameter/result types, C syntax, returns and call-site semantics in the second pass. Unspecified parameter types are int placeholders, not inferred types."
+	message = "Mechanical macro function draft: replacement text copied after directive line splicing, with empty for-loop bodies and structural control-flow braces made explicit. Repair parameter/result types, C syntax, returns and call-site semantics in the second pass. Unspecified parameter types are int placeholders, not inferred types."
 	return
 }

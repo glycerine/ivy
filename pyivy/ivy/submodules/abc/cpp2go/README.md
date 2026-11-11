@@ -12,7 +12,7 @@ go test -v ./...
 ```
 
 The output directory must not exist. Each input produces an untouched `.original`
-file and a `.go.txt` draft. `run.json` includes source hashes, original byte spans,
+file and a `.go` draft. `run.json` includes source hashes, original byte spans,
 per-function drafts, and unresolved review issues. Directives and unsupported
 code remain in the draft. Generated spans refer to per-function draft strings;
 no claim is made that a formatted Go file has been mapped.
@@ -24,7 +24,7 @@ Go dependencies. The module declares Go 1.22; this experiment was tested with Go
 
 The executable first experiment is in `experiments/satoko/repaired/`. It is a
 recorded LLM repair, not automatically generated production output. The original
-generation is frozen in `draft-v1/`; `repair.py` records the fixture-specific
+generation is frozen in `_draft-v1/`; `repair.py` records the fixture-specific
 repair procedure and is not part of the Go translator. Do not rerun that script
 over later hand edits. `scope.json`, `profile.json`, and `repairs.json` describe
 what was ported, the accepted semantic choices, and issue dispositions. Unselected
@@ -43,7 +43,7 @@ Outside copied macro bodies, whole-expression ternaries in returns, local initia
 become nested `if/else`, preserving lazy branches. Embedded ternaries remain
 flagged until expression lowering can safely introduce typed temporaries. C
 truth-value conversions and other unsupported syntax still require review.
-`draft-v10/` demonstrates the current rules; earlier drafts remain historical baselines.
+`_draft-v15/` demonstrates the current rules; earlier drafts remain historical baselines.
 
 The CLI resolves the package once for the entire output directory: `-package`
 if supplied, otherwise the first input's source-directory name. For example,
@@ -57,11 +57,11 @@ that name through `Options.Package` for each input.
 Adjacent typedef/struct pairs become Go type declarations, with ordinary scalar
 and pointer fields reordered to `name type`. Comments and line breaks are kept.
 Complex fields remain draft text with review issues. See `struct.go` and the
-heap/vector declarations in `experiments/satoko/draft-v4/`.
+heap/vector declarations in `experiments/satoko/_draft-v4/`.
 
 Unbraced `if` and `else` bodies in ordinary function drafts receive braces using
 token-based statement recognition. Nested control flow and comments are retained;
-macro replacement text remains verbatim. Current examples are in `draft-v10/`.
+macro replacement text remains verbatim. Current examples are in `_draft-v15/`.
 
 Whole-file header include guards are omitted from drafts. Their original text
 remains in the `.original` source copies; unrelated conditionals are retained.
@@ -75,3 +75,26 @@ receive `{}`. This is the narrow exception to verbatim macro replacement copying
 Includes and unknown standalone top-level identifier markers are commented out in
 drafts. Function-body identifiers and recognized declaration continuations remain
 untouched. The original source copies retain all directives and marker text.
+
+Ordinary unbraced for-loop bodies are also wrapped, including complete nested
+if/else statements. Multiline loop closing braces align with the loop header.
+
+Ordinary while loops become condition-only Go for loops, with braces added where
+needed. Do/while statements still require separate semantic lowering.
+
+New output filenames end in `.go` (for example, `00_vec_uint.h.go`), so Go tools
+can operate on them directly. Experiment directories use `_draft-vXX` names so
+Go's recursive package discovery skips their incomplete code. They need no
+separate module. From `cpp2go/`, run
+`go -C experiments/satoko/_draft-v13 test .` to request compiler diagnostics
+explicitly, or run gofmt on individual draft files. Formatting and compilation
+may still report unsupported C syntax. The CLI uses the output directory supplied
+by `-out`; use an underscore-prefixed directory for future drafts in this module.
+Earlier drafts retain their historical `.go.txt` filenames.
+
+Unsupported function signatures no longer suppress body transformations. Macro
+bodies also receive structural control-flow bracing. A whole-draft regression
+audit verifies braces after every recognized if in the four Satoko fixtures.
+
+C/C++ const qualifier tokens are removed from generated code; comments, strings,
+and original source snapshots retain their text.

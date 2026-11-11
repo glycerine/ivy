@@ -381,7 +381,7 @@ Conclusion and next milestone:
 ### Artifacts and reproducibility
 
 - [Prototype library](translate.go), [lexer](lex.go), and [CLI](cmd/cpp2go/main.go).
-- [Frozen generated drafts and handoff](experiments/satoko/draft-v1/run.json).
+- [Frozen generated drafts and handoff](experiments/satoko/_draft-v1/run.json).
   The four `.original` and `.go.txt` files retain full source, including comments,
   directives, macros, and declarations outside the recognized subset.
 - [Selected symbols](experiments/satoko/scope.json),
@@ -412,7 +412,7 @@ go -C cpp2go run ./cmd/cpp2go -out /tmp/cpp2go-new-run \
 Choose a nonexistent output directory. The first saved generation is intentionally
 frozen; current code additionally fixes pointer declarations such as `type *p`
 and preserves CRLF continued line comments. Current output therefore need not be
-byte-identical to `draft-v1`. Results are deterministic for a fixed version/input
+byte-identical to `_draft-v1`. Results are deterministic for a fixed version/input
 apart from run duration. Originals and function byte spans make the handoff
 reviewable without a version-control dependency.
 
@@ -552,7 +552,7 @@ Implemented in prototype-2:
   are handled; ternaries embedded in calls, arithmetic, or other conditions remain
   explicit `ternary-review` issues pending typed expression lowering. Converting
   C integer/pointer conditions into Go booleans still requires semantic review.
-- [draft-v2](experiments/satoko/draft-v2/run.json) records a fresh four-header run
+- [_draft-v2](experiments/satoko/_draft-v2/run.json) records a fresh four-header run
   with `package satoko`. Frozen v1 artifacts are historical evidence, not current
   generator output, and were not rewritten.
 
@@ -589,7 +589,7 @@ or call-site adaptation is invented. Macro bodies intentionally retain C syntax
 and ternaries for second-pass repair. Explicit signature overrides remain usable.
 Variadic/unsupported parameter syntax still produces a signature-review issue.
 
-[Draft v3](experiments/satoko/draft-v3/00_vec_uint.h.go.txt) now includes
+[Draft v3](experiments/satoko/_draft-v3/00_vec_uint.h.go.txt) now includes
 `func vec_uint_foreach(vec int, entry int, i int)` with the original replacement
 text as its body. Other vector iterator macros receive functions as well. Package
 names use their source directories (`vec` and `utils`) in this run.
@@ -616,7 +616,7 @@ another declaration. Complex fields such as arrays, bitfields, function pointers
 and comma-separated declarators remain visible with field-review issues. Header
 and typedef comments are retained instead of being discarded with the C syntax.
 
-[Draft v4 heap](experiments/satoko/draft-v4/03_heap.h.go.txt) now contains the
+[Draft v4 heap](experiments/satoko/_draft-v4/03_heap.h.go.txt) now contains the
 requested heap_t Go struct; all three vector declarations are converted as well.
 Previous drafts remain historical artifacts.
 
@@ -648,7 +648,7 @@ return can also be lowered safely within its new block.
 Macro replacement text remains verbatim under the separately requested macro
 policy. Unsupported statement syntax remains second-pass work.
 
-[Draft v5](experiments/satoko/draft-v5/00_vec_uint.h.go.txt) demonstrates braces
+[Draft v5](experiments/satoko/_draft-v5/00_vec_uint.h.go.txt) demonstrates braces
 around the vector capacity guard and includes the macro argument TODO annotations.
 Validation: `go -C cpp2go test ./...` passes, covering exact requested output,
 nested/dangling else, comments, multiline else, loop bodies, idempotence,
@@ -664,7 +664,7 @@ copies remain intact. Matching requires the same guard name, an empty define,
 no outer else/elif, and no substantive content outside the wrapper. Unmatched or
 ambiguous patterns remain unchanged.
 
-Generated `experiments/satoko/draft-v6/`; all four Satoko header guards are absent
+Generated `experiments/satoko/_draft-v6/`; all four Satoko header guards are absent
 from their Go drafts. Tests cover nested directives and negative matches.
 `go -C cpp2go test ./...` passes, including the C/Go differential suite.
 
@@ -678,7 +678,7 @@ the indentation recursively. Initializer declarations and their following if
 align, and the replacement no longer adds an unnecessary trailing blank line.
 Existing expression/comment contents are not globally reformatted.
 
-Generated `experiments/satoko/draft-v7/`. Exact-output tests cover the requested
+Generated `experiments/satoko/_draft-v7/`. Exact-output tests cover the requested
 allocation example, nested tab-indented branches, and variable initializers.
 `go -C cpp2go test ./...` passes, including lazy-branch execution and differential
 checks. No gofmt invocation on incomplete draft output is required.
@@ -692,7 +692,7 @@ both macro and ordinary function drafts. This is an explicit exception to the
 otherwise verbatim macro replacement policy. Header expressions are retained;
 nonempty bodies, comments, and literals remain unchanged.
 
-Generated `experiments/satoko/draft-v8/`; the vector foreach macro functions now
+Generated `experiments/satoko/_draft-v8/`; the vector foreach macro functions now
 contain explicit empty loop bodies. Tests cover bodyless headers, null bodies,
 comments, existing bodies, protected literals, and repeated application.
 `go -C cpp2go test ./...` passes, including the C/Go differential suite.
@@ -708,7 +708,7 @@ function declarations, tokens inside function bodies, and existing comments or
 literals are left alone. This is a conservative marker heuristic, not symbol
 resolution. Source copies remain unchanged.
 
-Generated `experiments/satoko/draft-v9/`. Tests cover the exact requested include
+Generated `experiments/satoko/_draft-v9/`. Tests cover the exact requested include
 block, continued includes, idempotence, and preservation of multiline code.
 `go -C cpp2go test ./...` passes, including the differential suite.
 
@@ -722,9 +722,90 @@ batch and recorded in `run.json`. The destination directory name is irrelevant.
 `ResolvePackage` exposes the same rule for library batch callers; standalone
 single-file analysis retains its source-directory default.
 
-Generated `experiments/satoko/draft-v10/`; all four Go drafts use `package vec`
+Generated `experiments/satoko/_draft-v10/`; all four Go drafts use `package vec`
 because vec_uint.h is the first source. Older mixed-package draft directories
 remain historical experiment records. CLI tests cover inputs from different
 source directories, a differently named destination, an explicit override,
 recorded metadata, and invalid-name rejection before output creation.
+`go -C cpp2go test ./...` passes.
+
+
+### Nonempty for-loop bodies — prototype-11
+
+Extended structural statement bracing to nonempty, unbraced for bodies. A nested
+if/else is treated as the complete loop body, and following statements remain
+outside the loop. Multiline loops get an aligned closing brace. Comments,
+already-braced bodies, and macro replacement policy are preserved.
+
+Generated `experiments/satoko/_draft-v11/`; vec_uint_find now has braces around
+its loop, with the final return 0 outside it. The batch retains a shared vec
+package. Tests cover the reported example, nested else/comments, and idempotence.
+`go -C cpp2go test ./...` passes. C for-header syntax remains draft syntax for a
+separate transformation; this change fixes body structure.
+
+
+### While loops — prototype-12
+
+Ordinary while statements now become condition-only for statements. Their
+conditions and comments are preserved; unbraced bodies receive braces using
+structural statement boundaries. The trailing condition of a do/while statement
+is not independently renamed, since that would change its semantics; full
+do/while lowering remains second-pass work. Macro bodies retain their separately
+specified copying policy.
+
+Generated `experiments/satoko/_draft-v12/`; both heap percolation loops now use for.
+Tests cover braced/unbraced bodies, nested if, comments/literals, do/while
+boundaries, idempotence, and parse/type checking of generated Go.
+`go -C cpp2go test ./...` passes.
+
+
+### Go output extension — prototype-13
+
+Generated draft filenames now end in `.go` instead of `.go.txt`; source snapshots
+and run metadata are unchanged. CLI tests discover the new extension and still
+verify a shared output package. Generated `experiments/satoko/_draft-v13/` contains
+four `.go` drafts. This saved experiment has a separate go.mod so its incomplete
+syntax does not break the translator's module tests; the CLI does not generate
+module files automatically. Earlier artifacts retain their historical filenames.
+
+Validation: `go -C cpp2go test ./...` passes. This filename change enables direct
+Go tooling; it does not assert the full ABC drafts compile or format yet.
+
+
+### Underscore-prefixed draft directories
+
+Renamed all 13 versioned experiment directories to `_draft-vXX` and updated
+links, repair replay paths, and repaired-source provenance comments. Removed the
+now-unnecessary experiment go.mod: Go's recursive package discovery skips these
+underscore-prefixed directories. Explicit `go test .` from a draft directory
+still requests compilation. Future experiment output paths should use the same
+underscore prefix; the CLI continues to honor the caller's `-out` value.
+
+
+### Braces in retained-signature functions — prototype-14
+
+The missing braces in vec_uint_asc_compare/vec_uint_desc_compare were caused by
+fallback behavior: unsupported `const void *` parameters made the generator
+restore the entire original function, discarding successful body transformations.
+The fallback now retains only the original signature and keeps the transformed
+body. Signature issues remain explicit. Macro bodies also receive the structural
+bracing pass so recognizable if statements there are not exempt from braces.
+
+Generated `experiments/satoko/_draft-v14/`. Added regression tests for unsupported
+signatures and macro if/else plus a token-based audit of all four assembled ABC
+drafts: all 54 if statements have braced bodies. This audit includes functions
+with retained C signatures and excludes comments/literals. It is corpus evidence,
+not a claim of complete C++ grammar coverage. `go -C cpp2go test ./...` passes.
+
+
+### C/C++ const qualifiers — prototype-15
+
+Removed const qualifier tokens from assembled C-derived Go drafts and per-function
+draft metadata, including retained signatures, casts, fields, and macro-generated
+bodies. Comments, literals, longer identifiers, preprocessor text, and original
+source snapshots remain unchanged. This is a C-qualifier cleanup pass, not a rule
+for removing legitimate Go const declarations from arbitrary Go source.
+
+Generated `experiments/satoko/_draft-v15/`. Tests cover qualifier positions,
+comments/strings, retained comparator signatures, macro bodies, and metadata.
 `go -C cpp2go test ./...` passes.

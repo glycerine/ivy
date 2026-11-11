@@ -65,3 +65,51 @@ func TestFreshCharVectorHelpers(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+// Audit the entire assembled draft, not just functions whose signatures could
+// be translated. Comments, original-macro comments and strings are excluded.
+func TestABCAllIfBodiesBraced(t *testing.T) {
+	count := 0
+	for _, name := range []string{"heap.h", "vec/vec_uint.h", "vec/vec_int.h", "vec/vec_sdbl.h"} {
+		path := "../src/sat/satoko/utils/" + name
+		source, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		r, err := Analyze(path, string(source))
+		if err != nil {
+			t.Fatal(err)
+		}
+		all, err := Lex(r.Draft)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var tokens []Token
+		for _, tok := range all {
+			if tok.Kind != "space" && tok.Kind != "comment" {
+				tokens = append(tokens, tok)
+			}
+		}
+		pairs, err := MatchDelimiters(tokens)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for i, tok := range tokens {
+			if tok.Kind != "word" || tok.Text != "if" {
+				continue
+			}
+			count++
+			if i+1 >= len(tokens) || tokens[i+1].Text != "(" {
+				t.Fatalf("%s: unrecognized if at byte %d", name, tok.Start)
+			}
+			end, ok := pairs[i+1]
+			if !ok || end+1 >= len(tokens) || tokens[end+1].Text != "{" {
+				t.Fatalf("%s: unbraced if at byte %d", name, tok.Start)
+			}
+		}
+	}
+	if count == 0 {
+		t.Fatal("audit found no if statements")
+	}
+	t.Logf("audited %d if statements across four assembled drafts", count)
+}

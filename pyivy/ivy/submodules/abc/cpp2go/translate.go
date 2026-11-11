@@ -164,8 +164,12 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 		draft := "func " + name + "(" + strings.Join(params, ", ") + ") " + goType(ret) + " " + converted
 		message := "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go."
 		if !valid {
-			draft = source[start:end]
-			message = "Unsupported parameter declarator or signature comment; entire function retained verbatim."
+			draft = source[start:open] + converted
+			message = "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved."
+		}
+		draft, err = stripConstQualifiers(draft)
+		if err != nil {
+			return r, err
 		}
 		check, _ := Lex(draft)
 		if strings.Contains(Mask(check), "?") {
@@ -178,6 +182,10 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 	r.Issues = append(r.Issues, Issue{path + "::file", "file-review", "", "open", "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.", 0, len(source)})
 	r.Draft, err = ApplyEdits(source, edits)
 	if err == nil {
+		r.Draft, err = stripConstQualifiers(r.Draft)
+		if err != nil {
+			return r, err
+		}
 		r.Draft, err = commentScaffolding(r.Draft)
 		if err == nil {
 			r.Draft = "package " + opts.Package + "\n\n" + r.Draft
@@ -232,7 +240,7 @@ func rewriteBody(body string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	converted, err = braceIfStatements(converted)
+	converted, err = braceStatements(converted)
 	if err != nil {
 		return "", err
 	}

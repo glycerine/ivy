@@ -2,9 +2,9 @@ package cpp2go
 
 import "strings"
 
-// braceIfStatements recognizes statement boundaries using tokens, so nested
-// if/else, comments and semicolons inside expressions do not confuse bracing.
-func braceIfStatements(source string) (string, error) {
+// braceStatements recognizes statement boundaries using tokens, so nested
+// if/else, for bodies, comments and semicolons in expressions preserve their scope.
+func braceStatements(source string) (string, error) {
 	all, err := Lex(source)
 	if err != nil {
 		return "", err
@@ -86,7 +86,27 @@ func braceIfStatements(source string) (string, error) {
 			if !ok {
 				return i, false
 			}
-			return statement(close + 1)
+			begin := close + 1
+			end, valid := statement(begin)
+			if !valid {
+				return i, false
+			}
+			if ts[i].Text == "while" {
+				edits = append(edits, Edit{ts[i].Start, ts[i].End, "for"})
+			}
+			if (ts[i].Text == "for" || ts[i].Text == "while") && ts[begin].Text != "{" {
+				closing := " }"
+				if strings.Contains(source[ts[close].End:ts[end-1].End], "\n") {
+					lineStart := strings.LastIndex(source[:ts[i].Start], "\n") + 1
+					j := lineStart
+					for j < ts[i].Start && (source[j] == ' ' || source[j] == '\t') {
+						j++
+					}
+					closing = "\n" + source[lineStart:j] + "}"
+				}
+				edits = append(edits, Edit{ts[close].End, ts[close].End, " {"}, Edit{ts[end-1].End, ts[end-1].End, closing})
+			}
+			return end, true
 		case "do":
 			end, ok := statement(i + 1)
 			if !ok {

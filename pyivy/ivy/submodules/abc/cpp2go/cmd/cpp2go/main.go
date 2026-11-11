@@ -50,7 +50,7 @@ func run(args []string) error {
 		if err = os.WriteFile(filepath.Join(*out, name+".original"), s, 0644); err != nil {
 			return err
 		}
-		if err = os.WriteFile(filepath.Join(*out, name+".go.txt"), []byte(r.Draft), 0644); err != nil {
+		if err = os.WriteFile(filepath.Join(*out, name+".go"), []byte(r.Draft), 0644); err != nil {
 			return err
 		}
 		results = append(results, r)
@@ -60,7 +60,7 @@ func run(args []string) error {
 		Package    string
 		DurationNS int64
 		Files      []cpp2go.Result
-	}{"prototype-10", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
+	}{"prototype-15", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
 	if err != nil {
 		return err
 	}
