@@ -126,3 +126,21 @@ Fallback diagnostics include original-source line and byte column (both 1-based)
 and byte offset (0-based). `run.json` also contains structured `FallbackLocation`
 fields. Look these up in the original source, not the generated Go draft. Errors
 from later rewriting stages are explicitly labelled as transformed-draft errors.
+
+Conditional-preprocessor regions are preserved as opaque original text, including
+all alternatives. Temporary delimiter-only scaffolding lets analysis continue
+around regions that supply part of a surrounding call, condition, or block. It
+is removed before output; no branch is selected. Incompatible branch structures
+cause a larger source span to be retained conservatively. Reports identify these
+spans as `conditional-review` issues. Recognized header guards are still removed.
+
+Ordinary top-level C functions now receive the same mechanical signature and
+body rewrites as static-inline helpers. Unsupported declarators still require
+review. Existing control-flow braces are moved onto their header lines, and
+statement traversal includes blocks following iterator macros.
+
+Preserved preprocessor conditionals are listed on the command line with original
+source `path:line:column`, byte offset, directive text, and destination file.
+Nested conditional openers are included; removed include guards are not.
+These branch-decision entries also appear as `Conditionals` in JSON metadata,
+independently of whole-file analysis failures.

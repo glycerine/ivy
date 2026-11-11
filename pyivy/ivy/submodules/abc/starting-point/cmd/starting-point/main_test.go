@@ -169,3 +169,43 @@ func TestFallbackDetailsPrinted(t *testing.T) {
 		t.Fatal("unexpected fallback listing")
 	}
 }
+
+func TestConditionalLocationsPrintedAndSaved(t *testing.T) {
+	root := t.TempDir()
+	source := filepath.Join(root, "abc")
+	out := filepath.Join(root, "out")
+	if err := os.Mkdir(source, 0755); err != nil {
+		t.Fatal(err)
+	}
+	input := "// heading\n  #if OUTER\n#if INNER\nint x;\n#else\nint y;\n#endif\n#endif\n"
+	if err := os.WriteFile(filepath.Join(source, "choice.c"), []byte(input), 0644); err != nil {
+		t.Fatal(err)
+	}
+	report, err := startingpoint.TranslateTree(source, out, startingpoint.Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var output bytes.Buffer
+	printTreeReport(&output, report)
+	for _, want := range []string{"0 source-preserving fallbacks", "branch decisions required", "choice.c:2:3 -> choice.go: preserved #if OUTER", "choice.c:3:1 -> choice.go: preserved #if INNER"} {
+		if !strings.Contains(output.String(), want) {
+			t.Fatalf("missing %q:\n%s", want, output.String())
+		}
+	}
+	data, err := os.ReadFile(filepath.Join(out, "run.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var saved startingpoint.TreeReport
+	if err := json.Unmarshal(data, &saved); err != nil {
+		t.Fatal(err)
+	}
+	if len(saved.Files[0].Conditionals) != 2 || saved.Files[0].Conditionals[0].Location.Column != 3 {
+		t.Fatal(saved)
+	}
+	output.Reset()
+	printConditionals(&output, "choice.c", "choice.go", saved.Files[0].Conditionals)
+	if !strings.Contains(output.String(), "choice.c:2:3") {
+		t.Fatal(output.String())
+	}
+}

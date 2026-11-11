@@ -7,6 +7,12 @@ import (
 	"strings"
 )
 
+// ConditionalReview identifies an original directive needing a branch decision.
+type ConditionalReview struct {
+	Location  SourceLocation
+	Directive string
+}
+
 type opaqueRegion struct {
 	start, end                   int
 	projectedStart, projectedEnd int
@@ -36,6 +42,25 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 			err = sourceError(source, &syntaxError{diagnostic.Message, originalOffset(diagnostic.Location.ByteOffset, regions)})
 		}
 		return r, err
+	}
+	// Report every preserved conditional opener, including nested ones. Recovery
+	// regions can start before #if; use directive offsets, not region offsets.
+	originalTokens, _ := Lex(source)
+	for _, token := range originalTokens {
+		name := directiveName(token)
+		if name != "if" && name != "ifdef" && name != "ifndef" {
+			continue
+		}
+		for _, region := range regions {
+			if token.Start >= region.start && token.End <= region.end {
+				prefix := source[:token.Start]
+				r.Conditionals = append(r.Conditionals, ConditionalReview{
+					Location:  SourceLocation{Line: strings.Count(prefix, "\n") + 1, Column: token.Start - strings.LastIndex(prefix, "\n"), ByteOffset: token.Start},
+					Directive: strings.TrimSpace(token.Text),
+				})
+				break
+			}
+		}
 	}
 	r.Draft = restoreRegions(r.Draft, regions)
 	for i := range r.Functions {

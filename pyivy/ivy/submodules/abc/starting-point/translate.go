@@ -47,13 +47,14 @@ type Issue struct {
 type Result struct {
 	Schema       int
 	Path, SHA256 string
+	Conditionals []ConditionalReview `json:",omitempty"`
 	Functions    []Function
 	Issues       []Issue
 	Draft        string
 }
 
-var signature = regexp.MustCompile(`\bstatic\s+inline\s+([A-Za-z_][A-Za-z_0-9 \t*]*?)\s*\b([A-Za-z_]\w*)\s*\(([^{};]*)\)\s*\{`)
-var declaration = regexp.MustCompile(`\b(unsigned|int|sdbl_t|[A-Za-z_]\w*_t)\s+(\*?)\s*([A-Za-z_]\w*)\s*(=|;)`)
+var signature = regexp.MustCompile(`\b([A-Za-z_][A-Za-z_0-9 \t*]*?)\s*\b([A-Za-z_]\w*)\s*\(([^{};]*)\)\s*\{`)
+var declaration = regexp.MustCompile(`\b([A-Za-z_]\w*)\s+(\*?)\s*([A-Za-z_]\w*)\s*(=|;)`)
 var namedType = regexp.MustCompile(`^\s*([A-Za-z_]\w*)\s*(\*?)\s*([A-Za-z_]\w*)\s*$`)
 
 func goType(s string) string {
@@ -78,7 +79,7 @@ func goType(s string) string {
 	return s
 }
 
-// Analyze currently recognizes ordinary static-inline C functions. Everything
+// Analyze currently recognizes ordinary C function definitions. Everything
 // else remains verbatim in Draft and in the preserved original input. It does
 // not evaluate preprocessor branches or claim to translate C++ yet.
 func Analyze(path, source string) (Result, error) {
@@ -159,13 +160,37 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 		edits = append(edits, Edit{t.Start, t.End, draft})
 		r.Issues = append(r.Issues, Issue{path + "::macro::" + name, "macro-review", name, "open", message, t.Start, t.End})
 	}
-	for _, loc := range signature.FindAllStringSubmatchIndex(mask, -1) {
+	depthAt := make(map[int]int)
+	depth := 0
+	for _, t := range ts {
+		depthAt[t.Start] = depth
+		if t.Kind == "punct" && t.Text == "{" {
+			depth++
+		}
+		if t.Kind == "punct" && t.Text == "}" {
+			depth--
+		}
+	}
+	functionSignatures := signature.FindAllStringSubmatchIndex(mask, -1)
+	var topLevelSignatures [][]int
+	for _, loc := range functionSignatures {
+		if depthAt[loc[0]] == 0 {
+			topLevelSignatures = append(topLevelSignatures, loc)
+		}
+	}
+	localTypes := declarationTypes(mask, topLevelSignatures)
+	for _, loc := range functionSignatures {
 		start, open := loc[0], loc[1]-1
 		end, ok := ends[open]
-		if !ok || insideOpaque(start, opts.opaque) || insideOpaque(open, opts.opaque) || insideOpaque(end-1, opts.opaque) {
+		if !ok || depthAt[start] != 0 || insideOpaque(start, opts.opaque) || insideOpaque(open, opts.opaque) || insideOpaque(end-1, opts.opaque) {
 			continue
 		}
 		ret, name, args := mask[loc[2]:loc[3]], mask[loc[4]:loc[5]], mask[loc[6]:loc[7]]
+		retWords := strings.Fields(ret)
+		for len(retWords) > 0 && (retWords[0] == "static" || retWords[0] == "inline" || retWords[0] == "extern") {
+			retWords = retWords[1:]
+		}
+		ret = strings.Join(retWords, " ")
 		// Normalize qualifiers before parsing the signature, rather than only
 		// removing them from the final draft after a failed parse.
 		args, err = stripConstQualifiers(args)
@@ -195,7 +220,22 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 			}
 		}
 		body := source[open:end]
-		converted, err := rewriteBody(body)
+		// Directives and local structs inside a function must be composed with
+		// its body rewrite, not applied again as overlapping whole-file edits.
+		var bodyEdits, outerEdits []Edit
+		for _, edit := range edits {
+			if edit.Start >= open && edit.End <= end {
+				bodyEdits = append(bodyEdits, Edit{edit.Start - open, edit.End - open, edit.Text})
+			} else {
+				outerEdits = append(outerEdits, edit)
+			}
+		}
+		body, err = ApplyEdits(body, bodyEdits)
+		if err != nil {
+			return r, err
+		}
+		edits = outerEdits
+		converted, err := rewriteBody(body, localTypes)
 		if err != nil {
 			return r, err
 		}
@@ -259,7 +299,11 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 	return r, err
 }
 
-func rewriteBody(body string) (string, error) {
+func rewriteBody(body string, localTypes map[string]bool) (string, error) {
+	body, err := lowerLocalDeclarations(body, localTypes)
+	if err != nil {
+		return "", err
+	}
 	ts, err := Lex(body)
 	if err != nil {
 		return "", err
@@ -267,7 +311,24 @@ func rewriteBody(body string) (string, error) {
 	mask := Mask(ts)
 	var edits []Edit
 	covered := map[int]bool{}
+	statementStart := map[int]bool{}
+	previous, beforePrevious := "", ""
+	for _, tok := range ts {
+		if tok.Kind == "space" || tok.Kind == "comment" {
+			continue
+		}
+		statementStart[tok.Start] = previous == "" || previous == "{" || previous == "}" || previous == ";" || (previous == "(" && beforePrevious == "for")
+		beforePrevious, previous = previous, tok.Text
+	}
 	for _, loc := range declaration.FindAllStringSubmatchIndex(mask, -1) {
+		// A spelling alone is insufficient: a * b can be multiplication.
+		if !statementStart[loc[0]] {
+			continue
+		}
+		typeName := mask[loc[2]:loc[3]]
+		if !localTypes[typeName] && !strings.HasSuffix(typeName, "_t") {
+			continue
+		}
 		// Leave expression contexts and ambiguous declarations to the repair pass.
 		typ := goType(mask[loc[2]:loc[3]] + mask[loc[4]:loc[5]])
 		name := mask[loc[6]:loc[7]]

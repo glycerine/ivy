@@ -1079,3 +1079,143 @@ Updated the installed command. All tests pass, including UTF-8/CRLF/tab location
 checks, unterminated multiline comments, printed fallback messages, and structured
 location persistence. Source locations must be looked up in original C/C++ files,
 not in transformed .go files whose inserted/removed lines change coordinates.
+
+
+## Opaque conditional-preprocessor regions — prototype-26
+
+Changed direction per user instruction: do not select or evaluate preprocessor
+branches. Preserve #if/#ifdef/#ifndef regions through their matching #endif,
+including #elif/#else, byte-for-byte in the draft. Recognized outer include guards
+retain their existing removal behavior. Nested conditional regions are tracked.
+
+For structural analysis only, replace each opaque region with temporary markers
+and its common external delimiter interface. Balanced internal syntax cancels;
+shared closings/openings allow partial constructs such as fprintf calls and if
+headers to match their surrounding code. Every branch must have the same
+interface, including the implicit empty branch when no else exists. This is not
+branch selection: all original alternatives are restored after every rewrite.
+No expression/type/control-flow transformations run inside a preserved island.
+
+When branch interfaces disagree or a conditional is incomplete, preserve a larger
+span from the current top-level declaration through EOF instead of guessing.
+This conservative recovery can leave more code untranslated; its exact original
+span is reported. Functions whose boundaries intersect synthetic delimiters are
+retained rather than guessed. Conditional-review issues record original spans;
+function metadata, source hashes, and diagnostics map back to original input.
+
+Validation and outcomes:
+
+- Added tests for nested regions, elif/else, shared call closings, shared condition
+  openings, alternative brace openings, conservative recovery, preserved original
+  text, translation before/after islands, source mapping, and marker removal.
+- All five former preprocessor failures analyze successfully. Saved focused
+  examples in `experiments/satoko/_draft-v26/`. Their preserved regions occupy
+  5.4–22.0% of their source bytes; no claim that exactly 99% is translated.
+- `go -C starting-point test ./...` passes; updated the installed command.
+- Full 1,630-file run in `/tmp/starting-point-conditional-check-v26` completed in
+  22.64 seconds with only int2Bmc.c still falling back. Audited every output: all
+  1,575 reported conditional spans are preserved verbatim and no temporary
+  structural markers leaked into generated files.
+- User had removed the original extra parenthesis at int2Bmc.c:270. Inspection
+  found two more at lines 284 and 286. With explicit user authorization, removed
+  those two extra parentheses. A fresh single-file translation succeeds, saved
+  in `experiments/satoko/_draft-v26-int2/int2Bmc.go`.
+- Repeated the full-tree translation after those corrections in
+  `/tmp/starting-point-conditional-check-v26-fixed`: all 1,630 files translated
+  with zero whole-file source-preserving fallbacks.
+
+These changes eliminate conditional-structure whole-file failures without
+resolving build configurations. Lexically malformed text and other unsupported
+source can still require review. Draft generation is not a compilation or
+semantic-equivalence claim.
+
+## Ordinary function coverage and control braces — prototype-27
+
+The int2Bmc.go review exposed a coverage gap: function recognition required
+`static inline`, so only two of this file's eight functions received body
+rewrites. This was not caused by conditional isolation: int2Bmc.c contains no
+conditional-preprocessor regions.
+
+Implemented:
+
+- Recognize ordinary top-level C function definitions, with optional static,
+  inline, and extern qualifiers. Retain the conservative parameter-declarator
+  rules and opaque-region boundary checks.
+- Compose local macro/struct edits into function-body rewrites, avoiding
+  overlapping edits. A full-tree trial exposed this in bzlib/compress.c.
+- Move existing opening braces onto if/for/while/switch/else header lines,
+  preserving intervening comments; perform this before removing for parentheses.
+- Descend into iterator-macro blocks when locating statements, so their nested
+  if statements also acquire braces.
+- Add regressions for ordinary functions, qualifier combinations, comments,
+  nested macro definitions, iterator blocks, and all eight int2Bmc functions.
+  The real-file regression also checks every if body has a same-line brace.
+
+Validation: `go -C starting-point test ./...` passes. The intermediate full-tree
+run in `starting-point-cpp2go-abc.7` translated 1,630 files with zero fallbacks;
+`starting-point-cpp2go-abc.8` exposed an overlapping-edit error in acecPo.c
+when a recursive statement parse failed after accumulating edits. Added local
+rollback for failed parses inside blocks and a real-file regression.
+`starting-point-cpp2go-abc.9` is the final validation run with that correction.
+The installed command includes these fixes.
+
+Remaining int2Bmc repair work: comma-separated declarations, C casts, iterator
+macro semantics, assignment expressions in arguments, integer truth values,
+and a ternary assignment used as an iterator-macro body. Recognizing all eight
+functions is a coverage improvement, not evidence that the draft compiles.
+
+Final prototype-27 validation: all 1630 files in `.9` translated with zero whole-file fallbacks. Audited all 1575 conditional-region spans: each remains verbatim, with no leaked projection markers.
+
+## Actionable preserved-conditional reporting — prototype-28
+
+The CLI now lists every preserved conditional opener with its original source
+path, one-based line and byte column, zero-based byte offset, directive text,
+and output path. Nested #if/#ifdef/#ifndef directives are listed individually;
+removed header guards are excluded. Locations come from original directive
+tokens, including when conservative recovery preserved a larger surrounding
+region. No branch is selected automatically.
+
+Both recursive and file-batch commands print these entries. Library Result and
+tree-file metadata expose Conditionals in run.json and per-file JSON. A zero
+fallback count no longer suppresses this review list.
+
+Validation: all Go tests pass, including nested directives, indentation/column
+accuracy, output with zero fallbacks, and JSON persistence. The installed command
+was exercised on cuddExport.c: it reports all 15 conditional openers, including
+`src/bdd/cudd/cuddExport.c:282:1` for `#if SIZEOF_VOID_P == 8`.
+
+## Named local declarations — prototype-29
+
+Local declaration conversion previously recognized only a short built-in list
+and names ending in `_t`, leaving `sat_solver * pSat;` unchanged. It now also
+learns named types from ordinary top-level function return/parameter types and
+simple typedefs in the current file. Candidates must begin in a declaration
+statement position; unknown names in multiplication expressions remain intact.
+Comments within declarators are retained for review rather than discarded.
+
+All Go tests pass, including named pointers, initializers, parameter-derived
+types, multiplication preservation, comments, and the real int2Bmc regression.
+Installed the command and generated
+`experiments/satoko/_draft-v29-int2/int2Bmc.go`: both pSat declarations (lines 94
+and 170) now read `var pSat *sat_solver;`. Existing full-tree snapshots were not
+regenerated for this focused change. Types known only through external headers,
+comma-separated declarations, and complex declarators still need further work.
+
+## Comma-separated locals and zero values — prototype-30
+
+Simple local declaration lists now become grouped Go var declarations when the
+types agree and all initializers are absent or literal zero. The int2Bmc line
+`int i, Lit, RetValue = 0;` becomes `var i, Lit, RetValue int32;`, retaining the
+existing C int -> int32 mapping. Single literal-zero initializers are omitted
+too; subsequent assignments to zero are preserved.
+
+Mixed pointer/value types and nonzero initializers become separate declarations
+in original order, preserving dependencies and calls (including argument commas).
+Commented or complex declarators remain for later repair; for-header declaration
+lowering remains separate work.
+
+All tests pass, including a real int2Bmc assertion and coverage of grouped zeros,
+nonzero initializers, mixed pointer types, comments, and ordinary assignments.
+Installed prototype-30 and saved fresh output in
+`experiments/satoko/_draft-v30-int2/int2Bmc.go` (the requested declaration is at
+line 99). Full-tree snapshots were not regenerated for this focused change.

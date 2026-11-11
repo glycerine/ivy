@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/glycerine/abc/starting-point"
@@ -97,6 +98,7 @@ func run(args []string) error {
 		if err = os.WriteFile(filepath.Join(*out, names[i]), []byte(r.Draft), 0644); err != nil {
 			return err
 		}
+		printConditionals(os.Stdout, path, names[i], r.Conditionals)
 		results = append(results, r)
 	}
 	data, err := json.MarshalIndent(struct {
@@ -104,7 +106,7 @@ func run(args []string) error {
 		Package    string
 		DurationNS int64
 		Files      []startingpoint.Result
-	}{"prototype-26", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
+	}{"prototype-30", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -134,10 +136,9 @@ func resolveSourceArgument(arg, cwd string) (string, bool, error) {
 
 func printTreeReport(w io.Writer, report startingpoint.TreeReport) {
 	fmt.Fprintf(w, "Translated %d files into %s (%d source-preserving fallbacks)\n", len(report.Files), report.Output, report.Fallbacks)
-	if report.Fallbacks == 0 {
-		return
+	if report.Fallbacks > 0 {
+		fmt.Fprintln(w, "Fallbacks (commented original source; analysis failed):")
 	}
-	fmt.Fprintln(w, "Fallbacks (commented original source; analysis failed):")
 	for _, file := range report.Files {
 		if !file.Fallback {
 			continue
@@ -147,5 +148,27 @@ func printTreeReport(w io.Writer, report startingpoint.TreeReport) {
 			path = file.Source
 		}
 		fmt.Fprintf(w, "  %s -> %s: %s\n", filepath.ToSlash(path), filepath.ToSlash(file.Output), file.FallbackReason)
+	}
+	heading := false
+	for _, file := range report.Files {
+		if len(file.Conditionals) == 0 {
+			continue
+		}
+		if !heading {
+			fmt.Fprintln(w, "Preserved preprocessor conditionals (branch decisions required; original source locations):")
+			heading = true
+		}
+		path, err := filepath.Rel(report.Source, file.Source)
+		if err != nil {
+			path = file.Source
+		}
+		printConditionals(w, path, file.Output, file.Conditionals)
+	}
+}
+
+func printConditionals(w io.Writer, source, output string, conditionals []startingpoint.ConditionalReview) {
+	for _, c := range conditionals {
+		directive := strings.Join(strings.Fields(c.Directive), " ")
+		fmt.Fprintf(w, "  %s:%d:%d -> %s: preserved %s; choose branch (source byte offset %d)\n", filepath.ToSlash(source), c.Location.Line, c.Location.Column, filepath.ToSlash(output), directive, c.Location.ByteOffset)
 	}
 }

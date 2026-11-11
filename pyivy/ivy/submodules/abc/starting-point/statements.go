@@ -32,8 +32,10 @@ func braceStatements(source string) (string, error) {
 				return i, false
 			}
 			for j := i + 1; j < end; {
+				checkpoint := len(edits)
 				next, valid := statement(j)
 				if !valid || next <= j {
+					edits = edits[:checkpoint]
 					j++
 				} else {
 					j = next
@@ -124,7 +126,7 @@ func braceStatements(source string) (string, error) {
 		// Ordinary expression/declaration/return statement. Skip matched groups;
 		// a directive or an unmatched body boundary is not a statement to guess at.
 		for j := i; j < len(ts); j++ {
-			if ts[j].Kind == "directive" || ts[j].Text == "}" {
+			if ts[j].Kind == "directive" || ts[j].Text == "}" || ts[j].Text == "{" {
 				return i, false
 			}
 			if ts[j].Text == ";" {
@@ -145,6 +147,59 @@ func braceStatements(source string) (string, error) {
 			i++
 		} else {
 			i = next
+		}
+	}
+	converted, err := ApplyEdits(source, edits)
+	if err != nil {
+		return "", err
+	}
+	return joinControlBraces(converted)
+}
+
+// joinControlBraces moves existing braces ahead of intervening comments so
+// line comments cannot swallow the opening brace. Literal contents are untouched.
+func joinControlBraces(source string) (string, error) {
+	all, err := Lex(source)
+	if err != nil {
+		return "", err
+	}
+	var ts []Token
+	for _, t := range all {
+		if t.Kind != "space" && t.Kind != "comment" {
+			ts = append(ts, t)
+		}
+	}
+	pairs, err := MatchDelimiters(ts)
+	if err != nil {
+		return "", err
+	}
+	var edits []Edit
+	for i, t := range ts {
+		if t.Text != "if" && t.Text != "for" && t.Text != "while" && t.Text != "switch" && t.Text != "else" {
+			continue
+		}
+		end := i
+		if t.Text != "else" {
+			if i+1 >= len(ts) || ts[i+1].Text != "(" {
+				continue
+			}
+			var ok bool
+			end, ok = pairs[i+1]
+			if !ok {
+				continue
+			}
+		}
+		if end+1 >= len(ts) || ts[end+1].Text != "{" {
+			continue
+		}
+		gap := source[ts[end].End:ts[end+1].Start]
+		if !strings.ContainsAny(gap, "\r\n") || strings.Contains(gap, "SP_OPAQUE_") {
+			continue
+		}
+		if strings.TrimSpace(gap) == "" {
+			edits = append(edits, Edit{ts[end].End, ts[end+1].End, " {"})
+		} else {
+			edits = append(edits, Edit{ts[end].End, ts[end].End, " {"}, Edit{ts[end+1].Start, ts[end+1].End, ""})
 		}
 	}
 	return ApplyEdits(source, edits)
