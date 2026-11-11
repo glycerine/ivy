@@ -66,17 +66,12 @@ func (p *libraryPass) convertNumeric(c libraryCall) (string, string, bool) {
 		if len(a) != 1 {
 			return "", arity(c, 1), false
 		}
-		bits, typ := "32", "int32"
-		if c.name != "atoi" {
-			bits, typ = "64", "int64"
+		sc := p.imports.use("strconv")
+		if c.name == "atoi" {
+			return sc + "Atoi(" + a[0] + ")", "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.", true
 		}
-		text := a[0]
-		if v, ok := p.text(text); ok {
-			text = v
-		}
-		st, sc := p.imports.use("strings"), p.imports.use("strconv")
-		body := "spText = " + st + "TrimLeft(spText, \" \\t\\n\\r\\v\\f\")\nspEnd := 0\nif len(spText) > 0 && (spText[0] == '+' || spText[0] == '-') { spEnd++ }\nspDigits := spEnd\nfor spEnd < len(spText) && spText[spEnd] >= '0' && spText[spEnd] <= '9' { spEnd++ }\nif spEnd == spDigits { return 0 }\nspValue, _ := " + sc + "ParseInt(spText[:spEnd], 10, " + bits + ") // Review overflow; C conversion is undefined outside range.\nreturn " + typ + "(spValue)"
-		return iife("spText string", typ, body, text), "Decimal prefix, sign and ASCII whitespace retained; LP64 widths, overflow and locale require review.", true
+		return sc + "ParseInt(" + a[0] + ", 10, 64)", "Handle Go value/error results and C prefix/whitespace semantics downstream.", true
+
 	case "abs", "labs", "llabs":
 		if len(a) != 1 {
 			return "", arity(c, 1), false

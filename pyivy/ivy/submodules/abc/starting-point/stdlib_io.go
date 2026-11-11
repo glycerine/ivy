@@ -29,7 +29,7 @@ func (p *libraryPass) convertIO(c libraryCall) (string, string, bool) {
 		if text, ok := p.text(filename); ok {
 			filename = text
 		}
-		return iife("spPath string", "*"+os+"File", "spFile, spErr := "+operation+"\nif spErr != nil { return nil } // C NULL failure; decide whether to propagate spErr.\nreturn spFile", filename), "Literal mode mapped; errno and platform text-mode translation require review.", true
+		return strings.ReplaceAll(operation, "spPath", filename), "Literal mode mapped; handle Go file/error results downstream.", true
 	case "fclose":
 		if len(a) != 1 {
 			return "", arity(c, 1), false

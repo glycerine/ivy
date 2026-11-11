@@ -70,8 +70,5 @@ func (p *libraryPass) convertFormatted(c libraryCall) (string, string, bool) {
 		name = "Fprintf"
 	}
 	call := fm + name + "(" + strings.Join(a, ", ") + ")"
-	if c.standalone {
-		return call, note, true
-	}
-	return iife("", "int32", "spN, spErr := "+call+"\nif spErr != nil { return -1 }; return int32(spN)"), note + " Integer count/failure result preserved.", true
+	return call, note + " Go count/error results are left for downstream repair.", true
 }

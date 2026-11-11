@@ -6,21 +6,29 @@ import (
 	"testing"
 )
 
-func TestTimeLibraryRuntime(t *testing.T) {
-	output, _ := runLibraryProgram(t, `package main
-import "fmt"
-func main() {
- var stored int64
- stamp := time(&stored)
- fmt.Println(stamp == stored, stamp > 0, time(nil) >= stamp)
- first := clock()
- second := clock()
- fmt.Println(second >= first, CLOCKS_PER_SEC == 1000000000)
- fmt.Println(difftime(12, 7), difftime(-3, 4))
- fmt.Println(difftime(int64(9223372036854775807), int64(-9223372036854775807-1)) > 1e19)
-}`)
-	if output != "true true true\ntrue true\n5 -7\ntrue\n" {
-		t.Fatal(output)
+func TestTimeLibraryDirectCalls(t *testing.T) {
+	draft, changes, err := RewriteStandardLibrary(`package p
+func f() { use(time(nil), time(&stored), clock(), difftime(12, 7)); }
+`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{"time.Now().Unix()", "time(&stored)", "time.Now().UnixNano()", "difftime(12, 7)"} {
+		if !strings.Contains(draft, want) {
+			t.Fatal(draft)
+		}
+	}
+	if anonymousFunctions(draft) != 0 {
+		t.Fatal(draft)
+	}
+	reviews := 0
+	for _, c := range changes {
+		if c.Status == "review" {
+			reviews++
+		}
+	}
+	if reviews != 2 {
+		t.Fatal(changes)
 	}
 }
 

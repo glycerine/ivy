@@ -61,16 +61,14 @@ deduplicated, and reused through existing aliases. A conflicting source name
 gets a distinct import alias. Blank imports can be upgraded when the package
 becomes needed. Failed/unsupported rules do not leave unused requested imports.
 
-Straightforward operations use Go calls or statements. Where C returns one
-status value and Go returns a value/error pair, the draft uses a small immediately
-invoked function containing explicit Go operations. Its arguments are evaluated
-once. This keeps expressions, conditionals and `goto`-heavy code structurally
-close to their source without injecting colliding locals or silently discarding
-an error result. A later repair pass can pull these bodies into idiomatic
-statements or shared helpers. `fgets` deliberately uses bounded byte reads with
-no hidden read-ahead state; optimize to a persistent reader only when all I/O on
-that stream can be coordinated. Concurrent stream operations also need coordinated
-locking: the explicit line-read loop is not an atomic stdio transaction.
+The prototype-43 policy forbids introducing anonymous functions or immediately
+invoked closures. Direct Go calls are emitted even when their multiple return
+values do not fit the surrounding C expression: downstream users and LLMs repair
+compiler errors and semantic differences. For example, printf becomes fmt.Printf,
+fopen becomes os.Open/OpenFile, and atoi becomes strconv.Atoi. Calls whose current
+conversion requires an adapter are retained with a review record instead. The
+older rule descriptions and catalog targets below describe semantic requirements;
+they do not override this policy. No adapter is inserted to preserve C status codes.
 
 `Result.Library` records every converted or retained recognized call, its rule
 message, and a source-line excerpt plus line/column/byte location in the **pre-library Go draft**. Those
@@ -494,11 +492,9 @@ specific argument shapes/types; `review` leaves the call visible for repair.
 
 ## Timing policy (prototype-42)
 
-`time(NULL)` becomes `time.Now().Unix()`, retaining Unix seconds. A non-null
-output pointer is evaluated once, written once, and the same timestamp is
-returned. `time_t` defaults to int64. `difftime` subtracts those seconds using
-unsigned magnitude arithmetic to avoid signed overflow and time.Duration's
-range limit.
+`time(NULL)` becomes `time.Now().Unix()`, retaining Unix seconds. `time_t`
+defaults to int64. Under prototype-43, non-null output pointers and `difftime`
+remain review sites because their former conversions required closures.
 
 At the user's request, `clock()` now uses `time.Now().UnixNano()` and clock_t
 becomes int64; CLOCKS_PER_SEC becomes int64(time.Second). This is an explicit

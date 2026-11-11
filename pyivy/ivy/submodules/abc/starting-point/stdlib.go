@@ -223,6 +223,10 @@ func (p *libraryPass) rewrite(lo, hi, start, end int) (string, error) {
 		}
 		before := cloneLibraryImports(p.imports)
 		replacement, note, converted := p.convert(c)
+		if converted && anonymousFunctions(replacement) > anonymousFunctions(p.source[t.Start:p.ts[close].End]) {
+			converted = false
+			note = "Retained for downstream repair: conversion would require an anonymous function."
+		}
 		if converted {
 			// Preserve every original comment. If a rewrite would drop or duplicate one,
 			// retain the call and offer the rule as a review item instead.
@@ -423,4 +427,22 @@ func newLibraryEnvironment(source string) (*libraryEnvironment, error) {
 		}
 	}
 	return env, nil
+}
+
+// Reject adapters that introduce function literals, including ones nested inside
+// arguments. Existing source function literals are not introduced by this pass.
+func anonymousFunctions(source string) int {
+	ts, _ := Lex(source)
+	count := 0
+	previous := ""
+	for _, t := range ts {
+		if t.Kind == "comment" || strings.TrimSpace(t.Text) == "" {
+			continue
+		}
+		if previous == "func" && t.Text == "(" {
+			count++
+		}
+		previous = t.Text
+	}
+	return count
 }

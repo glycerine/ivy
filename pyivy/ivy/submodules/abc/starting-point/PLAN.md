@@ -1533,3 +1533,27 @@ import collisions, conditional preservation, and real starter.c coverage.
 Installed prototype-42 and generated `experiments/satoko/_draft-v42-starter/`:
 `var clk int64 = time.Now().UnixNano()` and the final clock()-clk expression now
 use the same nanosecond policy. Updated the 302-name catalog and its references.
+
+
+## Prototype 43: no generated closures
+
+User direction: never insert a new func() closure to adapt C library semantics;
+leave compiler errors and structural repair to downstream users and LLMs.
+The library pass now rejects any conversion that introduces a function literal,
+including adapters nested in arguments, and rolls back its unused imports.
+Printf/fprintf always emit direct fmt calls, including expression contexts and
+ABC_PRT's comma expression. Fopen emits direct os.Open/OpenFile; atoi/atol/atoll
+emit direct strconv calls. Multiple Go results, error handling, and C numeric
+prefix differences remain downstream work. Other adapter-dependent calls remain
+in the draft with explicit review records. Existing opaque source is preserved.
+
+Replaced obsolete adapter-runtime tests with no-closure regression fixtures for
+numeric, memory, file, nested-call and timing cases. Kept runtime checks for direct
+formatting and math conversions. Historical prototype-41/42 runtime-equivalence
+claims above do not apply to this deliberately simpler draft policy. Retained
+review counts can rise as adapters are withdrawn.
+
+Validation: `go test ./...` passes. Regenerated starter.c in
+`/tmp/starting-point-v43-starter`: ABC_PRT contains direct fmt.Printf calls,
+without anonymous functions. Installed the updated starting-point executable.
+Existing user output directories were not overwritten.

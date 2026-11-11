@@ -33,63 +33,6 @@ func runLibraryProgram(t *testing.T, source string) (string, []LibraryChange) {
 	return string(output), changes
 }
 
-func TestStdlibNumericRuntime(t *testing.T) {
-	output, _ := runLibraryProgram(t, `package main
-import "fmt"
-func main() {
- for _, text := range []string{"  +12junk", "-17tail", "abc", "+", "2147483647", "\t42\n"} { fmt.Println(atoi(text)); }
- fmt.Println(atoll("-9223372036854775807rest"));
- fmt.Println(abs(-4), isdigit('8'), isalpha('!'), isspace('\n'), tolower('A'), toupper(-1));
- fmt.Println(sqrt(9), pow(2,3), fmin(0.0/1.0, 4));
-}`)
-	want := "12\n-17\n0\n0\n2147483647\n42\n-9223372036854775807\n4 1 0 1 97 -1\n3 8 0\n"
-	if output != want {
-		t.Fatalf("got %q want %q", output, want)
-	}
-}
-
-func TestStdlibFileRuntime(t *testing.T) {
-	output, _ := runLibraryProgram(t, `package main
-import ("fmt"; "os")
-func main() {
- dir, err := os.MkdirTemp("", "stdlib-fixture"); if err != nil { panic(err) }; defer os.RemoveAll(dir)
- path := dir + "/data"
- var file *os.File
- file = fopen(path, "wb"); if file == nil { panic("open") }
- fputs("abc\ndefgh\nz", file);
- fmt.Println(fclose(file));
- file = fopen(path, "rb");
- var buffer [5]byte
- for fgets(buffer, 5, file) != nil {
-  fmt.Printf("%q:%d\n", string(buffer[:strlen(buffer)]), strlen(buffer));
- }
- fmt.Println(fclose(file));
- file = fopen(path, "ab"); fputc('!',file); fclose(file);
- file = fopen(path, "rb"); fmt.Println(fseek(file, -1, SEEK_END), ftell(file), fgetc(file), fgetc(file)); fclose(file);
- fmt.Println(fopen(dir + "/missing", "r") == nil);
- fmt.Println(rename(path, path+"2"), remove(path+"2"));
-}`)
-	want := "0\n\"abc\\n\":4\n\"defg\":4\n\"h\\n\":2\n\"z\":1\n0\n0 11 33 -1\ntrue\n0 0\n"
-	if output != want {
-		t.Fatalf("got %q want %q", output, want)
-	}
-}
-
-func TestStdlibMemoryRuntime(t *testing.T) {
-	output, _ := runLibraryProgram(t, `package main
-import "fmt"
-func main() {
- var a [8]byte; var b [8]byte
- memset(a, 'x', 4); memcpy(b, a, 4);
- fmt.Println(memcmp(a,b,4), strlen(a));
- var text string = "hi"
- strcat(text, "!"); fmt.Println(text, strcmp(text,"hi!"), strncmp("abcd","abxy",2));
-}`)
-	if output != "0 4\nhi! 0 0\n" {
-		t.Fatal(output)
-	}
-}
-
 func TestStdlibProtectionAndReview(t *testing.T) {
 	source := `package p
 func f() {
@@ -127,19 +70,6 @@ func f() {
 	}
 }
 
-func TestStdlibAliasesAndNestedCalls(t *testing.T) {
-	output, _ := runLibraryProgram(t, `package main
-import (f "fmt"; st "strconv")
-func main() {
- _ = st.IntSize
- strings := "local"
- f.Println(strings, abs(atoi("-12foo")))
-}`)
-	if output != "local 12\n" {
-		t.Fatal(output)
-	}
-}
-
 func TestStdlibShadowedNames(t *testing.T) {
 	source := `package p
 func atoi(x string) int { return 7 }
@@ -154,26 +84,14 @@ func f(stdout *os.File) { atoi("9"); fprintf(stdout, "%d", 1); }
 	}
 }
 
-func TestStdlibArgumentEvaluationAndNesting(t *testing.T) {
-	output, _ := runLibraryProgram(t, `package main
-import "fmt"
-var calls int
-func next() string { calls++; return " -4x" }
-func main() { fmt.Println(abs(atoi(next())), calls); }
-`)
-	if output != "4 1\n" {
-		t.Fatal(output)
-	}
-}
-
 func TestStdlibFormatAndFailures(t *testing.T) {
 	output, _ := runLibraryProgram(t, `package main
 import "fmt"
 func main() {
  printf("%ld %u %zu\n", int64(2), uint32(3), uint64(4));
- fmt.Println(printf("x"));
+ printf("x");
 }`)
-	if output != "2 3 4\nx1\n" {
+	if output != "2 3 4\nx" {
 		t.Fatal(output)
 	}
 	draft, changes, err := RewriteStandardLibrary("package p\nfunc f() { printf(\"%n\", &n); }\n")
@@ -182,69 +100,12 @@ func main() {
 	}
 }
 
-func TestStdlibDifferentialCConsumer(t *testing.T) {
-	cc, err := exec.LookPath("cc")
-	if err != nil {
-		t.Skip("C compiler unavailable for reference run")
-	}
-	source := `#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-int main(int argc, char *argv[]) {
-    FILE *file = fopen(argv[1], "rb");
-    char buffer[5];
-    if (file == NULL) return 2;
-    printf("%d %d\n", atoi(" +12tail"), atoi("-8!"));
-    while (fgets(buffer, 5, file) != NULL) {
-        printf("%zu:%s|", strlen(buffer), buffer);
-    }
-    fclose(file);
-    return 0;
-}`
-	dir := t.TempDir()
-	cfile := filepath.Join(dir, "reference.c")
-	exe := filepath.Join(dir, "reference")
-	input := filepath.Join(dir, "input")
-	if err = os.WriteFile(cfile, []byte(source), 0644); err != nil {
-		t.Fatal(err)
-	}
-	if output, err := exec.Command(cc, cfile, "-o", exe).CombinedOutput(); err != nil {
-		t.Fatalf("%v %s", err, output)
-	}
-	r, err := AnalyzeWithOptions("consumer.c", source, Options{Package: "main"})
-	if err != nil {
-		t.Fatal(err)
-	}
-	gofile := filepath.Join(dir, "main.go")
-	if err = os.WriteFile(gofile, []byte(r.Draft), 0644); err != nil {
-		t.Fatal(err)
-	}
-	for _, data := range []string{"", "abc\ndefgh\nz", "123456789", "\n\n", "a\x00b\n"} {
-		if err = os.WriteFile(input, []byte(data), 0644); err != nil {
-			t.Fatal(err)
-		}
-		want, err := exec.Command(exe, input).CombinedOutput()
-		if err != nil {
-			t.Fatal(err, string(want))
-		}
-		cmd := exec.Command("go", "run", gofile, input)
-		cmd.Env = append(os.Environ(), "GOWORK=off")
-		got, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("%v\n%s\n%s", err, got, r.Draft)
-		}
-		if string(got) != string(want) {
-			t.Fatalf("input %q: Go %q != C %q", data, got, want)
-		}
-	}
-}
-
 func TestStdlibConditionCallsAreNotDefinitions(t *testing.T) {
 	draft, changes, err := RewriteStandardLibrary("package p\nfunc f() { if system(command) { }\nif isdigit(c) { } }")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(changes) != 2 || changes[0].Name != "system" || changes[0].Status != "review" || !strings.Contains(draft, "spC >= '0'") {
+	if len(changes) != 2 || changes[0].Name != "system" || changes[0].Status != "review" || !strings.Contains(draft, "isdigit(c)") {
 		t.Fatal(draft, changes)
 	}
 }
@@ -302,7 +163,7 @@ func TestLibraryMetadataUsesFileContext(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(r.Draft, "IndexByte") || !strings.Contains(r.Functions[0].Draft, "IndexByte") {
+	if !strings.Contains(r.Draft, "strlen(buffer)") || !strings.Contains(r.Functions[0].Draft, "strlen(buffer)") {
 		t.Fatal(r.Draft, r.Functions)
 	}
 	if len(r.Library) != 1 || r.Library[0].SourceLine == "" {
@@ -324,15 +185,87 @@ func TestStandardStatusConstants(t *testing.T) {
 	}
 }
 
-func TestStdlibNegativeByteConversion(t *testing.T) {
-	output, _ := runLibraryProgram(t, `package main
+// Former runtime-adapter fixtures now leave semantic repairs to the next pass.
+func TestStdlibNeverIntroducesClosures(t *testing.T) {
+	fixtures := []string{
+		`package main
+import "fmt"
+func main() {
+ for _, text := range []string{"  +12junk", "-17tail", "abc", "+", "2147483647", "\t42\n"} { fmt.Println(atoi(text)); }
+ fmt.Println(atoll("-9223372036854775807rest"));
+ fmt.Println(abs(-4), isdigit('8'), isalpha('!'), isspace('\n'), tolower('A'), toupper(-1));
+ fmt.Println(sqrt(9), pow(2,3), fmin(0.0/1.0, 4));
+}`,
+		`package main
+import ("fmt"; "os")
+func main() {
+ dir, err := os.MkdirTemp("", "stdlib-fixture"); if err != nil { panic(err) }; defer os.RemoveAll(dir)
+ path := dir + "/data"
+ var file *os.File
+ file = fopen(path, "wb"); if file == nil { panic("open") }
+ fputs("abc\ndefgh\nz", file);
+ fmt.Println(fclose(file));
+ file = fopen(path, "rb");
+ var buffer [5]byte
+ for fgets(buffer, 5, file) != nil {
+  fmt.Printf("%q:%d\n", string(buffer[:strlen(buffer)]), strlen(buffer));
+ }
+ fmt.Println(fclose(file));
+ file = fopen(path, "ab"); fputc('!',file); fclose(file);
+ file = fopen(path, "rb"); fmt.Println(fseek(file, -1, SEEK_END), ftell(file), fgetc(file), fgetc(file)); fclose(file);
+ fmt.Println(fopen(dir + "/missing", "r") == nil);
+ fmt.Println(rename(path, path+"2"), remove(path+"2"));
+}`,
+		`package main
+import "fmt"
+func main() {
+ var a [8]byte; var b [8]byte
+ memset(a, 'x', 4); memcpy(b, a, 4);
+ fmt.Println(memcmp(a,b,4), strlen(a));
+ var text string = "hi"
+ strcat(text, "!"); fmt.Println(text, strcmp(text,"hi!"), strncmp("abcd","abxy",2));
+}`,
+		`package main
+import (f "fmt"; st "strconv")
+func main() {
+ _ = st.IntSize
+ strings := "local"
+ f.Println(strings, abs(atoi("-12foo")))
+}`,
+		`package main
+import "fmt"
+var calls int
+func next() string { calls++; return " -4x" }
+func main() { fmt.Println(abs(atoi(next())), calls); }
+`,
+		`package main
 import ("fmt"; "os")
 func main() {
  file, err := os.CreateTemp("", "byte-conversion"); if err != nil { panic(err) }; defer os.Remove(file.Name()); defer file.Close()
  fmt.Println(fputc(-1,file)); rewind(file); fmt.Println(fgetc(file));
  var buffer [2]byte; memset(buffer,-1,2); fmt.Println(buffer[0],buffer[1]);
-}`)
-	if output != "255\n255\n255 255\n" {
-		t.Fatal(output)
+}`,
+	}
+	for _, source := range fixtures {
+		draft, _, err := RewriteStandardLibrary(source)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if anonymousFunctions(draft) != 0 {
+			t.Fatalf("introduced closure: %s", draft)
+		}
+	}
+}
+func TestPrintfExpressionRemainsDirect(t *testing.T) {
+	source := `package p
+func ABC_PRT(a int, t int) { (printf("%s = ", a), printf("%d", t)) }
+func count() { n := printf("x"); use(n) }
+`
+	draft, _, err := RewriteStandardLibrary(source)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if anonymousFunctions(draft) != 0 || strings.Count(draft, "fmt.Printf(") != 3 || !strings.Contains(draft, `n := fmt.Printf("x")`) {
+		t.Fatal(draft)
 	}
 }
