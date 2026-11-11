@@ -1301,3 +1301,13 @@ retain their existing original line/column/offset reporting.
 All Go tests pass and the updated command is installed. Full src-tree validation
 completed in `/tmp/starting-point-src-v34`: all 1,625 files translated with zero
 source-preserving fallbacks. Existing user output is untouched.
+
+## Paired struct brace placement — prototype-35
+
+Adjacent typedef/struct pairs now join the opening brace onto the Go type
+header, as standalone structs already did. Both paths share the same helper;
+intervening multiline/header comments are preserved, with the brace moved ahead
+of them when necessary. Regression tests parse/type-check simple examples and
+check both Xyz structs from src/template.c. All tests pass. Installed the command
+and generated `experiments/satoko/_draft-v35-template/template.go`, containing
+`type Xyz_ParTry_t struct {` and `type Xyz_ManTry_t struct {`.

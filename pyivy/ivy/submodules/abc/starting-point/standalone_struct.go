@@ -62,10 +62,7 @@ func standaloneStructEdits(source string, ts []Token, ends map[int]int, path str
 		}
 		tag := mask[loc[2]:loc[3]]
 		edits = append(edits, Edit{start, start + len("struct"), "type"}, Edit{loc[2], loc[3], tag + " struct"}, Edit{tail, tail + 1, ""})
-		gap := source[loc[3]:open]
-		if strings.TrimSpace(gap) == "" {
-			edits = append(edits, Edit{loc[3], open, " "})
-		}
+		edits = append(edits, structBraceEdits(source, loc[3], open)...)
 		fe, fi := structFieldEdits(source, ts, open, end, tag, tag, path)
 		edits = append(edits, fe...)
 		issues = append(issues, fi...)

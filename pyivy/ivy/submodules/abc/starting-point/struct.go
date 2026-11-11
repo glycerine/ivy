@@ -74,6 +74,7 @@ func structEdits(source string, ts []Token, ends map[int]int, path string) ([]Ed
 			continue
 		}
 		edits = append(edits, Edit{header[0].Start, header[0].End, "type"}, Edit{header[1].Start, header[1].End, alias + " struct"}, Edit{tail, tail + 1, ""})
+		edits = append(edits, structBraceEdits(source, header[1].End, open)...)
 		fe, fi := structFieldEdits(source, ts, open, end, tag, alias, path)
 		edits = append(edits, fe...)
 		issues = append(issues, fi...)
@@ -163,4 +164,16 @@ func structFieldEdits(source string, ts []Token, open, end int, tag, alias, path
 		start = t.End
 	}
 	return edits, issues
+}
+
+// Keep the opening brace on the type header line without discarding comments.
+func structBraceEdits(source string, headerEnd, open int) []Edit {
+	gap := source[headerEnd:open]
+	if strings.TrimSpace(gap) == "" {
+		return []Edit{{headerEnd, open, " "}}
+	}
+	if strings.ContainsAny(gap, "\r\n") {
+		return []Edit{{headerEnd, headerEnd, " {"}, {open, open + 1, ""}}
+	}
+	return nil
 }

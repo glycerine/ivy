@@ -115,3 +115,22 @@ func TestAigMemoryStructs(t *testing.T) {
 		t.Fatal(alias.Draft)
 	}
 }
+
+func TestPairedStructBracePlacement(t *testing.T) {
+	checkedDraft(t, "typedef struct pair_ pair;\nstruct pair_\n{\n int value;\n};", Options{Package: "p"})
+	checkedDraft(t, "typedef struct pair_ pair;\nstruct pair_ // keep header comment\n{\n int value;\n};", Options{Package: "p"})
+	checkedDraft(t, "struct lone_ // keep standalone comment\n{\n int value;\n};", Options{Package: "p"})
+	source, err := os.ReadFile("../src/template.c")
+	if err != nil {
+		t.Fatal(err)
+	}
+	r, err := Analyze("template.c", string(source))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"Xyz_ParTry_t", "Xyz_ManTry_t"} {
+		if !strings.Contains(r.Draft, "type "+name+" struct {") {
+			t.Fatalf("brace not joined for %s", name)
+		}
+	}
+}
