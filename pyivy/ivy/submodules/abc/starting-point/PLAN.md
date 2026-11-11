@@ -1386,3 +1386,23 @@ parameters, package arrays, mixed initializers, and real starter.c coverage.
 Installed prototype-38 and generated `experiments/satoko/_draft-v38-starter/`.
 Full src-tree validation completed in `/tmp/starting-point-src-v38`: all 1,625
 files translated with zero source-preserving fallbacks.
+
+## Go main signature and command-line arguments — prototype-39
+
+Conventional zero- and two-parameter C main definitions now emit `func main()`
+with no result. Within that body, the actual argument-count parameter name maps
+to `len(os.Args)` and the argument-vector name maps to `os.Args`, including
+nonstandard spellings. Other functions and comments retain their names/text.
+An os import is added when needed; ordinary/grouped existing imports are reused.
+
+Main's `return 0;` becomes a bare return; nonzero or computed return expressions
+become `os.Exit(int(expression))` to preserve the process exit status. Generated
+nested macro functions are skipped because they have independent return scopes.
+Package naming still follows the existing directory/override policy; users can
+select `-package main` for a standalone executable draft.
+
+All tests pass, including renamed arguments, helper-function isolation, import
+deduplication, zero/nonzero returns, and parsing the resulting Go fixture.
+Installed prototype-39 and generated `experiments/satoko/_draft-v39-starter/`.
+The real starter draft has `func main()`, os.Args references, and exit status 1
+on its usage path. Remaining C constructs in its body still require repair.

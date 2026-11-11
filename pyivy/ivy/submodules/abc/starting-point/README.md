@@ -168,3 +168,8 @@ becomes `argv []string`), and fixed local/package arrays retain their bounds
 (`pthread_t ids[N]` becomes `var ids [N]pthread_t`). Plain char buffers use byte
 arrays. Mixed declarations with initializers are split into separate var lines
 in source order, including FILE pointers.
+
+Conventional C main functions become `func main()`. Their argv/argc parameters
+map to os.Args/len(os.Args), with an os import when needed. Zero returns become
+bare returns; other exit statuses use os.Exit. Package selection still follows
+the directory name or `-package` override.
