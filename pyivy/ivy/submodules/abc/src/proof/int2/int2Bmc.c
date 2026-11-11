@@ -281,9 +281,9 @@ void Int2_ManCreateFrames( Int2_Man_t * p, int iFrame, Vec_Int_t * vPrefCos )
         }
         else if ( Gia_ObjIsAnd(pObj) )
         {
-            int iObjF0 = Gia_ObjFaninId0(p->pGia, iObj) );
+            int iObjF0 = Gia_ObjFaninId0(p->pGia, iObj);
             int iLit0 = Int2_ManCheckFrames( p, iFrame, iObjF0 );
-            int iObjF1 = Gia_ObjFaninId1(p->pGia, iObj) );
+            int iObjF1 = Gia_ObjFaninId1(p->pGia, iObj);
             int iLit1 = Int2_ManCheckFrames( p, iFrame, iObjF1 );
             if ( iLit0 >= 0 && iLit1 >= 0 )
             {
