@@ -108,47 +108,6 @@ func Gia_ManAutomSimulate(p *Gia_Man_t, vAlpha *Vec_Int_t, pSim string) {
   SeeAlso     []
 
 ***********************************************************************/
-// prints automaton
-func Gia_ManPrintAutom(pStr string, vStaTrans *Vec_Int_t) {
-    var i int32;
-    var nLength int32 = len(pStr);
-    for  i = 0; i < nLength; i++  {
-        fmt.Printf("%d \'%c\' ", i, pStr[i]);
-        if Vec_IntEntry(vStaTrans, i) >= 0 {
-            fmt.Printf("-> %d \'%c\' ", Vec_IntEntry(vStaTrans, i), pStr[Vec_IntEntry(vStaTrans, i)]); }
-        fmt.Printf("\n");
-    }
-}
-// prints states reachable through e-transitions
-func Gia_ManPrintReached(pStr string, iState int32, vReached *Vec_Int_t) {
-    var i, Entry int32;
-    fmt.Printf("Reached from state %d \'%c\':  ", iState, pStr[iState]);
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vReached)) && (((Entry) = Vec_IntEntry(vReached, i)), 1); i++  {
-        fmt.Printf("%d \'%c\'  ", Entry, pStr[Entry]);
-    }
-    fmt.Printf("\n");
-}
-// collect states reachable from the given one by e-transitions
-func Gia_ManPrintReached_rec(pStr string, vStaTrans *Vec_Int_t, iState int32, vReached *Vec_Int_t, vVisited *Vec_Int_t, TravId int32) {
-    if Vec_IntEntry(vVisited, iState) == TravId {
-        return; }
-    Vec_IntWriteEntry( vVisited, iState, TravId );
-    if !(Gia_SymbSpecial(pStr[iState]) != 0) { // read state
-        Vec_IntPush( vReached, iState ); }
-    if pStr[iState] == '\0' {
-        return; }
-    if (Gia_SymbSpecial(pStr[iState]) != 0) && pStr[iState] != '|' { // regular e-transition
-       Gia_ManPrintReached_rec( pStr, vStaTrans, iState + 1, vReached, vVisited, TravId ); }
-    if Vec_IntEntry(vStaTrans, iState) >= 0 { // additional e-transition
-       Gia_ManPrintReached_rec( pStr, vStaTrans, Vec_IntEntry(vStaTrans, iState), vReached, vVisited, TravId ); }
-}
-func Gia_ManCollectReached(pStr string, vStaTrans *Vec_Int_t, iState int32, vReached *Vec_Int_t, vVisited *Vec_Int_t, TravId int32) {
-    assert(iState == 0 || !(Gia_SymbSpecial(pStr[iState]) != 0), "iState == 0 || !Gia_SymbSpecial(pStr[iState])");
-    assert(Vec_IntEntry(vVisited, iState) != TravId, "Vec_IntEntry(vVisited, iState) != TravId");
-    Vec_IntClear( vReached );
-    Gia_ManPrintReached_rec( pStr, vStaTrans, iState + 1, vReached, vVisited, TravId );
-}
 // preprocesses the regular expression
 // construct sequential AIG for the automaton
 func Gia_ManRex2Gia(pStrInit string, fOrder int32, fVerbose int32) *Gia_Man_t {
