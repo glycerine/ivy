@@ -42,7 +42,7 @@ func TestProofDependencyChainsGrowCompact(t *testing.T) {
 func TestProofProblemIDMapping(t *testing.T) {
 	p := Prf_ManAlloc()
 	mapping := []int32{2, -1, 0, 2}
-	Prf_ManRestart(p, mapping, 5, 3)
+	Prf_ManRestart(p, &mapping, 5, 3)
 	Prf_ManChainStart(p, proofClause(0, 0))
 	Prf_ManChainResolve(p, proofClause(1, 0))
 	Prf_ManChainResolve(p, proofClause(2, 0))
@@ -56,5 +56,18 @@ func TestProofBitWordBoundaries(t *testing.T) {
 		if got := Prf_BitWordNum(test.bits); got != test.words {
 			t.Fatal(test, got)
 		}
+	}
+}
+func TestProofMappingTracksExternalGrowth(t *testing.T) {
+	p := Prf_ManAlloc()
+	mapping := make([]int32, 1, 1)
+	Prf_ManRestart(p, &mapping, 0, 130)
+	Prf_ManChainStart(p, proofClause(0, 0))
+	Prf_ManChainStop(p)
+	mapping = append(mapping, 64)
+	Prf_ManChainStart(p, proofClause(1, 0))
+	Prf_ManChainStop(p)
+	if got := Prf_ManUnsatCore(p); !reflect.DeepEqual(got, []int32{1}) {
+		t.Fatal("mapping reallocation lost", got)
 	}
 }

@@ -36,7 +36,7 @@ type Prf_Man_t struct {
 	pInfo                   []word
 	vInfo                   []word
 	vSaved                  []int32
-	vId2Pr                  []int32
+	vId2Pr                  *[]int32
 }
 
 func Prf_BitWordNum(width int32) int32 {
@@ -83,7 +83,7 @@ func Prf_ManStopP(p **Prf_Man_t) { Prf_ManStop(*p); *p = nil }
 func Prf_ManMemory(p *Prf_Man_t) float64 {
 	return float64(reflect.TypeOf(*p).Size()) + float64(cap(p.vInfo))*8 + float64(cap(p.vSaved))*4
 }
-func Prf_ManRestart(p *Prf_Man_t, idToProof []int32, first, width int32) {
+func Prf_ManRestart(p *Prf_Man_t, idToProof *[]int32, first, width int32) {
 	if p.iFirst != -1 || first < 0 || width <= 0 {
 		panic("invalid proof restart")
 	}
@@ -166,7 +166,7 @@ func Prf_ManChainResolve(p *Prf_Man_t, c *clause) {
 	}
 	entry := id
 	if p.vId2Pr != nil {
-		entry = p.vId2Pr[id]
+		entry = (*p.vId2Pr)[id]
 	}
 	if entry < 0 {
 		return
@@ -204,7 +204,7 @@ func Prf_ManUnsatCore(p *Prf_Man_t) []int32 {
 			}
 		}
 	} else {
-		for id, entry := range p.vId2Pr {
+		for id, entry := range *p.vId2Pr {
 			if entry < 0 {
 				continue
 			}
