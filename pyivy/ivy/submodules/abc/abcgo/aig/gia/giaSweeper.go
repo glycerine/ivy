@@ -210,41 +210,6 @@ func Gia_SweeperFraig(p *Gia_Man_t, vProbeIds *Vec_Int_t, pCommLime string, nWor
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_SweeperRun(p *Gia_Man_t, vProbeIds *Vec_Int_t, pCommLime string, fVerbose int32) int32 {
-    var pNew *Gia_Man_t;
-    var vLits *Vec_Int_t;
-    var ProbeId, i int32;
-    // sweeper is running
-    assert((Gia_SweeperIsRunning(p) != 0), "Gia_SweeperIsRunning(p)");
-    // sweep the logic
-    pNew = Gia_SweeperExtractUserLogic( p, vProbeIds, nil, nil );
-    // execute command line
-    if pCommLime {
-        if fVerbose != 0 {
-            fmt.Printf("GIA manager statistics before and after applying \"%s\":\n", pCommLime); }
-        if fVerbose != 0 {
-            Gia_ManPrintStats( pNew, nil ); }
-        // set pNew to be current GIA in ABC
-        Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), pNew );
-        // execute command line pCommLine using Abc_CmdCommandExecute()
-        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), pCommLime );
-        // get pNew to be current GIA in ABC     
-        pNew = Abc_FrameGetGia( Abc_FrameGetGlobalFrame() );
-        if fVerbose != 0 {
-            Gia_ManPrintStats( pNew, nil ); }
-    }
-    // return logic back into the main manager
-    vLits = Gia_SweeperGraft( p, nil, pNew );
-    Gia_ManStop( pNew );
-    // update the array of probes
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vProbeIds)) && (((ProbeId) = Vec_IntEntry(vProbeIds, i)), 1); i++  {
-        Gia_SweeperProbeUpdate( p, ProbeId, Vec_IntEntry(vLits, i) );
-    }
-    Vec_IntFree( vLits );        
-    return 1;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Sweeper sweeper test.]
