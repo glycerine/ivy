@@ -61,14 +61,6 @@ func Gia_SimDataCoExt(p *Gia_ManSim_t, i int32) *uint32 { return Gia_SimDataCo(p
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimCollect_rec(pGia *Gia_Man_t, pObj *Gia_Obj_t, vVec *Vec_Int_t) {
-    Vec_IntPush( vVec, Gia_ObjToLit(pGia, pObj) );
-    if Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) {
-        return; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ManSimCollect_rec( pGia, Gia_ObjChild0(pObj), vVec );
-    Gia_ManSimCollect_rec( pGia, Gia_ObjChild1(pObj), vVec );
-}
 
 /**Function*************************************************************
 
@@ -81,11 +73,6 @@ func Gia_ManSimCollect_rec(pGia *Gia_Man_t, pObj *Gia_Obj_t, vVec *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimCollect(pGia *Gia_Man_t, pObj *Gia_Obj_t, vVec *Vec_Int_t) {
-    Vec_IntClear( vVec );
-    Gia_ManSimCollect_rec( pGia, pObj, vVec );
-    Vec_IntUniqify( vVec );
-}
 
 /**Function*************************************************************
 
@@ -98,65 +85,6 @@ func Gia_ManSimCollect(pGia *Gia_Man_t, pObj *Gia_Obj_t, vVec *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimDeriveResets(pGia *Gia_Man_t) *Vec_Int_t {
-    var nImpLimit int32  = 5;
-    var vResult *Vec_Int_t;
-    var vCountLits, vSuperGate *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i, k, Lit, Count int32;
-    var Counter0, Counter1 int32;
-    var CounterPi0, CounterPi1 int32;
-    var clk abctime  = Abc_Clock();
-
-    // create reset counters for each literal
-    vCountLits = Vec_IntStart( 2 * Gia_ManObjNum(pGia) );
-
-    // collect implications for each flop input driver
-    vSuperGate = Vec_IntAlloc( 1000 );
-    // inlining of macro Gia_ManForEachRi
-    for  i = 0; (i < Gia_ManRegNum(pGia)) && ((pObj) = Gia_ManCo(pGia, Gia_ManPoNum(pGia)+i)); i++  {
-        if Gia_ObjFaninId0p(pGia, pObj) == 0 {
-            continue; }
-        Vec_IntAddToEntry( vCountLits, Gia_ObjToLit(pGia, Gia_ObjChild0(pObj)), 1 );
-        Gia_ManSimCollect( pGia, Gia_ObjFanin0(pObj), vSuperGate );
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vSuperGate)) && (((Lit) = Vec_IntEntry(vSuperGate, k)), 1); k++  {
-            Vec_IntAddToEntry( vCountLits, Lit, 1 );
-        }
-    }
-    Vec_IntFree( vSuperGate );
-
-    // label signals whose counter if more than the limit
-    vResult = Vec_IntStartFull( Gia_ManObjNum(pGia) );
-    // inlining of macro Vec_IntForEachEntry
-    for  Lit = 0; (Lit < Vec_IntSize(vCountLits)) && (((Count) = Vec_IntEntry(vCountLits, Lit)), 1); Lit++  {
-        if Count < nImpLimit {
-            continue; }
-        pObj = Gia_ManObj( pGia, Abc_Lit2Var(Lit) );
-        if Abc_LitIsCompl(Lit) { // const 0
-        
-//            Ssm_ObjSetLogic0( pObj );
-            Vec_IntWriteEntry( vResult, Abc_Lit2Var(Lit), 0 );
-            CounterPi0 += Gia_ObjIsPi(pGia, pObj);
-            Counter0++;
-        
-        } else {
-//            Ssm_ObjSetLogic1( pObj );
-            Vec_IntWriteEntry( vResult, Abc_Lit2Var(Lit), 1 );
-            CounterPi1 += Gia_ObjIsPi(pGia, pObj);
-            Counter1++;
-        }
-//        if ( Gia_ObjIsPi(pGia, pObj) )
-//            printf( "%d ", Count );
-    }
-//    printf( "\n" );
-    Vec_IntFree( vCountLits );
-
-    fmt.Printf("Logic0 = %d (%d). Logic1 = %d (%d). ", Counter0, CounterPi0, Counter1, CounterPi1);
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    return vResult;
-}
-
 
 /**Function*************************************************************
 
@@ -169,17 +97,6 @@ func Gia_ManSimDeriveResets(pGia *Gia_Man_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimSetDefaultParams(p *Gia_ParSim_t) {
-    memset( p, 0, sizeof(Gia_ParSim_t) );
-    // user-controlled parameters
-    p.nWords       =   8;    // the number of machine words
-    p.nIters       =  32;    // the number of timeframes
-    p.RandSeed     =   0;    // the seed to generate random numbers
-    p.TimeLimit    =  60;    // time limit in seconds
-    p.fCheckMiter  =   0;    // check if miter outputs are non-zero 
-    p.fVerbose     =   0;    // enables verbose output
-    p.iOutFail     =  -1;    // index of the failed output
-}
 
 /**Function*************************************************************
 
