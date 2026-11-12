@@ -143,3 +143,44 @@ func (p *ofMapper) backwardExact() {
 	}
 	p.iteration++
 }
+
+// backwardRequired propagates requirements through the current selected cuts
+// without changing their reference counts.
+func (p *ofMapper) backwardRequired() {
+	for i := range p.objects {
+		p.objects[i].required = math.MaxInt32
+	}
+	delay := int32(0)
+	for _, id := range vec.Vec_IntArray(p.cuts.graph.vCos) {
+		co := Gia_ManObj(p.cuts.graph, id)
+		delay = max(delay, p.objects[Gia_ObjFaninId0(co, id)].delay)
+	}
+	for _, id := range vec.Vec_IntArray(p.cuts.graph.vCos) {
+		co := Gia_ManObj(p.cuts.graph, id)
+		p.updateRequired(Gia_ObjFaninId0(co, id), delay)
+	}
+	p.cuts.pars.Delay = word(delay)
+	p.cuts.pars.Area = 0
+	p.cuts.pars.Edge = 0
+	for i := len(p.cuts.graph.pObjs) - 1; i >= 0; i-- {
+		obj := p.cuts.graph.pObjs[i]
+		if Gia_ObjIsAnd(obj) == 0 {
+			continue
+		}
+		id := obj.id
+		o := &p.objects[id]
+		if o.refs == 0 {
+			continue
+		}
+		if Gia_ObjIsBuf(obj) != 0 {
+			p.updateRequired(Gia_ObjFaninId0(obj, id), o.required)
+			continue
+		}
+		cut := p.cuts.storage.at(o.best)
+		for pin := range ofStoredLeaves(cut) {
+			p.updateRequired(ofStoredVar(cut, pin), o.required-p.cuts.pars.nDelayLut1)
+		}
+		p.cuts.pars.Area++
+		p.cuts.pars.Edge += word(ofStoredSize(cut))
+	}
+}
