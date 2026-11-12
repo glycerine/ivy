@@ -18,7 +18,7 @@ func TestBoundedQueueRollingAverage(t *testing.T) {
 		t.Fatal("not full")
 	}
 	p.Clear()
-	if p.Full() || p.sum != 0 || p.size != 0 {
+	if p.Full() || p.sum != 0 || len(p.data) != 0 {
 		t.Fatal(p)
 	}
 	p.Push(^uint32(0))
