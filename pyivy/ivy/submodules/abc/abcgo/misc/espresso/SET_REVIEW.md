@@ -67,3 +67,32 @@ Focused validation while other Espresso families are being ported:
 This passes, including the original-C oracle. This focused result is not a claim
 that the whole Espresso package is complete. make_sparse/mv_reduce integration
 also requires the real cube/cost/timing, mark_irredundant and expand families.
+
+## Cube geometry integration
+
+`setc.go` now ports full_row, cdist0/cdist01/cdist, force_lower, consensus,
+cactive, ccommon and the original sorting comparators. Binary-variable checks
+retain the two-bit parallel tests; multiple-valued variables retain the source's
+precomputed masks. Common distance/intersection helpers remove repetition without
+changing the geometry or substituting another minimization algorithm. The Go
+comparators accept row values rather than C qsort pointer-to-row wrappers.
+
+A separate geometry bug review checked shared-word binary/MV boundaries, empty
+variable intersections, preservation of existing lower-set bits, resetting result
+metadata, aliased consensus destinations, active empty variables, cofactor masks,
+unsigned highest-word comparison and nil-last sorting. Explicit parentheses
+preserve C's `x & (x >> 1)` meaning: Go gives shifts and AND the same precedence.
+
+800 randomized cases compare geometry with independent enumeration of each
+variable's parts, including binary fields crossing the 32-bit boundary and an
+MV field spanning words. Fifty deterministic cases additionally compile and run
+actual original set.c, setc.c and cubestr.c; all scalar results and output set
+words match. Oracle translation units are separate because the repository's
+legacy espresso.h does not protect its type declarations from repeated inclusion.
+
+Combined validation with the actual Go shared declarations:
+
+    go test -race ./misc/espresso/set.go ./misc/espresso/set_types.go ./misc/espresso/setc.go ./misc/espresso/espresso.h.go ./misc/espresso/cubestr.go ./misc/espresso/globals.go ./misc/espresso/set_test.go ./misc/espresso/setc_test.go
+
+This passes. The whole Espresso package still includes other active ports, and
+make_sparse/mv_reduce remain pending their real algorithm dependencies.

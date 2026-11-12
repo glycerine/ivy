@@ -106,7 +106,7 @@ func cactive(a pcube) int32 {
 			mask = cube.inmask
 		}
 		x := a[w]
-		missing := ^(x & x >> 1) & mask
+		missing := ^(x & (x >> 1)) & mask
 		if missing == 0 {
 			continue
 		}
@@ -138,7 +138,7 @@ func ccommon(a, b, cofactor pcube) bool {
 			mask = cube.inmask
 		}
 		x, y := a[w]|cofactor[w], b[w]|cofactor[w]
-		if ^(x&x>>1)&^(y&y>>1)&mask != 0 {
+		if ^(x&(x>>1))&^(y&(y>>1))&mask != 0 {
 			return true
 		}
 	}
