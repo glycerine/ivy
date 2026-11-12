@@ -1,609 +1,341 @@
 package ioa
 
-import "fmt"
+import (
+	"bytes"
+	"encoding/binary"
+	"fmt"
+	"io"
+	"os"
+	"sort"
+)
 
-import "os"
+type WriteOptions struct{ ASCII, Compact, Symbols bool }
 
-/**CFile****************************************************************
-
-  FileName    [ioaWriteAiger.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedures to write binary AIGER format developed by
-  Armin Biere, Johannes Kepler University (http://fmv.jku.at/)]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - December 16, 2006.]
-
-  Revision    [$Id: ioaWriteAiger.c,v 1.00 2006/12/16 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ioa.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-/*
-    The following is taken from the AIGER format description, 
-    which can be found at http://fmv.jku.at/aiger
-*/
-
-
-/*
-         The AIGER And-Inverter Graph (AIG) Format Version 20061129
-         ----------------------------------------------------------
-              Armin Biere, Johannes Kepler University, 2006
-
-  This report describes the AIG file format as used by the AIGER library.
-  The purpose of this report is not only to motivate and document the
-  format, but also to allow independent implementations of writers and
-  readers by giving precise and unambiguous definitions.
-
-  ...
-
-Introduction
-
-  The name AIGER contains as one part the acronym AIG of And-Inverter
-  Graphs and also if pronounced in German sounds like the name of the
-  'Eiger', a mountain in the Swiss alps.  This choice should emphasize the
-  origin of this format. It was first openly discussed at the Alpine
-  Verification Meeting 2006 in Ascona as a way to provide a simple, compact
-  file format for a model checking competition affiliated to CAV 2007.
-
-  ...
-
-Binary Format Definition
-
-  The binary format is semantically a subset of the ASCII format with a
-  slightly different syntax.  The binary format may need to reencode
-  literals, but translating a file in binary format into ASCII format and
-  then back in to binary format will result in the same file.
-
-  The main differences of the binary format to the ASCII format are as
-  follows.  After the header the list of input literals and all the
-  current state literals of a latch can be omitted.  Furthermore the
-  definitions of the AND gates are binary encoded.  However, the symbol
-  table and the comment section are as in the ASCII format.
-
-  The header of an AIGER file in binary format has 'aig' as format
-  identifier, but otherwise is identical to the ASCII header.  The standard
-  file extension for the binary format is therefore '.aig'. 
-  
-  A header for the binary format is still in ASCII encoding:
-
-    aig M I L O A
-
-  Constants, variables and literals are handled in the same way as in the
-  ASCII format.  The first simplifying restriction is on the variable
-  indices of inputs and latches.  The variable indices of inputs come first,
-  followed by the pseudo-primary inputs of the latches and then the variable
-  indices of all LHS of AND gates:
-
-    input variable indices        1,          2,  ... ,  I
-    latch variable indices      I+1,        I+2,  ... ,  (I+L)
-    AND variable indices      I+L+1,      I+L+2,  ... ,  (I+L+A) == M
-
-  The corresponding unsigned literals are
-
-    input literals                2,          4,  ... ,  2*I
-    latch literals            2*I+2,      2*I+4,  ... ,  2*(I+L)
-    AND literals          2*(I+L)+2,  2*(I+L)+4,  ... ,  2*(I+L+A) == 2*M
-                    
-  All literals have to be defined, and therefore 'M = I + L + A'.  With this
-  restriction it becomes possible that the inputs and the current state
-  literals of the latches do not have to be listed explicitly.  Therefore,
-  after the header only the list of 'L' next state literals follows, one per
-  latch on a single line, and then the 'O' outputs, again one per line.
-
-  In the binary format we assume that the AND gates are ordered and respect
-  the child parent relation.  AND gates with smaller literals on the LHS
-  come first.  Therefore we can assume that the literals on the right-hand
-  side of a definition of an AND gate are smaller than the LHS literal.
-  Furthermore we can sort the literals on the RHS, such that the larger
-  literal comes first.  A definition thus consists of three literals
-    
-      lhs rhs0 rhs1
-
-  with 'lhs' even and 'lhs > rhs0 >= rhs1'.  Also the variable indices are
-  pairwise different to avoid combinational self loops.  Since the LHS
-  indices of the definitions are all consecutive (as even integers),
-  the binary format does not have to keep 'lhs'.  In addition, we can use
-  the order restriction and only write the differences 'delta0' and 'delta1'
-  instead of 'rhs0' and 'rhs1', with
-
-      delta0 = lhs - rhs0,  delta1 = rhs0 - rhs1
-  
-  The differences will all be strictly positive, and in practice often very
-  small.  We can take advantage of this fact by the simple little-endian
-  encoding of unsigned integers of the next section.  After the binary delta
-  encoding of the RHSs of all AND gates, the optional symbol table and
-  optional comment section start in the same format as in the ASCII case.
-
-  ...
-
-*/
-
-func Ioa_ObjMakeLit(Var int32, fCompl int32) int32 { return (Var << 1) | fCompl;  }
-func Ioa_ObjAigerNum(pObj *Aig_Obj_t) int32 { return pObj.iData;          }
-func Ioa_ObjSetAigerNum(pObj *Aig_Obj_t, Num uint32) { pObj.iData = Num;           }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Adds one unsigned AIG edge to the output buffer.]
-
-  Description [This procedure is a slightly modified version of Armin Biere's
-  procedure "void encode (FILE * file, unsigned x)" ]
-  
-  SideEffects [Returns the current writing position.]
-
-  SeeAlso     []
-
-***********************************************************************/
-int Ioa_WriteAigerEncode( unsigned char * pBuffer, int Pos, unsigned x )
-{
-    unsigned char ch;
-    for x & ~0x7f {
-        ch = (x & 0x7f) | 0x80;
-//        putc (ch, file);
-        pBuffer[Pos++] = ch;
-        x >>= 7;
-    }
-    ch = x;
-//    putc (ch, file);
-    pBuffer[Pos++] = ch;
-    return Pos;
+func Ioa_ObjMakeLit(variable, complement int32) uint32 {
+	return uint32(variable)<<1 | uint32(complement)&1
+}
+func Ioa_WriteAigerEncode(buffer []byte, pos int32, value uint32) int32 {
+	var encoded [5]byte
+	n := binary.PutUvarint(encoded[:], uint64(value))
+	if pos < 0 || int64(pos)+int64(n) > int64(len(buffer)) {
+		panic("short AIGER encoding buffer")
+	}
+	copy(buffer[pos:], encoded[:n])
+	return pos + int32(n)
+}
+func Ioa_WriteAigerEncodeStr(buffer *[]byte, value uint32) {
+	*buffer = binary.AppendUvarint(*buffer, uint64(value))
+}
+func Ioa_WriteEncodeLiterals(literals []uint32) ([]byte, error) {
+	if len(literals) == 0 {
+		return nil, nil
+	}
+	data := binary.AppendUvarint(nil, uint64(literals[0]))
+	previous := literals[0]
+	for _, lit := range literals[1:] {
+		delta := int64(lit) - int64(previous)
+		sign := uint64(0)
+		if delta < 0 {
+			delta = -delta
+			sign = 1
+		}
+		code := uint64(delta)<<1 | sign
+		if code > 0xffffffff {
+			return nil, fmt.Errorf("compact literal delta exceeds 32 bits")
+		}
+		data = binary.AppendUvarint(data, code)
+		previous = lit
+	}
+	return data, nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds one unsigned AIG edge to the output buffer.]
-
-  Description [This procedure is a slightly modified version of Armin Biere's
-  procedure "void encode (FILE * file, unsigned x)" ]
-  
-  SideEffects [Returns the current writing position.]
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ioa_WriteAigerEncodeStr(vStr *Vec_Str_t, x uint32) {
-    unsigned char ch;
-    for x & ~0x7f {
-        ch = (x & 0x7f) | 0x80;
-//        putc (ch, file);
-//        pBuffer[Pos++] = ch;
-        Vec_StrPush( vStr, ch );
-        x >>= 7;
-    }
-    ch = x;
-//    putc (ch, file);
-//    pBuffer[Pos++] = ch;
-    Vec_StrPush( vStr, ch );
+// Normalize returns a dense, topologically ordered copy for binary AIGER.
+// Every original AND is retained, including gates not reachable from outputs.
+func (m *Model) Normalize() (*Model, error) {
+	if err := m.Check(); err != nil {
+		return nil, err
+	}
+	result := &Model{Name: m.Name, Comment: append([]byte(nil), m.Comment...), Symbols: map[Symbol]string{}}
+	for s, name := range m.Symbols {
+		result.Symbols[s] = name
+	}
+	mapped := map[uint32]uint32{0: 0}
+	next := uint32(1)
+	for _, lit := range m.Inputs {
+		mapped[lit>>1] = next << 1
+		result.Inputs = append(result.Inputs, next<<1)
+		next++
+	}
+	for _, l := range m.Latches {
+		mapped[l.Literal>>1] = next << 1
+		result.Latches = append(result.Latches, Latch{Literal: next << 1})
+		next++
+	}
+	gates := map[uint32]And{}
+	for _, a := range m.ANDs {
+		gates[a.Literal>>1] = a
+	}
+	var translate func(uint32) uint32
+	translate = func(lit uint32) uint32 {
+		v := lit >> 1
+		if value, ok := mapped[v]; ok {
+			return value ^ (lit & 1)
+		}
+		a := gates[v]
+		left, right := translate(a.Left), translate(a.Right)
+		lhs := next << 1
+		next++
+		mapped[v] = lhs
+		if left < right {
+			left, right = right, left
+		}
+		result.ANDs = append(result.ANDs, And{lhs, left, right})
+		return lhs ^ (lit & 1)
+	}
+	for _, a := range m.ANDs {
+		translate(a.Literal)
+	}
+	for i, l := range m.Latches {
+		result.Latches[i].Next = translate(l.Next)
+		result.Latches[i].Init = l.Init
+		if l.Init == l.Literal {
+			result.Latches[i].Init = result.Latches[i].Literal
+		}
+	}
+	list := func(values []uint32) []uint32 {
+		var r []uint32
+		for _, lit := range values {
+			r = append(r, translate(lit))
+		}
+		return r
+	}
+	result.Outputs = list(m.Outputs)
+	result.Bad = list(m.Bad)
+	result.Constraints = list(m.Constraints)
+	result.Fairness = list(m.Fairness)
+	for _, j := range m.Justice {
+		result.Justice = append(result.Justice, list(j))
+	}
+	result.MaxVar = next - 1
+	return result, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Create the array of literals to be written.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ioa_WriteAigerLiterals(pMan *Aig_Man_t) *Vec_Int_t {
-    var vLits *Vec_Int_t;
-    var pObj, pDriver *Aig_Obj_t;
-    var i int32;
-    vLits = Vec_IntAlloc( Aig_ManCoNum(pMan) );
-    // inlining of macro Aig_ManForEachLiSeq
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = Aig_ManCoNum(pMan)-Aig_ManRegNum(pMan); (i < Vec_PtrSize(pMan.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {
-        pDriver = Aig_ObjFanin0(pObj);
-        Vec_IntPush( vLits, Ioa_ObjMakeLit( Ioa_ObjAigerNum(pDriver), Aig_ObjFaninC0(pObj) ^ (Ioa_ObjAigerNum(pDriver) == 0) ) );
-    }
-    // inlining of macro Aig_ManForEachPoSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCoNum(pMan)-Aig_ManRegNum(pMan)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {
-        pDriver = Aig_ObjFanin0(pObj);
-        Vec_IntPush( vLits, Ioa_ObjMakeLit( Ioa_ObjAigerNum(pDriver), Aig_ObjFaninC0(pObj) ^ (Ioa_ObjAigerNum(pDriver) == 0) ) );
-    }
-    return vLits;
+func getModel(provider AigerProvider) (*Model, error) {
+	if provider == nil {
+		return nil, fmt.Errorf("nil AIGER provider")
+	}
+	m, err := provider.AigerModel()
+	if err != nil {
+		return nil, err
+	}
+	if m == nil {
+		return nil, fmt.Errorf("nil AIGER model")
+	}
+	return m, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the binary encoded array of literals.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ioa_WriteEncodeLiterals(vLits *Vec_Int_t) *Vec_Str_t {
-    var vBinary *Vec_Str_t;
-    var Pos, Lit, LitPrev, Diff, i int32;
-    vBinary = Vec_StrAlloc( 2 * Vec_IntSize(vLits) );
-    LitPrev = Vec_IntEntry( vLits, 0 );
-    Pos = Ioa_WriteAigerEncode( (unsigned char *)Vec_StrArray(vBinary), Pos, LitPrev ); 
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = 1; (i < Vec_IntSize(vLits)) && (((Lit) = Vec_IntEntry(vLits, i)), 1); i++  {
-        Diff = Lit - LitPrev;
-        if Lit < LitPrev {
-            Diff = -Diff;
-        } else {
-            Diff = Diff;
-        }
-        Diff = (Diff << 1) | int32((Lit < LitPrev));
-        Pos = Ioa_WriteAigerEncode( (unsigned char *)Vec_StrArray(vBinary), Pos, Diff );
-        LitPrev = Lit;
-        if Pos + 10 > vBinary.nCap {
-            Vec_StrGrow( vBinary, vBinary.nCap+1 ); }
-    }
-    vBinary.nSize = Pos;
-/*
-    // verify
-    {
-        extern Vec_Int_t * Ioa_WriteDecodeLiterals( char ** ppPos, int nEntries );
-        char * pPos = Vec_StrArray( vBinary );
-        Vec_Int_t * vTemp = Ioa_WriteDecodeLiterals( &pPos, Vec_IntSize(vLits) );
-        for ( i = 0; i < Vec_IntSize(vLits); i++ )
-        {
-            int Entry1 = Vec_IntEntry(vLits,i);
-            int Entry2 = Vec_IntEntry(vTemp,i);
-            assert( Entry1 == Entry2 );
-        }
-        Vec_IntFree( vTemp );
-    }
-*/
-    return vBinary;
+func Ioa_WriteAigerLiterals(provider AigerProvider) ([]uint32, error) {
+	m, err := getModel(provider)
+	if err != nil {
+		return nil, err
+	}
+	m, err = m.Normalize()
+	if err != nil {
+		return nil, err
+	}
+	result := make([]uint32, 0, len(m.Latches)+len(m.Outputs)+len(m.Bad)+len(m.Constraints))
+	for _, l := range m.Latches {
+		result = append(result, l.Next)
+	}
+	result = append(result, m.Outputs...)
+	result = append(result, m.Bad...)
+	result = append(result, m.Constraints...)
+	return result, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the AIG in into the memory buffer.]
-
-  Description [The resulting buffer constains the AIG in AIGER format. 
-  The returned size (pnSize) gives the number of bytes in the buffer. 
-  The resulting buffer should be deallocated by the user.]
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ioa_WriteAigerIntoMemoryStr(pMan *Aig_Man_t) *Vec_Str_t {
-    var vBuffer *Vec_Str_t;
-    var pObj, pDriver *Aig_Obj_t;
-    var nNodes, i, uLit, uLit0, uLit1 int32; 
-    // set the node numbers to be used in the output file
-    nNodes = 0;
-    Ioa_ObjSetAigerNum( Aig_ManConst1(pMan), nNodes++ );
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pMan.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {
-        Ioa_ObjSetAigerNum( pObj, nNodes++ );
-    }
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pMan.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        Ioa_ObjSetAigerNum( pObj, nNodes++ ); }
-    }
-
-    // write the header "M I L O A" where M = I + L + A
-/*
-    fprintf( pFile, "aig%s %u %u %u %u %u\n", 
-        fCompact? "2" : "",
-        Aig_ManCiNum(pMan) + Aig_ManNodeNum(pMan), 
-        Aig_ManCiNum(pMan) - Aig_ManRegNum(pMan),
-        Aig_ManRegNum(pMan),
-        Aig_ManCoNum(pMan) - Aig_ManRegNum(pMan),
-        Aig_ManNodeNum(pMan) );
-*/
-    vBuffer = Vec_StrAlloc( 3*Aig_ManObjNum(pMan) );
-    Vec_StrPrintStr( vBuffer, "aig " );
-    Vec_StrPrintNum( vBuffer, Aig_ManCiNum(pMan) + Aig_ManNodeNum(pMan) );
-    Vec_StrPrintStr( vBuffer, " " );
-    Vec_StrPrintNum( vBuffer, Aig_ManCiNum(pMan) - Aig_ManRegNum(pMan) );
-    Vec_StrPrintStr( vBuffer, " " );
-    Vec_StrPrintNum( vBuffer, Aig_ManRegNum(pMan) );
-    Vec_StrPrintStr( vBuffer, " " );
-    Vec_StrPrintNum( vBuffer, Aig_ManCoNum(pMan) - Aig_ManRegNum(pMan) );
-    Vec_StrPrintStr( vBuffer, " " );
-    Vec_StrPrintNum( vBuffer, Aig_ManNodeNum(pMan) );
-    Vec_StrPrintStr( vBuffer, "\n" );
-
-    // write latch drivers
-    // inlining of macro Aig_ManForEachLiSeq
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = Aig_ManCoNum(pMan)-Aig_ManRegNum(pMan); (i < Vec_PtrSize(pMan.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {
-        pDriver = Aig_ObjFanin0(pObj);
-        uLit    = Ioa_ObjMakeLit( Ioa_ObjAigerNum(pDriver), Aig_ObjFaninC0(pObj) ^ (Ioa_ObjAigerNum(pDriver) == 0) );
-//        fprintf( pFile, "%u\n", uLit );
-        Vec_StrPrintNum( vBuffer, uLit );
-        Vec_StrPrintStr( vBuffer, "\n" );
-    }
-
-    // write PO drivers
-    // inlining of macro Aig_ManForEachPoSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCoNum(pMan)-Aig_ManRegNum(pMan)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {
-        pDriver = Aig_ObjFanin0(pObj);
-        uLit    = Ioa_ObjMakeLit( Ioa_ObjAigerNum(pDriver), Aig_ObjFaninC0(pObj) ^ (Ioa_ObjAigerNum(pDriver) == 0) );
-//        fprintf( pFile, "%u\n", uLit );
-        Vec_StrPrintNum( vBuffer, uLit );
-        Vec_StrPrintStr( vBuffer, "\n" );
-    }
-    // write the nodes into the buffer
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pMan.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        uLit  = Ioa_ObjMakeLit( Ioa_ObjAigerNum(pObj), 0 );
-        uLit0 = Ioa_ObjMakeLit( Ioa_ObjAigerNum(Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj) );
-        uLit1 = Ioa_ObjMakeLit( Ioa_ObjAigerNum(Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj) );
-        assert(uLit0 != uLit1, "uLit0 != uLit1");
-        if uLit0 > uLit1 {
-            var Temp int32  = uLit0;
-            uLit0 = uLit1;
-            uLit1 = Temp;
-        }
-//        Pos = Ioa_WriteAigerEncode( pBuffer, Pos, uLit  - uLit1 );
-//        Pos = Ioa_WriteAigerEncode( pBuffer, Pos, uLit1 - uLit0 );
-        Ioa_WriteAigerEncodeStr( vBuffer, uLit  - uLit1 );
-        Ioa_WriteAigerEncodeStr( vBuffer, uLit1 - uLit0 );
-    }
-    }
-    Vec_StrPrintStr( vBuffer, "c" );
-    return vBuffer;
+func Marshal(provider AigerProvider, options WriteOptions) ([]byte, error) {
+	m, err := getModel(provider)
+	if err != nil {
+		return nil, err
+	}
+	if options.ASCII && options.Compact {
+		return nil, fmt.Errorf("ASCII and compact encodings are mutually exclusive")
+	}
+	if options.ASCII {
+		if err = m.Check(); err != nil {
+			return nil, err
+		}
+	} else {
+		m, err = m.Normalize()
+		if err != nil {
+			return nil, err
+		}
+	}
+	if options.Compact {
+		if len(m.Justice) > 0 || len(m.Fairness) > 0 {
+			return nil, fmt.Errorf("compact aig2 does not support justice/fairness")
+		}
+		for _, l := range m.Latches {
+			if l.Init != 0 {
+				return nil, fmt.Errorf("compact aig2 cannot preserve nonzero/uninitialized latch reset")
+			}
+		}
+	}
+	var data bytes.Buffer
+	format := "aig"
+	if options.ASCII {
+		format = "aag"
+	}
+	if options.Compact {
+		format = "aig2"
+	}
+	counts := []uint32{m.MaxVar, uint32(len(m.Inputs)), uint32(len(m.Latches)), uint32(len(m.Outputs)), uint32(len(m.ANDs)), uint32(len(m.Bad)), uint32(len(m.Constraints)), uint32(len(m.Justice)), uint32(len(m.Fairness))}
+	last := len(counts) - 1
+	for last >= 5 && counts[last] == 0 {
+		last--
+	}
+	fmt.Fprint(&data, format)
+	for _, n := range counts[:last+1] {
+		fmt.Fprintf(&data, " %d", n)
+	}
+	data.WriteByte('\n')
+	if options.ASCII {
+		for _, lit := range m.Inputs {
+			fmt.Fprintln(&data, lit)
+		}
+	}
+	if options.Compact {
+		literals := make([]uint32, 0)
+		for _, l := range m.Latches {
+			literals = append(literals, l.Next)
+		}
+		literals = append(literals, m.Outputs...)
+		literals = append(literals, m.Bad...)
+		literals = append(literals, m.Constraints...)
+		encoded, err := Ioa_WriteEncodeLiterals(literals)
+		if err != nil {
+			return nil, err
+		}
+		data.Write(encoded)
+	} else {
+		for _, l := range m.Latches {
+			if options.ASCII {
+				fmt.Fprintf(&data, "%d ", l.Literal)
+			}
+			fmt.Fprint(&data, l.Next)
+			if l.Init != 0 {
+				fmt.Fprintf(&data, " %d", l.Init)
+			}
+			data.WriteByte('\n')
+		}
+		for _, list := range [][]uint32{m.Outputs, m.Bad, m.Constraints} {
+			for _, lit := range list {
+				fmt.Fprintln(&data, lit)
+			}
+		}
+		for _, j := range m.Justice {
+			fmt.Fprintln(&data, len(j))
+		}
+		for _, j := range m.Justice {
+			for _, lit := range j {
+				fmt.Fprintln(&data, lit)
+			}
+		}
+		for _, lit := range m.Fairness {
+			fmt.Fprintln(&data, lit)
+		}
+	}
+	for _, a := range m.ANDs {
+		if options.ASCII {
+			fmt.Fprintf(&data, "%d %d %d\n", a.Literal, a.Left, a.Right)
+		} else {
+			left, right := a.Left, a.Right
+			if left < right {
+				left, right = right, left
+			}
+			var encoded []byte
+			encoded = binary.AppendUvarint(encoded, uint64(a.Literal-left))
+			encoded = binary.AppendUvarint(encoded, uint64(left-right))
+			data.Write(encoded)
+		}
+	}
+	if options.Symbols {
+		keys := make([]Symbol, 0, len(m.Symbols))
+		for key := range m.Symbols {
+			keys = append(keys, key)
+		}
+		rank := func(k byte) int {
+			switch k {
+			case 'i':
+				return 0
+			case 'l':
+				return 1
+			case 'o':
+				return 2
+			case 'b':
+				return 3
+			case 'c':
+				return 4
+			case 'j':
+				return 5
+			case 'f':
+				return 6
+			}
+			return 7
+		}
+		sort.Slice(keys, func(i, j int) bool {
+			if keys[i].Kind != keys[j].Kind {
+				return rank(keys[i].Kind) < rank(keys[j].Kind)
+			}
+			return keys[i].Index < keys[j].Index
+		})
+		for _, key := range keys {
+			fmt.Fprintf(&data, "%c%d %s\n", key.Kind, key.Index, m.Symbols[key])
+		}
+	}
+	if m.Name != "" || len(m.Comment) > 0 {
+		data.WriteByte('c')
+		if m.Name != "" {
+			data.WriteByte('n')
+			data.WriteString(m.Name)
+			data.WriteByte(0)
+		}
+		data.WriteByte('\n')
+		data.Write(m.Comment)
+	}
+	return data.Bytes(), nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the AIG in into the memory buffer.]
-
-  Description [The resulting buffer constains the AIG in AIGER format. 
-  The returned size (pnSize) gives the number of bytes in the buffer. 
-  The resulting buffer should be deallocated by the user.]
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ioa_WriteAigerIntoMemory(pMan *Aig_Man_t, pnSize *int32) string {
-    var pBuffer string;
-    var vBuffer *Vec_Str_t;
-    vBuffer = Ioa_WriteAigerIntoMemoryStr( pMan );
-    if pMan.pName {
-        Vec_StrPrintStr( vBuffer, "n" );
-        Vec_StrPrintStr( vBuffer, pMan.pName );
-        Vec_StrPush( vBuffer, 0 );
-    }
-    // prepare the return values
-    *pnSize = Vec_StrSize( vBuffer );
-    pBuffer = Vec_StrReleaseArray( vBuffer );
-    Vec_StrFree( vBuffer );
-    return pBuffer;
+func Write(writer io.Writer, provider AigerProvider, options WriteOptions) error {
+	data, err := Marshal(provider, options)
+	if err != nil {
+		return err
+	}
+	n, err := writer.Write(data)
+	if err == nil && n != len(data) {
+		err = io.ErrShortWrite
+	}
+	return err
 }
-
-/**Function*************************************************************
-
-  Synopsis    [This procedure is used to test the above procedure.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ioa_WriteAigerBufferTest(pMan *Aig_Man_t, pFileName string, fWriteSymbols int32, fCompact int32) {
-    var pFile *os.File;
-    var pBuffer string;
-    var nSize int32;
-    if Aig_ManCoNum(pMan) == 0 {
-        fmt.Printf("AIG cannot be written because it has no POs.\n");
-        return;
-    }
-    // start the output stream
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Fprintf(os.Stdout, "Ioa_WriteAiger(): Cannot open the output file \"%s\".\n", pFileName);
-        return;
-    }
-    // write the buffer
-    pBuffer = Ioa_WriteAigerIntoMemory( pMan, &nSize );
-    fwrite( pBuffer, 1, nSize, pFile );
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
-    // write the comment
-//    fprintf( pFile, "c" );
-//    if ( pMan->pName )
-//        fprintf( pFile, "n%s%c", pMan->pName, '\0' );
-    fmt.Fprintf(pFile, "\nThis file was produced by the IOA package in ABC on %s\n", Ioa_TimeStamp());
-    fmt.Fprintf(pFile, "For information about AIGER format, refer to %s\n", "http://fmv.jku.at/aiger");
-    _ = (pFile).Close();
+func Ioa_WriteAigerIntoMemoryStr(provider AigerProvider) ([]byte, error) {
+	return Marshal(provider, WriteOptions{})
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the AIG in the binary AIGER format.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ioa_WriteAiger(pMan *Aig_Man_t, pFileName string, fWriteSymbols int32, fCompact int32) {
-//    Bar_Progress_t * pProgress;
-    var pFile *os.File;
-    var pObj, pDriver *Aig_Obj_t;
-    var i, nNodes, nBufferSize, Pos int32;
-    unsigned char * pBuffer;
-    var uLit0, uLit1, uLit uint32;
-
-    if Aig_ManCoNum(pMan) == 0 {
-        fmt.Printf("AIG cannot be written because it has no POs.\n");
-        return;
-    }
-
-//    assert( Aig_ManIsStrash(pMan) );
-    // start the output stream
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Fprintf(os.Stdout, "Ioa_WriteAiger(): Cannot open the output file \"%s\".\n", pFileName);
-        return;
-    }
-/*
-    Aig_ManForEachLatch( pMan, pObj, i )
-        if ( !Aig_LatchIsInit0(pObj) )
-        {
-            fprintf( stdout, "Ioa_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \"zero\".\n" );
-            return;
-        }
-*/
-    // set the node numbers to be used in the output file
-    nNodes = 0;
-    Ioa_ObjSetAigerNum( Aig_ManConst1(pMan), nNodes++ );
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pMan.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {
-        Ioa_ObjSetAigerNum( pObj, nNodes++ );
-    }
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pMan.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        Ioa_ObjSetAigerNum( pObj, nNodes++ ); }
-    }
-
-    // write the header "M I L O A" where M = I + L + A
-    fmt.Fprintf(pFile, "aig%s %d %d %d %d %d", fCompact? "2" : "", Aig_ManCiNum(pMan) + Aig_ManNodeNum(pMan), Aig_ManCiNum(pMan) - Aig_ManRegNum(pMan), Aig_ManRegNum(pMan), Aig_ManConstrNum(pMan) ? 0 : Aig_ManCoNum(pMan) - Aig_ManRegNum(pMan), Aig_ManNodeNum(pMan));
-    // write the extended header "B C J F"
-    if Aig_ManConstrNum(pMan) {
-        fmt.Fprintf(pFile, " %d %d", Aig_ManCoNum(pMan) - Aig_ManRegNum(pMan) - Aig_ManConstrNum(pMan), Aig_ManConstrNum(pMan)); }
-    fmt.Fprintf(pFile, "\n"); 
-
-    // if the driver node is a constant, we need to complement the literal below
-    // because, in the AIGER format, literal 0/1 is represented as number 0/1
-    // while, in ABC, constant 1 node has number 0 and so literal 0/1 will be 1/0
-
-    Aig_ManInvertConstraints( pMan );
-    if !(fCompact != 0) {
-        // write latch drivers
-        // inlining of macro Aig_ManForEachLiSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCoNum(pMan)-Aig_ManRegNum(pMan); (i < Vec_PtrSize(pMan.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {
-            pDriver = Aig_ObjFanin0(pObj);
-            fmt.Fprintf(pFile, "%d\n", Ioa_ObjMakeLit( Ioa_ObjAigerNum(pDriver), Aig_ObjFaninC0(pObj) ^ (Ioa_ObjAigerNum(pDriver) == 0) ));
-        }
-
-        // write PO drivers
-        // inlining of macro Aig_ManForEachPoSeq
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Aig_ManCoNum(pMan)-Aig_ManRegNum(pMan)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {
-            pDriver = Aig_ObjFanin0(pObj);
-            fmt.Fprintf(pFile, "%d\n", Ioa_ObjMakeLit( Ioa_ObjAigerNum(pDriver), Aig_ObjFaninC0(pObj) ^ (Ioa_ObjAigerNum(pDriver) == 0) ));
-        }
-    
-    } else {
-        var vLits *Vec_Int_t  = Ioa_WriteAigerLiterals( pMan );
-        var vBinary *Vec_Str_t  = Ioa_WriteEncodeLiterals( vLits );
-        fwrite( Vec_StrArray(vBinary), 1, Vec_StrSize(vBinary), pFile );
-        Vec_StrFree( vBinary );
-        Vec_IntFree( vLits );
-    }
-    Aig_ManInvertConstraints( pMan );
-
-    // write the nodes into the buffer
-    Pos = 0;
-    nBufferSize = 6 * Aig_ManNodeNum(pMan) + 100; // skeptically assuming 3 chars per one AIG edge
-    // inlining of macro ABC_ALLOC
-    pBuffer = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(nBufferSize)));
-//    pProgress = Bar_ProgressStart( stdout, Aig_ManObjNumMax(pMan) );
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pMan.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-//        Bar_ProgressUpdate( pProgress, i, NULL );
-        uLit  = Ioa_ObjMakeLit( Ioa_ObjAigerNum(pObj), 0 );
-        uLit0 = Ioa_ObjMakeLit( Ioa_ObjAigerNum(Aig_ObjFanin0(pObj)), Aig_ObjFaninC0(pObj) );
-        uLit1 = Ioa_ObjMakeLit( Ioa_ObjAigerNum(Aig_ObjFanin1(pObj)), Aig_ObjFaninC1(pObj) );
-        assert(uLit0 != uLit1, "uLit0 != uLit1");
-        if uLit0 > uLit1 {
-            var Temp int32  = uLit0;
-            uLit0 = uLit1;
-            uLit1 = Temp;
-        }
-        Pos = Ioa_WriteAigerEncode( pBuffer, Pos, uLit  - uLit1 );
-        Pos = Ioa_WriteAigerEncode( pBuffer, Pos, uLit1 - uLit0 );
-        if Pos > nBufferSize - 10 {
-            fmt.Printf("Ioa_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\n");
-            _ = (pFile).Close();
-            return;
-        }
-    }
-    }
-    assert(Pos < nBufferSize, "Pos < nBufferSize");
-//    Bar_ProgressStop( pProgress );
-
-    // write the buffer
-    fwrite( pBuffer, 1, Pos, pFile );
-    // inlining of macro ABC_FREE
-    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);
-/*
-    // write the symbol table
-    if ( fWriteSymbols )
-    {
-        int bads;
-        // write PIs
-        Aig_ManForEachPiSeq( pMan, pObj, i )
-            fprintf( pFile, "i%d %s\n", i, Aig_ObjName(pObj) );
-        // write latches
-        Aig_ManForEachLoSeq( pMan, pObj, i )
-            fprintf( pFile, "l%d %s\n", i, Aig_ObjName(Aig_ObjFanout0(pObj)) );
-        // write POs
-        bads = Aig_ManCoNum(pMan) - Aig_ManRegNum(pMan) - Aig_ManConstrNum(pMan);
-        Aig_ManForEachPoSeq( pMan, pObj, i )
-            if ( !Aig_ManConstrNum(pMan) )
-                fprintf( pFile, "o%d %s\n", i, Aig_ObjName(pObj) );
-            else if ( i < bads )
-                fprintf( pFile, "b%d %s\n", i, Aig_ObjName(pObj) );
-            else
-                fprintf( pFile, "c%d %s\n", i - bads, Aig_ObjName(pObj) );
-    }
-*/
-    // write the comment
-    fmt.Fprintf(pFile, "c");
-    if pMan.pName {
-        fmt.Fprintf(pFile, "n%s%c", pMan.pName, '\0'); }
-    fmt.Fprintf(pFile, "\nThis file was produced by the IOA package in ABC on %s\n", Ioa_TimeStamp());
-    fmt.Fprintf(pFile, "For information about AIGER format, refer to %s\n", "http://fmv.jku.at/aiger");
-    _ = (pFile).Close();
+func Ioa_WriteAigerIntoMemory(provider AigerProvider, size *int32) ([]byte, error) {
+	data, err := Marshal(provider, WriteOptions{})
+	if err != nil {
+		return nil, err
+	}
+	if uint64(len(data)) > 0x7fffffff {
+		return nil, fmt.Errorf("AIGER buffer exceeds int32 size")
+	}
+	if size != nil {
+		*size = int32(len(data))
+	}
+	return data, nil
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Ioa_WriteAiger(provider AigerProvider, path string, symbols, compact int32) error {
+	data, err := Marshal(provider, WriteOptions{Symbols: symbols != 0, Compact: compact != 0})
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(path, data, 0644)
+}
+func Ioa_WriteAigerBufferTest(provider AigerProvider, path string, symbols, compact int32) error {
+	return Ioa_WriteAiger(provider, path, symbols, compact)
+}

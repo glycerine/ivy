@@ -1,467 +1,344 @@
 package ioa
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
+	"os"
 	"strconv"
+	"strings"
 )
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [ioaReadAiger.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedures to read binary AIGER format developed by
-  Armin Biere, Johannes Kepler University (http://fmv.jku.at/)]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - December 16, 2006.]
-
-  Revision    [$Id: ioaReadAiger.c,v 1.00 2006/12/16 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ioa.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Extracts one unsigned AIG edge from the input buffer.]
-
-  Description [This procedure is a slightly modified version of Armin Biere's
-  procedure "unsigned decode (FILE * file)". ]
-  
-  SideEffects [Updates the current reading position.]
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ioa_ReadAigerDecode(ppPos *string) uint32 {
-    var x, i uint32;
-    unsigned char ch;
-
-//    while ((ch = getnoneofch (file)) & 0x80)
-    for (ch = *(*ppPos)++) & 0x80 {
-        x |= (ch & 0x7f) << (7 * i++);
-    }
-
-    return x | (ch << (7 * i));
+type ParseError struct {
+	Offset  int
+	Message string
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Decodes the encoded array of literals.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ioa_WriteDecodeLiterals(ppPos *string, nEntries int32) *Vec_Int_t {
-    var vLits *Vec_Int_t;
-    var Lit, LitPrev, Diff, i int32;
-    vLits = Vec_IntAlloc( nEntries );
-    LitPrev = Ioa_ReadAigerDecode( ppPos );
-    Vec_IntPush( vLits, LitPrev );
-    for  i = 1; i < nEntries; i++  {
-//        Diff = Lit - LitPrev;
-//        Diff = (Lit < LitPrev)? -Diff : Diff;
-//        Diff = ((2 * Diff) << 1) | (int)(Lit < LitPrev);
-        Diff = Ioa_ReadAigerDecode( ppPos );
-        if Diff & 1 {
-            Diff = -(Diff >> 1);
-        } else {
-            Diff = Diff >> 1;
-        }
-        Lit  = Diff + LitPrev;
-        Vec_IntPush( vLits, Lit );
-        LitPrev = Lit;
-    }
-    return vLits;
+func (e *ParseError) Error() string { return fmt.Sprintf("AIGER byte %d: %s", e.Offset, e.Message) }
+func Ioa_ReadAigerDecode(position *[]byte) (uint32, error) {
+	data := *position
+	for i := 0; i < 5; i++ {
+		if i >= len(data) {
+			return 0, fmt.Errorf("truncated AIGER integer")
+		}
+		if data[i]&0x80 == 0 {
+			if i == 4 && data[i] > 15 {
+				return 0, fmt.Errorf("AIGER integer overflow")
+			}
+			v, n := binary.Uvarint(data[:i+1])
+			if n <= 0 {
+				return 0, fmt.Errorf("invalid AIGER integer")
+			}
+			*position = data[i+1:]
+			return uint32(v), nil
+		}
+	}
+	return 0, fmt.Errorf("AIGER integer overflow")
+}
+func Ioa_WriteDecodeLiterals(position *[]byte, n int32) ([]uint32, error) {
+	if n < 0 {
+		return nil, fmt.Errorf("negative literal count")
+	}
+	result := make([]uint32, 0, n)
+	if n == 0 {
+		return result, nil
+	}
+	first, err := Ioa_ReadAigerDecode(position)
+	if err != nil {
+		return nil, err
+	}
+	result = append(result, first)
+	for i := int32(1); i < n; i++ {
+		delta, err := Ioa_ReadAigerDecode(position)
+		if err != nil {
+			return nil, err
+		}
+		value := int64(result[len(result)-1])
+		if delta&1 != 0 {
+			value -= int64(delta >> 1)
+		} else {
+			value += int64(delta >> 1)
+		}
+		if value < 0 || value > 0xffffffff {
+			return nil, fmt.Errorf("compact literal delta overflow")
+		}
+		result = append(result, uint32(value))
+	}
+	return result, nil
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Reads the AIG in from the memory buffer.]
-
-  Description [The buffer constains the AIG in AIGER format. The size gives
-  the number of bytes in the buffer. The buffer is allocated by the user 
-  and not deallocated by this procedure.]
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ioa_ReadAigerFromMemory(pContents string, nFileSize int32, fCheck int32) *Aig_Man_t {
-    var vLits *Vec_Int_t  = nil;
-    var vNodes, vDrivers *Vec_Ptr_t;//, * vTerms;
-    var pObj, pNode0, pNode1 *Aig_Obj_t;
-    var pNew *Aig_Man_t;
-    var nTotal, nInputs, nOutputs, nLatches, nAnds, i int32;//, iTerm, nDigits;
-    var nBad, nConstr, nJust, nFair int32;
-    var pDrivers, pSymbols, pCur string;//, * pType;
-    var uLit0, uLit1, uLit uint32;
-
-    // check if the input file format is correct
-    if strncmp(pContents, "aig", 3) != 0 || (pContents[3] != ' ' && pContents[3] != '2') {
-        fmt.Fprintf(os.Stdout, "Wrong input file format.\n");
-        return nil;
-    }
-
-    // read the parameters (M I L O A + B C J F)
-    pCur = pContents;         for  *pCur != ' '  { pCur++; }
- pCur++;
-    // read the number of objects
-    nTotal = strconv.Atoi(pCur);    for  *pCur != ' '  { pCur++; }
- pCur++;
-    // read the number of inputs
-    nInputs = strconv.Atoi(pCur);   for  *pCur != ' '  { pCur++; }
- pCur++;
-    // read the number of latches
-    nLatches = strconv.Atoi(pCur);  for  *pCur != ' '  { pCur++; }
- pCur++;
-    // read the number of outputs
-    nOutputs = strconv.Atoi(pCur);  for  *pCur != ' '  { pCur++; }
- pCur++;
-    // read the number of nodes
-    nAnds = strconv.Atoi(pCur);     for  *pCur != ' ' && *pCur != '\n'  { pCur++; } 
-    if *pCur == ' ' {
-        assert(nOutputs == 0, "nOutputs == 0");
-        // read the number of properties
-        pCur++;
-        nBad = strconv.Atoi(pCur);     for  *pCur != ' ' && *pCur != '\n'  { pCur++; } 
-        nOutputs += nBad;
-    }
-    if *pCur == ' ' {
-        // read the number of properties
-        pCur++;
-        nConstr = strconv.Atoi(pCur);     for  *pCur != ' ' && *pCur != '\n'  { pCur++; } 
-        nOutputs += nConstr;
-    }
-    if *pCur == ' ' {
-        // read the number of properties
-        pCur++;
-        nJust = strconv.Atoi(pCur);     for  *pCur != ' ' && *pCur != '\n'  { pCur++; } 
-        nOutputs += nJust;
-    }
-    if *pCur == ' ' {
-        // read the number of properties
-        pCur++;
-        nFair = strconv.Atoi(pCur);     for  *pCur != ' ' && *pCur != '\n'  { pCur++; } 
-        nOutputs += nFair;
-    }
-    if *pCur != '\n' {
-        fmt.Fprintf(os.Stdout, "The parameter line is in a wrong format.\n");
-        return nil;
-    }
-    pCur++;
-
-    // check the parameters
-    if nTotal != nInputs + nLatches + nAnds {
-        fmt.Fprintf(os.Stdout, "The number of objects does not match.\n");
-        return nil;
-    }
-    if nJust || (nFair != 0) {
-        fmt.Fprintf(os.Stdout, "Reading AIGER files with liveness properties are currently not supported.\n");
-        return nil;
-    }
-
-    if nConstr {
-        if nConstr == 1 {
-            fmt.Fprintf(os.Stdout, "Warning: The last output is interpreted as a constraint.\n");
-        } else {
-            fmt.Fprintf(os.Stdout, "Warning: The last %d outputs are interpreted as constraints.\n", nConstr); }
-    }
-
-    // allocate the empty AIG
-    pNew = Aig_ManStart( nAnds );
-    pNew.nConstrs = nConstr;
-
-    // prepare the array of nodes
-    vNodes = Vec_PtrAlloc( 1 + nInputs + nLatches + nAnds );
-    Vec_PtrPush( vNodes, Aig_ManConst0(pNew) );
-
-    // create the PIs
-    for  i = 0; i < nInputs + nLatches; i++  {
-        pObj = Aig_ObjCreateCi(pNew);    
-        Vec_PtrPush( vNodes, pObj );
-    }
-/*
-    // create the POs
-    for ( i = 0; i < nOutputs + nLatches; i++ )
-    {
-        pObj = Aig_ObjCreateCo(pNew);   
-    }
-*/
-    // create the latches
-    pNew.nRegs = nLatches;
-/*
-    nDigits = Ioa_Base10Log( nLatches );
-    for ( i = 0; i < nLatches; i++ )
-    {
-        pObj = Aig_ObjCreateLatch(pNew);
-        Aig_LatchSetInit0( pObj );
-        pNode0 = Aig_ObjCreateBi(pNew);
-        pNode1 = Aig_ObjCreateBo(pNew);
-        Aig_ObjAddFanin( pObj, pNode0 );
-        Aig_ObjAddFanin( pNode1, pObj );
-        Vec_PtrPush( vNodes, pNode1 );
-        // assign names to latch and its input
-//        Aig_ObjAssignName( pObj, Aig_ObjNameDummy("_L", i, nDigits), NULL );
-//        printf( "Creating latch %s with input %d and output %d.\n", Aig_ObjName(pObj), pNode0->Id, pNode1->Id );
-    } 
-*/ 
-
-    // remember the beginning of latch/PO literals
-    pDrivers = pCur;
-    if pContents[3] == ' ' { // standard AIGER
-    
-        // scroll to the beginning of the binary data
-        for  i = 0; i < nLatches + nOutputs;  {
-            if *pCur++ == '\n' {
-                i++; }
-        }
-    
-    } else { // modified AIGER
-    
-        vLits = Ioa_WriteDecodeLiterals( &pCur, nLatches + nOutputs );
-    }
-
-    // create the AND gates
-//    pProgress = Bar_ProgressStart( stdout, nAnds );
-    for  i = 0; i < nAnds; i++  {
-//        Bar_ProgressUpdate( pProgress, i, NULL );
-        uLit = ((i + 1 + nInputs + nLatches) << 1);
-        uLit1 = uLit  - Ioa_ReadAigerDecode( &pCur );
-        uLit0 = uLit1 - Ioa_ReadAigerDecode( &pCur );
-//        assert( uLit1 > uLit0 );
-        pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 >> 1), uLit0 & 1 );
-        pNode1 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit1 >> 1), uLit1 & 1 );
-        assert(Vec_PtrSize(vNodes) == i + 1 + nInputs + nLatches, "Vec_PtrSize(vNodes) == i + 1 + nInputs + nLatches");
-        Vec_PtrPush( vNodes, Aig_And(pNew, pNode0, pNode1) );
-    }
-//    Bar_ProgressStop( pProgress );
-
-    // remember the place where symbols begin
-    pSymbols = pCur;
-
-    // read the latch driver literals
-    vDrivers = Vec_PtrAlloc( nLatches + nOutputs );
-    if pContents[3] == ' ' { // standard AIGER
-    
-        pCur = pDrivers;
-        for  i = 0; i < nLatches; i++  {
-            uLit0 = strconv.Atoi(pCur);  for  *pCur++ != '\n'  {; }
-            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 >> 1), (uLit0 & 1) );//^ (uLit0 < 2) );
-            Vec_PtrPush( vDrivers, pNode0 );
-        }
-        // read the PO driver literals
-        for  i = 0; i < nOutputs; i++  {
-            uLit0 = strconv.Atoi(pCur);  for  *pCur++ != '\n'  {; }
-            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 >> 1), (uLit0 & 1) );//^ (uLit0 < 2) );
-            Vec_PtrPush( vDrivers, pNode0 );
-        }
-
-    
-    } else {
-        // read the latch driver literals
-        for  i = 0; i < nLatches; i++  {
-            uLit0 = Vec_IntEntry( vLits, i );
-            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 >> 1), (uLit0 & 1) );//^ (uLit0 < 2) );
-            Vec_PtrPush( vDrivers, pNode0 );
-        }
-        // read the PO driver literals
-        for  i = 0; i < nOutputs; i++  {
-            uLit0 = Vec_IntEntry( vLits, i+nLatches );
-            pNode0 = Aig_NotCond( (Aig_Obj_t *)Vec_PtrEntry(vNodes, uLit0 >> 1), (uLit0 & 1) );//^ (uLit0 < 2) );
-            Vec_PtrPush( vDrivers, pNode0 );
-        }
-        Vec_IntFree( vLits );
-    }
-
-    // create the POs
-    for  i = 0; i < nOutputs; i++  {
-        Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vDrivers, nLatches + i) );
-    }
-    for  i = 0; i < nLatches; i++  {
-        Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Vec_PtrEntry(vDrivers, i) );
-    }
-    Vec_PtrFree( vDrivers );
-
-/*
-    // read the names if present
-    pCur = pSymbols;
-    if ( *pCur != 'c' )
-    {
-        int Counter = 0;
-        while ( pCur < pContents + nFileSize && *pCur != 'c' )
-        {
-            // get the terminal type
-            pType = pCur;
-            if ( *pCur == 'i' )
-                vTerms = pNew->vPis;
-            else if ( *pCur == 'l' )
-                vTerms = pNew->vBoxes;
-            else if ( *pCur == 'o' )
-                vTerms = pNew->vPos;
-            else
-            {
-                fprintf( stdout, "Wrong terminal type.\n" );
-                return NULL;
-            }
-            // get the terminal number
-            iTerm = atoi( ++pCur );  while ( *pCur++ != ' ' );
-            // get the node
-            if ( iTerm >= Vec_PtrSize(vTerms) )
-            {
-                fprintf( stdout, "The number of terminal is out of bound.\n" );
-                return NULL;
-            }
-            pObj = Vec_PtrEntry( vTerms, iTerm );
-            if ( *pType == 'l' )
-                pObj = Aig_ObjFanout0(pObj);
-            // assign the name
-            pName = pCur;          while ( *pCur++ != '\n' );
-            // assign this name 
-            *(pCur-1) = 0;
-            Aig_ObjAssignName( pObj, pName, NULL );
-            if ( *pType == 'l' )
-            {
-                Aig_ObjAssignName( Aig_ObjFanin0(pObj), Aig_ObjName(pObj), "L" );
-                Aig_ObjAssignName( Aig_ObjFanin0(Aig_ObjFanin0(pObj)), Aig_ObjName(pObj), "_in" );
-            }
-            // mark the node as named
-            pObj->pCopy = (Aig_Obj_t *)Aig_ObjName(pObj);
-        } 
-
-        // assign the remaining names
-        Aig_ManForEachCi( pNew, pObj, i )
-        {
-            if ( pObj->pCopy ) continue;
-            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );
-            Counter++;
-        }
-        Aig_ManForEachLatchOutput( pNew, pObj, i )
-        {
-            if ( pObj->pCopy ) continue;
-            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );
-            Aig_ObjAssignName( Aig_ObjFanin0(pObj), Aig_ObjName(pObj), "L" );
-            Aig_ObjAssignName( Aig_ObjFanin0(Aig_ObjFanin0(pObj)), Aig_ObjName(pObj), "_in" );
-            Counter++;
-        }
-        Aig_ManForEachCo( pNew, pObj, i )
-        {
-            if ( pObj->pCopy ) continue;
-            Aig_ObjAssignName( pObj, Aig_ObjName(pObj), NULL );
-            Counter++;
-        }
-        if ( Counter )
-            printf( "Ioa_ReadAiger(): Added %d default names for nameless I/O/register objects.\n", Counter );
-    }
-    else
-    {
-//        printf( "Ioa_ReadAiger(): I/O/register names are not given. Generating short names.\n" );
-        Aig_ManShortNames( pNew );
-    }
-*/
-    pCur = pSymbols;
-    if pCur + 1 < pContents + nFileSize && *pCur == 'c' {
-        pCur++;
-        if *pCur == 'n' {
-            pCur++;
-            // read model name
-            // inlining of macro ABC_FREE
-            ((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);
-            pNew.pName = Abc_UtilStrsav( pCur );
-        }
-    }
-
-    // skipping the comments
-    Vec_PtrFree( vNodes );
-
-    // remove the extra nodes
-    Aig_ManCleanup( pNew );
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pNew) );
-
-    // update polarity of the additional outputs
-    if nBad || nConstr || nJust || (nFair != 0) {
-        Aig_ManInvertConstraints( pNew ); }
-
-    // check the result
-    if (fCheck != 0) && !Aig_ManCheck( pNew ) {
-        fmt.Printf("Ioa_ReadAiger: The network check has failed.\n");
-        Aig_ManStop( pNew );
-        return nil;
-    }
-    return pNew;
+type aigerReader struct {
+	data []byte
+	pos  int
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Reads the AIG in the binary AIGER format.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ioa_ReadAiger(pFileName string, fCheck int32) *Aig_Man_t {
-    var pFile *os.File;
-    var pNew *Aig_Man_t;
-    var pName, pContents string;
-    var nFileSize, RetValue int32;
-
-    // read the file into the buffer
-    nFileSize = Ioa_FileSize( pFileName );
-    pFile = os.Open(pFileName);
-    // inlining of macro ABC_ALLOC
-    pContents = ((char *) malloc(sizeof(char) * (size_t)(nFileSize)));
-    RetValue = fread( pContents, nFileSize, 1, pFile );
-    _ = (pFile).Close();
-
-    pNew = Ioa_ReadAigerFromMemory( pContents, nFileSize, fCheck );
-    // inlining of macro ABC_FREE
-    ((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);
-    if pNew != nil {
-        pName = Ioa_FileNameGeneric( pFileName );
-        // inlining of macro ABC_FREE
-        ((pNew.pName) ? (free((char *) (pNew.pName)), (pNew.pName) = 0) : 0);
-        pNew.pName = Abc_UtilStrsav( pName );
-        pNew.pSpec = Abc_UtilStrsav( pFileName );
-        // inlining of macro ABC_FREE
-        ((pName) ? (free((char *) (pName)), (pName) = 0) : 0);
-    }
-    return pNew;
+func (r *aigerReader) fail(message string) error { return &ParseError{r.pos, message} }
+func (r *aigerReader) line() ([]byte, error) {
+	if r.pos >= len(r.data) {
+		return nil, r.fail("unexpected end of file")
+	}
+	end := bytes.IndexByte(r.data[r.pos:], '\n')
+	if end < 0 {
+		return nil, r.fail("unterminated line")
+	}
+	line := r.data[r.pos : r.pos+end]
+	r.pos += end + 1
+	return bytes.TrimSuffix(line, []byte{'\r'}), nil
+}
+func (r *aigerReader) numbers(min, max int) ([]uint32, error) {
+	line, err := r.line()
+	if err != nil {
+		return nil, err
+	}
+	fields := strings.Fields(string(line))
+	if len(fields) < min || len(fields) > max {
+		return nil, r.fail("wrong number of fields")
+	}
+	nums := make([]uint32, len(fields))
+	for i, f := range fields {
+		v, err := strconv.ParseUint(f, 10, 32)
+		if err != nil {
+			return nil, r.fail("invalid unsigned integer")
+		}
+		nums[i] = uint32(v)
+	}
+	return nums, nil
+}
+func (r *aigerReader) decode() (uint32, error) {
+	tail := r.data[r.pos:]
+	v, err := Ioa_ReadAigerDecode(&tail)
+	if err != nil {
+		return 0, r.fail(err.Error())
+	}
+	r.pos = len(r.data) - len(tail)
+	return v, nil
+}
+func (r *aigerReader) literals(n uint32) ([]uint32, error) {
+	var result []uint32
+	if n > 0 {
+		result = make([]uint32, 0, n)
+	}
+	for i := uint32(0); i < n; i++ {
+		line, err := r.numbers(1, 1)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, line[0])
+	}
+	return result, nil
 }
 
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Read parses standard binary/ASCII AIGER 1.9 and ABC's compact aig2 variant.
+// Data is copied into the model; the caller retains ownership of its buffer.
+func Read(data []byte) (*Model, error) {
+	r := &aigerReader{data: data}
+	header, err := r.line()
+	if err != nil {
+		return nil, err
+	}
+	fields := strings.Fields(string(header))
+	if len(fields) < 6 || len(fields) > 10 {
+		return nil, r.fail("invalid AIGER header")
+	}
+	format := fields[0]
+	if format != "aig" && format != "aag" && format != "aig2" {
+		return nil, r.fail("unknown AIGER format")
+	}
+	var sizes [9]uint32
+	for i, f := range fields[1:] {
+		v, err := strconv.ParseUint(f, 10, 32)
+		if err != nil {
+			return nil, r.fail("invalid header count")
+		}
+		sizes[i] = uint32(v)
+	}
+	max, inputs, latches, outputs, ands, bad, constraints, justice, fairness := sizes[0], sizes[1], sizes[2], sizes[3], sizes[4], sizes[5], sizes[6], sizes[7], sizes[8]
+	definitions := uint64(inputs) + uint64(latches) + uint64(ands)
+	if max > 0x7fffffff || definitions > uint64(max) {
+		return nil, r.fail("inconsistent maximum variable/counts")
+	}
+	if format != "aag" && definitions != uint64(max) {
+		return nil, r.fail("binary AIGER requires contiguous variable IDs")
+	}
+	// Bound header-directed allocation independently of malformed input sizes.
+	if definitions+uint64(outputs)+uint64(bad)+uint64(constraints)+uint64(justice)+uint64(fairness) > 1<<24 {
+		return nil, r.fail("AIGER object limit exceeded")
+	}
+	if format == "aig2" && (justice != 0 || fairness != 0) {
+		return nil, r.fail("compact aig2 does not encode justice/fairness sections")
+	}
+	m := &Model{MaxVar: max, Symbols: map[Symbol]string{}}
+	for i := uint32(0); i < inputs; i++ {
+		lit := 2 * (i + 1)
+		if format == "aag" {
+			line, e := r.numbers(1, 1)
+			if e != nil {
+				return nil, e
+			}
+			lit = line[0]
+		}
+		m.Inputs = append(m.Inputs, lit)
+	}
+	if format == "aig2" {
+		tail := r.data[r.pos:]
+		drivers, e := Ioa_WriteDecodeLiterals(&tail, int32(latches+outputs+bad+constraints))
+		if e != nil {
+			return nil, r.fail(e.Error())
+		}
+		r.pos = len(data) - len(tail)
+		for i := uint32(0); i < latches; i++ {
+			m.Latches = append(m.Latches, Latch{Literal: 2 * (inputs + i + 1), Next: drivers[i]})
+		}
+		at := latches
+		m.Outputs = append(m.Outputs, drivers[at:at+outputs]...)
+		at += outputs
+		m.Bad = append(m.Bad, drivers[at:at+bad]...)
+		at += bad
+		m.Constraints = append(m.Constraints, drivers[at:at+constraints]...)
+	} else {
+		for i := uint32(0); i < latches; i++ {
+			min, maxFields := 1, 2
+			if format == "aag" {
+				min, maxFields = 2, 3
+			}
+			line, e := r.numbers(min, maxFields)
+			if e != nil {
+				return nil, e
+			}
+			l := Latch{Literal: 2 * (inputs + i + 1)}
+			at := 0
+			if format == "aag" {
+				l.Literal = line[0]
+				at = 1
+			}
+			l.Next = line[at]
+			if len(line) > at+1 {
+				l.Init = line[at+1]
+			}
+			m.Latches = append(m.Latches, l)
+		}
+		m.Outputs, err = r.literals(outputs)
+		if err != nil {
+			return nil, err
+		}
+		m.Bad, err = r.literals(bad)
+		if err != nil {
+			return nil, err
+		}
+		m.Constraints, err = r.literals(constraints)
+		if err != nil {
+			return nil, err
+		}
+		counts, err := r.literals(justice)
+		if err != nil {
+			return nil, err
+		}
+		var total uint64
+		for _, n := range counts {
+			total += uint64(n)
+		}
+		if total > uint64(len(data)) {
+			return nil, r.fail("justice sizes exceed input")
+		}
+		for _, n := range counts {
+			list, err := r.literals(n)
+			if err != nil {
+				return nil, err
+			}
+			m.Justice = append(m.Justice, list)
+		}
+		m.Fairness, err = r.literals(fairness)
+		if err != nil {
+			return nil, err
+		}
+	}
+	for i := uint32(0); i < ands; i++ {
+		a := And{Literal: 2 * (inputs + latches + i + 1)}
+		if format == "aag" {
+			line, e := r.numbers(3, 3)
+			if e != nil {
+				return nil, e
+			}
+			a.Literal, a.Left, a.Right = line[0], line[1], line[2]
+		} else {
+			d0, e := r.decode()
+			if e != nil {
+				return nil, e
+			}
+			if d0 > a.Literal {
+				return nil, r.fail("invalid first AND delta")
+			}
+			a.Left = a.Literal - d0
+			d1, e := r.decode()
+			if e != nil {
+				return nil, e
+			}
+			if d1 > a.Left {
+				return nil, r.fail("invalid second AND delta")
+			}
+			a.Right = a.Left - d1
+			if a.Left >= a.Literal || a.Right >= a.Literal {
+				return nil, r.fail("non-topological binary AND")
+			}
+		}
+		m.ANDs = append(m.ANDs, a)
+	}
+	for r.pos < len(data) {
+		if data[r.pos] == 'c' && (r.pos+1 == len(data) || data[r.pos+1] == '\n' || data[r.pos+1] == '\r' || data[r.pos+1] == 'n') {
+			comment := data[r.pos+1:]
+			if len(comment) > 0 && comment[0] == 'n' {
+				end := bytes.IndexByte(comment, 0)
+				if end < 0 {
+					return nil, r.fail("unterminated ABC model name")
+				}
+				m.Name = string(comment[1:end])
+				comment = comment[end+1:]
+			}
+			if bytes.HasPrefix(comment, []byte("\r\n")) {
+				comment = comment[2:]
+			} else if len(comment) > 0 && comment[0] == '\n' {
+				comment = comment[1:]
+			}
+			m.Comment = append([]byte(nil), comment...)
+			r.pos = len(data)
+			break
+		}
+		line, e := r.line()
+		if e != nil {
+			return nil, e
+		}
+		if len(line) == 0 {
+			return nil, r.fail("empty symbol line")
+		}
+		space := bytes.IndexByte(line, ' ')
+		if space < 2 {
+			return nil, r.fail("invalid symbol line")
+		}
+		index, e := strconv.ParseUint(string(line[1:space]), 10, 32)
+		if e != nil {
+			return nil, r.fail("invalid symbol index")
+		}
+		symbol := Symbol{Kind: line[0], Index: uint32(index)}
+		if _, exists := m.Symbols[symbol]; exists {
+			return nil, r.fail("duplicate symbol")
+		}
+		m.Symbols[symbol] = string(line[space+1:])
+	}
+	if err := m.Check(); err != nil {
+		return nil, r.fail(err.Error())
+	}
+	return m, nil
+}
+func Ioa_ReadAigerFromMemory(data []byte, n int32, check int32) (*Model, error) {
+	if n < 0 || int64(n) > int64(len(data)) {
+		return nil, fmt.Errorf("invalid AIGER buffer length")
+	}
+	return Read(data[:n])
+}
+func Ioa_ReadAiger(path string, check int32) (*Model, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	return Read(data)
+}
