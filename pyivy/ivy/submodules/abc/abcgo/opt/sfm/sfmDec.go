@@ -190,28 +190,7 @@ func Sfm_ManReadNtkMinSlack(p *Sfm_Dec_t) int32 { if p.pMit {
   SeeAlso     []
 
 ***********************************************************************/
-func Sfm_ParSetDefault3(pPars *Sfm_Par_t) {
-    memset( pPars, 0, sizeof(Sfm_Par_t) );
-    pPars.nTfoLevMax   =  100;  // the maximum fanout levels
-    pPars.nTfiLevMax   =  100;  // the maximum fanin levels
-    pPars.nFanoutMax   =   10;  // the maximum number of fanouts
-    pPars.nMffcMin     =    1;  // the maximum MFFC size
-    pPars.nMffcMax     =    3;  // the maximum MFFC size
-    pPars.nVarMax      =    6;  // the maximum variable count
-    pPars.nDecMax      =    1;  // the maximum number of decompositions
-    pPars.nWinSizeMax  =    0;  // the maximum window size
-    pPars.nGrowthLevel =    0;  // the maximum allowed growth in level
-    pPars.nBTLimit     =    0;  // the maximum number of conflicts in one SAT run
-    pPars.nTimeWin     =    1;  // the size of timing window in percents
-    pPars.DeltaCrit    =    0;  // delta delay in picoseconds
-    pPars.fUseAndOr    =    0;  // enable internal detection of AND/OR gates
-    pPars.fZeroCost    =    0;  // enable zero-cost replacement
-    pPars.fMoreEffort  =    0;  // enables using more effort
-    pPars.fUseSim      =    0;  // enable simulation
-    pPars.fArea        =    0;  // performs optimization for area
-    pPars.fVerbose     =    0;  // enable basic stats
-    pPars.fVeryVerbose =    0;  // enable detailed stats
-}
+
 
 /**Function*************************************************************
 
