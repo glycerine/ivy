@@ -88,15 +88,15 @@ type Sfm_Dec_t struct {
     // solver
     pSat       *sat_solver;        // reusable solver 
     vClauses         Vec_Wec_t;    // CNF clauses for the node
-    Vec_Int_t         vImpls[2];   // onset/offset implications
-    Vec_Wrd_t         vSets[2];    // onset/offset patterns
+    vImpls [2]Vec_Int_t;   // onset/offset implications
+    vSets [2]Vec_Wrd_t;    // onset/offset patterns
     nPats [2]int32;    // CEX count
     nPatWords [2]int32;// CEX words
     nDivWords               int32;   // div words
     nDivWordsAlloc               int32; // div words
-    word              TtElems[SFM_SUPP_MAX][SFM_WORD_MAX];
-    word *            pTtElems[SFM_SUPP_MAX];
-    word *            pDivWords[SFM_SUPP_MAX];
+    TtElems [SFM_SUPP_MAX][SFM_WORD_MAX]word;
+    pTtElems [SFM_SUPP_MAX][]word;
+    pDivWords [SFM_SUPP_MAX][]word;
     // temporary
     vNewNodes         Vec_Int_t;
     vGateTfi         Vec_Int_t;
@@ -105,7 +105,7 @@ type Sfm_Dec_t struct {
     vGateTemp         Vec_Int_t;
     vGateMffc         Vec_Int_t;
     vCands         Vec_Int_t;
-    word              Copy[4];
+    Copy [4]word;
     nSuppVars               int32;
     // statistics
     timeLib           abctime;
@@ -152,22 +152,22 @@ const SFM_MASK_FANIN =  4  // the same as above (pointed to by node with SFM_MAS
 const SFM_MASK_MFFC =   8  // MFFC nodes, including the target node
 const SFM_MASK_PIVOT = 16  // the target node
 
-func Sfm_DecMan(p *Abc_Obj_t) *Sfm_Dec_t { return (Sfm_Dec_t *)p.pNtk.pData;                  }
+func Sfm_DecMan(p *Abc_Obj_t) *Sfm_Dec_t { return p.pNtk.pData.(*Sfm_Dec_t);                  }
 func Sfm_DecObjSim(p *Sfm_Dec_t, pObj *Abc_Obj_t) word { return Vec_WrdEntry(&p.vObjSims, Abc_ObjId(pObj));  }
 func Sfm_DecObjSim2(p *Sfm_Dec_t, pObj *Abc_Obj_t) word { return Vec_WrdEntry(&p.vObjSims2, Abc_ObjId(pObj)); }
 func Sfm_DecDivPats(p *Sfm_Dec_t, d int32, c int32) *word { return Vec_WrdEntryP(&p.vSets[c], d*SFM_SIM_WORDS); }
 
-func Sfm_ManReadObjDelay(p *Sfm_Dec_t, Id int32) int32 { if p.pMit {
+func Sfm_ManReadObjDelay(p *Sfm_Dec_t, Id int32) int32 { if p.pMit != nil {
     return Sfm_MitReadObjDelay(p.pMit, Id);
 } else {
     return Sfm_TimReadObjDelay(p.pTim, Id);
 } }
-func Sfm_ManReadNtkDelay(p *Sfm_Dec_t) int32 { if p.pMit {
+func Sfm_ManReadNtkDelay(p *Sfm_Dec_t) int32 { if p.pMit != nil {
     return Sfm_MitReadNtkDelay(p.pMit);
 } else {
     return Sfm_TimReadNtkDelay(p.pTim);
 }     }
-func Sfm_ManReadNtkMinSlack(p *Sfm_Dec_t) int32 { if p.pMit {
+func Sfm_ManReadNtkMinSlack(p *Sfm_Dec_t) int32 { if p.pMit != nil {
     return Sfm_MitReadNtkMinSlack(p.pMit);
 } else {
     return 0;
@@ -257,7 +257,7 @@ func Sfm_DecStop(p *Sfm_Dec_t) {
     }
     Sfm_LibStop( p.pLib );
     if p.pTim { Sfm_TimStop( p.pTim ); }
-    if p.pMit { Sfm_MitStop( p.pMit ); }
+    if p.pMit != nil { Sfm_MitStop( p.pMit ); }
     // divisors
     for  i = 0; i < SFM_SUPP_MAX; i++  {
         p.pDivWords[i] = nil;
@@ -1291,7 +1291,7 @@ func Sfm_DecPeformDec3(p *Sfm_Dec_t, pObj *Abc_Obj_t) int32 {
             // skip identical gate
             //if ( pGate2 == NULL && pGate1 == (Mio_Gate_t *)pObj->pData )
             //    continue;
-            if p.pMit {
+            if p.pMit != nil {
                 var Gain int32  = Sfm_MitEvalRemapping( p.pMit, &p.vGateMffc, pObj, &vFanins, &p.vObjMap, pGate1, pFans1, pGate2, pFans2 );
                 if p.pPars.DelAreaRatio && AreaNew > AreaMffc && (Gain / (AreaNew - AreaMffc)) < p.pPars.DelAreaRatio {
                     continue; }
@@ -2152,12 +2152,12 @@ p.timeSat += Abc_Clock() - clk;
             p.nNodesChanged++;
             Abc_NtkCountStats( p, Limit );
             // reduce load due to removed MFFC
-            if p.pMit { Sfm_MitUpdateLoad( p.pMit, &p.vGateMffc, 0 ); } // assuming &p->vGateMffc contains MFFC
+            if p.pMit != nil { Sfm_MitUpdateLoad( p.pMit, &p.vGateMffc, 0 ); } // assuming &p->vGateMffc contains MFFC
             Sfm_DecInsert( pNtk, pObj, Limit, &p.vObjGates, &p.vObjFanins, &p.vObjMap, &p.vGateHands, p.GateBuffer, p.GateInvert, &p.vGateFuncs, &p.vNewNodes, p.pMit );
             // increase load due to added new nodes
-            if p.pMit { Sfm_MitUpdateLoad( p.pMit, &p.vNewNodes, 1 ); } // assuming &p->vNewNodes contains new nodes
+            if p.pMit != nil { Sfm_MitUpdateLoad( p.pMit, &p.vNewNodes, 1 ); } // assuming &p->vNewNodes contains new nodes
 clk = Abc_Clock();
-            if p.pMit {
+            if p.pMit != nil {
                 Sfm_MitUpdateTiming( p.pMit, &p.vNewNodes );
             } else {
                 Sfm_TimUpdateTiming( p.pTim, &p.vNewNodes ); }
