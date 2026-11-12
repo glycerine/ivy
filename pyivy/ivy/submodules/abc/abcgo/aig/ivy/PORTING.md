@@ -120,3 +120,177 @@ compilation still fails in the visible unported ivyCheck.go/ivyCut.go routines
 and later drafts. Replacement/buffer propagation, the remaining manager
 transformations, full DFS/level maintenance, full history, mapping, cuts,
 fraiging, rewriting and sequential optimization remain unfinished.
+
+The full DFS/check helper groups are now also ported. DFS returns typed ID
+slices; cone collection uses typed node slices; levelization returns slices per
+level. Sequential DFS includes latch-input cones and returns latch IDs through
+an optional slice pointer. Required levels preserve the original XOR delay of
+two. Choice-aware level computation retains the original representative-ring
+semantics; cycle validation includes choice dependencies.
+
+A separate checker review replaced list-length assertions with a safe
+bidirectional fanout audit: missing links, incorrect previous pointers and
+cyclic lists return failure. A DFS bug regression caught repeated frontier
+entries restoring a stale mark; frontier marks are now saved once per regular
+node and restored on return. Tests cover DFS order, shared cone collection,
+recomputed/required levels, latch boundaries and choice-induced cycles. These
+groups pass together with all completed APIs under the race detector.
+
+Manager duplication, sequential reachability cleanup, self-feeding latch checks
+and statistics are also ported in ivyManage.go. Duplication maps latch boundaries
+before copying combinational cones, then reconnects feedback. It preserves XOR
+behavior (the source duplicate routine incorrectly rebuilt every gate as AND).
+Sequential cleanup first disconnects the entire unreachable component, allowing
+unreachable latch cycles to be recycled safely. Self-feed checks terminate on
+cycles that do not include the requested root.
+
+The separate manager bug review distinguishes pEquiv mappings to another manager
+from choice links within the same manager. This is necessary because StartFrom
+and Dup deliberately leave mapping pointers on the source; DFS/validation must
+not treat those mappings as local graph choices. Regression fixtures cover XOR
+duplication, two-latch feedback duplication and deletion, and unrelated cycles.
+The combined completed-API suite passes under the race detector.
+
+Current remaining manager routines are Frames, PropagateBuffers and MakeSeq.
+Object replacement and buffer-fanin repair remain drafts, as do the larger
+history/rewriting/fraiging/mapping/sequential algorithms. The whole Ivy package
+still does not compile; completed-group tests explicitly select the real ported
+files and their tests, without excluding or disguising any draft file.
+
+## Cuts, timeframes and complete manager/object groups
+
+ivyCut.go is fully ported: sequential reconvergence expansion, Boolean pivot
+cuts, cut hashing/derivation/dominance filtering, bounded cut enumeration and
+original diagnostic drivers. Typed slices replace temporary Vec containers.
+The bounded cut records retain fixed arrays and explicit live counts/limits,
+because these describe a bounded record rather than duplicate slice metadata.
+Cut enumeration owns its result per call instead of reusing C's static store.
+Structural MUX recognition is in ivyMux.go and covers complemented data/control.
+
+The separate cuts bug review fixed marks leaking on a failed Boolean pivot
+search, safe handling of buffers/constants and duplicate fanins, and overflow
+when deriving a cut larger than its bound. Dominance filtering checks rejection
+before deleting dominated records. Tests assert the exact cuts of a three-input
+tree, size limits, per-call ownership, latch-depth leaves, reconvergent Boolean
+cuts, mark cleanup, buffer/duplicate expansion and every MUX input polarity.
+
+All ivyMan.c routines are now implemented across ivyLife.go, ivyManage.go and
+ivyFrames.go. All ivyObj.c routines are implemented across ivyCreate.go and
+ivyObj.go. ivyUpdate.go adds the required incremental/reverse/reset-level
+algorithms, and history choice creation plus dependency search live beside the
+previous history-creation helpers. The remaining unported utility/history
+algorithms remain visible in their source-derived files.
+
+The separate manager/object readability pass retained typed slices, explicit
+identity transfer and cached complement proxies. The bug pass corrected frame
+mapping row overlap (stride is the number of object slots, including ID zero),
+XOR reconstruction during unrolling, and sequential conversion's deleted-object
+counter. Replacement rejects dependency cycles before mutation and preserves
+old node/proxy identity while recycling the replacement slot. Its freeTop option
+must be zero: recycling the identity being preserved is invalid; all original
+callers use zero. Bounded dependency search tracks remaining depth so a shared
+cone first reached on a long path can still be explored via a shorter path.
+
+Regressions exhaust three-frame XOR state transitions with initialized and free
+initial state, verify mapping bounds, replacement truth/identity/hash/fanout
+links, complemented buffer propagation, rejection of dependency cycles without
+mutation, and sequential conversion's visible initial state and all transitions.
+The combined completed-API suite, including the previous attributes, graph,
+balance, DFS and manager tests, passes under the race detector. Full-package
+compilation now first fails in the visible ivyCutTrav.go draft; advanced cut
+traversal, history, rewriting, fraiging, mapping and sequential synthesis remain
+unfinished. No unported implementation is hidden or replaced with a stub.
+
+## Traversal cut group
+
+ivyCutTrav.go is fully ported: elementary bit cuts, depth-based and size-based
+volume traversal, topological collection, wordwise merging and implication,
+bounded-leaf root cut collection, and the original diagnostic driver. Temporary
+node/frontier vectors and bit-cut rows are typed slices. The original default
+volume policy is six levels; its node-limit parameter was unused in C and
+remains advisory. Volume2 is the original size-driven alternative.
+
+The separate readability review replaced raw arena pointers with Go-owned word
+slices and per-call result ownership, deriving sizes from len. The separate bug
+review deduplicated shared nodes during volume collection, handled unary buffers
+and constants safely, checked cycles before changing marks, and ensured scratch
+traversal IDs/marks are cleared on exit. Bit-cut filtering first checks whether
+an existing cut rejects a candidate before compacting the output: the original
+interleaved filtering could corrupt existing cuts when a later cut rejected it.
+
+Regression tests compare traversal cuts against expansion cuts, check result
+ownership across subsequent calls, shared-cone uniqueness, node-limit volume
+collection, cycle rejection without mark/ID mutation, stable arena slices after
+growth, rejected-candidate preservation, unary buffers, and a 63-node tree whose
+bit cuts cross a 32-bit word boundary. Each returned cut of that tree is checked
+as an input separator. The connected completed-API suite passes with the race
+detector. Full Ivy compilation now first fails in visible ivyDsd.go drafts; no
+unported source has been excluded or replaced with a stub.
+
+## Five-variable DSD group
+
+ivyDsd.go now implements the complete active ivyDsd.c API: truth cofactors and
+support detection, recursive AND/XOR decomposition, disjoint-cofactor MUX and
+three-input majority recognition, truth reconstruction, textual printing, Ivy
+graph construction and the active diagnostics. The source's disabled #if 0
+file-driven experiments are not active APIs. Prime functions return failure,
+matching the original recognizer's intentionally restricted decomposition basis.
+
+The separate readability pass replaces C unions/bitfields with explicit 32-bit
+packing and a small bounded record, preserving original packed tree words.
+Temporary trees/frontiers use slices and output accepts io.Writer. There is no
+static shared decomposition tree; the diagnostic counter is atomic. Graph
+construction uses the actual typed Ivy constructors.
+
+The separate bug review adds packed-field bounds and checks every child index
+is smaller than its parent before truth computation, printing or construction,
+so malformed cyclic trees cannot recurse forever. It preserves the source's
+frontier behavior: sequential leaf encodings are changed to their object IDs;
+this constructor does not synthesize extra latch stages from leaf-depth bits.
+The fixed five-variable/32-bit truth-table scope is explicit.
+
+Exhaustive tests cover every four-variable function (65,536 truth tables).
+A differential test compiles the actual source-C decomposition section with a
+minimal vector shim and compares recognition plus every packed tree record for
+all four-variable functions and 4,096 seeded five-variable functions. Additional
+tests exercise 10,000 random five-variable truth tables, reconstruct every
+recognized three-variable function in the actual Ivy manager and compare all
+32 assignments, check packing/majority printing, and reject cyclic trees. The
+connected completed-API suite passes both race testing and go vet. Whole Ivy
+compilation now first fails in the visible ivyFastMap.go draft.
+
+## Fast K-LUT mapping
+
+ivyFastMap.go is now fully ported. This source file implements technology
+mapping, rather than structural hash lookup: delay-oriented support selection,
+sorted bounded support union, mapped-area collection, required times, exact
+reference/dereference area, three area-recovery passes, frontier compaction and
+the original alternative recovery helpers. Mapping requires a valid buffer-free
+combinational graph and LUT sizes 2..32. Structural lookup remains ivyTable.go.
+
+The separate readability pass replaced variable-length raw memory records with
+typed support slices, deriving counts from len. Manager-owned support records
+and levelized LUT slices replace pointer arithmetic and shared static temporary
+buffers. Mapping duration is stored per mapping manager. There are no global
+mutable mapping scratch buffers or duplicated byte-allocation metadata.
+
+The separate bug pass made failed/aliased support merges transactional, kept
+recovered support leaves sorted for subsequent merges, and stopped using the
+constant's support record as scratch storage. Mapping walks actual topology,
+including dangling nodes, so identity-preserving rewrites that create references
+to larger IDs work correctly. Foreign data in the manager's pData slot is
+rejected. Reference/dereference mismatches are checked; stop is idempotent.
+The original recovery2 alternative intentionally omits timing rejection; the
+active Perform sequence uses the timing-constrained main recovery routine.
+
+Tests perform 10,000 randomized support unions against independent sets, with
+failed aliased merges preserving the original. One hundred seeded random DAGs
+verify support bounds/order, separator correctness, unchanged canonical hash
+lookup, LUT delays and independently recomputed mapped references; exact-area
+queries must restore every reference count. Tree fixtures test LUT sizes 2..8,
+delay/area recovery and release; a replacement fixture tests non-ID-topological
+mapping. A source-C differential test compiles the actual original Node/Merge
+functions and compares every delay and support on 200 seeded random AIGs.
+The connected suite passes race testing and vet. Whole-package compilation now
+first fails in visible ivyFraig.go drafts, and the remaining fraiging/history/
+rewriting/sequential synthesis scope is still unfinished.

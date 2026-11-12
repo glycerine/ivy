@@ -51,3 +51,22 @@ func TestNativeXorPhase(t *testing.T) {
 		t.Fatal("XOR creation used AND phase rule")
 	}
 }
+
+func TestCheckRejectsCyclicFanoutList(t *testing.T) {
+	p := Ivy_ManStart()
+	a, b := Ivy_ObjCreatePi(p), Ivy_ObjCreatePi(p)
+	root := Ivy_And(p, a, b)
+	Ivy_ObjCreatePo(p, root)
+	Ivy_ManStartFanout(p)
+	if Ivy_ManCheckFanouts(p) == 0 {
+		t.Fatal("valid fanouts rejected")
+	}
+	if Ivy_ObjFanin0(root) == a {
+		root.pNextFan0 = root
+	} else {
+		root.pNextFan1 = root
+	}
+	if Ivy_ManCheckFanouts(p) != 0 || Ivy_ManCheck(p) != 0 {
+		t.Fatal("cyclic fanout list accepted")
+	}
+}

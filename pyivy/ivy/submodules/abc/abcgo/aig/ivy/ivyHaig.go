@@ -189,17 +189,8 @@ func Ivy_ManHaigStop(p *Ivy_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjIsInTfi_rec(pObjNew *Ivy_Obj_t, pObjOld *Ivy_Obj_t, Levels int32) int32 {
-    if pObjNew == pObjOld {
-        return 1; }
-    if Levels == 0 || Ivy_ObjIsCi(pObjNew) || Ivy_ObjIsConst1(pObjNew) {
-        return 0; }
-    if Ivy_ObjIsInTfi_rec( Ivy_ObjFanin0(pObjNew), pObjOld, Levels - 1 ) != 0 {
-        return 1; }
-    if Ivy_ObjIsNode(pObjNew) && (Ivy_ObjIsInTfi_rec( Ivy_ObjFanin1(pObjNew), pObjOld, Levels - 1 ) != 0) {
-        return 1; }
-    return 0;
-}
+// Ivy_ObjIsInTfi_rec is implemented in the ported object API group.
+
 
 /**Function*************************************************************
 
@@ -212,64 +203,8 @@ func Ivy_ObjIsInTfi_rec(pObjNew *Ivy_Obj_t, pObjOld *Ivy_Obj_t, Levels int32) in
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManHaigCreateChoice(p *Ivy_Man_t, pObjOld *Ivy_Obj_t, pObjNew *Ivy_Obj_t) {
-    var pObjOldHaig, pObjNewHaig *Ivy_Obj_t;
-    var pObjOldHaigR, pObjNewHaigR *Ivy_Obj_t;
-    var fCompl int32;
-//printf( "\nCreating choice for %d and %d in AIG\n", pObjOld->Id, Ivy_Regular(pObjNew)->Id );
+// Ivy_ManHaigCreateChoice is implemented in the ported object API group.
 
-    assert(p.pHaig != nil, "p.pHaig != nil");
-    assert(!Ivy_IsComplement(pObjOld), "!Ivy_IsComplement(pObjOld)");
-    // get pointers to the representatives of pObjOld and pObjNew
-    pObjOldHaig = pObjOld.pEquiv;
-    pObjNewHaig = Ivy_NotCond( Ivy_Regular(pObjNew).pEquiv, Ivy_IsComplement(pObjNew) );
-    // get the classes
-    pObjOldHaig = Ivy_NotCond( Ivy_HaigObjRepr(Ivy_Regular(pObjOldHaig)), Ivy_IsComplement(pObjOldHaig) );
-    pObjNewHaig = Ivy_NotCond( Ivy_HaigObjRepr(Ivy_Regular(pObjNewHaig)), Ivy_IsComplement(pObjNewHaig) );
-    // get regular pointers
-    pObjOldHaigR = Ivy_Regular(pObjOldHaig);
-    pObjNewHaigR = Ivy_Regular(pObjNewHaig);
-    // check if there is phase difference between them
-    fCompl = (Ivy_IsComplement(pObjOldHaig) != Ivy_IsComplement(pObjNewHaig));
-    // if the class is the same, nothing to do
-    if pObjOldHaigR == pObjNewHaigR {
-        return; }
-    // if the second node belongs to a class, do not merge classes (for the time being)
-    if Ivy_ObjRefs(pObjOldHaigR) == 0 || pObjNewHaigR.pEquiv != nil || 
-        Ivy_ObjRefs(pObjNewHaigR) > 0 { //|| Ivy_ObjIsInTfi_rec(pObjNewHaigR, pObjOldHaigR, 10) )
-    
-/*
-        if ( pObjNewHaigR->pEquiv != NULL )
-            printf( "c" );
-        if ( Ivy_ObjRefs(pObjNewHaigR) > 0 )
-            printf( "f" );
-        printf( " " );
-*/
-        p.pHaig.nClassesSkip++;
-        return;
-    }
-
-    // add this node to the class of pObjOldHaig
-    assert(Ivy_ObjRefs(pObjOldHaigR) > 0, "Ivy_ObjRefs(pObjOldHaigR) > 0");
-    assert(!Ivy_IsComplement(pObjOldHaigR.pEquiv), "!Ivy_IsComplement(pObjOldHaigR.pEquiv)");
-    if pObjOldHaigR.pEquiv == nil {
-        pObjNewHaigR.pEquiv = Ivy_NotCond( pObjOldHaigR, fCompl );
-    } else {
-        pObjNewHaigR.pEquiv = Ivy_NotCond( pObjOldHaigR.pEquiv, fCompl ); }
-    pObjOldHaigR.pEquiv = pObjNewHaigR;
-//printf( "Setting choice node %d -> %d.\n", pObjOldHaigR->Id, pObjNewHaigR->Id );
-    // update the class of the new node
-//    Ivy_Regular(pObjNew)->pEquiv = Ivy_NotCond( pObjOldHaigR, fCompl ^ Ivy_IsComplement(pObjNew) );
-//printf( "Creating choice for %d and %d in HAIG\n", pObjOldHaigR->Id, pObjNewHaigR->Id );
-
-//    if ( pObjOldHaigR->Id == 13 )
-//    {
-//        Ivy_ManShow( p, 0 );
-//        Ivy_ManShow( p->pHaig, 1 );
-//    }
-//    if ( !Ivy_ManIsAcyclic( p->pHaig ) )
-//        printf( "HAIG contains a cycle\n" );
-}
 
 /**Function*************************************************************
 

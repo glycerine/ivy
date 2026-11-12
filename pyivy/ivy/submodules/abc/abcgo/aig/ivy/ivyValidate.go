@@ -6,9 +6,6 @@ func ivyAcyclicVisit(p *Ivy_Man_t, node *Ivy_Obj_t, state map[*Ivy_Obj_t]byte) b
 	if node == nil || node.owner != p || node.recycled {
 		return false
 	}
-	if node == p.pConst1 || Ivy_ObjIsCi(node) != 0 {
-		return true
-	}
 	if state[node] == 1 {
 		return false
 	}
@@ -16,6 +13,25 @@ func ivyAcyclicVisit(p *Ivy_Man_t, node *Ivy_Obj_t, state map[*Ivy_Obj_t]byte) b
 		return true
 	}
 	state[node] = 1
+	if p.pHaig == nil && node.pEquiv != nil && Ivy_Regular(node.pEquiv).owner == p && node.nRefs > 0 {
+		if Ivy_IsComplement(node.pEquiv) != 0 {
+			return false
+		}
+		members := map[*Ivy_Obj_t]bool{}
+		for other := node.pEquiv; other != node; other = Ivy_Regular(other.pEquiv) {
+			if other == nil || members[other] {
+				return false
+			}
+			members[other] = true
+			if !ivyAcyclicVisit(p, other, state) {
+				return false
+			}
+		}
+	}
+	if node == p.pConst1 || Ivy_ObjIsCi(node) != 0 {
+		state[node] = 2
+		return true
+	}
 	if !ivyAcyclicVisit(p, node.pFanin0, state) {
 		return false
 	}
@@ -112,9 +128,9 @@ func Ivy_ManCheck(p *Ivy_Man_t) int32 {
 		if node != nil && node.nRefs != refs[node] {
 			return 0
 		}
-		if node != nil && p.fFanout != 0 && Ivy_ObjFanoutNum(p, node) != node.nRefs {
-			return 0
-		}
+	}
+	if Ivy_ManCheckFanouts(p) == 0 {
+		return 0
 	}
 	return Ivy_ManIsAcyclic(p)
 }

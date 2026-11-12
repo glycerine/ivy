@@ -38,3 +38,51 @@ func Ivy_ManHaigCreateObj(p *Ivy_Man_t, node *Ivy_Obj_t) {
 		panic("history creation supports buffers, latches and ANDs")
 	}
 }
+
+func Ivy_ObjIsInTfi_rec(next, old *Ivy_Obj_t, levels int32) int32 {
+	seen := map[*Ivy_Obj_t]int32{}
+	var visit func(*Ivy_Obj_t, int32) bool
+	visit = func(n *Ivy_Obj_t, left int32) bool {
+		n = Ivy_Regular(n)
+		if n == old {
+			return true
+		}
+		if n == nil || left == 0 || Ivy_ObjIsCi(n) != 0 || Ivy_ObjIsConst1(n) != 0 {
+			return false
+		}
+		if previous, known := seen[n]; known && (previous < 0 || left >= 0 && previous >= left) {
+			return false
+		}
+		seen[n] = left
+		remaining := left - 1
+		if left < 0 {
+			remaining = -1
+		}
+		return visit(n.pFanin0, remaining) || visit(n.pFanin1, remaining)
+	}
+	return ivyBool(visit(next, levels))
+}
+func Ivy_ManHaigCreateChoice(p *Ivy_Man_t, old, next *Ivy_Obj_t) {
+	if p.pHaig == nil || Ivy_IsComplement(old) != 0 || old.pEquiv == nil || Ivy_Regular(next).pEquiv == nil {
+		panic("ivy: missing history choice mapping")
+	}
+	a := old.pEquiv
+	b := Ivy_NotCond(Ivy_Regular(next).pEquiv, Ivy_IsComplement(next))
+	a = Ivy_NotCond(Ivy_HaigObjRepr(Ivy_Regular(a)), Ivy_IsComplement(a))
+	b = Ivy_NotCond(Ivy_HaigObjRepr(Ivy_Regular(b)), Ivy_IsComplement(b))
+	ar, br := Ivy_Regular(a), Ivy_Regular(b)
+	if ar == br {
+		return
+	}
+	if ar.nRefs == 0 || br.pEquiv != nil || br.nRefs > 0 {
+		p.pHaig.nClassesSkip++
+		return
+	}
+	compl := Ivy_IsComplement(a) ^ Ivy_IsComplement(b)
+	if ar.pEquiv == nil {
+		br.pEquiv = Ivy_NotCond(ar, compl)
+	} else {
+		br.pEquiv = Ivy_NotCond(ar.pEquiv, compl)
+	}
+	ar.pEquiv = br
+}

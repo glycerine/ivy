@@ -254,22 +254,7 @@ func Ivy_ManLatches(p *Ivy_Man_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManLevels(p *Ivy_Man_t) int32 {
-    var pObj *Ivy_Obj_t;
-    var i, LevelMax int32;
-    // inlining of macro Ivy_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vPos)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {
-        // inlining of macro IVY_MAX
-        
-        if (LevelMax) > (int32(Ivy_ObjFanin0(pObj).Level)) {
-            LevelMax = (LevelMax);
-        } else {
-            LevelMax = (int32(Ivy_ObjFanin0(pObj).Level));
-        }
-    }
-    return LevelMax;
-}
+// Ivy_ManLevels is implemented in ivyDfs.go.
 
 /**Function*************************************************************
 
@@ -282,16 +267,8 @@ func Ivy_ManLevels(p *Ivy_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManResetLevels_rec(pObj *Ivy_Obj_t) int32 {
-    if pObj.Level || Ivy_ObjIsCi(pObj) || Ivy_ObjIsConst1(pObj) {
-        return pObj.Level; }
-    if Ivy_ObjIsBuf(pObj) {
-        return pObj.Level = Ivy_ManResetLevels_rec( Ivy_ObjFanin0(pObj) ); }
-    assert(Ivy_ObjIsNode(pObj), "Ivy_ObjIsNode(pObj)");
-    Ivy_ManResetLevels_rec( Ivy_ObjFanin0(pObj) );
-    Ivy_ManResetLevels_rec( Ivy_ObjFanin1(pObj) );
-    return pObj.Level = Ivy_ObjLevelNew( pObj );
-}
+// Ivy_ManResetLevels_rec is implemented in the ported manager/object API group.
+
 
 /**Function*************************************************************
 
@@ -304,21 +281,8 @@ func Ivy_ManResetLevels_rec(pObj *Ivy_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ManResetLevels(p *Ivy_Man_t) {
-    var pObj *Ivy_Obj_t;
-    var i int32;
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        pObj.Level = 0; }
-    }
-    // inlining of macro Ivy_ManForEachCo
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsCo(pObj) {} else {
-        Ivy_ManResetLevels_rec( Ivy_ObjFanin0(pObj) ); }
-    }
-}
+// Ivy_ManResetLevels is implemented in the ported manager/object API group.
+
 
 /**Function*************************************************************
 
@@ -396,27 +360,8 @@ func Ivy_ObjMffcLabel(p *Ivy_Man_t, pNode *Ivy_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjUpdateLevel_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t) {
-    var pFanout *Ivy_Obj_t;
-    var vFanouts *Vec_Ptr_t;
-    var i, LevelNew int32;
-    assert(p.fFanout, "p.fFanout");
-    assert(Ivy_ObjIsNode(pObj), "Ivy_ObjIsNode(pObj)");
-    vFanouts = Vec_PtrAlloc( 10 );
-    // inlining of macro Ivy_ObjForEachFanout
-    for  i = 0, Ivy_ObjCollectFanouts(p, pObj, vFanouts);                                  i < Vec_PtrSize(vFanouts) && ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vFanouts,i)); i++  {
-        if Ivy_ObjIsCo(pFanout) {
-//            assert( (int)Ivy_ObjFanin0(pFanout)->Level <= p->nLevelMax );
-            continue;
-        }
-        LevelNew = Ivy_ObjLevelNew( pFanout );
-        if int32(pFanout.Level) == LevelNew {
-            continue; }
-        pFanout.Level = LevelNew;
-        Ivy_ObjUpdateLevel_rec( p, pFanout );
-    }
-    Vec_PtrFree( vFanouts );
-}
+// Ivy_ObjUpdateLevel_rec is implemented in the ported object API group.
+
 
 /**Function*************************************************************
 
@@ -429,28 +374,8 @@ func Ivy_ObjUpdateLevel_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjLevelRNew(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 {
-    var pFanout *Ivy_Obj_t;
-    var vFanouts *Vec_Ptr_t;
-    var i int32;
-    var Required int32;
-    var LevelNew int32 = 1000000;
-    assert(p.fFanout && p.vRequired, "p.fFanout && p.vRequired");
-    vFanouts = Vec_PtrAlloc( 10 );
-    // inlining of macro Ivy_ObjForEachFanout
-    for  i = 0, Ivy_ObjCollectFanouts(p, pObj, vFanouts);                                  i < Vec_PtrSize(vFanouts) && ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vFanouts,i)); i++  {
-        Required = Vec_IntEntry(p.vRequired, pFanout.Id);
-        // inlining of macro IVY_MIN
-        
-        if (LevelNew) < (Required) {
-            LevelNew = (LevelNew);
-        } else {
-            LevelNew = (Required);
-        }
-    }
-    Vec_PtrFree( vFanouts );
-    return LevelNew - 1;
-}
+// Ivy_ObjLevelRNew is implemented in the ported object API group.
+
 
 /**Function*************************************************************
 
@@ -463,26 +388,8 @@ func Ivy_ObjLevelRNew(p *Ivy_Man_t, pObj *Ivy_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjUpdateLevelR_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t, ReqNew int32) {
-    var pFanin *Ivy_Obj_t;
-    if Ivy_ObjIsConst1(pObj) || Ivy_ObjIsCi(pObj) {
-        return; }
-    assert(Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj), "Ivy_ObjIsNode(pObj) || Ivy_ObjIsBuf(pObj)");
-    // process the first fanin
-    pFanin = Ivy_ObjFanin0(pObj);
-    if Vec_IntEntry(p.vRequired, pFanin.Id) > ReqNew - 1 {
-        Vec_IntWriteEntry( p.vRequired, pFanin.Id, ReqNew - 1 );
-        Ivy_ObjUpdateLevelR_rec( p, pFanin, ReqNew - 1 );
-    }
-    if Ivy_ObjIsBuf(pObj) {
-        return; }
-    // process the second fanin
-    pFanin = Ivy_ObjFanin1(pObj);
-    if Vec_IntEntry(p.vRequired, pFanin.Id) > ReqNew - 1 {
-        Vec_IntWriteEntry( p.vRequired, pFanin.Id, ReqNew - 1 );
-        Ivy_ObjUpdateLevelR_rec( p, pFanin, ReqNew - 1 );
-    }
-}
+// Ivy_ObjUpdateLevelR_rec is implemented in the ported object API group.
+
 
 /**Function*************************************************************
 
@@ -495,28 +402,8 @@ func Ivy_ObjUpdateLevelR_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t, ReqNew int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjIsMuxType(pNode *Ivy_Obj_t) int32 {
-    var pNode0, pNode1 *Ivy_Obj_t;
-    // check that the node is regular
-    assert(!Ivy_IsComplement(pNode), "!Ivy_IsComplement(pNode)");
-    // if the node is not AND, this is not MUX
-    if !Ivy_ObjIsAnd(pNode) {
-        return 0; }
-    // if the children are not complemented, this is not MUX
-    if !Ivy_ObjFaninC0(pNode) || !Ivy_ObjFaninC1(pNode) {
-        return 0; }
-    // get children
-    pNode0 = Ivy_ObjFanin0(pNode);
-    pNode1 = Ivy_ObjFanin1(pNode);
-    // if the children are not ANDs, this is not MUX
-    if !Ivy_ObjIsAnd(pNode0) || !Ivy_ObjIsAnd(pNode1) {
-        return 0; }
-    // otherwise the node is MUX iff it has a pair of equal grandchildren
-    return (Ivy_ObjFaninId0(pNode0) == Ivy_ObjFaninId0(pNode1) && (Ivy_ObjFaninC0(pNode0) ^ Ivy_ObjFaninC0(pNode1))) || 
-           (Ivy_ObjFaninId0(pNode0) == Ivy_ObjFaninId1(pNode1) && (Ivy_ObjFaninC0(pNode0) ^ Ivy_ObjFaninC1(pNode1))) ||
-           (Ivy_ObjFaninId1(pNode0) == Ivy_ObjFaninId0(pNode1) && (Ivy_ObjFaninC1(pNode0) ^ Ivy_ObjFaninC0(pNode1))) ||
-           (Ivy_ObjFaninId1(pNode0) == Ivy_ObjFaninId1(pNode1) && (Ivy_ObjFaninC1(pNode0) ^ Ivy_ObjFaninC1(pNode1)));
-}
+// Ivy_ObjIsMuxType is implemented in ivyMux.go.
+
 
 /**Function*************************************************************
 
@@ -532,73 +419,8 @@ func Ivy_ObjIsMuxType(pNode *Ivy_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_ObjRecognizeMux(pNode *Ivy_Obj_t, ppNodeT **Ivy_Obj_t, ppNodeE **Ivy_Obj_t) *Ivy_Obj_t {
-    var pNode0, pNode1 *Ivy_Obj_t;
-    assert(!Ivy_IsComplement(pNode), "!Ivy_IsComplement(pNode)");
-    assert((Ivy_ObjIsMuxType(pNode) != 0), "Ivy_ObjIsMuxType(pNode)");
-    // get children
-    pNode0 = Ivy_ObjFanin0(pNode);
-    pNode1 = Ivy_ObjFanin1(pNode);
-    // find the control variable
-//    if ( pNode1->p1 == Fraig_Not(pNode2->p1) )
-    if Ivy_ObjFaninId0(pNode0) == Ivy_ObjFaninId0(pNode1) && (Ivy_ObjFaninC0(pNode0) ^ Ivy_ObjFaninC0(pNode1)) {
-//        if ( Fraig_IsComplement(pNode1->p1) )
-        if Ivy_ObjFaninC0(pNode0) { // pNode2->p1 is positive phase of C
-            *ppNodeT = Ivy_Not(Ivy_ObjChild1(pNode1));//pNode2->p2);
-            *ppNodeE = Ivy_Not(Ivy_ObjChild1(pNode0));//pNode1->p2);
-            return Ivy_ObjChild0(pNode1);//pNode2->p1;
-        
-        } else { // pNode1->p1 is positive phase of C
-            *ppNodeT = Ivy_Not(Ivy_ObjChild1(pNode0));//pNode1->p2);
-            *ppNodeE = Ivy_Not(Ivy_ObjChild1(pNode1));//pNode2->p2);
-            return Ivy_ObjChild0(pNode0);//pNode1->p1;
-        }
-    
-//    else if ( pNode1->p1 == Fraig_Not(pNode2->p2) )
-    } else if Ivy_ObjFaninId0(pNode0) == Ivy_ObjFaninId1(pNode1) && (Ivy_ObjFaninC0(pNode0) ^ Ivy_ObjFaninC1(pNode1)) {
-//        if ( Fraig_IsComplement(pNode1->p1) )
-        if Ivy_ObjFaninC0(pNode0) { // pNode2->p2 is positive phase of C
-            *ppNodeT = Ivy_Not(Ivy_ObjChild0(pNode1));//pNode2->p1);
-            *ppNodeE = Ivy_Not(Ivy_ObjChild1(pNode0));//pNode1->p2);
-            return Ivy_ObjChild1(pNode1);//pNode2->p2;
-        
-        } else { // pNode1->p1 is positive phase of C
-            *ppNodeT = Ivy_Not(Ivy_ObjChild1(pNode0));//pNode1->p2);
-            *ppNodeE = Ivy_Not(Ivy_ObjChild0(pNode1));//pNode2->p1);
-            return Ivy_ObjChild0(pNode0);//pNode1->p1;
-        }
-    
-//    else if ( pNode1->p2 == Fraig_Not(pNode2->p1) )
-    } else if Ivy_ObjFaninId1(pNode0) == Ivy_ObjFaninId0(pNode1) && (Ivy_ObjFaninC1(pNode0) ^ Ivy_ObjFaninC0(pNode1)) {
-//        if ( Fraig_IsComplement(pNode1->p2) )
-        if Ivy_ObjFaninC1(pNode0) { // pNode2->p1 is positive phase of C
-            *ppNodeT = Ivy_Not(Ivy_ObjChild1(pNode1));//pNode2->p2);
-            *ppNodeE = Ivy_Not(Ivy_ObjChild0(pNode0));//pNode1->p1);
-            return Ivy_ObjChild0(pNode1);//pNode2->p1;
-        
-        } else { // pNode1->p2 is positive phase of C
-            *ppNodeT = Ivy_Not(Ivy_ObjChild0(pNode0));//pNode1->p1);
-            *ppNodeE = Ivy_Not(Ivy_ObjChild1(pNode1));//pNode2->p2);
-            return Ivy_ObjChild1(pNode0);//pNode1->p2;
-        }
-    
-//    else if ( pNode1->p2 == Fraig_Not(pNode2->p2) )
-    } else if Ivy_ObjFaninId1(pNode0) == Ivy_ObjFaninId1(pNode1) && (Ivy_ObjFaninC1(pNode0) ^ Ivy_ObjFaninC1(pNode1)) {
-//        if ( Fraig_IsComplement(pNode1->p2) )
-        if Ivy_ObjFaninC1(pNode0) { // pNode2->p2 is positive phase of C
-            *ppNodeT = Ivy_Not(Ivy_ObjChild0(pNode1));//pNode2->p1);
-            *ppNodeE = Ivy_Not(Ivy_ObjChild0(pNode0));//pNode1->p1);
-            return Ivy_ObjChild1(pNode1);//pNode2->p2;
-        
-        } else { // pNode1->p2 is positive phase of C
-            *ppNodeT = Ivy_Not(Ivy_ObjChild0(pNode0));//pNode1->p1);
-            *ppNodeE = Ivy_Not(Ivy_ObjChild0(pNode1));//pNode2->p1);
-            return Ivy_ObjChild1(pNode0);//pNode1->p2;
-        }
-    }
-    assert(false, "0"); // this is not MUX
-    return nil;
-}
+// Ivy_ObjRecognizeMux is implemented in ivyMux.go.
+
 
 /**Function*************************************************************
 
