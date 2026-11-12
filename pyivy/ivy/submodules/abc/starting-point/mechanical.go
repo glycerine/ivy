@@ -173,7 +173,7 @@ func lowerSwitchCases(source string) (string, error) {
 
 func mechanicalDraft(source string) (string, error) {
 	var err error
-	for _, pass := range []func(string) (string, error){liftStaticLocals, lowerAggregateInitializers, lowerBitfields, lowerRemainingStructFields, lowerDoWhile, joinControlBraces, unwrapControlHeaders, simplifyConditionOnlyFor, mechanicalSyntax, lowerCommaExpressions, lowerPostfixIndexAssignments, lowerSwitchCases, separateBlockStatements} {
+	for _, pass := range []func(string) (string, error){liftStaticLocals, lowerAggregateInitializers, lowerBitfields, lowerRemainingStructFields, lowerDoWhile, joinControlBraces, unwrapControlHeaders, simplifyConditionOnlyFor, mechanicalSyntax, lowerSingleObjectCalloc, combineAllocationDeclarations, lowerCommaExpressions, lowerPostfixIndexAssignments, lowerSwitchCases, separateBlockStatements} {
 		source, err = pass(source)
 		if err != nil {
 			return "", err

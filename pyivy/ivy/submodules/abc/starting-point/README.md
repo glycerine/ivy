@@ -381,3 +381,14 @@ for evaluation-order review.
 The CLI prints total elapsed runtime as its final line, for example
 `elapsed: 2m 3sec`. Timing includes setup, translation and reporting, and is
 also printed after an error diagnostic.
+
+Typed single-object calloc expressions, including expanded `ABC_CALLOC(T, 1)`,
+become `&T{}` when the cast type matches `sizeof(T)`. Known primitive types use
+`new(T)` instead. Other counts or mismatched types remain for review. Macro
+inlining annotations and allocation comments are retained.
+
+An uninitialized local pointer declaration can combine with its first allocation:
+`var p *T; ...; p = &T{};` becomes `...; p := &T{};`. The types must match and the
+first use must be in the same straight-line block. Earlier uses, address-taking,
+control-flow boundaries and package variables prevent this rewrite. Declaration
+comments and macro inlining annotations are preserved.

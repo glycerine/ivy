@@ -2070,3 +2070,48 @@ built binary for tree, flat and error cases to verify exactly one elapsed line
 at the end of the combined output, including after -pre details. No experiment
 tests were run.
 CLI tests pass. Installed prototype-66.
+
+### Prototype 67: typed single-object calloc expressions
+
+Observed the requested explicit-allocation regression red, then added a shared
+mechanical rule after macro expansion: ((T *) calloc((size_t)(1), sizeof(T)))
+becomes &T{}. This also handles the actual ABC_CALLOC expansion in template.c,
+without special-casing the macro before expansion or losing its inlining comment.
+Recognize redundant enclosing parentheses, literal-one suffixes, whitespace and
+comments; require exactly one pointer level and a matching sizeof type. Known
+primitive types use new(mappedGoType), since scalar composite literals are not
+valid Go. Preserve required grouping before member/index access and leave other
+parts of larger expressions intact.
+
+Array/dynamic/zero counts, mismatched types, multiple pointer levels, malloc,
+untyped calloc, and malformed arities remain unchanged. Preserve comments and
+function draft metadata; no anonymous functions or allocation adapters.
+
+Validation: minimal red-to-green regression, explicit-form boundary tests,
+comments/literals/grouping, macro annotation and metadata checks, a compiled
+zero-initialization runtime test, and the real src/template.c allocation.
+Library and CLI tests exclude experiments; existing out/ is untouched.
+Library and CLI suites pass. Installed prototype-67; regenerate output to apply.
+
+### Prototype 68: combine local declarations with first allocation
+
+Observed a minimal declaration-plus-calloc regression fail, then added a pass
+after typed allocation lowering. An uninitialized local `var p *T;` followed by
+its first use as `p = &T{};` becomes `p := &T{};`. The declaration can be on the
+previous line or earlier among unrelated straight-line statements. Matching
+already-present `new(T)` assignments are supported too. Preserve declaration
+comments and the macro inlining annotation; function metadata matches the draft.
+
+Require the allocation's inferred pointer type to match the declared type.
+Leave package variables, initialized/grouped declarations, prior reads/writes,
+address escapes, type mismatches, labels, directives, control headers and
+cross-block cases unchanged. Multiple independent local allocations can combine;
+empty composite literals in intervening assignments are not treated as scopes.
+The operation is idempotent and does not hoist allocation or introduce closures.
+
+Validation: minimal red-to-green test, adjacent/earlier declarations, multiple
+locals, comment retention, scope/control-flow and first-use negative cases,
+metadata, real template.c, and a compiled runtime test combining earlier local
+declaration, macro expansion, allocation, field writes and printf. Library and
+CLI tests exclude experiments; existing out/ is unchanged.
+Library and CLI suites pass. Installed prototype-68; regenerate output to apply.
