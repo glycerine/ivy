@@ -1,559 +1,375 @@
 package cec
 
-import "time"
+// Pattern compression, sensitizing-path minimization and compatible-pattern
+// packing follow cecPat.c. Literals encode CI index<<1 | inverted assignment.
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-/**CFile****************************************************************
-
-  FileName    [cecPat.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Combinational equivalence checking.]
-
-  Synopsis    [Simulation pattern manager.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: cecPat.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "cecInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatStoreNum(p *Cec_ManPat_t, Num int32) {
-    var x uint32  = uint32(Num);
-    assert(Num >= 0, "Num >= 0");
-    for  x & ~0x7f  {
-        Vec_StrPush( p.vStorage, byte(((x & 0x7f) | 0x80)) );
-        x >>= 7;
-    }
-    Vec_StrPush( p.vStorage, byte(x) );
+type Cec_ManPat_t struct {
+	vPattern1, vPattern2                                                           *Vec_Int_t
+	vStorage                                                                       *Vec_Str_t
+	iStart, nPats, nPatsAll, nPatLits, nPatLitsAll, nPatLitsMin, nPatLitsMinAll    int32
+	nSeries, fVerbose                                                              int32
+	timeFind, timeShrink, timeVerify, timeSort, timePack, timeTotal, timeTotalSave int64
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Cec_ManPatStart() *Cec_ManPat_t {
+	return &Cec_ManPat_t{vPattern1: vec.Vec_IntAlloc(1000), vPattern2: vec.Vec_IntAlloc(1000), vStorage: vec.Vec_StrAlloc(1 << 20)}
+}
+func Cec_ManPatStop(p *Cec_ManPat_t) {
+	if p != nil {
+		p.vPattern1 = nil
+		p.vPattern2 = nil
+		p.vStorage = nil
+	}
+}
+func Cec_ManPatPrintStats(p *Cec_ManPat_t) {
+	ave := func(l, n int32) float64 {
+		if n == 0 {
+			return 0
+		}
+		return float64(l) / float64(n)
+	}
+	fmt.Printf("Latest: P = %8d. L = %10d. Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\n", p.nPats, p.nPatLits, p.nPatLitsMin, ave(p.nPatLitsMin, p.nPats), float64(vec.Vec_StrSize(p.vStorage)-int(p.iStart))/(1<<20))
+	fmt.Printf("Total: P = %8d. L = %10d. Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\n", p.nPatsAll, p.nPatLitsAll, p.nPatLitsMinAll, ave(p.nPatLitsMinAll, p.nPatsAll), float64(vec.Vec_StrSize(p.vStorage))/(1<<20))
+	for _, s := range []struct {
+		name string
+		ns   int64
+	}{{"Finding", p.timeFind}, {"Shrinking", p.timeShrink}, {"Verifying", p.timeVerify}, {"Sorting", p.timeSort}, {"Packing", p.timePack}, {"TOTAL", p.timeTotal}} {
+		fmt.Printf("%s = %.2f sec\n", s.name, float64(s.ns)/1e9)
+	}
+}
+func Cec_ManPatStoreNum(p *Cec_ManPat_t, num int32) {
+	if num < 0 {
+		panic("CEC pattern number is negative")
+	}
+	x := uint32(num)
+	for x > 127 {
+		vec.Vec_StrPush(p.vStorage, byte(x&127)|128)
+		x >>= 7
+	}
+	vec.Vec_StrPush(p.vStorage, byte(x))
+}
 func Cec_ManPatRestoreNum(p *Cec_ManPat_t) int32 {
-    var ch, i, x int32;
-    for  i = 0; (ch = Vec_StrEntry(p.vStorage, p.iStart++)) & 0x80; i++  {
-        x |= (ch & 0x7f) << (7 * i);
-    }
-    return x | (ch << (7 * i));
+	var x uint32
+	for shift := uint(0); shift < 35; shift += 7 {
+		if int(p.iStart) >= vec.Vec_StrSize(p.vStorage) {
+			panic("truncated CEC pattern")
+		}
+		b := vec.Vec_StrEntry(p.vStorage, int(p.iStart))
+		p.iStart++
+		if shift == 28 && b > 7 {
+			panic("CEC pattern number overflow")
+		}
+		x |= uint32(b&127) << shift
+		if b&128 == 0 {
+			return int32(x)
+		}
+	}
+	panic("invalid CEC pattern number")
+}
+func Cec_ManPatStore(p *Cec_ManPat_t, pat *Vec_Int_t) {
+	a := vec.Vec_IntArray(pat)
+	if len(a) == 0 {
+		panic("empty CEC pattern")
+	}
+	Cec_ManPatStoreNum(p, int32(len(a)))
+	prev := int32(0)
+	for i, x := range a {
+		if i > 0 && x <= prev {
+			panic("CEC pattern is not strictly increasing")
+		}
+		Cec_ManPatStoreNum(p, x-prev)
+		prev = x
+	}
+}
+func Cec_ManPatRestore(p *Cec_ManPat_t, pat *Vec_Int_t) {
+	vec.Vec_IntClear(pat)
+	n := Cec_ManPatRestoreNum(p)
+	if n <= 0 || int(n) > vec.Vec_StrSize(p.vStorage)-int(p.iStart) {
+		panic("invalid CEC pattern length")
+	}
+	value := int32(0)
+	for i := int32(0); i < n; i++ {
+		delta := Cec_ManPatRestoreNum(p)
+		if i > 0 && delta == 0 || value > int32(0x7fffffff)-delta {
+			panic("invalid CEC pattern delta")
+		}
+		value += delta
+		vec.Vec_IntPush(pat, value)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatStore(p *Cec_ManPat_t, vPat *Vec_Int_t) {
-    var i, Number, NumberPrev int32;
-    assert(Vec_IntSize(vPat) > 0, "Vec_IntSize(vPat) > 0");
-    Cec_ManPatStoreNum( p, Vec_IntSize(vPat) );
-    NumberPrev = Vec_IntEntry( vPat, 0 );
-    Cec_ManPatStoreNum( p, NumberPrev );
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = 1; (i < Vec_IntSize(vPat)) && (((Number) = Vec_IntEntry(vPat, i)), 1); i++  {
-        assert(NumberPrev < Number, "NumberPrev < Number");
-        Cec_ManPatStoreNum( p, Number - NumberPrev );
-        NumberPrev = Number;
-    }
+// The source justification algorithms consume normalized AND graphs. The
+// forward class simulator separately supports specialized XOR/MUX objects.
+func cecRequireAndGraph(p *Gia_Man_t, o *Gia_Obj_t) {
+	if gia.Gia_ObjIsXor(o) != 0 || gia.Gia_ObjIsMux(p, o) != 0 {
+		panic("normalize XOR/MUX gates before CEC backward justification")
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatRestore(p *Cec_ManPat_t, vPat *Vec_Int_t) {
-    var i, Size, Number int32;
-    Vec_IntClear( vPat );
-    Size = Cec_ManPatRestoreNum( p );
-    Number = Cec_ManPatRestoreNum( p );
-    Vec_IntPush( vPat, Number );
-    for  i = 1; i < Size; i++  {
-        Number += Cec_ManPatRestoreNum( p );
-        Vec_IntPush( vPat, Number );
-    }
-    assert(Vec_IntSize(vPat) == Size, "Vec_IntSize(vPat) == Size");
+func Cec_ManPatComputePattern_rec(sat *Cec_ManSat_t, p *Gia_Man_t, o *Gia_Obj_t) int32 {
+	if gia.Gia_ObjIsTravIdCurrent(p, o) != 0 {
+		return 0
+	}
+	gia.Gia_ObjSetTravIdCurrent(p, o)
+	if gia.Gia_ObjIsConst0(o) != 0 {
+		gia.Gia_ObjSetMark1(o, 0)
+		return 0
+	}
+	if gia.Gia_ObjIsCi(o) != 0 {
+		gia.Gia_ObjSetMark1(o, Cec_ObjSatVarValue(sat, o))
+		return 1
+	}
+	cecRequireAndGraph(p, o)
+	a, b := gia.Gia_ObjFanin0(o), gia.Gia_ObjFanin1(o)
+	n := Cec_ManPatComputePattern_rec(sat, p, a) + Cec_ManPatComputePattern_rec(sat, p, b)
+	gia.Gia_ObjSetMark1(o, (gia.Gia_ObjMark1(a)^gia.Gia_ObjFaninC0(o))&(gia.Gia_ObjMark1(b)^gia.Gia_ObjFaninC1(o)))
+	return n
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Derives satisfying assignment.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatComputePattern_rec(pSat *Cec_ManSat_t, p *Gia_Man_t, pObj *Gia_Obj_t) int32 {
-    var Counter int32;
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return 0; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        pObj.fMark1 = Cec_ObjSatVarValue( pSat, pObj );
-        return 1;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Counter += Cec_ManPatComputePattern_rec( pSat, p, Gia_ObjFanin0(pObj) );
-    Counter += Cec_ManPatComputePattern_rec( pSat, p, Gia_ObjFanin1(pObj) );
-    pObj.fMark1 = (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) & 
-                   (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj));
-    return Counter;
+func cecPatSensitize(p *Gia_Man_t, o *Gia_Obj_t, pat *Vec_Int_t, right bool) {
+	if gia.Gia_ObjIsTravIdCurrent(p, o) != 0 {
+		return
+	}
+	gia.Gia_ObjSetTravIdCurrent(p, o)
+	if gia.Gia_ObjIsConst0(o) != 0 {
+		return
+	}
+	if gia.Gia_ObjIsCi(o) != 0 {
+		v := int32(0)
+		if gia.Gia_ObjMark1(o) == 0 {
+			v = 1
+		}
+		vec.Vec_IntPush(pat, gia.Gia_ObjCioId(o)<<1|v)
+		return
+	}
+	cecRequireAndGraph(p, o)
+	a, b := gia.Gia_ObjFanin0(o), gia.Gia_ObjFanin1(o)
+	if gia.Gia_ObjMark1(o) != 0 {
+		cecPatSensitize(p, a, pat, right)
+		cecPatSensitize(p, b, pat, right)
+		return
+	}
+	if right {
+		a, b = b, a
+	}
+	c := gia.Gia_ObjFaninC0(o)
+	if right {
+		c = gia.Gia_ObjFaninC1(o)
+	}
+	if gia.Gia_ObjMark1(a)^c == 0 {
+		cecPatSensitize(p, a, pat, right)
+	} else {
+		cecPatSensitize(p, b, pat, right)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives satisfying assignment.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatComputePattern1_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vPat *Vec_Int_t) {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        Vec_IntPush( vPat, Abc_Var2Lit( Gia_ObjCioId(pObj), pObj.fMark1==0 ) );
-        return;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    if pObj.fMark1 == 1 {
-        Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin0(pObj), vPat );
-        Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin1(pObj), vPat );
-    
-    } else {
-        assert((Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||
-                        (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0, "(Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\n                (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0");
-        if (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 {
-            Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin0(pObj), vPat );
-        } else {
-            Cec_ManPatComputePattern1_rec( p, Gia_ObjFanin1(pObj), vPat ); }
-    }
+func Cec_ManPatComputePattern1_rec(p *Gia_Man_t, o *Gia_Obj_t, pat *Vec_Int_t) {
+	cecPatSensitize(p, o, pat, false)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives satisfying assignment.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatComputePattern2_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vPat *Vec_Int_t) {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        Vec_IntPush( vPat, Abc_Var2Lit( Gia_ObjCioId(pObj), pObj.fMark1==0 ) );
-        return;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    if pObj.fMark1 == 1 {
-        Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin0(pObj), vPat );
-        Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin1(pObj), vPat );
-    
-    } else {
-        assert((Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||
-                        (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0, "(Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 0 ||\n                (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0");
-        if (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)) == 0 {
-            Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin1(pObj), vPat );
-        } else {
-            Cec_ManPatComputePattern2_rec( p, Gia_ObjFanin0(pObj), vPat ); }
-    }
+func Cec_ManPatComputePattern2_rec(p *Gia_Man_t, o *Gia_Obj_t, pat *Vec_Int_t) {
+	cecPatSensitize(p, o, pat, true)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives satisfying assignment.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatComputePattern3_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {
-    var Value0, Value1, Value int32;
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return (pObj.fMark1 << 1) | pObj.fMark0; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        pObj.fMark0 = 1;
-        pObj.fMark1 = 1;
-        return GIA_UND;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Value0 = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin0(pObj) );
-    Value1 = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin1(pObj) );
-    Value = Gia_XsimAndCond( Value0, Gia_ObjFaninC0(pObj), Value1, Gia_ObjFaninC1(pObj) );
-    pObj.fMark0 =  (Value & 1);
-    pObj.fMark1 = ((Value >> 1) & 1);
-    return Value;
+func cecXNot(v, c int32) int32 {
+	if c != 0 && v != 3 {
+		return 3 ^ v
+	}
+	return v
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives satisfying assignment.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatVerifyPattern(p *Gia_Man_t, pObj *Gia_Obj_t, vPat *Vec_Int_t) {
-    var pTemp *Gia_Obj_t;
-    var i, Value int32;
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vPat)) && (((Value) = Vec_IntEntry(vPat, i)), 1); i++  {
-        pTemp = Gia_ManCi( p, Abc_Lit2Var(Value) );
-//        assert( Abc_LitIsCompl(Value) != (int)pTemp->fMark1 );
-        if pTemp.fMark1 {
-            pTemp.fMark0 = 0;
-            pTemp.fMark1 = 1;
-        
-        } else {
-            pTemp.fMark0 = 1;
-            pTemp.fMark1 = 0;
-        }
-        Gia_ObjSetTravIdCurrent( p, pTemp );
-    }
-    Value = Cec_ManPatComputePattern3_rec( p, Gia_ObjFanin0(pObj) );
-    Value = Gia_XsimNotCond( Value, Gia_ObjFaninC0(pObj) );
-    if Value != GIA_ONE {
-        Abc_Print( 1, "Cec_ManPatVerifyPattern(): Verification failed.\n" ); }
-    assert(Value == GIA_ONE, "Value == GIA_ONE");
+func cecXAnd(a, b int32) int32 {
+	if a == 1 || b == 1 {
+		return 1
+	}
+	if a == 3 || b == 3 {
+		return 3
+	}
+	return 2
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatComputePattern4_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    pObj.fMark0 = 0;
-    if Gia_ObjIsCi(pObj) {
-        return; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin0(pObj) );
-    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin1(pObj) );
+func Cec_ManPatComputePattern3_rec(p *Gia_Man_t, o *Gia_Obj_t) int32 {
+	if gia.Gia_ObjIsTravIdCurrent(p, o) != 0 {
+		return gia.Gia_ObjMark1(o)<<1 | gia.Gia_ObjMark0(o)
+	}
+	gia.Gia_ObjSetTravIdCurrent(p, o)
+	v := int32(3)
+	if gia.Gia_ObjIsConst0(o) != 0 {
+		v = 1
+	} else if gia.Gia_ObjIsCi(o) == 0 {
+		cecRequireAndGraph(p, o)
+		a := Cec_ManPatComputePattern3_rec(p, gia.Gia_ObjFanin0(o))
+		b := Cec_ManPatComputePattern3_rec(p, gia.Gia_ObjFanin1(o))
+		v = cecXAnd(cecXNot(a, gia.Gia_ObjFaninC0(o)), cecXNot(b, gia.Gia_ObjFaninC1(o)))
+	}
+	gia.Gia_ObjSetMark0(o, v&1)
+	gia.Gia_ObjSetMark1(o, (v>>1)&1)
+	return v
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatCleanMark0(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    assert(Gia_ObjIsCo(pObj), "Gia_ObjIsCo(pObj)");
-    Gia_ManIncrementTravId( p );
-    Cec_ManPatComputePattern4_rec( p, Gia_ObjFanin0(pObj) );
+func Cec_ManPatVerifyPattern(p *Gia_Man_t, o *Gia_Obj_t, pat *Vec_Int_t) {
+	gia.Gia_ManIncrementTravId(p)
+	for _, lit := range vec.Vec_IntArray(pat) {
+		ci := gia.Gia_ManCi(p, lit>>1)
+		v := int32(2)
+		if lit&1 != 0 {
+			v = 1
+		}
+		gia.Gia_ObjSetMark0(ci, v&1)
+		gia.Gia_ObjSetMark1(ci, v>>1)
+		gia.Gia_ObjSetTravIdCurrent(p, ci)
+	}
+	v := Cec_ManPatComputePattern3_rec(p, gia.Gia_ObjFanin0(o))
+	if cecXNot(v, gia.Gia_ObjFaninC0(o)) != 2 {
+		panic("Cec_ManPatVerifyPattern: verification failed")
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatSavePattern(pMan *Cec_ManPat_t, p *Cec_ManSat_t, pObj *Gia_Obj_t) {
-    var vPat *Vec_Int_t;
-    var nPatLits int32;
-    var clkTotal abctime  = Abc_Clock();
-//    abctime clk;
-    assert(Gia_ObjIsCo(pObj), "Gia_ObjIsCo(pObj)");
-    pMan.nPats++;
-    pMan.nPatsAll++;
-    // compute values in the cone of influence
-//clk = Abc_Clock();
-    Gia_ManIncrementTravId( p.pAig );
-    nPatLits = Cec_ManPatComputePattern_rec( p, p.pAig, Gia_ObjFanin0(pObj) );
-    assert((Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 1, "(Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) == 1");
-    pMan.nPatLits += nPatLits;
-    pMan.nPatLitsAll += nPatLits;
-//pMan->timeFind += Abc_Clock() - clk;
-    // compute sensitizing path
-//clk = Abc_Clock();
-    Vec_IntClear( pMan.vPattern1 );
-    Gia_ManIncrementTravId( p.pAig );
-    Cec_ManPatComputePattern1_rec( p.pAig, Gia_ObjFanin0(pObj), pMan.vPattern1 );
-    // compute sensitizing path
-    Vec_IntClear( pMan.vPattern2 );
-    Gia_ManIncrementTravId( p.pAig );
-    Cec_ManPatComputePattern2_rec( p.pAig, Gia_ObjFanin0(pObj), pMan.vPattern2 );
-    // compare patterns
-    if Vec_IntSize(pMan.vPattern1) < Vec_IntSize(pMan.vPattern2) {
-        vPat = pMan.vPattern1;
-    } else {
-        vPat = pMan.vPattern2;
-    }
-    pMan.nPatLitsMin += Vec_IntSize(vPat);
-    pMan.nPatLitsMinAll += Vec_IntSize(vPat);
-//pMan->timeShrink += Abc_Clock() - clk;
-    // verify pattern using ternary simulation
-//clk = Abc_Clock();
-//    Cec_ManPatVerifyPattern( p->pAig, pObj, vPat );
-//pMan->timeVerify += Abc_Clock() - clk;
-    // sort pattern
-//clk = Abc_Clock();
-    Vec_IntSort( vPat, 0 );
-//pMan->timeSort += Abc_Clock() - clk;
-    // save pattern
-    Cec_ManPatStore( pMan, vPat );
-    pMan.timeTotal += Abc_Clock() - clkTotal;
+func Cec_ManPatComputePattern4_rec(p *Gia_Man_t, o *Gia_Obj_t) {
+	if gia.Gia_ObjIsTravIdCurrent(p, o) != 0 {
+		return
+	}
+	gia.Gia_ObjSetTravIdCurrent(p, o)
+	gia.Gia_ObjSetMark0(o, 0)
+	if gia.Gia_ObjIsCi(o) != 0 || gia.Gia_ObjIsConst0(o) != 0 {
+		return
+	}
+	Cec_ManPatComputePattern4_rec(p, gia.Gia_ObjFanin0(o))
+	Cec_ManPatComputePattern4_rec(p, gia.Gia_ObjFanin1(o))
 }
-func Cec_ManPatSavePatternCSat(pMan *Cec_ManPat_t, vPat *Vec_Int_t) {
-    // sort pattern
-    Vec_IntSort( vPat, 0 );
-    // save pattern
-    Cec_ManPatStore( pMan, vPat );
+func Cec_ManPatCleanMark0(p *Gia_Man_t, o *Gia_Obj_t) {
+	gia.Gia_ManIncrementTravId(p)
+	Cec_ManPatComputePattern4_rec(p, gia.Gia_ObjFanin0(o))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Packs patterns into array of simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-*************************************`**********************************/
-func Cec_ManPatCollectTry(vInfo *Vec_Ptr_t, vPres *Vec_Ptr_t, iBit int32, pLits *int32, nLits int32) int32 {
-    var pInfo, pPres *uint32;
-    var i int32;
-    for  i = 0; i < nLits; i++  {
-        pInfo = (unsigned *)Vec_PtrEntry(vInfo, Abc_Lit2Var(pLits[i]));
-        pPres = (unsigned *)Vec_PtrEntry(vPres, Abc_Lit2Var(pLits[i]));
-        if Abc_InfoHasBit( pPres, iBit ) && 
-             Abc_InfoHasBit( pInfo, iBit ) == Abc_LitIsCompl(pLits[i]) {
-             return 0; }
-    }
-    for  i = 0; i < nLits; i++  {
-        pInfo = (unsigned *)Vec_PtrEntry(vInfo, Abc_Lit2Var(pLits[i]));
-        pPres = (unsigned *)Vec_PtrEntry(vPres, Abc_Lit2Var(pLits[i]));
-        Abc_InfoSetBit( pPres, iBit );
-        if Abc_InfoHasBit( pInfo, iBit ) == Abc_LitIsCompl(pLits[i]) {
-            Abc_InfoXorBit( pInfo, iBit ); }
-    }
-    return 1;
+func Cec_ManPatSavePattern(man *Cec_ManPat_t, sat *Cec_ManSat_t, o *Gia_Obj_t) {
+	start := util.Abc_Clock()
+	p := sat.pAig
+	man.nPats++
+	man.nPatsAll++
+	gia.Gia_ManIncrementTravId(p)
+	n := Cec_ManPatComputePattern_rec(sat, p, gia.Gia_ObjFanin0(o))
+	man.nPatLits += n
+	man.nPatLitsAll += n
+	vec.Vec_IntClear(man.vPattern1)
+	vec.Vec_IntClear(man.vPattern2)
+	gia.Gia_ManIncrementTravId(p)
+	Cec_ManPatComputePattern1_rec(p, gia.Gia_ObjFanin0(o), man.vPattern1)
+	gia.Gia_ManIncrementTravId(p)
+	Cec_ManPatComputePattern2_rec(p, gia.Gia_ObjFanin0(o), man.vPattern2)
+	pat := man.vPattern2
+	if vec.Vec_IntSize(man.vPattern1) < vec.Vec_IntSize(pat) {
+		pat = man.vPattern1
+	}
+	man.nPatLitsMin += int32(vec.Vec_IntSize(pat))
+	man.nPatLitsMinAll += int32(vec.Vec_IntSize(pat))
+	vec.Vec_IntSort(pat, 0)
+	Cec_ManPatStore(man, pat)
+	man.timeTotal += util.Abc_Clock() - start
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Packs patterns into array of simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatCollectPatterns(pMan *Cec_ManPat_t, nInputs int32, nWordsInit int32) *Vec_Ptr_t {
-    var vPat *Vec_Int_t  = pMan.vPattern1;
-    var vInfo, vPres *Vec_Ptr_t;
-    var k int32;
-    var kMax int32 = -1;
-    var nPatterns int32;
-    var iStartOld int32  = pMan.iStart;
-    var nWords int32  = nWordsInit;
-    var nBits int32  = 32 * nWords;
-    var clk abctime  = Abc_Clock();
-    vInfo = Vec_PtrAllocSimInfo( nInputs, nWords );
-    Gia_ManRandomInfo( vInfo, 0, 0, nWords );
-    vPres = Vec_PtrAllocSimInfo( nInputs, nWords );
-    Vec_PtrCleanSimInfo( vPres, 0, nWords );
-    for  pMan.iStart < Vec_StrSize(pMan.vStorage)  {
-        nPatterns++;
-        Cec_ManPatRestore( pMan, vPat );
-        for  k = 1; k < nBits; k++, k += ((k % (32 * nWordsInit)) == 0)  {
-            if Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) ) {
-                break; }
-        }
-        kMax = Abc_MaxInt( kMax, k );
-        if k == nBits-1 {
-            Vec_PtrReallocSimInfo( vInfo );
-            Gia_ManRandomInfo( vInfo, 0, nWords, 2*nWords );
-            Vec_PtrReallocSimInfo( vPres );
-            Vec_PtrCleanSimInfo( vPres, nWords, 2*nWords );
-            nWords *= 2;
-            nBits *= 2;
-        }
-    }
-    Vec_PtrFree( vPres );
-    pMan.nSeries = Vec_PtrReadWordsSimInfo(vInfo) / nWordsInit;
-    pMan.timePack += Abc_Clock() - clk;
-    pMan.timeTotal += Abc_Clock() - clk;
-    pMan.iStart = iStartOld;
-    if pMan.fVerbose {
-        Abc_Print( 1, "Total = %5d. Max used = %5d. Full = %5d. Series = %d. ", 
-            nPatterns, kMax, nWordsInit*32, pMan.nSeries );
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-        Cec_ManPatPrintStats( pMan );
-    }
-    return vInfo;
+func Cec_ManPatSavePatternCSat(p *Cec_ManPat_t, pat *Vec_Int_t) {
+	vec.Vec_IntSort(pat, 0)
+	Cec_ManPatStore(p, pat)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Packs patterns into array of simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatPackPatterns(vCexStore *Vec_Int_t, nInputs int32, nRegs int32, nWordsInit int32) *Vec_Ptr_t {
-    var vPat *Vec_Int_t;
-    var vInfo, vPres *Vec_Ptr_t;
-    var k, nSize, iStart, kMax, nPatterns int32;
-    var nWords int32  = nWordsInit;
-    var nBits int32  = 32 * nWords;
-//    int RetValue;
-    assert(nRegs <= nInputs, "nRegs <= nInputs");
-    vPat  = Vec_IntAlloc( 100 );
-
-    vInfo = Vec_PtrAllocSimInfo( nInputs, nWords );
-    Vec_PtrCleanSimInfo( vInfo, 0, nWords );
-    Gia_ManRandomInfo( vInfo, nRegs, 0, nWords );
-
-    vPres = Vec_PtrAllocSimInfo( nInputs, nWords );
-    Vec_PtrCleanSimInfo( vPres, 0, nWords );
-    iStart = 0;
-    for  iStart < Vec_IntSize(vCexStore)  {
-        nPatterns++;
-        // skip the output number
-        iStart++;
-        // get the number of items
-        nSize = Vec_IntEntry( vCexStore, iStart++ );
-        if nSize <= 0 {
-            continue; }
-        // extract pattern
-        Vec_IntClear( vPat );
-        for  k = 0; k < nSize; k++  {
-            Vec_IntPush( vPat, Vec_IntEntry( vCexStore, iStart++ ) );
-        }
-        // add pattern to storage
-        for  k = 1; k < nBits; k++, k += ((k % (32 * nWordsInit)) == 0)  {
-            if Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) ) {
-                break; }
-        }
-
-//        k = kMax + 1;
-//        RetValue = Cec_ManPatCollectTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) );
-//        assert( RetValue == 1 );
-
-        kMax = Abc_MaxInt( kMax, k );
-        if k == nBits-1 {
-            Vec_PtrReallocSimInfo( vInfo );
-            Vec_PtrCleanSimInfo( vInfo, nWords, 2*nWords );
-            Gia_ManRandomInfo( vInfo, nRegs, nWords, 2*nWords );
-
-            Vec_PtrReallocSimInfo( vPres );
-            Vec_PtrCleanSimInfo( vPres, nWords, 2*nWords );
-            nWords *= 2;
-            nBits *= 2;
-        }
-    }
-//    Abc_Print( 1, "packed %d patterns into %d vectors (out of %d)\n", nPatterns, kMax, nBits );
-    Vec_PtrFree( vPres );
-    Vec_IntFree( vPat );
-    return vInfo;
+func Cec_ManPatCollectTry(info, pres *Vec_Ptr_t, bit int32, lits []int32, nLits int32) int32 {
+	for _, l := range lits[:nLits] {
+		a := vec.Vec_PtrEntry(info, int(l>>1)).([]uint32)
+		b := vec.Vec_PtrEntry(pres, int(l>>1)).([]uint32)
+		mask := uint32(1) << uint(bit&31)
+		if b[bit>>5]&mask != 0 && ((a[bit>>5]>>uint(bit&31))&1) == uint32(l&1) {
+			return 0
+		}
+	}
+	for _, l := range lits[:nLits] {
+		a := vec.Vec_PtrEntry(info, int(l>>1)).([]uint32)
+		b := vec.Vec_PtrEntry(pres, int(l>>1)).([]uint32)
+		mask := uint32(1) << uint(bit&31)
+		b[bit>>5] |= mask
+		if ((a[bit>>5] >> uint(bit&31)) & 1) == uint32(l&1) {
+			a[bit>>5] ^= mask
+		}
+	}
+	return 1
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func cecPatGrow(info, pres *Vec_Ptr_t, nInputs, nRegs, nWords int32) {
+	for i := int32(0); i < nInputs; i++ {
+		a := vec.Vec_PtrEntry(info, int(i)).([]uint32)
+		b := vec.Vec_PtrEntry(pres, int(i)).([]uint32)
+		aa := make([]uint32, 2*nWords)
+		bb := make([]uint32, 2*nWords)
+		copy(aa, a)
+		copy(bb, b)
+		if i >= nRegs {
+			for w := nWords; w < 2*nWords; w++ {
+				aa[w] = gia.Gia_ManRandom(0)
+			}
+		}
+		vec.Vec_PtrWriteEntry(info, int(i), aa)
+		vec.Vec_PtrWriteEntry(pres, int(i), bb)
+	}
+}
+func cecPatInsert(info, pres *Vec_Ptr_t, pat []int32, nInputs, nRegs, chunk int32, nWords *int32) int32 {
+	for {
+		bits := 32 * (*nWords)
+		for k := int32(1); k < bits; k++ {
+			if k%(32*chunk) == 0 {
+				continue
+			}
+			if Cec_ManPatCollectTry(info, pres, k, pat, int32(len(pat))) != 0 {
+				if k == bits-1 {
+					cecPatGrow(info, pres, nInputs, nRegs, *nWords)
+					*nWords *= 2
+				}
+				return k
+			}
+		}
+		cecPatGrow(info, pres, nInputs, nRegs, *nWords)
+		*nWords *= 2
+	}
+}
+func Cec_ManPatCollectPatterns(p *Cec_ManPat_t, nInputs, nWordsInit int32) *Vec_Ptr_t {
+	if nWordsInit <= 0 {
+		panic("CEC simulation word count must be positive")
+	}
+	start := util.Abc_Clock()
+	old := p.iStart
+	words := nWordsInit
+	info := vec.Vec_PtrAllocSimInfo(int(nInputs), int(words))
+	pres := vec.Vec_PtrAllocSimInfo(int(nInputs), int(words))
+	gia.Gia_ManRandomInfo(info, 0, 0, words)
+	for int(p.iStart) < vec.Vec_StrSize(p.vStorage) {
+		Cec_ManPatRestore(p, p.vPattern1)
+		cecPatInsert(info, pres, vec.Vec_IntArray(p.vPattern1), nInputs, 0, nWordsInit, &words)
+	}
+	p.nSeries = words / nWordsInit
+	p.iStart = old
+	elapsed := util.Abc_Clock() - start
+	p.timePack += elapsed
+	p.timeTotal += elapsed
+	if p.fVerbose != 0 {
+		Cec_ManPatPrintStats(p)
+	}
+	return info
+}
+func Cec_ManPatPackPatterns(store *Vec_Int_t, nInputs, nRegs, nWordsInit int32) *Vec_Ptr_t {
+	if nRegs < 0 || nRegs > nInputs || nWordsInit <= 0 {
+		panic("invalid CEC pattern packing dimensions")
+	}
+	words := nWordsInit
+	info := vec.Vec_PtrAllocSimInfo(int(nInputs), int(words))
+	pres := vec.Vec_PtrAllocSimInfo(int(nInputs), int(words))
+	gia.Gia_ManRandomInfo(info, nRegs, 0, words)
+	a := vec.Vec_IntArray(store)
+	for i := 0; i < len(a); {
+		if i+2 > len(a) {
+			panic("truncated CEC counterexample")
+		}
+		n := a[i+1]
+		i += 2
+		if n <= 0 {
+			continue
+		}
+		if int(n) > len(a)-i {
+			panic("truncated CEC pattern")
+		}
+		cecPatInsert(info, pres, a[i:i+int(n)], nInputs, nRegs, nWordsInit, &words)
+		i += int(n)
+	}
+	return info
+}

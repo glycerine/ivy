@@ -1,201 +1,131 @@
 package cec
 
-import "fmt"
+// Backward greedy justification from cecSimBack.c. This is a diagnostic
+// simulation heuristic, not a complete SAT solver: it never backtracks when
+// neither zero-valued AND input has been chosen yet.
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
+)
 
-/**CFile****************************************************************
-
-  FileName    [cecSimBack.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Combinational equivalence checking.]
-
-  Synopsis    [Backward simulation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: cecSimBack.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "cecInt.h"
-//#include "aig/gia/giaAig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ObjSatVerify(p *Gia_Man_t, pRoot *Gia_Obj_t, Value int32) int32 {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    var RetValue int32 = 1;
-    fmt.Printf("Obj = %4d  Value = %d  ", Gia_ObjId(p, pRoot), Value);
-    Gia_ObjTerSimSet0( Gia_ManConst0(p) );
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        if !Gia_ObjIsTravIdCurrent(p, pObj) {
-            Gia_ObjTerSimSetX( pObj );
-fmt.Printf("x");
-        } else if pObj.fMark0 {
-            Gia_ObjTerSimSet1( pObj );
-fmt.Printf("1");
-        } else {
-            Gia_ObjTerSimSet0( pObj );
-fmt.Printf("0"); }
-    }
-    fmt.Printf(" ");
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        Gia_ObjTerSimAnd( pObj ); }
-    }
-    if Value ? Gia_ObjTerSimGet1(pRoot) : Gia_ObjTerSimGet0(pRoot) {
-        fmt.Printf("Verification successful.\n");
-    } else {
-        fmt.Printf("Verification failed.\n");
-RetValue = 0; }
-    return RetValue;
+func Cec_ManCheckSat_rec(p *Gia_Man_t, o *Gia_Obj_t, value int32) int32 {
+	if value != 0 && value != 1 {
+		panic("CEC backward simulation needs a Boolean value")
+	}
+	if gia.Gia_ObjIsConst0(o) != 0 {
+		if value == 0 {
+			return 1
+		}
+		return 0
+	}
+	if gia.Gia_ObjIsTravIdCurrent(p, o) != 0 {
+		if value == gia.Gia_ObjMark0(o) {
+			return 1
+		}
+		return 0
+	}
+	gia.Gia_ObjSetTravIdCurrent(p, o)
+	gia.Gia_ObjSetMark0(o, value)
+	if gia.Gia_ObjIsAnd(o) == 0 {
+		return 1
+	}
+	cecRequireAndGraph(p, o)
+	a, b := gia.Gia_ObjFanin0(o), gia.Gia_ObjFanin1(o)
+	ca, cb := gia.Gia_ObjFaninC0(o), gia.Gia_ObjFaninC1(o)
+	if value != 0 {
+		if Cec_ManCheckSat_rec(p, a, ca^1) == 0 {
+			return 0
+		}
+		return Cec_ManCheckSat_rec(p, b, cb^1)
+	}
+	if gia.Gia_ObjIsTravIdCurrent(p, a) != 0 {
+		if ca == gia.Gia_ObjMark0(a) {
+			return 1
+		}
+		return Cec_ManCheckSat_rec(p, b, cb)
+	}
+	if gia.Gia_ObjIsTravIdCurrent(p, b) != 0 {
+		if cb == gia.Gia_ObjMark0(b) {
+			return 1
+		}
+		return Cec_ManCheckSat_rec(p, a, ca)
+	}
+	return Cec_ManCheckSat_rec(p, a, ca)
+}
+func Cec_ManCheckSat2_rec(p *Gia_Man_t, o *Gia_Obj_t, value uint64, values *Vec_Wrd_t) uint64 {
+	if value > 1 {
+		panic("CEC backward scalar value exceeds one bit")
+	}
+	return uint64(Cec_ManCheckSat_rec(p, o, int32(value)))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Return 1 if pObj can have Value.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManCheckSat2_rec(p *Gia_Man_t, pObj *Gia_Obj_t, Value word, vValues *Vec_Wrd_t) word {
-    var pFan0, pFan1 *Gia_Obj_t;
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return Value == int32(pObj.fMark0); }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    pObj.fMark0 = Value;
-    if !Gia_ObjIsAnd(pObj) {
-        return 1; }
-    pFan0 = Gia_ObjFanin0(pObj);
-    pFan1 = Gia_ObjFanin1(pObj);
-    if Value != 0 {
-        return Cec_ManCheckSat2_rec( p, pFan0, !Gia_ObjFaninC0(pObj), vValues ) &&
-               Cec_ManCheckSat2_rec( p, pFan1, !Gia_ObjFaninC1(pObj), vValues );
-    }
-    if Gia_ObjIsTravIdCurrent(p, pFan0) { // already assigned
-    
-        if Gia_ObjFaninC0(pObj) == int32(pFan0.fMark0) { // justified
-            return 1; }
-        return Cec_ManCheckSat2_rec( p, pFan1, Gia_ObjFaninC1(pObj), vValues );        
-    }
-    if Gia_ObjIsTravIdCurrent(p, pFan1) { // already assigned
-    
-        if Gia_ObjFaninC1(pObj) == int32(pFan1.fMark0) { // justified
-            return 1; }
-        return Cec_ManCheckSat2_rec( p, pFan0, Gia_ObjFaninC0(pObj), vValues );        
-    }
-    return Cec_ManCheckSat2_rec( p, pFan0, Gia_ObjFaninC0(pObj), vValues );
+// The C wrapper was unfinished (always zero). Initialize a real justification
+// attempt instead; the recursive variant retains its existing traversal state.
+func Cec_ManCheckSat2(p *Gia_Man_t, o *Gia_Obj_t, value int32, values *Vec_Wrd_t) uint64 {
+	gia.Gia_ManIncrementTravId(p)
+	return Cec_ManCheckSat2_rec(p, o, uint64(value), values)
 }
-func Cec_ManCheckSat2(p *Gia_Man_t, pObj *Gia_Obj_t, Value int32, vValues *Vec_Wrd_t) word {
-    return 0;
+func Cec_ObjSatVerify(p *Gia_Man_t, root *Gia_Obj_t, value int32) int32 {
+	fmt.Printf("Obj = %4d Value = %d ", gia.Gia_ObjId(p, root), value)
+	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
+		o := gia.Gia_ManCi(p, i)
+		v := int32(3)
+		if gia.Gia_ObjIsTravIdCurrent(p, o) == 0 {
+			fmt.Print("x")
+		} else if gia.Gia_ObjMark0(o) != 0 {
+			v = 2
+			fmt.Print("1")
+		} else {
+			v = 1
+			fmt.Print("0")
+		}
+		gia.Gia_ObjSetMark0(o, v&1)
+		gia.Gia_ObjSetMark1(o, v>>1)
+	}
+	zero := gia.Gia_ManConst0(p)
+	gia.Gia_ObjSetMark0(zero, 1)
+	gia.Gia_ObjSetMark1(zero, 0)
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		o := gia.Gia_ManObj(p, id)
+		if gia.Gia_ObjIsAnd(o) == 0 {
+			continue
+		}
+		cecRequireAndGraph(p, o)
+		a, b := gia.Gia_ObjFanin0(o), gia.Gia_ObjFanin1(o)
+		va := gia.Gia_ObjMark1(a)<<1 | gia.Gia_ObjMark0(a)
+		vb := gia.Gia_ObjMark1(b)<<1 | gia.Gia_ObjMark0(b)
+		v := cecXAnd(cecXNot(va, gia.Gia_ObjFaninC0(o)), cecXNot(vb, gia.Gia_ObjFaninC1(o)))
+		gia.Gia_ObjSetMark0(o, v&1)
+		gia.Gia_ObjSetMark1(o, v>>1)
+	}
+	want := int32(1)
+	if value != 0 {
+		want = 2
+	}
+	got := gia.Gia_ObjMark1(root)<<1 | gia.Gia_ObjMark0(root)
+	if got == want {
+		fmt.Println(" Verification successful.")
+		return 1
+	}
+	fmt.Println(" Verification failed.")
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Return 1 if pObj can have Value.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManCheckSat_rec(p *Gia_Man_t, pObj *Gia_Obj_t, Value int32) int32 {
-    var pFan0, pFan1 *Gia_Obj_t;
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return Value == int32(pObj.fMark0); }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    pObj.fMark0 = Value;
-    if !Gia_ObjIsAnd(pObj) {
-        return 1; }
-    pFan0 = Gia_ObjFanin0(pObj);
-    pFan1 = Gia_ObjFanin1(pObj);
-    if Value != 0 {
-        return Cec_ManCheckSat_rec( p, pFan0, !Gia_ObjFaninC0(pObj) ) &&
-               Cec_ManCheckSat_rec( p, pFan1, !Gia_ObjFaninC1(pObj) );
-    }
-    if Gia_ObjIsTravIdCurrent(p, pFan0) { // already assigned
-    
-        if Gia_ObjFaninC0(pObj) == int32(pFan0.fMark0) { // justified
-            return 1; }
-        return Cec_ManCheckSat_rec( p, pFan1, Gia_ObjFaninC1(pObj) );        
-    }
-    if Gia_ObjIsTravIdCurrent(p, pFan1) { // already assigned
-    
-        if Gia_ObjFaninC1(pObj) == int32(pFan1.fMark0) { // justified
-            return 1; }
-        return Cec_ManCheckSat_rec( p, pFan0, Gia_ObjFaninC0(pObj) );        
-    }
-    return Cec_ManCheckSat_rec( p, pFan0, Gia_ObjFaninC0(pObj) );
-}
+func cecSimSetPhases(p *Gia_Man_t) { gia.Gia_ManSetPhase(p) }
 func Cec_ManSimBack(p *Gia_Man_t) {
-    var clk abctime  = Abc_Clock();
-    var vValues *Vec_Wrd_t  = Vec_WrdStart( Gia_ManObjNum(p) );
-    var pObj *Gia_Obj_t; 
-    var i, Count int32;
-    var Res word;
-    Gia_ManSetPhase( p );
-    //Gia_ManForEachAnd( p, pObj, i )
-    //    printf( "%d", pObj->fPhase );
-    //printf( "\n" );
-    //return;
-
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        Gia_ManIncrementTravId(p);
-        //Gia_ManCleanMark0( p );
-        Res = Cec_ManCheckSat_rec( p, pObj, !pObj.fPhase );
-        //if ( Res )
-        //    Cec_ObjSatVerify( p, pObj, !pObj->fPhase );
-
-        //Res = Cec_ManCheckSat2_rec( p, pObj, !pObj->fPhase ? ~(word)0 : 0, vValues );
-        //if ( Res )
-        //    Cec_ObjSatVerify2( p, pObj, !pObj->fPhase, Res );
-
-        Count += int32((Res > 0));
-    }
-    }
-    Vec_WrdFree( vValues );
-    fmt.Printf("Obj = %6d.  SAT = %6d.  ", Gia_ManAndNum(p), Count);
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
+	start := util.Abc_Clock()
+	cecSimSetPhases(p)
+	count, total := 0, 0
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		o := gia.Gia_ManObj(p, id)
+		if gia.Gia_ObjIsAnd(o) == 0 {
+			continue
+		}
+		total++
+		gia.Gia_ManIncrementTravId(p)
+		if Cec_ManCheckSat_rec(p, o, gia.Gia_ObjPhase(o)^1) != 0 {
+			count++
+		}
+	}
+	fmt.Printf("Obj = %6d. SAT = %6d. Time = %.2f sec\n", total, count, float64(util.Abc_Clock()-start)/1e9)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
