@@ -213,45 +213,6 @@ func Gia_ManCleanupRemap(p *Gia_Man_t, pGia *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManUpdateTimMan(p *Gia_Man_t, vBoxPres *Vec_Int_t) any {
-    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;
-    assert(pManTime != nil, "pManTime != nil");
-    assert(Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime), "Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime)");
-    return Tim_ManTrim( pManTime, vBoxPres );
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Update AIG of the holes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManUpdateExtraAig(pTime any, p *Gia_Man_t, vBoxPres *Vec_Int_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pManTime *Tim_Man_t  = (Tim_Man_t *)pTime;
-    var vOutPres *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var i, k, curPo int32;
-    assert(Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime), "Vec_IntSize(vBoxPres) == Tim_ManBoxNum(pManTime)");
-    assert(Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - Tim_ManPiNum(pManTime), "Gia_ManCoNum(p) == Tim_ManCiNum(pManTime) - Tim_ManPiNum(pManTime)");
-    for  i = 0; i < Tim_ManBoxNum(pManTime); i++  {
-        for  k = 0; k < Tim_ManBoxOutputNum(pManTime, i); k++  {
-            Vec_IntPush( vOutPres, Vec_IntEntry(vBoxPres, i) );
-        }
-        curPo += Tim_ManBoxOutputNum(pManTime, i);
-    }
-    assert(curPo == Gia_ManCoNum(p), "curPo == Gia_ManCoNum(p)");
-    pNew = Gia_ManDupOutputVec( p, vOutPres );
-    Vec_IntFree( vOutPres );
-    return pNew;
-}
-
-
 /**Function*************************************************************
 
   Synopsis    [Duplicates AIG while moving the last CIs to be after PIs.]
