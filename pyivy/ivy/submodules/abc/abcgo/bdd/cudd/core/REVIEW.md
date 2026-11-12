@@ -168,7 +168,7 @@ The ZDD set-operation review now includes a permanent original-CUDD checksum
 fixture. A separate C harness linked the original CUDD and genuine utility
 objects, enumerated the same 65,536 family pairs and operation sequence, and
 produced `7292090e7f59522c`. Go produces that same checksum. The C harness and
-reproduction command are retained under testdata; ordinary tests execute only
+reproduction command are retained under test_vectors; ordinary tests execute only
 Go and need no C compiler, objects or runtime.
 
 `TestZDDOriginalCUDDOracleChecksum` checks the fixed source-derived result rather
@@ -224,7 +224,7 @@ Independent original-C checks are permanent Go fixtures:
   permutation: `5eb39e097b2af27d`. Go uses fresh ordered managers for comparison;
   this does not claim Go ZDD dynamic heap reordering is implemented.
 
-The C harnesses and commands are retained under testdata. Normal Go tests require
+The C harnesses and commands are retained under test_vectors. Normal Go tests require
 no C compiler or objects. Per-operation checksums are also checked, so failures
 identify the particular API group. Matching finite fixtures does not prove that
 weak-division variants are universally interchangeable.

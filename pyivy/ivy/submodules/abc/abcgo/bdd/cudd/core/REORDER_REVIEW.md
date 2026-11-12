@@ -54,7 +54,7 @@ work does not manufacture those APIs or claim them complete.
 
 ## Independent original-C evidence
 
-`testdata/reorder_oracle.c` links actual original ABC CUDD object files. Its
+`test_vectors/reorder_oracle.c` links actual original ABC CUDD object files. Its
 fixture covers every three-variable truth table under both SIFT and SYMM_SIFT:
 512 cases. The Go regression matches exact initial/final DAG sizes, public
 status, all output truth tables, grouped-variable masks and group counts.

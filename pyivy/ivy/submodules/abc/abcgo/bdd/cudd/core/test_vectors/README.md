@@ -15,7 +15,7 @@ From the ABC checkout, with its original C object files built, reproduce with:
 
 ```sh
 cc -DABC_USE_STDINT_H -I src \
-  abcgo/bdd/cudd/core/testdata/zdd_setops_oracle.c \
+  abcgo/bdd/cudd/core/test_vectors/zdd_setops_oracle.c \
   src/bdd/cudd/*.o src/bdd/mtr/*.o src/bdd/epd/*.o \
   src/misc/st/st.o src/misc/extra/extraUtilUtil.o \
   -lm -o /tmp/abcgo_cudd_oracle
@@ -79,11 +79,11 @@ Reproduce from the ABC checkout (using the same original object files above):
 
 ```sh
 cc -DABC_USE_STDINT_H -I src \
-  abcgo/bdd/cudd/core/testdata/reorder_oracle.c \
+  abcgo/bdd/cudd/core/test_vectors/reorder_oracle.c \
   src/bdd/cudd/*.o src/bdd/mtr/*.o src/bdd/epd/*.o \
   src/misc/st/st.o src/misc/extra/extraUtilUtil.o \
   -lm -o /tmp/abcgo_reorder_oracle
-/tmp/abcgo_reorder_oracle > abcgo/bdd/cudd/core/testdata/reorder_oracle.txt
+/tmp/abcgo_reorder_oracle > abcgo/bdd/cudd/core/test_vectors/reorder_oracle.txt
 ```
 
 ## ISOP, cover conversion and logical complement oracle

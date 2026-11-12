@@ -3,7 +3,7 @@ package core
 import "testing"
 
 // This checksum comes from the independent original CUDD 2.4.2 implementation,
-// using testdata/zdd_setops_oracle.c. No C compiler or C objects are needed to
+// using test_vectors/zdd_setops_oracle.c. No C compiler or C objects are needed to
 // execute this fixture. Operation order and the numeric family-bit encoding are
 // identical in the C harness and here; pointer layouts never enter the checksum.
 func TestZDDOriginalCUDDOracleChecksum(t *testing.T) {

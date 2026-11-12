@@ -179,10 +179,10 @@ func TestShuffleCollectsDeadNodesAndHonorsMinsize(t *testing.T) {
 	}
 }
 
-// The fixture is emitted by testdata/reorder_oracle.c linked against the actual
+// The fixture is emitted by test_vectors/reorder_oracle.c linked against the actual
 // original CUDD object files. No C compiler/runtime is needed for this Go test.
 func TestDynamicReorderingOriginalCUDDOracle(t *testing.T) {
-	data, err := os.ReadFile("testdata/reorder_oracle.txt")
+	data, err := os.ReadFile("test_vectors/reorder_oracle.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
