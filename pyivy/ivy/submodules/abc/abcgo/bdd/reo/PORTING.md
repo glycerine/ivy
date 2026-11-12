@@ -18,9 +18,10 @@ ADD/MTBDD reordering now uses authoritative core ADD ITE/permutation and generic
 support APIs, with family-preserving transfers and numeric-terminal regressions.
 BDD and ADD node/APL/width objectives and mixed root arrays are covered.
 
-Remaining: the optional CUDD-reference comparison requires a core dynamic
-heap-reorder API (including SYMM_SIFT), absent at present. Extra_ReorderCudd is
-not implemented; Extra_bddReorderTest and Extra_addReorderTest return actual
-node counts using the Go REO backend, with the latter following source nonzero-
-pattern conversion. Their exact original CUDD benchmark backend is not claimed.
-See REVIEW.md for evidence and fidelity boundaries.
+The classical reference comparison now uses an independent Go CUDD manager with
+actual SYMM_SIFT dynamic reordering, preserving referenced handles. The BDD/ADD
+classic-sifting benchmarks use the source backend and node-count semantics,
+including ADD nonzero-pattern conversion. Main and comparison results are
+checked by inverse permutations and exhaustive input assignments. See REVIEW.md
+and core/REORDER_REVIEW.md for independent original-C parity evidence and the
+bounds of supported CUDD facilities outside this package.

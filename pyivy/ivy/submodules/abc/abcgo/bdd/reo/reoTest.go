@@ -3,26 +3,43 @@ package reo
 // Verification entry points historically located in reoTest.c. These use the
 // Go manager and canonical inverse-permutation equality, avoiding C random and
 // static process-global managers. Reordering behavior lives in the main engine.
-import cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+import (
+	"fmt"
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+	"time"
+)
 
 func Extra_ReorderTest(dd *DdManager, root *DdNode) {
-	p := New(len(dd.Vars), cudd.Cudd_DagSize(root))
+	p := New(100, 100)
 	defer p.Close()
-	p.SetVerification(true)
-	if _, _, err := p.Reorder(dd, []*DdNode{root}); err != nil {
-		panic(err)
+	temporary := Extra_Reorder(p, dd, root, make([]int, len(dd.Vars)))
+	if temporary == nil {
+		panic("reo: reordering failed")
 	}
+	cudd.Cudd_Ref(temporary)
+	defer cudd.Cudd_RecursiveDeref(dd, temporary)
+	classical := Extra_ReorderCudd(dd, root, nil)
+	if classical == nil {
+		panic("reo: CUDD comparison failed")
+	}
+	cudd.Cudd_Ref(classical)
+	defer cudd.Cudd_RecursiveDeref(dd, classical)
+	fmt.Printf("Initial = %d. Final = %d. Cudd = %d.\n", cudd.Cudd_DagSize(root), cudd.Cudd_DagSize(temporary), cudd.Cudd_DagSize(classical))
 }
 func Extra_ReorderTestArray(dd *DdManager, roots []*DdNode, n int) {
 	if n < 0 || n > len(roots) {
 		panic("reo: invalid root count")
 	}
-	p := New(len(dd.Vars), 0)
+	p := New(100, 100)
 	defer p.Close()
-	p.SetVerification(true)
-	if _, _, err := p.Reorder(dd, roots[:n]); err != nil {
-		panic(err)
-	}
+	result := make([]*DdNode, n)
+	Extra_ReorderArray(p, dd, roots, result, n, make([]int, len(dd.Vars)))
+	defer func() {
+		for _, root := range result {
+			cudd.Cudd_RecursiveDeref(dd, root)
+		}
+	}()
+	fmt.Printf("Initial = %d. Final = %d.\n", profileRoots(roots[:n], p.slots).Nodes, profileRoots(result, p.slots).Nodes)
 }
 
 // Extra_ReorderCudd performs the original independent-manager comparison using
@@ -48,9 +65,11 @@ func Extra_ReorderCudd(dd *DdManager, root *DdNode, inverse []int) *DdNode {
 	}
 	cudd.Cudd_Ref(temporary)
 	defer cudd.Cudd_RecursiveDeref(scratch, temporary)
+	fmt.Printf("Nodes before = %d.\n", cudd.Cudd_DagSize(temporary))
 	if cudd.Cudd_ReduceHeap(scratch, cudd.CUDD_REORDER_SYMM_SIFT, 1) == 0 {
 		return nil
 	}
+	fmt.Printf("Nodes before = %d.\n", cudd.Cudd_DagSize(temporary))
 	backward := make([]int, n)
 	for level, index := range scratch.InvPerm {
 		backward[index] = dd.InvPerm[level]
@@ -91,6 +110,7 @@ func Extra_bddReorderTest(dd *DdManager, root *DdNode) int {
 // classical CUDD sifting. Numeric leaf distinctions are intentionally collapsed
 // for this comparison only, never in the main REO reordering path.
 func Extra_addReorderTest(dd *DdManager, root *DdNode) int {
+	started := time.Now()
 	memo := map[*DdNode]*DdNode{}
 	var pattern func(*DdNode) *DdNode
 	pattern = func(node *DdNode) *DdNode {
@@ -118,8 +138,12 @@ func Extra_addReorderTest(dd *DdManager, root *DdNode) int {
 	}
 	cudd.Cudd_Ref(transferred)
 	defer cudd.Cudd_RecursiveDeref(scratch, transferred)
+	before := cudd.Cudd_DagSize(transferred)
 	if cudd.Cudd_ReduceHeap(scratch, cudd.CUDD_REORDER_SIFT, 1) == 0 {
 		return 0
 	}
-	return cudd.Cudd_DagSize(transferred)
+	after := cudd.Cudd_DagSize(transferred)
+	fmt.Printf("Classical reordering of ADDs: Before = %d. After = %d.\n", before, after)
+	fmt.Printf("Classical variable reordering time = %.2f sec\n", time.Since(started).Seconds())
+	return after
 }

@@ -78,13 +78,30 @@ claimed to reproduce the original optional CUDD-reference heap-reorder backend.
 `go -C abcgo test ./bdd/reo ./bdd/cudd/core -race -count=1` and
 `go -C abcgo vet ./bdd/reo` pass.
 
-## Remaining fidelity dependency
+## Classical comparison dependency resolved
 
-The optional original CUDD-reference comparison helper `Extra_ReorderCudd` and
-the exact backend of the two benchmark helpers require dynamic CUDD heap
-reordering (`Cudd_ReduceHeap`, including SYMM_SIFT), which is absent in the core.
-No implementation of that missing helper is manufactured or claimed complete.
-Main REO BDD/ADD reordering is implemented and tested; the whole source package
-must not be described as source-complete until this comparison dependency is
-resolved. Candidate-node retention/performance limitations described above also
-remain.
+Implemented the required core ShuffleHeap, SIFT/SYMM_SIFT (and convergence)
+backend with live referenced-handle preservation, true symmetry grouping,
+cache clearing and source-style dead-node collection. Generic cross-manager
+BDD/ADD transfer preserves numeric leaves and canonical polarity. The optional
+`Extra_ReorderCudd` now performs the original independent-manager SYMM_SIFT
+comparison and returns the inverse mapping, including nonidentity source orders.
+BDD and ADD benchmark helpers use the independent CUDD SIFT backend and actual
+node counts; ADD benchmarking retains the source's intentional nonzero pattern.
+Source diagnostic metrics and deterministic randomized shuffle checks are active.
+
+The backend has its own separate compactness/bug audits in
+`bdd/cudd/core/REORDER_REVIEW.md`. A real original-C fixture checks all 512
+three-variable SIFT/SYMM_SIFT cases for exact sizes, truth, public status, symmetry
+masks and group counts. A CUDD source-comment/public-return discrepancy was
+found and fixed using this independent evidence. ZDD state isolation is tested.
+
+REO's requested comparison dependency is resolved. The wider CUDD root package
+still contains unrelated unported modules and additional ordering facilities;
+only supported core methods are claimed by this component's tests.
+
+Final verification also exercised source-style diagnostic entry points: the
+independent manager preserves the input order and external reference count,
+returns a valid inverse permutation for both BDDs and numeric ADDs, and the
+shuffle diagnostic uses 120 deterministic adjacent random swaps after remapping
+support to the topmost levels. Diagnostic node-count/time output is preserved.

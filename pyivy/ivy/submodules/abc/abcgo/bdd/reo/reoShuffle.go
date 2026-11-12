@@ -1,5 +1,10 @@
 package reo
 
+import (
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+	"math/rand"
+)
+
 // Shuffle maps support-level positions according to permutation and optionally
 // returns the inverse variable map. Like the original helper, the result is not
 // referenced; malformed permutations return nil without changing the input.
@@ -44,13 +49,29 @@ func reoShuffle(p *Manager, dd *DdManager, root *DdNode, permutation, inverse []
 	return result
 }
 func Extra_ShuffleTest(p *Manager, dd *DdManager, root *DdNode) {
-	support := diagramSupport(dd, []*DdNode{root})
-	permutation := identity(len(support))
-	for i, j := 0, len(permutation)-1; i < j; i, j = i+1, j-1 {
-		permutation[i], permutation[j] = permutation[j], permutation[i]
+	support := dd.Support(root)
+	if len(support) < 2 {
+		return
 	}
-	result, inverse := p.Shuffle(dd, root, permutation)
-	if result == nil || permuteRoot(dd, result, inverse) != root {
+	permutation := identity(len(support))
+	random := rand.New(rand.NewSource(0x12341234))
+	for i := 0; i < 120; i++ {
+		offset := random.Intn(len(support) - 1)
+		permutation[offset], permutation[offset+1] = permutation[offset+1], permutation[offset]
+	}
+	// The source test first maps support to the topmost manager levels.
+	forward := identity(len(dd.Vars))
+	for level, index := range support {
+		forward[index] = dd.InvPerm[level]
+	}
+	remapped := permuteRoot(dd, root, forward)
+	if remapped == nil {
+		panic("reo: shuffle support remapping failed")
+	}
+	cudd.Cudd_Ref(remapped)
+	defer cudd.Cudd_RecursiveDeref(dd, remapped)
+	result, inverse := p.Shuffle(dd, remapped, permutation)
+	if result == nil || permuteRoot(dd, result, inverse) != remapped {
 		panic("reo: shuffle verification failed")
 	}
 }
