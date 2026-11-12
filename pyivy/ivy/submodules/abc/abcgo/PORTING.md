@@ -289,3 +289,27 @@ production Go file in that package contains `free(`, and the earlier
 `pMemory` expansion was replaced as part of the typed `Part_Man` pool port.
 This does not establish that all unrelated draft packages have had their raw
 C-style `free` calls converted.
+
+## Integration checkpoint (2026-11-12, continued)
+
+Since the preceding checkpoint, these tested subsets were committed on the
+current branch: CUDD CAS and cascade helpers (`c7a2b2577`), BSAT proof logging
+and interpolation (`cbdf670dd`), GIA MF cut/CNF mapping (`d34de997d`), MIO
+library and command adapters (`6383ecff3`), Int2 default parameters
+(`95983f709`), Ivy graph/mapping/cut APIs (`55b96fba1`), and Satoko conflict
+cost corrections (`da41ab7f9`). Each was checked with race tests and vet; the
+Int2 commit covers only its explicit-file component because the full package
+still has generated syntax/API blockers. `base/pla` subsequently passed its
+full package race/vet gates and was committed as `846c02ed8`.
+
+The latest whole-module test run is `/tmp/abcgo-full-current.log`: 62 package
+lines pass and 60 fail. `base/pla`, `map/mio`, `bdd/cas`, and the connected Ivy
+and SAT subsets now pass their recorded focused gates. The full Ivy package,
+GIA package, BDD Extra root, SCL, and many algorithm packages remain incomplete.
+Owners are actively porting those areas, including SAIG simulation/constraints,
+Ivy Fraig, SCL sizing and network APIs, DAU, CEC sequential correspondence,
+and SAT/BMC.
+
+The fixture-directory convention is now `test_vectors`; a fresh directory
+scan should remain part of integration checks to prevent reintroducing
+`testdata`.
