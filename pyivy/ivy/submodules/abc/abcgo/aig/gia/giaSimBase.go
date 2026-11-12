@@ -38,20 +38,6 @@ import "os"
 
 
    
-type Gia_SimRsbMan_t struct {
-    pGia     *Gia_Man_t;
-    vTfo     *Vec_Int_t;
-    vCands     *Vec_Int_t;
-    vFanins     *Vec_Int_t;
-    vFanins2     *Vec_Int_t;
-    vSimsObj     *Vec_Wrd_t;
-    vSimsObj2     *Vec_Wrd_t;
-    nWords            int32;
-    word *         pFunc[3];
-}
-
-
-   
 type Gia_SimAbsMan_t struct {
     // problem formulation
     pGia     *Gia_Man_t;       // AIG manager
@@ -216,44 +202,8 @@ func Gia_ManPatSatImprove(p *Gia_Man_t, nWords0 int32, fVerbose int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_SimRsbAlloc(pGia *Gia_Man_t) *Gia_SimRsbMan_t {
-    // inlining of macro ABC_CALLOC
-    var p *Gia_SimRsbMan_t  = &Gia_SimRsbMan_t{};
-    p.pGia      = pGia;
-    p.nWords    = Vec_WrdSize(pGia.vSimsPi) / Gia_ManCiNum(pGia); assert(Vec_WrdSize(pGia.vSimsPi) % Gia_ManCiNum(pGia) == 0, "Vec_WrdSize(pGia.vSimsPi) % Gia_ManCiNum(pGia) == 0");
-    // inlining of macro ABC_CALLOC
-    p.pFunc[0]  = ((word *) calloc((size_t)(p.nWords), sizeof(word)));
-    // inlining of macro ABC_CALLOC
-    p.pFunc[1]  = ((word *) calloc((size_t)(p.nWords), sizeof(word)));
-    // inlining of macro ABC_CALLOC
-    p.pFunc[2]  = ((word *) calloc((size_t)(p.nWords), sizeof(word)));
-    p.vTfo      = Vec_IntAlloc( 1000 );
-    p.vCands    = Vec_IntAlloc( 1000 );
-    p.vFanins   = Vec_IntAlloc( 10 );
-    p.vFanins2  = Vec_IntAlloc( 10 );
-    p.vSimsObj  = Gia_ManSimPatSim( pGia );
-    p.vSimsObj2 = Vec_WrdStart( Vec_WrdSize(p.vSimsObj) );
-    assert(p.nWords == Vec_WrdSize(p.vSimsObj) / Gia_ManObjNum(pGia), "p.nWords == Vec_WrdSize(p.vSimsObj) / Gia_ManObjNum(pGia)");
-    Gia_ManStaticFanoutStart( pGia );
-    return p;
-}
-func Gia_SimRsbFree(p *Gia_SimRsbMan_t) {
-    Gia_ManStaticFanoutStop( p.pGia );
-    Vec_IntFree( p.vTfo );
-    Vec_IntFree( p.vCands );
-    Vec_IntFree( p.vFanins );
-    Vec_IntFree( p.vFanins2 );
-    Vec_WrdFree( p.vSimsObj );
-    Vec_WrdFree( p.vSimsObj2 );
-    // inlining of macro ABC_FREE
-    p.pFunc[0] = nil;
-    // inlining of macro ABC_FREE
-    p.pFunc[1] = nil;
-    // inlining of macro ABC_FREE
-    p.pFunc[2] = nil;
-    // inlining of macro ABC_FREE
-    p = nil;
-}
+
+
 
 /**Function*************************************************************
 
@@ -266,29 +216,8 @@ func Gia_SimRsbFree(p *Gia_SimRsbMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_SimRsbTfo_rec(p *Gia_Man_t, iObj int32, iFanout int32, vTfo *Vec_Int_t) {
-    var i, iFan int32;
-    if Gia_ObjIsTravIdCurrentId(p, iObj) {
-        return; }
-    Gia_ObjSetTravIdCurrentId(p, iObj);
-    // inlining of macro Gia_ObjForEachFanoutStaticId
-    for  i = 0; (i < Gia_ObjFanoutNumId(p, iObj))   && (((iFan) = Gia_ObjFanoutId(p, iObj, i)), 1); i++  {
-        if iFanout == -1 || iFan == iFanout {
-            Gia_SimRsbTfo_rec( p, iFan, -1, vTfo ); }
-    }
-    Vec_IntPush( vTfo, iObj );
-}
-func Gia_SimRsbTfo(p *Gia_SimRsbMan_t, iObj int32, iFanout int32) *Vec_Int_t {
-    assert(iObj > 0, "iObj > 0");
-    Vec_IntClear( p.vTfo );
-    Gia_ManIncrementTravId( p.pGia );
-    Gia_SimRsbTfo_rec( p.pGia, iObj, iFanout, p.vTfo );
-    assert(Vec_IntEntryLast(p.vTfo) == iObj, "Vec_IntEntryLast(p.vTfo) == iObj");
-    Vec_IntPop( p.vTfo );
-    Vec_IntReverseOrder( p.vTfo );
-    Vec_IntSort( p.vTfo, 0 );
-    return p.vTfo;
-}
+
+
 
 /**Function*************************************************************
 
@@ -301,39 +230,8 @@ func Gia_SimRsbTfo(p *Gia_SimRsbMan_t, iObj int32, iFanout int32) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_SimRsbFunc(p *Gia_SimRsbMan_t, iObj int32, vFanins *Vec_Int_t, fOnSet int32) *word {
-    var nTruthWords int32  = Abc_Truth6WordNum( Vec_IntSize(vFanins) );
-    // inlining of macro ABC_CALLOC
-    var pTruth *word    = ((word *) calloc((size_t)(nTruthWords), sizeof(word))); 
-    var pFunc *word     = Vec_WrdEntryP( p.vSimsObj, p.nWords*iObj );
-    var pFanins [16]*word = [16]*word{nil};  var s, b, iMint, i, iFanin int32;
-    assert(Vec_IntSize(vFanins) <= 16, "Vec_IntSize(vFanins) <= 16");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vFanins)) && (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {
-        pFanins[i] = Vec_WrdEntryP( p.vSimsObj, p.nWords*iFanin );
-    }
-    for  s = 0; s < 64*p.nWords; s++  {
-        if !Abc_TtGetBit(p.pFunc[2], s) || Abc_TtGetBit(pFunc, s) != fOnSet {
-            continue; }
-        iMint = 0;
-        for  b = 0; b < Vec_IntSize(vFanins); b++  {
-            if Abc_TtGetBit(pFanins[b], s) {
-                iMint |= 1 << b; }
-        }
-        Abc_TtSetBit( pTruth, iMint );
-    }
-    return pTruth;
-}
-func Gia_SimRsbResubVerify(p *Gia_SimRsbMan_t, iObj int32, vFanins *Vec_Int_t) int32 {
-    var pTruth0 *word  = Gia_SimRsbFunc( p, iObj, p.vFanins, 0 );
-    var pTruth1 *word  = Gia_SimRsbFunc( p, iObj, p.vFanins, 1 );
-    var Res int32  = !Abc_TtIntersect( pTruth0, pTruth1, p.nWords, 0 );
-    // inlining of macro ABC_FREE
-    pTruth0 = nil;
-    // inlining of macro ABC_FREE
-    pTruth1 = nil;
-    return Res;
-}
+
+
 
 /**Function*************************************************************
 
@@ -346,53 +244,8 @@ func Gia_SimRsbResubVerify(p *Gia_SimRsbMan_t, iObj int32, vFanins *Vec_Int_t) i
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_SimRsbSimAndCareSet(p *Gia_Man_t, i int32, pObj *Gia_Obj_t, nWords int32, vSims *Vec_Wrd_t, vSims2 *Vec_Wrd_t) {
-    var pComps [2]word = [2]word{ 0, ~(word)0 };
-    var Diff0 word  = pComps[Gia_ObjFaninC0(pObj)];
-    var Diff1 word  = pComps[Gia_ObjFaninC1(pObj)];
-    var vSims0 *Vec_Wrd_t;
-    if Gia_ObjIsTravIdCurrentId(p, Gia_ObjFaninId0(pObj, i)) {
-        vSims0 = vSims2;
-    } else {
-        vSims0 = vSims;
-    }
-    var vSims1 *Vec_Wrd_t;
-    if Gia_ObjIsTravIdCurrentId(p, Gia_ObjFaninId1(pObj, i)) {
-        vSims1 = vSims2;
-    } else {
-        vSims1 = vSims;
-    }
-    var pSims0 *word  = Vec_WrdEntryP( vSims0, nWords*Gia_ObjFaninId0(pObj, i) );
-    var pSims1 *word  = Vec_WrdEntryP( vSims1, nWords*Gia_ObjFaninId1(pObj, i) );
-    var pSims2 *word  = Vec_WrdEntryP( vSims2, nWords*i ); var w int32;
-    if Gia_ObjIsXor(pObj) {
-        for  w = 0; w < nWords; w++  {
-            pSims2[w] = (pSims0[w] ^ Diff0) ^ (pSims1[w] ^ Diff1);
-        }
-    } else {
-        for  w = 0; w < nWords; w++  {
-            pSims2[w] = (pSims0[w] ^ Diff0) & (pSims1[w] ^ Diff1);
-        } }
-}
-func Gia_SimRsbCareSet(p *Gia_SimRsbMan_t, iObj int32, vTfo *Vec_Int_t) *word {
-    var pSims *word   = Vec_WrdEntryP( p.vSimsObj,  p.nWords*iObj );
-    var pSims2 *word  = Vec_WrdEntryP( p.vSimsObj2, p.nWords*iObj );  var iNode, i int32;
-    Abc_TtCopy( pSims2, pSims, p.nWords, 1 );
-    Abc_TtClear( p.pFunc[2], p.nWords );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vTfo)) && (((iNode) = Vec_IntEntry(vTfo, i)), 1); i++  {
-        var pNode *Gia_Obj_t  = Gia_ManObj(p.pGia, iNode);
-        if Gia_ObjIsAnd(pNode) {
-            Gia_SimRsbSimAndCareSet( p.pGia, iNode, pNode, p.nWords, p.vSimsObj, p.vSimsObj2 );
-        } else if Gia_ObjIsCo(pNode) {
-            var pSimsA *word  = Vec_WrdEntryP( p.vSimsObj,  p.nWords*Gia_ObjFaninId0p(p.pGia, pNode) );
-            var pSimsB *word  = Vec_WrdEntryP( p.vSimsObj2, p.nWords*Gia_ObjFaninId0p(p.pGia, pNode) );
-            Abc_TtOrXor( p.pFunc[2], pSimsA, pSimsB, p.nWords );
-        
-        } else { assert(false, "0"); }
-    }
-    return p.pFunc[2];
-}
+
+
 
 
 /**Function*************************************************************
