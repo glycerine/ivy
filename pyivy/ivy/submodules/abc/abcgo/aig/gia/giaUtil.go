@@ -449,74 +449,9 @@ func Gia_ManBfsForCrossCut(p *Gia_Man_t) *Vec_Int_t {
     return vNodes;
 }
 
-func Gia_ManDfsForCrossCut_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
-        return;
-    }
-    if Gia_ObjIsCo(pObj) {
-        Gia_ObjFanin0(pObj).Value++;
-        Gia_ManDfsForCrossCut_rec( p, Gia_ObjFanin0(pObj), vNodes );
-        Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
-        return;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ObjFanin0(pObj).Value++;
-    Gia_ObjFanin1(pObj).Value++;
-    Gia_ManDfsForCrossCut_rec( p, Gia_ObjFanin0(pObj), vNodes );
-    Gia_ManDfsForCrossCut_rec( p, Gia_ObjFanin1(pObj), vNodes );
-    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
-}
-func Gia_ManDfsForCrossCut(p *Gia_Man_t, fReverse int32) *Vec_Int_t {
-    var vNodes *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManCleanValue( p );
-    vNodes = Vec_IntAlloc( Gia_ManObjNum(p) );
-    Gia_ManIncrementTravId( p );
-    if fReverse != 0 {
-        Gia_ManForEachCoReverse( p, pObj, i )
-            if ( !Gia_ObjIsConst0(Gia_ObjFanin0(pObj)) )
-                Gia_ManDfsForCrossCut_rec( p, pObj, vNodes );
-    
-    } else {
-        Gia_ManForEachCo( p, pObj, i )
-            if ( !Gia_ObjIsConst0(Gia_ObjFanin0(pObj)) )
-                Gia_ManDfsForCrossCut_rec( p, pObj, vNodes );
-    }
-    return vNodes;
-}
-func Gia_ManCrossCut(p *Gia_Man_t, fReverse int32) int32 {
-    var vNodes *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i, nCutCur, nCutMax int32;
-    vNodes = Gia_ManDfsForCrossCut( p, fReverse );
-    //vNodes = Gia_ManBfsForCrossCut( p );
-    Gia_ManForEachObjVec( vNodes, p, pObj, i )
-    {
-        if pObj.Value {
-            nCutCur++; }
-        if nCutMax < nCutCur {
-            nCutMax = nCutCur; }
-        if Gia_ObjIsAnd(pObj) {
-            if --Gia_ObjFanin0(pObj).Value == 0 {
-                nCutCur--; }
-            if --Gia_ObjFanin1(pObj).Value == 0 {
-                nCutCur--; }
-        
-        } else if Gia_ObjIsCo(pObj) {
-            if --Gia_ObjFanin0(pObj).Value == 0 {
-                nCutCur--; }
-        }
-    }
-    Vec_IntFree( vNodes );
-    Gia_ManForEachObj( p, pObj, i )
-        assert(pObj.Value == 0, "pObj.Value == 0");
-    return nCutMax;
-}
+
+
+
 
 
 /**Function*************************************************************

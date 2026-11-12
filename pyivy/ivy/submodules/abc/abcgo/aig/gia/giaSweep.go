@@ -383,28 +383,7 @@ func Gia_ManFraigReduceGia(p *Gia_Man_t, pReprs *int32) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManComputeCarryOuts(p *Gia_Man_t) *Vec_Int_t {
-    var pObj *Gia_Obj_t;
-    var pManTime *Tim_Man_t  = (Tim_Man_t *)p.pManTime;
-    var i int32;
-    var iLast int32;
-    var iBox int32;
-    var nBoxes int32 = Tim_ManBoxNum( pManTime );
-    var vCarryOuts *Vec_Int_t  = Vec_IntAlloc( nBoxes );
-    for  i = 0; i < nBoxes; i++  {
-        iLast = Tim_ManBoxInputLast( pManTime, i );
-        pObj = Gia_ObjFanin0( Gia_ManCo(p, iLast) );
-        if !Gia_ObjIsCi(pObj) {
-            continue; }
-        iBox = Tim_ManBoxForCi( pManTime, Gia_ObjCioId(pObj) );
-        if iBox == -1 { 
-            continue; }
-        assert(Gia_ObjIsCi(pObj), "Gia_ObjIsCi(pObj)");
-        if Gia_ObjCioId(pObj) == Tim_ManBoxOutputLast(pManTime, iBox) {
-            Vec_IntPush( vCarryOuts, Gia_ObjId(p, pObj) ); }
-    }
-    return vCarryOuts;
-}
+
 
 /**Function*************************************************************
 
@@ -417,33 +396,7 @@ func Gia_ManComputeCarryOuts(p *Gia_Man_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCheckIntegrityWithBoxes(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var vCarryOuts *Vec_Int_t;
-    var i, nCountReg, nCountCarry int32;
-    if p.pManTime == nil {
-        return; }
-    // inlining of macro ABC_FREE
-    p.Refs = nil;
-    Gia_ManCreateRefs( p );
-    for  i = Gia_ManPoNum(p) - Gia_ManRegBoxNum(p); i < Gia_ManPoNum(p); i++  {
-        pObj = Gia_ObjFanin0( Gia_ManPo(p, i) );
-        assert(Gia_ObjIsCi(pObj), "Gia_ObjIsCi(pObj)");
-        if Gia_ObjRefNum(p, pObj) > 1 {
-            nCountReg++; }
-    }
-    vCarryOuts = Gia_ManComputeCarryOuts( p );
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vCarryOuts)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vCarryOuts,i))); i++  {
-        if Gia_ObjRefNum(p, pObj) > 1 {
-            nCountCarry++; }
-    }
-    Vec_IntFree( vCarryOuts );
-    if nCountReg || (nCountCarry != 0) {
-        fmt.Printf("Warning: AIG with boxes has internal fanout in %d complex flops and %d carries.\n", nCountReg, nCountCarry); }
-    // inlining of macro ABC_FREE
-    p.Refs = nil;
-}
+
 
 /**Function*************************************************************
 
