@@ -19,3 +19,21 @@ func sfmDecomposeWindow(window *sfmDecWindow, gateCNFs [][][]int, divisors int, 
 	}
 	return s.rec(nil, masks, nil, true, 0)
 }
+
+// sfmMatchAreaReplacement finds the prepared gate implementation for a window.
+func sfmMatchAreaReplacement(window *sfmDecWindow, cnfs [][][]int, divisors int, pars Sfm_Par_t, library *Sfm_Lib_t, care, target uint64, sim []uint64, fallback []int, oldArea int32) ([]int32, [][]int32, bool) {
+	truth, support, ok := sfmDecomposeWindow(window, cnfs, divisors, pars, care, target, sim, fallback)
+	if !ok {
+		return nil, nil, false
+	}
+	if len(support) < 2 {
+		gates, fanins := Sfm_LibImplementSimple(library, truth, support)
+		return gates, fanins, true
+	}
+	area, id := Sfm_LibFindAreaMatch(library, truth)
+	if area < 0 || area > oldArea || (!pars.ZeroCost && area == oldArea) {
+		return nil, nil, false
+	}
+	gates, fanins := Sfm_LibImplementGatesArea(library, support, id)
+	return gates, fanins, true
+}
