@@ -6,35 +6,6 @@ import (
 	"sort"
 )
 
-// Reusable supergate storage indexed by recursion depth.
-type Vec_Vec_t struct {
-	nSize  int32
-	pArray []*Vec_Ptr_t
-}
-
-func Vec_VecAlloc(n int32) *Vec_Vec_t { return &Vec_Vec_t{pArray: make([]*Vec_Ptr_t, 0, n)} }
-func Vec_VecSize(v *Vec_Vec_t) int32  { return v.nSize }
-func Vec_VecExpand(v *Vec_Vec_t, level int32) {
-	for v.nSize <= level {
-		v.pArray = append(v.pArray, Vec_PtrAlloc(16))
-		v.nSize++
-	}
-}
-func Vec_VecEntry(v *Vec_Vec_t, level int32) *Vec_Ptr_t { return v.pArray[level] }
-func Vec_VecPush(v *Vec_Vec_t, level int32, value any) {
-	Vec_VecExpand(v, level)
-	Vec_PtrPush(v.pArray[level], value)
-}
-func Vec_VecFree(v *Vec_Vec_t) {
-	if v != nil {
-		for _, x := range v.pArray {
-			Vec_PtrFree(x)
-		}
-		v.pArray = nil
-		v.nSize = 0
-	}
-}
-
 func Hop_ManBalance(p *Hop_Man_t, update int32) *Hop_Man_t {
 	result := Hop_ManStart()
 	result.fRefCount = 0
@@ -62,14 +33,14 @@ func Hop_NodeBalance_rec(p *Hop_Man_t, old *Hop_Obj_t, store *Vec_Vec_t, level, 
 	}
 	assert(Hop_ObjIsNode(old) != 0, "balancing requires a node or mapped input")
 	cone := Hop_NodeBalanceCone(old, store, level)
-	if cone.nSize == 0 {
+	if Vec_PtrSize(cone) == 0 {
 		old.pData = Hop_ManConst0(p)
 		return old.pData.(*Hop_Obj_t)
 	}
-	for i := int32(0); i < cone.nSize; i++ {
-		edge := cone.pArray[i].(*Hop_Obj_t)
+	for i := int32(0); i < Vec_PtrSize(cone); i++ {
+		edge := Vec_PtrArray(cone)[i].(*Hop_Obj_t)
 		node := Hop_NodeBalance_rec(p, Hop_Regular(edge), store, level+1, update)
-		cone.pArray[i] = Hop_NotCond(node, Hop_IsComplement(edge))
+		Vec_PtrArray(cone)[i] = Hop_NotCond(node, Hop_IsComplement(edge))
 	}
 	result := Hop_NodeBalanceBuildSuper(p, cone, Hop_ObjType(old), update)
 	assert(old.pData == nil, "node already mapped")
@@ -79,19 +50,19 @@ func Hop_NodeBalance_rec(p *Hop_Man_t, old *Hop_Obj_t, store *Vec_Vec_t, level, 
 func Hop_NodeBalanceCone_rec(root, node *Hop_Obj_t, cone *Vec_Ptr_t) int32 {
 	regular := Hop_Regular(node)
 	if regular.fMarkB != 0 {
-		for i := int32(0); i < cone.nSize; i++ {
-			if cone.pArray[i].(*Hop_Obj_t) == node {
+		for i := int32(0); i < Vec_PtrSize(cone); i++ {
+			if Vec_PtrArray(cone)[i].(*Hop_Obj_t) == node {
 				return 1
 			}
 		}
-		for i := int32(0); i < cone.nSize; i++ {
-			if cone.pArray[i].(*Hop_Obj_t) == Hop_Not(node) {
+		for i := int32(0); i < Vec_PtrSize(cone); i++ {
+			if Vec_PtrArray(cone)[i].(*Hop_Obj_t) == Hop_Not(node) {
 				return -1
 			}
 		}
 		panic("marked supergate leaf not found")
 	}
-	if node != root && (Hop_IsComplement(node) != 0 || Hop_ObjType(node) != Hop_ObjType(root) || Hop_ObjRefs(node) > 1 || cone.nSize > 10000) {
+	if node != root && (Hop_IsComplement(node) != 0 || Hop_ObjType(node) != Hop_ObjType(root) || Hop_ObjRefs(node) > 1 || Vec_PtrSize(cone) > 10000) {
 		Vec_PtrPush(cone, node)
 		regular.fMarkB = 1
 		return 0
@@ -111,13 +82,13 @@ func Hop_NodeBalanceCone(node *Hop_Obj_t, store *Vec_Vec_t, level int32) *Vec_Pt
 	assert(Hop_IsComplement(node) == 0, "regular cone root")
 	Vec_VecExpand(store, level)
 	cone := Vec_VecEntry(store, level)
-	cone.nSize = 0
+	Vec_PtrClear(cone)
 	result := Hop_NodeBalanceCone_rec(node, node, cone)
-	for i := int32(0); i < cone.nSize; i++ {
-		Hop_Regular(cone.pArray[i].(*Hop_Obj_t)).fMarkB = 0
+	for i := int32(0); i < Vec_PtrSize(cone); i++ {
+		Hop_Regular(Vec_PtrArray(cone)[i].(*Hop_Obj_t)).fMarkB = 0
 	}
 	if result == -1 {
-		cone.nSize = 0
+		Vec_PtrClear(cone)
 	}
 	return cone
 }
@@ -138,41 +109,41 @@ func Hop_NodeCompareLevelsDecrease(a, b *Hop_Obj_t) int32 {
 	return 0
 }
 func Hop_NodeBalanceBuildSuper(p *Hop_Man_t, cone *Vec_Ptr_t, typ Hop_Type_t, update int32) *Hop_Obj_t {
-	assert(cone.nSize > 0, "empty supergate")
-	sort.Slice(cone.pArray[:cone.nSize], func(i, j int) bool {
-		return Hop_NodeCompareLevelsDecrease(cone.pArray[i].(*Hop_Obj_t), cone.pArray[j].(*Hop_Obj_t)) < 0
+	assert(Vec_PtrSize(cone) > 0, "empty supergate")
+	sort.Slice(Vec_PtrArray(cone), func(i, j int) bool {
+		return Hop_NodeCompareLevelsDecrease(Vec_PtrArray(cone)[i].(*Hop_Obj_t), Vec_PtrArray(cone)[j].(*Hop_Obj_t)) < 0
 	})
-	for cone.nSize > 1 {
+	for Vec_PtrSize(cone) > 1 {
 		var left int32
 		if update != 0 {
 			left = Hop_NodeBalanceFindLeft(cone)
 		}
 		Hop_NodeBalancePermute(p, cone, left, hopBool(typ == AIG_EXOR))
-		a := cone.pArray[cone.nSize-1].(*Hop_Obj_t)
-		b := cone.pArray[cone.nSize-2].(*Hop_Obj_t)
-		cone.nSize -= 2
+		a := Vec_PtrArray(cone)[Vec_PtrSize(cone)-1].(*Hop_Obj_t)
+		b := Vec_PtrArray(cone)[Vec_PtrSize(cone)-2].(*Hop_Obj_t)
+		Vec_PtrShrink(cone, Vec_PtrSize(cone)-2)
 		Hop_NodeBalancePushUniqueOrderByLevel(cone, Hop_Oper(p, a, b, typ))
 	}
-	return cone.pArray[0].(*Hop_Obj_t)
+	return Vec_PtrArray(cone)[0].(*Hop_Obj_t)
 }
 func Hop_NodeBalanceFindLeft(cone *Vec_Ptr_t) int32 {
-	if cone.nSize < 3 {
+	if Vec_PtrSize(cone) < 3 {
 		return 0
 	}
-	current := cone.nSize - 2
-	level := Hop_ObjLevel(Hop_Regular(cone.pArray[current].(*Hop_Obj_t)))
-	for current > 0 && Hop_ObjLevel(Hop_Regular(cone.pArray[current-1].(*Hop_Obj_t))) == level {
+	current := Vec_PtrSize(cone) - 2
+	level := Hop_ObjLevel(Hop_Regular(Vec_PtrArray(cone)[current].(*Hop_Obj_t)))
+	for current > 0 && Hop_ObjLevel(Hop_Regular(Vec_PtrArray(cone)[current-1].(*Hop_Obj_t))) == level {
 		current--
 	}
 	return current
 }
 func Hop_NodeBalancePermute(p *Hop_Man_t, cone *Vec_Ptr_t, left, exor int32) {
-	right := cone.nSize - 2
+	right := Vec_PtrSize(cone) - 2
 	assert(left <= right, "invalid balancing bound")
 	if left == right {
 		return
 	}
-	a, b := cone.pArray[right+1].(*Hop_Obj_t), cone.pArray[right].(*Hop_Obj_t)
+	a, b := Vec_PtrArray(cone)[right+1].(*Hop_Obj_t), Vec_PtrArray(cone)[right].(*Hop_Obj_t)
 	if Hop_Regular(a) == p.pConst1 || Hop_Regular(b) == p.pConst1 {
 		return
 	}
@@ -181,27 +152,27 @@ func Hop_NodeBalancePermute(p *Hop_Man_t, cone *Vec_Ptr_t, left, exor int32) {
 		typ = AIG_EXOR
 	}
 	for i := right; i >= left; i-- {
-		candidate := cone.pArray[i].(*Hop_Obj_t)
+		candidate := Vec_PtrArray(cone)[i].(*Hop_Obj_t)
 		if Hop_Regular(candidate) == p.pConst1 || Hop_TableLookup(p, Hop_ObjCreateGhost(p, a, candidate, typ)) != nil {
 			if candidate != b {
-				cone.pArray[i], cone.pArray[right] = b, candidate
+				Vec_PtrArray(cone)[i], Vec_PtrArray(cone)[right] = b, candidate
 			}
 			return
 		}
 	}
 }
 func Hop_NodeBalancePushUniqueOrderByLevel(cone *Vec_Ptr_t, node *Hop_Obj_t) {
-	for i := int32(0); i < cone.nSize; i++ {
-		if cone.pArray[i].(*Hop_Obj_t) == node {
+	for i := int32(0); i < Vec_PtrSize(cone); i++ {
+		if Vec_PtrArray(cone)[i].(*Hop_Obj_t) == node {
 			return
 		}
 	}
 	Vec_PtrPush(cone, node)
-	for i := cone.nSize - 1; i > 0; i-- {
-		a, b := cone.pArray[i].(*Hop_Obj_t), cone.pArray[i-1].(*Hop_Obj_t)
+	for i := Vec_PtrSize(cone) - 1; i > 0; i-- {
+		a, b := Vec_PtrArray(cone)[i].(*Hop_Obj_t), Vec_PtrArray(cone)[i-1].(*Hop_Obj_t)
 		if Hop_ObjLevel(Hop_Regular(a)) <= Hop_ObjLevel(Hop_Regular(b)) {
 			break
 		}
-		cone.pArray[i], cone.pArray[i-1] = b, a
+		Vec_PtrArray(cone)[i], Vec_PtrArray(cone)[i-1] = b, a
 	}
 }

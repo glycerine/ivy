@@ -26,6 +26,7 @@ func Hop_ManStop(p *Hop_Man_t) {
 	p.pConst1 = nil
 }
 func Hop_ManCleanup(p *Hop_Man_t) int32 {
+	assert(p.fRefCount != 0, "cleanup requires reference counts, not levels")
 	old := Hop_ManNodeNum(p)
 	var dangling []*Hop_Obj_t
 	for _, head := range p.pTable {

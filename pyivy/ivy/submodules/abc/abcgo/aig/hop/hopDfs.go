@@ -42,14 +42,14 @@ func Hop_ManDfs(p *Hop_Man_t) *Vec_Ptr_t {
 func Hop_ManDfsNode(p *Hop_Man_t, o *Hop_Obj_t) *Vec_Ptr_t {
 	nodes := Vec_PtrAlloc(16)
 	Hop_ManDfs_rec(o, nodes)
-	for _, entry := range nodes.pArray[:nodes.nSize] {
+	for _, entry := range Vec_PtrArray(nodes) {
 		entry.(*Hop_Obj_t).fMarkA = 0
 	}
 	return nodes
 }
 func Hop_ManCountLevels(p *Hop_Man_t) int32 {
 	p.pConst1.pData = nil
-	for _, entry := range p.vPis.pArray[:p.vPis.nSize] {
+	for _, entry := range Vec_PtrArray(p.vPis) {
 		entry.(*Hop_Obj_t).pData = nil
 	}
 	nodes := Hop_ManDfs(p)
@@ -59,7 +59,7 @@ func Hop_ManCountLevels(p *Hop_Man_t) int32 {
 		}
 		return o.pData.(int32)
 	}
-	for _, entry := range nodes.pArray[:nodes.nSize] {
+	for _, entry := range Vec_PtrArray(nodes) {
 		o := entry.(*Hop_Obj_t)
 		a, b := level(Hop_ObjFanin0(o)), level(Hop_ObjFanin1(o))
 		if b > a {
@@ -68,7 +68,7 @@ func Hop_ManCountLevels(p *Hop_Man_t) int32 {
 		o.pData = 1 + Hop_ObjIsExor(o) + a
 	}
 	var max int32
-	for _, entry := range p.vPos.pArray[:p.vPos.nSize] {
+	for _, entry := range Vec_PtrArray(p.vPos) {
 		if v := level(Hop_ObjFanin0(entry.(*Hop_Obj_t))); v > max {
 			max = v
 		}
@@ -81,10 +81,10 @@ func Hop_ManCreateRefs(p *Hop_Man_t) {
 	}
 	p.fRefCount = 1
 	p.pConst1.nRefs = 0
-	for _, entry := range p.vPis.pArray[:p.vPis.nSize] {
+	for _, entry := range Vec_PtrArray(p.vPis) {
 		entry.(*Hop_Obj_t).nRefs = 0
 	}
-	for _, entry := range p.vPos.pArray[:p.vPos.nSize] {
+	for _, entry := range Vec_PtrArray(p.vPos) {
 		entry.(*Hop_Obj_t).nRefs = 0
 	}
 	for _, head := range p.pTable {
@@ -98,7 +98,7 @@ func Hop_ManCreateRefs(p *Hop_Man_t) {
 			Hop_ObjFanin1(o).nRefs++
 		}
 	}
-	for _, entry := range p.vPos.pArray[:p.vPos.nSize] {
+	for _, entry := range Vec_PtrArray(p.vPos) {
 		Hop_ObjFanin0(entry.(*Hop_Obj_t)).nRefs++
 	}
 }

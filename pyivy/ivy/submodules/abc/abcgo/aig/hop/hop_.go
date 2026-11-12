@@ -11,7 +11,7 @@ package hop
   Synopsis    []
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - May 11, 2006.]
@@ -23,7 +23,6 @@ package hop
 //#include "hop.h"
 
 //ABC_NAMESPACE_IMPL_START
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
@@ -38,18 +37,15 @@ package hop
   Synopsis    []
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

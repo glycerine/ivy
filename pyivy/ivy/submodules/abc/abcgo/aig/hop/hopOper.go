@@ -70,16 +70,16 @@ func Hop_Multi(p *Hop_Man_t, args []*Hop_Obj_t, n int32, t Hop_Type_t) *Hop_Obj_
 	return Hop_Multi_rec(p, args, n, t)
 }
 func Hop_Miter(p *Hop_Man_t, v *Vec_Ptr_t) *Hop_Obj_t {
-	if v.nSize == 0 || v.nSize%2 != 0 {
+	if Vec_PtrSize(v) == 0 || Vec_PtrSize(v)%2 != 0 {
 		panic("miter requires pairs")
 	}
-	args := make([]*Hop_Obj_t, v.nSize/2)
-	for i := int32(0); i < v.nSize; i += 2 {
-		args[i/2] = Hop_Not(Hop_Exor(p, v.pArray[i].(*Hop_Obj_t), v.pArray[i+1].(*Hop_Obj_t)))
+	args := make([]*Hop_Obj_t, Vec_PtrSize(v)/2)
+	for i := int32(0); i < Vec_PtrSize(v); i += 2 {
+		args[i/2] = Hop_Not(Hop_Exor(p, Vec_PtrArray(v)[i].(*Hop_Obj_t), Vec_PtrArray(v)[i+1].(*Hop_Obj_t)))
 	}
-	v.nSize /= 2
+	Vec_PtrShrink(v, Vec_PtrSize(v)/2)
 	for i, a := range args {
-		v.pArray[i] = a
+		Vec_PtrArray(v)[i] = a
 	}
 	return Hop_Not(Hop_Multi_rec(p, args, int32(len(args)), AIG_AND))
 }

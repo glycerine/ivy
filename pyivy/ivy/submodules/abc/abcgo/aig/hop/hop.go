@@ -41,7 +41,7 @@ type Hop_Man_t_ struct {
 	nTableSize                      int32
 	pData                           any
 	nTravIds, fRefCount, fCatchExor int32
-	vChunks, vPages                 [][]Hop_Obj_t
+	nodePages                       [][]Hop_Obj_t
 	pListFree                       *Hop_Obj_t
 	time1, time2                    int64
 }

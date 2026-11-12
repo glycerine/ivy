@@ -50,15 +50,13 @@ const IVY_PAGE_MASK = 4095 // page bitmask (2^IVY_PAGE_SIZE)-1
 // Hop_ManStartMemory initializes the typed node-page pool. Go owns the page
 // storage, so the C implementation's byte alignment and pointer casts vanish.
 func Hop_ManStartMemory(p *Hop_Man_t) {
-	p.vChunks = make([][]Hop_Obj_t, 0, 128)
-	p.vPages = make([][]Hop_Obj_t, 0, 128)
+	p.nodePages = make([][]Hop_Obj_t, 0, 128)
 	p.pListFree = nil
 }
 
 // Hop_ManStopMemory releases the manager's ownership of its node pages.
 func Hop_ManStopMemory(p *Hop_Man_t) {
-	p.vChunks = nil
-	p.vPages = nil
+	p.nodePages = nil
 	p.pListFree = nil
 }
 
@@ -69,8 +67,7 @@ func Hop_ManAddMemory(p *Hop_Man_t) {
 		panic("Hop_ManAddMemory: free list is not empty")
 	}
 	page := make([]Hop_Obj_t, 1<<IVY_PAGE_SIZE)
-	p.vChunks = append(p.vChunks, page)
-	p.vPages = append(p.vPages, page)
+	p.nodePages = append(p.nodePages, page)
 	for i := 0; i+1 < len(page); i++ {
 		page[i].pNext = &page[i+1]
 	}

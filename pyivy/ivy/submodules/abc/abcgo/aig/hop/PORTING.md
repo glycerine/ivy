@@ -14,10 +14,10 @@ free; live nodes reuse pNext for structural hashing. Structural buckets are type
 slices. Temporary data, integer data and traversal IDs have distinct typed fields
 instead of reinterpretation through C unions.
 
-Manager-local Vec_Ptr_t preserves the original int32 count/index API with []any
-storage. Vec_Int_t is an alias of the common misc/vec implementation. Consumers
-that use shared vec.Vec_Ptr_t should explicitly adapt returned pointer vectors;
-they are currently separate named types. Core Hop graph constructor APIs retain
+Vec_Ptr_t, Vec_Vec_t and Vec_Int_t are aliases of the common misc/vec
+implementations. Thin index adapters preserve the original int32-facing Hop API.
+DFS and nested-vector results are directly interoperable with other packages.
+Hop carries no duplicate vector capacity/size fields. Core Hop graph constructor APIs retain
 *Hop_Man_t and *Hop_Obj_t parameters/results.
 
 EquationOperations/CompileEquation/ParseEquation connect the generic misc/parse
@@ -38,10 +38,28 @@ Actual-workspace commands pass:
     GOCACHE=/tmp/abcgo-cache go -C abcgo test -race ./aig/hop
     GOCACHE=/tmp/abcgo-cache go -C abcgo test -cover ./aig/hop
 
-Statement coverage is 70.8%. Tests exercise node-pool ownership/free lists,
+Earlier statement coverage was 70.8%; subsequent review regressions are included
+in the package suite. Tests exercise node-pool ownership/free lists,
 complement identity, Boolean constructors, structural sharing and resize,
 reference cleanup, graph consistency, traversal order and cycles, levels,
 transfer/composition/remapping, balancing, 32-/64-bit truth tables and large
 supports, equation and SOP factoring adapters, MUX recognition, BLIF output and
 BDD-operation recording. This establishes Hop package behavior; the entire
 ABC application still requires integration and parity testing by the main port.
+
+## Separate review passes
+
+Readability/compactness review: removed Hop-local pointer and nested-vector
+representations and their redundant size fields, replacing them with shared vec
+aliases and small explicit index adapters. Replaced manual live-prefix slicing
+with common vector accessors. Removed duplicate node-page ownership lists; one
+nodePages slice now retains allocated pages.
+
+Bug review (after readability edits): restored the original cleanup precondition
+that counters must be references rather than balancing levels. Added a panic
+regression so cleanup cannot silently interpret levels as references. Added an
+interoperability regression consuming Hop DFS and nested vectors through common
+vec APIs. Truth-specific review also fixed constant-width handling, support
+validation before mutation, copy bounds, Truth6 sentinel indices and DAG
+memoization, with dedicated regressions. Existing graph, parser, factoring,
+balance, DFS and truth suites remain enabled. Actual-workspace race tests pass.

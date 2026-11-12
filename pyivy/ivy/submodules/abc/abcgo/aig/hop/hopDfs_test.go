@@ -40,11 +40,11 @@ func TestDfsPostorderAndCone(t *testing.T) {
 	root := Hop_And(p, x, y)
 	Hop_And(p, b, c) // A disconnected node belongs to manager DFS, not root DFS.
 	nodes := Hop_ManDfsNode(p, Hop_Regular(root))
-	if nodes.nSize != 3 || Hop_DagSize(root) != 3 || Hop_DagSize(Hop_Not(root)) != 3 {
+	if Vec_PtrSize(nodes) != 3 || Hop_DagSize(root) != 3 || Hop_DagSize(Hop_Not(root)) != 3 {
 		t.Fatal("wrong cone size")
 	}
 	seen := map[*Hop_Obj_t]bool{}
-	for _, entry := range nodes.pArray[:nodes.nSize] {
+	for _, entry := range Vec_PtrArray(nodes) {
 		o := entry.(*Hop_Obj_t)
 		for _, f := range []*Hop_Obj_t{Hop_ObjFanin0(o), Hop_ObjFanin1(o)} {
 			if Hop_ObjIsNode(f) != 0 && !seen[f] {
@@ -53,7 +53,7 @@ func TestDfsPostorderAndCone(t *testing.T) {
 		}
 		seen[o] = true
 	}
-	if got := Hop_ManDfs(p).nSize; got != 4 {
+	if got := Vec_PtrSize(Hop_ManDfs(p)); got != 4 {
 		t.Fatal(got)
 	}
 	dfsAssertUnmarked(t, p)
@@ -61,11 +61,11 @@ func TestDfsPostorderAndCone(t *testing.T) {
 		t.Fatal("wrong PI fanout count")
 	}
 	dfsAssertUnmarked(t, p)
-	for _, entry := range nodes.pArray[:nodes.nSize] {
+	for _, entry := range Vec_PtrArray(nodes) {
 		entry.(*Hop_Obj_t).pData = "scratch"
 	}
 	Hop_ConeCleanAndMark_rec(Hop_Regular(root))
-	for _, entry := range nodes.pArray[:nodes.nSize] {
+	for _, entry := range Vec_PtrArray(nodes) {
 		o := entry.(*Hop_Obj_t)
 		if o.fMarkA != 1 || o.pData != nil {
 			t.Fatal("clean and mark")
