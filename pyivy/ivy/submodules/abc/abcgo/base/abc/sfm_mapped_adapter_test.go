@@ -1,6 +1,11 @@
 package abc
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/glycerine/abcgo/map/mio"
+	"github.com/glycerine/abcgo/opt/sfm"
+)
 
 func TestAbcExtractSfmMappedNetwork(t *testing.T) {
 	n, _, _, pi, driver, consumer := abcSCLFixture(t)
@@ -57,5 +62,45 @@ func TestAbcApplySfmRejectsInvalidGateWithoutMutation(t *testing.T) {
 	}
 	if consumer.fanins[0] != old {
 		t.Fatal("failed validation changed network")
+	}
+}
+
+func TestAbcPerformMfs3MappedNetwork(t *testing.T) {
+	const genlib = `GATE zero 0 O=CONST0;
+GATE one 0 O=CONST1;
+GATE buf 1 O=a; PIN * NONINV 1 999 1 0 2 0
+GATE inv 1 O=!a; PIN * INV 1 999 1 0 2 0
+GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 2 0
+.end
+`
+	library, err := mio.ReadLibrary("fixture", genlib, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	n := NewNetwork("mapped and")
+	n.Type, n.Function, n.FunctionManager = uint8(ABC_NTK_LOGIC), uint8(ABC_FUNC_MAP), library
+	a, b := n.NewObject(ObjectPI), n.NewObject(ObjectPI)
+	x, y := n.NewObject(ObjectNode), n.NewObject(ObjectNode)
+	x.Data, y.Data = mio.Mio_LibraryReadGateByName(library, "and2", ""), mio.Mio_LibraryReadGateByName(library, "and2", "")
+	Abc_ObjAddFanin(x, a)
+	Abc_ObjAddFanin(x, b)
+	Abc_ObjAddFanin(y, x)
+	Abc_ObjAddFanin(y, a)
+	out := n.NewObject(ObjectPO)
+	Abc_ObjAddFanin(out, y)
+	pars := sfm.Sfm_Par_t{Area: true, TfoLevMax: 2, TfiLevMax: 3, FanoutMax: 10, MffcMax: 3, VarMax: 6, UseAndOr: true, NodeOne: y.ID}
+	changed, err := Abc_NtkPerformMfs3(n, &pars)
+	if err != nil || changed != 1 {
+		t.Fatalf("changed %d: %v", changed, err)
+	}
+	p, _, err := Abc_NtkExtractSfm(n)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for a := 0; a < 4; a++ {
+		got, err := p.Evaluate([]bool{a&1 != 0, a&2 != 0})
+		if err != nil || len(got) != 1 || got[0] != (a == 3) {
+			t.Fatalf("input %d: %v %v", a, got, err)
+		}
 	}
 }

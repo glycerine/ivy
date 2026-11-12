@@ -153,3 +153,44 @@ func Abc_NtkApplySfm(n *Network, p *sfm.Sfm_Ntk_t, original []*Object) error {
 	Abc_NtkLevel(n)
 	return n.Check()
 }
+
+// Abc_NtkPerformMfs3 optimizes mapped logic through the native SFM engine.
+// NodeOne refers to an ABC object ID, as in the original command interface.
+func Abc_NtkPerformMfs3(n *Network, pars *sfm.Sfm_Par_t) (int, error) {
+	if n == nil || pars == nil {
+		return 0, fmt.Errorf("sfm: missing network or parameters")
+	}
+	library, ok := n.FunctionManager.(*mio.Mio_Library_t)
+	if !ok || library == nil {
+		return 0, fmt.Errorf("sfm: mapped network has no gate library")
+	}
+	p, objects, err := Abc_NtkExtractSfm(n)
+	if err != nil {
+		return 0, err
+	}
+	options := *pars
+	if options.NodesMax != 0 {
+		return 0, fmt.Errorf("sfm: ABC object ID limit is not yet supported")
+	}
+	if options.NodeOne != 0 {
+		id := -1
+		for i, obj := range objects {
+			if obj.ID == options.NodeOne && obj.Kind == ObjectNode {
+				id = i
+				break
+			}
+		}
+		if id < 0 {
+			return 0, fmt.Errorf("sfm: selected node %d is not mapped", options.NodeOne)
+		}
+		options.NodeOne = id
+	}
+	changed, err := sfm.Sfm_OptimizeMapped(p, options, library)
+	if err != nil || changed == 0 {
+		return changed, err
+	}
+	if err := Abc_NtkApplySfm(n, p, objects); err != nil {
+		return 0, err
+	}
+	return changed, nil
+}
