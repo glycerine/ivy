@@ -105,24 +105,7 @@ var s_Truth8 [8][4]word = [8][4]word{
   SeeAlso     []
 
 ***********************************************************************/
-func Sfm_DecCreateCnf(vGateSizes *Vec_Int_t, vGateFuncs *Vec_Wrd_t, vGateCnfs *Vec_Wec_t) {
-    var vCnf, vCnfBase *Vec_Str_t;
-    var vCover *Vec_Int_t;
-    var uTruth word;
-    var i, nCubes int32;
-    vCnf = Vec_StrAlloc( 100 );
-    vCover = Vec_IntAlloc( 100 );
-    // inlining of macro Vec_WrdForEachEntry
-    for  i = 0; (i < Vec_WrdSize(vGateFuncs)) && (((uTruth) = Vec_WrdEntry(vGateFuncs, i)), 1); i++  {
-        nCubes = Sfm_TruthToCnf( uTruth, nil, Vec_IntEntry(vGateSizes, i), vCover, vCnf );
-        vCnfBase = (Vec_Str_t *)Vec_WecEntry( vGateCnfs, i );
-        Vec_StrGrow( vCnfBase, Vec_StrSize(vCnf) );
-        memcpy( Vec_StrArray(vCnfBase), Vec_StrArray(vCnf), (size_t)Vec_StrSize(vCnf) );
-        vCnfBase.nSize = Vec_StrSize(vCnf);
-    }
-    Vec_IntFree( vCover );
-    Vec_StrFree( vCnf );
-}
+
 
 /**Function*************************************************************
 
@@ -135,22 +118,7 @@ func Sfm_DecCreateCnf(vGateSizes *Vec_Int_t, vGateFuncs *Vec_Wrd_t, vGateCnfs *V
   SeeAlso     []
 
 ***********************************************************************/
-func Sfm_LibPreprocess(pLib *Mio_Library_t, vGateSizes *Vec_Int_t, vGateFuncs *Vec_Wrd_t, vGateCnfs *Vec_Wec_t, vGateHands *Vec_Ptr_t) {
-    var pGate *Mio_Gate_t;
-    var nGates int32  = Mio_LibraryReadGateNum(pLib);
-    Vec_IntGrow( vGateSizes, nGates );
-    Vec_WrdGrow( vGateFuncs, nGates );
-    Vec_WecInit( vGateCnfs,  nGates );
-    Vec_PtrGrow( vGateHands, nGates );
-    // inlining of macro Mio_LibraryForEachGate
-    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {
-        Vec_IntPush( vGateSizes, Mio_GateReadPinNum(pGate) );
-        Vec_WrdPush( vGateFuncs, Mio_GateReadTruth(pGate) );
-        Mio_GateSetValue( pGate, Vec_PtrSize(vGateHands) );
-        Vec_PtrPush( vGateHands, pGate );
-    }
-    Sfm_DecCreateCnf( vGateSizes, vGateFuncs, vGateCnfs );
-}
+
 
 
 /**Function*************************************************************
@@ -164,39 +132,7 @@ func Sfm_LibPreprocess(pLib *Mio_Library_t, vGateSizes *Vec_Int_t, vGateFuncs *V
   SeeAlso     []
 
 ***********************************************************************/
-func Sfm_LibFindComplInputGate(vFuncs *Vec_Wrd_t, iGate int32, nFanins int32, iFanin int32, piFaninNew *int32) int32 {
-    var uTruthGate word  = Vec_WrdEntry( vFuncs, iGate );
-    var uTruthFlip word  = Abc_Tt6Flip( uTruthGate, iFanin ); 
-    var uTruth, uTruthSwap word;  var i int32;
-    assert(iFanin >= 0 && iFanin < nFanins, "iFanin >= 0 && iFanin < nFanins");
-    if piFaninNew != nil { *piFaninNew = iFanin; }
-    // inlining of macro Vec_WrdForEachEntry
-    for  i = 0; (i < Vec_WrdSize(vFuncs)) && (((uTruth) = Vec_WrdEntry(vFuncs, i)), 1); i++  {
-        if uTruth == uTruthFlip {
-            return i; }
-    }
-    if iFanin-1 >= 0 {
-        if piFaninNew != nil { *piFaninNew = iFanin-1; }
-        uTruthSwap = Abc_Tt6SwapAdjacent( uTruthFlip, iFanin-1 );
-        // inlining of macro Vec_WrdForEachEntry
-        for  i = 0; (i < Vec_WrdSize(vFuncs)) && (((uTruth) = Vec_WrdEntry(vFuncs, i)), 1); i++  {
-            if uTruth == uTruthSwap {
-                return i; }
-        }
-    }
-    if iFanin+1 < nFanins {
-        if piFaninNew != nil { *piFaninNew = iFanin+1; }
-        uTruthSwap = Abc_Tt6SwapAdjacent( uTruthFlip, iFanin );
-        // inlining of macro Vec_WrdForEachEntry
-        for  i = 0; (i < Vec_WrdSize(vFuncs)) && (((uTruth) = Vec_WrdEntry(vFuncs, i)), 1); i++  {
-            if uTruth == uTruthSwap {
-                return i; }
-        }
-    }
-    // add checking for complemeting control input of a MUX
-    if piFaninNew != nil { *piFaninNew = -1; }
-    return -1;
-}
+
 
 
 /**Function*************************************************************
