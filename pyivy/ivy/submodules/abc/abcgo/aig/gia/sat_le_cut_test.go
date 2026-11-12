@@ -77,3 +77,20 @@ func TestSleCutFanins(t *testing.T) {
 		t.Fatal("expected both primary-input and internal cuts")
 	}
 }
+
+func TestSleManagerVariables(t *testing.T) {
+	p := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, x, c)
+	Gia_ManAppendCo(p, y)
+	m := Sle_ManAlloc(p, 0, 0)
+	Sle_ManMarkupVariables(m)
+	if m.nLevels != 1 || m.nNodeVars != p.nObjs || m.nCutVars != 3 || m.nEdgeVars != 1 || m.nDelayVars != 2 || m.nVarsTotal != p.nObjs+6 {
+		t.Fatalf("bad variable counts: %+v", m)
+	}
+	if Sle_ManCheckContained([]int32{1, 3}, 2, []int32{3, 2, 1}, 3) != 1 || Sle_ManCheckContained([]int32{1, 4}, 2, []int32{3, 2, 1}, 3) != 0 {
+		t.Fatal("bad LUT containment")
+	}
+	Sle_ManStop(m)
+}
