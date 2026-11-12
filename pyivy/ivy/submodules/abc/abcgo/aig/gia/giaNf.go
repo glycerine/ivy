@@ -115,11 +115,11 @@ func Nf_ObjUpdateRequired(p *Nf_Man_t, i int32, c int32, f int32) { if Nf_ObjReq
 func Nf_ObjMatchD(p *Nf_Man_t, i int32, c int32) *Nf_Mat_t { return &Nf_ManObj(p, i).M[c][0];                                }
 func Nf_ObjMatchA(p *Nf_Man_t, i int32, c int32) *Nf_Mat_t { return &Nf_ManObj(p, i).M[c][1];                                }
 
-func Nf_CutSize(pCut *int32) int32 { return pCut[0] & NF_NO_LEAF;                                     }
-func Nf_CutFunc(pCut *int32) int32 { return (uint32(pCut[0]) >> 5);                                 }
-func Nf_CutLeaves(pCut *int32) *int32 { return pCut + 1;                                                 }
-func Nf_CutSetBoth(n int32, f int32) int32 { return n | (f << 5);                                             }
-func Nf_CutIsTriv(pCut *int32, i int32) int32 { return Nf_CutSize(pCut) == 1 && pCut[1] == i;                    } 
+
+
+
+
+ 
 func Nf_CutHandle(pCutSet *int32, pCut *int32) int32 { assert(pCut > pCutSet, "pCut > pCutSet"); return pCut - pCutSet;                 } 
 func Nf_CutFromHandle(pCutSet *int32, h int32) *int32 { assert(h > 0, "h > 0"); return pCutSet + h;                             }
 
@@ -695,49 +695,11 @@ static inline int Nf_SetCutIsContainedOrder( Nf_Cut_t * pBase, Nf_Cut_t * pCut )
     }
     return 0;
 }
-func Nf_SetLastCutIsContained(pCuts **Nf_Cut_t, nCuts int32) int32 {
-    var i int32;
-    for  i = 0; i < nCuts; i++  {
-        if pCuts[i].nLeaves <= pCuts[nCuts].nLeaves && (pCuts[i].Sign & pCuts[nCuts].Sign) == pCuts[i].Sign && Nf_SetCutIsContainedOrder(pCuts[nCuts], pCuts[i]) {
-            return 1; }
-    }
-    return 0;
-}
-func Nf_SetLastCutContainsArea(pCuts **Nf_Cut_t, nCuts int32) int32 {
-    var i, k, fChanges int32;
-    for  i = 0; i < nCuts; i++  {
-        if pCuts[nCuts].nLeaves < pCuts[i].nLeaves && (pCuts[nCuts].Sign & pCuts[i].Sign) == pCuts[nCuts].Sign && Nf_SetCutIsContainedOrder(pCuts[i], pCuts[nCuts]) {
-            pCuts[i].nLeaves = NF_NO_LEAF, fChanges = 1; }
-    }
-    if !(fChanges != 0) {
-        return nCuts; }
-    for  i = k = 0; i <= nCuts; i++  {
-        if pCuts[i].nLeaves == NF_NO_LEAF {
-            continue; }
-        if k < i {
-            // inlining of macro ABC_SWAP
-             var t *Nf_Cut_t  = pCuts[k]; pCuts[k] = pCuts[i]; pCuts[i] = t; };
-        k++;
-    }
-    return k - 1;
-}
 
-func Nf_SetSortByArea(pCuts **Nf_Cut_t, nCuts int32) {
-    var i int32;
-    for  i = nCuts; i > 0; i--  {
-        if Nf_CutCompareArea(pCuts[i - 1], pCuts[i]) < 0 {//!= 1 )
-            return; }
-        // inlining of macro ABC_SWAP
-        { var t *Nf_Cut_t  = pCuts[i - 1]; pCuts[i - 1] = pCuts[i]; pCuts[i] = t; };
-    }
-}
-func Nf_SetAddCut(pCuts **Nf_Cut_t, nCuts int32, nCutNum int32) int32 {
-    if nCuts == 0 {
-        return 1; }
-    nCuts = Nf_SetLastCutContainsArea(pCuts, nCuts);
-    Nf_SetSortByArea( pCuts, nCuts );
-    return Abc_MinInt( nCuts + 1, nCutNum - 1 );
-}
+
+
+
+
 func Nf_CutArea(p *Nf_Man_t, nLeaves int32) int32 {
     if nLeaves < 2 {
         return 0; }
