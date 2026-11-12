@@ -117,64 +117,6 @@ func Gia_ManWriteMiniAig(pGia *Gia_Man_t, pFileName string) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManFromMiniLut(p *Mini_Lut_t, pvCopies **Vec_Int_t) *Gia_Man_t {
-    var pGia, pTemp *Gia_Man_t;
-    var vCopies *Vec_Int_t;
-    var vCover *Vec_Int_t  = Vec_IntAlloc( 1000 );
-    var vLits *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var i, k, Fan, iGiaLit, nNodes int32;
-    var LutSize int32  = Abc_MaxInt( 2, Mini_LutSize(p) );
-    // get the number of nodes
-    nNodes = Mini_LutNodeNum(p);
-    // create ABC network
-    pGia = Gia_ManStart( 3 * nNodes );
-    pGia.pName = Abc_UtilStrsav( "MiniLut" );
-    // create mapping from MiniLUT objects into ABC objects
-    vCopies = Vec_IntAlloc( nNodes );
-    Vec_IntPush( vCopies, 0 );
-    Vec_IntPush( vCopies, 1 );
-    // iterate through the objects
-    Gia_ManHashAlloc( pGia );
-    for  i = 2; i < nNodes; i++  {
-        if Mini_LutNodeIsPi( p, i ) {
-            iGiaLit = Gia_ManAppendCi(pGia);
-        } else if Mini_LutNodeIsPo( p, i ) {
-            iGiaLit = Gia_ManAppendCo(pGia, Vec_IntEntry(vCopies, Mini_LutNodeFanin(p, i, 0)));
-        } else if Mini_LutNodeIsNode( p, i ) {
-            var puTruth *uint32  = Mini_LutNodeTruth( p, i );
-            var Truth word  = ((word)*puTruth << 32) | (word)*puTruth; 
-            var pTruth *word;
-            if LutSize < 6 {
-                pTruth = &Truth;
-            } else {
-                pTruth = (word *)puTruth;
-            }
-            Vec_IntClear( vLits );
-            // inlining of macro Mini_LutForEachFanin
-            for k = 0; (k < p.LutSize) && (Fan = Mini_LutNodeFanin(p, i, k)) < MINI_LUT_NULL2; k++ { 
-                Vec_IntPush( vLits, Vec_IntEntry(vCopies, Fan) );
-            }
-            iGiaLit = Dsm_ManTruthToGia( pGia, pTruth, vLits, vCover );
-        
-        } else { assert(false, "0"); }
-        Vec_IntPush( vCopies, iGiaLit );
-    }
-    Vec_IntFree( vCover );
-    Vec_IntFree( vLits );
-    Gia_ManHashStop( pGia );
-    assert(Vec_IntSize(vCopies) == nNodes, "Vec_IntSize(vCopies) == nNodes");
-    if pvCopies {
-        *pvCopies = vCopies;
-    } else {
-        Vec_IntFree( vCopies ); }
-    Gia_ManSetRegNum( pGia, Mini_LutRegNum(p) );
-    pGia = Gia_ManCleanup( pTemp = pGia );
-    if pvCopies {
-        Gia_ManDupRemapLiterals( *pvCopies, pTemp ); }
-    Gia_ManStop( pTemp );
-    return pGia;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Marks LUTs that should be complemented.]
