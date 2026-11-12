@@ -10,6 +10,11 @@ type sfmAreaWindow struct {
 // sfmExtractAreaWindow follows Sfm_DecExtract's area-oriented traversal.
 // The timing-oriented ordering is handled separately by the timing manager.
 func sfmExtractAreaWindow(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t) sfmAreaWindow {
+	return sfmExtractWindow(p, pivot, pars, nil)
+}
+
+// sfmExtractWindow also supports the timing-oriented cut and divisor ordering.
+func sfmExtractWindow(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, timing *Sfm_Tim_t) sfmAreaWindow {
 	if pivot < p.Pis || pivot >= len(p.Fanins)-p.Pos || p.Deleted[pivot] || pars.MffcMax <= 0 {
 		panic("sfm: invalid area window pivot or MFFC limit")
 	}
@@ -107,7 +112,7 @@ func sfmExtractAreaWindow(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t) sfmAreaWindow
 	}
 	// The C traversal examines three successive fanin depths, in breadth order.
 	front := []int{pivot}
-	for depth := 0; depth < 3; depth++ {
+	for depth := 0; timing == nil && depth < 3; depth++ {
 		var next []int
 		for _, id := range front {
 			for _, f := range p.Fanins[id] {
@@ -119,11 +124,38 @@ func sfmExtractAreaWindow(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t) sfmAreaWindow
 		}
 		front = next
 	}
+	if timing != nil {
+		front = []int{pivot}
+		for depth := 0; depth < 3; depth++ {
+			var next []int
+			for _, id := range front {
+				for _, f := range p.Fanins[id] {
+					if seen[f] && Sfm_TimNodeIsNonCritical(timing, pivot, f) {
+						found := false
+						for _, old := range w.mffcInputs {
+							if old == f {
+								found = true
+								break
+							}
+						}
+						if !found {
+							w.mffcInputs = append(w.mffcInputs, f)
+						}
+					}
+					next = append(next, f)
+				}
+			}
+			front = next
+		}
+	}
 	for _, id := range w.mffc {
 		labels[id] |= cone
 	}
 	labels[pivot] |= target
 	for _, id := range w.mffc {
+		if timing != nil {
+			break
+		}
 		for _, f := range p.Fanins[id] {
 			if seen[f] && labels[f] == pi {
 				found := false
@@ -167,6 +199,9 @@ func sfmExtractAreaWindow(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t) sfmAreaWindow
 		if labels[id] == pi|input || labels[id] == fanin {
 			appendNode(id, labels[id] == fanin)
 		}
+	}
+	if timing != nil {
+		w.divisors = Sfm_TimSortArrayByArrival(timing, w.order, pivot)
 	}
 	for _, id := range tfi {
 		if labels[id] >= cone {
