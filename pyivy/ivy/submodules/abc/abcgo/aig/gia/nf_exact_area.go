@@ -117,3 +117,99 @@ func (p *nfMatcher) bestExactMatch(r *nfMappingRefs, id, phase, required int32) 
 	}
 	return best, bestArea, found
 }
+
+// optimizeExactMatch replaces one referenced, non-inverted match with the
+// lowest incremental-area implementation satisfying its required time.
+func (p *nfMatcher) optimizeExactMatch(r *nfMappingRefs, id, phase int32) bool {
+	kind := r.selected[id][phase]
+	if kind < 0 || r.refs[id][phase] == 0 {
+		return false
+	}
+	current := p.objects[id][phase][kind]
+	if current.inverted || Gia_ObjIsBuf(Gia_ManObj(p.cuts.graph, id)) != 0 {
+		return false
+	}
+	oldArea := p.adjustMatchRefs(r, id, phase, current, false)
+	best, newArea, ok := p.bestExactMatch(r, id, phase, p.required[id][phase])
+	if !ok || newArea > oldArea {
+		p.adjustMatchRefs(r, id, phase, current, true)
+		return false
+	}
+	actual := p.adjustMatchRefs(r, id, phase, best, true)
+	if actual != newArea {
+		panic("gia: Nf exact-area measurement changed")
+	}
+	p.objects[id][phase][kind] = best
+	// A newly referenced phase uses its delay match, which is the same choice
+	// used by the speculative exact-area calculation.
+	for node := range r.refs {
+		for polarity := 0; polarity < 2; polarity++ {
+			if r.refs[node][polarity] > 0 && r.selected[node][polarity] < 0 && Gia_ObjIsAnd(p.cuts.graph.pObjs[node]) != 0 {
+				r.selected[node][polarity] = 0
+			}
+		}
+	}
+	cut := p.cuts.storage.at(p.cuts.sets[id])[best.cutOffset:]
+	cell := &p.cuts.library.cells[best.gate]
+	leaves := Nf_CutLeaves(cut)
+	for pin := int32(0); pin < Nf_CutSize(cut); pin++ {
+		fanin, polarity := leaves[Nf_CfgVar(best.cfg, pin)], Nf_CfgCompl(best.cfg, pin)
+		p.updateRequired(fanin, polarity, p.required[id][phase]-cell.Delay(int(pin)))
+	}
+	return best.gate != current.gate || best.cutOffset != current.cutOffset || best.cfg != current.cfg
+}
+
+// refreshExactStats recomputes the mapped cell counts after exact-area edits.
+func (p *nfMatcher) refreshExactStats(r *nfMappingRefs) {
+	r.area = 0
+	r.gates = 0
+	r.edges = 0
+	r.inverters = 0
+	for id, obj := range p.cuts.graph.pObjs {
+		for phase := 0; phase < 2; phase++ {
+			if r.refs[id][phase] == 0 {
+				continue
+			}
+			if Gia_ObjIsCi(obj) != 0 {
+				if phase == 1 {
+					r.area += p.invArea
+					r.gates++
+					r.edges++
+					r.inverters++
+				}
+				continue
+			}
+			if Gia_ObjIsAnd(obj) == 0 {
+				continue
+			}
+			if Gia_ObjIsBuf(obj) != 0 {
+				if phase == 1 {
+					r.area += p.invArea
+					r.gates++
+					r.edges++
+					r.inverters++
+				}
+				continue
+			}
+			kind := r.selected[id][phase]
+			if kind < 0 {
+				panic("gia: missing Nf exact-area selection")
+			}
+			m := p.objects[id][phase][kind]
+			if m.inverted {
+				r.area += p.invArea
+				r.gates++
+				r.edges++
+				r.inverters++
+				continue
+			}
+			cut := p.cuts.storage.at(p.cuts.sets[id])[m.cutOffset:]
+			r.area += p.cuts.library.cells[m.gate].AreaF
+			r.gates++
+			r.edges += Nf_CutSize(cut)
+		}
+	}
+	p.cuts.pars.MapAreaF = r.area
+	p.cuts.pars.Area = word(r.gates)
+	p.cuts.pars.Edge = word(r.edges)
+}

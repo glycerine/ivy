@@ -90,3 +90,49 @@ GATE and3 1 O=a*b*c; PIN * NONINV 1 999 5 0 5 0
 		t.Fatal("search changed reference counts")
 	}
 }
+
+func TestNfExactOptimizationUpdatesMapping(t *testing.T) {
+	const genlib = `GATE zero 0 O=CONST0;
+GATE one 0 O=CONST1;
+GATE buf 1 O=a; PIN * NONINV 1 999 1 0 1 0
+GATE inv 1 O=!a; PIN * INV 1 999 1 0 1 0
+GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 1 0
+GATE and3 1 O=a*b*c; PIN * NONINV 1 999 5 0 5 0
+.end
+`
+	lib, err := mio.ReadLibrary("nf", genlib, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	library := nfPrepareLibrary(mio.Mio_CollectRootsNew2(lib, 6, nil, 0), false, true, false)
+	g := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendAnd(g, a, b)
+	out := Gia_ManAppendAnd(g, x, c)
+	Gia_ManAppendCo(g, out)
+	var pars Jf_Par_t
+	Mf_ManSetDefaultPars(&pars)
+	cuts := newNfCutManager(g, &pars, library)
+	cuts.computeCuts()
+	matcher := newNfMatcher(cuts)
+	matcher.computeMapping()
+	refs := matcher.mappingRefs(0)
+	matcher.required[out>>1][0] = nfInfinity - 1
+	if !matcher.optimizeExactMatch(refs, out>>1, 0) {
+		t.Fatal("expected a smaller implementation")
+	}
+	if refs.refs[x>>1][0] != 0 {
+		t.Fatal("intermediate gate should be unreferenced")
+	}
+	matcher.refreshExactStats(refs)
+	if refs.gates != 1 || refs.edges != 3 {
+		t.Fatalf("wrong optimized statistics: %+v", refs)
+	}
+	matcher.deriveMapping(refs)
+	if gate := Gia_ObjCellId(g, out); library.cells[gate].Name() != "and3" {
+		t.Fatalf("wrong gate %s", library.cells[gate].Name())
+	}
+	if Gia_ObjCellSize(g, out) != 3 {
+		t.Fatal("incorrect optimized fanins")
+	}
+}
