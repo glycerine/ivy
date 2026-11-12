@@ -43,7 +43,6 @@ const MF_CUT_MAX =    16
 const MF_LOG_PAGE =   12
 const MF_NO_LEAF =    31
 #define MF_TT_WORDS  ((MF_LEAF_MAX > 6) ? 1 << (MF_LEAF_MAX-6) : 1)
-const MF_EPSILON = 0.005
 
     
 type Mf_Obj_t struct {
@@ -816,55 +815,11 @@ func Mf_SetCheckArray(ppCuts **Mf_Cut_t, nCuts int32) int32 {
 
 
 
-func Mf_SetLastCutIsContained(pCuts **Mf_Cut_t, nCuts int32) int32 {
-    var i int32;
-    for  i = 0; i < nCuts; i++  {
-        if pCuts[i].nLeaves <= pCuts[nCuts].nLeaves && (pCuts[i].Sign & pCuts[nCuts].Sign) == pCuts[i].Sign && Mf_SetCutIsContainedOrder(pCuts[nCuts], pCuts[i]) {
-            return 1; }
-    }
-    return 0;
-}
-func Mf_SetLastCutContainsArea(pCuts **Mf_Cut_t, nCuts int32) int32 {
-    var i, k, fChanges int32;
-    for  i = 0; i < nCuts; i++  {
-        if pCuts[nCuts].nLeaves < pCuts[i].nLeaves && (pCuts[nCuts].Sign & pCuts[i].Sign) == pCuts[nCuts].Sign && Mf_SetCutIsContainedOrder(pCuts[i], pCuts[nCuts]) {
-            pCuts[i].nLeaves = MF_NO_LEAF, fChanges = 1; }
-    }
-    if !(fChanges != 0) {
-        return nCuts; }
-    for  i = k = 0; i <= nCuts; i++  {
-        if pCuts[i].nLeaves == MF_NO_LEAF {
-            continue; }
-        if k < i {
-            ABC_SWAP( Mf_Cut_t *, pCuts[k], pCuts[i] ); }
-        k++;
-    }
-    return k - 1;
-}
-func Mf_CutCompareArea(pCut0 *Mf_Cut_t, pCut1 *Mf_Cut_t) int32 {
-    if pCut0.Flow    < pCut1.Flow - MF_EPSILON {  return -1; }
-    if pCut0.Flow    > pCut1.Flow + MF_EPSILON {  return  1; }
-    if pCut0.Delay   < pCut1.Delay {  return -1; }
-    if pCut0.Delay   > pCut1.Delay {  return  1; }
-    if pCut0.nLeaves < pCut1.nLeaves {  return -1; }
-    if pCut0.nLeaves > pCut1.nLeaves {  return  1; }
-    return 0;
-}
-func Mf_SetSortByArea(pCuts **Mf_Cut_t, nCuts int32) {
-    var i int32;
-    for  i = nCuts; i > 0; i--  {
-        if Mf_CutCompareArea(pCuts[i - 1], pCuts[i]) < 0 {//!= 1 )
-            return; }
-        ABC_SWAP( Mf_Cut_t *, pCuts[i - 1], pCuts[i] );
-    }
-}
-func Mf_SetAddCut(pCuts **Mf_Cut_t, nCuts int32, nCutNum int32) int32 {
-    if nCuts == 0 {
-        return 1; }
-    nCuts = Mf_SetLastCutContainsArea(pCuts, nCuts);
-    Mf_SetSortByArea( pCuts, nCuts );
-    return Abc_MinInt( nCuts + 1, nCutNum - 1 );
-}
+
+
+
+
+
 func Mf_CutArea(p *Mf_Man_t, nLeaves int32, iFunc int32) int32 {
     if nLeaves < 2 {
         return 0; }

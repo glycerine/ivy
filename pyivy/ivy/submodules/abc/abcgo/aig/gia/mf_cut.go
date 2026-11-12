@@ -5,6 +5,7 @@ import "math/bits"
 const (
 	MF_LEAF_MAX = 10
 	MF_NO_FUNC  = 134217727
+	MF_EPSILON  = 0.005
 )
 
 type Mf_Cut_t struct {
@@ -104,4 +105,68 @@ func Mf_SetCutIsContainedOrder(base, cut *Mf_Cut_t) int32 {
 		return 1
 	}
 	return 0
+}
+
+func Mf_SetLastCutIsContained(cuts []*Mf_Cut_t, n int32) int32 {
+	candidate := cuts[n]
+	for _, cut := range cuts[:n] {
+		if cut.nLeaves <= candidate.nLeaves && cut.Sign&candidate.Sign == cut.Sign && Mf_SetCutIsContainedOrder(candidate, cut) != 0 {
+			return 1
+		}
+	}
+	return 0
+}
+
+func Mf_SetLastCutContainsArea(cuts []*Mf_Cut_t, n int32) int32 {
+	candidate := cuts[n]
+	write := 0
+	for read := 0; read < int(n); read++ {
+		c := cuts[read]
+		if candidate.nLeaves < c.nLeaves && candidate.Sign&c.Sign == candidate.Sign && Mf_SetCutIsContainedOrder(c, candidate) != 0 {
+			c.nLeaves = 31
+			continue
+		}
+		cuts[write], cuts[read] = cuts[read], cuts[write]
+		write++
+	}
+	cuts[write], cuts[n] = cuts[n], cuts[write]
+	return int32(write)
+}
+
+func Mf_CutCompareArea(a, b *Mf_Cut_t) int32 {
+	if a.Flow < b.Flow-MF_EPSILON {
+		return -1
+	}
+	if a.Flow > b.Flow+MF_EPSILON {
+		return 1
+	}
+	if a.Delay < b.Delay {
+		return -1
+	}
+	if a.Delay > b.Delay {
+		return 1
+	}
+	if a.nLeaves < b.nLeaves {
+		return -1
+	}
+	if a.nLeaves > b.nLeaves {
+		return 1
+	}
+	return 0
+}
+func Mf_SetSortByArea(cuts []*Mf_Cut_t, n int32) {
+	for i := n; i > 0; i-- {
+		if Mf_CutCompareArea(cuts[i-1], cuts[i]) < 0 {
+			return
+		}
+		cuts[i-1], cuts[i] = cuts[i], cuts[i-1]
+	}
+}
+func Mf_SetAddCut(cuts []*Mf_Cut_t, n, limit int32) int32 {
+	if n == 0 {
+		return 1
+	}
+	n = Mf_SetLastCutContainsArea(cuts, n)
+	Mf_SetSortByArea(cuts, n)
+	return min(n+1, limit-1)
 }
