@@ -332,6 +332,21 @@ consumer bridges (`3c92e21e0`). Further root CUDD numeric tests are in
 `map/if`, SCL, DAU, Extra, FRET, resubstitution and proof/SAT packages still
 have visible incomplete algorithm families.
 
+## Current integration gate (2026-11-12)
+
+The newest whole-module run is `/tmp/abcgo-full-current.log`: 66 package lines
+pass and 57 fail. `opt/dau`, `map/scl`, `base/pla`, and `sat/bsat2` now compile
+and pass their package gates; the count improved from the prior 62/60 snapshot.
+New tested commits since that earlier snapshot include IF cut/truth/count
+(`2503403fc`), DAU DSD (`b5241d616`), DAU Tree/Merge (`84060ba42`), DAU NPN
+(`76d7ae8cc`), Extra Misc transforms (`ee091073b`), and Extra BDD
+unate/threshold/primes (`69974e00b`). Ivy Fraig is committed as `4395f534f`.
+
+The remaining package failures are still broad generated frontiers, with GIA,
+Ivy, SAIG, ABC, CUDD, Extra BDD, IF, mapping, FRET, resubstitution, proof, CNF
+and Glucose2 among the active areas. Fixture directories were scanned and none
+are named `testdata`; use `test_vectors` for any new fixtures.
+
 After that snapshot, the ABC DFS/functional-isomorphism group passed its
 explicit-file race/vet gate and was committed (`8bf67da52`). The SCL timing
 network and incremental-update foundation passed its 22-file manifest race
