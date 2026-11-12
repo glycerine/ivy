@@ -75,56 +75,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDupUnshuffleInputs(p *Gia_Man_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i, nCIs, nAll, nPis int32;
-    // sanity checks
-    assert((Gia_ManIsNormalized(p) != 0), "Gia_ManIsNormalized(p)");
-    assert((Gia_ManIsSeqWithBoxes(p) != 0), "Gia_ManIsSeqWithBoxes(p)");
-    Gia_ManFillValue( p );
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManConst0(p).Value = 0;
-    // change input order
-    // desired reorder:   PIs + NewCIs + FOs
-    // current CI order:  PIs + FOs + NewCIs
-    nCIs = Tim_ManPiNum( (Tim_Man_t *)p.pManTime );
-    nAll = Tim_ManCiNum( (Tim_Man_t *)p.pManTime );
-    nPis = nCIs - Gia_ManRegNum(p);
-    assert(nAll == Gia_ManCiNum(p), "nAll == Gia_ManCiNum(p)");
-    assert(nPis > 0, "nPis > 0");
-    // copy PIs first
-    for  i = 0; i < nPis; i++  {
-        Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);
-    }
-    // copy flops second
-    for  i = nAll - Gia_ManRegNum(p); i < nAll; i++  {
-        Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);
-    }
-    // copy new CIs last
-    for  i = nPis; i < nAll - Gia_ManRegNum(p); i++  {
-        Gia_ManCi(p, i).Value = Gia_ManAppendCi(pNew);
-    }
-    fmt.Printf("Warning: Unshuffled CI order to be correct AIG with boxes.\n");
-    // other things
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-    }
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-    }
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    pNew.nConstrs = p.nConstrs;
-    assert((Gia_ManIsNormalized(pNew) != 0), "Gia_ManIsNormalized(pNew)");
-    Gia_ManDupRemapEquiv( pNew, p );
-    return pNew;
-}
-
-
 /**Function*************************************************************
 
   Synopsis    [Find the ordering of AIG objects.]
