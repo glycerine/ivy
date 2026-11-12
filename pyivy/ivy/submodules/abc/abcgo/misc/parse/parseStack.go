@@ -1,244 +1,66 @@
 package parse
 
-import "fmt"
+// FunctionStack stores opaque formula backend nodes. Its capacity hint replaces
+// the C fixed-depth allocation; Go slices grow without corrupting parser state.
+type FunctionStack struct{ values []any }
+type OperatorStack struct{ values []int }
+type Parse_StackFn_t = FunctionStack
+type Parse_StackOp_t = OperatorStack
 
-/**CFile****************************************************************
-
-  FileName    [parseStack.c]
-
-  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]
-
-  Synopsis    [Stacks used by the formula parser.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - August 18, 2003.]
-
-  Revision    [$Id: parseStack.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "parseInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-type ParseStackFnStruct struct {
-    pData      *any;        // the array of elements
-    Top           int32;          // the index
-    Size           int32;         // the stack size
+func NewFunctionStack(capacity int) *FunctionStack {
+	if capacity < 0 {
+		panic("parse: negative stack capacity")
+	}
+	return &FunctionStack{values: make([]any, 0, capacity)}
 }
-
-type ParseStackOpStruct struct {
-    pData          *int32;        // the array of elements
-    Top           int32;          // the index
-    Size           int32;         // the stack size
+func (s *FunctionStack) Empty() bool    { return len(s.values) == 0 }
+func (s *FunctionStack) Push(value any) { s.values = append(s.values, value) }
+func (s *FunctionStack) Pop() any {
+	if s.Empty() {
+		panic("parse: function stack underflow")
+	}
+	i := len(s.values) - 1
+	v := s.values[i]
+	s.values[i] = nil
+	s.values = s.values[:i]
+	return v
 }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the stack.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_StackFnStart(nDepth int32) *Parse_StackFn_t {
-    var p *Parse_StackFn_t;
-    // inlining of macro ABC_ALLOC
-    p = ((Parse_StackFn_t *) malloc(sizeof(Parse_StackFn_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Parse_StackFn_t) );
-    // inlining of macro ABC_ALLOC
-    p.pData = ((void * *) malloc(sizeof(void *) * (size_t)(nDepth)));
-    p.Size = nDepth;
-    return p;
+func (s *FunctionStack) Clear() { clear(s.values); s.values = s.values[:0] }
+func NewOperatorStack(capacity int) *OperatorStack {
+	if capacity < 0 {
+		panic("parse: negative stack capacity")
+	}
+	return &OperatorStack{values: make([]int, 0, capacity)}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Checks whether the stack is empty.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_StackFnIsEmpty(p *Parse_StackFn_t) int32 {
-    return int32((p.Top == 0));
+func (s *OperatorStack) Empty() bool    { return len(s.values) == 0 }
+func (s *OperatorStack) Push(value int) { s.values = append(s.values, value) }
+func (s *OperatorStack) Pop() int {
+	if s.Empty() {
+		panic("parse: operator stack underflow")
+	}
+	i := len(s.values) - 1
+	v := s.values[i]
+	s.values = s.values[:i]
+	return v
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Pushes an entry into the stack.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_StackFnPush(p *Parse_StackFn_t, bFunc any) {
-    if p.Top >= p.Size {
-        fmt.Printf("Parse_StackFnPush(): Stack size is too small!\n");
-        return;
-    }
-    p.pData[ p.Top++ ] = bFunc;
+func (s *OperatorStack) Clear()                 { s.values = s.values[:0] }
+func Parse_StackFnStart(n int) *Parse_StackFn_t { return NewFunctionStack(n) }
+func Parse_StackFnIsEmpty(s *Parse_StackFn_t) int {
+	if s.Empty() {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Pops an entry out of the stack.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_StackFnPop(p *Parse_StackFn_t) any {
-    if p.Top == 0 {
-        fmt.Printf("Parse_StackFnPush(): Trying to extract data from the empty stack!\n");
-        return nil;
-    }
-    return p.pData[ --p.Top ];
+func Parse_StackFnPush(s *Parse_StackFn_t, v any) { s.Push(v) }
+func Parse_StackFnPop(s *Parse_StackFn_t) any     { return s.Pop() }
+func Parse_StackFnFree(s *Parse_StackFn_t)        { s.Clear(); s.values = nil }
+func Parse_StackOpStart(n int) *Parse_StackOp_t   { return NewOperatorStack(n) }
+func Parse_StackOpIsEmpty(s *Parse_StackOp_t) int {
+	if s.Empty() {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Deletes the stack.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_StackFnFree(p *Parse_StackFn_t) {
-    // inlining of macro ABC_FREE
-    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
-}
-
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the stack.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_StackOpStart(nDepth int32) *Parse_StackOp_t {
-    var p *Parse_StackOp_t;
-    // inlining of macro ABC_ALLOC
-    p = ((Parse_StackOp_t *) malloc(sizeof(Parse_StackOp_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Parse_StackOp_t) );
-    // inlining of macro ABC_ALLOC
-    p.pData = ((int *) malloc(sizeof(int) * (size_t)(nDepth)));
-    p.Size = nDepth;
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Checks whether the stack is empty.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_StackOpIsEmpty(p *Parse_StackOp_t) int32 {
-    return int32((p.Top == 0));
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Pushes an entry into the stack.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_StackOpPush(p *Parse_StackOp_t, Oper int32) {
-    if p.Top >= p.Size {
-        fmt.Printf("Parse_StackOpPush(): Stack size is too small!\n");
-        return;
-    }
-    p.pData[ p.Top++ ] = Oper;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Pops an entry out of the stack.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_StackOpPop(p *Parse_StackOp_t) int32 {
-    if p.Top == 0 {
-        fmt.Printf("Parse_StackOpPush(): Trying to extract data from the empty stack!\n");
-        return -1;
-    }
-    return p.pData[ --p.Top ];
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Deletes the stack.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_StackOpFree(p *Parse_StackOp_t) {
-    // inlining of macro ABC_FREE
-    ((p.pData) ? (free((char *) (p.pData)), (p.pData) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Parse_StackOpPush(s *Parse_StackOp_t, v int) { s.Push(v) }
+func Parse_StackOpPop(s *Parse_StackOp_t) int     { return s.Pop() }
+func Parse_StackOpFree(s *Parse_StackOp_t)        { s.Clear(); s.values = nil }

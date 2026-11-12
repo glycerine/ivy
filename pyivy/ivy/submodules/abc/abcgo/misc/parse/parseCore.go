@@ -1,506 +1,187 @@
 package parse
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileNameIn  [parseCore.c]
-
-  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]
-
-  Synopsis    [Boolean formula parser.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - February 1, 2003.]
-
-  Revision    [$Id: parseCore.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-/*
-        Some aspects of Boolean Formula Parser:
-
- 1) The names in the boolean formulas can be any strings of symbols
-    that start with char or underscore and contain chars, digits 
-    and underscores: For example: 1) a&b <+> c'&d => a + b;   
-    2) a1 b2 c3' dummy' + (a2+b2')c3 dummy
- 2) Constant values 0 and 1 can be used just like normal variables
- 3) Any boolean operator (listed below) and parentheses can be used
-    any number of times provided there are equal number of opening
-    and closing parentheses.
- 4) By default, absence of an operator between vars and before and 
-    after parentheses is taken for AND. 
- 5) Both complementation prefix and complementation suffix can be 
-    used at the same time (but who needs this?)
- 6) Spaces (tabs, end-of-lines) may be inserted anywhere,
-    except between characters of the operations: <=>, =>, <=, <+>
- 7) The stack size is defined by macro STACKSIZE and is used by the 
-    stack constructor.
-*/
- 
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-//#include "parseInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-// the list of operation symbols to be used in expressions
-#define PARSE_SYM_OPEN    '('   // opening parenthesis
-#define PARSE_SYM_CLOSE   ')'   // closing parenthesis
-#define PARSE_SYM_LOWER   '['   // shifts one rank down 
-#define PARSE_SYM_RAISE   ']'   // shifts one rank up
-#define PARSE_SYM_CONST0  '0'   // constant 0
-#define PARSE_SYM_CONST1  '1'   // constant 1
-#define PARSE_SYM_NEGBEF1 '!'   // negation before the variable
-#define PARSE_SYM_NEGBEF2 '~'   // negation before the variable
-#define PARSE_SYM_NEGAFT  '\''  // negation after the variable
-#define PARSE_SYM_AND1    '&'   // logic AND
-#define PARSE_SYM_AND2    '*'   // logic AND
-#define PARSE_SYM_XOR1    '<'   // logic EXOR   (the 1st symbol) 
-#define PARSE_SYM_XOR2    '+'   // logic EXOR   (the 2nd symbol)
-#define PARSE_SYM_XOR3    '>'   // logic EXOR   (the 3rd symbol)
-#define PARSE_SYM_XOR     '^'   // logic XOR
-#define PARSE_SYM_OR1     '+'   // logic OR
-#define PARSE_SYM_OR2     '|'   // logic OR
-#define PARSE_SYM_EQU1    '<'   // equvalence   (the 1st symbol)
-#define PARSE_SYM_EQU2    '='   // equvalence   (the 2nd symbol)
-#define PARSE_SYM_EQU3    '>'   // equvalence   (the 3rd symbol)
-#define PARSE_SYM_FLR1    '='   // implication  (the 1st symbol)
-#define PARSE_SYM_FLR2    '>'   // implication  (the 2nd symbol)
-#define PARSE_SYM_FLL1    '<'   // backward imp (the 1st symbol)
-#define PARSE_SYM_FLL2    '='   // backward imp (the 2nd symbol)
-// PARSE_SYM_FLR1 and PARSE_SYM_FLR2 should be the same as PARSE_SYM_EQU2 and PARSE_SYM_EQU3!
-
-// the list of opcodes (also specifying operation precedence)
-const PARSE_OPER_NEG = 10  // negation
-const PARSE_OPER_AND =  9  // logic AND
-const PARSE_OPER_XOR =  8  // logic EXOR   (a'b | ab')   
-const PARSE_OPER_OR =   7  // logic OR
-const PARSE_OPER_EQU =  6  // equvalence   (a'b'| ab )
-const PARSE_OPER_FLR =  5  // implication  ( a' | b )
-const PARSE_OPER_FLL =  4  // backward imp ( 'b | a )
-const PARSE_OPER_MARK = 1  // OpStack token standing for an opening parenthesis
-
-// these are values of the internal Flag
-const PARSE_FLAG_START =  1 // after the opening parenthesis 
-const PARSE_FLAG_VAR =    2 // after operation is received
-const PARSE_FLAG_OPER =   3 // after operation symbol is received
-const PARSE_FLAG_ERROR =  4 // when error is detected
-
-const STACKSIZE = 1000
-
-// static DdNode * Parse_ParserPerformTopOp( DdManager * dd, Parse_StackFn_t * pStackFn, int Oper );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the BDD corresponding to the formula in language L.]
-
-  Description [Takes the stream to output messages, the formula, the number
-  variables and the rank in the formula. The array of variable names is also 
-  given. The BDD manager and the elementary 0-rank variable are the last two
-  arguments. The manager should have at least as many variables as 
-  nVars * (nRanks + 1). The 0-rank variables should have numbers larger 
-  than the variables of other ranks.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_FormulaParser(pOutput *os.File, pFormulaInit string, nVars int32, nRanks int32, ppVarNames []string, dd *DdManager, pbVars []*DdNode) *DdNode {
-    var pFormula string;
-    var pStackFn *Parse_StackFn_t;
-    var pStackOp *Parse_StackOp_t;
-    var bFunc, bTemp *DdNode;
-    var pTemp string;
-    var nParans, fFound, Flag int32;
-    var Oper, Oper1, Oper2 int32;
-    var i, fLower int32;
-    var v int32  = -1; // Suppress "might be used uninitialized"
-
-    // make sure that the number of vars and ranks is correct
-    if nVars * (nRanks + 1) > dd.size {
-        fmt.Printf("Parse_FormulaParser(): The BDD manager does not have enough variables.\n");
-        return nil;
-    }
-
-    // make sure that the number of opening and closing parentheses is the same
-    nParans = 0;
-    for  pTemp = pFormulaInit; *pTemp; pTemp++  {
-        if *pTemp == '(' {
-            nParans++;
-        } else if *pTemp == ')' {
-            nParans--; }
-    }
-    if nParans != 0 {
-        fmt.Fprintf(pOutput, "Parse_FormulaParser(): Different number of opening and closing parentheses ().\n");
-        return nil;
-    }
-
-    nParans = 0;
-    for  pTemp = pFormulaInit; *pTemp; pTemp++  {
-        if *pTemp == '[' {
-            nParans++;
-        } else if *pTemp == ']' {
-            nParans--; }
-    }
-    if nParans != 0 {
-        fmt.Fprintf(pOutput, "Parse_FormulaParser(): Different number of opening and closing brackets [].\n");
-        return nil;
-    }
-
-    // copy the formula
-    // inlining of macro ABC_ALLOC
-    pFormula = ((char *) malloc(sizeof(char) * (size_t)(len(pFormulaInit) + 3)));
-    pFormula = fmt.Sprintf("(%s)", pFormulaInit);
-
-    // start the stacks
-    pStackFn = Parse_StackFnStart( STACKSIZE );
-    pStackOp = Parse_StackOpStart( STACKSIZE );
-
-    Flag = PARSE_FLAG_START;
-    fLower = 0;
-    for  pTemp = pFormula; *pTemp; pTemp++  {
-        switch  *pTemp  {
-        // skip all spaces, tabs, and end-of-lines
-        case ' ',
-         '\t',
-         '\r',
-         '\n':
-            continue;
-
-        // treat Constant 0 as a variable
-        case PARSE_SYM_CONST0:
-            Parse_StackFnPush( pStackFn, b0 );   Cudd_Ref( b0 );
-            if Flag == PARSE_FLAG_VAR {
-                fmt.Fprintf(pOutput, "Parse_FormulaParser(): No operation symbol before constant 0.\n");
-                Flag = PARSE_FLAG_ERROR; 
-                break;
-            }
-            Flag = PARSE_FLAG_VAR; 
-            break;
-
-        // the same for Constant 1
-        case PARSE_SYM_CONST1:
-            Parse_StackFnPush( pStackFn, b1 );    Cudd_Ref( b1 );
-            if Flag == PARSE_FLAG_VAR {
-                fmt.Fprintf(pOutput, "Parse_FormulaParser(): No operation symbol before constant 1.\n");
-                Flag = PARSE_FLAG_ERROR; 
-                break;
-            }
-            Flag = PARSE_FLAG_VAR; 
-            break;
-
-        case PARSE_SYM_NEGBEF1,
-         PARSE_SYM_NEGBEF2:
-            if Flag == PARSE_FLAG_VAR {// if NEGBEF follows a variable, AND is assumed
-                Parse_StackOpPush( pStackOp, PARSE_OPER_AND );
-                Flag = PARSE_FLAG_OPER;
-            }
-            Parse_StackOpPush( pStackOp, PARSE_OPER_NEG );
-            break;
-
-        case PARSE_SYM_NEGAFT:
-            if Flag != PARSE_FLAG_VAR {// if there is no variable before NEGAFT, it is an error
-                fmt.Fprintf(pOutput, "Parse_FormulaParser(): No variable is specified before the negation suffix.\n");
-                Flag = PARSE_FLAG_ERROR; 
-                break;
-            
-            } else { // if ( Flag == PARSE_FLAG_VAR )
-                Parse_StackFnPush( pStackFn, Cudd_Not( Parse_StackFnPop(pStackFn) ) ); }
-            break;
-
-        case PARSE_SYM_AND1,
-         PARSE_SYM_AND2,
-         PARSE_SYM_OR1,
-         PARSE_SYM_OR2,
-         PARSE_SYM_XOR:
-            if Flag != PARSE_FLAG_VAR {
-                fmt.Fprintf(pOutput, "Parse_FormulaParser(): There is no variable before AND, EXOR, or OR.\n");
-                Flag = PARSE_FLAG_ERROR; 
-                break;
-            }
-            if *pTemp == PARSE_SYM_AND1 || *pTemp == PARSE_SYM_AND2 {
-                Parse_StackOpPush( pStackOp, PARSE_OPER_AND );
-            } else if *pTemp == PARSE_SYM_OR1 || *pTemp == PARSE_SYM_OR2 {
-                Parse_StackOpPush( pStackOp, PARSE_OPER_OR );
-            } else { //if ( Str[Pos] == PARSE_SYM_XOR )
-                Parse_StackOpPush( pStackOp, PARSE_OPER_XOR ); }
-            Flag = PARSE_FLAG_OPER; 
-            break;
-
-        case PARSE_SYM_EQU1:
-            if Flag != PARSE_FLAG_VAR { 
-                fmt.Fprintf(pOutput, "Parse_FormulaParser(): There is no variable before Equivalence or Implication\n");
-                Flag = PARSE_FLAG_ERROR; break;
-            }
-            if pTemp[1] == PARSE_SYM_EQU2 { // check what is the next symbol in the string
-                pTemp++; 
-                if pTemp[1] == PARSE_SYM_EQU3 {   
-                    pTemp++; 
-                    Parse_StackOpPush( pStackOp, PARSE_OPER_EQU ); 
-                
-                } else {   
-                    Parse_StackOpPush( pStackOp, PARSE_OPER_FLL ); 
-                }
-            
-            } else if pTemp[1] == PARSE_SYM_XOR2 {
-                pTemp++; 
-                if pTemp[1] == PARSE_SYM_XOR3 {   
-                    pTemp++; 
-                    Parse_StackOpPush( pStackOp, PARSE_OPER_XOR ); 
-                
-                } else {   
-                    fmt.Fprintf(pOutput, "Parse_FormulaParser(): Wrong symbol after \"%c%c\"\n", PARSE_SYM_EQU1, PARSE_SYM_XOR2);
-                    Flag = PARSE_FLAG_ERROR; 
-                    break;
-                }
-            
-            } else {
-                fmt.Fprintf(pOutput, "Parse_FormulaParser(): Wrong symbol after \"%c\"\n", PARSE_SYM_EQU1);
-                Flag = PARSE_FLAG_ERROR; 
-                break;
-            }
-            Flag = PARSE_FLAG_OPER; 
-            break;
-
-        case PARSE_SYM_EQU2:
-            if Flag != PARSE_FLAG_VAR {
-                fmt.Fprintf(pOutput, "Parse_FormulaParser(): There is no variable before Reverse Implication\n");
-                Flag = PARSE_FLAG_ERROR; 
-                break;
-            }
-            if pTemp[1] == PARSE_SYM_EQU3 {   
-                pTemp++; 
-                Parse_StackOpPush( pStackOp, PARSE_OPER_FLR ); 
-            
-            } else {
-                fmt.Fprintf(pOutput, "Parse_FormulaParser(): Wrong symbol after \"%c\"\n", PARSE_SYM_EQU2);
-                Flag = PARSE_FLAG_ERROR; 
-                break;
-            }
-            Flag = PARSE_FLAG_OPER; 
-            break;
-
-        case PARSE_SYM_LOWER,
-         PARSE_SYM_OPEN:
-            if ( Flag == PARSE_FLAG_VAR )
-                Parse_StackOpPush( pStackOp, PARSE_OPER_AND );
-            Parse_StackOpPush( pStackOp, PARSE_OPER_MARK );
-            // after an opening bracket, it feels like starting over again
-            Flag = PARSE_FLAG_START; 
-            break;
-
-        case PARSE_SYM_RAISE:
-            fLower = 1;
-        fallthrough
-case PARSE_SYM_CLOSE:
-            if !Parse_StackOpIsEmpty( pStackOp ) {
-                for {
-                    if Parse_StackOpIsEmpty( pStackOp ) {
-                        fmt.Fprintf(pOutput, "Parse_FormulaParser(): There is no opening parenthesis\n");
-                        Flag = PARSE_FLAG_ERROR; 
-                        break;
-                    }
-                    Oper = Parse_StackOpPop( pStackOp );
-                    if Oper == PARSE_OPER_MARK {
-                        break; }
-
-                    // perform the given operation
-                    if Parse_ParserPerformTopOp( dd, pStackFn, Oper ) == nil {
-                        fmt.Fprintf(pOutput, "Parse_FormulaParser(): Unknown operation\n");
-                        // inlining of macro ABC_FREE
-                        ((pFormula) ? (free((char *) (pFormula)), (pFormula) = 0) : 0);
-                        return nil;
-                    }
-                }
-
-                if fLower != 0 {
-                    bFunc = (DdNode *)Parse_StackFnPop( pStackFn );
-                    bFunc = Extra_bddMove( dd, bTemp = bFunc, -nVars );   Cudd_Ref( bFunc );
-                    Cudd_RecursiveDeref( dd, bTemp );
-                    Parse_StackFnPush( pStackFn, bFunc );
-                }
-            
-            } else {
-                fmt.Fprintf(pOutput, "Parse_FormulaParser(): There is no opening parenthesis\n");
-                Flag = PARSE_FLAG_ERROR; 
-                break;
-            }
-            if Flag != PARSE_FLAG_ERROR {
-                Flag = PARSE_FLAG_VAR; } 
-            fLower = 0;
-            break;
-
-
-        default:
-            // scan the next name
-/*
-            fFound = 0;
-            for ( i = 0; pTemp[i] && pTemp[i] != ' ' && pTemp[i] != '\t' && pTemp[i] != '\r' && pTemp[i] != '\n'; i++ )
-            {
-                for ( v = 0; v < nVars; v++ )
-                    if ( strncmp( pTemp, ppVarNames[v], i+1 ) == 0 && strlen(ppVarNames[v]) == (unsigned)(i+1) )
-                    {
-                        pTemp += i;
-                        fFound = 1;
-                        break;
-                    }
-                if ( fFound )
-                    break;
-            }
-*/ 
-            // bug fix by SV (9/11/08)
-            fFound = 0;
-            for  i = 0; pTemp[i] && pTemp[i] != ' ' && pTemp[i] != '\t' && pTemp[i] != '\r' && pTemp[i] != '\n' && 
-                         pTemp[i] != PARSE_SYM_AND1 && pTemp[i] != PARSE_SYM_AND2 && pTemp[i] != PARSE_SYM_XOR1 &&
-                         pTemp[i] != PARSE_SYM_XOR2 && pTemp[i] != PARSE_SYM_XOR3 && pTemp[i] != PARSE_SYM_XOR  &&
-                         pTemp[i] != PARSE_SYM_OR1  && pTemp[i] != PARSE_SYM_OR2  && pTemp[i] != PARSE_SYM_CLOSE &&
-                         pTemp[i] != PARSE_SYM_NEGAFT;
-                  i++  {}
-            for  v = 0; v < nVars; v++  {
-                if strncmp( pTemp, ppVarNames[v], i ) == 0 && len(ppVarNames[v]) == uint32((i)) {
-                    pTemp += i-1;
-                    fFound = 1;
-                    break;
-                }
-            }
-
-            if !fFound { 
-                fmt.Fprintf(pOutput, "Parse_FormulaParser(): The parser cannot find var \"%s\" in the input var list.\n", pTemp); 
-                Flag = PARSE_FLAG_ERROR; 
-                break; 
-            }
-            // assume operation AND, if vars follow one another
-            if Flag == PARSE_FLAG_VAR {
-                Parse_StackOpPush( pStackOp, PARSE_OPER_AND ); }
-            Parse_StackFnPush( pStackFn, pbVars[v] );  Cudd_Ref( pbVars[v] );
-            Flag = PARSE_FLAG_VAR; 
-            break;
-        }
-
-        if Flag == PARSE_FLAG_ERROR {
-            break;      // error exit
-        } else if Flag == PARSE_FLAG_START {
-            continue;  //  go on parsing
-        } else if Flag == PARSE_FLAG_VAR {
-            for {  // check if there are negations in the OpStack     
-                if Parse_StackOpIsEmpty(pStackOp) {
-                    break; }
-                Oper = Parse_StackOpPop( pStackOp );
-                if Oper != PARSE_OPER_NEG {
-                    Parse_StackOpPush( pStackOp, Oper );
-                    break;
-                
-                } else {
-                      Parse_StackFnPush( pStackFn, Cudd_Not(Parse_StackFnPop(pStackFn)) );
-                }
-            }
-        } else { // if ( Flag == PARSE_FLAG_OPER )
-            for {  // execute all the operations in the OpStack
-               // with precedence higher or equal than the last one
-                Oper1 = Parse_StackOpPop( pStackOp ); // the last operation
-                if Parse_StackOpIsEmpty(pStackOp) {  // if it is the only operation, push it back
-                    Parse_StackOpPush( pStackOp, Oper1 );
-                    break;
-                }
-                Oper2 = Parse_StackOpPop( pStackOp ); // the operation before the last one
-                if Oper2 >= Oper1 {  // if Oper2 precedence is higher or equal, execute it
-//                    Parse_StackPush( pStackFn,  Operation( FunStack.Pop(), FunStack.Pop(), Oper2 ) );
-                    if Parse_ParserPerformTopOp( dd, pStackFn, Oper2 ) == nil {
-                        fmt.Fprintf(pOutput, "Parse_FormulaParser(): Unknown operation\n");
-                        // inlining of macro ABC_FREE
-                        ((pFormula) ? (free((char *) (pFormula)), (pFormula) = 0) : 0);
-                        return nil;
-                    }
-                    Parse_StackOpPush( pStackOp,  Oper1 );     // push the last operation back
-                
-                } else {  // if Oper2 precedence is lower, push them back and done
-                    Parse_StackOpPush( pStackOp, Oper2 );
-                    Parse_StackOpPush( pStackOp, Oper1 );
-                    break;
-                }
-            } }
-    }
-
-    if Flag != PARSE_FLAG_ERROR {
-        if !Parse_StackFnIsEmpty(pStackFn) {    
-            bFunc = (DdNode *)Parse_StackFnPop(pStackFn);
-            if Parse_StackFnIsEmpty(pStackFn) {
-                if Parse_StackOpIsEmpty(pStackOp) {
-                    Parse_StackFnFree(pStackFn);
-                    Parse_StackOpFree(pStackOp);
-                    Cudd_Deref( bFunc );
-                    // inlining of macro ABC_FREE
-                    ((pFormula) ? (free((char *) (pFormula)), (pFormula) = 0) : 0);
-                    return bFunc;
-                
-                } else {
-                    fmt.Fprintf(pOutput, "Parse_FormulaParser(): Something is left in the operation stack\n"); }
-            } else {
-                fmt.Fprintf(pOutput, "Parse_FormulaParser(): Something is left in the function stack\n"); }
-        
-        } else {
-            fmt.Fprintf(pOutput, "Parse_FormulaParser(): The input string is empty\n"); }
-    }
-    // inlining of macro ABC_FREE
-    ((pFormula) ? (free((char *) (pFormula)), (pFormula) = 0) : 0);
-    return nil;
+type SyntaxError struct {
+	Offset  int
+	Message string
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs the operation on the top entries in the stack.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Parse_ParserPerformTopOp(dd *DdManager, pStackFn *Parse_StackFn_t, Oper int32) *DdNode {
-    var bArg1, bArg2, bFunc *DdNode;
-    // perform the given operation
-    bArg2 = (DdNode *)Parse_StackFnPop( pStackFn );
-    bArg1 = (DdNode *)Parse_StackFnPop( pStackFn );
-    if Oper == PARSE_OPER_AND {
-        bFunc = Cudd_bddAnd( dd, bArg1, bArg2 );
-    } else if Oper == PARSE_OPER_XOR {
-        bFunc = Cudd_bddXor( dd, bArg1, bArg2 );
-    } else if Oper == PARSE_OPER_OR {
-        bFunc = Cudd_bddOr( dd, bArg1, bArg2 );
-    } else if Oper == PARSE_OPER_EQU {
-        bFunc = Cudd_bddXnor( dd, bArg1, bArg2 );
-    } else if Oper == PARSE_OPER_FLR {
-        bFunc = Cudd_bddOr( dd, Cudd_Not(bArg1), bArg2 );
-    } else if Oper == PARSE_OPER_FLL {
-        bFunc = Cudd_bddOr( dd, Cudd_Not(bArg2), bArg1 );
-    } else {
-        return nil; }
-    Cudd_Ref( bFunc );
-    Cudd_RecursiveDeref( dd, bArg1 );
-    Cudd_RecursiveDeref( dd, bArg2 );
-    Parse_StackFnPush( pStackFn,  bFunc );
-    return bFunc;
+func (e *SyntaxError) Error() string {
+	return fmt.Sprintf("parse: column %d: %s", e.Offset+1, e.Message)
 }
 
+type formulaParser struct {
+	source   string
+	pos      int
+	names    map[string]int
+	equation bool
+	depth    int
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-//ABC_NAMESPACE_IMPL_END
-
+func ParseFormula(source string, names []string) (*Expression, error) {
+	return parseFormula(source, names, false)
+}
+func parseFormula(source string, names []string, equation bool) (*Expression, error) {
+	p := &formulaParser{source: source, names: map[string]int{}, equation: equation}
+	for i, name := range names {
+		if name == "" {
+			return nil, fmt.Errorf("parse: empty variable name")
+		}
+		if _, ok := p.names[name]; ok {
+			return nil, fmt.Errorf("parse: duplicate variable %q", name)
+		}
+		p.names[name] = i
+	}
+	e, err := p.expr(0)
+	if err != nil {
+		return nil, err
+	}
+	p.space()
+	if p.pos != len(source) {
+		return nil, p.fail("unexpected trailing token")
+	}
+	return e, nil
+}
+func (p *formulaParser) fail(message string) error { return &SyntaxError{p.pos, message} }
+func (p *formulaParser) space() {
+	for p.pos < len(p.source) && strings.ContainsRune(" \t\r\n", rune(p.source[p.pos])) {
+		p.pos++
+	}
+}
+func (p *formulaParser) prefix() (*Expression, error) {
+	p.space()
+	if p.pos >= len(p.source) {
+		return nil, p.fail("expected an operand")
+	}
+	if p.depth >= 4096 {
+		return nil, p.fail("formula nesting limit exceeded")
+	}
+	p.depth++
+	defer func() { p.depth-- }()
+	c := p.source[p.pos]
+	p.pos++
+	switch c {
+	case '!', '~':
+		if c == '~' && p.equation {
+			return nil, p.fail("unsupported equation operator")
+		}
+		e, err := p.prefix()
+		if err != nil {
+			return nil, err
+		}
+		return &Expression{Op: Not, Left: e}, nil
+	case '(', '[':
+		if c == '[' && p.equation {
+			return nil, p.fail("rank shifts are not equation operators")
+		}
+		e, err := p.expr(0)
+		if err != nil {
+			return nil, err
+		}
+		p.space()
+		close := byte(')')
+		if c == '[' {
+			close = ']'
+		}
+		if p.pos >= len(p.source) || p.source[p.pos] != close {
+			return nil, p.fail("missing closing delimiter")
+		}
+		p.pos++
+		if c == '[' {
+			e = &Expression{Op: Shift, Left: e}
+		}
+		return p.postfix(e)
+	case '0', '1':
+		return p.postfix(&Expression{Op: Constant, Value: c == '1'})
+	}
+	p.pos--
+	start := p.pos
+	for p.pos < len(p.source) && !strings.ContainsRune(" \t\r\n()[]!~'&*^+|<=>", rune(p.source[p.pos])) {
+		p.pos++
+	}
+	if p.pos == start {
+		return nil, p.fail("expected a variable or constant")
+	}
+	name := p.source[start:p.pos]
+	index, ok := p.names[name]
+	if !ok {
+		return nil, &SyntaxError{start, fmt.Sprintf("unknown variable %q", name)}
+	}
+	return p.postfix(&Expression{Op: Variable, Index: index})
+}
+func (p *formulaParser) postfix(e *Expression) (*Expression, error) {
+	for {
+		p.space()
+		if p.pos >= len(p.source) || p.source[p.pos] != '\'' {
+			return e, nil
+		}
+		if p.equation {
+			return nil, p.fail("suffix negation is not an equation operator")
+		}
+		p.pos++
+		e = &Expression{Op: Not, Left: e}
+	}
+}
+func (p *formulaParser) operator() (Operator, int, int) {
+	p.space()
+	s := p.source[p.pos:]
+	if !p.equation {
+		for _, op := range []struct {
+			s    string
+			op   Operator
+			prec int
+		}{{"<=>", Equivalent, 6}, {"<+>", Xor, 8}, {"=>", Implies, 5}, {"<=", ImpliedBy, 4}} {
+			if strings.HasPrefix(s, op.s) {
+				return op.op, op.prec, len(op.s)
+			}
+		}
+	}
+	if len(s) == 0 {
+		return 0, -1, 0
+	}
+	switch s[0] {
+	case '*':
+		return And, 9, 1
+	case '&':
+		if !p.equation {
+			return And, 9, 1
+		}
+	case '^':
+		return Xor, 8, 1
+	case '+':
+		return Or, 7, 1
+	case '|':
+		if !p.equation {
+			return Or, 7, 1
+		}
+	}
+	return 0, -1, 0
+}
+func (p *formulaParser) expr(min int) (*Expression, error) {
+	left, err := p.prefix()
+	if err != nil {
+		return nil, err
+	}
+	for {
+		op, prec, width := p.operator()
+		if prec < 0 && !p.equation && p.pos < len(p.source) {
+			c := p.source[p.pos]
+			if c == '(' || c == '[' || c == '!' || c == '~' || !strings.ContainsRune(")]'&*^+|<=>", rune(c)) {
+				op, prec, width = And, 9, 0
+			}
+		}
+		if prec < min {
+			return left, nil
+		}
+		p.pos += width
+		right, err := p.expr(prec + 1)
+		if err != nil {
+			return nil, err
+		}
+		left = &Expression{Op: op, Left: left, Right: right}
+	}
+}
