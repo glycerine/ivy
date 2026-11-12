@@ -1,834 +1,242 @@
 package util
 
-import "fmt"
+// Sorting and multiply-with-carry random sequences from ABC utilSort.c.
+// Packed-word sorts compare only their low 32 bits, leaving the upper bits
+// available for payloads (notably the original index in cost sorting).
+import (
+	"sort"
+	"sync"
+)
 
-/**CFile****************************************************************
+func Abc_SortMerge(a, b, out []int32) {
+	i, j, k := 0, 0, 0
+	for i < len(a) && j < len(b) {
+		if a[i] <= b[j] {
+			out[k] = a[i]
+			i++
+		} else {
+			out[k] = b[j]
+			j++
+		}
+		k++
+	}
+	k += copy(out[k:], a[i:])
+	copy(out[k:], b[j:])
+}
+func Abc_Sort_rec(input, scratch []int32) {
+	if len(input) < 2 {
+		return
+	}
+	mid := len(input) / 2
+	Abc_Sort_rec(input[:mid], scratch[:mid])
+	Abc_Sort_rec(input[mid:], scratch[mid:])
+	Abc_SortMerge(input[:mid], input[mid:], scratch[:len(input)])
+	copy(input, scratch)
+}
+func Abc_MergeSort(input []int32, n int32) { Abc_Sort_rec(input[:n], make([]int32, n)) }
 
-  FileName    [utilSort.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Merge sort with user-specified cost.]
-
-  Synopsis    [Merge sort with user-specified cost.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - Feburary 13, 2011.]
-
-  Revision    [$Id: utilSort.c,v 1.00 2011/02/11 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <stdio.h>
-//#include <string.h>
-//#include <stdlib.h>
-//#include <assert.h>
-
-//#include "abc_global.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Merging two lists of entries.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SortMerge(p1Beg *int32, p1End *int32, p2Beg *int32, p2End *int32, pOut *int32) {
-    var nEntries int32  = (p1End - p1Beg) + (p2End - p2Beg);
-    var pOutBeg *int32  = pOut;
-    for  p1Beg < p1End && p2Beg < p2End  {
-        if *p1Beg == *p2Beg {
-            *pOut++ = *p1Beg++, *pOut++ = *p2Beg++; 
-        } else if *p1Beg < *p2Beg {
-            *pOut++ = *p1Beg++; 
-        } else { // if ( *p1Beg > *p2Beg )
-            *pOut++ = *p2Beg++; } 
-    }
-    for  p1Beg < p1End  {
-        *pOut++ = *p1Beg++;
-    } 
-    for  p2Beg < p2End  {
-        *pOut++ = *p2Beg++;
-    }
-    assert(pOut - pOutBeg == nEntries, "pOut - pOutBeg == nEntries");
+// Cost merge records alternate original index and signed cost.
+func Abc_MergeSortCostMerge(a, b, out []int32) {
+	i, j, k := 0, 0, 0
+	for i < len(a) && j < len(b) {
+		if a[i+1] == b[j+1] {
+			copy(out[k:k+2], a[i:i+2])
+			copy(out[k+2:k+4], b[j:j+2])
+			i += 2
+			j += 2
+			k += 4
+		} else if a[i+1] < b[j+1] {
+			copy(out[k:k+2], a[i:i+2])
+			i += 2
+			k += 2
+		} else {
+			copy(out[k:k+2], b[j:j+2])
+			j += 2
+			k += 2
+		}
+	}
+	k += copy(out[k:], a[i:])
+	copy(out[k:], b[j:])
+}
+func Abc_MergeSortCost_rec(input, scratch []int32) {
+	n := len(input) / 2
+	if n < 2 {
+		return
+	}
+	if n < 8 {
+		for i := 0; i < n-1; i++ {
+			best := i
+			for j := i + 1; j < n; j++ {
+				if input[2*j+1] < input[2*best+1] {
+					best = j
+				}
+			}
+			input[2*i], input[2*best] = input[2*best], input[2*i]
+			input[2*i+1], input[2*best+1] = input[2*best+1], input[2*i+1]
+		}
+		return
+	}
+	mid := (n / 2) * 2
+	Abc_MergeSortCost_rec(input[:mid], scratch[:mid])
+	Abc_MergeSortCost_rec(input[mid:], scratch[mid:])
+	Abc_MergeSortCostMerge(input[:mid], input[mid:], scratch[:len(input)])
+	copy(input, scratch)
+}
+func Abc_MergeSortCost(costs []int32, n int32) []int32 {
+	records := make([]int32, 2*n)
+	for i := int32(0); i < n; i++ {
+		records[2*i] = i
+		records[2*i+1] = costs[i]
+	}
+	Abc_MergeSortCost_rec(records, make([]int32, len(records)))
+	result := make([]int32, n)
+	for i := range result {
+		result[i] = records[2*i]
+	}
+	return result
+}
+func Abc_SortNumCompare(a, b int32) int32 {
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
+}
+func Abc_QuickSort1CompareInc(a, b uint64) int32 {
+	if uint32(a) < uint32(b) {
+		return -1
+	}
+	if uint32(a) > uint32(b) {
+		return 1
+	}
+	return 0
+}
+func Abc_QuickSort1CompareDec(a, b uint64) int32 { return -Abc_QuickSort1CompareInc(a, b) }
+func Abc_QuickSort1(data []uint64, n, decrease int32) {
+	data = data[:n]
+	sort.Slice(data, func(i, j int) bool {
+		if decrease != 0 {
+			return uint32(data[i]) > uint32(data[j])
+		}
+		return uint32(data[i]) < uint32(data[j])
+	})
+}
+func Abc_SelectSortInc(data []uint64, n int32) { selectionSortWords(data[:n], false) }
+func Abc_SelectSortDec(data []uint64, n int32) { selectionSortWords(data[:n], true) }
+func selectionSortWords(data []uint64, decrease bool) {
+	for i := 0; i < len(data)-1; i++ {
+		best := i
+		for j := i + 1; j < len(data); j++ {
+			if (!decrease && uint32(data[j]) < uint32(data[best])) || (decrease && uint32(data[j]) > uint32(data[best])) {
+				best = j
+			}
+		}
+		data[i], data[best] = data[best], data[i]
+	}
+}
+func Abc_QuickSort2Inc_rec(data []uint64, l, r int32) { quickSortWords(data, l, r, false) }
+func Abc_QuickSort2Dec_rec(data []uint64, l, r int32) { quickSortWords(data, l, r, true) }
+func Abc_QuickSort3Inc_rec(data []uint64, l, r int32) { quickSortWords(data, l, r, false) }
+func Abc_QuickSort3Dec_rec(data []uint64, l, r int32) { quickSortWords(data, l, r, true) }
+func quickSortWords(data []uint64, l, r int32, decrease bool) {
+	if l >= r {
+		return
+	}
+	if r-l < 10 {
+		selectionSortWords(data[l:r+1], decrease)
+		return
+	}
+	pivot := uint32(data[(l+r)/2])
+	i, j := l, r
+	less := func(a, b uint32) bool {
+		if decrease {
+			return a > b
+		}
+		return a < b
+	}
+	for i <= j {
+		for less(uint32(data[i]), pivot) {
+			i++
+		}
+		for less(pivot, uint32(data[j])) {
+			j--
+		}
+		if i <= j {
+			data[i], data[j] = data[j], data[i]
+			i++
+			j--
+		}
+	}
+	if l < j {
+		quickSortWords(data, l, j, decrease)
+	}
+	if i < r {
+		quickSortWords(data, i, r, decrease)
+	}
+}
+func Abc_QuickSort2(data []uint64, n, decrease int32) {
+	quickSortWords(data[:n], 0, n-1, decrease != 0)
+}
+func Abc_QuickSort3(data []uint64, n, decrease int32) {
+	quickSortWords(data[:n], 0, n-1, decrease != 0)
+}
+func Abc_QuickSortCostData(costs []int32, n, decrease int32, data []uint64, result []int32) {
+	for i := int32(0); i < n; i++ {
+		data[i] = uint64(i)<<32 | uint64(uint32(costs[i]))
+	}
+	Abc_QuickSort3(data, n, decrease)
+	for i := int32(0); i < n; i++ {
+		result[i] = int32(data[i] >> 32)
+	}
+}
+func Abc_QuickSortCost(costs []int32, n, decrease int32) []int32 {
+	result := make([]int32, n)
+	Abc_QuickSortCostData(costs, n, decrease, make([]uint64, n), result)
+	return result
 }
 
-/**Function*************************************************************
+const NUMBER1 uint32 = 3716960521
+const NUMBER2 uint32 = 2174103536
 
-  Synopsis    [Recursive sorting.]
+var randomState = struct {
+	sync.Mutex
+	z, w uint32
+}{z: NUMBER1, w: NUMBER2}
 
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_Sort_rec(pInBeg *int32, pInEnd *int32, pOutBeg *int32) {
-    var nSize int32  = pInEnd - pInBeg;
-    assert(nSize > 0, "nSize > 0");
-    if nSize == 1 {
-        return; }
-    if nSize == 2 {
-         if pInBeg[0] > pInBeg[1] {
-             pInBeg[0] ^= pInBeg[1];
-             pInBeg[1] ^= pInBeg[0];
-             pInBeg[0] ^= pInBeg[1];
-         }
-    
-    } else if nSize < 8 {
-        var temp, i, j, best_i int32;
-        for  i = 0; i < nSize-1; i++  {
-            best_i = i;
-            for  j = i+1; j < nSize; j++  {
-                if pInBeg[j] < pInBeg[best_i] {
-                    best_i = j; }
-            }
-            temp = pInBeg[i]; 
-            pInBeg[i] = pInBeg[best_i]; 
-            pInBeg[best_i] = temp;
-        }
-    
-    } else {
-        Abc_Sort_rec( pInBeg, pInBeg + nSize/2, pOutBeg );
-        Abc_Sort_rec( pInBeg + nSize/2, pInEnd, pOutBeg + nSize/2 );
-        Abc_SortMerge( pInBeg, pInBeg + nSize/2, pInBeg + nSize/2, pInEnd, pOutBeg );
-        memcpy( pInBeg, pOutBeg, sizeof(int) * nSize );
-    }
+func abcRandomLocked(reset bool) uint32 {
+	if reset {
+		randomState.z = NUMBER1
+		randomState.w = NUMBER2
+	}
+	randomState.z = 36969*(randomState.z&65535) + (randomState.z >> 16)
+	randomState.w = 18000*(randomState.w&65535) + (randomState.w >> 16)
+	return randomState.z<<16 + randomState.w
+}
+func Abc_Random(reset int32) uint32 {
+	randomState.Lock()
+	defer randomState.Unlock()
+	return abcRandomLocked(reset != 0)
+}
+func Abc_RandomW(reset int32) uint64 {
+	randomState.Lock()
+	defer randomState.Unlock()
+	return uint64(abcRandomLocked(reset != 0))<<32 | uint64(abcRandomLocked(reset != 0))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the sorted array of integers.]
-
-  Description [This procedure is about 10% faster than qsort().]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MergeSort(pInput *int32, nSize int32) {
-    var pOutput *int32;
-    if nSize < 2 {
-        return; }
-    pOutput = (int *) malloc( sizeof(int) * nSize );
-    Abc_Sort_rec( pInput, pInput + nSize, pOutput );
-    free( pOutput );
-}
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Merging two lists of entries.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MergeSortCostMerge(p1Beg *int32, p1End *int32, p2Beg *int32, p2End *int32, pOut *int32) {
-    var nEntries int32  = (p1End - p1Beg) + (p2End - p2Beg);
-    var pOutBeg *int32  = pOut;
-    for  p1Beg < p1End && p2Beg < p2End  {
-        if p1Beg[1] == p2Beg[1] {
-            *pOut++ = *p1Beg++, *pOut++ = *p1Beg++, *pOut++ = *p2Beg++, *pOut++ = *p2Beg++; 
-        } else if p1Beg[1] < p2Beg[1] {
-            *pOut++ = *p1Beg++, *pOut++ = *p1Beg++; 
-        } else { // if ( p1Beg[1] > p2Beg[1] )
-            *pOut++ = *p2Beg++, *pOut++ = *p2Beg++; } 
-    }
-    for  p1Beg < p1End  {
-        *pOut++ = *p1Beg++, *pOut++ = *p1Beg++;
-    } 
-    for  p2Beg < p2End  {
-        *pOut++ = *p2Beg++, *pOut++ = *p2Beg++;
-    }
-    assert(pOut - pOutBeg == nEntries, "pOut - pOutBeg == nEntries");
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Recursive sorting.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MergeSortCost_rec(pInBeg *int32, pInEnd *int32, pOutBeg *int32) {
-    var nSize int32  = (pInEnd - pInBeg)/2;
-    assert(nSize > 0, "nSize > 0");
-    if nSize == 1 {
-        return; }
-    if nSize == 2 {
-         if pInBeg[1] > pInBeg[3] {
-             pInBeg[1] ^= pInBeg[3];
-             pInBeg[3] ^= pInBeg[1];
-             pInBeg[1] ^= pInBeg[3];
-             pInBeg[0] ^= pInBeg[2];
-             pInBeg[2] ^= pInBeg[0];
-             pInBeg[0] ^= pInBeg[2];
-         }
-    
-    } else if nSize < 8 {
-        var temp, i, j, best_i int32;
-        for  i = 0; i < nSize-1; i++  {
-            best_i = i;
-            for  j = i+1; j < nSize; j++  {
-                if pInBeg[2*j+1] < pInBeg[2*best_i+1] {
-                    best_i = j; }
-            }
-            temp = pInBeg[2*i]; 
-            pInBeg[2*i] = pInBeg[2*best_i]; 
-            pInBeg[2*best_i] = temp;
-            temp = pInBeg[2*i+1]; 
-            pInBeg[2*i+1] = pInBeg[2*best_i+1]; 
-            pInBeg[2*best_i+1] = temp;
-        }
-    
-    } else {
-        Abc_MergeSortCost_rec( pInBeg, pInBeg + 2*(nSize/2), pOutBeg );
-        Abc_MergeSortCost_rec( pInBeg + 2*(nSize/2), pInEnd, pOutBeg + 2*(nSize/2) );
-        Abc_MergeSortCostMerge( pInBeg, pInBeg + 2*(nSize/2), pInBeg + 2*(nSize/2), pInEnd, pOutBeg );
-        memcpy( pInBeg, pOutBeg, sizeof(int) * 2 * nSize );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Sorting procedure.]
-
-  Description [Returns permutation for the non-decreasing order of costs.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MergeSortCost(pCosts *int32, nSize int32) *int32 {
-    var i int32;
-    var pResult *int32;
-    var pInput *int32;
-    var pOutput *int32;
-    pResult = (int *) calloc( sizeof(int), nSize );
-    if nSize < 2 {
-        return pResult; }
-    pInput  = (int *) malloc( sizeof(int) * 2 * nSize );
-    pOutput = (int *) malloc( sizeof(int) * 2 * nSize );
-    for  i = 0; i < nSize; i++  {
-        pInput[2*i] = i, pInput[2*i+1] = pCosts[i];
-    }
-    Abc_MergeSortCost_rec( pInput, pInput + 2*nSize, pOutput );
-    for  i = 0; i < nSize; i++  {
-        pResult[i] = pInput[2*i];
-    }
-    free( pOutput );
-    free( pInput );
-    return pResult;
-}
-
-
-// this implementation uses 3x less memory but is 30% slower due to cache misses
-
-       
-
-                                                                        
-
-                                             
-
-                
-               
-                
-
-                
-
-                                                                        
-                                                                                                          
- 
-                                                     
-                         
-                                            
-     
-                                             
-                                                    
-                                                 
-                                
-                                                    
-                                
-     
-                           
-                            
-                           
-                           
-                                         
- 
-
-                                                                        
-
-                                  
-
-                
-               
-                
-
-                
-
-                                                                        
-                                                                                    
- 
-                                
-                        
-                     
-               
-                     
-     
-                                                   
-          
-                                    
-                                    
-                                    
-          
-     
-                         
-     
-                               
-                                       
-         
-                       
-                                           
-                                                               
-                               
-                              
-                                        
-                                  
-         
-     
-        
-     
-                                                                          
-                                                                                    
-                                                                                                     
-                                                       
-     
- 
-
-                                                                        
-
-                                  
-
-                                                                          
-               
-                
-
-                
-
-                                                                        
-                                                  
- 
-                               
-                                                   
-                                 
-                      
-                    
-                      
-                                                    
-                                                                     
-                    
-                  
- 
-
-      
-
-
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SortNumCompare(pNum1 *int32, pNum2 *int32) int32 {
-    return *pNum1 - *pNum2;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Testing the sorting procedure.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Retain diagnostic entry points as real sortedness checks.
 func Abc_SortTest() {
-    var fUseNew int32;
-    var i int32;
-    var nSize int32 = 50000000;
-    var pArray *int32  = (int *)malloc( sizeof(int) * nSize );
-    var pPerm *int32;
-    var clk abctime;
-    // generate numbers
-    srand( 1000 );
-    for  i = 0; i < nSize; i++  {
-        pArray[i] = rand();
-    }
-
-    // try sorting
-    if fUseNew != 0 {
-        var fUseCost int32  = 1;
-        if fUseCost != 0 {
-            clk = Abc_Clock();
-            pPerm = Abc_MergeSortCost( pArray, nSize );
-            Abc_PrintTime( 1, "New sort", Abc_Clock() - clk );
-            // check
-            for  i = 1; i < nSize; i++  {
-                assert(pArray[pPerm[i-1]] <= pArray[pPerm[i]], "pArray[pPerm[i-1]] <= pArray[pPerm[i]]");
-            }
-            free( pPerm );
-        
-        } else {
-            clk = Abc_Clock();
-            Abc_MergeSort( pArray, nSize );
-            Abc_PrintTime( 1, "New sort", Abc_Clock() - clk );
-            // check
-            for  i = 1; i < nSize; i++  {
-                assert(pArray[i-1] <= pArray[i], "pArray[i-1] <= pArray[i]");
-            }
-        }
-    
-    } else {
-        clk = Abc_Clock();
-        qsort( (void *)pArray, (size_t)nSize, sizeof(int), (int (*)(void *, void *)) Abc_SortNumCompare );
-        Abc_PrintTime( 1, "Old sort", Abc_Clock() - clk );
-        // check
-        for  i = 1; i < nSize; i++  {
-            assert(pArray[i-1] <= pArray[i], "pArray[i-1] <= pArray[i]");
-        }
-    }
-
-    free( pArray );
+	a := []int32{7, 3, 9, 1}
+	Abc_MergeSort(a, int32(len(a)))
+	if !sort.SliceIsSorted(a, func(i, j int) bool { return a[i] < a[j] }) {
+		panic("merge sort verification")
+	}
 }
-
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [QuickSort algorithm as implemented by qsort().]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_QuickSort1CompareInc(p1 *word, p2 *word) int32 {
-    if uint32((*p1)) < uint32((*p2)) {
-        return -1; }
-    if uint32((*p1)) > uint32((*p2)) {
-        return 1; }
-    return 0;
-}
-func Abc_QuickSort1CompareDec(p1 *word, p2 *word) int32 {
-    if uint32((*p1)) > uint32((*p2)) {
-        return -1; }
-    if uint32((*p1)) < uint32((*p2)) {
-        return 1; }
-    return 0;
-}
-func Abc_QuickSort1(pData *word, nSize int32, fDecrease int32) {
-    var i, fVerify int32;
-    if fDecrease != 0 {
-        qsort( (void *)pData, (size_t)nSize, sizeof(word), (int (*)(void *, void *))Abc_QuickSort1CompareDec );
-        if fVerify != 0 {
-            for  i = 1; i < nSize; i++  {
-                assert(uint32(pData[i-1]) >= uint32(pData[i]), "uint32(pData[i-1]) >= uint32(pData[i])");
-            } }
-    
-    } else {
-        qsort( (void *)pData, (size_t)nSize, sizeof(word), (int (*)(void *, void *))Abc_QuickSort1CompareInc );
-        if fVerify != 0 {
-            for  i = 1; i < nSize; i++  {
-                assert(uint32(pData[i-1]) <= uint32(pData[i]), "uint32(pData[i-1]) <= uint32(pData[i])");
-            } }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [QuickSort algorithm based on 2/3-way partitioning.]
-
-  Description [This code is based on the online presentation 
-  "QuickSort is Optimal" by Robert Sedgewick and Jon Bentley.
-  http://www.sorting-algorithms.com/static/QuicksortIsOptimal.pdf 
-
-  The first 32-bits of the input data contain values to be compared. 
-  The last 32-bits contain the user's data. When sorting is finished, 
-  the 64-bit words are ordered in the increasing order of their value ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SelectSortInc(pData *word, nSize int32) {
-    var i, j, best_i int32;
-    for  i = 0; i < nSize-1; i++  {
-        best_i = i;
-        for  j = i+1; j < nSize; j++  {
-            if uint32(pData[j]) < uint32(pData[best_i]) {
-                best_i = j; }
-        }
-        // inlining of macro ABC_SWAP
-        { var t word  = pData[i]; pData[i] = pData[best_i]; pData[best_i] = t; };
-    }
-}
-func Abc_SelectSortDec(pData *word, nSize int32) {
-    var i, j, best_i int32;
-    for  i = 0; i < nSize-1; i++  {
-        best_i = i;
-        for  j = i+1; j < nSize; j++  {
-            if uint32(pData[j]) > uint32(pData[best_i]) {
-                best_i = j; }
-        }
-        // inlining of macro ABC_SWAP
-        { var t word  = pData[i]; pData[i] = pData[best_i]; pData[best_i] = t; };
-    }
-}
-
-func Abc_QuickSort2Inc_rec(pData *word, l int32, r int32) {
-    var v word  = pData[r];
-    var i int32 = l-1;
-    var j int32 = r;
-    if l >= r {
-        return; }
-    assert(l < r, "l < r");
-    if r - l < 10 {
-        Abc_SelectSortInc( pData + l, r - l + 1 );
-        return;
-    }
-    for {
-        for  uint32(pData[++i]) < uint32(v)  {; }
-        for  uint32(v) < uint32(pData[--j])  {
-            if j == l {
-                break; }
-        }
-        if i >= j {
-            break; }
-        // inlining of macro ABC_SWAP
-        { var t word  = pData[i]; pData[i] = pData[j]; pData[j] = t; };
-    }
-    // inlining of macro ABC_SWAP
-    { var t word  = pData[i]; pData[i] = pData[r]; pData[r] = t; }; 
-    Abc_QuickSort2Inc_rec( pData, l, i-1 );
-    Abc_QuickSort2Inc_rec( pData, i+1, r );
-}
-func Abc_QuickSort2Dec_rec(pData *word, l int32, r int32) {
-    var v word  = pData[r];
-    var i int32 = l-1;
-    var j int32 = r;
-    if l >= r {
-        return; }
-    assert(l < r, "l < r");
-    if r - l < 10 {
-        Abc_SelectSortDec( pData + l, r - l + 1 );
-        return;
-    }
-    for {
-        for  uint32(pData[++i]) > uint32(v)  {; }
-        for  uint32(v) > uint32(pData[--j])  {
-            if j == l {
-                break; }
-        }
-        if i >= j {
-            break; }
-        // inlining of macro ABC_SWAP
-        { var t word  = pData[i]; pData[i] = pData[j]; pData[j] = t; };
-    }
-    // inlining of macro ABC_SWAP
-    { var t word  = pData[i]; pData[i] = pData[r]; pData[r] = t; }; 
-    Abc_QuickSort2Dec_rec( pData, l, i-1 );
-    Abc_QuickSort2Dec_rec( pData, i+1, r );
-}
-
-func Abc_QuickSort3Inc_rec(pData *word, l int32, r int32) {
-    var v word  = pData[r];
-    var k int32;
-    var i int32 = l-1;
-    var j int32 = r;
-    var p int32 = l-1;
-    var q int32 = r;
-    if l >= r {
-        return; }
-    assert(l < r, "l < r");
-    if r - l < 10 {
-        Abc_SelectSortInc( pData + l, r - l + 1 );
-        return;
-    }
-    for {
-        for  uint32(pData[++i]) < uint32(v)  {; }
-        for  uint32(v) < uint32(pData[--j])  {
-            if j == l {
-                break; }
-        }
-        if i >= j {
-            break; }
-        // inlining of macro ABC_SWAP
-        { var t word  = pData[i]; pData[i] = pData[j]; pData[j] = t; };
-        // inlining of macro ABC_SWAP
-        if uint32(pData[i]) == uint32(v) { p++; { var t word  = pData[p]; pData[p] = pData[i]; pData[i] = t; }; }
-        // inlining of macro ABC_SWAP
-        if uint32(v) == uint32(pData[j]) { q--; { var t word  = pData[j]; pData[j] = pData[q]; pData[q] = t; }; }
-    }
-    // inlining of macro ABC_SWAP
-    { var t word  = pData[i]; pData[i] = pData[r]; pData[r] = t; }; 
-    j = i-1; i = i+1;
-    for  k = l; k < p; k, j = k+1, j-1  { 
-        // inlining of macro ABC_SWAP
-         var t word  = pData[k]; pData[k] = pData[j]; pData[j] = t; };
-    for  k = r-1; k > q; k, i = k-1, i+1  { 
-        // inlining of macro ABC_SWAP
-         var t word  = pData[i]; pData[i] = pData[k]; pData[k] = t; };
-    Abc_QuickSort3Inc_rec( pData, l, j );
-    Abc_QuickSort3Inc_rec( pData, i, r );
-}
-func Abc_QuickSort3Dec_rec(pData *word, l int32, r int32) {
-    var v word  = pData[r];
-    var k int32;
-    var i int32 = l-1;
-    var j int32 = r;
-    var p int32 = l-1;
-    var q int32 = r;
-    if l >= r {
-        return; }
-    assert(l < r, "l < r");
-    if r - l < 10 {
-        Abc_SelectSortDec( pData + l, r - l + 1 );
-        return;
-    }
-    for {
-        for  uint32(pData[++i]) > uint32(v)  {; }
-        for  uint32(v) > uint32(pData[--j])  {
-            if j == l {
-                break; }
-        }
-        if i >= j {
-            break; }
-        // inlining of macro ABC_SWAP
-        { var t word  = pData[i]; pData[i] = pData[j]; pData[j] = t; };
-        // inlining of macro ABC_SWAP
-        if uint32(pData[i]) == uint32(v) { p++; { var t word  = pData[p]; pData[p] = pData[i]; pData[i] = t; }; }
-        // inlining of macro ABC_SWAP
-        if uint32(v) == uint32(pData[j]) { q--; { var t word  = pData[j]; pData[j] = pData[q]; pData[q] = t; }; }
-    }
-    // inlining of macro ABC_SWAP
-    { var t word  = pData[i]; pData[i] = pData[r]; pData[r] = t; }; 
-    j = i-1; i = i+1;
-    for  k = l; k < p; k, j = k+1, j-1  { 
-        // inlining of macro ABC_SWAP
-         var t word  = pData[k]; pData[k] = pData[j]; pData[j] = t; };
-    for  k = r-1; k > q; k, i = k-1, i+1  { 
-        // inlining of macro ABC_SWAP
-         var t word  = pData[i]; pData[i] = pData[k]; pData[k] = t; };
-    Abc_QuickSort3Dec_rec( pData, l, j );
-    Abc_QuickSort3Dec_rec( pData, i, r );
-}
-
-func Abc_QuickSort2(pData *word, nSize int32, fDecrease int32) {
-    var i, fVerify int32;
-    if fDecrease != 0 {
-        Abc_QuickSort2Dec_rec( pData, 0, nSize - 1 );
-        if fVerify != 0 {
-            for  i = 1; i < nSize; i++  {
-                assert(uint32(pData[i-1]) >= uint32(pData[i]), "uint32(pData[i-1]) >= uint32(pData[i])");
-            } }
-    
-    } else {
-        Abc_QuickSort2Inc_rec( pData, 0, nSize - 1 );
-        if fVerify != 0 {
-            for  i = 1; i < nSize; i++  {
-                assert(uint32(pData[i-1]) <= uint32(pData[i]), "uint32(pData[i-1]) <= uint32(pData[i])");
-            } }
-    }
-}
-func Abc_QuickSort3(pData *word, nSize int32, fDecrease int32) {
-    var i int32;
-    var fVerify int32 = 1;
-    if fDecrease != 0 {
-        Abc_QuickSort2Dec_rec( pData, 0, nSize - 1 );
-        if fVerify != 0 {
-            for  i = 1; i < nSize; i++  {
-                assert(uint32(pData[i-1]) >= uint32(pData[i]), "uint32(pData[i-1]) >= uint32(pData[i])");
-            } }
-    
-    } else {
-        Abc_QuickSort2Inc_rec( pData, 0, nSize - 1 );
-        if fVerify != 0 {
-            for  i = 1; i < nSize; i++  {
-                assert(uint32(pData[i-1]) <= uint32(pData[i]), "uint32(pData[i-1]) <= uint32(pData[i])");
-            } }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Wrapper around QuickSort to sort entries based on cost.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_QuickSortCostData(pCosts *int32, nSize int32, fDecrease int32, pData *word, pResult *int32) {
-    var i int32;
-    for  i = 0; i < nSize; i++  {
-        pData[i] = ((word)i << 32) | pCosts[i];
-    }
-    Abc_QuickSort3( pData, nSize, fDecrease );
-    for  i = 0; i < nSize; i++  {
-        pResult[i] = int32((pData[i] >> 32));
-    }
-}
-func Abc_QuickSortCost(pCosts *int32, nSize int32, fDecrease int32) *int32 {
-    // inlining of macro ABC_ALLOC
-    var pData *word  = ((word *) malloc(sizeof(word) * (size_t)(nSize)));
-    // inlining of macro ABC_ALLOC
-    var pResult *int32  = ((int *) malloc(sizeof(int) * (size_t)(nSize)));
-    Abc_QuickSortCostData( pCosts, nSize, fDecrease, pData, pResult );
-    // inlining of macro ABC_FREE
-    ((pData) ? (free((char *) (pData)), (pData) = 0) : 0);
-    return pResult;
-}
-
-//        extern void Abc_QuickSortTest();
-//        Abc_QuickSortTest();
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_QuickSortTest() {
-    var nSize int32  = 1000000;
-    var fVerbose int32;
-    var pData1, pData2 *word;
-    var i int32;
-    var clk abctime  = Abc_Clock();
-    // generate numbers
-    // inlining of macro ABC_ALLOC
-    pData1 = ((word *) malloc(sizeof(word) * (size_t)(nSize)));
-    // inlining of macro ABC_ALLOC
-    pData2 = ((word *) malloc(sizeof(word) * (size_t)(nSize)));
-    srand( 1111 );
-    for  i = 0; i < nSize; i++  {
-        pData2[i] = pData1[i] = ((word)i << 32) | rand();
-    }
-    Abc_PrintTime( 1, "Prepare ", Abc_Clock() - clk );
-    // perform sorting
-    clk = Abc_Clock();
-    Abc_QuickSort3( pData1, nSize, 1 );
-    Abc_PrintTime( 1, "Sort new", Abc_Clock() - clk );
-    // print the result
-    if fVerbose != 0 {
-        for  i = 0; i < nSize; i++  {
-            fmt.Printf("(%d,%d) ", int32((pData1[i] >> 32)), int32(pData1[i]));
-        }
-        fmt.Printf("\n");
-    }
-    // create new numbers
-    clk = Abc_Clock();
-    Abc_QuickSort1( pData2, nSize, 1 );
-    Abc_PrintTime( 1, "Sort old", Abc_Clock() - clk );
-    // print the result
-    if fVerbose != 0 {
-        for  i = 0; i < nSize; i++  {
-            fmt.Printf("(%d,%d) ", int32((pData2[i] >> 32)), int32(pData2[i]));
-        }
-        fmt.Printf("\n");
-    }
-    // inlining of macro ABC_FREE
-    ((pData1) ? (free((char *) (pData1)), (pData1) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((pData2) ? (free((char *) (pData2)), (pData2) = 0) : 0);
+	a := []uint64{7, 3, 9, 1}
+	Abc_QuickSort3(a, int32(len(a)), 0)
+	if !sort.SliceIsSorted(a, func(i, j int) bool { return uint32(a[i]) < uint32(a[j]) }) {
+		panic("quick sort verification")
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-// Creates a sequence of random numbers.
-// http://www.codeproject.com/KB/recipes/SimpleRNG.aspx
-
-const NUMBER1 uint32 =  3716960521
-const NUMBER2 uint32 =  2174103536
-
-func Abc_Random(fReset int32) uint32 {
-    static unsigned int m_z = NUMBER1;
-    static unsigned int m_w = NUMBER2;
-    if fReset != 0 {
-        m_z = NUMBER1;
-        m_w = NUMBER2;
-    }
-    m_z = 36969 * (m_z & 65535) + (m_z >> 16);
-    m_w = 18000 * (m_w & 65535) + (m_w >> 16);
-    return (m_z << 16) + m_w;
-}
-func Abc_RandomW(fReset int32) word {
-    return ((word)Abc_Random(fReset) << 32) | ((word)Abc_Random(fReset) << 0);
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

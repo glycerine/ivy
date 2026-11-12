@@ -1,565 +1,379 @@
 package util
 
+// ABC bridge framing and AIG payload encoding. BridgeNetlist separates the wire
+// protocol from GIA's manager implementation, avoiding a util<->gia import cycle.
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
+	"io"
+	"os"
 	"strconv"
 )
 
-import "os"
+const (
+	BRIDGE_TEXT_MESSAGE = 999996
+	BRIDGE_ABORT        = 5
+	BRIDGE_PROGRESS     = 3
+	BRIDGE_RESULTS      = 101
+	BRIDGE_BAD_ABS      = 105
+	BRIDGE_VALUE_X      = 0
+	BRIDGE_VALUE_0      = 2
+	BRIDGE_VALUE_1      = 3
+)
 
-/**CFile****************************************************************
-
-  FileName    [utilBridge.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName []
-
-  Synopsis    []
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: utilBridge.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <stdio.h>
-//#include <string.h>
-//#include <stdlib.h>
-//#include <assert.h>
-
-//#include <misc/util/abc_global.h>
-
-#if defined(LIN) || defined(LIN64)
-#include <unistd.h>
-#endif
-
-//#include "aig/gia/gia.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-const BRIDGE_TEXT_MESSAGE = 999996
-
-const BRIDGE_ABORT =        5
-const BRIDGE_PROGRESS =     3
-const BRIDGE_RESULTS =      101
-const BRIDGE_BAD_ABS =      105
-//#define BRIDGE_NETLIST      106
-//#define BRIDGE_ABS_NETLIST  107
-
-const BRIDGE_VALUE_X = 0
-const BRIDGE_VALUE_0 = 2
-const BRIDGE_VALUE_1 = 3
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManToBridgeVec(p *Gia_Man_t) *Vec_Str_t {
-    var vStr *Vec_Str_t;
-    var pObj *Gia_Obj_t;
-    var i, uLit0, uLit1, nNodes int32;
-    assert(Gia_ManPoNum(p) > 0, "Gia_ManPoNum(p) > 0");
-
-    // start with const1 node (number 1)
-    nNodes = 1;
-    // assign literals(!!!) to the value field
-    Gia_ManConst0(p).Value = Abc_Var2Lit( nNodes++, 1 );
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        pObj.Value = Abc_Var2Lit( nNodes++, 0 );
-    }
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        pObj.Value = Abc_Var2Lit( nNodes++, 0 ); }
-    }
-
-    // write header
-    vStr = Vec_StrAlloc( 1000 );
-    Gia_AigerWriteUnsigned( vStr, Gia_ManPiNum(p) );
-    Gia_AigerWriteUnsigned( vStr, Gia_ManRegNum(p) );
-    Gia_AigerWriteUnsigned( vStr, Gia_ManAndNum(p) );
-
-    // write the nodes 
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        uLit0 = Gia_ObjFanin0Copy( pObj );
-        uLit1 = Gia_ObjFanin1Copy( pObj );
-        assert(uLit0 != uLit1, "uLit0 != uLit1");
-        Gia_AigerWriteUnsigned( vStr, uLit0 << 1 );
-        Gia_AigerWriteUnsigned( vStr, uLit1 );
-    }
-    }
-
-    // write latch drivers
-    // inlining of macro Gia_ManForEachRi
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {
-        uLit0 = Gia_ObjFanin0Copy( pObj );
-        Gia_AigerWriteUnsigned( vStr, (uLit0 << 2) | BRIDGE_VALUE_0 );
-    }
-
-    // write PO drivers
-    Gia_AigerWriteUnsigned( vStr, Gia_ManPoNum(p) );
-    // inlining of macro Gia_ManForEachPo
-    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        uLit0 = Gia_ObjFanin0Copy( pObj );
-        // complement property output!!!
-        Gia_AigerWriteUnsigned( vStr, Abc_LitNot(uLit0) );
-    }
-    return vStr;
+type BridgeNetlist struct {
+	Inputs, Registers       int32
+	Ands                    [][2]int32
+	Outputs, RegisterInputs []int32
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Gia_CreateHeader( FILE * pFile, int Type, int Size, unsigned char * pBuffer )
-{
-    fmt.Fprintf(pFile, "%.6d", Type);
-    fmt.Fprintf(pFile, " ");
-    fmt.Fprintf(pFile, "%.16d", Size);
-    fmt.Fprintf(pFile, " ");
-#if !defined(LIN) && !defined(LIN64)
-    {
-    int RetValue;
-    RetValue = fwrite( pBuffer, Size, 1, pFile );
-    assert( RetValue == 1 || Size == 0);
-    fflush( pFile );
-    }
-#else
-    fflush(pFile);
-    int fd = fileno(pFile);
-
-    ssize_t bytes_written = 0;
-    while (bytes_written < Size){
-        ssize_t n = write(fd, &pBuffer[bytes_written], Size - bytes_written);
-        if (n < 0){
-            fprintf(stderr, "BridgeMode: failed to send package; aborting\n"); fflush(stderr);
-            _exit(255);
-        }
-        bytes_written += n;
-    }
-#endif
+func bridgeAppendUnsigned(dst []byte, value uint32) []byte {
+	return binary.AppendUvarint(dst, uint64(value))
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Gia_ManToBridgeText( FILE * pFile, int Size, unsigned char * pBuffer )
-{
-    Gia_CreateHeader( pFile, BRIDGE_TEXT_MESSAGE, Size, pBuffer );
-    return 1;
+func aigerNumSize(value uint32) int32 {
+	var buffer [binary.MaxVarintLen32]byte
+	return int32(binary.PutUvarint(buffer[:], uint64(value)))
 }
-
-
-int Gia_ManToBridgeAbort( FILE * pFile, int Size, unsigned char * pBuffer )
-{
-    Gia_CreateHeader( pFile, BRIDGE_ABORT, Size, pBuffer );
-    return 1;
+func bridgeWireLit(lit int32) uint32 {
+	if lit < 0 {
+		panic("negative AIG literal")
+	}
+	if lit < 2 {
+		return uint32(lit ^ 3)
+	}
+	return uint32(lit + 2)
 }
-
-
-int Gia_ManToBridgeProgress( FILE * pFile, int Size, unsigned char * pBuffer )
-{
-    Gia_CreateHeader( pFile, BRIDGE_PROGRESS, Size, pBuffer );
-    return 1;
+func Gia_ManToBridgeVec(p *BridgeNetlist) []byte {
+	assert(p.Inputs >= 0 && p.Registers >= 0 && int(p.Registers) == len(p.RegisterInputs) && len(p.Outputs) > 0, "bridge graph dimensions")
+	data := make([]byte, 0, 128)
+	data = bridgeAppendUnsigned(data, uint32(p.Inputs))
+	data = bridgeAppendUnsigned(data, uint32(p.Registers))
+	data = bridgeAppendUnsigned(data, uint32(len(p.Ands)))
+	for i, and := range p.Ands {
+		limit := 2 * (p.Inputs + p.Registers + int32(i) + 1)
+		assert(and[0] >= 0 && and[0] < limit && and[1] >= 0 && and[1] < limit && and[0] != and[1], "bridge topological AND")
+		data = bridgeAppendUnsigned(data, bridgeWireLit(and[0])<<1)
+		data = bridgeAppendUnsigned(data, bridgeWireLit(and[1]))
+	}
+	for _, lit := range p.RegisterInputs {
+		data = bridgeAppendUnsigned(data, bridgeWireLit(lit)<<2|BRIDGE_VALUE_0)
+	}
+	data = bridgeAppendUnsigned(data, uint32(len(p.Outputs)))
+	for _, lit := range p.Outputs {
+		data = bridgeAppendUnsigned(data, bridgeWireLit(lit)^1)
+	}
+	return data
 }
-
-
-func Gia_ManToBridgeAbsNetlist(pFile *os.File, p any, pkg_type int32) int32 {
-    var vBuffer *Vec_Str_t;
-    vBuffer = Gia_ManToBridgeVec( (Gia_Man_t *)p );
-    Gia_CreateHeader( pFile, pkg_type, Vec_StrSize(vBuffer), (unsigned char *)Vec_StrArray(vBuffer) );
-    Vec_StrFree( vBuffer );
-    return 1;
+func bridgeWriteAll(w io.Writer, data []byte) error {
+	for len(data) > 0 {
+		n, err := w.Write(data)
+		if n > 0 {
+			data = data[n:]
+		}
+		if err != nil {
+			return err
+		}
+		if n == 0 {
+			return io.ErrShortWrite
+		}
+	}
+	return nil
 }
-
-
-func Gia_ManToBridgeBadAbs(pFile *os.File) int32 {
-    Gia_CreateHeader( pFile, BRIDGE_BAD_ABS, 0, nil );
-    return 1;
+func WriteBridgePackage(w io.Writer, typ int32, payload []byte) error {
+	if typ < 0 || typ > 999999 {
+		return fmt.Errorf("bridge message type out of range: %d", typ)
+	}
+	header := fmt.Sprintf("%06d %016d ", typ, len(payload))
+	if err := bridgeWriteAll(w, []byte(header)); err != nil {
+		return err
+	}
+	return bridgeWriteAll(w, payload)
 }
-
-
-func aigerNumSize(x uint32) int32 {
-    var sz int32  = 1;
-    for x & ~0x7f {
-        sz++;
-        x >>= 7;
-    }
-    return sz;
+func ReadBridgePackage(r io.Reader) (typ int32, payload []byte, err error) {
+	var header [24]byte
+	if _, err = io.ReadFull(r, header[:]); err != nil {
+		return
+	}
+	if header[6] != ' ' || header[23] != ' ' {
+		return 0, nil, fmt.Errorf("invalid bridge header separators")
+	}
+	kind, e := strconv.ParseUint(string(header[:6]), 10, 20)
+	if e != nil {
+		return 0, nil, e
+	}
+	size, e := strconv.ParseUint(string(header[7:23]), 10, 64)
+	if e != nil {
+		return 0, nil, e
+	}
+	// A bound protects readers from an untrusted length triggering an allocation.
+	if size > 1<<30 {
+		return 0, nil, fmt.Errorf("bridge payload exceeds 1 GiB")
+	}
+	payload = make([]byte, int(size))
+	_, err = io.ReadFull(r, payload)
+	return int32(kind), payload, err
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManFromBridgeHolds(pFile *os.File, iPoProved int32) {
-    fmt.Fprintf(pFile, "%.6d", 101 /*message type = Result*/);
-    fmt.Fprintf(pFile, " ");
-    fmt.Fprintf(pFile, "%.16d", 3 + aigerNumSize(iPoProved) /*size in bytes*/);
-    fmt.Fprintf(pFile, " ");
-
-    fputc( byte(BRIDGE_VALUE_1), pFile ); // true
-    fputc( byte(1), pFile ); // size of vector (Armin's encoding)
-    Gia_AigerWriteUnsignedFile( pFile, iPoProved ); // number of the property (Armin's encoding)
-    fputc( byte(0), pFile ); // no invariant
-    fflush(pFile);
+func Gia_CreateHeader(w io.Writer, typ, size int32, data []byte) error {
+	if size < 0 || int(size) > len(data) {
+		return fmt.Errorf("bridge size exceeds buffer")
+	}
+	return WriteBridgePackage(w, typ, data[:size])
 }
-func Gia_ManFromBridgeUnknown(pFile *os.File, iPoUnknown int32) {
-    fmt.Fprintf(pFile, "%.6d", 101 /*message type = Result*/);
-    fmt.Fprintf(pFile, " ");
-    fmt.Fprintf(pFile, "%.16d", 2 + aigerNumSize(iPoUnknown) /*size in bytes*/);
-    fmt.Fprintf(pFile, " ");
-
-    fputc( byte(BRIDGE_VALUE_X), pFile ); // undef
-    fputc( byte(1), pFile ); // size of vector (Armin's encoding)
-    Gia_AigerWriteUnsignedFile( pFile, iPoUnknown ); // number of the property (Armin's encoding)
-    fflush(pFile);
+func bridgeSend(w io.Writer, typ, size int32, data []byte) int32 {
+	if Gia_CreateHeader(w, typ, size, data) != nil {
+		return 0
+	}
+	return 1
 }
-func Gia_ManFromBridgeCex(pFile *os.File, pCex *Abc_Cex_t) {
-    var i, f, iBit int32;//, RetValue;
-    var vStr *Vec_Str_t  = Vec_StrAlloc( 1000 );
-    Vec_StrPush( vStr, byte(BRIDGE_VALUE_0) ); // false
-    Vec_StrPush( vStr, byte(1) ); // size of vector (Armin's encoding)
-    Gia_AigerWriteUnsigned( vStr, pCex.iPo ); // number of the property (Armin's encoding)
-    Vec_StrPush( vStr, byte(1) ); // size of vector (Armin's encoding)
-    Gia_AigerWriteUnsigned( vStr, pCex.iFrame ); // depth
-
-    Gia_AigerWriteUnsigned( vStr, 1 ); // concrete
-    Gia_AigerWriteUnsigned( vStr, pCex.iFrame + 1 ); // number of frames (1 more than depth)
-    iBit = pCex.nRegs;
-    for  f = 0; f <= pCex.iFrame; f++  {
-        Gia_AigerWriteUnsigned( vStr, pCex.nPis ); // num of inputs
-        for  i = 0; i < pCex.nPis; i, iBit = i+1, iBit+1  {
-            Vec_StrPush( vStr, byte((Abc_InfoHasBit(pCex.pData, iBit) ? BRIDGE_VALUE_1:BRIDGE_VALUE_0)) );
-        } // value
-    }
-    assert(iBit == pCex.nBits, "iBit == pCex.nBits");
-    Vec_StrPush( vStr, byte(1) ); // the number of frames (for a concrete counter-example)
-    Gia_AigerWriteUnsigned( vStr, pCex.nRegs ); // num of flops
-    for  i = 0; i < pCex.nRegs; i++  {
-        Vec_StrPush( vStr, byte(BRIDGE_VALUE_0) );
-    } // always zero!!!
-//    RetValue = fwrite( Vec_StrArray(vStr), Vec_StrSize(vStr), 1, pFile );
-    Gia_CreateHeader(pFile, 101/*type=Result*/, Vec_StrSize(vStr), (unsigned char*)Vec_StrArray(vStr));
-
-    Vec_StrFree( vStr );
-    fflush(pFile);
+func Gia_ManToBridgeText(w io.Writer, size int32, data []byte) int32 {
+	return bridgeSend(w, BRIDGE_TEXT_MESSAGE, size, data)
 }
-func Gia_ManToBridgeResult(pFile *os.File, Result int32, pCex *Abc_Cex_t, iPoProved int32) int32 {
-    if Result == 0 { // sat
-        Gia_ManFromBridgeCex( pFile, pCex );
-    } else if Result == 1 { // unsat
-        Gia_ManFromBridgeHolds( pFile, iPoProved );
-    } else if Result == -1 { // undef
-        Gia_ManFromBridgeUnknown( pFile, iPoProved );
-    } else { assert(false, "0"); }
-    return 1;
+func Gia_ManToBridgeAbort(w io.Writer, size int32, data []byte) int32 {
+	return bridgeSend(w, BRIDGE_ABORT, size, data)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Gia_Man_t *  Gia_ManFromBridgeReadBody( int Size, unsigned char * pBuffer, Vec_Int_t ** pvInits )
-{
-    var fHash int32;
-    var vLits, vInits *Vec_Int_t;
-    var p *Gia_Man_t  = nil;
-    unsigned char * pBufferPivot, * pBufferEnd = pBuffer + Size;
-    var i, nInputs, nFlops, nGates, nProps int32;
-    var verFairness, nFairness, nConstraints int32;
-    var iFan0, iFan1 uint32;
-
-    nInputs = Gia_AigerReadUnsigned( &pBuffer );
-    nFlops  = Gia_AigerReadUnsigned( &pBuffer );
-    nGates  = Gia_AigerReadUnsigned( &pBuffer );
-
-    vLits = Vec_IntAlloc( 1000 );
-    Vec_IntPush( vLits, -999 );
-    Vec_IntPush( vLits,  1 );
-
-    // start the AIG package
-    p = Gia_ManStart( nInputs + nFlops * 2 + nGates + 1 + 1 ); // PI+FO+FI+AND+PO+1
-    p.pName = Abc_UtilStrsav( "temp" );
-
-    // create PIs
-    for  i = 0; i < nInputs; i++  {
-        Vec_IntPush( vLits, Gia_ManAppendCi( p ) );
-    }
-
-    // create flop outputs
-    for  i = 0; i < nFlops; i++  {
-        Vec_IntPush( vLits, Gia_ManAppendCi( p ) );
-    }
-
-    // create nodes
-    if fHash != 0 {
-        Gia_ManHashAlloc( p ); }
-    for  i = 0; i < nGates; i++  {
-        iFan0 = Gia_AigerReadUnsigned( &pBuffer );
-        iFan1 = Gia_AigerReadUnsigned( &pBuffer );
-        assert(!(iFan0 & 1), "!(iFan0 & 1)");
-        iFan0 >>= 1;
-        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 >> 1), iFan0 & 1 );
-        iFan1 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan1 >> 1), iFan1 & 1 );
-        if fHash != 0 {
-            Vec_IntPush( vLits, Gia_ManHashAnd(p, iFan0, iFan1) );
-        } else {
-            Vec_IntPush( vLits, Gia_ManAppendAnd(p, iFan0, iFan1) ); }
-
-    }
-    if fHash != 0 {
-        Gia_ManHashStop( p ); }
-
-    // remember where flops begin
-    pBufferPivot = pBuffer;
-    // scroll through flops
-    for  i = 0; i < nFlops; i++  {
-        Gia_AigerReadUnsigned( &pBuffer );
-    }
-
-    // create POs
-    nProps = Gia_AigerReadUnsigned( &pBuffer );
-//    assert( nProps == 1 );
-    for  i = 0; i < nProps; i++  {
-        iFan0 = Gia_AigerReadUnsigned( &pBuffer );
-        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 >> 1), iFan0 & 1 );
-        // complement property output!!!
-        Gia_ManAppendCo( p, Abc_LitNot(iFan0) );
-    }
-
-    verFairness = Gia_AigerReadUnsigned( &pBuffer );
-    assert(verFairness == 1, "verFairness == 1");
-
-    nFairness = Gia_AigerReadUnsigned( &pBuffer );
-    assert(nFairness == 0, "nFairness == 0");
-
-    nConstraints = Gia_AigerReadUnsigned( &pBuffer );
-    assert(nConstraints == 0, "nConstraints == 0");
-
-    // make sure the end of buffer is reached
-    assert(pBufferEnd == pBuffer, "pBufferEnd == pBuffer");
-
-    // resetting to flops
-    pBuffer = pBufferPivot;
-    vInits = Vec_IntAlloc( nFlops );
-    for  i = 0; i < nFlops; i++  {
-        iFan0 = Gia_AigerReadUnsigned( &pBuffer );
-        assert((iFan0 & 3) == BRIDGE_VALUE_0, "(iFan0 & 3) == BRIDGE_VALUE_0");
-        Vec_IntPush( vInits, iFan0 & 3 ); // 0 = X value; 1 = not used; 2 = false; 3 = true
-        iFan0 >>= 2;
-        iFan0 = Abc_LitNotCond( Vec_IntEntry(vLits, iFan0 >> 1), iFan0 & 1 );
-        Gia_ManAppendCo( p, iFan0 );
-    }
-    Gia_ManSetRegNum( p, nFlops );
-    Vec_IntFree( vLits );
-
-    // remove wholes in the node list
-    if fHash != 0 {
-        var pTemp *Gia_Man_t;
-        p = Gia_ManCleanup( pTemp = p );
-        Gia_ManStop( pTemp );
-    }
-
-    // return
-    if pvInits {
-        *pvInits = vInits;
-    } else {
-        Vec_IntFree( vInits ); }
-    return p;
+func Gia_ManToBridgeProgress(w io.Writer, size int32, data []byte) int32 {
+	return bridgeSend(w, BRIDGE_PROGRESS, size, data)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Gia_ManFromBridgeReadPackage( FILE * pFile, int * pType, int * pSize, unsigned char ** ppBuffer )
-{
-    var Temp [24]byte;
-    var RetValue int32;
-    RetValue = fread( Temp, 24, 1, pFile );
-    if RetValue != 1 {
-        fmt.Printf("Gia_ManFromBridgeReadPackage();  Error 1: Something is wrong!\n");
-        return 0;
-    }
-    Temp[6] = 0;
-    Temp[23]= 0;
-
-    *pType = strconv.Atoi(Temp);
-    *pSize = strconv.Atoi(Temp + 7);
-
-    *ppBuffer = ABC_ALLOC( unsigned char, *pSize );
-    RetValue = fread( *ppBuffer, *pSize, 1, pFile );
-    if RetValue != 1 && *pSize != 0 {
-        ABC_FREE( *ppBuffer );
-        fmt.Printf("Gia_ManFromBridgeReadPackage();  Error 2: Something is wrong!\n");
-        return 0;
-    }
-    return 1;
+func Gia_ManToBridgeAbsNetlist(w io.Writer, p *BridgeNetlist, typ int32) int32 {
+	data := Gia_ManToBridgeVec(p)
+	return bridgeSend(w, typ, int32(len(data)), data)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManFromBridge(pFile *os.File, pvInit **Vec_Int_t) *Gia_Man_t {
-    unsigned char * pBuffer;
-    var Type, Size, RetValue int32;
-    var p *Gia_Man_t  = nil;
-
-    RetValue = Gia_ManFromBridgeReadPackage( pFile, &Type, &Size, &pBuffer );
-    ABC_FREE( pBuffer );
-    if !(RetValue != 0) {
-        return nil; }
-
-    RetValue = Gia_ManFromBridgeReadPackage( pFile, &Type, &Size, &pBuffer );
-    if !(RetValue != 0) {
-        return nil; }
-
-    p = Gia_ManFromBridgeReadBody( Size, pBuffer, pvInit );
-    ABC_FREE( pBuffer );
-    if p == nil {
-        return nil; }
-
-    RetValue = Gia_ManFromBridgeReadPackage( pFile, &Type, &Size, &pBuffer );
-    ABC_FREE( pBuffer );
-    if !(RetValue != 0) {
-        return nil; }
-
-    return p;
+func Gia_ManToBridgeBadAbs(w io.Writer) int32 { return bridgeSend(w, BRIDGE_BAD_ABS, 0, nil) }
+func Gia_ManFromBridgeHolds(w io.Writer, po int32) error {
+	data := []byte{BRIDGE_VALUE_1, 1}
+	data = bridgeAppendUnsigned(data, uint32(po))
+	data = append(data, 0)
+	return WriteBridgePackage(w, BRIDGE_RESULTS, data)
 }
-
-/*
-    {
-        extern void Gia_ManFromBridgeTest( char * pFileName );
-        Gia_ManFromBridgeTest( "C:\\_projects\\abc\\_TEST\\bug\\65\\par.dump" );
-    }
-*/
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManToBridgeAbsNetlistTest(pFileName string, p *Gia_Man_t, msg_type int32) {
-    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Printf("Cannot open output file \"%s\".\n", pFileName);
-        return;
-    }
-    Gia_ManToBridgeAbsNetlist( pFile, p, msg_type );
-    _ = (pFile).Close();
+func Gia_ManFromBridgeUnknown(w io.Writer, po int32) error {
+	data := bridgeAppendUnsigned([]byte{BRIDGE_VALUE_X, 1}, uint32(po))
+	return WriteBridgePackage(w, BRIDGE_RESULTS, data)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManFromBridgeTest(pFileName string) {
-    var p *Gia_Man_t;
-    var pFile *os.File  = os.Open(pFileName);
-    if pFile == nil {
-        fmt.Printf("Cannot open input file \"%s\".\n", pFileName);
-        return;
-    }
-
-    p = Gia_ManFromBridge( pFile, nil );
-    _ = (pFile).Close();
-
-    Gia_ManPrintStats( p, nil );
-    Gia_AigerWrite( p, "temp.aig", 0, 0, 0 );
-
-    Gia_ManToBridgeAbsNetlistTest( "par_.dump", p, BRIDGE_ABS_NETLIST );
-    Gia_ManStop( p );
+func Gia_ManFromBridgeCex(w io.Writer, p *Abc_Cex_t) error {
+	if p == nil || p.IFrame < 0 || p.IPo < 0 {
+		return fmt.Errorf("missing counterexample")
+	}
+	data := bridgeAppendUnsigned([]byte{BRIDGE_VALUE_0, 1}, uint32(p.IPo))
+	data = append(data, 1)
+	data = bridgeAppendUnsigned(data, uint32(p.IFrame))
+	data = bridgeAppendUnsigned(data, 1)
+	data = bridgeAppendUnsigned(data, uint32(p.IFrame+1))
+	index := p.NRegs
+	for f := int32(0); f <= p.IFrame; f++ {
+		data = bridgeAppendUnsigned(data, uint32(p.NPis))
+		for i := int32(0); i < p.NPis; i++ {
+			value := byte(BRIDGE_VALUE_0)
+			if Abc_InfoHasBit(p.PData, index) {
+				value = BRIDGE_VALUE_1
+			}
+			data = append(data, value)
+			index++
+		}
+	}
+	assert(index == p.NBits, "bridge CEX bit count")
+	data = append(data, 1)
+	data = bridgeAppendUnsigned(data, uint32(p.NRegs))
+	for i := int32(0); i < p.NRegs; i++ {
+		data = append(data, BRIDGE_VALUE_0)
+	}
+	return WriteBridgePackage(w, BRIDGE_RESULTS, data)
 }
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
+func Gia_ManToBridgeResult(w io.Writer, result int32, cex *Abc_Cex_t, po int32) int32 {
+	var err error
+	switch result {
+	case 0:
+		err = Gia_ManFromBridgeCex(w, cex)
+	case 1:
+		err = Gia_ManFromBridgeHolds(w, po)
+	case -1:
+		err = Gia_ManFromBridgeUnknown(w, po)
+	default:
+		panic("invalid bridge result")
+	}
+	if err != nil {
+		return 0
+	}
+	return 1
+}
+func DecodeBridgeNetlist(data []byte) (p *BridgeNetlist, inits []int32, err error) {
+	reader := bytes.NewReader(data)
+	read := func() (uint32, error) {
+		v, e := binary.ReadUvarint(reader)
+		if e != nil {
+			return 0, e
+		}
+		if v > 0xffffffff {
+			return 0, fmt.Errorf("bridge integer exceeds 32 bits")
+		}
+		return uint32(v), nil
+	}
+	inputs, e := read()
+	if e != nil {
+		return nil, nil, e
+	}
+	regs, e := read()
+	if e != nil {
+		return nil, nil, e
+	}
+	gates, e := read()
+	if e != nil {
+		return nil, nil, e
+	}
+	// Every record needs at least one byte; bound counts before allocation.
+	if uint64(inputs)+uint64(regs)+uint64(gates) > 1<<28 || uint64(gates)*2+uint64(regs) > uint64(reader.Len()) {
+		return nil, nil, fmt.Errorf("invalid bridge graph dimensions")
+	}
+	p = &BridgeNetlist{Inputs: int32(inputs), Registers: int32(regs)}
+	literals := make([]int32, 2, 2+int(inputs+regs+gates))
+	literals[0] = -999
+	literals[1] = 1
+	for i := uint32(0); i < inputs+regs; i++ {
+		literals = append(literals, int32(2*(i+1)))
+	}
+	literal := func(wire uint32) (int32, error) {
+		id := wire >> 1
+		if id == 0 || int(id) >= len(literals) {
+			return 0, fmt.Errorf("bridge literal references unavailable node %d", id)
+		}
+		return literals[id] ^ int32(wire&1), nil
+	}
+	for i := uint32(0); i < gates; i++ {
+		a, e := read()
+		if e != nil {
+			return nil, nil, e
+		}
+		b, e := read()
+		if e != nil {
+			return nil, nil, e
+		}
+		if a&1 != 0 {
+			return nil, nil, fmt.Errorf("unsupported bridge gate kind")
+		}
+		la, e := literal(a >> 1)
+		if e != nil {
+			return nil, nil, e
+		}
+		lb, e := literal(b)
+		if e != nil {
+			return nil, nil, e
+		}
+		p.Ands = append(p.Ands, [2]int32{la, lb})
+		literals = append(literals, int32(2*(inputs+regs+i+1)))
+	}
+	encodedRegs := make([]uint32, regs)
+	for i := range encodedRegs {
+		encodedRegs[i], e = read()
+		if e != nil {
+			return nil, nil, e
+		}
+	}
+	outputs, e := read()
+	if e != nil {
+		return nil, nil, e
+	}
+	if uint64(outputs) > uint64(reader.Len()) {
+		return nil, nil, fmt.Errorf("invalid bridge output count")
+	}
+	for i := uint32(0); i < outputs; i++ {
+		v, e := read()
+		if e != nil {
+			return nil, nil, e
+		}
+		lit, e := literal(v)
+		if e != nil {
+			return nil, nil, e
+		}
+		p.Outputs = append(p.Outputs, lit^1)
+	}
+	// Incoming external packages include fairness metadata; the historic ABC
+	// sender omits it. Accept either and reject unsupported fairness/constraints.
+	if reader.Len() > 0 {
+		version, e := read()
+		if e != nil {
+			return nil, nil, e
+		}
+		fair, e := read()
+		if e != nil {
+			return nil, nil, e
+		}
+		constraints, e := read()
+		if e != nil {
+			return nil, nil, e
+		}
+		if version != 1 || fair != 0 || constraints != 0 || reader.Len() != 0 {
+			return nil, nil, fmt.Errorf("unsupported bridge fairness/constraints")
+		}
+	}
+	for _, v := range encodedRegs {
+		if v&3 != BRIDGE_VALUE_0 {
+			return nil, nil, fmt.Errorf("unsupported nonzero register initialization")
+		}
+		inits = append(inits, int32(v&3))
+		lit, e := literal(v >> 2)
+		if e != nil {
+			return nil, nil, e
+		}
+		p.RegisterInputs = append(p.RegisterInputs, lit)
+	}
+	return p, inits, nil
+}
+func Gia_ManFromBridgeReadBody(size int32, data []byte, inits *[]int32) (*BridgeNetlist, error) {
+	if size < 0 || int(size) > len(data) {
+		return nil, fmt.Errorf("bridge size exceeds buffer")
+	}
+	p, values, err := DecodeBridgeNetlist(data[:size])
+	if inits != nil {
+		*inits = values
+	}
+	return p, err
+}
+func Gia_ManFromBridgeReadPackage(r io.Reader, typ, size *int32, buffer *[]byte) int32 {
+	kind, data, err := ReadBridgePackage(r)
+	if err != nil {
+		return 0
+	}
+	*typ = kind
+	*size = int32(len(data))
+	*buffer = data
+	return 1
+}
+func Gia_ManFromBridge(r io.Reader, inits *[]int32) (*BridgeNetlist, error) {
+	if _, _, err := ReadBridgePackage(r); err != nil {
+		return nil, err
+	}
+	_, data, err := ReadBridgePackage(r)
+	if err != nil {
+		return nil, err
+	}
+	p, values, err := DecodeBridgeNetlist(data)
+	if err != nil {
+		return nil, err
+	}
+	if _, _, err = ReadBridgePackage(r); err != nil {
+		return nil, err
+	}
+	if inits != nil {
+		*inits = values
+	}
+	return p, nil
+}
+func Gia_ManToBridgeAbsNetlistTest(name string, p *BridgeNetlist, typ int32) error {
+	f, err := os.Create(name)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	if Gia_ManToBridgeAbsNetlist(f, p, typ) == 0 {
+		return io.ErrShortWrite
+	}
+	return nil
+}
+func Gia_ManFromBridgeTest(name string) (*BridgeNetlist, error) {
+	f, err := os.Open(name)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return Gia_ManFromBridge(f, nil)
+}

@@ -1,567 +1,267 @@
 package util
 
-import "fmt"
+import (
+	"fmt"
+	"math/bits"
+)
 
-/**CFile****************************************************************
-
-  FileName    [utilCex.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Handling counter-examples.]
-
-  Synopsis    [Handling counter-examples.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - Feburary 13, 2011.]
-
-  Revision    [$Id: utilCex.c,v 1.00 2011/02/11 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <stdio.h>
-//#include <string.h>
-//#include <stdlib.h>
-//#include <assert.h>
-
-//#include "misc/vec/vec.h"
-//#include "utilCex.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates a counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexAlloc(nRegs int32, nRealPis int32, nFrames int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var nWords int32  = Abc_BitWordNum( nRegs + nRealPis * nFrames );
-    // inlining of macro ABC_ALLOC
-    pCex = (Abc_Cex_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords)));
-    memset( pCex, 0, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );
-    pCex.nRegs  = nRegs;
-    pCex.nPis   = nRealPis;
-    pCex.nBits  = nRegs + nRealPis * nFrames;
-    return pCex;
+func Abc_CexAlloc(regs, pis, frames int32) *Abc_Cex_t {
+	if regs < 0 || pis < 0 || frames < 0 {
+		panic("negative counterexample dimensions")
+	}
+	n := regs + pis*frames
+	return &Abc_Cex_t{NRegs: regs, NPis: pis, NBits: n, PData: make([]uint32, Abc_BitWordNum(n))}
 }
-func Abc_CexAllocFull(nRegs int32, nRealPis int32, nFrames int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var nWords int32  = Abc_BitWordNum( nRegs + nRealPis * nFrames );
-    // inlining of macro ABC_ALLOC
-    pCex = (Abc_Cex_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords)));
-    memset( pCex, 0xFF, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );
-    pCex.nRegs  = nRegs;
-    pCex.nPis   = nRealPis;
-    pCex.nBits  = nRegs + nRealPis * nFrames;
-    return pCex;
+func Abc_CexAllocFull(regs, pis, frames int32) *Abc_Cex_t {
+	p := Abc_CexAlloc(regs, pis, frames)
+	p.IPo = -1
+	p.IFrame = -1
+	for i := range p.PData {
+		p.PData[i] = ^uint32(0)
+	}
+	return p
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Make the trivial counter-example for the trivially asserted output.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexMakeTriv(nRegs int32, nTruePis int32, nTruePos int32, iFrameOut int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var iPo, iFrame int32;
-    assert(nRegs > 0, "nRegs > 0");
-    iPo    = iFrameOut % nTruePos;
-    iFrame = iFrameOut / nTruePos;
-    // allocate the counter example
-    pCex = Abc_CexAlloc( nRegs, nTruePis, iFrame + 1 );
-    pCex.iPo    = iPo;
-    pCex.iFrame = iFrame;
-    return pCex;
+func Abc_CexMakeTriv(regs, pis, pos, frameOut int32) *Abc_Cex_t {
+	assert(regs > 0 && pos > 0, "trivial CEX dimensions")
+	p := Abc_CexAlloc(regs, pis, frameOut/pos+1)
+	p.IPo = frameOut % pos
+	p.IFrame = frameOut / pos
+	return p
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexCreate(nRegs int32, nPis int32, pArray *int32, iFrame int32, iPo int32, fSkipRegs int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var i int32;
-    pCex = Abc_CexAlloc( nRegs, nPis, iFrame+1 );
-    pCex.iPo    = iPo;
-    pCex.iFrame = iFrame;
-    if pArray == nil {
-        return pCex; }
-    if fSkipRegs != 0 {
-        for  i = nRegs; i < pCex.nBits; i++  {
-            if pArray[i-nRegs] {
-                Abc_InfoSetBit( pCex.pData, i ); }
-        }
-    
-    } else {
-        for  i = 0; i < pCex.nBits; i++  {
-            if pArray[i] {
-                Abc_InfoSetBit( pCex.pData, i ); }
-        }
-    }
-    return pCex;
+func Abc_CexCreate(regs, pis int32, array []int32, frame, po, skipRegs int32) *Abc_Cex_t {
+	p := Abc_CexAlloc(regs, pis, frame+1)
+	p.IPo = po
+	p.IFrame = frame
+	if array == nil {
+		return p
+	}
+	start := int32(0)
+	if skipRegs != 0 {
+		start = regs
+	}
+	for i := start; i < p.NBits; i++ {
+		if array[i-start] != 0 {
+			Abc_InfoSetBit(p.PData, i)
+		}
+	}
+	return p
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Make the trivial counter-example for the trivially asserted output.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexDup(p *Abc_Cex_t, nRegsNew int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var i int32;
-    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {
-        return p; }
-    if nRegsNew == -1 {
-        nRegsNew = p.nRegs; }
-    pCex = Abc_CexAlloc( nRegsNew, p.nPis, p.iFrame+1 );
-    pCex.iPo    = p.iPo;
-    pCex.iFrame = p.iFrame;
-    for  i = p.nRegs; i < p.nBits; i++  {
-        if Abc_InfoHasBit(p.pData, i) {
-            Abc_InfoSetBit( pCex.pData, pCex.nRegs + i - p.nRegs ); }
-    }
-    return pCex;
+func Abc_CexDup(p *Abc_Cex_t, newRegs int32) *Abc_Cex_t {
+	if p == AbcCexSentinel {
+		return p
+	}
+	if newRegs == -1 {
+		newRegs = p.NRegs
+	}
+	q := Abc_CexAlloc(newRegs, p.NPis, p.IFrame+1)
+	q.IPo = p.IPo
+	q.IFrame = p.IFrame
+	for i := p.NRegs; i < p.NBits; i++ {
+		if Abc_InfoHasBit(p.PData, i) {
+			Abc_InfoSetBit(q.PData, q.NRegs+i-p.NRegs)
+		}
+	}
+	return q
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives CEX from comb model.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexDeriveFromCombModel(pModel *int32, nPis int32, nRegs int32, iPo int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var i int32;
-    pCex = Abc_CexAlloc( nRegs, nPis, 1 );
-    pCex.iPo = iPo;
-    pCex.iFrame = 0;
-    for  i = 0; i < nPis; i++  {
-        if pModel[i] {
-            pCex.pData[i>>5] |= (1<<(i & 31)); }
-    }     
-    return pCex;
+func Abc_CexDeriveFromCombModel(model []int32, pis, regs, po int32) *Abc_Cex_t {
+	p := Abc_CexAlloc(regs, pis, 1)
+	p.IPo = po
+	for i := int32(0); i < pis; i++ {
+		if model[i] != 0 {
+			Abc_InfoSetBit(p.PData, i)
+		}
+	}
+	return p
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives CEX from comb model.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexMerge(pCex *Abc_Cex_t, pPart *Abc_Cex_t, iFrBeg int32, iFrEnd int32) *Abc_Cex_t {
-    var pNew *Abc_Cex_t;
-    var nFramesGain int32;
-    var i, f, iBit int32;
-
-    if iFrBeg < 0 { fmt.Printf("Starting frame is less than 0.\n"); return nil; }
-    if iFrEnd < 0 { fmt.Printf("Stopping frame is less than 0.\n"); return nil; }
-    if iFrBeg > pCex.iFrame { fmt.Printf("Starting frame is more than the last frame of CEX (%d).\n", pCex.iFrame); return nil; }
-    if iFrEnd > pCex.iFrame { fmt.Printf("Stopping frame is more than the last frame of CEX (%d).\n", pCex.iFrame); return nil; }
-    if iFrBeg > iFrEnd { fmt.Printf("Starting frame (%d) should be less than stopping frame (%d).\n", iFrBeg, iFrEnd); return nil; }
-    assert(iFrBeg >= 0 && iFrBeg <= pCex.iFrame, "iFrBeg >= 0 && iFrBeg <= pCex.iFrame");
-    assert(iFrEnd >= 0 && iFrEnd <= pCex.iFrame, "iFrEnd >= 0 && iFrEnd <= pCex.iFrame");
-    assert(iFrBeg <= iFrEnd, "iFrBeg <= iFrEnd");
-
-    assert(pCex.nPis == pPart.nPis, "pCex.nPis == pPart.nPis");
-    assert(iFrEnd - iFrBeg + pPart.iPo >= pPart.iFrame, "iFrEnd - iFrBeg + pPart.iPo >= pPart.iFrame");
-
-    nFramesGain = iFrEnd - iFrBeg + pPart.iPo - pPart.iFrame;
-    pNew = Abc_CexAlloc( pCex.nRegs, pCex.nPis, pCex.iFrame + 1 - nFramesGain );
-    pNew.iPo    = pCex.iPo;
-    pNew.iFrame = pCex.iFrame - nFramesGain;
-
-    for  iBit = 0; iBit < pCex.nRegs; iBit++  {
-        if Abc_InfoHasBit(pCex.pData, iBit) {
-            Abc_InfoSetBit( pNew.pData, iBit ); }
-    }
-    for  f = 0; f < iFrBeg; f++  {
-        for  i = 0; i < pCex.nPis; i, iBit = i+1, iBit+1  {
-            if Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i) {
-                Abc_InfoSetBit( pNew.pData, iBit ); }
-        }
-    }
-    for  f = 0; f < pPart.iFrame; f++  {
-        for  i = 0; i < pCex.nPis; i, iBit = i+1, iBit+1  {
-            if Abc_InfoHasBit(pPart.pData, pPart.nRegs + pCex.nPis * f + i) {
-                Abc_InfoSetBit( pNew.pData, iBit ); }
-        }
-    }
-    for  f = iFrEnd; f <= pCex.iFrame; f++  {
-        for  i = 0; i < pCex.nPis; i, iBit = i+1, iBit+1  {
-            if Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i) {
-                Abc_InfoSetBit( pNew.pData, iBit ); }
-        }
-    }
-    assert(iBit == pNew.nBits, "iBit == pNew.nBits");
-
-    return pNew;
+func Abc_CexMerge(p, part *Abc_Cex_t, beg, end int32) *Abc_Cex_t {
+	if beg < 0 || end < 0 || beg > p.IFrame || end > p.IFrame || beg > end {
+		return nil
+	}
+	assert(p.NPis == part.NPis && end-beg+part.IPo >= part.IFrame, "CEX merge dimensions")
+	gain := end - beg + part.IPo - part.IFrame
+	q := Abc_CexAlloc(p.NRegs, p.NPis, p.IFrame+1-gain)
+	q.IPo = p.IPo
+	q.IFrame = p.IFrame - gain
+	dst := int32(0)
+	copyBit := func(src *Abc_Cex_t, index int32) {
+		if Abc_InfoHasBit(src.PData, index) {
+			Abc_InfoSetBit(q.PData, dst)
+		}
+		dst++
+	}
+	for ; dst < p.NRegs; dst++ {
+		if Abc_InfoHasBit(p.PData, dst) {
+			Abc_InfoSetBit(q.PData, dst)
+		}
+	}
+	for f := int32(0); f < beg; f++ {
+		for i := int32(0); i < p.NPis; i++ {
+			copyBit(p, p.NRegs+p.NPis*f+i)
+		}
+	}
+	for f := int32(0); f < part.IFrame; f++ {
+		for i := int32(0); i < p.NPis; i++ {
+			copyBit(part, part.NRegs+p.NPis*f+i)
+		}
+	}
+	for f := end; f <= p.IFrame; f++ {
+		for i := int32(0); i < p.NPis; i++ {
+			copyBit(p, p.NRegs+p.NPis*f+i)
+		}
+	}
+	assert(dst == q.NBits, "merged bit count")
+	return q
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints out the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_CexPrintStats(p *Abc_Cex_t) {
-    var k, Counter int32;
-    if p == nil {
-        fmt.Printf("The counter example is NULL.\n");
-        return;
-    }
-    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {
-        fmt.Printf("The counter example is present but not available (pointer has value \"1\").\n");
-        return;
-    }
-    for  k = 0; k < p.nBits; k++  {
-        Counter += Abc_InfoHasBit(p.pData, k);
-    }
-    fmt.Printf("CEX: Po =%4d  Frame =%4d  FF = %d  PI = %d  Bit =%8d  1s =%8d (%5.2f %%)\n", p.iPo, p.iFrame, p.nRegs, p.nPis, p.nBits, Counter, 100.0 * Counter / (p.nBits - p.nRegs));
+	if p == nil {
+		fmt.Println("Counter-example is not given.")
+		return
+	}
+	fmt.Printf("CEX: PO = %d. Frame = %d. FFs = %d. PIs = %d. Bits = %d. Ones = %d.\n", p.IPo, p.IFrame, p.NRegs, p.NPis, p.NBits, Abc_CexCountOnes(p))
 }
-func Abc_CexPrintStatsInputs(p *Abc_Cex_t, nRealPis int32) {
-    var k, Counter, CounterPi, CounterPpi int32;
-    if p == nil {
-        fmt.Printf("The counter example is NULL.\n");
-        return;
-    }
-    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {
-        fmt.Printf("The counter example is present but not available (pointer has value \"1\").\n");
-        return;
-    }
-    assert(nRealPis <= p.nPis, "nRealPis <= p.nPis");
-    for  k = 0; k < p.nBits; k++  {
-        Counter += Abc_InfoHasBit(p.pData, k);
-        if nRealPis == p.nPis {
-            continue; }
-        if (k - p.nRegs) % p.nPis < nRealPis {
-            CounterPi += Abc_InfoHasBit(p.pData, k);
-        } else {
-            CounterPpi += Abc_InfoHasBit(p.pData, k); }
-    }
-    fmt.Printf("CEX: Po =%4d  Fr =%4d  FF = %d  PI = %d  Bit =%7d  1 =%8d (%5.2f %%)", p.iPo, p.iFrame, p.nRegs, p.nPis, p.nBits, Counter, 100.0 * Counter    / ((p.iFrame + 1) * p.nPis ));
-    if nRealPis < p.nPis {
-        fmt.Printf(" 1pi =%8d (%5.2f %%) 1ppi =%8d (%5.2f %%)", CounterPi, 100.0 * CounterPi  / ((p.iFrame + 1) * nRealPis ), CounterPpi, 100.0 * CounterPpi / ((p.iFrame + 1) * (p.nPis - nRealPis)));
-    }
-    fmt.Printf("\n");
+func Abc_CexPrintStatsInputs(p *Abc_Cex_t, realPis int32) {
+	if p == nil {
+		return
+	}
+	assert(realPis >= 0 && realPis <= p.NPis, "real input count")
+	var count int32
+	for f := int32(0); f <= p.IFrame; f++ {
+		for i := int32(0); i < realPis; i++ {
+			if Abc_InfoHasBit(p.PData, p.NRegs+f*p.NPis+i) {
+				count++
+			}
+		}
+	}
+	fmt.Printf("CEX real input ones = %d.\n", count)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints out the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_CexPrint(p *Abc_Cex_t) {
-    var i, f, k int32;
-    if p == nil {
-        fmt.Printf("The counter example is NULL.\n");
-        return;
-    }
-    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {
-        fmt.Printf("The counter example is present but not available (pointer has value \"1\").\n");
-        return;
-    }
-    Abc_CexPrintStats( p );
-    fmt.Printf("State    : ");
-    for  k = 0; k < p.nRegs; k++  {
-        fmt.Printf("%d", Abc_InfoHasBit(p.pData, k));
-    }
-    fmt.Printf("\n");
-    for  f = 0; f <= p.iFrame; f++  {
-        fmt.Printf("Frame %3d : ", f);
-        for  i = 0; i < p.nPis; i++  {
-            fmt.Printf("%d", Abc_InfoHasBit(p.pData, k++));
-        }
-        fmt.Printf("\n");
-    }
-    assert(k == p.nBits, "k == p.nBits");
+	if p == nil {
+		return
+	}
+	fmt.Print("Init : ")
+	for i := int32(0); i < p.NRegs; i++ {
+		if Abc_InfoHasBit(p.PData, i) {
+			fmt.Print(1)
+		} else {
+			fmt.Print(0)
+		}
+	}
+	fmt.Println()
+	for f := int32(0); f <= p.IFrame; f++ {
+		fmt.Printf("Frame %d : ", f)
+		for i := int32(0); i < p.NPis; i++ {
+			if Abc_InfoHasBit(p.PData, p.NRegs+f*p.NPis+i) {
+				fmt.Print(1)
+			} else {
+				fmt.Print(0)
+			}
+		}
+		fmt.Println()
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Frees the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexFreeP(p **Abc_Cex_t) {
-    if *p == nil {
-        return; }
-    if *p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {
-        *p = nil;
-    } else {
-        // inlining of macro ABC_FREE
-        ((*p) ? (free((char *) (*p)), (*p) = 0) : 0); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Frees the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_CexFree(p *Abc_Cex_t) {
-    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {
-        return; }
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+	if p != nil && p != AbcCexSentinel {
+		p.PData = nil
+	}
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Transform CEX after phase abstraction with nFrames frames.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexTransformPhase(p *Abc_Cex_t, nPisOld int32, nPosOld int32, nRegsOld int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var nFrames int32  = p.nPis / nPisOld;
-    var nPosNew int32  = nPosOld * nFrames;
-    assert(p.nPis % nPisOld == 0, "p.nPis % nPisOld == 0");
-    assert(p.iPo < nPosNew, "p.iPo < nPosNew");
-    pCex = Abc_CexDup( p, nRegsOld );
-    pCex.nPis   = nPisOld;
-    pCex.iPo    = -1;
-    pCex.iFrame = (p.iFrame + 1) * nFrames - 1;
-    pCex.nBits  = p.nBits;
-    return pCex;
+func Abc_CexFreeP(p **Abc_Cex_t) {
+	if p != nil {
+		Abc_CexFree(*p)
+		*p = nil
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Transform CEX after phase temporal decomposition with nFrames frames.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexTransformTempor(p *Abc_Cex_t, nPisOld int32, nPosOld int32, nRegsOld int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var i int32;
-    var k int32;
-    var iBit int32 = nRegsOld;
-    var nFrames int32 = p.nPis / nPisOld - 1;
-    assert(p.iFrame > 0, "p.iFrame > 0"); // otherwise tempor did not properly check for failures in the prefix
-    assert(p.nPis % nPisOld == 0, "p.nPis % nPisOld == 0");
-    pCex = Abc_CexAlloc( nRegsOld, nPisOld, nFrames + p.iFrame + 1 );
-    pCex.iPo    = p.iPo;
-    pCex.iFrame = nFrames + p.iFrame;
-    for  i = 0; i < nFrames; i++  {
-        for  k = 0; k < nPisOld; k, iBit = k+1, iBit+1  {
-            if Abc_InfoHasBit(p.pData, p.nRegs + (i+1)*nPisOld + k) {
-                Abc_InfoSetBit( pCex.pData, iBit ); }
-        }
-    }
-    for  i = 0; i <= p.iFrame; i++  {
-        for  k = 0; k < nPisOld; k, iBit = k+1, iBit+1  {
-            if Abc_InfoHasBit(p.pData, p.nRegs + i*p.nPis + k) {
-                Abc_InfoSetBit( pCex.pData, iBit ); }
-        }
-    }
-    assert(iBit == pCex.nBits, "iBit == pCex.nBits");
-    return pCex;
+func Abc_CexTransformPhase(p *Abc_Cex_t, pis, pos, regs int32) *Abc_Cex_t {
+	assert(pis > 0 && p.NPis%pis == 0, "phase input dimensions")
+	frames := p.NPis / pis
+	assert(p.IPo < pos*frames, "phase output index")
+	q := Abc_CexDup(p, regs)
+	q.NPis = pis
+	q.IPo = -1
+	q.IFrame = (p.IFrame+1)*frames - 1
+	q.NBits = p.NBits
+	return q
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Transform CEX after "logic; undc; st; zero".]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexTransformUndc(p *Abc_Cex_t, pInit string) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var nFlops int32  = len(pInit);
-    var i, f, iBit, iAddPi, nAddPis int32;
-    // count how many flops got a new PI
-    for  i = 0; i < nFlops; i++  {
-        nAddPis += int32((pInit[i] == 'x' || pInit[i] == 'X'));
-    }
-    // create new CEX
-    pCex = Abc_CexAlloc( nFlops, p.nPis - nAddPis, p.iFrame + 1 );
-    pCex.iPo    = p.iPo;
-    pCex.iFrame = p.iFrame;
-    for  iBit = 0; iBit < nFlops; iBit++  {
-        if pInit[iBit] == '1' || ((pInit[iBit] == 'x' || pInit[iBit] == 'X') && Abc_InfoHasBit(p.pData, p.nRegs + p.nPis - nAddPis + iAddPi)) {
-            Abc_InfoSetBit( pCex.pData, iBit ); }
-        iAddPi += int32((pInit[iBit] == 'x' || pInit[iBit] == 'X'));
-    }
-    assert(iAddPi == nAddPis, "iAddPi == nAddPis");
-    // add timeframes
-    for  f = 0; f <= p.iFrame; f++  {
-        for  i = 0; i < pCex.nPis; i, iBit = i+1, iBit+1  {
-            if Abc_InfoHasBit(p.pData, p.nRegs + p.nPis * f + i) {
-                Abc_InfoSetBit( pCex.pData, iBit ); }
-        }
-    }
-    assert(iBit == pCex.nBits, "iBit == pCex.nBits");
-    return pCex;
+func Abc_CexTransformTempor(p *Abc_Cex_t, pis, pos, regs int32) *Abc_Cex_t {
+	assert(p.IFrame > 0 && pis > 0 && p.NPis%pis == 0, "temporal dimensions")
+	frames := p.NPis/pis - 1
+	q := Abc_CexAlloc(regs, pis, frames+p.IFrame+1)
+	q.IPo = p.IPo
+	q.IFrame = frames + p.IFrame
+	dst := regs
+	copyFrame := func(index int32) {
+		for k := int32(0); k < pis; k++ {
+			if Abc_InfoHasBit(p.PData, index+k) {
+				Abc_InfoSetBit(q.PData, dst)
+			}
+			dst++
+		}
+	}
+	for i := int32(0); i < frames; i++ {
+		copyFrame(p.NRegs + (i+1)*pis)
+	}
+	for i := int32(0); i <= p.IFrame; i++ {
+		copyFrame(p.NRegs + i*p.NPis)
+	}
+	assert(dst == q.NBits, "temporal bit count")
+	return q
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives permuted CEX using permutation of its inputs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexPermute(p *Abc_Cex_t, vMapOld2New *Vec_Int_t) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var i, iNew int32;
-    assert(Vec_IntSize(vMapOld2New) == p.nPis, "Vec_IntSize(vMapOld2New) == p.nPis");
-    pCex = Abc_CexAlloc( p.nRegs, p.nPis, p.iFrame+1 );
-    pCex.iPo    = p.iPo;
-    pCex.iFrame = p.iFrame;
-    for  i = p.nRegs; i < p.nBits; i++  {
-        if Abc_InfoHasBit(p.pData, i) {
-            iNew = p.nRegs + p.nPis * ((i - p.nRegs) / p.nPis) + Vec_IntEntry( vMapOld2New, (i - p.nRegs) % p.nPis );
-            Abc_InfoSetBit( pCex.pData, iNew );
-        }
-    }
-    return pCex;
+func Abc_CexTransformUndc(p *Abc_Cex_t, init string) *Abc_Cex_t {
+	added := int32(0)
+	for _, c := range init {
+		if c == 'x' || c == 'X' {
+			added++
+		}
+	}
+	regs := int32(len(init))
+	q := Abc_CexAlloc(regs, p.NPis-added, p.IFrame+1)
+	q.IPo = p.IPo
+	q.IFrame = p.IFrame
+	extra := int32(0)
+	for i, c := range []byte(init) {
+		set := c == '1'
+		if c == 'x' || c == 'X' {
+			set = Abc_InfoHasBit(p.PData, p.NRegs+p.NPis-added+extra)
+			extra++
+		}
+		if set {
+			Abc_InfoSetBit(q.PData, int32(i))
+		}
+	}
+	for f := int32(0); f <= p.IFrame; f++ {
+		for i := int32(0); i < q.NPis; i++ {
+			if Abc_InfoHasBit(p.PData, p.NRegs+p.NPis*f+i) {
+				Abc_InfoSetBit(q.PData, q.NRegs+q.NPis*f+i)
+			}
+		}
+	}
+	return q
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives permuted CEX using two canonical permutations.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexPermuteTwo(p *Abc_Cex_t, vPermOld *Vec_Int_t, vPermNew *Vec_Int_t) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var vPerm *Vec_Int_t;
-    var i, eOld, eNew int32;
-    assert(Vec_IntSize(vPermOld) == p.nPis, "Vec_IntSize(vPermOld) == p.nPis");
-    assert(Vec_IntSize(vPermNew) == p.nPis, "Vec_IntSize(vPermNew) == p.nPis");
-    vPerm = Vec_IntStartFull( p.nPis );
-    // inlining of macro Vec_IntForEachEntryTwo
-    for  i = 0; (i < Vec_IntSize(vPermOld)) && (((eOld) = Vec_IntEntry(vPermOld, i)), 1) && (((eNew) = Vec_IntEntry(vPermNew, i)), 1); i++  {
-        Vec_IntWriteEntry( vPerm, eOld, eNew );
-    }
-    pCex = Abc_CexPermute( p, vPerm );
-    Vec_IntFree( vPerm );
-    return pCex;
+func Abc_CexPermute(p *Abc_Cex_t, mapping []int32) *Abc_Cex_t {
+	assert(int32(len(mapping)) == p.NPis, "permutation size")
+	q := Abc_CexAlloc(p.NRegs, p.NPis, p.IFrame+1)
+	q.IPo = p.IPo
+	q.IFrame = p.IFrame
+	for i := p.NRegs; i < p.NBits; i++ {
+		if Abc_InfoHasBit(p.PData, i) {
+			j := p.NRegs + p.NPis*((i-p.NRegs)/p.NPis) + mapping[(i-p.NRegs)%p.NPis]
+			Abc_InfoSetBit(q.PData, j)
+		}
+	}
+	return q
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Count the number of 1s in the CEX.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_CexOnes32(i uint32) int32 {
-    i = i - ((i >> 1) & 0x55555555);
-    i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
-    i = ((i + (i >> 4)) & 0x0F0F0F0F);
-    return (i*(0x01010101))>>24;
+func Abc_CexPermuteTwo(p *Abc_Cex_t, old, new []int32) *Abc_Cex_t {
+	assert(len(old) == int(p.NPis) && len(new) == len(old), "permutation size")
+	mapping := make([]int32, p.NPis)
+	for i := range old {
+		mapping[old[i]] = new[i]
+	}
+	return Abc_CexPermute(p, mapping)
 }
+func Abc_CexOnes32(i uint32) int32 { return int32(bits.OnesCount32(i)) }
 func Abc_CexCountOnes(p *Abc_Cex_t) int32 {
-    var nWords int32  = Abc_BitWordNum( p.nBits );
-    var i, Count int32;
-    for  i = 0; i < nWords; i++  {
-        Count += Abc_CexOnes32( p.pData[i] );
-    }
-    return Count;
+	var count int32
+	for _, w := range p.PData[:Abc_BitWordNum(p.NBits)] {
+		count += int32(bits.OnesCount32(w))
+	}
+	return count
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

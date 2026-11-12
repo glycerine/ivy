@@ -1,67 +1,39 @@
 package util
 
-/**CFile****************************************************************
+import (
+	"os"
+	"os/exec"
+	"runtime"
+)
 
-  FileName    [utilSignal.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName []
-
-  Synopsis    []
-
-  Author      [Baruch Sterin]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - February 1, 2011.]
-
-  Revision    [$Id: utilSignal.c,v 1.00 2011/02/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-
-//#include "abc_global.h"
-//#include "utilSignal.h"
-
-#ifdef _MSC_VER
-#define unlink _unlink
-#else
-#include <unistd.h>
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-func Util_SignalSystem(cmd string) int32 {
-    return system(cmd);
+// Util_SignalSystem preserves system()'s shell-command behavior and Unix-style
+// wait status: normal exit codes occupy the upper eight bits.
+func Util_SignalSystem(command string) int32 {
+	shell, args := "sh", []string{"-c", command}
+	if runtime.GOOS == "windows" {
+		shell, args = "cmd", []string{"/C", command}
+	}
+	cmd := exec.Command(shell, args...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err == nil {
+		return 0
+	}
+	if exit, ok := err.(*exec.ExitError); ok {
+		if exit.ExitCode() >= 0 {
+			return int32(exit.ExitCode() << 8)
+		}
+		return 1
+	}
+	return -1
 }
-
-// int tmpFile(const char* prefix, const char* suffix, char** out_name);
-
-
-func Util_SignalTmpFile(prefix string, suffix string, out_name *string) int32 {
-    return tmpFile(prefix, suffix, out_name);
+func Util_SignalTmpFile(prefix, suffix string, outName *string) (*os.File, error) {
+	return tmpFile(prefix, suffix, outName)
 }
-
-func Util_SignalTmpFileRemove(fname string, fLeave int32) {
-    if ! (fLeave != 0) {
-        unlink(fname);
-    }
+func Util_SignalTmpFileRemove(name string, leave int32) {
+	if leave == 0 {
+		_ = os.Remove(name)
+	}
 }
-
-//ABC_NAMESPACE_IMPL_END
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////

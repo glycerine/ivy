@@ -1,351 +1,132 @@
 package util
 
-/**CFile****************************************************************
+// Optional allocation-handle recording from utilMem.c. Go owns object storage;
+// this recorder tracks numeric allocation IDs for diagnostics and drops records
+// when recycled. It does not manufacture addresses or explicitly free Go data.
+import (
+	"sort"
+	"sync"
+)
 
-  FileName    [utilMem.c]
+type Vec_Mem_t struct{ pArray []AbcPointerValue }
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Memory recycling utilities.]
-
-  Synopsis    [Memory recycling utilities.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: utilMem.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <stdio.h>
-//#include <string.h>
-//#include <stdlib.h>
-//#include <assert.h>
-
-//#include "abc_global.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
- 
-
-         
-type Vec_Mem_t struct {
-    nCap              int32;
-    nSize              int32;
-    pArray           *any;
+func Vec_MemAlloc(capacity int32) *Vec_Mem_t {
+	if capacity > 0 && capacity < 8 {
+		capacity = 8
+	}
+	return &Vec_Mem_t{pArray: make([]AbcPointerValue, 0, capacity)}
 }
-
-var s_vAllocs any = nil;
-var s_vFrees any = nil;
-var s_fInterrupt int32;
-
-// Original macro:
-// #define ABC_MEM_ALLOC(type, num)     ((type *) malloc(sizeof(type) * (num)))
-
-// Original macro:
-// #define ABC_MEM_CALLOC(type, num)     ((type *) calloc((num), sizeof(type)))
-
-// Original macro:
-// #define ABC_MEM_FALLOC(type, num)     ((type *) memset(malloc(sizeof(type) * (num)), 0xff, sizeof(type) * (num)))
-
-// Original macro:
-// #define ABC_MEM_FREE(obj)             ((obj) ? (free((char *) (obj)), (obj) = 0) : 0)
-
-// Original macro:
-// #define ABC_MEM_REALLOC(type, obj, num)    \
-//         ((obj) ? ((type *) realloc((char *)(obj), sizeof(type) * (num))) : \
-//          ((type *) malloc(sizeof(type) * (num))))
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates a vector with the given capacity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemAlloc(nCap int32) *Vec_Mem_t {
-    var p *Vec_Mem_t;
-    // inlining of macro ABC_MEM_ALLOC
-    p = ((Vec_Mem_t *) malloc(sizeof(Vec_Mem_t) * (1)));
-    if nCap > 0 && nCap < 8 {
-        nCap = 8; }
-    p.nSize  = 0;
-    p.nCap   = nCap;
-    if p.nCap {
-        // inlining of macro ABC_MEM_ALLOC
-        p.pArray = ((void * *) malloc(sizeof(void *) * (p.nCap)));
-    } else {
-        p.pArray = nil;
-    }
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Frees the vector.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Vec_MemFree(p *Vec_Mem_t) {
-    // inlining of macro ABC_MEM_FREE
-    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);
-    // inlining of macro ABC_MEM_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+	if p != nil {
+		p.pArray = nil
+	}
+}
+func Vec_MemGrow(p *Vec_Mem_t, capacity int32) {
+	if cap(p.pArray) >= int(capacity) {
+		return
+	}
+	a := make([]AbcPointerValue, len(p.pArray), capacity)
+	copy(a, p.pArray)
+	p.pArray = a
+}
+func Vec_MemPush(p *Vec_Mem_t, value AbcPointerValue) {
+	if len(p.pArray) == cap(p.pArray) {
+		capacity := 2 * cap(p.pArray)
+		if capacity < 16 {
+			capacity = 16
+		}
+		Vec_MemGrow(p, int32(capacity))
+	}
+	p.pArray = append(p.pArray, value)
+}
+func Vec_MemSort(p *Vec_Mem_t, compare func(AbcPointerValue, AbcPointerValue) int32) {
+	sort.Slice(p.pArray, func(i, j int) bool { return compare(p.pArray[i], p.pArray[j]) < 0 })
+}
+func Util_ComparePointers(a, b AbcPointerValue) int32 {
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
+}
+func Vec_MemTwoMerge(allocated, freed *Vec_Mem_t) *Vec_Mem_t {
+	result := Vec_MemAlloc(int32(len(allocated.pArray)))
+	i, j := 0, 0
+	for i < len(allocated.pArray) && j < len(freed.pArray) {
+		a, b := allocated.pArray[i], freed.pArray[j]
+		if a == b {
+			i++
+			j++
+		} else if a < b {
+			Vec_MemPush(result, a)
+			i++
+		} else {
+			panic("memory recorder: free without allocation")
+		}
+	}
+	if j != len(freed.pArray) {
+		panic("memory recorder: free without allocation")
+	}
+	for ; i < len(allocated.pArray); i++ {
+		Vec_MemPush(result, allocated.pArray[i])
+	}
+	return result
 }
 
-/**Function*************************************************************
+var memoryRecordMu sync.Mutex
 
-  Synopsis    [Resizes the vector to the given capacity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemGrow(p *Vec_Mem_t, nCapMin int32) {
-    if p.nCap >= nCapMin {
-        return; }
-    // inlining of macro ABC_MEM_REALLOC
-    
-    if p.pArray {
-        p.pArray = ((void * *) realloc((char *)(p.pArray), sizeof(void *) * (nCapMin)));
-    } else {
-        p.pArray = ((void * *) malloc(sizeof(void *) * (nCapMin)));
-    } 
-    p.nCap   = nCapMin;
+func Util_MemRecAlloc(value AbcPointerValue) AbcPointerValue {
+	memoryRecordMu.Lock()
+	defer memoryRecordMu.Unlock()
+	if s_vAllocs != nil {
+		Vec_MemPush(s_vAllocs, value)
+	}
+	return value
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemPush(p *Vec_Mem_t, Entry any) {
-    if p.nSize == p.nCap {
-        if p.nCap < 16 {
-            Vec_MemGrow( p, 16 );
-        } else {
-            Vec_MemGrow( p, 2 * p.nCap ); }
-    }
-    p.pArray[p.nSize++] = Entry;
+func Util_MemRecFree(value AbcPointerValue) AbcPointerValue {
+	memoryRecordMu.Lock()
+	defer memoryRecordMu.Unlock()
+	if s_vFrees != nil {
+		Vec_MemPush(s_vFrees, value)
+	}
+	return value
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Sorting the entries by their integer value.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemSort(p *Vec_Mem_t, Vec_MemSortCompare func() int32) {
-    if p.nSize < 2 {
-        return; }
-    qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(void *), 
-                (int (*)(void *, void *)) Vec_MemSortCompare );
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Remembers an allocated pointer.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Util_MemRecAlloc(pMem any) any {
-    if s_vAllocs {
-        Vec_MemPush( (Vec_Mem_t *)s_vAllocs, pMem ); }
-    return pMem;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Remembers a deallocated pointer.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Util_MemRecFree(pMem any) any {
-    if s_vFrees {
-        Vec_MemPush( (Vec_Mem_t *)s_vFrees, pMem ); }
-    return pMem;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Procedure used for sorting the nodes in decreasing order of levels.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Util_ComparePointers(pp1 *any, pp2 *any) int32 {
-    if *pp1 < *pp2 {
-        return -1; }
-    if *pp1 > *pp2 { 
-        return 1; }
-    return 0; 
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Finds entries that do not appear in both lists.]
-
-  Description [Assumes that the vectors are sorted in the increasing order.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemTwoMerge(vArr1 *Vec_Mem_t, vArr2 *Vec_Mem_t) *Vec_Mem_t {
-    var vArr *Vec_Mem_t  = Vec_MemAlloc( vArr1.nSize + vArr2.nSize ); 
-    var pBeg *any   = vArr.pArray;
-    var pBeg1 *any  = vArr1.pArray;
-    var pBeg2 *any  = vArr2.pArray;
-    var pEnd1 *any  = vArr1.pArray + vArr1.nSize;
-    var pEnd2 *any  = vArr2.pArray + vArr2.nSize;
-    for  pBeg1 < pEnd1 && pBeg2 < pEnd2  {
-        if *pBeg1 == *pBeg2 {
-            pBeg1++, pBeg2++;
-        } else if *pBeg1 < *pBeg2 {
-            free( *pBeg1 );
-            *pBeg++ = *pBeg1++;
-        
-        } else { 
-            assert(false, "0"); }
-//            *pBeg++ = *pBeg2++;
-    }
-    for  pBeg1 < pEnd1  {
-        *pBeg++ = *pBeg1++;
-    }
-//    while ( pBeg2 < pEnd2 )
-//        *pBeg++ = *pBeg2++;
-    assert(pBeg2 >= pEnd2, "pBeg2 >= pEnd2");
-    vArr.nSize = pBeg - vArr.pArray;
-    assert(vArr.nSize <= vArr.nCap, "vArr.nSize <= vArr.nCap");
-    assert(vArr.nSize >= vArr1.nSize, "vArr.nSize >= vArr1.nSize");
-    assert(vArr.nSize >= vArr2.nSize, "vArr.nSize >= vArr2.nSize");
-    return vArr;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Recycles the accumulated memory.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Util_MemRecRecycle() {
-    var vMerge *Vec_Mem_t;
-    assert(s_vAllocs == nil, "s_vAllocs == nil");
-    assert(s_vFrees == nil, "s_vFrees == nil");
-    Vec_MemSort( (Vec_Mem_t *)s_vAllocs, (int (*)())Util_ComparePointers );
-    Vec_MemSort( (Vec_Mem_t *)s_vFrees, (int (*)())Util_ComparePointers );
-    vMerge = (Vec_Mem_t *)Vec_MemTwoMerge( (Vec_Mem_t *)s_vAllocs, (Vec_Mem_t *)s_vFrees );
-    Vec_MemFree( vMerge );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Starts memory structures.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Util_MemRecStart() {
-    assert(s_vAllocs == nil && s_vFrees == nil, "s_vAllocs == nil && s_vFrees == nil");
-    s_vAllocs = Vec_MemAlloc( 1000 );
-    s_vFrees = Vec_MemAlloc( 1000 );
+	memoryRecordMu.Lock()
+	defer memoryRecordMu.Unlock()
+	if s_vAllocs != nil || s_vFrees != nil {
+		panic("memory recorder already started")
+	}
+	s_vAllocs = Vec_MemAlloc(1000)
+	s_vFrees = Vec_MemAlloc(1000)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Quits memory structures.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Util_MemRecRecycle() {
+	memoryRecordMu.Lock()
+	defer memoryRecordMu.Unlock()
+	if s_vAllocs == nil || s_vFrees == nil {
+		panic("memory recorder not started")
+	}
+	Vec_MemSort(s_vAllocs, Util_ComparePointers)
+	Vec_MemSort(s_vFrees, Util_ComparePointers)
+	_ = Vec_MemTwoMerge(s_vAllocs, s_vFrees)
+	s_vAllocs.pArray = s_vAllocs.pArray[:0]
+	s_vFrees.pArray = s_vFrees.pArray[:0]
+}
 func Util_MemRecQuit() {
-    assert(s_vAllocs != nil && s_vFrees != nil, "s_vAllocs != nil && s_vFrees != nil");
-    Vec_MemFree( (Vec_Mem_t *)s_vAllocs );
-    Vec_MemFree( (Vec_Mem_t *)s_vFrees );
+	memoryRecordMu.Lock()
+	defer memoryRecordMu.Unlock()
+	if s_vAllocs == nil || s_vFrees == nil {
+		panic("memory recorder not started")
+	}
+	Vec_MemFree(s_vAllocs)
+	Vec_MemFree(s_vFrees)
+	s_vAllocs = nil
+	s_vFrees = nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Starts memory structures.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Util_MemRecIsSet() int32 {
-    return s_vAllocs != nil && s_vFrees != nil;
+func Util_MemRecIsSet() bool {
+	memoryRecordMu.Lock()
+	defer memoryRecordMu.Unlock()
+	return s_vAllocs != nil && s_vFrees != nil
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

@@ -1,638 +1,228 @@
 package util
 
-import "fmt"
+// String interning from ABC utilNam.c: ID zero is unused; names are retained
+// in a NUL-terminated byte arena and chained hash bins preserve insertion IDs.
+import (
+	"fmt"
+	"os"
+	"reflect"
+	"strings"
+)
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [utilNam.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Manager for character strings.]
-
-  Synopsis    [Manager for character strings.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: utilNam.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-
-//#include <stdio.h>
-//#include <string.h>
-//#include <stdlib.h>
-//#include <assert.h>
-
-//#include "abc_global.h"
-//#include "misc/vec/vec.h"
-//#include "utilNam.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// this package maps non-empty character strings into natural numbers and back
-
-// name manager
-type Abc_Nam_t_ struct {
-    // info storage for names
-    nStore              int32;       // the size of allocated storage
-    iHandle              int32;      // the current free handle
-    pStore            string;       // storage for name objects
-    // internal number mappings
-    vInt2Handle        Vec_Int_t;  // mapping integers into handles
-    vInt2Next        Vec_Int_t;    // mapping integers into nexts
-    // hash table for names
-    pBins             *int32;        // the hash table bins 
-    nBins              int32;        // the number of bins 
-    // manager recycling
-    nRefs              int32;        // reference counter for the manager
-    // internal buffer
-    vBuffer        Vec_Str_t;      
+type Abc_Nam_t struct {
+	store               []byte
+	handles, next, bins []int32
+	refs                int32
+	buffer              []byte
 }
 
-func Abc_NamHandleToStr(p *Abc_Nam_t, h int32) string { return (char *)(p.pStore + h);                         }
-func Abc_NamIntToHandle(p *Abc_Nam_t, i int32) int32 { return Vec_IntEntry(&p.vInt2Handle, i);                }
-func Abc_NamIntToStr(p *Abc_Nam_t, i int32) string { return Abc_NamHandleToStr(p, Abc_NamIntToHandle(p,i));  }
-func Abc_NamIntToNext(p *Abc_Nam_t, i int32) int32 { return Vec_IntEntry(&p.vInt2Next, i);                  }
-func Abc_NamIntToNextP(p *Abc_Nam_t, i int32) *int32 { return Vec_IntEntryP(&p.vInt2Next, i);                 }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamStart(nObjs int32, nAveSize int32) *Abc_Nam_t {
-    var p *Abc_Nam_t;
-    if nObjs == 0 {
-        nObjs = 16; }
-    // inlining of macro ABC_CALLOC
-    p = &Abc_Nam_t{};
-    p.nStore      = ((nObjs * (nAveSize + 1) + 16) / 4) * 4;
-    // inlining of macro ABC_ALLOC
-    p.pStore      = ((char *) malloc(sizeof(char) * (size_t)(p.nStore)));
-    p.nBins       = Abc_PrimeCudd( nObjs );
-    // inlining of macro ABC_CALLOC
-    p.pBins       = ((int *) calloc((size_t)(p.nBins), sizeof(int)));
-    // 0th object is unused
-    Vec_IntGrow( &p.vInt2Handle, nObjs );  Vec_IntPush( &p.vInt2Handle, -1 );
-    Vec_IntGrow( &p.vInt2Next,   nObjs );  Vec_IntPush( &p.vInt2Next,   -1 );
-    p.iHandle     = 4;
-    memset( p.pStore, 0, 4 );
-//Abc_Print( 1, "Starting nam with %d bins.\n", p->nBins );
-    // start reference counting
-    p.nRefs       = 1;
-    return p;
+func Abc_NamStart(n, average int32) *Abc_Nam_t {
+	if n == 0 {
+		n = 16
+	}
+	capacity := ((n*(average+1) + 16) / 4) * 4
+	if capacity < 4 {
+		capacity = 4
+	}
+	return &Abc_Nam_t{store: make([]byte, 4, capacity), handles: []int32{-1}, next: []int32{-1}, bins: make([]int32, Abc_PrimeCudd(uint32(n))), refs: 1}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Deletes manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NamStop(p *Abc_Nam_t) {
-//Abc_Print( 1, "Starting nam with %d bins.\n", p->nBins );
-    Vec_StrErase( &p.vBuffer );
-    Vec_IntErase( &p.vInt2Handle );
-    Vec_IntErase( &p.vInt2Next );
-    // inlining of macro ABC_FREE
-    ((p.pStore) ? (free((char *) (p.pStore)), (p.pStore) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+	if p != nil {
+		*p = Abc_Nam_t{}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamPrint(p *Abc_Nam_t, pFileName string) {
-    var pFile *os.File  = pFileName ? os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666) : os.Stdout;
-    var h, i int32;
-    if pFile == nil { fmt.Printf("Count node open file %s\n", pFileName); return; }
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = 1; (i < Vec_IntSize(&p.vInt2Handle)) && (((h) = Vec_IntEntry(&p.vInt2Handle, i)), 1); i++  {
-        fmt.Fprintf(pFile, "%8d = %s\n", i, Abc_NamHandleToStr(p, h));
-    }
-    if pFile != os.Stdout {
-        _ = (pFile).Close(); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [References the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamRef(p *Abc_Nam_t) *Abc_Nam_t {
-    p.nRefs++;
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Dereferences the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Abc_NamRef(p *Abc_Nam_t) *Abc_Nam_t { p.refs++; return p }
 func Abc_NamDeref(p *Abc_Nam_t) {
-    if p == nil {
-        return; }
-    if --p.nRefs == 0 {
-        Abc_NamStop( p ); }
+	if p == nil {
+		return
+	}
+	p.refs--
+	if p.refs == 0 {
+		Abc_NamStop(p)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of used entries.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamObjNumMax(p *Abc_Nam_t) int32 {
-    return Vec_IntSize(&p.vInt2Handle);
+func Abc_NamHandleToStr(p *Abc_Nam_t, h int32) string {
+	b := p.store[h:]
+	end := 0
+	for end < len(b) && b[end] != 0 {
+		end++
+	}
+	return string(b[:end])
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Reports memory usage of the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Abc_NamIntToHandle(p *Abc_Nam_t, i int32) int32 { return p.handles[i] }
+func Abc_NamIntToStr(p *Abc_Nam_t, i int32) string   { return Abc_NamHandleToStr(p, p.handles[i]) }
+func Abc_NamIntToNext(p *Abc_Nam_t, i int32) int32   { return p.next[i] }
+func Abc_NamIntToNextP(p *Abc_Nam_t, i int32) *int32 { return &p.next[i] }
+func Abc_NamPrint(p *Abc_Nam_t, name string) {
+	f := os.Stdout
+	if name != "" {
+		var err error
+		f, err = os.Create(name)
+		if err != nil {
+			Abc_Print(1, "Could not open file %s\n", name)
+			return
+		}
+		defer f.Close()
+	}
+	for i := 1; i < len(p.handles); i++ {
+		fmt.Fprintf(f, "%8d = %s\n", i, Abc_NamIntToStr(p, int32(i)))
+	}
+}
+func Abc_NamObjNumMax(p *Abc_Nam_t) int32 { return int32(len(p.handles)) }
 func Abc_NamMemUsed(p *Abc_Nam_t) int32 {
-    if p == nil {
-        return 0; }
-    return sizeof(Abc_Nam_t) + p.iHandle + sizeof(int) * p.nBins + 
-        sizeof(int) * (p.vInt2Handle.nSize + p.vInt2Next.nSize);
+	if p == nil {
+		return 0
+	}
+	return int32(reflect.TypeOf(*p).Size()) + int32(len(p.store)+4*(len(p.handles)+len(p.next)+len(p.bins)))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Reports memory usage of the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NamMemAlloc(p *Abc_Nam_t) int32 {
-    if p == nil {
-        return 0; }
-    return sizeof(Abc_Nam_t) + p.nStore + sizeof(int) * p.nBins + 
-        sizeof(int) * (p.vInt2Handle.nCap + p.vInt2Next.nCap);
+	if p == nil {
+		return 0
+	}
+	return int32(reflect.TypeOf(*p).Size()) + int32(cap(p.store)+4*(cap(p.handles)+cap(p.next)+cap(p.bins)))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes hash value of the C-string.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Abc_NamStrHash_s_FPrimes [128]int32 = [128]int32{ 
-        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, 
-        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, 
-        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, 
-        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, 
-        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, 
-        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, 
-        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, 
-        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, 
-        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, 
-        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, 
-        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, 
-        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, 
-        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147,
-    };
-func Abc_NamStrHash(pStr string, pLim string, nTableSize int32) int32 {
-    
-    var i, uHash uint32;
-    if pLim {
-        for  uHash, i = 0, 0; pStr+i < pLim; i++  {
-            if i & 1 { 
-                uHash *= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i & 0x7F];
-            } else {
-                uHash ^= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i & 0x7F]; }
-        }
-    
-    } else {
-        for  uHash, i = 0, 0; pStr[i]; i++  {
-            if i & 1 { 
-                uHash *= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i & 0x7F];
-            } else {
-                uHash ^= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i & 0x7F]; }
-        }
-    }
-    return uHash % nTableSize;
-}
-// https://en.wikipedia.org/wiki/Jenkins_hash_function
-func Abc_NamStrHash2(pStr string, pLim string, nTableSize int32) int32 {
-    var nSize int32;
-    if pLim {
-        nSize = pLim - pStr;
-    } else {
-        nSize = -1;
-    }
-    var i int32; var hash uint32;
-    for  i != nSize && pStr[i]  {
-        hash += pStr[i++];
-        hash += hash << 10;
-        hash ^= hash >> 6;
-    }
-    hash += hash << 3;
-    hash ^= hash >> 11;
-    hash += hash << 15;
-    return int32((hash % nTableSize));
+var nameHashPrimes = [128]uint32{
+	1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459,
+	1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997,
+	2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543,
+	2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089,
+	3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671,
+	3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243,
+	4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871,
+	4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471,
+	5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073,
+	6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689,
+	6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309,
+	7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933,
+	8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147,
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns place where this string is, or should be.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamStrcmp(pStr string, pLim string, pThis string) int32 {
-    if pLim {
-        for  pStr < pLim  {
-            if *pStr++ != *pThis++ {
-                return 1; }
-        }
-        return *pThis != '\0';
-    
-    } else {
-        for  *pStr  {
-            if *pStr++ != *pThis++ {
-                return 1; }
-        }
-        return *pThis != '\0';
-    }
+// A negative limit selects the whole C string; nonnegative limits are byte
+// indices into s, replacing C's pointer-to-end arguments.
+func namLimited(s string, limit int) string {
+	if limit >= 0 {
+		s = s[:limit]
+	}
+	if end := strings.IndexByte(s, 0); end >= 0 {
+		s = s[:end]
+	}
+	return s
 }
-func Abc_NamStrHashFind(p *Abc_Nam_t, pStr string, pLim string) *int32 {
-    var pThis string;
-    var pPlace *int32  = (int *)(p.pBins + Abc_NamStrHash( pStr, pLim, p.nBins ));
-    assert(*pStr, "*pStr");
-    for  pThis = (*pPlace)? Abc_NamIntToStr(p, *pPlace) : nil; 
-          pThis;    pPlace = Abc_NamIntToNextP(p, *pPlace), 
-          pThis = (*pPlace)? Abc_NamIntToStr(p, *pPlace) : nil  {
-              if !Abc_NamStrcmp( (char *)pStr, (char *)pLim, pThis ) {
-                  break; }
-    }
-    return pPlace;
+func Abc_NamStrHash(s string, limit int, size int32) int32 {
+	s = namLimited(s, limit)
+	var h uint32
+	for i := range len(s) {
+		term := uint32(int32(int8(s[i]))) * nameHashPrimes[i&127]
+		if i&1 != 0 {
+			h *= term
+		} else {
+			h ^= term
+		}
+	}
+	return int32(h % uint32(size))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resizes the hash table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Abc_NamStrHash2(s string, limit int, size int32) int32 {
+	s = namLimited(s, limit)
+	var h uint32
+	for i := range len(s) {
+		h += uint32(int32(int8(s[i])))
+		h += h << 10
+		h ^= h >> 6
+	}
+	h += h << 3
+	h ^= h >> 11
+	h += h << 15
+	return int32(h % uint32(size))
+}
+func Abc_NamStrcmp(s string, limit int, other string) int32 {
+	return int32(strings.Compare(namLimited(s, limit), namLimited(other, -1)))
+}
+func Abc_NamStrHashFind(p *Abc_Nam_t, s string, limit int) *int32 {
+	s = namLimited(s, limit)
+	if s == "" {
+		panic("name must be nonempty")
+	}
+	place := &p.bins[Abc_NamStrHash(s, -1, int32(len(p.bins)))]
+	for *place != 0 {
+		if Abc_NamIntToStr(p, *place) == s {
+			break
+		}
+		place = &p.next[*place]
+	}
+	return place
+}
 func Abc_NamStrHashResize(p *Abc_Nam_t) {
-    var vInt2HandleOld Vec_Int_t;  var pThis string; 
-    var piPlace *int32;
-    var pBinsOld *int32;
-    var iHandleOld int32;
-    var i int32;//, clk = Abc_Clock();
-    assert(p.pBins != nil, "p.pBins != nil");
-//    Abc_Print( 1, "Resizing names manager hash table from %6d to %6d. ", p->nBins, Abc_PrimeCudd( 3 * p->nBins ) );
-    // replace the table
-    pBinsOld = p.pBins;
-    p.nBins = Abc_PrimeCudd( 3 * p.nBins ); 
-    // inlining of macro ABC_CALLOC
-    p.pBins = ((int *) calloc((size_t)(p.nBins), sizeof(int)));
-    // replace the handles array
-    vInt2HandleOld = p.vInt2Handle;
-    Vec_IntZero( &p.vInt2Handle );
-    Vec_IntGrow( &p.vInt2Handle, 2 * Vec_IntSize(&vInt2HandleOld) ); 
-    Vec_IntPush( &p.vInt2Handle, -1 );
-    Vec_IntClear( &p.vInt2Next );    Vec_IntPush( &p.vInt2Next, -1 );
-    // rehash the entries from the old table
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = 1; (i < Vec_IntSize(&vInt2HandleOld)) && (((iHandleOld) = Vec_IntEntry(&vInt2HandleOld, i)), 1); i++  {
-        pThis   = Abc_NamHandleToStr( p, iHandleOld );
-        piPlace = Abc_NamStrHashFind( p, pThis, nil );
-        assert(*piPlace == 0, "*piPlace == 0");
-        *piPlace = Vec_IntSize( &p.vInt2Handle );
-        assert(Vec_IntSize( &p.vInt2Handle ) == i, "Vec_IntSize( &p.vInt2Handle ) == i");
-        Vec_IntPush( &p.vInt2Handle, iHandleOld );
-        Vec_IntPush( &p.vInt2Next,   0 );
-    }
-    Vec_IntErase( &vInt2HandleOld );
-    // inlining of macro ABC_FREE
-    ((pBinsOld) ? (free((char *) (pBinsOld)), (pBinsOld) = 0) : 0);
-//    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
+	p.bins = make([]int32, Abc_PrimeCudd(uint32(3*len(p.bins))))
+	clear(p.next)
+	for i := 1; i < len(p.handles); i++ {
+		place := Abc_NamStrHashFind(p, Abc_NamIntToStr(p, int32(i)), -1)
+		*place = int32(i)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the index of the string in the table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamStrFind(p *Abc_Nam_t, pStr string) int32 {
-    return *Abc_NamStrHashFind( p, pStr, nil );
+func Abc_NamStrFind(p *Abc_Nam_t, s string) int32 { return *Abc_NamStrHashFind(p, s, -1) }
+func Abc_NamStrFindLim(p *Abc_Nam_t, s string, limit int) int32 {
+	return *Abc_NamStrHashFind(p, s, limit)
 }
-func Abc_NamStrFindLim(p *Abc_Nam_t, pStr string, pLim string) int32 {
-    return *Abc_NamStrHashFind( p, pStr, pLim );
+func Abc_NamStrFindOrAdd(p *Abc_Nam_t, s string, found *int32) int32 {
+	return Abc_NamStrFindOrAddLim(p, s, -1, found)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Finds or adds the given name to storage.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamStrFindOrAdd(p *Abc_Nam_t, pStr string, pfFound *int32) int32 {
-    var i, iHandleNew int32;
-    var piPlace *int32;
-    if !(pStr[0] != '\\' || pStr[len(pStr)-1] == ' ') {
-        for  i = len(pStr) - 1; i >= 0; i--  {
-            if *pStr == ' ' {
-                break; }
-        }
-        assert(i < int32(len(pStr)), "i < int32(strlen(pStr))");
-    }
-    piPlace = Abc_NamStrHashFind( p, pStr, nil );
-    if *piPlace {
-        if pfFound != nil {
-            *pfFound = 1; }
-        return *piPlace;
-    }
-    if pfFound != nil {
-        *pfFound = 0; }
-    iHandleNew = p.iHandle + len(pStr) + 1;
-    for  p.nStore < iHandleNew  {
-        p.nStore *= 3;
-        p.nStore /= 2;
-        // inlining of macro ABC_REALLOC
-        
-        if p.pStore {
-            p.pStore = ((char *) realloc((char *)(p.pStore), sizeof(char) * (size_t)(p.nStore)));
-        } else {
-            p.pStore = ((char *) malloc(sizeof(char) * (size_t)(p.nStore)));
-        }
-    }
-    assert(p.nStore >= iHandleNew, "p.nStore >= iHandleNew");
-    // create new handle
-    *piPlace = Vec_IntSize( &p.vInt2Handle );
-    strcpy( Abc_NamHandleToStr( p, p.iHandle ), pStr );
-    Vec_IntPush( &p.vInt2Handle, p.iHandle );
-    Vec_IntPush( &p.vInt2Next, 0 );
-    p.iHandle = iHandleNew;
-    // extend the hash table
-    if Vec_IntSize(&p.vInt2Handle) > 2 * p.nBins {
-        Abc_NamStrHashResize( p ); }
-    return Vec_IntSize(&p.vInt2Handle) - 1;
+func Abc_NamStrFindOrAddLim(p *Abc_Nam_t, s string, limit int, found *int32) int32 {
+	s = namLimited(s, limit)
+	place := Abc_NamStrHashFind(p, s, -1)
+	if *place != 0 {
+		if found != nil {
+			*found = 1
+		}
+		return *place
+	}
+	if found != nil {
+		*found = 0
+	}
+	id := int32(len(p.handles))
+	*place = id
+	handle := int32(len(p.store))
+	p.store = append(p.store, []byte(s)...)
+	p.store = append(p.store, 0)
+	p.handles = append(p.handles, handle)
+	p.next = append(p.next, 0)
+	if len(p.handles) > 2*len(p.bins) {
+		Abc_NamStrHashResize(p)
+	}
+	return id
 }
-func Abc_NamStrFindOrAddLim(p *Abc_Nam_t, pStr string, pLim string, pfFound *int32) int32 {
-    var iHandleNew int32;
-    var piPlace *int32;
-    var pStore string;
-    assert(pStr < pLim, "pStr < pLim");
-    piPlace = Abc_NamStrHashFind( p, pStr, pLim );
-    if *piPlace {
-        if pfFound != nil {
-            *pfFound = 1; }
-        return *piPlace;
-    }
-    if pfFound != nil {
-        *pfFound = 0; }
-    iHandleNew = p.iHandle + (pLim - pStr) + 1;
-    for  p.nStore < iHandleNew  {
-        p.nStore *= 3;
-        p.nStore /= 2;
-        // inlining of macro ABC_REALLOC
-        
-        if p.pStore {
-            p.pStore = ((char *) realloc((char *)(p.pStore), sizeof(char) * (size_t)(p.nStore)));
-        } else {
-            p.pStore = ((char *) malloc(sizeof(char) * (size_t)(p.nStore)));
-        }
-    }
-    assert(p.nStore >= iHandleNew, "p.nStore >= iHandleNew");
-    // create new handle
-    *piPlace = Vec_IntSize( &p.vInt2Handle );
-    pStore = Abc_NamHandleToStr( p, p.iHandle );
-    strncpy( pStore, pStr, pLim - pStr );
-    pStore[pLim - pStr] = 0;
-    Vec_IntPush( &p.vInt2Handle, p.iHandle );
-    Vec_IntPush( &p.vInt2Next, 0 );
-    p.iHandle = iHandleNew;
-    // extend the hash table
-    if Vec_IntSize(&p.vInt2Handle) > 2 * p.nBins {
-        Abc_NamStrHashResize( p ); }
-    return Vec_IntSize(&p.vInt2Handle) - 1;
+func Abc_NamStrFindOrAddF(p *Abc_Nam_t, format string, args ...any) int32 {
+	return Abc_NamStrFindOrAdd(p, fmt.Sprintf(format, args...), nil)
 }
-int Abc_NamStrFindOrAddF( Abc_Nam_t * p, char * format, ...  )
-{
-    var nAdded int32;
-    var nSize int32 = 1000; 
-    va_list args;  va_start( args, format );
-    Vec_StrGrow( &p.vBuffer, Vec_StrSize(&p.vBuffer) + nSize );
-    nAdded = vsnprintf( Vec_StrLimit(&p.vBuffer), nSize, format, args );
-    if nAdded > nSize {
-        Vec_StrGrow( &p.vBuffer, Vec_StrSize(&p.vBuffer) + nAdded + nSize );
-        nSize = vsnprintf( Vec_StrLimit(&p.vBuffer), nAdded, format, args );
-        assert(nSize == nAdded, "nSize == nAdded");
-    }
-    va_end( args );
-    return Abc_NamStrFindOrAddLim( p, Vec_StrLimit(&p.vBuffer), Vec_StrLimit(&p.vBuffer) + nAdded, nil );
+func Abc_NamStr(p *Abc_Nam_t, id int32) string {
+	if id <= 0 {
+		return ""
+	}
+	return Abc_NamIntToStr(p, id)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns name from name ID.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamStr(p *Abc_Nam_t, NameId int32) string {
-    if NameId > 0 {
-        return Abc_NamIntToStr(p, NameId);
-    } else {
-        return nil;
-    }
+func Abc_NamBuffer(p *Abc_Nam_t) *[]byte { p.buffer = p.buffer[:0]; return &p.buffer }
+func Abc_NamComputeIdMap(a, b *Abc_Nam_t) []int32 {
+	result := make([]int32, len(a.handles))
+	for i := 1; i < len(result); i++ {
+		result[i] = Abc_NamStrFind(b, Abc_NamIntToStr(a, int32(i)))
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns internal buffer.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamBuffer(p *Abc_Nam_t) *Vec_Str_t {
-    Vec_StrClear(&p.vBuffer);
-    return &p.vBuffer;
+func Abc_NamReportCommon(ids []int32, a, b *Abc_Nam_t) int32 {
+	var count int32
+	for _, id := range ids {
+		if Abc_NamStrFind(b, Abc_NamStr(a, id)) > 0 {
+			count++
+		}
+	}
+	return count
 }
-
-/**Function*************************************************************
-
-  Synopsis    [For each ID of the first manager, gives ID of the second one.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamComputeIdMap(p1 *Abc_Nam_t, p2 *Abc_Nam_t) *Vec_Int_t {
-    var vMap *Vec_Int_t;
-    var pThis string;
-    var piPlace *int32;
-    var iHandle1 int32;
-    var i int32;
-    if p1 == p2 {
-        return Vec_IntStartNatural( Abc_NamObjNumMax(p1) ); }
-    vMap = Vec_IntStart( Abc_NamObjNumMax(p1) );
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = 1; (i < Vec_IntSize(&p1.vInt2Handle)) && (((iHandle1) = Vec_IntEntry(&p1.vInt2Handle, i)), 1); i++  {
-        pThis = Abc_NamHandleToStr( p1, iHandle1 );
-        piPlace = Abc_NamStrHashFind( p2, pThis, nil );
-        Vec_IntWriteEntry( vMap, i, *piPlace );
-//        Abc_Print( 1, "%d->%d  ", i, *piPlace );
-    }
-    return vMap;
+func Abc_NamReportUnique(ids []int32, a, b *Abc_Nam_t) string {
+	for _, id := range ids {
+		s := Abc_NamStr(a, id)
+		if Abc_NamStrFind(b, s) == 0 {
+			return s
+		}
+	}
+	return ""
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of common names in the array.]
-
-  Description [The array contains name IDs in the first manager.
-  The procedure returns the number of entries that correspond to names
-  in the first manager that appear in the second manager.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamReportCommon(vNameIds1 *Vec_Int_t, p1 *Abc_Nam_t, p2 *Abc_Nam_t) int32 {
-    var i, Entry, Counter int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vNameIds1)) && (((Entry) = Vec_IntEntry(vNameIds1, i)), 1); i++  {
-        assert(Entry > 0 && Entry < Abc_NamObjNumMax(p1), "Entry > 0 && Entry < Abc_NamObjNumMax(p1)");
-        Counter += (Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) > 0);
-//        if ( Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) == 0 )
-//            Abc_Print( 1, "unique name <%s>\n", Abc_NamStr(p1, Entry) );
-    }
-    return Counter;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the name that appears in p1 does not appear in p2.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NamReportUnique(vNameIds1 *Vec_Int_t, p1 *Abc_Nam_t, p2 *Abc_Nam_t) string {
-    var i, Entry int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vNameIds1)) && (((Entry) = Vec_IntEntry(vNameIds1, i)), 1); i++  {
-        assert(Entry > 0 && Entry < Abc_NamObjNumMax(p1), "Entry > 0 && Entry < Abc_NamObjNumMax(p1)");
-        if Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) == 0 {
-            return Abc_NamStr(p1, Entry); }
-    }
-    return nil;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
