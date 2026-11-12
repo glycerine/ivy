@@ -20,56 +20,31 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
+import (
+	"os"
+	"strconv"
+	"strings"
+)
 
-
-
-#if defined(__linux__)
-//#include <fpu_control.h>
-#endif
-
-//#include "sat/glucose/IntTypes.h"
-
-//ABC_NAMESPACE_CXX_HEADER_START
-
-//-------------------------------------------------------------------------------------------------
-
-namespace Gluco {
-
-static inline double cpuTime(void); // CPU-time in seconds.
-extern double memUsed();            // Memory in mega bytes (returns 0 for unsupported architectures).
-extern double memUsedPeak();        // Peak-memory in mega bytes (returns 0 for unsupported architectures).
-
+// CPUTime returns process user CPU seconds on Linux, matching the source's
+// getrusage ru_utime. /proc exports USER_HZ ticks (100 on Go-supported Linux
+// architectures). Unsupported hosts return zero instead of wall-clock time.
+func CPUTime() float64 {
+	data, err := os.ReadFile("/proc/self/stat")
+	if err != nil {
+		return 0
+	}
+	end := strings.LastIndexByte(string(data), ')')
+	if end < 0 {
+		return 0
+	}
+	fields := strings.Fields(string(data[end+1:]))
+	if len(fields) <= 11 {
+		return 0
+	}
+	ticks, err := strconv.ParseFloat(fields[11], 64)
+	if err != nil {
+		return 0
+	}
+	return ticks / 100
 }
-
-//ABC_NAMESPACE_CXX_HEADER_END
-
-//-------------------------------------------------------------------------------------------------
-// Implementation of inline functions:
-
-#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__EMSCRIPTEN__)
-#include <time.h>
-
-ABC_NAMESPACE_CXX_HEADER_START
-
-static inline double Gluco::cpuTime(void) { return (double)clock() / CLOCKS_PER_SEC; }
-
-ABC_NAMESPACE_CXX_HEADER_END
-
-
-#else
-#include <sys/time.h>
-#include <sys/resource.h>
-#include <unistd.h>
-
-ABC_NAMESPACE_CXX_HEADER_START
-
-static inline double Gluco::cpuTime(void) {
-    struct rusage ru;
-    getrusage(RUSAGE_SELF, &ru);
-    return (double)ru.ru_utime.tv_sec + (double)ru.ru_utime.tv_usec / 1000000; }
-
-ABC_NAMESPACE_CXX_HEADER_END
-
-#endif
-
-

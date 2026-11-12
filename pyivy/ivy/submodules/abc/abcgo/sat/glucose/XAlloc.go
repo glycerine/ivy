@@ -19,37 +19,24 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
+// OutOfMemoryException represents explicit checked allocator-limit failures.
+// Go's runtime remains responsible for process-wide allocation exhaustion.
+type OutOfMemoryException struct{}
 
-
-
-
-//#include <errno.h>
-//#include <stdlib.h>
-//#include <stdio.h>
-
-//#include <misc/util/abc_namespaces.h>
-
-//ABC_NAMESPACE_CXX_HEADER_START
-
-namespace Gluco {
-
-//=================================================================================================
-// Simple layer on top of malloc/realloc to catch out-of-memory situtaions and provide some typing:
-
-class OutOfMemoryException{};
-static inline void* xrealloc(void *ptr, size_t size)
-{
-    void* mem = realloc(ptr, size);
-    if mem == NULL && errno == ENOMEM{
-        throw OutOfMemoryException();
-    }else {
-        return mem;
-    }
+func (OutOfMemoryException) Error() string { return "glucose: allocation limit exceeded" }
+func XRealloc[T any](p []T, n int) []T {
+	if n < 0 {
+		panic(OutOfMemoryException{})
+	}
+	if n <= cap(p) {
+		old := len(p)
+		p = p[:n]
+		if n > old {
+			clear(p[old:])
+		}
+		return p
+	}
+	next := make([]T, n)
+	copy(next, p)
+	return next
 }
-
-//=================================================================================================
-}
-
-//ABC_NAMESPACE_CXX_HEADER_END
-
-

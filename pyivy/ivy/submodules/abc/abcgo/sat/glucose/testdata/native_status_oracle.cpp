@@ -1,0 +1,4 @@
+#include "sat/glucose/Solver.h"
+#include <stdio.h>
+using namespace Gluco;
+int main(){unsigned state=2381;unsigned long long hash=1469598103934665603ULL;for(int trial=0;trial<500;trial++){Solver s;int n=1+(state=state*1664525+1013904223)%9;for(int i=0;i<n;i++)s.newVar();int count=(state=state*1664525+1013904223)%45;for(int c=0;c<count;c++){vec<Lit> ps;int len=1+(state=state*1664525+1013904223)%5;for(int k=0;k<len;k++){int v=(state=state*1664525+1013904223)%n;bool sign=(state=state*1664525+1013904223)>>31;ps.push(mkLit(v,sign));}s.addClause(ps);}for(int round=0;round<5;round++){vec<Lit> as;int count=(state=state*1664525+1013904223)%4;for(int k=0;k<count;k++){int v=(state=state*1664525+1013904223)%n;bool sign=(state=state*1664525+1013904223)>>31;as.push(mkLit(v,sign));}hash^=s.solve(as)?1:0;hash*=1099511628211ULL;}}printf("%llu\n",hash);}

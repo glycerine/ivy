@@ -11,7 +11,7 @@ package glucose
   Synopsis    [Interface to Glucose.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - September 6, 2017.]
@@ -20,135 +20,22 @@ package glucose
 
 ***********************************************************************/
 
+import "github.com/glycerine/abcgo/aig/aig"
 
+const (
+	GLUCOSE_UNSAT int32 = -1
+	GLUCOSE_SAT   int32 = 1
+	GLUCOSE_UNDEC int32 = 0
+)
 
+type Glucose_Pars struct{ Pre, Verb, Cust, NConfls int32 }
 
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include "aig/gia/gia.h"
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-const GLUCOSE_UNSAT = -1
-const GLUCOSE_SAT =    1
-const GLUCOSE_UNDEC =  0
-
-
-//ABC_NAMESPACE_HEADER_START
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
-
-   
-type Glucose_Pars struct {
-    pre int32;     // preprocessing
-    verb int32;    // verbosity
-    cust int32;    // customizable
-    nConfls int32; // conflict limit (0 = no limit)
+func Glucose_CreatePars(pre, verbosity, custom, conflicts int32) Glucose_Pars {
+	return Glucose_Pars{pre, verbosity, custom, conflicts}
 }
 
-func Glucose_CreatePars(p int32, v int32, c int32, nConfls int32) Glucose_Pars {
-    var pars Glucose_Pars;
-    pars.pre     = p;
-    pars.verb    = v;
-    pars.cust    = c;
-    pars.nConfls = nConfls;
-    return pars;
-}
+type Bmcg_sat_solver = Solver
 
-typedef void bmcg_sat_solver;
-
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-// extern bmcg_sat_solver * bmcg_sat_solver_start();
-
-// extern void              bmcg_sat_solver_stop( bmcg_sat_solver* s );
-
-// extern void              bmcg_sat_solver_reset( bmcg_sat_solver* s );
-
-// extern int               bmcg_sat_solver_addclause( bmcg_sat_solver* s, int * plits, int nlits );
-
-// extern void              bmcg_sat_solver_setcallback( bmcg_sat_solver* s, void * pman, int(*pfunc)(void*, int, int*) );
-
-// extern int               bmcg_sat_solver_solve( bmcg_sat_solver* s, int * plits, int nlits );
-
-// extern int               bmcg_sat_solver_final( bmcg_sat_solver* s, int ** ppArray );
-
-// extern int               bmcg_sat_solver_addvar( bmcg_sat_solver* s );
-
-// extern void              bmcg_sat_solver_set_nvars( bmcg_sat_solver* s, int nvars );
-
-// extern int               bmcg_sat_solver_eliminate( bmcg_sat_solver* s, int turn_off_elim );
-
-// extern int               bmcg_sat_solver_var_is_elim( bmcg_sat_solver* s, int v );
-
-// extern void              bmcg_sat_solver_var_set_frozen( bmcg_sat_solver* s, int v, int freeze );
-
-// extern int               bmcg_sat_solver_elim_varnum(bmcg_sat_solver* s);
-
-// extern int *             bmcg_sat_solver_read_cex( bmcg_sat_solver* s );
-
-// extern int               bmcg_sat_solver_read_cex_varvalue( bmcg_sat_solver* s, int );
-
-// extern void              bmcg_sat_solver_set_stop( bmcg_sat_solver* s, int * pstop );
-
-// extern abctime           bmcg_sat_solver_set_runtime_limit( bmcg_sat_solver* s, abctime Limit );
-
-// extern void              bmcg_sat_solver_set_conflict_budget( bmcg_sat_solver* s, int Limit );
-
-// extern int               bmcg_sat_solver_varnum( bmcg_sat_solver* s );
-
-// extern int               bmcg_sat_solver_clausenum( bmcg_sat_solver* s );
-
-// extern int               bmcg_sat_solver_learntnum( bmcg_sat_solver* s );
-
-// extern int               bmcg_sat_solver_conflictnum( bmcg_sat_solver* s );
-
-// extern int               bmcg_sat_solver_minimize_assumptions( bmcg_sat_solver * s, int * plits, int nlits, int pivot );
-
-// extern int               bmcg_sat_solver_add_and( bmcg_sat_solver * s, int iVar, int iVar0, int iVar1, int fCompl0, int fCompl1, int fCompl );
-
-// extern int               bmcg_sat_solver_add_xor( bmcg_sat_solver * s, int iVarA, int iVarB, int iVarC, int fCompl );
-
-// extern int               bmcg_sat_solver_quantify( bmcg_sat_solver * s[], Gia_Man_t * p, int iLit, int fHash, int(*pFuncCiToKeep)(void *, int), void * pData, Vec_Int_t * vDLits );
-
-// extern int               bmcg_sat_solver_equiv_overlap_check( bmcg_sat_solver * s, Gia_Man_t * p, int iLit0, int iLit1, int fEquiv );
-
-// extern Vec_Str_t *       bmcg_sat_solver_sop( Gia_Man_t * p, int CubeLimit );
-
-// extern int               bmcg_sat_solver_jftr( bmcg_sat_solver * s );
-
-// extern void              bmcg_sat_solver_set_jftr( bmcg_sat_solver * s, int jftr );
-
-// extern void              bmcg_sat_solver_set_var_fanin_lit( bmcg_sat_solver * s, int var, int lit0, int lit1 );
-
-// extern void              bmcg_sat_solver_start_new_round( bmcg_sat_solver * s );
-
-// extern void              bmcg_sat_solver_mark_cone( bmcg_sat_solver * s, int var );
-
-
-
-// extern void              Glucose_SolveCnf( char * pFilename, Glucose_Pars * pPars );
-
-// extern int               Glucose_SolveAig( Gia_Man_t * p, Glucose_Pars * pPars );
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
+// The Go bridge uses the committed graph manager. GIA clients can convert their
+// graph at the boundary; edge phases follow AIG's constant-one convention.
+type Gia_Man_t = aig.Graph

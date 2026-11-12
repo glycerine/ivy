@@ -20,56 +20,57 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-
-
-
-//#include "sat/glucose/Vec.h"
-
-//ABC_NAMESPACE_CXX_HEADER_START
-
-namespace Gluco {
-
-//=================================================================================================
-
-template<class T>
-class Queue {
-    vec<T>  buf;
-    int     first;
-    int     end;
-
-public:
-    typedef T Key;
-
-    Queue() : buf(1), first(0), end(0) {}
-
-    void clear (bool dealloc = false) { buf.clear(dealloc); buf.growTo(1); first = end = 0; }
-    int  size  () { return (end >= first) ? end - first : end - first + buf.size(); }
-
-    T& operator [] (int index) { assert(index >= 0, "index >= 0"); assert(index < size(), "index < size()"); return buf[(first + index) % buf.size()]; }
-    T&       operator [] (int index)        { assert(index >= 0, "index >= 0"); assert(index < size(), "index < size()"); return buf[(first + index) % buf.size()]; }
-
-    T    peek  () { assert(first != end, "first != end"); return buf[first]; }
-    void pop   () { assert(first != end, "first != end"); first++; if (first == buf.size()) first = 0; }
-    void insert(T elem) {   // INVARIANT: buf[end] is always unused
-        buf[end++] = elem;
-        if (end == buf.size()) end = 0;
-        if first == end{  // Resize:
-            vec<T>  tmp((buf.size()*3 + 1) >> 1);
-            //**/printf("queue alloc: %d elems (%.1f MB)\n", tmp.size(), tmp.size() * sizeof(T) / 1000000.0);
-            int j, i = 0;
-            for (j = first; j < buf.size(); j++) tmp[i++] = buf[j];
-            for (j = 0    ; j < end       ; j++) tmp[i++] = buf[j];
-            first = 0;
-            end   = buf.size();
-            tmp.moveTo(buf);
-        }
-    }
-};
-
-
-//=================================================================================================
+// Queue is a growable FIFO. The extra slot distinguishes full from empty.
+type Queue[T any] struct {
+	buf        []T
+	first, end int
 }
 
-//ABC_NAMESPACE_CXX_HEADER_END
-
-
+func (q *Queue[T]) Size() int {
+	if q.end >= q.first {
+		return q.end - q.first
+	}
+	return q.end - q.first + len(q.buf)
+}
+func (q *Queue[T]) At(i int) T {
+	if i < 0 || i >= q.Size() {
+		panic("queue index out of range")
+	}
+	return q.buf[(q.first+i)%len(q.buf)]
+}
+func (q *Queue[T]) Peek() T { return q.At(0) }
+func (q *Queue[T]) Pop() {
+	if q.Size() == 0 {
+		panic("empty queue")
+	}
+	var zero T
+	q.buf[q.first] = zero
+	q.first = (q.first + 1) % len(q.buf)
+}
+func (q *Queue[T]) Insert(x T) {
+	if len(q.buf) == 0 {
+		q.buf = make([]T, 1)
+	}
+	q.buf[q.end] = x
+	q.end = (q.end + 1) % len(q.buf)
+	if q.first == q.end {
+		next := make([]T, (len(q.buf)*3+1)/2)
+		if len(next) <= len(q.buf) {
+			next = make([]T, len(q.buf)+1)
+		}
+		for i := 0; i < len(q.buf); i++ {
+			next[i] = q.buf[(q.first+i)%len(q.buf)]
+		}
+		q.end = len(q.buf)
+		q.first = 0
+		q.buf = next
+	}
+}
+func (q *Queue[T]) Clear(deallocate ...bool) {
+	clear(q.buf)
+	q.first = 0
+	q.end = 0
+	if len(deallocate) > 0 && deallocate[0] {
+		q.buf = nil
+	}
+}

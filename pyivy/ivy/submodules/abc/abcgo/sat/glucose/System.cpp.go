@@ -20,101 +20,40 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-//#include "sat/glucose/System.h"
+import (
+	"os"
+	"strconv"
+	"strings"
+)
 
-#if defined(__linux__)
-
-#include <stdio.h>
-#include <stdlib.h>
-
-ABC_NAMESPACE_IMPL_START
-
-//using namespace Gluco;
-
-
-// TODO: split the memory reading functions into two: one for reading high-watermark of RSS, and
-// one for reading the current virtual memory size.
-
-static inline int memReadStat(int field)
-{
-    char  name[256];
-    pid_t pid = getpid();
-    int   value;
-
-    sprintf(name, "/proc/%d/statm", pid);
-    FILE* in = fopen(name, "rb");
-    if (in == NULL) return 0;
-
-    for (; field >= 0; field--)
-        if (fscanf(in, "%d", &value) != 1)
-            printf("ERROR! Failed to parse memory statistics from \"/proc\".\n"), exit(1);
-    fclose(in);
-    return value;
+// MemUsed follows the original Linux virtual-memory statistic, in MiB.
+func MemUsed() float64 {
+	data, err := os.ReadFile("/proc/self/statm")
+	if err != nil {
+		return 0
+	}
+	fields := strings.Fields(string(data))
+	if len(fields) == 0 {
+		return 0
+	}
+	pages, err := strconv.ParseUint(fields[0], 10, 64)
+	if err != nil {
+		return 0
+	}
+	return float64(pages) * float64(os.Getpagesize()) / (1024 * 1024)
 }
-
-
-static inline int memReadPeak(void)
-{
-    char  name[256];
-    pid_t pid = getpid();
-
-    sprintf(name, "/proc/%d/status", pid);
-    FILE* in = fopen(name, "rb");
-    if (in == NULL) return 0;
-
-    // Find the correct line, beginning with "VmPeak:":
-    int peak_kb = 0;
-    while (!feof(in) && fscanf(in, "VmPeak: %d kB", &peak_kb) != 1)
-        while (!feof(in) && fgetc(in) != '\n')
-            ;
-    fclose(in);
-
-    return peak_kb;
+func MemUsedPeak() float64 {
+	data, err := os.ReadFile("/proc/self/status")
+	if err == nil {
+		for _, line := range strings.Split(string(data), "\n") {
+			fields := strings.Fields(line)
+			if len(fields) >= 2 && fields[0] == "VmPeak:" {
+				kb, err := strconv.ParseUint(fields[1], 10, 64)
+				if err == nil && kb > 0 {
+					return float64(kb) / 1024
+				}
+			}
+		}
+	}
+	return MemUsed()
 }
-
-double Gluco::memUsed() { return (double)memReadStat(0) * (double)getpagesize() / (1024*1024); }
-double Gluco::memUsedPeak() { 
-    double peak = memReadPeak() / 1024;
-    return peak == 0 ? memUsed() : peak; }
-
-ABC_NAMESPACE_IMPL_END
-
-#elif defined(__FreeBSD__)
-
-ABC_NAMESPACE_IMPL_START
-
-//using namespace Gluco;
-
-
-double Gluco::memUsed(void) {
-    struct rusage ru;
-    getrusage(RUSAGE_SELF, &ru);
-    return (double)ru.ru_maxrss / 1024; }
-double memUsedPeak(void) { return memUsed(); }
-
-ABC_NAMESPACE_IMPL_END
-
-#elif defined(__APPLE__)
-
-#include <malloc/malloc.h>
-
-ABC_NAMESPACE_IMPL_START
-
-double Gluco::memUsed(void) {
-    malloc_statistics_t t;
-    malloc_zone_statistics(NULL, &t);
-    return (double)t.max_size_in_use / (1024*1024); }
-
-ABC_NAMESPACE_IMPL_END
-
-#else
-
-ABC_NAMESPACE_IMPL_START
-
-double Gluco::memUsed() { 
-    return 0; }
-
-ABC_NAMESPACE_IMPL_END
-
-#endif
-

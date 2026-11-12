@@ -1,0 +1,127 @@
+package glucose
+
+import (
+	"math/rand"
+	"testing"
+)
+
+func TestSimpSolverRandomCNF(t *testing.T) {
+	rng := rand.New(rand.NewSource(8231))
+	for trial := 0; trial < 1500; trial++ {
+		n := 1 + rng.Intn(9)
+		s := NewSimpSolver()
+		s.UseAsymm = trial%3 == 0
+		s.UseRCheck = trial%5 == 0
+		for i := 0; i < n; i++ {
+			s.NewVar(true, true)
+		}
+		var cnf [][]Lit
+		for count := rng.Intn(45); count > 0; count-- {
+			var row []Lit
+			for k := 1 + rng.Intn(5); k > 0; k-- {
+				row = append(row, MkLit(Var(rng.Intn(n)), rng.Intn(2) != 0))
+			}
+			cnf = append(cnf, row)
+			s.AddClause(row)
+		}
+		var as []Lit
+		for k := rng.Intn(4); k > 0; k-- {
+			as = append(as, MkLit(Var(rng.Intn(n)), rng.Intn(2) != 0))
+		}
+		want := bruteCNF(n, cnf, as)
+		if got := s.Solve(as); got != want {
+			t.Fatalf("trial%d got%v want%v cnf%v assumptions%v", trial, got, want, cnf, as)
+		}
+		if want {
+			for _, c := range cnf {
+				sat := false
+				for _, p := range c {
+					if s.ModelValue(p) == LTrue {
+						sat = true
+						break
+					}
+				}
+				if !sat {
+					t.Fatalf("trial%d bad model clause%v model%v", trial, c, s.Model)
+				}
+			}
+		}
+	}
+}
+func TestSimpSolverSubstitutionAndReuse(t *testing.T) {
+	s := NewSimpSolver()
+	for i := 0; i < 3; i++ {
+		s.NewVar(true, true)
+	}
+	s.SetFrozen(1, true)
+	s.SetFrozen(2, true)
+	s.AddClause([]Lit{0, 2})
+	s.AddClause([]Lit{1, 4})
+	if !s.Substitute(0, 3) {
+		t.Fatal("substitution")
+	}
+	if !s.Solve([]Lit{2, 4}) || s.Model[0] != LFalse {
+		t.Fatal("substitution extension", s.Model)
+	}
+	s.Reset()
+	s.NewVar(true, true)
+	s.SetFrozen(0, true)
+	s.AddClause([]Lit{1})
+	if !s.Solve(nil) || s.Model[0] != LFalse {
+		t.Fatal("reset")
+	}
+}
+
+func TestSimpRCheckMustRetainResolvents(t *testing.T) {
+	s := NewSimpSolver()
+	s.UseRCheck = true
+	for i := 0; i < 4; i++ {
+		s.NewVar(true, true)
+		if i > 0 {
+			s.SetFrozen(Var(i), true)
+		}
+	}
+	s.AddClause([]Lit{0, 2, 4})
+	s.AddClause([]Lit{1, 2, 6})
+	if s.Solve([]Lit{3, 5, 7}) {
+		t.Fatal("resolution must retain (a OR b OR c) when both x parents are removed")
+	}
+}
+
+func TestSimpSolverNativeStatusOracle(t *testing.T) {
+	state := uint32(8231)
+	next := func() uint32 { state = state*1664525 + 1013904223; return state }
+	hash := uint64(1469598103934665603)
+	for trial := 0; trial < 1500; trial++ {
+		s := NewSimpSolver()
+		n := 1 + int(next()%9)
+		for i := 0; i < n; i++ {
+			s.NewVar(true, true)
+		}
+		count := int(next() % 45)
+		for c := 0; c < count; c++ {
+			length := 1 + int(next()%5)
+			var ps []Lit
+			for k := 0; k < length; k++ {
+				v := Var(next() % uint32(n))
+				sign := next()>>31 != 0
+				ps = append(ps, MkLit(v, sign))
+			}
+			s.AddClause(ps)
+		}
+		count = int(next() % 4)
+		var as []Lit
+		for k := 0; k < count; k++ {
+			v := Var(next() % uint32(n))
+			sign := next()>>31 != 0
+			as = append(as, MkLit(v, sign))
+		}
+		if s.Solve(as) {
+			hash ^= 1
+		}
+		hash *= 1099511628211
+	}
+	if hash != 818442487605194937 {
+		t.Fatalf("native preprocessing status oracle %d", hash)
+	}
+}
