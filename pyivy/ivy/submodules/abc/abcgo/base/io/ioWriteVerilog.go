@@ -72,47 +72,7 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Io_WriteVerilog(pNtk *Abc_Ntk_t, pFileName string, fOnlyAnds int32) {
-    var pNetlist *Abc_Ntk_t;
-    var pFile *os.File;
-    var i int32;
-    // can only write nodes represented using local AIGs
-    if !Abc_NtkIsAigNetlist(pNtk) && !Abc_NtkIsMappedNetlist(pNtk) {
-        fmt.Printf("Io_WriteVerilog(): Can produce Verilog for mapped or AIG netlists only.\n");
-        return;
-    }
-    // start the output stream
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Fprintf(os.Stdout, "Io_WriteVerilog(): Cannot open the output file \"%s\".\n", pFileName);
-        return;
-    }
 
-    // write the equations for the network
-    fmt.Fprintf(pFile, "// Benchmark \"%s\" written by ABC on %s\n", pNtk.pName, Extra_TimeStamp());
-    fmt.Fprintf(pFile, "\n");
-
-    // write modules
-    if pNtk.pDesign {
-        // write the network first
-        Io_WriteVerilogInt( pFile, pNtk, fOnlyAnds );
-        // write other things
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pNtk.pDesign.vModules)) && (((pNetlist) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {
-            assert(Abc_NtkIsNetlist(pNetlist), "Abc_NtkIsNetlist(pNetlist)");
-            if pNetlist == pNtk {
-                continue; }
-            fmt.Fprintf(pFile, "\n");
-            Io_WriteVerilogInt( pFile, pNetlist, fOnlyAnds );
-        }
-    
-    } else {
-        Io_WriteVerilogInt( pFile, pNtk, fOnlyAnds );
-    }
-
-    fmt.Fprintf(pFile, "\n");
-    _ = (pFile).Close();
-}
 
 /**Function*************************************************************
 
@@ -125,58 +85,7 @@ func Io_WriteVerilog(pNtk *Abc_Ntk_t, pFileName string, fOnlyAnds int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Io_WriteVerilogInt(pFile *os.File, pNtk *Abc_Ntk_t, fOnlyAnds int32) {
-    // write inputs and outputs
-//    fprintf( pFile, "module %s ( gclk,\n   ", Abc_NtkName(pNtk) );
-    fmt.Fprintf(pFile, "module %s ( ", Io_WriteVerilogGetName(Abc_NtkName(pNtk)));
-    // add the clock signal if it does not exist
-    if Abc_NtkLatchNum(pNtk) > 0 && Nm_ManFindIdByName(pNtk.pManName, "clock", ABC_OBJ_PI) == -1 {
-        fmt.Fprintf(pFile, "clock, "); }
-    // write other primary inputs
-    fmt.Fprintf(pFile, "\n   ");
-    if Abc_NtkPiNum(pNtk) > 0 {
-        Io_WriteVerilogPis( pFile, pNtk, 3 );
-        fmt.Fprintf(pFile, ",\n   ");
-    }
-    if Abc_NtkPoNum(pNtk) > 0 {
-        Io_WriteVerilogPos( pFile, pNtk, 3 ); }
-    fmt.Fprintf(pFile, "  );\n");
-    // add the clock signal if it does not exist
-    if Abc_NtkLatchNum(pNtk) > 0 && Nm_ManFindIdByName(pNtk.pManName, "clock", ABC_OBJ_PI) == -1 {
-        fmt.Fprintf(pFile, "  input  clock;\n"); }
-    // write inputs, outputs, registers, and wires
-    if Abc_NtkPiNum(pNtk) > 0 {
-//        fprintf( pFile, "  input gclk," );
-        fmt.Fprintf(pFile, "  input ");
-        Io_WriteVerilogPis( pFile, pNtk, 10 );
-        fmt.Fprintf(pFile, ";\n");
-    }
-    if Abc_NtkPoNum(pNtk) > 0 {
-        fmt.Fprintf(pFile, "  output");
-        Io_WriteVerilogPos( pFile, pNtk, 5 );
-        fmt.Fprintf(pFile, ";\n");
-    }
-    // if this is not a blackbox, write internal signals
-    if !Abc_NtkHasBlackbox(pNtk) {
-        if Abc_NtkLatchNum(pNtk) > 0 {
-            fmt.Fprintf(pFile, "  reg");
-            Io_WriteVerilogRegs( pFile, pNtk, 4 );
-            fmt.Fprintf(pFile, ";\n");
-        }
-        if Io_WriteVerilogWiresCount(pNtk) > 0 {
-            fmt.Fprintf(pFile, "  wire");
-            Io_WriteVerilogWires( pFile, pNtk, 4 );
-            fmt.Fprintf(pFile, ";\n");
-        }
-        // write nodes
-        Io_WriteVerilogObjects( pFile, pNtk, fOnlyAnds );        
-        // write registers
-        if Abc_NtkLatchNum(pNtk) > 0 {
-            Io_WriteVerilogLatches( pFile, pNtk ); }
-    }
-    // finalize the file
-    fmt.Fprintf(pFile, "endmodule\n\n");
-} 
+ 
 
 /**Function*************************************************************
 
