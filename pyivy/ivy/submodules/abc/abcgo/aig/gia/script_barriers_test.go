@@ -28,3 +28,17 @@ func TestScriptBarrierRoundTrip(t *testing.T) {
 		}
 	}
 }
+
+func TestScriptSynthesisTruth(t *testing.T) {
+	p := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, x, c)
+	Gia_ManAppendCo(p, y)
+	for i, run := range []func(*Gia_Man_t, int32, int32) *Gia_Man_t{Gia_ManAigSyn3, Gia_ManAigSyn4} {
+		q := run(p, 0, 0)
+		if q == nil || Gia_ManVerifyTwoTruths(p, q) != 1 {
+			t.Fatalf("synthesis %d changed truth", i)
+		}
+	}
+}
