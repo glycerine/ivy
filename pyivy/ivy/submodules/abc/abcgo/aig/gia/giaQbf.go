@@ -210,110 +210,11 @@ func Gia_GenQbfMiter(p *Gia_Man_t, nFrames int32, nLutNum int32, nLutSize int32,
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Gen2CreateMux_rec(pNew *Gia_Man_t, pCtrl *int32, nCtrl int32, vData *Vec_Int_t, Shift int32) int32 {
-    var iLit0, iLit1 int32;
-    if nCtrl == 0 {
-        return Vec_IntEntry( vData, Shift ); }
-    iLit0 = Gia_Gen2CreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift );
-    iLit1 = Gia_Gen2CreateMux_rec( pNew, pCtrl, nCtrl-1, vData, Shift + (1<<(nCtrl-1)) );
-    return Gia_ManHashMux( pNew, pCtrl[nCtrl-1], iLit1, iLit0 );
-}
-func Gia_Gen2CreateMuxes(pNew *Gia_Man_t, nLutSize int32, nLutNum int32, vPLits *Vec_Int_t, vXLits *Vec_Int_t) *Vec_Int_t {
-    var vLits *Vec_Int_t  = Vec_IntAlloc( nLutNum );
-    var i, iMux int32;
-    // add MUXes for each group of flops
-    assert(Vec_IntSize(vPLits) == nLutNum * (1 << nLutSize), "Vec_IntSize(vPLits) == nLutNum * (1 << nLutSize)");
-    assert(Vec_IntSize(vXLits) == nLutSize, "Vec_IntSize(vXLits) == nLutSize");
-    for  i = 0; i < nLutNum; i++  {
-        iMux = Gia_Gen2CreateMux_rec( pNew, Vec_IntArray(vXLits), nLutSize, vPLits, i * (1 << nLutSize) );
-        Vec_IntPush( vLits, iMux );
-    }
-    return vLits;
-}
-func Gia_Gen2CreateMiter(nLutSize int32, nLutNum int32) *Gia_Man_t {
-    // |<-- PVars(0)-->|...|<-- PVars(nLutNum-1)-->|<-- XVars-->|<-- YVars-->|
-    var vPLits *Vec_Int_t   = Vec_IntAlloc( nLutNum * (1 << nLutSize) );
-    var vXLits *Vec_Int_t   = Vec_IntAlloc( nLutSize );
-    var vYLits *Vec_Int_t   = Vec_IntAlloc( nLutSize );
-    var vXYLits *Vec_Int_t  = Vec_IntAlloc( nLutSize );
-    var vXRes, vYRes, vXYRes *Vec_Int_t;
-    var vXYRes2 *Vec_Int_t  = Vec_IntAlloc( 2 * nLutNum );
-    var pTemp *Gia_Man_t;
-    var pNew *Gia_Man_t = Gia_ManStart( 1000 ); var i, k, v, Cond, Res int32;
-    pNew.pName = Abc_UtilStrsav( "homoqbf" );
-    Gia_ManHashAlloc( pNew );
-    for  i = 0; i < nLutNum * (1 << nLutSize); i++  {
-        Vec_IntPush( vPLits, Gia_ManAppendCi(pNew) );
-    }
-    for  i = 0; i < nLutSize; i++  {
-        Vec_IntPush( vXLits, Gia_ManAppendCi(pNew) );
-    }
-    for  i = 0; i < nLutSize; i++  {
-        Vec_IntPush( vYLits, Gia_ManAppendCi(pNew) );
-    }
-    for  i = 0; i < nLutSize; i++  {
-        Vec_IntPush( vXYLits, Abc_LitNot(Gia_ManHashAnd(pNew, Vec_IntEntry(vXLits, i), Vec_IntEntry(vYLits, i))) );
-    }
-    vXRes  = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vXLits );
-    vYRes  = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vYLits );
-    vXYRes = Gia_Gen2CreateMuxes( pNew, nLutSize, nLutNum, vPLits, vXYLits );
-    for  i = 0; i < nLutNum; i++  {
-        Vec_IntPush( vXYRes2, Vec_IntEntry(vXYRes, i) );
-        Vec_IntPush( vXYRes2, Abc_LitNot(Gia_ManHashAnd(pNew, Vec_IntEntry(vXRes, i), Vec_IntEntry(vYRes, i))) );
-    }
-    Res = Gia_ManHashDualMiter( pNew, vXYRes2 );
-    // uniqueness of codes
-    for  i = 0; i < (1 << nLutSize); i++  {
-        var vCondA *Vec_Int_t  = Vec_IntAlloc( nLutNum );
-        var vCondB *Vec_Int_t  = Vec_IntAlloc( nLutNum );
-        for  v = 0; v < nLutNum; v++  {
-            Vec_IntPush( vCondA, Vec_IntEntry(vPLits, v*(1 << nLutSize)+i) );
-        }
-        for  k = i+1; k < (1 << nLutSize); k++  {
-            Vec_IntClear( vCondB );
-            for  v = 0; v < nLutNum; v++  {
-                Vec_IntPush( vCondB, Vec_IntEntry(vCondA, v) );
-                Vec_IntPush( vCondB, Vec_IntEntry(vPLits, v*(1 << nLutSize)+k) );
-            }
-            Cond = Gia_ManHashDualMiter( pNew, vCondB );
-            Res = Gia_ManHashOr( pNew, Res, Abc_LitNot(Cond) );
-        }
-        Vec_IntFree( vCondA );
-        Vec_IntFree( vCondB );
-    }
-    Gia_ManAppendCo( pNew, Abc_LitNot(Res) );
-    Gia_ManHashStop( pNew );
-    Vec_IntFree( vPLits );
-    Vec_IntFree( vXLits );
-    Vec_IntFree( vYLits );
-    Vec_IntFree( vXYLits );
-    Vec_IntFree( vXRes );
-    Vec_IntFree( vYRes );
-    Vec_IntFree( vXYRes );
-    Vec_IntFree( vXYRes2 );
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    fmt.Printf("Generated QBF miter with %d parameters, %d functional variables, and %d AIG nodes.\n", nLutNum * (1 << nLutSize), 2*nLutSize, Gia_ManAndNum(pNew));
-    return pNew;
-}
-func Gia_Gen2CodeOne(nLutSize int32, nLutNum int32, vCode *Vec_Int_t, x int32) int32 {
-    var k, Code int32;
-    for  k = 0; k < nLutNum; k++  {
-        if Vec_IntEntry(vCode, k*(1 << nLutSize)+x) {
-            Code |= (1 << k); }
-    }
-    return Code;
-}
-func Gia_Gen2CodeOneP(nLutSize int32, nLutNum int32, vCode *Vec_Int_t, x int32) *word {
-    // inlining of macro ABC_CALLOC
-    var pRes *word  = ((word *) calloc((size_t)(Abc_Bit6WordNum(nLutNum)), sizeof(word)));
-    var k int32;
-    for  k = 0; k < nLutNum; k++  {
-        if Vec_IntEntry(vCode, k*(1 << nLutSize)+x) {
-            Abc_InfoSetBit( (unsigned *)pRes, k ); }
-    }
-    return pRes;
-}
+
+
+
+
+
 func Gia_Gen2CodePrint(nLutSize int32, nLutNum int32, vCode *Vec_Int_t) {
     // |<-- PVars(0)-->|...|<-- PVars(nLutNum-1)-->|
     var i int32;
