@@ -707,78 +707,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteAiger(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var fWriteSymbols int32;
-    var fCompact int32;
-    var fUnique int32;
-    var fVerbose int32;
-    var c int32;
 
-    fWriteSymbols = 0;
-    fCompact      = 0;
-    fUnique       = 0;
-    fVerbose      = 0;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "scuvh" ) ) != -1  {
-        switch  c  {
-            case 's':
-                fWriteSymbols ^= 1;
-                break;
-            case 'c':
-                fCompact ^= 1;
-                break;
-            case 'u':
-                fUnique ^= 1;
-                break;
-            case 'v':
-                fVerbose ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    if !Abc_NtkIsStrash(pAbc.pNtkCur) {
-        fmt.Fprintf(os.Stdout, "Writing this format is only possible for structurally hashed AIGs.\n");
-        return 1;
-    }
-    if fUnique != 0 {
-        extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );
-        extern Abc_Ntk_t * Abc_NtkFromAigPhase( Aig_Man_t * pMan );
-        var pAig *Aig_Man_t  = Abc_NtkToDar( pAbc.pNtkCur, 0, 1 );
-        var pCan *Aig_Man_t  = Saig_ManDupIsoCanonical( pAig, fVerbose );
-        var pTemp *Abc_Ntk_t  = Abc_NtkFromAigPhase( pCan );
-        Aig_ManStop( pCan );
-        Aig_ManStop( pAig );
-        Io_WriteAiger( pTemp, pFileName, fWriteSymbols, fCompact, fUnique );
-        Abc_NtkDelete( pTemp );
-    
-    } else {
-        Io_WriteAiger( pAbc.pNtkCur, pFileName, fWriteSymbols, fCompact, fUnique ); }
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_aiger [-scuvh] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes the network in the AIGER format (http://fmv.jku.at/aiger)\n");
-    fmt.Fprintf(pAbc.Err, "\t-s     : toggle saving I/O names [default = %s]\n", fWriteSymbols? "yes" : "no");
-    fmt.Fprintf(pAbc.Err, "\t-c     : toggle writing more compactly [default = %s]\n", fCompact? "yes" : "no");
-    fmt.Fprintf(pAbc.Err, "\t-u     : toggle writing canonical AIG structure [default = %s]\n", fUnique? "yes" : "no");
-    fmt.Fprintf(pAbc.Err, "\t-v     : toggle printing verbose information [default = %s]\n", fVerbose? "yes" : "no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write (extension .aig)\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
