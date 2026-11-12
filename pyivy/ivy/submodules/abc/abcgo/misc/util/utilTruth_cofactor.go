@@ -24,13 +24,7 @@ func ttMask(v int32) word {
 	if v < 0 || v >= 6 {
 		panic("truth: invalid small variable")
 	}
-	var m word
-	for i := 0; i < 64; i++ {
-		if i&(1<<v) != 0 {
-			m |= word(1) << i
-		}
-	}
-	return m
+	return s_Truths6[v]
 }
 func ttBit(t []word, i int) bool { return t[i>>6]&(word(1)<<uint(i&63)) != 0 }
 func ttPut(t []word, i int, v bool) {
