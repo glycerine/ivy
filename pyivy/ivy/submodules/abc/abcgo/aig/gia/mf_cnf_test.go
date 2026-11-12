@@ -25,3 +25,48 @@ func TestMfDeriveCnfs(t *testing.T) {
 		t.Fatalf("vars %d clauses %d lits %d", vars, clauses, lits)
 	}
 }
+
+func TestMfDeriveCnfSatisfiesAnd(t *testing.T) {
+	g := Gia_ManStart(8)
+	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendAnd(g, a, b)
+	Gia_ManAppendCo(g, x)
+	var pars Jf_Par_t
+	Mf_ManSetDefaultPars(&pars)
+	pars.fCutMin = 1
+	pars.fGenCnf = 1
+	pars.fCnfMapping = 1
+	p := Mf_ManAlloc(g, &pars)
+	p.pGia0 = g
+	Mf_ManComputeCuts(p)
+	cnf := Mf_ManDeriveCnf(p, 0, 0)
+	for mask := 0; mask < 1<<cnf.Variables; mask++ {
+		valid := true
+		for _, clause := range cnf.Clauses {
+			satisfied := false
+			for _, lit := range clause {
+				value := (mask >> uint(lit>>1)) & 1
+				if value^int(lit&1) == 1 {
+					satisfied = true
+					break
+				}
+			}
+			if !satisfied {
+				valid = false
+				break
+			}
+		}
+		if !valid {
+			continue
+		}
+		av := (mask >> uint(cnf.VarNums[a>>1])) & 1
+		bv := (mask >> uint(cnf.VarNums[b>>1])) & 1
+		ov := (mask >> uint(cnf.VarNums[g.pObjs[len(g.pObjs)-1].id])) & 1
+		if ov != av&bv {
+			t.Fatalf("invalid assignment %b", mask)
+		}
+	}
+	if len(cnf.Mapping) == 0 {
+		t.Fatal("missing CNF mapping")
+	}
+}

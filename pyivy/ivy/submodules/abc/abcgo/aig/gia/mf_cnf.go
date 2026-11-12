@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/aig/gia/mf"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
@@ -70,4 +71,44 @@ func Mf_ManDeriveCnfs(p *Mf_Man_t, nVars, nClauses, nLits *int32) *Vec_Int_t {
 		*nLits += vec.Vec_IntEntry(lits, int(id))
 	}
 	return cnfs
+}
+
+func Mf_ManDeriveCnf(p *Mf_Man_t, objectIDs, addOr int32) *Cnf_Dat_t {
+	m := &mf.Mapping{Network: p.pGia, Options: mf.Options{LUTSize: int(p.pPars.nLutSize)}, Cuts: make([][]mf.Cut, p.pGia.nObjs), Refs: make([]int32, p.pGia.nObjs)}
+	for i := 0; i < vec.Vec_MemEntryNum(p.vTtMem); i++ {
+		m.Truths = append(m.Truths, append([]uint64(nil), vec.Vec_MemReadEntry(p.vTtMem, i)...))
+	}
+	for _, v := range vec.Vec_IntArray(&p.vCnfSizes) {
+		m.ClauseSizes = append(m.ClauseSizes, int(v))
+	}
+	for _, obj := range p.pGia.pObjs {
+		id := obj.id
+		m.Refs[id] = Mf_ObjMapRefNum(p, id)
+		if Gia_ObjIsAnd(obj) == 0 || m.Refs[id] == 0 {
+			continue
+		}
+		packed := Mf_ObjCutBest(p, id)
+		size := Mf_CutSize(packed)
+		m.Cuts[id] = []mf.Cut{{Leaves: append([]int32(nil), packed[1:1+size]...), Function: Mf_CutFunc(packed)}}
+	}
+	result, err := mf.DeriveCNF(m, objectIDs != 0, addOr != 0, p.pPars.fCnfMapping != 0)
+	if err != nil {
+		panic(err)
+	}
+	if objectIDs == 0 && p.pGia0 != nil && p.pGia0 != p.pGia {
+		nums := make([]int32, p.pGia0.nObjs)
+		for i := range nums {
+			nums[i] = -1
+		}
+		oldCis, newCis := vec.Vec_IntArray(p.pGia0.vCis), vec.Vec_IntArray(p.pGia.vCis)
+		oldCos, newCos := vec.Vec_IntArray(p.pGia0.vCos), vec.Vec_IntArray(p.pGia.vCos)
+		for i, id := range oldCis {
+			nums[id] = result.VarNums[newCis[i]]
+		}
+		for i, id := range oldCos {
+			nums[id] = result.VarNums[newCos[i]]
+		}
+		result.VarNums = nums
+	}
+	return result
 }
