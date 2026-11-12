@@ -64,10 +64,6 @@ func Sfm_LibTest() {
 	Sfm_LibStop(p)
 }
 func Sfm_LibImplementSimple(p *Sfm_Lib_t, truth []uint64, fanins []int32) ([]int32, [][]int32) {
-	lib, ok := abcmain.Abc_FrameReadLibGen().(*mio.Mio_Library_t)
-	if !ok || lib == nil {
-		panic("sfm: no current gate library")
-	}
 	allZero, allOne, variable, inverse := true, true, true, true
 	for _, v := range truth[:p.nWords] {
 		allZero = allZero && v == 0
@@ -75,19 +71,23 @@ func Sfm_LibImplementSimple(p *Sfm_Lib_t, truth []uint64, fanins []int32) ([]int
 		variable = variable && v == 0xaaaaaaaaaaaaaaaa
 		inverse = inverse && v == 0x5555555555555555
 	}
-	var gate *mio.Mio_Gate_t
+	index := -1
 	switch {
 	case allZero:
-		gate = mio.Mio_LibraryReadConst0(lib)
+		index = 0
 	case allOne:
-		gate = mio.Mio_LibraryReadConst1(lib)
+		index = 1
 	case variable:
-		gate = mio.Mio_LibraryReadBuf(lib)
+		index = 2
 	case inverse:
-		gate = mio.Mio_LibraryReadInv(lib)
+		index = 3
 	default:
 		panic("sfm: truth is not constant or buffer")
 	}
+	if index >= len(p.pCells) {
+		panic("sfm: missing simple library gates")
+	}
+	gate := p.pCells[index].Gate()
 	if gate == nil || ((allZero || allOne) && len(fanins) != 0) || ((variable || inverse) && len(fanins) != 1) {
 		panic("sfm: invalid simple implementation")
 	}

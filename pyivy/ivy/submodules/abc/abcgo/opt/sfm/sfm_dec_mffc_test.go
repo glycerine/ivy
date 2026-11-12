@@ -107,4 +107,11 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 2 0
 	if err != nil || changed != 1 || timing.Delay >= 10000 || !reflect.DeepEqual(coreTable(t, p), want) {
 		t.Fatalf("delay driver: changed=%d delay=%d err=%v", changed, timing.Delay, err)
 	}
+	p = testNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
+	p.Mapping[2], p.Mapping[3] = slow, slow
+	pars.Area, pars.AreaRev, pars.NodeOne = true, false, 3
+	changed, err = Sfm_OptimizeMapped(p, pars, lib)
+	if err != nil || changed != 1 || !reflect.DeepEqual(coreTable(t, p), want) {
+		t.Fatalf("mapped entry point: changed=%d err=%v", changed, err)
+	}
 }
