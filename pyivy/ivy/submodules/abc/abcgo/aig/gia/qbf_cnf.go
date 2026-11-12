@@ -2,12 +2,16 @@ package gia
 
 import (
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/sat/satoko"
 )
+
+type qbfCNFSink interface {
+	AddVariable(bool) int
+	AddClause([]int) bool
+}
 
 // qbfEncodeGraph adds a Tseitin encoding and returns its output literal.
 // inputLits allows separate copies to share parameters but not internal nodes.
-func qbfEncodeGraph(s *satoko.Solver, g *Gia_Man_t, inputLits []int) int {
+func qbfEncodeGraph(s qbfCNFSink, g *Gia_Man_t, inputLits []int) int {
 	if g == nil || g.nRegs != 0 || len(inputLits) != int(Gia_ManCiNum(g)) || Gia_ManCoNum(g) != 1 {
 		panic("gia: invalid QBF circuit")
 	}
