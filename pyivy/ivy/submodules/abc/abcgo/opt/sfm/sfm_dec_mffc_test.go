@@ -85,4 +85,19 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 2 0
 	if _, err := sfmOptimizeMappedArea(p, pars, prepared, handles); err == nil {
 		t.Fatal("unsupported option was silently ignored")
 	}
+	p = testNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
+	slow := &Gate{Area: 2000, Inputs: 2, Pins: []Pin{{Phase: 2, Rise: 5000, Fall: 5000}, {Phase: 2, Rise: 5000, Fall: 5000}}}
+	p.Mapping[2], p.Mapping[3] = slow, slow
+	timing := Sfm_TimStart(p, 6000)
+	delayLib := sfmLibPrepareCells(6, 0, 1, 0, 0, mio.Mio_CollectRootsNew2(lib, 6, nil, 0))
+	defer Sfm_LibStop(delayLib)
+	pars.DecMax = 1
+	gates, fanins, order, cone, ok = sfmFindDelayNodeMatch(p, 3, pars, delayLib, timing)
+	if !ok || !sfmInsertAreaMatch(p, 3, gates, fanins, order, cone, handles) {
+		t.Fatal("timing match failed")
+	}
+	Sfm_TimTrace(timing)
+	if timing.Delay >= 10000 || !reflect.DeepEqual(coreTable(t, p), want) {
+		t.Fatalf("timing replacement: delay=%d", timing.Delay)
+	}
 }

@@ -30,8 +30,12 @@ func sfmDecomposeAreaNodeForced(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, forcedN
 }
 
 func sfmPrepareAreaSession(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t) (*sfmDecSearch, sfmAreaWindow, bool) {
-	w := sfmExtractAreaWindow(p, pivot, pars)
-	if pars.WinSizeMax > 0 && len(w.order) > pars.WinSizeMax {
+	return sfmPrepareMappedSession(p, pivot, pars, nil)
+}
+
+func sfmPrepareMappedSession(p *Sfm_Ntk_t, pivot int, pars Sfm_Par_t, timing *Sfm_Tim_t) (*sfmDecSearch, sfmAreaWindow, bool) {
+	w := sfmExtractWindow(p, pivot, pars, timing)
+	if timing != nil && w.divisors < 2 || pars.WinSizeMax > 0 && len(w.order) > pars.WinSizeMax {
 		return nil, w, false
 	}
 	window, cnfs := sfmDecWindowFromNetwork(p, w.order, w.roots, w.boundary, pivot, w.divisors)
