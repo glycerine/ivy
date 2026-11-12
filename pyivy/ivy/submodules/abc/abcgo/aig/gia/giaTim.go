@@ -161,22 +161,6 @@ func Gia_ManDupUnshuffleInputs(p *Gia_Man_t) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCleanupRemap(p *Gia_Man_t, pGia *Gia_Man_t) {
-    var pObj, pObjGia *Gia_Obj_t;
-    var i, iPrev int32;
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        iPrev = Gia_ObjValue(pObj);
-        if iPrev == ~0 {
-            continue; }
-        pObjGia = Gia_ManObj( pGia, Abc_Lit2Var(iPrev) );
-        if pObjGia.Value == ~0 {
-            Gia_ObjSetValue( pObj, pObjGia.Value ); 
-        } else {
-            Gia_ObjSetValue( pObj, Abc_LitNotCond(pObjGia.Value, Abc_LitIsCompl(iPrev)) ); }
-    }
-}
-
 /**Function*************************************************************
 
   Synopsis    [Computes level with boxes.]
@@ -224,43 +208,6 @@ func Gia_ManCleanupRemap(p *Gia_Man_t, pGia *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDupMoveLast(p *Gia_Man_t, iInsert int32, nItems int32) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        if i < iInsert {
-            pObj.Value = Gia_ManAppendCi( pNew ); }
-    }
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        if i >= Gia_ManCiNum(p) - nItems {
-            pObj.Value = Gia_ManAppendCi( pNew ); }
-    }
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        if i >= iInsert && i < Gia_ManCiNum(p) - nItems {
-            pObj.Value = Gia_ManAppendCi( pNew ); }
-    }
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsCi(pObj) {
-            continue; }
-        if Gia_ObjIsAnd(pObj) {
-            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        } else if Gia_ObjIsCo(pObj) {
-            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-        } else { assert(false, "0"); }
-    }
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    return pNew;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Computes AIG with boxes.]
