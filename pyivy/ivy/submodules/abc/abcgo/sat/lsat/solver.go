@@ -1,3 +1,5 @@
+// Package lsat implements the solver interface declared in ABC's lsat/solver.h.
+// Its execution engine is the pure-Go Satoko CDCL solver.
 package lsat
 
 /****************************************************************************************[solver.h]
@@ -20,152 +22,95 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/sat/satoko"
+)
 
+// Literal uses variable*2+sign; sign one denotes negation.
+type Literal = int
+type Variable = int
+type Truth int
 
+const (
+	True Truth = iota
+	False
+	Undefined
+)
 
+type Solver struct {
+	engine           *satoko.Solver
+	clauseBuffer     []int
+	assumptionBuffer []int
+	verbosity        int
+}
 
-//ABC_NAMESPACE_HEADER_START
-
-
-// SolverTypes:
-//
-type solver = solver_t;
-typedef int solver_Var;
-typedef int solver_Lit;
-typedef int solver_lbool;
-
-// Constants: (can these be made inline-able?)
-//
-
-var solver_l_True solver_lbool;
-var solver_l_False solver_lbool;
-var solver_l_Undef solver_lbool;
-
-
-// solver*      solver_new             (void);
-
-// void         solver_delete          (solver* s);
-
-             
-// solver_Var   solver_newVar          (solver *s);
-
-// solver_Lit   solver_newLit          (solver *s);
-
-             
-// solver_Lit   solver_mkLit           (solver_Var x);
-
-// solver_Lit   solver_mkLit_args      (solver_Var x, int sign);
-
-// solver_Lit   solver_negate          (solver_Lit p);
-
-                                    
-// solver_Var   solver_var             (solver_Lit p);
-
-// int          solver_sign            (solver_Lit p);
-
-             
-// int          solver_addClause       (solver *s, int len, solver_Lit *ps);
-
-// void         solver_addClause_begin (solver *s);
-
-// void         solver_addClause_addLit(solver *s, solver_Lit p);
-
-// int          solver_addClause_commit(solver *s);
-
-             
-// int          solver_simplify        (solver *s);
-
-             
-// int          solver_solve           (solver *s, int len, solver_Lit *ps);
-
-// void         solver_solve_begin     (solver *s);
-
-// void         solver_solve_addLit    (solver *s, solver_Lit p);
-
-// int          solver_solve_commit    (solver *s);
-
-             
-// int          solver_okay            (solver *s);
-
-             
-// void         solver_setPolarity     (solver *s, solver_Var v, int b);
-
-// void         solver_setDecisionVar  (solver *s, solver_Var v, int b);
-
-
-// solver_lbool solver_get_l_True      (void);
-
-// solver_lbool solver_get_l_False     (void);
-
-// solver_lbool solver_get_l_Undef     (void);
-
-
-// solver_lbool solver_value_Var       (solver *s, solver_Var x);
-
-// solver_lbool solver_value_Lit       (solver *s, solver_Lit p);
-
-
-// solver_lbool solver_modelValue_Var  (solver *s, solver_Var x);
-
-// solver_lbool solver_modelValue_Lit  (solver *s, solver_Lit p);
-
-
-// int          solver_num_assigns     (solver *s);
-
-// int          solver_num_clauses     (solver *s);
-     
-// int          solver_num_learnts     (solver *s);
-     
-// int          solver_num_vars        (solver *s);
-  
-// int          solver_num_freeVars    (solver *s);
-
-
-// int          solver_conflict_len    (solver *s);
-
-// solver_Lit   solver_conflict_nthLit (solver *s, int i);
-
-
-// Setters:
-
-// void         solver_set_verbosity   (solver *s, int v);
-
-
-// Getters:
-
-// int          solver_num_conflicts   (solver *s);
-
-
-/* TODO
-
-    // Mode of operation:
-    //
-    int       verbosity;
-    double    var_decay;
-    double    clause_decay;
-    double    random_var_freq;
-    double    random_seed;
-    double    restart_luby_start; // The factor with which the values of the luby sequence is multiplied to get the restart    (default 100)
-    double    restart_luby_inc;   // The constant that the luby sequence uses powers of                                        (default 2)
-    int       expensive_ccmin;    // FIXME: describe.
-    int       rnd_pol;            // FIXME: describe.
-
-    int       restart_first;      // The initial restart limit.                                                                (default 100)
-    double    restart_inc;        // The factor with which the restart limit is multiplied in each restart.                    (default 1.5)
-    double    learntsize_factor;  // The intitial limit for learnt clauses is a factor of the original clauses.                (default 1 / 3)
-    double    learntsize_inc;     // The limit for learnt clauses is multiplied with this factor each restart.                 (default 1.1)
-
-    int       learntsize_adjust_start_confl;
-    double    learntsize_adjust_inc;
-
-    // Statistics: (read-only member variable)
-    //
-    uint64_t starts, decisions, rnd_decisions, propagations, conflicts;
-    uint64_t dec_vars, clauses_literals, learnts_literals, max_literals, tot_literals;
-*/
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
+func New() *Solver                                  { return &Solver{engine: satoko.New()} }
+func (s *Solver) NewVariable() Variable             { return s.engine.AddVariable(false) }
+func (s *Solver) NewLiteral() Literal               { return MakeLiteral(s.NewVariable(), false) }
+func MakeLiteral(v Variable, negative bool) Literal { return satoko.Literal(v, negative) }
+func Negate(p Literal) Literal                      { return p ^ 1 }
+func LiteralVariable(p Literal) Variable            { return p >> 1 }
+func LiteralSign(p Literal) bool                    { return p&1 != 0 }
+func (s *Solver) AddClause(lits []Literal) bool     { return s.engine.AddClause(lits) }
+func (s *Solver) BeginClause()                      { s.clauseBuffer = s.clauseBuffer[:0] }
+func (s *Solver) AddClauseLiteral(lit Literal)      { s.clauseBuffer = append(s.clauseBuffer, lit) }
+func (s *Solver) CommitClause() bool                { return s.AddClause(s.clauseBuffer) }
+func (s *Solver) BeginSolve()                       { s.assumptionBuffer = s.assumptionBuffer[:0] }
+func (s *Solver) AddAssumption(lit Literal)         { s.assumptionBuffer = append(s.assumptionBuffer, lit) }
+func (s *Solver) CommitSolve() bool                 { return s.Solve(s.assumptionBuffer) }
+func (s *Solver) Solve(assumptions []Literal) bool {
+	result := s.engine.SolveAssumptions(assumptions)
+	if s.verbosity > 0 {
+		fmt.Printf("lsat: result %d, decisions %d, conflicts %d\n", result, s.engine.Stats().Decisions, s.engine.Stats().Conflicts)
+	}
+	return result == satoko.SATOKO_SAT
+}
+func (s *Solver) Simplify() bool                        { return s.engine.Simplify() }
+func (s *Solver) Okay() bool                            { return s.engine.Okay() }
+func (s *Solver) SetPolarity(v Variable, negative bool) { s.engine.SetPolarity(v, negative) }
+func (s *Solver) SetDecisionVariable(v Variable, enabled bool) {
+	s.engine.SetDecisionVariable(v, enabled)
+}
+func truth(value int) Truth {
+	if value < 0 {
+		return Undefined
+	}
+	if value == 0 {
+		return False
+	}
+	return True
+}
+func (s *Solver) Value(v Variable) Truth      { return truth(s.engine.CurrentValue(v)) }
+func (s *Solver) ModelValue(v Variable) Truth { return truth(s.engine.ModelValue(v)) }
+func negateValue(value Truth) Truth {
+	if value == Undefined {
+		return value
+	}
+	if value == True {
+		return False
+	}
+	return True
+}
+func (s *Solver) LiteralValue(lit Literal) Truth {
+	value := s.Value(lit >> 1)
+	if lit&1 != 0 {
+		return negateValue(value)
+	}
+	return value
+}
+func (s *Solver) ModelLiteralValue(lit Literal) Truth {
+	value := s.ModelValue(lit >> 1)
+	if lit&1 != 0 {
+		return negateValue(value)
+	}
+	return value
+}
+func (s *Solver) AssignmentCount() int       { return s.engine.AssignedCount() }
+func (s *Solver) ClauseCount() int           { return s.engine.ClauseCount() }
+func (s *Solver) LearntCount() int           { return s.engine.LearntCount() }
+func (s *Solver) VariableCount() int         { return s.engine.VariableCount() }
+func (s *Solver) FreeVariableCount() int     { return s.engine.FreeVariableCount() }
+func (s *Solver) Conflict() []Literal        { return s.engine.FinalConflict() }
+func (s *Solver) ConflictCount() int64       { return s.engine.Stats().AllConflicts }
+func (s *Solver) SetVerbosity(verbosity int) { s.verbosity = verbosity }
