@@ -694,47 +694,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteHie(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pBaseName, pFileName string;
-    var c int32;
 
-    glo_fMapped = 0;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "mh" ) ) != -1  {
-        switch  c  {
-            case 'm':
-                glo_fMapped ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 2 {
-        goto usage; }
-    // get the output file name
-    pBaseName = argv[globalUtilOptind];
-    pFileName = argv[globalUtilOptind+1];
-    // call the corresponding file writer
-//    Io_Write( pAbc->pNtkCur, pFileName, Io_ReadFileType(pFileName) );
-    Io_WriteHie( pAbc.pNtkCur, pBaseName, pFileName );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_hie [-h] <orig> <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes the current network into <file> by calling\n");
-    fmt.Fprintf(pAbc.Err, "\t         the hierarchical writer that matches the extension of <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t-m     : toggle reading mapped Verilog for <orig> [default = %s]\n", glo_fMapped? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\torig   : the name of the original file with the hierarchical design\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -1055,45 +1015,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteCellNet(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var c int32;
-    extern void Io_WriteCellNet( Abc_Ntk_t * pNtk, char * pFileName );
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    pNtk = pAbc.pNtkCur;
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    if !Abc_NtkIsLogic(pNtk) {
-        fmt.Fprintf(pAbc.Out, "The network should be a logic network (if it an AIG, use command \"logic\")\n");
-        return 0;
-    }
-    Io_WriteCellNet( pNtk, pFileName );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_cellnet [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes the network is the cellnet format\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
