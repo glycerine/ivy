@@ -216,10 +216,11 @@ had been cleared to `nil`; those were corrected to empty strings and their
 nil comparisons were updated. The full package build remains the semantic
 validation gate for each area.
 
-The latest `GOCACHE=/tmp/abcgo-cache go -C abcgo test ./aig/aig` still fails
-to parse `aigRet.go` (first errors at lines 68, 75 and 85); that file is being
-ported. The earlier focused AIG free scanner passed before this latest Ret
-work. Full AIG and module completion remain outstanding.
+The AIG package now passes full `go test -race ./aig/aig` and `go vet
+./aig/aig`. A scratch-mark leak found by an independent test was fixed by
+validating clock domains before marking reachability. Retiming, storage and
+the rest of the converted AIG package were committed as `ab1b2a780`; full
+module completion remains outstanding.
 
 The Espresso sparse row/column/matrix family has since been ported, with
 12,800 operations checked against fixtures generated from the original C
@@ -249,3 +250,19 @@ shared cube/header/expand ownership is now assigned across util/hash/tim,
 without duplicate type definitions. SAT/XSAT, base/main, CGlucose and AIG
 forward retiming also have explicit owners. These component and focused tests
 do not replace the whole-module gate; rerun it after the current ports land.
+
+Since that update, Espresso set/cube geometry has been ported with an original
+two-bit encoding and MV masks; its combined tests await the shared cube
+globals. Review caught and fixed a C-to-Go operator-precedence hazard in mixed
+shift/AND expressions by adding explicit parentheses. REO's CUDD comparison now
+matches original-C SIFT and SYMM_SIFT behavior on 512 three-variable cases;
+that owner is completing the connected integration and review.
+
+The Espresso dependency barrier has now moved: set, setc geometry, headers,
+cube strings and shared globals compile together, and the combined focused
+tests pass. Geometry oracle coverage is being expanded; sparse minimum-cover
+instrumentation still awaits the remaining cost/irredundancy APIs.
+
+The `opt/cut` package now passes an independent full-package race test and
+`go vet` after its 14 source-derived files were ported. A final audit of the
+optional sequential network driver remains before its owner signs off.
