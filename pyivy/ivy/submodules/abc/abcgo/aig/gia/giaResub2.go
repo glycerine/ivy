@@ -180,129 +180,18 @@ func Abc_ResubPrintDivs(ppDivs *any, nDivs int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ObjFaninId(pObj *Gia_Obj_t, iObj int32, n int32) int32 { if n != 0 {
-    return Gia_ObjFaninId1(pObj, iObj);
-} else {
-    return Gia_ObjFaninId0(pObj, iObj);
-}  }
 
-func Gia_ObjTravIsTopTwo(p *Gia_Man_t, iNodeA int32) int32 { return (p.pTravIds[iNodeA] >= p.nTravIds - 1);       }
-func Gia_ObjTravIsSame(p *Gia_Man_t, iNodeA int32, iNodeB int32) int32 { return (p.pTravIds[iNodeA] == p.pTravIds[iNodeB]);   }
-func Gia_ObjTravSetSame(p *Gia_Man_t, iNodeA int32, iNodeB int32) { p.pTravIds[iNodeA] = p.pTravIds[iNodeB];             }
+
+
+
+
 
 // collect nodes on the path from the meeting point to the root node, excluding the meeting point
-func Gia_RsbWindowGather(p *Gia_Man_t, vPaths *Vec_Int_t, iNode int32, vVisited *Vec_Int_t) {
-    var iPrev int32;
-    if iNode == 0 {
-        return; }
-    Vec_IntPush( vVisited, iNode );
-    iPrev = Vec_IntEntry( vPaths, iNode );
-    if iPrev == 0 {
-        return; }
-    assert((Gia_ObjTravIsSame(p, iPrev, iNode) != 0), "Gia_ObjTravIsSame(p, iPrev, iNode)");
-    Gia_RsbWindowGather( p, vPaths, iPrev, vVisited );
-}
+
 // explore the frontier of nodes in the breadth-first traversal
-func Gia_RsbWindowExplore(p *Gia_Man_t, vVisited *Vec_Int_t, iStart int32, vPaths *Vec_Int_t, piMeet *int32, piNode *int32) int32 {
-    var i int32;
-    var n int32;
-    var iObj int32;
-    var iLimit int32 = Vec_IntSize( vVisited );
-    *piMeet = *piNode = 0;
-    // inlining of macro Vec_IntForEachEntryStartStop
-    for  i = iStart; (i < iLimit) && (((iObj) = Vec_IntEntry(vVisited, i)), 1); i++  {
-        var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );
-        if !Gia_ObjIsAnd(pObj) {
-            continue; }
-        for  n = 0; n < 2; n++  {
-            var iFan int32  = Gia_ObjFaninId( pObj, iObj, n );
-            // if the node was visited on the paths to both fanins, collect it
-            if (Gia_ObjTravIsTopTwo(p, iObj) != 0) && (Gia_ObjTravIsTopTwo(p, iFan) != 0) && !(Gia_ObjTravIsSame(p, iObj, iFan) != 0) {
-                *piMeet = iFan;
-                *piNode = iObj;
-                return 1;
-            }
-            // if the node was visited already on this path, skip it
-            if Gia_ObjTravIsTopTwo(p, iFan) != 0 {
-                assert((Gia_ObjTravIsSame(p, iObj, iFan) != 0), "Gia_ObjTravIsSame(p, iObj, iFan)");
-                continue;
-            }
-            // label the node as visited
-            Gia_ObjTravSetSame( p, iFan, iObj );
-            Vec_IntWriteEntry( vPaths, iFan, iObj ); 
-            Vec_IntPush( vVisited, iFan );
-        }
-    }
-    return 0;
-}
-func Gia_RsbWindowInit(p *Gia_Man_t, vPaths *Vec_Int_t, iPivot int32, nIter int32) *Vec_Int_t {
-    var vVisited *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var pPivot *Gia_Obj_t  = Gia_ManObj( p, iPivot ); 
-    var i, n, iStart int32;
-    assert(Gia_ObjIsAnd(pPivot), "Gia_ObjIsAnd(pPivot)");
-    // start paths for both fanins of the pivot node
-    for  n = 0; n < 2; n++  {
-        var iFan int32  = Gia_ObjFaninId( pPivot, iPivot, n );
-        Gia_ManIncrementTravId(p);
-        Vec_IntPush( vVisited, iFan );
-        Vec_IntWriteEntry( vPaths, iFan, 0 ); 
-        Gia_ObjSetTravIdCurrentId( p, iFan );
-    }
-    // perform several iterations of breadth-first search
-    for  i = 0; i < nIter; i++  {
-        var iMeet int32;
-        var iNode int32;
-        var iNext int32 = Vec_IntSize(vVisited);
-        if Gia_RsbWindowExplore( p, vVisited, iStart, vPaths, &iMeet, &iNode ) != 0 {
-            // found the shared path
-            if Gia_ObjIsTravIdCurrentId(p, iMeet) {
-                assert(Gia_ObjIsTravIdPreviousId(p, iNode), "Gia_ObjIsTravIdPreviousId(p, iNode)");
-            } else if Gia_ObjIsTravIdPreviousId(p, iMeet) {
-                assert(Gia_ObjIsTravIdCurrentId(p, iNode), "Gia_ObjIsTravIdCurrentId(p, iNode)");
-            } else { assert(false, "0"); }
-            // collect the initial window
-            Vec_IntClear( vVisited );
-            Gia_RsbWindowGather( p, vPaths, Vec_IntEntry(vPaths, iMeet), vVisited );
-            Gia_RsbWindowGather( p, vPaths, iNode, vVisited );
-            Vec_IntPush( vVisited, iPivot );
-            break;
-        }
-        iStart = iNext;
-    }
-    // if no meeting point is found, make sure to return NULL
-    if i == nIter {
-        Vec_IntFreeP( &vVisited ); }
-    return vVisited;
-}
-func Gia_RsbCreateWindowInputs(p *Gia_Man_t, vWin *Vec_Int_t) *Vec_Int_t {
-    var vInputs *Vec_Int_t  = Vec_IntAlloc(10);
-    var pObj *Gia_Obj_t; var i, n, iObj int32;
-    Gia_ManIncrementTravId(p);
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vWin)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vWin,i))); i++  {
-        Gia_ObjSetTravIdCurrent(p, pObj);
-    }
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vWin)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vWin,i))); i++  {
-        assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-        for  n = 0; n < 2; n++  {
-            var iFan int32;
-            if n != 0 {
-                iFan = Gia_ObjFaninId1p(p, pObj);
-            } else {
-                iFan = Gia_ObjFaninId0p(p, pObj);
-            }
-            if !Gia_ObjIsTravIdCurrentId(p, iFan) {
-                Vec_IntPushUnique( vInputs, iFan ); }
-        }
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vInputs)) && (((iObj) = Vec_IntEntry(vInputs, i)), 1); i++  {
-        Gia_ObjSetTravIdCurrentId( p, iObj );
-        Vec_IntPush( vWin, iObj );
-    }
-    return vInputs;
-}
+
+
+
 
 /**Function*************************************************************
 
@@ -315,46 +204,7 @@ func Gia_RsbCreateWindowInputs(p *Gia_Man_t, vWin *Vec_Int_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_RsbAddSideInputs(p *Gia_Man_t, vLevels *Vec_Wec_t, vWin *Vec_Int_t) {
-    var vLevel *Vec_Int_t; 
-    var pObj, pFanout *Gia_Obj_t;
-    var k, i, f, iObj int32;
-    // precondition: the levelized structure is empty
-    assert(Vec_WecSizeSize(vLevels) == 0, "Vec_WecSizeSize(vLevels) == 0");
-    // precondition: window nodes are labeled with the current ID
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vWin)) && (((iObj) = Vec_IntEntry(vWin, i)), 1); i++  {
-        assert(Gia_ObjIsTravIdCurrentId(p, iObj), "Gia_ObjIsTravIdCurrentId(p, iObj)");
-        Vec_WecPush( vLevels, Gia_ObjLevelId(p, iObj), iObj );
-    }
-    // iterate through all objects and explore their fanouts
-    // inlining of macro Vec_WecForEachLevel
-    for  k = 0; (k < Vec_WecSize(vLevels)) && (((vLevel) = Vec_WecEntry(vLevels, k)), 1); k++  {
-        // inlining of macro Gia_ManForEachObjVec
-        for  i = 0; (i < Vec_IntSize(vLevel)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vLevel,i))); i++  {
-            // inlining of macro Gia_ObjForEachFanoutStatic
-            for  f = 0; (f < Gia_ObjFanoutNum(p, pObj))   && (((pFanout) = Gia_ObjFanout(p, pObj, f)), 1); f++  {
-                if f == 5 { // explore first 5 fanouts of the node
-                    break; }
-                if Gia_ObjIsAnd(pFanout) && // internal node
-                    !Gia_ObjIsTravIdCurrent(p, pFanout) && // not in the window
-                     Gia_ObjIsTravIdCurrent(p, Gia_ObjFanin0(pFanout)) && // but fanins are
-                     Gia_ObjIsTravIdCurrent(p, Gia_ObjFanin1(pFanout)) {  // in the window
-                
-                    // add fanout to the window and to the levelized structure
-                    Gia_ObjSetTravIdCurrent( p, pFanout );
-                    Vec_WecPush( vLevels, Gia_ObjLevel(p, pFanout), Gia_ObjId(p, pFanout) );
-                    Vec_IntPush( vWin, Gia_ObjId(p, pFanout) );
-                }
-            }
-        }
-    }
-    // iterate through the nodes in the levelized structure
-    // inlining of macro Vec_WecForEachLevel
-    for  k = 0; (k < Vec_WecSize(vLevels)) && (((vLevel) = Vec_WecEntry(vLevels, k)), 1); k++  {
-        Vec_IntClear( vLevel );
-    }
-}
+
 // expland inputs until saturation while adding the side-fanouts
 func Gia_RsbExpandInputs(p *Gia_Man_t, vLevels *Vec_Wec_t, vWin *Vec_Int_t, vInputs *Vec_Int_t) {
     var pObj *Gia_Obj_t; 
@@ -436,202 +286,15 @@ func Gia_RsbWindowGrow(p *Gia_Man_t, vLevels *Vec_Wec_t, vWin *Vec_Int_t, vIns *
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_WinCreateFromCut_rec(p *Gia_Man_t, iObj int32, vWin *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    if Gia_ObjIsTravIdCurrentId(p, iObj) {
-        return; }
-    Gia_ObjSetTravIdCurrentId(p, iObj);
-    pObj = Gia_ManObj( p, iObj );
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_WinCreateFromCut_rec( p, Gia_ObjFaninId0(pObj, iObj), vWin );
-    Gia_WinCreateFromCut_rec( p, Gia_ObjFaninId1(pObj, iObj), vWin );
-    Vec_IntPush( vWin, iObj );
-}
+
 // uses levelized structure (vLevels) to collect in array vWin divisors supported by the cut (vIn)
-func Gia_WinCreateFromCut(p *Gia_Man_t, iPivot int32, vIn *Vec_Int_t, vLevels *Vec_Wec_t, vWin *Vec_Int_t) {
-    var vLevel *Vec_Int_t; 
-    var pObj, pFanout *Gia_Obj_t;
-    var k, i, f, iObj, Level int32;
-    var vUsed *Vec_Int_t  = Vec_IntAlloc( 100 );
-    // precondition:  the levelized structure is empty
-    assert(Vec_WecSizeSize(vLevels) == 0, "Vec_WecSizeSize(vLevels) == 0");
-    // clean the resulting array
-    Vec_IntClear( vWin );
-    // collect leaves
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vIn)) && (((iObj) = Vec_IntEntry(vIn, i)), 1); i++  {
-        Gia_ObjSetTravIdCurrentId( p, iObj );
-        Vec_IntPush( vWin, iObj );
-    }
-    // collect internal cone
-    Gia_WinCreateFromCut_rec( p, iPivot, vWin );
-    // add nodes to the levelized structure
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vWin)) && (((iObj) = Vec_IntEntry(vWin, i)), 1); i++  {
-        Vec_WecPush( vLevels, Gia_ObjLevelId(p, iObj), iObj );
-        Vec_IntPushUniqueOrder( vUsed, Gia_ObjLevelId(p, iObj) );
-    }
-    // iterate through all objects and explore their fanouts
-    //Vec_WecForEachLevel( vLevels, vLevel, k )
-    // inlining of macro Vec_IntForEachEntry
-    for  k = 0; (k < Vec_IntSize(vUsed)) && (((Level) = Vec_IntEntry(vUsed, k)), 1); k++  {
-        vLevel = Vec_WecEntry( vLevels, Level );
-        // inlining of macro Gia_ManForEachObjVec
-        for  i = 0; (i < Vec_IntSize(vLevel)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vLevel,i))); i++  {
-            // inlining of macro Gia_ObjForEachFanoutStatic
-            for  f = 0; (f < Gia_ObjFanoutNum(p, pObj))   && (((pFanout) = Gia_ObjFanout(p, pObj, f)), 1); f++  {
-                if f == 5 { // explore first 5 fanouts of the node
-                    break; }
-                if Gia_ObjIsAnd(pFanout) && // internal node
-                    !Gia_ObjIsTravIdCurrent(p, pFanout) && // not in the window
-                     Gia_ObjIsTravIdCurrent(p, Gia_ObjFanin0(pFanout)) && // but fanins are
-                     Gia_ObjIsTravIdCurrent(p, Gia_ObjFanin1(pFanout)) {  // in the window
-                
-                    // add fanout to the window and to the levelized structure
-                    Gia_ObjSetTravIdCurrent( p, pFanout );
-                    Vec_WecPush( vLevels, Gia_ObjLevel(p, pFanout), Gia_ObjId(p, pFanout) );
-                    Vec_IntPush( vWin, Gia_ObjId(p, pFanout) );
-                    Vec_IntPushUniqueOrder( vUsed, Gia_ObjLevel(p, pFanout) );
-                }
-            }
-        }
-        Vec_IntClear( vLevel );
-    }
-    Vec_IntSort( vWin, 0 );
-    Vec_IntFree( vUsed );
-}
+
 // update the cut until both fanins of AND nodes are not in the cut
-func Gia_RsbExpandCut(p *Gia_Man_t, vIns *Vec_Int_t) int32 {
-    var fOnlyPis int32;
-    var fChange int32 = 1;
-    var nSize int32 = Vec_IntSize(vIns);
-    for  fChange != 0  {
-        var pObj *Gia_Obj_t;
-        var i, iFan0, iFan1, fHave0, fHave1 int32;
-        fOnlyPis = 1;
-        fChange = 0;
-        // check if some nodes can be expanded without increasing cut size
-        // inlining of macro Gia_ManForEachObjVec
-        for  i = 0; (i < Vec_IntSize(vIns)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vIns,i))); i++  {
-            assert(Gia_ObjIsTravIdCurrent(p, pObj), "Gia_ObjIsTravIdCurrent(p, pObj)");
-            if !Gia_ObjIsAnd(pObj) {
-                continue; }
-            fOnlyPis = 0;
-            iFan0 = Gia_ObjFaninId0p(p, pObj);
-            iFan1 = Gia_ObjFaninId1p(p, pObj);
-            fHave0 = Gia_ObjIsTravIdCurrentId(p, iFan0);
-            fHave1 = Gia_ObjIsTravIdCurrentId(p, iFan1);
-            if !fHave0 && !(fHave1 != 0) {
-                continue; }
-            // can expand because one of the fanins is already in the cut
-            // remove current cut node
-            Vec_IntDrop( vIns, i );
-            // add missing fanin
-            if !fHave0 {
-                Vec_IntPush( vIns, iFan0 );
-                Gia_ObjSetTravIdCurrentId( p, iFan0 );
-            }
-            if !(fHave1 != 0) {
-                Vec_IntPush( vIns, iFan1 );
-                Gia_ObjSetTravIdCurrentId( p, iFan1 );
-            }
-            fChange = 1;
-            break;
-        }
-    }
-    assert(Vec_IntSize(vIns) <= nSize, "Vec_IntSize(vIns) <= nSize");
-    return fOnlyPis;
-}
-func Gia_RsbFindFaninAdd(iFan int32, pFanins []int32, pFaninCounts []int32, nFanins int32) int32 {
-    var i int32;
-    for  i = 0; i < nFanins; i++  {
-        if pFanins[i] == iFan {
-            break; }
-    }
-    pFanins[i] = iFan;
-    pFaninCounts[i]++;
-    return nFanins + (i == nFanins);
-}                        
-func Gia_RsbFindFaninToAddToCut(p *Gia_Man_t, vIns *Vec_Int_t) int32 {
-    var pObj *Gia_Obj_t;
-    var nFanins int32;
-    var pFanins [64]int32 ;
-    var pFaninCounts [64]int32 ;
-    var i int32;
-    var iFan0 int32;
-    var iFan1 int32;
-    var iFanMax int32 = -1;
-    var CountMax int32;
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vIns)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vIns,i))); i++  {
-        if !Gia_ObjIsAnd(pObj) {
-            continue; }
-        iFan0 = Gia_ObjFaninId0p(p, pObj);
-        iFan1 = Gia_ObjFaninId1p(p, pObj);
-        assert(!Gia_ObjIsTravIdCurrentId(p, iFan0), "!Gia_ObjIsTravIdCurrentId(p, iFan0)");
-        assert(!Gia_ObjIsTravIdCurrentId(p, iFan1), "!Gia_ObjIsTravIdCurrentId(p, iFan1)");
-        nFanins = Gia_RsbFindFaninAdd( iFan0, pFanins, pFaninCounts, nFanins );
-        nFanins = Gia_RsbFindFaninAdd( iFan1, pFanins, pFaninCounts, nFanins );
-        assert(nFanins < 64, "nFanins < 64");
-    }
-    // find fanin with the highest count
-    for  i = 0; i < nFanins; i++  {
-//        if ( CountMax < pFaninCounts[i] )
-        if CountMax < pFaninCounts[i] || (CountMax == pFaninCounts[i] && (Gia_ObjFanoutNumId(p, iFanMax) < Gia_ObjFanoutNumId(p, pFanins[i]))) {
-            CountMax = pFaninCounts[i];
-            iFanMax  = pFanins[i];
-        }
-    }
-    return iFanMax;
-}
+
+                        
+
 // precondition: nodes in vWin and in vIns are marked with the current ID
-func Gia_RsbWindowGrow2(p *Gia_Man_t, iObj int32, vLevels *Vec_Wec_t, vWin *Vec_Int_t, vIns *Vec_Int_t, nInputsMax int32) {
-    // window will be recomputed later
-    Vec_IntClear( vWin );
-    // expand the cut without increasing its cost
-    if !(Gia_RsbExpandCut( p, vIns ) != 0) {
-        // save it as the best cut
-        var vBest *Vec_Int_t;
-        if Vec_IntSize(vIns) <= nInputsMax {
-            vBest = Vec_IntDup(vIns);
-        } else {
-            vBest = nil;
-        }
-        var fOnlyPis, Iter int32;
-        // iterate expansion until  
-        // (1) the cut cannot be expanded because all leaves are PIs
-        // (2) the cut size exceeded the limit for 5 consecutive iterations
-        for  !(fOnlyPis != 0) && (Vec_IntSize(vIns) <= nInputsMax || Iter < 5)  {
-            var iFanBest int32  = Gia_RsbFindFaninToAddToCut( p, vIns );
-            Vec_IntPush( vIns, iFanBest );
-            Gia_ObjSetTravIdCurrentId( p, iFanBest );
-            fOnlyPis = Gia_RsbExpandCut( p, vIns );
-            if Vec_IntSize(vIns) > nInputsMax {
-                Iter++;
-            } else {
-                Iter = 0; }                
-            if Vec_IntSize(vIns) <= nInputsMax && (!(vBest != nil) || Vec_IntSize(vBest) <= Vec_IntSize(vIns)) {
-                if vBest != nil {
-                    Vec_IntClear(vBest);
-                } else {
-                    vBest = Vec_IntAlloc( 10 ); }
-                Vec_IntAppend( vBest, vIns );
-            }
-        }
-        if vBest != nil {
-            Vec_IntClear( vIns );
-            Vec_IntAppend( vIns, vBest );
-            Vec_IntFree( vBest );
-        
-        } else {
-            assert(Vec_IntSize(vIns) > nInputsMax, "Vec_IntSize(vIns) > nInputsMax"); }
-    }
-    if Vec_IntSize(vIns) <= nInputsMax {
-        Vec_IntSort( vIns, 0 );
-        Gia_WinCreateFromCut( p, iObj, vIns, vLevels, vWin );
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -644,31 +307,7 @@ func Gia_RsbWindowGrow2(p *Gia_Man_t, iObj int32, vLevels *Vec_Wec_t, vWin *Vec_
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_RsbWindowCompute(p *Gia_Man_t, iObj int32, nInputsMax int32, nLevelsMax int32, vLevels *Vec_Wec_t, vPaths *Vec_Int_t, pvWin **Vec_Int_t, pvIns **Vec_Int_t) int32 {
-    var vWin, vIns *Vec_Int_t;
-    *pvWin = *pvIns = nil;
-    vWin = Gia_RsbWindowInit( p, vPaths, iObj, nLevelsMax );
-    if vWin == nil {
-        return 0; }
-    vIns = Gia_RsbCreateWindowInputs( p, vWin ); 
-    // vWin and vIns are labeled with the current trav ID
-    //Vec_IntPrint( vWin );    
-    //Vec_IntPrint( vIns );    
-    if Vec_IntSize(vIns) <= nInputsMax + 3 { // consider windows, which initially has a larger input space
-        Gia_RsbWindowGrow2( p, iObj, vLevels, vWin, vIns, nInputsMax ); }
-    if Vec_IntSize(vIns) <= nInputsMax {
-        Vec_IntSort( vWin, 0 );
-        Vec_IntSort( vIns, 0 );
-        *pvWin = vWin;
-        *pvIns = vIns;
-        return 1;
-    
-    } else {
-        Vec_IntFree( vWin );
-        Vec_IntFree( vIns );
-        return 0;
-    }
-}
+
 
 /**Function*************************************************************
 
