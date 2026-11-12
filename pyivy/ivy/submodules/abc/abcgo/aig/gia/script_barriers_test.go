@@ -3,6 +3,7 @@ package gia
 import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/dch"
 	"testing"
 )
 
@@ -62,5 +63,18 @@ func TestScriptPortOrdering(t *testing.T) {
 		if vec.Vec_PtrEntry(order, i) != edge {
 			t.Fatalf("port %d: %v want %v", i, vec.Vec_PtrEntry(order, i), edge)
 		}
+	}
+}
+
+func TestScriptChoiceConstruction(t *testing.T) {
+	p := Gia_ManStart(8)
+	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	out := Gia_ManAppendAnd(p, a, b)
+	Gia_ManAppendCo(p, out)
+	pars := dch.DefaultParams()
+	pars.Synthesis = false
+	q := Gia_ManAigSynch2Choices(p, Gia_ManDup(p), Gia_ManDup(p), &pars)
+	if q == nil || Gia_ManVerifyTwoTruths(p, q) != 1 {
+		t.Fatal("choice construction changed function")
 	}
 }

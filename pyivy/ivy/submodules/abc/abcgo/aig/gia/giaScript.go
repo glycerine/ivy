@@ -176,33 +176,6 @@ func Gia_ManAigSyn2(pInit *Gia_Man_t, fOldAlgo int32, fCoarsen int32, fCutMin in
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManAigSynch2Choices(pGia1 *Gia_Man_t, pGia2 *Gia_Man_t, pGia3 *Gia_Man_t, pPars *Dch_Pars_t) *Gia_Man_t {
-    var pMan, pTemp *Aig_Man_t;
-    var pGia, pMiter *Gia_Man_t;
-    // derive miter
-    var vPios *Vec_Ptr_t;
-    var vGias *Vec_Ptr_t = Vec_PtrAlloc( 3 );
-    if pGia3 != nil { Vec_PtrPush( vGias, pGia3 ); }
-    if pGia2 != nil { Vec_PtrPush( vGias, pGia2 ); }
-    if pGia1 != nil { Vec_PtrPush( vGias, pGia1 ); }
-    pMiter = Gia_ManChoiceMiter( vGias );
-    Vec_PtrFree( vGias );
-    // transform into an AIG
-    pMan = Gia_ManToAigSkip( pMiter, 3 );
-    Gia_ManStop( pMiter );
-    // compute choices
-    pMan = Dch_ComputeChoices( pTemp = pMan, pPars );
-    Aig_ManStop( pTemp );
-    // reconstruct the network
-    vPios = Gia_ManOrderPios( pMan, pGia1 ); 
-    pMan = Aig_ManDupDfsGuided( pTemp = pMan, vPios );
-    Aig_ManStop( pTemp );
-    Vec_PtrFree( vPios );
-    // convert to GIA
-    pGia = Gia_ManFromAigChoices( pMan );
-    Aig_ManStop( pMan );
-    return pGia;
-}
 func Gia_ManAigSynch2(pInit *Gia_Man_t, pPars0 any, nLutSize int32, nRelaxRatio int32) *Gia_Man_t {
     extern Gia_Man_t * Gia_ManLutBalance( Gia_Man_t * p, int nLutSize, int fUseMuxes, int fRecursive, int fOptArea, int fVerbose );
     var pParsDch *Dch_Pars_t  = (Dch_Pars_t *)pPars0;
