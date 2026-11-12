@@ -73,6 +73,13 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 2 0
 	if err != nil || changed != 1 || !reflect.DeepEqual(coreTable(t, p), want) {
 		t.Fatalf("area driver: changed=%d err=%v", changed, err)
 	}
+	p = testNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
+	p.Mapping[2], p.Mapping[3] = &Gate{Area: 2000}, &Gate{Area: 2000}
+	pars.AreaRev = true
+	changed, err = sfmOptimizeMappedArea(p, pars, prepared, handles)
+	if err != nil || changed != 1 || !reflect.DeepEqual(coreTable(t, p), want) {
+		t.Fatalf("reverse area driver: changed=%d err=%v", changed, err)
+	}
 	pars.MoreEffort = true
 	if _, err := sfmOptimizeMappedArea(p, pars, prepared, handles); err == nil {
 		t.Fatal("unsupported option was silently ignored")
