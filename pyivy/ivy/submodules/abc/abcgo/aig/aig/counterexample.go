@@ -44,6 +44,9 @@ func (p *Graph) TakeCombinationalCounterexample() *util.Abc_Cex_t {
 // witness. It shares the original pSeqModel storage with one-frame witnesses.
 // A rejected model leaves the previous witness intact.
 func (p *Graph) SetSequentialCounterexample(model *util.Abc_Cex_t) error {
+	if p == nil {
+		return fmt.Errorf("aig: nil graph")
+	}
 	if model == nil {
 		return fmt.Errorf("aig: nil sequential counterexample")
 	}
@@ -57,7 +60,7 @@ func (p *Graph) SetSequentialCounterexample(model *util.Abc_Cex_t) error {
 		return fmt.Errorf("aig: truncated or inconsistent sequential counterexample")
 	}
 	copied := *model
-	copied.PData = append([]uint32(nil), model.PData...)
+	copied.PData = append([]uint32(nil), model.PData[:(count+31)/32]...)
 	p.combinationalCex = &copied
 	return nil
 }
