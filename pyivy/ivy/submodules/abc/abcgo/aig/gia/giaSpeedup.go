@@ -100,92 +100,7 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDelayTraceLut(p *Gia_Man_t) float32 {
-    var fUseSorting int32  = 1;
-    var pLutLib *If_LibLut_t  = (If_LibLut_t *)p.pLutLib;
-    var vObjs *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var tArrival, tArrivalCur, tRequired, tSlack float32;
-    var i, iObj int32;
 
-    // get the library
-    if (pLutLib != nil) && pLutLib.LutMax < Gia_ManLutSizeMax(p) {
-        fmt.Printf("The max LUT size (%d) is less than the max fanin count (%d).\n", pLutLib.LutMax, Gia_ManLutSizeMax(p));
-        return -TIM_ETERNITY;
-    }
-
-    // initialize the arrival times
-    Gia_ManTimeStart( p );
-    Gia_ManLevelNum( p );
-
-    // propagate arrival times
-    if p.pManTime {
-        Tim_ManIncrementTravId( (Tim_Man_t *)p.pManTime ); }
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if !Gia_ObjIsCi(pObj) && !Gia_ObjIsCo(pObj) && !Gia_ObjIsLut(p, i) {
-            continue; }
-        tArrival = Gia_ObjComputeArrival( p, i, fUseSorting );
-        if Gia_ObjIsCi(pObj) && p.pManTime {
-            tArrival = Tim_ManGetCiArrival( (Tim_Man_t *)p.pManTime, Gia_ObjCioId(pObj) );
-//printf( "%.3f  ", tArrival );
-        }
-        if Gia_ObjIsCo(pObj) && p.pManTime {
-            Tim_ManSetCoArrival( (Tim_Man_t *)p.pManTime, Gia_ObjCioId(pObj), tArrival ); }
-        Gia_ObjSetTimeArrival( p, i, tArrival );
-    }
-
-    // get the latest arrival times
-    tArrival = -TIM_ETERNITY;
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        tArrivalCur = Gia_ObjTimeArrivalObj( p, Gia_ObjFanin0(pObj) );
-        Gia_ObjSetTimeArrival( p, Gia_ObjId(p,pObj), tArrivalCur );
-        if tArrival < tArrivalCur {
-            tArrival = tArrivalCur; }
-    }
-
-    // initialize the required times
-    if p.pManTime {
-        Tim_ManIncrementTravId( (Tim_Man_t *)p.pManTime );
-        Tim_ManInitPoRequiredAll( (Tim_Man_t *)p.pManTime, tArrival );
-    
-    } else {
-        // inlining of macro Gia_ManForEachCo
-        for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-            Gia_ObjSetTimeRequiredObj( p, pObj, tArrival );
-        }
-    }
-
-    // propagate the required times
-    vObjs = Gia_ManOrderReverse( p );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vObjs)) && (((iObj) = Vec_IntEntry(vObjs, i)), 1); i++  {
-        pObj = Gia_ManObj(p, iObj);
-        if Gia_ObjIsLut(p, iObj) {
-            Gia_ObjPropagateRequired( p, iObj, fUseSorting );
-        
-        } else if Gia_ObjIsCi(pObj) {
-            if p.pManTime {
-                Tim_ManSetCiRequired( (Tim_Man_t *)p.pManTime, Gia_ObjCioId(pObj), Gia_ObjTimeRequired(p, iObj) ); }
-        
-        } else if Gia_ObjIsCo(pObj) {
-            if p.pManTime {
-                tRequired = Tim_ManGetCoRequired( (Tim_Man_t *)p.pManTime, Gia_ObjCioId(pObj) );
-                Gia_ObjSetTimeRequired( p, iObj, tRequired );
-            }
-            if Gia_ObjTimeRequired(p, Gia_ObjFaninId0p(p, pObj)) > Gia_ObjTimeRequired(p, iObj) {
-                Gia_ObjSetTimeRequired(p, Gia_ObjFaninId0p(p, pObj), Gia_ObjTimeRequired(p, iObj) ); }
-        }
-
-        // set slack for this object
-        tSlack = Gia_ObjTimeRequired(p, iObj) - Gia_ObjTimeArrival(p, iObj);
-        assert(tSlack + 0.01 > 0.0, "tSlack + 0.01 > 0.0");
-        Gia_ObjSetTimeSlack( p, iObj, tSlack < 0.0 ? 0.0 : tSlack );
-    }
-    Vec_IntFree( vObjs );
-    return tArrival;
-}
 
      
 
@@ -367,41 +282,7 @@ func Gia_ManDelayTraceLutPrint(p *Gia_Man_t, fVerbose int32) float32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_LutDelayTraceTCEdges(p *Gia_Man_t, iObj int32, tDelta float32) uint32 {
-    var pLutLib *If_LibLut_t  = (If_LibLut_t *)p.pLutLib;
-    var pPinPerm [32]int32;
-    var pPinDelays [32]float32;
-    var tRequired float32;
-    var pDelays *float32;
-    var uResult uint32;
-    var k, iFanin int32;
-    tRequired = Gia_ObjTimeRequired( p, iObj );
-    if pLutLib == nil {
-        // inlining of macro Gia_LutForEachFanin
-        for  k = 0; k < Gia_ObjLutSize(p,iObj) && ((iFanin = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {
-            if tRequired < Gia_ObjTimeArrival(p, iFanin) + 1.0 + tDelta {
-                uResult |= (1 << k); }
-        }
-    
-    } else if !pLutLib.fVarPinDelays {
-        pDelays = pLutLib.pLutDelays[Gia_ObjLutSize(p, iObj)];
-        // inlining of macro Gia_LutForEachFanin
-        for  k = 0; k < Gia_ObjLutSize(p,iObj) && ((iFanin = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {
-            if tRequired < Gia_ObjTimeArrival(p, iFanin) + pDelays[0] + tDelta {
-                uResult |= (1 << k); }
-        }
-    
-    } else {
-        pDelays = pLutLib.pLutDelays[Gia_ObjLutSize(p, iObj)];
-        Gia_LutDelayTraceSortPins( p, iObj, pPinPerm, pPinDelays );
-        // inlining of macro Gia_LutForEachFanin
-        for  k = 0; k < Gia_ObjLutSize(p,iObj) && ((iFanin = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {
-            if tRequired < Gia_ObjTimeArrival( p, Gia_ObjLutFanin(p, iObj,pPinPerm[k])) + pDelays[k] + tDelta {
-                uResult |= (1 << pPinPerm[k]); }
-        }
-    }
-    return uResult;
-}
+
 
 /**Function*************************************************************
 
