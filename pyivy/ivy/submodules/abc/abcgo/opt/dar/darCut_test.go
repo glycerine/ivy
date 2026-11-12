@@ -21,7 +21,7 @@ func TestCutSupportMinimization(t *testing.T) {
 	}
 }
 func TestCutMergeTruth(t *testing.T) {
-	a := Cut{Leaves: []aig.Edge{2, 6}, Truth: 0x8888}
+	a := Cut{Leaves: []aig.Edge{2, 6}, Truth: 0x6666}
 	b := Cut{Leaves: []aig.Edge{4, 6}, Truth: 0xeeee}
 	c, ok := Dar_CutMerge(a, b)
 	if !ok {
@@ -30,7 +30,7 @@ func TestCutMergeTruth(t *testing.T) {
 	c.Truth = Dar_CutTruth(c, a, b, false, true)
 	for n := 0; n < 16; n++ {
 		x, y, z := n&1 != 0, n&2 != 0, n&4 != 0
-		want := (x && z) && !(y || z)
+		want := (x != z) && !(y || z)
 		if (c.Truth&(1<<n) != 0) != want {
 			t.Fatal(n, c.Truth)
 		}
@@ -43,14 +43,17 @@ func TestCutEnumeratorTruth(t *testing.T) {
 	g := aig.NewGraph()
 	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
 	root := g.XOR(g.AND(a, b.Not()), c)
-	cuts := NewCutEnumerator(g, 32).Cuts(root)
+	enumerator := NewCutEnumerator(g, 32)
+	cuts := enumerator.Cuts(root)
 	if len(cuts) < 2 {
 		t.Fatal("no nontrivial cuts")
 	}
+	found := false
 	for _, cut := range cuts {
 		if len(cut.Leaves) != 3 || cut.Leaves[0] != a || cut.Leaves[1] != b || cut.Leaves[2] != c {
 			continue
 		}
+		found = true
 		for n := 0; n < 8; n++ {
 			values := map[aig.Edge]bool{a: n&1 != 0, b: n&2 != 0, c: n&4 != 0}
 			index := 0
@@ -65,8 +68,15 @@ func TestCutEnumeratorTruth(t *testing.T) {
 			}
 		}
 	}
+	if !found {
+		t.Fatal("missing primary-input cut")
+	}
 	// Returned cuts are owned by caller, not aliases of the memoized boundaries.
+	original := cuts[0].Leaves[0]
 	cuts[0].Leaves[0] = a
+	if enumerator.Cuts(root)[0].Leaves[0] != original {
+		t.Fatal("borrowed cut boundary")
+	}
 	again := NewCutEnumerator(g, 32).Cuts(root.Not())
 	if again[0].Truth != ^NewCutEnumerator(g, 32).Cuts(root)[0].Truth {
 		t.Fatal("root phase")

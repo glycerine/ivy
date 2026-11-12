@@ -16,14 +16,19 @@ func Dar_ManStart(g *aig.Graph, params *RewriteParams) (*Manager, error) {
 	if p.CutsMax < 2 || p.SubgraphsMax < 1 {
 		return nil, fmt.Errorf("dar: invalid cut or subgraph limit")
 	}
-	if p.Power {
-		return nil, fmt.Errorf("dar: power-driven rewriting requires switching activity and is not available")
-	}
 	if err := g.Check(); err != nil {
 		return nil, err
 	}
-	return &Manager{Graph: g, Params: p, library: Dar_LibPrepare(p.SubgraphsMax)}, nil
+	m := &Manager{Graph: g, Params: p, library: Dar_LibPrepare(p.SubgraphsMax)}
+	if p.Power {
+		var err error
+		m.probabilities, err = SimulateActivity(p.Context, g, DefaultActivityOptions())
+		if err != nil {
+			return nil, err
+		}
+	}
+	return m, nil
 }
 
 // Dar_ManStop releases temporary search state; the caller retains its graph.
-func Dar_ManStop(m *Manager) { m.library = nil }
+func Dar_ManStop(m *Manager) { m.library = nil; m.probabilities = nil }

@@ -88,3 +88,21 @@ func TestRewriteRejectsRootDependentReplacement(t *testing.T) {
 		t.Fatal("incorrect root dependency")
 	}
 }
+func TestRewriteTrivialSupport(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	g.AddOutput(g.OR(a, g.AND(a, g.OR(b, c))))
+	before := g.NodeCount()
+	if err := Dar_ManRewrite(g, nil); err != nil {
+		t.Fatal(err)
+	}
+	if aig.Aig_ManDupDfs(g).NodeCount() >= before {
+		t.Fatal("support-one simplification missed")
+	}
+	for n := 0; n < 8; n++ {
+		out, err := g.Evaluate([]bool{n&1 != 0, n&2 != 0, n&4 != 0})
+		if err != nil || out[0] != (n&1 != 0) {
+			t.Fatal(n, out, err)
+		}
+	}
+}

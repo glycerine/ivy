@@ -25,6 +25,7 @@ func Dar_ManRewrite(g *aig.Graph, params *RewriteParams) error {
 }
 func (m *Manager) Rewrite() error {
 	g := m.Graph
+	cuts := NewCutEnumerator(g, m.Params.CutsMax)
 	for _, root := range g.LiveEdges() {
 		if m.Params.Context != nil {
 			if err := m.Params.Context.Err(); err != nil {
@@ -36,7 +37,32 @@ func (m *Manager) Rewrite() error {
 		}
 		m.Stats.Roots++
 		var best *rewriteCandidate
-		for _, cut := range NewCutEnumerator(g, m.Params.CutsMax).Cuts(root) {
+		trivialApplied := false
+		for _, cut := range cuts.Cuts(root) {
+			if len(cut.Leaves) <= 1 {
+				replacement := aig.InvalidEdge
+				if len(cut.Leaves) == 0 {
+					replacement = 1
+					if cut.Truth&1 != 0 {
+						replacement = 0
+					}
+				} else if cut.Leaves[0].NodeID() != root.NodeID() {
+					replacement = cut.Leaves[0]
+					if cut.Truth&1 != 0 {
+						replacement = replacement.Not()
+					}
+				}
+				if replacement != aig.InvalidEdge && !graphDependsOn(g, replacement, root) {
+					saved := int(aig.Aig_NodeMffcLabelCut(g, root, cut.Leaves))
+					aig.Aig_ObjReplace(g, root, replacement, 0)
+					aig.Aig_ManCleanup(g)
+					m.Stats.Replacements++
+					m.Stats.NodesSaved += saved
+					cuts = NewCutEnumerator(g, m.Params.CutsMax)
+					trivialApplied = true
+					break
+				}
+			}
 			if len(cut.Leaves) != 4 {
 				continue
 			}
@@ -51,14 +77,22 @@ func (m *Manager) Rewrite() error {
 				}
 			}
 			oldArea := int(aig.Aig_NodeMffcLabelCut(g, root, cut.Leaves))
+			var powerSaved float32
+			if m.Params.Power {
+				powerSaved = mffcPower(g, root, m.probabilities)
+			}
 			existing := make([]aig.Edge, len(class.nodes)+4)
 			levels := make([]int, len(existing))
+			probabilities := make([]float32, len(existing))
 			for i := range existing {
 				existing[i] = aig.InvalidEdge
 			}
 			for i, e := range inputs {
 				existing[i] = e
 				levels[i] = g.Node(e).Level
+				if m.Params.Power {
+					probabilities[i] = edgeProbability(m.probabilities, e)
+				}
 			}
 			for i, node := range class.nodes {
 				a, b := node.fanins[0], node.fanins[1]
@@ -78,27 +112,22 @@ func (m *Manager) Rewrite() error {
 				levels[i+4] = 1 + max(levels[a>>1], levels[b>>1])
 				if existing[i+4] != aig.InvalidEdge {
 					levels[i+4] = g.Node(existing[i+4]).Level
+					if m.Params.Power {
+						probabilities[i+4] = edgeProbability(m.probabilities, existing[i+4])
+					}
 				}
 			}
 			for _, candidate := range class.roots {
 				if m.Params.UpdateLevel && levels[candidate.index] > g.Node(root).Level {
 					continue
 				}
-				seen := make([]bool, len(existing))
-				var cost func(int) int
-				cost = func(index int) int {
-					if index < 4 || seen[index] {
-						return 0
-					}
-					seen[index] = true
-					e := existing[index]
-					if e != aig.InvalidEdge && !aig.Aig_ObjIsTravIdCurrent(g, e) {
-						return 0
-					}
-					node := class.nodes[index-4]
-					return 1 + cost(int(node.fanins[0]>>1)) + cost(int(node.fanins[1]>>1))
+				area, powerAdded := evaluateLibraryCandidate(g, class, existing, candidate.index, probabilities, m.Params.Power)
+				gain := oldArea - area
+				if m.Params.Power && powerSaved < powerAdded {
+					m.Stats.PowerRejected++
+					continue
 				}
-				gain := oldArea - cost(candidate.index)
+
 				if gain < 0 || gain == 0 && !m.Params.UseZeros {
 					continue
 				}
@@ -107,7 +136,7 @@ func (m *Manager) Rewrite() error {
 				}
 			}
 		}
-		if best == nil {
+		if trivialApplied || best == nil {
 			continue
 		}
 		memo := make([]aig.Edge, len(best.class.nodes)+4)
@@ -132,17 +161,20 @@ func (m *Manager) Rewrite() error {
 			return memo[index]
 		}
 		replacement := build(best.root.index)
+		m.extendProbabilities()
 		if best.complement {
 			replacement = replacement.Not()
 		}
 		if graphDependsOn(g, replacement, root) {
 			aig.Aig_ManCleanup(g)
+			cuts = NewCutEnumerator(g, m.Params.CutsMax)
 			continue
 		}
 		aig.Aig_ObjReplace(g, root, replacement, 0)
 		aig.Aig_ManCleanup(g)
 		m.Stats.Replacements++
 		m.Stats.NodesSaved += best.gain
+		cuts = NewCutEnumerator(g, m.Params.CutsMax)
 	}
 	return g.Check()
 }
