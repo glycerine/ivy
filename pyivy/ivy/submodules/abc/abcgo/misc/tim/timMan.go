@@ -8,14 +8,17 @@ func Tim_ManStart(cis, cos int) *Tim_Man_t {
 	}
 	p := &Tim_Man_t{nCis: cis, nCos: cos, pCis: make([]Tim_Obj_t, cis), pCos: make([]Tim_Obj_t, cos), fUseTravId: true}
 	for i := range p.pCis {
-		p.pCis[i] = Tim_Obj_t{Id: i, iObj2Box: -1, iObj2Num: -1, timeReq: 1000000000}
+		p.pCis[i] = Tim_Obj_t{Id: i, iObj2Box: -1, iObj2Num: -1, timeReq: TIM_ETERNITY}
 	}
 	for i := range p.pCos {
-		p.pCos[i] = Tim_Obj_t{Id: i, iObj2Box: -1, iObj2Num: -1, timeReq: 1000000000}
+		p.pCos[i] = Tim_Obj_t{Id: i, iObj2Box: -1, iObj2Num: -1, timeReq: TIM_ETERNITY}
 	}
 	return p
 }
 func copyTables(p *Tim_Man_t, unit int) [][]float32 {
+	if p.vDelayTables == nil {
+		return nil
+	}
 	tables := make([][]float32, len(p.vDelayTables))
 	for i, t := range p.vDelayTables {
 		if t == nil {
@@ -25,7 +28,7 @@ func copyTables(p *Tim_Man_t, unit int) [][]float32 {
 		tables[i][0] = float32(i)
 		if unit != 0 {
 			for j := 3; j < len(t); j++ {
-				if t[j] != -1000000000 {
+				if t[j] != -TIM_ETERNITY {
 					tables[i][j] = float32(unit)
 				}
 			}
@@ -34,26 +37,26 @@ func copyTables(p *Tim_Man_t, unit int) [][]float32 {
 	return tables
 }
 func Tim_ManDup(p *Tim_Man_t, unit int) *Tim_Man_t {
-	for i := range p.pCis {
-		p.pCis[i].TravId = 0
-	}
-	for i := range p.pCos {
-		p.pCos[i].TravId = 0
-	}
 	q := Tim_ManStart(p.nCis, p.nCos)
 	copy(q.pCis, p.pCis)
 	copy(q.pCos, p.pCos)
+	for i := range q.pCis {
+		q.pCis[i].TravId = 0
+	}
+	for i := range q.pCos {
+		q.pCos[i].TravId = 0
+	}
 	q.vDelayTables = copyTables(p, unit)
 	if unit != 0 {
-		Tim_ManInitPiArrivalAll(p, 0)
-		Tim_ManInitPoRequiredAll(p, 1000000000)
+		Tim_ManInitPiArrivalAll(q, 0)
+		Tim_ManInitPoRequiredAll(q, TIM_ETERNITY)
 	}
 	for _, b := range p.vBoxes {
 		black := 0
 		if b.fBlack {
 			black = 1
 		}
-		Tim_ManCreateBox(q, b.Inouts[0], b.nInputs, b.Inouts[b.nInputs], b.nOutputs, b.iDelayTable, black)
+		Tim_ManCreateBox(q, b.firstIn, b.nInputs, b.firstOut, b.nOutputs, b.iDelayTable, black)
 		q.vBoxes[len(q.vBoxes)-1].iCopy = b.iCopy
 	}
 	return q
@@ -74,6 +77,9 @@ func Tim_ManTrim(p *Tim_Man_t, present []int) *Tim_Man_t {
 	return Tim_ManReduce(p, boxes, 0)
 }
 func Tim_ManReduce(p *Tim_Man_t, boxes []int, diff int) *Tim_Man_t {
+	if diff < 0 {
+		panic("tim: negative terminal reduction")
+	}
 	pi, po := Tim_ManPiNum(p)-diff, Tim_ManPoNum(p)-diff
 	if pi < 0 || po < 0 {
 		panic("tim: invalid terminal reduction")
@@ -87,12 +93,6 @@ func Tim_ManReduce(p *Tim_Man_t, boxes []int, diff int) *Tim_Man_t {
 		seen[id] = true
 		cis += p.vBoxes[id].nOutputs
 		cos += p.vBoxes[id].nInputs
-	}
-	for i := range p.pCis {
-		p.pCis[i].TravId = 0
-	}
-	for i := range p.pCos {
-		p.pCos[i].TravId = 0
 	}
 	q := Tim_ManStart(cis, cos)
 	copy(q.pCis[:pi], p.pCis[:pi])
@@ -117,9 +117,11 @@ func Tim_ManReduce(p *Tim_Man_t, boxes []int, diff int) *Tim_Man_t {
 	// Terminal IDs are positions in the new manager, not the copied old positions.
 	for i := range q.pCis {
 		q.pCis[i].Id = i
+		q.pCis[i].TravId = 0
 	}
 	for i := range q.pCos {
 		q.pCos[i].Id = i
+		q.pCos[i].TravId = 0
 	}
 	return q
 }
@@ -235,7 +237,7 @@ func Tim_ManGetArrTimes(p *Tim_Man_t) []float32 {
 func Tim_ManGetReqTimes(p *Tim_Man_t) []float32 {
 	var result []float32
 	for _, o := range p.pCos {
-		if o.iObj2Box < 0 && o.timeReq != 1000000000 {
+		if o.iObj2Box < 0 && o.timeReq != TIM_ETERNITY {
 			result = make([]float32, p.nCos)
 			break
 		}

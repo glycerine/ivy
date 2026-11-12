@@ -1,10 +1,10 @@
 package tim
 
 func Tim_ManCreateBox(p *Tim_Man_t, firstIn, nIns, firstOut, nOuts, table, black int) {
-	if firstIn < 0 || nIns < 0 || firstIn+nIns > p.nCos || firstOut < 0 || nOuts < 0 || firstOut+nOuts > p.nCis {
+	if firstIn < 0 || nIns < 0 || nIns > p.nCos-firstIn || firstOut < 0 || nOuts < 0 || nOuts > p.nCis-firstOut {
 		panic("tim: box terminal range out of bounds")
 	}
-	b := &Tim_Box_t{iBox: len(p.vBoxes), nInputs: nIns, nOutputs: nOuts, iDelayTable: table, fBlack: black != 0, Inouts: make([]int, nIns+nOuts)}
+	b := &Tim_Box_t{iBox: len(p.vBoxes), firstIn: firstIn, firstOut: firstOut, nInputs: nIns, nOutputs: nOuts, iDelayTable: table, fBlack: black != 0, Inouts: make([]int, nIns+nOuts)}
 	p.vBoxes = append(p.vBoxes, b)
 	for i := 0; i < nIns; i++ {
 		b.Inouts[i] = firstIn + i
@@ -31,11 +31,11 @@ func Tim_ManBoxForCo(p *Tim_Man_t, i int) int {
 	}
 	return p.pCos[i].iObj2Box
 }
-func Tim_ManBoxInputFirst(p *Tim_Man_t, i int) int { return p.vBoxes[i].Inouts[0] }
+func Tim_ManBoxInputFirst(p *Tim_Man_t, i int) int { return p.vBoxes[i].firstIn }
 func Tim_ManBoxInputLast(p *Tim_Man_t, i int) int {
 	return Tim_ManBoxInputFirst(p, i) + p.vBoxes[i].nInputs - 1
 }
-func Tim_ManBoxOutputFirst(p *Tim_Man_t, i int) int { b := p.vBoxes[i]; return b.Inouts[b.nInputs] }
+func Tim_ManBoxOutputFirst(p *Tim_Man_t, i int) int { return p.vBoxes[i].firstOut }
 func Tim_ManBoxOutputLast(p *Tim_Man_t, i int) int {
 	return Tim_ManBoxOutputFirst(p, i) + p.vBoxes[i].nOutputs - 1
 }

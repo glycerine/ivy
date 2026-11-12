@@ -12,6 +12,7 @@ type Tim_Man_t struct {
 }
 type Tim_Box_t struct {
 	iBox, TravId, nInputs, nOutputs, iDelayTable, iCopy int
+	firstIn, firstOut                                   int
 	fBlack                                              bool
 	Inouts                                              []int
 }

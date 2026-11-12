@@ -48,15 +48,19 @@ func Tim_ManSave(p *Tim_Man_t, hierarchyOnly int) []byte {
 	}
 	return data
 }
+
+// Tim_ManLoad validates the encoded topology before allocating terminal arrays.
+// Invalid counts must not force a large allocation before the inconsistency is
+// discovered. Hierarchy-only input intentionally ends after the box records.
 func Tim_ManLoad(data []byte, hierarchyOnly int) *Tim_Man_t {
 	pos := 0
 	getWord := func(order binary.ByteOrder) uint32 {
 		if len(data)-pos < 4 {
 			panic("tim: truncated timing stream")
 		}
-		v := order.Uint32(data[pos:])
+		value := order.Uint32(data[pos:])
 		pos += 4
-		return v
+		return value
 	}
 	getInt := func() int { return int(int32(getWord(binary.BigEndian))) }
 	getFloat := func() float32 { return math.Float32frombits(getWord(binary.NativeEndian)) }
@@ -64,61 +68,84 @@ func Tim_ManLoad(data []byte, hierarchyOnly int) *Tim_Man_t {
 		panic("tim: unsupported dump version")
 	}
 	cis, cos, pi, po := getInt(), getInt(), getInt(), getInt()
-	// A valid timing file contains at least one value per terminal in full mode;
-	// cap all counts by encoded bytes even in hierarchy-only mode.
 	if cis < 0 || cos < 0 || pi < 0 || po < 0 || pi > cis || po > cos || cis > 1<<28 || cos > 1<<28 {
 		panic("tim: invalid terminal counts")
 	}
-	p := Tim_ManStart(cis, cos)
-	n := getInt()
-	if n < 0 || n > (len(data)-pos)/16 {
+	type boxRecord struct{ inputs, outputs, table, copyID int }
+	count := getInt()
+	if count < 0 || count > (len(data)-pos)/16 {
 		panic("tim: invalid box count")
 	}
+	boxes := make([]boxRecord, count)
 	ci, co := pi, 0
-	for i := 0; i < n; i++ {
-		ins, outs, table, copyID := getInt(), getInt(), getInt(), getInt()
-		Tim_ManCreateBox(p, co, ins, ci, outs, table, 0)
-		p.vBoxes[i].iCopy = copyID
-		ci += outs
-		co += ins
+	for i := range boxes {
+		box := boxRecord{getInt(), getInt(), getInt(), getInt()}
+		if box.inputs < 0 || box.outputs < 0 || box.inputs > cos-co || box.outputs > cis-ci {
+			panic("tim: invalid box terminal count")
+		}
+		boxes[i] = box
+		ci += box.outputs
+		co += box.inputs
 	}
 	if ci != cis || co+po != cos {
 		panic("tim: inconsistent terminal counts")
 	}
-	if hierarchyOnly != 0 {
-		return p
-	}
-	tables := getInt()
-	if tables < 0 || tables > (len(data)-pos)/12 {
-		panic("tim: invalid table count")
-	}
-	p.vDelayTables = make([][]float32, tables)
-	for i := 0; i < tables; i++ {
-		id, x, y := getInt(), getInt(), getInt()
-		if id != i || x < 0 || y < 0 || int64(x)*int64(y) > int64((len(data)-pos)/4) {
-			panic("tim: invalid delay table dimensions")
+	var tables [][]float32
+	var arrivals, required []float32
+	if hierarchyOnly == 0 {
+		tableCount := getInt()
+		if tableCount < 0 || tableCount > (len(data)-pos)/12 {
+			panic("tim: invalid table count")
 		}
-		table := make([]float32, 3+x*y)
-		table[0] = float32(id)
-		table[1] = float32(x)
-		table[2] = float32(y)
-		for k := 3; k < len(table); k++ {
-			table[k] = getFloat()
+		if tableCount > 0 {
+			tables = make([][]float32, tableCount)
 		}
-		p.vDelayTables[i] = table
-	}
-	for i := range p.pCis {
-		if p.pCis[i].iObj2Box < 0 {
-			p.pCis[i].timeArr = getFloat()
+		for i := range tables {
+			id, x, y := getInt(), getInt(), getInt()
+			if id != i || x < 0 || y < 0 || int64(x)*int64(y) > int64((len(data)-pos)/4) {
+				panic("tim: invalid delay table dimensions")
+			}
+			table := make([]float32, 3+x*y)
+			table[0] = float32(id)
+			table[1] = float32(x)
+			table[2] = float32(y)
+			for j := 3; j < len(table); j++ {
+				table[j] = getFloat()
+			}
+			tables[i] = table
+		}
+		if pi > (len(data)-pos)/4 {
+			panic("tim: truncated PI arrivals")
+		}
+		arrivals = make([]float32, pi)
+		for i := range arrivals {
+			arrivals[i] = getFloat()
+		}
+		if po > (len(data)-pos)/4 {
+			panic("tim: truncated PO constraints")
+		}
+		required = make([]float32, po)
+		for i := range required {
+			required[i] = getFloat()
+		}
+		if pos != len(data) {
+			panic("tim: trailing timing stream data")
 		}
 	}
-	for i := range p.pCos {
-		if p.pCos[i].iObj2Box < 0 {
-			p.pCos[i].timeReq = getFloat()
-		}
+	p := Tim_ManStart(cis, cos)
+	ci, co = pi, 0
+	for _, box := range boxes {
+		Tim_ManCreateBox(p, co, box.inputs, ci, box.outputs, box.table, 0)
+		p.vBoxes[len(p.vBoxes)-1].iCopy = box.copyID
+		ci += box.outputs
+		co += box.inputs
 	}
-	if pos != len(data) {
-		panic("tim: trailing timing stream data")
+	p.vDelayTables = tables
+	for i, arrival := range arrivals {
+		p.pCis[i].timeArr = arrival
+	}
+	for i, requirement := range required {
+		p.pCos[cos-po+i].timeReq = requirement
 	}
 	return p
 }

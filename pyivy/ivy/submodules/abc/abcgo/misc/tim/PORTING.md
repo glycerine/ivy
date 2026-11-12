@@ -28,3 +28,26 @@ terminal. These should be included in any C-vs-Go differential review.
 Printing preserves the same information but uses a simpler readable Go layout;
 byte-for-byte terminal output compatibility is not claimed. Trim/reduce retain
 the original convention that PIs precede box outputs and POs follow box inputs.
+
+## Separate audits
+
+The compactness/idiomatic/readability pass consolidated timing sentinels, made
+zero-port box boundaries explicit instead of recovering them from a flexible
+array, and made the stream decoder validate topology before constructing the
+manager. It retains the source API names to keep algorithm review straightforward.
+
+The subsequent bug pass fixed and regression-tested:
+
+- Unit-delay duplication now resets constraints in the clone, not the source.
+- Duplicating a manager without delay tables preserves nil, allowing later setup.
+- Zero-input, zero-output and zero-port boxes retain their boundary positions
+  through duplication and version-1 save/load.
+- Failed timing queries no longer mark an object as successfully cached.
+- Malformed large terminal counts are rejected before allocating terminal arrays.
+- Negative terminal-reduction counts are rejected explicitly.
+
+Full package tests, race tests and vet pass after these changes. The unit-delay
+clone correction is an additional intentional source defect repair beyond those
+listed above. Save/load still preserves the original version-1 binary format.
+Manager duplication and reduction reset traversal marks only in the new manager;
+they preserve the source manager's timing constraints and traversal cache state.

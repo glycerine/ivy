@@ -49,10 +49,14 @@ func Tim_ManGetCiArrival(p *Tim_Man_t, i int) float32 {
 	if p.fUseTravId && o.TravId == p.nTravIds {
 		return o.timeArr
 	}
-	o.TravId = p.nTravIds
 	b := Tim_ManCiBox(p, i)
 	if b == nil {
+		o.TravId = p.nTravIds
 		return o.timeArr
+	}
+	table := Tim_ManBoxDelayTable(p, b.iBox)
+	if table == nil {
+		panic("tim: delay table missing")
 	}
 	b.TravId = p.nTravIds
 	if p.fUseTravId {
@@ -62,12 +66,11 @@ func Tim_ManGetCiArrival(p *Tim_Man_t, i int) float32 {
 			}
 		}
 	}
-	table := Tim_ManBoxDelayTable(p, b.iBox)
 	for output := 0; output < b.nOutputs; output++ {
-		best := float32(-1000000000)
+		best := float32(-TIM_ETERNITY)
 		for input := 0; input < b.nInputs; input++ {
 			delay := table[3+output*b.nInputs+input]
-			if delay == -1000000000 {
+			if delay == -TIM_ETERNITY {
 				continue
 			}
 			if arrival := Tim_ManBoxInput(p, b, input).timeArr + delay; arrival > best {
@@ -87,10 +90,14 @@ func Tim_ManGetCoRequired(p *Tim_Man_t, i int) float32 {
 	if p.fUseTravId && o.TravId == p.nTravIds {
 		return o.timeReq
 	}
-	o.TravId = p.nTravIds
 	b := Tim_ManCoBox(p, i)
 	if b == nil {
+		o.TravId = p.nTravIds
 		return o.timeReq
+	}
+	table := Tim_ManBoxDelayTable(p, b.iBox)
+	if table == nil {
+		panic("tim: delay table missing")
 	}
 	b.TravId = p.nTravIds
 	if p.fUseTravId {
@@ -100,12 +107,11 @@ func Tim_ManGetCoRequired(p *Tim_Man_t, i int) float32 {
 			}
 		}
 	}
-	table := Tim_ManBoxDelayTable(p, b.iBox)
 	for input := 0; input < b.nInputs; input++ {
-		best := float32(1000000000)
+		best := float32(TIM_ETERNITY)
 		for output := 0; output < b.nOutputs; output++ {
 			delay := table[3+output*b.nInputs+input]
-			if delay == -1000000000 {
+			if delay == -TIM_ETERNITY {
 				continue
 			}
 			if required := Tim_ManBoxOutput(p, b, output).timeReq - delay; required < best {

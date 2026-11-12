@@ -133,3 +133,110 @@ func TestDefaultDelayTablesAndPrimaryTimes(t *testing.T) {
 		t.Fatal(p.pCos)
 	}
 }
+
+func TestDupUnitTimingDoesNotModifySource(t *testing.T) {
+	p := managedFixture()
+	q := Tim_ManDup(p, 1)
+	if p.pCis[0].timeArr != 2.5 || p.pCos[4].timeReq != 90.5 {
+		t.Fatal("duplication changed source constraints")
+	}
+	if q.pCis[0].timeArr != 0 || q.pCos[4].timeReq != TIM_ETERNITY {
+		t.Fatal("unit clone kept old constraints")
+	}
+	fresh := Tim_ManDup(Tim_ManStart(1, 1), 0)
+	Tim_ManCreate(fresh, nil, nil, nil)
+}
+func TestZeroPortBoxCloneAndSerialization(t *testing.T) {
+	for _, ports := range [][2]int{{0, 1}, {1, 0}, {0, 0}} {
+		ins, outs := ports[0], ports[1]
+		p := Tim_ManStart(1+outs, 1+ins)
+		Tim_ManCreateBox(p, 0, ins, 1, outs, -1, 0)
+		Tim_ManCreate(p, nil, nil, nil)
+		for _, q := range []*Tim_Man_t{Tim_ManDup(p, 0), Tim_ManLoad(Tim_ManSave(p, 0), 0)} {
+			if Tim_ManPiNum(q) != 1 || Tim_ManPoNum(q) != 1 || Tim_ManBoxInputNum(q, 0) != ins || Tim_ManBoxOutputNum(q, 0) != outs {
+				t.Fatal("zero-port box lost its boundary")
+			}
+		}
+	}
+}
+func TestFailedTimingQueryDoesNotCacheFailure(t *testing.T) {
+	p := Tim_ManStart(1, 1)
+	Tim_ManCreateBox(p, 0, 1, 0, 1, -1, 0)
+	Tim_ManIncrementTravId(p)
+	for _, query := range []func(){func() { Tim_ManGetCiArrival(p, 0) }, func() { Tim_ManGetCoRequired(p, 0) }} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Error("missing table accepted")
+				}
+			}()
+			query()
+		}()
+	}
+	if p.pCis[0].TravId == p.nTravIds || p.pCos[0].TravId == p.nTravIds {
+		t.Fatal("failed query cached as completed")
+	}
+	Tim_ManCreate(p, nil, nil, nil)
+	Tim_ManSetCoArrival(p, 0, 8)
+	if got := Tim_ManGetCiArrival(p, 0); got != 9 {
+		t.Fatal(got)
+	}
+}
+func TestLoadRejectsHugeInconsistentTopologyBeforeAllocation(t *testing.T) {
+	var data []byte
+	for _, value := range []uint32{1, 1 << 28, 1 << 28, 0, 0, 0} {
+		data = binary.BigEndian.AppendUint32(data, value)
+	}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("inconsistent topology accepted")
+		}
+	}()
+	Tim_ManLoad(data, 1)
+}
+
+func TestNegativeTerminalReductionRejected(t *testing.T) {
+	p := managedFixture()
+	defer func() {
+		if recover() == nil {
+			t.Error("negative terminal reduction accepted")
+		}
+		if p.nCis != 5 || p.nCos != 5 {
+			t.Error("manager modified before rejection")
+		}
+	}()
+	Tim_ManReduce(p, []int{0}, -1)
+}
+
+func TestManagerTransformsPreserveSourceTraversal(t *testing.T) {
+	p := managedFixture()
+	p.nTravIds = 17
+	for i := range p.pCis {
+		p.pCis[i].TravId = 17
+	}
+	for i := range p.pCos {
+		p.pCos[i].TravId = 17
+	}
+	for _, q := range []*Tim_Man_t{Tim_ManDup(p, 1), Tim_ManTrim(p, []int{0, 1}), Tim_ManReduce(p, []int{0}, 0)} {
+		for _, o := range q.pCis {
+			if o.TravId != 0 {
+				t.Fatal("clone retained source traversal")
+			}
+		}
+		for _, o := range q.pCos {
+			if o.TravId != 0 {
+				t.Fatal("clone retained source traversal")
+			}
+		}
+	}
+	for _, o := range p.pCis {
+		if o.TravId != 17 {
+			t.Fatal("transform changed source traversal")
+		}
+	}
+	for _, o := range p.pCos {
+		if o.TravId != 17 {
+			t.Fatal("transform changed source traversal")
+		}
+	}
+}
