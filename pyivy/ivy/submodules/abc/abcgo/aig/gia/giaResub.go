@@ -383,46 +383,6 @@ func Gia_ManResubVerify(p *Gia_ResbMan_t, pFunc *word) int32 {
 
 
 
-func Gia_ManDivCover(pOff *word, pOn *word, pDivA *word, ComplA int32, pDivB *word, ComplB int32, nWords int32) int32 {
-    //assert( !Abc_TtIntersectOne(pOff, 0, pDivA, ComplA, nWords) );
-    //assert( !Abc_TtIntersectOne(pOff, 0, pDivB, ComplB, nWords) );
-    return !Abc_TtIntersectTwo( pOn, 0, pDivA, !ComplA, pDivB, !ComplB, nWords );
-}
-func Gia_ManFindTwoUnateInt(pOff *word, pOn *word, vDivs *Vec_Ptr_t, nWords int32, vUnateLits *Vec_Int_t, vUnateLitsW *Vec_Int_t, pnPairs *int32) int32 {
-    var i, k, iDiv0_, iDiv1_, Cover0, Cover1 int32;
-    var nTotal int32  = Abc_TtCountOnesVec( pOn, nWords );
-    (*pnPairs) = 0;
-    // inlining of macro Vec_IntForEachEntryTwo
-    for  i = 0; (i < Vec_IntSize(vUnateLits)) && (((iDiv0_) = Vec_IntEntry(vUnateLits, i)), 1) && (((Cover0) = Vec_IntEntry(vUnateLitsW, i)), 1); i++  {
-        if 2*Cover0 < nTotal {
-            break; }
-        // inlining of macro Vec_IntForEachEntryTwoStart
-        for  k = i+1; (k < Vec_IntSize(vUnateLits)) && (((iDiv1_) = Vec_IntEntry(vUnateLits, k)), 1) && (((Cover1) = Vec_IntEntry(vUnateLitsW, k)), 1); k++  {
-            var iDiv0 int32  = Abc_MinInt( iDiv0_, iDiv1_ );
-            var iDiv1 int32  = Abc_MaxInt( iDiv0_, iDiv1_ );
-            var pDiv0 *word  = (word *)Vec_PtrEntry(vDivs, Abc_Lit2Var(iDiv0));
-            var pDiv1 *word  = (word *)Vec_PtrEntry(vDivs, Abc_Lit2Var(iDiv1));
-            if Cover0 + Cover1 < nTotal {
-                break; }
-            (*pnPairs)++;
-            if Gia_ManDivCover(pOff, pOn, pDiv1, Abc_LitIsCompl(iDiv1), pDiv0, Abc_LitIsCompl(iDiv0), nWords) != 0 {
-                return Abc_Var2Lit((Abc_LitNot(iDiv1) << 15) | Abc_LitNot(iDiv0), 1); }
-        }
-    }
-    return -1;
-}
-func Gia_ManFindTwoUnate(pSets []*word, vDivs *Vec_Ptr_t, nWords int32, vUnateLits []*Vec_Int_t, vUnateLitsW []*Vec_Int_t, fVerbose int32) int32 {
-    var n, iLit, nPairs int32;
-    if fVerbose != 0 { fmt.Printf("  "); }
-    for  n = 0; n < 2; n++  {
-        //int nPairsAll = Vec_IntSize(vUnateLits[n])*(Vec_IntSize(vUnateLits[n])-1)/2;
-        iLit = Gia_ManFindTwoUnateInt( pSets[n], pSets[!n], vDivs, nWords, vUnateLits[n], vUnateLitsW[n], &nPairs );
-        if fVerbose != 0 { fmt.Printf("UU%d =%5d ", n, nPairs); }
-        if iLit >= 0 {
-            return Abc_LitNotCond(iLit, n); }
-    }
-    return -1;
-}
 
 
 
@@ -431,188 +391,22 @@ func Gia_ManFindTwoUnate(pSets []*word, vDivs *Vec_Ptr_t, nWords int32, vUnateLi
 
 
 
-func Gia_ManFindDivGateInt(pOff *word, pOn *word, vDivs *Vec_Ptr_t, nWords int32, vUnateLits *Vec_Int_t, vUnatePairs *Vec_Int_t, vUnateLitsW *Vec_Int_t, vUnatePairsW *Vec_Int_t, pDivTemp *word) int32 {
-    var i, k, iDiv0, iDiv1, Cover0, Cover1 int32;
-    var nTotal int32  = Abc_TtCountOnesVec( pOn, nWords );
-    // inlining of macro Vec_IntForEachEntryTwo
-    for  i = 0; (i < Vec_IntSize(vUnateLits)) && (((iDiv0) = Vec_IntEntry(vUnateLits, i)), 1) && (((Cover0) = Vec_IntEntry(vUnateLitsW, i)), 1); i++  {
-        var pDiv0 *word  = (word *)Vec_PtrEntry(vDivs, Abc_Lit2Var(iDiv0));
-        if 2*Cover0 < nTotal {
-            break; }
-        // inlining of macro Vec_IntForEachEntryTwo
-        for  k = 0; (k < Vec_IntSize(vUnatePairs)) && (((iDiv1) = Vec_IntEntry(vUnatePairs, k)), 1) && (((Cover1) = Vec_IntEntry(vUnatePairsW, k)), 1); k++  {
-            var fComp1 int32  = Abc_LitIsCompl(iDiv1);
-            if Cover0 + Cover1 < nTotal {
-                break; }
-            Gia_ManDeriveDivPair( iDiv1, vDivs, nWords, pDivTemp );
-            if Gia_ManDivCover(pOff, pOn, pDiv0, Abc_LitIsCompl(iDiv0), pDivTemp, fComp1, nWords) != 0 {
-                return Abc_Var2Lit((Abc_Var2Lit(k, 1) << 15) | Abc_LitNot(iDiv0), 1); }
-        }
-    }
-    return -1;
-}
-func Gia_ManFindDivGate(pSets []*word, vDivs *Vec_Ptr_t, nWords int32, vUnateLits []*Vec_Int_t, vUnatePairs []*Vec_Int_t, vUnateLitsW []*Vec_Int_t, vUnatePairsW []*Vec_Int_t, pDivTemp *word) int32 {
-    var n, iLit int32;
-    for  n = 0; n < 2; n++  {
-        iLit = Gia_ManFindDivGateInt( pSets[n], pSets[!n], vDivs, nWords, vUnateLits[n], vUnatePairs[n], vUnateLitsW[n], vUnatePairsW[n], pDivTemp );
-        if iLit >= 0 {
-            return Abc_LitNotCond( iLit, n ); }
-    }
-    return -1;
-}
 
-func Gia_ManFindGateGateInt(pOff *word, pOn *word, vDivs *Vec_Ptr_t, nWords int32, vUnatePairs *Vec_Int_t, vUnatePairsW *Vec_Int_t, pDivTempA *word, pDivTempB *word) int32 {
-    var i, k, iDiv0, iDiv1, Cover0, Cover1 int32;
-    var nTotal int32  = Abc_TtCountOnesVec( pOn, nWords );
-    // inlining of macro Vec_IntForEachEntryTwo
-    for  k = 0; (k < Vec_IntSize(vUnatePairs)) && (((iDiv0) = Vec_IntEntry(vUnatePairs, k)), 1) && (((Cover0) = Vec_IntEntry(vUnatePairsW, k)), 1); k++  {
-        var fCompA int32  = Abc_LitIsCompl(iDiv0);
-        if 2*Cover0 < nTotal {
-            break; }
-        Gia_ManDeriveDivPair( iDiv0, vDivs, nWords, pDivTempA );
-        // inlining of macro Vec_IntForEachEntryTwoStart
-        for  i = k+1; (i < Vec_IntSize(vUnatePairs)) && (((iDiv1) = Vec_IntEntry(vUnatePairs, i)), 1) && (((Cover1) = Vec_IntEntry(vUnatePairsW, i)), 1); i++  {
-            var fCompB int32  = Abc_LitIsCompl(iDiv1);
-            if Cover0 + Cover1 < nTotal {
-                break; }
-            Gia_ManDeriveDivPair( iDiv1, vDivs, nWords, pDivTempB );
-            if Gia_ManDivCover(pOff, pOn, pDivTempA, fCompA, pDivTempB, fCompB, nWords) != 0 {
-                return Abc_Var2Lit((Abc_Var2Lit(i, 1) << 15) | Abc_Var2Lit(k, 1), 1); }
-        }
-    }
-    return -1;
-}
-func Gia_ManFindGateGate(pSets []*word, vDivs *Vec_Ptr_t, nWords int32, vUnatePairs []*Vec_Int_t, vUnatePairsW []*Vec_Int_t, pDivTempA *word, pDivTempB *word) int32 {
-    var n, iLit int32;
-    for  n = 0; n < 2; n++  {
-        iLit = Gia_ManFindGateGateInt( pSets[n], pSets[!n], vDivs, nWords, vUnatePairs[n], vUnatePairsW[n], pDivTempA, pDivTempB );
-        if iLit >= 0 {
-            return Abc_LitNotCond( iLit, n ); }
-    }
-    return -1;
-}
 
-func Gia_ManSortUnatesInt(pOff *word, pOn *word, vDivs *Vec_Ptr_t, nWords int32, vUnateLits *Vec_Int_t, vUnateLitsW *Vec_Int_t, vSorter *Vec_Wec_t) {
-    var i, k, iLit int32;
-    var vLevel *Vec_Int_t;
-    Vec_WecInit( vSorter, nWords*64 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vUnateLits)) && (((iLit) = Vec_IntEntry(vUnateLits, i)), 1); i++  {
-        var pDiv *word  = (word *)Vec_PtrEntry(vDivs, Abc_Lit2Var(iLit));
-        //assert( !Abc_TtIntersectOne( pOff, 0, pDiv, Abc_LitIsCompl(iLit), nWords ) );
-        Vec_WecPush( vSorter, Abc_TtCountOnesVecMask(pDiv, pOn, nWords, Abc_LitIsCompl(iLit)), iLit );
-    }
-    Vec_IntClear( vUnateLits );
-    Vec_IntClear( vUnateLitsW );
-    // inlining of macro Vec_WecForEachLevelReverse
-    for  k = Vec_WecSize(vSorter)-1; (k >= 0) && (((vLevel) = Vec_WecEntry(vSorter, k)), 1); k--  {
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vLevel)) && (((iLit) = Vec_IntEntry(vLevel, i)), 1); i++  {
-            Vec_IntPush( vUnateLits, iLit );
-            Vec_IntPush( vUnateLitsW, k );
-        }
-    }
-    //Vec_IntPrint( Vec_WecEntry(vSorter, 0) );
-    Vec_WecClear( vSorter );
-}
-func Gia_ManSortUnates(pSets []*word, vDivs *Vec_Ptr_t, nWords int32, vUnateLits []*Vec_Int_t, vUnateLitsW []*Vec_Int_t, vSorter *Vec_Wec_t) {
-    var n int32;
-    for  n = 0; n < 2; n++  {
-        Gia_ManSortUnatesInt( pSets[n], pSets[!n], vDivs, nWords, vUnateLits[n], vUnateLitsW[n], vSorter );
-    }
-}
 
-func Gia_ManSortPairsInt(pOff *word, pOn *word, vDivs *Vec_Ptr_t, nWords int32, vUnatePairs *Vec_Int_t, vUnatePairsW *Vec_Int_t, vSorter *Vec_Wec_t) {
-    var i, k, iPair int32;
-    var vLevel *Vec_Int_t;
-    Vec_WecInit( vSorter, nWords*64 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vUnatePairs)) && (((iPair) = Vec_IntEntry(vUnatePairs, i)), 1); i++  {
-        var fComp int32  = Abc_LitIsCompl(iPair);
-        var iLit0 int32  = Abc_Lit2Var(iPair) & 0x7FFF;
-        var iLit1 int32  = Abc_Lit2Var(iPair) >> 15;
-        var pDiv0 *word  = (word *)Vec_PtrEntry( vDivs, Abc_Lit2Var(iLit0) );
-        var pDiv1 *word  = (word *)Vec_PtrEntry( vDivs, Abc_Lit2Var(iLit1) );
-        if iLit0 < iLit1 {
-            assert(!(fComp != 0), "!fComp");
-            //assert( !Abc_TtIntersectTwo( pOff, 0, pDiv0, Abc_LitIsCompl(iLit0), pDiv1, Abc_LitIsCompl(iLit1), nWords ) );
-            Vec_WecPush( vSorter, Abc_TtCountOnesVecMask2(pDiv0, pDiv1, Abc_LitIsCompl(iLit0), Abc_LitIsCompl(iLit1), pOn, nWords), iPair );
-        
-        } else {
-            assert(!Abc_LitIsCompl(iLit0), "!Abc_LitIsCompl(iLit0)");
-            assert(!Abc_LitIsCompl(iLit1), "!Abc_LitIsCompl(iLit1)");
-            //assert( !Abc_TtIntersectXor( pOff, 0, pDiv0, pDiv1, fComp, nWords ) );
-            Vec_WecPush( vSorter, Abc_TtCountOnesVecXorMask(pDiv0, pDiv1, fComp, pOn, nWords), iPair );
-        }
-    }
-    Vec_IntClear( vUnatePairs );
-    Vec_IntClear( vUnatePairsW );
-    // inlining of macro Vec_WecForEachLevelReverse
-    for  k = Vec_WecSize(vSorter)-1; (k >= 0) && (((vLevel) = Vec_WecEntry(vSorter, k)), 1); k--  {
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vLevel)) && (((iPair) = Vec_IntEntry(vLevel, i)), 1); i++  {
-            Vec_IntPush( vUnatePairs, iPair );
-            Vec_IntPush( vUnatePairsW, k );
-        }
-    }
-    //Vec_IntPrint( Vec_WecEntry(vSorter, 0) );
-    Vec_WecClear( vSorter );
 
-}
-func Gia_ManSortPairs(pSets []*word, vDivs *Vec_Ptr_t, nWords int32, vUnateLits []*Vec_Int_t, vUnateLitsW []*Vec_Int_t, vSorter *Vec_Wec_t) {
-    var n int32;
-    for  n = 0; n < 2; n++  {
-        Gia_ManSortPairsInt( pSets[n], pSets[!n], vDivs, nWords, vUnateLits[n], vUnateLitsW[n], vSorter );
-    }
-}
 
-func Gia_ManSortBinate(pSets []*word, vDivs *Vec_Ptr_t, nWords int32, vBinateVars *Vec_Int_t, vSorter *Vec_Wec_t) {
-    var vLevel *Vec_Int_t;
-    var nMints [2]int32 = [2]int32{ Abc_TtCountOnesVec(pSets[0], nWords), Abc_TtCountOnesVec(pSets[1], nWords) };
-    var pBig *word;
-    if nMints[0] > nMints[1] {
-        pBig = pSets[0];
-    } else {
-        pBig = pSets[1];
-    }
-    var pSmo *word;
-    if nMints[0] > nMints[1] {
-        pSmo = pSets[1];
-    } else {
-        pSmo = pSets[0];
-    }
-    var Big int32  = Abc_MaxInt( nMints[0], nMints[1] );
-    var Smo int32  = Abc_MinInt( nMints[0], nMints[1] );
-    var i, k, iDiv, Gain int32;
 
-    Vec_WecInit( vSorter, nWords*64 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vBinateVars)) && (((iDiv) = Vec_IntEntry(vBinateVars, i)), 1); i++  {
-        var pDiv *word  = (word *)Vec_PtrEntry( vDivs, iDiv );
-        var nInter [2]int32 = [2]int32{ Abc_TtCountOnesVecMask(pBig, pDiv, nWords, 0), Abc_TtCountOnesVecMask(pSmo, pDiv, nWords, 0) };
-        if nInter[0] < Big/2 { // complement the divisor
-        
-            nInter[0] = Big - nInter[0];
-            nInter[1] = Smo - nInter[1];
-        }
-        assert(nInter[0] >= Big/2, "nInter[0] >= Big/2");
-        Gain = Abc_MaxInt( 0, nInter[0] - Big/2 + Smo/2 - nInter[1] );
-        Vec_WecPush( vSorter, Gain, iDiv );
-    }
 
-    Vec_IntClear( vBinateVars );
-    // inlining of macro Vec_WecForEachLevelReverse
-    for  k = Vec_WecSize(vSorter)-1; (k >= 0) && (((vLevel) = Vec_WecEntry(vSorter, k)), 1); k--  {
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vLevel)) && (((iDiv) = Vec_IntEntry(vLevel, i)), 1); i++  {
-            Vec_IntPush( vBinateVars, iDiv );
-        }
-    }
-    Vec_WecClear( vSorter );
 
-    if Vec_IntSize(vBinateVars) > 2000 {
-        Vec_IntShrink( vBinateVars, 2000 ); }
-}
+
+
+
+
+
+
+
+
 
 /**Function*************************************************************
 
