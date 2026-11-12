@@ -80,3 +80,8 @@ func giaSimSimulate(g *Gia_Man_t, pars *Gia_ParSim_t, equiv func(*Gia_Man_t, *Gi
 	fmt.Printf("No bug detected after simulating %d frames with %d words.  Time: %s\n", frame, pars.nWords, time.Since(started))
 	return 0
 }
+
+// Gia_ManSimSimulate selects class-aware simulation when representatives exist.
+func Gia_ManSimSimulate(g *Gia_Man_t, pars *Gia_ParSim_t) int32 {
+	return giaSimSimulate(g, pars, Gia_ManSimSimulateEquiv)
+}
