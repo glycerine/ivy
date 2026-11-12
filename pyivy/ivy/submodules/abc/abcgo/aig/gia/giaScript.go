@@ -295,19 +295,8 @@ func Gia_ManAigSynch2(pInit *Gia_Man_t, pPars0 any, nLutSize int32, nRelaxRatio 
 
 ***********************************************************************/
 func Gia_ManPerformFlow3(nLutSize int32, nCutNum int32, fBalance int32, fMinAve int32, fUseMfs int32, fUseLutLib int32, fVerbose int32) {
-    var Comm1, Comm2, Comm3 [200]byte;
-    if fUseLutLib != 0 {
-        Comm1 = fmt.Sprintf("&st; &if -C %d;       &save; &st; &syn2; &if -C %d;       &save; &load", nCutNum, nCutNum);
-    } else {
-        Comm1 = fmt.Sprintf("&st; &if -C %d -K %d; &save; &st; &syn2; &if -C %d -K %d; &save; &load", nCutNum, nLutSize, nCutNum, nLutSize); }
-    if fUseLutLib != 0 {
-        Comm2 = fmt.Sprintf("&st; &if -%s -K 6; &dch -f; &if -C %d;       %s&save; &load", Abc_NtkRecIsRunning3() ? "y" : "g", nCutNum, fUseMfs ? "&mfs; ":"");
-    } else {
-        Comm2 = fmt.Sprintf("&st; &if -%s -K 6; &dch -f; &if -C %d -K %d; %s&save; &load", Abc_NtkRecIsRunning3() ? "y" : "g", nCutNum, nLutSize, fUseMfs ? "&mfs; ":""); }
-    if fUseLutLib != 0 {
-        Comm3 = fmt.Sprintf("&st; &if -%s -K 6; &synch2; &if -C %d;       %s&save; &load", Abc_NtkRecIsRunning3() ? "y" : "g", nCutNum, fUseMfs ? "&mfs; ":"");
-    } else {
-        Comm3 = fmt.Sprintf("&st; &if -%s -K 6; &synch2; &if -C %d -K %d; %s&save; &load", Abc_NtkRecIsRunning3() ? "y" : "g", nCutNum, nLutSize, fUseMfs ? "&mfs; ":""); }
+    commands := giaFlow3Commands(nLutSize, nCutNum, fUseMfs != 0, fUseLutLib != 0, Abc_NtkRecIsRunning3() != 0)
+    Comm1, Comm2, Comm3 := commands[0], commands[1], commands[2]
 
     if fVerbose != 0 { fmt.Printf("Trying simple synthesis with %s...\n", Abc_NtkRecIsRunning3() ? "LMS" : "SOP balancing"); }
     Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm1 );

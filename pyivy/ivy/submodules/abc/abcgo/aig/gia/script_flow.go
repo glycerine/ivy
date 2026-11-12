@@ -152,3 +152,27 @@ func Gia_ManPerformFlow2(mapped, ands, levels, lutSize, cutNum, balance, minAve,
 		}
 	}
 }
+
+// giaFlow3Commands builds the three command sequences used by the flow.
+func giaFlow3Commands(lutSize, cutNum int32, useMfs, useLutLib, recRunning bool) [3]string {
+	mode := "g"
+	if recRunning {
+		mode = "y"
+	}
+	mfs := ""
+	if useMfs {
+		mfs = "&mfs; "
+	}
+	if useLutLib {
+		return [3]string{
+			fmt.Sprintf("&st; &if -C %d;       &save; &st; &syn2; &if -C %d;       &save; &load", cutNum, cutNum),
+			fmt.Sprintf("&st; &if -%s -K 6; &dch -f; &if -C %d;       %s&save; &load", mode, cutNum, mfs),
+			fmt.Sprintf("&st; &if -%s -K 6; &synch2; &if -C %d;       %s&save; &load", mode, cutNum, mfs),
+		}
+	}
+	return [3]string{
+		fmt.Sprintf("&st; &if -C %d -K %d; &save; &st; &syn2; &if -C %d -K %d; &save; &load", cutNum, lutSize, cutNum, lutSize),
+		fmt.Sprintf("&st; &if -%s -K 6; &dch -f; &if -C %d -K %d; %s&save; &load", mode, cutNum, lutSize, mfs),
+		fmt.Sprintf("&st; &if -%s -K 6; &synch2; &if -C %d -K %d; %s&save; &load", mode, cutNum, lutSize, mfs),
+	}
+}

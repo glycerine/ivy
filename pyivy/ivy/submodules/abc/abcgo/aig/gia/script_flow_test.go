@@ -38,3 +38,23 @@ func TestScriptFlow2Commands(t *testing.T) {
 		t.Fatalf("unexpected flow: %s", joined)
 	}
 }
+
+func TestFlow3Commands(t *testing.T) {
+	for _, tc := range []struct {
+		lib, rec, mfs        bool
+		first, second, third string
+	}{
+		{false, false, false, "&if -C 8 -K 4", "&if -g -K 6; &dch -f", "&if -g -K 6; &synch2"},
+		{true, true, true, "&if -C 8;       &save", "&if -y -K 6; &dch -f", "&if -y -K 6; &synch2"},
+	} {
+		commands := giaFlow3Commands(4, 8, tc.mfs, tc.lib, tc.rec)
+		for i, fragment := range []string{tc.first, tc.second, tc.third} {
+			if !strings.Contains(commands[i], fragment) {
+				t.Fatalf("command %d: %q does not contain %q", i, commands[i], fragment)
+			}
+		}
+		if strings.Contains(commands[1], "&mfs;") != tc.mfs || strings.Contains(commands[2], "&mfs;") != tc.mfs {
+			t.Fatalf("incorrect MFS option: %q", commands)
+		}
+	}
+}
