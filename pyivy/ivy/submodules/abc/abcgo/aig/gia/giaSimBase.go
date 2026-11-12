@@ -259,45 +259,8 @@ func Gia_ManPatSatImprove(p *Gia_Man_t, nWords0 int32, fVerbose int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ObjSimCollect(p *Gia_SimRsbMan_t) {
-    var i, k, iTemp, iFanout int32;
-    Vec_IntClear( p.vFanins2 );
-    assert(Vec_IntSize(p.vFanins) > 0, "Vec_IntSize(p.vFanins) > 0");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vFanins)) && (((iTemp) = Vec_IntEntry(p.vFanins, i)), 1); i++  {
-        var pObj *Gia_Obj_t  = Gia_ManObj( p.pGia, iTemp );
-        if Gia_ObjIsAnd(pObj) && !Gia_ObjIsTravIdCurrentId( p.pGia, Gia_ObjFaninId0(pObj, iTemp) ) {
-            Vec_IntPush( p.vFanins2, Gia_ObjFaninId0(pObj, iTemp) ); }
-        if Gia_ObjIsAnd(pObj) && !Gia_ObjIsTravIdCurrentId( p.pGia, Gia_ObjFaninId1(pObj, iTemp) ) {
-            Vec_IntPush( p.vFanins2, Gia_ObjFaninId1(pObj, iTemp) ); }
-        // inlining of macro Gia_ObjForEachFanoutStaticId
-        for  k = 0; (k < Gia_ObjFanoutNumId(p.pGia, iTemp))   && (((iFanout) = Gia_ObjFanoutId(p.pGia, iTemp, k)), 1); k++  {
-            if Gia_ObjIsAnd(Gia_ManObj(p.pGia, iFanout)) && !Gia_ObjIsTravIdCurrentId( p.pGia, iFanout ) {
-                Vec_IntPush( p.vFanins2, iFanout ); }
-        }
-    }
-}
-func Gia_ObjSimCands(p *Gia_SimRsbMan_t, iObj int32, nCands int32) *Vec_Int_t {
-    assert(iObj > 0, "iObj > 0");
-    assert(Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj)), "Gia_ObjIsAnd(Gia_ManObj(p.pGia, iObj))");
-    Vec_IntClear( p.vCands );
-    Vec_IntFill( p.vFanins, 1, iObj );
-    for  Vec_IntSize(p.vFanins) > 0 && Vec_IntSize(p.vCands) < nCands  {
-        var i, iTemp int32;
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(p.vFanins)) && (((iTemp) = Vec_IntEntry(p.vFanins, i)), 1); i++  {
-            Gia_ObjSetTravIdCurrentId( p.pGia, iTemp );
-        }
-        Gia_ObjSimCollect( p ); // p->vFanins -> p->vFanins2
-        Vec_IntAppend( p.vCands, p.vFanins2 );
-        // inlining of macro ABC_SWAP
-        { var t *Vec_Int_t  = p.vFanins; p.vFanins = p.vFanins2; p.vFanins2 = t; };
-    }
-    assert(Vec_IntSize(p.vFanins) == 0 || Vec_IntSize(p.vCands) >= nCands, "Vec_IntSize(p.vFanins) == 0 || Vec_IntSize(p.vCands) >= nCands");
-    if Vec_IntSize(p.vCands) > nCands {
-        Vec_IntShrink( p.vCands, nCands ); }
-    return p.vCands;
-}
+
+
 
 /**Function*************************************************************
 
@@ -310,53 +273,9 @@ func Gia_ObjSimCands(p *Gia_SimRsbMan_t, iObj int32, nCands int32) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ObjSimRsb(p *Gia_SimRsbMan_t, iObj int32, nCands int32, fVerbose int32, pnBufs *int32, pnInvs *int32) int32 {
-    var i, iCand, RetValue int32;
-    var vTfo *Vec_Int_t    = Gia_SimRsbTfo( p, iObj, -1 );
-    var pCareSet *word     = Gia_SimRsbCareSet( p, iObj, vTfo );
-    var pFunc *word        = Vec_WrdEntryP( p.vSimsObj, p.nWords*iObj );
-    var vCands *Vec_Int_t  = Gia_ObjSimCands( p, iObj, nCands );
-    Abc_TtAndSharp( p.pFunc[0], pCareSet, pFunc, p.nWords, 1 );
-    Abc_TtAndSharp( p.pFunc[1], pCareSet, pFunc, p.nWords, 0 );
 
-/*
-printf( "Considering node %d with %d candidates:\n", iObj, Vec_IntSize(vCands) );
-Vec_IntPrint( vTfo );
-Vec_IntPrint( vCands );
-Extra_PrintBinary( stdout, (unsigned *)pCareSet,    64 );  printf( "\n" );
-Extra_PrintBinary( stdout, (unsigned *)pFunc,       64 );  printf( "\n" );
-Extra_PrintBinary( stdout, (unsigned *)p->pFunc[0], 64 );  printf( "\n" );
-Extra_PrintBinary( stdout, (unsigned *)p->pFunc[1], 64 );  printf( "\n" );
-*/
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vCands)) && (((iCand) = Vec_IntEntry(vCands, i)), 1); i++  {
-        var pDiv *word  = Vec_WrdEntryP( p.vSimsObj, p.nWords*iCand );
-        if !Abc_TtIntersect(pDiv, p.pFunc[0], p.nWords, 0) &&
-             !Abc_TtIntersect(pDiv, p.pFunc[1], p.nWords, 1) { (*pnBufs)++; if fVerbose != 0 { fmt.Printf("Level %3d : %d = buf(%d)\n", Gia_ObjLevelId(p.pGia, iObj), iObj, iCand); }
- RetValue = 1; }
-        if !Abc_TtIntersect(pDiv, p.pFunc[0], p.nWords, 1) &&
-             !Abc_TtIntersect(pDiv, p.pFunc[1], p.nWords, 0) { (*pnInvs)++; if fVerbose != 0 { fmt.Printf("Level %3d : %d = inv(%d)\n", Gia_ObjLevelId(p.pGia, iObj), iObj, iCand); }
- RetValue = 1; }
-    }
-    return RetValue;
-}
 
-func Gia_ManSimRsb(pGia *Gia_Man_t, nCands int32, fVerbose int32) int32 {
-    var clk abctime  = Abc_Clock();
-    var pObj *Gia_Obj_t; var iObj, nCount, nBufs, nInvs int32;
-    var p *Gia_SimRsbMan_t  = Gia_SimRsbAlloc( pGia );
-    assert(pGia.vSimsPi != nil, "pGia.vSimsPi != nil");
-    Gia_ManLevelNum( pGia );
-    // inlining of macro Gia_ManForEachAnd
-    for  iObj = 0; (iObj < pGia.nObjs) && ((pObj) = Gia_ManObj(pGia, iObj)); iObj++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        //if ( iObj == 6 )
-        nCount += Gia_ObjSimRsb( p, iObj, nCands, fVerbose, &nBufs, &nInvs ); }
-    }
-    fmt.Printf("Can resubstitute %d nodes (%.2f %% out of %d) (Bufs = %d Invs = %d)  ", nCount, 100.0*nCount/Gia_ManAndNum(pGia), Gia_ManAndNum(pGia), nBufs, nInvs);
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    Gia_SimRsbFree( p );
-    return nCount;
-}
+
 
 
 
