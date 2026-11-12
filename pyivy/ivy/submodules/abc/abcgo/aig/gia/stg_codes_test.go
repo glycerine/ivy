@@ -1,8 +1,11 @@
 package gia
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/glycerine/abcgo/misc/vec"
+	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -64,5 +67,27 @@ func TestStateTransitionOneHot(t *testing.T) {
 			t.Fatalf("input %v output %v", input, out)
 		}
 		copy(state, out[1:])
+	}
+}
+
+func TestStateTableReadPrint(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "states.txt")
+	if err := os.WriteFile(path, []byte("# example\n0 0 1 1\n1 1 0 0\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	var ins, outs, states int32
+	rows := Gia_ManStgReadLines(path, &ins, &outs, &states)
+	if rows == nil || ins != 1 || outs != 1 || states != 2 || vec.Vec_IntSize(rows) != 8 {
+		t.Fatal("state table parsing failed")
+	}
+	if g := Gia_ManStgRead(path, 1, 0); g == nil || Gia_ManRegNum(g) != 2 {
+		t.Fatal("state graph read failed")
+	}
+	oneBased := vec.Vec_IntAlloc(4)
+	vec.Vec_IntPushFour(oneBased, 0, 1, 2, 1)
+	var buf bytes.Buffer
+	Gia_ManStgPrint(&buf, oneBased, 1, 1, 2)
+	if buf.String() != "0 1 2 1\n" {
+		t.Fatalf("printed %q", buf.String())
 	}
 }
