@@ -266,3 +266,26 @@ original-C ZDD product and reorder fixtures. Ivy's converted graph/manager/cut
 groups pass their connected race harness, with `ivyDsd.go` now the next
 full-package blocker. The CUDD ISOP/complement core is being added against
 original-C fixtures.
+
+## Current package checkpoint (2026-11-12)
+
+The following additional packages passed package-wide race tests and `go vet`
+and were committed independently: `base/exor` (`512ac75e7`),
+`misc/espresso` (`92546cc57`), `sat/psat` (`1ee0d2fcc`), `opt/dar`
+(`b7ce3e477`), and `bdd/dsd` (`8af6eb080`). Their test fixtures now use the
+directory name `test_vectors`; do not introduce `testdata` directories in this
+module.
+
+The latest whole-module `go test ./...` run is recorded in
+`/tmp/abcgo-full-current.log`: 58 package lines passed and 64 failed. This is a
+current integration snapshot, not a completion claim. Active package blockers
+include GIA, Ivy, base/abc, base/pla, CUDD/Extra BDD, MIO/SCL, misc/extra, DAU,
+CEC/DCH, BSAT and several SAT/proof packages. Several package owners have
+reported further component-level progress after this run; rerun the full gate
+after their changes settle.
+
+The null-safe expanded `ABC_FREE` audit in `aig/aig` is clear: no converted
+production Go file in that package contains `free(`, and the earlier
+`pMemory` expansion was replaced as part of the typed `Part_Man` pool port.
+This does not establish that all unrelated draft packages have had their raw
+C-style `free` calls converted.
