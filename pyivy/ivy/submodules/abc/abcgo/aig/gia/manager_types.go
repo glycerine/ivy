@@ -36,7 +36,7 @@ type Gia_Man_t struct {
 	nConstrs        int32        // the number of constraints
 	nTravIds        int32        // the current traversal ID
 	nFront          int32        // frontier size
-	pReprsOld       *int32       // representatives (for CIs and ANDs)
+	pReprsOld       []int32      // representatives (for CIs and ANDs)
 	pReprs          []Gia_Rpr_t  // representatives (for CIs and ANDs)
 	pNexts          []int32      // next nodes in the equivalence classes
 	pSibls          []int32      // next nodes in the choice nodes
@@ -108,6 +108,7 @@ type Gia_Man_t struct {
 	nHashHit        word         // hash table hit
 	nHashMiss       word         // hash table miss
 	pData           any          // various user data
+	cexValues       [][]bool     // per-frame values while probing a counterexample
 	pData2          *uint32      // various user data
 	iData           int32        // various user data
 	iData2          int32        // various user data

@@ -119,3 +119,8 @@ func (p *Gia_Man_t) TakeData() any                 { data := p.pData; p.pData = 
 
 func (p *Gia_Man_t) NetworkName() string { return p.pName }
 func (p *Gia_Man_t) NetworkSpec() string { return p.pSpec }
+
+// CellConfiguration returns the mapped-cell description and configuration words.
+func (p *Gia_Man_t) CellConfiguration() (string, *Vec_Int_t) {
+	return p.pCellStr, p.vConfigs
+}

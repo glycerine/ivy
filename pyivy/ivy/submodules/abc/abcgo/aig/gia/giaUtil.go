@@ -817,7 +817,7 @@ func Gia_ManPrintCollect_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {
         Gia_ManPrintCollect_rec( p, Gia_ObjFanin2(p, pObj), vNodes ); }
     Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
 }
-func Gia_ManPrintCone(p *Gia_Man_t, pObj *Gia_Obj_t, pLeaves *int32, nLeaves int32, vNodes *Vec_Int_t) {
+func Gia_ManPrintCone(p *Gia_Man_t, pObj *Gia_Obj_t, pLeaves []int32, nLeaves int32, vNodes *Vec_Int_t) {
     var i int32;
     Vec_IntClear( vNodes );
     for  i = 0; i < nLeaves; i++  {

@@ -761,19 +761,7 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManReduceConst(pAig *Gia_Man_t, fVerbose int32) *Gia_Man_t {
-    var p *Gia_ManTer_t;
-    var pNew *Gia_Man_t  = nil;
-    var pCi2Lit *int32;
-    p = Gia_ManTerSimulate( pAig, fVerbose );
-    Gia_ManTerAnalyze( p );
-    pCi2Lit = Gia_ManTerCreateMap( p, fVerbose );
-    Gia_ManTerDelete( p );
-    pNew = Gia_ManDupDfsCiMap( pAig, pCi2Lit, nil );
-    // inlining of macro ABC_FREE
-    pCi2Lit = nil;
-    return pNew;
-}
+
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///

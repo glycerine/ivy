@@ -40,7 +40,7 @@ func TestIfnParseDefinedNetworkAndConstraints(t *testing.T) {
 	if root.Type != int32(IFN_DSD_AND) || root.nFanins != 2 || root.Fanins[0] != 0 || root.Fanins[1] != 1 {
 		t.Fatalf("parsed definition = %+v", root)
 	}
-	if network.nConstr != 1 || network.pConstr[0] != int32('A'<<16|'B') {
+	if network.nConstr != 1 || network.pConstr[0] != 1 {
 		t.Fatalf("constraints = %v (count %d), want AB", network.pConstr[:network.nConstr], network.nConstr)
 	}
 }

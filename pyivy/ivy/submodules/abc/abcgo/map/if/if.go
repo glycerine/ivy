@@ -161,6 +161,10 @@ type If_Par_t_ struct {
 	pFuncCell                                                                         func(*If_Man_t, []uint32, int32, int32, string) int32
 	pFuncCell2                                                                        func(*If_Man_t, []uint64, int32, *Vec_Str_t, *[]string) int32
 	pFuncWrite                                                                        func(*If_Man_t) int32
+	pFuncRecGia                                                                       func(*Gia_Man_t, *If_Man_t, *If_Cut_t, *Vec_Int_t, int32) int32
+	pDsdManager                                                                       *If_DsdMan_t
+	pFuncSwitching                                                                    func(*If_Man_t)
+	pFuncDelayTrace                                                                   func(*Gia_Man_t)
 	pReoMan                                                                           any
 }
 

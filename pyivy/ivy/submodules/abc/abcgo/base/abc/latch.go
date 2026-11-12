@@ -6,6 +6,7 @@ import (
 
 	"github.com/glycerine/abcgo/aig/hop"
 	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -67,6 +68,7 @@ func Abc_NtkRemoveSelfFeedLatches(n *Network) int32 {
 		if Abc_NtkIsStrash(n) == 0 {
 			constant = Abc_NtkCreateNodeConst1(n).Signal()
 		}
+		constant.Complement = input.fanins[0].Complement
 		if err := n.PatchFanin(input, 0, constant); err != nil {
 			panic(err)
 		}
@@ -308,4 +310,109 @@ func Abc_NtkConvertOnehot(n *Network) *Network {
 		panic(err)
 	}
 	return result
+}
+
+// Native one-hot groups already contain latch indices rather than name pointers.
+func Abc_NtkConverLatchNamesIntoNumbers(n *Network) *vec.Vec_Ptr_t {
+	if n.Onehots == nil {
+		return nil
+	}
+	result := vec.Vec_PtrAlloc(len(n.Onehots))
+	for _, group := range n.Onehots {
+		numbers := vec.Vec_IntAlloc(len(group))
+		for _, index := range group {
+			if index >= 0 && int(index) < len(n.ObjectsOfKind(ObjectLatch)) {
+				vec.Vec_IntPush(numbers, index)
+			}
+		}
+		if vec.Vec_IntSize(numbers) > 1 {
+			vec.Vec_PtrPush(result, numbers)
+		}
+	}
+	return result
+}
+
+func Abc_NtkTransformBack(old, result *Network, controls *vec.Vec_Ptr_t, classes *vec.Vec_Int_t) {
+	oldOutputs, newOutputs := old.ObjectsOfKind(ObjectPO), result.ObjectsOfKind(ObjectPO)
+	if len(oldOutputs) != len(newOutputs) {
+		panic("retiming changed primary output count")
+	}
+	for i, output := range oldOutputs {
+		output.Copy = newOutputs[i]
+	}
+	for i := 0; i < vec.Vec_PtrSize(controls); i++ {
+		output := vec.Vec_PtrEntry(controls, i).(*Object)
+		if output.network != old || output.Kind != ObjectPO {
+			panic("control is not an original primary output")
+		}
+		vec.Vec_PtrWriteEntry(controls, i, output.Copy)
+	}
+	latches := result.ObjectsOfKind(ObjectLatch)
+	if len(latches) != vec.Vec_IntSize(classes) {
+		panic("latch class count mismatch")
+	}
+	for i, latch := range latches {
+		class := vec.Vec_IntEntry(classes, i)
+		if class == -1 {
+			continue
+		}
+		if class < 0 || int(class) >= vec.Vec_PtrSize(controls) {
+			panic("invalid latch class")
+		}
+		input := latch.fanins[0].Object
+		control := vec.Vec_PtrEntry(controls, int(class)).(*Object).fanins[0]
+		mux := result.NewObject(ObjectNode)
+		Abc_ObjAddFanin(mux, control)
+		Abc_ObjAddFanin(mux, input.fanins[0])
+		Abc_ObjAddFanin(mux, latch.fanouts[0])
+		mux.Data = "0-1 1\n11- 1\n"
+		if err := result.PatchFanin(input, 0, mux.Signal()); err != nil {
+			panic(err)
+		}
+	}
+	for i := 0; i < vec.Vec_PtrSize(controls); i++ {
+		Abc_NtkDeleteObj(vec.Vec_PtrEntry(controls, i).(*Object))
+	}
+}
+
+func Abc_NtkVerifyCex(n *Network, trace *util.Abc_Cex_t) int32 {
+	pis, latches := n.ObjectsOfKind(ObjectPI), n.ObjectsOfKind(ObjectLatch)
+	if trace == nil || trace.IFrame < 0 || int(trace.NPis) != len(pis) || int(trace.NRegs) < len(latches) || trace.NBits != trace.NRegs+(trace.IFrame+1)*trace.NPis || int64(len(trace.PData))*32 < int64(trace.NBits) {
+		panic("invalid network counterexample dimensions")
+	}
+	inputs := make(map[*Object]bool, len(pis)+len(latches))
+	for i, latch := range latches {
+		inputs[latch.fanouts[0]] = util.Abc_InfoHasBit(trace.PData, int32(i))
+	}
+	outputs := n.ObjectsOfKind(ObjectPO)
+	failed := int32(-1)
+	for frame := int32(0); frame <= trace.IFrame; frame++ {
+		for i, pi := range pis {
+			inputs[pi] = util.Abc_InfoHasBit(trace.PData, trace.NRegs+frame*trace.NPis+int32(i))
+		}
+		if frame == trace.IFrame {
+			for i, output := range outputs {
+				value, err := n.Evaluate(output.Signal(), inputs)
+				if err != nil {
+					panic(err)
+				}
+				if value {
+					failed = int32(i)
+					break
+				}
+			}
+		}
+		next := make([]bool, len(latches))
+		for i, latch := range latches {
+			var err error
+			next[i], err = n.Evaluate(latch.fanins[0], inputs)
+			if err != nil {
+				panic(err)
+			}
+		}
+		for i, latch := range latches {
+			inputs[latch.fanouts[0]] = next[i]
+		}
+	}
+	return failed
 }

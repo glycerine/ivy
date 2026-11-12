@@ -132,3 +132,76 @@ func (bridge *FrameDataBridge) Import(frame *abcmain.Frame, format string, value
 	abcmain.Abc_FrameReplaceCex(frame, &model)
 	return nil
 }
+
+// Abc_FrameMiniAigSetCiArrivals installs independent CI arrival times.
+func Abc_FrameMiniAigSetCiArrivals(frame *abcmain.Frame, arrivals []int32) {
+	if arrivals == nil {
+		fmt.Println("Arrival times are not given.")
+		return
+	}
+	if frame == nil {
+		fmt.Println("ABC framework is not initialized by calling Abc_Start().")
+		return
+	}
+	p, ok := frame.Resource("pGia").(*Gia_Man_t)
+	if !ok || p == nil {
+		fmt.Println("Current network in ABC framework is not defined.")
+		return
+	}
+	if len(arrivals) != int(Gia_ManCiNum(p)) {
+		panic("gia: CI arrival count mismatch")
+	}
+	p.vCiArrs = vec.Vec_IntAllocArrayCopy(arrivals, len(arrivals))
+}
+
+// Abc_FrameMiniAigSetCoRequireds installs independent CO required times.
+func Abc_FrameMiniAigSetCoRequireds(frame *abcmain.Frame, required []int32) {
+	if required == nil {
+		fmt.Println("Required times are not given.")
+		return
+	}
+	if frame == nil {
+		fmt.Println("ABC framework is not initialized by calling Abc_Start().")
+		return
+	}
+	p, ok := frame.Resource("pGia").(*Gia_Man_t)
+	if !ok || p == nil {
+		fmt.Println("Current network in ABC framework is not defined.")
+		return
+	}
+	if len(required) != int(Gia_ManCoNum(p)) {
+		panic("gia: CO required count mismatch")
+	}
+	p.vCoReqs = vec.Vec_IntAllocArrayCopy(required, len(required))
+}
+
+// Abc_FrameMiniAigReadCoArrivals returns an independent copy of CO arrivals.
+func Abc_FrameMiniAigReadCoArrivals(frame *abcmain.Frame) []int32 {
+	if frame == nil {
+		fmt.Println("ABC framework is not initialized by calling Abc_Start().")
+		return nil
+	}
+	p, ok := frame.Resource("pGia").(*Gia_Man_t)
+	if !ok || p == nil {
+		fmt.Println("Current network in ABC framework is not defined.")
+		return nil
+	}
+	if p.vCoArrs == nil {
+		fmt.Println("Current network in ABC framework has no CO arrival times.")
+		return nil
+	}
+	return append([]int32(nil), vec.Vec_IntArray(p.vCoArrs)...)
+}
+
+func Abc_FrameMiniAigSetAndGateDelay(frame *abcmain.Frame, delay int32) {
+	if frame == nil {
+		fmt.Println("ABC framework is not initialized by calling Abc_Start().")
+		return
+	}
+	p, ok := frame.Resource("pGia").(*Gia_Man_t)
+	if !ok || p == nil {
+		fmt.Println("Current network in ABC framework is not defined.")
+		return
+	}
+	p.And2Delay = delay
+}

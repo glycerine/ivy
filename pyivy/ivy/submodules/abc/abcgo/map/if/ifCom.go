@@ -67,7 +67,7 @@ import (
 */
 func If_Init(pAbc *Abc_Frame_t) {
 	// set the default library
-	var s_LutLib If_LibLut_t = If_LibLut_t{"lutlib", 4, 0, {0, 1, 1, 1, 1}, {{0}, {1}, {1}, {1}, {1}}}
+	var s_LutLib = If_LibLut_t{pName: "lutlib", LutMax: 4, pLutAreas: [IF_MAX_LUTSIZE + 1]float32{0, 1, 1, 1, 1}, pLutDelays: [IF_MAX_LUTSIZE + 1][IF_MAX_LUTSIZE + 1]float32{{0}, {1}, {1}, {1}, {1}}}
 	Abc_FrameSetLibLut(If_LibLutDup(&s_LutLib))
 
 	abccmd.Cmd_CommandAdd(pAbc, "FPGA mapping", "read_lut", If_CommandReadLut, 0)
@@ -110,13 +110,12 @@ func If_End(pAbc *Abc_Frame_t) {
 */
 func If_CommandReadLut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pFile *os.File
-	var pOut, pErr io.Writer
+	var pErr io.Writer
 	var pLib *If_LibLut_t
 	var FileName string
 	var fVerbose int32
 	var c int32
 
-	pOut = Abc_FrameReadOut(pAbc)
 	pErr = Abc_FrameReadErr(pAbc)
 
 	// set the defaults
@@ -197,11 +196,10 @@ usage:
 **********************************************************************
 */
 func If_CommandPrintLut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var pOut, pErr io.Writer
+	var pErr io.Writer
 	var fVerbose int32
 	var c int32
 
-	pOut = Abc_FrameReadOut(pAbc)
 	pErr = Abc_FrameReadErr(pAbc)
 
 	// set the defaults
@@ -251,14 +249,13 @@ usage:
 */
 func If_CommandReadBox(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pFile *os.File
-	var pOut, pErr io.Writer
+	var pErr io.Writer
 	var pLib *If_LibBox_t
 	var FileName string
 	var fExtended int32
 	var fVerbose int32
 	var c int32
 
-	pOut = Abc_FrameReadOut(pAbc)
 	pErr = Abc_FrameReadErr(pAbc)
 
 	// set the defaults
@@ -336,11 +333,10 @@ usage:
 **********************************************************************
 */
 func If_CommandPrintBox(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var pOut, pErr io.Writer
+	var pErr io.Writer
 	var fVerbose int32
 	var c int32
 
-	pOut = Abc_FrameReadOut(pAbc)
 	pErr = Abc_FrameReadErr(pAbc)
 
 	// set the defaults

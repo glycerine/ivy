@@ -2,288 +2,151 @@ package gia
 
 import "fmt"
 
-/**CFile****************************************************************
-
-  FileName    [giaFront.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Scalable AIG package.]
-
-  Synopsis    [Frontier representation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: giaFront.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "gia.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Find the next place on the frontier.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManFrontFindNext(pFront string, nFront int32, iFront int32) int32 {
-    assert(iFront < nFront, "iFront < nFront");
-    for  ; pFront[iFront]; iFront = (iFront + 1) % nFront  {}
-    assert(pFront[iFront] == 0, "pFront[iFront] == 0");
-    pFront[iFront] = 1;
-    return iFront;
+// Gia_ManFrontFindNext reserves the next available frontier slot.
+func Gia_ManFrontFindNext(front []byte, nFront, iFront int32) int32 {
+	if nFront <= 0 || int(nFront) > len(front) || iFront < 0 || iFront >= nFront {
+		panic("gia: invalid frontier")
+	}
+	start := iFront
+	for front[iFront] != 0 {
+		iFront = (iFront + 1) % nFront
+		if iFront == start {
+			panic("gia: frontier is full")
+		}
+	}
+	front[iFront] = 1
+	return iFront
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Transforms the frontier manager to its initial state.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Gia_ManFrontTransform restores backward object differences from frontier slots.
 func Gia_ManFrontTransform(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    var pFrontToId *int32; // mapping of nodes into frontier variables
-    assert(p.nFront > 0, "p.nFront > 0");
-    // inlining of macro ABC_FALLOC
-    pFrontToId = ((int *) memset(malloc(sizeof(int) * (size_t)(p.nFront)), 0xff, sizeof(int) * (size_t)(p.nFront)));
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsCo(pObj) {
-            assert(pObj.Value == GIA_NONE, "pObj.Value == GIA_NONE");
-            pObj.iDiff0 = i - pFrontToId[Gia_ObjDiff0(pObj)];
-        
-        } else if Gia_ObjIsAnd(pObj) {
-            assert(int32(pObj.Value) < p.nFront, "int32(pObj.Value) < p.nFront");
-            pObj.iDiff0 = i - pFrontToId[Gia_ObjDiff0(pObj)];
-            pObj.iDiff1 = i - pFrontToId[Gia_ObjDiff1(pObj)];
-            pFrontToId[pObj.Value] = i;
-        
-        } else {
-            assert(int32(pObj.Value) < p.nFront, "int32(pObj.Value) < p.nFront");
-            pFrontToId[pObj.Value] = i;
-        }
-        pObj.Value = 0;
-    }
-    // inlining of macro ABC_FREE
-    pFrontToId = nil;
+	if p.nFront <= 0 {
+		panic("gia: graph has no frontier")
+	}
+	frontToID := make([]int32, p.nFront)
+	for i := range frontToID {
+		frontToID[i] = -1
+	}
+	for i, obj := range p.pObjs {
+		id := int32(i)
+		if Gia_ObjIsCo(obj) != 0 {
+			if obj.Value != GIA_NONE {
+				panic("gia: invalid frontier output")
+			}
+			obj.iDiff0 = uint32(id - frontToID[obj.iDiff0])
+		} else if Gia_ObjIsAnd(obj) != 0 {
+			obj.iDiff0 = uint32(id - frontToID[obj.iDiff0])
+			obj.iDiff1 = uint32(id - frontToID[obj.iDiff1])
+			frontToID[obj.Value] = id
+		} else {
+			frontToID[obj.Value] = id
+		}
+		obj.Value = 0
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Determine the frontier.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Gia_ManCrossCutSimple counts the maximum number of simultaneously live nodes.
+// Like the C implementation, it uses and clears object Value fields.
 func Gia_ManCrossCutSimple(p *Gia_Man_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i, nCutCur, nCutMax int32;
-    Gia_ManCreateValueRefs( p );
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if pObj.Value {
-            nCutCur++; }
-        if nCutMax < nCutCur {
-            nCutMax = nCutCur; }
-        if Gia_ObjIsAnd(pObj) {
-            if --Gia_ObjFanin0(pObj).Value == 0 {
-                nCutCur--; }
-            if --Gia_ObjFanin1(pObj).Value == 0 {
-                nCutCur--; }
-        
-        } else if Gia_ObjIsCo(pObj) {
-            if --Gia_ObjFanin0(pObj).Value == 0 {
-                nCutCur--; }
-        }
-    }
-//    Gia_ManForEachObj( p, pObj, i )
-//        assert( pObj->Value == 0 );
-    return nCutMax;
+	Gia_ManCreateValueRefs(p)
+	var current, maximum int32
+	for _, obj := range p.pObjs {
+		if obj.Value != 0 {
+			current++
+		}
+		if current > maximum {
+			maximum = current
+		}
+		if Gia_ObjIsAnd(obj) != 0 {
+			for _, fanin := range []*Gia_Obj_t{Gia_ObjFanin0(obj), Gia_ObjFanin1(obj)} {
+				fanin.Value--
+				if fanin.Value == 0 {
+					current--
+				}
+			}
+		} else if Gia_ObjIsCo(obj) != 0 {
+			fanin := Gia_ObjFanin0(obj)
+			fanin.Value--
+			if fanin.Value == 0 {
+				current--
+			}
+		}
+	}
+	return maximum
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Determine the frontier.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Gia_ManFront duplicates p with fanin differences represented as frontier slots.
+// Call Gia_ManFrontTransform before using normal graph traversal on the result.
 func Gia_ManFront(p *Gia_Man_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj, pFanin0New, pFanin1New, pObjNew *Gia_Obj_t;
-    var pFront string;    // places used for the frontier
-    var i, iLit, nCrossCut, nCrossCutMax int32;
-    var nCrossCutMaxInit int32  = Gia_ManCrossCutSimple( p );
-    var iFront int32;//, clk = Abc_Clock(); 
-    // set references for all objects
-    Gia_ManCreateValueRefs( p );
-    // start the new manager
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.nFront = 1 + int32((float32(1.1) * nCrossCutMaxInit)); 
-    // start the frontier
-    // inlining of macro ABC_CALLOC
-    pFront = ((char *) calloc((size_t)(pNew.nFront), sizeof(char)));
-    // add constant node
-    Gia_ManConst0(pNew).Value = iFront = Gia_ManFrontFindNext( pFront, pNew.nFront, iFront );
-    if Gia_ObjValue(Gia_ManConst0(p)) == 0 {
-        pFront[iFront] = 0;
-    } else {
-        nCrossCut = 1; }
-    // iterate through the objects
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsCi(pObj) {
-            if Gia_ObjValue(pObj) && nCrossCutMax < ++nCrossCut {
-                nCrossCutMax = nCrossCut; }
-            // create new node
-            iLit = Gia_ManAppendCi( pNew );
-            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(iLit) );
-            assert(Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj), "Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj)");
-            pObjNew.Value = iFront = Gia_ManFrontFindNext( pFront, pNew.nFront, iFront );
-            // handle CIs without fanout
-            if Gia_ObjValue(pObj) == 0 {
-                pFront[iFront] = 0; }
-            continue;
-        }
-        if Gia_ObjIsCo(pObj) {
-            assert(Gia_ObjValue(pObj) == 0, "Gia_ObjValue(pObj) == 0");
-            // create new node
-            iLit = Gia_ManAppendCo( pNew, 0 );
-            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(iLit) );
-            assert(Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj), "Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj)");
-            // get the fanin
-            pFanin0New = Gia_ManObj( pNew, Gia_ObjFaninId0(pObj, i) );
-            assert(pFanin0New.Value != GIA_NONE, "pFanin0New.Value != GIA_NONE");
-            pObjNew.Value = GIA_NONE;
-            pObjNew.iDiff0 = pFanin0New.Value;
-            pObjNew.fCompl0 = Gia_ObjFaninC0(pObj);
-            // deref the fanin
-            if --Gia_ObjFanin0(pObj).Value == 0 {
-                pFront[pFanin0New.Value] = 0;
-                nCrossCut--;
-            }
-            continue;
-        }
-        if Gia_ObjValue(pObj) && nCrossCutMax < ++nCrossCut {
-            nCrossCutMax = nCrossCut; }
-        // create new node
-        pObjNew = Gia_ManAppendObj( pNew );
-        assert(Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj), "Gia_ObjId(pNew, pObjNew) == Gia_ObjId(p, pObj)");
-        // assign the first fanin
-        pFanin0New = Gia_ManObj( pNew, Gia_ObjFaninId0(pObj, i) );
-        assert(pFanin0New.Value != GIA_NONE, "pFanin0New.Value != GIA_NONE");
-        pObjNew.iDiff0 = pFanin0New.Value;
-        pObjNew.fCompl0 = Gia_ObjFaninC0(pObj);
-        // assign the second fanin
-        pFanin1New = Gia_ManObj( pNew, Gia_ObjFaninId1(pObj, i) );
-        assert(pFanin1New.Value != GIA_NONE, "pFanin1New.Value != GIA_NONE");
-        pObjNew.iDiff1 = pFanin1New.Value;
-        pObjNew.fCompl1 = Gia_ObjFaninC1(pObj);
-        // assign the frontier number
-        pObjNew.Value = iFront = Gia_ManFrontFindNext( pFront, pNew.nFront, iFront );
-        // deref the fanins
-        if --Gia_ObjFanin0(pObj).Value == 0 {
-            pFront[pFanin0New.Value] = 0;
-            nCrossCut--;
-        }
-        if --Gia_ObjFanin1(pObj).Value == 0 {
-            pFront[pFanin1New.Value] = 0;
-            nCrossCut--;
-        }
-        // handle nodes without fanout (choice nodes)
-        if Gia_ObjValue(pObj) == 0 {
-            pFront[iFront] = 0; }
-    }
-    assert(pNew.nObjs == p.nObjs, "pNew.nObjs == p.nObjs");
-    assert(nCrossCut == 0 || nCrossCutMax == nCrossCutMaxInit, "nCrossCut == 0 || nCrossCutMax == nCrossCutMaxInit");
-    for  i = 0; i < pNew.nFront; i++  {
-        assert(pFront[i] == 0, "pFront[i] == 0");
-    }
-    // inlining of macro ABC_FREE
-    pFront = "";
-//printf( "Crosscut = %6d. Frontier = %6d. ", nCrossCutMaxInit, pNew->nFront );
-//ABC_PRT( "Time", Abc_Clock() - clk );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    return pNew;
+	maxCut := Gia_ManCrossCutSimple(p)
+	Gia_ManCreateValueRefs(p)
+	result := Gia_ManStart(p.nObjs)
+	result.pName, result.pSpec = p.pName, p.pSpec
+	result.nFront = 1 + int32(float32(maxCut)*1.1)
+	front := make([]byte, result.nFront)
+	position := Gia_ManFrontFindNext(front, result.nFront, 0)
+	result.pObjs[0].Value = uint32(position)
+	if p.pObjs[0].Value == 0 {
+		front[position] = 0
+	}
+	for id := int32(1); id < p.nObjs; id++ {
+		obj := p.pObjs[id]
+		if Gia_ObjIsCi(obj) != 0 {
+			lit := Gia_ManAppendCi(result)
+			out := result.pObjs[lit>>1]
+			position = Gia_ManFrontFindNext(front, result.nFront, position)
+			out.Value = uint32(position)
+			if obj.Value == 0 {
+				front[position] = 0
+			}
+			continue
+		}
+		fanin0 := p.pObjs[Gia_ObjFaninId0(obj, id)]
+		slot0 := result.pObjs[fanin0.id].Value
+		if Gia_ObjIsCo(obj) != 0 {
+			lit := Gia_ManAppendCo(result, 0)
+			out := result.pObjs[lit>>1]
+			out.Value = GIA_NONE
+			out.iDiff0, out.fCompl0 = slot0, obj.fCompl0
+			fanin0.Value--
+			if fanin0.Value == 0 {
+				front[slot0] = 0
+			}
+			continue
+		}
+		fanin1 := p.pObjs[Gia_ObjFaninId1(obj, id)]
+		slot1 := result.pObjs[fanin1.id].Value
+		out := Gia_ManAppendObj(result)
+		out.iDiff0, out.fCompl0 = slot0, obj.fCompl0
+		out.iDiff1, out.fCompl1 = slot1, obj.fCompl1
+		position = Gia_ManFrontFindNext(front, result.nFront, position)
+		out.Value = uint32(position)
+		fanin0.Value--
+		if fanin0.Value == 0 {
+			front[slot0] = 0
+		}
+		fanin1.Value--
+		if fanin1.Value == 0 {
+			front[slot1] = 0
+		}
+		if obj.Value == 0 {
+			front[position] = 0
+		}
+	}
+	Gia_ManSetRegNum(result, Gia_ManRegNum(p))
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Gia_ManFrontTest checks that frontier conversion preserves graph fields.
 func Gia_ManFrontTest(p *Gia_Man_t) {
-    var pNew *Gia_Man_t;
-    pNew  = Gia_ManFront( p );
-    Gia_ManFrontTransform( pNew );
-//    Gia_ManCleanValue( p );
-//    Gia_ManCleanValue( pNew );
-    if memcmp( pNew.pObjs, p.pObjs, sizeof(Gia_Obj_t) * p.nObjs ) {
-/*
-        Gia_Obj_t * pObj, * pObjNew;
-        int i;
-        Gia_ManForEachObj( p, pObj, i )
-        {
-            pObjNew = Gia_ManObj( pNew, i );
-            printf( "%5d %5d   %5d %5d\n", 
-                pObj->iDiff0, pObjNew->iDiff0, 
-                pObj->iDiff1, pObjNew->iDiff1 );
-        }
-*/
-        fmt.Printf("Verification failed.\n");
-    
-    } else {
-        fmt.Printf("Verification successful.\n"); }
-    Gia_ManStop( pNew );
+	result := Gia_ManFront(p)
+	Gia_ManFrontTransform(result)
+	for i, a := range p.pObjs {
+		b := result.pObjs[i]
+		if a.iDiff0 != b.iDiff0 || a.iDiff1 != b.iDiff1 || a.fCompl0 != b.fCompl0 || a.fCompl1 != b.fCompl1 || a.fTerm != b.fTerm || a.Value != b.Value {
+			fmt.Println("Verification failed.")
+			return
+		}
+	}
+	fmt.Println("Verification successful.")
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

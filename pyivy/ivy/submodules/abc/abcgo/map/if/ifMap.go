@@ -269,10 +269,10 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 
 	// generate cuts
 	// inlining of macro If_ObjForEachCut
-	for i = 0; i < int(pObj.pFanin0.pCutSet.nCuts); i++ {
+	for i = 0; i < int32(pObj.pFanin0.pCutSet.nCuts); i++ {
 		pCut0 = pObj.pFanin0.pCutSet.ppCuts[i]
 		// inlining of macro If_ObjForEachCut
-		for k = 0; k < int(pObj.pFanin1.pCutSet.nCuts); k++ {
+		for k = 0; k < int32(pObj.pFanin1.pCutSet.nCuts); k++ {
 			pCut1 = pObj.pFanin1.pCutSet.ppCuts[k]
 			// get the next free cut
 			assert(pCutSet.nCuts <= pCutSet.nCutsMax, "pCutSet.nCuts <= pCutSet.nCutsMax")

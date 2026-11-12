@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/glycerine/abcgo/bool/kit"
+	abcutil "github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dau"
 )
@@ -110,12 +111,14 @@ func If_DsdManAlloc(nVars, lutSize int32) *If_DsdMan_t {
 	return p
 }
 
-func If_DsdManFileName(p *If_DsdMan_t) string           { return p.pStore }
-func If_DsdManVarNum(p *If_DsdMan_t) int32              { return p.nVars }
-func If_DsdManObjNum(p *If_DsdMan_t) int32              { return int32(Vec_PtrSize(&p.vObjs)) }
-func If_DsdManLutSize(p *If_DsdMan_t) int32             { return p.LutSize }
-func If_DsdManTtBitNum(p *If_DsdMan_t) int32            { return 1 << uint(p.nVars) }
-func If_DsdManPermBitNum(p *If_DsdMan_t) int32          { return p.nVars }
+func If_DsdManFileName(p *If_DsdMan_t) string { return p.pStore }
+func If_DsdManVarNum(p *If_DsdMan_t) int32    { return p.nVars }
+func If_DsdManObjNum(p *If_DsdMan_t) int32    { return int32(Vec_PtrSize(&p.vObjs)) }
+func If_DsdManLutSize(p *If_DsdMan_t) int32   { return p.LutSize }
+func If_DsdManTtBitNum(p *If_DsdMan_t) int32  { return p.nTtBits }
+func If_DsdManPermBitNum(p *If_DsdMan_t) int32 {
+	return (abcutil.Abc_Base2Log(uint32(p.nVars+1)) + 1) * p.nVars
+}
 func If_DsdManSetLutSize(p *If_DsdMan_t, n int32)       { p.LutSize = n }
 func If_DsdManSuppSize(p *If_DsdMan_t, lit int32) int32 { return dsdObject(p, lit).nSupp }
 func If_DsdManCheckDec(p *If_DsdMan_t, lit int32) int32 {
@@ -195,6 +198,8 @@ func If_DsdManFree(p *If_DsdMan_t, verbose int32) {
 		return
 	}
 	p.vObjs = Vec_Ptr_t{}
+	vec.Vec_WrdFree(p.vConfigs)
+	p.vConfigs = nil
 	p.vTemp1 = nil
 	p.vTemp2 = nil
 }
@@ -244,12 +249,21 @@ func If_DsdManFilter(p *If_DsdMan_t, limit int32) *If_DsdMan_t {
 	}
 	return q
 }
-func If_DsdManGetFuncConfig(p *If_DsdMan_t, lit int32) *word {
-	o := dsdObject(p, lit)
-	if len(o.truth) == 0 {
+
+// If_DsdManGetFuncConfig returns the stored cell-input permutation and
+// programmable bits, or nil when the function has not been configured.
+func If_DsdManGetFuncConfig(p *If_DsdMan_t, lit int32) []word {
+	if p == nil || p.vConfigs == nil || p.nConfigWords <= 0 {
 		return nil
 	}
-	return &o.truth[0]
+	id := Abc_Lit2Var(lit)
+	start := int(id * p.nConfigWords)
+	end := start + int(p.nConfigWords)
+	data := vec.Vec_WrdArray(p.vConfigs)
+	if id < 0 || start < 0 || end > len(data) {
+		return nil
+	}
+	return data[start:end:end]
 }
 func If_DsdManPrint(p *If_DsdMan_t, fileName string, number, support, occurs, dump, verbose int32) {
 	if fileName == "" {
@@ -366,13 +380,111 @@ func If_CutDsdBalancePinDelays(p *If_Man_t, cut *If_Cut_t, permutation []byte) i
 	return delay
 }
 
-func If_CutDsdBalanceEval(p *If_Man_t, cut *If_Cut_t, _ *Vec_Int_t) float32 {
+func If_CutDsdBalanceEval(p *If_Man_t, cut *If_Cut_t, aig *Vec_Int_t) float32 {
+	cut.fUser = 1
+	if aig != nil {
+		vec.Vec_IntClear(aig)
+	}
+	lit := If_CutDsdLit(p, cut)
 	if cut.nLeaves == 0 {
+		if aig != nil {
+			vec.Vec_IntPush(aig, lit&1)
+		}
+		cut.Cost = 0
 		return 0
 	}
 	if cut.nLeaves == 1 {
+		if aig != nil {
+			vec.Vec_IntPush(aig, 0)
+			vec.Vec_IntPush(aig, lit&1)
+		}
+		cut.Cost = 0
 		return If_ObjCutBest(If_CutLeaf(p, cut, 0)).Delay
 	}
-	permutation := make([]byte, cut.nLeaves)
-	return float32(If_CutDsdBalancePinDelays(p, cut, permutation))
+	obj := dsdObject(p.pIfDsdMan, lit)
+	if obj.network == nil {
+		return -1
+	}
+	times := ifDelayTimes(p, cut)
+	var area int32
+	delay, root := ifDsdBalance(obj.network, obj.network.Root, If_CutDsdPerm(p, cut), times, aig, int32(cut.nLeaves), &area)
+	if delay < 0 {
+		return -1
+	}
+	if aig != nil {
+		area = int32(vec.Vec_IntSize(aig) / 2)
+		if root>>1 != int32(cut.nLeaves)+area-1 {
+			panic("if: DSD AIG root is not final")
+		}
+		vec.Vec_IntPush(aig, root&1^lit&1^int32(cut.fCompl))
+	}
+	cut.Cost = uint32(area)
+	return float32(delay)
+}
+
+// ifDsdBalance builds the compact AND graph while preserving DSD edge phases.
+// area is accumulated for timing-only callers; graph callers count emitted ANDs.
+func ifDsdBalance(network *dau.Dss_Ntk_t, edge *dau.Dss_Obj_t, pins []byte, times []int32, aig *Vec_Int_t, support int32, area *int32) (int32, int32) {
+	phase := dau.Dss_IsComplement(edge)
+	obj := dau.Dss_Regular(edge)
+	if obj.Type == dau.DAU_DSD_VAR {
+		if obj.Var < 0 || int(obj.Var) >= len(pins) {
+			panic("if: invalid DSD variable")
+		}
+		lit := int32(pins[obj.Var])
+		pin := lit >> 1
+		if pin < 0 || int(pin) >= len(times) {
+			panic("if: invalid DSD pin")
+		}
+		return times[pin], lit ^ phase
+	}
+	delays := make([]int32, len(obj.Fans))
+	lits := make([]int32, len(obj.Fans))
+	for i, fan := range obj.Fans {
+		delays[i], lits[i] = ifDsdBalance(network, dau.Dss_Lit2Obj(network.Objects, fan), pins, times, aig, support, area)
+		if delays[i] < 0 {
+			return -1, 0
+		}
+	}
+	switch obj.Type {
+	case dau.DAU_DSD_MUX:
+		if len(lits) != 3 {
+			panic("if: invalid DSD mux")
+		}
+		var root int32
+		if aig == nil {
+			*area += 3
+		} else {
+			root = If_LogCreateMux(aig, lits[0], lits[1], lits[2], support)
+		}
+		return 2 + max(delays[0], delays[1], delays[2]), root ^ phase
+	case dau.DAU_DSD_PRIME:
+		cover := dsdSopCover(obj)
+		defer vec.Vec_IntFree(cover)
+		var root int32
+		delay := ifCutSopBalanceEvalInt(cover, delays, lits, aig, &root, int32(len(lits)), support, area)
+		return delay, root ^ phase
+	case dau.DAU_DSD_AND, dau.DAU_DSD_XOR:
+		if len(lits) == 0 {
+			panic("if: empty DSD operator")
+		}
+		var count, delay int32
+		queue, queuedLits := make([]int32, len(lits)), make([]int32, len(lits))
+		xor := int32(0)
+		if obj.Type == dau.DAU_DSD_XOR {
+			xor = 1
+		}
+		for i := range lits {
+			delay = If_LogCounterAddAig(queue, &count, queuedLits, delays[i], lits[i], aig, support, 0, xor)
+		}
+		var root int32
+		if aig == nil {
+			*area += int32(len(lits) - 1)
+		} else {
+			root = If_LogCreateAndXorMulti(aig, queuedLits, count, support, xor)
+		}
+		return delay, root ^ phase
+	default:
+		panic("if: unsupported DSD node")
+	}
 }

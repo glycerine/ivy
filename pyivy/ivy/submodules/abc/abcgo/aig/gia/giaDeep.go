@@ -1,175 +1,109 @@
 package gia
 
+// Iterative randomized synthesis driver, adapted from giaDeep.c.
 import (
 	"fmt"
+	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/misc/util"
 	"time"
 )
 
-/**CFile****************************************************************
-
-  FileName    [giaDeep.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Scalable AIG package.]
-
-  Synopsis    [Experiments with synthesis.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: giaDeep.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "gia.h"
-//#include "base/main/main.h"
-//#include "base/cmd/cmd.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManDeepSynOne(nNoImpr int32, TimeOut int32, nAnds int32, Seed int32, fUseTwo int32, fVerbose int32) *Gia_Man_t {
-    var nTimeToStop abctime;
-    if TimeOut {
-        nTimeToStop = Abc_Clock() + TimeOut * int64(time.Second);
-    } else {
-        nTimeToStop = 0;
-    }
-    var clkStart abctime     = Abc_Clock();
-    var s int32;
-    var i int32;
-    var IterMax int32 = 100000;
-    var nAndsMin int32 = -1;
-    var iIterLast int32 = -1;
-    var pTemp *Gia_Man_t    = Abc_FrameReadGia(Abc_FrameGetGlobalFrame());
-    var pNew *Gia_Man_t     = Gia_ManDup( pTemp );
-    Abc_Random(1);
-    for  s = 0; s < 10+Seed; s++  {
-        Abc_Random(0);
-    }
-    for  i = 0; i < IterMax; i++  {
-        var Rand uint32  = Abc_Random(0);
-        var fDch int32  = Rand & 1;
-        //int fCom = (Rand >> 1) & 3;
-        var fCom int32  = (Rand >> 1) & 1;
-        var fFx int32   = (Rand >> 2) & 1;
-        var KLut int32;
-        if fUseTwo != 0 {
-            KLut = 2 + (i % 5);
-        } else {
-            KLut = 3 + (i % 4);
-        }
-        var fChange int32;
-        var Command string // was [1000]byte in C
-
-        var pComp string  = nil;
-        if fCom == 3 {
-            pComp = "; &put; compress2rs; compress2rs; compress2rs; &get";
-        } else if fCom == 2 {
-            pComp = "; &put; compress2rs; compress2rs; &get";
-        } else if fCom == 1 {
-            pComp = "; &put; compress2rs; &get";
-        } else if fCom == 0 {
-            pComp = "; &dc2"; }
-        Command = fmt.Sprintf("&dch%s; &if -a -K %d; &mfs -e -W 20 -L 20%s%s", fDch ? " -f" : "", KLut, fFx ? "; &fx" : "", pComp);
-        if Abc_FrameIsBatchMode() {
-            if Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), Command) {
-                Abc_Print( 1, "Something did not work out with the command \"%s\".\n", Command );
-                return nil;
-            }
-        
-        } else {
-            Abc_FrameSetBatchMode( 1 );
-            if Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), Command) {
-                Abc_Print( 1, "Something did not work out with the command \"%s\".\n", Command );
-                return nil;
-            }
-            Abc_FrameSetBatchMode( 0 );
-        }
-        pTemp = Abc_FrameReadGia(Abc_FrameGetGlobalFrame());
-        if Gia_ManAndNum(pNew) > Gia_ManAndNum(pTemp) {
-            Gia_ManStop( pNew );
-            pNew = Gia_ManDup( pTemp );
-            fChange = 1;
-            iIterLast = i;
-        
-        } else if Gia_ManAndNum(pNew) + Gia_ManAndNum(pNew)/10 < Gia_ManAndNum(pTemp) {
-            //printf( "Updating\n" );
-            //Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), Gia_ManDup(pNew) );
-        }
-        if (fChange != 0) && (fVerbose != 0) {
-            fmt.Printf("Iter %6d : ", i);
-            fmt.Printf("Time %8.2f sec : ", float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second));
-            fmt.Printf("And = %6d  ", Gia_ManAndNum(pNew));
-            fmt.Printf("Lev = %3d  ", Gia_ManLevelNum(pNew));
-            if fChange != 0 { 
-                fmt.Printf("<== best : ");
-            } else if fVerbose != 0 {
-                fmt.Printf("           "); }
-            printf( "%s", Command );
-            fmt.Printf("\n");
-        }
-        if nTimeToStop && Abc_Clock() > nTimeToStop {
-            fmt.Printf("Runtime limit (%d sec) is reached after %d iterations.\n", TimeOut, i);
-            break;
-        }
-        if i - iIterLast > nNoImpr {
-            fmt.Printf("Completed %d iterations without improvement in %.2f seconds.\n", nNoImpr, float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second));
-            break;
-        }
-    }
-    if i == IterMax {
-        fmt.Printf("Iteration limit (%d iters) is reached after %.2f seconds.\n", IterMax, float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second));
-    } else if (nAnds != 0) && nAndsMin <= nAnds {
-        fmt.Printf("Quality goal (%d nodes <= %d nodes) is achieved after %d iterations and %.2f seconds.\n", nAndsMin, nAnds, i, float32(1.0)*(Abc_Clock() - clkStart)/int64(time.Second)); }
-    return pNew;
+func Gia_ManDeepSynOne(noImprovement, timeout, goal, seed, useTwo, verbose int32) *Gia_Man_t {
+	frame := abcmain.Abc_FrameGetGlobalFrame()
+	initial, ok := abcmain.Abc_FrameReadGia(frame).(*Gia_Man_t)
+	if !ok || initial == nil {
+		fmt.Fprintln(frame.Err, "gia: no current graph for synthesis")
+		return nil
+	}
+	best := Gia_ManDup(initial)
+	start := time.Now()
+	last := int32(-1)
+	util.Abc_Random(1)
+	for s := int32(0); s < 10+seed; s++ {
+		util.Abc_Random(0)
+	}
+	const limit int32 = 100000
+	var i int32
+	for i = 0; i < limit; i++ {
+		random := util.Abc_Random(0)
+		optionDch, optionFx := "", ""
+		if random&1 != 0 {
+			optionDch = " -f"
+		}
+		if random&4 != 0 {
+			optionFx = "; &fx"
+		}
+		compress := "; &dc2"
+		if random&2 != 0 {
+			compress = "; &put; compress2rs; &get"
+		}
+		lut := int32(3) + i%4
+		if useTwo != 0 {
+			lut = 2 + i%5
+		}
+		command := fmt.Sprintf("&dch%s; &if -a -K %d; &mfs -e -W 20 -L 20%s%s", optionDch, lut, optionFx, compress)
+		previous := abcmain.Abc_FrameIsBatchMode()
+		if previous == 0 {
+			abcmain.Abc_FrameSetBatchMode(1)
+		}
+		status := abcmain.Cmd_CommandExecute(frame, command)
+		if previous == 0 {
+			abcmain.Abc_FrameSetBatchMode(0)
+		}
+		if status != 0 {
+			fmt.Fprintf(frame.Err, "Something did not work out with the command %q.\n", command)
+			Gia_ManStop(best)
+			return nil
+		}
+		current, ok := abcmain.Abc_FrameReadGia(frame).(*Gia_Man_t)
+		if !ok || current == nil {
+			fmt.Fprintln(frame.Err, "gia: synthesis command removed the graph")
+			Gia_ManStop(best)
+			return nil
+		}
+		if Gia_ManAndNum(best) > Gia_ManAndNum(current) {
+			Gia_ManStop(best)
+			best = Gia_ManDup(current)
+			last = i
+			if verbose != 0 {
+				fmt.Printf("Iter %6d : Time %8.2f sec : And = %6d  Lev = %3d  <== best : %s\n", i, time.Since(start).Seconds(), Gia_ManAndNum(best), Gia_ManLevelNum(best), command)
+			}
+		}
+		if goal > 0 && Gia_ManAndNum(best) <= goal {
+			fmt.Printf("Quality goal (%d nodes <= %d nodes) is achieved after %d iterations and %.2f seconds.\n", Gia_ManAndNum(best), goal, i, time.Since(start).Seconds())
+			break
+		}
+		if timeout > 0 && time.Since(start) >= time.Duration(timeout)*time.Second {
+			fmt.Printf("Runtime limit (%d sec) is reached after %d iterations.\n", timeout, i)
+			break
+		}
+		if i-last > noImprovement {
+			fmt.Printf("Completed %d iterations without improvement in %.2f seconds.\n", noImprovement, time.Since(start).Seconds())
+			break
+		}
+	}
+	if i == limit {
+		fmt.Printf("Iteration limit (%d iters) is reached after %.2f seconds.\n", limit, time.Since(start).Seconds())
+	}
+	return best
 }
-func Gia_ManDeepSyn(pGia *Gia_Man_t, nIters int32, nNoImpr int32, TimeOut int32, nAnds int32, Seed int32, fUseTwo int32, fVerbose int32) *Gia_Man_t {
-    var pInit *Gia_Man_t  = Gia_ManDup(pGia);
-    var pBest *Gia_Man_t  = Gia_ManDup(pGia);
-    var pThis *Gia_Man_t;
-    var i int32;
-    for  i = 0; i < nIters; i++  {
-        Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), Gia_ManDup(pInit) );
-        pThis = Gia_ManDeepSynOne( nNoImpr, TimeOut, nAnds, Seed+i, fUseTwo, fVerbose );
-        if Gia_ManAndNum(pBest) > Gia_ManAndNum(pThis) {
-            Gia_ManStop( pBest );
-            pBest = pThis;
-        
-        } else { 
-            Gia_ManStop( pThis ); }
-        
-    }
-    Gia_ManStop( pInit );
-    return pBest;
+func Gia_ManDeepSyn(g *Gia_Man_t, iters, noImprovement, timeout, goal, seed, useTwo, verbose int32) *Gia_Man_t {
+	initial, best := Gia_ManDup(g), Gia_ManDup(g)
+	defer Gia_ManStop(initial)
+	frame := abcmain.Abc_FrameGetGlobalFrame()
+	for i := int32(0); i < iters; i++ {
+		abcmain.Abc_FrameUpdateGia(frame, Gia_ManDup(initial))
+		next := Gia_ManDeepSynOne(noImprovement, timeout, goal, seed+i, useTwo, verbose)
+		if next == nil {
+			Gia_ManStop(best)
+			return nil
+		}
+		if Gia_ManAndNum(best) > Gia_ManAndNum(next) {
+			Gia_ManStop(best)
+			best = next
+		} else {
+			Gia_ManStop(next)
+		}
+	}
+	return best
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

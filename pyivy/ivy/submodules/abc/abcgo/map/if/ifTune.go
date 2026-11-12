@@ -7,6 +7,8 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/bool/kit"
 	abcutil "github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/opt/dau"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
 )
@@ -51,7 +53,7 @@ type Cnf_Dat_t = cnf.Cnf_Dat_t
 ////////////////////////////////////////////////////////////////////////
 
 // network types
-type Ifn_DsdType_t int32
+type Ifn_DsdType_t = int32
 
 const (
 	IFN_DSD_NONE Ifn_DsdType_t = 0
@@ -74,7 +76,7 @@ const (
 var Ifn_Symbs = [16]string{"", "const", "var", "()", "[]", "<>", "{}"}
 
 func Ifn_ElemTruth(p *Ifn_Ntk_t, i int32) []word {
-	start := int(i * Abc_TtWordNum(p.nInps))
+	start := int(i * abcutil.Abc_TtWordNum(p.nInps))
 	return p.pTtElems[start : start+int(p.nWords)]
 }
 func Ifn_ObjTruth(p *Ifn_Ntk_t, i int32) []word {
@@ -110,7 +112,7 @@ func Ifn_Prepare(p *Ifn_Ntk_t, pTruth []word, nVars int32) int32 {
 	assert(nVars <= p.nInps, "nVars <= p.nInps")
 	p.pTruth = pTruth
 	p.nVars = nVars
-	p.nWords = Abc_TtWordNum(nVars)
+	p.nWords = abcutil.Abc_TtWordNum(nVars)
 	p.nPars = p.nObjs
 	for i = p.nInps; i < p.nObjs; i++ {
 		if p.Nodes[i].Type != IFN_DSD_PRIME {
@@ -126,10 +128,12 @@ func Ifn_Prepare(p *Ifn_Ntk_t, pTruth []word, nVars int32) int32 {
 		fmt.Printf("Groups start %d\n", p.nPars)
 	}
 	p.nParsVIni = p.nPars
-	p.nParsVNum = Abc_Base2Log(nVars)
+	p.nParsVNum = abcutil.Abc_Base2Log(uint32(nVars))
 	p.nPars += p.nParsVNum * p.nInps
 	assert(p.nPars <= IFN_PAR, "p.nPars <= IFN_PAR")
-	memset(p.Values, 0xFF, sizeof(int)*p.nPars)
+	for i := int32(0); i < p.nPars; i++ {
+		p.Values[i] = -1
+	}
 	return p.nPars
 }
 func Ifn_NtkPrint(p *Ifn_Ntk_t) {
@@ -429,7 +433,7 @@ func Ifn_NtkParseInt2(pStr string, p *Ifn_Ntk_t) int32 {
 	for i = p.nInps; i < p.nObjs; i++ {
 		var Next byte
 		for k = 0; k < int32(len(pStr)); k++ {
-			if k+1 < int32(len(pStr)) && pStr[k] == 'a'+i && pStr[k+1] == '=' {
+			if k+1 < int32(len(pStr)) && int32(pStr[k]) == 'a'+i && pStr[k+1] == '=' {
 				break
 			}
 		}
@@ -464,7 +468,7 @@ func Ifn_NtkParseInt2(pStr string, p *Ifn_Ntk_t) int32 {
 			return Ifn_ErrorMessage("Cannot find matching operation symbol in the definition of signal '%c'.\n", 'a'+i)
 		}
 		for f = 0; f < nFans; f++ {
-			iFan = pStr[k+3+f] - 'a'
+			iFan = int32(pStr[k+3+f]) - 'a'
 			if iFan < 0 || iFan >= i {
 				return Ifn_ErrorMessage("Fanin number %d is signal %d is out of range.\n", f, 'a'+i)
 			}
@@ -480,7 +484,7 @@ func Ifn_NtkParseConstraints(pStr string, p *Ifn_Ntk_t) {
 	p.nConstr = 0
 	for i = 0; i < p.nInps; i++ {
 		for k = 0; k < int32(len(pStr)); k++ {
-			if k > 0 && k+1 < int32(len(pStr)) && pStr[k] == 'A'+i && pStr[k-1] == ';' {
+			if k > 0 && k+1 < int32(len(pStr)) && int32(pStr[k]) == 'A'+i && pStr[k-1] == ';' {
 				assert(p.nConstr < IFN_INS*IFN_INS, "p.nConstr < IFN_INS*IFN_INS")
 				p.pConstr[p.nConstr] = (int32((pStr[k] - 'A')) << 16) | int32((pStr[k+1] - 'A'))
 				p.nConstr++
@@ -506,7 +510,7 @@ func Ifn_NtkParse(pStr string) *Ifn_Ntk_t {
 		}
 	}
 	Ifn_NtkParseConstraints(pStr, p)
-	Abc_TtElemInit2(p.pTtElems[:], p.nInps)
+	abcutil.Abc_TtElemInit2(p.pTtElems[:], p.nInps)
 	//    printf( "Finished parsing: " ); Ifn_NtkPrint(p);
 	return p
 }
@@ -552,7 +556,7 @@ func Ifn_ManStrFindModel(p *Ifn_Ntk_t) *Gia_Man_t {
 	for i = p.nInps; i < p.nObjs; i++ {
 		var Type int32 = p.Nodes[i].Type
 		var nFans int32 = p.Nodes[i].nFanins
-		pFans := &p.Nodes[i].Fanins[0]
+		pFans := p.Nodes[i].Fanins[:]
 		var iFanin int32 = p.Nodes[i].iFirst
 		if Type == IFN_DSD_AND {
 			iLit = 1
@@ -581,7 +585,8 @@ func Ifn_ManStrFindModel(p *Ifn_Ntk_t) *Gia_Man_t {
 			for k = 0; k < nMints; k++ {
 				pVarsData[k] = pVarMap[iFanin+k]
 			}
-			for Step, k := int32(1), int32(0); k < nFans; k++ {
+			Step = 1
+			for k = 0; k < nFans; k++ {
 				for n = 0; n < nMints; n += Step << 1 {
 					pVarsData[n] = Gia_ManHashMux(pNew, pVarMap[pFans[k]], pVarsData[n+Step], pVarsData[n])
 				}
@@ -669,13 +674,13 @@ func Ifn_ManStrFindSolver(p *Gia_Man_t, pvPiVars **Vec_Int_t, pvPoVars **Vec_Int
 		}
 	}
 	// inputs/outputs
-	*pvPiVars = Vec_IntAlloc(Gia_ManPiNum(p))
-	for i = 0; i < gia.Gia_ManCiNum(p); i++ {
+	*pvPiVars = Vec_IntAlloc(int(Gia_ManPiNum(p)))
+	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
 		obj := gia.Gia_ManCi(p, i)
 		Vec_IntPush(*pvPiVars, pCnf.VarNums[gia.Gia_ObjId(p, obj)])
 	}
-	*pvPoVars = Vec_IntAlloc(Gia_ManPoNum(p))
-	for i = 0; i < Gia_ManPoNum(p); i++ {
+	*pvPoVars = Vec_IntAlloc(int(Gia_ManPoNum(p)))
+	for i := int32(0); i < Gia_ManPoNum(p); i++ {
 		obj := gia.Gia_ManPo(p, i)
 		Vec_IntPush(*pvPoVars, pCnf.VarNums[gia.Gia_ObjId(p, obj)])
 	}
@@ -698,11 +703,11 @@ func Ifn_ManSatBuild(p *Ifn_Ntk_t, pvPiVars **Vec_Int_t, pvPoVars **Vec_Int_t) *
 }
 func If_ManSatBuildFromCell(pStr string, pvPiVars **Vec_Int_t, pvPoVars **Vec_Int_t, ppNtk **Ifn_Ntk_t) any {
 	var p *Ifn_Ntk_t = Ifn_NtkParse(pStr)
-	Ifn_Prepare(p, nil, p.nInps)
 	*ppNtk = p
 	if p == nil {
 		return nil
 	}
+	Ifn_Prepare(p, nil, p.nInps)
 	//    Ifn_NtkPrint( p );
 	return Ifn_ManSatBuild(p, pvPiVars, pvPoVars)
 }
@@ -727,7 +732,7 @@ func Ifn_ManSatPrintPerm(pPerms string, nVars int32) {
 	}
 	fmt.Printf("\n")
 }
-func Ifn_ManSatCheckOne(pSat *sat_solver, vPoVars *Vec_Int_t, pTruth []word, nVars int32, pPerm *int32, nInps int32, vLits *Vec_Int_t) int32 {
+func Ifn_ManSatCheckOne(pSat *sat_solver, vPoVars *Vec_Int_t, pTruth []word, nVars int32, pPerm []int32, nInps int32, vLits *Vec_Int_t) int32 {
 	var v int32
 	var Value int32
 	var m int32
@@ -736,7 +741,7 @@ func Ifn_ManSatCheckOne(pSat *sat_solver, vPoVars *Vec_Int_t, pTruth []word, nVa
 	assert((1<<nInps) == Vec_IntSize(vPoVars), "(1 << nInps) == Vec_IntSize(vPoVars)")
 	assert(nVars <= nInps, "nVars <= nInps")
 	// remap minterms
-	Vec_IntFill(vLits, Vec_IntSize(vPoVars), -1)
+	vec.Vec_IntFill(vLits, Vec_IntSize(vPoVars), -1)
 	for m = 0; m < nMints; m++ {
 		mNew = 0
 		for v = 0; v < nInps; v++ {
@@ -745,27 +750,27 @@ func Ifn_ManSatCheckOne(pSat *sat_solver, vPoVars *Vec_Int_t, pTruth []word, nVa
 				mNew |= (1 << v)
 			}
 		}
-		assert(Vec_IntEntry(vLits, mNew) == -1, "Vec_IntEntry(vLits, mNew) == -1")
-		Vec_IntWriteEntry(vLits, mNew, Abc_TtGetBit(pTruth, m))
+		assert(Vec_IntEntry(vLits, int(mNew)) == -1, "Vec_IntEntry(vLits, int(mNew)) == -1")
+		Vec_IntWriteEntry(vLits, int(mNew), abcutil.Abc_TtGetBit(pTruth, m))
 	}
 	// find assumptions
 	v = 0
-	for m = 0; m < Vec_IntSize(vLits); m++ {
-		Value = Vec_IntEntry(vLits, m)
+	for m = 0; m < int32(Vec_IntSize(vLits)); m++ {
+		Value = Vec_IntEntry(vLits, int(m))
 		if Value >= 0 {
-			Vec_IntWriteEntry(vLits, v, Abc_Var2Lit(Vec_IntEntry(vPoVars, m), Value == 0))
+			Vec_IntWriteEntry(vLits, int(v), abcutil.Abc_Var2Lit(Vec_IntEntry(vPoVars, int(m)), ifTuneBoolInt(Value == 0)))
 			v++
 		}
 	}
-	Vec_IntShrink(vLits, v)
+	vec.Vec_IntShrink(vLits, int(v))
 	// run SAT solver
-	return boolInt(pSat.Solve(Vec_IntArray(vLits)...) == bsat.Satisfiable)
+	return ifTuneBoolInt(pSat.Solve(Vec_IntArray(vLits)...) == bsat.Satisfiable)
 }
 func Ifn_ManSatDeriveOne(pSat *sat_solver, vPiVars *Vec_Int_t, vValues *Vec_Int_t) {
 	var i, iVar int32
-	Vec_IntClear(vValues)
-	for i = 0; i < Vec_IntSize(vPiVars); i++ {
-		iVar = Vec_IntEntry(vPiVars, i)
+	vec.Vec_IntClear(vValues)
+	for i = 0; i < int32(Vec_IntSize(vPiVars)); i++ {
+		iVar = Vec_IntEntry(vPiVars, int(i))
 		Vec_IntPush(vValues, satValue(pSat, iVar))
 	}
 }
@@ -776,7 +781,7 @@ func If_ManSatFindCofigBits(pSat any, vPiVars *Vec_Int_t, vPoVars *Vec_Int_t, pT
 	var pPerm [IF_MAX_FUNC_LUTSIZE]int32
 	assert(nInps <= IF_MAX_FUNC_LUTSIZE, "nInps <= IF_MAX_FUNC_LUTSIZE")
 	for i = 0; i < nInps; i++ {
-		pPerm[i] = Abc_TtGetHex([]word{Perm}, i)
+		pPerm[i] = abcutil.Abc_TtGetHex([]word{Perm}, i)
 		assert(pPerm[i] < nVars, "pPerm[i] < nVars")
 	}
 	// perform SAT check
@@ -784,8 +789,8 @@ func If_ManSatFindCofigBits(pSat any, vPiVars *Vec_Int_t, vPoVars *Vec_Int_t, pT
 	if !ok {
 		return 0
 	}
-	RetValue = Ifn_ManSatCheckOne(solver, vPoVars, pTruth, nVars, &pPerm[0], nInps, vValues)
-	Vec_IntClear(vValues)
+	RetValue = Ifn_ManSatCheckOne(solver, vPoVars, pTruth, nVars, pPerm[:], nInps, vValues)
+	vec.Vec_IntClear(vValues)
 	if RetValue == 0 {
 		return 0
 	}
@@ -797,15 +802,15 @@ func Ifn_ManSatFindCofigBitsTest(p *Ifn_Ntk_t, pTruth []word, nVars int32, Perm 
 	var vPiVars, vPoVars *Vec_Int_t
 	var pSat *sat_solver = Ifn_ManSatBuild(p, &vPiVars, &vPoVars)
 	var RetValue int32 = If_ManSatFindCofigBits(pSat, vPiVars, vPoVars, pTruth, nVars, Perm, p.nInps, vValues)
-	Vec_IntPrint(vValues)
+	vec.Vec_IntPrint(vValues)
 	// cleanup
-	Vec_IntFreeP(&vPiVars)
-	Vec_IntFreeP(&vPoVars)
-	Vec_IntFreeP(&vValues)
+	vec.Vec_IntFreeP(&vPiVars)
+	vec.Vec_IntFreeP(&vPoVars)
+	vec.Vec_IntFreeP(&vValues)
 	return RetValue
 }
 
-func boolInt(value bool) int32 {
+func ifTuneBoolInt(value bool) int32 {
 	if value {
 		return 1
 	}
@@ -837,7 +842,7 @@ func sat_solver_var_value(s *sat_solver, v int32) int32 { return satValue(s, v) 
 func ifnConfigWords(v *Vec_Int_t, offset, nInts int32) []word {
 	words := make([]word, (nInts+1)/2)
 	for j := int32(0); j < nInts; j++ {
-		words[j/2] |= word(uint32(Vec_IntEntry(v, offset+j))) << (32 * (j & 1))
+		words[j/2] |= word(uint32(Vec_IntEntry(v, int(offset+j)))) << (32 * (j & 1))
 	}
 	return words
 }
@@ -867,23 +872,23 @@ func If_ManSatDeriveGiaFromBits(pGia any, p *Ifn_Ntk_t, pConfigData []word, vLea
 	var nVarsNew int32
 	var pVarMap [1000]int32
 	var nTtBits int32 = p.nParsVIni - p.nObjs
-	var nPermBits int32 = Abc_Base2Log(p.nInps+1) + 1
-	var fCompl int32 = Abc_TtGetBit(pConfigData, nTtBits+nPermBits*p.nInps)
-	assert(Vec_IntSize(vLeaves) <= p.nInps && p.nParsVIni < 1000, "Vec_IntSize(vLeaves) <= p.nInps && p.nParsVIni < 1000")
+	var nPermBits int32 = abcutil.Abc_Base2Log(uint32(p.nInps+1)) + 1
+	var fCompl int32 = abcutil.Abc_TtGetBit(pConfigData, nTtBits+nPermBits*p.nInps)
+	assert(int32(Vec_IntSize(vLeaves)) <= p.nInps && p.nParsVIni < 1000, "int32(Vec_IntSize(vLeaves)) <= p.nInps && p.nParsVIni < 1000")
 	for i = 0; i < p.nInps; i++ {
 		iLit = 0
 		for k = 0; k < nPermBits; k++ {
-			if Abc_TtGetBit(pConfigData, nTtBits+i*nPermBits+k) != 0 {
+			if abcutil.Abc_TtGetBit(pConfigData, nTtBits+i*nPermBits+k) != 0 {
 				iLit |= (1 << k)
 			}
 		}
-		assert(Abc_Lit2Var(iLit) < Vec_IntSize(vLeaves), "Abc_Lit2Var(iLit) < Vec_IntSize(vLeaves)")
+		assert(Abc_Lit2Var(iLit) < int32(Vec_IntSize(vLeaves)), "Abc_Lit2Var(iLit) < int32(Vec_IntSize(vLeaves))")
 		pVarMap[i] = Abc_Lit2LitL(Vec_IntArray(vLeaves), iLit)
 	}
 	for i = p.nInps; i < p.nObjs; i++ {
 		var Type int32 = p.Nodes[i].Type
 		var nFans int32 = p.Nodes[i].nFanins
-		pFans := &p.Nodes[i].Fanins[0]
+		pFans := p.Nodes[i].Fanins[:]
 		//int iFanin = p->Nodes[i].iFirst;
 		assert(nFans <= 6, "nFans <= 6")
 		if Type == IFN_DSD_AND {
@@ -910,12 +915,12 @@ func If_ManSatDeriveGiaFromBits(pGia any, p *Ifn_Ntk_t, pConfigData []word, vLea
 			var uTruth word
 			var nMints int32 = (1 << nFans)
 			for k = 0; k < nMints; k++ {
-				if Abc_TtGetBit(pConfigData, iVar) != 0 {
+				if abcutil.Abc_TtGetBit(pConfigData, iVar) != 0 {
 					uTruth |= word(1) << k
 				}
 				iVar++
 			}
-			uTruth = Abc_Tt6Stretch(uTruth, nFans)
+			uTruth = abcutil.Abc_Tt6Stretch(uTruth, nFans)
 			// collect function
 			for k = 0; k < nFans; k++ {
 				pFaninLits[k] = pVarMap[pFans[k]]
@@ -935,7 +940,7 @@ func If_ManSatDeriveGiaFromBits(pGia any, p *Ifn_Ntk_t, pConfigData []word, vLea
 		}
 	}
 	assert(iVar == nTtBits, "iVar == nTtBits")
-	return Abc_LitNotCond(pVarMap[p.nObjs-1], fCompl)
+	return abcutil.Abc_LitNotCond(pVarMap[p.nObjs-1], fCompl)
 }
 
 /*
@@ -962,15 +967,16 @@ func If_ManDeriveGiaFromCells(pGia any) any {
 	var pObj *Gia_Obj_t
 	var pConfigData []word
 	//word * pTruth;
-	var k, i, iLut, iVar int32
+	var i, iLut int32
 	var nConfigInts, Count int32
-	assert(p.vConfigs != nil, "p.vConfigs != nil")
-	assert(p.pCellStr != nil, "p.pCellStr != nil")
-	assert(Gia_ManHasMapping(p), "Gia_ManHasMapping(p)")
+	cellStr, configs := p.CellConfiguration()
+	assert(configs != nil, "configs != nil")
+	assert(cellStr != "", "p.pCellStr != nil")
+	assert(Gia_ManHasMapping(p) != 0, "Gia_ManHasMapping(p)")
 	// derive cell network
-	pNtkCell = Ifn_NtkParse(p.pCellStr)
+	pNtkCell = Ifn_NtkParse(cellStr)
 	Ifn_Prepare(pNtkCell, nil, pNtkCell.nInps)
-	nConfigInts = Vec_IntEntry(p.vConfigs, 1)
+	nConfigInts = Vec_IntEntry(configs, 1)
 	// create new manager
 	pNew = Gia_ManStart(6*Gia_ManObjNum(p)/5 + 100)
 	name, spec := p.Identity()
@@ -978,7 +984,7 @@ func If_ManDeriveGiaFromCells(pGia any) any {
 	// map primary inputs
 	Gia_ManFillValue(p)
 	Gia_ManConst0(p).Value = 0
-	for i = 0; i < gia.Gia_ManCiNum(p); i++ {
+	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
 		obj := gia.Gia_ManCi(p, i)
 		obj.Value = uint32(Gia_ManAppendCi(pNew))
 	}
@@ -993,29 +999,29 @@ func If_ManDeriveGiaFromCells(pGia any) any {
 			continue
 		}
 		if gia.Gia_ObjIsBuf(pObj) != 0 {
-			pObj.Value = Gia_ManAppendBuf(pNew, Gia_ObjFanin0Copy(pObj))
+			pObj.Value = uint32(Gia_ManAppendBuf(pNew, Gia_ObjFanin0Copy(pObj)))
 			continue
 		}
 		if gia.Gia_ObjIsLut(p, iLut) == 0 {
 			continue
 		}
 		// collect leaves
-		//Vec_IntClear( vLeaves );
+		//vec.Vec_IntClear( vLeaves );
 		//Gia_LutForEachFanin( p, iLut, iVar, k )
 		//    Vec_IntPush( vLeaves, iVar );
 		//pTruth = Gia_ObjComputeTruthTableCut( p, Gia_ManObj(p, iLut), vLeaves );
 		// collect incoming literals
-		Vec_IntClear(vLeaves)
+		vec.Vec_IntClear(vLeaves)
 		for _, iVar := range gia.Gia_ObjLutFanins(p, iLut) {
 			Vec_IntPush(vLeaves, int32(gia.Gia_ManObj(p, iVar).Value))
 		}
 		offset := 2 + nConfigInts*Count
-		pConfigData = ifnConfigWords(p.vConfigs, offset, nConfigInts)
+		pConfigData = ifnConfigWords(configs, offset, nConfigInts)
 		Count++
-		Gia_ManObj(p, iLut).Value = If_ManSatDeriveGiaFromBits(pNew, pNtkCell, pConfigData, vLeaves, vCover)
+		Gia_ManObj(p, iLut).Value = uint32(If_ManSatDeriveGiaFromBits(pNew, pNtkCell, pConfigData, vLeaves, vCover))
 	}
-	assert(Vec_IntEntry(p.vConfigs, 0) == Count, "Vec_IntEntry(p.vConfigs, 0) == Count")
-	assert(Vec_IntSize(p.vConfigs) == 2+nConfigInts*Count, "Vec_IntSize(p.vConfigs) == 2 + nConfigInts * Count")
+	assert(Vec_IntEntry(configs, 0) == Count, "Vec_IntEntry(configs, 0) == Count")
+	assert(Vec_IntSize(configs) == int(2+nConfigInts*Count), "Vec_IntSize(configs) == 2 + nConfigInts * Count")
 	//Gia_ObjComputeTruthTableStop( p );
 	for i = 0; i < gia.Gia_ManCoNum(p); i++ {
 		pObj = gia.Gia_ManCo(p, i)
@@ -1059,52 +1065,52 @@ func Ifn_NtkDeriveTruth(p *Ifn_Ntk_t, pValues []int32) []word {
 			}
 		}
 		// assign variable
-		Abc_TtCopy(Ifn_ObjTruth(p, i), Ifn_ElemTruth(p, iVar), p.nWords, 0)
+		abcutil.Abc_TtCopy(Ifn_ObjTruth(p, i), Ifn_ElemTruth(p, iVar), p.nWords, 0)
 	}
 	// internal variables
 	for i = p.nInps; i < p.nObjs; i++ {
 		var nFans int32 = p.Nodes[i].nFanins
-		pFans := &p.Nodes[i].Fanins[0]
+		pFans := p.Nodes[i].Fanins[:]
 		pTruth := Ifn_ObjTruth(p, i)
 		if p.Nodes[i].Type == IFN_DSD_AND {
-			Abc_TtFill(pTruth, p.nWords)
+			abcutil.Abc_TtFill(pTruth, p.nWords)
 			for f = 0; f < nFans; f++ {
-				Abc_TtAnd(pTruth, pTruth, Ifn_ObjTruth(p, pFans[f]), p.nWords, 0)
+				abcutil.Abc_TtAnd(pTruth, pTruth, Ifn_ObjTruth(p, pFans[f]), p.nWords, 0)
 			}
 
 		} else if p.Nodes[i].Type == IFN_DSD_XOR {
-			Abc_TtClear(pTruth, p.nWords)
+			abcutil.Abc_TtClear(pTruth, p.nWords)
 			for f = 0; f < nFans; f++ {
-				Abc_TtXor(pTruth, pTruth, Ifn_ObjTruth(p, pFans[f]), p.nWords, 0)
+				abcutil.Abc_TtXor(pTruth, pTruth, Ifn_ObjTruth(p, pFans[f]), p.nWords, 0)
 			}
 
 		} else if p.Nodes[i].Type == IFN_DSD_MUX {
 			assert(nFans == 3, "nFans == 3")
-			Abc_TtMux(pTruth, Ifn_ObjTruth(p, pFans[0]), Ifn_ObjTruth(p, pFans[1]), Ifn_ObjTruth(p, pFans[2]), p.nWords)
+			abcutil.Abc_TtMux(pTruth, Ifn_ObjTruth(p, pFans[0]), Ifn_ObjTruth(p, pFans[1]), Ifn_ObjTruth(p, pFans[2]), p.nWords)
 
 		} else if p.Nodes[i].Type == IFN_DSD_PRIME {
 			var nValues int32 = (1 << nFans)
-			var pTemp *word = Ifn_ObjTruth(p, p.nObjs)
-			Abc_TtClear(pTruth, p.nWords)
+			pTemp := Ifn_ObjTruth(p, p.nObjs)
+			abcutil.Abc_TtClear(pTruth, p.nWords)
 			for v = 0; v < nValues; v++ {
 				if pValues[p.Nodes[i].iFirst+v] == 0 {
 					continue
 				}
-				Abc_TtFill(pTemp, p.nWords)
+				abcutil.Abc_TtFill(pTemp, p.nWords)
 				for f = 0; f < nFans; f++ {
 					if ((v >> f) & 1) != 0 {
-						Abc_TtAnd(pTemp, pTemp, Ifn_ObjTruth(p, pFans[f]), p.nWords, 0)
+						abcutil.Abc_TtAnd(pTemp, pTemp, Ifn_ObjTruth(p, pFans[f]), p.nWords, 0)
 					} else {
-						Abc_TtSharp(pTemp, pTemp, Ifn_ObjTruth(p, pFans[f]), p.nWords)
+						abcutil.Abc_TtSharp(pTemp, pTemp, Ifn_ObjTruth(p, pFans[f]), p.nWords)
 					}
 				}
-				Abc_TtOr(pTruth, pTruth, pTemp, p.nWords)
+				abcutil.Abc_TtOr(pTruth, pTruth, pTemp, p.nWords)
 			}
 
 		} else {
 			assert(false, "0")
 		}
-		//Dau_DsdPrintFromTruth( pTruth, p->nVars );
+		//dau.Dau_DsdPrintFromTruth( pTruth, p->nVars );
 	}
 	return Ifn_ObjTruth(p, p.nObjs-1)
 }
@@ -1125,33 +1131,33 @@ func Ifn_NtkDeriveTruth(p *Ifn_Ntk_t, pValues []int32) []word {
 func Ifn_TtComparisonConstr(pTruth []word, nVars int32, fMore int32, fEqual int32) {
 	var Cond, Equa, Temp [4]word
 	var s_TtElems [8][4]word = [8][4]word{
-		{ABC_CONST(0xAAAAAAAAAAAAAAAA), ABC_CONST(0xAAAAAAAAAAAAAAAA), ABC_CONST(0xAAAAAAAAAAAAAAAA), ABC_CONST(0xAAAAAAAAAAAAAAAA)},
-		{ABC_CONST(0xCCCCCCCCCCCCCCCC), ABC_CONST(0xCCCCCCCCCCCCCCCC), ABC_CONST(0xCCCCCCCCCCCCCCCC), ABC_CONST(0xCCCCCCCCCCCCCCCC)},
-		{ABC_CONST(0xF0F0F0F0F0F0F0F0), ABC_CONST(0xF0F0F0F0F0F0F0F0), ABC_CONST(0xF0F0F0F0F0F0F0F0), ABC_CONST(0xF0F0F0F0F0F0F0F0)},
-		{ABC_CONST(0xFF00FF00FF00FF00), ABC_CONST(0xFF00FF00FF00FF00), ABC_CONST(0xFF00FF00FF00FF00), ABC_CONST(0xFF00FF00FF00FF00)},
-		{ABC_CONST(0xFFFF0000FFFF0000), ABC_CONST(0xFFFF0000FFFF0000), ABC_CONST(0xFFFF0000FFFF0000), ABC_CONST(0xFFFF0000FFFF0000)},
-		{ABC_CONST(0xFFFFFFFF00000000), ABC_CONST(0xFFFFFFFF00000000), ABC_CONST(0xFFFFFFFF00000000), ABC_CONST(0xFFFFFFFF00000000)},
-		{ABC_CONST(0x0000000000000000), ABC_CONST(0xFFFFFFFFFFFFFFFF), ABC_CONST(0x0000000000000000), ABC_CONST(0xFFFFFFFFFFFFFFFF)},
-		{ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000000000), ABC_CONST(0xFFFFFFFFFFFFFFFF), ABC_CONST(0xFFFFFFFFFFFFFFFF)},
+		{0xAAAAAAAAAAAAAAAA, 0xAAAAAAAAAAAAAAAA, 0xAAAAAAAAAAAAAAAA, 0xAAAAAAAAAAAAAAAA},
+		{0xCCCCCCCCCCCCCCCC, 0xCCCCCCCCCCCCCCCC, 0xCCCCCCCCCCCCCCCC, 0xCCCCCCCCCCCCCCCC},
+		{0xF0F0F0F0F0F0F0F0, 0xF0F0F0F0F0F0F0F0, 0xF0F0F0F0F0F0F0F0, 0xF0F0F0F0F0F0F0F0},
+		{0xFF00FF00FF00FF00, 0xFF00FF00FF00FF00, 0xFF00FF00FF00FF00, 0xFF00FF00FF00FF00},
+		{0xFFFF0000FFFF0000, 0xFFFF0000FFFF0000, 0xFFFF0000FFFF0000, 0xFFFF0000FFFF0000},
+		{0xFFFFFFFF00000000, 0xFFFFFFFF00000000, 0xFFFFFFFF00000000, 0xFFFFFFFF00000000},
+		{0x0000000000000000, 0xFFFFFFFFFFFFFFFF, 0x0000000000000000, 0xFFFFFFFFFFFFFFFF},
+		{0x0000000000000000, 0x0000000000000000, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF},
 	}
 	var i int32
-	var nWords int32 = Abc_TtWordNum(2 * nVars)
+	var nWords int32 = abcutil.Abc_TtWordNum(2 * nVars)
 	assert(nVars > 0 && nVars <= 4, "nVars > 0 && nVars <= 4")
-	Abc_TtClear(pTruth, nWords)
-	Abc_TtFill(Equa[:], nWords)
+	abcutil.Abc_TtClear(pTruth, nWords)
+	abcutil.Abc_TtFill(Equa[:], nWords)
 	for i = nVars - 1; i >= 0; i-- {
 		if fMore != 0 {
-			Abc_TtSharp(Cond[:], s_TtElems[2*i+1][:], s_TtElems[2*i+0][:], nWords)
+			abcutil.Abc_TtSharp(Cond[:], s_TtElems[2*i+1][:], s_TtElems[2*i+0][:], nWords)
 		} else {
-			Abc_TtSharp(Cond[:], s_TtElems[2*i+0][:], s_TtElems[2*i+1][:], nWords)
+			abcutil.Abc_TtSharp(Cond[:], s_TtElems[2*i+0][:], s_TtElems[2*i+1][:], nWords)
 		}
-		Abc_TtAnd(Temp[:], Equa[:], Cond[:], nWords, 0)
-		Abc_TtOr(pTruth, pTruth, Temp[:], nWords)
-		Abc_TtXor(Temp[:], s_TtElems[2*i+0][:], s_TtElems[2*i+1][:], nWords, 1)
-		Abc_TtAnd(Equa[:], Equa[:], Temp[:], nWords, 0)
+		abcutil.Abc_TtAnd(Temp[:], Equa[:], Cond[:], nWords, 0)
+		abcutil.Abc_TtOr(pTruth, pTruth, Temp[:], nWords)
+		abcutil.Abc_TtXor(Temp[:], s_TtElems[2*i+0][:], s_TtElems[2*i+1][:], nWords, 1)
+		abcutil.Abc_TtAnd(Equa[:], Equa[:], Temp[:], nWords, 0)
 	}
 	if fEqual != 0 {
-		Abc_TtNot(pTruth, nWords)
+		abcutil.Abc_TtNot(pTruth, nWords)
 	}
 }
 
@@ -1169,7 +1175,7 @@ func Ifn_TtComparisonConstr(pTruth []word, nVars int32, fMore int32, fEqual int3
 **********************************************************************
 */
 func Ifn_AddClause(pSat *sat_solver, literals []int32) int32 {
-	return boolInt(pSat.AddClause(literals...))
+	return ifTuneBoolInt(pSat.AddClause(literals...))
 }
 func Ifn_NtkAddConstrOne(pSat *sat_solver, vCover *Vec_Int_t, pVars []int32, nVars int32) {
 	var RetValue int32
@@ -1179,16 +1185,16 @@ func Ifn_NtkAddConstrOne(pSat *sat_solver, vCover *Vec_Int_t, pVars []int32, nVa
 	var Literal int32
 	var nLits int32
 	var pLits [IFN_INS]int32
-	for c = 0; c < Vec_IntSize(vCover); c++ {
-		Cube = Vec_IntEntry(vCover, c)
+	for c = 0; c < int32(Vec_IntSize(vCover)); c++ {
+		Cube = Vec_IntEntry(vCover, int(c))
 		nLits = 0
 		for k = 0; k < nVars; k++ {
 			Literal = 3 & (Cube >> (k << 1))
 			if Literal == 1 { // '0'  -> pos lit
-				pLits[nLits] = Abc_Var2Lit(pVars[k], 0)
+				pLits[nLits] = abcutil.Abc_Var2Lit(pVars[k], 0)
 				nLits++
 			} else if Literal == 2 { // '1'  -> neg lit
-				pLits[nLits] = Abc_Var2Lit(pVars[k], 1)
+				pLits[nLits] = abcutil.Abc_Var2Lit(pVars[k], 1)
 				nLits++
 			} else if Literal != 0 {
 				assert(false, "0")
@@ -1201,7 +1207,7 @@ func Ifn_NtkAddConstrOne(pSat *sat_solver, vCover *Vec_Int_t, pVars []int32, nVa
 func Ifn_NtkAddConstraints(p *Ifn_Ntk_t, pSat *sat_solver) {
 	var fAddConstr int32 = 1
 	var vCover *Vec_Int_t = Vec_IntAlloc(0)
-	var uTruth word = Abc_Tt6Stretch(~Abc_Tt6Mask(p.nVars), p.nParsVNum)
+	var uTruth word = abcutil.Abc_Tt6Stretch(^abcutil.Abc_Tt6Mask(p.nVars), p.nParsVNum)
 	assert(p.nParsVNum <= 4, "p.nParsVNum <= 4")
 	if uTruth != 0 {
 		var i int32
@@ -1209,7 +1215,7 @@ func Ifn_NtkAddConstraints(p *Ifn_Ntk_t, pSat *sat_solver) {
 		var pVars [IFN_INS]int32
 		var RetValue int32 = ifTuneTruthISOP([]word{uTruth}, p.nParsVNum, vCover)
 		assert(RetValue == 0, "RetValue == 0")
-		//        Dau_DsdPrintFromTruth( &uTruth, p->nParsVNum );
+		//        dau.Dau_DsdPrintFromTruth( &uTruth, p->nParsVNum );
 		// add capacity constraints
 		for i = 0; i < p.nInps; i++ {
 			for k = 0; k < p.nParsVNum; k++ {
@@ -1225,7 +1231,7 @@ func Ifn_NtkAddConstraints(p *Ifn_Ntk_t, pSat *sat_solver) {
 		var k int32
 		var RetValue int32
 		var pVars [2 * IFN_INS]int32
-		var fForceDiff int32 = (p.nVars == p.nInps)
+		var fForceDiff int32 = ifTuneBoolInt(p.nVars == p.nInps)
 		Ifn_TtComparisonConstr(pTruth[:], p.nParsVNum, fForceDiff, fForceDiff)
 		RetValue = ifTuneTruthISOP(pTruth[:], 2*p.nParsVNum, vCover)
 		assert(RetValue == 0, "RetValue == 0")
@@ -1252,7 +1258,7 @@ func ifTuneTruthISOP(words []word, nVars int32, cover *Vec_Int_t) int32 {
 	}
 	var cubes []uint32
 	complement := kit.Kit_TruthIsop(truth32, nVars, &cubes, 0)
-	Vec_IntClear(cover)
+	vec.Vec_IntClear(cover)
 	for _, cube := range cubes {
 		Vec_IntPush(cover, int32(cube))
 	}
@@ -1272,7 +1278,7 @@ func ifTuneTruthISOP(words []word, nVars int32, cover *Vec_Int_t) int32 {
 
 **********************************************************************
 */
-func Ifn_NtkAddClauses(p *Ifn_Ntk_t, pValues *int32, pSat *sat_solver) int32 {
+func Ifn_NtkAddClauses(p *Ifn_Ntk_t, pValues []int32, pSat *sat_solver) int32 {
 	var i int32
 	var f int32
 	var v int32
@@ -1302,10 +1308,10 @@ func Ifn_NtkAddClauses(p *Ifn_Ntk_t, pValues *int32, pSat *sat_solver) int32 {
 		var iParStart int32 = p.nParsVIni + i*p.nParsVNum
 		for v = 0; v < p.nVars; v++ {
 			// add output literal
-			pLits[0] = Abc_Var2Lit(p.Nodes[i].Var, pValues[v] == 0)
+			pLits[0] = abcutil.Abc_Var2Lit(p.Nodes[i].Var, ifTuneBoolInt(pValues[v] == 0))
 			// add clause literals
 			for f = 0; f < p.nParsVNum; f++ {
-				pLits[f+1] = Abc_Var2Lit(iParStart+f, (v>>f)&1)
+				pLits[f+1] = abcutil.Abc_Var2Lit(iParStart+f, (v>>f)&1)
 			}
 			if !(Ifn_AddClause(pSat, pLits[:p.nParsVNum+1]) != 0) {
 				return 0
@@ -1315,17 +1321,17 @@ func Ifn_NtkAddClauses(p *Ifn_Ntk_t, pValues *int32, pSat *sat_solver) int32 {
 	//printf( "\n" );
 	for i = p.nInps; i < p.nObjs; i++ {
 		var nFans int32 = p.Nodes[i].nFanins
-		pFans := &p.Nodes[i].Fanins[0]
+		pFans := p.Nodes[i].Fanins[:]
 		if p.Nodes[i].Type == IFN_DSD_AND {
 			nLits = 0
-			pLits[nLits] = Abc_Var2Lit(p.Nodes[i].Var, 0)
+			pLits[nLits] = abcutil.Abc_Var2Lit(p.Nodes[i].Var, 0)
 			nLits++
 			for f = 0; f < nFans; f++ {
-				pLits[nLits] = Abc_Var2Lit(p.Nodes[pFans[f]].Var, 1)
+				pLits[nLits] = abcutil.Abc_Var2Lit(p.Nodes[pFans[f]].Var, 1)
 				nLits++
 				// add small clause
-				pLits2[0] = Abc_Var2Lit(p.Nodes[i].Var, 1)
-				pLits2[1] = Abc_Var2Lit(p.Nodes[pFans[f]].Var, 0)
+				pLits2[0] = abcutil.Abc_Var2Lit(p.Nodes[i].Var, 1)
+				pLits2[1] = abcutil.Abc_Var2Lit(p.Nodes[pFans[f]].Var, 0)
 				if !(Ifn_AddClause(pSat, pLits2[:2]) != 0) {
 					return 0
 				}
@@ -1348,9 +1354,9 @@ func Ifn_NtkAddClauses(p *Ifn_Ntk_t, pValues *int32, pSat *sat_solver) int32 {
 					continue
 				}
 				// generate minterm
-				pLits[0] = Abc_Var2Lit(p.Nodes[i].Var, (m>>nFans)&1)
+				pLits[0] = abcutil.Abc_Var2Lit(p.Nodes[i].Var, (m>>nFans)&1)
 				for v = 0; v < nFans; v++ {
-					pLits[v+1] = Abc_Var2Lit(p.Nodes[pFans[v]].Var, (m>>v)&1)
+					pLits[v+1] = abcutil.Abc_Var2Lit(p.Nodes[pFans[v]].Var, (m>>v)&1)
 				}
 				if !(Ifn_AddClause(pSat, pLits[:nFans+1]) != 0) {
 					return 0
@@ -1358,30 +1364,30 @@ func Ifn_NtkAddClauses(p *Ifn_Ntk_t, pValues *int32, pSat *sat_solver) int32 {
 			}
 
 		} else if p.Nodes[i].Type == IFN_DSD_MUX {
-			pLits[0] = Abc_Var2Lit(p.Nodes[i].Var, 0)
-			pLits[1] = Abc_Var2Lit(p.Nodes[pFans[0]].Var, 1) // ctrl
-			pLits[2] = Abc_Var2Lit(p.Nodes[pFans[1]].Var, 1)
+			pLits[0] = abcutil.Abc_Var2Lit(p.Nodes[i].Var, 0)
+			pLits[1] = abcutil.Abc_Var2Lit(p.Nodes[pFans[0]].Var, 1) // ctrl
+			pLits[2] = abcutil.Abc_Var2Lit(p.Nodes[pFans[1]].Var, 1)
 			if !(Ifn_AddClause(pSat, pLits[:3]) != 0) {
 				return 0
 			}
 
-			pLits[0] = Abc_Var2Lit(p.Nodes[i].Var, 1)
-			pLits[1] = Abc_Var2Lit(p.Nodes[pFans[0]].Var, 1) // ctrl
-			pLits[2] = Abc_Var2Lit(p.Nodes[pFans[1]].Var, 0)
+			pLits[0] = abcutil.Abc_Var2Lit(p.Nodes[i].Var, 1)
+			pLits[1] = abcutil.Abc_Var2Lit(p.Nodes[pFans[0]].Var, 1) // ctrl
+			pLits[2] = abcutil.Abc_Var2Lit(p.Nodes[pFans[1]].Var, 0)
 			if !(Ifn_AddClause(pSat, pLits[:3]) != 0) {
 				return 0
 			}
 
-			pLits[0] = Abc_Var2Lit(p.Nodes[i].Var, 0)
-			pLits[1] = Abc_Var2Lit(p.Nodes[pFans[0]].Var, 0) // ctrl
-			pLits[2] = Abc_Var2Lit(p.Nodes[pFans[2]].Var, 1)
+			pLits[0] = abcutil.Abc_Var2Lit(p.Nodes[i].Var, 0)
+			pLits[1] = abcutil.Abc_Var2Lit(p.Nodes[pFans[0]].Var, 0) // ctrl
+			pLits[2] = abcutil.Abc_Var2Lit(p.Nodes[pFans[2]].Var, 1)
 			if !(Ifn_AddClause(pSat, pLits[:3]) != 0) {
 				return 0
 			}
 
-			pLits[0] = Abc_Var2Lit(p.Nodes[i].Var, 1)
-			pLits[1] = Abc_Var2Lit(p.Nodes[pFans[0]].Var, 0) // ctrl
-			pLits[2] = Abc_Var2Lit(p.Nodes[pFans[2]].Var, 0)
+			pLits[0] = abcutil.Abc_Var2Lit(p.Nodes[i].Var, 1)
+			pLits[1] = abcutil.Abc_Var2Lit(p.Nodes[pFans[0]].Var, 0) // ctrl
+			pLits[2] = abcutil.Abc_Var2Lit(p.Nodes[pFans[2]].Var, 0)
 			if !(Ifn_AddClause(pSat, pLits[:3]) != 0) {
 				return 0
 			}
@@ -1392,18 +1398,18 @@ func Ifn_NtkAddClauses(p *Ifn_Ntk_t, pValues *int32, pSat *sat_solver) int32 {
 			for v = 0; v < nValues; v++ {
 				nLits = 0
 				if pValues[i] == -1 {
-					pLits[nLits] = Abc_Var2Lit(p.Nodes[i].Var, 0)
-					pLits2[nLits] = Abc_Var2Lit(p.Nodes[i].Var, 1)
+					pLits[nLits] = abcutil.Abc_Var2Lit(p.Nodes[i].Var, 0)
+					pLits2[nLits] = abcutil.Abc_Var2Lit(p.Nodes[i].Var, 1)
 					nLits++
 				}
 				for f = 0; f < nFans; f++ {
-					lit := Abc_Var2Lit(p.Nodes[pFans[f]].Var, (v>>f)&1)
+					lit := abcutil.Abc_Var2Lit(p.Nodes[pFans[f]].Var, (v>>f)&1)
 					pLits[nLits] = lit
 					pLits2[nLits] = lit
 					nLits++
 				}
-				pLits[nLits] = Abc_Var2Lit(iParStart+v, 1)
-				pLits2[nLits] = Abc_Var2Lit(iParStart+v, 0)
+				pLits[nLits] = abcutil.Abc_Var2Lit(iParStart+v, 1)
+				pLits2[nLits] = abcutil.Abc_Var2Lit(iParStart+v, 0)
 				nLits++
 				if pValues[i] != 0 {
 					if !(Ifn_AddClause(pSat, pLits2[:nLits]) != 0) {
@@ -1423,7 +1429,7 @@ func Ifn_NtkAddClauses(p *Ifn_Ntk_t, pValues *int32, pSat *sat_solver) int32 {
 		//printf( "\n" );
 	}
 	// add last clause (not needed if the root node is IFN_DSD_PRIME)
-	pLits[0] = Abc_Var2Lit(p.Nodes[p.nObjs-1].Var, pValues[p.nObjs-1] == 0)
+	pLits[0] = abcutil.Abc_Var2Lit(p.Nodes[p.nObjs-1].Var, ifTuneBoolInt(pValues[p.nObjs-1] == 0))
 	if !(Ifn_AddClause(pSat, pLits[:1]) != 0) {
 		return 0
 	}
@@ -1487,7 +1493,7 @@ func Ifn_NtkMatchCollectPerm(p *Ifn_Ntk_t, pSat *sat_solver) word {
 				Mint |= (1 << v)
 			}
 		}
-		Abc_TtSetHex(permWords, i, Mint)
+		abcutil.Abc_TtSetHex(permWords, i, Mint)
 	}
 	Perm = permWords[0]
 	return Perm
@@ -1502,11 +1508,11 @@ func Ifn_NtkMatchCollectConfig(p *Ifn_Ntk_t, pSat *sat_solver, pConfig []word) {
 				Mint |= (1 << v)
 			}
 		}
-		Abc_TtSetHex(pConfig, i, Mint)
+		abcutil.Abc_TtSetHex(pConfig, i, Mint)
 	}
 	for v = p.nObjs; v < p.nParsVIni; v++ {
 		if sat_solver_var_value(pSat, v) != 0 {
-			Abc_TtSetBit(pConfig, 64+v-p.nObjs)
+			abcutil.Abc_TtSetBit(pConfig, 64+v-p.nObjs)
 		}
 	}
 }
@@ -1514,12 +1520,12 @@ func Ifn_NtkMatchPrintPerm(Perm word, nInps int32) {
 	var i int32
 	assert(nInps <= 16, "nInps <= 16")
 	for i = 0; i < nInps; i++ {
-		fmt.Printf("%c", 'a'+Abc_TtGetHex([]word{Perm}, i))
+		fmt.Printf("%c", 'a'+abcutil.Abc_TtGetHex([]word{Perm}, i))
 	}
 	fmt.Printf("\n")
 }
 func Ifn_NtkMatch(p *Ifn_Ntk_t, pTruth []word, nVars int32, nConfls int32, fVerbose int32, fVeryVerbose int32, pConfig []word) int32 {
-	var pTruth1 *word
+	var pTruth1 []word
 	var RetValue int32
 	var nIterMax int32 = (1 << nVars)
 	var i, v, status, iMint int32
@@ -1548,9 +1554,9 @@ func Ifn_NtkMatch(p *Ifn_Ntk_t, pTruth []word, nVars int32, nConfls int32, fVerb
 				p.Values[v] = -1
 			}
 		}
-		p.Values[p.nObjs-1] = Abc_TtGetBit(pTruth, iMint)
+		p.Values[p.nObjs-1] = abcutil.Abc_TtGetBit(pTruth, iMint)
 		// derive clauses
-		if !(Ifn_NtkAddClauses(p, &p.Values[0], pSat) != 0) {
+		if !(Ifn_NtkAddClauses(p, p.Values[:], pSat) != 0) {
 			break
 		}
 		// find assignment of parameters
@@ -1572,9 +1578,9 @@ func Ifn_NtkMatch(p *Ifn_Ntk_t, pTruth []word, nVars int32, nConfls int32, fVerb
 		//        clk2 = Abc_Clock();
 		pTruth1 = Ifn_NtkDeriveTruth(p, p.Values[:])
 		//        clkTru += Abc_Clock() - clk2;
-		Abc_TtXor(pTruth1, pTruth1, p.pTruth, p.nWords, 0)
+		abcutil.Abc_TtXor(pTruth1, pTruth1, p.pTruth, p.nWords, 0)
 		// find mismatch if present
-		iMint = Abc_TtFindFirstBit(pTruth1, p.nVars)
+		iMint = abcutil.Abc_TtFindFirstBit(pTruth1, p.nVars)
 		if iMint == -1 {
 			if pConfig != nil {
 				Ifn_NtkMatchCollectConfig(p, pSat, pConfig)
@@ -1625,15 +1631,14 @@ func Ifn_NtkMatch(p *Ifn_Ntk_t, pTruth []word, nVars int32, nConfls int32, fVerb
 **********************************************************************
 */
 func Ifn_NtkRead() {
-	var RetValue int32
 	var nVars int32 = 8
-	//    word * pTruth = Dau_DsdToTruth( "(abcdefghi)", nVars );
-	pTruth := Dau_DsdToTruth("1008{(1008{(ab)cde}f)ghi}", nVars)
-	//    word * pTruth = Dau_DsdToTruth( "18{(1008{(ab)cde}f)gh}", nVars );
-	//    word * pTruth = Dau_DsdToTruth( "1008{(1008{[ab]cde}f)ghi}", nVars );
-	//    word * pTruth = Dau_DsdToTruth( "(abcd)", nVars );
-	//    word * pTruth = Dau_DsdToTruth( "(abc)", nVars );
-	//    word * pTruth = Dau_DsdToTruth( "18{(1008{(ab)cde}f)gh}", nVars );
+	//    word * pTruth = dau.Dau_DsdToTruth( "(abcdefghi)", nVars );
+	pTruth := dau.Dau_DsdToTruth("1008{(1008{(ab)cde}f)ghi}", nVars)
+	//    word * pTruth = dau.Dau_DsdToTruth( "18{(1008{(ab)cde}f)gh}", nVars );
+	//    word * pTruth = dau.Dau_DsdToTruth( "1008{(1008{[ab]cde}f)ghi}", nVars );
+	//    word * pTruth = dau.Dau_DsdToTruth( "(abcd)", nVars );
+	//    word * pTruth = dau.Dau_DsdToTruth( "(abc)", nVars );
+	//    word * pTruth = dau.Dau_DsdToTruth( "18{(1008{(ab)cde}f)gh}", nVars );
 	//    char * pStr = "e={abc};f={ed};";
 	//    char * pStr = "d={ab};e={cd};";
 	//    char * pStr = "j=(ab);k={jcde};l=(kf);m={lghi};";
@@ -1647,10 +1652,10 @@ func Ifn_NtkRead() {
 		return
 	}
 	Ifn_NtkPrint(p)
-	Dau_DsdPrintFromTruth(pTruth, nVars)
+	dau.Dau_DsdPrintFromTruth(pTruth, nVars)
 	// get the given function
 	config := make([]word, IFN_PAR/64)
-	RetValue = Ifn_NtkMatch(p, pTruth, nVars, 0, 1, 1, config)
+	Ifn_NtkMatch(p, pTruth, nVars, 0, 1, 1, config)
 }
 
 ////////////////////////////////////////////////////////////////////////

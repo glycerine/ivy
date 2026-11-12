@@ -65,21 +65,26 @@ func (p *Gia_Man_t) Gate(id int32) (a, b, c int32, kind int) {
 // Evaluate simulates the combinational region: register outputs are additional
 // inputs, and register inputs are additional outputs, both in source order.
 func (p *Gia_Man_t) Evaluate(inputs []bool) ([]bool, error) {
+	_, outputs, err := p.evaluateObjects(inputs)
+	return outputs, err
+}
+
+func (p *Gia_Man_t) evaluateObjects(inputs []bool) ([]bool, []bool, error) {
 	literals := p.InputLiterals()
 	if len(inputs) != len(literals) {
-		return nil, fmt.Errorf("gia: expected %d inputs, got %d", len(literals), len(inputs))
+		return nil, nil, fmt.Errorf("gia: expected %d inputs, got %d", len(literals), len(inputs))
 	}
 	if p.nObjs < 1 || len(p.pObjs) != int(p.nObjs) || p.pObjs[0] == nil || Gia_ObjIsConst0(p.pObjs[0]) == 0 || p.pObjs[0].fTerm != 0 {
-		return nil, fmt.Errorf("gia: invalid object storage")
+		return nil, nil, fmt.Errorf("gia: invalid object storage")
 	}
 	values := make([]bool, p.nObjs)
 	seeded := make([]bool, p.nObjs)
 	for i, lit := range literals {
 		if lit < 0 || lit&1 != 0 || lit>>1 >= p.nObjs || seeded[lit>>1] {
-			return nil, fmt.Errorf("gia: invalid or duplicate input literal")
+			return nil, nil, fmt.Errorf("gia: invalid or duplicate input literal")
 		}
 		if _, _, _, kind := p.Gate(lit >> 1); kind != 1 {
-			return nil, fmt.Errorf("gia: input vector references non-input object")
+			return nil, nil, fmt.Errorf("gia: input vector references non-input object")
 		}
 		values[lit>>1] = inputs[i]
 		seeded[lit>>1] = true
@@ -94,16 +99,16 @@ func (p *Gia_Man_t) Evaluate(inputs []bool) ([]bool, error) {
 		a, b, c, kind := p.Gate(id)
 		if kind == 1 {
 			if !seeded[id] {
-				return nil, fmt.Errorf("gia: unbound input object %d", id)
+				return nil, nil, fmt.Errorf("gia: unbound input object %d", id)
 			}
 			continue
 		}
 		if kind < 2 || kind > 6 {
-			return nil, fmt.Errorf("gia: invalid gate kind at object %d", id)
+			return nil, nil, fmt.Errorf("gia: invalid gate kind at object %d", id)
 		}
 		x, err := read(a, id)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		switch kind {
 		case 5, 6:
@@ -111,7 +116,7 @@ func (p *Gia_Man_t) Evaluate(inputs []bool) ([]bool, error) {
 		case 2, 3:
 			y, err := read(b, id)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			if kind == 2 {
 				values[id] = x && y
@@ -121,11 +126,11 @@ func (p *Gia_Man_t) Evaluate(inputs []bool) ([]bool, error) {
 		case 4:
 			yes, err := read(b, id)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			no, err := read(c, id)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			if x {
 				values[id] = yes
@@ -139,11 +144,11 @@ func (p *Gia_Man_t) Evaluate(inputs []bool) ([]bool, error) {
 	for i, lit := range outputs {
 		value, err := read(lit, p.nObjs)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		result[i] = value
 	}
-	return result, nil
+	return values, result, nil
 }
 
 // AndFaninLiterals exposes ordinary AND/buffer dependencies to adapters that

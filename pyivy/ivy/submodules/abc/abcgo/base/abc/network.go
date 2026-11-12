@@ -2,8 +2,10 @@ package abc
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
 	"github.com/glycerine/abcgo/misc/nm"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 // ObjectKind retains the ABC object-kind numbering while replacing packed
@@ -34,17 +36,23 @@ func (e Edge) Not() Edge { e.Complement = !e.Complement; return e }
 
 // Object is a network object. Fanin order and fanout multiplicity are retained.
 type Object struct {
-	MVEncoding          []Edge
+	MVEncoding []Edge
+	// BoxInputPolarity records the optional input-complement mask used by ABC's
+	// hierarchical gate strashing interface.
+	BoxInputPolarity    []uint32
 	CopyEdge            Edge
 	Barrier             bool
 	Choice              *Object
+	Next                *Object
 	Phase               bool
 	reverseLevel        int
 	travID              uint64
+	crossCutVisits      int
 	ID                  int
 	Kind                ObjectKind
 	Level               int
 	Temp                int
+	DTemp               float64
 	TerminalIndex       int
 	Data                any
 	Copy                *Object
@@ -74,11 +82,14 @@ type Network struct {
 	Onehots                   [][]int32
 	SequenceModel             *util.Abc_Cex_t
 	ObjectPermutation, Phases []int32
+	NameIDs                   []int32
+	Topo                      []int32
 	AndGateDelay              float64
 	WireLoad                  string
 	LTLProperties             []string
 	Model                     []int32
 	Data                      any
+	Attributes                []*vec.Vec_Att_t
 	Step                      int32
 	DTemp                     float64
 	FunctionManager           any
@@ -203,6 +214,11 @@ func (n *Network) DeleteObject(o *Object) error {
 	}
 	if len(o.fanouts) > 0 {
 		return fmt.Errorf("object still has fanouts")
+	}
+	if node, ok := o.Data.(*core.DdNode); ok && o.Kind == ObjectNode {
+		if manager, ok := n.FunctionManager.(*core.DdManager); ok {
+			core.Cudd_RecursiveDeref(manager, node)
+		}
 	}
 	for len(o.fanins) > 0 {
 		if err := n.DeleteFanin(o, len(o.fanins)-1); err != nil {

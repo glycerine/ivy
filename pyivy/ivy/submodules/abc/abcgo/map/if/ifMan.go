@@ -47,7 +47,7 @@ func If_ManStart(pars *If_Par_t) *If_Man_t {
 
 	if pars.fTruth != 0 {
 		maxVars := int(Abc_MaxInt(6, pars.nLutSize))
-		for v := 0; v <= int(pars.nLutSize); v++ {
+		for v := 0; v <= maxVars; v++ {
 			p.nTruth6Words[v] = abcutil.Abc_Truth6WordNum(int32(v))
 		}
 		for v := 6; v <= maxVars; v++ {
@@ -61,6 +61,7 @@ func If_ManStart(pars *If_Par_t) *If_Man_t {
 			for v := 6; v <= maxVars; v++ {
 				p.vTtIsops[v] = vec.Vec_WecAlloc(1000)
 				vec.Vec_WecInit(p.vTtIsops[v], 2)
+				p.vTtIsopComplement[v] = make([]bool, 2)
 			}
 			for v := 0; v < 6; v++ {
 				p.vTtIsops[v] = p.vTtIsops[6]

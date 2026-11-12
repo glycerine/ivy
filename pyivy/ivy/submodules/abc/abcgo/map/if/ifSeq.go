@@ -49,7 +49,7 @@ func If_ManPrepareMappingSeq(p *If_Man_t) {
 	var pObjLi, pObjLo *If_Obj_t
 
 	// link the latch outputs (CIs) directly to the drivers of latch inputs (COs)
-	for i = 0; i < p.pPars.nLatchesCi; i++ {
+	for i := int32(0); i < p.pPars.nLatchesCi; i++ {
 		pObjLi = If_ManLi(p, i)
 		pObjLo = If_ManLo(p, i)
 		pObjLo.pFanin0 = If_ObjFanin0(pObjLi)
@@ -98,7 +98,6 @@ func If_ManCollectLatches_rec(pObj *If_Obj_t, vLatches *Vec_Ptr_t) {
 func If_ManCollectLatches(p *If_Man_t) *Vec_Ptr_t {
 	var vLatches *Vec_Ptr_t
 	var pObj *If_Obj_t
-	var i int32
 	// collect latches
 	vLatches = Vec_PtrAlloc(int(p.pPars.nLatchesCi))
 	// inlining of macro If_ManForEachLatchOutput
@@ -218,7 +217,7 @@ func If_ManPerformMappingRoundSeq(p *If_Man_t, nIter int32) int32 {
 */
 func If_ManBinarySearchPeriod(p *If_Man_t) int32 {
 	var pObj *If_Obj_t
-	var i, c, fConverged int32
+	var c, fConverged int32
 	//    int fResetRefs = 0;
 	p.nAttempts++
 
@@ -256,7 +255,7 @@ func If_ManBinarySearchPeriod(p *If_Man_t) int32 {
 		}
 		p.RequiredGlo = If_ManDelayMax(p, 1)
 		//Abc_Print( 1, "Global = %d \n", (int)p->RequiredGlo );
-		if p.RequiredGlo > p.Period+p.fEpsilon {
+		if p.RequiredGlo > float32(p.Period)+p.fEpsilon {
 			break
 		}
 	}
@@ -353,7 +352,7 @@ func If_ManPerformMappingSeqPost(p *If_Man_t) {
 	// inlining of macro Vec_PtrForEachEntry
 	for i := 0; i < Vec_PtrSize(p.vObjs); i++ {
 		pObj = Vec_PtrEntry(p.vObjs, int(i)).(*If_Obj_t)
-		if If_ObjIsAnd(pObj) {
+		if If_ObjIsAnd(pObj) != 0 {
 			If_ObjCutBest(pObj).nLeaves = 0
 		}
 	}
@@ -384,7 +383,7 @@ func If_ManPerformMappingSeq(p *If_Man_t) int32 {
 	p.SortMode = 0
 
 	// perform combinational mapping to get the upper bound on the clock period
-	If_ManPerformMappingRound(p, 1, 0, 0, 1, nil)
+	If_ManPerformMappingRound(p, 1, 0, 0, 1, "")
 	p.RequiredGlo = If_ManDelayMax(p, 0)
 	p.RequiredGlo2 = p.RequiredGlo
 

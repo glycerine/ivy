@@ -64,7 +64,7 @@ func If_ManCutReach_rec(pPath *If_Obj_t, pLeaf *If_Obj_t) int32 {
 	if pPath.fMark != 0 {
 		return 0
 	}
-	assert(If_ObjIsAnd(pPath), "If_ObjIsAnd(pPath)")
+	assert(If_ObjIsAnd(pPath) != 0, "If_ObjIsAnd(pPath)")
 	if If_ManCutReach_rec(If_ObjFanin0(pPath), pLeaf) != 0 {
 		return 1
 	}
@@ -76,12 +76,12 @@ func If_ManCutReach_rec(pPath *If_Obj_t, pLeaf *If_Obj_t) int32 {
 func If_ManCutReach(p *If_Man_t, pCut *If_Cut_t, pPath *If_Obj_t, pLeaf *If_Obj_t) int32 {
 	var pTemp *If_Obj_t
 	RetValue := int32(0)
-	for _, leafID := range pCut.pLeaves {
+	for _, leafID := range pCut.pLeaves[:pCut.nLeaves] {
 		pTemp = If_ManObj(p, leafID)
 		pTemp.fMark = 1
 	}
 	RetValue = If_ManCutReach_rec(pPath, pLeaf)
-	for _, leafID := range pCut.pLeaves {
+	for _, leafID := range pCut.pLeaves[:pCut.nLeaves] {
 		pTemp = If_ManObj(p, leafID)
 		pTemp.fMark = 0
 	}
@@ -106,28 +106,24 @@ func If_ManCutTruthCheck_rec(pObj *If_Obj_t, pTruths []word) word {
 	if pObj.fMark != 0 {
 		return pTruths[If_ObjId(pObj)]
 	}
-	assert(If_ObjIsAnd(pObj), "If_ObjIsAnd(pObj)")
+	assert(If_ObjIsAnd(pObj) != 0, "If_ObjIsAnd(pObj)")
 	T0 = If_ManCutTruthCheck_rec(If_ObjFanin0(pObj), pTruths)
 	T1 = If_ManCutTruthCheck_rec(If_ObjFanin1(pObj), pTruths)
-	if If_ObjFaninC0(pObj) {
-		T0 = ~T0
-	} else {
-		T0 = T0
+	if If_ObjFaninC0(pObj) != 0 {
+		T0 = ^T0
 	}
-	if If_ObjFaninC1(pObj) {
-		T1 = ~T1
-	} else {
-		T1 = T1
+	if If_ObjFaninC1(pObj) != 0 {
+		T1 = ^T1
 	}
 	return T0 & T1
 }
 func If_ManCutTruthCheck(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t, pLeaf *If_Obj_t, Cof int32, pTruths []word) int32 {
 	var Truth word
 	var pTemp *If_Obj_t
-	var i, k int32
+	var k int32
 	assert(Cof == 0 || Cof == 1, "Cof == 0 || Cof == 1")
 	// inlining of macro If_CutForEachLeaf
-	for _, leafID := range pCut.pLeaves {
+	for _, leafID := range pCut.pLeaves[:pCut.nLeaves] {
 		pTemp = If_ManObj(p, leafID)
 		assert(pTemp.fMark == 0, "pTemp.fMark == 0")
 		pTemp.fMark = 1
@@ -146,7 +142,7 @@ func If_ManCutTruthCheck(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t, pLeaf *If_
 	// compute truth table
 	Truth = If_ManCutTruthCheck_rec(pObj, pTruths)
 	// inlining of macro If_CutForEachLeaf
-	for _, leafID := range pCut.pLeaves {
+	for _, leafID := range pCut.pLeaves[:pCut.nLeaves] {
 		If_ManObj(p, leafID).fMark = 0
 	}
 	if Truth == 0 || Truth == ^word(0) {
@@ -177,19 +173,23 @@ func If_ManCutCheck(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t) {
 
 	var pLeaf, pPath *If_Obj_t
 	if pCut == nil {
-		fmt.Printf("DecStr  = %9d (%6.2f %%).\n", spStatic_If_ManCutCheck_nDecStruct, 100.0*spStatic_If_ManCutCheck_nDecStruct/spStatic_If_ManCutCheck_nDecCalls)
-		fmt.Printf("DecStr2 = %9d (%6.2f %%).\n", spStatic_If_ManCutCheck_nDecStruct2, 100.0*spStatic_If_ManCutCheck_nDecStruct2/spStatic_If_ManCutCheck_nDecCalls)
-		fmt.Printf("DecFunc = %9d (%6.2f %%).\n", spStatic_If_ManCutCheck_nDecFunction, 100.0*spStatic_If_ManCutCheck_nDecFunction/spStatic_If_ManCutCheck_nDecCalls)
-		fmt.Printf("Total   = %9d (%6.2f %%).\n", spStatic_If_ManCutCheck_nDecCalls, 100.0*spStatic_If_ManCutCheck_nDecCalls/spStatic_If_ManCutCheck_nDecCalls)
+		if spStatic_If_ManCutCheck_nDecCalls == 0 {
+			fmt.Println("No decomposition calls.")
+			return
+		}
+		fmt.Printf("DecStr  = %9d (%6.2f %%).\n", spStatic_If_ManCutCheck_nDecStruct, 100.0*float64(spStatic_If_ManCutCheck_nDecStruct)/float64(spStatic_If_ManCutCheck_nDecCalls))
+		fmt.Printf("DecStr2 = %9d (%6.2f %%).\n", spStatic_If_ManCutCheck_nDecStruct2, 100.0*float64(spStatic_If_ManCutCheck_nDecStruct2)/float64(spStatic_If_ManCutCheck_nDecCalls))
+		fmt.Printf("DecFunc = %9d (%6.2f %%).\n", spStatic_If_ManCutCheck_nDecFunction, 100.0*float64(spStatic_If_ManCutCheck_nDecFunction)/float64(spStatic_If_ManCutCheck_nDecCalls))
+		fmt.Printf("Total   = %9d (%6.2f %%).\n", spStatic_If_ManCutCheck_nDecCalls, 100.0*float64(spStatic_If_ManCutCheck_nDecCalls)/float64(spStatic_If_ManCutCheck_nDecCalls))
 		return
 	}
-	assert(If_ObjIsAnd(pObj), "If_ObjIsAnd(pObj)")
+	assert(If_ObjIsAnd(pObj) != 0, "If_ObjIsAnd(pObj)")
 	assert(pCut.nLeaves <= 7, "pCut.nLeaves <= 7")
 	spStatic_If_ManCutCheck_nDecCalls++
 	// check structural decomposition
 	// inlining of macro If_CutForEachLeaf
 	found := false
-	for _, leafID := range pCut.pLeaves {
+	for _, leafID := range pCut.pLeaves[:pCut.nLeaves] {
 		pLeaf = If_ManObj(p, leafID)
 		if pLeaf == If_ObjFanin0(pObj) || pLeaf == If_ObjFanin1(pObj) {
 			found = true
@@ -213,7 +213,7 @@ func If_ManCutCheck(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t) {
 	}
 	// check functional decomposition
 	pTruths := make([]word, Vec_PtrSize(p.vObjs))
-	for _, leafID := range pCut.pLeaves {
+	for _, leafID := range pCut.pLeaves[:pCut.nLeaves] {
 		pLeaf = If_ManObj(p, leafID)
 		if If_ManCutTruthCheck(p, pObj, pCut, pLeaf, 0, pTruths) != 0 {
 			spStatic_If_ManCutCheck_nDecFunction++

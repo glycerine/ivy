@@ -106,10 +106,14 @@ func ifTruthIntern(p *If_Man_t, c *If_Cut_t, table []uint64, phase uint32, makeI
 				vec.Vec_IntPush(level, int32(cube))
 			}
 		}
-		if len(p.vTtIsopComplement[n]) != id {
+		cacheIndex := n
+		if n < 6 && p.vTtIsops[n] == p.vTtIsops[6] {
+			cacheIndex = 6
+		}
+		if len(p.vTtIsopComplement[cacheIndex]) != id {
 			panic("if: ISOP complement cache out of sync")
 		}
-		p.vTtIsopComplement[n] = append(p.vTtIsopComplement[n], complement > 0)
+		p.vTtIsopComplement[cacheIndex] = append(p.vTtIsopComplement[cacheIndex], complement > 0)
 	}
 }
 func If_CutTruthPermute(table []uint64, nLeaves, nVars, nWords int32, delays []float32, vars []int32) {

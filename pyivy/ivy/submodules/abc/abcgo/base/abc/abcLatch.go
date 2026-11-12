@@ -38,46 +38,6 @@ import (
   SeeAlso     []
 
 ***********************************************************************/
-func Abc_NtkConverLatchNamesIntoNumbers(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-    var vResult, vNames *Vec_Ptr_t;
-    var vNumbers *Vec_Int_t;
-    var pObj *Abc_Obj_t;
-    var pName string;
-    var i, k, Num int32;
-    if pNtk.vOnehots == nil {
-        return nil; }
-    // set register numbers
-    Abc_NtkForEachLatch( pNtk, pObj, i )
-        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;
-    // add the numbers
-    vResult = Vec_PtrAlloc( Vec_PtrSize(pNtk.vOnehots) );
-    Vec_PtrForEachEntry( Vec_Ptr_t *, pNtk.vOnehots, vNames, i )
-    {
-        vNumbers = Vec_IntAlloc( Vec_PtrSize(vNames) );
-        Vec_PtrForEachEntry( char *, vNames, pName, k )
-        {
-            Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_BO );
-            if Num < 0 {
-                continue; }
-            pObj = Abc_NtkObj( pNtk, Num );
-            if Abc_ObjFaninNum(pObj) != 1 || !Abc_ObjIsLatch(Abc_ObjFanin0(pObj)) {
-                continue; }
-            Vec_IntPush( vNumbers, int32((ABC_PTRINT_T))pObj.pNext );
-        }
-        if Vec_IntSize( vNumbers ) > 1 {
-            Vec_PtrPush( vResult, vNumbers );
-fmt.Printf("Converted %d one-hot registers.\n", Vec_IntSize(vNumbers));
-        
-        } else {
-            Vec_IntFree( vNumbers ); }
-    }
-    // clean the numbers
-    Abc_NtkForEachLatch( pNtk, pObj, i )
-        pObj.pNext = nil;
-    return vResult;
-}
-
-
 /**Function*************************************************************
 
   Synopsis    [Converts registers with DC values into additional PIs.]
@@ -161,41 +121,6 @@ func Abc_NtkRetimeWithClassesNtk(pNtk *Abc_Ntk_t, vClasses *Vec_Int_t, pvClasses
   SeeAlso     []
 
 ***********************************************************************/
-func Abc_NtkTransformBack(pNtkOld *Abc_Ntk_t, pNtkNew *Abc_Ntk_t, vControls *Vec_Ptr_t, vClasses *Vec_Int_t) {
-    var pObj, pNodeNew, pCtrl, pDriver *Abc_Obj_t;
-    var i, Class int32;
-    assert(Abc_NtkPoNum(pNtkOld) == Abc_NtkPoNum(pNtkNew), "Abc_NtkPoNum(pNtkOld) == Abc_NtkPoNum(pNtkNew)");
-    // match the POs of the old into new
-    Abc_NtkForEachPo( pNtkOld, pObj, i )
-        pObj.pCopy = Abc_NtkPo( pNtkNew, i );
-    // remap the flops
-    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )
-    {
-        assert(Abc_ObjIsPo(pObj) && pObj.pNtk == pNtkOld, "Abc_ObjIsPo(pObj) && pObj.pNtk == pNtkOld");
-        Vec_PtrWriteEntry( vControls, i, pObj.pCopy );
-    }
-    // create self-loops
-    assert(Abc_NtkLatchNum(pNtkNew) == Vec_IntSize(vClasses), "Abc_NtkLatchNum(pNtkNew) == Vec_IntSize(vClasses)");
-    Abc_NtkForEachLatch( pNtkNew, pObj, i )
-    {
-        Class = Vec_IntEntry( vClasses, i );
-        if Class == -1 {
-            continue; }
-        pDriver = Abc_ObjFanin0(Abc_ObjFanin0(pObj));
-        pCtrl = (Abc_Obj_t *)Vec_PtrEntry( vControls, Class );
-        pCtrl = Abc_ObjFanin0( pCtrl );
-        pNodeNew = Abc_NtkCreateNode( pNtkNew );
-        Abc_ObjAddFanin( pNodeNew, pCtrl );
-        Abc_ObjAddFanin( pNodeNew, pDriver );
-        Abc_ObjAddFanin( pNodeNew, Abc_ObjFanout0(pObj) );
-        Abc_ObjSetData( pNodeNew, Abc_SopRegister((Mem_Flex_t *)pNtkNew.pManFunc, "0-1 1\n11- 1\n") );
-        Abc_ObjPatchFanin( Abc_ObjFanin0(pObj), pDriver, pNodeNew );
-    }
-    // remove the useless POs
-    Vec_PtrForEachEntry( Abc_Obj_t *, vControls, pObj, i )
-        Abc_NtkDeleteObj( pObj );
-}
-
 /**Function*************************************************************
 
   Synopsis    [Classify flops.]
@@ -287,44 +212,6 @@ func Abc_NtkCRetime(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Abc_NtkVerifyCex(pNtk *Abc_Ntk_t, p *Abc_Cex_t) int32 {
-    var pObj *Abc_Obj_t;
-    var RetValue, i, k, iBit int32;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    assert(p.nPis  == Abc_NtkPiNum(pNtk), "p.nPis  == Abc_NtkPiNum(pNtk)");
-//    assert( p->nRegs == Abc_NtkLatchNum(pNtk) );
-    Abc_NtkCleanMarkC( pNtk );
-    Abc_AigConst1(pNtk).fMarkC = 1;
-    // initialize flops
-    Abc_NtkForEachLatch( pNtk, pObj, i )
-        Abc_ObjFanout0(pObj).fMarkC = Abc_InfoHasBit(p.pData, iBit++);
-    // simulate timeframes
-    iBit = p.nRegs;
-    for  i = 0; i <= p.iFrame; i++  {
-        Abc_NtkForEachPi( pNtk, pObj, k )
-            pObj.fMarkC = Abc_InfoHasBit(p.pData, iBit++);
-        Abc_NtkForEachNode( pNtk, pObj, k )
-            pObj.fMarkC = (Abc_ObjFanin0(pObj).fMarkC ^ Abc_ObjFaninC0(pObj)) & 
-                           (Abc_ObjFanin1(pObj).fMarkC ^ Abc_ObjFaninC1(pObj));
-        Abc_NtkForEachCo( pNtk, pObj, k )
-            pObj.fMarkC = Abc_ObjFanin0(pObj).fMarkC ^ Abc_ObjFaninC0(pObj);
-        Abc_NtkForEachLatch( pNtk, pObj, k )
-            Abc_ObjFanout0(pObj).fMarkC = Abc_ObjFanin0(pObj).fMarkC;
-    }
-    assert(iBit == p.nBits, "iBit == p.nBits");
-    // figure out the number of failed output
-    RetValue = -1;
-    Abc_NtkForEachPo( pNtk, pObj, i )
-    {
-        if pObj.fMarkC {
-            RetValue = i;
-            break;
-        }
-    }
-    Abc_NtkCleanMarkC( pNtk );
-    return RetValue;
-}
-
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////

@@ -1,8 +1,8 @@
 package if_
 
 import (
+	abcutil "github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/opt/dau"
 )
 
 // ifSatPlan retains the public build/unbuild lifecycle. The source SAT clauses
@@ -87,8 +87,13 @@ func setTruthBit(truth *word, assignment int, value bool) {
 // If_ManSatCheckXY derives bound/free LUT truth tables for a proposed variable
 // partition. For each shared assignment, bound assignments may select at most
 // two distinct free-variable cofactors; their selector is the bound LUT output.
-func If_ManSatCheckXY(_ any, lutSize int32, truth *word, nVars int32, set uint32, boundOut, freeOut *word, scratch *Vec_Int_t) int32 {
-	if truth == nil || nVars < 1 || nVars > 6 || lutSize < 2 || lutSize > 6 {
+func If_ManSatCheckXY(sat any, lutSize int32, truth []word, nVars int32, set uint32, boundOut, freeOut *word, scratch *Vec_Int_t) int32 {
+	return ifManSatCheckXY(sat, lutSize, truth, nVars, set, boundOut, freeOut, scratch)
+}
+
+// ifManSatCheckXY accepts all truth words, including cuts wider than six inputs.
+func ifManSatCheckXY(_ any, lutSize int32, truth []word, nVars int32, set uint32, boundOut, freeOut *word, scratch *Vec_Int_t) int32 {
+	if nVars < 1 || nVars > 11 || lutSize < 2 || lutSize > 6 || nVars > 2*lutSize-1 || len(truth) < (1<<uint(nVars)+63)/64 {
 		return 0
 	}
 	var boundSet, sharedSet, freeSet []int32
@@ -140,7 +145,7 @@ func If_ManSatCheckXY(_ any, lutSize int32, truth *word, nVars int32, set uint32
 						assignment |= 1 << uint(v)
 					}
 				}
-				if truthBit([]word{*truth}, assignment) {
+				if truthBit(truth, assignment) {
 					pattern |= uint64(1) << uint(f)
 				}
 			}
@@ -163,10 +168,10 @@ func If_ManSatCheckXY(_ any, lutSize int32, truth *word, nVars int32, set uint32
 		}
 	}
 	if boundOut != nil {
-		*boundOut = boundTable
+		*boundOut = abcutil.Abc_Tt6Stretch(boundTable, int32(len(sharedSet)+len(boundSet)))
 	}
 	if freeOut != nil {
-		*freeOut = freeTable
+		*freeOut = abcutil.Abc_Tt6Stretch(freeTable, int32(1+len(sharedSet)+len(freeSet)))
 	}
 	if scratch != nil {
 		vec.Vec_IntClear(scratch)
@@ -174,28 +179,58 @@ func If_ManSatCheckXY(_ any, lutSize int32, truth *word, nVars int32, set uint32
 	return 1
 }
 
-func If_ManSatCheckXYall_int(pSat any, lutSize int32, truth *word, nVars int32, scratch *Vec_Int_t) uint32 {
-	if nVars < 3 || nVars > 6 || lutSize < 2 || lutSize > 6 || nVars > 2*lutSize-1 {
+// If_ManSatCheckXYall searches bound sets and increasing numbers of shared
+// inputs in the same order as the source implementation.
+func If_ManSatCheckXYall(pSat any, lutSize int32, truth []word, nVars int32, scratch *Vec_Int_t) uint32 {
+	if lutSize < 2 || lutSize > 6 || nVars <= lutSize || nVars > 2*lutSize-1 || len(truth) < (1<<uint(nVars)+63)/64 {
 		return 0
 	}
-	sets := dau.Dau_DecFindSets([]uint64{*truth}, nVars)
-	defer vec.Vec_IntFree(sets)
-	sharedNeeded := 2*lutSize - 1 - nVars
-	for _, raw := range vec.Vec_IntArray(sets) {
-		set := uint32(raw)
-		var unique, shared, free int32
-		dau.Dau_DecSortSet(set, nVars, &unique, &shared, &free)
-		if shared != sharedNeeded {
-			continue
+	maxShared := 2*lutSize - 1 - nVars
+	var result uint32
+	bound := make([]int32, lutSize)
+	for sharedCount := int32(0); sharedCount <= maxShared; sharedCount++ {
+		var chooseBound func(int32, int32) bool
+		chooseBound = func(depth, start int32) bool {
+			if depth == lutSize {
+				var chooseShared func(int32, int32, uint32) bool
+				chooseShared = func(remaining, start int32, set uint32) bool {
+					if remaining == 0 {
+						if ifManSatCheckXY(pSat, lutSize, truth, nVars, set, nil, nil, scratch) != 0 {
+							result = set
+							return true
+						}
+						return false
+					}
+					for i := start; i <= lutSize-remaining; i++ {
+						if chooseShared(remaining-1, i+1, set|(3<<uint(2*bound[i]))) {
+							return true
+						}
+					}
+					return false
+				}
+				var set uint32
+				for _, variable := range bound {
+					set |= 1 << uint(2*variable)
+				}
+				return chooseShared(sharedCount, 0, set)
+			}
+			for i := start; i <= nVars-(lutSize-depth); i++ {
+				bound[depth] = i
+				if chooseBound(depth+1, i+1) {
+					return true
+				}
+			}
+			return false
 		}
-		if If_ManSatCheckXY(pSat, lutSize, truth, nVars, set, nil, nil, scratch) != 0 {
-			return set
+		if chooseBound(0, 0) {
+			return result
 		}
 	}
 	return 0
 }
-func If_ManSatCheckXYall(pSat any, lutSize int32, truth *word, nVars int32, scratch *Vec_Int_t) uint32 {
-	return If_ManSatCheckXYall_int(pSat, lutSize, truth, nVars, scratch)
+
+func If_ManSatCheckXYall_int(pSat any, lutSize int32, truth []word, nVars int32, scratch *Vec_Int_t) uint32 {
+	return If_ManSatCheckXYall(pSat, lutSize, truth, nVars, scratch)
 }
 
 func If_ManSatTest2() {}

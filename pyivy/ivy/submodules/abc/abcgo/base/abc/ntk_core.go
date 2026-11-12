@@ -430,6 +430,11 @@ func Abc_NtkDelete(n *Network) {
 	if n.Excare != nil {
 		Abc_NtkDelete(n.Excare)
 	}
+	for i, attribute := range n.Attributes {
+		if attribute != nil {
+			Abc_NtkAttrFree(n, int32(i), 1)
+		}
+	}
 	switch manager := n.FunctionManager.(type) {
 	case *Abc_Aig_t:
 		Abc_AigFree(manager)

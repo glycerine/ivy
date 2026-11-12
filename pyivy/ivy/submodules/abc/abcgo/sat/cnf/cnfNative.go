@@ -166,3 +166,22 @@ func cloneClauses(clauses [][]int32) [][]int32 {
 	}
 	return out
 }
+
+// NewMappedCNF constructs CNF data from ABC-encoded clauses and mapping
+// metadata. It copies its inputs so the caller can reuse their buffers.
+func NewMappedCNF(variables int, clauses [][]int32, varNums, obj2Clause, obj2Count []int32) *CNF {
+	result := &CNF{Variables: variables, nVars: int32(variables)}
+	result.Clauses = cloneClauses(clauses)
+	result.pClauses = cloneClauses(clauses)
+	result.nClauses = int32(len(clauses))
+	for _, clause := range clauses {
+		result.nLiterals += int32(len(clause))
+	}
+	result.VarNums = append([]int32(nil), varNums...)
+	result.pVarNums = append([]int32(nil), varNums...)
+	result.Obj2Clause = append([]int32(nil), obj2Clause...)
+	result.pObj2Clause = append([]int32(nil), obj2Clause...)
+	result.Obj2Count = append([]int32(nil), obj2Count...)
+	result.pObj2Count = append([]int32(nil), obj2Count...)
+	return result
+}

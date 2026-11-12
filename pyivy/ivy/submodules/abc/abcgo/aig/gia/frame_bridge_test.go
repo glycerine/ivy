@@ -74,3 +74,29 @@ func TestFrameBridgeGraphAndWitnessOwnership(t *testing.T) {
 		t.Fatal("accepted overflowing frame count")
 	}
 }
+
+func TestFrameMiniAigTimingOwnsItsArrays(t *testing.T) {
+	frame := abcmain.Abc_FrameAllocate()
+	p := Gia_ManStart(8)
+	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	root := Gia_ManAppendAnd(p, a, b)
+	Gia_ManAppendCo(p, root)
+	frame.SetResource("pGia", p)
+	arrivals, required := []int32{2, 3}, []int32{8}
+	Abc_FrameMiniAigSetCiArrivals(frame, arrivals)
+	Abc_FrameMiniAigSetCoRequireds(frame, required)
+	arrivals[0], required[0] = 20, 80
+	if Vec_IntEntry(p.vCiArrs, 0) != 2 || Vec_IntEntry(p.vCoReqs, 0) != 8 {
+		t.Fatal("timing arrays alias inputs")
+	}
+	p.SetMappingOutputArrivals([]int32{5})
+	output := Abc_FrameMiniAigReadCoArrivals(frame)
+	output[0] = 50
+	if Vec_IntEntry(p.vCoArrs, 0) != 5 {
+		t.Fatal("output arrivals alias manager")
+	}
+	Abc_FrameMiniAigSetAndGateDelay(frame, 4)
+	if p.And2Delay != 4 {
+		t.Fatalf("delay %d", p.And2Delay)
+	}
+}

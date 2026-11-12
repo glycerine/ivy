@@ -60,6 +60,7 @@ type NetworkFunctionCloner interface{ CloneForNetwork(*Network) any }
 
 func Abc_NtkDupObj(n *Network, old *Object, copyName int32) *Object {
 	o := n.NewObject(old.Kind)
+	o.BoxInputPolarity = append([]uint32(nil), old.BoxInputPolarity...)
 	copyMVVariable(old, o)
 	o.Level = old.Level
 	if cloner, ok := old.Data.(NetworkFunctionCloner); ok {
@@ -98,7 +99,15 @@ func Abc_NtkDupObj(n *Network, old *Object, copyName int32) *Object {
 		}
 	}
 	if copyName != 0 && (old.IsCI() || old.IsCO() || Abc_ObjIsBox(old) != 0 || old.Kind == ObjectNet) {
-		if name, ok := old.network.names.Lookup(int32(old.ID)); ok {
+		nameObject := old
+		if Abc_NtkIsNetlist(old.network) != 0 {
+			if old.IsCI() && len(old.fanouts) != 0 {
+				nameObject = old.fanouts[0]
+			} else if old.Kind == ObjectPO && len(old.fanins) != 0 {
+				nameObject = old.fanins[0].Object
+			}
+		}
+		if name, ok := old.network.names.Lookup(int32(nameObject.ID)); ok {
 			o.SetName(name)
 		}
 	}
@@ -336,6 +345,15 @@ func Abc_NtkCreateNodeInv(n *Network, fanin *Object) *Object {
 	if fanin != nil {
 		Abc_ObjAddFanin(node, fanin)
 	}
+	switch manager := n.FunctionManager.(type) {
+	case *core.DdManager:
+		node.Data = core.Cudd_Not(core.Cudd_bddIthVar(manager, 0))
+		core.Cudd_Ref(node.Data.(*core.DdNode))
+	case *hop.Hop_Man_t:
+		node.Data = hop.Hop_Not(hop.Hop_IthVar(manager, 0))
+	case *mio.Mio_Library_t:
+		node.Data = mio.Mio_LibraryReadInv(manager)
+	}
 	return sopConstructor(n, node, Abc_SopCreateInv(nil))
 }
 func Abc_NtkCreateNodeBuf(n *Network, fanin *Object) *Object {
@@ -354,6 +372,20 @@ func Abc_NtkCreateNodeAnd(n *Network, fanins []*Object) *Object {
 		}
 		return true
 	})
+	switch manager := n.FunctionManager.(type) {
+	case *core.DdManager:
+		value := manager.One
+		for i := range fanins {
+			value = core.Cudd_bddAnd(manager, value, core.Cudd_bddIthVar(manager, i))
+		}
+		if value == nil {
+			panic("abc: cannot create BDD AND")
+		}
+		node.Data = value
+		core.Cudd_Ref(value)
+	case *hop.Hop_Man_t:
+		node.Data = hop.Hop_CreateAnd(manager, int32(len(fanins)))
+	}
 	return sopConstructor(n, node, Abc_SopCreateAnd(nil, int32(len(fanins)), nil))
 }
 func Abc_NtkCreateNodeOr(n *Network, fanins []*Object) *Object {

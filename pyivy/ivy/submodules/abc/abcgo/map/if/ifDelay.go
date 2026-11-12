@@ -34,8 +34,12 @@ func ifDelayCover(p *If_Man_t, c *If_Cut_t) (*Vec_Int_t, bool) {
 		return nil, false
 	}
 	phase := false
-	if id < len(p.vTtIsopComplement[c.nLeaves]) {
-		phase = p.vTtIsopComplement[c.nLeaves][id]
+	cacheIndex := c.nLeaves
+	if cacheIndex < 6 && p.vTtIsops[cacheIndex] == p.vTtIsops[6] {
+		cacheIndex = 6
+	}
+	if id < len(p.vTtIsopComplement[cacheIndex]) {
+		phase = p.vTtIsopComplement[cacheIndex][id]
 	}
 	return vec.Vec_WecEntry(levels, id), phase
 }
@@ -178,6 +182,10 @@ func If_CutSopBalancePinDelays(p *If_Man_t, c *If_Cut_t, permutation []byte) int
 
 // Optional coverComplement replaces the C attribute hidden inside Vec_Int.nCap.
 func If_CutSopBalanceEvalInt(cover *Vec_Int_t, times, faninLiterals []int32, aig *Vec_Int_t, result *int32, n int32, area *int32, coverComplement ...bool) int32 {
+	return ifCutSopBalanceEvalInt(cover, times, faninLiterals, aig, result, n, n, area, coverComplement...)
+}
+
+func ifCutSopBalanceEvalInt(cover *Vec_Int_t, times, faninLiterals []int32, aig *Vec_Int_t, result *int32, n, support int32, area *int32, coverComplement ...bool) int32 {
 	if !ifValidSop(cover, times, n) || aig != nil && len(faninLiterals) < int(n) {
 		return -1
 	}
@@ -204,11 +212,11 @@ func If_CutSopBalanceEvalInt(cover *Vec_Int_t, times, faninLiterals []int32, aig
 				}
 			}
 			literals++
-			delay = If_LogCounterAddAig(andTimes, &andCount, andLiterals, times[pin], lit, aig, n, 0, 0)
+			delay = If_LogCounterAddAig(andTimes, &andCount, andLiterals, times[pin], lit, aig, support, 0, 0)
 		}
 		root := int32(0)
 		if aig != nil {
-			root = If_LogCreateAndXorMulti(aig, andLiterals, andCount, n, 0)
+			root = If_LogCreateAndXorMulti(aig, andLiterals, andCount, support, 0)
 		} else {
 			gates += literals - 1
 		}
@@ -216,10 +224,10 @@ func If_CutSopBalanceEvalInt(cover *Vec_Int_t, times, faninLiterals []int32, aig
 		if aig != nil {
 			orLit = root ^ 1
 		}
-		delay = If_LogCounterAddAig(orTimes, &orCount, orLiterals, delay, orLit, aig, n, 0, 0)
+		delay = If_LogCounterAddAig(orTimes, &orCount, orLiterals, delay, orLit, aig, support, 0, 0)
 	}
 	if aig != nil {
-		root := If_LogCreateAndXorMulti(aig, orLiterals, orCount, n, 0) ^ 1
+		root := If_LogCreateAndXorMulti(aig, orLiterals, orCount, support, 0) ^ 1
 		if len(coverComplement) > 0 && coverComplement[0] {
 			root ^= 1
 		}

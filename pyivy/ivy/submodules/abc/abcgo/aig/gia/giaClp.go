@@ -1,424 +1,223 @@
 package gia
 
-/**CFile****************************************************************
+// BDD collapsing and disjoint-support rebuilding, adapted from giaClp.c.
+import (
+	"fmt"
+	"os"
 
-  FileName    [giaClp.c]
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/dsd"
+	"github.com/glycerine/abcgo/bdd/extrab"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Scalable AIG package.]
-
-  Synopsis    [Collapsing AIG.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: gia.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "gia.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#include "bdd/dsd/dsd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-#ifdef ABC_USE_CUDD
-
-extern int Abc_ConvertZddToSop( DdManager * dd, DdNode * zCover, char * pSop, int nFanins, Vec_Str_t * vCube, int fPhase );
-extern int Abc_CountZddCubes( DdManager * dd, DdNode * zCover );
-extern int Abc_NtkDeriveFlatGiaSop( Gia_Man_t * pGia, int * gFanins, char * pSop );
-extern int Gia_ManFactorNode( Gia_Man_t * p, char * pSop, Vec_Int_t * vLeaves );
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Vec_Ptr_t * Gia_GetFakeNames( int nNames )
-{
-    Vec_Ptr_t * vNames;
-    char Buffer[5];
-    int i;
-
-    vNames = Vec_PtrAlloc( nNames );
-    for ( i = 0; i < nNames; i++ )
-    {
-        if ( nNames < 26 )
-        {
-            Buffer[0] = 'a' + i;
-            Buffer[1] = 0;
-        }
-        else
-        {
-            Buffer[0] = 'a' + i%26;
-            Buffer[1] = '0' + i/26;
-            Buffer[2] = 0;
-        }
-        Vec_PtrPush( vNames, Extra_UtilStrsav(Buffer) );
-    }
-    return vNames;
+func Gia_GetFakeNames(n int32) *Vec_Ptr_t {
+	names := vec.Vec_PtrAlloc(int(n))
+	for i := int32(0); i < n; i++ {
+		name := string(rune('a' + i%26))
+		if n >= 26 {
+			name += fmt.Sprint(i / 26)
+		}
+		vec.Vec_PtrPush(names, name)
+	}
+	return names
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Gia_ManRebuildIsop( DdManager * dd, DdNode * bLocal, Gia_Man_t * pNew, Vec_Int_t * vFanins, Vec_Str_t * vSop, Vec_Str_t * vCube )
-{
-    char * pSop;
-    DdNode * bCover, * zCover, * zCover0, * zCover1;
-    int nFanins = Vec_IntSize(vFanins);
-    int fPhase, nCubes, nCubes0, nCubes1;
-
-    // get the ZDD of the negative polarity
-    bCover = Cudd_zddIsop( dd, Cudd_Not(bLocal), Cudd_Not(bLocal), &zCover0 );
-    Cudd_Ref( zCover0 );
-    Cudd_Ref( bCover );
-    Cudd_RecursiveDeref( dd, bCover );
-    nCubes0 = Abc_CountZddCubes( dd, zCover0 );
-
-    // get the ZDD of the positive polarity
-    bCover = Cudd_zddIsop( dd, bLocal, bLocal, &zCover1 );
-    Cudd_Ref( zCover1 );
-    Cudd_Ref( bCover );
-    Cudd_RecursiveDeref( dd, bCover );
-    nCubes1 = Abc_CountZddCubes( dd, zCover1 );
-
-    // compare the number of cubes
-    if ( nCubes1 <= nCubes0 )
-    { // use positive polarity
-        nCubes = nCubes1;
-        zCover = zCover1;
-        Cudd_RecursiveDerefZdd( dd, zCover0 );
-        fPhase = 1;
-    }
-    else
-    { // use negative polarity
-        nCubes = nCubes0;
-        zCover = zCover0;
-        Cudd_RecursiveDerefZdd( dd, zCover1 );
-        fPhase = 0;
-    }
-    if ( nCubes > 1000 )
-    {
-        Cudd_RecursiveDerefZdd( dd, zCover );
-        return -1;
-    }
-
-    // allocate memory for the cover
-    Vec_StrGrow( vSop, (nFanins + 3) * nCubes + 1 );
-    pSop = Vec_StrArray( vSop );
-    pSop[(nFanins + 3) * nCubes] = 0;
-    // create the SOP
-    Vec_StrFill( vCube, nFanins, '-' );
-    Vec_StrPush( vCube, '\0' );
-    Abc_ConvertZddToSop( dd, zCover, pSop, nFanins, vCube, fPhase );
-    Cudd_RecursiveDerefZdd( dd, zCover );
-
-    // perform factoring
-//    return Abc_NtkDeriveFlatGiaSop( pNew, Vec_IntArray(vFanins), pSop );
-    return Gia_ManFactorNode( pNew, pSop, vFanins );
-}
-int Gia_ManRebuildNode( Dsd_Manager_t * pManDsd, Dsd_Node_t * pNodeDsd, Gia_Man_t * pNew, DdManager * ddNew, Vec_Int_t * vFanins, Vec_Str_t * vSop, Vec_Str_t * vCube )
-{
-    DdManager * ddDsd = Dsd_ManagerReadDd( pManDsd );
-    DdNode * bLocal, * bTemp;
-    Dsd_Node_t * pFaninDsd;
-    Dsd_Type_t Type;
-    int i, nDecs, iLit = -1;
-
-    // add the fanins
-    Type  = Dsd_NodeReadType( pNodeDsd );
-    nDecs = Dsd_NodeReadDecsNum( pNodeDsd );
-    assert( nDecs > 1 );
-    Vec_IntClear( vFanins );
-    for ( i = 0; i < nDecs; i++ )
-    {
-        pFaninDsd = Dsd_NodeReadDec( pNodeDsd, i );
-        iLit      = Dsd_NodeReadMark( Dsd_Regular(pFaninDsd) );
-        iLit      = Abc_LitNotCond( iLit, Dsd_IsComplement(pFaninDsd) );
-        assert( Type == DSD_NODE_OR || !Dsd_IsComplement(pFaninDsd) );
-        Vec_IntPush( vFanins, iLit );
-    }
-
-    // create the local function depending on the type of the node
-    switch ( Type )
-    {
-        case DSD_NODE_CONST1:
-        {
-            iLit = 1;
-            break;
-        }
-        case DSD_NODE_OR:
-        {
-            iLit = 0;
-            for ( i = 0; i < nDecs; i++ )
-                iLit = Gia_ManHashOr( pNew, iLit, Vec_IntEntry(vFanins, i) );
-            break;
-        }
-        case DSD_NODE_EXOR:
-        {
-            iLit = 0;
-            for ( i = 0; i < nDecs; i++ )
-                iLit = Gia_ManHashXor( pNew, iLit, Vec_IntEntry(vFanins, i) );
-            break;
-        }
-        case DSD_NODE_PRIME:
-        {
-            bLocal = Dsd_TreeGetPrimeFunction( ddDsd, pNodeDsd );                Cudd_Ref( bLocal );
-            bLocal = Extra_TransferLevelByLevel( ddDsd, ddNew, bTemp = bLocal ); Cudd_Ref( bLocal );
-            Cudd_RecursiveDeref( ddDsd, bTemp );
-            // bLocal is now in the new BDD manager
-            iLit = Gia_ManRebuildIsop( ddNew, bLocal, pNew, vFanins, vSop, vCube );
-            Cudd_RecursiveDeref( ddNew, bLocal );
-            break;
-        }
-        default:
-        {
-            assert( 0 );
-            break;
-        }
-    }
-    Dsd_NodeSetMark( pNodeDsd, iLit );
-    return iLit;
-}
-Gia_Man_t * Gia_ManRebuild( Gia_Man_t * p, Dsd_Manager_t * pManDsd, DdManager * ddNew )
-{
-    Gia_Man_t * pNew;
-    Dsd_Node_t ** ppNodesDsd;
-    Dsd_Node_t * pNodeDsd;
-    int i, nNodesDsd, iLit = -1;
-    Vec_Str_t * vSop, * vCube;
-    Vec_Int_t * vFanins;
-
-    vFanins = Vec_IntAlloc( 1000 );
-    vSop    = Vec_StrAlloc( 10000 );
-    vCube   = Vec_StrAlloc( 1000 );
-
-    pNew = Gia_ManStart( 2*Gia_ManObjNum(p) );
-    pNew->pName = Abc_UtilStrsav( p->pName );
-    pNew->pSpec = Abc_UtilStrsav( p->pSpec );
-    Gia_ManHashAlloc( pNew );
-
-    // save the CI nodes in the DSD nodes
-    Dsd_NodeSetMark( Dsd_ManagerReadConst1(pManDsd), 1 );
-    for ( i = 0; i < Gia_ManCiNum(p); i++ )
-    {
-        pNodeDsd = Dsd_ManagerReadInput( pManDsd, i );
-        Dsd_NodeSetMark( pNodeDsd, Gia_ManAppendCi( pNew ) );
-    }
-
-    // collect DSD nodes in DFS order (leaves and const1 are not collected)
-    ppNodesDsd = Dsd_TreeCollectNodesDfs( pManDsd, &nNodesDsd );
-    for ( i = 0; i < nNodesDsd; i++ )
-    {
-        iLit = Gia_ManRebuildNode( pManDsd, ppNodesDsd[i], pNew, ddNew, vFanins, vSop, vCube );
-        if ( iLit == -1 )
-            break;
-    }
-    ppNodesDsd = nil;
-    Vec_IntFree( vFanins );
-    Vec_StrFree( vSop );
-    Vec_StrFree( vCube );
-    if ( iLit == -1 )
-    {
-        Gia_ManStop( pNew );
-        return Gia_ManDup(p);
-    }
-
-    // set the pointers to the CO drivers
-    for ( i = 0; i < Gia_ManCoNum(p); i++ )
-    {
-        pNodeDsd = Dsd_ManagerReadRoot( pManDsd, i );
-        iLit = Dsd_NodeReadMark( Dsd_Regular(pNodeDsd) );
-        iLit = Abc_LitNotCond( iLit, Dsd_IsComplement(pNodeDsd) );
-        Gia_ManAppendCo( pNew, iLit );
-    }
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    return pNew;
+// Gia_ManRebuildIsop builds the local BDD using Shannon decomposition. Unlike
+// the original SOP factoring, shared BDD nodes become shared AIG subgraphs.
+func Gia_ManRebuildIsop(dd *cudd.DdManager, local *cudd.DdNode, p *Gia_Man_t, fanins *Vec_Int_t, sop, cube *Vec_Str_t) int32 {
+	if dd == nil || local == nil {
+		return -1
+	}
+	literals := vec.Vec_IntArray(fanins)
+	memo := make(map[*cudd.DdNode]int32)
+	var build func(*cudd.DdNode) int32
+	build = func(node *cudd.DdNode) int32 {
+		if node == dd.One {
+			return 1
+		}
+		if node == dd.LogicZero {
+			return 0
+		}
+		if lit, ok := memo[node]; ok {
+			return lit
+		}
+		regular := cudd.Cudd_Regular(node)
+		level := dd.Perm[regular.Index]
+		if level < 0 || level >= len(literals) {
+			return -1
+		}
+		inv := cudd.Cudd_IsComplement(node)
+		lo := build(cudd.Cudd_NotCond(regular.E, inv))
+		hi := build(cudd.Cudd_NotCond(regular.T, inv))
+		if lo < 0 || hi < 0 {
+			return -1
+		}
+		lit := Gia_ManHashMux(p, literals[level], hi, lo)
+		memo[node] = lit
+		return lit
+	}
+	return build(local)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Gia_ManCollapseDeref( DdManager * dd, Vec_Ptr_t * vFuncs )
-{
-    DdNode * bFunc; int i;
-    Vec_PtrForEachEntry( DdNode *, vFuncs, bFunc, i )
-        if ( bFunc )
-            Cudd_RecursiveDeref( dd, bFunc );
-    Vec_PtrFree( vFuncs );
-}
-void Gia_ObjCollapseDeref( Gia_Man_t * p, DdManager * dd, Vec_Ptr_t * vFuncs, int Id )
-{
-    if ( Gia_ObjRefDecId(p, Id) )
-        return;
-    Cudd_RecursiveDeref( dd, (DdNode *)Vec_PtrEntry(vFuncs, Id) );
-    Vec_PtrWriteEntry( vFuncs, Id, NULL );
-}
-Vec_Ptr_t * Gia_ManCollapse( Gia_Man_t * p, DdManager * dd, int nBddLimit, int fVerbose )
-{
-    Vec_Ptr_t * vFuncs;
-    DdNode * bFunc0, * bFunc1, * bFunc;
-    Gia_Obj_t * pObj;
-    int i, Id;
-    Gia_ManCreateRefs( p );
-    // assign constant node
-    vFuncs = Vec_PtrStart( Gia_ManObjNum(p) );
-    if ( Gia_ObjRefNumId(p, 0) > 0 )
-        Vec_PtrWriteEntry( vFuncs, 0, Cudd_ReadLogicZero(dd) ), Cudd_Ref(Cudd_ReadLogicZero(dd));
-    // assign elementary variables
-    Gia_ManForEachCiId( p, Id, i )
-        if ( Gia_ObjRefNumId(p, Id) > 0 )
-            Vec_PtrWriteEntry( vFuncs, Id, Cudd_bddIthVar(dd,i) ), Cudd_Ref(Cudd_bddIthVar(dd,i));
-    // create BDD for AND nodes
-    Gia_ManForEachAnd( p, pObj, i )
-    {
-        bFunc0 = Cudd_NotCond( (DdNode *)Vec_PtrEntry(vFuncs, Gia_ObjFaninId0(pObj, i)), Gia_ObjFaninC0(pObj) );
-        bFunc1 = Cudd_NotCond( (DdNode *)Vec_PtrEntry(vFuncs, Gia_ObjFaninId1(pObj, i)), Gia_ObjFaninC1(pObj) );
-        bFunc  = Cudd_bddAndLimit( dd, bFunc0, bFunc1, nBddLimit );  
-        if ( bFunc == NULL )
-        {
-            Gia_ManCollapseDeref( dd, vFuncs );
-            return NULL;
-        }        
-        Cudd_Ref( bFunc );
-        Vec_PtrWriteEntry( vFuncs, i, bFunc );
-        Gia_ObjCollapseDeref( p, dd, vFuncs, Gia_ObjFaninId0(pObj, i) );
-        Gia_ObjCollapseDeref( p, dd, vFuncs, Gia_ObjFaninId1(pObj, i) );
-    }
-    // create BDD for outputs
-    Gia_ManForEachCoId( p, Id, i )
-    {
-        pObj = Gia_ManCo( p, i );
-        bFunc0 = Cudd_NotCond( (DdNode *)Vec_PtrEntry(vFuncs, Gia_ObjFaninId0(pObj, Id)), Gia_ObjFaninC0(pObj) );
-        Vec_PtrWriteEntry( vFuncs, Id, bFunc0 ); Cudd_Ref( bFunc0 );
-        Gia_ObjCollapseDeref( p, dd, vFuncs, Gia_ObjFaninId0(pObj, Id) );
-    }
-    assert( Vec_PtrSize(vFuncs) == Vec_PtrCountZero(vFuncs) + Gia_ManCoNum(p) );
-    // compact
-    Gia_ManForEachCoId( p, Id, i )
-        Vec_PtrWriteEntry( vFuncs, i, Vec_PtrEntry(vFuncs, Id) );
-    Vec_PtrShrink( vFuncs, Gia_ManCoNum(p) );
-    return vFuncs;
+func Gia_ManRebuildNode(manager *dsd.Dsd_Manager_t, node *dsd.Dsd_Node_t, p *Gia_Man_t, dd *cudd.DdManager, fanins *Vec_Int_t, sop, cube *Vec_Str_t) int32 {
+	vec.Vec_IntClear(fanins)
+	for i := 0; i < dsd.Dsd_NodeReadDecsNum(node); i++ {
+		child := dsd.Dsd_NodeReadDec(node, i)
+		lit := int32(dsd.Dsd_NodeReadMark(child))
+		if dsd.Dsd_IsComplement(child) {
+			lit ^= 1
+		}
+		vec.Vec_IntPush(fanins, lit)
+	}
+	var lit int32
+	switch dsd.Dsd_NodeReadType(node) {
+	case dsd.DSD_NODE_CONST1:
+		lit = 1
+	case dsd.DSD_NODE_OR:
+		for _, v := range vec.Vec_IntArray(fanins) {
+			lit = Gia_ManHashOr(p, lit, v)
+		}
+	case dsd.DSD_NODE_EXOR:
+		for _, v := range vec.Vec_IntArray(fanins) {
+			lit = Gia_ManHashXor(p, lit, v)
+		}
+	case dsd.DSD_NODE_PRIME:
+		src := dsd.Dsd_ManagerReadDd(manager)
+		local := dsd.Dsd_TreeGetPrimeFunction(src, node)
+		local = extrab.Extra_TransferLevelByLevel(src, dd, local)
+		lit = Gia_ManRebuildIsop(dd, local, p, fanins, sop, cube)
+	default:
+		return -1
+	}
+	dsd.Dsd_NodeSetMark(node, int(lit))
+	return lit
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Gia_Man_t * Gia_ManCollapseTest( Gia_Man_t * p, int fVerbose )
-{
-    Gia_Man_t * pNew;
-    DdManager * dd, * ddNew;
-    Dsd_Manager_t * pManDsd;
-    Vec_Ptr_t * vFuncs;
-    // derive global BDDs
-    dd = Cudd_Init( Gia_ManCiNum(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );
-    vFuncs = Gia_ManCollapse( p, dd, 10000, 0 );
-    Cudd_AutodynDisable( dd );
-    if ( vFuncs == NULL ) 
-    {
-        Extra_StopManager( dd );
-        return Gia_ManDup(p);
-    }
-    // start ISOP manager
-    ddNew = Cudd_Init( Gia_ManCiNum(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    Cudd_zddVarsFromBddVars( ddNew, 2 );
-//    Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );
-    if ( fVerbose )
-    printf( "Ins = %d. Outs = %d.  Shared BDD nodes = %d.  Peak live nodes = %d. Peak nodes = %d.\n", 
-        Gia_ManCiNum(p), Gia_ManCoNum(p), 
-        Cudd_SharingSize( (DdNode **)Vec_PtrArray(vFuncs), Vec_PtrSize(vFuncs) ),
-        Cudd_ReadPeakLiveNodeCount(dd), (int)Cudd_ReadNodeCount(dd) );
-    // perform decomposition
-    pManDsd = Dsd_ManagerStart( dd, Gia_ManCiNum(p), 0 );
-    Dsd_Decompose( pManDsd, (DdNode **)Vec_PtrArray(vFuncs), Vec_PtrSize(vFuncs) );
-    if ( fVerbose )
-    {
-        Vec_Ptr_t * vNamesCi = Gia_GetFakeNames( Gia_ManCiNum(p) );
-        Vec_Ptr_t * vNamesCo = Gia_GetFakeNames( Gia_ManCoNum(p) );
-        char ** ppNamesCi = (char **)Vec_PtrArray( vNamesCi );
-        char ** ppNamesCo = (char **)Vec_PtrArray( vNamesCo );
-        Dsd_TreePrint( stdout, pManDsd, ppNamesCi, ppNamesCo, 0, -1 );
-        Vec_PtrFreeFree( vNamesCi );
-        Vec_PtrFreeFree( vNamesCo );
-    }
-
-    pNew = Gia_ManRebuild( p, pManDsd, ddNew );
-    Dsd_ManagerStop( pManDsd );
-    // return manager
-    Gia_ManCollapseDeref( dd, vFuncs );
-    Extra_StopManager( dd );
-    Extra_StopManager( ddNew );
-    return pNew;
-}
-void Gia_ManCollapseTestTest( Gia_Man_t * p )
-{
-    Gia_Man_t * pNew;
-    pNew = Gia_ManCollapseTest( p, 0 );
-    Gia_ManPrintStats( p, NULL );
-    Gia_ManPrintStats( pNew, NULL );
-    Gia_ManStop( pNew );
+func Gia_ManRebuild(p *Gia_Man_t, manager *dsd.Dsd_Manager_t, dd *cudd.DdManager) *Gia_Man_t {
+	out := Gia_ManStart(2 * Gia_ManObjNum(p))
+	out.pName, out.pSpec = p.pName, p.pSpec
+	Gia_ManHashAlloc(out)
+	dsd.Dsd_NodeSetMark(dsd.Dsd_ManagerReadConst1(manager), 1)
+	for i := int32(0); i < Gia_ManCiNum(p); i++ {
+		dsd.Dsd_NodeSetMark(dsd.Dsd_ManagerReadInput(manager, int(i)), int(Gia_ManAppendCi(out)))
+	}
+	fanins := vec.Vec_IntAlloc(16)
+	var count int
+	for _, node := range dsd.Dsd_TreeCollectNodesDfs(manager, &count) {
+		if Gia_ManRebuildNode(manager, node, out, dd, fanins, nil, nil) < 0 {
+			Gia_ManStop(out)
+			return Gia_ManDup(p)
+		}
+	}
+	for i := int32(0); i < Gia_ManCoNum(p); i++ {
+		root := dsd.Dsd_ManagerReadRoot(manager, int(i))
+		lit := int32(dsd.Dsd_NodeReadMark(root))
+		if dsd.Dsd_IsComplement(root) {
+			lit ^= 1
+		}
+		Gia_ManAppendCo(out, lit)
+	}
+	Gia_ManSetRegNum(out, Gia_ManRegNum(p))
+	return out
 }
 
-#else
-
-Gia_Man_t * Gia_ManCollapseTest( Gia_Man_t * p, int fVerbose )
-{
-    return NULL;
+func Gia_ManCollapseDeref(dd *cudd.DdManager, funcs *Vec_Ptr_t) {
+	if funcs == nil {
+		return
+	}
+	for _, v := range vec.Vec_PtrArray(funcs) {
+		if node, ok := v.(*cudd.DdNode); ok && node != nil {
+			cudd.Cudd_RecursiveDeref(dd, node)
+		}
+	}
+	vec.Vec_PtrFree(funcs)
 }
 
-#endif
+func Gia_ObjCollapseDeref(p *Gia_Man_t, dd *cudd.DdManager, funcs *Vec_Ptr_t, id int32) {
+	if Gia_ObjRefDecId(p, id) != 0 {
+		return
+	}
+	if node, ok := vec.Vec_PtrEntry(funcs, int(id)).(*cudd.DdNode); ok {
+		cudd.Cudd_RecursiveDeref(dd, node)
+	}
+	vec.Vec_PtrWriteEntry(funcs, int(id), nil)
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+// Gia_ManCollapse returns referenced BDD roots in combinational-output order.
+func Gia_ManCollapse(p *Gia_Man_t, dd *cudd.DdManager, limit, verbose int32) *Vec_Ptr_t {
+	if p == nil || dd == nil || limit < 0 {
+		return nil
+	}
+	values := make([]*cudd.DdNode, p.nObjs)
+	values[0] = dd.LogicZero
+	for i := int32(0); i < Gia_ManCiNum(p); i++ {
+		values[Gia_ObjId(p, Gia_ManCi(p, i))] = cudd.Cudd_bddIthVar(dd, int(i))
+	}
+	read := func(lit int32) *cudd.DdNode { return cudd.Cudd_NotCond(values[lit>>1], lit&1 != 0) }
+	for id := int32(1); id < p.nObjs; id++ {
+		a, b, c, kind := p.Gate(id)
+		switch kind {
+		case 1:
+			continue
+		case 2:
+			values[id] = cudd.Cudd_bddAndLimit(dd, read(a), read(b), uint32(limit))
+		case 3:
+			values[id] = cudd.Cudd_bddXor(dd, read(a), read(b))
+		case 4:
+			values[id] = cudd.Cudd_bddIte(dd, read(a), read(b), read(c))
+		case 5, 6:
+			values[id] = read(a)
+		default:
+			return nil
+		}
+		if values[id] == nil {
+			return nil
+		}
+	}
+	result := vec.Vec_PtrAlloc(int(Gia_ManCoNum(p)))
+	for i := int32(0); i < Gia_ManCoNum(p); i++ {
+		node := values[Gia_ObjId(p, Gia_ManCo(p, i))]
+		cudd.Cudd_Ref(node)
+		vec.Vec_PtrPush(result, node)
+	}
+	return result
+}
 
+func Gia_ManCollapseTest(p *Gia_Man_t, verbose int32) *Gia_Man_t {
+	dd := cudd.Cudd_Init(uint32(Gia_ManCiNum(p)), 0, 0, 0, 0)
+	defer cudd.Cudd_Quit(dd)
+	funcs := Gia_ManCollapse(p, dd, 10000, 0)
+	if funcs == nil {
+		return Gia_ManDup(p)
+	}
+	defer Gia_ManCollapseDeref(dd, funcs)
+	roots := make([]*cudd.DdNode, vec.Vec_PtrSize(funcs))
+	for i, v := range vec.Vec_PtrArray(funcs) {
+		roots[i] = v.(*cudd.DdNode)
+	}
+	manager := dsd.Dsd_ManagerStart(dd, int(Gia_ManCiNum(p)), 0)
+	defer dsd.Dsd_ManagerStop(manager)
+	dsd.Dsd_Decompose(manager, roots, len(roots))
+	if verbose != 0 {
+		inputs := make([]string, Gia_ManCiNum(p))
+		outputs := make([]string, Gia_ManCoNum(p))
+		for i := range inputs {
+			inputs[i] = fmt.Sprintf("i%d", i)
+		}
+		for i := range outputs {
+			outputs[i] = fmt.Sprintf("o%d", i)
+		}
+		fmt.Printf("Ins = %d. Outs = %d. BDD nodes = %d.\n", len(inputs), len(outputs), cudd.Cudd_ReadNodeCount(dd))
+		dsd.Dsd_TreePrint(os.Stdout, manager, inputs, outputs, 0, -1)
+	}
+	local := cudd.Cudd_Init(uint32(Gia_ManCiNum(p)), 0, 0, 0, 0)
+	defer cudd.Cudd_Quit(local)
+	return Gia_ManRebuild(p, manager, local)
+}
 
-//ABC_NAMESPACE_IMPL_END
-
+func Gia_ManCollapseTestTest(p *Gia_Man_t) {
+	out := Gia_ManCollapseTest(p, 0)
+	fmt.Printf("GIA collapse: %d nodes -> %d nodes\n", Gia_ManObjNum(p), Gia_ManObjNum(out))
+	Gia_ManStop(out)
+}
