@@ -1034,32 +1034,6 @@ package abc
 
 **********************************************************************
 */
-func Abc_NtkCreatePropertyMonitor(p *Abc_Ntk_t, vNodeIds *Vec_Int_t, vNodeValues *Vec_Int_t) *Abc_Ntk_t {
-	var pMonitor, pStrashed, pResult *Abc_Ntk_t
-	// sequential cleanup parameters
-	var fLatchConst int32 = 1
-	var fLatchEqual int32 = 1
-	var fSaveNames int32 = 1
-	var fUseMvSweep int32
-	var nFramesSymb int32 = 1
-	var nFramesSatur int32 = 512
-	var fVerbose int32
-	var fVeryVerbose int32
-	// expecting sequential logic network
-	assert(Abc_NtkIsLogic(p), "Abc_NtkIsLogic(p)")
-	assert(Abc_NtkLatchNum(p) > 0, "Abc_NtkLatchNum(p) > 0")
-	assert(Vec_IntSize(vNodeIds) > 0, "Vec_IntSize(vNodeIds) > 0")
-	assert(Vec_IntSize(vNodeIds) == Vec_IntSize(vNodeValues), "Vec_IntSize(vNodeIds) == Vec_IntSize(vNodeValues)")
-	// derive ABC network whose only output is 1 iff the given nodes have the given values
-	pMonitor = Abc_NtkDeriveWithOnePo(p, vNodeIds, vNodeValues)
-	// perform structural hashing
-	pStrashed = Abc_NtkStrash(pMonitor, 0, 1, 0)
-	Abc_NtkDelete(pMonitor)
-	// it is a good idea to run sequential cleanup before giving the network to PDR
-	pResult = Abc_NtkDarLatchSweep(pStrashed, fLatchConst, fLatchEqual, fSaveNames, fUseMvSweep, nFramesSymb, nFramesSatur, fVerbose, fVeryVerbose)
-	Abc_NtkDelete(pStrashed)
-	return pResult
-}
 
 /*
 *Function*************************************************************
@@ -1074,27 +1048,6 @@ func Abc_NtkCreatePropertyMonitor(p *Abc_Ntk_t, vNodeIds *Vec_Int_t, vNodeValues
 
 **********************************************************************
 */
-func Abc_NtkCreatePropertyMonitorTest(p *Abc_Ntk_t) *Abc_Ntk_t {
-	var pNtk *Abc_Ntk_t
-	var vNodeIds *Vec_Int_t = Vec_IntAlloc(100)
-	var vNodeValues *Vec_Int_t = Vec_IntAlloc(100)
-
-	// this test will only work for the network, which has nodes with internal IDs such as these
-	Vec_IntPush(vNodeIds, 90)
-	Vec_IntPush(vNodeIds, 80)
-	Vec_IntPush(vNodeIds, 100)
-
-	Vec_IntPush(vNodeValues, 1)
-	Vec_IntPush(vNodeValues, 0)
-	Vec_IntPush(vNodeValues, 1)
-
-	pNtk = Abc_NtkCreatePropertyMonitor(p, vNodeIds, vNodeValues)
-
-	Vec_IntFree(vNodeIds)
-	Vec_IntFree(vNodeValues)
-
-	return pNtk
-}
 
 /**Function*************************************************************
 
