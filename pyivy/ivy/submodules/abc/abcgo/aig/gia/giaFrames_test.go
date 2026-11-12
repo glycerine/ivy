@@ -12,6 +12,14 @@ func frameTestGraph() *Gia_Man_t {
 	return p
 }
 
+func TestGiaManUnrollRejectsInvalidFrameCounts(t *testing.T) {
+	for _, frames := range []int32{-1, 1<<30} {
+		if got := Gia_ManUnrollStart(frameTestGraph(), &Gia_ParFra_t{nFrames: frames}); got != nil {
+			t.Fatalf("unroll start with %d frames = %v, want nil", frames, got)
+		}
+	}
+}
+
 func TestGiaManUnrollIncrementalLifecycle(t *testing.T) {
 	src := frameTestGraph()
 	params := &Gia_ParFra_t{nFrames: 2, fSaveLastLit: 1}

@@ -12,6 +12,7 @@ type Vec_Str_t = vec.Vec_Str_t
 type Vec_Wrd_t = vec.Vec_Wrd_t
 type Vec_Ptr_t = vec.Vec_Ptr_t
 type Vec_Wec_t = vec.Vec_Wec_t
+type Vec_Mem_t = vec.Vec_Mem_t
 type Vec_Vec_t = vec.Vec_Vec_t
 type Abc_Cex_t = util.Abc_Cex_t
 type word = uint64

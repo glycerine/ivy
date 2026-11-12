@@ -87,11 +87,18 @@ func Gia_ManUnrollAbs(src *Gia_Man_t, frames int32) *Vec_Ptr_t {
 // Gia_ManUnrollStart prepares incremental frame construction. With
 // fSaveLastLit, primary inputs are appended as each frame is requested.
 func Gia_ManUnrollStart(src *Gia_Man_t, params *Gia_ParFra_t) any {
-	if src == nil || params == nil || Gia_ManRegNum(src) < 0 {
+	if src == nil || params == nil || Gia_ManRegNum(src) < 0 || params.nFrames < 0 {
 		return nil
 	}
+	capacity := int64(Gia_ManObjNum(src)) * int64(maxInt(1, int(params.nFrames)))
+	if capacity > int64(objectNoFanin) {
+		return nil
+	}
+	if capacity < 1 {
+		capacity = 1
+	}
 	manager := &Gia_ManUnr_t{pAig: src, pPars: params, LastLit: 0}
-	manager.pNew = Gia_ManStart(maxInt(1, int(Gia_ManObjNum(src))*maxInt(1, int(params.nFrames))))
+	manager.pNew = Gia_ManStart(int32(capacity))
 	manager.pNew.pName, manager.pNew.pSpec = src.pName, src.pSpec
 	Gia_ManHashStart(manager.pNew)
 	nPis, nRegs := Gia_ManPiNum(src), Gia_ManRegNum(src)

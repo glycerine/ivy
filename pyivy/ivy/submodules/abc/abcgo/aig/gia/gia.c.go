@@ -125,7 +125,7 @@ func Gia_ManStructExperiment(p *Gia_Man_t) {
 	for i := int32(0); i < Gia_ManCoNum(p); i++ {
 		output := Gia_ManCo(p, i)
 		fanin := Gia_ObjFaninId0(output, output.id)
-		candidate := Gia_ManDupAndCones(p, &fanin, 1, 1)
+		candidate := Gia_ManDupAndCones(p, []int32{fanin}, 1, 1)
 		match := 0
 		for ; match < Vec_PtrSize(graphs); match++ {
 			existing := Vec_PtrEntry(graphs, match).(*Gia_Man_t)

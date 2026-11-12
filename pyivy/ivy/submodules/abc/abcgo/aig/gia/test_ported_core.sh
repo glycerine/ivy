@@ -9,6 +9,7 @@ exec go test "$@" \
   aig/gia/giaAiger.go aig/gia/giaAigerExt.go aig/gia/giaAiger_test.go aig/gia/giaAigerExt_test.go \
   aig/gia/giaTruth.go aig/gia/gia_truth_port_test.go aig/gia/gia_truth_c_oracle_test.go \
   aig/gia/aiger_io.go aig/gia/aiger_vec.go aig/gia/aiger_io_test.go \
+  aig/gia/gia.c.go aig/gia/giaFrames.go aig/gia/giaFrames_test.go aig/gia/giaIiff.c.go aig/gia/giaSim5.go \
   aig/gia/vector_aliases.go aig/gia/manager_types.go aig/gia/manager.go \
   aig/gia/network.go aig/gia/manager_accessors.go aig/gia/manager_auxiliary.go \
   aig/gia/choice_miter.go aig/gia/choice_miter_test.go aig/gia/metadata.go aig/gia/abstraction_metadata.go aig/gia/abstraction_metadata_test.go aig/gia/random.go aig/gia/counterexample.go aig/gia/frame_bridge.go aig/gia/frame_bridge_test.go aig/gia/counterexample_test.go aig/gia/metadata_test.go aig/gia/sat.go aig/gia/sat_test.go aig/gia/representatives.go aig/gia/fanout.go aig/gia/references.go aig/gia/bridge.go aig/gia/slv.go \

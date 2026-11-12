@@ -1,5 +1,7 @@
 package gia
 
+import abcmain "github.com/glycerine/abcgo/base/main"
+
 /**CFile****************************************************************
 
   FileName    [giaSim5.c]
@@ -11,7 +13,7 @@ package gia
   Synopsis    [Simulation engine.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -29,9 +31,9 @@ package gia
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-func Sim_Init(pAbc *Abc_Frame_t) {}
-func Sim_End(pAbc *Abc_Frame_t) {}
-func Gia_DatFree(p *Gia_Dat_t) {}
+func Sim_Init(pAbc *abcmain.Frame) {}
+func Sim_End(pAbc *abcmain.Frame)  {}
+func Gia_DatFree(p *Gia_Dat_t)     {}
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
@@ -53,6 +55,4 @@ func Gia_DatFree(p *Gia_Dat_t) {}
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-
