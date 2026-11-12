@@ -186,6 +186,10 @@ after a Repr fix; all four sweep drivers reduce three registers to one while
 preserving sequential traces. The full AIG package remains blocked by other
 original files, and full-module verification remains outstanding.
 
+`bool/lucky` is now fully ported and committed after race/vet validation; its
+fast/simple/swap implementations match the original C outputs, phase flags and
+permutations on 550 differential cases.
+
 ## AIG free-to-nil audit
 
 The AIG owner scanned every `abcgo/aig/aig/*.go` file and converted all four
