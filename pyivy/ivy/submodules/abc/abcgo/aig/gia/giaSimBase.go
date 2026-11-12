@@ -38,23 +38,6 @@ import "os"
 
 
    
-type Gia_SimAbsMan_t struct {
-    // problem formulation
-    pGia     *Gia_Man_t;       // AIG manager
-    word *         pSet[2];    // offset/onset truth tables
-    nCands            int32;     // candidate count
-    nWords            int32;     // word count
-    vSims     *Vec_Wrd_t;      // candidate simulation info
-    vResub     *Vec_Int_t;     // the result
-    fVerbose            int32;   // verbose
-    // intermediate result
-    vValues     *Vec_Int_t;       // function values in each pattern
-    vPatPairs     *Vec_Int_t;     // used minterms
-    nWordsTable            int32;   // words of table data
-    pTableTemp          *word;    // temporary table pattern
-    vCoverTable     *Vec_Wrd_t;   // columns = minterms; rows = classes
-    vTtMints     *Vec_Int_t;      // truth table minterms
-}
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
@@ -403,48 +386,9 @@ func Gia_ManSimRelTest(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Sim5CollectValues(pOffSet *word, pOnSet *word, nWords int32) *Vec_Int_t {
-    var vBits *Vec_Int_t  = Vec_IntAlloc( 64*nWords ); var i int32;
-var Count [2]int32 ;
-    for  i = 0; i < 64*nWords; i++  {
-        if Abc_TtGetBit( pOffSet, i ) {
-            Vec_IntPush( vBits, 0 );
-Count[0]++;
-        } else if Abc_TtGetBit( pOnSet, i ) {
-            Vec_IntPush( vBits, 1 );
-Count[1]++;
-        } else {
-            Vec_IntPush( vBits, -1 ); }
-    }
-    //printf( "Offset = %d.  Onset = %d.  Dcset = %d.\n", Count[0], Count[1], 64*nWords - Count[0] - Count[1] );
-    return vBits;
-}
-func Gia_SimAbsAlloc(pGia *Gia_Man_t, pOffSet *word, pOnSet *word, vSims *Vec_Wrd_t, nWords int32, vResub *Vec_Int_t, fVerbose int32) *Gia_SimAbsMan_t {
-    // inlining of macro ABC_CALLOC
-    var p *Gia_SimAbsMan_t  = &Gia_SimAbsMan_t{};
-    p.pGia      = pGia;
-    p.pSet[0]   = pOffSet;
-    p.pSet[1]   = pOnSet;
-    p.nCands    = Vec_WrdSize(vSims)/nWords;
-    p.nWords    = nWords;
-    p.vSims     = vSims;
-    p.vResub    = vResub;
-    p.fVerbose  = fVerbose;
-    p.vValues      = Gia_Sim5CollectValues( pOffSet, pOnSet, nWords );
-    p.vPatPairs    = Vec_IntAlloc( 100 );
-    p.vCoverTable  = Vec_WrdAlloc( 10000 );
-    p.vTtMints     = Vec_IntAlloc( 100 );
-    assert(Vec_WrdSize(vSims) % nWords == 0, "Vec_WrdSize(vSims) % nWords == 0");
-    return p;
-}
-func Gia_SimAbsFree(p *Gia_SimAbsMan_t) {
-    Vec_IntFree( p.vValues );
-    Vec_IntFree( p.vPatPairs );
-    Vec_WrdFree( p.vCoverTable );
-    Vec_IntFree( p.vTtMints );
-    // inlining of macro ABC_FREE
-    p = nil;
-}
+
+
+
 
 
 /**Function*************************************************************
@@ -515,146 +459,9 @@ func Gia_SimAbsCheckSolution(p *Gia_SimAbsMan_t) {
     }
 }
 
-func Gia_SimAbsSolve(p *Gia_SimAbsMan_t) {
-    var clk abctime  = Abc_Clock();
-    var i, k, iPat, iPat2 int32;
-/*
-    Vec_Int_t * vSimPats = Vec_IntDup( p->vPatPairs );
-    Vec_IntUniqify( vSimPats );
-    printf( "Selected %d pattern pairs contain %d unique patterns.\n", Vec_IntSize(p->vPatPairs)/2, Vec_IntSize(vSimPats) );
-    Vec_IntFree( vSimPats );
-*/
-    // set up the covering problem
-    p.nWordsTable = Abc_Bit6WordNum( Vec_IntSize(p.vPatPairs)/2 );
-    Vec_WrdFill( p.vCoverTable, p.nWordsTable * (p.nCands + 1), 0 );
-    p.pTableTemp = Vec_WrdEntryP( p.vCoverTable, p.nWordsTable * p.nCands );
-    for  i = 0; i < p.nCands; i++  {
-        var pSimCand *word   = Vec_WrdEntryP( p.vSims, p.nWords * i );
-        var pSimTable *word  = Vec_WrdEntryP( p.vCoverTable, p.nWordsTable * i );
-        //printf( "%4d : ", i );
-        //Extra_PrintBinary( stdout, (word *)pSimCand, p->nCands );  printf( "\n" );
-        // inlining of macro Vec_IntForEachEntryDouble
-        for  k = 0; (k+1 < Vec_IntSize(p.vPatPairs)) && (((iPat) = Vec_IntEntry(p.vPatPairs, k)), 1) && (((iPat2) = Vec_IntEntry(p.vPatPairs, k+1)), 1); k += 2  {
-            assert(Vec_IntEntry(p.vValues, iPat)  == 0, "Vec_IntEntry(p.vValues, iPat)  == 0");
-            assert(Vec_IntEntry(p.vValues, iPat2) == 1, "Vec_IntEntry(p.vValues, iPat2) == 1");
-            if Abc_TtGetBit(pSimCand, iPat) != Abc_TtGetBit(pSimCand, iPat2) {
-                Abc_TtXorBit(pSimTable, k/2); }
-        }
-        assert(k == Vec_IntSize(p.vPatPairs), "k == Vec_IntSize(p.vPatPairs)");
-    }
 
-    if false {
-        fmt.Printf("                  ");
-        for  i = 0; i < p.nCands; i++  {
-            fmt.Printf("%d", i % 10);
-        }
-        fmt.Printf("\n");
 
-        // inlining of macro Vec_IntForEachEntryDouble
-        for  i = 0; (i+1 < Vec_IntSize(p.vPatPairs)) && (((iPat) = Vec_IntEntry(p.vPatPairs, i)), 1) && (((iPat2) = Vec_IntEntry(p.vPatPairs, i+1)), 1); i += 2  {
-            fmt.Printf("%4d  ", i/2);
-            fmt.Printf("%4d  ", iPat);
-            fmt.Printf("%4d  ", iPat2);
-            for  k = 0; k < p.nCands; k++  {
-                var pSimTable *word  = Vec_WrdEntryP( p.vCoverTable, p.nWordsTable * k );
-                fmt.Printf("%c", Abc_TtGetBit(pSimTable, i/2) ? '*' : ' ');
-            }
-            fmt.Printf("\n");
-        }
-    }
 
-    //Gia_SimAbsCheckSolution(p);
-
-    Vec_IntClear( p.vResub );
-    Abc_TtClear( p.pTableTemp, p.nWordsTable );
-    for  i = 0; i < Vec_IntSize(p.vPatPairs)/2; i++  {
-        Abc_TtXorBit( p.pTableTemp, i );
-    }
-
-    for  !Abc_TtIsConst0(p.pTableTemp, p.nWordsTable)  {
-        var pSimTable *word;
-        var iArgMax int32 = -1;
-        var CostThis int32;
-        var CostMax int32 = -1;
-        // compute the cost of each column
-        for  i = 0; i < p.nCands; i++  {
-            pSimTable = Vec_WrdEntryP( p.vCoverTable, p.nWordsTable * i );
-            CostThis = Abc_TtCountOnesVecMask( pSimTable, p.pTableTemp, p.nWordsTable, 0 );
-            if CostMax >= CostThis {
-                continue; }
-            CostMax = CostThis;
-            iArgMax = i;
-        }
-        // find the best column
-        Vec_IntPush( p.vResub, iArgMax );
-        // delete values of this column
-        pSimTable = Vec_WrdEntryP( p.vCoverTable, p.nWordsTable * iArgMax );
-        Abc_TtSharp( p.pTableTemp, p.pTableTemp, pSimTable, p.nWordsTable );
-    }
-    if p.fVerbose {
-        fmt.Printf("Solution %2d for covering problem [%5d x %5d]: ", Vec_IntSize(p.vResub), Vec_IntSize(p.vPatPairs)/2, p.nCands);
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(p.vResub)) && (((iPat) = Vec_IntEntry(p.vResub, i)), 1); i++  {
-            fmt.Printf("%6d ", iPat);
-        }
-        for  ; i < 12; i++  {
-            fmt.Printf("       ");
-        }
-        fmt.Printf("   ");
-        Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    }
-}
-func Gia_SimAbsRefine(p *Gia_SimAbsMan_t) int32 {
-    var i, b, Value, iPat, iMint, iObj, Count int32;
-    // inlining of macro ABC_ALLOC
-    var pFanins **word  = ((word * *) malloc(sizeof(word *) * (size_t)(Vec_IntSize(p.vResub))));
-    assert(Vec_IntSize(p.vResub) > 0, "Vec_IntSize(p.vResub) > 0");
-    // inlining of macro Vec_IntForEachEntry
-    for  b = 0; (b < Vec_IntSize(p.vResub)) && (((iObj) = Vec_IntEntry(p.vResub, b)), 1); b++  {
-        pFanins[b] = Vec_WrdEntryP( p.vSims, p.nWords * iObj );
-    }
-    Vec_IntFill( p.vTtMints, 1 << Vec_IntSize(p.vResub), -1 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vValues)) && (((Value) = Vec_IntEntry(p.vValues, i)), 1); i++  {
-        if Value == -1 {
-            continue; }
-        iMint = 0;
-        for  b = 0; b < Vec_IntSize(p.vResub); b++  {
-            if Abc_TtGetBit(pFanins[b], i) {
-                iMint |= 1 << b; }
-        }
-        iPat = Vec_IntEntry( p.vTtMints, iMint );
-        if iPat == -1 {
-            Vec_IntWriteEntry( p.vTtMints, iMint, i );
-            continue;
-        }
-        assert(Abc_TtGetBit(p.pSet[Value], i), "Abc_TtGetBit(p.pSet[Value], i)");
-        if Abc_TtGetBit(p.pSet[Value], iPat) {
-            continue; }
-        assert(Abc_TtGetBit(p.pSet[!Value], iPat), "Abc_TtGetBit(p.pSet[!Value], iPat)");
-        Vec_IntPushTwo( p.vPatPairs, Value ? iPat : i, Value ? i : iPat );
-        //printf( "iPat1 = %d  iPat2 = %d   Mint = %d\n", Value ? iPat : i, Value ? i : iPat, iMint );
-        Count++;
-        if Count == 64 {
-            // inlining of macro ABC_FREE
-            pFanins = nil;
-            return 1;
-        }
-    }
-    //printf( "Refinement added %d minterm pairs.\n", Count );
-    // inlining of macro ABC_FREE
-    pFanins = nil;
-    return Count != 0;
-}
-func Gia_SimAbsFind(vValues *Vec_Int_t, Value int32) *Vec_Int_t {
-    var vSubset *Vec_Int_t  = Vec_IntAlloc( 100 ); var i, Entry int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vValues)) && (((Entry) = Vec_IntEntry(vValues, i)), 1); i++  {
-        if Entry == Value {
-            Vec_IntPush( vSubset, i ); }
-    }
-    return vSubset;
-}
 func Gia_SimAbsInit(p *Gia_SimAbsMan_t) {
     var n int32;
     var nPairsInit int32 = 64;
