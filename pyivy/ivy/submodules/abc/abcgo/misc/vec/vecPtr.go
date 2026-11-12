@@ -8,10 +8,7 @@ import (
 	"unsafe"
 )
 
-type Vec_Ptr_t struct {
-	nCap, nSize int
-	pArray      []any
-}
+type Vec_Ptr_t struct{ data []any }
 
 func Vec_PtrAlloc(n int) *Vec_Ptr_t {
 	if n > 0 && n < 8 {
@@ -19,21 +16,21 @@ func Vec_PtrAlloc(n int) *Vec_Ptr_t {
 	}
 	return Vec_PtrAllocExact(n)
 }
-func Vec_PtrAllocExact(n int) *Vec_Ptr_t { return &Vec_Ptr_t{nCap: n, pArray: make([]any, n)} }
-func Vec_PtrStart(n int) *Vec_Ptr_t      { p := Vec_PtrAlloc(n); p.nSize = n; return p }
+func Vec_PtrAllocExact(n int) *Vec_Ptr_t { return &Vec_Ptr_t{data: make([]any, 0, n)} }
+func Vec_PtrStart(n int) *Vec_Ptr_t      { p := Vec_PtrAlloc(n); p.resize(n); return p }
 func Vec_PtrAllocArray(a []any, n int) *Vec_Ptr_t {
-	return &Vec_Ptr_t{nCap: n, nSize: n, pArray: a[:n]}
+	return &Vec_Ptr_t{data: (a[:n])[:n]}
 }
 func Vec_PtrAllocArrayCopy(a []any, n int) *Vec_Ptr_t {
 	p := Vec_PtrAllocExact(n)
-	p.nSize = n
-	copy(p.pArray, a[:n])
+	p.resize(n)
+	copy(p.storage(), a[:n])
 	return p
 }
 func Vec_PtrDup(p *Vec_Ptr_t) *Vec_Ptr_t {
-	q := Vec_PtrAllocExact(p.nCap)
-	q.nSize = p.nSize
-	copy(q.pArray, p.pArray[:p.nSize])
+	q := Vec_PtrAllocExact(cap(p.data))
+	q.resize(len(p.data))
+	copy(q.storage(), p.data)
 	return q
 }
 func Vec_PtrDupArray(p *Vec_Ptr_t) *Vec_Ptr_t { q := *p; Vec_PtrZero(p); return &q }
@@ -45,54 +42,61 @@ func Vec_PtrFree(p *Vec_Ptr_t) {
 	}
 }
 func Vec_PtrFreeP(p **Vec_Ptr_t)                   { Vec_PtrFree(*p); *p = nil }
-func Vec_PtrReleaseArray(p *Vec_Ptr_t) []any       { a := p.pArray; Vec_PtrZero(p); return a }
-func Vec_PtrArray(p *Vec_Ptr_t) []any              { return p.pArray[:p.nSize] }
-func Vec_PtrSize(p *Vec_Ptr_t) int                 { return p.nSize }
-func Vec_PtrCap(p *Vec_Ptr_t) int                  { return p.nCap }
-func Vec_PtrEntry(p *Vec_Ptr_t, i int) any         { return p.pArray[:p.nSize][i] }
-func Vec_PtrEntryP(p *Vec_Ptr_t, i int) *any       { return &p.pArray[:p.nSize][i] }
-func Vec_PtrWriteEntry(p *Vec_Ptr_t, i int, x any) { p.pArray[:p.nSize][i] = x }
-func Vec_PtrEntryLast(p *Vec_Ptr_t) any            { return Vec_PtrEntry(p, p.nSize-1) }
+func Vec_PtrReleaseArray(p *Vec_Ptr_t) []any       { a := p.data; Vec_PtrZero(p); return a }
+func Vec_PtrArray(p *Vec_Ptr_t) []any              { return p.data }
+func Vec_PtrSize(p *Vec_Ptr_t) int                 { return len(p.data) }
+func Vec_PtrCap(p *Vec_Ptr_t) int                  { return cap(p.data) }
+func Vec_PtrEntry(p *Vec_Ptr_t, i int) any         { return p.data[i] }
+func Vec_PtrEntryP(p *Vec_Ptr_t, i int) *any       { return &p.data[i] }
+func Vec_PtrWriteEntry(p *Vec_Ptr_t, i int, x any) { p.data[i] = x }
+func Vec_PtrEntryLast(p *Vec_Ptr_t) any            { return Vec_PtrEntry(p, len(p.data)-1) }
 func Vec_PtrGrow(p *Vec_Ptr_t, n int) {
-	if n > p.nCap {
-		p.pArray = append(p.pArray, make([]any, n-p.nCap)...)
-		p.nCap = n
+	if n > cap(p.data) {
+		data := make([]any, len(p.data), n)
+		copy(data, p.data)
+		p.data = data
 	}
 }
 func Vec_PtrFill(p *Vec_Ptr_t, n int, x any) {
 	Vec_PtrGrow(p, n)
 	for i := 0; i < n; i++ {
-		p.pArray[i] = x
+		p.storage()[i] = x
 	}
-	p.nSize = n
+	p.resize(n)
 }
 func Vec_PtrFillExtra(p *Vec_Ptr_t, n int, x any) {
-	if n <= p.nSize {
+	if n <= len(p.data) {
 		return
 	}
-	if n > p.nCap {
-		Vec_PtrGrow(p, max(n, 2*p.nCap))
+	if n > cap(p.data) {
+		Vec_PtrGrow(p, max(n, 2*cap(p.data)))
 	}
-	for i := p.nSize; i < n; i++ {
-		p.pArray[i] = x
+	for i := len(p.data); i < n; i++ {
+		p.storage()[i] = x
 	}
-	p.nSize = n
+	p.resize(n)
 }
 func Vec_PtrShrink(p *Vec_Ptr_t, n int) {
-	if n < 0 || n > p.nSize {
+	if n < 0 || n > len(p.data) {
 		panic("invalid vector shrink")
 	}
-	p.nSize = n
+	clear(p.data[n:])
+	p.resize(n)
 }
-func Vec_PtrClear(p *Vec_Ptr_t) { p.nSize = 0 }
+func Vec_PtrClear(p *Vec_Ptr_t) { clear(p.data); p.resize(0) }
 func Vec_PtrPush(p *Vec_Ptr_t, x any) {
-	if p.nSize == p.nCap {
-		Vec_PtrGrow(p, max(16, 2*p.nCap))
+	if len(p.data) == cap(p.data) {
+		Vec_PtrGrow(p, max(16, 2*cap(p.data)))
 	}
-	p.pArray[p.nSize] = x
-	p.nSize++
+	p.storage()[len(p.data)] = x
+	p.resize(len(p.data) + 1)
 }
-func Vec_PtrPop(p *Vec_Ptr_t) any { x := Vec_PtrEntryLast(p); p.nSize--; return x }
+func Vec_PtrPop(p *Vec_Ptr_t) any {
+	x := Vec_PtrEntryLast(p)
+	p.data[len(p.data)-1] = nil
+	p.resize(len(p.data) - 1)
+	return x
+}
 func ptrNil(x any) bool {
 	if x == nil {
 		return true
@@ -137,7 +141,7 @@ func ptrEqual(a, b any) bool {
 	return false
 }
 func Vec_PtrDupStr(p *Vec_Ptr_t) *Vec_Ptr_t {
-	q := Vec_PtrAlloc(p.nSize)
+	q := Vec_PtrAlloc(len(p.data))
 	for _, x := range Vec_PtrArray(p) {
 		if x == nil {
 			Vec_PtrPush(q, nil)
@@ -151,7 +155,7 @@ func Vec_PtrMemory(p *Vec_Ptr_t) float64 {
 	if p == nil {
 		return 0
 	}
-	return float64(p.nCap*int(unsafe.Sizeof(uintptr(0))) + int(unsafe.Sizeof(*p)))
+	return float64(cap(p.data)*int(unsafe.Sizeof(uintptr(0))) + int(unsafe.Sizeof(*p)))
 }
 func Vec_PtrCountZero(p *Vec_Ptr_t) int {
 	n := 0
@@ -166,12 +170,12 @@ func Vec_PtrFillTwo(p *Vec_Ptr_t, n int, even, odd any) {
 	Vec_PtrGrow(p, n)
 	for i := range n {
 		if i&1 == 0 {
-			p.pArray[i] = even
+			p.storage()[i] = even
 		} else {
-			p.pArray[i] = odd
+			p.storage()[i] = odd
 		}
 	}
-	p.nSize = n
+	p.resize(n)
 }
 func Vec_PtrGetEntry(p *Vec_Ptr_t, i int) any {
 	Vec_PtrFillExtra(p, i+1, nil)
@@ -187,19 +191,19 @@ func Vec_PtrFreeData(p *Vec_Ptr_t) {
 	if p != nil {
 		for i, x := range Vec_PtrArray(p) {
 			if x != uintptr(1) && x != uintptr(2) {
-				p.pArray[i] = nil
+				p.storage()[i] = nil
 			}
 		}
 	}
 }
 func Vec_PtrFreeFree(p *Vec_Ptr_t) { Vec_PtrFreeData(p); Vec_PtrFree(p) }
 func Vec_PtrCopy(dst, src *Vec_Ptr_t) {
-	Vec_PtrGrow(dst, src.nSize)
-	copy(dst.pArray, Vec_PtrArray(src))
-	dst.nSize = src.nSize
+	Vec_PtrGrow(dst, len(src.data))
+	copy(dst.storage(), Vec_PtrArray(src))
+	dst.resize(len(src.data))
 }
 func Vec_PtrPrintNames(p *Vec_Ptr_t) {
-	fmt.Printf("Vector has %d entries: {", p.nSize)
+	fmt.Printf("Vector has %d entries: {", len(p.data))
 	for _, x := range Vec_PtrArray(p) {
 		fmt.Printf("%s ", x)
 	}
@@ -213,8 +217,8 @@ func Vec_PtrAppend(p, q *Vec_Ptr_t) {
 }
 func Vec_PtrPushFirst(p *Vec_Ptr_t, x any) {
 	Vec_PtrPush(p, nil)
-	copy(p.pArray[1:p.nSize], p.pArray[:p.nSize-1])
-	p.pArray[0] = x
+	copy(p.storage()[1:len(p.data)], p.storage()[:len(p.data)-1])
+	p.storage()[0] = x
 }
 func Vec_PtrPushUnique(p *Vec_Ptr_t, x any) int {
 	if Vec_PtrFind(p, x) >= 0 {
@@ -240,8 +244,8 @@ func Vec_PtrFindStr(p *Vec_Ptr_t, x string) int {
 	return -1
 }
 func Vec_PtrRemove(p *Vec_Ptr_t, x any) {
-	for i := p.nSize - 1; i >= 0; i-- {
-		if ptrEqual(p.pArray[i], x) {
+	for i := len(p.data) - 1; i >= 0; i-- {
+		if ptrEqual(p.storage()[i], x) {
 			Vec_PtrDrop(p, i)
 			return
 		}
@@ -250,37 +254,37 @@ func Vec_PtrRemove(p *Vec_Ptr_t, x any) {
 }
 func Vec_PtrDrop(p *Vec_Ptr_t, i int) {
 	_ = Vec_PtrEntry(p, i)
-	copy(p.pArray[i:], p.pArray[i+1:p.nSize])
-	p.nSize--
-	p.pArray[p.nSize] = nil
+	copy(p.storage()[i:], p.storage()[i+1:len(p.data)])
+	p.resize(len(p.data) - 1)
+	p.storage()[len(p.data)] = nil
 }
 func Vec_PtrInsert(p *Vec_Ptr_t, i int, x any) {
-	if i < 0 || i >= p.nSize {
+	if i < 0 || i >= len(p.data) {
 		panic("insert index")
 	}
 	Vec_PtrPush(p, nil)
-	copy(p.pArray[i+1:p.nSize], p.pArray[i:p.nSize-1])
-	p.pArray[i] = x
+	copy(p.storage()[i+1:len(p.data)], p.storage()[i:len(p.data)-1])
+	p.storage()[i] = x
 }
 func Vec_PtrReorder(p *Vec_Ptr_t, n int) {
-	if n < 0 || n >= p.nSize {
+	if n < 0 || n >= len(p.data) {
 		panic("reorder count")
 	}
-	Vec_PtrGrow(p, p.nSize+n)
-	copy(p.pArray[p.nSize:], p.pArray[:n])
-	copy(p.pArray, p.pArray[n:n+p.nSize])
+	Vec_PtrGrow(p, len(p.data)+n)
+	copy(p.storage()[len(p.data):], p.storage()[:n])
+	copy(p.storage(), p.storage()[n:n+len(p.data)])
 }
 func Vec_PtrReverseOrder(p *Vec_Ptr_t) {
-	for i, j := 0, p.nSize-1; i < j; i, j = i+1, j-1 {
-		p.pArray[i], p.pArray[j] = p.pArray[j], p.pArray[i]
+	for i, j := 0, len(p.data)-1; i < j; i, j = i+1, j-1 {
+		p.storage()[i], p.storage()[j] = p.storage()[j], p.storage()[i]
 	}
 }
 func Vec_PtrEqual(p, q *Vec_Ptr_t) int {
-	if p.nSize != q.nSize {
+	if len(p.data) != len(q.data) {
 		return 0
 	}
 	for i, v := range Vec_PtrArray(p) {
-		if !ptrEqual(v, q.pArray[i]) {
+		if !ptrEqual(v, q.storage()[i]) {
 			return 0
 		}
 	}
@@ -300,63 +304,65 @@ func Vec_PtrSort(p *Vec_Ptr_t, compare func(*any, *any) int) {
 	if compare == nil {
 		compare = Vec_PtrSortComparePtr
 	}
-	sort.SliceStable(Vec_PtrArray(p), func(i, j int) bool { return compare(&p.pArray[i], &p.pArray[j]) < 0 })
+	sort.SliceStable(Vec_PtrArray(p), func(i, j int) bool { return compare(&p.storage()[i], &p.storage()[j]) < 0 })
 }
 func Vec_PtrUniqify(p *Vec_Ptr_t, compare func(*any, *any) int) {
-	if p.nSize < 2 {
+	if len(p.data) < 2 {
 		return
 	}
 	Vec_PtrSort(p, compare)
 	k := 1
-	for i := 1; i < p.nSize; i++ {
-		if !ptrEqual(p.pArray[i], p.pArray[i-1]) {
-			p.pArray[k] = p.pArray[i]
+	for i := 1; i < len(p.data); i++ {
+		if !ptrEqual(p.storage()[i], p.storage()[i-1]) {
+			p.storage()[k] = p.storage()[i]
 			k++
 		}
 	}
-	p.nSize = k
+	clear(p.data[k:])
+	p.resize(k)
 }
 func Vec_PtrUniqify2(p *Vec_Ptr_t, compare func(*any, *any) int, free func(any), counts *Vec_Int_t) {
 	if counts != nil {
-		Vec_IntFill(counts, 1, 1)
+		Vec_IntFill(counts, min(1, len(p.data)), 1)
 	}
-	if p.nSize < 2 {
+	if len(p.data) < 2 {
 		return
 	}
 	Vec_PtrSort(p, compare)
 	k := 1
-	for i := 1; i < p.nSize; i++ {
-		if compare(&p.pArray[i], &p.pArray[k-1]) != 0 {
-			p.pArray[k] = p.pArray[i]
+	for i := 1; i < len(p.data); i++ {
+		if compare(&p.storage()[i], &p.storage()[k-1]) != 0 {
+			p.storage()[k] = p.storage()[i]
 			k++
 			if counts != nil {
 				Vec_IntPush(counts, 1)
 			}
 		} else {
 			if free != nil {
-				free(p.pArray[i])
+				free(p.storage()[i])
 			}
 			if counts != nil {
-				Vec_IntAddToEntry(counts, counts.nSize-1, 1)
+				Vec_IntAddToEntry(counts, len(counts.data)-1, 1)
 			}
 		}
 	}
-	p.nSize = k
+	clear(p.data[k:])
+	p.resize(k)
 }
 func Vec_PtrAllocSimInfo(entries, words int) *Vec_Ptr_t {
 	p := Vec_PtrAllocExact(entries)
-	p.nSize = entries
+	p.resize(entries)
 	data := make([]uint32, entries*words)
 	for i := range entries {
-		p.pArray[i] = data[i*words : (i+1)*words]
+		p.storage()[i] = data[i*words : (i+1)*words]
 	}
 	return p
 }
 func Vec_PtrReadWordsSimInfo(p *Vec_Ptr_t) int {
-	if p.nSize < 2 {
+	if len(p.data) < 2 {
 		panic("simulation entries")
 	}
-	return len(p.pArray[0].([]uint32))
+	return len(p.storage()[0].([]uint32))
 }
 func Vec_PtrCleanSimInfo(p *Vec_Ptr_t, start, words int) {
 	for _, x := range Vec_PtrArray(p) {
@@ -372,16 +378,16 @@ func Vec_PtrFillSimInfo(p *Vec_Ptr_t, start, words int) {
 	}
 }
 func Vec_PtrDoubleSimInfo(p *Vec_Ptr_t) {
-	q := Vec_PtrAllocSimInfo(2*p.nSize, Vec_PtrReadWordsSimInfo(p))
+	q := Vec_PtrAllocSimInfo(2*len(p.data), Vec_PtrReadWordsSimInfo(p))
 	for i, x := range Vec_PtrArray(p) {
-		copy(q.pArray[i].([]uint32), x.([]uint32))
+		copy(q.storage()[i].([]uint32), x.([]uint32))
 	}
 	*p = *q
 }
 func Vec_PtrReallocSimInfo(p *Vec_Ptr_t) {
-	q := Vec_PtrAllocSimInfo(p.nSize, 2*Vec_PtrReadWordsSimInfo(p))
+	q := Vec_PtrAllocSimInfo(len(p.data), 2*Vec_PtrReadWordsSimInfo(p))
 	for i, x := range Vec_PtrArray(p) {
-		copy(q.pArray[i].([]uint32), x.([]uint32))
+		copy(q.storage()[i].([]uint32), x.([]uint32))
 	}
 	*p = *q
 }

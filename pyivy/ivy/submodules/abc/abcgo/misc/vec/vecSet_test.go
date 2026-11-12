@@ -117,3 +117,16 @@ func TestSetInvalidSizes(t *testing.T) {
 		}()
 	}
 }
+
+func TestSetIntegerOverflowRejected(t *testing.T) {
+	for _, f := range []func(){func() { Vec_SetWordNum(1<<31 - 1) }, func() { Vec_SetFetchH(Vec_SetAlloc(9), 1<<31-1) }} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Fatal("overflow accepted")
+				}
+			}()
+			f()
+		}()
+	}
+}

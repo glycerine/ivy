@@ -7,7 +7,7 @@ func TestAttributeLifecycle(t *testing.T) {
 	manager := new(int)
 	p := Vec_AttAlloc(1, manager, func(any) { managers++ }, func(any) any { starts++; return new(int) }, func(any, any) { frees++ })
 	first := Vec_AttEntry(p, 20)
-	if first == nil || Vec_AttEntry(p, 20) != first || starts != 1 || p.nCap < 21 {
+	if first == nil || Vec_AttEntry(p, 20) != first || starts != 1 || len(p.pArrayPtr) < 21 {
 		t.Fatal("lazy initialization or growth")
 	}
 	Vec_AttFreeEntry(p, 20)

@@ -39,7 +39,7 @@ func TestPointerVectorsAndSimulation(t *testing.T) {
 	}
 	Vec_PtrDoubleSimInfo(sim)
 	Vec_PtrReallocSimInfo(sim)
-	if sim.nSize != 12 || Vec_PtrReadWordsSimInfo(sim) != 4 || Vec_PtrEntry(sim, 0).([]uint32)[0] != 0xaaaaaaaa {
+	if len(sim.data) != 12 || Vec_PtrReadWordsSimInfo(sim) != 4 || Vec_PtrEntry(sim, 0).([]uint32)[0] != 0xaaaaaaaa {
 		t.Fatal("simulation resizing")
 	}
 	Vec_PtrFillSimInfo(sim, 1, 4)
@@ -106,7 +106,7 @@ func TestByteVectorBinaryRoundtrip(t *testing.T) {
 	Vec_StrPutS(p, "hello")
 	Vec_StrPutC(p, 0xff)
 	pos := 0
-	if Vec_StrGetI_ne(p, &pos) != -123 || Vec_StrGetI(p, &pos) != 0x7fffffff || Vec_StrGetW(p, &pos) != 0xfedcba9876543210 || Vec_StrGetF(p, &pos) != -1.25 || !math.IsInf(Vec_StrGetD(p, &pos), 1) || Vec_StrGetS(p, &pos) != "hello" || Vec_StrGetC(p, &pos) != 0xff || pos != p.nSize {
+	if Vec_StrGetI_ne(p, &pos) != -123 || Vec_StrGetI(p, &pos) != 0x7fffffff || Vec_StrGetW(p, &pos) != 0xfedcba9876543210 || Vec_StrGetF(p, &pos) != -1.25 || !math.IsInf(Vec_StrGetD(p, &pos), 1) || Vec_StrGetS(p, &pos) != "hello" || Vec_StrGetC(p, &pos) != 0xff || pos != len(p.data) {
 		t.Fatal("binary roundtrip")
 	}
 	Vec_StrClear(p)
@@ -136,7 +136,7 @@ func TestLevelVectorsMarksAndOwnership(t *testing.T) {
 	}
 	Vec_WecUnmarkLevels(p, levels)
 	Vec_WecRemoveEmpty(p)
-	if p.nSize != 2 || Vec_WecEntryEntry(p, 0, 0) != 2 {
+	if len(p.data) != 2 || Vec_WecEntryEntry(p, 0, 0) != 2 {
 		t.Fatal("remove empty")
 	}
 	Vec_WecInsertLevel(p, 1)

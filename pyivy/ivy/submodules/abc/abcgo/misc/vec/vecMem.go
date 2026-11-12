@@ -11,16 +11,16 @@ import (
 // Vec_Mem_t keeps fixed-sized word records in pages so record slices remain
 // stable when more pages are allocated. Hash buckets contain record indices.
 type Vec_Mem_t struct {
-	nEntrySize, nEntries, LogPageSze, PageMask, nPageAlloc, iPage int
-	ppPages                                                       [][]uint64
-	vTable, vNexts                                                *Vec_Int_t
+	nEntrySize, nEntries, LogPageSze int
+	ppPages                          [][]uint64
+	vTable, vNexts                   *Vec_Int_t
 }
 
 func Vec_MemAlloc_(p *Vec_Mem_t, size, logPage int) {
 	if size <= 0 || logPage < 0 || logPage > 30 {
 		panic("invalid paged vector geometry")
 	}
-	*p = Vec_Mem_t{nEntrySize: size, LogPageSze: logPage, PageMask: (1 << logPage) - 1, iPage: -1}
+	*p = Vec_Mem_t{nEntrySize: size, LogPageSze: logPage}
 }
 func Vec_MemAlloc(size, logPage int) *Vec_Mem_t {
 	p := new(Vec_Mem_t)
@@ -29,7 +29,7 @@ func Vec_MemAlloc(size, logPage int) *Vec_Mem_t {
 }
 func Vec_MemFree(p *Vec_Mem_t) {
 	if p != nil {
-		*p = Vec_Mem_t{iPage: -1}
+		*p = Vec_Mem_t{}
 	}
 }
 func Vec_MemFreeP(p **Vec_Mem_t) { Vec_MemFree(*p); *p = nil }
@@ -39,7 +39,7 @@ func Vec_MemDup(p *Vec_Mem_t) *Vec_Mem_t {
 		Vec_MemPush(q, Vec_MemReadEntry(p, i))
 	}
 	if p.vTable != nil {
-		Vec_MemHashAlloc(q, p.vTable.nSize)
+		Vec_MemHashAlloc(q, len(p.vTable.data))
 		Vec_MemHashResize(q)
 	}
 	return q
@@ -70,18 +70,18 @@ func Vec_MemClean(p *Vec_Mem_t, n int) {
 func Vec_MemEntrySize(p *Vec_Mem_t) int { return p.nEntrySize }
 func Vec_MemEntryNum(p *Vec_Mem_t) int  { return p.nEntries }
 func Vec_MemPageSize(p *Vec_Mem_t) int  { return p.LogPageSze }
-func Vec_MemPageNum(p *Vec_Mem_t) int   { return p.iPage + 1 }
+func Vec_MemPageNum(p *Vec_Mem_t) int   { return len(p.ppPages) }
 func Vec_MemMemory(p *Vec_Mem_t) float64 {
 	if p == nil {
 		return 0
 	}
-	return float64(8*p.nEntrySize*(1<<p.LogPageSze)*(p.iPage+1) + p.nPageAlloc*int(unsafe.Sizeof(uintptr(0))) + int(unsafe.Sizeof(*p)))
+	return float64(8*p.nEntrySize*(1<<p.LogPageSze)*(len(p.ppPages)) + cap(p.ppPages)*int(unsafe.Sizeof(uintptr(0))) + int(unsafe.Sizeof(*p)))
 }
 func Vec_MemReadEntry(p *Vec_Mem_t, i int) []uint64 {
 	if i < 0 || i >= p.nEntries {
 		panic("memory vector index")
 	}
-	start := p.nEntrySize * (i & p.PageMask)
+	start := p.nEntrySize * (i & ((1 << p.LogPageSze) - 1))
 	return p.ppPages[i>>p.LogPageSze][start : start+p.nEntrySize]
 }
 func Vec_MemReadEntryLast(p *Vec_Mem_t) []uint64 { return Vec_MemReadEntry(p, p.nEntries-1) }
@@ -94,15 +94,9 @@ func Vec_MemGetEntry(p *Vec_Mem_t, i int) []uint64 {
 	}
 	if i >= p.nEntries {
 		page := i >> p.LogPageSze
-		if page >= p.nPageAlloc {
-			n := max(2*p.nPageAlloc, page+32)
-			p.ppPages = append(p.ppPages, make([][]uint64, n-p.nPageAlloc)...)
-			p.nPageAlloc = n
+		for len(p.ppPages) <= page {
+			p.ppPages = append(p.ppPages, make([]uint64, p.nEntrySize*(1<<p.LogPageSze)))
 		}
-		for k := p.iPage + 1; k <= page; k++ {
-			p.ppPages[k] = make([]uint64, p.nEntrySize*(1<<p.LogPageSze))
-		}
-		p.iPage = max(p.iPage, page)
 		p.nEntries = i + 1
 	}
 	return Vec_MemReadEntry(p, i)
@@ -115,15 +109,10 @@ func Vec_MemShrink(p *Vec_Mem_t, n int) {
 	if n < 0 || n > p.nEntries {
 		panic("memory vector shrink")
 	}
-	last := -1
-	if n > 0 {
-		last = (n - 1) >> p.LogPageSze
-	}
-	for k := last + 1; k <= p.iPage; k++ {
-		p.ppPages[k] = nil
-	}
+	pages := (n + (1 << p.LogPageSze) - 1) >> p.LogPageSze
+	clear(p.ppPages[pages:])
+	p.ppPages = p.ppPages[:pages]
 	p.nEntries = n
-	p.iPage = last
 	if p.vNexts != nil {
 		Vec_MemHashResize(p)
 	}
@@ -181,7 +170,7 @@ func Vec_MemHashKey(p *Vec_Mem_t, data []uint64) uint32 {
 	for i, x := range data[:p.nEntrySize] {
 		key += uint32(x)*primes[(2*i)&7] + uint32(x>>32)*primes[(2*i+1)&7]
 	}
-	return key % uint32(p.vTable.nSize)
+	return key % uint32(len(p.vTable.data))
 }
 func Vec_MemHashLookup(p *Vec_Mem_t, data []uint64) *int32 {
 	spot := Vec_IntEntryP(p.vTable, int(Vec_MemHashKey(p, data)))
@@ -205,14 +194,14 @@ func Vec_MemHashProfile(p *Vec_Mem_t) {
 	fmt.Println()
 }
 func Vec_MemHashResize(p *Vec_Mem_t) {
-	Vec_IntFill(p.vTable, vecMemPrime(2*p.vTable.nSize), -1)
+	Vec_IntFill(p.vTable, vecMemPrime(2*len(p.vTable.data)), -1)
 	Vec_IntClear(p.vNexts)
 	for i := range p.nEntries {
 		spot := Vec_MemHashLookup(p, Vec_MemReadEntry(p, i))
 		if *spot != -1 {
 			panic("duplicate memory hash entry")
 		}
-		*spot = int32(p.vNexts.nSize)
+		*spot = int32(len(p.vNexts.data))
 		Vec_IntPush(p.vNexts, -1)
 	}
 }
@@ -220,14 +209,14 @@ func Vec_MemHashInsert(p *Vec_Mem_t, data []uint64) int {
 	if p.vTable == nil {
 		panic("hash not allocated")
 	}
-	if p.nEntries > p.vTable.nSize {
+	if p.nEntries > len(p.vTable.data) {
 		Vec_MemHashResize(p)
 	}
 	spot := Vec_MemHashLookup(p, data)
 	if *spot != -1 {
 		return int(*spot)
 	}
-	id := p.vNexts.nSize
+	id := len(p.vNexts.data)
 	*spot = int32(id)
 	Vec_IntPush(p.vNexts, -1)
 	Vec_MemPush(p, data)

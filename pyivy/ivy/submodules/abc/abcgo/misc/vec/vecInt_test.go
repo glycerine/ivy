@@ -18,7 +18,7 @@ func TestIntegerVectorsAndRecords(t *testing.T) {
 		t.Fatal("full")
 	}
 	Vec_IntSetEntry(q, 7, 8)
-	if q.nSize != 8 || Vec_IntEntry(q, 5) != 0 {
+	if len(q.data) != 8 || Vec_IntEntry(q, 5) != 0 {
 		t.Fatal("sparse set")
 	}
 	a := Vec_IntAllocArrayCopy([]int32{1, 2, 2, 3}, 4)
@@ -45,7 +45,7 @@ func TestIntegerVectorsAndRecords(t *testing.T) {
 		t.Fatal("record order")
 	}
 	Vec_IntSortMulti(records, 2, 0)
-	if records.pArray[0] != 1 || records.pArray[1] != 2 {
+	if records.storage()[0] != 1 || records.storage()[1] != 2 {
 		t.Fatal("record sorting")
 	}
 }
@@ -56,8 +56,8 @@ func TestIntegerFetchAndOverflow(t *testing.T) {
 	if Vec_IntEntry(p, 0) != -1 {
 		t.Fatal("unsigned alias")
 	}
-	if Vec_IntFetch(p, 1) != nil || p.nSize != 3 {
-		t.Fatal("failed reservation semantics")
+	if Vec_IntFetch(p, 1) != nil || len(p.data) != 2 {
+		t.Fatal("failed reservation changed logical size")
 	}
 	q := Vec_IntStart(1)
 	Vec_IntWriteEntry(q, 0, 2147483647)

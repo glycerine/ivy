@@ -7,15 +7,15 @@ import (
 
 // Vec_Bit_t packs bits into 32-bit words, matching ABC's bit numbering.
 type Vec_Bit_t struct {
-	nCap, nSize int
-	pArray      []int32
+	nSize  int
+	pArray []int32
 }
 
 func Vec_BitAlloc(n int) *Vec_Bit_t {
 	words := (n + 31) / 32
-	return &Vec_Bit_t{nCap: 32 * words, pArray: make([]int32, words)}
+	return &Vec_Bit_t{pArray: make([]int32, words)}
 }
-func Vec_BitStart(n int) *Vec_Bit_t { p := Vec_BitAlloc(n); p.nSize = p.nCap; return p }
+func Vec_BitStart(n int) *Vec_Bit_t { p := Vec_BitAlloc(n); p.nSize = (32 * len(p.pArray)); return p }
 func Vec_BitStartFull(n int) *Vec_Bit_t {
 	p := Vec_BitStart(n)
 	for i := range p.pArray {
@@ -24,7 +24,7 @@ func Vec_BitStartFull(n int) *Vec_Bit_t {
 	return p
 }
 func Vec_BitDup(p *Vec_Bit_t) *Vec_Bit_t {
-	q := Vec_BitAlloc(p.nCap)
+	q := Vec_BitAlloc((32 * len(p.pArray)))
 	q.nSize = p.nSize
 	copy(q.pArray, p.pArray)
 	return q
@@ -38,7 +38,7 @@ func Vec_BitFreeP(p **Vec_Bit_t)               { Vec_BitFree(*p); *p = nil }
 func Vec_BitReleaseArray(p *Vec_Bit_t) []int32 { a := p.pArray; *p = Vec_Bit_t{}; return a }
 func Vec_BitArray(p *Vec_Bit_t) []int32        { return p.pArray[:(p.nSize+31)/32] }
 func Vec_BitSize(p *Vec_Bit_t) int             { return p.nSize }
-func Vec_BitCap(p *Vec_Bit_t) int              { return p.nCap }
+func Vec_BitCap(p *Vec_Bit_t) int              { return (32 * len(p.pArray)) }
 func Vec_BitMemory(p *Vec_Bit_t) float64 {
 	if p == nil {
 		return 0
@@ -72,12 +72,12 @@ func Vec_BitAddEntry(p *Vec_Bit_t, i int) int {
 }
 func Vec_BitEntryLast(p *Vec_Bit_t) int { return Vec_BitEntry(p, p.nSize-1) }
 func Vec_BitGrow(p *Vec_Bit_t, n int) {
-	if n <= p.nCap {
+	if n <= (32 * len(p.pArray)) {
 		return
 	}
 	words := (n + 31) / 32
 	p.pArray = append(p.pArray, make([]int32, words-len(p.pArray))...)
-	p.nCap = words * 32
+
 }
 func Vec_BitFill(p *Vec_Bit_t, n, x int) {
 	Vec_BitGrow(p, n)
@@ -99,8 +99,8 @@ func Vec_BitFillExtra(p *Vec_Bit_t, n, x int) {
 	if x != 0 && x != 1 {
 		panic("bit value")
 	}
-	if n > p.nCap {
-		Vec_BitGrow(p, max(n, 2*p.nCap))
+	if n > (32 * len(p.pArray)) {
+		Vec_BitGrow(p, max(n, 2*(32*len(p.pArray))))
 	}
 	old := p.nSize
 	p.nSize = n
@@ -118,8 +118,8 @@ func Vec_BitShrink(p *Vec_Bit_t, n int) {
 }
 func Vec_BitClear(p *Vec_Bit_t) { p.nSize = 0 }
 func Vec_BitPush(p *Vec_Bit_t, x int) {
-	if p.nSize == p.nCap {
-		Vec_BitGrow(p, max(32, 2*p.nCap))
+	if p.nSize == (32 * len(p.pArray)) {
+		Vec_BitGrow(p, max(32, 2*(32*len(p.pArray))))
 	}
 	i := p.nSize
 	p.nSize++

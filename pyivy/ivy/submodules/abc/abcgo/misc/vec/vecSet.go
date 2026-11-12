@@ -18,7 +18,7 @@ type Vec_Set_t struct {
 func Vec_SetHandPage(p *Vec_Set_t, h int32) int32  { return h >> p.nPageSize }
 func Vec_SetHandShift(p *Vec_Set_t, h int32) int32 { return int32(uint32(h) & p.uPageMask) }
 func Vec_SetWordNum(n int32) int32 {
-	if n < 0 {
+	if n < 0 || n == 1<<31-1 {
 		panic("vec: negative set size")
 	}
 	return (n + 1) >> 1
@@ -142,14 +142,14 @@ func Vec_SetAppendS(p *Vec_Set_t, size int32) int32 {
 	return handle
 }
 func Vec_SetFetchH(p *Vec_Set_t, bytes int32) int32 {
-	if bytes < 0 {
+	if bytes < 0 || bytes > 1<<31-4 {
 		panic("vec: negative allocation")
 	}
 	return Vec_SetAppend(p, nil, (bytes+3)>>2)
 }
 func Vec_SetFetch(p *Vec_Set_t, bytes int32) []uint64 {
 	h := Vec_SetFetchH(p, bytes)
-	return Vec_SetEntry(p, h)[:(bytes+7)>>3]
+	return Vec_SetEntry(p, h)[:(int64(bytes)+7)>>3]
 }
 func Vec_SetStrsav(p *Vec_Set_t, name string) string {
 	data := Vec_SetFetch(p, int32(len(name)+1))

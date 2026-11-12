@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"math/rand/v2"
 	"slices"
+	"strconv"
 	"testing"
 )
 
@@ -176,5 +177,37 @@ func TestHshInvalidRecordSizes(t *testing.T) {
 			}()
 			run()
 		}()
+	}
+}
+
+func TestHshLargeGoTableSize(t *testing.T) {
+	if strconv.IntSize < 64 {
+		t.Skip("large Go table size requires 64-bit int")
+	}
+	largeSize := uint64(1) << 32
+	tableSize := int(largeSize) + 1
+	data := []int32{-1, 17}
+	expected := int(hshJenkinsBytes(data))
+	if got := Hsh_IntManHash(data, len(data), tableSize); got != expected {
+		t.Fatal(got, expected)
+	}
+	if got := Hsh_Int1ManHash(-1, tableSize); got != int(hshJenkinsBytes([]int32{-1})) {
+		t.Fatal(got)
+	}
+	v := Vec_IntAllocArrayCopy(data, len(data))
+	if got := Hsh_VecManHash(v, tableSize); got != int(uint32(data[0])*hshPrimes[0]+uint32(data[1])*hshPrimes[1]) {
+		t.Fatal(got)
+	}
+	// The byte-weighted alternative also uses the full Go integer table size.
+	var bytes [4]byte
+	var key uint32
+	for i, value := range data {
+		binary.NativeEndian.PutUint32(bytes[:], uint32(value))
+		for j, b := range bytes {
+			key += uint32(b) * hshPrimes[(4*i+j)%len(hshPrimes)]
+		}
+	}
+	if got := Hsh_IntManHash2(data, len(data), tableSize); got != int(key) {
+		t.Fatal(got, key)
 	}
 }

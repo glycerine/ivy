@@ -12,33 +12,33 @@ type Vec_Vec_t = Vec_Ptr_t
 func Vec_VecAlloc(n int) *Vec_Vec_t { return Vec_PtrAlloc(n) }
 func Vec_VecStart(n int) *Vec_Vec_t { p := Vec_VecAlloc(n); Vec_VecExpand(p, n-1); return p }
 func Vec_VecExpand(p *Vec_Vec_t, level int) {
-	if level < p.nSize {
+	if level < len(p.data) {
 		return
 	}
 	Vec_PtrGrow(p, level+1)
-	for i := p.nSize; i <= level; i++ {
-		p.pArray[i] = Vec_PtrAlloc(0)
+	for i := len(p.data); i <= level; i++ {
+		p.storage()[i] = Vec_PtrAlloc(0)
 	}
-	p.nSize = level + 1
+	p.resize(level + 1)
 }
 func Vec_VecExpandInt(p *Vec_Vec_t, level int) {
-	if level < p.nSize {
+	if level < len(p.data) {
 		return
 	}
 	Vec_PtrGrow(p, level+1)
-	for i := p.nSize; i <= level; i++ {
-		p.pArray[i] = Vec_IntAlloc(0)
+	for i := len(p.data); i <= level; i++ {
+		p.storage()[i] = Vec_IntAlloc(0)
 	}
-	p.nSize = level + 1
+	p.resize(level + 1)
 }
-func Vec_VecSize(p *Vec_Vec_t) int { return p.nSize }
-func Vec_VecCap(p *Vec_Vec_t) int  { return p.nCap }
+func Vec_VecSize(p *Vec_Vec_t) int { return len(p.data) }
+func Vec_VecCap(p *Vec_Vec_t) int  { return cap(p.data) }
 func Vec_VecLevelSize(p *Vec_Vec_t, i int) int {
 	switch v := Vec_PtrEntry(p, i).(type) {
 	case *Vec_Int_t:
-		return v.nSize
+		return len(v.data)
 	case *Vec_Ptr_t:
-		return v.nSize
+		return len(v.data)
 	}
 	panic("invalid level type")
 }
@@ -91,14 +91,14 @@ func Vec_VecErase(p *Vec_Vec_t) {
 }
 func Vec_VecFreeP(p **Vec_Vec_t) { Vec_VecFree(*p); *p = nil }
 func Vec_VecDup(p *Vec_Vec_t) *Vec_Vec_t {
-	q := Vec_VecAlloc(p.nSize)
+	q := Vec_VecAlloc(len(p.data))
 	for _, x := range Vec_PtrArray(p) {
 		Vec_PtrPush(q, Vec_PtrDup(x.(*Vec_Ptr_t)))
 	}
 	return q
 }
 func Vec_VecDupInt(p *Vec_Vec_t) *Vec_Vec_t {
-	q := Vec_VecAlloc(p.nSize)
+	q := Vec_VecAlloc(len(p.data))
 	for _, x := range Vec_PtrArray(p) {
 		Vec_PtrPush(q, Vec_IntDup(x.(*Vec_Int_t)))
 	}
@@ -106,7 +106,7 @@ func Vec_VecDupInt(p *Vec_Vec_t) *Vec_Vec_t {
 }
 func Vec_VecSizeSize(p *Vec_Vec_t) int {
 	n := 0
-	for i := range p.nSize {
+	for i := range len(p.data) {
 		n += Vec_VecLevelSize(p, i)
 	}
 	return n
@@ -137,7 +137,7 @@ func Vec_VecPushUniqueInt(p *Vec_Vec_t, level int, x int32) {
 	Vec_VecExpandInt(p, level)
 	Vec_IntPushUnique(Vec_VecEntryInt(p, level), x)
 }
-func Vec_VecSortCompare1(a, b **Vec_Ptr_t) int { return (*a).nSize - (*b).nSize }
+func Vec_VecSortCompare1(a, b **Vec_Ptr_t) int { return len((*a).data) - len((*b).data) }
 func Vec_VecSortCompare2(a, b **Vec_Ptr_t) int { return -Vec_VecSortCompare1(a, b) }
 func Vec_VecSort(p *Vec_Vec_t, reverse int) {
 	sort.SliceStable(Vec_PtrArray(p), func(i, j int) bool {
@@ -169,9 +169,9 @@ func Vec_VecSortByFirstInt(p *Vec_Vec_t, reverse int) {
 	})
 }
 func Vec_VecPrintInt(p *Vec_Vec_t, skipSingles int) {
-	for i := range p.nSize {
+	for i := range len(p.data) {
 		v := Vec_VecEntryInt(p, i)
-		if skipSingles != 0 && v.nSize == 1 {
+		if skipSingles != 0 && len(v.data) == 1 {
 			continue
 		}
 		fmt.Printf(" %4d : {", i)

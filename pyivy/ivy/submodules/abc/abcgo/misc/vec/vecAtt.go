@@ -76,7 +76,6 @@ const (
 
 // Vec_Att_t stores optional attributes and their ownership callbacks.
 type Vec_Att_t struct {
-	nCap          int
 	pArrayPtr     []any
 	pMan          any
 	pFuncFreeMan  func(any)
@@ -88,7 +87,7 @@ func Vec_AttAlloc(nSize int, manager any, freeManager func(any), start func(any)
 	if nSize == 0 {
 		nSize = 16
 	}
-	return &Vec_Att_t{nCap: nSize, pArrayPtr: make([]any, nSize), pMan: manager, pFuncFreeMan: freeManager, pFuncStartObj: start, pFuncFreeObj: freeObject}
+	return &Vec_Att_t{pArrayPtr: make([]any, nSize), pMan: manager, pFuncFreeMan: freeManager, pFuncStartObj: start, pFuncFreeObj: freeObject}
 }
 
 // Vec_AttFree releases owned attributes and optionally their manager. Otherwise
@@ -99,12 +98,12 @@ func Vec_AttFree(p *Vec_Att_t, freeManager int) any {
 	}
 	Vec_AttClear(p)
 	manager := p.pMan
-	if manager != nil && freeManager != 0 {
+	if !ptrNil(manager) && freeManager != 0 {
 		p.pFuncFreeMan(manager)
 	}
 	p.pArrayPtr = nil
 	p.pMan = nil
-	p.nCap = 0
+
 	if freeManager != 0 {
 		return nil
 	}
@@ -113,7 +112,7 @@ func Vec_AttFree(p *Vec_Att_t, freeManager int) any {
 func Vec_AttClear(p *Vec_Att_t) {
 	if p.pFuncFreeObj != nil {
 		for _, entry := range p.pArrayPtr {
-			if entry != nil {
+			if !ptrNil(entry) {
 				p.pFuncFreeObj(p.pMan, entry)
 			}
 		}
@@ -121,27 +120,27 @@ func Vec_AttClear(p *Vec_Att_t) {
 	clear(p.pArrayPtr)
 }
 func Vec_AttFreeEntry(p *Vec_Att_t, i int) {
-	if i >= p.nCap {
+	if i >= len(p.pArrayPtr) {
 		return
 	}
-	if p.pMan != nil && p.pArrayPtr[i] != nil && p.pFuncFreeObj != nil {
+	if !ptrNil(p.pMan) && !ptrNil(p.pArrayPtr[i]) && p.pFuncFreeObj != nil {
 		p.pFuncFreeObj(p.pMan, p.pArrayPtr[i])
 	}
 	p.pArrayPtr[i] = nil
 }
 func Vec_AttGrow(p *Vec_Att_t, minimum int) {
-	if p.nCap >= minimum {
+	if len(p.pArrayPtr) >= minimum {
 		return
 	}
-	p.pArrayPtr = append(p.pArrayPtr, make([]any, minimum-p.nCap)...)
-	p.nCap = minimum
+	p.pArrayPtr = append(p.pArrayPtr, make([]any, minimum-len(p.pArrayPtr))...)
+
 }
 func Vec_AttWriteEntry(p *Vec_Att_t, i int, entry any) {
 	if p.pArrayPtr == nil || p.pFuncStartObj != nil {
 		panic("Vec_AttWriteEntry requires initialized unmanaged attributes")
 	}
-	if i >= p.nCap {
-		Vec_AttGrow(p, max(2*p.nCap, i+10))
+	if i >= len(p.pArrayPtr) {
+		Vec_AttGrow(p, max(2*len(p.pArrayPtr), i+10))
 	}
 	p.pArrayPtr[i] = entry
 }
@@ -149,10 +148,10 @@ func Vec_AttEntry(p *Vec_Att_t, i int) any {
 	if p.pArrayPtr == nil {
 		panic("Vec_AttEntry requires initialized attributes")
 	}
-	if i >= p.nCap {
-		Vec_AttGrow(p, max(2*p.nCap, i+10))
+	if i >= len(p.pArrayPtr) {
+		Vec_AttGrow(p, max(2*len(p.pArrayPtr), i+10))
 	}
-	if p.pArrayPtr[i] == nil && p.pFuncStartObj != nil {
+	if ptrNil(p.pArrayPtr[i]) && p.pFuncStartObj != nil {
 		p.pArrayPtr[i] = p.pFuncStartObj(p.pMan)
 	}
 	return p.pArrayPtr[i]

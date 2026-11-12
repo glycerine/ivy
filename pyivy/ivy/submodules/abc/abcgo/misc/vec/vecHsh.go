@@ -7,31 +7,42 @@ import (
 	"slices"
 )
 
+// Hsh_Int1Man_t interns signed 32-bit values into stable insertion-order IDs.
 type Hsh_Int1Man_t struct{ vData, vNext, vTable *Vec_Int_t }
 type Hsh_IntObj_t struct{ iData, iNext int32 }
+
+// Hsh_IntMan_t borrows fixed-size records from vData. Stored keys must remain
+// unchanged while the manager is in use; appending new records is supported.
 type Hsh_IntMan_t struct {
-	nSize         int
+	recordWidth   int
 	vData, vTable *Vec_Int_t
 	objs          []*Hsh_IntObj_t
 }
 type Hsh_VecObj_t struct {
-	nSize  int
 	iNext  int32
-	pArray []int32
+	values []int32
 }
+
+// Hsh_VecMan_t copies variable-size keys. ReadEntry views borrow those keys
+// and must not be edited while they remain indexed in the hash table.
 type Hsh_VecMan_t struct {
 	vTable                *Vec_Int_t
 	objs                  []*Hsh_VecObj_t
 	vTemp, vTemp1, vTemp2 Vec_Int_t
 }
 
+var hshPrimes = [...]uint32{4177, 5147, 5647, 6343, 7103, 7873, 8147}
+
 func hshPrime(n int) int {
-	if n < 2 {
+	if n <= 2 {
 		return 2
+	}
+	if n%2 == 0 {
+		n++
 	}
 	for {
 		prime := true
-		for d := 2; d <= n/d; d++ {
+		for d := 3; d <= n/d; d += 2 {
 			if n%d == 0 {
 				prime = false
 				break
@@ -40,7 +51,7 @@ func hshPrime(n int) int {
 		if prime {
 			return n
 		}
-		n++
+		n += 2
 	}
 }
 func hshJenkinsBytes(data []int32) uint32 {
@@ -60,10 +71,10 @@ func hshJenkinsBytes(data []int32) uint32 {
 	return hash
 }
 func Hsh_IntData(p *Hsh_IntMan_t, iData int) []int32 {
-	if iData < 0 || p.nSize <= 0 || iData >= Vec_IntSize(p.vData)/p.nSize {
+	if iData < 0 || p.recordWidth <= 0 || iData >= Vec_IntSize(p.vData)/p.recordWidth {
 		panic("vec: hash record out of bounds")
 	}
-	return Vec_IntArray(p.vData)[p.nSize*iData : p.nSize*(iData+1)]
+	return Vec_IntArray(p.vData)[p.recordWidth*iData : p.recordWidth*(iData+1)]
 }
 func Hsh_IntObj(p *Hsh_IntMan_t, iObj int32) *Hsh_IntObj_t {
 	if iObj == -1 {
@@ -90,7 +101,7 @@ func Hsh_Int1ManStart(entries int) *Hsh_Int1Man_t {
 	if entries < 0 {
 		panic("vec: negative hash capacity")
 	}
-	return &Hsh_Int1Man_t{Vec_IntAlloc(entries), Vec_IntAlloc(entries), Vec_IntStartFull(hshPrime(entries))}
+	return &Hsh_Int1Man_t{vData: Vec_IntAlloc(entries), vNext: Vec_IntAlloc(entries), vTable: Vec_IntStartFull(hshPrime(entries))}
 }
 func Hsh_Int1ManStop(p *Hsh_Int1Man_t) {
 	if p != nil {
@@ -105,7 +116,7 @@ func Hsh_Int1ManHash(data int32, tableSize int) int {
 	if tableSize <= 0 {
 		panic("vec: invalid hash table size")
 	}
-	return int(hshJenkinsBytes([]int32{data}) % uint32(tableSize))
+	return int(uint64(hshJenkinsBytes([]int32{data})) % uint64(tableSize))
 }
 func Hsh_Int1ManLookupInt(p *Hsh_Int1Man_t, data int32) *int32 {
 	place := Vec_IntEntryP(p.vTable, Hsh_Int1ManHash(data, Vec_IntSize(p.vTable)))
@@ -143,7 +154,7 @@ func Hsh_IntManStart(data *Vec_Int_t, size, entries int) *Hsh_IntMan_t {
 	if data == nil || size <= 0 || entries < 0 {
 		panic("vec: invalid fixed-record hash dimensions")
 	}
-	return &Hsh_IntMan_t{nSize: size, vData: data, vTable: Vec_IntStartFull(hshPrime(entries)), objs: make([]*Hsh_IntObj_t, 0, entries)}
+	return &Hsh_IntMan_t{recordWidth: size, vData: data, vTable: Vec_IntStartFull(hshPrime(entries)), objs: make([]*Hsh_IntObj_t, 0, entries)}
 }
 func Hsh_IntManStop(p *Hsh_IntMan_t) {
 	if p != nil {
@@ -156,31 +167,30 @@ func Hsh_IntManHash(data []int32, size, tableSize int) int {
 	if size < 0 || size > len(data) || tableSize <= 0 {
 		panic("vec: invalid hash dimensions")
 	}
-	return int(hshJenkinsBytes(data[:size]) % uint32(tableSize))
+	return int(uint64(hshJenkinsBytes(data[:size])) % uint64(tableSize))
 }
 func Hsh_IntManHash2(data []int32, size, tableSize int) int {
 	if size < 0 || size > len(data) || tableSize <= 0 {
 		panic("vec: invalid hash dimensions")
 	}
-	primes := [7]uint32{4177, 5147, 5647, 6343, 7103, 7873, 8147}
 	var key uint32
 	var bytes [4]byte
 	for i, word := range data[:size] {
 		binary.NativeEndian.PutUint32(bytes[:], uint32(word))
 		for j, b := range bytes {
-			key += uint32(b) * primes[(4*i+j)%7]
+			key += uint32(b) * hshPrimes[(4*i+j)%len(hshPrimes)]
 		}
 	}
-	return int(key % uint32(tableSize))
+	return int(uint64(key) % uint64(tableSize))
 }
 func Hsh_IntManLookup(p *Hsh_IntMan_t, data []int32) *int32 {
-	if len(data) < p.nSize {
+	if len(data) < p.recordWidth {
 		panic("vec: incomplete fixed hash record")
 	}
-	place := Vec_IntEntryP(p.vTable, Hsh_IntManHash(data, p.nSize, Vec_IntSize(p.vTable)))
+	place := Vec_IntEntryP(p.vTable, Hsh_IntManHash(data, p.recordWidth, Vec_IntSize(p.vTable)))
 	for *place >= 0 {
 		o := p.objs[*place]
-		if slices.Equal(data[:p.nSize], Hsh_IntData(p, int(o.iData))) {
+		if slices.Equal(data[:p.recordWidth], Hsh_IntData(p, int(o.iData))) {
 			return place
 		}
 		place = &o.iNext
@@ -191,7 +201,7 @@ func Hsh_IntManAdd(p *Hsh_IntMan_t, iData int) int32 {
 	if len(p.objs) > Vec_IntSize(p.vTable) {
 		Vec_IntFill(p.vTable, hshPrime(2*Vec_IntSize(p.vTable)), -1)
 		for i, o := range p.objs {
-			place := Vec_IntEntryP(p.vTable, Hsh_IntManHash(Hsh_IntData(p, int(o.iData)), p.nSize, Vec_IntSize(p.vTable)))
+			place := Vec_IntEntryP(p.vTable, Hsh_IntManHash(Hsh_IntData(p, int(o.iData)), p.recordWidth, Vec_IntSize(p.vTable)))
 			o.iNext = *place
 			*place = int32(i)
 		}
@@ -262,9 +272,9 @@ func Hsh_VecManStop(p *Hsh_VecMan_t) {
 		*p = Hsh_VecMan_t{}
 	}
 }
-func Hsh_VecReadArray(p *Hsh_VecMan_t, i int32) []int32 { return p.objs[i].pArray }
+func Hsh_VecReadArray(p *Hsh_VecMan_t, i int32) []int32 { return p.objs[i].values }
 func hshVecView(o *Hsh_VecObj_t, v *Vec_Int_t) *Vec_Int_t {
-	*v = Vec_Int_t{nSize: o.nSize, nCap: o.nSize, pArray: o.pArray}
+	*v = Vec_Int_t{data: o.values}
 	return v
 }
 func Hsh_VecReadEntry(p *Hsh_VecMan_t, i int32) *Vec_Int_t  { return hshVecView(p.objs[i], &p.vTemp) }
@@ -275,18 +285,17 @@ func Hsh_VecManHash(v *Vec_Int_t, tableSize int) int {
 	if tableSize <= 0 {
 		panic("vec: invalid hash table size")
 	}
-	primes := [7]uint32{4177, 5147, 5647, 6343, 7103, 7873, 8147}
 	var key uint32
 	for i, value := range Vec_IntArray(v) {
-		key += uint32(value) * primes[i%7]
+		key += uint32(value) * hshPrimes[i%len(hshPrimes)]
 	}
-	return int(key % uint32(tableSize))
+	return int(uint64(key) % uint64(tableSize))
 }
 func Hsh_VecManAdd(p *Hsh_VecMan_t, v *Vec_Int_t) int32 {
 	if len(p.objs) > Vec_IntSize(p.vTable) {
 		Vec_IntFill(p.vTable, hshPrime(2*Vec_IntSize(p.vTable)), -1)
 		for i, o := range p.objs {
-			view := Vec_Int_t{nSize: o.nSize, nCap: o.nSize, pArray: o.pArray}
+			view := Vec_Int_t{data: o.values}
 			place := Vec_IntEntryP(p.vTable, Hsh_VecManHash(&view, Vec_IntSize(p.vTable)))
 			o.iNext = *place
 			*place = int32(i)
@@ -296,14 +305,14 @@ func Hsh_VecManAdd(p *Hsh_VecMan_t, v *Vec_Int_t) int32 {
 	data := Vec_IntArray(v)
 	for *place >= 0 {
 		o := p.objs[*place]
-		if slices.Equal(o.pArray, data) {
+		if slices.Equal(o.values, data) {
 			return *place
 		}
 		place = &o.iNext
 	}
 	id := int32(len(p.objs))
 	*place = id
-	p.objs = append(p.objs, &Hsh_VecObj_t{nSize: len(data), iNext: -1, pArray: append([]int32(nil), data...)})
+	p.objs = append(p.objs, &Hsh_VecObj_t{iNext: -1, values: append([]int32(nil), data...)})
 	return id
 }
 
