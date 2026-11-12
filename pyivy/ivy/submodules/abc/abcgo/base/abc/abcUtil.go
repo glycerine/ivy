@@ -820,7 +820,6 @@ func Abc_NtkPrepareTwoNtks(pErr *os.File, pNtk *Abc_Ntk_t, argv *string, argc in
 **********************************************************************
 */
 
-
 /*
 *Function*************************************************************
 
@@ -834,7 +833,6 @@ func Abc_NtkPrepareTwoNtks(pErr *os.File, pNtk *Abc_Ntk_t, argv *string, argc in
 
 **********************************************************************
 */
-
 
 /**Function*************************************************************
 
@@ -1203,67 +1201,25 @@ func Abc_NtkCreatePropertyMonitorTest(p *Abc_Ntk_t) *Abc_Ntk_t {
 ***********************************************************************/
 
 func Abc_SopSynthesize(vSops *Vec_Ptr_t) *Vec_Wec_t {
-	var vRes *Vec_Wec_t = nil
 	var pNtk *Abc_Ntk_t = Abc_NtkCreateFromSops("top", vSops)
 	var pNtkNew *Abc_Ntk_t
-	var pObj, pFanin *Abc_Obj_t
-	var i, k, iNode int32
 	Abc_FrameReplaceCurrentNetwork(Abc_FrameReadGlobalFrame(), pNtk)
 	//Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "fx; strash; balance; dc2; map -a" );
 	Abc_FrameSetBatchMode(1)
 	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "st; collapse; sop; fx; strash; &get; &ps; &deepsyn -I 4 -J 50 -T 5 -S 111 -t; &ps; &put; map -a")
 	Abc_FrameSetBatchMode(0)
 	pNtkNew = Abc_FrameReadNtk(Abc_FrameReadGlobalFrame())
-	vRes = Vec_WecStart(Abc_NtkPiNum(pNtkNew) + Abc_NtkNodeNum(pNtkNew) + Abc_NtkPoNum(pNtkNew))
-	Abc_NtkForEachPi(pNtkNew, pObj, i)
-	pObj.iTemp = iNode
-	iNode++
-	Abc_NtkForEachNode(pNtkNew, pObj, i)
-	{
-		var vNode *Vec_Int_t = Vec_WecEntry(vRes, iNode)
-		Vec_IntPush(vNode, Abc_GateToType(pObj))
-		Vec_IntPush(vNode, iNode)
-		Abc_ObjForEachFanin(pObj, pFanin, k)
-		Vec_IntPush(vNode, pFanin.iTemp)
-		pObj.iTemp = iNode
-		iNode++
-	}
-	Abc_NtkForEachPo(pNtkNew, pObj, i)
-	Vec_IntPushTwo(Vec_WecEntry(vRes, iNode), ABC_OPER_BIT_BUF, Abc_ObjFanin0(pObj).iTemp)
-	iNode++
-	assert(Vec_WecSize(vRes) == iNode, "Vec_WecSize(vRes) == iNode")
-	return vRes
+	return abcSerializeMapped(pNtkNew)
 }
 func Abc_GiaSynthesize(vGias *Vec_Ptr_t, pMulti *Gia_Man_t) *Vec_Wec_t {
-	var vRes *Vec_Wec_t = nil
 	var pNtk *Abc_Ntk_t = Abc_NtkCreateFromGias("top", vGias, pMulti)
 	var pNtkNew *Abc_Ntk_t
-	var pObj, pFanin *Abc_Obj_t
-	var i, k, iNode int32
 	Abc_FrameReplaceCurrentNetwork(Abc_FrameReadGlobalFrame(), pNtk)
 	Abc_FrameSetBatchMode(1)
 	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "compress2rs; dch; map -a;  strash; compress2rs; dch; map -a;  strash; compress2rs; dch; map -a")
 	Abc_FrameSetBatchMode(0)
 	pNtkNew = Abc_FrameReadNtk(Abc_FrameReadGlobalFrame())
-	vRes = Vec_WecStart(Abc_NtkPiNum(pNtkNew) + Abc_NtkNodeNum(pNtkNew) + Abc_NtkPoNum(pNtkNew))
-	Abc_NtkForEachPi(pNtkNew, pObj, i)
-	pObj.iTemp = iNode
-	iNode++
-	Abc_NtkForEachNode(pNtkNew, pObj, i)
-	{
-		var vNode *Vec_Int_t = Vec_WecEntry(vRes, iNode)
-		Vec_IntPush(vNode, Abc_GateToType(pObj))
-		Vec_IntPush(vNode, iNode)
-		Abc_ObjForEachFanin(pObj, pFanin, k)
-		Vec_IntPush(vNode, pFanin.iTemp)
-		pObj.iTemp = iNode
-		iNode++
-	}
-	Abc_NtkForEachPo(pNtkNew, pObj, i)
-	Vec_IntPushTwo(Vec_WecEntry(vRes, iNode), ABC_OPER_BIT_BUF, Abc_ObjFanin0(pObj).iTemp)
-	iNode++
-	assert(Vec_WecSize(vRes) == iNode, "Vec_WecSize(vRes) == iNode")
-	return vRes
+	return abcSerializeMapped(pNtkNew)
 }
 func Abc_GiaSynthesizeInter(p *Gia_Man_t) *Gia_Man_t {
 	var pNtkNew, pNtk *Abc_Ntk_t
@@ -1290,7 +1246,6 @@ func Abc_GiaSynthesizeInter(p *Gia_Man_t) *Gia_Man_t {
 
 **********************************************************************
 */
-
 
 func Abc_SopSynthesizeOne(pSop string, fClp int32) *Gia_Man_t {
 	var pNtkNew, pNtk *Abc_Ntk_t
