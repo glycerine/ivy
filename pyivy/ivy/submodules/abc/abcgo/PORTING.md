@@ -331,3 +331,11 @@ consumer bridges (`3c92e21e0`). Further root CUDD numeric tests are in
 (`d6f8d2cf7`). The full port remains active; GIA, Ivy, SAIG, base/abc,
 `map/if`, SCL, DAU, Extra, FRET, resubstitution and proof/SAT packages still
 have visible incomplete algorithm families.
+
+After that snapshot, the ABC DFS/functional-isomorphism group passed its
+explicit-file race/vet gate and was committed (`8bf67da52`). The SCL timing
+network and incremental-update foundation passed its 22-file manifest race
+and vet gates and was committed (`0aaf68811`); SCL still has buffer/upsize
+families in progress. SAIG cone, cleanup, structural-constraint, and I/O
+components pass explicit-file checks, while its simulation/phase group has
+source-backed fixtures; the full SAIG package remains blocked by other drafts.
