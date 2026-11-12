@@ -1042,34 +1042,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteBook(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-        var c int32;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-        // call the corresponding file writer
-    Io_Write( pAbc.pNtkCur, pFileName, IO_FILE_BOOK );
-    return 0;
 
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_book [-h] <file> [-options]\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write (extension .aux, .nodes, .nets)\n");
-    fmt.Fprintf(pAbc.Err, "\t\n");
-    fmt.Fprintf(pAbc.Err, "\tThis command is developed by Myungchul Kim (University of Michigan).\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -1689,54 +1662,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteList(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var fUseHost int32;
-    var c int32;
 
-    fmt.Printf("This command currently does not work.\n");
-    return 0;
-
-    fUseHost = 1;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "nh" ) ) != -1  {
-        switch  c  {
-            case 'n':
-                fUseHost ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-/*
-    if ( !Abc_NtkIsSeq(pAbc->pNtkCur) )
-    {
-        fprintf( stdout, "IoCommandWriteList(): Can write adjacency list for sequential AIGs only.\n" );
-        return 0;
-    }
-*/
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // write the file
-    Io_WriteList( pAbc.pNtkCur, pFileName, fUseHost );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_list [-nh] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes network using graph representation formal GML\n");
-    fmt.Fprintf(pAbc.Err, "\t-n     : toggle writing host node [default = %s]\n", fUseHost? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
