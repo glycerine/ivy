@@ -591,67 +591,6 @@ func Gia_Min2ObjGetCnfVar(p *Gia_Man2Min_t, iObj int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Min2ManSimulate(p *Gia_Man2Min_t) int32 {
-    var Sim0, Sim1 word; var n, i, iObj int32;
-    p.nSims++;
-    // add random values to new CIs
-    Vec_WrdFillExtra( p.vSims, Gia_ManObjNum(p.pGia), 0 );
-    for  i = p.nCisOld; i < Gia_ManCiNum(p.pGia); i++  {
-        Vec_WrdWriteEntry( p.vSims, Gia_ManCiIdToId(p.pGia, i), Gia_ManRandomW( 0 ) << 1 );
-    }
-    p.nCisOld = Gia_ManCiNum(p.pGia);
-    // simulate internal nodes
-    for ( n = 0; n < 2; n++ )
-        Vec_IntForEachEntry( p.vObjs[n], iObj, i )
-        {
-            var pObj *Gia_Obj_t  = Gia_ManObj( p.pGia, iObj );
-            Sim0 = Vec_WrdEntry( p.vSims, Gia_ObjFaninId0p(p.pGia, pObj) );
-            Sim1 = Vec_WrdEntry( p.vSims, Gia_ObjFaninId1p(p.pGia, pObj) );
-            if Gia_ObjFaninC0(pObj) {
-                Sim0 = ~Sim0;
-            } else {
-                Sim0 = Sim0;
-            }
-            if Gia_ObjFaninC1(pObj) {
-                Sim1 = ~Sim1;
-            } else {
-                Sim1 = Sim1;
-            }
-            Vec_WrdWriteEntry( p.vSims, iObj, Sim0 & Sim1 );
-        }
-    Sim0 = Vec_WrdEntry( p.vSims, Abc_Lit2Var(p.iLits[0]) );
-    Sim1 = Vec_WrdEntry( p.vSims, Abc_Lit2Var(p.iLits[1]) );
-    if Abc_LitIsCompl(p.iLits[0]) {
-        Sim0 = ~Sim0;
-    } else {
-        Sim0 = Sim0;
-    }
-    if Abc_LitIsCompl(p.iLits[1]) {
-        Sim1 = ~Sim1;
-    } else {
-        Sim1 = Sim1;
-    }
-//    assert( (Sim0 & Sim1) != ~0 );
-    return (Sim0 & Sim1) == 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Internal simulation APIs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_Min2SimSetInputBit(p *Gia_Man2Min_t, iObj int32, Bit int32, iPattern int32) {
-    var pSim *word  = Vec_WrdEntryP( p.vSims, iObj );
-    assert(iPattern > 0 && iPattern < 64, "iPattern > 0 && iPattern < 64");
-    if Abc_InfoHasBit( (unsigned*)pSim, iPattern ) != Bit {
-        Abc_InfoXorBit( (unsigned*)pSim, iPattern ); }
-}
 func Gia_Min2ManSolve(p *Gia_Man2Min_t) int32 {
     var iObj0 int32  = Abc_Lit2Var(p.iLits[0]);
     var iObj1 int32  = Abc_Lit2Var(p.iLits[1]);
