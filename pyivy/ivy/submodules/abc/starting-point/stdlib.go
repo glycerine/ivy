@@ -108,6 +108,16 @@ func rewriteStandardLibraryContext(source string, imports bool, context *library
 	if err != nil {
 		return "", nil, err
 	}
+	if p.imports.required["fmt"] {
+		qualifier := p.imports.existing["fmt"]
+		if qualifier == "." {
+			qualifier = ""
+		}
+		text, err = promoteSprintfDestinations(text, qualifier)
+		if err != nil {
+			return "", nil, err
+		}
+	}
 	text, err = p.rewriteTruthHeaders(text)
 	if err != nil {
 		return "", nil, err

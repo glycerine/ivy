@@ -60,10 +60,9 @@ func (p *libraryPass) convertFormatted(c libraryCall) (string, string, bool) {
 			return "", "sprintf count-result or complex destination requires structural repair.", false
 		}
 		value := fm + "Sprintf(" + strings.Join(a[1:], ", ") + ")"
-		if buffer, ok := p.bytes(c.rawArgs[0]); ok {
-			return iife("spDst []byte, spText string", "", "if len(spText) >= len(spDst) { panic(\"sprintf exceeds known buffer\") }\ncopy(spDst, spText); spDst[len(spText)] = 0", buffer, value), note, true
-		}
-		return a[0] + " = " + value, note + " Destination assumed to be a Go string.", true
+		// Emit a direct assignment even for known C byte buffers. The declaration pass
+		// promotes matching local arrays to strings; never add a closure.
+		return a[0] + " = " + value, note + " Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.", true
 	}
 	name := "Printf"
 	if c.name == "fprintf" {

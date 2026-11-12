@@ -1896,3 +1896,38 @@ Boundary tests also cover labels after control headers and non-label colons.
 Validation uses library and CLI tests only; experiments and existing out/ are
 untouched.
 Library and CLI tests pass; installed prototype-59. Regenerate output to apply.
+
+### Prototype 60: direct sprintf assignment for known byte buffers
+
+Added and observed a minimal failing regression with char Suffix[2000] and
+sprintf under an if. Known byte-buffer destinations selected an old closure
+adapter, which the no-anonymous-functions guard rejected, leaving sprintf
+unchanged. Emit destination = fmt.Sprintf(...) directly for standalone calls
+with simple named destinations, even when the destination is a known byte array.
+Keep any array/string type mismatch visible for downstream repair and note it
+in conversion metadata. Count-result uses and complex destinations retain their
+existing review behavior.
+
+Validation: minimal regression and actual abcHie.c translation pass, including
+fmt import deduplication and function metadata. All library and CLI tests pass;
+experiments excluded. Existing out/ remains unchanged until regeneration.
+
+### Prototype 61: string declarations for sprintf destinations
+
+Extended the char-array regression and observed it fail before implementing
+promotion of the declaration bound to an emitted fmt.Sprintf assignment.
+Uninitialized one-dimensional byte arrays (including C {0} initializers already
+lowered to zero-value declarations) now become string declarations, annotated
+with `// was [N]byte in C`. Already-string variables remain unchanged. Nonzero
+aggregate initializers remain for further representation work.
+
+Resolve destination names by lexical scope so other functions and nested
+shadowing declarations are not changed. Preserve comments and terminate the
+annotation with a newline even when subsequent source code shares the line.
+Retained sprintf calls (count-result use or unsupported formats) do not trigger
+promotion. Repeated writes produce a single annotation; fmt aliases work.
+
+Validation: minimal red-to-green test and actual abcHie.c output, function
+metadata, unrelated/nested buffers, retained calls, aliases, and a compiled
+runtime test pass. Library and CLI suites pass; experiments are excluded.
+Existing out/ is unchanged until regenerated.
