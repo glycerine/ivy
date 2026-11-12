@@ -9,8 +9,6 @@ package utils
 //
 //===------------------------------------------------------------------------===
 
-
-
 //#include <stdlib.h>
 
 //#include "misc/util/abc_global.h"
@@ -28,6 +26,4 @@ package utils
 // Original macro:
 // #define satoko_free(p) do { free(p); p = NULL; } while(0)
 
-
 //ABC_NAMESPACE_HEADER_END
-

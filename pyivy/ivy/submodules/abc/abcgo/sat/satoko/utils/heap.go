@@ -1,180 +1,115 @@
+// Copyright Satoko contributors. Distributed under the BSD 2-Clause License.
 package utils
 
-//===--- heap.h ----------------------------------------------------------===
-//
-//                     satoko: Satisfiability solver
-//
-// This file is distributed under the BSD 2-Clause License.
-// See LICENSE for details.
-//
-//===------------------------------------------------------------------------===
+import "github.com/glycerine/abcgo/sat/satoko/utils/vec"
 
-
-
-//#include "mem.h"
-//#include "../types.h"
-//#include "vec/vec_sdbl.h"
-//#include "vec/vec_int.h"
-//#include "vec/vec_uint.h"
-
-//#include "misc/util/abc_global.h"
-//ABC_NAMESPACE_HEADER_START
-
-   
-type heap_t struct {
-    indices *vec_int_t;
-    data *vec_uint_t;
-    weights *vec_act_t;
+// Heap orders variable IDs by decreasing activity and keeps inverse positions.
+type Heap struct {
+	indices []int
+	data    []uint32
+	weights *vec.Activities
 }
-//===------------------------------------------------------------------------===
-// Heap internal functions
-//===------------------------------------------------------------------------===
-func left(i uint32) uint32 { return 2 * i + 1; }
-func right(i uint32) uint32 { return (i + 1) * 2; }
-func parent(i uint32) uint32 { return (i - 1) >> 1; }
+type heap_t = Heap
 
-func compare(p *heap_t, x uint32, y uint32) int32 {
-    // inlining of macro vec_act_at
-    return vec_sdbl_at(p.weights, x) > vec_sdbl_at(p.weights, y);
+func NewHeap(weights *vec.Activities) *Heap      { return &Heap{weights: weights} }
+func heap_alloc(weights *vec.Activities) *heap_t { return NewHeap(weights) }
+func (h *Heap) Len() int                         { return len(h.data) }
+func (h *Heap) Contains(x uint32) bool           { return int(x) < len(h.indices) && h.indices[x] >= 0 }
+func (h *Heap) better(x, y uint32) bool          { return h.weights.At(x) > h.weights.At(y) }
+func (h *Heap) up(i int) {
+	x := h.data[i]
+	for i > 0 {
+		p := (i - 1) / 2
+		if !h.better(x, h.data[p]) {
+			break
+		}
+		h.data[i] = h.data[p]
+		h.indices[h.data[i]] = i
+		i = p
+	}
+	h.data[i] = x
+	h.indices[x] = i
 }
-
-func heap_percolate_up(h *heap_t, i uint32) {
-    var x uint32  = vec_uint_at(h.data, i);
-    var p uint32  = parent(i);
-
-    for i != 0 && (compare(h, x, vec_uint_at(h.data, p)) != 0) {
-        vec_uint_assign(h.data, i, vec_uint_at(h.data, p));
-        vec_int_assign(h.indices, vec_uint_at(h.data, p), int32( i));
-        i = p;
-        p = parent(p);
-    }
-    vec_uint_assign(h.data, i, x);
-    vec_int_assign(h.indices, x, int32( i));
+func (h *Heap) down(i int) {
+	x := h.data[i]
+	for 2*i+1 < len(h.data) {
+		child := 2*i + 1
+		if child+1 < len(h.data) && h.better(h.data[child+1], h.data[child]) {
+			child++
+		}
+		if !h.better(h.data[child], x) {
+			break
+		}
+		h.data[i] = h.data[child]
+		h.indices[h.data[i]] = i
+		i = child
+	}
+	h.data[i] = x
+	h.indices[x] = i
 }
-
-func heap_percolate_down(h *heap_t, i uint32) {
-    var x uint32  = vec_uint_at(h.data, i);
-
-    for left(i) < vec_uint_size(h.data) {
-        var child uint32;
-        if right(i) < vec_uint_size(h.data) &&
-                     (compare(h, vec_uint_at(h.data, right(i)), vec_uint_at(h.data, left(i))) != 0) {
-            child = right(i);
-        } else {
-            child = left(i);
-        }
-
-        if !(compare(h, vec_uint_at(h.data, child), x) != 0) {
-            break; }
-
-        vec_uint_assign(h.data, i, vec_uint_at(h.data, child));
-        vec_int_assign(h.indices, vec_uint_at(h.data, i), int32( i));
-        i = child;
-    }
-    vec_uint_assign(h.data, i, x);
-    vec_int_assign(h.indices, x, int32( i));
+func (h *Heap) Insert(x uint32) {
+	for len(h.indices) <= int(x) {
+		h.indices = append(h.indices, -1)
+	}
+	if h.Contains(x) {
+		panic("duplicate heap entry")
+	}
+	h.indices[x] = len(h.data)
+	h.data = append(h.data, x)
+	h.up(len(h.data) - 1)
 }
-
-//===------------------------------------------------------------------------===
-// Heap API
-//===------------------------------------------------------------------------===
-func heap_alloc(weights *vec_act_t) *heap_t {
-    // inlining of macro satoko_alloc
-    var p *heap_t  = ((heap_t *) malloc((1) * sizeof(heap_t)));
-    p.weights = weights;
-    p.indices = vec_int_alloc(0);
-    p.data = vec_uint_alloc(0);
-    return p;
+func (h *Heap) Update(x uint32) {
+	if !h.Contains(x) {
+		h.Insert(x)
+		return
+	}
+	h.up(h.indices[x])
+	h.down(h.indices[x])
 }
-
-func heap_free(p *heap_t) {
-    vec_int_free(p.indices);
-    vec_uint_free(p.data);
-    // inlining of macro satoko_free
-    for { free(p); p = nil; 
-if !(false) { break }
-} 
+func (h *Heap) Pop() uint32 {
+	if len(h.data) == 0 {
+		panic("pop empty heap")
+	}
+	x := h.data[0]
+	last := h.data[len(h.data)-1]
+	h.data = h.data[:len(h.data)-1]
+	h.indices[x] = -1
+	if len(h.data) > 0 {
+		h.data[0] = last
+		h.indices[last] = 0
+		h.down(0)
+	}
+	return x
 }
-
-func heap_size(p *heap_t) uint32 {
-    return vec_uint_size(p.data);
+func (h *Heap) Clear() { h.data = nil; h.indices = nil }
+func (h *Heap) Build(entries []uint32) {
+	h.Clear()
+	for _, x := range entries {
+		h.Insert(x)
+	}
 }
-
-func heap_in_heap(p *heap_t, entry uint32) int32 {
-    return (entry < vec_int_size(p.indices)) &&
-           (vec_int_at(p.indices, entry) >= 0);
+func heap_free(h *heap_t)        { h.Clear(); h.weights = nil }
+func heap_size(h *heap_t) uint32 { return uint32(h.Len()) }
+func heap_in_heap(h *heap_t, x uint32) int32 {
+	if h.Contains(x) {
+		return 1
+	}
+	return 0
 }
-
-func heap_increase(p *heap_t, entry uint32) {
-    assert((heap_in_heap(p, entry) != 0), "heap_in_heap(p, entry)");
-    heap_percolate_down(p, uint32( vec_int_at(p.indices, entry)));
+func heap_increase(h *heap_t, x uint32) {
+	if !h.Contains(x) {
+		panic("absent heap entry")
+	}
+	h.down(h.indices[x])
 }
-
-func heap_decrease(p *heap_t, entry uint32) {
-    assert((heap_in_heap(p, entry) != 0), "heap_in_heap(p, entry)");
-    heap_percolate_up(p, uint32( vec_int_at(p.indices, entry)));
+func heap_decrease(h *heap_t, x uint32) {
+	if !h.Contains(x) {
+		panic("absent heap entry")
+	}
+	h.up(h.indices[x])
 }
-
-func heap_insert(p *heap_t, entry uint32) {
-    if vec_int_size(p.indices) < entry + 1 {
-        var old_size uint32  = vec_int_size(p.indices);
-        var i uint32;
-        var e int32;
-        vec_int_resize(p.indices, entry + 1);
-        // inlining of macro vec_int_foreach_start
-        for i = old_size; (i < vec_int_size(p.indices)) && (((e) = vec_int_at(p.indices, i)), 1); i++ {
-            vec_int_assign(p.indices, i, -1);
-        }
-    }
-    assert(!(heap_in_heap(p, entry) != 0), "!heap_in_heap(p, entry)");
-    vec_int_assign(p.indices, entry, int32( vec_uint_size(p.data)));
-    vec_uint_push_back(p.data, entry);
-    heap_percolate_up(p, uint32( vec_int_at(p.indices, entry)));
-}
-
-func heap_update(p *heap_t, i uint32) {
-    if !(heap_in_heap(p, i) != 0) {
-        heap_insert(p, i);
-    } else {
-        heap_percolate_up(p, uint32( vec_int_at(p.indices, i)));
-        heap_percolate_down(p, uint32( vec_int_at(p.indices, i)));
-    }
-}
-
-func heap_build(p *heap_t, entries *vec_uint_t) {
-    var i int32;
-    var j, entry uint32;
-
-    // inlining of macro vec_uint_foreach
-    for j = 0; (j < vec_uint_size(p.data)) && (((entry) = vec_uint_at(p.data, j)), 1); j++ {
-        vec_int_assign(p.indices, entry, -1);
-    }
-    vec_uint_clear(p.data);
-    // inlining of macro vec_uint_foreach
-    for j = 0; (j < vec_uint_size(entries)) && (((entry) = vec_uint_at(entries, j)), 1); j++ {
-        vec_int_assign(p.indices, entry, int32( j));
-        vec_uint_push_back(p.data, entry);
-    }
-    for (i = vec_uint_size(p.data) / 2 - 1); i >= 0; i-- {
-        heap_percolate_down(p, uint32( i));
-    }
-}
-
-func heap_clear(p *heap_t) {
-    vec_int_clear(p.indices);
-    vec_uint_clear(p.data);
-}
-
-func heap_remove_min(p *heap_t) uint32 {
-    var x uint32  = vec_uint_at(p.data, 0);
-    vec_uint_assign(p.data, 0, vec_uint_at(p.data, vec_uint_size(p.data) - 1));
-    vec_int_assign(p.indices, vec_uint_at(p.data, 0), 0);
-    vec_int_assign(p.indices, x, -1);
-    vec_uint_pop_back(p.data);
-    if vec_uint_size(p.data) > 1 {
-        heap_percolate_down(p, 0); }
-    return x;
-}
-
-//ABC_NAMESPACE_HEADER_END
-
+func heap_insert(h *heap_t, x uint32)          { h.Insert(x) }
+func heap_update(h *heap_t, x uint32)          { h.Update(x) }
+func heap_build(h *heap_t, entries *vec.Uints) { h.Build(entries.Data()) }
+func heap_clear(h *heap_t)                     { h.Clear() }
+func heap_remove_min(h *heap_t) uint32         { return h.Pop() }

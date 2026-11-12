@@ -91,3 +91,13 @@ func TestAliasingAndCopy(t *testing.T) {
 		t.Fatal(a, b)
 	}
 }
+
+func TestDecimalExtremeReciprocal(t *testing.T) {
+	var a, b EpDouble
+	EpdPow2Decimal(10000, &a)
+	EpdPow2Decimal(-10000, &b)
+	EpdMultiply2Decimal(&a, &b)
+	if math.Abs(a.Value*math.Pow10(a.Exponent)-1) > 2e-14 {
+		t.Fatal(a)
+	}
+}
