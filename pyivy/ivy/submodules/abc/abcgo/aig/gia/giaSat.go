@@ -117,22 +117,6 @@ func Gia_ManSatStop(p *Gia_ManSat_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSatPartCollectSuper(p *Gia_Man_t, pObj *Gia_Obj_t, pLits *int32, pnLits *int32) {
-    var pFanin *Gia_Obj_t;
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    assert(pObj.fMark0 == 0, "pObj.fMark0 == 0");
-    pFanin = Gia_ObjFanin0(pObj);
-    if pFanin.fMark0 || Gia_ObjFaninC0(pObj) {
-        pLits[(*pnLits)++] = Gia_Var2Lit(Gia_ObjId(p, pFanin), Gia_ObjFaninC0(pObj));
-    } else {
-        Gia_ManSatPartCollectSuper(p, pFanin, pLits, pnLits); }
-    pFanin = Gia_ObjFanin1(pObj);
-    if pFanin.fMark0 || Gia_ObjFaninC1(pObj) {
-        pLits[(*pnLits)++] = Gia_Var2Lit(Gia_ObjId(p, pFanin), Gia_ObjFaninC1(pObj));
-    } else {
-        Gia_ManSatPartCollectSuper(p, pFanin, pLits, pnLits); }
-}
-
 /**Function*************************************************************
 
   Synopsis    [Returns the number of words used.]
@@ -202,38 +186,6 @@ func Gia_ManSatPartCreate(p *Gia_Man_t, pObj *Gia_Obj_t, pStore *int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSatPartCountClauses(p *Gia_Man_t, pObj *Gia_Obj_t, pnOnset *int32, pnOffset *int32) {
-    var pFanin *Gia_Obj_t;
-    var nOnset0, nOnset1, nOffset0, nOffset1 int32;
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    pFanin = Gia_ObjFanin0(pObj);
-    if pFanin.fMark0 {
-        nOnset0 = 1;
-nOffset0 = 1;
-    } else {
-        Gia_ManSatPartCountClauses(p, pFanin, &nOnset0, &nOffset0);
-        if Gia_ObjFaninC0(pObj) {
-            var Temp int32  = nOnset0;
-            nOnset0 = nOffset0;
-            nOffset0 = Temp;
-        }
-    }
-    pFanin = Gia_ObjFanin1(pObj);
-    if pFanin.fMark0 {
-        nOnset1 = 1;
-nOffset1 = 1;
-    } else {
-        Gia_ManSatPartCountClauses(p, pFanin, &nOnset1, &nOffset1);
-        if Gia_ObjFaninC1(pObj) {
-            var Temp int32  = nOnset1;
-            nOnset1 = nOffset1;
-            nOffset1 = Temp;
-        }
-    }
-    *pnOnset  = nOnset0  * nOnset1;
-    *pnOffset = nOffset0 + nOffset1;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Count the number of internal nodes in the leaf-DAG.]
@@ -245,25 +197,6 @@ nOffset1 = 1;
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSatPartCount(p *Gia_Man_t, pObj *Gia_Obj_t, pnLeaves *int32, pnNodes *int32) int32 {
-    var pFanin *Gia_Obj_t;
-    var Level0, Level1 int32;
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    assert(pObj.fMark0 == 0, "pObj.fMark0 == 0");
-    (*pnNodes)++;
-    pFanin = Gia_ObjFanin0(pObj);
-    if pFanin.fMark0 {
-        (*pnLeaves)++;
-    } else {
-        Level0 = Gia_ManSatPartCount(p, pFanin, pnLeaves, pnNodes) + Gia_ObjFaninC0(pObj); }
-    pFanin = Gia_ObjFanin1(pObj);
-    if pFanin.fMark0 {
-        (*pnLeaves)++;
-    } else {
-        Level1 = Gia_ManSatPartCount(p, pFanin, pnLeaves, pnNodes) + Gia_ObjFaninC1(pObj); }
-    return Abc_MaxInt( Level0, Level1 );
-}
-
 /**Function*************************************************************
 
   Synopsis    [Count the number of internal nodes in the leaf-DAG.]
@@ -275,20 +208,6 @@ func Gia_ManSatPartCount(p *Gia_Man_t, pObj *Gia_Obj_t, pnLeaves *int32, pnNodes
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSatPartCountNodes(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {
-    var pFanin *Gia_Obj_t;
-    var nNodes0, nNodes1 int32;
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    assert(pObj.fMark0 == 0, "pObj.fMark0 == 0");
-    pFanin = Gia_ObjFanin0(pObj);
-    if !(pFanin.fMark0) {
-        nNodes0 = Gia_ManSatPartCountNodes(p, pFanin); }
-    pFanin = Gia_ObjFanin1(pObj);
-    if !(pFanin.fMark0) {
-        nNodes1 = Gia_ManSatPartCountNodes(p, pFanin); }
-    return nNodes0 + nNodes1 + 1;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Count the number of internal nodes in the leaf-DAG.]
