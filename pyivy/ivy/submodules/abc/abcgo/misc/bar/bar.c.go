@@ -94,7 +94,11 @@ func (p *Bar_Progress_t) write(text string) {
 	if p.err != nil {
 		return
 	}
-	_, p.err = io.WriteString(p.pFile, text)
+	n, err := io.WriteString(p.pFile, text)
+	p.err = err
+	if p.err == nil && n != len(text) {
+		p.err = io.ErrShortWrite
+	}
 	if f, ok := p.pFile.(interface{ Flush() error }); ok && p.err == nil {
 		p.err = f.Flush()
 	}

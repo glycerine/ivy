@@ -3,6 +3,7 @@ package bar
 import (
 	"bytes"
 	"errors"
+	"io"
 	"strings"
 	"testing"
 )
@@ -73,5 +74,17 @@ func TestProgressErrorsAndLongLabel(t *testing.T) {
 	Bar_ProgressShow(p, label)
 	if b.String() != label+" \r" {
 		t.Fatal(b.String())
+	}
+}
+
+type shortWriter struct{}
+
+func (shortWriter) Write(p []byte) (int, error) { return len(p) - 1, nil }
+func TestProgressShortWrite(t *testing.T) {
+	Bar_SetEnabled(true)
+	Bar_SetBatchMode(false)
+	p := Bar_ProgressStart(shortWriter{}, 100)
+	if !errors.Is(p.Err(), io.ErrShortWrite) {
+		t.Fatal(p.Err())
 	}
 }
