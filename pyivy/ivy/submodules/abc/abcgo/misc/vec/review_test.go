@@ -93,3 +93,28 @@ func TestVariableIntegerRejectsInvalidEncoding(t *testing.T) {
 		Vec_StrGetI(p, &pos)
 	})
 }
+
+func TestPagedMemoryWritesKeepHashConsistent(t *testing.T) {
+	p := Vec_MemAlloc(1, 2)
+	Vec_MemHashAlloc(p, 3)
+	Vec_MemHashInsert(p, []uint64{1})
+	Vec_MemHashInsert(p, []uint64{2})
+	Vec_MemWriteEntry(p, 0, []uint64{2})
+	if Vec_MemHashInsert(p, []uint64{2}) != 0 || p.nEntries != 2 {
+		t.Fatal("write left stale key or duplicate record")
+	}
+	Vec_MemClean(p, 2)
+	if Vec_MemHashInsert(p, []uint64{0}) != 0 || p.nEntries != 2 {
+		t.Fatal("clean left stale hash")
+	}
+	Vec_MemPush(p, []uint64{3})
+	if Vec_MemHashInsert(p, []uint64{3}) != 2 || p.nEntries != 3 {
+		t.Fatal("raw append not indexed")
+	}
+	q := Vec_MemAlloc(1, 2)
+	Vec_MemPush(q, []uint64{8})
+	Vec_MemHashAlloc(q, 3)
+	if Vec_MemHashInsert(q, []uint64{8}) != 0 || q.nEntries != 1 {
+		t.Fatal("hash allocation ignored existing records")
+	}
+}

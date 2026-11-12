@@ -1,3 +1,23 @@
+/**CFile****************************************************************
+
+  FileName    [vecStr.h]
+
+  SystemName  [ABC: Logic synthesis and verification system.]
+
+  PackageName [Resizable arrays.]
+
+  Synopsis    [Resizable arrays of characters.]
+
+  Author      [Alan Mishchenko]
+
+  Affiliation [UC Berkeley]
+
+  Date        [Ver. 1.0. Started - June 20, 2005.]
+
+  Revision    [$Id: vecStr.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
+
+***********************************************************************/
+
 package vec
 
 import (

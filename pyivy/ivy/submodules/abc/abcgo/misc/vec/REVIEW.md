@@ -49,3 +49,11 @@ serialization, partial-word bit counts, level marks, priority updates and stable
 paged memory records. Source functions that were originally unimplemented
 (`Vec_MemDup`, `Vec_MemFill`, `Vec_MemClean`) are implemented and identified in
 `vecMem.go`; source searches found no external C callers of these three helpers.
+
+A subsequent independent container audit also found optional memory-hash indices
+could become stale after explicit record writes/zeroing. Writes, cleaning and raw
+appends now rebuild the index as needed without changing record IDs; duplicate
+records created by mutation resolve deterministically to their lowest ID. Hash
+allocation indexes existing records. Regression tests cover each path. Raw record
+slices remain borrowed mutable views; callers editing those views directly must
+rehash before lookup, as with the source API's mutable storage.

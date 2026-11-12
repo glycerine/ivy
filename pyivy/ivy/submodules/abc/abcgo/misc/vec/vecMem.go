@@ -40,7 +40,6 @@ func Vec_MemDup(p *Vec_Mem_t) *Vec_Mem_t {
 	}
 	if p.vTable != nil {
 		Vec_MemHashAlloc(q, len(p.vTable.data))
-		Vec_MemHashResize(q)
 	}
 	return q
 }
@@ -66,6 +65,9 @@ func Vec_MemClean(p *Vec_Mem_t, n int) {
 	for i := range n {
 		clear(Vec_MemReadEntry(p, i))
 	}
+	if p.vTable != nil {
+		vecMemRehash(p, len(p.vTable.data))
+	}
 }
 func Vec_MemEntrySize(p *Vec_Mem_t) int { return p.nEntrySize }
 func Vec_MemEntryNum(p *Vec_Mem_t) int  { return p.nEntries }
@@ -77,6 +79,9 @@ func Vec_MemMemory(p *Vec_Mem_t) float64 {
 	}
 	return float64(8*p.nEntrySize*(1<<p.LogPageSze)*(len(p.ppPages)) + cap(p.ppPages)*int(unsafe.Sizeof(uintptr(0))) + int(unsafe.Sizeof(*p)))
 }
+
+// Vec_MemReadEntry returns a borrowed record. If its words are edited directly
+// while hashing is enabled, call Vec_MemHashResize before the next lookup.
 func Vec_MemReadEntry(p *Vec_Mem_t, i int) []uint64 {
 	if i < 0 || i >= p.nEntries {
 		panic("memory vector index")
@@ -87,6 +92,9 @@ func Vec_MemReadEntry(p *Vec_Mem_t, i int) []uint64 {
 func Vec_MemReadEntryLast(p *Vec_Mem_t) []uint64 { return Vec_MemReadEntry(p, p.nEntries-1) }
 func Vec_MemWriteEntry(p *Vec_Mem_t, i int, data []uint64) {
 	copy(Vec_MemReadEntry(p, i), data[:p.nEntrySize])
+	if p.vTable != nil {
+		vecMemRehash(p, len(p.vTable.data))
+	}
 }
 func Vec_MemGetEntry(p *Vec_Mem_t, i int) []uint64 {
 	if i < 0 {
@@ -102,7 +110,11 @@ func Vec_MemGetEntry(p *Vec_Mem_t, i int) []uint64 {
 	return Vec_MemReadEntry(p, i)
 }
 func Vec_MemSetEntry(p *Vec_Mem_t, i int, data []uint64) {
+	existing := i < p.nEntries
 	copy(Vec_MemGetEntry(p, i), data[:p.nEntrySize])
+	if p.vTable != nil && (existing || len(p.vNexts.data) != p.nEntries) {
+		vecMemRehash(p, len(p.vTable.data))
+	}
 }
 func Vec_MemPush(p *Vec_Mem_t, data []uint64) { Vec_MemSetEntry(p, p.nEntries, data) }
 func Vec_MemShrink(p *Vec_Mem_t, n int) {
@@ -157,6 +169,9 @@ func Vec_MemHashAlloc(p *Vec_Mem_t, n int) {
 	}
 	p.vTable = Vec_IntStartFull(vecMemPrime(n))
 	p.vNexts = Vec_IntAlloc(n)
+	if p.nEntries > 0 {
+		vecMemRehash(p, len(p.vTable.data))
+	}
 }
 func Vec_MemHashFree(p *Vec_Mem_t) {
 	if p != nil {
@@ -170,7 +185,7 @@ func Vec_MemHashKey(p *Vec_Mem_t, data []uint64) uint32 {
 	for i, x := range data[:p.nEntrySize] {
 		key += uint32(x)*primes[(2*i)&7] + uint32(x>>32)*primes[(2*i+1)&7]
 	}
-	return key % uint32(len(p.vTable.data))
+	return uint32(uint64(key) % uint64(len(p.vTable.data)))
 }
 func Vec_MemHashLookup(p *Vec_Mem_t, data []uint64) *int32 {
 	spot := Vec_IntEntryP(p.vTable, int(Vec_MemHashKey(p, data)))
@@ -193,18 +208,20 @@ func Vec_MemHashProfile(p *Vec_Mem_t) {
 	}
 	fmt.Println()
 }
-func Vec_MemHashResize(p *Vec_Mem_t) {
-	Vec_IntFill(p.vTable, vecMemPrime(2*len(p.vTable.data)), -1)
-	Vec_IntClear(p.vNexts)
-	for i := range p.nEntries {
-		spot := Vec_MemHashLookup(p, Vec_MemReadEntry(p, i))
-		if *spot != -1 {
-			panic("duplicate memory hash entry")
-		}
-		*spot = int32(len(p.vNexts.data))
-		Vec_IntPush(p.vNexts, -1)
+
+// Rehash mutable records without changing their IDs. Explicit writes may
+// create equal records; lookup deterministically returns the lowest ID.
+func vecMemRehash(p *Vec_Mem_t, buckets int) {
+	Vec_IntFill(p.vTable, vecMemPrime(buckets), -1)
+	Vec_IntFill(p.vNexts, p.nEntries, -1)
+	for i := p.nEntries - 1; i >= 0; i-- {
+		key := int(Vec_MemHashKey(p, Vec_MemReadEntry(p, i)))
+		p.vNexts.data[i] = p.vTable.data[key]
+		p.vTable.data[key] = int32(i)
 	}
 }
+func Vec_MemHashResize(p *Vec_Mem_t) { vecMemRehash(p, 2*len(p.vTable.data)) }
+
 func Vec_MemHashInsert(p *Vec_Mem_t, data []uint64) int {
 	if p.vTable == nil {
 		panic("hash not allocated")
