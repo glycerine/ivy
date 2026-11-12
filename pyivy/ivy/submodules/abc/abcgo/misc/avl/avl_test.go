@@ -122,3 +122,35 @@ func TestSlotsAndCompatibility(t *testing.T) {
 		t.Fatal("empty last")
 	}
 }
+
+func TestExtremeKeysAndClearCallbacks(t *testing.T) {
+	maxInt := int(^uint(0) >> 1)
+	minInt := -maxInt - 1
+	tree := New(Avl_numcmp)
+	for _, key := range []int{maxInt, 0, minInt} {
+		tree.Insert(key, key)
+	}
+	first, _, _ := tree.First()
+	last, _, _ := tree.Last()
+	if first != minInt || last != maxInt || tree.Check() != 0 {
+		t.Fatal("integer comparator overflow")
+	}
+	tree = New(Avl_numcmp)
+	tree.Insert(2, "b")
+	tree.Insert(1, "a")
+	tree.Insert(3, "c")
+	var keys []int
+	var values []string
+	tree.Clear(func(k any) { keys = append(keys, k.(int)) }, func(v any) { values = append(values, v.(string)) })
+	if !slices.Equal(keys, []int{1, 3, 2}) || !slices.Equal(values, []string{"a", "c", "b"}) {
+		t.Fatal("cleanup postorder", keys, values)
+	}
+	if tree.Insert(4, "d") || tree.Count() != 1 {
+		t.Fatal("reuse after clear")
+	}
+	gen := tree.Generator(AVL_FORWARD)
+	gen.Close()
+	if _, _, ok := gen.Next(); ok {
+		t.Fatal("closed generator")
+	}
+}
