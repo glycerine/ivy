@@ -875,50 +875,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadJson(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    extern Vec_Wec_t * Json_Read( char * pFileName, Abc_Nam_t ** ppStrs );
-    var vObjs *Vec_Wec_t;
-    var pStrs *Abc_Nam_t;
-    var pFileName string;
-    var pFile *os.File;
-    var c int32;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage;
-    }
-
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    if (pFile = os.Open(pFileName)) == nil {
-        fmt.Fprintf(pAbc.Err, "Cannot open input file \"%s\". \n", pFileName);
-        return 1;
-    }
-    _ = (pFile).Close();
-
-    // set the new network
-    vObjs = Json_Read( pFileName, &pStrs );
-    if vObjs == nil {
-        return 0; }
-    Abc_FrameSetJsonStrs( pStrs );
-    Abc_FrameSetJsonObjs( vObjs );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_json [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads file in JSON format\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -2497,45 +2454,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteJson(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    extern void Json_Write( char * pFileName, Abc_Nam_t * pStr, Vec_Wec_t * vObjs );
-    extern void Json_Extract( char * pFileName, Abc_Nam_t * pStr, Vec_Wec_t * vObjs );
-    var c, fExtract int32;
-    var pFileName string;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "ch" ) ) != -1  {
-        switch  c  {
-            case 'c':
-                fExtract ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if Abc_FrameReadJsonStrs(Abc_FrameReadGlobalFrame()) == nil {
-        fmt.Fprintf(pAbc.Out, "No JSON info is available.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    pFileName = argv[globalUtilOptind];
-    if fExtract != 0 {
-        Json_Extract( pFileName, Abc_FrameReadJsonStrs(Abc_FrameReadGlobalFrame()), Abc_FrameReadJsonObjs(Abc_FrameReadGlobalFrame()) );
-    } else {
-        Json_Write( pFileName, Abc_FrameReadJsonStrs(Abc_FrameReadGlobalFrame()), Abc_FrameReadJsonObjs(Abc_FrameReadGlobalFrame()) ); }
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_json [-ch] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         write the network in JSON format\n");
-    fmt.Fprintf(pAbc.Err, "\t-c     : output extracted version\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help message\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write (extension .json)\n");
-    return 1;
-}
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
