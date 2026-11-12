@@ -35,35 +35,7 @@ import "fmt"
 ////////////////////////////////////////////////////////////////////////
  
    
-type Gia_Rsb2Man_t struct {
-    // hyper-parameters
-    nDivsMax            int32;
-    nLevelIncrease            int32;
-    fUseXor            int32;
-    fUseZeroCost            int32;
-    fDebug            int32;
-    fVerbose            int32;
-    // input AIG
-    nObjs            int32;
-    nPis            int32;
-    nNodes            int32;
-    nPos            int32;
-    iFirstPo            int32;
-    Level            int32;
-    nMffc            int32;
-    // intermediate data
-    vObjs      Vec_Int_t;
-    vSims      Vec_Wrd_t;
-    vpDivs      Vec_Ptr_t;
-    vDivs      Vec_Int_t;
-    vLevels      Vec_Int_t;
-    vRefs      Vec_Int_t;
-    vCopies      Vec_Int_t;
-    vTried      Vec_Int_t;
-    Truth0           word;
-    Truth1           word;
-    CareSet           word;
-}
+
 
 // extern void Abc_ResubPrepareManager( int nWords );
 
@@ -85,74 +57,9 @@ type Gia_Rsb2Man_t struct {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Rsb2ManAlloc() *Gia_Rsb2Man_t {
-    // inlining of macro ABC_CALLOC
-    var p *Gia_Rsb2Man_t  = &Gia_Rsb2Man_t{};
-    return p;
-}
-func Gia_Rsb2ManFree(p *Gia_Rsb2Man_t) {
-    Vec_IntErase( &p.vObjs   );
-    Vec_WrdErase( &p.vSims   );
-    Vec_PtrErase( &p.vpDivs  );
-    Vec_IntErase( &p.vDivs   );
-    Vec_IntErase( &p.vLevels );
-    Vec_IntErase( &p.vRefs   );
-    Vec_IntErase( &p.vCopies );
-    Vec_IntErase( &p.vTried );
-    // inlining of macro ABC_FREE
-    p = nil;
-}
-func Gia_Rsb2ManStart(p *Gia_Rsb2Man_t, pObjs *int32, nObjs int32, nDivsMax int32, nLevelIncrease int32, fUseXor int32, fUseZeroCost int32, fDebug int32, fVerbose int32) {
-    var i int32;
-    // hyper-parameters
-    p.nDivsMax       = nDivsMax; 
-    p.nLevelIncrease = nLevelIncrease; 
-    p.fUseXor        = fUseXor; 
-    p.fUseZeroCost   = fUseZeroCost; 
-    p.fDebug         = fDebug; 
-    p.fVerbose       = fVerbose; 
-    // user data
-    Vec_IntClear( &p.vObjs );
-    Vec_IntPushArray( &p.vObjs, pObjs, 2*nObjs );
-    assert(pObjs[0] == 0, "pObjs[0] == 0");
-    assert(pObjs[1] == 0, "pObjs[1] == 0");
-    p.nObjs    = nObjs;
-    p.nPis     = 0;
-    p.nNodes   = 0;
-    p.nPos     = 0;
-    p.iFirstPo = 0;
-    for  i = 1; i < nObjs; i++  {
-        if pObjs[2*i+0] == 0 && pObjs[2*i+1] == 0 {
-            p.nPis++;
-        } else if pObjs[2*i+0] == pObjs[2*i+1] {
-            p.nPos++;
-        } else {
-            p.nNodes++; }
-    }
-    assert(nObjs == 1 + p.nPis + p.nNodes + p.nPos, "nObjs == 1 + p.nPis + p.nNodes + p.nPos");
-    p.iFirstPo = nObjs - p.nPos;
-    Vec_WrdClear( &p.vSims );
-    Vec_WrdGrow( &p.vSims, 2*nObjs );
-    Vec_WrdPush( &p.vSims, 0 );
-    Vec_WrdPush( &p.vSims, 0 );
-    for  i = 0; i < p.nPis; i++  {
-        Vec_WrdPush( &p.vSims,  s_Truths6[i] );
-        Vec_WrdPush( &p.vSims, ~s_Truths6[i] );
-    }
-    p.vSims.nSize = 2*p.nObjs;
-    Vec_IntClear( &p.vDivs   );
-    Vec_IntClear( &p.vLevels );
-    Vec_IntClear( &p.vRefs   );
-    Vec_IntClear( &p.vCopies );
-    Vec_IntClear( &p.vTried  );
-    Vec_PtrClear( &p.vpDivs  );
-    Vec_IntGrow( &p.vDivs,   nObjs );
-    Vec_IntGrow( &p.vLevels, nObjs );
-    Vec_IntGrow( &p.vRefs,   nObjs );
-    Vec_IntGrow( &p.vCopies, nObjs );
-    Vec_IntGrow( &p.vTried,  nObjs );
-    Vec_PtrGrow( &p.vpDivs,  nObjs );
-}
+
+
+
 
 /**Function*************************************************************
 
@@ -165,132 +72,16 @@ func Gia_Rsb2ManStart(p *Gia_Rsb2Man_t, pObjs *int32, nObjs int32, nDivsMax int3
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Rsb2ManPrint(p *Gia_Rsb2Man_t) {
-    var i int32;
-    var pObjs *int32 = Vec_IntArray( &p.vObjs );
-    fmt.Printf("PI = %d.  PO = %d.  Obj = %d.\n", p.nPis, p.nPos, p.nObjs);
-    for  i = p.nPis + 1; i < p.iFirstPo; i++  {
-        fmt.Printf("%2d = %c%2d & %c%2d;\n", i, Abc_LitIsCompl(pObjs[2*i+0]) ? '!' : ' ', Abc_Lit2Var(pObjs[2*i+0]), Abc_LitIsCompl(pObjs[2*i+1]) ? '!' : ' ', Abc_Lit2Var(pObjs[2*i+1]));
-    }
-    for  i = p.iFirstPo; i < p.nObjs; i++  {
-        fmt.Printf("%2d = %c%2d;\n", i, Abc_LitIsCompl(pObjs[2*i+0]) ? '!' : ' ', Abc_Lit2Var(pObjs[2*i+0]));
-    }
-}
 
-func Gia_Rsb2ManLevel(p *Gia_Rsb2Man_t) int32 {
-    var i int32;
-    var pLevs *int32;
-    var Level int32;
-    Vec_IntClear( &p.vLevels );
-    Vec_IntGrow( &p.vLevels, p.nObjs );
-    pLevs = Vec_IntArray( &p.vLevels );
-    for  i = p.nPis + 1; i < p.iFirstPo; i++  {
-        pLevs[i] = 1 + Abc_MaxInt( pLevs[2*i+0]/2, pLevs[2*i+1]/2 );
-    }
-    for  i = p.iFirstPo; i < p.nObjs; i++  {
-        Level = Abc_MaxInt( Level, pLevs[i] = pLevs[2*i+0]/2 );
-    }
-    return Level;
-}
-func Gia_Rsb2ManOdcs(p *Gia_Rsb2Man_t, iNode int32) word {
-    var i int32; var Res word;
-    var pObjs *int32  = Vec_IntArray( &p.vObjs );
-    var pSims *word  = Vec_WrdArray( &p.vSims );
-    for  i = p.nPis + 1; i < p.iFirstPo; i++  {
-        if pObjs[2*i+0] < pObjs[2*i+1] {
-            pSims[2*i+0] = pSims[pObjs[2*i+0]] & pSims[pObjs[2*i+1]];
-        } else if pObjs[2*i+0] > pObjs[2*i+1] {
-            pSims[2*i+0] = pSims[pObjs[2*i+0]] ^ pSims[pObjs[2*i+1]];
-        } else { assert(false, "0"); }
-        pSims[2*i+1] = ~pSims[2*i+0];        
-    }
-    for  i = p.iFirstPo; i < p.nObjs; i++  {
-        pSims[2*i+0] = pSims[pObjs[2*i+0]];
-    }
-    // inlining of macro ABC_SWAP
-    { var t word  = pSims[2*iNode+0]; pSims[2*iNode+0] = pSims[2*iNode+1]; pSims[2*iNode+1] = t; };
-    for  i = iNode + 1; i < p.iFirstPo; i++  {
-        if pObjs[2*i+0] < pObjs[2*i+1] {
-            pSims[2*i+0] = pSims[pObjs[2*i+0]] & pSims[pObjs[2*i+1]];
-        } else if pObjs[2*i+0] < pObjs[2*i+1] {
-            pSims[2*i+0] = pSims[pObjs[2*i+0]] ^ pSims[pObjs[2*i+1]];
-        } else { assert(false, "0"); }
-        pSims[2*i+1] = ~pSims[2*i+0];        
-    }
-    for  i = p.iFirstPo; i < p.nObjs; i++  {
-        Res |= pSims[2*i+0] ^ pSims[pObjs[2*i+0]];
-    }
-    // inlining of macro ABC_SWAP
-    { var t word  = pSims[2*iNode+0]; pSims[2*iNode+0] = pSims[2*iNode+1]; pSims[2*iNode+1] = t; };
-    return Res;
-}
+
+
+
 // marks MFFC and returns its size
-func Gia_Rsb2ManDeref_rec(p *Gia_Rsb2Man_t, pObjs *int32, pRefs *int32, iNode int32) int32 {
-    var Counter int32  = 1;
-    if iNode <= p.nPis {
-        return 0; }
-    if --pRefs[Abc_Lit2Var(pObjs[2*iNode+0])] == 0 {
-        Counter += Gia_Rsb2ManDeref_rec( p, pObjs, pRefs, Abc_Lit2Var(pObjs[2*iNode+0]) ); }
-    if --pRefs[Abc_Lit2Var(pObjs[2*iNode+1])] == 0 {
-        Counter += Gia_Rsb2ManDeref_rec( p, pObjs, pRefs, Abc_Lit2Var(pObjs[2*iNode+1]) ); }
-    return Counter;
-}
-func Gia_Rsb2ManMffc(p *Gia_Rsb2Man_t, iNode int32) int32 {
-    var i int32;
-    var pRefs *int32;
-    var pObjs *int32;
-    Vec_IntFill( &p.vRefs, p.nObjs, 0 );
-    pRefs = Vec_IntArray( &p.vRefs );
-    pObjs = Vec_IntArray( &p.vObjs );
-    assert(pObjs[2*iNode+0] != pObjs[2*iNode+1], "pObjs[2*iNode+0] != pObjs[2*iNode+1]");
-    for  i = p.nPis + 1; i < p.iFirstPo; i++  {
-        pRefs[Abc_Lit2Var(pObjs[2*i+0])]++, 
-        pRefs[Abc_Lit2Var(pObjs[2*i+1])]++;
-    }
-    for  i = p.iFirstPo; i < p.nObjs; i++  {
-        pRefs[Abc_Lit2Var(pObjs[2*i+0])]++;
-    }
-    for  i = p.nPis + 1; i < p.iFirstPo; i++  {
-        assert(pRefs[i], "pRefs[i]");
-    }
-    pRefs[iNode] = 0;
-    for  i = iNode + 1; i < p.iFirstPo; i++  {
-        if !pRefs[Abc_Lit2Var(pObjs[2*i+0])] || !pRefs[Abc_Lit2Var(pObjs[2*i+1])] {
-            pRefs[i] = 0; }
-    }
-    return Gia_Rsb2ManDeref_rec( p, pObjs, pRefs, iNode );
-}
+
+
 // collects divisors and maps them into nodes
 // assumes MFFC is already marked
-func Gia_Rsb2ManDivs(p *Gia_Rsb2Man_t, iNode int32) int32 {
-    var i, iNodeLevel int32;
-    var pRefs *int32  = Vec_IntArray( &p.vRefs );
-    p.CareSet = Gia_Rsb2ManOdcs( p, iNode );
-    p.Truth1 = p.CareSet & Vec_WrdEntry(&p.vSims, 2*iNode);
-    p.Truth0 = p.CareSet & ~p.Truth1;
-    Vec_PtrClear( &p.vpDivs );
-    Vec_PtrPush( &p.vpDivs, &p.Truth0 );
-    Vec_PtrPush( &p.vpDivs, &p.Truth1 );
-    Vec_IntClear( &p.vDivs );
-    Vec_IntPushTwo( &p.vDivs, -1, -1 );
-    for  i = 1; i <= p.nPis; i++  {
-        Vec_PtrPush( &p.vpDivs, Vec_WrdEntryP(&p.vSims, 2*i) );
-        Vec_IntPush( &p.vDivs, i );
-    }
-    p.nMffc = Gia_Rsb2ManMffc( p, iNode );
-    if p.nLevelIncrease >= 0 {
-        p.Level = Gia_Rsb2ManLevel(p);
-        iNodeLevel = Vec_IntEntry(&p.vLevels, iNode);
-    }
-    for  i = p.nPis + 1; i < p.iFirstPo; i++  {
-        if !pRefs[i] || (p.nLevelIncrease >= 0 && Vec_IntEntry(&p.vLevels, i) > iNodeLevel + p.nLevelIncrease) {
-            continue; }
-        Vec_PtrPush( &p.vpDivs, Vec_WrdEntryP(&p.vSims, 2*i) );
-        Vec_IntPush( &p.vDivs, i );
-    }
-    assert(Vec_IntSize(&p.vDivs) == Vec_PtrSize(&p.vpDivs), "Vec_IntSize(&p.vDivs) == Vec_PtrSize(&p.vpDivs)");
-    return Vec_IntSize(&p.vDivs);
-}
+
 
 /**Function*************************************************************
 
