@@ -44,29 +44,6 @@ import (
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-const NF_LEAF_MAX =  6
-const NF_CUT_MAX =  32
-const NF_NO_LEAF =  31
-const NF_NO_FUNC =  0x3FFFFFF
-const NF_EPSILON =  0.001
-
-    
-type Nf_Cut_t struct {
-    Sign            word;           // signature
-    Delay             int32;          // delay
-    Flow           float32;           // flow
-    iFunc uint32; /* C bitfield: 26 bits; review packing and truncation */   // function (NF_NO_FUNC)
-    Useless uint32; /* C bitfield: 1 bits; review packing and truncation */   // function
-    nLeaves uint32; /* C bitfield: 5 bits; review packing and truncation */   // leaf number (NF_NO_LEAF)
-    pLeaves [NF_LEAF_MAX+1]int32; // leaves
-}
-    
-type Nf_Cfg_t struct {
-    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */   // complemented
-    Phase uint32; /* C bitfield: 7 bits; review packing and truncation */   // match phase
-    Perm uint32; /* C bitfield: 24 bits; review packing and truncation */   // match permutation
-}
-    
 type Nf_Mat_t struct {
     Gate uint32; /* C bitfield: 20 bits; review packing and truncation */   // gate
     CutH uint32; /* C bitfield: 10 bits; review packing and truncation */   // cut handle
@@ -113,11 +90,6 @@ type Nf_Man_t struct {
     nCutUseAll             int32;     // objects with useful cuts
 }
 
-func Nf_Cfg2Int(Mat Nf_Cfg_t) int32 { union { var x int32; var y Nf_Cfg_t; }
- v; v.y = Mat; return v.x;           }
-func Nf_Int2Cfg(Int int32) Nf_Cfg_t { union { var x int32; var y Nf_Cfg_t; }
- v; v.x = Int; return v.y;           }
-
 func Nf_ManObj(p *Nf_Man_t, i int32) *Nf_Obj_t { return p.pNfObjs + i;                                           }
 func Nf_ManCell(p *Nf_Man_t, i int32) *Mio_Cell2_t { return p.pCells + i;                                            }
 func Nf_ManCutSet(p *Nf_Man_t, i int32) *int32 { return (int *)Vec_PtrEntry(&p.vPages, i >> 16) + (i & 0xFFFF);  }
@@ -151,8 +123,8 @@ func Nf_CutIsTriv(pCut *int32, i int32) int32 { return Nf_CutSize(pCut) == 1 && 
 func Nf_CutHandle(pCutSet *int32, pCut *int32) int32 { assert(pCut > pCutSet, "pCut > pCutSet"); return pCut - pCutSet;                 } 
 func Nf_CutFromHandle(pCutSet *int32, h int32) *int32 { assert(h > 0, "h > 0"); return pCutSet + h;                             }
 
-func Nf_CfgVar(Cfg Nf_Cfg_t, i int32) int32 { return (Cfg.Perm >> (i<<2)) & 15;                                }
-func Nf_CfgCompl(Cfg Nf_Cfg_t, i int32) int32 { return (Cfg.Phase >> i) & 1;                                     }
+
+
 
 // Original macro:
 // #define Nf_SetForEachCut( pList, pCut, i )                   for ( i = 0, pCut = pList + 1; i < pList[0]; i++, pCut += Nf_CutSize(pCut) + 1 )
@@ -542,28 +514,9 @@ func Nf_CutComputeTruthMux6(p *Nf_Man_t, pCut0 *Nf_Cut_t, pCut1 *Nf_Cut_t, pCutC
   SeeAlso     []
 
 ***********************************************************************/
-func Nf_CutCountBits(i word) int32 {
-    i = i - ((i >> 1) & 0x5555555555555555);
-    i = (i & 0x3333333333333333) + ((i >> 2) & 0x3333333333333333);
-    i = ((i + (i >> 4)) & 0x0F0F0F0F0F0F0F0F);
-    return (i*(0x0101010101010101))>>56;
-}
-func Nf_CutGetSign(pLeaves *int32, nLeaves int32) word {
-    var Sign word; var i int32; 
-    for  i = 0; i < nLeaves; i++  {
-        Sign |= ((word)1) << (pLeaves[i] & 0x3F);
-    }
-    return Sign;
-}
-func Nf_CutCreateUnit(p *Nf_Cut_t, i int32) int32 {
-    p.Delay      = 0;
-    p.Flow       = 0;
-    p.iFunc      = 2;
-    p.nLeaves    = 1;
-    p.pLeaves[0] = i;
-    p.Sign       = ((word)1) << (i & 0x3F);
-    return 1;
-}
+
+
+
 func Nf_CutPrint(p *Nf_Man_t, pCut *Nf_Cut_t) {
     var i int32;
     var nDigits int32 = Abc_Base10Log(Gia_ManObjNum(p.pGia)); 
@@ -714,112 +667,8 @@ func Nf_SetCheckArray(ppCuts **Nf_Cut_t, nCuts int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Nf_CutMergeOrder(pCut0 *Nf_Cut_t, pCut1 *Nf_Cut_t, pCut *Nf_Cut_t, nLutSize int32) int32 { 
-    var nSize0 int32    = pCut0.nLeaves;
-    var nSize1 int32    = pCut1.nLeaves;
-    var i int32;
-    var pC0 *int32 = pCut0.pLeaves;
-    var k int32;
-    var pC1 *int32 = pCut1.pLeaves;
-    var c int32;
-    var pC *int32 = pCut.pLeaves;
-    // the case of the largest cut sizes
-    if nSize0 == nLutSize && nSize1 == nLutSize {
-        for  i = 0; i < nSize0; i++  {
-            if pC0[i] != pC1[i] {  return 0; }
-            pC[i] = pC0[i];
-        }
-        pCut.nLeaves = nLutSize;
-        pCut.iFunc = NF_NO_FUNC;
-        pCut.Sign = pCut0.Sign | pCut1.Sign;
-        return 1;
-    }
-    // compare two cuts with different numbers
-    i = k = c = 0;
-    if nSize0 == 0 { goto FlushCut1; }
-    if nSize1 == 0 { goto FlushCut0; }
-    for {
-        if c == nLutSize { return 0; }
-        if pC0[i] < pC1[k] {
-            pC[c++] = pC0[i++];
-            if i >= nSize0 { goto FlushCut1; }
-        
-        } else if pC0[i] > pC1[k] {
-            pC[c++] = pC1[k++];
-            if k >= nSize1 { goto FlushCut0; }
-        
-        } else {
-            pC[c++] = pC0[i++]; k++;
-            if i >= nSize0 { goto FlushCut1; }
-            if k >= nSize1 { goto FlushCut0; }
-        }
-    }
 
-FlushCut0:
-    if c + nSize0 > nLutSize + i { return 0; }
-    for  i < nSize0  {
-        pC[c++] = pC0[i++];
-    }
-    pCut.nLeaves = c;
-    pCut.iFunc = NF_NO_FUNC;
-    pCut.Sign = pCut0.Sign | pCut1.Sign;
-    return 1;
 
-FlushCut1:
-    if c + nSize1 > nLutSize + k { return 0; }
-    for  k < nSize1  {
-        pC[c++] = pC1[k++];
-    }
-    pCut.nLeaves = c;
-    pCut.iFunc = NF_NO_FUNC;
-    pCut.Sign = pCut0.Sign | pCut1.Sign;
-    return 1;
-}
-func Nf_CutMergeOrderMux(pCut0 *Nf_Cut_t, pCut1 *Nf_Cut_t, pCut2 *Nf_Cut_t, pCut *Nf_Cut_t, nLutSize int32) int32 { 
-    var x0 int32;
-    var i0 int32;
-    var nSize0 int32 = pCut0.nLeaves;
-    var pC0 *int32 = pCut0.pLeaves;
-    var x1 int32;
-    var i1 int32;
-    var nSize1 int32 = pCut1.nLeaves;
-    var pC1 *int32 = pCut1.pLeaves;
-    var x2 int32;
-    var i2 int32;
-    var nSize2 int32 = pCut2.nLeaves;
-    var pC2 *int32 = pCut2.pLeaves;
-    var xMin int32;
-    var c int32;
-    var pC *int32 = pCut.pLeaves;
-    for {
-        if i0 == nSize0 {
-            x0 = ABC_INFINITY;
-        } else {
-            x0 = pC0[i0];
-        }
-        if i1 == nSize1 {
-            x1 = ABC_INFINITY;
-        } else {
-            x1 = pC1[i1];
-        }
-        if i2 == nSize2 {
-            x2 = ABC_INFINITY;
-        } else {
-            x2 = pC2[i2];
-        }
-        xMin = Abc_MinInt( Abc_MinInt(x0, x1), x2 );
-        if xMin == ABC_INFINITY { break; }
-        if c == nLutSize { return 0; }
-        pC[c++] = xMin;
-        if x0 == xMin { i0++; }
-        if x1 == xMin { i1++; }
-        if x2 == xMin { i2++; }
-    }
-    pCut.nLeaves = c;
-    pCut.iFunc = NF_NO_FUNC;
-    pCut.Sign = pCut0.Sign | pCut1.Sign | pCut2.Sign;
-    return 1;
-}
 static inline int Nf_SetCutIsContainedOrder( Nf_Cut_t * pBase, Nf_Cut_t * pCut ) // check if pCut is contained in pBase
 {
     var i int32;
@@ -872,17 +721,7 @@ func Nf_SetLastCutContainsArea(pCuts **Nf_Cut_t, nCuts int32) int32 {
     }
     return k - 1;
 }
-func Nf_CutCompareArea(pCut0 *Nf_Cut_t, pCut1 *Nf_Cut_t) int32 {
-    if pCut0.Useless < pCut1.Useless {  return -1; }
-    if pCut0.Useless > pCut1.Useless {  return  1; }
-    if pCut0.Flow    < pCut1.Flow - NF_EPSILON {  return -1; }
-    if pCut0.Flow    > pCut1.Flow + NF_EPSILON {  return  1; }
-    if pCut0.Delay   < pCut1.Delay {  return -1; }
-    if pCut0.Delay   > pCut1.Delay {  return  1; }
-    if pCut0.nLeaves < pCut1.nLeaves {  return -1; }
-    if pCut0.nLeaves > pCut1.nLeaves {  return  1; }
-    return 0;
-}
+
 func Nf_SetSortByArea(pCuts **Nf_Cut_t, nCuts int32) {
     var i int32;
     for  i = nCuts; i > 0; i--  {
