@@ -43,6 +43,7 @@ type Object struct {
 	ID                  int
 	Kind                ObjectKind
 	Level               int
+	Temp                int
 	Data                any
 	Copy                *Object
 	MarkA, MarkB, MarkC bool
@@ -66,11 +67,13 @@ func (o *Object) IsCO() bool { return o.Kind == ObjectPO || o.Kind == ObjectBI }
 // Network owns objects with stable IDs; deletion leaves holes, as in ABC.
 // Mutations must be serialized by the caller.
 type Network struct {
-	mvVars          map[*Object]*MVVariable
-	Design          *Design
-	Copy, AltView   *Network
-	Type, Function  uint8
-	Barriers        int
+	mvVars         map[*Object]*MVVariable
+	Design         *Design
+	Copy, AltView  *Network
+	Type, Function uint8
+	Barriers       int
+	// CILevel supplies timing-derived initial levels when a timing manager is attached.
+	CILevel         func(*Object) int
 	kindOrder       map[ObjectKind][]*Object
 	cis, cos, boxes []*Object
 	travID          uint64
