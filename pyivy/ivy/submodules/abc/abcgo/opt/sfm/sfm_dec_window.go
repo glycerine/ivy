@@ -40,7 +40,7 @@ func sfmMatchAreaReplacement(window *sfmDecWindow, cnfs [][][]int, divisors int,
 
 // sfmDecWindowFromNetwork converts a caller-selected topological window to SAT
 // object IDs and returns the corresponding original node IDs.
-func sfmDecWindowFromNetwork(p *Sfm_Ntk_t, order, roots []int, pivot, divisors int) (*sfmDecWindow, [][][]int) {
+func sfmDecWindowFromNetwork(p *Sfm_Ntk_t, order, roots, boundary []int, pivot, divisors int) (*sfmDecWindow, [][][]int) {
 	if divisors < 0 || divisors > len(order) {
 		panic("sfm: invalid divisor count")
 	}
@@ -58,10 +58,18 @@ func sfmDecWindowFromNetwork(p *Sfm_Ntk_t, order, roots []int, pivot, divisors i
 	if !ok || pivotID < divisors {
 		panic("sfm: invalid window pivot")
 	}
+	cut := make(map[int]bool, len(boundary))
+	for _, id := range boundary {
+		index, exists := local[id]
+		if !exists || index >= pivotID {
+			panic("sfm: invalid window boundary")
+		}
+		cut[id] = true
+	}
 	window := &sfmDecWindow{gates: make([]int, len(order)), fanins: make([][]int, len(order)), pivot: pivotID}
 	var cnfs [][][]int
 	for i, id := range order {
-		if Sfm_ObjIsPi(p, id) {
+		if Sfm_ObjIsPi(p, id) || cut[id] {
 			window.gates[i] = -1
 			continue
 		}
