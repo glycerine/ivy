@@ -192,54 +192,9 @@ func Gia_ManDupMuxesNoHash(p *Gia_Man_t) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSuperCollectXor_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    assert(!Gia_IsComplement(pObj), "!Gia_IsComplement(pObj)");
-    if !Gia_ObjIsXor(pObj) || 
-        Gia_ObjRefNum(p, pObj) > 1 || 
-//        Gia_ObjRefNum(p, pObj) > 3 || 
-//        (Gia_ObjRefNum(p, pObj) == 2 && (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) == 1 || Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) == 1)) || 
-        Vec_IntSize(p.vSuper) > STR_SUPER {
-        Vec_IntPush( p.vSuper, Gia_ObjToLit(p, pObj) );
-        return;
-    }
-    assert(!Gia_ObjFaninC0(pObj) && !Gia_ObjFaninC1(pObj), "!Gia_ObjFaninC0(pObj) && !Gia_ObjFaninC1(pObj)");
-    Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin0(pObj) );
-    Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin1(pObj) );
-}
-func Gia_ManSuperCollectAnd_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    if Gia_IsComplement(pObj) || 
-        !Gia_ObjIsAndReal(p, pObj) || 
-        Gia_ObjRefNum(p, pObj) > 1 || 
-//        Gia_ObjRefNum(p, pObj) > 3 || 
-//        (Gia_ObjRefNum(p, pObj) == 2 && (Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) == 1 || Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) == 1)) || 
-        Vec_IntSize(p.vSuper) > STR_SUPER {
-        Vec_IntPush( p.vSuper, Gia_ObjToLit(p, pObj) );
-        return;
-    }
-    Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild0(pObj) );
-    Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild1(pObj) );
-}
-func Gia_ManSuperCollect(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    if p.vSuper == nil {
-        p.vSuper = Vec_IntAlloc( STR_SUPER );
-    } else {
-        Vec_IntClear( p.vSuper ); }
-    if Gia_ObjIsXor(pObj) {
-        assert(!Gia_ObjFaninC0(pObj) && !Gia_ObjFaninC1(pObj), "!Gia_ObjFaninC0(pObj) && !Gia_ObjFaninC1(pObj)");
-        Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin0(pObj) );
-        Gia_ManSuperCollectXor_rec( p, Gia_ObjFanin1(pObj) );
-        Vec_IntSort( p.vSuper, 0 );
-        Gia_ManSimplifyXor( p.vSuper );
-    
-    } else if Gia_ObjIsAndReal(p, pObj) {
-        Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild0(pObj) );
-        Gia_ManSuperCollectAnd_rec( p, Gia_ObjChild1(pObj) );
-        Vec_IntSort( p.vSuper, 0 );
-        Gia_ManSimplifyAnd( p.vSuper );
-    
-    } else { assert(false, "0"); }
-    assert(Vec_IntSize(p.vSuper) > 0, "Vec_IntSize(p.vSuper) > 0");
-}
+
+
+
 
 /**Function*************************************************************
 
@@ -252,137 +207,9 @@ func Gia_ManSuperCollect(p *Gia_Man_t, pObj *Gia_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Str_ManNormalize_rec(pNtk *Str_Ntk_t, p *Gia_Man_t, pObj *Gia_Obj_t, vGroups *Vec_Wec_t, vRoots *Vec_Int_t) {
-    var i, k, iVar, iLit, iBeg, iEnd int32;
-    if ~pObj.Value {
-        return; }
-    pObj.Value = 0;
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    if Gia_ObjIsMux(p, pObj) {
-        var vGroup *Vec_Int_t;
-        var pRoot, pMux *Gia_Obj_t;
-        var pFanins [3]int32;
-        if Vec_IntEntry(vRoots, Gia_ObjId(p, pObj)) == -1 {
-            Str_ManNormalize_rec( pNtk, p, Gia_ObjFanin0(pObj), vGroups, vRoots );
-            Str_ManNormalize_rec( pNtk, p, Gia_ObjFanin1(pObj), vGroups, vRoots );
-            Str_ManNormalize_rec( pNtk, p, Gia_ObjFanin2(p, pObj), vGroups, vRoots );
-            pFanins[0] = Gia_ObjFanin0Copy(pObj);
-            pFanins[1] = Gia_ObjFanin1Copy(pObj);
-            pFanins[2] = Gia_ObjFanin2Copy(p, pObj);
-            if Abc_LitIsCompl(pFanins[2]) {
-                pFanins[2] = Abc_LitNot(pFanins[2]);
-                // inlining of macro ABC_SWAP
-                { var t int32  = pFanins[0]; pFanins[0] = pFanins[1]; pFanins[1] = t; };
-            }
-            pObj.Value = Str_ObjCreate( pNtk, STR_MUX, 3, pFanins );
-            return;
-        }
-        vGroup = Vec_WecEntry( vGroups, Vec_IntEntry(vRoots, Gia_ObjId(p, pObj)) );
-        // build data-inputs for each tree
-        // inlining of macro Gia_ManForEachObjVec
-        for  i = 0; (i < Vec_IntSize(vGroup)) && ((pRoot) = Gia_ManObj(p, Vec_IntEntry(vGroup,i))); i++  {
-            Str_MuxInputsCollect( p, pRoot, p.vSuper );
-            iBeg = Vec_IntSize( p.vStore );
-            Vec_IntAppend( p.vStore, p.vSuper );
-            iEnd = Vec_IntSize( p.vStore );
-            // inlining of macro Vec_IntForEachEntryStartStop
-            for  k = iBeg; (k < iEnd) && (((iVar) = Vec_IntEntry(p.vStore, k)), 1); k++  {
-                Str_ManNormalize_rec( pNtk, p, Gia_ManObj(p, iVar), vGroups, vRoots );
-            }
-            Vec_IntShrink( p.vStore, iBeg );
-        }
-        // build internal structures
-        // inlining of macro Gia_ManForEachObjVec
-        for  i = 0; (i < Vec_IntSize(vGroup)) && ((pRoot) = Gia_ManObj(p, Vec_IntEntry(vGroup,i))); i++  {
-            Str_MuxStructCollect( p, pRoot, p.vSuper );
-            // inlining of macro Gia_ManForEachObjVec
-            for  k = 0; (k < Vec_IntSize(p.vSuper)) && ((pMux) = Gia_ManObj(p, Vec_IntEntry(p.vSuper,k))); k++  {
-                pFanins[0] = Gia_ObjFanin0Copy(pMux);
-                pFanins[1] = Gia_ObjFanin1Copy(pMux);
-                pFanins[2] = Gia_ObjFanin2Copy(p, pMux);
-                if Abc_LitIsCompl(pFanins[2]) {
-                    pFanins[2] = Abc_LitNot(pFanins[2]);
-                    // inlining of macro ABC_SWAP
-                    { var t int32  = pFanins[0]; pFanins[0] = pFanins[1]; pFanins[1] = t; };
-                }
-                pMux.Value = Str_ObjCreate( pNtk, STR_MUX, 3, pFanins );
-            }
-            assert(~pRoot.Value, "~pRoot.Value");
-            // set mapping
-            // inlining of macro Gia_ManForEachObjVec
-            for  k = 0; (k < Vec_IntSize(p.vSuper)) && ((pMux) = Gia_ManObj(p, Vec_IntEntry(p.vSuper,k))); k++  {
-                Str_NtkObj(pNtk, Abc_Lit2Var(pMux.Value)).iTop = Abc_Lit2Var(pRoot.Value);
-            }
-            pNtk.nTrees++;
-        }
-        assert(~pObj.Value, "~pObj.Value");
-        // set mapping
-        pObj = Gia_ManObj( p, Vec_IntEntryLast(vGroup) );
-        // inlining of macro Gia_ManForEachObjVec
-        for  i = 0; (i < Vec_IntSize(vGroup)) && ((pRoot) = Gia_ManObj(p, Vec_IntEntry(vGroup,i))); i++  {
-            Str_NtkObj(pNtk, Abc_Lit2Var(pRoot.Value)).iTop = Abc_Lit2Var(pObj.Value);
-        }
-        pNtk.nGroups++;
-        //printf( "%d x %d  ", Vec_IntSize(vGroup), Vec_IntSize(p->vSuper) );
-        return;
-    }
-    // find supergate
-    Gia_ManSuperCollect( p, pObj );
-    // save entries
-    iBeg = Vec_IntSize( p.vStore );
-    Vec_IntAppend( p.vStore, p.vSuper );
-    iEnd = Vec_IntSize( p.vStore );
-    // call recursively
-    // inlining of macro Vec_IntForEachEntryStartStop
-    for  i = iBeg; (i < iEnd) && (((iLit) = Vec_IntEntry(p.vStore, i)), 1); i++  {
-        var pTemp *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(iLit) );
-        Str_ManNormalize_rec( pNtk, p, pTemp, vGroups, vRoots );
-        Vec_IntWriteEntry( p.vStore, i, Abc_LitNotCond(pTemp.Value, Abc_LitIsCompl(iLit)) );
-    }
-    assert(Vec_IntSize(p.vStore) == iEnd, "Vec_IntSize(p.vStore) == iEnd");
-    // consider general case
-    pObj.Value = Str_ObjCreate( pNtk, Gia_ObjIsXor(pObj) ? STR_XOR : STR_AND, iEnd-iBeg, Vec_IntEntryP(p.vStore, iBeg) );
-    Vec_IntShrink( p.vStore, iBeg );
-}
-func Str_ManNormalizeInt(p *Gia_Man_t, vGroups *Vec_Wec_t, vRoots *Vec_Int_t) *Str_Ntk_t {
-    var pNtk *Str_Ntk_t;
-    var pObj *Gia_Obj_t;
-    var i, iFanin int32;
-    assert(p.pMuxes != nil, "p.pMuxes != nil");
-    if p.vSuper == nil {
-        p.vSuper = Vec_IntAlloc( STR_SUPER ); }
-    if p.vStore == nil {
-        p.vStore = Vec_IntAlloc( STR_SUPER ); }
-    Gia_ManFillValue( p );
-    pNtk = Str_NtkCreate( Gia_ManObjNum(p), 1 + Gia_ManCoNum(p) + 2 * Gia_ManAndNum(p) + Gia_ManMuxNum(p) );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsCi(pObj) {
-            pObj.Value = Str_ObjCreate( pNtk, STR_PI, 0, nil );
-        } else if Gia_ObjIsCo(pObj) {
-            Str_ManNormalize_rec( pNtk, p, Gia_ObjFanin0(pObj), vGroups, vRoots );
-            iFanin = Gia_ObjFanin0Copy(pObj);
-            pObj.Value = Str_ObjCreate( pNtk, STR_PO, 1, &iFanin );
-        }
-    }
-    assert(pNtk.nObjs <= Gia_ManObjNum(p), "pNtk.nObjs <= Gia_ManObjNum(p)");
-    return pNtk;
-}
-func Str_ManNormalize(p *Gia_Man_t) *Str_Ntk_t {
-    var pNtk *Str_Ntk_t;
-    var pMuxes *Gia_Man_t  = Gia_ManDupMuxes( p, 5 );
-    var vGroups *Vec_Wec_t  = Str_ManDeriveTrees( pMuxes );
-    var vRoots *Vec_Int_t;
-    Str_ManCheckOverlap( pMuxes, vGroups );
-    vRoots = Str_ManCreateRoots( vGroups, Gia_ManObjNum(pMuxes) );
-    pNtk = Str_ManNormalizeInt( pMuxes, vGroups, vRoots );
-    Gia_ManCleanMark0( pMuxes );
-    Gia_ManStop( pMuxes );
-    Vec_IntFree( vRoots );
-    Vec_WecFree( vGroups );
-    return pNtk;
-}
+
+
+
  
 /**Function*************************************************************
 
