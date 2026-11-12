@@ -24,7 +24,62 @@ for the next pass; do not add anonymous-function adapters. No Clang dependency.
 Evidence: `out/starter.go:38` has `#ifdef WIN32`, and
 `out/aig/aig/aig.go:59` has an ordinary `typedef enum` defining AIG object kinds.
 
-## Recommended next small improvements
+## Implementation status: prototype 52
+
+The mechanical rules below are now implemented within these explicit boundaries.
+The original examples remain useful as regression targets.
+
+- [x] Config branch selection, `-cfg`, inline `//` comments, and automatic
+  `_starting.cfg` discovery when the default config is absent. The template
+  lists every discovered conditional symbol as `SYMBOL = 0`, with source
+  directive comments. It is inactive and never overwrites an existing template.
+- [x] Literal loop/if conditions, switch header cleanup, adjacent empty case
+  grouping, and explicit fallthrough between C cases that reach the next case.
+- [x] Scalar single-token casts (float/double/int/unsigned/char/short/long), plus
+  integer literal suffixes as typed Go conversions. Pointer casts remain review.
+- [x] Simple prefix increments/decrements at the start of an if condition become
+  Go if initializers. Member/index operands and postfix expression uses remain.
+- [x] Shared typedef/enum-tag name discovery across tree and flat-batch inputs.
+- [x] One-object ABC_CALLOC and ABC_ALLOC become new(T). Array allocations,
+  reallocation and freeing remain explicitly reported ownership decisions.
+- [x] Ordinary bitfields expand to integer fields with width/layout/truncation
+  comments; no claim of C binary-layout equivalence is made.
+- [x] Pointer-member spelling is normalized in generated macro bodies as well
+  as ordinary functions, while original comments/opaque source remain intact.
+- [x] Discarded comma-expression statements become ordered statements. Independent
+  simple loop initializers/post assignments become Go multi-assignment. Dependent
+  assignments and arbitrary multi-operation post clauses remain for repair.
+- [x] Braced do/while loops with no continue become bottom-tested Go loops.
+  Continue-bearing bodies are retained with specific control-flow review guidance.
+- [x] Known integer/pointer conditions become comparisons against zero/nil,
+  including assert arguments and known function returns. Ambiguous names stay C.
+- [x] Direct assert(pthread_mutex_lock/unlock(...) == 0) becomes the method call
+  once, without an impossible check against a nonexistent Go return value.
+- [x] Known aggregate `{0}` initialization is omitted; explicit array/aggregate
+  lists become typed composite literals. Array/comma struct fields are reordered.
+- [x] Recognized local-static declarations lift to uniquely named package variables
+  so state persists across calls. Dynamic/lazy C++ initializers, addresses of
+  automatic variables, and ambiguous shadowing remain for repair.
+- [x] Ordinary file/local enum definitions, tag references and separate tag aliases
+  convert; explicit resets and implicit successors retain their values. C++
+  scoped enums and trailing variable declarators remain unsupported.
+- [x] Expression macros with supplied result types receive return statements;
+  untyped expression macros receive specific result-type repair guidance.
+- [x] Whole-object memset(p, 0, sizeof(T)) becomes *p = T{} only when p is a known
+  pointer to a known struct of exactly that type. Unknown layouts remain intact.
+- [x] Union, pointer-cast, sizeof, allocation, thread and unsupported control-flow
+  cases have targeted review metadata instead of invented representations.
+- [x] Function metadata uses the actual emitted function text, including renamed
+  static variables, to prevent per-function/file-wide rewrite disagreement.
+
+Validation uses **only** the library and CLI packages:
+`go -C starting-point test . ./cmd/starting-point`. Experiments are excluded.
+Runtime regressions combine rules, including a configured multi-file translation
+with header typedefs, enums, bitfields, arrays, allocation, assertions, static
+state, switch fallthrough, and comma loop clauses. Boundary tests protect comments,
+opaque branches, shadowed names, nested breaks, increment operands, and filenames.
+
+## Implemented small improvements and their boundaries
 
 | Priority | Pattern and observed example | Proposed rule | Boundary / verification |
 |---|---|---|---|
@@ -37,7 +92,7 @@ Evidence: `out/starter.go:38` has `#ifdef WIN32`, and
 | 7 | `unsigned int Type : 3` at `out/aig/aig/aig.go:78` | Expand bitfields to ordinary integer fields and retain the bit width in a comment. | This loses C packing and truncation semantics; clearly mark these as representation-review sites. Avoid booleanizing 1-bit integer fields automatically. |
 | 8 | `p->nCutsMax` remains inside a generated iterator function at `out/aig/aig/aig.go:221` | Apply token-level member-access normalization consistently to generated macro replacement bodies. | Do not alter saved original-macro comments, strings, or opaque conditional text. |
 
-## More valuable rules that need structural care
+## Structural rules and remaining boundaries
 
 ### Comma expressions and loop clauses
 
@@ -155,7 +210,8 @@ but can still include block comments, strings, macro drafts, and opaque C.
 | enum keyword | 132 |
 | union keyword | 105 |
 
-Suggested order: constant loop conditions, switch headers, scalar casts,
-single-object zero allocation, and a shared typedef index. Then tackle the
-structural comma/do-while rules with focused semantic tests. Track each completed
-rule in starting-point/PLAN.md and regenerate a fresh output tree for comparison.
+Next work requires choosing representations or expanding the documented rule
+boundaries: continue-aware do/while, dependent comma loop clauses, callback/iterator
+macro expansion, scoped C++ enums, unions, pointer tagging, array ownership, and
+thread lifecycle. These are not silently marked as mechanically solved. Keep
+unused-local cleanup compiler-guided and retain side-effecting initializers.

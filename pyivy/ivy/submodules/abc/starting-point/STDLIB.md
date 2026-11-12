@@ -562,3 +562,14 @@ No closures or status adapters are emitted. Integer-return checks are left for
 compiler-guided repair because Lock and Unlock return no value. Initialization
 attributes, destruction, trylock and timedlock remain review cases. Non-default
 pthread mutex semantics and copying a Go mutex after use require review.
+
+
+## Mechanical follow-ups (prototype-52)
+
+Known numeric/pointer conditions now become comparisons to zero/nil. Direct
+mutex-success assertions are reduced to the single Lock/Unlock operation; no
+closure is generated. ABC_ALLOC/ABC_CALLOC of exactly one known type become
+new(T); Go zero-initializes the object. Whole known struct clearing can become
+*p = T{}. Other allocation, free/realloc and pthread lifecycle calls are recorded
+for coordinated representation/ownership repair. Literal integer suffixes retain
+their widths/signs through explicit typed conversions in expressions.

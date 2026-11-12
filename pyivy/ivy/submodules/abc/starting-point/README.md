@@ -182,7 +182,7 @@ Go calls may intentionally leave return-value/type errors for downstream repair;
 calls that require structural adaptation remain review sites (prototype-43).
 
 
-The library pass now has a documented catalog of 310 C-library names, classified
+The library pass now has a documented catalog of C/POSIX/ABC-library names, classified
 as implemented, conditional on recognizable argument shapes/types, or retained
 for review. See [STDLIB.md](STDLIB.md) for the C11 header survey, references,
 conversion policy, full rule table, and validation details.
@@ -278,3 +278,11 @@ go -C starting-point test . ./cmd/starting-point
 ```
 
 Do not run tests in `experiments/`; its drafts are not expected to compile.
+
+
+Prototype-52 implements the bounded mechanical rules tracked in IDEAS.md: scalar
+casts, truth conditions, enums, switch/do-while cleanup, comma statements, known
+allocation/zeroing patterns, bitfields, aggregate declarations, and persistent
+local statics. The library/CLI regression tests exercise these together. This
+remains a draft port: union layout, tagged pointers, arbitrary allocation sizes,
+iterator expansion, thread lifecycle and ambiguous types are explicit repair work.

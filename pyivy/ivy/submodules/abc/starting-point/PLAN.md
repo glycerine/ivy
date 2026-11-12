@@ -1677,3 +1677,92 @@ Validation: all Go tests pass, including actual starter.c, import alias/name
 collisions, source-defined function protection, nested assertions and an
 executed generated program using four concurrent workers to increment a shared
 counter under the translated mutex. Installed prototype-50; regenerate outputs.
+
+
+## Prototype 51: inspected-output backlog, configuration and enums
+
+Created root IDEAS.md from the existing out/ tree with concrete path/line examples,
+relative priorities, rough pattern counts, implementation boundaries and semantic
+pitfalls. The original user output remains unchanged.
+
+Added ParseConfig/ReadConfig and Options.Defines. The CLI reads ./starting.cfg or
+-cfg PATH. An absent default is optional; explicit missing files and malformed
+entries are errors. Configured zero disables symbols for #if as well as
+#ifdef/defined, matching the user's platform-choice intent. This intentionally
+is not C's defined-but-zero distinction. Unlisted symbols and unsupported
+expressions stay unknown; source macro expansion is not attempted.
+
+Choose decidable conditional chains (including elif/elseif, else, nested selected
+branches and choices inside header guards). Blank discarded bytes internally so
+source coordinates remain stable. Preserve original source hashes and snapshots.
+Unknown enclosing blocks stay opaque. Comment pthread.h includes even after
+opaque regions are restored. Record active configuration in analysis/tree JSON.
+
+Convert standalone enum definitions into Go const groups. Implicit sequences use
+iota; explicit resets use their expressions and subsequent names use Previous+1.
+Named enums use the existing int32 draft policy, retaining comments and tag aliases.
+The later prototype-52 work extends local enum/tag-reference handling.
+
+Validation before the larger backlog work: library/CLI tests passed and all 1625
+ABC source files translated with zero source-preserving fallbacks using WIN32=0
+in /tmp/starting-point-v51-src. That snapshot reported 37787 library conversions
+and 3878 retained review sites. It is a draft translation, not an ABC build.
+
+## Prototype 52: mechanical backlog and configuration-template usability
+
+User explicitly requested implementation of IDEAS.md with unit tests preventing
+feature cross-talk. IDEAS.md now records completed bounded rules and unresolved
+representation work; the implementation does not invent ownership or union layout.
+
+Implemented scalar casts/suffixes; constant conditions; switch headers, grouped
+cases and fallthrough; simple prefix increments in Go if initializers; braced
+do/while without continue; ordered comma-expression statements and independent
+for-header assignments; consistent macro member access; numeric/pointer truth
+conditions using conservative known types/return types; single-object ABC_ALLOC
+and ABC_CALLOC; bitfield expansion with layout/truncation comments; array/comma
+struct fields; typed aggregate literals and zero values; persistent local-static
+storage with collision-free names; local enums, tag references and aliases;
+reviewed-result expression-macro returns; direct mutex-status assertion removal;
+and whole known struct memset-to-zero conversion. Add targeted review metadata
+for retained unions, casts, layouts, control-flow and ownership/lifecycle decisions.
+
+A shared typedef/enum-tag inventory supplies names from headers to consumers.
+Function metadata now takes actual emitted function text, avoiding disagreements
+when whole-file passes choose collision-safe names for lifted static variables.
+Regression tests caught and fixed same-line block separators, enum separators,
+retained do/while macro formatting, increment operand boundaries, and assertion
+status-check spacing. Existing tests were updated only where behavior intentionally
+improved; compiled/runtime fixtures verify the resulting semantics.
+
+Config parsing now accepts // comments to end of line anywhere. If -cfg is absent
+and ./starting.cfg does not exist, a successful CLI run writes ./_starting.cfg:
+sorted/deduplicated SYMBOL = 0 placeholders plus observed conditional directives
+and source locations. The file is inactive until renamed; existing templates are
+never overwritten. Explicit -cfg suppresses generation. CLI tests run in an
+isolated working directory so generated templates do not pollute the repository.
+
+Testing instruction: never run tests under experiments/. All subsequent checks
+use `go -C starting-point test . ./cmd/starting-point`, including generated-Go
+runtime fixtures in temporary directories. No experiment drafts are compiled.
+
+The first full prototype-52 inventory translated 1625 files with zero fallbacks
+in 109.08 seconds (/tmp/starting-point-v52-src), including 102 assertion helpers.
+It reported 38011 conversions and 9202 review sites; review coverage expanded to
+ABC allocation/free and pthread lifecycle calls, so counts are not comparable to
+the narrower old library catalog as a measure of regressions. A final full-tree
+check follows the last cross-talk fixes.
+
+
+Final validation and boundaries:
+- The configured whole-tree check in /tmp/starting-point-v52-final translated all
+  1625 files with zero fallbacks in 112.10 seconds, producing 102 assert helpers.
+  It reported 38328 converted and 8885 retained library sites after the expanded
+  allocation/POSIX catalog. This validates translation coverage, not an ABC build.
+- Library/CLI tests pass with `go -C starting-point test . ./cmd/starting-point`.
+  Experiments were excluded after the user's instruction and remain excluded.
+- A final targeted regression tightened static lifting: literal/zero/address
+  initializers can lift, but C++ lazy calls, automatic-variable values/addresses,
+  and ambiguous shadowing remain local for review. Tests verify both persistence
+  and non-hoisting of dynamic initialization. No new anonymous functions are used.
+- Installed prototype-52. The user's out/ tree was inspected, not overwritten;
+  regenerate to use the new transformations and configuration support.

@@ -388,3 +388,42 @@ func TestMain(m *testing.M) {
 	os.RemoveAll(dir)
 	os.Exit(code)
 }
+
+func TestConfigTemplateTreeAndExplicitPath(t *testing.T) {
+	previous, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.Chdir(previous)
+	for _, explicit := range []bool{false, true} {
+		root := t.TempDir()
+		if err = os.Chdir(root); err != nil {
+			t.Fatal(err)
+		}
+		if err = os.Mkdir("src", 0755); err != nil {
+			t.Fatal(err)
+		}
+		if err = os.WriteFile("src/a.c", []byte("#if WIN32\nint x;\n#else\nint y;\n#endif\n"), 0644); err != nil {
+			t.Fatal(err)
+		}
+		args := []string{"-out", "out"}
+		if explicit {
+			if err = os.WriteFile("custom.cfg", []byte("WIN32=0// disabled\n"), 0644); err != nil {
+				t.Fatal(err)
+			}
+			args = append(args, "-cfg", "custom.cfg")
+		}
+		args = append(args, "src")
+		if err = run(args); err != nil {
+			t.Fatal(err)
+		}
+		data, err := os.ReadFile("_starting.cfg")
+		if explicit {
+			if !os.IsNotExist(err) {
+				t.Fatal("explicit config generated template", err)
+			}
+		} else if err != nil || !strings.Contains(string(data), "WIN32 = 0") {
+			t.Fatal(string(data), err)
+		}
+	}
+}

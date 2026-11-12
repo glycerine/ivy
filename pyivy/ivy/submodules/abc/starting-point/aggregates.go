@@ -84,6 +84,19 @@ func liftStaticLocals(source string) (string, error) {
 			used[t.Text] = true
 		}
 	}
+	globals := map[string]bool{}
+	depth := 0
+	for j, t := range ts {
+		if t.Text == "{" {
+			depth++
+		}
+		if t.Text == "}" {
+			depth--
+		}
+		if depth == 0 && t.Text == "var" && j+1 < len(ts) {
+			globals[ts[j+1].Text] = true
+		}
+	}
 	var edits []Edit
 	for i, t := range ts {
 		if t.Text != "func" || i+2 >= len(ts) || ts[i+2].Text != "(" {
@@ -140,6 +153,50 @@ func liftStaticLocals(source string) (string, error) {
 		if len(declarations) == 0 {
 			continue
 		}
+		// C++ local statics can initialize lazily from calls or automatic variables.
+		// Hoist only literal/zero/address initializers; retain dynamic initialization.
+		constantInitializers := true
+		for _, d := range declarations {
+			tokens, _, err := significantTokens(d.text)
+			if err != nil {
+				return "", err
+			}
+			inValue := false
+			numericEnd := -1
+			for at, tok := range tokens {
+				if tok.Text == ";" {
+					inValue = false
+				}
+				if tok.Text == "=" {
+					inValue = true
+					continue
+				}
+				if !inValue {
+					continue
+				}
+				if tok.Start < numericEnd {
+					continue
+				}
+				if literal := castNumber.FindString(d.text[tok.Start:]); literal != "" {
+					numericEnd = tok.Start + len(literal)
+					continue
+				}
+				if tok.Kind != "word" {
+					continue
+				}
+				if tok.Text == "NULL" || tok.Text == "nil" || tok.Text == "true" || tok.Text == "false" || scalarCastType(tok.Text) != "" {
+					continue
+				}
+				if at > 0 && tokens[at-1].Text == "&" && (names[tok.Text] != "" || globals[tok.Text]) {
+					continue
+				}
+				constantInitializers = false
+			}
+		}
+		if !constantInitializers {
+			continue
+		}
+
 		inside := func(at int) bool {
 			for _, d := range declarations {
 				if at >= d.start && at < d.end {

@@ -277,3 +277,16 @@ int main(void) { printf("%d %d\n",calc(0),calc(1)); return 0; }
 		t.Fatal(string(output), err)
 	}
 }
+
+func TestDynamicLocalStaticRemainsLazy(t *testing.T) {
+	for _, source := range []string{
+		"func f() int32 { static int count=next(); return count; }",
+		"func f(n int32) int32 { static int count=n; return count; }",
+		"func f(n int32) { static int *p = &n; use(p); }",
+	} {
+		got, err := liftStaticLocals(source)
+		if err != nil || got != source {
+			t.Fatal(got, err)
+		}
+	}
+}
