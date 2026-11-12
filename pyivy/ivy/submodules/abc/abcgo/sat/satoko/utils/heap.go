@@ -85,7 +85,14 @@ func (h *Heap) Clear() { h.data = nil; h.indices = nil }
 func (h *Heap) Build(entries []uint32) {
 	h.Clear()
 	for _, x := range entries {
-		h.Insert(x)
+		for len(h.indices) <= int(x) {
+			h.indices = append(h.indices, -1)
+		}
+		h.indices[x] = len(h.data)
+		h.data = append(h.data, x)
+	}
+	for i := len(h.data)/2 - 1; i >= 0; i-- {
+		h.down(i)
 	}
 }
 func heap_free(h *heap_t)        { h.Clear(); h.weights = nil }

@@ -44,12 +44,20 @@ func (s *Solver) AddClause(lits []int) bool {
 		if lit < 0 {
 			panic("negative encoded literal")
 		}
-		s.SetVariables((lit >> 1) + 1)
+		for lit>>1 >= len(s.values) {
+			s.AddVariable(true)
+		}
 	}
 	sort.Ints(copyLits)
 	out := copyLits[:0]
 	last := -2
 	for _, lit := range copyLits {
+		if s.literalValue(lit) == 1 {
+			return true
+		}
+		if s.literalValue(lit) == 0 {
+			continue
+		}
 		if lit == last {
 			continue
 		}
@@ -60,12 +68,12 @@ func (s *Solver) AddClause(lits []int) bool {
 		last = lit
 	}
 	s.model = nil
-	s.addStored(out, false, 0)
+	id := s.addStored(out, false, 0)
 	if len(out) == 0 {
 		s.ok = false
 		return false
 	}
-	if !s.prepare() {
+	if len(out) == 1 && (!s.enqueue(out[0], id) || s.propagate() >= 0) {
 		s.ok = false
 		return false
 	}
@@ -335,10 +343,12 @@ func (s *Solver) Simplify() bool {
 	if !s.ok {
 		return false
 	}
-	if !s.prepare() {
+	s.cancel(0)
+	if s.propagate() >= 0 {
 		s.ok = false
 		return false
 	}
+	s.simplifyOrder()
 	return true
 }
 

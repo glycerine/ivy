@@ -68,3 +68,34 @@ restored formula. Original C rollback memory behavior is not reproduced.
    after recovered panics, stale final cores after minimization, a spurious
    zero-based dump terminator, rollback literal counters, and reset losing
    cancellation settings. Regression and race suites cover the resulting fixes.
+
+### Source-ordered conflict-cost audit (2026-11-12)
+
+The GIA tuning integration exposed search-order differences despite matching SAT
+answers. Instrumented original-C and Go traces identified the first divergent
+decisions rather than compensating the conflict counter. Corrections preserve
+implicit negative variable polarity, enqueue-time phase saving, reverse trail
+reinsertion, binary-before-long watch priority and blocker caching, binary
+minimization's tail-swap order, and the additional learnt-reason activity bump.
+Root assignments now persist during clause insertion; root-satisfied clauses are
+omitted and root-false literals removed. Root simplification rebuilds the heap
+bottom-up with the original propagation budget, including the source's reset of
+literal statistics at solve entry. Unit records remain Go-owned for dumping and
+rollback; they do not contribute to source clause-literal statistics.
+
+Readability pass: kept stable clause IDs and existing API ownership; isolated
+watch insertion and root order maintenance into named helpers. The blocker map
+keys each literal/clause watch independently, so moving one watch does not alter
+the other. Retained original clauses support the existing rollback contract;
+`simplified` records removal from source simplification accounting.
+
+Bug/invariant pass: checked implied phase timing, root-unit clause normalization,
+heap membership during cancellation, binary propagation before long watches,
+root decision order, and propagation accounting on binary versus long conflicts.
+Focused regressions cover implicit/explicit polarity, binary watch priority,
+persistent root implications, and four original-C conflict costs from seeded
+formulas. The independent GIA oracle matches status and conflict count on its
+100 seeded source-ordered formulas. Full Satoko subtree race tests, existing
+original-C status differential, and vet pass. This evidence covers those cases;
+it does not establish complete search-trace equivalence for arbitrary restart,
+reduction, assumption, or incremental histories.

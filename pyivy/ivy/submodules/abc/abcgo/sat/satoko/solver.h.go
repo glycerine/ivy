@@ -13,6 +13,9 @@ type Solver struct {
 	stats                     Stats
 	clauses                   []*clause
 	watches                   [][]int
+	watchBlockers             map[[2]int]int
+	simplifyAssigned          int
+	simplifyProps             int64
 	values                    []int8
 	levels, reasons           []int
 	phases                    []uint8
@@ -54,6 +57,7 @@ func (s *Solver) enqueue(lit, reason int) bool {
 	}
 	variable := lit >> 1
 	s.values[variable] = 1 - int8(lit&1)
+	s.phases[variable] = uint8(lit & 1)
 	s.levels[variable] = s.decisionLevel()
 	s.reasons[variable] = reason
 	s.trail = append(s.trail, lit)
@@ -64,12 +68,15 @@ func (s *Solver) cancel(level int) {
 		return
 	}
 	at := s.limits[level]
-	for _, lit := range s.trail[at:] {
+	for i := len(s.trail) - 1; i >= at; i-- {
+		lit := s.trail[i]
 		v := lit >> 1
 		s.phases[v] = uint8(lit & 1)
 		s.values[v] = -1
 		s.reasons[v] = -1
-		s.order.Update(uint32(v))
+		if !s.order.Contains(uint32(v)) {
+			s.order.Insert(uint32(v))
+		}
 	}
 	s.trail = s.trail[:at]
 	s.limits = s.limits[:level]

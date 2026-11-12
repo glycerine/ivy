@@ -14,7 +14,7 @@ func (s *Solver) clauseLBD(lits []int) uint32 {
 func (s *Solver) minimizeLearnt(lits []int) []int {
 	present := make([]bool, len(s.values))
 	var mask uint32
-	for _, lit := range lits {
+	for _, lit := range lits[1:] {
 		present[lit>>1] = true
 	}
 	for _, lit := range lits[1:] {
@@ -68,13 +68,16 @@ func (s *Solver) minimizeLearnt(lits []int) []int {
 			redundant[other^1] = true
 		}
 	}
-	result := out[:1]
-	for _, lit := range out[1:] {
-		if !redundant[lit] {
-			result = append(result, lit)
+	end := len(out)
+	for i := 1; i < end; {
+		if redundant[out[i]] {
+			end--
+			out[i], out[end] = out[end], out[i]
+		} else {
+			i++
 		}
 	}
-	return result
+	return out[:end]
 }
 
 // analyzeFinal walks reasons back to assumption decisions rather than returning

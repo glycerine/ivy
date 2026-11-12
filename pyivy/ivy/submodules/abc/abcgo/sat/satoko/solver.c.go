@@ -10,6 +10,7 @@ func (s *Solver) analyze(conflict int) ([]int, int, uint32) {
 	seen := make([]bool, len(s.values))
 	learnt := []int{0}
 	path := 0
+	var lastLevel []int
 	p := -1
 	index := len(s.trail) - 1
 	for {
@@ -36,6 +37,9 @@ func (s *Solver) analyze(conflict int) ([]int, int, uint32) {
 			s.bumpVariable(v)
 			if s.levels[v] == s.decisionLevel() {
 				path++
+				if r := s.reasons[v]; r >= 0 && s.clauses[r].learnt {
+					lastLevel = append(lastLevel, v)
+				}
 			} else {
 				learnt = append(learnt, q)
 			}
@@ -74,6 +78,11 @@ func (s *Solver) analyze(conflict int) ([]int, int, uint32) {
 	levels := map[int]bool{}
 	for _, lit := range learnt {
 		levels[s.levels[lit>>1]] = true
+	}
+	for _, v := range lastLevel {
+		if s.clauses[s.reasons[v]].lbd < uint32(len(levels)) {
+			s.bumpVariable(v)
+		}
 	}
 	return learnt, back, uint32(len(levels))
 }
@@ -150,15 +159,18 @@ func (s *Solver) prepare() bool {
 func (s *Solver) Solve() int {
 	s.final = nil
 	s.model = nil
-	s.stats.Decisions = 0
-	s.stats.Propagations = 0
-	s.stats.Conflicts = 0
+	allConflicts, allPropagations := s.stats.AllConflicts, s.stats.AllPropagations
+	s.stats = Stats{AllConflicts: allConflicts, AllPropagations: allPropagations}
 	if !s.ok {
 		return SATOKO_UNSAT
 	}
-	if !s.prepare() {
+	s.cancel(0)
+	if s.propagate() >= 0 {
 		s.ok = false
 		return SATOKO_UNSAT
+	}
+	if !s.opts.NoSimplify {
+		s.simplifyOrder()
 	}
 	restart := uint32(0)
 	window := s.opts.RestartWindow
@@ -232,6 +244,9 @@ func (s *Solver) Solve() int {
 			}
 			continue
 		}
+		if !s.opts.NoSimplify && s.decisionLevel() == 0 {
+			s.simplifyOrder()
+		}
 		decision := -1
 		for s.decisionLevel() < len(s.assumptions) {
 			lit := s.assumptions[s.decisionLevel()]
@@ -270,4 +285,33 @@ func (s *Solver) Solve() int {
 			panic("conflicting decision")
 		}
 	}
+}
+
+// Root simplification rebuilds decision order only when its source budget expires.
+func (s *Solver) simplifyOrder() {
+	if s.simplifyAssigned == len(s.trail) || s.simplifyProps > 0 {
+		return
+	}
+	var entries []uint32
+	for v, value := range s.values {
+		if value < 0 {
+			entries = append(entries, uint32(v))
+		}
+	}
+	s.order.Build(entries)
+	s.simplifyAssigned = len(s.trail)
+
+	for _, c := range s.clauses {
+		if c.deleted || c.learnt || c.simplified || len(c.lits) < 2 {
+			continue
+		}
+		for _, lit := range c.lits {
+			if s.literalValue(lit) == 1 {
+				c.simplified = true
+				s.stats.OriginalLiterals -= int64(len(c.lits))
+				break
+			}
+		}
+	}
+	s.simplifyProps = s.stats.OriginalLiterals + s.stats.LearntLiterals
 }

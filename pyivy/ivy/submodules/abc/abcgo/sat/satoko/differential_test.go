@@ -28,7 +28,7 @@ func TestOriginalCDifferential(t *testing.T) {
 	tmp := t.TempDir()
 	binary := filepath.Join(tmp, "original")
 	source := filepath.Join(root, "src/sat/satoko")
-	args := []string{"-O2", "-DABC_USE_STDINT_H", "-I" + filepath.Join(root, "src"), "testdata/original_driver.c", filepath.Join(source, "solver.c"), filepath.Join(source, "solver_api.c"), filepath.Join(source, "cnf_reader.c"), "-lm", "-o", binary}
+	args := []string{"-O2", "-DABC_USE_STDINT_H", "-I" + filepath.Join(root, "src"), "test_vectors/original_driver.c", filepath.Join(source, "solver.c"), filepath.Join(source, "solver_api.c"), filepath.Join(source, "cnf_reader.c"), "-lm", "-o", binary}
 	if output, err := exec.Command(compiler, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile C reference: %v\n%s", err, output)
 	}

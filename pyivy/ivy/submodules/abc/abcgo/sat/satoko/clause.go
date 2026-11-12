@@ -5,6 +5,7 @@ import "fmt"
 import "io"
 
 type clause struct {
+	simplified      bool
 	lits            []int
 	learnt, deleted bool
 	protected       bool
