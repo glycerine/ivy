@@ -74,7 +74,7 @@ func Mmr_FixedStart(base, n int32) *Mmr_Fixed_t {
 func Mmr_FixedStop(p *Mmr_Fixed_t, freeLast int32) { *p = Mmr_Fixed_t{} }
 func Mmr_FixedEntry(p *Mmr_Fixed_t, h int32) []uint64 {
 	page, off := h>>p.nPageBase, h&p.PageMask
-	if h <= 0 || int(page) >= len(p.pages) || off+p.nEntryWords > p.PageMask {
+	if h <= 0 || int(page) >= len(p.pages) || off+p.nEntryWords > p.PageMask+1 {
 		panic("invalid handle")
 	}
 	return p.pages[page][off : off+p.nEntryWords : off+p.nEntryWords]
@@ -86,6 +86,10 @@ func Mmr_FixedFetch(p *Mmr_Fixed_t) int32 {
 		var handles []int32
 		for i := int32(1); i+p.nEntryWords <= p.PageMask; i += p.nEntryWords {
 			handles = append(handles, base|i)
+		}
+		// A maximum-size entry uses every word except reserved offset zero.
+		if len(handles) == 0 {
+			handles = append(handles, base|1)
 		}
 		for i := len(handles) - 1; i >= 0; i-- {
 			p.frees = append(p.frees, handles[i])

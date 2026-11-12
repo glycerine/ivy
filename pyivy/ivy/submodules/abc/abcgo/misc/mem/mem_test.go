@@ -146,3 +146,24 @@ func TestRestartDropsChunkReferences(t *testing.T) {
 		}
 	}
 }
+
+func TestMaximumSizeHandleEntry(t *testing.T) {
+	p := Mmr_FixedStart(5, 31)
+	h := Mmr_FixedFetch(p)
+	entry := Mmr_FixedEntry(p, h)
+	if len(entry) != 31 {
+		t.Fatal(len(entry))
+	}
+	entry[30] = 7
+	h2 := Mmr_FixedFetch(p)
+	if h2>>5 == h>>5 {
+		t.Fatal("maximum entries must occupy separate pages")
+	}
+	if Mmr_FixedEntry(p, h)[30] != 7 {
+		t.Fatal("entry moved")
+	}
+	Mmr_FixedRecycle(p, h)
+	if Mmr_FixedFetch(p) != h {
+		t.Fatal("maximum entry recycling")
+	}
+}
