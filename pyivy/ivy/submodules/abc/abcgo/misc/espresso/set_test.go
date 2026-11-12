@@ -258,3 +258,35 @@ func TestSetCopyColumnOnlyAddsBits(t *testing.T) {
 		t.Fatal("sf_copy_col cleared destination despite source OR semantics")
 	}
 }
+
+func TestNegativeSetElementsCannotCorruptMetadata(t *testing.T) {
+	operations := []struct {
+		name  string
+		apply func(pset, int32)
+	}{
+		{"membership", func(s pset, e int32) { _ = is_in_set(s, e) }},
+		{"insert", set_insert},
+		{"remove", set_remove},
+		{"public membership", func(s pset, e int32) { _ = s.Contains(e) }},
+		{"public insert", func(s pset, e int32) { s.Insert(e) }},
+		{"public remove", func(s pset, e int32) { s.Remove(e) }},
+	}
+	for _, operation := range operations {
+		for _, element := range []int32{-1, -2, -16, -31, -32, -33, -2147483648} {
+			t.Run(fmt.Sprintf("%s/%d", operation.name, element), func(t *testing.T) {
+				s := setOf(65, 0, 31, 64)
+				SET(s, PRIME|ACTIVE)
+				PUTSIZE(s, 17)
+				before := set_save(s)
+				panicked := false
+				func() { defer func() { panicked = recover() != nil }(); operation.apply(s, element) }()
+				if !panicked {
+					t.Fatalf("negative element %d accepted", element)
+				}
+				if !reflect.DeepEqual(s, before) {
+					t.Fatal("invalid element modified set data or metadata", s, before)
+				}
+			})
+		}
+	}
+}

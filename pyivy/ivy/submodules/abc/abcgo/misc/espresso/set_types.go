@@ -58,12 +58,23 @@ func set_full(size int32) pset { return set_fill(make(pset, SET_SIZE(size)), siz
 func set_save(set pset) pset   { return set_copy(make(pset, LOOPCOPY(set)+1), set) }
 func set_free(pset)            {} // Sets are Go-owned slices; no manual allocator is retained.
 func is_in_set(set pset, element int32) bool {
+	if element < 0 {
+		panic("espresso: negative set element")
+	}
 	return set[WHICH_WORD(element)]&(uint32(1)<<WHICH_BIT(element)) != 0
 }
 func set_remove(set pset, element int32) {
+	if element < 0 {
+		panic("espresso: negative set element")
+	}
 	set[WHICH_WORD(element)] &^= uint32(1) << WHICH_BIT(element)
 }
-func set_insert(set pset, element int32) { set[WHICH_WORD(element)] |= uint32(1) << WHICH_BIT(element) }
+func set_insert(set pset, element int32) {
+	if element < 0 {
+		panic("espresso: negative set element")
+	}
+	set[WHICH_WORD(element)] |= uint32(1) << WHICH_BIT(element)
+}
 
 // Set and Family expose the same storage to package users without exporting
 // the original C bookkeeping fields.

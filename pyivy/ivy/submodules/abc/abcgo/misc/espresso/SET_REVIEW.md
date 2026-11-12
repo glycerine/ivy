@@ -96,3 +96,13 @@ Combined validation with the actual Go shared declarations:
 
 This passes. The whole Espresso package still includes other active ports, and
 make_sparse/mv_reduce remain pending their real algorithm dependencies.
+
+### Negative-element follow-up
+
+Public and internal membership/insertion/removal now reject negative element
+indices before computing a word number. C's `WHICH_WORD(-1)` otherwise selects
+metadata word zero, so bounds checking alone does not protect flags/cardinality.
+Observed the regression fail before adding guards; tests cover all three raw
+helpers and public methods with negative values around the word boundary and
+MinInt32, asserting a panic and byte-for-byte unchanged metadata/data. Valid-input
+C differential fixtures and the combined set/cube race harness remain green.
