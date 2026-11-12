@@ -1,776 +1,350 @@
 package rsb
 
-import "fmt"
+import (
+	"fmt"
+	"math/bits"
+	"os"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/misc/util"
+)
 
-  FileName    [rsbDec6.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Truth-table-based resubstitution.]
-
-  Synopsis    [Implementation of the algorithm.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: rsbDec6.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "rsbInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rsb_DecTry0(c word) uint32 {
-    return uint32((c != 0));
+func Rsb_DecTry0(c uint64) uint32 {
+	if c != 0 {
+		return 1
+	}
+	return 0
 }
-func Rsb_DecTry1(c word, f1 word) uint32 {
-    return (Rsb_DecTry0(c&f1) << 1) | Rsb_DecTry0(c&~f1);
+func decTry(c uint64, functions []uint64) uint32 {
+	if len(functions) == 0 {
+		return Rsb_DecTry0(c)
+	}
+	last := functions[len(functions)-1]
+	return decTry(c&last, functions[:len(functions)-1])<<uint(1<<uint(len(functions)-1)) | decTry(c&^last, functions[:len(functions)-1])
 }
-func Rsb_DecTry2(c word, f1 word, f2 word) uint32 {
-    return (Rsb_DecTry1(c&f2, f1) << 2) | Rsb_DecTry1(c&~f2, f1);
+func Rsb_DecTry1(c, f1 uint64) uint32                 { return decTry(c, []uint64{f1}) }
+func Rsb_DecTry2(c, f1, f2 uint64) uint32             { return decTry(c, []uint64{f1, f2}) }
+func Rsb_DecTry3(c, f1, f2, f3 uint64) uint32         { return decTry(c, []uint64{f1, f2, f3}) }
+func Rsb_DecTry4(c, f1, f2, f3, f4 uint64) uint32     { return decTry(c, []uint64{f1, f2, f3, f4}) }
+func Rsb_DecTry5(c, f1, f2, f3, f4, f5 uint64) uint32 { return decTry(c, []uint64{f1, f2, f3, f4, f5}) }
+func Rsb_DecTryCex(g []uint64, a, b int32) int32 {
+	if rsbBit(g, a) == rsbBit(g, b) {
+		return 1
+	}
+	return 0
 }
-func Rsb_DecTry3(c word, f1 word, f2 word, f3 word) uint32 {
-    return (Rsb_DecTry2(c&f3, f1, f2) << 4) | Rsb_DecTry2(c&~f3, f1, f2);
+func Rsb_DecVerifyCex(f []uint64, g [][]uint64, n int32, a, b int32) bool {
+	if a < 0 || b < 0 || Rsb_DecTryCex(f, a, b) != 0 {
+		return false
+	}
+	for _, truth := range g[:n] {
+		if Rsb_DecTryCex(truth, a, b) == 0 {
+			return false
+		}
+	}
+	return true
 }
-func Rsb_DecTry4(c word, f1 word, f2 word, f3 word, f4 word) uint32 {
-    return (Rsb_DecTry3(c&f4, f1, f2, f3) << 8) | Rsb_DecTry3(c&~f4, f1, f2, f3);
+func Rsb_DecRecordCex(g [][]uint64, n int32, a, b int32, cexes []uint64, count int32) {
+	if count < 0 || count >= 64 {
+		panic("rsb: counterexample budget exceeded")
+	}
+	for i, truth := range g[:n] {
+		if Rsb_DecTryCex(truth, a, b) != 0 {
+			cexes[i] |= 1 << uint(count)
+		}
+	}
 }
-func Rsb_DecTry5(c word, f1 word, f2 word, f3 word, f4 word, f5 word) uint32 {
-    return (Rsb_DecTry4(c&f5, f1, f2, f3, f4) << 16) | Rsb_DecTry4(c&~f5, f1, f2, f3, f4);
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rsb_DecTryCex(g *word, iCexA int32, iCexB int32) int32 {
-    return Abc_TtGetBit(g, iCexA) == Abc_TtGetBit(g, iCexB);
-}
-func Rsb_DecVerifyCex(f *word, g **word, nGs int32, iCexA int32, iCexB int32) {
-    var i int32;
-    // f distinquished it
-    if Rsb_DecTryCex( f, iCexA, iCexB ) != 0 {
-        fmt.Printf("Verification of CEX has failed: f(A) == f(B)!!!\n"); }
-    // g do not distinguish it
-    for  i = 0; i < nGs; i++  {
-        if !(Rsb_DecTryCex( g[i], iCexA, iCexB ) != 0) {
-            fmt.Printf("Verification of CEX has failed: g[%d](A) != g[%d](B)!!!\n", i, i); }
-    }
-}
-func Rsb_DecRecordCex(g **word, nGs int32, iCexA int32, iCexB int32, pCexes *word, nCexes int32) {
-    var i int32;
-    assert(nCexes < 64, "nCexes < 64");
-    for  i = 0; i < nGs; i++  {
-        if Rsb_DecTryCex(g[i], iCexA, iCexB) != 0 {
-            Abc_TtSetBit( pCexes + i, nCexes ); }
-    }
+func Rsb_DecCofactor(g [][]uint64, n, w, mint int32) uint64 {
+	cof := ^uint64(0)
+	for i, truth := range g[:n] {
+		if mint&(1<<uint(i)) != 0 {
+			cof &= truth[w]
+		} else {
+			cof &^= truth[w]
+		}
+	}
+	return cof
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Checks decomposability of f with divisors g.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rsb_DecCofactor(g **word, nGs int32, w int32, iMint int32) word {
-    var i int32;
-    var Cof word  = ~(word)0;
-    for  i = 0; i < nGs; i++  {
-        Cof &=  ((iMint >> i) & 1) ? g[i][w] : ~g[i][w];
-    }
-    return Cof;
+// A pattern packs reachable output=0 divisor assignments in its low half and
+// output=1 assignments in its high half. An overlap supplies a genuine pair of
+// minterms that the selected divisors cannot distinguish.
+func Rsb_DecCheck(nVars int32, f []uint64, g [][]uint64, nGs int32, patterns []uint32, cexA, cexB *int32) uint32 {
+	if nGs <= 0 || nGs > 4 || len(g) < int(nGs) {
+		panic("rsb: decomposition needs 1..4 divisors")
+	}
+	words := rsbWords(nVars)
+	if len(f) < words || len(patterns) < words {
+		panic("rsb: short truth/pattern buffer")
+	}
+	for _, truth := range g[:nGs] {
+		if len(truth) < words {
+			panic("rsb: short divisor truth")
+		}
+	}
+	shift := uint(1 << uint(nGs))
+	mask := uint32(1)<<shift - 1
+	var total uint32
+	var functions [5]uint64
+	for w := 0; w < words; w++ {
+		for i := int32(0); i < nGs; i++ {
+			functions[i] = g[i][w]
+		}
+		functions[nGs] = f[w]
+		patterns[w] = decTry(^uint64(0), functions[:nGs+1])
+		overlap := (patterns[w] >> shift) & patterns[w] & mask
+		if overlap != 0 {
+			mint := int32(bits.TrailingZeros32(overlap))
+			cof := Rsb_DecCofactor(g, nGs, int32(w), mint)
+			*cexA = int32(w*64 + bits.TrailingZeros64(cof&^f[w]))
+			*cexB = int32(w*64 + bits.TrailingZeros64(cof&f[w]))
+			return 0
+		}
+		total |= patterns[w]
+		if w == 0 || (total>>shift)&total&mask == 0 {
+			continue
+		}
+		for k := 0; k < w; k++ {
+			overlap = ((patterns[k] | patterns[w]) >> shift) & (patterns[k] | patterns[w]) & mask
+			if overlap == 0 {
+				continue
+			}
+			mint := int32(bits.TrailingZeros32(overlap))
+			a, b := Rsb_DecCofactor(g, nGs, int32(k), mint), Rsb_DecCofactor(g, nGs, int32(w), mint)
+			if a&^f[k] != 0 && b&f[w] != 0 {
+				*cexA = int32(k*64 + bits.TrailingZeros64(a&^f[k]))
+				*cexB = int32(w*64 + bits.TrailingZeros64(b&f[w]))
+			} else {
+				*cexA = int32(k*64 + bits.TrailingZeros64(a&f[k]))
+				*cexB = int32(w*64 + bits.TrailingZeros64(b&^f[w]))
+			}
+			return 0
+		}
+	}
+	return total
 }
-func Rsb_DecCheck(nVars int32, f *word, g **word, nGs int32, pPat *uint32, pCexA *int32, pCexB *int32) uint32 {
-    var CofA, CofB word;
-    var nWords int32  = Abc_TtWordNum( nVars );
-    var w int32;
-    var k int32;
-    var iMint int32;
-    var iShift int32 = ( 1 << nGs );
-    var uMask uint32  = (~uint32(0)) >> (32-iShift);
-    var uTotal uint32;
-    assert(nGs > 0 && nGs < 5, "nGs > 0 && nGs < 5");
-    for  w = 0; w < nWords; w++  {
-        // generate decomposition pattern
-        if nGs == 1 {
-            pPat[w] = Rsb_DecTry2( ~(word)0, g[0][w], f[w] );
-        } else if nGs == 2 {
-            pPat[w] = Rsb_DecTry3( ~(word)0, g[0][w], g[1][w], f[w] );
-        } else if nGs == 3 {
-            pPat[w] = Rsb_DecTry4( ~(word)0, g[0][w], g[1][w], g[2][w], f[w] );
-        } else if nGs == 4 {
-            pPat[w] = Rsb_DecTry5( ~(word)0, g[0][w], g[1][w], g[2][w], g[3][w], f[w] ); }
-        // check if it is consistent
-        iMint = Abc_Tt6FirstBit( (pPat[w] >> iShift) & pPat[w] & uMask );
-        if iMint >= 0 {   // generate a cex
-            CofA = Rsb_DecCofactor( g, nGs, w, iMint );
-            assert((~f[w] & CofA) && (f[w] & CofA), "(~f[w] & CofA) && (f[w] & CofA)");
-            *pCexA = w * 64 + Abc_Tt6FirstBit( ~f[w] & CofA );
-            *pCexB = w * 64 + Abc_Tt6FirstBit(  f[w] & CofA );
-            return 0;
-        }
-        uTotal |= pPat[w];
-        if w == 0 {
-            continue; }
-        // check if it is consistent with other patterns seen so far
-        iMint = Abc_Tt6FirstBit( (uTotal >> iShift) & uTotal & uMask );
-        if iMint == -1 {
-            continue; }
-        // find an overlap and generate a cex
-        for  k = 0; k < w; k++  {
-            iMint = Abc_Tt6FirstBit( ((pPat[k] | pPat[w]) >> iShift) & (pPat[k] | pPat[w]) & uMask );
-            if iMint == -1 {
-                continue; }
-            CofA = Rsb_DecCofactor( g, nGs, k, iMint );
-            CofB = Rsb_DecCofactor( g, nGs, w, iMint );
-            if (~f[k] & CofA) && (f[w] & CofB) {
-                *pCexA = k * 64 + Abc_Tt6FirstBit( ~f[k] & CofA );
-                *pCexB = w * 64 + Abc_Tt6FirstBit(  f[w] & CofB );
-            
-            } else {
-                assert((f[k] & CofA) && (~f[w] & CofB), "(f[k] & CofA) && (~f[w] & CofB)");
-                *pCexA = k * 64 + Abc_Tt6FirstBit(  f[k] & CofA );
-                *pCexB = w * 64 + Abc_Tt6FirstBit( ~f[w] & CofB );
-            }
-            return 0;
-        }
-    }
-    return uTotal;
+func firstLast(t []uint64, value bool) (int32, int32) {
+	first, last := int32(-1), int32(-1)
+	for i, w := range t {
+		if !value {
+			w = ^w
+		}
+		if w == 0 {
+			continue
+		}
+		if first < 0 {
+			first = int32(i*64 + bits.TrailingZeros64(w))
+		}
+		last = int32(i*64 + 63 - bits.LeadingZeros64(w))
+	}
+	return first, last
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rsb_DecPrintTable(pCexes *word, nGs int32, nGsAll int32, vTries *Vec_Int_t) {
-    var pCands [16]int32;
-    var nCands int32;
-    var i, c, Cand, iStart int32;
-    if Vec_IntSize(vTries) == 0 {
-        return; }
-
-//    printf( "\n" );
-    for  i = 0; i < 4; i++  {
-        fmt.Printf("    ");
-    }
-    fmt.Printf("  ");
-    for  i = 0; i < nGs; i++  {
-        fmt.Printf("%d", (i % 100) / 10);
-    }
-    fmt.Printf("|");
-    for  ; i < nGsAll; i++  {
-        fmt.Printf("%d", (i % 100) / 10);
-    }
-    fmt.Printf("\n");
-
-    for  i = 0; i < 4; i++  {
-        fmt.Printf("    ");
-    }
-    fmt.Printf("  ");
-    for  i = 0; i < nGs; i++  {
-        fmt.Printf("%d", i % 10);
-    }
-    fmt.Printf("|");
-    for  ; i < nGsAll; i++  {
-        fmt.Printf("%d", i % 10);
-    }
-    fmt.Printf("\n");
-    fmt.Printf("\n");
-
-    for  c = 0; iStart < Vec_IntSize(vTries); c++  {
-        // collect candidates
-        for  i = 0; i < 4; i++  {
-            pCands[i] = -1;
-        }
-        nCands = 0;
-        Vec_IntForEachEntryStart( vTries, Cand, i, iStart )
-            if Cand == -1 {
-                iStart = i + 1;
-                break;
-            
-            } else {
-                pCands[nCands++] = Cand; }
-        assert(nCands <= 4, "nCands <= 4");
-        // print them
-        for  i = 0; i < 4; i++  {
-            if pCands[i] >= 0 {
-                fmt.Printf("%4d", pCands[i]);
-            } else {
-                fmt.Printf("    "); }
-        }
-        // print the bit-string
-        fmt.Printf("  ");
-        for  i = 0; i < nGs; i++  {
-            fmt.Printf("%c", Abc_TtGetBit( pCexes + i, c ) ? '.' : '+');
-        }
-        fmt.Printf("|");
-        for  ; i < nGsAll; i++  {
-            fmt.Printf("%c", Abc_TtGetBit( pCexes + i, c ) ? '.' : '+');
-        }
-        fmt.Printf("  %3d\n", c);
-    }
-    fmt.Printf("\n");
-
-    // write the number of ones
-    for  i = 0; i < 4; i++  {
-        fmt.Printf("    ");
-    }
-    fmt.Printf("  ");
-    for  i = 0; i < nGs; i++  {
-        fmt.Printf("%d", Abc_TtCountOnes(pCexes[i]) / 10);
-    }
-    fmt.Printf("|");
-    for  ; i < nGsAll; i++  {
-        fmt.Printf("%d", Abc_TtCountOnes(pCexes[i]) / 10);
-    }
-    fmt.Printf("\n");
-
-    for  i = 0; i < 4; i++  {
-        fmt.Printf("    ");
-    }
-    fmt.Printf("  ");
-    for  i = 0; i < nGs; i++  {
-        fmt.Printf("%d", Abc_TtCountOnes(pCexes[i]) % 10);
-    }
-    fmt.Printf("|");
-    for  ; i < nGsAll; i++  {
-        fmt.Printf("%d", Abc_TtCountOnes(pCexes[i]) % 10);
-    }
-    fmt.Printf("\n");
-    fmt.Printf("\n");
+func Rsb_DecInitCexes(nVars int32, f []uint64, g [][]uint64, nGs, nGsAll int32, cexes []uint64, tries *[]int32) int32 {
+	on0, on1 := firstLast(f[:rsbWords(nVars)], true)
+	off0, off1 := firstLast(f[:rsbWords(nVars)], false)
+	if on0 < 0 || off0 < 0 {
+		return 0
+	}
+	for i, pair := range [][2]int32{{on0, off0}, {on0, off1}, {on1, off0}, {on1, off1}} {
+		Rsb_DecRecordCex(g, nGsAll, pair[0], pair[1], cexes, int32(i))
+		if tries != nil {
+			*tries = append(*tries, -1)
+		}
+	}
+	return 4
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Init ]
-
-  Description [Returns the numbers of the decomposition functions and 
-  the truth table of a function up to 4 variables.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rsb_DecInitCexes(nVars int32, f *word, g **word, nGs int32, nGsAll int32, pCexes *word, vTries *Vec_Int_t) int32 {
-    var nWords int32  = Abc_TtWordNum( nVars );
-    var ValueB int32  = Abc_TtGetBit( f, 0 );
-    var ValueE int32  = Abc_TtGetBit( f, 64*nWords-1 );
-    var iCexT0, iCexT1, iCexF0, iCexF1 int32;
-
-    if ValueB != 0 {
-        iCexT0 = 0;
-    } else {
-        iCexT0 = Abc_TtFindFirstBit( f, nVars );
-    }
-    if ValueE != 0 {
-        iCexT1 = 64*nWords-1;
-    } else {
-        iCexT1 = Abc_TtFindLastBit( f, nVars );
-    }
-
-    if !(ValueB != 0) {
-        iCexF0 = 0;
-    } else {
-        iCexF0 = Abc_TtFindFirstZero( f, nVars );
-    }
-    if !(ValueE != 0) {
-        iCexF1 = 64*nWords-1;
-    } else {
-        iCexF1 = Abc_TtFindLastZero( f, nVars );
-    }
-
-    assert(!(Rsb_DecTryCex( f, iCexT0, iCexF0 ) != 0), "!Rsb_DecTryCex( f, iCexT0, iCexF0 )");
-    assert(!(Rsb_DecTryCex( f, iCexT0, iCexF1 ) != 0), "!Rsb_DecTryCex( f, iCexT0, iCexF1 )");
-    assert(!(Rsb_DecTryCex( f, iCexT1, iCexF0 ) != 0), "!Rsb_DecTryCex( f, iCexT1, iCexF0 )");
-    assert(!(Rsb_DecTryCex( f, iCexT1, iCexF1 ) != 0), "!Rsb_DecTryCex( f, iCexT1, iCexF1 )");
-
-    Rsb_DecRecordCex( g, nGsAll, iCexT0, iCexF0, pCexes, 0 );
-    Rsb_DecRecordCex( g, nGsAll, iCexT0, iCexF1, pCexes, 1 );
-    Rsb_DecRecordCex( g, nGsAll, iCexT1, iCexF0, pCexes, 2 );
-    Rsb_DecRecordCex( g, nGsAll, iCexT1, iCexF1, pCexes, 3 );
-
-    if vTries != nil {
-    Vec_IntPush( vTries, -1 );
-    Vec_IntPush( vTries, -1 );
-    Vec_IntPush( vTries, -1 );
-    Vec_IntPush( vTries, -1 );
-    }
-    return 4;
+// Enumerate singleton/pair/triple/quadruple candidates in exactly the original
+// nested-loop order. A counterexample column filters every later candidate
+// whose selected divisors all fail to distinguish that pair.
+func Rsb_DecPerformInt(p *Rsb_Man_t, nVars int32, f []uint64, g [][]uint64, nGs, nGsAll, findAll int32) uint32 {
+	if nVars > p.leafMax || nGs < 0 || nGs > nGsAll || int(nGsAll) > len(g) {
+		panic("rsb: invalid search dimensions")
+	}
+	words := rsbWords(nVars)
+	if len(f) < words {
+		panic("rsb: short function")
+	}
+	for _, t := range g[:nGsAll] {
+		if len(t) < words {
+			panic("rsb: short divisor")
+		}
+	}
+	p.cexes = append(p.cexes[:0], make([]uint64, nGsAll)...)
+	p.patterns = append(p.patterns[:0], make([]uint32, words)...)
+	p.fanins = p.fanins[:0]
+	p.tries = p.tries[:0]
+	count := int32(0)
+	var result uint32
+	var chosen []int32
+	limit := p.decMax
+	if limit <= 0 || limit > 4 {
+		limit = 4
+	}
+	limit = min(limit, nGs)
+	var enumerate func(int32, int32, []int32) bool
+	enumerate = func(left, upper int32, indices []int32) bool {
+		if left != 0 {
+			for index := left - 1; index < upper; index++ {
+				if enumerate(left-1, index, append(indices, index)) {
+					return true
+				}
+			}
+			return false
+		}
+		common := ^uint64(0)
+		divisors := make([][]uint64, len(indices))
+		for i, index := range indices {
+			common &= p.cexes[index]
+			divisors[i] = g[index]
+		}
+		if common != 0 {
+			return false
+		}
+		a, b := int32(-1), int32(-1)
+		pattern := Rsb_DecCheck(nVars, f, divisors, int32(len(divisors)), p.patterns, &a, &b)
+		if pattern != 0 {
+			if findAll != 0 {
+				fmt.Printf("Decomposition %v pattern %08x\n", indices, pattern)
+				return false
+			}
+			result = pattern
+			chosen = append([]int32(nil), indices...)
+			return true
+		}
+		if count == 64 {
+			return true
+		}
+		if !Rsb_DecVerifyCex(f, divisors, int32(len(divisors)), a, b) {
+			panic("rsb: invalid generated counterexample")
+		}
+		Rsb_DecRecordCex(g, nGsAll, a, b, p.cexes, count)
+		count++
+		if p.verbose {
+			p.tries = append(p.tries, indices...)
+			p.tries = append(p.tries, -1)
+		}
+		return false
+	}
+	for size := int32(1); size <= limit; size++ {
+		if enumerate(size, nGs, nil) {
+			break
+		}
+	}
+	p.fanins = append(p.fanins, chosen...)
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Finds a setset of gs to decompose f.]
-
-  Description [Returns the numbers of the decomposition functions and 
-  the truth table of a function up to 4 variables.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rsb_DecPerformInt(p *Rsb_Man_t, nVars int32, f *word, g **word, nGs int32, nGsAll int32, fFindAll int32) uint32 {
-    var pCexes *word  = Vec_WrdArray(p.vCexes);
-    var pPat *uint32  = (unsigned *)Vec_IntArray(p.vDecPats);
-    /*
-    The following filtering hueristic can be used:
-    after the first round (if there is more than 5 cexes, 
-    remove all the divisors, except fanins of the node
-    This should lead to a speadup without sacrifying quality.
-
-    Another idea is to precompute several counter-examples
-    like the first and last 0 and 1 mints of the function
-    which yields 4 cexes.
-    */
-
-    var pDivs [16]*word;
-    var uTruth uint32;
-    var i, k, j, n, iCexA, iCexB, nCexes int32;
-    memset( pCexes, 0, sizeof(word) * nGsAll );  
-    Vec_IntClear( p.vTries );
-    // populate the counter-examples with the three most obvious
-//    nCexes = Rsb_DecInitCexes( nVars, f, g, nGs, nGsAll, pCexes, vTries );
-    // start by checking each function
-    p.vFanins.nSize = 1;
-    for  i = 0; i < nGs; i++  {
-        if pCexes[i] {
-            continue; }
-        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;
-        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, &iCexA, &iCexB );
-        if uTruth != 0 {
-            if fFindAll != 0 {
-                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 1 ));
-                Kit_DsdPrintFromTruth( &uTruth, 1 ); fmt.Printf("   ");
-                Vec_IntPrint(p.vFanins);
-                continue;
-            
-            } else {
-                return uTruth; }
-        }
-        if nCexes == 64 {
-            return 0; }
-        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );
-        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );
-        if !p.fVerbose {
-            continue; }
-        Vec_IntPush( p.vTries, i );
-        Vec_IntPush( p.vTries, -1 );
-    }
-    if p.nDecMax == 1 {
-        return 0; }
-    // continue by checking pairs
-    p.vFanins.nSize = 2;
-    for  i = 1; i < nGs; i++  {
-    for  k = 0; k < i; k++  {
-        if pCexes[i] & pCexes[k] {
-            continue; }
-        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;
-        pDivs[1] = g[k];  p.vFanins.pArray[1] = k;
-        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, &iCexA, &iCexB );
-        if uTruth != 0 {
-            if fFindAll != 0 {
-                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 2 ));
-                Kit_DsdPrintFromTruth( &uTruth, 2 ); fmt.Printf("   ");
-                Vec_IntPrint(p.vFanins);
-                continue;
-            
-            } else {
-                return uTruth; }
-        }
-        if nCexes == 64 {
-            return 0; }
-        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );
-        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );
-        if !p.fVerbose {
-            continue; }
-        Vec_IntPush( p.vTries, i );
-        Vec_IntPush( p.vTries, k );
-        Vec_IntPush( p.vTries, -1 );
-    }
-    }
-    if p.nDecMax == 2 {
-        return 0; }
-    // continue by checking triples
-    p.vFanins.nSize = 3;
-    for  i = 2; i < nGs; i++  {
-    for  k = 1; k < i; k++  {
-    for  j = 0; j < k; j++  {
-        if pCexes[i] & pCexes[k] & pCexes[j] {
-            continue; }
-        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;
-        pDivs[1] = g[k];  p.vFanins.pArray[1] = k;
-        pDivs[2] = g[j];  p.vFanins.pArray[2] = j;
-        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, &iCexA, &iCexB );
-        if uTruth != 0 {
-            if fFindAll != 0 {
-                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 3 ));
-                Kit_DsdPrintFromTruth( &uTruth, 3 ); fmt.Printf("   ");
-                Vec_IntPrint(p.vFanins);
-                continue;
-            
-            } else {
-                return uTruth; }
-        }
-        if nCexes == 64 {
-            return 0; }
-        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );
-        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );
-        if !p.fVerbose {
-            continue; }
-        Vec_IntPush( p.vTries, i );
-        Vec_IntPush( p.vTries, k );
-        Vec_IntPush( p.vTries, j );
-        Vec_IntPush( p.vTries, -1 );
-    }
-    }
-    }
-    if p.nDecMax == 3 {
-        return 0; }
-    // continue by checking quadras
-    p.vFanins.nSize = 4;
-    for  i = 3; i < nGs; i++  {
-    for  k = 2; k < i; k++  {
-    for  j = 1; j < k; j++  {
-    for  n = 0; n < j; n++  {
-        if pCexes[i] & pCexes[k] & pCexes[j] & pCexes[n] {
-            continue; }
-        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;
-        pDivs[1] = g[k];  p.vFanins.pArray[1] = k;
-        pDivs[2] = g[j];  p.vFanins.pArray[2] = j;
-        pDivs[3] = g[n];  p.vFanins.pArray[3] = n;
-        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, &iCexA, &iCexB );
-        if uTruth != 0 {
-            if fFindAll != 0 {
-                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 4 ));
-                Kit_DsdPrintFromTruth( &uTruth, 4 ); fmt.Printf("   ");
-                Vec_IntPrint(p.vFanins);
-                continue;
-            
-            } else {
-                return uTruth; }
-        }
-        if nCexes == 64 {
-            return 0; }
-        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );
-        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );
-        if !p.fVerbose {
-            continue; }
-        Vec_IntPush( p.vTries, i );
-        Vec_IntPush( p.vTries, k );
-        Vec_IntPush( p.vTries, j );
-        Vec_IntPush( p.vTries, n );
-        Vec_IntPush( p.vTries, -1 );
-    }
-    }
-    }
-    }
-//    printf( "%d ", nCexes );
-    if p.nDecMax == 4 {
-        return 0; }
-    return 0;
+func Rsb_ManPerform(p *Rsb_Man_t, nVars int32, f []uint64, g [][]uint64, nGs, nGsAll, verbose int32) uint32 {
+	if len(p.faninsOld) > 0 && len(p.faninsOld) <= 4 {
+		divisors := make([][]uint64, len(p.faninsOld))
+		for i, index := range p.faninsOld {
+			if index < 0 || int(index) >= len(g) {
+				panic("rsb: old fanin out of range")
+			}
+			divisors[i] = g[index]
+		}
+		a, b := int32(-1), int32(-1)
+		if Rsb_DecCheck(nVars, f, divisors, int32(len(divisors)), make([]uint32, rsbWords(nVars)), &a, &b) == 0 {
+			fmt.Printf("Verification FAILED for original decomposition %v.\n", p.faninsOld)
+		}
+	}
+	return Rsb_DecPerformInt(p, nVars, f, g, nGs, nGsAll, 0)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Verifies 4-input decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rsb_DecPrintFunc(p *Rsb_Man_t, Truth4 uint32, f *word, ppGs **word, nGs int32, nVarsAll int32) {
-    var nVars int32   =  Vec_IntSize(p.vFanins);
-    var Copy word   =  Truth4;
-    var wOn word    =  Abc_Tt6Stretch( Copy >> (1 << nVars), nVars );
-    var wOnDc word  = ~Abc_Tt6Stretch( Copy, nVars );
-    var wIsop word  =  Abc_Tt6Isop( wOn, wOnDc, nVars, nil );
-    var i int32;
-
-    fmt.Printf("Offset : ");
-    Abc_TtPrintBinary( &Copy, nVars );  //printf( "\n" );
-    Copy >>= ((word)1 << nVars);
-    fmt.Printf("Onset  : ");
-    Abc_TtPrintBinary( &Copy, nVars );  //printf( "\n" );
-    fmt.Printf("Result : ");
-    Abc_TtPrintBinary( &wIsop, nVars ); //printf( "\n" );
-    Kit_DsdPrintFromTruth( (unsigned *)&wIsop, nVars );  fmt.Printf("\n");
-
-    // print functions
-    fmt.Printf("Func   : ");
-    Abc_TtPrintBinary( f, nVarsAll );   //printf( "\n" );
-    Kit_DsdPrintFromTruth( (unsigned *)f, nVarsAll );    fmt.Printf("\n");
-    for  i = 0; i < nGs; i++  {
-        fmt.Printf("Div%3d : ", i);
-        Kit_DsdPrintFromTruth( (unsigned *)ppGs[i], nVarsAll );  fmt.Printf("\n");
-    }
-    fmt.Printf("Solution : ");
-    for  i = 0; i < Vec_IntSize(p.vFanins); i++  {
-        fmt.Printf("%d ", Vec_IntEntry(p.vFanins, i));
-    }
-    fmt.Printf("\n");
+func Rsb_ManPerformResub6(p *Rsb_Man_t, nVars int32, truth uint64, divisors []uint64, off, on *uint64, verbose int32) int32 {
+	if nVars < 0 || nVars > 6 || len(divisors) >= 200 {
+		panic("rsb: six-variable resubstitution dimensions invalid")
+	}
+	g := make([][]uint64, len(divisors))
+	for i := range divisors {
+		g[i] = divisors[i : i+1]
+	}
+	pattern := Rsb_DecPerformInt(p, nVars, []uint64{truth}, g, int32(len(g)), int32(len(g)), 0)
+	if pattern == 0 {
+		return 0
+	}
+	n := int32(len(p.fanins))
+	*off = rsbStretch(uint64(pattern), n)
+	*on = rsbStretch(uint64(pattern)>>uint(1<<uint(n)), n)
+	if verbose != 0 {
+		Rsb_DecPrintFunc(p, pattern, []uint64{truth}, g, int32(len(g)), nVars)
+		Rsb_DecPrintTable(p.cexes, int32(len(g)), int32(len(g)), p.tries)
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Verifies 4-input decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rsb_DecVerify(p *Rsb_Man_t, nVars int32, f *word, g **word, nGs int32, Truth4 uint32, pTemp1 *word, pTemp2 *word) int32 {
-    var pFanins [16]*word;
-    var b, m, Num, nSuppSize int32;
-    var nWords int32  = Abc_TtWordNum(nVars);
-    Truth4 >>= (1 << Vec_IntSize(p.vFanins));
-    Truth4 = uint32(Abc_Tt6Stretch( (word)Truth4, Vec_IntSize(p.vFanins) ));
-//Kit_DsdPrintFromTruth( (unsigned *)&Truth4, Vec_IntSize(p->vFanins) );
-//printf( "\n" );
-//    nSuppSize = Rsb_Word6SupportSize( Truth4 );
-//    assert( nSuppSize == Vec_IntSize(p->vFanins) );
-    nSuppSize = Vec_IntSize(p.vFanins);
-    // collect the fanins
-    Vec_IntForEachEntry( p.vFanins, Num, b )
-    {
-        assert(Num < nGs, "Num < nGs");
-        pFanins[b] = g[Num];
-    }
-    // create the or of ands
-    Abc_TtClear( pTemp1, nWords );
-    for  m = 0; m < (1<<nSuppSize); m++  {
-        if ((Truth4 >> m) & 1) == 0 {
-            continue; }
-        Abc_TtFill( pTemp2, nWords );
-        for  b = 0; b < nSuppSize; b++  {
-            if (m >> b) & 1 {
-                Abc_TtAnd( pTemp2, pTemp2, pFanins[b], nWords, 0 );
-            } else {
-                Abc_TtSharp( pTemp2, pTemp2, pFanins[b], nWords ); }
-        }
-        Abc_TtOr( pTemp1, pTemp1, pTemp2, nWords );
-    }
-    // check the function
-    if !Abc_TtEqual( pTemp1, f, nWords ) {
-        fmt.Printf("Verification failed.\n"); }
-//    else
-//        printf( "Verification passed.\n" );
-    return 1;
+func Rsb_DecVerify(p *Rsb_Man_t, nVars int32, f []uint64, g [][]uint64, nGs int32, pattern uint32, temp, result []uint64) int32 {
+	words := rsbWords(nVars)
+	if len(temp) < words || len(result) < words {
+		panic("rsb: short verification scratch")
+	}
+	clear(temp[:words])
+	n := uint(len(p.fanins))
+	function := pattern >> uint(1<<n)
+	for a := 0; a < words*64; a++ {
+		mint := uint(0)
+		for i, index := range p.fanins {
+			if index < 0 || index >= nGs {
+				panic("rsb: fanin out of range")
+			}
+			mint |= uint(rsbBit(g[index], int32(a))) << uint(i)
+		}
+		if function&(1<<mint) != 0 {
+			temp[a>>6] |= 1 << uint(a&63)
+		}
+	}
+	for i, w := range temp[:words] {
+		if w != f[i] {
+			return 0
+		}
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Finds a setset of gs to decompose f.]
-
-  Description [Returns the numbers of the decomposition functions and 
-  the truth table of a function up to 4 variables.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rsb_ManPerform(p *Rsb_Man_t, nVars int32, f *word, g **word, nGs int32, nGsAll int32, fVerbose0 int32) uint32 {
-    var pCexes *word  = Vec_WrdArray(p.vCexes);
-    var pPat *uint32  = (unsigned *)Vec_IntArray(p.vDecPats);
-    var fVerbose int32;//(nGs > 40);
-    var vTries *Vec_Int_t  = nil;
-    var uTruth uint32;
-
-    // verify original decomposition
-    if Vec_IntSize(p.vFaninsOld) && Vec_IntSize(p.vFaninsOld) <= 4 {
-        var pDivs [8]*word;
-        var i, Entry, iCexA, iCexB int32;
-        Vec_IntForEachEntry( p.vFaninsOld, Entry, i )
-            pDivs[i] = g[Entry];
-        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFaninsOld), pPat, &iCexA, &iCexB );
-//        assert( uTruth != 0 );
-        if fVerbose != 0 {
-            fmt.Printf("Verified orig decomp with %d vars {", Vec_IntSize(p.vFaninsOld));
-            Vec_IntForEachEntry( p.vFaninsOld, Entry, i )
-                fmt.Printf(" %d", Entry);
-            fmt.Printf(" }\n");
-        }
-        if uTruth != 0 {
-//            if ( fVerbose )
-//                Rsb_DecPrintFunc( p, uTruth );
-        
-        } else {
-            fmt.Printf("Verified orig decomp with %d vars {", Vec_IntSize(p.vFaninsOld));
-            Vec_IntForEachEntry( p.vFaninsOld, Entry, i )
-                fmt.Printf(" %d", Entry);
-            fmt.Printf(" }\n");
-            fmt.Printf("Verification FAILED.\n");
-        }
-    }
-    // start tries
-if fVerbose != 0 {
-vTries = Vec_IntAlloc( 100 ); }
-    assert(nGs < nGsAll, "nGs < nGsAll");
-    uTruth = Rsb_DecPerformInt( p, nVars, f, g, nGs, nGsAll, 0 );
-
-    if uTruth != 0 {
-        if fVerbose != 0 {
-            var i, Entry int32;
-            fmt.Printf("Found decomp with %d vars {", Vec_IntSize(p.vFanins));
-            Vec_IntForEachEntry( p.vFanins, Entry, i )
-                fmt.Printf(" %d", Entry);
-            fmt.Printf(" }\n");
-//            Rsb_DecPrintFunc( p, uTruth );
-//            Rsb_DecVerify( nVars, f, g, nGs, p->vFanins, uTruth, g[nGsAll], g[nGsAll+1] );
-        }
-    
-    } else {
-        Vec_IntShrink( p.vFanins, 0 );
-        if fVerbose != 0 {
-        fmt.Printf("Did not find decomposition with 4 variables.\n"); }
-    }
-
-if fVerbose != 0 {
-Rsb_DecPrintTable( pCexes, nGs, nGsAll, vTries ); }
-if fVerbose != 0 {
-Vec_IntFree( vTries ); }
-    return uTruth;
+func Rsb_DecPrintFunc(p *Rsb_Man_t, pattern uint32, f []uint64, g [][]uint64, nGs, nVars int32) {
+	n := int32(len(p.fanins))
+	off, on := rsbStretch(uint64(pattern), n), rsbStretch(uint64(pattern)>>uint(1<<uint(n)), n)
+	count := int32(0)
+	isop := util.Abc_Tt6Isop(on, ^off, n, &count)
+	fmt.Printf("Offset : %016x\nOnset  : %016x\nResult : %016x\nFunc   : %x\n", off, on, isop, f)
+	for i, t := range g[:nGs] {
+		fmt.Printf("Div%3d : %x\n", i, t)
+	}
+	fmt.Printf("Solution : %v\n", p.fanins)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rsb_ManPerformResub6(p *Rsb_Man_t, nVarsAll int32, uTruth word, vDivTruths *Vec_Wrd_t, puTruth0 *word, puTruth1 *word, fVerbose int32) int32 {
-    var pGs [200]*word;
-    var uTruthRes uint32;
-    var i int32;
-    var nVars int32;
-    var nGs int32 = Vec_WrdSize(vDivTruths);
-    assert(nGs < 200, "nGs < 200");
-    for  i = 0; i < nGs; i++  {
-        pGs[i] = Vec_WrdEntryP(vDivTruths,i);
-    }
-    uTruthRes = Rsb_DecPerformInt( p, nVarsAll, &uTruth, pGs, nGs, nGs, 0 );
-    if uTruthRes == 0 {
-        return 0; }
-
-    if fVerbose != 0 {
-        Rsb_DecPrintFunc( p, uTruthRes, &uTruth, pGs, nGs, nVarsAll ); }
-    if fVerbose != 0 {
-        Rsb_DecPrintTable( Vec_WrdArray(p.vCexes), nGs, nGs, p.vTries ); }
-
-    nVars = Vec_IntSize(p.vFanins);
-    *puTruth0 = Abc_Tt6Stretch( uTruthRes,                 nVars );
-    *puTruth1 = Abc_Tt6Stretch( uTruthRes >> (1 << nVars), nVars );
-    return 1;
+func Rsb_DecPrintTable(cexes []uint64, nGs, nGsAll int32, tries []int32) {
+	if len(tries) == 0 {
+		return
+	}
+	start := 0
+	for c := 0; start < len(tries); c++ {
+		end := start
+		for end < len(tries) && tries[end] != -1 {
+			end++
+		}
+		fmt.Fprintf(os.Stdout, "%v  ", tries[start:end])
+		for i, w := range cexes[:nGsAll] {
+			if int32(i) == nGs {
+				fmt.Print("|")
+			}
+			if w&(1<<uint(c)) != 0 {
+				fmt.Print(".")
+			} else {
+				fmt.Print("+")
+			}
+		}
+		fmt.Printf("  %3d\n", c)
+		start = end + 1
+	}
+	fmt.Print("Counts : ")
+	for i, w := range cexes[:nGsAll] {
+		if int32(i) == nGs {
+			fmt.Print("|")
+		}
+		fmt.Printf(" %d", bits.OnesCount64(w))
+	}
+	fmt.Println()
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Rsb_ManPerformResub6Test() {
-    var p *Rsb_Man_t;
-    var vDivTruths *Vec_Wrd_t;
-    var RetValue int32;
-    var a word  = s_Truths6[0];
-    var b word  = s_Truths6[1];
-    var c word  = s_Truths6[2];
-    var d word  = s_Truths6[3];
-    var e word  = s_Truths6[4];
-    var f word  = s_Truths6[5];
-    var ab word  = a & b;
-    var cd word  = c & d;
-    var ef word  = e & f;
-    var F word  = ab | cd | ef;
-    var uTruth0, uTruth1 word;
-
-    vDivTruths = Vec_WrdAlloc( 100 );
-    Vec_WrdPush( vDivTruths, a );
-    Vec_WrdPush( vDivTruths, b );
-    Vec_WrdPush( vDivTruths, c );
-    Vec_WrdPush( vDivTruths, d );
-    Vec_WrdPush( vDivTruths, e );
-    Vec_WrdPush( vDivTruths, f );
-    Vec_WrdPush( vDivTruths, ab );
-    Vec_WrdPush( vDivTruths, cd );
-    Vec_WrdPush( vDivTruths, ef );
-
-    p = Rsb_ManAlloc( 6, 64, 4, 1 );
-
-    RetValue = Rsb_ManPerformResub6( p, 6, F, vDivTruths, &uTruth0, &uTruth1, 1 );
-
-    Rsb_ManFree( p );
-    Vec_WrdFree( vDivTruths );
+	x := [6]uint64{0xaaaaaaaaaaaaaaaa, 0xcccccccccccccccc, 0xf0f0f0f0f0f0f0f0, 0xff00ff00ff00ff00, 0xffff0000ffff0000, 0xffffffff00000000}
+	d := []uint64{x[0], x[1], x[2], x[3], x[4], x[5], x[0] & x[1], x[2] & x[3], x[4] & x[5]}
+	p := Rsb_ManAlloc(6, 64, 4, 1)
+	var off, on uint64
+	Rsb_ManPerformResub6(p, 6, d[6]|d[7]|d[8], d, &off, &on, 1)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
