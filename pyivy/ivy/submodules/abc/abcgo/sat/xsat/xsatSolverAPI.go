@@ -1,340 +1,147 @@
+// Go port of xsatSolverAPI.c by Bruno Schmitt (2016).
 package xsat
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/vec"
+	"sort"
+)
 
-/**CFile****************************************************************
-
-  FileName    [xsatSolverAPI.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [xSAT - A SAT solver written in C.
-               Read the license file for more info.]
-
-  Synopsis    [Solver external API functions implementation.]
-
-  Author      [Bruno Schmitt <boschmitt@inf.ufrgs.br>]
-
-  Affiliation [UC Berkeley / UFRGS]
-
-  Date        [Ver. 1.0. Started - November 10, 2016.]
-
-  Revision    []
-
-***********************************************************************/
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-//#include <stdio.h>
-//#include <assert.h>
-//#include <string.h>
-//#include <math.h>
-
-//#include "xsatSolver.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-xSAT_SolverOptions_t DefaultConfig =
-{
-    1,     //.fVerbose = 1,
-
-    0,     //.nConfLimit = 0,
-    0,     //.nInsLimit = 0,
-    0,     //.nRuntimeLimit = 0,
-
-    0.8,   //.K = 0.8,
-    1.4,   //.R = 1.4,
-    10000, //.nFirstBlockRestart = 10000,
-    50,    //.nSizeLBDQueue = 50,
-    5000,  //.nSizeTrailQueue = 5000,
-
-    2000,  //.nConfFirstReduce = 2000,
-    300,   //.nIncReduce = 300,
-    1000,  //.nSpecialIncReduce = 1000,
-
-    30     //.nLBDFrozenClause = 30
-};
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_SolverCreate() *xSAT_Solver_t {
-    // inlining of macro ABC_CALLOC
-    var s *xSAT_Solver_t  = (xSAT_Solver_t *) ((char *) calloc((size_t)(sizeof( xSAT_Solver_t )), sizeof(char)));
-    s.Config = DefaultConfig;
-
-    s.pMemory = xSAT_MemAlloc(0);
-    s.vClauses = Vec_IntAlloc(0);
-    s.vLearnts = Vec_IntAlloc(0);
-    s.vWatches = xSAT_VecWatchListAlloc( 0 );
-    s.vBinWatches = xSAT_VecWatchListAlloc( 0 );
-
-    s.vTrailLim = Vec_IntAlloc(0);
-    s.vTrail = Vec_IntAlloc( 0 );
-
-    s.vActivity = Vec_IntAlloc( 0 );
-    s.hOrder = xSAT_HeapAlloc( s.vActivity );
-
-    s.vPolarity = Vec_StrAlloc( 0 );
-    s.vTags = Vec_StrAlloc( 0 );
-    s.vAssigns = Vec_StrAlloc( 0 );
-    s.vLevels = Vec_IntAlloc( 0 );
-    s.vReasons = Vec_IntAlloc( 0 );
-    s.vStamp = Vec_IntAlloc( 0 );
-
-    s.vTagged = Vec_IntAlloc(0);
-    s.vStack  = Vec_IntAlloc(0);
-
-    s.vSeen = Vec_StrAlloc( 0 );
-    s.vLearntClause = Vec_IntAlloc(0);
-    s.vLastDLevel = Vec_IntAlloc(0);
-
-
-    s.bqTrail = xSAT_BQueueNew( s.Config.nSizeTrailQueue );
-    s.bqLBD = xSAT_BQueueNew( s.Config.nSizeLBDQueue );
-
-    s.nVarActInc = (1 <<  5);
-    s.nClaActInc = (1 << 11);
-
-    s.nConfBeforeReduce = s.Config.nConfFirstReduce;
-    s.nRC1 = 1;
-    s.nRC2 = s.Config.nConfFirstReduce;
-    return s;
+func New() *Solver {
+	s := &Solver{Config: DefaultConfig, memory: xSAT_MemAlloc(0), watches: xSAT_VecWatchListAlloc(0), binary: xSAT_VecWatchListAlloc(0), varInc: 1 << 5, claInc: 1 << 11, okay: true}
+	s.order = xSAT_HeapAlloc(&s.activity)
+	s.lbdQueue = xSAT_BQueueNew(s.Config.LBDWindow)
+	s.trailQueue = xSAT_BQueueNew(s.Config.TrailWindow)
+	s.reduceAt = int64(s.Config.FirstReduce)
+	s.rc2 = int64(s.Config.FirstReduce)
+	return s
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_SolverDestroy(s *xSAT_Solver_t) {
-    xSAT_MemFree( s.pMemory );
-    Vec_IntFree( s.vClauses );
-    Vec_IntFree( s.vLearnts );
-    xSAT_VecWatchListFree( s.vWatches );
-    xSAT_VecWatchListFree( s.vBinWatches );
-
-    xSAT_HeapFree(s.hOrder);
-    Vec_IntFree( s.vTrailLim );
-    Vec_IntFree( s.vTrail );
-    Vec_IntFree( s.vTagged );
-    Vec_IntFree( s.vStack );
-
-    Vec_StrFree( s.vSeen );
-    Vec_IntFree( s.vLearntClause );
-    Vec_IntFree( s.vLastDLevel );
-
-    Vec_IntFree( s.vActivity );
-    Vec_StrFree( s.vPolarity );
-    Vec_StrFree( s.vTags );
-    Vec_StrFree( s.vAssigns );
-    Vec_IntFree( s.vLevels );
-    Vec_IntFree( s.vReasons );
-    Vec_IntFree( s.vStamp );
-
-    xSAT_BQueueFree(s.bqLBD);
-    xSAT_BQueueFree(s.bqTrail);
-
-    s = nil;
+func xSAT_SolverCreate() *xSAT_Solver_t { return New() }
+func xSAT_SolverDestroy(s *Solver) {
+	if s != nil {
+		*s = Solver{}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_SolverSimplify(s *xSAT_Solver_t) int32 {
-    var i, j int32;
-    var CRef uint32;
-    assert(xSAT_SolverDecisionLevel(s) == 0, "xSAT_SolverDecisionLevel(s) == 0");
-
-    if xSAT_SolverPropagate(s) != CRefUndef {
-        return false; }
-
-    if s.nAssignSimplify == Vec_IntSize( s.vTrail ) || s.nPropSimplify > 0 {
-        return true; }
-
-    j = 0;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(s.vClauses)) && (((CRef) = Vec_IntEntry(s.vClauses, i)), 1); i++  {
-        var pCla *xSAT_Clause_t  = xSAT_SolverReadClause( s, CRef );
-        if xSAT_SolverIsClauseSatisfied( s, pCla ) {
-            pCla.fMark = 1;
-            s.Stats.nClauseLits -= pCla.nSize;
-
-            if pCla.nSize == 2 {
-                xSAT_WatchListRemove( xSAT_VecWatchListEntry( s.vBinWatches, xSAT_NegLit(pCla.pData[0].Lit) ), CRef );
-                xSAT_WatchListRemove( xSAT_VecWatchListEntry( s.vBinWatches, xSAT_NegLit(pCla.pData[1].Lit) ), CRef );
-            
-            } else {
-                xSAT_WatchListRemove( xSAT_VecWatchListEntry( s.vWatches, xSAT_NegLit(pCla.pData[0].Lit) ), CRef );
-                xSAT_WatchListRemove( xSAT_VecWatchListEntry( s.vWatches, xSAT_NegLit(pCla.pData[1].Lit) ), CRef );
-            }
-        
-        } else {
-            Vec_IntWriteEntry( s.vClauses, j++, CRef ); }
-    }
-    Vec_IntShrink( s.vClauses, j );
-    xSAT_SolverRebuildOrderHeap( s );
-
-    s.nAssignSimplify = Vec_IntSize( s.vTrail );
-    s.nPropSimplify = s.Stats.nClauseLits + s.Stats.nLearntLits;
-
-    return true;
+func (s *Solver) AddVariable(sign int) int {
+	v := len(s.assigns)
+	s.assigns = append(s.assigns, VarX)
+	s.polarity = append(s.polarity, byte(boolInt(sign != 0)))
+	s.activity = append(s.activity, 0)
+	s.levels = append(s.levels, 0)
+	s.reasons = append(s.reasons, CRefUndef)
+	xSAT_VecWatchListPush(s.watches)
+	xSAT_VecWatchListPush(s.watches)
+	xSAT_VecWatchListPush(s.binary)
+	xSAT_VecWatchListPush(s.binary)
+	xSAT_HeapInsert(s.order, v)
+	s.model = nil
+	return v
 }
+func xSAT_SolverAddVariable(s *Solver, sign int) { s.AddVariable(sign) }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_SolverAddVariable(s *xSAT_Solver_t, Sign int32) {
-    var Var int32  = Vec_IntSize( s.vActivity );
-
-    xSAT_VecWatchListPush( s.vWatches );
-    xSAT_VecWatchListPush( s.vWatches );
-    xSAT_VecWatchListPush( s.vBinWatches );
-    xSAT_VecWatchListPush( s.vBinWatches );
-
-    Vec_IntPush( s.vActivity, 0 );
-    Vec_IntPush( s.vLevels, 0 );
-    Vec_StrPush( s.vAssigns, VarX );
-    Vec_StrPush( s.vPolarity, 1 );
-    Vec_StrPush( s.vTags, 0 );
-    Vec_IntPush( s.vReasons, int32(   CRefUndef) );
-    Vec_IntPush( s.vStamp, 0 );
-    Vec_StrPush( s.vSeen, 0 );
-
-    xSAT_HeapInsert( s.hOrder, Var );
+// AddClause preserves the caller's Go slice. The compatibility entry point
+// below additionally retains the original C vector's sorting/shrinking behavior.
+func (s *Solver) AddClause(literals []int) bool {
+	result, _ := s.addMutableClause(append([]int(nil), literals...))
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_SolverAddClause(s *xSAT_Solver_t, vLits *Vec_Int_t) int32 {
-    var i, j int32;
-    var Lit, PrevLit int32;
-    var MaxVar int32;
-
-    Vec_IntSort( vLits, 0 );
-    MaxVar = xSAT_Lit2Var( Vec_IntEntryLast( vLits ) );
-    for  MaxVar >= Vec_IntSize( s.vActivity )  {
-        xSAT_SolverAddVariable( s, 1 );
-    }
-
-    j = 0;
-    PrevLit = LitUndef;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vLits)) && (((Lit) = Vec_IntEntry(vLits, i)), 1); i++  {
-        if Lit == xSAT_NegLit( PrevLit ) || Vec_StrEntry( s.vAssigns, xSAT_Lit2Var( Lit ) ) == xSAT_LitSign( Lit ) {
-            return true;
-        } else if Lit != PrevLit && Vec_StrEntry( s.vAssigns, xSAT_Lit2Var( Lit ) ) == VarX {
-            PrevLit = Lit;
-            Vec_IntWriteEntry( vLits, j++, Lit );
-        }
-    }
-    Vec_IntShrink( vLits, j );
-
-    if Vec_IntSize( vLits ) == 0 {
-        return false; }
-    if Vec_IntSize( vLits ) == 1 {
-        xSAT_SolverEnqueue( s, Vec_IntEntry( vLits, 0 ), CRefUndef );
-        return ( xSAT_SolverPropagate( s ) == CRefUndef );
-    }
-
-    xSAT_SolverClaNew( s, vLits, 0 );
-    return true;
+func (s *Solver) addMutableClause(lits []int) (bool, int) {
+	for _, lit := range lits {
+		if lit < 0 {
+			panic("negative encoded literal")
+		}
+	}
+	s.model = nil
+	if !s.okay {
+		return false, -1
+	}
+	xSAT_SolverCancelUntil(s, 0)
+	for _, lit := range lits {
+		for lit>>1 >= len(s.assigns) {
+			s.AddVariable(1)
+		}
+	}
+	sort.Ints(lits)
+	previous := LitUndef
+	filtered := lits[:0]
+	for _, lit := range lits {
+		if lit == previous {
+			continue
+		}
+		if lit == previous^1 {
+			return true, -1
+		}
+		previous = lit
+		value := s.litValue(lit)
+		if value == LBoolTrue {
+			return true, -1
+		}
+		if value == LBoolUndef {
+			filtered = append(filtered, lit)
+		}
+	}
+	if len(filtered) == 0 {
+		s.okay = false
+		return false, 0
+	}
+	if len(filtered) == 1 {
+		if !s.enqueue(filtered[0], CRefUndef) || s.propagate() != CRefUndef {
+			s.okay = false
+			return false, 1
+		}
+		return true, 1
+	}
+	s.newClause(filtered, false)
+	return true, len(filtered)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_SolverSolve(s *xSAT_Solver_t) int32 {
-    var status byte  = LBoolUndef;
-
-    assert((s != nil), "s");
-    if s.Config.fVerbose {
-        fmt.Printf("==========================================[ BLACK MAGIC ]================================================\n");
-        fmt.Printf("|                                |                                |                                     |\n");
-        fmt.Printf("| - Restarts:                    | - Reduce Clause DB:            | - Minimize Asserting:               |\n");
-        fmt.Printf("|   * LBD Queue    : %6d      |   * First     : %6d         |    * size < %3d                     |\n", s.Config.nSizeLBDQueue, s.Config.nConfFirstReduce, 0);
-        fmt.Printf("|   * Trail Queue  : %6d      |   * Inc       : %6d         |    * lbd  < %3d                     |\n", s.Config.nSizeTrailQueue, s.Config.nIncReduce, 0);
-        fmt.Printf("|   * K            : %6.2f      |   * Special   : %6d         |                                     |\n", s.Config.K, s.Config.nSpecialIncReduce);
-        fmt.Printf("|   * R            : %6.2f      |   * Protected :  (lbd)< %2d     |                                     |\n", s.Config.R, s.Config.nLBDFrozenClause);
-        fmt.Printf("|                                |                                |                                     |\n");
-        fmt.Printf("=========================================================================================================\n");
-    }
-
-    for  status == LBoolUndef  {
-        status = xSAT_SolverSearch( s );
-    }
-
-    if s.Config.fVerbose {
-        fmt.Printf("=========================================================================================================\n"); }
-
-    xSAT_SolverCancelUntil( s, 0 );
-    return status;
+func xSAT_SolverAddClause(s *Solver, lits *vec.Vec_Int_t) int {
+	values := vec.Vec_IntArray(lits)
+	native := make([]int, len(values))
+	for i, value := range values {
+		native[i] = int(value)
+	}
+	result, size := s.addMutableClause(native)
+	for i, value := range native {
+		vec.Vec_IntWriteEntry(lits, i, int32(value))
+	}
+	if size >= 0 {
+		vec.Vec_IntShrink(lits, size)
+	}
+	return boolInt(result)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_SolverPrintStats(s *xSAT_Solver_t) {
-    fmt.Printf("starts        : %10d\n", s.Stats.nStarts);
-    fmt.Printf("conflicts     : %10d\n", s.Stats.nConflicts);
-    fmt.Printf("decisions     : %10d\n", s.Stats.nDecisions);
-    fmt.Printf("propagations  : %10d\n", s.Stats.nPropagations);
+func (s *Solver) Simplify() bool {
+	if len(s.limits) != 0 {
+		panic("simplification requires root level")
+	}
+	if !s.okay {
+		return false
+	}
+	if s.propagate() != CRefUndef {
+		s.okay = false
+		return false
+	}
+	if s.simplifyAssigned == len(s.trail) || s.simplifyRemaining > 0 {
+		return true
+	}
+	kept := s.clauses[:0]
+	for _, ref := range s.clauses {
+		c := s.memory.clauses[ref]
+		if xSAT_SolverIsClauseSatisfied(s, c) != 0 {
+			c.marked = true
+			s.Stats.ClauseLiterals -= int64(len(c.lits))
+			s.unwatch(ref)
+		} else {
+			kept = append(kept, ref)
+		}
+	}
+	s.clauses = kept
+	xSAT_SolverRebuildOrderHeap(s)
+	s.simplifyAssigned = len(s.trail)
+	s.simplifyRemaining = s.Stats.ClauseLiterals + s.Stats.LearntLiterals
+	return true
 }
-
-//ABC_NAMESPACE_IMPL_END
+func xSAT_SolverSimplify(s *Solver) int { return boolInt(s.Simplify()) }
+func xSAT_SolverPrintStats(s *Solver) {
+	fmt.Printf("starts        : %10d\nconflicts     : %10d\ndecisions     : %10d\npropagations  : %10d\n", s.Stats.Starts, s.Stats.Conflicts, s.Stats.Decisions, s.Stats.Propagations)
+}
+func xSAT_SolverSolve(s *Solver) int { return s.Solve() }

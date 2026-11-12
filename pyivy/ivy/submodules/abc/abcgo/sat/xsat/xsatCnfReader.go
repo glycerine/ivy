@@ -1,234 +1,81 @@
+// Go port of xsatCnfReader.c by Bruno Schmitt (2016).
 package xsat
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"strconv"
+	"strings"
+)
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [xsatCnfReader.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [xSAT - A SAT solver written in C.
-               Read the license file for more info.]
-
-  Synopsis    [CNF DIMACS file format parser.]
-
-  Author      [Bruno Schmitt <boschmitt@inf.ufrgs.br>]
-
-  Affiliation [UC Berkeley / UFRGS]
-
-  Date        [Ver. 1.0. Started - November 10, 2016.]
-
-  Revision    []
-
-***********************************************************************/
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-//#include <ctype.h>
-
-//#include "misc/util/abc_global.h"
-//#include "misc/vec/vecInt.h"
-
-//#include "xsatSolver.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Read the file into the internal buffer.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_FileRead(pFile *os.File) string {
-    var nFileSize int32;
-    var pBuffer string;
-    var RetValue int32;
-    // get the file size, in bytes
-    fseek( pFile, 0, SEEK_END );
-    nFileSize = ftell( pFile );
-    // move the file current reading position to the beginning
-    rewind( pFile );
-    // load the contents of the file into memory
-    // inlining of macro ABC_ALLOC
-    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 3)));
-    RetValue = fread( pBuffer, nFileSize, 1, pFile );
-    // terminate the string with '\0'
-    pBuffer[ nFileSize + 0] = '\n';
-    pBuffer[ nFileSize + 1] = '\0';
-    return pBuffer;
+func ParseDIMACS(r io.Reader) (*Solver, error) {
+	scanner := bufio.NewScanner(r)
+	scanner.Buffer(make([]byte, 4096), 16<<20)
+	var s *Solver
+	var clause []int
+	declared, count := 0, 0
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "c") {
+			continue
+		}
+		if strings.HasPrefix(line, "p") {
+			if s != nil {
+				return nil, fmt.Errorf("duplicate DIMACS header")
+			}
+			var kind string
+			var variables int
+			if _, err := fmt.Sscanf(line, "p %s %d %d", &kind, &variables, &declared); err != nil || kind != "cnf" || variables < 0 || declared < 0 {
+				return nil, fmt.Errorf("invalid DIMACS header")
+			}
+			s = New()
+			for v := 0; v < variables; v++ {
+				s.AddVariable(1)
+			}
+			continue
+		}
+		if s == nil {
+			return nil, fmt.Errorf("missing DIMACS header")
+		}
+		for _, field := range strings.Fields(line) {
+			n, err := strconv.Atoi(field)
+			if err != nil {
+				return nil, fmt.Errorf("invalid DIMACS literal %q", field)
+			}
+			if n == 0 {
+				s.AddClause(clause)
+				clause = nil
+				count++
+				continue
+			}
+			negative := n < 0
+			if negative {
+				n = -n
+			}
+			if n <= 0 || n > len(s.assigns) {
+				return nil, fmt.Errorf("DIMACS variable out of range")
+			}
+			lit := 2 * (n - 1)
+			if negative {
+				lit++
+			}
+			clause = append(clause, lit)
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	if s == nil || len(clause) != 0 || count != declared {
+		return nil, fmt.Errorf("incomplete DIMACS input")
+	}
+	return s, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func skipLine(pIn *string) {
-    for {
-        if **pIn == 0 {
-            return; }
-        if **pIn == '\n' {
-            (*pIn)++;
-            return;
-        }
-        (*pIn)++;
-    }
+func xSAT_SolverParseDimacs(r io.Reader, out **Solver) int {
+	s, err := ParseDIMACS(r)
+	if err != nil {
+		return 0
+	}
+	*out = s
+	return boolInt(s.okay)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_ReadInt(pIn *string) int32 {
-    var val int32;
-    var neg int32;
-
-    for ; isspace(**pIn); (*pIn)++ {}
-    if **pIn == '-' {
-        neg = 1;
-(*pIn)++;
-    } else if **pIn == '+' {
-        (*pIn)++; }
-    if !isdigit(**pIn) {
-        fmt.Fprintf(os.Stderr, "PARSE ERROR! Unexpected char: %c\n", **pIn);
-os.Exit(int(1)); }
-    for  isdigit(**pIn)  {
-        val = val*10 + (**pIn - '0');
-(*pIn)++;
-    }
-    if neg != 0 {
-        return -val;
-    } else {
-        return val;
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_ReadClause(pIn *string, p *xSAT_Solver_t, vLits *Vec_Int_t) {
-    var token, var, sign int32;
-
-    Vec_IntClear( vLits );
-    for {
-        token = xSAT_ReadInt( pIn );
-        if token == 0 {
-            break; }
-        var = abs(token) - 1;
-        sign = (token > 0);
-        Vec_IntPush( vLits, xSAT_Var2Lit( var, !sign ) );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_ParseDimacs(pText string, pS **xSAT_Solver_t) int32 {
-    var p *xSAT_Solver_t  = nil;
-    var vLits *Vec_Int_t  = nil;
-    var pIn string  = pText;
-    var nVars, nClas int32;
-    for {
-        for ; isspace(*pIn); pIn++ {}
-        if *pIn == 0 {
-            break;
-        } else if *pIn == 'c' {
-            skipLine( &pIn );
-        } else if *pIn == 'p' {
-            pIn++;
-            for ; isspace(*pIn); pIn++ {}
-            for ; !isspace(*pIn); pIn++ {}
-
-            nVars = xSAT_ReadInt( &pIn );
-            nClas = xSAT_ReadInt( &pIn );
-            skipLine( &pIn );
-
-            /* start the solver */
-            p = xSAT_SolverCreate();
-            /* allocate the vector */
-            vLits = Vec_IntAlloc( nVars );
-        
-        } else {
-            if p == nil {
-                fmt.Printf("There is no parameter line.\n");
-                os.Exit(int(1));
-            }
-            xSAT_ReadClause( &pIn, p, vLits );
-            if !xSAT_SolverAddClause( p, vLits ) {
-                Vec_IntPrint(vLits);
-                return 0;
-            }
-        }
-    }
-    Vec_IntFree( vLits );
-    *pS = p;
-    return xSAT_SolverSimplify( p );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the solver and reads the DIMAC file.]
-
-  Description [Returns FALSE upon immediate conflict.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func xSAT_SolverParseDimacs(pFile *os.File, p **xSAT_Solver_t) int32 {
-    var pText string;
-    var Value int32;
-    pText = xSAT_FileRead( pFile );
-    Value = xSAT_ParseDimacs( pText, p );
-    pText = nil;
-    return Value;
-}
-
-//ABC_NAMESPACE_IMPL_END
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
