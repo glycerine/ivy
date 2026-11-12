@@ -1,692 +1,344 @@
+// Cut matching, area flow and bounded exact-area recovery from amapMatch.c.
 package amap
 
 import (
 	"fmt"
+	"math"
 	"time"
+
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-/**CFile****************************************************************
-
-  FileName    [amapMatch.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Technology mapper for standard cells.]
-
-  Synopsis    []
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: amapMatch.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "amapInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the cut using new memory manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManDupCut(p *Amap_Man_t, pCut *Amap_Cut_t) *Amap_Cut_t {
-    var pNew *Amap_Cut_t;
-    var nBytes int32  = sizeof(Amap_Cut_t) + sizeof(int) * pCut.nFans;
-    pNew = (Amap_Cut_t *)Aig_MmFlexEntryFetch( p.pMemCutBest, nBytes );
-    memcpy( pNew, pCut, (size_t)nBytes );
-    return pNew;
+func Amap_ManDupCut(p *Amap_Man_t, c *Amap_Cut_t) *Amap_Cut_t {
+	if c == nil {
+		return nil
+	}
+	copy := *c
+	copy.Fans = append([]int32(nil), c.Fans...)
+	copy.pNext = nil
+	return &copy
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the match with cut and set.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManMatchStart(p *Amap_Mat_t, pCut *Amap_Cut_t, pSet *Amap_Set_t) {
-    memset( p, 0, sizeof(Amap_Mat_t) );
-    p.pCut = pCut;
-    p.pSet = pSet;
+func Amap_ManMatchStart(m *Amap_Mat_t, c *Amap_Cut_t, s *Amap_Set_t) {
+	*m = Amap_Mat_t{pCut: c, pSet: s}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Cleans reference counters.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func amapMatchObjects(p *Amap_Man_t) []*Amap_Obj_t {
+	result := make([]*Amap_Obj_t, 0, Vec_PtrSize(p.vObjs))
+	for _, entry := range vec.Vec_PtrArray(p.vObjs) {
+		if entry != nil {
+			result = append(result, entry.(*Amap_Obj_t))
+		}
+	}
+	return result
+}
 func Amap_ManCleanRefs(p *Amap_Man_t) {
-    var pObj *Amap_Obj_t;
-    var i int32;
-    // inlining of macro Amap_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        pObj.nFouts[0] = pObj.nFouts[1] = 0; }
-    }
+	for _, o := range amapMatchObjects(p) {
+		o.nFouts = [2]int32{}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes delay.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManMaxDelay(p *Amap_Man_t) float32 {
-    var pObj *Amap_Obj_t;
-    var Delay float32  = 0.0;
-    var i int32;
-    // inlining of macro Amap_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vPos)) && (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {
-        Delay = Abc_MaxInt( Delay, Amap_ObjFanin0(p,pObj).Best.Delay );
-    }
-    return Delay;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Cleans reference counters.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Amap_ManCleanData(p *Amap_Man_t) {
-    var pObj *Amap_Obj_t;
-    var i int32;
-//    Amap_ManForEachNode( p, pObj, i )
-//        ABC_FREE( pObj->pData );
-    // inlining of macro Amap_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        pObj.pData = nil; }
-    }
+	for _, o := range amapMatchObjects(p) {
+		o.pData = nil
+	}
+}
+func Amap_ManMaxDelay(p *Amap_Man_t) float32 {
+	var delay float32
+	for _, entry := range vec.Vec_PtrArray(p.vPos) {
+		o := entry.(*Amap_Obj_t)
+		delay = max(delay, Amap_Regular(Amap_ObjFanin0(p, o)).Best.Delay)
+	}
+	return delay
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute nodes used in the mapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManComputeMapping_rec(p *Amap_Man_t, pObj *Amap_Obj_t, fCompl int32) float32 {
-    var pM *Amap_Mat_t  = &pObj.Best;
-    var pFanin *Amap_Obj_t;
-    var pGate *Amap_Gat_t;
-    var i, iFanin, fComplFanin int32;
-    var Area float32;
-    if pObj.nFouts[fCompl]++ + pObj.nFouts[!fCompl] > 0 {
-        return 0.0; }
-    if Amap_ObjIsPi(pObj) || Amap_ObjIsConst1(pObj) {
-        return 0.0; }
-    pGate = Amap_LibGate( p.pLib, pM.pSet.iGate );
-    assert(pGate.nPins == pM.pCut.nFans, "pGate.nPins == pM.pCut.nFans");
-    Area = pGate.dArea;
-    for  i = 0; i < int32(pGate.nPins); i++  {
-        iFanin = Abc_Lit2Var( pM.pSet.Ins[i] );
-        pFanin = Amap_ManObj( p, Abc_Lit2Var(pM.pCut.Fans[iFanin]) );
-        fComplFanin = Abc_LitIsCompl( pM.pSet.Ins[i] ) ^ Abc_LitIsCompl( pM.pCut.Fans[iFanin] );
-        Area += Amap_ManComputeMapping_rec( p, pFanin, fComplFanin );
-    }
-    return Area;
+// The set permutes and complements the cut leaves into gate-pin order.
+func amapMatchFanins(p *Amap_Man_t, m *Amap_Mat_t, visit func(*Amap_Obj_t, int32)) {
+	if m.pCut == nil || m.pSet == nil {
+		panic("AMAP: missing match")
+	}
+	gate := Amap_LibGate(p.pLib, int32(m.pSet.iGate))
+	if gate.nPins != m.pCut.nFans || int(m.pCut.nFans) > len(m.pCut.Fans) {
+		panic("AMAP: inconsistent match support")
+	}
+	for i := uint32(0); i < gate.nPins; i++ {
+		selector := int32(m.pSet.Ins[i])
+		index := selector >> 1
+		if index < 0 || int(index) >= len(m.pCut.Fans) {
+			panic("AMAP: invalid match permutation")
+		}
+		literal := m.pCut.Fans[index]
+		visit(Amap_ManObj(p, literal>>1), (selector^literal)&1)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Compute nodes used in the mapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Amap_ManComputeMapping_rec(p *Amap_Man_t, o *Amap_Obj_t, polarity int32) float32 {
+	o = Amap_Regular(o)
+	old := Amap_ObjRefsTotal(o)
+	o.nFouts[polarity]++
+	if old > 0 || Amap_ObjIsNode(o) == 0 {
+		return 0
+	}
+	area := float32(Amap_LibGate(p.pLib, int32(o.Best.pSet.iGate)).dArea)
+	amapMatchFanins(p, &o.Best, func(f *Amap_Obj_t, c int32) { area += Amap_ManComputeMapping_rec(p, f, c) })
+	return area
+}
 func Amap_ManComputeMapping(p *Amap_Man_t) float32 {
-    var pObj *Amap_Obj_t;
-    var Area float32  = 0.0;
-    var i int32;
-    Amap_ManCleanRefs( p );
-    // inlining of macro Amap_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vPos)) && (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {
-        Area += Amap_ManComputeMapping_rec( p, Amap_ObjFanin0(p, pObj), Amap_ObjFaninC0(pObj) );
-    }
-    return Area;
+	Amap_ManCleanRefs(p)
+	var area float32
+	for _, entry := range vec.Vec_PtrArray(p.vPos) {
+		o := entry.(*Amap_Obj_t)
+		area += Amap_ManComputeMapping_rec(p, Amap_Regular(Amap_ObjFanin0(p, o)), Amap_ObjFaninC0(o))
+	}
+	return area
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of inverters to be added.]
-
-  Description [Should be called after mapping has been set.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Amap_ManCountInverters(p *Amap_Man_t) int32 {
-    var pObj *Amap_Obj_t;
-    var i, Counter int32;
-    // inlining of macro Amap_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        Counter += int32((pObj.nFouts[!pObj.fPolar] > 0)); }
-    }
-    return Counter;
+	var count int32
+	for _, o := range amapMatchObjects(p) {
+		if o.nFouts[o.fPolar^1] > 0 {
+			count++
+		}
+	}
+	return count
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Compare two matches.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_CutCompareDelay(p *Amap_Man_t, pM0 *Amap_Mat_t, pM1 *Amap_Mat_t) int32 {
-    // compare delay
-    if pM0.Delay < pM1.Delay - p.pPars.fEpsilon {
-        return -1; }
-    if pM0.Delay > pM1.Delay + p.pPars.fEpsilon {
-        return 1; }
-
-    // compare area flows
-    if pM0.Area < pM1.Area - p.pPars.fEpsilon {
-        return -1; }
-    if pM0.Area > pM1.Area + p.pPars.fEpsilon {
-        return 1; }
-
-    // compare average fanouts
-    if pM0.AveFan > pM1.AveFan - p.pPars.fEpsilon {
-        return -1; }
-    if pM0.AveFan < pM1.AveFan + p.pPars.fEpsilon {
-        return 1; }
-    return 1;
+func amapCompareMetric(a, b, epsilon float32) int32 {
+	if a < b-epsilon {
+		return -1
+	}
+	if a > b+epsilon {
+		return 1
+	}
+	return 0
 }
-func Amap_CutCompareArea(p *Amap_Man_t, pM0 *Amap_Mat_t, pM1 *Amap_Mat_t) int32 {
-    // compare area flows
-    if pM0.Area < pM1.Area - p.pPars.fEpsilon {
-        return -1; }
-    if pM0.Area > pM1.Area + p.pPars.fEpsilon {
-        return 1; }
-
-    // compare average fanouts
-    if pM0.AveFan > pM1.AveFan - p.pPars.fEpsilon {
-        return -1; }
-    if pM0.AveFan < pM1.AveFan + p.pPars.fEpsilon {
-        return 1; }
-
-    // compare delay
-    if pM0.Delay < pM1.Delay - p.pPars.fEpsilon {
-        return -1; }
-    if pM0.Delay > pM1.Delay + p.pPars.fEpsilon {
-        return 1; }
-    return 1;
+func amapCompareFanout(a, b, epsilon float32) int32 {
+	// Preserve the original preference, including its asymmetric treatment of nearly tied matches.
+	if a > b-epsilon {
+		return -1
+	}
+	if a < b+epsilon {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Counts area while dereferencing the match.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_CutAreaDeref(p *Amap_Man_t, pM *Amap_Mat_t) float32 {
-    var pFanin *Amap_Obj_t;
-    var i, fCompl int32;
-    var Area float32  = Amap_LibGate( p.pLib, pM.pSet.iGate ).dArea;
-    // inlining of macro Amap_MatchForEachFaninCompl
-    for  i = 0; i < int32((pM).pCut.nFans) &&                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1) &&         ((fCompl = Abc_LitIsCompl((pM).pSet.Ins[i]) ^ Abc_LitIsCompl((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])])), 1);         i++  {
-        assert(Amap_ObjRefsTotal(pFanin) > 0, "Amap_ObjRefsTotal(pFanin) > 0");
-        if int32(pFanin.fPolar) != fCompl && pFanin.nFouts[fCompl] == 1 {
-            Area += p.fAreaInv; }
-        if --pFanin.nFouts[fCompl] + pFanin.nFouts[!fCompl] == 0 && Amap_ObjIsNode(pFanin) {
-            Area += Amap_CutAreaDeref( p, &pFanin.Best ); }
-    }
-    return Area;
+func Amap_CutCompareDelay(p *Amap_Man_t, a, b *Amap_Mat_t) int32 {
+	e := p.pPars.fEpsilon
+	if c := amapCompareMetric(a.Delay, b.Delay, e); c != 0 {
+		return c
+	}
+	if c := amapCompareMetric(a.Area, b.Area, e); c != 0 {
+		return c
+	}
+	if c := amapCompareFanout(a.AveFan, b.AveFan, e); c != 0 {
+		return c
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Counts area while referencing the match.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_CutAreaRef2(p *Amap_Man_t, pM *Amap_Mat_t, vTemp *Vec_Ptr_t, Limit int32) float32 {
-    var pFanin *Amap_Obj_t;
-    var i, fCompl int32;
-    var Area float32  = Amap_LibGate( p.pLib, pM.pSet.iGate ).dArea;
-    if Limit == 0 { return Area; }
-    // inlining of macro Amap_MatchForEachFaninCompl
-    for  i = 0; i < int32((pM).pCut.nFans) &&                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1) &&         ((fCompl = Abc_LitIsCompl((pM).pSet.Ins[i]) ^ Abc_LitIsCompl((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])])), 1);         i++  {
-        Vec_PtrPush( vTemp, pFanin.nFouts + fCompl );
-        assert(Amap_ObjRefsTotal(pFanin) >= 0, "Amap_ObjRefsTotal(pFanin) >= 0");
-        if int32(pFanin.fPolar) != fCompl && pFanin.nFouts[fCompl] == 0 {
-            Area += p.fAreaInv; }
-        if pFanin.nFouts[fCompl]++ + pFanin.nFouts[!fCompl] == 0 && Amap_ObjIsNode(pFanin) {
-            Area += Amap_CutAreaRef2( p, &pFanin.Best, vTemp, Limit-1 ); }
-    }
-    return Area;
+func Amap_CutCompareArea(p *Amap_Man_t, a, b *Amap_Mat_t) int32 {
+	e := p.pPars.fEpsilon
+	if c := amapCompareMetric(a.Area, b.Area, e); c != 0 {
+		return c
+	}
+	if c := amapCompareFanout(a.AveFan, b.AveFan, e); c != 0 {
+		return c
+	}
+	if c := amapCompareMetric(a.Delay, b.Delay, e); c != 0 {
+		return c
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives area of the match for a non-referenced node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_CutAreaDerefed2(p *Amap_Man_t, pNode *Amap_Obj_t, pM *Amap_Mat_t) float32 {
-    var nRecurLevels int32  = 8;
-    var fComplNew int32;
-    var i int32;
-    var pInt *int32;
-    var aResult float32;
-    Vec_PtrClear( p.vTempP );
-    aResult = Amap_CutAreaRef2( p, pM, p.vTempP, nRecurLevels );
-    //Amap_CutAreaDeref( p, pM );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vTempP)) && (((pInt) = (int *)Vec_PtrEntry(p.vTempP, i)), 1); i++  {
-        (*pInt)--;
-    }
-    // if node is needed in another polarity, add inverter
-    fComplNew = pM.pCut.fInv ^ pM.pSet.fInv;
-    if pNode.nFouts[fComplNew] == 0 && pNode.nFouts[!fComplNew] > 0 {
-        aResult += p.fAreaInv; }
-    return aResult;
+func Amap_CutAreaDeref(p *Amap_Man_t, m *Amap_Mat_t) float32 {
+	area := float32(Amap_LibGate(p.pLib, int32(m.pSet.iGate)).dArea)
+	amapMatchFanins(p, m, func(f *Amap_Obj_t, c int32) {
+		if Amap_ObjRefsTotal(f) <= 0 || f.nFouts[c] <= 0 {
+			panic("AMAP: dereferencing unused polarity")
+		}
+		if int32(f.fPolar) != c && f.nFouts[c] == 1 {
+			area += p.fAreaInv
+		}
+		f.nFouts[c]--
+		if Amap_ObjRefsTotal(f) == 0 && Amap_ObjIsNode(f) != 0 {
+			area += Amap_CutAreaDeref(p, &f.Best)
+		}
+	})
+	return area
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Counts area while referencing the match.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_CutAreaRef(p *Amap_Man_t, pM *Amap_Mat_t) float32 {
-    var pFanin *Amap_Obj_t;
-    var i, fCompl int32;
-    var Area float32  = Amap_LibGate( p.pLib, pM.pSet.iGate ).dArea;
-    // inlining of macro Amap_MatchForEachFaninCompl
-    for  i = 0; i < int32((pM).pCut.nFans) &&                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1) &&         ((fCompl = Abc_LitIsCompl((pM).pSet.Ins[i]) ^ Abc_LitIsCompl((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])])), 1);         i++  {
-        assert(Amap_ObjRefsTotal(pFanin) >= 0, "Amap_ObjRefsTotal(pFanin) >= 0");
-        if int32(pFanin.fPolar) != fCompl && pFanin.nFouts[fCompl] == 0 {
-            Area += p.fAreaInv; }
-        if pFanin.nFouts[fCompl]++ + pFanin.nFouts[!fCompl] == 0 && Amap_ObjIsNode(pFanin) {
-            Area += Amap_CutAreaRef( p, &pFanin.Best ); }
-    }
-    return Area;
+func Amap_CutAreaRef2(p *Amap_Man_t, m *Amap_Mat_t, temp *Vec_Ptr_t, limit int32) float32 {
+	area := float32(Amap_LibGate(p.pLib, int32(m.pSet.iGate)).dArea)
+	if limit == 0 {
+		return area
+	}
+	amapMatchFanins(p, m, func(f *Amap_Obj_t, c int32) {
+		vec.Vec_PtrPush(temp, &f.nFouts[c])
+		if int32(f.fPolar) != c && f.nFouts[c] == 0 {
+			area += p.fAreaInv
+		}
+		old := Amap_ObjRefsTotal(f)
+		f.nFouts[c]++
+		if old == 0 && Amap_ObjIsNode(f) != 0 {
+			area += Amap_CutAreaRef2(p, &f.Best, temp, limit-1)
+		}
+	})
+	return area
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives area of the match for a non-referenced node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_CutAreaDerefed(p *Amap_Man_t, pNode *Amap_Obj_t, pM *Amap_Mat_t) float32 {
-    var aResult, aResult2 float32;
-    var fComplNew int32;
-    aResult2 = Amap_CutAreaRef( p, pM );
-    aResult  = Amap_CutAreaDeref( p, pM );
-    assert(aResult > aResult2 - p.fEpsilonInternal, "aResult > aResult2 - p.fEpsilonInternal");
-    assert(aResult < aResult2 + p.fEpsilonInternal, "aResult < aResult2 + p.fEpsilonInternal");
-    // if node is needed in another polarity, add inverter
-    fComplNew = pM.pCut.fInv ^ pM.pSet.fInv;
-    if pNode.nFouts[fComplNew] == 0 && pNode.nFouts[!fComplNew] > 0 {
-        aResult += p.fAreaInv; }
-    return aResult;
+func amapOutputInverter(p *Amap_Man_t, o *Amap_Obj_t, m *Amap_Mat_t) float32 {
+	c := m.pCut.fInv ^ m.pSet.fInv
+	if o.nFouts[c] == 0 && o.nFouts[c^1] > 0 {
+		return p.fAreaInv
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_CutAreaTest(p *Amap_Man_t, pNode *Amap_Obj_t) {
-    var aResult, aResult2 float32;
-    if Amap_ObjRefsTotal(pNode) == 0 {
-        aResult2 = Amap_CutAreaRef( p, &pNode.Best );
-        aResult  = Amap_CutAreaDeref( p, &pNode.Best );
-        assert(aResult > aResult2 - p.fEpsilonInternal, "aResult > aResult2 - p.fEpsilonInternal");
-        assert(aResult < aResult2 + p.fEpsilonInternal, "aResult < aResult2 + p.fEpsilonInternal");
-    
-    } else {
-        aResult  = Amap_CutAreaDeref( p, &pNode.Best );
-        aResult2 = Amap_CutAreaRef( p, &pNode.Best );
-        assert(aResult > aResult2 - p.fEpsilonInternal, "aResult > aResult2 - p.fEpsilonInternal");
-        assert(aResult < aResult2 + p.fEpsilonInternal, "aResult < aResult2 + p.fEpsilonInternal");
-    }
+func Amap_CutAreaDerefed2(p *Amap_Man_t, o *Amap_Obj_t, m *Amap_Mat_t) float32 {
+	if p.vTempP == nil {
+		p.vTempP = vec.Vec_PtrAlloc(16)
+	}
+	vec.Vec_PtrClear(p.vTempP)
+	area := Amap_CutAreaRef2(p, m, p.vTempP, 8)
+	for _, entry := range vec.Vec_PtrArray(p.vTempP) {
+		counter := entry.(*int32)
+		*counter--
+	}
+	vec.Vec_PtrClear(p.vTempP)
+	return area + amapOutputInverter(p, o, m)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives parameters for the match.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManMatchGetFlows(p *Amap_Man_t, pM *Amap_Mat_t) {
-    var pMFanin *Amap_Mat_t;
-    var pFanin *Amap_Obj_t;
-    var pGate *Amap_Gat_t;
-    var AddOn float32; 
-    var i int32;
-    pGate = Amap_LibGate( p.pLib, pM.pSet.iGate );
-    assert(pGate.nPins == pM.pCut.nFans, "pGate.nPins == pM.pCut.nFans");
-    assert(pM.Area == 0.0, "pM.Area == 0.0");
-    pM.Area = pGate.dArea;
-    pM.AveFan = 0.0;
-    pM.Delay = 0.0;
-    // inlining of macro Amap_MatchForEachFanin
-    for  i = 0; i < int32((pM).pCut.nFans) &&                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1);         i++  {
-        pMFanin = &pFanin.Best;
-        pM.Delay = Abc_MaxInt( pM.Delay, pMFanin.Delay );
-        pM.AveFan += Amap_ObjRefsTotal(pFanin);
-//        if ( Amap_ObjRefsTotal(pFanin) == 0 )
-//            pM->Area += pMFanin->Area;
-//        else
-//            pM->Area += pMFanin->Area / pFanin->EstRefs;
-        if Amap_ObjRefsTotal(pFanin) == 0 {
-            AddOn = pMFanin.Area;
-        } else {
-            AddOn = pMFanin.Area / pFanin.EstRefs;
-        } 
-        if pM.Area >= float32(1e32) || AddOn >= float32(1e32) {
-            pM.Area = float32(1e32);
-        } else { 
-            pM.Area += AddOn; }
-    }
-    pM.AveFan /= pGate.nPins;
-    pM.Delay += 1.0;
+func Amap_CutAreaRef(p *Amap_Man_t, m *Amap_Mat_t) float32 {
+	area := float32(Amap_LibGate(p.pLib, int32(m.pSet.iGate)).dArea)
+	amapMatchFanins(p, m, func(f *Amap_Obj_t, c int32) {
+		if int32(f.fPolar) != c && f.nFouts[c] == 0 {
+			area += p.fAreaInv
+		}
+		old := Amap_ObjRefsTotal(f)
+		f.nFouts[c]++
+		if old == 0 && Amap_ObjIsNode(f) != 0 {
+			area += Amap_CutAreaRef(p, &f.Best)
+		}
+	})
+	return area
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives parameters for the match.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManMatchGetExacts(p *Amap_Man_t, pNode *Amap_Obj_t, pM *Amap_Mat_t) {
-    var pMFanin *Amap_Mat_t;
-    var pFanin *Amap_Obj_t;
-    var pGate *Amap_Gat_t;
-    var i int32;
-    pGate = Amap_LibGate( p.pLib, pM.pSet.iGate );
-    assert(pGate.nPins == pM.pCut.nFans, "pGate.nPins == pM.pCut.nFans");
-    assert(pM.Area == 0.0, "pM.Area == 0.0");
-    pM.AveFan = 0.0;
-    pM.Delay = 0.0;
-    // inlining of macro Amap_MatchForEachFanin
-    for  i = 0; i < int32((pM).pCut.nFans) &&                                     ((pFanin = Amap_ManObj((p), Abc_Lit2Var((pM).pCut.Fans[Abc_Lit2Var((pM).pSet.Ins[i])]))), 1);         i++  {
-        pMFanin = &pFanin.Best;
-        pM.Delay = Abc_MaxInt( pM.Delay, pMFanin.Delay );
-        pM.AveFan += Amap_ObjRefsTotal(pFanin);
-    }
-    pM.AveFan /= pGate.nPins;
-    pM.Delay += 1.0;
-    //pM->Area = Amap_CutAreaDerefed( p, pNode, pM );
-    pM.Area = Amap_CutAreaDerefed2( p, pNode, pM );
+func amapCheckArea(p *Amap_Man_t, a, b float32) {
+	if math.Abs(float64(a-b)) > float64(p.fEpsilonInternal) {
+		panic("AMAP: reference/dereference area mismatch")
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the best match at each node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManMatchNode(p *Amap_Man_t, pNode *Amap_Obj_t, fFlow int32, fRefs int32) {
-    var fVerbose int32; //(pNode->Level == 2 || pNode->Level == 4);
-    var fVeryVerbose int32  = fVerbose;
-
-    var MA Amap_Mat_t ;
-    var MD Amap_Mat_t ;
-    var M Amap_Mat_t ;
-    var pMBestA *Amap_Mat_t = &MA;
-    var pMBestD *Amap_Mat_t = &MD;
-    var pMThis *Amap_Mat_t = &M;
-    var pMBest *Amap_Mat_t;
-    var pCut *Amap_Cut_t;
-    var pSet *Amap_Set_t;
-    var pNod *Amap_Nod_t;
-    var i int32;
-
-    if fRefs != 0 {
-        pNode.EstRefs = float32(((2.0 * pNode.EstRefs + Amap_ObjRefsTotal(pNode)) / 3.0));
-    } else {
-        pNode.EstRefs = float32(pNode.nRefs); }
-    if (fRefs != 0) && Amap_ObjRefsTotal(pNode) > 0 {
-        Amap_CutAreaDeref( p, &pNode.Best ); }
-
-    if fVerbose != 0 {
-        fmt.Printf("\nNode %d (%d)\n", pNode.Id, pNode.Level); }
-
-    pMBestA.pCut = pMBestD.pCut = nil;
-    // inlining of macro Amap_NodeForEachCut
-    for  i = 0, pCut = (Amap_Cut_t *)pNode.pData; i < int32(pNode.nCuts);         i++, pCut = Amap_ManCutNext(pCut)  {
-        if pCut.iMat == 0 {
-            continue; }
-        pNod = Amap_LibNod( p.pLib, pCut.iMat );
-        // inlining of macro Amap_LibNodeForEachSet
-        for  pSet = pNod.pSets; (pSet != nil); pSet = pSet.pNext  {
-            Amap_ManMatchStart( pMThis, pCut, pSet );
-            if fFlow != 0 {
-                Amap_ManMatchGetFlows( p, pMThis );
-            } else {
-                Amap_ManMatchGetExacts( p, pNode, pMThis ); }
-            if pMBestD.pCut == nil || Amap_CutCompareDelay(p, pMBestD, pMThis) == 1 {
-                *pMBestD = *pMThis; }
-            if pMBestA.pCut == nil || Amap_CutCompareArea(p, pMBestA, pMThis) == 1 {
-                *pMBestA = *pMThis; }
-
-            if fVeryVerbose != 0 {
-                fmt.Printf("Cut %2d (%d) :  ", i, pCut.nFans);
-                fmt.Printf("Gate %10s  ", Amap_LibGate(p.pLib, pMThis.pSet.iGate).pName);
-                fmt.Printf("%s  ", pMThis.pSet.fInv ? "inv" : "   ");
-                fmt.Printf("Delay %5.2f  ", pMThis.Delay);
-                fmt.Printf("Area %5.2f  ", pMThis.Area);
-                fmt.Printf("\n");
-            }
-        }
-    }
-
-    if Abc_AbsFloat(pMBestA.Area - pMBestD.Area) / pMBestD.Area >= p.pPars.fADratio * Abc_AbsFloat(pMBestA.Delay - pMBestD.Delay) / pMBestA.Delay {
-        pMBest = pMBestA;
-    } else {
-        pMBest = pMBestD; }
-
-    if fVerbose != 0 {
-        fmt.Printf("BEST MATCHA:  ");
-        fmt.Printf("Gate %10s  ", Amap_LibGate(p.pLib, pMBestA.pSet.iGate).pName);
-        fmt.Printf("%s  ", pMBestA.pSet.fInv ? "inv" : "   ");
-        fmt.Printf("Delay %5.2f  ", pMBestA.Delay);
-        fmt.Printf("Area %5.2f  ", pMBestA.Area);
-        fmt.Printf("\n"); 
-
-        fmt.Printf("BEST MATCHD:  ");
-        fmt.Printf("Gate %10s  ", Amap_LibGate(p.pLib, pMBestD.pSet.iGate).pName);
-        fmt.Printf("%s  ", pMBestD.pSet.fInv ? "inv" : "   ");
-        fmt.Printf("Delay %5.2f  ", pMBestD.Delay);
-        fmt.Printf("Area %5.2f  ", pMBestD.Area);
-        fmt.Printf("\n"); 
-
-        fmt.Printf("BEST MATCH :  ");
-        fmt.Printf("Gate %10s  ", Amap_LibGate(p.pLib, pMBest.pSet.iGate).pName);
-        fmt.Printf("%s  ", pMBest.pSet.fInv ? "inv" : "   ");
-        fmt.Printf("Delay %5.2f  ", pMBest.Delay);
-        fmt.Printf("Area %5.2f  ", pMBest.Area);
-        fmt.Printf("\n"); 
-    }
-
-    pNode.fPolar = pMBest.pCut.fInv ^ pMBest.pSet.fInv;
-    pNode.Best = *pMBest;
-    pNode.Best.pCut = Amap_ManDupCut( p, pNode.Best.pCut );
-    if (fRefs != 0) && Amap_ObjRefsTotal(pNode) > 0 {
-        Amap_CutAreaRef( p, &pNode.Best ); }
+func Amap_CutAreaDerefed(p *Amap_Man_t, o *Amap_Obj_t, m *Amap_Mat_t) float32 {
+	a := Amap_CutAreaRef(p, m)
+	b := Amap_CutAreaDeref(p, m)
+	amapCheckArea(p, a, b)
+	return b + amapOutputInverter(p, o, m)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs one round of mapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManMatch(p *Amap_Man_t, fFlow int32, fRefs int32) {
-    var pMemOld *Aig_MmFlex_t;
-    var pObj *Amap_Obj_t;
-    var Area float32;
-    var i, nInvs int32;
-    var clk abctime  = Abc_Clock();
-    pMemOld = p.pMemCutBest;
-    p.pMemCutBest = Aig_MmFlexStart();
-    // inlining of macro Amap_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Amap_ObjIsNode(pObj) {} else
-        if pObj.pData {
-            Amap_ManMatchNode( p, pObj, fFlow, fRefs ); }
-    }
-    Aig_MmFlexStop( pMemOld, 0 );
-    Area = Amap_ManComputeMapping( p );
-    nInvs = Amap_ManCountInverters( p );
-if p.pPars.fVerbose {
-    fmt.Printf("Area =%9.2f. Gate =%9.2f. Inv =%9.2f. (%6d.) Delay =%6.2f. ", Area + nInvs * p.fAreaInv, Area, nInvs * p.fAreaInv, nInvs, Amap_ManMaxDelay(p));
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Time "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
+func Amap_CutAreaTest(p *Amap_Man_t, o *Amap_Obj_t) {
+	var a, b float32
+	if Amap_ObjRefsTotal(o) == 0 {
+		a = Amap_CutAreaRef(p, &o.Best)
+		b = Amap_CutAreaDeref(p, &o.Best)
+	} else {
+		a = Amap_CutAreaDeref(p, &o.Best)
+		b = Amap_CutAreaRef(p, &o.Best)
+	}
+	amapCheckArea(p, a, b)
 }
-    // test procedures
-//    Amap_ManForEachNode( p, pObj, i )
-//        Amap_CutAreaTest( p, pObj );
+func Amap_ManMatchGetFlows(p *Amap_Man_t, m *Amap_Mat_t) {
+	gate := Amap_LibGate(p.pLib, int32(m.pSet.iGate))
+	m.Area = float32(gate.dArea)
+	m.AveFan = 0
+	m.Delay = 0
+	amapMatchFanins(p, m, func(f *Amap_Obj_t, c int32) {
+		m.Delay = max(m.Delay, f.Best.Delay)
+		m.AveFan += float32(Amap_ObjRefsTotal(f))
+		add := f.Best.Area
+		if Amap_ObjRefsTotal(f) > 0 {
+			add /= f.EstRefs
+		}
+		if m.Area >= 1e32 || add >= 1e32 {
+			m.Area = 1e32
+		} else {
+			m.Area += add
+		}
+	})
+	if gate.nPins > 0 {
+		m.AveFan /= float32(gate.nPins)
+	}
+	m.Delay++
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs mapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Amap_ManMatchGetExacts(p *Amap_Man_t, o *Amap_Obj_t, m *Amap_Mat_t) {
+	gate := Amap_LibGate(p.pLib, int32(m.pSet.iGate))
+	m.Delay = 0
+	m.AveFan = 0
+	amapMatchFanins(p, m, func(f *Amap_Obj_t, c int32) {
+		m.Delay = max(m.Delay, f.Best.Delay)
+		m.AveFan += float32(Amap_ObjRefsTotal(f))
+	})
+	if gate.nPins > 0 {
+		m.AveFan /= float32(gate.nPins)
+	}
+	m.Delay++
+	m.Area = Amap_CutAreaDerefed2(p, o, m)
+}
+func Amap_ManMatchNode(p *Amap_Man_t, o *Amap_Obj_t, flow, refs int32) {
+	if refs != 0 {
+		o.EstRefs = (2*o.EstRefs + float32(Amap_ObjRefsTotal(o))) / 3
+	} else {
+		o.EstRefs = float32(o.nRefs)
+	}
+	referenced := refs != 0 && Amap_ObjRefsTotal(o) > 0
+	if referenced {
+		Amap_CutAreaDeref(p, &o.Best)
+	}
+	var bestArea, bestDelay Amap_Mat_t
+	cut, ok := o.pData.(*Amap_Cut_t)
+	if !ok {
+		panic("AMAP: node cuts are not a native cut chain")
+	}
+	for ; cut != nil; cut = cut.pNext {
+		if cut.iMat == 0 {
+			continue
+		}
+		for set := Amap_LibNod(p.pLib, int32(cut.iMat)).pSets; set != nil; set = set.pNext {
+			m := Amap_Mat_t{pCut: cut, pSet: set}
+			if flow != 0 {
+				Amap_ManMatchGetFlows(p, &m)
+			} else {
+				Amap_ManMatchGetExacts(p, o, &m)
+			}
+			if bestDelay.pCut == nil || Amap_CutCompareDelay(p, &bestDelay, &m) == 1 {
+				bestDelay = m
+			}
+			if bestArea.pCut == nil || Amap_CutCompareArea(p, &bestArea, &m) == 1 {
+				bestArea = m
+			}
+		}
+	}
+	if bestDelay.pCut == nil {
+		panic("AMAP: no implementable cut")
+	}
+	best := bestDelay
+	areaGain := float32(math.Abs(float64(bestArea.Area-bestDelay.Area))) / bestDelay.Area
+	delayGain := float32(math.Abs(float64(bestArea.Delay-bestDelay.Delay))) / bestArea.Delay
+	if areaGain >= p.pPars.fADratio*delayGain {
+		best = bestArea
+	}
+	o.fPolar = best.pCut.fInv ^ best.pSet.fInv
+	o.Best = best
+	o.Best.pCut = Amap_ManDupCut(p, best.pCut)
+	if referenced {
+		Amap_CutAreaRef(p, &o.Best)
+	}
+}
+func Amap_ManMatch(p *Amap_Man_t, flow, refs int32) {
+	start := time.Now()
+	for _, o := range amapMatchObjects(p) {
+		if Amap_ObjIsNode(o) != 0 && o.pData != nil {
+			Amap_ManMatchNode(p, o, flow, refs)
+		}
+	}
+	area := Amap_ManComputeMapping(p)
+	inverters := Amap_ManCountInverters(p)
+	if p.pPars.fVerbose != 0 {
+		fmt.Printf("Area =%9.2f. Gate =%9.2f. Inv =%9.2f. (%6d.) Delay =%6.2f. Time %s\n", area+float32(inverters)*p.fAreaInv, area, float32(inverters)*p.fAreaInv, inverters, Amap_ManMaxDelay(p), time.Since(start))
+	}
+}
 func Amap_ManMap(p *Amap_Man_t) {
-    var i int32;
-    Amap_ManMerge( p );
-    for  i = 0; i < p.pPars.nIterFlow; i++  {
-        Amap_ManMatch( p, 1, i>0 );
-    }
-    for  i = 0; i < p.pPars.nIterArea; i++  {
-        Amap_ManMatch( p, 0, p.pPars.nIterFlow>0||i>0 );
-    }
-/*
-    for ( i = 0; i < p->pPars->nIterFlow; i++ )
-        Amap_ManMatch( p, 1, 1 );
-    for ( i = 0; i < p->pPars->nIterArea; i++ )
-        Amap_ManMatch( p, 0, 1 );
-*/
-    Amap_ManCleanData( p );
+	Amap_ManMerge(p)
+	for i := int32(0); i < p.pPars.nIterFlow; i++ {
+		Amap_ManMatch(p, 1, amapBool(i > 0))
+	}
+	for i := int32(0); i < p.pPars.nIterArea; i++ {
+		Amap_ManMatch(p, 0, amapBool(p.pPars.nIterFlow > 0 || i > 0))
+	}
+	Amap_ManCleanData(p)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

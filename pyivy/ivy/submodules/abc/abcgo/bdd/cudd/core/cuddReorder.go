@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"math"
+	"math/rand"
 	"sort"
 	"time"
 )
@@ -354,6 +355,12 @@ func Cudd_ReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) int
 	if method == CUDD_REORDER_NONE {
 		return 1
 	}
+	if method == CUDD_REORDER_ANNEALING {
+		if len(dd.Vars) < 2 {
+			return 1
+		}
+		return Cudd_AnnealRange(dd, 0, len(dd.Vars)-1, minsize)
+	}
 	symmetric := method == CUDD_REORDER_SYMM_SIFT || method == CUDD_REORDER_SYMM_SIFT_CONV
 	converge := method == CUDD_REORDER_SIFT_CONVERGE || method == CUDD_REORDER_SYMM_SIFT_CONV
 	if method != CUDD_REORDER_SIFT && method != CUDD_REORDER_SIFT_CONVERGE && !symmetric {
@@ -443,6 +450,52 @@ func Cudd_ReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) int
 	if symmetric {
 		dd.symmetryGroups = cloneGroups(groups)
 	}
+	return 1
+}
+
+// Cudd_AnnealRange runs simulated annealing over variable orders in [lower,
+// upper]. Candidate graphs are built off-manager; only the best order is
+// committed, so live node handles remain valid throughout the search.
+func Cudd_AnnealRange(dd *DdManager, lower, upper, minsize int) int {
+	if dd == nil || dd.closed || lower < 0 || upper >= len(dd.Vars) || lower > upper || minsize < 0 {
+		return 0
+	}
+	started := time.Now()
+	defer func() { dd.reorderingTime += time.Since(started) }()
+	roots := dd.liveReorderRoots()
+	order := append([]int(nil), dd.InvPerm...)
+	current := reorderBuild(dd, roots, order)
+	if len(current.nodes) < minsize || upper-lower < 1 {
+		return 1
+	}
+	bestOrder := append([]int(nil), order...)
+	bestCost := current.cost
+	rng := rand.New(rand.NewSource(int64(dd.nextID + uint64(lower*31+upper))))
+	startTemp := math.Max(1, float64(current.cost)*0.05)
+	for temp, generation := startTemp, 0; temp > 0.05 && generation < 40; temp, generation = temp*0.82, generation+1 {
+		steps := max(12, (upper-lower+1)*6)
+		for step := 0; step < steps; step++ {
+			a := lower + rng.Intn(upper-lower+1)
+			b := lower + rng.Intn(upper-lower+1)
+			if a == b {
+				b = lower + (b-lower+1)%(upper-lower+1)
+			}
+			candidateOrder := append([]int(nil), order...)
+			candidateOrder[a], candidateOrder[b] = candidateOrder[b], candidateOrder[a]
+			candidate := reorderBuild(dd, roots, candidateOrder)
+			delta := candidate.cost - current.cost
+			if delta <= 0 || rng.Float64() < math.Exp(-float64(delta)/temp) {
+				order, current = candidateOrder, candidate
+			}
+			if current.cost < bestCost {
+				bestCost = current.cost
+				bestOrder = append(bestOrder[:0], order...)
+			}
+		}
+	}
+	reorderCommit(dd, roots, reorderBuild(dd, roots, bestOrder), bestOrder)
+	dd.reorderings++
+	dd.symmetryGroups = nil
 	return 1
 }
 func groupIndex(groups [][]int, variable int) int {

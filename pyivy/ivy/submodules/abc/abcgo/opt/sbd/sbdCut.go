@@ -506,7 +506,7 @@ func Sbd_StoRefObj(p *Sbd_Sto_t, id, mirror int32) {
 	switch node.Kind {
 	case aig.And, aig.ExclusiveOr:
 		fanins = 2
-	case aig.Output:
+	case aig.Output, aig.Buffer:
 		fanins = 1
 	}
 	for _, edge := range node.Fanins[:fanins] {

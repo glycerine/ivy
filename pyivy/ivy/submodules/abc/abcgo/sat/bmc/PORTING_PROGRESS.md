@@ -44,17 +44,62 @@ go test -race ./sat/bmc/bmcBmc3.go ./sat/bmc/aliases.go ./sat/bmc/bmcBmc3_native
 go vet ./sat/bmc/bmcBmc3.go ./sat/bmc/aliases.go ./sat/bmc/bmcBmc3_native_test.go
 ```
 
-`Gia_ManBmcPerform` now converts its input through the public GIA-to-AIG bridge
-and delegates to the scalable checker. It records the returned witness on the
-GIA manager through a validated, copy-owning sequential-CEX API. Adapter tests
-cover a one-frame counterexample and a bounded-safe invariant.
+`Gia_ManBmcPerform`, the BMCg/BMCs entry points, `Bmc_ChainTest`,
+`Bmc_ChainFailOneOutput`, and `Gia_ManMultiProve` now use the native scalable
+checker. The GIA entry points convert through the public GIA-to-AIG bridge;
+chain and multi-output checks project one output cone at a time while retaining
+the register interface. Sequential witnesses are copied onto the GIA manager
+through validated accessors. Focused tests cover the scalable checker, output
+projection, and GIA entry-point behavior. Five duplicate GIA-to-CNF helpers
+were consolidated into `cnf_remapped.go`; all had the same behavior of treating
+every CO as an asserted output, which the shared encoder now does directly.
+The mesh SAT-backend variant now shares the byte-for-byte identical variable
+index helpers from the original mesh variant, while retaining its own solver
+operations.
+
+`Bmc_LoadTest` now uses the shared CNF encoder and a typed BSAT solver, with
+focused tests for satisfiable and constant-false outputs and malformed CNF.
+Its focused race/vet gates pass. `bmcUnroll.go` now delegates to the native AIG
+frame builder; tests check frame ordering, initial register state, and the
+last-frame register-input outputs, and pass under race/vet.
+
+`Gia_ManBmciTest` has been restored as a typed GIA adapter. Its core
+`CompareInitialStatesAIG` builds a shared-input two-state unrolling, encodes
+the register-state XORs with the common CNF layer, and checks each difference
+under BSAT. The adapter preserves the source convention that initial values
+above 1 denote independent unconstrained state inputs. Focused tests cover
+divergent identity state, reset convergence, shared inputs, symbolic
+initialization, zero frames, and invalid initialization. Its focused race/vet
+gates pass; the public GIA wrapper remains transitively blocked by GIA syntax.
+
+The C-derived `bmcBmc2.go` object-pointer implementation has been replaced by
+the shared native checker at `Saig_BmcPerform`. The adapter preserves its
+legacy status convention (`0` for a counterexample, `-1` for bounded-safe or
+early stop) and its reported-frame offset. Its ternary simulator now traverses
+the typed AIG graph and stores owned packed frames; tests cover both safe and
+unknown properties, status/frame mapping, and packed accessor behavior. Focused
+race/vet gates pass. The former internal mutable-object helpers had no callers
+outside that C implementation; project call sites use `Saig_BmcPerform`.
+
+`Saig_ManBmcSimple` now also delegates to the shared checker and preserves the
+legacy `0`/`-1` result and counterexample frame. `Saig_ManFramesBmc` is backed
+by the native frame builder. A call-site scan found no use of the removed
+private SAT/model helpers or the size-limited frame builder elsewhere in the
+project. Focused tests cover safe and failing models and pass under race/vet.
 
 Whole-package tests still do not pass. `go test ./sat/bmc` is currently blocked
-transitively by syntax errors in the imported `aig/gia` package, beginning at
-`giaBalAig.go:98`. The BMC package itself still has parser-invalid files such
-as `bmcBmcG.go`, `bmcBmcS.go`, and `bmcChain.go`; the syntax scan reports
-hundreds of source-conversion errors across these and other legacy algorithm
-families. Normal package race/vet verification remains outstanding.
+transitively by syntax errors in the imported `aig/gia` package, now beginning
+at `giaBalLut.go:66`. The BMC syntax scan still reports errors across other
+legacy families, including CEX minimization, fault, majority, and
+interpolation support. Five duplicate `Cnf_DeriveGiaRemapped` declarations
+and three duplicate `Cnf_DataLiftGia` declarations have been consolidated.
+Mesh variable helpers were deduplicated after matching their formulas. The
+Exa/Maj families in `bmcMaj.go` and `bmcMaj2.go` are distinct solver/topology
+variants. Their duplicate helper namespace in bmcMaj2 now carries a `V2`
+suffix, and its random-topology public entry point is `Maj_ManExactSynthesis2`,
+matching the base/abci call site. These large files remain parser-invalid, so
+variant behavior tests and normal package race/vet verification remain
+outstanding.
 
 The package contains roughly 23,000 generated Go lines. A syntax scan found
 hundreds of C-style macro assignment expressions and ternaries across files.

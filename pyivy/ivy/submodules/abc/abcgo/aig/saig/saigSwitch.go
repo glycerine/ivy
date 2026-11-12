@@ -1,560 +1,314 @@
 package saig
 
 import (
+	"encoding/binary"
 	"fmt"
-	"strconv"
+	"math"
+	"math/bits"
+	"math/rand"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-/**CFile****************************************************************
-
-  FileName    [saigSwitch.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Sequential AIG package.]
-
-  Synopsis    [Returns switching propabilities.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: saigSwitch.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "saig.h"
-
-//#include "base/main/main.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-   
+// Saig_SimObj_t is a compact per-node simulation record. PData stores one
+// 32-pattern simulation word, while Number accumulates ones over sampled
+// frames after the requested prefix.
 type Saig_SimObj_t struct {
-    iFan0      int32;
-    iFan1      int32;
-    Type uint32; /* C bitfield: 8 bits; review packing and truncation */
-    Number uint32; /* C bitfield: 24 bits; review packing and truncation */
-    pData [1]uint32;
+	iFan0, iFan1 int32
+	Type         aig.NodeKind
+	Number       uint32
+	pData        uint32
+	isLatch      bool
+	valid        bool
 }
 
-func Saig_SimObjFaninC0(pObj *Saig_SimObj_t) int32 { return pObj.iFan0 & 1;  }
-func Saig_SimObjFaninC1(pObj *Saig_SimObj_t) int32 { return pObj.iFan1 & 1;  }
-func Saig_SimObjFanin0(pObj *Saig_SimObj_t) int32 { return pObj.iFan0 >> 1; }
-func Saig_SimObjFanin1(pObj *Saig_SimObj_t) int32 { return pObj.iFan1 >> 1; }
+func Saig_SimObjFaninC0(p *Saig_SimObj_t) int32 { return p.iFan0 & 1 }
+func Saig_SimObjFaninC1(p *Saig_SimObj_t) int32 { return p.iFan1 & 1 }
+func Saig_SimObjFanin0(p *Saig_SimObj_t) int32  { return p.iFan0 >> 1 }
+func Saig_SimObjFanin1(p *Saig_SimObj_t) int32  { return p.iFan1 >> 1 }
 
-//typedef struct Aig_CMan_t_ Aig_CMan_t;
-
-//static Aig_CMan_t * Aig_CManCreate( Aig_Man_t * p );
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates fast simulation manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManCreateMan(p *Aig_Man_t) *Saig_SimObj_t {
-    var pAig, pEntry *Saig_SimObj_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // inlining of macro ABC_CALLOC
-    pAig = ((Saig_SimObj_t *) calloc((size_t)(Aig_ManObjNumMax(p)+1), sizeof(Saig_SimObj_t)));
-//    printf( "Allocating %7.2f MB.\n", 1.0 * sizeof(Saig_SimObj_t) * (Aig_ManObjNumMax(p)+1)/(1<<20) );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        pEntry = pAig + i;
-        pEntry.Type = pObj.Type;
-        if Aig_ObjIsCi(pObj) || i == 0 {
-            if Saig_ObjIsLo(p, pObj) {
-                pEntry.iFan0 = (Saig_ObjLoToLi(p, pObj).Id << 1);
-                pEntry.iFan1 = -1;
-            }
-            continue;
-        }
-        pEntry.iFan0 = (Aig_ObjFaninId0(pObj) << 1) | Aig_ObjFaninC0(pObj);
-        if Aig_ObjIsCo(pObj) {
-            continue; }
-        assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-        pEntry.iFan1 = (Aig_ObjFaninId1(pObj) << 1) | Aig_ObjFaninC1(pObj);
-    }
-    }
-    pEntry = pAig + Aig_ManObjNumMax(p);
-    pEntry.Type = AIG_OBJ_VOID;
-    return pAig;
+// Saig_ManCreateMan builds the compact simulation view for a sequential AIG.
+func Saig_ManCreateMan(g *aig.Graph) []Saig_SimObj_t {
+	if g == nil {
+		return nil
+	}
+	nodes, inputs, outputs := g.Nodes(), g.Inputs(), g.Outputs()
+	regs := int(aig.Aig_ManRegNum(g))
+	piCount := len(inputs) - regs
+	poCount := len(outputs) - regs
+	if regs < 0 || piCount < 0 || poCount < 0 {
+		return nil
+	}
+	result := make([]Saig_SimObj_t, len(nodes)+1)
+	for id, n := range nodes {
+		entry := &result[id]
+		if !g.ValidEdge(aig.Edge(id) << 1) {
+			continue
+		}
+		entry.Type, entry.valid = n.Kind, true
+		switch n.Kind {
+		case aig.Constant:
+		case aig.Input:
+			for i, input := range inputs {
+				if input.NodeID() == id {
+					if i < piCount {
+						entry.iFan0 = 0 // primary input marker
+					} else {
+						li := outputs[poCount+i-piCount]
+						entry.iFan0 = int32(aig.Aig_ObjChild0(g, li))
+						entry.isLatch = true
+					}
+					break
+				}
+			}
+		case aig.And, aig.ExclusiveOr:
+			entry.iFan0, entry.iFan1 = int32(n.Fanins[0]), int32(n.Fanins[1])
+		case aig.Buffer, aig.Output:
+			entry.iFan0 = int32(n.Fanins[0])
+		}
+	}
+	result[len(nodes)].valid = false // sentinel
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Simulated one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManSimulateNode2(pAig *Saig_SimObj_t, pObj *Saig_SimObj_t) {
-    var pObj0 *Saig_SimObj_t  = pAig + Saig_SimObjFanin0( pObj );
-    var pObj1 *Saig_SimObj_t  = pAig + Saig_SimObjFanin1( pObj );
-    if (Saig_SimObjFaninC0(pObj) != 0) && (Saig_SimObjFaninC1(pObj) != 0) {
-        pObj.pData[0] = ~(pObj0.pData[0] | pObj1.pData[0]);
-    } else if (Saig_SimObjFaninC0(pObj) != 0) && !(Saig_SimObjFaninC1(pObj) != 0) {
-        pObj.pData[0] = (~pObj0.pData[0] & pObj1.pData[0]);
-    } else if !(Saig_SimObjFaninC0(pObj) != 0) && (Saig_SimObjFaninC1(pObj) != 0) {
-        pObj.pData[0] = (pObj0.pData[0] & ~pObj1.pData[0]);
-    } else { // if ( !Saig_SimObjFaninC0(pObj) && !Saig_SimObjFaninC1(pObj) )
-        pObj.pData[0] = (pObj0.pData[0] & pObj1.pData[0]); }
+func Saig_ManSimulateNode2(rows []Saig_SimObj_t, obj int) {
+	if obj < 0 || obj >= len(rows) {
+		return
+	}
+	Saig_ManSimulateNode(rows, obj)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Simulated one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManSimulateNode(pAig *Saig_SimObj_t, pObj *Saig_SimObj_t) {
-    var pObj0 *Saig_SimObj_t  = pAig + Saig_SimObjFanin0( pObj );
-    var pObj1 *Saig_SimObj_t  = pAig + Saig_SimObjFanin1( pObj );
-    pObj.pData[0] = (Saig_SimObjFaninC0(pObj)? ~pObj0.pData[0] : pObj0.pData[0])
-        & (Saig_SimObjFaninC1(pObj)? ~pObj1.pData[0] : pObj1.pData[0]);
+func Saig_ManSimulateNode(rows []Saig_SimObj_t, obj int) {
+	entry := &rows[obj]
+	a := rows[Saig_SimObjFanin0(entry)].pData
+	b := rows[Saig_SimObjFanin1(entry)].pData
+	if Saig_SimObjFaninC0(entry) != 0 {
+		a = ^a
+	}
+	if Saig_SimObjFaninC1(entry) != 0 {
+		b = ^b
+	}
+	if entry.Type == aig.ExclusiveOr {
+		entry.pData = a ^ b
+	} else {
+		entry.pData = a & b
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Simulated buffer/inverter.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManSimulateOneInput(pAig *Saig_SimObj_t, pObj *Saig_SimObj_t) {
-    var pObj0 *Saig_SimObj_t  = pAig + Saig_SimObjFanin0( pObj );
-    if Saig_SimObjFaninC0(pObj) != 0 {
-        pObj.pData[0] = ~pObj0.pData[0];
-    } else { // if ( !Saig_SimObjFaninC0(pObj) )
-        pObj.pData[0] = pObj0.pData[0]; }
+func Saig_ManSimulateOneInput(rows []Saig_SimObj_t, obj int) {
+	entry := &rows[obj]
+	value := rows[Saig_SimObjFanin0(entry)].pData
+	if Saig_SimObjFaninC0(entry) != 0 {
+		value = ^value
+	}
+	entry.pData = value
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Simulates the timeframes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManSimulateFrames(pAig *Saig_SimObj_t, nFrames int32, nPref int32) {
-    var pEntry *Saig_SimObj_t;
-    var f int32;
-    for  f = 0; f < nFrames; f++  {
-        for  pEntry = pAig; pEntry.Type != AIG_OBJ_VOID; pEntry++  {
-            if pEntry.Type == AIG_OBJ_AND {
-                Saig_ManSimulateNode( pAig, pEntry );
-            } else if pEntry.Type == AIG_OBJ_CO {
-                Saig_ManSimulateOneInput( pAig, pEntry );
-            } else if pEntry.Type == AIG_OBJ_CI {
-                if pEntry.iFan0 == 0 { // true PI
-                    pEntry.pData[0] = Aig_ManRandom( 0 );
-                } else if f > 0 { // register output
-                    Saig_ManSimulateOneInput( pAig, pEntry ); }
-            
-            } else if pEntry.Type == AIG_OBJ_CONST1 {
-                pEntry.pData[0] = ~0;
-            } else if pEntry.Type != AIG_OBJ_NONE {
-                assert(false, "0"); }
-            if f >= nPref {
-                pEntry.Number += Aig_WordCountOnes( pEntry.pData[0] ); }
-        }
-    }
+// Saig_ManSimulateFrames runs bit-parallel random simulation, counting node
+// activity only after the warm-up prefix.
+func Saig_ManSimulateFrames(rows []Saig_SimObj_t, frames, prefix int32) {
+	if frames <= 0 {
+		return
+	}
+	rng := rand.New(rand.NewSource(1))
+	for frame := int32(0); frame < frames; frame++ {
+		for id := 0; id < len(rows)-1; id++ {
+			entry := &rows[id]
+			if !entry.valid {
+				continue
+			}
+			switch entry.Type {
+			case aig.Constant:
+				entry.pData = ^uint32(0)
+			case aig.Input:
+				if !entry.isLatch {
+					entry.pData = rng.Uint32()
+				} else if frame > 0 {
+					Saig_ManSimulateOneInput(rows, id)
+				}
+			case aig.And, aig.ExclusiveOr:
+				Saig_ManSimulateNode(rows, id)
+			case aig.Buffer, aig.Output:
+				Saig_ManSimulateOneInput(rows, id)
+			}
+			if frame >= prefix {
+				entry.Number += uint32(bits.OnesCount32(entry.pData))
+			}
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes switching activity of one node.]
-
-  Description [Uses the formula: Switching = 2 * nOnes * nZeros / (nTotal ^ 2) ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManComputeSwitching(nOnes int32, nSimWords int32) float32 {
-    var nTotal int32  = 32 * nSimWords;
-    return float32(2.0) * nOnes / nTotal * (nTotal - nOnes) / nTotal;
+func Saig_ManComputeSwitching(ones, simulationWords int32) float32 {
+	total := float32(32 * simulationWords)
+	if total == 0 {
+		return 0
+	}
+	p := float32(ones) / total
+	return 2 * p * (1 - p)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes switching activity of one node.]
-
-  Description [Uses the formula: Switching = 2 * nOnes * nZeros / (nTotal ^ 2) ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManComputeProbOne(nOnes int32, nSimWords int32) float32 {
-    var nTotal int32  = 32 * nSimWords;
-    return float32(nOnes) / nTotal;
+func Saig_ManComputeProbOne(ones, simulationWords int32) float32 {
+	total := float32(32 * simulationWords)
+	if total == 0 {
+		return 0
+	}
+	return float32(ones) / total
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes switching activity of one node.]
-
-  Description [Uses the formula: Switching = 2 * nOnes * nZeros / (nTotal ^ 2) ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManComputeProbOnePlus(nOnes int32, nSimWords int32, fCompl int32) float32 {
-    var nTotal int32  = 32 * nSimWords;
-    if fCompl != 0 {
-        return float32((nTotal-nOnes)) / nTotal;
-    } else {
-        return float32(nOnes) / nTotal; }
+func Saig_ManComputeProbOnePlus(ones, simulationWords, complemented int32) float32 {
+	p := Saig_ManComputeProbOne(ones, simulationWords)
+	if complemented != 0 {
+		return 1 - p
+	}
+	return p
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute switching probabilities of all nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManComputeSwitchProb4s(p *Aig_Man_t, nFrames int32, nPref int32, fProbOne int32) *Vec_Int_t {
-    var pAig, pEntry *Saig_SimObj_t;
-    var vSwitching *Vec_Int_t;
-    var pSwitching *float32;
-    var nFramesReal int32;
-    var clk abctime;//, clkTotal = Abc_Clock();
-    vSwitching = Vec_IntStart( Aig_ManObjNumMax(p) );
-    pSwitching = (float *)vSwitching.pArray;
-clk = Abc_Clock();
-    pAig = Saig_ManCreateMan( p );
-//ABC_PRT( "\nCreation  ", Abc_Clock() - clk );
-
-    Aig_ManRandom( 1 );
-    // get the number of  frames to simulate
-    // if the parameter "seqsimframes" is defined, use it
-    // otherwise, use the given number of frames "nFrames"
-    nFramesReal = nFrames;
-    if Abc_FrameReadFlag("seqsimframes") {
-        nFramesReal = strconv.Atoi(Abc_FrameReadFlag("seqsimframes")); }
-    if nFramesReal <= nPref {
-        fmt.Printf("The total number of frames (%d) should exceed prefix (%d).\n", nFramesReal, nPref);\
-        fmt.Printf("Setting the total number of frames to be %d.\n", nFrames);
-        nFramesReal = nFrames;
-    }
-//printf( "Simulating %d frames.\n", nFramesReal );
-clk = Abc_Clock();
-    Saig_ManSimulateFrames( pAig, nFramesReal, nPref );
-//ABC_PRT( "Simulation", Abc_Clock() - clk );
-clk = Abc_Clock();
-    for  pEntry = pAig; pEntry.Type != AIG_OBJ_VOID; pEntry++  {
-/*
-        if ( pEntry->Type == AIG_OBJ_AND )
-        {
-        Saig_SimObj_t * pObj0 = pAig + Saig_SimObjFanin0( pEntry );
-        Saig_SimObj_t * pObj1 = pAig + Saig_SimObjFanin1( pEntry );
-        printf( "%5.2f = %5.2f * %5.2f  (%7.4f)\n", 
-            Saig_ManComputeProbOnePlus( pEntry->Number, nFrames - nPref, 0 ),
-            Saig_ManComputeProbOnePlus( pObj0->Number, nFrames - nPref, Saig_SimObjFaninC0(pEntry) ),
-            Saig_ManComputeProbOnePlus( pObj1->Number, nFrames - nPref, Saig_SimObjFaninC1(pEntry) ),
-            Saig_ManComputeProbOnePlus( pEntry->Number, nFrames - nPref, 0 ) -
-            Saig_ManComputeProbOnePlus( pObj0->Number, nFrames - nPref, Saig_SimObjFaninC0(pEntry) ) *
-            Saig_ManComputeProbOnePlus( pObj1->Number, nFrames - nPref, Saig_SimObjFaninC1(pEntry) )
-            );
-        }
-*/
-        if fProbOne != 0 {
-            pSwitching[pEntry-pAig] = Saig_ManComputeProbOne( pEntry.Number, nFramesReal - nPref );
-        } else {
-            pSwitching[pEntry-pAig] = Saig_ManComputeSwitching( pEntry.Number, nFramesReal - nPref ); }
-//printf( "%3d : %7.2f\n", pEntry-pAig, pSwitching[pEntry-pAig] );
-    }
-    pAig = nil;
-//ABC_PRT( "Switch    ", Abc_Clock() - clk );
-//ABC_PRT( "TOTAL     ", Abc_Clock() - clkTotal );
-
-//    Aig_CManCreate( p );
-    return vSwitching;
+// Saig_ManComputeSwitchProb4s returns IEEE-754 float32 bit patterns in the
+// legacy integer vector, preserving the C ABI representation.
+func Saig_ManComputeSwitchProb4s(g *aig.Graph, frames, prefix, probability int32) *vec.Vec_Int_t {
+	if g == nil || frames <= 0 || prefix < 0 {
+		return vec.Vec_IntAlloc(0)
+	}
+	rows := Saig_ManCreateMan(g)
+	Saig_ManSimulateFrames(rows, frames, prefix)
+	result := vec.Vec_IntStart(len(rows) - 1)
+	simulatedFrames := frames - prefix
+	if simulatedFrames <= 0 {
+		return result
+	}
+	for id := 0; id < len(rows)-1; id++ {
+		var value float32
+		if probability != 0 {
+			value = Saig_ManComputeProbOne(int32(rows[id].Number), simulatedFrames)
+		} else {
+			value = Saig_ManComputeSwitching(int32(rows[id].Number), simulatedFrames)
+		}
+		vec.Vec_IntWriteEntry(result, id, int32(math.Float32bits(value)))
+	}
+	return result
 }
 
-
-
-
-   
+// Aig_CMan_t stores a compact, delta-encoded AIG node/output stream.
 type Aig_CMan_t struct {
-    // parameters
-    nIns             int32;
-    nNodes             int32;
-    nOuts             int32;
-    // current state
-    iNode             int32;
-    iDiff0             int32;
-    iDiff1             int32;
-    unsigned char * pCur;
-    // stored data
-    iPrev             int32;
-    nBytes             int32;
-    unsigned char   Data[0];
+	nIns, nNodes, nOuts int32
+	iNode, iPrev        int32
+	Data                []byte
+	readAt              int
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_CManStart(nIns int32, nNodes int32, nOuts int32) *Aig_CMan_t {
-    var p *Aig_CMan_t;
-    // inlining of macro ABC_ALLOC
-    p = (Aig_CMan_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Aig_CMan_t) + 2*(2*nNodes + nOuts))));
-    memset( p, 0, sizeof(Aig_CMan_t) );
-    // set parameters
-    p.nIns = nIns;
-    p.nOuts = nOuts;
-    p.nNodes = nNodes;
-    p.nBytes = 2*(2*nNodes + nOuts);
-    // prepare the manager
-    p.iNode = 1 + p.nIns;
-    p.iPrev = -1;
-    p.pCur = p.Data;
-    return p;
+func Aig_CManStart(inputs, nodes, outputs int32) *Aig_CMan_t {
+	if inputs < 0 || nodes < 0 || outputs < 0 {
+		panic("saig: negative compact-AIG size")
+	}
+	return &Aig_CMan_t{nIns: inputs, nNodes: nodes, nOuts: outputs, iNode: inputs + 1, iPrev: -1, Data: make([]byte, 0, 2*(2*int(nodes)+int(outputs)))}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Aig_CManStop(p *Aig_CMan_t) {
-    p = nil;
+	if p != nil {
+		p.Data = nil
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Aig_CManRestart(p *Aig_CMan_t) {
-    assert(p.iNode == 1 + p.nIns + p.nNodes + p.nOuts, "p.iNode == 1 + p.nIns + p.nNodes + p.nOuts");
-    p.iNode = 1 + p.nIns;
-    p.iPrev = -1;
-    p.pCur = p.Data;
+	if p.iNode != 1+p.nIns+p.nNodes+p.nOuts {
+		panic("saig: compact-AIG cursor has not reached the end")
+	}
+	p.iNode, p.iPrev, p.readAt = 1+p.nIns, -1, 0
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_CManStoreNum(p *Aig_CMan_t, x uint32) {
-    for  x & ~0x7f  {
-        *p.pCur++ = (x & 0x7f) | 0x80;
-        x >>= 7;
-    }
-    *p.pCur++ = x;
-    assert(p.pCur - p.Data < p.nBytes - 10, "p.pCur - p.Data < p.nBytes - 10");
+func Aig_CManStoreNum(p *Aig_CMan_t, value uint32) {
+	var buf [binary.MaxVarintLen32]byte
+	n := binary.PutUvarint(buf[:], uint64(value))
+	p.Data = append(p.Data, buf[:n]...)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Aig_CManRestoreNum(p *Aig_CMan_t) int32 {
-    var ch, i, x int32;
-    for  i = 0; (ch = *p.pCur++) & 0x80; i++  {
-        x |= (ch & 0x7f) << (7 * i);
-    }
-    return x | (ch << (7 * i));
+	if p.readAt >= len(p.Data) {
+		panic("saig: compact-AIG stream exhausted")
+	}
+	value, n := binary.Uvarint(p.Data[p.readAt:])
+	if n <= 0 || value > (1<<31)-1 {
+		panic("saig: invalid compact-AIG varint")
+	}
+	p.readAt += n
+	return int32(value)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_CManAddNode(p *Aig_CMan_t, iFan0 int32, iFan1 int32) {
-    assert(iFan0 < iFan1, "iFan0 < iFan1");
-    assert(iFan1 < (p.iNode << 1), "iFan1 < (p.iNode << 1)");
-    Aig_CManStoreNum( p, (p.iNode++ << 1) - iFan1 );
-    Aig_CManStoreNum( p, iFan1 - iFan0 );
+func Aig_CManAddNode(p *Aig_CMan_t, fanin0, fanin1 int32) {
+	if fanin0 >= fanin1 || fanin1 >= p.iNode<<1 {
+		panic("saig: compact-AIG fanins must be ordered and earlier than their node")
+	}
+	Aig_CManStoreNum(p, uint32((p.iNode<<1)-fanin1))
+	Aig_CManStoreNum(p, uint32(fanin1-fanin0))
+	p.iNode++
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_CManAddPo(p *Aig_CMan_t, iFan0 int32) {
-    if p.iPrev == -1 {
-        Aig_CManStoreNum( p, p.iNode - iFan0 );
-    } else if p.iPrev <= iFan0 {
-        Aig_CManStoreNum( p, (iFan0 - p.iPrev) << 1 );
-    } else { 
-        Aig_CManStoreNum( p,((p.iPrev - iFan0) << 1) | 1 ); }
-    p.iPrev = iFan0;
-    p.iNode++;
+func Aig_CManAddPo(p *Aig_CMan_t, fanin int32) {
+	switch {
+	case p.iPrev == -1:
+		Aig_CManStoreNum(p, uint32(p.iNode-fanin))
+	case p.iPrev <= fanin:
+		Aig_CManStoreNum(p, uint32((fanin-p.iPrev)<<1))
+	default:
+		Aig_CManStoreNum(p, uint32(((p.iPrev-fanin)<<1)|1))
+	}
+	p.iPrev = fanin
+	p.iNode++
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_CManGetNode(p *Aig_CMan_t, piFan0 *int32, piFan1 *int32) {
-    *piFan1 = (p.iNode++ << 1) - Aig_CManRestoreNum( p );
-    *piFan0 = *piFan1 - Aig_CManRestoreNum( p );
+func Aig_CManGetNode(p *Aig_CMan_t, fanin0, fanin1 *int32) {
+	*fanin1 = (p.iNode << 1) - Aig_CManRestoreNum(p)
+	*fanin0 = *fanin1 - Aig_CManRestoreNum(p)
+	p.iNode++
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Aig_CManGetPo(p *Aig_CMan_t) int32 {
-    var Num int32  = Aig_CManRestoreNum( p );
-    if p.iPrev == -1 {
-        p.iPrev = p.iNode; }
-    p.iNode++;
-    if Num & 1 {
-        return p.iPrev = p.iPrev + (Num >> 1); }
-    return p.iPrev = p.iPrev - (Num >> 1);
+	num := Aig_CManRestoreNum(p)
+	if p.iPrev == -1 {
+		p.iPrev = p.iNode
+	}
+	p.iNode++
+	if num&1 != 0 {
+		p.iPrev += num >> 1
+	} else {
+		p.iPrev -= num >> 1
+	}
+	return p.iPrev
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute switching probabilities of all nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_CManCreate(p *Aig_Man_t) *Aig_CMan_t {
-    var pCMan *Aig_CMan_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    pCMan = Aig_CManStart( Aig_ManCiNum(p), Aig_ManNodeNum(p), Aig_ManCoNum(p) );
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        Aig_CManAddNode( pCMan, 
-            (Aig_ObjFaninId0(pObj) << 1) | Aig_ObjFaninC0(pObj), 
-            (Aig_ObjFaninId1(pObj) << 1) | Aig_ObjFaninC1(pObj) ); }
-    }
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Aig_CManAddPo( pCMan, 
-            (Aig_ObjFaninId0(pObj) << 1) | Aig_ObjFaninC0(pObj) );
-    } 
-    fmt.Printf("\nBytes alloc = %5d.  Bytes used = %7d.  Ave per node = %4.2f. \n", pCMan.nBytes, int32((pCMan.pCur - pCMan.Data)), 1.0 * (pCMan.pCur - pCMan.Data) / (pCMan.nNodes + pCMan.nOuts ));
-//    Aig_CManStop( pCMan );
-    return pCMan;
+func Aig_CManCreate(g *aig.Graph) *Aig_CMan_t {
+	if g == nil {
+		return nil
+	}
+	nodes, outputs := g.Nodes(), g.Outputs()
+	andCount := 0
+	for id, node := range nodes {
+		if !g.ValidEdge(aig.Edge(id) << 1) {
+			continue
+		}
+		if node.Kind == aig.ExclusiveOr {
+			panic("saig: compact-AIG format does not encode XOR node kinds")
+		}
+		if node.Kind == aig.And {
+			andCount++
+		}
+	}
+	manager := Aig_CManStart(int32(len(g.Inputs())), int32(andCount), int32(len(outputs)))
+	for _, node := range nodes {
+		if node.Kind == aig.And {
+			Aig_CManAddNode(manager, int32(node.Fanins[0]), int32(node.Fanins[1]))
+		}
+	}
+	for _, output := range outputs {
+		Aig_CManAddPo(manager, int32(aig.Aig_ObjChild0(g, output)))
+	}
+	return manager
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func (p *Aig_CMan_t) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("Aig_CMan(inputs=%d nodes=%d outputs=%d bytes=%d)", p.nIns, p.nNodes, p.nOuts, len(p.Data))
+}

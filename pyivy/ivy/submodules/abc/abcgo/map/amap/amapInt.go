@@ -105,9 +105,6 @@ type Amap_Man_t_ struct {
 	vObjs         *Vec_Ptr_t
 	objects       []*Amap_Obj_t // stable Go-owned nodes replace the C fixed-object arena
 	sourceCopies  map[int]*Amap_Obj_t
-	pMemCuts      *Aig_MmFlex_t
-	pMemCutBest   *Aig_MmFlex_t
-	pMemTemp      *Aig_MmFlex_t
 	pConst1       *Amap_Obj_t
 	nObjs         [AMAP_OBJ_VOID]int32
 	nLevelMax     int32
@@ -115,9 +112,7 @@ type Amap_Man_t_ struct {
 	nChoicesAdded int32
 	// mapping data-structures
 	vTemp      *Vec_Int_t
-	pMatsTemp  []int32
 	ppCutsTemp []*Amap_Cut_t
-	pCutsPi    []*Amap_Cut_t
 	vCuts0     *Vec_Ptr_t
 	vCuts1     *Vec_Ptr_t
 	vCuts2     *Vec_Ptr_t
@@ -340,7 +335,13 @@ func Amap_ObjSetChoice(pObj *Amap_Obj_t, pEqu *Amap_Obj_t) {
 func Amap_ObjPhaseReal(pObj *Amap_Obj_t) int32 {
 	return int32(Amap_Regular(pObj).fPhase) ^ Amap_IsComplement(pObj)
 }
-func Amap_ObjRefsTotal(pObj *Amap_Obj_t) int32 { return pObj.nFouts[0] + pObj.nFouts[1] }
+func Amap_ObjRefsTotal(pObj *Amap_Obj_t) int32 {
+	pObj = Amap_Regular(pObj)
+	if pObj == nil {
+		return 0
+	}
+	return pObj.nFouts[0] + pObj.nFouts[1]
+}
 
 func Amap_LibGate(p *Amap_Lib_t, i int32) *Amap_Gat_t {
 	return Vec_PtrEntry(p.vGates, i).(*Amap_Gat_t)

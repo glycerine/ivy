@@ -1,1252 +1,723 @@
 package gia
 
 import (
+	"encoding/binary"
 	"fmt"
-	"os"
+	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/vec"
+	"math/bits"
+	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
-/**CFile****************************************************************
-
-  FileName    [giaMuxes.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Scalable AIG package.]
-
-  Synopsis    [Multiplexer profiling algorithm.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: giaMuxes.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "gia.h"
-//#include "misc/util/utilNam.h"
-//#include "misc/util/utilTruth.h"
-//#include "misc/vec/vecWec.h"
-//#include "misc/vec/vecHsh.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Counts XORs and MUXes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCountMuxXor(p *Gia_Man_t, pnMuxes *int32, pnXors *int32) {
-    var pObj, pFan0, pFan1 *Gia_Obj_t; var i int32;
-    *pnMuxes = *pnXors = 0;
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        if !Gia_ObjIsMuxType(pObj) {
-            continue; }
-        if Gia_ObjRecognizeExor(pObj, &pFan0, &pFan1) {
-            (*pnXors)++;
-        } else {
-            (*pnMuxes)++; }
-    }
-    }
+func Gia_ManCountMuxXor(p *Gia_Man_t, muxes, xors *int32) {
+	*muxes, *xors = 0, 0
+	for _, obj := range p.pObjs {
+		if Gia_ObjIsAnd(obj) == 0 || Gia_ObjIsMuxType(obj) == 0 {
+			continue
+		}
+		var a, b *Gia_Obj_t
+		if Gia_ObjRecognizeExor(obj, &a, &b) != 0 {
+			*xors++
+		} else {
+			*muxes++
+		}
+	}
 }
 func Gia_ManPrintMuxStats(p *Gia_Man_t) {
-    var nAnds, nMuxes, nXors, nTotal int32;
-    if p.pMuxes {
-        nAnds  = Gia_ManAndNotBufNum(p)-Gia_ManXorNum(p)-Gia_ManMuxNum(p);
-        nXors  = Gia_ManXorNum(p);
-        nMuxes = Gia_ManMuxNum(p);
-        nTotal = nAnds + 3*nXors + 3*nMuxes;
-    
-    } else {
-        Gia_ManCountMuxXor( p, &nMuxes, &nXors );
-        nAnds  = Gia_ManAndNotBufNum(p) - 3*nMuxes - 3*nXors;
-        nTotal = Gia_ManAndNotBufNum(p);
-    }
-    Abc_Print( 1, "stats:  " );
-    Abc_Print( 1, "xor =%8d %6.2f %%   ", nXors,  300.0*nXors/nTotal );
-    Abc_Print( 1, "mux =%8d %6.2f %%   ", nMuxes, 300.0*nMuxes/nTotal );
-    Abc_Print( 1, "and =%8d %6.2f %%   ", nAnds,  100.0*nAnds/nTotal );
-    Abc_Print( 1, "obj =%8d  ", Gia_ManAndNotBufNum(p) );
-    fflush( os.Stdout );
+	var ands, muxes, xors, total int32
+	if p.pMuxes != nil {
+		ands = Gia_ManAndNotBufNum(p) - Gia_ManXorNum(p) - Gia_ManMuxNum(p)
+		xors = Gia_ManXorNum(p)
+		muxes = Gia_ManMuxNum(p)
+		total = ands + 3*xors + 3*muxes
+	} else {
+		Gia_ManCountMuxXor(p, &muxes, &xors)
+		total = Gia_ManAndNotBufNum(p)
+		ands = total - 3*muxes - 3*xors
+	}
+	denominator := float64(max(total, 1))
+	fmt.Printf("stats: xor=%8d %.2f %% mux=%8d %.2f %% and=%8d %.2f %% obj=%8d\n", xors, 300*float64(xors)/denominator, muxes, 300*float64(muxes)/denominator, ands, 100*float64(ands)/denominator, Gia_ManAndNotBufNum(p))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives GIA with MUXes.]
-
-  Description [Create MUX if the sum of fanin references does not exceed limit.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManDupMuxes(p *Gia_Man_t, Limit int32) *Gia_Man_t {
-    var pNew, pTemp *Gia_Man_t;
-    var pObj, pFan0, pFan1, pFanC, pSiblNew, pObjNew *Gia_Obj_t;
-    var i int32;
-    assert(p.pMuxes == nil, "p.pMuxes == nil");
-    assert(Limit >= 0, "Limit >= 0"); // allows to create AIG with XORs without MUXes
-    // inlining of macro ABC_FREE
-    p.Refs = nil;
-    Gia_ManCreateRefs( p ); 
-    // start the new manager
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    // inlining of macro ABC_CALLOC
-    pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));
-    if Gia_ManHasChoices(p) {
-        // inlining of macro ABC_CALLOC
-        pNew.pSibls = ((int *) calloc((size_t)(pNew.nObjsAlloc), sizeof(int))); }
-    Gia_ManConst0(p).Value = 0;
-    Gia_ManHashStart( pNew );
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsCi(pObj) {
-            pObj.Value = Gia_ManAppendCi( pNew );
-        } else if Gia_ObjIsCo(pObj) {
-            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-        } else if Gia_ObjIsBuf(pObj) {
-            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );
-        } else if !Gia_ObjIsMuxType(pObj) || Gia_ObjSibl(p, Gia_ObjFaninId0(pObj, i)) || Gia_ObjSibl(p, Gia_ObjFaninId1(pObj, i)) {
-            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        } else if Gia_ObjRecognizeExor(pObj, &pFan0, &pFan1) {
-            pObj.Value = Gia_ManHashXorReal( pNew, Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan0)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan1)) );
-        } else if Gia_ObjRefNum(p, Gia_ObjFanin0(pObj)) + Gia_ObjRefNum(p, Gia_ObjFanin1(pObj)) > Limit {
-            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        } else {
-            pFanC = Gia_ObjRecognizeMux( pObj, &pFan1, &pFan0 );
-            pObj.Value = Gia_ManHashMuxReal( pNew, Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFanC)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan1)), Gia_ObjLitCopy(p, Gia_ObjToLit(p, pFan0)) );
-        }
-        if !Gia_ObjSibl(p, i) {
-            continue; }
-        pObjNew  = Gia_ManObj( pNew, Abc_Lit2Var(pObj.Value) );
-        pSiblNew = Gia_ManObj( pNew, Abc_Lit2Var(Gia_ObjSiblObj(p, i).Value) );
-        if Gia_ObjIsAnd(pObjNew) && Gia_ObjIsAnd(pSiblNew) && Gia_ObjId(pNew, pObjNew) > Gia_ObjId(pNew, pSiblNew) {
-            pNew.pSibls[Gia_ObjId(pNew, pObjNew)] = Gia_ObjId(pNew, pSiblNew); }
-    }
-    Gia_ManHashStop( pNew );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    // perform cleanup
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    return pNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Derives GIA without MUXes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManDupNoMuxes(p *Gia_Man_t, fSkipBufs int32) *Gia_Man_t {
-    var pNew, pTemp *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    assert(p.pMuxes != nil || Gia_ManXorNum(p), "p.pMuxes != nil || Gia_ManXorNum(p)");
-    // start the new manager
-    pNew = Gia_ManStart( 5000 );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManConst0(p).Value = 0;
-    Gia_ManHashStart( pNew );
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsCi(pObj) {
-            pObj.Value = Gia_ManAppendCi( pNew );
-        } else if Gia_ObjIsCo(pObj) {
-            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-        } else if Gia_ObjIsBuf(pObj) {
-            if fSkipBufs != 0 {
-                pObj.Value = Gia_ObjFanin0Copy(pObj);
-            } else {
-                pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );
-            }
-        } else if Gia_ObjIsMuxId(p, i) {
-            pObj.Value = Gia_ManHashMux( pNew, Gia_ObjFanin2Copy(p, pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin0Copy(pObj) );
-        } else if Gia_ObjIsXor(pObj) {
-            pObj.Value = Gia_ManHashXor( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        } else { 
-            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-    }
-    Gia_ManHashStop( pNew );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    // perform cleanup
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    return pNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Test these procedures.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Gia_ManDupMuxesTest(p *Gia_Man_t) *Gia_Man_t {
-    var pNew, pNew2 *Gia_Man_t;
-    pNew = Gia_ManDupMuxes( p, 2 );
-    pNew2 = Gia_ManDupNoMuxes( pNew, 0 );
-    Gia_ManPrintStats( p, nil );
-    Gia_ManPrintStats( pNew, nil );
-    Gia_ManPrintStats( pNew2, nil );
-    Gia_ManStop( pNew );
-//    Gia_ManStop( pNew2 );
-    return pNew2;
+	coarse := Gia_ManDupMuxes(p, 2)
+	result := Gia_ManDupNoMuxes(coarse, 0)
+	Gia_ManPrintMuxStats(p)
+	Gia_ManPrintMuxStats(coarse)
+	Gia_ManPrintMuxStats(result)
+	Gia_ManStop(coarse)
+	return result
 }
 
+func Gia_ManMuxRestructure(src *Gia_Man_t) *Gia_Man_t {
+	if src.pMuxes == nil || Gia_ManHasChoices(src) != 0 || Gia_ManHasMapping(src) != 0 {
+		panic("gia: MUX restructuring requires unmapped real gates without choices")
+	}
+	src.Refs = nil
+	Gia_ManCreateRefs(src)
+	used := make([]bool, src.nObjs)
+	dst := Gia_ManStart(src.nObjs)
+	dst.CopyIdentityFrom(src)
+	dst.EnableMuxes()
+	Gia_ManHashStart(dst)
+	src.pObjs[0].Value = 0
+	for _, obj := range src.pObjs[1:] {
+		a, b, c, kind := src.Gate(obj.id)
+		var lit int32
+		switch kind {
+		case 1:
+			lit = Gia_ManAppendCi(dst)
+		case 2:
+			lit = Gia_ManHashAnd(dst, Gia_ObjLitCopy(src, a), Gia_ObjLitCopy(src, b))
+		case 3:
+			lit = Gia_ManHashXor(dst, Gia_ObjLitCopy(src, a), Gia_ObjLitCopy(src, b))
+		case 4:
+			// Source restructuring shares an intermediate selector: on the then
+			// branch it equals the inner control; otherwise it equals the
+			// original else result. Preserve a noncanonical then-edge phase.
+			bc, bt, be, bk := src.Gate(b >> 1)
+			cc, _, _, ck := src.Gate(c >> 1)
+			if bk == 4 && ck == 4 && !used[b>>1] && !used[c>>1] && bc>>1 == cc>>1 {
+				selector := Gia_ManHashMux(dst, Gia_ObjLitCopy(src, a), Gia_ObjLitCopy(src, bc), Gia_ObjLitCopy(src, c))
+				inner := Gia_ManHashMux(dst, selector, Gia_ObjLitCopy(src, bt), Gia_ObjLitCopy(src, be)) ^ (b & 1)
+				lit = Gia_ManHashMux(dst, Gia_ObjLitCopy(src, a), inner, selector)
+				used[b>>1], used[c>>1], used[obj.id] = true, true, true
+			} else {
+				lit = Gia_ManHashMux(dst, Gia_ObjLitCopy(src, a), Gia_ObjLitCopy(src, b), Gia_ObjLitCopy(src, c))
+			}
 
-/**Function*************************************************************
-
-  Synopsis    [Test these procedures.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManMuxRestructure(p *Gia_Man_t) *Gia_Man_t {
-    var pNew, pTemp *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i, nNodes int32;
-    var vUsed *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );
-    assert(!Gia_ManHasChoices(p), "!Gia_ManHasChoices(p)");
-    assert(!Gia_ManHasMapping(p), "!Gia_ManHasMapping(p)");
-    assert(p.pMuxes != nil, "p.pMuxes != nil");
-    // inlining of macro ABC_FREE
-    p.Refs = nil;
-    Gia_ManCreateRefs( p ); 
-    // start the new manager
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    // inlining of macro ABC_CALLOC
-    pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned)));
-    Gia_ManConst0(p).Value = 0;
-    Gia_ManHashStart( pNew );
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsCi(pObj) {
-            pObj.Value = Gia_ManAppendCi( pNew );
-        } else if Gia_ObjIsCo(pObj) {
-            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-        } else if Gia_ObjIsBuf(pObj) {
-            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );
-        } else if Gia_ObjIsMuxId(p, i) && 
-                  Gia_ObjIsMuxId(p, Gia_ObjFaninId0(pObj, i)) && !Vec_BitEntry(vUsed, Gia_ObjFaninId0(pObj, i)) && 
-                  Gia_ObjIsMuxId(p, Gia_ObjFaninId1(pObj, i)) && !Vec_BitEntry(vUsed, Gia_ObjFaninId1(pObj, i)) &&
-                  Gia_ObjFaninId2(p, Gia_ObjFaninId0(pObj, i)) == Gia_ObjFaninId2(p, Gia_ObjFaninId1(pObj, i)) {
-            var pFan1 *Gia_Obj_t  = Gia_ObjFanin1(pObj);
-            var Value0 int32  = Gia_ManHashMux( pNew, Gia_ObjFanin2Copy(p, pObj), Gia_ObjFanin2Copy(p, pFan1), Gia_ObjFanin0Copy(pObj) );
-            var Value1 int32  = Gia_ManHashMux( pNew, Value0, Gia_ObjFanin1Copy(pFan1), Gia_ObjFanin0Copy(pFan1) );
-            pObj.Value = Gia_ManHashMux( pNew, Gia_ObjFanin2Copy(p, pObj), Value1, Value0 );
-            Vec_BitWriteEntry( vUsed, Gia_ObjFaninId0(pObj, i), 1 );
-            Vec_BitWriteEntry( vUsed, Gia_ObjFaninId1(pObj, i), 1 );
-            Vec_BitWriteEntry( vUsed, i, 1 );
-            nNodes++;
-        
-        } else if Gia_ObjIsMuxId(p, i) {
-            pObj.Value = Gia_ManHashMux( pNew, Gia_ObjFanin2Copy(p, pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin0Copy(pObj) );
-        } else if Gia_ObjIsXor(pObj) {
-            pObj.Value = Gia_ManHashXor( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        } else { 
-            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-    }
-    Vec_BitFree( vUsed );
-    Gia_ManHashStop( pNew );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    // perform cleanup
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    return pNew;
+		case 5:
+			lit = Gia_ManAppendBuf(dst, Gia_ObjLitCopy(src, a))
+		case 6:
+			lit = Gia_ManAppendCo(dst, Gia_ObjLitCopy(src, a))
+		default:
+			panic("gia: invalid MUX restructuring object")
+		}
+		obj.Value = uint32(lit)
+	}
+	Gia_ManHashStop(dst)
+	Gia_ManSetRegNum(dst, src.nRegs)
+	giaCopyInterfaceMetadata(dst, src)
+	result := Gia_ManCleanup(dst)
+	Gia_ManStop(dst)
+	return result
 }
-func Gia_ManDupMuxRestructure(p *Gia_Man_t) *Gia_Man_t {
-    var pTemp *Gia_Man_t;
-    var pNew *Gia_Man_t = Gia_ManDupMuxes( p, 2 );
-    pNew = Gia_ManMuxRestructure( pTemp = pNew );  Gia_ManStop( pTemp );
-    pNew = Gia_ManDupNoMuxes( pTemp = pNew, 0 );   Gia_ManStop( pTemp );
-    return pNew;
+func Gia_ManDupMuxRestructure(src *Gia_Man_t) *Gia_Man_t {
+	coarse := Gia_ManDupMuxes(src, 2)
+	middle := Gia_ManMuxRestructure(coarse)
+	Gia_ManStop(coarse)
+	result := Gia_ManDupNoMuxes(middle, 0)
+	Gia_ManStop(middle)
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the size of MUX structure.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_MuxRef_rec(p *Gia_Man_t, iObj int32) int32 {
-    var pObj *Gia_Obj_t;
-    if !Gia_ObjIsMuxId(p, iObj) {
-        return 0; }
-    pObj = Gia_ManObj( p, iObj );
-    if Gia_ObjRefInc(p, pObj) {
-        return 0; }
-    return Gia_MuxRef_rec( p, Gia_ObjFaninId0p(p, pObj) ) + 
-           Gia_MuxRef_rec( p, Gia_ObjFaninId1p(p, pObj) ) + 
-           Gia_MuxRef_rec( p, Gia_ObjFaninId2p(p, pObj) ) + 1;
+func giaMuxReference(p *Gia_Man_t, id int32, increment bool) int32 {
+	stack := []int32{id}
+	var count int32
+	for len(stack) > 0 {
+		id := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		if Gia_ObjIsMuxId(p, id) == 0 {
+			continue
+		}
+		obj := p.pObjs[id]
+		if increment {
+			if Gia_ObjRefInc(p, obj) != 0 {
+				continue
+			}
+		} else {
+			if Gia_ObjRefDec(p, obj) != 0 {
+				continue
+			}
+		}
+		count++
+		stack = append(stack, Gia_ObjFaninId2(p, id), Gia_ObjFaninId1(obj, id), Gia_ObjFaninId0(obj, id))
+	}
+	return count
 }
-func Gia_MuxRef(p *Gia_Man_t, iObj int32) int32 {
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );
-    assert(Gia_ObjIsMuxId(p, iObj), "Gia_ObjIsMuxId(p, iObj)");
-    return Gia_MuxRef_rec( p, Gia_ObjFaninId0p(p, pObj) ) + 
-           Gia_MuxRef_rec( p, Gia_ObjFaninId1p(p, pObj) ) + 
-           Gia_MuxRef_rec( p, Gia_ObjFaninId2p(p, pObj) ) + 1;
+func Gia_MuxRef_rec(p *Gia_Man_t, id int32) int32   { return giaMuxReference(p, id, true) }
+func Gia_MuxDeref_rec(p *Gia_Man_t, id int32) int32 { return giaMuxReference(p, id, false) }
+func giaMuxRootReference(p *Gia_Man_t, id int32, increment bool) int32 {
+	if Gia_ObjIsMuxId(p, id) == 0 {
+		panic("gia: expected real MUX root")
+	}
+	obj := p.pObjs[id]
+	return 1 + giaMuxReference(p, Gia_ObjFaninId0(obj, id), increment) + giaMuxReference(p, Gia_ObjFaninId1(obj, id), increment) + giaMuxReference(p, Gia_ObjFaninId2(p, id), increment)
 }
-func Gia_MuxDeref_rec(p *Gia_Man_t, iObj int32) int32 {
-    var pObj *Gia_Obj_t;
-    if !Gia_ObjIsMuxId(p, iObj) {
-        return 0; }
-    pObj = Gia_ManObj( p, iObj );
-    if Gia_ObjRefDec(p, pObj) {
-        return 0; }
-    return Gia_MuxDeref_rec( p, Gia_ObjFaninId0p(p, pObj) ) + 
-           Gia_MuxDeref_rec( p, Gia_ObjFaninId1p(p, pObj) ) + 
-           Gia_MuxDeref_rec( p, Gia_ObjFaninId2p(p, pObj) ) + 1;
+func Gia_MuxRef(p *Gia_Man_t, id int32) int32   { return giaMuxRootReference(p, id, true) }
+func Gia_MuxDeref(p *Gia_Man_t, id int32) int32 { return giaMuxRootReference(p, id, false) }
+func Gia_MuxMffcSize(p *Gia_Man_t, id int32) int32 {
+	if Gia_ObjIsMuxId(p, id) == 0 {
+		return 0
+	}
+	count := Gia_MuxDeref(p, id)
+	if Gia_MuxRef(p, id) != count {
+		panic("gia: MUX references did not restore")
+	}
+	return count
 }
-func Gia_MuxDeref(p *Gia_Man_t, iObj int32) int32 {
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );
-    assert(Gia_ObjIsMuxId(p, iObj), "Gia_ObjIsMuxId(p, iObj)");
-    return Gia_MuxDeref_rec( p, Gia_ObjFaninId0p(p, pObj) ) + 
-           Gia_MuxDeref_rec( p, Gia_ObjFaninId1p(p, pObj) ) + 
-           Gia_MuxDeref_rec( p, Gia_ObjFaninId2p(p, pObj) ) + 1;
+func giaMuxStructure(p *Gia_Man_t, id int32, first bool, print bool, digits int) string {
+	if !first && (Gia_ObjIsMuxId(p, id) == 0 || p.Refs[id] > 0) {
+		if print {
+			return fmt.Sprintf("<%02d>", Gia_ObjLevelId(p, id))
+		}
+		return ""
+	}
+	obj := p.pObjs[id]
+	control := Gia_ObjFaninId2(p, id)
+	var name string
+	if Gia_ObjIsMuxId(p, control) != 0 && p.Refs[control] == 0 {
+		name = giaMuxStructure(p, control, false, print, digits)
+	} else if print {
+		name = fmt.Sprintf("%d<%d>", control, Gia_ObjLevelId(p, control))
+	} else {
+		name = fmt.Sprintf("%0*d", digits, control)
+	}
+	then, otherwise := Gia_ObjFaninId1(obj, id), Gia_ObjFaninId0(obj, id)
+	if Gia_ObjFaninC2(p, obj) != 0 {
+		then, otherwise = otherwise, then
+	}
+	prefix := "[("
+	if print {
+		prefix = " [("
+	}
+	return prefix + name + ")" + giaMuxStructure(p, then, false, print, digits) + "|" + giaMuxStructure(p, otherwise, false, print, digits) + "]"
 }
-func Gia_MuxMffcSize(p *Gia_Man_t, iObj int32) int32 {
-    var Count1, Count2 int32;
-    if !Gia_ObjIsMuxId(p, iObj) {
-        return 0; }
-    Count1 = Gia_MuxDeref( p, iObj );
-    Count2 = Gia_MuxRef( p, iObj );
-    assert(Count1 == Count2, "Count1 == Count2");
-    return Count1;
+func Gia_MuxStructPrint_rec(p *Gia_Man_t, id, first int32) {
+	fmt.Print(giaMuxStructure(p, id, first != 0, true, 0))
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_MuxStructPrint_rec(p *Gia_Man_t, iObj int32, fFirst int32) {
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );
-    var iCtrl int32;
-    if !(fFirst != 0) && (!Gia_ObjIsMuxId(p, iObj) || Gia_ObjRefNumId(p, iObj) > 0) {
-//        printf( "%d", iObj );
-        fmt.Printf("<%02d>", Gia_ObjLevelId(p, iObj));
-        return;
-    }
-    iCtrl = Gia_ObjFaninId2p(p, pObj);
-    fmt.Printf(" [(");
-    if Gia_ObjIsMuxId(p, iCtrl) && Gia_ObjRefNumId(p, iCtrl) == 0 {
-        Gia_MuxStructPrint_rec( p, iCtrl, 0 );
-    } else {
-        fmt.Printf("%d", iCtrl);
-        fmt.Printf("<%d>", Gia_ObjLevelId(p, iCtrl));
-    }
-    fmt.Printf(")");
-    if Gia_ObjFaninC2(p, pObj) {
-        Gia_MuxStructPrint_rec( p, Gia_ObjFaninId0p(p, pObj), 0 );
-        fmt.Printf("|");
-        Gia_MuxStructPrint_rec( p, Gia_ObjFaninId1p(p, pObj), 0 );
-        fmt.Printf("]");
-    
-    } else {
-        Gia_MuxStructPrint_rec( p, Gia_ObjFaninId1p(p, pObj), 0 );
-        fmt.Printf("|");
-        Gia_MuxStructPrint_rec( p, Gia_ObjFaninId0p(p, pObj), 0 );
-        fmt.Printf("]");
-    }
+func Gia_MuxStructPrint(p *Gia_Man_t, id int32) {
+	count := Gia_MuxDeref(p, id)
+	Gia_MuxStructPrint_rec(p, id, 1)
+	if Gia_MuxRef(p, id) != count {
+		panic("gia: MUX print changed references")
+	}
+	fmt.Println()
 }
-func Gia_MuxStructPrint(p *Gia_Man_t, iObj int32) {
-    var Count1, Count2 int32;
-    assert(Gia_ObjIsMuxId(p, iObj), "Gia_ObjIsMuxId(p, iObj)");
-    Count1 = Gia_MuxDeref( p, iObj );
-    Gia_MuxStructPrint_rec( p, iObj, 1 );
-    Count2 = Gia_MuxRef( p, iObj );
-    assert(Count1 == Count2, "Count1 == Count2");
-    fmt.Printf("\n");
+func Gia_MuxStructDump_rec(p *Gia_Man_t, id, first int32, text *Vec_Str_t, digits int32) {
+	value := giaMuxStructure(p, id, first != 0, false, int(digits))
+	vec.Vec_StrPushBuffer(text, []byte(value), len(value))
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_MuxStructDump_rec(p *Gia_Man_t, iObj int32, fFirst int32, vStr *Vec_Str_t, nDigitsId int32) {
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );
-    var iCtrl int32;
-    if !(fFirst != 0) && (!Gia_ObjIsMuxId(p, iObj) || Gia_ObjRefNumId(p, iObj) > 0) {
-        return; }
-    iCtrl = Gia_ObjFaninId2p(p, pObj);
-    Vec_StrPush( vStr, '[' );
-    Vec_StrPush( vStr, '(' );
-    if Gia_ObjIsMuxId(p, iCtrl) && Gia_ObjRefNumId(p, iCtrl) == 0 {
-        Gia_MuxStructDump_rec( p, iCtrl, 0, vStr, nDigitsId );
-    } else {
-        Vec_StrPrintNumStar( vStr, iCtrl, nDigitsId ); }
-    Vec_StrPush( vStr, ')' );
-    if Gia_ObjFaninC2(p, pObj) {
-        Gia_MuxStructDump_rec( p, Gia_ObjFaninId0p(p, pObj), 0, vStr, nDigitsId );
-        Vec_StrPush( vStr, '|' );
-        Gia_MuxStructDump_rec( p, Gia_ObjFaninId1p(p, pObj), 0, vStr, nDigitsId );
-        Vec_StrPush( vStr, ']' );
-    
-    } else {
-        Gia_MuxStructDump_rec( p, Gia_ObjFaninId1p(p, pObj), 0, vStr, nDigitsId );
-        Vec_StrPush( vStr, '|' );
-        Gia_MuxStructDump_rec( p, Gia_ObjFaninId0p(p, pObj), 0, vStr, nDigitsId );
-        Vec_StrPush( vStr, ']' );
-    }
+func Gia_MuxStructDump(p *Gia_Man_t, id int32, text *Vec_Str_t, countDigits, idDigits int32) int32 {
+	count := Gia_MuxDeref(p, id)
+	vec.Vec_StrClear(text)
+	vec.Vec_StrPrintNumStar(text, count, int(countDigits))
+	Gia_MuxStructDump_rec(p, id, 1, text, idDigits)
+	vec.Vec_StrPush(text, 0)
+	if Gia_MuxRef(p, id) != count {
+		panic("gia: MUX dump changed references")
+	}
+	return count
 }
-func Gia_MuxStructDump(p *Gia_Man_t, iObj int32, vStr *Vec_Str_t, nDigitsNum int32, nDigitsId int32) int32 {
-    var Count1, Count2 int32;
-    assert(Gia_ObjIsMuxId(p, iObj), "Gia_ObjIsMuxId(p, iObj)");
-    Count1 = Gia_MuxDeref( p, iObj );
-    Vec_StrClear( vStr );
-    Vec_StrPrintNumStar( vStr, Count1, nDigitsNum );
-    Gia_MuxStructDump_rec( p, iObj, 1, vStr, nDigitsId );
-    Vec_StrPush( vStr, '\0' );
-    Count2 = Gia_MuxRef( p, iObj );
-    assert(Count1 == Count2, "Count1 == Count2");
-    return Count1;
-}
+func Gia_ManMuxCompare(a, b *string) int32 { return int32(-strings.Compare(*a, *b)) }
+func Gia_ManMuxCountOne(text string) int32 { return int32(strings.Count(text, "[")) }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManMuxCompare(pp1 *string, pp2 *string) int32 {
-    var Diff int32  = int32(strings.Compare(*pp1, *pp2));
-    if Diff < 0 {
-        return 1; }
-    if Diff > 0 { 
-        return -1; }
-    return 0; 
-}
-func Gia_ManMuxCountOne(p string) int32 {
-    var Count int32;
-    for  ; *p; p++  {
-        Count += (*p == '[');
-    }
-    return Count;
-}
-
-    
 type Mux_Man_t struct {
-    pGia      *Gia_Man_t;      // manager
-    pNames      *Abc_Nam_t;    // hashing name into ID
-    vTops      *Vec_Wec_t;     // top nodes for each struct
+	pGia  *Gia_Man_t
+	names []string
+	ids   map[string]int
+	tops  [][]int32
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Mux_ManAlloc(pGia *Gia_Man_t) *Mux_Man_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Mux_Man_t{};
-    p.pGia   = pGia;
-    p.pNames = Abc_NamStart( 10000, 50 );
-    p.vTops  = Vec_WecAlloc( 1000 );
-    Vec_WecPushLevel( p.vTops );
-    return p;
+func Mux_ManAlloc(p *Gia_Man_t) *Mux_Man_t {
+	return &Mux_Man_t{pGia: p, names: []string{""}, ids: make(map[string]int), tops: [][]int32{nil}}
 }
 func Mux_ManFree(p *Mux_Man_t) {
-    Abc_NamStop( p.pNames );
-    Vec_WecFree( p.vTops );
-    // inlining of macro ABC_FREE
-    p = nil;
+	if p != nil {
+		*p = Mux_Man_t{}
+	}
+}
+func Gia_ManMuxProfile(p *Mux_Man_t, width int32) int32 {
+	counts := make([]int, 1000)
+	for i := 1; i < len(p.tops); i++ {
+		value := len(p.tops[i])
+		if width == 0 {
+			value, _ = strconv.Atoi(strings.Fields(p.names[i])[0])
+		}
+		counts[min(value, 999)]++
+	}
+	var distinct, total, maximum int
+	for value, count := range counts {
+		if count != 0 {
+			distinct++
+			total += count
+			maximum = max(maximum, count)
+			fmt.Printf(" %d=%d", value, count)
+		}
+	}
+	if distinct == 0 {
+		return 0
+	}
+	fmt.Printf("\nSummary: Max=%d Ave=%.2f\n", maximum, float64(total)/float64(distinct))
+	return 1
+}
+func Gia_ManMuxProfiling(src *Gia_Man_t) {
+	started := time.Now()
+	p := Gia_ManDupMuxes(src, 2)
+	defer Gia_ManStop(p)
+	manager := Mux_ManAlloc(p)
+	Gia_ManLevelNum(p)
+	Gia_ManCreateRefs(p)
+	for _, id := range Vec_IntArray(p.vCos) {
+		Gia_ObjRefFanin0Inc(p, p.pObjs[id])
+	}
+	text := vec.Vec_StrAlloc(1000)
+	fans := Gia_ManFirstFanouts(p)
+	for _, obj := range p.pObjs {
+		id := obj.id
+		if Gia_ObjIsMuxId(p, id) == 0 {
+			continue
+		}
+		if p.Refs[id] == 1 && Gia_ObjIsMuxId(p, Vec_IntEntry(fans, int(id))) != 0 {
+			continue
+		}
+		if Gia_MuxStructDump(p, id, text, 3, int32(len(strconv.Itoa(int(p.nObjs))))) == 1 {
+			continue
+		}
+		key := strings.TrimSuffix(string(vec.Vec_StrArray(text)), "\x00")
+		index, found := manager.ids[key]
+		if !found {
+			index = len(manager.names)
+			manager.ids[key] = index
+			manager.names = append(manager.names, key)
+			manager.tops = append(manager.tops, nil)
+		}
+		manager.tops[index] = append(manager.tops[index], id)
+	}
+	var total int
+	for _, top := range manager.tops {
+		total += len(top)
+	}
+	fmt.Printf("MUX structure profile for AIG %q: Total MUXes=%d Total trees=%d Unique trees=%d Time=%s\n", src.pName, Gia_ManMuxNum(p), total, len(manager.tops)-1, time.Since(started))
+	if Gia_ManMuxProfile(manager, 0) != 0 {
+		Gia_ManMuxProfile(manager, 1)
+		for i := 1; i < min(len(manager.tops), 10); i++ {
+			fmt.Printf("%5d: Occur=%4d %s\n", i, len(manager.tops[i]), manager.names[i])
+		}
+	}
 }
 
-/**Function*************************************************************
+// Object, incoming-edge and outgoing-edge classes used by the source's
+// one-level TFI/TFO signatures. Complement classes remain reserved as in C.
+type Gia_ObjType_t int32
 
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManMuxProfile(p *Mux_Man_t, fWidth int32) int32 {
-    var i, Entry, Counter, Total int32;
-    var vVec, vCounts *Vec_Int_t;
-    vCounts = Vec_IntStart( 1000 );
-    if fWidth != 0 {
-        // inlining of macro Vec_WecForEachLevelStart
-        for  i = 1; (i < Vec_WecSize(p.vTops)) && (((vVec) = Vec_WecEntry(p.vTops, i)), 1); i++  {
-            Vec_IntAddToEntry( vCounts, Abc_MinInt(Vec_IntSize(vVec), 999), 1 );
-        }
-    
-    } else {
-        for  i = 1; i < Vec_WecSize(p.vTops); i++  {
-            Vec_IntAddToEntry( vCounts, Abc_MinInt(strconv.Atoi(Abc_NamStr(p.pNames, i)), 999), 1 );
-        }
-    }
-    Total = Vec_IntCountPositive(vCounts);
-    if Total == 0 {
-        return 0; }
-    fmt.Printf("The distribution of MUX tree %s:\n", fWidth ? "widths" : "sizes");
-    Counter = 0;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vCounts)) && (((Entry) = Vec_IntEntry(vCounts, i)), 1); i++  {
-        if !(Entry != 0) { continue; }
-        if Counter++; Counter == 12 {
-            fmt.Printf("\n");
-Counter = 0; }
-        fmt.Printf("  %d=%d", i, Entry);
-    }
-    fmt.Printf("\nSummary: ");
-    fmt.Printf("Max = %d  ", Vec_IntFindMax(vCounts));
-    fmt.Printf("Ave = %.2f", 1.0*Vec_IntSum(vCounts)/Total);
-    fmt.Printf("\n");
-    Vec_IntFree( vCounts );
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManMuxProfiling(p *Gia_Man_t) {
-    var pMan *Mux_Man_t;
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var vStr *Vec_Str_t;
-    var vFans, vVec *Vec_Int_t;
-    var i, Counter, fFound, iStructId, nDigitsId int32;
-    var clk abctime  = Abc_Clock();
-
-    pNew = Gia_ManDupMuxes( p, 2 );
-    nDigitsId = Abc_Base10Log( Gia_ManObjNum(pNew) );
-
-    pMan = Mux_ManAlloc( pNew );
-     
-    Gia_ManLevelNum( pNew );
-    Gia_ManCreateRefs( pNew );
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(pNew.vCos)) && ((pObj) = Gia_ManCo(pNew, i)); i++  {
-        Gia_ObjRefFanin0Inc( pNew, pObj );
-    }
-
-    vStr = Vec_StrAlloc( 1000 );
-    vFans = Gia_ManFirstFanouts( pNew );
-    // inlining of macro Gia_ManForEachMux
-    for  i = 0; (i < pNew.nObjs) && ((pObj) = Gia_ManObj(pNew, i)); i++  {      if !Gia_ObjIsMuxId(pNew, i) {} else {
-        // skip MUXes in the middle of the tree (which have only one MUX fanout)
-        if Gia_ObjRefNumId(pNew, i) == 1 && Gia_ObjIsMuxId(pNew, Vec_IntEntry(vFans, i)) {
-            continue; }
-        // this node is the root of the MUX structure - create hash key
-        Counter = Gia_MuxStructDump( pNew, i, vStr, 3, nDigitsId );
-        if Counter == 1 {
-            continue; }
-        iStructId = Abc_NamStrFindOrAdd( pMan.pNames, Vec_StrArray(vStr), &fFound );
-        if !fFound {
-            Vec_WecPushLevel( pMan.vTops ); }
-        assert(Abc_NamObjNumMax(pMan.pNames) == Vec_WecSize(pMan.vTops), "Abc_NamObjNumMax(pMan.pNames) == Vec_WecSize(pMan.vTops)");
-        Vec_IntPush( Vec_WecEntry(pMan.vTops, iStructId), i );
-    }
-    }
-    Vec_StrFree( vStr );
-    Vec_IntFree( vFans );
-
-    fmt.Printf("MUX structure profile for AIG \"%s\":\n", p.pName);
-    fmt.Printf("Total MUXes = %d.  Total trees = %d.  Unique trees = %d.  Memory = %.2f MB   ", Gia_ManMuxNum(pNew), Vec_WecSizeSize(pMan.vTops), Vec_WecSize(pMan.vTops)-1, 1.0*Abc_NamMemUsed(pMan.pNames)/(1<<20));
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-
-    if Gia_ManMuxProfile(pMan, 0) != 0 {
-        Gia_ManMuxProfile( pMan, 1 );
-
-        // short the first ones
-        fmt.Printf("The first %d structures: \n", 10);
-        // inlining of macro Vec_WecForEachLevelStartStop
-        for  i = 1; (i < Abc_MinInt(Vec_WecSize(pMan.vTops), 10)) && (((vVec) = Vec_WecEntry(pMan.vTops, i)), 1); i++  {
-            var pTemp string  = Abc_NamStr(pMan.pNames, i);
-            fmt.Printf("%5d : ", i);
-            fmt.Printf("Occur = %4d   ", Vec_IntSize(vVec));
-            fmt.Printf("Size = %4d   ", strconv.Atoi(pTemp));
-            fmt.Printf("%s\n", pTemp);
-        }
-
-        // print trees for the first one
-        Counter = 0;
-        // inlining of macro Vec_WecForEachLevelStart
-        for  i = 1; (i < Vec_WecSize(pMan.vTops)) && (((vVec) = Vec_WecEntry(pMan.vTops, i)), 1); i++  {
-            var pTemp string  = Abc_NamStr(pMan.pNames, i);
-            if Vec_IntSize(vVec) > 5 && strconv.Atoi(pTemp) > 5 {
-                var k, Entry int32;
-                fmt.Printf("For example, structure %d has %d MUXes and bit-width %d:\n", i, strconv.Atoi(pTemp), Vec_IntSize(vVec));
-                // inlining of macro Vec_IntForEachEntry
-                for  k = 0; (k < Vec_IntSize(vVec)) && (((Entry) = Vec_IntEntry(vVec, k)), 1); k++  {
-                    Gia_MuxStructPrint( pNew, Entry );
-                }
-                if Counter++; Counter == 5 {
-                    break; }
-            }
-        }
-    }
-
-    Mux_ManFree( pMan );
-    Gia_ManStop( pNew );
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Compute one-level TFI/TFO structural signatures.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-// these are object/fanin/fanout attributes
-// http://stackoverflow.com/questions/9907160/how-to-convert-enum-names-to-string-in-c
-// Original macro:
-// #define GIA_FOREACH_ITEM(ITEM) \
-//     ITEM(C0)    \
-//     ITEM(PO)    \
-//     ITEM(PI)    \
-//     ITEM(FF)    \
-//     ITEM(XOR)   \
-//     ITEM(MUX)   \
-//     ITEM(AND)   \
-//     ITEM(iC0)   \
-//     ITEM(iC1)   \
-//     ITEM(iPI)   \
-//     ITEM(iFF)   \
-//     ITEM(iXOR)  \
-//     ITEM(iMUX)  \
-//     ITEM(iAND)  \
-//     ITEM(iANDn) \
-//     ITEM(iANDp) \
-//     ITEM(oPO)   \
-//     ITEM(oFF)   \
-//     ITEM(oXOR)  \
-//     ITEM(oMUXc) \
-//     ITEM(oMUXd) \
-//     ITEM(oAND)  \
-//     ITEM(oANDn) \
-//     ITEM(oANDp) \
-//     ITEM(GIA_END)
-
-
-// Original macro:
-// #define GENERATE_ENUM(ENUM) ENUM,
-
- type Gia_ObjType_t int32
-// inlining of macro GIA_FOREACH_ITEM
-// inlining of macro GENERATE_ENUM
-const ( C0 Gia_ObjType_t = iota
-        // inlining of macro GENERATE_ENUM
-        PO
-        // inlining of macro GENERATE_ENUM
-        PI
-        // inlining of macro GENERATE_ENUM
-        FF
-        // inlining of macro GENERATE_ENUM
-        XOR
-       // inlining of macro GENERATE_ENUM
-       MUX
-       // inlining of macro GENERATE_ENUM
-       AND
-       // inlining of macro GENERATE_ENUM
-       iC0
-       // inlining of macro GENERATE_ENUM
-       iC1
-       // inlining of macro GENERATE_ENUM
-       iPI
-       // inlining of macro GENERATE_ENUM
-       iFF
-       // inlining of macro GENERATE_ENUM
-       iXOR
-      // inlining of macro GENERATE_ENUM
-      iMUX
-      // inlining of macro GENERATE_ENUM
-      iAND
-      // inlining of macro GENERATE_ENUM
-      iANDn
-     // inlining of macro GENERATE_ENUM
-     iANDp
-     // inlining of macro GENERATE_ENUM
-     oPO
-       // inlining of macro GENERATE_ENUM
-       oFF
-       // inlining of macro GENERATE_ENUM
-       oXOR
-      // inlining of macro GENERATE_ENUM
-      oMUXc
-     // inlining of macro GENERATE_ENUM
-     oMUXd
-     // inlining of macro GENERATE_ENUM
-     oAND
-      // inlining of macro GENERATE_ENUM
-      oANDn
-     // inlining of macro GENERATE_ENUM
-     oANDp
-     // inlining of macro GENERATE_ENUM
-     GIA_END
- 
+const (
+	C0 Gia_ObjType_t = iota
+	PO
+	PI
+	FF
+	XOR
+	MUX
+	AND
+	iC0
+	iC1
+	iPI
+	iFF
+	iXOR
+	iMUX
+	iAND
+	iANDn
+	iANDp
+	oPO
+	oFF
+	oXOR
+	oMUXc
+	oMUXd
+	oAND
+	oANDn
+	oANDp
+	GIA_END
 )
 
- 
-
-// Original macro:
-// #define GENERATE_STRING(STRING) #STRING,
-
-// inlining of macro GIA_FOREACH_ITEM
-static char * GIA_TYPE_STRINGS[] = { GENERATE_STRING(C0)        GENERATE_STRING(PO)        GENERATE_STRING(PI)        GENERATE_STRING(FF)        GENERATE_STRING(XOR)       GENERATE_STRING(MUX)       GENERATE_STRING(AND)       GENERATE_STRING(iC0)       GENERATE_STRING(iC1)       GENERATE_STRING(iPI)       GENERATE_STRING(iFF)       GENERATE_STRING(iXOR)      GENERATE_STRING(iMUX)      GENERATE_STRING(iAND)      GENERATE_STRING(iANDn)     GENERATE_STRING(iANDp)     GENERATE_STRING(oPO)       GENERATE_STRING(oFF)       GENERATE_STRING(oXOR)      GENERATE_STRING(oMUXc)     GENERATE_STRING(oMUXd)     GENERATE_STRING(oAND)      GENERATE_STRING(oANDn)     GENERATE_STRING(oANDp)     GENERATE_STRING(GIA_END) };
+var GIA_TYPE_STRINGS = []string{"C0", "PO", "PI", "FF", "XOR", "MUX", "AND", "iC0", "iC1", "iPI", "iFF", "iXOR", "iMUX", "iAND", "iANDn", "iANDp", "oPO", "oFF", "oXOR", "oMUXc", "oMUXd", "oAND", "oANDn", "oANDp", "GIA_END"}
 
 func Gia_ManProfileStructuresTest(p *Gia_Man_t) {
-    var i int32;
-    for  i = 0; i < GIA_END; i++  {
-        fmt.Printf("%d = %s\n", i, GIA_TYPE_STRINGS[i]);
-    }
+	for i := Gia_ObjType_t(0); i < GIA_END; i++ {
+		fmt.Printf("%d = %s\n", i, GIA_TYPE_STRINGS[i])
+	}
+}
+func Gia_ManEncodeObj(p *Gia_Man_t, id int32) int32 {
+	obj := p.pObjs[id]
+	if Gia_ObjIsRi(p, obj) != 0 {
+		panic("gia: RI has no standalone profile code")
+	}
+	switch {
+	case Gia_ObjIsConst0(obj) != 0:
+		return int32(C0)
+	case Gia_ObjIsPo(p, obj) != 0:
+		return int32(PO)
+	case Gia_ObjIsPi(p, obj) != 0:
+		return int32(PI)
+	case Gia_ObjIsCi(obj) != 0:
+		return int32(FF)
+	case Gia_ObjIsXor(obj) != 0:
+		return int32(XOR)
+	case Gia_ObjIsMux(p, obj) != 0:
+		return int32(MUX)
+	default:
+		return int32(AND)
+	}
+}
+func Gia_ManEncodeFanin(p *Gia_Man_t, literal int32) int32 {
+	obj := p.pObjs[literal>>1]
+	switch {
+	case Gia_ObjIsConst0(obj) != 0:
+		return int32(iC0)
+	case Gia_ObjIsPi(p, obj) != 0:
+		return int32(iPI)
+	case Gia_ObjIsCi(obj) != 0:
+		return int32(iFF)
+	case Gia_ObjIsXor(obj) != 0:
+		return int32(iXOR)
+	case Gia_ObjIsMux(p, obj) != 0:
+		return int32(iMUX)
+	default:
+		return int32(iAND)
+	}
+}
+func Gia_ManEncodeFanout(p *Gia_Man_t, obj *Gia_Obj_t, index int32) Gia_ObjType_t {
+	switch {
+	case Gia_ObjIsPo(p, obj) != 0:
+		return oPO
+	case Gia_ObjIsCo(obj) != 0:
+		return oFF
+	case Gia_ObjIsXor(obj) != 0:
+		return oXOR
+	case Gia_ObjIsMux(p, obj) != 0:
+		if index == 2 {
+			return oMUXc
+		}
+		return oMUXd
+	default:
+		return oAND
+	}
+}
+func Gia_ManProfileCollect(p *Gia_Man_t, id int32, code, offsets, array *Vec_Int_t) {
+	Vec_IntClear(array)
+	for _, value := range Vec_IntArray(code)[Vec_IntEntry(offsets, int(id)):Vec_IntEntry(offsets, int(id)+1)] {
+		Vec_IntPush(array, value)
+	}
+}
+func Gia_ManProfilePrintOne(p *Gia_Man_t, id int32, array *Vec_Int_t) {
+	obj := p.pObjs[id]
+	if Gia_ObjIsRi(p, obj) != 0 {
+		return
+	}
+	fanins := int(Gia_ObjFaninNum(p, obj))
+	if Gia_ObjIsRo(p, obj) != 0 {
+		fanins = 1
+	}
+	values := Vec_IntArray(array)
+	if len(values) == 0 {
+		return
+	}
+	fmt.Printf("%6d: ", id)
+	for i := 0; i < 3; i++ {
+		name := ""
+		if i < fanins {
+			name = GIA_TYPE_STRINGS[values[1+i]]
+		}
+		fmt.Printf(" %5s", name)
+	}
+	fmt.Printf(" -> %5s ->", GIA_TYPE_STRINGS[values[0]])
+	for i := 1 + fanins; i < len(values); {
+		end := i + 1
+		for end < len(values) && values[end] == values[i] {
+			end++
+		}
+		fmt.Printf(" %d x %s", end-i, GIA_TYPE_STRINGS[values[i]])
+		i = end
+	}
+	fmt.Println()
+}
+func giaProfileKey(values []int32) string {
+	data := make([]byte, 4*len(values))
+	for i, value := range values {
+		binary.LittleEndian.PutUint32(data[i*4:], uint32(value))
+	}
+	return string(data)
+}
+func Gia_ManProfileHash(p *Gia_Man_t, code, offsets *Vec_Int_t) *Vec_Int_t {
+	result := Vec_IntAlloc(int(p.nObjs))
+	ids := map[string]int32{"": 0}
+	for id := int32(0); id < p.nObjs; id++ {
+		key := giaProfileKey(Vec_IntArray(code)[Vec_IntEntry(offsets, int(id)):Vec_IntEntry(offsets, int(id)+1)])
+		index, found := ids[key]
+		if !found {
+			index = int32(len(ids))
+			ids[key] = index
+		}
+		Vec_IntPush(result, index)
+	}
+	return result
+}
+func giaProfileCodes(p *Gia_Man_t) (*Vec_Int_t, *Vec_Int_t) {
+	code, offsets := Vec_IntAlloc(5*int(p.nObjs)), Vec_IntAlloc(int(p.nObjs)+1)
+	for _, obj := range p.pObjs {
+		Vec_IntPush(offsets, int32(Vec_IntSize(code)))
+		if Gia_ObjIsRi(p, obj) != 0 {
+			continue
+		}
+		Vec_IntPush(code, Gia_ManEncodeObj(p, obj.id))
+		a, b, c, kind := p.Gate(obj.id)
+		switch kind {
+		case 4:
+			Vec_IntPush(code, Gia_ManEncodeFanin(p, a&^1))
+			if a&1 != 0 {
+				b, c = c, b
+			}
+			Vec_IntPush(code, Gia_ManEncodeFanin(p, b))
+			Vec_IntPush(code, Gia_ManEncodeFanin(p, c))
+		case 2, 3, 5:
+			x, y := Gia_ManEncodeFanin(p, a), Gia_ManEncodeFanin(p, b)
+			Vec_IntPush(code, min(x, y))
+			Vec_IntPush(code, max(x, y))
+		case 6:
+			Vec_IntPush(code, Gia_ManEncodeFanin(p, a))
+		case 1:
+			if Gia_ObjIsRo(p, obj) != 0 {
+				Vec_IntPush(code, Gia_ManEncodeFanin(p, Gia_ObjFaninLit0p(p, Gia_ObjRoToRi(p, obj))))
+			}
+		}
+		var fanouts []int32
+		for i := int32(0); i < Gia_ObjFanoutNum(p, obj); i++ {
+			fanout := Gia_ObjFanout(p, obj, i)
+			fanouts = append(fanouts, int32(Gia_ManEncodeFanout(p, fanout, Gia_ObjWhatFanin(p, fanout, obj))))
+		}
+		sort.Slice(fanouts, func(i, j int) bool { return fanouts[i] < fanouts[j] })
+		for _, value := range fanouts {
+			Vec_IntPush(code, value)
+		}
+	}
+	Vec_IntPush(offsets, int32(Vec_IntSize(code)))
+	return code, offsets
+}
+func Gia_ManProfileStructuresInt(p *Gia_Man_t, limit, verbose int32) {
+	if p.pMuxes == nil {
+		panic("gia: profiling requires real-gate manager")
+	}
+	Gia_ManStaticFanoutStart(p)
+	defer Gia_ManStaticFanoutStop(p)
+	code, offsets := giaProfileCodes(p)
+	array := Vec_IntAlloc(100)
+	if verbose != 0 {
+		for _, obj := range p.pObjs {
+			Gia_ManProfileCollect(p, obj.id, code, offsets, array)
+			Gia_ManProfilePrintOne(p, obj.id, array)
+		}
+	}
+	classes := Gia_ManProfileHash(p, code, offsets)
+	type entry struct{ id, count, first int32 }
+	groups := make([]entry, int(Vec_IntFindMax(classes))+1)
+	for id, class := range Vec_IntArray(classes) {
+		if Gia_ObjIsRi(p, p.pObjs[id]) != 0 {
+			continue
+		}
+		if groups[class].count == 0 {
+			groups[class].first = int32(id)
+			groups[class].id = class
+		}
+		groups[class].count++
+	}
+	sort.SliceStable(groups, func(i, j int) bool { return groups[i].count > groups[j].count })
+	fmt.Printf("Showing TFI/node/TFO structures that appear at least %d times.\n", limit)
+	for _, group := range groups {
+		if group.count < limit || group.count == 0 {
+			break
+		}
+		fmt.Printf("Class %d: weight=%d first obj=", group.id, group.count)
+		Gia_ManProfileCollect(p, group.first, code, offsets, array)
+		Gia_ManProfilePrintOne(p, group.first, array)
+	}
+}
+func Gia_ManProfileStructures(p *Gia_Man_t, limit, verbose int32) {
+	if p.pMuxes != nil {
+		Gia_ManProfileStructuresInt(p, limit, verbose)
+		return
+	}
+	coarse := Gia_ManDupMuxes(p, 2)
+	defer Gia_ManStop(coarse)
+	Gia_ManProfileStructuresInt(coarse, limit, verbose)
 }
 
-
-
-// find object code
-func Gia_ManEncodeObj(p *Gia_Man_t, i int32) int32 {
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, i );
-    assert(!Gia_ObjIsRi(p, pObj), "!Gia_ObjIsRi(p, pObj)");
-    if Gia_ObjIsConst0(pObj) {
-        return C0; }
-    if Gia_ObjIsPo(p, pObj) {
-        return PO; }
-    if Gia_ObjIsPi(p, pObj) {
-        return PI; }
-    if Gia_ObjIsCi(pObj) {
-        return FF; }
-    if Gia_ObjIsXor(pObj) {
-        return XOR; }
-    if Gia_ObjIsMux(p, pObj) {
-        return MUX; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    return AND;
-}
-// find fanin code
-func Gia_ManEncodeFanin(p *Gia_Man_t, iLit int32) int32 {
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(iLit) );
-    if Gia_ObjIsConst0(pObj) {
-        return iC0; }
-    if Gia_ObjIsPi(p, pObj) {
-        return iPI; }
-    if Gia_ObjIsCi(pObj) {
-        return iFF; }
-    if Gia_ObjIsXor(pObj) {
-        return iXOR; }
-    if Gia_ObjIsMux(p, pObj) {
-        return iMUX; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    return iAND;
-//    if ( Abc_LitIsCompl(iLit) )
-//        return iANDn;
-//    else
-//        return iANDp;
-}
-// find fanout code
-func Gia_ManEncodeFanout(p *Gia_Man_t, pObj *Gia_Obj_t, i int32) Gia_ObjType_t {
-//    int iLit;
-    if Gia_ObjIsPo(p, pObj) {
-        return oPO; }
-    if Gia_ObjIsCo(pObj) {
-        return oFF; }
-    if Gia_ObjIsXor(pObj) {
-        return oXOR; }
-    if Gia_ObjIsMux(p, pObj) {
-        if i == 2 {
-            return oMUXc;
-        } else {
-            return oMUXd;
-        } }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    return oAND;
-//    iLit = i ? Gia_ObjFaninLit1p(p, pObj) : Gia_ObjFaninLit0p(p, pObj);
-//    if ( Abc_LitIsCompl(iLit) )
-//        return oANDn;
-//    else
-//        return oANDp;
-}
-
-func Gia_ManProfileCollect(p *Gia_Man_t, i int32, vCode *Vec_Int_t, vCodeOffsets *Vec_Int_t, vArray *Vec_Int_t) {
-    var k int32;
-    Vec_IntClear( vArray );
-    for  k = Vec_IntEntry(vCodeOffsets, i); k < Vec_IntEntry(vCodeOffsets, i+1); k++  {
-        Vec_IntPush( vArray, Vec_IntEntry(vCode, k) );
-    }
-}
-
-func Gia_ManProfilePrintOne(p *Gia_Man_t, i int32, vArray *Vec_Int_t) {
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, i );
-    var k, nFanins, nFanouts int32;
-    if Gia_ObjIsRi(p, pObj) {
-        return; }
-    if Gia_ObjIsRo(p, pObj) {
-        nFanins = 1;
-    } else {
-        nFanins = Gia_ObjFaninNum(p, pObj);
-    }
-    nFanouts = Gia_ObjFanoutNum(p, pObj);
-
-    fmt.Printf("%6d : ", i);
-    for  k = 0; k < nFanins; k++  {
-        fmt.Printf("  %5s", GIA_TYPE_STRINGS[Vec_IntEntry(vArray, k + 1)]);
-    }
-    for       ; k < 3; k++  {
-        fmt.Printf("  %5s", "");
-    }
-    fmt.Printf("  ->");
-    fmt.Printf(" %5s", GIA_TYPE_STRINGS[Vec_IntEntry(vArray, 0)]);
-    fmt.Printf("  ->");
-    if nFanouts > 0 {
-        var Count int32 = 1;
-        var Prev int32 = Vec_IntEntry(vArray, 1 + nFanins);
-        for  k = 1; k < nFanouts; k++  {
-            if Prev != Vec_IntEntry(vArray, k + 1 + nFanins) {
-                fmt.Printf("  %d x %s", Count, GIA_TYPE_STRINGS[Prev]);
-                Prev = Vec_IntEntry(vArray, k + 1 + nFanins);
-                Count = 0;
-            }
-            Count++;
-        }
-        fmt.Printf("  %d x %s", Count, GIA_TYPE_STRINGS[Prev]);
-    }
-    fmt.Printf("\n");
-}
-
-func Gia_ManProfileHash(p *Gia_Man_t, vCode *Vec_Int_t, vCodeOffsets *Vec_Int_t) *Vec_Int_t {
-    var pHash *Hsh_VecMan_t;
-    var vRes, vArray *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    vRes = Vec_IntAlloc( Gia_ManObjNum(p) );
-    pHash = Hsh_VecManStart( Gia_ManObjNum(p) );
-    // add empty entry
-    vArray = Vec_IntAlloc( 100 );
-    Hsh_VecManAdd( pHash, vArray );
-    // iterate through the entries
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        Gia_ManProfileCollect( p, i, vCode, vCodeOffsets, vArray );
-        Vec_IntPush( vRes, Hsh_VecManAdd( pHash, vArray ) );
-    }
-    Hsh_VecManStop( pHash );
-    Vec_IntFree( vArray );
-    assert(Vec_IntSize(vRes) == Gia_ManObjNum(p), "Vec_IntSize(vRes) == Gia_ManObjNum(p)");
-    return vRes;
-}
-
-
-func Gia_ManProfileStructuresInt(p *Gia_Man_t, nLimit int32, fVerbose int32) {
-    var vRes, vCount, vFirst *Vec_Int_t;
-    var vCode, vCodeOffsets, vArray *Vec_Int_t;
-    var pObj, pFanout *Gia_Obj_t;
-    var i int32;
-    var k int32;
-    var nFanins int32;
-    var nFanouts int32;
-    var pPerm *int32;
-    var nClasses int32;
-    assert(p.pMuxes, "p.pMuxes");
-    Gia_ManStaticFanoutStart( p );
-    // create fanout codes
-    vArray = Vec_IntAlloc( 100 );
-    vCode = Vec_IntAlloc( 5 * Gia_ManObjNum(p) );
-    vCodeOffsets = Vec_IntAlloc( Gia_ManObjNum(p) );
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        Vec_IntPush( vCodeOffsets, Vec_IntSize(vCode) );
-        if Gia_ObjIsRi(p, pObj) {
-            continue; }
-        nFanins = Gia_ObjFaninNum(p, pObj);
-        nFanouts = Gia_ObjFanoutNum(p, pObj);
-        Vec_IntPush( vCode, Gia_ManEncodeObj(p, i) );
-        if nFanins == 3 {
-            var iLit int32  = Gia_ObjFaninLit2p(p, pObj);
-            Vec_IntPush( vCode, Gia_ManEncodeFanin(p, Abc_LitRegular(iLit)) );
-            if Abc_LitIsCompl(iLit) {
-                Vec_IntPush( vCode, Gia_ManEncodeFanin(p, Gia_ObjFaninLit0p(p, pObj)) );
-                Vec_IntPush( vCode, Gia_ManEncodeFanin(p, Gia_ObjFaninLit1p(p, pObj)) );
-            
-            } else {
-                Vec_IntPush( vCode, Gia_ManEncodeFanin(p, Gia_ObjFaninLit1p(p, pObj)) );
-                Vec_IntPush( vCode, Gia_ManEncodeFanin(p, Gia_ObjFaninLit0p(p, pObj)) );
-            }
-        
-        } else if nFanins == 2 {
-            var Code0 int32  = Gia_ManEncodeFanin(p, Gia_ObjFaninLit0p(p, pObj));
-            var Code1 int32  = Gia_ManEncodeFanin(p, Gia_ObjFaninLit1p(p, pObj));
-            Vec_IntPush( vCode, Code0 < Code1 ? Code0 : Code1 );
-            Vec_IntPush( vCode, Code0 < Code1 ? Code1 : Code0 );
-        
-        } else if nFanins == 1 {
-            Vec_IntPush( vCode, Gia_ManEncodeFanin(p, Gia_ObjFaninLit0p(p, pObj)) );
-        } else if Gia_ObjIsRo(p, pObj) {
-            Vec_IntPush( vCode, Gia_ManEncodeFanin(p, Gia_ObjFaninLit0p(p, Gia_ObjRoToRi(p, pObj))) ); }
-
-        // add fanouts
-        Vec_IntClear( vArray );
-        // inlining of macro Gia_ObjForEachFanoutStatic
-        for  k = 0; (k < Gia_ObjFanoutNum(p, pObj))   && (((pFanout) = Gia_ObjFanout(p, pObj, k)), 1); k++  {
-            var Index int32  = Gia_ObjWhatFanin( p, pFanout, pObj );
-            var Type Gia_ObjType_t  = Gia_ManEncodeFanout( p, pFanout, Index );
-            Vec_IntPush( vArray, Type );
-        }
-        Vec_IntSort( vArray, 0 );
-        Vec_IntAppend( vCode, vArray );
-    }
-    assert(Vec_IntSize(vCodeOffsets) == Gia_ManObjNum(p), "Vec_IntSize(vCodeOffsets) == Gia_ManObjNum(p)");
-    Vec_IntPush( vCodeOffsets, Vec_IntSize(vCode) );
-    // print the results
-    if fVerbose != 0 {
-        fmt.Printf("Showing TFI/node/TFO structures for all nodes:\n");
-        // inlining of macro Gia_ManForEachObj
-        for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-            Gia_ManProfileCollect( p, i, vCode, vCodeOffsets, vArray );
-            Gia_ManProfilePrintOne( p, i, vArray );
-        }
-    }
-
-    // collect statistics
-    vRes = Gia_ManProfileHash( p, vCode, vCodeOffsets );
-    //Vec_IntPrint( vRes );
-
-    // count how many times each class appears
-    nClasses = Vec_IntFindMax(vRes) + 1;
-    vCount = Vec_IntStart( nClasses );
-    vFirst = Vec_IntStart( nClasses );
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        var Entry int32  = Vec_IntEntry( vRes, i );
-        if Gia_ObjIsRi(p, pObj) {
-            continue; }
-        if Vec_IntEntry(vCount, Entry) == 0 {
-            Vec_IntWriteEntry( vFirst, Entry, i ); }
-        Vec_IntAddToEntry( vCount, Entry, -1 );
-    }
-    // sort the counts
-    pPerm = Abc_MergeSortCost( Vec_IntArray(vCount), Vec_IntSize(vCount) );
-    fmt.Printf("Showing TFI/node/TFO structures that appear more than %d times.\n", nLimit);
-    for  i = 0; i < nClasses-1; i++  {
-        if nLimit > -Vec_IntEntry(vCount, pPerm[i]) {
-            break; }
-        fmt.Printf("%6d : ", i);
-        fmt.Printf("%6d : ", pPerm[i]);
-        fmt.Printf("Weight =%6d  ", -Vec_IntEntry(vCount, pPerm[i]));
-        fmt.Printf("First obj =");
-        // print the object
-        Gia_ManProfileCollect( p, Vec_IntEntry(vFirst, pPerm[i]), vCode, vCodeOffsets, vArray );
-        Gia_ManProfilePrintOne( p, Vec_IntEntry(vFirst, pPerm[i]), vArray );
-    }
-
-    // cleanup
-    // inlining of macro ABC_FREE
-    pPerm = nil;
-    Vec_IntFree( vRes );
-    Vec_IntFree( vCount );
-    Vec_IntFree( vFirst );
-
-    Vec_IntFree( vArray );
-    Vec_IntFree( vCode );
-    Vec_IntFree( vCodeOffsets );
-    Gia_ManStaticFanoutStop( p );
-}
-func Gia_ManProfileStructures(p *Gia_Man_t, nLimit int32, fVerbose int32) {
-    if p.pMuxes {
-        Gia_ManProfileStructuresInt( p, nLimit, fVerbose );
-    } else {
-        var pNew *Gia_Man_t  = Gia_ManDupMuxes( p, 2 );
-        Gia_ManProfileStructuresInt( pNew, nLimit, fVerbose );
-        Gia_ManStop( pNew );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Circuit restructuring.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManMarkTfi_rec(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if !Gia_ObjIsAnd(pObj) {
-        return; }
-    Gia_ManMarkTfi_rec( p, Gia_ObjFanin0(pObj) );
-    Gia_ManMarkTfi_rec( p, Gia_ObjFanin1(pObj) );
+func Gia_ManMarkTfi_rec(p *Gia_Man_t, obj *Gia_Obj_t) {
+	stack := []int32{obj.id}
+	for len(stack) > 0 {
+		id := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		if Gia_ObjIsTravIdCurrentId(p, id) != 0 {
+			continue
+		}
+		Gia_ObjSetTravIdCurrentId(p, id)
+		obj := p.pObjs[id]
+		if Gia_ObjIsAnd(obj) == 0 {
+			continue
+		}
+		stack = append(stack, giaObjectFanins(p, obj)...)
+	}
 }
 func Gia_ManFindSharedInputs(p *Gia_Man_t) *Vec_Int_t {
-    var pObj, pObj2 *Gia_Obj_t; var i, k, Value int32;
-    var vRes *Vec_Int_t  = Vec_IntStart( Gia_ManCiNum(p) );
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        Gia_ManIncrementTravId( p );
-        Gia_ManMarkTfi_rec( p, Gia_ObjFanin0(pObj) );
-        // inlining of macro Gia_ManForEachCi
-        for  k = 0; (k < Vec_IntSize(p.vCis)) && ((pObj2) = Gia_ManCi(p, k)); k++  {
-            if Gia_ObjIsTravIdCurrent(p, pObj2) {
-                Vec_IntAddToEntry( vRes, k, 1 ); }
-        }
-    }
-    k = 0;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vRes)) && (((Value) = Vec_IntEntry(vRes, i)), 1); i++  {
-        if Value == Gia_ManCoNum(p) {
-            Vec_IntWriteEntry( vRes, k++, i ); }
-    }
-    Vec_IntShrink( vRes, k );
-    //printf( "Found %d candidate inputs.\n", Vec_IntSize(vRes) );
-    if Vec_IntSize(vRes) == 0 || Vec_IntSize(vRes) > 10 {
-        Vec_IntFreeP(&vRes); }
-    return vRes;
+	counts := make([]int32, Gia_ManCiNum(p))
+	for _, id := range Vec_IntArray(p.vCos) {
+		Gia_ManIncrementTravId(p)
+		Gia_ManMarkTfi_rec(p, Gia_ObjFanin0(p.pObjs[id]))
+		for i, ci := range Vec_IntArray(p.vCis) {
+			if Gia_ObjIsTravIdCurrentId(p, ci) != 0 {
+				counts[i]++
+			}
+		}
+	}
+	result := Vec_IntAlloc(len(counts))
+	for i, count := range counts {
+		if count == Gia_ManCoNum(p) {
+			Vec_IntPush(result, int32(i))
+		}
+	}
+	if Vec_IntSize(result) == 0 || Vec_IntSize(result) > 10 {
+		return nil
+	}
+	return result
 }
-func Gia_ManFindCofs(p *Gia_Man_t, vRes *Vec_Int_t, ppNew **Gia_Man_t) *Vec_Wec_t {
-    var pObj *Gia_Obj_t;
-    var vCofs *Vec_Wec_t  = Vec_WecStart( 1 << Vec_IntSize(vRes) );
-    var Value int32;
-    var i int32;
-    var m int32;
-    var nMints int32 = 1 << Vec_IntSize(vRes);
-    var pNew *Gia_Man_t  = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    Gia_ManHashAlloc( pNew );
-    Gia_ManFillValue( p );
-    Gia_ManConst0(p).Value = 0;
-    assert(Vec_IntSize(vRes) < Gia_ManCiNum(p), "Vec_IntSize(vRes) < Gia_ManCiNum(p)");
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCi(pNew);
-    }
-    for  m = 0; m < nMints; m++  {
-        var vLayer *Vec_Int_t  = Vec_WecEntry( vCofs, m );
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vRes)) && (((Value) = Vec_IntEntry(vRes, i)), 1); i++  {
-            Gia_ManCi(p, Value).Value = uint32(((m >> i) & 1));
-        }
-        // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-        }
-        // inlining of macro Gia_ManForEachCo
-        for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-            Vec_IntPush( vLayer, Gia_ObjFanin0Copy(pObj) );
-        }
-        assert(Vec_IntSize(vLayer) == Gia_ManCoNum(p), "Vec_IntSize(vLayer) == Gia_ManCoNum(p)");
-        //printf( "%3d : ", m ); Vec_IntPrint( vLayer );
-    }
-    if ppNew != nil {
-        *ppNew = pNew; }
-    return vCofs;
+func Gia_ManFindCofs(src *Gia_Man_t, inputs *Vec_Int_t, out **Gia_Man_t) *Vec_Wec_t {
+	if Vec_IntSize(inputs) >= int(Gia_ManCiNum(src)) || Vec_IntSize(inputs) > 10 {
+		panic("gia: invalid cofactor input count")
+	}
+	count := 1 << uint(Vec_IntSize(inputs))
+	cofactors := vec.Vec_WecStart(count)
+	dst := Gia_ManStart(src.nObjs)
+	dst.CopyIdentityFrom(src)
+	Gia_ManHashAlloc(dst)
+	Gia_ManFillValue(src)
+	src.pObjs[0].Value = 0
+	for _, id := range Vec_IntArray(src.vCis) {
+		src.pObjs[id].Value = uint32(Gia_ManAppendCi(dst))
+	}
+	for assignment := 0; assignment < count; assignment++ {
+		for i, index := range Vec_IntArray(inputs) {
+			Gia_ManCi(src, index).Value = uint32(assignment >> uint(i) & 1)
+		}
+		for _, obj := range src.pObjs {
+			a, b, c, kind := src.Gate(obj.id)
+			var lit int32
+			switch kind {
+			case 2, 5:
+				lit = Gia_ManHashAnd(dst, Gia_ObjLitCopy(src, a), Gia_ObjLitCopy(src, b))
+			case 3:
+				lit = Gia_ManHashXor(dst, Gia_ObjLitCopy(src, a), Gia_ObjLitCopy(src, b))
+			case 4:
+				lit = Gia_ManHashMux(dst, Gia_ObjLitCopy(src, a), Gia_ObjLitCopy(src, b), Gia_ObjLitCopy(src, c))
+			default:
+				continue
+			}
+			obj.Value = uint32(lit)
+		}
+		layer := vec.Vec_WecEntry(cofactors, assignment)
+		for _, id := range Vec_IntArray(src.vCos) {
+			Vec_IntPush(layer, Gia_ObjFanin0Copy(src.pObjs[id]))
+		}
+	}
+	Gia_ManSetRegNum(dst, src.nRegs)
+	if out != nil {
+		*out = dst
+	}
+	return cofactors
 }
-func Gia_ManFindEquivClasses(vCofs *Vec_Wec_t) *Vec_Int_t {
-    var vVec *Vec_Int_t; var i, k, Lev int32;
-    var vMap *Vec_Int_t     = Vec_IntAlloc( Vec_WecSize(vCofs) );
-    var vUnique *Vec_Int_t  = Vec_IntAlloc( Vec_WecSize(vCofs) );
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vCofs)) && (((vVec) = Vec_WecEntry(vCofs, i)), 1); i++  {
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vUnique)) && (((Lev) = Vec_IntEntry(vUnique, k)), 1); k++  {
-            if Vec_IntEqual(vVec, Vec_WecEntry(vCofs, Lev)) {
-                break; }
-        }
-        Vec_IntPush( vMap, k );
-        if k == Vec_IntSize(vUnique) {
-            Vec_IntPush( vUnique, i ); }
-    }
-    //printf( "Found %d equiv clasess.\n", Vec_IntSize(vUnique) );
-    //Vec_IntPrint( vUnique );
-    Vec_IntFree( vUnique );
-    assert(Vec_IntSize(vMap) == Vec_WecSize(vCofs), "Vec_IntSize(vMap) == Vec_WecSize(vCofs)");
-    //Vec_IntPrint( vMap );
-    return vMap;
+func Gia_ManFindEquivClasses(cofactors *Vec_Wec_t) *Vec_Int_t {
+	result := Vec_IntAlloc(vec.Vec_WecSize(cofactors))
+	ids := make(map[string]int32)
+	for i := 0; i < vec.Vec_WecSize(cofactors); i++ {
+		key := giaProfileKey(Vec_IntArray(vec.Vec_WecEntry(cofactors, i)))
+		id, found := ids[key]
+		if !found {
+			id = int32(len(ids))
+			ids[key] = id
+		}
+		Vec_IntPush(result, id)
+	}
+	return result
 }
-func Gia_ManFindMuxTree_rec(pNew *Gia_Man_t, pCtrl *int32, nCtrl int32, vData *Vec_Int_t, Shift int32) int32 {
-    var iLit0, iLit1 int32;
-    if nCtrl-- == 0 {
-        return Vec_IntEntry( vData, Shift ); }
-    iLit0 = Gia_ManFindMuxTree_rec( pNew, pCtrl, nCtrl, vData, Shift );
-    iLit1 = Gia_ManFindMuxTree_rec( pNew, pCtrl, nCtrl, vData, Shift + (1<<nCtrl) );
-    return Gia_ManHashMux( pNew, pCtrl[nCtrl], iLit1, iLit0 );
+func Gia_ManFindMuxTree_rec(p *Gia_Man_t, controls []int32, count int32, data *Vec_Int_t, shift int32) int32 {
+	if count == 0 {
+		return Vec_IntEntry(data, int(shift))
+	}
+	count--
+	a := Gia_ManFindMuxTree_rec(p, controls, count, data, shift)
+	b := Gia_ManFindMuxTree_rec(p, controls, count, data, shift+(1<<uint(count)))
+	return Gia_ManHashMux(p, controls[count], b, a)
 }
-func Gia_ManFindDerive(pNew *Gia_Man_t, nOuts int32, vIns *Vec_Int_t, vCofs *Vec_Wec_t, vMap *Vec_Int_t) {
-    extern int Kit_TruthToGia( Gia_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory, Vec_Int_t * vLeaves, int fHash );
-    var vMemory *Vec_Int_t  = Vec_IntAlloc( 1 << 16 );
-    var vLeaves *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vUsed *Vec_Int_t  = Vec_IntStart( Vec_WecSize(vCofs) );
-    var vBits *Vec_Int_t  = Vec_IntAlloc( 10 );
-    var vData *Vec_Int_t  = Vec_IntAlloc( Vec_WecSize(vCofs) );
-    var nWords int32  = Abc_TtWordNum(Vec_IntSize(vIns));
-    // inlining of macro ABC_ALLOC
-    var pTruth *word  = ((word *) malloc(sizeof(word) * (size_t)(nWords)));
-    var nValues int32  = Vec_IntFindMax(vMap)+1;
-    var i int32;
-    var k int32;
-    var Value int32;
-    var nBits int32 = Abc_Base2Log(nValues);
-    assert(nBits < Vec_IntSize(vIns), "nBits < Vec_IntSize(vIns)");
-    assert(Vec_IntSize(vMap) == Vec_WecSize(vCofs), "Vec_IntSize(vMap) == Vec_WecSize(vCofs)");
-    assert(Vec_IntSize(vMap) == (1 << Vec_IntSize(vIns)), "Vec_IntSize(vMap) == (1 << Vec_IntSize(vIns))");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vIns)) && (((Value) = Vec_IntEntry(vIns, i)), 1); i++  {
-        Vec_IntPush( vLeaves, Gia_ObjToLit(pNew, Gia_ManCi(pNew, Value)) );
-    }
-    for  i = 0; i < nBits; i++  {
-        Abc_TtClear( pTruth, nWords );
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vMap)) && (((Value) = Vec_IntEntry(vMap, k)), 1); k++  {
-            if (Value >> i) & 1 {
-                Abc_TtSetBit( pTruth, k ); }
-        }
-        if nBits < 6 {
-            pTruth[0] = Abc_Tt6Stretch( pTruth[0], Vec_IntSize(vIns) ); }
-        Vec_IntPush( vBits, Kit_TruthToGia(pNew, (unsigned*)pTruth, Vec_IntSize(vIns), vMemory, vLeaves, 1) );
-        //printf( "Bit %d : ", i ); Dau_DsdPrintFromTruth( pTruth, Vec_IntSize(vIns) );
-    }
-    for  i = 0; i < nValues; i++  {
-        var Cof int32  = Vec_IntFind(vMap, i);
-        assert(Cof >= 0 && Cof < Vec_WecSize(vCofs), "Cof >= 0 && Cof < Vec_WecSize(vCofs)");
-        Vec_IntWriteEntry( vUsed, Cof, 1 );
-    }
-    for  i = 0; i < nOuts; i++  {
-        var vLevel *Vec_Int_t;
-        Vec_IntClear( vData );
-        // inlining of macro Vec_WecForEachLevel
-        for  k = 0; (k < Vec_WecSize(vCofs)) && (((vLevel) = Vec_WecEntry(vCofs, k)), 1); k++  {
-            if Vec_IntEntry(vUsed, k) {
-                Vec_IntPush( vData, Vec_IntEntry(vLevel, i) ); }
-        }
-        for  Vec_IntSize(vData) < (1 << nBits)  {
-            Vec_IntPush( vData, 0 );
-        }
-        assert(Vec_IntSize(vData) == (1 << nBits), "Vec_IntSize(vData) == (1 << nBits)");
-        assert(Vec_IntSize(vBits) == nBits, "Vec_IntSize(vBits) == nBits");
-        Value = Gia_ManFindMuxTree_rec( pNew, Vec_IntArray(vBits), Vec_IntSize(vBits), vData, 0 );
-        Gia_ManAppendCo( pNew, Value );
-    }
-    // inlining of macro ABC_FREE
-    pTruth = nil;
-    Vec_IntFree( vUsed );
-    Vec_IntFree( vBits );
-    Vec_IntFree( vData );
-    Vec_IntFree( vLeaves );
-    Vec_IntFree( vMemory );
+func Gia_ManFindDerive(p *Gia_Man_t, outputs int32, inputs *Vec_Int_t, cofactors *Vec_Wec_t, classes *Vec_Int_t) {
+	values := Vec_IntFindMax(classes) + 1
+	count := int32(bits.Len32(uint32(values - 1)))
+	if count >= int32(Vec_IntSize(inputs)) || Vec_IntSize(classes) != vec.Vec_WecSize(cofactors) || Vec_IntSize(classes) != 1<<uint(Vec_IntSize(inputs)) {
+		panic("gia: invalid cofactor compression dimensions")
+	}
+	leaves := make([]int32, Vec_IntSize(inputs))
+	for i, index := range Vec_IntArray(inputs) {
+		leaves[i] = Gia_ObjToLit(p, Gia_ManCi(p, index))
+	}
+	controls := make([]int32, count)
+	var memory []uint32
+	for bit := int32(0); bit < count; bit++ {
+		truth := make([]uint32, max(1, (Vec_IntSize(classes)+31)/32))
+		for assignment, class := range Vec_IntArray(classes) {
+			if class>>uint(bit)&1 != 0 {
+				truth[assignment>>5] |= 1 << uint(assignment&31)
+			}
+		}
+		// Kit's <=5-variable truth convention repeats the low pattern to 32 bits.
+		if len(leaves) < 5 {
+			period := 1 << uint(len(leaves))
+			for i := period; i < 32; i++ {
+				if truth[0]>>uint(i%period)&1 != 0 {
+					truth[0] |= 1 << uint(i)
+				}
+			}
+		}
+		controls[bit] = kit.Kit_TruthToGia(p, truth, int32(len(leaves)), &memory, leaves, 1)
+	}
+	first := make([]int, values)
+	for i := range first {
+		first[i] = -1
+	}
+	for assignment, class := range Vec_IntArray(classes) {
+		if first[class] < 0 {
+			first[class] = assignment
+		}
+	}
+	data := Vec_IntAlloc(1 << uint(count))
+	for output := int32(0); output < outputs; output++ {
+		Vec_IntClear(data)
+		for _, assignment := range first {
+			Vec_IntPush(data, Vec_IntEntry(vec.Vec_WecEntry(cofactors, assignment), int(output)))
+		}
+		for Vec_IntSize(data) < 1<<uint(count) {
+			Vec_IntPush(data, 0)
+		}
+		Gia_ManAppendCo(p, Gia_ManFindMuxTree_rec(p, controls, count, data, 0))
+	}
 }
-func Gia_ManCofStructure(p *Gia_Man_t) *Gia_Man_t {
-    var pNew *Gia_Man_t  = nil;
-    var vIns *Vec_Int_t  = Gia_ManFindSharedInputs( p );
-    var vCfs *Vec_Wec_t;
-    if vIns != nil {
-        vCfs = Gia_ManFindCofs( p, vIns, &pNew );
-    } else {
-        vCfs = nil;
-    }
-    var vMap *Vec_Int_t;
-    if vCfs != nil {
-        vMap = Gia_ManFindEquivClasses( vCfs );
-    } else {
-        vMap = nil;
-    }
-    if (vMap != nil) && Abc_Base2Log(Vec_IntFindMax(vMap)+1) < Vec_IntSize(vIns) {
-        var pTemp *Gia_Man_t; 
-        Gia_ManFindDerive( pNew, Gia_ManCoNum(p), vIns, vCfs, vMap );
-        pNew = Gia_ManCleanup( pTemp = pNew );
-        Gia_ManStop( pTemp );
-    
-    } else {
-        Gia_ManStopP( &pNew ); }
-    Vec_WecFreeP( &vCfs );
-    Vec_IntFreeP( &vMap );
-    Vec_IntFreeP( &vIns );
-    return pNew;
+func Gia_ManCofStructure(src *Gia_Man_t) *Gia_Man_t {
+	inputs := Gia_ManFindSharedInputs(src)
+	if inputs == nil {
+		return nil
+	}
+	// If all inputs are selected there is no nontrivial decomposition boundary.
+	if Vec_IntSize(inputs) >= int(Gia_ManCiNum(src)) {
+		return nil
+	}
+	var dst *Gia_Man_t
+	cofactors := Gia_ManFindCofs(src, inputs, &dst)
+	classes := Gia_ManFindEquivClasses(cofactors)
+	if bits.Len32(uint32(Vec_IntFindMax(classes))) >= Vec_IntSize(inputs) {
+		Gia_ManStop(dst)
+		return nil
+	}
+	Gia_ManFindDerive(dst, Gia_ManCoNum(src), inputs, cofactors, classes)
+	Gia_ManHashStop(dst)
+	giaCopyInterfaceMetadata(dst, src)
+	result := Gia_ManCleanup(dst)
+	Gia_ManStop(dst)
+	return result
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

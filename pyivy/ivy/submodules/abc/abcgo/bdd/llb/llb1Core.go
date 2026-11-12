@@ -1,213 +1,64 @@
 package llb
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-/**CFile****************************************************************
-
-  FileName    [llb1Core.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [BDD based reachability.]
-
-  Synopsis    [Top-level procedure.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: llb1Core.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "llbInt.h"
-//#include "aig/gia/gia.h"
-//#include "aig/gia/giaAig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
- 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
- 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_ManSetDefaultParams(p *Gia_ParLlb_t) {
-    memset( p, 0, sizeof(Gia_ParLlb_t) );
-    p.nBddMax       = 10000000;
-    p.nIterMax      = 10000000;
-    p.nClusterMax   =       20;
-    p.nHintDepth    =        0;
-    p.HintFirst     =        0;
-    p.fUseFlow      =        0;  // use flow 
-    p.nVolumeMax    =      100;  // max volume
-    p.nVolumeMin    =       30;  // min volume
-    p.nPartValue    =        5;  // partitioning value
-    p.fBackward     =        0;  // forward by default
-    p.fReorder      =        1;
-    p.fIndConstr    =        0;
-    p.fUsePivots    =        0;
-    p.fCluster      =        0;
-    p.fSchedule     =        0;
-    p.fDumpReached  =        0;
-    p.fVerbose      =        0;
-    p.fVeryVerbose  =        0;
-    p.fSilent       =        0;
-    p.TimeLimit     =        0;
-//    p->TimeLimit     =        0;
-    p.TimeLimitGlo  =        0;
-    p.TimeTarget    =        0;
-    p.iFrame        =       -1;
+	if p == nil {
+		return
+	}
+	*p = Gia_ParLlb_t{nBddMax: 10000000, nIterMax: 10000000, nClusterMax: 20, nVolumeMax: 100, nVolumeMin: 30, nPartValue: 5, fReorder: 1, iFrame: -1}
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Prints statistics about MFFCs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_ManPrintAig(p *Llb_Man_t) {
-    Abc_Print( 1, "pi =%3d  ",    Saig_ManPiNum(p.pAig) );
-    Abc_Print( 1, "po =%3d  ",    Saig_ManPoNum(p.pAig) );
-    Abc_Print( 1, "ff =%3d  ",    Saig_ManRegNum(p.pAig) );
-    Abc_Print( 1, "int =%5d  ",   Vec_IntSize(p.vVar2Obj)-Aig_ManCiNum(p.pAig)-Saig_ManRegNum(p.pAig) );
-    Abc_Print( 1, "var =%5d  ",   Vec_IntSize(p.vVar2Obj) );
-    Abc_Print( 1, "part =%5d  ",  Vec_PtrSize(p.vGroups)-2 );
-    Abc_Print( 1, "and =%5d  ",   Aig_ManNodeNum(p.pAig) );
-    Abc_Print( 1, "lev =%4d  ",   Aig_ManLevelNum(p.pAig) );
-//    Abc_Print( 1, "cut =%4d  ",   Llb_ManCrossCut(p->pAig) );
-    Abc_Print( 1, "\n" );
+	if p == nil || p.pAig == nil {
+		return
+	}
+	fmt.Printf("pi=%d po=%d ff=%d vars=%d and=%d\n", aig.Saig_ManPiNum(p.pAig), aig.Saig_ManPoNum(p.pAig), aig.Saig_ManRegNum(p.pAig), vec.Vec_IntSize(p.vVar2Obj), aig.Aig_ManNodeNum(p.pAig))
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManModelCheckAig(pAigGlo *Aig_Man_t, pPars *Gia_ParLlb_t, vHints *Vec_Int_t, pddGlo **DdManager) int32 {
-    var p *Llb_Man_t  = nil; 
-    var pAig *Aig_Man_t;
-    var RetValue int32  = -1;
-    var clk abctime  = Abc_Clock();
-
-    if pPars.fIndConstr {
-        assert(vHints == nil, "vHints == nil");
-        vHints = Llb_ManDeriveConstraints( pAigGlo );
-    }
-
-    // derive AIG for hints
-    if vHints == nil {
-        pAig = Aig_ManDupSimple( pAigGlo );
-    } else {
-        if pPars.fVerbose {
-            Llb_ManPrintEntries( pAigGlo, vHints ); }
-        pAig = Aig_ManDupSimpleWithHints( pAigGlo, vHints );
-    }
-
-
-    if pPars.fUseFlow {
-//        p = Llb_ManStartFlow( pAigGlo, pAig, pPars );
-    
-    } else {
-        p = Llb_ManStart( pAigGlo, pAig, pPars );
-        if pPars.fVerbose {
-            Llb_ManPrintAig( p );
-            fmt.Printf("Original matrix:          ");
-            Llb_MtrPrintMatrixStats( p.pMatrix );
-            if pPars.fVeryVerbose {
-                Llb_MtrPrint( p.pMatrix, 1 ); }
-        }
-        if pPars.fCluster {
-            Llb_ManCluster( p.pMatrix );
-            if pPars.fVerbose {
-                fmt.Printf("Matrix after clustering:  ");
-                Llb_MtrPrintMatrixStats( p.pMatrix );
-                if pPars.fVeryVerbose {
-                    Llb_MtrPrint( p.pMatrix, 1 ); }
-            }
-        }
-        if pPars.fSchedule {
-            Llb_MtrSchedule( p.pMatrix );
-            if pPars.fVerbose {
-                fmt.Printf("Matrix after scheduling:  ");
-                Llb_MtrPrintMatrixStats( p.pMatrix );
-                if pPars.fVeryVerbose {
-                    Llb_MtrPrint( p.pMatrix, 1 ); }
-            }
-        }
-    }
-    
-    if !p.pPars.fSkipReach { 
-        RetValue = Llb_ManReachability( p, vHints, pddGlo ); }
-    Llb_ManStop( p );
-
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-
-    if pPars.fIndConstr {
-        Vec_IntFreeP( &vHints ); }
-    return RetValue;
+// Llb_ManModelCheckAig creates an independent working graph and runs exact
+// symbolic reachability. The source graph remains caller-owned.
+func Llb_ManModelCheckAig(original *Aig_Man_t, params *Gia_ParLlb_t, hints *Vec_Int_t, global **DdManager) int32 {
+	if original == nil {
+		return -1
+	}
+	if params == nil {
+		params = &Gia_ParLlb_t{}
+		Llb_ManSetDefaultParams(params)
+	}
+	working := aig.Aig_ManDupSimple(original)
+	if hints != nil {
+		working = aig.Aig_ManDupSimpleWithHints(original, vec.Vec_IntArray(hints))
+	}
+	manager := &Llb_Man_t_{pAigGlo: original, pAig: working, pPars: params}
+	status := int32(-1)
+	if params.fSkipReach == 0 {
+		status = Llb_ManReachability(manager, hints, global)
+	}
+	if manager.reached != nil && global != nil && *global == nil {
+		*global = manager.dd
+		manager.dd = nil
+	}
+	if manager.dd != nil {
+		core.Cudd_Quit(manager.dd)
+	}
+	aig.Aig_ManStop(working)
+	return status
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManModelCheckGia(pGia *Gia_Man_t, pPars *Gia_ParLlb_t) int32 {
-    var pGia2 *Gia_Man_t;
-    var pAig *Aig_Man_t;
-    var RetValue int32  = -1;
-    pGia2 = Gia_ManDupDfs( pGia );
-    pAig  = Gia_ManToAigSimple( pGia2 );
-    Gia_ManStop( pGia2 );
-//Aig_ManShow( pAig, 0, NULL ); 
-
-    if pPars.nHintDepth == 0 {
-        RetValue = Llb_ManModelCheckAig( pAig, pPars, nil, nil );
-    } else {
-        RetValue = Llb_ManModelCheckAigWithHints( pAig, pPars ); }
-    pGia.pCexSeq = pAig.pSeqModel; pAig.pSeqModel = nil;
-    Aig_ManStop( pAig );
-    return RetValue;
+func Llb_ManModelCheckGia(g *Gia_Man_t, params *Gia_ParLlb_t) int32 {
+	if g == nil {
+		return -1
+	}
+	intermediate := gia.Gia_ManDupDfs(g)
+	graph := gia.Gia_ManToAigSimple(intermediate)
+	gia.Gia_ManStop(intermediate)
+	result := Llb_ManModelCheckAig(graph, params, nil, nil)
+	aig.Aig_ManStop(graph)
+	return result
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

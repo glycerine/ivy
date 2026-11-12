@@ -1,404 +1,256 @@
 package mfs
 
-/**CFile****************************************************************
+import "github.com/glycerine/abcgo/aig/aig"
 
-  FileName    [mfsStrash.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [The good old minimization with complete don't-cares.]
-
-  Synopsis    [Structural hashing of the window with ODCs.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: mfsStrash.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "mfsInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively converts AIG from Aig_Man_t into Hop_Obj_t.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MfsConvertAigToHop_rec(pObj *Aig_Obj_t, pHop *Hop_Man_t) {
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if pObj.pData {
-        return; }
-    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin0(pObj), pHop ); 
-    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin1(pObj), pHop );
-    pObj.pData = Hop_And( pHop, (Hop_Obj_t *)Aig_ObjChild0Copy(pObj), (Hop_Obj_t *)Aig_ObjChild1Copy(pObj) ); 
-    assert(!Hop_IsComplement((Hop_Obj_t *)pObj.pData), "!Hop_IsComplement((Hop_Obj_t *)pObj.pData)");
+func truthGraph(truth []uint32, vars int) *aig.Graph {
+	g := aig.NewGraph()
+	inputs := make([]aig.Edge, vars)
+	for i := range inputs {
+		inputs[i] = g.NewInput()
+	}
+	g.AddOutput(composeTruth(g, truth, inputs))
+	return g
+}
+func composeTruth(g *aig.Graph, truth []uint32, inputs []aig.Edge) aig.Edge {
+	var rec func(int, int) aig.Edge
+	rec = func(level, base int) aig.Edge {
+		if level == 0 {
+			if truthBit(truth, base) {
+				return g.Const1()
+			}
+			return g.Const0()
+		}
+		lo := rec(level-1, base)
+		hi := rec(level-1, base|(1<<uint(level-1)))
+		return g.Mux(inputs[level-1], hi, lo)
+	}
+	return rec(len(inputs), 0)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG from Aig_Man_t into Hop_Obj_t.]
-
-  Description [Assumes that Aig_Man_t has exactly one primary outputs.
-  Returns the pointer to the root node (Hop_Obj_t) in Hop_Man_t.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MfsConvertAigToHop(pMan *Aig_Man_t, pHop *Hop_Man_t) *Hop_Obj_t {
-    var pRoot, pObj *Aig_Obj_t;
-    var i int32;
-    assert(Aig_ManCoNum(pMan) == 1, "Aig_ManCoNum(pMan) == 1");
-    pRoot = Aig_ManCo( pMan, 0 );
-    // check the case of a constant
-    if Aig_ObjIsConst1( Aig_ObjFanin0(pRoot) ) {
-        return Hop_NotCond( Hop_ManConst1(pHop), Aig_ObjFaninC0(pRoot) ); }
-    // set the PI mapping
-    Aig_ManCleanData( pMan );
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pMan.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {
-        pObj.pData = Hop_IthVar( pHop, i );
-    }
-    // construct the AIG
-    Abc_MfsConvertAigToHop_rec( Aig_ObjFanin0(pRoot), pHop );
-    return Hop_NotCond( (Hop_Obj_t *)Aig_ObjFanin0(pRoot).pData, Aig_ObjFaninC0(pRoot) );
+// Abc_NtkConstructAig constructs both original and target-flipped window copies.
+// Output zero is observability; external care clauses follow, then the target
+// and divisors (resubstitution) or target fanins (care enumeration).
+func Abc_NtkConstructAig(p *Mfs_Man_t, target int) *aig.Graph {
+	g := aig.NewGraph()
+	base, flipped := map[int]aig.Edge{0: g.Const1()}, map[int]aig.Edge{0: g.Const1()}
+	for _, id := range p.Support {
+		e := g.NewInput()
+		base[id] = e
+		flipped[id] = e
+	}
+	var rec func(int, bool) aig.Edge
+	rec = func(id int, flip bool) aig.Edge {
+		memo := base
+		if flip {
+			memo = flipped
+		}
+		if e, ok := memo[id]; ok {
+			return e
+		}
+		v := p.Network.Nodes[id]
+		args := make([]aig.Edge, len(v.Fanins))
+		for i, f := range v.Fanins {
+			args[i] = rec(f, flip)
+		}
+		e := composeTruth(g, v.Truth, args)
+		if flip && id == target {
+			e = e.Not()
+		}
+		memo[id] = e
+		return e
+	}
+	observe := g.Const0()
+	for _, id := range p.Roots {
+		observe = g.OR(observe, g.XOR(rec(id, false), rec(id, true)))
+	}
+	g.AddOutput(observe)
+	p.CareOutputs = 0
+	if care := p.Network.Care; care != nil {
+		pi := map[int]aig.Edge{}
+		positions := map[int]int{}
+		for i, id := range p.Network.Inputs {
+			positions[id] = i
+		}
+		cis := care.Inputs()
+		for _, id := range p.Support {
+			pi[cis[positions[id]].NodeID()] = base[id]
+		}
+		memo := map[int]aig.Edge{0: g.Const1()}
+		available := map[int]bool{0: true}
+		var copyCare func(aig.Edge) (aig.Edge, bool)
+		copyCare = func(e aig.Edge) (aig.Edge, bool) {
+			id := e.NodeID()
+			if x, ok := pi[id]; ok {
+				if e.Complemented() {
+					x = x.Not()
+				}
+				return x, true
+			}
+			if x, ok := memo[id]; ok {
+				if e.Complemented() {
+					x = x.Not()
+				}
+				return x, available[id]
+			}
+			n := care.Node(e)
+			if n.Kind == aig.Input {
+				return aig.InvalidEdge, false
+			}
+			x, ok := copyCare(n.Fanins[0])
+			if !ok {
+				return aig.InvalidEdge, false
+			}
+			v := x
+			if n.Kind == aig.And || n.Kind == aig.ExclusiveOr {
+				y, ok := copyCare(n.Fanins[1])
+				if !ok {
+					return aig.InvalidEdge, false
+				}
+				if n.Kind == aig.And {
+					v = g.AND(x, y)
+				} else {
+					v = g.XOR(x, y)
+				}
+			}
+			memo[id] = v
+			available[id] = true
+			if e.Complemented() {
+				v = v.Not()
+			}
+			return v, true
+		}
+		for _, co := range care.Outputs() {
+			if e, ok := copyCare(co); ok {
+				g.AddOutput(e)
+				p.CareOutputs++
+			}
+		}
+	}
+	if p.Params.Resub {
+		g.AddOutput(rec(target, false))
+		for _, id := range p.Divisors {
+			g.AddOutput(rec(id, false))
+		}
+	} else {
+		for _, id := range p.Network.Nodes[target].Fanins {
+			g.AddOutput(rec(id, false))
+		}
+	}
+	p.Window, p.Values = g, base
+	return g
 }
 
-// should be called as follows:   pNodeNew->pData = Abc_MfsConvertAigToHop( pAigManInterpol, pNodeNew->pNtk->pManFunc );
-
-/**Function*************************************************************
-
-  Synopsis    [Construct BDDs and mark AIG nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MfsConvertHopToAig_rec(pObj *Hop_Obj_t, pMan *Aig_Man_t) {
-    assert(!Hop_IsComplement(pObj), "!Hop_IsComplement(pObj)");
-    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {
-        return; }
-    Abc_MfsConvertHopToAig_rec( Hop_ObjFanin0(pObj), pMan ); 
-    Abc_MfsConvertHopToAig_rec( Hop_ObjFanin1(pObj), pMan );
-    pObj.pData = Aig_And( pMan, (Aig_Obj_t *)Hop_ObjChild0Copy(pObj), (Aig_Obj_t *)Hop_ObjChild1Copy(pObj) ); 
-    assert(!Hop_ObjIsMarkA(pObj), "!Hop_ObjIsMarkA(pObj)"); // loop detection
-    Hop_ObjSetMarkA( pObj );
+// ToAIG preserves the LUT interface and register partition.
+func (n *Network) ToAIG() (*aig.Graph, error) {
+	order, err := n.topology()
+	if err != nil {
+		return nil, err
+	}
+	g := aig.NewGraph()
+	g.Name, g.Spec = n.Name, n.Spec
+	values := map[int]aig.Edge{0: g.Const1()}
+	for _, id := range n.Inputs {
+		values[id] = g.NewInput()
+	}
+	for _, id := range order {
+		v := n.Nodes[id]
+		if id == 0 || v.Input {
+			continue
+		}
+		args := make([]aig.Edge, len(v.Fanins))
+		for i, f := range v.Fanins {
+			args[i] = values[f]
+		}
+		values[id] = composeTruth(g, v.Truth, args)
+	}
+	for _, e := range n.Outputs {
+		x := values[e.ID()]
+		if e&1 != 0 {
+			x = x.Not()
+		}
+		g.AddOutput(x)
+	}
+	aig.Aig_ManSetRegNum(g, int32(n.Registers))
+	return g, nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts the network from AIG to BDD representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MfsConvertHopToAig(pObjOld *Abc_Obj_t, pMan *Aig_Man_t) {
-    var pHopMan *Hop_Man_t;
-    var pRoot *Hop_Obj_t;
-    var pFanin *Abc_Obj_t;
-    var i int32;
-    // get the local AIG
-    pHopMan = (Hop_Man_t *)pObjOld.pNtk.pManFunc;
-    pRoot = (Hop_Obj_t *)pObjOld.pData;
-    // check the case of a constant
-    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {
-        pObjOld.pCopy = (Abc_Obj_t *)Aig_NotCond( Aig_ManConst1(pMan), Hop_IsComplement(pRoot) );
-        pObjOld.pNext = pObjOld.pCopy;
-        return;
-    }
-
-    // assign the fanin nodes
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObjOld)) && (((pFanin) = Abc_ObjFanin(pObjOld, i)), 1); i++  {
-        Hop_ManPi(pHopMan, i).pData = pFanin.pCopy;
-    }
-    // construct the AIG
-    Abc_MfsConvertHopToAig_rec( Hop_Regular(pRoot), pMan );
-    pObjOld.pCopy = (Abc_Obj_t *)Aig_NotCond( (Aig_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );  
-    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );
-
-    // assign the fanin nodes
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObjOld)) && (((pFanin) = Abc_ObjFanin(pObjOld, i)), 1); i++  {
-        Hop_ManPi(pHopMan, i).pData = pFanin.pNext;
-    }
-    // construct the AIG
-    Abc_MfsConvertHopToAig_rec( Hop_Regular(pRoot), pMan );
-    pObjOld.pNext = (Abc_Obj_t *)Aig_NotCond( (Aig_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );  
-    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );
+// FromAIG retains original gates as local 2-input functions and unary buffers.
+func FromAIG(g *aig.Graph) (*Network, error) {
+	if err := g.Check(); err != nil {
+		return nil, err
+	}
+	n := NewNetwork()
+	n.Name, n.Spec = g.Name, g.Spec
+	n.Registers = int(aig.Aig_ManRegNum(g))
+	mapped := map[int]int{0: 0}
+	for _, e := range g.Inputs() {
+		mapped[e.NodeID()] = n.AddInput()
+	}
+	var rec func(aig.Edge) int
+	rec = func(e aig.Edge) int {
+		if id, ok := mapped[e.NodeID()]; ok {
+			return id
+		}
+		v := g.Node(e)
+		if v.Kind == aig.Output {
+			e = v.Fanins[0]
+			id := rec(e)
+			truth := uint32(0xaaaaaaaa)
+			if e.Complemented() {
+				truth = ^truth
+			}
+			return n.AddNode([]int{id}, []uint32{truth})
+		}
+		fs := []aig.Edge{v.Fanins[0]}
+		if v.Kind == aig.And || v.Kind == aig.ExclusiveOr {
+			fs = append(fs, v.Fanins[1])
+		}
+		ids := make([]int, len(fs))
+		for i, f := range fs {
+			ids[i] = rec(f)
+		}
+		var truth uint32
+		for a := 0; a < 32; a++ {
+			x := a&1 != 0
+			if fs[0].Complemented() {
+				x = !x
+			}
+			value := x
+			if len(fs) == 2 {
+				y := a&2 != 0
+				if fs[1].Complemented() {
+					y = !y
+				}
+				if v.Kind == aig.And {
+					value = x && y
+				} else {
+					value = x != y
+				}
+			}
+			if value {
+				truth |= 1 << uint(a)
+			}
+		}
+		id := n.AddNode(ids, []uint32{truth})
+		mapped[e.NodeID()] = id
+		return id
+	}
+	// The source optimizes all internal objects, including output-unreachable
+	// logic. Preserve these cones rather than silently sweeping the adapter.
+	for _, e := range g.LiveEdges() {
+		kind := g.Node(e).Kind
+		if kind == aig.And || kind == aig.ExclusiveOr || kind == aig.Buffer {
+			rec(e)
+		}
+	}
+	for _, co := range g.Outputs() {
+		e := g.Node(co).Fanins[0]
+		id := rec(e)
+		lit := Literal(id << 1)
+		if e.Complemented() {
+			lit = lit.Not()
+		}
+		n.AddOutput(lit)
+	}
+	return n, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the care set of the node under ODCs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkConstructAig_rec(p *Mfs_Man_t, pNode *Abc_Obj_t, pMan *Aig_Man_t) *Aig_Obj_t {
-    var pRoot, pExor *Aig_Obj_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    // assign AIG nodes to the leaves
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vSupp)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {
-        pObj.pCopy = pObj.pNext = (Abc_Obj_t *)Aig_ObjCreateCi( pMan );
-    }
-    // strash intermediate nodes
-    Abc_NtkIncrementTravId( pNode.pNtk );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {
-        Abc_MfsConvertHopToAig( pObj, pMan );
-        if pObj == pNode {
-            pObj.pNext = Abc_ObjNot(pObj.pNext); }
-    }
-    // create the observability condition
-    pRoot = Aig_ManConst0(pMan);
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vRoots)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {
-        pExor = Aig_Exor( pMan, (Aig_Obj_t *)pObj.pCopy, (Aig_Obj_t *)pObj.pNext );
-        pRoot = Aig_Or( pMan, pRoot, pExor );
-    }
-    return pRoot;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Adds relevant constraints.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkConstructCare_rec(pCare *Aig_Man_t, pObj *Aig_Obj_t, pMan *Aig_Man_t) *Aig_Obj_t {
-    var pObj0, pObj1 *Aig_Obj_t;
-    if Aig_ObjIsTravIdCurrent( pCare, pObj ) {
-        return (Aig_Obj_t *)pObj.pData; }
-    Aig_ObjSetTravIdCurrent( pCare, pObj );
-    if Aig_ObjIsCi(pObj) {
-        return (Aig_Obj_t *)(pObj.pData = nil); }
-    pObj0 = Abc_NtkConstructCare_rec( pCare, Aig_ObjFanin0(pObj), pMan );
-    if pObj0 == nil {
-        return (Aig_Obj_t *)(pObj.pData = nil); }
-    pObj1 = Abc_NtkConstructCare_rec( pCare, Aig_ObjFanin1(pObj), pMan );
-    if pObj1 == nil {
-        return (Aig_Obj_t *)(pObj.pData = nil); }
-    pObj0 = Aig_NotCond( pObj0, Aig_ObjFaninC0(pObj) );
-    pObj1 = Aig_NotCond( pObj1, Aig_ObjFaninC1(pObj) );
-    return (Aig_Obj_t *)(pObj.pData = Aig_And( pMan, pObj0, pObj1 ));
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AIG for the window with constraints.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkConstructAig(p *Mfs_Man_t, pNode *Abc_Obj_t) *Aig_Man_t {
-    var pMan *Aig_Man_t;
-    var pFanin *Abc_Obj_t;
-    var pObjAig, pPi, pPo *Aig_Obj_t;
-    var vOuts *Vec_Int_t;
-    var i, k, iOut int32;
-    // start the new manager
-    pMan = Aig_ManStart( 1000 );
-    // construct the root node's AIG cone
-    pObjAig = Abc_NtkConstructAig_rec( p, pNode, pMan );
-//    assert( Aig_ManConst1(pMan) == pObjAig );
-    Aig_ObjCreateCo( pMan, pObjAig );
-    if p.pCare {
-        // mark the care set
-        Aig_ManIncrementTravId( p.pCare );
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vSupp)) && (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {
-            pPi = Aig_ManCi( p.pCare, int32((ABC_PTRUINT_T))pFanin.pData );
-            Aig_ObjSetTravIdCurrent( p.pCare, pPi );
-            pPi.pData = pFanin.pCopy;
-        }
-        // construct the constraints
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vSupp)) && (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {
-            vOuts = (Vec_Int_t *)Vec_PtrEntry( p.vSuppsInv, int32((ABC_PTRUINT_T))pFanin.pData );
-            // inlining of macro Vec_IntForEachEntry
-            for  k = 0; (k < Vec_IntSize(vOuts)) && (((iOut) = Vec_IntEntry(vOuts, k)), 1); k++  {
-                pPo = Aig_ManCo( p.pCare, iOut );
-                if Aig_ObjIsTravIdCurrent( p.pCare, pPo ) {
-                    continue; }
-                Aig_ObjSetTravIdCurrent( p.pCare, pPo );
-                if Aig_ObjFanin0(pPo) == Aig_ManConst1(p.pCare) {
-                    continue; }
-                pObjAig = Abc_NtkConstructCare_rec( p.pCare, Aig_ObjFanin0(pPo), pMan );
-                if pObjAig == nil {
-                    continue; }
-                pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );
-                Aig_ObjCreateCo( pMan, pObjAig );
-            }
-        }
-/*
-        Aig_ManForEachCo( p->pCare, pPo, i )
-        {
-//            assert( Aig_ObjFanin0(pPo) != Aig_ManConst1(p->pCare) );
-            if ( Aig_ObjFanin0(pPo) == Aig_ManConst1(p->pCare) )
-                continue;
-            pObjAig = Abc_NtkConstructCare_rec( p->pCare, Aig_ObjFanin0(pPo), pMan );
-            if ( pObjAig == NULL )
-                continue;
-            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );
-            Aig_ObjCreateCo( pMan, pObjAig );
-        }
-*/
-    }
-    if p.pPars.fResub {
-        // construct the node
-        pObjAig = (Aig_Obj_t *)pNode.pCopy;
-        Aig_ObjCreateCo( pMan, pObjAig );
-        // construct the divisors
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vDivs)) && (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vDivs, i)), 1); i++  {
-            pObjAig = (Aig_Obj_t *)pFanin.pCopy;
-            Aig_ObjCreateCo( pMan, pObjAig );
-        }
-    
-    } else {
-        // construct the fanins
-        // inlining of macro Abc_ObjForEachFanin
-        for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
-            pObjAig = (Aig_Obj_t *)pFanin.pCopy;
-            Aig_ObjCreateCo( pMan, pObjAig );
-        }
-    }
-    Aig_ManCleanup( pMan );
-    return pMan;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AIG for the window with constraints.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkAigForConstraints(p *Mfs_Man_t, pNode *Abc_Obj_t) *Aig_Man_t {
-    var pFanin *Abc_Obj_t;
-    var pMan *Aig_Man_t;
-    var pPi, pPo, pObjAig, pObjRoot *Aig_Obj_t;
-    var vOuts *Vec_Int_t;
-    var i, k, iOut int32;
-    if p.pCare == nil {
-        return nil; }
-    pMan = Aig_ManStart( 1000 );
-    // mark the care set
-    Aig_ManIncrementTravId( p.pCare );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vSupp)) && (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {
-        pPi = Aig_ManCi( p.pCare, int32((ABC_PTRUINT_T))pFanin.pData );
-        Aig_ObjSetTravIdCurrent( p.pCare, pPi );
-        pPi.pData = Aig_ObjCreateCi(pMan);
-    }
-    // construct the constraints
-    pObjRoot = Aig_ManConst1(pMan);
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vSupp)) && (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(p.vSupp, i)), 1); i++  {
-        vOuts = (Vec_Int_t *)Vec_PtrEntry( p.vSuppsInv, int32((ABC_PTRUINT_T))pFanin.pData );
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vOuts)) && (((iOut) = Vec_IntEntry(vOuts, k)), 1); k++  {
-            pPo = Aig_ManCo( p.pCare, iOut );
-            if Aig_ObjIsTravIdCurrent( p.pCare, pPo ) {
-                continue; }
-            Aig_ObjSetTravIdCurrent( p.pCare, pPo );
-            if Aig_ObjFanin0(pPo) == Aig_ManConst1(p.pCare) {
-                continue; }
-            pObjAig = Abc_NtkConstructCare_rec( p.pCare, Aig_ObjFanin0(pPo), pMan );
-            if pObjAig == nil {
-                continue; }
-            pObjAig = Aig_NotCond( pObjAig, Aig_ObjFaninC0(pPo) );
-            pObjRoot = Aig_And( pMan, pObjRoot, pObjAig );
-        }
-    }
-    Aig_ObjCreateCo( pMan, pObjRoot );
-    Aig_ManCleanup( pMan );
-    return pMan;
-}
-
-//ABC_NAMESPACE_IMPL_END
-
-//#include "proof/fra/fra.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-/**Function*************************************************************
-
-  Synopsis    [Compute the ratio of don't-cares.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkConstraintRatio(p *Mfs_Man_t, pNode *Abc_Obj_t) float64 {
-    var nSimWords int32  = 256;
-    var pMan *Aig_Man_t;
-    var pSim *Fra_Sml_t;
-    var Counter int32;
-    pMan = Abc_NtkAigForConstraints( p, pNode );
-    pSim = Fra_SmlSimulateComb( pMan, nSimWords, 0 );
-    Counter = Fra_SmlNodeCountOnes( pSim, Aig_ManCo(pMan, 0) );
-    Aig_ManStop( pMan );
-    Fra_SmlStop( pSim );
-    return 1.0 * Counter / (32 * nSimWords);
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

@@ -1,346 +1,183 @@
 package io
 
-import "fmt"
+import (
+	"fmt"
+	stdio "io"
+	"os"
+	"strings"
 
-import "os"
+	"github.com/glycerine/abcgo/base/abc"
+)
 
-/**CFile****************************************************************
-
-  FileName    [ioWriteBench.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedures to write the network in BENCH format.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: ioWriteBench.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ioAbc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static int Io_WriteBenchCheckNames( Abc_Ntk_t * pNtk );
-
-
-// static int Io_WriteBenchOne( FILE * pFile, Abc_Ntk_t * pNtk );
-
-// static int Io_WriteBenchOneNode( FILE * pFile, Abc_Obj_t * pNode );
-
-
-// static int Io_WriteBenchLutOne( FILE * pFile, Abc_Ntk_t * pNtk );
-
-// static int Io_WriteBenchLutOneNode( FILE * pFile, Abc_Obj_t * pNode, Vec_Int_t * vTruth );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the network in BENCH format.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteBench(pNtk *Abc_Ntk_t, pFileName string) int32 {
-    var pExdc *Abc_Ntk_t;
-    var pFile *os.File;
-    assert(Abc_NtkIsSopNetlist(pNtk), "Abc_NtkIsSopNetlist(pNtk)");
-    if !(Io_WriteBenchCheckNames(pNtk) != 0) {
-        fmt.Fprintf(os.Stdout, "Io_WriteBench(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \"short_names\".\n");
-        return 0;
-    }
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Fprintf(os.Stdout, "Io_WriteBench(): Cannot open the output file.\n");
-        return 0;
-    }
-    fmt.Fprintf(pFile, "# Benchmark \"%s\" written by ABC on %s\n", pNtk.pName, Extra_TimeStamp());
-    // write the network
-    Io_WriteBenchOne( pFile, pNtk );
-    // write EXDC network if it exists
-    pExdc = Abc_NtkExdc( pNtk );
-    if pExdc != nil {
-        fmt.Printf("Io_WriteBench: EXDC is not written (warning).\n"); }
-    // finalize the file
-    _ = (pFile).Close();
-    return 1;
+func WriteBench(w stdio.Writer, n *abc.Network) error {
+	if n == nil {
+		return fmt.Errorf("nil network")
+	}
+	used := map[string]bool{}
+	for _, o := range n.Objects() {
+		name := blifObjectName(o)
+		if strings.ContainsAny(name, "(),= \t\r\n") {
+			return fmt.Errorf("signal name %q cannot be represented in BENCH", name)
+		}
+		used[name] = true
+	}
+	temporary := func() string {
+		for i := 0; ; i++ {
+			name := fmt.Sprintf("__bench_%d", i)
+			if !used[name] {
+				used[name] = true
+				return name
+			}
+		}
+	}
+	var out strings.Builder
+	constants := map[bool]string{}
+	constant := func(value bool) string {
+		if signal := constants[value]; signal != "" {
+			return signal
+		}
+		signal := temporary()
+		digit := 0
+		if value {
+			digit = 1
+		}
+		fmt.Fprintf(&out, "%s = LUT 0x%d()\n", signal, digit)
+		constants[value] = signal
+		return signal
+	}
+	fmt.Fprintf(&out, "# %s\n", n.Name)
+	for _, port := range n.ObjectsOfKind(abc.ObjectPI) {
+		fmt.Fprintf(&out, "INPUT(%s)\n", blifPortName(port, true))
+	}
+	for _, port := range n.ObjectsOfKind(abc.ObjectPO) {
+		fmt.Fprintf(&out, "OUTPUT(%s)\n", blifPortName(port, false))
+	}
+	for _, box := range n.Boxes() {
+		if box.Kind != abc.ObjectLatch {
+			return fmt.Errorf("BENCH output requires flattened hierarchy")
+		}
+		fans, outs := box.Fanins(), box.Fanouts()
+		if len(fans) != 1 || len(outs) != 1 {
+			return fmt.Errorf("malformed latch")
+		}
+		input, output := blifPortNet(fans[0].Object, false), blifPortNet(outs[0], true)
+		if input == nil || output == nil {
+			return fmt.Errorf("latch has no net terminals")
+		}
+		fmt.Fprintf(&out, "%s = DFF(%s)\n", blifObjectName(output), blifObjectName(input))
+	}
+	for _, node := range n.ObjectsOfKind(abc.ObjectNode) {
+		sop, ok := node.Data.(string)
+		if !ok {
+			return fmt.Errorf("BENCH requires SOP functions")
+		}
+		outputs := node.Fanouts()
+		if len(outputs) != 1 {
+			return fmt.Errorf("SOP node must drive one net")
+		}
+		output := blifObjectName(outputs[0])
+		inputs := node.Fanins()
+		var cubes []string
+		polarity := ""
+		for _, line := range strings.Split(strings.TrimSpace(sop), "\n") {
+			if strings.TrimSpace(line) == "" {
+				continue
+			}
+			fields := strings.Fields(line)
+			pattern, value := "", ""
+			if len(fields) == 1 {
+				value = fields[0]
+			} else if len(fields) == 2 {
+				pattern, value = fields[0], fields[1]
+			} else {
+				return fmt.Errorf("invalid SOP row")
+			}
+			if value != "0" && value != "1" {
+				return fmt.Errorf("invalid SOP output phase")
+			}
+			if polarity != "" && polarity != value {
+				return fmt.Errorf("mixed SOP phases")
+			}
+			polarity = value
+			var literals []string
+			if pattern != "" && len(pattern) != len(inputs) {
+				return fmt.Errorf("SOP width mismatch")
+			}
+			for i, c := range pattern {
+				if c == '-' {
+					continue
+				}
+				if c != '0' && c != '1' {
+					return fmt.Errorf("invalid SOP literal")
+				}
+				signal := blifObjectName(inputs[i].Object)
+				inverted := inputs[i].Complement != (c == '0')
+				if inverted {
+					tmp := temporary()
+					fmt.Fprintf(&out, "%s = NOT(%s)\n", tmp, signal)
+					signal = tmp
+				}
+				literals = append(literals, signal)
+			}
+			if len(literals) == 0 {
+				cubes = append(cubes, constant(true))
+			} else if len(literals) == 1 {
+				cubes = append(cubes, literals[0])
+			} else {
+				tmp := temporary()
+				fmt.Fprintf(&out, "%s = AND(%s)\n", tmp, strings.Join(literals, ", "))
+				cubes = append(cubes, tmp)
+			}
+		}
+		if len(cubes) == 0 {
+			fmt.Fprintf(&out, "%s = BUFF(%s)\n", output, constant(false))
+		} else if len(cubes) == 1 {
+			gate := "BUFF"
+			if polarity == "0" {
+				gate = "NOT"
+			}
+			fmt.Fprintf(&out, "%s = %s(%s)\n", output, gate, cubes[0])
+		} else {
+			gate := "OR"
+			if polarity == "0" {
+				gate = "NOR"
+			}
+			fmt.Fprintf(&out, "%s = %s(%s)\n", output, gate, strings.Join(cubes, ", "))
+		}
+	}
+	return writeText(w, out.String())
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the network in BENCH format.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteBenchOne(pFile *os.File, pNtk *Abc_Ntk_t) int32 {
-    var pProgress *ProgressBar;
-    var pNode *Abc_Obj_t;
-    var i int32;
-
-    // write the PIs/POs/latches
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        fmt.Fprintf(pFile, "INPUT(%s)\n", Abc_ObjName(Abc_ObjFanout0(pNode)));
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        fmt.Fprintf(pFile, "OUTPUT(%s)\n", Abc_ObjName(Abc_ObjFanin0(pNode)));
-    }
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {
-        fmt.Fprintf(pFile, "%-11s = DFF(%s)\n", Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))), Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode)))); }
-    }
-
-    // write internal nodes
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        Io_WriteBenchOneNode( pFile, pNode );
-    }
-    }
-    Extra_ProgressBarStop( pProgress );
-    return 1;
+func WriteBenchFile(n *abc.Network, filename string) error {
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	err = WriteBench(file, n)
+	closeErr := file.Close()
+	if err != nil {
+		return err
+	}
+	return closeErr
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the network in BENCH format.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteBenchOneNode(pFile *os.File, pNode *Abc_Obj_t) int32 {
-    var nFanins int32;
-
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    nFanins = Abc_ObjFaninNum(pNode);
-    if nFanins == 0 {   // write the constant 1 node
-        assert(Abc_NodeIsConst1(pNode), "Abc_NodeIsConst1(pNode)");
-        fmt.Fprintf(pFile, "%-11s", Abc_ObjName(Abc_ObjFanout0(pNode)));
-        fmt.Fprintf(pFile, " = vdd\n");
-    
-    } else if nFanins == 1 {   // write the interver/buffer
-        if Abc_NodeIsBuf(pNode) {
-            fmt.Fprintf(pFile, "%-11s = BUFF(", Abc_ObjName(Abc_ObjFanout0(pNode)));
-            fmt.Fprintf(pFile, "%s)\n", Abc_ObjName(Abc_ObjFanin0(pNode)));
-        
-        } else {
-            fmt.Fprintf(pFile, "%-11s = NOT(", Abc_ObjName(Abc_ObjFanout0(pNode)));
-            fmt.Fprintf(pFile, "%s)\n", Abc_ObjName(Abc_ObjFanin0(pNode)));
-        }
-    
-    } else {   // write the AND gate
-        fmt.Fprintf(pFile, "%-11s", Abc_ObjName(Abc_ObjFanout0(pNode)));
-        fmt.Fprintf(pFile, " = AND(%s, ", Abc_ObjName(Abc_ObjFanin0(pNode)));
-        fmt.Fprintf(pFile, "%s)\n", Abc_ObjName(Abc_ObjFanin1(pNode)));
-    }
-    return 1;
+func Io_WriteBench(n *abc.Network, filename string) int32 {
+	if err := WriteBenchFile(n, filename); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return 0
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the network in BENCH format with LUTs and DFFRSE.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteBenchLut(pNtk *Abc_Ntk_t, pFileName string) int32 {
-    var pExdc *Abc_Ntk_t;
-    var pFile *os.File;
-    assert(Abc_NtkIsAigNetlist(pNtk), "Abc_NtkIsAigNetlist(pNtk)");
-    if !(Io_WriteBenchCheckNames(pNtk) != 0) {
-        fmt.Fprintf(os.Stdout, "Io_WriteBenchLut(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \"short_names\".\n");
-        return 0;
-    }
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Fprintf(os.Stdout, "Io_WriteBench(): Cannot open the output file.\n");
-        return 0;
-    }
-    fmt.Fprintf(pFile, "# Benchmark \"%s\" written by ABC on %s\n", pNtk.pName, Extra_TimeStamp());
-    // write the network
-    Io_WriteBenchLutOne( pFile, pNtk );
-    // write EXDC network if it exists
-    pExdc = Abc_NtkExdc( pNtk );
-    if pExdc != nil {
-        fmt.Printf("Io_WriteBench: EXDC is not written (warning).\n"); }
-    // finalize the file
-    _ = (pFile).Close();
-    return 1;
+func Io_WriteBenchOne(w stdio.Writer, n *abc.Network) int32 {
+	if err := WriteBench(w, n); err != nil {
+		return 0
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the network in BENCH format.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteBenchLutOne(pFile *os.File, pNtk *Abc_Ntk_t) int32 {
-    var pProgress *ProgressBar;
-    var pNode *Abc_Obj_t;
-    var vMemory *Vec_Int_t;
-    var i int32;
-
-    // write the PIs/POs/latches
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        fmt.Fprintf(pFile, "INPUT(%s)\n", Abc_ObjName(Abc_ObjFanout0(pNode)));
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        fmt.Fprintf(pFile, "OUTPUT(%s)\n", Abc_ObjName(Abc_ObjFanin0(pNode)));
-    }
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {
-        fmt.Fprintf(pFile, "%-11s = DFFRSE( %s, gnd, gnd, gnd, gnd )\n", Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pNode))), Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pNode)))); }
-    }
-//Abc_NtkLevel(pNtk);
-    // write internal nodes
-    vMemory = Vec_IntAlloc( 10000 );
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        Io_WriteBenchLutOneNode( pFile, pNode, vMemory );
-    }
-    }
-    Extra_ProgressBarStop( pProgress );
-    Vec_IntFree( vMemory );
-    return 1;
+func Io_WriteBenchCheckNames(n *abc.Network) int32 {
+	for _, o := range n.Objects() {
+		if strings.ContainsAny(blifObjectName(o), "(),= \t\r\n") {
+			return 0
+		}
+	}
+	return 1
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the network in BENCH format.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteBenchLutOneNode(pFile *os.File, pNode *Abc_Obj_t, vTruth *Vec_Int_t) int32 {
-    var pFanin *Abc_Obj_t;
-    var pTruth *uint32;
-    var i, nFanins int32;
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    nFanins = Abc_ObjFaninNum(pNode);
-    assert(nFanins <= 8, "nFanins <= 8");
-    // compute the truth table
-    pTruth = Hop_ManConvertAigToTruth( (Hop_Man_t *)pNode.pNtk.pManFunc, Hop_Regular((Hop_Obj_t *)pNode.pData), nFanins, vTruth, 0 );
-    if Hop_IsComplement((Hop_Obj_t *)pNode.pData) {
-        Extra_TruthNot( pTruth, pTruth, nFanins ); }
-    // consider simple cases
-    if Extra_TruthIsConst0(pTruth, nFanins) {
-        fmt.Fprintf(pFile, "%-11s = gnd\n", Abc_ObjName(Abc_ObjFanout0(pNode)));
-        return 1;
-    }
-    if Extra_TruthIsConst1(pTruth, nFanins) {
-        fmt.Fprintf(pFile, "%-11s = vdd\n", Abc_ObjName(Abc_ObjFanout0(pNode)));
-        return 1;
-    }
-    if nFanins == 1 {
-        fmt.Fprintf(pFile, "%-11s = LUT 0x%d ( %s )\n", Abc_ObjName(Abc_ObjFanout0(pNode)), Abc_NodeIsBuf(pNode)? 2 : 1, Abc_ObjName(Abc_ObjFanin0(pNode)));
-        return 1;
-    }
-    // write it in the hexadecimal form
-    fmt.Fprintf(pFile, "%-11s = LUT 0x", Abc_ObjName(Abc_ObjFanout0(pNode)));
-    Extra_PrintHexadecimal( pFile, pTruth, nFanins );
-/*
-    {
-extern void Kit_DsdTest( unsigned * pTruth, int nVars );
-Abc_ObjForEachFanin( pNode, pFanin, i )
-printf( "%c%d ", 'a'+i, Abc_ObjFanin0(pFanin)->Level );
-printf( "\n" );
-Kit_DsdTest( pTruth, nFanins );
-    }
-    if ( pNode->Id % 1000 == 0 )
-    {
-        int x = 0;
-    }
-*/
-    // write the fanins
-    fmt.Fprintf(pFile, " (");
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
-        fmt.Fprintf(pFile, " %s%s", Abc_ObjName(pFanin), ((i==nFanins-1)? "" : ","));
-    }
-    fmt.Fprintf(pFile, " )\n");
-    return 1;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the names cannot be written into the bench file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteBenchCheckNames(pNtk *Abc_Ntk_t) int32 {
-    var pObj *Abc_Obj_t;
-    var pName string;
-    var i int32;
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {
-        for  pName = Nm_ManFindNameById(pNtk.pManName, i); pName && *pName; pName++  {
-            if *pName == '(' || *pName == ')' {
-                return 0; }
-        } }
-    }
-    return 1;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func init() { RegisterFormat(IO_FILE_BENCH, nil, WriteBenchFile) }

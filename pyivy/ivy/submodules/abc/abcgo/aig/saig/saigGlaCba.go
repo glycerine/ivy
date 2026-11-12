@@ -3,840 +3,739 @@ package saig
 import (
 	"fmt"
 	"time"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
-/**CFile****************************************************************
-
-  FileName    [saigGlaCba.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Sequential AIG package.]
-
-  Synopsis    [Gate level abstraction.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: saigGlaCba.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "saig.h"
-//#include "sat/bsat/satSolver.h"
-//#include "sat/cnf/cnf.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-   
+// Aig_Gla1Man_t owns the incremental SAT state used by gate-level abstraction.
 type Aig_Gla1Man_t struct {
-    // user data
-    pAig     *Aig_Man_t;
-    nConfLimit            int32;
-    nFramesMax            int32;
-    fVerbose            int32;
-    // unrolling
-    nFrames            int32;
-    vObj2Vec     *Vec_Int_t;   // maps obj ID into its vec ID
-    vVec2Var     *Vec_Int_t;   // maps vec ID into its sat Var (nFrames per vec ID)
-    vVar2Inf     *Vec_Int_t;   // maps sat Var into its frame and obj ID
-    // abstraction
-    vAssigned     *Vec_Int_t;  // collects objects whose SAT variables have been created
-    vIncluded     *Vec_Int_t;  // maps obj ID into its status (0=unused; 1=included in abstraction)
-    // components
-    vPis     *Vec_Int_t;       // primary inputs
-    vPPis     *Vec_Int_t;      // pseudo primary inputs
-    vFlops     *Vec_Int_t;     // flops
-    vNodes     *Vec_Int_t;     // nodes
-    // CNF computation
-    vLeaves     *Vec_Ptr_t;
-    vVolume     *Vec_Ptr_t;
-    vCover     *Vec_Int_t;
-    vObj2Cnf     *Vec_Ptr_t;
-    vLits     *Vec_Int_t;
-    // SAT solver
-    pSat    *sat_solver;
-    // statistics
-    timeSat        int64;
-    timeRef        int64;
-    timeTotal        int64;
+	pAig       *aig.Graph
+	nConfLimit int32
+	nFramesMax int32
+	fVerbose   int32
+	nFrames    int32
+	vIncluded  []int32
+	pSat       *bsat.Solver
+	lastFrames *aig.Graph
+	lastCNF    *aigCNF
+	lastFrame  int32
+	startedAt  time.Time
+	objToVec   []int32
+	vecToVar   [][]int32
+	varToInfo  [][2]int32
+	assigned   []bool
+	addedFrame [][]bool
+	vPis       []int
+	vPPis      []int
+	vFlops     []int
+	vNodes     []int
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Adds constant to the solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1AddConst(pSat *sat_solver, iVar int32, fCompl int32) int32 {
-    var Lit lit  = toLitCond( iVar, fCompl );
-    if !sat_solver_addclause( pSat, &Lit, &Lit + 1 ) {
-        return 0; }
-    return 1;
+func Aig_Gla1AddConst(solver *bsat.Solver, variable, complement int32) int32 {
+	lit := bsat.Positive(variable)
+	if complement != 0 {
+		lit ^= 1
+	}
+	if solver.AddClause(lit) {
+		return 1
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds buffer to the solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1AddBuffer(pSat *sat_solver, iVar0 int32, iVar1 int32, fCompl int32) int32 {
-    var Lits [2]lit;
-
-    Lits[0] = toLitCond( iVar0, 0 );
-    Lits[1] = toLitCond( iVar1, !fCompl );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVar0, 1 );
-    Lits[1] = toLitCond( iVar1, fCompl );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    return 1;
+func Aig_Gla1AddBuffer(solver *bsat.Solver, v0, v1, complement int32) int32 {
+	x, y := bsat.Positive(v0), bsat.Positive(v1)
+	if complement != 0 {
+		y ^= 1
+	}
+	if !solver.AddClause(x^1, y) || !solver.AddClause(x, y^1) {
+		return 0
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds buffer to the solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1AddNode(pSat *sat_solver, iVar int32, iVar0 int32, iVar1 int32, fCompl0 int32, fCompl1 int32) int32 {
-    var Lits [3]lit;
-
-    Lits[0] = toLitCond( iVar, 1 );
-    Lits[1] = toLitCond( iVar0, fCompl0 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVar, 1 );
-    Lits[1] = toLitCond( iVar1, fCompl1 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVar, 0 );
-    Lits[1] = toLitCond( iVar0, !fCompl0 );
-    Lits[2] = toLitCond( iVar1, !fCompl1 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 3 ) {
-        return 0; }
-
-    return 1;
+func Aig_Gla1AddNode(solver *bsat.Solver, result, v0, v1, c0, c1 int32) int32 {
+	z, a, b := bsat.Positive(result), bsat.Positive(v0), bsat.Positive(v1)
+	if c0 != 0 {
+		a ^= 1
+	}
+	if c1 != 0 {
+		b ^= 1
+	}
+	if !solver.AddClause(z^1, a) || !solver.AddClause(z^1, b) || !solver.AddClause(z, a^1, b^1) {
+		return 0
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives abstraction components (PIs, PPIs, flops, nodes).]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1CollectAbstr(p *Aig_Gla1Man_t) {
-    var pObj *Aig_Obj_t;
-    var i, Entry int32;
-/*
-    // make sure every neighbor of included objects is assigned a variable
-    Vec_IntForEachEntry( p->vIncluded, Entry, i )
-    {
-        if ( Entry == 0 )
-            continue;
-        assert( Entry == 1 );
-        pObj = Aig_ManObj( p->pAig, i );
-        if ( Vec_IntFind( p->vAssigned, Aig_ObjId(pObj) ) == -1 )
-            printf( "Aig_Gla1CollectAbstr(): Object not found\n" );
-        if ( Aig_ObjIsNode(pObj) )
-        {
-            if ( Vec_IntFind( p->vAssigned, Aig_ObjFaninId0(pObj) ) == -1 )
-                printf( "Aig_Gla1CollectAbstr(): Node's fanin is not found\n" );
-            if ( Vec_IntFind( p->vAssigned, Aig_ObjFaninId1(pObj) ) == -1 )
-                printf( "Aig_Gla1CollectAbstr(): Node's fanin is not found\n" );
-        }
-        else if ( Saig_ObjIsLo(p->pAig, pObj) ) 
-        {
-            Aig_Obj_t * pObjLi;
-            pObjLi = Saig_ObjLoToLi(p->pAig, pObj);
-            if ( Vec_IntFind( p->vAssigned, Aig_ObjFaninId0(pObjLi) ) == -1 )
-                printf( "Aig_Gla1CollectAbstr(): Flop's fanin is not found\n" );
-        }
-        else assert( Aig_ObjIsConst1(pObj) );
-    }
-*/
-    Vec_IntClear( p.vPis );
-    Vec_IntClear( p.vPPis );
-    Vec_IntClear( p.vFlops );
-    Vec_IntClear( p.vNodes );
-    // inlining of macro Vec_IntForEachEntryReverse
-    for  i = Vec_IntSize(p.vAssigned) - 1; (i >= 0) && (((Entry) = Vec_IntEntry(p.vAssigned, i)), 1); i--  {
-        pObj = Aig_ManObj( p.pAig, Entry );
-        if Saig_ObjIsPi(p.pAig, pObj) {
-            Vec_IntPush( p.vPis, Aig_ObjId(pObj) );
-        } else if !Vec_IntEntry(p.vIncluded, Aig_ObjId(pObj)) {
-            Vec_IntPush( p.vPPis, Aig_ObjId(pObj) );
-        } else if Aig_ObjIsNode(pObj) {
-            Vec_IntPush( p.vNodes, Aig_ObjId(pObj) );
-        } else if Saig_ObjIsLo(p.pAig, pObj) {
-            Vec_IntPush( p.vFlops, Aig_ObjId(pObj) );
-        } else { assert(Aig_ObjIsConst1(pObj), "Aig_ObjIsConst1(pObj)"); }
-    }
+func Aig_Gla1ManStart(src *aig.Graph, oldClasses *vec.Vec_Int_t, naiveCNF int32) *Aig_Gla1Man_t {
+	if src == nil {
+		return nil
+	}
+	included := make([]int32, len(src.Nodes()))
+	if oldClasses != nil {
+		limit := min(len(included), vec.Vec_IntSize(oldClasses))
+		for i := 0; i < limit; i++ {
+			included[i] = vec.Vec_IntEntry(oldClasses, i)
+		}
+	}
+	if len(included) > 0 {
+		included[0] = 1
+	}
+	solver := bsat.NewSolver()
+	solver.NewVariable() // SAT variable zero is reserved as the unallocated marker.
+	return &Aig_Gla1Man_t{pAig: src, nFrames: 32, vIncluded: included, pSat: solver, startedAt: time.Now()}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager recursively.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1DeriveAbs_rec(pNew *Aig_Man_t, pObj *Aig_Obj_t) {
-    if pObj.pData {
-        return; }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Aig_Gla1DeriveAbs_rec( pNew, Aig_ObjFanin0(pObj) );
-    Aig_Gla1DeriveAbs_rec( pNew, Aig_ObjFanin1(pObj) );
-    pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
+func Aig_Gla1ManStop(manager *Aig_Gla1Man_t) {
+	if manager == nil {
+		return
+	}
+	manager.pSat = nil
+	manager.lastFrames = nil
+	manager.lastCNF = nil
+	manager.vIncluded = nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives abstraction.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1DeriveAbs(p *Aig_Gla1Man_t) *Aig_Man_t { 
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var i, RetValue int32;
-    assert(Saig_ManPoNum(p.pAig) == 1, "Saig_ManPoNum(p.pAig) == 1");
-    // start the new manager
-    pNew = Aig_ManStart( 5000 );
-    pNew.pName = Abc_UtilStrsav( p.pAig.pName );
-    // create constant
-    Aig_ManCleanData( p.pAig );
-    Aig_ManConst1(p.pAig).pData = Aig_ManConst1(pNew);
-    // create PIs
-    // inlining of macro Aig_ManForEachObjVec
-    for  i = 0; i < Vec_IntSize(p.vPis) && (((pObj) = Aig_ManObj(p.pAig, Vec_IntEntry(p.vPis,i))), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi(pNew);
-    }
-    // create additional PIs
-    // inlining of macro Aig_ManForEachObjVec
-    for  i = 0; i < Vec_IntSize(p.vPPis) && (((pObj) = Aig_ManObj(p.pAig, Vec_IntEntry(p.vPPis,i))), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi(pNew);
-    }
-    // create ROs
-    // inlining of macro Aig_ManForEachObjVec
-    for  i = 0; i < Vec_IntSize(p.vFlops) && (((pObj) = Aig_ManObj(p.pAig, Vec_IntEntry(p.vFlops,i))), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi(pNew);
-    }
-    // create internal nodes
-    // inlining of macro Aig_ManForEachObjVec
-    for  i = 0; i < Vec_IntSize(p.vNodes) && (((pObj) = Aig_ManObj(p.pAig, Vec_IntEntry(p.vNodes,i))), 1); i++  {
-//        pObj->pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-        Aig_Gla1DeriveAbs_rec( pNew, pObj );
-    }
-    // create PO
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    // create RIs
-    // inlining of macro Aig_ManForEachObjVec
-    for  i = 0; i < Vec_IntSize(p.vFlops) && (((pObj) = Aig_ManObj(p.pAig, Vec_IntEntry(p.vFlops,i))), 1); i++  {
-        assert(Saig_ObjIsLo(p.pAig, pObj), "Saig_ObjIsLo(p.pAig, pObj)");
-        pObj = Saig_ObjLoToLi( p.pAig, pObj );
-        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    Aig_ManSetRegNum( pNew, Vec_IntSize(p.vFlops) );
-    // clean up
-    RetValue = Aig_ManCleanup( pNew );
-    if RetValue > 0 {
-        fmt.Printf("Aig_Gla1DeriveAbs(): Internal error! Object count mismatch.\n"); }
-    assert(RetValue == 0, "RetValue == 0");
-    return pNew;
+func Aig_Gla1CollectAbstr(manager *Aig_Gla1Man_t) {
+	if manager == nil || manager.pAig == nil {
+		return
+	}
+	if len(manager.vIncluded) < len(manager.pAig.Nodes()) {
+		manager.vIncluded = append(manager.vIncluded, make([]int32, len(manager.pAig.Nodes())-len(manager.vIncluded))...)
+	}
+	manager.vPis, manager.vPPis, manager.vFlops, manager.vNodes = nil, nil, nil, nil
+	for id, assigned := range manager.assigned {
+		if !assigned || !manager.pAig.ValidEdge(aig.Edge(id)<<1) {
+			continue
+		}
+		object := aig.Edge(id) << 1
+		switch {
+		case Saig_ObjIsPi(manager.pAig, object):
+			manager.vPis = append(manager.vPis, id)
+		case manager.vIncluded[id] == 0:
+			manager.vPPis = append(manager.vPPis, id)
+		case aig.Aig_ObjIsNode(manager.pAig, object):
+			manager.vNodes = append(manager.vNodes, id)
+		case Saig_ObjIsLo(manager.pAig, object):
+			manager.vFlops = append(manager.vFlops, id)
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Finds existing SAT variable or creates a new one.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1FetchVecId(p *Aig_Gla1Man_t, pObj *Aig_Obj_t) int32 {
-    var i, iVecId int32;
-    iVecId = Vec_IntEntry( p.vObj2Vec, Aig_ObjId(pObj) );
-    if iVecId == 0 {
-        iVecId = Vec_IntSize( p.vVec2Var ) / p.nFrames;
-        for  i = 0; i < p.nFrames; i++  {
-            Vec_IntPush( p.vVec2Var, 0 );
-        }
-        Vec_IntWriteEntry( p.vObj2Vec, Aig_ObjId(pObj), iVecId );
-        Vec_IntPushOrderReverse( p.vAssigned, Aig_ObjId(pObj) );
-    }
-    return iVecId;
+func Aig_Gla1DeriveAbs(manager *Aig_Gla1Man_t) *aig.Graph {
+	if manager == nil || manager.pAig == nil {
+		return nil
+	}
+	Aig_Gla1CollectAbstr(manager)
+	src := manager.pAig
+	dst := aig.NewGraph()
+	dst.Name, dst.Spec = src.Name, src.Spec
+	objects := src.Nodes()
+	mapped := make([]aig.Edge, len(objects))
+	known := make([]bool, len(objects))
+	mapped[0], known[0] = dst.Const1(), true
+	for _, id := range manager.vPis {
+		e := dst.NewInput()
+		mapped[id], known[id] = e, true
+	}
+	for _, id := range manager.vPPis {
+		e := dst.NewInput()
+		mapped[id], known[id] = e, true
+	}
+	for _, id := range manager.vFlops {
+		e := dst.NewInput()
+		mapped[id], known[id] = e, true
+	}
+	var copyEdge func(aig.Edge) aig.Edge
+	copyEdge = func(edge aig.Edge) aig.Edge {
+		id := edge.NodeID()
+		if id < 0 || id >= len(objects) || !src.ValidEdge(edge) {
+			panic("saig: invalid edge in gate abstraction")
+		}
+		if !known[id] {
+			node := objects[id]
+			switch node.Kind {
+			case aig.And:
+				mapped[id] = dst.AND(copyEdge(node.Fanins[0]), copyEdge(node.Fanins[1]))
+			case aig.ExclusiveOr:
+				mapped[id] = dst.NewXor(copyEdge(node.Fanins[0]), copyEdge(node.Fanins[1]))
+			case aig.Buffer, aig.Output:
+				mapped[id] = copyEdge(node.Fanins[0])
+			default:
+				panic("saig: abstraction references an unmapped CI")
+			}
+			known[id] = true
+		}
+		result := mapped[id]
+		if edge.Complemented() {
+			result = result.Not()
+		}
+		return result
+	}
+	outputs := src.Outputs()
+	poCount := len(outputs) - int(aig.Aig_ManRegNum(src))
+	for _, output := range outputs[:poCount] {
+		dst.AddOutput(copyEdge(aig.Aig_ObjChild0(src, output)))
+	}
+	for _, id := range manager.vFlops {
+		li := Saig_ManLi(src, int32(Saig_ObjRegId(src, aig.Edge(id)<<1)))
+		dst.AddOutput(copyEdge(aig.Aig_ObjChild0(src, li)))
+	}
+	aig.Aig_ManSetRegNum(dst, int32(len(manager.vFlops)))
+	aig.Aig_ManSetConstrNum(dst, aig.Aig_ManConstrNum(src))
+	return dst
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Finds existing SAT variable or creates a new one.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1FetchVar(p *Aig_Gla1Man_t, pObj *Aig_Obj_t, k int32) int32 {
-    var iVecId, iSatVar int32;
-    assert(k < p.nFrames, "k < p.nFrames");
-    iVecId  = Aig_Gla1FetchVecId( p, pObj );
-    iSatVar = Vec_IntEntry( p.vVec2Var, iVecId * p.nFrames + k );
-    if iSatVar == 0 {
-        iSatVar = Vec_IntSize( p.vVar2Inf ) / 2;
-        Vec_IntPush( p.vVar2Inf, Aig_ObjId(pObj) );
-        Vec_IntPush( p.vVar2Inf, k );
-        Vec_IntWriteEntry( p.vVec2Var, iVecId * p.nFrames + k, iSatVar );
-        sat_solver_setnvars( p.pSat, iSatVar + 1 );
-    }
-    return iSatVar;
+// Aig_Gla1FetchVecId assigns one time-frame vector to an object ID.
+func Aig_Gla1FetchVecId(manager *Aig_Gla1Man_t, object aig.Edge) int32 {
+	if manager == nil || manager.pAig == nil || !manager.pAig.ValidEdge(object) {
+		return -1
+	}
+	if manager.objToVec == nil {
+		manager.objToVec = make([]int32, len(manager.pAig.Nodes()))
+		manager.assigned = make([]bool, len(manager.pAig.Nodes()))
+		manager.addedFrame = make([][]bool, len(manager.pAig.Nodes()))
+	}
+	id := object.NodeID()
+	if manager.objToVec[id] == 0 {
+		manager.objToVec[id] = int32(len(manager.vecToVar)) + 1
+		manager.vecToVar = append(manager.vecToVar, make([]int32, manager.nFrames))
+	}
+	manager.assigned[id] = true
+	return manager.objToVec[id]
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds CNF for the given object in the given frame.]
-
-  Description [Returns 0, if the solver becames UNSAT.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1ObjAddToSolver(p *Aig_Gla1Man_t, pObj *Aig_Obj_t, k int32) int32 {
-    if k == p.nFrames {
-        var i int32;
-        var j int32;
-        var nVecIds int32 = Vec_IntSize( p.vVec2Var ) / p.nFrames;
-        var vVec2VarNew *Vec_Int_t  = Vec_IntAlloc( 4 * nVecIds * p.nFrames );
-        for  i = 0; i < nVecIds; i++  {
-            for  j = 0; j < p.nFrames; j++  {
-                Vec_IntPush( vVec2VarNew, Vec_IntEntry( p.vVec2Var, i * p.nFrames + j ) );
-            }
-            for  j = 0; j < p.nFrames; j++  {
-                Vec_IntPush( vVec2VarNew, i ? 0 : -1 );
-            }
-        }
-        Vec_IntFree( p.vVec2Var );
-        p.vVec2Var = vVec2VarNew;
-        p.nFrames *= 2;
-    }
-    assert(k < p.nFrames, "k < p.nFrames");
-    assert(Vec_IntEntry(p.vIncluded, Aig_ObjId(pObj)), "Vec_IntEntry(p.vIncluded, Aig_ObjId(pObj))");
-    if Aig_ObjIsConst1(pObj) {
-        return Aig_Gla1AddConst( p.pSat, Aig_Gla1FetchVar(p, pObj, k), 0 ); }
-    if Saig_ObjIsLo(p.pAig, pObj) {
-        var pObjLi *Aig_Obj_t  = Saig_ObjLoToLi(p.pAig, pObj);
-        if k == 0 {
-            Aig_Gla1FetchVecId( p, Aig_ObjFanin0(pObjLi) );
-            return Aig_Gla1AddConst( p.pSat, Aig_Gla1FetchVar(p, pObj, k), 1 );
-        }
-        return Aig_Gla1AddBuffer( p.pSat, Aig_Gla1FetchVar(p, pObj, k), 
-                   Aig_Gla1FetchVar(p, Aig_ObjFanin0(pObjLi), k-1), 
-                   Aig_ObjFaninC0(pObjLi) );
-    
-    } else { 
-        var vClauses *Vec_Int_t;
-        var i, Entry int32;
-        assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-        if p.vObj2Cnf == nil {
-            return Aig_Gla1AddNode( p.pSat, Aig_Gla1FetchVar(p, pObj, k), 
-                       Aig_Gla1FetchVar(p, Aig_ObjFanin0(pObj), k), 
-                       Aig_Gla1FetchVar(p, Aig_ObjFanin1(pObj), k), 
-                       Aig_ObjFaninC0(pObj), Aig_ObjFaninC1(pObj) ); }
-        // derive clauses
-        assert(pObj.fMarkA, "pObj.fMarkA");
-        vClauses = (Vec_Int_t *)Vec_PtrEntry( p.vObj2Cnf, Aig_ObjId(pObj) );
-        if vClauses == nil {
-            Vec_PtrWriteEntry( p.vObj2Cnf, Aig_ObjId(pObj), (vClauses = Vec_IntAlloc(16)) );
-            Cnf_ComputeClauses( p.pAig, pObj, p.vLeaves, p.vVolume, nil, p.vCover, vClauses );
-        }
-        // derive variables
-        Cnf_CollectLeaves( p.pAig, pObj, p.vLeaves, 0 );
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {
-            Aig_Gla1FetchVar( p, pObj, k );
-        }
-        // translate clauses
-        assert(Vec_IntSize(vClauses) >= 2, "Vec_IntSize(vClauses) >= 2");
-        assert(Vec_IntEntry(vClauses, 0) == 0, "Vec_IntEntry(vClauses, 0) == 0");
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vClauses)) && (((Entry) = Vec_IntEntry(vClauses, i)), 1); i++  {
-            if Entry == 0 {
-                Vec_IntClear( p.vLits );
-                continue;
-            }
-            Vec_IntPush( p.vLits, (Entry & 1) ^ (2 * Aig_Gla1FetchVar(p, Aig_ManObj(p.pAig, Entry >> 1), k)) );
-            if i == Vec_IntSize(vClauses) - 1 || Vec_IntEntry(vClauses, i+1) == 0 {
-                if !sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntArray(p.vLits)+Vec_IntSize(p.vLits) ) {
-                    return 0; }
-            }
-        }       
-        return 1;
-    }
+// Aig_Gla1FetchVar returns the SAT variable for object/frame, allocating it
+// and recording the reverse map when first requested.
+func Aig_Gla1FetchVar(manager *Aig_Gla1Man_t, object aig.Edge, frame int32) int32 {
+	if manager == nil || frame < 0 {
+		return -1
+	}
+	for frame >= manager.nFrames {
+		for i := range manager.vecToVar {
+			manager.vecToVar[i] = append(manager.vecToVar[i], make([]int32, manager.nFrames)...)
+		}
+		manager.nFrames *= 2
+	}
+	vecID := Aig_Gla1FetchVecId(manager, object)
+	if vecID <= 0 {
+		return -1
+	}
+	vars := manager.vecToVar[vecID-1]
+	if vars[frame] == 0 {
+		vars[frame] = manager.pSat.NewVariable()
+		manager.varToInfo = append(manager.varToInfo, [2]int32{int32(object.NodeID()), frame})
+	}
+	return vars[frame]
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of neighbors.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1CollectAssigned(p *Aig_Gla1Man_t, vGateClasses *Vec_Int_t) {
-    var pObj *Aig_Obj_t;
-    var i, Entry int32;
-    // inlining of macro Vec_IntForEachEntryReverse
-    for  i = Vec_IntSize(vGateClasses) - 1; (i >= 0) && (((Entry) = Vec_IntEntry(vGateClasses, i)), 1); i--  {
-        if Entry == 0 {
-            continue; }
-        assert(Entry == 1, "Entry == 1");
-        pObj = Aig_ManObj( p.pAig, i );
-        Aig_Gla1FetchVecId( p, pObj );
-        if Aig_ObjIsNode(pObj) {
-            Aig_Gla1FetchVecId( p, Aig_ObjFanin0(pObj) );
-            Aig_Gla1FetchVecId( p, Aig_ObjFanin1(pObj) );
-        
-        } else if Saig_ObjIsLo(p.pAig, pObj) {
-            Aig_Gla1FetchVecId( p, Aig_ObjFanin0(Saig_ObjLoToLi(p.pAig, pObj)) );
-        } else { assert(Aig_ObjIsConst1(pObj), "Aig_ObjIsConst1(pObj)"); }
-    }
+// Aig_Gla1ObjAddToSolver constrains a selected object in one frame. PIs remain
+// free; initial latch values are zero, and later latches equal the prior LI.
+func Aig_Gla1ObjAddToSolver(manager *Aig_Gla1Man_t, object aig.Edge, frame int32) int32 {
+	if manager == nil || manager.pAig == nil || !manager.pAig.ValidEdge(object) || frame < 0 {
+		return 0
+	}
+	if frame >= manager.nFrames {
+		Aig_Gla1FetchVar(manager, object, frame)
+	}
+	id := object.NodeID()
+	if manager.vIncluded[id] == 0 {
+		return 1
+	}
+	if len(manager.addedFrame[id]) <= int(frame) {
+		manager.addedFrame[id] = append(manager.addedFrame[id], make([]bool, int(frame)+1-len(manager.addedFrame[id]))...)
+	}
+	if manager.addedFrame[id][frame] {
+		return 1
+	}
+	manager.addedFrame[id][frame] = true
+	var node aig.Node
+	if object.NodeID() < len(manager.pAig.Nodes()) {
+		node = manager.pAig.Node(object)
+	}
+	variable := Aig_Gla1FetchVar(manager, object, frame)
+	switch node.Kind {
+	case aig.Constant:
+		return Aig_Gla1AddConst(manager.pSat, variable, 0)
+	case aig.Input:
+		if !Saig_ObjIsLo(manager.pAig, object) {
+			return 1
+		}
+		li := Saig_ObjLoToLi(manager.pAig, object)
+		liDriver := aig.Aig_ObjChild0(manager.pAig, li)
+		if frame == 0 {
+			return Aig_Gla1AddConst(manager.pSat, variable, 1)
+		}
+		return Aig_Gla1AddBuffer(manager.pSat, variable, Aig_Gla1FetchVar(manager, liDriver, frame-1), boolInt(liDriver.Complemented()))
+	case aig.And:
+		return Aig_Gla1AddNode(manager.pSat, variable,
+			Aig_Gla1FetchVar(manager, node.Fanins[0], frame),
+			Aig_Gla1FetchVar(manager, node.Fanins[1], frame),
+			boolInt(node.Fanins[0].Complemented()), boolInt(node.Fanins[1].Complemented()))
+	case aig.ExclusiveOr:
+		// Encode XOR from its four truth-table clauses.
+		z := bsat.Positive(variable)
+		a := bsat.Positive(Aig_Gla1FetchVar(manager, node.Fanins[0], frame))
+		b := bsat.Positive(Aig_Gla1FetchVar(manager, node.Fanins[1], frame))
+		if node.Fanins[0].Complemented() {
+			a ^= 1
+		}
+		if node.Fanins[1].Complemented() {
+			b ^= 1
+		}
+		if !manager.pSat.AddClause(a^1, b^1, z^1) || !manager.pSat.AddClause(a, b, z^1) || !manager.pSat.AddClause(a, b^1, z) || !manager.pSat.AddClause(a^1, b, z) {
+			return 0
+		}
+		return 1
+	default:
+		return 0
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1ManStart(pAig *Aig_Man_t, vGateClassesOld *Vec_Int_t, fNaiveCnf int32) *Aig_Gla1Man_t {
-    
-    var i int32;
-
-    // inlining of macro ABC_CALLOC
-    p := &Aig_Gla1Man_t{};
-    p.pAig      = pAig;
-    p.nFrames   = 32;
-
-    // unrolling
-    p.vObj2Vec  = Vec_IntStart( Aig_ManObjNumMax(pAig) );
-    p.vVec2Var  = Vec_IntAlloc( 1 << 20 );
-    p.vVar2Inf  = Vec_IntAlloc( 1 << 20 );
-
-    // skip first vector ID
-    for  i = 0; i < p.nFrames; i++  {
-        Vec_IntPush( p.vVec2Var, -1 );
-    }
-    // skip  first SAT variable
-    Vec_IntPush( p.vVar2Inf, -1 );
-    Vec_IntPush( p.vVar2Inf, -1 );
-
-    // abstraction
-    p.vAssigned = Vec_IntAlloc( 1000 );
-    if vGateClassesOld != nil {
-        p.vIncluded = Vec_IntDup( vGateClassesOld );
-        Aig_Gla1CollectAssigned( p, vGateClassesOld );
-        assert((fNaiveCnf != 0), "fNaiveCnf");
-    
-    } else {
-        p.vIncluded = Vec_IntStart( Aig_ManObjNumMax(pAig) ); }
-
-    // components
-    p.vPis      = Vec_IntAlloc( 1000 );
-    p.vPPis     = Vec_IntAlloc( 1000 );
-    p.vFlops    = Vec_IntAlloc( 1000 );
-    p.vNodes    = Vec_IntAlloc( 1000 );
-
-    // CNF computation
-    if !(fNaiveCnf != 0) {
-        p.vLeaves   = Vec_PtrAlloc( 100 );
-        p.vVolume   = Vec_PtrAlloc( 100 );
-        p.vCover    = Vec_IntAlloc( 1 << 16 );
-        p.vObj2Cnf  = Vec_PtrStart( Aig_ManObjNumMax(pAig) );
-        p.vLits     = Vec_IntAlloc( 100 );
-        Cnf_DeriveFastMark( pAig );
-    }
-
-    // start the SAT solver
-    p.pSat = sat_solver_new();
-    sat_solver_setnvars( p.pSat, 256 );
-    return p;
+func Aig_Gla1CollectAssigned(manager *Aig_Gla1Man_t, classes *vec.Vec_Int_t) {
+	if manager == nil || classes == nil {
+		return
+	}
+	for id := 0; id < vec.Vec_IntSize(classes); id++ {
+		if vec.Vec_IntEntry(classes, id) == 0 || id >= len(manager.pAig.Nodes()) {
+			continue
+		}
+		object := aig.Edge(id) << 1
+		Aig_Gla1FetchVecId(manager, object)
+		node := manager.pAig.Node(object)
+		for _, fanin := range node.Fanins {
+			if fanin != aig.InvalidEdge {
+				Aig_Gla1FetchVecId(manager, fanin)
+			}
+		}
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1ManStop(p *Aig_Gla1Man_t) {
-    Vec_IntFreeP( &p.vObj2Vec );
-    Vec_IntFreeP( &p.vVec2Var );
-    Vec_IntFreeP( &p.vVar2Inf );
-
-    Vec_IntFreeP( &p.vAssigned );
-    Vec_IntFreeP( &p.vIncluded );
-
-    Vec_IntFreeP( &p.vPis );
-    Vec_IntFreeP( &p.vPPis );
-    Vec_IntFreeP( &p.vFlops );
-    Vec_IntFreeP( &p.vNodes );
-
-    if p.vObj2Cnf {
-        Vec_PtrFreeP( &p.vLeaves );
-        Vec_PtrFreeP( &p.vVolume );
-        Vec_IntFreeP( &p.vCover );
-        Vec_VecFreeP( (Vec_Vec_t **)&p.vObj2Cnf );
-        Vec_IntFreeP( &p.vLits );
-        Aig_ManCleanMarkA( p.pAig );
-    }
-
-    if p.pSat {
-        sat_solver_delete( p.pSat ); }
-    p = nil;
+func Aig_Gla1DeriveCex(manager *Aig_Gla1Man_t, frame int32) *util.Abc_Cex_t {
+	if manager == nil || manager.lastFrames == nil || manager.lastCNF == nil || manager.lastCNF.solver == nil || frame != manager.lastFrame {
+		return nil
+	}
+	Aig_Gla1CollectAbstr(manager)
+	regs, pis := int32(len(manager.vFlops)), int32(len(manager.vPis)+len(manager.vPPis))
+	cex := util.Abc_CexAlloc(regs, pis, frame+1)
+	cex.IFrame = frame
+	read := func(id int, f int32) bool {
+		if id < 0 || id >= len(manager.objToVec) {
+			return false
+		}
+		vecID := manager.objToVec[id]
+		if vecID <= 0 || int(vecID-1) >= len(manager.vecToVar) || int(f) >= len(manager.vecToVar[vecID-1]) {
+			return false
+		}
+		variable := manager.vecToVar[vecID-1][f]
+		if variable == 0 {
+			return false
+		}
+		value, ok := manager.lastCNF.solver.Value(variable)
+		return ok && value
+	}
+	for f := int32(0); f <= frame; f++ {
+		for i, id := range manager.vPis {
+			if read(id, f) {
+				util.Abc_InfoSetBit(cex.PData, regs+f*pis+int32(i))
+			}
+		}
+		for i, id := range manager.vPPis {
+			if read(id, f) {
+				util.Abc_InfoSetBit(cex.PData, regs+f*pis+int32(len(manager.vPis)+i))
+			}
+		}
+	}
+	return cex
 }
 
-/**Function*************************************************************
+type cbaInputFrame struct{ input, frame int32 }
 
-  Synopsis    []
+// saigManCbaFilterInputsWithFrames follows one sufficient reason through the
+// time-expanded graph and retains each pseudo-input's frame.
+func saigManCbaFilterInputsWithFrames(graph *aig.Graph, firstFlopPI int32, cex *util.Abc_Cex_t, verbose int32) []cbaInputFrame {
+	if graph == nil || cex == nil || firstFlopPI < 0 {
+		return nil
+	}
+	inputs, outputs := graph.Inputs(), graph.Outputs()
+	regs := int(aig.Aig_ManRegNum(graph))
+	piCount := len(inputs) - regs
+	poCount := len(outputs) - regs
+	if piCount != int(cex.NPis) || firstFlopPI > cex.NPis || cex.IPo < 0 || int(cex.IPo) >= poCount {
+		return nil
+	}
+	valuesByFrame := make([][]bool, cex.IFrame+1)
+	state := make([]bool, regs)
+	for i := range state {
+		state[i] = util.Abc_InfoHasBit(cex.PData, int32(i))
+	}
+	for frame := int32(0); frame <= cex.IFrame; frame++ {
+		inputValues := make([]bool, len(inputs))
+		for i := 0; i < piCount; i++ {
+			inputValues[i] = util.Abc_InfoHasBit(cex.PData, cex.NRegs+frame*cex.NPis+int32(i))
+		}
+		copy(inputValues[piCount:], state)
+		values, result, err := evalSequentialGraphFrame(graph, inputValues)
+		if err != nil {
+			return nil
+		}
+		valuesByFrame[frame] = values
+		if frame < cex.IFrame {
+			copy(state, result[poCount:])
+		}
+	}
 
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1DeriveCex(p *Aig_Gla1Man_t, iFrame int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var pObj *Aig_Obj_t;
-    var i, f, iVecId, iSatId int32;
-    pCex = Abc_CexAlloc( Vec_IntSize(p.vFlops), Vec_IntSize(p.vPis) + Vec_IntSize(p.vPPis), iFrame+1 );
-    pCex.iFrame = iFrame;
-    // inlining of macro Aig_ManForEachObjVec
-    for  i = 0; i < Vec_IntSize(p.vPis) && (((pObj) = Aig_ManObj(p.pAig, Vec_IntEntry(p.vPis,i))), 1); i++  {
-        iVecId = Vec_IntEntry( p.vObj2Vec, Aig_ObjId(pObj) );
-        assert(iVecId > 0, "iVecId > 0");
-        for  f = 0; f <= iFrame; f++  {
-            iSatId = Vec_IntEntry( p.vVec2Var, iVecId * p.nFrames + f );
-            if iSatId == 0 {
-                continue; }
-            assert(iSatId > 0, "iSatId > 0");
-            if sat_solver_var_value(p.pSat, iSatId) {
-                Abc_InfoSetBit( pCex.pData, pCex.nRegs + f * pCex.nPis + i ); }
-        }
-    }
-    // inlining of macro Aig_ManForEachObjVec
-    for  i = 0; i < Vec_IntSize(p.vPPis) && (((pObj) = Aig_ManObj(p.pAig, Vec_IntEntry(p.vPPis,i))), 1); i++  {
-        iVecId = Vec_IntEntry( p.vObj2Vec, Aig_ObjId(pObj) );
-        assert(iVecId > 0, "iVecId > 0");
-        for  f = 0; f <= iFrame; f++  {
-            iSatId = Vec_IntEntry( p.vVec2Var, iVecId * p.nFrames + f );
-            if iSatId == 0 {
-                continue; }
-            assert(iSatId > 0, "iSatId > 0");
-            if sat_solver_var_value(p.pSat, iSatId) {
-                Abc_InfoSetBit( pCex.pData, pCex.nRegs + f * pCex.nPis + Vec_IntSize(p.vPis) + i ); }
-        }
-    }
-    return pCex;
+	seenInput := make(map[cbaInputFrame]struct{})
+	inputsInReasonOrder := make([]cbaInputFrame, 0)
+	seenNode := make(map[[2]int32]struct{})
+	var visit func(aig.Edge, int32)
+	visit = func(edge aig.Edge, frame int32) {
+		edge = aig.Aig_Regular(edge)
+		if !graph.ValidEdge(edge) || frame < 0 || int(frame) >= len(valuesByFrame) {
+			return
+		}
+		key := [2]int32{int32(edge.NodeID()), frame}
+		if _, exists := seenNode[key]; exists {
+			return
+		}
+		seenNode[key] = struct{}{}
+		node := graph.Node(edge)
+		switch node.Kind {
+		case aig.Constant:
+			return
+		case aig.Input:
+			if Saig_ObjIsLo(graph, edge) {
+				if frame == 0 {
+					return
+				}
+				reg := Saig_ObjRegId(graph, edge)
+				if reg >= 0 {
+					li := Saig_ManLi(graph, reg)
+					visit(aig.Aig_ObjChild0(graph, li), frame-1)
+				}
+				return
+			}
+			ci := aig.Aig_ObjCioId(graph, edge)
+			if ci >= firstFlopPI {
+				input := cbaInputFrame{input: ci - firstFlopPI, frame: frame}
+				if _, exists := seenInput[input]; !exists {
+					seenInput[input] = struct{}{}
+					inputsInReasonOrder = append(inputsInReasonOrder, input)
+				}
+			}
+		case aig.Buffer, aig.Output:
+			visit(node.Fanins[0], frame)
+		case aig.ExclusiveOr:
+			visit(node.Fanins[0], frame)
+			visit(node.Fanins[1], frame)
+		case aig.And:
+			v0 := valuesByFrame[frame][node.Fanins[0].NodeID()] != node.Fanins[0].Complemented()
+			v1 := valuesByFrame[frame][node.Fanins[1].NodeID()] != node.Fanins[1].Complemented()
+			switch {
+			case v0 && v1:
+				visit(node.Fanins[0], frame)
+				visit(node.Fanins[1], frame)
+			case !v0 && v1:
+				visit(node.Fanins[0], frame)
+			case v0 && !v1:
+				visit(node.Fanins[1], frame)
+			default:
+				if reasonPriority(graph, valuesByFrame, node.Fanins[0], frame) <= reasonPriority(graph, valuesByFrame, node.Fanins[1], frame) {
+					visit(node.Fanins[0], frame)
+				} else {
+					visit(node.Fanins[1], frame)
+				}
+			}
+		}
+	}
+	po := outputs[cex.IPo]
+	visit(aig.Aig_ObjChild0(graph, po), cex.IFrame)
+	if verbose != 0 {
+		fmt.Printf("CBA reason includes %d frame pseudo-inputs.\n", len(inputsInReasonOrder))
+	}
+	return inputsInReasonOrder
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prints current abstraction statistics.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1PrintAbstr(p *Aig_Gla1Man_t, f int32, r int32, v int32, c int32) {
-    if r == 0 {
-        fmt.Printf("== %3d ==", f);
-    } else {
-        fmt.Printf("         "); }
-    fmt.Printf(" %4d  PI =%6d  PPI =%6d  FF =%6d  Node =%6d  Var =%7d  Conf =%6d\n", r, Vec_IntSize(p.vPis), Vec_IntSize(p.vPPis), Vec_IntSize(p.vFlops), Vec_IntSize(p.vNodes), v, c);
+// Saig_ManCbaFilterInputs returns the distinct pseudo-primary inputs on a
+// sufficient reason for the selected property output to fail.
+func Saig_ManCbaFilterInputs(graph *aig.Graph, firstFlopPI int32, cex *util.Abc_Cex_t, verbose int32) *vec.Vec_Int_t {
+	perFrame := saigManCbaFilterInputsWithFrames(graph, firstFlopPI, cex, 0)
+	indices := make(map[int32]struct{}, len(perFrame))
+	for _, input := range perFrame {
+		indices[input.input] = struct{}{}
+	}
+	result := vec.Vec_IntAlloc(len(indices))
+	ordered := make([]int32, 0, len(indices))
+	for _, input := range perFrame {
+		if _, exists := indices[input.input]; exists {
+			delete(indices, input.input)
+			ordered = append(ordered, input.input)
+		}
+	}
+	for _, input := range ordered {
+		vec.Vec_IntPush(result, input)
+	}
+	if verbose != 0 {
+		fmt.Printf("CBA reason includes %d pseudo-primary inputs.\n", vec.Vec_IntSize(result))
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prints current abstraction statistics.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1ExtendIncluded(p *Aig_Gla1Man_t) {
-    var pObj *Aig_Obj_t;
-    var i, k int32;
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        if !Vec_IntEntry( p.vIncluded, i ) {
-            continue; }
-        Cnf_ComputeClauses( p.pAig, pObj, p.vLeaves, p.vVolume, nil, p.vCover, p.vNodes );
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(p.vVolume)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vVolume, k)), 1); k++  {
-            assert(Aig_ObjId(pObj) <= i, "Aig_ObjId(pObj) <= i");
-            Vec_IntWriteEntry( p.vIncluded, Aig_ObjId(pObj), 1 );
-        }
-    }
-    }
+func reasonPriority(graph *aig.Graph, valuesByFrame [][]bool, edge aig.Edge, frame int32) int {
+	edge = aig.Aig_Regular(edge)
+	if !graph.ValidEdge(edge) || frame < 0 || int(frame) >= len(valuesByFrame) {
+		return int(^uint(0) >> 1)
+	}
+	node := graph.Node(edge)
+	if node.Kind == aig.Input {
+		return int(aig.Aig_ObjCioId(graph, edge)) + int(frame)*graph.InputCount()
+	}
+	if node.Kind != aig.And && node.Kind != aig.ExclusiveOr {
+		return edge.NodeID()
+	}
+	a, b := node.Fanins[0], node.Fanins[1]
+	v0 := valuesByFrame[frame][a.NodeID()] != a.Complemented()
+	v1 := valuesByFrame[frame][b.NodeID()] != b.Complemented()
+	p0, p1 := reasonPriority(graph, valuesByFrame, a, frame), reasonPriority(graph, valuesByFrame, b, frame)
+	if node.Kind == aig.ExclusiveOr || (v0 && v1) {
+		if p0 > p1 {
+			return p0
+		}
+		return p1
+	}
+	if !v0 && v1 {
+		return p0
+	}
+	if v0 && !v1 {
+		return p1
+	}
+	if p0 < p1 {
+		return p0
+	}
+	return p1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs gate-level localization abstraction.]
-
-  Description [Returns array of objects included in the abstraction. This array
-  may contain only const1, flop outputs, and internal nodes, that is, objects
-  that should have clauses added to the SAT solver.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla1ManPerform(pAig *Aig_Man_t, vGateClassesOld *Vec_Int_t, nStart int32, nFramesMax int32, nConfLimit int32, TimeLimit int32, fNaiveCnf int32, fVerbose int32, piFrame *int32) *Vec_Int_t {
-    var vResult *Vec_Int_t  = nil;
-    var p *Aig_Gla1Man_t;
-    var pAbs *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var pCex *Abc_Cex_t;
-    var vPPiRefine *Vec_Int_t;
-    var f, g, r, i, iSatVar, Lit, Entry, RetValue int32;
-    var nConfBef, nConfAft int32;
-    var clk int64;
-    var clkTotal int64 = time.Now().UnixNano();
-    var nTimeToStop int64;
-    if TimeLimit {
-        nTimeToStop = TimeLimit * int64(time.Second) + time.Now().UnixNano();
-    } else {
-        nTimeToStop = 0;
-    }
-    assert(Saig_ManPoNum(pAig) == 1, "Saig_ManPoNum(pAig) == 1");
-
-    if nFramesMax == 0 {
-        nFramesMax = ABC_INFINITY; }
-
-    if fVerbose != 0 {
-        if TimeLimit {
-            fmt.Printf("Abstracting from frame %d to frame %d with timeout %d sec.\n", nStart, nFramesMax, TimeLimit);
-        } else {
-            fmt.Printf("Abstracting from frame %d to frame %d with no timeout.\n", nStart, nFramesMax); }
-    }
-
-    // start the solver
-    p = Aig_Gla1ManStart( pAig, vGateClassesOld, fNaiveCnf );
-    p.nFramesMax = nFramesMax;
-    p.nConfLimit = nConfLimit;
-    p.fVerbose   = fVerbose;
-
-    // include constant node
-    Vec_IntWriteEntry( p.vIncluded, 0, 1 );
-    Aig_Gla1FetchVecId( p, Aig_ManConst1(pAig) );
-
-    // set runtime limit
-    if TimeLimit {
-        sat_solver_set_runtime_limit( p.pSat, nTimeToStop ); }
-
-    // iterate over the timeframes
-    for  f = 0; f < nFramesMax; f++  {
-        // initialize abstraction in this timeframe
-        // inlining of macro Aig_ManForEachObjVec
-        for  i = 0; i < Vec_IntSize(p.vAssigned) && (((pObj) = Aig_ManObj(pAig, Vec_IntEntry(p.vAssigned,i))), 1); i++  {
-            if Vec_IntEntry(p.vIncluded, Aig_ObjId(pObj)) {
-                if !(Aig_Gla1ObjAddToSolver( p, pObj, f ) != 0) {
-                    fmt.Printf("Error!  SAT solver became UNSAT.\n"); } }
-        }
-
-        // skip checking if we are not supposed to
-        if f < nStart {
-            continue; }
-
-        // create output literal to represent property failure
-        pObj    = Aig_ManCo( pAig, 0 );
-        iSatVar = Aig_Gla1FetchVar( p, Aig_ObjFanin0(pObj), f );
-        Lit     = toLitCond( iSatVar, Aig_ObjFaninC0(pObj) );
-
-        // try solving the abstraction
-        Aig_Gla1CollectAbstr( p );
-        for  r = 0; r < ABC_INFINITY; r++  {
-            // try to find a counter-example
-            clk = time.Now().UnixNano();
-            nConfBef = p.pSat.stats.conflicts;
-            RetValue = sat_solver_solve( p.pSat, &Lit, &Lit + 1, 
-                (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-            nConfAft = p.pSat.stats.conflicts;
-            p.timeSat += time.Now().UnixNano() - clk;
-            if RetValue != l_True {
-                if fVerbose != 0 {
-                    if r == 0 {
-                        fmt.Printf("== %3d ==", f);
-                    } else {
-                        fmt.Printf("         "); }
-                    if TimeLimit && time.Now().UnixNano() > nTimeToStop {
-                        fmt.Printf("       SAT solver timed out after %d seconds.\n", TimeLimit);
-                    } else if RetValue != l_False {
-                        fmt.Printf("       SAT solver returned UNDECIDED after %5d conflicts.\n", nConfAft - nConfBef);
-                    } else {
-                        fmt.Printf("       SAT solver returned UNSAT after %5d conflicts.  ", nConfAft - nConfBef);
-                        Abc_PrintTime( 1, "Total time", time.Now().UnixNano() - clkTotal );
-                    }
-                }
-                break;
-            }
-            clk = time.Now().UnixNano();
-            // derive abstraction
-            pAbs = Aig_Gla1DeriveAbs( p );
-            // derive counter-example
-            pCex = Aig_Gla1DeriveCex( p, f );
-            // verify the counter-example
-            RetValue = Saig_ManVerifyCex( pAbs, pCex );
-            if RetValue == 0 {
-                fmt.Printf("Error!  CEX is invalid.\n"); }
-            // perform refinement
-            vPPiRefine = Saig_ManCbaFilterInputs( pAbs, Vec_IntSize(p.vPis), pCex, 0 );
-            // inlining of macro Vec_IntForEachEntry
-            for  i = 0; (i < Vec_IntSize(vPPiRefine)) && (((Entry) = Vec_IntEntry(vPPiRefine, i)), 1); i++  {
-                pObj = Aig_ManObj( pAig, Vec_IntEntry(p.vPPis, Entry) );
-                assert(Aig_ObjIsNode(pObj) || Saig_ObjIsLo(p.pAig, pObj), "Aig_ObjIsNode(pObj) || Saig_ObjIsLo(p.pAig, pObj)");
-                assert(Vec_IntEntry( p.vIncluded, Aig_ObjId(pObj) ) == 0, "Vec_IntEntry( p.vIncluded, Aig_ObjId(pObj) ) == 0");
-                Vec_IntWriteEntry( p.vIncluded, Aig_ObjId(pObj), 1 );
-                for  g = 0; g <= f; g++  {
-                    if !(Aig_Gla1ObjAddToSolver( p, pObj, g ) != 0) {
-                        fmt.Printf("Error!  SAT solver became UNSAT.\n"); }
-                }
-            }
-            if Vec_IntSize(vPPiRefine) == 0 {
-                Vec_IntFreeP( &p.vIncluded );
-                Vec_IntFree( vPPiRefine );
-                Aig_ManStop( pAbs );
-                Abc_CexFree( pCex );
-                break;
-            }
-            Vec_IntFree( vPPiRefine );
-            Aig_ManStop( pAbs );
-            Abc_CexFree( pCex );
-            p.timeRef += time.Now().UnixNano() - clk;
-
-            // prepare abstraction
-            Aig_Gla1CollectAbstr( p );
-            if fVerbose != 0 {
-                Aig_Gla1PrintAbstr( p, f, r, p.pSat.size, nConfAft - nConfBef ); }
-        }
-        if RetValue != l_False {
-            break; }
-    }
-    p.timeTotal = time.Now().UnixNano() - clkTotal;
-    if f == nFramesMax {
-        fmt.Printf("Finished %d frames without exceeding conflict limit (%d).\n", f, nConfLimit);
-    } else if p.vIncluded == nil {
-        fmt.Printf("The problem is SAT in frame %d. The CEX is currently not produced.\n", f);
-    } else {
-        fmt.Printf("Ran out of conflict limit (%d) at frame %d.\n", nConfLimit, f); }
-    *piFrame = f;
-    // print stats
-    if fVerbose != 0 {
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Sat   "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat)))/(float64((p.timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Ref   "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeRef)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeRef)))/(float64((p.timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Total "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;
-    }
-    // prepare return value
-    if !(fNaiveCnf != 0) && p.vIncluded {
-        Aig_Gla1ExtendIncluded( p ); }
-    vResult = p.vIncluded;  p.vIncluded = nil;
-    Aig_Gla1ManStop( p );
-    return vResult;
+func evalSequentialGraphFrame(graph *aig.Graph, inputs []bool) ([]bool, []bool, error) {
+	if len(inputs) != len(graph.Inputs()) {
+		return nil, nil, fmt.Errorf("saig: got %d frame inputs, want %d", len(inputs), len(graph.Inputs()))
+	}
+	nodes := graph.Nodes()
+	values := make([]bool, len(nodes))
+	for i, input := range graph.Inputs() {
+		values[input.NodeID()] = inputs[i]
+	}
+	for id, node := range nodes {
+		if !graph.ValidEdge(aig.Edge(id) << 1) {
+			continue
+		}
+		switch node.Kind {
+		case aig.Constant:
+			values[id] = true
+		case aig.Input:
+		case aig.And:
+			values[id] = (values[node.Fanins[0].NodeID()] != node.Fanins[0].Complemented()) && (values[node.Fanins[1].NodeID()] != node.Fanins[1].Complemented())
+		case aig.ExclusiveOr:
+			values[id] = (values[node.Fanins[0].NodeID()] != node.Fanins[0].Complemented()) != (values[node.Fanins[1].NodeID()] != node.Fanins[1].Complemented())
+		case aig.Buffer, aig.Output:
+			values[id] = values[node.Fanins[0].NodeID()] != node.Fanins[0].Complemented()
+		}
+	}
+	outputs := make([]bool, len(graph.Outputs()))
+	for i, output := range graph.Outputs() {
+		outputs[i] = values[aig.Aig_ObjChild0(graph, output).NodeID()] != aig.Aig_ObjChild0(graph, output).Complemented()
+	}
+	return values, outputs, nil
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Aig_Gla1PrintAbstr(manager *Aig_Gla1Man_t, frame, iteration, variables, conflicts int32) {
+	if manager == nil || manager.fVerbose == 0 {
+		return
+	}
+	fmt.Printf("== %3d == %4d vars=%d conflicts=%d included=%d\n", frame, iteration, variables, conflicts, countIncluded(manager.vIncluded))
+}
 
+func Aig_Gla1ExtendIncluded(manager *Aig_Gla1Man_t) {
+	if manager == nil || manager.pAig == nil {
+		return
+	}
+	var include func(aig.Edge)
+	seen := make(map[int]bool)
+	include = func(edge aig.Edge) {
+		id := edge.NodeID()
+		if seen[id] || !manager.pAig.ValidEdge(edge) {
+			return
+		}
+		seen[id] = true
+		manager.vIncluded[id] = 1
+		for _, fanin := range manager.pAig.Node(edge).Fanins {
+			if fanin != aig.InvalidEdge {
+				include(fanin)
+			}
+		}
+	}
+	for id, included := range manager.vIncluded {
+		if included != 0 {
+			include(aig.Edge(id) << 1)
+		}
+	}
+}
 
-//ABC_NAMESPACE_IMPL_END
+// Aig_Gla1ManPerform checks successive frames using an incremental abstraction.
+// A spurious abstract CEX is filtered to its pseudo-input support; those source
+// objects are included and constrained, then the same frame is solved again.
+// It returns nil for a concrete counterexample and otherwise the current gate
+// bitmap, including when SAT reaches a resource limit.
+func Aig_Gla1ManPerform(src *aig.Graph, oldClasses *vec.Vec_Int_t, start, maxFrames, conflictLimit, timeLimit, naiveCNF, verbose int32, piFrame *int32) *vec.Vec_Int_t {
+	if src == nil || len(src.Outputs())-int(aig.Aig_ManRegNum(src)) != 1 {
+		if piFrame != nil {
+			*piFrame = 0
+		}
+		return nil
+	}
+	if maxFrames == 0 {
+		maxFrames = 10000
+	}
+	manager := Aig_Gla1ManStart(src, oldClasses, naiveCNF)
+	manager.nConfLimit, manager.nFramesMax, manager.fVerbose = conflictLimit, maxFrames, verbose
+	deadline := time.Time{}
+	if timeLimit > 0 {
+		deadline = time.Now().Add(time.Duration(timeLimit) * time.Second)
+		manager.pSat.SetDeadline(deadline)
+	}
+	Aig_Gla1FetchVecId(manager, src.Const1())
+	outputs := src.Outputs()
+	po := outputs[0]
+	property := aig.Aig_ObjChild0(src, po)
+	var result *vec.Vec_Int_t
+	frameDone := int32(0)
+	finishedWithCEX := false
+	resourceLimited := false
+	lastStatus := bsat.Unknown
+	for frame := int32(0); frame < maxFrames; frame++ {
+		frameDone = frame
+		// Constraints for already assigned objects are added in every frame.
+		// Fetching fanin variables during clause construction may assign new
+		// objects, so scan the full source ID range each time.
+		for id := 0; id < len(manager.assigned); id++ {
+			if manager.assigned[id] && manager.vIncluded[id] != 0 {
+				if Aig_Gla1ObjAddToSolver(manager, aig.Edge(id)<<1, frame) == 0 {
+					if verbose != 0 {
+						fmt.Printf("Error! SAT solver became UNSAT while adding object %d at frame %d.\n", id, frame)
+					}
+				}
+			}
+		}
+		if frame < start {
+			continue
+		}
+		propertyVar := Aig_Gla1FetchVar(manager, property, frame)
+		assumption := bsat.Positive(propertyVar)
+		if property.Complemented() {
+			assumption ^= 1
+		}
+		Aig_Gla1CollectAbstr(manager)
+		for iteration := int32(0); ; iteration++ {
+			manager.pSat.SetLimits(int64(conflictLimit), 0)
+			before := manager.pSat.Statistics().Conflicts
+			status := manager.pSat.Solve(assumption)
+			lastStatus = status
+			after := manager.pSat.Statistics().Conflicts
+			if status != bsat.Satisfiable {
+				if verbose != 0 {
+					if status == bsat.Unsatisfiable {
+						fmt.Printf("== %3d == SAT solver returned UNSAT after %5d conflicts.\n", frame, after-before)
+					} else {
+						fmt.Printf("== %3d == SAT solver returned UNDECIDED after %5d conflicts.\n", frame, after-before)
+					}
+				}
+				break
+			}
+			manager.lastFrames, manager.lastCNF, manager.lastFrame = src, &aigCNF{solver: manager.pSat}, frame
+			abstract := Aig_Gla1DeriveAbs(manager)
+			cex := Aig_Gla1DeriveCex(manager, frame)
+			refine := Saig_ManCbaFilterInputs(abstract, int32(len(manager.vPis)), cex, 0)
+			refined := false
+			for i := 0; i < vec.Vec_IntSize(refine); i++ {
+				ppiIndex := int(vec.Vec_IntEntry(refine, i))
+				if ppiIndex < 0 || ppiIndex >= len(manager.vPPis) {
+					continue
+				}
+				id := manager.vPPis[ppiIndex]
+				if id < 0 || id >= len(manager.vIncluded) || manager.vIncluded[id] != 0 {
+					continue
+				}
+				manager.vIncluded[id] = 1
+				Aig_Gla1FetchVecId(manager, aig.Edge(id)<<1)
+				refined = true
+				for prior := int32(0); prior <= frame; prior++ {
+					Aig_Gla1ObjAddToSolver(manager, aig.Edge(id)<<1, prior)
+				}
+			}
+			if !refined {
+				result = nil // the abstract counterexample is concrete
+				finishedWithCEX = true
+				break
+			}
+			Aig_Gla1CollectAbstr(manager)
+			Aig_Gla1PrintAbstr(manager, frame, iteration, manager.pSat.NumVars(), int32(after-before))
+		}
+		if finishedWithCEX {
+			break
+		}
+		if lastStatus == bsat.Unknown {
+			result = includedBitmapSlice(manager.vIncluded)
+			resourceLimited = true
+			break
+		}
+	}
+	if piFrame != nil {
+		*piFrame = frameDone
+		if frameDone == maxFrames-1 && lastStatus == bsat.Unsatisfiable {
+			*piFrame = maxFrames
+		}
+	}
+	if result == nil && !finishedWithCEX && !resourceLimited {
+		result = includedBitmapSlice(manager.vIncluded)
+	}
+	Aig_Gla1ManStop(manager)
+	return result
+}
 
+func includedBitmap(src *aig.Graph) *vec.Vec_Int_t {
+	nodes := src.Nodes()
+	result := vec.Vec_IntStart(len(nodes))
+	for id := range nodes {
+		if src.ValidEdge(aig.Edge(id) << 1) {
+			vec.Vec_IntWriteEntry(result, id, 1)
+		}
+	}
+	return result
+}
+
+func includedBitmapSlice(included []int32) *vec.Vec_Int_t {
+	result := vec.Vec_IntStart(len(included))
+	for id, value := range included {
+		vec.Vec_IntWriteEntry(result, id, value)
+	}
+	return result
+}
+
+func countIncluded(included []int32) int {
+	count := 0
+	for _, value := range included {
+		if value != 0 {
+			count++
+		}
+	}
+	return count
+}
+
+func boolInt(value bool) int32 {
+	if value {
+		return 1
+	}
+	return 0
+}

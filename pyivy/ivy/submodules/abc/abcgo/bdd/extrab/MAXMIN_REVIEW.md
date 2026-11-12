@@ -21,7 +21,6 @@ GOCACHE=/tmp/abcgo-go-cache go -C abcgo test bdd/extrab/extraBdd.go bdd/extrab/e
 GOCACHE=/tmp/abcgo-go-cache go -C abcgo vet bdd/extrab/extraBdd.go bdd/extrab/extraBddSet.go bdd/extrab/extraBddMaxMin.go bdd/extrab/extraBddMaxMin_test.go
 ```
 
-Normal `go test ./bdd/extrab` still reports visible unported syntax in
-`extraBddAuto.go:190` and later. No files are hidden or skipped to change that
-status. Image, auto, symmetry, time, K-map, and remaining misc/cascade-root work
-are separate package-frontier tasks.
+All root families are now ported, and normal `go test ./bdd/extrab` passes.
+The complete ordinary race/vet gates in `FULL_PACKAGE_REVIEW.md` supersede the
+historical explicit-file gate above. No drafts are hidden or skipped.

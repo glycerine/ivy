@@ -1,0 +1,12 @@
+.model top
+.inputs a b
+.outputs z
+.subckt xor2 Y=z B=b A=a
+.end
+.model xor2
+.inputs A B
+.outputs Y
+.names A B Y
+01 1
+10 1
+.end

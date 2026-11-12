@@ -58,6 +58,8 @@
 
 package core
 
+import "github.com/glycerine/abcgo/bdd/mtr"
+
 // Cudd_Init creates BDD variables and the ZDD universe. Go maps replace the
 // original raw-memory pools; sizing arguments remain allocation hints.
 func Cudd_Init(numVars, numVarsZ, numSlots, cacheSize uint32, maxMemory uint64) *DdManager {
@@ -153,5 +155,30 @@ func Cudd_zddVarsFromBddVars(dd *DdManager, multiplicity int) int {
 	if !reorderZdd(dd, target, permutation, order) {
 		return 0
 	}
+	var newTree *mtr.MtrNode
+	if dd.Tree != nil {
+		newTree = mtr.Mtr_CopyTree(dd.Tree, multiplicity)
+		if newTree == nil {
+			return 0
+		}
+	} else if multiplicity > 1 && target > 0 {
+		newTree = mtr.Mtr_InitGroupTree(0, target)
+	}
+	if newTree != nil {
+		newTree.Index = uint32(dd.InvPermZ[0])
+		if multiplicity > 1 {
+			for index := range dd.Vars {
+				low := dd.Perm[index] * multiplicity
+				group := mtr.Mtr_MakeGroup(newTree, uint32(low), uint32(multiplicity), mtr.MTR_FIXED)
+				if group == nil {
+					mtr.Mtr_FreeTree(newTree)
+					return 0
+				}
+				group.Index = uint32(dd.InvPermZ[low])
+			}
+		}
+	}
+	mtr.Mtr_FreeTree(dd.TreeZ)
+	dd.TreeZ = newTree
 	return 1
 }

@@ -52,6 +52,6 @@ ordinary products for general families and extremal operations for the requisite
 antichains. Checksum `d5ec309d9c0db5a5` matches the permanent Go fixture.
 Regeneration is optional; normal tests require no C compiler.
 
-Leaf race tests/vet and root forwarder subset gates are required. Normal root
-extrab still fails in visible `extraBddAuto.go` drafts; the MaxMin family itself
-is complete, not a claim that the surrounding root package builds.
+Leaf and full ordinary root race tests/vet now pass. See
+`../FULL_PACKAGE_REVIEW.md`; this supersedes the earlier explicit-file frontier
+checks without hiding any original source family.

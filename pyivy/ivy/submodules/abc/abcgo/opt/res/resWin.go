@@ -1,5 +1,7 @@
 package res
 
+import "github.com/glycerine/abcgo/base/abc"
+
 /**CFile****************************************************************
 
   FileName    [resWin.c]
@@ -76,13 +78,22 @@ func Res_WinAlloc() *Res_Win_t {
 **********************************************************************
 */
 func Res_WinFree(p *Res_Win_t) {
+	if p == nil {
+		return
+	}
 	Vec_PtrFree(p.vRoots)
+	p.vRoots = nil
 	Vec_PtrFree(p.vLeaves)
+	p.vLeaves = nil
 	Vec_PtrFree(p.vBranches)
+	p.vBranches = nil
 	Vec_PtrFree(p.vNodes)
+	p.vNodes = nil
 	Vec_PtrFree(p.vDivs)
+	p.vDivs = nil
 	Vec_VecFree(p.vMatrix)
-	p = nil
+	p.vMatrix = nil
+	p.pNode = nil
 }
 
 /*
@@ -109,8 +120,8 @@ func Res_WinCollectLeavesAndNodes(p *Res_Win_t) int32 {
 	// start matrix with the node
 	Vec_VecClear(p.vMatrix)
 	Vec_VecPush(p.vMatrix, 0, p.pNode)
-	Abc_NtkIncrementTravId(p.pNode.pNtk)
-	Abc_NodeSetTravIdCurrent(p.pNode)
+	abc.Abc_NtkIncrementTravId(abc.Abc_ObjNtk(p.pNode))
+	abc.Abc_NodeSetTravIdCurrent(p.pNode)
 
 	// collect the leaves (nodes pTemp such that "p->pNode->Level - pTemp->Level > p->nWinTfiMax")
 	Vec_PtrClear(p.vLeaves)
@@ -121,16 +132,16 @@ func Res_WinCollectLeavesAndNodes(p *Res_Win_t) int32 {
 		for k = 0; k < Vec_PtrSize(vFront); k++ {
 			pObj = Vec_PtrEntry(vFront, k)
 			// inlining of macro Abc_ObjForEachFanin
-			for m = 0; m < Abc_ObjFaninNum(pObj); m++ {
-				pTemp = Abc_ObjFanin(pObj, m)
-				if Abc_NodeIsTravIdCurrent(pTemp) {
+			for m = 0; m < abc.Abc_ObjFaninNum(pObj); m++ {
+				pTemp = abc.Abc_ObjFanin(pObj, m)
+				if abc.Abc_NodeIsTravIdCurrent(pTemp) != 0 {
 					continue
 				}
-				Abc_NodeSetTravIdCurrent(pTemp)
-				if Abc_ObjIsCi(pTemp) || int32((p.pNode.Level-pTemp.Level)) > p.nWinTfiMax {
+				abc.Abc_NodeSetTravIdCurrent(pTemp)
+				if abc.Abc_ObjIsCi(pTemp) != 0 || abc.Abc_ObjLevel(p.pNode)-abc.Abc_ObjLevel(pTemp) > p.nWinTfiMax {
 					Vec_PtrPush(p.vLeaves, pTemp)
 				} else {
-					Vec_VecPush(p.vMatrix, p.pNode.Level-pTemp.Level, pTemp)
+					Vec_VecPush(p.vMatrix, abc.Abc_ObjLevel(p.pNode)-abc.Abc_ObjLevel(pTemp), pTemp)
 				}
 			}
 		}
@@ -153,15 +164,20 @@ func Res_WinCollectLeavesAndNodes(p *Res_Win_t) int32 {
 	}
 
 	// get the lowest leaf level
-	p.nLevLeafMin = ABC_INFINITY
+	p.nLevLeafMin = 1000000000
 	// inlining of macro Vec_PtrForEachEntry
 	for k = 0; k < Vec_PtrSize(p.vLeaves); k++ {
 		pObj = Vec_PtrEntry(p.vLeaves, k)
-		p.nLevLeafMin = Abc_MinInt(p.nLevLeafMin, int32(pObj.Level))
+		if level := abc.Abc_ObjLevel(pObj); level < p.nLevLeafMin {
+			p.nLevLeafMin = level
+		}
 	}
 
 	// set minimum traversal level
-	p.nLevTravMin = Abc_MaxInt((int32(p.pNode.Level))-p.nWinTfiMax-p.nLevTfiMinus, p.nLevLeafMin)
+	p.nLevTravMin = abc.Abc_ObjLevel(p.pNode) - p.nWinTfiMax - p.nLevTfiMinus
+	if p.nLevTravMin < p.nLevLeafMin {
+		p.nLevTravMin = p.nLevLeafMin
+	}
 	assert(p.nLevTravMin >= 0, "p.nLevTravMin >= 0")
 	return 1
 }
@@ -184,15 +200,15 @@ func Res_WinComputeRootsCheck(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit in
 	var i int32
 	// the node is the root if one of the following is true:
 	// (1) the node has more than fanouts than the limit
-	if Abc_ObjFanoutNum(pNode) > nFanoutLimit {
+	if abc.Abc_ObjFanoutNum(pNode) > nFanoutLimit {
 		return 1
 	}
 	// (2) the node has CO fanouts
 	// (3) the node has fanouts above the cutoff level
 	// inlining of macro Abc_ObjForEachFanout
-	for i = 0; i < Abc_ObjFanoutNum(pNode); i++ {
-		pFanout = Abc_ObjFanout(pNode, i)
-		if Abc_ObjIsCo(pFanout) || int32(pFanout.Level) > nLevelMax {
+	for i = 0; i < abc.Abc_ObjFanoutNum(pNode); i++ {
+		pFanout = abc.Abc_ObjFanout(pNode, i)
+		if abc.Abc_ObjIsCo(pFanout) != 0 || abc.Abc_ObjLevel(pFanout) > nLevelMax {
 			return 1
 		}
 	}
@@ -215,18 +231,18 @@ func Res_WinComputeRootsCheck(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit in
 func Res_WinComputeRoots_rec(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit int32, vRoots *Vec_Ptr_t) {
 	var pFanout *Abc_Obj_t
 	var i int32
-	assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)")
-	if Abc_NodeIsTravIdCurrent(pNode) {
+	assert(abc.Abc_ObjIsNode(pNode) != 0, "abc.Abc_ObjIsNode(pNode)")
+	if abc.Abc_NodeIsTravIdCurrent(pNode) != 0 {
 		return
 	}
-	Abc_NodeSetTravIdCurrent(pNode)
+	abc.Abc_NodeSetTravIdCurrent(pNode)
 	// check if the node should be the root
 	if Res_WinComputeRootsCheck(pNode, nLevelMax, nFanoutLimit) != 0 {
 		Vec_PtrPush(vRoots, pNode)
 	} else { // if not, explore its fanouts
 		// inlining of macro Abc_ObjForEachFanout
-		for i = 0; i < Abc_ObjFanoutNum(pNode); i++ {
-			pFanout = Abc_ObjFanout(pNode, i)
+		for i = 0; i < abc.Abc_ObjFanoutNum(pNode); i++ {
+			pFanout = abc.Abc_ObjFanout(pNode, i)
 			Res_WinComputeRoots_rec(pFanout, nLevelMax, nFanoutLimit, vRoots)
 		}
 	}
@@ -247,8 +263,8 @@ func Res_WinComputeRoots_rec(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit int
 */
 func Res_WinComputeRoots(p *Res_Win_t) int32 {
 	Vec_PtrClear(p.vRoots)
-	Abc_NtkIncrementTravId(p.pNode.pNtk)
-	Res_WinComputeRoots_rec(p.pNode, p.pNode.Level+p.nWinTfoMax, p.nFanoutLimit, p.vRoots)
+	abc.Abc_NtkIncrementTravId(abc.Abc_ObjNtk(p.pNode))
+	Res_WinComputeRoots_rec(p.pNode, abc.Abc_ObjLevel(p.pNode)+p.nWinTfoMax, p.nFanoutLimit, p.vRoots)
 	assert(Vec_PtrSize(p.vRoots) > 0, "Vec_PtrSize(p.vRoots) > 0")
 	if Vec_PtrSize(p.vRoots) == 1 && Vec_PtrEntry(p.vRoots, 0) == p.pNode {
 		return 0
@@ -273,29 +289,29 @@ func Res_WinMarkPaths_rec(pNode *Abc_Obj_t, pPivot *Abc_Obj_t, nLevelMin int32) 
 	var pFanin *Abc_Obj_t
 	var i, RetValue int32
 	// skip visited nodes
-	if Abc_NodeIsTravIdCurrent(pNode) {
+	if abc.Abc_NodeIsTravIdCurrent(pNode) != 0 {
 		return 1
 	}
-	if Abc_NodeIsTravIdPrevious(pNode) {
+	if abc.Abc_NodeIsTravIdPrevious(pNode) != 0 {
 		return 0
 	}
 	// assume that the node does not have access to the leaves
-	Abc_NodeSetTravIdPrevious(pNode)
+	abc.Abc_NodeSetTravIdPrevious(pNode)
 	// skip nodes below the given level
-	if pNode == pPivot || int32(pNode.Level) <= nLevelMin {
+	if pNode == pPivot || abc.Abc_ObjLevel(pNode) <= nLevelMin {
 		return 0
 	}
-	assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)")
+	assert(abc.Abc_ObjIsNode(pNode) != 0, "abc.Abc_ObjIsNode(pNode)")
 	// check if the fanins have access to the leaves
 	RetValue = 0
 	// inlining of macro Abc_ObjForEachFanin
-	for i = 0; i < Abc_ObjFaninNum(pNode); i++ {
-		pFanin = Abc_ObjFanin(pNode, i)
+	for i = 0; i < abc.Abc_ObjFaninNum(pNode); i++ {
+		pFanin = abc.Abc_ObjFanin(pNode, i)
 		RetValue |= Res_WinMarkPaths_rec(pFanin, pPivot, nLevelMin)
 	}
 	// relabel the node if it has access to the leaves
 	if RetValue != 0 {
-		Abc_NodeSetTravIdCurrent(pNode)
+		abc.Abc_NodeSetTravIdCurrent(pNode)
 	}
 	return RetValue
 }
@@ -317,12 +333,12 @@ func Res_WinMarkPaths(p *Res_Win_t) {
 	var pObj *Abc_Obj_t
 	var i int32
 	// mark the leaves
-	Abc_NtkIncrementTravId(p.pNode.pNtk)
-	Abc_NtkIncrementTravId(p.pNode.pNtk)
+	abc.Abc_NtkIncrementTravId(abc.Abc_ObjNtk(p.pNode))
+	abc.Abc_NtkIncrementTravId(abc.Abc_ObjNtk(p.pNode))
 	// inlining of macro Vec_PtrForEachEntry
 	for i = 0; i < Vec_PtrSize(p.vLeaves); i++ {
 		pObj = Vec_PtrEntry(p.vLeaves, i)
-		Abc_NodeSetTravIdCurrent(pObj)
+		abc.Abc_NodeSetTravIdCurrent(pObj)
 	}
 	// traverse from the roots and mark the nodes that can reach leaves
 	// the nodes that do not reach leaves have previous trav ID
@@ -350,23 +366,23 @@ func Res_WinMarkPaths(p *Res_Win_t) {
 func Res_WinFinalizeRoots_rec(pObj *Abc_Obj_t, vRoots *Vec_Ptr_t) {
 	var pFanout *Abc_Obj_t
 	var i int32
-	assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)")
-	assert(Abc_NodeIsTravIdCurrent(pObj), "Abc_NodeIsTravIdCurrent(pObj)")
+	assert(abc.Abc_ObjIsNode(pObj) != 0, "abc.Abc_ObjIsNode(pObj)")
+	assert(abc.Abc_NodeIsTravIdCurrent(pObj) != 0, "abc.Abc_NodeIsTravIdCurrent(pObj)")
 	// check if the node has all fanouts marked
 	// inlining of macro Abc_ObjForEachFanout
-	for i = 0; i < Abc_ObjFanoutNum(pObj); i++ {
-		pFanout = Abc_ObjFanout(pObj, i)
-		if !Abc_NodeIsTravIdCurrent(pFanout) {
+	for i = 0; i < abc.Abc_ObjFanoutNum(pObj); i++ {
+		pFanout = abc.Abc_ObjFanout(pObj, i)
+		if abc.Abc_NodeIsTravIdCurrent(pFanout) == 0 {
 			break
 		}
 	}
 	// if some of the fanouts are unmarked, add the node to the roots
-	if i < Abc_ObjFanoutNum(pObj) {
+	if i < abc.Abc_ObjFanoutNum(pObj) {
 		Vec_PtrPushUnique(vRoots, pObj)
 	} else { // otherwise, call recursively
 		// inlining of macro Abc_ObjForEachFanout
-		for i = 0; i < Abc_ObjFanoutNum(pObj); i++ {
-			pFanout = Abc_ObjFanout(pObj, i)
+		for i = 0; i < abc.Abc_ObjFanoutNum(pObj); i++ {
+			pFanout = abc.Abc_ObjFanout(pObj, i)
 			Res_WinFinalizeRoots_rec(pFanout, vRoots)
 		}
 	}
@@ -387,9 +403,9 @@ func Res_WinFinalizeRoots_rec(pObj *Abc_Obj_t, vRoots *Vec_Ptr_t) {
 **********************************************************************
 */
 func Res_WinFinalizeRoots(p *Res_Win_t) int32 {
-	assert(!Abc_NodeIsTravIdCurrent(p.pNode), "!Abc_NodeIsTravIdCurrent(p.pNode)")
+	assert(abc.Abc_NodeIsTravIdCurrent(p.pNode) == 0, "!abc.Abc_NodeIsTravIdCurrent(p.pNode)")
 	// mark the node with the old traversal ID
-	Abc_NodeSetTravIdCurrent(p.pNode)
+	abc.Abc_NodeSetTravIdCurrent(p.pNode)
 	// recollect the roots
 	Vec_PtrClear(p.vRoots)
 	Res_WinFinalizeRoots_rec(p.pNode, p.vRoots)
@@ -417,22 +433,22 @@ func Res_WinAddMissing_rec(p *Res_Win_t, pObj *Abc_Obj_t, nLevTravMin int32) {
 	var pFanin *Abc_Obj_t
 	var i int32
 	// skip the already collected leaves, nodes, and branches
-	if Abc_NodeIsTravIdCurrent(pObj) {
+	if abc.Abc_NodeIsTravIdCurrent(pObj) != 0 {
 		return
 	}
 	// if this is not an internal node - make it a new branch
-	if !Abc_NodeIsTravIdPrevious(pObj) {
+	if abc.Abc_NodeIsTravIdPrevious(pObj) == 0 {
 		assert(Vec_PtrFind(p.vLeaves, pObj) == -1, "Vec_PtrFind(p.vLeaves, pObj) == -1")
-		Abc_NodeSetTravIdCurrent(pObj)
+		abc.Abc_NodeSetTravIdCurrent(pObj)
 		Vec_PtrPush(p.vBranches, pObj)
 		return
 	}
-	assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)") // if this is a CI, then the window is incorrect!
-	Abc_NodeSetTravIdCurrent(pObj)
+	assert(abc.Abc_ObjIsNode(pObj) != 0, "abc.Abc_ObjIsNode(pObj)") // if this is a CI, then the window is incorrect!
+	abc.Abc_NodeSetTravIdCurrent(pObj)
 	// visit the fanins of the node
 	// inlining of macro Abc_ObjForEachFanin
-	for i = 0; i < Abc_ObjFaninNum(pObj); i++ {
-		pFanin = Abc_ObjFanin(pObj, i)
+	for i = 0; i < abc.Abc_ObjFaninNum(pObj); i++ {
+		pFanin = abc.Abc_ObjFanin(pObj, i)
 		Res_WinAddMissing_rec(p, pFanin, nLevTravMin)
 	}
 	// collect the node
@@ -456,17 +472,17 @@ func Res_WinAddMissing(p *Res_Win_t) {
 	var pObj *Abc_Obj_t
 	var i int32
 	// mark the leaves
-	Abc_NtkIncrementTravId(p.pNode.pNtk)
+	abc.Abc_NtkIncrementTravId(abc.Abc_ObjNtk(p.pNode))
 	// inlining of macro Vec_PtrForEachEntry
 	for i = 0; i < Vec_PtrSize(p.vLeaves); i++ {
 		pObj = Vec_PtrEntry(p.vLeaves, i)
-		Abc_NodeSetTravIdCurrent(pObj)
+		abc.Abc_NodeSetTravIdCurrent(pObj)
 	}
 	// mark the already collected nodes
 	// inlining of macro Vec_PtrForEachEntry
 	for i = 0; i < Vec_PtrSize(p.vNodes); i++ {
 		pObj = Vec_PtrEntry(p.vNodes, i)
-		Abc_NodeSetTravIdCurrent(pObj)
+		abc.Abc_NodeSetTravIdCurrent(pObj)
 	}
 	// explore from the roots
 	Vec_PtrClear(p.vBranches)
@@ -508,7 +524,7 @@ func Res_WinIsTrivial(p *Res_Win_t) int32 {
 **********************************************************************
 */
 func Res_WinCompute(pNode *Abc_Obj_t, nWinTfiMax int32, nWinTfoMax int32, p *Res_Win_t) int32 {
-	assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)")
+	assert(abc.Abc_ObjIsNode(pNode) != 0, "abc.Abc_ObjIsNode(pNode)")
 	assert(nWinTfiMax > 0 && nWinTfiMax < 10, "nWinTfiMax > 0 && nWinTfiMax < 10")
 	assert(nWinTfoMax >= 0 && nWinTfoMax < 10, "nWinTfoMax >= 0 && nWinTfoMax < 10")
 

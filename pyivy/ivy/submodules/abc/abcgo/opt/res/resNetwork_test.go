@@ -3,6 +3,7 @@ package res
 import (
 	"testing"
 
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/base/abc"
 )
 
@@ -59,6 +60,61 @@ func TestResubstituteNetworkPreservesTruthAndNames(t *testing.T) {
 		values := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
 		if got, want := evaluateNetworkOutputs(t, result, values), evaluateNetworkOutputs(t, source, values); !equalBoolSlice(got, want) {
 			t.Fatalf("assignment %03b: got %v want %v", mask, got, want)
+		}
+	}
+}
+
+func TestResNetworkFromGraphEncodesExplicitXorWithoutDeadGate(t *testing.T) {
+	graph := aig.NewGraph()
+	a, b := graph.NewInput(), graph.NewInput()
+	graph.AddOutput(graph.NewXor(a.Not(), b))
+
+	network, err := ResNetworkFromGraph(graph)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := len(network.ObjectsOfKind(abc.ObjectNode)); got != 3 {
+		t.Fatalf("explicit XOR produced %d AND nodes, want 3", got)
+	}
+	inputs, output := network.Inputs(), network.Outputs()[0]
+	for assignment := 0; assignment < 4; assignment++ {
+		values := map[*abc.Object]bool{inputs[0]: assignment&1 != 0, inputs[1]: assignment&2 != 0}
+		got, err := network.Evaluate(output.Fanins()[0], values)
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := (assignment&1 == 0) != (assignment&2 != 0)
+		if got != want {
+			t.Fatalf("assignment %02b: got %v want %v", assignment, got, want)
+		}
+	}
+}
+
+func TestResGraphFromNetworkPreservesComplementedFanins(t *testing.T) {
+	network := abc.NewNetwork("phased")
+	network.Type = uint8(abc.ABC_NTK_STRASH)
+	network.Function = uint8(abc.ABC_FUNC_AIG)
+	manager := abc.Abc_AigAlloc(network)
+	network.FunctionManager = manager
+	a := network.NewObject(abc.ObjectPI)
+	b := network.NewObject(abc.ObjectPI)
+	root := abc.Abc_AigAnd(manager, a.Signal().Not(), b.Signal())
+	addNetworkOutput(t, network, root, "f")
+
+	graph, err := ResGraphFromNetwork(network)
+	if err != nil {
+		t.Fatal(err)
+	}
+	inputs, outputs := graph.Inputs(), graph.Outputs()
+	for assignment := 0; assignment < 4; assignment++ {
+		values := []bool{assignment&1 != 0, assignment&2 != 0}
+		got, err := graph.Evaluate(values)
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := !values[0] && values[1]
+		if len(outputs) != 1 || got[0] != want {
+			t.Fatalf("assignment %02b inputs=%v outputs=%v want %v", assignment, inputs, got, want)
 		}
 	}
 }

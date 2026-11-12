@@ -2,183 +2,95 @@ package nwk
 
 import (
 	"fmt"
-	"time"
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/bool/bdc"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-/**CFile****************************************************************
+type Bdc_Man_t = bdc.Bdc_Man_t
+type Bdc_Fun_t = bdc.Bdc_Fun_t
 
-  FileName    [nwkBidec.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Logic network representation.]
-
-  Synopsis    [Bi-decomposition of local functions.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: nwkBidec.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "nwk.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Extra_TruthWordNum(nVars int32) int32 { if nVars <= 5 {
-    return 1;
-} else {
-    return (1 << (nVars - 5));
-} }
-func Extra_TruthNot(pOut *uint32, pIn *uint32, nVars int32) {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = ~pIn[w];
-    }
+func Extra_TruthWordNum(n int32) int32 {
+	if n <= 5 {
+		return 1
+	}
+	return 1 << uint(n-5)
 }
-func Extra_TruthOr(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = pIn0[w] | pIn1[w];
-    }
+func Extra_TruthNot(out, in []uint32, n int32) {
+	for i := range out[:Extra_TruthWordNum(n)] {
+		out[i] = ^in[i]
+	}
 }
-func Extra_TruthSharp(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {
-    var w int32;
-    for  w = Extra_TruthWordNum(nVars)-1; w >= 0; w--  {
-        pOut[w] = pIn0[w] & ~pIn1[w];
-    }
+func Extra_TruthOr(out, a, b []uint32, n int32) {
+	for i := range out[:Extra_TruthWordNum(n)] {
+		out[i] = a[i] | b[i]
+	}
 }
-
-func Bdc_FunCopyHop(pObj *Bdc_Fun_t) *Hop_Obj_t { return Hop_NotCond( (Hop_Obj_t *)Bdc_FuncCopy(Bdc_Regular(pObj)), Bdc_IsComplement(pObj) );  }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Resynthesizes nodes using bi-decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_NodeIfNodeResyn(p *Bdc_Man_t, pHop *Hop_Man_t, pRoot *Hop_Obj_t, nVars int32, vTruth *Vec_Int_t, puCare *uint32, dProb float32) *Hop_Obj_t {
-    var pTruth *uint32;
-    var pFunc *Bdc_Fun_t;
-    var nNodes, i int32;
-    assert(nVars <= 16, "nVars <= 16");
-    // derive truth table
-    pTruth = Hop_ManConvertAigToTruth( pHop, Hop_Regular(pRoot), nVars, vTruth, 0 );
-    if Hop_IsComplement(pRoot) {
-        for  i = Abc_TruthWordNum(nVars)-1; i >= 0; i--  {
-            pTruth[i] = ~pTruth[i];
-        } }
-    // perform power-aware decomposition
-    if dProb >= 0.0 {
-        var Prob float32  = float32(2.0) * dProb * (1.0 - dProb);
-        assert(Prob >= 0.0 && Prob <= 0.5, "Prob >= 0.0 && Prob <= 0.5");
-        if Prob >= 0.4 {
-            Extra_TruthNot( puCare, puCare, nVars );
-            if dProb > 0.5 { // more 1s than 0s
-                Extra_TruthOr( pTruth, pTruth, puCare, nVars );
-            } else {
-                Extra_TruthSharp( pTruth, pTruth, puCare, nVars ); }
-            Extra_TruthNot( puCare, puCare, nVars );
-            // decompose truth table
-            Bdc_ManDecompose( p, pTruth, nil, nVars, nil, 1000 );
-        
-        } else {
-            // decompose truth table
-            Bdc_ManDecompose( p, pTruth, puCare, nVars, nil, 1000 );
-        }
-    
-    } else {
-        // decompose truth table
-        Bdc_ManDecompose( p, pTruth, puCare, nVars, nil, 1000 );
-    }
-    // convert back into HOP
-    Bdc_FuncSetCopy( Bdc_ManFunc( p, 0 ), Hop_ManConst1( pHop ) );
-    for  i = 0; i < nVars; i++  {
-        Bdc_FuncSetCopy( Bdc_ManFunc( p, i+1 ), Hop_ManPi( pHop, i ) );
-    }
-    nNodes = Bdc_ManNodeNum(p);
-    for  i = nVars + 1; i < nNodes; i++  {
-        pFunc = Bdc_ManFunc( p, i );
-        Bdc_FuncSetCopy( pFunc, Hop_And( pHop, Bdc_FunCopyHop(Bdc_FuncFanin0(pFunc)), Bdc_FunCopyHop(Bdc_FuncFanin1(pFunc)) ) );
-    }
-    return Bdc_FunCopyHop( Bdc_ManRoot(p) );
+func Extra_TruthSharp(out, a, b []uint32, n int32) {
+	for i := range out[:Extra_TruthWordNum(n)] {
+		out[i] = a[i] &^ b[i]
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resynthesizes nodes using bi-decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_ManBidecResyn(pNtk *Nwk_Man_t, fVerbose int32) {
-    var Pars Bdc_Par_t ;
-    var pPars *Bdc_Par_t = &Pars;
-    var p *Bdc_Man_t;
-    var pObj *Nwk_Obj_t;
-    var vTruth *Vec_Int_t;
-    var i, nGainTotal, nNodes1, nNodes2 int32;
-    var clk abctime  = Abc_Clock();
-    pPars.nVarsMax = Nwk_ManGetFaninMax( pNtk );
-    pPars.fVerbose = fVerbose;
-    if pPars.nVarsMax < 2 {
-        fmt.Printf("Resynthesis is not performed for networks whose nodes are less than 2 inputs.\n");
-        return;
-    }
-    if pPars.nVarsMax > 15 {
-        if fVerbose != 0 {
-        fmt.Printf("Resynthesis is not performed for nodes with more than 15 inputs.\n"); }
-        pPars.nVarsMax = 15;
-    }
-    vTruth = Vec_IntAlloc( 0 );
-    p = Bdc_ManAlloc( pPars );
-    // inlining of macro Nwk_ManForEachNode
-    for  i = 0; (i < Vec_PtrSize(pNtk.vObjs)) && (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if (pObj) == nil || !Nwk_ObjIsNode(pObj) {} else {
-        if Nwk_ObjFaninNum(pObj) > 15 {
-            continue; }
-        nNodes1 = Hop_DagSize(pObj.pFunc);
-        pObj.pFunc = Nwk_NodeIfNodeResyn( p, pNtk.pManHop, pObj.pFunc, Nwk_ObjFaninNum(pObj), vTruth, nil, -1.0 );
-        nNodes2 = Hop_DagSize(pObj.pFunc);
-        nGainTotal += nNodes1 - nNodes2;
-    }
-    }
-    Bdc_ManFree( p );
-    Vec_IntFree( vTruth );
-    if fVerbose != 0 {
-    fmt.Printf("Total gain in AIG nodes = %d.  ", nGainTotal);
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Total runtime"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    }
+func Bdc_FunCopyHop(f *Bdc_Fun_t) *Hop_Obj_t {
+	return hop.Hop_NotCond(bdc.Bdc_FuncCopy(bdc.Bdc_Regular(f)).(*Hop_Obj_t), bdc.Bdc_IsComplement(f))
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Nwk_NodeIfNodeResyn(p *Bdc_Man_t, h *Hop_Man_t, root *Hop_Obj_t, n int32, scratch *Vec_Int_t, care []uint32, probability float32) *Hop_Obj_t {
+	if n > 16 {
+		panic("nwk: decomposition support exceeds sixteen")
+	}
+	truth := append([]uint32(nil), hop.Hop_ManConvertAigToTruth(h, root, n, scratch, 0)...)
+	decompositionCare := care
+	if probability >= 0 {
+		if probability > 1 {
+			panic("nwk: invalid switching probability")
+		}
+		activity := 2 * probability * (1 - probability)
+		if activity >= .4 {
+			if len(care) < len(truth) {
+				panic("nwk: power decomposition needs care table")
+			}
+			for i := range truth {
+				if probability > .5 {
+					truth[i] |= ^care[i]
+				} else {
+					truth[i] &= care[i]
+				}
+			}
+			decompositionCare = nil
+		}
+	}
+	if bdc.Bdc_ManDecompose(p, truth, decompositionCare, n, nil, 1000) < 0 {
+		panic("nwk: decomposition failed")
+	}
+	bdc.Bdc_FuncSetCopy(bdc.Bdc_ManFunc(p, 0), hop.Hop_ManConst1(h))
+	for i := int32(0); i < n; i++ {
+		bdc.Bdc_FuncSetCopy(bdc.Bdc_ManFunc(p, i+1), hop.Hop_IthVar(h, i))
+	}
+	for i := n + 1; i < bdc.Bdc_ManNodeNum(p); i++ {
+		f := bdc.Bdc_ManFunc(p, i)
+		bdc.Bdc_FuncSetCopy(f, hop.Hop_And(h, Bdc_FunCopyHop(bdc.Bdc_FuncFanin0(f)), Bdc_FunCopyHop(bdc.Bdc_FuncFanin1(f))))
+	}
+	return Bdc_FunCopyHop(bdc.Bdc_ManRoot(p))
+}
+func Nwk_ManBidecResyn(p *Nwk_Man_t, verbose int32) {
+	n := Nwk_ManGetFaninMax(p)
+	if n < 2 {
+		return
+	}
+	n = min(n, 15)
+	manager := bdc.Bdc_ManAlloc(&bdc.Bdc_Par_t{NVarsMax: n, FVerbose: verbose})
+	defer bdc.Bdc_ManFree(manager)
+	scratch := vec.Vec_IntAlloc(0)
+	var gain int32
+	for _, o := range p.Objects {
+		if o == nil || o.Type != NWK_OBJ_NODE || len(o.Fanins) > 15 {
+			continue
+		}
+		before := hop.Hop_DagSize(o.Function)
+		o.Function = Nwk_NodeIfNodeResyn(manager, p.Hop, o.Function, int32(len(o.Fanins)), scratch, nil, -1)
+		gain += before - hop.Hop_DagSize(o.Function)
+	}
+	if verbose != 0 {
+		fmt.Fprintf(writer(p), "Total gain in AIG nodes = %d.\n", gain)
+	}
+}

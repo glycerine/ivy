@@ -18,10 +18,6 @@ var (
 	Cudd_RecursiveDeref = core.Cudd_RecursiveDeref
 	Cudd_Support        = core.Cudd_Support
 	Cudd_SupportSize    = core.Cudd_SupportSize
-	Cudd_bddPermute     = core.Cudd_bddPermute
-	Cudd_bddCompose     = core.Cudd_bddCompose
-	Cudd_Cofactor       = core.Cudd_Cofactor
-	Cudd_bddAndAbstract = core.Cudd_bddAndAbstract
 	Cudd_DagSize        = core.Cudd_DagSize
 	Cudd_CountMinterm   = core.Cudd_CountMinterm
 )

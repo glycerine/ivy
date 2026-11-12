@@ -5,199 +5,94 @@ import (
 	"time"
 )
 
-/**CFile****************************************************************
+func (p *Fpga_Man_t) Map() (err error) {
+	start := time.Now()
+	defer func() { p.Stats.Total = time.Since(start) }()
+	p.LastError = nil
+	p.Stats = MappingStatistics{}
+	if len(p.InputArrivals) != len(p.Inputs) {
+		return fmt.Errorf("fpga: input arrival count mismatch")
+	}
+	for _, arrival := range p.InputArrivals {
+		if !finite(arrival) {
+			return fmt.Errorf("fpga: non-finite input arrival")
+		}
+	}
+	if interrupted(p) {
+		return p.LastError
+	}
+	if e := p.Library.Validate(); e != nil {
+		return e
+	}
+	if p.Library.LutMax > FPGA_MAX_LEAVES {
+		return fmt.Errorf("fpga: maximum cut size is %d", FPGA_MAX_LEAVES)
+	}
+	if p.Latches < 0 || int(p.Latches) > len(p.Outputs) {
+		return fmt.Errorf("fpga: invalid latch count")
+	}
+	for i, e := range p.Outputs {
+		if e == nil || Fpga_Regular(e).manager != p {
+			return fmt.Errorf("fpga: invalid output %d", i)
+		}
+	}
+	for _, n := range p.Nodes {
+		n.Cuts = nil
+		n.Best = nil
+		n.EstimatedFanouts = -1
+		n.Refs = int32(len(n.fanouts))
+		n.Required = FPGA_FLOAT_LARGE
+	}
+	p.Ands = Fpga_MappingDfs(p, 1)
+	Fpga_MappingSetChoiceLevels(p)
+	startCuts := time.Now()
+	Fpga_MappingCuts(p)
+	p.Stats.CutTime = time.Since(startCuts)
+	startMatch := time.Now()
+	if Fpga_MappingMatches(p, 1) == 0 {
+		if p.LastError != nil {
+			return p.LastError
+		}
+		return fmt.Errorf("fpga: no feasible LUT cut")
+	}
+	p.Stats.MatchTime = time.Since(startMatch)
+	if Fpga_MappingPostProcess(p) == 0 {
+		return p.LastError
+	}
 
-  FileName    [fpgaCore.c]
-
-  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]
-
-  Synopsis    [Technology mapping for variable-size-LUT FPGAs.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 2.0. Started - August 18, 2004.]
-
-  Revision    [$Id: fpgaCore.c,v 1.7 2004/10/01 23:41:04 satrajit Exp $]
-
-***********************************************************************/
-
-//#include "fpgaInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static int  Fpga_MappingPostProcess( Fpga_Man_t * p );
-
-
-var s_MappingTime int64;
-var s_MappingMem int32;
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Performs technology mapping for the given object graph.]
-
-  Description [The object graph is stored in the mapping manager.
-  First, all the AND-nodes, which fanout into the POs, are collected
-  in the DFS fashion. Next, three steps are performed: the k-feasible
-  cuts are computed for each node, the truth tables are computed for
-  each cut, and the delay-optimal matches are assigned for each node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_Mapping(p *Fpga_Man_t) int32 {
-    var clk int64;
-    var clkTotal int64 = time.Now().UnixNano();
- 
-    // collect the nodes reachable from POs in the DFS order (including the choices)
-    p.vAnds = Fpga_MappingDfs( p, 1 );
-    Fpga_ManReportChoices( p ); // recomputes levels
-    Fpga_MappingSetChoiceLevels( p );
-
-    // compute the cuts of nodes in the DFS order
-    clk = time.Now().UnixNano();
-    Fpga_MappingCuts( p );
-    p.timeCuts = time.Now().UnixNano() - clk;
-
-    // match the truth tables to the supergates
-    clk = time.Now().UnixNano();
-    if !Fpga_MappingMatches( p, 1 ) {
-        return 0; }
-    p.timeMatch = time.Now().UnixNano() - clk;
-
-    // perform area recovery
-    clk = time.Now().UnixNano();
-    if !(Fpga_MappingPostProcess( p ) != 0) {
-        return 0; }
-    p.timeRecover = time.Now().UnixNano() - clk;
-//ABC_PRT( "Total mapping time", clock() - clkTotal );
-
-    s_MappingTime = time.Now().UnixNano() - clkTotal;
-    s_MappingMem = Fpga_CutCountAll(p) * (sizeof(Fpga_Cut_t) - sizeof(int) * (FPGA_MAX_LEAVES - p.nVarsMax));
-
-    // print the AI-graph used for mapping
-    //Fpga_ManShow( p, "test" );
-//    if ( p->fVerbose )
-//        Fpga_MappingPrintOutputArrivals( p );
-    if p.fVerbose {
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Total time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((time.Now().UnixNano() - clkTotal)))/(float64(int64(time.Second))));;
-    }
-    return 1;
+	Fpga_TimeComputeRequiredGlobal(p, 0)
+	Fpga_MappingSetUsedCuts(p)
+	p.Stats.Nodes = len(p.Ands.Nodes)
+	p.Stats.LUTs = len(p.Mapping.Nodes)
+	p.Stats.Area = p.AreaGlobal
+	p.Stats.Delay = Fpga_TimeComputeArrivalMax(p)
+	p.Stats.Switching = Fpga_MappingGetSwitching(p, p.Mapping)
+	return nil
 }
+func Fpga_Mapping(p *Fpga_Man_t) int32 { p.LastError = p.Map(); return boolInt(p.LastError == nil) }
 
-/**Function*************************************************************
-
-  Synopsis    [Postprocesses the mapped network for area recovery.]
-
-  Description [This procedure assumes that the mapping is assigned.
-  It iterates the loop, in which the required times are computed and
-  the mapping is updated. It is conceptually similar to the paper: 
-  V. Manohararajah, S. D. Brown, Z. G. Vranesic, Heuristics for area 
-  minimization in LUT-based FPGA technology mapping. Proc. IWLS '04.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Fpga_MappingPostProcess performs area-flow and exact area/switching recovery
+// on an existing delay-oriented cover.
 func Fpga_MappingPostProcess(p *Fpga_Man_t) int32 {
-    var fShowSwitching int32;
-    var fRecoverAreaFlow int32   = 1;
-    var fRecoverArea int32       = 1;
-    var aAreaTotalCur, aAreaTotalCur2 float32;
-    var Iter int32;
-    var clk int64;
+	Fpga_MappingSetRefsAndArea(p)
+	if p.AreaRecovery {
+		startRecovery := time.Now()
+		Fpga_TimeComputeRequiredGlobal(p, 1)
 
-//if ( p->fVerbose )
-//    printf( "Best clock period = %5.2f\n", Fpga_TimeComputeArrivalMax(p) );
-
-    // compute area, set references, and collect nodes used in the mapping
-    Iter = 1;
-    aAreaTotalCur = Fpga_MappingSetRefsAndArea( p );
-if p.fVerbose {
-fmt.Printf("Iteration %dD :  Area = %8.1f  ", Iter++, aAreaTotalCur);
-if fShowSwitching != 0 {
-fmt.Printf("Switch = %8.1f  ", Fpga_MappingGetSwitching(p,p.vMapping));
-} else {
-fmt.Printf("Delay = %5.2f  ", Fpga_TimeComputeArrivalMax(p)); }
-
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeMatch)))/(float64(int64(time.Second))));;
+		if Fpga_MappingMatches(p, 0) == 0 {
+			return 0
+		}
+		Fpga_MappingSetRefsAndArea(p)
+		Fpga_TimeComputeRequiredGlobal(p, 0)
+		if p.Switching {
+			if Fpga_MappingMatchesSwitch(p) == 0 {
+				return 0
+			}
+		} else if Fpga_MappingMatchesArea(p) == 0 {
+			return 0
+		}
+		Fpga_MappingSetRefsAndArea(p)
+		Fpga_TimePropagateArrival(p)
+		p.Stats.RecoveryTime = time.Since(startRecovery)
+	}
+	return 1
 }
-
-    if !p.fAreaRecovery {
-        return 1; }
-
-    if fRecoverAreaFlow != 0 {
-clk = time.Now().UnixNano();
-        // compute the required times and the fanouts
-        Fpga_TimeComputeRequiredGlobal( p, 1 );
-        // remap topologically
-        Fpga_MappingMatches( p, 0 );
-        // get the resulting area
-//        aAreaTotalCur = Fpga_MappingSetRefsAndArea( p );
-        aAreaTotalCur = Fpga_MappingAreaTrav( p );
-        // note that here we do not update the reference counter
-        // for some reason, this works better on benchmarks
-if p.fVerbose {
-fmt.Printf("Iteration %dF :  Area = %8.1f  ", Iter++, aAreaTotalCur);
-if fShowSwitching != 0 {
-fmt.Printf("Switch = %8.1f  ", Fpga_MappingGetSwitching(p,p.vMapping));
-} else {
-fmt.Printf("Delay = %5.2f  ", Fpga_TimeComputeArrivalMax(p)); }
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;
-}
-    }
-
-    // update reference counters
-    aAreaTotalCur2 = Fpga_MappingSetRefsAndArea( p );
-    assert(aAreaTotalCur == aAreaTotalCur2, "aAreaTotalCur == aAreaTotalCur2");
-
-    if fRecoverArea != 0 {
-clk = time.Now().UnixNano();
-        // compute the required times and the fanouts
-        Fpga_TimeComputeRequiredGlobal( p, 0 );
-        // remap topologically
-        if p.fSwitching {
-            Fpga_MappingMatchesSwitch( p );
-        } else {
-            Fpga_MappingMatchesArea( p ); }
-        // get the resulting area
-        aAreaTotalCur = Fpga_MappingSetRefsAndArea( p );
-if p.fVerbose {
-fmt.Printf("Iteration %d%s :  Area = %8.1f  ", Iter++, (p.fSwitching?"S":"A"), aAreaTotalCur);
-if fShowSwitching != 0 {
-fmt.Printf("Switch = %8.1f  ", Fpga_MappingGetSwitching(p,p.vMapping));
-} else {
-fmt.Printf("Delay = %5.2f  ", Fpga_TimeComputeArrivalMax(p)); }
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;
-}
-    }
-
-    p.fAreaGlo = aAreaTotalCur;
-    return 1;
-}
-
-
-//ABC_NAMESPACE_IMPL_END
-

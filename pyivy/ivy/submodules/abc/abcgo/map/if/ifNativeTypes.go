@@ -7,7 +7,7 @@ const (
 )
 
 type Ifn_Obj_t struct {
-	Type, nFanins, iFirst, Var uint32
+	Type, nFanins, iFirst, Var int32
 	Fanins                     [IFN_INS]int32
 }
 

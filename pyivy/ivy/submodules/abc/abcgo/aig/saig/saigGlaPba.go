@@ -1,591 +1,286 @@
 package saig
 
 import (
-	"fmt"
 	"time"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
-/**CFile****************************************************************
-
-  FileName    [saigGlaPba.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Sequential AIG package.]
-
-  Synopsis    [Gate level abstraction.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: saigGlaPba.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-//#include "saig.h"
-//#include "sat/bsat/satSolver.h"
-//#include "sat/bsat/satStore.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-   
+// Aig_Gla2Man_t owns the bounded unrolling used by gate-level localization
+// abstraction. Clause IDs are the proof solver's stable, one-based root IDs.
 type Aig_Gla2Man_t struct {
-    // user data
-    pAig     *Aig_Man_t;
-    nStart            int32;
-    nFramesMax            int32;
-    fVerbose            int32;
-    // unrolling
-    vObj2Vec     *Vec_Int_t;   // maps obj ID into its vec ID
-    vVec2Var     *Vec_Int_t;   // maps vec ID into its sat Var (nFrames per vec ID)
-    vVar2Inf     *Vec_Int_t;   // maps sat Var into its frame and obj ID
-    // clause mapping
-    vCla2Obj     *Vec_Int_t;   // maps clause into its root object
-    vCla2Fra     *Vec_Int_t;   // maps clause into its frame
-    vVec2Use     *Vec_Int_t;   // maps vec ID into its used frames (nFrames per vec ID)
-    // SAT solver
-    pSat    *sat_solver;
-    // statistics
-    timePre        int64;
-    timeSat        int64;
-    timeTotal        int64;
+	pAig                         *Aig_Man_t
+	nStart, nFramesMax, fVerbose int32
+	objVars                      []int32
+	claObj, claFrame             []int32
+	pSat                         *bsat.Solver2
+	clauseConflict               bool
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-
-/**Function*************************************************************
-
-  Synopsis    [Adds constant to the solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla2AddConst(pSat *sat_solver, iVar int32, fCompl int32) int32 {
-    var Lit lit  = toLitCond( iVar, fCompl );
-    if !sat_solver_addclause( pSat, &Lit, &Lit + 1 ) {
-        return 0; }
-    return 1;
+func newGlaManager(g *Aig_Man_t, start, frames, verbose int32) *Aig_Gla2Man_t {
+	return &Aig_Gla2Man_t{pAig: g, nStart: start, nFramesMax: frames, fVerbose: verbose}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds buffer to the solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla2AddBuffer(pSat *sat_solver, iVar0 int32, iVar1 int32, fCompl int32) int32 {
-    var Lits [2]lit;
-
-    Lits[0] = toLitCond( iVar0, 0 );
-    Lits[1] = toLitCond( iVar1, !fCompl );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVar0, 1 );
-    Lits[1] = toLitCond( iVar1, fCompl );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    return 1;
+func (p *Aig_Gla2Man_t) variable(edge aig.Edge, frame int32) int32 {
+	id := int(aig.Aig_ObjId(aig.Aig_Regular(edge)))
+	if id < 0 || id >= len(p.objVars) || frame < 0 || frame >= p.nFramesMax {
+		panic("saig GLA: invalid object/frame")
+	}
+	v := p.objVars[id*int(p.nFramesMax)+int(frame)]
+	if v < 0 {
+		panic("saig GLA: variable was not assigned during unrolling")
+	}
+	return v
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds buffer to the solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla2AddNode(pSat *sat_solver, iVar int32, iVar0 int32, iVar1 int32, fCompl0 int32, fCompl1 int32) int32 {
-    var Lits [3]lit;
-
-    Lits[0] = toLitCond( iVar, 1 );
-    Lits[1] = toLitCond( iVar0, fCompl0 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVar, 1 );
-    Lits[1] = toLitCond( iVar1, fCompl1 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVar, 0 );
-    Lits[1] = toLitCond( iVar0, !fCompl0 );
-    Lits[2] = toLitCond( iVar1, !fCompl1 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 3 ) {
-        return 0; }
-
-    return 1;
+func (p *Aig_Gla2Man_t) addClause(object, frame int32, literals ...bsat.Literal) bool {
+	if p.clauseConflict {
+		return false
+	}
+	ok := p.pSat.AddClause(literals...)
+	// IDs advance for every root clause, including an immediately conflicting
+	// one; the solver wrapper assigns IDs before detecting that conflict.
+	p.claObj = append(p.claObj, object)
+	p.claFrame = append(p.claFrame, frame)
+	p.clauseConflict = !ok
+	return ok
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Finds existing SAT variable or creates a new one.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla2FetchVar(p *Aig_Gla2Man_t, pObj *Aig_Obj_t, k int32) int32 {
-    var i, iVecId, iSatVar int32;
-    assert(k < p.nFramesMax, "k < p.nFramesMax");
-    iVecId = Vec_IntEntry( p.vObj2Vec, Aig_ObjId(pObj) );
-    if iVecId == 0 {
-        iVecId = Vec_IntSize( p.vVec2Var ) / p.nFramesMax;
-        for  i = 0; i < p.nFramesMax; i++  {
-            Vec_IntPush( p.vVec2Var, 0 );
-        }
-        Vec_IntWriteEntry( p.vObj2Vec, Aig_ObjId(pObj), iVecId );
-    }
-    iSatVar = Vec_IntEntry( p.vVec2Var, iVecId * p.nFramesMax + k );
-    if iSatVar == 0 {
-        iSatVar = Vec_IntSize( p.vVar2Inf ) / 2;
-        Vec_IntPush( p.vVar2Inf, Aig_ObjId(pObj) );
-        Vec_IntPush( p.vVar2Inf, k );
-        Vec_IntWriteEntry( p.vVec2Var, iVecId * p.nFramesMax + k, iSatVar );
-    }
-    return iSatVar;
+func glaLit(variable int32, complement bool) bsat.Literal {
+	lit := bsat.Positive(variable)
+	if complement {
+		lit = bsat.Negative(variable)
+	}
+	return lit
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Assigns variables to the AIG nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla2AssignVars_rec(p *Aig_Gla2Man_t, pObj *Aig_Obj_t, f int32) {
-    var nVars int32  = Vec_IntSize(p.vVar2Inf);
-    Aig_Gla2FetchVar( p, pObj, f );
-    if nVars == Vec_IntSize(p.vVar2Inf) {
-        return; }
-    if Aig_ObjIsConst1(pObj) {
-        return; }
-    if Saig_ObjIsPo( p.pAig, pObj ) {
-        Aig_Gla2AssignVars_rec( p, Aig_ObjFanin0(pObj), f );
-        return;
-    }
-    if Aig_ObjIsCi( pObj ) {
-        if Saig_ObjIsLo(p.pAig, pObj) && f > 0 {
-            Aig_Gla2AssignVars_rec( p, Aig_ObjFanin0( Saig_ObjLoToLi(p.pAig, pObj) ), f-1 ); }
-        return;
-    }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Aig_Gla2AssignVars_rec( p, Aig_ObjFanin0(pObj), f );
-    Aig_Gla2AssignVars_rec( p, Aig_ObjFanin1(pObj), f );
+func (p *Aig_Gla2Man_t) assign(edge aig.Edge, frame int32) {
+	g := p.pAig
+	e := aig.Aig_Regular(edge)
+	id := int(aig.Aig_ObjId(e))
+	index := id*int(p.nFramesMax) + int(frame)
+	if p.objVars[index] >= 0 {
+		return
+	}
+	p.objVars[index] = p.pSat.NewVariable()
+	if aig.Aig_ObjIsConst1(g, e) {
+		return
+	}
+	if Saig_ObjIsPo(g, e) {
+		p.assign(aig.Aig_ObjFanin0(g, e), frame)
+		return
+	}
+	if aig.Aig_ObjIsCi(g, e) {
+		if Saig_ObjIsLo(g, e) && frame > 0 {
+			p.assign(aig.Aig_ObjFanin0(g, Saig_ObjLoToLi(g, e)), frame-1)
+		}
+		return
+	}
+	if aig.Aig_ObjIsNode(g, e) {
+		p.assign(aig.Aig_ObjFanin0(g, e), frame)
+		p.assign(aig.Aig_ObjFanin1(g, e), frame)
+	}
 }
 
-/**Function*************************************************************
+func (p *Aig_Gla2Man_t) build() bool {
+	if p == nil || p.pAig == nil || p.nFramesMax <= 0 || p.nStart < 0 || p.nStart >= p.nFramesMax || Saig_ManPoNum(p.pAig) != 1 {
+		return false
+	}
+	maxObjects := int(aig.Aig_ManObjNumMax(p.pAig))
+	if maxObjects > int(^uint(0)>>1)/int(p.nFramesMax) {
+		return false
+	}
+	p.objVars = make([]int32, maxObjects*int(p.nFramesMax))
+	for i := range p.objVars {
+		p.objVars[i] = -1
+	}
+	p.pSat = bsat.NewSolver2()
+	for f := p.nFramesMax - 1; f >= 0; f-- {
+		p.assign(aig.Aig_ManCo(p.pAig, 0), f)
+	}
+	add := func(obj aig.Edge, frame int32, lits ...bsat.Literal) bool {
+		return p.addClause(aig.Aig_ObjId(obj), frame, lits...)
+	}
+	ok := true
+	for id := 0; id < maxObjects; id++ {
+		for frame := 0; frame < int(p.nFramesMax); frame++ {
+			variable := p.objVars[id*int(p.nFramesMax)+frame]
+			if variable < 0 {
+				continue
+			}
+			obj := aig.Aig_ManObj(p.pAig, int32(id))
+			f := int32(frame)
+			switch {
+			case aig.Aig_ObjIsNode(p.pAig, obj):
+				a := p.variable(aig.Aig_ObjFanin0(p.pAig, obj), f)
+				b := p.variable(aig.Aig_ObjFanin1(p.pAig, obj), f)
+				c0 := aig.Aig_ObjFaninC0(p.pAig, obj) != 0
+				c1 := aig.Aig_ObjFaninC1(p.pAig, obj) != 0
+				ok = add(obj, f, glaLit(variable, true), glaLit(a, c0)) && ok
+				ok = add(obj, f, glaLit(variable, true), glaLit(b, c1)) && ok
+				ok = add(obj, f, glaLit(variable, false), glaLit(a, !c0), glaLit(b, !c1)) && ok
+			case Saig_ObjIsLo(p.pAig, obj):
+				if f == 0 {
+					ok = add(obj, f, glaLit(variable, true)) && ok
+				} else {
+					li := Saig_ObjLoToLi(p.pAig, obj)
+					driver := p.variable(aig.Aig_ObjFanin0(p.pAig, li), f-1)
+					c := aig.Aig_ObjFaninC0(p.pAig, li) != 0
+					ok = add(obj, f, glaLit(variable, false), glaLit(driver, !c)) && ok
+					ok = add(obj, f, glaLit(variable, true), glaLit(driver, c)) && ok
+				}
+			case Saig_ObjIsPo(p.pAig, obj):
+				driver := p.variable(aig.Aig_ObjFanin0(p.pAig, obj), f)
+				c := aig.Aig_ObjFaninC0(p.pAig, obj) != 0
+				ok = add(obj, f, glaLit(variable, false), glaLit(driver, !c)) && ok
+				ok = add(obj, f, glaLit(variable, true), glaLit(driver, c)) && ok
+			case aig.Aig_ObjIsConst1(p.pAig, obj):
+				ok = add(obj, f, glaLit(variable, false)) && ok
+			}
+		}
+	}
+	property := make([]bsat.Literal, 0, p.nFramesMax-p.nStart)
+	for f := p.nStart; f < p.nFramesMax; f++ {
+		property = append(property, glaLit(p.variable(aig.Aig_ManCo(p.pAig, 0), f), false))
+	}
+	ok = p.addClause(0, 0, property...) && ok
+	return ok
+}
 
-  Synopsis    [Creates SAT solver.]
+// Aig_Gla2ManStart allocates an abstraction manager; no SAT work is done yet.
+func Aig_Gla2ManStart(g *Aig_Man_t, start, frames, verbose int32) *Aig_Gla2Man_t {
+	return newGlaManager(g, start, frames, verbose)
+}
 
-  Description []
-               
-  SideEffects []
+func Aig_Gla2FetchVar(p *Aig_Gla2Man_t, obj *Aig_Obj_t, frame int32) int32 {
+	if p == nil || obj == nil {
+		panic("saig GLA: nil manager or object")
+	}
+	return p.variable(*obj, frame)
+}
 
-  SeeAlso     []
+func Aig_Gla2AssignVars_rec(p *Aig_Gla2Man_t, obj *Aig_Obj_t, frame int32) {
+	if p == nil || obj == nil {
+		panic("saig GLA: nil manager or object")
+	}
+	p.assign(*obj, frame)
+}
 
-***********************************************************************/
 func Aig_Gla2CreateSatSolver(p *Aig_Gla2Man_t) int32 {
-    var vPoLits *Vec_Int_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    var f int32;
-    var ObjId int32;
-    var nVars int32;
-    var RetValue int32 = 1;
-
-    // assign variables
-    for  f = p.nFramesMax - 1; f >= 0; f--  {
-//    for ( f = 0; f < p->nFramesMax; f++ )
-        Aig_Gla2AssignVars_rec( p, Aig_ManCo(p.pAig, 0), f );
-    }
-
-    // create SAT solver
-    p.pSat = sat_solver_new();
-    sat_solver_store_alloc( p.pSat ); 
-    sat_solver_setnvars( p.pSat, Vec_IntSize(p.vVar2Inf)/2 );
-
-    // add clauses
-    nVars = Vec_IntSize( p.vVar2Inf );
-    // inlining of macro Vec_IntForEachEntryDouble
-    for  i = 0; (i+1 < Vec_IntSize(p.vVar2Inf)) && (((ObjId) = Vec_IntEntry(p.vVar2Inf, i)), 1) && (((f) = Vec_IntEntry(p.vVar2Inf, i+1)), 1); i += 2  {
-        if ObjId == -1 {
-            continue; }
-        pObj = Aig_ManObj( p.pAig, ObjId );
-        if Aig_ObjIsNode(pObj) {
-            RetValue &= Aig_Gla2AddNode( p.pSat, Aig_Gla2FetchVar(p, pObj, f), 
-                                                  Aig_Gla2FetchVar(p, Aig_ObjFanin0(pObj), f), 
-                                                  Aig_Gla2FetchVar(p, Aig_ObjFanin1(pObj), f), 
-                                                  Aig_ObjFaninC0(pObj), Aig_ObjFaninC1(pObj) );
-            Vec_IntPush( p.vCla2Obj, ObjId );
-            Vec_IntPush( p.vCla2Obj, ObjId );
-            Vec_IntPush( p.vCla2Obj, ObjId );
-
-            Vec_IntPush( p.vCla2Fra, f );
-            Vec_IntPush( p.vCla2Fra, f );
-            Vec_IntPush( p.vCla2Fra, f );
-        
-        } else if Saig_ObjIsLo(p.pAig, pObj) {
-            if f == 0 {
-                RetValue &= Aig_Gla2AddConst( p.pSat, Aig_Gla2FetchVar(p, pObj, f), 1 );
-                Vec_IntPush( p.vCla2Obj, ObjId );
-
-                Vec_IntPush( p.vCla2Fra, f );
-            
-            } else {
-                var pObjLi *Aig_Obj_t  = Saig_ObjLoToLi(p.pAig, pObj);
-                RetValue &= Aig_Gla2AddBuffer( p.pSat, Aig_Gla2FetchVar(p, pObj, f), 
-                                                        Aig_Gla2FetchVar(p, Aig_ObjFanin0(pObjLi), f-1), 
-                                                        Aig_ObjFaninC0(pObjLi) );
-                Vec_IntPush( p.vCla2Obj, ObjId );
-                Vec_IntPush( p.vCla2Obj, ObjId );
-
-                Vec_IntPush( p.vCla2Fra, f );
-                Vec_IntPush( p.vCla2Fra, f );
-            }
-        
-        } else if Saig_ObjIsPo(p.pAig, pObj) {
-            RetValue &= Aig_Gla2AddBuffer( p.pSat, Aig_Gla2FetchVar(p, pObj, f), 
-                                                    Aig_Gla2FetchVar(p, Aig_ObjFanin0(pObj), f), 
-                                                    Aig_ObjFaninC0(pObj) );
-            Vec_IntPush( p.vCla2Obj, ObjId );
-            Vec_IntPush( p.vCla2Obj, ObjId );
-
-            Vec_IntPush( p.vCla2Fra, f );
-            Vec_IntPush( p.vCla2Fra, f );
-        
-        } else if Aig_ObjIsConst1(pObj) {
-            RetValue &= Aig_Gla2AddConst( p.pSat, Aig_Gla2FetchVar(p, pObj, f), 0 );
-            Vec_IntPush( p.vCla2Obj, ObjId );
-
-            Vec_IntPush( p.vCla2Fra, f );
-        
-        } else { assert(Saig_ObjIsPi(p.pAig, pObj), "Saig_ObjIsPi(p.pAig, pObj)"); }
-    }
-
-    // add output clause
-    vPoLits = Vec_IntAlloc( p.nFramesMax );
-    for  f = p.nStart; f < p.nFramesMax; f++  {
-        Vec_IntPush( vPoLits, 2 * Aig_Gla2FetchVar(p, Aig_ManCo(p.pAig, 0), f) );
-    }
-    RetValue &= sat_solver_addclause( p.pSat, Vec_IntArray(vPoLits), Vec_IntArray(vPoLits) + Vec_IntSize(vPoLits) );
-    Vec_IntFree( vPoLits );
-    Vec_IntPush( p.vCla2Obj, 0 );
-    Vec_IntPush( p.vCla2Fra, 0 );
-    assert(Vec_IntSize(p.vCla2Fra) == Vec_IntSize(p.vCla2Obj), "Vec_IntSize(p.vCla2Fra) == Vec_IntSize(p.vCla2Obj)");
-
-    assert(nVars == Vec_IntSize(p.vVar2Inf), "nVars == Vec_IntSize(p.vVar2Inf)");
-    assert(((Sto_Man_t *)p.pSat.pStore).nClauses == Vec_IntSize(p.vCla2Obj), "((Sto_Man_t *)p.pSat.pStore).nClauses == Vec_IntSize(p.vCla2Obj)");
-//    Sto_ManDumpClauses( ((Sto_Man_t *)p->pSat->pStore), "temp_sto.cnf" );
-    sat_solver_store_mark_roots( p.pSat ); 
-
-    if p.fVerbose {
-        fmt.Printf("The resulting SAT problem contains %d variables and %d clauses.\n", p.pSat.size, p.pSat.stats.clauses); }
-    return RetValue;
+	if p == nil {
+		return 0
+	}
+	return boolToInt(p.build())
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla2ManStart(pAig *Aig_Man_t, nStart int32, nFramesMax int32, fVerbose int32) *Aig_Gla2Man_t {
-    
-    var i int32;
-
-    // inlining of macro ABC_CALLOC
-    p := &Aig_Gla2Man_t{};
-    p.pAig       = pAig;
-
-    p.vObj2Vec   = Vec_IntStart( Aig_ManObjNumMax(pAig) );
-    p.vVec2Var   = Vec_IntAlloc( 1 << 20 );
-    p.vVar2Inf   = Vec_IntAlloc( 1 << 20 );
-    p.vCla2Obj   = Vec_IntAlloc( 1 << 20 );
-    p.vCla2Fra   = Vec_IntAlloc( 1 << 20 );
-
-    // skip first vector ID
-    p.nStart     = nStart;
-    p.nFramesMax = nFramesMax;
-    p.fVerbose   = fVerbose;
-    for  i = 0; i < p.nFramesMax; i++  {
-        Vec_IntPush( p.vVec2Var, -1 );
-    }
-
-    // skip  first SAT variable
-    Vec_IntPush( p.vVar2Inf, -1 );
-    Vec_IntPush( p.vVar2Inf, -1 );
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Aig_Gla2ManStop(p *Aig_Gla2Man_t) {
-    Vec_IntFreeP( &p.vObj2Vec );
-    Vec_IntFreeP( &p.vVec2Var );
-    Vec_IntFreeP( &p.vVar2Inf );
-    Vec_IntFreeP( &p.vCla2Obj );
-    Vec_IntFreeP( &p.vCla2Fra );
-    Vec_IntFreeP( &p.vVec2Use );
-
-    if p.pSat {
-        sat_solver_delete( p.pSat ); }
-    p = nil;
+	if p != nil {
+		*p = Aig_Gla2Man_t{}
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Finds the set of clauses involved in the UNSAT core.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_AbsSolverUnsatCore(pSat *sat_solver, nConfMax int32, fVerbose int32, piRetValue *int32) *Vec_Int_t {
-    var vCore *Vec_Int_t;
-    var pSatCnf any; 
-    var pManProof *Intp_Man_t;
-    var RetValue int32;
-    var clk int64  = time.Now().UnixNano();
-    if piRetValue != nil {
-        *piRetValue = -1; }
-    // solve the problem
-    RetValue = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfMax, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    if RetValue == l_Undef {
-        fmt.Printf("Conflict limit is reached.\n");
-        return nil;
-    }
-    if RetValue == l_True {
-        fmt.Printf("The BMC problem is SAT.\n");
-        if piRetValue != nil {
-            *piRetValue = 0; }
-        return nil;
-    }
-    if fVerbose != 0 {
-        fmt.Printf("SAT solver returned UNSAT after %7d conflicts.      ", int32(pSat.stats.conflicts));
-        Abc_PrintTime( 1, "Time", time.Now().UnixNano() - clk );
-    }
-    assert(RetValue == l_False, "RetValue == l_False");
-    pSatCnf = sat_solver_store_release( pSat ); 
-    // derive the UNSAT core
-    clk = time.Now().UnixNano();
-    pManProof = Intp_ManAlloc();
-    vCore = (Vec_Int_t *)Intp_ManUnsatCore( pManProof, (Sto_Man_t *)pSatCnf, 0, 0 );
-    Intp_ManFree( pManProof );
-    if fVerbose != 0 {
-        fmt.Printf("SAT core contains %8d clauses (out of %8d).   ", Vec_IntSize(vCore), sat_solver_nclauses(pSat));
-        Abc_PrintTime( 1, "Time", time.Now().UnixNano() - clk );
-    }
-    Sto_ManFree( (Sto_Man_t *)pSatCnf );
-    return vCore;
+// Saig_AbsSolverUnsatCore solves the bounded problem and returns the proof's
+// root clause IDs. The return status uses 1 for UNSAT, 0 for SAT, and -1 for
+// resource exhaustion, matching the C helper's convention.
+func Saig_AbsSolverUnsatCore(s *bsat.Solver2, conflicts, verbose int32, status *int32) *Vec_Int_t {
+	if status != nil {
+		*status = -1
+	}
+	if s == nil {
+		return nil
+	}
+	if conflicts > 0 {
+		s.SetLimits(int64(conflicts), 0)
+	}
+	result := s.Solve()
+	if result == bsat.Satisfiable {
+		if status != nil {
+			*status = 0
+		}
+		return nil
+	}
+	if result != bsat.Unsatisfiable {
+		return nil
+	}
+	if status != nil {
+		*status = 1
+	}
+	ids := s.ProofCore()
+	core := vec.Vec_IntAlloc(len(ids))
+	vec.Vec_IntPushArray(core, ids, len(ids))
+	return core
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collects abstracted objects.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla2ManCollect(p *Aig_Gla2Man_t, vCore *Vec_Int_t) *Vec_Int_t {
-    var vResult *Vec_Int_t;
-    var pObj *Aig_Obj_t;
-    var i, ClaId, iVecId int32;
-//    p->vVec2Use = Vec_IntStart( Vec_IntSize(p->vVec2Var) );
-
-    vResult = Vec_IntStart( Aig_ManObjNumMax(p.pAig) );
-    Vec_IntWriteEntry( vResult, 0, 1 ); // add const1
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vCore)) && (((ClaId) = Vec_IntEntry(vCore, i)), 1); i++  {
-        pObj = Aig_ManObj( p.pAig, Vec_IntEntry(p.vCla2Obj, ClaId) );
-        if Saig_ObjIsPi(p.pAig, pObj) || Saig_ObjIsPo(p.pAig, pObj) || Aig_ObjIsConst1(pObj) {
-            continue; }
-        assert(Saig_ObjIsLo(p.pAig, pObj) || Aig_ObjIsNode(pObj), "Saig_ObjIsLo(p.pAig, pObj) || Aig_ObjIsNode(pObj)");
-        Vec_IntWriteEntry( vResult, Aig_ObjId(pObj), 1 );
-/*
-        // add flop inputs with multiple fanouts
-        if ( Saig_ObjIsLo(p->pAig, pObj) )
-        {
-            Aig_Obj_t * pObjLi = Saig_ObjLoToLi(p->pAig, pObj);
-            if ( !Saig_ObjIsPi(p->pAig, Aig_ObjFanin0(pObjLi)) )
-//            if ( Aig_ObjRefs( Aig_ObjFanin0(pObjLi) ) > 1 )
-                Vec_IntWriteEntry( vResult, Aig_ObjFaninId0(pObjLi), 1 );
-        }
-        else
-        {
-            if ( !Saig_ObjIsPi(p->pAig, Aig_ObjFanin0(pObj)) )
-                Vec_IntWriteEntry( vResult, Aig_ObjFaninId0(pObj), 1 );
-            if ( !Saig_ObjIsPi(p->pAig, Aig_ObjFanin1(pObj)) )
-                Vec_IntWriteEntry( vResult, Aig_ObjFaninId1(pObj), 1 );
-        }
-*/
-        if p.vVec2Use {
-            iVecId = Vec_IntEntry( p.vObj2Vec, Aig_ObjId(pObj) );
-            Vec_IntWriteEntry( p.vVec2Use, iVecId * p.nFramesMax + Vec_IntEntry(p.vCla2Fra, ClaId), 1 );
-        }
-    }
-//    printf( "Number of entries %d\n", Vec_IntCountPositive(vResult) );
-
-    // count the number of objects in each frame
-    if p.vVec2Use {
-        var vCounts *Vec_Int_t  = Vec_IntStart( p.nFramesMax );
-        var v int32;
-        var f int32;
-        var Entry int32;
-        var nVecIds int32 = Vec_IntSize(p.vVec2Use) / p.nFramesMax;
-        for  f = 0; f < p.nFramesMax; f++  {
-        for  v = 0; v < nVecIds; v++  {
-            if Vec_IntEntry( p.vVec2Use, v * p.nFramesMax + f ) {
-                Vec_IntAddToEntry( vCounts, f, 1 ); }
-        }
-        }
-        // inlining of macro Vec_IntForEachEntry
-        for  f = 0; (f < Vec_IntSize(vCounts)) && (((Entry) = Vec_IntEntry(vCounts, f)), 1); f++  {
-            fmt.Printf("%d ", Entry);
-        }
-        fmt.Printf("\n");
-        Vec_IntFree( vCounts );
-    }
-    return vResult;
+// Aig_Gla2ManCollect maps proof-root clause IDs back to the graph objects they
+// constrain. The result is a dense object bitmap and always includes const1.
+func Aig_Gla2ManCollect(p *Aig_Gla2Man_t, core *Vec_Int_t) *Vec_Int_t {
+	if p == nil || p.pAig == nil {
+		return nil
+	}
+	result := vec.Vec_IntStart(int(aig.Aig_ManObjNumMax(p.pAig)))
+	vec.Vec_IntWriteEntry(result, 0, 1)
+	for _, raw := range vec.Vec_IntArray(core) {
+		id := int(raw) - 1
+		if id < 0 || id >= len(p.claObj) {
+			continue
+		}
+		obj := aig.Aig_ManObj(p.pAig, p.claObj[id])
+		if Saig_ObjIsPi(p.pAig, obj) || Saig_ObjIsPo(p.pAig, obj) || aig.Aig_ObjIsConst1(p.pAig, obj) {
+			continue
+		}
+		vec.Vec_IntWriteEntry(result, int(p.claObj[id]), 1)
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs gate-level localization abstraction.]
-
-  Description [Returns array of objects included in the abstraction. This array
-  may contain only const1, flop outputs, and internal nodes, that is, objects
-  that should have clauses added to the SAT solver.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_Gla2ManPerform(pAig *Aig_Man_t, nStart int32, nFramesMax int32, nConfLimit int32, TimeLimit int32, fSkipRand int32, fVerbose int32) *Vec_Int_t {
-    var p *Aig_Gla2Man_t;
-    var vCore, vResult *Vec_Int_t;
-    var nTimeToStop int64;
-    if TimeLimit {
-        nTimeToStop = TimeLimit * int64(time.Second) + time.Now().UnixNano();
-    } else {
-        nTimeToStop = 0;
-    }
-    var clk int64;
-    var clk2 int64 = time.Now().UnixNano();
-    assert(Saig_ManPoNum(pAig) == 1, "Saig_ManPoNum(pAig) == 1");
-
-    if fVerbose != 0 {
-        if TimeLimit {
-            fmt.Printf("Abstracting from frame %d to frame %d with timeout %d sec.\n", nStart, nFramesMax, TimeLimit);
-        } else {
-            fmt.Printf("Abstracting from frame %d to frame %d with no timeout.\n", nStart, nFramesMax); }
-    }
-
-    // start the solver
-    clk = time.Now().UnixNano();
-    p = Aig_Gla2ManStart( pAig, nStart, nFramesMax, fVerbose );
-    if !(Aig_Gla2CreateSatSolver( p ) != 0) {
-        fmt.Printf("Error!  SAT solver became UNSAT.\n");
-        Aig_Gla2ManStop( p );
-        return nil;
-    }
-    sat_solver_set_random( p.pSat, fSkipRand );
-    p.timePre += time.Now().UnixNano() - clk;
-
-    // set runtime limit
-    if TimeLimit {
-        sat_solver_set_runtime_limit( p.pSat, nTimeToStop ); }
-
-    // compute UNSAT core
-    clk = time.Now().UnixNano();
-    vCore = Saig_AbsSolverUnsatCore( p.pSat, nConfLimit, fVerbose, nil );
-    if vCore == nil {
-        Aig_Gla2ManStop( p );
-        return nil;
-    }
-    p.timeSat += time.Now().UnixNano() - clk;
-    p.timeTotal += time.Now().UnixNano() - clk2;
-
-    // print stats
-    if fVerbose != 0 {
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Pre   "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timePre)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timePre)))/(float64((p.timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Sat   "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat)))/(float64((p.timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Total "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;
-    }
-
-    // prepare return value
-    vResult = Aig_Gla2ManCollect( p, vCore );
-    Vec_IntFree( vCore );
-    Aig_Gla2ManStop( p );
-    return vResult;
+// Aig_Gla2ManPerform unrolls the property, solves it, and returns the bitmap
+// of objects participating in the proof core. nil means SAT, unknown, or bad input.
+func Aig_Gla2ManPerform(g *Aig_Man_t, start, frames, conflicts, seconds, skipRandom, verbose int32) *Vec_Int_t {
+	p := Aig_Gla2ManStart(g, start, frames, verbose)
+	defer Aig_Gla2ManStop(p)
+	if !p.build() {
+		return nil
+	}
+	if conflicts > 0 {
+		p.pSat.SetLimits(int64(conflicts), 0)
+	}
+	if seconds > 0 {
+		p.pSat.SetDeadline(time.Now().Add(time.Duration(seconds) * time.Second))
+	}
+	status := p.pSat.Solve()
+	if status != bsat.Unsatisfiable {
+		return nil
+	}
+	ids := p.pSat.ProofCore()
+	core := vec.Vec_IntAlloc(len(ids))
+	vec.Vec_IntPushArray(core, ids, len(ids))
+	return Aig_Gla2ManCollect(p, core)
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Gla2AddConst, Gla2AddBuffer, and Gla2AddNode expose the CNF encodings used
+// by the unroller for callers that build compatible proof solvers themselves.
+func Aig_Gla2AddConst(s *bsat.Solver2, v int32, complement int32) int32 {
+	if complement != 0 {
+		return boolToInt(s.AddClause(glaLit(v, true)))
+	}
+	return boolToInt(s.AddClause(glaLit(v, false)))
+}
+func Aig_Gla2AddBuffer(s *bsat.Solver2, a, b int32, c int32) int32 {
+	ok := s.AddClause(glaLit(a, false), glaLit(b, c == 0))
+	ok = s.AddClause(glaLit(a, true), glaLit(b, c != 0)) && ok
+	return boolToInt(ok)
+}
+func Aig_Gla2AddNode(s *bsat.Solver2, z, a, b int32, ca, cb int32) int32 {
+	ok := s.AddClause(glaLit(z, true), glaLit(a, ca != 0))
+	ok = s.AddClause(glaLit(z, true), glaLit(b, cb != 0)) && ok
+	ok = s.AddClause(glaLit(z, false), glaLit(a, ca == 0), glaLit(b, cb == 0)) && ok
+	return boolToInt(ok)
+}
+func boolToInt(v bool) int32 {
+	if v {
+		return 1
+	}
+	return 0
+}

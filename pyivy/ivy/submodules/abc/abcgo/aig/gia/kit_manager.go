@@ -7,6 +7,9 @@ func (p *Gia_Man_t) AndLiteral(a, b int32, hash bool) int32 {
 	if !hash {
 		return Gia_ManAppendAnd(p, a, b)
 	}
+	if Vec_IntSize(&p.vHTable) != 0 {
+		return Gia_ManHashAnd(p, a, b)
+	}
 	giaCheckFanin(p, a)
 	giaCheckFanin(p, b)
 	if a == 0 || b == 0 {

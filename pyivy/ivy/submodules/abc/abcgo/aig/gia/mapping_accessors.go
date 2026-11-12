@@ -94,3 +94,16 @@ func (p *Gia_Man_t) LUT(id int32) (leaves []int32, truth []uint64, ok bool) {
 	truth = giaNewTruthEval(p, int32(len(leaves)), leaves).node(id)
 	return leaves, truth, true
 }
+
+func Gia_ManLutSizeMax(p *Gia_Man_t) int32 {
+	maximum := int32(-1)
+	if p.vMapping == nil {
+		return maximum
+	}
+	for id := int32(1); id < p.nObjs; id++ {
+		if Gia_ObjIsLut(p, id) != 0 {
+			maximum = max(maximum, Gia_ObjLutSize(p, id))
+		}
+	}
+	return maximum
+}

@@ -1,247 +1,147 @@
 package fpga
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"math"
+	"os"
+	"strconv"
+	"strings"
+)
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [fpgaLib.c]
-
-  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]
-
-  Synopsis    [Technology mapping for variable-size-LUT FPGAs.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 2.0. Started - August 18, 2004.]
-
-  Revision    [$Id: fpgaLib.c,v 1.4 2005/01/23 06:59:41 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "fpgaInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [APIs to access LUT library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_LutLibReadVarMax(p *Fpga_LutLib_t) int32 { return p.LutMax;     }
-func Fpga_LutLibReadLutAreas(p *Fpga_LutLib_t) *float32 { return p.pLutAreas;  }
-func Fpga_LutLibReadLutArea(p *Fpga_LutLib_t, Size int32) float32 { assert(Size <= p.LutMax, "Size <= p.LutMax"); return p.pLutAreas[Size];  }
-
-/**Function*************************************************************
-
-  Synopsis    [Reads the description of LUTs from the LUT library file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_LutLibRead(FileName string, fVerbose int32) *Fpga_LutLib_t {
-    var pBuffer [1000]byte;
-    var pToken string;
-    var p *Fpga_LutLib_t;
-    var pFile *os.File;
-    var i, k int32;
-
-    pFile = os.Open(FileName);
-    if pFile == nil {
-        fmt.Printf("Cannot open LUT library file \"%s\".\n", FileName);
-        return nil;
-    }
-
-    // inlining of macro ABC_ALLOC
-    p = ((Fpga_LutLib_t *) malloc(sizeof(Fpga_LutLib_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Fpga_LutLib_t) );
-    p.pName = Extra_UtilStrsav( FileName );
-
-    i = 1;
-    for  fgets( pBuffer, 1000, pFile ) != nil  {
-        pToken = strtok( pBuffer, " \t\n" );
-        if pToken == nil {
-            continue; }
-        if pToken[0] == '#' {
-            continue; }
-        if i != atoi(pToken) {
-            fmt.Printf("Error in the LUT library file \"%s\".\n", FileName);
-            p = nil;
-            return nil;
-        }
-
-        // read area
-        pToken = strtok( nil, " \t\n" );
-        p.pLutAreas[i] = float32(atof(pToken));
-
-        // read delays
-        k = 0;
-        for  pToken = strtok( nil, " \t\n" )  {
-            p.pLutDelays[i][k++] = float32(atof(pToken));
-        }
-
-        // check for out-of-bound
-        if k > i {
-            fmt.Printf("LUT %d has too many pins (%d). Max allowed is %d.\n", i, k, i);
-            return nil;
-        }
-
-        // check if var delays are specifies
-        if k > 1 {
-            p.fVarPinDelays = 1; }
-
-        if i == FPGA_MAX_LUTSIZE {
-            fmt.Printf("Skipping LUTs of size more than %d.\n", i);
-            return nil;
-        }
-        i++;
-    }
-    p.LutMax = i-1;
-/*
-    if ( p->LutMax > FPGA_MAX_LEAVES )
-    {
-        p->LutMax = FPGA_MAX_LEAVES;
-        printf( "Warning: LUTs with more than %d inputs will not be used.\n", FPGA_MAX_LEAVES );
-    }
-*/
-    // check the library
-    if p.fVarPinDelays {
-        for  i = 1; i <= p.LutMax; i++  {
-            for  k = 0; k < i; k++  {
-                if p.pLutDelays[i][k] <= 0.0 {
-                    fmt.Printf("Warning: Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\n", k, i, p.pLutDelays[i][k]); }
-                if (k != 0) && p.pLutDelays[i][k-1] > p.pLutDelays[i][k] {
-                    fmt.Printf("Warning: Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\n", k-1, i, p.pLutDelays[i][k-1], k, i, p.pLutDelays[i][k]); }
-            }
-        }
-    
-    } else {
-        for  i = 1; i <= p.LutMax; i++  {
-            if p.pLutDelays[i][0] <= 0.0 {
-                fmt.Printf("Warning: LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\n", i, p.pLutDelays[i][0]); }
-        }
-    }
-
-    return p;
+func DefaultLibrary(size int) *Fpga_LutLib_t {
+	p := &Fpga_LutLib_t{Name: fmt.Sprintf("lut%d", size), LutMax: int32(size), Areas: make([]float32, size+1), Delays: make([][]float32, size+1)}
+	for k := 1; k <= size; k++ {
+		p.Areas[k] = 1
+		p.Delays[k] = []float32{1}
+	}
+	return p
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the LUT library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func (p *Fpga_LutLib_t) Validate() error {
+	if p == nil || p.LutMax < 1 || p.LutMax > FPGA_MAX_LUTSIZE {
+		return fmt.Errorf("fpga: LUT size must be 1..%d", FPGA_MAX_LUTSIZE)
+	}
+	if len(p.Areas) <= int(p.LutMax) || len(p.Delays) <= int(p.LutMax) {
+		return fmt.Errorf("fpga: missing LUT rows")
+	}
+	for k := 1; k <= int(p.LutMax); k++ {
+		if !finite(p.Areas[k]) || p.Areas[k] < 0 {
+			return fmt.Errorf("fpga: invalid area for LUT %d", k)
+		}
+		d := p.Delays[k]
+		if len(d) != 1 && len(d) != k {
+			return fmt.Errorf("fpga: LUT %d needs one or %d delays", k, k)
+		}
+		for _, v := range d {
+			if !finite(v) || v < 0 {
+				return fmt.Errorf("fpga: invalid LUT delay")
+			}
+		}
+	}
+	return nil
+}
+func finite(v float32) bool { return !math.IsNaN(float64(v)) && !math.IsInf(float64(v), 0) }
+func ReadLibrary(r io.Reader, name string) (*Fpga_LutLib_t, error) {
+	p := &Fpga_LutLib_t{Name: name, Areas: []float32{0}, Delays: [][]float32{nil}}
+	s := bufio.NewScanner(r)
+	line := 0
+	for s.Scan() {
+		line++
+		text := s.Text()
+		if i := strings.IndexAny(text, "#"); i >= 0 {
+			text = text[:i]
+		}
+		fields := strings.Fields(text)
+		if len(fields) == 0 {
+			continue
+		}
+		k, e := strconv.Atoi(fields[0])
+		if e != nil || k != len(p.Areas) || k > FPGA_MAX_LUTSIZE || len(fields) < 3 {
+			return nil, fmt.Errorf("%s:%d: expected consecutive LUT size, area, delay(s)", name, line)
+		}
+		values := make([]float32, len(fields)-1)
+		for i, f := range fields[1:] {
+			v, e := strconv.ParseFloat(f, 32)
+			if e != nil {
+				return nil, fmt.Errorf("%s:%d: %w", name, line, e)
+			}
+			values[i] = float32(v)
+		}
+		p.Areas = append(p.Areas, values[0])
+		p.Delays = append(p.Delays, values[1:])
+		p.LutMax = int32(k)
+		p.VariablePinDelays = p.VariablePinDelays || len(values) > 2
+	}
+	if e := s.Err(); e != nil {
+		return nil, e
+	}
+	if e := p.Validate(); e != nil {
+		return nil, e
+	}
+	return p, nil
+}
+func Fpga_LutLibRead(path string, verbose int32) *Fpga_LutLib_t {
+	f, e := os.Open(path)
+	if e != nil {
+		return nil
+	}
+	defer f.Close()
+	p, e := ReadLibrary(f, path)
+	if e != nil {
+		if verbose != 0 {
+			fmt.Fprintln(os.Stderr, e)
+		}
+		return nil
+	}
+	return p
+}
+func Fpga_LutLibReadVarMax(p *Fpga_LutLib_t) int32             { return p.LutMax }
+func Fpga_LutLibReadLutAreas(p *Fpga_LutLib_t) []float32       { return p.Areas }
+func Fpga_LutLibReadLutArea(p *Fpga_LutLib_t, k int32) float32 { return p.Areas[k] }
 func Fpga_LutLibDup(p *Fpga_LutLib_t) *Fpga_LutLib_t {
-    var pNew *Fpga_LutLib_t;
-    // inlining of macro ABC_ALLOC
-    pNew = ((Fpga_LutLib_t *) malloc(sizeof(Fpga_LutLib_t) * (size_t)(1)));
-    *pNew = *p;
-    pNew.pName = Extra_UtilStrsav( pNew.pName );
-    return pNew;
+	if p == nil {
+		return nil
+	}
+	q := *p
+	q.Areas = append([]float32(nil), p.Areas...)
+	q.Delays = make([][]float32, len(p.Delays))
+	for k, d := range p.Delays {
+		q.Delays[k] = append([]float32(nil), d...)
+	}
+	return &q
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Frees the LUT library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_LutLibFree(pLutLib *Fpga_LutLib_t) {
-    if pLutLib == nil {
-        return; }
-    pLutLib.pName = nil;
-    pLutLib = nil;
+func Fpga_LutLibFree(p *Fpga_LutLib_t) {
+	if p != nil {
+		p.Areas = nil
+		p.Delays = nil
+	}
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Prints the LUT library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_LutLibPrint(pLutLib *Fpga_LutLib_t) {
-    var i, k int32;
-    fmt.Printf("# The area/delay of k-variable LUTs:\n");
-    fmt.Printf("# k    area     delay\n");
-    if pLutLib.fVarPinDelays {
-        for  i = 1; i <= pLutLib.LutMax; i++  {
-            fmt.Printf("%d   %7.2f  ", i, pLutLib.pLutAreas[i]);
-            for  k = 0; k < i; k++  {
-                fmt.Printf(" %7.2f", pLutLib.pLutDelays[i][k]);
-            }
-            fmt.Printf("\n");
-        }
-    
-    } else {
-        for  i = 1; i <= pLutLib.LutMax; i++  {
-            fmt.Printf("%d   %7.2f   %7.2f\n", i, pLutLib.pLutAreas[i], pLutLib.pLutDelays[i][0]);
-        } }
+func (p *Fpga_LutLib_t) Close() error { Fpga_LutLibFree(p); return nil }
+func (p *Fpga_LutLib_t) Write(w io.Writer) error {
+	for k := 1; k <= int(p.LutMax); k++ {
+		if _, e := fmt.Fprintf(w, "%d %g", k, p.Areas[k]); e != nil {
+			return e
+		}
+		for _, d := range p.Delays[k] {
+			if _, e := fmt.Fprintf(w, " %g", d); e != nil {
+				return e
+			}
+		}
+		if _, e := fmt.Fprintln(w); e != nil {
+			return e
+		}
+	}
+	return nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the delays are discrete.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_LutLibDelaysAreDiscrete(pLutLib *Fpga_LutLib_t) int32 {
-    var Delay float32;
-    var i int32;
-    for  i = 1; i <= pLutLib.LutMax; i++  {
-        Delay = pLutLib.pLutDelays[i][0];
-        if (float32((int32(Delay)))) != Delay {
-            return 0; }
-    }
-    return 1;
+func Fpga_LutLibPrint(p *Fpga_LutLib_t) { _ = p.Write(os.Stdout) }
+func Fpga_LutLibDelaysAreDiscrete(p *Fpga_LutLib_t) int32 {
+	for _, row := range p.Delays {
+		for _, d := range row {
+			if d != float32(math.Trunc(float64(d))) {
+				return 0
+			}
+		}
+	}
+	return 1
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

@@ -3,6 +3,7 @@ package abc
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/nm"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 // ObjectKind retains the ABC object-kind numbering while replacing packed
@@ -44,6 +45,7 @@ type Object struct {
 	Kind                ObjectKind
 	Level               int
 	Temp                int
+	TerminalIndex       int
 	Data                any
 	Copy                *Object
 	MarkA, MarkB, MarkC bool
@@ -67,14 +69,26 @@ func (o *Object) IsCO() bool { return o.Kind == ObjectPO || o.Kind == ObjectBI }
 // Network owns objects with stable IDs; deletion leaves holes, as in ABC.
 // Mutations must be serialized by the caller.
 type Network struct {
-	FunctionManager any
-	timingMapping   any
-	phaseTracking   bool
-	mvVars          map[*Object]*MVVariable
-	Design          *Design
-	Copy, AltView   *Network
-	Type, Function  uint8
-	Barriers        int
+	Constraints               int32
+	Exdc, Excare              *Network
+	Onehots                   [][]int32
+	SequenceModel             *util.Abc_Cex_t
+	ObjectPermutation, Phases []int32
+	AndGateDelay              float64
+	WireLoad                  string
+	LTLProperties             []string
+	Model                     []int32
+	Data                      any
+	Step                      int32
+	DTemp                     float64
+	FunctionManager           any
+	timingMapping             any
+	phaseTracking             bool
+	mvVars                    map[*Object]*MVVariable
+	Design                    *Design
+	Copy, AltView             *Network
+	Type, Function            uint8
+	Barriers                  int
 	// CILevel supplies timing-derived initial levels when a timing manager is attached.
 	CILevel         func(*Object) int
 	kindOrder       map[ObjectKind][]*Object
@@ -89,7 +103,7 @@ type Network struct {
 }
 
 func NewNetwork(name string) *Network {
-	n := &Network{travID: 1, Type: 3, Function: 3, kindOrder: make(map[ObjectKind][]*Object), Name: name, names: nm.Nm_ManCreate(16), hashed: make(map[[2]Edge]Edge)}
+	n := &Network{Step: -1, DTemp: -1, travID: 1, Type: 3, Function: 3, kindOrder: make(map[ObjectKind][]*Object), Name: name, names: nm.Nm_ManCreate(16), hashed: make(map[[2]Edge]Edge)}
 	n.constant = n.NewObject(ObjectConst1)
 	n.constant.Phase = true
 	return n

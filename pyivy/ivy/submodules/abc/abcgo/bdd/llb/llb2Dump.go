@@ -1,109 +1,57 @@
 package llb
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [llb2Dump.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [BDD based reachability.]
-
-  Synopsis    [Dumps the BDD of reached states into a file.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: llb2Dump.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "llbInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns a dummy name.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Llb_ManGetDummyName_Buffer string // was [2000]byte in C
-
-func Llb_ManGetDummyName(pPrefix string, Num int32, nDigits int32) string {
-    
-    spStatic_Llb_ManGetDummyName_Buffer = fmt.Sprintf("%s%0*d", pPrefix, nDigits, Num);
-    return spStatic_Llb_ManGetDummyName_Buffer;
+func Llb_ManGetDummyName(prefix string, number, digits int32) string {
+	return fmt.Sprintf("%s%0*d", prefix, digits, number)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Writes reached state BDD into a BLIF file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManDumpReached(ddG *DdManager, bReached *DdNode, pModel string, pFileName string) {
-    var pFile *os.File;
-    var vNamesIn, vNamesOut *Vec_Ptr_t;
-    var pName string;
-    var i, nDigits int32;
-    // reorder the BDD
-    Cudd_ReduceHeap( ddG, CUDD_REORDER_SYMM_SIFT, 1 );
-
-    // create input names
-    nDigits = Abc_Base10Log( Cudd_ReadSize(ddG) );
-    vNamesIn = Vec_PtrAlloc( Cudd_ReadSize(ddG) );
-    for  i = 0; i < Cudd_ReadSize(ddG); i++  {
-        pName = Llb_ManGetDummyName( "ff", i, nDigits );
-        Vec_PtrPush( vNamesIn, Extra_UtilStrsav(pName) );
-    }
-    // create output names
-    vNamesOut = Vec_PtrAlloc( 1 );
-    Vec_PtrPush( vNamesOut, Extra_UtilStrsav("Reached") );
-
-    // write the file
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    Cudd_DumpBlif( ddG, 1, &bReached, (char **)Vec_PtrArray(vNamesIn), (char **)Vec_PtrArray(vNamesOut), pModel, pFile, 0 );
-    _ = (pFile).Close();
-
-    // cleanup
-    Vec_PtrForEachEntry( char *, vNamesIn, pName, i )
-        ABC_FREE( pName );
-    Vec_PtrForEachEntry( char *, vNamesOut, pName, i )
-        ABC_FREE( pName );
-    Vec_PtrFree( vNamesIn );
-    Vec_PtrFree( vNamesOut );
+// Llb_ManDumpReached writes a BLIF truth-table representation for reached
+// states. Truth-table export is bounded because BLIF's explicit cube format is
+// exponential in the function support.
+func Llb_ManDumpReached(dd *DdManager, reached *DdNode, model, filename string) {
+	if dd == nil || reached == nil {
+		return
+	}
+	variables := dd.Support(reached)
+	if len(variables) > 24 {
+		return
+	}
+	file, err := os.Create(filename)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+	fmt.Fprintf(file, ".model %s\n.inputs", model)
+	for _, variable := range variables {
+		fmt.Fprintf(file, " %s", Llb_ManGetDummyName("ff", int32(variable), 1))
+	}
+	fmt.Fprintln(file, "\n.outputs Reached")
+	fmt.Fprint(file, ".names")
+	for _, variable := range variables {
+		fmt.Fprintf(file, " %s", Llb_ManGetDummyName("ff", int32(variable), 1))
+	}
+	fmt.Fprintln(file, " Reached")
+	assignment := make([]bool, len(dd.Vars))
+	for mask := 0; mask < 1<<len(variables); mask++ {
+		for bit, variable := range variables {
+			assignment[variable] = mask&(1<<bit) != 0
+		}
+		value, evalErr := dd.Evaluate(reached, assignment)
+		if evalErr != nil || !value {
+			continue
+		}
+		for bit := range variables {
+			if assignment[variables[bit]] {
+				fmt.Fprint(file, "1")
+			} else {
+				fmt.Fprint(file, "0")
+			}
+		}
+		fmt.Fprintln(file, " 1")
+	}
+	fmt.Fprintln(file, ".end")
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

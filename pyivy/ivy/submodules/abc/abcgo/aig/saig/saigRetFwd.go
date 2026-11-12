@@ -3,269 +3,256 @@ package saig
 import (
 	"fmt"
 	"time"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-/**CFile****************************************************************
+// Aig_StaticFanout_t is an immutable adjacency list for one graph snapshot.
+type Aig_StaticFanout_t struct{ nodes [][]aig.Edge }
 
-  FileName    [saigRetFwd.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Sequential AIG package.]
-
-  Synopsis    [Most-forward retiming.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: saigRetFwd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "saig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Aig_ObjFanoutStatic(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return ((Aig_Obj_t **)pObj.pData)[i];             }
-func Aig_ObjSetFanoutStatic(pObj *Aig_Obj_t, pFan *Aig_Obj_t) { ((Aig_Obj_t **)pObj.pData)[pObj.nRefs++] = pFan; }
-
-// Original macro:
-// #define Aig_ObjForEachFanoutStatic( pObj, pFan, i )                        \
-//     for ( i = 0; (i < (int)(pObj)->nRefs) && ((pFan) = Aig_ObjFanoutStatic(pObj, i)); i++ )
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocate static fanout for all nodes in the AIG manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManStaticFanoutStart(p *Aig_Man_t) **Aig_Obj_t {
-    var ppFanouts **Aig_Obj_t;
-    var pObj *Aig_Obj_t;
-    var i, nFanouts, nFanoutsAlloc int32;
-    // allocate fanouts
-    nFanoutsAlloc = 2 * Aig_ManObjNumMax(p) - Aig_ManCiNum(p) - Aig_ManCoNum(p);
-    // inlining of macro ABC_ALLOC
-    ppFanouts = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nFanoutsAlloc)));
-    // mark up storage
-    nFanouts = 0;
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        pObj.pData = ppFanouts + nFanouts;
-        nFanouts += pObj.nRefs;  
-        pObj.nRefs = 0;
-    }
-    }
-    assert(nFanouts < nFanoutsAlloc, "nFanouts < nFanoutsAlloc"); 
-    // add fanouts
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Aig_ObjChild0(pObj) {
-            Aig_ObjSetFanoutStatic( Aig_ObjFanin0(pObj), pObj ); }
-        if Aig_ObjChild1(pObj) {
-            Aig_ObjSetFanoutStatic( Aig_ObjFanin1(pObj), pObj ); }
-    }
-    }
-    return ppFanouts;
+func Aig_ManStaticFanoutStart(graph *aig.Graph) *Aig_StaticFanout_t {
+	if graph == nil {
+		return nil
+	}
+	fanouts := &Aig_StaticFanout_t{nodes: make([][]aig.Edge, len(graph.Nodes()))}
+	for id, node := range graph.Nodes() {
+		if !graph.ValidEdge(aig.Edge(id) << 1) {
+			continue
+		}
+		if node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer && node.Kind != aig.Output {
+			continue
+		}
+		for _, fanin := range node.Fanins {
+			if fanin != aig.InvalidEdge {
+				fanouts.nodes[fanin.NodeID()] = append(fanouts.nodes[fanin.NodeID()], aig.Edge(id)<<1)
+			}
+		}
+	}
+	return fanouts
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Marks the objects reachable from the given object.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Aig_ManMarkAutonomous_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {
-    var pFanout *Aig_Obj_t;
-    var i int32;
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    // inlining of macro Aig_ObjForEachFanoutStatic
-    for  i = 0; (i < int32((pObj).nRefs)) && ((pFanout) = Aig_ObjFanoutStatic(pObj, i)); i++  {
-        Aig_ManMarkAutonomous_rec( p, pFanout );
-    }
+func Aig_ObjFanoutStatic(fanouts *Aig_StaticFanout_t, object aig.Edge, index int32) aig.Edge {
+	if fanouts == nil || index < 0 || object.NodeID() < 0 || object.NodeID() >= len(fanouts.nodes) || int(index) >= len(fanouts.nodes[object.NodeID()]) {
+		return aig.InvalidEdge
+	}
+	return fanouts.nodes[object.NodeID()][index]
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Marks with current trav ID nodes reachable from Const1 and PIs.]
-
-  Description [Returns the number of unreachable registers.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManMarkAutonomous(p *Aig_Man_t) {
-    var ppFanouts **Aig_Obj_t;
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var i int32;
-    // temporarily connect register outputs to register inputs
-    // inlining of macro Saig_ManForEachLiLo
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObjLi) = Saig_ManLi(p, i)), 1)            && (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {
-        pObjLo.pFanin0 = pObjLi;
-        pObjLi.nRefs = 1;
-    }
-    // mark nodes reachable from Const1 and PIs
-    Aig_ManIncrementTravId( p );
-    ppFanouts = Aig_ManStaticFanoutStart( p );
-    Aig_ManMarkAutonomous_rec( p, Aig_ManConst1(p) );
-    // inlining of macro Saig_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPiNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        Aig_ManMarkAutonomous_rec( p, pObj );
-    }
-    ppFanouts = nil;
-    // disconnect LIs/LOs and label unreachable registers
-    // inlining of macro Saig_ManForEachLiLo
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObjLi) = Saig_ManLi(p, i)), 1)            && (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {
-        assert(pObjLo.pFanin0 && pObjLi.nRefs == 1, "pObjLo.pFanin0 && pObjLi.nRefs == 1");
-        pObjLo.pFanin0 = nil;
-        pObjLi.nRefs = 0;
-    }
+func Aig_ObjSetFanoutStatic(fanouts *Aig_StaticFanout_t, object, fanout aig.Edge) {
+	if fanouts == nil {
+		return
+	}
+	fanouts.nodes[object.NodeID()] = append(fanouts.nodes[object.NodeID()], fanout)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives the cut for forward retiming.]
-
-  Description [Assumes topological ordering of the nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManRetimeForwardOne(p *Aig_Man_t, pnRegFixed *int32, pnRegMoves *int32) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var vCut *Vec_Ptr_t;
-    var pObj, pFanin *Aig_Obj_t;
-    var i int32;
-    // mark the retimable nodes
-    Saig_ManMarkAutonomous( p );
-    // mark the retimable registers with the fresh trav ID
-    Aig_ManIncrementTravId( p );
-    *pnRegFixed = 0;
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {
-        if Aig_ObjIsTravIdPrevious(p, pObj) {
-            Aig_ObjSetTravIdCurrent(p, pObj);
-        } else {
-            (*pnRegFixed)++; }
-    }
-    // mark all the nodes that can be retimed forward
-    *pnRegMoves = 0;
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else
-        if Aig_ObjIsTravIdCurrent(p, Aig_ObjFanin0(pObj)) && Aig_ObjIsTravIdCurrent(p, Aig_ObjFanin1(pObj)) {
-            Aig_ObjSetTravIdCurrent(p, pObj);
-            (*pnRegMoves)++;
-        }
-    }
-    // mark the remaining registers
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {
-        Aig_ObjSetTravIdCurrent(p, pObj);
-    }
-    // find the cut (all such marked objects that fanout into unmarked nodes)
-    vCut = Vec_PtrAlloc( 1000 );
-    Aig_ManIncrementTravId( p );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Aig_ObjIsTravIdPrevious(p, pObj) {
-            continue; }
-        pFanin = Aig_ObjFanin0(pObj);
-        if (pFanin != nil) && Aig_ObjIsTravIdPrevious(p, pFanin) {
-            Vec_PtrPush( vCut, pFanin );
-            Aig_ObjSetTravIdCurrent( p, pFanin );
-        }
-        pFanin = Aig_ObjFanin1(pObj);
-        if (pFanin != nil) && Aig_ObjIsTravIdPrevious(p, pFanin) {
-            Vec_PtrPush( vCut, pFanin );
-            Aig_ObjSetTravIdCurrent( p, pFanin );
-        }
-    }
-    }
-    // finally derive the new manager
-    pNew = Saig_ManRetimeDupForward( p, vCut );
-    Vec_PtrFree( vCut );
-    return pNew;
+func Saig_ManMarkAutonomous_rec(graph *aig.Graph, object aig.Edge, fanouts *Aig_StaticFanout_t, reached []bool) {
+	if graph == nil || fanouts == nil || !graph.ValidEdge(object) {
+		return
+	}
+	id := object.NodeID()
+	if reached[id] {
+		return
+	}
+	reached[id] = true
+	for i := int32(0); ; i++ {
+		fanout := Aig_ObjFanoutStatic(fanouts, object, i)
+		if fanout == aig.InvalidEdge {
+			break
+		}
+		Saig_ManMarkAutonomous_rec(graph, fanout, fanouts, reached)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives the cut for forward retiming.]
-
-  Description [Assumes topological ordering of the nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManRetimeForward(p *Aig_Man_t, nMaxIters int32, fVerbose int32) *Aig_Man_t {
-    var pNew, pTemp *Aig_Man_t;
-    var i int32;
-    var nRegFixed int32;
-    var nRegMoves int32 = 1;
-    var clk abctime;
-    pNew = p;
-    for  i = 0; i < nMaxIters && nRegMoves > 0; i++  {
-        clk = Abc_Clock();
-        pNew = Saig_ManRetimeForwardOne( pTemp = pNew, &nRegFixed, &nRegMoves );
-        if fVerbose != 0 {
-            fmt.Printf("%2d : And = %6d. Reg = %5d. Unret = %5d. Move = %6d. ", i + 1, Aig_ManNodeNum(pTemp), Aig_ManRegNum(pTemp), nRegFixed, nRegMoves);
-            // inlining of macro ABC_PRT
-            Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-        }
-        if pTemp != p {
-            Aig_ManStop( pTemp ); }
-    }
-    clk = Abc_Clock();
-    pNew = Aig_ManReduceLaches( pNew, fVerbose );
-    if fVerbose != 0 {
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Register sharing time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    }
-    return pNew;
+// Saig_ManMarkAutonomous marks the forward-reachable nodes from constant one
+// and primary inputs, with latch-input to latch-output edges added virtually.
+func Saig_ManMarkAutonomous(graph *aig.Graph) {
+	if graph == nil {
+		return
+	}
+	fanouts := Aig_ManStaticFanoutStart(graph)
+	for reg := int32(0); reg < Saig_ManRegNum(graph); reg++ {
+		li, lo := Saig_ManLi(graph, reg), Saig_ManLo(graph, reg)
+		Aig_ObjSetFanoutStatic(fanouts, li, lo)
+	}
+	aig.Aig_ManIncrementTravId(graph)
+	reached := make([]bool, len(graph.Nodes()))
+	Saig_ManMarkAutonomous_rec(graph, graph.Const1(), fanouts, reached)
+	for pi := int32(0); pi < Saig_ManPiNum(graph); pi++ {
+		Saig_ManMarkAutonomous_rec(graph, aig.Aig_ManCi(graph, pi), fanouts, reached)
+	}
+	for id, value := range reached {
+		if value {
+			aig.Aig_ObjSetTravIdCurrent(graph, aig.Edge(id)<<1)
+		}
+	}
 }
 
+func Saig_ManRetimeForwardOne(graph *aig.Graph, fixedRegisters, movedGates *int32) *aig.Graph {
+	if graph == nil {
+		return nil
+	}
+	Saig_ManMarkAutonomous(graph)
+	aig.Aig_ManIncrementTravId(graph)
+	if fixedRegisters != nil {
+		*fixedRegisters = 0
+	}
+	for reg := int32(0); reg < Saig_ManRegNum(graph); reg++ {
+		lo := Saig_ManLo(graph, reg)
+		if aig.Aig_ObjIsTravIdPrevious(graph, lo) {
+			aig.Aig_ObjSetTravIdCurrent(graph, lo)
+		} else if fixedRegisters != nil {
+			*fixedRegisters++
+		}
+	}
+	if movedGates != nil {
+		*movedGates = 0
+	}
+	for id, node := range graph.Nodes() {
+		object := aig.Edge(id) << 1
+		if !graph.ValidEdge(object) || !aig.Aig_ObjIsNode(graph, object) {
+			continue
+		}
+		if aig.Aig_ObjIsTravIdCurrent(graph, node.Fanins[0]) && aig.Aig_ObjIsTravIdCurrent(graph, node.Fanins[1]) {
+			aig.Aig_ObjSetTravIdCurrent(graph, object)
+			if movedGates != nil {
+				*movedGates++
+			}
+		}
+	}
+	for reg := int32(0); reg < Saig_ManRegNum(graph); reg++ {
+		aig.Aig_ObjSetTravIdCurrent(graph, Saig_ManLo(graph, reg))
+	}
+	aig.Aig_ManIncrementTravId(graph)
+	cut := vec.Vec_PtrAlloc(32)
+	seen := make(map[int]bool)
+	for id, node := range graph.Nodes() {
+		object := aig.Edge(id) << 1
+		if !graph.ValidEdge(object) || aig.Aig_ObjIsTravIdPrevious(graph, object) {
+			continue
+		}
+		if node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer && node.Kind != aig.Output {
+			continue
+		}
+		for _, fanin := range node.Fanins {
+			if fanin == aig.InvalidEdge || !aig.Aig_ObjIsTravIdPrevious(graph, fanin) {
+				continue
+			}
+			if !seen[fanin.NodeID()] {
+				seen[fanin.NodeID()] = true
+				vec.Vec_PtrPush(cut, aig.Aig_Regular(fanin))
+			}
+		}
+	}
+	return Saig_ManRetimeDupForward(graph, cut)
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+// Saig_ManRetimeDupForward duplicates the cones above and below a retiming cut.
+// Cut objects become latch outputs in the new graph; their next-state functions
+// are emitted as the final latch-input outputs.
+func Saig_ManRetimeDupForward(graph *aig.Graph, cut *vec.Vec_Ptr_t) *aig.Graph {
+	if graph == nil || cut == nil {
+		return nil
+	}
+	dst := aig.NewGraph()
+	dst.Name, dst.Spec = graph.Name, graph.Spec
+	nodes := graph.Nodes()
+	mapped := make([]aig.Edge, len(nodes))
+	known := make([]bool, len(nodes))
+	mapped[0], known[0] = dst.Const1(), true
+	for i := 0; i < int(Saig_ManPiNum(graph)); i++ {
+		input := aig.Aig_ManCi(graph, int32(i))
+		mapped[input.NodeID()], known[input.NodeID()] = dst.NewInput(), true
+	}
+	for i := 0; i < vec.Vec_PtrSize(cut); i++ {
+		object := vec.Vec_PtrEntry(cut, i).(aig.Edge)
+		id := object.NodeID()
+		register := dst.NewInput()
+		if aig.Aig_ObjPhase(graph, object) {
+			register = register.Not()
+		}
+		mapped[id], known[id] = register, true
+	}
+	var copyEdge func(aig.Edge) aig.Edge
+	copyEdge = func(edge aig.Edge) aig.Edge {
+		id := edge.NodeID()
+		if id < 0 || id >= len(nodes) || !graph.ValidEdge(edge) {
+			panic("saig: invalid edge while duplicating retiming cut")
+		}
+		if !known[id] {
+			node := nodes[id]
+			switch node.Kind {
+			case aig.And:
+				mapped[id] = dst.AND(copyEdge(node.Fanins[0]), copyEdge(node.Fanins[1]))
+			case aig.ExclusiveOr:
+				mapped[id] = dst.NewXor(copyEdge(node.Fanins[0]), copyEdge(node.Fanins[1]))
+			case aig.Buffer, aig.Output:
+				mapped[id] = copyEdge(node.Fanins[0])
+			case aig.Input:
+				panic("saig: retiming cut omits a required latch output")
+			default:
+				panic("saig: unsupported node while duplicating retiming cut")
+			}
+			known[id] = true
+		}
+		result := mapped[id]
+		if edge.Complemented() {
+			result = result.Not()
+		}
+		return result
+	}
+	outputs := graph.Outputs()
+	regCount := int(aig.Aig_ManRegNum(graph))
+	poCount := len(outputs) - regCount
+	for _, output := range outputs[:poCount] {
+		dst.AddOutput(copyEdge(aig.Aig_ObjChild0(graph, output)))
+	}
+	nextState := make([]aig.Edge, regCount)
+	for reg := 0; reg < regCount; reg++ {
+		li := aig.Aig_ManLi(graph, int32(reg))
+		nextState[reg] = copyEdge(aig.Aig_ObjChild0(graph, li))
+	}
+	for reg := 0; reg < regCount; reg++ {
+		lo := aig.Aig_ManLo(graph, int32(reg))
+		mapped[lo.NodeID()], known[lo.NodeID()] = nextState[reg], true
+	}
+	for i := 0; i < vec.Vec_PtrSize(cut); i++ {
+		object := vec.Vec_PtrEntry(cut, i).(aig.Edge)
+		if aig.Aig_ObjIsNode(graph, object) {
+			known[object.NodeID()] = false
+		}
+	}
+	for i := 0; i < vec.Vec_PtrSize(cut); i++ {
+		object := vec.Vec_PtrEntry(cut, i).(aig.Edge)
+		stateValue := copyEdge(object)
+		if aig.Aig_ObjPhase(graph, object) {
+			stateValue = stateValue.Not()
+		}
+		dst.AddOutput(stateValue)
+	}
+	aig.Aig_ManSetRegNum(dst, int32(vec.Vec_PtrSize(cut)))
+	aig.Aig_ManSetConstrNum(dst, aig.Aig_ManConstrNum(graph))
+	aig.Aig_ManCleanup(dst)
+	return dst
+}
 
-
-//ABC_NAMESPACE_IMPL_END
-
+func Saig_ManRetimeForward(graph *aig.Graph, maxIterations, verbose int32) *aig.Graph {
+	if graph == nil {
+		return nil
+	}
+	result := graph
+	moves := int32(1)
+	for iteration := int32(0); iteration < maxIterations && moves > 0; iteration++ {
+		started := time.Now()
+		previous := result
+		fixed := int32(0)
+		result = Saig_ManRetimeForwardOne(previous, &fixed, &moves)
+		if result == nil {
+			return nil
+		}
+		if verbose != 0 {
+			fmt.Printf("%2d : And = %6d. Reg = %5d. Unret = %5d. Move = %6d. elapsed %s\n", iteration+1, aig.Aig_ManNodeNum(previous), aig.Aig_ManRegNum(previous), fixed, moves, time.Since(started).Round(time.Millisecond))
+		}
+	}
+	return aig.Aig_ManReduceLaches(result, verbose)
+}

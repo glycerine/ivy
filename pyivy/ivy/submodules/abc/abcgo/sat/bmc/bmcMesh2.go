@@ -33,13 +33,6 @@ import "fmt"
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-const NCPARS = 16
-
-func Bmc_MeshTVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y];                                         }
-func Bmc_MeshGVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y] + Me[101][100];                          }
-func Bmc_MeshCVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y] + Me[101][100] + Me[101][101];           }
-func Bmc_MeshUVar(Me [][102]int32, x int32, y int32) int32 { return Me[x][y] + Me[101][100] + Me[101][101] + NCPARS;  }
-
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////

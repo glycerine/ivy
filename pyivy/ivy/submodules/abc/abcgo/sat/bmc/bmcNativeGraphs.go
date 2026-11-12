@@ -58,7 +58,7 @@ func projectAIGProperties(source *aig.Graph, properties []int) (*aig.Graph, erro
 		case aig.Constant:
 			mapping[id] = destination.Const1()
 		case aig.And:
-		a, err := mapEdge(node.Fanins[0])
+			a, err := mapEdge(node.Fanins[0])
 			if err != nil {
 				return nil, err
 			}

@@ -2,19 +2,17 @@ package cov
 
 import "fmt"
 
-// Abc_NtkSopEsopCover converts an AIG network into an equivalent logic network
-// whose AND nodes carry exact SOP covers. Fanin order, object sharing, names,
-// and complemented edges are preserved. The original C routine iteratively
-// balances bounded covers; the Go representation uses exact local two-input
-// covers, which meet the same fanin/cube constraints for an AIG.
+// Abc_NtkSopEsopCover converts an AIG network into an equivalent bounded-cover
+// logic network. It grows cut boundaries iteratively when a local support or
+// cover exceeds the configured limits, as covCore.c does.
 func Abc_NtkSopEsopCover(pNtk *Abc_Ntk_t, nFaninMax, nCubesMax, fUseEsop, fUseSop, fUseInvs, fVerbose int32) *Abc_Ntk_t {
-	if pNtk == nil {
+	if pNtk == nil || nFaninMax < 0 || nCubesMax < 0 || fUseEsop == 0 && fUseSop == 0 {
 		return nil
 	}
 	manager := Cov_ManAlloc(pNtk, nFaninMax, nCubesMax)
 	manager.fUseEsop = fUseEsop
 	manager.fUseSop = fUseSop
-	result, err := deriveAIGToSOP(pNtk, nFaninMax, nCubesMax)
+	result, err := deriveAIGToSOP(pNtk, nFaninMax, nCubesMax, fUseEsop, fUseSop)
 	Cov_ManFree(manager)
 	if err != nil {
 		if fVerbose != 0 {
@@ -22,7 +20,7 @@ func Abc_NtkSopEsopCover(pNtk *Abc_Ntk_t, nFaninMax, nCubesMax, fUseEsop, fUseSo
 		}
 		return nil
 	}
-	_, _, _ = fUseEsop, fUseSop, fUseInvs
+	_ = fUseInvs // C's regular derivation path also leaves inversion cleanup disabled.
 	if err := result.Check(); err != nil {
 		if fVerbose != 0 {
 			fmt.Printf("Abc_NtkSopEsopCover: network check failed: %v\n", err)

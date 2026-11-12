@@ -44,3 +44,8 @@ opaque Go Boolean function to an exact cover enumerates assignments and returns
 failure above 20 inputs; existing SOP covers convert directly without that
 enumeration bound. No approximate large-function cover is emitted. The separate
 BLIF-MV file parser and remaining base/abc algorithms are still unported.
+
+IO integration adds SetMVVariable with deep-copy/validation and explicit symbolic
+binary-domain retention. Regressions cover ownership, invalid update atomicity,
+clearing annotations and deleted objects; the legacy binary-default heuristic
+in Abc_NtkSetMvVarValues remains available independently.

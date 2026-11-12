@@ -43,6 +43,7 @@ type Extra_ImageTree_t struct {
 	careSupport                      map[int]bool
 	verbose, closed                  bool
 	NIter, NNodesMax, NNodesMaxTotal int
+	sizeLimit                        int
 }
 type Extra_ImageTree2_t struct {
 	dd                    *DdManager
@@ -50,13 +51,6 @@ type Extra_ImageTree2_t struct {
 	closed                bool
 }
 
-func imageSupport(dd *DdManager, f *DdNode) map[int]bool {
-	support := map[int]bool{}
-	for _, i := range dd.Support(f) {
-		support[i] = true
-	}
-	return support
-}
 func imageSorted(set map[int]bool) []int {
 	values := make([]int, 0, len(set))
 	for i := range set {
@@ -82,17 +76,17 @@ func imageReplace(dd *DdManager, destination **DdNode, f *DdNode) {
 	*destination = f
 }
 func imageInputs(dd *DdManager, care *DdNode, nParts int, parts []*DdNode, nVars int, vars []*DdNode) (map[int]bool, bool) {
-	if !autoBDD(dd, care) || nParts < 0 || nParts > len(parts) || nVars < 0 || nVars > len(vars) {
+	if !extraValidBDD(dd, care) || nParts < 0 || nParts > len(parts) || nVars < 0 || nVars > len(vars) {
 		return nil, false
 	}
 	for _, f := range parts[:nParts] {
-		if !autoBDD(dd, f) {
+		if !extraValidBDD(dd, f) {
 			return nil, false
 		}
 	}
 	keep := map[int]bool{}
 	for _, v := range vars[:nVars] {
-		if !autoBDD(dd, v) || cudd.Cudd_IsConstant(v) || cudd.Cudd_IsComplement(v) || int(v.Index) >= len(dd.Vars) || dd.Vars[v.Index] != v {
+		if !extraValidBDD(dd, v) || cudd.Cudd_IsConstant(v) || cudd.Cudd_IsComplement(v) || int(v.Index) >= len(dd.Vars) || dd.Vars[v.Index] != v {
 			return nil, false
 		}
 		keep[int(v.Index)] = true
@@ -135,7 +129,7 @@ func imageCombine(dd *DdManager, cube *DdNode, left, right *imageNode) *imageNod
 	}
 	function := cudd.Cudd_bddAndAbstract(dd, left.part.function, right.part.function, cube)
 	n.part = &imagePart{function, support, cudd.Cudd_DagSize(function)}
-	imageReplace(dd, &n.image, cudd.Cudd_bddAndAbstract(dd, left.image, right.image, cube))
+	imageReplace(dd, &n.image, function)
 	if cube != dd.One {
 		imageReplace(dd, &n.cube, cube)
 	}
@@ -145,6 +139,12 @@ func imageCombine(dd *DdManager, cube *DdNode, left, right *imageNode) *imageNod
 // Extra_bddImageStart builds the source's support-driven quantification tree.
 // vars are next-state/parameter projections to retain; all others are quantified.
 func Extra_bddImageStart(dd *DdManager, care *DdNode, nParts int, parts []*DdNode, nVars int, vars []*DdNode, verbose bool) *Extra_ImageTree_t {
+	return Extra_bddImageStartLimited(dd, care, nParts, parts, nVars, vars, -1, verbose)
+}
+
+// Extra_bddImageStartLimited shares the source BBR scheduler's manager-node
+// checks after scheduled merges. A negative limit disables these checks.
+func Extra_bddImageStartLimited(dd *DdManager, care *DdNode, nParts int, parts []*DdNode, nVars int, vars []*DdNode, limit int, verbose bool) *Extra_ImageTree_t {
 	keep, valid := imageInputs(dd, care, nParts, parts, nVars, vars)
 	if !valid {
 		return nil
@@ -153,7 +153,7 @@ func Extra_bddImageStart(dd *DdManager, care *DdNode, nParts int, parts []*DdNod
 	all := append(append([]*DdNode(nil), parts[:nParts]...), care)
 	memberships := map[int]map[int]bool{}
 	for id, f := range all {
-		part := &imagePart{f, imageSupport(dd, f), cudd.Cudd_DagSize(f)}
+		part := &imagePart{f, extraSupportSet(dd, f), cudd.Cudd_DagSize(f)}
 		nodes[id] = &imageNode{part: part}
 		for v := range part.support {
 			if keep[v] {
@@ -193,7 +193,7 @@ func Extra_bddImageStart(dd *DdManager, care *DdNode, nParts int, parts []*DdNod
 		}
 		imageReplace(dd, &n.image, f)
 	}
-	tree := &Extra_ImageTree_t{dd: dd, care: nodes[nParts], careSupport: imageSupport(dd, care), verbose: verbose}
+	tree := &Extra_ImageTree_t{dd: dd, care: nodes[nParts], careSupport: extraSupportSet(dd, care), verbose: verbose, sizeLimit: limit}
 	for len(memberships) > 0 {
 		best := -1
 		costBest := math.Inf(1)
@@ -237,6 +237,15 @@ func Extra_bddImageStart(dd *DdManager, care *DdNode, nParts int, parts []*DdNod
 				m[first] = true
 			}
 		}
+
+		if limit >= 0 && int(cudd.Cudd_ReadKeys(dd)-cudd.Cudd_ReadDead(dd)) > limit {
+			for _, n := range nodes {
+				if n != nil {
+					imageDeleteNode(dd, n)
+				}
+			}
+			return nil
+		}
 	}
 	for {
 		first, second := -1, -1
@@ -272,16 +281,17 @@ func Extra_bddImageStart(dd *DdManager, care *DdNode, nParts int, parts []*DdNod
 	}
 	return tree
 }
-func imageCompute(tree *Extra_ImageTree_t, n *imageNode) {
+func imageCompute(tree *Extra_ImageTree_t, n *imageNode) bool {
 	dd := tree.dd
 	if n.left == nil {
 		if n.cube != nil {
 			imageReplace(dd, &n.image, cudd.Cudd_bddExistAbstract(dd, n.image, n.cube))
 		}
-		return
+		return true
 	}
-	imageCompute(tree, n.left)
-	imageCompute(tree, n.right)
+	if !imageCompute(tree, n.left) || !imageCompute(tree, n.right) {
+		return false
+	}
 	cube := n.cube
 	if cube == nil {
 		cube = dd.One
@@ -290,9 +300,10 @@ func imageCompute(tree *Extra_ImageTree_t, n *imageNode) {
 	if tree.verbose {
 		tree.NNodesMax = max(tree.NNodesMax, cudd.Cudd_DagSize(n.image))
 	}
+	return tree.sizeLimit < 0 || int(cudd.Cudd_ReadKeys(dd)-cudd.Cudd_ReadDead(dd)) <= tree.sizeLimit
 }
 func Extra_bddImageCompute(tree *Extra_ImageTree_t, care *DdNode) *DdNode {
-	if tree == nil || tree.closed || !autoBDD(tree.dd, care) {
+	if tree == nil || tree.closed || !extraValidBDD(tree.dd, care) {
 		return nil
 	}
 	tree.NIter++
@@ -303,7 +314,9 @@ func Extra_bddImageCompute(tree *Extra_ImageTree_t, care *DdNode) *DdNode {
 	}
 	imageReplace(tree.dd, &tree.care.image, care)
 	tree.NNodesMax = 0
-	imageCompute(tree, tree.root)
+	if !imageCompute(tree, tree.root) {
+		return nil
+	}
 	tree.NNodesMaxTotal = max(tree.NNodesMaxTotal, tree.NNodesMax)
 	return tree.root.image
 }
@@ -313,20 +326,19 @@ func Extra_bddImageRead(tree *Extra_ImageTree_t) *DdNode {
 	}
 	return tree.root.image
 }
+func imageDeleteNode(dd *DdManager, n *imageNode) {
+	if n.left != nil {
+		imageDeleteNode(dd, n.left)
+		imageDeleteNode(dd, n.right)
+	}
+	imageReplace(dd, &n.cube, nil)
+	imageReplace(dd, &n.image, nil)
+}
 func Extra_bddImageTreeDelete(tree *Extra_ImageTree_t) {
 	if tree == nil || tree.closed {
 		return
 	}
-	var remove func(*imageNode)
-	remove = func(n *imageNode) {
-		if n.left != nil {
-			remove(n.left)
-			remove(n.right)
-		}
-		imageReplace(tree.dd, &n.cube, nil)
-		imageReplace(tree.dd, &n.image, nil)
-	}
-	remove(tree.root)
+	imageDeleteNode(tree.dd, tree.root)
 	tree.root = nil
 	tree.care = nil
 	tree.careSupport = nil
@@ -372,7 +384,7 @@ func Extra_bddImageStart2(dd *DdManager, care *DdNode, nParts int, parts []*DdNo
 	return tree
 }
 func Extra_bddImageCompute2(tree *Extra_ImageTree2_t, care *DdNode) *DdNode {
-	if tree == nil || tree.closed || !autoBDD(tree.dd, care) {
+	if tree == nil || tree.closed || !extraValidBDD(tree.dd, care) {
 		return nil
 	}
 	imageReplace(tree.dd, &tree.image, cudd.Cudd_bddAndAbstract(tree.dd, tree.relation, care, tree.cube))

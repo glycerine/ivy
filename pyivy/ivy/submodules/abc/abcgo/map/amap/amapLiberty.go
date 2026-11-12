@@ -1,1115 +1,631 @@
+// Liberty syntax tree and combinational genlib conversion from amapLiberty.c.
 package amap
 
 import (
 	"fmt"
+	"io"
+	"math"
+	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
+
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-import "os"
+type Amap_LibertyType_t int32
 
-/**CFile****************************************************************
-
-  FileHead    [amapLiberty.c]
-
-  SystemHead  [ABC: Logic synthesis and verification system.]
-
-  PackageHead [Technology mapper for standard cells.]
-
-  Synopsis    [Liberty parser.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: amapLiberty.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "amapInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
+const (
+	AMAP_LIBERTY_NONE Amap_LibertyType_t = iota
+	AMAP_LIBERTY_PROC
+	AMAP_LIBERTY_EQUA
+	AMAP_LIBERTY_LIST
+)
 const ABC_MAX_LIB_STR_LEN = 5000
 
-// entry types
- type Amap_LibertyType_t int32
-const ( 
-    AMAP_LIBERTY_NONE Amap_LibertyType_t = 0
-        // 0:  unknown
-    AMAP_LIBERTY_PROC Amap_LibertyType_t = AMAP_LIBERTY_NONE + 1
-            // 1:  procedure :  key(head){body}
-    AMAP_LIBERTY_EQUA Amap_LibertyType_t = AMAP_LIBERTY_PROC + 1
-            // 2:  equation  :  key:head;
-    AMAP_LIBERTY_LIST Amap_LibertyType_t = AMAP_LIBERTY_EQUA + 1             // 3:  list      :  key(head) 
-
-)
-
- 
-
-   
-type Amap_Pair_t struct {
-    Beg             int32;          // item beginning
-    End             int32;          // item end
-}
-
-   
+type Amap_Pair_t struct{ Beg, End int32 }
 type Amap_Item_t struct {
-    Type             int32;         // Amap_LibertyType_t
-    iLine             int32;        // file line where the item's spec begins
-    Key     Amap_Pair_t;          // key part
-    Head     Amap_Pair_t;         // head part 
-    Body     Amap_Pair_t;         // body part
-    Next             int32;         // next item in the list 
-    Child             int32;        // first child item 
+	Type            Amap_LibertyType_t
+	iLine           int32
+	Key, Head, Body Amap_Pair_t
+	Next, Child     int32
 }
-
-   
 type Amap_Tree_t struct {
-    pFileName           string;    // input Liberty file name
-    pContents           string;    // file contents
-    nContents             int32;    // file size
-    nLines             int32;       // line counter
-    nItems             int32;       // number of items
-    nItermAlloc             int32;  // number of items allocated
-    pItems    *Amap_Item_t;       // the items
-    pError           string;       // the error string
+	pFileName, pContents                   string
+	nContents, nLines, nItems, nItermAlloc int32
+	pItems                                 []*Amap_Item_t
+	pError                                 string
+}
+type amapLibertyToken struct {
+	text                      string
+	start, end, line, endLine int
 }
 
-func Amap_LibertyRoot(p *Amap_Tree_t) *Amap_Item_t { return p.pItems;                                                 }
-func Amap_LibertyItem(p *Amap_Tree_t, v int32) *Amap_Item_t { assert(v < p.nItems, "v < p.nItems"); if v < 0 {
-    return nil;
-} else {
-    return p.pItems + v;
-}     }
-func Amap_LibertyCompare(p *Amap_Tree_t, Pair Amap_Pair_t, pStr string) int32 { return strncmp( p.pContents+Pair.Beg, pStr, Pair.End-Pair.Beg ); }
-func Amap_PrintWord(pFile *os.File, p *Amap_Tree_t, Pair Amap_Pair_t) { var pBeg string = p.pContents+Pair.Beg;
-var pEnd string = p.pContents+Pair.End; for  pBeg < pEnd  { fputc( *pBeg++, pFile ); } }
-func Amap_PrintSpace(pFile *os.File, nOffset int32) { var i int32; for  i = 0; i < nOffset; i++  { fputc(' ', pFile); }         }
-func Amap_LibertyItemId(p *Amap_Tree_t, pItem *Amap_Item_t) int32 { return pItem - p.pItems;                                         }
-
-// Original macro:
-// #define Amap_ItemForEachChild( p, pItem, pChild ) \
-//     for ( pChild = Amap_LibertyItem(p, pItem->Child); pChild; pChild = Amap_LibertyItem(p, pChild->Next) )
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Prints parse tree in Liberty format.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyPrintLibertyItem(pFile *os.File, p *Amap_Tree_t, pItem *Amap_Item_t, nOffset int32) {
-    if pItem.Type == AMAP_LIBERTY_PROC {
-        Amap_PrintSpace( pFile, nOffset );
-        Amap_PrintWord( pFile, p, pItem.Key );
-        fmt.Fprintf(pFile, "(");
-        Amap_PrintWord( pFile, p, pItem.Head );
-        fmt.Fprintf(pFile, ") {\n");
-        if Amap_LibertyItem(p, pItem.Child) != nil {
-            Amap_LibertyPrintLibertyItem( pFile, p, Amap_LibertyItem(p, pItem.Child), nOffset + 1 ); }
-        Amap_PrintSpace( pFile, nOffset );
-        fmt.Fprintf(pFile, "}\n");
-    
-    } else if pItem.Type == AMAP_LIBERTY_EQUA {
-        Amap_PrintSpace( pFile, nOffset );
-        Amap_PrintWord( pFile, p, pItem.Key );
-        fmt.Fprintf(pFile, " : ");
-        Amap_PrintWord( pFile, p, pItem.Head );
-        fmt.Fprintf(pFile, ";\n");
-    
-    } else if pItem.Type == AMAP_LIBERTY_LIST {
-        Amap_PrintSpace( pFile, nOffset );
-        Amap_PrintWord( pFile, p, pItem.Key );
-        fmt.Fprintf(pFile, "(");
-        Amap_PrintWord( pFile, p, pItem.Head );
-        fmt.Fprintf(pFile, ");\n");
-    
-    } else { assert(false, "0"); }
-    if Amap_LibertyItem(p, pItem.Next) != nil {
-        Amap_LibertyPrintLibertyItem( pFile, p, Amap_LibertyItem(p, pItem.Next), nOffset ); }
+func amapLibertyLex(name, text string) ([]amapLibertyToken, error) {
+	var tokens []amapLibertyToken
+	line := 1
+	for i := 0; i < len(text); {
+		c := text[i]
+		if c == '\n' {
+			line++
+			i++
+			continue
+		}
+		if c == ' ' || c == '\t' || c == '\r' {
+			i++
+			continue
+		}
+		if c == '\\' && i+1 < len(text) && (text[i+1] == '\n' || text[i+1] == '\r') {
+			i++
+			continue
+		}
+		if c == '#' || c == '/' && i+1 < len(text) && text[i+1] == '/' {
+			for i < len(text) && text[i] != '\n' {
+				i++
+			}
+			continue
+		}
+		if c == '/' && i+1 < len(text) && text[i+1] == '*' {
+			startLine := line
+			i += 2
+			closed := false
+			for i < len(text) {
+				if text[i] == '\n' {
+					line++
+				}
+				if text[i] == '*' && i+1 < len(text) && text[i+1] == '/' {
+					i += 2
+					closed = true
+					break
+				}
+				i++
+			}
+			if !closed {
+				return nil, fmt.Errorf("%s:%d: unterminated comment", name, startLine)
+			}
+			continue
+		}
+		start, startLine := i, line
+		if c == '"' {
+			i++
+			closed := false
+			for i < len(text) {
+				if text[i] == '\n' {
+					line++
+				}
+				if text[i] == '\\' && i+1 < len(text) {
+					if text[i+1] == '\n' {
+						line++
+					}
+					i += 2
+					continue
+				}
+				if text[i] == '"' {
+					i++
+					closed = true
+					break
+				}
+				i++
+			}
+			if !closed {
+				return nil, fmt.Errorf("%s:%d: unterminated string", name, startLine)
+			}
+		} else if strings.ContainsRune("():;{},", rune(c)) {
+			i++
+		} else {
+			for i < len(text) && !strings.ContainsRune(" \t\r\n():;{},\"", rune(text[i])) {
+				if text[i] == '/' && i+1 < len(text) && (text[i+1] == '/' || text[i+1] == '*') {
+					break
+				}
+				i++
+			}
+			if i == start {
+				return nil, fmt.Errorf("%s:%d: invalid token", name, startLine)
+			}
+		}
+		tokens = append(tokens, amapLibertyToken{text[start:i], start, i, startLine, line})
+	}
+	return tokens, nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prints parse tree in Liberty format.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyPrintLiberty(p *Amap_Tree_t, pFileName string) int32 {
-    var pFile *os.File;
-    if pFileName == nil {
-        pFile = os.Stdout;
-    } else {
-        pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-        if pFile == nil {
-            fmt.Printf("Amap_LibertyPrintLiberty(): The output file is unavailable (absent or open).\n");
-            return 0;
-        }
-    }
-    Amap_LibertyPrintLibertyItem( pFile, p, Amap_LibertyRoot(p), 0 );
-    if pFile != os.Stdout {
-        _ = (pFile).Close(); }
-    return 1;
+type amapLibertyParser struct {
+	tree   *Amap_Tree_t
+	tokens []amapLibertyToken
+	next   int
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the time stamp.]
-
-  Description [The file should be closed.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Amap_LibertyTimeStamp_Buffer [100]byte;
-func Amap_LibertyTimeStamp() string {
-    
-    var TimeStamp string;
-    var ltime int64;
-    // get the current time
-    time( &ltime );
-    TimeStamp = asctime( localtime( &ltime ) );
-    TimeStamp[ len(TimeStamp) - 1 ] = 0;
-    assert(len(TimeStamp) < 100, "strlen(TimeStamp) < 100");
-    strcpy( spStatic_Amap_LibertyTimeStamp_Buffer, TimeStamp );
-    return spStatic_Amap_LibertyTimeStamp_Buffer;
+func (p *amapLibertyParser) peek() string {
+	if p.next == len(p.tokens) {
+		return ""
+	}
+	return p.tokens[p.next].text
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns cell's function.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyCellIsFlop(p *Amap_Tree_t, pCell *Amap_Item_t) int32 {
-    var pAttr *Amap_Item_t;
-    // inlining of macro Amap_ItemForEachChild
-    for  pAttr = Amap_LibertyItem(p, pCell.Child); (pAttr != nil); pAttr = Amap_LibertyItem(p, pAttr.Next)  {
-        if !(Amap_LibertyCompare(p, pAttr.Key, "ff") != 0) ||
-             !(Amap_LibertyCompare(p, pAttr.Key, "latch") != 0) {
-            return 1; }
-    }
-    return 0;
+func (p *amapLibertyParser) failure(message string) error {
+	line := int(p.tree.nLines)
+	if p.next < len(p.tokens) {
+		line = p.tokens[p.next].line
+	}
+	return fmt.Errorf("%s:%d: %s", p.tree.pFileName, line, message)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns cell's function.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyCellIsDontUse(p *Amap_Tree_t, pCell *Amap_Item_t) int32 {
-    var pAttr *Amap_Item_t;
-    // inlining of macro Amap_ItemForEachChild
-    for  pAttr = Amap_LibertyItem(p, pCell.Child); (pAttr != nil); pAttr = Amap_LibertyItem(p, pAttr.Next)  {
-        if !(Amap_LibertyCompare(p, pAttr.Key, "dont_use") != 0) {
-            return 1; }
-    }
-    return 0;
+func (p *amapLibertyParser) items(nested bool) (int32, error) {
+	first, last := int32(-1), int32(-1)
+	for p.next < len(p.tokens) && p.peek() != "}" {
+		key := p.tokens[p.next]
+		p.next++
+		if strings.ContainsAny(key.text, "():;{},") {
+			return -1, p.failure("expected attribute/group name")
+		}
+		item := &Amap_Item_t{iLine: int32(key.line), Key: Amap_Pair_t{int32(key.start), int32(key.end)}, Next: -1, Child: -1}
+		id := int32(len(p.tree.pItems))
+		p.tree.pItems = append(p.tree.pItems, item)
+		switch p.peek() {
+		case ":":
+			p.next++
+			if p.next >= len(p.tokens) {
+				return -1, p.failure("missing attribute value")
+			}
+			value := p.tokens[p.next]
+			if len(value.text) == 1 && strings.ContainsAny(value.text, "{};()") {
+				return -1, p.failure("invalid attribute value")
+			}
+			p.next++
+			item.Type = AMAP_LIBERTY_EQUA
+			item.Head = Amap_Pair_t{int32(value.start), int32(value.end)}
+			if p.peek() == ";" {
+				p.next++
+			} else if p.next < len(p.tokens) && p.tokens[p.next].line <= value.endLine {
+				return -1, p.failure("missing attribute semicolon")
+			}
+		case "(":
+			open := p.tokens[p.next]
+			p.next++
+			depth := 1
+			end := open.end
+			for p.next < len(p.tokens) {
+				token := p.tokens[p.next]
+				p.next++
+				if token.text == "(" {
+					depth++
+				}
+				if token.text == ")" {
+					depth--
+					if depth == 0 {
+						end = token.start
+						break
+					}
+				}
+			}
+			if depth != 0 {
+				return -1, p.failure("unclosed group arguments")
+			}
+			item.Head = Amap_LibertyUpdateHead(p.tree, Amap_Pair_t{int32(open.end), int32(end)})
+			if p.peek() == "{" {
+				body := p.tokens[p.next].end
+				p.next++
+				child, err := p.items(true)
+				if err != nil {
+					return -1, err
+				}
+				if p.peek() != "}" {
+					return -1, p.failure("unclosed group body")
+				}
+				close := p.tokens[p.next]
+				p.next++
+				item.Type = AMAP_LIBERTY_PROC
+				item.Child = child
+				item.Body = Amap_Pair_t{int32(body), int32(close.start)}
+			} else {
+				item.Type = AMAP_LIBERTY_LIST
+				if p.peek() == ";" {
+					p.next++
+				}
+			}
+		default:
+			return -1, p.failure("expected ':' or '(' after item name")
+		}
+		if first < 0 {
+			first = id
+		} else {
+			p.tree.pItems[last].Next = id
+		}
+		last = id
+	}
+	if !nested && p.peek() == "}" {
+		return -1, p.failure("unexpected closing brace")
+	}
+	return first, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns pin's function.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyPinFunction(p *Amap_Tree_t, pPin *Amap_Item_t) *Amap_Item_t {
-    var pFunc *Amap_Item_t;
-    // inlining of macro Amap_ItemForEachChild
-    for  pFunc = Amap_LibertyItem(p, pPin.Child); (pFunc != nil); pFunc = Amap_LibertyItem(p, pFunc.Next)  {
-        if !(Amap_LibertyCompare(p, pFunc.Key, "function") != 0) {
-            return pFunc; }
-    }
-    return nil;
+func ParseAMAPLibertyTree(name, text string) (*Amap_Tree_t, error) {
+	if len(text) > math.MaxInt32 {
+		return nil, fmt.Errorf("Liberty source exceeds 32-bit span size")
+	}
+	tree := &Amap_Tree_t{pFileName: name, pContents: text, nContents: int32(len(text)), nLines: int32(strings.Count(text, "\n") + 1)}
+	tokens, err := amapLibertyLex(name, text)
+	if err != nil {
+		return nil, err
+	}
+	parser := amapLibertyParser{tree: tree, tokens: tokens}
+	root, err := parser.items(false)
+	if err != nil {
+		return nil, err
+	}
+	if root != 0 || len(tree.pItems) == 0 || tree.pItems[0].Type != AMAP_LIBERTY_PROC || Amap_LibertyGetString(tree, tree.pItems[0].Key) != "library" || tree.pItems[0].Next >= 0 {
+		return nil, fmt.Errorf("%s: expected one library group", name)
+	}
+	tree.nItems = int32(len(tree.pItems))
+	tree.nItermAlloc = int32(cap(tree.pItems))
+	return tree, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns output pin(s).]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyCellOutput(p *Amap_Tree_t, pCell *Amap_Item_t) *Amap_Item_t {
-    var pPin *Amap_Item_t;
-    // inlining of macro Amap_ItemForEachChild
-    for  pPin = Amap_LibertyItem(p, pCell.Child); (pPin != nil); pPin = Amap_LibertyItem(p, pPin.Next)  {
-        if Amap_LibertyCompare(p, pPin.Key, "pin") != 0 {
-            continue; }
-        if Amap_LibertyPinFunction(p, pPin) != nil {
-            return pPin; }
-    }
-    return nil;
+func Amap_LibertyRoot(p *Amap_Tree_t) *Amap_Item_t { return Amap_LibertyItem(p, 0) }
+func Amap_LibertyItem(p *Amap_Tree_t, id int32) *Amap_Item_t {
+	if p == nil || id < 0 || int(id) >= len(p.pItems) {
+		return nil
+	}
+	return p.pItems[id]
 }
-func Amap_LibertyCellOutputs(p *Amap_Tree_t, pCell *Amap_Item_t) *Vec_Ptr_t {
-    var pPin *Amap_Item_t;
-    var vOutPins *Vec_Ptr_t;
-    vOutPins = Vec_PtrAlloc( 2 );
-    // inlining of macro Amap_ItemForEachChild
-    for  pPin = Amap_LibertyItem(p, pCell.Child); (pPin != nil); pPin = Amap_LibertyItem(p, pPin.Next)  {
-        if Amap_LibertyCompare(p, pPin.Key, "pin") != 0 {
-            continue; }
-        if Amap_LibertyPinFunction(p, pPin) != nil {
-            Vec_PtrPush( vOutPins, pPin ); }
-    }
-    return vOutPins;
+func Amap_LibertyItemId(p *Amap_Tree_t, item *Amap_Item_t) int32 {
+	for id, candidate := range p.pItems {
+		if candidate == item {
+			return int32(id)
+		}
+	}
+	return -1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns cell's area.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyCellArea(p *Amap_Tree_t, pCell *Amap_Item_t) *Amap_Item_t {
-    var pArea *Amap_Item_t;
-    // inlining of macro Amap_ItemForEachChild
-    for  pArea = Amap_LibertyItem(p, pCell.Child); (pArea != nil); pArea = Amap_LibertyItem(p, pArea.Next)  {
-        if Amap_LibertyCompare(p, pArea.Key, "area") != 0 {
-            continue; }
-        return pArea;
-    }
-    return nil;
+func Amap_LibertyGetString(p *Amap_Tree_t, pair Amap_Pair_t) string {
+	if pair.Beg < 0 || pair.End < pair.Beg || int(pair.End) > len(p.pContents) {
+		panic("Liberty span outside source")
+	}
+	return p.pContents[pair.Beg:pair.End]
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Count cell's output pins (pins with a logic function).]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyCellCountOutputs(p *Amap_Tree_t, pCell *Amap_Item_t) int32 {
-    var pPin *Amap_Item_t;
-    var Counter int32;
-    // inlining of macro Amap_ItemForEachChild
-    for  pPin = Amap_LibertyItem(p, pCell.Child); (pPin != nil); pPin = Amap_LibertyItem(p, pPin.Next)  {
-        if Amap_LibertyCompare(p, pPin.Key, "pin") != 0 {
-            continue; }
-        if Amap_LibertyPinFunction(p, pPin) != nil {
-            Counter++; }
-    }
-    return Counter;
+func Amap_LibertyGetStringFormula(p *Amap_Tree_t, pair Amap_Pair_t) string {
+	text := strings.TrimSpace(Amap_LibertyGetString(p, pair))
+	text = strings.ReplaceAll(strings.ReplaceAll(text, "\\\r\n", ""), "\\\n", "")
+	if len(text) >= 2 && text[0] == '"' && text[len(text)-1] == '"' {
+		if value, err := strconv.Unquote(text); err == nil {
+			return value
+		}
+		text = text[1 : len(text)-1]
+		text = strings.ReplaceAll(text, "\\\"", "\"")
+	}
+	return text
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Gets the name to write.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Amap_LibertyGetString_Buffer [ABC_MAX_LIB_STR_LEN]byte;
-func Amap_LibertyGetString(p *Amap_Tree_t, Pair Amap_Pair_t) string { 
-     
-    assert(Pair.End-Pair.Beg < ABC_MAX_LIB_STR_LEN, "Pair.End-Pair.Beg < ABC_MAX_LIB_STR_LEN");
-    strncpy( spStatic_Amap_LibertyGetString_Buffer, p.pContents+Pair.Beg, Pair.End-Pair.Beg ); 
-    spStatic_Amap_LibertyGetString_Buffer[Pair.End-Pair.Beg] = 0;
-    return spStatic_Amap_LibertyGetString_Buffer;
+func Amap_LibertyUpdateHead(p *Amap_Tree_t, pair Amap_Pair_t) Amap_Pair_t {
+	for pair.Beg < pair.End && strings.ContainsRune(" \t\r\n\\", rune(p.pContents[pair.Beg])) {
+		pair.Beg++
+	}
+	for pair.End > pair.Beg && strings.ContainsRune(" \t\r\n\\", rune(p.pContents[pair.End-1])) {
+		pair.End--
+	}
+	return pair
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Gets the name to write.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Amap_LibertyGetStringFormula_Buffer [ABC_MAX_LIB_STR_LEN]byte;
-func Amap_LibertyGetStringFormula(p *Amap_Tree_t, Pair Amap_Pair_t) string { 
-     
-    assert(Pair.End-Pair.Beg-2 < ABC_MAX_LIB_STR_LEN, "Pair.End-Pair.Beg-2 < ABC_MAX_LIB_STR_LEN");
-    strncpy( spStatic_Amap_LibertyGetStringFormula_Buffer, p.pContents+Pair.Beg+1, Pair.End-Pair.Beg-2 ); 
-    spStatic_Amap_LibertyGetStringFormula_Buffer[Pair.End-Pair.Beg-2] = 0;
-    return spStatic_Amap_LibertyGetStringFormula_Buffer;
+func Amap_LibertyCompare(p *Amap_Tree_t, pair Amap_Pair_t, text string) int32 {
+	return int32(strings.Compare(Amap_LibertyGetString(p, pair), text))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints parse tree in Genlib format.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyPrintGenlib(p *Amap_Tree_t, pFileName string, fVerbose int32) int32 {
-    var pFile *os.File;
-    var vOutputs *Vec_Ptr_t;
-    var pCell, pArea, pFunc, pPin, pOutput *Amap_Item_t;
-    var pForm string;
-    var i, Counter int32;
-    if pFileName == nil {
-        pFile = os.Stdout;
-    } else {
-        pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-        if pFile == nil {
-            fmt.Printf("Amap_LibertyPrintGenlib(): The output file is unavailable (absent or open).\n");
-            return 0;
-        }
-    }
-    fmt.Fprintf(pFile, "# This Genlib file was generated by ABC on %s\n", Amap_LibertyTimeStamp());
-    fmt.Fprintf(pFile, "# The standard cell library \"%s\" is from Liberty file \"%s\"\n", Amap_LibertyGetString(p, Amap_LibertyRoot(p).Head), p.pFileName);
-    fmt.Fprintf(pFile, "# (To find out more about Genlib format, google for \"sis_paper.ps\")\n");
-
-    fmt.Fprintf(pFile, "GATE  ");
-    fmt.Fprintf(pFile, "%16s  ", "_const0_");
-    fmt.Fprintf(pFile, "%f  ", 0.0);
-    fmt.Fprintf(pFile, "%s=", "z");
-    fmt.Fprintf(pFile, "%s;\n", "CONST0");
-
-    fmt.Fprintf(pFile, "GATE  ");
-    fmt.Fprintf(pFile, "%16s  ", "_const1_");
-    fmt.Fprintf(pFile, "%f  ", 0.0);
-    fmt.Fprintf(pFile, "%s=", "z");
-    fmt.Fprintf(pFile, "%s;\n", "CONST1");
-
-    // inlining of macro Amap_ItemForEachChild
-    for  pCell = Amap_LibertyItem(p, Amap_LibertyRoot(p).Child); (pCell != nil); pCell = Amap_LibertyItem(p, pCell.Next)  {
-/*
-    if ( strcmp(Amap_LibertyGetString(p, pCell->Head), "HA1SVTX1") == 0 )
-    {
-        int s = 0;
-    }
-*/
-        if Amap_LibertyCompare(p, pCell.Key, "cell") != 0 {
-            continue; }
-        if Amap_LibertyCellIsFlop(p, pCell) != 0 {
-            if fVerbose != 0 {
-                fmt.Printf("Amap_LibertyPrintGenlib() skipped sequential cell \"%s\".\n", Amap_LibertyGetString(p, pCell.Head)); }
-            continue;
-        }
-        if Amap_LibertyCellIsDontUse(p, pCell) != 0 {
-            if fVerbose != 0 {
-                fmt.Printf("Amap_LibertyPrintGenlib() skipped cell \"%s\" due to dont_use attribute.\n", Amap_LibertyGetString(p, pCell.Head)); }
-            continue;
-        }
-        Counter = Amap_LibertyCellCountOutputs( p, pCell );
-        if Counter == 0 {
-            if fVerbose != 0 {
-                fmt.Printf("Amap_LibertyPrintGenlib() skipped cell \"%s\" without logic function.\n", Amap_LibertyGetString(p, pCell.Head)); }
-            continue;
-        }
-/*
-        if ( Counter > 1 )
-        {
-            if ( fVerbose )
-                printf( "Amap_LibertyPrintGenlib() skipped multi-output cell \"%s\".\n", Amap_LibertyGetString(p, pCell->Head) );
-            continue;
-        }
-*/
-        pArea = Amap_LibertyCellArea( p, pCell );
-        if pArea == nil {
-            if fVerbose != 0 {
-                fmt.Printf("Amap_LibertyPrintGenlib() skipped cell \"%s\" with unspecified area.\n", Amap_LibertyGetString(p, pCell.Head)); }
-            continue;
-        }
-//        pOutput = Amap_LibertyCellOutput( p, pCell );
-        vOutputs = Amap_LibertyCellOutputs( p, pCell );
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(vOutputs)) && (((pOutput) = (Amap_Item_t *)Vec_PtrEntry(vOutputs, i)), 1); i++  {
-            pFunc   = Amap_LibertyPinFunction( p, pOutput );
-            pForm   = Amap_LibertyGetStringFormula( p, pFunc.Head );
-            if !(int32(strings.Compare(pForm, "0")) != 0) || !(int32(strings.Compare(pForm, "1")) != 0) {
-                if fVerbose != 0 {
-                    fmt.Printf("Amap_LibertyPrintGenlib() skipped cell \"%s\" with constant formula \"%s\".\n", Amap_LibertyGetString(p, pCell.Head), pForm); }
-                continue;
-            }
-            fmt.Fprintf(pFile, "GATE  ");
-            fmt.Fprintf(pFile, "%16s  ", Amap_LibertyGetString(p, pCell.Head));
-            fmt.Fprintf(pFile, "%f  ", atof(Amap_LibertyGetString(p, pArea.Head)));
-            fmt.Fprintf(pFile, "%s=", Amap_LibertyGetString(p, pOutput.Head));
-            fmt.Fprintf(pFile, "%s;\n", Amap_LibertyGetStringFormula(p, pFunc.Head));
-            // inlining of macro Amap_ItemForEachChild
-            for  pPin = Amap_LibertyItem(p, pCell.Child); (pPin != nil); pPin = Amap_LibertyItem(p, pPin.Next)  {
-                if Vec_PtrFind(vOutputs, pPin) == -1 && !(Amap_LibertyCompare(p, pPin.Key, "pin") != 0) {
-                    fmt.Fprintf(pFile, "    PIN  %13s  UNKNOWN  1  999  1.00  0.00  1.00  0.00\n", Amap_LibertyGetString(p, pPin.Head)); }
-            }
-        }
-        Vec_PtrFree( vOutputs );
-    }
-    if pFile != os.Stdout {
-        _ = (pFile).Close(); }
-    return 1;
+func amapLibertyChildren(p *Amap_Tree_t, item *Amap_Item_t) []*Amap_Item_t {
+	var children []*Amap_Item_t
+	if item == nil {
+		return children
+	}
+	for id := item.Child; id >= 0; {
+		child := Amap_LibertyItem(p, id)
+		if child == nil {
+			panic("invalid Liberty child index")
+		}
+		children = append(children, child)
+		id = child.Next
+	}
+	return children
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints parse tree in Genlib format.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyPrintGenlibStr(p *Amap_Tree_t, fVerbose int32) *Vec_Str_t {
-    var vStr *Vec_Str_t;
-    var Buffer string // was [100]byte in C
-
-    var vOutputs *Vec_Ptr_t;
-    var pCell, pArea, pFunc, pPin, pOutput *Amap_Item_t;
-    var i, Counter int32;
-    var pForm string;
-
-    vStr = Vec_StrAlloc( 1000 );
-
-    Vec_StrPrintStr( vStr, "GATE          _const0_  0.000000  z=CONST0;\n" );
-    Vec_StrPrintStr( vStr, "GATE          _const1_  0.000000  z=CONST1;\n" );
-    // inlining of macro Amap_ItemForEachChild
-    for  pCell = Amap_LibertyItem(p, Amap_LibertyRoot(p).Child); (pCell != nil); pCell = Amap_LibertyItem(p, pCell.Next)  {
-        if Amap_LibertyCompare(p, pCell.Key, "cell") != 0 {
-            continue; }
-        if Amap_LibertyCellIsFlop(p, pCell) != 0 {
-            if fVerbose != 0 {
-                fmt.Printf("Amap_LibertyPrintGenlib() skipped sequential cell \"%s\".\n", Amap_LibertyGetString(p, pCell.Head)); }
-            continue;
-        }
-        if Amap_LibertyCellIsDontUse(p, pCell) != 0 {
-            if fVerbose != 0 {
-                fmt.Printf("Amap_LibertyPrintGenlib() skipped cell \"%s\" due to dont_use attribute.\n", Amap_LibertyGetString(p, pCell.Head)); }
-            continue;
-        }
-        Counter = Amap_LibertyCellCountOutputs( p, pCell );
-        if Counter == 0 {
-            if fVerbose != 0 {
-                fmt.Printf("Amap_LibertyPrintGenlib() skipped cell \"%s\" without logic function.\n", Amap_LibertyGetString(p, pCell.Head)); }
-            continue;
-        }
-        pArea = Amap_LibertyCellArea( p, pCell );
-        if pArea == nil {
-            if fVerbose != 0 {
-                fmt.Printf("Amap_LibertyPrintGenlib() skipped cell \"%s\" with unspecified area.\n", Amap_LibertyGetString(p, pCell.Head)); }
-            continue;
-        }
-        vOutputs = Amap_LibertyCellOutputs( p, pCell );
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(vOutputs)) && (((pOutput) = (Amap_Item_t *)Vec_PtrEntry(vOutputs, i)), 1); i++  {
-            pFunc   = Amap_LibertyPinFunction( p, pOutput );
-            pForm   = Amap_LibertyGetStringFormula( p, pFunc.Head );
-            if !(int32(strings.Compare(pForm, "0")) != 0) || !(int32(strings.Compare(pForm, "1")) != 0) {
-                if fVerbose != 0 {
-                    fmt.Printf("Amap_LibertyPrintGenlib() skipped cell \"%s\" with constant formula \"%s\".\n", Amap_LibertyGetString(p, pCell.Head), pForm); }
-                continue;
-            }
-/*
-            fprintf( pFile, "GATE  " );
-            fprintf( pFile, "%16s  ", Amap_LibertyGetString(p, pCell->Head) );
-            fprintf( pFile, "%f  ",   atof(Amap_LibertyGetString(p, pArea->Head)) );
-            fprintf( pFile, "%s=",    Amap_LibertyGetString(p, pOutput->Head) );
-            fprintf( pFile, "%s;\n",  Amap_LibertyGetStringFormula(p, pFunc->Head) );
-            Amap_ItemForEachChild( p, pCell, pPin )
-                if ( Vec_PtrFind(vOutputs, pPin) == -1 && !Amap_LibertyCompare(p, pPin->Key, "pin") )
-                    fprintf( pFile, "    PIN  %13s  UNKNOWN  1  999  1.00  0.00  1.00  0.00\n", Amap_LibertyGetString(p, pPin->Head) );
-*/
-            Vec_StrPrintStr( vStr, "GATE " );
-            Vec_StrPrintStr( vStr, Amap_LibertyGetString(p, pCell.Head) );
-            Vec_StrPrintStr( vStr, " " );
-            Buffer = fmt.Sprintf("%f", atof(Amap_LibertyGetString(p, pArea.Head)));
-            Vec_StrPrintStr( vStr, Buffer );
-            Vec_StrPrintStr( vStr, " " );
-            Vec_StrPrintStr( vStr, Amap_LibertyGetString(p, pOutput.Head) );
-            Vec_StrPrintStr( vStr, "=" );
-            Vec_StrPrintStr( vStr, Amap_LibertyGetStringFormula(p, pFunc.Head) );
-            Vec_StrPrintStr( vStr, ";\n" );
-            // inlining of macro Amap_ItemForEachChild
-            for  pPin = Amap_LibertyItem(p, pCell.Child); (pPin != nil); pPin = Amap_LibertyItem(p, pPin.Next)  {
-                if Vec_PtrFind(vOutputs, pPin) == -1 && !(Amap_LibertyCompare(p, pPin.Key, "pin") != 0) {
-                    Vec_StrPrintStr( vStr, "  PIN " );
-                    Vec_StrPrintStr( vStr, Amap_LibertyGetString(p, pPin.Head) );
-                    Vec_StrPrintStr( vStr, " UNKNOWN  1  999  1.00  0.00  1.00  0.00\n" );
-                }
-            }
-        }
-        Vec_PtrFree( vOutputs );
-    }
-    Vec_StrPrintStr( vStr, "\n.end\n" );
-    Vec_StrPush( vStr, '\0' );
-//    printf( "%s", Vec_StrArray(vStr) );
-    return vStr;
+func amapLibertyChild(p *Amap_Tree_t, item *Amap_Item_t, key string) *Amap_Item_t {
+	for _, child := range amapLibertyChildren(p, item) {
+		if Amap_LibertyCompare(p, child.Key, key) == 0 {
+			return child
+		}
+	}
+	return nil
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the file size.]
-
-  Description [The file should be closed.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyFileSize(pFileName string) int32 {
-    var pFile *os.File;
-    var nFileSize int32;
-    pFile = os.Open(pFileName);
-    if pFile == nil {
-        fmt.Printf("Amap_LibertyFileSize(): The input file is unavailable (absent or open).\n");
-        return 0;
-    }
-    fseek( pFile, 0, SEEK_END );  
-    nFileSize = ftell( pFile ); 
-    _ = (pFile).Close();
-    return nFileSize;
+func Amap_LibertyCellIsFlop(p *Amap_Tree_t, cell *Amap_Item_t) int32 {
+	if amapLibertyChild(p, cell, "ff") != nil || amapLibertyChild(p, cell, "latch") != nil {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyFixFileHead(pFileName string) {
-    var pHead string;
-    for  pHead = pFileName; *pHead; pHead++  {
-        if *pHead == '>' {
-            *pHead = '\\'; }
-    }
+func Amap_LibertyCellIsDontUse(p *Amap_Tree_t, cell *Amap_Item_t) int32 {
+	item := amapLibertyChild(p, cell, "dont_use")
+	if item != nil {
+		value := strings.ToLower(Amap_LibertyGetStringFormula(p, item.Head))
+		if value == "true" || value == "1" {
+			return 1
+		}
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyCountItems(pBeg string, pEnd string) int32 {
-    var Counter int32;
-    for  ; pBeg < pEnd; pBeg++  {
-        Counter += (*pBeg == '(' || *pBeg == ':');
-    }
-    return Counter;
+func Amap_LibertyPinFunction(p *Amap_Tree_t, pin *Amap_Item_t) *Amap_Item_t {
+	return amapLibertyChild(p, pin, "function")
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Removes C-style comments.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyWipeOutComments(pBeg string, pEnd string) {
-    var pCur, pStart string;
-    for  pCur = pBeg; pCur < pEnd; pCur++  {
-    if pCur[0] == '/' && pCur[1] == '*' {
-        for  pStart = pCur; pCur < pEnd; pCur++  {
-        if pCur[0] == '*' && pCur[1] == '/' {
-            for  ; pStart < pCur + 2; pStart++  {
-            if *pStart != '\n' { *pStart = ' '; }
-            }
-            break;
-        }
-        } }
-    }
+func Amap_LibertyCellOutputs(p *Amap_Tree_t, cell *Amap_Item_t) *Vec_Ptr_t {
+	outputs := vec.Vec_PtrAlloc(2)
+	for _, pin := range amapLibertyChildren(p, cell) {
+		if Amap_LibertyCompare(p, pin.Key, "pin") == 0 && Amap_LibertyPinFunction(p, pin) != nil {
+			vec.Vec_PtrPush(outputs, pin)
+		}
+	}
+	return outputs
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the character is space.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyCharIsSpace(c byte) int32 {
-    return c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\\';
+func Amap_LibertyCellOutput(p *Amap_Tree_t, cell *Amap_Item_t) *Amap_Item_t {
+	outputs := Amap_LibertyCellOutputs(p, cell)
+	if vec.Vec_PtrSize(outputs) == 0 {
+		return nil
+	}
+	return vec.Vec_PtrEntry(outputs, 0).(*Amap_Item_t)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Skips spaces.]
-
-  Description [Returns 1 if reached the end.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertySkipSpaces(p *Amap_Tree_t, ppPos *string, pEnd string, fStopAtNewLine int32) int32 {
-    var pPos string  = *ppPos;
-    for  ; pPos < pEnd; pPos++  {
-        if *pPos == '\n' {
-            p.nLines++;
-            if fStopAtNewLine != 0 {
-                break; }
-        }        
-        if !(Amap_LibertyCharIsSpace(*pPos) != 0) {
-            break; }
-    }
-    *ppPos = pPos;
-    return pPos == pEnd;
+func Amap_LibertyCellCountOutputs(p *Amap_Tree_t, cell *Amap_Item_t) int32 {
+	return int32(vec.Vec_PtrSize(Amap_LibertyCellOutputs(p, cell)))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Skips entry delimited by " :;(){}" ]
-
-  Description [Returns 1 if reached the end.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertySkipEntry(ppPos *string, pEnd string) int32 {
-    var pPos string  = *ppPos;
-    if *pPos == '\"' {
-        for  pPos++; pPos < pEnd; pPos++  {
-            if *pPos == '\"' {
-                pPos++;
-                break;
-            }
-        }
-    
-    } else {
-        for  ; pPos < pEnd; pPos++  {
-            if *pPos == ' ' || *pPos == '\r' || *pPos == '\n' || *pPos == '\t' ||
-                 *pPos == ':' || *pPos == ';'  || 
-                 *pPos == '(' || *pPos == ')'  || 
-                 *pPos == '{' || *pPos == '}' {
-                break; }
-        }
-    }
-    *ppPos = pPos;
-    return pPos == pEnd;
+func Amap_LibertyCellArea(p *Amap_Tree_t, cell *Amap_Item_t) *Amap_Item_t {
+	return amapLibertyChild(p, cell, "area")
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Find the matching closing symbol.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyFindMatch(pPos string, pEnd string) string {
-    var Counter int32;
-    assert(*pPos == '(' || *pPos == '{', "*pPos == '(' || *pPos == '{'");
-    if *pPos == '(' {
-        for  ; pPos < pEnd; pPos++  {
-            if *pPos == '(' {
-                Counter++; }
-            if *pPos == ')' {
-                Counter--; }
-            if Counter == 0 {
-                break; }
-        }
-    
-    } else {
-        for  ; pPos < pEnd; pPos++  {
-            if *pPos == '{' {
-                Counter++; }
-            if *pPos == '}' {
-                Counter--; }
-            if Counter == 0 {
-                break; }
-        }
-    }
-    assert(*pPos == ')' || *pPos == '}', "*pPos == ')' || *pPos == '}'");
-    return pPos;
+func Amap_PrintWord(w io.Writer, p *Amap_Tree_t, pair Amap_Pair_t) error {
+	_, err := io.WriteString(w, Amap_LibertyGetString(p, pair))
+	return err
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Find the matching closing symbol.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyUpdateHead(p *Amap_Tree_t, Head Amap_Pair_t) Amap_Pair_t {
-    var Res Amap_Pair_t;
-    var pBeg string  = p.pContents + Head.Beg;
-    var pEnd string  = p.pContents + Head.End;
-    var pFirstNonSpace string  = nil;
-    var pLastNonSpace string  = nil;
-    var pChar string;
-    for  pChar = pBeg; pChar < pEnd; pChar++  {
-        if *pChar == '\n' {
-            p.nLines++; }
-        if Amap_LibertyCharIsSpace(*pChar) != 0 {
-            continue; }
-        pLastNonSpace = pChar;
-        if pFirstNonSpace == nil {
-            pFirstNonSpace = pChar; }
-    }
-    if pFirstNonSpace == nil || pLastNonSpace == nil {
-        return Head; }
-    assert(pFirstNonSpace && pLastNonSpace, "pFirstNonSpace && pLastNonSpace");
-    Res.Beg = pFirstNonSpace - p.pContents;
-    Res.End = pLastNonSpace  - p.pContents + 1;
-    return Res;
+func Amap_PrintSpace(w io.Writer, offset int32) error {
+	if offset < 0 {
+		offset = 0
+	}
+	_, err := io.WriteString(w, strings.Repeat(" ", int(offset)))
+	return err
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns free item.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyNewItem(p *Amap_Tree_t, Type int32) *Amap_Item_t {
-    p.pItems[p.nItems].iLine = p.nLines;
-    p.pItems[p.nItems].Type  = Type;
-    p.pItems[p.nItems].Child = -1;
-    p.pItems[p.nItems].Next  = -1;
-    return p.pItems + p.nItems++;
+func Amap_LibertyPrintLibertyItem(w io.Writer, p *Amap_Tree_t, item *Amap_Item_t, offset int32) error {
+	if err := Amap_PrintSpace(w, offset); err != nil {
+		return err
+	}
+	key, head := Amap_LibertyGetString(p, item.Key), Amap_LibertyGetString(p, item.Head)
+	switch item.Type {
+	case AMAP_LIBERTY_PROC:
+		if _, err := fmt.Fprintf(w, "%s (%s) {\n", key, head); err != nil {
+			return err
+		}
+		for _, child := range amapLibertyChildren(p, item) {
+			if err := Amap_LibertyPrintLibertyItem(w, p, child, offset+2); err != nil {
+				return err
+			}
+		}
+		if err := Amap_PrintSpace(w, offset); err != nil {
+			return err
+		}
+		_, err := fmt.Fprintln(w, "}")
+		return err
+	case AMAP_LIBERTY_EQUA:
+		_, err := fmt.Fprintf(w, "%s : %s;\n", key, head)
+		return err
+	case AMAP_LIBERTY_LIST:
+		_, err := fmt.Fprintf(w, "%s (%s);\n", key, head)
+		return err
+	}
+	return fmt.Errorf("unknown Liberty item kind")
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns free item.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyBuildItem(p *Amap_Tree_t, ppPos *string, pEnd string) int32 {
-    var pItem *Amap_Item_t;
-    var Key, Head, Body Amap_Pair_t;
-    var pNext, pStop string;
-    Key.End = 0;
-    if Amap_LibertySkipSpaces( p, ppPos, pEnd, 0 ) != 0 {
-        return -2; }
-    Key.Beg = *ppPos - p.pContents;
-    if Amap_LibertySkipEntry( ppPos, pEnd ) != 0 {
-        goto exit; }
-    Key.End = *ppPos - p.pContents;
-    if Amap_LibertySkipSpaces( p, ppPos, pEnd, 0 ) != 0 {
-        goto exit; }
-    pNext = *ppPos;
-    if *pNext == ':' {
-        *ppPos = pNext + 1;
-        if Amap_LibertySkipSpaces( p, ppPos, pEnd, 0 ) != 0 {
-            goto exit; }
-        Head.Beg = *ppPos - p.pContents;
-        if Amap_LibertySkipEntry( ppPos, pEnd ) != 0 {
-            goto exit; }
-        Head.End = *ppPos - p.pContents;
-        if Amap_LibertySkipSpaces( p, ppPos, pEnd, 1 ) != 0 {
-            goto exit; }
-        pNext = *ppPos;
-        if *pNext != ';' && *pNext != '\n' {
-            goto exit; }
-        *ppPos = pNext + 1;
-        // end of equation
-        pItem = Amap_LibertyNewItem( p, AMAP_LIBERTY_EQUA );
-        pItem.Key  = Key;
-        pItem.Head = Amap_LibertyUpdateHead( p, Head );
-        pItem.Next = Amap_LibertyBuildItem( p, ppPos, pEnd );
-        if pItem.Next == -1 {
-            goto exit; }
-        return Amap_LibertyItemId( p, pItem );
-    }
-    if *pNext == '(' {
-        pStop = Amap_LibertyFindMatch( pNext, pEnd );
-        Head.Beg = pNext - p.pContents + 1;
-        Head.End = pStop - p.pContents;
-        *ppPos = pStop + 1;
-        if Amap_LibertySkipSpaces( p, ppPos, pEnd, 0 ) != 0 {
-            // end of list
-            pItem = Amap_LibertyNewItem( p, AMAP_LIBERTY_LIST );
-            pItem.Key  = Key;
-            pItem.Head = Amap_LibertyUpdateHead( p, Head );
-            return Amap_LibertyItemId( p, pItem );
-        }
-        pNext = *ppPos;
-        if *pNext == '{' { // beginning of body
-        
-            pStop = Amap_LibertyFindMatch( pNext, pEnd );
-            Body.Beg = pNext - p.pContents + 1;
-            Body.End = pStop - p.pContents;
-            // end of body
-            pItem = Amap_LibertyNewItem( p, AMAP_LIBERTY_PROC );
-            pItem.Key  = Key;
-            pItem.Head = Amap_LibertyUpdateHead( p, Head );
-            pItem.Body = Body;
-            *ppPos = pNext + 1;
-            pItem.Child = Amap_LibertyBuildItem( p, ppPos, pStop );
-            if pItem.Child == -1 {
-                goto exit; }
-            *ppPos = pStop + 1;
-            pItem.Next = Amap_LibertyBuildItem( p, ppPos, pEnd );
-            if pItem.Next == -1 {
-                goto exit; }
-            return Amap_LibertyItemId( p, pItem );
-        }
-        // end of list
-        if *pNext == ';' {
-            *ppPos = pNext + 1; }
-        pItem = Amap_LibertyNewItem( p, AMAP_LIBERTY_LIST );
-        pItem.Key  = Key;
-        pItem.Head = Amap_LibertyUpdateHead( p, Head );
-        pItem.Next = Amap_LibertyBuildItem( p, ppPos, pEnd );
-        if pItem.Next == -1 {
-            goto exit; }
-        return Amap_LibertyItemId( p, pItem );
-    }
-exit:
-    if p.pError == nil {
-        // inlining of macro ABC_ALLOC
-        p.pError = ((char *) malloc(sizeof(char) * (size_t)(1000)));
-        sprintf( p.pError, "File \"%s\". Line %6d. Failed to parse entry \"%s\".\n", 
-                    p.pFileName, p.nLines, Amap_LibertyGetString(p, Key) );
-    }
-    return -1;
+func amapLibertyWriteFile(filename string, write func(io.Writer) error) error {
+	if filename == "" {
+		return write(os.Stdout)
+	}
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	err = write(file)
+	if closeErr := file.Close(); err == nil {
+		err = closeErr
+	}
+	return err
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the parsing manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyStart(pFileName string) *Amap_Tree_t {
-    var pFile *os.File;
-    var p *Amap_Tree_t;
-    var RetValue int32;
-    // start the manager
-    // inlining of macro ABC_ALLOC
-    p = ((Amap_Tree_t *) malloc(sizeof(Amap_Tree_t) * (size_t)(1)));
-    *p = Amap_Tree_t{};
-    // read the file into the buffer
-    Amap_LibertyFixFileHead( pFileName );
-    p.nContents = Amap_LibertyFileSize( pFileName );
-    if p.nContents == 0 {
-        p = nil;
-        return nil;
-    }
-    pFile = os.Open(pFileName);
-    // inlining of macro ABC_ALLOC
-    p.pContents = ((char *) malloc(sizeof(char) * (size_t)(p.nContents+1)));
-    RetValue = fread( p.pContents, p.nContents, 1, pFile );
-    _ = (pFile).Close();
-    p.pContents[p.nContents] = 0;
-    // other 
-    p.pFileName = Abc_UtilStrsav( pFileName );
-    p.nItermAlloc = 10 + Amap_LibertyCountItems( p.pContents, p.pContents+p.nContents );
-    // inlining of macro ABC_CALLOC
-    p.pItems = ((Amap_Item_t *) calloc((size_t)(p.nItermAlloc), sizeof(Amap_Item_t)));
-    p.nItems = 0;
-    p.nLines = 1;
-    return p;
+func Amap_LibertyPrintLiberty(p *Amap_Tree_t, filename string) int32 {
+	if err := amapLibertyWriteFile(filename, func(w io.Writer) error { return Amap_LibertyPrintLibertyItem(w, p, Amap_LibertyRoot(p), 0) }); err != nil {
+		return 0
+	}
+	return 1
 }
+func Amap_LibertyTimeStamp() string { return time.Now().Format(time.RFC1123) }
 
-/**Function*************************************************************
-
-  Synopsis    [Stops the parsing manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// LibertyGenlib retains AMAP's area-only unit-delay model; timing tables remain
+// available in the tree but are not approximated as physical timing data here.
+func LibertyGenlib(p *Amap_Tree_t) (string, error) {
+	if p == nil || Amap_LibertyRoot(p) == nil {
+		return "", fmt.Errorf("empty Liberty tree")
+	}
+	var output strings.Builder
+	output.WriteString("GATE _const0_ 0 z=CONST0;\nGATE _const1_ 0 z=CONST1;\n")
+	for _, cell := range amapLibertyChildren(p, Amap_LibertyRoot(p)) {
+		if Amap_LibertyCompare(p, cell.Key, "cell") != 0 || Amap_LibertyCellIsFlop(p, cell) != 0 || Amap_LibertyCellIsDontUse(p, cell) != 0 {
+			continue
+		}
+		areaItem := Amap_LibertyCellArea(p, cell)
+		if areaItem == nil {
+			continue
+		}
+		name := Amap_LibertyGetStringFormula(p, cell.Head)
+		if name == "" || len(strings.Fields(name)) != 1 {
+			return "", fmt.Errorf("cell name %q cannot be represented in genlib", name)
+		}
+		area, err := strconv.ParseFloat(Amap_LibertyGetStringFormula(p, areaItem.Head), 64)
+		if err != nil || area < 0 || math.IsNaN(area) || math.IsInf(area, 0) {
+			return "", fmt.Errorf("cell %s has invalid area", name)
+		}
+		var inputs []*Amap_Item_t
+		for _, pin := range amapLibertyChildren(p, cell) {
+			if Amap_LibertyCompare(p, pin.Key, "pin") == 0 && Amap_LibertyPinFunction(p, pin) == nil {
+				inputs = append(inputs, pin)
+			}
+		}
+		for _, entry := range vec.Vec_PtrArray(Amap_LibertyCellOutputs(p, cell)) {
+			pin := entry.(*Amap_Item_t)
+			function := Amap_LibertyPinFunction(p, pin)
+			formula := Amap_LibertyGetStringFormula(p, function.Head)
+			if formula == "0" || formula == "1" {
+				continue
+			}
+			pinName := Amap_LibertyGetStringFormula(p, pin.Head)
+			if len(strings.Fields(pinName)) != 1 {
+				return "", fmt.Errorf("invalid genlib output pin %q", pinName)
+			}
+			fmt.Fprintf(&output, "GATE %s %.17g %s=%s;\n", name, area, pinName, formula)
+			for _, input := range inputs {
+				inputName := Amap_LibertyGetStringFormula(p, input.Head)
+				if len(strings.Fields(inputName)) != 1 {
+					return "", fmt.Errorf("invalid genlib input pin %q", inputName)
+				}
+				fmt.Fprintf(&output, "    PIN %s UNKNOWN 1 999 1 0 1 0\n", inputName)
+			}
+		}
+	}
+	return output.String(), nil
+}
+func Amap_LibertyPrintGenlib(p *Amap_Tree_t, filename string, verbose int32) int32 {
+	text, err := LibertyGenlib(p)
+	if err != nil {
+		return 0
+	}
+	if err = amapLibertyWriteFile(filename, func(w io.Writer) error { _, err := io.WriteString(w, text); return err }); err != nil {
+		return 0
+	}
+	return 1
+}
+func Amap_LibertyPrintGenlibStr(p *Amap_Tree_t, verbose int32) *Vec_Str_t {
+	text, err := LibertyGenlib(p)
+	if err != nil {
+		return nil
+	}
+	result := vec.Vec_StrAlloc(len(text) + 1)
+	for i := range text {
+		vec.Vec_StrPush(result, text[i])
+	}
+	vec.Vec_StrPush(result, 0)
+	return result
+}
+func Amap_LibertyFileSize(filename string) int32 {
+	info, err := os.Stat(filename)
+	if err != nil || info.Size() > math.MaxInt32 {
+		return 0
+	}
+	return int32(info.Size())
+}
+func Amap_LibertyFixFileHead(filename string) string { return strings.ReplaceAll(filename, ">", "\\") }
+func Amap_LibertyStart(filename string) *Amap_Tree_t {
+	data, err := os.ReadFile(Amap_LibertyFixFileHead(filename))
+	if err != nil || len(data) > math.MaxInt32 {
+		return nil
+	}
+	return &Amap_Tree_t{pFileName: filename, pContents: string(data), nContents: int32(len(data)), nLines: int32(strings.Count(string(data), "\n") + 1)}
+}
 func Amap_LibertyStop(p *Amap_Tree_t) {
-    p.pFileName = nil;
-    p.pContents = nil;
-    p.pItems = nil;
-    p.pError = nil;
-    p = nil;
+	if p != nil {
+		*p = Amap_Tree_t{}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Parses the standard cell library in Liberty format.]
-
-  Description [Writes the resulting file in Genlib format.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyParse(pFileName string, fVerbose int32) int32 {
-    var p *Amap_Tree_t;
-    var pPos string;
-    var clk abctime  = Abc_Clock();
-    var RetValue int32;
-    p = Amap_LibertyStart( pFileName );
-    if p == nil {
-        return 0; }
-    pPos = p.pContents;
-    Amap_LibertyWipeOutComments( p.pContents, p.pContents+p.nContents );
-    if Amap_LibertyBuildItem( p, &pPos, p.pContents + p.nContents ) == 0 {
-        if fVerbose != 0 {
-        fmt.Printf("Parsing finished successfully.\n"); }
-//        Amap_LibertyPrintLiberty( p, "temp_.lib" );
-        Amap_LibertyPrintGenlib( p, Extra_FileNameGenericAppend(pFileName, ".genlib"), fVerbose );
-        RetValue = 1;
-    
-    } else {
-        if p.pError {
-            fmt.Printf("%s", p.pError); }
-        if fVerbose != 0 {
-        fmt.Printf("Parsing failed.\n"); }
-        RetValue = 0;
-    }
-    if fVerbose != 0 {
-    fmt.Printf("Memory = %7.2f MB. ", 1.0*(p.nContents+p.nItermAlloc*sizeof(Amap_Item_t))/(1<<20));
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    }
-    Amap_LibertyStop( p );
-    return RetValue;
+func Amap_LibertyCountItems(text string) int32 {
+	tokens, err := amapLibertyLex("<count>", text)
+	if err != nil {
+		return -1
+	}
+	var count int32
+	for _, token := range tokens {
+		if token.text == "(" || token.text == ":" {
+			count++
+		}
+	}
+	return count
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Parses the standard cell library in Liberty format.]
-
-  Description [Writes the resulting file in Genlib format.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibertyParseStr(pFileName string, fVerbose int32) *Vec_Str_t {
-    var p *Amap_Tree_t;
-    var vStr *Vec_Str_t  = nil;
-    var pPos string;
-    var clk abctime  = Abc_Clock();
-    var RetValue int32;
-    p = Amap_LibertyStart( pFileName );
-    if p == nil {
-        return 0; }
-    pPos = p.pContents;
-    Amap_LibertyWipeOutComments( p.pContents, p.pContents+p.nContents );
-    if Amap_LibertyBuildItem( p, &pPos, p.pContents + p.nContents ) == 0 {
-        if fVerbose != 0 {
-        fmt.Printf("Parsing finished successfully.\n"); }
-//        Amap_LibertyPrintLiberty( p, "temp_.lib" );
-        vStr = Amap_LibertyPrintGenlibStr( p, fVerbose );
-        RetValue = 1;
-    
-    } else {
-        if p.pError {
-            fmt.Printf("%s", p.pError); }
-        if fVerbose != 0 {
-        fmt.Printf("Parsing failed.\n"); }
-        RetValue = 0;
-    }
-    if fVerbose != 0 {
-    fmt.Printf("Memory = %7.2f MB. ", 1.0*(p.nContents+p.nItermAlloc*sizeof(Amap_Item_t))/(1<<20));
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    }
-    Amap_LibertyStop( p );
-    return vStr;
+func Amap_LibertyWipeOutComments(text string) (string, error) {
+	if _, err := amapLibertyLex("<comments>", text); err != nil {
+		return "", err
+	}
+	result := []byte(text)
+	quoted := false
+	for i := 0; i < len(result); i++ {
+		if result[i] == '\\' && quoted {
+			i++
+			continue
+		}
+		if result[i] == '"' {
+			quoted = !quoted
+			continue
+		}
+		if quoted {
+			continue
+		}
+		if result[i] == '/' && i+1 < len(result) && result[i+1] == '*' {
+			start := i
+			i += 2
+			for !(result[i] == '*' && result[i+1] == '/') {
+				i++
+			}
+			i++
+			for j := start; j <= i; j++ {
+				if result[j] != '\n' {
+					result[j] = ' '
+				}
+			}
+		} else if result[i] == '#' || result[i] == '/' && i+1 < len(result) && result[i+1] == '/' {
+			for i < len(result) && result[i] != '\n' {
+				result[i] = ' '
+				i++
+			}
+		}
+	}
+	return string(result), nil
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Amap_LibertyBuildItem(p *Amap_Tree_t, position *int32, end int32) int32 {
+	if p == nil || position == nil || *position < 0 || end < *position || int(end) > len(p.pContents) {
+		return -1
+	}
+	start := *position
+	original := p.pContents
+	tree, err := ParseAMAPLibertyTree(p.pFileName, original[start:end])
+	if err != nil {
+		p.pError = err.Error()
+		return -1
+	}
+	// Retain absolute source spans when the caller supplies a subrange.
+	lineOffset := int32(strings.Count(original[:start], "\n"))
+	for _, item := range tree.pItems {
+		item.Key.Beg += start
+		item.Key.End += start
+		item.Head.Beg += start
+		item.Head.End += start
+		if item.Type == AMAP_LIBERTY_PROC {
+			item.Body.Beg += start
+			item.Body.End += start
+		}
+		item.iLine += lineOffset
+	}
+	tree.pContents = original
+	tree.nContents = int32(len(original))
+	tree.nLines = int32(strings.Count(original, "\n") + 1)
+	*p = *tree
+	*position = end
+	return 0
+}
+func Amap_LibertyParse(filename string, verbose int32) int32 {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return 0
+	}
+	tree, err := ParseAMAPLibertyTree(filename, string(data))
+	if err != nil {
+		return 0
+	}
+	output := strings.TrimSuffix(filename, filepath.Ext(filename)) + ".genlib"
+	return Amap_LibertyPrintGenlib(tree, output, verbose)
+}
+func Amap_LibertyParseStr(filename string, verbose int32) *Vec_Str_t {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil
+	}
+	tree, err := ParseAMAPLibertyTree(filename, string(data))
+	if err != nil {
+		return nil
+	}
+	return Amap_LibertyPrintGenlibStr(tree, verbose)
+}

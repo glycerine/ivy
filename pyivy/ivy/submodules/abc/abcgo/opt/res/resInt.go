@@ -3,15 +3,25 @@ package res
 import (
 	"math/rand"
 
+	"github.com/glycerine/abcgo/aig/hop"
 	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bool/kit"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 // Names retained by the C-derived window routines, backed by the Go packages.
 type Abc_Ntk_t = abc.Network
 type Abc_Obj_t = abc.Object
+type Hop_Obj_t = hop.Hop_Obj_t
+type Hop_Man_t = hop.Hop_Man_t
+type Kit_Graph_t = kit.Kit_Graph_t
+type Sto_Man_t = bsat.Sto_Man_t
+type Int_Man_t = bsat.Int_Man_t
+type Vec_Int_t = vec.Vec_Int_t
 type Vec_Ptr_t = vec.Vec_Ptr_t
 type Vec_Vec_t = vec.Vec_Vec_t
+type abctime = int64
 
 /**CFile****************************************************************
 

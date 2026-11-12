@@ -54,8 +54,7 @@ func Cov_ManAlloc(pNtk *Abc_Ntk_t, nFaninMax, nCubesMax int32) *Cov_Man_t {
 	return p
 }
 
-// Cov_ManFree releases per-pass state. The network's FunctionManager slot is
-// cleared only if it still points at this manager.
+// Cov_ManFree releases per-pass state and removes this manager's registry entry.
 func Cov_ManFree(p *Cov_Man_t) {
 	if p == nil {
 		return
@@ -107,8 +106,6 @@ func Abc_NodeCovDropData(p *Cov_Man_t, pObj *Abc_Obj_t) {
 		}
 		Min_CoverRecycle(p.pManMin, cover)
 		Abc_ObjSetCover2(pObj, nil)
-		if support != nil || cover != nil {
-			p.nSupps--
-		}
+		p.nSupps--
 	}
 }

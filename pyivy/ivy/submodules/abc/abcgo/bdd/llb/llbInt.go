@@ -47,6 +47,9 @@ type Llb_Mtr_t = Llb_Mtr_t_
 type Llb_Grp_t = Llb_Grp_t_
 
 type Llb_Man_t_ struct {
+	reached  *DdNode
+	frameSets []*DdNode
+	failureValues []bool
 	pPars    *Gia_ParLlb_t // parameters
 	pAigGlo  *Aig_Man_t    // initial AIG manager (owned by the caller)
 	pAig     *Aig_Man_t    // derived AIG manager (created in this package)

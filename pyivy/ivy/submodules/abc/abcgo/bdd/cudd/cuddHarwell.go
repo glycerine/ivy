@@ -1,612 +1,267 @@
 package cudd
 
-import "fmt"
-
-/**CFile***********************************************************************
-
-  FileName    [cuddHarwell.c]
-
-  PackageName [cudd]
-
-  Synopsis    [Function to read a matrix in Harwell format.]
-
-  Description [External procedures included in this module:
-                <ul>
-                <li> Cudd_addHarwell()
-                </ul>
-        ]
-
-  Author      [Fabio Somenzi]
-
-  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado
-
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-
-  Redistributions of source code must retain the above copyright
-  notice, this list of conditions and the following disclaimer.
-
-  Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in the
-  documentation and/or other materials provided with the distribution.
-
-  Neither the name of the University of Colorado nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-  POSSIBILITY OF SUCH DAMAGE.]
-
-******************************************************************************/
-
-//#include "misc/util/util_hack.h"
-//#include "cuddInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-
-/*---------------------------------------------------------------------------*/
-/* Constant declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-
-/*---------------------------------------------------------------------------*/
-/* Stucture declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-
-/*---------------------------------------------------------------------------*/
-/* Type declarations                                                         */
-/*---------------------------------------------------------------------------*/
-
-
-/*---------------------------------------------------------------------------*/
-/* Variable declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-#ifndef lint
-static char rcsid[] DD_UNUSED = "$Id: cuddHarwell.c,v 1.9 2004/08/13 18:04:49 fabio Exp $";
-#endif
-
-/*---------------------------------------------------------------------------*/
-/* Macro declarations                                                        */
-/*---------------------------------------------------------------------------*/
-
-
-/**AutomaticStart*************************************************************/
-
-/*---------------------------------------------------------------------------*/
-/* Static function prototypes                                                */
-/*---------------------------------------------------------------------------*/
-
-
-/**AutomaticEnd***************************************************************/
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of exported functions                                          */
-/*---------------------------------------------------------------------------*/
-
-/**Function********************************************************************
-
-  Synopsis    [Reads in a matrix in the format of the Harwell-Boeing
-  benchmark suite.]
-
-  Description [Reads in a matrix in the format of the Harwell-Boeing
-  benchmark suite. The variables are ordered as follows:
-  <blockquote>
-  x\[0\] y\[0\] x\[1\] y\[1\] ...
-  </blockquote>
-  0 is the most significant bit.  On input, nx and ny hold the numbers
-  of row and column variables already in existence. On output, they
-  hold the numbers of row and column variables actually used by the
-  matrix.  m and n are set to the numbers of rows and columns of the
-  matrix.  Their values on input are immaterial.  Returns 1 on
-  success; 0 otherwise. The ADD for the sparse matrix is returned in
-  E, and its reference count is > 0.]
-
-  SideEffects [None]
-
-  SeeAlso     [Cudd_addRead Cudd_bddRead]
-
-******************************************************************************/
-int
-Cudd_addHarwell(
-  FILE * fp /* pointer to the input file */,
-  DdManager * dd /* DD manager */,
-  DdNode ** E /* characteristic function of the graph */,
-  DdNode *** x /* array of row variables */,
-  DdNode *** y /* array of column variables */,
-  DdNode *** xn /* array of complemented row variables */,
-  DdNode *** yn_ /* array of complemented column variables */,
-  int * nx /* number or row variables */,
-  int * ny /* number or column variables */,
-  int * m /* number of rows */,
-  int * n /* number of columns */,
-  int  bx /* first index of row variables */,
-  int  sx /* step of row variables */,
-  int  by /* first index of column variables */,
-  int  sy /* step of column variables */,
-  int  pr /* verbosity level */)
-{
-    var one, zero *DdNode;
-    var w *DdNode;
-    var cubex, cubey, minterm1 *DdNode;
-    var u, v, err, i, j, nv int32;
-    var val float64;
-    var lx **DdNode = nil;
-    var ly **DdNode = nil;
-    var lxn **DdNode = nil;
-    var lyn **DdNode = nil;    /* local copies of x, y, xn, yn_ */
-    var lnx, lny int32;                       /* local copies of nx and ny */
-    var title [73]byte;
-    var key [9]byte;
-    var mxtype [4]byte;
-    var rhstyp [4]byte;
-    var totcrd, ptrcrd, indcrd, valcrd, rhscrd, nrow, ncol, nnzero, neltvl, nrhs, nrhsix int32;
-    var colptr, rowind *int32;
-     
-                       
-                         
-      
-
-    if *nx < 0 || *ny < 0 { return(0); }
-
-    // inlining of macro DD_ONE
-    one = ((dd).one);
-    // inlining of macro DD_ZERO
-    zero = ((dd).zero);
-
-    /* Read the header */
-    err = fscanf(fp, "%72c %8c", title, key);
-    if err == -1 {
-        return(0);
-    } else if err != 2 {
-        return(0);
-    }
-    title[72] = byte( 0);
-    key[8] = byte( 0);
-
-    err = fscanf(fp, "%d %d %d %d %d", &totcrd, &ptrcrd, &indcrd,
-        &valcrd, &rhscrd);
-    if err == -1 {
-        return(0);
-    } else if err != 5 {
-        return(0);
-    }
-
-    err = fscanf(fp, "%3s %d %d %d %d", mxtype, &nrow, &ncol,
-        &nnzero, &neltvl);
-    if err == -1 {
-        return(0);
-    } else if err != 5 {
-        return(0);
-    }
-
-    /* Skip FORTRAN formats */
-    if rhscrd == 0 {
-        err = fscanf(fp, "%*s %*s %*s \n");
-    } else {
-        err = fscanf(fp, "%*s %*s %*s %*s \n");
-    }
-    if err == -1 {
-        return(0);
-    } else if err != 0 {
-        return(0);
-    }
-
-    /* Print out some stuff if requested to be verbose */
-    if pr>0 {
-        (void) fprintf(dd.out,"%s: type %s, %d rows, %d columns, %d entries\n", key,
-                mxtype, nrow, ncol, nnzero);
-        if pr>1 { (void) fprintf(dd.out,"%s\n", title); }
-    }
-
-    /* Check matrix type */
-    if mxtype[0] != 'R' || mxtype[1] != 'U' || mxtype[2] != 'A' {
-        (void) fprintf(dd.err,"%s: Illegal matrix type: %s\n",
-                               key, mxtype);
-        return(0);
-    }
-    if neltvl != 0 { return(0); }
-
-    /* Read optional 5-th line */
-    if rhscrd != 0 {
-        err = fscanf(fp, "%3c %d %d", rhstyp, &nrhs, &nrhsix);
-        if err == -1 {
-            return(0);
-        } else if err != 3 {
-            return(0);
-        }
-        rhstyp[3] = byte( 0);
-        if rhstyp[0] != 'F' {
-            (void) fprintf(dd.err,
-                        "%s: Sparse right-hand side not yet supported\n", key);
-            return(0);
-        }
-        if pr>0 { (void) fmt.Fprintf(dd.out, "%d right-hand side(s)\n", nrhs); }
-    } else {
-        nrhs = 0;
-    }
-
-    /* Compute the number of variables */
-
-    /* row and column numbers start from 0 */
-    u = nrow - 1;
-    for i=0; u > 0; i++ {
-        u >>= 1;
-    }
-    lnx = i;
-    if nrhs == 0 {
-        v = ncol - 1;
-    } else {
-        // inlining of macro ddMax
-        v = 2* ((((nrhs) > (ncol)) ? (nrhs) : (ncol)) - 1);
-    }
-    for i=0; v > 0; i++ {
-        v >>= 1;
-    }
-    lny = i;
-
-    /* Allocate or reallocate arrays for variables as needed */
-    if *nx == 0 {
-        if lnx > 0 {
-            *x = lx = ABC_ALLOC(DdNode *,lnx);
-            if lx == nil {
-                dd.errorCode = CUDD_MEMORY_OUT;
-                return(0);
-            }
-            *xn = lxn =  ABC_ALLOC(DdNode *,lnx);
-            if lxn == nil {
-                dd.errorCode = CUDD_MEMORY_OUT;
-                return(0);
-            }
-        } else {
-            *x = *xn = nil;
-        }
-    } else if lnx > *nx {
-        *x = lx = ABC_REALLOC(DdNode *, *x, lnx);
-        if lx == nil {
-            dd.errorCode = CUDD_MEMORY_OUT;
-            return(0);
-        }
-        *xn = lxn =  ABC_REALLOC(DdNode *, *xn, lnx);
-        if lxn == nil {
-            dd.errorCode = CUDD_MEMORY_OUT;
-            return(0);
-        }
-    } else {
-        lx = *x;
-        lxn = *xn;
-    }
-    if *ny == 0 {
-        if lny >0 {
-            *y = ly = ABC_ALLOC(DdNode *,lny);
-            if ly == nil {
-                dd.errorCode = CUDD_MEMORY_OUT;
-                return(0);
-            }
-            *yn_ = lyn = ABC_ALLOC(DdNode *,lny);
-            if lyn == nil {
-                dd.errorCode = CUDD_MEMORY_OUT;
-                return(0);
-            }
-        } else {
-            *y = *yn_ = nil;
-        }
-    } else if lny > *ny {
-        *y = ly = ABC_REALLOC(DdNode *, *y, lny);
-        if ly == nil {
-            dd.errorCode = CUDD_MEMORY_OUT;
-            return(0);
-        }
-        *yn_ = lyn = ABC_REALLOC(DdNode *, *yn_, lny);
-        if lyn == nil {
-            dd.errorCode = CUDD_MEMORY_OUT;
-            return(0);
-        }
-    } else {
-        ly = *y;
-        lyn = *yn_;
-    }
-
-    /* Create new variables as needed */
-    for i= *nx,nv=bx+(*nx)*sx; i < lnx; i++,nv+=sx {
-        for {
-            dd.reordered = 0;
-            lx[i] = cuddUniqueInter(dd, nv, one, zero);
-        
-if !(dd.reordered == 1) { break }
-} 
-        if lx[i] == nil { return(0); }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(lx[i]).ref);
-        for {
-            dd.reordered = 0;
-            lxn[i] = cuddUniqueInter(dd, nv, zero, one);
-        
-if !(dd.reordered == 1) { break }
-} 
-        if lxn[i] == nil { return(0); }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(lxn[i]).ref);
-    }
-    for i= *ny,nv=by+(*ny)*sy; i < lny; i++,nv+=sy {
-        for {
-            dd.reordered = 0;
-            ly[i] = cuddUniqueInter(dd, nv, one, zero);
-        
-if !(dd.reordered == 1) { break }
-} 
-        if ly[i] == nil { return(0); }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(ly[i]).ref);
-        for {
-            dd.reordered = 0;
-            lyn[i] = cuddUniqueInter(dd, nv, zero, one);
-        
-if !(dd.reordered == 1) { break }
-} 
-        if lyn[i] == nil { return(0); }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(lyn[i]).ref);
-    }
-
-    /* Update matrix parameters */
-    *nx = lnx;
-    *ny = lny;
-    *m = nrow;
-    if nrhs == 0 {
-        *n = ncol;
-    } else {
-        *n = (1 << (lny - 1)) + nrhs;
-    }
-    
-    /* Read structure data */
-    colptr = ABC_ALLOC(int, ncol+1);
-    if colptr == nil {
-        dd.errorCode = CUDD_MEMORY_OUT;
-        return(0);
-    }
-    rowind = ABC_ALLOC(int, nnzero);
-    if rowind == nil {
-        dd.errorCode = CUDD_MEMORY_OUT;
-        return(0);
-    }
-
-    for i=0; i<ncol+1; i++ {
-        err = fscanf(fp, " %d ", &u);
-        if err == -1{ 
-            ABC_FREE(colptr);
-            ABC_FREE(rowind);
-            return(0);
-        } else if err != 1 {
-            ABC_FREE(colptr);
-            ABC_FREE(rowind);
-            return(0);
-        }
-        colptr[i] = u - 1;
-    }
-    if colptr[0] != 0 {
-        (void) fprintf(dd.err,"%s: Unexpected colptr[0] (%d)\n",
-                               key,colptr[0]);
-        ABC_FREE(colptr);
-        ABC_FREE(rowind);
-        return(0);
-    }
-    for i=0; i<nnzero; i++ {
-        err = fscanf(fp, " %d ", &u);
-        if err == -1{ 
-            ABC_FREE(colptr);
-            ABC_FREE(rowind);
-            return(0);
-        } else if err != 1 {
-            ABC_FREE(colptr);
-            ABC_FREE(rowind);
-            return(0);
-        }
-        rowind[i] = u - 1;
-    }
-
-    // inlining of macro cuddRef
-    *E = zero; cuddSatInc(Cudd_Regular(*E).ref);
-
-    for j=0; j<ncol; j++ {
-        v = j;
-        // inlining of macro cuddRef
-        cubey = one; cuddSatInc(Cudd_Regular(cubey).ref);
-        for nv = lny - 1; nv>=0; nv-- {
-            if v & 1 {
-                w = Cudd_addApply(dd, Cudd_addTimes, cubey, ly[nv]);
-            } else {
-                w = Cudd_addApply(dd, Cudd_addTimes, cubey, lyn[nv]);
-            }
-            if w == nil {
-                Cudd_RecursiveDeref(dd, cubey);
-                ABC_FREE(colptr);
-                ABC_FREE(rowind);
-                return(0);
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(w).ref);
-            Cudd_RecursiveDeref(dd, cubey);
-            cubey = w;
-            v >>= 1;
-        }
-        for i=colptr[j]; i<colptr[j+1]; i++ {
-            u = rowind[i];
-            err = fscanf(fp, " %lf ", &val);
-            if err == -1 || err != 1{ 
-                Cudd_RecursiveDeref(dd, cubey);
-                ABC_FREE(colptr);
-                ABC_FREE(rowind);
-                return(0);
-            }
-            /* Create new Constant node if necessary */
-            cubex = cuddUniqueConst(dd, (CUDD_VALUE_TYPE) val);
-            if cubex == nil {
-                Cudd_RecursiveDeref(dd, cubey);
-                ABC_FREE(colptr);
-                ABC_FREE(rowind);
-                return(0);
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(cubex).ref);
-
-            for nv = lnx - 1; nv>=0; nv-- {
-                if u & 1 {
-                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lx[nv]);
-                } else { 
-                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lxn[nv]);
-                }
-                if w == nil {
-                    Cudd_RecursiveDeref(dd, cubey);
-                    Cudd_RecursiveDeref(dd, cubex);
-                    ABC_FREE(colptr);
-                    ABC_FREE(rowind);
-                    return(0);
-                }
-                // inlining of macro cuddRef
-                cuddSatInc(Cudd_Regular(w).ref);
-                Cudd_RecursiveDeref(dd, cubex);
-                cubex = w;
-                u >>= 1;
-            }
-            minterm1 = Cudd_addApply(dd, Cudd_addTimes, cubey, cubex);
-            if minterm1 == nil {
-                Cudd_RecursiveDeref(dd, cubey);
-                Cudd_RecursiveDeref(dd, cubex);
-                ABC_FREE(colptr);
-                ABC_FREE(rowind);
-                return(0);
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(minterm1).ref);
-            Cudd_RecursiveDeref(dd, cubex);
-            w = Cudd_addApply(dd, Cudd_addPlus, *E, minterm1);
-            if w == nil {
-                Cudd_RecursiveDeref(dd, cubey);
-                ABC_FREE(colptr);
-                ABC_FREE(rowind);
-                return(0);
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(w).ref);
-            Cudd_RecursiveDeref(dd, minterm1);
-            Cudd_RecursiveDeref(dd, *E);
-            *E = w;
-        }
-        Cudd_RecursiveDeref(dd, cubey);
-    }
-    ABC_FREE(colptr);
-    ABC_FREE(rowind);
-
-    /* Read right-hand sides */
-    for j=0; j<nrhs; j++ {
-        v = j + (1<< (lny-1));
-        // inlining of macro cuddRef
-        cubey = one; cuddSatInc(Cudd_Regular(cubey).ref);
-        for nv = lny - 1; nv>=0; nv-- {
-            if v & 1 {
-                w = Cudd_addApply(dd, Cudd_addTimes, cubey, ly[nv]);
-            } else {
-                w = Cudd_addApply(dd, Cudd_addTimes, cubey, lyn[nv]);
-            }
-            if w == nil {
-                Cudd_RecursiveDeref(dd, cubey);
-                return(0);
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(w).ref);
-            Cudd_RecursiveDeref(dd, cubey);
-            cubey = w;
-            v >>= 1;
-        }
-        for i=0; i<nrow; i++ {
-            u = i;
-            err = fscanf(fp, " %lf ", &val);
-            if err == -1 || err != 1{ 
-                Cudd_RecursiveDeref(dd, cubey);
-                return(0);
-            }
-            /* Create new Constant node if necessary */
-            if val == float64( 0.0) { continue; }
-            cubex = cuddUniqueConst(dd, (CUDD_VALUE_TYPE) val);
-            if cubex == nil {
-                Cudd_RecursiveDeref(dd, cubey);
-                return(0);
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(cubex).ref);
-
-            for nv = lnx - 1; nv>=0; nv-- {
-                if u & 1 {
-                   w = Cudd_addApply(dd, Cudd_addTimes, cubex, lx[nv]);
-                } else { 
-                    w = Cudd_addApply(dd, Cudd_addTimes, cubex, lxn[nv]);
-                }
-                if w == nil {
-                    Cudd_RecursiveDeref(dd, cubey);
-                    Cudd_RecursiveDeref(dd, cubex);
-                    return(0);
-                }
-                // inlining of macro cuddRef
-                cuddSatInc(Cudd_Regular(w).ref);
-                Cudd_RecursiveDeref(dd, cubex);
-                cubex = w;
-                u >>= 1;
-            }
-            minterm1 = Cudd_addApply(dd, Cudd_addTimes, cubey, cubex);
-            if minterm1 == nil {
-                Cudd_RecursiveDeref(dd, cubey);
-                Cudd_RecursiveDeref(dd, cubex);
-                return(0);
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(minterm1).ref);
-            Cudd_RecursiveDeref(dd, cubex);
-            w = Cudd_addApply(dd, Cudd_addPlus, *E, minterm1);
-            if w == nil {
-                Cudd_RecursiveDeref(dd, cubey);
-                return(0);
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(w).ref);
-            Cudd_RecursiveDeref(dd, minterm1);
-            Cudd_RecursiveDeref(dd, *E);
-            *E = w;
-        }
-        Cudd_RecursiveDeref(dd, cubey);
-    }
-
-    return(1);
-
-} /* end of Cudd_addHarwell */
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of internal functions                                          */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Definition of static functions                                            */
-/*---------------------------------------------------------------------------*/
-
-
-//ABC_NAMESPACE_IMPL_END
-
-
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"math/bits"
+	"strconv"
+	"strings"
+
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+)
+
+// HarwellMatrix is the ADD and variable set read from a Harwell–Boeing
+// assembled sparse matrix. X and Y contain row and column indicator vars;
+// XNeg and YNeg contain their arithmetic complements.
+type HarwellMatrix struct {
+	Function       *DdNode
+	X, Y           []*DdNode
+	XNeg, YNeg     []*DdNode
+	Rows, Cols     int
+	RightHandSides int
+}
+
+// Cudd_addHarwell reads a real, unsymmetric assembled matrix (RUA) from r.
+// Variable indices are assigned bx+i*sx to rows and by+i*sy to columns.
+// As in CUDD, optional right hand sides are represented as extra columns.
+// Unsupported matrix forms and malformed records return an error without
+// publishing a partial result.
+func Cudd_addHarwell(r io.Reader, dd *DdManager, bx, sx, by, sy int, verbose io.Writer) (*HarwellMatrix, error) {
+	if r == nil || dd == nil || sx == 0 || sy == 0 {
+		return nil, fmt.Errorf("invalid Harwell reader arguments")
+	}
+	lines := bufio.NewScanner(r)
+	lines.Buffer(make([]byte, 1024), 4*1024*1024)
+	var records []string
+	for lines.Scan() {
+		records = append(records, lines.Text())
+	}
+	if err := lines.Err(); err != nil {
+		return nil, err
+	}
+	if len(records) < 4 {
+		return nil, fmt.Errorf("Harwell–Boeing input has fewer than four header records")
+	}
+	title, key := records[0], ""
+	if len(title) > 72 {
+		key = strings.TrimSpace(title[72:])
+		title = title[:72]
+	}
+	if len(records[0]) >= 80 {
+		title, key = records[0][:72], strings.TrimSpace(records[0][72:80])
+	}
+	counts, err := parseHBInts(records[1], 5)
+	if err != nil {
+		return nil, fmt.Errorf("header record 2: %w", err)
+	}
+	rhsRecords := counts[4]
+	meta := strings.Fields(records[2])
+	if len(meta) < 5 || len(meta[0]) < 3 {
+		return nil, fmt.Errorf("header record 3 is malformed")
+	}
+	matrixType := meta[0][:3]
+	nrow, err := strconv.Atoi(meta[1])
+	if err != nil {
+		return nil, fmt.Errorf("invalid row count: %w", err)
+	}
+	ncol, err := strconv.Atoi(meta[2])
+	if err != nil {
+		return nil, fmt.Errorf("invalid column count: %w", err)
+	}
+	nnz, err := strconv.Atoi(meta[3])
+	if err != nil {
+		return nil, fmt.Errorf("invalid nonzero count: %w", err)
+	}
+	nelt, err := strconv.Atoi(meta[4])
+	if err != nil {
+		return nil, fmt.Errorf("invalid element count: %w", err)
+	}
+	if matrixType != "RUA" {
+		return nil, fmt.Errorf("%s: unsupported matrix type %q (only RUA is supported)", key, matrixType)
+	}
+	if nelt != 0 || nrow < 0 || ncol < 0 || nnz < 0 {
+		return nil, fmt.Errorf("invalid assembled matrix dimensions")
+	}
+	// Record 4 contains FORTRAN field formats. It is intentionally parsed as
+	// a whole record because descriptors such as (10I8) are not whitespace data.
+	dataAt := 4
+	rhs := 0
+	if rhsRecords > 0 {
+		if len(records) <= dataAt {
+			return nil, fmt.Errorf("missing right-hand-side header")
+		}
+		rh := strings.Fields(records[dataAt])
+		dataAt++
+		if len(rh) < 3 || !strings.HasPrefix(rh[0], "F") {
+			return nil, fmt.Errorf("sparse right-hand sides are unsupported")
+		}
+		rhs, err = strconv.Atoi(rh[1])
+		if err != nil || rhs < 0 {
+			return nil, fmt.Errorf("invalid right-hand-side count")
+		}
+		if _, err = strconv.Atoi(rh[2]); err != nil {
+			return nil, fmt.Errorf("invalid right-hand-side index count")
+		}
+	}
+	if verbose != nil {
+		fmt.Fprintf(verbose, "%s: type %s, %d rows, %d columns, %d entries\n", key, matrixType, nrow, ncol, nnz)
+		if rhs > 0 {
+			fmt.Fprintf(verbose, "%d right-hand side(s)\n", rhs)
+		}
+		if title != "" {
+			fmt.Fprintln(verbose, strings.TrimSpace(title))
+		}
+	}
+	data := strings.Join(records[dataAt:], " ")
+	fields := strings.Fields(data)
+	need := ncol + 1 + nnz + nnz + rhs*nrow
+	if len(fields) < need {
+		return nil, fmt.Errorf("matrix data is truncated: need %d numeric fields, found %d", need, len(fields))
+	}
+	pos := 0
+	readInts := func(n int) ([]int, error) {
+		out := make([]int, n)
+		for i := range out {
+			v, e := strconv.Atoi(fields[pos])
+			if e != nil {
+				return nil, e
+			}
+			out[i] = v - 1
+			pos++
+		}
+		return out, nil
+	}
+	colPtr, err := readInts(ncol + 1)
+	if err != nil {
+		return nil, fmt.Errorf("invalid column pointer: %w", err)
+	}
+	rowIndex, err := readInts(nnz)
+	if err != nil {
+		return nil, fmt.Errorf("invalid row index: %w", err)
+	}
+	if len(colPtr) == 0 || colPtr[0] != 0 || colPtr[ncol] != nnz {
+		return nil, fmt.Errorf("column pointers do not span the nonzero entries")
+	}
+	for i := 0; i < ncol; i++ {
+		if colPtr[i] < 0 || colPtr[i] > colPtr[i+1] || colPtr[i+1] > nnz {
+			return nil, fmt.Errorf("column pointers are not monotone")
+		}
+	}
+	for _, row := range rowIndex {
+		if row < 0 || row >= nrow {
+			return nil, fmt.Errorf("row index %d is outside matrix", row+1)
+		}
+	}
+	values := make([]float64, nnz+rhs*nrow)
+	for i := range values {
+		values[i], err = strconv.ParseFloat(fields[pos], 64)
+		if err != nil {
+			return nil, fmt.Errorf("invalid matrix value %q: %w", fields[pos], err)
+		}
+		pos++
+	}
+
+	rowBits := bits.Len(uint(maxInt(nrow-1, 0)))
+	colDomain := ncol
+	if rhs > 0 {
+		colDomain = 2 * maxInt(rhs, ncol)
+	}
+	colBits := bits.Len(uint(maxInt(colDomain-1, 0)))
+	result := &HarwellMatrix{Rows: nrow, Cols: ncol, RightHandSides: rhs}
+	result.X, result.XNeg, err = makeAddLiterals(dd, rowBits, bx, sx)
+	if err != nil {
+		return nil, err
+	}
+	result.Y, result.YNeg, err = makeAddLiterals(dd, colBits, by, sy)
+	if err != nil {
+		return nil, err
+	}
+	zero := core.Cudd_ReadZero(dd)
+	function := zero
+	addProduct := func(a, b *DdNode) *DdNode { return core.Cudd_addApply(dd, core.Cudd_addTimes, a, b) }
+	addTerms := func(row, col int, value float64) bool {
+		term := core.Cudd_addConst(dd, value)
+		for bit := 0; bit < rowBits; bit++ {
+			lit := result.XNeg[rowBits-1-bit]
+			if row&(1<<bit) != 0 {
+				lit = result.X[rowBits-1-bit]
+			}
+			term = addProduct(term, lit)
+			if term == nil {
+				return false
+			}
+		}
+		for bit := 0; bit < colBits; bit++ {
+			lit := result.YNeg[colBits-1-bit]
+			if col&(1<<bit) != 0 {
+				lit = result.Y[colBits-1-bit]
+			}
+			term = addProduct(term, lit)
+			if term == nil {
+				return false
+			}
+		}
+		function = core.Cudd_addApply(dd, core.Cudd_addPlus, function, term)
+		return function != nil
+	}
+	for col := 0; col < ncol; col++ {
+		for entry := colPtr[col]; entry < colPtr[col+1]; entry++ {
+			if !addTerms(rowIndex[entry], col, values[entry]) {
+				return nil, fmt.Errorf("failed to construct ADD for matrix entry")
+			}
+		}
+	}
+	for rhsIndex := 0; rhsIndex < rhs; rhsIndex++ {
+		col := (1 << maxInt(colBits-1, 0)) + rhsIndex
+		for row := 0; row < nrow; row++ {
+			v := values[nnz+rhsIndex*nrow+row]
+			if v != 0 && !addTerms(row, col, v) {
+				return nil, fmt.Errorf("failed to construct ADD for right-hand side")
+			}
+		}
+	}
+	Cudd_Ref(function)
+	result.Function = function
+	return result, nil
+}
+
+func makeAddLiterals(dd *DdManager, count, first, step int) (positive, negative []*DdNode, err error) {
+	positive, negative = make([]*DdNode, count), make([]*DdNode, count)
+	one, zero := core.Cudd_ReadOne(dd), core.Cudd_ReadZero(dd)
+	for i := 0; i < count; i++ {
+		v := core.Cudd_addIthVar(dd, first+i*step)
+		if v == nil {
+			return nil, nil, fmt.Errorf("failed to create ADD variable %d", first+i*step)
+		}
+		positive[i] = v
+		negative[i] = core.Cudd_addIte(dd, v, zero, one)
+		if negative[i] == nil {
+			return nil, nil, fmt.Errorf("failed to create complemented ADD variable %d", first+i*step)
+		}
+	}
+	return positive, negative, nil
+}
+
+func parseHBInts(record string, count int) ([]int, error) {
+	fields := strings.Fields(record)
+	if len(fields) < count {
+		return nil, fmt.Errorf("expected %d integers, found %d", count, len(fields))
+	}
+	values := make([]int, count)
+	for i := range values {
+		n, err := strconv.Atoi(fields[i])
+		if err != nil {
+			return nil, err
+		}
+		values[i] = n
+	}
+	return values, nil
+}
+
+func maxInt(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}

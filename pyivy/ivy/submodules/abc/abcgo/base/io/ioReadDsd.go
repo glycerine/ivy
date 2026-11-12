@@ -3,301 +3,168 @@ package io
 import (
 	"fmt"
 	"os"
+	"strings"
+
+	"github.com/glycerine/abcgo/base/abc"
 )
 
-/**CFile****************************************************************
-
-  FileName    [ioReadDsd.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedure to read network from file.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: ioReadDsd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ioAbc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Finds the end of the part.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_ReadDsdFindEnd(pCur string) string {
-    var pEnd string;
-    var nParts int32;
-    assert(*pCur == '(', "*pCur == '('");
-    for  pEnd = pCur; *pEnd; pEnd++  {
-        if *pEnd == '(' {
-            nParts++;
-        } else if *pEnd == ')' {
-            nParts--; }
-        if nParts == 0 {
-            return pEnd; }
-    }
-    return nil;
+func Io_ReadDsdFindEnd(text string) string {
+	if text == "" || text[0] != '(' {
+		return ""
+	}
+	depth := 0
+	for i, c := range text {
+		if c == '(' {
+			depth++
+		}
+		if c == ')' {
+			depth--
+			if depth == 0 {
+				return text[i:]
+			}
+		}
+	}
+	return ""
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Splits the formula into parts.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_ReadDsdStrSplit(pCur string, pParts []string, pTypeXor *int32) int32 {
-    var fAnd, fXor, fPri, nParts int32;
-    assert(*pCur, "*pCur");
-    // process the parts
-    for {
-        // save the current part
-        pParts[nParts++] = pCur;
-        // skip the complement
-        if *pCur == '!' {
-            pCur++; }
-        // skip var
-        if *pCur >= 'a' && *pCur <= 'z' {
-            pCur++;
-        } else {
-            // skip hex truth table
-            for  (*pCur >= '0' && *pCur <= '9') || (*pCur >= 'A' && *pCur <= 'F')  {
-                pCur++;
-            }
-            // process parentheses
-            if *pCur != '(' {
-                fmt.Printf("Cannot find the opening parenthesis.\n");
-                break;
-            }
-            // find the corresponding closing parenthesis
-            pCur = Io_ReadDsdFindEnd( pCur );
-            if pCur == nil {
-                fmt.Printf("Cannot find the closing parenthesis.\n");
-                break;
-            }
-            pCur++;
-        }
-        // check the end
-        if *pCur == 0 {
-            break; }
-        // check symbol
-        if *pCur != '*' && *pCur != '+' && *pCur != ',' {
-            fmt.Printf("Wrong separating symbol.\n");
-            break;
-        }
-        // remember the symbol
-        fAnd |= (*pCur == '*');
-        fXor |= (*pCur == '+');
-        fPri |= (*pCur == ',');
-        *pCur++ = 0;
-    }
-    // check separating symbols
-    if fAnd + fXor + fPri > 1 {
-        fmt.Printf("Different types of separating symbol ennPartsed.\n");
-        return 0;
-    }
-    *pTypeXor = fXor;
-    return nParts;
+func dsdParts(text string) ([]string, byte, error) {
+	var parts []string
+	depth, start := 0, 0
+	var operator byte
+	for i := 0; i < len(text); i++ {
+		switch text[i] {
+		case '(':
+			depth++
+		case ')':
+			depth--
+			if depth < 0 {
+				return nil, 0, fmt.Errorf("unbalanced DSD parentheses")
+			}
+		case '*', '+', ',':
+			if depth == 0 {
+				if operator != 0 && operator != text[i] {
+					return nil, 0, fmt.Errorf("mixed DSD separators")
+				}
+				operator = text[i]
+				if i == start {
+					return nil, 0, fmt.Errorf("empty DSD argument")
+				}
+				parts = append(parts, text[start:i])
+				start = i + 1
+			}
+		}
+	}
+	if depth != 0 || start == len(text) {
+		return nil, 0, fmt.Errorf("unclosed or empty DSD argument")
+	}
+	parts = append(parts, text[start:])
+	return parts, operator, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively parses the formula.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_ReadDsd_rec(pNtk *Abc_Ntk_t, pCur string, pSop string) *Abc_Obj_t {
-    var pObj, pFanin *Abc_Obj_t;
-    var pEnd string;
-    var pParts [32]string;
-    var i, nParts, TypeExor int32;
-
-    // consider complemented formula
-    if *pCur == '!' {
-        pObj = Io_ReadDsd_rec( pNtk, pCur + 1, nil );
-        return Abc_NtkCreateNodeInv( pNtk, pObj );
-    }
-    if *pCur == '(' {
-        assert(pCur[len(pCur)-1] == ')', "pCur[strlen(pCur)-1] == ')'");
-        pCur[len(pCur)-1] = 0;
-        nParts = Io_ReadDsdStrSplit( pCur+1, pParts, &TypeExor );
-        if nParts == 0 {
-            Abc_NtkDelete( pNtk );
-            return nil;
-        }
-        pObj = Abc_NtkCreateNode( pNtk );
-        if pSop {
-//            for ( i = nParts - 1; i >= 0; i-- )
-            for  i = 0; i < nParts; i++  {
-                pFanin = Io_ReadDsd_rec( pNtk, pParts[i], nil );
-                if pFanin == nil {
-                    return nil; }
-                Abc_ObjAddFanin( pObj, pFanin );
-            }
-        
-        } else {
-            for  i = 0; i < nParts; i++  {
-                pFanin = Io_ReadDsd_rec( pNtk, pParts[i], nil );
-                if pFanin == nil {
-                    return nil; }
-                Abc_ObjAddFanin( pObj, pFanin );
-            }
-        }
-        if pSop {
-            pObj.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, pSop );
-        } else if TypeExor != 0 {
-            pObj.pData = Abc_SopCreateXorSpecial( (Mem_Flex_t *)pNtk.pManFunc, nParts );
-        } else {
-            pObj.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtk.pManFunc, nParts, nil ); }
-        return pObj;
-    }
-    if *pCur >= 'a' && *pCur <= 'z' {
-        assert(*(pCur+1) == 0, "*(pCur+1) == 0");
-        return Abc_NtkPi( pNtk, *pCur - 'a' );
-    }
-
-    // skip hex truth table
-    pEnd = pCur;
-    for  (*pEnd >= '0' && *pEnd <= '9') || (*pEnd >= 'A' && *pEnd <= 'F')  {
-        pEnd++;
-    }
-    if *pEnd != '(' {
-        fmt.Printf("Cannot find the end of hexidecimal truth table.\n");
-        return nil;
-    }
-
-    // parse the truth table
-    *pEnd = 0;
-    pSop = Abc_SopFromTruthHex( pCur );
-    *pEnd = '(';
-    pObj = Io_ReadDsd_rec( pNtk, pEnd, pSop );
-    pSop = nil;
-    return pObj;
+func Io_ReadDsdStrSplit(text string, parts []string, xor *int32) int32 {
+	values, operator, err := dsdParts(text)
+	if err != nil || len(values) > len(parts) {
+		return 0
+	}
+	copy(parts, values)
+	if xor != nil {
+		*xor = 0
+		if operator == '+' {
+			*xor = 1
+		}
+	}
+	return int32(len(values))
 }
+func dsdNode(m *blifModel, text string) (string, error) {
+	if text == "" {
+		return "", fmt.Errorf("empty DSD expression")
+	}
+	if text[0] == '!' {
+		input, err := dsdNode(m, text[1:])
+		if err != nil {
+			return "", err
+		}
+		output := m.uniqueNetName("__dsd_not")
+		_, err = m.node([]string{input, output}, "0 1\n")
+		return output, err
+	}
+	if len(text) == 1 && text[0] >= 'a' && text[0] <= 'z' {
+		return text, nil
+	}
+	at := strings.IndexByte(text, '(')
+	if at < 0 || text[len(text)-1] != ')' {
+		return "", fmt.Errorf("expected DSD group in %q", text)
+	}
+	prefix := text[:at]
+	parts, operator, err := dsdParts(text[at+1 : len(text)-1])
+	if err != nil {
+		return "", err
+	}
+	inputs := make([]string, len(parts))
+	for i, part := range parts {
+		inputs[i], err = dsdNode(m, part)
+		if err != nil {
+			return "", err
+		}
+	}
+	output := m.uniqueNetName("__dsd_gate")
+	var cover string
+	if prefix != "" {
+		cover, err = benchHexCover(prefix, len(inputs))
+		if err != nil {
+			return "", err
+		}
 
-/**Function*************************************************************
-
-  Synopsis    [Derives the DSD network of the formula.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_ReadDsd(pForm string) *Abc_Ntk_t {
-    var pNtk *Abc_Ntk_t;
-    var pObj, pTop *Abc_Obj_t;
-    var vNames *Vec_Ptr_t;
-    var pCur, pFormCopy string;
-    var i, nInputs int32;
-
-    // count the number of elementary variables
-    nInputs = 0;
-    for  pCur = pForm; *pCur; pCur++  {
-        if *pCur >= 'a' && *pCur <= 'z' {
-            nInputs = Abc_MaxInt( nInputs, *pCur - 'a' ); }
-    }
-    nInputs++;
-
-    // create the network
-    pNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );
-    pNtk.pName = Extra_UtilStrsav( "dsd" );
-
-    // create PIs
-    vNames = Abc_NodeGetFakeNames( nInputs );
-    for  i = 0; i < nInputs; i++  {
-        Abc_ObjAssignName( Abc_NtkCreatePi(pNtk), (char *)Vec_PtrEntry(vNames, i), nil );
-    }
-    Abc_NodeFreeNames( vNames );
-
-    // transform the formula by inserting parentheses
-    // this transforms strings like PRIME(a,b,cd) into (PRIME((a),(b),(cd)))
-    // inlining of macro ABC_ALLOC
-    pCur = pFormCopy = ((char *) malloc(sizeof(char) * (size_t)(3 * len(pForm) + 10)));
-    *pCur++ = '(';
-    for  ; *pForm; pForm++  {
-        if *pForm == '(' {
-            *pCur++ = '(';
-            *pCur++ = '(';
-        
-        } else if *pForm == ')' {
-            *pCur++ = ')';
-            *pCur++ = ')';
-        
-        } else if *pForm == ',' {
-            *pCur++ = ')';
-            *pCur++ = ',';
-            *pCur++ = '(';
-        
-        } else {
-            *pCur++ = *pForm; }
-    }
-    *pCur++ = ')';
-    *pCur = 0;
-
-    // parse the formula
-    pObj = Io_ReadDsd_rec( pNtk, pFormCopy, nil );
-    pFormCopy = nil;
-    if pObj == nil {
-        return nil; }
-
-    // create output
-    pTop = Abc_NtkCreatePo(pNtk);
-    Abc_ObjAssignName( pTop, "F", nil );
-    Abc_ObjAddFanin( pTop, pObj );
-
-    // create the only PO
-    if !Abc_NtkCheck( pNtk ) {
-        fmt.Fprintf(os.Stdout, "Io_ReadDsd(): Network check has failed.\n");
-        Abc_NtkDelete( pNtk );
-        return nil;
-    }
-    return pNtk;
+	} else if operator == '+' {
+		signal := inputs[0]
+		for _, input := range inputs[1:] {
+			next := m.uniqueNetName("__dsd_xor")
+			if _, err = m.node([]string{signal, input, next}, "01 1\n10 1\n"); err != nil {
+				return "", err
+			}
+			signal = next
+		}
+		_, err = m.node([]string{signal, output}, "1 1\n")
+		return output, err
+	} else {
+		cover, err = benchGateCover("AND", len(inputs))
+		if err != nil {
+			return "", err
+		}
+	}
+	_, err = m.node(append(inputs, output), cover)
+	return output, err
 }
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func ParseDSD(expression string) (*abc.Network, error) {
+	expression = strings.Join(strings.Fields(expression), "")
+	m := &blifModel{network: abc.NewNetwork("dsd"), nets: map[string]*abc.Object{}, domains: map[string]*abc.MVVariable{}}
+	m.network.Type = uint8(abc.ABC_NTK_NETLIST)
+	m.network.Function = uint8(abc.ABC_FUNC_SOP)
+	highest := byte(0)
+	for i := range expression {
+		if expression[i] >= 'a' && expression[i] <= 'z' && expression[i] > highest {
+			highest = expression[i]
+		}
+	}
+	if highest != 0 {
+		for c := byte('a'); c <= highest; c++ {
+			if err := m.input(string(c)); err != nil {
+				return nil, err
+			}
+		}
+	}
+	signal, err := dsdNode(m, expression)
+	if err != nil {
+		return nil, err
+	}
+	if err = m.output(signal); err != nil {
+		return nil, err
+	}
+	return m.network, nil
+}
+func Io_ReadDsd(expression string) *abc.Network {
+	n, err := ParseDSD(expression)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return nil
+	}
+	return n
+}

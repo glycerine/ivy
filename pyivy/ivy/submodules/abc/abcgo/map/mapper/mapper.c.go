@@ -1,184 +1,94 @@
 package mapper
 
-import "fmt"
+import (
+	"fmt"
+	"os"
 
-import "os"
+	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/map/mio"
+	"github.com/glycerine/abcgo/misc/extra"
+)
 
-/**CFile****************************************************************
-
-  FileName    [mapper.c]
-
-  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]
-
-  Synopsis    [Command file for the mapper package.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 2.0. Started - June 1, 2004.]
-
-  Revision    [$Id: mapper.c,v 1.7 2005/01/23 06:59:42 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "base/main/mainInt.h"
-//#include "map/mio/mio.h"
-//#include "mapperInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static int Map_CommandReadLibrary ( Abc_Frame_t * pAbc, int argc, char **argv );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_Init(pAbc *Abc_Frame_t) {
-    Cmd_CommandAdd( pAbc, "SC mapping", "read_super",  Map_CommandReadLibrary, 0 ); 
+func Map_Init(frame *abcmain.Frame) {
+	_ = frame.RegisterCommand(abcmain.Command{
+		Name: "read_super", Group: "SC mapping",
+		Handler: func(frame *abcmain.Frame, args []string) int32 {
+			return Map_CommandReadLibrary(frame, int32(len(args)), args)
+		},
+	})
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_End(pAbc *Abc_Frame_t) {
-//    Map_SuperLibFree( s_pSuperLib );
-     Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );
+func Map_End(frame *abcmain.Frame) {
+	frame.RemoveCommand("read_super")
+	if lib, ok := frame.TakeResource("pLibSuper").(*Map_SuperLib_t); ok {
+		Map_SuperLibFree(lib)
+	}
 }
 
+func Map_CommandReadLibrary(frame *abcmain.Frame, _ int32, args []string) int32 {
+	var exclude string
+	verbose, algorithm := int32(1), int32(1)
+	path := ""
+	for i := 1; i < len(args); i++ {
+		arg := args[i]
+		switch arg {
+		case "-e":
+			i++
+			if i >= len(args) {
+				return mapReadSuperUsage(frame)
+			}
+			exclude = args[i]
+		case "-o":
+			algorithm ^= 1
+		case "-v":
+			verbose ^= 1
+		case "-h":
+			return mapReadSuperUsage(frame)
+		default:
+			if len(arg) > 0 && arg[0] == '-' || path != "" {
+				return mapReadSuperUsage(frame)
+			}
+			path = arg
+		}
+	}
+	if path == "" {
+		return mapReadSuperUsage(frame)
+	}
 
-/**Function*************************************************************
+	f, err := os.Open(path)
+	if err != nil {
+		fmt.Fprintf(frame.Err, "Cannot open input file %q. ", path)
+		if guess := extra.Extra_FileGetSimilarName(path, ".genlib", ".lib", ".gen", ".g", ""); guess != "" {
+			fmt.Fprintf(frame.Err, "Did you mean %q?", guess)
+		}
+		fmt.Fprintln(frame.Err)
+		return 1
+	}
+	_ = f.Close()
 
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_CommandReadLibrary(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFile *os.File;
-    var pOut, pErr *os.File;
-    var pLib *Map_SuperLib_t;
-    var pNet *Abc_Ntk_t;
-    var FileName, ExcludeFile string;
-    var fVerbose int32;
-    var fAlgorithm int32;
-    var c int32;
-
-    pNet = Abc_FrameReadNtk(pAbc);
-    pOut = Abc_FrameReadOut(pAbc);
-    pErr = Abc_FrameReadErr(pAbc);
-
-    // set the defaults
-    fVerbose = 1;
-    fAlgorithm = 1;
-    ExcludeFile = 0;
-    Extra_UtilGetoptReset();
-    for  (c = Extra_UtilGetopt(argc, argv, "eovh")) != -1  {
-        switch c {
-            case 'e':
-                ExcludeFile = argv[globalUtilOptind];
-                if ExcludeFile == 0 {
-                    goto usage; }
-                globalUtilOptind++;
-                break;
-            case 'o':
-                fAlgorithm ^= 1;
-                break;
-            case 'v':
-                fVerbose ^= 1;
-                break;
-            case 'h':
-                goto usage;
-                break;
-            default:
-                goto usage;
-        }
-    }
-
-
-    if argc != globalUtilOptind + 1 {
-        goto usage;
-    }
-
-    // get the input file name
-    FileName = argv[globalUtilOptind];
-    if (pFile = Io_FileOpen( FileName, "open_path", "r", 0 )) == nil {
-//    if ( (pFile = fopen( FileName, "r" )) == NULL )
-    
-        fmt.Fprintf(pErr, "Cannot open input file \"%s\". ", FileName);
-        if FileName = Extra_FileGetSimilarName( FileName, ".genlib", ".lib", ".gen", ".g", nil ) {
-            fmt.Fprintf(pErr, "Did you mean \"%s\"?", FileName); }
-        fmt.Fprintf(pErr, "\n");
-        return 1;
-    }
-    _ = (pFile).Close();
-
-    if Abc_FrameReadLibGen() == nil {
-        fmt.Fprintf(pErr, "Genlib library should be read in first..\n");
-        return 1;
-    }
-
-    // set the new network
-    pLib = Map_SuperLibCreate( (Mio_Library_t *)Abc_FrameReadLibGen(), nil, FileName, ExcludeFile, fAlgorithm, fVerbose );
-    if pLib == nil {
-        fmt.Fprintf(pErr, "Reading supergate library has failed.\n");
-        return 1;
-    }
-    // replace the current library
-//    Map_SuperLibFree( s_pSuperLib );
-//    s_pSuperLib = pLib;
-    Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );
-    Abc_FrameSetLibSuper( pLib );
-    // replace the current genlib library
-//    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );
-//    Abc_FrameSetLibGen( (Mio_Library_t *)pLib->pGenlib );
-    return 0;
-
-usage:
-    fmt.Fprintf(pErr, "\nusage: read_super [-ovh]\n");
-    fmt.Fprintf(pErr, "\t         read the supergate library from the file\n");  
-    fmt.Fprintf(pErr, "\t-e file : file contains list of genlib gates to exclude\n");
-    fmt.Fprintf(pErr, "\t-o      : toggles the use of old file format [default = %s]\n", (fAlgorithm? "new" : "old"));
-    fmt.Fprintf(pErr, "\t-v      : toggles enabling of verbose output [default = %s]\n", (fVerbose? "yes" : "no"));
-    fmt.Fprintf(pErr, "\t-h      : print the command usage\n");
-    return 1;       /* error exit */
+	genlib, ok := frame.Resource("pLibGen").(*mio.Mio_Library_t)
+	if !ok || genlib == nil {
+		fmt.Fprintln(frame.Err, "Genlib library should be read in first.")
+		return 1
+	}
+	lib := Map_SuperLibCreate(genlib, nil, path, exclude, algorithm, verbose)
+	if lib == nil {
+		fmt.Fprintln(frame.Err, "Reading supergate library has failed.")
+		return 1
+	}
+	if old, ok := frame.TakeResource("pLibSuper").(*Map_SuperLib_t); ok {
+		Map_SuperLibFree(old)
+	}
+	frame.SetResource("pLibSuper", lib)
+	return 0
 }
 
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func mapReadSuperUsage(frame *abcmain.Frame) int32 {
+	fmt.Fprintln(frame.Err, "\nusage: read_super [-e file] [-ovh] file")
+	fmt.Fprintln(frame.Err, "\tread the supergate library from the file")
+	fmt.Fprintln(frame.Err, "\t-e file : file contains list of genlib gates to exclude")
+	fmt.Fprintln(frame.Err, "\t-o      : toggles the old file format")
+	fmt.Fprintln(frame.Err, "\t-v      : toggles verbose output")
+	fmt.Fprintln(frame.Err, "\t-h      : print this usage")
+	return 1
+}

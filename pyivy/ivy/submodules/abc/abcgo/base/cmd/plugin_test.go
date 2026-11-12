@@ -114,3 +114,15 @@ func TestPluginProcessAndBridge(t *testing.T) {
 		t.Fatal(f.Status, bridge.witness, out.String())
 	}
 }
+func TestPluginCounterexampleBridgeData(t *testing.T) {
+	witness := &PluginCounterexample{Bits: []int32{0, 1}, Registers: 1, Inputs: 1, Frame: 0, Output: 2}
+	bits, registers, inputs, frame, output := witness.CounterexampleData()
+	bits[0] = 1
+	if witness.Bits[0] != 0 || registers != 1 || inputs != 1 || frame != 0 || output != 2 {
+		t.Fatal("bridge data aliased or corrupted")
+	}
+	var empty *PluginCounterexample
+	if bits, registers, inputs, frame, output := empty.CounterexampleData(); bits != nil || registers != 0 || inputs != 0 || frame != 0 || output != 0 {
+		t.Fatal("nil witness not safe")
+	}
+}

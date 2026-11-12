@@ -3,8 +3,8 @@
 Completed `extraBddUnate.c` and `extraBddThresh.c` algorithms as real Go in the
 root package. Shared graph types alias the sole CUDD core; exported Go info fields
 replace C bitfields and fixed scratch buffers. `extraBdd.go` is now a valid header
-translation. Image-tree forward aliases moved beside their existing definitions
-in the still-visible `extraBddImage.go` draft.
+translation. Image-tree types live beside their completed implementation in
+`extraBddImage.go`.
 
 ## Readability and compactness pass
 
@@ -67,12 +67,7 @@ BDD manager or implementing an incomplete ISOP approximation.
 
 ## Validation and scope
 
-Run the explicit completed subset while other root extrab families remain drafts:
-
-```
-GOCACHE=/tmp/abcgo-go-cache go -C abcgo test bdd/extrab/extraBdd.go bdd/extrab/extraBddUnate.go bdd/extrab/extraBddThresh.go bdd/extrab/extraBddPrimes.go bdd/extrab/extraBddUnate_test.go bdd/extrab/extraBddThresh_test.go bdd/extrab/extraBddPrimes_test.go -race -count=1
-```
-
-Vet uses the same explicit files. This does not claim full root extrab race/vet
-passes; remaining original drafts are visible and still need real ports. Native
-oracle generators live in `test_vectors`; normal Go tests need no C compiler.
+The entire root package now passes ordinary race tests and vet. See
+`FULL_PACKAGE_REVIEW.md` for the exact full-package/dependency gates, superseding
+the earlier explicit-file frontier checks. Original C generators live in
+`test_vectors`; normal Go tests need no C compiler.

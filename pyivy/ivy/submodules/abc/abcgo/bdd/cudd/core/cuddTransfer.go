@@ -1,5 +1,7 @@
 package core
 
+import "context"
+
 // Transfer rebuilds an owned BDD or ADD in destination. A nil permutation keeps
 // variable indices; otherwise permutation[source index] is the destination index.
 // The result is canonical in destination and is not externally referenced.
@@ -8,11 +10,10 @@ func (dd *DdManager) Transfer(root *DdNode, destination *DdManager, permutation 
 		return nil
 	}
 	add := Cudd_IsAdd(root)
-	if add {
-		if !dd.validAdd(root) {
-			return nil
-		}
-	} else if !dd.valid(root) {
+	if !add {
+		return BDDTransferContext(context.Background(), dd, destination, root, permutation)
+	}
+	if !dd.validAdd(root) {
 		return nil
 	}
 	support := dd.Support(root)
@@ -42,11 +43,7 @@ func (dd *DdManager) Transfer(root *DdNode, destination *DdManager, permutation 
 					target = permutation[target]
 				}
 				t, e := transfer(node.T), transfer(node.E)
-				if add {
-					result = Cudd_addIte(destination, Cudd_addIthVar(destination, target), t, e)
-				} else {
-					result = destination.ite(Cudd_bddIthVar(destination, target), t, e)
-				}
+				result = Cudd_addIte(destination, Cudd_addIthVar(destination, target), t, e)
 			}
 			memo[node] = result
 		}

@@ -19,12 +19,16 @@ type LUTCut struct {
 // Mirrors use ABC/Gia literals (0=false) and -1 for no replacement; only boundary
 // conversion changes constant polarity because aig.Graph uses 0=true.
 type Network struct {
-	Graph     *aig.Graph
-	LUTs      map[int32]LUTCut
-	Levels    []int32
-	Mirrors   []int32
-	LUTRefs   []int32
-	BoxInputs map[int32][]int32
+	SimWords               int32
+	SimValues, SimControls []uint64
+	random                 *aig.AigRandomSource
+	trial                  map[int32]int32
+	Graph                  *aig.Graph
+	LUTs                   map[int32]LUTCut
+	Levels                 []int32
+	Mirrors                []int32
+	LUTRefs                []int32
+	BoxInputs              map[int32][]int32
 	// BoxLevelInputs optionally restricts level propagation to enabled timing arcs.
 	// Critical-path backtracing still uses all BoxInputs, matching the source.
 	BoxLevelInputs map[int32][]int32
@@ -145,9 +149,17 @@ func (p *Network) deriveLevels() int32 {
 	return maximum
 }
 func (p *Network) SetLUT(root int32, cut LUTCut) {
-	p.object(root)
+	kind := p.object(root).Kind
+	if kind != aig.And && kind != aig.ExclusiveOr {
+		panic("LUT root must be a logic gate")
+	}
+	seen := map[int32]bool{}
 	for _, leaf := range cut.Leaves {
 		p.object(leaf)
+		if leaf == root || seen[leaf] {
+			panic("invalid LUT support")
+		}
+		seen[leaf] = true
 	}
 	p.LUTs[root] = LUTCut{Leaves: slices.Clone(cut.Leaves), Truth: slices.Clone(cut.Truth)}
 }

@@ -1,283 +1,188 @@
 package lpk
 
-/**CFile****************************************************************
+import (
+	"time"
 
-  FileName    [lpkAbcDec.c]
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Fast Boolean matching for LUT structures.]
-
-  Synopsis    [The new core procedure.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: lpkAbcDec.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-//#include "lpkInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Implements the function.]
-
-  Description [Returns the node implementing this function.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Lpk_ImplementFun(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, p *Lpk_Fun_t) *Abc_Obj_t {
-    extern Hop_Obj_t * Kit_TruthToHop( Hop_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory );
-    var pTruth *uint32;
-    var pObjNew *Abc_Obj_t;
-    var i int32;
-    if p.fMark {
-        pMan.nMuxes++;
-    } else {
-        pMan.nDsds++; }
-    // create the new node
-    pObjNew = Abc_NtkCreateNode( pNtk );
-    for  i = 0; i < int32(p.nVars); i++  {
-        Abc_ObjAddFanin( pObjNew, Abc_ObjRegular((Abc_Obj_t *)Vec_PtrEntry(vLeaves, p.pFanins[i])) );
-    }
-    Abc_ObjSetLevel( pObjNew, Abc_ObjLevelNew(pObjNew) );
-    // assign the node's function
-    pTruth = Lpk_FunTruth(p, 0);
-    if p.nVars == 0 {
-        pObjNew.pData = Hop_NotCond( Hop_ManConst1((Hop_Man_t *)pNtk.pManFunc), !(pTruth[0] & 1) );
-        return pObjNew;
-    }
-    if p.nVars == 1 {
-        pObjNew.pData = Hop_NotCond( Hop_ManPi((Hop_Man_t *)pNtk.pManFunc, 0), (pTruth[0] & 1) );
-        return pObjNew;
-    }
-    // create the logic function
-    pObjNew.pData = Kit_TruthToHop( (Hop_Man_t *)pNtk.pManFunc, pTruth, p.nVars, nil );
-    return pObjNew;
+// Lpk_ImplementFun builds the Hop logic for one decomposition component.
+func Lpk_ImplementFun(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, leaves *Vec_Ptr_t, fun *Lpk_Fun_t) *Abc_Obj_t {
+	if fun.fMark != 0 {
+		pMan.nMuxes++
+	} else {
+		pMan.nDsds++
+	}
+	obj := abc.Abc_NtkCreateNode(pNtk)
+	for i := 0; i < int(fun.nVars); i++ {
+		abc.Abc_ObjAddFanin(obj, abc.Abc_ObjRegular(vec.Vec_PtrEntry(leaves, int(fun.pFanins[i]))))
+	}
+	abc.Abc_ObjSetLevel(obj, abcLevelNew(obj))
+	truth := Lpk_FunTruth(fun, 0)
+	hopMan, ok := pNtk.FunctionManager.(*hop.Hop_Man_t)
+	if !ok || hopMan == nil {
+		panic("lpk: network function manager is not a Hop manager")
+	}
+	switch fun.nVars {
+	case 0:
+		obj.Data = hop.Hop_NotCond(hop.Hop_ManConst1(hopMan), int32((truth[0]&1)^1))
+	case 1:
+		obj.Data = hop.Hop_NotCond(hop.Hop_ManPi(hopMan, 0), int32(truth[0]&1))
+	default:
+		obj.Data = kit.Kit_TruthToHop(hopMan, truth, int32(fun.nVars), nil)
+	}
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Implements the function.]
-
-  Description [Returns the node implementing this function.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Lpk_Implement_rec(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, pFun *Lpk_Fun_t) *Abc_Obj_t {
-    var pFanin, pRes *Abc_Obj_t;
-    var i int32;
-    // prepare the leaves of the function
-    for  i = 0; i < int32(pFun.nVars); i++  {
-        pFanin = (Abc_Obj_t *)Vec_PtrEntry( vLeaves, pFun.pFanins[i] );
-        if !Abc_ObjIsComplement(pFanin) {
-            Lpk_Implement_rec( pMan, pNtk, vLeaves, (Lpk_Fun_t *)pFanin ); }
-        pFanin = (Abc_Obj_t *)Vec_PtrEntry( vLeaves, pFun.pFanins[i] );
-        assert(Abc_ObjIsComplement(pFanin), "Abc_ObjIsComplement(pFanin)");
-    }
-    // construct the function
-    pRes = Lpk_ImplementFun( pMan, pNtk, vLeaves, pFun );
-    // replace the function
-    Vec_PtrWriteEntry( vLeaves, pFun.Id, Abc_ObjNot(pRes) );
-    Lpk_FunFree( pFun );
-    return pRes;
+func abcLevelNew(obj *Abc_Obj_t) int32 {
+	var level int32
+	for _, fanin := range obj.Fanins() {
+		if fanin.Object != nil && int32(fanin.Object.Level) > level {
+			level = int32(fanin.Object.Level)
+		}
+	}
+	if len(obj.Fanins()) > 0 {
+		level++
+	}
+	return level
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Implements the function.]
-
-  Description [Returns the node implementing this function.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Lpk_Implement(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, nLeavesOld int32) *Abc_Obj_t {
-    var pFanin, pRes *Abc_Obj_t;
-    var i int32;
-    assert(nLeavesOld < Vec_PtrSize(vLeaves), "nLeavesOld < Vec_PtrSize(vLeaves)");
-    // mark implemented nodes
-    Vec_PtrForEachEntryStop( Abc_Obj_t *, vLeaves, pFanin, i, nLeavesOld )
-        Vec_PtrWriteEntry( vLeaves, i, Abc_ObjNot(pFanin) );
-    // recursively construct starting from the first entry
-    pRes = Lpk_Implement_rec( pMan, pNtk, vLeaves, (Lpk_Fun_t *)Vec_PtrEntry( vLeaves, nLeavesOld ) );
-    Vec_PtrShrink( vLeaves, nLeavesOld );
-    return pRes;
+func Lpk_Implement_rec(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, leaves *Vec_Ptr_t, fun *Lpk_Fun_t) *Abc_Obj_t {
+	for i := 0; i < int(fun.nVars); i++ {
+		faninIndex := int(fun.pFanins[i])
+		fanin := vec.Vec_PtrEntry(leaves, faninIndex)
+		if child, ok := fanin.(*Lpk_Fun_t); ok {
+			Lpk_Implement_rec(pMan, pNtk, leaves, child)
+		}
+		if abc.Abc_ObjIsComplement(vec.Vec_PtrEntry(leaves, faninIndex)) == 0 {
+			panic("lpk: implementation did not replace a decomposition fanin")
+		}
+	}
+	res := Lpk_ImplementFun(pMan, pNtk, leaves, fun)
+	vec.Vec_PtrWriteEntry(leaves, int(fun.Id), abc.Abc_ObjNot(res))
+	Lpk_FunFree(fun)
+	return res
 }
 
-/**Function*************************************************************
+func Lpk_Implement(pMan *Lpk_Man_t, pNtk *Abc_Ntk_t, leaves *Vec_Ptr_t, nLeavesOld int32) *Abc_Obj_t {
+	if nLeavesOld < 0 || int(nLeavesOld) >= vec.Vec_PtrSize(leaves) {
+		panic("lpk: invalid decomposition leaf boundary")
+	}
+	for i := 0; i < int(nLeavesOld); i++ {
+		fanin := vec.Vec_PtrEntry(leaves, i)
+		vec.Vec_PtrWriteEntry(leaves, i, abc.Abc_ObjNot(fanin))
+	}
+	fun, ok := vec.Vec_PtrEntry(leaves, int(nLeavesOld)).(*Lpk_Fun_t)
+	if !ok {
+		panic("lpk: missing root decomposition function")
+	}
+	res := Lpk_Implement_rec(pMan, pNtk, leaves, fun)
+	vec.Vec_PtrShrink(leaves, int(nLeavesOld))
+	return res
+}
 
-  Synopsis    [Decomposes the function using recursive MUX decomposition.]
-
-  Description [Returns the ID of the top-most decomposition node 
-  implementing this function, or 0 if there is no decomposition satisfying
-  the constraints on area and delay.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Lpk_Decompose_rec(pMan *Lpk_Man_t, p *Lpk_Fun_t) int32 {
-    var pResMux, pResDsd *Lpk_Res_t;
-    var p2 *Lpk_Fun_t;
-    var clk abctime;
-
-    // is only called for non-trivial blocks
-    assert(p.nLutK >= 3 && p.nLutK <= 6, "p.nLutK >= 3 && p.nLutK <= 6");
-    assert(p.nVars > p.nLutK, "p.nVars > p.nLutK");
-    // skip if area bound is exceeded
-    if Lpk_LutNumLuts(p.nVars, p.nLutK) > int32(p.nAreaLim) {
-        return 0; }
-    // skip if delay bound is exceeded
-    if Lpk_SuppDelay(p.uSupp, p.pDelays) > int32(p.nDelayLim) {
-        return 0; }
-
-    // compute supports if needed
-    if !p.fSupports {
-        Lpk_FunComputeCofSupps( p ); }
-
-    // check DSD decomposition
-clk = Abc_Clock();
-    pResDsd = Lpk_DsdAnalize( pMan, p, pMan.pPars.nVarsShared );
-pMan.timeEvalDsdAn += Abc_Clock() - clk;
-    if (pResDsd != nil) && (pResDsd.nBSVars == int32(p.nLutK) || pResDsd.nBSVars == int32(p.nLutK) - 1) && 
-          pResDsd.AreaEst <= int32(p.nAreaLim) && pResDsd.DelayEst <= int32(p.nDelayLim) {
-clk = Abc_Clock();
-        p2 = Lpk_DsdSplit( pMan, p, pResDsd.pCofVars, pResDsd.nCofVars, pResDsd.BSVars );
-pMan.timeEvalDsdSp += Abc_Clock() - clk;
-        assert(p2.nVars <= int32(p.nLutK), "p2.nVars <= int32(p.nLutK)");
-        if p.nVars > p.nLutK && !(Lpk_Decompose_rec( pMan, p ) != 0) {
-            return 0; }
-        return 1;
-    }
-
-    // check MUX decomposition
-clk = Abc_Clock();
-    pResMux = Lpk_MuxAnalize( pMan, p );
-pMan.timeEvalMuxAn += Abc_Clock() - clk;
-//    pResMux = NULL;
-    assert(!pResMux || (pResMux.DelayEst <= int32(p.nDelayLim) && pResMux.AreaEst <= int32(p.nAreaLim)), "!pResMux || (pResMux.DelayEst <= int32(p.nDelayLim) && pResMux.AreaEst <= int32(p.nAreaLim))");
-    // accept MUX decomposition if it is "good"
-    if pResMux && pResMux.nSuppSizeS <= int32(p.nLutK) && pResMux.nSuppSizeL <= int32(p.nLutK) {
-        pResDsd = nil;
-    } else if pResMux && (pResDsd != nil) {
-        // compare two decompositions
-        if pResMux.AreaEst < pResDsd.AreaEst || 
-            (pResMux.AreaEst == pResDsd.AreaEst && pResMux.nSuppSizeL < pResDsd.nSuppSizeL) || 
-            (pResMux.AreaEst == pResDsd.AreaEst && pResMux.nSuppSizeL == pResDsd.nSuppSizeL && pResMux.DelayEst < pResDsd.DelayEst) {
-            pResDsd = nil;
-        } else {
-            pResMux = nil; }
-    }
-    assert(pResMux == nil || pResDsd == nil, "pResMux == nil || pResDsd == nil");
-    if pResMux {
-clk = Abc_Clock();
-        p2 = Lpk_MuxSplit( pMan, p, pResMux.Variable, pResMux.Polarity );
-pMan.timeEvalMuxSp += Abc_Clock() - clk;
-        if p2.nVars > p.nLutK && !(Lpk_Decompose_rec( pMan, p2 ) != 0) {
-            return 0; }
-        if p.nVars > p.nLutK && !(Lpk_Decompose_rec( pMan, p ) != 0) {
-            return 0; }
-        return 1;
-    }
-    if pResDsd != nil {
-clk = Abc_Clock();
-        p2 = Lpk_DsdSplit( pMan, p, pResDsd.pCofVars, pResDsd.nCofVars, pResDsd.BSVars );
-pMan.timeEvalDsdSp += Abc_Clock() - clk;
-        assert(p2.nVars <= int32(p.nLutK), "p2.nVars <= int32(p.nLutK)");
-        if p.nVars > p.nLutK && !(Lpk_Decompose_rec( pMan, p ) != 0) {
-            return 0; }
-        return 1;
-    }
-    return 0;
+	if p.nLutK < 3 || p.nLutK > 6 || p.nVars <= p.nLutK {
+		return 0
+	}
+	if Lpk_LutNumLuts(int32(p.nVars), int32(p.nLutK)) > int32(p.nAreaLim) || Lpk_SuppDelay(p.uSupp, p.pDelays[:]) > int32(p.nDelayLim) {
+		return 0
+	}
+	if p.fSupports == 0 {
+		Lpk_FunComputeCofSupps(p)
+	}
+	clk := time.Now()
+	resDSD := Lpk_DsdAnalize(pMan, p, pMan.pPars.nVarsShared)
+	pMan.timeEvalDsdAn += abctime(time.Since(clk))
+	if resDSD != nil && (resDSD.nBSVars == int32(p.nLutK) || resDSD.nBSVars == int32(p.nLutK)-1) && resDSD.AreaEst <= int32(p.nAreaLim) && resDSD.DelayEst <= int32(p.nDelayLim) {
+		clk = time.Now()
+		p2 := Lpk_DsdSplit(pMan, p, resDSD.pCofVars[:], resDSD.nCofVars, resDSD.BSVars)
+		pMan.timeEvalDsdSp += abctime(time.Since(clk))
+		if p2 == nil || p2.nVars > p.nLutK {
+			return 0
+		}
+		if p.nVars > p.nLutK && Lpk_Decompose_rec(pMan, p) == 0 {
+			return 0
+		}
+		return 1
+	}
+	clk = time.Now()
+	resMux := Lpk_MuxAnalize(pMan, p)
+	pMan.timeEvalMuxAn += abctime(time.Since(clk))
+	if resMux != nil && (resMux.DelayEst > int32(p.nDelayLim) || resMux.AreaEst > int32(p.nAreaLim)) {
+		resMux = nil
+	}
+	if resMux != nil && resMux.nSuppSizeS <= int32(p.nLutK) && resMux.nSuppSizeL <= int32(p.nLutK) {
+		resDSD = nil
+	} else if resMux != nil && resDSD != nil {
+		muxBetter := resMux.AreaEst < resDSD.AreaEst ||
+			(resMux.AreaEst == resDSD.AreaEst && resMux.nSuppSizeL < resDSD.nSuppSizeL) ||
+			(resMux.AreaEst == resDSD.AreaEst && resMux.nSuppSizeL == resDSD.nSuppSizeL && resMux.DelayEst < resDSD.DelayEst)
+		if muxBetter {
+			resDSD = nil
+		} else {
+			resMux = nil
+		}
+	}
+	if resMux != nil {
+		clk = time.Now()
+		p2 := Lpk_MuxSplit(pMan, p, resMux.Variable, resMux.Polarity)
+		pMan.timeEvalMuxSp += abctime(time.Since(clk))
+		if p2 == nil {
+			return 0
+		}
+		if p2.nVars > p.nLutK && Lpk_Decompose_rec(pMan, p2) == 0 {
+			return 0
+		}
+		if p.nVars > p.nLutK && Lpk_Decompose_rec(pMan, p) == 0 {
+			return 0
+		}
+		return 1
+	}
+	if resDSD != nil {
+		clk = time.Now()
+		p2 := Lpk_DsdSplit(pMan, p, resDSD.pCofVars[:], resDSD.nCofVars, resDSD.BSVars)
+		pMan.timeEvalDsdSp += abctime(time.Since(clk))
+		if p2 == nil || p2.nVars > p.nLutK {
+			return 0
+		}
+		if p.nVars > p.nLutK && Lpk_Decompose_rec(pMan, p) == 0 {
+			return 0
+		}
+		return 1
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Removes decomposed nodes from the array of fanins.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Lpk_DecomposeClean(vLeaves *Vec_Ptr_t, nLeavesOld int32) {
-    var pFunc *Lpk_Fun_t;
-    var i int32;
-    Vec_PtrForEachEntryStart( Lpk_Fun_t *, vLeaves, pFunc, i, nLeavesOld )
-        Lpk_FunFree( pFunc );
-    Vec_PtrShrink( vLeaves, nLeavesOld );
+func Lpk_DecomposeClean(leaves *Vec_Ptr_t, nLeavesOld int32) {
+	for i := int(nLeavesOld); i < vec.Vec_PtrSize(leaves); i++ {
+		if fun, ok := vec.Vec_PtrEntry(leaves, i).(*Lpk_Fun_t); ok {
+			Lpk_FunFree(fun)
+		}
+	}
+	vec.Vec_PtrShrink(leaves, int(nLeavesOld))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Decomposes the function using recursive MUX decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Lpk_Decompose(p *Lpk_Man_t, pNtk *Abc_Ntk_t, vLeaves *Vec_Ptr_t, pTruth *uint32, puSupps *uint32, nLutK int32, AreaLim int32, DelayLim int32) *Abc_Obj_t {
-    var pFun *Lpk_Fun_t;
-    var pObjNew *Abc_Obj_t  = nil;
-    var nLeaves int32  = Vec_PtrSize( vLeaves );
-    pFun = Lpk_FunCreate( pNtk, vLeaves, pTruth, nLutK, AreaLim, DelayLim );
-    if puSupps[0] || puSupps[1] {
-/*
-        int i;
-        Lpk_FunComputeCofSupps( pFun );
-        for ( i = 0; i < nLeaves; i++ )
-        {
-            assert( pFun->puSupps[2*i+0] == puSupps[2*i+0] );
-            assert( pFun->puSupps[2*i+1] == puSupps[2*i+1] );
-        }
-*/
-        memcpy( pFun.puSupps, puSupps, sizeof(unsigned) * 2 * nLeaves );
-        pFun.fSupports = 1;
-    }
-    Lpk_FunSuppMinimize( pFun );
-    if pFun.nVars <= pFun.nLutK {
-        pObjNew = Lpk_ImplementFun( p, pNtk, vLeaves, pFun );
-    } else if Lpk_Decompose_rec(p, pFun) != 0 {
-        pObjNew = Lpk_Implement( p, pNtk, vLeaves, nLeaves ); }
-    Lpk_DecomposeClean( vLeaves, nLeaves );
-    return pObjNew;
+func Lpk_Decompose(p *Lpk_Man_t, pNtk *Abc_Ntk_t, leaves *Vec_Ptr_t, truth []uint32, supps []uint32, nLutK, areaLim, delayLim int32) *Abc_Obj_t {
+	nLeaves := vec.Vec_PtrSize(leaves)
+	fun := Lpk_FunCreate(pNtk, leaves, truth, nLutK, areaLim, delayLim)
+	if fun == nil {
+		return nil
+	}
+	if len(supps) >= 2*nLeaves && (supps[0] != 0 || supps[1] != 0) {
+		copy(fun.puSupps[:2*nLeaves], supps[:2*nLeaves])
+		fun.fSupports = 1
+	}
+	Lpk_FunSuppMinimize(fun)
+	var result *Abc_Obj_t
+	if int32(fun.nVars) <= int32(fun.nLutK) {
+		result = Lpk_ImplementFun(p, pNtk, leaves, fun)
+	} else if Lpk_Decompose_rec(p, fun) != 0 {
+		result = Lpk_Implement(p, pNtk, leaves, int32(nLeaves))
+	}
+	Lpk_DecomposeClean(leaves, int32(nLeaves))
+	return result
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

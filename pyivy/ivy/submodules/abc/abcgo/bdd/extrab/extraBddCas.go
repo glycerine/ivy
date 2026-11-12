@@ -45,7 +45,7 @@ func Extra_bddEncodingNonStrict(dd *DdManager, columns []*DdNode, nColumns int, 
 // Extra_bddNodePathsUnderCut maps each Boolean cofactor to its path sum. Both
 // keys and values are referenced, matching ownership of the original st table.
 func Extra_bddNodePathsUnderCut(dd *DdManager, f *DdNode, cut int) map[*DdNode]*DdNode {
-	if !autoBDD(dd, f) || cut < 0 || cut > len(dd.Vars) {
+	if !extraValidBDD(dd, f) || cut < 0 || cut > len(dd.Vars) {
 		return nil
 	}
 	paths := cascade.Extra_bddNodePathsUnderCutArray(dd, []*DdNode{f}, []*DdNode{dd.One}, cut)
@@ -65,9 +65,22 @@ func Extra_bddNodePathsUnderCutArray(dd *DdManager, nodes, cubes []*DdNode, n in
 		return -1
 	}
 	for i := 0; i < n; i++ {
-		if !autoBDD(dd, cubes[i]) || !autoBDD(dd, nodes[i]) && cudd.Cudd_addFindMin(dd, nodes[i]) == nil {
+		if !extraValidBDD(dd, cubes[i]) || !extraValidBDD(dd, nodes[i]) && cudd.Cudd_addFindMin(dd, nodes[i]) == nil {
 			return -1
 		}
+	}
+	if n == 1 && cudd.Cudd_IsConstant(nodes[0]) {
+		if len(outNodes) < 1 || len(outPaths) < 1 {
+			return -1
+		}
+		outNodes[0] = dd.Zero
+		if nodes[0] == dd.One {
+			outNodes[0] = dd.One
+		}
+		outPaths[0] = cubes[0]
+		cudd.Cudd_Ref(outNodes[0])
+		cudd.Cudd_Ref(outPaths[0])
+		return 1
 	}
 	paths := cascade.Extra_bddNodePathsUnderCutArray(dd, nodes[:n], cubes[:n], cut)
 	if len(outNodes) < len(paths.Nodes) || len(outPaths) < len(paths.Nodes) {

@@ -39,7 +39,7 @@ func TestTechnologyEnumerationAgainstOriginalABC(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			nativeMetrics, err := readTreeMetrics(data, native, library)
+			nativeMetrics, err := readTreeMetrics(data, library)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -61,7 +61,7 @@ func TestTechnologyEnumerationAgainstOriginalABC(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			reference, err := readTreeMetrics(source, native, library)
+			reference, err := readTreeMetrics(source, library)
 			if err != nil {
 				t.Fatalf("original tree: %v", err)
 			}

@@ -1,787 +1,583 @@
 package abc
 
-import "fmt"
+import (
+	"fmt"
+	aig "github.com/glycerine/abcgo/aig/aig"
+	"sync"
+)
 
-/**CFile****************************************************************
-
-  FileName    [abcHieCec.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Hierarchical CEC manager.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcHieCec.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "abc.h"
-//#include "base/io/ioAbc.h"
-//#include "aig/gia/gia.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// Original macro:
-// #define Abc_ObjForEachFaninReal( pObj, pFanin, i )          \
-//     for ( i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFaninReal(pObj, i)), 1); i++ )
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the real faniin of the object.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_ObjFaninReal(pObj *Abc_Obj_t, i int32) *Abc_Obj_t {
-    var pRes *Abc_Obj_t;
-    if Abc_ObjIsBox(pObj) {
-        pRes = Abc_ObjFanin0( Abc_ObjFanin0( Abc_ObjFanin(pObj, i) ) );
-    } else {
-        assert(Abc_ObjIsPo(pObj) || Abc_ObjIsNode(pObj), "Abc_ObjIsPo(pObj) || Abc_ObjIsNode(pObj)");
-        pRes = Abc_ObjFanin0( Abc_ObjFanin(pObj, i) );
-    }
-    if Abc_ObjIsBo(pRes) {
-        return Abc_ObjFanin0(pRes); }
-    return pRes;
+// Abc_ObjFaninReal skips netlist nets and box terminals for dependency order.
+func Abc_ObjFaninReal(o *Object, index int32) *Object {
+	child := o.fanins[index].Object
+	if Abc_ObjIsBox(o) != 0 {
+		child = child.fanins[0].Object
+	}
+	child = dfsDriver(child)
+	if child.Kind == ObjectBO {
+		return child.fanins[0].Object
+	}
+	return child
+}
+func dfsBoxesVisit(o *Object, nodes *[]*Object, state map[*Object]byte) error {
+	if o.Kind == ObjectPI || o.Kind == ObjectConst1 {
+		return nil
+	}
+	if state[o] == 1 {
+		return fmt.Errorf("combinational box cycle at object %d", o.ID)
+	}
+	if state[o] == 2 || dfsVisited(o) {
+		return nil
+	}
+	state[o] = 1
+	dfsMark(o)
+	for i := range o.fanins {
+		if err := dfsBoxesVisit(Abc_ObjFaninReal(o, int32(i)), nodes, state); err != nil {
+			return err
+		}
+	}
+	state[o] = 2
+	*nodes = append(*nodes, o)
+	return nil
+}
+func Abc_NtkDfsBoxes_rec(o *Object, nodes *[]*Object) {
+	if err := dfsBoxesVisit(o, nodes, make(map[*Object]byte)); err != nil {
+		panic(err)
+	}
+}
+func Abc_NtkDfsBoxes(n *Network) []*Object {
+	if n.Type != uint8(ABC_NTK_NETLIST) {
+		panic("box DFS requires netlist")
+	}
+	Abc_NtkIncrementTravId(n)
+	var nodes []*Object
+	state := make(map[*Object]byte)
+	for _, po := range n.ObjectsOfKind(ObjectPO) {
+		if len(po.fanins) != 1 {
+			return nil
+		}
+		if err := dfsBoxesVisit(Abc_ObjFaninReal(po, 0), &nodes, state); err != nil {
+			return nil
+		}
+	}
+	return nodes
+}
+func Abc_NtkDeriveFlatGiaSop(graph *aig.Graph, fanins []aig.Edge, text string) aig.Edge {
+	return isoCover(graph, text, fanins)
+}
+func fillHierarchyTemps(n *Network) {
+	for _, o := range n.Objects() {
+		o.Temp = -1
+	}
+}
+func graphAndCount(graph *aig.Graph) int32 {
+	var count int32
+	for _, edge := range graph.LiveEdges() {
+		if graph.Node(edge).Kind == aig.And {
+			count++
+		}
+	}
+	return count
+}
+func importHierarchyGraph(dst, source *aig.Graph, inputs []aig.Edge) ([]aig.Edge, error) {
+	if len(inputs) != len(source.Inputs()) {
+		return nil, fmt.Errorf("cached module input count mismatch")
+	}
+	copies := map[int]aig.Edge{0: 0}
+	for i, edge := range source.Inputs() {
+		copies[edge.NodeID()] = inputs[i]
+	}
+	active := map[int]bool{}
+	var visit func(aig.Edge) (aig.Edge, error)
+	visit = func(edge aig.Edge) (aig.Edge, error) {
+		value, ok := copies[edge.NodeID()]
+		if !ok {
+			if active[edge.NodeID()] {
+				return 0, fmt.Errorf("cached module contains cycle")
+			}
+			active[edge.NodeID()] = true
+			node := source.Node(edge)
+			a, err := visit(node.Fanins[0])
+			if err != nil {
+				return 0, err
+			}
+			switch node.Kind {
+			case aig.And, aig.ExclusiveOr:
+				b, err := visit(node.Fanins[1])
+				if err != nil {
+					return 0, err
+				}
+				if node.Kind == aig.And {
+					value = dst.AND(a, b)
+				} else {
+					value = dst.XOR(a, b)
+				}
+			case aig.Buffer, aig.Output:
+				value = a
+			default:
+				return 0, fmt.Errorf("invalid cached module node")
+			}
+			copies[edge.NodeID()] = value
+			delete(active, edge.NodeID())
+		}
+		if edge.Complemented() {
+			value = value.Not()
+		}
+		return value, nil
+	}
+	outputs := make([]aig.Edge, len(source.Outputs()))
+	for i, edge := range source.Outputs() {
+		value, err := visit(edge)
+		if err != nil {
+			return nil, err
+		}
+		outputs[i] = value
+	}
+	return outputs, nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs DFS for one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDfsBoxes_rec(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) {
-    var pFanin *Abc_Obj_t;
-    var i int32;
-    if Abc_ObjIsPi(pNode) {
-        return; }
-    assert(Abc_ObjIsNode(pNode) || Abc_ObjIsBox(pNode), "Abc_ObjIsNode(pNode) || Abc_ObjIsBox(pNode)");
-    // if this node is already visited, skip
-    if Abc_NodeIsTravIdCurrent( pNode ) {
-        return; }
-    Abc_NodeSetTravIdCurrent( pNode );
-    // visit the transitive fanin of the node
-    // inlining of macro Abc_ObjForEachFaninReal
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFaninReal(pNode, i)), 1); i++  {
-        Abc_NtkDfsBoxes_rec( pFanin, vNodes );
-    }
-    // add the node after the fanins have been added
-    Vec_PtrPush( vNodes, pNode );
+type hierarchyAIG struct {
+	enterBox func(*aig.Graph, *Object, []aig.Edge) []aig.Edge
+	leaveBox func(*aig.Graph, *Object, []aig.Edge) []aig.Edge
+	cached   map[*Network]*aig.Graph
+	active   map[*Network]bool
+	bottomUp bool
+	orders   map[*Network][]*Object
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of node and boxes reachable from POs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDfsBoxes(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    // set the traversal ID
-    Abc_NtkIncrementTravId( pNtk );
-    // start the array of nodes
-    vNodes = Vec_PtrAlloc( 100 );
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Abc_NtkDfsBoxes_rec( Abc_ObjFaninReal(pObj, 0), vNodes );
-    }
-    return vNodes;
+func (c *hierarchyAIG) order(n *Network) []*Object {
+	if order, ok := c.orders[n]; ok {
+		return order
+	}
+	order := Abc_NtkDfsBoxes(n)
+	c.orders[n] = order
+	return order
+}
+func hierarchyNodeSignals(driver *Object, value aig.Edge, signals map[*Object]aig.Edge) {
+	driver.Temp = int(value)
+	for _, net := range driver.fanouts {
+		if net.Kind != ObjectNet {
+			continue
+		}
+		signal := value
+		if net.fanins[0].Complement {
+			signal = signal.Not()
+		}
+		signals[net] = signal
+		net.Temp = int(signal)
+	}
+}
+func (c *hierarchyAIG) expand(graph *aig.Graph, n *Network, inputs []aig.Edge) ([]aig.Edge, error) {
+	if n.Type != uint8(ABC_NTK_NETLIST) || len(n.ObjectsOfKind(ObjectLatch)) > 0 {
+		return nil, fmt.Errorf("hierarchy AIG conversion requires combinational netlists")
+	}
+	if n.Function == uint8(ABC_FUNC_BLACKBOX) {
+		return nil, fmt.Errorf("blackbox %s has no Boolean implementation", n.Name)
+	}
+	if c.active[n] {
+		return nil, fmt.Errorf("recursive model %s", n.Name)
+	}
+	c.active[n] = true
+	defer delete(c.active, n)
+	pis, pos := n.ObjectsOfKind(ObjectPI), n.ObjectsOfKind(ObjectPO)
+	if len(pis) != len(inputs) {
+		return nil, fmt.Errorf("model input count mismatch")
+	}
+	fillHierarchyTemps(n)
+	signals := make(map[*Object]aig.Edge)
+	hierarchyNodeSignals(n.constant, 0, signals)
+	for i, pi := range pis {
+		hierarchyNodeSignals(pi, inputs[i], signals)
+	}
+	order := c.order(n)
+	if len(order) == 0 && len(pos) > 0 {
+		for _, po := range pos {
+			net, err := hieInputNet(po)
+			if err != nil {
+				return nil, err
+			}
+			if _, ok := signals[net]; !ok {
+				return nil, fmt.Errorf("model has an undriven or cyclic output")
+			}
+		}
+	}
+	read := func(edge Edge) (aig.Edge, error) {
+		value, ok := signals[edge.Object]
+		if !ok {
+			return 0, fmt.Errorf("net %s is not available in dependency order", hieNetName(edge.Object))
+		}
+		if edge.Complement {
+			value = value.Not()
+		}
+		return value, nil
+	}
+	for _, object := range order {
+		if object.Kind == ObjectNode {
+			args := make([]aig.Edge, len(object.fanins))
+			for i, edge := range object.fanins {
+				value, err := read(edge)
+				if err != nil {
+					return nil, err
+				}
+				args[i] = value
+			}
+			value := aig.Edge(0)
+			if object.Barrier {
+				if len(args) != 1 {
+					return nil, fmt.Errorf("barrier arity mismatch")
+				}
+				value = args[0]
+			} else {
+				value = localFunctionAIG(graph, object, args)
+			}
+			hierarchyNodeSignals(object, value, signals)
+			continue
+		}
+		model, ok := object.Data.(*Network)
+		if !ok || model == nil {
+			return nil, fmt.Errorf("box %d has no model", object.ID)
+		}
+		args := make([]aig.Edge, len(object.fanins))
+		for i, edge := range object.fanins {
+			terminal := edge.Object
+			if len(terminal.fanins) != 1 {
+				return nil, fmt.Errorf("box terminal arity mismatch")
+			}
+			value, err := read(terminal.fanins[0])
+			if err != nil {
+				return nil, err
+			}
+			if edge.Complement {
+				value = value.Not()
+			}
+			args[i] = value
+		}
+		if c.enterBox != nil {
+			args = c.enterBox(graph, object, args)
+		}
+		var results []aig.Edge
+		var err error
+		if c.bottomUp {
+			cached := c.cached[model]
+			if cached == nil {
+				if provided, ok := model.Data.(*aig.Graph); ok {
+					cached = provided
+				} else {
+					cached, err = c.derive(model)
+				}
+			}
+			if err == nil {
+				results, err = importHierarchyGraph(graph, cached, args)
+			}
+		} else {
+			results, err = c.expand(graph, model, args)
+		}
+		if err != nil {
+			return nil, err
+		}
+		if c.leaveBox != nil {
+			results = c.leaveBox(graph, object, results)
+		}
+		if len(results) != len(object.fanouts) {
+			return nil, fmt.Errorf("box output count mismatch")
+		}
+		for i, bo := range object.fanouts {
+			value := results[i]
+			if len(bo.fanins) != 1 {
+				return nil, fmt.Errorf("box output terminal arity mismatch")
+			}
+			if bo.fanins[0].Complement {
+				value = value.Not()
+			}
+			hierarchyNodeSignals(bo, value, signals)
+		}
+	}
+	outputs := make([]aig.Edge, len(pos))
+	for i, po := range pos {
+		if len(po.fanins) != 1 {
+			return nil, fmt.Errorf("model output terminal arity mismatch")
+		}
+		value, err := read(po.fanins[0])
+		if err != nil {
+			return nil, err
+		}
+		outputs[i] = value
+		po.Temp = int(value)
+	}
+	return outputs, nil
+}
+func (c *hierarchyAIG) derive(n *Network) (*aig.Graph, error) {
+	if graph := c.cached[n]; graph != nil {
+		return graph, nil
+	}
+	graph := aig.NewGraph()
+	graph.Name, graph.Spec = n.Name, n.Spec
+	inputs := make([]aig.Edge, len(n.ObjectsOfKind(ObjectPI)))
+	for i := range inputs {
+		inputs[i] = graph.NewInput()
+	}
+	outputs, err := c.expand(graph, n, inputs)
+	if err != nil {
+		return nil, err
+	}
+	for _, output := range outputs {
+		graph.AddOutput(output)
+	}
+	aig.Aig_ManCleanup(graph)
+	if err := graph.Check(); err != nil {
+		return nil, err
+	}
+	c.cached[n] = graph
+	return graph, nil
+}
+func newHierarchyAIG(bottomUp bool) *hierarchyAIG {
+	return &hierarchyAIG{cached: make(map[*Network]*aig.Graph), active: make(map[*Network]bool), orders: make(map[*Network][]*Object), bottomUp: bottomUp}
+}
+func Abc_NtkDeriveFlatGia_rec(graph *aig.Graph, n *Network) {
+	inputs := make([]aig.Edge, len(n.ObjectsOfKind(ObjectPI)))
+	for i, pi := range n.ObjectsOfKind(ObjectPI) {
+		net, err := hieOutputNet(pi)
+		if err != nil || net.Temp < 0 {
+			panic("hierarchy input has no assigned literal")
+		}
+		value := aig.Edge(net.Temp)
+		if net.fanins[0].Complement {
+			value = value.Not()
+		}
+		inputs[i] = value
+	}
+	if _, err := newHierarchyAIG(false).expand(graph, n, inputs); err != nil {
+		panic(err)
+	}
+}
+func Abc_NtkDeriveFlatGia(n *Network) *aig.Graph {
+	if !hieValidateModels(n) || Abc_NtkCheckRecursive(n) != 0 {
+		return nil
+	}
+	graph, err := newHierarchyAIG(false).derive(n)
+	if err != nil {
+		return nil
+	}
+	return graph
+}
+func Abc_NtkCountAndNodes(order []*Object) int32 {
+	var count int32
+	for _, object := range order {
+		if object.Kind == ObjectNode {
+			count++
+			continue
+		}
+		model, ok := object.Data.(*Network)
+		if !ok || model == nil {
+			continue
+		}
+		graph, ok := model.Data.(*aig.Graph)
+		if !ok {
+			graph = Abc_NtkDeriveFlatGia(model)
+		}
+		if graph != nil {
+			count += graphAndCount(graph)
+		}
+	}
+	return count
+}
+func Abc_NtkDeriveFlatGia2Derive(n *Network, order []*Object) *aig.Graph {
+	context := newHierarchyAIG(true)
+	context.orders[n] = order
+	graph, err := context.derive(n)
+	if err != nil {
+		return nil
+	}
+	return graph
+}
+func Abc_NtkDeriveFlatGia2(n *Network, models []*Network) *aig.Graph {
+	if !hieValidateModels(n) || Abc_NtkCheckRecursive(n) != 0 {
+		return nil
+	}
+	context := newHierarchyAIG(true)
+	for _, model := range models {
+		if _, err := context.derive(model); err != nil {
+			return nil
+		}
+	}
+	graph, err := context.derive(n)
+	if err != nil {
+		return nil
+	}
+	return graph
+}
+func collectHierarchy(n *Network, models *[]*Network, state map[*Network]byte) error {
+	if state[n] == 2 {
+		return nil
+	}
+	if state[n] == 1 {
+		return fmt.Errorf("recursive model %s", n.Name)
+	}
+	state[n] = 1
+	for _, object := range Abc_NtkDfsBoxes(n) {
+		if Abc_ObjIsBox(object) == 0 {
+			continue
+		}
+		model, ok := object.Data.(*Network)
+		if ok && model != nil && model != n {
+			if err := collectHierarchy(model, models, state); err != nil {
+				return err
+			}
+		}
+	}
+	state[n] = 2
+	n.Step = int32(len(*models))
+	*models = append(*models, n)
+	return nil
+}
+func Abc_NtkCollectHie_rec(n *Network, models *[]*Network) {
+	state := make(map[*Network]byte)
+	for _, model := range *models {
+		state[model] = 2
+	}
+	if err := collectHierarchy(n, models, state); err != nil {
+		panic(err)
+	}
+}
+func Abc_NtkCollectHie(n *Network) []*Network {
+	var models []*Network
+	if Abc_NtkCheckRecursive(n) != 0 {
+		return nil
+	}
+	if err := collectHierarchy(n, &models, make(map[*Network]byte)); err != nil {
+		return nil
+	}
+	return models
+}
+func countHierarchy(n *Network, instances bool, memo map[*Network]float64, active map[*Network]bool) float64 {
+	if value, ok := memo[n]; ok {
+		return value
+	}
+	if active[n] {
+		panic("recursive hierarchy cannot be counted")
+	}
+	active[n] = true
+	value := float64(0)
+	if instances {
+		value = 1
+	}
+	if n.Function != uint8(ABC_FUNC_BLACKBOX) {
+		for _, object := range Abc_NtkDfsBoxes(n) {
+			if object.Kind == ObjectNode {
+				if !instances {
+					value++
+				}
+				continue
+			}
+			model, ok := object.Data.(*Network)
+			if ok && model != nil && model != n {
+				value += countHierarchy(model, instances, memo, active)
+			}
+		}
+	}
+	delete(active, n)
+	memo[n] = value
+	if instances {
+		n.Step = int32(value)
+	} else {
+		n.DTemp = value
+	}
+	return value
+}
+func Abc_NtkCountInst_rec(n *Network) int32 {
+	return int32(countHierarchy(n, true, make(map[*Network]float64), make(map[*Network]bool)))
+}
+func Abc_NtkCountInst(n *Network) { fmt.Printf("Instances = %10d.\n", Abc_NtkCountInst_rec(n)) }
+func Abc_NtkCountNodes_rec(n *Network) float64 {
+	return countHierarchy(n, false, make(map[*Network]float64), make(map[*Network]bool))
+}
+func Abc_NtkCountNodes(n *Network) { fmt.Printf("Nodes = %.0f\n", Abc_NtkCountNodes_rec(n)) }
+func Abc_NtkCheckRecursive(n *Network) int32 {
+	state := make(map[*Network]byte)
+	var visit func(*Network) bool
+	visit = func(model *Network) bool {
+		if state[model] == 1 {
+			fmt.Printf("WARNING: Model %q contains a recursive definition.\n", model.Name)
+			return true
+		}
+		if state[model] == 2 {
+			return false
+		}
+		state[model] = 1
+		for _, box := range model.boxes {
+			if box.Kind == ObjectLatch {
+				continue
+			}
+			if child, ok := box.Data.(*Network); ok && child != nil {
+				if visit(child) {
+					return true
+				}
+			}
+		}
+		state[model] = 2
+		return false
+	}
+	if visit(n) {
+		return 1
+	}
+	if n.Design != nil {
+		for _, model := range n.Design.Modules {
+			if visit(model) {
+				return 1
+			}
+		}
+	}
+	return 0
 }
 
+// HierarchyReader is installed by the actual BLIF I/O package to avoid an
+// abc↔io dependency cycle. The booleans select multivalued parsing and checking.
+type HierarchyReader func(filename string, multiValued, check bool) (*Network, error)
 
-/**Function*************************************************************
-
-  Synopsis    [Strashes one logic node using its SOP.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDeriveFlatGiaSop(pGia *Gia_Man_t, gFanins *int32, pSop string) int32 {
-    var pCube string;
-    var gAnd, gSum int32;
-    var i, Value, nFanins int32;
-    // get the number of variables
-    nFanins = Abc_SopGetVarNum(pSop);
-    if Abc_SopIsExorType(pSop) {
-        gSum = 0; 
-        for  i = 0; i < nFanins; i++  {
-            gSum = Gia_ManHashXor( pGia, gSum, gFanins[i] );
-        }
-    
-    } else {
-        // go through the cubes of the node's SOP
-        gSum = 0; 
-        // inlining of macro Abc_SopForEachCube
-        for  pCube = (pSop); *pCube; pCube += (nFanins) + 3  {
-            // create the AND of literals
-            gAnd = 1;
-            // inlining of macro Abc_CubeForEachVar
-            for  i = 0; (pCube[i] != ' ') && (Value = pCube[i]); i++  {
-                if Value == '1' {
-                    gAnd = Gia_ManHashAnd( pGia, gAnd, gFanins[i] );
-                } else if Value == '0' {
-                    gAnd = Gia_ManHashAnd( pGia, gAnd, Abc_LitNot(gFanins[i]) ); }
-            }
-            // add to the sum of cubes
-            gSum = Gia_ManHashAnd( pGia, Abc_LitNot(gSum), Abc_LitNot(gAnd) );
-            gSum = Abc_LitNot( gSum );
-        }
-    }
-    // decide whether to complement the result
-    if Abc_SopIsComplement(pSop) {
-        gSum = Abc_LitNot(gSum); }
-    return gSum;
+var hierarchyReader struct {
+	sync.RWMutex
+	read HierarchyReader
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Flattens the logic hierarchy of the netlist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDeriveFlatGia_rec(pGia *Gia_Man_t, pNtk *Abc_Ntk_t) {
-    var gFanins [16]int32;
-    var vOrder *Vec_Ptr_t  = (Vec_Ptr_t *)pNtk.pData;
-    var pObj, pTerm *Abc_Obj_t;
-    var pNtkModel *Abc_Ntk_t;
-    var i, k int32;
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        assert(Abc_ObjFanout0(pTerm).iTemp >= 0, "Abc_ObjFanout0(pTerm).iTemp >= 0");
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vOrder)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vOrder, i)), 1); i++  {
-        if Abc_ObjIsNode(pObj) {
-            var pSop string  = (char *)pObj.pData;
-/*
-            int nLength = strlen(pSop);
-            if ( nLength == 4 ) // buf/inv
-            {
-                assert( pSop[2] == '1' );
-                assert( pSop[0] == '0' || pSop[0] == '1' );
-                assert( Abc_ObjFanin0(pObj)->iTemp >= 0 );
-                Abc_ObjFanout0(pObj)->iTemp = Abc_LitNotCond( Abc_ObjFanin0(pObj)->iTemp, pSop[0]=='0' );
-                continue;
-            }
-            if ( nLength == 5 ) // and2
-            {
-                assert( pSop[3] == '1' );
-                assert( pSop[0] == '0' || pSop[0] == '1' );
-                assert( pSop[1] == '0' || pSop[1] == '1' );
-                assert( Abc_ObjFanin0(pObj)->iTemp >= 0 );
-                assert( Abc_ObjFanin1(pObj)->iTemp >= 0 );
-                Abc_ObjFanout0(pObj)->iTemp = Gia_ManHashAnd( pGia, 
-                    Abc_LitNotCond( Abc_ObjFanin0(pObj)->iTemp, pSop[0]=='0' ),
-                    Abc_LitNotCond( Abc_ObjFanin1(pObj)->iTemp, pSop[1]=='0' )
-                    );
-                continue;
-            }
-*/
-            assert(Abc_ObjFaninNum(pObj) <= 16, "Abc_ObjFaninNum(pObj) <= 16");
-            assert(Abc_ObjFaninNum(pObj) == Abc_SopGetVarNum(pSop), "Abc_ObjFaninNum(pObj) == Abc_SopGetVarNum(pSop)");
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-                gFanins[k] = pTerm.iTemp;
-                assert(gFanins[k] >= 0, "gFanins[k] >= 0");
-            }
-            Abc_ObjFanout0(pObj).iTemp = Abc_NtkDeriveFlatGiaSop( pGia, gFanins, pSop );
-            continue;
-        }
-        assert(Abc_ObjIsBox(pObj), "Abc_ObjIsBox(pObj)");
-        pNtkModel = (Abc_Ntk_t *)pObj.pData;
-        Abc_NtkFillTemp( pNtkModel );
-        // check the match between the number of actual and formal parameters
-        assert(Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel), "Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel)");
-        assert(Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel), "Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel)");
-        // assign PIs
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            Abc_ObjFanout0( Abc_NtkPi(pNtkModel, k) ).iTemp = Abc_ObjFanin0(pTerm).iTemp;
-        }
-        // call recursively
-        Abc_NtkDeriveFlatGia_rec( pGia, pNtkModel );
-        // assign POs
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            Abc_ObjFanout0(pTerm).iTemp = Abc_ObjFanin0( Abc_NtkPo(pNtkModel, k) ).iTemp;
-        }
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        assert(Abc_ObjFanin0(pTerm).iTemp >= 0, "Abc_ObjFanin0(pTerm).iTemp >= 0");
-    }
+func SetHierarchyReader(read HierarchyReader) {
+	hierarchyReader.Lock()
+	hierarchyReader.read = read
+	hierarchyReader.Unlock()
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Flattens the logic hierarchy of the netlist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDeriveFlatGia(pNtk *Abc_Ntk_t) *Gia_Man_t {
-    var pTemp *Gia_Man_t;
-    var pGia *Gia_Man_t = nil;
-    var pTerm *Abc_Obj_t;
-    var i int32;
-
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(!Abc_NtkLatchNum(pNtk), "!Abc_NtkLatchNum(pNtk)");
-    Abc_NtkFillTemp( pNtk );
-    // start the network
-    pGia = Gia_ManStart( (1<<16) );
-    pGia.pName = Abc_UtilStrsav( Abc_NtkName(pNtk) );
-    pGia.pSpec = Abc_UtilStrsav( Abc_NtkSpec(pNtk) );
-    Gia_ManHashAlloc( pGia );
-    // create PIs
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_ObjFanout0(pTerm).iTemp = Gia_ManAppendCi( pGia );
-    }
-    // recursively flatten hierarchy
-    Abc_NtkDeriveFlatGia_rec( pGia, pNtk );
-    // create POs
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Gia_ManAppendCo( pGia, Abc_ObjFanin0(pTerm).iTemp );
-    }
-    // prepare return value
-    Gia_ManHashStop( pGia );
-    Gia_ManSetRegNum( pGia, 0 );
-    pGia = Gia_ManCleanup( pTemp = pGia );
-    Gia_ManStop( pTemp );
-    return pGia;
+func ReadHierarchyAIG(filename string, verbose bool) (*aig.Graph, error) {
+	hierarchyReader.RLock()
+	read := hierarchyReader.read
+	hierarchyReader.RUnlock()
+	if read == nil {
+		return nil, fmt.Errorf("hierarchical BLIF reader service is not installed")
+	}
+	n, err := read(filename, false, true)
+	if err != nil {
+		return nil, err
+	}
+	if n == nil {
+		return nil, fmt.Errorf("hierarchical BLIF reader returned no network")
+	}
+	if verbose {
+		Abc_NtkPrintBoxInfo(n)
+	}
+	if n.Type != uint8(ABC_NTK_NETLIST) {
+		return nil, fmt.Errorf("hierarchical reader must return a netlist")
+	}
+	models := Abc_NtkCollectHie(n)
+	if models == nil {
+		return nil, fmt.Errorf("hierarchical model dependency cycle")
+	}
+	graph := Abc_NtkDeriveFlatGia2(n, models)
+	if graph == nil {
+		return nil, fmt.Errorf("hierarchical Boolean graph derivation failed")
+	}
+	return graph, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the total number of AIG nodes before flattening.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCountAndNodes(vOrder *Vec_Ptr_t) int32 {
-    var pGiaBox *Gia_Man_t;
-    var pNtkModel *Abc_Ntk_t;
-    var pObj *Abc_Obj_t;
-    var i, Counter int32;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vOrder)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vOrder, i)), 1); i++  {
-        if Abc_ObjIsNode(pObj) {
-            Counter++;
-            continue;
-        }
-        assert(Abc_ObjIsBox(pObj), "Abc_ObjIsBox(pObj)");
-        pNtkModel = (Abc_Ntk_t *)pObj.pData;
-        pGiaBox   = (Gia_Man_t *)pNtkModel.pData;
-        Counter  += Gia_ManAndNum(pGiaBox);
-    }
-    return Counter;
+func Abc_NtkHieCecTest(filename string, verbose int32) *aig.Graph {
+	graph, err := ReadHierarchyAIG(filename, verbose != 0)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	return graph
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Flattens the logic hierarchy of the netlist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDeriveFlatGia2Derive(pNtk *Abc_Ntk_t, vOrder *Vec_Ptr_t) *Gia_Man_t {
-    var gFanins [16]int32;
-    var pNtkModel *Abc_Ntk_t;
-    var pGiaBox *Gia_Man_t;
-    var pGia *Gia_Man_t = nil;
-    var pGiaObj *Gia_Obj_t;
-    var pTerm, pObj *Abc_Obj_t;
-    var i, k int32;
-
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(!Abc_NtkLatchNum(pNtk), "!Abc_NtkLatchNum(pNtk)");
-    Abc_NtkFillTemp( pNtk );
-
-    // start the network
-    pGia = Gia_ManStart( (1<<15) );
-    pGia.pName = Abc_UtilStrsav( Abc_NtkName(pNtk) );
-    pGia.pSpec = Abc_UtilStrsav( Abc_NtkSpec(pNtk) );
-    Gia_ManHashAlloc( pGia );
-    // create PIs
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_ObjFanout0(pTerm).iTemp = Gia_ManAppendCi( pGia );
-    }
-    // recursively flatten hierarchy
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vOrder)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vOrder, i)), 1); i++  {
-        if Abc_ObjIsNode(pObj) {
-            var pSop string  = (char *)pObj.pData;
-            assert(Abc_ObjFaninNum(pObj) <= 16, "Abc_ObjFaninNum(pObj) <= 16");
-            assert(Abc_ObjFaninNum(pObj) == Abc_SopGetVarNum(pSop), "Abc_ObjFaninNum(pObj) == Abc_SopGetVarNum(pSop)");
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-                gFanins[k] = pTerm.iTemp;
-                assert(gFanins[k] >= 0, "gFanins[k] >= 0");
-            }
-            Abc_ObjFanout0(pObj).iTemp = Abc_NtkDeriveFlatGiaSop( pGia, gFanins, pSop );
-            continue;
-        }
-        assert(Abc_ObjIsBox(pObj), "Abc_ObjIsBox(pObj)");
-        pNtkModel = (Abc_Ntk_t *)pObj.pData;
-        // check the match between the number of actual and formal parameters
-        assert(Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel), "Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel)");
-        assert(Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel), "Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel)");
-/*
-        // assign PIs
-        Abc_ObjForEachFanin( pObj, pTerm, k )
-            Abc_ObjFanout0( Abc_NtkPi(pNtkModel, k) )->iTemp = Abc_ObjFanin0(pTerm)->iTemp;
-        // call recursively
-        Abc_NtkDeriveFlatGia_rec( pGia, pNtkModel );
-        // assign POs
-        Abc_ObjForEachFanout( pObj, pTerm, k )
-            Abc_ObjFanout0(pTerm)->iTemp = Abc_ObjFanin0( Abc_NtkPo(pNtkModel, k) )->iTemp;
-*/ 
-        // duplicate the AIG
-        pGiaBox = (Gia_Man_t *)pNtkModel.pData;
-        assert(Abc_ObjFaninNum(pObj) == Gia_ManPiNum(pGiaBox), "Abc_ObjFaninNum(pObj) == Gia_ManPiNum(pGiaBox)");
-        assert(Abc_ObjFanoutNum(pObj) == Gia_ManPoNum(pGiaBox), "Abc_ObjFanoutNum(pObj) == Gia_ManPoNum(pGiaBox)");
-        Gia_ManFillValue( pGiaBox );
-        Gia_ManConst0(pGiaBox).Value = 0;
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            Gia_ManPi(pGiaBox, k).Value = Abc_ObjFanin0(pTerm).iTemp;
-        }
-        // inlining of macro Gia_ManForEachAnd
-        for  k = 0; (k < pGiaBox.nObjs) && ((pGiaObj) = Gia_ManObj(pGiaBox, k)); k++  {      if !Gia_ObjIsAnd(pGiaObj) {} else {
-            pGiaObj.Value = Gia_ManHashAnd( pGia, Gia_ObjFanin0Copy(pGiaObj), Gia_ObjFanin1Copy(pGiaObj) ); }
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            Abc_ObjFanout0(pTerm).iTemp = Gia_ObjFanin0Copy(Gia_ManPo(pGiaBox, k));
-        }
-    }
-    // create POs
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Gia_ManAppendCo( pGia, Abc_ObjFanin0(pTerm).iTemp );
-    }
-    // prepare return value
-    Gia_ManHashStop( pGia );
-    Gia_ManSetRegNum( pGia, 0 );
-    pGia = Gia_ManCleanup( pGiaBox = pGia );
-    Gia_ManStop( pGiaBox );
-
-    fmt.Printf("%8d -> ", Abc_NtkCountAndNodes(vOrder));
-    Gia_ManPrintStats( pGia, nil );
-    return pGia;
-}
-/*
-void Abc_NtkDeriveFlatGia2_rec( Abc_Ntk_t * pNtk )
-{
-    Vec_Ptr_t * vOrder;
-    Abc_Obj_t * pObj;
-    int i;
-    if ( pNtk->pData != NULL )
-        return;
-    vOrder = Abc_NtkDfsBoxes( pNtk );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vOrder, pObj, i )
-        if ( Abc_ObjIsBox(pObj) )
-            Abc_NtkDeriveFlatGia2_rec( (Abc_Ntk_t *)pObj->pData );
-    pNtk->pData = Abc_NtkDeriveFlatGia2Derive( pNtk, vOrder );
-    Vec_PtrFree( vOrder );
-}
-
-Gia_Man_t * Abc_NtkDeriveFlatGia2( Abc_Ntk_t * pNtk )
-{
-    Vec_Ptr_t * vMods;
-    Abc_Ntk_t * pModel;
-    Gia_Man_t * pGia = NULL;
-    int i;
-
-    assert( Abc_NtkIsNetlist(pNtk) );
-    assert( !Abc_NtkLatchNum(pNtk) );
-
-    vMods = pNtk->pDesign->vModules;
-    Vec_PtrForEachEntry( Abc_Ntk_t *, vMods, pModel, i )
-        pModel->pData = NULL;
-
-    Abc_NtkDeriveFlatGia2_rec( pNtk );
-    pGia = pNtk->pData;  pNtk->pData = NULL;
-    
-    Vec_PtrForEachEntry( Abc_Ntk_t *, vMods, pModel, i )
-        Gia_ManStopP( (Gia_Man_t **)&pModel->pData );
-
-    return pGia;
-}
-*/
-func Abc_NtkDeriveFlatGia2(pNtk *Abc_Ntk_t, vModels *Vec_Ptr_t) *Gia_Man_t { 
-    var vOrder *Vec_Ptr_t;
-    var pModel *Abc_Ntk_t  = nil;
-    var pGia *Gia_Man_t  = nil;
-    var i int32;
-
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vModels)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vModels, i)), 1); i++  {
-        vOrder = Abc_NtkDfsBoxes( pModel );
-        pModel.pData = Abc_NtkDeriveFlatGia2Derive( pModel, vOrder );
-        Vec_PtrFree( vOrder );
-    }
-
-    pGia = (Gia_Man_t *)pModel.pData;  pModel.pData = nil;
-
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vModels)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vModels, i)), 1); i++  {
-        Gia_ManStopP( (Gia_Man_t **)&pModel.pData );
-    }
-
-    return pGia;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Collect models in the DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCollectHie_rec(pNtk *Abc_Ntk_t, vModels *Vec_Ptr_t) {
-    var vOrder *Vec_Ptr_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    if pNtk.iStep >= 0 {
-        return; }
-    vOrder = Abc_NtkDfsBoxes( pNtk );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vOrder)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vOrder, i)), 1); i++  {
-        if Abc_ObjIsBox(pObj) && (Abc_Ntk_t *)pObj.pData != pNtk {
-            Abc_NtkCollectHie_rec( (Abc_Ntk_t *)pObj.pData, vModels ); }
-    }
-    Vec_PtrFree( vOrder );
-    pNtk.iStep = Vec_PtrSize(vModels);
-    Vec_PtrPush( vModels, pNtk );
-}
-
-func Abc_NtkCollectHie(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-    var vMods, vResult *Vec_Ptr_t;
-    var pModel *Abc_Ntk_t;
-    var i int32;
-
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(!Abc_NtkLatchNum(pNtk), "!Abc_NtkLatchNum(pNtk)");
-
-    vResult = Vec_PtrAlloc( 1000 );
-    if pNtk.pDesign == nil {
-        Vec_PtrPush( vResult, pNtk );
-        return vResult;
-    }
-
-    vMods = pNtk.pDesign.vModules;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vMods)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {
-        pModel.iStep = -1;
-    }
-
-    Abc_NtkCollectHie_rec( pNtk, vResult );
-    return vResult;    
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of intstances.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCountInst_rec(pNtk *Abc_Ntk_t) int32 {
-    var vOrder *Vec_Ptr_t;
-    var pObj *Abc_Obj_t;
-    var i, Counter int32;
-    if pNtk.iStep >= 0 {
-        return pNtk.iStep; }
-    vOrder = Abc_NtkDfsBoxes( pNtk );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vOrder)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vOrder, i)), 1); i++  {
-        if Abc_ObjIsBox(pObj) && (Abc_Ntk_t *)pObj.pData != pNtk {
-            Counter += Abc_NtkCountInst_rec( (Abc_Ntk_t *)pObj.pData ); }
-    }
-    Vec_PtrFree( vOrder );
-    return pNtk.iStep = 1 + Counter;
-}
-
-func Abc_NtkCountInst(pNtk *Abc_Ntk_t) {
-    var vMods *Vec_Ptr_t;
-    var pModel *Abc_Ntk_t;
-    var i, Counter int32;
-
-    if pNtk.pDesign == nil {
-        Counter = Abc_NtkNodeNum(pNtk);
-    } else {
-        vMods = pNtk.pDesign.vModules;
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(vMods)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {
-            pModel.iStep = -1;
-        }
-        Counter = Abc_NtkCountInst_rec( pNtk );
-    }
-    fmt.Printf("Instances = %10d.\n", Counter);
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCountNodes_rec(pNtk *Abc_Ntk_t) float64 {
-    var vOrder *Vec_Ptr_t;
-    var pObj *Abc_Obj_t;
-    var Counter float64;
-    var i int32;
-    if pNtk.dTemp >= 0 {
-        return pNtk.dTemp; }
-    vOrder = Abc_NtkDfsBoxes( pNtk );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vOrder)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vOrder, i)), 1); i++  {
-        if Abc_ObjIsNode(pObj) {
-            Counter++;
-        } else if Abc_ObjIsBox(pObj) && (Abc_Ntk_t *)pObj.pData != pNtk {
-            Counter += Abc_NtkCountNodes_rec( (Abc_Ntk_t *)pObj.pData ); }
-    }
-    Vec_PtrFree( vOrder );
-    return pNtk.dTemp = Counter;
-}
-
-func Abc_NtkCountNodes(pNtk *Abc_Ntk_t) {
-    var vMods *Vec_Ptr_t;
-    var pModel *Abc_Ntk_t;
-    var Counter float64;
-    var i int32;
-
-    if pNtk.pDesign == nil {
-        Counter = Abc_NtkNodeNum(pNtk);
-    } else {
-        vMods = pNtk.pDesign.vModules;
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(vMods)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {
-            pModel.dTemp = -1;
-        }
-        Counter = Abc_NtkCountNodes_rec( pNtk );
-    }
-    fmt.Printf("Nodes = %.0f\n", Counter);
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if there is a recursive definition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCheckRecursive(pNtk *Abc_Ntk_t) int32 {
-    var vMods *Vec_Ptr_t;
-    var pModel *Abc_Ntk_t;
-    var pObj *Abc_Obj_t;
-    var i, k, RetValue int32;
-
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(!Abc_NtkLatchNum(pNtk), "!Abc_NtkLatchNum(pNtk)");
-
-    if pNtk.pDesign == nil {
-        return RetValue; }
-
-    vMods = pNtk.pDesign.vModules;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vMods)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {
-        // inlining of macro Abc_NtkForEachObj
-        for  k = 0; (k < Vec_PtrSize((pModel).vObjs)) && (((pObj) = Abc_NtkObj(pModel, k)), 1); k++  {            if (pObj) == nil {} else
-            if Abc_ObjIsBox(pObj) && pObj.pData == (void *)pModel {
-                fmt.Printf("WARNING: Model \"%s\" contains a recursive definition.\n", Abc_NtkName(pModel));
-                RetValue = 1;
-                break;
-            }
-        }
-    }
-    return RetValue;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs hierarchical equivalence checking.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHieCecTest(pFileName string, fVerbose int32) *Gia_Man_t {
-    var fUseTest int32  = 1;
-    var fUseNew int32;
-    var fCheck int32  = 1;
-    var vMods, vOrder *Vec_Ptr_t;
-    var pNtk, pModel *Abc_Ntk_t;
-    var pGia *Gia_Man_t;
-    var i int32;
-    var clk abctime  = Abc_Clock();
-
-    // read hierarchical netlist
-    pNtk = Io_ReadBlifMv( pFileName, 0, fCheck );
-    if pNtk == nil {
-        fmt.Printf("Reading BLIF file has failed.\n");
-        return nil;
-    }
-    if pNtk.pDesign == nil || pNtk.pDesign.vModules == nil {
-        fmt.Printf("There is no hierarchy information.\n");
-//        Abc_NtkDelete( pNtk );
-//        return NULL;
-    }
-    Abc_PrintTime( 1, "Reading file", Abc_Clock() - clk );
-
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(!Abc_NtkLatchNum(pNtk), "!Abc_NtkLatchNum(pNtk)");
-/*
-    if ( pNtk->pDesign != NULL )
-    {
-        clk = Abc_Clock();
-        Abc_NtkCountNodes( pNtk );
-        Abc_PrintTime( 1, "Count nodes", Abc_Clock() - clk );
-    }
-*/
-    // print stats
-    if fVerbose != 0 {
-        Abc_NtkPrintBoxInfo( pNtk ); }
-
-    // test the new data-structure
-    if fUseTest != 0 {
-        extern Gia_Man_t * Au_ManDeriveTest( Abc_Ntk_t * pRoot );
-        var pGia *Gia_Man_t;
-        pGia = Au_ManDeriveTest( pNtk );
-        Abc_NtkDelete( pNtk );
-        return pGia;
-    }
-
-    if Abc_NtkCheckRecursive(pNtk) != 0 {
-        return nil; }
-
-    if fUseNew != 0 {
-        clk = Abc_Clock();
-        vOrder = Abc_NtkCollectHie( pNtk );
-        Abc_PrintTime( 1, "Collect DFS ", Abc_Clock() - clk );
-
-        // derive GIA
-        clk = Abc_Clock();
-        pGia = Abc_NtkDeriveFlatGia2( pNtk, vOrder );
-        Abc_PrintTime( 1, "Deriving GIA", Abc_Clock() - clk );
-        Gia_ManPrintStats( pGia, nil );
-    //    Gia_ManStop( pGia );
- 
-        Vec_PtrFree( vOrder );
-    
-    } else {
-        // order nodes/boxes of all models
-        vMods = pNtk.pDesign.vModules;
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(vMods)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {
-            pModel.pData = Abc_NtkDfsBoxes( pModel );
-        }
-
-        // derive GIA
-        clk = Abc_Clock();
-        pGia = Abc_NtkDeriveFlatGia( pNtk );
-        Abc_PrintTime( 1, "Deriving GIA", Abc_Clock() - clk );
-        Gia_ManPrintStats( pGia, nil );
-
-        // clean nodes/boxes of all nodes
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(vMods)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {
-            Vec_PtrFree( (Vec_Ptr_t *)pModel.pData );
-        }
-    }
-
-    clk = Abc_Clock();
-    Abc_NtkCountInst( pNtk );
-    Abc_PrintTime( 1, "Gather stats", Abc_Clock() - clk );
-
-    Abc_NtkDelete( pNtk );
-    return pGia;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

@@ -1,5 +1,7 @@
 package res
 
+import "github.com/glycerine/abcgo/base/abc"
+
 import (
 	"fmt"
 	"os"
@@ -162,7 +164,7 @@ func Res_ManFree(p *Res_Man_t) {
 	}
 	Res_WinFree(p.pWin)
 	if p.pAig {
-		Abc_NtkDelete(p.pAig)
+		abc.Abc_NtkDelete(p.pAig)
 	}
 	Res_SimFree(p.pSim)
 	if p.pCnf != nil {
@@ -194,11 +196,11 @@ func Res_UpdateNetwork(pObj *Abc_Obj_t, vFanins *Vec_Ptr_t, pFunc *Hop_Obj_t, vL
 	var k int32
 
 	// create the new node
-	pObjNew = Abc_NtkCreateNode(pObj.pNtk)
+	pObjNew = abc.Abc_NtkCreateNode(pObj.pNtk)
 	pObjNew.pData = pFunc
 	for k = 0; k < Vec_PtrSize(vFanins); k++ {
-		pFanin = Vec_PtrEntry(vFanins, k).(*Abc_Obj_t)
-		Abc_ObjAddFanin(pObjNew, pFanin)
+		pFanin = Vec_PtrEntry(vFanins, k)
+		abc.Abc_ObjAddFanin(pObjNew, pFanin)
 	}
 	// replace the old node by the new node
 	//printf( "Replacing node " ); Abc_ObjPrint( stdout, pObj );
@@ -234,9 +236,9 @@ func Abc_NtkResynthesize(pNtk *Abc_Ntk_t, pPars *Res_Par_t) int32 {
 
 	// start the manager
 	p = Res_ManAlloc(pPars)
-	p.nTotalNets = Abc_NtkGetTotalFanins(pNtk)
-	p.nTotalNodes = Abc_NtkNodeNum(pNtk)
-	nFaninsMax = Abc_NtkGetFaninMax(pNtk)
+	p.nTotalNets = abc.Abc_NtkGetTotalFanins(pNtk)
+	p.nTotalNodes = abc.Abc_NtkNodeNum(pNtk)
+	nFaninsMax = abc.Abc_NtkGetFaninMax(pNtk)
 	if nFaninsMax > 8 {
 		nFaninsMax = 8
 	}
@@ -245,27 +247,27 @@ func Abc_NtkResynthesize(pNtk *Abc_Ntk_t, pPars *Res_Par_t) int32 {
 	Abc_NtkSweep(pNtk, 0)
 
 	// convert into the AIG
-	if !Abc_NtkToAig(pNtk) {
+	if !abc.Abc_NtkToAig(pNtk) {
 		fmt.Fprintf(os.Stdout, "Converting to BDD has failed.\n")
 		Res_ManFree(p)
 		return 0
 	}
-	assert(Abc_NtkHasAig(pNtk), "Abc_NtkHasAig(pNtk)")
+	assert(abc.Abc_NtkHasAig(pNtk), "abc.Abc_NtkHasAig(pNtk)")
 
 	// set the number of levels
-	Abc_NtkLevel(pNtk)
+	abc.Abc_NtkLevel(pNtk)
 	Abc_NtkStartReverseLevels(pNtk, pPars.nGrowthLevel)
 
 	// try resynthesizing nodes in the topological order
-	nNodesOld = Abc_NtkObjNumMax(pNtk)
+	nNodesOld = abc.Abc_NtkObjNumMax(pNtk)
 	pProgress = Extra_ProgressBarStart(os.Stdout, nNodesOld)
-	for i = 0; i < Abc_NtkObjNumMax(pNtk); i++ {
-		pObj = Abc_NtkObj(pNtk, i)
+	for i = 0; i < abc.Abc_NtkObjNumMax(pNtk); i++ {
+		pObj = abc.Abc_NtkObj(pNtk, i)
 		Extra_ProgressBarUpdate(pProgress, i, nil)
-		if !Abc_ObjIsNode(pObj) {
+		if !abc.Abc_ObjIsNode(pObj) {
 			continue
 		}
-		if Abc_ObjFaninNum(pObj) > 8 {
+		if abc.Abc_ObjFaninNum(pObj) > 8 {
 			continue
 		}
 		if pObj.Id > nNodesOld {
@@ -303,13 +305,13 @@ func Abc_NtkResynthesize(pNtk *Abc_Ntk_t, pPars *Res_Par_t) int32 {
 		// create the AIG for the window
 		clk = Abc_Clock()
 		if p.pAig {
-			Abc_NtkDelete(p.pAig)
+			abc.Abc_NtkDelete(p.pAig)
 		}
 		p.pAig = Res_WndStrash(p.pWin)
 		p.timeAig += Abc_Clock() - clk
 
 		if p.pPars.fVeryVerbose {
-			fmt.Printf("AIG = %4d ", Abc_NtkNodeNum(p.pAig))
+			fmt.Printf("AIG = %4d ", abc.Abc_NtkNodeNum(p.pAig))
 			fmt.Printf("\n")
 		}
 
@@ -421,8 +423,8 @@ func Abc_NtkResynthesize(pNtk *Abc_Ntk_t, pPars *Res_Par_t) int32 {
 	p.timeSatSim += p.pSim.timeSat
 	p.timeSatTotal = p.timeSatSat + p.timeSatUnsat + p.timeSatSim
 
-	p.nTotalNets2 = Abc_NtkGetTotalFanins(pNtk)
-	p.nTotalNodes2 = Abc_NtkNodeNum(pNtk)
+	p.nTotalNets2 = abc.Abc_NtkGetTotalFanins(pNtk)
+	p.nTotalNodes2 = abc.Abc_NtkNodeNum(pNtk)
 
 	// quit resubstitution manager
 	p.timeTotal = Abc_Clock() - clkTotal
@@ -430,7 +432,7 @@ func Abc_NtkResynthesize(pNtk *Abc_Ntk_t, pPars *Res_Par_t) int32 {
 
 	s_ResynTime += Abc_Clock() - clkTotal
 	// check the resulting network
-	if !Abc_NtkCheck(pNtk) {
+	if !abc.Abc_NtkCheck(pNtk) {
 		fmt.Fprintf(os.Stdout, "Abc_NtkResynthesize(): Network check has failed.\n")
 		return 0
 	}

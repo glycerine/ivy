@@ -45,6 +45,10 @@ func ResGraphFromNetwork(n *abc.Network) (*aig.Graph, error) {
 	if n.Type != uint8(abc.ABC_NTK_STRASH) {
 		return nil, fmt.Errorf("res: expected a strashed network, type kind is %d", n.Type)
 	}
+	manager, ok := n.FunctionManager.(*abc.Abc_Aig_t)
+	if !ok || abc.Abc_AigCheck(manager) == 0 {
+		return nil, fmt.Errorf("res: input network has no valid AIG hash manager")
+	}
 	if len(n.ObjectsOfKind(abc.ObjectLatch)) != 0 {
 		return nil, fmt.Errorf("res: sequential AIG networks are not supported")
 	}

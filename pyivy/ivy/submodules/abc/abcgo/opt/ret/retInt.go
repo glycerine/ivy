@@ -1,110 +1,53 @@
+// Package ret implements logic-network retiming with explicit latch state.
 package ret
 
-/**CFile****************************************************************
+import "github.com/glycerine/abcgo/base/abc"
 
-  FileName    [retInt.h]
+type Abc_Ntk_t = abc.Network
+type Abc_Obj_t = abc.Object
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+func retBool(b bool) int32 {
+	if b {
+		return 1
+	}
+	return 0
+}
+func retLatches(n *abc.Network) []*abc.Object { return n.ObjectsOfKind(abc.ObjectLatch) }
+func retNodes(n *abc.Network) []*abc.Object   { return n.ObjectsOfKind(abc.ObjectNode) }
+func retFan0(o *abc.Object) *abc.Object       { return abc.Abc_ObjFanin0(o) }
+func retAdd(o *abc.Object, e abc.Edge) {
+	if err := o.Network().AddFanin(o, e); err != nil {
+		panic(err)
+	}
+}
+func retPatch(o *abc.Object, index int, e abc.Edge) {
+	if err := o.Network().PatchFanin(o, index, e); err != nil {
+		panic(err)
+	}
+}
+func retDelete(o *abc.Object) { abc.Abc_NtkDeleteObj(o) }
 
-  PackageName [Retiming package.]
-
-  Synopsis    [Internal declarations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - Oct 31, 2006.]
-
-  Revision    [$Id: retInt.h,v 1.00 2006/10/31 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include "base/abc/abc.h"
-
-//ABC_NAMESPACE_HEADER_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                    STRUCTURE DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                       MACRO DEFINITIONS                          ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/*=== retArea.c ========================================================*/
-// extern int         Abc_NtkRetimeMinArea( Abc_Ntk_t * pNtk, int fForwardOnly, int fBackwardOnly, int fUseOldNames, int fVerbose );
-
-/*=== retCore.c ========================================================*/
-// extern int         Abc_NtkRetime( Abc_Ntk_t * pNtk, int Mode, int nDelayLim, int fForwardOnly, int fBackwardOnly, int fOneStep, int fUseOldNames, int fVerbose );
-
-/*=== retDelay.c ========================================================*/
-// extern int         Abc_NtkRetimeMinDelay( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkCopy, int nDelayLim, int nIterLimit, int fForward, int fVerbose );
-
-/*=== retDirect.c ========================================================*/
-// extern int         Abc_NtkRetimeIncremental( Abc_Ntk_t * pNtk, int nDelayLim, int fForward, int fMinDelay, int fOneStep, int fUseOldNames, int fVerbose );
-
-// extern void        Abc_NtkRetimeShareLatches( Abc_Ntk_t * pNtk, int fInitial );
-
-// extern int         Abc_NtkRetimeNodeIsEnabled( Abc_Obj_t * pObj, int fForward );
-
-// extern void        Abc_NtkRetimeNode( Abc_Obj_t * pObj, int fForward, int fInitial );
-
-// extern st__table *  Abc_NtkRetimePrepareLatches( Abc_Ntk_t * pNtk );
-
-// extern int         Abc_NtkRetimeFinalizeLatches( Abc_Ntk_t * pNtk, st__table * tLatches, int nIdMaxStart, int fUseOldNames );
-
-/*=== retFlow.c ========================================================*/
-// extern void        Abc_NtkMaxFlowTest( Abc_Ntk_t * pNtk );
-
-// extern Vec_Ptr_t * Abc_NtkMaxFlow( Abc_Ntk_t * pNtk, int fForward, int fVerbose );
-
-/*=== retInit.c ========================================================*/
-// extern Vec_Int_t * Abc_NtkRetimeInitialValues( Abc_Ntk_t * pNtkSat, Vec_Int_t * vValues, int fVerbose );
-
-// extern int         Abc_ObjSopSimulate( Abc_Obj_t * pObj );
-
-// extern void        Abc_NtkRetimeTranferToCopy( Abc_Ntk_t * pNtk );
-
-// extern void        Abc_NtkRetimeTranferFromCopy( Abc_Ntk_t * pNtk );
-
-// extern Vec_Int_t * Abc_NtkRetimeCollectLatchValues( Abc_Ntk_t * pNtk );
-
-// extern void        Abc_NtkRetimeInsertLatchValues( Abc_Ntk_t * pNtk, Vec_Int_t * vValues );
-
-// extern Abc_Ntk_t * Abc_NtkRetimeBackwardInitialStart( Abc_Ntk_t * pNtk );
-
-// extern void        Abc_NtkRetimeBackwardInitialFinish( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkNew, Vec_Int_t * vValuesOld, int fVerbose );
-
-/*=== retLvalue.c ========================================================*/
-// extern int         Abc_NtkRetimeLValue( Abc_Ntk_t * pNtk, int nIterLimit, int fVerbose );
-
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
+// Prepared retiming graphs connect latches directly, so a sequential cycle can
+// appear combinational to the general network transfer validator. Patch only
+// these incident edges; latch boundaries are restored before network checking.
+func retTransfer(from, to *abc.Object) {
+	if from == to {
+		return
+	}
+	if from.Network() != to.Network() {
+		panic("ret: cross-network transfer")
+	}
+	for _, fanout := range from.Fanouts() {
+		for i, e := range fanout.Fanins() {
+			if e.Object == from {
+				replacement := to.Signal()
+				replacement.Complement = e.Complement
+				retPatch(fanout, i, replacement)
+			}
+		}
+	}
+}
+func retSopNode(n *abc.Network, source *abc.Object) *abc.Object {
+	return abc.Abc_NtkDupObj(n, source, 0)
+}
+func retLatchValue(o *abc.Object) int32 { return abc.Abc_LatchIsInit1(o) }

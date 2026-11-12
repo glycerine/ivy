@@ -48,6 +48,8 @@ type DdManager struct {
 	Perm, InvPerm                     []int
 	unique                            map[bddUniqueKey]*DdNode
 	cache                             map[bddITEKey]*DdNode
+	computed                          map[computedKey]*DdNode
+	interact                          []uint64
 	nextID                            uint64
 	cacheLookups, cacheHits           uint64
 	closed                            bool
@@ -73,13 +75,81 @@ type DdManager struct {
 	reorderingTime                    time.Duration
 }
 
+// Cudd_SetInteraction and Cudd_TestInteraction maintain the symmetric
+// variable interaction relation used by adjacent-swap reordering.
+func Cudd_SetInteraction(dd *DdManager, x, y int) {
+	if dd == nil || x == y || x < 0 || y < 0 || x >= len(dd.Vars) || y >= len(dd.Vars) {
+		return
+	}
+	if x > y {
+		x, y = y, x
+	}
+	index := ((2*len(dd.Vars)-x-3)*x)/2 + y - 1
+	if index < 0 {
+		return
+	}
+	word, bit := index/64, uint(index%64)
+	if word >= len(dd.interact) {
+		dd.interact = append(dd.interact, make([]uint64, word+1-len(dd.interact))...)
+	}
+	dd.interact[word] |= uint64(1) << bit
+}
+
+func Cudd_TestInteraction(dd *DdManager, x, y int) bool {
+	if dd == nil || x == y || x < 0 || y < 0 || x >= len(dd.Vars) || y >= len(dd.Vars) {
+		return false
+	}
+	if x > y {
+		x, y = y, x
+	}
+	index := ((2*len(dd.Vars)-x-3)*x)/2 + y - 1
+	word, bit := index/64, uint(index%64)
+	return word >= 0 && word < len(dd.interact) && dd.interact[word]&(uint64(1)<<bit) != 0
+}
+
+// Cudd_ComputeInteractions rebuilds the interaction relation from the
+// support of every canonical BDD node. Including unreferenced canonical
+// nodes can add harmless extra interactions, but cannot omit a dependency;
+// the reorderer only uses this relation to skip independent swaps.
+func Cudd_ComputeInteractions(dd *DdManager) {
+	if dd == nil {
+		return
+	}
+	dd.interact = nil
+	for n := range dd.unique {
+		seen := make(map[*DdNode]bool)
+		support := make(map[int]bool)
+		var visit func(*DdNode)
+		visit = func(n *DdNode) {
+			n = Cudd_Regular(n)
+			if n == nil || Cudd_IsConstant(n) || seen[n] {
+				return
+			}
+			seen[n] = true
+			support[int(n.Index)] = true
+			visit(n.T)
+			visit(n.E)
+		}
+		visit(n.t)
+		indices := make([]int, 0, len(support))
+		for i := range support {
+			indices = append(indices, i)
+		}
+		for i := 0; i < len(indices); i++ {
+			for j := i + 1; j < len(indices); j++ {
+				Cudd_SetInteraction(dd, indices[i], indices[j])
+			}
+		}
+	}
+}
+
 const bddConstantIndex uint32 = CUDD_CONST_INDEX
 
 func NewBDDManager(variables int) *DdManager {
 	if variables < 0 || uint64(variables) >= uint64(bddConstantIndex) {
 		return nil
 	}
-	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, nextID: 2, reorderMethod: CUDD_REORDER_SIFT, maxGrowth: 1.1, maxGrowthAlt: 1.1, minHit: 30.0 / 70.0, looseUpTo: 5 * CUDD_UNIQUE_SLOTS, maxCache: 2 * CUDD_CACHE_SLOTS, maxCacheHard: 3 * CUDD_CACHE_SLOTS, siftMaxVar: 1000, siftMaxSwap: 2000000, stdout: os.Stdout, stderr: os.Stderr}
+	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, computed: map[computedKey]*DdNode{}, nextID: 2, reorderMethod: CUDD_REORDER_SIFT, maxGrowth: 1.1, maxGrowthAlt: 1.1, minHit: 30.0 / 70.0, looseUpTo: 5 * CUDD_UNIQUE_SLOTS, maxCache: 2 * CUDD_CACHE_SLOTS, maxCacheHard: 3 * CUDD_CACHE_SLOTS, siftMaxVar: 1000, siftMaxSwap: 2000000, stdout: os.Stdout, stderr: os.Stderr}
 	dd.One = &DdNode{Index: bddConstantIndex, Value: 1, ID: 0, manager: dd}
 	dd.LogicZero = &DdNode{Index: bddConstantIndex, Value: 0, ID: 1, manager: dd, regular: dd.One, inverse: dd.One}
 	dd.One.inverse = dd.LogicZero
@@ -93,6 +163,53 @@ func NewBDDManager(variables int) *DdManager {
 		Cudd_bddIthVar(dd, i)
 	}
 	return dd
+}
+
+type computedKey struct {
+	operation uintptr
+	f, g, h   *DdNode
+	family    uint8
+}
+
+// Cudd_CacheLookup and Cudd_CacheInsert expose the generic computed table
+// needed by the translated CUDD operator modules.
+func Cudd_CacheLookup(dd *DdManager, operation uintptr, f, g, h *DdNode, family uint8) *DdNode {
+	if dd == nil {
+		return nil
+	}
+	key := computedKey{operation: operation, f: f, g: g, h: h, family: family}
+	dd.cacheLookups++
+	result := dd.computed[key]
+	if result != nil {
+		dd.cacheHits++
+	}
+	return result
+}
+
+func Cudd_CacheInsert(dd *DdManager, operation uintptr, f, g, h, result *DdNode, family uint8) {
+	if dd == nil || result == nil {
+		return
+	}
+	if dd.computed == nil {
+		dd.computed = make(map[computedKey]*DdNode)
+	}
+	if dd.maxCacheHard > 0 && uint32(len(dd.computed)) >= dd.maxCacheHard {
+		clear(dd.computed)
+	}
+	dd.computed[computedKey{operation: operation, f: f, g: g, h: h, family: family}] = result
+}
+
+func Cudd_CacheFlush(dd *DdManager) {
+	if dd != nil {
+		clear(dd.computed)
+	}
+}
+
+func Cudd_CacheSize(dd *DdManager) int {
+	if dd == nil {
+		return 0
+	}
+	return len(dd.computed)
 }
 func Cudd_Regular(n *DdNode) *DdNode {
 	if n == nil {
@@ -199,6 +316,13 @@ func (dd *DdManager) cofactors(n *DdNode, level int) (*DdNode, *DdNode) {
 	return Cudd_NotCond(r.T, Cudd_IsComplement(n)), Cudd_NotCond(r.E, Cudd_IsComplement(n))
 }
 func (dd *DdManager) ite(f, g, h *DdNode) *DdNode {
+	return dd.iteChecked(f, g, h, nil)
+}
+
+func (dd *DdManager) iteChecked(f, g, h *DdNode, check func() bool) *DdNode {
+	if check != nil && !check() {
+		return nil
+	}
 	if f == dd.One {
 		return g
 	}
@@ -233,7 +357,14 @@ func (dd *DdManager) ite(f, g, h *DdNode) *DdNode {
 	ft, fe := dd.cofactors(f, level)
 	gt, ge := dd.cofactors(g, level)
 	ht, he := dd.cofactors(h, level)
-	t, e := dd.ite(ft, gt, ht), dd.ite(fe, ge, he)
+	t := dd.iteChecked(ft, gt, ht, check)
+	if t == nil {
+		return nil
+	}
+	e := dd.iteChecked(fe, ge, he, check)
+	if e == nil {
+		return nil
+	}
 	n := dd.node(uint32(dd.InvPerm[level]), t, e)
 	dd.cache[key] = n
 	return Cudd_NotCond(n, invert)
@@ -461,11 +592,30 @@ func (dd *DdManager) abstract(f, cube *DdNode, universal bool) *DdNode {
 }
 
 func Cudd_bddAndAbstract(dd *DdManager, f, g, cube *DdNode) *DdNode {
-	v := Cudd_bddAnd(dd, f, g)
-	if v == nil {
+	if dd == nil || !dd.valid(f, g, cube) {
 		return nil
 	}
-	return dd.abstract(v, cube, false)
+	for c := cube; c != dd.One; c = c.T {
+		if Cudd_IsConstant(c) || Cudd_IsComplement(c) || c.E != dd.LogicZero {
+			return nil
+		}
+	}
+	return dd.andAbstractChecked(f, g, cube, nil)
+}
+func Cudd_bddAndAbstractLimit(dd *DdManager, f, g, cube *DdNode, limit uint32) (result *DdNode) {
+	if !dd.valid(f, g, cube) {
+		return nil
+	}
+	oldLimited, oldCeiling := dd.allocationLimited, dd.allocationCeiling
+	dd.allocationLimited = true
+	dd.allocationCeiling = len(dd.unique) + int(limit)
+	defer func() {
+		dd.allocationLimited, dd.allocationCeiling = oldLimited, oldCeiling
+		if recover() != nil {
+			result = nil
+		}
+	}()
+	return Cudd_bddAndAbstract(dd, f, g, cube)
 }
 func Cudd_DagSize(f *DdNode) int {
 	if f == nil {

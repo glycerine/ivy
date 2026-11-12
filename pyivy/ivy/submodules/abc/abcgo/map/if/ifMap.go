@@ -5,6 +5,7 @@ import (
 
 	"github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/tim"
+	abcutil "github.com/glycerine/abcgo/misc/util"
 )
 
 /**CFile****************************************************************
@@ -99,27 +100,6 @@ func If_ManCutAigDelay(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t) int32 {
 	}
 	//    assert( Delay <= (int)pObj->Level );
 	return Delay
-}
-
-/*
-*Function*************************************************************
-
-	Synopsis    [Counts the number of 1s in the signature.]
-
-	Description []
-
-	SideEffects []
-
-	SeeAlso     []
-
-**********************************************************************
-*/
-func If_WordCountOnes(uWord uint32) int32 {
-	uWord = (uWord & 0x55555555) + ((uWord >> 1) & 0x55555555)
-	uWord = (uWord & 0x33333333) + ((uWord >> 2) & 0x33333333)
-	uWord = (uWord & 0x0F0F0F0F) + ((uWord >> 4) & 0x0F0F0F0F)
-	uWord = (uWord & 0x00FF00FF) + ((uWord >> 8) & 0x00FF00FF)
-	return int32((uWord & 0x0000FFFF) + (uWord >> 16))
 }
 
 /*
@@ -289,10 +269,10 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 
 	// generate cuts
 	// inlining of macro If_ObjForEachCut
-	for i := 0; i < int(pObj.pFanin0.pCutSet.nCuts); i++ {
+	for i = 0; i < int(pObj.pFanin0.pCutSet.nCuts); i++ {
 		pCut0 = pObj.pFanin0.pCutSet.ppCuts[i]
 		// inlining of macro If_ObjForEachCut
-		for k := 0; k < int(pObj.pFanin1.pCutSet.nCuts); k++ {
+		for k = 0; k < int(pObj.pFanin1.pCutSet.nCuts); k++ {
 			pCut1 = pObj.pFanin1.pCutSet.ppCuts[k]
 			// get the next free cut
 			assert(pCutSet.nCuts <= pCutSet.nCutsMax, "pCutSet.nCuts <= pCutSet.nCutsMax")
@@ -444,7 +424,7 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 								Vec_IntPush(p.vTtDecs[pCut.nLeaves], -1)
 							}
 							if int32(pCut.nLeaves) > p.pPars.nLutSize/2 && int32(pCut.nLeaves) <= 2*(p.pPars.nLutSize/2) {
-								iDecMask = Abc_TtProcessBiDec(ifMapTruth64(p, pCut), int32(pCut.nLeaves), p.pPars.nLutSize/2)
+								iDecMask = abcutil.Abc_TtProcessBiDec(ifMapTruth64(p, pCut), int32(pCut.nLeaves), p.pPars.nLutSize/2)
 							} else {
 								iDecMask = 0
 							}
@@ -452,7 +432,7 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 						}
 						iDecMask = Vec_IntEntry(p.vTtDecs[pCut.nLeaves], int(truthId))
 						assert(iDecMask >= 0, "iDecMask >= 0")
-						pCut.fUseless = ifMapFlag(iDecMask == 0 && int32(pCut.nLeaves) > p.pPars.nLutSize/2)
+						pCut.fUseless = uint32(ifMapFlag(iDecMask == 0 && int32(pCut.nLeaves) > p.pPars.nLutSize/2))
 						p.nCutsUselessAll += int32(pCut.fUseless)
 						p.nCutsUseless[pCut.nLeaves] += int32(pCut.fUseless)
 						p.nCutsCountAll++
@@ -461,11 +441,11 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 					if p.pPars.fUseCofVars != 0 && (p.pPars.fUseAndVars == 0 || pCut.fUseless != 0) {
 						var iCofVar int32 = -1
 						var truthId int32 = Abc_Lit2Var(pCut.iCutFunc)
-						if truthId >= int32(Vec_StrSize(p.vTtVars[pCut.nLeaves])) || Vec_StrEntry(p.vTtVars[pCut.nLeaves], int(truthId)) == byte(-1) {
+						if truthId >= int32(Vec_StrSize(p.vTtVars[pCut.nLeaves])) || Vec_StrEntry(p.vTtVars[pCut.nLeaves], int(truthId)) == 0xff {
 							for truthId >= int32(Vec_StrSize(p.vTtVars[pCut.nLeaves])) {
-								Vec_StrPush(p.vTtVars[pCut.nLeaves], byte(-1))
+								Vec_StrPush(p.vTtVars[pCut.nLeaves], 0xff)
 							}
-							iCofVar = Abc_TtCheckCondDep(ifMapTruth64(p, pCut), int32(pCut.nLeaves), p.pPars.nLutSize/2)
+							iCofVar = abcutil.Abc_TtCheckCondDep(ifMapTruth64(p, pCut), int32(pCut.nLeaves), p.pPars.nLutSize/2)
 							Vec_StrWriteEntry(p.vTtVars[pCut.nLeaves], int(truthId), byte(iCofVar))
 						}
 						iCofVar = int32(Vec_StrEntry(p.vTtVars[pCut.nLeaves], int(truthId)))
@@ -491,27 +471,19 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 			}
 			// check if the cut satisfies the required times
 			if p.pPars.fDelayOpt != 0 {
-				pCut.Delay = If_CutSopBalanceEval(p, pCut, nil)
+				pCut.Delay = float32(If_CutSopBalanceEval(p, pCut, nil))
 			} else if p.pPars.fDsdBalance != 0 {
 				pCut.Delay = If_CutDsdBalanceEval(p, pCut, nil)
 			} else if p.pPars.fUserRecLib != 0 {
-				pCut.Delay = If_CutDelayRecCost3(p, pCut, pObj)
+				panic("if: recursive library delay cost is outside the ported IF subsystem")
 			} else if p.pPars.fUserSesLib != 0 {
-				var Cost int32
-				pCut.fUser = 1
-				pCut.Delay = float32(Abc_ExactDelayCost(If_CutTruthW(p, pCut), If_CutLeaveNum(pCut), If_CutArrTimeProfile(p, pCut), If_CutPerm(pCut), &Cost, If_ManCutAigDelay(p, pObj, pCut)))
-				if Cost == ABC_INFINITY {
-					for v = 0; v < If_CutLeaveNum(pCut); v++ {
-						If_CutPerm(pCut)[v] = IF_BIG_CHAR
-					}
-					pCut.Cost = IF_COST_MAX
-					pCut.fUseless = 1
-				}
-
+				// The C implementation delegates this optional mode to its external
+				// exact-delay/SAT subsystem, which is not included in this Go package.
+				panic("if: exact SAT delay cost requires the unported ABC exact-delay subsystem")
 			} else if p.pPars.fDelayOptLut != 0 {
-				pCut.Delay = If_CutLutBalanceEval(p, pCut)
+				pCut.Delay = float32(If_CutLutBalanceEval(p, pCut))
 			} else if p.pPars.nGateSize > 0 {
-				pCut.Delay = If_CutDelaySop(p, pCut)
+				pCut.Delay = float32(If_CutDelaySop(p, pCut))
 			} else {
 				pCut.Delay = If_CutDelay(p, pObj, pCut)
 			}
@@ -554,7 +526,7 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 	if !(fPreprocess != 0) || pCutSet.ppCuts[0].Delay <= pObj.Required+p.fEpsilon {
 		If_CutCopy(p, If_ObjCutBest(pObj), pCutSet.ppCuts[0])
 		if p.pPars.fUserRecLib != 0 || p.pPars.fUserSesLib != 0 {
-			assert(If_ObjCutBest(pObj).Cost < IF_COST_MAX && If_ObjCutBest(pObj).Delay < ABC_INFINITY, "If_ObjCutBest(pObj).Cost < IF_COST_MAX && If_ObjCutBest(pObj).Delay < ABC_INFINITY")
+			assert(If_ObjCutBest(pObj).Cost < IF_COST_MAX && If_ObjCutBest(pObj).Delay < IF_INFINITY, "If_ObjCutBest(pObj).Cost < IF_COST_MAX && If_ObjCutBest(pObj).Delay < IF_INFINITY")
 		}
 	}
 	// add the trivial cut to the set
@@ -630,7 +602,7 @@ func If_ObjPerformMappingChoice(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPrepro
 		}
 		// go through the cuts of this node
 		// inlining of macro If_ObjForEachCut
-		for i = 0; i < int(pTemp.pCutSet.nCuts); i++ {
+		for i = 0; i < int32(pTemp.pCutSet.nCuts); i++ {
 			pCutTemp = pTemp.pCutSet.ppCuts[i]
 			if pCutTemp.fUseless != 0 {
 				continue

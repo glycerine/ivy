@@ -1,706 +1,379 @@
 package saig
 
-import "fmt"
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-/**CFile****************************************************************
-
-  FileName    [saigDup.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Sequential AIG package.]
-
-  Synopsis    [Various duplication procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: saigDup.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "saig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates while ORing the POs of sequential circuit.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManDupOrpos(pAig *Aig_Man_t) *Aig_Man_t {
-    var pAigNew *Aig_Man_t;
-    var pObj, pMiter *Aig_Obj_t;
-    var i int32;
-    if pAig.nConstrs > 0 {
-        fmt.Printf("The AIG manager should have no constraints.\n");
-        return nil;
-    }
-    // start the new manager
-    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );
-    pAigNew.pName = Abc_UtilStrsav( pAig.pName );
-    pAigNew.nConstrs = pAig.nConstrs;
-    // map the constant node
-    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );
-    // create variables for PIs
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pAigNew );
-    }
-    // add internal nodes of this frame
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // create PO of the circuit
-    pMiter = Aig_ManConst0( pAigNew );
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-        pMiter = Aig_Or( pAigNew, pMiter, Aig_ObjChild0Copy(pObj) );
-    }
-    Aig_ObjCreateCo( pAigNew, pMiter );
-    // transfer to register outputs
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {
-        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );
-    }
-    Aig_ManCleanup( pAigNew );
-    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );
-    return pAigNew;
+// dupGraph keeps source object IDs separate from destination edges. Register
+// inputs and outputs remain trailing, as required by the sequential interface.
+type dupGraph struct {
+	src, dst *aig.Graph
+	copies   map[int]aig.Edge
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Duplicates while ORing the POs of sequential circuit.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManCreateEquivMiter(pAig *Aig_Man_t, vPairs *Vec_Int_t, fAddOuts int32) *Aig_Man_t {
-    var pAigNew *Aig_Man_t;
-    var pObj, pObj2, pMiter *Aig_Obj_t;
-    var i int32;
-    if pAig.nConstrs > 0 {
-        fmt.Printf("The AIG manager should have no constraints.\n");
-        return nil;
-    }
-    // start the new manager
-    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );
-    pAigNew.pName = Abc_UtilStrsav( pAig.pName );
-    pAigNew.nConstrs = pAig.nConstrs;
-    // map the constant node
-    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );
-    // create variables for PIs
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pAigNew );
-    }
-    // add internal nodes of this frame
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // create POs
-    assert(Vec_IntSize(vPairs) % 2 == 0, "Vec_IntSize(vPairs) % 2 == 0");
-    // inlining of macro Aig_ManForEachObjVec
-    for  i = 0; i < Vec_IntSize(vPairs) && (((pObj) = Aig_ManObj(pAig, Vec_IntEntry(vPairs,i))), 1); i++  {
-        pObj2  = Aig_ManObj( pAig, Vec_IntEntry(vPairs, ++i) );
-        pMiter = Aig_Exor( pAigNew, (Aig_Obj_t *)pObj.pData, (Aig_Obj_t *)pObj2.pData );
-        pMiter = Aig_NotCond( pMiter, pObj.fPhase ^ pObj2.fPhase );
-        Aig_ObjCreateCo( pAigNew, pMiter );
-    }
-    // transfer to register outputs
-    if fAddOuts != 0 {
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {
-        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );
-    } }
-    Aig_ManCleanup( pAigNew );
-    if fAddOuts != 0 {
-    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) ); }
-    return pAigNew;
+func newDupGraph(p *aig.Graph) *dupGraph {
+	q := aig.NewGraph()
+	q.Name = p.Name
+	q.Spec = p.Spec
+	return &dupGraph{p, q, map[int]aig.Edge{0: q.Const1()}}
+}
+func (d *dupGraph) edge(e aig.Edge) aig.Edge {
+	r, ok := d.copies[e.NodeID()]
+	if !ok {
+		n := d.src.Node(e)
+		switch n.Kind {
+		case aig.And:
+			r = d.dst.AND(d.edge(n.Fanins[0]), d.edge(n.Fanins[1]))
+		case aig.ExclusiveOr:
+			r = d.dst.NewXor(d.edge(n.Fanins[0]), d.edge(n.Fanins[1]))
+		case aig.Buffer:
+			r = aig.Aig_ObjCreate(d.dst, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{d.edge(n.Fanins[0]), aig.InvalidEdge}})
+		case aig.Output:
+			r = d.edge(n.Fanins[0])
+		default:
+			panic("saig: unmapped input")
+		}
+		d.copies[e.NodeID()] = r
+	}
+	if e.Complemented() {
+		r = r.Not()
+	}
+	return r
+}
+func (d *dupGraph) inputs() {
+	for _, e := range d.src.Inputs() {
+		d.copies[e.NodeID()] = d.dst.NewInput()
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Trims the model by removing PIs without fanout.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManTrimPis(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var i, fAllPisHaveNoRefs int32;
-    // check the refs of PIs    
-    fAllPisHaveNoRefs = 1;
-    // inlining of macro Saig_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPiNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        if pObj.nRefs {
-            fAllPisHaveNoRefs = 0; }
-    }
-    // start the new manager
-    pNew = Aig_ManStart( Aig_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.nConstrs = p.nConstrs;
-    // start mapping of the CI numbers
-    pNew.vCiNumsOrig = Vec_IntAlloc( Aig_ManCiNum(p) );
-    // map const and primary inputs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        if (fAllPisHaveNoRefs != 0) || pObj.nRefs || Saig_ObjIsLo(p, pObj) {
-            pObj.pData = Aig_ObjCreateCi( pNew );
-            Vec_IntPush( pNew.vCiNumsOrig, Vec_IntEntry(p.vCiNumsOrig, i) );
-        }
-    }
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    return pNew;
+// allNodes preserves the original duplication pass, including dangling logic.
+func (d *dupGraph) allNodes() {
+	for _, e := range aig.Aig_ManDfsAll(d.src) {
+		n := d.src.Node(e)
+		if n.Kind == aig.And || n.Kind == aig.ExclusiveOr || n.Kind == aig.Buffer {
+			d.edge(e)
+		}
+	}
+}
+func (d *dupGraph) finish(regs int32) *aig.Graph {
+	aig.Aig_ManSetRegNum(d.dst, regs)
+	aig.Aig_ManCleanup(d.dst)
+	return d.dst
+}
+func Saig_ManDupOrpos(p *aig.Graph) *aig.Graph {
+	if aig.Aig_ManConstrNum(p) > 0 {
+		return nil
+	}
+	d := newDupGraph(p)
+	d.inputs()
+	d.allNodes()
+	m := d.dst.Const0()
+	for _, e := range p.Outputs()[:Saig_ManPoNum(p)] {
+		m = d.dst.OR(m, d.edge(e))
+	}
+	d.dst.AddOutput(m)
+	for _, e := range p.Outputs()[Saig_ManPoNum(p):] {
+		d.dst.AddOutput(d.edge(e))
+	}
+	return d.finish(p.RegisterCount())
+}
+func Saig_ManCreateEquivMiter(p *aig.Graph, pairs *vec.Vec_Int_t, addOutputs int32) *aig.Graph {
+	if aig.Aig_ManConstrNum(p) > 0 {
+		return nil
+	}
+	if vec.Vec_IntSize(pairs)%2 != 0 {
+		panic("saig: odd equivalence pairs")
+	}
+	d := newDupGraph(p)
+	d.inputs()
+	d.allNodes()
+	for i := 0; i < vec.Vec_IntSize(pairs); i += 2 {
+		a, b := aig.Edge(vec.Vec_IntEntry(pairs, i))<<1, aig.Edge(vec.Vec_IntEntry(pairs, i+1))<<1
+		r := d.dst.NewXor(d.edge(a), d.edge(b))
+		if p.Node(a).Phase != p.Node(b).Phase {
+			r = r.Not()
+		}
+		d.dst.AddOutput(r)
+	}
+	if addOutputs != 0 {
+		for _, e := range p.Outputs()[Saig_ManPoNum(p):] {
+			d.dst.AddOutput(d.edge(e))
+		}
+		return d.finish(p.RegisterCount())
+	}
+	return d.finish(0)
+}
+func Saig_ManTrimPis(p *aig.Graph) *aig.Graph {
+	d := newDupGraph(p)
+	allUnused := true
+	for _, e := range p.Inputs()[:Saig_ManPiNum(p)] {
+		if p.Node(e).Refs > 0 {
+			allUnused = false
+		}
+	}
+	for i, e := range p.Inputs() {
+		if allUnused || p.Node(e).Refs > 0 || i >= int(Saig_ManPiNum(p)) {
+			d.copies[e.NodeID()] = d.dst.NewInput()
+			original := int32(i)
+			if p.InputNumbers != nil {
+				original = p.InputNumbers[i]
+			}
+			d.dst.InputNumbers = append(d.dst.InputNumbers, original)
+		}
+	}
+	d.allNodes()
+	for _, e := range p.Outputs() {
+		d.dst.AddOutput(d.edge(e))
+	}
+	aig.Aig_ManSetConstrNum(d.dst, aig.Aig_ManConstrNum(p))
+	aig.Aig_ManSetRegNum(d.dst, p.RegisterCount())
+	return d.dst
+}
+func Saig_ManDupAbstraction(p *aig.Graph, flops *vec.Vec_Int_t) *aig.Graph {
+	selected := make([]bool, p.RegisterCount())
+	for i := 0; i < vec.Vec_IntSize(flops); i++ {
+		k := vec.Vec_IntEntry(flops, i)
+		if k < 0 || k >= p.RegisterCount() || selected[k] {
+			panic("saig: invalid abstraction register")
+		}
+		selected[k] = true
+	}
+	d := newDupGraph(p)
+	pis := int(Saig_ManPiNum(p))
+	for pass := 0; pass < 2; pass++ {
+		for i, e := range p.Inputs() {
+			keep := i >= pis && selected[i-pis]
+			if keep != (pass == 1) {
+				continue
+			}
+			d.copies[e.NodeID()] = d.dst.NewInput()
+			d.dst.InputNumbers = append(d.dst.InputNumbers, int32(i))
+		}
+	}
+	for _, e := range p.Outputs()[:Saig_ManPoNum(p)] {
+		d.dst.AddOutput(d.edge(e))
+	}
+	for i, keep := range selected {
+		if keep {
+			d.dst.AddOutput(d.edge(p.Outputs()[int(Saig_ManPoNum(p))+i]))
+		}
+	}
+	d.finish(int32(vec.Vec_IntSize(flops)))
+	before := d.dst.Inputs()
+	numbers := append([]int32(nil), d.dst.InputNumbers...)
+	aig.Aig_ManSeqCleanup(d.dst)
+	byID := make(map[int]int32, len(before))
+	for i, e := range before {
+		byID[e.NodeID()] = numbers[i]
+	}
+	d.dst.InputNumbers = nil
+	for _, e := range d.dst.Inputs() {
+		d.dst.InputNumbers = append(d.dst.InputNumbers, byID[e.NodeID()])
+	}
+	return d.dst
+}
+func Saig_ManDupWithPhase(p *aig.Graph, initial *vec.Vec_Int_t) *aig.Graph {
+	if vec.Vec_IntSize(initial) < int(p.RegisterCount()) {
+		panic("saig: missing initial register values")
+	}
+	d := newDupGraph(p)
+	d.inputs()
+	pis := int(Saig_ManPiNum(p))
+	pos := int(Saig_ManPoNum(p))
+	for i, e := range p.Inputs()[pis:] {
+		if vec.Vec_IntEntry(initial, i) != 0 {
+			d.copies[e.NodeID()] = d.copies[e.NodeID()].Not()
+		}
+	}
+	d.allNodes()
+	for i, e := range p.Outputs() {
+		r := d.edge(e)
+		if i >= pos && vec.Vec_IntEntry(initial, i-pos) != 0 {
+			r = r.Not()
+		}
+		d.dst.AddOutput(r)
+	}
+	aig.Aig_ManSetConstrNum(d.dst, aig.Aig_ManConstrNum(p))
+	return d.finish(p.RegisterCount())
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG manager recursively.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManAbstractionDfs_rec(pNew *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t {
-    if pObj.pData {
-        return (Aig_Obj_t *)pObj.pData; }
-    Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );
-    Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin1(pObj) );
-    return (Aig_Obj_t *)(pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ));
+// Saig_ManDupCones closes selected output cones through register dependencies.
+// Primary inputs and registers follow first discovery order, as in the C DFS.
+func Saig_ManDupCones(p *aig.Graph, outputs []int32, nOutputs int32) *aig.Graph {
+	if nOutputs < 0 || int(nOutputs) > len(outputs) {
+		panic("saig: invalid cone output count")
+	}
+	roots := make([]aig.Edge, nOutputs)
+	for i := range roots {
+		roots[i] = p.Outputs()[outputs[i]]
+	}
+	seen := map[int]bool{0: true}
+	var leaves, regs []aig.Edge
+	var visit func(aig.Edge)
+	visit = func(e aig.Edge) {
+		if seen[e.NodeID()] {
+			return
+		}
+		seen[e.NodeID()] = true
+		n := p.Node(e)
+		switch n.Kind {
+		case aig.Input:
+			if Saig_ObjIsLo(p, e) {
+				regs = append(regs, e)
+				roots = append(roots, Saig_ObjLoToLi(p, e))
+			} else {
+				leaves = append(leaves, e)
+			}
+		case aig.And, aig.ExclusiveOr:
+			visit(n.Fanins[0])
+			visit(n.Fanins[1])
+		case aig.Buffer, aig.Output:
+			visit(n.Fanins[0])
+		}
+	}
+	for i := 0; i < len(roots); i++ {
+		visit(roots[i])
+	}
+	d := newDupGraph(p)
+	for _, e := range append(leaves, regs...) {
+		d.copies[e.NodeID()] = d.dst.NewInput()
+	}
+	for _, e := range roots {
+		d.dst.AddOutput(d.edge(e))
+	}
+	return d.finish(int32(len(regs)))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs abstraction of the AIG to preserve the included flops.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManDupAbstraction(p *Aig_Man_t, vFlops *Vec_Int_t) *Aig_Man_t { 
-    var pNew *Aig_Man_t;//, * pTemp;
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var i, Entry int32;
-    Aig_ManCleanData( p );
-    // start the new manager
-    pNew = Aig_ManStart( 5000 );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    // map the constant node
-    Aig_ManConst1(p).pData = Aig_ManConst1( pNew );
-    // label included flops
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vFlops)) && (((Entry) = Vec_IntEntry(vFlops, i)), 1); i++  {
-        pObjLi = Saig_ManLi( p, Entry );
-        assert(pObjLi.fMarkA == 0, "pObjLi.fMarkA == 0");
-        pObjLi.fMarkA = 1;
-        pObjLo = Saig_ManLo( p, Entry );
-        assert(pObjLo.fMarkA == 0, "pObjLo.fMarkA == 0");
-        pObjLo.fMarkA = 1;
-    }
-    // create variables for PIs
-    assert(p.vCiNumsOrig == nil, "p.vCiNumsOrig == nil");
-    pNew.vCiNumsOrig = Vec_IntAlloc( Aig_ManCiNum(p) );
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        if !pObj.fMarkA {
-            pObj.pData = Aig_ObjCreateCi( pNew );
-            Vec_IntPush( pNew.vCiNumsOrig, i );
-        }
-    }
-    // create variables for LOs
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        if pObj.fMarkA {
-            pObj.fMarkA = 0;
-            pObj.pData = Aig_ObjCreateCi( pNew );
-            Vec_IntPush( pNew.vCiNumsOrig, i );
-        }
-    }
-    // add internal nodes 
-//    Aig_ManForEachNode( p, pObj, i )
-//        pObj->pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-    // create POs
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );
-        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    // create LIs
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        if pObj.fMarkA {
-            pObj.fMarkA = 0;
-            Saig_ManAbstractionDfs_rec( pNew, Aig_ObjFanin0(pObj) );
-            Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-        }
-    }
-    Aig_ManSetRegNum( pNew, Vec_IntSize(vFlops) );
-    Aig_ManSeqCleanup( pNew );
-    // remove PIs without fanout
-//    pNew = Saig_ManTrimPis( pTemp = pNew );
-//    Aig_ManStop( pTemp );
-    return pNew;
+// replayCex evaluates the final frame without mutating graph marks. The caller
+// chooses whether to expose final-frame values through the legacy MarkB API.
+func replayCex(p *aig.Graph, c *util.Abc_Cex_t) ([]bool, []bool, []bool) {
+	return replayCexFrames(p, c, nil)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resimulates the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManVerifyCex(pAig *Aig_Man_t, p *Abc_Cex_t) int32 {
-    var pObj, pObjRi, pObjRo *Aig_Obj_t;
-    var RetValue, i, k, iBit int32;
-    Aig_ManCleanMarkB(pAig);
-    Aig_ManConst1(pAig).fMarkB = 1;
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {
-        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);
-    }
-    for  i = 0; i <= p.iFrame; i++  {
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  k = 0; (k < Saig_ManPiNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {
-            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);
-        }
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) & 
-                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }
-        }
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {
-            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);
-        }
-        if i == p.iFrame {
-            break; }
-        // inlining of macro Saig_ManForEachLiLo
-        for  k = 0; (k < Saig_ManRegNum(pAig)) && (((pObjRi) = Saig_ManLi(pAig, k)), 1)            && (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {
-            pObjRo.fMarkB = pObjRi.fMarkB;
-        }
-    }
-    assert(iBit == p.nBits, "iBit == p.nBits");
-    RetValue = Aig_ManCo(pAig, p.iPo).fMarkB;
-    Aig_ManCleanMarkB(pAig);
-    return RetValue;
+func replayCexFrames(p *aig.Graph, c *util.Abc_Cex_t, onFrame func(int32, []bool)) ([]bool, []bool, []bool) {
+	if c == nil || c.IFrame < 0 || c.NRegs != p.RegisterCount() || c.NPis != Saig_ManPiNum(p) || c.NBits != c.NRegs+(c.IFrame+1)*c.NPis || int64(len(c.PData))*32 < int64(c.NBits) {
+		panic("saig: incompatible counterexample")
+	}
+	bit := func(i int32) bool { return c.PData[i/32]&(1<<uint(i%32)) != 0 }
+	state := make([]bool, c.NRegs)
+	for i := range state {
+		state[i] = bit(int32(i))
+	}
+	var values, outs []bool
+	for frame := int32(0); frame <= c.IFrame; frame++ {
+		inputs := make([]bool, len(p.Inputs()))
+		for i := int32(0); i < c.NPis; i++ {
+			inputs[i] = bit(c.NRegs + frame*c.NPis + i)
+		}
+		copy(inputs[c.NPis:], state)
+		if onFrame != nil {
+			onFrame(frame, inputs)
+		}
+		values = make([]bool, len(p.Nodes()))
+		values[0] = true
+		for i, e := range p.Inputs() {
+			values[e.NodeID()] = inputs[i]
+		}
+		var evaluate func(aig.Edge) bool
+		done := make([]bool, len(values))
+		done[0] = true
+		for _, e := range p.Inputs() {
+			done[e.NodeID()] = true
+		}
+		evaluate = func(e aig.Edge) bool {
+			if !done[e.NodeID()] {
+				n := p.Node(e)
+				switch n.Kind {
+				case aig.And:
+					values[e.NodeID()] = evaluate(n.Fanins[0]) && evaluate(n.Fanins[1])
+				case aig.ExclusiveOr:
+					values[e.NodeID()] = evaluate(n.Fanins[0]) != evaluate(n.Fanins[1])
+				case aig.Buffer, aig.Output:
+					values[e.NodeID()] = evaluate(n.Fanins[0])
+				}
+				done[e.NodeID()] = true
+			}
+			return values[e.NodeID()] != e.Complemented()
+		}
+		outs = make([]bool, len(p.Outputs()))
+		for i, e := range p.Outputs() {
+			outs[i] = evaluate(e)
+		}
+		for _, e := range aig.Aig_ManDfsAll(p) {
+			evaluate(e)
+		}
+		if frame < c.IFrame {
+			copy(state, outs[Saig_ManPoNum(p):])
+		}
+	}
+	return values, state, outs
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resimulates the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManVerifyCexNoClear(pAig *Aig_Man_t, p *Abc_Cex_t) int32 {
-    var pObj, pObjRi, pObjRo *Aig_Obj_t;
-    var RetValue, i, k, iBit int32;
-    Aig_ManCleanMarkB(pAig);
-    Aig_ManConst1(pAig).fMarkB = 1;
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {
-        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);
-    }
-    for  i = 0; i <= p.iFrame; i++  {
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  k = 0; (k < Saig_ManPiNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {
-            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);
-        }
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) & 
-                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }
-        }
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {
-            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);
-        }
-        if i == p.iFrame {
-            break; }
-        // inlining of macro Saig_ManForEachLiLo
-        for  k = 0; (k < Saig_ManRegNum(pAig)) && (((pObjRi) = Saig_ManLi(pAig, k)), 1)            && (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {
-            pObjRo.fMarkB = pObjRi.fMarkB;
-        }
-    }
-    assert(iBit == p.nBits, "iBit == p.nBits");
-    RetValue = Aig_ManCo(pAig, p.iPo).fMarkB;
-    //Aig_ManCleanMarkB(pAig);
-    return RetValue;
+func Saig_ManVerifyCexNoClear(p *aig.Graph, c *util.Abc_Cex_t) int32 {
+	v, _, o := replayCex(p, c)
+	aig.Aig_ManCleanMarkB(p)
+	for i, x := range v {
+		if x && p.ValidEdge(aig.Edge(i)<<1) {
+			aig.Aig_ObjSetMarkB(p, aig.Edge(i)<<1)
+		}
+	}
+	if c.IPo < 0 || int(c.IPo) >= len(o) {
+		panic("saig: invalid failing output")
+	}
+	if o[c.IPo] {
+		return 1
+	}
+	return 0
 }
-func Saig_ManReturnFailingState(pAig *Aig_Man_t, p *Abc_Cex_t, fNextOne int32) *Vec_Int_t {
-    var pObj *Aig_Obj_t;
-    var vState *Vec_Int_t;
-    var i int32;
-    var RetValue int32 = Saig_ManVerifyCexNoClear( pAig, p );
-    if RetValue == 0 {
-        Aig_ManCleanMarkB(pAig);
-        fmt.Printf("CEX does fail the given sequential miter.\n");
-        return nil;
-    }
-    vState = Vec_IntAlloc( Aig_ManRegNum(pAig) );
-    if fNextOne != 0 {
-        // inlining of macro Saig_ManForEachLi
-        for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {
-            Vec_IntPush( vState, pObj.fMarkB );
-        }
-    
-    } else {
-        // inlining of macro Saig_ManForEachLo
-        for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {
-            Vec_IntPush( vState, pObj.fMarkB );
-        }
-    }
-    Aig_ManCleanMarkB(pAig);
-    return vState;
+func Saig_ManVerifyCex(p *aig.Graph, c *util.Abc_Cex_t) int32 {
+	r := Saig_ManVerifyCexNoClear(p, c)
+	aig.Aig_ManCleanMarkB(p)
+	return r
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resimulates the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManExtendCex(pAig *Aig_Man_t, p *Abc_Cex_t) *Abc_Cex_t {
-    var pNew *Abc_Cex_t;
-    var pObj, pObjRi, pObjRo *Aig_Obj_t;
-    var RetValue, i, k, iBit int32;
-    // create new counter-example
-    pNew = Abc_CexAlloc( 0, Aig_ManCiNum(pAig), p.iFrame + 1 );
-    pNew.iPo = p.iPo;
-    pNew.iFrame = p.iFrame;
-    // simulate the AIG
-    Aig_ManCleanMarkB(pAig);
-    Aig_ManConst1(pAig).fMarkB = 1;
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {
-        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);
-    }
-    for  i = 0; i <= p.iFrame; i++  {
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  k = 0; (k < Saig_ManPiNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {
-            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);
-        }
-        ///////// write PI+LO values ////////////
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {
-            if pObj.fMarkB {
-                Abc_InfoSetBit(pNew.pData, Aig_ManCiNum(pAig)*i + k); }
-        }
-        /////////////////////////////////////////
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) & 
-                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }
-        }
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {
-            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);
-        }
-        if i == p.iFrame {
-            break; }
-        // inlining of macro Saig_ManForEachLiLo
-        for  k = 0; (k < Saig_ManRegNum(pAig)) && (((pObjRi) = Saig_ManLi(pAig, k)), 1)            && (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {
-            pObjRo.fMarkB = pObjRi.fMarkB;
-        }
-    }
-    assert(iBit == p.nBits, "iBit == p.nBits");
-    RetValue = Aig_ManCo(pAig, p.iPo).fMarkB;
-    Aig_ManCleanMarkB(pAig);
-    if RetValue == 0 {
-        fmt.Printf("Saig_ManExtendCex(): The counter-example is invalid!!!\n"); }
-    return pNew;
+func Saig_ManReturnFailingState(p *aig.Graph, c *util.Abc_Cex_t, next int32) *vec.Vec_Int_t {
+	_, state, o := replayCex(p, c)
+	aig.Aig_ManCleanMarkB(p)
+	if c.IPo < 0 || int(c.IPo) >= len(o) || !o[c.IPo] {
+		return nil
+	}
+	if next != 0 {
+		state = o[Saig_ManPoNum(p):]
+	}
+	v := vec.Vec_IntAlloc(len(state))
+	for _, b := range state {
+		var x int32
+		if b {
+			x = 1
+		}
+		vec.Vec_IntPush(v, x)
+	}
+	return v
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resimulates the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManFindFailedPoCex(pAig *Aig_Man_t, p *Abc_Cex_t) int32 {
-    var pObj, pObjRi, pObjRo *Aig_Obj_t;
-    var RetValue, i, k, iBit int32;
-    Aig_ManCleanMarkB(pAig);
-    Aig_ManConst1(pAig).fMarkB = 1;
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {
-        pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);
-    }
-    for  i = 0; i <= p.iFrame; i++  {
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  k = 0; (k < Saig_ManPiNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, k)), 1); k++  {
-            pObj.fMarkB = Abc_InfoHasBit(p.pData, iBit++);
-        }
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.fMarkB = (Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj)) & 
-                           (Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj)); }
-        }
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {
-            pObj.fMarkB = Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj);
-        }
-        if i == p.iFrame {
-            break; }
-        // inlining of macro Saig_ManForEachLiLo
-        for  k = 0; (k < Saig_ManRegNum(pAig)) && (((pObjRi) = Saig_ManLi(pAig, k)), 1)            && (((pObjRo)=Saig_ManLo(pAig, k)), 1); k++  {
-            pObjRo.fMarkB = pObjRi.fMarkB;
-        }
-    }
-    assert(iBit == p.nBits, "iBit == p.nBits");
-    // remember the number of failed output
-    RetValue = -1;
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-        if pObj.fMarkB {
-            RetValue = i;
-            break;
-        }
-    }
-    Aig_ManCleanMarkB(pAig);
-    return RetValue;
+func Saig_ManFindFailedPoCex(p *aig.Graph, c *util.Abc_Cex_t) int32 {
+	_, _, o := replayCex(p, c)
+	aig.Aig_ManCleanMarkB(p)
+	for i, b := range o[:Saig_ManPoNum(p)] {
+		if b {
+			return int32(i)
+		}
+	}
+	return -1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates while ORing the POs of sequential circuit.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManDupWithPhase(pAig *Aig_Man_t, vInit *Vec_Int_t) *Aig_Man_t {
-    var pAigNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    assert(Aig_ManRegNum(pAig) <= Vec_IntSize(vInit), "Aig_ManRegNum(pAig) <= Vec_IntSize(vInit)");
-    // start the new manager
-    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );
-    pAigNew.pName = Abc_UtilStrsav( pAig.pName );
-    pAigNew.nConstrs = pAig.nConstrs;
-    // map the constant node
-    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );
-    // create variables for PIs
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pAigNew );
-    }
-    // update the flop variables
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {
-        pObj.pData = Aig_NotCond( (Aig_Obj_t *)pObj.pData, Vec_IntEntry(vInit, i) );
-    }
-    // add internal nodes of this frame
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // transfer to register outputs
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );
-    }
-    // update the flop variables
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {
-        Aig_ObjCreateCo( pAigNew, Aig_NotCond(Aig_ObjChild0Copy(pObj), Vec_IntEntry(vInit, i)) );
-    }
-    // finalize
-    Aig_ManCleanup( pAigNew );
-    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );
-    return pAigNew;
+func Saig_ManExtendCex(p *aig.Graph, c *util.Abc_Cex_t) *util.Abc_Cex_t {
+	if c == nil {
+		panic("saig: missing counterexample")
+	}
+	q := util.Abc_CexAlloc(0, int32(len(p.Inputs())), c.IFrame+1)
+	q.IPo = c.IPo
+	q.IFrame = c.IFrame
+	replayCexFrames(p, c, func(frame int32, inputs []bool) {
+		for i, b := range inputs {
+			if b {
+				index := frame*q.NPis + int32(i)
+				q.PData[index/32] |= 1 << uint(index%32)
+			}
+		}
+	})
+	aig.Aig_ManCleanMarkB(p)
+	return q
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Copy an AIG structure related to the selected POs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManDupCones_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vLeaves *Vec_Ptr_t, vNodes *Vec_Ptr_t, vRoots *Vec_Ptr_t) {
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    if Aig_ObjIsNode(pObj) {
-        Saig_ManDupCones_rec( p, Aig_ObjFanin0(pObj), vLeaves, vNodes, vRoots );
-        Saig_ManDupCones_rec( p, Aig_ObjFanin1(pObj), vLeaves, vNodes, vRoots );
-        Vec_PtrPush( vNodes, pObj );
-    
-    } else if Aig_ObjIsCo(pObj) {
-        Saig_ManDupCones_rec( p, Aig_ObjFanin0(pObj), vLeaves, vNodes, vRoots );
-    } else if Saig_ObjIsLo(p, pObj) {
-        Vec_PtrPush( vRoots, Saig_ObjLoToLi(p, pObj) );
-    } else if Saig_ObjIsPi(p, pObj) {
-        Vec_PtrPush( vLeaves, pObj );
-    } else { assert(false, "0"); }
-}
-func Saig_ManDupCones(pAig *Aig_Man_t, pPos *int32, nPos int32) *Aig_Man_t {
-    var pAigNew *Aig_Man_t;
-    var vLeaves, vNodes, vRoots *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-
-    // collect initial POs
-    vLeaves = Vec_PtrAlloc( 100 );
-    vNodes = Vec_PtrAlloc( 100 );
-    vRoots = Vec_PtrAlloc( 100 );
-    for  i = 0; i < nPos; i++  {
-        Vec_PtrPush( vRoots, Aig_ManCo(pAig, pPos[i]) );
-    }
-
-    // mark internal nodes
-    Aig_ManIncrementTravId( pAig );
-    Aig_ObjSetTravIdCurrent( pAig, Aig_ManConst1(pAig) );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vRoots)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vRoots, i)), 1); i++  {
-        Saig_ManDupCones_rec( pAig, pObj, vLeaves, vNodes, vRoots );
-    }
-
-    // start the new manager
-    pAigNew = Aig_ManStart( Vec_PtrSize(vNodes) );
-    pAigNew.pName = Abc_UtilStrsav( pAig.pName );
-    // map the constant node
-    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );
-    // create PIs
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vLeaves)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pAigNew );
-    }
-    // create LOs
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = nPos; (i < Vec_PtrSize(vRoots)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vRoots, i)), 1); i++  {
-        Saig_ObjLiToLo(pAig, pObj).pData = Aig_ObjCreateCi( pAigNew );
-    }
-    // create internal nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-    }
-    // create COs
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vRoots)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vRoots, i)), 1); i++  {
-        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );
-    }
-    // finalize
-    Aig_ManSetRegNum( pAigNew, Vec_PtrSize(vRoots)-nPos );
-    Vec_PtrFree( vLeaves );
-    Vec_PtrFree( vNodes );
-    Vec_PtrFree( vRoots );
-    return pAigNew;
-
-}
-
-#ifndef ABC_USE_CUDD
-int Aig_ManVerifyUsingBdds( Aig_Man_t * pInit, Saig_ParBbr_t * pPars ) { return 0; }
-void Bbr_ManSetDefaultParams( Saig_ParBbr_t * p ) {}
-#endif
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

@@ -1,415 +1,454 @@
+// Ordered JSON documents and ABC's string-interned vector representation.
 package io
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	stdio "io"
+	"os"
+	"strconv"
 	"strings"
+
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [ioJson.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedures to read JSON.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: ioJson.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ioAbc.h"
-//#include "misc/vec/vecWec.h"
-//#include "misc/util/utilNam.h"
-//#include "misc/extra/extra.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Json_EntryIsName(Fan int32) int32 { return Abc_LitIsCompl(Fan);                                                       }
-func Json_EntryName(pStrs *Abc_Nam_t, Fan int32) string { assert((Json_EntryIsName(Fan) != 0), "Json_EntryIsName(Fan)");  return Abc_NamStr( pStrs, Abc_Lit2Var(Fan) );     }
-func Json_EntryNode(vObjs *Vec_Wec_t, Fan int32) *Vec_Int_t { assert(!(Json_EntryIsName(Fan) != 0), "!Json_EntryIsName(Fan)"); return Vec_WecEntry( vObjs, Abc_Lit2Var(Fan) );   }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Writes JSON into a file.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nnc_LayerType2Str(pStr string) string {
-    if !(int32(strings.Compare(pStr, "InputLayer")) != 0) {
-        return "input  "; }
-    if !(int32(strings.Compare(pStr, "Conv2D")) != 0) {
-        return "convo  "; }
-    if !(int32(strings.Compare(pStr, "BatchNormalization")) != 0) {
-        return "batch  "; }
-    if !(int32(strings.Compare(pStr, "Activation")) != 0) {
-        return "relu   "; }
-    if !(int32(strings.Compare(pStr, "Add")) != 0) {
-        return "eltwise"; }
-    if !(int32(strings.Compare(pStr, "MaxPooling2D")) != 0) {
-        return "pool   "; }
-    if !(int32(strings.Compare(pStr, "GlobalAveragePooling2D")) != 0) {
-        return "pool   "; }
-    if !(int32(strings.Compare(pStr, "Dense")) != 0) {
-        return "fullcon"; }
-    if !(int32(strings.Compare(pStr, "ZeroPadding2D")) != 0) {
-        return "pad"; }
-//    if ( !strcmp(pStr, "InputLayer") )
-//        return "softmax";
-    return nil;
+type JSONMember struct {
+	Name  string
+	Value *JSONValue
 }
 
-func Json_Extract_rec(pFile *os.File, pStr *Abc_Nam_t, vObjs *Vec_Wec_t, vArray *Vec_Int_t, fWrite int32, pCount *int32) {
-    var i, Entry1, Entry2 int32;
-    if Vec_IntEntry(vArray, 0) { // array
-    
-        if Vec_IntSize(vArray) == 1 {
-            return; }
-        if Vec_IntSize(vArray) == 2 && (Json_EntryIsName(Vec_IntEntry(vArray,1)) != 0) {
-            if fWrite != 0 {
-                fmt.Fprintf(pFile, "%s", Json_EntryName(pStr, Vec_IntEntry(vArray,1))); }
-            return;
-        
-        } else {
-            // inlining of macro Vec_IntForEachEntryStart
-            for  i = 1; (i < Vec_IntSize(vArray)) && (((Entry1) = Vec_IntEntry(vArray, i)), 1); i++  {
-                if Json_EntryIsName(Entry1) != 0 {
-                    var Digit int32  = Json_EntryName(pStr, Entry1)[0];
-                    if (fWrite != 0) && Digit != '0' {
-                        fmt.Fprintf(pFile, "%s%s", Json_EntryName(pStr, Entry1), Digit >= '0' && Digit <= '9' ? "" : " "); }
-                
-                } else {
-                    Json_Extract_rec( pFile, pStr, vObjs, Json_EntryNode(vObjs, Entry1), fWrite, pCount ); }
-            }
-            return;
-        }
-    
-    } else { // list of pairs
-    
-        var fHaveConfig int32;
-        assert(Vec_IntSize(vArray) % 2 != 0, "Vec_IntSize(vArray) % 2 != 0");
-        // inlining of macro Vec_IntForEachEntryDoubleStart
-        for  i = 1; (i+1 < Vec_IntSize(vArray)) && (((Entry1) = Vec_IntEntry(vArray, i)), 1) && (((Entry2) = Vec_IntEntry(vArray, i+1)), 1); i += 2  {
-            var pName1 string;
-            if Json_EntryIsName(Entry1) != 0 {
-                pName1 = Json_EntryName(pStr, Entry1);
-            } else {
-                pName1 = nil;
-            }
-            var pName2 string;
-            if Json_EntryIsName(Entry2) != 0 {
-                pName2 = Json_EntryName(pStr, Entry2);
-            } else {
-                pName2 = nil;
-            }
-            var pName3 string;
-            if pName2 {
-                pName3 = Nnc_LayerType2Str(pName2);
-            } else {
-                pName3 = nil;
-            }
-            if pName1 == nil {
-                continue; }
-            if !(int32(strings.Compare(pName1, "class_name")) != 0) {
-                if pName3 {
-                    fmt.Fprintf(pFile, "\n%3d : %-8s ", (*pCount)++, pName3); }
-            
-            } else if !(int32(strings.Compare(pName1, "name")) != 0) {
-                if fHaveConfig != 0 {
-                    fmt.Fprintf(pFile, " N=%s  ", pName2 ? pName2 : "???"); }
-            
-            } else if !(int32(strings.Compare(pName1, "kernel_size")) != 0) {
-                fmt.Fprintf(pFile, " K=");
-                Json_Extract_rec( pFile, pStr, vObjs, Json_EntryNode(vObjs, Entry2), 1, pCount );
-            
-            } else if !(int32(strings.Compare(pName1, "strides")) != 0) {
-                fmt.Fprintf(pFile, " S=");
-                Json_Extract_rec( pFile, pStr, vObjs, Json_EntryNode(vObjs, Entry2), 1, pCount );
-            
-            } else if !(int32(strings.Compare(pName1, "filters")) != 0) {
-                fmt.Fprintf(pFile, " C=%s", pName2);
-            } else if !(int32(strings.Compare(pName1, "inbound_nodes")) != 0) {
-                Json_Extract_rec( pFile, pStr, vObjs, Json_EntryNode(vObjs, Entry2), 1, pCount );
-            } else if !(int32(strings.Compare(pName1, "layers")) != 0) {
-                Json_Extract_rec( pFile, pStr, vObjs, Json_EntryNode(vObjs, Entry2), 1, pCount );
-            } else if !(int32(strings.Compare(pName1, "config")) != 0) {
-                fHaveConfig = 1;
-                Json_Extract_rec( pFile, pStr, vObjs, Json_EntryNode(vObjs, Entry2), 0, pCount );
-            }
-        }
-    }
+// JSONValue retains member order, duplicate keys, scalar types, and number text.
+// Kind is '{', '[', or 'v'; Value is string, json.Number, bool, or nil.
+type JSONValue struct {
+	Kind   byte
+	Object []JSONMember
+	Array  []*JSONValue
+	Value  any
 }
-func Json_Extract(pFileName string, pStr *Abc_Nam_t, vObjs *Vec_Wec_t) {
-    var Count int32;
-    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Printf("Cannot open file \"%s\" for writing.\n", pFileName);
-        return;
-    }
-    fmt.Fprintf(pFile, "# Data extracted from JSON file:\n");
-    Json_Extract_rec( pFile, pStr, vObjs, Vec_WecEntry(vObjs, 0), 0, &Count );
-    fmt.Fprintf(pFile, "\n");
-    _ = (pFile).Close();
+type Abc_Nam_t = util.Abc_Nam_t
+
+func ParseJSON(data []byte) (*JSONValue, error) {
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.UseNumber()
+	var parse func(int) (*JSONValue, error)
+	parse = func(depth int) (*JSONValue, error) {
+		if depth > 10000 {
+			return nil, fmt.Errorf("JSON nesting exceeds 10000")
+		}
+		token, err := decoder.Token()
+		if err != nil {
+			return nil, err
+		}
+		switch token {
+		case json.Delim('{'):
+			node := &JSONValue{Kind: '{'}
+			for decoder.More() {
+				key, err := decoder.Token()
+				if err != nil {
+					return nil, err
+				}
+				name, ok := key.(string)
+				if !ok {
+					return nil, fmt.Errorf("JSON object key is not a string")
+				}
+				value, err := parse(depth + 1)
+				if err != nil {
+					return nil, err
+				}
+				node.Object = append(node.Object, JSONMember{name, value})
+			}
+			if _, err = decoder.Token(); err != nil {
+				return nil, err
+			}
+			return node, nil
+		case json.Delim('['):
+			node := &JSONValue{Kind: '['}
+			for decoder.More() {
+				value, err := parse(depth + 1)
+				if err != nil {
+					return nil, err
+				}
+				node.Array = append(node.Array, value)
+			}
+			if _, err = decoder.Token(); err != nil {
+				return nil, err
+			}
+			return node, nil
+		default:
+			if _, ok := token.(json.Delim); ok {
+				return nil, fmt.Errorf("unexpected JSON delimiter")
+			}
+			return &JSONValue{Kind: 'v', Value: token}, nil
+		}
+	}
+	root, err := parse(0)
+	if err != nil {
+		return nil, err
+	}
+	if _, err = decoder.Token(); err != stdio.EOF {
+		if err == nil {
+			err = fmt.Errorf("multiple JSON root values")
+		}
+		return nil, err
+	}
+	return root, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Parsing.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Json_CharIsSpace(c byte) int32 { 
-    return (c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == ':');   
+func (n *JSONValue) MarshalJSON() ([]byte, error) {
+	var out bytes.Buffer
+	active := map[*JSONValue]bool{}
+	var write func(*JSONValue) error
+	write = func(node *JSONValue) error {
+		if node == nil {
+			return fmt.Errorf("nil JSON node")
+		}
+		if active[node] {
+			return fmt.Errorf("cyclic JSON value")
+		}
+		active[node] = true
+		defer delete(active, node)
+		switch node.Kind {
+		case '{':
+			out.WriteByte('{')
+			for i, member := range node.Object {
+				if i > 0 {
+					out.WriteByte(',')
+				}
+				key, err := json.Marshal(member.Name)
+				if err != nil {
+					return err
+				}
+				out.Write(key)
+				out.WriteByte(':')
+				if err = write(member.Value); err != nil {
+					return err
+				}
+			}
+			out.WriteByte('}')
+		case '[':
+			out.WriteByte('[')
+			for i, value := range node.Array {
+				if i > 0 {
+					out.WriteByte(',')
+				}
+				if err := write(value); err != nil {
+					return err
+				}
+			}
+			out.WriteByte(']')
+		case 'v':
+			switch node.Value.(type) {
+			case string, json.Number, bool, nil:
+			default:
+				return fmt.Errorf("invalid JSON scalar %T", node.Value)
+			}
+			value, err := json.Marshal(node.Value)
+			if err != nil {
+				return err
+			}
+			out.Write(value)
+		default:
+			return fmt.Errorf("invalid JSON node kind")
+		}
+		return nil
+	}
+	if err := write(n); err != nil {
+		return nil, err
+	}
+	return out.Bytes(), nil
 }
-func Json_SkipSpaces(pCur string) string {
-    for  Json_CharIsSpace(*pCur) != 0  {
-        pCur++;
-    }    
-    return pCur;
+func WriteJSON(w stdio.Writer, root *JSONValue) error {
+	data, err := root.MarshalJSON()
+	if err != nil {
+		return err
+	}
+	var pretty bytes.Buffer
+	if err = json.Indent(&pretty, data, "", "   "); err != nil {
+		return err
+	}
+	pretty.WriteByte('\n')
+	return writeText(w, pretty.String())
 }
-func Json_SkipNonSpaces(pCur string) string {
-    for  !(Json_CharIsSpace(*pCur) != 0)  {
-        pCur++;
-    }    
-    return pCur;
+func ReadJSONFile(filename string) (*JSONValue, error) {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	value, err := ParseJSON(data)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", filename, err)
+	}
+	return value, nil
 }
-func Json_TokenCompare(pCur string, pNext string, ppCur2 *string, ppNext2 *string) int32 {
-//    int i;
-    if *pCur == '\"' {
-        pCur++; }
-    if *(pNext-1) == ',' {
-        pNext--; }
-    if *(pNext-1) == '\"' {
-        pNext--; }
-    *ppCur2 = pCur;
-    *ppNext2 = pNext;
-//    for ( i = 1; i < JSON_NUM_LINES; i++ )
-//        if ( !strncmp( s_Types[i].pName, pCur, pNext - pCur ) )
-//            return i;
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Writes JSON into a file.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Json_Write_rec(pFile *os.File, pStr *Abc_Nam_t, vObjs *Vec_Wec_t, vArray *Vec_Int_t, Level int32, fAddComma int32, fSpaces int32) {
-    var i, Entry1, Entry2, fComma int32;
-    if Vec_IntEntry(vArray, 0) { // array
-    
-        if Vec_IntSize(vArray) == 1 {
-            fmt.Fprintf(pFile, "[]");
-        } else if Vec_IntSize(vArray) == 2 && (Json_EntryIsName(Vec_IntEntry(vArray,1)) != 0) {
-            fmt.Fprintf(pFile, "[ \"%s\" ]", Json_EntryName(pStr, Vec_IntEntry(vArray,1)));
-        } else {
-            if fSpaces != 0 {
-                fmt.Fprintf(pFile, "%*s", 3*(Level-1), ""); }
-            fmt.Fprintf(pFile, "[\n");
-            // inlining of macro Vec_IntForEachEntryStart
-            for  i = 1; (i < Vec_IntSize(vArray)) && (((Entry1) = Vec_IntEntry(vArray, i)), 1); i++  {
-                fComma = (i < Vec_IntSize(vArray) - 1);
-                if Json_EntryIsName(Entry1) != 0 {
-                    fmt.Fprintf(pFile, "%*s\"%s\"%s\n", 3*Level, "", Json_EntryName(pStr, Entry1), fComma ? ",":"");
-                } else {
-                    Json_Write_rec( pFile, pStr, vObjs, Json_EntryNode(vObjs, Entry1), Level+1, fComma, 1 ); }
-            }
-            fmt.Fprintf(pFile, "%*s]", 3*(Level-1), "");
-        }
-        fmt.Fprintf(pFile, "%s\n", fAddComma ? ",":"");
-    
-    } else { // list of pairs
-    
-        if fSpaces != 0 {
-            fmt.Fprintf(pFile, "%*s", 3*(Level-1), ""); }
-        fmt.Fprintf(pFile, "{\n");
-        assert(Vec_IntSize(vArray) % 2 != 0, "Vec_IntSize(vArray) % 2 != 0");
-        // inlining of macro Vec_IntForEachEntryDoubleStart
-        for  i = 1; (i+1 < Vec_IntSize(vArray)) && (((Entry1) = Vec_IntEntry(vArray, i)), 1) && (((Entry2) = Vec_IntEntry(vArray, i+1)), 1); i += 2  {
-            fComma = (i < Vec_IntSize(vArray) - 3);
-            if Json_EntryIsName(Entry1) != 0 {
-                fmt.Fprintf(pFile, "%*s\"%s\"", 3*Level, "", Json_EntryName(pStr, Entry1));
-            } else {
-                Json_Write_rec( pFile, pStr, vObjs, Json_EntryNode(vObjs, Entry1), Level+1, 0, 1 ); }
-            fmt.Fprintf(pFile, " : ");
-            if Json_EntryIsName(Entry2) != 0 {
-                fmt.Fprintf(pFile, "\"%s\"%s\n", Json_EntryName(pStr, Entry2), fComma ? ",":"");
-            } else {
-                Json_Write_rec( pFile, pStr, vObjs, Json_EntryNode(vObjs, Entry2), Level+1, fComma, 0 ); }
-        }
-        fmt.Fprintf(pFile, "%*s}%s\n", 3*(Level-1), "", fAddComma ? ",":"");
-    }
-}
-func Json_Write(pFileName string, pStr *Abc_Nam_t, vObjs *Vec_Wec_t) {
-    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Printf("Cannot open file \"%s\" for writing.\n", pFileName);
-        return;
-    }
-    Json_Write_rec( pFile, pStr, vObjs, Vec_WecEntry(vObjs, 0), 1, 0, 1 );
-    _ = (pFile).Close();
+func WriteJSONFile(filename string, root *JSONValue) error {
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	err = WriteJSON(file, root)
+	closeErr := file.Close()
+	if err != nil {
+		return err
+	}
+	return closeErr
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Reads JSON from a file.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Json_ReadPreprocess(pIn string, nFileSize int32) string {
-    // inlining of macro ABC_ALLOC
-    var pOut string  = ((char *) malloc(sizeof(char) * (size_t)(3*nFileSize))); var i, k int32;
-    for  i = 0; i < nFileSize; i++  {
-        if pIn[i] == '{' || pIn[i] == '}' || pIn[i] == '[' || pIn[i] == ']' {
-            pOut[k++] = ' ';
-            pOut[k++] = pIn[i];
-            pOut[k++] = ' ';
-        
-        } else {
-            pOut[k++] = pIn[i]; }
-    }
-    pOut[k++] = '\0';
-    return pOut;
+func jsonScalarText(node *JSONValue) string {
+	if value, ok := node.Value.(string); ok {
+		return value
+	}
+	data, _ := json.Marshal(node.Value)
+	return string(data)
 }
-func Json_Read(pFileName string, ppStrs **Abc_Nam_t) *Vec_Wec_t {
-    var pStrs *Abc_Nam_t; 
-    var vObjs *Vec_Wec_t; 
-    var vStack, vTemp *Vec_Int_t;
-    var pContents, pCur, pNext, pCur2, pNext2 string;
-    var nFileSize, RetValue, iToken int32;
-    var pFile *os.File;
-
-    // read the file into the buffer
-    pFile = os.Open(pFileName);
-    if pFile == nil {
-        fmt.Printf("Cannot open file \"%s\" for reading.\n", pFileName);
-        return nil;
-    }
-    nFileSize = Extra_FileSize( pFileName );
-    // inlining of macro ABC_ALLOC
-    pContents = pCur = ((char *) malloc(sizeof(char) * (size_t)(nFileSize+1)));
-    RetValue = fread( pContents, nFileSize, 1, pFile );
-    pContents[nFileSize] = 0;
-    _ = (pFile).Close();
-
-    pContents = Json_ReadPreprocess( pCur = pContents, nFileSize );
-    nFileSize = len(pContents);
-    pCur = nil;
-    pCur = pContents;
-
-    // start data-structures
-    vObjs  = Vec_WecAlloc( 1000 );
-    vStack = Vec_IntAlloc( 100 );
-    pStrs  = Abc_NamStart( 1000, 24 );
-    //Json_AddTypes( pStrs );
-
-    // read lines
-    assert(Vec_WecSize(vObjs) == 0, "Vec_WecSize(vObjs) == 0");
-    assert(Vec_IntSize(vStack) == 0, "Vec_IntSize(vStack) == 0");
-    for  pCur < pContents + nFileSize  {
-        pCur  = Json_SkipSpaces( pCur );
-        if *pCur == '\0' {
-            break; }
-        pNext = Json_SkipNonSpaces( pCur );
-        if *pCur == '{' || *pCur == '[' {
-            // add fanin to node on the previous level
-            if Vec_IntSize(vStack) > 0 {
-                Vec_IntPush( Vec_WecEntry(vObjs, Vec_IntEntryLast(vStack)), Abc_Var2Lit(Vec_WecSize(vObjs), 0) ); }            
-            // add node to the stack
-            Vec_IntPush( vStack, Vec_WecSize(vObjs) );
-            vTemp = Vec_WecPushLevel( vObjs );
-            Vec_IntGrow( vTemp, 4 );
-            // remember it as an array
-            Vec_IntPush( vTemp, int32((*pCur == '[')) );
-            pCur++;
-            continue;
-        }
-        if *pCur == '}' || *pCur == ']' {
-            Vec_IntPop( vStack );
-            pCur++;
-            continue;
-        }
-        if *pCur == ',' || *pCur == ':' {
-            pCur++;
-            continue;
-        }
-        iToken = Json_TokenCompare( pCur, pNext, &pCur2, &pNext2 );
-        if iToken == 0 {
-            iToken = Abc_NamStrFindOrAddLim( pStrs, pCur2, pNext2, nil ); }
-        Vec_IntPush( Vec_WecEntry(vObjs, Vec_IntEntryLast(vStack)), Abc_Var2Lit(iToken, 1) );
-        pCur = pNext;
-    }
-    Vec_IntFree( vStack );
-    pContents = nil;
-    *ppStrs = pStrs;
-    return vObjs;
+func JSONVectors(root *JSONValue) (*vec.Vec_Wec_t, *util.Abc_Nam_t, error) {
+	if _, err := root.MarshalJSON(); err != nil {
+		return nil, nil, err
+	}
+	objects := vec.Vec_WecAlloc(16)
+	names := util.Abc_NamStart(16, 24)
+	active := map[*JSONValue]bool{}
+	var add func(*JSONValue) (int32, error)
+	add = func(node *JSONValue) (int32, error) {
+		if node == nil || active[node] {
+			return 0, fmt.Errorf("nil or cyclic JSON value")
+		}
+		if node.Kind == 'v' {
+			id := util.Abc_NamStrFindOrAdd(names, jsonScalarText(node), nil)
+			return id<<1 | 1, nil
+		}
+		if node.Kind != '{' && node.Kind != '[' {
+			return 0, fmt.Errorf("invalid JSON container")
+		}
+		active[node] = true
+		defer delete(active, node)
+		id := vec.Vec_WecSize(objects)
+		array := vec.Vec_WecPushLevel(objects)
+		flag := int32(0)
+		if node.Kind == '[' {
+			flag = 1
+		}
+		vec.Vec_IntPush(array, flag)
+		if node.Kind == '[' {
+			for _, value := range node.Array {
+				literal, err := add(value)
+				if err != nil {
+					return 0, err
+				}
+				array = vec.Vec_WecEntry(objects, id)
+				vec.Vec_IntPush(array, literal)
+			}
+		} else {
+			for _, member := range node.Object {
+				key := util.Abc_NamStrFindOrAdd(names, member.Name, nil)<<1 | 1
+				literal, err := add(member.Value)
+				if err != nil {
+					return 0, err
+				}
+				array = vec.Vec_WecEntry(objects, id)
+				vec.Vec_IntPush(array, key)
+				vec.Vec_IntPush(array, literal)
+			}
+		}
+		return int32(id << 1), nil
+	}
+	if root == nil || root.Kind == 'v' {
+		return nil, nil, fmt.Errorf("ABC JSON vectors require a container root")
+	}
+	_, err := add(root)
+	if err != nil {
+		return nil, nil, err
+	}
+	return objects, names, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Json_ReadTest(pFileName string) {
-    var pStrs *Abc_Nam_t;
-    var vObjs *Vec_Wec_t;
-    vObjs = Json_Read( pFileName, &pStrs );
-    if vObjs == nil {
-        return; }
-    Json_Write( "test.json", pStrs, vObjs );
-    Abc_NamDeref( pStrs );
-    Vec_WecFree( vObjs );
+func JSONFromVectors(names *util.Abc_Nam_t, objects *vec.Vec_Wec_t) (*JSONValue, error) {
+	if names == nil || objects == nil || vec.Vec_WecSize(objects) == 0 {
+		return nil, fmt.Errorf("empty JSON vectors")
+	}
+	active := map[int32]bool{}
+	var decode func(int32) (*JSONValue, error)
+	decode = func(literal int32) (*JSONValue, error) {
+		if literal < 0 {
+			return nil, fmt.Errorf("negative JSON literal")
+		}
+		id := literal >> 1
+		if literal&1 != 0 {
+			if id <= 0 || id >= util.Abc_NamObjNumMax(names) {
+				return nil, fmt.Errorf("JSON name index out of range")
+			}
+			return &JSONValue{Kind: 'v', Value: util.Abc_NamStr(names, id)}, nil
+		}
+		if int(id) >= vec.Vec_WecSize(objects) || active[id] {
+			return nil, fmt.Errorf("invalid or cyclic JSON object index")
+		}
+		active[id] = true
+		defer delete(active, id)
+		entries := vec.Vec_IntArray(vec.Vec_WecEntry(objects, int(id)))
+		if len(entries) == 0 {
+			return nil, fmt.Errorf("JSON container missing kind")
+		}
+		node := &JSONValue{Kind: '{'}
+		if entries[0] != 0 {
+			node.Kind = '['
+			for _, entry := range entries[1:] {
+				value, err := decode(entry)
+				if err != nil {
+					return nil, err
+				}
+				node.Array = append(node.Array, value)
+			}
+		} else {
+			if len(entries)%2 == 0 {
+				return nil, fmt.Errorf("JSON object has odd key/value arity")
+			}
+			for i := 1; i < len(entries); i += 2 {
+				if entries[i]&1 == 0 {
+					return nil, fmt.Errorf("JSON key is not a string")
+				}
+				key, err := decode(entries[i])
+				if err != nil {
+					return nil, err
+				}
+				value, err := decode(entries[i+1])
+				if err != nil {
+					return nil, err
+				}
+				node.Object = append(node.Object, JSONMember{key.Value.(string), value})
+			}
+		}
+		return node, nil
+	}
+	return decode(0)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Json_Read(filename string, names **Abc_Nam_t) *vec.Vec_Wec_t {
+	root, err := ReadJSONFile(filename)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return nil
+	}
+	objects, strings, err := JSONVectors(root)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return nil
+	}
+	if names != nil {
+		*names = strings
+	}
+	return objects
+}
+func Json_Write(filename string, names *Abc_Nam_t, objects *vec.Vec_Wec_t) error {
+	root, err := JSONFromVectors(names, objects)
+	if err != nil {
+		return err
+	}
+	return WriteJSONFile(filename, root)
+}
+func Json_ReadPreprocess(text string, size int32) string {
+	if size < 0 || int(size) > len(text) {
+		return ""
+	}
+	return text[:size]
+}
+func Json_EntryIsName(literal int32) int32 { return literal & 1 }
+func Json_EntryName(names *Abc_Nam_t, literal int32) string {
+	if literal&1 == 0 {
+		panic("JSON literal is not a name")
+	}
+	return util.Abc_NamStr(names, literal>>1)
+}
+func Json_EntryNode(objects *vec.Vec_Wec_t, literal int32) *vec.Vec_Int_t {
+	if literal&1 != 0 {
+		panic("JSON literal is not a container")
+	}
+	return vec.Vec_WecEntry(objects, int(literal>>1))
+}
+func Nnc_LayerType2Str(name string) string {
+	return map[string]string{"InputLayer": "input  ", "Conv2D": "convo  ", "BatchNormalization": "batch  ", "Activation": "relu   ", "Add": "eltwise", "MaxPooling2D": "pool   ", "GlobalAveragePooling2D": "pool   ", "Dense": "fullcon", "ZeroPadding2D": "pad"}[name]
+}
+func ExtractJSONLayers(w stdio.Writer, root *JSONValue) error {
+	if _, err := root.MarshalJSON(); err != nil {
+		return err
+	}
+	var out strings.Builder
+	out.WriteString("# Data extracted from JSON file:\n")
+	count := 0
+	var visit func(*JSONValue, bool)
+	visit = func(node *JSONValue, write bool) {
+		if node.Kind == '[' {
+			if len(node.Array) == 1 && node.Array[0].Kind == 'v' {
+				if write {
+					out.WriteString(jsonScalarText(node.Array[0]))
+				}
+				return
+			}
+			for _, value := range node.Array {
+				if value.Kind != 'v' {
+					visit(value, write)
+					continue
+				}
+				text := jsonScalarText(value)
+				if write && text != "" && text[0] != '0' {
+					out.WriteString(text)
+					if _, err := strconv.Atoi(text[:1]); err != nil {
+						out.WriteByte(' ')
+					}
+				}
+			}
+			return
+		}
+		if node.Kind != '{' {
+			return
+		}
+		haveConfig := false
+		for _, member := range node.Object {
+			value := member.Value
+			text := ""
+			if value.Kind == 'v' {
+				text = jsonScalarText(value)
+			}
+			switch member.Name {
+			case "class_name":
+				if kind := Nnc_LayerType2Str(text); kind != "" {
+					fmt.Fprintf(&out, "\n%3d : %-8s ", count, kind)
+					count++
+				}
+			case "name":
+				if haveConfig {
+					fmt.Fprintf(&out, " N=%s  ", text)
+				}
+			case "kernel_size":
+				out.WriteString(" K=")
+				visit(value, true)
+			case "strides":
+				out.WriteString(" S=")
+				visit(value, true)
+			case "filters":
+				fmt.Fprint(&out, " C=", text)
+			case "inbound_nodes", "layers":
+				visit(value, true)
+			case "config":
+				haveConfig = true
+				visit(value, false)
+			}
+		}
+	}
+	visit(root, false)
+	out.WriteByte('\n')
+	return writeText(w, out.String())
+}
+func Json_Extract(filename string, names *Abc_Nam_t, objects *vec.Vec_Wec_t) error {
+	root, err := JSONFromVectors(names, objects)
+	if err != nil {
+		return err
+	}
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	err = ExtractJSONLayers(file, root)
+	closeErr := file.Close()
+	if err != nil {
+		return err
+	}
+	return closeErr
+}

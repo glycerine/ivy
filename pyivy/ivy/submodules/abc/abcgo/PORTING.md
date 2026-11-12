@@ -445,3 +445,212 @@ The newest module run (`/tmp/abcgo-full-current14.log`) remains 80 passing and
 separate independent readability/bug review and full race/vet/original-C gate;
 no blocking review findings were reported. SAIG has advanced through the dual-
 rail wrapper and now reaches `saigDup.go`; the full SAIG package remains open.
+
+The latest whole-module run (`/tmp/abcgo-full-current15.log`) improves to 81
+passing and 46 failing; `opt/fsim` now passes its normal package test. `map/super`
+also passes full race/vet with original-ABC comparisons. The map/if DSD engine
+now parses and its reduction loops have native slice forms, but whole-package
+testing currently reaches the remaining `ifSat.go` and timing dependencies;
+the DSD delay path still needs full recursive-tree semantics, so the DSD family
+is not complete.
+
+The latest full-module gate (`/tmp/abcgo-full-current16.log`) reports 82 passing
+and 45 failing. The `opt/fsim` package remains green after resolving a transient
+duplicate AIG MarkB API, and `sat/csat` now also passes its normal package test.
+SAIG has moved beyond the initial wrapper/constraint parser blockers; a helper
+is porting the dual-rail miter family, and another is implementing GLA/PBA over
+the proof-core-capable `sat/bsat.Solver2` API. Full SAIG and BMC package gates
+remain open.
+
+The latest run (`/tmp/abcgo-full-current17.log`) reports 81 passing and 47
+failing. `opt/fsim` regressed only in its original-C oracle build because the C
+fixture requests `aig/ssw/ssw.h` while the repository contains the real header
+at `src/proof/ssw/ssw.h`; the FSIM owner is repairing the test include layout,
+not removing the differential test. The normal `map/if` package remains blocked
+by its unported SAT family and recursive DSD/timing integration.
+
+The newest module run (`/tmp/abcgo-full-current18.log`) reports 83 passing and
+44 failing. `aig/ivy`, `map/super`, `opt/fsim`, and `sat/csat` now pass normal
+package tests, joining prior green families. Ivy's race/vet gates pass, but its
+sequential rewrite wrapper still lacks the original latch-crossing resynthesis
+path, so the package is not considered semantically complete. SAIG, GIA,
+base/abc, BDD, IF, and other mapping/optimization/proof/SAT families remain
+unbuildable at package scope.
+
+The next whole-module run (`/tmp/abcgo-full-current20.log`) has the same 83/44
+result and unchanged package failure set as current19. SBD's window/LUT
+components now have focused native tests and the public BSAT polarity bridge;
+the package still has additional source families to port. SAIG miter/duplication families have focused race/vet checks,
+while full package parsing remains blocked in other SAIG families. `map/if`
+DSD and delay/time selected-file race/vet gates now pass, including recursive
+tree timing; the ordinary package gate has moved to malformed `ifSat.go` and
+remains red. Amap has advanced past native graph, permutation, and rule files
+to the remaining match/merge sources. These component checks do not establish
+the whole parent packages.
+
+The next run (`/tmp/abcgo-full-current21.log`) remains 83/44 with the same
+package failure set. Amap now has native reader, permutation/rule and Liberty
+files with scoped tests, but package compilation still reaches `amapMatch.go`;
+SBD and BMC have additional native helper coverage but still cannot clear their
+package frontiers until their surrounding families and dependencies build.
+After that run, `map/if` also advanced: the native partition/factorization
+replacement for `ifSat.go` now passes its expanded selected-file race/vet gate;
+ordinary package compilation has moved to `ifSelect.go`.
+
+The latest run (`/tmp/abcgo-full-current22.log`) briefly showed 82/45 because
+the sequential-cut test requested a cut whose root canonicalized to a latch.
+The Ivy owner corrected the fixture to keep a logic root while preserving the
+sequential coverage; the test now passes and exercises cross-latch cut
+enumeration and rewrite behavior. A new whole-module run is needed to refresh
+the aggregate count after this fix and ongoing changes.
+
+The latest gate (`/tmp/abcgo-full-current23.log`) returns to 83 passing and 44
+failing package results; the Ivy test failure is gone. The ordinary Ivy package
+test passes, while its final race/vet reruns for the latest cross-latch rewrite
+are pending. The rest of the package failure set is unchanged.
+
+The newest run (`/tmp/abcgo-full-current24.log`) remains 83/44. Ivy's full
+latch-aware sequential rewrite now passes normal, race, and vet gates with an
+exhaustive PI/latch-state source differential. The IF package advanced from
+`ifSelect.go` to `ifSeq.go` after replacing the selector and SAT choice
+constraints; ordinary package compilation still fails in `ifSeq.go`.
+
+The latest full run (`/tmp/abcgo-full-current25.log`) improves to 84 passing and
+43 failing package results. `sat/proof` now compiles as a package with no test
+files. The major package failures remain GIA/SAIG, base/abc, BDD, mapping,
+optimization, and proof/SAT. The current IF ordinary gate still stops at
+`ifSeq.go`; DSD/SAT/selection slices are separately tested but do not establish
+whole-package completion.
+
+The newest module run (`/tmp/abcgo-full-current26.log`) reports 86 passing and
+41 failing package results. `map/amap` now passes full race/vet with native
+matching, merging, reading, library, and Liberty paths. `opt/sim` now compiles as
+a package with no test files; behavioral coverage and review remain to be added.
+Ivy's package-wide race/vet gates remain green; IF still fails at the later
+sequential-file frontier.
+
+The next whole-module run (`/tmp/abcgo-full-current27.log`) reports 84 passing,
+39 failing, and 3 packages with no test files. It confirms `opt/sim` and
+`sat/proof` package gates pass. `map/amap` regressed: the mux mapping test panics
+because mapped mux fanins are not visited before their consumers; its owner is
+repairing traversal order. `map/if` still fails parsing in `ifTune.go`. GIA and
+`base/abc` parser failures continue to block dependent packages, including
+SAIG, BMC, `base/io`, CUDD-related consumers, and several optimizers/proof
+packages. The run was performed while workers were editing shared files, so
+package failures are a moving snapshot, not a stable baseline.
+
+The next module snapshot (`/tmp/abcgo-full-current28.log`) reports 85 passing,
+38 failing, and 3 packages with no test files. `map/amap` passes again after
+fixing complemented-reference handling and matching the C invocation's
+`fUseMuxes=1` setting. Follow-up ordinary, race, and vet gates all pass,
+including the MUX2 C parity fixture. `map/fpga` also has an independently
+verified ordinary package pass. GIA now passes the previous `giaBalAig.go`
+frontier but still fails parsing in `giaBalLut.go`; `base/abc` still fails in
+`abcHieGia.go`. `map/if` remains blocked in `ifTune.go`.
+
+Since current27, `map/fpga` completed its full package port with original-C
+comparisons, race/vet coverage, and separate readability/bug reviews. Its owner
+has moved on to `opt/nwk`, whose native graph core now parses while the
+remaining package families are in progress. The `map/if` owner advanced
+`ifTune.go` beyond its prior parser errors; remaining raw C syntax begins
+around line 701. More source families are split across `base/abc`, `base/io`,
+and SAIG to reduce shared bottlenecks without hiding drafts.
+
+The current29 module snapshot (`/tmp/abcgo-full-current29.log`) remains 85
+passing, 38 failing, and 3 packages with no test files. Its parser frontiers are
+`giaBalLut.go` in GIA, `abcHieGia.go` in `base/abc`, and `ifTune.go` in
+`map/if`. IF has moved beyond the earlier line-701 frontier; current errors
+include unconverted loop control around lines 824/827 and C syntax from line
+987 onward. These are active source files, not excluded drafts.
+
+Current30 (`/tmp/abcgo-full-current30.log`) reports 86 passing, 37 failing,
+and 3 packages with no test files. This is a net gain of one passing package
+and one fewer failure versus current29. `map/amap` remains green. SAIG has
+advanced to `saigIsoFast.go`; the GIA and `base/abc` frontiers remain
+`giaBalLut.go` and `abcHieGia.go`. `map/if` now parses `ifTune.go` but its
+ordinary package gate is still blocked by missing external type/API wiring,
+unexpanded GIA iteration, and compile errors. LLB has passed an isolated
+scratch check, but its real package gate remains blocked by GIA and is not
+counted as green. The scratch directory was removed after checking.
+
+Current31 (`/tmp/abcgo-full-current31.log`) remains 86 passing, 37 failing,
+and 3 packages with no test files. `giaBalLut.go` now parses and the real GIA
+and IF gates advance to `giaBalMap.go`; its raw C syntax is the current shared
+parser blocker. `base/abc` remains blocked in `abcHieGia.go`. IF's previous
+unexpanded GIA loop macros were replaced with native iteration, but the package
+cannot reach its next type-check until GIA builds. The completed Amap package
+has independent normal/race/vet passes and a separate bug/readability review.
+After current31, the LUT-balancing owner completed the full native algorithm;
+48 original-ABC combinations matched truth, AIG node count, and depth, with
+additional exhaustive/random tests and separate reviews. The ordinary GIA
+gate still stops at `giaBalMap.go`. `opt/mfs` passes its ordinary package test;
+the Win/Div original-source differential now passes, while package race/vet and
+independent review are in progress. The SAIG parser frontier has moved past
+`saigIsoFast.go` to `saigRefSat.go`. `abcSop.go` now has a disjoint owner to
+unblock `abcNtk` validation; `base/abc` still fails at `abcHieGia.go`.
+The AIGER codec/adapter package `aig/ioa` independently passes race tests and
+vet, including constant polarity, latch initialization, compression, and
+round-trip regressions; `base/io` integration remains blocked by `base/abc`.
+
+Current33 (`/tmp/abcgo-full-current33.log`) reports 86 passing, 37 failing,
+and 3 packages with no test files; the temporary LLB scratch package is gone.
+GIA has advanced from `giaBalMap.go` to `giaBidec.go` and `giaCCof.go` parser
+errors. `base/abc` remains at `abcHieGia.go`, and `base/abci` has raw C syntax
+in `abc.go`. `opt/mfs` passes the ordinary package gate, and the independent
+review's three behavior findings have been fixed and regression-tested; final
+review completion is pending. `map/if` parses its own `ifTune.go` work but
+remains blocked before type-check by GIA's current files.
+Follow-up reviews fixed two additional issues: LLB group construction now
+encodes output-function equivalence (with a regression), and the AIGER CEX
+writer now preserves ABC's repeated register-state prefix on later frames.
+Their real `bdd/llb` and `base/io` package gates remain blocked by shared
+dependencies and were not inferred from focused tests.
+
+Current34 (`/tmp/abcgo-full-current34.log`) reports 87 passing, 36 failing,
+and 3 packages with no test files. This gains one passing package versus
+current33. The real GIA gate remains in `giaBidec.go`/`giaCCof.go`; `base/abc`
+remains in `abcHieGia.go`, and `map/if` is blocked by GIA. `opt/nwk` source
+files now all parse but its package gate is blocked by those GIA and SAIG
+dependencies. `abcSop.go` has a full native API and a 500-case C differential;
+`abcNtk` focused tests now run against it, with one buffer-composition bug under
+repair. MFS passes the ordinary package test; its race/vet and separate review
+are pending. `aig/ioa` passes race/vet, while integration into `base/io` awaits
+the ABC parser frontier.
+
+Current35 and current36 both report 87 passing, 36 failing, and 3 packages
+without test files. Current36 advances GIA's ordinary parser frontier to
+`giaCSat.go`; SAIG is blocked in `saigRetFwd.go`. `base/abc` remains at
+`abcHieGia.go`, and `base/abci` remains raw in `abc.go`. The MFS package now
+passes ordinary tests, race tests, and vet after its independent review fixed
+source-fidelity issues in BDC WinMax, PowerResub traversal, sequential
+probability sampling, and AIG cone import. `map/if` parses its source but is
+still blocked before type-checking by GIA. CUDD core race/vet remain green,
+while the root CUDD package is still blocked in its I/O files.
+
+After current36, ordinary GIA testing confirms the frontier is now
+`giaCSat.go`; GIA remains unbuildable. MFS is fully signed off with normal,
+race, vet, original-source comparisons, and independent review. The complete
+native `abcNtk` selected-source suite now passes 21 source files against actual
+component files, including race, metadata/induction handoff, and C-oracle
+cases; the enclosing `base/abc` package still fails in `abcHieGia.go`. The
+completed workers have been reassigned to `opt/sfm` and `base/abci/abcSat.go`;
+additional native `base/io` formats are in progress.
+
+Current37 (`/tmp/abcgo-full-current37.log`) remains 87 passing, 36 failing,
+and 3 packages with no test files. `bdd/extrab` now independently passes
+ordinary tests, race tests, and vet after completing its remaining families and
+fixing a K-map dimension overflow. It is a full package green. The module
+frontiers remain GIA `giaCSat.go`, SAIG `saigRetFwd.go`, `base/abc`
+`abcHieGia.go`, and `base/abci/abc.go`.
+
+Current38 and current39 remain 87 passing, 36 failing, and 3 packages with no
+test files. `base/abc` has advanced past HieGia to `abcHieNew.go`; GIA is at
+`giaCSat2.go`, and SAIG at `saigRetMin.go`. `bdd/extrab` is fully green across
+normal, race, and vet gates. MFS and its independent review are also complete
+and green; Amap's full gates remain green. `base/abci` still has raw
+preprocessor/C syntax in `abc.go`, blocking dependent packages.
+An independent `abcgo/base/abc/test_ntk.sh -race -count=1` run passes its
+actual-source selection (21 native ABC files). The separate review found and
+sent additional metadata fixes; this selected gate does not replace the
+ordinary `base/abc` package gate. `map/if` now has no syntax errors of its own,
+but cannot compile until GIA's current dependency frontier is cleared.

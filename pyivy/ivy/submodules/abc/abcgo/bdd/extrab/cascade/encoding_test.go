@@ -107,3 +107,38 @@ func TestPathsAndWidthAcrossSkippedLevels(t *testing.T) {
 		t.Fatal("cut reconstruction")
 	}
 }
+
+func TestProfileZDDLevelsAndInvalidOwnership(t *testing.T) {
+	dd := cudd.NewBDDManager(0)
+	dd.ZddSize = 3
+	dd.InvPermZ = []int{2, 0, 1}
+	dd.PermZ = []int{1, 2, 0}
+	if cudd.InitializeZDDUniverse(dd) != 1 {
+		t.Fatal("ZDD initialization")
+	}
+	f := cudd.Cudd_zddUnion(dd, cudd.Cudd_zddChange(dd, dd.One, 0), cudd.Cudd_zddChange(dd, dd.One, 2))
+	profile := Extra_ProfileWidth(dd, f)
+	if len(profile) != 4 {
+		t.Fatal(profile)
+	}
+	for cut := 0; cut <= 3; cut++ {
+		frontier := map[*DdNode]bool{}
+		var visit func(*DdNode)
+		visit = func(n *DdNode) {
+			if cudd.Cudd_IsConstant(n) || dd.PermZ[n.Index] >= cut {
+				frontier[n] = true
+				return
+			}
+			visit(n.T)
+			visit(n.E)
+		}
+		visit(f)
+		if profile[cut] != len(frontier) {
+			t.Fatal("ZDD profile", cut, profile, len(frontier))
+		}
+	}
+	other := cudd.NewBDDManager(1)
+	if Extra_ProfileWidth(dd, other.Vars[0]) != nil || Extra_ProfileWidth(nil, f) != nil {
+		t.Fatal("invalid profile domain accepted")
+	}
+}

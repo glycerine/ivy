@@ -43,6 +43,8 @@ type edgePair struct{ a, b Edge }
 // gates; complemented edges represent inversion directly. Deletion leaves holes
 // so existing edges remain valid, and rewriting may change topological ID order.
 type Graph struct {
+	// InputNumbers maps retained CIs to their original interface positions.
+	InputNumbers                      []int32
 	combinationalCex                  *util.Abc_Cex_t
 	PartitionInputs, PartitionOutputs []int32
 	ClockDomains                      [][]int32
@@ -54,6 +56,7 @@ type Graph struct {
 	iPrev, iNext, nAndTotal, nAndPrev int32
 	objectData                        map[int]any
 	cexValues                         [][]bool
+	inductionCex                      *util.Abc_Cex_t
 	editDepth                         int
 	fanouts                           *FanoutIndex
 	Assertions, BarrierBuffers        int32

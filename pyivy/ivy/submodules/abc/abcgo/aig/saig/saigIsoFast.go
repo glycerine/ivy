@@ -1,352 +1,245 @@
 package saig
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
 
-/**CFile****************************************************************
-
-  FileName    [aigIsoFast.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [AIG package.]
-
-  Synopsis    [Graph isomorphism package.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - April 28, 2007.]
-
-  Revision    [$Id: aigIsoFast.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "saig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
 const AIG_ISO_NUM = 16
 
-   
+// Iso_Dat_t stores the compact structural signature fields from the source
+// bitfield. Each field is masked to the width used by the C declaration.
 type Iso_Dat_t struct {
-    nFiNeg uint32; /* C bitfield: 3 bits; review packing and truncation */
-    nFoNeg uint32; /* C bitfield: 2 bits; review packing and truncation */
-    nFoPos uint32; /* C bitfield: 2 bits; review packing and truncation */
-    Fi0Lev uint32; /* C bitfield: 3 bits; review packing and truncation */
-    Fi1Lev uint32; /* C bitfield: 3 bits; review packing and truncation */
-    Level uint32; /* C bitfield: 3 bits; review packing and truncation */
-    fVisit uint32; /* C bitfield: 16 bits; review packing and truncation */
+	nFiNeg uint32
+	nFoNeg uint32
+	nFoPos uint32
+	Fi0Lev uint32
+	Fi1Lev uint32
+	Level  uint32
+	fVisit uint32
 }
 
-   
-type Iso_Dat2_t struct {
-    Data uint32; /* C bitfield: 16 bits; review packing and truncation */
-}
+type Iso_Dat2_t struct{ Data uint32 }
 
-   
 type Iso_Sto_t struct {
-    pAig    *Aig_Man_t;       // user's AIG manager
-    nObjs           int32;      // number of objects
-    pData    *Iso_Dat_t;      // data for each object
-    vVisited    *Vec_Int_t;   // visited nodes
-    vRoots    *Vec_Ptr_t;     // root nodes
-    vPlaces    *Vec_Int_t;    // places in the counter lists
-    pCounters          *int32;  // counters    
+	pAig      *aig.Graph
+	nObjs     int32
+	pData     []Iso_Dat_t
+	vVisited  []int
+	vRoots    []aig.Edge
+	vPlaces   []uint32
+	pCounters []uint32
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Iso_StoStart(pAig *Aig_Man_t) *Iso_Sto_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Iso_Sto_t{};
-    p.pAig      = pAig;
-    p.nObjs     = Aig_ManObjNumMax( pAig );
-    // inlining of macro ABC_CALLOC
-    p.pData     = ((Iso_Dat_t *) calloc((size_t)(p.nObjs), sizeof(Iso_Dat_t)));
-    p.vVisited  = Vec_IntStart( 1000 );
-    p.vPlaces   = Vec_IntStart( 1000 );
-    p.vRoots    = Vec_PtrStart( 1000 );
-    // inlining of macro ABC_CALLOC
-    p.pCounters = ((int *) calloc((size_t)((1 << AIG_ISO_NUM)), sizeof(int)));
-    return p;
-}
-func Iso_StoStop(p *Iso_Sto_t) {
-    Vec_IntFree( p.vPlaces );
-    Vec_IntFree( p.vVisited );
-    Vec_PtrFree( p.vRoots );
-    p.pCounters = nil;
-    p.pData = nil;
-    p = nil;
+func Iso_StoStart(graph *aig.Graph) *Iso_Sto_t {
+	if graph == nil {
+		return nil
+	}
+	n := len(graph.Nodes())
+	return &Iso_Sto_t{
+		pAig: graph, nObjs: int32(n), pData: make([]Iso_Dat_t, n),
+		pCounters: make([]uint32, 1<<AIG_ISO_NUM),
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collect statistics about one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Iso_StoCollectInfo_rec(p *Aig_Man_t, pObj *Aig_Obj_t, fCompl int32, vVisited *Vec_Int_t, pData *Iso_Dat_t, vRoots *Vec_Ptr_t) {
-    var pThis *Iso_Dat_t  = pData + Aig_ObjId(pObj);
-    assert(Aig_ObjIsCi(pObj) || Aig_ObjIsNode(pObj), "Aig_ObjIsCi(pObj) || Aig_ObjIsNode(pObj)");
-    if pThis.fVisit {
-        if fCompl != 0 {
-            pThis.nFoNeg++;
-        } else {
-            pThis.nFoPos++; }
-        return;
-    }
-    assert(*((int *)pThis) == 0, "*((int *)pThis) == 0");
-    pThis.fVisit = 1;
-    if fCompl != 0 {
-        pThis.nFoNeg++;
-    } else {
-        pThis.nFoPos++; }
-    pThis.Level = pObj.Level;
-    pThis.nFiNeg = Aig_ObjFaninC0(pObj) + Aig_ObjFaninC1(pObj);
-    if Aig_ObjIsNode(pObj) {
-        if Aig_ObjFaninC0(pObj) < Aig_ObjFaninC1(pObj) || (Aig_ObjFaninC0(pObj) == Aig_ObjFaninC1(pObj) && Aig_ObjFanin0(pObj).Level < Aig_ObjFanin1(pObj).Level) {
-            pThis.Fi0Lev = pObj.Level - Aig_ObjFanin0(pObj).Level;
-            pThis.Fi1Lev = pObj.Level - Aig_ObjFanin1(pObj).Level;
-        
-        } else {
-            pThis.Fi0Lev = pObj.Level - Aig_ObjFanin1(pObj).Level;
-            pThis.Fi1Lev = pObj.Level - Aig_ObjFanin0(pObj).Level;
-        }
-        Iso_StoCollectInfo_rec( p, Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj), vVisited, pData, vRoots );
-        Iso_StoCollectInfo_rec( p, Aig_ObjFanin1(pObj), Aig_ObjFaninC1(pObj), vVisited, pData, vRoots );
-    
-    } else if Saig_ObjIsLo(p, pObj) {
-        pThis.Fi0Lev = 1;
-        pThis.Fi1Lev = 0;
-        Vec_PtrPush( vRoots, Saig_ObjLoToLi(p, pObj) );
-    
-    } else if Saig_ObjIsPi(p, pObj) {
-        pThis.Fi0Lev = 0;
-        pThis.Fi1Lev = 0;
-    
-    } else {
-        assert(false, "0"); }
-    assert(pThis.nFoNeg + pThis.nFoPos, "pThis.nFoNeg + pThis.nFoPos");
-    Vec_IntPush( vVisited, Aig_ObjId(pObj) );
+func Iso_StoStop(manager *Iso_Sto_t) {
+	if manager == nil {
+		return
+	}
+	manager.pData = nil
+	manager.vVisited = nil
+	manager.vRoots = nil
+	manager.vPlaces = nil
+	manager.pCounters = nil
+	manager.pAig = nil
 }
 
-//static abctime time_Trav = 0;
-
-/**Function*************************************************************
-
-  Synopsis    [Collect statistics about one output.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Iso_StoCollectInfo(p *Iso_Sto_t, pPo *Aig_Obj_t) *Vec_Int_t {
-    var fVerboseShow int32;
-    var vInfo *Vec_Int_t;
-    var pData2 *Iso_Dat2_t  = (Iso_Dat2_t *)p.pData;
-    var pAig *Aig_Man_t  = p.pAig;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    var Value int32;
-    var Entry int32;
-    var pPerm *int32;
-//    abctime clk = Abc_Clock();
-
-    assert(Aig_ObjIsCo(pPo), "Aig_ObjIsCo(pPo)");
-
-    // collect initial POs
-    Vec_IntClear( p.vVisited );
-    Vec_PtrClear( p.vRoots );
-    Vec_PtrPush( p.vRoots, pPo );
-
-    // mark internal nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vRoots)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {
-        if !Aig_ObjIsConst1(Aig_ObjFanin0(pObj)) {
-            Iso_StoCollectInfo_rec( pAig, Aig_ObjFanin0(pObj), Aig_ObjFaninC0(pObj), p.vVisited, p.pData, p.vRoots ); }
-    }
-//    time_Trav += Abc_Clock() - clk;
-
-    // count how many times each data entry appears
-    Vec_IntClear( p.vPlaces );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vVisited)) && (((Entry) = Vec_IntEntry(p.vVisited, i)), 1); i++  {
-        Value = pData2[Entry].Data;
-//        assert( Value > 0 );
-        if p.pCounters[Value]++ == 0 {
-            Vec_IntPush( p.vPlaces, Value ); }
-//        pData2[Entry].Data = 0;
-        *((int *)(p.pData + Entry)) = 0;
-    }
-
-    // collect non-trivial counters
-    Vec_IntClear( p.vVisited );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vPlaces)) && (((Entry) = Vec_IntEntry(p.vPlaces, i)), 1); i++  {
-        assert(p.pCounters[Entry], "p.pCounters[Entry]");
-        Vec_IntPush( p.vVisited, p.pCounters[Entry] );
-        p.pCounters[Entry] = 0;
-    }
-//    printf( "%d ", Vec_IntSize(p->vVisited) );
-
-    // sort the costs in the increasing order
-    pPerm = Abc_MergeSortCost( Vec_IntArray(p.vVisited), Vec_IntSize(p.vVisited) );
-    assert(Vec_IntEntry(p.vVisited, pPerm[0]) <= Vec_IntEntry(p.vVisited, pPerm[Vec_IntSize(p.vVisited)-1]), "Vec_IntEntry(p.vVisited, pPerm[0]) <= Vec_IntEntry(p.vVisited, pPerm[Vec_IntSize(p.vVisited)-1])");
-
-    // create information
-    vInfo = Vec_IntAlloc( Vec_IntSize(p.vVisited) );
-    for  i = Vec_IntSize(p.vVisited)-1; i >= 0; i--  {
-        Entry = Vec_IntEntry( p.vVisited, pPerm[i] );
-        Entry = (Entry << AIG_ISO_NUM) | Vec_IntEntry( p.vPlaces, pPerm[i] );
-        Vec_IntPush( vInfo, Entry );
-    }
-    pPerm = nil;
-
-    // show the final result
-    if fVerboseShow != 0 {
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vInfo)) && (((Entry) = Vec_IntEntry(vInfo, i)), 1); i++  {
-        var Data Iso_Dat2_t  = Iso_Dat2_t{ uint32(Entry) & 0xFFFF };
-        var pData *Iso_Dat_t  = (Iso_Dat_t *)&Data;
-
-        fmt.Printf("%6d : ", i);
-        fmt.Printf("Freq =%6d ", Entry >> 16);
-
-        fmt.Printf("FiNeg =%3d ", pData.nFiNeg);
-        fmt.Printf("FoNeg =%3d ", pData.nFoNeg);
-        fmt.Printf("FoPos =%3d ", pData.nFoPos);
-        fmt.Printf("Fi0L  =%3d ", pData.Fi0Lev);
-        fmt.Printf("Fi1L  =%3d ", pData.Fi1Lev);
-        fmt.Printf("Lev   =%3d ", pData.Level);
-        fmt.Printf("\n");
-    } }
-    return vInfo;
+// Iso_StoCollectInfo_rec accumulates one regular object and its fanin cone.
+func Iso_StoCollectInfo_rec(manager *Iso_Sto_t, object aig.Edge, complemented bool) {
+	if manager == nil || manager.pAig == nil {
+		return
+	}
+	object = aig.Aig_Regular(object)
+	if !manager.pAig.ValidEdge(object) {
+		return
+	}
+	id := object.NodeID()
+	node := manager.pAig.Node(object)
+	if node.Kind != aig.Input && node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer {
+		return
+	}
+	data := &manager.pData[id]
+	if data.fVisit != 0 {
+		if complemented {
+			data.nFoNeg = (data.nFoNeg + 1) & 3
+		} else {
+			data.nFoPos = (data.nFoPos + 1) & 3
+		}
+		return
+	}
+	data.fVisit = 1
+	if complemented {
+		data.nFoNeg = 1
+	} else {
+		data.nFoPos = 1
+	}
+	data.Level = uint32(node.Level) & 7
+	data.nFiNeg = 0
+	for _, fanin := range node.Fanins {
+		if fanin == aig.InvalidEdge {
+			continue
+		}
+		if fanin.Complemented() {
+			data.nFiNeg++
+		}
+	}
+	data.nFiNeg &= 7
+	switch node.Kind {
+	case aig.And, aig.ExclusiveOr:
+		first, second := node.Fanins[0], node.Fanins[1]
+		if (first.Complemented() && !second.Complemented()) || (first.Complemented() == second.Complemented() && manager.pAig.Node(first).Level >= manager.pAig.Node(second).Level) {
+			first, second = second, first
+		}
+		data.Fi0Lev = uint32(node.Level-manager.pAig.Node(first).Level) & 7
+		data.Fi1Lev = uint32(node.Level-manager.pAig.Node(second).Level) & 7
+		Iso_StoCollectInfo_rec(manager, node.Fanins[0], node.Fanins[0].Complemented())
+		Iso_StoCollectInfo_rec(manager, node.Fanins[1], node.Fanins[1].Complemented())
+	case aig.Buffer:
+		data.Fi0Lev = uint32(node.Level-manager.pAig.Node(node.Fanins[0]).Level) & 7
+		Iso_StoCollectInfo_rec(manager, node.Fanins[0], node.Fanins[0].Complemented())
+	case aig.Input:
+		if Saig_ObjIsLo(manager.pAig, object) {
+			data.Fi0Lev, data.Fi1Lev = 1, 0
+			manager.vRoots = append(manager.vRoots, Saig_ObjLoToLi(manager.pAig, object))
+		} else if Saig_ObjIsPi(manager.pAig, object) {
+			data.Fi0Lev, data.Fi1Lev = 0, 0
+		}
+	}
+	manager.vVisited = append(manager.vVisited, int(id))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Takes multi-output sequential AIG.]
-
-  Description [Returns candidate equivalence classes of POs.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Iso_StoCompareVecInt(p1 **Vec_Int_t, p2 **Vec_Int_t) int32 {
-    return Vec_IntCompareVec( *p1, *p2 );
+// Iso_StoCollectInfo returns sorted, frequency-packed structural signatures
+// for the cone of one output. The final entry is reserved for the caller's PO ID.
+func Iso_StoCollectInfo(manager *Iso_Sto_t, output aig.Edge) *vec.Vec_Int_t {
+	if manager == nil || manager.pAig == nil || !manager.pAig.ValidEdge(output) || !aig.Aig_ObjIsCo(manager.pAig, output) {
+		return vec.Vec_IntAlloc(0)
+	}
+	manager.vVisited = manager.vVisited[:0]
+	manager.vRoots = manager.vRoots[:0]
+	manager.vRoots = append(manager.vRoots, output)
+	for i := 0; i < len(manager.vRoots); i++ {
+		co := manager.vRoots[i]
+		fanin := aig.Aig_ObjChild0(manager.pAig, co)
+		if !aig.Aig_ObjIsConst1(manager.pAig, fanin) {
+			Iso_StoCollectInfo_rec(manager, fanin, fanin.Complemented())
+		}
+	}
+	counts := make(map[uint32]uint32, len(manager.vVisited))
+	for _, id := range manager.vVisited {
+		data := &manager.pData[id]
+		signature := isoPackData(*data)
+		if manager.pCounters[signature] == 0 {
+			manager.vPlaces = append(manager.vPlaces, signature)
+		}
+		manager.pCounters[signature]++
+		counts[signature] = manager.pCounters[signature]
+		*data = Iso_Dat_t{}
+	}
+	items := make([]isoFrequency, 0, len(manager.vPlaces))
+	for _, signature := range manager.vPlaces {
+		items = append(items, isoFrequency{signature: signature, count: counts[signature]})
+		manager.pCounters[signature] = 0
+	}
+	manager.vVisited = manager.vVisited[:0]
+	manager.vPlaces = manager.vPlaces[:0]
+	sort.SliceStable(items, func(i, j int) bool { return items[i].count < items[j].count })
+	info := vec.Vec_IntAlloc(len(items))
+	for i := len(items) - 1; i >= 0; i-- {
+		packed := (items[i].count << AIG_ISO_NUM) | items[i].signature
+		vec.Vec_IntPush(info, int32(packed))
+	}
+	return info
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Takes multi-output sequential AIG.]
-
-  Description [Returns candidate equivalence classes of POs.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_IsoDetectFast(pAig *Aig_Man_t) *Vec_Vec_t {
-    var pMan *Iso_Sto_t;
-    var pObj *Aig_Obj_t;
-    var vClasses, vInfos *Vec_Ptr_t;
-    var vInfo, vPrev, vLevel *Vec_Int_t;
-    var i, Number, nUnique int32;
-    var clk abctime  = Abc_Clock();
-
-    // collect infos and remember their number
-    pMan = Iso_StoStart( pAig );
-    vInfos = Vec_PtrAlloc( Saig_ManPoNum(pAig) );
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-        vInfo = Iso_StoCollectInfo(pMan, pObj);
-        Vec_IntPush( vInfo, i );
-        Vec_PtrPush( vInfos, vInfo );
-    }
-    Iso_StoStop( pMan );
-    Abc_PrintTime( 1, "Info computation time", Abc_Clock() - clk );
-
-    // sort the infos
-    clk = Abc_Clock();
-    Vec_PtrSort( vInfos, (int (*)(void))Iso_StoCompareVecInt );
-
-    // create classes
-    clk = Abc_Clock();
-    vClasses = Vec_PtrAlloc( Saig_ManPoNum(pAig) );
-    // start the first class
-    Vec_PtrPush( vClasses, (vLevel = Vec_IntAlloc(4)) );
-    vPrev = (Vec_Int_t *)Vec_PtrEntry( vInfos, 0 );
-    Vec_IntPush( vLevel, Vec_IntPop(vPrev) );
-    // consider other classes
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = 1; (i < Vec_PtrSize(vInfos)) && (((vInfo) = (Vec_Int_t *)Vec_PtrEntry(vInfos, i)), 1); i++  {
-        Number = Vec_IntPop( vInfo );
-        if Vec_IntCompareVec(vPrev, vInfo) {
-            Vec_PtrPush( vClasses, Vec_IntAlloc(4) ); }
-        vLevel = (Vec_Int_t *)Vec_PtrEntryLast( vClasses );
-        Vec_IntPush( vLevel, Number );
-        vPrev = vInfo;
-    }
-    Vec_VecFree( (Vec_Vec_t *)vInfos );
-    Abc_PrintTime( 1, "Sorting time", Abc_Clock() - clk );
-//    Abc_PrintTime( 1, "Traversal time", time_Trav );
-
-    // report the results
-//    Vec_VecPrintInt( (Vec_Vec_t *)vClasses );
-    fmt.Printf("Devided %d outputs into %d cand equiv classes.\n", Saig_ManPoNum(pAig), Vec_PtrSize(vClasses));
-
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vClasses)) && (((vLevel) = (Vec_Int_t *)Vec_PtrEntry(vClasses, i)), 1); i++  {
-        if Vec_IntSize(vLevel) > 1 {
-            fmt.Printf("%d ", Vec_IntSize(vLevel));
-        } else {
-            nUnique++; }
-    }
-    fmt.Printf(" Unique = %d\n", nUnique);
-
-//    return (Vec_Vec_t *)vClasses;
-    Vec_VecFree( (Vec_Vec_t *)vClasses );
-    return nil;
+type isoFrequency struct {
+	signature uint32
+	count     uint32
 }
 
+func isoPackData(data Iso_Dat_t) uint32 {
+	return (data.nFiNeg & 7) |
+		((data.nFoNeg & 3) << 3) |
+		((data.nFoPos & 3) << 5) |
+		((data.Fi0Lev & 7) << 7) |
+		((data.Fi1Lev & 7) << 10) |
+		((data.Level & 7) << 13)
+}
 
+func Iso_StoCompareVecInt(first, second *vec.Vec_Int_t) int32 {
+	limit := min(vec.Vec_IntSize(first), vec.Vec_IntSize(second))
+	for i := 0; i < limit; i++ {
+		a, b := vec.Vec_IntEntry(first, i), vec.Vec_IntEntry(second, i)
+		if a < b {
+			return -1
+		}
+		if a > b {
+			return 1
+		}
+	}
+	if vec.Vec_IntSize(first) < vec.Vec_IntSize(second) {
+		return -1
+	}
+	if vec.Vec_IntSize(first) > vec.Vec_IntSize(second) {
+		return 1
+	}
+	return 0
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Saig_IsoDetectFast groups sequential primary outputs by their structural
+// signature. Unlike the C routine's commented-out return, the Go port returns
+// the computed classes so callers can use the result directly.
+func Saig_IsoDetectFast(graph *aig.Graph) *vec.Vec_Vec_t {
+	if graph == nil {
+		return vec.Vec_VecAlloc(0)
+	}
+	manager := Iso_StoStart(graph)
+	outputs := graph.Outputs()
+	poCount := len(outputs) - int(aig.Aig_ManRegNum(graph))
+	infos := make([]*vec.Vec_Int_t, 0, poCount)
+	for i := 0; i < poCount; i++ {
+		info := Iso_StoCollectInfo(manager, outputs[i])
+		vec.Vec_IntPush(info, int32(i))
+		infos = append(infos, info)
+	}
+	Iso_StoStop(manager)
+	sort.Slice(infos, func(i, j int) bool { return Iso_StoCompareVecInt(infos[i], infos[j]) < 0 })
+	classes := vec.Vec_VecAlloc(len(infos))
+	var previous *vec.Vec_Int_t
+	for _, info := range infos {
+		signature := vec.Vec_IntDup(info)
+		po := vec.Vec_IntPop(info)
+		vec.Vec_IntPop(signature)
+		if previous == nil || Iso_StoCompareVecInt(previous, signature) != 0 {
+			vec.Vec_VecExpandInt(classes, vec.Vec_VecSize(classes))
+			previous = signature
+		}
+		vec.Vec_IntPush(vec.Vec_VecEntryInt(classes, vec.Vec_VecSize(classes)-1), po)
+	}
+	unique := 0
+	for i := 0; i < vec.Vec_VecSize(classes); i++ {
+		if vec.Vec_IntSize(vec.Vec_VecEntryInt(classes, i)) == 1 {
+			unique++
+		}
+	}
+	fmt.Printf("Devided %d outputs into %d cand equiv classes.\n", poCount, vec.Vec_VecSize(classes))
+	for i := 0; i < vec.Vec_VecSize(classes); i++ {
+		if n := vec.Vec_IntSize(vec.Vec_VecEntryInt(classes, i)); n > 1 {
+			fmt.Printf("%d ", n)
+		}
+	}
+	fmt.Printf(" Unique = %d\n", unique)
+	return classes
+}

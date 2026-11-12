@@ -1,740 +1,569 @@
 package csat
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+	"time"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/sat/bsat2"
+)
 
-  FileName    [csat_apis.h]
+const (
+	ABC_DEFAULT_CONF_LIMIT int64 = 0
+	ABC_DEFAULT_IMP_LIMIT  int64 = 0
+)
 
-  PackageName [Interface to CSAT.]
-
-  Synopsis    [APIs, enums, and data structures expected from the use of CSAT.]
-
-  Author      [Alan Mishchenko <alanmi@eecs.berkeley.edu>]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - August 28, 2005]
-
-  Revision    [$Id: csat_apis.h,v 1.00 2005/08/28 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "proof/fraig/fraig.h"
-//#include "csat_apis.h"
-//#include "misc/st/stmm.h"
-//#include "base/main/main.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-const ABC_DEFAULT_CONF_LIMIT =     0   // limit on conflicts
-const ABC_DEFAULT_IMP_LIMIT =      0   // limit on implications
-
-
-type ABC_ManagerStruct_t struct {
-    // information about the problem
-    tName2Node           *stmm_table;    // the hash table mapping names to nodes
-    tNode2Name           *stmm_table;    // the hash table mapping nodes to names
-    pNtk            *Abc_Ntk_t;          // the starting ABC network
-    pTarget            *Abc_Ntk_t;       // the AIG representing the target
-    pDumpFileName                 string; // the name of the file to dump the target network
-    pMmNames       *Mem_Flex_t;      // memory manager for signal names
-    // solving parameters
-    mode                   int32;          // 0 = resource-aware integration; 1 = brute-force SAT
-    Params        Prove_Params_t;        // integrated CEC parameters
-    // information about the target 
-    nog                   int32;           // the numbers of gates in the target
-    vNodes            *Vec_Ptr_t;        // the gates in the target
-    vValues            *Vec_Int_t;       // the values of gate's outputs in the target
-    // solution
-    pResult  *CSAT_Target_ResultT;       // the result of solving the target
+type gate struct {
+	name   string
+	typeID GateType
+	inputs []string
+	value  int
 }
 
-// static CSAT_Target_ResultT * ABC_TargetResAlloc( int nVars );
+type managerState struct {
+	gates         []gate
+	byName        map[string]int
+	targetNames   []string
+	targetValues  []int
+	finalized     bool
+	prepared      bool
+	mode          int
+	timeLimit     time.Duration
+	conflictLimit int64
+	backtrackCap  uint64
+	inspectCap    uint64
+	backtracks    uint64
+	inspects      uint64
+	dumpFile      string
+	result        *CSAT_Target_ResultT
+	lastError     error
+}
 
-// static char * ABC_GetNodeName( ABC_Manager mng, Abc_Obj_t * pNode );
-
-
-// procedures to start and stop the ABC framework
-// extern void  Abc_Start();
-
-// extern void  Abc_Stop();
-
-
-// some external procedures
-// extern int Io_WriteBench( Abc_Ntk_t * pNtk, const char * FileName );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates a new manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func ABC_InitManager() ABC_Manager {
-    var mng *ABC_Manager_t;
-    Abc_Start();
-    // inlining of macro ABC_ALLOC
-    mng = ((ABC_Manager_t *) malloc(sizeof(ABC_Manager_t) * (size_t)(1)));
-    memset( mng, 0, sizeof(ABC_Manager_t) );
-    mng.pNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );
-    mng.pNtk.pName = Extra_UtilStrsav("csat_network");
-    mng.tName2Node = stmm_init_table(strcmp, stmm_strhash);
-    mng.tNode2Name = stmm_init_table(stmm_ptrcmp, stmm_ptrhash);
-    mng.pMmNames   = Mem_FlexStart();
-    mng.vNodes     = Vec_PtrAlloc( 100 );
-    mng.vValues    = Vec_IntAlloc( 100 );
-    mng.mode       = 0; // set "resource-aware integration" as the default mode
-    // set default parameters for CEC
-    Prove_ParamsSetDefault( &mng.Params );
-    // set infinite resource limit for the final mitering
-//    mng->Params.nMiteringLimitLast = ABC_INFINITY;
-    return mng;
+	return &ABC_ManagerStruct_t{state: &managerState{
+		byName: make(map[string]int), conflictLimit: -1,
+	}}
 }
 
-/**Function*************************************************************
+func (m ABC_Manager) valid() bool { return m != nil && m.state != nil }
 
-  Synopsis    [Deletes the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_ReleaseManager(mng ABC_Manager) {
-    var p_res *CSAT_Target_ResultT  = ABC_Get_Target_Result( mng,0 );
-    ABC_TargetResFree(p_res);
-    if mng.tNode2Name { stmm_free_table( mng.tNode2Name ); }
-    if mng.tName2Node { stmm_free_table( mng.tName2Node ); }
-    if mng.pMmNames {   Mem_FlexStop( mng.pMmNames, 0 ); }
-    if mng.pNtk {       Abc_NtkDelete( mng.pNtk ); }
-    if mng.pTarget {    Abc_NtkDelete( mng.pTarget ); }
-    if mng.vNodes {     Vec_PtrFree( mng.vNodes ); }
-    if mng.vValues {    Vec_IntFree( mng.vValues ); }
-    mng.pDumpFileName = nil;
-    mng = nil;
-    Abc_Stop();
+func (m ABC_Manager) Release() {
+	if m == nil {
+		return
+	}
+	m.state = nil
 }
 
-/**Function*************************************************************
+func ABC_ReleaseManager(m ABC_Manager) { m.Release() }
 
-  Synopsis    [Sets solver options for learning.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_SetSolveOption(mng ABC_Manager, option CSAT_OptionT) {
+func (m ABC_Manager) LastError() error {
+	if !m.valid() {
+		return fmt.Errorf("csat: invalid manager")
+	}
+	return m.state.lastError
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Sets solving mode by brute-force SAT.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_UseOnlyCoreSatSolver(mng ABC_Manager) {
-    mng.mode = 1;  // switch to "brute-force SAT" as the solving option
+func (m ABC_Manager) setError(err error) {
+	if m.valid() {
+		m.state.lastError = err
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds a gate to the circuit.]
-
-  Description [The meaning of the parameters are:
-    type: the type of the gate to be added
-    name: the name of the gate to be added, name should be unique in a circuit.
-    nofi: number of fanins of the gate to be added;
-    fanins: the name array of fanins of the gate to be added.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_AddGate(mng ABC_Manager, type GateType, name string, nofi int32, fanins *string, dc_attr int32) int32 {
-    var pObj *Abc_Obj_t  = nil; // Suppress "might be used uninitialized"
-    var pFanin *Abc_Obj_t;
-    var pSop string  = nil; // Suppress "might be used uninitialized"
-    var pNewName string;
-    var i int32;
-
-    // save the name in the local memory manager
-    pNewName = Mem_FlexEntryFetch( mng.pMmNames, len(name) + 1 );
-    pNewName = name;
-    name = pNewName;
-
-    // consider different cases, create the node, and map the node into the name
-    switch  type  {
-    case CSAT_BPI,
-     CSAT_BPPI:
-        if nofi != 0 { fmt.Printf("ABC_AddGate: The PI/PPI gate \"%s\" has fanins.\n", name); return 0; }
-        // create the PI
-        pObj = Abc_NtkCreatePi( mng.pNtk );
-        stmm_insert( mng.tNode2Name, (char *)pObj, name );
-        break;
-    case CSAT_CONST,
-     CSAT_BAND,
-     CSAT_BNAND,
-     CSAT_BOR,
-     CSAT_BNOR,
-     CSAT_BXOR,
-     CSAT_BXNOR,
-     CSAT_BINV,
-     CSAT_BBUF:
-        // create the node
-        pObj = Abc_NtkCreateNode( mng.pNtk );
-        // create the fanins
-        for  i = 0; i < nofi; i++  {
-            if !stmm_lookup( mng.tName2Node, fanins[i], (char **)&pFanin ) { fmt.Printf("ABC_AddGate: The fanin gate \"%s\" is not in the network.\n", fanins[i]); return 0; }
-            Abc_ObjAddFanin( pObj, pFanin );
-        }
-        // create the node function
-        switch  type  {
-            case CSAT_CONST:
-                if nofi != 0 { fmt.Printf("ABC_AddGate: The constant gate \"%s\" has fanins.\n", name); return 0; }
-                pSop = Abc_SopCreateConst1( (Mem_Flex_t *)mng.pNtk.pManFunc );
-                break;
-            case CSAT_BAND:
-                if nofi < 1 { fmt.Printf("ABC_AddGate: The AND gate \"%s\" no fanins.\n", name); return 0; }
-                pSop = Abc_SopCreateAnd( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi, nil );
-                break;
-            case CSAT_BNAND:
-                if nofi < 1 { fmt.Printf("ABC_AddGate: The NAND gate \"%s\" no fanins.\n", name); return 0; }
-                pSop = Abc_SopCreateNand( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );
-                break;
-            case CSAT_BOR:
-                if nofi < 1 { fmt.Printf("ABC_AddGate: The OR gate \"%s\" no fanins.\n", name); return 0; }
-                pSop = Abc_SopCreateOr( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi, nil );
-                break;
-            case CSAT_BNOR:
-                if nofi < 1 { fmt.Printf("ABC_AddGate: The NOR gate \"%s\" no fanins.\n", name); return 0; }
-                pSop = Abc_SopCreateNor( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );
-                break;
-            case CSAT_BXOR:
-                if nofi < 1 { fmt.Printf("ABC_AddGate: The XOR gate \"%s\" no fanins.\n", name); return 0; }
-                if nofi > 2 { fmt.Printf("ABC_AddGate: The XOR gate \"%s\" has more than two fanins.\n", name); return 0; }
-                pSop = Abc_SopCreateXor( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );
-                break;
-            case CSAT_BXNOR:
-                if nofi < 1 { fmt.Printf("ABC_AddGate: The XNOR gate \"%s\" no fanins.\n", name); return 0; }
-                if nofi > 2 { fmt.Printf("ABC_AddGate: The XNOR gate \"%s\" has more than two fanins.\n", name); return 0; }
-                pSop = Abc_SopCreateNxor( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );
-                break;
-            case CSAT_BINV:
-                if nofi != 1 { fmt.Printf("ABC_AddGate: The inverter gate \"%s\" does not have exactly one fanin.\n", name); return 0; }
-                pSop = Abc_SopCreateInv( (Mem_Flex_t *)mng.pNtk.pManFunc );
-                break;
-            case CSAT_BBUF:
-                if nofi != 1 { fmt.Printf("ABC_AddGate: The buffer gate \"%s\" does not have exactly one fanin.\n", name); return 0; }
-                pSop = Abc_SopCreateBuf( (Mem_Flex_t *)mng.pNtk.pManFunc );
-                break;
-            default :
-                break;
-        }
-        Abc_ObjSetData( pObj, pSop );
-        break;
-    case CSAT_BPPO,
-     CSAT_BPO:
-        if nofi != 1 { fmt.Printf("ABC_AddGate: The PO/PPO gate \"%s\" does not have exactly one fanin.\n", name); return 0; }
-        // create the PO
-        pObj = Abc_NtkCreatePo( mng.pNtk );
-        stmm_insert( mng.tNode2Name, (char *)pObj, name );
-        // connect to the PO fanin
-        if !stmm_lookup( mng.tName2Node, fanins[0], (char **)&pFanin ) { fmt.Printf("ABC_AddGate: The fanin gate \"%s\" is not in the network.\n", fanins[0]); return 0; }
-        Abc_ObjAddFanin( pObj, pFanin );
-        break;
-    default:
-        fmt.Printf("ABC_AddGate: Unknown gate type.\n");
-        break;
-    }
-
-    // map the name into the node
-    if stmm_insert( mng.tName2Node, name, (char *)pObj ) { fmt.Printf("ABC_AddGate: The same gate \"%s\" is added twice.\n", name); return 0; }
-    return 1;
+func ABC_SetSolveOption(m ABC_Manager, option CSAT_OptionT) {
+	if !m.valid() {
+		return
+	}
+	// The native solver has one learning strategy; the option remains accepted
+	// for compatibility with clients of the original API.
+	_ = option
 }
 
-/**Function*************************************************************
-
-  Synopsis    [This procedure also finalizes construction of the ABC network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_Network_Finalize(mng ABC_Manager) {
-    var pNtk *Abc_Ntk_t  = mng.pNtk;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_ObjAssignName( pObj, ABC_GetNodeName(mng, pObj), nil );
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Abc_ObjAssignName( pObj, ABC_GetNodeName(mng, pObj), nil );
-    }
-    assert(Abc_NtkLatchNum(pNtk) == 0, "Abc_NtkLatchNum(pNtk) == 0");
+func ABC_UseOnlyCoreSatSolver(m ABC_Manager) {
+	if m.valid() {
+		m.state.mode = 1
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Checks integraty of the manager.]
-
-  Description [Checks if there are gates that are not used by any primary output.
-  If no such gates exist, return 1 else return 0.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_Check_Integrity(mng ABC_Manager) int32 {
-    var pNtk *Abc_Ntk_t  = mng.pNtk;
-    var pObj *Abc_Obj_t;
-    var i int32;
-
-    // check that there are no dangling nodes
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        if i == 0 { 
-            continue; }
-        if Abc_ObjFanoutNum(pObj) == 0 {
-//            printf( "ABC_Check_Integrity: The network has dangling nodes.\n" );
-            return 0;
-        }
-    }
-    }
-
-    // make sure everything is okay with the network structure
-    if !Abc_NtkDoCheck( pNtk ) {
-        fmt.Printf("ABC_Check_Integrity: The internal network check has failed.\n");
-        return 0;
-    }
-    return 1;
+// ABC_AddGate adds a uniquely named gate. Fanins must already exist, as in the
+// original network-construction API. Invalid input returns 0 and sets LastError.
+func ABC_AddGate(m ABC_Manager, typ GateType, name string, nofi int32, fanins []string, dcAttr int32) int32 {
+	if !m.valid() {
+		return 0
+	}
+	s := m.state
+	s.lastError = nil
+	if s.finalized {
+		return failAdd(m, "cannot add gates after network finalization")
+	}
+	if name == "" {
+		return failAdd(m, "gate name is empty")
+	}
+	if _, exists := s.byName[name]; exists {
+		return failAdd(m, "duplicate gate name %q", name)
+	}
+	if int(nofi) != len(fanins) || nofi < 0 {
+		return failAdd(m, "gate %q declares %d fanins, received %d", name, nofi, len(fanins))
+	}
+	for _, input := range fanins {
+		if _, exists := s.byName[input]; !exists {
+			return failAdd(m, "fanin %q of gate %q does not exist", input, name)
+		}
+	}
+	if err := validateGate(typ, len(fanins), dcAttr); err != nil {
+		m.setError(fmt.Errorf("gate %q: %w", name, err))
+		return 0
+	}
+	g := gate{name: name, typeID: typ, inputs: append([]string(nil), fanins...)}
+	if typ == CSAT_CONST {
+		g.value = 1
+	}
+	s.byName[name] = len(s.gates)
+	s.gates = append(s.gates, g)
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Sets time limit for solving a target.]
-
-  Description [Runtime: time limit (in second).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_SetTimeLimit(mng ABC_Manager, runtime int32) {
-//    printf( "ABC_SetTimeLimit: The resource limit is not implemented (warning).\n" );
+func failAdd(m ABC_Manager, format string, args ...any) int32 {
+	m.setError(fmt.Errorf(format, args...))
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_SetLearnLimit(mng ABC_Manager, num int32) {
-//    printf( "ABC_SetLearnLimit: The resource limit is not implemented (warning).\n" );
+func validateGate(typ GateType, n int, dcAttr int32) error {
+	switch typ {
+	case CSAT_CONST, CSAT_BPI, CSAT_BPPI:
+		if n != 0 {
+			return fmt.Errorf("expected no fanins")
+		}
+	case CSAT_BAND, CSAT_BNAND, CSAT_BOR, CSAT_BNOR:
+		if n < 1 {
+			return fmt.Errorf("expected one or more fanins")
+		}
+	case CSAT_BXOR, CSAT_BXNOR:
+		if n < 1 || n > 2 {
+			return fmt.Errorf("expected one or two fanins")
+		}
+	case CSAT_BINV, CSAT_BBUF:
+		if n != 1 {
+			return fmt.Errorf("expected one fanin")
+		}
+	case CSAT_BPPO, CSAT_BPO:
+		if n != 1 {
+			return fmt.Errorf("expected one fanin")
+		}
+	case CSAT_BDC:
+		return fmt.Errorf("don't-care gates are not supported by the original CSAT network builder")
+	default:
+		return fmt.Errorf("unsupported gate type %d", typ)
+	}
+	return nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_SetLearnBacktrackLimit(mng ABC_Manager, num int32) {
-//    printf( "ABC_SetLearnBacktrackLimit: The resource limit is not implemented (warning).\n" );
+func ABC_Network_Finalize(m ABC_Manager) {
+	if !m.valid() {
+		return
+	}
+	m.state.finalized = true
+	m.state.lastError = nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_SetSolveBacktrackLimit(mng ABC_Manager, num int32) {
-    mng.Params.nMiteringLimitLast = num;
+// ABC_Check_Integrity reports whether every non-input internal gate reaches an
+// output, and whether the network's references are well-formed.
+func ABC_Check_Integrity(m ABC_Manager) int32 {
+	if !m.valid() || len(m.state.gates) == 0 {
+		return 0
+	}
+	s := m.state
+	used := make([]bool, len(s.gates))
+	var visit func(int)
+	visit = func(i int) {
+		if used[i] {
+			return
+		}
+		used[i] = true
+		for _, name := range s.gates[i].inputs {
+			visit(s.byName[name])
+		}
+	}
+	for _, g := range s.gates {
+		if g.typeID == CSAT_BPO || g.typeID == CSAT_BPPO {
+			visit(s.byName[g.name])
+		}
+	}
+	for i, g := range s.gates {
+		if g.typeID != CSAT_CONST && g.typeID != CSAT_BPI && g.typeID != CSAT_BPPI && !used[i] {
+			return 0
+		}
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_SetSolveImplicationLimit(mng ABC_Manager, num int32) {
-//    printf( "ABC_SetSolveImplicationLimit: The resource limit is not implemented (warning).\n" );
+func ABC_SetTimeLimit(m ABC_Manager, seconds int32) {
+	if m.valid() {
+		if seconds <= 0 {
+			m.state.timeLimit = 0
+		} else {
+			m.state.timeLimit = time.Duration(seconds) * time.Second
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_SetTotalBacktrackLimit(mng ABC_Manager, num ABC_UINT64_T) {
-    mng.Params.nTotalBacktrackLimit = num;
+func ABC_SetLearnLimit(m ABC_Manager, n int32) {
+	if m.valid() {
+		if n <= 0 {
+			m.state.conflictLimit = -1
+		} else {
+			m.state.conflictLimit = int64(n)
+		}
+	}
+}
+func ABC_SetLearnBacktrackLimit(m ABC_Manager, n int32)   { ABC_SetLearnLimit(m, n) }
+func ABC_SetSolveBacktrackLimit(m ABC_Manager, n int32)   { ABC_SetLearnLimit(m, n) }
+func ABC_SetSolveImplicationLimit(m ABC_Manager, n int32) { ABC_SetLearnLimit(m, n) }
+func ABC_SetTotalBacktrackLimit(m ABC_Manager, n ABC_UINT64_T) {
+	if m.valid() {
+		m.state.backtrackCap = n
+	}
+}
+func ABC_SetTotalInspectLimit(m ABC_Manager, n ABC_UINT64_T) {
+	if m.valid() {
+		m.state.inspectCap = n
+	}
+}
+func ABC_GetTotalBacktracksMade(m ABC_Manager) ABC_UINT64_T {
+	if !m.valid() {
+		return 0
+	}
+	return m.state.backtracks
+}
+func ABC_GetTotalInspectsMade(m ABC_Manager) ABC_UINT64_T {
+	if !m.valid() {
+		return 0
+	}
+	return m.state.inspects
+}
+func ABC_EnableDump(m ABC_Manager, file string) {
+	if m.valid() {
+		m.state.dumpFile = file
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_SetTotalInspectLimit(mng ABC_Manager, num ABC_UINT64_T) {
-    mng.Params.nTotalInspectLimit = num;
-}
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_GetTotalBacktracksMade(mng ABC_Manager) ABC_UINT64_T {
-    return mng.Params.nTotalBacktracksMade;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_GetTotalInspectsMade(mng ABC_Manager) ABC_UINT64_T {
-    return mng.Params.nTotalInspectsMade;
+func ABC_AddTarget(m ABC_Manager, n int32, names []string, values []int32) int32 {
+	if !m.valid() {
+		return 0
+	}
+	s := m.state
+	s.lastError = nil
+	if n < 1 || int(n) != len(names) || len(names) != len(values) {
+		m.setError(fmt.Errorf("target requires matching non-empty name and value slices"))
+		return 0
+	}
+	newNames := append([]string(nil), names...)
+	newValues := make([]int, len(values))
+	for i, name := range names {
+		if _, exists := s.byName[name]; !exists {
+			m.setError(fmt.Errorf("target gate %q does not exist", name))
+			return 0
+		}
+		if values[i] != 0 && values[i] != 1 {
+			m.setError(fmt.Errorf("target value for %q must be 0 or 1", name))
+			return 0
+		}
+		newValues[i] = int(values[i])
+	}
+	s.targetNames, s.targetValues = newNames, newValues
+	s.prepared, s.result = false, nil
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Sets the file name to dump the structurally hashed network used for solving.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_EnableDump(mng ABC_Manager, dump_file string) {
-    mng.pDumpFileName = nil;
-    mng.pDumpFileName = Extra_UtilStrsav( dump_file );
+func ABC_SolveInit(m ABC_Manager) {
+	if !m.valid() {
+		return
+	}
+	s := m.state
+	s.prepared = len(s.targetNames) > 0 && len(s.targetNames) == len(s.targetValues)
+	s.result = nil
+	if !s.prepared {
+		s.lastError = fmt.Errorf("target is not specified")
+	}
 }
 
-/**Function*************************************************************
+func ABC_AnalyzeTargets(m ABC_Manager) { _ = m }
 
-  Synopsis    [Adds a new target to the manager.]
-
-  Description [The meaning of the parameters are:
-    nog: number of gates that are in the targets,
-    names: name array of gates,
-    values: value array of the corresponding gates given in "names" to be solved. 
-    The relation of them is AND.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_AddTarget(mng ABC_Manager, nog int32, names *string, values *int32) int32 {
-    var pObj *Abc_Obj_t;
-    var i int32;
-    if nog < 1 { fmt.Printf("ABC_AddTarget: The target has no gates.\n"); return 0; }
-    // clear storage for the target
-    mng.nog = 0;
-    Vec_PtrClear( mng.vNodes );
-    Vec_IntClear( mng.vValues );
-    // save the target
-    for  i = 0; i < nog; i++  {
-        if !stmm_lookup( mng.tName2Node, names[i], (char **)&pObj ) { fmt.Printf("ABC_AddTarget: The target gate \"%s\" is not in the network.\n", names[i]); return 0; }
-        Vec_PtrPush( mng.vNodes, pObj );
-        if values[i] < 0 || values[i] > 1 { fmt.Printf("ABC_AddTarget: The value of gate \"%s\" is not 0 or 1.\n", names[i]); return 0; }
-        Vec_IntPush( mng.vValues, values[i] );
-    }
-    mng.nog = nog;
-    return 1;
+func ABC_Solve(m ABC_Manager) CSAT_StatusT {
+	if !m.valid() || !m.state.prepared {
+		return UNDETERMINED
+	}
+	s := m.state
+	started := time.Now()
+	res := &CSAT_Target_ResultT{}
+	vars := make([]bsat2.Var, len(s.gates))
+	var solver interface {
+		NewVariable() bsat2.Var
+		AddClause(...bsat2.Lit) bool
+		SolveLimited(...bsat2.Lit) bsat2.LBool
+		ModelValue(bsat2.Lit) bsat2.LBool
+	}
+	var core *bsat2.Solver
+	if s.mode == 1 {
+		core = bsat2.NewSolver()
+		solver = core
+	} else {
+		simplifier := bsat2.NewSimpSolver()
+		core = simplifier.Solver
+		solver = simplifier
+	}
+	for i := range vars {
+		vars[i] = solver.NewVariable()
+	}
+	add := func(lits ...bsat2.Lit) bool { return solver.AddClause(lits...) }
+	lit := func(i int, neg bool) bsat2.Lit { return bsat2.MakeLit(vars[i], neg) }
+	constantOK := true
+	for i, g := range s.gates {
+		out := lit(i, false)
+		in := make([]bsat2.Lit, len(g.inputs))
+		for j, name := range g.inputs {
+			in[j] = lit(s.byName[name], false)
+		}
+		switch g.typeID {
+		case CSAT_CONST:
+			constantOK = constantOK && add(out)
+		case CSAT_BPI, CSAT_BPPI:
+		case CSAT_BAND:
+			for _, x := range in {
+				constantOK = constantOK && add(out.Not(), x)
+			}
+			clause := append([]bsat2.Lit{out}, negate(in)...)
+			constantOK = constantOK && add(clause...)
+		case CSAT_BNAND:
+			for _, x := range in {
+				constantOK = constantOK && add(out, x)
+			}
+			clause := append([]bsat2.Lit{out.Not()}, negate(in)...)
+			constantOK = constantOK && add(clause...)
+		case CSAT_BOR:
+			for _, x := range in {
+				constantOK = constantOK && add(out, x.Not())
+			}
+			clause := append([]bsat2.Lit{out.Not()}, in...)
+			constantOK = constantOK && add(clause...)
+		case CSAT_BNOR:
+			for _, x := range in {
+				constantOK = constantOK && add(out.Not(), x.Not())
+			}
+			clause := append([]bsat2.Lit{out}, in...)
+			constantOK = constantOK && add(clause...)
+		case CSAT_BXOR, CSAT_BXNOR:
+			x := in[0]
+			if len(in) == 1 {
+				if g.typeID == CSAT_BXNOR {
+					x = x.Not()
+				}
+				constantOK = constantOK && equivalent(solver, out, x)
+			} else {
+				y := in[1]
+				if g.typeID == CSAT_BXNOR {
+					out = out.Not()
+				}
+				constantOK = constantOK && xor(solver, out, x, y)
+			}
+		case CSAT_BINV:
+			constantOK = constantOK && equivalent(solver, out, in[0].Not())
+		case CSAT_BBUF, CSAT_BPPO, CSAT_BPO:
+			constantOK = constantOK && equivalent(solver, out, in[0])
+		case CSAT_BDC:
+			// The legacy two-input don't-care primitive leaves its output
+			// unconstrained; this preserves the relation used by ABC's SOP gate.
+		}
+	}
+	if !constantOK {
+		res.Status, res.Time = UNSATISFIABLE, time.Since(started).Seconds()
+		s.result = res
+		return res.Status
+	}
+	for i, name := range s.targetNames {
+		targetLit := lit(s.byName[name], s.targetValues[i] == 0)
+		if !add(targetLit) {
+			res.Status, res.Time = UNSATISFIABLE, time.Since(started).Seconds()
+			s.result = res
+			return res.Status
+		}
+	}
+	if s.conflictLimit > 0 {
+		core.SetConflictBudget(s.conflictLimit)
+	}
+	if s.backtrackCap > 0 {
+		remaining := int64(0)
+		if s.backtracks < s.backtrackCap {
+			remaining = int64(s.backtrackCap - s.backtracks)
+		}
+		if s.conflictLimit <= 0 || remaining < s.conflictLimit {
+			core.SetConflictBudget(remaining)
+		}
+	}
+	if s.inspectCap > 0 {
+		remaining := int64(0)
+		if s.inspects < s.inspectCap {
+			remaining = int64(s.inspectCap - s.inspects)
+		}
+		core.SetPropagationBudget(remaining)
+	}
+	if s.timeLimit > 0 {
+		timer := time.AfterFunc(s.timeLimit, core.Interrupt)
+		defer timer.Stop()
+	}
+	answer := solver.SolveLimited()
+	res.NumDec = int32(core.Decisions)
+	res.NumImp = int32(core.Propagations)
+	res.NumCftg = int32(core.Conflicts)
+	res.NumCfts = int32(core.ClauseLiterals)
+	res.Time = time.Since(started).Seconds()
+	s.backtracks += core.Conflicts
+	s.inspects += core.Propagations
+	if s.backtrackCap > 0 && s.backtracks > s.backtrackCap || s.inspectCap > 0 && s.inspects > s.inspectCap {
+		res.Status = TIME_OUT
+	} else {
+		switch answer {
+		case bsat2.True:
+			res.Status = SATISFIABLE
+			for i, g := range s.gates {
+				if g.typeID == CSAT_BPI || g.typeID == CSAT_BPPI {
+					res.Names = append(res.Names, g.name)
+					v := int32(0)
+					if solver.ModelValue(lit(i, false)) == bsat2.True {
+						v = 1
+					}
+					res.Values = append(res.Values, v)
+				}
+			}
+			res.NoSig = int32(len(res.Names))
+		case bsat2.False:
+			res.Status = UNSATISFIABLE
+		default:
+			res.Status = TIME_OUT
+		}
+	}
+	s.result = res
+	if s.dumpFile != "" {
+		_ = dumpBENCH(s, s.dumpFile)
+	}
+	return res.Status
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Initialize the solver internal data structure.]
-
-  Description [Prepares the solver to work on one specific target
-  set by calling ABC_AddTarget before.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_SolveInit(mng ABC_Manager) {
-    // check if the target is available
-    assert(mng.nog == Vec_PtrSize(mng.vNodes), "mng.nog == Vec_PtrSize(mng.vNodes)");
-    if mng.nog == 0 { fmt.Printf("ABC_SolveInit: Target is not specified by ABC_AddTarget().\n"); return; }
-
-    // free the previous target network if present
-    if mng.pTarget { Abc_NtkDelete( mng.pTarget ); }
-
-    // set the new target network
-//    mng->pTarget = Abc_NtkCreateTarget( mng->pNtk, mng->vNodes, mng->vValues );
-    mng.pTarget = Abc_NtkStrash( mng.pNtk, 0, 1, 0 );
+func negate(in []bsat2.Lit) []bsat2.Lit {
+	out := make([]bsat2.Lit, len(in))
+	for i, l := range in {
+		out[i] = l.Not()
+	}
+	return out
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Currently not implemented.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_AnalyzeTargets(mng ABC_Manager) {
+type clauseAdder interface {
+	AddClause(...bsat2.Lit) bool
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Solves the targets added by ABC_AddTarget().]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-     func ABC_Solve(mng ABC_Manager) CSAT_StatusT {
-    var pParams *Prove_Params_t  = &mng.Params;
-    var RetValue, i int32;
-
-    // check if the target network is available
-    if mng.pTarget == nil { fmt.Printf("ABC_Solve: Target network is not derived by ABC_SolveInit().\n"); return UNDETERMINED; }
-
-    // try to prove the miter using a number of techniques
-    if mng.mode {
-        RetValue = Abc_NtkMiterSat( mng.pTarget, (ABC_INT64_T)pParams.nMiteringLimitLast, (ABC_INT64_T)0, 0, nil, nil );
-    } else {
-//        RetValue = Abc_NtkMiterProve( &mng->pTarget, pParams ); // old CEC engine
-        RetValue = Abc_NtkIvyProve( &mng.pTarget, pParams ); } // new CEC engine
-
-    // analyze the result
-    mng.pResult = ABC_TargetResAlloc( Abc_NtkCiNum(mng.pTarget) );
-    if RetValue == -1 {
-        mng.pResult.status = UNDETERMINED;
-    } else if RetValue == 1 {
-        mng.pResult.status = UNSATISFIABLE;
-    } else if RetValue == 0 {
-        mng.pResult.status = SATISFIABLE;
-        // create the array of PI names and values
-        for  i = 0; i < mng.pResult.no_sig; i++  {
-            mng.pResult.names[i]  = Extra_UtilStrsav( ABC_GetNodeName(mng, Abc_NtkCi(mng.pNtk, i)) ); 
-            mng.pResult.values[i] = mng.pTarget.pModel[i];
-        }
-        mng.pTarget.pModel = nil;
-    
-    } else { assert(false, "0"); }
-
-    // delete the target
-    Abc_NtkDelete( mng.pTarget );
-    mng.pTarget = nil;
-    // return the status
-    return mng.pResult.status;
+func equivalent(s clauseAdder, a, b bsat2.Lit) bool {
+	return s.AddClause(a.Not(), b) && s.AddClause(a, b.Not())
+}
+func xor(s clauseAdder, z, a, b bsat2.Lit) bool {
+	return s.AddClause(a, b, z.Not()) && s.AddClause(a.Not(), b.Not(), z.Not()) && s.AddClause(a, b.Not(), z) && s.AddClause(a.Not(), b, z)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Gets the solve status of a target.]
-
-  Description [TargetID: the target id returned by ABC_AddTarget().]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_Get_Target_Result(mng ABC_Manager, TargetID int32) *CSAT_Target_ResultT {
-    return mng.pResult;
+func ABC_Get_Target_Result(m ABC_Manager, targetID int32) *CSAT_Target_ResultT {
+	if !m.valid() {
+		return nil
+	}
+	_ = targetID // The original API ignores this argument and returns its last result.
+	return cloneResult(m.state.result)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Dumps the original network into the BENCH file.]
-
-  Description [This procedure should be modified to dump the target.]
-               
-  SideEffects []
-
-  SeeAlso     [] 
-
-***********************************************************************/
-func ABC_Dump_Bench_File(mng ABC_Manager) {
-    var pNtkTemp, pNtkAig *Abc_Ntk_t;
-    char * pFileName;
- 
-    // derive the netlist
-    pNtkAig = Abc_NtkStrash( mng.pNtk, 0, 0, 0 );
-    pNtkTemp = Abc_NtkToNetlistBench( pNtkAig );
-    Abc_NtkDelete( pNtkAig );
-    if pNtkTemp == nil { fmt.Printf("ABC_Dump_Bench_File: Dumping BENCH has failed.\n"); return; }
-    if mng.pDumpFileName {
-        pFileName = mng.pDumpFileName;
-    } else {
-        pFileName = "abc_test.bench";
-    }
-    Io_WriteBench( pNtkTemp, pFileName );
-    Abc_NtkDelete( pNtkTemp );
+func cloneResult(r *CSAT_Target_ResultT) *CSAT_Target_ResultT {
+	if r == nil {
+		return nil
+	}
+	copyResult := *r
+	copyResult.Names = append([]string(nil), r.Names...)
+	copyResult.Values = append([]int32(nil), r.Values...)
+	return &copyResult
 }
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates the target result.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func ABC_TargetResAlloc(nVars int32) *CSAT_Target_ResultT {
-    var p *CSAT_Target_ResultT;
-    // inlining of macro ABC_ALLOC
-    p = ((CSAT_Target_ResultT *) malloc(sizeof(CSAT_Target_ResultT) * (size_t)(1)));
-    memset( p, 0, sizeof(CSAT_Target_ResultT) );
-    p.no_sig = nVars;
-    // inlining of macro ABC_ALLOC
-    p.names = ((char * *) malloc(sizeof(char *) * (size_t)(nVars)));
-    // inlining of macro ABC_ALLOC
-    p.values = ((int *) malloc(sizeof(int) * (size_t)(nVars)));
-    memset( p.names, 0, sizeof(char *) * nVars );
-    memset( p.values, 0, sizeof(int) * nVars );
-    return p;
+	if nVars < 0 {
+		nVars = 0
+	}
+	return &CSAT_Target_ResultT{NoSig: nVars, Names: make([]string, 0, nVars), Values: make([]int32, 0, nVars)}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Deallocates the target result.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func ABC_TargetResFree(p *CSAT_Target_ResultT) {
-    if p == nil {
-        return; }
-    if p.names {
-        var i int32;
-        for  i = 0; i < p.no_sig; i++  {
-            p.names[i] = nil;
-        }
-    }
-    p.names = nil;
-    p.values = nil;
-    p = nil;
+	if p == nil {
+		return
+	}
+	p.Names, p.Values = nil, nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Dumps the target AIG into the BENCH file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func ABC_GetNodeName(mng ABC_Manager, pNode *Abc_Obj_t) string {
-    var pName string  = nil;
-    if !stmm_lookup( mng.tNode2Name, (char *)pNode, (char **)&pName ) {
-        assert(false, "0");
-    }
-    return pName;
+func ABC_Dump_Bench_File(m ABC_Manager) {
+	if !m.valid() {
+		return
+	}
+	file := m.state.dumpFile
+	if file == "" {
+		file = "abc_test.bench"
+	}
+	if err := dumpBENCH(m.state, file); err != nil {
+		m.state.lastError = err
+	}
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func dumpBENCH(s *managerState, file string) error {
+	f, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+	w := bufio.NewWriter(f)
+	for _, g := range s.gates {
+		switch g.typeID {
+		case CSAT_BPI, CSAT_BPPI:
+			_, err = fmt.Fprintf(w, "INPUT(%s)\n", g.name)
+		case CSAT_BPO, CSAT_BPPO:
+			_, err = fmt.Fprintf(w, "OUTPUT(%s)\n", g.inputs[0])
+		case CSAT_CONST:
+			_, err = fmt.Fprintf(w, "%s = 1\n", g.name)
+		default:
+			op := benchOp(g.typeID)
+			if op == "" {
+				continue
+			}
+			_, err = fmt.Fprintf(w, "%s = %s(%s)\n", g.name, op, strings.Join(g.inputs, ", "))
+		}
+		if err != nil {
+			break
+		}
+	}
+	if flushErr := w.Flush(); err == nil {
+		err = flushErr
+	}
+	if closeErr := f.Close(); err == nil {
+		err = closeErr
+	}
+	return err
+}
+func benchOp(typ GateType) string {
+	switch typ {
+	case CSAT_CONST:
+		return "CONST1"
+	case CSAT_BAND:
+		return "AND"
+	case CSAT_BNAND:
+		return "NAND"
+	case CSAT_BOR:
+		return "OR"
+	case CSAT_BNOR:
+		return "NOR"
+	case CSAT_BXOR:
+		return "XOR"
+	case CSAT_BXNOR:
+		return "XNOR"
+	case CSAT_BINV:
+		return "NOT"
+	case CSAT_BBUF:
+		return "BUFF"
+	default:
+		return ""
+	}
+}

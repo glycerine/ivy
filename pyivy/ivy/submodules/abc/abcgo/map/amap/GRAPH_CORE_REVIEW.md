@@ -29,20 +29,17 @@ through its stable `aig.Graph` edge API instead of relying on C pointer tagging,
 
 The graph-core tests compare all eight assignments of an input AIG containing
 XOR, mux, complemented fanins, and AND against the copied Amap outputs. This is
-an explicit-file-set gate because the parent package still contains other
-unported C-derived files; it does not prove `go test ./map/amap` passes.
+supplemented by a native end-to-end AND/XOR/MUX mapping test. The MUX case uses
+the checked-in genlib and BLIF fixture, enables `fUseMuxes` as in C's `amap -m`,
+and asserts that the serialized result selects the MUX2 cell. The C oracle
+output and reproduction command are recorded under `test_vectors`.
 
 ```sh
-GOCACHE=/tmp/abcgo-cache go -C abcgo test -race \
-  ./map/amap/amap.go ./map/amap/amapInt.go ./map/amap/amapCompat.go \
-  ./map/amap/amapMan.go ./map/amap/amapGraph.go ./map/amap/assert.go \
-  ./map/amap/amapGraph_native_test.go
-GOCACHE=/tmp/abcgo-cache go -C abcgo vet \
-  ./map/amap/amap.go ./map/amap/amapInt.go ./map/amap/amapCompat.go \
-  ./map/amap/amapMan.go ./map/amap/amapGraph.go ./map/amap/assert.go \
-  ./map/amap/amapGraph_native_test.go
+GOCACHE=/tmp/abcgo-cache go -C abcgo test ./map/amap
+GOCACHE=/tmp/abcgo-cache go -C abcgo test -race -count=1 ./map/amap
+GOCACHE=/tmp/abcgo-cache go -C abcgo vet ./map/amap
 ```
 
-The ordinary package command is still blocked by the separately owned library
-reader and the remaining matcher, merge, output, permutation, reader, rule, and
-uniqueness ports. Do not treat the explicit-file gate as package completion.
+All three normal package gates pass with the complete reader, parser, rule,
+merge, matching, output, and graph implementations included. The merge review
+records why cut order and complemented proxy access need dedicated coverage.

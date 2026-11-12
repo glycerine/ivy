@@ -149,7 +149,7 @@ func Hop_ObjFanoutCount(o, pivot *Hop_Obj_t) int32 {
 	return n
 }
 func Hop_Transfer_rec(dest *Hop_Man_t, o *Hop_Obj_t) {
-	hopDfsVisit(o, map[*Hop_Obj_t]bool{}, func(n *Hop_Obj_t) { n.pData = Hop_And(dest, Hop_ObjChild0Copy(n), Hop_ObjChild1Copy(n)) })
+	hopDfsVisit(o, map[*Hop_Obj_t]bool{}, func(n *Hop_Obj_t) { n.pData = Hop_Oper(dest, Hop_ObjChild0Copy(n), Hop_ObjChild1Copy(n), n.Type) })
 }
 func Hop_Transfer(source, dest *Hop_Man_t, root *Hop_Obj_t, nVars int32) *Hop_Obj_t {
 	if source == dest {
@@ -193,7 +193,7 @@ func hopComposeVisit(p *Hop_Man_t, o, function, variable *Hop_Obj_t, active map[
 	hopComposeVisit(p, Hop_ObjFanin0(o), function, variable, active)
 	hopComposeVisit(p, Hop_ObjFanin1(o), function, variable, active)
 	delete(active, o)
-	o.pData = Hop_And(p, Hop_ObjChild0Copy(o), Hop_ObjChild1Copy(o))
+	o.pData = Hop_Oper(p, Hop_ObjChild0Copy(o), Hop_ObjChild1Copy(o), o.Type)
 	o.fMarkA = 1
 }
 func Hop_Compose_rec(p *Hop_Man_t, o, function, variable *Hop_Obj_t) {

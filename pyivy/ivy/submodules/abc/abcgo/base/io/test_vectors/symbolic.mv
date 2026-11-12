@@ -1,0 +1,9 @@
+.model colors
+.inputs a b
+.outputs y
+.mv a,b,y 3 red green blue
+.names a b y
+.default blue
+red - green
+(blue,green) red =a
+.end

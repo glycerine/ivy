@@ -3,6 +3,7 @@ package gia
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 	ceccore "github.com/glycerine/abcgo/proof/cec/core"
 )
 
@@ -63,10 +64,10 @@ func (p *Gia_Man_t) SetSequentialCounterexamples(models []*util.Abc_Cex_t) error
 	if p == nil || len(models) != int(Gia_ManPoNum(p)) {
 		return fmt.Errorf("gia: sequential CEX list has invalid output count")
 	}
-	copyOfModels := Vec_PtrAllocExact(len(models))
+	copyOfModels := vec.Vec_PtrAllocExact(len(models))
 	for output, model := range models {
 		if model == nil {
-			Vec_PtrPush(copyOfModels, nil)
+			vec.Vec_PtrPush(copyOfModels, nil)
 			continue
 		}
 		if model.NRegs != p.nRegs || model.NPis != Gia_ManPiNum(p) || model.IPo != int32(output) || model.IFrame < 0 {
@@ -78,7 +79,7 @@ func (p *Gia_Man_t) SetSequentialCounterexamples(models []*util.Abc_Cex_t) error
 		}
 		owned := *model
 		owned.PData = append([]uint32(nil), model.PData[:(bits+31)/32]...)
-		Vec_PtrPush(copyOfModels, &owned)
+		vec.Vec_PtrPush(copyOfModels, &owned)
 	}
 	p.vSeqModelVec = copyOfModels
 	return nil
@@ -89,13 +90,63 @@ func (p *Gia_Man_t) SequentialCounterexamples() []*util.Abc_Cex_t {
 	if p == nil || p.vSeqModelVec == nil {
 		return nil
 	}
-	models := make([]*util.Abc_Cex_t, Vec_PtrSize(p.vSeqModelVec))
+	models := make([]*util.Abc_Cex_t, vec.Vec_PtrSize(p.vSeqModelVec))
 	for i := range models {
-		if model, ok := Vec_PtrEntry(p.vSeqModelVec, i).(*util.Abc_Cex_t); ok && model != nil {
+		if model, ok := vec.Vec_PtrEntry(p.vSeqModelVec, i).(*util.Abc_Cex_t); ok && model != nil {
 			copyOfModel := *model
 			copyOfModel.PData = append([]uint32(nil), model.PData...)
 			models[i] = &copyOfModel
 		}
 	}
 	return models
+}
+
+// ValidateSequentialCounterexample independently replays the declared transition
+// relation. checkResets additionally enforces explicit AIGER resets (or ordinary
+// zero initialization when reset metadata is absent). The manager is unchanged.
+func (p *Gia_Man_t) ValidateSequentialCounterexample(cex *util.Abc_Cex_t, checkResets bool) error {
+	if p == nil || cex == nil {
+		return fmt.Errorf("gia: nil sequential counterexample input")
+	}
+	if cex.NRegs != p.nRegs || cex.NPis != Gia_ManPiNum(p) || cex.IFrame < 0 || cex.IPo < 0 || cex.IPo >= Gia_ManPoNum(p) {
+		return fmt.Errorf("gia: invalid sequential counterexample dimensions")
+	}
+	required := int64(cex.NRegs) + int64(cex.NPis)*(int64(cex.IFrame)+1)
+	if required > int64(^uint32(0)>>1) || int64(cex.NBits) < required || int64(len(cex.PData))*32 < int64(cex.NBits) {
+		return fmt.Errorf("gia: short or oversized sequential counterexample")
+	}
+	bit := func(index int32) bool { return cex.PData[index>>5]>>uint(index&31)&1 != 0 }
+	state := make([]bool, p.nRegs)
+	for i := range state {
+		state[i] = bit(int32(i))
+		reset := int32(0)
+		if checkResets && len(p.aigerLatchInits) != 0 {
+			if len(p.aigerLatchInits) != len(state) {
+				return fmt.Errorf("gia: invalid latch reset metadata")
+			}
+			reset = p.aigerLatchInits[i]
+		}
+		if checkResets && (reset < -1 || reset > 1 || reset >= 0 && state[i] != (reset == 1)) {
+			return fmt.Errorf("gia: counterexample violates reset of register %d", i)
+		}
+	}
+	input := make([]bool, Gia_ManCiNum(p))
+	for frame := int32(0); frame <= cex.IFrame; frame++ {
+		for i := int32(0); i < cex.NPis; i++ {
+			input[i] = bit(cex.NRegs + frame*cex.NPis + i)
+		}
+		copy(input[cex.NPis:], state)
+		output, err := p.Evaluate(input)
+		if err != nil {
+			return err
+		}
+		if frame == cex.IFrame {
+			if !output[cex.IPo] {
+				return fmt.Errorf("gia: counterexample does not fail output %d", cex.IPo)
+			}
+			break
+		}
+		copy(state, output[Gia_ManPoNum(p):])
+	}
+	return nil
 }

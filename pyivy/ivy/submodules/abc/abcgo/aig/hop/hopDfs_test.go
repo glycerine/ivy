@@ -170,3 +170,27 @@ func TestDfsCycleDetected(t *testing.T) {
 	}()
 	Hop_ManDfsNode(p, root)
 }
+
+func TestExplicitXorSurvivesGraphTransforms(t *testing.T) {
+	source, dest := Hop_ManStart(), Hop_ManStart()
+	defer Hop_ManStop(source)
+	defer Hop_ManStop(dest)
+	a, b, c := Hop_IthVar(source, 0), Hop_IthVar(source, 1), Hop_IthVar(source, 2)
+	root := Hop_Not(Hop_ObjCreate(source, Hop_ObjCreateGhost(source, a, Hop_Not(b), AIG_EXOR)))
+	transferred := Hop_Transfer(source, dest, root, 3)
+	composed := Hop_Compose(source, root, c, 0)
+	permuted := Hop_Permute(source, root, 3, []int32{2, 1, 0})
+	sparse := Hop_ObjCreate(source, Hop_ObjCreateGhost(source, a, c, AIG_EXOR))
+	remapped := Hop_Remap(source, sparse, 5, 3)
+	for mask := 0; mask < 8; mask++ {
+		inputs := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+		for _, item := range []struct {
+			graph *Hop_Obj_t
+			want  bool
+		}{{transferred, inputs[0] != inputs[1]}, {composed, inputs[2] != inputs[1]}, {permuted, inputs[2] != inputs[1]}, {remapped, inputs[0] != inputs[1]}} {
+			if got := dfsEvaluate(item.graph, inputs); got != item.want {
+				t.Fatalf("explicit XOR transform changed function mask=%d got=%v want=%v", mask, got, item.want)
+			}
+		}
+	}
+}

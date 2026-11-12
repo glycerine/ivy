@@ -510,7 +510,7 @@ func Min_CubesProduct(p *Min_Man_t, pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) *Min
 	for i = 0; i < p.nWords; i++ {
 		pCube.uData[i] = pCube0.uData[i] & pCube1.uData[i]
 	}
-	pCube.nLits = Min_CubeCountLits(pCube)
+	pCube.nLits = uint32(Min_CubeCountLits(pCube))
 	return pCube
 }
 
@@ -535,7 +535,7 @@ func Min_CubesXor(p *Min_Man_t, pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) *Min_Cub
 	for i = 0; i < p.nWords; i++ {
 		pCube.uData[i] = pCube0.uData[i] ^ pCube1.uData[i]
 	}
-	pCube.nLits = Min_CubeCountLits(pCube)
+	pCube.nLits = uint32(Min_CubeCountLits(pCube))
 	return pCube
 }
 
@@ -602,7 +602,7 @@ func Min_CubesTransform(pCube *Min_Cube_t, pDist *Min_Cube_t, pMask *Min_Cube_t)
 	var w int32
 	for w = 0; w < int32(pCube.nWords); w++ {
 		pCube.uData[w] = pCube.uData[w] ^ pDist.uData[w]
-		pCube.uData[w] |= (pDist.uData[w] & ~pMask.uData[w])
+		pCube.uData[w] |= (pDist.uData[w] & ^pMask.uData[w])
 	}
 }
 
@@ -645,7 +645,7 @@ func Min_CoverExpandRemoveEqual(p *Min_Man_t, pCover *Min_Cube_t) {
 		Min_ManClean(p, p.nVars)
 		return
 	}
-	Min_ManClean(p, pCover.nVars)
+	Min_ManClean(p, int32(pCover.nVars))
 	// inlining of macro Min_CoverForEachCubeSafe
 	for pCube = pCover; pCube != nil; {
 		pCube2 = pCube.pNext

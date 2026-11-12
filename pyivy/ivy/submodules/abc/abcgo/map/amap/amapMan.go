@@ -17,9 +17,6 @@ func Amap_ManStart(nNodes int32) *Amap_Man_t {
 	p.vCuts1 = Vec_PtrAlloc(100)
 	p.vCuts2 = Vec_PtrAlloc(100)
 	p.vTempP = Vec_PtrAlloc(100)
-	p.pMemCuts = Aig_MmFlexStart()
-	p.pMemCutBest = Aig_MmFlexStart()
-	p.pMemTemp = Aig_MmFlexStart()
 	return p
 }
 
@@ -37,8 +34,5 @@ func Amap_ManStop(p *Amap_Man_t) {
 	Vec_PtrFree(p.vCuts2)
 	Vec_PtrFree(p.vTempP)
 	Vec_IntFree(p.vTemp)
-	Aig_MmFlexStop(p.pMemCuts, 0)
-	Aig_MmFlexStop(p.pMemCutBest, 0)
-	Aig_MmFlexStop(p.pMemTemp, 0)
 	*p = Amap_Man_t_{}
 }

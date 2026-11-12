@@ -114,6 +114,5 @@ func Llb_ManStart(globalAig, workingAig *Aig_Man_t, params *Gia_ParLlb_t) *Llb_M
 	aig.Aig_ManCleanMarkA(workingAig)
 	manager.pMatrix = Llb_MtrCreate(manager)
 	manager.pMatrix.pMan = manager
-	Llb_ManPrepareVarLimits(manager)
 	return manager
 }

@@ -1,16 +1,17 @@
 package fret
 
 import (
-	. "github.com/glycerine/abcgo/base/abc"
+	"fmt"
+	"os"
+	"strings"
+
 	. "github.com/glycerine/abcgo/aig/hop"
+	. "github.com/glycerine/abcgo/base/abc"
+	abci "github.com/glycerine/abcgo/base/abci"
+	core "github.com/glycerine/abcgo/bdd/cudd/core"
 	. "github.com/glycerine/abcgo/map/mio"
 	. "github.com/glycerine/abcgo/misc/mem"
 	. "github.com/glycerine/abcgo/misc/vec"
-)
-
-import (
-	"fmt"
-	"os"
 )
 
 /**CFile****************************************************************
@@ -24,7 +25,7 @@ import (
   Synopsis    [Initialization for retiming package.]
 
   Author      [Aaron Hurst]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - January 1, 2008.]
@@ -39,15 +40,11 @@ import (
 //#include "map/mio/mio.h"
 //#include "aig/hop/hop.h"
 
-#ifdef ABC_USE_CUDD
-#include "bdd/cudd/cuddInt.h"
-#endif
+// Optional ABC_USE_CUDD support is omitted in the portable Go port.
 
 //ABC_NAMESPACE_IMPL_START
 
-
-#undef DEBUG_PRINT_INIT_NTK
-
+// DEBUG_PRINT_INIT_NTK is disabled.
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION PROTOTYPES                          ///
@@ -61,11 +58,9 @@ import (
 
 // static Abc_Obj_t* Abc_FlowRetime_UpdateBackwardInit_rec( Abc_Obj_t *pOrigObj );
 
-
 // static void Abc_FlowRetime_SimulateNode( Abc_Obj_t * pObj );
 
 // static void Abc_FlowRetime_SimulateSop( Abc_Obj_t * pObj, char *pSop );
-
 
 // static void Abc_FlowRetime_SetInitToOrig( Abc_Obj_t *pInit, Abc_Obj_t *pOrig );
 
@@ -73,1231 +68,831 @@ import (
 
 // static void Abc_FlowRetime_ClearInitToOrig( Abc_Obj_t *pInit );
 
-
 // extern void * Abc_FrameReadLibGen();
 
-
 // extern void Abc_NtkMarkCone_rec( Abc_Obj_t * pObj, int fForward );
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Updates initial state information.]
 
-  Synopsis    [Updates initial state information.]
+	Description [Assumes latch boxes in original position, latches in
+	             new positions.]
 
-  Description [Assumes latch boxes in original position, latches in
-               new positions.]
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_FlowRetime_InitState(pNtk *Abc_Ntk_t) {
 
-  if !pManMR.fComputeInitState { return; }
+	if pManMR.fComputeInitState == 0 {
+		return
+	}
 
-  if pManMR.fIsForward {
-    Abc_FlowRetime_UpdateForwardInit( pNtk );
-  } else {
-    Abc_FlowRetime_UpdateBackwardInit( pNtk );
-  }
+	if pManMR.fIsForward != 0 {
+		Abc_FlowRetime_UpdateForwardInit(pNtk)
+	} else {
+		Abc_FlowRetime_UpdateBackwardInit(pNtk)
+	}
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Prints initial state information.]
+	Synopsis    [Prints initial state information.]
 
-  Description [Prints distribution of 0,1,and X initial states.]
-               
-  SideEffects []
+	Description [Prints distribution of 0,1,and X initial states.]
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_FlowRetime_ObjFirstNonLatchBox(pOrigObj *Abc_Obj_t, pResult **Abc_Obj_t) int32 {
-  var lag int32;
-  var pNtk *Abc_Ntk_t;
-  *pResult = pOrigObj;
-  pNtk = Abc_ObjNtk( pOrigObj );
-
-  Abc_NtkIncrementTravId( pNtk );
-
-  for  Abc_ObjIsBo(*pResult) || Abc_ObjIsLatch(*pResult) || Abc_ObjIsBi(*pResult)  {
-    assert(Abc_ObjFaninNum(*pResult), "Abc_ObjFaninNum(*pResult)");
-    *pResult = Abc_ObjFanin0(*pResult);
-    
-    if Abc_NodeIsTravIdCurrent(*pResult) {
-      return -1; }
-    Abc_NodeSetTravIdCurrent(*pResult);
-
-    if Abc_ObjIsLatch(*pResult) { ++lag; }
-  }
-
-  return lag;
+	if pOrigObj == nil || pResult == nil {
+		panic("nil object in first non-latch lookup")
+	}
+	lag := int32(0)
+	*pResult = pOrigObj
+	ntk := Abc_ObjNtk(pOrigObj)
+	Abc_NtkIncrementTravId(ntk)
+	for Abc_ObjIsBo(*pResult) != 0 || Abc_ObjIsLatch(*pResult) != 0 || Abc_ObjIsBi(*pResult) != 0 {
+		if Abc_ObjFaninNum(*pResult) == 0 {
+			panic("box boundary has no fanin")
+		}
+		*pResult = Abc_ObjFanin0(*pResult)
+		if Abc_NodeIsTravIdCurrent(*pResult) != 0 {
+			return -1
+		}
+		Abc_NodeSetTravIdCurrent(*pResult)
+		if Abc_ObjIsLatch(*pResult) != 0 {
+			lag++
+		}
+	}
+	return lag
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Prints initial state information.]
 
-  Synopsis    [Prints initial state information.]
+	Description [Prints distribution of 0,1,and X initial states.]
 
-  Description [Prints distribution of 0,1,and X initial states.]
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_FlowRetime_PrintInitStateInfo(pNtk *Abc_Ntk_t) {
-  var i, n0, n1, nDC, nOther int32;
-  var pLatch *Abc_Obj_t;
-
-  Abc_NtkForEachLatch( pNtk, pLatch, i ) {
-    if Abc_LatchIsInit0(pLatch) { n0++;
-    } else if Abc_LatchIsInit1(pLatch) { n1++;
-    } else if Abc_LatchIsInitDc(pLatch) { nDC++;
-    } else { nOther++; }
-  }     
-
-  fmt.Printf("\tinitial states {0,1,x} = {%d, %d, %d}", n0, n1, nDC);
-  if nOther != 0 {
-    fmt.Printf(" + %d UNKNOWN", nOther); }
-  fmt.Printf("\n");
+	var n0, n1, nDC, nOther int
+	for _, latch := range pNtk.ObjectsOfKind(ABC_OBJ_LATCH) {
+		switch {
+		case Abc_LatchIsInit0(latch) != 0:
+			n0++
+		case Abc_LatchIsInit1(latch) != 0:
+			n1++
+		case Abc_LatchIsInitDc(latch) != 0:
+			nDC++
+		default:
+			nOther++
+		}
+	}
+	fmt.Printf("\tinitial states {0,1,x} = {%d, %d, %d}", n0, n1, nDC)
+	if nOther != 0 {
+		fmt.Printf(" + %d UNKNOWN", nOther)
+	}
+	fmt.Printf("\n")
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Computes initial state after forward retiming.]
 
-  Synopsis    [Computes initial state after forward retiming.]
+	Description [Assumes box outputs in old positions stored w/ init values.
+	             Uses three-value simulation to preserve don't cares.]
 
-  Description [Assumes box outputs in old positions stored w/ init values.
-               Uses three-value simulation to preserve don't cares.]
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_FlowRetime_UpdateForwardInit(pNtk *Abc_Ntk_t) {
-  var pObj, pFanin *Abc_Obj_t;
-  var i int32;
-
-  vprintf("\t\tupdating init state\n");
-
-  Abc_NtkIncrementTravId( pNtk );
-
-  Abc_NtkForEachLatch( pNtk, pObj, i ) {
-    pFanin = Abc_ObjFanin0(pObj);
-    Abc_FlowRetime_UpdateForwardInit_rec( pFanin );
-
-    if FTEST(pFanin, INIT_0) {
-      Abc_LatchSetInit0( pObj );
-    } else if FTEST(pFanin, INIT_1) {
-      Abc_LatchSetInit1( pObj );
-    } else {
-      Abc_LatchSetInitDc( pObj ); }
-  }
+	fmt.Fprintln(os.Stdout, "\t\tupdating init state")
+	Abc_NtkIncrementTravId(pNtk)
+	for _, latch := range pNtk.ObjectsOfKind(ABC_OBJ_LATCH) {
+		fanin := Abc_ObjFanin0(latch)
+		Abc_FlowRetime_UpdateForwardInit_rec(fanin)
+		switch {
+		case FTEST(fanin, INIT_0) != 0:
+			Abc_LatchSetInit0(latch)
+		case FTEST(fanin, INIT_1) != 0:
+			Abc_LatchSetInit1(latch)
+		default:
+			Abc_LatchSetInitDc(latch)
+		}
+	}
 }
 
 func Abc_FlowRetime_UpdateForwardInit_rec(pObj *Abc_Obj_t) {
-  var pNext *Abc_Obj_t;
-  var i int32;
-
-  assert(!Abc_ObjIsPi(pObj), "!Abc_ObjIsPi(pObj)"); // should never reach the inputs
-
-  if Abc_ObjIsBo(pObj) { return; }
-
-  // visited?
-  if Abc_NodeIsTravIdCurrent(pObj) { return; }
-  Abc_NodeSetTravIdCurrent(pObj);
-
-  Abc_ObjForEachFanin( pObj, pNext, i ) {
-    Abc_FlowRetime_UpdateForwardInit_rec( pNext );
-  }
-  
-  Abc_FlowRetime_SimulateNode( pObj );
+	assert(Abc_ObjIsPi(pObj) == 0, "forward init recursion does not reach primary inputs")
+	if Abc_ObjIsBo(pObj) != 0 || Abc_NodeIsTravIdCurrent(pObj) != 0 {
+		return
+	}
+	Abc_NodeSetTravIdCurrent(pObj)
+	for _, edge := range pObj.Fanins() {
+		Abc_FlowRetime_UpdateForwardInit_rec(edge.Object)
+	}
+	Abc_FlowRetime_SimulateNode(pObj)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Recursively evaluates HOP netlist.]
+	Synopsis    [Recursively evaluates HOP netlist.]
 
-  Description [Exponential.  There aren't enough flags on a HOP node.]
-               
-  SideEffects []
+	Description [Exponential.  There aren't enough flags on a HOP node.]
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-func Abc_FlowRetime_EvalHop_rec(pHop *Hop_Man_t, pObj *Hop_Obj_t, f *int32, dc *int32) {
-  var f1, dc1, f2, dc2 int32;
-  var pReg *Hop_Obj_t  = Hop_Regular(pObj);
-  
-  // const 0
-  if Hop_ObjIsConst1(pReg) {
-    *f  = 1;
-    *f ^= (pReg == pObj ? 1 : 0);
-    *dc = 0;
-    return;
-  }
+	SeeAlso     []
 
-  // PI
-  if Hop_ObjIsPi(pReg) {
-    *f  = pReg.fMarkA;
-    *f ^= (pReg == pObj ? 1 : 0);
-    *dc = pReg.fMarkB;
-    return;
-  }
-
-  // PO
-  if Hop_ObjIsPo(pReg) {
-    assert(pReg == pObj, "pReg == pObj");
-    Abc_FlowRetime_EvalHop_rec(pHop, Hop_ObjChild0(pReg), f, dc);
-    return;
-  }
-
-  // AND
-  if Hop_ObjIsAnd(pReg) {
-    Abc_FlowRetime_EvalHop_rec(pHop, Hop_ObjChild0(pReg), &f1, &dc1);
-    Abc_FlowRetime_EvalHop_rec(pHop, Hop_ObjChild1(pReg), &f2, &dc2);
-
-    *dc = (dc1 & f2) | (dc2 & f1) | (dc1 & dc2);
-    *f  = f1 & f2;
-    *f ^= (pReg == pObj ? 1 : 0);
-    return;
-  }
-
-  assert(false, "0");
+**********************************************************************
+*/
+func evalHopInit(obj *Hop_Obj_t, primary map[*Hop_Obj_t][2]int32) (int32, int32) {
+	regular := Hop_Regular(obj)
+	complement := int32(Hop_IsComplement(obj))
+	switch {
+	case Hop_ObjIsConst1(regular) != 0:
+		return 1 ^ complement, 0
+	case Hop_ObjIsPi(regular) != 0:
+		state, ok := primary[regular]
+		if !ok {
+			panic("HOP PI has no initial-state value")
+		}
+		return state[0] ^ complement, 1 - state[1]
+	case Hop_ObjIsPo(regular) != 0:
+		return evalHopInit(Hop_ObjChild0(regular), primary)
+	case Hop_ObjIsAnd(regular) != 0:
+		v0, d0 := evalHopInit(Hop_ObjChild0(regular), primary)
+		v1, d1 := evalHopInit(Hop_ObjChild1(regular), primary)
+		dc := (d0 & v1) | (d1 & v0) | (d0 & d1)
+		return (v0 & v1) ^ complement, dc
+	case Hop_ObjIsExor(regular) != 0:
+		v0, d0 := evalHopInit(Hop_ObjChild0(regular), primary)
+		v1, d1 := evalHopInit(Hop_ObjChild1(regular), primary)
+		return (v0 ^ v1) ^ complement, d0 | d1
+	default:
+		panic("unsupported HOP node in initial-state simulation")
+	}
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Sets initial value flags.]
 
-  Synopsis    [Sets initial value flags.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_FlowRetime_SetInitValue(pObj *Abc_Obj_t, val int32, dc int32) {
-  
-  // store init value
-  FUNSET(pObj, INIT_CARE);
-  if !dc{
-    if val != 0 {
-      FSET(pObj, INIT_1);
-    } else {
-      FSET(pObj, INIT_0);
-    }
-  }
+
+	// store init value
+	FUNSET(pObj, INIT_CARE)
+	if dc == 0 {
+		if val != 0 {
+			FSET(pObj, INIT_1)
+		} else {
+			FSET(pObj, INIT_0)
+		}
+	}
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Propogates initial state through a logic node.]
 
-  Synopsis    [Propogates initial state through a logic node.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_FlowRetime_SimulateNode(pObj *Abc_Obj_t) {
-  var pNtk *Abc_Ntk_t  = Abc_ObjNtk(pObj);
-  var pFanin *Abc_Obj_t;
-  var i, rAnd, rVar, dcAnd, dcVar int32;
-#ifdef ABC_USE_CUDD
-  DdManager * dd = (DdManager*)pNtk->pManFunc;
-  DdNode *pBdd = (DdNode*)pObj->pData, *pVar;
-#endif
-  var pHop *Hop_Man_t  = (Hop_Man_t*)pNtk.pManFunc;
-  
-  assert(!Abc_ObjIsLatch(pObj), "!Abc_ObjIsLatch(pObj)");
-  assert(Abc_ObjRegular(pObj), "Abc_ObjRegular(pObj)");
-
-  // (i) constant nodes
-  if Abc_NtkIsStrash(pNtk) && Abc_AigNodeIsConst(pObj) {
-    Abc_FlowRetime_SetInitValue(pObj, 1, 0);
-    return;
-  }
-  if !Abc_NtkIsStrash( pNtk ) && Abc_ObjIsNode(pObj) {
-    if Abc_NodeIsConst0(pObj) {
-      Abc_FlowRetime_SetInitValue(pObj, 0, 0);
-      return;
-    } else if Abc_NodeIsConst1(pObj) {
-      Abc_FlowRetime_SetInitValue(pObj, 1, 0);
-      return;
-    }
-  }
-  
-  // (ii) terminal nodes
-  if !Abc_ObjIsNode(pObj) {
-    pFanin = Abc_ObjFanin0(pObj);
-    
-    Abc_FlowRetime_SetInitValue(pObj, 
-         (FTEST(pFanin, INIT_1) ? 1 : 0) ^ pObj.fCompl0, 
-         !FTEST(pFanin, INIT_CARE));    
-    return;
-  }
-
-  // (iii) logic nodes
-
-  // ------ SOP network
-  if Abc_NtkHasSop( pNtk ) {
-    Abc_FlowRetime_SimulateSop( pObj, (char *)Abc_ObjData(pObj) );
-    return;
-  
-#ifdef ABC_USE_CUDD
-  // ------ BDD network
-  else if ( Abc_NtkHasBdd( pNtk )) {
-    assert(dd);
-    assert(pBdd);
-
-    // cofactor for 0,1 inputs
-    // do nothing for X values
-    Abc_ObjForEachFanin(pObj, pFanin, i) {
-      pVar = Cudd_bddIthVar( dd, i );
-      if (FTEST(pFanin, INIT_CARE)) {
-        if (FTEST(pFanin, INIT_0))
-          pBdd = Cudd_Cofactor( dd, pBdd, Cudd_Not(pVar) ); 
-        else
-          pBdd = Cudd_Cofactor( dd, pBdd, pVar ); 
-      }
-    }
-
-    // if function has not been reduced to 
-    // a constant, propagate an X
-    rVar = (pBdd == Cudd_ReadOne(dd));
-    dcVar = !Cudd_IsConstant(pBdd);
-    
-    Abc_FlowRetime_SetInitValue(pObj, rVar, dcVar);
-    return;
-  }
-#endif // #ifdef ABC_USE_CUDD
-
-  // ------ AIG logic network
-  } else if Abc_NtkHasAig( pNtk ) && !Abc_NtkIsStrash( pNtk ) {
-    
-    assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)");
-    assert(pObj.pData, "pObj.pData");
-    assert(Abc_ObjFaninNum(pObj) <= Hop_ManPiNum(pHop), "Abc_ObjFaninNum(pObj) <= Hop_ManPiNum(pHop)");
-    
-    // set vals at inputs
-    Abc_ObjForEachFanin(pObj, pFanin, i) {
-      Hop_ManPi(pHop, i).fMarkA = FTEST(pFanin, INIT_1)?1:0;
-      Hop_ManPi(pHop, i).fMarkB = FTEST(pFanin, INIT_CARE)?1:0;
-    }
-
-    Abc_FlowRetime_EvalHop_rec( pHop, (Hop_Obj_t*)pObj.pData, &rVar, &dcVar );
-   
-    Abc_FlowRetime_SetInitValue(pObj, rVar, dcVar);
-
-    // clear flags
-    Abc_ObjForEachFanin(pObj, pFanin, i) {
-      Hop_ManPi(pHop, i).fMarkA = 0;
-      Hop_ManPi(pHop, i).fMarkB = 0;
-    }
-
-    return;
-  
-
-  // ------ strashed network
-  } else if Abc_NtkIsStrash( pNtk ) {
-
-    assert(Abc_ObjType(pObj) == ABC_OBJ_NODE, "Abc_ObjType(pObj) == ABC_OBJ_NODE");
-    dcAnd = 0;
-rAnd = 1;
-    
-    pFanin = Abc_ObjFanin0(pObj);
-    dcAnd |= FTEST(pFanin, INIT_CARE) ? 0 : 1;
-    if FTEST(pFanin, INIT_0) {
-        rVar = 0;
-    } else {
-        rVar = 1;
-    }
-    if pObj.fCompl0 { rVar ^= 1; } // complimented?
-    rAnd &= rVar;
-    
-    pFanin = Abc_ObjFanin1(pObj);
-    dcAnd |= FTEST(pFanin, INIT_CARE) ? 0 : 1;
-    if FTEST(pFanin, INIT_0) {
-        rVar = 0;
-    } else {
-        rVar = 1;
-    }
-    if pObj.fCompl1 { rVar ^= 1; } // complimented?
-    rAnd &= rVar;
-    
-    if !rAnd { dcAnd = 0; } /* controlling value */
-    
-    Abc_FlowRetime_SetInitValue(pObj, rAnd, dcAnd);
-    return;
-  
-
-  // ------ MAPPED network
-  } else if Abc_NtkHasMapping( pNtk ) {
-    Abc_FlowRetime_SimulateSop( pObj, (char *)Mio_GateReadSop((Mio_Gate_t*)pObj.pData) );
-    return;
-  }
-
-  assert(false, "0");
+	ntk := Abc_ObjNtk(pObj)
+	assert(Abc_ObjIsLatch(pObj) == 0, "logic simulation is not applied to latches")
+	if Abc_NtkIsStrash(ntk) != 0 && Abc_AigNodeIsConst(pObj) != 0 {
+		Abc_FlowRetime_SetInitValue(pObj, 1, 0)
+		return
+	}
+	if Abc_NtkIsStrash(ntk) == 0 && Abc_ObjIsNode(pObj) != 0 {
+		if Abc_NodeIsConst0(pObj) != 0 {
+			Abc_FlowRetime_SetInitValue(pObj, 0, 0)
+			return
+		}
+		if Abc_NodeIsConst1(pObj) != 0 {
+			Abc_FlowRetime_SetInitValue(pObj, 1, 0)
+			return
+		}
+	}
+	if Abc_ObjIsNode(pObj) == 0 {
+		fanin := Abc_ObjFanin0(pObj)
+		value := FTEST(fanin, INIT_1) & 1
+		if Abc_ObjFaninC0(pObj) != 0 {
+			value ^= 1
+		}
+		care := int32(0)
+		if FTEST(fanin, INIT_CARE) == 0 {
+			care = 1
+		}
+		Abc_FlowRetime_SetInitValue(pObj, value, care)
+		return
+	}
+	if Abc_NtkHasSop(ntk) != 0 {
+		sop, ok := Abc_ObjData(pObj).(string)
+		assert(ok, "SOP node stores a string")
+		Abc_FlowRetime_SimulateSop(pObj, sop)
+		return
+	}
+	if Abc_NtkHasBdd(ntk) != 0 {
+		manager, ok := ntk.FunctionManager.(*core.DdManager)
+		assert(ok && manager != nil, "BDD network has a manager")
+		function, ok := Abc_ObjData(pObj).(*core.DdNode)
+		assert(ok && function != nil, "BDD node has a function")
+		owned := false
+		for i, edge := range pObj.Fanins() {
+			if FTEST(edge.Object, INIT_CARE) == 0 {
+				continue
+			}
+			variable := core.Cudd_bddIthVar(manager, i)
+			assert(variable != nil, "BDD manager has a variable for each fanin")
+			literal := variable
+			if FTEST(edge.Object, INIT_0) != 0 {
+				literal = core.Cudd_Not(variable)
+			}
+			next := core.Cudd_Cofactor(manager, function, literal)
+			assert(next != nil, "BDD cofactor is valid")
+			if next != function {
+				core.Cudd_Ref(next)
+				if owned {
+					core.Cudd_RecursiveDeref(manager, function)
+				}
+				function = next
+				owned = true
+			}
+		}
+		value, dc := int32(0), int32(1)
+		if core.Cudd_IsConstant(function) {
+			dc = 0
+			if function == core.Cudd_ReadOne(manager) {
+				value = 1
+			}
+		}
+		if owned {
+			core.Cudd_RecursiveDeref(manager, function)
+		}
+		Abc_FlowRetime_SetInitValue(pObj, value, dc)
+		return
+	}
+	if Abc_NtkIsStrash(ntk) != 0 {
+		value, care := int32(1), int32(1)
+		for i, edge := range pObj.Fanins() {
+			faninValue := int32(1)
+			if FTEST(edge.Object, INIT_0) != 0 {
+				faninValue = 0
+			}
+			if edge.Complement {
+				faninValue ^= 1
+			}
+			value &= faninValue
+			if FTEST(edge.Object, INIT_CARE) == 0 {
+				care = 0
+			}
+			if i >= 1 {
+				break
+			}
+		}
+		if value == 0 {
+			care = 1
+		}
+		Abc_FlowRetime_SetInitValue(pObj, value, 1-care)
+		return
+	}
+	if Abc_NtkHasAig(ntk) != 0 {
+		manager, ok := ntk.FunctionManager.(*Hop_Man_t)
+		assert(ok, "AIG node has HOP manager")
+		hopNode, ok := Abc_ObjData(pObj).(*Hop_Obj_t)
+		assert(ok, "AIG node stores HOP node")
+		p := map[*Hop_Obj_t][2]int32{}
+		for i, edge := range pObj.Fanins() {
+			pi := Hop_ManPi(manager, int32(i))
+			val := int32(0)
+			if FTEST(edge.Object, INIT_1) != 0 {
+				val = 1
+			}
+			care := int32(0)
+			if FTEST(edge.Object, INIT_CARE) != 0 {
+				care = 1
+			}
+			p[pi] = [2]int32{val, care}
+		}
+		val, dc := evalHopInit(hopNode, p)
+		Abc_FlowRetime_SetInitValue(pObj, val, dc)
+		return
+	}
+	if Abc_NtkHasMapping(ntk) != 0 {
+		gate, ok := Abc_ObjData(pObj).(*Mio_Gate_t)
+		assert(ok, "mapped node stores MIO gate")
+		Abc_FlowRetime_SimulateSop(pObj, Mio_GateReadSop(gate))
+		return
+	}
+	panic("unsupported logic representation in initial-state simulation")
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Propogates initial state through a SOP node.]
 
-  Synopsis    [Propogates initial state through a SOP node.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_FlowRetime_SimulateSop(pObj *Abc_Obj_t, pSop string) {
-  var pFanin *Abc_Obj_t;
-  var pCube string;
-  var i, j, rAnd, rOr, rVar, dcAnd, dcOr, v int32;
-
-  assert(pSop && !Abc_SopIsExorType(pSop), "pSop && !Abc_SopIsExorType(pSop)");
-      
-  rOr = 0;
-dcOr = 0;
-
-  i = Abc_SopGetVarNum(pSop);
-  Abc_SopForEachCube( pSop, i, pCube ) {
-    rAnd = 1;
-dcAnd = 0;
-    Abc_CubeForEachVar( pCube, v, j ) {
-      pFanin = Abc_ObjFanin(pObj, j);
-      if v == '0' {
-        if FTEST(pFanin, INIT_0) {
-            rVar = 1;
-        } else {
-            rVar = 0;
-        }
-      } else if v == '1' {
-        if FTEST(pFanin, INIT_1) {
-            rVar = 1;
-        } else {
-            rVar = 0;
-        }
-      } else {
-        continue; }
-      
-      if FTEST(pFanin, INIT_CARE) {
-        rAnd &= rVar;
-      } else {
-        dcAnd = 1; }
-    }
-    if !rAnd { dcAnd = 0; } /* controlling value */
-    if dcAnd { 
-      dcOr = 1;
-    } else {
-      rOr |= rAnd; }
-  }
-  if rOr { dcOr = 0; } /* controlling value */
-  
-  // complement the result if necessary
-  if !Abc_SopGetPhase(pSop) {
-    rOr ^= 1; }
-      
-  Abc_FlowRetime_SetInitValue(pObj, rOr, dcOr);
+	assert(pSop != "" && Abc_SopIsExorType(pSop) == 0, "nonempty non-XOR SOP")
+	nVars := int(Abc_SopGetVarNum(pSop))
+	assert(nVars == int(Abc_ObjFaninNum(pObj)), "SOP variable count matches fanins")
+	rOr, dcOr := int32(0), int32(0)
+	for _, cube := range strings.Split(strings.TrimSuffix(pSop, "\n"), "\n") {
+		if cube == "" {
+			continue
+		}
+		sep := strings.IndexByte(cube, ' ')
+		assert(sep == nVars && sep+1 < len(cube), "SOP cube has expected width")
+		rAnd, dcAnd := int32(1), int32(0)
+		for j, lit := range cube[:sep] {
+			fanin := Abc_ObjFanin(pObj, int32(j))
+			want := int32(0)
+			switch lit {
+			case '0':
+				if FTEST(fanin, INIT_0) != 0 {
+					want = 1
+				}
+			case '1':
+				if FTEST(fanin, INIT_1) != 0 {
+					want = 1
+				}
+			default:
+				continue
+			}
+			if FTEST(fanin, INIT_CARE) == 0 {
+				dcAnd = 1
+			} else {
+				rAnd &= want
+			}
+		}
+		if rAnd == 0 {
+			dcAnd = 0
+		}
+		if dcAnd != 0 {
+			dcOr = 1
+		} else {
+			rOr |= rAnd
+		}
+	}
+	if rOr != 0 {
+		dcOr = 0
+	}
+	if Abc_SopGetPhase(pSop) == 0 {
+		rOr ^= 1
+	}
+	Abc_FlowRetime_SetInitValue(pObj, rOr, dcOr)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Sets up backward initial state computation.]
+	Synopsis    [Sets up backward initial state computation.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_FlowRetime_SetupBackwardInit(pNtk *Abc_Ntk_t) {
-  var pLatch, pObj, pPi *Abc_Obj_t;
-  var i int32;
-  var vObj *Vec_Ptr_t  = Vec_PtrAlloc(100);
-
-  // create the network used for the initial state computation
-  if Abc_NtkIsStrash(pNtk) {
-    pManMR.pInitNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );
-  } else if Abc_NtkHasMapping(pNtk) {
-    pManMR.pInitNtk = Abc_NtkAlloc( pNtk.ntkType, ABC_FUNC_SOP, 1 );
-  } else {
-    pManMR.pInitNtk = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 ); }
-
-  // mitre inputs
-  Abc_NtkForEachLatch( pNtk, pLatch, i ) {
-    // map latch to initial state network
-    pPi = Abc_NtkCreatePi( pManMR.pInitNtk );
-
-    // DEBUG
-    // printf("setup : mapping latch %d to PI %d\n", pLatch->Id, pPi->Id);
-
-    // has initial state requirement?
-    if Abc_LatchIsInit0(pLatch) {
-      pObj = Abc_NtkCreateNodeInv( pManMR.pInitNtk, pPi );
-      Vec_PtrPush(vObj, pObj);
-    
-    } else if Abc_LatchIsInit1(pLatch) {
-      Vec_PtrPush(vObj, pPi);
-    }
-    
-    Abc_ObjSetData( pLatch, pPi );     // if not verifying init state
-    // FDATA(pLatch)->pInitObj = pPi;  // if verifying init state
-  }
-
-  // are there any nodes not DC?
-  if !Vec_PtrSize(vObj) {
-    pManMR.fSolutionIsDc = 1;
-    return;
-  } else { 
-    pManMR.fSolutionIsDc = 0; }
-
-  // mitre output
-
-  // create n-input AND gate
-  pObj = Abc_NtkCreateNodeAnd( pManMR.pInitNtk, vObj );
-
-  Abc_ObjAddFanin( Abc_NtkCreatePo( pManMR.pInitNtk ), pObj );
-
-  Vec_PtrFree( vObj );
+	ntkType, ntkFunc := Abc_NtkType_t(pNtk.Type), Abc_NtkFunc_t(pNtk.Function)
+	if Abc_NtkIsStrash(pNtk) != 0 || Abc_NtkHasMapping(pNtk) != 0 {
+		ntkFunc = ABC_FUNC_SOP
+	}
+	if Abc_NtkIsStrash(pNtk) != 0 {
+		ntkType = ABC_NTK_LOGIC
+	}
+	pManMR.pInitNtk = Abc_NtkAlloc(ntkType, ntkFunc, 1)
+	constrained := make([]*Abc_Obj_t, 0, int(Abc_NtkLatchNum(pNtk)))
+	for _, latch := range pNtk.ObjectsOfKind(ABC_OBJ_LATCH) {
+		pi := Abc_NtkCreatePi(pManMR.pInitNtk)
+		switch {
+		case Abc_LatchIsInit0(latch) != 0:
+			constrained = append(constrained, Abc_NtkCreateNodeInv(pManMR.pInitNtk, pi))
+		case Abc_LatchIsInit1(latch) != 0:
+			constrained = append(constrained, pi)
+		}
+		Abc_ObjSetData(latch, pi)
+	}
+	if len(constrained) == 0 {
+		pManMR.fSolutionIsDc = 1
+		return
+	}
+	pManMR.fSolutionIsDc = 0
+	and := Abc_NtkCreateNodeAnd(pManMR.pInitNtk, constrained)
+	Abc_ObjAddFanin(Abc_NtkCreatePo(pManMR.pInitNtk), and)
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Solves backward initial state computation.]
 
-  Synopsis    [Solves backward initial state computation.]
+	Description []
 
-  Description []
-               
-  SideEffects [Sets object copies in init ntk.]
+	SideEffects [Sets object copies in init ntk.]
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
-func Abc_FlowRetime_SolveBackwardInit(pNtk *Abc_Ntk_t) int32 {
-  var i int32;
-  var pObj, pInitObj *Abc_Obj_t;
-  var vDelete *Vec_Ptr_t  = Vec_PtrAlloc(0);
-  var pSatNtk *Abc_Ntk_t;
-  var result int32;
+**********************************************************************
+*/
+func Abc_FlowRetime_SolveBackwardInit(ntk *Abc_Ntk_t) int32 {
+	assert(pManMR.pInitNtk != nil, "backward init network exists")
+	if pManMR.fSolutionIsDc != 0 {
+		for _, latch := range ntk.ObjectsOfKind(ABC_OBJ_LATCH) {
+			Abc_LatchSetInitDc(latch)
+		}
+		fmt.Fprintln(os.Stdout, "\tno init state computation: all-don't-care solution")
+		return 1
+	}
+	for _, obj := range pManMR.pInitNtk.Objects() {
+		assert(Abc_ObjIsLatch(obj) == 0 && Abc_ObjIsBo(obj) == 0 && Abc_ObjIsBi(obj) == 0, "init network is combinational")
+	}
+	Abc_NtkAddDummyPoNames(pManMR.pInitNtk)
+	Abc_NtkAddDummyPiNames(pManMR.pInitNtk)
+	if Abc_NtkHasSop(pManMR.pInitNtk) != 0 && Abc_NtkSopToAig(pManMR.pInitNtk) == 0 {
+		fmt.Fprintln(os.Stdout, "FAILURE: could not convert init network to AIG")
+		return 0
+	}
+	fmt.Fprintf(os.Stdout, "\tsolving for init state (%d nodes)... ", Abc_NtkObjNum(pManMR.pInitNtk))
+	result := abci.Abc_NtkMiterSat(pManMR.pInitNtk, int64(500000), int64(50000000), 0, nil, nil)
+	if result != 0 {
+		fmt.Fprintln(os.Stdout, "FAILURE")
+		return 0
+	}
+	fmt.Fprintln(os.Stdout, "SUCCESS")
 
-  assert(pManMR.pInitNtk, "pManMR.pInitNtk");
-
-  // is the solution entirely DC's?
-  if pManMR.fSolutionIsDc {
-    Vec_PtrFree(vDelete);
-    Abc_NtkForEachLatch( pNtk, pObj, i ) Abc_LatchSetInitDc( pObj );
-    vprintf("\tno init state computation: all-don't-care solution\n");
-    return 1;
-  }
-
-  // check that network is combinational
-  Abc_NtkForEachObj( pManMR.pInitNtk, pObj, i ) {
-    assert(!Abc_ObjIsLatch(pObj), "!Abc_ObjIsLatch(pObj)");
-    assert(!Abc_ObjIsBo(pObj), "!Abc_ObjIsBo(pObj)");
-    assert(!Abc_ObjIsBi(pObj), "!Abc_ObjIsBi(pObj)");
-  }
-  
-  // delete superfluous nodes
-  for Vec_PtrSize( vDelete ) {
-    pObj = (Abc_Obj_t *)Vec_PtrPop( vDelete );
-    Abc_NtkDeleteObj( pObj );
-  }
-  Vec_PtrFree(vDelete);
-
-  // do some final cleanup on the network
-  Abc_NtkAddDummyPoNames(pManMR.pInitNtk);
-  Abc_NtkAddDummyPiNames(pManMR.pInitNtk);
-  if Abc_NtkIsLogic(pManMR.pInitNtk) {
-    Abc_NtkCleanup(pManMR.pInitNtk, 0); }
-
-                                 
-                                          
-                                                 
-                                 
-                                 
-      
-  
-  vprintf("\tsolving for init state (%d nodes)... ", Abc_NtkObjNum(pManMR.pInitNtk));
-  fflush(os.Stdout);
-#ifdef ABC_USE_CUDD
-  // convert SOPs to BDD
-  if (Abc_NtkHasSop(pManMR->pInitNtk))
-    Abc_NtkSopToBdd( pManMR->pInitNtk );
-  // convert AIGs to BDD
-  if (Abc_NtkHasAig(pManMR->pInitNtk))
-    Abc_NtkAigToBdd( pManMR->pInitNtk );
-#else
-  // convert SOPs to AIG
-  if (Abc_NtkHasSop(pManMR->pInitNtk))
-    Abc_NtkSopToAig( pManMR->pInitNtk );
-#endif
-  pSatNtk = pManMR.pInitNtk;
-  
-  // solve
-  result = Abc_NtkMiterSat( pSatNtk, (ABC_INT64_T)500000, (ABC_INT64_T)50000000, 0, nil, nil );
-
-  if !(result != 0) { 
-    vprintf("SUCCESS\n");
-  } else  {    
-    vprintf("FAILURE\n");
-    return 0;
-  }
-
-  // clear initial values, associate PIs to latches
-  Abc_NtkForEachPi( pManMR.pInitNtk, pInitObj, i ) Abc_ObjSetCopy( pInitObj, nil );
-  Abc_NtkForEachLatch( pNtk, pObj, i ) {
-    pInitObj = (Abc_Obj_t*)Abc_ObjData( pObj );
-    assert(Abc_ObjIsPi( pInitObj ), "Abc_ObjIsPi( pInitObj )");
-    Abc_ObjSetCopy( pInitObj, pObj );
-    Abc_LatchSetInitNone( pObj );
-
-    // DEBUG
-    // printf("solve : getting latch %d from PI %d\n", pObj->Id, pInitObj->Id);
-  }
-
-  // copy solution from PIs to latches
-  assert(pManMR.pInitNtk.pModel, "pManMR.pInitNtk.pModel");
-  Abc_NtkForEachPi( pManMR.pInitNtk, pInitObj, i ) {
-    if pObj = Abc_ObjCopy( pInitObj ) {
-      if pManMR.pInitNtk.pModel[i] {
-        Abc_LatchSetInit1( pObj );
-      } else {
-        Abc_LatchSetInit0( pObj ); }
-    }
-  }
-
-#if defined(DEBUG_CHECK)
-  // check that all latches have initial state
-  Abc_NtkForEachLatch( pNtk, pObj, i ) assert( !Abc_LatchIsInitNone( pObj ) );
-#endif
-
-  return 1;
+	pis := pManMR.pInitNtk.ObjectsOfKind(ABC_OBJ_PI)
+	model := Abc_NtkReadModel(pManMR.pInitNtk)
+	assert(len(model) >= len(pis), "SAT model covers init PIs")
+	for _, latch := range ntk.ObjectsOfKind(ABC_OBJ_LATCH) {
+		pi, ok := Abc_ObjData(latch).(*Abc_Obj_t)
+		assert(ok && Abc_ObjIsPi(pi) != 0, "latch maps to init PI")
+		Abc_LatchSetInitNone(latch)
+		index := -1
+		for i, candidate := range pis {
+			if candidate == pi {
+				index = i
+				break
+			}
+		}
+		assert(index >= 0, "mapped init PI belongs to init network")
+		if model[index] > 0 {
+			Abc_LatchSetInit1(latch)
+		} else if model[index] == 0 {
+			Abc_LatchSetInit0(latch)
+		} else {
+			Abc_LatchSetInitDc(latch)
+		}
+	}
+	return 1
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Updates backward initial state computation problem.]
-
-  Description [Assumes box outputs in old positions stored w/ init values.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_FlowRetime_UpdateBackwardInit(pNtk *Abc_Ntk_t) {
-  var pOrigObj, pInitObj *Abc_Obj_t;
-  var vBo *Vec_Ptr_t  = Vec_PtrAlloc(100);
-  var vPi *Vec_Ptr_t  = Vec_PtrAlloc(100);
-  var pInitNtk *Abc_Ntk_t  = pManMR. pInitNtk;
-  var pBuf *Abc_Obj_t;
-  var i int32;
-
-  // remove PIs from network (from BOs)
-  Abc_NtkForEachObj( pNtk, pOrigObj, i )
-    if Abc_ObjIsBo(pOrigObj) {
-      pInitObj = FDATA(pOrigObj).pInitObj;
-      assert(Abc_ObjIsPi(pInitObj), "Abc_ObjIsPi(pInitObj)");
-
-      // DEBUG
-      // printf("update : freeing PI %d\n", pInitObj->Id);
-      
-      // create a buffer instead
-      pBuf = Abc_NtkCreateNodeBuf( pInitNtk, nil );
-      Abc_FlowRetime_ClearInitToOrig( pBuf );
-
-      Abc_ObjBetterTransferFanout( pInitObj, pBuf, 0 );
-      FDATA(pOrigObj).pInitObj = pBuf;
-      pOrigObj.fMarkA = 1;
-
-      Vec_PtrPush(vBo, pOrigObj);
-      Vec_PtrPush(vPi, pInitObj);
-    }
-  
-  // check that PIs are all free
-  Abc_NtkForEachPi( pInitNtk, pInitObj, i) {
-    assert(Abc_ObjFanoutNum( pInitObj ) == 0, "Abc_ObjFanoutNum( pInitObj ) == 0");
-  }
-
-  // add PIs to to latches
-  Abc_NtkForEachLatch( pNtk, pOrigObj, i ) {
-    assert(Vec_PtrSize(vPi) > 0, "Vec_PtrSize(vPi) > 0");
-    pInitObj = (Abc_Obj_t*)Vec_PtrPop(vPi);
-
-    // DEBUG
-    // printf("update : mapping latch %d to PI %d\n", pOrigObj->Id, pInitObj->Id);
-
-    pOrigObj.fMarkA = pOrigObj.fMarkB = 1;
-    FDATA(pOrigObj).pInitObj = pInitObj;
-    Abc_ObjSetData(pOrigObj, pInitObj);
-  }  
-
-  // recursively build init network
-  Vec_PtrForEachEntry( Abc_Obj_t *, vBo, pOrigObj, i )
-    Abc_FlowRetime_UpdateBackwardInit_rec( pOrigObj );
-  
-  // clear flags
-  Abc_NtkForEachObj( pNtk, pOrigObj, i )
-    pOrigObj.fMarkA = pOrigObj.fMarkB = 0;
-
-  // deallocate
-  Vec_PtrFree( vBo );
-  Vec_PtrFree( vPi );
+func Abc_FlowRetime_UpdateBackwardInit(ntk *Abc_Ntk_t) {
+	initNtk := pManMR.pInitNtk
+	boxOutputs := make([]*Abc_Obj_t, 0)
+	freePis := make([]*Abc_Obj_t, 0)
+	for _, bo := range ntk.Objects() {
+		if Abc_ObjIsBo(bo) == 0 {
+			continue
+		}
+		initPi := flowData(bo).pInitObj
+		assert(initPi != nil && Abc_ObjIsPi(initPi) != 0, "BO init mapping is an init PI")
+		replacement := Abc_NtkCreateNodeBuf(initNtk, nil)
+		Abc_FlowRetime_ClearInitToOrig(replacement)
+		Abc_ObjBetterTransferFanout(initPi, replacement, 0)
+		flowData(bo).pInitObj = replacement
+		bo.MarkA = true
+		boxOutputs = append(boxOutputs, bo)
+		freePis = append(freePis, initPi)
+	}
+	for _, pi := range initNtk.ObjectsOfKind(ABC_OBJ_PI) {
+		assert(Abc_ObjFanoutNum(pi) == 0, "unconnected init PI before latch remapping")
+	}
+	for _, latch := range ntk.ObjectsOfKind(ABC_OBJ_LATCH) {
+		assert(len(freePis) > 0, "one free init PI per latch")
+		pi := freePis[len(freePis)-1]
+		freePis = freePis[:len(freePis)-1]
+		latch.MarkA, latch.MarkB = true, true
+		Abc_ObjSetData(latch, pi)
+	}
+	for _, bo := range boxOutputs {
+		Abc_FlowRetime_UpdateBackwardInit_rec(bo)
+	}
+	for _, obj := range ntk.Objects() {
+		obj.MarkA, obj.MarkB = false, false
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Creates a corresponding node in the init state network]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_FlowRetime_CopyNodeToInitNtk(pOrigObj *Abc_Obj_t) *Abc_Obj_t {
-  var pNtk *Abc_Ntk_t  = pManMR.pNtk;
-  var pInitNtk *Abc_Ntk_t  = pManMR.pInitNtk;
-  var pInitObj *Abc_Obj_t;
-  var pData any;
-  var fCompl [2]int32;
-
-  assert((pOrigObj != nil), "pOrigObj");
-
-  // what we do depends on the ntk types of original / init networks...
-  
-  // (0) convert BI/BO nodes to buffers
-  if Abc_ObjIsBi( pOrigObj ) || Abc_ObjIsBo( pOrigObj ) {
-    pInitObj =  Abc_NtkCreateNodeBuf( pInitNtk, nil );
-    Abc_FlowRetime_ClearInitToOrig( pInitObj );
-    return pInitObj;
-  }
-
-  // (i) strash node -> SOP node
-  if Abc_NtkIsStrash( pNtk ) {
-
-    if Abc_AigNodeIsConst( pOrigObj ) {
-      return Abc_NtkCreateNodeConst1( pInitNtk );
-    }
-    if !Abc_ObjIsNode( pOrigObj ) {
-      assert(Abc_ObjFaninNum(pOrigObj) == 1, "Abc_ObjFaninNum(pOrigObj) == 1");
-      pInitObj =  Abc_NtkCreateNodeBuf( pInitNtk, nil );
-      Abc_FlowRetime_ClearInitToOrig( pInitObj );
-      return pInitObj;
-    }
-
-    assert(Abc_ObjIsNode(pOrigObj), "Abc_ObjIsNode(pOrigObj)");
-    pInitObj = Abc_NtkCreateObj( pInitNtk, ABC_OBJ_NODE );
-    
-    fCompl[0] = pOrigObj.fCompl0 ? 1 : 0;
-    fCompl[1] = pOrigObj.fCompl1 ? 1 : 0;
-    
-    pData =  Abc_SopCreateAnd( (Mem_Flex_t *)pInitNtk.pManFunc, 2, fCompl );
-    assert(pData, "pData");
-    pInitObj.pData = Abc_SopRegister( (Mem_Flex_t *)pInitNtk.pManFunc, (char*)pData );
-   
-
-  // (ii) mapped node -> SOP node
-  } else if Abc_NtkHasMapping( pNtk ) {
-    if !pOrigObj.pData {
-      // assume terminal...
-      assert(Abc_ObjFaninNum(pOrigObj) == 1, "Abc_ObjFaninNum(pOrigObj) == 1");
-
-      pInitObj =  Abc_NtkCreateNodeBuf( pInitNtk, nil );
-      Abc_FlowRetime_ClearInitToOrig( pInitObj );
-      return pInitObj;
-    }
-
-    pInitObj = Abc_NtkCreateObj( pInitNtk, (Abc_ObjType_t)Abc_ObjType(pOrigObj) );
-    pData = Mio_GateReadSop((Mio_Gate_t*)pOrigObj.pData);
-    assert(Abc_SopGetVarNum((char*)pData) == Abc_ObjFaninNum(pOrigObj), "Abc_SopGetVarNum((char*)pData) == Abc_ObjFaninNum(pOrigObj)");
-    
-    pInitObj.pData = Abc_SopRegister( (Mem_Flex_t *)pInitNtk.pManFunc, (char*)pData );
-   
-
-  // (iii) otherwise, duplicate obj
-  } else {
-    pInitObj = Abc_NtkDupObj( pInitNtk, pOrigObj, 0 );
-    
-    // copy phase
-    pInitObj.fPhase = pOrigObj.fPhase;
-  }
-
-  assert((pInitObj != nil), "pInitObj");
-  return pInitObj;
+func Abc_FlowRetime_CopyNodeToInitNtk(original *Abc_Obj_t) *Abc_Obj_t {
+	assert(original != nil, "original node exists")
+	initNtk := pManMR.pInitNtk
+	if Abc_ObjIsBi(original) != 0 || Abc_ObjIsBo(original) != 0 || (Abc_ObjIsNode(original) == 0 && Abc_ObjIsLatch(original) == 0) {
+		copy := Abc_NtkCreateNodeBuf(initNtk, nil)
+		Abc_FlowRetime_ClearInitToOrig(copy)
+		return copy
+	}
+	if Abc_NtkIsStrash(pManMR.pNtk) != 0 {
+		if Abc_AigNodeIsConst(original) != 0 {
+			constant := Abc_NtkCreateNodeConst1(initNtk)
+			Abc_FlowRetime_ClearInitToOrig(constant)
+			return constant
+		}
+		assert(Abc_ObjIsNode(original) != 0 && Abc_ObjFaninNum(original) == 2, "strashed logic node has two inputs")
+		copy := Abc_NtkCreateObj(initNtk, ABC_OBJ_NODE)
+		zero, one := byte('1'), byte('1')
+		if Abc_ObjFaninC0(original) != 0 {
+			zero = '0'
+		}
+		if Abc_ObjFaninC1(original) != 0 {
+			one = '0'
+		}
+		Abc_ObjSetData(copy, string([]byte{zero, one, ' ', '1', '\n'}))
+		return copy
+	}
+	if Abc_NtkHasMapping(pManMR.pNtk) != 0 {
+		gate, ok := Abc_ObjData(original).(*Mio_Gate_t)
+		if !ok || gate == nil {
+			assert(Abc_ObjFaninNum(original) == 1, "mapped terminal is a buffer")
+			copy := Abc_NtkCreateNodeBuf(initNtk, nil)
+			Abc_FlowRetime_ClearInitToOrig(copy)
+			return copy
+		}
+		copy := Abc_NtkCreateObj(initNtk, ABC_OBJ_NODE)
+		Abc_ObjSetData(copy, Mio_GateReadSop(gate))
+		return copy
+	}
+	copy := Abc_NtkDupObj(initNtk, original, 0)
+	copy.Phase = original.Phase
+	return copy
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Updates backward initial state computation problem.]
-
-  Description [Creates a duplicate node in the initial state network 
-               corresponding to a node in the original circuit.  If
-               fRecurse is set, the procedure recurses on and connects
-               the new node to its fan-ins.  A latch in the original
-               circuit corresponds to a PI in the initial state network.
-               An existing PI may be supplied by pUseThisPi, and if the
-               node is a latch, it will be used; otherwise the PI is
-               saved in the list vOtherPis and subsequently used for
-               another latch.]
-               
-  SideEffects [Nodes that have a corresponding initial state node
-               are marked with fMarkA.  Nodes that have been fully
-               connected in the initial state network are marked with
-               fMarkB.]
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_FlowRetime_UpdateBackwardInit_rec(pOrigObj *Abc_Obj_t) *Abc_Obj_t {
-  var pOrigFanin, pInitFanin, pInitObj *Abc_Obj_t;
-  var i int32;
-
-  assert((pOrigObj != nil), "pOrigObj");
-
-  // should never reach primary IOs
-  assert(!Abc_ObjIsPi(pOrigObj), "!Abc_ObjIsPi(pOrigObj)");
-  assert(!Abc_ObjIsPo(pOrigObj), "!Abc_ObjIsPo(pOrigObj)");
-
-  // skip bias nodes
-  if FTEST(pOrigObj, BIAS_NODE) { 
-    return nil; }
-
-  // does an init node already exist?
-  if !pOrigObj.fMarkA {
-
-    pInitObj = Abc_FlowRetime_CopyNodeToInitNtk( pOrigObj );
-
-    Abc_FlowRetime_SetInitToOrig( pInitObj, pOrigObj );
-    FDATA(pOrigObj).pInitObj = pInitObj;
-
-    pOrigObj.fMarkA = 1;
-  } else {
-    pInitObj = FDATA(pOrigObj).pInitObj;
-  }
-  assert((pInitObj != nil), "pInitObj");
-    
-  // have we already connected this object?
-  if !pOrigObj.fMarkB {
-
-    // create and/or connect fanins
-    Abc_ObjForEachFanin( pOrigObj, pOrigFanin, i ) {
-      // should not reach BOs (i.e. the start of the next frame)
-      // the new latch bounday should lie before it
-      assert(!Abc_ObjIsBo( pOrigFanin ), "!Abc_ObjIsBo( pOrigFanin )");
-      pInitFanin = Abc_FlowRetime_UpdateBackwardInit_rec( pOrigFanin );
-      Abc_ObjAddFanin( pInitObj, pInitFanin );
-    }
-
-    pOrigObj.fMarkB = 1;
-  }
-
-  return pInitObj;
+func Abc_FlowRetime_UpdateBackwardInit_rec(original *Abc_Obj_t) *Abc_Obj_t {
+	assert(original != nil, "original node exists")
+	assert(Abc_ObjIsPi(original) == 0 && Abc_ObjIsPo(original) == 0, "recursion stays inside the logic network")
+	if FTEST(original, BIAS_NODE) != 0 {
+		return nil
+	}
+	initObj := flowData(original).pInitObj
+	if !original.MarkA {
+		initObj = Abc_FlowRetime_CopyNodeToInitNtk(original)
+		Abc_FlowRetime_SetInitToOrig(initObj, original)
+		flowData(original).pInitObj = initObj
+		original.MarkA = true
+	}
+	assert(initObj != nil, "original node has init-network copy")
+	if !original.MarkB {
+		for _, edge := range original.Fanins() {
+			assert(Abc_ObjIsBo(edge.Object) == 0, "recursion does not cross BO boundary")
+			faninCopy := Abc_FlowRetime_UpdateBackwardInit_rec(edge.Object)
+			if faninCopy != nil {
+				Abc_ObjAddFanin(initObj, faninCopy)
+			}
+		}
+		original.MarkB = true
+	}
+	return initObj
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Verifies backward init state computation.]
-
-  Description [This procedure requires the BOs to store the original
-               latch values and the latches to store the new values:
-               both in the INIT_0 and INIT_1 flags in the Flow_Data
-               structure.  (This is not currently the case in the rest
-               of the code.)  Also, can not verify backward state
-               computations that span multiple combinational frames.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_FlowRetime_VerifyBackwardInit(pNtk *Abc_Ntk_t) {
-  var pObj, pFanin *Abc_Obj_t;
-  var i int32;
-
-  vprintf("\t\tupdating init state\n");
-
-  Abc_NtkIncrementTravId( pNtk );
-
-  Abc_NtkForEachObj( pNtk, pObj, i )
-    if Abc_ObjIsBo( pObj ) {
-      pFanin = Abc_ObjFanin0(pObj);
-      Abc_FlowRetime_VerifyBackwardInit_rec( pFanin );
-
-      if FTEST(pObj, INIT_CARE) {
-        if FTEST(pObj, INIT_CARE) != FTEST(pFanin, INIT_CARE) {
-          fmt.Printf("ERROR: expected val=%d care=%d and got val=%d care=%d\n", FTEST(pObj, INIT_1)?1:0, FTEST(pObj, INIT_CARE)?1:0, FTEST(pFanin, INIT_1)?1:0, FTEST(pFanin, INIT_CARE)?1:0);
-
-        }
-      }
-    }
+func Abc_FlowRetime_VerifyBackwardInit(ntk *Abc_Ntk_t) {
+	fmt.Fprintln(os.Stdout, "\t\tupdating init state")
+	Abc_NtkIncrementTravId(ntk)
+	for _, obj := range ntk.ObjectsOfKind(ABC_OBJ_BO) {
+		fanin := Abc_ObjFanin0(obj)
+		Abc_FlowRetime_VerifyBackwardInit_rec(fanin)
+		if FTEST(obj, INIT_CARE) != 0 && (FTEST(obj, INIT_CARE) != FTEST(fanin, INIT_CARE) || FTEST(obj, INIT_1) != FTEST(fanin, INIT_1)) {
+			fmt.Fprintf(os.Stdout, "ERROR: expected val=%d care=%d and got val=%d care=%d\n", boolInt(FTEST(obj, INIT_1) != 0), boolInt(FTEST(obj, INIT_CARE) != 0), boolInt(FTEST(fanin, INIT_1) != 0), boolInt(FTEST(fanin, INIT_CARE) != 0))
+		}
+	}
 }
 
-func Abc_FlowRetime_VerifyBackwardInit_rec(pObj *Abc_Obj_t) {
-  var pNext *Abc_Obj_t;
-  var i int32;
-
-  assert(!Abc_ObjIsBo(pObj), "!Abc_ObjIsBo(pObj)"); // should never reach the inputs
-  assert(!Abc_ObjIsPi(pObj), "!Abc_ObjIsPi(pObj)"); // should never reach the inputs
-
-  // visited?
-  if Abc_NodeIsTravIdCurrent(pObj) { return; }
-  Abc_NodeSetTravIdCurrent(pObj);
-
-  if Abc_ObjIsLatch(pObj) {
-    FUNSET(pObj, INIT_CARE);
-    if Abc_LatchIsInit0(pObj) {
-      FSET(pObj, INIT_0);
-    } else if Abc_LatchIsInit1(pObj) {
-      FSET(pObj, INIT_1); }
-    return;
-  }
-
-  Abc_ObjForEachFanin( pObj, pNext, i ) {
-    Abc_FlowRetime_VerifyBackwardInit_rec( pNext );
-  }
-  
-  Abc_FlowRetime_SimulateNode( pObj );
+func Abc_FlowRetime_VerifyBackwardInit_rec(obj *Abc_Obj_t) {
+	assert(obj != nil && Abc_ObjIsBo(obj) == 0 && Abc_ObjIsPi(obj) == 0, "backward init simulation remains inside the logic cone")
+	if Abc_NodeIsTravIdCurrent(obj) != 0 {
+		return
+	}
+	Abc_NodeSetTravIdCurrent(obj)
+	if Abc_ObjIsLatch(obj) != 0 {
+		FUNSET(obj, INIT_CARE)
+		if Abc_LatchIsInit0(obj) != 0 {
+			FSET(obj, INIT_0)
+		} else if Abc_LatchIsInit1(obj) != 0 {
+			FSET(obj, INIT_1)
+		}
+		return
+	}
+	for _, edge := range obj.Fanins() {
+		Abc_FlowRetime_VerifyBackwardInit_rec(edge.Object)
+	}
+	Abc_FlowRetime_SimulateNode(obj)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Constrains backward retiming for initializability.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_FlowRetime_PartialSat(vNodes *Vec_Ptr_t, cut int32) int32 {
-  var pPartNtk *Abc_Ntk_t;
-  var pInitNtk *Abc_Ntk_t = pManMR.pInitNtk;
-  var pObj, pNext, pPartObj, pPartNext, pPo *Abc_Obj_t;
-  var i, j, result int32;
-
-  assert(Abc_NtkPoNum( pInitNtk ) == 1, "Abc_NtkPoNum( pInitNtk ) == 1");
-
-  pPartNtk = Abc_NtkAlloc( pInitNtk.ntkType, pInitNtk.ntkFunc, 0 );
-
-  // copy network
-  Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i ) {
-    pObj.Level = i;
-    assert(!Abc_ObjIsPo( pObj ), "!Abc_ObjIsPo( pObj )");
-
-    if i < cut && !pObj.fMarkA {
-      pPartObj = Abc_NtkCreatePi( pPartNtk );
-      Abc_ObjSetCopy( pObj, pPartObj );
-    } else {
-      // copy node
-      pPartObj = Abc_NtkDupObj( pPartNtk, pObj, 0 );
-      // copy complementation
-      pPartObj.fPhase = pObj.fPhase;
-   
-      // connect fanins
-      Abc_ObjForEachFanin( pObj, pNext, j ) {   
-        pPartNext = Abc_ObjCopy( pNext );
-        assert(pPartNext, "pPartNext");
-        Abc_ObjAddFanin( pPartObj, pPartNext );
-      }
-    }
-
-    assert(pObj.pCopy == pPartObj, "pObj.pCopy == pPartObj");
-  }
-  
-  // create PO
-  pPo = Abc_NtkCreatePo( pPartNtk );
-  pNext = Abc_ObjFanin0( Abc_NtkPo( pInitNtk, 0 ) );
-  pPartNext = Abc_ObjCopy( pNext );
-  assert(pPartNext, "pPartNext");
-  Abc_ObjAddFanin( pPo, pPartNext );
-  
-  // check network
-#if defined(DEBUG_CHECK)
-  Abc_NtkAddDummyPoNames(pPartNtk);
-  Abc_NtkAddDummyPiNames(pPartNtk);
-  Abc_NtkCheck( pPartNtk );
-#endif
-
-  result = Abc_NtkMiterSat( pPartNtk, (ABC_INT64_T)500000, (ABC_INT64_T)50000000, 0, nil, nil );
-
-  Abc_NtkDelete( pPartNtk );
- 
-  return !result;
+func Abc_FlowRetime_PartialSat(vNodes []*Abc_Obj_t, cut int32) int32 {
+	initNtk := pManMR.pInitNtk
+	assert(Abc_NtkPoNum(initNtk) == 1, "init network has one output")
+	part := Abc_NtkAlloc(Abc_NtkType_t(initNtk.Type), Abc_NtkFunc_t(initNtk.Function), 0)
+	defer Abc_NtkDelete(part)
+	copies := make(map[*Abc_Obj_t]*Abc_Obj_t, len(vNodes))
+	for _, constant := range initNtk.ObjectsOfKind(ABC_OBJ_CONST1) {
+		copies[constant] = Abc_NtkCreateNodeConst1(part)
+	}
+	for i, obj := range vNodes {
+		assert(Abc_ObjIsPo(obj) == 0, "DFS node list excludes POs")
+		if int32(i) < cut && !obj.MarkA {
+			copies[obj] = Abc_NtkCreatePi(part)
+			continue
+		}
+		copy := Abc_NtkDupObj(part, obj, 0)
+		copy.Phase = obj.Phase
+		for _, edge := range obj.Fanins() {
+			fanin := copies[edge.Object]
+			assert(fanin != nil, "fanin appears before its consumer in DFS order")
+			if err := part.AddFanin(copy, Edge{Object: fanin, Complement: edge.Complement}); err != nil {
+				panic(err)
+			}
+		}
+		copies[obj] = copy
+	}
+	po := Abc_NtkPo(initNtk, 0)
+	assert(Abc_ObjFaninNum(po) == 1, "init output has one driver")
+	poEdge := po.Fanins()[0]
+	output := copies[poEdge.Object]
+	assert(output != nil, "init output driver copied")
+	if err := part.AddFanin(Abc_NtkCreatePo(part), Edge{Object: output, Complement: poEdge.Complement}); err != nil {
+		panic(err)
+	}
+	result := abci.Abc_NtkMiterSat(part, int64(500000), int64(50000000), 0, nil, nil)
+	return boolInt(result == 0)
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Constrains backward retiming for initializability.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_FlowRetime_ConstrainInit() {
-  var vNodes *Vec_Ptr_t;
-  var low, high, mid int32;
-  var i, n, lag int32;
-  var pObj *Abc_Obj_t = nil;
-  var pOrigObj *Abc_Obj_t;
-  var pConstraint *InitConstraint_t  = new(InitConstraint_t);
-
-  memset( pConstraint, 0, sizeof(InitConstraint_t) );
-
-  assert(pManMR.pInitNtk, "pManMR.pInitNtk");
-
-  vprintf("\tsearch for initial state conflict...\n");
-
-  vNodes = Abc_NtkDfs(pManMR.pInitNtk, 0);
-  n = Vec_PtrSize(vNodes);
-  // also add PIs to vNodes
-  Abc_NtkForEachPi(pManMR.pInitNtk, pObj, i) 
-    Vec_PtrPush(vNodes, pObj);
-  Vec_PtrReorder(vNodes, n);
-
-#if defined(DEBUG_CHECK)
-    assert(!Abc_FlowRetime_PartialSat( vNodes, 0 ));
-#endif
-
-  // grow initialization constraint
-  for {
-    vprintf("\t\t");
-
-    // find element to add to set...
-    low = 0;
-high = Vec_PtrSize(vNodes);
-    for low != high-1 {
-      mid = (low + high) >> 1;
-      
-      if !(Abc_FlowRetime_PartialSat( vNodes, mid ) != 0) {
-        low = mid;
-        vprintf("-");
-      } else {
-        high = mid;
-        vprintf("*");
-      }
-      fflush(os.Stdout);
-    }
-      
-#if defined(DEBUG_CHECK)
-    assert(Abc_FlowRetime_PartialSat( vNodes, high ));
-    assert(!Abc_FlowRetime_PartialSat( vNodes, low ));
-#endif
-    
-    // mark its TFO
-    pObj = (Abc_Obj_t*)Vec_PtrEntry( vNodes, low );
-    Abc_NtkMarkCone_rec( pObj, 1 );
-    vprintf("   conflict term = %d ", low);
-
-     
-                            
-                               
-                 
-                                        
-                       
-      
-
-    // add node to constraint
-    Abc_FlowRetime_GetInitToOrig( pObj, &pOrigObj, &lag );
-    assert((pOrigObj != nil), "pOrigObj");
-    vprintf(" <=> %d/%d\n", Abc_ObjId(pOrigObj), lag);
-
-         
-                            
-                                   
-                 
-                                            
-                       
-      
-    Vec_IntPush( &pConstraint.vNodes, Abc_ObjId(pOrigObj) );
-    Vec_IntPush( &pConstraint.vLags, lag );
-
-  
-if !((Abc_FlowRetime_PartialSat( vNodes, Vec_PtrSize(vNodes) ) != 0)) { break }
-} 
-
-  pConstraint.pBiasNode = nil;
-
-  // add constraint
-  Vec_PtrPush( pManMR.vInitConstraints, pConstraint );
-
-  // clear marks
-  Abc_NtkForEachObj( pManMR.pInitNtk, pObj, i)
-    pObj.fMarkA = 0;
-
-  // free
-  Vec_PtrFree( vNodes );
+	assert(pManMR.pInitNtk != nil, "backward init network exists")
+	fmt.Fprintln(os.Stdout, "\tsearch for initial state conflict...")
+	dfsNodes := Abc_NtkDfs(pManMR.pInitNtk, 0)
+	vNodes := append(pManMR.pInitNtk.ObjectsOfKind(ABC_OBJ_PI), dfsNodes...)
+	constraint := &InitConstraint_t{vNodes: Vec_IntAlloc(8), vLags: Vec_IntAlloc(8)}
+	for {
+		assert(len(vNodes) > 0, "init network DFS has a conflict node")
+		low, high := int32(0), int32(len(vNodes))
+		for low < high-1 {
+			middle := (low + high) / 2
+			if Abc_FlowRetime_PartialSat(vNodes, middle) != 0 {
+				high = middle
+			} else {
+				low = middle
+			}
+		}
+		selected := vNodes[low]
+		markTFO := func(root *Abc_Obj_t) {
+			seen := make(map[*Abc_Obj_t]bool)
+			var visit func(*Abc_Obj_t)
+			visit = func(obj *Abc_Obj_t) {
+				if obj == nil || seen[obj] {
+					return
+				}
+				seen[obj] = true
+				obj.MarkA = true
+				for _, next := range obj.Fanouts() {
+					visit(next)
+				}
+			}
+			visit(root)
+		}
+		markTFO(selected)
+		var original *Abc_Obj_t
+		var lag int32
+		Abc_FlowRetime_GetInitToOrig(selected, &original, &lag)
+		assert(original != nil, "conflict node maps to original object")
+		Vec_IntPush(constraint.vNodes, Abc_ObjId(original))
+		Vec_IntPush(constraint.vLags, lag)
+		fmt.Fprintf(os.Stdout, "\t\tconflict term %d maps to %d/%d\n", low, Abc_ObjId(original), lag)
+		if Abc_FlowRetime_PartialSat(vNodes, int32(len(vNodes))) == 0 {
+			break
+		}
+	}
+	constraint.pBiasNode = nil
+	Vec_PtrPush(pManMR.vInitConstraints, constraint)
+	for _, obj := range pManMR.pInitNtk.Objects() {
+		obj.MarkA = false
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Removes nodes to bias against uninitializable cuts.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_FlowRetime_RemoveInitBias() {
-  // Abc_Ntk_t *pNtk = pManMR->pNtk;
-  var pBiasNode *Abc_Obj_t;
-  var pConstraint *InitConstraint_t;
-  var i int32;
-
-  Vec_PtrForEachEntry( InitConstraint_t *, pManMR.vInitConstraints, pConstraint, i ) {
-    pBiasNode = pConstraint.pBiasNode;
-    pConstraint.pBiasNode = nil;
-
-    if pBiasNode != nil {
-      Abc_NtkDeleteObj(pBiasNode); }
-  }
+	for i := 0; i < Vec_PtrSize(pManMR.vInitConstraints); i++ {
+		constraint, ok := Vec_PtrEntry(pManMR.vInitConstraints, int32(i)).(*InitConstraint_t)
+		assert(ok && constraint != nil, "init constraint has expected type")
+		if constraint.pBiasNode != nil {
+			Abc_NtkDeleteObj(constraint.pBiasNode)
+			constraint.pBiasNode = nil
+		}
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Connects the bias node to one of the constraint vertices.]
-
-  Description [ACK!
-               Currently this is dumb dumb hack.
-               What should we do with biases that belong on BOs?  These
-               move through the circuit.
-               Currently, the bias gets marked on the fan-in of BO
-               and the bias gets implemented on every BO fan-out of a
-               node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_FlowRetime_ConnectBiasNode(pBiasNode *Abc_Obj_t, pObj *Abc_Obj_t, biasLag int32) {
-  var pCur, pNext *Abc_Obj_t;
-  var i int32;
-  var lag int32;
-  var vNodes *Vec_Ptr_t  = Vec_PtrAlloc(1);
-  var vLags *Vec_Int_t  = Vec_IntAlloc(1);
-  var pNtk *Abc_Ntk_t  = Abc_ObjNtk( pObj );
-  
-  Vec_PtrPush( vNodes, pObj );
-  Vec_IntPush( vLags, 0 );
-
-  Abc_NtkIncrementTravId( pNtk );
-
-  for Vec_PtrSize( vNodes ) {
-    pCur = (Abc_Obj_t*)Vec_PtrPop( vNodes );
-    lag = Vec_IntPop( vLags );
-
-    if Abc_NodeIsTravIdCurrent( pCur ) { continue; }
-    Abc_NodeSetTravIdCurrent( pCur );
-
-    if !Abc_ObjIsLatch(pCur) &&
-        !Abc_ObjIsBo(pCur) &&
-        Abc_FlowRetime_GetLag(pObj)+lag == biasLag {
-
-      // printf("biasing : ");
-      // Abc_ObjPrint(stdout,  pCur );
-     
-      FSET( pCur, BLOCK );
-     
-                                         
-      
-    }
-
-    Abc_ObjForEachFanout( pCur, pNext, i ) {
-      if Abc_ObjIsBi(pNext) ||
-          Abc_ObjIsLatch(pNext) ||
-          Abc_ObjIsBo(pNext) ||
-          Abc_ObjIsBo(pCur) {
-        Vec_PtrPush( vNodes, pNext );
-        Vec_IntPush( vLags, lag - Abc_ObjIsLatch(pNext) ? 1 : 0 );
-      }
-    }
-  }
-
-  Vec_PtrFree( vNodes );
-  Vec_IntFree( vLags );
+func Abc_FlowRetime_ConnectBiasNode(_ *Abc_Obj_t, start *Abc_Obj_t, biasLag int32) {
+	if start == nil {
+		return
+	}
+	type state struct {
+		obj         *Abc_Obj_t
+		relativeLag int32
+	}
+	stack := []state{{obj: start}}
+	seen := make(map[*Abc_Obj_t]map[int32]bool)
+	for len(stack) != 0 {
+		current := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		byLag := seen[current.obj]
+		if byLag == nil {
+			byLag = make(map[int32]bool)
+			seen[current.obj] = byLag
+		}
+		if byLag[current.relativeLag] {
+			continue
+		}
+		byLag[current.relativeLag] = true
+		obj := current.obj
+		if Abc_ObjIsLatch(obj) == 0 && Abc_ObjIsBo(obj) == 0 && Abc_FlowRetime_GetLag(start)+current.relativeLag == biasLag {
+			FSET(obj, BLOCK)
+		}
+		for _, next := range obj.Fanouts() {
+			if Abc_ObjIsBi(next) != 0 || Abc_ObjIsLatch(next) != 0 || Abc_ObjIsBo(next) != 0 || Abc_ObjIsBo(obj) != 0 {
+				delta := int32(0)
+				if Abc_ObjIsLatch(next) != 0 {
+					delta = 1
+				}
+				stack = append(stack, state{obj: next, relativeLag: current.relativeLag - delta})
+			}
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds nodes to bias against uninitializable cuts.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_FlowRetime_AddInitBias() {
-  var pNtk *Abc_Ntk_t  = pManMR.pNtk;
-  var pBiasNode, pObj *Abc_Obj_t;
-  var pConstraint *InitConstraint_t;
-  var i, j, id int32;
-  int nConstraints = Vec_PtrSize( pManMR.vInitConstraints );
-
-  pManMR.pDataArray = ABC_REALLOC( Flow_Data_t, pManMR.pDataArray, pManMR.nNodes + (nConstraints*(pManMR.iteration+1)) );
-  memset(pManMR.pDataArray + pManMR.nNodes, 0, sizeof(Flow_Data_t)*(nConstraints*(pManMR.iteration+1)));
-
-  vprintf("\t\tcreating %d bias structures\n", nConstraints);
-
-  Vec_PtrForEachEntry(InitConstraint_t*, pManMR.vInitConstraints, pConstraint, i ) {
-    if pConstraint.pBiasNode { continue; }
-    
- //   printf("\t\t\tbias %d...\n", i);
-    pBiasNode = Abc_NtkCreateBlackbox( pNtk );
-
-    Vec_IntForEachEntry( &pConstraint.vNodes, id, j ) {
-      pObj = Abc_NtkObj(pNtk, id);
-      Abc_FlowRetime_ConnectBiasNode(pBiasNode, pObj, Vec_IntEntry(&pConstraint.vLags, j));
-    }
-
-    // pConstraint->pBiasNode = pBiasNode;
-  }
+	for i := 0; i < Vec_PtrSize(pManMR.vInitConstraints); i++ {
+		constraint, ok := Vec_PtrEntry(pManMR.vInitConstraints, int32(i)).(*InitConstraint_t)
+		assert(ok && constraint != nil, "init constraint has expected type")
+		if constraint.pBiasNode != nil {
+			continue
+		}
+		assert(Vec_IntSize(constraint.vNodes) == Vec_IntSize(constraint.vLags), "constraint node and lag vectors align")
+		for j := 0; j < Vec_IntSize(constraint.vNodes); j++ {
+			obj := Abc_NtkObj(pManMR.pNtk, Vec_IntEntry(constraint.vNodes, j))
+			assert(obj != nil, "constraint object still exists")
+			Abc_FlowRetime_ConnectBiasNode(nil, obj, Vec_IntEntry(constraint.vLags, j))
+		}
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Clears mapping from init node to original node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_FlowRetime_ClearInitToOrig(pInit *Abc_Obj_t) {
 	if pInit == nil {
 		panic("cannot clear init mapping for a nil object")
@@ -1315,12 +910,16 @@ func Abc_FlowRetime_SetInitToOrig(pInit *Abc_Obj_t, pOrig *Abc_Obj_t) {
 	ensureInitToOrig(id)
 
 	// Box boundaries and latches do not correspond to ordinary logic nodes.
-	if Abc_ObjIsBo(pOrig) != 0 || Abc_ObjIsBi(pOrig) != 0 || Abc_ObjIsLatch(pOrig) != 0 {
+	if Abc_ObjIsBo(pOrig) != 0 || Abc_ObjIsBi(pOrig) != 0 || Abc_ObjIsLatch(pOrig) != 0 || Abc_AigNodeIsConst(pOrig) != 0 || Abc_NodeIsConst(pOrig) != 0 {
 		Abc_FlowRetime_ClearInitToOrig(pInit)
 		return
 	}
 
 	lag := Abc_FlowRetime_ObjFirstNonLatchBox(pOrig, &pOrig)
+	if lag < 0 || pOrig == nil {
+		Abc_FlowRetime_ClearInitToOrig(pInit)
+		return
+	}
 	pManMR.pInitToOrig[int(id)] = NodeLag_t{
 		id:  Abc_ObjId(pOrig),
 		lag: Abc_FlowRetime_GetLag(pOrig) + lag,
@@ -1349,4 +948,3 @@ func Abc_FlowRetime_GetInitToOrig(pInit *Abc_Obj_t, pOrig **Abc_Obj_t, lag *int3
 }
 
 //ABC_NAMESPACE_IMPL_END
-

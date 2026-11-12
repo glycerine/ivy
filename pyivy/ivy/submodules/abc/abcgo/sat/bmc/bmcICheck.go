@@ -53,15 +53,6 @@ import (
   SeeAlso     []
 
 ***********************************************************************/
-func Cnf_DeriveGiaRemapped(p *Gia_Man_t) *Cnf_Dat_t {
-    var pCnf *Cnf_Dat_t;
-    var pAig *Aig_Man_t  = Gia_ManToAigSimple( p );
-    pAig.nRegs = 0;
-    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );
-    Aig_ManStop( pAig );
-    return pCnf;
-}
-
 /**Function*************************************************************
 
   Synopsis    []
@@ -73,19 +64,6 @@ func Cnf_DeriveGiaRemapped(p *Gia_Man_t) *Cnf_Dat_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Cnf_DataLiftGia(p *Cnf_Dat_t, pGia *Gia_Man_t, nVarsPlus int32) {
-    var pObj *Gia_Obj_t;
-    var v int32;
-    // inlining of macro Gia_ManForEachObj
-    for  v = 0; (v < pGia.nObjs) && ((pObj) = Gia_ManObj(pGia, v)); v++  {
-        if p.pVarNums[Gia_ObjId(pGia, pObj)] >= 0 {
-            p.pVarNums[Gia_ObjId(pGia, pObj)] += nVarsPlus; }
-    }
-    for  v = 0; v < p.nLiterals; v++  {
-        p.pClauses[0][v] += 2*nVarsPlus;
-    }
-}
-
 /**Function*************************************************************
 
   Synopsis    []

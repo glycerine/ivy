@@ -22,14 +22,18 @@ func Fsim_ManSwitchSimulate(g *aig.Graph, parameters *Fsim_ParSwitch_t) (*Switch
 		return nil, err
 	}
 	defer Fsim_ManDelete(p)
+	p.words = pars.Words
 	if err = Fsim_ManFront(p, false); err != nil {
 		return nil, err
 	}
 	count := len(g.Nodes())
 	ones, transitions := make([]uint64, count), make([]uint64, count)
-	previous := make([][]uint32, count)
-	for i := range previous {
-		previous[i] = make([]uint32, pars.Words)
+	var previous [][]uint32
+	if pars.ProbabilityTransition {
+		previous = make([][]uint32, count)
+		for i := range previous {
+			previous[i] = make([]uint32, pars.Words)
+		}
 	}
 	cis := make([][]uint32, p.CIs)
 	for i := range cis {
@@ -54,7 +58,9 @@ func Fsim_ManSwitchSimulate(g *aig.Graph, parameters *Fsim_ParSwitch_t) (*Switch
 				if frame >= max(pars.Prefix, 1) && pars.ProbabilityTransition {
 					transitions[id] += uint64(bits.OnesCount32(value ^ previous[id][w]))
 				}
-				previous[id][w] = value
+				if pars.ProbabilityTransition {
+					previous[id][w] = value
+				}
 			}
 		}
 		outputs, err := p.Round(cis)

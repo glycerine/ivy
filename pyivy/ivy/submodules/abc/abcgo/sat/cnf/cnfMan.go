@@ -108,6 +108,19 @@ func Cnf_DataLift(cnf *Cnf_Dat_t, variables int32) {
 	if cnf == nil || variables == 0 {
 		return
 	}
+	cnf.LiftVariableOffsets(variables)
+	cnf.nVars += variables
+	cnf.Variables = int(cnf.nVars)
+}
+
+// LiftVariableOffsets shifts literals and object mappings into a larger
+// solver namespace while preserving this CNF's local variable count. BMC
+// callers that concatenate independently encoded frames need that local count
+// unchanged when advancing the next frame.
+func (cnf *Cnf_Dat_t_) LiftVariableOffsets(variables int32) {
+	if cnf == nil || variables == 0 {
+		return
+	}
 	for i, v := range cnf.VarNums {
 		if v >= 0 {
 			cnf.VarNums[i] += variables
@@ -120,8 +133,6 @@ func Cnf_DataLift(cnf *Cnf_Dat_t, variables int32) {
 		}
 	}
 	cnf.pClauses = cloneClauses(cnf.Clauses)
-	cnf.nVars += variables
-	cnf.Variables = int(cnf.nVars)
 }
 func Cnf_DataCollectFlipLits(cnf *Cnf_Dat_t, variable int32, flips *Vec_Int_t) {
 	if flips == nil {
@@ -340,17 +351,14 @@ func Cnf_DataAddXorClause(sat *bsat.Solver, a, b, c int32) int32 {
 	if sat == nil {
 		return 0
 	}
-	clauses := [][]int32{{a, b, c ^ 1}, {a ^ 1, b ^ 1, c ^ 1}, {a, b ^ 1, c}, {a ^ 1, b, c}}
+	clauses := [][]bsat.Literal{
+		{bsat.Negative(a), bsat.Negative(b), bsat.Negative(c)},
+		{bsat.Negative(a), bsat.Positive(b), bsat.Positive(c)},
+		{bsat.Positive(a), bsat.Negative(b), bsat.Positive(c)},
+		{bsat.Positive(a), bsat.Positive(b), bsat.Negative(c)},
+	}
 	for _, clause := range clauses {
-		lits := make([]bsat.Literal, len(clause))
-		for i, lit := range clause {
-			if lit&1 != 0 {
-				lits[i] = bsat.Negative(lit >> 1)
-			} else {
-				lits[i] = bsat.Positive(lit >> 1)
-			}
-		}
-		if !sat.AddClause(lits...) {
+		if !sat.AddClause(clause...) {
 			return 0
 		}
 	}

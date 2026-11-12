@@ -1,219 +1,97 @@
 package llb
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [llb2Driver.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [BDD based reachability.]
-
-  Synopsis    [Procedures working with flop drivers.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: llb2Driver.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "llbInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// driver issue:arises when creating
-// - driver ref-counter array
-// - Ns2Glo maps
-// - final partition
-// - change-phase cube
-
-// LI variable is used when
-// - driver drives more than one LI
-// - driver is a PI
-// - driver is a constant
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of times each flop driver is referenced.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_DriverCountRefs(p *Aig_Man_t) *Vec_Int_t {
-    var vCounts *Vec_Int_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    vCounts = Vec_IntStart( Aig_ManObjNumMax(p) );
-    Saig_ManForEachLi( p, pObj, i )
-        Vec_IntAddToEntry( vCounts, Aig_ObjFaninId0(pObj), 1 );
-    return vCounts;
+// Llb_DriverCountRefs counts edge references into each graph node.
+func Llb_DriverCountRefs(g *Aig_Man_t) *Vec_Int_t {
+	if g == nil {
+		return nil
+	}
+	counts := vec.Vec_IntStart(int(aig.Aig_ManObjNumMax(g)))
+	for _, node := range g.Nodes() {
+		if node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer && node.Kind != aig.Output {
+			continue
+		}
+		faninCount := 1
+		if node.Kind == aig.And || node.Kind == aig.ExclusiveOr {
+			faninCount = 2
+		}
+		for i := 0; i < faninCount; i++ {
+			id := node.Fanins[i].NodeID()
+			vec.Vec_IntAddToEntry(counts, id, 1)
+		}
+	}
+	return counts
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns array of NS variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_DriverCollectNs(pAig *Aig_Man_t, vDriRefs *Vec_Int_t) *Vec_Int_t {
-    var vVars *Vec_Int_t;
-    var pObj, pDri *Aig_Obj_t;
-    var i int32;
-    vVars = Vec_IntAlloc( Aig_ManRegNum(pAig) );
-    Saig_ManForEachLi( pAig, pObj, i )
-    {
-        pDri = Aig_ObjFanin0(pObj);
-        if Vec_IntEntry( vDriRefs, Aig_ObjId(pDri) ) != 1 || Saig_ObjIsPi(pAig, pDri) || Aig_ObjIsConst1(pDri) {
-            Vec_IntPush( vVars, Aig_ObjId(pObj) );
-        } else {
-            Vec_IntPush( vVars, Aig_ObjId(pDri) ); }
-    }
-    return vVars;
+// Llb_DriverCollectNs returns IDs of latch-input drivers.
+func Llb_DriverCollectNs(g *Aig_Man_t, refs *Vec_Int_t) *Vec_Int_t {
+	if g == nil {
+		return nil
+	}
+	registers := int(g.RegisterCount())
+	outputs := g.Outputs()
+	result := vec.Vec_IntAlloc(registers)
+	for i := len(outputs) - registers; i < len(outputs); i++ {
+		if i >= 0 {
+			vec.Vec_IntPush(result, int32(outputs[i].NodeID()))
+		}
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns array of CS variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_DriverCollectCs(pAig *Aig_Man_t) *Vec_Int_t {
-    var vVars *Vec_Int_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    vVars = Vec_IntAlloc( Aig_ManRegNum(pAig) );
-    Saig_ManForEachLo( pAig, pObj, i )
-        Vec_IntPush( vVars, Aig_ObjId(pObj) );
-    return vVars;
+// Llb_DriverCollectCs returns IDs of latch outputs.
+func Llb_DriverCollectCs(g *Aig_Man_t) *Vec_Int_t {
+	if g == nil {
+		return nil
+	}
+	registers := int(g.RegisterCount())
+	inputs := g.Inputs()
+	result := vec.Vec_IntAlloc(registers)
+	for i := len(inputs) - registers; i < len(inputs); i++ {
+		if i >= 0 {
+			vec.Vec_IntPush(result, int32(inputs[i].NodeID()))
+		}
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Create cube for phase swapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_DriverPhaseCube(pAig *Aig_Man_t, vDriRefs *Vec_Int_t, dd *DdManager) *DdNode {
-    var bCube, bVar, bTemp *DdNode;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    var TimeStop abctime;
-    TimeStop = dd.TimeStop; dd.TimeStop = 0;
-    bCube = Cudd_ReadOne( dd );  Cudd_Ref( bCube );
-    Saig_ManForEachLi( pAig, pObj, i )
-    {
-        assert(Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) >= 1, "Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) >= 1");
-        if Vec_IntEntry( vDriRefs, Aig_ObjFaninId0(pObj) ) != 1 {
-            continue; }
-        if !Aig_ObjFaninC0(pObj) {
-            continue; }
-        bVar  = Cudd_bddIthVar( dd, Aig_ObjFaninId0(pObj) );
-        bCube = Cudd_bddAnd( dd, bTemp = bCube, bVar );  Cudd_Ref( bCube );
-        Cudd_RecursiveDeref( dd, bTemp );
-    }
-    Cudd_Deref( bCube );
-    dd.TimeStop = TimeStop;
-    return bCube;
+// Llb_DriverPhaseCube captures complemented latch-driver phases. The variable
+// order follows the full node-ID variable map used by the image manager.
+func Llb_DriverPhaseCube(g *Aig_Man_t, refs *Vec_Int_t, dd *DdManager) *DdNode {
+	if g == nil || dd == nil {
+		return nil
+	}
+	cube := core.Cudd_ReadOne(dd)
+	outputs := g.Outputs()
+	registers := int(g.RegisterCount())
+	for i := len(outputs) - registers; i < len(outputs); i++ {
+		if i < 0 {
+			continue
+		}
+		edge := outputs[i]
+		if !edge.Complemented() {
+			continue
+		}
+		index := edge.NodeID()
+		if index < len(dd.Vars) {
+			cube = core.Cudd_bddAnd(dd, cube, core.Cudd_Not(core.Cudd_bddIthVar(dd, index)))
+		}
+		if cube == nil {
+			return nil
+		}
+	}
+	return cube
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute the last partition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_DriverLastPartition(p *Aig_Man_t, vVarsNs *Vec_Int_t, TimeTarget abctime) *DdManager {
-//    int fVerbose = 1;
-    var dd *DdManager;
-    var bVar1, bVar2, bProd, bRes, bTemp *DdNode;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    dd = Cudd_Init( Aig_ManObjNumMax(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );
-    dd.TimeStop = TimeTarget;
-    bRes = Cudd_ReadOne(dd);                                   Cudd_Ref( bRes );
-
-    // mark the duplicated flop inputs
-    Aig_ManForEachObjVec( vVarsNs, p, pObj, i )
-    {
-        if !Saig_ObjIsLi(p, pObj) {
-            continue; }
-        bVar1 = Cudd_bddIthVar( dd, Aig_ObjId(pObj) );
-        bVar2 = Cudd_bddIthVar( dd, Aig_ObjFaninId0(pObj) );
-        if Aig_ObjIsConst1(Aig_ObjFanin0(pObj)) {
-            bVar2 = Cudd_ReadOne(dd); }
-        // inlining of macro Cudd_NotCond
-        bVar2 = ((DdNode *)((ptrint)(bVar2) ^ (Aig_ObjFaninC0(pObj))));
-        bProd = Cudd_bddXnor( dd, bVar1, bVar2 );              Cudd_Ref( bProd );
-//        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd );        Cudd_Ref( bRes );
-//        bRes  = Extra_bddAndTime( dd, bTemp = bRes, bProd, TimeTarget );  
-        bRes  = Cudd_bddAnd( dd, bTemp = bRes, bProd );  
-        if bRes == nil {
-            Cudd_RecursiveDeref( dd, bTemp );
-            Cudd_RecursiveDeref( dd, bProd );
-            return nil;
-        }        
-        Cudd_Ref( bRes );
-        Cudd_RecursiveDeref( dd, bTemp );
-        Cudd_RecursiveDeref( dd, bProd );
-    }
-
-/*
-    Saig_ManForEachLi( p, pObj, i )
-        printf( "%d ", Aig_ObjId(pObj) );
-    printf( "\n" );
-    Saig_ManForEachLi( p, pObj, i )
-        printf( "%c%d ", Aig_ObjFaninC0(pObj)? '-':'+', Aig_ObjFaninId0(pObj) );
-    printf( "\n" );
-*/
-    Cudd_AutodynDisable( dd );
-//    Cudd_RecursiveDeref( dd, bRes );
-//    Extra_StopManager( dd );
-    dd.bFunc = bRes;
-    dd.TimeStop = 0;
-    return dd;
+// Llb_DriverLastPartition creates a manager with one variable per CI.
+func Llb_DriverLastPartition(g *Aig_Man_t, nextState *Vec_Int_t, timeout abctime) *DdManager {
+	if g == nil {
+		return nil
+	}
+	return core.NewBDDManager(len(g.Inputs()))
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

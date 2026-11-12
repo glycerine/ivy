@@ -1,1301 +1,903 @@
 package proof
 
 import (
+	"bufio"
+	"errors"
 	"fmt"
+	"io"
+	"os"
+	"strconv"
+	"strings"
 	"time"
 )
 
-import "os"
+const (
+	proofChunkSize   = 1 << 16
+	defaultProofFile = "proof.cnf_"
+)
 
-/**CFile****************************************************************
+const LIT_UNDEF Lit = ^Lit(0)
 
-  FileName    [pr.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Proof recording.]
-
-  Synopsis    [Core procedures of the package.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: pr.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <assert.h>
-
-//#include "misc/util/abc_global.h"
-//#include "pr.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-typedef unsigned lit;
-
-   
+// Pr_Cls_t stores one input clause or learned clause and its assigned proof ID.
 type Pr_Cls_t struct {
-    uTruth        uint32;       // interpolant
-    pProof           any;       // the proof node 
-//    void *          pAntis;       // the anticedents
-    pNext       *Pr_Cls_t;        // the next clause
-    pNext0       *Pr_Cls_t;       // the next 0-watch
-    pNext1       *Pr_Cls_t;       // the next 0-watch
-    Id             int32;           // the clause ID
-    fA uint32; /* C bitfield: 1 bits; review packing and truncation */  // belongs to A
-    fRoot uint32; /* C bitfield: 1 bits; review packing and truncation */  // original clause
-    fVisit uint32; /* C bitfield: 1 bits; review packing and truncation */  // visited clause
-    nLits uint32; /* C bitfield: 24 bits; review packing and truncation */  // the number of literals
-    lit             pLits[0];     // literals of this clause
+	uTruth uint32
+	pProof int32
+	pNext  *Pr_Cls_t
+	Id     int32
+	fA     bool
+	fRoot  bool
+	fVisit bool
+	pLits  []Lit
 }
 
+// Pr_Man_t_ owns a clause database and the state used to check RUP learned
+// clauses and emit the corresponding resolution trace.
 type Pr_Man_t_ struct {
-    // general data
-    fProofWrite             int32;  // writes the proof file
-    fProofVerif             int32;  // verifies the proof
-    nVars             int32;        // the number of variables
-    nVarsAB             int32;      // the number of global variables
-    nRoots             int32;       // the number of root clauses
-    nClauses             int32;     // the number of all clauses
-    nClausesA             int32;    // the number of clauses of A 
-    pHead       *Pr_Cls_t;        // the head clause
-    pTail       *Pr_Cls_t;        // the tail clause
-    pLearnt       *Pr_Cls_t;      // the tail clause
-    pEmpty       *Pr_Cls_t;       // the empty clause
-    // internal BCP
-    nRootSize             int32;    // the number of root level assignments
-    nTrailSize             int32;   // the number of assignments made 
-    pTrail            *lit;       // chronological order of assignments (size nVars)
-    pAssigns            *lit;     // assignments by variable (size nVars) 
-    pSeens           string;       // temporary mark (size nVars)
-    pVarTypes           string;    // variable type (size nVars) [1=A, 0=B, <0=AB]
-    pReasons      **Pr_Cls_t;     // reasons for each assignment (size nVars)          
-    pWatches      **Pr_Cls_t;     // watched clauses for each literal (size 2*nVars)          
-    nVarsAlloc             int32;   // the allocated size of arrays
-    // proof recording
-    pManProof           any;    // proof manager
-    Counter             int32;      // counter of resolved clauses
-    // memory management
-    nChunkSize             int32;   // the number of bytes in a chunk
-    nChunkUsed             int32;   // the number of bytes used in the last chunk
-    pChunkLast           string;   // the last memory chunk
-    // internal verification
-    pResLits            *lit;     // the literals of the resolvent   
-    nResLits             int32;     // the number of literals of the resolvent
-    nResLitsAlloc             int32;// the number of literals of the resolvent
-    // runtime stats
-    timeBcp         abctime;
-    timeTrace         abctime;
-    timeRead         abctime;
-    timeTotal         abctime;
+	fProofWrite   int32
+	fProofVerif   int32
+	nVars         int32
+	nVarsAB       int32
+	nRoots        int32
+	nClauses      int32
+	nClausesA     int32
+	activeClauses int32
+	pHead         *Pr_Cls_t
+	pTail         *Pr_Cls_t
+	pLearnt       *Pr_Cls_t
+	pEmpty        *Pr_Cls_t
+
+	nRootSize  int32
+	nTrailSize int32
+	pTrail     []Lit
+	pAssigns   []Lit
+	pSeens     []bool
+	pVarTypes  []int8
+	pReasons   []*Pr_Cls_t
+	nVarsAlloc int32
+
+	Counter     int32
+	clauses     []*Pr_Cls_t
+	proofFile   string
+	proofWriter io.Writer
+	lastError   error
+	proofSteps  []ProofStep
+	startTime   time.Time
+	timeBcp     time.Duration
+	timeTrace   time.Duration
+	timeRead    time.Duration
+	timeTotal   time.Duration
+	memoryUsed  int64
+	interpolant uint32
+	finished    bool
 }
 
-// variable assignments 
-var LIT_UNDEF lit = 0xffffffff;
+// ProofStep records one resolution of clause Left with clause Right.
+type ProofStep struct {
+	ID          int32
+	Left, Right int32
+	Literals    []Lit
+}
 
-// variable/literal conversions (taken from MiniSat)
-func toLit(v int32) lit { return v + v;  }
-func toLitCond(v int32, c int32) lit { return v + v + (c != 0); }
-func lit_neg(l lit) lit { return l ^ 1;  }
-func lit_var(l lit) int32 { return l >> 1; }
-func lit_sign(l lit) int32 { return l & 1;  }
-func lit_print(l lit) int32 { if lit_sign(l) != 0 {
-    return -lit_var(l)-1;
-} else {
-    return lit_var(l)+1;
-} }
-func lit_read(s int32) lit { if s > 0 {
-    return toLit(s-1);
-} else {
-    return lit_neg(toLit(-s-1));
-} }
-func lit_check(l lit, n int32) int32 { return l >= 0 && lit_var(l) < n;                  }
+func ToLit(v int32) Lit {
+	if v < 0 || uint64(v) > uint64(^uint32(0)>>1) {
+		panic("proof: variable out of range")
+	}
+	return Lit(uint32(v) << 1)
+}
+func LitFromDIMACS(v int32) Lit {
+	if v == 0 || v == -1<<31 {
+		panic("proof: invalid DIMACS literal")
+	}
+	l := ToLit(abs(v) - 1)
+	if v < 0 {
+		return l ^ 1
+	}
+	return l
+}
+func LitToDIMACS(l Lit) int32 {
+	v := int64(l>>1) + 1
+	if l&1 != 0 {
+		v = -v
+	}
+	if v < -1<<31 || v > 1<<31-1 {
+		panic("proof: literal out of range")
+	}
+	return int32(v)
+}
+func LitVar(l Lit) int32           { return int32(l >> 1) }
+func LitSign(l Lit) bool           { return l&1 != 0 }
+func LitNeg(l Lit) Lit             { return l ^ 1 }
+func LitValid(l Lit, n int32) bool { return l != LIT_UNDEF && LitVar(l) < n }
+func toLit(v int32) lit            { return ToLit(v) }
+func toLitCond(v int32, c int32) lit {
+	l := ToLit(v)
+	if c != 0 {
+		return l ^ 1
+	}
+	return l
+}
+func lit_neg(l lit) lit   { return LitNeg(l) }
+func lit_var(l lit) int32 { return LitVar(l) }
+func lit_sign(l lit) int32 {
+	if LitSign(l) {
+		return 1
+	}
+	return 0
+}
+func lit_print(l lit) int32 { return LitToDIMACS(l) }
+func lit_read(v int32) lit  { return LitFromDIMACS(v) }
+func lit_check(l lit, n int32) int32 {
+	if LitValid(l, n) {
+		return 1
+	}
+	return 0
+}
+func abs(v int32) int32 {
+	if v < 0 {
+		return -v
+	}
+	return v
+}
 
-// iterators through the clauses
-// Original macro:
-// #define Pr_ManForEachClause( p, pCls )        for( pCls = p->pHead; pCls; pCls = pCls->pNext )
-
-// Original macro:
-// #define Pr_ManForEachClauseRoot( p, pCls )    for( pCls = p->pHead; pCls != p->pLearnt; pCls = pCls->pNext )
-
-// Original macro:
-// #define Pr_ManForEachClauseLearnt( p, pCls )  for( pCls = p->pLearnt; pCls; pCls = pCls->pNext )
-
-
-// static procedures
-// static char *     Pr_ManMemoryFetch( Pr_Man_t * p, int nBytes );
-
-// static void       Pr_ManMemoryStop( Pr_Man_t * p );
-
-// static void       Pr_ManResize( Pr_Man_t * p, int nVarsNew );
-
-
-// exported procedures
-// extern Pr_Man_t * Pr_ManAlloc( int nVarsAlloc );
-
-// extern void       Pr_ManFree( Pr_Man_t * p );
-
-// extern int        Pr_ManAddClause( Pr_Man_t * p, lit * pBeg, lit * pEnd, int fRoot, int fClauseA );
-
-// extern int        Pr_ManProofWrite( Pr_Man_t * p );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocate proof manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Pr_ManAlloc(nVarsAlloc int32) *Pr_Man_t {
-    var p *Pr_Man_t;
-    // allocate the manager
-    // inlining of macro ABC_ALLOC
-    p = (Pr_Man_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Pr_Man_t))));
-    memset( p, 0, sizeof(Pr_Man_t) );
-    // allocate internal arrays
-    Pr_ManResize( p, nVarsAlloc? nVarsAlloc : 256 );
-    // set the starting number of variables
-    p.nVars = 0;
-    // memory management
-    p.nChunkSize = (1<<16); // use 64K chunks
-    // verification
-    p.nResLitsAlloc = (1<<16);
-    // inlining of macro ABC_ALLOC
-    p.pResLits = ((lit *) malloc(sizeof(lit) * (size_t)(p.nResLitsAlloc)));
-    // parameters
-    p.fProofWrite = 0;
-    p.fProofVerif = 0;
-    return p;    
+	if nVarsAlloc < 0 {
+		nVarsAlloc = 0
+	}
+	p := &Pr_Man_t{proofFile: defaultProofFile, startTime: time.Now()}
+	Pr_ManResize(p, nVarsAlloc)
+	return p
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resize proof manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Pr_ManResize(p *Pr_Man_t, nVarsNew int32) {
-    // check if resizing is needed
-    if p.nVarsAlloc < nVarsNew {
-        var nVarsAllocOld int32  = p.nVarsAlloc;
-        // find the new size
-        if p.nVarsAlloc == 0 {
-            p.nVarsAlloc = 1; }
-        for  p.nVarsAlloc < nVarsNew  { 
-            p.nVarsAlloc *= 2;
-        }
-        // resize the arrays
-        // inlining of macro ABC_REALLOC
-        
-        if p.pTrail {
-            p.pTrail = ((lit *) realloc((char *)(p.pTrail), sizeof(lit) * (size_t)(p.nVarsAlloc)));
-        } else {
-            p.pTrail = ((lit *) malloc(sizeof(lit) * (size_t)(p.nVarsAlloc)));
-        }
-        // inlining of macro ABC_REALLOC
-        
-        if p.pAssigns {
-            p.pAssigns = ((lit *) realloc((char *)(p.pAssigns), sizeof(lit) * (size_t)(p.nVarsAlloc)));
-        } else {
-            p.pAssigns = ((lit *) malloc(sizeof(lit) * (size_t)(p.nVarsAlloc)));
-        }
-        // inlining of macro ABC_REALLOC
-        
-        if p.pSeens {
-            p.pSeens = ((char *) realloc((char *)(p.pSeens), sizeof(char) * (size_t)(p.nVarsAlloc)));
-        } else {
-            p.pSeens = ((char *) malloc(sizeof(char) * (size_t)(p.nVarsAlloc)));
-        }
-        // inlining of macro ABC_REALLOC
-        
-        if p.pVarTypes {
-            p.pVarTypes = ((char *) realloc((char *)(p.pVarTypes), sizeof(char) * (size_t)(p.nVarsAlloc)));
-        } else {
-            p.pVarTypes = ((char *) malloc(sizeof(char) * (size_t)(p.nVarsAlloc)));
-        }
-        // inlining of macro ABC_REALLOC
-        
-        if p.pReasons {
-            p.pReasons = ((Pr_Cls_t * *) realloc((char *)(p.pReasons), sizeof(Pr_Cls_t *) * (size_t)(p.nVarsAlloc)));
-        } else {
-            p.pReasons = ((Pr_Cls_t * *) malloc(sizeof(Pr_Cls_t *) * (size_t)(p.nVarsAlloc)));
-        }
-        // inlining of macro ABC_REALLOC
-        
-        if p.pWatches {
-            p.pWatches = ((Pr_Cls_t * *) realloc((char *)(p.pWatches), sizeof(Pr_Cls_t *) * (size_t)(p.nVarsAlloc*2)));
-        } else {
-            p.pWatches = ((Pr_Cls_t * *) malloc(sizeof(Pr_Cls_t *) * (size_t)(p.nVarsAlloc*2)));
-        }
-        // clean the free space
-        memset( p.pAssigns  + nVarsAllocOld, 0xff, sizeof(lit) * (p.nVarsAlloc - nVarsAllocOld) );
-        memset( p.pSeens    + nVarsAllocOld, 0, sizeof(char) * (p.nVarsAlloc - nVarsAllocOld) );
-        memset( p.pVarTypes + nVarsAllocOld, 0, sizeof(char) * (p.nVarsAlloc - nVarsAllocOld) );
-        memset( p.pReasons  + nVarsAllocOld, 0, sizeof(Pr_Cls_t *) * (p.nVarsAlloc - nVarsAllocOld) );
-        memset( p.pWatches  + nVarsAllocOld, 0, sizeof(Pr_Cls_t *) * (p.nVarsAlloc - nVarsAllocOld)*2 );
-    }
-    // adjust the number of variables
-    if p.nVars < nVarsNew {
-        p.nVars = nVarsNew; }
+	if p == nil || nVarsNew < 0 {
+		return
+	}
+	if nVarsNew > p.nVarsAlloc {
+		alloc := p.nVarsAlloc
+		if alloc == 0 {
+			alloc = 1
+		}
+		for alloc < nVarsNew {
+			alloc *= 2
+		}
+		old := int(p.nVarsAlloc)
+		p.pAssigns = append(p.pAssigns, make([]Lit, int(alloc)-len(p.pAssigns))...)
+		p.pSeens = append(p.pSeens, make([]bool, int(alloc)-len(p.pSeens))...)
+		p.pVarTypes = append(p.pVarTypes, make([]int8, int(alloc)-len(p.pVarTypes))...)
+		p.pReasons = append(p.pReasons, make([]*Pr_Cls_t, int(alloc)-len(p.pReasons))...)
+		for i := old; i < int(alloc); i++ {
+			p.pAssigns[i] = LIT_UNDEF
+		}
+		p.nVarsAlloc = alloc
+	}
+	if p.nVars < nVarsNew {
+		p.nVars = nVarsNew
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Deallocate proof manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Pr_ManFree(p *Pr_Man_t) {
-    fmt.Printf("Runtime stats:\n");
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Reading "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeRead)))/(float64(int64(time.Second))));;
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("BCP     "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeBcp)))/(float64(int64(time.Second))));;
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Trace   "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeTrace)))/(float64(int64(time.Second))));;
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("TOTAL   "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;
-
-    Pr_ManMemoryStop( p );
-    p.pTrail = nil;
-    p.pAssigns = nil;
-    p.pSeens = nil;
-    p.pVarTypes = nil;
-    p.pReasons = nil;
-    p.pWatches = nil;
-    p.pResLits = nil;
-    p = nil;
+	if p == nil {
+		return
+	}
+	p.pTrail, p.pAssigns, p.pSeens, p.pVarTypes, p.pReasons = nil, nil, nil, nil, nil
+	p.clauses, p.proofSteps = nil, nil
+	p.pHead, p.pTail, p.pLearnt, p.pEmpty = nil, nil, nil, nil
+	p.proofWriter = nil
+}
+func (p *Pr_Man_t) SetProofOutput(file string) {
+	if p == nil {
+		return
+	}
+	p.fProofWrite = 1
+	if file == "" {
+		file = defaultProofFile
+	}
+	p.proofFile = file
+}
+func (p *Pr_Man_t) DisableProofOutput() {
+	if p != nil {
+		p.fProofWrite = 0
+	}
+}
+func (p *Pr_Man_t) SetProofVerification(enabled bool) {
+	if p == nil {
+		return
+	}
+	if enabled {
+		p.fProofVerif = 1
+	} else {
+		p.fProofVerif = 0
+	}
+}
+func (p *Pr_Man_t) LastError() error {
+	if p == nil {
+		return errors.New("proof: nil manager")
+	}
+	return p.lastError
+}
+func (p *Pr_Man_t) Clauses() [][]Lit {
+	if p == nil {
+		return nil
+	}
+	out := make([][]Lit, len(p.clauses))
+	for i, c := range p.clauses {
+		out[i] = append([]Lit(nil), c.pLits...)
+	}
+	return out
+}
+func (p *Pr_Man_t) ProofSteps() []ProofStep {
+	if p == nil {
+		return nil
+	}
+	out := make([]ProofStep, len(p.proofSteps))
+	for i, s := range p.proofSteps {
+		out[i] = s
+		out[i].Literals = append([]Lit(nil), s.Literals...)
+	}
+	return out
+}
+func (p *Pr_Man_t) Counts() (vars, roots, clauses int32) {
+	if p == nil {
+		return 0, 0, 0
+	}
+	return p.nVars, p.nRoots, p.nClauses
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds one clause to the watcher list.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManWatchClause(p *Pr_Man_t, pClause *Pr_Cls_t, Lit lit) {
-    assert((lit_check(Lit, p.nVars) != 0), "lit_check(Lit, p.nVars)");
-    if pClause.pLits[0] == Lit {
-        pClause.pNext0 = p.pWatches[lit_neg(Lit)];  
-    } else {
-        assert(pClause.pLits[1] == Lit, "pClause.pLits[1] == Lit");
-        pClause.pNext1 = p.pWatches[lit_neg(Lit)];  
-    }
-    p.pWatches[lit_neg(Lit)] = pClause;
+// Pr_ManAddClause appends a clause. Root clauses must precede learned clauses;
+// A-partition clauses must be roots. It sorts literals by packed value and
+// rejects repeated variables or out-of-range flags instead of relying on C asserts.
+func Pr_ManAddClause(p *Pr_Man_t, literals []Lit, fRoot, fClauseA int32) int32 {
+	if p == nil {
+		return 0
+	}
+	p.lastError = nil
+	if fRoot < 0 || fRoot > 1 || fClauseA < 0 || fClauseA > 1 || (fClauseA != 0 && fRoot == 0) {
+		p.lastError = errors.New("proof: invalid root/A flags")
+		return 0
+	}
+	if p.pLearnt != nil && fRoot != 0 {
+		p.lastError = errors.New("proof: root clause follows learned clause")
+		return 0
+	}
+	clause := append([]Lit(nil), literals...)
+	sortLits(clause)
+	maxVar := int32(-1)
+	for i, l := range clause {
+		if l == LIT_UNDEF {
+			p.lastError = errors.New("proof: undefined literal in clause")
+			return 0
+		}
+		if v := LitVar(l); v > maxVar {
+			maxVar = v
+		}
+		if i > 0 && LitVar(clause[i-1]) == LitVar(l) {
+			p.lastError = fmt.Errorf("proof: repeated variable %d in clause", LitVar(l))
+			return 0
+		}
+	}
+	if maxVar >= 0 {
+		Pr_ManResize(p, maxVar+1)
+	}
+	if fClauseA != 0 && p.nClausesA != int32(len(p.clauses)) {
+		p.lastError = errors.New("proof: A clauses must form the initial root prefix")
+		return 0
+	}
+	c := &Pr_Cls_t{Id: p.nClauses, fRoot: fRoot != 0, fA: fClauseA != 0, pLits: clause}
+	if p.pHead == nil {
+		p.pHead = c
+	}
+	if p.pTail != nil {
+		p.pTail.pNext = c
+	}
+	p.pTail = c
+	if p.pLearnt == nil && !c.fRoot {
+		p.pLearnt = c
+	}
+	if len(clause) == 0 {
+		if p.pEmpty != nil {
+			p.lastError = errors.New("proof: multiple empty clauses")
+		}
+		p.pEmpty = c
+	}
+	p.clauses = append(p.clauses, c)
+	p.nClauses++
+	if c.fRoot {
+		p.nRoots++
+	}
+	if c.fA {
+		p.nClausesA++
+	}
+	return 1
+}
+func sortLits(lits []Lit) {
+	for i := 1; i < len(lits); i++ {
+		for j := i; j > 0 && lits[j-1] > lits[j]; j-- {
+			lits[j-1], lits[j] = lits[j], lits[j-1]
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds one clause to the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManAddClause(p *Pr_Man_t, pBeg *lit, pEnd *lit, fRoot int32, fClauseA int32) int32 {
-    var pClause *Pr_Cls_t;
-    var Lit lit;
-    var i *lit;
-    var j *lit;
-    var nSize, VarMax int32;
-
-    // process the literals
-    if pBeg < pEnd {
-        // insertion sort
-        VarMax = lit_var( *pBeg );
-        for  i = pBeg + 1; i < pEnd; i++  {
-            Lit = *i;
-            if lit_var(Lit) > VarMax {
-                VarMax = lit_var(Lit);
-            } else {
-                VarMax = VarMax;
-            }
-            for  j = i; j > pBeg && *(j-1) > Lit; j--  {
-                *j = *(j-1);
-            }
-            *j = Lit;
-        }
-        // make sure there is no duplicated variables
-        for  i = pBeg + 1; i < pEnd; i++  {
-            assert(lit_var(*(i-1)) != lit_var(*i), "lit_var(*(i-1)) != lit_var(*i)");
-        }
-        // resize the manager
-        Pr_ManResize( p, VarMax+1 );
-    }
-
-    // get memory for the clause
-    nSize = sizeof(Pr_Cls_t) + sizeof(lit) * (pEnd - pBeg);
-    pClause = (Pr_Cls_t *)Pr_ManMemoryFetch( p, nSize );
-    *pClause = Pr_Cls_t{};
-
-    // assign the clause
-    assert(!(fClauseA != 0) || fRoot, "!fClauseA || fRoot"); // clause of A is always a root clause
-    p.nRoots += fRoot;
-    p.nClausesA += fClauseA;
-    pClause.Id = p.nClauses++;
-    pClause.fA = fClauseA;
-    pClause.fRoot = fRoot;
-    pClause.nLits = pEnd - pBeg;
-    memcpy( pClause.pLits, pBeg, sizeof(lit) * (pEnd - pBeg) );
-
-    // add the clause to the list
-    if p.pHead == nil {
-        p.pHead = pClause; }
-    if p.pTail == nil {
-        p.pTail = pClause;
-    } else {
-        p.pTail.pNext = pClause;
-        p.pTail = pClause;
-    }
-
-    // mark the first learnt clause
-    if p.pLearnt == nil && !pClause.fRoot {
-        p.pLearnt = pClause; }
-
-    // add the empty clause
-    if pClause.nLits == 0 {
-        if p.pEmpty {
-            fmt.Printf("More than one empty clause!\n"); }
-        p.pEmpty = pClause;
-    }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Fetches memory.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManMemoryFetch(p *Pr_Man_t, nBytes int32) string {
-    var pMem string;
-    if p.pChunkLast == nil || nBytes > p.nChunkSize - p.nChunkUsed {
-        // inlining of macro ABC_ALLOC
-        pMem = (char *)((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));
-        *(char **)pMem = p.pChunkLast;
-        p.pChunkLast = pMem;
-        p.nChunkUsed = sizeof(char *);
-    }
-    pMem = p.pChunkLast + p.nChunkUsed;
-    p.nChunkUsed += nBytes;
-    return pMem;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Frees memory manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManMemoryStop(p *Pr_Man_t) {
-    var pMem, pNext string;
-    if p.pChunkLast == nil {
-        return; }
-    for  pMem = p.pChunkLast; pNext = *(char **)pMem; pMem = pNext  {
-        pMem = nil;
-    }
-    pMem = nil;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Reports memory usage in bytes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Pr_ManMemoryReport(p *Pr_Man_t) int32 {
-    var Total int32;
-    var pMem, pNext string;
-    if p.pChunkLast == nil {
-        return 0; }
-    Total = p.nChunkUsed; 
-    for  pMem = p.pChunkLast; pNext = *(char **)pMem; pMem = pNext  {
-        Total += p.nChunkSize;
-    }
-    return Total;
+	if p == nil {
+		return 0
+	}
+	n := int64(cap(p.clauses))*8 + int64(cap(p.pAssigns))*16 + int64(cap(p.pTrail))*4
+	for _, c := range p.clauses {
+		n += int64(cap(c.pLits))*4 + 48
+	}
+	if n > int64(^uint32(0)>>1) {
+		return int32(^uint32(0) >> 1)
+	}
+	return int32(n)
+}
+func Pr_ManMemoryStop(p *Pr_Man_t) {
+	if p != nil {
+		p.memoryUsed = 0
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Records the proof.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_PrintBinary_(pFile *os.File, Sign []uint32, nBits int32) {
-    var Remainder, nWords int32;
-    var w, i int32;
-
-    Remainder = (nBits%(sizeof(unsigned)*8));
-    nWords    = (nBits/(sizeof(unsigned)*8)) + (Remainder>0);
-
-    for  w = nWords-1; w >= 0; w--  {
-        for  i = ((w == nWords-1 && Remainder)? Remainder-1: 31); i >= 0; i--  {
-            fmt.Fprintf(pFile, "%c", '0' + int32(((Sign[w] & (1<<i)) > 0)));
-        }
-    }
+func Pr_ManEnqueue(p *Pr_Man_t, l Lit, reason *Pr_Cls_t) int32 {
+	if p == nil || !LitValid(l, p.nVars) {
+		return 0
+	}
+	v := LitVar(l)
+	if p.pAssigns[v] != LIT_UNDEF {
+		if p.pAssigns[v] == l {
+			return 1
+		}
+		return 0
+	}
+	p.pAssigns[v] = l
+	p.pReasons[v] = reason
+	p.pTrail = append(p.pTrail, l)
+	p.nTrailSize = int32(len(p.pTrail))
+	return 1
+}
+func Pr_ManCancelUntil(p *Pr_Man_t, level int32) {
+	if p == nil {
+		return
+	}
+	if level < 0 {
+		level = 0
+	}
+	if level > int32(len(p.pTrail)) {
+		level = int32(len(p.pTrail))
+	}
+	for _, l := range p.pTrail[level:] {
+		v := LitVar(l)
+		p.pAssigns[v], p.pReasons[v] = LIT_UNDEF, nil
+	}
+	p.pTrail = p.pTrail[:level]
+	p.nTrailSize = level
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prints the interpolant for one clause.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManPrintInterOne(p *Pr_Man_t, pClause *Pr_Cls_t) {
-    fmt.Printf("Clause %2d :  ", pClause.Id);
-    Extra_PrintBinary_( os.Stdout, &pClause.uTruth, (1 << p.nVarsAB) );
-    fmt.Printf("\n");
+// Pr_ManPropagateOne propagates the current trail to a fixpoint and returns a
+// conflicting clause if one is found. The database is small and immutable per
+// proof step, so this native implementation scans clauses instead of storing
+// C-style pointer-linked watch lists.
+func Pr_ManPropagateOne(p *Pr_Man_t, _ Lit) *Pr_Cls_t {
+	if p == nil {
+		return nil
+	}
+	conflict, _ := propagate(p, len(p.pTrail))
+	return conflict
+}
+func Pr_ManPropagate(p *Pr_Man_t, start int32) *Pr_Cls_t {
+	if p == nil {
+		return nil
+	}
+	began := time.Now()
+	conflict, _ := propagate(p, int(start))
+	p.timeBcp += time.Since(began)
+	return conflict
+}
+func propagate(p *Pr_Man_t, start int) (*Pr_Cls_t, int) {
+	if start < 0 {
+		start = 0
+	}
+	if start > len(p.pTrail) {
+		start = len(p.pTrail)
+	}
+	for {
+		changed := false
+		for _, clause := range p.clauses[:p.activeClauses] {
+			trueCount, undefCount, last := 0, 0, Lit(0)
+			for _, l := range clause.pLits {
+				value := p.pAssigns[LitVar(l)]
+				if value == LIT_UNDEF {
+					undefCount++
+					last = l
+				} else if value == l {
+					trueCount++
+					break
+				}
+			}
+			if trueCount > 0 {
+				continue
+			}
+			if undefCount == 0 {
+				return clause, start
+			}
+			if undefCount == 1 {
+				if Pr_ManEnqueue(p, last, clause) == 0 {
+					return clause, start
+				}
+				changed = true
+			}
+		}
+		if !changed {
+			return nil, start
+		}
+	}
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Records implication.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManEnqueue(p *Pr_Man_t, Lit lit, pReason *Pr_Cls_t) int32 {
-    var Var int32  = lit_var(Lit);
-    if p.pAssigns[Var] != LIT_UNDEF {
-        return p.pAssigns[Var] == Lit; }
-    p.pAssigns[Var] = Lit;
-    p.pReasons[Var] = pReason;
-    p.pTrail[p.nTrailSize++] = Lit;
-//printf( "assigning var %d value %d\n", Var, !lit_sign(Lit) );
-    return 1;
+func Pr_ManProofWriteOne(p *Pr_Man_t, c *Pr_Cls_t) {
+	if p == nil || c == nil {
+		return
+	}
+	p.Counter++
+	c.pProof = p.Counter
+	if p.proofWriter != nil {
+		writeClauseLine(p.proofWriter, c.pProof, c.pLits)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Records implication.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManCancelUntil(p *Pr_Man_t, Level int32) {
-    var Lit lit;
-    var i, Var int32;
-    for  i = p.nTrailSize - 1; i >= Level; i--  {
-        Lit = p.pTrail[i];
-        Var = lit_var( Lit );
-        p.pReasons[Var] = nil;
-        p.pAssigns[Var] = LIT_UNDEF;
-//printf( "cancelling var %d\n", Var );
-    }
-    p.nTrailSize = Level;
+func Pr_ManProofTraceOne(p *Pr_Man_t, conflict, final *Pr_Cls_t) int32 {
+	if p == nil || conflict == nil || final == nil {
+		return 0
+	}
+	start := time.Now()
+	resolvent := append([]Lit(nil), conflict.pLits...)
+	seen := make([]bool, p.nVars)
+	for _, l := range resolvent {
+		seen[LitVar(l)] = true
+	}
+	if p.nClausesA > 0 {
+		final.uTruth = conflict.uTruth
+	}
+	prev := conflict.pProof
+	for i := len(p.pTrail) - 1; i >= 0; i-- {
+		assigned := p.pTrail[i]
+		v := LitVar(assigned)
+		if !seen[v] {
+			continue
+		}
+		seen[v] = false
+		reason := p.pReasons[v]
+		if reason == nil {
+			continue
+		}
+		resolvent, p.lastError = resolveOn(resolvent, reason.pLits, v)
+		if p.lastError != nil {
+			p.timeTrace += time.Since(start)
+			return 0
+		}
+		if p.nClausesA > 0 {
+			if p.pVarTypes[v] == 1 {
+				final.uTruth |= reason.uTruth
+			} else {
+				final.uTruth &= reason.uTruth
+			}
+		}
+		p.Counter++
+		step := ProofStep{ID: p.Counter, Left: prev, Right: reason.pProof, Literals: append([]Lit(nil), resolvent...)}
+		p.proofSteps = append(p.proofSteps, step)
+		if p.proofWriter != nil {
+			fmt.Fprintf(p.proofWriter, "%d * %d %d 0\n", step.ID, step.Left, step.Right)
+		}
+		prev = p.Counter
+		for _, l := range reason.pLits {
+			if LitVar(l) != v {
+				seen[LitVar(l)] = true
+			}
+		}
+	}
+	if !subsetByLiteral(resolvent, final.pLits) {
+		p.lastError = fmt.Errorf("proof: derived resolvent %v does not imply learned clause %v", resolvent, final.pLits)
+		p.timeTrace += time.Since(start)
+		return 0
+	}
+	if p.nClausesA > 0 {
+		p.interpolant = final.uTruth
+	}
+	p.timeTrace += time.Since(start)
+	return prev
+}
+func resolveOn(current, reason []Lit, variable int32) ([]Lit, error) {
+	pivot := -1
+	for i, l := range current {
+		if LitVar(l) == variable {
+			pivot = i
+			break
+		}
+	}
+	if pivot < 0 {
+		return nil, fmt.Errorf("proof: pivot variable %d missing from resolvent", variable)
+	}
+	assignedComplement := LitNeg(current[pivot])
+	if !containsLit(reason, assignedComplement) {
+		return nil, fmt.Errorf("proof: reason lacks complement of pivot %d", variable)
+	}
+	out := append([]Lit(nil), current[:pivot]...)
+	out = append(out, current[pivot+1:]...)
+	for _, l := range reason {
+		if LitVar(l) == variable {
+			continue
+		}
+		found := false
+		for _, old := range out {
+			if LitVar(old) == LitVar(l) {
+				if old != l {
+					return nil, fmt.Errorf("proof: tautological resolvent on variable %d", LitVar(l))
+				}
+				found = true
+				break
+			}
+		}
+		if !found {
+			out = append(out, l)
+		}
+	}
+	return out, nil
+}
+func containsLit(list []Lit, needle Lit) bool {
+	for _, l := range list {
+		if l == needle {
+			return true
+		}
+	}
+	return false
+}
+func subsetByLiteral(a, b []Lit) bool {
+	for _, l := range a {
+		if !containsLit(b, l) {
+			return false
+		}
+	}
+	return true
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Propagate one assignment.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManPropagateOne(p *Pr_Man_t, Lit lit) *Pr_Cls_t {
-    var ppPrev **Pr_Cls_t;
-    var pCur *Pr_Cls_t;
-    var pTemp *Pr_Cls_t;
-    var LitF lit  = lit_neg(Lit);
-    var i int32;
-    // iterate through the literals
-    ppPrev = p.pWatches + Lit;
-    for  pCur = p.pWatches[Lit]; pCur; pCur = *ppPrev  {
-        // make sure the false literal is in the second literal of the clause
-        if pCur.pLits[0] == LitF {
-            pCur.pLits[0] = pCur.pLits[1];
-            pCur.pLits[1] = LitF;
-            pTemp = pCur.pNext0;
-            pCur.pNext0 = pCur.pNext1;
-            pCur.pNext1 = pTemp;
-        }
-        assert(pCur.pLits[1] == LitF, "pCur.pLits[1] == LitF");
-
-        // if the first literal is true, the clause is satisfied
-        if pCur.pLits[0] == p.pAssigns[lit_var(pCur.pLits[0])] {
-            ppPrev = &pCur.pNext1;
-            continue;
-        }
-
-        // look for a new literal to watch
-        for  i = 2; i < int32(pCur.nLits); i++  {
-            // skip the case when the literal is false
-            if lit_neg(pCur.pLits[i]) == p.pAssigns[lit_var(pCur.pLits[i])] {
-                continue; }
-            // the literal is either true or unassigned - watch it
-            pCur.pLits[1] = pCur.pLits[i];
-            pCur.pLits[i] = LitF;
-            // remove this clause from the watch list of Lit
-            *ppPrev = pCur.pNext1;
-            // add this clause to the watch list of pCur->pLits[i] (now it is pCur->pLits[1])
-            Pr_ManWatchClause( p, pCur, pCur.pLits[1] );
-            break;
-        }
-        if i < int32(pCur.nLits) { // found new watch
-            continue; }
-
-        // clause is unit - enqueue new implication
-        if Pr_ManEnqueue(p, pCur.pLits[0], pCur) != 0 {
-            ppPrev = &pCur.pNext1;
-            continue;
-        }
-
-        // conflict detected - return the conflict clause
-        return pCur;
-    }
-    return nil;
+func Pr_ManProofRecordOne(p *Pr_Man_t, clause *Pr_Cls_t) int32 {
+	if p == nil || clause == nil || clause.fRoot || len(clause.pLits) == 0 || p.pEmpty == nil {
+		if p != nil {
+			p.lastError = errors.New("proof: learned clauses must be non-empty and have a final empty clause")
+		}
+		return 0
+	}
+	if len(p.pTrail) != int(p.nRootSize) {
+		p.lastError = errors.New("proof: trail is not at root level")
+		return 0
+	}
+	for _, l := range clause.pLits {
+		if Pr_ManEnqueue(p, LitNeg(l), nil) == 0 {
+			Pr_ManCancelUntil(p, p.nRootSize)
+			p.lastError = errors.New("proof: learned clause contradicted by root assignment")
+			return 0
+		}
+	}
+	conflict := Pr_ManPropagate(p, p.nRootSize)
+	if conflict == nil {
+		Pr_ManCancelUntil(p, p.nRootSize)
+		p.lastError = fmt.Errorf("proof: learned clause %d is not RUP", clause.Id)
+		return 0
+	}
+	proofID := Pr_ManProofTraceOne(p, conflict, clause)
+	Pr_ManCancelUntil(p, p.nRootSize)
+	if proofID == 0 {
+		return 0
+	}
+	clause.pProof = proofID
+	if len(clause.pLits) == 1 {
+		if Pr_ManEnqueue(p, clause.pLits[0], clause) == 0 {
+			p.lastError = errors.New("proof: learned unit contradicts root assignment")
+			return 0
+		}
+		conflict = Pr_ManPropagate(p, p.nRootSize)
+		if conflict != nil {
+			if p.pEmpty == nil {
+				p.lastError = errors.New("proof: no terminal empty clause")
+				return 0
+			}
+			p.pEmpty.pProof = Pr_ManProofTraceOne(p, conflict, p.pEmpty)
+			if p.pEmpty.pProof == 0 {
+				return 0
+			}
+			p.finished = true
+			return 1
+		}
+		p.nRootSize = p.nTrailSize
+	}
+	p.activeClauses++
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Propagate the current assignments.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManPropagate(p *Pr_Man_t, Start int32) *Pr_Cls_t {
-    var pClause *Pr_Cls_t;
-    var i int32;
-    var clk abctime  = Abc_Clock();
-    for  i = Start; i < p.nTrailSize; i++  {
-        pClause = Pr_ManPropagateOne( p, p.pTrail[i] );
-        if pClause != nil {
-p.timeBcp += Abc_Clock() - clk;
-            return pClause;
-        }
-    }
-p.timeBcp += Abc_Clock() - clk;
-    return nil;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Prints the clause.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManPrintClause(pClause *Pr_Cls_t) {
-    var i int32;
-    fmt.Printf("Clause ID = %d. Proof = %d. {", pClause.Id, int32(pClause.pProof));
-    for  i = 0; i < int32(pClause.nLits); i++  {
-        fmt.Printf(" %d", pClause.pLits[i]);
-    }
-    fmt.Printf(" }\n");
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Prints the resolvent.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManPrintResolvent(pResLits *lit, nResLits int32) {
-    var i int32;
-    fmt.Printf("Resolvent: {");
-    for  i = 0; i < nResLits; i++  {
-        fmt.Printf(" %d", pResLits[i]);
-    }
-    fmt.Printf(" }\n");
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Writes one root clause into a file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManProofWriteOne(p *Pr_Man_t, pClause *Pr_Cls_t) {
-    pClause.pProof = (void *)++p.Counter;
-
-    if p.fProofWrite {
-        var v int32;
-        fmt.Fprintf((FILE *)p.pManProof, "%d", int32(pClause.pProof));
-        for  v = 0; v < int32(pClause.nLits); v++  {
-            fmt.Fprintf((FILE *)p.pManProof, " %d", lit_print(pClause.pLits[v]));
-        }
-        fmt.Fprintf((FILE *)p.pManProof, " 0 0\n");
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Traces the proof for one clause.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManProofTraceOne(p *Pr_Man_t, pConflict *Pr_Cls_t, pFinal *Pr_Cls_t) int32 {
-    var pReason *Pr_Cls_t;
-    var i, v, Var, PrevId int32;
-    var fPrint int32;
-    var clk abctime  = Abc_Clock();
-
-    // collect resolvent literals
-    if p.fProofVerif {
-        assert(int32(pConflict.nLits) <= p.nResLitsAlloc, "int32(pConflict.nLits) <= p.nResLitsAlloc");
-        memcpy( p.pResLits, pConflict.pLits, sizeof(lit) * pConflict.nLits );
-        p.nResLits = pConflict.nLits;
-    }
-
-    // mark all the variables in the conflict as seen
-    for  v = 0; v < int32(pConflict.nLits); v++  {
-        p.pSeens[lit_var(pConflict.pLits[v])] = 1;
-    }
-
-    // start the anticedents
-//    pFinal->pAntis = Vec_PtrAlloc( 32 );
-//    Vec_PtrPush( pFinal->pAntis, pConflict );
-
-    if p.nClausesA {
-        pFinal.uTruth = pConflict.uTruth; }
-   
-    // follow the trail backwards
-    PrevId = int32(pConflict.pProof);
-    for  i = p.nTrailSize - 1; i >= 0; i--  {
-        // skip literals that are not involved
-        Var = lit_var(p.pTrail[i]);
-        if !p.pSeens[Var] {
-            continue; }
-        p.pSeens[Var] = 0;
-
-        // skip literals of the resulting clause
-        pReason = p.pReasons[Var];
-        if pReason == nil {
-            continue; }
-        assert(p.pTrail[i] == pReason.pLits[0], "p.pTrail[i] == pReason.pLits[0]");
-
-        // add the variables to seen
-        for  v = 1; v < int32(pReason.nLits); v++  {
-            p.pSeens[lit_var(pReason.pLits[v])] = 1;
-        }
-
-
-        // record the reason clause
-        assert(pReason.pProof > 0, "pReason.pProof > 0");
-        p.Counter++;
-        if p.fProofWrite {
-            fmt.Fprintf((FILE *)p.pManProof, "%d * %d %d 0\n", p.Counter, PrevId, int32(pReason.pProof)); }
-        PrevId = p.Counter;
-
-        if p.nClausesA {
-            if p.pVarTypes[Var] == 1 { // var of A
-                pFinal.uTruth |= pReason.uTruth;
-            } else {
-                pFinal.uTruth &= pReason.uTruth; }
-        }
- 
-        // resolve the temporary resolvent with the reason clause
-        if p.fProofVerif {
-            var v1, v2 int32; 
-            if fPrint != 0 {
-                Pr_ManPrintResolvent( p.pResLits, p.nResLits ); }
-            // check that the var is present in the resolvent
-            for  v1 = 0; v1 < p.nResLits; v1++  {
-                if lit_var(p.pResLits[v1]) == Var {
-                    break; }
-            }
-            if v1 == p.nResLits {
-                fmt.Printf("Recording clause %d: Cannot find variable %d in the temporary resolvent.\n", pFinal.Id, Var); }
-            if p.pResLits[v1] != lit_neg(pReason.pLits[0]) {
-                fmt.Printf("Recording clause %d: The resolved variable %d is in the wrong polarity.\n", pFinal.Id, Var); }
-            // remove this variable from the resolvent
-            assert(lit_var(p.pResLits[v1]) == Var, "lit_var(p.pResLits[v1]) == Var");
-            p.nResLits--;
-            for  ; v1 < p.nResLits; v1++  {
-                p.pResLits[v1] = p.pResLits[v1+1];
-            }
-            // add variables of the reason clause
-            for  v2 = 1; v2 < int32(pReason.nLits); v2++  {
-                for  v1 = 0; v1 < p.nResLits; v1++  {
-                    if lit_var(p.pResLits[v1]) == lit_var(pReason.pLits[v2]) {
-                        break; }
-                }
-                // if it is a new variable, add it to the resolvent
-                if v1 == p.nResLits {
-                    if p.nResLits == p.nResLitsAlloc {
-                        fmt.Printf("Recording clause %d: Ran out of space for intermediate resolvent.\n, pFinal->Id"); }
-                    p.pResLits[ p.nResLits++ ] = pReason.pLits[v2];
-                    continue;
-                }
-                // if the variable is the same, the literal should be the same too
-                if p.pResLits[v1] == pReason.pLits[v2] {
-                    continue; }
-                // the literal is different
-                fmt.Printf("Recording clause %d: Trying to resolve the clause with more than one opposite literal.\n", pFinal.Id);
-            }
-        }
-
-//        Vec_PtrPush( pFinal->pAntis, pReason );
-    }
-
-    // unmark all seen variables
-//    for ( i = p->nTrailSize - 1; i >= 0; i-- )
-//        p->pSeens[lit_var(p->pTrail[i])] = 0;
-    // check that the literals are unmarked
-//    for ( i = p->nTrailSize - 1; i >= 0; i-- )
-//        assert( p->pSeens[lit_var(p->pTrail[i])] == 0 );
-
-    // use the resulting clause to check the correctness of resolution
-    if p.fProofVerif {
-        var v1, v2 int32; 
-        if fPrint != 0 {
-            Pr_ManPrintResolvent( p.pResLits, p.nResLits ); }
-        for  v1 = 0; v1 < p.nResLits; v1++  {
-            for  v2 = 0; v2 < int32(pFinal.nLits); v2++  {
-                if pFinal.pLits[v2] == p.pResLits[v1] {
-                    break; }
-            }
-            if v2 < int32(pFinal.nLits) {
-                continue; }
-            break;
-        }
-        if v1 < p.nResLits {
-            fmt.Printf("Recording clause %d: The final resolvent is wrong.\n", pFinal.Id);
-            Pr_ManPrintClause( pConflict );
-            Pr_ManPrintResolvent( p.pResLits, p.nResLits );
-            Pr_ManPrintClause( pFinal );
-        }
-    }
-p.timeTrace += Abc_Clock() - clk;
-
-    // return the proof pointer 
-    if p.nClausesA {
-        Pr_ManPrintInterOne( p, pFinal );
-    }
-    return p.Counter;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Records the proof for one clause.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManProofRecordOne(p *Pr_Man_t, pClause *Pr_Cls_t) int32 {
-    var pConflict *Pr_Cls_t;
-    var i int32;
-
-    // empty clause never ends up there
-    assert(pClause.nLits > 0, "pClause.nLits > 0");
-    if pClause.nLits == 0 {
-        fmt.Printf("Error: Empty clause is attempted.\n"); }
-
-    // add assumptions to the trail
-    assert(!pClause.fRoot, "!pClause.fRoot");
-    assert(p.nTrailSize == p.nRootSize, "p.nTrailSize == p.nRootSize");
-    for  i = 0; i < int32(pClause.nLits); i++  {
-        if !(Pr_ManEnqueue( p, lit_neg(pClause.pLits[i]), nil ) != 0) {
-            assert(false, "0"); // impossible
-            return 0;
-        }
-    }
-
-    // propagate the assumptions
-    pConflict = Pr_ManPropagate( p, p.nRootSize );
-    if pConflict == nil {
-        assert(false, "0"); // cannot prove
-        return 0;
-    }
-
-    // construct the proof
-    pClause.pProof = (void *)Pr_ManProofTraceOne( p, pConflict, pClause );
-
-    // undo to the root level
-    Pr_ManCancelUntil( p, p.nRootSize );
-
-    // add large clauses to the watched lists
-    if pClause.nLits > 1 {
-        Pr_ManWatchClause( p, pClause, pClause.pLits[0] );
-        Pr_ManWatchClause( p, pClause, pClause.pLits[1] );
-        return 1;
-    }
-    assert(pClause.nLits == 1, "pClause.nLits == 1");
-
-    // if the clause proved is unit, add it and propagate
-    if !(Pr_ManEnqueue( p, pClause.pLits[0], pClause ) != 0) {
-        assert(false, "0"); // impossible
-        return 0;
-    }
-
-    // propagate the assumption
-    pConflict = Pr_ManPropagate( p, p.nRootSize );
-    if pConflict != nil {
-        // construct the proof
-        p.pEmpty.pProof = (void *)Pr_ManProofTraceOne( p, pConflict, p.pEmpty );
-        fmt.Printf("Found last conflict after adding unit clause number %d!\n", pClause.Id);
-        return 0;
-    }
-
-    // update the root level
-    p.nRootSize = p.nTrailSize;
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Propagate the root clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Pr_ManProcessRoots(p *Pr_Man_t) int32 {
-    var pClause *Pr_Cls_t;
-    var Counter int32;
-
-    // make sure the root clauses are preceeding the learnt clauses
-    Counter = 0;
-    // inlining of macro Pr_ManForEachClause
-    for  pClause = p.pHead; (pClause != nil); pClause = pClause.pNext  {
-        assert(int32(pClause.fA)    == (Counter < int32(p.nClausesA)), "int32(pClause.fA)    == (Counter < int32(p.nClausesA))");
-        assert(int32(pClause.fRoot) == (Counter < int32(p.nRoots)), "int32(pClause.fRoot) == (Counter < int32(p.nRoots))");
-        Counter++;
-    }
-    assert(p.nClauses == Counter, "p.nClauses == Counter");
-
-    // make sure the last clause if empty
-    assert(p.pTail.nLits == 0, "p.pTail.nLits == 0");
-
-    // go through the root unit clauses
-    p.nTrailSize = 0;
-    // inlining of macro Pr_ManForEachClauseRoot
-    for  pClause = p.pHead; pClause != p.pLearnt; pClause = pClause.pNext  {
-        // create watcher lists for the root clauses
-        if pClause.nLits > 1 {
-            Pr_ManWatchClause( p, pClause, pClause.pLits[0] );
-            Pr_ManWatchClause( p, pClause, pClause.pLits[1] );
-        }
-        // empty clause and large clauses
-        if pClause.nLits != 1 {
-            continue; }
-        // unit clause
-        assert((lit_check(pClause.pLits[0], p.nVars) != 0), "lit_check(pClause.pLits[0], p.nVars)");
-        if !(Pr_ManEnqueue( p, pClause.pLits[0], pClause ) != 0) {
-            // detected root level conflict
-            fmt.Printf("Pr_ManProcessRoots(): Detected a root-level conflict\n");
-            assert(false, "0");
-            return 0;
-        }
-    }
-
-    // propagate the root unit clauses
-    pClause = Pr_ManPropagate( p, 0 );
-    if pClause != nil {
-        // detected root level conflict
-        fmt.Printf("Pr_ManProcessRoots(): Detected a root-level conflict\n");
-        assert(false, "0");
-        return 0;
-    }
-
-    // set the root level
-    p.nRootSize = p.nTrailSize;
-    return 1;
+	if p == nil {
+		return 0
+	}
+	if len(p.clauses) == 0 || len(p.clauses[len(p.clauses)-1].pLits) != 0 {
+		p.lastError = errors.New("proof: final clause must be empty")
+		return 0
+	}
+	for i, c := range p.clauses {
+		if c.fRoot != (int32(i) < p.nRoots) || c.fA != (int32(i) < p.nClausesA) {
+			p.lastError = errors.New("proof: roots and A clauses must form ordered prefixes")
+			return 0
+		}
+	}
+	p.pTrail = nil
+	p.nTrailSize = 0
+	p.activeClauses = p.nRoots
+	for _, c := range p.clauses[:p.nRoots] {
+		if len(c.pLits) != 1 {
+			continue
+		}
+		if !LitValid(c.pLits[0], p.nVars) || Pr_ManEnqueue(p, c.pLits[0], c) == 0 {
+			p.lastError = errors.New("proof: conflicting root unit clauses")
+			return 0
+		}
+	}
+	if conflict := Pr_ManPropagate(p, 0); conflict != nil {
+		p.lastError = fmt.Errorf("proof: root-level conflict in clause %d", conflict.Id)
+		return 0
+	}
+	p.nRootSize = p.nTrailSize
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Records the proof.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Pr_ManPrepareInter(p *Pr_Man_t) {
-    var uTruths [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };
-    var pClause *Pr_Cls_t;
-    var Var, v int32;
-
-    // mark the variable encountered in the clauses of A
-    // inlining of macro Pr_ManForEachClauseRoot
-    for  pClause = p.pHead; pClause != p.pLearnt; pClause = pClause.pNext  {
-        if !pClause.fA {
-            break; }
-        for  v = 0; v < int32(pClause.nLits); v++  {
-            p.pVarTypes[lit_var(pClause.pLits[v])] = 1;
-        }
-    }
-
-    // check variables that appear in clauses of B
-    p.nVarsAB = 0;
-    // inlining of macro Pr_ManForEachClauseRoot
-    for  pClause = p.pHead; pClause != p.pLearnt; pClause = pClause.pNext  {
-        if pClause.fA {
-            continue; }
-        for  v = 0; v < int32(pClause.nLits); v++  {
-            Var = lit_var(pClause.pLits[v]);
-            if p.pVarTypes[Var] == 1 { // var of A
-            
-                // change it into a global variable
-                p.nVarsAB++;
-                p.pVarTypes[Var] = -1;
-            }
-        }
-    }
-
-    // order global variables
-    p.nVarsAB = 0;
-    for  v = 0; v < p.nVars; v++  {
-        if p.pVarTypes[v] == -1 {
-            p.pVarTypes[v] -= p.nVarsAB++; }
-    }
-fmt.Printf("There are %d global variables.\n", p.nVarsAB);
-
-    // set interpolants for root clauses
-    // inlining of macro Pr_ManForEachClauseRoot
-    for  pClause = p.pHead; pClause != p.pLearnt; pClause = pClause.pNext  {
-        if !pClause.fA { // clause of B
-        
-            pClause.uTruth = ~0;
-            Pr_ManPrintInterOne( p, pClause );
-            continue;
-        }
-        // clause of A
-        pClause.uTruth = 0;
-        for  v = 0; v < int32(pClause.nLits); v++  {
-            Var = lit_var(pClause.pLits[v]);
-            if p.pVarTypes[Var] < 0 { // global var
-            
-                if lit_sign(pClause.pLits[v]) != 0 { // negative var
-                    pClause.uTruth |= ~uTruths[ -p.pVarTypes[Var]-1 ];
-                } else {
-                    pClause.uTruth |= uTruths[ -p.pVarTypes[Var]-1 ]; }
-            }
-        }
-        Pr_ManPrintInterOne( p, pClause );
-    }
+	if p == nil || p.nClausesA == 0 {
+		return
+	}
+	shared := make([]bool, p.nVars)
+	for _, c := range p.clauses[:p.nClausesA] {
+		for _, l := range c.pLits {
+			p.pVarTypes[LitVar(l)] = 1
+		}
+	}
+	for _, c := range p.clauses[:p.nRoots] {
+		if c.fA {
+			continue
+		}
+		for _, l := range c.pLits {
+			v := LitVar(l)
+			if p.pVarTypes[v] == 1 {
+				shared[v] = true
+			}
+		}
+	}
+	common := []int32{}
+	for v := int32(0); v < p.nVars; v++ {
+		if shared[v] {
+			p.pVarTypes[v] = -1 - int8(len(common))
+			common = append(common, v)
+		}
+	}
+	if len(common) > 5 {
+		p.lastError = fmt.Errorf("proof: interpolation supports at most five shared variables, got %d", len(common))
+		return
+	}
+	truths := []uint32{0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000}
+	for _, c := range p.clauses[:p.nRoots] {
+		if !c.fA {
+			c.uTruth = ^uint32(0)
+			continue
+		}
+		c.uTruth = 0
+		for _, l := range c.pLits {
+			v := LitVar(l)
+			if p.pVarTypes[v] < 0 {
+				idx := int(-p.pVarTypes[v] - 1)
+				term := truths[idx]
+				if LitSign(l) {
+					term = ^term
+				}
+				c.uTruth |= term
+			}
+		}
+	}
+	p.nVarsAB = int32(len(common))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Records the proof.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Pr_ManProofWrite(p *Pr_Man_t) int32 {
-    var pClause *Pr_Cls_t;
-    var RetValue int32  = 1;
-
-    // propagate root level assignments
-    Pr_ManProcessRoots( p );
-
-    // prepare the interpolant computation
-    if p.nClausesA {
-        Pr_ManPrepareInter( p ); }
-
-    // construct proof for each clause
-    // start the proof
-    if p.fProofWrite {
-        p.pManProof = os.OpenFile("proof.cnf_", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666); }
-    p.Counter = 0;
-
-    // write the root clauses
-    // inlining of macro Pr_ManForEachClauseRoot
-    for  pClause = p.pHead; pClause != p.pLearnt; pClause = pClause.pNext  {
-        Pr_ManProofWriteOne( p, pClause );
-    }
-
-    // consider each learned clause
-    // inlining of macro Pr_ManForEachClauseLearnt
-    for  pClause = p.pLearnt; (pClause != nil); pClause = pClause.pNext  {
-        if !(Pr_ManProofRecordOne( p, pClause ) != 0) {
-            RetValue = 0;
-            break;
-        }
-    }
-
-    if p.nClausesA {
-        fmt.Printf("Interpolant:  ");
-    }
-
-
-    // stop the proof
-    if p.fProofWrite {
-        _ = ((FILE *)p.pManProof).Close();
-        p.pManProof = nil;    
-    }
-    return RetValue;
+	if p == nil {
+		return 0
+	}
+	p.lastError = nil
+	p.proofSteps = nil
+	p.Counter = 0
+	p.finished = false
+	started := time.Now()
+	defer func() { p.timeTotal = time.Since(started) }()
+	if Pr_ManProcessRoots(p) == 0 {
+		return 0
+	}
+	if p.nClausesA > 0 {
+		Pr_ManPrepareInter(p)
+		if p.lastError != nil {
+			return 0
+		}
+	}
+	var output *os.File
+	if p.fProofWrite != 0 {
+		f, err := os.Create(p.proofFile)
+		if err != nil {
+			p.lastError = err
+			return 0
+		}
+		output = f
+		p.proofWriter = f
+	}
+	defer func() {
+		if output != nil {
+			if err := output.Close(); err != nil && p.lastError == nil {
+				p.lastError = err
+			}
+		}
+		p.proofWriter = nil
+	}()
+	for _, c := range p.clauses[:p.nRoots] {
+		Pr_ManProofWriteOne(p, c)
+	}
+	for _, c := range p.clauses[p.nRoots:] {
+		if len(c.pLits) == 0 {
+			continue
+		}
+		if Pr_ManProofRecordOne(p, c) == 0 {
+			if p.lastError == nil {
+				p.lastError = fmt.Errorf("proof: failed to record clause %d", c.Id)
+			}
+			return 0
+		}
+		if p.finished {
+			break
+		}
+	}
+	if p.pEmpty != nil && p.pEmpty.pProof == 0 {
+		p.lastError = errors.New("proof: learned clauses did not derive the terminal empty clause")
+		return 0
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Reads clauses from file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManProofRead(pFileName string) *Pr_Man_t {
-    var p *Pr_Man_t  = nil;
-    var pCur string;
-    var pBuffer string = nil;
-    var pArray *int32  = nil;
-    var pFile *os.File;
-    var RetValue, Counter, nNumbers, Temp int32;
-    var nClauses, nClausesA, nRoots, nVars int32;
-
-    // open the file
-    pFile = os.Open(pFileName);
-    if pFile == nil {
-        fmt.Printf("Count not open input file \"%s\".\n", pFileName);
-        return nil;
-    }
-
-    // read the file
-    // inlining of macro ABC_ALLOC
-    pBuffer = (char *)((char *) malloc(sizeof(char) * (size_t)((1<<16))));
-    for  Counter = 0; fgets( pBuffer, (1<<16), pFile );  {
-        if pBuffer[0] == 'c' {
-            continue; }
-        if pBuffer[0] == 'p' {
-            assert(p == nil, "p == nil");
-            nClausesA = 0;
-            RetValue = sscanf( pBuffer + 1, "%d %d %d %d", &nVars, &nClauses, &nRoots, &nClausesA );
-            if RetValue != 3 && RetValue != 4 {
-                fmt.Printf("Wrong input file format.\n");
-            }
-            p = Pr_ManAlloc( nVars );
-            // inlining of macro ABC_ALLOC
-            pArray = (int *)((char *) malloc(sizeof(char) * (size_t)(sizeof(int) * (nVars + 10))));
-            continue;
-        }
-        // skip empty lines
-        for  pCur = pBuffer; *pCur; pCur++  {
-            if !(*pCur == ' ' || *pCur == '\t' || *pCur == '\r' || *pCur == '\n') {
-                break; }
-        }
-        if *pCur == 0 {
-            continue; }
-        // scan the numbers from file
-        nNumbers = 0;
-        pCur = pBuffer;
-        for  *pCur  {
-            // skip spaces
-            for  ; *pCur && *pCur == ' '; pCur++  {}
-            // read next number
-            Temp = 0;
-            sscanf( pCur, "%d", &Temp );
-            if Temp == 0 {
-                break; }
-            pArray[ nNumbers++ ] = lit_read( Temp );
-            // skip non-spaces
-            for  ; *pCur && *pCur != ' '; pCur++  {}
-        }
-        // add the clause
-        if !Pr_ManAddClause( p, (unsigned *)pArray, (unsigned *)pArray + nNumbers, Counter < nRoots, Counter < nClausesA ) {
-            fmt.Printf("Bad clause number %d.\n", Counter);
-            return nil;
-        }
-        // count the clauses
-        Counter++;
-    }
-    // check the number of clauses
-    if Counter != nClauses {
-        fmt.Printf("Expected %d clauses but read %d.\n", nClauses, Counter); }
-
-    // finish
-    if pArray != nil { pArray = nil; }
-    if pBuffer { pBuffer = nil; }
-    _ = (pFile).Close();
-    return p;
+func ReadProofLog(fileName string) (*Pr_Man_t, error) {
+	started := time.Now()
+	f, err := os.Open(fileName)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	scanner := bufio.NewScanner(f)
+	scanner.Buffer(make([]byte, 4096), 4<<20)
+	var p *Pr_Man_t
+	var wantClauses, wantRoots, wantA int32
+	var seen int32
+	for lineNo := 1; scanner.Scan(); lineNo++ {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "c") {
+			continue
+		}
+		fields := strings.Fields(line)
+		if strings.HasPrefix(line, "p") {
+			if p != nil || len(fields) < 4 || len(fields) > 5 {
+				return nil, fmt.Errorf("proof: line %d: malformed header", lineNo)
+			}
+			vals := make([]int64, len(fields)-1)
+			for i, s := range fields[1:] {
+				vals[i], err = strconv.ParseInt(s, 10, 32)
+				if err != nil || vals[i] < 0 {
+					return nil, fmt.Errorf("proof: line %d: invalid header number", lineNo)
+				}
+			}
+			p = Pr_ManAlloc(int32(vals[0]))
+			wantClauses, wantRoots = int32(vals[1]), int32(vals[2])
+			if len(vals) == 4 {
+				wantA = int32(vals[3])
+			}
+			if wantRoots > wantClauses || wantA > wantRoots {
+				return nil, fmt.Errorf("proof: line %d: inconsistent counts", lineNo)
+			}
+			continue
+		}
+		if p == nil {
+			return nil, fmt.Errorf("proof: line %d: clause before header", lineNo)
+		}
+		vals := make([]int32, 0, len(fields))
+		terminated := false
+		for _, field := range fields {
+			v, e := strconv.ParseInt(field, 10, 32)
+			if e != nil {
+				return nil, fmt.Errorf("proof: line %d: invalid literal %q", lineNo, field)
+			}
+			if v == 0 {
+				terminated = true
+				break
+			}
+			vals = append(vals, int32(v))
+		}
+		if !terminated {
+			return nil, fmt.Errorf("proof: line %d: missing zero clause terminator", lineNo)
+		}
+		lits := make([]Lit, len(vals))
+		for i, v := range vals {
+			if int64(v) > int64(p.nVars) || int64(v) < -int64(p.nVars) {
+				return nil, fmt.Errorf("proof: line %d: literal %d exceeds declared variables", lineNo, v)
+			}
+			lits[i] = LitFromDIMACS(v)
+		}
+		root := int32(0)
+		if seen < wantRoots {
+			root = 1
+		}
+		partA := int32(0)
+		if seen < wantA {
+			partA = 1
+		}
+		if Pr_ManAddClause(p, lits, root, partA) == 0 {
+			return nil, fmt.Errorf("proof: line %d: %w", lineNo, p.LastError())
+		}
+		seen++
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	if p == nil {
+		return nil, errors.New("proof: missing problem header")
+	}
+	if seen != wantClauses {
+		return nil, fmt.Errorf("proof: header declares %d clauses, read %d", wantClauses, seen)
+	}
+	p.timeRead = time.Since(started)
+	return p, nil
+}
+func Pr_ManProofRead(fileName string) *Pr_Man_t {
+	p, err := ReadProofLog(fileName)
+	if err != nil {
+		return nil
+	}
+	return p
+}
+func Pr_ManProofTest(fileName string) int32 {
+	p, err := ReadProofLog(fileName)
+	if err != nil {
+		return 0
+	}
+	defer Pr_ManFree(p)
+	if Pr_ManProofWrite(p) == 0 {
+		return 0
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Records the proof.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-/*
-int Pr_ManProofCount_rec( Pr_Cls_t * pClause )
-{
-    Pr_Cls_t * pNext;
-    int i, Counter;    
-    if ( pClause->fRoot )
-        return 0;
-    if ( pClause->fVisit )
-        return 0;
-    pClause->fVisit = 1;
-    // count the number of visited clauses
-    Counter = 1;
-    Vec_PtrForEachEntry( Pr_Cls_t *, pClause->pAntis, pNext, i )
-        Counter += Pr_ManProofCount_rec( pNext );
-    return Counter;
+func Extra_PrintBinary_(w io.Writer, sign []uint32, nBits int32) {
+	if w == nil || nBits <= 0 {
+		return
+	}
+	for bit := nBits - 1; bit >= 0; bit-- {
+		word := int(bit / 32)
+		off := uint(bit % 32)
+		ch := '0'
+		if word < len(sign) && sign[word]&(uint32(1)<<off) != 0 {
+			ch = '1'
+		}
+		_, _ = fmt.Fprintf(w, "%c", ch)
+	}
 }
-*/
-
-/**Function*************************************************************
-
-  Synopsis    [Records the proof.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pr_ManProofTest(pFileName string) int32 {
-    var p *Pr_Man_t;
-    var clk abctime;
-    var clkTotal abctime = Abc_Clock();
-
-clk = Abc_Clock();
-    p = Pr_ManProofRead( pFileName );
-p.timeRead = Abc_Clock() - clk;
-    if p == nil {
-        return 0; }
-
-    Pr_ManProofWrite( p );
-
-    // print stats
-/*
-    nUsed = Pr_ManProofCount_rec( p->pEmpty );
-    printf( "Roots = %d. Learned = %d. Total = %d. Steps = %d.  Ave = %.2f.  Used = %d. Ratio = %.2f. \n", 
-        p->nRoots, p->nClauses-p->nRoots, p->nClauses, p->Counter,  
-        1.0*(p->Counter-p->nRoots)/(p->nClauses-p->nRoots),
-        nUsed, 1.0*nUsed/(p->nClauses-p->nRoots)  );
-*/
-    fmt.Printf("Vars = %d. Roots = %d. Learned = %d. Resol steps = %d.  Ave = %.2f.  Mem = %.2f MB\n", p.nVars, p.nRoots, p.nClauses-p.nRoots, p.Counter, 1.0*(p.Counter-p.nRoots)/(p.nClauses-p.nRoots), 1.0*Pr_ManMemoryReport(p)/(1<<20));
-
-p.timeTotal = Abc_Clock() - clkTotal;
-    Pr_ManFree( p );
-    return 1;
+func Pr_ManPrintInterOne(p *Pr_Man_t, c *Pr_Cls_t) {
+	if p != nil && c != nil {
+		fmt.Printf("Clause %2d :  %032b\n", c.Id, c.uTruth)
+	}
 }
+func Pr_ManPrintClause(c *Pr_Cls_t) {
+	if c == nil {
+		return
+	}
+	fmt.Printf("Clause ID = %d. Proof = %d. %v\n", c.Id, c.pProof, c.pLits)
+}
+func Pr_ManPrintResolvent(lits []Lit) { fmt.Printf("Resolvent: %v\n", lits) }
 
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func writeClauseLine(w io.Writer, id int32, lits []Lit) {
+	fmt.Fprintf(w, "%d", id)
+	for _, l := range lits {
+		fmt.Fprintf(w, " %d", LitToDIMACS(l))
+	}
+	fmt.Fprintln(w, " 0 0")
+}

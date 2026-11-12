@@ -645,3 +645,33 @@ func Abc_NtkConvertToBlifMv(n *Network) int32 {
 	n.Function = uint8(ABC_FUNC_BLIFMV)
 	return 1
 }
+
+// SetMVVariable stores an owned domain, including symbolic binary domains.
+// Passing nil removes the optional annotation and restores the binary default.
+func SetMVVariable(o *Object, variable *MVVariable) error {
+	if o == nil || o.network == nil || !o.network.contains(o) {
+		return fmt.Errorf("MV variable requires a live object")
+	}
+	if variable == nil {
+		delete(o.network.mvVars, o)
+		return nil
+	}
+	if variable.Values < 2 {
+		return fmt.Errorf("MV domain must have at least two values")
+	}
+	if len(variable.Names) != 0 && len(variable.Names) != variable.Values {
+		return fmt.Errorf("MV label count does not match domain")
+	}
+	seen := make(map[string]bool)
+	for _, name := range variable.Names {
+		if name == "" || seen[name] {
+			return fmt.Errorf("MV labels must be nonempty and unique")
+		}
+		seen[name] = true
+	}
+	if o.network.mvVars == nil {
+		o.network.mvVars = make(map[*Object]*MVVariable)
+	}
+	o.network.mvVars[o] = &MVVariable{Values: variable.Values, Names: append([]string(nil), variable.Names...)}
+	return nil
+}

@@ -1,224 +1,95 @@
 package sfm
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/bool/kit"
+)
 
-/**CFile****************************************************************
-
-  FileName    [sfmCnf.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [SAT-based optimization using internal don't-cares.]
-
-  Synopsis    [CNF computation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: sfmCnf.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sfmInt.h"
-//#include "bool/kit/kit.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sfm_PrintCnf(vCnf *Vec_Str_t) {
-    signed char Entry;
-    var i, Lit int32;
-    Vec_StrForEachEntry( vCnf, Entry, i )
-    {
-        Lit = int32(Entry);
-        if Lit == -1 {
-            fmt.Printf("\n");
-        } else {
-            fmt.Printf("%s%d ", Abc_LitIsCompl(Lit) ? "-":"", Abc_Lit2Var(Lit)); }
-    }
+// Sfm_TruthToCnf derives both ISOP covers and emits implications to the local
+// output variable nVars. Clauses use ordinary var<<1|negative literals.
+func Sfm_TruthToCnf(truth uint64, large []uint64, vars int) [][]int {
+	if vars < 0 || vars > 16 {
+		panic("sfm: invalid truth support")
+	}
+	words := []uint64{stretch(truth, vars)}
+	if vars > 6 {
+		if len(large) < truthWords(vars) {
+			panic("sfm: short truth")
+		}
+		words = large[:truthWords(vars)]
+	}
+	all0, all1 := true, true
+	for _, w := range words {
+		all0 = all0 && w == 0
+		all1 = all1 && w == ^uint64(0)
+	}
+	if all0 || all1 {
+		lit := vars << 1
+		if all0 {
+			lit ^= 1
+		}
+		return [][]int{{lit}}
+	}
+	var clauses [][]int
+	for c := 0; c < 2; c++ {
+		t := make([]uint32, 2*len(words))
+		for i, w := range words {
+			if c != 0 {
+				w = ^w
+			}
+			t[2*i], t[2*i+1] = uint32(w), uint32(w>>32)
+		}
+		var cover []uint32
+		if kit.Kit_TruthIsop(t, int32(vars), &cover, 0) != 0 {
+			panic("sfm: ISOP failed")
+		}
+		for _, cube := range cover {
+			var clause []int
+			for v := 0; v < vars; v++ {
+				literal := (cube >> uint(2*v)) & 3
+				if literal == 1 {
+					clause = append(clause, v<<1)
+				} else if literal == 2 {
+					clause = append(clause, v<<1|1)
+				}
+			}
+			clause = append(clause, vars<<1|c)
+			clauses = append(clauses, clause)
+		}
+	}
+	return clauses
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sfm_TruthToCnf(Truth word, pTruth *word, nVars int32, vCover *Vec_Int_t, vCnf *Vec_Str_t) int32 {
-    var w int32;
-    var nWords int32 = Abc_Truth6WordNum( nVars );
-    Vec_StrClear( vCnf );
-    if nVars <= 6 {
-        if Truth == 0 || ~Truth == 0 {
-            //assert( nVars == 0 );
-            Vec_StrPush( vCnf, byte((Truth == 0)) );
-            Vec_StrPush( vCnf, byte(-1) );
-            return 1;
-        }
-    
-    } else {
-        // const0
-        for  w = 0; w < nWords; w++  {
-            if pTruth[w] {
-                break; }
-        }
-        if w == nWords {
-            Vec_StrPush( vCnf, byte(1) );
-            Vec_StrPush( vCnf, byte(-1) );
-            return 1;
-        }
-        // const1
-        for  w = 0; w < nWords; w++  {
-            if ~pTruth[w] {
-                break; }
-        }
-        if w == nWords {
-            Vec_StrPush( vCnf, byte(0) );
-            Vec_StrPush( vCnf, byte(-1) );
-            return 1;
-        }
-    }
-    {
-        var i, k, c, RetValue, Literal, Cube, nCubes int32;
-        assert(nVars > 0, "nVars > 0");
-        for  c = 0; c < 2; c ++  {
-            if nVars <= 6 {
-                if c {
-                    Truth = ~Truth;
-                } else {
-                    Truth = Truth;
-                }
-                RetValue = Kit_TruthIsop( (unsigned *)&Truth, nVars, vCover, 0 );
-            
-            } else {
-                if c {
-                    for  k = 0; k < nWords; k++  {
-                        pTruth[k] = ~pTruth[k];
-                    } }
-                RetValue = Kit_TruthIsop( (unsigned *)pTruth, nVars, vCover, 0 );
-                if c {
-                    for  k = 0; k < nWords; k++  {
-                        pTruth[k] = ~pTruth[k];
-                    } }
-            }
-            assert(RetValue == 0, "RetValue == 0");
-            nCubes += Vec_IntSize( vCover );
-            Vec_IntForEachEntry( vCover, Cube, i )
-            {
-                for  k = 0; k < nVars; k++  {
-                    Literal = 3 & (Cube >> (k << 1));
-                    if Literal == 1 {      // '0'  -> pos lit
-                        Vec_StrPush( vCnf, byte(Abc_Var2Lit(k, 0)) );
-                    } else if Literal == 2 { // '1'  -> neg lit
-                        Vec_StrPush( vCnf, byte(Abc_Var2Lit(k, 1)) );
-                    } else if Literal != 0 {
-                        assert(false, "0"); }
-                }
-                Vec_StrPush( vCnf, byte(Abc_Var2Lit(nVars, c)) );
-                Vec_StrPush( vCnf, byte(-1) );
-            }
-        }
-        return nCubes;
-    }
+func Sfm_TranslateCnf(cnf [][]int, faninMap []int, pivot int) [][]int {
+	r := make([][]int, len(cnf))
+	for i, c := range cnf {
+		r[i] = make([]int, len(c))
+		for j, l := range c {
+			v := faninMap[l>>1]
+			r[i][j] = v<<1 | (l & 1)
+			if v == pivot {
+				r[i][j] ^= 1
+			}
+		}
+	}
+	return r
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sfm_CreateCnf(p *Sfm_Ntk_t) *Vec_Wec_t {
-    var vCnfs *Vec_Wec_t;
-    var vCnf, vCnfBase *Vec_Str_t;
-    var uTruth word;
-    var i, nCubes int32;
-    vCnf = Vec_StrAlloc( 100 );
-    vCnfs = Vec_WecStart( p.nObjs );
-    Vec_WrdForEachEntryStartStop( p.vTruths, uTruth, i, p.nPis, Vec_WrdSize(p.vTruths)-p.nPos )
-    {
-        var Offset int32   = Vec_IntEntry( p.vStarts, i );
-        var pRes *word;
-        if Vec_WrdSize(p.vTruths2) {
-            pRes = Vec_WrdEntryP( p.vTruths2, Offset );
-        } else {
-            pRes = nil;
-        }
-        nCubes = Sfm_TruthToCnf( uTruth, pRes, Sfm_ObjFaninNum(p, i), p.vCover, vCnf );
-        vCnfBase = (Vec_Str_t *)Vec_WecEntry( vCnfs, i );
-        Vec_StrGrow( vCnfBase, Vec_StrSize(vCnf) );
-        memcpy( Vec_StrArray(vCnfBase), Vec_StrArray(vCnf), (size_t)Vec_StrSize(vCnf) );
-        vCnfBase.nSize = Vec_StrSize(vCnf);
-    }
-    Vec_StrFree( vCnf );
-    return vCnfs;
+func Sfm_CreateCnf(p *Sfm_Ntk_t) [][][]int {
+	r := make([][][]int, len(p.Fanins))
+	for id := p.Pis; id < len(p.Fanins)-p.Pos; id++ {
+		if !p.Deleted[id] {
+			r[id] = Sfm_TruthToCnf(p.Truths[id][0], p.Truths[id], len(p.Fanins[id]))
+		}
+	}
+	return r
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sfm_TranslateCnf(vRes *Vec_Wec_t, vCnf *Vec_Str_t, vFaninMap *Vec_Int_t, iPivotVar int32) {
-    var vClause *Vec_Int_t;
-    signed char Entry;
-    var i, Lit int32;
-    Vec_WecClear( vRes );
-    vClause = Vec_WecPushLevel( vRes );
-    Vec_StrForEachEntry( vCnf, Entry, i )
-    {
-        if int32(Entry) == -1 {
-            vClause = Vec_WecPushLevel( vRes );
-            continue;
-        }
-        Lit = Abc_Lit2LitV( Vec_IntArray(vFaninMap), int32(Entry) );
-        Lit = Abc_LitNotCond( Lit, Abc_Lit2Var(Lit) == iPivotVar );
-        Vec_IntPush( vClause, Lit );
-    }
+func Sfm_PrintCnf(cnf [][]int) {
+	for _, c := range cnf {
+		for _, l := range c {
+			if l&1 != 0 {
+				fmt.Print("-")
+			}
+			fmt.Printf("%d ", l>>1)
+		}
+		fmt.Println()
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

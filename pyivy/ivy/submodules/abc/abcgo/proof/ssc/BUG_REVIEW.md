@@ -1,0 +1,26 @@
+# Independent correctness review
+
+Completed after the first functional tests. Checked constraint polarity (all
+violations false), both SAT query directions, phase correction, constant literals,
+UNKNOWN retention, solver recycling, and source-ID versus rebuilt-literal maps.
+Checked that witness refinement separates the failed candidate and never merges
+classes on simulation alone. Proved representative links and phases are published
+consistently, including conditional constant-one equivalence.
+
+Review/tests caught and corrected care extraction assigning register metadata to
+a combinational care graph, the source's trivial-constraint Append behavior, and
+missing pivot phases/class links in published representative metadata. Replay-free
+word simulation handles zero-input graphs without source division assumptions.
+Gate simulation and CNF handle explicit native XOR/MUX/buffer nodes. Construction
+validates both source networks using the native circuit-model validator.
+
+Containment retains a sufficient output union as outputs are removed. Ring
+constraints are temporary and preserve union rather than each individual output
+outside its care set. Concurrent independent-manager tests exercise local random,
+class, and solver state under the race detector. Simultaneous mutation of one
+source GIA remains outside the graph API's concurrency contract.
+
+Normal/race focused suites and vet pass with the real native GIA dependency set.
+The C oracle actually ran successfully during review; optional skips are visible.
+Ordinary package validation is blocked by unrelated GIA drafts, documented in
+PORTING.md; no claim is made that those drafts compile.

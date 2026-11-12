@@ -5,579 +5,266 @@ import (
 	"time"
 )
 
-/**CFile****************************************************************
-
-  FileName    [amapMerge.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Technology mapper for standard cells.]
-
-  Synopsis    [Computing cuts for the node.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: amapMerge.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "amapInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates new cut and adds it to storage.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManSetupPis(p *Amap_Man_t) *Amap_Cut_t {
-    var pObj *Amap_Obj_t;
-    var pCut *Amap_Cut_t;
-    var i int32;
-    var nBytes int32 = sizeof(Amap_Cut_t) + sizeof(int);
-    // inlining of macro ABC_ALLOC
-    var pBuffer string  = ((char *) malloc(sizeof(char) * (size_t)(Amap_ManPiNum(p) * nBytes)));
-    // inlining of macro Amap_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vPis)) && (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {
-        pCut = (Amap_Cut_t *)( pBuffer + i*nBytes );
-        pCut.iMat = 0;
-        pCut.fInv = 0;
-        pCut.nFans = 1;
-        pCut.Fans[0] = Abc_Var2Lit( pObj.Id, 0 );
-        pObj.pData = pCut;
-        pObj.nCuts = 1;
-        pObj.EstRefs = float32(1.0);
-    }
-    return (Amap_Cut_t *)pBuffer;
+// Cuts are Go-owned values linked from each Amap node. Temporary cuts are
+// bucketed by their resulting library node/literal in ppCutsTemp.
+func Amap_ManSetupPis(p *Amap_Man_t) {
+	for _, item := range Vec_PtrArray(p.vPis) {
+		obj, ok := item.(*Amap_Obj_t)
+		if !ok || obj == nil {
+			continue
+		}
+		cut := &Amap_Cut_t{nFans: 1, Fans: []int32{Abc_Var2Lit(int32(obj.Id), 0)}}
+		obj.pData, obj.nCuts, obj.EstRefs = cut, 1, 1
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates new cut and adds it to storage.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManCutStore(p *Amap_Man_t, pCut *Amap_Cut_t, fCompl int32) *Amap_Cut_t {
-    var pNew *Amap_Cut_t;
-    var iFan int32;
-    var nBytes int32 = sizeof(Amap_Cut_t) + sizeof(int) * pCut.nFans + sizeof(Amap_Cut_t *);
-    pNew = (Amap_Cut_t *)Aig_MmFlexEntryFetch( p.pMemTemp, nBytes );
-    pNew.iMat  = pCut.iMat;
-    pNew.fInv  = pCut.fInv ^ fCompl;
-    pNew.nFans = pCut.nFans;
-    memcpy( pNew.Fans, pCut.Fans, sizeof(int) * pCut.nFans );
-    // add it to storage
-    iFan = Abc_Var2Lit( pNew.iMat, pNew.fInv );
-    if p.ppCutsTemp[ iFan ] == nil {
-        Vec_IntPushOrder( p.vTemp, iFan ); }
-    *Amap_ManCutNextP( pNew ) = p.ppCutsTemp[ iFan ];
-    p.ppCutsTemp[ iFan ] = pNew;
-    return pNew;
-} 
-
-/**Function*************************************************************
-
-  Synopsis    [Creates new cut and adds it to storage.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManCutCreate(p *Amap_Man_t, pCut0 *Amap_Cut_t, pCut1 *Amap_Cut_t, iMat int32) *Amap_Cut_t {
-    var pCut *Amap_Cut_t;
-    var i int32;
-    var nSize int32 = pCut0.nFans + pCut1.nFans;
-    var nBytes int32  = sizeof(Amap_Cut_t) + sizeof(int) * nSize + sizeof(Amap_Cut_t *);
-    assert(pCut0.iMat >= pCut1.iMat, "pCut0.iMat >= pCut1.iMat");
-    pCut = (Amap_Cut_t *)Aig_MmFlexEntryFetch( p.pMemTemp, nBytes );
-    pCut.iMat  = iMat;
-    pCut.fInv  = 0;
-    pCut.nFans = nSize;
-    for  i = 0; i < int32(pCut0.nFans); i++  {
-        pCut.Fans[i] = pCut0.Fans[i];
-    }
-    for  i = 0; i < int32(pCut1.nFans); i++  {
-        pCut.Fans[pCut0.nFans+i] = pCut1.Fans[i];
-    }
-    // add it to storage
-    if p.ppCutsTemp[ pCut.iMat ] == nil {
-        Vec_IntPushOrder( p.vTemp, pCut.iMat ); }
-    *Amap_ManCutNextP( pCut ) = p.ppCutsTemp[ pCut.iMat ];
-    p.ppCutsTemp[ pCut.iMat ] = pCut;
-    return pCut;
-} 
-
-/**Function*************************************************************
-
-  Synopsis    [Creates new cut and adds it to storage.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManCutCreate3(p *Amap_Man_t, pCut0 *Amap_Cut_t, pCut1 *Amap_Cut_t, pCut2 *Amap_Cut_t, iMat int32) *Amap_Cut_t {
-    var pCut *Amap_Cut_t;
-    var i int32;
-    var nSize int32 = pCut0.nFans + pCut1.nFans + pCut2.nFans;
-    var nBytes int32  = sizeof(Amap_Cut_t) + sizeof(int) * nSize + sizeof(Amap_Cut_t *);
-    pCut = (Amap_Cut_t *)Aig_MmFlexEntryFetch( p.pMemTemp, nBytes );
-    pCut.iMat  = iMat;
-    pCut.fInv  = 0;
-    pCut.nFans = nSize;
-    for  i = 0; i < int32(pCut0.nFans); i++  {
-        pCut.Fans[i] = pCut0.Fans[i];
-    }
-    for  i = 0; i < int32(pCut1.nFans); i++  {
-        pCut.Fans[pCut0.nFans+i] = pCut1.Fans[i];
-    }
-    for  i = 0; i < int32(pCut2.nFans); i++  {
-        pCut.Fans[pCut0.nFans+pCut1.nFans+i] = pCut2.Fans[i];
-    }
-    // add it to storage
-    if p.ppCutsTemp[ pCut.iMat ] == nil {
-        Vec_IntPushOrder( p.vTemp, pCut.iMat ); }
-    *Amap_ManCutNextP( pCut ) = p.ppCutsTemp[ pCut.iMat ];
-    p.ppCutsTemp[ pCut.iMat ] = pCut;
-    return pCut;
-} 
-
-/**Function*************************************************************
-
-  Synopsis    [Removes cuts from the temporary storage.]
-
-  Description [] 
-               
-  SideEffects []
-
-  SeeAlso     [] 
-
-***********************************************************************/
-func Amap_ManCutSaveStored(p *Amap_Man_t, pNode *Amap_Obj_t) {
-    var nMaxCuts int32  = p.pPars.nCutsMax;
-    var pBuffer *int32;
-    var pNext, pCut *Amap_Cut_t;
-    var i, nWords, Entry, nCuts, nCuts2 int32;
-    assert(pNode.pData == nil, "pNode.pData == nil");
-    // count memory needed
-    nCuts = 1;
-    nWords = 2;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vTemp)) && (((Entry) = Vec_IntEntry(p.vTemp, i)), 1); i++  {
-        for  pCut = p.ppCutsTemp[Entry]; (pCut != nil); pCut = *Amap_ManCutNextP(pCut)  {
-            nCuts++;
-            if nCuts < nMaxCuts {
-                nWords += pCut.nFans + 1; }
-        }
-    }
-    p.nBytesUsed += 4*nWords;
-    // allocate memory
-    pBuffer = (int *)Aig_MmFlexEntryFetch( p.pMemCuts, 4*nWords );
-    pNext = (Amap_Cut_t *)pBuffer;
-    // add the first cut
-    pNext.iMat  = 0; 
-    pNext.fInv  = 0;
-    pNext.nFans = 1;
-    pNext.Fans[0] = Abc_Var2Lit(pNode.Id, 0);
-    pNext  = (Amap_Cut_t *)(pBuffer + 2);
-    // add other cuts
-    nCuts2 = 1;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vTemp)) && (((Entry) = Vec_IntEntry(p.vTemp, i)), 1); i++  {
-        for  pCut = p.ppCutsTemp[Entry]; (pCut != nil); pCut = *Amap_ManCutNextP(pCut)  {
-            nCuts2++;
-            if nCuts2 < nMaxCuts {
-                memcpy( pNext, pCut, sizeof(int) * (pCut.nFans + 1) );
-                pNext = (Amap_Cut_t *)((int *)pNext + pCut.nFans + 1);
-            }
-        }
-        p.ppCutsTemp[Entry] = nil;
-    }
-    assert(nCuts == nCuts2, "nCuts == nCuts2");
-    assert((int *)pNext - pBuffer == nWords, "(int *)pNext - pBuffer == nWords");
-    // restore the storage
-    Vec_IntClear( p.vTemp );
-    Aig_MmFlexRestart( p.pMemTemp );
-    for  i = 0; i < 2*p.pLib.nNodes; i++  {
-        if p.ppCutsTemp[i] != nil {
-            fmt.Printf("Amap_ManCutSaveStored(): Error!\n"); }
-    }
-    pNode.pData = (Amap_Cut_t *)pBuffer;
-    pNode.nCuts = Abc_MinInt( nCuts, nMaxCuts-1 );
-    assert(nCuts < (1<<20), "nCuts < (1<<20)");
-//    printf("%d ", nCuts );
-    // verify cuts
-    pCut = nil;
-    // inlining of macro Amap_NodeForEachCut
-    for  i = 0, pNext = (Amap_Cut_t *)pNode.pData; i < int32(pNode.nCuts);         i++, pNext = Amap_ManCutNext(pNext)  {
-//        for ( i = 0, pNext = (Amap_Cut_t *)pNode->pData; i < (int)pNode->nCuts; 
-//        i++, pNext = Amap_ManCutNext(pNext) )
-    
-        if i == nMaxCuts {
-            break; }
-        assert(pCut == nil || pCut.iMat <= pNext.iMat, "pCut == nil || pCut.iMat <= pNext.iMat");
-        pCut = pNext;
-    }
+func Amap_ManCutStore(p *Amap_Man_t, cut *Amap_Cut_t, complement int32) *Amap_Cut_t {
+	if cut == nil {
+		return nil
+	}
+	copyCut := &Amap_Cut_t{iMat: cut.iMat, fInv: cut.fInv ^ uint32(complement), nFans: cut.nFans, Fans: append([]int32(nil), cut.Fans...)}
+	key := Abc_Var2Lit(int32(copyCut.iMat), int32(copyCut.fInv))
+	if key < 0 || int(key) >= len(p.ppCutsTemp) {
+		return nil
+	}
+	if p.ppCutsTemp[key] == nil {
+		Vec_IntPushOrder(p.vTemp, key)
+	}
+	copyCut.pNext = p.ppCutsTemp[key]
+	p.ppCutsTemp[key] = copyCut
+	return copyCut
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of possible new cuts.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManMergeCountCuts(p *Amap_Man_t, pNode *Amap_Obj_t) int32 {
-    var pFanin0 *Amap_Obj_t  = Amap_ObjFanin0( p, pNode );
-    var pFanin1 *Amap_Obj_t  = Amap_ObjFanin1( p, pNode );
-    var pCut0, pCut1 *Amap_Cut_t;
-    var Entry, c0, c1, iCompl0, iCompl1, iFan0, iFan1 int32;
-    var Counter int32  = 1;
-    // inlining of macro Amap_NodeForEachCut
-    for  c0 = 0, pCut0 = (Amap_Cut_t *)pFanin0.pData; c0 < int32(pFanin0.nCuts);         c0++, pCut0 = Amap_ManCutNext(pCut0)  {
-    // inlining of macro Amap_NodeForEachCut
-    for  c1 = 0, pCut1 = (Amap_Cut_t *)pFanin1.pData; c1 < int32(pFanin1.nCuts);         c1++, pCut1 = Amap_ManCutNext(pCut1)  {
-        iCompl0 = pCut0.fInv ^ Amap_ObjFaninC0(pNode);
-        iCompl1 = pCut1.fInv ^ Amap_ObjFaninC1(pNode);
-        if !pCut0.iMat {
-            iFan0 = 0;
-        } else {
-            iFan0 = Abc_Var2Lit( pCut0.iMat, iCompl0 );
-        }
-        if !pCut1.iMat {
-            iFan1 = 0;
-        } else {
-            iFan1 = Abc_Var2Lit( pCut1.iMat, iCompl1 );
-        }
-        Entry = Amap_LibFindNode( p.pLib, iFan0, iFan1, pNode.Type == AMAP_OBJ_XOR );
-        Counter += ( Entry >=0 );
-//        if ( Entry >=0 )
-//            printf( "Full: %d + %d = %d\n", iFan0, iFan1, Entry );
-    }
-    }
-    return Counter;
+func Amap_ManCutCreate(p *Amap_Man_t, a, b *Amap_Cut_t, result int32) *Amap_Cut_t {
+	return amapStoreCombinedCut(p, []*Amap_Cut_t{a, b}, result)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Print cuts.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManPrintCuts(pNode *Amap_Obj_t) {
-    var pCut *Amap_Cut_t;
-    var c, i int32;
-    fmt.Printf("NODE %5d : Type = ", pNode.Id);
-    if pNode.Type == AMAP_OBJ_AND {
-        fmt.Printf("AND");
-    } else if pNode.Type == AMAP_OBJ_XOR {
-        fmt.Printf("XOR");
-    } else if pNode.Type == AMAP_OBJ_MUX {
-        fmt.Printf("MUX"); }
-    fmt.Printf("  Cuts = %d\n", pNode.nCuts);
-    // inlining of macro Amap_NodeForEachCut
-    for  c = 0, pCut = (Amap_Cut_t *)pNode.pData; c < int32(pNode.nCuts);         c++, pCut = Amap_ManCutNext(pCut)  {
-        fmt.Printf("%3d :  Mat= %3d  Inv=%d  ", c, pCut.iMat, pCut.fInv);
-        for  i = 0; i < int32(pCut.nFans); i++  {
-            fmt.Printf("%d%c ", Abc_Lit2Var(pCut.Fans[i]), Abc_LitIsCompl(pCut.Fans[i])?'-':'+');
-        }
-        fmt.Printf("\n");
-    }
+func Amap_ManCutCreate3(p *Amap_Man_t, a, b, c *Amap_Cut_t, result int32) *Amap_Cut_t {
+	return amapStoreCombinedCut(p, []*Amap_Cut_t{a, b, c}, result)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives cuts for one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManMergeNodeChoice(p *Amap_Man_t, pNode *Amap_Obj_t) {
-    var pTemp *Amap_Obj_t;
-    var pCut *Amap_Cut_t;
-    var c int32;
-    // go through the nodes of the choice node
-    for  pTemp = pNode; (pTemp != nil); pTemp = Amap_ObjChoice(p, pTemp)  {
-        // inlining of macro Amap_NodeForEachCut
-        for  c = 0, pCut = (Amap_Cut_t *)pTemp.pData; c < int32(pTemp.nCuts);         c++, pCut = Amap_ManCutNext(pCut)  {
-            if !(pCut != nil) { break; }   // mikelee added; abort when pCut is NULL
-            if pCut.iMat {
-                Amap_ManCutStore( p, pCut, pNode.fPhase ^ pTemp.fPhase ); }
-        }
-        pTemp.pData = nil;
-    }
-    Amap_ManCutSaveStored( p, pNode );
-
-//    Amap_ManPrintCuts( pNode );
+func amapStoreCombinedCut(p *Amap_Man_t, parts []*Amap_Cut_t, result int32) *Amap_Cut_t {
+	cut := &Amap_Cut_t{iMat: uint32(result)}
+	for _, part := range parts {
+		if part == nil {
+			return nil
+		}
+		cut.Fans = append(cut.Fans, part.Fans...)
+	}
+	cut.nFans = uint32(len(cut.Fans))
+	if result < 0 || int(result) >= len(p.ppCutsTemp) {
+		return nil
+	}
+	if p.ppCutsTemp[result] == nil {
+		Vec_IntPushOrder(p.vTemp, result)
+	}
+	cut.pNext = p.ppCutsTemp[result]
+	p.ppCutsTemp[result] = cut
+	return cut
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives cuts for one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManFindCut(pNode *Amap_Obj_t, pFanin *Amap_Obj_t, fComplFanin int32, Val int32, vCuts *Vec_Ptr_t) int32 {
-    var pCut *Amap_Cut_t;
-    var c, iCompl, iFan int32;
-    Vec_PtrClear( vCuts );
-    // inlining of macro Amap_NodeForEachCut
-    for  c = 0, pCut = (Amap_Cut_t *)pFanin.pData; c < int32(pFanin.nCuts);         c++, pCut = Amap_ManCutNext(pCut)  {
-        iCompl = pCut.fInv ^ fComplFanin;
-        if !pCut.iMat {
-            iFan = 0;
-        } else {
-            iFan = Abc_Var2Lit( pCut.iMat, iCompl );
-        }
-        if iFan == Val {
-            Vec_PtrPush( vCuts, pCut ); }
-    }
-    return Vec_PtrSize(vCuts) == 0;
+func Amap_ManCutSaveStored(p *Amap_Man_t, node *Amap_Obj_t) {
+	if node == nil {
+		return
+	}
+	limit := int(p.pPars.nCutsMax) - 1
+	if limit < 1 {
+		limit = 1
+	}
+	cuts := []*Amap_Cut_t{{nFans: 1, Fans: []int32{Abc_Var2Lit(int32(node.Id), 0)}}}
+	for _, key := range Vec_IntArray(p.vTemp) {
+		if key < 0 || int(key) >= len(p.ppCutsTemp) {
+			continue
+		}
+		for cut := p.ppCutsTemp[key]; cut != nil; cut = cut.pNext {
+			cuts = append(cuts, &Amap_Cut_t{iMat: cut.iMat, fInv: cut.fInv, nFans: cut.nFans, Fans: append([]int32(nil), cut.Fans...)})
+		}
+		p.ppCutsTemp[key] = nil
+	}
+	if len(cuts) > 1 {
+		// Preserve the source's stable key ordering: the trivial cut first,
+		// then buckets in increasing result-literal order.
+		for i := 1; i < len(cuts); i++ {
+			for j := i; j > 1 && cuts[j].iMat < cuts[j-1].iMat; j-- {
+				cuts[j], cuts[j-1] = cuts[j-1], cuts[j]
+			}
+		}
+	}
+	if len(cuts) > limit {
+		cuts = cuts[:limit]
+	}
+	for i := range cuts {
+		cuts[i].pNext = nil
+		if i+1 < len(cuts) {
+			cuts[i].pNext = cuts[i+1]
+		}
+	}
+	node.pData, node.nCuts = cuts[0], uint32(len(cuts))
+	p.nBytesUsed += 8 // two-word trivial cut header and fanin
+	for _, cut := range cuts[1:] {
+		p.nBytesUsed += int32(4 * (len(cut.Fans) + 1))
+	}
+	Vec_IntClear(p.vTemp)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives cuts for one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManMergeNodeCutsMux(p *Amap_Man_t, pNode *Amap_Obj_t) {
-    var vRules *Vec_Int_t  = p.pLib.vRules3;
-    var pFanin0 *Amap_Obj_t  = Amap_ObjFanin0( p, pNode );
-    var pFanin1 *Amap_Obj_t  = Amap_ObjFanin1( p, pNode );
-    var pFanin2 *Amap_Obj_t  = Amap_ObjFanin2( p, pNode );
-    var fComplFanin0 int32  = Amap_ObjFaninC0( pNode );
-    var fComplFanin1 int32  = Amap_ObjFaninC1( pNode );
-    var fComplFanin2 int32  = Amap_ObjFaninC2( pNode );
-    var pCut0, pCut1, pCut2 *Amap_Cut_t;
-    var x, c0, c1, c2 int32;
-    assert(pNode.pData == nil, "pNode.pData == nil");
-    assert(pNode.Type == AMAP_OBJ_MUX, "pNode.Type == AMAP_OBJ_MUX");
-    assert(pNode.fRepr == 0, "pNode.fRepr == 0");
-    // go through the rules
-    for  x = 0; x < Vec_IntSize(vRules); x += 4  {
-        if Amap_ManFindCut( pNode, pFanin0, fComplFanin0, Vec_IntEntry(vRules, x), p.vCuts0 ) != 0 {
-            continue; }
-        if Amap_ManFindCut( pNode, pFanin1, fComplFanin1, Vec_IntEntry(vRules, x+1), p.vCuts1 ) != 0 {
-            continue; }
-        if Amap_ManFindCut( pNode, pFanin2, fComplFanin2, Vec_IntEntry(vRules, x+2), p.vCuts2 ) != 0 {
-            continue; }
-        // inlining of macro Vec_PtrForEachEntry
-        for  c0 = 0; (c0 < Vec_PtrSize(p.vCuts0)) && (((pCut0) = (Amap_Cut_t *)Vec_PtrEntry(p.vCuts0, c0)), 1); c0++  {
-        // inlining of macro Vec_PtrForEachEntry
-        for  c1 = 0; (c1 < Vec_PtrSize(p.vCuts1)) && (((pCut1) = (Amap_Cut_t *)Vec_PtrEntry(p.vCuts1, c1)), 1); c1++  {
-        // inlining of macro Vec_PtrForEachEntry
-        for  c2 = 0; (c2 < Vec_PtrSize(p.vCuts2)) && (((pCut2) = (Amap_Cut_t *)Vec_PtrEntry(p.vCuts2, c2)), 1); c2++  {
-            var pNod *Amap_Nod_t  = Amap_LibNod( p.pLib, Vec_IntEntry(vRules, x+3) );
-            if pNod.pSets == nil {
-                continue; }
-            // complement literals
-            if pCut0.nFans == 1 && (pCut0.fInv ^ fComplFanin0) {
-                pCut0.Fans[0] = Abc_LitNot(pCut0.Fans[0]); }
-            if pCut1.nFans == 1 && (pCut1.fInv ^ fComplFanin1) {
-                pCut1.Fans[0] = Abc_LitNot(pCut1.Fans[0]); }
-            if pCut2.nFans == 1 && (pCut2.fInv ^ fComplFanin2) {
-                pCut2.Fans[0] = Abc_LitNot(pCut2.Fans[0]); }
-            // create new cut
-            Amap_ManCutCreate3( p, pCut0, pCut1, pCut2, Vec_IntEntry(vRules, x+3) );
-            // uncomplement literals
-            if pCut0.nFans == 1 && (pCut0.fInv ^ fComplFanin0) {
-                pCut0.Fans[0] = Abc_LitNot(pCut0.Fans[0]); }
-            if pCut1.nFans == 1 && (pCut1.fInv ^ fComplFanin1) {
-                pCut1.Fans[0] = Abc_LitNot(pCut1.Fans[0]); }
-            if pCut2.nFans == 1 && (pCut2.fInv ^ fComplFanin2) {
-                pCut2.Fans[0] = Abc_LitNot(pCut2.Fans[0]); }
-        }
-        }
-        }
-    }
-    Amap_ManCutSaveStored( p, pNode );
-    p.nCutsUsed += pNode.nCuts;
-    p.nCutsTried3 += pFanin0.nCuts * pFanin1.nCuts * pFanin2.nCuts;
-
-//    Amap_ManPrintCuts( pNode );
+func Amap_ManMergeCountCuts(p *Amap_Man_t, node *Amap_Obj_t) int32 {
+	left, right := Amap_ObjFanin0(p, node), Amap_ObjFanin1(p, node)
+	count := int32(1)
+	for a := Amap_CutHead(left); a != nil; a = a.pNext {
+		litA := amapCutLiteral(a, Amap_ObjFaninC0(node))
+		for b := Amap_CutHead(right); b != nil; b = b.pNext {
+			litB := amapCutLiteral(b, Amap_ObjFaninC1(node))
+			if Amap_LibFindNode(p.pLib, litA, litB, amapBool(node.Type == AMAP_OBJ_XOR)) >= 0 {
+				count++
+			}
+		}
+	}
+	return count
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives cuts for one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManMergeNodeCuts(p *Amap_Man_t, pNode *Amap_Obj_t) {
-    var pFanin0 *Amap_Obj_t  = Amap_ObjFanin0( p, pNode );
-    var pFanin1 *Amap_Obj_t  = Amap_ObjFanin1( p, pNode );
-    var pCut0, pCut1 *Amap_Cut_t;
-    var pRules **int32;
-    var Entry int32;
-    var i int32;
-    var k int32;
-    var c int32;
-    var iCompl0 int32;
-    var iCompl1 int32;
-    var iFan0 int32;
-    var iFan1 int32;
-    assert(pNode.pData == nil, "pNode.pData == nil");
-    if pNode.Type == AMAP_OBJ_MUX {
-        Amap_ManMergeNodeCutsMux( p, pNode );
-        return;
-    }
-    assert(pNode.Type != AMAP_OBJ_MUX, "pNode.Type != AMAP_OBJ_MUX");
-    if pNode.Type == AMAP_OBJ_AND {
-        pRules = p.pLib.pRules;
-    } else {
-        pRules = p.pLib.pRulesX;
-    }
-    // inlining of macro Amap_NodeForEachCut
-    for  c = 0, pCut0 = (Amap_Cut_t *)pFanin0.pData; c < int32(pFanin0.nCuts);         c++, pCut0 = Amap_ManCutNext(pCut0)  {
-        iCompl0 = pCut0.fInv ^ Amap_ObjFaninC0(pNode);
-        if !pCut0.iMat {
-            iFan0 = 0;
-        } else {
-            iFan0 = Abc_Var2Lit( pCut0.iMat, iCompl0 );
-        }
-        // complement literals
-        if pCut0.nFans == 1 && (iCompl0 != 0) {
-            pCut0.Fans[0] = Abc_LitNot(pCut0.Fans[0]); }
-        // label resulting sets
-        for  i = 0; (Entry = pRules[iFan0][i]); i++  {
-            p.pMatsTemp[Entry & 0xffff] = (Entry >> 16);
-        }
-        // iterate through the cuts
-        // inlining of macro Amap_NodeForEachCut
-        for  k = 0, pCut1 = (Amap_Cut_t *)pFanin1.pData; k < int32(pFanin1.nCuts);         k++, pCut1 = Amap_ManCutNext(pCut1)  {
-            iCompl1 = pCut1.fInv ^ Amap_ObjFaninC1(pNode);
-            if !pCut1.iMat {
-                iFan1 = 0;
-            } else {
-                iFan1 = Abc_Var2Lit( pCut1.iMat, iCompl1 );
-            }
-            if p.pMatsTemp[iFan1] == 0 {
-                continue; }
-            // complement literals
-            if pCut1.nFans == 1 && (iCompl1 != 0) {
-                pCut1.Fans[0] = Abc_LitNot(pCut1.Fans[0]); }
-            // create new cut
-            if iFan0 >= iFan1 {
-                Amap_ManCutCreate( p, pCut0, pCut1, p.pMatsTemp[iFan1] );
-            } else {
-                Amap_ManCutCreate( p, pCut1, pCut0, p.pMatsTemp[iFan1] ); }
-            // uncomplement literals
-            if pCut1.nFans == 1 && (iCompl1 != 0) {
-                pCut1.Fans[0] = Abc_LitNot(pCut1.Fans[0]); }
-        }
-        // uncomplement literals
-        if pCut0.nFans == 1 && (iCompl0 != 0) {
-            pCut0.Fans[0] = Abc_LitNot(pCut0.Fans[0]); }
-        // label resulting sets
-        for  i = 0; (Entry = pRules[iFan0][i]); i++  {
-            p.pMatsTemp[Entry & 0xffff] = 0;
-        }
-    }
-    Amap_ManCutSaveStored( p, pNode );
-    p.nCutsUsed += pNode.nCuts;
-    p.nCutsTried += pFanin0.nCuts * pFanin1.nCuts;
-//    assert( (int)pNode->nCuts == Amap_ManMergeCountCuts(p, pNode) );
-    if pNode.fRepr {
-        Amap_ManMergeNodeChoice( p, pNode ); }
-
-//    Amap_ManPrintCuts( pNode );
+func Amap_ManPrintCuts(node *Amap_Obj_t) {
+	if node == nil {
+		return
+	}
+	fmt.Printf("NODE %5d : Type = %d  Cuts = %d\n", node.Id, node.Type, node.nCuts)
+	for i, cut := 0, Amap_CutHead(node); cut != nil; i, cut = i+1, cut.pNext {
+		fmt.Printf("%3d : Mat=%3d Inv=%d ", i, cut.iMat, cut.fInv)
+		for _, fan := range cut.Fans {
+			fmt.Printf("%d%c ", Abc_Lit2Var(fan), polarity(Abc_LitIsCompl(fan)))
+		}
+		fmt.Println()
+	}
 }
 
-/**Function*************************************************************
+func Amap_ManMergeNodeChoice(p *Amap_Man_t, node *Amap_Obj_t) {
+	for choice := node; choice != nil; choice = Amap_ObjChoice(p, choice) {
+		for cut := Amap_CutHead(choice); cut != nil; cut = cut.pNext {
+			if cut.iMat != 0 {
+				Amap_ManCutStore(p, cut, int32(node.fPhase^choice.fPhase))
+			}
+		}
+		choice.pData = nil
+	}
+	Amap_ManCutSaveStored(p, node)
+}
 
-  Synopsis    [Derives cuts for all nodes.]
+func Amap_ManFindCut(_ *Amap_Obj_t, fanin *Amap_Obj_t, complement, value int32, out *Vec_Ptr_t) int32 {
+	Vec_PtrClear(out)
+	for cut := Amap_CutHead(fanin); cut != nil; cut = cut.pNext {
+		if amapCutLiteral(cut, complement) == value {
+			Vec_PtrPush(out, cut)
+		}
+	}
+	return amapBool(Vec_PtrSize(out) == 0)
+}
 
-  Description []
-               
-  SideEffects []
+func Amap_ManMergeNodeCutsMux(p *Amap_Man_t, node *Amap_Obj_t) {
+	left, middle, right := Amap_ObjFanin0(p, node), Amap_ObjFanin1(p, node), Amap_ObjFanin2(p, node)
+	comps := [3]int32{Amap_ObjFaninC0(node), Amap_ObjFaninC1(node), Amap_ObjFaninC2(node)}
+	for i := int32(0); i+3 < Vec_IntSize(p.pLib.vRules3); i += 4 {
+		vals := [3]int32{Vec_IntEntry(p.pLib.vRules3, i), Vec_IntEntry(p.pLib.vRules3, i+1), Vec_IntEntry(p.pLib.vRules3, i+2)}
+		if Amap_ManFindCut(node, left, comps[0], vals[0], p.vCuts0) != 0 || Amap_ManFindCut(node, middle, comps[1], vals[1], p.vCuts1) != 0 || Amap_ManFindCut(node, right, comps[2], vals[2], p.vCuts2) != 0 {
+			continue
+		}
+		for _, ca := range Vec_PtrArray(p.vCuts0) {
+			for _, cb := range Vec_PtrArray(p.vCuts1) {
+				for _, cc := range Vec_PtrArray(p.vCuts2) {
+					a, _ := ca.(*Amap_Cut_t)
+					b, _ := cb.(*Amap_Cut_t)
+					c, _ := cc.(*Amap_Cut_t)
+					Amap_ManCutCreate3(p, amapComplementSingleton(a, comps[0]), amapComplementSingleton(b, comps[1]), amapComplementSingleton(c, comps[2]), Vec_IntEntry(p.pLib.vRules3, i+3))
+				}
+			}
+		}
+	}
+	Amap_ManCutSaveStored(p, node)
+	p.nCutsUsed += int32(node.nCuts)
+	p.nCutsTried3 += int32(left.nCuts * middle.nCuts * right.nCuts)
+}
 
-  SeeAlso     []
+func Amap_ManMergeNodeCuts(p *Amap_Man_t, node *Amap_Obj_t) {
+	left, right := Amap_ObjFanin0(p, node), Amap_ObjFanin1(p, node)
+	if node.Type == AMAP_OBJ_MUX {
+		Amap_ManMergeNodeCutsMux(p, node)
+		return
+	}
+	rules := p.pLib.pRules
+	if node.Type == AMAP_OBJ_XOR {
+		rules = p.pLib.pRulesX
+	}
+	if node.pData != nil {
+		panic("amap: cuts already attached while merging node")
+	}
+	for ca := Amap_CutHead(left); ca != nil; ca = ca.pNext {
+		litA := amapCutLiteral(ca, Amap_ObjFaninC0(node))
+		if int(litA) >= len(rules) || litA < 0 {
+			continue
+		}
+		resultByFan := make(map[int32]int32)
+		for _, packed := range rules[litA] {
+			if packed == 0 {
+				break
+			}
+			resultByFan[packed&0xffff] = packed >> 16
+		}
+		for cb := Amap_CutHead(right); cb != nil; cb = cb.pNext {
+			litB := amapCutLiteral(cb, Amap_ObjFaninC1(node))
+			result, ok := resultByFan[litB]
+			if !ok {
+				continue
+			}
+			first, second := amapComplementSingleton(ca, Amap_ObjFaninC0(node)), amapComplementSingleton(cb, Amap_ObjFaninC1(node))
+			if litA >= litB {
+				Amap_ManCutCreate(p, first, second, result)
+			} else {
+				Amap_ManCutCreate(p, second, first, result)
+			}
+		}
+	}
+	Amap_ManCutSaveStored(p, node)
+	p.nCutsUsed += int32(node.nCuts)
+	p.nCutsTried += int32(left.nCuts * right.nCuts)
+	if node.fRepr != 0 {
+		Amap_ManMergeNodeChoice(p, node)
+	}
+}
 
-***********************************************************************/
 func Amap_ManMerge(p *Amap_Man_t) {
-    var pObj *Amap_Obj_t;
-    var i int32;
-    var clk abctime  = Abc_Clock();
-    p.pCutsPi = Amap_ManSetupPis( p );
-    // inlining of macro Amap_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Amap_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Amap_ObjIsNode(pObj) {} else {
-        Amap_ManMergeNodeCuts( p, pObj ); }
-    }
-    if p.pPars.fVerbose {
-        fmt.Printf("AIG object is %d bytes.  ", int32(sizeof(Amap_Obj_t)));
-        fmt.Printf("Internal AIG = %5.2f MB.  Cuts = %5.2f MB.  CutsMax = %d.\n", 1.0*Amap_ManObjNum(p)*sizeof(Amap_Obj_t)/(1<<20), 1.0*p.nBytesUsed/(1<<20), p.pPars.nCutsMax);
-        fmt.Printf("Node =%6d. Try =%9d. Try3 =%10d. Used =%7d. R =%6.2f.  ", Amap_ManNodeNum(p), p.nCutsTried, p.nCutsTried3, p.nCutsUsed, 1.0*p.nCutsUsed/Amap_ManNodeNum(p));
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Time "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    }
+	started := time.Now()
+	Amap_ManSetupPis(p)
+	for _, item := range Vec_PtrArray(p.vObjs) {
+		node, ok := item.(*Amap_Obj_t)
+		if ok && node != nil && Amap_ObjIsNode(node) != 0 {
+			Amap_ManMergeNodeCuts(p, node)
+		}
+	}
+	if p.pPars.fVerbose != 0 {
+		fmt.Printf("Internal AIG objects=%d cuts=%d; merge elapsed %.2fs\n", Amap_ManObjNum(p), p.nCutsUsed, time.Since(started).Seconds())
+	}
 }
 
+func Amap_CutHead(node *Amap_Obj_t) *Amap_Cut_t {
+	if node == nil {
+		return nil
+	}
+	node = Amap_Regular(node)
+	cut, _ := node.pData.(*Amap_Cut_t)
+	return cut
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func amapCutLiteral(cut *Amap_Cut_t, complement int32) int32 {
+	if cut == nil || cut.iMat == 0 {
+		return 0
+	}
+	return Abc_Var2Lit(int32(cut.iMat), int32(cut.fInv)^complement)
+}
 
-
-//ABC_NAMESPACE_IMPL_END
-
+func amapComplementSingleton(cut *Amap_Cut_t, complement int32) *Amap_Cut_t {
+	if cut == nil || cut.nFans != 1 || complement == 0 {
+		return cut
+	}
+	copyCut := *cut
+	copyCut.Fans = append([]int32(nil), cut.Fans...)
+	copyCut.Fans[0] = Abc_LitNot(copyCut.Fans[0])
+	return &copyCut
+}

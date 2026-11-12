@@ -37,33 +37,7 @@ func Abc_NtkFunctionalIsoGia_rec(graph *aig.Graph, o *Object) aig.Edge {
 		}
 		value = graph.AND(args[0], args[1])
 	default:
-		if root, ok := o.Data.(*hop.Hop_Obj_t); ok {
-			value = isoHop(graph, root, args)
-		} else if root, ok := o.Data.(*core.DdNode); ok {
-			value = isoBDD(graph, root, args)
-		} else if gate, ok := o.Data.(*mio.Mio_Gate_t); ok {
-			value = isoCover(graph, mio.Mio_GateReadSop(gate), args)
-		} else if text, ok := o.Data.(string); ok {
-			value = isoCover(graph, text, args)
-		} else {
-			fn := localFunction(o)
-			values := make([]bool, len(args))
-			var shannon func(int) aig.Edge
-			shannon = func(index int) aig.Edge {
-				if index == len(args) {
-					if fn(values) {
-						return 0
-					}
-					return 1
-				}
-				values[index] = false
-				low := shannon(index + 1)
-				values[index] = true
-				high := shannon(index + 1)
-				return graph.Mux(args[index], high, low)
-			}
-			value = shannon(0)
-		}
+		value = localFunctionAIG(graph, o, args)
 	}
 	o.Temp = int(value)
 	return value
@@ -265,4 +239,42 @@ func isoBDD(graph *aig.Graph, root *core.DdNode, args []aig.Edge) aig.Edge {
 		return value
 	}
 	return visit(root)
+}
+
+func localFunctionAIG(graph *aig.Graph, o *Object, args []aig.Edge) aig.Edge {
+	var value aig.Edge
+	if o.Data == aigANDMarker {
+		if len(args) != 2 {
+			panic("invalid AIG node arity")
+		}
+		return graph.AND(args[0], args[1])
+	}
+	if root, ok := o.Data.(*hop.Hop_Obj_t); ok {
+		value = isoHop(graph, root, args)
+	} else if root, ok := o.Data.(*core.DdNode); ok {
+		value = isoBDD(graph, root, args)
+	} else if gate, ok := o.Data.(*mio.Mio_Gate_t); ok {
+		value = isoCover(graph, mio.Mio_GateReadSop(gate), args)
+	} else if text, ok := o.Data.(string); ok {
+		value = isoCover(graph, text, args)
+	} else {
+		fn := localFunction(o)
+		values := make([]bool, len(args))
+		var shannon func(int) aig.Edge
+		shannon = func(index int) aig.Edge {
+			if index == len(args) {
+				if fn(values) {
+					return 0
+				}
+				return 1
+			}
+			values[index] = false
+			low := shannon(index + 1)
+			values[index] = true
+			high := shannon(index + 1)
+			return graph.Mux(args[index], high, low)
+		}
+		value = shannon(0)
+	}
+	return value
 }

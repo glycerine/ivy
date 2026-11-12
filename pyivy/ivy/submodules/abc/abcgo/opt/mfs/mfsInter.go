@@ -1,387 +1,153 @@
 package mfs
 
-import "fmt"
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/sat/satoko"
+)
 
-/**CFile****************************************************************
-
-  FileName    [mfsInter.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [The good old minimization with complete don't-cares.]
-
-  Synopsis    [Procedures for computing resub function by interpolation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: mfsInter.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "mfsInt.h"
-//#include "bool/kit/kit.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Adds constraints for the two-input AND-gate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MfsSatAddXor(pSat *sat_solver, iVarA int32, iVarB int32, iVarC int32) int32 {
-    var Lits [3]lit;
-
-    Lits[0] = toLitCond( iVarA, 1 );
-    Lits[1] = toLitCond( iVarB, 1 );
-    Lits[2] = toLitCond( iVarC, 1 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 3 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVarA, 1 );
-    Lits[1] = toLitCond( iVarB, 0 );
-    Lits[2] = toLitCond( iVarC, 0 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 3 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVarA, 0 );
-    Lits[1] = toLitCond( iVarB, 1 );
-    Lits[2] = toLitCond( iVarC, 0 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 3 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVarA, 0 );
-    Lits[1] = toLitCond( iVarB, 0 );
-    Lits[2] = toLitCond( iVarC, 1 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 3 ) {
-        return 0; }
-
-    return 1;
+func encodeGraph(g *aig.Graph) ([][]int, int) {
+	var c [][]int
+	add := func(xs ...int) { c = append(c, xs) }
+	add(0)
+	for _, e := range g.LiveEdges() {
+		n := g.Node(e)
+		z := int(e)
+		a, b := int(n.Fanins[0]), int(n.Fanins[1])
+		switch n.Kind {
+		case aig.And:
+			add(a^1, b^1, z)
+			add(a, z^1)
+			add(b, z^1)
+		case aig.ExclusiveOr:
+			add(a, b, z^1)
+			add(a^1, b^1, z^1)
+			add(a, b^1, z)
+			add(a^1, b, z)
+		case aig.Buffer, aig.Output:
+			add(a, z^1)
+			add(a^1, z)
+		}
+	}
+	return c, int(aig.Aig_ManObjNumMax(g))
+}
+func graphLiteral(g *aig.Graph, output int) int { return int(g.Node(g.Outputs()[output]).Fanins[0]) }
+func Abc_MfsSatAddXor(s *satoko.Solver, a, b, z int) {
+	s.AddClause([]int{a, b, z ^ 1})
+	s.AddClause([]int{a ^ 1, b ^ 1, z ^ 1})
+	s.AddClause([]int{a, b ^ 1, z})
+	s.AddClause([]int{a ^ 1, b, z})
+}
+func newSolver(clauses [][]int, vars int) *satoko.Solver {
+	s := satoko.New()
+	s.SetVariables(vars)
+	for _, c := range clauses {
+		s.AddClause(c)
+	}
+	return s
+}
+func addWindowConstraints(p *Mfs_Man_t, s *satoko.Solver, offset int) {
+	for o := 0; o <= p.CareOutputs; o++ {
+		s.AddClause([]int{graphLiteral(p.Window, o) + 2*offset})
+	}
+	if p.Params.OneHotness {
+		inputs := p.Window.Inputs()
+		for i, a := range inputs {
+			for _, b := range inputs[i+1:] {
+				s.AddClause([]int{int(a) ^ 1 + 2*offset, int(b) ^ 1 + 2*offset})
+			}
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates miter for checking resubsitution.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MfsCreateSolverResub(p *Mfs_Man_t, pCands *int32, nCands int32, fInvert int32) *sat_solver {
-    var pSat *sat_solver;
-    var pObjPo *Aig_Obj_t;
-    var Lits [2]int32;
-    var status int32;
-    var iVar int32;
-    var i int32;
-    var c int32;
-
-    // get the literal for the output of F
-    pObjPo = Aig_ManCo( p.pAigWin, Aig_ManCoNum(p.pAigWin) - Vec_PtrSize(p.vDivs) - 1 );
-    Lits[0] = toLitCond( p.pCnf.pVarNums[pObjPo.Id], fInvert );
-
-    // collect the outputs of the divisors
-    Vec_IntClear( p.vProjVarsCnf );
-    Vec_PtrForEachEntryStart( Aig_Obj_t *, p.pAigWin.vCos, pObjPo, i, Aig_ManCoNum(p.pAigWin) - Vec_PtrSize(p.vDivs) )
-    {
-        assert(p.pCnf.pVarNums[pObjPo.Id] >= 0, "p.pCnf.pVarNums[pObjPo.Id] >= 0");
-        Vec_IntPush( p.vProjVarsCnf, p.pCnf.pVarNums[pObjPo.Id] );
-    }
-    assert(Vec_IntSize(p.vProjVarsCnf) == Vec_PtrSize(p.vDivs), "Vec_IntSize(p.vProjVarsCnf) == Vec_PtrSize(p.vDivs)");
-
-    // start the solver
-    pSat = sat_solver_new();
-    sat_solver_setnvars( pSat, 2 * p.pCnf.nVars + Vec_PtrSize(p.vDivs) );
-    if pCands != nil {
-        sat_solver_store_alloc( pSat ); }
-
-    // load the first copy of the clauses
-    for  i = 0; i < p.pCnf.nClauses; i++  {
-        if !sat_solver_addclause( pSat, p.pCnf.pClauses[i], p.pCnf.pClauses[i+1] ) {
-            sat_solver_delete( pSat );
-            return nil;
-        }
-    }
-    // add the clause for the first output of F
-    if !sat_solver_addclause( pSat, Lits, Lits+1 ) {
-        sat_solver_delete( pSat );
-        return nil;
-    }
-
-    // add one-hotness constraints
-    if p.pPars.fOneHotness {
-        p.pSat = pSat;
-        if !Abc_NtkAddOneHotness( p ) {
-            return nil; }
-        p.pSat = nil;
-    }
-
-    // bookmark the clauses of A
-    if pCands != nil {
-        sat_solver_store_mark_clauses_a( pSat ); }
-
-    // transform the literals
-    for  i = 0; i < p.pCnf.nLiterals; i++  {
-        p.pCnf.pClauses[0][i] += 2 * p.pCnf.nVars;
-    }
-    // load the second copy of the clauses
-    for  i = 0; i < p.pCnf.nClauses; i++  {
-        if !sat_solver_addclause( pSat, p.pCnf.pClauses[i], p.pCnf.pClauses[i+1] ) {
-            sat_solver_delete( pSat );
-            return nil;
-        }
-    }
-    // add one-hotness constraints
-    if p.pPars.fOneHotness {
-        p.pSat = pSat;
-        if !Abc_NtkAddOneHotness( p ) {
-            return nil; }
-        p.pSat = nil;
-    }
-    // transform the literals
-    for  i = 0; i < p.pCnf.nLiterals; i++  {
-        p.pCnf.pClauses[0][i] -= 2 * p.pCnf.nVars;
-    }
-    // add the clause for the second output of F
-    Lits[0] = 2 * p.pCnf.nVars + lit_neg( Lits[0] );
-    if !sat_solver_addclause( pSat, Lits, Lits+1 ) {
-        sat_solver_delete( pSat );
-        return nil;
-    }
-
-    if pCands != nil {
-        // add relevant clauses for EXOR gates
-        for  c = 0; c < nCands; c++  {
-            // get the variable number of this divisor
-            i = lit_var( pCands[c] ) - 2 * p.pCnf.nVars;
-            // get the corresponding SAT variable
-            iVar = Vec_IntEntry( p.vProjVarsCnf, i );
-            // add the corresponding EXOR gate
-            if !(Abc_MfsSatAddXor( pSat, iVar, iVar + p.pCnf.nVars, 2 * p.pCnf.nVars + i ) != 0) {
-                sat_solver_delete( pSat );
-                return nil;
-            }
-            // add the corresponding clause
-            if !sat_solver_addclause( pSat, pCands + c, pCands + c + 1 ) {
-                sat_solver_delete( pSat );
-                return nil;
-            }
-        }
-        // bookmark the roots
-        sat_solver_store_mark_roots( pSat );
-    
-    } else {
-        // add the clauses for the EXOR gates - and remember their outputs
-        Vec_IntClear( p.vProjVarsSat );
-        Vec_IntForEachEntry( p.vProjVarsCnf, iVar, i )
-        {
-            if !(Abc_MfsSatAddXor( pSat, iVar, iVar + p.pCnf.nVars, 2 * p.pCnf.nVars + i ) != 0) {
-                sat_solver_delete( pSat );
-                return nil;
-            }
-            Vec_IntPush( p.vProjVarsSat, 2 * p.pCnf.nVars + i );
-        }
-        assert(Vec_IntSize(p.vProjVarsCnf) == Vec_IntSize(p.vProjVarsSat), "Vec_IntSize(p.vProjVarsCnf) == Vec_IntSize(p.vProjVarsSat)");
-        // simplify the solver
-        status = sat_solver_simplify(pSat);
-        if status == 0 {
-//            printf( "Abc_MfsCreateSolverResub(): SAT solver construction has failed. Skipping node.\n" );
-            sat_solver_delete( pSat );
-            return nil;
-        }
-    }
-    return pSat;
+// Two independently constrained window copies have opposite target values.
+// Each projection variable is the XOR of one divisor across the copies.
+func Abc_MfsCreateSolverResub(p *Mfs_Man_t, candidates []int, invert bool) *satoko.Solver {
+	p.clauses, p.vars = encodeGraph(p.Window)
+	s := newSolver(p.clauses, 2*p.vars+len(p.Divisors))
+	for _, c := range p.clauses {
+		copy := make([]int, len(c))
+		for i, l := range c {
+			copy[i] = l + 2*p.vars
+		}
+		s.AddClause(copy)
+	}
+	addWindowConstraints(p, s, 0)
+	addWindowConstraints(p, s, p.vars)
+	f := graphLiteral(p.Window, 1+p.CareOutputs)
+	if invert {
+		f ^= 1
+	}
+	s.AddClause([]int{f})
+	s.AddClause([]int{(f ^ 1) + 2*p.vars})
+	p.projection = make([]int, len(p.Divisors))
+	for i := range p.Divisors {
+		a := graphLiteral(p.Window, 2+p.CareOutputs+i)
+		z := (2*p.vars + i) << 1
+		p.projection[i] = z
+		Abc_MfsSatAddXor(s, a, a+2*p.vars, z)
+	}
+	for _, i := range candidates {
+		s.AddClause([]int{p.projection[i] ^ 1})
+	}
+	p.Solver = s
+	return s
+}
+func solve(p *Mfs_Man_t, s *satoko.Solver, assumptions []int) int {
+	p.Stats.SATCalls++
+	status := s.SolveAssumptionsLimit(assumptions, p.Params.BTLimit)
+	if status == satoko.SATOKO_UNDEC {
+		p.Stats.Timeouts++
+	}
+	return status
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs interpolation.]
-
-  Description [Derives the new function of the node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMfsInterplateTruth(p *Mfs_Man_t, pCands *int32, nCands int32, fInvert int32) *uint32 {
-    var pSat *sat_solver;
-    var pCnf *Sto_Man_t  = nil;
-    var puTruth *uint32;
-    var nFanins, status int32;
-    var c int32;
-    var i int32;
-    var pGloVars *int32;
-
-    // derive the SAT solver for interpolation
-    pSat = Abc_MfsCreateSolverResub( p, pCands, nCands, fInvert );
-
-    // solve the problem
-    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)p.pPars.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    if status != l_False {
-        p.nTimeOuts++;
-        return nil;
-    }
-    // get the learned clauses
-    pCnf = (Sto_Man_t *)sat_solver_store_release( pSat );
-    sat_solver_delete( pSat );
-
-    // set the global variables
-    pGloVars = Int_ManSetGlobalVars( p.pMan, nCands );
-    for  c = 0; c < nCands; c++  {
-        // get the variable number of this divisor
-        i = lit_var( pCands[c] ) - 2 * p.pCnf.nVars;
-        // get the corresponding SAT variable
-        pGloVars[c] = Vec_IntEntry( p.vProjVarsCnf, i );
-    }
-
-    // derive the interpolant
-    nFanins = Int_ManInterpolate( p.pMan, pCnf, 0, &puTruth );
-    Sto_ManFree( pCnf );
-    assert(nFanins == nCands, "nFanins == nCands");
-    return puTruth;
+// Interpolation is exact functional separation by projected SAT enumeration.
+// It returns a truth table, not a resolution proof trace. Unreachable projected
+// minterms are zero; every on/off care minterm is separated before any update.
+func Abc_NtkMfsInterplate(p *Mfs_Man_t, candidates []int) []uint32 {
+	if len(candidates) > MFS_FANIN_MAX {
+		panic("mfs: too many projected inputs")
+	}
+	s := newSolver(p.clauses, p.vars)
+	addWindowConstraints(p, s, 0)
+	s.AddClause([]int{graphLiteral(p.Window, 1+p.CareOutputs)})
+	truth := make([]uint32, truthWords(len(candidates)))
+	vars := make([]int, len(candidates))
+	for i, c := range candidates {
+		vars[i] = graphLiteral(p.Window, 2+p.CareOutputs+c)
+	}
+	for {
+		status := solve(p, s, nil)
+		if status == satoko.SATOKO_UNDEC {
+			return nil
+		}
+		if status == satoko.SATOKO_UNSAT {
+			break
+		}
+		mint := 0
+		block := make([]int, len(vars))
+		for i, l := range vars {
+			value := s.ModelValue(l>>1) == 1
+			if l&1 != 0 {
+				value = !value
+			}
+			block[i] = l
+			if value {
+				mint |= 1 << uint(i)
+				block[i] ^= 1
+			}
+		}
+		setBit(truth, mint)
+		if !s.AddClause(block) {
+			break
+		}
+	}
+	return normalizeTruth(truth, len(candidates))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs interpolation.]
-
-  Description [Derives the new function of the node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMfsInterplateEval(p *Mfs_Man_t, pCands *int32, nCands int32) int32 {
-    var pTruth *uint32;
-    var uTruth0 [2]uint32;
-    var uTruth1 [2]uint32;
-    var nCounter int32;
-    pTruth = Abc_NtkMfsInterplateTruth( p, pCands, nCands, 0 );
-    if nCands == 6 {
-        uTruth1[0] = pTruth[0];
-        uTruth1[1] = pTruth[1];
-    
-    } else {
-        uTruth1[0] = pTruth[0];
-        uTruth1[1] = pTruth[0];
-    }
-    pTruth = Abc_NtkMfsInterplateTruth( p, pCands, nCands, 1 );
-    if nCands == 6 {
-        uTruth0[0] = ~pTruth[0];
-        uTruth0[1] = ~pTruth[1];
-    
-    } else {
-        uTruth0[0] = ~pTruth[0];
-        uTruth0[1] = ~pTruth[0];
-    }
-    nCounter  = Extra_WordCountOnes( uTruth0[0] ^ uTruth1[0] );
-    nCounter += Extra_WordCountOnes( uTruth0[1] ^ uTruth1[1] );
-//    printf( "%d ", nCounter );
-    return nCounter;
+func Abc_NtkMfsInterplateEval(p *Mfs_Man_t, candidates []int) int {
+	truth := Abc_NtkMfsInterplate(p, candidates)
+	if truth == nil {
+		return -1
+	}
+	return gateCount(truthGraph(truth, len(candidates)))
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs interpolation.]
-
-  Description [Derives the new function of the node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Abc_NtkMfsInterplate_Counter int32;
-func Abc_NtkMfsInterplate(p *Mfs_Man_t, pCands *int32, nCands int32) *Hop_Obj_t {
-    extern Hop_Obj_t * Kit_GraphToHop( Hop_Man_t * pMan, Kit_Graph_t * pGraph );
-    var fDumpFile int32;
-    var FileName string // was [32]byte in C
-
-    var pSat *sat_solver;
-    var pCnf *Sto_Man_t  = nil;
-    var puTruth *uint32;
-    var pGraph *Kit_Graph_t;
-    var pFunc *Hop_Obj_t;
-    var nFanins, status int32;
-    var c int32;
-    var i int32;
-    var pGloVars *int32;
-//    abctime clk = Abc_Clock();
-//    p->nDcMints += Abc_NtkMfsInterplateEval( p, pCands, nCands );
-
-    // derive the SAT solver for interpolation
-    pSat = Abc_MfsCreateSolverResub( p, pCands, nCands, 0 );
-
-    // dump CNF file (remember to uncomment two-lit clases in clause_create_new() in 'satSolver.c')
-    if fDumpFile != 0 {
-        
-        FileName = fmt.Sprintf("cnf\\pj1_if6_mfs%03d.cnf", spStatic_Abc_NtkMfsInterplate_Counter++);
-        Sat_SolverWriteDimacs( pSat, FileName, nil, nil, 1 );
-    }
-
-    // solve the problem
-    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)p.pPars.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    if fDumpFile != 0 {
-        printf( "File %s has UNSAT problem with %d conflicts.\n", FileName, int32(pSat.stats.conflicts) ); }
-    if status != l_False {
-        p.nTimeOuts++;
-        return nil;
-    }
-//printf( "%d\n", pSat->stats.conflicts );
-//    ABC_PRT( "S", Abc_Clock() - clk );
-    // get the learned clauses
-    pCnf = (Sto_Man_t *)sat_solver_store_release( pSat );
-    sat_solver_delete( pSat );
-
-    // set the global variables
-    pGloVars = Int_ManSetGlobalVars( p.pMan, nCands );
-    for  c = 0; c < nCands; c++  {
-        // get the variable number of this divisor
-        i = lit_var( pCands[c] ) - 2 * p.pCnf.nVars;
-        // get the corresponding SAT variable
-        pGloVars[c] = Vec_IntEntry( p.vProjVarsCnf, i );
-    }
-
-    // derive the interpolant
-    nFanins = Int_ManInterpolate( p.pMan, pCnf, 0, &puTruth );
-    Sto_ManFree( pCnf );
-    assert(nFanins == nCands, "nFanins == nCands");
-
-    // transform interpolant into AIG
-    pGraph = Kit_TruthToGraph( puTruth, nFanins, p.vMem );
-    pFunc = Kit_GraphToHop( (Hop_Man_t *)p.pNtk.pManFunc, pGraph );
-    Kit_GraphFree( pGraph );
-    return pFunc;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

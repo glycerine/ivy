@@ -1,0 +1,12 @@
+.model top
+.inputs a b
+.outputs left right
+.subckt leaf a=a b=b y=left
+.subckt leaf a=b b=a y=right
+.end
+.model leaf
+.inputs a b
+.outputs y
+.names a b y
+10 1
+.end

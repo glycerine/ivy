@@ -1,349 +1,157 @@
 package mapper
 
-/**CFile****************************************************************
+import "sort"
 
-  FileName    [mapperVec.c]
-
-  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]
-
-  Synopsis    [Generic technology mapping engine.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 2.0. Started - June 1, 2004.]
-
-  Revision    [$Id: mapperVec.c,v 1.3 2005/01/23 06:59:45 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "mapperInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static int Map_NodeVecCompareLevels( Map_Node_t ** pp1, Map_Node_t ** pp2 );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates a vector with the given capacity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecAlloc(nCap int32) *Map_NodeVec_t {
-    var p *Map_NodeVec_t;
-    // inlining of macro ABC_ALLOC
-    p = ((Map_NodeVec_t *) malloc(sizeof(Map_NodeVec_t) * (size_t)(1)));
-    if nCap > 0 && nCap < 16 {
-        nCap = 16; }
-    p.nSize  = 0;
-    p.nCap   = nCap;
-    if p.nCap {
-        // inlining of macro ABC_ALLOC
-        p.pArray = ((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(p.nCap)));
-    } else {
-        p.pArray = nil;
-    }
-    return p;
+// Map_NodeVec_t is the mapper's compact, growable node list. The translated
+// algorithms still read nSize directly, so it is kept in sync with pArray.
+func Map_NodeVecAlloc(capacity int32) *Map_NodeVec_t {
+	if capacity > 0 && capacity < 16 {
+		capacity = 16
+	}
+	if capacity < 0 {
+		panic("mapper: negative node vector capacity")
+	}
+	return &Map_NodeVecStruct_t_{pArray: make([]*Map_Node_t, 0, capacity), nCap: capacity}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecFree(p *Map_NodeVec_t) {
-    if p == nil {
-        return; }
-    p.pArray = nil;
-    p = nil;
+func Map_NodeVecFree(v *Map_NodeVec_t) {
+	if v == nil {
+		return
+	}
+	v.pArray = nil
+	v.nSize, v.nCap = 0, 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecDup(p *Map_NodeVec_t) *Map_NodeVec_t {
-    var pNew *Map_NodeVec_t  = Map_NodeVecAlloc( p.nSize );
-    memcpy( pNew.pArray, p.pArray, sizeof(int) * p.nSize );
-    pNew.nSize = p.nSize;
-    return pNew;
+func Map_NodeVecDup(v *Map_NodeVec_t) *Map_NodeVec_t {
+	if v == nil {
+		return nil
+	}
+	out := Map_NodeVecAlloc(v.nSize)
+	out.pArray = append(out.pArray, v.pArray[:v.nSize]...)
+	out.nSize = int32(len(out.pArray))
+	return out
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecReadArray(p *Map_NodeVec_t) **Map_Node_t {
-    return p.pArray;
+func Map_NodeVecReadArray(v *Map_NodeVec_t) []*Map_Node_t {
+	if v == nil {
+		return nil
+	}
+	return v.pArray[:v.nSize]
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecReadSize(p *Map_NodeVec_t) int32 {
-    return p.nSize;
+func Map_NodeVecReadSize(v *Map_NodeVec_t) int32 {
+	if v == nil {
+		return 0
+	}
+	return v.nSize
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Resizes the vector to the given capacity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecGrow(p *Map_NodeVec_t, nCapMin int32) {
-    if p.nCap >= nCapMin {
-        return; }
-    // inlining of macro ABC_REALLOC
-    
-    if p.pArray {
-        p.pArray = ((Map_Node_t * *) realloc((char *)(p.pArray), sizeof(Map_Node_t *) * (size_t)(nCapMin)));
-    } else {
-        p.pArray = ((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(nCapMin)));
-    } 
-    p.nCap   = nCapMin;
+func Map_NodeVecGrow(v *Map_NodeVec_t, minimum int32) {
+	if v == nil || minimum <= v.nCap {
+		return
+	}
+	if minimum < 0 {
+		panic("mapper: negative node vector capacity")
+	}
+	items := make([]*Map_Node_t, v.nSize, minimum)
+	copy(items, v.pArray[:v.nSize])
+	v.pArray, v.nCap = items, minimum
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecShrink(p *Map_NodeVec_t, nSizeNew int32) {
-    assert(p.nSize >= nSizeNew, "p.nSize >= nSizeNew");
-    p.nSize = nSizeNew;
+func Map_NodeVecShrink(v *Map_NodeVec_t, size int32) {
+	if v == nil || size < 0 || size > v.nSize {
+		panic("mapper: invalid node vector shrink")
+	}
+	clear(v.pArray[size:v.nSize])
+	v.pArray = v.pArray[:size]
+	v.nSize = size
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecClear(p *Map_NodeVec_t) {
-    p.nSize = 0;
+func Map_NodeVecClear(v *Map_NodeVec_t) {
+	if v == nil {
+		return
+	}
+	clear(v.pArray[:v.nSize])
+	v.pArray = v.pArray[:0]
+	v.nSize = 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecPush(p *Map_NodeVec_t, Entry *Map_Node_t) {
-    if p.nSize == p.nCap {
-        if p.nCap < 16 {
-            Map_NodeVecGrow( p, 16 );
-        } else {
-            Map_NodeVecGrow( p, 2 * p.nCap ); }
-    }
-    p.pArray[p.nSize++] = Entry;
+func Map_NodeVecPush(v *Map_NodeVec_t, node *Map_Node_t) {
+	if v == nil {
+		panic("mapper: push to nil node vector")
+	}
+	if v.nSize == v.nCap {
+		capacity := int32(16)
+		if v.nCap >= 16 {
+			capacity = 2 * v.nCap
+		}
+		Map_NodeVecGrow(v, capacity)
+	}
+	v.pArray = append(v.pArray[:v.nSize], node)
+	v.nSize++
+	if int32(cap(v.pArray)) > v.nCap {
+		v.nCap = int32(cap(v.pArray))
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Add the element while ensuring uniqueness.]
-
-  Description [Returns 1 if the element was found, and 0 if it was new. ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecPushUnique(p *Map_NodeVec_t, Entry *Map_Node_t) int32 {
-    var i int32;
-    for  i = 0; i < p.nSize; i++  {
-        if p.pArray[i] == Entry {
-            return 1; }
-    }
-    Map_NodeVecPush( p, Entry );
-    return 0;
+func Map_NodeVecPushUnique(v *Map_NodeVec_t, node *Map_Node_t) int32 {
+	for _, existing := range Map_NodeVecReadArray(v) {
+		if existing == node {
+			return 1
+		}
+	}
+	Map_NodeVecPush(v, node)
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecPop(p *Map_NodeVec_t) *Map_Node_t {
-    return p.pArray[--p.nSize];
+func Map_NodeVecPop(v *Map_NodeVec_t) *Map_Node_t {
+	if v == nil || v.nSize == 0 {
+		panic("mapper: pop from empty node vector")
+	}
+	last := v.nSize - 1
+	node := v.pArray[last]
+	v.pArray[last] = nil
+	v.pArray = v.pArray[:last]
+	v.nSize = last
+	return node
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecRemove(p *Map_NodeVec_t, Entry *Map_Node_t) {
-    var i int32;
-    for  i = 0; i < p.nSize; i++  {
-        if p.pArray[i] == Entry {
-            break; }
-    }
-    assert(i < p.nSize, "i < p.nSize");
-    for  i++; i < p.nSize; i++  {
-        p.pArray[i-1] = p.pArray[i];
-    }
-    p.nSize--;
+func Map_NodeVecRemove(v *Map_NodeVec_t, node *Map_Node_t) {
+	for i, candidate := range Map_NodeVecReadArray(v) {
+		if candidate == node {
+			copy(v.pArray[i:], v.pArray[i+1:v.nSize])
+			v.nSize--
+			v.pArray[v.nSize] = nil
+			v.pArray = v.pArray[:v.nSize]
+			return
+		}
+	}
+	panic("mapper: removing node not present in vector")
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecWriteEntry(p *Map_NodeVec_t, i int32, Entry *Map_Node_t) {
-    assert(i >= 0 && i < p.nSize, "i >= 0 && i < p.nSize");
-    p.pArray[i] = Entry;
+func Map_NodeVecWriteEntry(v *Map_NodeVec_t, index int32, node *Map_Node_t) {
+	if v == nil || index < 0 || index >= v.nSize {
+		panic("mapper: node vector index out of range")
+	}
+	v.pArray[index] = node
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecReadEntry(p *Map_NodeVec_t, i int32) *Map_Node_t {
-    assert(i >= 0 && i < p.nSize, "i >= 0 && i < p.nSize");
-    return p.pArray[i];
+func Map_NodeVecReadEntry(v *Map_NodeVec_t, index int32) *Map_Node_t {
+	if v == nil || index < 0 || index >= v.nSize {
+		panic("mapper: node vector index out of range")
+	}
+	return v.pArray[index]
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Sorting the entries by their integer value.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecSortByLevel(p *Map_NodeVec_t) {
-    qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(Map_Node_t *), 
-                (int (*)(void *, void *)) Map_NodeVecCompareLevels );
+func Map_NodeVecSortByLevel(v *Map_NodeVec_t) {
+	if v == nil {
+		return
+	}
+	sort.SliceStable(v.pArray[:v.nSize], func(i, j int) bool {
+		a, b := Map_Regular(v.pArray[i]), Map_Regular(v.pArray[j])
+		if a.Level != b.Level {
+			return a.Level < b.Level
+		}
+		return a.Num < b.Num
+	})
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Comparison procedure for two clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_NodeVecCompareLevels(pp1 **Map_Node_t, pp2 **Map_Node_t) int32 {
-    // inlining of macro Map_Regular
-    var Level1 int32  = ((Map_Node_t *)((ABC_PTRUINT_T)(*pp1) & ~01)) .Level;
-    // inlining of macro Map_Regular
-    var Level2 int32  = ((Map_Node_t *)((ABC_PTRUINT_T)(*pp2) & ~01)) .Level;
-    if Level1 < Level2 {
-        return -1; }
-    if Level1 > Level2 {
-        return 1; }
-    // inlining of macro Map_Regular
-    if  ((Map_Node_t *)((ABC_PTRUINT_T)(*pp1) & ~01)) .Num < ((Map_Node_t *)((ABC_PTRUINT_T)(*pp2) & ~01)) .Num {
-        return -1; }
-    // inlining of macro Map_Regular
-    if  ((Map_Node_t *)((ABC_PTRUINT_T)(*pp1) & ~01)) .Num > ((Map_Node_t *)((ABC_PTRUINT_T)(*pp2) & ~01)) .Num {
-        return 1; }
-    return 0; 
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-//ABC_NAMESPACE_IMPL_END
-

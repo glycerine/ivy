@@ -2,829 +2,548 @@ package sbd
 
 import (
 	"fmt"
-	"os"
+	"slices"
 	"time"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
-/**CFile****************************************************************
+const MAX_M = 8
+const MAX_N = 30
+const MAX_K = 6
+const MAX_D = 8
 
-  FileName    [sbd.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [SAT-based optimization using internal don't-cares.]
-
-  Synopsis    []
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: sbd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sbdInt.h"
-//#include "misc/util/utilTruth.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-const MAX_M =  8 // max inputs
-const MAX_N = 30 // max nodes
-const MAX_K =  6 // max lutsize
-const MAX_D =  8 // max delays
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-// new AIG manager
-   
+type TopologyVariables [MAX_N][MAX_M + MAX_N][MAX_K]int32
+type DelayVariables [MAX_M + MAX_N][MAX_D]int32
+type LUTTopology [MAX_N][MAX_K]int32
 type Sbd_Pro_t struct {
-    nLuts             int32;  // LUT count
-    nSize             int32;  // LUT size
-    nDivs             int32;  // divisor count
-    nVars             int32;  // intermediate variables (nLuts * nSize)
-    nPars             int32;  // total parameter count (nLuts * (1 << nSize) + nLuts * nSize * nDivs) 
-    pPars1 [SBD_LUTS_MAX][1<<SBD_SIZE_MAX]int32;            // lut parameters
-    pPars2 [SBD_LUTS_MAX][SBD_SIZE_MAX][SBD_DIV_MAX]int32;  // topo parameters
-    pVars [SBD_LUTS_MAX][SBD_SIZE_MAX+1]int32;              // internal variables
-    pDivs [SBD_DIV_MAX]int32;                               // divisor variables (external)
+	nLuts, nSize, nDivs, nVars, nPars int32
+	pPars1                            [SBD_LUTS_MAX][1 << SBD_SIZE_MAX]int32
+	pPars2                            [SBD_LUTS_MAX][SBD_SIZE_MAX][SBD_DIV_MAX]int32
+	pVars                             [SBD_LUTS_MAX][SBD_SIZE_MAX + 1]int32
+	pDivs                             [SBD_DIV_MAX]int32
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sbd_ProblemSetup(p *Sbd_Pro_t, nLuts int32, nSize int32, nDivs int32) *Vec_Int_t {
-    var vCnf *Vec_Int_t  = Vec_IntAlloc( 1000 );
-    var i, k, d, v, n, iVar int32;
-    assert(nLuts >= 1 && nLuts <= 2, "nLuts >= 1 && nLuts <= 2");
-    *p = Sbd_Pro_t{};
-    p.nLuts = nLuts;
-    p.nSize = nSize;
-    p.nDivs = nDivs;
-    p.nVars = nLuts * nSize;
-    p.nPars = nLuts * (1 << nSize) + nLuts * nSize * nDivs;
-    // set parameters
-    for  i = 0; i < nLuts; i++  {
-    for  k = 0; k < (1 << nSize); k++  {
-        p.pPars1[i][k] = iVar++;
-    }
-    }
-    for  i = 0; i < nLuts; i++  {
-    for  k = 0; k < nSize; k++  {
-    for  d = 0; d < nDivs; d++  {
-        p.pPars2[i][k][d] = iVar++;
-    }
-    }
-    }
-    // set intermediate variables
-    for  i = 0; i < nLuts; i++  {
-    for  k = 0; k < nSize; k++  {
-        p.pVars[i][k] = iVar++;
-    }
-    }
-    // set top variables 
-    for  i = 1; i < nLuts; i++  {
-        p.pVars[i][nSize] = p.pVars[i-1][0];
-    }
-    // set divisor variables
-    for  d = 0; d < nDivs; d++  {
-        p.pDivs[d] = iVar++;
-    }
-    assert(iVar == p.nPars + p.nVars + p.nDivs, "iVar == p.nPars + p.nVars + p.nDivs");
-
-    // input compatiblity clauses
-    for  i = 0; i < nLuts; i++  {
-    for  k = (i > 0); k < nSize; k++  {
-    for  d = 0; d < nDivs; d++  {
-    for  n = 0; n < nDivs; n++  {
-        if n < d {
-            Vec_IntPush( vCnf, Abc_Var2Lit(p.pPars2[i][k][d], 0) );
-            Vec_IntPush( vCnf, Abc_Var2Lit(p.pPars2[i][k][n], 0) );
-            Vec_IntPush( vCnf, -1 );
-        
-        } else if k < nSize-1 {
-            Vec_IntPush( vCnf, Abc_Var2Lit(p.pPars2[i][k][d], 0) );
-            Vec_IntPush( vCnf, Abc_Var2Lit(p.pPars2[i][k+1][n], 0) );
-            Vec_IntPush( vCnf, -1 );
-        }
-    }
-    }
-    }
-    }
-
-    // create LUT clauses
-    for  i = 0; i < nLuts; i++  {
-    for  k = 0; k < (1 << nSize); k++  {
-    for  n = 0; n < 2; n++  {
-        for  v = 0; v < nSize; v++  {
-            Vec_IntPush( vCnf, Abc_Var2Lit(p.pPars1[i][v], (k >> v) & 1) );
-        }
-        Vec_IntPush( vCnf, Abc_Var2Lit(p.pVars[i][nSize], n) );
-        Vec_IntPush( vCnf, Abc_Var2Lit(p.pPars1[i][k], !n) );
-        Vec_IntPush( vCnf, -1 );
-    }
-    }
-    }
-
-    // create input clauses
-    for  i = 0; i < nLuts; i++  {
-    for  k = (i > 0); k < nSize; k++  {
-    for  d = 0; d < nDivs; d++  {
-    for  n = 0; n < 2; n++  {
-        Vec_IntPush( vCnf, Abc_Var2Lit(p.pPars2[i][k][d], 0) );
-        Vec_IntPush( vCnf, Abc_Var2Lit(p.pPars1[i][k], n) );
-        Vec_IntPush( vCnf, Abc_Var2Lit(p.pDivs[d], !n) );
-        Vec_IntPush( vCnf, -1 );
-    }
-    }
-    }
-    }
-
-    return vCnf;
+func Sbd_ProblemSetup(p *Sbd_Pro_t, luts, size, divs int32) *vec.Vec_Int_t {
+	if luts < 1 || luts > 2 || size < 1 || size > 4 || divs < 1 || divs > 10 {
+		panic("invalid parameterized LUT problem")
+	}
+	*p = Sbd_Pro_t{nLuts: luts, nSize: size, nDivs: divs}
+	variable := int32(0)
+	for i := int32(0); i < luts; i++ {
+		for row := int32(0); row < 1<<size; row++ {
+			p.pPars1[i][row] = variable
+			variable++
+		}
+	}
+	for i := int32(0); i < luts; i++ {
+		for k := int32(0); k < size; k++ {
+			for d := int32(0); d < divs; d++ {
+				p.pPars2[i][k][d] = variable
+				variable++
+			}
+		}
+	}
+	p.nPars = variable
+	for i := int32(0); i < luts; i++ {
+		for k := int32(0); k <= size; k++ {
+			if i > 0 && k == 0 {
+				p.pVars[i][k] = p.pVars[i-1][size]
+			} else {
+				p.pVars[i][k] = variable
+				variable++
+			}
+		}
+	}
+	p.nVars = variable - p.nPars
+	for d := int32(0); d < divs; d++ {
+		p.pDivs[d] = variable
+		variable++
+	}
+	cnf := vec.Vec_IntAlloc(1000)
+	add := func(literals ...int32) {
+		for _, lit := range literals {
+			vec.Vec_IntPush(cnf, lit)
+		}
+		vec.Vec_IntPush(cnf, -1)
+	}
+	for i := int32(0); i < luts; i++ {
+		first := int32(0)
+		if i > 0 {
+			first = 1
+		}
+		for k := first; k < size; k++ {
+			var selected []int32
+			for d := int32(0); d < divs; d++ {
+				selected = append(selected, 2*p.pPars2[i][k][d]+1)
+				for n := int32(0); n < divs; n++ {
+					if n < d {
+						add(2*p.pPars2[i][k][d], 2*p.pPars2[i][k][n])
+					} else if k < size-1 {
+						add(2*p.pPars2[i][k][d], 2*p.pPars2[i][k+1][n])
+					}
+				}
+			}
+			add(selected...)
+		}
+	}
+	for i := int32(0); i < luts; i++ {
+		for row := int32(0); row < 1<<size; row++ {
+			for sign := int32(0); sign < 2; sign++ {
+				var clause []int32
+				for k := int32(0); k < size; k++ {
+					clause = append(clause, 2*p.pVars[i][k]+(row>>k&1))
+				}
+				clause = append(clause, 2*p.pVars[i][size]+sign, 2*p.pPars1[i][row]+1-sign)
+				add(clause...)
+			}
+		}
+	}
+	for i := int32(0); i < luts; i++ {
+		first := int32(0)
+		if i > 0 {
+			first = 1
+		}
+		for k := first; k < size; k++ {
+			for d := int32(0); d < divs; d++ {
+				for sign := int32(0); sign < 2; sign++ {
+					add(2*p.pPars2[i][k][d], 2*p.pVars[i][k]+sign, 2*p.pDivs[d]+1-sign)
+				}
+			}
+		}
+	}
+	return cnf
 }
-// add clauses to the don't-care computation solver
-func Sbd_ProblemLoad1(p *Sbd_Pro_t, vCnf *Vec_Int_t, iStartVar int32, pDivVars *int32, iTopVar int32, pSat *sat_solver) {
-    var pLits [8]int32;
-    var nLits int32;
-    var i int32;
-    var k int32;
-    var iLit int32;
-    var RetValue int32;
-    var ThisTopVar int32  = p.pVars[0][p.nSize];
-    var FirstDivVar int32  = p.nPars + p.nVars;
-    // add clauses
-    for  i = 0; i < Vec_IntSize(vCnf); i++  {
-        assert(Vec_IntEntry(vCnf, i) != -1, "Vec_IntEntry(vCnf, i) != -1");
-        for  k = i+1; k < Vec_IntSize(vCnf); k++  {
-            if Vec_IntEntry(vCnf, i) == -1 {
-                break; }
-        }
-        nLits = 0;
-        Vec_IntForEachEntryStartStop( vCnf, iLit, i, i, k ) {
-            if Abc_Lit2Var(iLit) == ThisTopVar {
-                pLits[nLits++] = Abc_Var2Lit( ThisTopVar, Abc_LitIsCompl(iLit) );
-            } else if Abc_Lit2Var(iLit) >= FirstDivVar {
-                pLits[nLits++] = Abc_Var2Lit( pDivVars[Abc_Lit2Var(iLit)-FirstDivVar], Abc_LitIsCompl(iLit) );
-            } else {
-                pLits[nLits++] = iLit + 2 * iStartVar; }
-        }
-        assert(nLits <= 8, "nLits <= 8");
-        RetValue = sat_solver_addclause( pSat, pLits, pLits + nLits );
-        assert((RetValue != 0), "RetValue");
-    }
+func sbdFlatClauses(cnf *vec.Vec_Int_t) [][]int32 {
+	var clauses [][]int32
+	start := 0
+	for i, v := range vec.Vec_IntArray(cnf) {
+		if v == -1 {
+			clauses = append(clauses, slices.Clone(vec.Vec_IntArray(cnf)[start:i]))
+			start = i + 1
+		} else if v < 0 {
+			panic("invalid CNF literal")
+		}
+	}
+	if start != vec.Vec_IntSize(cnf) {
+		panic("unterminated CNF clause")
+	}
+	return clauses
 }
-// add clauses to the functionality evaluation solver
-func Sbd_ProblemLoad2(p *Sbd_Pro_t, vCnf *Vec_Wec_t, iStartVar int32, pDivVarValues *int32, iTopVarValue int32, pSat *sat_solver) {
-    var vLevel *Vec_Int_t;
-    var pLits [8]int32;
-    var nLits int32;
-    var i int32;
-    var k int32;
-    var iLit int32;
-    var RetValue int32;
-    var ThisTopVar int32  = p.pVars[0][p.nSize];
-    var FirstDivVar int32  = p.nPars + p.nVars;
-    var FirstIntVar int32  = p.nPars;
-    // add clauses
-    Vec_WecForEachLevel( vCnf, vLevel, i )
-    {
-        nLits = 0;
-        Vec_IntForEachEntry( vLevel, iLit, k ) {
-            if Abc_Lit2Var(iLit) == ThisTopVar {
-                if Abc_LitIsCompl(iLit) == iTopVarValue {
-                    break; }
-                continue;
-            
-            } else if Abc_Lit2Var(iLit) >= FirstDivVar {
-                if Abc_LitIsCompl(iLit) == pDivVarValues[Abc_Lit2Var(iLit)-FirstDivVar] {
-                    break; }
-                continue;
-            
-            } else if Abc_Lit2Var(iLit) >= FirstIntVar {
-                pLits[nLits++] = iLit + 2 * iStartVar;
-            } else {
-                pLits[nLits++] = iLit; }
-        }
-        if k < Vec_IntSize(vLevel) {
-            continue; }
-        assert(nLits <= 8, "nLits <= 8");
-        RetValue = sat_solver_addclause( pSat, pLits, pLits + nLits );
-        assert((RetValue != 0), "RetValue");
-    }
+func Sbd_ProblemLoad1(p *Sbd_Pro_t, cnf *vec.Vec_Int_t, start int32, divVars []int32, top int32, solver *bsat.Solver) {
+	root := p.pVars[p.nLuts-1][p.nSize]
+	firstDiv := p.nPars + p.nVars
+	for _, clause := range sbdFlatClauses(cnf) {
+		mapped := make([]bsat.Literal, len(clause))
+		for i, lit := range clause {
+			v := lit >> 1
+			switch {
+			case v == root:
+				v = top
+			case v >= firstDiv:
+				v = divVars[v-firstDiv]
+			default:
+				v += start
+			}
+			mapped[i] = bsat.Literal(2*v + (lit & 1))
+		}
+		if !solver.AddClause(mapped...) {
+			panic("inconsistent parameterized problem")
+		}
+	}
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-sat_solver * Sbd_SolverTopo( int M, int N, int K, int pVars[MAX_N][MAX_M+MAX_N][MAX_K], int pVars2[MAX_M+MAX_N][MAX_D], int pDelays[], int Req, int * pnVars ) // inputs, nodes, lutsize
-{
-    var pSat *sat_solver  = nil;
-    var vTemp *Vec_Int_t  = Vec_IntAlloc(100);
-    // assign vars
-    var RetValue, n, i, j, j2, k, k2, d, Count, nVars int32;
-    for  n = 0; n < N;   n++  {
-    for  i = 0; i < M+N; i++  {
-    for  k = 0; k < K;   k++  {
-        pVars[n][i][k] = -1;
-    }
-    }
-    }
-    for  n = 0; n < N;   n++  {
-    for  i = 0; i < M+n; i++  {
-    for  k = 0; k < K;   k++  {
-        pVars[n][i][k] = nVars++;
-    }
-    }
-    }
-    fmt.Printf("Number of topo vars = %d.\n", nVars);
-    *pnVars = nVars;
-    // add constraints
-    pSat = sat_solver_new();
-    sat_solver_setnvars( pSat, nVars );
-    // each node is used
-    for  i = 0; i < M+N-1; i++  {
-        Vec_IntClear( vTemp );
-        for  n = 0; n < N; n++  {
-        for  k = 0; k < K; k++  {
-            if pVars[n][i][k] >= 0 {
-                Vec_IntPush( vTemp, Abc_Var2Lit(pVars[n][i][k], 0) ); }
-        }
-        }
-        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntLimit(vTemp) );
-        assert((RetValue != 0), "RetValue");
-    }
-    fmt.Printf("Added %d node connectivity constraints.\n", i);
-    // each fanin of each node is connected exactly once
-    Count = 0;
-    for  n = 0; n < N; n++  {
-    for  k = 0; k < K; k++  {
-        // connected
-        Vec_IntClear( vTemp );
-        for  i = 0; i < M+n; i++  {
-            Vec_IntPush( vTemp, Abc_Var2Lit(pVars[n][i][k], 0) );
-        }
-        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntLimit(vTemp) );
-        assert((RetValue != 0), "RetValue");
-        // exactly once
-        for  i = 0;   i < M+n; i++  {
-        for  j = i+1; j < M+n; j++  {
-            Vec_IntFillTwo( vTemp, 2, Abc_Var2Lit(pVars[n][i][k], 1), Abc_Var2Lit(pVars[n][j][k], 1) );
-            RetValue = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntLimit(vTemp) );
-            assert((RetValue != 0), "RetValue");
-            Count++;
-        }
-        }
-    }
-    }
-    fmt.Printf("Added %d fanin connectivity constraints.\n", Count);
-    // node fanins are unique
-    Count = 0;
-    for  n = 0; n < N;   n++  {
-    for  i = 0; i < M+n; i++  {
-    for  k = 0; k < K;   k++  {
-    for  j = i; j < M+n; j++  {
-    for  k2 = k+1; k2 < K; k2++  {
-        Vec_IntFillTwo( vTemp, 2, Abc_Var2Lit(pVars[n][i][k], 1), Abc_Var2Lit(pVars[n][j][k2], 1) );
-        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntLimit(vTemp) );
-        assert((RetValue != 0), "RetValue");
-        Count++;
-    }
-    }
-    }
-    }
-    }
-    fmt.Printf("Added %d fanin exclusivity constraints.\n", Count);
-    // nodes are ordered
-    Count = 0;
-    for  n = 1; n < N;     n++  {
-    for  i = 0; i < M+n-1; i++  {
-        // first of n cannot be smaller than first of n-1 (but can be equal)
-        for  j = i+1; j < M+n-1; j++  {
-            Vec_IntFillTwo( vTemp, 2, Abc_Var2Lit(pVars[n][i][0], 1), Abc_Var2Lit(pVars[n-1][j][0], 1) );
-            RetValue = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntLimit(vTemp) );
-            assert((RetValue != 0), "RetValue");
-            Count++;
-        }
-        // if first nodes of n and n-1 are equal, second nodes are ordered
-        Vec_IntFillTwo( vTemp, 2, Abc_Var2Lit(pVars[n][i][0], 1), Abc_Var2Lit(pVars[n-1][i][0], 1) );
-        for  j = 0;    j < i;  j++  {
-        for  j2 = j+1; j2 < i; j2++  {
-            Vec_IntPushTwo( vTemp, Abc_Var2Lit(pVars[n][j][1], 1), Abc_Var2Lit(pVars[n-1][j2][1], 1) );
-            RetValue = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntLimit(vTemp) );
-            assert((RetValue != 0), "RetValue");
-            Vec_IntShrink( vTemp, 2 );
-            Count++;
-        }
-        }
-    }
-    }
-    fmt.Printf("Added %d node ordering constraints.\n", Count);
-    // exclude fanins of two-input nodes
-    Count = 0;
-    if K == 2 {
-    for  n = 1; n < N;   n++  {
-    for  i = M; i < M+n; i++  {
-    for  j = 0; j < i;   j++  {
-    for  k = 0; k < K;   k++  {
-        Vec_IntClear( vTemp );
-        Vec_IntPush( vTemp, Abc_Var2Lit(pVars[n][i][0], 1) );
-        Vec_IntPush( vTemp, Abc_Var2Lit(pVars[n][j][1], 1) );
-        Vec_IntPush( vTemp, Abc_Var2Lit(pVars[i-M][j][k], 1) );
-        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntLimit(vTemp) );
-        assert((RetValue != 0), "RetValue");
-        Count++;
-    }
-    }
-    }
-    } }
-    fmt.Printf("Added %d two-node non-triviality constraints.\n", Count);
-
-
-    // assign delay vars
-    assert(Req < MAX_D-1, "Req < MAX_D-1");
-    for  i = 0; i < M+N;   i++  {
-    for  d = 0; d < MAX_D; d++  {
-        pVars2[i][d] = nVars++;
-    }
-    }
-    fmt.Printf("Number of total vars = %d.\n", nVars);
-    // set input delays
-    for  i = 0; i < M; i++  {
-        assert(pDelays[i] < MAX_D-2, "pDelays[i] < MAX_D-2");
-        Vec_IntFill( vTemp, 1, Abc_Var2Lit(pVars2[i][pDelays[i]], 0) );
-        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntLimit(vTemp) );
-        assert((RetValue != 0), "RetValue");
-    }
-    // set output delay
-    for  k = Req; k < MAX_D; k++  {
-        Vec_IntFill( vTemp, 1, Abc_Var2Lit(pVars2[M+N-1][Req+1], 1) );
-        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntLimit(vTemp) );
-        assert((RetValue != 0), "RetValue");
-    }
-    // set internal nodes
-    for  n = 0; n < N;   n++  {
-    for  i = 0; i < M+n; i++  {
-    for  k = 0; k < K;   k++  {
-    for  d = 0; d < MAX_D-1; d++  {
-        Vec_IntFill( vTemp, 1, Abc_Var2Lit(pVars[n][i][k],   1) );
-        Vec_IntPush( vTemp,    Abc_Var2Lit(pVars2[i][d],     1) );
-        Vec_IntPush( vTemp,    Abc_Var2Lit(pVars2[M+n][d+1], 0) );
-        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntLimit(vTemp) );
-        assert((RetValue != 0), "RetValue");
-    }
-    }
-    }
-    }
-
-    
-    Vec_IntFree( vTemp );
-    return pSat;
+func Sbd_ProblemLoad2(p *Sbd_Pro_t, cnf *vec.Vec_Wec_t, start int32, divValues []int32, topValue int32, solver *bsat.Solver) {
+	root := p.pVars[p.nLuts-1][p.nSize]
+	firstDiv := p.nPars + p.nVars
+	for level := 0; level < vec.Vec_WecSize(cnf); level++ {
+		var mapped []bsat.Literal
+		satisfied := false
+		for _, lit := range vec.Vec_IntArray(vec.Vec_WecEntry(cnf, level)) {
+			v := lit >> 1
+			if v == root || v >= firstDiv {
+				value := topValue
+				if v >= firstDiv {
+					value = divValues[v-firstDiv]
+				}
+				if value != (lit & 1) {
+					satisfied = true
+					break
+				}
+				continue
+			}
+			if v >= p.nPars {
+				v += start
+			}
+			mapped = append(mapped, bsat.Literal(2*v+(lit&1)))
+		}
+		if !satisfied {
+			solver.AddClause(mapped...)
+		}
+	}
 }
-func Sbd_SolverTopoPrint(pSat *sat_solver, M int32, N int32, K int32, pVars [][MAX_M+MAX_N][MAX_K]int32) {
-    var n, i, k int32;
-    fmt.Printf("Solution:\n");
-    fmt.Printf("     | ");
-    for  n = 0; n < N; n++  {
-        fmt.Printf("%2d  ", M+n);
-    }
-    fmt.Printf("\n");
-    for  i = M+N-2; i >= 0; i--  {
-        fmt.Printf("%2d %c | ", i, i < M ? 'i' : ' ');
-        for  n = 0; n < N; n++  {
-            for  k = K-1; k >= 0; k--  {
-                if pVars[n][i][k] == -1 {
-                    fmt.Printf(" ");
-                } else {                    
-                    fmt.Printf("%c", sat_solver_var_value(pSat, pVars[n][i][k]) ? '*' : '.'); }
-            }
-            fmt.Printf("  ");
-        }
-        fmt.Printf("\n");
-    }
+func Sbd_SolverTopo(m, n, k int32, variables *TopologyVariables, delays *DelayVariables, inputDelays []int32, required int32) (*bsat.Solver, int32) {
+	if m < 1 || m > MAX_M || n < 1 || n > MAX_N || k < 2 || k > MAX_K || required < 0 || required >= MAX_D-1 || len(inputDelays) < int(m) {
+		panic("invalid SAT topology dimensions")
+	}
+	count := int32(0)
+	for node := int32(0); node < n; node++ {
+		for fan := int32(0); fan < m+n; fan++ {
+			for pin := int32(0); pin < k; pin++ {
+				variables[node][fan][pin] = -1
+			}
+		}
+		for fan := int32(0); fan < m+node; fan++ {
+			for pin := int32(0); pin < k; pin++ {
+				variables[node][fan][pin] = count
+				count++
+			}
+		}
+	}
+	topologyCount := count
+	solver := bsat.NewSolver()
+	add := func(literals ...bsat.Literal) { solver.AddClause(literals...) }
+	for fan := int32(0); fan < m+n-1; fan++ {
+		var clause []bsat.Literal
+		for node := int32(0); node < n; node++ {
+			for pin := int32(0); pin < k; pin++ {
+				if v := variables[node][fan][pin]; v >= 0 {
+					clause = append(clause, bsat.Positive(v))
+				}
+			}
+		}
+		add(clause...)
+	}
+	for node := int32(0); node < n; node++ {
+		for pin := int32(0); pin < k; pin++ {
+			var clause []bsat.Literal
+			for fan := int32(0); fan < m+node; fan++ {
+				clause = append(clause, bsat.Positive(variables[node][fan][pin]))
+				for other := fan + 1; other < m+node; other++ {
+					add(bsat.Negative(variables[node][fan][pin]), bsat.Negative(variables[node][other][pin]))
+				}
+			}
+			add(clause...)
+		}
+	}
+	for node := int32(0); node < n; node++ {
+		for fan := int32(0); fan < m+node; fan++ {
+			for pin := int32(0); pin < k; pin++ {
+				for other := fan; other < m+node; other++ {
+					for pin2 := pin + 1; pin2 < k; pin2++ {
+						add(bsat.Negative(variables[node][fan][pin]), bsat.Negative(variables[node][other][pin2]))
+					}
+				}
+			}
+		}
+	}
+	for node := int32(1); node < n; node++ {
+		for fan := int32(0); fan < m+node-1; fan++ {
+			for other := fan + 1; other < m+node-1; other++ {
+				add(bsat.Negative(variables[node][fan][0]), bsat.Negative(variables[node-1][other][0]))
+			}
+			for second := int32(0); second < fan; second++ {
+				for previous := second + 1; previous < fan; previous++ {
+					add(bsat.Negative(variables[node][fan][0]), bsat.Negative(variables[node-1][fan][0]), bsat.Negative(variables[node][second][1]), bsat.Negative(variables[node-1][previous][1]))
+				}
+			}
+		}
+	}
+	if k == 2 {
+		for node := int32(1); node < n; node++ {
+			for fan := m; fan < m+node; fan++ {
+				for other := int32(0); other < fan; other++ {
+					for pin := int32(0); pin < k; pin++ {
+						v := variables[fan-m][other][pin]
+						if v >= 0 {
+							add(bsat.Negative(variables[node][fan][0]), bsat.Negative(variables[node][other][1]), bsat.Negative(v))
+						}
+					}
+				}
+			}
+		}
+	}
+	for id := int32(0); id < m+n; id++ {
+		for delay := int32(0); delay < MAX_D; delay++ {
+			delays[id][delay] = count
+			count++
+		}
+	}
+	sbdEnsureVariables(solver, count)
+	for input := int32(0); input < m; input++ {
+		if inputDelays[input] < 0 || inputDelays[input] >= MAX_D-2 {
+			panic("input delay exceeds topology encoding")
+		}
+		add(bsat.Positive(delays[input][inputDelays[input]]))
+	}
+	for delay := required + 1; delay < MAX_D; delay++ {
+		add(bsat.Negative(delays[m+n-1][delay]))
+	}
+	for node := int32(0); node < n; node++ {
+		for fan := int32(0); fan < m+node; fan++ {
+			for pin := int32(0); pin < k; pin++ {
+				for delay := int32(0); delay < MAX_D-1; delay++ {
+					add(bsat.Negative(variables[node][fan][pin]), bsat.Negative(delays[fan][delay]), bsat.Positive(delays[m+node][delay+1]))
+				}
+			}
+		}
+	}
+	return solver, topologyCount
+}
+func Sbd_SolverTopoPrint(solver *bsat.Solver, m, n, k int32, variables *TopologyVariables) {
+	fmt.Println("Solution:")
+	for node := int32(0); node < n; node++ {
+		fmt.Printf("%d :", m+node)
+		for pin := int32(0); pin < k; pin++ {
+			for fan := int32(0); fan < m+node; fan++ {
+				if sbdModelValue(solver, variables[node][fan][pin]) != 0 {
+					fmt.Printf(" %d", fan)
+				}
+			}
+		}
+		fmt.Println()
+	}
 }
 func Sbd_SolverTopoTest() {
-    var M int32  = 8;  //  6;  // inputs
-    var N int32  = 3;  // 16;  // nodes
-    var K int32  = 4;  //  2;  // lutsize
-    var status, v, nVars, nIter, nSols int32;
-    var pVars [MAX_N][MAX_M+MAX_N][MAX_K]int32; // 20 x 32 x 6 = 3840
-    var pVars2 [MAX_M+MAX_N][MAX_D]int32;       // 20 x 32 x 6 = 3840
-    var pDelays [MAX_M]int32 = [MAX_M]int32{1,0,0,0,1};
-    var clk abctime  = Abc_Clock();
-    var vLits *Vec_Int_t  = Vec_IntAlloc(100);
-    var pSat *sat_solver  = Sbd_SolverTopo( M, N, K, pVars, pVars2, pDelays, 2, &nVars );
-    for  nIter = 0; nIter < 1000000; nIter++  {
-        // find onset minterm
-        status = sat_solver_solve( pSat, nil, nil, 0, 0, 0, 0 );
-        if status == l_Undef {
-            break; }
-        if status == l_False {
-            break; }
-        assert(status == l_True, "status == l_True");
-        nSols++;
-        // print solution
-        if nIter < 5 {
-            Sbd_SolverTopoPrint( pSat, M, N, K, pVars ); }
-        // remember variable values
-        Vec_IntClear( vLits );
-        for  v = 0; v < nVars; v++  {
-            if sat_solver_var_value(pSat, v) {
-                Vec_IntPush( vLits, Abc_Var2Lit(v, 1) ); }
-        }
-        // add breaking clause
-        status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntLimit(vLits) );
-        if status == 0 {
-            break; }
-        //if ( nIter == 5 )
-        //    break;
-    }
-    sat_solver_delete( pSat );
-    Vec_IntFree( vLits );
-    fmt.Printf("Found %d solutions. ", nSols);
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
+	var variables TopologyVariables
+	var delayVariables DelayVariables
+	solver, count := Sbd_SolverTopo(8, 3, 4, &variables, &delayVariables, []int32{1, 0, 0, 0, 1, 0, 0, 0}, 2)
+	solutions := 0
+	for iteration := 0; iteration < 1000000 && solver.Solve() == bsat.Satisfiable; iteration++ {
+		solutions++
+		if iteration < 5 {
+			Sbd_SolverTopoPrint(solver, 8, 3, 4, &variables)
+		}
+		var block []bsat.Literal
+		for v := int32(0); v < count; v++ {
+			if sbdModelValue(solver, v) != 0 {
+				block = append(block, bsat.Negative(v))
+			}
+		}
+		if !solver.AddClause(block...) {
+			break
+		}
+	}
+	fmt.Printf("Found %d solutions.\n", solutions)
 }
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Synthesize random topology.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sbd_SolverSynth(M int32, N int32, K int32, pLuts [][MAX_K]int32) {
-    var Used [MAX_M+MAX_N]int32 ;
-    var nUnused int32  = M;
-    var n, iFan0, iFan1 int32;
-    srand( time.Now().Unix() );
-    for  n = 0; nUnused < N - n; n++  {
-        iFan0 = iFan1 = 0;
-        for  (iFan0 = rand() % (M + n)) == (iFan1 = rand() % (M + n))  {
-            ;
-        }
-        pLuts[n][0] = iFan0;
-        pLuts[n][1] = iFan1;
-        if Used[iFan0] == 0 {
-            Used[iFan0] = 1;
-            nUnused--;
-        }
-        if Used[iFan1] == 0 {
-            Used[iFan1] = 1;
-            nUnused--;
-        }
-        nUnused++;
-    }
-    if nUnused == N - n {
-        // undo the first one
-        for  iFan0 = 0; iFan0 < M+n; iFan0++  {
-            if Used[iFan0] {
-                Used[iFan0] = 0;
-                nUnused++;
-                break;
-            }
-        }
-
-    }
-    assert(nUnused == N - n + 1, "nUnused == N - n + 1");
-    for  ; n < N; n++  {
-        for  iFan0 = 0; iFan0 < M+n; iFan0++  {
-            if Used[iFan0] == 0 {
-                Used[iFan0] = 1;
-                break;
-            }
-        }
-        assert(iFan0 < M+n, "iFan0 < M+n");
-        for  iFan1 = 0; iFan1 < M+n; iFan1++  {
-            if Used[iFan1] == 0 {
-                Used[iFan1] = 1;
-                break;
-            }
-        }
-        assert(iFan1 < M+n, "iFan1 < M+n");
-        pLuts[n][0] = iFan0;
-        pLuts[n][1] = iFan1;
-    }
-
-    fmt.Printf("{\n");
-    for  n = 0; n < N; n++  {
-        fmt.Printf("    {%d, %d}%s // %d\n", pLuts[n][0], pLuts[n][1], n==N-1 ? "" :",", M+n);
-    }
-    fmt.Printf("};\n");
+func Sbd_SolverSynth(m, n, k int32, luts *LUTTopology) {
+	if m < 2 || m > MAX_M || n < m-1 || n > MAX_N || k != 2 {
+		panic("random topology generator requires feasible binary dimensions")
+	}
+	random := aig.NewAigRandomSource()
+	var used [MAX_M + MAX_N]bool
+	unused := m
+	for node := int32(0); node < n; node++ {
+		remaining := n - node
+		var a, b int32
+		if unused == remaining+1 {
+			found := false
+			for fan := int32(0); fan < m+node; fan++ {
+				if used[fan] {
+					continue
+				}
+				if !found {
+					a = fan
+					found = true
+				} else {
+					b = fan
+					break
+				}
+			}
+		} else {
+			for {
+				a = int32(random.Uint32() % uint32(m+node))
+				b = int32(random.Uint32() % uint32(m+node))
+				if a == b {
+					continue
+				}
+				consumed := int32(0)
+				if !used[a] {
+					consumed++
+				}
+				if !used[b] {
+					consumed++
+				}
+				if unused+1-consumed <= remaining {
+					break
+				}
+			}
+		}
+		luts[node][0], luts[node][1] = a, b
+		for _, fan := range []int32{a, b} {
+			if !used[fan] {
+				used[fan] = true
+				unused--
+			}
+		}
+		unused++
+	}
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Compute truth table for the given parameter settings.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sbd_SolverTruth(M int32, N int32, K int32, pLuts [][MAX_K]int32, pValues []int32) word {
-    var i int32;
-    var k int32;
-    var v int32;
-    var nLutPars int32 = (1 << K) - 1;
-    var Truths [MAX_M+MAX_N]word;
-    assert(M <= 6 && N <= MAX_N, "M <= 6 && N <= MAX_N");
-    for  i = 0; i < M; i++  {
-        Truths[i] = s_Truths6[i];
-    }
-    for  i = 0; i < N; i++  {
-        var Truth, Mint word;
-        for  k = 1; k <= nLutPars; k++  {            
-            if !pValues[i*nLutPars+k-1] {
-                continue; }
-            Mint = ~(word)0;
-            for  v = 0; v < K; v++  {
-                Mint &= ((k >> v) & 1) ? Truths[pLuts[i][v]] :  ~Truths[pLuts[i][v]];
-            }
-            Truth |= Mint;
-        }
-        Truths[M+i] = Truth;
-    }
-    return Truths[M+N-1];
+func sbdCheckTopology(m, n, k int32, luts *LUTTopology) {
+	if m < 1 || m > 8 || n < 1 || n > 30 || k < 1 || k > 6 {
+		panic("invalid LUT topology")
+	}
+	for node := int32(0); node < n; node++ {
+		for _, fan := range luts[node][:k] {
+			if fan < 0 || fan >= m+node {
+				panic("non-topological LUT fanin")
+			}
+		}
+	}
 }
-func Sbd_SolverTruthWord(M int32, N int32, K int32, pLuts [][MAX_K]int32, pValues []int32, pTruthsElem *word, fCompl int32) *word {
-    var i int32;
-    var k int32;
-    var v int32;
-    var nLutPars int32 = (1 << K) - 1;
-    var nWords int32  = Abc_TtWordNum( M );
-    var pRes *word  = pTruthsElem + (M+N-1)*nWords;
-    assert(M <= MAX_M && N <= MAX_N, "M <= MAX_M && N <= MAX_N");
-    for  i = 0; i < N; i++  {
-        var pMint *word;
-        var pTruth *word = pTruthsElem + (M+i)*nWords;
-        Abc_TtClear( pTruth, nWords );
-        for  k = 1; k <= nLutPars; k++  {            
-            if !pValues[i*nLutPars+k-1] {
-                continue; }
-            pMint = pTruthsElem + (M+N)*nWords;
-            Abc_TtFill( pMint, nWords );
-            for  v = 0; v < K; v++  {
-                var pFanin *word  = pTruthsElem + pLuts[i][v]*nWords;
-                Abc_TtAndSharp( pMint, pMint, pFanin, nWords, ((k >> v) & 1) == 0 );
-            }
-            Abc_TtOr( pTruth, pTruth, pMint, nWords );
-        }
-    }
-    if fCompl != 0 {
-        Abc_TtNot( pRes, nWords ); }
-    return pRes;
+func Sbd_SolverTruth(m, n, k int32, luts *LUTTopology, values []int32) uint64 {
+	if m > 6 {
+		panic("word truth exceeds six inputs")
+	}
+	storage := sbdTruthStorage(m, n)
+	return Sbd_SolverTruthWord(m, n, k, luts, values, storage, 0)[0]
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sbd_SolverFunc(M int32, N int32, K int32, pLuts [][MAX_K]int32, pTruthInit *word, pValues *int32) int32 {
-    var fVerbose int32;
-    var clk abctime  = Abc_Clock();
-    var clk2, clkOther abctime;
-    var pSat *sat_solver  = nil;
-    var nWords int32  = Abc_TtWordNum(M);
-    var pLits [MAX_K+2]int32;
-    var pLits2 [MAX_K+2]int32;
-    var nLits int32;
-    var nLutPars int32 = (1 << K) - 1;
-    var nVars int32 = N * nLutPars;
-    var i int32;
-    var k int32;
-    var m int32;
-    var status int32;
-    var iMint int32;
-    var Iter int32;
-    var fCompl int32 = int32((pTruthInit[0] & 1));
-    // create truth tables
-    var pTruthNew *word;
-    var pTruths *word = ABC_ALLOC( word, Abc_TtWordNum(MAX_N) * (MAX_M + MAX_N + 1) );
-    Abc_TtElemInit2( pTruths, M );
-    // create solver
-    pSat = sat_solver_new();
-    sat_solver_setnvars( pSat, nVars );
-    fmt.Printf("Number of parameters %d x %d = %d.\n", N, nLutPars, nVars);
-    // start with the last minterm
-//    iMint = (1 << M) - 1;
-    iMint = 1;
-    for  Iter = 0; Iter < (1 << M); Iter++  {
-        // assign the first intermediate variable
-        var nVarStart int32  = sat_solver_nvars(pSat);
-        sat_solver_setnvars( pSat, nVarStart + N - 1 );
-        // add clauses for nodes
-        //if ( fVerbose )
-            fmt.Printf("Iter %3d : Mint = %3d. Conflicts =%8d.\n", Iter, iMint, sat_solver_nconflicts(pSat));
-        for  i = 0; i < N; i++  {
-        for  m = 0; m <= nLutPars; m++  {
-            if fVerbose != 0 {
-                fmt.Printf("i = %d.  m = %d.\n", i, m); }
-            // selector variables
-            nLits = 0;
-            for  k = 0; k < K; k++  {
-                if pLuts[i][k] >= M {
-                    assert(pLuts[i][k] - M < N - 1, "pLuts[i][k] - M < N - 1");
-                    pLits[nLits] = pLits2[nLits] = Abc_Var2Lit( nVarStart + pLuts[i][k] - M, (m >> k) & 1 ); 
-                    nLits++;
-                
-                } else if ((iMint >> pLuts[i][k]) & 1) != ((m >> k) & 1) {
-                    break; }
-            }
-            if k < K {
-                continue; }
-            // add parameter
-            if m != 0 {
-                pLits[nLits]  = Abc_Var2Lit( i*nLutPars + m-1, 1 );
-                pLits2[nLits] = Abc_Var2Lit( i*nLutPars + m-1, 0 );
-                nLits++;
-            }
-            // node variable
-            if i != N - 1 {
-                pLits[nLits]  = Abc_Var2Lit( nVarStart + i, 0 );
-                pLits2[nLits] = Abc_Var2Lit( nVarStart + i, 1 );
-                nLits++;
-            }
-            // add clauses
-            if i != N - 1 || Abc_TtGetBit(pTruthInit, iMint) != fCompl {
-                status = sat_solver_addclause( pSat, pLits2, pLits2 + nLits );
-                if status == 0 {
-                    fCompl = -1;
-                    goto finish;
-                }
-            }
-            if (i != N - 1 || Abc_TtGetBit(pTruthInit, iMint) == fCompl) && m > 0 {
-                status = sat_solver_addclause( pSat, pLits, pLits + nLits );
-                if status == 0 {
-                    fCompl = -1;
-                    goto finish;
-                }
-            }
-        }
-        }
-
-        // run SAT solver
-        status = sat_solver_solve( pSat, nil, nil, 0, 0, 0, 0 );
-        if status == l_Undef {
-            break; }
-        if status == l_False {
-            fCompl = -1;
-            goto finish;
-        }
-        assert(status == l_True, "status == l_True");
-
-        // collect values
-        for  i = 0; i < nVars; i++  {
-            pValues[i] = sat_solver_var_value(pSat, i);
-        }
-
-        clk2 = Abc_Clock();
-        pTruthNew = Sbd_SolverTruthWord( M, N, K, pLuts, pValues, pTruths, fCompl );
-        clkOther += Abc_Clock() - clk2;
-
-        if fVerbose != 0 {
-            for  i = 0; i < nVars; i++  {
-                fmt.Printf("%d=%d ", i, pValues[i]);
-            }
-            fmt.Printf("  ");
-            for  i = nVars; i < sat_solver_nvars(pSat); i++  {
-                fmt.Printf("%d=%d ", i, sat_solver_var_value(pSat, i));
-            }
-            fmt.Printf("\n");
-            Extra_PrintBinary( os.Stdout, (unsigned *)pTruthInit, (1 << M) );  fmt.Printf("\n");
-            Extra_PrintBinary( os.Stdout, (unsigned *)pTruthNew,  (1 << M) );  fmt.Printf("\n");
-        }
-        if Abc_TtEqual(pTruthInit, pTruthNew, nWords) {
-            break; }
-
-        // get new minterm
-        iMint = Abc_TtFindFirstDiffBit( pTruthInit, pTruthNew, M );
-    }
-finish:
-    fmt.Printf("Finished after %d iterations and %d conflicts.  ", Iter, sat_solver_nconflicts(pSat));
-    sat_solver_delete( pSat );
-    ABC_FREE( pTruths );
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    Abc_PrintTime( 1, "Time", clkOther );
-    return fCompl;
+func sbdTruthStorage(m, n int32) []uint64 {
+	words := 1
+	if m > 6 {
+		words <<= m - 6
+	}
+	storage := make([]uint64, int(m+n+1)*words)
+	for v := int32(0); v < m; v++ {
+		for bit := 0; bit < 64*words; bit++ {
+			if bit>>v&1 != 0 {
+				storage[int(v)*words+bit/64] |= uint64(1) << uint(bit&63)
+			}
+		}
+	}
+	return storage
+}
+func Sbd_SolverTruthWord(m, n, k int32, luts *LUTTopology, values []int32, storage []uint64, compl int32) []uint64 {
+	sbdCheckTopology(m, n, k, luts)
+	words := 1
+	if m > 6 {
+		words <<= m - 6
+	}
+	storage = storage[:int(m+n+1)*words]
+	parameters := int32(1<<k) - 1
+	for node := int32(0); node < n; node++ {
+		truth := storage[int(m+node)*words : int(m+node+1)*words]
+		clear(truth)
+		for row := int32(1); row <= parameters; row++ {
+			if values[node*parameters+row-1] == 0 {
+				continue
+			}
+			for w := 0; w < words; w++ {
+				cube := ^uint64(0)
+				for pin, fan := range luts[node][:k] {
+					value := storage[int(fan)*words+w]
+					if row>>pin&1 == 0 {
+						value = ^value
+					}
+					cube &= value
+				}
+				truth[w] |= cube
+			}
+		}
+	}
+	result := storage[int(m+n-1)*words : int(m+n)*words]
+	if compl != 0 {
+		for i := range result {
+			result[i] = ^result[i]
+		}
+	}
+	return result
+}
+func Sbd_SolverFunc(m, n, k int32, luts *LUTTopology, target []uint64, values []int32) int32 {
+	sbdCheckTopology(m, n, k, luts)
+	storage := sbdTruthStorage(m, n)
+	words := 1
+	if m > 6 {
+		words <<= m - 6
+	}
+	truth := slices.Clone(target[:words])
+	if m < 6 {
+		mask := uint64(1)<<uint(1<<m) - 1
+		pattern := truth[0] & mask
+		truth[0] = 0
+		for shift := 0; shift < 64; shift += 1 << m {
+			truth[0] |= pattern << shift
+		}
+	}
+	phase := int32(truth[0] & 1)
+	parameters := int32(1<<k) - 1
+	solver := bsat.NewSolver()
+	sbdEnsureVariables(solver, n*parameters)
+	minterm := int32(1)
+	for iteration := 0; iteration < 1<<m; iteration++ {
+		start := solver.NumVars()
+		sbdEnsureVariables(solver, start+n-1)
+		for node := int32(0); node < n; node++ {
+			for row := int32(0); row <= parameters; row++ {
+				var mismatch []bsat.Literal
+				possible := true
+				for pin, fan := range luts[node][:k] {
+					if fan < m {
+						if minterm>>fan&1 != row>>pin&1 {
+							possible = false
+							break
+						}
+					} else {
+						mismatch = append(mismatch, bsat.Literal(2*(start+fan-m)+(row>>pin&1)))
+					}
+				}
+				if !possible {
+					continue
+				}
+				if node == n-1 {
+					desired := int32(truth[minterm>>6]>>uint(minterm&63)&1) ^ phase
+					if row == 0 {
+						if desired != 0 {
+							solver.AddClause(mismatch...)
+						}
+					} else {
+						sign := 1 - desired
+						solver.AddClause(append(mismatch, bsat.Literal(2*(node*parameters+row-1)+sign))...)
+					}
+				} else {
+					output := bsat.Positive(start + node)
+					if row == 0 {
+						solver.AddClause(append(mismatch, output^1)...)
+					} else {
+						parameter := bsat.Positive(node*parameters + row - 1)
+						solver.AddClause(append(slices.Clone(mismatch), parameter^1, output)...)
+						solver.AddClause(append(mismatch, parameter, output^1)...)
+					}
+				}
+			}
+		}
+		if solver.Solve() != bsat.Satisfiable {
+			return -1
+		}
+		for v := int32(0); v < n*parameters; v++ {
+			values[v] = sbdModelValue(solver, v)
+		}
+		candidate := Sbd_SolverTruthWord(m, n, k, luts, values, storage, phase)
+		if slices.Equal(candidate, truth) {
+			return phase
+		}
+		minterm = -1
+		for bit := int32(0); bit < 1<<m; bit++ {
+			if candidate[bit>>6]>>uint(bit&63)&1 != truth[bit>>6]>>uint(bit&63)&1 {
+				minterm = bit
+				break
+			}
+		}
+		if minterm < 0 {
+			panic("truth mismatch outside declared inputs")
+		}
+	}
+	return -1
 }
 func Sbd_SolverFuncTest() {
-//    int M = 4;  //  6;  // inputs
-//    int N = 3;  // 16;  // nodes
-//    int K = 2;  //  2;  // lutsize
-//    word Truth = ~((word)3 << 8);
-//    int pLuts[MAX_N][MAX_K] = { {0,1}, {2,3}, {4,5}, {6,7}, {8,9} };
-
-/*
-    int M =  6;  //  6;  // inputs
-    int N = 19;  // 16;  // nodes
-    int K =  2;  //  2;  // lutsize
-    word pTruth[4] = { ABC_CONST(0x9ef7a8d9c7193a0f), 0, 0, 0 };
-    int pLuts[MAX_N][MAX_K] = { 
-        {3, 5}, {1, 6}, {0, 5}, {8, 2}, {7, 9},
-        {0, 1}, {2, 11}, {5, 12}, {3, 13}, {1, 14},
-        {10, 15}, {11, 2}, {3, 17}, {9, 18}, {0, 13},
-        {20, 7}, {19, 21}, {4, 16}, {23, 22} 
-    };
-*/
-
-/*
-    int M = 6;  //  6;  // inputs
-    int N = 5;  // 16;  // nodes
-    int K = 4;  //  2;  // lutsize
-    word Truth = ABC_CONST(0x9ef7a8d9c7193a0f);
-    int pLuts[MAX_N][MAX_K] = { 
-        {0, 1, 2, 3}, // 6
-        {1, 2, 3, 4}, // 7
-        {2, 3, 4, 5}, // 8
-        {0, 1, 4, 5}, // 9
-        {6, 7, 8, 9}  // 10
-    };
-*/
-
-/*
-    int M =  8;  //  6;  // inputs
-    int N =  7;  // 16;  // nodes
-    int K =  2;  //  2;  // lutsize
-//    word pTruth[4] = { 0, 0, 0, ABC_CONST(0x8000000000000000) };
-//    word pTruth[4] = { ABC_CONST(0x0000000000000001), 0, 0, 0 };
-    word pTruth[4] = { 0, 0, 0, ABC_CONST(0x0000000000020000) };
-    int pLuts[MAX_N][MAX_K] = { {0,1}, {2,3}, {4,5}, {6,7}, {8,9}, {10,11}, {12,13} };
-*/
-
-    var M int32  =  8;  //  6;  // inputs
-    var N int32  =  7;  // 16;  // nodes
-    var K int32  =  2;  //  2;  // lutsize
-    var pTruth [4]word = [4]word{ ABC_CONST(0x0000080000020000), ABC_CONST(0x0000000000020000), ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000020000) };
-    var pLuts [MAX_N][MAX_K]int32 = [MAX_N][MAX_K]int32{ {0,1}, {2,3}, {4,5}, {6,7}, {8,9}, {10,11}, {12,13} };
-
-    var pValues [MAX_N*((1<<MAX_K)-1)]int32;
-    var Res int32;
-    var i int32;
-    var k int32;
-    var nLutPars int32 = (1 << K) - 1;
-
-    //Sbd_SolverSynth( M, N, K, pLuts );
-
-    Res = Sbd_SolverFunc( M, N, K, pLuts, pTruth, pValues );
-    if Res == -1 {
-        fmt.Printf("Solution does not exist.\n");
-        return;
-    }
-    fmt.Printf("Result (compl = %d):\n", Res);
-    for  i = 0; i < N; i++  {
-        for  k = nLutPars-1; k >= 0; k--  {
-            fmt.Printf("%d", pValues[i*nLutPars+k]);
-        }
-        fmt.Printf("0\n");
-    }
+	var luts LUTTopology
+	for i, pair := range [][2]int32{{0, 1}, {2, 3}, {4, 5}, {6, 7}, {8, 9}, {10, 11}, {12, 13}} {
+		luts[i][0], luts[i][1] = pair[0], pair[1]
+	}
+	truth := []uint64{0x0000080000020000, 0x0000000000020000, 0, 0x0000000000020000}
+	values := make([]int32, 7*3)
+	started := time.Now()
+	phase := Sbd_SolverFunc(8, 7, 2, &luts, truth, values)
+	fmt.Printf("Result (compl=%d): %v Time=%v\n", phase, values, time.Since(started))
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

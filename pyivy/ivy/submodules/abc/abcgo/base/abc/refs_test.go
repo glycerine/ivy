@@ -142,3 +142,23 @@ func TestTraversalInitializationAndWrap(t *testing.T) {
 		t.Fatal("overflow reused stale marker")
 	}
 }
+func TestPreviousTraversalEpochAPI(t *testing.T) {
+	n := NewNetwork("previous")
+	o := n.NewObject(ObjectPI)
+	Abc_NtkIncrementTravId(n)
+	if Abc_NodeIsTravIdPrevious(o) != 0 {
+		t.Fatal("unvisited epoch mistaken for previous")
+	}
+	Abc_NodeSetTravIdPrevious(o)
+	if Abc_NodeIsTravIdPrevious(o) != 1 || Abc_NodeIsTravIdCurrent(o) != 0 {
+		t.Fatal("previous marking failed")
+	}
+	Abc_NtkIncrementTravId(n)
+	if Abc_NodeIsTravIdPrevious(o) != 0 {
+		t.Fatal("stale previous epoch retained")
+	}
+	Abc_NodeSetTravIdCurrent(o)
+	if Abc_NodeIsTravIdCurrent(o) != 1 || Abc_NodeIsTravIdPrevious(o) != 0 {
+		t.Fatal("current/previous distinction failed")
+	}
+}

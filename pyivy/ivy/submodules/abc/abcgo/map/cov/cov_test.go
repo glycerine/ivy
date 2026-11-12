@@ -1,6 +1,7 @@
 package cov
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/glycerine/abcgo/base/abc"
@@ -67,11 +68,186 @@ func TestSopEsopCoverPreservesAIGFunction(t *testing.T) {
 
 func TestCoverRejectsImpossibleLimits(t *testing.T) {
 	source := makeAIGForCoverTest(t, false, false)
+	if got := Abc_NtkSopEsopCover(source, -1, 4, 0, 1, 0, 0); got != nil {
+		t.Fatal("negative fanin limit unexpectedly succeeded")
+	}
 	if got := Abc_NtkSopEsopCover(source, 1, 4, 0, 1, 0, 0); got != nil {
 		t.Fatal("fanin limit below two unexpectedly succeeded")
 	}
 	if got := Abc_NtkSopEsopCover(source, 2, 0, 0, 1, 0, 0); got != nil {
 		t.Fatal("zero cube limit unexpectedly succeeded")
+	}
+}
+
+func TestCoverGrowsCutBoundariesToHonorFaninLimit(t *testing.T) {
+	network := abc.NewNetwork("cut_growth")
+	network.Type = uint8(abc.ABC_NTK_STRASH)
+	network.Function = uint8(abc.ABC_FUNC_AIG)
+	inputs := make([]*abc.Object, 4)
+	for i := range inputs {
+		inputs[i] = network.NewObject(abc.ObjectPI)
+	}
+	left := network.AndEdges(inputs[0].Signal(), inputs[1].Signal())
+	right := network.AndEdges(inputs[2].Signal(), inputs[3].Signal())
+	root := network.AndEdges(left, right)
+	output := network.NewObject(abc.ObjectPO)
+	if err := network.AddFanin(output, root); err != nil {
+		t.Fatal(err)
+	}
+	got := Abc_NtkSopEsopCover(network, 2, 4, 0, 1, 0, 0)
+	if got == nil {
+		t.Fatal("cover failed for a four-input cone that can be cut into two-input pieces")
+	}
+	for assignment := 0; assignment < 16; assignment++ {
+		oldValues, newValues := map[*abc.Object]bool{}, map[*abc.Object]bool{}
+		for i := range inputs {
+			value := assignment&(1<<i) != 0
+			oldValues[inputs[i]] = value
+			newValues[got.ObjectsOfKind(abc.ObjectPI)[i]] = value
+		}
+		want, err := network.Evaluate(output.Signal(), oldValues)
+		if err != nil {
+			t.Fatal(err)
+		}
+		gotValue, err := got.Evaluate(got.ObjectsOfKind(abc.ObjectPO)[0].Signal(), newValues)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if gotValue != want {
+			t.Fatalf("assignment %04b: got %v, want %v", assignment, gotValue, want)
+		}
+	}
+}
+
+func TestCubeBoundIsIndependentOfFaninBound(t *testing.T) {
+	network := abc.NewNetwork("three_input_parity")
+	network.Type = uint8(abc.ABC_NTK_STRASH)
+	network.Function = uint8(abc.ABC_FUNC_AIG)
+	a, b, c := network.NewObject(abc.ObjectPI), network.NewObject(abc.ObjectPI), network.NewObject(abc.ObjectPI)
+	xor := func(left, right abc.Edge) abc.Edge {
+		one := network.AndEdges(left.Not(), right)
+		two := network.AndEdges(left, right.Not())
+		return network.AndEdges(one.Not(), two.Not()).Not()
+	}
+	root := xor(xor(a.Signal(), b.Signal()), c.Signal())
+	output := network.NewObject(abc.ObjectPO)
+	if err := network.AddFanin(output, root); err != nil {
+		t.Fatal(err)
+	}
+	got := Abc_NtkSopEsopCover(network, 3, 4, 0, 1, 0, 0)
+	if got == nil {
+		t.Fatal("SOP cover with four cubes was rejected by the three-fanin limit")
+	}
+	for assignment := 0; assignment < 8; assignment++ {
+		oldValues, newValues := map[*abc.Object]bool{}, map[*abc.Object]bool{}
+		for i, input := range []*abc.Object{a, b, c} {
+			value := assignment&(1<<i) != 0
+			oldValues[input] = value
+			newValues[got.ObjectsOfKind(abc.ObjectPI)[i]] = value
+		}
+		want, err := network.Evaluate(output.Signal(), oldValues)
+		if err != nil {
+			t.Fatal(err)
+		}
+		gotValue, err := got.Evaluate(got.ObjectsOfKind(abc.ObjectPO)[0].Signal(), newValues)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if gotValue != want {
+			t.Fatalf("assignment %03b: got %v, want %v", assignment, gotValue, want)
+		}
+	}
+}
+
+func TestSOPDerivationCanUseNegativePolarityCover(t *testing.T) {
+	network := abc.NewNetwork("negative_sop")
+	network.Type = uint8(abc.ABC_NTK_STRASH)
+	network.Function = uint8(abc.ABC_FUNC_AIG)
+	a, b, c, d := network.NewObject(abc.ObjectPI), network.NewObject(abc.ObjectPI), network.NewObject(abc.ObjectPI), network.NewObject(abc.ObjectPI)
+	ab := network.AndEdges(a.Signal(), b.Signal())
+	cd := network.AndEdges(c.Signal(), d.Signal())
+	root := network.AndEdges(ab.Not(), cd.Not())
+	output := network.NewObject(abc.ObjectPO)
+	if err := network.AddFanin(output, root); err != nil {
+		t.Fatal(err)
+	}
+	got := Abc_NtkSopEsopCover(network, 4, 4, 0, 1, 0, 0)
+	if got == nil {
+		t.Fatal("negative-polarity SOP conversion failed")
+	}
+	negativePhase := false
+	for _, object := range got.ObjectsOfKind(abc.ObjectNode) {
+		if data, ok := object.Data.(string); ok && strings.Contains(data, " 0\n") {
+			negativePhase = true
+		}
+	}
+	if !negativePhase {
+		t.Fatal("derivation did not use the smaller negative-polarity cover")
+	}
+	for assignment := 0; assignment < 16; assignment++ {
+		oldValues, newValues := map[*abc.Object]bool{}, map[*abc.Object]bool{}
+		for i, input := range []*abc.Object{a, b, c, d} {
+			value := assignment&(1<<i) != 0
+			oldValues[input] = value
+			newValues[got.ObjectsOfKind(abc.ObjectPI)[i]] = value
+		}
+		want, err := network.Evaluate(output.Signal(), oldValues)
+		if err != nil {
+			t.Fatal(err)
+		}
+		gotValue, err := got.Evaluate(got.ObjectsOfKind(abc.ObjectPO)[0].Signal(), newValues)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if gotValue != want {
+			t.Fatalf("assignment %04b: got %v, want %v", assignment, gotValue, want)
+		}
+	}
+}
+
+func TestCoverHonorsESOPMode(t *testing.T) {
+	network := abc.NewNetwork("three_input_parity")
+	network.Type = uint8(abc.ABC_NTK_STRASH)
+	network.Function = uint8(abc.ABC_FUNC_AIG)
+	a, b, c := network.NewObject(abc.ObjectPI), network.NewObject(abc.ObjectPI), network.NewObject(abc.ObjectPI)
+	xor := func(left, right abc.Edge) abc.Edge {
+		one := network.AndEdges(left.Not(), right)
+		two := network.AndEdges(left, right.Not())
+		return network.AndEdges(one.Not(), two.Not()).Not()
+	}
+	root := xor(xor(a.Signal(), b.Signal()), c.Signal())
+	output := network.NewObject(abc.ObjectPO)
+	if err := network.AddFanin(output, root); err != nil {
+		t.Fatal(err)
+	}
+	got := Abc_NtkSopEsopCover(network, 3, 4, 1, 1, 0, 0)
+	if got == nil {
+		t.Fatal("ESOP conversion failed")
+	}
+	foundXor := false
+	for _, object := range got.ObjectsOfKind(abc.ObjectNode) {
+		if data, ok := object.Data.(string); ok && strings.Contains(data, " x\n") {
+			foundXor = true
+		}
+	}
+	if !foundXor {
+		t.Fatal("ESOP mode did not select the smaller XOR-special cover")
+	}
+	for assignment := 0; assignment < 8; assignment++ {
+		values := map[*abc.Object]bool{a: assignment&1 != 0, b: assignment&2 != 0, c: assignment&4 != 0}
+		newInputs := got.ObjectsOfKind(abc.ObjectPI)
+		newValues := map[*abc.Object]bool{newInputs[0]: values[a], newInputs[1]: values[b], newInputs[2]: values[c]}
+		want, err := network.Evaluate(output.Signal(), values)
+		if err != nil {
+			t.Fatal(err)
+		}
+		gotValue, err := got.Evaluate(got.ObjectsOfKind(abc.ObjectPO)[0].Signal(), newValues)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if gotValue != want {
+			t.Fatalf("assignment %03b: got %v, want %v", assignment, gotValue, want)
+		}
 	}
 }
 
@@ -88,6 +264,44 @@ func TestCubeCoverSerializationAndManager(t *testing.T) {
 	Min_CoverCreate(coverText, cube, '1')
 	if got := string(Vec_StrArray(coverText)); got != "1- 1\n\x00" {
 		t.Fatalf("cover serialization %q", got)
+	}
+}
+
+func TestManagerDropsCompletedNodeState(t *testing.T) {
+	source := makeAIGForCoverTest(t, false, false)
+	manager := Cov_ManAlloc(source, 2, 4)
+	defer Cov_ManFree(manager)
+	root := source.ObjectsOfKind(abc.ObjectNode)[0]
+	Abc_ObjSetSupp(root, Vec_IntAlloc(0))
+	manager.nSupps = 1
+	Abc_NodeCovDropData(manager, root)
+	if manager.nSupps != 0 || Abc_ObjGetSupp(root) != nil || Abc_ObjGetCover2(root) != nil {
+		t.Fatal("last fanout did not release the node's cover state")
+	}
+}
+
+func TestCoverSupportCountsCommonFixedVariables(t *testing.T) {
+	manager := Min_ManAlloc(2)
+	defer Min_ManFree(manager)
+	first := makeCubePattern(manager, "-1")
+	second := makeCubePattern(manager, "1-")
+	first.pNext = second
+	if got := Min_CoverSuppVarNum(manager, first); got != 2 {
+		t.Fatalf("cover support = %d, want 2", got)
+	}
+}
+
+func TestSOPAddCubeMergesDistanceOneTerms(t *testing.T) {
+	manager := Min_ManAlloc(2)
+	defer Min_ManFree(manager)
+	Min_SopAddCube(manager, makeCubePattern(manager, "1-"))
+	Min_SopAddCube(manager, makeCubePattern(manager, "0-"))
+	cover := Min_CoverCollect(manager, manager.nVars)
+	if got := Min_CoverCountCubes(cover); got != 1 {
+		t.Fatalf("merged SOP has %d cubes, want 1", got)
+	}
+	if got := Min_CoverSuppVarNum(manager, cover); got != 0 {
+		t.Fatalf("merged tautology support = %d, want 0", got)
 	}
 }
 

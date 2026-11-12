@@ -1,283 +1,126 @@
 package fpga
 
-import "fmt"
+import "sort"
 
-/**CFile****************************************************************
-
-  FileName    [fpgaTime.c]
-
-  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]
-
-  Synopsis    [Technology mapping for variable-size-LUT FPGAs.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 2.0. Started - August 18, 2004.]
-
-  Revision    [$Id: fpgaTime.c,v 1.1 2005/01/23 06:59:42 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "fpgaInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the arrival times of the cut.]
-
-  Description [Computes the maximum arrival time of the cut leaves and
-  adds the delay of the LUT.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_TimeCutComputeArrival(pMan *Fpga_Man_t, pCut *Fpga_Cut_t) float32 {
-    var i int32;
-    var tArrival float32;
-    tArrival = -FPGA_FLOAT_LARGE;
-    for  i = 0; i < pCut.nLeaves; i++  {
-        if tArrival < pCut.ppLeaves[i].pCutBest.tArrival {
-            tArrival = pCut.ppLeaves[i].pCutBest.tArrival; }
-    }
-    tArrival += pMan.pLutLib.pLutDelays[int32(pCut.nLeaves)][0];
-    return tArrival;
+// Assign late signals to fast pins; truth-table leaf order stays unchanged.
+func Fpga_TimeCutComputeArrival(p *Fpga_Man_t, c *Fpga_Cut_t) float32 {
+	if len(c.Leaves) == 0 {
+		c.Arrival = 0
+		return 0
+	}
+	k := len(c.Leaves)
+	delays := p.Library.Delays[k]
+	c.PinOrder = make([]int, k)
+	for i := range c.PinOrder {
+		c.PinOrder[i] = i
+	}
+	pins := make([]int, k)
+	for i := range pins {
+		pins[i] = i
+	}
+	if len(delays) > 1 {
+		sort.SliceStable(c.PinOrder, func(i, j int) bool {
+			return c.Leaves[c.PinOrder[i]].Best.Arrival > c.Leaves[c.PinOrder[j]].Best.Arrival
+		})
+		sort.SliceStable(pins, func(i, j int) bool { return delays[pins[i]] < delays[pins[j]] })
+	}
+	order := make([]int, k)
+	arrival := float32(-FPGA_FLOAT_LARGE)
+	for rank, leafIndex := range c.PinOrder {
+		pin := pins[rank]
+		order[pin] = leafIndex
+		d := delays[0]
+		if len(delays) > 1 {
+			d = delays[pin]
+		}
+		v := c.Leaves[leafIndex].Best.Arrival + d
+		if v > arrival {
+			arrival = v
+		}
+	}
+	c.PinOrder = order
+	c.Arrival = arrival
+	return arrival
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the arrival times of the cut recursively.]
-
-  Description [When computing the arrival time for the previously unused 
-  cuts, their arrival time may be incorrect because their fanins have 
-  incorrect arrival time. This procedure is called to fix this problem.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_TimeCutComputeArrival_rec(pMan *Fpga_Man_t, pCut *Fpga_Cut_t) float32 {
-    var i int32;
-    for  i = 0; i < pCut.nLeaves; i++  {
-        if pCut.ppLeaves[i].nRefs == 0 {
-            Fpga_TimeCutComputeArrival_rec( pMan, pCut.ppLeaves[i].pCutBest ); }
-    }
-    return Fpga_TimeCutComputeArrival( pMan, pCut );
+func Fpga_TimeCutComputeArrival_rec(p *Fpga_Man_t, c *Fpga_Cut_t) float32 {
+	seen := map[*Fpga_Node_t]bool{}
+	var update func(*Fpga_Cut_t)
+	update = func(c *Fpga_Cut_t) {
+		for _, leaf := range c.Leaves {
+			if leaf.Refs == 0 && Fpga_NodeIsAnd(leaf) != 0 && !seen[leaf] {
+				seen[leaf] = true
+				update(leaf.Best)
+			}
+		}
+		Fpga_TimeCutComputeArrival(p, c)
+	}
+	update(c)
+	return c.Arrival
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the maximum arrival times.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func timingOutputs(p *Fpga_Man_t) []*Fpga_Node_t {
+	if p.LatchPaths && p.Latches > 0 {
+		return p.Outputs[len(p.Outputs)-int(p.Latches):]
+	}
+	return p.Outputs
+}
 func Fpga_TimeComputeArrivalMax(p *Fpga_Man_t) float32 {
-    var fRequired float32;
-    var i int32;
-    if p.fLatchPaths && p.nLatches == 0 {
-        fmt.Printf("Delay optimization of latch path is not performed because there is no latches.\n");
-        p.fLatchPaths = 0;
-    }
-    // get the critical PO arrival time
-    fRequired = -FPGA_FLOAT_LARGE;
-    if p.fLatchPaths {
-        for  i = p.nOutputs - p.nLatches; i < p.nOutputs; i++  {
-            if Fpga_NodeIsConst(p.pOutputs[i]) {
-                continue; }
-            // inlining of macro FPGA_MAX
-            
-            // inlining of macro Fpga_Regular
-            if (fRequired) > (((Fpga_Node_t *)((ABC_PTRUINT_T)(p.pOutputs[i]) & ~01)) .pCutBest.tArrival) {
-                fRequired = (fRequired);
-            } else {
-                // inlining of macro Fpga_Regular
-                fRequired = (((Fpga_Node_t *)((ABC_PTRUINT_T)(p.pOutputs[i]) & ~01)) .pCutBest.tArrival);
-            }
-//            printf( " %5.1f", Fpga_Regular(p->pOutputs[i])->pCutBest->tArrival );
-        }
-//        printf( "Required latches = %5.1f\n", fRequired );
-    
-    } else {
-        for  i = 0; i < p.nOutputs; i++  {
-            if Fpga_NodeIsConst(p.pOutputs[i]) {
-                continue; }
-            // inlining of macro FPGA_MAX
-            
-            // inlining of macro Fpga_Regular
-            if (fRequired) > (((Fpga_Node_t *)((ABC_PTRUINT_T)(p.pOutputs[i]) & ~01)) .pCutBest.tArrival) {
-                fRequired = (fRequired);
-            } else {
-                // inlining of macro Fpga_Regular
-                fRequired = (((Fpga_Node_t *)((ABC_PTRUINT_T)(p.pOutputs[i]) & ~01)) .pCutBest.tArrival);
-            }
-//            printf( " %5.1f", Fpga_Regular(p->pOutputs[i])->pCutBest->tArrival );
-        }
-//        printf( "Required outputs = %5.1f\n", fRequired );
-    }
-    return fRequired;
+	result := float32(-FPGA_FLOAT_LARGE)
+	found := false
+	for _, edge := range timingOutputs(p) {
+		n := Fpga_Regular(edge)
+		if n != nil && Fpga_NodeIsConst(n) == 0 && n.Best != nil && n.Best.Arrival > result {
+			found = true
+			result = n.Best.Arrival
+		}
+	}
+	if !found {
+		return 0
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the required times of all nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_TimeComputeRequiredGlobal(p *Fpga_Man_t, fFirstTime int32) {
-    p.fRequiredGlo = Fpga_TimeComputeArrivalMax( p );
-    // update the required times according to the target
-    if p.DelayTarget != -1 {
-        if p.fRequiredGlo > p.DelayTarget + p.fEpsilon {
-            if fFirstTime != 0 {
-                fmt.Printf("Cannot meet the target required times (%4.2f). Mapping continues anyway.\n", p.DelayTarget); }
-        
-        } else if p.fRequiredGlo < p.DelayTarget - p.fEpsilon {
-            if fFirstTime != 0 {
-                fmt.Printf("Relaxing the required times from (%4.2f) to the target (%4.2f).\n", p.fRequiredGlo, p.DelayTarget); }
-            p.fRequiredGlo = p.DelayTarget;
-        }
-    }
-    Fpga_TimeComputeRequired( p, p.fRequiredGlo );
+func Fpga_TimeComputeRequiredGlobal(p *Fpga_Man_t, first int32) {
+	required := Fpga_TimeComputeArrivalMax(p)
+	if p.DelayTarget > required {
+		required = p.DelayTarget
+	}
+	Fpga_TimeComputeRequired(p, required)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the required times of all nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_TimeComputeRequired(p *Fpga_Man_t, fRequired float32) {
-    var i int32;
-    // clean the required times and the fanout counts for all nodes
-    for  i = 0; i < p.vAnds.nSize; i++  {
-        p.vAnds.pArray[i].tRequired = FPGA_FLOAT_LARGE;
-    }
-    // set the required times for the POs
-    if p.fLatchPaths {
-        for  i = p.nOutputs - p.nLatches; i < p.nOutputs; i++  {
-            // inlining of macro Fpga_Regular
-            ((Fpga_Node_t *)((ABC_PTRUINT_T)(p.pOutputs[i]) & ~01)) .tRequired = fRequired;
-        }
-    } else {
-        for  i = 0; i < p.nOutputs; i++  {
-            // inlining of macro Fpga_Regular
-            ((Fpga_Node_t *)((ABC_PTRUINT_T)(p.pOutputs[i]) & ~01)) .tRequired = fRequired;
-        } }
-    // collect nodes reachable from POs in the DFS order through the best cuts
-    Fpga_TimePropagateRequired( p, p.vMapping );
-/*
-    {
-        int Counter = 0;
-        for ( i = 0; i < p->vAnds->nSize; i++ )
-            if ( p->vAnds->pArray[i]->tRequired > FPGA_FLOAT_LARGE - 100 )
-                Counter++;
-        printf( "The number of nodes with large required times = %d.\n", Counter );
-    }
-*/
+func Fpga_TimeComputeRequired(p *Fpga_Man_t, required float32) {
+	p.RequiredGlobal = required
+	for _, n := range p.Nodes {
+		n.Required = FPGA_FLOAT_LARGE
+	}
+	p.Const1.Required = FPGA_FLOAT_LARGE
+	for _, edge := range timingOutputs(p) {
+		n := Fpga_Regular(edge)
+		n.Required = required
+	}
+	Fpga_TimePropagateRequired(p, p.Mapping)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the required times of the given nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_TimePropagateRequired(p *Fpga_Man_t, vNodes *Fpga_NodeVec_t) {
-    var pNode, pChild *Fpga_Node_t;
-    var fRequired float32;
-    var i, k int32;
-
-    // sorts the nodes in the decreasing order of levels
-//    Fpga_MappingSortByLevel( p, vNodes, 0 );
-    // the nodes area already sorted in Fpga_MappingSetRefsAndArea()
-
-    // go through the nodes in the reverse topological order
-    for  k = 0; k < vNodes.nSize; k++  {
-        pNode = vNodes.pArray[k];
-        if !Fpga_NodeIsAnd(pNode) {
-            continue; }
-        // get the required time for children
-        fRequired = pNode.tRequired - p.pLutLib.pLutDelays[int32(pNode.pCutBest.nLeaves)][0];
-        // update the required time of the children
-        for  i = 0; i < pNode.pCutBest.nLeaves; i++  {
-            pChild = pNode.pCutBest.ppLeaves[i];
-            // inlining of macro FPGA_MIN
-            
-            if (pChild.tRequired) < (fRequired) {
-                pChild.tRequired = (pChild.tRequired);
-            } else {
-                pChild.tRequired = (fRequired);
-            }
-        }
-    }
+func Fpga_TimePropagateRequired(p *Fpga_Man_t, nodes *Fpga_NodeVec_t) {
+	for _, n := range nodes.Nodes {
+		c := n.Best
+		delays := p.Library.Delays[len(c.Leaves)]
+		for pin, leafIndex := range c.PinOrder {
+			leaf := c.Leaves[leafIndex]
+			d := delays[0]
+			if len(delays) > 1 {
+				d = delays[pin]
+			}
+			r := n.Required - d
+			if r < leaf.Required {
+				leaf.Required = r
+			}
+		}
+	}
 }
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the required times of all nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Fpga_TimePropagateArrival(p *Fpga_Man_t) {
-    var pNode *Fpga_Node_t;
-    var pCut *Fpga_Cut_t;
-    var i int32;
-
-    // clean the required times and the fanout counts for all nodes
-    for  i = 0; i < p.vAnds.nSize; i++  {
-        pNode = p.vAnds.pArray[i];
-        for  pCut = pNode.pCuts.pNext; (pCut != nil); pCut = pCut.pNext  {
-            pCut.tArrival = Fpga_TimeCutComputeArrival( p, pCut );
-        }
-    }
+	for i, n := range p.Inputs {
+		n.Best.Arrival = p.InputArrivals[i]
+	}
+	for _, n := range p.Ands.Nodes {
+		if n.Best != nil && Fpga_NodeIsAnd(n) != 0 {
+			Fpga_TimeCutComputeArrival(p, n.Best)
+		}
+	}
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

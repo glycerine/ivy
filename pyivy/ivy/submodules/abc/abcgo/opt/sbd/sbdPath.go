@@ -13,6 +13,13 @@ func sbcAddInternal(p *Network, id int32, path *vec.Vec_Bit_t, seen map[int32]bo
 	}
 	seen[id] = true
 	node := p.object(id)
+	if node.Kind == aig.Buffer {
+		value := sbcAddInternal(p, int32(node.Fanins[0].NodeID()), path, seen)
+		if value != 0 {
+			vec.Vec_BitWriteEntry(path, int(id), 1)
+		}
+		return value
+	}
 	if node.Kind == aig.Input {
 		return int32(vec.Vec_BitEntry(path, int(id)))
 	}
@@ -51,6 +58,10 @@ func sbcCriticalPath(p *Network, levels []int32, id, levelFan int32, path *vec.V
 	seen[id] = true
 	vec.Vec_BitWriteEntry(path, int(id), 1)
 	node := p.object(id)
+	if node.Kind == aig.Buffer {
+		sbcCriticalPath(p, levels, int32(node.Fanins[0].NodeID()), levelFan, path, slack, seen)
+		return
+	}
 	if node.Kind == aig.Input {
 		for _, co := range p.BoxInputs[id] {
 			driver := p.outputDriver(co)

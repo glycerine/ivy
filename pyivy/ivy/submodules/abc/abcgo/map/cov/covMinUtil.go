@@ -179,20 +179,18 @@ func Min_CoverSuppVarNum(p *Min_Man_t, cover *Min_Cube_t) int32 {
 	if p == nil || cover == nil {
 		return 0
 	}
-	fixed := make([]bool, p.nVars)
-	for variable := range fixed {
-		fixed[variable] = true
+	common := make([]int32, p.nVars)
+	for variable := range common {
+		common[variable] = 3
 	}
 	for cube := cover; cube != nil; cube = cube.pNext {
-		for variable := range fixed {
-			if Min_CubeGetVar(cube, int32(variable)) == 3 {
-				fixed[variable] = false
-			}
+		for variable := range common {
+			common[variable] &= Min_CubeGetVar(cube, int32(variable))
 		}
 	}
 	var count int32
-	for _, hasLiteral := range fixed {
-		if hasLiteral {
+	for _, value := range common {
+		if value != 3 {
 			count++
 		}
 	}

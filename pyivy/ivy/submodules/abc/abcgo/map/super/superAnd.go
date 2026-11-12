@@ -63,8 +63,8 @@ func (p *Super2_Lib_t) canonical(truth uint32) uint32 {
 	return truth
 }
 func Super2_LibFirst(manager *Super2_Man_t, inputs int32) *Super2_Lib_t {
-	if inputs < 1 || inputs > 5 {
-		panic("super2: input count must be 1..5")
+	if inputs < 0 || inputs > 5 {
+		panic("super2: input count must be 0..5")
 	}
 	p := &Super2_Lib_t{Inputs: int(inputs), Gates: []*Super2_Gate_t{{Variable: -1}}}
 	for variable := 0; variable < int(inputs); variable++ {
@@ -114,7 +114,7 @@ func Super2_LibCompute(manager *Super2_Man_t, current *Super2_Lib_t) *Super2_Lib
 	return next
 }
 func GenerateAND(inputs, levels int) (*Super2_Lib_t, error) {
-	if inputs < 1 || inputs > 5 || levels < 0 {
+	if inputs < 0 || inputs > 5 || levels < 0 {
 		return nil, fmt.Errorf("super2: invalid input/level count")
 	}
 	manager := Super2_ManStart()

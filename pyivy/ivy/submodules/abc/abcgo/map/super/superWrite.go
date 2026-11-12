@@ -68,8 +68,7 @@ func (p *Super_Man_t) selected() []*Super_Gate_t {
 	})
 	return gates
 }
-func Super_WriteFileHeader(p *Super_Man_t, w io.Writer) error {
-	gates := p.selected()
+func writeHeader(p *Super_Man_t, w io.Writer, gates []*Super_Gate_t) error {
 	functions := 0
 	var previous uint64
 	for index, g := range gates {
@@ -88,6 +87,7 @@ func Super_WriteFileHeader(p *Super_Man_t, w io.Writer) error {
 	_, err := fmt.Fprintf(w, "# Supergate library derived for %q.\n# Inputs=%d Levels=%d Attempts=%d Functions=%d\n%s\n%d\n%d\n", name, p.Options.Inputs, p.Levels, p.Stats.Tried, functions, name, p.Options.Inputs, len(gates))
 	return err
 }
+func Super_WriteFileHeader(p *Super_Man_t, w io.Writer) error { return writeHeader(p, w, p.selected()) }
 func Super_WriteFileHeaderStr(p *Super_Man_t, v *Vec_Str_t) error {
 	var b bytes.Buffer
 	if err := Super_WriteFileHeader(p, &b); err != nil {
@@ -158,7 +158,7 @@ func (p *Super_Man_t) MarshalTree() ([]byte, error) {
 		}
 	}
 	var result bytes.Buffer
-	if err := Super_WriteFileHeader(p, &result); err != nil {
+	if err := writeHeader(p, &result, gates); err != nil {
 		return nil, err
 	}
 	fmt.Fprintf(&result, "%d\n", counter)
@@ -217,10 +217,11 @@ func Super_WriteLibraryGate(w io.Writer, p *Super_Man_t, g *Super_Gate_t, number
 	return err
 }
 func (p *Super_Man_t) WriteOld(w io.Writer) error {
-	if err := Super_WriteFileHeader(p, w); err != nil {
+	gates := p.selected()
+	if err := writeHeader(p, w, gates); err != nil {
 		return err
 	}
-	for index, g := range p.selected() {
+	for index, g := range gates {
 		if err := Super_WriteLibraryGate(w, p, g, int32(index+1)); err != nil {
 			return err
 		}

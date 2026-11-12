@@ -1,0 +1,34 @@
+package if_
+
+import (
+	"github.com/glycerine/abcgo/misc/tim"
+	"github.com/glycerine/abcgo/misc/vec"
+	"math"
+)
+
+func (p *If_Par_t_) LUTSize() int32     { return p.nLutSize }
+func (p *If_Par_t_) SetLUTSize(n int32) { p.nLutSize = n }
+func (p *If_Par_t_) SetCutMin(value bool) {
+	p.fCutMin = 0
+	if value {
+		p.fCutMin = 1
+	}
+}
+func (p *If_Par_t_) Bidec() bool { return p.fBidec != 0 }
+func (p *If_Par_t_) SetArrivalTimes(arrivals []float32) {
+	p.pTimesArr = append([]float32(nil), arrivals...)
+}
+func (p *If_Man_t_) Parameters() *If_Par_t                  { return p.pPars }
+func (p *If_Man_t_) TimingManager() *tim.Tim_Man_t          { return p.pManTim }
+func (p *If_Man_t_) SetTimingManager(timing *tim.Tim_Man_t) { p.pManTim = timing }
+
+func (o *If_Obj_t_) Equivalent() *If_Obj_t { return o.pEquiv }
+func (o *If_Obj_t_) Phase() bool           { return o.fPhase != 0 }
+
+func (p *If_Par_t_) Power() bool { return p.fPower != 0 }
+func (p *If_Man_t_) SetSwitchingProbabilities(probabilities []float32) {
+	p.vSwitching = vec.Vec_IntAlloc(len(probabilities))
+	for _, probability := range probabilities {
+		vec.Vec_IntPush(p.vSwitching, int32(math.Float32bits(probability)))
+	}
+}

@@ -71,3 +71,45 @@ func (p *Graph) ClearSequentialCounterexample()            { p.combinationalCex 
 func (p *Graph) TakeSequentialCounterexample() *util.Abc_Cex_t {
 	return p.TakeCombinationalCounterexample()
 }
+
+// SetInductionCounterexample stores the witness produced by bounded
+// induction. Its dimensions follow the induction algorithm's compact witness
+// layout, so it is validated against its compact dimensions instead.
+func (p *Graph) SetInductionCounterexample(model *util.Abc_Cex_t) error {
+	if p == nil || model == nil || p.nRegs <= 0 {
+		return fmt.Errorf("aig: invalid induction counterexample target")
+	}
+	wantRegs := p.nRegs - 1
+	wantPis := int32(len(p.inputs)) - p.nRegs
+	wantBits := wantRegs + wantPis
+	if wantPis < 0 || model.NRegs != wantRegs || model.NPis != wantPis || model.IFrame != 0 || model.IPo != 0 || model.NBits != wantBits || int64(len(model.PData))*32 < int64(wantBits) {
+		return fmt.Errorf("aig: invalid compact induction counterexample dimensions")
+	}
+	p.inductionCex = model
+	return nil
+}
+
+// InductionCounterexample returns the witness saved by bounded induction.
+func (p *Graph) InductionCounterexample() *util.Abc_Cex_t {
+	if p == nil {
+		return nil
+	}
+	return p.inductionCex
+}
+
+// TakeInductionCounterexample transfers the saved witness to the caller.
+func (p *Graph) TakeInductionCounterexample() *util.Abc_Cex_t {
+	if p == nil {
+		return nil
+	}
+	model := p.inductionCex
+	p.inductionCex = nil
+	return model
+}
+
+// ClearInductionCounterexample discards the saved witness.
+func (p *Graph) ClearInductionCounterexample() {
+	if p != nil {
+		p.inductionCex = nil
+	}
+}

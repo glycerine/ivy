@@ -2,258 +2,118 @@ package mapper
 
 import (
 	"fmt"
-	"os"
-	"time"
+	"unsafe"
+
+	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/map/mio"
+	superpkg "github.com/glycerine/abcgo/map/super"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-/**CFile****************************************************************
-
-  FileName    [mapperLib.c]
-
-  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]
-
-  Synopsis    [Generic technology mapping engine.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 2.0. Started - June 1, 2004.]
-
-  Revision    [$Id: mapperLib.c,v 1.6 2005/01/23 06:59:44 alanmi Exp $]
-
-***********************************************************************/
-#define _BSD_SOURCE
-
-#ifndef WIN32
-#include <unistd.h>
-#endif
-
-//#include "mapperInt.h"
-//#include "map/super/super.h"
-//#include "map/mapper/mapperInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Reads in the supergate library and prepares it for use.]
-
-  Description [The supergates library comes in a .super file. This file
-  contains descriptions of supergates along with some relevant information.
-  This procedure reads the supergate file, canonicizes the supergates,
-  and constructs an additional lookup table, which can be used to map
-  truth tables of the cuts into the pair (phase, supergate). The phase
-  indicates how the current truth table should be phase assigned to 
-  match the canonical form of the supergate. The resulting phase is the
-  bitwise EXOR of the phase needed to canonicize the supergate and the
-  phase needed to transform the truth table into its canonical form.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_SuperLibCreate(pGenlib *Mio_Library_t, vStr *Vec_Str_t, pFileName string, pExcludeFile string, fAlgorithm int32, fVerbose int32) *Map_SuperLib_t {
-    var p *Map_SuperLib_t;
-    var clk abctime;
-
-    // start the supergate library
-    // inlining of macro ABC_ALLOC
-    p = ((Map_SuperLib_t *) malloc(sizeof(Map_SuperLib_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Map_SuperLib_t) );
-    p.pName     = Abc_UtilStrsav(pFileName);
-    p.fVerbose  = fVerbose;
-    p.mmSupers  = Extra_MmFixedStart( sizeof(Map_Super_t) );
-    p.mmEntries = Extra_MmFixedStart( sizeof(Map_HashEntry_t) );
-    p.mmForms   = Extra_MmFlexStart();
-    Map_MappingSetupTruthTables( p.uTruths );
-
-    // start the hash table
-    p.tTableC = Map_SuperTableCreate( p );
-    p.tTable  = Map_SuperTableCreate( p );
-
-    // read the supergate library from file
-clk = Abc_Clock();
-    if vStr != nil {
-        // read the supergate library from file
-        var Status int32  = Map_LibraryReadFileTreeStr( p, pGenlib, vStr, pFileName );
-        if Status == 0 {
-            Map_SuperLibFree( p );
-            return nil;
-        }
-        // prepare the info about the library
-        Status = Map_LibraryDeriveGateInfo( p, nil );
-        if Status == 0 {
-            Map_SuperLibFree( p );
-            return nil;
-        }
-        assert(p.nVarsMax > 0, "p.nVarsMax > 0");
-    
-    } else if fAlgorithm != 0 {
-        if !Map_LibraryReadTree( p, pGenlib, pFileName, pExcludeFile ) {
-            Map_SuperLibFree( p );
-            return nil;
-        }
-    
-    } else {
-        if pExcludeFile != 0 {
-            Map_SuperLibFree( p );
-            fmt.Printf("Error: Exclude file support not present for old format. Stop.\n");
-            return nil;
-        }
-        if !Map_LibraryRead( p, pFileName ) {
-            Map_SuperLibFree( p );
-            return nil;
-        }
-    }
-    assert(p.nVarsMax > 0, "p.nVarsMax > 0");
-
-    // report the stats
-    if fVerbose != 0 {
-        fmt.Printf("Loaded %d unique %d-input supergates from \"%s\".  ", p.nSupersReal, p.nVarsMax, pFileName);
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    }
-
-    // assign the interver parameters
-    p.pGateInv        = Mio_LibraryReadInv( p.pGenlib );
-    p.tDelayInv.Rise  = Mio_LibraryReadDelayInvRise( p.pGenlib );
-    p.tDelayInv.Fall  = Mio_LibraryReadDelayInvFall( p.pGenlib );
-    // inlining of macro MAP_MAX
-    
-    if (p.tDelayInv.Rise) > (p.tDelayInv.Fall) {
-        p.tDelayInv.Worst = (p.tDelayInv.Rise);
-    } else {
-        p.tDelayInv.Worst = (p.tDelayInv.Fall);
-    }
-    p.AreaInv         = Mio_LibraryReadAreaInv( p.pGenlib );
-    p.AreaBuf         = Mio_LibraryReadAreaBuf( p.pGenlib );
-
-    // assign the interver supergate
-    p.pSuperInv = (Map_Super_t *)Extra_MmFixedEntryFetch( p.mmSupers );
-    memset( p.pSuperInv, 0, sizeof(Map_Super_t) );
-    p.pSuperInv.Num         = -1;
-    p.pSuperInv.nGates      =  1;
-    p.pSuperInv.nFanins     =  1;
-    p.pSuperInv.nFanLimit   = 10;
-    p.pSuperInv.pFanins[0]  = p.ppSupers[0];
-    p.pSuperInv.pRoot       = p.pGateInv;
-    p.pSuperInv.Area        = p.AreaInv;
-    p.pSuperInv.tDelayMax   = p.tDelayInv;
-    p.pSuperInv.tDelaysR[0].Rise = MAP_NO_VAR;
-    p.pSuperInv.tDelaysR[0].Fall = p.tDelayInv.Rise;
-    p.pSuperInv.tDelaysF[0].Rise = p.tDelayInv.Fall;
-    p.pSuperInv.tDelaysF[0].Fall = MAP_NO_VAR;
-    return p;
+func Map_SuperLibCreate(genlib *mio.Mio_Library_t, text *vec.Vec_Str_t, path, exclude string, algorithm, verbose int32) *Map_SuperLib_t {
+	if genlib == nil {
+		return nil
+	}
+	lib := &Map_SuperLibStruct_t_{pName: path, pGenlib: genlib, fVerbose: verbose}
+	lib.mmSupers = extra.Extra_MmFixedStart(int32(unsafe.Sizeof(Map_SuperStruct_t_{})))
+	lib.mmEntries = extra.Extra_MmFixedStart(int32(unsafe.Sizeof(Map_HashEntryStruct_t_{})))
+	lib.mmForms = extra.Extra_MmFlexStart()
+	Map_MappingSetupTruthTables(lib.uTruths[:])
+	lib.tTableC, lib.tTable = Map_SuperTableCreate(lib), Map_SuperTableCreate(lib)
+	start := Abc_Clock()
+	loaded := int32(0)
+	if text != nil {
+		loaded = Map_LibraryReadFileTreeStr(lib, genlib, text, path)
+		if loaded != 0 {
+			loaded = Map_LibraryDeriveGateInfo(lib, nil)
+		}
+	} else if algorithm != 0 {
+		loaded = Map_LibraryReadTree(lib, genlib, path, exclude)
+	} else if exclude == "" {
+		loaded = Map_LibraryRead(lib, path)
+	} else {
+		fmt.Println("Error: Exclude file support not present for old format. Stop.")
+	}
+	if loaded == 0 || lib.nVarsMax <= 0 || len(lib.ppSupers) == 0 {
+		Map_SuperLibFree(lib)
+		return nil
+	}
+	if verbose != 0 {
+		fmt.Printf("Loaded %d unique %d-input supergates from %q. %.2f sec\n", lib.nSupersReal, lib.nVarsMax, path, float64(Abc_Clock()-start)/1e9)
+	}
+	lib.pGateInv = mio.Mio_LibraryReadInv(genlib)
+	lib.tDelayInv.Rise = mio.Mio_LibraryReadDelayInvRise(genlib)
+	lib.tDelayInv.Fall = mio.Mio_LibraryReadDelayInvFall(genlib)
+	lib.tDelayInv.Worst = max(lib.tDelayInv.Rise, lib.tDelayInv.Fall)
+	lib.AreaInv, lib.AreaBuf = mio.Mio_LibraryReadAreaInv(genlib), mio.Mio_LibraryReadAreaBuf(genlib)
+	lib.pSuperInv = &Map_SuperStruct_t_{Num: -1, nGates: 1, nFanins: 1, nFanLimit: 10, pRoot: lib.pGateInv, Area: lib.AreaInv, tDelayMax: lib.tDelayInv}
+	lib.pSuperInv.pFanins[0] = lib.ppSupers[0]
+	lib.pSuperInv.tDelaysR[0] = Map_Time_t{Rise: MAP_NO_VAR, Fall: lib.tDelayInv.Rise}
+	lib.pSuperInv.tDelaysF[0] = Map_Time_t{Rise: lib.tDelayInv.Fall, Fall: MAP_NO_VAR}
+	return lib
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Deallocates the supergate library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_SuperLibFree(p *Map_SuperLib_t) {
-    if p == nil { return; }
-    if p.pGenlib {
-        if p.pGenlib != Abc_FrameReadLibGen() {
-            Mio_LibraryDelete( p.pGenlib ); }
-        p.pGenlib = nil;
-    }
-    if p.tTableC {
-        Map_SuperTableFree( p.tTableC ); }
-    if p.tTable {
-        Map_SuperTableFree( p.tTable ); }
-    Extra_MmFixedStop( p.mmSupers );
-    Extra_MmFixedStop( p.mmEntries );
-    Extra_MmFlexStop( p.mmForms );
-    p.ppSupers = nil;
-    p.pName = nil;
-    p = nil;
+func Map_SuperLibFree(lib *Map_SuperLib_t) {
+	if lib == nil {
+		return
+	}
+	if lib.tTableC != nil {
+		Map_SuperTableFree(lib.tTableC)
+	}
+	if lib.tTable != nil {
+		Map_SuperTableFree(lib.tTable)
+	}
+	if lib.pGenlib != nil {
+		if current, _ := abcmain.Abc_FrameGetGlobalFrame().Resource("pLibGen").(*mio.Mio_Library_t); current != lib.pGenlib {
+			mio.Mio_LibraryDelete(lib.pGenlib)
+		}
+	}
+	extra.Extra_MmFixedStop(lib.mmSupers)
+	extra.Extra_MmFixedStop(lib.mmEntries)
+	extra.Extra_MmFlexStop(lib.mmForms)
+	lib.pGenlib, lib.ppSupers, lib.pSuperInv = nil, nil, nil
+	lib.tTableC, lib.tTable = nil, nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives the library from the genlib library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_SuperLibDeriveFromGenlib(pLib *Mio_Library_t, fVerbose int32) int32 {
-    var pLibSuper *Map_SuperLib_t;
-    var vStr *Vec_Str_t;
-    var pFileName string;
-    if pLib == nil {
-        return 0; }
-
-    // compute supergates
-    vStr = Super_PrecomputeStr( pLib, 5, 1, 100000000, 10000000, 10000000, 100, 1, 0 );
-    if vStr == nil {
-        return 0; }
-
-    // create supergate library
-    pFileName = Extra_FileNameGenericAppend( Mio_LibraryReadName(pLib), ".super" );
-    pLibSuper = Map_SuperLibCreate( pLib, vStr, pFileName, nil, 1, 0 );
-    Vec_StrFree( vStr );
-
-    // replace the library
-    Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );
-    Abc_FrameSetLibSuper( pLibSuper );
-    return 1;
+func Map_SuperLibDeriveFromGenlib(genlib *mio.Mio_Library_t, verbose int32) int32 {
+	if genlib == nil {
+		return 0
+	}
+	text := superpkg.Super_PrecomputeStr(genlib, 5, 1, 100000000, 10000000, 10000000, 100, 1, 0)
+	if text == nil {
+		return 0
+	}
+	path := mio.Mio_LibraryReadName(genlib) + ".super"
+	lib := Map_SuperLibCreate(genlib, text, path, "", 1, 0)
+	vec.Vec_StrFree(text)
+	if lib == nil {
+		return 0
+	}
+	frame := abcmain.Abc_FrameGetGlobalFrame()
+	if old, ok := frame.TakeResource("pLibSuper").(*Map_SuperLib_t); ok {
+		Map_SuperLibFree(old)
+	}
+	frame.SetResource("pLibSuper", lib)
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives the library from the genlib library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_SuperLibDeriveFromGenlib2(pLib *Mio_Library_t, fVerbose int32) int32 {
-    var pAbc *Abc_Frame_t  = Abc_FrameGetGlobalFrame();
-    var pFileName string;
-    if pLib == nil {
-        return 0; }
-    // compute supergates
-    pFileName = Extra_FileNameGenericAppend(Mio_LibraryReadName(pLib), ".super");
-    Super_Precompute( pLib, 5, 1, 100000000, 10000000, 10000000, 100, 1, 0, pFileName );
-    // assuming that it terminated successfully
-    if Cmd_CommandExecute( pAbc, pFileName ) {
-        fmt.Fprintf(os.Stdout, "Cannot execute command \"read_super %s\".\n", pFileName);
-        return 0;
-    }
-    return 1;
+func Map_SuperLibDeriveFromGenlib2(genlib *mio.Mio_Library_t, verbose int32) int32 {
+	if genlib == nil {
+		return 0
+	}
+	path := mio.Mio_LibraryReadName(genlib) + ".super"
+	if err := superpkg.Super_Precompute(genlib, 5, 1, 100000000, 10000000, 10000000, 100, 1, verbose, path); err != nil {
+		return 0
+	}
+	lib := Map_SuperLibCreate(genlib, nil, path, "", 1, verbose)
+	if lib == nil {
+		return 0
+	}
+	frame := abcmain.Abc_FrameGetGlobalFrame()
+	if old, ok := frame.TakeResource("pLibSuper").(*Map_SuperLib_t); ok {
+		Map_SuperLibFree(old)
+	}
+	frame.SetResource("pLibSuper", lib)
+	return 1
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

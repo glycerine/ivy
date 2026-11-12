@@ -180,57 +180,9 @@ func createLogicNode(n *Network, fanins []*Object, fn func([]bool) bool) *Object
 	o.Data = fn
 	return o
 }
-func Abc_NtkCreateNodeConst0(n *Network) *Object {
-	return createLogicNode(n, nil, func([]bool) bool { return false })
-}
-func Abc_NtkCreateNodeConst1(n *Network) *Object {
-	return createLogicNode(n, nil, func([]bool) bool { return true })
-}
-func Abc_NtkCreateNodeInv(n *Network, fanin *Object) *Object {
-	return createLogicNode(n, []*Object{fanin}, func(v []bool) bool { return !v[0] })
-}
-func Abc_NtkCreateNodeBuf(n *Network, fanin *Object) *Object {
-	return createLogicNode(n, []*Object{fanin}, func(v []bool) bool { return v[0] })
-}
 
 // Fanin vectors are Go slices in the port; ownership stays with the caller.
-func Abc_NtkCreateNodeAnd(n *Network, fanins []*Object) *Object {
-	return createLogicNode(n, fanins, func(v []bool) bool {
-		for _, b := range v {
-			if !b {
-				return false
-			}
-		}
-		return true
-	})
-}
-func Abc_NtkCreateNodeOr(n *Network, fanins []*Object) *Object {
-	return createLogicNode(n, fanins, func(v []bool) bool {
-		for _, b := range v {
-			if b {
-				return true
-			}
-		}
-		return false
-	})
-}
-func Abc_NtkCreateNodeExor(n *Network, fanins []*Object) *Object {
-	return createLogicNode(n, fanins, func(v []bool) bool {
-		r := false
-		for _, b := range v {
-			r = r != b
-		}
-		return r
-	})
-}
-func Abc_NtkCreateNodeMux(n *Network, c, t, e *Object) *Object {
-	return createLogicNode(n, []*Object{c, t, e}, func(v []bool) bool {
-		if v[0] {
-			return v[1]
-		}
-		return v[2]
-	})
-}
+
 func Abc_NodeIsConst(o *Object) int32 { return abcBool(o.Kind == ObjectNode && len(o.fanins) == 0) }
 func booleanFunction(o *Object) (func([]bool) bool, bool) {
 	if fn, ok := o.Data.(func([]bool) bool); ok {
@@ -365,4 +317,72 @@ func Abc_NodeComplementInput(o, fanin *Object) {
 		return fn(copyValues)
 	}
 	clear(o.network.hashed)
+}
+
+func sopConstructor(n *Network, node *Object, text string) *Object {
+	if Abc_NtkHasSop(n) != 0 {
+		node.Data = text
+	}
+	return node
+}
+func Abc_NtkCreateNodeConst0(n *Network) *Object {
+	return sopConstructor(n, createLogicNode(n, nil, func([]bool) bool { return false }), Abc_SopCreateConst0(nil))
+}
+func Abc_NtkCreateNodeConst1(n *Network) *Object {
+	return sopConstructor(n, createLogicNode(n, nil, func([]bool) bool { return true }), Abc_SopCreateConst1(nil))
+}
+func Abc_NtkCreateNodeInv(n *Network, fanin *Object) *Object {
+	node := createLogicNode(n, nil, func(v []bool) bool { return !v[0] })
+	if fanin != nil {
+		Abc_ObjAddFanin(node, fanin)
+	}
+	return sopConstructor(n, node, Abc_SopCreateInv(nil))
+}
+func Abc_NtkCreateNodeBuf(n *Network, fanin *Object) *Object {
+	node := createLogicNode(n, nil, func(v []bool) bool { return v[0] })
+	if fanin != nil {
+		Abc_ObjAddFanin(node, fanin)
+	}
+	return sopConstructor(n, node, Abc_SopCreateBuf(nil))
+}
+func Abc_NtkCreateNodeAnd(n *Network, fanins []*Object) *Object {
+	node := createLogicNode(n, fanins, func(v []bool) bool {
+		for _, b := range v {
+			if !b {
+				return false
+			}
+		}
+		return true
+	})
+	return sopConstructor(n, node, Abc_SopCreateAnd(nil, int32(len(fanins)), nil))
+}
+func Abc_NtkCreateNodeOr(n *Network, fanins []*Object) *Object {
+	node := createLogicNode(n, fanins, func(v []bool) bool {
+		for _, b := range v {
+			if b {
+				return true
+			}
+		}
+		return false
+	})
+	return sopConstructor(n, node, Abc_SopCreateOr(nil, int32(len(fanins)), nil))
+}
+func Abc_NtkCreateNodeExor(n *Network, fanins []*Object) *Object {
+	node := createLogicNode(n, fanins, func(v []bool) bool {
+		r := false
+		for _, b := range v {
+			r = r != b
+		}
+		return r
+	})
+	return sopConstructor(n, node, Abc_SopCreateXorSpecial(nil, int32(len(fanins))))
+}
+func Abc_NtkCreateNodeMux(n *Network, c, t, e *Object) *Object {
+	node := createLogicNode(n, []*Object{c, t, e}, func(v []bool) bool {
+		if v[0] {
+			return v[1]
+		}
+		return v[2]
+	})
+	return sopConstructor(n, node, Abc_SopCreateMux(nil))
 }

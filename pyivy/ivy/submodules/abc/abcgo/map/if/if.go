@@ -387,7 +387,11 @@ func If_CutLeaveNum(pCut *If_Cut_t) int32 { return int32(pCut.nLeaves) }
 func If_CutLeaves(pCut *If_Cut_t) []int32 { return pCut.pLeaves }
 func If_CutLeaf(p *If_Man_t, pCut *If_Cut_t, i int32) *If_Obj_t {
 	assert(i >= 0 && i < int32(pCut.nLeaves), "i >= 0 && i < int32(pCut.nLeaves)")
-	return If_ManObj(p, pCut.pLeaves[i])
+	id := pCut.pLeaves[i]
+	if p.pPars != nil && p.pPars.fLiftLeaves != 0 {
+		id >>= 8
+	}
+	return If_ManObj(p, id)
 }
 func If_CutSuppMask(pCut *If_Cut_t) uint32 {
 	if pCut.nLeaves >= 32 {

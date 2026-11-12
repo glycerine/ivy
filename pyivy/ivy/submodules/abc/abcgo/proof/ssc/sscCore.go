@@ -2,476 +2,234 @@ package ssc
 
 import (
 	"fmt"
-	"time"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/proof/cec/core"
+	"github.com/glycerine/abcgo/sat/satoko"
 )
 
-/**CFile****************************************************************
-
-  FileName    [sscCore.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [SAT sweeping under constraints.]
-
-  Synopsis    [The core procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 29, 2008.]
-
-  Revision    [$Id: sscCore.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sscInt.h"
-//#include "proof/cec/cec.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [This procedure sets default parameters.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssc_ManSetDefaultParams(p *Ssc_Pars_t) {
-    memset( p, 0, sizeof(Ssc_Pars_t) );
-    p.nWords         =     1;  // the number of simulation words
-    p.nBTLimit       =  1000;  // conflict limit at a node
-    p.nSatVarMax     =  5000;  // the max number of SAT variables
-    p.nCallsRecycle  =   100;  // calls to perform before recycling SAT solver
-    p.fVerbose       =     0;  // verbose stats
+// StartStatus distinguishes an empty care set from an exhausted SAT budget.
+// This replaces C's invalid pointer sentinel without collapsing the outcomes.
+func Ssc_ManStart(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) (*Ssc_Man_t, int) {
+	if subject == nil || care == nil || len(subject.InputLiterals()) != len(care.InputLiterals()) || care.RegisterCount() != 0 {
+		panic("ssc: incompatible care interface")
+	}
+	for _, network := range []*gia.Gia_Man_t{subject, care} {
+		if _, err := core.NewModel(network); err != nil {
+			panic(err)
+		}
+	}
+	v := DefaultParams()
+	if params != nil {
+		v = *params
+	}
+	if v.NWords < 1 || v.BTLimit < 0 || v.SatVarMax < 0 || v.CallsRecycle < 0 {
+		panic("ssc: invalid parameters")
+	}
+	p := &Ssc_Man_t{Params: v, Aig: subject, Care: care}
+	Ssc_ManStartSolver(p)
+	pivot, status := Ssc_ManFindPivotSat(p)
+	if status != satoko.SATOKO_SAT {
+		return p, status
+	}
+	p.Pivot = pivot
+	p.Sim = NewSimulation(subject, int(v.NWords))
+	p.Classes = Ssc_GiaClassesInit(subject, pivot)
+	return p, status
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Ssc_ManStop(p *Ssc_Man_t) {
-    Vec_IntFreeP( &p.vFront );
-    Vec_IntFreeP( &p.vFanins );
-    Vec_IntFreeP( &p.vPattern );
-    Vec_IntFreeP( &p.vDisPairs );
-    Vec_IntFreeP( &p.vPivot );
-    Vec_IntFreeP( &p.vId2Var );
-    Vec_IntFreeP( &p.vVar2Id );
-    if p.pSat { sat_solver_delete( p.pSat ); }
-    Gia_ManStopP( &p.pFraig );
-    p = nil;
-}
-func Ssc_ManStart(pAig *Gia_Man_t, pCare *Gia_Man_t, pPars *Ssc_Pars_t) *Ssc_Man_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Ssc_Man_t{};
-    p.pPars  = pPars;
-    p.pAig   = pAig;
-    p.pCare  = pCare;
-    p.pFraig = Gia_ManDupDfs( p.pCare );
-    assert(Vec_IntSize(&p.pFraig.vHTable) == 0, "Vec_IntSize(&p.pFraig.vHTable) == 0");
-    assert(!Gia_ManHasDangling(p.pFraig), "!Gia_ManHasDangling(p.pFraig)");
-    Gia_ManInvertPos( p.pFraig );
-    Ssc_ManStartSolver( p );
-    if p.pSat == nil {
-        fmt.Printf("Constraints are UNSAT after propagation.\n");
-        Ssc_ManStop( p );
-        return (Ssc_Man_t *)(ABC_PTRINT_T)1;
-    }
-//    p->vPivot = Ssc_GiaFindPivotSim( p->pFraig );
-//    Vec_IntFreeP( &p->vPivot  );
-    p.vPivot = Ssc_ManFindPivotSat( p );
-    if p.vPivot == (Vec_Int_t *)(ABC_PTRINT_T)1 {
-        fmt.Printf("Constraints are UNSAT.\n");
-        Ssc_ManStop( p );
-        return (Ssc_Man_t *)(ABC_PTRINT_T)1;
-    }
-    if p.vPivot == nil {
-        fmt.Printf("Conflict limit is reached while trying to find one SAT assignment.\n");
-        Ssc_ManStop( p );
-        return nil;
-    }
-    sat_solver_bookmark( p.pSat );
-//    Vec_IntPrint( p->vPivot );
-    Gia_ManSetPhasePattern( p.pAig, p.vPivot );
-    Gia_ManSetPhasePattern( p.pCare, p.vPivot );
-    if Gia_ManCheckCoPhase(p.pCare) {
-        fmt.Printf("Computed reference pattern violates %d constraints (this is a bug!).\n", Gia_ManCheckCoPhase(p.pCare));
-        Ssc_ManStop( p );
-        return nil;
-    }
-    // other things
-    p.vDisPairs = Vec_IntAlloc( 100 );
-    p.vPattern = Vec_IntAlloc( 100 );
-    p.vFanins = Vec_IntAlloc( 100 );
-    p.vFront = Vec_IntAlloc( 100 );
-    Ssc_GiaClassesInit( pAig );
-    // now it is ready for refinement using simulation 
-    return p;
+	if p != nil {
+		*p = Ssc_Man_t{}
+	}
 }
 func Ssc_ManPrintStats(p *Ssc_Man_t) {
-    Abc_Print( 1, "Parameters: SimWords = %d. SatConfs = %d. SatVarMax = %d. CallsRec = %d. Verbose = %d.\n",
-        p.pPars.nWords, p.pPars.nBTLimit, p.pPars.nSatVarMax, p.pPars.nCallsRecycle, p.pPars.fVerbose );
-    Abc_Print( 1, "SAT calls : Total = %d. Proof = %d. Cex = %d. Undec = %d.\n",
-        p.nSatCalls, p.nSatCallsUnsat, p.nSatCallsSat, p.nSatCallsUndec );
-    Abc_Print( 1, "SAT solver: Vars = %d. Clauses = %d. Recycles = %d. Sim rounds = %d.\n",
-        sat_solver_nvars(p.pSat), sat_solver_nclauses(p.pSat), p.nRecycles, p.nSimRounds );
-
-    p.timeOther = p.timeTotal - p.timeSimInit - p.timeSimSat - p.timeCnfGen - p.timeSatSat - p.timeSatUnsat - p.timeSatUndec;
-    // inlining of macro ABC_PRTP
-    Abc_Print(1, "%s =", ("Initialization "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSimInit)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimInit)))/(float64((p.timeTotal))) : 0.0);;
-    // inlining of macro ABC_PRTP
-    Abc_Print(1, "%s =", ("SAT simulation "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSimSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimSat)))/(float64((p.timeTotal))) : 0.0);;
-    // inlining of macro ABC_PRTP
-    Abc_Print(1, "%s =", ("CNF generation "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSimSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimSat)))/(float64((p.timeTotal))) : 0.0);;
-    // inlining of macro ABC_PRTP
-    Abc_Print(1, "%s =", ("SAT solving    "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSat-p.timeCnfGen)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat-p.timeCnfGen)))/(float64((p.timeTotal))) : 0.0);;
-    // inlining of macro ABC_PRTP
-    Abc_Print(1, "%s =", ("  unsat        "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((p.timeTotal))) : 0.0);;
-    // inlining of macro ABC_PRTP
-    Abc_Print(1, "%s =", ("  sat          "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((p.timeTotal))) : 0.0);;
-    // inlining of macro ABC_PRTP
-    Abc_Print(1, "%s =", ("  undecided    "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSatUndec)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((p.timeTotal))) : 0.0);;
-    // inlining of macro ABC_PRTP
-    Abc_Print(1, "%s =", ("Other          "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;
-    // inlining of macro ABC_PRTP
-    Abc_Print(1, "%s =", ("TOTAL          "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;
+	fmt.Printf("SSC: %d queries, %d proofs, %d counterexamples, %d undecided, %d recycles, %d simulation rounds\n", p.Stats.Calls, p.Stats.Proofs, p.Stats.Counterexamples, p.Stats.Undecided, p.Stats.Recycles, p.Stats.SimulationRounds)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Refine one class by resimulating one pattern.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssc_GiaSimulatePatternFraig_rec(p *Ssc_Man_t, iFraigObj int32) int32 {
-    var pObj *Gia_Obj_t;
-    var Res0, Res1 int32;
-    if Ssc_ObjSatVar(p, iFraigObj) {
-        return sat_solver_var_value( p.pSat, Ssc_ObjSatVar(p, iFraigObj) ); }
-    pObj = Gia_ManObj( p.pFraig, iFraigObj );
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Res0 = Ssc_GiaSimulatePatternFraig_rec( p, Gia_ObjFaninId0(pObj, iFraigObj) );
-    Res1 = Ssc_GiaSimulatePatternFraig_rec( p, Gia_ObjFaninId1(pObj, iFraigObj) );
-    pObj.fMark0 = (Res0 ^ Gia_ObjFaninC0(pObj)) & (Res1 ^ Gia_ObjFaninC1(pObj));
-    return pObj.fMark0;
+func Ssc_GiaResimulateOneClass(p *Ssc_Man_t, head, node int32) int32 {
+	s := NewSimulation(p.Aig, 1)
+	Ssc_GiaSavePiPattern(s, p.Pattern)
+	Ssc_GiaSimRound(s)
+	values := make([]bool, len(s.Values))
+	for i := range values {
+		values[i] = s.Values[i][0]&1 != 0
+	}
+	return Ssc_GiaSimClassRefineOneBit(p.Classes, values, head)
 }
-func Ssc_GiaSimulatePattern_rec(p *Ssc_Man_t, pObj *Gia_Obj_t) int32 {
-    var Res0, Res1 int32;
-    if Gia_ObjIsTravIdCurrent(p.pAig, pObj) {
-        return pObj.fMark0; }
-    Gia_ObjSetTravIdCurrent(p.pAig, pObj);
-    if ~pObj.Value {  // mapping into FRAIG exists - simulate FRAIG
-     
-        Res0 = Ssc_GiaSimulatePatternFraig_rec( p, Abc_Lit2Var(pObj.Value) );
-        pObj.fMark0 = Res0 ^ Abc_LitIsCompl(pObj.Value);
-    
-    } else { // mapping into FRAIG does not exist - simulate AIG
-    
-        Res0 = Ssc_GiaSimulatePattern_rec( p, Gia_ObjFanin0(pObj) );
-        Res1 = Ssc_GiaSimulatePattern_rec( p, Gia_ObjFanin1(pObj) );
-        pObj.fMark0 = (Res0 ^ Gia_ObjFaninC0(pObj)) & (Res1 ^ Gia_ObjFaninC1(pObj));
-    }
-    return pObj.fMark0;
+func carePatterns(p *Ssc_Man_t) {
+	care := NewSimulation(p.Care, 5)
+	for round := 0; round < 32; round++ {
+		Ssc_GiaRandomPiPattern(care, 5, nil)
+		Ssc_GiaSimRound(care)
+		mask := make([]uint64, 5)
+		for i := range mask {
+			mask[i] = ^uint64(0)
+		}
+		for _, lit := range p.Care.OutputLiterals() {
+			for w := range mask {
+				x := care.Values[lit>>1][w]
+				if lit&1 != 0 {
+					x = ^x
+				}
+				mask[w] &= ^x
+			}
+		}
+		hits := Ssc_SimCountBits(mask, 5)
+		if hits == 0 {
+			break
+		}
+		Ssc_GiaResetPiPattern(p.Sim, 5)
+		for i := range p.Sim.Inputs {
+			for w := range mask {
+				x := care.Inputs[i][w] & mask[w]
+				if p.Pivot[i] {
+					x |= ^mask[w]
+				}
+				p.Sim.Inputs[i][w] = x
+			}
+		}
+		Ssc_GiaSimRound(p.Sim)
+		p.Stats.SimulationRounds++
+		if Ssc_GiaClassesRefine(p.Classes, p.Sim) == 0 {
+			break
+		}
+	}
 }
-func Ssc_GiaResimulateOneClass(p *Ssc_Man_t, iRepr int32, iObj int32) int32 {
-    var Ent, RetValue int32;
-    assert(iRepr == Gia_ObjRepr(p.pAig, iObj), "iRepr == Gia_ObjRepr(p.pAig, iObj)");
-    assert(Gia_ObjIsHead( p.pAig, iRepr ), "Gia_ObjIsHead( p.pAig, iRepr )");
-    // set bit-values at the nodes according to the counter-example
-    Gia_ManIncrementTravId( p.pAig );
-    // inlining of macro Gia_ClassForEachObj
-    for  assert(Gia_ObjIsHead(p.pAig, iRepr) && (iRepr != 0), "Gia_ObjIsHead(p.pAig, iRepr) && iRepr"), Ent = iRepr; Ent > 0; Ent = Gia_ObjNext(p.pAig, Ent)  {
-        Ssc_GiaSimulatePattern_rec( p, Gia_ManObj(p.pAig, Ent) );
-    }
-    // refine one class using these bit-values
-    RetValue = Ssc_GiaSimClassRefineOneBit( p.pAig, iRepr );
-    // check that the candidate equivalence is indeed refined
-    assert(iRepr != Gia_ObjRepr(p.pAig, iObj), "iRepr != Gia_ObjRepr(p.pAig, iObj)");
-    return RetValue;
+func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *gia.Gia_Man_t {
+	p, status := Ssc_ManStart(subject, care, params)
+	if status == satoko.SATOKO_UNSAT {
+		return copyOutputs(subject, nil, true)
+	}
+	if status != satoko.SATOKO_SAT {
+		return copyOutputs(subject, nil, false)
+	}
+	carePatterns(p)
+	mapping := make([]int32, subject.ObjectCount())
+	for i := range mapping {
+		mapping[i] = int32(i) << 1
+	}
+	subject.StartRepresentatives()
+	for id := int32(1); int(id) < subject.ObjectCount(); id++ {
+		_, _, _, kind := subject.Gate(id)
+		if kind < 1 || kind > 5 {
+			continue
+		}
+		for p.Classes.Repr[id] >= 0 {
+			repr := p.Classes.Repr[id]
+			complement := int32(0)
+			if p.Classes.Phase[id] != p.Classes.Phase[repr] {
+				complement = 1
+			}
+			result := Ssc_ManCheckEquivalence(p, repr, id, complement)
+			if result == satoko.SATOKO_UNSAT {
+				mapping[id] = mapping[repr] ^ complement
+				gia.Gia_ObjSetRepr(subject, id, repr)
+				gia.Gia_ObjSetProved(subject, id)
+				break
+			}
+			if result != satoko.SATOKO_SAT {
+				break
+			}
+			Ssc_GiaResimulateOneClass(p, repr, id)
+		}
+	}
+	// Publish canonical proved-class links, including phase metadata from Pivot.
+	tails := make(map[int32]int32)
+	for id := int32(1); int(id) < subject.ObjectCount(); id++ {
+		if gia.Gia_ObjHasRepr(subject, id) == 0 {
+			continue
+		}
+		root := gia.Gia_ObjRepr(subject, id)
+		for gia.Gia_ObjHasRepr(subject, root) != 0 {
+			root = gia.Gia_ObjRepr(subject, root)
+		}
+		gia.Gia_ObjSetRepr(subject, id, root)
+		previous, ok := tails[root]
+		if !ok {
+			previous = root
+		}
+		gia.Gia_ObjSetNext(subject, previous, id)
+		tails[root] = id
+	}
+	result := copyMapped(subject, subject.OutputLiterals(), mapping)
+	if p.Params.Verbose {
+		Ssc_ManPrintStats(p)
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Perform verification of conditional sweeping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssc_PerformVerification(p0 *Gia_Man_t, p1 *Gia_Man_t, pC *Gia_Man_t) int32 {
-    var Status int32;
-    var ParsCec Cec_ParCec_t;
-    var pPars *Cec_ParCec_t = &ParsCec;
-    // derive the OR of constraint outputs
-    var pCond *Gia_Man_t  = Gia_ManDupAndOr( pC, Gia_ManPoNum(p0), 1, 0 );
-    // derive F = F & !OR(c0, c1, c2, ...)
-    var p0c *Gia_Man_t  = Gia_ManMiter( p0, pCond, 0, 0, 0, 1, 0 );
-    // derive F = F & !OR(c0, c1, c2, ...)
-    var p1c *Gia_Man_t  = Gia_ManMiter( p1, pCond, 0, 0, 0, 1, 0 );
-    // derive dual-output miter
-    var pMiter *Gia_Man_t  = Gia_ManMiter( p0c, p1c, 0, 1, 0, 0, 0 );
-    Gia_ManStop( p0c );
-    Gia_ManStop( p1c );
-    Gia_ManStop( pCond );
-    // run equivalence checking
-    Cec_ManCecSetDefaultParams( pPars );
-    Status = Cec_ManVerify( pMiter, pPars );
-    Gia_ManStop( pMiter );
-    // report the results
-    if Status == 1 {
-        fmt.Printf("Verification succeeded.\n");
-    } else if Status == 0 {
-        fmt.Printf("Verification failed.\n");
-    } else if Status == -1 {
-        fmt.Printf("Verification undecided.\n");
-    } else { assert(false, "0"); }
-    return Status;
+func Ssc_PerformSweeping(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *gia.Gia_Man_t {
+	result := Ssc_PerformSweepingInt(subject, care, params)
+	if params != nil && params.Verify && Ssc_PerformVerification(subject, result, care) == 0 {
+		panic("ssc: conditional equivalence verification failed")
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssc_PerformSweepingInt(pAig *Gia_Man_t, pCare *Gia_Man_t, pPars *Ssc_Pars_t) *Gia_Man_t {
-    var p *Ssc_Man_t;
-    var pResult, pTemp *Gia_Man_t;
-    var pObj, pRepr *Gia_Obj_t;
-    var clk abctime;
-    var clkTotal abctime = Abc_Clock();
-    var i, fCompl, nRefined, status int32;
-clk = Abc_Clock();
-    assert(Gia_ManRegNum(pCare) == 0, "Gia_ManRegNum(pCare) == 0");
-    assert(Gia_ManCiNum(pAig) == Gia_ManCiNum(pCare), "Gia_ManCiNum(pAig) == Gia_ManCiNum(pCare)");
-    assert(Gia_ManIsNormalized(pAig), "Gia_ManIsNormalized(pAig)");
-    assert(Gia_ManIsNormalized(pCare), "Gia_ManIsNormalized(pCare)");
-    // reset random numbers
-    Gia_ManRandom( 1 );
-    // sweeping manager
-    p = Ssc_ManStart( pAig, pCare, pPars );
-    if p == (Ssc_Man_t *)(ABC_PTRINT_T)1 { // UNSAT
-        return Gia_ManDupZero( pAig ); }
-    if p == nil { // timeout
-        return Gia_ManDup( pAig ); }
-    if p.pPars.fVerbose {
-        fmt.Printf("Care set produced %d hits out of %d.\n", Ssc_GiaEstimateCare(p.pFraig, 5), 640); }
-    // perform simulation 
-    for {
-        // simulate care set
-        Ssc_GiaRandomPiPattern( p.pFraig, 5, nil );
-        Ssc_GiaSimRound( p.pFraig );
-        // transfer care patterns to user's AIG
-        if !Ssc_GiaTransferPiPattern( pAig, p.pFraig, p.vPivot ) {
-            break; }
-        // simulate the main AIG
-        Ssc_GiaSimRound( pAig );
-        nRefined = Ssc_GiaClassesRefine( pAig );
-        if pPars.fVerbose { 
-            Gia_ManEquivPrintClasses( pAig, 0, 0 ); }
-        if nRefined <= Gia_ManCandNum(pAig) / 100 {
-            break; }
-    }
-p.timeSimInit += Abc_Clock() - clk;
-
-    // prepare user's AIG
-    Gia_ManFillValue(pAig);
-    Gia_ManConst0(pAig).Value = 0;
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(pAig.vCis)) && ((pObj) = Gia_ManCi(pAig, i)); i++  {
-        pObj.Value = Gia_Obj2Lit( p.pFraig, Gia_ManCi(p.pFraig, i) );
-    }
-//    Gia_ManLevelNum(pAig);
-    // prepare swept AIG (should be done after starting SAT solver in Ssc_ManStart)
-    Gia_ManHashStart( p.pFraig );
-    // perform sweeping
-    Ssc_GiaResetPiPattern( pAig, pPars.nWords );
-    Ssc_GiaSavePiPattern( pAig, p.vPivot );
-    // inlining of macro Gia_ManForEachCand
-    for  i = 0; (i < pAig.nObjs) && ((pObj) = Gia_ManObj(pAig, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else {
-        if pAig.iPatsPi == 64 * pPars.nWords {
-clk = Abc_Clock();
-            Ssc_GiaSimRound( pAig );
-            Ssc_GiaClassesRefine( pAig );
-            if pPars.fVerbose { 
-                Gia_ManEquivPrintClasses( pAig, 0, 0 ); }
-            Ssc_GiaClassesCheckPairs( pAig, p.vDisPairs );
-            Vec_IntClear( p.vDisPairs );
-            // prepare next patterns
-            Ssc_GiaResetPiPattern( pAig, pPars.nWords );
-            Ssc_GiaSavePiPattern( pAig, p.vPivot );
-p.timeSimSat += Abc_Clock() - clk;
-//printf( "\n" );
-        }
-        if Gia_ObjIsAnd(pObj) {
-            pObj.Value = Gia_ManHashAnd( p.pFraig, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-        if !Gia_ObjHasRepr(pAig, i) {
-            continue; }
-        pRepr = Gia_ObjReprObj(pAig, i);
-        if int32(pObj.Value) == Abc_LitNotCond( pRepr.Value, pRepr.fPhase ^ pObj.fPhase ) {
-            Gia_ObjSetProved( pAig, i );
-            continue;
-        }
-        assert(Abc_Lit2Var(pRepr.Value) != Abc_Lit2Var(pObj.Value), "Abc_Lit2Var(pRepr.Value) != Abc_Lit2Var(pObj.Value)");
-        fCompl = pRepr.fPhase ^ pObj.fPhase ^ Abc_LitIsCompl(pRepr.Value) ^ Abc_LitIsCompl(pObj.Value);
-
-        // perform SAT call
-clk = Abc_Clock();
-        p.nSatCalls++;
-        status = Ssc_ManCheckEquivalence( p, Abc_Lit2Var(pRepr.Value), Abc_Lit2Var(pObj.Value), fCompl );
-        if status == l_False {
-            p.nSatCallsUnsat++;
-            pObj.Value = Abc_LitNotCond( pRepr.Value, pRepr.fPhase ^ pObj.fPhase );
-            Gia_ObjSetProved( pAig, i );
-        
-        } else if status == l_True {
-            p.nSatCallsSat++;
-            Ssc_GiaSavePiPattern( pAig, p.vPattern );
-            Vec_IntPush( p.vDisPairs, Gia_ObjRepr(p.pAig, i) );
-            Vec_IntPush( p.vDisPairs, i );
-//            printf( "Try %2d and %2d: ", Gia_ObjRepr(p->pAig, i), i );
-//            Vec_IntPrint( p->vPattern );
-            if Gia_ObjRepr(p.pAig, i) > 0 {
-                Ssc_GiaResimulateOneClass( p, Gia_ObjRepr(p.pAig, i), i ); }
-        
-        } else if status == l_Undef {
-            p.nSatCallsUndec++;
-        } else { assert(false, "0"); }
-p.timeSat += Abc_Clock() - clk;
-    }
-    }
-    if pAig.iPatsPi > 1 {
-clk = Abc_Clock();
-        for  pAig.iPatsPi < 64 * pPars.nWords  {
-            Ssc_GiaSavePiPattern( pAig, p.vPivot );
-        }
-        Ssc_GiaSimRound( pAig );
-        Ssc_GiaClassesRefine( pAig );
-        if pPars.fVerbose { 
-            Gia_ManEquivPrintClasses( pAig, 0, 0 ); }
-        Ssc_GiaClassesCheckPairs( pAig, p.vDisPairs );
-        Vec_IntClear( p.vDisPairs );
-p.timeSimSat += Abc_Clock() - clk;
-    }
-//    Gia_ManEquivPrintClasses( pAig, 1, 0 );
-//    Gia_ManPrint( pAig );
-
-    // generate the resulting AIG
-    pResult = Gia_ManEquivReduce( pAig, 0, 0, 1, 0 );
-    if pResult == nil {
-        fmt.Printf("There is no equivalences.\n");
-        pAig.pReprs = nil;
-        pAig.pNexts = nil;
-        pResult = Gia_ManDup( pAig );
-    }
-    pResult = Gia_ManCleanup( pTemp = pResult );
-    Gia_ManStop( pTemp );
-    p.timeTotal = Abc_Clock() - clkTotal;
-    if pPars.fVerbose {
-        Ssc_ManPrintStats( p ); }
-    Ssc_ManStop( p );
-    // count the number of representatives
-    if pPars.fVerbose {
-        Abc_Print( 1, "Reduction in AIG nodes:%8d  ->%8d (%6.2f %%).  ", 
-            Gia_ManAndNum(pAig), Gia_ManAndNum(pResult), 
-            100.0 - 100.0 * Gia_ManAndNum(pResult) / Gia_ManAndNum(pAig) );
-        Abc_PrintTime( 1, "Time", Abc_Clock() - clkTotal );
-    }
-    return pResult;
+func Ssc_PerformVerification(a, b, care *gia.Gia_Man_t) int32 {
+	if len(a.OutputLiterals()) != len(b.OutputLiterals()) || len(a.InputLiterals()) != len(b.InputLiterals()) {
+		panic("ssc: verification interface mismatch")
+	}
+	q := newBuilder(len(a.InputLiterals()), a.ObjectCount()+b.ObjectCount()+care.ObjectCount())
+	aa := copyInto(q, a, nil)
+	bb := copyInto(q, b, nil)
+	violations := copyInto(q, care, nil)
+	allowed := int32(1)
+	for _, v := range violations {
+		allowed = q.and(allowed, v^1)
+	}
+	difference := int32(0)
+	for i := range aa {
+		difference = q.or(difference, q.xor(aa[i], bb[i]))
+	}
+	gia.Gia_ManAppendCo(q.graph, q.and(allowed, difference))
+	m, _ := Ssc_ManStart(q.graph, emptyCare(q.graph), nil)
+	status := Ssc_ManCheckEquivalence(m, 0, q.graph.OutputLiterals()[0]>>1, q.graph.OutputLiterals()[0]&1)
+	if status == satoko.SATOKO_UNSAT {
+		return 1
+	}
+	if status == satoko.SATOKO_SAT {
+		return 0
+	}
+	return -1
 }
-func Ssc_PerformSweeping(pAig *Gia_Man_t, pCare *Gia_Man_t, pPars *Ssc_Pars_t) *Gia_Man_t {
-    var pResult *Gia_Man_t  = Ssc_PerformSweepingInt( pAig, pCare, pPars );
-    if pPars.fVerify {
-        Ssc_PerformVerification( pAig, pResult, pCare ); }
-    return pResult;
+func emptyCare(p *gia.Gia_Man_t) *gia.Gia_Man_t {
+	q := gia.Gia_ManStart(int32(len(p.InputLiterals()) + 2))
+	for range p.InputLiterals() {
+		gia.Gia_ManAppendCi(q)
+	}
+	gia.Gia_ManAppendCo(q, 0)
+	return q
 }
-func Ssc_PerformSweepingConstr(p *Gia_Man_t, pPars *Ssc_Pars_t) *Gia_Man_t {
-    var pAig, pCare, pResult *Gia_Man_t;
-    var i int32;
-    if pPars.fVerbose {
-        Abc_Print( 0, "SAT sweeping AIG with %d constraints.\n", p.nConstrs ); }
-    if p.nConstrs == 0 {
-        pAig = Gia_ManDup( p );
-        pCare = Gia_ManStart( Gia_ManCiNum(p) + 2 );
-        pCare.pName = Abc_UtilStrsav( "care" );
-        for  i = 0; i < Gia_ManCiNum(p); i++  {
-            Gia_ManAppendCi( pCare );
-        }
-        Gia_ManAppendCo( pCare, 0 );
-    
-    } else {
-        var vOuts *Vec_Int_t  = Vec_IntStartNatural( Gia_ManPoNum(p) );
-        pAig = Gia_ManDupCones( p, Vec_IntArray(vOuts), Gia_ManPoNum(p) - p.nConstrs, 0 );
-        pCare = Gia_ManDupCones( p, Vec_IntArray(vOuts) + Gia_ManPoNum(p) - p.nConstrs, p.nConstrs, 0 );
-        Vec_IntFree( vOuts );
-    }
-    if pPars.fVerbose {
-        fmt.Printf("User AIG: ");
-        Gia_ManPrintStats( pAig, nil );
-        fmt.Printf("Care AIG: ");
-        Gia_ManPrintStats( pCare, nil );
-    }
-
-    pAig = Gia_ManDupLevelized( pResult = pAig );
-    Gia_ManStop( pResult );
-    pResult = Ssc_PerformSweeping( pAig, pCare, pPars );
-    if pPars.fAppend {
-        Gia_ManDupAppendShare( pResult, pCare );
-        pResult.nConstrs = Gia_ManPoNum(pCare);
-    }
-    Gia_ManStop( pAig );
-    Gia_ManStop( pCare );
-    return pResult;
+func Ssc_PerformSweepingConstr(p *gia.Gia_Man_t, params *Ssc_Pars_t) *gia.Gia_Man_t {
+	pos := len(p.OutputLiterals()) - p.RegisterCount()
+	constraints := int(gia.Gia_ManConstrNum(p))
+	if constraints < 0 || constraints > pos {
+		panic("ssc: invalid constraint count")
+	}
+	ordinary := append([]int32(nil), p.OutputLiterals()[:pos-constraints]...)
+	ordinary = append(ordinary, p.OutputLiterals()[pos:]...)
+	subject := copyOutputs(p, ordinary, false)
+	care := copyWithRegs(p, p.OutputLiterals()[pos-constraints:pos], nil, 0)
+	if constraints == 0 {
+		care = emptyCare(subject)
+	}
+	result := Ssc_PerformSweeping(subject, care, params)
+	if params != nil && params.Append {
+		outputs := result.OutputLiterals()
+		q := newBuilder(len(result.InputLiterals()), result.ObjectCount()+care.ObjectCount())
+		r := copyInto(q, result, nil)
+		c := copyInto(q, care, nil)
+		n := len(outputs) - result.RegisterCount()
+		for _, v := range r[:n] {
+			gia.Gia_ManAppendCo(q.graph, v)
+		}
+		for _, v := range c {
+			gia.Gia_ManAppendCo(q.graph, v)
+		}
+		for _, v := range r[n:] {
+			gia.Gia_ManAppendCo(q.graph, v)
+		}
+		gia.Gia_ManSetRegNum(q.graph, int32(result.RegisterCount()))
+		gia.Gia_ManSetConstrNum(q.graph, int32(len(c)))
+		q.graph.CopyIdentityFrom(p)
+		result = q.graph
+	}
+	return result
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

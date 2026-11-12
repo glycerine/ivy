@@ -1,1709 +1,1219 @@
 package abc
 
+// The experimental AU hierarchy uses integer literals and owns its topology.
+// Go slices replace the original aligned page allocator and address-derived IDs.
 import (
+	"bufio"
 	"fmt"
+	aig "github.com/glycerine/abcgo/aig/aig"
+	"io"
+	"os"
+	"sort"
 	"strconv"
 	"strings"
+	"unsafe"
 )
 
-import "os"
+type Au_Type_t uint8
 
-/**CFile****************************************************************
-
-  FileName    [abcHieNew.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [New hierarchy manager.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcHieNew.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <assert.h>
-
-//#include "misc/vec/vec.h"
-//#include "misc/util/utilNam.h"
-//#include "misc/extra/extra.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-const AU_MAX_FANINS = 0x1FFFFFFF
- 
- type Au_Type_t int32
-const ( 
-    AU_OBJ_NONE Au_Type_t = iota
-           // 0: non-existent object
-    AU_OBJ_CONST0
-         // 1: constant node
-    AU_OBJ_PI
-             // 2: primary input
-    AU_OBJ_PO
-             // 3: primary output
-    AU_OBJ_FAN
-            // 4: box output
-    AU_OBJ_FLOP
-           // 5: flip-flop
-    AU_OBJ_BOX
-            // 6: box
-    AU_OBJ_NODE
-           // 7: logic node
-    AU_OBJ_VOID            // 8: placeholder
-
+const (
+	AU_OBJ_NONE Au_Type_t = iota
+	AU_OBJ_CONST0
+	AU_OBJ_PI
+	AU_OBJ_PO
+	AU_OBJ_FAN
+	AU_OBJ_FLOP
+	AU_OBJ_BOX
+	AU_OBJ_NODE
+	AU_OBJ_VOID
 )
 
- 
-
-
-type Au_Man_t =   Au_Man_t_;
-type Au_Ntk_t =   Au_Ntk_t_;
-     
-
-type Au_Obj_t struct { // 16 bytes
-
-    Func uint32; /* C bitfield: 30 bits; review packing and truncation */       // functionality
-    Value uint32; /* C bitfield: 2 bits; review packing and truncation */       // node value
-    Type uint32; /* C bitfield: 3 bits; review packing and truncation */       // object type
-    nFanins uint32; /* C bitfield: 29 bits; review packing and truncation */       // fanin count (related to AU_MAX_FANIN_NUM)
-    Fanins [2]int32;          // fanin literals
+type Au_Obj_t struct {
+	Func, Value       int
+	Type              Au_Type_t
+	Fanins            []int
+	id, pio           int
+	network           *Au_Ntk_t
+	fanouts           []int
+	copy              int
+	trav              uint64
+	regular, negative *Au_Obj_t
+}
+type Au_Ntk_t struct {
+	Name                                   string
+	Man                                    *Au_Man_t
+	ID                                     int
+	Objects                                []*Au_Obj_t
+	PIs, POs                               []int
+	counts                                 [AU_OBJ_VOID]int
+	epoch                                  uint64
+	Boxes, Nodes, Ports, Ands, Xors, Muxes float64
+}
+type Au_Man_t struct {
+	Name                      string
+	Networks                  []*Au_Ntk_t
+	Functions                 []string
+	functionIDs               map[string]int
+	PortsC0, PortsC1, PortsNC float64
 }
 
-type Au_Ntk_t_ struct {
-    pName                  string;              // model name
-    pMan              *Au_Man_t;               // model manager
-    Id                    int32;                 // model ID
-    // objects
-    vPis              Vec_Int_t;               // primary inputs (CI id -> handle)
-    vPos              Vec_Int_t;               // primary outputs (CI id -> handle)
-    vObjs              Vec_Int_t;              // internal nodes (obj id -> handle)
-    nObjs [AU_OBJ_VOID]int32; // counter of objects of each type
-    // memory for objects
-    vChunks             *Vec_Ptr_t;            // memory pages
-    vPages              Vec_Ptr_t;             // memory pages
-    iHandle                    int32;            // currently available ID
-    nObjsAlloc                    int32;         // the total number of objects allocated
-    nObjsUsed                    int32;          // the number of useful entries
-    // object attributes
-    nTravIds                    int32;           // counter of traversal IDs
-    vTravIds              Vec_Int_t;           // trav IDs of the objects
-    vCopies              Vec_Int_t;            // object copies
-    // structural hashing
-    nHTable                    int32;            // hash table size
-    pHTable                   *int32;            // hash table
-    pConst0              *Au_Obj_t;            // constant node
-    // statistics
-    fMark                    int32;
-    nBoxes                 float64;
-    nNodes                 float64;
-    nPorts                 float64;
-    nNodeAnds                 float64;
-    nNodeXors                 float64;
-    nNodeMuxs                 float64;
+func Au_Var2Lit(v, c int) int { return v*2 + c }
+func Au_Lit2Var(l int) int    { return l >> 1 }
+func Au_LitIsCompl(l int) int { return l & 1 }
+func Au_LitNot(l int) int     { return l ^ 1 }
+func Au_LitNotCond(l, c int) int {
+	if c > 0 {
+		return l ^ 1
+	}
+	return l
+}
+func Au_LitRegular(l int) int { return l &^ 1 }
+func Au_Regular(o *Au_Obj_t) *Au_Obj_t {
+	if o != nil && o.regular != nil {
+		return o.regular
+	}
+	return o
+}
+func Au_Not(o *Au_Obj_t) *Au_Obj_t {
+	if o == nil {
+		panic("nil AU complement")
+	}
+	if o.regular != nil {
+		return o.regular
+	}
+	if o.negative == nil {
+		o.negative = &Au_Obj_t{regular: o}
+	}
+	return o.negative
+}
+func Au_NotCond(o *Au_Obj_t, c int) *Au_Obj_t {
+	if c != 0 {
+		return Au_Not(o)
+	}
+	return o
+}
+func Au_IsComplement(o *Au_Obj_t) int   { return int(abcBool(o != nil && o.regular != nil)) }
+func Au_UtilStrsav(s string) string     { return s }
+func Au_ManAlloc(name string) *Au_Man_t { return &Au_Man_t{Name: name, Networks: []*Au_Ntk_t{nil}} }
+func Au_NtkAlloc(m *Au_Man_t, name string) *Au_Ntk_t {
+	n := &Au_Ntk_t{Name: name, Objects: []*Au_Obj_t{nil}, epoch: 1}
+	Au_ManAddNtk(m, n)
+	return n
+}
+func Au_ManAddNtk(m *Au_Man_t, n *Au_Ntk_t) {
+	if m == nil || n == nil || Au_ManFindNtk(m, n.Name) >= 0 {
+		panic("invalid or duplicate AU model")
+	}
+	n.Man = m
+	n.ID = len(m.Networks)
+	m.Networks = append(m.Networks, n)
+}
+func Au_ManFindNtk(m *Au_Man_t, name string) int {
+	for i, n := range m.Networks {
+		if n != nil && n.Name == name {
+			return i
+		}
+	}
+	return -1
+}
+func Au_ManFindNtkP(m *Au_Man_t, name string) *Au_Ntk_t {
+	i := Au_ManFindNtk(m, name)
+	if i < 0 {
+		return nil
+	}
+	return m.Networks[i]
+}
+func Au_NtkFree(n *Au_Ntk_t) {
+	if n == nil {
+		return
+	}
+	if n.Man != nil && n.ID < len(n.Man.Networks) && n.Man.Networks[n.ID] == n {
+		n.Man.Networks[n.ID] = nil
+	}
+	for _, o := range n.Objects {
+		if o != nil {
+			o.network = nil
+			o.Fanins = nil
+			o.fanouts = nil
+		}
+	}
+	n.Objects = nil
+	n.PIs = nil
+	n.POs = nil
+	n.Man = nil
+}
+func Au_ManFree(m *Au_Man_t) {
+	if m == nil {
+		return
+	}
+	for _, n := range m.Networks {
+		if n != nil {
+			return
+		}
+	}
+	m.Networks = nil
+	m.Functions = nil
+	m.functionIDs = nil
+}
+func Au_ManDelete(m *Au_Man_t) {
+	if m == nil {
+		return
+	}
+	for _, n := range m.Networks {
+		Au_NtkFree(n)
+	}
+	Au_ManFree(m)
+}
+func Au_NtkMemUsage(n *Au_Ntk_t) int {
+	total := int(unsafe.Sizeof(*n)) + cap(n.PIs)*int(unsafe.Sizeof(int(0))) + cap(n.POs)*int(unsafe.Sizeof(int(0))) + cap(n.Objects)*int(unsafe.Sizeof((*Au_Obj_t)(nil)))
+	for _, o := range n.Objects {
+		if o != nil {
+			total += int(unsafe.Sizeof(*o)) + (cap(o.Fanins)+cap(o.fanouts))*int(unsafe.Sizeof(int(0)))
+		}
+	}
+	return total
+}
+func Au_ManMemUsage(m *Au_Man_t) int {
+	total := 0
+	for _, n := range m.Networks {
+		if n != nil {
+			total += Au_NtkMemUsage(n)
+		}
+	}
+	return total
+}
+func Au_ManMemUsageUseful(m *Au_Man_t) int { return Au_ManMemUsage(m) } // Native allocations contain no page padding.
+func Au_NtkCleanCopy(n *Au_Ntk_t) {
+	for _, o := range n.Objects {
+		if o != nil {
+			o.copy = -1
+		}
+	}
+}
+func Au_NtkNodeNumFunc(n *Au_Ntk_t, f int) int {
+	if len(n.Man.Functions) > 0 {
+		return 0
+	}
+	count := 0
+	for _, o := range n.Objects {
+		if o != nil && o.Type == AU_OBJ_NODE && o.Func == f {
+			count++
+		}
+	}
+	return count
+}
+func Au_NtkPrintStats(n *Au_Ntk_t) {
+	fmt.Printf("%-30s: i/o =%6d/%6d lat =%5d nd =%6d box =%5d obj =%7d %.1f MB\n", n.Name, len(n.PIs), len(n.POs), n.counts[AU_OBJ_FLOP], n.counts[AU_OBJ_NODE], n.counts[AU_OBJ_BOX], len(n.Objects)-1, float64(Au_NtkMemUsage(n))/(1<<20))
+}
+func Au_ManPrintStats(m *Au_Man_t) {
+	fmt.Printf("Design %s\n", m.Name)
+	for _, n := range m.Networks {
+		if n != nil {
+			Au_NtkPrintStats(n)
+		}
+	}
+	fmt.Printf("Different functions = %d. Memory = %.1f MB\n", len(m.Functions), float64(Au_ManMemUsage(m))/(1<<20))
+}
+func Au_NtkAllocObj(n *Au_Ntk_t, fanins, kind int) int {
+	if fanins < 0 || kind <= int(AU_OBJ_NONE) || kind >= int(AU_OBJ_VOID) {
+		panic("invalid AU object")
+	}
+	o := &Au_Obj_t{Type: Au_Type_t(kind), Fanins: make([]int, fanins), id: len(n.Objects), network: n, copy: -1}
+	n.Objects = append(n.Objects, o)
+	n.counts[o.Type]++
+	switch o.Type {
+	case AU_OBJ_PI:
+		o.pio = len(n.PIs)
+		n.PIs = append(n.PIs, o.id)
+	case AU_OBJ_PO:
+		o.pio = len(n.POs)
+		n.POs = append(n.POs, o.id)
+	}
+	return o.id
+}
+func Au_NtkCreateConst0(n *Au_Ntk_t) int { return Au_NtkAllocObj(n, 0, int(AU_OBJ_CONST0)) }
+func Au_NtkCreatePi(n *Au_Ntk_t) int     { return Au_NtkAllocObj(n, 0, int(AU_OBJ_PI)) }
+func Au_NtkCreatePo(n *Au_Ntk_t, lit int) int {
+	id := Au_NtkAllocObj(n, 1, int(AU_OBJ_PO))
+	n.Objects[id].Fanins[0] = lit
+	return id
+}
+func Au_NtkCreateFan(n *Au_Ntk_t, fanin, output, model int) int {
+	id := Au_NtkAllocObj(n, 1, int(AU_OBJ_FAN))
+	o := n.Objects[id]
+	o.Fanins[0] = fanin
+	o.pio = output
+	o.Func = model
+	return id
+}
+func Au_NtkCreateNode(n *Au_Ntk_t, fanins []int, function int) int {
+	id := Au_NtkAllocObj(n, len(fanins), int(AU_OBJ_NODE))
+	o := n.Objects[id]
+	copy(o.Fanins, fanins)
+	o.Func = function
+	return id
+}
+func Au_NtkCreateBox(n *Au_Ntk_t, fanins []int, outputs, model int) int {
+	if outputs < 0 || model <= 0 {
+		panic("invalid AU box")
+	}
+	id := Au_NtkAllocObj(n, len(fanins), int(AU_OBJ_BOX))
+	o := n.Objects[id]
+	copy(o.Fanins, fanins)
+	o.Func = model
+	for i := 0; i < outputs; i++ {
+		o.fanouts = append(o.fanouts, Au_NtkCreateFan(n, id*2, i, model))
+	}
+	return id
+}
+func Au_NtkIncrementTravId(n *Au_Ntk_t) {
+	n.epoch++
+	if n.epoch == 0 {
+		for _, o := range n.Objects {
+			if o != nil {
+				o.trav = 0
+			}
+		}
+		n.epoch = 1
+	}
+}
+func Au_ObjSetTravIdCurrent(o *Au_Obj_t)  { o = Au_Regular(o); o.trav = o.network.epoch }
+func Au_ObjSetTravIdPrevious(o *Au_Obj_t) { o = Au_Regular(o); o.trav = o.network.epoch - 1 }
+func Au_ObjIsTravIdCurrent(o *Au_Obj_t) int {
+	o = Au_Regular(o)
+	return int(abcBool(o.trav == o.network.epoch))
+}
+func Au_ObjIsTravIdPrevious(o *Au_Obj_t) int {
+	o = Au_Regular(o)
+	return int(abcBool(o.trav == o.network.epoch-1))
+}
+func Au_ObjSetTravIdCurrentId(n *Au_Ntk_t, id int)    { Au_ObjSetTravIdCurrent(Au_NtkObj(n, id)) }
+func Au_ObjIsTravIdCurrentId(n *Au_Ntk_t, id int) int { return Au_ObjIsTravIdCurrent(Au_NtkObj(n, id)) }
+func Au_ObjSuppSize_rec(n *Au_Ntk_t, id int) int {
+	o := Au_NtkObj(n, id)
+	if Au_ObjIsTravIdCurrent(o) != 0 {
+		return 0
+	}
+	Au_ObjSetTravIdCurrent(o)
+	if o.Type == AU_OBJ_PI {
+		return 1
+	}
+	total := 0
+	for _, lit := range o.Fanins {
+		total += Au_ObjSuppSize_rec(n, lit>>1)
+	}
+	return total
+}
+func Au_ObjSuppSize(o *Au_Obj_t) int {
+	Au_NtkIncrementTravId(o.network)
+	return Au_ObjSuppSize_rec(o.network, o.id)
+}
+func Au_NtkSuppSizeTest(n *Au_Ntk_t) int {
+	count := 0
+	for _, o := range n.Objects {
+		if o != nil && o.Type == AU_OBJ_NODE && Au_ObjSuppSize(o) <= 16 {
+			count++
+		}
+	}
+	fmt.Printf("Nodes with small support %d (out of %d)\n", count, n.counts[AU_OBJ_NODE])
+	return count
 }
 
-type Au_Man_t_ struct {
-    pName                  string;              // the name of the library
-    vNtks              Vec_Ptr_t;              // the array of modules
-    pFuncs             *Abc_Nam_t;             // hashing functions into integers
-    nRefs                    int32;              // reference counter
-    // statistics
-    nGiaObjMax                    int32;         // max number of GIA objects
-    nPortsC0                 float64;           // const ports
-    nPortsC1                 float64;           // const ports
-    nPortsNC                 float64;           // non-const ports
+func Au_ManReorderModels_rec(n *Au_Ntk_t, order *[]int) {
+	seen := map[*Au_Ntk_t]bool{}
+	var visit func(*Au_Ntk_t)
+	visit = func(n *Au_Ntk_t) {
+		if seen[n] {
+			return
+		}
+		seen[n] = true
+		for _, o := range n.Objects {
+			if o != nil && o.Type == AU_OBJ_BOX {
+				child := Au_ObjModel(o)
+				if child != nil && child != n {
+					visit(child)
+				}
+			}
+		}
+		*order = append(*order, n.ID)
+	}
+	visit(n)
+}
+func Au_ManReorderModels(m *Au_Man_t, root *Au_Ntk_t) {
+	var order []int
+	Au_ManReorderModels_rec(root, &order)
+	seen := map[int]bool{}
+	for _, id := range order {
+		seen[id] = true
+	}
+	order = order[:len(order)-1]
+	for _, n := range m.Networks {
+		if n != nil && !seen[n.ID] {
+			order = append(order, n.ID)
+		}
+	}
+	order = append(order, root.ID)
+	reverse := make(map[int]int)
+	models := []*Au_Ntk_t{nil}
+	for i := len(order) - 1; i >= 0; i-- {
+		reverse[order[i]] = len(models)
+		models = append(models, m.Networks[order[i]])
+	}
+	for _, n := range models[1:] {
+		n.ID = reverse[n.ID]
+		for _, o := range n.Objects {
+			if o != nil && (o.Type == AU_OBJ_BOX || o.Type == AU_OBJ_FAN) {
+				o.Func = reverse[o.Func]
+			}
+		}
+	}
+	m.Networks = models
+}
+func Au_NtkCheckRecursive(n *Au_Ntk_t) int {
+	active, seen := map[*Au_Ntk_t]bool{}, map[*Au_Ntk_t]bool{}
+	var visit func(*Au_Ntk_t) bool
+	visit = func(n *Au_Ntk_t) bool {
+		if active[n] {
+			return true
+		}
+		if seen[n] {
+			return false
+		}
+		seen[n] = true
+		active[n] = true
+		defer delete(active, n)
+		for _, o := range n.Objects {
+			if o != nil && o.Type == AU_OBJ_BOX {
+				if visit(Au_ObjModel(o)) {
+					return true
+				}
+			}
+		}
+		return false
+	}
+	return int(abcBool(visit(n)))
+}
+func Au_ManCountThings(m *Au_Man_t) {
+	active, done := map[*Au_Ntk_t]bool{}, map[*Au_Ntk_t]bool{}
+	var count func(*Au_Ntk_t)
+	count = func(n *Au_Ntk_t) {
+		if done[n] {
+			return
+		}
+		if active[n] {
+			panic("recursive AU model")
+		}
+		active[n] = true
+		n.Boxes = float64(n.counts[AU_OBJ_BOX])
+		n.Nodes = float64(n.counts[AU_OBJ_NODE])
+		n.Ports = float64(len(n.PIs) + len(n.POs))
+		n.Ands = float64(Au_NtkNodeNumFunc(n, 1))
+		n.Xors = float64(Au_NtkNodeNumFunc(n, 2))
+		n.Muxes = float64(Au_NtkNodeNumFunc(n, 3))
+		for _, o := range n.Objects {
+			if o != nil && o.Type == AU_OBJ_BOX {
+				child := Au_ObjModel(o)
+				if child == n {
+					continue
+				}
+				count(child)
+				n.Boxes += child.Boxes
+				n.Nodes += child.Nodes
+				n.Ports += child.Ports
+				n.Ands += child.Ands
+				n.Xors += child.Xors
+				n.Muxes += child.Muxes
+			}
+		}
+		delete(active, n)
+		done[n] = true
+	}
+	for _, n := range m.Networks {
+		if n != nil {
+			count(n)
+		}
+	}
+	root := Au_ManNtkRoot(m)
+	fmt.Printf("Total nodes = %.0f. Total instances = %.0f. Total ports = %.0f.\n", root.Nodes, root.Boxes, root.Ports)
+}
+func Au_NtkCompareNames(a, b *Au_Ntk_t) int { return strings.Compare(a.Name, b.Name) }
+func Au_NtkCompareSign(a, b *Au_Ntk_t) int {
+	if len(a.PIs) != len(b.PIs) {
+		return len(a.PIs) - len(b.PIs)
+	}
+	return len(a.POs) - len(b.POs)
+}
+func auPrintModel(n *Au_Ntk_t) {
+	fmt.Printf("MODULE %-30s : PI=%6d PO=%6d BB=%6d ND=%6d\n", n.Name, len(n.PIs), len(n.POs), n.counts[AU_OBJ_BOX], n.counts[AU_OBJ_NODE])
+}
+func Au_ManPrintBoxInfo(n *Au_Ntk_t) {
+	for _, model := range n.Man.Networks {
+		if model == nil {
+			continue
+		}
+		auPrintModel(model)
+		counts := map[int]int{}
+		for _, o := range model.Objects {
+			if o != nil && o.Type == AU_OBJ_BOX && o.Func != model.ID {
+				counts[o.Func]++
+			}
+		}
+		for id := 1; id < len(n.Man.Networks); id++ {
+			if counts[id] > 0 {
+				fmt.Printf("%15d : %s\n", counts[id], n.Man.Networks[id].Name)
+			}
+		}
+	}
+}
+func Au_ManPrintBoxInfoSorted(n *Au_Ntk_t) {
+	models := append([]*Au_Ntk_t(nil), n.Man.Networks[1:]...)
+	sort.SliceStable(models, func(i, j int) bool { return Au_NtkCompareSign(models[i], models[j]) < 0 })
+	for _, model := range models {
+		auPrintModel(model)
+	}
 }
 
+func Au_ManName(m *Au_Man_t) string { return m.Name }
 
-func Au_Var2Lit(Var int32, fCompl int32) int32 { return Var + Var + fCompl;                       }
-func Au_Lit2Var(Lit int32) int32 { return Lit >> 1;                                 }
-func Au_LitIsCompl(Lit int32) int32 { return Lit & 1;                                  }
-func Au_LitNot(Lit int32) int32 { return Lit ^ 1;                                  }
-func Au_LitNotCond(Lit int32, c int32) int32 { return Lit ^ int32((c > 0));                       }
-func Au_LitRegular(Lit int32) int32 { return Lit & ~01;                                }
+func Au_ManNtkNum(m *Au_Man_t) int { return len(m.Networks) - 1 }
 
-func Au_Regular(p *Au_Obj_t) *Au_Obj_t { return (Au_Obj_t *)((ABC_PTRUINT_T)(p) & ~01);   }
-func Au_Not(p *Au_Obj_t) *Au_Obj_t { return (Au_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);   }
-func Au_NotCond(p *Au_Obj_t, c int32) *Au_Obj_t { return (Au_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));   }
-func Au_IsComplement(p *Au_Obj_t) int32 { return int32(((ABC_PTRUINT_T)(p) & 01));           }
- 
-func Au_UtilStrsav(s string) string { if s {
-    // inlining of macro ABC_ALLOC
-    return strcpy(((char *) malloc(sizeof(char) * (size_t)(len(s)+1))), s);
-} else {
-    return nil;
-}             }
+func Au_ManNtk(m *Au_Man_t, i int) *Au_Ntk_t { return m.Networks[i] }
 
-func Au_ManName(p *Au_Man_t) string { return p.pName;                                                       }
-func Au_ManNtkNum(p *Au_Man_t) int32 { return Vec_PtrSize(&p.vNtks) - 1;                                     }
-func Au_ManNtk(p *Au_Man_t, i int32) *Au_Ntk_t { return (Au_Ntk_t *)Vec_PtrEntry(&p.vNtks, i);                         }
-func Au_ManNtkRoot(p *Au_Man_t) *Au_Ntk_t { return Au_ManNtk( p, 1 );                                              }
+func Au_ManNtkRoot(m *Au_Man_t) *Au_Ntk_t { return m.Networks[1] }
 
-func Au_NtkName(p *Au_Ntk_t) string { return p.pName;                                                       }
-func Au_NtkMan(p *Au_Ntk_t) *Au_Man_t { return p.pMan;                                                        }
-func Au_NtkPiNum(p *Au_Ntk_t) int32 { return p.nObjs[AU_OBJ_PI];                                            } 
-func Au_NtkPoNum(p *Au_Ntk_t) int32 { return p.nObjs[AU_OBJ_PO];                                            } 
-func Au_NtkFanNum(p *Au_Ntk_t) int32 { return p.nObjs[AU_OBJ_FAN];                                           } 
-func Au_NtkFlopNum(p *Au_Ntk_t) int32 { return p.nObjs[AU_OBJ_FLOP];                                          } 
-func Au_NtkBoxNum(p *Au_Ntk_t) int32 { return p.nObjs[AU_OBJ_BOX];                                           } 
-func Au_NtkNodeNum(p *Au_Ntk_t) int32 { return p.nObjs[AU_OBJ_NODE];                                          } 
-func Au_NtkObjNumMax(p *Au_Ntk_t) int32 { return (Vec_PtrSize(&p.vPages) - 1) * (1 << 12) + p.iHandle;         } 
-func Au_NtkObjNum(p *Au_Ntk_t) int32 { return Vec_IntSize(&p.vObjs);                                         } 
-func Au_NtkObj(p *Au_Ntk_t, h int32) *Au_Obj_t { return (Au_Obj_t *)p.vPages.pArray[h >> 12] + (h & 0xFFF);            }
+func Au_NtkName(n *Au_Ntk_t) string { return n.Name }
 
-func Au_NtkPi(p *Au_Ntk_t, i int32) *Au_Obj_t { return Au_NtkObj(p, Vec_IntEntry(&p.vPis, i));                        }
-func Au_NtkPo(p *Au_Ntk_t, i int32) *Au_Obj_t { return Au_NtkObj(p, Vec_IntEntry(&p.vPos, i));                        }
-func Au_NtkObjI(p *Au_Ntk_t, i int32) *Au_Obj_t { return Au_NtkObj(p, Vec_IntEntry(&p.vObjs, i));                       }
+func Au_NtkMan(n *Au_Ntk_t) *Au_Man_t { return n.Man }
 
-func Au_ObjIsNone(p *Au_Obj_t) int32 { return p.Type == AU_OBJ_NONE;                                         } 
-func Au_ObjIsConst0(p *Au_Obj_t) int32 { return p.Type == AU_OBJ_CONST0;                                       } 
-func Au_ObjIsPi(p *Au_Obj_t) int32 { return p.Type == AU_OBJ_PI;                                           } 
-func Au_ObjIsPo(p *Au_Obj_t) int32 { return p.Type == AU_OBJ_PO;                                           } 
-func Au_ObjIsFan(p *Au_Obj_t) int32 { return p.Type == AU_OBJ_FAN;                                          } 
-func Au_ObjIsFlop(p *Au_Obj_t) int32 { return p.Type == AU_OBJ_FLOP;                                         } 
-func Au_ObjIsBox(p *Au_Obj_t) int32 { return p.Type == AU_OBJ_BOX;                                          } 
-func Au_ObjIsNode(p *Au_Obj_t) int32 { return p.Type == AU_OBJ_NODE;                                         }
-func Au_ObjIsTerm(p *Au_Obj_t) int32 { return p.Type >= AU_OBJ_PI && p.Type <= AU_OBJ_FLOP;                 } 
+func Au_NtkObjNumMax(n *Au_Ntk_t) int { return len(n.Objects) }
 
-func Au_ObjBase(p *Au_Obj_t) string { return (char *)p - ((ABC_PTRINT_T)p & 0x3FF);                          } 
-func Au_ObjNtk(p *Au_Obj_t) *Au_Ntk_t { return ((Au_Ntk_t **)Au_ObjBase(p))[0];                                } 
-func Au_ObjId(p *Au_Obj_t) int32 { return ((int *)Au_ObjBase(p))[2] | (((ABC_PTRINT_T)p & 0x3FF) >> 4);   }
-func Au_ObjPioNum(p *Au_Obj_t) int32 { assert((Au_ObjIsTerm(p) != 0), "Au_ObjIsTerm(p)"); return p.Fanins[p.nFanins];                 }
-func Au_ObjFunc(p *Au_Obj_t) int32 { return p.Func;                                                        }
-func Au_ObjModel(p *Au_Obj_t) *Au_Ntk_t { assert((Au_ObjIsFan(p) != 0)||(Au_ObjIsBox(p) != 0), "Au_ObjIsFan(p)||Au_ObjIsBox(p)"); return Au_ManNtk(Au_NtkMan(Au_ObjNtk(p)), p.Func); }
+func Au_NtkObjNum(n *Au_Ntk_t) int { return len(n.Objects) - 1 }
 
-func Au_ObjFaninNum(p *Au_Obj_t) int32 { return p.nFanins;                                                     }
-func Au_ObjFaninId(p *Au_Obj_t, i int32) int32 { assert(i >= 0 && i < int32(p.nFanins) && p.Fanins[i], "i >= 0 && i < int32(p.nFanins) && p.Fanins[i]"); return Au_Lit2Var(p.Fanins[i]);     }
-func Au_ObjFaninId0(p *Au_Obj_t) int32 { return Au_ObjFaninId(p, 0);                                                                 }
-func Au_ObjFaninId1(p *Au_Obj_t) int32 { return Au_ObjFaninId(p, 1);                                                                 }
-func Au_ObjFaninId2(p *Au_Obj_t) int32 { return Au_ObjFaninId(p, 2);                                                                 }
-func Au_ObjFanin(p *Au_Obj_t, i int32) *Au_Obj_t { return Au_NtkObj(Au_ObjNtk(p), Au_ObjFaninId(p, i));                                        }
-func Au_ObjFanin0(p *Au_Obj_t) *Au_Obj_t { return Au_ObjFanin( p, 0 );                                                                 }
-func Au_ObjFanin1(p *Au_Obj_t) *Au_Obj_t { return Au_ObjFanin( p, 1 );                                                                 }
-func Au_ObjFanin2(p *Au_Obj_t) *Au_Obj_t { return Au_ObjFanin( p, 2 );                                                                 }
-func Au_ObjFaninC(p *Au_Obj_t, i int32) int32 { assert(i >= 0 && i < int32(p.nFanins) && p.Fanins[i], "i >= 0 && i < int32(p.nFanins) && p.Fanins[i]"); return Au_LitIsCompl(p.Fanins[i]);  }
-func Au_ObjFaninC0(p *Au_Obj_t) int32 { return Au_ObjFaninC(p, 0);                                                                  }
-func Au_ObjFaninC1(p *Au_Obj_t) int32 { return Au_ObjFaninC(p, 1);                                                                  }
-func Au_ObjFaninC2(p *Au_Obj_t) int32 { return Au_ObjFaninC(p, 2);                                                                  }
-func Au_ObjFaninLit(p *Au_Obj_t, i int32) int32 { assert(i >= 0 && i < int32(p.nFanins) && p.Fanins[i], "i >= 0 && i < int32(p.nFanins) && p.Fanins[i]"); return p.Fanins[i];                 }
-func Au_ObjSetFanin(p *Au_Obj_t, i int32, f int32) { assert(f > 0 && p.Fanins[i] == 0, "f > 0 && p.Fanins[i] == 0"); p.Fanins[i] = Au_Var2Lit(f,0);                         }
-func Au_ObjSetFaninLit(p *Au_Obj_t, i int32, f int32) { assert(f >= 0 && p.Fanins[i] == 0, "f >= 0 && p.Fanins[i] == 0"); p.Fanins[i] = f;                                      }
+func Au_NtkObj(n *Au_Ntk_t, id int) *Au_Obj_t { return n.Objects[id] }
 
-func Au_BoxFanoutNum(p *Au_Obj_t) int32 { assert((Au_ObjIsBox(p) != 0), "Au_ObjIsBox(p)"); return p.Fanins[p.nFanins];                                       }
-func Au_BoxFanoutId(p *Au_Obj_t, i int32) int32 { assert(i >= 0 && i < Au_BoxFanoutNum(p), "i >= 0 && i < Au_BoxFanoutNum(p)"); return p.Fanins[p.nFanins+1+i];                 }
-func Au_BoxFanout(p *Au_Obj_t, i int32) *Au_Obj_t { return Au_NtkObj(Au_ObjNtk(p), Au_BoxFanoutId(p, i));                                       }
+func Au_NtkPi(n *Au_Ntk_t, i int) *Au_Obj_t { return n.Objects[n.PIs[i]] }
 
-func Au_ObjCopy(p *Au_Obj_t) int32 { return Vec_IntEntry( &Au_ObjNtk(p).vCopies, Au_ObjId(p) );                                 }
-func Au_ObjSetCopy(p *Au_Obj_t, c int32) { Vec_IntWriteEntry( &Au_ObjNtk(p).vCopies, Au_ObjId(p), c );                                }
+func Au_NtkPo(n *Au_Ntk_t, i int) *Au_Obj_t { return n.Objects[n.POs[i]] }
 
-func Au_ObjFanout(p *Au_Obj_t, i int32) int32 { assert(p.Type == AU_OBJ_BOX && i >= 0 && i < p.Fanins[p.nFanins] && p.Fanins[i], "p.Type == AU_OBJ_BOX && i >= 0 && i < p.Fanins[p.nFanins] && p.Fanins[i]"); return p.Fanins[p.nFanins + 1 + i];             }
-func Au_ObjSetFanout(p *Au_Obj_t, i int32, f int32) { assert(p.Type == AU_OBJ_BOX && i >= 0 && i < p.Fanins[p.nFanins] && p.Fanins[i] == 0 && f > 0, "p.Type == AU_OBJ_BOX && i >= 0 && i < p.Fanins[p.nFanins] && p.Fanins[i] == 0 && f > 0"); p.Fanins[p.nFanins + 1 + i] = f;  }
+func Au_NtkObjI(n *Au_Ntk_t, i int) *Au_Obj_t { return n.Objects[i+1] }
 
-func Au_NtkIncrementTravId(p *Au_Ntk_t) { if p.vTravIds.pArray == nil { Vec_IntFill(&p.vTravIds, Au_NtkObjNumMax(p)+500, 0); }
- p.nTravIds++; assert(p.nTravIds < (1<<30), "p.nTravIds < (1<<30)");  }
-func Au_ObjSetTravIdCurrent(p *Au_Obj_t) { Vec_IntSetEntry(&Au_ObjNtk(p).vTravIds, Au_ObjId(p), Au_ObjNtk(p).nTravIds );                        }
-func Au_ObjSetTravIdPrevious(p *Au_Obj_t) { Vec_IntSetEntry(&Au_ObjNtk(p).vTravIds, Au_ObjId(p), Au_ObjNtk(p).nTravIds-1 );                      }
-func Au_ObjIsTravIdCurrent(p *Au_Obj_t) int32 { return (Vec_IntGetEntry(&Au_ObjNtk(p).vTravIds, Au_ObjId(p)) == Au_ObjNtk(p).nTravIds);              }
-func Au_ObjIsTravIdPrevious(p *Au_Obj_t) int32 { return (Vec_IntGetEntry(&Au_ObjNtk(p).vTravIds, Au_ObjId(p)) == Au_ObjNtk(p).nTravIds-1);            }
-func Au_ObjSetTravIdCurrentId(p *Au_Ntk_t, Id int32) { Vec_IntSetEntry(&p.vTravIds, Id, p.nTravIds );                                                       }
-func Au_ObjIsTravIdCurrentId(p *Au_Ntk_t, Id int32) int32 { return (Vec_IntGetEntry(&p.vTravIds, Id) == p.nTravIds);                                             }
+func Au_ObjNtk(o *Au_Obj_t) *Au_Ntk_t { return Au_Regular(o).network }
 
-// Original macro:
-// #define Au_ManForEachNtk( p, pNtk, i )           \
-//     for ( i = 1; (i < Vec_PtrSize(&p->vNtks))   && (((pNtk) = Au_ManNtk(p, i)), 1); i++ ) 
+func Au_ObjId(o *Au_Obj_t) int { return Au_Regular(o).id }
 
-// Original macro:
-// #define Au_ManForEachNtkReverse( p, pNtk, i )    \
-//     for ( i = Vec_PtrSize(&p->vNtks) - 1;(i>=1) && (((pNtk) = Au_ManNtk(p, i)), 1); i-- ) 
+func Au_ObjPioNum(o *Au_Obj_t) int { return Au_Regular(o).pio }
 
+func Au_ObjFunc(o *Au_Obj_t) int { return Au_Regular(o).Func }
 
-// Original macro:
-// #define Au_ObjForEachFaninId( pObj, hFanin, i )  \
-//     for ( i = 0; (i < Au_ObjFaninNum(pObj))     && (((hFanin) = Au_ObjFaninId(pObj, i)), 1); i++ )  
-
-// Original macro:
-// #define Au_BoxForEachFanoutId( pObj, hFanout, i) \
-//     for ( i = 0; (i < Au_BoxFanoutNum(pObj))    && (((hFanout) = Au_BoxFanoutId(pObj, i)), 1); i++ )
-
-
-// Original macro:
-// #define Au_ObjForEachFanin( pObj, pFanin, i )    \
-//     for ( i = 0; (i < Au_ObjFaninNum(pObj))     && (((pFanin) = Au_ObjFanin(pObj, i)), 1); i++ )  
-
-// Original macro:
-// #define Au_BoxForEachFanout( pObj, pFanout, i)   \
-//     for ( i = 0; (i < Au_BoxFanoutNum(pObj))    && (((pFanout) = Au_BoxFanout(pObj, i)), 1); i++ )
-
-
-// Original macro:
-// #define Au_NtkForEachPi( p, pObj, i )            \
-//     for ( i = 0; (i < Vec_IntSize(&p->vPis))    && (((pObj) = Au_NtkPi(p, i)), 1); i++ )
-
-// Original macro:
-// #define Au_NtkForEachPo( p, pObj, i )            \
-//     for ( i = 0; (i < Vec_IntSize(&p->vPos))    && (((pObj) = Au_NtkPo(p, i)), 1); i++ )
-
-// Original macro:
-// #define Au_NtkForEachObj( p, pObj, i )           \
-//     for ( i = 0; (i < Vec_IntSize(&p->vObjs))   && (((pObj) = Au_NtkObjI(p, i)), 1); i++ )
-
-// Original macro:
-// #define Au_NtkForEachNode( p, pObj, i )           \
-//     for ( i = 0; (i < Vec_IntSize(&p->vObjs))   && (((pObj) = Au_NtkObjI(p, i)), 1); i++ ) if ( !Au_ObjIsNode(pObj) ) {} else
-
-// Original macro:
-// #define Au_NtkForEachBox( p, pObj, i )           \
-//     for ( i = 0; (i < Vec_IntSize(&p->vObjs))   && (((pObj) = Au_NtkObjI(p, i)), 1); i++ ) if ( !Au_ObjIsBox(pObj) ) {} else
-
-
-
-
-// extern void Au_ManAddNtk( Au_Man_t * pMan, Au_Ntk_t * p );
-
-// extern void Au_ManFree( Au_Man_t * p );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Working with models.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Au_NtkAlloc(pMan *Au_Man_t, pName string) *Au_Ntk_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Au_Ntk_t{};
-    p.pName = Au_UtilStrsav( pName );
-    p.vChunks = Vec_PtrAlloc( 111 );
-    Vec_IntGrow( &p.vPis,  111 );
-    Vec_IntGrow( &p.vPos,  111 );
-    Vec_IntGrow( &p.vObjs, 1111 );
-    Vec_PtrGrow( &p.vPages, 11 );
-    Au_ManAddNtk( pMan, p );
-    return p;
-}
-func Au_NtkFree(p *Au_Ntk_t) {
-    Au_ManFree( p.pMan );
-    Vec_PtrFreeFree( p.vChunks );
-    p.vCopies.pArray = nil;
-    p.vPages.pArray = nil;
-    p.vObjs.pArray = nil;
-    p.vPis.pArray = nil;
-    p.vPos.pArray = nil;
-    p.pHTable = nil;
-    p.pName = nil;
-    p = nil;
-}
-func Au_NtkMemUsage(p *Au_Ntk_t) int32 {
-    var Mem int32  = sizeof(Au_Ntk_t);
-    Mem += 4 * p.vPis.nCap;
-    Mem += 4 * p.vPos.nCap;
-    Mem += 4 * p.vObjs.nCap;
-    Mem += 16 * p.nObjsAlloc;
-    return Mem;
-}
-func Au_NtkPrintStats(p *Au_Ntk_t) {
-    fmt.Printf("%-30s:", Au_NtkName(p));
-    fmt.Printf(" i/o =%6d/%6d", Au_NtkPiNum(p), Au_NtkPoNum(p));
-    if Au_NtkFlopNum(p) != 0 {
-        fmt.Printf("  lat =%5d", Au_NtkFlopNum(p)); }
-    fmt.Printf("  nd =%6d", Au_NtkNodeNum(p));
-//    if ( Au_NtkBoxNum(p) )
-        fmt.Printf("  box =%5d", Au_NtkBoxNum(p));
-    fmt.Printf("  obj =%7d", Au_NtkObjNum(p));
-//    printf( "  max =%7d",    Au_NtkObjNumMax(p) );
-//    printf( "  use =%7d",    p->nObjsUsed );
-    fmt.Printf(" %5.1f %%", 100.0 * (Au_NtkObjNumMax(p) - Au_NtkObjNum(p)) / Au_NtkObjNumMax(p));
-    fmt.Printf(" %6.1f MB", 1.0 * Au_NtkMemUsage(p) / (1 << 20));
-    fmt.Printf(" %5.1f %%", 100.0 * (p.nObjsAlloc - p.nObjsUsed) / p.nObjsAlloc);
-    fmt.Printf("\n");
-}
-func Au_NtkCleanCopy(p *Au_Ntk_t) {
-    Vec_IntFill( &p.vCopies, Au_NtkObjNumMax(p), -1 );
-}
-func Au_NtkNodeNumFunc(p *Au_Ntk_t, Func int32) int32 {
-    var pObj *Au_Obj_t;
-    var i, Counter int32;
-    if p.pMan && p.pMan.pFuncs {
-        return 0; }
-    // inlining of macro Au_NtkForEachNode
-    for  i = 0; (i < Vec_IntSize(&p.vObjs))   && (((pObj) = Au_NtkObjI(p, i)), 1); i++  { if !(Au_ObjIsNode(pObj) != 0) {} else {
-        Counter += (pObj.Func == uint32(Func));
-//        printf( "%d ", pObj->Func );
-    }
-    }
-//    printf( "\n" );
-    return Counter;
+func Au_ObjModel(o *Au_Obj_t) *Au_Ntk_t {
+	return Au_Regular(o).network.Man.Networks[Au_Regular(o).Func]
 }
 
-/**Function*************************************************************
+func Au_ObjFaninNum(o *Au_Obj_t) int { return len(Au_Regular(o).Fanins) }
 
-  Synopsis    [Working with manager.]
+func Au_ObjFaninId(o *Au_Obj_t, i int) int { return Au_Regular(o).Fanins[i] >> 1 }
 
-  Description []
-               
-  SideEffects []
+func Au_ObjFaninC(o *Au_Obj_t, i int) int { return Au_Regular(o).Fanins[i] & 1 }
 
-  SeeAlso     []
+func Au_ObjFaninLit(o *Au_Obj_t, i int) int { return Au_Regular(o).Fanins[i] }
 
-***********************************************************************/
-func Au_ManAlloc(pName string) *Au_Man_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Au_Man_t{};
-    p.pName = Au_UtilStrsav( pName );
-    Vec_PtrGrow( &p.vNtks,  111 );
-    Vec_PtrPush( &p.vNtks, nil );
-    return p;
-}
-func Au_ManFree(p *Au_Man_t) {
-    assert(p.nRefs > 0, "p.nRefs > 0");
-    if --p.nRefs > 0 {
-        return; }
-    if p.pFuncs {
-        Abc_NamStop( p.pFuncs ); }
-    p.vNtks.pArray = nil;
-    p.pName = nil;
-    p = nil;
-}
-func Au_ManDelete(p *Au_Man_t) {
-    var pNtk *Au_Ntk_t;
-    var i int32;
-    // inlining of macro Au_ManForEachNtk
-    for  i = 1; (i < Vec_PtrSize(&p.vNtks))   && (((pNtk) = Au_ManNtk(p, i)), 1); i++  { 
-        Au_NtkFree( pNtk );
-    }
-}
-func Au_ManFindNtk(p *Au_Man_t, pName string) int32 {
-    var pNtk *Au_Ntk_t;
-    var i int32;
-    // inlining of macro Au_ManForEachNtk
-    for  i = 1; (i < Vec_PtrSize(&p.vNtks))   && (((pNtk) = Au_ManNtk(p, i)), 1); i++  { 
-        if !(int32(strings.Compare(Au_NtkName(pNtk), pName)) != 0) {
-            return i; }
-    }
-    return -1;
-}
-func Au_ManFindNtkP(p *Au_Man_t, pName string) *Au_Ntk_t {
-    var iNtk int32  = Au_ManFindNtk( p, pName );
-    if iNtk == -1 {
-        return nil; }
-    return Au_ManNtk( p, iNtk );
-}
-func Au_ManAddNtk(pMan *Au_Man_t, p *Au_Ntk_t) {
-    assert(Au_ManFindNtk(pMan, Au_NtkName(p)) == -1, "Au_ManFindNtk(pMan, Au_NtkName(p)) == -1");
-    p.pMan = pMan; pMan.nRefs++;
-    p.Id = Vec_PtrSize( &pMan.vNtks );
-    Vec_PtrPush( &pMan.vNtks, p );
-}
-func Au_ManMemUsage(p *Au_Man_t) int32 {
-    var pNtk *Au_Ntk_t;
-    var i, Mem int32;
-    // inlining of macro Au_ManForEachNtk
-    for  i = 1; (i < Vec_PtrSize(&p.vNtks))   && (((pNtk) = Au_ManNtk(p, i)), 1); i++  { 
-        Mem += 16 * pNtk.nObjsAlloc;
-    }
-    return Mem;
-}
-func Au_ManMemUsageUseful(p *Au_Man_t) int32 {
-    var pNtk *Au_Ntk_t;
-    var i, Mem int32;
-    // inlining of macro Au_ManForEachNtk
-    for  i = 1; (i < Vec_PtrSize(&p.vNtks))   && (((pNtk) = Au_ManNtk(p, i)), 1); i++  { 
-        Mem += 16 * pNtk.nObjsUsed;
-    }
-    return Mem;
-}
-func Au_ManPrintStats(p *Au_Man_t) {
-    var pNtk *Au_Ntk_t;
-    var i int32;
-    if Vec_PtrSize(&p.vNtks) > 2 {
-        fmt.Printf("Design %-13s\n", Au_ManName(p)); }
-    // inlining of macro Au_ManForEachNtk
-    for  i = 1; (i < Vec_PtrSize(&p.vNtks))   && (((pNtk) = Au_ManNtk(p, i)), 1); i++  { 
-        Au_NtkPrintStats( pNtk );
-    }
-    fmt.Printf("Different functions = %d. ", p.pFuncs ? Abc_NamObjNumMax(p.pFuncs) : 0);
-    fmt.Printf("Memory = %.1f MB", 1.0 * Au_ManMemUsage(p) / (1 << 20));
-    fmt.Printf(" %5.1f %%", 100.0 * (Au_ManMemUsage(p) - Au_ManMemUsageUseful(p)) / Au_ManMemUsage(p));
-    fmt.Printf("\n");
-//    if ( p->pFuncs )
-//        Abc_NamPrint( p->pFuncs );
+func Au_ObjFanin(o *Au_Obj_t, i int) *Au_Obj_t { return Au_NtkObj(Au_ObjNtk(o), Au_ObjFaninId(o, i)) }
+
+func Au_BoxFanoutNum(o *Au_Obj_t) int { return len(Au_Regular(o).fanouts) }
+
+func Au_BoxFanoutId(o *Au_Obj_t, i int) int { return Au_Regular(o).fanouts[i] }
+
+func Au_BoxFanout(o *Au_Obj_t, i int) *Au_Obj_t { return Au_NtkObj(Au_ObjNtk(o), Au_BoxFanoutId(o, i)) }
+
+func Au_ObjFanout(o *Au_Obj_t, i int) int { return Au_BoxFanoutId(o, i) }
+
+func Au_ObjCopy(o *Au_Obj_t) int { return Au_Regular(o).copy }
+
+func Au_ObjGetXsim(o *Au_Obj_t) int { return Au_Regular(o).Value }
+
+func Au_NtkPiNum(n *Au_Ntk_t) int { return n.counts[AU_OBJ_PI] }
+
+func Au_NtkPoNum(n *Au_Ntk_t) int { return n.counts[AU_OBJ_PO] }
+
+func Au_NtkFanNum(n *Au_Ntk_t) int { return n.counts[AU_OBJ_FAN] }
+
+func Au_NtkFlopNum(n *Au_Ntk_t) int { return n.counts[AU_OBJ_FLOP] }
+
+func Au_NtkBoxNum(n *Au_Ntk_t) int { return n.counts[AU_OBJ_BOX] }
+
+func Au_NtkNodeNum(n *Au_Ntk_t) int { return n.counts[AU_OBJ_NODE] }
+
+func Au_ObjIsNone(o *Au_Obj_t) int { return int(abcBool(Au_Regular(o).Type == AU_OBJ_NONE)) }
+
+func Au_ObjIsConst0(o *Au_Obj_t) int { return int(abcBool(Au_Regular(o).Type == AU_OBJ_CONST0)) }
+
+func Au_ObjIsPi(o *Au_Obj_t) int { return int(abcBool(Au_Regular(o).Type == AU_OBJ_PI)) }
+
+func Au_ObjIsPo(o *Au_Obj_t) int { return int(abcBool(Au_Regular(o).Type == AU_OBJ_PO)) }
+
+func Au_ObjIsFan(o *Au_Obj_t) int { return int(abcBool(Au_Regular(o).Type == AU_OBJ_FAN)) }
+
+func Au_ObjIsFlop(o *Au_Obj_t) int { return int(abcBool(Au_Regular(o).Type == AU_OBJ_FLOP)) }
+
+func Au_ObjIsBox(o *Au_Obj_t) int { return int(abcBool(Au_Regular(o).Type == AU_OBJ_BOX)) }
+
+func Au_ObjIsNode(o *Au_Obj_t) int { return int(abcBool(Au_Regular(o).Type == AU_OBJ_NODE)) }
+
+func Au_ObjIsTerm(o *Au_Obj_t) int {
+	return int(abcBool(Au_Regular(o).Type >= AU_OBJ_PI && Au_Regular(o).Type <= AU_OBJ_FLOP))
 }
 
-func Au_ManReorderModels_rec(pNtk *Au_Ntk_t, vOrder *Vec_Int_t) {
-    var pBoxModel *Au_Ntk_t;
-    var pObj *Au_Obj_t;
-    var k int32;
-    if pNtk.fMark {
-        return; }
-    pNtk.fMark = 1;
-    // inlining of macro Au_NtkForEachBox
-    for  k = 0; (k < Vec_IntSize(&pNtk.vObjs))   && (((pObj) = Au_NtkObjI(pNtk, k)), 1); k++  { if !(Au_ObjIsBox(pObj) != 0) {} else {
-        pBoxModel = Au_ObjModel(pObj);
-        if pBoxModel == nil || pBoxModel == pNtk {
-            continue; }
-        Au_ManReorderModels_rec( pBoxModel, vOrder );
-    }
-    }
-    Vec_IntPush( vOrder, pNtk.Id );
+func Au_ObjFaninId0(o *Au_Obj_t) int { return Au_ObjFaninId(o, 0) }
+
+func Au_ObjFanin0(o *Au_Obj_t) *Au_Obj_t { return Au_ObjFanin(o, 0) }
+
+func Au_ObjFaninC0(o *Au_Obj_t) int { return Au_ObjFaninC(o, 0) }
+
+func Au_ObjGetXsimFan0(o *Au_Obj_t) int { return auXsimFanin(o, 0) }
+
+func Au_ObjFaninId1(o *Au_Obj_t) int { return Au_ObjFaninId(o, 1) }
+
+func Au_ObjFanin1(o *Au_Obj_t) *Au_Obj_t { return Au_ObjFanin(o, 1) }
+
+func Au_ObjFaninC1(o *Au_Obj_t) int { return Au_ObjFaninC(o, 1) }
+
+func Au_ObjGetXsimFan1(o *Au_Obj_t) int { return auXsimFanin(o, 1) }
+
+func Au_ObjFaninId2(o *Au_Obj_t) int { return Au_ObjFaninId(o, 2) }
+
+func Au_ObjFanin2(o *Au_Obj_t) *Au_Obj_t { return Au_ObjFanin(o, 2) }
+
+func Au_ObjFaninC2(o *Au_Obj_t) int { return Au_ObjFaninC(o, 2) }
+
+func Au_ObjGetXsimFan2(o *Au_Obj_t) int { return auXsimFanin(o, 2) }
+func Au_ObjSetFaninLit(o *Au_Obj_t, i, lit int) {
+	o = Au_Regular(o)
+	if lit < 0 || o.Fanins[i] != 0 {
+		panic("invalid AU fanin assignment")
+	}
+	o.Fanins[i] = lit
 }
-func Au_ManReorderModels(p *Au_Man_t, pRoot *Au_Ntk_t) {
-    var vNtksNew *Vec_Ptr_t;
-    var vOrder, vTemp *Vec_Int_t;
-    var pNtk, pBoxModel *Au_Ntk_t;
-    var pBox, pFan *Au_Obj_t;
-    var i, k, j, Entry int32;
-    // inlining of macro Au_ManForEachNtk
-    for  i = 1; (i < Vec_PtrSize(&p.vNtks))   && (((pNtk) = Au_ManNtk(p, i)), 1); i++  { 
-        pNtk.fMark = 0;
-    }
-    // collect networks in the DFS order
-    vOrder = Vec_IntAlloc( Au_ManNtkNum(p)+1 );
-    Vec_IntPush( vOrder, 0 );
-    Au_ManReorderModels_rec( pRoot, vOrder );
-    assert(Vec_IntEntryLast(vOrder) == pRoot.Id, "Vec_IntEntryLast(vOrder) == pRoot.Id");
-    // add unconnected ones
-    Vec_IntPop( vOrder );
-    // inlining of macro Au_ManForEachNtk
-    for  i = 1; (i < Vec_PtrSize(&p.vNtks))   && (((pNtk) = Au_ManNtk(p, i)), 1); i++  { 
-        if pNtk.fMark == 0 {
-            Vec_IntPush( vOrder, pNtk.Id ); }
-    }
-    Vec_IntPush( vOrder, pRoot.Id );
-    assert(Vec_IntSize(vOrder) == Au_ManNtkNum(p)+1, "Vec_IntSize(vOrder) == Au_ManNtkNum(p)+1");
-    // reverse order
-    vOrder.nSize--;
-    vOrder.pArray++;
-    Vec_IntReverseOrder( vOrder ); 
-    vOrder.pArray--;
-    vOrder.nSize++;
-    // compute new order
-    vNtksNew = Vec_PtrAlloc( Au_ManNtkNum(p)+1 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vOrder)) && (((Entry) = Vec_IntEntry(vOrder, i)), 1); i++  {
-        Vec_PtrPush( vNtksNew, Au_ManNtk(p, Entry) );
-    }
-    // invert order
-    assert(Vec_IntEntry(vOrder, 1) == pRoot.Id, "Vec_IntEntry(vOrder, 1) == pRoot.Id");
-    vOrder = Vec_IntInvert( vTemp = vOrder, 0 );
-    Vec_IntFree( vTemp );
-    assert(Vec_IntEntry(vOrder, 1) == pRoot.Id, "Vec_IntEntry(vOrder, 1) == pRoot.Id");
-    // update model numbers
-    // inlining of macro Au_ManForEachNtk
-    for  i = 1; (i < Vec_PtrSize(&p.vNtks))   && (((pNtk) = Au_ManNtk(p, i)), 1); i++  {
-        pNtk.Id = Vec_IntEntry( vOrder, pNtk.Id );
-        // inlining of macro Au_NtkForEachBox
-        for  k = 0; (k < Vec_IntSize(&pNtk.vObjs))   && (((pBox) = Au_NtkObjI(pNtk, k)), 1); k++  { if !(Au_ObjIsBox(pBox) != 0) {} else {
-            pBox.Func = Vec_IntEntry( vOrder, pBox.Func );
-            assert(pBox.Func > 0, "pBox.Func > 0");
-            // inlining of macro Au_BoxForEachFanout
-            for  j = 0; (j < Au_BoxFanoutNum(pBox))    && (((pFan) = Au_BoxFanout(pBox, j)), 1); j++  {
-                pFan.Func = pBox.Func;
-            }
-        }
-        }
-    }
-    // update
-    p.vNtks.pArray = nil;
-    p.vNtks.pArray = vNtksNew.pArray;
-    vNtksNew.pArray = nil;
-    Vec_PtrFree( vNtksNew );
-    // verify
-    // inlining of macro Au_ManForEachNtk
-    for  i = 1; (i < Vec_PtrSize(&p.vNtks))   && (((pNtk) = Au_ManNtk(p, i)), 1); i++  { 
-        // inlining of macro Au_NtkForEachBox
-        for  k = 0; (k < Vec_IntSize(&pNtk.vObjs))   && (((pBox) = Au_NtkObjI(pNtk, k)), 1); k++  { if !(Au_ObjIsBox(pBox) != 0) {} else {
-            pBoxModel = Au_ObjModel(pBox);
-            if pBoxModel == nil || pBoxModel == pNtk {
-                continue; }
-            assert(!pBox.Func || pBox.Func >= uint32(pNtk.Id), "!pBox.Func || pBox.Func >= uint32(pNtk.Id)");
-            assert(Au_ObjFaninNum(pBox) == Au_NtkPiNum(pBoxModel), "Au_ObjFaninNum(pBox) == Au_NtkPiNum(pBoxModel)");
-            assert(Au_BoxFanoutNum(pBox) == Au_NtkPoNum(pBoxModel), "Au_BoxFanoutNum(pBox) == Au_NtkPoNum(pBoxModel)");
-        }
-        }
-    }
-    Vec_IntFree( vOrder );
+func Au_ObjSetFanin(o *Au_Obj_t, i, id int) { Au_ObjSetFaninLit(o, i, id*2) }
+func Au_ObjSetFanout(o *Au_Obj_t, i, id int) {
+	o = Au_Regular(o)
+	if o.Type != AU_OBJ_BOX || id <= 0 || o.fanouts[i] != 0 {
+		panic("invalid AU fanout assignment")
+	}
+	o.fanouts[i] = id
 }
-func Au_ManCountThings(p *Au_Man_t) {
-    var pNtk, pBoxModel *Au_Ntk_t;
-    var pBox *Au_Obj_t;
-    var i, k int32;//, clk = Abc_Clock();
-    // inlining of macro Au_ManForEachNtkReverse
-    for  i = Vec_PtrSize(&p.vNtks) - 1;(i>=1) && (((pNtk) = Au_ManNtk(p, i)), 1); i--  {
-        pNtk.nBoxes = Au_NtkBoxNum(pNtk);
-        pNtk.nNodes = Au_NtkNodeNum(pNtk);
-        pNtk.nPorts = Au_NtkPiNum(pNtk) + Au_NtkPoNum(pNtk);
-        pNtk.nNodeAnds = Au_NtkNodeNumFunc( pNtk, 1 );
-        pNtk.nNodeXors = Au_NtkNodeNumFunc( pNtk, 2 );
-        pNtk.nNodeMuxs = Au_NtkNodeNumFunc( pNtk, 3 );
-//        assert( pNtk->nNodes == pNtk->nNodeAnds + pNtk->nNodeXors + pNtk->nNodeMuxs );
-//        printf( "adding %.0f nodes of model %s\n", pNtk->nNodes, Au_NtkName(pNtk) );
-        // inlining of macro Au_NtkForEachBox
-        for  k = 0; (k < Vec_IntSize(&pNtk.vObjs))   && (((pBox) = Au_NtkObjI(pNtk, k)), 1); k++  { if !(Au_ObjIsBox(pBox) != 0) {} else {
-            pBoxModel = Au_ObjModel(pBox);
-            if pBoxModel == nil || pBoxModel == pNtk {
-                continue; }
-            assert(Au_ObjFaninNum(pBox) == Au_NtkPiNum(pBoxModel), "Au_ObjFaninNum(pBox) == Au_NtkPiNum(pBoxModel)");
-            assert(Au_BoxFanoutNum(pBox) == Au_NtkPoNum(pBoxModel), "Au_BoxFanoutNum(pBox) == Au_NtkPoNum(pBoxModel)");
-            assert(pBoxModel.Id > pNtk.Id, "pBoxModel.Id > pNtk.Id");
-            assert(pBoxModel.nPorts > 0, "pBoxModel.nPorts > 0");
-            pNtk.nBoxes += pBoxModel.nBoxes;
-            pNtk.nNodes += pBoxModel.nNodes;
-            pNtk.nPorts += pBoxModel.nPorts;
-            pNtk.nNodeAnds += pBoxModel.nNodeAnds;
-            pNtk.nNodeXors += pBoxModel.nNodeXors;
-            pNtk.nNodeMuxs += pBoxModel.nNodeMuxs;
-//            printf( "    adding %.0f nodes of model %s\n", pBoxModel->nNodes, Au_NtkName(pBoxModel) );
-        }
-        }
-//        printf( "total %.0f nodes in model %s\n", pNtk->nNodes, Au_NtkName(pNtk) );
-    }
-    pNtk = Au_ManNtkRoot(p);
-    fmt.Printf("Total nodes = %15.0f. Total instances = %15.0f. Total ports = %15.0f.\n", //    printf( "Total nodes = %.2e. Total instances = %.2e. Total ports = %.2e.\n", 
-            pNtk.nNodes, pNtk.nBoxes, pNtk.nPorts);
-//    printf( "Total ANDs  = %15.0f. Total XORs      = %15.0f. Total MUXes = %15.0f.\n", 
-//    printf( "Total ANDs  = %.2e. Total XORs      = %.2e. Total MUXes = %.2e.  ", 
-//        pNtk->nNodeAnds, pNtk->nNodeXors, pNtk->nNodeMuxs );
-    fmt.Printf("Total ANDs  = %15.0f.\n", pNtk.nNodeAnds);
-    fmt.Printf("Total XORs  = %15.0f.\n", pNtk.nNodeXors);
-    fmt.Printf("Total MUXes = %15.0f.\n", pNtk.nNodeMuxs);
-//    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
+func Au_ObjSetCopy(o *Au_Obj_t, value int) { Au_Regular(o).copy = value }
+func Au_ObjSetXsim(o *Au_Obj_t, value int) {
+	if value < AU_VAL0 || value > AU_VALX {
+		panic("invalid ternary value")
+	}
+	Au_Regular(o).Value = value
+}
+func Au_NtkRemapNum(ids []int, number int) int {
+	if number < 0 || number>>1 >= len(ids) {
+		panic("undefined CBLIF signal")
+	}
+	return ids[number>>1]*2 + number&1
+}
+func Au_NtkParseCBlifNum(fanins *[]int, token string, ids []int) {
+	parts := strings.FieldsFunc(token, func(c rune) bool { return c == ':' || c == '*' })
+	if len(parts) == 0 || len(parts) > 2 {
+		panic("invalid CBLIF range")
+	}
+	number, err := strconv.Atoi(parts[0])
+	if err != nil || number < 0 {
+		panic("invalid CBLIF literal")
+	}
+	count := 1
+	if len(parts) == 2 {
+		count, err = strconv.Atoi(parts[1])
+		if err != nil || count < 0 {
+			panic("invalid CBLIF range count")
+		}
+	}
+	for i := 0; i < count; i++ {
+		lit := number
+		if strings.Contains(token, ":") {
+			lit += i * 2
+		}
+		*fanins = append(*fanins, Au_NtkRemapNum(ids, lit))
+	}
 }
 
-func Au_NtkCompareNames(p1 **Au_Ntk_t, p2 **Au_Ntk_t) int32 {
-    return int32(strings.Compare(Au_NtkName(*p1), Au_NtkName(*p2)));
+// ParseCBlif reports malformed directives with their original line number.
+// Model references are resolved only after parsing all definitions.
+func ParseCBlif(reader io.Reader, name string) (root *Au_Ntk_t, err error) {
+	m := Au_ManAlloc(name)
+	defer func() {
+		if failure := recover(); failure != nil {
+			root = nil
+			err = fmt.Errorf("CBLIF: %v", failure)
+		}
+	}()
+	scanner := bufio.NewScanner(reader)
+	scanner.Buffer(make([]byte, 4096), 16<<20)
+	var n *Au_Ntk_t
+	var ids []int
+	unresolved := map[*Au_Obj_t]string{}
+	line := 0
+	fail := func(message string) { panic(fmt.Sprintf("line %d: %s", line, message)) }
+	integer := func(s string) int {
+		v, e := strconv.Atoi(s)
+		if e != nil || v < 0 {
+			fail("invalid nonnegative integer")
+		}
+		return v
+	}
+	for scanner.Scan() {
+		line++
+		text := strings.SplitN(scanner.Text(), "#", 2)[0]
+		fields := strings.Fields(text)
+		if len(fields) == 0 {
+			continue
+		}
+		directive := fields[0]
+		args := fields[1:]
+		if directive == ".model" {
+			if len(args) != 1 {
+				fail("model requires one name")
+			}
+			n = Au_NtkAlloc(m, args[0])
+			ids = []int{Au_NtkCreateConst0(n)}
+			if root == nil {
+				root = n
+			}
+			continue
+		}
+		if n == nil {
+			fail("directive outside model")
+		}
+		switch directive {
+		case ".inputs":
+			if len(args) != 1 {
+				fail("inputs requires a count")
+			}
+			for i := 0; i < integer(args[0]); i++ {
+				ids = append(ids, Au_NtkCreatePi(n))
+			}
+		case ".and", ".xor", ".mux":
+			arity, function := 2, 1
+			if directive == ".xor" {
+				function = 2
+			}
+			if directive == ".mux" {
+				arity, function = 3, 3
+			}
+			if len(args) != arity {
+				fail("gate arity mismatch")
+			}
+			fanins := make([]int, arity)
+			for i, s := range args {
+				fanins[i] = Au_NtkRemapNum(ids, integer(s))
+			}
+			ids = append(ids, Au_NtkCreateNode(n, fanins, function))
+		case ".outputs":
+			if len(args) < 1 {
+				fail("outputs requires a count")
+			}
+			var fanins []int
+			for _, arg := range args[1:] {
+				Au_NtkParseCBlifNum(&fanins, arg, ids)
+			}
+			if len(fanins) != integer(args[0]) {
+				fail("output count mismatch")
+			}
+			for _, lit := range fanins {
+				Au_NtkCreatePo(n, lit)
+			}
+		case ".subckt":
+			if len(args) < 3 {
+				fail("subckt requires name and port counts")
+			}
+			var fanins []int
+			for _, arg := range args[3:] {
+				Au_NtkParseCBlifNum(&fanins, arg, ids)
+			}
+			if len(fanins) != integer(args[1]) {
+				fail("subckt input count mismatch")
+			}
+			id := Au_NtkCreateBox(n, fanins, integer(args[2]), 1)
+			box := n.Objects[id]
+			unresolved[box] = args[0]
+			ids = append(ids, box.fanouts...)
+		case ".end":
+			if len(args) != 0 {
+				fail("unexpected end arguments")
+			}
+			n = nil
+		default:
+			fail("unknown directive " + directive)
+		}
+	}
+	if e := scanner.Err(); e != nil {
+		return nil, e
+	}
+	if root == nil {
+		return nil, fmt.Errorf("empty CBLIF design")
+	}
+	for box, model := range unresolved {
+		found := Au_ManFindNtk(m, model)
+		if found < 0 {
+			return nil, fmt.Errorf("undefined model %q", model)
+		}
+		child := m.Networks[found]
+		if len(box.Fanins) != len(child.PIs) || len(box.fanouts) != len(child.POs) {
+			return nil, fmt.Errorf("model %q port count mismatch", model)
+		}
+		box.Func = found
+		for _, id := range box.fanouts {
+			box.network.Objects[id].Func = found
+		}
+	}
+	Au_ManReorderModels(m, root)
+	return root, nil
 }
-func Au_ManPrintBoxInfo(pNtk *Au_Ntk_t) {
-    var vMods *Vec_Ptr_t;
-    var pModel, pBoxModel *Au_Ntk_t;
-    var pObj *Au_Obj_t;
-    var vCounts *Vec_Int_t;
-    var i, k, Num int32;
-    if pNtk.pMan == nil {
-        fmt.Printf("There is no hierarchy information.\n");
-        return;
-    }
-    vMods = &pNtk.pMan.vNtks;
-
-/*
-    vMods->nSize--;
-    vMods->pArray++;
-    // sort models by name
-    Vec_PtrSort( vMods, (int(*)())Au_NtkCompareNames );
-    // swap the first model
-    Num = Vec_PtrFind( vMods, pNtk );
-    assert( Num >= 0 && Num < Vec_PtrSize(vMods) );
-    pBoxModel = (Au_Ntk_t *)Vec_PtrEntry(vMods, 0);
-    Vec_PtrWriteEntry(vMods, 0, (Au_Ntk_t *)Vec_PtrEntry(vMods, Num) );
-    Vec_PtrWriteEntry(vMods, Num, pBoxModel );
-    vMods->pArray--;
-    vMods->nSize++;
-*/
-
-//    Vec_PtrForEachEntry( Au_Ntk_t *, vMods, pModel, i )
-//        printf( "%s\n", Au_NtkName(pModel) );
-
-    // print models
-    vCounts = Vec_IntStart( Vec_PtrSize(vMods) );
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = 1; (i < Vec_PtrSize(vMods)) && (((pModel) = (Au_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {
-        if Au_NtkBoxNum(pModel) == 0 {
-            continue; }
-        Vec_IntFill( vCounts, Vec_IntSize(vCounts), 0 );
-        // inlining of macro Au_NtkForEachBox
-        for  k = 0; (k < Vec_IntSize(&pModel.vObjs))   && (((pObj) = Au_NtkObjI(pModel, k)), 1); k++  { if !(Au_ObjIsBox(pObj) != 0) {} else {
-            pBoxModel = Au_ObjModel(pObj);
-            if pBoxModel == nil || pBoxModel == pModel {
-                continue; }
-            Num = Vec_PtrFind( vMods, pBoxModel );
-            assert(Num >= 0 && Num < Vec_PtrSize(vMods), "Num >= 0 && Num < Vec_PtrSize(vMods)");
-            Vec_IntAddToEntry( vCounts, Num, 1 );
-        }
-        }
-
-//        Au_NtkPrintStats( pModel, 0, 0, 0, 0, 0, 0, 0 );
-        fmt.Printf("MODULE  ");
-        fmt.Printf("%-30s : ", Au_NtkName(pModel));
-        fmt.Printf("PI=%6d ", Au_NtkPiNum(pModel));
-        fmt.Printf("PO=%6d ", Au_NtkPoNum(pModel));
-        fmt.Printf("BB=%6d ", Au_NtkBoxNum(pModel));
-        fmt.Printf("ND=%6d ", Au_NtkNodeNum(pModel)); // sans constants
-//        printf( "Lev=%5d ", Au_NtkLevel(pModel) );
-        fmt.Printf("\n");
-
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vCounts)) && (((Num) = Vec_IntEntry(vCounts, k)), 1); k++  {
-            if Num != 0 {
-                fmt.Printf("%15d : %s\n", Num, Au_NtkName((Au_Ntk_t *)Vec_PtrEntry(vMods, k))); }
-        }
-    }
-    Vec_IntFree( vCounts );
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = 1; (i < Vec_PtrSize(vMods)) && (((pModel) = (Au_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {
-        if Au_NtkBoxNum(pModel) != 0 {
-            continue; }
-        fmt.Printf("MODULE  ");
-        fmt.Printf("%-30s : ", Au_NtkName(pModel));
-        fmt.Printf("PI=%6d ", Au_NtkPiNum(pModel));
-        fmt.Printf("PO=%6d ", Au_NtkPoNum(pModel));
-        fmt.Printf("BB=%6d ", Au_NtkBoxNum(pModel));
-        fmt.Printf("ND=%6d ", Au_NtkNodeNum(pModel));
-//        printf( "Lev=%5d ", Au_NtkLevel(pModel) );
-        fmt.Printf("\n");
-    }
-}
-func Au_NtkCompareSign(p1 **Au_Ntk_t, p2 **Au_Ntk_t) int32 {
-    if Au_NtkPiNum(*p1) - Au_NtkPiNum(*p2) != 0 {
-        return Au_NtkPiNum(*p1) - Au_NtkPiNum(*p2);
-    } else {
-        return Au_NtkPoNum(*p1) - Au_NtkPoNum(*p2); }
-}
-func Au_ManPrintBoxInfoSorted(pNtk *Au_Ntk_t) {
-    var vMods, vModsNew *Vec_Ptr_t;
-    var pModel *Au_Ntk_t;
-    var i int32;
-    if pNtk.pMan == nil {
-        fmt.Printf("There is no hierarchy information.\n");
-        return;
-    }
-    vMods = &pNtk.pMan.vNtks;
-
-    vMods.nSize--;
-    vMods.pArray++;
-    vModsNew = Vec_PtrDup( vMods );
-    vMods.pArray--;
-    vMods.nSize++;
-
-    Vec_PtrSort( vModsNew, (int(*)())Au_NtkCompareSign );
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = 1; (i < Vec_PtrSize(vModsNew)) && (((pModel) = (Au_Ntk_t *)Vec_PtrEntry(vModsNew, i)), 1); i++  {
-        fmt.Printf("MODULE  ");
-        fmt.Printf("%-30s : ", Au_NtkName(pModel));
-        fmt.Printf("PI=%6d ", Au_NtkPiNum(pModel));
-        fmt.Printf("PO=%6d ", Au_NtkPoNum(pModel));
-        fmt.Printf("BB=%6d ", Au_NtkBoxNum(pModel));
-        fmt.Printf("ND=%6d ", Au_NtkNodeNum(pModel));
-        fmt.Printf("\n");
-    }
-    Vec_PtrFree( vModsNew );
-}
-
-func Au_NtkCheckRecursive(pNtk *Au_Ntk_t) int32 {
-    var vMods *Vec_Ptr_t;
-    var pModel *Au_Ntk_t;
-    var pObj *Au_Obj_t;
-    var i, k, RetValue int32;
-
-    if pNtk.pMan == nil {
-        fmt.Printf("There is no hierarchy information.\n");
-        return RetValue;
-    }
-
-    vMods = &pNtk.pMan.vNtks;
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = 1; (i < Vec_PtrSize(vMods)) && (((pModel) = (Au_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {
-        // inlining of macro Au_NtkForEachObj
-        for  k = 0; (k < Vec_IntSize(&pModel.vObjs))   && (((pObj) = Au_NtkObjI(pModel, k)), 1); k++  {
-            if (Au_ObjIsBox(pObj) != 0) && Au_ObjModel(pObj) == pModel {
-                fmt.Printf("WARNING: Model \"%s\" contains a recursive definition.\n", Au_NtkName(pModel));
-                RetValue = 1;
-                break;
-            }
-        }
-    }
-    return RetValue;
-}
-
-// count the number of support variables
-func Au_ObjSuppSize_rec(p *Au_Ntk_t, Id int32) int32 {
-    var pObj *Au_Obj_t;
-    var i, iFanin, Counter int32;
-    if Au_ObjIsTravIdCurrentId(p, Id) != 0 {
-        return 0; }
-    Au_ObjSetTravIdCurrentId(p, Id);
-    pObj = Au_NtkObj( p, Id );
-    if Au_ObjIsPi(pObj) != 0 {
-        return 1; }
-    assert((Au_ObjIsNode(pObj) != 0) || (Au_ObjIsBox(pObj) != 0) || (Au_ObjIsFan(pObj) != 0), "Au_ObjIsNode(pObj) || Au_ObjIsBox(pObj) || Au_ObjIsFan(pObj)");
-    // inlining of macro Au_ObjForEachFaninId
-    for  i = 0; (i < Au_ObjFaninNum(pObj))     && (((iFanin) = Au_ObjFaninId(pObj, i)), 1); i++  {  
-        Counter += Au_ObjSuppSize_rec( p, iFanin );
-    }
-    return Counter;
-}
-func Au_ObjSuppSize(pObj *Au_Obj_t) int32 {
-    var p *Au_Ntk_t  = Au_ObjNtk(pObj);
-    Au_NtkIncrementTravId( p );
-    return Au_ObjSuppSize_rec( p, Au_ObjId(pObj) );
-}
-/*
-// this version is 50% slower than above
-int Au_ObjSuppSize_rec( Au_Obj_t * pObj )
-{
-    Au_Obj_t * pFanin;
-    int i, Counter = 0;
-    if ( Au_ObjIsTravIdCurrent(pObj) )
-        return 0;
-    Au_ObjSetTravIdCurrent(pObj);
-    if ( Au_ObjIsPi(pObj) )
-        return 1;
-    assert( Au_ObjIsNode(pObj) || Au_ObjIsBox(pObj) || Au_ObjIsFan(pObj) );
-    Au_ObjForEachFanin( pObj, pFanin, i )
-        Counter += Au_ObjSuppSize_rec( pFanin );
-    return Counter;
-}
-int Au_ObjSuppSize( Au_Obj_t * pObj )
-{
-    Au_NtkIncrementTravId( Au_ObjNtk(pObj) );
-    return Au_ObjSuppSize_rec( pObj );
-}
-*/
-func Au_NtkSuppSizeTest(p *Au_Ntk_t) int32 {
-    var pObj *Au_Obj_t;
-    var i, Counter int32;
-    // inlining of macro Au_NtkForEachObj
-    for  i = 0; (i < Vec_IntSize(&p.vObjs))   && (((pObj) = Au_NtkObjI(p, i)), 1); i++  {
-        if Au_ObjIsNode(pObj) != 0 {
-            Counter += (Au_ObjSuppSize(pObj) <= 16); }
-    }
-    fmt.Printf("Nodes with small support %d (out of %d)\n", Counter, Au_NtkNodeNum(p));
-    return Counter;
+func Au_NtkParseCBlif(filename string) *Au_Ntk_t {
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	defer file.Close()
+	root, err := ParseCBlif(file, filename)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	return root
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns memory for the next object.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Au_NtkInsertHeader(p *Au_Ntk_t) {
-    var pMem *Au_Obj_t  = (Au_Obj_t *)Vec_PtrEntryLast( &p.vPages );
-    assert((((ABC_PTRINT_T)(pMem + p.iHandle) & 0x3FF) >> 4) == 0, "(((ABC_PTRINT_T)(pMem + p.iHandle) & 0x3FF) >> 4) == 0");
-    ((Au_Ntk_t **)(pMem + p.iHandle))[0] = p;
-    ((int *)(pMem + p.iHandle))[2] = ((Vec_PtrSize(&p.vPages) - 1) << 12) | (p.iHandle & 0xFC0);
-    p.iHandle++;
+// AU expansion keeps one signal environment per instance, so repeated models
+// and complemented actual arguments do not share stale copy values.
+func auExpand(g *aig.Graph, n *Au_Ntk_t, inputs []aig.Edge, active map[*Au_Ntk_t]bool) []aig.Edge {
+	if len(inputs) != len(n.PIs) {
+		panic("AU model input count mismatch")
+	}
+	if n.Name == "ref_egcd" {
+		outputs := make([]aig.Edge, len(n.POs))
+		for i := range outputs {
+			outputs[i] = g.NewInput()
+		}
+		return outputs
+	}
+	if active[n] {
+		panic("recursive AU model")
+	}
+	active[n] = true
+	defer delete(active, n)
+	values := map[int]aig.Edge{}
+	visiting := map[int]bool{}
+	for i, id := range n.PIs {
+		values[id] = inputs[i]
+		n.Objects[id].copy = int(inputs[i])
+	}
+	var read func(int) aig.Edge
+	read = func(lit int) aig.Edge {
+		id := lit >> 1
+		value, exists := values[id]
+		if !exists {
+			if visiting[id] {
+				panic("cyclic AU net")
+			}
+			visiting[id] = true
+			o := Au_NtkObj(n, id)
+			args := func() []aig.Edge {
+				v := make([]aig.Edge, len(o.Fanins))
+				for i, f := range o.Fanins {
+					v[i] = read(f)
+				}
+				return v
+			}
+			switch o.Type {
+			case AU_OBJ_CONST0:
+				value = 1
+			case AU_OBJ_PO:
+				value = read(o.Fanins[0])
+			case AU_OBJ_NODE:
+				fanins := args()
+				if len(n.Man.Functions) > 0 {
+					if o.Func <= 0 || o.Func >= len(n.Man.Functions) {
+						panic("undefined AU SOP")
+					}
+					value = isoCover(g, n.Man.Functions[o.Func], fanins)
+				} else {
+					switch o.Func {
+					case 1:
+						if len(fanins) != 2 {
+							panic("AU AND arity")
+						}
+						value = g.AND(fanins[0], fanins[1])
+					case 2:
+						if len(fanins) != 2 {
+							panic("AU XOR arity")
+						}
+						value = g.XOR(fanins[0], fanins[1])
+					case 3:
+						if len(fanins) != 3 {
+							panic("AU MUX arity")
+						}
+						value = g.Mux(fanins[0], fanins[1], fanins[2])
+					default:
+						panic("unknown AU function")
+					}
+				}
+			case AU_OBJ_FAN:
+				box := Au_ObjFanin0(o)
+				child := Au_ObjModel(box)
+				outputs := auExpand(g, child, func() []aig.Edge {
+					v := make([]aig.Edge, len(box.Fanins))
+					for i, f := range box.Fanins {
+						v[i] = read(f)
+					}
+					return v
+				}(), active)
+				if len(outputs) != len(box.fanouts) {
+					panic("AU box output mismatch")
+				}
+				for i, fan := range box.fanouts {
+					values[fan] = outputs[i]
+					n.Objects[fan].copy = int(outputs[i])
+				}
+				value = values[id]
+			case AU_OBJ_PI:
+				panic("unbound AU input")
+			default:
+				panic("unsupported AU object")
+			}
+			values[id] = value
+			o.copy = int(value)
+			delete(visiting, id)
+		}
+		if lit&1 != 0 {
+			return value.Not()
+		}
+		return value
+	}
+	outputs := make([]aig.Edge, len(n.POs))
+	for i, id := range n.POs {
+		outputs[i] = read(id * 2)
+	}
+	return outputs
 }
-func Au_NtkAllocObj(p *Au_Ntk_t, nFanins int32, Type int32) int32 {
-    var pMem, pObj, pTemp *Au_Obj_t;
-    var nObjInt int32  = ((2+nFanins) >> 2) + (((2+nFanins) & 3) > 0);
-    var Id int32;
-    var nObjIntReal int32 = nObjInt;
-    if nObjInt > 63 {
-        nObjInt = 63 + 64 * (((nObjInt-63) >> 6) + (((nObjInt-63) & 63) > 0)); }
-    if Vec_PtrSize(&p.vPages) == 0 || p.iHandle + nObjInt > (1 << 12) {
-        if nObjInt + 64 > (1 << 12) {
-            // inlining of macro ABC_CALLOC
-            pMem = ((Au_Obj_t *) calloc((size_t)(nObjInt + 64), sizeof(Au_Obj_t)));
-p.nObjsAlloc += nObjInt + 64;
-        } else {
-            // inlining of macro ABC_CALLOC
-            pMem = ((Au_Obj_t *) calloc((size_t)((1 << 12) + 64), sizeof(Au_Obj_t)));
-p.nObjsAlloc += (1 << 12) + 64; }
-        Vec_PtrPush( p.vChunks, pMem );
-        if (ABC_PTRINT_T)pMem & 0xF {
-            pMem = (Au_Obj_t *)((char *)pMem + 16 - ((ABC_PTRINT_T)pMem & 0xF)); }
-        assert(((ABC_PTRINT_T)pMem & 0xF) == 0, "((ABC_PTRINT_T)pMem & 0xF) == 0");
-        p.iHandle = (((ABC_PTRINT_T)pMem & 0x3FF) >> 4);
-        if p.iHandle {
-            pMem += 64 - (p.iHandle & 63);
-            p.iHandle = 0; 
-        }
-        Vec_PtrPush( &p.vPages, pMem );
-        Au_NtkInsertHeader( p );
-    
-    } else {
-        pMem = (Au_Obj_t *)Vec_PtrEntryLast( &p.vPages );
-        if (p.iHandle & 63) == 0 || nObjInt > (64 - (p.iHandle & 63)) {
-            if p.iHandle & 63 {
-                p.iHandle += 64 - (p.iHandle & 63); } 
-            Au_NtkInsertHeader( p );
-        }
-        if p.iHandle + nObjInt > (1 << 12) {
-            return Au_NtkAllocObj( p, nFanins, Type ); }
-    }
-    pObj = pMem + p.iHandle;
-    assert(*((int *)pObj) == 0, "*((int *)pObj) == 0");
-    pObj.nFanins = nFanins;
-    p.nObjs[pObj.Type = Type]++;
-    if Type == AU_OBJ_PI {
-        Au_ObjSetFaninLit( pObj, 0, Vec_IntSize(&p.vPis) );
-        Vec_IntPush( &p.vPis, Au_ObjId(pObj) );
-    
-    } else if Type == AU_OBJ_PO {
-        Au_ObjSetFaninLit( pObj, 1, Vec_IntSize(&p.vPos) );
-        Vec_IntPush( &p.vPos, Au_ObjId(pObj) );
-    }
-    p.iHandle += nObjInt;
-    p.nObjsUsed += nObjIntReal;
-
-    Id = Au_ObjId(pObj);
-    Vec_IntPush( &p.vObjs, Id );
-    pTemp = Au_NtkObj( p, Id );
-    assert(pTemp == pObj, "pTemp == pObj");
-    return Id;
+func Au_NtkDeriveFlatGia_rec(g *aig.Graph, n *Au_Ntk_t) {
+	inputs := make([]aig.Edge, len(n.PIs))
+	for i, id := range n.PIs {
+		if n.Objects[id].copy < 0 {
+			panic("unassigned AU PI")
+		}
+		inputs[i] = aig.Edge(n.Objects[id].copy)
+	}
+	auExpand(g, n, inputs, map[*Au_Ntk_t]bool{})
 }
-func Au_NtkCreateConst0(pNtk *Au_Ntk_t) int32 {
-    return Au_NtkAllocObj( pNtk, 0, AU_OBJ_CONST0 );
-}
-func Au_NtkCreatePi(pNtk *Au_Ntk_t) int32 {
-    return Au_NtkAllocObj( pNtk, 0, AU_OBJ_PI );
-}
-func Au_NtkCreatePo(pNtk *Au_Ntk_t, iFanin int32) int32 {
-    var Id int32  = Au_NtkAllocObj( pNtk, 1, AU_OBJ_PO );
-    if iFanin != 0 {
-        Au_ObjSetFaninLit( Au_NtkObj(pNtk, Id), 0, iFanin ); }
-    return Id;
-}
-func Au_NtkCreateFan(pNtk *Au_Ntk_t, iFanin int32, iFanout int32, iModel int32) int32 {
-    var Id int32  = Au_NtkAllocObj( pNtk, 1, AU_OBJ_FAN );
-    var p *Au_Obj_t  = Au_NtkObj( pNtk, Id );
-    if iFanin != 0 {
-        Au_ObjSetFaninLit( p, 0, iFanin ); }
-    Au_ObjSetFaninLit( p, 1, iFanout );
-    p.Func = iModel;
-    return Id;
-}
-func Au_NtkCreateNode(pNtk *Au_Ntk_t, vFanins *Vec_Int_t, iFunc int32) int32 {
-    var i, iFanin int32;
-    var Id int32  = Au_NtkAllocObj( pNtk, Vec_IntSize(vFanins), AU_OBJ_NODE );
-    var p *Au_Obj_t  = Au_NtkObj( pNtk, Id );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vFanins)) && (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {
-        Au_ObjSetFaninLit( p, i, iFanin );
-    }
-    p.Func = iFunc;
-    return Id;
-}
-func Au_NtkCreateBox(pNtk *Au_Ntk_t, vFanins *Vec_Int_t, nFanouts int32, iModel int32) int32 {
-    var i int32;
-    var iFanin int32;
-    var nFanins int32 = Vec_IntSize(vFanins);
-    var Id int32  = Au_NtkAllocObj( pNtk, nFanins + 1 + nFanouts, AU_OBJ_BOX );
-    var p *Au_Obj_t  = Au_NtkObj( pNtk, Id );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vFanins)) && (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {
-        Au_ObjSetFaninLit( p, i, iFanin );
-    }
-    Au_ObjSetFaninLit( p, nFanins, nFanouts );
-    for  i = 0; i < nFanouts; i++  {
-        Au_ObjSetFaninLit( p, nFanins + 1 + i, Au_NtkCreateFan(pNtk, Au_Var2Lit(Id,0), i, iModel) );
-    }
-    p.nFanins = nFanins;
-    p.Func = iModel;
-    assert(iModel > 0, "iModel > 0");
-    return Id;
-}
-
-/*
- * 0/1 would denote false/true respectively.
- * Signals would be even numbers, and negation would be handled by xor with 1.
- * The output signal for each gate or subckt could be implicitly generated just use the next signal number.
- * For ranges, we could use "start:cnt" to denote the sequence "start, start+2, ..., start + 2*(cnt- 1)".
-    - "cnt" seems more intuitive when signals are restricted to even numbers.
- * We'd have subckts and specialized gates .and, .xor, and .mux.
-
-Here is a small example:
-
-.model test
-.inputs 3 # Inputs 2 4 6
-.subckt and3 3 1 2:3 # 8 is implicit output
-.outputs 1 8
-.end
-
-.model and3
-.inputs 3 # Inputs 2 4 6
-.and 2 4 # 8 output
-.and 6 8 # 10 output
-.outputs 1 10
-.end
-*/
-
-/**Function*************************************************************
-
-  Synopsis    [Reads one entry.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Au_NtkRemapNum(vNum2Obj *Vec_Int_t, Num int32) int32 {
-    return Au_Var2Lit(Vec_IntEntry(vNum2Obj, Au_Lit2Var(Num)), Au_LitIsCompl(Num));
-}
-/**Function*************************************************************
-
-  Synopsis    [Reads one entry.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Au_NtkParseCBlifNum(vFanins *Vec_Int_t, pToken string, vNum2Obj *Vec_Int_t) {
-    var pCur string;
-    var Num1, Num2, i int32;
-    assert(pToken[0] >= '0' && pToken[0] <= '9', "pToken[0] >= '0' && pToken[0] <= '9'");
-    Num1 = strconv.Atoi(pToken);
-    for  pCur = pToken; *pCur; pCur++  {
-        if *pCur == ':' {
-            Num2 = strconv.Atoi(pCur+1);
-            for  i = 0; i < Num2; i++  {
-                Vec_IntPush( vFanins, Au_NtkRemapNum(vNum2Obj, Num1 + i + i) );
-            }
-            return;
-        
-        } else if *pCur == '*' {
-            Num2 = strconv.Atoi(pCur+1);
-            for  i = 0; i < Num2; i++  {
-                Vec_IntPush( vFanins, Au_NtkRemapNum(vNum2Obj, Num1) );
-            }
-            return;
-        }
-    }
-    assert(*pCur == 0, "*pCur == 0");
-    Vec_IntPush( vFanins, Au_NtkRemapNum(vNum2Obj, Num1) );
+func Au_NtkDeriveFlatGia(n *Au_Ntk_t) *aig.Graph {
+	g := aig.NewGraph()
+	g.Name = n.Name
+	inputs := make([]aig.Edge, len(n.PIs))
+	for i := range inputs {
+		inputs[i] = g.NewInput()
+	}
+	outputs := auExpand(g, n, inputs, map[*Au_Ntk_t]bool{})
+	for _, output := range outputs {
+		g.AddOutput(output)
+	}
+	return aig.Aig_ManCleanup(g)
 }
 
-/**Function*************************************************************
+const (
+	AU_VAL0 = 1
+	AU_VAL1 = 2
+	AU_VALX = 3
+)
 
-  Synopsis    [Parses CBLIF file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Au_NtkParseCBlif(pFileName string) *Au_Ntk_t {
-    var pFile *os.File;
-    var pMan *Au_Man_t;
-    var pRoot *Au_Ntk_t  = nil;
-    var pBox, pFan *Au_Obj_t;
-    var pBuffer, pCur string;
-    var vLines, vNum2Obj, vFanins *Vec_Int_t;
-    var i, k, j, Id, nInputs, nOutputs int32;
-    var Line, Num, Func int32;
-    // read the file
-    pFile = os.Open(pFileName);
-    if pFile == nil {
-        fmt.Printf("Cannot open file \"%s\".\n", pFileName);
-        return nil;
-    }
-    pBuffer = Extra_FileRead( pFile );
-    _ = (pFile).Close();
-    // split into lines
-    vLines = Vec_IntAlloc( 1000 );
-    Vec_IntPush( vLines, 0 );
-    for  pCur = pBuffer; *pCur; pCur++  {
-        if *pCur == '\n' {
-            *pCur = 0;
-            Vec_IntPush( vLines, pCur - pBuffer + 1 );
-        }
-    }
-    // start the manager
-    pMan = Au_ManAlloc( pFileName );
-    // parse the lines
-    vNum2Obj = Vec_IntAlloc( 1000 );
-    vFanins = Vec_IntAlloc( 1000 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vLines)) && (((Line) = Vec_IntEntry(vLines, i)), 1); i++  {
-        pCur = strtok( pBuffer + Line, " \t\r" );
-        if pCur == nil || *pCur == '#' {
-            continue; }
-        if *pCur != '.' {
-            fmt.Printf("Cannot read directive in line %d: \"%s\".\n", i, pBuffer + Line);
-            continue;
-        }
-        Vec_IntClear( vFanins );
-        if !(int32(strings.Compare(pCur, ".and")) != 0) {
-            for  k = 0; k < 2; k++  {
-                pCur = strtok( nil, " \t\r" );
-                Num  = strconv.Atoi(pCur);
-                Vec_IntPush( vFanins, Au_NtkRemapNum(vNum2Obj, Num) );
-            }
-            Id = Au_NtkCreateNode( pRoot, vFanins, 1 );
-            Vec_IntPush( vNum2Obj, Id );
-        
-        } else if !(int32(strings.Compare(pCur, ".xor")) != 0) {
-            for  k = 0; k < 2; k++  {
-                pCur = strtok( nil, " \t\r" );
-                Num  = strconv.Atoi(pCur);
-                Vec_IntPush( vFanins, Au_NtkRemapNum(vNum2Obj, Num) );
-            }
-            Id = Au_NtkCreateNode( pRoot, vFanins, 2 );
-            Vec_IntPush( vNum2Obj, Id );
-        
-        } else if !(int32(strings.Compare(pCur, ".mux")) != 0) {
-            for  k = 0; k < 3; k++  {
-                pCur = strtok( nil, " \t\r" );
-                Num  = strconv.Atoi(pCur);
-                Vec_IntPush( vFanins, Au_NtkRemapNum(vNum2Obj, Num) );
-            }
-            Id = Au_NtkCreateNode( pRoot, vFanins, 3 );
-            Vec_IntPush( vNum2Obj, Id );
-        
-        } else if !(int32(strings.Compare(pCur, ".subckt")) != 0) {
-            pCur = strtok( nil, " \t\r" );
-            Func = pCur - pBuffer;
-            pCur = strtok( nil, " \t\r" );
-            nInputs = strconv.Atoi(pCur);
-            pCur = strtok( nil, " \t\r" );
-            nOutputs = strconv.Atoi(pCur);
-            for {
-                pCur = strtok( nil, " \t\r" );
-                if pCur == nil || *pCur == '#' {
-                    break; }
-                Au_NtkParseCBlifNum( vFanins, pCur, vNum2Obj );
-            }
-            assert(Vec_IntSize(vFanins) == nInputs, "Vec_IntSize(vFanins) == nInputs");
-            Id = Au_NtkCreateBox( pRoot, vFanins, nOutputs, Func );
-            pBox = Au_NtkObj( pRoot, Id );
-            // inlining of macro Au_BoxForEachFanoutId
-            for  k = 0; (k < Au_BoxFanoutNum(pBox))    && (((Num) = Au_BoxFanoutId(pBox, k)), 1); k++  {
-                Vec_IntPush( vNum2Obj, Num );
-            }
-        
-        } else if !(int32(strings.Compare(pCur, ".model")) != 0) {
-            pCur  = strtok( nil, " \t\r" );
-            pRoot = Au_NtkAlloc( pMan, pCur );
-            Id    = Au_NtkCreateConst0( pRoot );
-            Vec_IntClear( vNum2Obj );
-            Vec_IntPush( vNum2Obj, Id );
-        
-        } else if !(int32(strings.Compare(pCur, ".inputs")) != 0) {
-            pCur = strtok( nil, " \t\r" );
-            Num  = strconv.Atoi(pCur);
-            for  k = 0; k < Num; k++  {
-                Vec_IntPush( vNum2Obj, Au_NtkCreatePi(pRoot) );
-            }
-        
-        } else if !(int32(strings.Compare(pCur, ".outputs")) != 0) {
-            pCur = strtok( nil, " \t\r" );
-            nOutputs = strconv.Atoi(pCur);
-            for {
-                pCur = strtok( nil, " \t\r" );
-                if pCur == nil || *pCur == '#' {
-                    break; } 
-                Au_NtkParseCBlifNum( vFanins, pCur, vNum2Obj );
-            }
-            assert(Vec_IntSize(vFanins) == nOutputs, "Vec_IntSize(vFanins) == nOutputs");
-            // inlining of macro Vec_IntForEachEntry
-            for  k = 0; (k < Vec_IntSize(vFanins)) && (((Num) = Vec_IntEntry(vFanins, k)), 1); k++  {
-                Au_NtkCreatePo( pRoot, Num );
-            }
-        
-        } else if int32(strings.Compare(pCur, ".end")) != 0 {
-            fmt.Printf("Unknown directive in line %d: \"%s\".\n", i, pBuffer + Line); }
-    }
-    Vec_IntFree( vFanins );
-    Vec_IntFree( vNum2Obj );
-    Vec_IntFree( vLines );
-    // set pointers to models
-    // inlining of macro Au_ManForEachNtk
-    for  i = 1; (i < Vec_PtrSize(&pMan.vNtks))   && (((pRoot) = Au_ManNtk(pMan, i)), 1); i++  { 
-        // inlining of macro Au_NtkForEachBox
-        for  k = 0; (k < Vec_IntSize(&pRoot.vObjs))   && (((pBox) = Au_NtkObjI(pRoot, k)), 1); k++  { if !(Au_ObjIsBox(pBox) != 0) {} else {
-            pBox.Func = Au_ManFindNtk( pMan, pBuffer + pBox.Func );
-            assert(pBox.Func > 0, "pBox.Func > 0");
-            // inlining of macro Au_BoxForEachFanout
-            for  j = 0; (j < Au_BoxFanoutNum(pBox))    && (((pFan) = Au_BoxFanout(pBox, j)), 1); j++  {
-                pFan.Func = pBox.Func;
-            }
-        }
-        }
-    }
-    pBuffer = nil;
-    // order models in topological order
-    pRoot = Au_ManNtkRoot( pMan );
-    Au_ManReorderModels( pMan, pRoot );
-    return pRoot;
+func auValidXsim(v int) {
+	if v < AU_VAL0 || v > AU_VALX {
+		panic("invalid AU ternary value")
+	}
 }
-
-//ABC_NAMESPACE_IMPL_END
-
-//#include "abc.h"
-//#include "aig/gia/gia.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-// extern Vec_Ptr_t * Abc_NtkDfsBoxes( Abc_Ntk_t * pNtk );
-
-// extern int Abc_NtkDeriveFlatGiaSop( Gia_Man_t * pGia, int * gFanins, char * pSop );
-
-// extern int Abc_NtkCheckRecursive( Abc_Ntk_t * pNtk );
-
-
-/**Function*************************************************************
-
-  Synopsis    [Flattens the logic hierarchy of the netlist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Au_NtkDeriveFlatGia_rec(pGia *Gia_Man_t, p *Au_Ntk_t) { 
-    var pObj, pTerm *Au_Obj_t;
-    var i, k, Lit int32;
-    // inlining of macro Au_NtkForEachPi
-    for  i = 0; (i < Vec_IntSize(&p.vPis))    && (((pTerm) = Au_NtkPi(p, i)), 1); i++  {
-        assert(Au_ObjCopy(pTerm) >= 0, "Au_ObjCopy(pTerm) >= 0");
-    }
-    if int32(strings.Compare(Au_NtkName(p), "ref_egcd")) == 0 {
-        fmt.Printf("Replacing one instance of recursive model \"%s\" by a black box.\n", "ref_egcd");
-        // inlining of macro Au_NtkForEachPo
-        for  i = 0; (i < Vec_IntSize(&p.vPos))    && (((pTerm) = Au_NtkPo(p, i)), 1); i++  {
-            Au_ObjSetCopy( pTerm, Gia_ManAppendCi(pGia) );
-        }
-        return;
-    }
-    // inlining of macro Au_NtkForEachObj
-    for  i = 0; (i < Vec_IntSize(&p.vObjs))   && (((pObj) = Au_NtkObjI(p, i)), 1); i++  {
-        if Au_ObjIsNode(pObj) != 0 {
-            if p.pMan.pFuncs {
-                var gFanins [16]int32;
-                var pSop string  = Abc_NamStr( p.pMan.pFuncs, pObj.Func );
-                assert(Au_ObjFaninNum(pObj) <= 16, "Au_ObjFaninNum(pObj) <= 16");
-                assert(Au_ObjFaninNum(pObj) == Abc_SopGetVarNum(pSop), "Au_ObjFaninNum(pObj) == Abc_SopGetVarNum(pSop)");
-                // inlining of macro Au_ObjForEachFanin
-                for  k = 0; (k < Au_ObjFaninNum(pObj))     && (((pTerm) = Au_ObjFanin(pObj, k)), 1); k++  {
-                    gFanins[k] = Au_ObjCopy(pTerm);
-                    assert(gFanins[k] >= 0, "gFanins[k] >= 0");
-                }
-                Lit = Abc_NtkDeriveFlatGiaSop( pGia, gFanins, pSop );
-            
-            } else {
-                var Lit0, Lit1, Lit2 int32;
-                assert(pObj.Func >= 1 && pObj.Func <= 3, "pObj.Func >= 1 && pObj.Func <= 3");
-                Lit0 = Abc_LitNotCond( Au_ObjCopy(Au_ObjFanin0(pObj)), Au_ObjFaninC0(pObj) );
-                Lit1 = Abc_LitNotCond( Au_ObjCopy(Au_ObjFanin1(pObj)), Au_ObjFaninC1(pObj) );
-                if pObj.Func == 1 {
-                    Lit = Gia_ManHashAnd( pGia, Lit0, Lit1 );
-                } else if pObj.Func == 2 {
-                    Lit = Gia_ManHashXor( pGia, Lit0, Lit1 );
-                } else if pObj.Func == 3 {
-                    Lit2 = Abc_LitNotCond( Au_ObjCopy(Au_ObjFanin2(pObj)), Au_ObjFaninC2(pObj) );
-                    Lit = Gia_ManHashMux( pGia, Lit0, Lit1, Lit2 );
-                
-                } else { assert(false, "0"); } 
-            } 
-            assert(Lit >= 0, "Lit >= 0");
-            Au_ObjSetCopy( pObj, Lit );
-        
-        } else if Au_ObjIsBox(pObj) != 0 {
-            var pModel *Au_Ntk_t  = Au_ObjModel(pObj);
-            Au_NtkCleanCopy( pModel );
-            // check the match between the number of actual and formal parameters
-            assert(Au_ObjFaninNum(pObj) == Au_NtkPiNum(pModel), "Au_ObjFaninNum(pObj) == Au_NtkPiNum(pModel)");
-            assert(Au_BoxFanoutNum(pObj) == Au_NtkPoNum(pModel), "Au_BoxFanoutNum(pObj) == Au_NtkPoNum(pModel)");
-            // assign PIs
-            // inlining of macro Au_ObjForEachFanin
-            for  k = 0; (k < Au_ObjFaninNum(pObj))     && (((pTerm) = Au_ObjFanin(pObj, k)), 1); k++  {  
-                Au_ObjSetCopy( Au_NtkPi(pModel, k), Au_ObjCopy(pTerm) );
-            }
-            // call recursively
-            Au_NtkDeriveFlatGia_rec( pGia, pModel );
-            // assign POs
-            // inlining of macro Au_BoxForEachFanout
-            for  k = 0; (k < Au_BoxFanoutNum(pObj))    && (((pTerm) = Au_BoxFanout(pObj, k)), 1); k++  {
-                Au_ObjSetCopy( pTerm, Au_ObjCopy(Au_NtkPo(pModel, k)) );
-            }
-        
-        } else if Au_ObjIsConst0(pObj) != 0 {
-            Au_ObjSetCopy( pObj, 0 ); }
-            
-    }
-    // inlining of macro Au_NtkForEachPo
-    for  i = 0; (i < Vec_IntSize(&p.vPos))    && (((pTerm) = Au_NtkPo(p, i)), 1); i++  {
-        Lit = Abc_LitNotCond( Au_ObjCopy(Au_ObjFanin0(pTerm)), Au_ObjFaninC0(pTerm) );
-        Au_ObjSetCopy( pTerm, Lit );
-    }
-    // inlining of macro Au_NtkForEachPo
-    for  i = 0; (i < Vec_IntSize(&p.vPos))    && (((pTerm) = Au_NtkPo(p, i)), 1); i++  {
-        assert(Au_ObjCopy(pTerm) >= 0, "Au_ObjCopy(pTerm) >= 0");
-    }
-//    p->pMan->nGiaObjMax = Abc_MaxInt( p->pMan->nGiaObjMax, Gia_ManObjNum(pGia) );
+func Au_XsimInv(v int) int {
+	auValidXsim(v)
+	if v == AU_VAL0 {
+		return AU_VAL1
+	}
+	if v == AU_VAL1 {
+		return AU_VAL0
+	}
+	return AU_VALX
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Flattens the logic hierarchy of the netlist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Au_NtkDeriveFlatGia(p *Au_Ntk_t) *Gia_Man_t {
-    var pTemp *Gia_Man_t;
-    var pGia *Gia_Man_t = nil;
-    var pTerm *Au_Obj_t;
-    var i int32;
-    fmt.Printf("Collapsing model \"%s\"...\n", Au_NtkName(p));
-    Au_NtkCleanCopy( p );
-    // start the network
-    pGia = Gia_ManStart( (1<<16) );
-    pGia.pName = Abc_UtilStrsav( Au_NtkName(p) );
-//    pGia->pSpec = Abc_UtilStrsav( Au_NtkSpec(p) );
-    Gia_ManHashAlloc( pGia );
-    Gia_ManFlipVerbose( pGia );
-    // create PIs
-    // inlining of macro Au_NtkForEachPi
-    for  i = 0; (i < Vec_IntSize(&p.vPis))    && (((pTerm) = Au_NtkPi(p, i)), 1); i++  {
-        Au_ObjSetCopy( pTerm, Gia_ManAppendCi(pGia) );
-    }
-    // recursively flatten hierarchy
-    Au_NtkDeriveFlatGia_rec( pGia, p );
-    // create POs
-    // inlining of macro Au_NtkForEachPo
-    for  i = 0; (i < Vec_IntSize(&p.vPos))    && (((pTerm) = Au_NtkPo(p, i)), 1); i++  {
-        Gia_ManAppendCo( pGia, Au_ObjCopy(pTerm) );
-    }
-    // prepare return value
-//    Gia_ManHashProfile( pGia );
-    Gia_ManHashStop( pGia );
-    Gia_ManSetRegNum( pGia, 0 );
-    pGia = Gia_ManCleanup( pTemp = pGia );
-    Gia_ManStop( pTemp );
-    return pGia;
+func Au_XsimAnd(a, b int) int {
+	auValidXsim(a)
+	auValidXsim(b)
+	if a == AU_VAL0 || b == AU_VAL0 {
+		return AU_VAL0
+	}
+	if a == AU_VALX || b == AU_VALX {
+		return AU_VALX
+	}
+	return AU_VAL1
 }
-
-
-// ternary simulation
-const AU_VAL0 =   1
-const AU_VAL1 =   2
-const AU_VALX =   3
-
-func Au_ObjSetXsim(pObj *Au_Obj_t, Value int32) { pObj.Value = Value;  }
-func Au_ObjGetXsim(pObj *Au_Obj_t) int32 { return pObj.Value;   }
-func Au_XsimInv(Value int32) int32 { 
-    if Value == AU_VAL0 {
-        return AU_VAL1; }
-    if Value == AU_VAL1 {
-        return AU_VAL0; }
-    assert(Value == AU_VALX, "Value == AU_VALX");       
-    return AU_VALX;
+func Au_XsimXor(a, b int) int {
+	auValidXsim(a)
+	auValidXsim(b)
+	if a == AU_VALX || b == AU_VALX {
+		return AU_VALX
+	}
+	if a == b {
+		return AU_VAL0
+	}
+	return AU_VAL1
 }
-func Au_XsimAnd(Value0 int32, Value1 int32) int32 { 
-    if Value0 == AU_VAL0 || Value1 == AU_VAL0 {
-        return AU_VAL0; }
-    if Value0 == AU_VALX || Value1 == AU_VALX {
-        return AU_VALX; }
-    assert(Value0 == AU_VAL1 && Value1 == AU_VAL1, "Value0 == AU_VAL1 && Value1 == AU_VAL1");
-    return AU_VAL1;
+func Au_XsimMux(c, t, e int) int {
+	auValidXsim(c)
+	auValidXsim(t)
+	auValidXsim(e)
+	if c == AU_VAL0 {
+		return e
+	}
+	if c == AU_VAL1 {
+		return t
+	}
+	if t == e {
+		return t
+	}
+	return AU_VALX
 }
-func Au_XsimXor(Value0 int32, Value1 int32) int32 { 
-    if Value0 == AU_VALX || Value1 == AU_VALX {
-        return AU_VALX; }
-    if (Value0 == AU_VAL0) == (Value1 == AU_VAL0) {
-        return AU_VAL0; }
-    return AU_VAL1;
+func auXsimFanin(o *Au_Obj_t, i int) int {
+	v := Au_ObjFanin(o, i).Value
+	if Au_ObjFaninC(o, i) != 0 {
+		return Au_XsimInv(v)
+	}
+	return v
 }
-func Au_XsimMux(ValueC int32, Value1 int32, Value0 int32) int32 { 
-    if ValueC == AU_VAL0 {
-        return Value0; }
-    if ValueC == AU_VAL1 {
-        return Value1; }
-    if Value0 == AU_VAL0 && Value1 == AU_VAL0 {
-        return AU_VAL0; }
-    if Value0 == AU_VAL1 && Value1 == AU_VAL1 {
-        return AU_VAL1; }
-    return AU_VALX;
+func auSimulate(n *Au_Ntk_t, inputs []int, active map[*Au_Ntk_t]bool) []int {
+	if len(inputs) != len(n.PIs) {
+		panic("AU simulation port mismatch")
+	}
+	if active[n] && n.Name != "ref_egcd" {
+		panic("recursive AU model")
+	}
+	values := map[int]int{}
+	busy := map[int]bool{}
+	for i, id := range n.PIs {
+		auValidXsim(inputs[i])
+		values[id] = inputs[i]
+		n.Objects[id].Value = inputs[i]
+		switch inputs[i] {
+		case AU_VAL0:
+			n.Man.PortsC0++
+		case AU_VAL1:
+			n.Man.PortsC1++
+		case AU_VALX:
+			n.Man.PortsNC++
+		}
+	}
+	if n.Name == "ref_egcd" {
+		out := make([]int, len(n.POs))
+		for i, id := range n.POs {
+			out[i] = AU_VALX
+			n.Objects[id].Value = AU_VALX
+		}
+		return out
+	}
+	active[n] = true
+	defer delete(active, n)
+	var read func(int) int
+	read = func(lit int) int {
+		id := lit >> 1
+		value, ok := values[id]
+		if !ok {
+			if busy[id] {
+				panic("cyclic AU simulation net")
+			}
+			busy[id] = true
+			o := n.Objects[id]
+			switch o.Type {
+			case AU_OBJ_CONST0:
+				value = AU_VAL0
+			case AU_OBJ_PO:
+				value = read(o.Fanins[0])
+			case AU_OBJ_NODE:
+				v := make([]int, len(o.Fanins))
+				for i, f := range o.Fanins {
+					v[i] = read(f)
+				}
+				switch o.Func {
+				case 1:
+					value = Au_XsimAnd(v[0], v[1])
+				case 2:
+					value = Au_XsimXor(v[0], v[1])
+				case 3:
+					value = Au_XsimMux(v[0], v[1], v[2])
+				default:
+					panic("unknown AU simulation function")
+				}
+			case AU_OBJ_FAN:
+				box := Au_ObjFanin0(o)
+				v := make([]int, len(box.Fanins))
+				for i, f := range box.Fanins {
+					v[i] = read(f)
+				}
+				results := auSimulate(Au_ObjModel(box), v, active)
+				for i, id := range box.fanouts {
+					values[id] = results[i]
+					n.Objects[id].Value = results[i]
+				}
+				value = values[id]
+			default:
+				panic("unsupported AU simulation object")
+			}
+			delete(busy, id)
+			values[id] = value
+			o.Value = value
+		}
+		if lit&1 != 0 {
+			return Au_XsimInv(value)
+		}
+		return value
+	}
+	outputs := make([]int, len(n.POs))
+	for i, id := range n.POs {
+		outputs[i] = read(id * 2)
+		switch outputs[i] {
+		case AU_VAL0:
+			n.Man.PortsC0++
+		case AU_VAL1:
+			n.Man.PortsC1++
+		case AU_VALX:
+			n.Man.PortsNC++
+		}
+	}
+	return outputs
 }
-func Au_ObjGetXsimFan0(pObj *Au_Obj_t) int32 { 
-    var Value int32  = Au_ObjGetXsim( Au_ObjFanin0(pObj) );
-    if Au_ObjFaninC0(pObj) != 0 {
-        return Au_XsimInv(Value);
-    } else {
-        return Value;
-    }
+func Au_NtkTerSimulate_rec(n *Au_Ntk_t) {
+	inputs := make([]int, len(n.PIs))
+	for i, id := range n.PIs {
+		inputs[i] = n.Objects[id].Value
+	}
+	auSimulate(n, inputs, map[*Au_Ntk_t]bool{})
 }
-func Au_ObjGetXsimFan1(pObj *Au_Obj_t) int32 { 
-    var Value int32  = Au_ObjGetXsim( Au_ObjFanin1(pObj) );
-    if Au_ObjFaninC1(pObj) != 0 {
-        return Au_XsimInv(Value);
-    } else {
-        return Value;
-    }
+func Au_NtkTerSimulate(n *Au_Ntk_t) {
+	if len(n.Man.Functions) > 0 {
+		panic("AU ternary simulation needs primitive functions")
+	}
+	n.Man.PortsC0, n.Man.PortsC1, n.Man.PortsNC = 0, 0, 0
+	for _, id := range n.PIs {
+		n.Objects[id].Value = AU_VALX
+	}
+	Au_NtkTerSimulate_rec(n)
+	fmt.Printf("Const0 ports = %.0f. Const1 ports = %.0f. Non-const ports = %.0f.\n", n.Man.PortsC0, n.Man.PortsC1, n.Man.PortsNC)
 }
-func Au_ObjGetXsimFan2(pObj *Au_Obj_t) int32 { 
-    var Value int32  = Au_ObjGetXsim( Au_ObjFanin2(pObj) );
-    if Au_ObjFaninC2(pObj) != 0 {
-        return Au_XsimInv(Value);
-    } else {
-        return Value;
-    }
+func (m *Au_Man_t) intern(sop string) int {
+	if m.functionIDs == nil {
+		m.functionIDs = map[string]int{}
+		m.Functions = []string{""}
+	}
+	if id, ok := m.functionIDs[sop]; ok {
+		return id
+	}
+	id := len(m.Functions)
+	m.Functions = append(m.Functions, sop)
+	m.functionIDs[sop] = id
+	return id
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Flattens the logic hierarchy of the netlist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Au_NtkTerSimulate_rec(p *Au_Ntk_t) { 
-    var pObj *Au_Obj_t = nil;
-    var pTerm *Au_Obj_t;
-    var i, k int32;
-    // inlining of macro Au_NtkForEachPi
-    for  i = 0; (i < Vec_IntSize(&p.vPis))    && (((pTerm) = Au_NtkPi(p, i)), 1); i++  {
-        assert(Au_ObjGetXsim(pTerm) > 0, "Au_ObjGetXsim(pTerm) > 0");
-        if Au_ObjGetXsim(pTerm) == AU_VALX {
-            p.pMan.nPortsNC++;
-        } else if Au_ObjGetXsim(pTerm) == AU_VAL0 {
-            p.pMan.nPortsC0++;
-        } else {
-            p.pMan.nPortsC1++; }
-    }
-    if int32(strings.Compare(Au_NtkName(p), "ref_egcd")) == 0 {
-        fmt.Printf("Replacing one instance of recursive model \"%s\" by a black box.\n", "ref_egcd");
-        // inlining of macro Au_NtkForEachPo
-        for  i = 0; (i < Vec_IntSize(&p.vPos))    && (((pTerm) = Au_NtkPo(p, i)), 1); i++  {
-            Au_ObjSetXsim( pTerm, AU_VALX );
-        }
-        return;
-    }
-    // inlining of macro Au_NtkForEachObj
-    for  i = 0; (i < Vec_IntSize(&p.vObjs))   && (((pObj) = Au_NtkObjI(p, i)), 1); i++  {
-        if Au_ObjIsNode(pObj) != 0 {
-            if pObj.Func == 1 {
-                Au_ObjSetXsim( pObj, Au_XsimAnd(Au_ObjGetXsimFan0(pObj), Au_ObjGetXsimFan1(pObj)) );
-            } else if pObj.Func == 2 {
-                Au_ObjSetXsim( pObj, Au_XsimXor(Au_ObjGetXsimFan0(pObj), Au_ObjGetXsimFan1(pObj)) );
-            } else if pObj.Func == 3 {
-                Au_ObjSetXsim( pObj, Au_XsimMux(Au_ObjGetXsimFan0(pObj), Au_ObjGetXsimFan1(pObj), Au_ObjGetXsimFan2(pObj)) );
-            } else { assert(false, "0"); }
-        
-        } else if Au_ObjIsBox(pObj) != 0 {
-            var pModel *Au_Ntk_t  = Au_ObjModel(pObj);
-            // check the match between the number of actual and formal parameters
-            assert(Au_ObjFaninNum(pObj) == Au_NtkPiNum(pModel), "Au_ObjFaninNum(pObj) == Au_NtkPiNum(pModel)");
-            assert(Au_BoxFanoutNum(pObj) == Au_NtkPoNum(pModel), "Au_BoxFanoutNum(pObj) == Au_NtkPoNum(pModel)");
-            // assign PIs
-            // inlining of macro Au_ObjForEachFanin
-            for  k = 0; (k < Au_ObjFaninNum(pObj))     && (((pTerm) = Au_ObjFanin(pObj, k)), 1); k++  {  
-                Au_ObjSetXsim( Au_NtkPi(pModel, k), Au_ObjGetXsim(pTerm) );
-            }
-            // call recursively
-            Au_NtkTerSimulate_rec( pModel );
-            // assign POs
-            // inlining of macro Au_BoxForEachFanout
-            for  k = 0; (k < Au_BoxFanoutNum(pObj))    && (((pTerm) = Au_BoxFanout(pObj, k)), 1); k++  {
-                Au_ObjSetXsim( pTerm, Au_ObjGetXsim(Au_NtkPo(pModel, k)) );
-            }
-        
-        } else if Au_ObjIsConst0(pObj) != 0 {
-            Au_ObjSetXsim( pObj, AU_VAL0 ); }
-            
-    }
-    // inlining of macro Au_NtkForEachPo
-    for  i = 0; (i < Vec_IntSize(&p.vPos))    && (((pTerm) = Au_NtkPo(p, i)), 1); i++  {
-        Au_ObjSetXsim( pTerm, Au_ObjGetXsimFan0(pObj) );
-    }
-    // inlining of macro Au_NtkForEachPo
-    for  i = 0; (i < Vec_IntSize(&p.vPos))    && (((pTerm) = Au_NtkPo(p, i)), 1); i++  {
-        assert(Au_ObjGetXsim(pTerm) > 0, "Au_ObjGetXsim(pTerm) > 0");
-        if Au_ObjGetXsim(pTerm) == AU_VALX {
-            p.pMan.nPortsNC++;
-        } else if Au_ObjGetXsim(pTerm) == AU_VAL0 {
-            p.pMan.nPortsC0++;
-        } else {
-            p.pMan.nPortsC1++; }
-    }
+func Au_NtkDerive(m *Au_Man_t, old *Network, order []*Object) *Au_Ntk_t {
+	n := Au_NtkAlloc(m, old.Name)
+	constant := Au_NtkCreateConst0(n)
+	values := map[*Object]int{old.constant: constant*2 + 1}
+	set := func(o *Object, lit int) {
+		values[o] = lit
+		o.Temp = lit >> 1
+		for _, net := range o.fanouts {
+			if net.Kind == ObjectNet && len(net.fanins) == 1 {
+				values[net] = Au_LitNotCond(lit, int(abcBool(net.fanins[0].Complement)))
+				net.Temp = values[net] >> 1
+			}
+		}
+	}
+	read := func(e Edge) int {
+		lit, ok := values[e.Object]
+		if !ok {
+			panic("AU derivation dependency order")
+		}
+		return Au_LitNotCond(lit, int(abcBool(e.Complement)))
+	}
+	set(old.constant, constant*2+1)
+	for _, pi := range old.ObjectsOfKind(ObjectPI) {
+		set(pi, Au_NtkCreatePi(n)*2)
+	}
+	for _, o := range order {
+		if o.Kind == ObjectNode {
+			fanins := make([]int, len(o.fanins))
+			for i, e := range o.fanins {
+				fanins[i] = read(e)
+			}
+			sop, ok := o.Data.(string)
+			if !ok {
+				panic("AU derivation needs SOP logic")
+			}
+			set(o, Au_NtkCreateNode(n, fanins, m.intern(sop))*2)
+		} else {
+			child := boxModel(o)
+			model := Au_ManFindNtk(m, child.Name)
+			if model <= 0 {
+				panic("AU child model not derived")
+			}
+			fanins := make([]int, len(o.fanins))
+			for i, e := range o.fanins {
+				bi := e.Object
+				if len(bi.fanins) != 1 {
+					panic("AU BI arity")
+				}
+				fanins[i] = Au_LitNotCond(read(bi.fanins[0]), int(abcBool(e.Complement)))
+			}
+			id := Au_NtkCreateBox(n, fanins, len(o.fanouts), model)
+			box := n.Objects[id]
+			for i, bo := range o.fanouts {
+				set(bo, Au_LitNotCond(box.fanouts[i]*2, int(abcBool(bo.fanins[0].Complement))))
+			}
+		}
+	}
+	for _, po := range old.ObjectsOfKind(ObjectPO) {
+		if len(po.fanins) != 1 {
+			panic("AU PO arity")
+		}
+		Au_NtkCreatePo(n, read(po.fanins[0]))
+	}
+	return n
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Flattens the logic hierarchy of the netlist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Au_NtkTerSimulate(p *Au_Ntk_t) {
-    var pTerm *Au_Obj_t;
-    var i int32;
-    var Counter [2]int32 ;
-    assert(p.pMan.pFuncs == nil, "p.pMan.pFuncs == nil");
-    fmt.Printf("Collapsing model \"%s\"...\n", Au_NtkName(p));
-    // create PIs
-    // inlining of macro Au_NtkForEachPi
-    for  i = 0; (i < Vec_IntSize(&p.vPis))    && (((pTerm) = Au_NtkPi(p, i)), 1); i++  {
-        Au_ObjSetXsim( pTerm, AU_VALX );
-    }
-    // recursively flatten hierarchy
-    p.pMan.nPortsC0 = 0;
-    p.pMan.nPortsC1 = 0;
-    p.pMan.nPortsNC = 0;
-    Au_NtkTerSimulate_rec( p );
-    // analyze outputs
-    // inlining of macro Au_NtkForEachPo
-    for  i = 0; (i < Vec_IntSize(&p.vPos))    && (((pTerm) = Au_NtkPo(p, i)), 1); i++  {
-        if Au_ObjGetXsim(pTerm) == AU_VAL0 {
-            Counter[0]++;
-        } else if Au_ObjGetXsim(pTerm) == AU_VAL1 {
-            Counter[1]++; }
-    }
-    // print results
-    fmt.Printf("Const0 outputs =%15d. Const1 outputs =%15d.  Total outputs =%15d.\n", Counter[0], Counter[1], Au_NtkPoNum(p));
-    fmt.Printf("Const0 ports =  %.0f. Const1  ports =  %.0f. Non-const ports=  %.0f.  Total ports =  %.0f.\n", p.pMan.nPortsC0, p.pMan.nPortsC1, p.pMan.nPortsNC, p.pMan.nPortsC0 + p.pMan.nPortsC1 + p.pMan.nPortsNC);
+func Au_ManDeriveTest(root *Network) *aig.Graph {
+	m := Au_ManAlloc(root.Name)
+	defer Au_ManDelete(m)
+	var target *Au_Ntk_t
+	for _, model := range Abc_NtkCollectHie(root) {
+		derived := Au_NtkDerive(m, model, Abc_NtkDfsBoxes(model))
+		if model == root {
+			target = derived
+		}
+	}
+	Au_ManReorderModels(m, target)
+	// Retain the source's optional experimental model selection, with root fallback.
+	if selected := Au_ManFindNtkP(m, "path_0_r_x_lhs"); selected != nil {
+		target = selected
+	}
+	return Au_NtkDeriveFlatGia(target)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates ABC network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Au_NtkDerive(pMan *Au_Man_t, pNtk *Abc_Ntk_t, vOrder *Vec_Ptr_t) *Au_Ntk_t {
-    var p *Au_Ntk_t;
-    var pAuObj *Au_Obj_t;
-    var pObj, pTerm *Abc_Obj_t;
-//    Vec_Ptr_t * vOrder;
-    var vFanins *Vec_Int_t;
-    var i, k, iFunc int32;
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    Abc_NtkCleanCopy( pNtk );
-    p = Au_NtkAlloc( pMan, Abc_NtkName(pNtk) );
-    // copy PIs
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_ObjFanout0(pTerm).iTemp = Au_NtkCreatePi(p);
-    }
-    // copy nodes and boxes
-    vFanins = Vec_IntAlloc( 100 );
-//    vOrder = Abc_NtkDfsBoxes( pNtk );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vOrder)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vOrder, i)), 1); i++  {
-        Vec_IntClear( vFanins );
-        if Abc_ObjIsNode(pObj) {
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-                Vec_IntPush( vFanins, Au_Var2Lit(pTerm.iTemp, 0) );
-            }
-            iFunc = Abc_NamStrFindOrAdd( pMan.pFuncs, (char *)pObj.pData, nil );
-            Abc_ObjFanout0(pObj).iTemp = Au_NtkCreateNode(p, vFanins, iFunc);
-            continue;
-        }
-        assert(Abc_ObjIsBox(pObj), "Abc_ObjIsBox(pObj)");
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            Vec_IntPush( vFanins, Au_Var2Lit(Abc_ObjFanin0(pTerm).iTemp, 0) );
-        }
-        pObj.iTemp = Au_NtkCreateBox(p, vFanins, Abc_ObjFanoutNum(pObj), ((Abc_Ntk_t *)pObj.pData).iStep );
-        pAuObj = Au_NtkObj(p, pObj.iTemp);
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            Abc_ObjFanout0(pTerm).iTemp = Au_ObjFanout(pAuObj, k);
-        }
-    }
-//    Vec_PtrFree( vOrder );
-    Vec_IntFree( vFanins );
-    // copy POs
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Au_NtkCreatePo( p, Au_Var2Lit(Abc_ObjFanin0(pTerm).iTemp, 0) );
-    }
-//    Au_NtkPrintStats( p );
-    return p;
+func Abc_NtkHieCecTest2(filename, model string, verbose int32) *aig.Graph {
+	root := Au_NtkParseCBlif(filename)
+	if root == nil {
+		return nil
+	}
+	defer Au_ManDelete(root.Man)
+	if model != "" {
+		if selected := Au_ManFindNtkP(root.Man, model); selected != nil {
+			root = selected
+		}
+	}
+	if verbose != 0 {
+		Au_ManPrintBoxInfo(root)
+		Au_ManPrintStats(root.Man)
+	}
+	return Au_NtkDeriveFlatGia(root)
 }
-
-func Au_ManDeriveTest(pRoot *Abc_Ntk_t) *Gia_Man_t {
-    extern Vec_Ptr_t * Abc_NtkCollectHie( Abc_Ntk_t * pNtk );
-
-//    char * pModelName = NULL;
-    var pModelName string  = "path_0_r_x_lhs";
-    var pGia *Gia_Man_t  = nil;
-    var vOrder, vModels *Vec_Ptr_t;
-    var pMod *Abc_Ntk_t;
-    var pMan *Au_Man_t;
-    var pNtk *Au_Ntk_t  = nil;
-    var clk1 abctime;
-    var clk2 abctime;
-    var clk3 abctime;
-    var clk abctime = Abc_Clock();
-    var i int32;
-
-    clk1 = Abc_Clock();
-    pMan = Au_ManAlloc( pRoot.pDesign ? pRoot.pDesign.pName : pRoot.pName );
-    pMan.pFuncs = Abc_NamStart( 100, 16 );
-    clk2 += Abc_Clock() - clk1;
-
-    vModels = Abc_NtkCollectHie( pRoot );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vModels)) && (((pMod) = (Abc_Ntk_t *)Vec_PtrEntry(vModels, i)), 1); i++  {
-        vOrder = Abc_NtkDfsBoxes( pMod );
-
-        clk1 = Abc_Clock();
-        pNtk = Au_NtkDerive( pMan, pMod, vOrder );
-        pMod.iStep = pNtk.Id;
-        pMod.pData = pNtk;
-        clk2 += Abc_Clock() - clk1;
-
-        Vec_PtrFree( vOrder );
-    }
-    Vec_PtrFree( vModels );
-    // order models in topological order
-    Au_ManReorderModels( pMan, pNtk );
-
-    // print statistics
-    Au_ManPrintStats( pMan );
-    Au_ManCountThings( pNtk.pMan );
-
-    // select network
-    if pModelName {
-        pNtk = Au_ManFindNtkP( pMan, pModelName );
-        if pNtk == nil {
-            fmt.Printf("Could not find module \"%s\".\n", pModelName); }
-    }
-    if pNtk == nil {
-        pNtk = (Au_Ntk_t *)pRoot.pData; }
-
-  
-//    if ( !Abc_NtkCheckRecursive(pRoot) )
-    {
-        clk1 = Abc_Clock();
-        pGia = Au_NtkDeriveFlatGia( pNtk );
-        clk3 = Abc_Clock() - clk1;
-//        printf( "GIA objects max = %d.\n", pMan->nGiaObjMax );
-    }
-
-//    clk1 = Abc_Clock();
-//    Au_NtkSuppSizeTest( (Au_Ntk_t *)pRoot->pData );
-//    clk4 = Abc_Clock() - clk1;
-
-    clk1 = Abc_Clock();
-    Au_ManDelete( pMan );
-    clk2 += Abc_Clock() - clk1;
-    
-    Abc_PrintTime( 1, "Time all ", Abc_Clock() - clk );
-    Abc_PrintTime( 1, "Time new ", clk2 );
-    Abc_PrintTime( 1, "Time GIA ", clk3 );
-//    Abc_PrintTime( 1, "Time supp", clk4 );
-    return pGia;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs hierarchical equivalence checking.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHieCecTest2(pFileName string, pModelName string, fVerbose int32) *Gia_Man_t {
-    var fSimulation int32;
-    var pGia *Gia_Man_t  = nil;
-    var pNtk *Au_Ntk_t;
-    var pNtkClp *Au_Ntk_t = nil;
-    var clk1 abctime;
-    var clk abctime = Abc_Clock();
-
-    // read hierarchical netlist
-    pNtk = Au_NtkParseCBlif( pFileName );
-    if pNtk == nil {
-        fmt.Printf("Reading CBLIF file has failed.\n");
-        return nil;
-    }
-    if pNtk.pMan == nil || pNtk.pMan.vNtks.pArray == nil {
-        fmt.Printf("There is no hierarchy information.\n");
-        Au_NtkFree( pNtk );
-        return nil;
-    }
-    Abc_PrintTime( 1, "Reading file", Abc_Clock() - clk );
-
-    if fVerbose != 0 {
-        Au_ManPrintBoxInfo( pNtk );
-//    Au_ManPrintBoxInfoSorted( pNtk );
-        Au_ManPrintStats( pNtk.pMan );
-    }
-    Au_ManCountThings( pNtk.pMan );
-
-    // select network
-    if pModelName {
-        pNtkClp = Au_ManFindNtkP( pNtk.pMan, pModelName ); }
-    if pNtkClp == nil {
-        pNtkClp = pNtk; }
-
-    // check if the model is recursive
-    Au_NtkCheckRecursive( pNtkClp );
-
-    // collapse
-    clk1 = Abc_Clock();
-    if fSimulation != 0 {
-        Au_NtkTerSimulate( pNtkClp );
-        Abc_PrintTime( 1, "Time sim ", Abc_Clock() - clk1 );
-    
-    } else {
-        pGia = Au_NtkDeriveFlatGia( pNtkClp );
-        Abc_PrintTime( 1, "Time GIA ", Abc_Clock() - clk1 );
-    }
-
-    // delete
-    Au_ManDelete( pNtk.pMan );
-    Abc_PrintTime( 1, "Time all ", Abc_Clock() - clk );
-    return pGia;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

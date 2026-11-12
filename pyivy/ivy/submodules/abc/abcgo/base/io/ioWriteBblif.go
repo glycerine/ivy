@@ -1,130 +1,116 @@
 package io
 
-/**CFile****************************************************************
+import (
+	"fmt"
+	"os"
 
-  FileName    [ioWriteBblif.c]
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/bbl"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedures to write AIG in the binary format.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: ioWriteBblif.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ioAbc.h"
-//#include "misc/bbl/bblif.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-// For description of Binary BLIF format, refer to "abc/src/aig/bbl/bblif.h"
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Fnction*************************************************************
-
-  Synopsis    [Construct manager from the ABC network.]
-
-  Description [In the ABC network each object has a unique integer ID.
-  This ID is used when we construct objects of the BBLIF manager 
-  corresponding to each object of the ABC network. The objects can be
-  added to the manager in any order (although below they are added in the
-  topological order), but by the time fanin/fanout connections are created, 
-  corresponding objects are already constructed. In the end the checking
-  procedure is called.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Bbl_ManFromAbc(pNtk *Abc_Ntk_t) *Bbl_Man_t {
-    var p *Bbl_Man_t;
-    var vNodes *Vec_Ptr_t;
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k int32;
-    assert(Abc_NtkIsSopLogic(pNtk), "Abc_NtkIsSopLogic(pNtk)");
-    // start the data manager
-    p = Bbl_ManStart( Abc_NtkName(pNtk) );
-    // collect internal nodes to be added
-    vNodes = Abc_NtkDfs( pNtk, 0 );
-    // create combinational inputs
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        Bbl_ManCreateObject( p, BBL_OBJ_CI, Abc_ObjId(pObj), 0, nil );
-    }
-    // create internal nodes 
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        Bbl_ManCreateObject( p, BBL_OBJ_NODE, Abc_ObjId(pObj), Abc_ObjFaninNum(pObj), (char *)pObj.pData );
-    }
-    // create combinational outputs
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Bbl_ManCreateObject( p, BBL_OBJ_CO, Abc_ObjId(pObj), 1, nil );
-    }
-    // create fanin/fanout connections for internal nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            Bbl_ManAddFanin( p, Abc_ObjId(pObj), Abc_ObjId(pFanin) );
-        }
-    }
-    // create fanin/fanout connections for combinational outputs
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            Bbl_ManAddFanin( p, Abc_ObjId(pObj), Abc_ObjId(pFanin) );
-        }
-    }
-    Vec_PtrFree( vNodes );
-    // sanity check
-    Bbl_ManCheck( p );
-    return p;
+func BBLIFfromNetwork(n *abc.Network) (*bbl.Bbl_Man_t, error) {
+	if n == nil {
+		return nil, fmt.Errorf("nil network")
+	}
+	if n.Function != uint8(abc.ABC_FUNC_SOP) {
+		return nil, fmt.Errorf("BBLIF requires SOP functions")
+	}
+	manager := bbl.Bbl_ManStart(n.Name)
+	copies := map[*abc.Object]int{}
+	for _, input := range n.Inputs() {
+		if err := bbl.Bbl_ManCreateObject(manager, bbl.BBL_OBJ_CI, input.ID, 0, ""); err != nil {
+			return nil, err
+		}
+		copies[input] = input.ID
+	}
+	active := map[*abc.Object]bool{}
+	var derive func(*abc.Object) (int, error)
+	derive = func(object *abc.Object) (int, error) {
+		if id, ok := copies[object]; ok {
+			return id, nil
+		}
+		if active[object] {
+			return 0, fmt.Errorf("cyclic ABC netlist")
+		}
+		active[object] = true
+		defer delete(active, object)
+		if object.Kind == abc.ObjectNet {
+			fans := object.Fanins()
+			if len(fans) != 1 || fans[0].Complement {
+				return 0, fmt.Errorf("invalid net driver")
+			}
+			id, err := derive(fans[0].Object)
+			if err == nil {
+				copies[object] = id
+			}
+			return id, err
+		}
+		if object.Kind != abc.ObjectNode {
+			return 0, fmt.Errorf("unsupported BBLIF object %d", object.ID)
+		}
+		sop, ok := object.Data.(string)
+		if !ok {
+			return 0, fmt.Errorf("node has no SOP")
+		}
+		fans := object.Fanins()
+		ids := make([]int, len(fans))
+		for i, fanin := range fans {
+			if fanin.Complement {
+				return 0, fmt.Errorf("BBLIF requires explicit SOP inverter nodes")
+			}
+			var err error
+			ids[i], err = derive(fanin.Object)
+			if err != nil {
+				return 0, err
+			}
+		}
+		if err := bbl.Bbl_ManCreateObject(manager, bbl.BBL_OBJ_NODE, object.ID, len(ids), sop); err != nil {
+			return 0, err
+		}
+		for _, id := range ids {
+			if err := bbl.Bbl_ManAddFanin(manager, object.ID, id); err != nil {
+				return 0, err
+			}
+		}
+		copies[object] = object.ID
+		return object.ID, nil
+	}
+	for _, output := range n.Outputs() {
+		fans := output.Fanins()
+		if len(fans) != 1 || fans[0].Complement {
+			return nil, fmt.Errorf("invalid BBLIF output")
+		}
+		id, err := derive(fans[0].Object)
+		if err != nil {
+			return nil, err
+		}
+		if err = bbl.Bbl_ManCreateObject(manager, bbl.BBL_OBJ_CO, output.ID, 1, ""); err != nil {
+			return nil, err
+		}
+		if err = bbl.Bbl_ManAddFanin(manager, output.ID, id); err != nil {
+			return nil, err
+		}
+	}
+	if err := manager.Check(); err != nil {
+		return nil, err
+	}
+	return manager, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the AIG in the binary format.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteBblif(pNtk *Abc_Ntk_t, pFileName string) {
-    var p *Bbl_Man_t;
-    p = Bbl_ManFromAbc( pNtk );
-//Bbl_ManPrintStats( p );
-//Bbl_ManDumpBlif( p, "test_bbl.blif" );
-    Bbl_ManDumpBinaryBlif( p, pFileName );
-    Bbl_ManStop( p );
+func Bbl_ManFromAbc(n *abc.Network) *bbl.Bbl_Man_t {
+	manager, err := BBLIFfromNetwork(n)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return nil
+	}
+	return manager
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func WriteBBLIF(n *abc.Network, filename string) error {
+	manager, err := BBLIFfromNetwork(n)
+	if err != nil {
+		return err
+	}
+	defer bbl.Bbl_ManStop(manager)
+	return bbl.Bbl_ManDumpBinaryBlif(manager, filename)
+}
+func Io_WriteBblif(n *abc.Network, filename string) error { return WriteBBLIF(n, filename) }
+func init()                                               { RegisterFormat(IO_FILE_BBLIF, nil, WriteBBLIF) }

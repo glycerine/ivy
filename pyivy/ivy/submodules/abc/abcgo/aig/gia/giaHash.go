@@ -1,845 +1,516 @@
 package gia
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
+)
 
-/**CFile****************************************************************
-
-  FileName    [giaHash.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Scalable AIG package.]
-
-  Synopsis    [Structural hashing.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: giaHash.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "gia.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the place where this node is stored (or should be stored).]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManHashOne(iLit0 int32, iLit1 int32, iLitC int32, TableSize int32) int32 {
-    var Key uint32  = iLitC * 2011;
-    Key += Abc_Lit2Var(iLit0) * 7937;
-    Key += Abc_Lit2Var(iLit1) * 2971;
-    Key += Abc_LitIsCompl(iLit0) * 911;
-    Key += Abc_LitIsCompl(iLit1) * 353;
-    return int32((Key % TableSize));
-}
-func Gia_ManHashFind(p *Gia_Man_t, iLit0 int32, iLit1 int32, iLitC int32) *int32 {
-    var iThis int32;
-    var pPlace *int32 = Vec_IntEntryP( &p.vHTable, Gia_ManHashOne( iLit0, iLit1, iLitC, Vec_IntSize(&p.vHTable) ) );
-    assert(Vec_IntSize(&p.vHash) == Gia_ManObjNum(p), "Vec_IntSize(&p.vHash) == Gia_ManObjNum(p)");
-    assert(p.pMuxes || iLit0 < iLit1, "p.pMuxes || iLit0 < iLit1");
-    assert(iLit0 < iLit1 || (!Abc_LitIsCompl(iLit0) && !Abc_LitIsCompl(iLit1)), "iLit0 < iLit1 || (!Abc_LitIsCompl(iLit0) && !Abc_LitIsCompl(iLit1))");
-    assert(iLitC == -1 || !Abc_LitIsCompl(iLit1), "iLitC == -1 || !Abc_LitIsCompl(iLit1)");
-    for  ; (iThis = *pPlace); pPlace = Vec_IntEntryP(&p.vHash, iThis)  {
-        var pThis *Gia_Obj_t  = Gia_ManObj( p, iThis );
-        if Gia_ObjFaninLit0(pThis, iThis) == iLit0 && Gia_ObjFaninLit1(pThis, iThis) == iLit1 && (p.pMuxes == nil || Gia_ObjFaninLit2p(p, pThis) == iLitC) {
-            break; }
-    }
-    return pPlace;
+func Gia_ManHashOne(a, b, c, size int32) int32 {
+	key := uint32(c)*2011 + uint32(a>>1)*7937 + uint32(b>>1)*2971 + uint32(a&1)*911 + uint32(b&1)*353
+	return int32(key % uint32(size))
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManHashLookupInt(p *Gia_Man_t, iLit0 int32, iLit1 int32) int32 {
-    if iLit0 > iLit1 {
-        iLit0 ^= iLit1, iLit1 ^= iLit0, iLit0 ^= iLit1; }
-    return Abc_Var2Lit( *Gia_ManHashFind( p, iLit0, iLit1, -1 ), 0 );
+// HashFind returns a stable vector slot until the next append/resize. Callers
+// reacquire it after allocation, as in the original linked-bucket table.
+func Gia_ManHashFind(p *Gia_Man_t, a, b, c int32) *int32 {
+	if Vec_IntSize(&p.vHTable) == 0 {
+		panic("gia: structural hash is not started")
+	}
+	slot := Vec_IntEntryP(&p.vHTable, int(Gia_ManHashOne(a, b, c, int32(Vec_IntSize(&p.vHTable)))))
+	for *slot != 0 {
+		id := *slot
+		obj := p.pObjs[id]
+		if Gia_ObjFaninLit0(obj, id) == a && Gia_ObjFaninLit1(obj, id) == b && (p.pMuxes == nil || Gia_ObjFaninLit2(p, id) == c) {
+			break
+		}
+		slot = Vec_IntEntryP(&p.vHash, int(id))
+	}
+	return slot
 }
-func Gia_ManHashLookup(p *Gia_Man_t, p0 *Gia_Obj_t, p1 *Gia_Obj_t) int32 {
-    var iLit0 int32  = Gia_ObjToLit( p, p0 );
-    var iLit1 int32  = Gia_ObjToLit( p, p1 );
-    return Gia_ManHashLookupInt( p, iLit0, iLit1 );
+func Gia_ManHashLookupInt(p *Gia_Man_t, a, b int32) int32 {
+	if a > b {
+		a, b = b, a
+	}
+	return *Gia_ManHashFind(p, a, b, -1) << 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the hash table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Gia_ManHashLookup(p *Gia_Man_t, a, b *Gia_Obj_t) int32 {
+	return Gia_ManHashLookupInt(p, Gia_ObjToLit(p, a), Gia_ObjToLit(p, b))
+}
 func Gia_ManHashAlloc(p *Gia_Man_t) {
-    assert(Vec_IntSize(&p.vHTable) == 0, "Vec_IntSize(&p.vHTable) == 0");
-    Vec_IntFill( &p.vHTable, Abc_PrimeCudd( Gia_ManAndNum(p) ? Gia_ManAndNum(p) + 1000 : p.nObjsAlloc ), 0 );
-    Vec_IntGrow( &p.vHash, Abc_MaxInt(Vec_IntSize(&p.vHTable), Gia_ManObjNum(p)) );
-    Vec_IntFill( &p.vHash, Gia_ManObjNum(p), 0 );
-//printf( "Alloced table with %d entries.\n", Vec_IntSize(&p->vHTable) );
+	if Vec_IntSize(&p.vHTable) != 0 {
+		panic("gia: structural hash already started")
+	}
+	p.literalHash = nil
+	size := p.nObjsAlloc
+	if Gia_ManAndNum(p) != 0 {
+		size = Gia_ManAndNum(p) + 1000
+	}
+	Vec_IntFill(&p.vHTable, int(util.Abc_PrimeCudd(uint32(size))), 0)
+	Vec_IntFill(&p.vHash, int(p.nObjs), 0)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the hash table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Gia_ManHashStart(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var pPlace *int32;
-    var i int32;
-    Gia_ManHashAlloc( p );
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        pPlace = Gia_ManHashFind( p, Gia_ObjFaninLit0(pObj, i), Gia_ObjFaninLit1(pObj, i), Gia_ObjFaninLit2(p, i) );
-        assert(*pPlace == 0, "*pPlace == 0");
-        *pPlace = i;
-    }
-    }
+	Gia_ManHashAlloc(p)
+	for _, obj := range p.pObjs {
+		if Gia_ObjIsAnd(obj) != 0 && Gia_ObjIsBuf(obj) == 0 {
+			slot := Gia_ManHashFind(p, Gia_ObjFaninLit0(obj, obj.id), Gia_ObjFaninLit1(obj, obj.id), Gia_ObjFaninLit2(p, obj.id))
+			if *slot != 0 {
+				panic("gia: duplicate object in structural hash")
+			}
+			*slot = obj.id
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Stops the hash table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Gia_ManHashStop(p *Gia_Man_t) {
-    Vec_IntErase( &p.vHTable );
-    Vec_IntErase( &p.vHash );
+	Vec_IntErase(&p.vHTable)
+	Vec_IntErase(&p.vHash)
+	p.literalHash = nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resizes the hash table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Gia_ManHashResize(p *Gia_Man_t) {
-    var i int32;
-    var iThis int32;
-    var iNext int32;
-    var Counter int32;
-    var Counter2 int32;
-    var pPlace *int32;
-    var vOld Vec_Int_t  = p.vHTable;
-    assert(Vec_IntSize(&vOld) > 0, "Vec_IntSize(&vOld) > 0");
-    // replace the table
-    Vec_IntZero( &p.vHTable );
-    Vec_IntFill( &p.vHTable, Abc_PrimeCudd( 2 * Gia_ManAndNum(p) ), 0 ); 
-    // rehash the entries from the old table
-    Counter = 0;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(&vOld)) && (((iThis) = Vec_IntEntry(&vOld, i)), 1); i++  {
-        for  iNext = Vec_IntEntry(&p.vHash, iThis);  
-              (iThis != 0);  iThis = iNext,   
-              iNext = Vec_IntEntry(&p.vHash, iThis)   {
-            var pThis0 *Gia_Obj_t  = Gia_ManObj( p, iThis );
-            Vec_IntWriteEntry( &p.vHash, iThis, 0 );
-            pPlace = Gia_ManHashFind( p, Gia_ObjFaninLit0(pThis0, iThis), Gia_ObjFaninLit1(pThis0, iThis), Gia_ObjFaninLit2p(p, pThis0) );
-            assert(*pPlace == 0, "*pPlace == 0"); // should not be there
-            *pPlace = iThis;
-            assert(*pPlace != 0, "*pPlace != 0");
-            Counter++;
-        }
-    }
-    Counter2 = Gia_ManAndNum(p) - Gia_ManBufNum(p);
-    assert(Counter == Counter2, "Counter == Counter2");
-//    if ( p->fVerbose )
-//        printf( "Resizing GIA hash table: %d -> %d.\n", Vec_IntSize(&vOld), Vec_IntSize(&p->vHTable) );
-    Vec_IntErase( &vOld );
+	old := append([]int32(nil), Vec_IntArray(&p.vHTable)...)
+	if len(old) == 0 {
+		panic("gia: cannot resize inactive hash")
+	}
+	Vec_IntFill(&p.vHTable, int(util.Abc_PrimeCudd(uint32(2*Gia_ManAndNum(p)))), 0)
+	for _, head := range old {
+		for head != 0 {
+			obj := p.pObjs[head]
+			next := Vec_IntEntry(&p.vHash, int(head))
+			Vec_IntWriteEntry(&p.vHash, int(head), 0)
+			slot := Gia_ManHashFind(p, Gia_ObjFaninLit0(obj, head), Gia_ObjFaninLit1(obj, head), Gia_ObjFaninLit2(p, head))
+			if *slot != 0 {
+				panic("gia: duplicate rehashed gate")
+			}
+			*slot = head
+			head = next
+		}
+	}
 }
-
-/**Function********************************************************************
-
-  Synopsis    [Profiles the hash table.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
 func Gia_ManHashProfile(p *Gia_Man_t) {
-    var iEntry int32;
-    var i, Counter, Limit int32;
-    fmt.Printf("Table size = %d. Entries = %d. ", Vec_IntSize(&p.vHTable), Gia_ManAndNum(p));
-    fmt.Printf("Hits = %d. Misses = %d.\n", int32(p.nHashHit), int32(p.nHashMiss));
-    Limit = Abc_MinInt( 1000, Vec_IntSize(&p.vHTable) );
-    for  i = 0; i < Limit; i++  {
-        Counter = 0;
-        for  iEntry = Vec_IntEntry(&p.vHTable, i); 
-              (iEntry != 0); 
-              iEntry = iEntry? Vec_IntEntry(&p.vHash, iEntry) : 0  {
-            Counter++;
-        }
-        if Counter != 0 { 
-            fmt.Printf("%d ", Counter); }
-    }
-    fmt.Printf("\n");
+	fmt.Printf("Table size = %d. Entries = %d. Hits = %d. Misses = %d.\n", Vec_IntSize(&p.vHTable), Gia_ManAndNum(p), p.nHashHit, p.nHashMiss)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recognizes what nodes are control and data inputs of a MUX.]
-
-  Description [If the node is a MUX, returns the control variable C.
-  Assigns nodes T and E to be the then and else variables of the MUX. 
-  Node C is never complemented. Nodes T and E can be complemented.
-  This function also recognizes EXOR/NEXOR gates as MUXes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func giaHashIntern(p *Gia_Man_t, a, b, c int32, appendGate func() int32) int32 {
+	if p.nObjs&255 == 0 && 2*Vec_IntSize(&p.vHTable) < int(Gia_ManAndNum(p)) {
+		Gia_ManHashResize(p)
+	}
+	slot := Gia_ManHashFind(p, a, b, c)
+	if *slot != 0 {
+		p.nHashHit++
+		return *slot << 1
+	}
+	p.nHashMiss++
+	literal := appendGate()
+	slot = Gia_ManHashFind(p, a, b, c)
+	*slot = literal >> 1
+	return literal
+}
+func Gia_ManHashAnd(p *Gia_Man_t, a, b int32) int32 {
+	giaCheckFanin(p, a)
+	giaCheckFanin(p, b)
+	if a < 2 {
+		if a == 0 {
+			return 0
+		}
+		return b
+	}
+	if b < 2 {
+		if b == 0 {
+			return 0
+		}
+		return a
+	}
+	if a == b {
+		return a
+	}
+	if a == b^1 {
+		return 0
+	}
+	if p.fGiaSimple != 0 {
+		return Gia_ManAppendAnd(p, a, b)
+	}
+	if p.fAddStrash != 0 {
+		if obj := Gia_ManAddStrash(p, Gia_ObjFromLit(p, a), Gia_ObjFromLit(p, b)); obj != nil {
+			return Gia_ObjToLit(p, obj)
+		}
+	}
+	if a > b {
+		a, b = b, a
+	}
+	return giaHashIntern(p, a, b, -1, func() int32 { return Gia_ManAppendAnd(p, a, b) })
+}
+func Gia_ManHashOr(p *Gia_Man_t, a, b int32) int32 { return Gia_ManHashAnd(p, a^1, b^1) ^ 1 }
+func Gia_ManHashAndTry(p *Gia_Man_t, a, b int32) int32 {
+	if a < 2 {
+		if a == 0 {
+			return 0
+		}
+		return b
+	}
+	if b < 2 {
+		if b == 0 {
+			return 0
+		}
+		return a
+	}
+	if a == b {
+		return a
+	}
+	if a == b^1 {
+		return 0
+	}
+	if lit := Gia_ManHashLookupInt(p, a, b); lit != 0 {
+		return lit
+	}
+	return -1
+}
+func Gia_ManHashXorReal(p *Gia_Man_t, a, b int32) int32 {
+	if p.fAddStrash != 0 {
+		panic("gia: additional strashing is incompatible with real XORs")
+	}
+	if a < 2 {
+		return b ^ a
+	}
+	if b < 2 {
+		return a ^ b
+	}
+	if a == b {
+		return 0
+	}
+	if a == b^1 {
+		return 1
+	}
+	if a < b {
+		a, b = b, a
+	}
+	phase := (a ^ b) & 1
+	a, b = a&^1, b&^1
+	return giaHashIntern(p, a, b, -1, func() int32 { return Gia_ManAppendXorReal(p, a, b) }) ^ phase
+}
+func Gia_ManHashMuxReal(p *Gia_Man_t, control, then, otherwise int32) int32 {
+	if p.fAddStrash != 0 {
+		panic("gia: additional strashing is incompatible with real MUXs")
+	}
+	if control < 2 {
+		if control == 1 {
+			return then
+		}
+		return otherwise
+	}
+	if otherwise < 2 {
+		if otherwise == 1 {
+			return Gia_ManHashOr(p, control^1, then)
+		}
+		return Gia_ManHashAnd(p, control, then)
+	}
+	if then < 2 {
+		if then == 1 {
+			return Gia_ManHashOr(p, control, otherwise)
+		}
+		return Gia_ManHashAnd(p, control^1, otherwise)
+	}
+	if otherwise == then {
+		return otherwise
+	}
+	if control == otherwise || control == then^1 {
+		return Gia_ManHashAnd(p, otherwise, then)
+	}
+	if control == then || control == otherwise^1 {
+		return Gia_ManHashOr(p, otherwise, then)
+	}
+	if otherwise>>1 == then>>1 {
+		return Gia_ManHashXorReal(p, control, otherwise)
+	}
+	if otherwise > then {
+		otherwise, then = then, otherwise
+		control ^= 1
+	}
+	phase := then & 1
+	if phase != 0 {
+		otherwise ^= 1
+		then ^= 1
+	}
+	return giaHashIntern(p, otherwise, then, control, func() int32 { return Gia_ManAppendMuxReal(p, control, then, otherwise) }) ^ phase
+}
+func Gia_ManHashXor(p *Gia_Man_t, a, b int32) int32 {
+	if p.fGiaSimple != 0 {
+		return Gia_ManHashOr(p, Gia_ManHashAnd(p, a, b^1), Gia_ManHashAnd(p, a^1, b))
+	}
+	phase := (a ^ b) & 1
+	x := Gia_ManHashAnd(p, a&^1, (b&^1)^1)
+	y := Gia_ManHashAnd(p, b&^1, (a&^1)^1)
+	return Gia_ManHashAnd(p, x^1, y^1) ^ (phase ^ 1)
+}
+func Gia_ManHashMux(p *Gia_Man_t, control, then, otherwise int32) int32 {
+	if p.fGiaSimple != 0 {
+		return Gia_ManHashOr(p, Gia_ManHashAnd(p, control, then), Gia_ManHashAnd(p, control^1, otherwise))
+	}
+	if otherwise > then {
+		otherwise, then = then, otherwise
+		control ^= 1
+	}
+	phase := then & 1
+	if phase != 0 {
+		otherwise ^= 1
+		then ^= 1
+	}
+	x := Gia_ManHashAnd(p, control^1, otherwise)
+	y := Gia_ManHashAnd(p, control, then)
+	return Gia_ManHashAnd(p, x^1, y^1) ^ (phase ^ 1)
+}
+func Gia_ManHashMaj(p *Gia_Man_t, a, b, c int32) int32 {
+	return Gia_ManHashOr(p, Gia_ManHashAnd(p, a, Gia_ManHashOr(p, b, c)), Gia_ManHashAnd(p, b, c))
+}
+func giaHashOpposite(a, b *Gia_Obj_t) bool { return a != nil && b != nil && a == Gia_Not(b) }
 func Gia_ObjRecognizeMuxTwo(pNode0 *Gia_Obj_t, pNode1 *Gia_Obj_t, ppNodeT **Gia_Obj_t, ppNodeE **Gia_Obj_t) *Gia_Obj_t {
-    assert(!Gia_IsComplement(pNode0), "!Gia_IsComplement(pNode0)");
-    assert(!Gia_IsComplement(pNode1), "!Gia_IsComplement(pNode1)");
-    // find the control variable
-    if Gia_ObjFanin1(pNode0) == Gia_ObjFanin1(pNode1) && (Gia_ObjFaninC1(pNode0) ^ Gia_ObjFaninC1(pNode1)) {
-//        if ( FrGia_IsComplement(pNode1->p2) )
-        if Gia_ObjFaninC1(pNode0) { // pNode2->p2 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild0(pNode1));//pNode2->p1);
-            *ppNodeE = Gia_Not(Gia_ObjChild0(pNode0));//pNode1->p1);
-            return Gia_ObjChild1(pNode1);//pNode2->p2;
-        
-        } else { // pNode1->p2 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild0(pNode0));//pNode1->p1);
-            *ppNodeE = Gia_Not(Gia_ObjChild0(pNode1));//pNode2->p1);
-            return Gia_ObjChild1(pNode0);//pNode1->p2;
-        }
-    
-    } else if Gia_ObjFanin0(pNode0) == Gia_ObjFanin0(pNode1) && (Gia_ObjFaninC0(pNode0) ^ Gia_ObjFaninC0(pNode1)) {
-//        if ( FrGia_IsComplement(pNode1->p1) )
-        if Gia_ObjFaninC0(pNode0) { // pNode2->p1 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild1(pNode1));//pNode2->p2);
-            *ppNodeE = Gia_Not(Gia_ObjChild1(pNode0));//pNode1->p2);
-            return Gia_ObjChild0(pNode1);//pNode2->p1;
-        
-        } else { // pNode1->p1 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild1(pNode0));//pNode1->p2);
-            *ppNodeE = Gia_Not(Gia_ObjChild1(pNode1));//pNode2->p2);
-            return Gia_ObjChild0(pNode0);//pNode1->p1;
-        }
-    
-    } else if Gia_ObjFanin0(pNode0) == Gia_ObjFanin1(pNode1) && (Gia_ObjFaninC0(pNode0) ^ Gia_ObjFaninC1(pNode1)) {
-//        if ( FrGia_IsComplement(pNode1->p1) )
-        if Gia_ObjFaninC0(pNode0) { // pNode2->p2 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild0(pNode1));//pNode2->p1);
-            *ppNodeE = Gia_Not(Gia_ObjChild1(pNode0));//pNode1->p2);
-            return Gia_ObjChild1(pNode1);//pNode2->p2;
-        
-        } else { // pNode1->p1 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild1(pNode0));//pNode1->p2);
-            *ppNodeE = Gia_Not(Gia_ObjChild0(pNode1));//pNode2->p1);
-            return Gia_ObjChild0(pNode0);//pNode1->p1;
-        }
-    
-    } else if Gia_ObjFanin1(pNode0) == Gia_ObjFanin0(pNode1) && (Gia_ObjFaninC1(pNode0) ^ Gia_ObjFaninC0(pNode1)) {
-//        if ( FrGia_IsComplement(pNode1->p2) )
-        if Gia_ObjFaninC1(pNode0) { // pNode2->p1 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild1(pNode1));//pNode2->p2);
-            *ppNodeE = Gia_Not(Gia_ObjChild0(pNode0));//pNode1->p1);
-            return Gia_ObjChild0(pNode1);//pNode2->p1;
-        
-        } else { // pNode1->p2 is positive phase of C
-            *ppNodeT = Gia_Not(Gia_ObjChild0(pNode0));//pNode1->p1);
-            *ppNodeE = Gia_Not(Gia_ObjChild1(pNode1));//pNode2->p2);
-            return Gia_ObjChild1(pNode0);//pNode1->p2;
-        }
-    }
-    assert(false, "0"); // this is not MUX
-    return nil;
+	if !(Gia_IsComplement(pNode0) == 0) {
+		panic("gia: invalid structural hashing precondition")
+	}
+	if !(Gia_IsComplement(pNode1) == 0) {
+		panic("gia: invalid structural hashing precondition")
+	}
+
+	if Gia_ObjFanin1(pNode0) == Gia_ObjFanin1(pNode1) && (Gia_ObjFaninC1(pNode0) != Gia_ObjFaninC1(pNode1)) {
+
+		if Gia_ObjFaninC1(pNode0) != 0 {
+			*ppNodeT = Gia_Not(Gia_ObjChild0(pNode1))
+			*ppNodeE = Gia_Not(Gia_ObjChild0(pNode0))
+			return Gia_ObjChild1(pNode1)
+
+		} else {
+			*ppNodeT = Gia_Not(Gia_ObjChild0(pNode0))
+			*ppNodeE = Gia_Not(Gia_ObjChild0(pNode1))
+			return Gia_ObjChild1(pNode0)
+		}
+
+	} else if Gia_ObjFanin0(pNode0) == Gia_ObjFanin0(pNode1) && (Gia_ObjFaninC0(pNode0) != Gia_ObjFaninC0(pNode1)) {
+
+		if Gia_ObjFaninC0(pNode0) != 0 {
+			*ppNodeT = Gia_Not(Gia_ObjChild1(pNode1))
+			*ppNodeE = Gia_Not(Gia_ObjChild1(pNode0))
+			return Gia_ObjChild0(pNode1)
+
+		} else {
+			*ppNodeT = Gia_Not(Gia_ObjChild1(pNode0))
+			*ppNodeE = Gia_Not(Gia_ObjChild1(pNode1))
+			return Gia_ObjChild0(pNode0)
+		}
+
+	} else if Gia_ObjFanin0(pNode0) == Gia_ObjFanin1(pNode1) && (Gia_ObjFaninC0(pNode0) != Gia_ObjFaninC1(pNode1)) {
+
+		if Gia_ObjFaninC0(pNode0) != 0 {
+			*ppNodeT = Gia_Not(Gia_ObjChild0(pNode1))
+			*ppNodeE = Gia_Not(Gia_ObjChild1(pNode0))
+			return Gia_ObjChild1(pNode1)
+
+		} else {
+			*ppNodeT = Gia_Not(Gia_ObjChild1(pNode0))
+			*ppNodeE = Gia_Not(Gia_ObjChild0(pNode1))
+			return Gia_ObjChild0(pNode0)
+		}
+
+	} else if Gia_ObjFanin1(pNode0) == Gia_ObjFanin0(pNode1) && (Gia_ObjFaninC1(pNode0) != Gia_ObjFaninC0(pNode1)) {
+
+		if Gia_ObjFaninC1(pNode0) != 0 {
+			*ppNodeT = Gia_Not(Gia_ObjChild1(pNode1))
+			*ppNodeE = Gia_Not(Gia_ObjChild0(pNode0))
+			return Gia_ObjChild0(pNode1)
+
+		} else {
+			*ppNodeT = Gia_Not(Gia_ObjChild0(pNode0))
+			*ppNodeE = Gia_Not(Gia_ObjChild1(pNode1))
+			return Gia_ObjChild1(pNode0)
+		}
+	}
+	if !(false) {
+		panic("gia: invalid structural hashing precondition")
+	}
+	return nil
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Rehashes AIG with mapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManHashAndP(p *Gia_Man_t, p0 *Gia_Obj_t, p1 *Gia_Obj_t) *Gia_Obj_t { 
-    return Gia_ObjFromLit( p, Gia_ManHashAnd( p, Gia_ObjToLit(p, p0), Gia_ObjToLit(p, p1) ) );
+func Gia_ManHashAndP(p *Gia_Man_t, p0 *Gia_Obj_t, p1 *Gia_Obj_t) *Gia_Obj_t {
+	return Gia_ObjFromLit(p, Gia_ManHashAnd(p, Gia_ObjToLit(p, p0), Gia_ObjToLit(p, p1)))
 }
 
-/**Function*************************************************************
+func Gia_ManAddStrash(p *Gia_Man_t, p0 *Gia_Obj_t, p1 *Gia_Obj_t) *Gia_Obj_t {
+	var pNode0, pNode1, pFanA, pFanB, pFanC, pFanD *Gia_Obj_t
+	if !(p.fAddStrash != 0) {
+		panic("gia: invalid structural hashing precondition")
+	}
+	pNode0 = Gia_Regular(p0)
+	pNode1 = Gia_Regular(p1)
+	if Gia_ObjIsAnd(pNode0) == 0 && Gia_ObjIsAnd(pNode1) == 0 {
+		return nil
+	}
+	if Gia_ObjIsAnd(pNode0) != 0 {
+		pFanA = Gia_ObjChild0(pNode0)
+	} else {
+		pFanA = nil
+	}
+	if Gia_ObjIsAnd(pNode0) != 0 {
+		pFanB = Gia_ObjChild1(pNode0)
+	} else {
+		pFanB = nil
+	}
+	if Gia_ObjIsAnd(pNode1) != 0 {
+		pFanC = Gia_ObjChild0(pNode1)
+	} else {
+		pFanC = nil
+	}
+	if Gia_ObjIsAnd(pNode1) != 0 {
+		pFanD = Gia_ObjChild1(pNode1)
+	} else {
+		pFanD = nil
+	}
+	if Gia_IsComplement(p0) != 0 {
+		if pFanA == Gia_Not(p1) || pFanB == Gia_Not(p1) {
+			return p1
+		}
+		if pFanB == p1 {
+			return Gia_ManHashAndP(p, Gia_Not(pFanA), pFanB)
+		}
+		if pFanA == p1 {
+			return Gia_ManHashAndP(p, Gia_Not(pFanB), pFanA)
+		}
 
-  Synopsis    [Rehashes AIG with mapping.]
+	} else {
+		if pFanA == Gia_Not(p1) || pFanB == Gia_Not(p1) {
+			return Gia_ManConst0(p)
+		}
+		if pFanA == p1 || pFanB == p1 {
+			return p0
+		}
+	}
+	if Gia_IsComplement(p1) != 0 {
+		if pFanC == Gia_Not(p0) || pFanD == Gia_Not(p0) {
+			return p0
+		}
+		if pFanD == p0 {
+			return Gia_ManHashAndP(p, Gia_Not(pFanC), pFanD)
+		}
+		if pFanC == p0 {
+			return Gia_ManHashAndP(p, Gia_Not(pFanD), pFanC)
+		}
 
-  Description [http://fmv.jku.at/papers/BrummayerBiere-MEMICS06.pdf]
-               
-  SideEffects []
+	} else {
+		if pFanC == Gia_Not(p0) || pFanD == Gia_Not(p0) {
+			return Gia_ManConst0(p)
+		}
+		if pFanC == p0 || pFanD == p0 {
+			return p1
+		}
+	}
+	if Gia_IsComplement(p0) == 0 && Gia_IsComplement(p1) == 0 {
+		if giaHashOpposite(pFanA, pFanC) || giaHashOpposite(pFanA, pFanD) || giaHashOpposite(pFanB, pFanC) || giaHashOpposite(pFanB, pFanD) {
+			return Gia_ManConst0(p)
+		}
+		if pFanA == pFanC || pFanB == pFanC {
+			return Gia_ManHashAndP(p, p0, pFanD)
+		}
+		if pFanB == pFanC || pFanB == pFanD {
+			return Gia_ManHashAndP(p, pFanA, p1)
+		}
+		if pFanA == pFanD || pFanB == pFanD {
+			return Gia_ManHashAndP(p, p0, pFanC)
+		}
+		if pFanA == pFanC || pFanA == pFanD {
+			return Gia_ManHashAndP(p, pFanB, p1)
+		}
 
-  SeeAlso     []
+	} else if Gia_IsComplement(p0) != 0 && Gia_IsComplement(p1) == 0 {
+		if giaHashOpposite(pFanA, pFanC) || giaHashOpposite(pFanA, pFanD) || giaHashOpposite(pFanB, pFanC) || giaHashOpposite(pFanB, pFanD) {
+			return p1
+		}
+		if pFanB == pFanC || pFanB == pFanD {
+			return Gia_ManHashAndP(p, Gia_Not(pFanA), p1)
+		}
+		if pFanA == pFanC || pFanA == pFanD {
+			return Gia_ManHashAndP(p, Gia_Not(pFanB), p1)
+		}
 
-***********************************************************************/
-func Gia_ManAddStrash(p *Gia_Man_t, p0 *Gia_Obj_t, p1 *Gia_Obj_t) *Gia_Obj_t { 
-    var pNode0, pNode1, pFanA, pFanB, pFanC, pFanD *Gia_Obj_t;
-    assert(p.fAddStrash, "p.fAddStrash");
-    pNode0 = Gia_Regular(p0);
-    pNode1 = Gia_Regular(p1);
-    if !Gia_ObjIsAnd(pNode0) && !Gia_ObjIsAnd(pNode1) {
-        return nil; }
-    if Gia_ObjIsAnd(pNode0) {
-        pFanA = Gia_ObjChild0(pNode0);
-    } else {
-        pFanA = nil;
-    }
-    if Gia_ObjIsAnd(pNode0) {
-        pFanB = Gia_ObjChild1(pNode0);
-    } else {
-        pFanB = nil;
-    }
-    if Gia_ObjIsAnd(pNode1) {
-        pFanC = Gia_ObjChild0(pNode1);
-    } else {
-        pFanC = nil;
-    }
-    if Gia_ObjIsAnd(pNode1) {
-        pFanD = Gia_ObjChild1(pNode1);
-    } else {
-        pFanD = nil;
-    }
-    if Gia_IsComplement(p0) {
-        if pFanA == Gia_Not(p1) || pFanB == Gia_Not(p1) {
-            return p1; }
-        if pFanB == p1 {
-            return Gia_ManHashAndP( p, Gia_Not(pFanA), pFanB ); }
-        if pFanA == p1 {
-            return Gia_ManHashAndP( p, Gia_Not(pFanB), pFanA ); }
-    
-    } else {
-        if pFanA == Gia_Not(p1) || pFanB == Gia_Not(p1) {
-            return Gia_ManConst0(p); }
-        if pFanA == p1 || pFanB == p1 {
-            return p0; }
-    }
-    if Gia_IsComplement(p1) {
-        if pFanC == Gia_Not(p0) || pFanD == Gia_Not(p0) {
-            return p0; }
-        if pFanD == p0 {
-            return Gia_ManHashAndP( p, Gia_Not(pFanC), pFanD ); }
-        if pFanC == p0 {
-            return Gia_ManHashAndP( p, Gia_Not(pFanD), pFanC ); }
-    
-    } else {
-        if pFanC == Gia_Not(p0) || pFanD == Gia_Not(p0) {
-            return Gia_ManConst0(p); }
-        if pFanC == p0 || pFanD == p0 {
-            return p1; }
-    }
-    if !Gia_IsComplement(p0) && !Gia_IsComplement(p1) {
-        if pFanA == Gia_Not(pFanC) || pFanA == Gia_Not(pFanD) || pFanB == Gia_Not(pFanC) || pFanB == Gia_Not(pFanD) {
-            return Gia_ManConst0(p); }
-        if pFanA == pFanC || pFanB == pFanC {
-            return Gia_ManHashAndP( p, p0, pFanD ); }
-        if pFanB == pFanC || pFanB == pFanD {
-            return Gia_ManHashAndP( p, pFanA, p1 ); }
-        if pFanA == pFanD || pFanB == pFanD {
-            return Gia_ManHashAndP( p, p0, pFanC ); }
-        if pFanA == pFanC || pFanA == pFanD {
-            return Gia_ManHashAndP( p, pFanB, p1 ); }
-    
-    } else if Gia_IsComplement(p0) && !Gia_IsComplement(p1) {
-        if pFanA == Gia_Not(pFanC) || pFanA == Gia_Not(pFanD) || pFanB == Gia_Not(pFanC) || pFanB == Gia_Not(pFanD) {
-            return p1; }
-        if pFanB == pFanC || pFanB == pFanD {
-            return Gia_ManHashAndP( p, Gia_Not(pFanA), p1 ); }
-        if pFanA == pFanC || pFanA == pFanD {
-            return Gia_ManHashAndP( p, Gia_Not(pFanB), p1 ); }
-    
-    } else if !Gia_IsComplement(p0) && Gia_IsComplement(p1) {
-        if pFanC == Gia_Not(pFanA) || pFanC == Gia_Not(pFanB) || pFanD == Gia_Not(pFanA) || pFanD == Gia_Not(pFanB) {
-            return p0; }
-        if pFanD == pFanA || pFanD == pFanB {
-            return Gia_ManHashAndP( p, Gia_Not(pFanC), p0 ); }
-        if pFanC == pFanA || pFanC == pFanB {
-            return Gia_ManHashAndP( p, Gia_Not(pFanD), p0 ); }
-    
-    } else { // if ( Gia_IsComplement(p0) && Gia_IsComplement(p1) )
-    
-        if pFanA == pFanD && pFanB == Gia_Not(pFanC) {
-            return Gia_Not(pFanA); }
-        if pFanB == pFanC && pFanA == Gia_Not(pFanD) {
-            return Gia_Not(pFanB); }
-        if pFanA == pFanC && pFanB == Gia_Not(pFanD) {
-            return Gia_Not(pFanA); }
-        if pFanB == pFanD && pFanA == Gia_Not(pFanC) {
-            return Gia_Not(pFanB); }
-    }
-/*
-    if ( !Gia_IsComplement(p0) || !Gia_IsComplement(p1) )
-        return NULL;
-    if ( !Gia_ObjIsAnd(pNode0) || !Gia_ObjIsAnd(pNode1) )
-        return NULL;
-    if ( (Gia_ObjFanin0(pNode0) == Gia_ObjFanin0(pNode1) && (Gia_ObjFaninC0(pNode0) ^ Gia_ObjFaninC0(pNode1))) || 
-         (Gia_ObjFanin0(pNode0) == Gia_ObjFanin1(pNode1) && (Gia_ObjFaninC0(pNode0) ^ Gia_ObjFaninC1(pNode1))) ||
-         (Gia_ObjFanin1(pNode0) == Gia_ObjFanin0(pNode1) && (Gia_ObjFaninC1(pNode0) ^ Gia_ObjFaninC0(pNode1))) ||
-         (Gia_ObjFanin1(pNode0) == Gia_ObjFanin1(pNode1) && (Gia_ObjFaninC1(pNode0) ^ Gia_ObjFaninC1(pNode1))) )
-    {
-        Gia_Obj_t * pNodeC, * pNodeT, * pNodeE;
-        int fCompl;
-        pNodeC = Gia_ObjRecognizeMuxTwo( pNode0, pNode1, &pNodeT, &pNodeE );
-        // using non-standard canonical rule for MUX (d0 is not compl; d1 may be compl)
-        if ( (fCompl = Gia_IsComplement(pNodeE)) )
-        {
-            pNodeE = Gia_Not(pNodeE);
-            pNodeT = Gia_Not(pNodeT);
-        }
-        pNode0 = Gia_ManHashAndP( p, Gia_Not(pNodeC), pNodeE );
-        pNode1 = Gia_ManHashAndP( p, pNodeC,          pNodeT );
-        p->fAddStrash = 0;
-        pNodeC = Gia_NotCond( Gia_ManHashAndP( p, Gia_Not(pNode0), Gia_Not(pNode1) ), !fCompl );
-        p->fAddStrash = 1;
-        return pNodeC;
-    }
-*/
-    return nil;
+	} else if Gia_IsComplement(p0) == 0 && Gia_IsComplement(p1) != 0 {
+		if giaHashOpposite(pFanC, pFanA) || giaHashOpposite(pFanC, pFanB) || giaHashOpposite(pFanD, pFanA) || giaHashOpposite(pFanD, pFanB) {
+			return p0
+		}
+		if pFanD == pFanA || pFanD == pFanB {
+			return Gia_ManHashAndP(p, Gia_Not(pFanC), p0)
+		}
+		if pFanC == pFanA || pFanC == pFanB {
+			return Gia_ManHashAndP(p, Gia_Not(pFanD), p0)
+		}
+
+	} else {
+
+		if pFanA == pFanD && giaHashOpposite(pFanB, pFanC) {
+			return Gia_Not(pFanA)
+		}
+		if pFanB == pFanC && giaHashOpposite(pFanA, pFanD) {
+			return Gia_Not(pFanB)
+		}
+		if pFanA == pFanC && giaHashOpposite(pFanB, pFanD) {
+			return Gia_Not(pFanA)
+		}
+		if pFanB == pFanD && giaHashOpposite(pFanA, pFanC) {
+			return Gia_Not(pFanB)
+		}
+	}
+
+	return nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Hashes XOR gate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManHashXorReal(p *Gia_Man_t, iLit0 int32, iLit1 int32) int32 { 
-    var fCompl int32;
-    assert(p.fAddStrash == 0, "p.fAddStrash == 0");
-    if iLit0 < 2 {
-        if iLit0 != 0 {
-            return Abc_LitNot(iLit1);
-        } else {
-            return iLit1;
-        } }
-    if iLit1 < 2 {
-        if iLit1 != 0 {
-            return Abc_LitNot(iLit0);
-        } else {
-            return iLit0;
-        } }
-    if iLit0 == iLit1 {
-        return 0; }
-    if iLit0 == Abc_LitNot(iLit1) {
-        return 1; }
-    if (p.nObjs & 0xFF) == 0 && 2 * Vec_IntSize(&p.vHTable) < Gia_ManAndNum(p) {
-        Gia_ManHashResize( p ); }
-    if iLit0 < iLit1 {
-        iLit0 ^= iLit1, iLit1 ^= iLit0, iLit0 ^= iLit1; }
-    if Abc_LitIsCompl(iLit0) {
-        iLit0 = Abc_LitNot(iLit0);
-fCompl ^= 1; }
-    if Abc_LitIsCompl(iLit1) {
-        iLit1 = Abc_LitNot(iLit1);
-fCompl ^= 1; }
-    {
-        var pPlace *int32  = Gia_ManHashFind( p, iLit0, iLit1, -1 );
-        if *pPlace {
-            p.nHashHit++;
-            return Abc_Var2Lit( *pPlace, fCompl );
-        }
-        p.nHashMiss++;
-        if Vec_IntSize(&p.vHash) < Vec_IntCap(&p.vHash) {
-            *pPlace = Abc_Lit2Var( Gia_ManAppendXorReal( p, iLit0, iLit1 ) );
-        } else {
-            var iNode int32  = Gia_ManAppendXorReal( p, iLit0, iLit1 );
-            pPlace = Gia_ManHashFind( p, iLit0, iLit1, -1 );
-            assert(*pPlace == 0, "*pPlace == 0");
-            *pPlace = Abc_Lit2Var( iNode );
-        }
-        return Abc_Var2Lit( *pPlace, fCompl );
-    }
+func Gia_ManRehash(src *Gia_Man_t, additional int32) *Gia_Man_t {
+	dst := Gia_ManStart(src.nObjs)
+	dst.CopyIdentityFrom(src)
+	dst.fAddStrash = additional
+	Gia_ManHashAlloc(dst)
+	src.pObjs[0].Value = 0
+	for _, obj := range src.pObjs[1:] {
+		switch {
+		case Gia_ObjIsAnd(obj) != 0:
+			obj.Value = uint32(Gia_ManHashAnd(dst, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+		case Gia_ObjIsCi(obj) != 0:
+			obj.Value = uint32(Gia_ManAppendCi(dst))
+		case Gia_ObjIsCo(obj) != 0:
+			obj.Value = uint32(Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(obj)))
+		}
+	}
+	Gia_ManHashStop(dst)
+	dst.fAddStrash = 0
+	Gia_ManSetRegNum(dst, src.nRegs)
+	dst.nConstrs = src.nConstrs
+	result := Gia_ManCleanup(dst)
+	Gia_ManStop(dst)
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Hashes MUX gate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManHashMuxReal(p *Gia_Man_t, iLitC int32, iLit1 int32, iLit0 int32) int32 {
-    var fCompl int32;
-    assert(p.fAddStrash == 0, "p.fAddStrash == 0");
-    if iLitC < 2 {
-        if iLitC != 0 {
-            return iLit1;
-        } else {
-            return iLit0;
-        } }
-    if iLit0 < 2 {
-        if iLit0 != 0 {
-            return Gia_ManHashOr(p, Abc_LitNot(iLitC), iLit1);
-        } else {
-            return Gia_ManHashAnd(p, iLitC, iLit1);
-        } }
-    if iLit1 < 2 {
-        if iLit1 != 0 {
-            return Gia_ManHashOr(p, iLitC, iLit0);
-        } else {
-            return Gia_ManHashAnd(p, Abc_LitNot(iLitC), iLit0);
-        } }
-    assert(iLit0 > 1 && iLit1 > 1 && iLitC > 1, "iLit0 > 1 && iLit1 > 1 && iLitC > 1");
-    if iLit0 == iLit1 {
-        return iLit0; }
-    if iLitC == iLit0 || iLitC == Abc_LitNot(iLit1) {
-        return Gia_ManHashAnd(p, iLit0, iLit1); }
-    if iLitC == iLit1 || iLitC == Abc_LitNot(iLit0) {
-        return Gia_ManHashOr(p, iLit0, iLit1); }
-    if Abc_Lit2Var(iLit0) == Abc_Lit2Var(iLit1) {
-        return Gia_ManHashXorReal( p, iLitC, iLit0 ); }
-    if iLit0 > iLit1 {
-        iLit0 ^= iLit1, iLit1 ^= iLit0, iLit0 ^= iLit1, iLitC = Abc_LitNot(iLitC); }
-    if Abc_LitIsCompl(iLit1) {
-        iLit0 = Abc_LitNot(iLit0);
-iLit1 = Abc_LitNot(iLit1);
-fCompl = 1; }
-    {
-        var pPlace *int32  = Gia_ManHashFind( p, iLit0, iLit1, iLitC );
-        if *pPlace {
-            p.nHashHit++;
-            return Abc_Var2Lit( *pPlace, fCompl );
-        }
-        p.nHashMiss++;
-        if Vec_IntSize(&p.vHash) < Vec_IntCap(&p.vHash) {
-            *pPlace = Abc_Lit2Var( Gia_ManAppendMuxReal( p, iLitC, iLit1, iLit0 ) );
-        } else {
-            var iNode int32  = Gia_ManAppendMuxReal( p, iLitC, iLit1, iLit0 );
-            pPlace = Gia_ManHashFind( p, iLit0, iLit1, iLitC );
-            assert(*pPlace == 0, "*pPlace == 0");
-            *pPlace = Abc_Lit2Var( iNode );
-        }
-        return Abc_Var2Lit( *pPlace, fCompl );
-    }
+func Gia_ManHashAndMulti(p *Gia_Man_t, literals *Vec_Int_t) int32 {
+	if Vec_IntSize(literals) == 0 {
+		return 0
+	}
+	for Vec_IntSize(literals) > 1 {
+		array := Vec_IntArray(literals)
+		count := 0
+		for i := 0; i+1 < len(array); i += 2 {
+			array[count] = Gia_ManHashAnd(p, array[i], array[i+1])
+			count++
+		}
+		if len(array)&1 != 0 {
+			array[count] = array[len(array)-1]
+			count++
+		}
+		Vec_IntShrink(literals, count)
+	}
+	return Vec_IntEntry(literals, 0)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Hashes AND gate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManHashAnd(p *Gia_Man_t, iLit0 int32, iLit1 int32) int32 { 
-    if iLit0 < 2 {
-        if iLit0 != 0 {
-            return iLit1;
-        } else {
-            return 0;
-        } }
-    if iLit1 < 2 {
-        if iLit1 != 0 {
-            return iLit0;
-        } else {
-            return 0;
-        } }
-    if iLit0 == iLit1 {
-        return iLit1; }
-    if iLit0 == Abc_LitNot(iLit1) {
-        return 0; }
-    if p.fGiaSimple {
-        assert(Vec_IntSize(&p.vHTable) == 0, "Vec_IntSize(&p.vHTable) == 0");
-        return Gia_ManAppendAnd( p, iLit0, iLit1 );
-    }
-    if (p.nObjs & 0xFF) == 0 && 2 * Vec_IntSize(&p.vHTable) < Gia_ManAndNum(p) {
-        Gia_ManHashResize( p ); }
-    if p.fAddStrash {
-        var pObj *Gia_Obj_t  = Gia_ManAddStrash( p, Gia_ObjFromLit(p, iLit0), Gia_ObjFromLit(p, iLit1) );
-        if pObj != nil {
-            return Gia_ObjToLit( p, pObj ); }
-    }
-    if iLit0 > iLit1 {
-        iLit0 ^= iLit1, iLit1 ^= iLit0, iLit0 ^= iLit1; }
-    {
-        var pPlace *int32  = Gia_ManHashFind( p, iLit0, iLit1, -1 );
-        if *pPlace {
-            p.nHashHit++;
-            return Abc_Var2Lit( *pPlace, 0 );
-        }
-        p.nHashMiss++;
-        if Vec_IntSize(&p.vHash) < Vec_IntCap(&p.vHash) {
-            *pPlace = Abc_Lit2Var( Gia_ManAppendAnd( p, iLit0, iLit1 ) );
-        } else {
-            var iNode int32  = Gia_ManAppendAnd( p, iLit0, iLit1 );
-            pPlace = Gia_ManHashFind( p, iLit0, iLit1, -1 );
-            assert(*pPlace == 0, "*pPlace == 0");
-            *pPlace = Abc_Lit2Var( iNode );
-        }
-        return Abc_Var2Lit( *pPlace, 0 );
-    }
+func Gia_ManHashAndMulti2(p *Gia_Man_t, literals *Vec_Int_t) int32 {
+	result := int32(1)
+	for _, lit := range Vec_IntArray(literals) {
+		result = Gia_ManHashAnd(p, result, lit)
+	}
+	return result
 }
-func Gia_ManHashOr(p *Gia_Man_t, iLit0 int32, iLit1 int32) int32 { 
-    return Abc_LitNot(Gia_ManHashAnd( p, Abc_LitNot(iLit0), Abc_LitNot(iLit1) ));
+func Gia_ManHashDualMiter(p *Gia_Man_t, outputs *Vec_Int_t) int32 {
+	result := int32(0)
+	array := Vec_IntArray(outputs)
+	for i := 0; i+1 < len(array); i += 2 {
+		result = Gia_ManHashOr(p, result, Gia_ManHashXor(p, array[i], array[i+1]))
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManHashAndTry(p *Gia_Man_t, iLit0 int32, iLit1 int32) int32 { 
-    if iLit0 < 2 {
-        if iLit0 != 0 {
-            return iLit1;
-        } else {
-            return 0;
-        } }
-    if iLit1 < 2 {
-        if iLit1 != 0 {
-            return iLit0;
-        } else {
-            return 0;
-        } }
-    if iLit0 == iLit1 {
-        return iLit1; }
-    if iLit0 == Abc_LitNot(iLit1) {
-        return 0; }
-    if iLit0 > iLit1 {
-        iLit0 ^= iLit1, iLit1 ^= iLit0, iLit0 ^= iLit1; }
-    {
-        var pPlace *int32  = Gia_ManHashFind( p, iLit0, iLit1, -1 );
-        if *pPlace { 
-            return Abc_Var2Lit( *pPlace, 0 ); }
-        return -1;
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManHashXor(p *Gia_Man_t, iLit0 int32, iLit1 int32) int32 { 
-    if p.fGiaSimple {
-        return Gia_ManHashOr(p, Gia_ManHashAnd(p, iLit0, Abc_LitNot(iLit1)), Gia_ManHashAnd(p, Abc_LitNot(iLit0), iLit1) );
-    } else {
-        var fCompl int32  = Abc_LitIsCompl(iLit0) ^ Abc_LitIsCompl(iLit1);
-        var iTemp0 int32  = Gia_ManHashAnd( p, Abc_LitRegular(iLit0), Abc_LitNot(Abc_LitRegular(iLit1)) );
-        var iTemp1 int32  = Gia_ManHashAnd( p, Abc_LitRegular(iLit1), Abc_LitNot(Abc_LitRegular(iLit0)) );
-        return Abc_LitNotCond( Gia_ManHashAnd( p, Abc_LitNot(iTemp0), Abc_LitNot(iTemp1) ), !fCompl );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManHashMux(p *Gia_Man_t, iCtrl int32, iData1 int32, iData0 int32) int32 { 
-    if p.fGiaSimple {
-        return Gia_ManHashOr(p, Gia_ManHashAnd(p, iCtrl, iData1), Gia_ManHashAnd(p, Abc_LitNot(iCtrl), iData0) );
-    } else {
-        var iTemp0, iTemp1, fCompl int32;
-        if iData0 > iData1 {
-            iData0 ^= iData1, iData1 ^= iData0, iData0 ^= iData1, iCtrl = Abc_LitNot(iCtrl); }
-        if Abc_LitIsCompl(iData1) {
-            iData0 = Abc_LitNot(iData0);
-iData1 = Abc_LitNot(iData1);
-fCompl = 1; }
-        iTemp0 = Gia_ManHashAnd( p, Abc_LitNot(iCtrl), iData0 );
-        iTemp1 = Gia_ManHashAnd( p, iCtrl, iData1 );
-        return Abc_LitNotCond( Gia_ManHashAnd( p, Abc_LitNot(iTemp0), Abc_LitNot(iTemp1) ), !fCompl );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManHashMaj(p *Gia_Man_t, iData0 int32, iData1 int32, iData2 int32) int32 { 
-    var iTemp0 int32  = Gia_ManHashOr( p, iData1, iData2 );
-    var iTemp1 int32  = Gia_ManHashAnd( p, iData0, iTemp0 );
-    var iTemp2 int32  = Gia_ManHashAnd( p, iData1, iData2 );
-    return Gia_ManHashOr( p, iTemp1, iTemp2 );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Rehashes AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManRehash(p *Gia_Man_t, fAddStrash int32) *Gia_Man_t {
-    var pNew, pTemp *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    pNew.fAddStrash = fAddStrash;
-    Gia_ManHashAlloc( pNew );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        //if ( Gia_ObjIsBuf(pObj) )
-        //    pObj->Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );
-        //else 
-        if Gia_ObjIsAnd(pObj) {
-            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        } else if Gia_ObjIsCi(pObj) {
-            pObj.Value = Gia_ManAppendCi( pNew );
-        } else if Gia_ObjIsCo(pObj) {
-            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }
-    }
-    Gia_ManHashStop( pNew );
-    pNew.fAddStrash = 0;
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-//    printf( "Top gate is %s\n", Gia_ObjFaninC0(Gia_ManCo(pNew, 0))? "OR" : "AND" );
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    return pNew;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Creates well-balanced AND gate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManHashAndMulti(p *Gia_Man_t, vLits *Vec_Int_t) int32 {
-    if Vec_IntSize(vLits) == 0 {
-        return 0; }
-    for  Vec_IntSize(vLits) > 1  {
-        var i, k, Lit1, Lit2, LitRes int32;
-        // inlining of macro Vec_IntForEachEntryDouble
-        for  i = 0; (i+1 < Vec_IntSize(vLits)) && (((Lit1) = Vec_IntEntry(vLits, i)), 1) && (((Lit2) = Vec_IntEntry(vLits, i+1)), 1); i += 2  {
-            LitRes = Gia_ManHashAnd( p, Lit1, Lit2 );
-            Vec_IntWriteEntry( vLits, k++, LitRes );
-        }
-        if Vec_IntSize(vLits) & 1 {
-            Vec_IntWriteEntry( vLits, k++, Vec_IntEntryLast(vLits) ); }
-        Vec_IntShrink( vLits, k );
-    }
-    assert(Vec_IntSize(vLits) == 1, "Vec_IntSize(vLits) == 1");
-    return Vec_IntEntry(vLits, 0);
-}
-func Gia_ManHashAndMulti2(p *Gia_Man_t, vLits *Vec_Int_t) int32 {
-    var i int32;
-    var iLit int32;
-    var iRes int32 = 1;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vLits)) && (((iLit) = Vec_IntEntry(vLits, i)), 1); i++  {
-        iRes = Gia_ManHashAnd( p, iRes, iLit );
-    }
-    return iRes;
-}
-func Gia_ManHashDualMiter(p *Gia_Man_t, vOuts *Vec_Int_t) int32 {
-    var i, iLit0, iLit1, iRes int32;
-    // inlining of macro Vec_IntForEachEntryDouble
-    for  i = 0; (i+1 < Vec_IntSize(vOuts)) && (((iLit0) = Vec_IntEntry(vOuts, i)), 1) && (((iLit1) = Vec_IntEntry(vOuts, i+1)), 1); i += 2  {
-        iRes = Gia_ManHashOr( p, iRes, Gia_ManHashXor(p, iLit0, iLit1) );
-    }
-    return iRes;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

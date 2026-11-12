@@ -1,0 +1,6 @@
+# Benchmark "mux" written by ABC
+.model mux
+.inputs a b c
+.outputs y
+.gate MUX2 A=a B=b C=c Y=y
+.end

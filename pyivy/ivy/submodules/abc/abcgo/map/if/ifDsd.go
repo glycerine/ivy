@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/glycerine/abcgo/bool/kit"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dau"
 )
@@ -32,7 +33,10 @@ type If_DsdObj_t struct {
 	nFans               int32
 	pFans               []int32
 	truth               []uint64
+	supportVars         []int32
 	text                string
+	network             *dau.Dss_Ntk_t
+	permutation         []byte
 }
 
 func If_DsdObjClean(p *If_DsdObj_t)      { *p = If_DsdObj_t{} }
@@ -82,7 +86,8 @@ func dsdWordCount(n int32) int { return (1<<uint(n) + 63) / 64 }
 
 func dsdSupport(truth []uint64, n int32) []int32 {
 	vars := make([]int32, n)
-	return vars[:dau.Dau_DsdMinBase(truth, n, vars)]
+	base := append([]uint64(nil), truth...)
+	return vars[:dau.Dau_DsdMinBase(base, n, vars)]
 }
 
 // If_DsdManAlloc creates constant and variable records up front, matching the
@@ -133,12 +138,13 @@ func If_DsdManCompute(p *If_DsdMan_t, truth []uint64, nLeaves int32, permutation
 	words := dsdWordCount(nLeaves)
 	copyTruth := append([]uint64(nil), truth[:words]...)
 	var text []byte
-	prime := dau.Dau_DsdDecompose(copyTruth, nLeaves, 0, 1, &text)
+	decomposeTruth := append([]uint64(nil), copyTruth...)
+	prime := dau.Dau_DsdDecompose(decomposeTruth, nLeaves, 0, 1, &text)
 	support := dsdSupport(copyTruth, nLeaves)
 	for i := range permutation {
-		permutation[i] = byte(i)
+		permutation[i] = byte(i << 1)
 	}
-	obj := &If_DsdObj_t{Id: int32(Vec_PtrSize(&p.vObjs)), Type: IF_DSD_PRIME, nSupp: int32(len(support)), nFans: nLeaves, truth: copyTruth, text: string(text)}
+	obj := &If_DsdObj_t{Id: int32(Vec_PtrSize(&p.vObjs)), Type: IF_DSD_PRIME, nSupp: int32(len(support)), nFans: nLeaves, truth: copyTruth, supportVars: support, text: string(text), network: dau.Dss_NtkCreate(string(text), nLeaves, nil), permutation: append([]byte(nil), permutation[:nLeaves]...)}
 	if prime == 0 && len(support) <= 1 {
 		obj.Type = IF_DSD_VAR
 	}
@@ -161,17 +167,23 @@ func If_DsdManCheckXY(p *If_DsdMan_t, lit, lutSize, derive int32, maskNot uint32
 	if obj.nSupp < 3 || obj.nSupp > 16 {
 		return 0
 	}
-	sets := dau.Dau_DecFindSets(obj.truth, obj.nSupp)
+	baseTruth := append([]uint64(nil), obj.truth...)
+	dau.Dau_DsdMinBase(baseTruth, obj.nFans, make([]int32, obj.nFans))
+	sets := dau.Dau_DecFindSets(baseTruth, obj.nSupp)
 	defer vec.Vec_IntFree(sets)
 	for _, raw := range vec.Vec_IntArray(sets) {
 		set := uint32(raw)
-		if set&maskNot != 0 {
+		var mapped uint32
+		for i, variable := range obj.supportVars {
+			mapped |= ((set >> uint(2*i)) & 3) << uint(2*variable)
+		}
+		if mapped&maskNot != 0 {
 			continue
 		}
 		var unique, shared, free int32
 		dau.Dau_DecSortSet(set, obj.nSupp, &unique, &shared, &free)
 		if unique+shared <= lutSize && free+shared+1 <= lutSize {
-			return set
+			return mapped
 		}
 	}
 	return 0
@@ -264,25 +276,103 @@ func If_DsdManPrint(p *If_DsdMan_t, fileName string, number, support, occurs, du
 func If_DsdManSave(p *If_DsdMan_t, fileName string) { If_DsdManPrint(p, fileName, 0, 0, 0, 0, 0) }
 func If_DsdManLoad(fileName string) *If_DsdMan_t    { return nil }
 
-// DSD delay evaluation uses one LUT stage for each cut in the fast path. The
-// detailed pin-delay reconstruction is performed by ifDelay's exact SOP/LUT
-// algorithms; this function is retained for callers selecting DSD balance.
-func If_CutDsdBalanceEval(p *If_Man_t, cut *If_Cut_t, _ *Vec_Int_t) float32 {
-	if cut.nLeaves == 0 {
-		return 0
+func dsdSopCover(obj *dau.Dss_Obj_t) *Vec_Int_t {
+	truth32 := make([]uint32, (len(obj.Truth) * 2))
+	for i, word := range obj.Truth {
+		truth32[2*i], truth32[2*i+1] = uint32(word), uint32(word>>32)
 	}
-	maximum := float32(-IF_FLOAT_LARGE)
-	for pin := int32(0); pin < int32(cut.nLeaves); pin++ {
-		maximum = max(maximum, If_ObjCutBest(If_CutLeaf(p, cut, pin)).Delay+1)
+	var cover []uint32
+	kit.Kit_TruthIsop(truth32, int32(len(obj.Fans)), &cover, 0)
+	result := vec.Vec_IntAlloc(len(cover))
+	for _, cube := range cover {
+		vec.Vec_IntPush(result, int32(cube))
 	}
-	return maximum
+	return result
 }
+
+// dsdDelayRec mirrors the source recursion: variables inherit arrival times,
+// muxes cost two stages, prime nodes use their ISOP, and associative nodes use
+// the logarithmic counter scheduler.
+func dsdDelayRec(network *dau.Dss_Ntk_t, obj *dau.Dss_Obj_t, pinMap []byte, times []int32, support *int32, all int32) (int32, uint64) {
+	obj = dau.Dss_Regular(obj)
+	switch obj.Type {
+	case dau.DAU_DSD_VAR:
+		if int(obj.Var) >= len(pinMap) {
+			panic("if: DSD variable outside permutation")
+		}
+		pin := int(Abc_Lit2Var(int32(pinMap[obj.Var])))
+		if pin >= len(times) {
+			panic("if: DSD variable outside cut")
+		}
+		*support++
+		return times[pin], If_CutPinDelayInit(int32(pin))
+	case dau.DAU_DSD_MUX:
+		if len(obj.Fans) != 3 {
+			panic("if: malformed DSD mux")
+		}
+		delays, profiles := make([]int32, 3), make([]uint64, 3)
+		for i, lit := range obj.Fans {
+			delays[i], profiles[i] = dsdDelayRec(network, dau.Dss_Lit2Obj(network.Objects, lit), pinMap, times, support, all)
+		}
+		profile := If_CutPinDelayMax(If_CutPinDelayMax(profiles[0], profiles[1], all, 1), If_CutPinDelayMax(profiles[0], profiles[2], all, 1), all, 1)
+		return 2 + max(delays[0], max(delays[1], delays[2])), profile
+	case dau.DAU_DSD_PRIME:
+		delays, profiles := make([]int32, len(obj.Fans)), make([]uint64, len(obj.Fans))
+		for i, lit := range obj.Fans {
+			delays[i], profiles[i] = dsdDelayRec(network, dau.Dss_Lit2Obj(network.Objects, lit), pinMap, times, support, all)
+		}
+		cover := dsdSopCover(obj)
+		defer vec.Vec_IntFree(cover)
+		var profile uint64
+		delay := If_CutSopBalancePinDelaysInt(cover, delays, profiles, int32(len(obj.Fans)), &profile)
+		return delay, profile
+	case dau.DAU_DSD_AND, dau.DAU_DSD_XOR:
+		var count int32
+		delays, profiles, counters := make([]int32, len(obj.Fans)), make([]uint64, len(obj.Fans)), make([]int32, len(obj.Fans))
+		var delay int32
+		for i, lit := range obj.Fans {
+			delays[i], profiles[i] = dsdDelayRec(network, dau.Dss_Lit2Obj(network.Objects, lit), pinMap, times, support, all)
+			delay = If_LogCounterPinDelays(counters, &count, profiles, delays[i], profiles[i], all, 0)
+		}
+		return delay, If_LogPinDelaysMulti(profiles, count, all, 0)
+	default:
+		panic("if: unsupported DSD node type")
+	}
+}
+
 func If_CutDsdBalancePinDelays(p *If_Man_t, cut *If_Cut_t, permutation []byte) int32 {
 	if len(permutation) < int(cut.nLeaves) {
 		return -1
 	}
-	for i := int32(0); i < int32(cut.nLeaves); i++ {
-		permutation[i] = 1
+	if cut.nLeaves == 0 {
+		return 0
 	}
-	return int32(If_CutDsdBalanceEval(p, cut, nil))
+	if cut.nLeaves == 1 {
+		permutation[0] = 0
+		return int32(If_ObjCutBest(If_CutLeaf(p, cut, 0)).Delay)
+	}
+	obj := dsdObject(p.pIfDsdMan, If_CutDsdLit(p, cut))
+	if obj.network == nil {
+		return -1
+	}
+	times := make([]int32, cut.nLeaves)
+	for i := range times {
+		times[i] = int32(If_ObjCutBest(If_CutLeaf(p, cut, int32(i))).Delay)
+	}
+	var support int32
+	delay, profile := dsdDelayRec(obj.network, obj.network.Root, obj.permutation, times, &support, int32(cut.nLeaves))
+	assert(support == int32(cut.nLeaves), "support == cut.nLeaves")
+	If_CutPinDelayTranslate(profile, int32(cut.nLeaves), permutation)
+	return delay
+}
+
+func If_CutDsdBalanceEval(p *If_Man_t, cut *If_Cut_t, _ *Vec_Int_t) float32 {
+	if cut.nLeaves == 0 {
+		return 0
+	}
+	if cut.nLeaves == 1 {
+		return If_ObjCutBest(If_CutLeaf(p, cut, 0)).Delay
+	}
+	permutation := make([]byte, cut.nLeaves)
+	return float32(If_CutDsdBalancePinDelays(p, cut, permutation))
 }

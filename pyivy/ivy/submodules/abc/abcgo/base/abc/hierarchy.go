@@ -191,39 +191,7 @@ func netForDriver(n *Network, e Edge) *Object {
 // cloneNetwork preserves a module which the optimized top-level cone did not
 // visit. All interfaces, logic, names and connection polarities remain owned by
 // the new design rather than referring back to the old graph.
-func cloneNetwork(old *Network) *Network {
-	n := copyNetworkMetadata(old)
-	old.Copy = n
-	setCopy(old.constant, n.One())
-	for _, o := range old.Objects() {
-		if o == old.constant {
-			continue
-		}
-		dup := Abc_NtkDupObj(n, o, 1)
-		dup.Barrier = o.Barrier
-		setCopy(o, dup.Signal())
-	}
-	for _, o := range old.Objects() {
-		if o == old.constant {
-			continue
-		}
-		for _, e := range o.fanins {
-			copy := getCopy(e.Object)
-			copy.Complement = copy.Complement != e.Complement
-			Abc_ObjAddFanin(o.Copy, copy)
-		}
-		if o.Choice != nil {
-			o.Copy.Choice = o.Choice.Copy
-		}
-	}
-	for _, kind := range []ObjectKind{ObjectPI, ObjectPO, ObjectBI, ObjectBO} {
-		var ids []int
-		for _, o := range old.ObjectsOfKind(kind) {
-			ids = append(ids, o.Copy.ID)
-		}
-		if err := n.SetTerminalOrder(kind, ids); err != nil {
-			panic(err)
-		}
-	}
-	return n
-}
+
+// Hierarchy cloning uses the public duplicate routine so function managers are
+// independently owned and may be released when either network is deleted.
+func cloneNetwork(old *Network) *Network { return Abc_NtkDup(old) }

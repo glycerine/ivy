@@ -21,5 +21,6 @@ GOCACHE=/tmp/abcgo-go-cache go -C abcgo test bdd/extrab/extraBdd.go bdd/extrab/e
 GOCACHE=/tmp/abcgo-go-cache go -C abcgo vet bdd/extrab/extraBdd.go bdd/extrab/extraBddSet.go bdd/extrab/extraBddSet_test.go
 ```
 
-Full root extrab still has other visible drafts; this is a completed-family gate,
-not a claim of full-package success.
+The full root package now passes ordinary race tests and vet; see
+`FULL_PACKAGE_REVIEW.md` for the exact complete gate. The family-specific checks
+above remain covered by that package gate.

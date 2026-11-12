@@ -79,6 +79,25 @@ func TestShuffleHeapPreservesLiveHandlesAndCanonicality(t *testing.T) {
 		t.Fatal("invalid permutation accepted")
 	}
 }
+
+func TestAnnealingRangePreservesReferencedFunctions(t *testing.T) {
+	dd := NewBDDManager(4)
+	x0, x1, x2, x3 := dd.Vars[0], dd.Vars[1], dd.Vars[2], dd.Vars[3]
+	f := Cudd_bddXor(dd, Cudd_bddAnd(dd, x0, x2), Cudd_bddAnd(dd, x1, x3))
+	Cudd_Ref(f)
+	before := make([]bool, 16)
+	for assignment := range before {
+		before[assignment] = bddValueAt(f, assignment)
+	}
+	if Cudd_AnnealRange(dd, 1, 3, 0) != 1 {
+		t.Fatal("annealing failed")
+	}
+	for assignment, want := range before {
+		if got := bddValueAt(f, assignment); got != want {
+			t.Fatalf("annealing changed function at assignment %04b: got %v want %v", assignment, got, want)
+		}
+	}
+}
 func TestReduceHeapSiftImprovesReferencedMux(t *testing.T) {
 	dd := NewBDDManager(3)
 	root := Cudd_bddIte(dd, dd.Vars[2], dd.Vars[1], dd.Vars[0])

@@ -1,5 +1,7 @@
 package sbd
 
+import "github.com/glycerine/abcgo/misc/vec"
+
 /**CFile****************************************************************
 
   FileName    [rsbInt.h]
@@ -11,7 +13,7 @@ package sbd
   Synopsis    [Internal declarations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -19,10 +21,6 @@ package sbd
   Revision    [$Id: rsbInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
- 
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
@@ -52,32 +50,30 @@ package sbd
 //ABC_NAMESPACE_HEADER_START
 
 const SBD_SAT_UNDEC = 0x1234567812345678
-const SBD_SAT_SAT =   0x8765432187654321
+const SBD_SAT_SAT = 0x8765432187654321
 
-const SBD_LUTS_MAX =    2
-const SBD_SIZE_MAX =    4
-const SBD_DIV_MAX =    10
-const SBD_FVAR_MAX =  100
+const SBD_LUTS_MAX = 2
+const SBD_SIZE_MAX = 4
+const SBD_DIV_MAX = 10
+const SBD_FVAR_MAX = 100
 
 ////////////////////////////////////////////////////////////////////////
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
 // Sbd_Sto_t is declared with its implementation in sbdCut.go.
-// Sbd_Srv_t is declared with its implementation in sbdCut2.go. 
+// Sbd_Srv_t is declared with its implementation in sbdCut2.go.
 
-   
 type Sbd_Str_t struct {
-    fLut               int32;                 // LUT or SEL
-    nVarIns               int32;              // input count
-    VarIns [SBD_DIV_MAX]int32;  // input vars
-    Res              word;                  // result of solving
+	fLut    int32              // LUT or SEL
+	nVarIns int32              // input count
+	VarIns  [SBD_DIV_MAX]int32 // input vars
+	Res     uint64             // result of solving
 }
 
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///
 ////////////////////////////////////////////////////////////////////////
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                    FUNCTION DECLARATIONS                         ///
@@ -107,8 +103,8 @@ type Sbd_Str_t struct {
 // extern int          Sbd_StoObjBestCut( Sbd_Sto_t * p, int iObj, int nSize, int * pLeaves );
 
 /*=== sbdCut2.c ==========================================================*/
-// extern Sbd_Srv_t *  Sbd_ManCutServerStart( Gia_Man_t * pGia, Vec_Int_t * vMirrors, 
-//                                    Vec_Int_t * vLutLevs, Vec_Int_t * vLevs, Vec_Int_t * vRefs, 
+// extern Sbd_Srv_t *  Sbd_ManCutServerStart( Gia_Man_t * pGia, Vec_Int_t * vMirrors,
+//                                    Vec_Int_t * vLutLevs, Vec_Int_t * vLevs, Vec_Int_t * vRefs,
 //                                    int nLutSize, int nCutSize, int nCutNum, int fVerbose );
 
 // extern void         Sbd_ManCutServerStop( Sbd_Srv_t * p );
@@ -128,19 +124,23 @@ type Sbd_Str_t struct {
 // extern Vec_Bit_t *  Sbc_ManCriticalPath( Gia_Man_t * p );
 
 /*=== sbdQbf.c ==========================================================*/
-// extern int          Sbd_ProblemSolve( 
-//                                        Gia_Man_t * p, Vec_Int_t * vMirrors, 
-//                                        int Pivot, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var, 
-//                                        Vec_Int_t * vTfo, Vec_Int_t * vRoots, 
-//                                        Vec_Int_t * vDivSet, int nStrs, Sbd_Str_t * pStr0 
+// extern int          Sbd_ProblemSolve(
+//                                        Gia_Man_t * p, Vec_Int_t * vMirrors,
+//                                        int Pivot, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var,
+//                                        Vec_Int_t * vTfo, Vec_Int_t * vRoots,
+//                                        Vec_Int_t * vDivSet, int nStrs, Sbd_Str_t * pStr0
 //                                     );
 
-
 //ABC_NAMESPACE_HEADER_END
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
+func sbdVector(values ...int32) *vec.Vec_Int_t {
+	p := vec.Vec_IntAlloc(len(values))
+	for _, v := range values {
+		vec.Vec_IntPush(p, v)
+	}
+	return p
+}

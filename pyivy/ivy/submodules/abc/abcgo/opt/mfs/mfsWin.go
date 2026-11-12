@@ -1,120 +1,74 @@
 package mfs
 
-/**CFile****************************************************************
-
-  FileName    [mfsWin.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [The good old minimization with complete don't-cares.]
-
-  Synopsis    [Procedures to compute windows stretching to the PIs.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: mfsWin.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "mfsInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the node should be a root.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MfsComputeRootsCheck(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit int32) int32 {
-    var pFanout *Abc_Obj_t;
-    var i int32;
-    // the node is the root if one of the following is true:
-    // (1) the node has more than fanouts than the limit
-    if Abc_ObjFanoutNum(pNode) > nFanoutLimit {
-        return 1; }
-    // (2) the node has CO fanouts
-    // (3) the node has fanouts above the cutoff level
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pNode)) && (((pFanout) = Abc_ObjFanout(pNode, i)), 1); i++  {
-        if Abc_ObjIsCo(pFanout) || int32(pFanout.Level) > nLevelMax {
-            return 1; }
-    }
-    return 0;
+// Abc_MfsComputeRoots uses the original fanout-count, CO-fanout and level-cutoff
+// rules. A dangling node is treated as its own root rather than an empty window.
+func Abc_MfsComputeRoots(p *Mfs_Man_t, target, levels, limit int) []int {
+	cutoff := p.levels[target] + levels
+	seen := make([]bool, len(p.Network.Nodes))
+	var roots []int
+	var rec func(int)
+	rec = func(id int) {
+		if seen[id] {
+			return
+		}
+		seen[id] = true
+		root := p.outputDriver[id] || len(p.fanouts[id]) > limit
+		for _, fo := range p.fanouts[id] {
+			root = root || p.levels[fo] > cutoff
+		}
+		if root {
+			roots = append(roots, id)
+			return
+		}
+		for _, fo := range p.fanouts[id] {
+			rec(fo)
+		}
+	}
+	rec(target)
+	if len(roots) == 0 {
+		roots = append(roots, target)
+	}
+	return roots
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively collects the root candidates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MfsComputeRoots_rec(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit int32, vRoots *Vec_Ptr_t) {
-    var pFanout *Abc_Obj_t;
-    var i int32;
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    if Abc_NodeIsTravIdCurrent(pNode) {
-        return; }
-    Abc_NodeSetTravIdCurrent( pNode );
-    // check if the node should be the root
-    if Abc_MfsComputeRootsCheck( pNode, nLevelMax, nFanoutLimit ) != 0 {
-        Vec_PtrPush( vRoots, pNode );
-    } else { // if not, explore its fanouts
-        // inlining of macro Abc_ObjForEachFanout
-        for  i = 0; (i < Abc_ObjFanoutNum(pNode)) && (((pFanout) = Abc_ObjFanout(pNode, i)), 1); i++  {
-            Abc_MfsComputeRoots_rec( pFanout, nLevelMax, nFanoutLimit, vRoots );
-        } }
+func Abc_MfsWinMarkTfi(p *Mfs_Man_t, roots []int) []int {
+	seen := make([]bool, len(p.Network.Nodes))
+	var result []int
+	var rec func(int)
+	rec = func(id int) {
+		if seen[id] {
+			return
+		}
+		seen[id] = true
+		for _, f := range p.Network.Nodes[id].Fanins {
+			rec(f)
+		}
+		result = append(result, id)
+	}
+	for _, id := range roots {
+		rec(id)
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively collects the root candidates.]
-
-  Description [Returns 1 if the only root is this node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MfsComputeRoots(pNode *Abc_Obj_t, nWinTfoMax int32, nFanoutLimit int32) *Vec_Ptr_t {
-    var vRoots *Vec_Ptr_t;
-    vRoots = Vec_PtrAlloc( 10 );
-    Abc_NtkIncrementTravId( pNode.pNtk );
-    Abc_MfsComputeRoots_rec( pNode, pNode.Level + nWinTfoMax, nFanoutLimit, vRoots );
-    assert(Vec_PtrSize(vRoots) > 0, "Vec_PtrSize(vRoots) > 0");
-//    if ( Vec_PtrSize(vRoots) == 1 && Vec_PtrEntry(vRoots, 0) == pNode )
-//        return 0;
-    return vRoots;
+func Abc_WinNode(p *Mfs_Man_t, target int) bool {
+	Mfs_ManClean(p)
+	p.Target = target
+	p.Stats.NodesTried++
+	p.Roots = Abc_MfsComputeRoots(p, target, p.Params.WinTfoLevs, p.Params.FanoutsMax)
+	cone := Abc_MfsWinMarkTfi(p, p.Roots)
+	for _, id := range cone {
+		if p.Network.Nodes[id].Input {
+			p.Support = append(p.Support, id)
+		} else if id != 0 {
+			p.Nodes = append(p.Nodes, id)
+		}
+	}
+	if p.Params.Resub && p.Params.WinMax > 0 && len(p.Nodes) > p.Params.WinMax {
+		p.Stats.WindowsSkipped++
+		return false
+	}
+	if p.Params.Resub {
+		p.Divisors = Abc_MfsComputeDivisors(p, target, p.required[target]-1)
+	}
+	Abc_NtkConstructAig(p, target)
+	return true
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

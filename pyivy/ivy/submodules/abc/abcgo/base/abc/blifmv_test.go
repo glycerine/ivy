@@ -303,3 +303,32 @@ func TestDeletedMVObjectsReleaseAttributes(t *testing.T) {
 		t.Fatal("deleted object retained in MV attribute manager")
 	}
 }
+func TestSymbolicBinaryMVVariableSetter(t *testing.T) {
+	n := NewNetwork("symbolic")
+	o := n.NewObject(ObjectNet)
+	variable := &MVVariable{Values: 2, Names: []string{"low", "high"}}
+	if err := SetMVVariable(o, variable); err != nil {
+		t.Fatal(err)
+	}
+	variable.Names[0] = "changed"
+	if Abc_ObjMvVarNum(o) != 2 || Abc_ObjMvVar(o).Names[0] != "low" {
+		t.Fatal("binary labels aliased or lost")
+	}
+	for _, bad := range []*MVVariable{{Values: 1}, {Values: 2, Names: []string{"one"}}, {Values: 2, Names: []string{"x", "x"}}, {Values: 2, Names: []string{"", "x"}}} {
+		if err := SetMVVariable(o, bad); err == nil {
+			t.Fatal("invalid domain accepted", bad)
+		}
+	}
+	if Abc_ObjMvVar(o).Names[0] != "low" {
+		t.Fatal("invalid update changed domain")
+	}
+	if err := SetMVVariable(o, nil); err != nil || Abc_ObjMvVar(o) != nil {
+		t.Fatal("clear failed", err)
+	}
+	if err := n.DeleteObject(o); err != nil {
+		t.Fatal(err)
+	}
+	if err := SetMVVariable(o, variable); err == nil {
+		t.Fatal("annotated deleted object")
+	}
+}

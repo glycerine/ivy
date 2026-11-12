@@ -180,13 +180,16 @@ func RunSimulation(g *aig.Graph, parameters *Fsim_ParSim_t) (*SimulationResult, 
 		return nil, err
 	}
 	defer Fsim_ManDelete(p)
+	p.words = pars.Words
 	if aig.Aig_ManRegNum(g) <= 0 {
 		return nil, fmt.Errorf("fsim: sequential simulation needs registers")
 	}
 	if err = Fsim_ManFront(p, pars.CompressAIG); err != nil {
 		return nil, err
 	}
-	g.ClearSequentialCounterexample()
+	if pars.CheckMiter {
+		g.ClearSequentialCounterexample()
+	}
 	cis := make([][]uint32, p.CIs)
 	for i := range cis {
 		cis[i] = make([]uint32, pars.Words)

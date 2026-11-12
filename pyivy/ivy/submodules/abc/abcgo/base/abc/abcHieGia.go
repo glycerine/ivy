@@ -1,640 +1,594 @@
 package abc
 
-import "fmt"
+// Native counterparts of abcHieGia.c. Graph edges use the AIG package's
+// const-one literal 0 convention, rather than GIA's const-zero convention.
+import (
+	"fmt"
+	aig "github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/hop"
+)
 
-/**CFile****************************************************************
-
-  FileName    [abcHieGia.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Procedures to handle hierarchy.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcHieGia.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "abc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Transfers the AIG from one manager into another.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeStrashToGia_rec(pNew *Gia_Man_t, pObj *Hop_Obj_t) {
-    assert(!Hop_IsComplement(pObj), "!Hop_IsComplement(pObj)");
-    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {
-        return; }
-    Abc_NodeStrashToGia_rec( pNew, Hop_ObjFanin0(pObj) ); 
-    Abc_NodeStrashToGia_rec( pNew, Hop_ObjFanin1(pObj) );
-    pObj.iData = Gia_ManHashAnd( pNew, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );
-    assert(!Hop_ObjIsMarkA(pObj), "!Hop_ObjIsMarkA(pObj)"); // loop detection
-    Hop_ObjSetMarkA( pObj );
+// Boundary buffers survive sweeping even when their logical value becomes a
+// constant or another boundary. Signals records that value separately from
+// Buffers, which keeps the mapper-to-hierarchy port correspondence stable.
+type HierarchyBufferInfo struct {
+	Ports            []*Object
+	Buffers, Signals []aig.Edge
+	Groups           []HierarchyBufferGroup
 }
-func Abc_NodeStrashToGia(pNew *Gia_Man_t, pNode *Abc_Obj_t) int32 {
-    var pMan *Hop_Man_t  = (Hop_Man_t *)pNode.pNtk.pManFunc;
-    var pRoot *Hop_Obj_t  = (Hop_Obj_t *)pNode.pData;
-    var pFanin *Abc_Obj_t;  var i int32;
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    assert(Abc_NtkHasAig(pNode.pNtk) && !Abc_NtkIsStrash(pNode.pNtk), "Abc_NtkHasAig(pNode.pNtk) && !Abc_NtkIsStrash(pNode.pNtk)");
-    // check the constant case
-    if Abc_NodeIsConst(pNode) || Hop_Regular(pRoot) == Hop_ManConst1(pMan) {
-        return Abc_LitNotCond( 1, Hop_IsComplement(pRoot) ); }
-    // set elementary variables
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
-        assert(pFanin.iTemp != -1, "pFanin.iTemp != -1");
-    }
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
-        Hop_IthVar(pMan, i).iData = pFanin.iTemp;
-    }
-    // strash the AIG of this node
-    Abc_NodeStrashToGia_rec( pNew, Hop_Regular(pRoot) );
-    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );
-    return Abc_LitNotCond( Hop_Regular(pRoot).iData, Hop_IsComplement(pRoot) );
+type HierarchyBufferGroup struct {
+	InputStart, InputCount, OutputStart, OutputCount int
+	Instance                                         *Object
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Flattens the logic hierarchy of the netlist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFlattenHierarchyGia2_rec(pNew *Gia_Man_t, pNtk *Abc_Ntk_t, pCounter *int32, vBufs *Vec_Int_t) {
-    var vDfs *Vec_Ptr_t  = (Vec_Ptr_t *)pNtk.pData;
-    var pObj, pTerm *Abc_Obj_t; 
-    var i, k int32; (*pCounter)++;
-    //printf( "[%d:%d] ", Abc_NtkPiNum(pNtk), Abc_NtkPoNum(pNtk) );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vDfs)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vDfs, i)), 1); i++  {
-        if Abc_ObjIsNode(pObj) {
-            Abc_ObjFanout0(pObj).iTemp = Abc_NodeStrashToGia( pNew, pObj );
-        } else {
-            var iBufStart int32  = Gia_ManBufNum(pNew);
-            var pModel *Abc_Ntk_t  = (Abc_Ntk_t *)pObj.pData;
-            assert(!Abc_ObjIsLatch(pObj), "!Abc_ObjIsLatch(pObj)");
-            assert(Abc_NtkPiNum(pModel) == Abc_ObjFaninNum(pObj), "Abc_NtkPiNum(pModel) == Abc_ObjFaninNum(pObj)");
-            assert(Abc_NtkPoNum(pModel) == Abc_ObjFanoutNum(pObj), "Abc_NtkPoNum(pModel) == Abc_ObjFanoutNum(pObj)");
-            Abc_NtkFillTemp( pModel );
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-                assert(Abc_ObjIsNet(Abc_ObjFanin0(pTerm)), "Abc_ObjIsNet(Abc_ObjFanin0(pTerm))");
-                Abc_ObjFanout0(Abc_NtkPi(pModel, k)).iTemp = Abc_ObjFanin0(pTerm).iTemp;
-            }
-            if vBufs != nil {
-                // inlining of macro Abc_ObjForEachFanin
-                for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-                    Abc_ObjFanout0(Abc_NtkPi(pModel, k)).iTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanout0(Abc_NtkPi(pModel, k)).iTemp );
-                } }
-            Abc_NtkFlattenHierarchyGia2_rec( pNew, pModel, pCounter, vBufs );
-            if vBufs != nil {
-                // inlining of macro Abc_ObjForEachFanout
-                for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-                    Abc_ObjFanin0(Abc_NtkPo(pModel, k)).iTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanin0(Abc_NtkPo(pModel, k)).iTemp );
-                } }
-            // inlining of macro Abc_ObjForEachFanout
-            for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-                assert(Abc_ObjIsNet(Abc_ObjFanout0(pTerm)), "Abc_ObjIsNet(Abc_ObjFanout0(pTerm))");
-                Abc_ObjFanout0(pTerm).iTemp = Abc_ObjFanin0(Abc_NtkPo(pModel, k)).iTemp;
-            }
-            // save buffers
-            if vBufs == nil {
-                continue; }
-            Vec_IntPush( vBufs, iBufStart );
-            Vec_IntPush( vBufs, Abc_NtkPiNum(pModel) );
-            Vec_IntPush( vBufs, Gia_ManBufNum(pNew) - Abc_NtkPoNum(pModel) );
-            Vec_IntPush( vBufs, Abc_NtkPoNum(pModel) );
-        }
-    }
+func hierarchyBuffer(g *aig.Graph, driver aig.Edge) aig.Edge {
+	return aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{driver, 0}})
 }
-func Abc_NtkFlattenHierarchyGia2(pNtk *Abc_Ntk_t) *Gia_Man_t {
-    var fUseBufs int32  = 1;
-    var fUseInter int32;
-    var pNew, pTemp *Gia_Man_t; 
-    var pModel *Abc_Ntk_t;
-    var pTerm *Abc_Obj_t;
-    var i int32;
-    var Counter int32 = -1;
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-//    Abc_NtkPrintBoxInfo( pNtk );
-    Abc_NtkFillTemp( pNtk );
-
-    // start the manager
-    pNew = Gia_ManStart( Abc_NtkObjNumMax(pNtk) );
-    pNew.pName = Abc_UtilStrsav(pNtk.pName);
-    pNew.pSpec = Abc_UtilStrsav(pNtk.pSpec);
-    if fUseBufs != 0 {
-        pNew.vBarBufs = Vec_IntAlloc( 1000 ); }
-
-    // create PIs and buffers
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        pTerm.iTemp = Gia_ManAppendCi( pNew );
-    }
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_ObjFanout0(pTerm).iTemp = fUseInter ? Gia_ManAppendBuf(pNew, pTerm.iTemp) : pTerm.iTemp;
-    }
-
-    // create DFS order of nets
-    if !pNtk.pDesign {
-        pNtk.pData = Abc_NtkDfsWithBoxes( pNtk );
-    } else {
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pNtk.pDesign.vModules)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {
-            pModel.pData = Abc_NtkDfsWithBoxes( pModel );
-        } }
-
-    // call recursively
-    Gia_ManHashAlloc( pNew );
-    Abc_NtkFlattenHierarchyGia2_rec( pNew, pNtk, &Counter, pNew.vBarBufs );
-    Gia_ManHashStop( pNew );
-    fmt.Printf("Hierarchy reader flattened %d instances of logic boxes.\n", Counter);
-
-    // delete DFS order of nets
-    if !pNtk.pDesign {
-        Vec_PtrFreeP( (Vec_Ptr_t **)&pNtk.pData );
-    } else {
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pNtk.pDesign.vModules)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {
-            Vec_PtrFreeP( (Vec_Ptr_t **)&pModel.pData );
-        } }
-
-    // create buffers and POs
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        if fUseInter != 0 {
-            pTerm.iTemp = Gia_ManAppendBuf(pNew, Abc_ObjFanin0(pTerm).iTemp);
-        } else {
-            pTerm.iTemp = Abc_ObjFanin0(pTerm).iTemp;
-        }
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Gia_ManAppendCo( pNew, pTerm.iTemp );
-    }
-
-    // save buffers
-    if fUseInter != 0 {
-        Vec_IntPush( pNew.vBarBufs, 0 );
-        Vec_IntPush( pNew.vBarBufs, Abc_NtkPiNum(pNtk) );
-        Vec_IntPush( pNew.vBarBufs, Gia_ManBufNum(pNew) - Abc_NtkPoNum(pNtk) );
-        Vec_IntPush( pNew.vBarBufs, Abc_NtkPoNum(pNtk) );
-    }
-    if fUseBufs != 0 {
-        Vec_IntPrint( pNew.vBarBufs ); }
-
-    // cleanup
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    return pNew;
+func (b *HierarchyBufferInfo) append(g *aig.Graph, port *Object, driver aig.Edge) aig.Edge {
+	edge := hierarchyBuffer(g, driver)
+	b.Ports = append(b.Ports, port)
+	b.Buffers = append(b.Buffers, edge)
+	b.Signals = append(b.Signals, edge)
+	return edge
+}
+func Abc_NodeStrashToGia_rec(g *aig.Graph, o *hop.Hop_Obj_t) { Abc_ConvertAigToGia_rec1(g, o) }
+func Abc_NodeStrashToGia(g *aig.Graph, o *Object) aig.Edge {
+	args := make([]aig.Edge, len(o.fanins))
+	for i, e := range o.fanins {
+		if e.Object.Temp < 0 {
+			panic("unassigned hierarchy fanin")
+		}
+		args[i] = aig.Edge(e.Object.Temp)
+		if e.Complement {
+			args[i] = args[i].Not()
+		}
+	}
+	return localFunctionAIG(g, o, args)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManPrintBarBufDrivers(p *Gia_Man_t) {
-    var vMap, vFan, vCrits *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    var iFanin int32;
-    var CountCrit [2]int32 ;
-    var CountFans [2]int32 ;
-    // map barbuf drivers into barbuf literals of the first barbuf driven by them
-    vMap = Vec_IntStart( Gia_ManObjNum(p) );
-    vFan = Vec_IntStart( Gia_ManObjNum(p) );
-    vCrits = Vec_IntAlloc( 100 );
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        // count fanouts
-        if Gia_ObjIsBuf(pObj) || Gia_ObjIsCo(pObj) {
-            Vec_IntAddToEntry( vFan, Gia_ObjFaninId0(pObj, i), 1 );
-        } else if Gia_ObjIsAnd(pObj) {
-            Vec_IntAddToEntry( vFan, Gia_ObjFaninId0(pObj, i), 1 );
-            Vec_IntAddToEntry( vFan, Gia_ObjFaninId1(pObj, i), 1 );
-        }
-        // count critical barbufs
-        if Gia_ObjIsBuf(pObj) {
-            iFanin = Gia_ObjFaninId0( pObj, i );
-            if iFanin == 0 || Vec_IntEntry(vMap, iFanin) != 0 {
-                CountCrit[int32((iFanin != 0))]++;
-                Vec_IntPush( vCrits, i );
-                continue;
-            }
-            Vec_IntWriteEntry( vMap, iFanin, Abc_Var2Lit(i, Gia_ObjFaninC0(pObj)) );
-        }
-    }
-    // check fanouts of the critical barbufs
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vCrits)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vCrits,i))); i++  {
-        assert(Gia_ObjIsBuf(pObj), "Gia_ObjIsBuf(pObj)");
-        if Vec_IntEntry(vFan, i) == 0 {
-            continue; }
-        iFanin = Gia_ObjFaninId0p( p, pObj );
-        CountFans[int32((iFanin != 0))]++;
-    }
-    fmt.Printf("Detected %d const (out of %d) and %d shared (out of %d) barbufs with fanout.\n", CountFans[0], CountCrit[0], CountFans[1], CountCrit[1]);
-    Vec_IntFree( vMap );
-    Vec_IntFree( vFan );
-    Vec_IntFree( vCrits );
+// This variant visits all instantiated ports, including unused outputs, and
+// therefore accepts reused models. Each expansion owns a separate signal map.
+func Abc_NtkFlattenHierarchyGia2_rec(g *aig.Graph, n *Network, counter *int32, groups *[]int32) {
+	info, _ := g.Data.(*HierarchyBufferInfo)
+	if info == nil {
+		info = &HierarchyBufferInfo{}
+		g.Data = info
+	}
+	c := &hierarchyAIG{cached: map[*Network]*aig.Graph{}, active: map[*Network]bool{}, orders: map[*Network][]*Object{}}
+	var stack []HierarchyBufferGroup
+	c.enterBox = func(g *aig.Graph, box *Object, args []aig.Edge) []aig.Edge {
+		model := boxModel(box)
+		group := HierarchyBufferGroup{InputStart: len(info.Buffers), InputCount: len(args), Instance: box}
+		stack = append(stack, group)
+		if groups != nil {
+			for i, pi := range model.ObjectsOfKind(ObjectPI) {
+				args[i] = info.append(g, pi, args[i])
+			}
+		}
+		if counter != nil {
+			(*counter)++
+		}
+		return args
+	}
+	c.leaveBox = func(g *aig.Graph, box *Object, outputs []aig.Edge) []aig.Edge {
+		group := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		group.OutputStart = len(info.Buffers)
+		group.OutputCount = len(outputs)
+		if groups != nil {
+			for i, po := range boxModel(box).ObjectsOfKind(ObjectPO) {
+				outputs[i] = info.append(g, po, outputs[i])
+			}
+			info.Groups = append(info.Groups, group)
+			*groups = append(*groups, int32(group.InputStart), int32(group.InputCount), int32(group.OutputStart), int32(group.OutputCount))
+		}
+		return outputs
+	}
+	inputs := make([]aig.Edge, 0)
+	for _, pi := range n.ObjectsOfKind(ObjectPI) {
+		if pi.Temp < 0 {
+			panic("unassigned root input")
+		}
+		inputs = append(inputs, aig.Edge(pi.Temp))
+	}
+	outputs, err := c.expand(g, n, inputs)
+	if err != nil {
+		panic(err)
+	}
+	for i, po := range n.ObjectsOfKind(ObjectPO) {
+		po.Temp = int(outputs[i])
+	}
+}
+func Abc_NtkFlattenHierarchyGia2(n *Network) *aig.Graph {
+	if !hieValidateModels(n) {
+		panic("invalid hierarchy")
+	}
+	g := aig.NewGraph()
+	g.Name, g.Spec = n.Name, n.Spec
+	for _, pi := range n.ObjectsOfKind(ObjectPI) {
+		pi.Temp = int(g.NewInput())
+	}
+	var counter int32 = 1
+	var groups []int32
+	Abc_NtkFlattenHierarchyGia2_rec(g, n, &counter, &groups)
+	for _, po := range n.ObjectsOfKind(ObjectPO) {
+		g.AddOutput(aig.Edge(po.Temp))
+	}
+	return hierarchySweep(g, false)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManPatchBufDriver(p *Gia_Man_t, iBuf int32, iLit0 int32) {
-    var pObjBuf *Gia_Obj_t   = Gia_ManObj( p, iBuf );
-    assert(Gia_ObjIsBuf(pObjBuf), "Gia_ObjIsBuf(pObjBuf)");
-    assert(Gia_ObjId(p, pObjBuf) > Abc_Lit2Var(iLit0), "Gia_ObjId(p, pObjBuf) > Abc_Lit2Var(iLit0)");
-    pObjBuf.iDiff1  = pObjBuf.iDiff0  = Gia_ObjId(p, pObjBuf) - Abc_Lit2Var(iLit0);
-    pObjBuf.fCompl1 = pObjBuf.fCompl0 = Abc_LitIsCompl(iLit0);
+func Gia_ManPrintBarBufDrivers(g *aig.Graph) {
+	nodes := g.Nodes()
+	seen := map[int]bool{}
+	constants, shared, liveConstants, liveShared := 0, 0, 0, 0
+	for _, edge := range g.LiveEdges() {
+		node := nodes[edge.NodeID()]
+		if node.Kind != aig.Buffer {
+			continue
+		}
+		driver := node.Fanins[0].NodeID()
+		if driver == 0 {
+			constants++
+			if node.Refs > 0 {
+				liveConstants++
+			}
+		} else if seen[driver] {
+			shared++
+			if node.Refs > 0 {
+				liveShared++
+			}
+		} else {
+			seen[driver] = true
+		}
+	}
+	fmt.Printf("Barbuf drivers: %d constant (%d used), %d shared (%d used).\n", constants, liveConstants, shared, liveShared)
+}
+func Gia_ManPatchBufDriver(g *aig.Graph, id int, driver aig.Edge) {
+	edge := aig.Edge(id) << 1
+	if !g.ValidEdge(edge) || !g.ValidEdge(driver) || driver.NodeID() >= id || g.Node(edge).Kind != aig.Buffer {
+		panic("invalid buffer patch")
+	}
+	seen := map[int]bool{}
+	var visit func(aig.Edge)
+	visit = func(e aig.Edge) {
+		if e.NodeID() == id {
+			panic("buffer patch would create a cycle")
+		}
+		if seen[e.NodeID()] {
+			return
+		}
+		seen[e.NodeID()] = true
+		node := g.Node(e)
+		switch node.Kind {
+		case aig.And, aig.ExclusiveOr:
+			visit(node.Fanins[1])
+			fallthrough
+		case aig.Buffer, aig.Output:
+			visit(node.Fanins[0])
+		}
+	}
+	visit(driver)
+	aig.Aig_ObjConnect(g, edge, driver, aig.InvalidEdge)
 }
 
-/**Function*************************************************************
+// Cleanup roots include every physical buffer, as in Gia_ManCleanup. Ordinary
+// AIG cleanup roots only outputs and would discard unused boundary identities.
+func hierarchySweep(old *aig.Graph, simplify bool) *aig.Graph {
+	g := aig.NewGraph()
+	g.Name, g.Spec = old.Name, old.Spec
+	g.Data = old.Data
+	nodes := old.Nodes()
+	copies := map[int]aig.Edge{0: 0}
+	physical := map[int]aig.Edge{}
+	for _, input := range old.Inputs() {
+		copies[input.NodeID()] = g.NewInput()
+	}
+	type representative struct{ buffer, driver aig.Edge }
+	first := map[int]representative{}
+	active := map[int]bool{}
+	var visit func(aig.Edge) aig.Edge
+	visit = func(edge aig.Edge) aig.Edge {
+		id := edge.NodeID()
+		value, ok := copies[id]
+		if !ok {
+			if active[id] {
+				panic("cyclic hierarchy AIG")
+			}
+			active[id] = true
+			node := nodes[id]
+			switch node.Kind {
+			case aig.And:
+				value = g.AND(visit(node.Fanins[0]), visit(node.Fanins[1]))
+			case aig.ExclusiveOr:
+				value = g.NewXor(visit(node.Fanins[0]), visit(node.Fanins[1]))
+			case aig.Output:
+				value = visit(node.Fanins[0])
+			case aig.Buffer:
+				driver := visit(node.Fanins[0])
+				value = hierarchyBuffer(g, driver)
+				physical[id] = value
+				if simplify {
+					if driver.NodeID() == 0 {
+						Gia_ManPatchBufDriver(g, value.NodeID(), 1)
+						value = driver
+					} else if previous, exists := first[driver.NodeID()]; exists {
+						Gia_ManPatchBufDriver(g, value.NodeID(), 1)
+						value = previous.buffer
+						if previous.driver.Complemented() != driver.Complemented() {
+							value = value.Not()
+						}
+					} else {
+						first[driver.NodeID()] = representative{value, driver}
+					}
+				}
+			default:
+				panic("unsupported hierarchy AIG node")
+			}
+			copies[id] = value
+			delete(active, id)
+		}
+		if edge.Complemented() {
+			return value.Not()
+		}
+		return value
+	}
+	for _, edge := range old.LiveEdges() {
+		if nodes[edge.NodeID()].Kind == aig.Buffer {
+			visit(edge)
+		}
+	}
+	for _, output := range old.Outputs() {
+		g.AddOutput(visit(output))
+	}
+	aig.Aig_ManSetRegNum(g, old.RegisterCount())
+	if info, ok := old.Data.(*HierarchyBufferInfo); ok {
+		clone := &HierarchyBufferInfo{Ports: append([]*Object(nil), info.Ports...), Groups: append([]HierarchyBufferGroup(nil), info.Groups...)}
+		for i, buffer := range info.Buffers {
+			clone.Buffers = append(clone.Buffers, physical[buffer.NodeID()])
+			clone.Signals = append(clone.Signals, visit(info.Signals[i]))
+		}
+		g.Data = clone
+	}
+	if err := g.Check(); err != nil {
+		panic(err)
+	}
+	return g
+}
+func Gia_ManSweepHierarchy(g *aig.Graph) *aig.Graph { return hierarchySweep(g, true) }
 
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManSweepHierarchy(p *Gia_Man_t) *Gia_Man_t {
-    var vMap *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );
-    var pNew, pTemp *Gia_Man_t;
-    var pObj, pObjNew, pObjNewR *Gia_Obj_t;
-    var i int32;
-    var iFanin int32;
-    var CountReals [2]int32 ;
-
-    // duplicate AIG while propagating constants and equivalences 
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManConst0(p).Value = 0;
-    Gia_ManHashAlloc( pNew );
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsBuf(pObj) {
-            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );
-            pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(pObj.Value) );
-            iFanin = Gia_ObjFaninId0p( pNew, pObjNew );
-            if iFanin == 0 {
-                pObj.Value = Gia_ObjFaninC0(pObjNew);
-                CountReals[0]++;
-                Gia_ManPatchBufDriver( pNew, Gia_ObjId(pNew, pObjNew), 0 );
-            
-            } else if Vec_IntEntry(vMap, iFanin) {
-                pObjNewR = Gia_ManObj( pNew, Vec_IntEntry(vMap, iFanin) );
-                pObj.Value = Abc_Var2Lit( Vec_IntEntry(vMap, iFanin), Gia_ObjFaninC0(pObjNewR) ^ Gia_ObjFaninC0(pObjNew) );
-                CountReals[1]++;
-                Gia_ManPatchBufDriver( pNew, Gia_ObjId(pNew, pObjNew), 0 );
-            
-            } else {
-                Vec_IntWriteEntry( vMap, iFanin, Gia_ObjId(pNew, pObjNew) ); }
-        
-        } else if Gia_ObjIsAnd(pObj) {
-            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        } else if Gia_ObjIsCi(pObj) {
-            pObj.Value = Gia_ManAppendCi( pNew );
-        } else if Gia_ObjIsCo(pObj) {
-            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }
-    }
-    Gia_ManHashStop( pNew );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-//    printf( "Updated %d const and %d shared.\n", CountReals[0], CountReals[1] );
-    Vec_IntFree( vMap );
-    return pNew;
+func Gia_ManFlattenLogicPrepare(n *Network) int32 {
+	fillHierarchyTemps(n)
+	for i, o := range n.ObjectsOfKind(ObjectPI) {
+		o.TerminalIndex = i
+	}
+	for i, o := range n.ObjectsOfKind(ObjectPO) {
+		o.TerminalIndex = i
+	}
+	for _, box := range n.Boxes() {
+		if box.Kind == ObjectLatch {
+			panic("sequential hierarchy is not supported")
+		}
+		for i, e := range box.fanins {
+			e.Object.TerminalIndex = i
+		}
+		for i, o := range box.fanouts {
+			o.TerminalIndex = i
+		}
+	}
+	return int32(len(n.ObjectsOfKind(ObjectPI)) + len(n.ObjectsOfKind(ObjectPO)))
+}
+func Abc_NtkFlattenHierarchyGia_rec(g *aig.Graph, supers *[]*Object, o *Object, buffers *[]*Object) aig.Edge {
+	if o.Temp >= 0 {
+		return aig.Edge(o.Temp)
+	}
+	// -2 distinguishes a recursion cycle from an unvisited object.
+	if o.Temp == -2 {
+		panic("cyclic hierarchy net")
+	}
+	o.Temp = -2
+	read := func(e Edge) aig.Edge {
+		value := Abc_NtkFlattenHierarchyGia_rec(g, supers, e.Object, buffers)
+		if e.Complement {
+			value = value.Not()
+		}
+		return value
+	}
+	var value aig.Edge
+	switch o.Kind {
+	case ObjectConst1:
+		value = 0
+	case ObjectNet, ObjectPO, ObjectBI:
+		if len(o.fanins) != 1 {
+			panic("hierarchy wire must have one driver")
+		}
+		value = read(o.fanins[0])
+	case ObjectPI:
+		if len(*supers) == 0 {
+			panic("unassigned root input")
+		}
+		box := (*supers)[len(*supers)-1]
+		*supers = (*supers)[:len(*supers)-1]
+		value = read(box.fanins[o.TerminalIndex])
+		*supers = append(*supers, box)
+		if buffers != nil {
+			value = g.Data.(*HierarchyBufferInfo).append(g, o, value)
+			*buffers = append(*buffers, o)
+		}
+	case ObjectBO:
+		if len(o.fanins) != 1 {
+			panic("box output must have one box")
+		}
+		box := o.fanins[0].Object
+		*supers = append(*supers, box)
+		po := boxModel(box).ObjectsOfKind(ObjectPO)[o.TerminalIndex]
+		value = Abc_NtkFlattenHierarchyGia_rec(g, supers, po, buffers)
+		*supers = (*supers)[:len(*supers)-1]
+		if buffers != nil {
+			value = g.Data.(*HierarchyBufferInfo).append(g, po, value)
+			*buffers = append(*buffers, po)
+		}
+		if o.fanins[0].Complement {
+			value = value.Not()
+		}
+	case ObjectNode:
+		args := make([]aig.Edge, len(o.fanins))
+		for i, e := range o.fanins {
+			args[i] = read(e)
+		}
+		if o.Barrier {
+			if len(args) != 1 {
+				panic("barrier arity")
+			}
+			value = args[0]
+		} else {
+			value = localFunctionAIG(g, o, args)
+		}
+	default:
+		panic("unsupported hierarchical object")
+	}
+	o.Temp = int(value)
+	return value
+}
+func Abc_NtkFlattenHierarchyGia(n *Network, buffers *[]*Object, verbose int32) *aig.Graph {
+	if !hieValidateModels(n) {
+		panic("invalid hierarchy")
+	}
+	models := Abc_NtkCollectHie(n)
+	uses := map[*Network]int{}
+	for _, model := range models {
+		Gia_ManFlattenLogicPrepare(model)
+		for _, box := range model.Boxes() {
+			uses[boxModel(box)]++
+		}
+	}
+	for _, count := range uses {
+		if count > 1 {
+			panic("demand-driven hierarchy flattening requires unique models")
+		}
+	}
+	g := aig.NewGraph()
+	g.Name, g.Spec = n.Name, n.Spec
+	g.Data = &HierarchyBufferInfo{}
+	for _, pi := range n.ObjectsOfKind(ObjectPI) {
+		pi.Temp = int(g.NewInput())
+	}
+	var supers, ports []*Object
+	for _, po := range n.ObjectsOfKind(ObjectPO) {
+		g.AddOutput(Abc_NtkFlattenHierarchyGia_rec(g, &supers, po, &ports))
+	}
+	if buffers != nil {
+		*buffers = ports
+	}
+	if verbose != 0 {
+		fmt.Printf("Hierarchy reader added %d boundary buffers.\n", len(ports))
+	}
+	return Gia_ManSweepHierarchy(g)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Flattens the logic hierarchy of the netlist.]
-
-  Description [This procedure requires that models are uniqified.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManFlattenLogicPrepare(pNtk *Abc_Ntk_t) int32 {
-    var pTerm, pBox *Abc_Obj_t; 
-    var i, k int32;
-    Abc_NtkFillTemp( pNtk );
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        pTerm.iData = i;
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        pTerm.iData = i;
-    }
-    // inlining of macro Abc_NtkForEachBox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {
-        assert(!Abc_ObjIsLatch(pBox), "!Abc_ObjIsLatch(pBox)");
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pBox)) && (((pTerm) = Abc_ObjFanin(pBox, k)), 1); k++  {
-            pTerm.iData = k;
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pBox)) && (((pTerm) = Abc_ObjFanout(pBox, k)), 1); k++  {
-            pTerm.iData = k;
-        }
-    }
-    return Abc_NtkPiNum(pNtk) + Abc_NtkPoNum(pNtk);
+// insertHierarchyCone copies a mapped cone into one module. The bindings cut
+// traversal at module boundaries; the cache is local to that module so shared
+// flat nodes never accidentally connect two different hierarchy instances.
+func insertHierarchyCone(dst, flat *Network, bindings map[*Object]Edge) func(Edge) Edge {
+	active := map[*Object]bool{}
+	var copyEdge func(Edge) Edge
+	copyEdge = func(edge Edge) Edge {
+		o := edge.Object
+		if o == nil {
+			return netForDriver(dst, dst.One().Not()).Signal()
+		}
+		value, ok := bindings[o]
+		if !ok {
+			if o.network != flat {
+				panic("foreign mapped cone")
+			}
+			if active[o] {
+				panic("cyclic mapped cone")
+			}
+			active[o] = true
+			switch {
+			case o.Kind == ObjectConst1:
+				value = netForDriver(dst, dst.One()).Signal()
+			case o.Kind == ObjectPI || o.Kind == ObjectBO:
+				panic("mapped cone crosses an unbound module input")
+			case o.Kind == ObjectNet || o.Kind == ObjectPO || o.Kind == ObjectBI || o.Barrier:
+				if len(o.fanins) != 1 {
+					panic("mapped wire arity")
+				}
+				value = copyEdge(o.fanins[0])
+			case o.Kind == ObjectNode:
+				args := make([]Edge, len(o.fanins))
+				for i, e := range o.fanins {
+					args[i] = copyEdge(e)
+				}
+				node := Abc_NtkDupObj(dst, o, 0)
+				for _, arg := range args {
+					Abc_ObjAddFanin(node, arg)
+				}
+				value = netForDriver(dst, node.Signal()).Signal()
+			default:
+				panic("unsupported mapped cone object")
+			}
+			delete(active, o)
+			bindings[o] = value
+		}
+		if edge.Complement {
+			value = value.Not()
+		}
+		return value
+	}
+	return copyEdge
 }
-func Abc_NtkFlattenHierarchyGia_rec(pNew *Gia_Man_t, vSupers *Vec_Ptr_t, pObj *Abc_Obj_t, vBuffers *Vec_Ptr_t) int32 {
-    var pModel *Abc_Ntk_t;
-    var pBox, pFanin *Abc_Obj_t;  
-    var iLit, i int32;
-    if pObj.iTemp != -1 {
-        return pObj.iTemp; }
-    if Abc_ObjIsNet(pObj) || Abc_ObjIsPo(pObj) || Abc_ObjIsBi(pObj) {
-        return (pObj.iTemp = Abc_NtkFlattenHierarchyGia_rec(pNew, vSupers, Abc_ObjFanin0(pObj), vBuffers)); }
-    if Abc_ObjIsPi(pObj) {
-        pBox   = (Abc_Obj_t *)Vec_PtrPop( vSupers );
-        pModel = Abc_ObjModel(pBox);
-        //printf( "   Exiting %s\n", Abc_NtkName(pModel) );
-        assert(Abc_ObjFaninNum(pBox) == Abc_NtkPiNum(pModel), "Abc_ObjFaninNum(pBox) == Abc_NtkPiNum(pModel)");
-        assert(pObj.iData >= 0 && pObj.iData < Abc_NtkPiNum(pModel), "pObj.iData >= 0 && pObj.iData < Abc_NtkPiNum(pModel)");
-        pFanin = Abc_ObjFanin( pBox, pObj.iData );
-        iLit   = Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );
-        Vec_PtrPush( vSupers, pBox );
-        //if ( vBuffers ) Vec_PtrPush( vBuffers, pFanin ); // save BI
-        if vBuffers != nil { Vec_PtrPush( vBuffers, pObj ); }   // save PI
-        return (pObj.iTemp = (vBuffers ? Gia_ManAppendBuf(pNew, iLit) : iLit));
-    }
-    if Abc_ObjIsBo(pObj) {
-        pBox   = Abc_ObjFanin0(pObj);
-        assert(Abc_ObjIsBox(pBox), "Abc_ObjIsBox(pBox)");
-        Vec_PtrPush( vSupers, pBox );
-        pModel = Abc_ObjModel(pBox);
-        //printf( "Entering %s\n", Abc_NtkName(pModel) );
-        assert(Abc_ObjFanoutNum(pBox) == Abc_NtkPoNum(pModel), "Abc_ObjFanoutNum(pBox) == Abc_NtkPoNum(pModel)");
-        assert(pObj.iData >= 0 && pObj.iData < Abc_NtkPoNum(pModel), "pObj.iData >= 0 && pObj.iData < Abc_NtkPoNum(pModel)");
-        pFanin = Abc_NtkPo( pModel, pObj.iData );
-        iLit   = Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );
-        Vec_PtrPop( vSupers );
-        //if ( vBuffers ) Vec_PtrPush( vBuffers, pObj );   // save BO
-        if vBuffers != nil { Vec_PtrPush( vBuffers, pFanin ); } // save PO
-        return (pObj.iTemp = (vBuffers ? Gia_ManAppendBuf(pNew, iLit) : iLit));
-    }
-    assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)");
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
-        Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pFanin, vBuffers );
-    }
-    return (pObj.iTemp = Abc_NodeStrashToGia( pNew, pObj ));
-}
-func Abc_NtkFlattenHierarchyGia(pNtk *Abc_Ntk_t, pvBuffers **Vec_Ptr_t, fVerbose int32) *Gia_Man_t {
-    var fUseBufs int32  = 1;
-    var pNew, pTemp *Gia_Man_t; 
-    var pModel *Abc_Ntk_t;
-    var pTerm *Abc_Obj_t;
-    var vSupers *Vec_Ptr_t;
-    var vBuffers *Vec_Ptr_t;
-    if fUseBufs != 0 {
-        vBuffers = Vec_PtrAlloc(1000);
-    } else {
-        vBuffers = nil;
-    }
-    var i, Counter int32; 
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-//    Abc_NtkPrintBoxInfo( pNtk );
-
-    // set the PI/PO numbers
-    Counter -= Abc_NtkPiNum(pNtk) + Abc_NtkPoNum(pNtk);
-    if !pNtk.pDesign {
-        Counter += Gia_ManFlattenLogicPrepare( pNtk );
-    } else {
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pNtk.pDesign.vModules)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {
-            Counter += Gia_ManFlattenLogicPrepare( pModel );
-        } }
-
-    // start the manager
-    pNew = Gia_ManStart( Abc_NtkObjNumMax(pNtk) );
-    pNew.pName = Abc_UtilStrsav(pNtk.pName);
-    pNew.pSpec = Abc_UtilStrsav(pNtk.pSpec);
-
-    // create PIs and buffers
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        pTerm.iTemp = Gia_ManAppendCi( pNew );
-    }
-
-    // call recursively
-    vSupers = Vec_PtrAlloc( 100 );
-    Gia_ManHashAlloc( pNew );
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Abc_NtkFlattenHierarchyGia_rec( pNew, vSupers, pTerm, vBuffers );
-    }
-    Gia_ManHashStop( pNew );
-    Vec_PtrFree( vSupers );
-    fmt.Printf("Hierarchy reader flattened %d instances of boxes and added %d barbufs (out of %d).\n", pNtk.pDesign ? Vec_PtrSize(pNtk.pDesign.vModules)-1 : 0, Vec_PtrSize(vBuffers), Counter);
-
-    // create buffers and POs
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Gia_ManAppendCo( pNew, pTerm.iTemp );
-    }
-
-    if pvBuffers {
-        *pvBuffers = vBuffers;
-    } else {
-        Vec_PtrFreeP( &vBuffers ); }
-
-    // cleanup
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-//    Gia_ManPrintStats( pNew, NULL );
-    pNew = Gia_ManSweepHierarchy( pTemp = pNew );
-    Gia_ManStop( pTemp );
-//    Gia_ManPrintStats( pNew, NULL );
-    return pNew;
+func Gia_ManInsertOne_rec(dst, flat *Network, o *Object) Edge {
+	bindings := map[*Object]Edge{}
+	for _, obj := range flat.Objects() {
+		if e := getCopy(obj); e.Object != nil && e.Object.network == dst {
+			bindings[obj] = e
+		}
+	}
+	result := insertHierarchyCone(dst, flat, bindings)(Edge{Object: o})
+	for obj, edge := range bindings {
+		setCopy(obj, edge)
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Inserts the result of mapping into logic hierarchy.]
-
-  Description [When this procedure is called PIs/POs of pNtk
-  point to the corresponding nodes in network with barbufs.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManInsertOne_rec(pNtk *Abc_Ntk_t, pNew *Abc_Ntk_t, pObj *Abc_Obj_t) *Abc_Obj_t {
-    var pFanin *Abc_Obj_t;  var i int32;
-    if pObj == nil {
-        return Abc_NtkCreateNodeConst0( pNtk ); }
-    assert(Abc_ObjNtk(pObj) == pNew, "Abc_ObjNtk(pObj) == pNew");
-    if pObj.pCopy {
-        return pObj.pCopy; }
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
-        Gia_ManInsertOne_rec( pNtk, pNew, pFanin );
-    }
-    pObj.pCopy = Abc_NtkDupObj( pNtk, pObj, 0 );
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
-        Abc_ObjAddFanin( pObj, pFanin );
-    }
-    return pObj.pCopy;
+func rebuildHierarchyModule(old, flat *Network, portSignals map[*Object]Edge) *Network {
+	// Capture boundary bindings before cloning rewrites the old Copy fields.
+	dst := cloneInterfaces(old)
+	dst.Function = uint8(ABC_FUNC_MAP)
+	dst.FunctionManager = flat.FunctionManager
+	bindings := map[*Object]Edge{}
+	bind := func(global, local Edge) {
+		if global.Object == nil || global.Object == flat.constant {
+			return
+		}
+		if global.Complement {
+			local = local.Not()
+		}
+		if _, exists := bindings[global.Object]; !exists {
+			bindings[global.Object] = local
+		}
+	}
+	for _, pi := range old.ObjectsOfKind(ObjectPI) {
+		copied := getCopy(pi).Object
+		net := netForDriver(dst, copied.Signal())
+		if len(pi.fanouts) > 0 {
+			net.SetName(pi.fanouts[0].Name())
+		}
+		bind(portSignals[pi], net.Signal())
+	}
+	for _, box := range old.Boxes() {
+		model := boxModel(box)
+		for i, bo := range box.fanouts {
+			copied := getCopy(bo).Object
+			net := netForDriver(dst, copied.Signal())
+			if len(bo.fanouts) > 0 {
+				net.SetName(bo.fanouts[0].Name())
+			}
+			bind(portSignals[model.ObjectsOfKind(ObjectPO)[i]], net.Signal())
+		}
+	}
+	copyEdge := insertHierarchyCone(dst, flat, bindings)
+	for _, po := range old.ObjectsOfKind(ObjectPO) {
+		Abc_ObjAddFanin(getCopy(po).Object, copyEdge(portSignals[po]))
+	}
+	for _, box := range old.Boxes() {
+		model := boxModel(box)
+		for i, e := range box.fanins {
+			Abc_ObjAddFanin(getCopy(e.Object).Object, copyEdge(portSignals[model.ObjectsOfKind(ObjectPI)[i]]))
+		}
+	}
+	hieOrderTerminals(dst)
+	if err := dst.Check(); err != nil {
+		panic(err)
+	}
+	return dst
 }
-func Gia_ManInsertOne(pNtk *Abc_Ntk_t, pNew *Abc_Ntk_t) {
-    var pObj, pBox *Abc_Obj_t;  var i, k int32;
-    assert(!Abc_NtkHasMapping(pNtk), "!Abc_NtkHasMapping(pNtk)");
-    assert(Abc_NtkHasMapping(pNew), "Abc_NtkHasMapping(pNew)");
-    // check that PIs point to barbufs
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        assert(!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew, "!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew");
-    }
-    // make barbufs point to box outputs
-    // inlining of macro Abc_NtkForEachBox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pBox)) && (((pObj) = Abc_ObjFanout(pBox, k)), 1); k++  {
-            pObj.pCopy = Abc_NtkPo(Abc_ObjModel(pBox), k).pCopy;
-            assert(!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew, "!pObj.pCopy || Abc_ObjNtk(pObj.pCopy) == pNew");
-        }
-    }
-    // remove internal nodes
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        Abc_NtkDeleteObj( pObj ); }
-    }
-    // start traversal from box inputs
-    // inlining of macro Abc_NtkForEachBox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pBox)) && (((pObj) = Abc_ObjFanin(pBox, k)), 1); k++  {
-            if Abc_ObjFaninNum(pObj) == 0 {
-                Abc_ObjAddFanin( pObj, Gia_ManInsertOne_rec(pNtk, pNew, Abc_NtkPi(Abc_ObjModel(pBox), k).pCopy) ); }
-        }
-    }
-    // start traversal from primary outputs
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        if Abc_ObjFaninNum(pObj) == 0 {
-            Abc_ObjAddFanin( pObj, Gia_ManInsertOne_rec(pNtk, pNew, pObj.pCopy) ); }
-    }
-    // update the functionality manager
-    pNtk.pManFunc = pNew.pManFunc;
-    pNtk.ntkFunc  = pNew.ntkFunc;
-    assert(Abc_NtkHasMapping(pNtk), "Abc_NtkHasMapping(pNtk)");
+func commitHierarchyModule(old, fresh *Network) {
+	design := old.Design
+	*old = *fresh
+	old.Design = design
+	for _, object := range old.Objects() {
+		object.network = old
+	}
 }
-func Abc_NtkInsertHierarchyGia(pNtk *Abc_Ntk_t, pNew *Abc_Ntk_t, fVerbose int32) {
-    var vBuffers *Vec_Ptr_t;
-    var pGia *Gia_Man_t  = Abc_NtkFlattenHierarchyGia( pNtk, &vBuffers, 0 );
-    var pModel *Abc_Ntk_t;  
-    var pObj *Abc_Obj_t; 
-    var i, k int32;
-
-    assert(Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNtk), "Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNtk)");
-    assert(Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNew), "Gia_ManPiNum(pGia) == Abc_NtkPiNum(pNew)");
-    assert(Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNtk), "Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNtk)");
-    assert(Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNew), "Gia_ManPoNum(pGia) == Abc_NtkPoNum(pNew)");
-    assert(Gia_ManBufNum(pGia) == Vec_PtrSize(vBuffers), "Gia_ManBufNum(pGia) == Vec_PtrSize(vBuffers)");
-    assert(Gia_ManBufNum(pGia) == pNew.nBarBufs2, "Gia_ManBufNum(pGia) == pNew.nBarBufs2");
-    Gia_ManStop( pGia );
-
-    // clean the networks
-    if !pNtk.pDesign {
-        Abc_NtkCleanCopy( pNtk );
-    } else {
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pNtk.pDesign.vModules)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {
-            Abc_NtkCleanCopy( pModel );
-        } }
-
-    // annotate PIs and POs of each network with barbufs
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNew)) && (((pObj) = Abc_NtkPi(pNew, i)), 1); i++  {
-        Abc_NtkPi(pNtk, i).pCopy = pObj;
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNew)) && (((pObj) = Abc_NtkPo(pNew, i)), 1); i++  {
-        Abc_NtkPo(pNtk, i).pCopy = pObj;
-    }
-    // inlining of macro Abc_NtkForEachBarBuf
-    for  i = 0; (i < Vec_PtrSize((pNew).vObjs)) && (((pObj) = Abc_NtkObj(pNew, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsBarBuf(pObj) {} else {
-        ((Abc_Obj_t *)Vec_PtrEntry(vBuffers, k++)).pCopy = pObj; }
-    }
-    Vec_PtrFree( vBuffers );
-
-    // connect each model
-    Abc_NtkCleanCopy( pNew );
-    Gia_ManInsertOne( pNtk, pNew );
-    if pNtk.pDesign {
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pNtk.pDesign.vModules)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {
-            if pModel != pNtk {
-                Gia_ManInsertOne( pModel, pNew ); }
-        } }
+func Gia_ManInsertOne(old, flat *Network) {
+	if flat.Function != uint8(ABC_FUNC_MAP) {
+		panic("hierarchy insertion needs a mapped network")
+	}
+	signals := map[*Object]Edge{}
+	for _, o := range old.ObjectsOfKind(ObjectPI) {
+		signals[o] = getCopy(o)
+	}
+	for _, o := range old.ObjectsOfKind(ObjectPO) {
+		signals[o] = getCopy(o)
+	}
+	for _, box := range old.Boxes() {
+		for _, o := range boxModel(box).Objects() {
+			if o.Kind == ObjectPI || o.Kind == ObjectPO {
+				signals[o] = getCopy(o)
+			}
+		}
+	}
+	commitHierarchyModule(old, rebuildHierarchyModule(old, flat, signals))
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Abc_NtkInsertHierarchyGia(old, flat *Network, verbose int32) {
+	if flat.Function != uint8(ABC_FUNC_MAP) {
+		panic("hierarchy insertion needs a mapped network")
+	}
+	graph := Abc_NtkFlattenHierarchyGia(old, nil, 0)
+	info := graph.Data.(*HierarchyBufferInfo)
+	pis, pos := old.ObjectsOfKind(ObjectPI), old.ObjectsOfKind(ObjectPO)
+	flatPI, flatPO := flat.ObjectsOfKind(ObjectPI), flat.ObjectsOfKind(ObjectPO)
+	if len(pis) != len(flatPI) || len(pos) != len(flatPO) {
+		panic("mapped hierarchy interface mismatch")
+	}
+	var barriers []*Object
+	for _, o := range flat.ObjectsOfKind(ObjectNode) {
+		if o.Barrier {
+			barriers = append(barriers, o)
+		}
+	}
+	if len(barriers) != len(info.Buffers) {
+		panic("mapped hierarchy boundary count mismatch")
+	}
+	bufferIndex := map[int]int{}
+	for i, buffer := range info.Buffers {
+		bufferIndex[buffer.NodeID()] = i
+	}
+	signals := map[*Object]Edge{}
+	for i, pi := range pis {
+		signals[pi] = flatPI[i].Signal()
+	}
+	for i, po := range pos {
+		signals[po] = flatPO[i].Signal()
+	}
+	for i, port := range info.Ports {
+		signal := info.Signals[i]
+		value := flat.One()
+		if signal.NodeID() != 0 {
+			index, ok := bufferIndex[signal.NodeID()]
+			if !ok {
+				panic("boundary signal lost during sweep")
+			}
+			value = barriers[index].Signal()
+		}
+		if signal.Complemented() {
+			value = value.Not()
+		}
+		signals[port] = value
+	}
+	models := Abc_NtkCollectHie(old)
+	fresh := make([]*Network, len(models))
+	// Build every module before replacing any of them: model pointers continue to
+	// refer to their original identities throughout this transaction.
+	for i, model := range models {
+		fresh[i] = rebuildHierarchyModule(model, flat, signals)
+	}
+	for i, model := range models {
+		commitHierarchyModule(model, fresh[i])
+	}
+	if verbose != 0 {
+		fmt.Printf("Reinserted mapped logic into %d hierarchy modules.\n", len(models))
+	}
+}

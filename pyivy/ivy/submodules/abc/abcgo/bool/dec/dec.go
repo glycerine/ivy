@@ -210,3 +210,33 @@ func (n *Dec_Node_t) SetPrintingFlags(flags [3]uint32) {
 
 // SetLevel preserves the original node's unsigned fourteen-bit field semantics.
 func (n *Dec_Node_t) SetLevel(level uint32) { n.Level = level & ((1 << 14) - 1) }
+
+// Edges returns the ordered input edges of a decomposition node.
+func (n *Dec_Node_t) Edges() (Dec_Edge_t, Dec_Edge_t) {
+	if n == nil {
+		panic("dec: nil node")
+	}
+	return n.eEdge0, n.eEdge1
+}
+
+// SetEdges assigns the ordered input edges of a decomposition node.
+func (n *Dec_Node_t) SetEdges(a, b Dec_Edge_t) {
+	if n == nil {
+		panic("dec: nil node")
+	}
+	n.eEdge0, n.eEdge1 = a, b
+}
+
+// RootEdge returns the graph's output edge.
+func Dec_GraphRootEdge(g *Dec_Graph_t) Dec_Edge_t {
+	if g == nil {
+		panic("dec: nil graph")
+	}
+	return g.eRoot
+}
+
+// Complemented reports whether this edge is complemented.
+func (e Dec_Edge_t) Complemented() bool { return e.fCompl != 0 }
+
+// Complement toggles the complemented-edge bit.
+func (e *Dec_Edge_t) Complement() { e.fCompl ^= 1 }

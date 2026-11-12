@@ -1,128 +1,64 @@
 package io
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/base/abc"
+	stdio "io"
+	"os"
+	"strconv"
+	"strings"
+)
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [ioWriteGml.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedures to write the graph structure of AIG in GML.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: ioWriteGml.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ioAbc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the graph structure of AIG in GML.]
-
-  Description [Useful for graph visualization using tools such as yEd: 
-  http://www.yworks.com/]
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteGml(pNtk *Abc_Ntk_t, pFileName string) {
-    var pFile *os.File;
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k int32;
-
-    assert(Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk), "Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk)");
-
-    // start the output stream
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Fprintf(os.Stdout, "Io_WriteGml(): Cannot open the output file \"%s\".\n", pFileName);
-        return;
-    }
-    fmt.Fprintf(pFile, "# GML for \"%s\" written by ABC on %s\n", pNtk.pName, Extra_TimeStamp());
-    fmt.Fprintf(pFile, "graph [\n");
-
-    // output the POs
-    fmt.Fprintf(pFile, "\n");
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        fmt.Fprintf(pFile, "    node [ id %5d label \"%s\"\n", pObj.Id, Abc_ObjName(pObj));
-        fmt.Fprintf(pFile, "        graphics [ type \"triangle\" fill \"#00FFFF\" ]\n");   // blue
-        fmt.Fprintf(pFile, "    ]\n");
-    }
-    // output the PIs
-    fmt.Fprintf(pFile, "\n");
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        fmt.Fprintf(pFile, "    node [ id %5d label \"%s\"\n", pObj.Id, Abc_ObjName(pObj));
-        fmt.Fprintf(pFile, "        graphics [ type \"triangle\" fill \"#00FF00\" ]\n");   // green
-        fmt.Fprintf(pFile, "    ]\n");
-    }
-    // output the latches
-    fmt.Fprintf(pFile, "\n");
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {
-        fmt.Fprintf(pFile, "    node [ id %5d label \"%s\"\n", pObj.Id, Abc_ObjName(pObj));
-        fmt.Fprintf(pFile, "        graphics [ type \"rectangle\" fill \"#FF0000\" ]\n");   // red
-        fmt.Fprintf(pFile, "    ]\n");
-    }
-    }
-    // output the nodes
-    fmt.Fprintf(pFile, "\n");
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        fmt.Fprintf(pFile, "    node [ id %5d label \"%s\"\n", pObj.Id, Abc_ObjName(pObj));
-        fmt.Fprintf(pFile, "        graphics [ type \"ellipse\" fill \"#CCCCFF\" ]\n");     // grey
-        fmt.Fprintf(pFile, "    ]\n");
-    }
-    }
-
-    // output the edges
-    fmt.Fprintf(pFile, "\n");
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            fmt.Fprintf(pFile, "    edge [ source %5d   target %5d\n", pObj.Id, pFanin.Id);
-            fmt.Fprintf(pFile, "        graphics [ type \"line\" arrow \"first\" ]\n");
-            fmt.Fprintf(pFile, "    ]\n");
-        }
-    }
-    }
-
-    fmt.Fprintf(pFile, "]\n");
-    fmt.Fprintf(pFile, "\n");
-    _ = (pFile).Close();
+func exportName(o *abc.Object) string {
+	if name := o.Name(); name != "" {
+		return name
+	}
+	return fmt.Sprintf("n%d", o.ID)
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func exportFile(filename string, write func(stdio.Writer) error) error {
+	var b strings.Builder
+	if err := write(&b); err != nil {
+		return err
+	}
+	return os.WriteFile(filename, []byte(b.String()), 0644)
+}
+func exportQuoted(s string) string { return strconv.Quote(s) }
+func gmlQuoted(s string) string {
+	return `"` + strings.NewReplacer("&", "&amp;", "\"", "&quot;", "\n", "&#10;", "\r", "&#13;").Replace(s) + `"`
+}
+func WriteGML(w stdio.Writer, n *abc.Network) error {
+	if n == nil {
+		return fmt.Errorf("nil network")
+	}
+	var b strings.Builder
+	fmt.Fprintf(&b, "# GML for %s written by ABC\ngraph [\n", exportQuoted(n.Name))
+	for _, kind := range []abc.ObjectKind{abc.ObjectPO, abc.ObjectPI, abc.ObjectLatch, abc.ObjectNode, abc.ObjectConst1, abc.ObjectBI, abc.ObjectBO, abc.ObjectNet, abc.ObjectBlackbox, abc.ObjectWhitebox} {
+		for _, o := range n.ObjectsOfKind(kind) {
+			if kind == abc.ObjectConst1 && len(o.Fanouts()) == 0 {
+				continue
+			}
+			shape, color := "ellipse", "#CCCCFF"
+			switch kind {
+			case abc.ObjectPO:
+				shape, color = "triangle", "#00FFFF"
+			case abc.ObjectPI:
+				shape, color = "triangle", "#00FF00"
+			case abc.ObjectLatch:
+				shape, color = "rectangle", "#FF0000"
+			}
+			fmt.Fprintf(&b, "    node [ id %5d label %s\n        graphics [ type %s fill %s ]\n    ]\n", o.ID, gmlQuoted(exportName(o)), gmlQuoted(shape), gmlQuoted(color))
+		}
+	}
+	for _, o := range n.Objects() {
+		for _, e := range o.Fanins() {
+			fmt.Fprintf(&b, "    edge [ source %5d   target %5d\n        graphics [ type \"line\" arrow \"first\" ]\n    ]\n", o.ID, e.Object.ID)
+		}
+	}
+	b.WriteString("]\n\n")
+	_, err := stdio.WriteString(w, b.String())
+	return err
+}
+func Io_WriteGml(n *abc.Network, filename string) error {
+	return exportFile(filename, func(w stdio.Writer) error { return WriteGML(w, n) })
+}
+func init() { RegisterFormat(IO_FILE_GML, nil, Io_WriteGml) }

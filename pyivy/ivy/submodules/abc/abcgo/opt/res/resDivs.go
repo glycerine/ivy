@@ -1,5 +1,7 @@
 package res
 
+import "github.com/glycerine/abcgo/base/abc"
+
 /**CFile****************************************************************
 
   FileName    [resDivs.c]
@@ -56,20 +58,20 @@ func Res_WinDivisors(p *Res_Win_t, nLevDivMax int32) {
 	p.nLevDivMax = nLevDivMax
 
 	// mark the TFI with the current trav ID
-	Abc_NtkIncrementTravId(p.pNode.pNtk)
+	abc.Abc_NtkIncrementTravId(abc.Abc_ObjNtk(p.pNode))
 	Res_WinMarkTfi(p)
 
 	// mark with the current trav ID those nodes that should not be divisors:
 	// (1) the node and its TFO
 	// (2) the MFFC of the node
 	// (3) the node's fanins (these are treated as a special case)
-	Abc_NtkIncrementTravId(p.pNode.pNtk)
+	abc.Abc_NtkIncrementTravId(abc.Abc_ObjNtk(p.pNode))
 	Res_WinSweepLeafTfo_rec(p.pNode, p.nLevDivMax)
 	Res_WinVisitMffc(p.pNode)
 	// inlining of macro Abc_ObjForEachFanin
-	for k = 0; k < Abc_ObjFaninNum(p.pNode); k++ {
-		pObj = Abc_ObjFanin(p.pNode, k)
-		Abc_NodeSetTravIdCurrent(pObj)
+	for k = 0; k < abc.Abc_ObjFaninNum(p.pNode); k++ {
+		pObj = abc.Abc_ObjFanin(p.pNode, k)
+		abc.Abc_NodeSetTravIdCurrent(pObj)
 	}
 
 	// at this point the nodes are marked with two trav IDs:
@@ -81,11 +83,11 @@ func Res_WinDivisors(p *Res_Win_t, nLevDivMax int32) {
 	// inlining of macro Vec_PtrForEachEntry
 	for k = 0; k < Vec_PtrSize(p.vLeaves); k++ {
 		pObj = Vec_PtrEntry(p.vLeaves, k)
-		assert(int32(pObj.Level) >= p.nLevLeafMin, "int32(pObj.Level) >= p.nLevLeafMin")
-		if !Abc_NodeIsTravIdPrevious(pObj) {
+		assert(abc.Abc_ObjLevel(pObj) >= p.nLevLeafMin, "abc.Abc_ObjLevel(pObj) >= p.nLevLeafMin")
+		if abc.Abc_NodeIsTravIdPrevious(pObj) == 0 {
 			continue
 		}
-		if int32(pObj.Level) > p.nLevDivMax {
+		if abc.Abc_ObjLevel(pObj) > p.nLevDivMax {
 			continue
 		}
 		Vec_PtrPush(p.vDivs, pObj)
@@ -94,10 +96,10 @@ func Res_WinDivisors(p *Res_Win_t, nLevDivMax int32) {
 	// inlining of macro Vec_PtrForEachEntry
 	for k = 0; k < Vec_PtrSize(p.vNodes); k++ {
 		pObj = Vec_PtrEntry(p.vNodes, k)
-		if !Abc_NodeIsTravIdPrevious(pObj) {
+		if abc.Abc_NodeIsTravIdPrevious(pObj) == 0 {
 			continue
 		}
-		if int32(pObj.Level) > p.nLevDivMax {
+		if abc.Abc_ObjLevel(pObj) > p.nLevDivMax {
 			continue
 		}
 		Vec_PtrPush(p.vDivs, pObj)
@@ -110,50 +112,50 @@ func Res_WinDivisors(p *Res_Win_t, nLevDivMax int32) {
 		pObj = Vec_PtrEntry(p.vDivs, k)
 		// consider fanouts of this node
 		// inlining of macro Abc_ObjForEachFanout
-		for f = 0; f < Abc_ObjFanoutNum(pObj); f++ {
-			pFanout = Abc_ObjFanout(pObj, f)
+		for f = 0; f < abc.Abc_ObjFanoutNum(pObj); f++ {
+			pFanout = abc.Abc_ObjFanout(pObj, f)
 			// stop if there are too many fanouts
 			if f > 20 {
 				break
 			}
 			// skip nodes that are already added
-			if Abc_NodeIsTravIdPrevious(pFanout) {
+			if abc.Abc_NodeIsTravIdPrevious(pFanout) != 0 {
 				continue
 			}
 			// skip nodes in the TFO or in the MFFC of node
-			if Abc_NodeIsTravIdCurrent(pFanout) {
+			if abc.Abc_NodeIsTravIdCurrent(pFanout) != 0 {
 				continue
 			}
 			// skip COs
-			if !Abc_ObjIsNode(pFanout) {
+			if abc.Abc_ObjIsNode(pFanout) == 0 {
 				continue
 			}
 			// skip nodes with large level
-			if int32(pFanout.Level) > p.nLevDivMax {
+			if abc.Abc_ObjLevel(pFanout) > p.nLevDivMax {
 				continue
 			}
 			// skip nodes whose fanins are not divisors
 			// inlining of macro Abc_ObjForEachFanin
-			for m = 0; m < Abc_ObjFaninNum(pFanout); m++ {
-				pFanin = Abc_ObjFanin(pFanout, m)
-				if !Abc_NodeIsTravIdPrevious(pFanin) {
+			for m = 0; m < abc.Abc_ObjFaninNum(pFanout); m++ {
+				pFanin = abc.Abc_ObjFanin(pFanout, m)
+				if abc.Abc_NodeIsTravIdPrevious(pFanin) == 0 {
 					break
 				}
 			}
-			if m < Abc_ObjFaninNum(pFanout) {
+			if m < abc.Abc_ObjFaninNum(pFanout) {
 				continue
 			}
 			// add the node to the divisors
 			Vec_PtrPush(p.vDivs, pFanout)
 			Vec_PtrPush(p.vNodes, pFanout)
-			Abc_NodeSetTravIdPrevious(pFanout)
+			abc.Abc_NodeSetTravIdPrevious(pFanout)
 			p.nDivsPlus++
 		}
 	}
 	/*
-	   printf( "Node level = %d.  ", Abc_ObjLevel(p->pNode) );
+	   printf( "Node level = %d.  ", abc.Abc_ObjLevel(p->pNode) );
 	   Vec_PtrForEachEntryStart( Abc_Obj_t *, p->vDivs, pObj, k, Vec_PtrSize(p->vDivs)-p->nDivsPlus )
-	       printf( "%d ", Abc_ObjLevel(pObj) );
+	       printf( "%d ", abc.Abc_ObjLevel(pObj) );
 	   printf( "\n" );
 	*/
 	//printf( "%d ", p->nDivsPlus );
@@ -175,15 +177,15 @@ func Res_WinDivisors(p *Res_Win_t, nLevDivMax int32) {
 func Res_WinMarkTfi_rec(p *Res_Win_t, pObj *Abc_Obj_t) {
 	var pFanin *Abc_Obj_t
 	var i int32
-	if Abc_NodeIsTravIdCurrent(pObj) {
+	if abc.Abc_NodeIsTravIdCurrent(pObj) != 0 {
 		return
 	}
-	Abc_NodeSetTravIdCurrent(pObj)
-	assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)")
+	abc.Abc_NodeSetTravIdCurrent(pObj)
+	assert(abc.Abc_ObjIsNode(pObj) != 0, "abc.Abc_ObjIsNode(pObj)")
 	// visit the fanins of the node
 	// inlining of macro Abc_ObjForEachFanin
-	for i = 0; i < Abc_ObjFaninNum(pObj); i++ {
-		pFanin = Abc_ObjFanin(pObj, i)
+	for i = 0; i < abc.Abc_ObjFaninNum(pObj); i++ {
+		pFanin = abc.Abc_ObjFanin(pObj, i)
 		Res_WinMarkTfi_rec(p, pFanin)
 	}
 }
@@ -208,7 +210,7 @@ func Res_WinMarkTfi(p *Res_Win_t) {
 	// inlining of macro Vec_PtrForEachEntry
 	for i = 0; i < Vec_PtrSize(p.vLeaves); i++ {
 		pObj = Vec_PtrEntry(p.vLeaves, i)
-		Abc_NodeSetTravIdCurrent(pObj)
+		abc.Abc_NodeSetTravIdCurrent(pObj)
 	}
 	// start from the node
 	Res_WinMarkTfi_rec(p, p.pNode)
@@ -230,16 +232,16 @@ func Res_WinMarkTfi(p *Res_Win_t) {
 func Res_WinSweepLeafTfo_rec(pObj *Abc_Obj_t, nLevelLimit int32) {
 	var pFanout *Abc_Obj_t
 	var i int32
-	if Abc_ObjIsCo(pObj) || int32(pObj.Level) > nLevelLimit {
+	if abc.Abc_ObjIsCo(pObj) != 0 || abc.Abc_ObjLevel(pObj) > nLevelLimit {
 		return
 	}
-	if Abc_NodeIsTravIdCurrent(pObj) {
+	if abc.Abc_NodeIsTravIdCurrent(pObj) != 0 {
 		return
 	}
-	Abc_NodeSetTravIdCurrent(pObj)
+	abc.Abc_NodeSetTravIdCurrent(pObj)
 	// inlining of macro Abc_ObjForEachFanout
-	for i = 0; i < Abc_ObjFanoutNum(pObj); i++ {
-		pFanout = Abc_ObjFanout(pObj, i)
+	for i = 0; i < abc.Abc_ObjFanoutNum(pObj); i++ {
+		pFanout = abc.Abc_ObjFanout(pObj, i)
 		Res_WinSweepLeafTfo_rec(pFanout, nLevelLimit)
 	}
 }
@@ -258,23 +260,7 @@ func Res_WinSweepLeafTfo_rec(pObj *Abc_Obj_t, nLevelLimit int32) {
 **********************************************************************
 */
 func Res_NodeDeref_rec(pNode *Abc_Obj_t) int32 {
-	var pFanin *Abc_Obj_t
-	var i int32
-	var Counter int32 = 1
-	if Abc_ObjIsCi(pNode) {
-		return 0
-	}
-	Abc_NodeSetTravIdCurrent(pNode)
-	// inlining of macro Abc_ObjForEachFanin
-	for i = 0; i < Abc_ObjFaninNum(pNode); i++ {
-		pFanin = Abc_ObjFanin(pNode, i)
-		assert(pFanin.vFanouts.nSize > 0, "pFanin.vFanouts.nSize > 0")
-		pFanin.vFanouts.nSize--
-		if pFanin.vFanouts.nSize == 0 {
-			Counter += Res_NodeDeref_rec(pFanin)
-		}
-	}
-	return Counter
+	return abc.Abc_NodeDeref_rec(pNode)
 }
 
 /*
@@ -291,22 +277,7 @@ func Res_NodeDeref_rec(pNode *Abc_Obj_t) int32 {
 **********************************************************************
 */
 func Res_NodeRef_rec(pNode *Abc_Obj_t) int32 {
-	var pFanin *Abc_Obj_t
-	var i int32
-	var Counter int32 = 1
-	if Abc_ObjIsCi(pNode) {
-		return 0
-	}
-	// inlining of macro Abc_ObjForEachFanin
-	for i = 0; i < Abc_ObjFaninNum(pNode); i++ {
-		pFanin = Abc_ObjFanin(pNode, i)
-		wasUnreferenced := pFanin.vFanouts.nSize == 0
-		pFanin.vFanouts.nSize++
-		if wasUnreferenced {
-			Counter += Res_NodeRef_rec(pFanin)
-		}
-	}
-	return Counter
+	return abc.Abc_NodeRef_rec(pNode)
 }
 
 /*
@@ -323,14 +294,8 @@ func Res_NodeRef_rec(pNode *Abc_Obj_t) int32 {
 **********************************************************************
 */
 func Res_WinVisitMffc(pNode *Abc_Obj_t) int32 {
-	var Count1, Count2 int32
-	assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)")
-	// dereference the node (mark with the current trav ID)
-	Count1 = Res_NodeDeref_rec(pNode)
-	// reference it back
-	Count2 = Res_NodeRef_rec(pNode)
-	assert(Count1 == Count2, "Count1 == Count2")
-	return Count1
+	assert(abc.Abc_ObjIsNode(pNode) != 0, "abc.Abc_ObjIsNode(pNode)")
+	return abc.Abc_NodeMffcLabelAig(pNode)
 }
 
 ////////////////////////////////////////////////////////////////////////

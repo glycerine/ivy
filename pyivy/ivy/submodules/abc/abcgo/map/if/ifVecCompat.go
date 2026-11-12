@@ -15,6 +15,7 @@ func Vec_PtrAlloc(n int) *Vec_Ptr_t                      { return vec.Vec_PtrAll
 func Vec_PtrPush(v *Vec_Ptr_t, value any)                { vec.Vec_PtrPush(v, value) }
 func Vec_PtrClear(v *Vec_Ptr_t)                          { vec.Vec_PtrClear(v) }
 func Vec_PtrFree(v *Vec_Ptr_t)                           { vec.Vec_PtrFree(v) }
+func Vec_PtrRemove(v *Vec_Ptr_t, value any)              { vec.Vec_PtrRemove(v, value) }
 func Vec_StrSize(v *Vec_Str_t) int                       { return vec.Vec_StrSize(v) }
 func Vec_StrEntry(v *Vec_Str_t, i int) byte              { return vec.Vec_StrEntry(v, i) }
 func Vec_StrPush(v *Vec_Str_t, value byte)               { vec.Vec_StrPush(v, value) }

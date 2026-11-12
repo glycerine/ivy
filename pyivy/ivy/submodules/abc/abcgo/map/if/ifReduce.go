@@ -61,10 +61,10 @@ func If_ManImproveMapping(p *If_Man_t) {
 	clk = Abc_Clock()
 	If_ManImproveExpand(p, p.pPars.nLutSize)
 	If_ManComputeRequired(p)
-	if p.pPars.fVerbose {
+	if p.pPars.fVerbose != 0 {
 		Abc_Print(1, "E:  Del = %7.2f.  Ar = %9.1f.  Edge = %8d.  ",
 			p.RequiredGlo, p.AreaGlo, p.nNets)
-		if p.dPower {
+		if p.dPower != 0 {
 			Abc_Print(1, "Switch = %7.2f.  ", p.dPower)
 		}
 		Abc_Print(1, "Cut = %8d.  ", p.nCutsMerged)
@@ -88,9 +88,8 @@ func If_ManImproveMapping(p *If_Man_t) {
 func If_ManImproveExpand(p *If_Man_t, nLimit int32) {
 	var vFront, vFrontOld, vVisited *Vec_Ptr_t
 	var pObj *If_Obj_t
-	var i int32
-	vFront = Vec_PtrAlloc(nLimit)
-	vFrontOld = Vec_PtrAlloc(nLimit)
+	vFront = Vec_PtrAlloc(int(nLimit))
+	vFrontOld = Vec_PtrAlloc(int(nLimit))
 	vVisited = Vec_PtrAlloc(100)
 	// iterate through all nodes in the topological order
 	// inlining of macro If_ManForEachNode
@@ -122,7 +121,7 @@ func If_ManImproveExpand(p *If_Man_t, nLimit int32) {
 */
 func If_ManImproveCutCost(p *If_Man_t, vFront *Vec_Ptr_t) int32 {
 	var pFanin *If_Obj_t
-	var i, Counter int32
+	var Counter int32
 	// inlining of macro Vec_PtrForEachEntry
 	for _, entry := range Vec_PtrArray(vFront) {
 		pFanin = entry.(*If_Obj_t)
@@ -149,7 +148,7 @@ func If_ManImproveCutCost(p *If_Man_t, vFront *Vec_Ptr_t) int32 {
 func If_ManImproveNodeExpand(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vFrontOld *Vec_Ptr_t, vVisited *Vec_Ptr_t) {
 	var pFanin *If_Obj_t
 	var pCut *If_Cut_t
-	var CostBef, CostAft, i int32
+	var CostBef, CostAft int32
 	var DelayOld, AreaBef, AreaAft float32
 	pCut = If_ObjCutBest(pObj)
 	pCut.Delay = If_CutDelay(p, pObj, pCut)
@@ -205,10 +204,10 @@ func If_ManImproveNodeExpand(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *
 **********************************************************************
 */
 func If_ManImproveMark_rec(p *If_Man_t, pObj *If_Obj_t, vVisited *Vec_Ptr_t) {
-	if pObj.fMark {
+	if pObj.fMark != 0 {
 		return
 	}
-	assert(If_ObjIsAnd(pObj), "If_ObjIsAnd(pObj)")
+	assert(If_ObjIsAnd(pObj) != 0, "If_ObjIsAnd(pObj)")
 	If_ManImproveMark_rec(p, If_ObjFanin0(pObj), vVisited)
 	If_ManImproveMark_rec(p, If_ObjFanin1(pObj), vVisited)
 	Vec_PtrPush(vVisited, pObj)
@@ -231,7 +230,6 @@ func If_ManImproveMark_rec(p *If_Man_t, pObj *If_Obj_t, vVisited *Vec_Ptr_t) {
 func If_ManImproveNodePrepare(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vFrontOld *Vec_Ptr_t, vVisited *Vec_Ptr_t) {
 	var pCut *If_Cut_t
 	var pLeaf *If_Obj_t
-	var i int32
 	Vec_PtrClear(vFront)
 	Vec_PtrClear(vFrontOld)
 	Vec_PtrClear(vVisited)
@@ -265,14 +263,13 @@ func If_ManImproveNodePrepare(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront 
 func If_ManImproveNodeUpdate(p *If_Man_t, pObj *If_Obj_t, vFront *Vec_Ptr_t) {
 	var pCut *If_Cut_t
 	var pFanin *If_Obj_t
-	var i int32
 	pCut = If_ObjCutBest(pObj)
 	// deref node's cut
 	If_CutAreaDeref(p, pCut)
 	// update the node's cut
-	pCut.nLeaves = Vec_PtrSize(vFront)
+	pCut.nLeaves = uint32(Vec_PtrSize(vFront))
 	// inlining of macro Vec_PtrForEachEntry
-	for _, entry := range Vec_PtrArray(vFront) {
+	for i, entry := range Vec_PtrArray(vFront) {
 		pFanin = entry.(*If_Obj_t)
 		pCut.pLeaves[i] = pFanin.Id
 	}
@@ -297,10 +294,10 @@ func If_ManImproveNodeUpdate(p *If_Man_t, pObj *If_Obj_t, vFront *Vec_Ptr_t) {
 */
 func If_ManImproveNodeWillGrow(p *If_Man_t, pObj *If_Obj_t) int32 {
 	var pFanin0, pFanin1 *If_Obj_t
-	assert(If_ObjIsAnd(pObj), "If_ObjIsAnd(pObj)")
+	assert(If_ObjIsAnd(pObj) != 0, "If_ObjIsAnd(pObj)")
 	pFanin0 = If_ObjFanin0(pObj)
 	pFanin1 = If_ObjFanin1(pObj)
-	return !pFanin0.fMark && !pFanin1.fMark
+	return ifMapFlag(pFanin0.fMark == 0 && pFanin1.fMark == 0)
 }
 
 /*
@@ -318,17 +315,17 @@ func If_ManImproveNodeWillGrow(p *If_Man_t, pObj *If_Obj_t) int32 {
 */
 func If_ManImproveNodeFaninCost(p *If_Man_t, pObj *If_Obj_t) int32 {
 	var Counter int32
-	assert(If_ObjIsAnd(pObj), "If_ObjIsAnd(pObj)")
+	assert(If_ObjIsAnd(pObj) != 0, "If_ObjIsAnd(pObj)")
 	// check if the node has external refs
 	if pObj.nRefs == 0 {
 		Counter--
 	}
 	// increment the number of fanins without external refs
-	if !If_ObjFanin0(pObj).fMark && If_ObjFanin0(pObj).nRefs == 0 {
+	if If_ObjFanin0(pObj).fMark == 0 && If_ObjFanin0(pObj).nRefs == 0 {
 		Counter++
 	}
 	// increment the number of fanins without external refs
-	if !If_ObjFanin1(pObj).fMark && If_ObjFanin1(pObj).nRefs == 0 {
+	if If_ObjFanin1(pObj).fMark == 0 && If_ObjFanin1(pObj).nRefs == 0 {
 		Counter++
 	}
 	return Counter
@@ -349,16 +346,16 @@ func If_ManImproveNodeFaninCost(p *If_Man_t, pObj *If_Obj_t) int32 {
 */
 func If_ManImproveNodeFaninUpdate(p *If_Man_t, pObj *If_Obj_t, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) {
 	var pFanin *If_Obj_t
-	assert(If_ObjIsAnd(pObj), "If_ObjIsAnd(pObj)")
+	assert(If_ObjIsAnd(pObj) != 0, "If_ObjIsAnd(pObj)")
 	Vec_PtrRemove(vFront, pObj)
 	pFanin = If_ObjFanin0(pObj)
-	if !pFanin.fMark {
+	if pFanin.fMark == 0 {
 		Vec_PtrPush(vFront, pFanin)
 		Vec_PtrPush(vVisited, pFanin)
 		pFanin.fMark = 1
 	}
 	pFanin = If_ObjFanin1(pObj)
-	if !pFanin.fMark {
+	if pFanin.fMark == 0 {
 		Vec_PtrPush(vFront, pFanin)
 		Vec_PtrPush(vVisited, pFanin)
 		pFanin.fMark = 1
@@ -380,11 +377,10 @@ func If_ManImproveNodeFaninUpdate(p *If_Man_t, pObj *If_Obj_t, vFront *Vec_Ptr_t
 */
 func If_ManImproveNodeFaninCompact0(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) int32 {
 	var pFanin *If_Obj_t
-	var i int32
 	// inlining of macro Vec_PtrForEachEntry
 	for _, entry := range Vec_PtrArray(vFront) {
 		pFanin = entry.(*If_Obj_t)
-		if If_ObjIsCi(pFanin) {
+		if If_ObjIsCi(pFanin) != 0 {
 			continue
 		}
 		if If_ManImproveNodeWillGrow(p, pFanin) != 0 {
@@ -413,11 +409,10 @@ func If_ManImproveNodeFaninCompact0(p *If_Man_t, pObj *If_Obj_t, nLimit int32, v
 */
 func If_ManImproveNodeFaninCompact1(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) int32 {
 	var pFanin *If_Obj_t
-	var i int32
 	// inlining of macro Vec_PtrForEachEntry
 	for _, entry := range Vec_PtrArray(vFront) {
 		pFanin = entry.(*If_Obj_t)
-		if If_ObjIsCi(pFanin) {
+		if If_ObjIsCi(pFanin) != 0 {
 			continue
 		}
 		if If_ManImproveNodeFaninCost(p, pFanin) < 0 {
@@ -443,11 +438,10 @@ func If_ManImproveNodeFaninCompact1(p *If_Man_t, pObj *If_Obj_t, nLimit int32, v
 */
 func If_ManImproveNodeFaninCompact2(p *If_Man_t, pObj *If_Obj_t, nLimit int32, vFront *Vec_Ptr_t, vVisited *Vec_Ptr_t) int32 {
 	var pFanin *If_Obj_t
-	var i int32
 	// inlining of macro Vec_PtrForEachEntry
 	for _, entry := range Vec_PtrArray(vFront) {
 		pFanin = entry.(*If_Obj_t)
-		if If_ObjIsCi(pFanin) {
+		if If_ObjIsCi(pFanin) != 0 {
 			continue
 		}
 		if If_ManImproveNodeFaninCost(p, pFanin) <= 0 {
@@ -475,12 +469,12 @@ func If_ManImproveNodeFaninCompact_int(p *If_Man_t, pObj *If_Obj_t, nLimit int32
 	if If_ManImproveNodeFaninCompact0(p, pObj, nLimit, vFront, vVisited) != 0 {
 		return 1
 	}
-	if Vec_PtrSize(vFront) < nLimit && (If_ManImproveNodeFaninCompact1(p, pObj, nLimit, vFront, vVisited) != 0) {
+	if int32(Vec_PtrSize(vFront)) < nLimit && (If_ManImproveNodeFaninCompact1(p, pObj, nLimit, vFront, vVisited) != 0) {
 		return 1
 	}
-	//    if ( Vec_PtrSize(vFront) < nLimit && If_ManImproveNodeFaninCompact2(p, pObj, nLimit, vFront, vVisited) )
+	//    if ( int32(Vec_PtrSize(vFront)) < nLimit && If_ManImproveNodeFaninCompact2(p, pObj, nLimit, vFront, vVisited) )
 	//        return 1;
-	assert(Vec_PtrSize(vFront) <= nLimit, "Vec_PtrSize(vFront) <= nLimit")
+	assert(int32(Vec_PtrSize(vFront)) <= nLimit, "int32(Vec_PtrSize(vFront)) <= nLimit")
 	return 0
 }
 

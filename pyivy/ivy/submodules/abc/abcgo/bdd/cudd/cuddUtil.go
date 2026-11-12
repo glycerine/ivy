@@ -1782,7 +1782,7 @@ Cudd_SubsetWithMaskVars(
         mask[i] = 0;
     }
     string[size] = '\0';
-    indices = ABC_ALLOC(int,nvars);
+    indices = make([]int32, nvars);
     if indices == nil {
         dd.errorCode = CUDD_MEMORY_OUT;
         ABC_FREE(weight);
@@ -1942,31 +1942,31 @@ func Cudd_FirstCube(dd *DdManager, f *DdNode, cube **int32, value *CUDD_VALUE_TY
     }
 
     gen.manager = dd;
-    gen.type = CUDD_GEN_CUBES;
+    gen.genType = CUDD_GEN_CUBES;
     gen.status = CUDD_GEN_EMPTY;
-    gen.gen.cubes.cube = nil;
-    gen.gen.cubes.value = DD_ZERO_VAL;
+    gen.data.cubes.cube = nil;
+    gen.data.cubes.value = DD_ZERO_VAL;
     gen.stack.sp = 0;
     gen.stack.stack = nil;
     gen.node = nil;
 
     nvars = dd.size;
-    gen.gen.cubes.cube = ABC_ALLOC(int,nvars);
-    if gen.gen.cubes.cube == nil {
+    gen.data.cubes.cube = make([]int32, nvars);
+    if gen.data.cubes.cube == nil {
         dd.errorCode = CUDD_MEMORY_OUT;
         ABC_FREE(gen);
         return(nil);
     }
-    for i = 0; i < nvars; i++ { gen.gen.cubes.cube[i] = 2; }
+    for i = 0; i < nvars; i++ { gen.data.cubes.cube[i] = 2; }
 
     /* The maximum stack depth is one plus the number of variables.
     ** because a path may have nodes at all levels, including the
     ** constant level.
     */
-    gen.stack.stack = ABC_ALLOC(DdNodePtr, nvars+1);
+    gen.stack.stack = make([]*DdNode, nvars+1);
     if gen.stack.stack == nil {
         dd.errorCode = CUDD_MEMORY_OUT;
-        ABC_FREE(gen.gen.cubes.cube);
+        ABC_FREE(gen.data.cubes.cube);
         ABC_FREE(gen);
         return(nil);
     }
@@ -1982,7 +1982,7 @@ func Cudd_FirstCube(dd *DdManager, f *DdNode, cube **int32, value *CUDD_VALUE_TY
         // inlining of macro cuddIsConstant
         if !((treg).index == CUDD_CONST_INDEX) {
             /* Take the else branch first. */
-            gen.gen.cubes.cube[treg.index] = 0;
+            gen.data.cubes.cube[treg.index] = 0;
             // inlining of macro cuddE
             next = ((treg).type.kids.E);
             // inlining of macro Cudd_Not
@@ -2007,12 +2007,12 @@ func Cudd_FirstCube(dd *DdManager, f *DdNode, cube **int32, value *CUDD_VALUE_TY
                 // inlining of macro Cudd_Not
                 if prev != preg {next = ((DdNode *)((ptrint)(nreg) ^ 01));} else {next = nreg;}
                 if next != top { /* follow the then branch next */
-                    gen.gen.cubes.cube[preg.index] = 1;
+                    gen.data.cubes.cube[preg.index] = 1;
                     gen.stack.stack[gen.stack.sp-1] = next;
                     break;
                 }
                 /* Pop the stack and try again. */
-                gen.gen.cubes.cube[preg.index] = 2;
+                gen.data.cubes.cube[preg.index] = 2;
                 gen.stack.sp--;
                 top = gen.stack.stack[gen.stack.sp-1];
                 // inlining of macro Cudd_Regular
@@ -2021,14 +2021,14 @@ func Cudd_FirstCube(dd *DdManager, f *DdNode, cube **int32, value *CUDD_VALUE_TY
         } else {
             gen.status = CUDD_GEN_NONEMPTY;
             // inlining of macro cuddV
-            gen.gen.cubes.value = ((top).type.value);
+            gen.data.cubes.value = ((top).type.value);
             goto done;
         }
     }
 
 done:
-    *cube = gen.gen.cubes.cube;
-    *value = gen.gen.cubes.value;
+    *cube = gen.data.cubes.cube;
+    *value = gen.data.cubes.value;
     return(gen);
 
 } /* end of Cudd_FirstCube */
@@ -2072,12 +2072,12 @@ func Cudd_NextCube(gen *DdGen, cube **int32, value *CUDD_VALUE_TYPE) int32 {
         // inlining of macro Cudd_Not
         if prev != preg {next = ((DdNode *)((ptrint)(nreg) ^ 01));} else {next = nreg;}
         if next != top { /* follow the then branch next */
-            gen.gen.cubes.cube[preg.index] = 1;
+            gen.data.cubes.cube[preg.index] = 1;
             gen.stack.stack[gen.stack.sp-1] = next;
             break;
         }
         /* Pop the stack and try again. */
-        gen.gen.cubes.cube[preg.index] = 2;
+        gen.data.cubes.cube[preg.index] = 2;
         gen.stack.sp--;
     }
 
@@ -2088,7 +2088,7 @@ func Cudd_NextCube(gen *DdGen, cube **int32, value *CUDD_VALUE_TYPE) int32 {
         // inlining of macro cuddIsConstant
         if !((treg).index == CUDD_CONST_INDEX) {
             /* Take the else branch first. */
-            gen.gen.cubes.cube[treg.index] = 0;
+            gen.data.cubes.cube[treg.index] = 0;
             // inlining of macro cuddE
             next = ((treg).type.kids.E);
             // inlining of macro Cudd_Not
@@ -2113,12 +2113,12 @@ func Cudd_NextCube(gen *DdGen, cube **int32, value *CUDD_VALUE_TYPE) int32 {
                 // inlining of macro Cudd_Not
                 if prev != preg {next = ((DdNode *)((ptrint)(nreg) ^ 01));} else {next = nreg;}
                 if next != top { /* follow the then branch next */
-                    gen.gen.cubes.cube[preg.index] = 1;
+                    gen.data.cubes.cube[preg.index] = 1;
                     gen.stack.stack[gen.stack.sp-1] = next;
                     break;
                 }
                 /* Pop the stack and try again. */
-                gen.gen.cubes.cube[preg.index] = 2;
+                gen.data.cubes.cube[preg.index] = 2;
                 gen.stack.sp--;
                 top = gen.stack.stack[gen.stack.sp-1];
                 // inlining of macro Cudd_Regular
@@ -2127,15 +2127,15 @@ func Cudd_NextCube(gen *DdGen, cube **int32, value *CUDD_VALUE_TYPE) int32 {
         } else {
             gen.status = CUDD_GEN_NONEMPTY;
             // inlining of macro cuddV
-            gen.gen.cubes.value = ((top).type.value);
+            gen.data.cubes.value = ((top).type.value);
             goto done;
         }
     }
 
 done:
     if gen.status == CUDD_GEN_EMPTY { return(0); }
-    *cube = gen.gen.cubes.cube;
-    *value = gen.gen.cubes.value;
+    *cube = gen.data.cubes.cube;
+    *value = gen.data.cubes.value;
     return(1);
 
 } /* end of Cudd_NextCube */
@@ -2186,18 +2186,18 @@ func Cudd_FirstPrime(dd *DdManager, l *DdNode, u *DdNode, cube **int32) *DdGen {
     }
 
     gen.manager = dd;
-    gen.type = CUDD_GEN_PRIMES;
+    gen.genType = CUDD_GEN_PRIMES;
     gen.status = CUDD_GEN_EMPTY;
-    gen.gen.primes.cube = nil;
-    gen.gen.primes.ub = u;
+    gen.data.primes.cube = nil;
+    gen.data.primes.ub = u;
     gen.stack.sp = 0;
     gen.stack.stack = nil;
     gen.node = l;
     // inlining of macro cuddRef
     cuddSatInc(Cudd_Regular(l).ref);
 
-    gen.gen.primes.cube = ABC_ALLOC(int,dd.size);
-    if gen.gen.primes.cube == nil {
+    gen.data.primes.cube = make([]int32, dd.size);
+    if gen.data.primes.cube == nil {
         dd.errorCode = CUDD_MEMORY_OUT;
         ABC_FREE(gen);
         return(nil);
@@ -2209,17 +2209,17 @@ func Cudd_FirstPrime(dd *DdManager, l *DdNode, u *DdNode, cube **int32) *DdGen {
         implicant = Cudd_LargestCube(dd,gen.node,&length);
         if implicant == nil {
             Cudd_RecursiveDeref(dd,gen.node);
-            ABC_FREE(gen.gen.primes.cube);
+            ABC_FREE(gen.data.primes.cube);
             ABC_FREE(gen);
             return(nil);
         }
         // inlining of macro cuddRef
         cuddSatInc(Cudd_Regular(implicant).ref);
-        prime = Cudd_bddMakePrime(dd,implicant,gen.gen.primes.ub);
+        prime = Cudd_bddMakePrime(dd,implicant,gen.data.primes.ub);
         if prime == nil {
             Cudd_RecursiveDeref(dd,gen.node);
             Cudd_RecursiveDeref(dd,implicant);
-            ABC_FREE(gen.gen.primes.cube);
+            ABC_FREE(gen.data.primes.cube);
             ABC_FREE(gen);
             return(nil);
         }
@@ -2231,7 +2231,7 @@ func Cudd_FirstPrime(dd *DdManager, l *DdNode, u *DdNode, cube **int32) *DdGen {
         if tmp == nil {
             Cudd_RecursiveDeref(dd,gen.node);
             Cudd_RecursiveDeref(dd,prime);
-            ABC_FREE(gen.gen.primes.cube);
+            ABC_FREE(gen.data.primes.cube);
             ABC_FREE(gen);
             return(nil);
         }
@@ -2239,18 +2239,18 @@ func Cudd_FirstPrime(dd *DdManager, l *DdNode, u *DdNode, cube **int32) *DdGen {
         cuddSatInc(Cudd_Regular(tmp).ref);
         Cudd_RecursiveDeref(dd,gen.node);
         gen.node = tmp;
-        result = Cudd_BddToCubeArray(dd,prime,gen.gen.primes.cube);
+        result = Cudd_BddToCubeArray(dd,prime,gen.data.primes.cube);
         if result == 0 {
             Cudd_RecursiveDeref(dd,gen.node);
             Cudd_RecursiveDeref(dd,prime);
-            ABC_FREE(gen.gen.primes.cube);
+            ABC_FREE(gen.data.primes.cube);
             ABC_FREE(gen);
             return(nil);
         }
         Cudd_RecursiveDeref(dd,prime);
         gen.status = CUDD_GEN_NONEMPTY;
     }
-    *cube = gen.gen.primes.cube;
+    *cube = gen.data.primes.cube;
     return(gen);
 
 } /* end of Cudd_FirstPrime */
@@ -2286,7 +2286,7 @@ func Cudd_NextPrime(gen *DdGen, cube **int32) int32 {
         }
         // inlining of macro cuddRef
         cuddSatInc(Cudd_Regular(implicant).ref);
-        prime = Cudd_bddMakePrime(dd,implicant,gen.gen.primes.ub);
+        prime = Cudd_bddMakePrime(dd,implicant,gen.data.primes.ub);
         if prime == nil {
             Cudd_RecursiveDeref(dd,implicant);
             gen.status = CUDD_GEN_EMPTY;
@@ -2306,7 +2306,7 @@ func Cudd_NextPrime(gen *DdGen, cube **int32) int32 {
         cuddSatInc(Cudd_Regular(tmp).ref);
         Cudd_RecursiveDeref(dd,gen.node);
         gen.node = tmp;
-        result = Cudd_BddToCubeArray(dd,prime,gen.gen.primes.cube);
+        result = Cudd_BddToCubeArray(dd,prime,gen.data.primes.cube);
         if result == 0 {
             Cudd_RecursiveDeref(dd,prime);
             gen.status = CUDD_GEN_EMPTY;
@@ -2316,7 +2316,7 @@ func Cudd_NextPrime(gen *DdGen, cube **int32) int32 {
         gen.status = CUDD_GEN_NONEMPTY;
     }
     if gen.status == CUDD_GEN_EMPTY { return(0); }
-    *cube = gen.gen.primes.cube;
+    *cube = gen.data.primes.cube;
     return(1);
 
 } /* end of Cudd_NextPrime */
@@ -2555,7 +2555,7 @@ func Cudd_FirstNode(dd *DdManager, f *DdNode, node **DdNode) *DdGen {
     }
 
     gen.manager = dd;
-    gen.type = CUDD_GEN_NODES;
+    gen.genType = CUDD_GEN_NODES;
     gen.status = CUDD_GEN_EMPTY;
     gen.stack.sp = 0;
     gen.node = nil;
@@ -2568,10 +2568,10 @@ func Cudd_FirstNode(dd *DdManager, f *DdNode, node **DdNode) *DdGen {
         dd.errorCode = CUDD_MEMORY_OUT;
         return(nil);
     }
-    gen.gen.nodes.size = size;
+    gen.data.nodes.size = size;
 
     /* Find the first node. */
-    if gen.stack.sp < gen.gen.nodes.size {
+    if gen.stack.sp < gen.data.nodes.size {
         gen.status = CUDD_GEN_NONEMPTY;
         gen.node = gen.stack.stack[gen.stack.sp];
         *node = gen.node;
@@ -2598,7 +2598,7 @@ func Cudd_FirstNode(dd *DdManager, f *DdNode, node **DdNode) *DdGen {
 func Cudd_NextNode(gen *DdGen, node **DdNode) int32 {
     /* Find the next node. */
     gen.stack.sp++;
-    if gen.stack.sp < gen.gen.nodes.size {
+    if gen.stack.sp < gen.data.nodes.size {
         gen.node = gen.stack.stack[gen.stack.sp];
         *node = gen.node;
         return(1);
@@ -2625,14 +2625,14 @@ func Cudd_NextNode(gen *DdGen, node **DdNode) int32 {
 ******************************************************************************/
 func Cudd_GenFree(gen *DdGen) int32 {
     if gen == nil { return(0); }
-    switch gen.type {
+    switch gen.genType {
     case CUDD_GEN_CUBES,
      CUDD_GEN_ZDD_PATHS:
-        ABC_FREE(gen.gen.cubes.cube);
+        ABC_FREE(gen.data.cubes.cube);
         ABC_FREE(gen.stack.stack);
         break;
     case CUDD_GEN_PRIMES:
-        ABC_FREE(gen.gen.primes.cube);
+        ABC_FREE(gen.data.primes.cube);
         Cudd_RecursiveDeref(gen.manager,gen.node);
         break;
     case CUDD_GEN_NODES:

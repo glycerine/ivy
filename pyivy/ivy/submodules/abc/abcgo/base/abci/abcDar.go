@@ -3609,9 +3609,7 @@ ABC_PRT( "Time", Abc_Clock() - clkTotal );
 ABC_PRT( "Time", Abc_Clock() - clkTotal );
     }
     if fGetCex != 0 {
-        ABC_FREE( pNtk.pModel );
-        ABC_FREE( pNtk.pSeqModel );
-        pNtk.pSeqModel = pMan.pSeqModel; pMan.pSeqModel = nil;
+        pNtk.TakeInductionCounterexample(pMan)
     }
     Aig_ManStop( pMan );
     return RetValue;

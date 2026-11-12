@@ -25,24 +25,61 @@ func Cudd_SetOutput(dd *DdManager, stdout, stderr io.Writer) {
 	}
 }
 func Cudd_ReadTree(dd *DdManager) *mtr.MtrNode {
-	if dd == nil || dd.closed { return nil }
+	if dd == nil || dd.closed {
+		return nil
+	}
 	return dd.Tree
 }
-func Cudd_SetTree(dd *DdManager, tree *mtr.MtrNode) {
-	if dd != nil && !dd.closed { dd.Tree = tree }
-}
 func Cudd_FreeTree(dd *DdManager) {
-	if dd != nil { mtr.Mtr_FreeTree(dd.Tree); dd.Tree = nil }
+	if dd != nil {
+		mtr.Mtr_FreeTree(dd.Tree)
+		dd.Tree = nil
+	}
 }
 func Cudd_ReadZddTree(dd *DdManager) *mtr.MtrNode {
-	if dd == nil || dd.closed { return nil }
+	if dd == nil || dd.closed {
+		return nil
+	}
 	return dd.TreeZ
 }
-func Cudd_SetZddTree(dd *DdManager, tree *mtr.MtrNode) {
-	if dd != nil && !dd.closed { dd.TreeZ = tree }
-}
 func Cudd_FreeZddTree(dd *DdManager) {
-	if dd != nil { mtr.Mtr_FreeTree(dd.TreeZ); dd.TreeZ = nil }
+	if dd != nil {
+		mtr.Mtr_FreeTree(dd.TreeZ)
+		dd.TreeZ = nil
+	}
+}
+func fixVarTree(tree *mtr.MtrNode, permutation []int) {
+	for node := tree; node != nil; {
+		index := int(node.Low)
+		node.Index = node.Low
+		if index >= 0 && index < len(permutation) {
+			node.Low = uint32(permutation[index])
+		}
+		if node.Child != nil {
+			fixVarTree(node.Child, permutation)
+		}
+		node = node.Younger
+	}
+}
+func Cudd_SetTree(dd *DdManager, tree *mtr.MtrNode) {
+	if dd == nil || dd.closed {
+		return
+	}
+	mtr.Mtr_FreeTree(dd.Tree)
+	dd.Tree = tree
+	if tree != nil {
+		fixVarTree(tree, dd.Perm)
+	}
+}
+func Cudd_SetZddTree(dd *DdManager, tree *mtr.MtrNode) {
+	if dd == nil || dd.closed {
+		return
+	}
+	mtr.Mtr_FreeTree(dd.TreeZ)
+	dd.TreeZ = tree
+	if tree != nil {
+		fixVarTree(tree, dd.PermZ)
+	}
 }
 
 func Cudd_IsNonConstant(node *DdNode) bool {
@@ -249,50 +286,80 @@ func validVarIndex(dd *DdManager, index int) bool {
 	return dd != nil && !dd.closed && index >= 0 && index < len(dd.Vars)
 }
 func Cudd_bddBindVar(dd *DdManager, index int) int {
-	if !validVarIndex(dd, index) { return 0 }
-	if dd.boundVars == nil { dd.boundVars = map[int]bool{} }
+	if !validVarIndex(dd, index) {
+		return 0
+	}
+	if dd.boundVars == nil {
+		dd.boundVars = map[int]bool{}
+	}
 	dd.boundVars[index] = true
 	return 1
 }
 func Cudd_bddUnbindVar(dd *DdManager, index int) int {
-	if !validVarIndex(dd, index) { return 0 }
+	if !validVarIndex(dd, index) {
+		return 0
+	}
 	delete(dd.boundVars, index)
 	return 1
 }
 func Cudd_bddVarIsBound(dd *DdManager, index int) int {
-	if !validVarIndex(dd, index) { return 0 }
-	if dd.boundVars[index] { return 1 }
+	if !validVarIndex(dd, index) {
+		return 0
+	}
+	if dd.boundVars[index] {
+		return 1
+	}
 	return 0
 }
 func Cudd_bddSetVariableType(dd *DdManager, index int, kind Cudd_VariableType) int {
-	if !validVarIndex(dd, index) || kind < CUDD_VAR_PRIMARY_INPUT || kind > CUDD_VAR_NEXT_STATE { return 0 }
-	if dd.variableTypes == nil { dd.variableTypes = map[int]Cudd_VariableType{} }
+	if !validVarIndex(dd, index) || kind < CUDD_VAR_PRIMARY_INPUT || kind > CUDD_VAR_NEXT_STATE {
+		return 0
+	}
+	if dd.variableTypes == nil {
+		dd.variableTypes = map[int]Cudd_VariableType{}
+	}
 	dd.variableTypes[index] = kind
 	return 1
 }
 func Cudd_bddVariableType(dd *DdManager, index int) int {
-	if !validVarIndex(dd, index) { return -1 }
+	if !validVarIndex(dd, index) {
+		return -1
+	}
 	return int(dd.variableTypes[index])
 }
 func Cudd_bddSetPairIndex(dd *DdManager, index, pair int) int {
-	if !validVarIndex(dd, index) { return 0 }
-	if dd.pairIndices == nil { dd.pairIndices = map[int]int{} }
+	if !validVarIndex(dd, index) {
+		return 0
+	}
+	if dd.pairIndices == nil {
+		dd.pairIndices = map[int]int{}
+	}
 	dd.pairIndices[index] = pair
 	return 1
 }
 func Cudd_bddReadPairIndex(dd *DdManager, index int) int {
-	if !validVarIndex(dd, index) { return -1 }
-	if pair, ok := dd.pairIndices[index]; ok { return pair }
+	if !validVarIndex(dd, index) {
+		return -1
+	}
+	if pair, ok := dd.pairIndices[index]; ok {
+		return pair
+	}
 	return -1
 }
 func Cudd_bddSetLazyGroup(dd *DdManager, index int, kind Cudd_LazyGroupType) int {
-	if !validVarIndex(dd, index) { return 0 }
-	if dd.lazyGroups == nil { dd.lazyGroups = map[int]Cudd_LazyGroupType{} }
+	if !validVarIndex(dd, index) {
+		return 0
+	}
+	if dd.lazyGroups == nil {
+		dd.lazyGroups = map[int]Cudd_LazyGroupType{}
+	}
 	dd.lazyGroups[index] = kind
 	return 1
 }
 func Cudd_bddLazyGroup(dd *DdManager, index int) int {
-	if !validVarIndex(dd, index) { return -1 }
+	if !validVarIndex(dd, index) {
+		return -1
+	}
 	return int(dd.lazyGroups[index])
 }
 

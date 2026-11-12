@@ -1,0 +1,13 @@
+.model mux
+.inputs a b c
+.outputs y
+.names a b n1
+11 1
+.names a na
+0 1
+.names na c n2
+11 1
+.names n1 n2 y
+1- 1
+-1 1
+.end

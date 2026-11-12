@@ -1,198 +1,83 @@
 package sim
 
-/**CFile****************************************************************
+import "github.com/glycerine/abcgo/aig/aig"
 
-  FileName    [simSeq.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Simulation for sequential circuits.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: simUtils.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "sim.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static void Sim_SimulateSeqFrame( Vec_Ptr_t * vInfo, Abc_Ntk_t * pNtk, int iFrames, int nWords, int fTransfer );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Simulates sequential circuit.]
-
-  Description [Takes sequential circuit (pNtk). Simulates the given number
-  (nFrames) of the circuit with the given number of machine words (nWords)
-  of random simulation data, starting from the initial state. If the initial
-  state of some latches is a don't-care, uses random input for that latch.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sim_SimulateSeqRandom(pNtk *Abc_Ntk_t, nFrames int32, nWords int32) *Vec_Ptr_t {
-    var vInfo *Vec_Ptr_t;
-    var pNode *Abc_Obj_t;
-    var i int32;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    vInfo = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nWords * nFrames, 0 );
-    // set the constant data
-    pNode = Abc_AigConst1(pNtk);
-    // inlining of macro Sim_SimInfoGet
-    Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords * nFrames, 1 );
-    // set the random PI data
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        // inlining of macro Sim_SimInfoGet
-        Sim_UtilSetRandom( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords * nFrames );
-    }
-    // set the initial state data
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else
-        if Abc_LatchIsInit0(pNode) {
-            // inlining of macro Sim_SimInfoGet
-            Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords, 0 );
-        } else if Abc_LatchIsInit1(pNode) {
-            // inlining of macro Sim_SimInfoGet
-            Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords, 1 );
-        } else { 
-            // inlining of macro Sim_SimInfoGet
-            Sim_UtilSetRandom( ((unsigned *)((vInfo).pArray[(pNode).Id])), nWords ); }
-    }
-    // simulate the nodes for the given number of timeframes
-    for  i = 0; i < nFrames; i++  {
-        Sim_SimulateSeqFrame( vInfo, pNtk, i, nWords, int32((i < nFrames-1)) );
-    }
-    return vInfo;
+// SequentialSimulation allows explicit initial 0/1/unknown latch values.
+// Initial nil means all zero (the native Graph convention); -1 means random.
+// Info rows contain consecutive words for each frame, indexed by node ID.
+func SequentialSimulation(g *aig.Graph, frames, words int, model []bool, initial []int8) Info {
+	if frames < 0 || words <= 0 {
+		panic("invalid sequential simulation dimensions")
+	}
+	order := graphOrder(g)
+	inputs, outputs := g.Inputs(), g.Outputs()
+	regs := int(aig.Aig_ManRegNum(g))
+	pis := len(inputs) - regs
+	if model != nil && (words != 1 || len(model) != frames*pis) {
+		panic("sequential model dimensions mismatch")
+	}
+	if initial != nil && len(initial) != regs {
+		panic("initial state dimensions mismatch")
+	}
+	info := Sim_UtilInfoAlloc(int(aig.Aig_ManObjNumMax(g)), frames*words, true)
+	rng := newRandom()
+	Sim_UtilSetConst(info[0], frames*words, true)
+	for i, e := range inputs[:pis] {
+		if model == nil {
+			fillRandom(info[e.NodeID()], rng)
+		} else {
+			for f := 0; f < frames; f++ {
+				Sim_UtilSetConst(info[e.NodeID()][f:f+1], 1, model[f*pis+i])
+			}
+		}
+	}
+	if frames == 0 {
+		return info
+	}
+	for i, e := range inputs[pis:] {
+		init := int8(0)
+		if initial != nil {
+			init = initial[i]
+		}
+		switch init {
+		case 0:
+		case 1:
+			Sim_UtilSetConst(info[e.NodeID()], words, true)
+		case -1:
+			fillRandom(info[e.NodeID()][:words], rng)
+		default:
+			panic("invalid initial state")
+		}
+	}
+	for f := 0; f < frames; f++ {
+		simulateSeqFrame(info, g, order, inputs, outputs, f, words, f+1 < frames)
+	}
+	return info
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Simulates sequential circuit.]
-
-  Description [Takes sequential circuit (pNtk). Simulates the given number
-  (nFrames) of the circuit with the given model. The model is assumed to 
-  contain values of PIs for each frame. The latches are initialized to
-  the initial state. One word of data is simulated.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sim_SimulateSeqModel(pNtk *Abc_Ntk_t, nFrames int32, pModel *int32) *Vec_Ptr_t {
-    var vInfo *Vec_Ptr_t;
-    var pNode *Abc_Obj_t;
-    var pUnsigned *uint32;
-    var i, k int32;
-    vInfo = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nFrames, 0 );
-    // set the constant data
-    pNode = Abc_AigConst1(pNtk);
-    // inlining of macro Sim_SimInfoGet
-    Sim_UtilSetConst( ((unsigned *)((vInfo).pArray[(pNode).Id])), nFrames, 1 );
-    // set the random PI data
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pNode) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        // inlining of macro Sim_SimInfoGet
-        pUnsigned = ((unsigned *)((vInfo).pArray[(pNode).Id]));
-        for  k = 0; k < nFrames; k++  {
-            pUnsigned[k] = pModel[k * Abc_NtkPiNum(pNtk) + i] ? ~(uint32(0)) : 0;
-        }
-    }
-    // set the initial state data
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {
-        // inlining of macro Sim_SimInfoGet
-        pUnsigned = ((unsigned *)((vInfo).pArray[(pNode).Id]));
-        if Abc_LatchIsInit0(pNode) {
-            pUnsigned[0] = 0;
-        } else if Abc_LatchIsInit1(pNode) {
-            pUnsigned[0] = ~(uint32(0));
-        } else { 
-            pUnsigned[0] = SIM_RANDOM_UNSIGNED; }
-    }
-    }
-    // simulate the nodes for the given number of timeframes
-    for  i = 0; i < nFrames; i++  {
-        Sim_SimulateSeqFrame( vInfo, pNtk, i, 1, int32((i < nFrames-1)) );
-    }
-/*
-    // print the simulated values
-    for ( i = 0; i < nFrames; i++ )
-    {
-        printf( "Frame %d : ", i+1 );
-        Abc_NtkForEachPi( pNtk, pNode, k )
-            printf( "%d", Sim_SimInfoGet(vInfo,pNode)[i] > 0 );
-        printf( " " );
-        Abc_NtkForEachLatch( pNtk, pNode, k )
-            printf( "%d", Sim_SimInfoGet(vInfo,pNode)[i] > 0 );
-        printf( " " );
-        Abc_NtkForEachPo( pNtk, pNode, k )
-            printf( "%d", Sim_SimInfoGet(vInfo,pNode)[i] > 0 );
-        printf( "\n" );
-    }
-    printf( "\n" );
-*/
-    return vInfo;
+func Sim_SimulateSeqRandom(g *aig.Graph, frames, words int) Info {
+	return SequentialSimulation(g, frames, words, nil, nil)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Simulates one frame of sequential circuit.]
-
-  Description [Assumes that the latches and POs are already initialized.
-  In the end transfers the data to the latches of the next frame.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sim_SimulateSeqFrame(vInfo *Vec_Ptr_t, pNtk *Abc_Ntk_t, iFrames int32, nWords int32, fTransfer int32) {
-    var pNode *Abc_Obj_t;
-    var i int32;
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        Sim_UtilSimulateNodeOne( pNode, vInfo, nWords, iFrames * nWords ); }
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Sim_UtilTransferNodeOne( pNode, vInfo, nWords, iFrames * nWords, 0 );
-    }
-    if !(fTransfer != 0) {
-        return; }
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pNode) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pNode) {} else {
-        Sim_UtilTransferNodeOne( pNode, vInfo, nWords, iFrames * nWords, 1 ); }
-    }
+func Sim_SimulateSeqModel(g *aig.Graph, frames int, model []bool) Info {
+	if model == nil && frames > 0 && g.InputCount() > int(aig.Aig_ManRegNum(g)) {
+		panic("missing sequential model")
+	}
+	return SequentialSimulation(g, frames, 1, model, nil)
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Sim_SimulateSeqFrame(info Info, g *aig.Graph, frame, words int, transfer bool) {
+	simulateSeqFrame(info, g, graphOrder(g), g.Inputs(), g.Outputs(), frame, words, transfer)
+}
+func simulateSeqFrame(info Info, g *aig.Graph, order, inputs, outputs []aig.Edge, frame, words int, transfer bool) {
+	off := frame * words
+	for _, e := range order {
+		Sim_UtilSimulateNodeOne(g, e, info, words, off)
+	}
+	if !transfer {
+		return
+	}
+	regs := int(aig.Aig_ManRegNum(g))
+	for i := 0; i < regs; i++ {
+		src := info[outputs[len(outputs)-regs+i].NodeID()][off : off+words]
+		dst := info[inputs[len(inputs)-regs+i].NodeID()][off+words : off+2*words]
+		copy(dst, src)
+	}
+}

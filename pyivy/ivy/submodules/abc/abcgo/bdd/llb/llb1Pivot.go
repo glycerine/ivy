@@ -1,249 +1,197 @@
 package llb
 
-import "fmt"
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [llb1Pivot.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [BDD based reachability.]
-
-  Synopsis    [Determining pivot variables.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: llb1Pivot.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "llbInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManTracePaths_rec(p *Aig_Man_t, pObj *Aig_Obj_t, pPivot *Aig_Obj_t) int32 {
-    var pFanout *Aig_Obj_t;
-    var k int32;
-    var iFan int32 = -1;
-    if Aig_ObjIsTravIdPrevious(p, pObj) {
-        return 0; }
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return 1; }
-    if Saig_ObjIsLi(p, pObj) {
-        return 0; }
-    if Saig_ObjIsPo(p, pObj) {
-        return 0; }
-    if pObj == pPivot {
-        return 1; }
-    assert(Aig_ObjIsCand(pObj), "Aig_ObjIsCand(pObj)");
-    Aig_ObjForEachFanout( p, pObj, pFanout, iFan, k )
-        if !(Llb_ManTracePaths_rec( p, pFanout, pPivot ) != 0) {
-            Aig_ObjSetTravIdPrevious(p, pObj);
-            return 0;
-        }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    return 1;
+func llbIsLi(graph *aig.Graph, edge aig.Edge) bool {
+	start := int(aig.Aig_ManCoNum(graph) - aig.Aig_ManRegNum(graph))
+	for i := start; i < int(aig.Aig_ManCoNum(graph)); i++ {
+		if aig.Aig_ManCo(graph, int32(i)) == edge {
+			return true
+		}
+	}
+	return false
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManTracePaths(p *Aig_Man_t, pPivot *Aig_Obj_t) int32 {
-    var pObj *Aig_Obj_t;
-    var i, Counter int32;
-    Aig_ManIncrementTravId( p ); // prev = visited with path to LI  (value 0)
-    Aig_ManIncrementTravId( p ); // cur  = visited w/o  path to LI  (value 1)
-    Saig_ManForEachLo( p, pObj, i )
-        Counter += Llb_ManTracePaths_rec( p, pObj, pPivot );
-    return Counter;
+func llbIsPo(graph *aig.Graph, edge aig.Edge) bool {
+	for i := int32(0); i < aig.Aig_ManCoNum(graph)-aig.Aig_ManRegNum(graph); i++ {
+		if aig.Aig_ManCo(graph, i) == edge {
+			return true
+		}
+	}
+	return false
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManTestCuts(p *Aig_Man_t) {
-    var pObj *Aig_Obj_t;
-    var i, Count int32;
-    Aig_ManFanoutStart( p );
-    Aig_ManForEachNode( p, pObj, i )
-    {
-        if Aig_ObjRefs(pObj) <= 1 {
-            continue; }
-        Count = Llb_ManTracePaths( p, pObj );
-        fmt.Printf("Obj =%5d.  Lev =%3d.  Fanout =%5d.  Count = %3d.\n", i, Aig_ObjLevel(pObj), Aig_ObjRefs(pObj), Count);
-    }
-    Aig_ManFanoutStop( p );
+func llbFanouts(graph *aig.Graph, edge aig.Edge) []aig.Edge {
+	var result []aig.Edge
+	for fan := aig.Aig_ObjFanout0Int(graph, int32(edge.NodeID())); fan != 0; fan = aig.Aig_ObjFanoutNext(graph, fan) {
+		result = append(result, aig.Aig_ManObj(graph, fan>>1))
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManLabelLiCones_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {
-    if pObj.fMarkB {
-        return; }
-    pObj.fMarkB = 1;
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Llb_ManLabelLiCones_rec( p, Aig_ObjFanin0(pObj) );
-    Llb_ManLabelLiCones_rec( p, Aig_ObjFanin1(pObj) );
+func llbTracePathRec(graph *aig.Graph, object, pivot aig.Edge, failed, successful map[int]bool) bool {
+	id := object.NodeID()
+	if failed[id] {
+		return false
+	}
+	if successful[id] {
+		return true
+	}
+	if llbIsLi(graph, object) || llbIsPo(graph, object) {
+		return false
+	}
+	if object.NodeID() == pivot.NodeID() {
+		return true
+	}
+	if !aig.Aig_ObjIsCand(graph, object) {
+		panic("llb: non-candidate object in pivot fanout traversal")
+	}
+	for _, fanout := range llbFanouts(graph, object) {
+		if !llbTracePathRec(graph, fanout, pivot, failed, successful) {
+			failed[id] = true
+			return false
+		}
+	}
+	successful[id] = true
+	return true
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Determine starting cut-points.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManLabelLiCones(p *Aig_Man_t) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // mark const and PIs
-    Aig_ManConst1(p).fMarkB = 1;
-    Aig_ManForEachCi( p, pObj, i )
-        pObj.fMarkB = 1;
-    // mark cones
-    Saig_ManForEachLi( p, pObj, i )
-        Llb_ManLabelLiCones_rec( p, Aig_ObjFanin0(pObj) );
+func Llb_ManTracePaths_rec(graph *Aig_Man_t, object, pivot aig.Edge) int32 {
+	if llbTracePathRec(graph, object, pivot, map[int]bool{}, map[int]bool{}) {
+		return 1
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Determine starting cut-points.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManMarkInternalPivots(p *Aig_Man_t) {
-    var vMuxes *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var i, Counter int32;
-
-    // remove refs due to MUXes
-    vMuxes = Aig_ManMuxesCollect( p );
-    Aig_ManMuxesDeref( p, vMuxes );
-
-    // mark nodes feeding into LIs
-    Aig_ManCleanMarkB( p );
-    Llb_ManLabelLiCones( p );
-
-    // mark internal nodes
-    Aig_ManFanoutStart( p );
-    Aig_ManForEachNode( p, pObj, i )
-        if pObj.fMarkB && pObj.nRefs > 1 {
-            if Llb_ManTracePaths(p, pObj) > 0 {
-                pObj.fMarkA = 1; }
-            Counter++;
-        }
-    Aig_ManFanoutStop( p );
-//    printf( "TracePath tried = %d.\n", Counter );
-
-    // mark nodes feeding into LIs
-    Aig_ManCleanMarkB( p );
-
-    // add refs due to MUXes
-    Aig_ManMuxesRef( p, vMuxes );
-    Vec_PtrFree( vMuxes );
+func Llb_ManTracePaths(graph *Aig_Man_t, pivot aig.Edge) int32 {
+	var count int32
+	inputs := graph.Inputs()
+	start := len(inputs) - int(aig.Aig_ManRegNum(graph))
+	failed, successful := map[int]bool{}, map[int]bool{}
+	for i := start; i < len(inputs); i++ {
+		if llbTracePathRec(graph, inputs[i], pivot, failed, successful) {
+			count++
+		}
+	}
+	return count
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Determine starting cut-points.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManMarkPivotNodes(p *Aig_Man_t, fUseInternal int32) *Vec_Int_t {
-    var vVar2Obj *Vec_Int_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // mark inputs/outputs
-    Aig_ManForEachCi( p, pObj, i )
-        pObj.fMarkA = 1;
-    Saig_ManForEachLi( p, pObj, i )
-        pObj.fMarkA = 1;
-
-    // mark internal pivot nodes
-    if fUseInternal != 0 {
-        Llb_ManMarkInternalPivots( p ); }
-
-    // assign variable numbers
-    Aig_ManConst1(p).fMarkA = 0;
-    vVar2Obj = Vec_IntAlloc( 100 );
-    Aig_ManForEachCi( p, pObj, i )
-        Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );
-    Aig_ManForEachNode( p, pObj, i )
-        if ( pObj.fMarkA )
-            Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );
-    Saig_ManForEachLi( p, pObj, i )
-        Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );
-    return vVar2Obj;
+func Llb_ManTestCuts(graph *Aig_Man_t) {
+	aig.Aig_ManFanoutStart(graph)
+	defer aig.Aig_ManFanoutStop(graph)
+	for _, edge := range graph.LiveEdges() {
+		if !aig.Aig_ObjIsNode(graph, edge) || aig.Aig_ObjRefs(graph, edge) <= 1 {
+			continue
+		}
+		fmt.Printf("Obj =%5d.  Lev =%3d.  Fanout =%5d.  Count = %3d.\n", edge.NodeID(), graph.Node(edge).Level, aig.Aig_ObjRefs(graph, edge), Llb_ManTracePaths(graph, edge))
+	}
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func llbLabelCone(graph *aig.Graph, edge aig.Edge, marked map[int]bool) {
+	id := edge.NodeID()
+	if marked[id] {
+		return
+	}
+	marked[id] = true
+	node := graph.Node(aig.Aig_Regular(edge))
+	switch node.Kind {
+	case aig.Constant, aig.Input:
+		return
+	case aig.Output, aig.Buffer:
+		llbLabelCone(graph, node.Fanins[0], marked)
+	case aig.And, aig.ExclusiveOr:
+		llbLabelCone(graph, node.Fanins[0], marked)
+		llbLabelCone(graph, node.Fanins[1], marked)
+	default:
+		panic("llb: unsupported node in latch-input cone")
+	}
+}
 
+func Llb_ManLabelLiCones_rec(graph *Aig_Man_t, object aig.Edge) {
+	if aig.Aig_ObjIsMarkB(graph, object) {
+		return
+	}
+	aig.Aig_ObjSetMarkB(graph, object)
+	node := graph.Node(aig.Aig_Regular(object))
+	if node.Kind == aig.Constant || node.Kind == aig.Input {
+		return
+	}
+	if node.Kind == aig.Output || node.Kind == aig.Buffer {
+		Llb_ManLabelLiCones_rec(graph, node.Fanins[0])
+		return
+	}
+	if node.Kind != aig.And && node.Kind != aig.ExclusiveOr {
+		panic("llb: unsupported node in latch-input cone")
+	}
+	Llb_ManLabelLiCones_rec(graph, node.Fanins[0])
+	Llb_ManLabelLiCones_rec(graph, node.Fanins[1])
+}
 
-//ABC_NAMESPACE_IMPL_END
+func Llb_ManLabelLiCones(graph *Aig_Man_t) {
+	aig.Aig_ManCleanMarkB(graph)
+	aig.Aig_ObjSetMarkB(graph, aig.Aig_ManConst1(graph))
+	for _, input := range graph.Inputs() {
+		aig.Aig_ObjSetMarkB(graph, input)
+	}
+	outputs := graph.Outputs()
+	start := len(outputs) - int(aig.Aig_ManRegNum(graph))
+	for i := start; i < len(outputs); i++ {
+		node := graph.Node(outputs[i])
+		Llb_ManLabelLiCones_rec(graph, node.Fanins[0])
+	}
+}
 
+func Llb_ManMarkInternalPivots(graph *Aig_Man_t) {
+	muxes := aig.Aig_ManMuxesCollect(graph)
+	aig.Aig_ManMuxesDeref(graph, muxes)
+	defer aig.Aig_ManMuxesRef(graph, muxes)
+	aig.Aig_ManCleanMarkB(graph)
+	Llb_ManLabelLiCones(graph)
+	aig.Aig_ManFanoutStart(graph)
+	defer aig.Aig_ManFanoutStop(graph)
+	for _, edge := range graph.LiveEdges() {
+		if !aig.Aig_ObjIsNode(graph, edge) || !aig.Aig_ObjIsMarkB(graph, edge) || aig.Aig_ObjRefs(graph, edge) <= 1 {
+			continue
+		}
+		if Llb_ManTracePaths(graph, edge) > 0 {
+			aig.Aig_ObjSetMarkA(graph, edge)
+		}
+	}
+	aig.Aig_ManCleanMarkB(graph)
+}
+
+func Llb_ManMarkPivotNodes(graph *Aig_Man_t, useInternal int32) *Vec_Int_t {
+	if graph == nil {
+		return vec.Vec_IntAlloc(0)
+	}
+	aig.Aig_ManCleanMarkA(graph)
+	for _, input := range graph.Inputs() {
+		aig.Aig_ObjSetMarkA(graph, input)
+	}
+	outputs := graph.Outputs()
+	start := len(outputs) - int(aig.Aig_ManRegNum(graph))
+	for i := start; i < len(outputs); i++ {
+		aig.Aig_ObjSetMarkA(graph, outputs[i])
+	}
+	if useInternal != 0 {
+		Llb_ManMarkInternalPivots(graph)
+	}
+	v := vec.Vec_IntAlloc(len(graph.LiveEdges()))
+	for _, input := range graph.Inputs() {
+		vec.Vec_IntPush(v, int32(input.NodeID()))
+	}
+	for _, edge := range graph.LiveEdges() {
+		if aig.Aig_ObjIsNode(graph, edge) && aig.Aig_ObjIsMarkA(graph, edge) {
+			vec.Vec_IntPush(v, int32(edge.NodeID()))
+		}
+	}
+	for i := start; i < len(outputs); i++ {
+		vec.Vec_IntPush(v, int32(outputs[i].NodeID()))
+	}
+	return v
+}

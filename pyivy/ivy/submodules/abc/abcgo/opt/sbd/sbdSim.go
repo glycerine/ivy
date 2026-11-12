@@ -1,308 +1,303 @@
 package sbd
 
-import "fmt"
+import (
+	"encoding/binary"
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [sbdSim.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [SAT-based optimization using internal don't-cares.]
-
-  Synopsis    [Simulation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: sbdSim.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sbdInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Sbd_ObjSims(p *Gia_Man_t, i int32) *word { return Vec_WrdEntryP( p.vSims,   p.iPatsPi * i );  }
-func Sbd_ObjCtrl(p *Gia_Man_t, i int32) *word { return Vec_WrdEntryP( p.vSimsPi, p.iPatsPi * i );  }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [This does not work.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sbd_GiaSimRoundBack2(p *Gia_Man_t) {
-    var nWords int32  = p.iPatsPi;
-    var pObj *Gia_Obj_t;
-    var w, i, Id int32;
-    // init primary outputs
-    // inlining of macro Gia_ManForEachCoId
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((Id) = Gia_ObjId(p, Gia_ManCo(p, i))); i++  {
-        for  w = 0; w < nWords; w++  {
-            Sbd_ObjSims(p, Id)[w] = Gia_ManRandomW(0);
-        }
-    }
-    // transfer to nodes
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        var pSims *word  = Sbd_ObjSims(p, Gia_ObjId(p, pObj));
-        Abc_TtCopy( Sbd_ObjSims(p, Gia_ObjFaninId0p(p, pObj)), pSims, nWords, Gia_ObjFaninC0(pObj) );
-    }
-    // simulate nodes
-    // inlining of macro Gia_ManForEachAndReverse
-    for  i = p.nObjs - 1; (i > 0) && ((pObj) = Gia_ManObj(p, i)); i--  {  if !Gia_ObjIsAnd(pObj) {} else {
-        var pSims *word   = Sbd_ObjSims(p, i);
-        var pSims0 *word  = Sbd_ObjSims(p, Gia_ObjFaninId0(pObj, i));
-        var pSims1 *word  = Sbd_ObjSims(p, Gia_ObjFaninId1(pObj, i));
-        var Rand word  = Gia_ManRandomW(0);
-        for  w = 0; w < nWords; w++  {
-            pSims0[w] = pSims[w] | Rand;
-            pSims1[w] = pSims[w] | ~Rand;
-        }
-        if Gia_ObjFaninC0(pObj) { Abc_TtNot( pSims0, nWords ); }
-        if Gia_ObjFaninC1(pObj) { Abc_TtNot( pSims1, nWords ); }
-    }
-    }
-    // primary inputs are initialized
+func (p *Network) ensureSimulation() {
+	if p.SimWords == 0 {
+		p.SimWords = 1
+	}
+	if p.SimWords < 0 {
+		panic("negative simulation width")
+	}
+	count := len(p.Graph.Nodes()) * int(p.SimWords)
+	if len(p.SimValues) < count {
+		p.SimValues = append(p.SimValues, make([]uint64, count-len(p.SimValues))...)
+	}
+	if len(p.SimControls) < count {
+		p.SimControls = append(p.SimControls, make([]uint64, count-len(p.SimControls))...)
+	}
+}
+func Sbd_ObjSims(p *Network, id int32) []uint64 {
+	p.ensureSimulation()
+	start := int(id) * int(p.SimWords)
+	return p.SimValues[start : start+int(p.SimWords)]
+}
+func Sbd_ObjCtrl(p *Network, id int32) []uint64 {
+	p.ensureSimulation()
+	start := int(id) * int(p.SimWords)
+	return p.SimControls[start : start+int(p.SimWords)]
+}
+func (p *Network) randomWord() uint64 {
+	if p.random == nil {
+		p.random = aig.NewAigRandomSource()
+	}
+	high, low := p.random.Uint32(), p.random.Uint32()
+	return uint64(high)<<32 | uint64(low)
+}
+func sbdSimLiteral(p *Network, edge aig.Edge, word int) uint64 {
+	lit := sourceLiteral(edge)
+	value := Sbd_ObjSims(p, lit>>1)[word]
+	if lit&1 != 0 {
+		value = ^value
+	}
+	return value
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Tries to falsify a sequence of two-literal SAT problems.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sbd_GiaSatOne_rec(p *Gia_Man_t, pObj *Gia_Obj_t, Value int32, fFirst int32, iPat int32) int32 {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return int32(pObj.fMark0) == Value; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    pObj.fMark0 = Value;
-    if Gia_ObjIsCi(pObj) {
-        var pSims *word  = Sbd_ObjSims(p, Gia_ObjId(p, pObj));
-        if Abc_TtGetBit( pSims, iPat ) != Value {
-            Abc_TtXorBit( pSims, iPat ); }
-        return 1;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    assert(!Gia_ObjIsXor(pObj), "!Gia_ObjIsXor(pObj)");
-    if Value != 0 {
-        return Sbd_GiaSatOne_rec( p, Gia_ObjFanin0(pObj), !Gia_ObjFaninC0(pObj), fFirst, iPat ) &&
-               Sbd_GiaSatOne_rec( p, Gia_ObjFanin1(pObj), !Gia_ObjFaninC1(pObj), fFirst, iPat ); }
-    if fFirst != 0 {
-        return Sbd_GiaSatOne_rec( p, Gia_ObjFanin0(pObj), Gia_ObjFaninC0(pObj), fFirst, iPat );
-    } else {
-        return Sbd_GiaSatOne_rec( p, Gia_ObjFanin1(pObj), Gia_ObjFaninC1(pObj), fFirst, iPat ); }
+// This is the source's experimental backward heuristic, explicitly marked
+// "This does not work" in C. It is retained as a diagnostic, not used to prove
+// satisfiability or justify any rewrite.
+func Sbd_GiaSimRoundBack2(p *Network) {
+	p.ensureSimulation()
+	for _, co := range p.Graph.Outputs() {
+		sims := Sbd_ObjSims(p, int32(co.NodeID()))
+		for w := range sims {
+			sims[w] = p.randomWord()
+		}
+		driver := p.Graph.Node(co).Fanins[0]
+		for w, value := range sims {
+			if sourceLiteral(driver)&1 != 0 {
+				value = ^value
+			}
+			Sbd_ObjSims(p, int32(driver.NodeID()))[w] = value
+		}
+	}
+	edges := p.Graph.LiveEdges()
+	for i := len(edges) - 1; i >= 0; i-- {
+		edge := edges[i]
+		node := p.Graph.Node(edge)
+		if node.Kind != aig.And && node.Kind != aig.ExclusiveOr {
+			continue
+		}
+		sims := Sbd_ObjSims(p, int32(edge.NodeID()))
+		a, b := Sbd_ObjSims(p, int32(node.Fanins[0].NodeID())), Sbd_ObjSims(p, int32(node.Fanins[1].NodeID()))
+		random := p.randomWord()
+		for w, value := range sims {
+			a[w], b[w] = value|random, value|^random
+			if node.Fanins[0].Complemented() {
+				a[w] = ^a[w]
+			}
+			if node.Fanins[1].Complemented() {
+				b[w] = ^b[w]
+			}
+		}
+	}
 }
-func Sbd_GiaSatOne(p *Gia_Man_t, vPairs *Vec_Int_t) int32 {
-    var k, n, Var1, Var2, iPat int32;
-    //Gia_ManSetPhase( p );
-    Vec_IntForEachEntryDouble( vPairs, Var1, Var2, k )
-    {
-        var pObj1 *Gia_Obj_t  = Gia_ManObj( p, Var1 );
-        var pObj2 *Gia_Obj_t  = Gia_ManObj( p, Var2 );
-        assert(Var2 > 0, "Var2 > 0");
-        if Var1 == 0 {
-            for  n = 0; n < 2; n++  {
-                Gia_ManIncrementTravId( p );
-                if Sbd_GiaSatOne_rec(p, pObj2, !pObj2.fPhase, n, iPat) != 0 {
-                    iPat++;
-                    break;
-                }
-            }
-            fmt.Printf("%c", n == 2 ? '.' : 'c');
-        
-        } else {
-            for  n = 0; n < 2; n++  {
-                Gia_ManIncrementTravId( p );
-                if (Sbd_GiaSatOne_rec(p, pObj1, !pObj1.fPhase, n, iPat) != 0) && (Sbd_GiaSatOne_rec(p, pObj2, pObj2.fPhase, n, iPat) != 0) {
-                    iPat++;
-                    break;
-                }
-                Gia_ManIncrementTravId( p );
-                if (Sbd_GiaSatOne_rec(p, pObj1, pObj1.fPhase, n, iPat) != 0) && (Sbd_GiaSatOne_rec(p, pObj2, !pObj2.fPhase, n, iPat) != 0) {
-                    iPat++;
-                    break;
-                }
-            }
-            fmt.Printf("%c", n == 2 ? '.' : 'e');
-        }
-        if iPat == 64 * p.iPatsPi - 1 {
-            break; }
-    }
-    fmt.Printf("\n");
-    return iPat;
+func Sbd_GiaSatOne_rec(p *Network, id, value, first, pattern int32) int32 {
+	if p.trial == nil {
+		p.trial = map[int32]int32{}
+	}
+	if previous, ok := p.trial[id]; ok {
+		if previous == value {
+			return 1
+		}
+		return 0
+	}
+	p.trial[id] = value
+	node := p.object(id)
+	if node.Kind == aig.Input {
+		data := Sbd_ObjSims(p, id)
+		mask := uint64(1) << uint(pattern&63)
+		if value != 0 {
+			data[pattern>>6] |= mask
+		} else {
+			data[pattern>>6] &^= mask
+		}
+		return 1
+	}
+	if node.Kind != aig.And {
+		panic("backward justification requires AND gates")
+	}
+	child := func(edge aig.Edge, desired int32) int32 {
+		lit := sourceLiteral(edge)
+		if lit>>1 == 0 {
+			if int32(lit&1) == desired {
+				return 1
+			}
+			return 0
+		}
+		return Sbd_GiaSatOne_rec(p, lit>>1, desired^(lit&1), first, pattern)
+	}
+	if value != 0 {
+		if child(node.Fanins[0], 1) == 0 {
+			return 0
+		}
+		return child(node.Fanins[1], 1)
+	}
+	index := 0
+	if first == 0 {
+		index = 1
+	}
+	return child(node.Fanins[index], 0)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sbd_GiaSimRoundBack(p *Gia_Man_t) {
-    extern void Sbd_GiaSimRound( Gia_Man_t * p, int fTry, Vec_Int_t ** pvMap );
-    var vReprs *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );
-    var vPairs *Vec_Int_t  = Vec_IntAlloc( 1000 );
-    var vMap *Vec_Int_t; // maps each node into its class
-    var i, nConsts, nClasses, nPats int32;
-    Sbd_GiaSimRound( p, 0, &vMap );
-    // inlining of macro Gia_ManForEachAndId
-    for  i = 0; (i < p.nObjs); i++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p, i)) {} else {
-        if Vec_IntEntry(vMap, i) == 0 {
-            Vec_IntPushTwo( vPairs, 0, i );
-nConsts++;
-        } else if Vec_IntEntry(vReprs, Vec_IntEntry(vMap, i)) == 0 {
-            Vec_IntWriteEntry( vReprs, Vec_IntEntry(vMap, i), i );
-        } else if Vec_IntEntry(vReprs, Vec_IntEntry(vMap, i)) != -1 {
-            Vec_IntPushTwo( vPairs, Vec_IntEntry(vReprs, Vec_IntEntry(vMap, i)), i );
-            Vec_IntWriteEntry( vReprs, Vec_IntEntry(vMap, i), -1 );
-            nClasses++;
-        }
-    }
-    }
-    Vec_IntFree( vMap );
-    Vec_IntFree( vReprs );
-    fmt.Printf("Constants = %d.   Classes = %d.\n", nConsts, nClasses);
-
-    nPats = Sbd_GiaSatOne( p, vPairs );
-    Vec_IntFree( vPairs );
-
-    fmt.Printf("Generated %d patterns.\n", nPats);
+func sbdPhases(p *Network) []int32 {
+	values := make([]int32, len(p.Graph.Nodes()))
+	read := func(edge aig.Edge) int32 { lit := sourceLiteral(edge); return values[lit>>1] ^ (lit & 1) }
+	for _, edge := range p.Graph.LiveEdges() {
+		node := p.Graph.Node(edge)
+		switch node.Kind {
+		case aig.And:
+			values[edge.NodeID()] = read(node.Fanins[0]) & read(node.Fanins[1])
+		case aig.ExclusiveOr:
+			values[edge.NodeID()] = read(node.Fanins[0]) ^ read(node.Fanins[1])
+		case aig.Buffer, aig.Output:
+			values[edge.NodeID()] = read(node.Fanins[0])
+		}
+	}
+	return values
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sbd_GiaSimRound(p *Gia_Man_t, fTry int32, pvMap **Vec_Int_t) {
-    var nWords int32  = p.iPatsPi;
-    var vStore *Vec_Mem_t;
-    var pObj *Gia_Obj_t;
-    var vMap *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );
-    var w, i, Id, fCompl, RetValue int32;
-    // init primary inputs
-    if fTry != 0 {
-        Sbd_GiaSimRoundBack( p );
-        // inlining of macro Gia_ManForEachCiId
-        for  i = 0; (i < Vec_IntSize(p.vCis)) && ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {
-            Sbd_ObjSims(p, Id)[0] <<= 1;
-        }
-    
-    } else {
-        // inlining of macro Gia_ManForEachCiId
-        for  i = 0; (i < Vec_IntSize(p.vCis)) && ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {
-            for  w = 0; w < nWords; w++  {
-                Sbd_ObjSims(p, Id)[w] = Gia_ManRandomW(0) << !w;
-            }
-        }
-    }
-    // simulate internal nodes
-    vStore = Vec_MemAlloc( nWords, 16 ); // 2^12 N-word entries per page
-    Vec_MemHashAlloc( vStore, 1 << 16 );
-    RetValue = Vec_MemHashInsert( vStore, Sbd_ObjSims(p, 0) ); // const zero
-    assert(RetValue == 0, "RetValue == 0");
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        var pSims *word  = Sbd_ObjSims(p, i);
-        if Gia_ObjIsXor(pObj) {
-            Abc_TtXor( pSims, 
-                Sbd_ObjSims(p, Gia_ObjFaninId0(pObj, i)), 
-                Sbd_ObjSims(p, Gia_ObjFaninId1(pObj, i)), 
-                nWords, 
-                Gia_ObjFaninC0(pObj) ^ Gia_ObjFaninC1(pObj) );
-        } else {
-            Abc_TtAndCompl( pSims, 
-                Sbd_ObjSims(p, Gia_ObjFaninId0(pObj, i)), Gia_ObjFaninC0(pObj), 
-                Sbd_ObjSims(p, Gia_ObjFaninId1(pObj, i)), Gia_ObjFaninC1(pObj), 
-                nWords ); }
-        // hash sim info
-        fCompl = int32((pSims[0] & 1));
-        if fCompl { Abc_TtNot( pSims, nWords ); }
-        Vec_IntWriteEntry( vMap, i, Vec_MemHashInsert(vStore, pSims) );
-        if fCompl { Abc_TtNot( pSims, nWords ); }
-    }
-    }
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        var pSims *word  = Sbd_ObjSims(p, Gia_ObjId(p, pObj));
-        Abc_TtCopy( pSims, Sbd_ObjSims(p, Gia_ObjFaninId0p(p, pObj)), nWords, Gia_ObjFaninC0(pObj) );
-//        printf( "%d ", Abc_TtCountOnesVec(pSims, nWords) );
-        assert(Gia_ObjPhase(pObj) == int32((pSims[0] & 1)), "Gia_ObjPhase(pObj) == int32((pSims[0] & 1))");
-    }
-//    printf( "\n" );
-    Vec_MemHashFree( vStore );
-    Vec_MemFree( vStore );
-    fmt.Printf("Objects = %6d.  Unique = %6d.\n", Gia_ManAndNum(p), Vec_IntCountUnique(vMap));
-    if pvMap {
-        *pvMap = vMap;
-    } else {
-        Vec_IntFree( vMap ); }
+func Sbd_GiaSatOne(p *Network, pairs *vec.Vec_Int_t) int32 {
+	p.ensureSimulation()
+	if vec.Vec_IntSize(pairs)%2 != 0 {
+		panic("unpaired simulation requests")
+	}
+	phases := sbdPhases(p)
+	pattern := int32(0)
+	for i := 0; i < vec.Vec_IntSize(pairs); i += 2 {
+		a, b := vec.Vec_IntEntry(pairs, i), vec.Vec_IntEntry(pairs, i+1)
+		if b <= 0 {
+			panic("invalid justification target")
+		}
+		success := false
+		for first := int32(0); first < 2; first++ {
+			p.trial = map[int32]int32{}
+			if a == 0 {
+				success = Sbd_GiaSatOne_rec(p, b, 1-phases[b], first, pattern) != 0
+			} else {
+				success = Sbd_GiaSatOne_rec(p, a, 1-phases[a], first, pattern) != 0 && Sbd_GiaSatOne_rec(p, b, phases[b], first, pattern) != 0
+				if !success {
+					p.trial = map[int32]int32{}
+					success = Sbd_GiaSatOne_rec(p, a, phases[a], first, pattern) != 0 && Sbd_GiaSatOne_rec(p, b, 1-phases[b], first, pattern) != 0
+				}
+			}
+			if success {
+				break
+			}
+		}
+		if success {
+			pattern++
+			if a == 0 {
+				fmt.Print("c")
+			} else {
+				fmt.Print("e")
+			}
+		} else {
+			fmt.Print(".")
+		}
+		if pattern == 64*p.SimWords-1 {
+			break
+		}
+	}
+	fmt.Println()
+	return pattern
 }
-func Sbd_GiaSimTest(pGia *Gia_Man_t) {
-    Gia_ManSetPhase( pGia );
-
-    // allocate simulation info
-    pGia.iPatsPi = 32;
-    pGia.vSims   = Vec_WrdStart( Gia_ManObjNum(pGia) * pGia.iPatsPi );
-    pGia.vSimsPi = Vec_WrdStart( Gia_ManObjNum(pGia) * pGia.iPatsPi );
-
-    Gia_ManRandom( 1 );
-
-    Sbd_GiaSimRound( pGia, 0, nil );
-    Sbd_GiaSimRound( pGia, 0, nil );
-    Sbd_GiaSimRound( pGia, 0, nil );
-
-    fmt.Printf("\n");
-    Sbd_GiaSimRound( pGia, 1, nil );
-    fmt.Printf("\n");
-    Sbd_GiaSimRound( pGia, 1, nil );
-    fmt.Printf("\n");
-    Sbd_GiaSimRound( pGia, 1, nil );
-
-    Vec_WrdFreeP( &pGia.vSims );
-    Vec_WrdFreeP( &pGia.vSimsPi );
+func Sbd_GiaSimRoundBack(p *Network) {
+	mapping := Sbd_GiaSimRound(p, 0)
+	representatives := make([]int32, len(p.Graph.Nodes()))
+	pairs := vec.Vec_IntAlloc(1000)
+	constants, classes := 0, 0
+	for _, edge := range p.Graph.LiveEdges() {
+		kind := p.Graph.Node(edge).Kind
+		if kind != aig.And && kind != aig.ExclusiveOr {
+			continue
+		}
+		id := int32(edge.NodeID())
+		class := vec.Vec_IntEntry(mapping, int(id))
+		if class == 0 {
+			vec.Vec_IntPush(pairs, 0)
+			vec.Vec_IntPush(pairs, id)
+			constants++
+		} else if representatives[class] == 0 {
+			representatives[class] = id
+		} else if representatives[class] != -1 {
+			vec.Vec_IntPush(pairs, representatives[class])
+			vec.Vec_IntPush(pairs, id)
+			representatives[class] = -1
+			classes++
+		}
+	}
+	fmt.Printf("Constants = %d. Classes = %d.\n", constants, classes)
+	fmt.Printf("Generated %d patterns.\n", Sbd_GiaSatOne(p, pairs))
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Sbd_GiaSimRound(p *Network, try int32) *vec.Vec_Int_t {
+	p.ensureSimulation()
+	if try != 0 {
+		Sbd_GiaSimRoundBack(p)
+		for _, edge := range p.Graph.Inputs() {
+			Sbd_ObjSims(p, int32(edge.NodeID()))[0] <<= 1
+		}
+	} else {
+		for _, edge := range p.Graph.Inputs() {
+			for w := int32(0); w < p.SimWords; w++ {
+				value := p.randomWord()
+				if w == 0 {
+					value <<= 1
+				}
+				Sbd_ObjSims(p, int32(edge.NodeID()))[w] = value
+			}
+		}
+	}
+	clear(Sbd_ObjSims(p, 0))
+	mapping := vec.Vec_IntStart(len(p.Graph.Nodes()))
+	index := map[string]int32{}
+	key := func(values []uint64, compl bool) string {
+		data := make([]byte, 8*len(values))
+		for i, value := range values {
+			if compl {
+				value = ^value
+			}
+			binary.LittleEndian.PutUint64(data[8*i:], value)
+		}
+		return string(data)
+	}
+	index[key(Sbd_ObjSims(p, 0), false)] = 0
+	for _, edge := range p.Graph.LiveEdges() {
+		node := p.Graph.Node(edge)
+		id := int32(edge.NodeID())
+		switch node.Kind {
+		case aig.And, aig.ExclusiveOr:
+			sims := Sbd_ObjSims(p, id)
+			for w := range sims {
+				a, b := sbdSimLiteral(p, node.Fanins[0], w), sbdSimLiteral(p, node.Fanins[1], w)
+				if node.Kind == aig.ExclusiveOr {
+					sims[w] = a ^ b
+				} else {
+					sims[w] = a & b
+				}
+			}
+			signature := key(sims, sims[0]&1 != 0)
+			class, ok := index[signature]
+			if !ok {
+				class = int32(len(index))
+				index[signature] = class
+			}
+			vec.Vec_IntWriteEntry(mapping, int(id), class)
+		case aig.Buffer, aig.Output:
+			sims := Sbd_ObjSims(p, id)
+			for w := range sims {
+				sims[w] = sbdSimLiteral(p, node.Fanins[0], w)
+			}
+		}
+	}
+	fmt.Printf("Objects = %6d. Unique = %6d.\n", len(p.LUTs), len(index))
+	return mapping
+}
+func Sbd_GiaSimTest(p *Network) {
+	p.SimWords = 32
+	p.SimValues = nil
+	p.SimControls = nil
+	p.random = aig.NewAigRandomSource()
+	p.random.Uint32()
+	for i := 0; i < 3; i++ {
+		Sbd_GiaSimRound(p, 0)
+	}
+	for i := 0; i < 3; i++ {
+		Sbd_GiaSimRound(p, 1)
+	}
+	p.SimValues, p.SimControls = nil, nil
+}

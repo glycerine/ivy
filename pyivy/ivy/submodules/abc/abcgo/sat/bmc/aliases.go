@@ -28,4 +28,3 @@ type Cnf_Dat_t = cnf.Cnf_Dat_t
 type Abc_Cex_t = util.Abc_Cex_t
 type word = uint64
 type abctime = int64
-

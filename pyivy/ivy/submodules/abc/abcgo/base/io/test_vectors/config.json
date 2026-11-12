@@ -1,0 +1,1 @@
+{"class_name":"Model","config":{"layers":[{"class_name":"Conv2D","config":{"name":"conv one","filters":16,"kernel_size":[3,3],"strides":[1,1]},"inbound_nodes":[[["input",0,0,{}]]]}]},"text":"quoted { [ ] } and \"words\"","large":9007199254740993,"bool":true,"null":null,"duplicate":1,"duplicate":2}

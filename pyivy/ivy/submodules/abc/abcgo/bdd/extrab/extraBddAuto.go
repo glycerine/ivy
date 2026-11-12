@@ -35,25 +35,6 @@ type autoEngine struct {
 func newAuto(dd *DdManager) *autoEngine {
 	return &autoEngine{dd, make(map[autoPair]*DdNode), make(map[autoSigned]*DdNode), make(map[autoSigned]*DdNode), make(map[autoSigned]*DdNode), make(map[*DdNode]*DdNode)}
 }
-func autoBDD(dd *DdManager, roots ...*DdNode) bool {
-	if dd == nil {
-		return false
-	}
-	for _, f := range roots {
-		if !cudd.Cudd_bddLeq(dd, f, f) {
-			return false
-		}
-	}
-	return true
-}
-func autoChildren(f *DdNode) (lo, hi *DdNode) {
-	r := cudd.Cudd_Regular(f)
-	lo, hi = r.E, r.T
-	if cudd.Cudd_IsComplement(f) {
-		lo, hi = cudd.Cudd_Not(lo), cudd.Cudd_Not(hi)
-	}
-	return
-}
 func (e *autoEngine) space(f, g *DdNode) *DdNode {
 	dd := e.dd
 	if cudd.Cudd_IsConstant(f) {
@@ -77,11 +58,11 @@ func (e *autoEngine) space(f, g *DdNode) *DdNode {
 	index := dd.InvPerm[min(lf, lg)]
 	f0, f1 := f, f
 	if lf <= lg {
-		f0, f1 = autoChildren(f)
+		f0, f1 = extraBDDCofactors(f)
 	}
 	g0, g1 := g, g
 	if lg <= lf {
-		g0, g1 = autoChildren(g)
+		g0, g1 = extraBDDCofactors(g)
 	}
 	lo := cudd.Cudd_bddAnd(dd, e.space(f0, g0), e.space(f1, g1))
 	hi := cudd.Cudd_bddAnd(dd, e.space(f0, g1), e.space(f1, g0))
@@ -101,7 +82,7 @@ func (e *autoEngine) sign(f *DdNode, negative bool) *DdNode {
 	if r := e.signs[key]; r != nil {
 		return r
 	}
-	lo, hi := autoChildren(f)
+	lo, hi := extraBDDCofactors(f)
 	a := cudd.Cudd_bddAnd(dd, e.sign(lo, negative), e.sign(hi, negative))
 	b := cudd.Cudd_bddAnd(dd, e.sign(lo, !negative), e.sign(hi, !negative))
 	r := cudd.Cudd_bddIte(dd, dd.Vars[cudd.Cudd_Regular(f).Index], b, a)
@@ -115,7 +96,7 @@ func (e *autoEngine) canon(f *DdNode) *DdNode {
 	if r := e.canonical[f]; r != nil {
 		return r
 	}
-	lo, hi := autoChildren(f)
+	lo, hi := extraBDDCofactors(f)
 	var r *DdNode
 	if lo == e.dd.LogicZero {
 		r = e.canon(hi)
@@ -142,7 +123,7 @@ func (e *autoEngine) equation(f *DdNode, negative bool) *DdNode {
 	if r := e.equations[key]; r != nil {
 		return r
 	}
-	lo, hi := autoChildren(f)
+	lo, hi := extraBDDCofactors(f)
 	index := 2 * int(cudd.Cudd_Regular(f).Index)
 	var r *DdNode
 	if lo == dd.LogicZero {
@@ -202,31 +183,31 @@ func autoMatrixValid(dd *DdManager, f *DdNode) bool {
 	return visit(f)
 }
 func Extra_bddSpaceFromFunction(dd *DdManager, f, g *DdNode) *DdNode {
-	if !autoBDD(dd, f, g) {
+	if !extraValidBDD(dd, f, g) {
 		return nil
 	}
 	return newAuto(dd).space(f, g)
 }
 func Extra_bddSpaceFromFunctionPos(dd *DdManager, f *DdNode) *DdNode {
-	if !autoBDD(dd, f) {
+	if !extraValidBDD(dd, f) {
 		return nil
 	}
 	return newAuto(dd).sign(f, false)
 }
 func Extra_bddSpaceFromFunctionNeg(dd *DdManager, f *DdNode) *DdNode {
-	if !autoBDD(dd, f) {
+	if !extraValidBDD(dd, f) {
 		return nil
 	}
 	return newAuto(dd).sign(f, true)
 }
 func Extra_bddSpaceCanonVars(dd *DdManager, f *DdNode) *DdNode {
-	if !autoBDD(dd, f) {
+	if !extraValidBDD(dd, f) {
 		return nil
 	}
 	return newAuto(dd).canon(f)
 }
 func Extra_bddSpaceReduce(dd *DdManager, f, vars *DdNode) *DdNode {
-	if !autoBDD(dd, f, vars) {
+	if !extraValidBDD(dd, f, vars) {
 		return nil
 	}
 	cube := dd.One
@@ -236,19 +217,19 @@ func Extra_bddSpaceReduce(dd *DdManager, f, vars *DdNode) *DdNode {
 	return cudd.Cudd_Cofactor(dd, f, cube)
 }
 func Extra_bddSpaceEquationsPos(dd *DdManager, f *DdNode) *DdNode {
-	if !autoBDD(dd, f) {
+	if !extraValidBDD(dd, f) {
 		return nil
 	}
 	return newAuto(dd).equation(f, false)
 }
 func Extra_bddSpaceEquationsNeg(dd *DdManager, f *DdNode) *DdNode {
-	if !autoBDD(dd, f) {
+	if !extraValidBDD(dd, f) {
 		return nil
 	}
 	return newAuto(dd).equation(f, true)
 }
 func Extra_bddSpaceEquations(dd *DdManager, f *DdNode) *DdNode {
-	if !autoBDD(dd, f) {
+	if !extraValidBDD(dd, f) {
 		return nil
 	}
 	e := newAuto(dd)
@@ -267,7 +248,7 @@ func Extra_bddSpaceFromMatrixNeg(dd *DdManager, f *DdNode) *DdNode {
 	return newAuto(dd).matrix(f, true)
 }
 func Extra_bddSpaceFromFunctionFast(dd *DdManager, f *DdNode) *DdNode {
-	if !autoBDD(dd, f) {
+	if !extraValidBDD(dd, f) {
 		return nil
 	}
 	support := dd.Support(f)
@@ -311,26 +292,11 @@ func Extra_zddLitCountComb(dd *DdManager, f *DdNode) int {
 	}
 	return count
 }
-func autoSelectSubset(dd *DdManager, f *DdNode) *DdNode {
-	cube := dd.One
-	for f != dd.One {
-		if f == dd.Zero {
-			return dd.Zero
-		}
-		if f.E != dd.Zero {
-			f = f.E
-		} else {
-			cube = cudd.Cudd_zddChange(dd, cube, int(f.Index))
-			f = f.T
-		}
-	}
-	return cube
-}
 
 // Extra_bddSpaceExorGates returns referenced equations indexed by their unique
 // reduced-function variable. Nil means the equation/basis precondition failed.
 func Extra_bddSpaceExorGates(dd *DdManager, reduced, equations *DdNode) []*DdNode {
-	if !autoBDD(dd, reduced) || !autoMatrixValid(dd, equations) {
+	if !extraValidBDD(dd, reduced) || !autoMatrixValid(dd, equations) {
 		return nil
 	}
 	support := map[int]bool{}
@@ -347,7 +313,7 @@ func Extra_bddSpaceExorGates(dd *DdManager, reduced, equations *DdNode) []*DdNod
 		return nil
 	}
 	for equations != dd.Zero {
-		cube := autoSelectSubset(dd, equations)
+		cube := extraSelectSubset(dd, equations)
 		equations = cudd.Cudd_zddDiff(dd, equations, cube)
 		index := -1
 		for node := cube; node != dd.One; node = node.T {

@@ -113,3 +113,51 @@ func TestOriginalObjectDeletion(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+// Unary constructors support deferred wiring, as required by AttachBottom.
+func TestUnaryNodeDeferredFanin(t *testing.T) {
+	for _, invert := range []bool{false, true} {
+		n := NewNetwork("deferred")
+		input := Abc_NtkCreatePi(n)
+		var node *Object
+		if invert {
+			node = Abc_NtkCreateNodeInv(n, nil)
+		} else {
+			node = Abc_NtkCreateNodeBuf(n, nil)
+		}
+		if len(node.fanins) != 0 {
+			t.Fatal("deferred node already has a fanin")
+		}
+		Abc_ObjAddFanin(node, input)
+		for _, value := range []bool{false, true} {
+			got, err := n.Evaluate(node.Signal(), map[*Object]bool{input: value})
+			if err != nil || got != (value != invert) {
+				t.Fatalf("invert=%v value=%v: got %v, %v", invert, value, got, err)
+			}
+		}
+		if err := n.Check(); err != nil {
+			t.Fatal(err)
+		}
+	}
+}
+
+func TestSOPConstructorStorage(t *testing.T) {
+	n := Abc_NtkAlloc(ABC_NTK_LOGIC, ABC_FUNC_SOP, 1)
+	a, b, c := n.NewObject(ObjectPI), n.NewObject(ObjectPI), n.NewObject(ObjectPI)
+	nodes := []*Object{Abc_NtkCreateNodeConst0(n), Abc_NtkCreateNodeConst1(n), Abc_NtkCreateNodeInv(n, a), Abc_NtkCreateNodeBuf(n, a), Abc_NtkCreateNodeAnd(n, []*Object{a, b}), Abc_NtkCreateNodeOr(n, []*Object{a, b}), Abc_NtkCreateNodeExor(n, []*Object{a, b}), Abc_NtkCreateNodeMux(n, a, b, c)}
+	for _, o := range nodes {
+		if _, ok := o.Data.(string); !ok {
+			t.Fatalf("SOP constructor stored%T", o.Data)
+		}
+	}
+	for x := 0; x < 8; x++ {
+		inputs := map[*Object]bool{a: x&1 != 0, b: x&2 != 0, c: x&4 != 0}
+		want := []bool{false, true, x&1 == 0, x&1 != 0, x&3 == 3, x&3 != 0, (x&1 != 0) != (x&2 != 0), x&1 != 0 && x&2 != 0 || x&1 == 0 && x&4 != 0}
+		for i, o := range nodes {
+			got, err := n.Evaluate(o.Signal(), inputs)
+			if err != nil || got != want[i] {
+				t.Fatalf("constructor%d assignment%d", i, x)
+			}
+		}
+	}
+}

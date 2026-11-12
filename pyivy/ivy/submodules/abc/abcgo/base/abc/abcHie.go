@@ -27,16 +27,7 @@ func hieOutputNet(o *Object) (*Object, error) {
 	}
 	return o.fanouts[0], nil
 }
-func hieOrderTerminals(n *Network) {
-	n.cis = append([]*Object(nil), n.ObjectsOfKind(ObjectPI)...)
-	n.cos = append([]*Object(nil), n.ObjectsOfKind(ObjectPO)...)
-	for _, box := range n.boxes {
-		n.cis = append(n.cis, box.fanouts...)
-		for _, edge := range box.fanins {
-			n.cos = append(n.cos, edge.Object)
-		}
-	}
-}
+func hieOrderTerminals(n *Network) { Abc_NtkOrderCisCos(n) }
 func hieCopyBinding(o *Object, dst *Network) *Object {
 	if o.Copy != nil && o.Copy.network == dst {
 		return o.Copy
@@ -49,6 +40,52 @@ func hieConnect(dst *Network, object *Object, edge Edge) error {
 	}
 	return dst.AddFanin(object, edge)
 }
+func hieUnaryNode(dst *Network, input, formal *Object, invert bool) (*Object, error) {
+	if invert && Abc_ObjMvVarNum(formal) != 2 {
+		return nil, fmt.Errorf("complemented nonbinary hierarchy port")
+	}
+	node := Abc_NtkCreateNodeBuf(dst, input)
+	switch Abc_NtkFunc_t(dst.Function) {
+	case ABC_FUNC_SOP:
+		node.Data = "1 1\n"
+		if invert {
+			node.Data = "0 1\n"
+		}
+	case ABC_FUNC_BLIFMV:
+		size := int(Abc_ObjMvVarNum(formal))
+		table := &MVTable{DomainSizes: []int{size, size}, Cubes: []MVCube{{Inputs: []MVTerm{{Any: true, EqualInput: -1}}, Output: MVTerm{EqualInput: 0}}}}
+		if invert {
+			table.Cubes = []MVCube{{Inputs: []MVTerm{{Values: []int{0}, EqualInput: -1}}, Output: MVTerm{Values: []int{1}, EqualInput: -1}}, {Inputs: []MVTerm{{Values: []int{1}, EqualInput: -1}}, Output: MVTerm{Values: []int{0}, EqualInput: -1}}}
+		}
+		node.Data = table
+	case ABC_FUNC_AIG:
+		if manager, ok := dst.FunctionManager.(*hop.Hop_Man_t); ok {
+			node.Data = hop.Hop_NotCond(hop.Hop_IthVar(manager, 0), abcBool(invert))
+		} else {
+			return nil, fmt.Errorf("local AIG manager missing")
+		}
+	case ABC_FUNC_BDD:
+		if manager, ok := dst.FunctionManager.(*core.DdManager); ok {
+			node.Data = core.Cudd_NotCond(core.Cudd_bddIthVar(manager, 0), invert)
+		} else {
+			return nil, fmt.Errorf("BDD manager missing")
+		}
+	case ABC_FUNC_MAP:
+		manager, ok := dst.FunctionManager.(*mio.Mio_Library_t)
+		if !ok {
+			return nil, fmt.Errorf("mapped hierarchy needs MIO library")
+		}
+		gate := mio.Mio_LibraryReadBuf(manager)
+		if invert {
+			gate = mio.Mio_LibraryReadInv(manager)
+		}
+		if gate == nil {
+			return nil, fmt.Errorf("mapped hierarchy needs unary cell")
+		}
+		node.Data = gate
+	}
+	return node, nil
+}
 func hieBridgeNet(dst *Network, input, output, formal *Object) error {
 	if input == output {
 		return nil
@@ -56,33 +93,22 @@ func hieBridgeNet(dst *Network, input, output, formal *Object) error {
 	if len(output.fanins) != 0 {
 		return fmt.Errorf("multiple drivers for hierarchical net %s", hieNetName(output))
 	}
-	node := Abc_NtkCreateNodeBuf(dst, input)
-	switch Abc_NtkFunc_t(dst.Function) {
-	case ABC_FUNC_SOP:
-		node.Data = "1 1\n"
-	case ABC_FUNC_BLIFMV:
-		size := int(Abc_ObjMvVarNum(formal))
-		node.Data = &MVTable{DomainSizes: []int{size, size}, Cubes: []MVCube{{Inputs: []MVTerm{{Any: true, EqualInput: -1}}, Output: MVTerm{EqualInput: 0}}}}
-	case ABC_FUNC_AIG:
-		if manager, ok := dst.FunctionManager.(*hop.Hop_Man_t); ok {
-			node.Data = hop.Hop_IthVar(manager, 0)
-		}
-	case ABC_FUNC_BDD:
-		if manager, ok := dst.FunctionManager.(*core.DdManager); ok {
-			node.Data = core.Cudd_bddIthVar(manager, 0)
-		}
-	case ABC_FUNC_MAP:
-		manager, ok := dst.FunctionManager.(*mio.Mio_Library_t)
-		if !ok {
-			return fmt.Errorf("mapped hierarchy needs MIO library")
-		}
-		gate := mio.Mio_LibraryReadBuf(manager)
-		if gate == nil {
-			return fmt.Errorf("mapped hierarchy needs buffer cell")
-		}
-		node.Data = gate
+	node, err := hieUnaryNode(dst, input, formal, false)
+	if err != nil {
+		return err
 	}
 	return hieConnect(dst, output, node.Signal())
+}
+func hiePhaseNet(dst *Network, reference, formal *Object) *Object {
+	net := dst.NewObject(ObjectNet)
+	base := fmt.Sprintf("%s_phase_%d", hieNetName(reference), net.ID)
+	name := base
+	for index := 1; Abc_NtkFindNet(dst, name) != nil; index++ {
+		name = fmt.Sprintf("%s_%d", base, index)
+	}
+	net.SetName(name)
+	copyMVVariable(formal, net)
+	return net
 }
 
 type hierarchyFlatten struct {
@@ -252,7 +278,20 @@ func (context *hierarchyFlatten) flatten(src *Network, prefix string) error {
 			if err != nil {
 				return err
 			}
-			setCopy(formal, hieCopyBinding(actual, dst).Signal())
+			target := hieCopyBinding(actual, dst)
+			phase := edge.Complement != edge.Object.fanins[0].Complement
+			phase = phase != formal.fanins[0].Complement
+			if phase {
+				inverse, err := hieUnaryNode(dst, target, formal, true)
+				if err != nil {
+					return err
+				}
+				target = hiePhaseNet(dst, target, formal)
+				if err := hieConnect(dst, target, inverse.Signal()); err != nil {
+					return err
+				}
+			}
+			setCopy(formal, target.Signal())
 		}
 		for i, bo := range box.fanouts {
 			actual, err := hieOutputNet(bo)
@@ -264,12 +303,25 @@ func (context *hierarchyFlatten) flatten(src *Network, prefix string) error {
 				return err
 			}
 			target := hieCopyBinding(actual, dst)
-			if existing := hieCopyBinding(formal, dst); existing != nil && existing != target {
-				if err := hieBridgeNet(dst, existing, target, formal); err != nil {
+			binding := target
+			phase := pos[i].fanins[0].Complement != bo.fanins[0].Complement
+			phase = phase != actual.fanins[0].Complement
+			if phase {
+				binding = hiePhaseNet(dst, target, formal)
+				inverse, err := hieUnaryNode(dst, binding, formal, true)
+				if err != nil {
+					return err
+				}
+				if err := hieConnect(dst, target, inverse.Signal()); err != nil {
+					return err
+				}
+			}
+			if existing := hieCopyBinding(formal, dst); existing != nil && existing != binding {
+				if err := hieBridgeNet(dst, existing, binding, formal); err != nil {
 					return err
 				}
 			} else {
-				setCopy(formal, target.Signal())
+				setCopy(formal, binding.Signal())
 			}
 			setCopy(pos[i], target.Signal())
 		}
@@ -331,8 +383,38 @@ func hieBlackboxDesign(src, dst *Network) error {
 	}
 	return nil
 }
+func hieValidateModels(root *Network) bool {
+	seen := make(map[*Network]bool)
+	var visit func(*Network) bool
+	visit = func(model *Network) bool {
+		if model == nil || model.Type != uint8(ABC_NTK_NETLIST) {
+			return false
+		}
+		if seen[model] {
+			return true
+		}
+		seen[model] = true
+		if model.Check() != nil {
+			return false
+		}
+		if model.Function == uint8(ABC_FUNC_BLACKBOX) {
+			return true
+		}
+		for _, box := range model.boxes {
+			if box.Kind == ObjectLatch {
+				continue
+			}
+			child, ok := box.Data.(*Network)
+			if !ok || !visit(child) {
+				return false
+			}
+		}
+		return true
+	}
+	return visit(root)
+}
 func flattenLogicHierarchy(src *Network, suffix bool) *Network {
-	if src.Type != uint8(ABC_NTK_NETLIST) || Abc_NtkIsAcyclicHierarchy(src) == 0 {
+	if src.Type != uint8(ABC_NTK_NETLIST) || Abc_NtkIsAcyclicHierarchy(src) == 0 || !hieValidateModels(src) {
 		return nil
 	}
 	dst := copyNetworkMetadata(src)
@@ -347,7 +429,7 @@ func flattenLogicHierarchy(src *Network, suffix bool) *Network {
 		setCopy(pi, copy.Signal())
 		target := Abc_NtkFindOrCreateNet(dst, hieNetName(net))
 		setCopy(net, target.Signal())
-		if err := hieConnect(dst, target, copy.Signal()); err != nil {
+		if err := hieConnect(dst, target, Edge{Object: copy, Complement: net.fanins[0].Complement}); err != nil {
 			return nil
 		}
 	}
@@ -360,7 +442,7 @@ func flattenLogicHierarchy(src *Network, suffix bool) *Network {
 		setCopy(po, copy.Signal())
 		target := Abc_NtkFindOrCreateNet(dst, hieNetName(net))
 		setCopy(net, target.Signal())
-		if err := hieConnect(dst, copy, target.Signal()); err != nil {
+		if err := hieConnect(dst, copy, Edge{Object: target, Complement: po.fanins[0].Complement}); err != nil {
 			return nil
 		}
 	}

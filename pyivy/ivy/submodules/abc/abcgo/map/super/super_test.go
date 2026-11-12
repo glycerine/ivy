@@ -107,7 +107,7 @@ func TestParetoFrontierAndRetainedChildren(t *testing.T) {
 	if !bytes.Equal(before, after) || parent.Fanins[0] != old || old.Area != 2 {
 		t.Fatal("serialization/replacement mutated retained child")
 	}
-	if _, err = readTreeMetrics(before, p, testLibrary(t)); err != nil {
+	if _, err = readTreeMetrics(before, testLibrary(t)); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -126,7 +126,7 @@ func TestLimitsCancellationAndEmptySerialization(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = readTreeMetrics(data, p, lib); err != nil {
+	if _, err = readTreeMetrics(data, lib); err != nil {
 		t.Fatal(err)
 	}
 	ctx, cancel := context.WithCancel(context.Background())
@@ -144,7 +144,7 @@ func TestLimitsCancellationAndEmptySerialization(t *testing.T) {
 	}
 }
 func TestANDEnumerationAndFormulaTruth(t *testing.T) {
-	for _, item := range []struct{ inputs, levels, count int }{{2, 0, 3}, {2, 1, 7}, {2, 2, 8}, {3, 1, 16}} {
+	for _, item := range []struct{ inputs, levels, count int }{{0, 1, 1}, {2, 0, 3}, {2, 1, 7}, {2, 2, 8}, {3, 1, 16}} {
 		p, err := GenerateAND(item.inputs, item.levels)
 		if err != nil {
 			t.Fatal(err)
@@ -241,7 +241,7 @@ func TestSuperCommandsAndCompatibilityVector(t *testing.T) {
 
 // Parse the actual emitted tree grammar, independently recomputing node truth,
 // tree area, and pin delays from root cells and previously numbered rows.
-func readTreeMetrics(data []byte, p *Super_Man_t, lib *Mio_Library_t) ([]string, error) {
+func readTreeMetrics(data []byte, lib *Mio_Library_t) ([]string, error) {
 	var lines []string
 	for _, line := range strings.Split(strings.TrimRight(string(data), "\x00"), "\n") {
 		line = strings.TrimSpace(line)

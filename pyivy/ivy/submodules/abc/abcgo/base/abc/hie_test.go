@@ -1,6 +1,8 @@
 package abc
 
 import (
+	"os"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -202,7 +204,6 @@ func TestHierarchyFlattenBDDManagers(t *testing.T) {
 func TestHierarchyRejectsCycleBeforeConstruction(t *testing.T) {
 	root := testHierarchicalDesign(t, false)
 	leaf := root.Design.Module("leaf")
-	leaf.Boxes()
 	testInstance(leaf, root, "recursive", leaf.ObjectsOfKind(ObjectPI)[0].fanouts[0], leaf.ObjectsOfKind(ObjectPI)[1].fanouts[0])
 	if flat := Abc_NtkFlattenLogicHierarchy(root); flat != nil {
 		t.Fatal("recursive hierarchy flattened")
@@ -240,4 +241,65 @@ func TestHierarchyMVWireAliasRetainsParentValueNames(t *testing.T) {
 			t.Fatal(input, got, err)
 		}
 	}
+}
+func TestHierarchyOriginalABCFlattenOracle(t *testing.T) {
+	data, err := os.ReadFile("test_vectors/hierarchy_flat_oracle.blif")
+	if err != nil {
+		t.Fatal(err)
+	}
+	leaf := testModule("leaf")
+	a, b := testInputNet(leaf, "a"), testInputNet(leaf, "b")
+	node := leaf.NewObject(ObjectNode)
+	node.Data = "10 1\n"
+	Abc_ObjAddFanin(node, a)
+	Abc_ObjAddFanin(node, b)
+	testOutputNet(leaf, "y", node.Signal())
+	root := testModule("top")
+	x, y := testInputNet(root, "a"), testInputNet(root, "b")
+	left := testInstance(root, leaf, "first", x, y)
+	testOutputNet(root, "left", left.Signal())
+	right := testInstance(root, leaf, "second", y, x)
+	testOutputNet(root, "right", right.Signal())
+	flat := Abc_NtkFlattenLogicHierarchy(root)
+	if flat == nil {
+		t.Fatal("oracle flatten failed")
+	}
+	expected := map[string][]string{}
+	rows := map[string]string{}
+	current := ""
+	for _, line := range strings.Split(string(data), "\n") {
+		if strings.HasPrefix(line, ".names ") {
+			fields := strings.Fields(line)
+			current = fields[len(fields)-1]
+			expected[current] = fields[1 : len(fields)-1]
+		} else if strings.HasPrefix(line, ".") {
+			current = ""
+		} else if current != "" && line != "" {
+			rows[current] += line + "\n"
+		}
+	}
+	for _, po := range flat.ObjectsOfKind(ObjectPO) {
+		driver := dfsOutput(po)
+		driver = dfsDriver(driver)
+		var fanins []string
+		for _, edge := range driver.fanins {
+			fanins = append(fanins, hieNetName(edge.Object))
+		}
+		if !reflect.DeepEqual(fanins, expected[po.Name()]) || driver.Data != rows[po.Name()] {
+			t.Fatal(po.Name(), fanins, driver.Data, expected[po.Name()], rows[po.Name()])
+		}
+	}
+}
+func TestHierarchyFlattenHopManagers(t *testing.T) {
+	root := testHierarchicalDesign(t, true)
+	for _, model := range root.Design.Modules {
+		if Abc_NtkSopToAig(model) != 1 {
+			t.Fatal("module Hop conversion failed")
+		}
+	}
+	flat := Abc_NtkFlattenLogicHierarchy(root)
+	if flat == nil {
+		t.Fatal("Hop hierarchy flatten failed")
+	}
+	assertBufferTruth(t, flat, true)
 }

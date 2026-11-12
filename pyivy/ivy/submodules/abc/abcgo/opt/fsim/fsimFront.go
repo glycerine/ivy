@@ -86,7 +86,7 @@ func Fsim_ManFront(p *Manager, compressed bool) error {
 		}
 	}
 	if compressed {
-		var previous int
+		previous := p.constSlot
 		for _, o := range p.program {
 			p.encoded = appendOperation(p.encoded, o, &previous)
 		}
@@ -157,7 +157,7 @@ func decodeOperation(data []byte, offset *int, previous *int) (Fsim_Obj_t, error
 	default:
 		return o, fmt.Errorf("fsim: invalid operation kind")
 	}
-	if o.Node < 0 || o.Fan0 < 0 || o.Fan1 < 0 {
+	if o.Kind != aig.Output && o.Node <= 0 || o.Kind != aig.Input && o.Fan0 <= 0 || (o.Kind == aig.And || o.Kind == aig.ExclusiveOr) && o.Fan1 <= 0 || o.Node < 0 || o.Fan0 < 0 || o.Fan1 < 0 {
 		return o, fmt.Errorf("fsim: negative decoded frontier index")
 	}
 	return o, nil
@@ -169,7 +169,7 @@ func (p *Manager) forEachOperation(visit func(Fsim_Obj_t)) error {
 		}
 		return nil
 	}
-	offset, previous := 0, 0
+	offset, previous := 0, p.constSlot
 	for i := 2; i < len(p.ops); i++ {
 		o, err := decodeOperation(p.encoded, &offset, &previous)
 		if err != nil {

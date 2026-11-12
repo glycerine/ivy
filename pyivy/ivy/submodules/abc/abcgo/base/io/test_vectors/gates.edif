@@ -1,0 +1,19 @@
+(edif demo
+ (external gates
+  (cell And2 (view logic (interface (port A (direction INPUT)) (port B (direction INPUT)) (port Y (direction OUTPUT)))))
+  (cell Inv (view logic (interface (port A (direction INPUT)) (port Y (direction OUTPUT)))))
+ )
+ (library work
+  (cell top (view logic
+   (interface (port a (direction INPUT)) (port b (direction INPUT)) (port z (direction OUTPUT)))
+   (contents
+    (instance first (viewRef logic (cellRef And2 (libraryRef gates))))
+    (instance second (viewRef logic (cellRef Inv (libraryRef gates))))
+    (net wire_a (joined (portRef a) (portRef A (instanceRef first))))
+    (net wire_b (joined (portRef b) (portRef B (instanceRef first))))
+    (net middle (joined (portRef Y (instanceRef first)) (portRef A (instanceRef second))))
+    (net result (joined (portRef Y (instanceRef second)) (portRef z)))
+  )))
+ )
+ (design chip (cellRef top (libraryRef work)))
+)

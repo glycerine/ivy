@@ -195,3 +195,6 @@ func Abc_NodeMffcLabel(o *Object, nodes *[]*Object) int32 {
 	}
 	return before
 }
+
+func Abc_NodeIsTravIdPrevious(o *Object) int32 { return abcBool(o.travID == o.network.travID-1) }
+func Abc_NodeSetTravIdPrevious(o *Object)      { o.travID = o.network.travID - 1 }

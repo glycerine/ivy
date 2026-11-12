@@ -287,3 +287,49 @@ names and representative ownership. Review fixed empty-interface remap handling,
 rejects mismatched RO/RI retention and recounts surviving constraint metadata.
 An unreachable sequential buffer can be removed rather than failing the source's
 debug-only buffer assertion. No sources were excluded to obtain these results.
+
+Sequential witness storage retains the native BMC APIs and owns copied bits.
+ValidateSequentialCounterexample independently replays the live transition
+relation, optionally checking zero or explicit AIGER reset states; validation
+never changes the stored witness. Regressions cover valid/invalid traces,
+unknown/one/zero reset states and caller-buffer mutation. Compactness review
+kept storage and replay separate to avoid duplicate evaluation in BMC drivers;
+bug review ensures a failed validation cannot overwrite an existing model.
+
+Gia_ManDupNoMuxes now lowers real XOR/MUX nodes to an ordinary structurally
+hashed AIG, retaining the source buffer-policy argument and cleanup pass.
+Separate readability review uses the existing live Gate/copy interface and
+AndLiteral rather than another graph representation. Bug review exhausts all
+input assignments and eight fanin-polarity combinations under both buffer
+policies. Focused core race verification, including these changes, passes:
+GOCACHE=/tmp/abcgo-cache abcgo/aig/gia/test_ported_core.sh -race (2.773s).
+The full package remains blocked by visible, unported giaBalAig.go syntax.
+
+The native FrameDataBridge wraps an existing frame bridge for unrelated formats.
+It exports an independently owned AIGER model and imports through the real
+AIGER codecs before replacing/closing the old frame manager. Flop classes and
+counterexample bits are copied; counterexamples must pass transition/reset
+replay before either native or frame storage is changed. The frame transfer uses
+the existing locked Abc_FrameReplaceCex API. Codec failures remain explicit for
+unsupported real gates/metadata. Normal CLI registration still awaits full GIA
+package completion; selected-source integration is verification, not a claim
+that those visible drafts compile.
+
+Separate compactness review retained structural CounterexampleData interface
+instead of introducing a dependency on command-line packages. Separate bug
+review added real-frame roundtrip/replacement, detached snapshots, copied flop
+classes, copied witness bits and rejection-without-overwrite regressions; it
+also guards the frame-count int32 increment against overflow. Focused core race
+passed 2.740s before that final guard; rerun records follow below.
+Final focused core race rerun after overflow guard and its regression: 2.816s.
+
+Balancing's sorted AND/XOR supergate simplification and collection are native in
+balance_simplify.go. Collection preserves strict sharing barriers, the original
+two-reference heuristic, complement boundaries and source fanin traversal order
+using an explicit stack. Exhaustive multisets of up to five literals (constants
+and both phases included) verify simplification against independent Boolean
+folds; dedicated real-manager tests check sharing and repeated-XOR cancellation.
+Readability review shares the collector while keeping gate-specific boundaries
+explicit. Bug review retained references as caller-owned scratch and tests
+rebuild them only after clearing, consistent with Gia_ManCreateRefs ownership.
+Remaining balance/DAM extraction is still visible and unported in giaBalAig.go.

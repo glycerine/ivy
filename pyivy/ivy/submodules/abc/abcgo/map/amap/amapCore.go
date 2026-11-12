@@ -54,7 +54,6 @@ func Amap_ManMapGraph(pAig *Aig_Man_t, pLib *Amap_Lib_t, pPars *Amap_Par_t) *Vec
 	p.fUseXor = amapBool(pPars.fUseXors != 0 && pLib.fHasXor != 0)
 	tempSize := max(0, int(pLib.nNodes)*2)
 	p.ppCutsTemp = make([]*Amap_Cut_t, tempSize)
-	p.pMatsTemp = make([]int32, tempSize)
 	Amap_ManCreate(p, pAig)
 	Amap_ManMap(p)
 	result := Amap_ManProduceMapped(p)

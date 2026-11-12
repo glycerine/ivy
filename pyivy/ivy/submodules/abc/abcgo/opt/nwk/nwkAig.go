@@ -1,313 +1,253 @@
 package nwk
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-/**CFile****************************************************************
-
-  FileName    [nwkAig.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Netlist representation.]
-
-  Synopsis    [Translating of AIG into the network.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: nwkAig.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "nwk.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG into the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_ManDeriveFromAig(p *Aig_Man_t) *Nwk_Man_t {
-    var pNtk *Nwk_Man_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    pNtk = Nwk_ManAlloc();
-    pNtk.nFanioPlus = 0;
-    Hop_ManStop( pNtk.pManHop );
-    pNtk.pManHop = nil;
-    pNtk.pName = Abc_UtilStrsav( p.pName );
-    pNtk.pSpec = Abc_UtilStrsav( p.pSpec );
-    pObj = Aig_ManConst1(p);
-    pObj.pData = Nwk_ManCreateNode( pNtk, 0, pObj.nRefs );
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Nwk_ManCreateCi( pNtk, pObj.nRefs );
-    }
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Nwk_ManCreateNode( pNtk, 2, pObj.nRefs );
-        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj.pData, (Nwk_Obj_t *)Aig_ObjFanin0(pObj).pData );
-        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj.pData, (Nwk_Obj_t *)Aig_ObjFanin1(pObj).pData );
-    }
-    }
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pObj.pData = Nwk_ManCreateCo( pNtk );
-        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj.pData, (Nwk_Obj_t *)Aig_ObjFanin0(pObj).pData );
-    }
-    return pNtk;
+func Nwk_ManDeriveFromAig(g *Aig_Man_t) *Nwk_Man_t {
+	p := Nwk_ManAlloc()
+	p.Name = g.Name
+	p.Spec = g.Spec
+	copies := map[int]*Nwk_Obj_t{}
+	constant := Nwk_ManCreateNode(p, 0, 0)
+	constant.Function = hop.Hop_ManConst1(p.Hop)
+	constant.Copy = g.Const1()
+	copies[0] = constant
+	for _, e := range g.Inputs() {
+		o := Nwk_ManCreateCi(p, 0)
+		o.Copy = e
+		copies[e.NodeID()] = o
+	}
+	var convert func(aig.Edge) *Nwk_Obj_t
+	convert = func(e aig.Edge) *Nwk_Obj_t {
+		if n := copies[e.NodeID()]; n != nil {
+			return n
+		}
+		n := g.Node(e)
+		switch n.Kind {
+		case aig.And, aig.ExclusiveOr, aig.Buffer:
+		default:
+			panic("nwk: invalid internal AIG object")
+		}
+		arity := 2
+		if n.Kind == aig.Buffer {
+			arity = 1
+		}
+		fanins := make([]*Nwk_Obj_t, arity)
+		for i := range fanins {
+			fanins[i] = convert(n.Fanins[i])
+		}
+		o := Nwk_ManCreateNode(p, int32(arity), int32(n.Refs))
+		o.Copy = aig.Edge(e.NodeID() << 1)
+		copies[e.NodeID()] = o
+		for _, f := range fanins {
+			Nwk_ObjAddFanin(o, f)
+		}
+		a := hop.Hop_NotCond(hop.Hop_IthVar(p.Hop, 0), bit(n.Fanins[0].Complemented()))
+		o.Function = a
+		if arity == 2 {
+			b := hop.Hop_NotCond(hop.Hop_IthVar(p.Hop, 1), bit(n.Fanins[1].Complemented()))
+			o.Function = hop.Hop_And(p.Hop, a, b)
+			if n.Kind == aig.ExclusiveOr {
+				o.Function = hop.Hop_Exor(p.Hop, a, b)
+			}
+		}
+		return o
+	}
+	for _, e := range g.Outputs() {
+		n := g.Node(e)
+		driver := n.Fanins[0]
+		fanin := convert(driver)
+		o := Nwk_ManCreateCo(p)
+		o.Copy = e
+		o.Invert = driver.Complemented()
+		Nwk_ObjAddFanin(o, fanin)
+	}
+	p.Latches = g.RegisterCount()
+	p.TruePIs = int32(len(p.Inputs)) - p.Latches
+	p.TruePOs = int32(len(p.Outputs)) - p.Latches
+	return p
+}
+func Nwk_ManDeriveRetimingCut(g *Aig_Man_t, forward, verbose int32) *Vec_Ptr_t {
+	p := Nwk_ManDeriveFromAig(g)
+	mapping := map[*Nwk_Obj_t]aig.Edge{}
+	for _, o := range p.Objects {
+		if o != nil {
+			mapping[o] = o.Copy.(aig.Edge)
+		}
+	}
+	var cut *Vec_Ptr_t
+	if forward != 0 {
+		cut = Nwk_ManRetimeCutForward(p, g.RegisterCount(), verbose)
+	} else {
+		cut = Nwk_ManRetimeCutBackward(p, g.RegisterCount(), verbose)
+	}
+	result := vec.Vec_PtrAlloc(vec.Vec_PtrSize(cut))
+	for _, o := range vectorNodes(cut) {
+		vec.Vec_PtrPush(result, mapping[o])
+	}
+	Nwk_ManFree(p)
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG into the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_ManDeriveRetimingCut(p *Aig_Man_t, fForward int32, fVerbose int32) *Vec_Ptr_t { 
-    var vNodes *Vec_Ptr_t;
-    var pNtk *Nwk_Man_t;
-    var pNode *Nwk_Obj_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    pNtk = Nwk_ManDeriveFromAig( p );
-    if fForward != 0 {
-        vNodes = Nwk_ManRetimeCutForward( pNtk, Aig_ManRegNum(p), fVerbose );
-    } else {
-        vNodes = Nwk_ManRetimeCutBackward( pNtk, Aig_ManRegNum(p), fVerbose ); }
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        ((Nwk_Obj_t *)pObj.pData).pCopy = pObj; }
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pNode) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        Vec_PtrWriteEntry( vNodes, i, pNode.pCopy );
-    }
-    Nwk_ManFree( pNtk );
-//    assert( Vec_PtrSize(vNodes) <= Aig_ManRegNum(p) );
-    return vNodes;
+// GiaNetwork is implemented by GIA without introducing a reverse package import.
+// Gate kinds match GIA's network interface: const0,input,AND,XOR,MUX,buffer,CO.
+type GiaNetwork interface {
+	ObjectCount() int
+	InputLiterals() []int32
+	OutputLiterals() []int32
+	Gate(int32) (int32, int32, int32, int)
 }
 
-
-//ABC_NAMESPACE_IMPL_END
-
-//#include "proof/abs/abs.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-/**Function*************************************************************
-
-  Synopsis    [Collects reachable nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_ManColleacReached_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t, vLeaves *Vec_Int_t) {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        Vec_IntPush( vLeaves, Gia_ObjId(p, pObj) );
-        return;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Nwk_ManColleacReached_rec( p, Gia_ObjFanin0(pObj), vNodes, vLeaves );
-    Nwk_ManColleacReached_rec( p, Gia_ObjFanin1(pObj), vNodes, vLeaves );
-    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
+func Nwk_ManColleacReached_rec(g GiaNetwork, id int32, nodes, leaves *Vec_Int_t) {
+	seen := map[int32]bool{}
+	for _, v := range vec.Vec_IntArray(nodes) {
+		seen[v] = true
+	}
+	for _, v := range vec.Vec_IntArray(leaves) {
+		seen[v] = true
+	}
+	var visit func(int32)
+	visit = func(id int32) {
+		if seen[id] {
+			return
+		}
+		seen[id] = true
+		a, b, c, kind := g.Gate(id)
+		if kind == 1 {
+			vec.Vec_IntPush(leaves, id)
+			return
+		}
+		if kind == 0 {
+			return
+		}
+		if kind < 2 {
+			panic("nwk: invalid GIA gate")
+		}
+		visit(a >> 1)
+		if kind == 2 || kind == 3 || kind == 4 {
+			visit(b >> 1)
+		}
+		if kind == 4 {
+			visit(c >> 1)
+		}
+		vec.Vec_IntPush(nodes, id)
+	}
+	visit(id)
+}
+func Nwk_ManCreateFromGia(g GiaNetwork, ppis, nodes, leaves *Vec_Int_t, inverse **Vec_Int_t) *Nwk_Man_t {
+	p := Nwk_ManAlloc()
+	copies := map[int32]*Nwk_Obj_t{}
+	mapping := vec.Vec_IntAlloc(0)
+	constant := Nwk_ManCreateNode(p, 0, 0)
+	constant.Function = hop.Hop_ManConst0(p.Hop)
+	copies[0] = constant
+	vec.Vec_IntPush(mapping, 0)
+	for _, id := range vec.Vec_IntArray(leaves) {
+		o := Nwk_ManCreateCi(p, 0)
+		copies[id] = o
+		vec.Vec_IntPush(mapping, id)
+	}
+	for i := vec.Vec_IntSize(leaves); i < vec.Vec_IntSize(ppis); i++ {
+		Nwk_ManCreateCi(p, 0)
+		vec.Vec_IntPush(mapping, -1)
+	}
+	for _, id := range vec.Vec_IntArray(nodes) {
+		a, b, c, kind := g.Gate(id)
+		lits := []int32{a, b}
+		if kind == 4 {
+			lits = append(lits, c)
+		} else if kind == 5 || kind == 6 {
+			lits = lits[:1]
+		}
+		o := Nwk_ManCreateNode(p, int32(len(lits)), 0)
+		args := make([]*Hop_Obj_t, len(lits))
+		for i, lit := range lits {
+			fanin := copies[lit>>1]
+			if fanin == nil {
+				panic("nwk: GIA nodes not topological")
+			}
+			Nwk_ObjAddFanin(o, fanin)
+			args[i] = hop.Hop_NotCond(hop.Hop_IthVar(p.Hop, int32(i)), lit&1)
+		}
+		switch kind {
+		case 2:
+			o.Function = hop.Hop_And(p.Hop, args[0], args[1])
+		case 3:
+			o.Function = hop.Hop_Exor(p.Hop, args[0], args[1])
+		case 4:
+			o.Function = hop.Hop_Mux(p.Hop, args[0], args[1], args[2])
+		case 5, 6:
+			o.Function = args[0]
+		default:
+			panic("nwk: unsupported GIA node kind")
+		}
+		copies[id] = o
+		vec.Vec_IntPush(mapping, id)
+	}
+	for _, id := range vec.Vec_IntArray(ppis) {
+		o := Nwk_ManCreateCo(p)
+		fanin := copies[id]
+		if fanin == nil {
+			panic(fmt.Sprintf("nwk: missing GIA output %d", id))
+		}
+		Nwk_ObjAddFanin(o, fanin)
+		vec.Vec_IntPush(mapping, id)
+	}
+	for i := vec.Vec_IntSize(ppis); i < vec.Vec_IntSize(leaves); i++ {
+		o := Nwk_ManCreateCo(p)
+		Nwk_ObjAddFanin(o, constant)
+		vec.Vec_IntPush(mapping, 0)
+	}
+	if inverse != nil {
+		*inverse = mapping
+	}
+	return p
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG into the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_ManCreateFromGia(p *Gia_Man_t, vPPis *Vec_Int_t, vNodes *Vec_Int_t, vLeaves *Vec_Int_t, pvMapInv **Vec_Int_t) *Nwk_Man_t {
-    var pNtk *Nwk_Man_t;
-    var ppCopies **Nwk_Obj_t;
-    var pObj *Gia_Obj_t;
-    var vMaps *Vec_Int_t;
-    var i int32;
-//    assert( Vec_IntSize(vLeaves) >= Vec_IntSize(vPPis) );
-    Gia_ManCreateRefs( p );
-    pNtk = Nwk_ManAlloc();
-    pNtk.pName = Abc_UtilStrsav( p.pName );
-    pNtk.nFanioPlus = 0;
-    Hop_ManStop( pNtk.pManHop );
-    pNtk.pManHop = nil;
-    // allocate
-    vMaps = Vec_IntAlloc( Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1 );
-    // inlining of macro ABC_ALLOC
-    ppCopies = ((Nwk_Obj_t * *) malloc(sizeof(Nwk_Obj_t *) * (size_t)(Gia_ManObjNum(p))));
-    // copy objects
-    pObj = Gia_ManConst0(p);
-//    ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 0, Gia_ObjRefNum(p,pObj) );
-    ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 0, Gia_ObjRefNum(p,pObj) + (Vec_IntSize(vLeaves) > Vec_IntSize(vPPis) ? Vec_IntSize(vLeaves) - Vec_IntSize(vPPis) : 0) );
-    Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vLeaves)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vLeaves,i))); i++  {
-        ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateCi( pNtk, Gia_ObjRefNum(p,pObj) );
-        assert(Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)]), "Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)])");
-        Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );
-    }
-    for  i = Vec_IntSize(vLeaves); i < Vec_IntSize(vPPis); i++  {
-        Nwk_ManCreateCi( pNtk, 0 );
-        Vec_IntPush( vMaps, -1 );
-    }
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vNodes)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {
-        ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 2, Gia_ObjRefNum(p,pObj) );
-        Nwk_ObjAddFanin( ppCopies[Gia_ObjId(p,pObj)], ppCopies[Gia_ObjFaninId0p(p,pObj)] );
-        Nwk_ObjAddFanin( ppCopies[Gia_ObjId(p,pObj)], ppCopies[Gia_ObjFaninId1p(p,pObj)] );
-        assert(Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)]), "Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)])");
-        Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );
-    }
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vPPis)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPPis,i))); i++  {
-        assert(ppCopies[Gia_ObjId(p,pObj)] != nil, "ppCopies[Gia_ObjId(p,pObj)] != nil");
-        Nwk_ObjAddFanin( Nwk_ManCreateCo(pNtk), ppCopies[Gia_ObjId(p,pObj)] );
-    }
-    for  i = Vec_IntSize(vPPis); i < Vec_IntSize(vLeaves); i++  {
-        Nwk_ObjAddFanin( Nwk_ManCreateCo(pNtk), ppCopies[0] );
-    }
-    assert(Vec_IntSize(vMaps) == Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1, "Vec_IntSize(vMaps) == Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1");
-    ppCopies = nil;
-    *pvMapInv = vMaps;
-    return pNtk;
+// GiaAbstractionNetwork supplies the abstraction PPIs and mutable gate classes
+// needed by the source min-cut abstraction refinement driver.
+type GiaAbstractionNetwork interface {
+	GiaNetwork
+	AbstractionPPIs() []int32
+	SetGateClass(int32, int32)
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Returns min-cut in the AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_ManDeriveMinCut(p *Gia_Man_t, fVerbose int32) {
-    var pNtk *Nwk_Man_t;
-    var pNode *Nwk_Obj_t;
-    var vMinCut *Vec_Ptr_t;
-    var vPPis, vNodes, vLeaves, vNodes2, vLeaves2, vMapInv *Vec_Int_t;
-    var vCommon, vDiff0, vDiff1 *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i, iObjId int32;
-    // get inputs
-    Gia_ManGlaCollect( p, p.vGateClasses, nil, &vPPis, nil, nil );
-    // collect nodes rechable from PPIs
-    vNodes = Vec_IntAlloc( 100 );
-    vLeaves = Vec_IntAlloc( 100 );
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vPPis)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPPis,i))); i++  {
-        Nwk_ManColleacReached_rec( p, pObj, vNodes, vLeaves );
-    }
-    // derive the new network
-    pNtk = Nwk_ManCreateFromGia( p, vPPis, vNodes, vLeaves, &vMapInv );
-    assert(Nwk_ManPiNum(pNtk) == Nwk_ManPoNum(pNtk), "Nwk_ManPiNum(pNtk) == Nwk_ManPoNum(pNtk)");
-    // create min-cut
-    vMinCut = Nwk_ManRetimeCutBackward( pNtk, Nwk_ManPiNum(pNtk), fVerbose );
-    // copy from the GIA back
-//    Aig_ManForEachObj( p, pObj, i )
-//        ((Nwk_Obj_t *)pObj->pData)->pCopy = pObj;
-    // mark min-cut nodes
-    vNodes2 = Vec_IntAlloc( 100 );
-    vLeaves2 = Vec_IntAlloc( 100 );
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vMinCut)) && (((pNode) = (Nwk_Obj_t *)Vec_PtrEntry(vMinCut, i)), 1); i++  {
-        pObj = Gia_ManObj( p, Vec_IntEntry(vMapInv, Nwk_ObjId(pNode)) );
-        if Gia_ObjIsConst0(pObj) {
-            continue; }
-        Nwk_ManColleacReached_rec( p, pObj, vNodes2, vLeaves2 );
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Min-cut: %d -> %d.  Nodes %d -> %d.  ", Vec_IntSize(vPPis)+1, Vec_PtrSize(vMinCut), Vec_IntSize(vNodes), Vec_IntSize(vNodes2)); }
-    Vec_IntFree( vPPis );
-    Vec_PtrFree( vMinCut );
-    Vec_IntFree( vMapInv );
-    Nwk_ManFree( pNtk );
-
-    // sort the results
-    Vec_IntSort( vNodes, 0 );
-    Vec_IntSort( vNodes2, 0 );
-    vCommon = Vec_IntAlloc( Vec_IntSize(vNodes) );
-    vDiff0 = Vec_IntAlloc( 100 );
-    vDiff1 = Vec_IntAlloc( 100 );
-    Vec_IntTwoSplit( vNodes, vNodes2, vCommon, vDiff0, vDiff1 );
-    if fVerbose != 0 {
-        fmt.Printf("Common = %d.  Diff0 = %d. Diff1 = %d.\n", Vec_IntSize(vCommon), Vec_IntSize(vDiff0), Vec_IntSize(vDiff1)); }
-
-    // fill in
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vDiff0)) && (((iObjId) = Vec_IntEntry(vDiff0, i)), 1); i++  {
-        Vec_IntWriteEntry( p.vGateClasses, iObjId, 1 );
-    }
-
-    Vec_IntFree( vLeaves );
-    Vec_IntFree( vNodes );
-    Vec_IntFree( vLeaves2 );
-    Vec_IntFree( vNodes2 );
-
-    Vec_IntFree( vCommon );
-    Vec_IntFree( vDiff0 );
-    Vec_IntFree( vDiff1 );
-
-    // check abstraction
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Vec_IntEntry( p.vGateClasses, i ) == 0 {
-            continue; }
-        assert(Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p, pObj) || Gia_ObjIsAnd(pObj), "Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p, pObj) || Gia_ObjIsAnd(pObj)");
-    }
+func Nwk_ManDeriveMinCut(g GiaAbstractionNetwork, verbose int32) {
+	leaves, nodes, ppis := vec.Vec_IntAlloc(0), vec.Vec_IntAlloc(0), vec.Vec_IntAlloc(0)
+	for _, id := range g.AbstractionPPIs() {
+		vec.Vec_IntPush(ppis, id)
+		Nwk_ManColleacReached_rec(g, id, nodes, leaves)
+	}
+	var inverse *Vec_Int_t
+	p := Nwk_ManCreateFromGia(g, ppis, nodes, leaves, &inverse)
+	if len(p.Inputs) != len(p.Outputs) {
+		panic("nwk: abstraction interface is not square")
+	}
+	cut := Nwk_ManRetimeCutBackward(p, int32(len(p.Inputs)), verbose)
+	newNodes, newLeaves := vec.Vec_IntAlloc(0), vec.Vec_IntAlloc(0)
+	for _, o := range vectorNodes(cut) {
+		id := vec.Vec_IntEntry(inverse, int(o.ID))
+		if id > 0 {
+			Nwk_ManColleacReached_rec(g, id, newNodes, newLeaves)
+		}
+	}
+	retained := map[int32]bool{}
+	for _, id := range vec.Vec_IntArray(newNodes) {
+		retained[id] = true
+	}
+	changed := 0
+	for _, id := range vec.Vec_IntArray(nodes) {
+		if !retained[id] {
+			g.SetGateClass(id, 1)
+			changed++
+		}
+	}
+	if verbose != 0 {
+		fmt.Fprintf(writer(p), "Min-cut: %d -> %d. Nodes %d -> %d. New gate classes %d.\n", vec.Vec_IntSize(ppis)+1, vec.Vec_PtrSize(cut), vec.Vec_IntSize(nodes), vec.Vec_IntSize(newNodes), changed)
+	}
+	Nwk_ManFree(p)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

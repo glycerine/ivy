@@ -1,0 +1,8 @@
+.model top
+.inputs a b
+.outputs left right
+.names a b left
+10 1
+.names b a right
+10 1
+.end

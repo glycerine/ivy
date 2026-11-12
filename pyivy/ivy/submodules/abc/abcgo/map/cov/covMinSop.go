@@ -88,6 +88,20 @@ func Min_SopAddCubeInt(p *Min_Man_t, cube *Min_Cube_t) int32 {
 			}
 		}
 	}
+	previous := &p.ppStore[cube.nLits]
+	for current := *previous; current != nil; {
+		next := current.pNext
+		if Min_CubesDistOne(cube, current, nil) != 0 {
+			*previous = next
+			Min_CubesTransformOr(cube, current)
+			cube.nLits--
+			Min_CubeRecycle(p, current)
+			p.nCubes--
+			return 1
+		}
+		previous = &current.pNext
+		current = next
+	}
 	for literals := int(cube.nLits) + 1; literals < len(p.ppStore); literals++ {
 		previous := &p.ppStore[literals]
 		for current := *previous; current != nil; {
@@ -111,7 +125,8 @@ func Min_SopAddCube(p *Min_Man_t, cube *Min_Cube_t) {
 	if cube == nil || Min_CubeCheck(cube) == 0 || int32(cube.nLits) != Min_CubeCountLits(cube) {
 		panic("cov: invalid SOP cube encoding")
 	}
-	Min_SopAddCubeInt(p, cube)
+	for Min_SopAddCubeInt(p, cube) != 0 {
+	}
 }
 
 func Min_SopContain(p *Min_Man_t) {

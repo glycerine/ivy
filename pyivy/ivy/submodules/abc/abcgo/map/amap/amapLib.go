@@ -1,386 +1,228 @@
+// Standard-cell library lifecycle and area selection from amapLib.c.
 package amap
 
 import (
+	"encoding/binary"
 	"fmt"
-	"time"
+	"io"
+	"os"
+	"sort"
+
+	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [amapLib.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Technology mapper for standard cells.]
-
-  Synopsis    [Standard-cell library.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: amapLib.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "amapInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocs a library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Amap_LibAlloc() *Amap_Lib_t {
-    var p *Amap_Lib_t;
-    // inlining of macro ABC_ALLOC
-    p = (Amap_Lib_t *)((Amap_Lib_t *) malloc(sizeof(Amap_Lib_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Amap_Lib_t) );
-    p.vGates = Vec_PtrAlloc( 100 );
-    p.pMemGates = Aig_MmFlexStart();
-    p.pMemSet = Aig_MmFlexStart();
-    return p;
+	return &Amap_Lib_t{vGates: vec.Vec_PtrAlloc(100), vRules: vec.Vec_PtrAlloc(100), vRulesX: vec.Vec_PtrAlloc(100), vRules3: vec.Vec_IntAlloc(100)}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Deallocs a library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Amap_LibFree(p *Amap_Lib_t) {
-    if p == nil {
-        return; }
-    if p.vSelect {
-        Vec_PtrFree( p.vSelect ); }
-    if p.vSorted {
-        Vec_PtrFree( p.vSorted ); }
-    if p.vGates {
-        Vec_PtrFree( p.vGates ); }
-    if p.vRules {
-        Vec_VecFree( (Vec_Vec_t *)p.vRules ); }
-    if p.vRulesX {
-        Vec_VecFree( (Vec_Vec_t *)p.vRulesX ); }
-    if p.vRules3 {
-        Vec_IntFree( p.vRules3 ); }
-    Aig_MmFlexStop( p.pMemGates, 0 );
-    Aig_MmFlexStop( p.pMemSet, 0 );
-    p.pRules = nil;
-    p.pRulesX = nil;
-    p.pNodes = nil;
-    p.pName = nil;
-    p = nil;
+	if p != nil {
+		*p = Amap_Lib_t{}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the largest gate size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func (p *Amap_Lib_t_) Close() error { Amap_LibFree(p); return nil }
+func (p *Amap_Lib_t_) Name() string { return p.pName }
+func (p *Amap_Lib_t_) Gates() []*Amap_Gat_t {
+	if p == nil || p.vGates == nil {
+		return nil
+	}
+	out := make([]*Amap_Gat_t, 0, vec.Vec_PtrSize(p.vGates))
+	for _, entry := range vec.Vec_PtrArray(p.vGates) {
+		if entry != nil {
+			out = append(out, entry.(*Amap_Gat_t))
+		}
+	}
+	return out
+}
 func Amap_LibNumPinsMax(p *Amap_Lib_t) int32 {
-    var pGate *Amap_Gat_t;
-    var i, Counter int32;
-    // inlining of macro Amap_LibForEachGate
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vGates)) && (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(p.vGates, i)), 1); i++  {
-        if Counter < int32(pGate.nPins) {
-            Counter = pGate.nPins; }
-    }
-    return Counter;
+	var maximum uint32
+	for _, gate := range p.Gates() {
+		maximum = max(maximum, gate.nPins)
+	}
+	return int32(maximum)
+}
+func Amap_LibWritePin(w io.Writer, pin *Amap_Pin_t) error {
+	phases := [3]string{"UNKNOWN", "INV", "NONINV"}
+	if pin == nil || pin.Phase < 0 || pin.Phase > 2 {
+		return fmt.Errorf("invalid AMAP pin phase")
+	}
+	_, err := fmt.Fprintf(w, "    PIN %s %s %.17g %.17g %.17g %.17g %.17g %.17g\n", pin.pName, phases[pin.Phase], pin.dLoadInput, pin.dLoadMax, pin.dDelayBlockRise, pin.dDelayFanoutRise, pin.dDelayBlockFall, pin.dDelayFanoutFall)
+	return err
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Writes one pin.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibWritePin(pFile *os.File, pPin *Amap_Pin_t) {
-    var pPhaseNames [10]string = [10]string{ "UNKNOWN", "INV", "NONINV" };
-    fmt.Fprintf(pFile, "    PIN ");
-    fmt.Fprintf(pFile, "%9s ", pPin.pName);
-    fmt.Fprintf(pFile, "%10s ", pPhaseNames[pPin.Phase]);
-    fmt.Fprintf(pFile, "%6d ", int32(pPin.dLoadInput));
-    fmt.Fprintf(pFile, "%6d ", int32(pPin.dLoadMax));
-    fmt.Fprintf(pFile, "%6.2f ", pPin.dDelayBlockRise);
-    fmt.Fprintf(pFile, "%6.2f ", pPin.dDelayFanoutRise);
-    fmt.Fprintf(pFile, "%6.2f ", pPin.dDelayBlockFall);
-    fmt.Fprintf(pFile, "%6.2f", pPin.dDelayFanoutFall);
-    fmt.Fprintf(pFile, "\n");
+// amapCheckedWriter retains errors from legacy printers with no error result.
+type amapCheckedWriter struct {
+	io.Writer
+	err error
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Writes one gate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibWriteGate(pFile *os.File, pGate *Amap_Gat_t, fPrintDsd int32) {
-    var pPin *Amap_Pin_t;
-    fmt.Fprintf(pFile, "GATE ");
-    fmt.Fprintf(pFile, "%12s ", pGate.pName);
-    fmt.Fprintf(pFile, "%10.2f   ", pGate.dArea);
-    fmt.Fprintf(pFile, "%s=%s;\n", pGate.pOutName, pGate.pForm);
-    if fPrintDsd != 0 {
-        if pGate.pFunc == nil {
-            fmt.Printf("Truth table is not available.\n");
-        } else {
-            Kit_DsdPrintFromTruth( pGate.pFunc, pGate.nPins ); }
-    }
-    // inlining of macro Amap_GateForEachPin
-    for  pPin = pGate.Pins; pPin < pGate.Pins + pGate.nPins; pPin++  {
-        Amap_LibWritePin( pFile, pPin );
-    }
+func (w *amapCheckedWriter) Write(p []byte) (int, error) {
+	if w.err != nil {
+		return 0, w.err
+	}
+	n, err := w.Writer.Write(p)
+	if err == nil && n != len(p) {
+		err = io.ErrShortWrite
+	}
+	w.err = err
+	return n, err
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Writes library.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibWrite(pFile *os.File, pLib *Amap_Lib_t, fPrintDsd int32) {
-    var pGate *Amap_Gat_t;
-    var i int32;
-    fmt.Fprintf(pFile, "# The genlib library \"%s\".\n", pLib.pName);
-    // inlining of macro Amap_LibForEachGate
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pLib.vGates)) && (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(pLib.vGates, i)), 1); i++  {
-        Amap_LibWriteGate( pFile, pGate, fPrintDsd );
-    }
+func Amap_LibWriteGate(w io.Writer, gate *Amap_Gat_t, printDsd int32) error {
+	if gate == nil || int(gate.nPins) != len(gate.Pins) {
+		return fmt.Errorf("invalid AMAP gate pin count")
+	}
+	if _, err := fmt.Fprintf(w, "GATE %s %.17g %s=%s;\n", gate.pName, gate.dArea, gate.pOutName, gate.pForm); err != nil {
+		return err
+	}
+	if printDsd != 0 && gate.pFunc != nil {
+		if _, err := fmt.Fprint(w, "# DSD: "); err != nil {
+			return err
+		}
+		checked := &amapCheckedWriter{Writer: w}
+		kit.Kit_DsdPrintFromTruth2(checked, gate.pFunc, int32(gate.nPins))
+		if checked.err != nil {
+			return checked.err
+		}
+		if _, err := fmt.Fprintln(w); err != nil {
+			return err
+		}
+	}
+	for i := range gate.Pins {
+		if err := Amap_LibWritePin(w, &gate.Pins[i]); err != nil {
+			return err
+		}
+	}
+	return nil
 }
-        
-/**Function*************************************************************
-
-  Synopsis    [Compares two gates by area.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibCompareGatesByArea(pp1 **Amap_Gat_t, pp2 **Amap_Gat_t) int32 {
-    var Diff float64  = (*pp1).dArea - (*pp2).dArea;
-    if Diff < 0.0 {
-        return -1; }
-    if Diff > 0.0 { 
-        return 1; }
-    return 0; 
+func Amap_LibWrite(w io.Writer, lib *Amap_Lib_t, printDsd int32) error {
+	if lib == nil {
+		return fmt.Errorf("nil AMAP library")
+	}
+	if _, err := fmt.Fprintf(w, "# Genlib library %q\n", lib.pName); err != nil {
+		return err
+	}
+	for _, gate := range lib.Gates() {
+		if err := Amap_LibWriteGate(w, gate, printDsd); err != nil {
+			return err
+		}
+	}
+	return nil
 }
-        
-/**Function*************************************************************
-
-  Synopsis    [Compares gates by area.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibSortGatesByArea(pLib *Amap_Lib_t) *Vec_Ptr_t {
-    var vSorted *Vec_Ptr_t;
-    vSorted = Vec_PtrDup( pLib.vGates );
-    qsort( (void *)Vec_PtrArray(vSorted), (size_t)Vec_PtrSize(vSorted), sizeof(void *), 
-                (int (*)(void *, void *)) Amap_LibCompareGatesByArea );
-    return vSorted;
+func Amap_LibCompareGatesByArea(a, b *Amap_Gat_t) int32 {
+	if a.dArea < b.dArea {
+		return -1
+	}
+	if a.dArea > b.dArea {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Finds min-area gate with the given function.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibFindGate(p *Amap_Lib_t, uTruth uint32) *Amap_Gat_t {
-    var pGate *Amap_Gat_t;
-    var i int32;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vSorted)) && (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(p.vSorted, i)), 1); i++  {
-        if ( pGate == nil ) || ( pGate.pFunc == nil ) { continue; }
-        if pGate.nPins <= 5 && pGate.pFunc[0] == uTruth {
-            return pGate; }
-    }
-    return nil;
+func Amap_LibSortGatesByArea(lib *Amap_Lib_t) *Vec_Ptr_t {
+	gates := lib.Gates()
+	sort.SliceStable(gates, func(i, j int) bool { return gates[i].dArea < gates[j].dArea })
+	sorted := vec.Vec_PtrAlloc(len(gates))
+	for _, gate := range gates {
+		vec.Vec_PtrPush(sorted, gate)
+	}
+	return sorted
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Selects gates useful for area-only mapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibSelectGates(p *Amap_Lib_t, fVerbose int32) *Vec_Ptr_t {
-    var vSelect *Vec_Ptr_t;
-    var pGate, pGate2 *Amap_Gat_t;
-    var i, k int32;//, clk = Abc_Clock();
-    p.pGate0   = Amap_LibFindGate( p, 0 );
-    p.pGate1   = Amap_LibFindGate( p, ~0 );
-    p.pGateBuf = Amap_LibFindGate( p, 0xAAAAAAAA );
-    p.pGateInv = Amap_LibFindGate( p, ~0xAAAAAAAA );
-    vSelect = Vec_PtrAlloc( 100 );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vSorted)) && (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(p.vSorted, i)), 1); i++  {
-        if pGate.pFunc == nil || pGate.pTwin != nil {
-            continue; }
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  k = 0; (k < i) && (((pGate2) = (Amap_Gat_t *)Vec_PtrEntry(p.vSorted, k)), 1); k++  {
-            if pGate2.pFunc == nil || pGate2.pTwin != nil {
-                continue; }
-            if pGate2.nPins != pGate.nPins {
-                continue; }
-            if !memcmp( pGate2.pFunc, pGate.pFunc, sizeof(unsigned) * Abc_TruthWordNum(pGate.nPins) ) {
-                break; }
-        }
-        if k < i {
-            continue; }
-        Vec_PtrPush( vSelect, pGate );            
-    }
-    return vSelect;
+func Amap_LibFindGate(lib *Amap_Lib_t, truth uint32) *Amap_Gat_t {
+	if lib == nil {
+		return nil
+	}
+	if lib.vSorted == nil {
+		lib.vSorted = Amap_LibSortGatesByArea(lib)
+	}
+	for _, entry := range vec.Vec_PtrArray(lib.vSorted) {
+		gate, ok := entry.(*Amap_Gat_t)
+		if ok && gate != nil && gate.nPins <= 5 && len(gate.pFunc) > 0 && gate.pFunc[0] == truth {
+			return gate
+		}
+	}
+	return nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Selects gates useful for area-only mapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibPrintSelectedGates(p *Amap_Lib_t, fAllGates int32) {
-    var vArray *Vec_Ptr_t;
-    var pGate *Amap_Gat_t;
-    var i int32;
-    if fAllGates != 0 {
-        vArray = p.vGates;
-    } else {
-        vArray = p.vSelect;
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vArray)) && (((pGate) = (Amap_Gat_t *)Vec_PtrEntry(vArray, i)), 1); i++  {
-        fmt.Printf("%3d :%12s %d %9.2f  ", i, pGate.pName, pGate.nPins, pGate.dArea);
-        fmt.Printf("%4s=%40s  ", pGate.pOutName, pGate.pForm);
-        fmt.Printf("DSD: ");
-        Kit_DsdPrintFromTruth( pGate.pFunc, pGate.nPins );
-        fmt.Printf("\n");
-    }
+func amapTruthKey(gate *Amap_Gat_t) string {
+	words := 1
+	if gate.nPins > 5 {
+		words = 1 << uint(gate.nPins-5)
+	}
+	if len(gate.pFunc) < words {
+		panic("short AMAP gate truth table")
+	}
+	key := make([]byte, 4+4*words)
+	binary.LittleEndian.PutUint32(key, gate.nPins)
+	for i, value := range gate.pFunc[:words] {
+		binary.LittleEndian.PutUint32(key[4+4*i:], value)
+	}
+	return string(key)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Parses equations for the gates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibReadAndPrepare(pFileName string, pBuffer string, fVerbose int32, fVeryVerbose int32) *Amap_Lib_t {
-    var p *Amap_Lib_t;
-    var clk abctime  = Abc_Clock();
-    if pBuffer == nil {
-        p = Amap_LibReadFile( pFileName, fVerbose );
-    } else {
-        p = Amap_LibReadBuffer( pBuffer, fVerbose );
-        if p != nil {
-            p.pName = Abc_UtilStrsav( pFileName ); }
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Read %d gates from file \"%s\".\n", Vec_PtrSize(p.vGates), pFileName); }
-    if p == nil {
-        return nil; }
-    if !Amap_LibParseEquations( p, fVerbose ) {
-        Amap_LibFree( p );
-        return nil;
-    }
-    p.vSorted = Amap_LibSortGatesByArea( p );
-    p.vSelect = Amap_LibSelectGates( p, fVerbose );
-    if fVerbose != 0 {
-        fmt.Printf("Selected %d functionally unique gates. ", Vec_PtrSize(p.vSelect));
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-//       Amap_LibPrintSelectedGates( p, 0 );
-    }
-    clk = Abc_Clock();
-    Amap_LibCreateRules( p, fVeryVerbose );
-    if fVerbose != 0 {
-        fmt.Printf("Created %d rules and %d matches. ", p.nNodes, p.nSets);
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    }
-    return p;
+func Amap_LibSelectGates(lib *Amap_Lib_t, verbose int32) *Vec_Ptr_t {
+	if lib == nil {
+		return nil
+	}
+	if lib.vSorted == nil {
+		lib.vSorted = Amap_LibSortGatesByArea(lib)
+	}
+	lib.pGate0 = Amap_LibFindGate(lib, 0)
+	lib.pGate1 = Amap_LibFindGate(lib, ^uint32(0))
+	lib.pGateBuf = Amap_LibFindGate(lib, 0xaaaaaaaa)
+	lib.pGateInv = Amap_LibFindGate(lib, 0x55555555)
+	selected := vec.Vec_PtrAlloc(100)
+	seen := make(map[string]bool)
+	for _, entry := range vec.Vec_PtrArray(lib.vSorted) {
+		gate, ok := entry.(*Amap_Gat_t)
+		if !ok || gate == nil || gate.pFunc == nil || gate.pTwin != nil || gate.nPins > AMAP_MAXINS {
+			continue
+		}
+		key := amapTruthKey(gate)
+		if seen[key] {
+			continue
+		}
+		seen[key] = true
+		vec.Vec_PtrPush(selected, gate)
+	}
+	return selected
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Amap_LibPrintSelectedGates(lib *Amap_Lib_t, all int32) error {
+	array := lib.vSelect
+	if all != 0 {
+		array = lib.vGates
+	}
+	if array == nil {
+		return nil
+	}
+	for index, entry := range vec.Vec_PtrArray(array) {
+		gate := entry.(*Amap_Gat_t)
+		if _, err := fmt.Fprintf(os.Stdout, "%3d: %s inputs=%d area=%.2f %s=%s\n", index, gate.pName, gate.nPins, gate.dArea, gate.pOutName, gate.pForm); err != nil {
+			return err
+		}
+		if gate.pFunc != nil {
+			kit.Kit_DsdPrintFromTruth2(os.Stdout, gate.pFunc, int32(gate.nPins))
+			fmt.Println()
+		}
+	}
+	return nil
+}
+func Amap_LibReadAndPrepare(filename, buffer string, verbose, veryVerbose int32) *Amap_Lib_t {
+	var lib *Amap_Lib_t
+	if buffer == "" {
+		lib = Amap_LibReadFile(filename, verbose)
+	} else {
+		lib = Amap_LibReadBuffer(buffer, verbose)
+		if lib != nil {
+			lib.pName = filename
+		}
+	}
+	if lib == nil {
+		return nil
+	}
+	if Amap_LibParseEquations(lib, verbose) == 0 {
+		Amap_LibFree(lib)
+		return nil
+	}
+	lib.vSorted = Amap_LibSortGatesByArea(lib)
+	lib.vSelect = Amap_LibSelectGates(lib, verbose)
+	Amap_LibCreateRules(lib, veryVerbose)
+	return lib
+}

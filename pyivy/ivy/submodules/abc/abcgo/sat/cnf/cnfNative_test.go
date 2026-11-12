@@ -170,3 +170,28 @@ func TestNativeCutMappingOwnsCopies(t *testing.T) {
 	}
 	Cnf_ManStop(manager)
 }
+
+func TestCnfDataAddXorClauseTruthTable(t *testing.T) {
+	for a := int32(0); a <= 1; a++ {
+		for b := int32(0); b <= 1; b++ {
+			for c := int32(0); c <= 1; c++ {
+				solver := bsat.NewSolver()
+				if Cnf_DataAddXorClause(solver, 0, 1, 2) != 4 {
+					t.Fatal("failed to add XOR clauses")
+				}
+				for variable, value := range []int32{a, b, c} {
+					lit := bsat.Negative(int32(variable))
+					if value != 0 {
+						lit = bsat.Positive(int32(variable))
+					}
+					solver.AddClause(lit)
+				}
+				got := solver.Solve() == bsat.Satisfiable
+				want := c == (a ^ b)
+				if got != want {
+					t.Fatalf("a=%d b=%d c=%d: satisfiable=%v, want %v", a, b, c, got, want)
+				}
+			}
+		}
+	}
+}

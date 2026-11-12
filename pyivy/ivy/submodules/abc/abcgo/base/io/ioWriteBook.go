@@ -2,1019 +2,459 @@ package io
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/map/mio"
 	"math"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [ioWriteBook.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedures to write Bookshelf files.]
-
-  Author      [Myungchul Kim]
-  
-  Affiliation [U of Michigan]
-
-  Date        [Ver. 1.0. Started - October 25, 2008.]
-
-  Revision    [$Id: ioWriteBook.c,v 1.00 2005/11/10 00:00:00 mckima Exp $]
-
-***********************************************************************/
-
-//#include <math.h>
-
-//#include "base/main/main.h"
-//#include "map/mio/mio.h"
-//#include "ioAbc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-const NODES =       0
-const PL =       1
-const coreHeight = 1
-const termWidth =  1
-const termHeight = 1
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static unsigned Io_NtkWriteNodes( FILE * pFile, Abc_Ntk_t * pNtk );
-
-// static void Io_NtkWritePiPoNodes( FILE * pFile, Abc_Ntk_t * pNtk );
-
-// static void Io_NtkWriteLatchNode( FILE * pFile, Abc_Obj_t * pLatch, int NodesOrPl );
-
-// static unsigned Io_NtkWriteIntNode( FILE * pFile, Abc_Obj_t * pNode, int NodesOrPl );
-
-// static unsigned Io_NtkWriteNodeGate( FILE * pFile, Abc_Obj_t * pNode );
-
-// static void Io_NtkWriteNets( FILE * pFile, Abc_Ntk_t * pNtk );
-
-// static void Io_NtkWriteIntNet( FILE * pFile, Abc_Obj_t * pNode );
-
-// static void Io_NtkBuildLayout( FILE * pFile1, FILE *pFile2, Abc_Ntk_t * pNtk, double aspectRatio, double whiteSpace, unsigned coreCellArea );
-
-// static void Io_NtkWriteScl( FILE * pFile, unsigned numCoreRows, double layoutWidth );
-
-// static void Io_NtkWritePl( FILE * pFile, Abc_Ntk_t * pNtk, unsigned numTerms, double layoutHeight, double layoutWidth );
-
-// static Vec_Ptr_t * Io_NtkOrderingPads( Abc_Ntk_t * pNtk, Vec_Ptr_t * vTerms );
- 
-// static Abc_Obj_t * Io_NtkBfsPads( Abc_Ntk_t * pNtk, Abc_Obj_t * pCurrEntry, unsigned numTerms, int * pOrdered );
-
-// static int Abc_NodeIsNand2( Abc_Obj_t * pNode );
-
-// static int Abc_NodeIsNor2( Abc_Obj_t * pNode );
-
-// static int Abc_NodeIsAnd2( Abc_Obj_t * pNode );
-
-// static int Abc_NodeIsOr2( Abc_Obj_t * pNode );
-
-// static int Abc_NodeIsXor2( Abc_Obj_t * pNode );
-
-// static int Abc_NodeIsXnor2( Abc_Obj_t * pNode );
-
-
-func Abc_Rint(x float64) float64 { return float64(int32(x));  }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Write the network into a Bookshelf file with the given name.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteBookLogic(pNtk *Abc_Ntk_t, FileName string) {
-    var pNtkTemp *Abc_Ntk_t;
-    // derive the netlist
-    pNtkTemp = Abc_NtkToNetlist(pNtk);
-    if pNtkTemp == nil {
-        fmt.Fprintf(os.Stdout, "Writing BOOK has failed.\n");
-        return;
-    }
-    Io_WriteBook( pNtkTemp, FileName );
-    Abc_NtkDelete( pNtkTemp );
+type bookCell struct {
+	name     string
+	width    int
+	terminal bool
+	object   *abc.Object
+}
+type bookPin struct {
+	cell      *bookCell
+	direction string
+}
+type bookNet struct {
+	name string
+	pins []bookPin
+}
+type bookModel struct {
+	cells []*bookCell
+	nets  []bookNet
+	terms []*bookCell
+	area  int
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Write the network into a BOOK file with the given name.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_WriteBook(pNtk *Abc_Ntk_t, FileName string) {
-
-    var pFileNodes, pFileNets, pFileAux *os.File;
-    var pFileScl, pFilePl, pFileWts *os.File;
-    // inlining of macro ABC_CALLOC
-    var FileExt string  = ((char *) calloc((size_t)(len(FileName)+7), sizeof(char)));
-    var coreCellArea uint32;
-    var pExdc, pNtkTemp *Abc_Ntk_t;
-    var i int32;
-
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    // start writing the files
-    FileExt = FileName;
-    pFileNodes = os.OpenFile(strcat(FileExt,".nodes"), os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    FileExt = FileName;
-    pFileNets  = os.OpenFile(strcat(FileExt,".nets"), os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    FileExt = FileName;
-    pFileAux   = os.OpenFile(strcat(FileExt,".aux"), os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-
-        // write the aux file
-    if (pFileNodes == nil) || (pFileNets == nil) || (pFileAux == nil) {
-        _ = (pFileAux).Close();
-        fmt.Fprintf(os.Stdout, "Io_WriteBook(): Cannot open the output files.\n");
-        return;
-    }
-    fmt.Fprintf(pFileAux, "RowBasedPlacement : %s.nodes %s.nets %s.scl %s.pl %s.wts", FileName, FileName, FileName, FileName, FileName);
-    _ = (pFileAux).Close();
-
-    // write the master network
-    coreCellArea+=Io_NtkWriteNodes( pFileNodes, pNtk );
-    Io_NtkWriteNets( pFileNets, pNtk );
-
-    // write EXDC network if it exists
-    pExdc = Abc_NtkExdc( pNtk );
-    if pExdc {
-    coreCellArea+=Io_NtkWriteNodes( pFileNodes, pNtk );
-        Io_NtkWriteNets( pFileNets, pNtk );
-    }
-
-    // make sure there is no logic hierarchy
-    assert(Abc_NtkWhiteboxNum(pNtk) == 0, "Abc_NtkWhiteboxNum(pNtk) == 0");
-
-    // write the hierarchy if present
-    if Abc_NtkBlackboxNum(pNtk) > 0 {
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pNtk.pDesign.vModules)) && (((pNtkTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {
-            if pNtkTemp == pNtk {
-                continue; }
-            coreCellArea+=Io_NtkWriteNodes( pFileNodes, pNtkTemp );
-            Io_NtkWriteNets( pFileNets, pNtkTemp );
-        }
-    }
-    _ = (pFileNodes).Close();
-    _ = (pFileNets).Close();
-
-    FileExt = FileName;
-    pFileScl = os.OpenFile(strcat(FileExt,".scl"), os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    FileExt = FileName;
-    pFilePl  = os.OpenFile(strcat(FileExt,".pl"), os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    FileExt = FileName;
-    pFileWts   = os.OpenFile(strcat(FileExt,".wts"), os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    FileExt = nil;
-
-    Io_NtkBuildLayout( pFileScl, pFilePl, pNtk, 1.0, 10, coreCellArea );
-    _ = (pFileScl).Close();
-    _ = (pFilePl).Close();
-    _ = (pFileWts).Close();
+func bookSOP(o *abc.Object) string {
+	switch f := o.Data.(type) {
+	case string:
+		return f
+	case *mio.Mio_Gate_t:
+		return mio.Mio_GateReadSop(f)
+	}
+	return ""
+}
+func bookTwo(o *abc.Object, truth byte) int32 {
+	if len(o.Fanins()) != 2 {
+		return 0
+	}
+	s := bookSOP(o)
+	if s == "" {
+		return 0
+	}
+	if abc.Abc_SopGetVarNum(s) != 2 {
+		return 0
+	}
+	if byte(abc.Abc_SopToTruth(s, 2)&15) == truth {
+		return 1
+	}
+	return 0
+}
+func Abc_NodeIsNand2(o *abc.Object) int32 { return bookTwo(o, 7) }
+func Abc_NodeIsNor2(o *abc.Object) int32  { return bookTwo(o, 1) }
+func Abc_NodeIsAnd2(o *abc.Object) int32 {
+	s := bookSOP(o)
+	if len(o.Fanins()) == 2 && s != "" {
+		return abc.Abc_SopIsAndType(s)
+	}
+	return 0
+}
+func Abc_NodeIsOr2(o *abc.Object) int32 {
+	if len(o.Fanins()) != 2 {
+		return 0
+	}
+	s := bookSOP(o)
+	if s == "" {
+		return 0
+	}
+	if abc.Abc_SopIsOrType(s) != 0 || s == "01 0\n" || s == "10 0\n" || s == "00 0\n" {
+		return 1
+	}
+	return 0
+}
+func Abc_NodeIsXor2(o *abc.Object) int32  { return bookTwo(o, 6) }
+func Abc_NodeIsXnor2(o *abc.Object) int32 { return bookTwo(o, 9) }
+func bookWidth(o *abc.Object) (int, error) {
+	if o.Kind == abc.ObjectLatch {
+		return 6, nil
+	}
+	if o.Kind == abc.ObjectNode && abc.Abc_NtkIsStrash(o.Network()) != 0 {
+		return 3, nil
+	}
+	if o.Kind == abc.ObjectConst1 {
+		return 0, nil
+	}
+	if o.Kind == abc.ObjectBlackbox || o.Kind == abc.ObjectWhitebox {
+		return max(1, len(o.Fanins())), nil
+	}
+	if gate, ok := o.Data.(*mio.Mio_Gate_t); ok {
+		area := mio.Mio_GateReadArea(gate)
+		if math.IsNaN(area) || math.IsInf(area, 0) || area < 0 {
+			return 0, fmt.Errorf("invalid mapped cell area")
+		}
+		return int(area), nil
+	}
+	s := bookSOP(o)
+	if s == "" {
+		return 0, fmt.Errorf("cell %s has no SOP or mapped gate", exportName(o))
+	}
+	if abc.Abc_SopIsConst0(s) != 0 || abc.Abc_SopIsConst1(s) != 0 {
+		return 0, nil
+	}
+	if abc.Abc_SopIsInv(s) != 0 {
+		return 1, nil
+	}
+	if abc.Abc_SopIsBuf(s) != 0 {
+		return 2, nil
+	}
+	if Abc_NodeIsNand2(o) != 0 || Abc_NodeIsNor2(o) != 0 {
+		return 2, nil
+	}
+	if Abc_NodeIsAnd2(o) != 0 || Abc_NodeIsOr2(o) != 0 {
+		return 3, nil
+	}
+	if Abc_NodeIsXor2(o) != 0 || Abc_NodeIsXnor2(o) != 0 {
+		return 5, nil
+	}
+	return len(o.Fanins()) + int(abc.Abc_SopGetCubeNum(s)), nil
+}
+func bookInputNet(o *abc.Object) *abc.Object {
+	in := o.Fanins()
+	if len(in) == 1 && in[0].Object.Kind == abc.ObjectNet {
+		return in[0].Object
+	}
+	return o
+}
+func bookOutputNet(o *abc.Object) *abc.Object {
+	for _, out := range o.Fanouts() {
+		if out.Kind == abc.ObjectNet {
+			return out
+		}
+	}
+	return o
+}
+func bookCellName(o *abc.Object) string {
+	switch o.Kind {
+	case abc.ObjectPI:
+		return "i" + exportName(bookOutputNet(o)) + "_input"
+	case abc.ObjectPO:
+		return "o" + exportName(bookInputNet(o)) + "_output"
+	case abc.ObjectLatch:
+		in, out := "in", "out"
+		if len(o.Fanins()) == 1 {
+			in = exportName(bookInputNet(o.Fanins()[0].Object))
+		}
+		if len(o.Fanouts()) == 1 {
+			out = exportName(bookOutputNet(o.Fanouts()[0]))
+		}
+		return in + "_" + out + "_latch"
+	}
+	var b strings.Builder
+	for _, e := range o.Fanins() {
+		b.WriteString(exportName(e.Object))
+		b.WriteByte('_')
+	}
+	for _, out := range o.Fanouts() {
+		b.WriteString(exportName(out))
+		b.WriteByte('_')
+	}
+	if gate, ok := o.Data.(*mio.Mio_Gate_t); ok {
+		b.WriteString(mio.Mio_GateReadName(gate))
+	} else {
+		b.WriteString("name")
+	}
+	return b.String()
+}
+func makeBook(n *abc.Network) (*bookModel, error) {
+	if n == nil {
+		return nil, fmt.Errorf("nil network")
+	}
+	model := &bookModel{}
+	modules := []*abc.Network{n}
+	if n.Exdc != nil {
+		modules = append(modules, n.Exdc)
+	}
+	if n.Design != nil {
+		for _, m := range n.Design.Modules {
+			if m != n && m != n.Exdc {
+				modules = append(modules, m)
+			}
+		}
+	}
+	names := map[string]bool{}
+	for mi, module := range modules {
+		cells := map[*abc.Object]*bookCell{}
+		prefix := ""
+		if mi > 0 {
+			prefix = fmt.Sprintf("m%d_", mi)
+		}
+		for _, kind := range []abc.ObjectKind{abc.ObjectPI, abc.ObjectPO, abc.ObjectLatch, abc.ObjectNode, abc.ObjectConst1, abc.ObjectBlackbox, abc.ObjectWhitebox} {
+			for _, o := range module.ObjectsOfKind(kind) {
+				if kind == abc.ObjectConst1 && len(o.Fanouts()) == 0 {
+					continue
+				}
+				terminal := kind == abc.ObjectPI || kind == abc.ObjectPO
+				width := 1
+				var err error
+				if !terminal {
+					width, err = bookWidth(o)
+					if err != nil {
+						return nil, err
+					}
+				}
+				name := prefix + bookCellName(o)
+				if strings.ContainsAny(name, " \t\n\r") {
+					return nil, fmt.Errorf("Bookshelf cell name contains whitespace: %q", name)
+				}
+				if names[name] {
+					name = fmt.Sprintf("%s_%d", name, o.ID)
+				}
+				if names[name] {
+					return nil, fmt.Errorf("duplicate Bookshelf cell name %q", name)
+				}
+				names[name] = true
+				c := &bookCell{name, width, terminal, o}
+				cells[o] = c
+				model.cells = append(model.cells, c)
+				if terminal {
+					model.terms = append(model.terms, c)
+				} else {
+					model.area += width
+				}
+			}
+		}
+		owner := func(o *abc.Object) *bookCell {
+			if o.Kind == abc.ObjectBI {
+				for _, out := range o.Fanouts() {
+					if out.Kind == abc.ObjectLatch {
+						return cells[out]
+					}
+				}
+			}
+			if o.Kind == abc.ObjectBO {
+				for _, e := range o.Fanins() {
+					if e.Object.Kind == abc.ObjectLatch {
+						return cells[e.Object]
+					}
+				}
+			}
+			return cells[o]
+		}
+		if nets := module.ObjectsOfKind(abc.ObjectNet); len(nets) > 0 {
+			for _, net := range nets {
+				inputs := net.Fanins()
+				if len(inputs) != 1 {
+					return nil, fmt.Errorf("net %s needs one driver", exportName(net))
+				}
+				driver := owner(inputs[0].Object)
+				if driver == nil {
+					return nil, fmt.Errorf("net %s driver has no cell", exportName(net))
+				}
+				bn := bookNet{name: prefix + exportName(net), pins: []bookPin{{driver, "I"}}}
+				for _, sink := range net.Fanouts() {
+					cell := owner(sink)
+					if cell == nil {
+						return nil, fmt.Errorf("net %s sink has no cell", exportName(net))
+					}
+					bn.pins = append(bn.pins, bookPin{cell, "O"})
+				}
+				model.nets = append(model.nets, bn)
+			}
+		} else {
+			for _, driver := range module.Objects() {
+				cell := owner(driver)
+				if cell == nil || driver.Kind == abc.ObjectPO || driver.Kind == abc.ObjectLatch || driver.Kind == abc.ObjectBI {
+					continue
+				}
+				bn := bookNet{name: prefix + exportName(driver), pins: []bookPin{{cell, "I"}}}
+				for _, sink := range driver.Fanouts() {
+					c := owner(sink)
+					if c == nil {
+						return nil, fmt.Errorf("logic fanout has no cell")
+					}
+					bn.pins = append(bn.pins, bookPin{c, "O"})
+				}
+				if len(bn.pins) > 1 {
+					model.nets = append(model.nets, bn)
+				}
+			}
+		}
+	}
+	return model, nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Write the network into a BOOK file with the given name.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkWriteNodes(pFile *os.File, pNtk *Abc_Ntk_t) uint32 {
-    var pProgress *ProgressBar;
-    var pLatch, pNode *Abc_Obj_t;
-    var numTerms, numNodes, coreCellArea uint32;
-    var i int32;
-
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    // write the forehead
-    numTerms=Abc_NtkPiNum(pNtk)+Abc_NtkPoNum(pNtk);
-    numNodes=numTerms+Abc_NtkNodeNum(pNtk)+Abc_NtkLatchNum(pNtk);
-    fmt.Printf("NumNodes : %d\t", numNodes);
-    fmt.Printf("NumTerminals : %d\n", numTerms);
-    fmt.Fprintf(pFile, "UCLA    nodes    1.0\n");
-    fmt.Fprintf(pFile, "NumNodes : %d\n", numNodes);
-    fmt.Fprintf(pFile, "NumTerminals : %d\n", numTerms);
-    // write the PI/POs
-    Io_NtkWritePiPoNodes( pFile, pNtk );
-    // write the latches
-    if !Abc_NtkIsComb(pNtk) {
-        // inlining of macro Abc_NtkForEachLatch
-        for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {
-            Io_NtkWriteLatchNode( pFile, pLatch, NODES );
-            coreCellArea+=6*coreHeight;
-        }
-        }
-    }
-    // write each internal node
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkNodeNum(pNtk) );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        coreCellArea+=Io_NtkWriteIntNode( pFile, pNode, NODES );
-    }
-    }
-    Extra_ProgressBarStop( pProgress );
-    return coreCellArea;
+// Io_NtkBfsPads finds the closest unordered PI/PO through undirected incidence.
+// Sets are keyed by object pointers, avoiding the source's term-count-sized
+// array indexed by arbitrary object IDs.
+func Io_NtkBfsPads(n *abc.Network, start *abc.Object, ordered map[*abc.Object]bool) *abc.Object {
+	queue := []*abc.Object{start}
+	seen := map[*abc.Object]bool{start: true}
+	for len(queue) > 0 {
+		o := queue[0]
+		queue = queue[1:]
+		if o != start && (o.Kind == abc.ObjectPI || o.Kind == abc.ObjectPO) && !ordered[o] {
+			return o
+		}
+		neighbors := append([]*abc.Object(nil), o.Fanouts()...)
+		for _, e := range o.Fanins() {
+			neighbors = append(neighbors, e.Object)
+		}
+		for _, out := range neighbors {
+			if !seen[out] {
+				seen[out] = true
+				queue = append(queue, out)
+			}
+		}
+	}
+	return nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the primary input nodes into a file]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkWritePiPoNodes(pFile *os.File, pNtk *Abc_Ntk_t) {
-    var pTerm, pNet *Abc_Obj_t;
-    var i int32;
-
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        pNet = Abc_ObjFanout0(pTerm);
-    fmt.Fprintf(pFile, "i%s_input\t", Abc_ObjName(pNet)); 
-    fmt.Fprintf(pFile, "terminal ");
-    fmt.Fprintf(pFile, " %d %d\n", termWidth, termHeight);
-    }
-    
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-    pNet = Abc_ObjFanin0(pTerm);
-    fmt.Fprintf(pFile, "o%s_output\t", Abc_ObjName(pNet)); 
-    fmt.Fprintf(pFile, "terminal ");
-    fmt.Fprintf(pFile, " %d %d\n", termWidth, termHeight);
-    }
+func Io_NtkOrderingPads(n *abc.Network, terms []*abc.Object) []*abc.Object {
+	ordered := map[*abc.Object]bool{}
+	out := make([]*abc.Object, 0, len(terms))
+	var current *abc.Object
+	for len(out) < len(terms) {
+		if current == nil || ordered[current] {
+			for _, term := range terms {
+				if !ordered[term] {
+					current = term
+					break
+				}
+			}
+		}
+		ordered[current] = true
+		out = append(out, current)
+		current = Io_NtkBfsPads(n, current, ordered)
+	}
+	return out
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Write the latch nodes into a file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkWriteLatchNode(pFile *os.File, pLatch *Abc_Obj_t, NodesOrPl int32) {
-    var pNetLi, pNetLo *Abc_Obj_t;
-    
-    pNetLi = Abc_ObjFanin0( Abc_ObjFanin0(pLatch) );
-    pNetLo = Abc_ObjFanout0( Abc_ObjFanout0(pLatch) );
-    /// write the latch line
-    fmt.Fprintf(pFile, "%s_%s_latch\t", Abc_ObjName(pNetLi), Abc_ObjName(pNetLo));
-    if NodesOrPl == NODES {
-        fmt.Fprintf(pFile, " %d %d\n", 6, 1); }
+func bookFiles(model *bookModel, base string) map[string]string {
+	files := map[string]string{}
+	var nodes, nets, rows, placement strings.Builder
+	fmt.Fprintf(&nodes, "UCLA    nodes    1.0\nNumNodes : %d\nNumTerminals : %d\n", len(model.cells), len(model.terms))
+	for _, c := range model.cells {
+		if c.terminal {
+			fmt.Fprintf(&nodes, "%s\t 1 1 terminal\n", c.name)
+		} else {
+			fmt.Fprintf(&nodes, "%s\t %d 1\n", c.name, c.width)
+		}
+	}
+	pins := 0
+	for _, net := range model.nets {
+		pins += len(net.pins)
+	}
+	fmt.Fprintf(&nets, "UCLA    nets    1.0\nNumNets : %d\nNumPins : %d\n", len(model.nets), pins)
+	for _, net := range model.nets {
+		fmt.Fprintf(&nets, "NetDegree\t:\t\t%d\t\t%s\n", len(net.pins), net.name)
+		for _, pin := range net.pins {
+			if pin.cell.terminal {
+				fmt.Fprintf(&nets, "%s %s\n", pin.cell.name, pin.direction)
+			} else {
+				fmt.Fprintf(&nets, "%s %s : 0.00 0.00\n", pin.cell.name, pin.direction)
+			}
+		}
+	}
+	area := float64(max(model.area, 1)) / 0.9
+	height := max(1, int(math.Sqrt(area)))
+	width := max(1, int(area/float64(height)))
+	fmt.Fprintf(&rows, "UCLA    scl    1.0\n\nNumrows : %d\n\n", height)
+	for row := 0; row < height; row++ {
+		orient := "N"
+		if row%2 != 0 {
+			orient = "FS"
+		}
+		fmt.Fprintf(&rows, "CoreRow Horizontal\n Coordinate   : \t%d\n Height       : \t1\n Sitewidth    : \t1\n Sitespacing  : \t1\n Siteorient   : \t%s\n Sitesymmetry : \tY\n SubrowOrigin : \t0 Numsites :    \t%d\nEnd\n", row, orient, width)
+	}
+	placement.WriteString("UCLA    pl    1.0\n\n")
+	perimeter := 2 * float64(width+height)
+	top := int(float64(len(model.terms)) * float64(width) / perimeter)
+	bottom := top
+	right := (len(model.terms) - top - bottom + 1) / 2
+	left := len(model.terms) - top - bottom - right
+	counts := []int{top, bottom, left, right}
+	var ordered []*bookCell
+	byObject := map[*abc.Object]*bookCell{}
+	networks := []*abc.Network{}
+	grouped := map[*abc.Network][]*abc.Object{}
+	for _, c := range model.terms {
+		n := c.object.Network()
+		if _, ok := grouped[n]; !ok {
+			networks = append(networks, n)
+		}
+		grouped[n] = append(grouped[n], c.object)
+		byObject[c.object] = c
+	}
+	for _, n := range networks {
+		for _, o := range Io_NtkOrderingPads(n, grouped[n]) {
+			ordered = append(ordered, byObject[o])
+		}
+	}
+	index := 0
+	for side, count := range counts {
+		extent := float64(width)
+		if side >= 2 {
+			extent = float64(height)
+		}
+		delta := 0.0
+		if count > 0 {
+			delta = extent / float64(count)
+		}
+		coordinate := 0.0
+		for step := 0; step < count; step++ {
+			if (side >= 2 || step > 0) && int(coordinate) < int(coordinate-delta)+1 {
+				coordinate++
+			}
+			x, y, orientation := int(coordinate), height+2, "FS"
+			switch side {
+			case 1:
+				y, orientation = -3, "N"
+			case 2:
+				x, y, orientation = -3, int(coordinate), "E"
+			case 3:
+				x, y, orientation = width+2, int(coordinate), "FW"
+			}
+			fmt.Fprintf(&placement, "%s\t\t%d\t\t%d\t: %s /FIXED\n", ordered[index].name, x, y, orientation)
+			coordinate += delta
+			index++
+		}
+	}
+	for _, c := range model.cells {
+		if !c.terminal {
+			fmt.Fprintf(&placement, "%s\t\t0\t\t0\t: N\n", c.name)
+		}
+	}
+	files[".nodes"], files[".nets"], files[".scl"], files[".pl"], files[".wts"] = nodes.String(), nets.String(), rows.String(), placement.String(), ""
+	files[".aux"] = fmt.Sprintf("RowBasedPlacement : %s.nodes %s.nets %s.scl %s.pl %s.wts", base, base, base, base, base)
+	return files
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Write the internal node into a file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkWriteIntNode(pFile *os.File, pNode *Abc_Obj_t, NodesOrPl int32) uint32 {
-    var sizex uint32;
-    var sizey uint32 = coreHeight;
-    var isize uint32;
-    //double nx, ny, xstep, ystep;    
-    var pNeti, pNeto *Abc_Obj_t;
-    var i int32;
-        
-    // write the network after mapping 
-    if Abc_NtkHasMapping(pNode.pNtk) {
-        sizex=Io_NtkWriteNodeGate( pFile, pNode );
-    } else {
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pNeti) = Abc_ObjFanin(pNode, i)), 1); i++  {
-        fmt.Fprintf(pFile, "%s_", Abc_ObjName(pNeti));
-    }
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pNode)) && (((pNeto) = Abc_ObjFanout(pNode, i)), 1); i++  {
-        fmt.Fprintf(pFile, "%s_", Abc_ObjName(pNeto));
-    }    
-    fmt.Fprintf(pFile, "name\t");
-    
-    if NodesOrPl == NODES {
-        isize=Abc_ObjFaninNum(pNode);
-        if Abc_NodeIsConst0(pNode) || Abc_NodeIsConst1(pNode) { 
-            sizex=0;
-        } else if Abc_NodeIsInv(pNode) {
-            sizex=1;
-        } else if Abc_NodeIsBuf(pNode) {
-            sizex=2;
-        } else {
-            assert(Abc_NtkHasSop(pNode.pNtk), "Abc_NtkHasSop(pNode.pNtk)");
-            if (Abc_NodeIsNand2(pNode) != 0) || (Abc_NodeIsNor2(pNode) != 0) {
-            sizex=2;
-        } else if (Abc_NodeIsAnd2(pNode) != 0) || (Abc_NodeIsOr2(pNode) != 0) {
-            sizex=3;
-        } else if (Abc_NodeIsXor2(pNode) != 0) || (Abc_NodeIsXnor2(pNode) != 0) {
-            sizex=5;
-        } else {
-            assert(isize > 2, "isize > 2");
-            sizex=isize+Abc_SopGetCubeNum((char *)pNode.pData);
-        }
-        }
-    }
-    }
-    if NodesOrPl == NODES {
-    fmt.Fprintf(pFile, " %d %d\n", sizex, sizey);
-
-    // Equally place pins. Size pins needs /  isize+#output+1
-    isize= isize + Abc_ObjFanoutNum(pNode) + 1;
-    }
-    return sizex*sizey;
-    /*
-    xstep = sizex / isize;
-    ystep = sizey / isize;
-    nx= -0.5 * sizex;
-    ny= -0.5 * sizey;
-
-    Abc_ObjForEachFanin( pNode, pFanin, i )
-    {
-            nx+= xstep;
-            ny+= ystep;
-            if (fabs(nx) < 0.001)
-                    nx= 0;
-            if (fabs(ny) < 0.001)
-                    ny= 0;
-    }
-    Abc_ObjForEachFanout( pNode, pFanout, i )
-    {
-            nx+= xstep;
-            ny+= ystep;
-            if (fabs(nx) < 0.001)
-                    nx= 0;
-            if (fabs(ny) < 0.001)
-                    ny= 0;
-    }
-    */
+func Io_WriteBook(n *abc.Network, path string) error {
+	model, err := makeBook(n)
+	if err != nil {
+		return err
+	}
+	files := bookFiles(model, filepath.Base(path))
+	for _, suffix := range []string{".nodes", ".nets", ".scl", ".pl", ".wts", ".aux"} {
+		if err := os.WriteFile(path+suffix, []byte(files[suffix]), 0644); err != nil {
+			return err
+		}
+	}
+	return nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the internal node after tech mapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkWriteNodeGate(pFile *os.File, pNode *Abc_Obj_t) uint32 {
-    var pGate *Mio_Gate_t  = (Mio_Gate_t *)pNode.pData;
-    var pGatePin *Mio_Pin_t;
-    var i int32;
-    // write the node gate
-    for  pGatePin = Mio_GateReadPins(pGate), i = 0; (pGatePin != nil); pGatePin = Mio_PinReadNext(pGatePin), i++  {
-        fmt.Fprintf(pFile, "%s_", Abc_ObjName( Abc_ObjFanin(pNode,i) ));
-    }
-    assert(i == Abc_ObjFaninNum(pNode), "i == Abc_ObjFaninNum(pNode)");
-    fmt.Fprintf(pFile, "%s_%s\t", Abc_ObjName( Abc_ObjFanout0(pNode) ), Mio_GateReadName(pGate));
-    return Mio_GateReadArea(pGate);
+func Io_WriteBookLogic(n *abc.Network, path string) error {
+	if n == nil {
+		return fmt.Errorf("nil network")
+	}
+	if abc.Abc_NtkIsStrash(n) == 0 && abc.Abc_NtkHasSop(n) == 0 && abc.Abc_NtkHasMapping(n) == 0 {
+		n = abc.Abc_NtkDup(n)
+		if n == nil || abc.Abc_NtkToSop(n, -1, 1000000) == 0 {
+			return fmt.Errorf("Bookshelf SOP conversion failed")
+		}
+	}
+	return Io_WriteBook(n, path)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Write the nets into a file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkWriteNets(pFile *os.File, pNtk *Abc_Ntk_t) {
-    var pProgress *ProgressBar;
-    var pNet *Abc_Obj_t;
-    var numPin uint32;
-    var i int32;
-
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    // write the head
-    // inlining of macro Abc_NtkForEachNet
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNet) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pNet) == nil || !Abc_ObjIsNet(pNet) {} else {
-    numPin+=Abc_ObjFaninNum(pNet)+Abc_ObjFanoutNum(pNet); }
-    }
-    fmt.Printf("NumNets  : %d\t", Abc_NtkNetNum(pNtk));
-    fmt.Printf("NumPins      : %d\n\n", numPin);
-    fmt.Fprintf(pFile, "UCLA    nets    1.0\n");
-    fmt.Fprintf(pFile, "NumNets : %d\n", Abc_NtkNetNum(pNtk));
-    fmt.Fprintf(pFile, "NumPins : %d\n", numPin);
-
-    // write nets
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkNetNum(pNtk) );
-    // inlining of macro Abc_NtkForEachNet
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNet) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pNet) == nil || !Abc_ObjIsNet(pNet) {} else {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        Io_NtkWriteIntNet( pFile, pNet );
-    }
-    }
-    Extra_ProgressBarStop( pProgress );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Write the nets into a file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkWriteIntNet(pFile *os.File, pNet *Abc_Obj_t) {
-    var pFanin, pFanout *Abc_Obj_t;
-    var pNeti, pNeto *Abc_Obj_t;
-    var pNetLi, pNetLo, pLatch *Abc_Obj_t;
-    var i, j int32;
-    var NetDegree int32 =Abc_ObjFaninNum(pNet)+Abc_ObjFanoutNum(pNet);
-
-    fmt.Fprintf(pFile, "NetDegree\t:\t\t%d\t\t%s\n", NetDegree, Abc_ObjName(Abc_ObjFanin0(pNet)));
-
-    pFanin=Abc_ObjFanin0(pNet);
-    if Abc_ObjIsPi(pFanin) {
-    fmt.Fprintf(pFile, "i%s_input I\n", Abc_ObjName(pNet));
-    } else {
-    if !Abc_NtkIsComb(pNet.pNtk) && Abc_ObjFaninNum(pFanin) && Abc_ObjIsLatch(Abc_ObjFanin0(pFanin)) {
-        pLatch=Abc_ObjFanin0(pFanin);
-        pNetLi=Abc_ObjFanin0(Abc_ObjFanin0(pLatch));
-        pNetLo=Abc_ObjFanout0(Abc_ObjFanout0(pLatch));
-        fmt.Fprintf(pFile, "%s_%s_latch I : ", Abc_ObjName(pNetLi), Abc_ObjName(pNetLo));
-    
-    } else {
-        // inlining of macro Abc_ObjForEachFanin
-        for  j = 0; (j < Abc_ObjFaninNum(pFanin)) && (((pNeti) = Abc_ObjFanin(pFanin, j)), 1); j++  {
-        fmt.Fprintf(pFile, "%s_", Abc_ObjName(pNeti));
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  j = 0; (j < Abc_ObjFanoutNum(pFanin)) && (((pNeto) = Abc_ObjFanout(pFanin, j)), 1); j++  {
-        fmt.Fprintf(pFile, "%s_", Abc_ObjName(pNeto));
-        }    
-        if Abc_NtkHasMapping(pNet.pNtk) {
-        fmt.Fprintf(pFile, "%s : ", Mio_GateReadName((Mio_Gate_t *)pFanin.pData)); 
-        } else {
-        fmt.Fprintf(pFile, "name I : "); }                                
-    }
-    // offsets are simlply 0.00 0.00 at the moment
-    fmt.Fprintf(pFile, "%.2f %.2f\n", .0, .0);
-    }
-
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pNet)) && (((pFanout) = Abc_ObjFanout(pNet, i)), 1); i++  {
-    if Abc_ObjIsPo(pFanout) {
-        fmt.Fprintf(pFile, "o%s_output O\n", Abc_ObjName(pNet));
-    } else {
-        if !Abc_NtkIsComb(pNet.pNtk) && Abc_ObjFanoutNum(pFanout) && Abc_ObjIsLatch( Abc_ObjFanout0(pFanout) ) {
-        pLatch=Abc_ObjFanout0(pFanout);
-        pNetLi=Abc_ObjFanin0(Abc_ObjFanin0(pLatch));
-        pNetLo=Abc_ObjFanout0(Abc_ObjFanout0(pLatch));
-        fmt.Fprintf(pFile, "%s_%s_latch O : ", Abc_ObjName(pNetLi), Abc_ObjName(pNetLo));
-        
-        } else {
-        // inlining of macro Abc_ObjForEachFanin
-        for  j = 0; (j < Abc_ObjFaninNum(pFanout)) && (((pNeti) = Abc_ObjFanin(pFanout, j)), 1); j++  {
-        fmt.Fprintf(pFile, "%s_", Abc_ObjName(pNeti));
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  j = 0; (j < Abc_ObjFanoutNum(pFanout)) && (((pNeto) = Abc_ObjFanout(pFanout, j)), 1); j++  {
-        fmt.Fprintf(pFile, "%s_", Abc_ObjName(pNeto));
-        }    
-        if Abc_NtkHasMapping(pNet.pNtk) {
-            fmt.Fprintf(pFile, "%s : ", Mio_GateReadName((Mio_Gate_t *)pFanout.pData)); 
-        } else {
-            fmt.Fprintf(pFile, "name O : "); }
-        }
-    // offsets are simlply 0.00 0.00 at the moment
-    fmt.Fprintf(pFile, "%.2f %.2f\n", .0, .0);
-    }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Write the network into a BOOK file with the given name.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkBuildLayout(pFileScl *os.File, pFilePl *os.File, pNtk *Abc_Ntk_t, aspectRatio float64, whiteSpace float64, coreCellArea uint32) {
-    var numCoreCells uint32 =Abc_NtkNodeNum(pNtk)+Abc_NtkLatchNum(pNtk);
-    var targetLayoutArea float64  = coreCellArea/(1.0-(whiteSpace/100.0));
-    var numCoreRows uint32;
-    if aspectRatio>0.0 {
-        numCoreRows = (Abc_Rint(math.Sqrt(float64(targetLayoutArea/aspectRatio))/coreHeight));
-    } else {
-        numCoreRows = 0;
-    }
-    var numTerms uint32 =Abc_NtkPiNum(pNtk)+Abc_NtkPoNum(pNtk);
-    var totalWidth uint32 =coreCellArea/coreHeight;
-    var layoutHeight float64  = numCoreRows * coreHeight;
-    var layoutWidth float64  = Abc_Rint(targetLayoutArea/layoutHeight);
-    var actualLayoutArea float64  = layoutWidth * layoutHeight;
-
-    fmt.Printf("Core cell height(==site height) is %d\n", coreHeight);
-    fmt.Printf("Total core cell width is %d giving an ave width of %f\n", totalWidth, float64((totalWidth/numCoreCells)));
-    fmt.Printf("Target Dimensions:\n");
-    fmt.Printf("  Area  :   %f\n", targetLayoutArea);
-    fmt.Printf("  WS%%   :   %f\n", whiteSpace);
-    fmt.Printf("  AR    :   %f\n", aspectRatio);
-    fmt.Printf("Actual Dimensions:\n");
-    fmt.Printf("  Width :   %f\n", layoutWidth);
-    fmt.Printf("  Height:   %f (%d rows)\n", layoutHeight, numCoreRows);
-    fmt.Printf("  Area  :   %f\n", actualLayoutArea);
-    fmt.Printf("  WS%%   :   %f\n", 100*(actualLayoutArea-coreCellArea)/actualLayoutArea);
-    fmt.Printf("  AR    :   %f\n\n", layoutWidth/layoutHeight);    
-
-    Io_NtkWriteScl( pFileScl, numCoreRows, layoutWidth ); 
-    Io_NtkWritePl( pFilePl, pNtk, numTerms, layoutHeight, layoutWidth );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Write the network into a BOOK file with the given name.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkWriteScl(pFile *os.File, numCoreRows uint32, layoutWidth float64) {
-    var origin_y int32;
-    var rowOrients [2]string = [2]string{"N", "FS"};
-    var symmetry byte ='Y';
-    var sitewidth float64 =1.0;
-    var spacing float64 =1.0;
-        
-    var rowId uint32;
-    // write the forehead
-    fmt.Fprintf(pFile, "UCLA    scl    1.0\n\n");
-    fmt.Fprintf(pFile, "Numrows : %d\n\n", numCoreRows);
-
-    for  rowId=0 ; rowId<numCoreRows ; rowId++, origin_y += coreHeight  {
-    fmt.Fprintf(pFile, "CoreRow Horizontal\n");
-    fmt.Fprintf(pFile, " Coordinate   : \t%d\n", origin_y);
-    fmt.Fprintf(pFile, " Height       : \t%d\n", coreHeight);
-    fmt.Fprintf(pFile, " Sitewidth    : \t%d\n", uint32(sitewidth));
-    fmt.Fprintf(pFile, " Sitespacing  : \t%d\n", uint32(spacing));
-    fmt.Fprintf(pFile, " Siteorient   : \t%s\n", rowOrients[rowId%2]);
-    //if( coreRow[i].site.symmetry.rot90 || coreRow[i].site.symmetry.y || coreRow[i].site.symmetry.x )
-    fmt.Fprintf(pFile, " Sitesymmetry : \t%c\n", symmetry);
-    //else fprintf( pFile, "Sitesymmetry            : \t\t\t1\n" );
-    fmt.Fprintf(pFile, " SubrowOrigin : \t%d Numsites :    \t%d\n", 0, uint32(layoutWidth));
-    fmt.Fprintf(pFile, "End\n");
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Write the network into a BOOK file with the given name.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkWritePl(pFile *os.File, pNtk *Abc_Ntk_t, numTerms uint32, layoutWidth float64, layoutHeight float64) {
-    var pTerm, pLatch, pNode *Abc_Obj_t;
-    var vTerms *Vec_Ptr_t  = Vec_PtrAlloc ( numTerms ); 
-    var vOrderedTerms *Vec_Ptr_t  = Vec_PtrAlloc ( numTerms ); 
-    var layoutPerim float64  = 2*layoutWidth + 2*layoutHeight;
-    var nextLoc_x, nextLoc_y float64;
-    var delta float64;
-    var termsOnTop, termsOnBottom, termsOnLeft, termsOnRight uint32;
-    var t uint32;
-    var i int32;
-
-    termsOnTop = termsOnBottom = uint32((Abc_Rint(numTerms*(layoutWidth/layoutPerim))));
-    termsOnLeft = numTerms - (termsOnTop+termsOnBottom);
-    termsOnRight = uint32((math.Ceil(float64(termsOnLeft/2.0))));
-    termsOnLeft -= termsOnRight;
-
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-    Vec_PtrPush( vTerms, pTerm );
-    }    
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-    Vec_PtrPush( vTerms, pTerm );
-    }
-    // Ordering Pads
-    vOrderedTerms=Io_NtkOrderingPads( pNtk, vTerms );
-    assert(termsOnTop+termsOnBottom+termsOnLeft+termsOnRight == uint32(Vec_PtrSize(vOrderedTerms)), "termsOnTop+termsOnBottom+termsOnLeft+termsOnRight == uint32(Vec_PtrSize(vOrderedTerms))");
-
-    fmt.Printf("Done constructing layout region\n");
-    fmt.Printf("Terminals: %d\n", numTerms);
-    fmt.Printf("  Top:     %d\n", termsOnTop);
-    fmt.Printf("  Bottom:  %d\n", termsOnBottom);
-    fmt.Printf("  Left:    %d\n", termsOnLeft);
-    fmt.Printf("  Right:   %d\n", termsOnRight);
-
-    fmt.Fprintf(pFile, "UCLA    pl    1.0\n\n");
-
-    nextLoc_x = math.Floor(float64(.0));
-    nextLoc_y = math.Ceil(float64(layoutHeight + 2*coreHeight));
-    delta   = layoutWidth / termsOnTop;
-    for t = 0; t < termsOnTop; t++ {
-    pTerm = (Abc_Obj_t *)Vec_PtrEntry( vOrderedTerms, t );
-    if Abc_ObjIsPi(pTerm) {
-        fmt.Fprintf(pFile, "i%s_input\t\t", Abc_ObjName(Abc_ObjFanout0(pTerm))); 
-    } else {
-        fmt.Fprintf(pFile, "o%s_output\t\t", Abc_ObjName(Abc_ObjFanin0(pTerm))); } 
-    if (t != 0) && Abc_Rint(nextLoc_x) < Abc_Rint(nextLoc_x-delta)+termWidth {
-        nextLoc_x++; }
-    fmt.Fprintf(pFile, "%d\t\t%d\t: %s /FIXED\n", int32(Abc_Rint(nextLoc_x)), int32(Abc_Rint(nextLoc_y)), "FS");    
-    nextLoc_x += delta;
-    }
-
-    nextLoc_x = math.Floor(float64(.0));
-    nextLoc_y = math.Floor(float64(.0 - 2*coreHeight - termHeight));
-    delta   = layoutWidth / termsOnBottom;
-    for ;t < termsOnTop+termsOnBottom; t++ {
-    pTerm = (Abc_Obj_t *)Vec_PtrEntry( vOrderedTerms, t );
-    if Abc_ObjIsPi(pTerm) {
-        fmt.Fprintf(pFile, "i%s_input\t\t", Abc_ObjName(Abc_ObjFanout0(pTerm))); 
-    } else {
-        fmt.Fprintf(pFile, "o%s_output\t\t", Abc_ObjName(Abc_ObjFanin0(pTerm))); } 
-    if t!=termsOnTop && Abc_Rint(nextLoc_x) < Abc_Rint(nextLoc_x-delta)+termWidth {
-        nextLoc_x++; }
-    fmt.Fprintf(pFile, "%d\t\t%d\t: %s /FIXED\n", int32(Abc_Rint(nextLoc_x)), int32(Abc_Rint(nextLoc_y)), "N");    
-    nextLoc_x     += delta;
-    }
-
-    nextLoc_x = math.Floor(float64(.0-2*coreHeight-termWidth));
-    nextLoc_y = math.Floor(float64(.0));
-    delta   = layoutHeight / termsOnLeft;
-    for ;t < termsOnTop+termsOnBottom+termsOnLeft; t++ {
-    pTerm = (Abc_Obj_t *)Vec_PtrEntry( vOrderedTerms, t );
-    if Abc_ObjIsPi(pTerm) {
-        fmt.Fprintf(pFile, "i%s_input\t\t", Abc_ObjName(Abc_ObjFanout0(pTerm))); 
-    } else {
-        fmt.Fprintf(pFile, "o%s_output\t\t", Abc_ObjName(Abc_ObjFanin0(pTerm))); } 
-    if Abc_Rint(nextLoc_y) < Abc_Rint(nextLoc_y-delta)+termHeight {
-        nextLoc_y++; }
-    fmt.Fprintf(pFile, "%d\t\t%d\t: %s /FIXED\n", int32(Abc_Rint(nextLoc_x)), int32(Abc_Rint(nextLoc_y)), "E");    
-    nextLoc_y     += delta;
-    }
-
-    nextLoc_x = math.Ceil(float64(layoutWidth+2*coreHeight));
-    nextLoc_y = math.Floor(float64(.0));
-    delta   = layoutHeight / termsOnRight;
-    for ;t < termsOnTop+termsOnBottom+termsOnLeft+termsOnRight; t++ {
-           pTerm = (Abc_Obj_t *)Vec_PtrEntry( vOrderedTerms, t );
-    if Abc_ObjIsPi(pTerm) {
-        fmt.Fprintf(pFile, "i%s_input\t\t", Abc_ObjName(Abc_ObjFanout0(pTerm))); 
-    } else {
-        fmt.Fprintf(pFile, "o%s_output\t\t", Abc_ObjName(Abc_ObjFanin0(pTerm))); } 
-    if Abc_Rint(nextLoc_y) < Abc_Rint(nextLoc_y-delta)+termHeight {
-        nextLoc_y++; }
-    fmt.Fprintf(pFile, "%d\t\t%d\t: %s /FIXED\n", int32(Abc_Rint(nextLoc_x)), int32(Abc_Rint(nextLoc_y)), "FW");    
-    nextLoc_y     += delta;
-    }
-
-    if !Abc_NtkIsComb(pNtk) {
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {
-        Io_NtkWriteLatchNode( pFile, pLatch, PL );
-        fmt.Fprintf(pFile, "\t%d\t\t%d\t: %s\n", 0, 0, "N");    
-    }
-    }
-    }
-    
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-    Io_NtkWriteIntNode( pFile, pNode, PL );
-    fmt.Fprintf(pFile, "\t%d\t\t%d\t: %s\n", 0, 0, "N");    
-    }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the closest I/O to a given I/O.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkOrderingPads(pNtk *Abc_Ntk_t, vTerms *Vec_Ptr_t) *Vec_Ptr_t { 
-    var pProgress *ProgressBar;
-    var numTerms uint32 =Vec_PtrSize(vTerms); 
-    var termIdx, termCount uint32;
-    // inlining of macro ABC_ALLOC
-    var pOrdered *int32  = ((int *) malloc(sizeof(int) * (size_t)(numTerms))); 
-    var newNeighbor int32 =1;
-    var vOrderedTerms *Vec_Ptr_t  = Vec_PtrAlloc ( numTerms );
-    var pNeighbor *Abc_Obj_t = nil;
-    var pNextTerm *Abc_Obj_t;     
-    var i uint32; 
-
-    for  i=0 ; i<numTerms ; i++  {
-    pOrdered[i]=0;
-    } 
-   
-    pNextTerm = (Abc_Obj_t *)Vec_PtrEntry(vTerms, termIdx++);
-    pProgress = Extra_ProgressBarStart( os.Stdout, numTerms );
-    for  termCount < numTerms && termIdx < numTerms  {
-    if pOrdered[Abc_ObjId(pNextTerm)] && !(newNeighbor != 0) {
-        pNextTerm = (Abc_Obj_t *)Vec_PtrEntry( vTerms, termIdx++ );
-        continue;
-    }
-    if !Vec_PtrPushUnique( vOrderedTerms, pNextTerm ) {
-        pOrdered[Abc_ObjId(pNextTerm)]=1;
-        termCount++; 
-    }
-    pNeighbor=Io_NtkBfsPads( pNtk, pNextTerm, numTerms, pOrdered );
-    if newNeighbor=!Vec_PtrPushUnique( vOrderedTerms, pNeighbor ) {
-       pOrdered[Abc_ObjId(pNeighbor)]=1;
-       termCount++;
-       pNextTerm=pNeighbor;
-    
-    } else if termIdx < numTerms {
-        pNextTerm = (Abc_Obj_t *)Vec_PtrEntry( vTerms, termIdx++ ); }
-
-    Extra_ProgressBarUpdate( pProgress, termCount, nil );
-    }
-    Extra_ProgressBarStop( pProgress );
-    assert(termCount==numTerms, "termCount==numTerms");
-    return vOrderedTerms;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the closest I/O to a given I/O.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_NtkBfsPads(pNtk *Abc_Ntk_t, pTerm *Abc_Obj_t, numTerms uint32, pOrdered *int32) *Abc_Obj_t {
-    var vNeighbors *Vec_Ptr_t  = Vec_PtrAlloc ( numTerms ); 
-    var pNet, pNode, pNeighbor *Abc_Obj_t;
-    var foundNeighbor int32;
-    var i int32;
-
-    assert(Abc_ObjIsPi(pTerm) || Abc_ObjIsPo(pTerm), "Abc_ObjIsPi(pTerm) || Abc_ObjIsPo(pTerm)");
-    Abc_NtkIncrementTravId ( pNtk );
-    Abc_NodeSetTravIdCurrent( pTerm );
-    if Abc_ObjIsPi(pTerm) {
-    pNet = Abc_ObjFanout0(pTerm);
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pNet)) && (((pNode) = Abc_ObjFanout(pNet, i)), 1); i++  { 
-        Vec_PtrPush( vNeighbors, pNode );
-    }
-    
-    } else {
-    pNet = Abc_ObjFanin0(pTerm);
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNet)) && (((pNode) = Abc_ObjFanin(pNet, i)), 1); i++  { 
-        Vec_PtrPush( vNeighbors, pNode );
-    }   
-    }
-
-    for  Vec_PtrSize(vNeighbors) >0  {
-    pNeighbor = (Abc_Obj_t *)Vec_PtrEntry( vNeighbors, 0 );
-    assert(Abc_ObjIsNode(pNeighbor) || Abc_ObjIsTerm(pNeighbor), "Abc_ObjIsNode(pNeighbor) || Abc_ObjIsTerm(pNeighbor)");
-    Vec_PtrRemove( vNeighbors, pNeighbor );
-
-    if Abc_NodeIsTravIdCurrent( pNeighbor ) {
-        continue; }
-    Abc_NodeSetTravIdCurrent( pNeighbor );
-
-    if ((Abc_ObjIsPi(pNeighbor) || Abc_ObjIsPo(pNeighbor))) && !pOrdered[Abc_ObjId(pNeighbor)] {
-        foundNeighbor=1;
-        break;
-    }
-    if Abc_ObjFanoutNum( pNeighbor ) {   
-        pNet=Abc_ObjFanout0( pNeighbor );
-        if !Abc_NtkIsComb(pNtk) && Abc_ObjIsLatch(pNet) {
-        pNet=Abc_ObjFanout0( Abc_ObjFanout0(pNet) ); }
-        // inlining of macro Abc_ObjForEachFanout
-        for  i = 0; (i < Abc_ObjFanoutNum(pNet)) && (((pNode) = Abc_ObjFanout(pNet, i)), 1); i++  {
-        if !Abc_NodeIsTravIdCurrent(pNode) { 
-            Vec_PtrPush( vNeighbors, pNode ); }
-        } 
-    }
-    if Abc_ObjFaninNum( pNeighbor ) {
-        if !Abc_NtkIsComb(pNtk) && Abc_ObjIsLatch(Abc_ObjFanin0(pNeighbor)) {
-        pNeighbor=Abc_ObjFanin0( Abc_ObjFanin0(pNeighbor) ); }
-        // inlining of macro Abc_ObjForEachFanin
-        for  i = 0; (i < Abc_ObjFaninNum(pNeighbor)) && (((pNet) = Abc_ObjFanin(pNeighbor, i)), 1); i++  {
-        if !Abc_NodeIsTravIdCurrent(pNode=Abc_ObjFanin0(pNet)) { 
-            Vec_PtrPush( vNeighbors, pNode ); }
-        }
-    }
-    }
-    if foundNeighbor != 0 {
-        return pNeighbor;
-    } else {
-        return pTerm;
-    }
-} 
-
-/**Function*************************************************************
-
-  Synopsis    [Test is the node is nand2.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeIsNand2(pNode *Abc_Obj_t) int32 {
-    var pNtk *Abc_Ntk_t  = pNode.pNtk;
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)"); 
-    if Abc_ObjFaninNum(pNode) != 2 {
-        return 0; }
-    if Abc_NtkHasSop(pNtk) {
-    return ( !int32(strings.Compare(((char *)pNode.pData), "-0 1\n0- 1\n")) || 
-         !int32(strings.Compare(((char *)pNode.pData), "0- 1\n-0 1\n")) || 
-         !int32(strings.Compare(((char *)pNode.pData), "11 0\n")) ); }
-    if Abc_NtkHasMapping(pNtk) {
-        return pNode.pData == (void *)Mio_LibraryReadNand2((Mio_Library_t *)Abc_FrameReadLibGen()); }
-    assert(false, "0");
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Test is the node is nand2.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeIsNor2(pNode *Abc_Obj_t) int32 {
-    var pNtk *Abc_Ntk_t  = pNode.pNtk;
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)"); 
-    if Abc_ObjFaninNum(pNode) != 2 {
-        return 0; }
-    if Abc_NtkHasSop(pNtk) {
-        return ( !int32(strings.Compare(((char *)pNode.pData), "00 1\n")) ); }
-    assert(false, "0");
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Test is the node is and2.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeIsAnd2(pNode *Abc_Obj_t) int32 {
-    var pNtk *Abc_Ntk_t  = pNode.pNtk;
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)"); 
-    if Abc_ObjFaninNum(pNode) != 2 {
-        return 0; }
-    if Abc_NtkHasSop(pNtk) {
-    return Abc_SopIsAndType(((char *)pNode.pData)); }
-    if Abc_NtkHasMapping(pNtk) {
-        return pNode.pData == (void *)Mio_LibraryReadAnd2((Mio_Library_t *)Abc_FrameReadLibGen()); }
-    assert(false, "0");
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Test is the node is or2.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeIsOr2(pNode *Abc_Obj_t) int32 {
-    var pNtk *Abc_Ntk_t  = pNode.pNtk;
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)"); 
-    if Abc_ObjFaninNum(pNode) != 2 {
-        return 0; }
-    if Abc_NtkHasSop(pNtk) {
-    return ( Abc_SopIsOrType(((char *)pNode.pData))   || 
-         !int32(strings.Compare(((char *)pNode.pData), "01 0\n")) ||
-         !int32(strings.Compare(((char *)pNode.pData), "10 0\n")) ||
-         !int32(strings.Compare(((char *)pNode.pData), "00 0\n")) ); }
-         //off-sets, too
-    assert(false, "0");
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Test is the node is xor2.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeIsXor2(pNode *Abc_Obj_t) int32 {
-    var pNtk *Abc_Ntk_t  = pNode.pNtk;
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)"); 
-    if Abc_ObjFaninNum(pNode) != 2 {
-        return 0; }
-    if Abc_NtkHasSop(pNtk) {
-    return ( !int32(strings.Compare(((char *)pNode.pData), "01 1\n10 1\n")) || !int32(strings.Compare(((char *)pNode.pData), "10 1\n01 1\n"))  ); }
-    assert(false, "0");
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Test is the node is xnor2.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeIsXnor2(pNode *Abc_Obj_t) int32 {
-    var pNtk *Abc_Ntk_t  = pNode.pNtk;
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)"); 
-    if Abc_ObjFaninNum(pNode) != 2 {
-        return 0; }
-    if Abc_NtkHasSop(pNtk) {
-    return ( !int32(strings.Compare(((char *)pNode.pData), "11 1\n00 1\n")) || !int32(strings.Compare(((char *)pNode.pData), "00 1\n11 1\n")) ); }
-    assert(false, "0");
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func init() { RegisterFormat(IO_FILE_BOOK, nil, Io_WriteBookLogic) }

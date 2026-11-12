@@ -281,22 +281,22 @@ func Cudd_zddFirstPath(zdd *DdManager, f *DdNode, path **int32) *DdGen {
     }
 
     gen.manager = zdd;
-    gen.type = CUDD_GEN_ZDD_PATHS;
+    gen.genType = CUDD_GEN_ZDD_PATHS;
     gen.status = CUDD_GEN_EMPTY;
-    gen.gen.cubes.cube = nil;
-    gen.gen.cubes.value = DD_ZERO_VAL;
+    gen.data.cubes.cube = nil;
+    gen.data.cubes.value = DD_ZERO_VAL;
     gen.stack.sp = 0;
     gen.stack.stack = nil;
     gen.node = nil;
 
     nvars = zdd.sizeZ;
-    gen.gen.cubes.cube = ABC_ALLOC(int,nvars);
-    if gen.gen.cubes.cube == nil {
+    gen.data.cubes.cube = ABC_ALLOC(int,nvars);
+    if gen.data.cubes.cube == nil {
         zdd.errorCode = CUDD_MEMORY_OUT;
         ABC_FREE(gen);
         return(nil);
     }
-    for i = 0; i < nvars; i++ { gen.gen.cubes.cube[i] = 2; }
+    for i = 0; i < nvars; i++ { gen.data.cubes.cube[i] = 2; }
 
     /* The maximum stack depth is one plus the number of variables.
     ** because a path may have nodes at all levels, including the
@@ -305,7 +305,7 @@ func Cudd_zddFirstPath(zdd *DdManager, f *DdNode, path **int32) *DdGen {
     gen.stack.stack = ABC_ALLOC(DdNodePtr, nvars+1);
     if gen.stack.stack == nil {
         zdd.errorCode = CUDD_MEMORY_OUT;
-        ABC_FREE(gen.gen.cubes.cube);
+        ABC_FREE(gen.data.cubes.cube);
         ABC_FREE(gen);
         return(nil);
     }
@@ -321,7 +321,7 @@ func Cudd_zddFirstPath(zdd *DdManager, f *DdNode, path **int32) *DdGen {
         if !((((DdNode *)((ptruint)(top) & ~01))).index == CUDD_CONST_INDEX) {
             /* Take the else branch first. */
             // inlining of macro Cudd_Regular
-            gen.gen.cubes.cube[((DdNode *)((ptruint)(top) & ~01)).index] = 0;
+            gen.data.cubes.cube[((DdNode *)((ptruint)(top) & ~01)).index] = 0;
             // inlining of macro cuddE
             // inlining of macro Cudd_Regular
             next = ((((DdNode *)((ptruint)(top) & ~01))).type.kids.E);
@@ -343,12 +343,12 @@ func Cudd_zddFirstPath(zdd *DdManager, f *DdNode, path **int32) *DdGen {
                 // inlining of macro cuddT
                 next = ((prev).type.kids.T);
                 if next != top { /* follow the then branch next */
-                    gen.gen.cubes.cube[prev.index] = 1;
+                    gen.data.cubes.cube[prev.index] = 1;
                     gen.stack.stack[gen.stack.sp-1] = next;
                     break;
                 }
                 /* Pop the stack and try again. */
-                gen.gen.cubes.cube[prev.index] = 2;
+                gen.data.cubes.cube[prev.index] = 2;
                 gen.stack.sp--;
                 top = gen.stack.stack[gen.stack.sp-1];
             }
@@ -356,13 +356,13 @@ func Cudd_zddFirstPath(zdd *DdManager, f *DdNode, path **int32) *DdGen {
             gen.status = CUDD_GEN_NONEMPTY;
             // inlining of macro cuddV
             // inlining of macro Cudd_Regular
-            gen.gen.cubes.value = ((((DdNode *)((ptruint)(top) & ~01))).type.value);
+            gen.data.cubes.value = ((((DdNode *)((ptruint)(top) & ~01))).type.value);
             goto done;
         }
     }
 
 done:
-    *path = gen.gen.cubes.cube;
+    *path = gen.data.cubes.cube;
     return(gen);
 
 } /* end of Cudd_zddFirstPath */
@@ -401,12 +401,12 @@ func Cudd_zddNextPath(gen *DdGen, path **int32) int32 {
         // inlining of macro cuddT
         next = ((prev).type.kids.T);
         if next != top { /* follow the then branch next */
-            gen.gen.cubes.cube[prev.index] = 1;
+            gen.data.cubes.cube[prev.index] = 1;
             gen.stack.stack[gen.stack.sp-1] = next;
             break;
         }
         /* Pop the stack and try again. */
-        gen.gen.cubes.cube[prev.index] = 2;
+        gen.data.cubes.cube[prev.index] = 2;
         gen.stack.sp--;
     }
 
@@ -417,7 +417,7 @@ func Cudd_zddNextPath(gen *DdGen, path **int32) int32 {
         if !((((DdNode *)((ptruint)(top) & ~01))).index == CUDD_CONST_INDEX) {
             /* Take the else branch first. */
             // inlining of macro Cudd_Regular
-            gen.gen.cubes.cube[((DdNode *)((ptruint)(top) & ~01)).index] = 0;
+            gen.data.cubes.cube[((DdNode *)((ptruint)(top) & ~01)).index] = 0;
             // inlining of macro cuddE
             // inlining of macro Cudd_Regular
             next = ((((DdNode *)((ptruint)(top) & ~01))).type.kids.E);
@@ -439,12 +439,12 @@ func Cudd_zddNextPath(gen *DdGen, path **int32) int32 {
                 // inlining of macro cuddT
                 next = ((prev).type.kids.T);
                 if next != top { /* follow the then branch next */
-                    gen.gen.cubes.cube[prev.index] = 1;
+                    gen.data.cubes.cube[prev.index] = 1;
                     gen.stack.stack[gen.stack.sp-1] = next;
                     break;
                 }
                 /* Pop the stack and try again. */
-                gen.gen.cubes.cube[prev.index] = 2;
+                gen.data.cubes.cube[prev.index] = 2;
                 gen.stack.sp--;
                 top = gen.stack.stack[gen.stack.sp-1];
             }
@@ -452,14 +452,14 @@ func Cudd_zddNextPath(gen *DdGen, path **int32) int32 {
             gen.status = CUDD_GEN_NONEMPTY;
             // inlining of macro cuddV
             // inlining of macro Cudd_Regular
-            gen.gen.cubes.value = ((((DdNode *)((ptruint)(top) & ~01))).type.value);
+            gen.data.cubes.value = ((((DdNode *)((ptruint)(top) & ~01))).type.value);
             goto done;
         }
     }
 
 done:
     if gen.status == CUDD_GEN_EMPTY { return(0); }
-    *path = gen.gen.cubes.cube;
+    *path = gen.data.cubes.cube;
     return(1);
 
 } /* end of Cudd_zddNextPath */

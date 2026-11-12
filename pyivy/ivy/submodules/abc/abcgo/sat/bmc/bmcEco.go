@@ -141,15 +141,6 @@ func Bmc_EcoMiter(pGold *Gia_Man_t, pOld *Gia_Man_t, vFans *Vec_Int_t) *Gia_Man_
   SeeAlso     []
 
 ***********************************************************************/
-func Cnf_DeriveGiaRemapped(p *Gia_Man_t) *Cnf_Dat_t {
-    var pCnf *Cnf_Dat_t;
-    var pAig *Aig_Man_t  = Gia_ManToAigSimple( p );
-    pAig.nRegs = 0;
-    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );
-    Aig_ManStop( pAig );
-    return pCnf;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Solve the enumeration problem.]

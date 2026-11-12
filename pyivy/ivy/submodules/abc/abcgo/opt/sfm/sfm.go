@@ -1,118 +1,69 @@
+// Package sfm implements SAT-based logic resubstitution and cell mapping.
 package sfm
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/map/mio"
+	"github.com/glycerine/abcgo/sat/satoko"
+)
 
-  FileName    [sfm.h]
+const SFM_FANIN_MAX = 6
+const SFM_SUPP_MAX = 8
+const SFM_WIN_MAX = 1000
+const SFM_DEC_MAX = 4
+const SFM_SIM_WORDS = 8
+const SFM_SAT_UNDEC uint64 = 0x1234567812345678
+const SFM_SAT_SAT uint64 = 0x8765432187654321
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [SAT-based optimization using internal don't-cares.]
-
-  Synopsis    [External declarations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: sfm.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include "misc/vec/vecWec.h"
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-//ABC_NAMESPACE_HEADER_START
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
-
-type Sfm_Ntk_t = Sfm_Ntk_t_;
-   
 type Sfm_Par_t struct {
-    nTfoLevMax             int32;    // the maximum fanout levels
-    nTfiLevMax             int32;    // the maximum fanin levels
-    nFanoutMax             int32;    // the maximum number of fanouts
-    nDepthMax             int32;     // the maximum depth to try
-    nVarMax             int32;       // the maximum variable count
-    nMffcMin             int32;      // the minimum MFFC size
-    nMffcMax             int32;      // the maximum MFFC size
-    nDecMax             int32;       // the maximum number of decompositions
-    nWinSizeMax             int32;   // the maximum window size
-    nGrowthLevel             int32;  // the maximum allowed growth in level
-    nBTLimit             int32;      // the maximum number of conflicts in one SAT run
-    nNodesMax             int32;     // the maximum number of nodes to try
-    iNodeOne             int32;      // one particular node to try
-    nFirstFixed             int32;   // the number of first nodes to be treated as fixed
-    nTimeWin             int32;      // the size of timing window in percents
-    DeltaCrit             int32;     // delay delta in picoseconds
-    DelAreaRatio             int32;  // delay/area tradeoff (how many ps we trade for a unit of area)
-    fRrOnly             int32;       // perform redundance removal
-    fArea             int32;         // performs optimization for area
-    fAreaRev             int32;      // performs optimization for area in reverse order
-    fMoreEffort             int32;   // performs high-affort minimization
-    fUseAndOr             int32;     // enable internal detection of AND/OR gates
-    fZeroCost             int32;     // enable zero-cost replacement
-    fUseSim             int32;       // enable simulation
-    fUseDcs             int32;       // enable deriving don't-cares
-    fPrintDecs             int32;    // enable printing decompositions
-    fAllBoxes             int32;     // enable preserving all boxes
-    fLibVerbose             int32;   // enable library stats
-    fDelayVerbose             int32; // enable delay stats
-    fVerbose             int32;      // enable basic stats
-    fVeryVerbose             int32;  // enable detailed stats
+	TfoLevMax, TfiLevMax, FanoutMax, DepthMax, VarMax, MffcMin, MffcMax, DecMax, WinSizeMax, GrowthLevel                                       int
+	BTLimit                                                                                                                                    int64
+	NodesMax, NodeOne, FirstFixed, TimeWin, DeltaCrit, DelAreaRatio                                                                            int
+	RrOnly, Area, AreaRev, MoreEffort, UseAndOr, ZeroCost, UseSim, UseDcs, PrintDecs, AllBoxes, LibVerbose, DelayVerbose, Verbose, VeryVerbose bool
 }
 
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
+func Sfm_ParSetDefault(p *Sfm_Par_t) {
+	*p = Sfm_Par_t{TfoLevMax: 2, FanoutMax: 30, DepthMax: 20, WinSizeMax: 300, BTLimit: 5000}
+}
+func DefaultParams() Sfm_Par_t { var p Sfm_Par_t; Sfm_ParSetDefault(&p); return p }
 
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
+type Stats struct{ NodesTried, Removes, Resubs, Improves, TryRemoves, TryResubs, TryImproves, SATCalls, Timeouts, MaxDivs, TotalDivs, NodesBefore, NodesAfter, EdgesBefore, EdgesAfter int }
 
-/*=== sfmCnf.c ==========================================================*/
-/*=== sfmCore.c ==========================================================*/
-// extern void         Sfm_ParSetDefault( Sfm_Par_t * pPars );
+// Sfm_Ntk_t retains source object numbering: PIs first, POs last. Truth rows
+// contain expanded 64-bit truth words; fanin zero is the least significant bit.
+// Fixed objects cannot be rewritten; Empty objects add no logic level.
+// Gate is a cached native library cell. Area and pin timing use source integer
+// units; Cell retains the original genlib handle for application adapters.
+type Gate struct {
+	Cell   *mio.Mio_Gate_t
+	Name   string
+	Inputs int
+	Truth  []uint64
+	Area   int
+	Pins   []Pin
+}
+type Pin struct {
+	Phase      int
+	Rise, Fall int
+	Load       float64
+}
 
-// extern int          Sfm_NtkPerform( Sfm_Ntk_t * p, Sfm_Par_t * pPars );
-
-/*=== sfmNtk.c ==========================================================*/
-// extern Sfm_Ntk_t *  Sfm_NtkConstruct( Vec_Wec_t * vFanins, int nPis, int nPos, Vec_Str_t * vFixed, Vec_Str_t * vEmpty, Vec_Wrd_t * vTruths, Vec_Int_t * vStarts, Vec_Wrd_t * vTruths2 );
-
-// extern void         Sfm_NtkFree( Sfm_Ntk_t * p );
-
-// extern Vec_Int_t *  Sfm_NodeReadFanins( Sfm_Ntk_t * p, int i );
-
-// extern word *       Sfm_NodeReadTruth( Sfm_Ntk_t * p, int i );
-
-// extern int          Sfm_NodeReadFixed( Sfm_Ntk_t * p, int i );
-
-// extern int          Sfm_NodeReadUsed( Sfm_Ntk_t * p, int i );
-
-/*=== sfmWin.c ==========================================================*/
-// extern Vec_Int_t *  Sfm_NtkDfs( Sfm_Ntk_t * p, Vec_Wec_t * vGroups, Vec_Int_t * vGroupMap, Vec_Int_t * vBoxesLeft, int fAllBoxes );
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
+type Sfm_Ntk_t struct {
+	Pis, Pos              int
+	Fanins, Fanouts       [][]int
+	Truths                [][]uint64
+	Fixed, Empty, Deleted []bool
+	Levels, Reverse       []int
+	LevelMax              int
+	Params                Sfm_Par_t
+	Stats                 Stats
+	// Mapping associates each internal object with a library gate (nil for LUTs).
+	// Mapped algorithms share the same object IDs and fanin ordering.
+	Mapping                        []*Gate
+	pivot                          int
+	nodes, divs, roots, tfo, order []int
+	solver                         *satoko.Solver
+	idVar                          map[int]int
+	divIDs                         []int
+	witnesses                      [][]bool
+	cnfs                           [][][]int
+}

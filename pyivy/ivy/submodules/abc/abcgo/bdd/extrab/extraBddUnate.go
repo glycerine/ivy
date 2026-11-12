@@ -29,20 +29,6 @@ import (
 )
 
 func unateBDD(dd *DdManager, f *DdNode) bool { return dd != nil && cudd.Cudd_bddLeq(dd, f, f) }
-func supportVariables(dd *DdManager, cube *DdNode) ([]int, bool) {
-	if !unateBDD(dd, cube) {
-		return nil, false
-	}
-	vars := []int{}
-	for cube != dd.One {
-		if cudd.Cudd_IsConstant(cube) || cudd.Cudd_IsComplement(cube) || cube.E != dd.LogicZero {
-			return nil, false
-		}
-		vars = append(vars, int(cube.Index))
-		cube = cube.T
-	}
-	return vars, true
-}
 func Extra_UnateInfoAllocate(nVars int) *Extra_UnateInfo_t {
 	if nVars < 0 {
 		return nil
@@ -114,7 +100,7 @@ func unateSingleton(dd *DdManager, index int) *DdNode { return cudd.Cudd_zddChan
 // Extra_zddGetSingletonsBoth retains the source's empty-set base case: the
 // resulting family contains the empty set as well as both literal singletons.
 func Extra_zddGetSingletonsBoth(dd *DdManager, vars *DdNode) *DdNode {
-	indices, ok := supportVariables(dd, vars)
+	indices, ok := extraPositiveCube(dd, vars)
 	if !ok {
 		return nil
 	}
@@ -129,7 +115,7 @@ func Extra_zddGetSingletonsBoth(dd *DdManager, vars *DdNode) *DdNode {
 type unateKey struct{ function, vars *DdNode }
 
 func Extra_zddUnateInfoCompute(dd *DdManager, f, vars *DdNode) *DdNode {
-	indices, ok := supportVariables(dd, vars)
+	indices, ok := extraPositiveCube(dd, vars)
 	if !ok || !unateBDD(dd, f) {
 		return nil
 	}
@@ -191,7 +177,7 @@ func Extra_zddUnateInfoCompute(dd *DdManager, f, vars *DdNode) *DdNode {
 	return visit(f, vars)
 }
 func Extra_UnateInfoCreateFromZdd(dd *DdManager, f, vars *DdNode) *Extra_UnateInfo_t {
-	support, ok := supportVariables(dd, vars)
+	support, ok := extraPositiveCube(dd, vars)
 	if !ok || f == nil || cudd.Cudd_zddUnion(dd, f, dd.Zero) == nil {
 		return nil
 	}

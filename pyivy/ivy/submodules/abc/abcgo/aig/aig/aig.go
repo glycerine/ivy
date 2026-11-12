@@ -274,6 +274,9 @@ func Aig_ObjId(e Edge) int32 { return int32(e.NodeID()) }
 func Aig_ObjIsMarkA(p *Graph, e Edge) bool { return p.node(e).MarkA }
 func Aig_ObjSetMarkA(p *Graph, e Edge)     { p.node(e).MarkA = true }
 func Aig_ObjClearMarkA(p *Graph, e Edge)   { p.node(e).MarkA = false }
+func Aig_ObjIsMarkB(p *Graph, e Edge) bool { return p.node(e).MarkB }
+func Aig_ObjSetMarkB(p *Graph, e Edge)     { p.node(e).MarkB = true }
+func Aig_ObjClearMarkB(p *Graph, e Edge)   { p.node(e).MarkB = false }
 
 func Aig_ObjSetTravId(p *Graph, e Edge, id int32)   { p.node(e).TravID = id }
 func Aig_ObjSetTravIdCurrent(p *Graph, e Edge)      { p.node(e).TravID = p.travID }
@@ -1063,3 +1066,4 @@ func Aig_ManSetConstrNum(p *Graph, count int32) {
 	}
 	p.nConstrs = count
 }
+

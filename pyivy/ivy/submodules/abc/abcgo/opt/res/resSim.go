@@ -1,5 +1,7 @@
 package res
 
+import "github.com/glycerine/abcgo/base/abc"
+
 import (
 	"fmt"
 	"math/rand"
@@ -88,12 +90,12 @@ func Res_SimAlloc(nWords int32) *Res_Sim_t {
 func Res_SimAdjust(p *Res_Sim_t, pAig *Abc_Ntk_t, nTruePis int32) {
 	p.rng = rand.New(rand.NewSource(0xABC))
 
-	assert(Abc_NtkIsStrash(pAig), "Abc_NtkIsStrash(pAig)")
+	assert(abc.Abc_NtkIsStrash(pAig), "abc.Abc_NtkIsStrash(pAig)")
 	p.pAig = pAig
 	p.nTruePis = nTruePis
-	if Vec_PtrSize(p.vPats) < Abc_NtkObjNumMax(pAig)+1 {
+	if Vec_PtrSize(p.vPats) < abc.Abc_NtkObjNumMax(pAig)+1 {
 		Vec_PtrFree(p.vPats)
-		p.vPats = Vec_PtrAllocSimInfo(Abc_NtkObjNumMax(pAig)+1, p.nWordsIn)
+		p.vPats = Vec_PtrAllocSimInfo(abc.Abc_NtkObjNumMax(pAig)+1, p.nWordsIn)
 	}
 	if Vec_PtrSize(p.vPats0) < nTruePis {
 		Vec_PtrFree(p.vPats0)
@@ -103,13 +105,13 @@ func Res_SimAdjust(p *Res_Sim_t, pAig *Abc_Ntk_t, nTruePis int32) {
 		Vec_PtrFree(p.vPats1)
 		p.vPats1 = Vec_PtrAllocSimInfo(nTruePis, p.nWords)
 	}
-	if Vec_PtrSize(p.vOuts) < Abc_NtkPoNum(pAig) {
+	if Vec_PtrSize(p.vOuts) < abc.Abc_NtkPoNum(pAig) {
 		Vec_PtrFree(p.vOuts)
-		p.vOuts = Vec_PtrAllocSimInfo(Abc_NtkPoNum(pAig), p.nWordsOut)
+		p.vOuts = Vec_PtrAllocSimInfo(abc.Abc_NtkPoNum(pAig), p.nWordsOut)
 	}
 	// clean storage info for patterns
-	Abc_InfoClear(resWords(Vec_PtrEntry(p.vPats0, 0)), p.nWords*nTruePis)
-	Abc_InfoClear(resWords(Vec_PtrEntry(p.vPats1, 0)), p.nWords*nTruePis)
+	Abc_InfoClear(resWords(Vec_PtrEntryAny(p.vPats0, 0)), p.nWords*nTruePis)
+	Abc_InfoClear(resWords(Vec_PtrEntryAny(p.vPats1, 0)), p.nWords*nTruePis)
 	p.nPats0 = 0
 	p.nPats1 = 0
 	p.fConst0 = 0
@@ -182,9 +184,9 @@ func Res_SimSetRandomBytes(p *Res_Sim_t) {
 	var pInfo []uint32
 	var i int32
 	// inlining of macro Abc_NtkForEachPi
-	for i = 0; i < Abc_NtkPiNum(p.pAig); i++ {
-		pObj = Abc_NtkPi(p.pAig, i)
-		pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
+	for i = 0; i < abc.Abc_NtkPiNum(p.pAig); i++ {
+		pObj = abc.Abc_NtkPi(p.pAig, i)
+		pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
 		if i < p.nTruePis {
 			Abc_InfoRandomBytes(pInfo, p.nWordsIn, p.rng)
 		} else {
@@ -198,7 +200,7 @@ func Res_SimSetRandomBytes(p *Res_Sim_t) {
 	   	{
 	   	    if ( i == p->nTruePis )
 	   	        break;
-	   	    pInfoC = resWords(Vec_PtrEntry( p->vPats, pObj->Id ));
+	   	    pInfoC = resWords(Vec_PtrEntryAny( p->vPats, pObj->Id ));
 	   	    for ( k = 0; k < p->nBytesIn; k++ )
 	   	        assert( pInfoC[k] == 0 || pInfoC[k] == 0xff );
 	   	}
@@ -229,12 +231,12 @@ func Res_SimSetDerivedBytes(p *Res_Sim_t, fUseWalk int32) {
 	assert(p.nBytesIn%32 == 0, "p.nBytesIn % 32 == 0")
 	nPats = p.nBytesIn / 8
 	// inlining of macro Abc_NtkForEachPi
-	for i = 0; i < Abc_NtkPiNum(p.pAig); i++ {
-		pObj = Abc_NtkPi(p.pAig, i)
+	for i = 0; i < abc.Abc_NtkPiNum(p.pAig); i++ {
+		pObj = abc.Abc_NtkPi(p.pAig, i)
 		if i == p.nTruePis {
 			break
 		}
-		Abc_InfoRandomBytes(resWords(Vec_PtrEntry(p.vPats, pObj.Id)), nPats/4)
+		Abc_InfoRandomBytes(resWords(Vec_PtrEntryAny(p.vPats, pObj.Id)), nPats/4)
 	}
 
 	// set special patterns
@@ -242,12 +244,12 @@ func Res_SimSetDerivedBytes(p *Res_Sim_t, fUseWalk int32) {
 		for z = 0; z < 2; z++ {
 			// set the zero pattern
 			// inlining of macro Abc_NtkForEachPi
-			for i = 0; i < Abc_NtkPiNum(p.pAig); i++ {
-				pObj = Abc_NtkPi(p.pAig, i)
+			for i = 0; i < abc.Abc_NtkPiNum(p.pAig); i++ {
+				pObj = abc.Abc_NtkPi(p.pAig, i)
 				if i == p.nTruePis {
 					break
 				}
-				pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
+				pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
 				value := byte(0)
 				if z != 0 {
 					value = 0xff
@@ -261,12 +263,12 @@ func Res_SimSetDerivedBytes(p *Res_Sim_t, fUseWalk int32) {
 			// set the walking zero pattern
 			for k = 0; k < p.nTruePis; k++ {
 				// inlining of macro Abc_NtkForEachPi
-				for i = 0; i < Abc_NtkPiNum(p.pAig); i++ {
-					pObj = Abc_NtkPi(p.pAig, i)
+				for i = 0; i < abc.Abc_NtkPiNum(p.pAig); i++ {
+					pObj = abc.Abc_NtkPi(p.pAig, i)
 					if i == p.nTruePis {
 						break
 					}
-					pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
+					pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
 					value := (i == k) != (z != 0)
 					if value {
 						setResByte(pInfo, nPats, 0xff)
@@ -302,13 +304,13 @@ func Res_SimSetDerivedBytes(p *Res_Sim_t, fUseWalk int32) {
 			// set the given source pattern
 			for k = 0; k < p.nTruePis; k++ {
 				// inlining of macro Abc_NtkForEachPi
-				for i = 0; i < Abc_NtkPiNum(p.pAig); i++ {
-					pObj = Abc_NtkPi(p.pAig, i)
+				for i = 0; i < abc.Abc_NtkPiNum(p.pAig); i++ {
+					pObj = abc.Abc_NtkPi(p.pAig, i)
 					if i == p.nTruePis {
 						break
 					}
-					pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
-					if (i == k) != Abc_InfoHasBit(resWords(Vec_PtrEntry(vPatsSource[z], i)), s) {
+					pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
+					if (i == k) != Abc_InfoHasBit(resWords(Vec_PtrEntryAny(vPatsSource[z], i)), s) {
 						setResByte(pInfo, nPats, 0xff)
 						//                        if ( s == 0 )
 						//                        printf( "1" );
@@ -331,12 +333,12 @@ func Res_SimSetDerivedBytes(p *Res_Sim_t, fUseWalk int32) {
 	// clean the rest
 	for z = nPats; z < p.nBytesIn; z++ {
 		// inlining of macro Abc_NtkForEachPi
-		for i = 0; i < Abc_NtkPiNum(p.pAig); i++ {
-			pObj = Abc_NtkPi(p.pAig, i)
+		for i = 0; i < abc.Abc_NtkPiNum(p.pAig); i++ {
+			pObj = abc.Abc_NtkPi(p.pAig, i)
 			if i == p.nTruePis {
 				break
 			}
-			pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
+			pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
 			clearResBytes(pInfo, nPats, p.nBytesIn)
 		}
 	}
@@ -347,7 +349,7 @@ func Res_SimSetDerivedBytes(p *Res_Sim_t, fUseWalk int32) {
 	   	{
 	   	    if ( i == p->nTruePis )
 	   	        break;
-	   	    pInfo = resWords(Vec_PtrEntry( p->vPats, pObj->Id ));
+	   	    pInfo = resWords(Vec_PtrEntryAny( p->vPats, pObj->Id ));
 	   	    for ( k = 0; k < p->nBytesIn; k++ )
 	   	        assert( pInfo[k] == 0 || pInfo[k] == 0xff );
 	   	}
@@ -372,13 +374,13 @@ func Res_SimSetGiven(p *Res_Sim_t, vInfo *Vec_Ptr_t) {
 	var pInfo, pInfo2 []uint32
 	var i, w int32
 	// inlining of macro Abc_NtkForEachPi
-	for i = 0; i < Abc_NtkPiNum(p.pAig); i++ {
-		pObj = Abc_NtkPi(p.pAig, i)
+	for i = 0; i < abc.Abc_NtkPiNum(p.pAig); i++ {
+		pObj = abc.Abc_NtkPi(p.pAig, i)
 		if i == p.nTruePis {
 			break
 		}
-		pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
-		pInfo2 = resWords(Vec_PtrEntry(vInfo, i))
+		pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
+		pInfo2 = resWords(Vec_PtrEntryAny(vInfo, i))
 		for w = 0; w < p.nWords; w++ {
 			pInfo[w] = pInfo2[w]
 		}
@@ -402,12 +404,12 @@ func Res_SimPerformOne(pNode *Abc_Obj_t, vSimInfo *Vec_Ptr_t, nSimWords int32) {
 	var pInfo, pInfo1, pInfo2 []uint32
 	var k, fComp1, fComp2 int32
 	// simulate the internal nodes
-	assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)")
-	pInfo = resWords(Vec_PtrEntry(vSimInfo, pNode.Id))
-	pInfo1 = resWords(Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode)))
-	pInfo2 = resWords(Vec_PtrEntry(vSimInfo, Abc_ObjFaninId1(pNode)))
-	fComp1 = Abc_ObjFaninC0(pNode)
-	fComp2 = Abc_ObjFaninC1(pNode)
+	assert(abc.Abc_ObjIsNode(pNode), "abc.Abc_ObjIsNode(pNode)")
+	pInfo = resWords(Vec_PtrEntryAny(vSimInfo, pNode.Id))
+	pInfo1 = resWords(Vec_PtrEntryAny(vSimInfo, Abc_ObjFaninId0(pNode)))
+	pInfo2 = resWords(Vec_PtrEntryAny(vSimInfo, Abc_ObjFaninId1(pNode)))
+	fComp1 = abc.Abc_ObjFaninC0(pNode)
+	fComp2 = abc.Abc_ObjFaninC1(pNode)
 	if (fComp1 != 0) && (fComp2 != 0) {
 		for k = 0; k < nSimWords; k++ {
 			pInfo[k] = ~pInfo1[k] & ~pInfo2[k]
@@ -444,10 +446,10 @@ func Res_SimTransferOne(pNode *Abc_Obj_t, vSimInfo *Vec_Ptr_t, nSimWords int32) 
 	var pInfo, pInfo1 []uint32
 	var k, fComp1 int32
 	// simulate the internal nodes
-	assert(Abc_ObjIsCo(pNode), "Abc_ObjIsCo(pNode)")
-	pInfo = resWords(Vec_PtrEntry(vSimInfo, pNode.Id))
-	pInfo1 = resWords(Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode)))
-	fComp1 = Abc_ObjFaninC0(pNode)
+	assert(abc.Abc_ObjIsCo(pNode), "abc.Abc_ObjIsCo(pNode)")
+	pInfo = resWords(Vec_PtrEntryAny(vSimInfo, pNode.Id))
+	pInfo1 = resWords(Vec_PtrEntryAny(vSimInfo, Abc_ObjFaninId0(pNode)))
+	fComp1 = abc.Abc_ObjFaninC0(pNode)
 	if fComp1 != 0 {
 		for k = 0; k < nSimWords; k++ {
 			pInfo[k] = ~pInfo1[k]
@@ -475,18 +477,18 @@ func Res_SimTransferOne(pNode *Abc_Obj_t, vSimInfo *Vec_Ptr_t, nSimWords int32) 
 func Res_SimPerformRound(p *Res_Sim_t, nWords int32) {
 	var pObj *Abc_Obj_t
 	var i int32
-	Abc_InfoFill(resWords(Vec_PtrEntry(p.vPats, 0)), nWords)
+	Abc_InfoFill(resWords(Vec_PtrEntryAny(p.vPats, 0)), nWords)
 	// inlining of macro Abc_AigForEachAnd
 	for i = 0; i < Vec_PtrSize((p.pAig).vObjs); i++ {
-		pObj = Abc_NtkObj(p.pAig, i)
-		if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {
+		pObj = abc.Abc_NtkObj(p.pAig, i)
+		if (pObj) == nil || !abc.Abc_AigNodeIsAnd(pObj) {
 		} else {
 			Res_SimPerformOne(pObj, p.vPats, nWords)
 		}
 	}
 	// inlining of macro Abc_NtkForEachPo
-	for i = 0; i < Abc_NtkPoNum(p.pAig); i++ {
-		pObj = Abc_NtkPo(p.pAig, i)
+	for i = 0; i < abc.Abc_NtkPoNum(p.pAig); i++ {
+		pObj = abc.Abc_NtkPo(p.pAig, i)
 		Res_SimTransferOne(pObj, p.vPats, nWords)
 	}
 }
@@ -512,7 +514,7 @@ func Res_SimPadSimInfo(vPats *Vec_Ptr_t, nPats int32, nWords int32) {
 	if nPats < 32 {
 		// inlining of macro Vec_PtrForEachEntry
 		for i = 0; i < Vec_PtrSize(vPats); i++ {
-			pInfo = resWords(Vec_PtrEntry(vPats, i))
+			pInfo = resWords(Vec_PtrEntryAny(vPats, i))
 			if pInfo[0]&1 != 0 {
 				pInfo[0] |= (^uint32(0)) << uint(nPats)
 			}
@@ -523,7 +525,7 @@ func Res_SimPadSimInfo(vPats *Vec_Ptr_t, nPats int32, nWords int32) {
 	iWords = nPats / 32
 	// inlining of macro Vec_PtrForEachEntry
 	for i = 0; i < Vec_PtrSize(vPats); i++ {
-		pInfo = resWords(Vec_PtrEntry(vPats, i))
+		pInfo = resWords(Vec_PtrEntryAny(vPats, i))
 		for w = iWords; w < nWords; w++ {
 			pInfo[w] = pInfo[0]
 		}
@@ -548,10 +550,10 @@ func Res_SimDeriveInfoReplicate(p *Res_Sim_t) {
 	var pObj *Abc_Obj_t
 	var i, j, w int32
 	// inlining of macro Abc_NtkForEachPo
-	for i = 0; i < Abc_NtkPoNum(p.pAig); i++ {
-		pObj = Abc_NtkPo(p.pAig, i)
-		pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
-		pInfo2 = resWords(Vec_PtrEntry(p.vOuts, i))
+	for i = 0; i < abc.Abc_NtkPoNum(p.pAig); i++ {
+		pObj = abc.Abc_NtkPo(p.pAig, i)
+		pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
+		pInfo2 = resWords(Vec_PtrEntryAny(p.vOuts, i))
 		for j = 0; j < p.nPats; j++ {
 			for w = 0; w < p.nWords; w++ {
 				pInfo2[j*p.nWords+w] = pInfo[w]
@@ -578,10 +580,10 @@ func Res_SimDeriveInfoComplement(p *Res_Sim_t) {
 	var pObj *Abc_Obj_t
 	var i, j, w int32
 	// inlining of macro Abc_NtkForEachPo
-	for i = 0; i < Abc_NtkPoNum(p.pAig); i++ {
-		pObj = Abc_NtkPo(p.pAig, i)
-		pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
-		pInfo2 = resWords(Vec_PtrEntry(p.vOuts, i))
+	for i = 0; i < abc.Abc_NtkPoNum(p.pAig); i++ {
+		pObj = abc.Abc_NtkPo(p.pAig, i)
+		pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
+		pInfo2 = resWords(Vec_PtrEntryAny(p.vOuts, i))
 		for j = 0; j < p.nPats; j++ {
 			if Abc_InfoHasBit(pInfo, j) {
 				for w = 0; w < p.nWords; w++ {
@@ -611,9 +613,9 @@ func Res_SimPrintOutPatterns(p *Res_Sim_t, pAig *Abc_Ntk_t) {
 	var pInfo2 []uint32
 	var i int32
 	// inlining of macro Abc_NtkForEachPo
-	for i = 0; i < Abc_NtkPoNum(pAig); i++ {
-		pObj = Abc_NtkPo(pAig, i)
-		pInfo2 = resWords(Vec_PtrEntry(p.vOuts, i))
+	for i = 0; i < abc.Abc_NtkPoNum(pAig); i++ {
+		pObj = abc.Abc_NtkPo(pAig, i)
+		pInfo2 = resWords(Vec_PtrEntryAny(p.vOuts, i))
 		Extra_PrintBinary(os.Stdout, pInfo2, p.nPatsOut)
 		fmt.Printf("\n")
 	}
@@ -634,7 +636,7 @@ func Res_SimPrintOutPatterns(p *Res_Sim_t, pAig *Abc_Ntk_t) {
 */
 func Res_SimPrintNodePatterns(p *Res_Sim_t, pAig *Abc_Ntk_t) {
 	var pInfo []uint32
-	pInfo = resWords(Vec_PtrEntry(p.vPats, Abc_NtkPo(p.pAig, 1).Id))
+	pInfo = resWords(Vec_PtrEntryAny(p.vPats, abc.Abc_NtkPo(p.pAig, 1).Id))
 	Extra_PrintBinary(os.Stdout, pInfo, p.nPats)
 	fmt.Printf("\n")
 }
@@ -655,8 +657,8 @@ func Res_SimPrintNodePatterns(p *Res_Sim_t, pAig *Abc_Ntk_t) {
 func Res_SimCountResults(p *Res_Sim_t, pnDcs *int32, pnOnes *int32, pnZeros *int32, fVerbose int32) {
 	var pInfoCare, pInfoNode []uint32
 	var i, nTotal int32
-	pInfoCare = resWords(Vec_PtrEntry(p.vPats, Abc_NtkPo(p.pAig, 0).Id))
-	pInfoNode = resWords(Vec_PtrEntry(p.vPats, Abc_NtkPo(p.pAig, 1).Id))
+	pInfoCare = resWords(Vec_PtrEntryAny(p.vPats, abc.Abc_NtkPo(p.pAig, 0).Id))
+	pInfoNode = resWords(Vec_PtrEntryAny(p.vPats, abc.Abc_NtkPo(p.pAig, 1).Id))
 	for i = 0; i < p.nBytesIn; i++ {
 		if resByte(pInfoCare, i) == 0 {
 			(*pnDcs)++
@@ -693,8 +695,8 @@ func Res_SimCollectPatterns(p *Res_Sim_t, fVerbose int32) {
 	var pObj *Abc_Obj_t
 	var pInfoCare, pInfoNode, pInfo []uint32
 	var i, j int32
-	pInfoCare = resWords(Vec_PtrEntry(p.vPats, Abc_NtkPo(p.pAig, 0).Id))
-	pInfoNode = resWords(Vec_PtrEntry(p.vPats, Abc_NtkPo(p.pAig, 1).Id))
+	pInfoCare = resWords(Vec_PtrEntryAny(p.vPats, abc.Abc_NtkPo(p.pAig, 0).Id))
+	pInfoNode = resWords(Vec_PtrEntryAny(p.vPats, abc.Abc_NtkPo(p.pAig, 1).Id))
 	for i = 0; i < p.nBytesIn; i++ {
 		// skip don't-care patterns
 		if resByte(pInfoCare, i) == 0 {
@@ -707,15 +709,15 @@ func Res_SimCollectPatterns(p *Res_Sim_t, fVerbose int32) {
 				continue
 			}
 			// inlining of macro Abc_NtkForEachPi
-			for j = 0; j < Abc_NtkPiNum(p.pAig); j++ {
-				pObj = Abc_NtkPi(p.pAig, j)
+			for j = 0; j < abc.Abc_NtkPiNum(p.pAig); j++ {
+				pObj = abc.Abc_NtkPi(p.pAig, j)
 				if j == p.nTruePis {
 					break
 				}
-				pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
+				pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
 				assert(resByte(pInfo, i) == 0 || resByte(pInfo, i) == 0xff, "pInfo[i] == 0 || pInfo[i] == 0xff")
 				if resByte(pInfo, i) != 0 {
-					Abc_InfoSetBit(resWords(Vec_PtrEntry(p.vPats0, j)), p.nPats0)
+					Abc_InfoSetBit(resWords(Vec_PtrEntryAny(p.vPats0, j)), p.nPats0)
 				}
 			}
 			p.nPats0++
@@ -725,15 +727,15 @@ func Res_SimCollectPatterns(p *Res_Sim_t, fVerbose int32) {
 				continue
 			}
 			// inlining of macro Abc_NtkForEachPi
-			for j = 0; j < Abc_NtkPiNum(p.pAig); j++ {
-				pObj = Abc_NtkPi(p.pAig, j)
+			for j = 0; j < abc.Abc_NtkPiNum(p.pAig); j++ {
+				pObj = abc.Abc_NtkPi(p.pAig, j)
 				if j == p.nTruePis {
 					break
 				}
-				pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
+				pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
 				assert(resByte(pInfo, i) == 0 || resByte(pInfo, i) == 0xff, "pInfo[i] == 0 || pInfo[i] == 0xff")
 				if resByte(pInfo, i) != 0 {
-					Abc_InfoSetBit(resWords(Vec_PtrEntry(p.vPats1, j)), p.nPats1)
+					Abc_InfoSetBit(resWords(Vec_PtrEntryAny(p.vPats1, j)), p.nPats1)
 				}
 			}
 			p.nPats1++
@@ -768,20 +770,20 @@ func Res_SimVerifyValue(p *Res_Sim_t, fOnSet int32) int32 {
 	var pInfo, pInfo2 []uint32
 	var i, value int32
 	// inlining of macro Abc_NtkForEachPi
-	for i = 0; i < Abc_NtkPiNum(p.pAig); i++ {
-		pObj = Abc_NtkPi(p.pAig, i)
+	for i = 0; i < abc.Abc_NtkPiNum(p.pAig); i++ {
+		pObj = abc.Abc_NtkPi(p.pAig, i)
 		if i == p.nTruePis {
 			break
 		}
 		if fOnSet != 0 {
-			pInfo2 = resWords(Vec_PtrEntry(p.vPats1, i))
+			pInfo2 = resWords(Vec_PtrEntryAny(p.vPats1, i))
 			value = Abc_InfoHasBit(pInfo2, p.nPats1-1)
 
 		} else {
-			pInfo2 = resWords(Vec_PtrEntry(p.vPats0, i))
+			pInfo2 = resWords(Vec_PtrEntryAny(p.vPats0, i))
 			value = Abc_InfoHasBit(pInfo2, p.nPats0-1)
 		}
-		pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
+		pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
 		if value != 0 {
 			pInfo[0] = ^uint32(0)
 		} else {
@@ -789,8 +791,8 @@ func Res_SimVerifyValue(p *Res_Sim_t, fOnSet int32) int32 {
 		}
 	}
 	Res_SimPerformRound(p, 1)
-	pObj = Abc_NtkPo(p.pAig, 1)
-	pInfo = resWords(Vec_PtrEntry(p.vPats, pObj.Id))
+	pObj = abc.Abc_NtkPo(p.pAig, 1)
+	pInfo = resWords(Vec_PtrEntryAny(p.vPats, pObj.Id))
 	assert(pInfo[0] == 0 || pInfo[0] == ~0, "pInfo[0] == 0 || pInfo[0] == ~0")
 	return pInfo[0] > 0
 }

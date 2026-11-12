@@ -77,3 +77,11 @@ func (p *Gia_Man_t) AndFanins(id int32) (a, b int32, ok bool) {
 	}
 	return Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id), true
 }
+
+// Gia_ManSetConstrNum sets the trailing ordinary-output constraint count.
+func Gia_ManSetConstrNum(p *Gia_Man_t, count int32) {
+	if count < 0 || count > Gia_ManPoNum(p) {
+		panic("gia: invalid constraint count")
+	}
+	p.nConstrs = count
+}

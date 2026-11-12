@@ -2,16 +2,20 @@ package llb
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
 type Aig_Man_t = aig.Graph
 type Aig_Obj_t = aig.Edge
+type Gia_Man_t = gia.Gia_Man_t
 type DdManager = core.DdManager
 type DdNode = core.DdNode
 type Vec_Int_t = vec.Vec_Int_t
 type Vec_Ptr_t = vec.Vec_Ptr_t
+type Abc_Cex_t = util.Abc_Cex_t
 type abctime = int64
 
 func Aig_ObjId(obj *Aig_Obj_t) int32           { return aig.Aig_ObjId(*obj) }

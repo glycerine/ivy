@@ -1,6 +1,10 @@
 package aig
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/glycerine/abcgo/misc/util"
+)
 
 func TestGraphCounterexampleOwnership(t *testing.T) {
 	p := NewGraph()
@@ -30,5 +34,30 @@ func TestGraphCounterexampleOwnership(t *testing.T) {
 	p.ClearCombinationalCounterexample()
 	if p.CombinationalCounterexample() != nil {
 		t.Fatal("clear")
+	}
+}
+
+func TestInductionCounterexampleTake(t *testing.T) {
+	p := NewGraph()
+	p.NewInput()
+	p.NewInput()
+	p.NewInput()
+	p.nRegs = 2
+	witness := &util.Abc_Cex_t{NRegs: 1, NPis: 1, NBits: 2, PData: []uint32{3}}
+	if err := p.SetInductionCounterexample(witness); err != nil {
+		t.Fatal(err)
+	}
+	if got := p.TakeInductionCounterexample(); got != witness {
+		t.Fatalf("TakeInductionCounterexample() = %p, want %p", got, witness)
+	}
+	if p.InductionCounterexample() != nil || p.TakeInductionCounterexample() != nil {
+		t.Fatal("take did not clear the saved witness")
+	}
+	if err := p.SetInductionCounterexample(witness); err != nil {
+		t.Fatal(err)
+	}
+	p.ClearInductionCounterexample()
+	if p.InductionCounterexample() != nil {
+		t.Fatal("clear did not discard the saved witness")
 	}
 }

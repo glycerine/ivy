@@ -2,183 +2,141 @@ package fpga
 
 import "fmt"
 
-/**CFile****************************************************************
-
-  FileName    [fpgaTruth.c]
-
-  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]
-
-  Synopsis    [Technology mapping for variable-size-LUT FPGAs.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 2.0. Started - August 18, 2004.]
-
-  Revision    [$Id: fpgaTruth.c,v 1.4 2005/01/23 06:59:42 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "fpgaInt.h"
-//#include "bdd/cudd/cudd.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively derives the truth table for the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_TruthsCutBdd_rec(dd *DdManager, pCut *Fpga_Cut_t, vVisited *Fpga_NodeVec_t) *DdNode {
-    var bFunc, bFunc0, bFunc1 *DdNode;
-    // inlining of macro Fpga_IsComplement
-    assert(!(((int32(((ABC_PTRUINT_T) (pCut) & 01)) != 0))), "!/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (pCut) & 01))))");
-    // if the cut is visited, return the result
-    if pCut.uSign {
-        return (DdNode *)(ABC_PTRUINT_T)pCut.uSign; }
-    // compute the functions of the children
-    // inlining of macro Fpga_CutRegular
-    bFunc0 = Fpga_TruthsCutBdd_rec( dd, ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pOne) & ~01)) , vVisited );   Cudd_Ref( bFunc0 );
-    // inlining of macro Cudd_NotCond
-    // inlining of macro Fpga_CutIsComplement
-    bFunc0 = ((DdNode *)((ptrint)(bFunc0) ^ (((int32(((ABC_PTRUINT_T)(pCut.pOne) & 01)))))));
-    // inlining of macro Fpga_CutRegular
-    bFunc1 = Fpga_TruthsCutBdd_rec( dd, ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pTwo) & ~01)) , vVisited );   Cudd_Ref( bFunc1 );
-    // inlining of macro Cudd_NotCond
-    // inlining of macro Fpga_CutIsComplement
-    bFunc1 = ((DdNode *)((ptrint)(bFunc1) ^ (((int32(((ABC_PTRUINT_T)(pCut.pTwo) & 01)))))));
-    // get the function of the cut
-    bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );   Cudd_Ref( bFunc );
-    // inlining of macro Cudd_NotCond
-    bFunc  = ((DdNode *)((ptrint)(bFunc) ^ (pCut.Phase)));
-    Cudd_RecursiveDeref( dd, bFunc0 );
-    Cudd_RecursiveDeref( dd, bFunc1 );
-    assert(pCut.uSign == 0, "pCut.uSign == 0");
-    pCut.uSign = uint32((ABC_PTRUINT_T))bFunc;
-    // add this cut to the visited list
-    Fpga_NodeVecPush( vVisited, (Fpga_Node_t *)pCut );
-    return bFunc;
+// BooleanBuilder keeps cut truth construction independent of a BDD or AIG package.
+// Hop managers implement this interface directly.
+type BooleanBuilder interface {
+	ConstantOne() any
+	Complement(any) any
+	Variable(int) any
+	And(any, any) any
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives the truth table for one cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_TruthsCutBdd(dd any, pCut *Fpga_Cut_t) any {
-    var vVisited *Fpga_NodeVec_t;
-    var bFunc *DdNode;
-    var i int32;
-    assert(pCut.nLeaves > 1, "pCut.nLeaves > 1");
-    // set the leaf variables
-    for  i = 0; i < pCut.nLeaves; i++  {
-        pCut.ppLeaves[i].pCuts.uSign = uint32((ABC_PTRUINT_T))Cudd_bddIthVar( (DdManager *)dd, i );
-    }
-    // recursively compute the function
-    vVisited = Fpga_NodeVecAlloc( 10 );
-    bFunc = Fpga_TruthsCutBdd_rec( (DdManager *)dd, pCut, vVisited );   Cudd_Ref( bFunc );
-    // clean the intermediate BDDs
-    for  i = 0; i < pCut.nLeaves; i++  {
-        pCut.ppLeaves[i].pCuts.uSign = 0;
-    }
-    for  i = 0; i < vVisited.nSize; i++  {
-        pCut = (Fpga_Cut_t *)vVisited.pArray[i];
-        Cudd_RecursiveDeref( (DdManager *)dd, (DdNode*)(ABC_PTRUINT_T)pCut.uSign );
-        pCut.uSign = 0;
-    }
-//    printf( "%d ", vVisited->nSize );
-    Fpga_NodeVecFree( vVisited );
-    Cudd_Deref( bFunc );
-    return bFunc;
+func Fpga_TruthsCutBdd(dd any, c *Fpga_Cut_t) any {
+	b, ok := dd.(BooleanBuilder)
+	if !ok {
+		panic("fpga: Boolean builder required")
+	}
+	complement := Fpga_CutIsComplement(c) != 0
+	c = Fpga_CutRegular(c)
+	var build func(uint64, int) any
+	build = func(truth uint64, n int) any {
+		mask := truthMask(n)
+		truth &= mask
+		if truth == 0 {
+			return b.Complement(b.ConstantOne())
+		}
+		if truth == mask {
+			return b.ConstantOne()
+		}
+		half := 1 << uint(n-1)
+		low := build(truth&truthMask(n-1), n-1)
+		high := build(truth>>half, n-1)
+		x := b.Variable(n - 1)
+		return b.Complement(b.And(b.Complement(b.And(b.Complement(x), low)), b.Complement(b.And(x, high))))
+	}
+	result := build(c.Truth, len(c.Leaves))
+	if complement {
+		result = b.Complement(result)
+	}
+	return result
+}
+func Fpga_TruthsCutBdd_rec(dd any, c *Fpga_Cut_t, visited *Fpga_NodeVec_t) any {
+	return Fpga_TruthsCutBdd(dd, c)
+}
+func Fpga_CutVolume(c *Fpga_Cut_t) int32 {
+	seen := map[*Fpga_Cut_t]bool{}
+	var count func(*Fpga_Cut_t) int32
+	count = func(c *Fpga_Cut_t) int32 {
+		c = Fpga_CutRegular(c)
+		if c == nil || seen[c] || c.One == nil {
+			return 0
+		}
+		seen[c] = true
+		return 1 + count(c.One) + count(c.Two)
+	}
+	return count(c)
+}
+func Fpga_CutVolume_rec(c *Fpga_Cut_t, v *Fpga_NodeVec_t) {
+	seen := map[*Fpga_Cut_t]bool{}
+	var visit func(*Fpga_Cut_t)
+	visit = func(c *Fpga_Cut_t) {
+		c = Fpga_CutRegular(c)
+		if c == nil || seen[c] || c.One == nil {
+			return
+		}
+		seen[c] = true
+		visit(c.One)
+		visit(c.Two)
+		if c.Root != nil {
+			v.Nodes = append(v.Nodes, c.Root)
+		}
+	}
+	visit(c)
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively derives the truth table for the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_CutVolume_rec(pCut *Fpga_Cut_t, vVisited *Fpga_NodeVec_t) {
-    // inlining of macro Fpga_IsComplement
-    assert(!(((int32(((ABC_PTRUINT_T) (pCut) & 01)) != 0))), "!/*__starting_point_inline_macro:Fpga_IsComplement__*/((int32(((ABC_PTRUINT_T) (pCut) & 01))))");
-    if pCut.fMark {
-        return; }
-    pCut.fMark = 1;
-    // inlining of macro Fpga_CutRegular
-    Fpga_CutVolume_rec( ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pOne) & ~01)) , vVisited );
-    // inlining of macro Fpga_CutRegular
-    Fpga_CutVolume_rec( ((Fpga_Cut_t *)((ABC_PTRUINT_T)(pCut.pTwo) & ~01)) , vVisited );
-    Fpga_NodeVecPush( vVisited, (Fpga_Node_t *)pCut );
+// Evaluate compares the original AND graph or its selected LUT cover without altering scratch data.
+func (p *Fpga_Man_t) Evaluate(inputs []bool, mapped bool) ([]bool, error) {
+	if len(inputs) != len(p.Inputs) {
+		return nil, fmt.Errorf("fpga: expected %d inputs", len(p.Inputs))
+	}
+	values := map[*Fpga_Node_t]bool{p.Const1: true}
+	for i, n := range p.Inputs {
+		values[n] = inputs[i]
+	}
+	active := map[*Fpga_Node_t]bool{}
+	var eval func(*Fpga_Node_t) (bool, error)
+	eval = func(edge *Fpga_Node_t) (bool, error) {
+		if edge == nil {
+			return false, fmt.Errorf("fpga: unset signal")
+		}
+		if mapped {
+			edge = choiceSignal(edge)
+		}
+		n := Fpga_Regular(edge)
+		v, found := values[n]
+		if !found {
+			if active[n] {
+				return false, fmt.Errorf("fpga: cyclic mapping")
+			}
+			active[n] = true
+			if mapped {
+				if n.Best == nil {
+					return false, fmt.Errorf("fpga: graph has not been mapped")
+				}
+				index := 0
+				for i, leaf := range n.Best.Leaves {
+					bit, e := eval(leaf)
+					if e != nil {
+						return false, e
+					}
+					if bit {
+						index |= 1 << i
+					}
+				}
+				v = n.Best.Truth>>index&1 != 0
+			} else {
+				a, e := eval(n.One)
+				if e != nil {
+					return false, e
+				}
+				b, e := eval(n.Two)
+				if e != nil {
+					return false, e
+				}
+				v = a && b
+			}
+			delete(active, n)
+			values[n] = v
+		}
+		return v != (Fpga_IsComplement(edge) != 0), nil
+	}
+	out := make([]bool, len(p.Outputs))
+	for i, e := range p.Outputs {
+		v, err := eval(e)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = v
+	}
+	return out, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the truth table for one cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fpga_CutVolume(pCut *Fpga_Cut_t) int32 {
-    var vVisited *Fpga_NodeVec_t;
-    var Volume, i int32;
-    assert(pCut.nLeaves > 1, "pCut.nLeaves > 1");
-    // set the leaf variables
-    for  i = 0; i < pCut.nLeaves; i++  {
-        pCut.ppLeaves[i].pCuts.fMark = 1;
-    }
-    // recursively compute the function
-    vVisited = Fpga_NodeVecAlloc( 10 );
-    Fpga_CutVolume_rec( pCut, vVisited ); 
-    // clean the marks
-    for  i = 0; i < pCut.nLeaves; i++  {
-        pCut.ppLeaves[i].pCuts.fMark = 0;
-    }
-    for  i = 0; i < vVisited.nSize; i++  {
-        pCut = (Fpga_Cut_t *)vVisited.pArray[i];
-        pCut.fMark = 0;
-    }
-    Volume = vVisited.nSize;
-    fmt.Printf("%d ", Volume);
-    Fpga_NodeVecFree( vVisited );
-    return Volume;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

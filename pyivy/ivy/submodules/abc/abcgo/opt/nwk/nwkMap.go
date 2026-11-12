@@ -1,405 +1,228 @@
 package nwk
 
 import (
-	"fmt"
-	"time"
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/aig/saig"
+	if_ "github.com/glycerine/abcgo/map/if"
+	"github.com/glycerine/abcgo/misc/tim"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-/**CFile****************************************************************
+type If_Par_t = if_.If_Par_t
+type If_Man_t = if_.If_Man_t
+type If_Obj_t = if_.If_Obj_t
 
-  FileName    [nwkMap.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Logic network representation.]
-
-  Synopsis    [Interface to technology mapping.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: nwkMap.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "nwk.h"
-//#include "map/if/if.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Load the network into FPGA manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_ManSetIfParsDefault(pPars *If_Par_t) {
-//    extern void * Abc_FrameReadLibLut();
-    // set defaults
-    memset( pPars, 0, sizeof(If_Par_t) );
-    // user-controlable paramters
-//    pPars->nLutSize    = -1;
-    pPars.nLutSize    =  6;
-    pPars.nCutsMax    =  8;
-    pPars.nFlowIters  =  1;
-    pPars.nAreaIters  =  2;
-    pPars.DelayTarget = -1;
-    pPars.Epsilon     =  float32(0.005);
-    pPars.fPreprocess =  1;
-    pPars.fArea       =  0;
-    pPars.fFancy      =  0;
-    pPars.fExpRed     =  1; ////
-    pPars.fLatchPaths =  0;
-    pPars.fEdge       =  1;
-    pPars.fPower      =  0;
-    pPars.fCutMin     =  0;
-    pPars.fVerbose    =  0;
-    // internal parameters
-    pPars.fTruth      =  0;
-    pPars.nLatchesCi  =  0;
-    pPars.nLatchesCo  =  0;
-    pPars.fLiftLeaves =  0;
-//    pPars->pLutLib     =  Abc_FrameReadLibLut();
-    pPars.pLutLib     =  nil;
-    pPars.pTimesArr   =  nil; 
-    pPars.pTimesArr   =  nil;   
-    pPars.pFuncCost   =  nil;   
-/*
-    if ( pPars->nLutSize == -1 )
-    {
-        if ( pPars->pLutLib == NULL )
-        {
-            printf( "The LUT library is not given.\n" );
-            return;
-        }
-        // get LUT size from the library
-        pPars->nLutSize = pPars->pLutLib->LutMax;
-    }
-*/
+func Nwk_ManSetIfParsDefault(p *If_Par_t) {
+	if_.If_ManSetDefaultPars(p)
+	p.SetLUTSize(6)
+	p.SetCutMin(false)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Load the network into FPGA manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_ManToIf(p *Aig_Man_t, pPars *If_Par_t, vAigToIf *Vec_Ptr_t) *If_Man_t {
-    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );
-    var vSwitching *Vec_Int_t = nil;
-    var vSwitching2 *Vec_Int_t = nil;
-    var pSwitching *float32 = nil;
-    var pSwitching2 *float32 = nil;
-    var pIfMan *If_Man_t;
-    var pIfObj *If_Obj_t  = nil;
-    var pNode, pFanin, pPrev *Aig_Obj_t;
-    var i int32;
-    var clk abctime  = Abc_Clock();
-    // set the number of registers (switch activity will be combinational)
-    Aig_ManSetRegNum( p, 0 );
-    if pPars.fPower {
-        vSwitching  = Saig_ManComputeSwitchProbs( p, 48, 16, 0 );
-        if pPars.fVerbose {
-            // inlining of macro ABC_PRT
-            Abc_Print(1, "%s =", ("Computing switching activity"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-        }
-        pSwitching  = (float *)vSwitching.pArray;
-        vSwitching2 = Vec_IntStart( Aig_ManObjNumMax(p) );
-        pSwitching2 = (float *)vSwitching2.pArray;
-    }
-    // start the mapping manager and set its parameters
-    pIfMan = If_ManStart( pPars );
-    pIfMan.vSwitching = vSwitching2;
-    // load the AIG into the mapper
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pNode) == nil {} else {
-        if Aig_ObjIsAnd(pNode) {
-            pIfObj = If_ManCreateAnd( pIfMan, 
-                If_NotCond( (If_Obj_t *)Aig_ObjFanin0(pNode).pData, Aig_ObjFaninC0(pNode) ), 
-                If_NotCond( (If_Obj_t *)Aig_ObjFanin1(pNode).pData, Aig_ObjFaninC1(pNode) ) );
-//            printf( "no%d=%d\n ", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );
-        
-        } else if Aig_ObjIsCi(pNode) {
-            pIfObj = If_ManCreateCi( pIfMan );
-            If_ObjSetLevel( pIfObj, Aig_ObjLevel(pNode) );
-//            printf( "pi%d=%d\n ", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );
-            if pIfMan.nLevelMax < int32(pIfObj.Level) {
-                pIfMan.nLevelMax = int32(pIfObj.Level); }
-        
-        } else if Aig_ObjIsCo(pNode) {
-            pIfObj = If_ManCreateCo( pIfMan, If_NotCond( (If_Obj_t *)Aig_ObjFanin0(pNode).pData, Aig_ObjFaninC0(pNode) ) );
-//            printf( "po%d=%d\n ", If_ObjId(pIfObj), If_ObjLevel(pIfObj) );
-        
-        } else if Aig_ObjIsConst1(pNode) {
-            pIfObj = If_ManConst1( pIfMan );
-        } else { // add the node to the mapper
-            assert(false, "0"); }
-        // save the result
-        assert(Vec_PtrEntry(vAigToIf, i) == nil, "Vec_PtrEntry(vAigToIf, i) == nil");
-        Vec_PtrWriteEntry( vAigToIf, i, pIfObj );
-        pNode.pData = pIfObj;
-        if vSwitching2 != nil {
-            pSwitching2[pIfObj.Id] = pSwitching[pNode.Id]; }            
-        // set up the choice node
-        if Aig_ObjIsChoice( p, pNode ) {
-            for  pPrev = pNode, pFanin = Aig_ObjEquiv(p, pNode); pFanin; pPrev = pFanin, pFanin = Aig_ObjEquiv(p, pFanin)  {
-                If_ObjSetChoice( (If_Obj_t *)pPrev.pData, (If_Obj_t *)pFanin.pData );
-            }
-            If_ManCreateChoice( pIfMan, (If_Obj_t *)pNode.pData );
-        }
-//        assert( If_ObjLevel(pIfObj) == Aig_ObjLevel(pNode) );
-    }
-    }
-    if vSwitching != nil {
-        Vec_IntFree( vSwitching ); }
-    return pIfMan;
+func Nwk_ManToIf(g *Aig_Man_t, pars *If_Par_t, mapping *Vec_Ptr_t) *If_Man_t {
+	p := if_.If_ManStart(pars)
+	if p == nil {
+		return nil
+	}
+	copies := map[int]*If_Obj_t{0: if_.If_ManConst1(p)}
+	for _, e := range g.Inputs() {
+		copies[e.NodeID()] = if_.If_ManCreateCi(p)
+	}
+	var convert func(aig.Edge) *If_Obj_t
+	convert = func(e aig.Edge) *If_Obj_t {
+		n := copies[e.NodeID()]
+		if n == nil {
+			object := g.Node(e)
+			switch object.Kind {
+			case aig.And:
+				n = if_.If_ManCreateAnd(p, convert(object.Fanins[0]), convert(object.Fanins[1]))
+			case aig.ExclusiveOr:
+				n = if_.If_ManCreateXor(p, convert(object.Fanins[0]), convert(object.Fanins[1]))
+			case aig.Buffer:
+				n = convert(object.Fanins[0])
+			default:
+				panic("nwk: unsupported AIG mapping object")
+			}
+			copies[e.NodeID()] = n
+		}
+		return if_.If_NotCond(n, bit(e.Complemented()))
+	}
+	// Materialize the entire choice graph before linking classes.
+	for _, edge := range g.LiveEdges() {
+		kind := g.Node(edge).Kind
+		if kind == aig.And || kind == aig.ExclusiveOr || kind == aig.Buffer {
+			convert(edge)
+		}
+	}
+	for _, edge := range g.LiveEdges() {
+		if equivalent := aig.Aig_ObjEquiv(g, edge); equivalent != aig.InvalidEdge {
+			previous := edge
+			seen := map[int]bool{edge.NodeID(): true}
+			for equivalent != aig.InvalidEdge {
+				if seen[equivalent.NodeID()] {
+					panic("nwk: cyclic AIG choice class")
+				}
+				seen[equivalent.NodeID()] = true
+				if_.If_ObjSetChoice(if_.If_Regular(convert(previous)), if_.If_Regular(convert(equivalent)))
+				previous = equivalent
+				equivalent = aig.Aig_ObjEquiv(g, equivalent)
+			}
+			if_.If_ManCreateChoice(p, if_.If_Regular(convert(edge)))
+		}
+	}
+	for _, e := range g.Outputs() {
+		copies[e.NodeID()] = if_.If_ManCreateCo(p, convert(g.Node(e).Fanins[0]))
+	}
+	vec.Vec_PtrFill(mapping, int(aig.Aig_ManObjNumMax(g)), nil)
+	for id, n := range copies {
+		vec.Vec_PtrWriteEntry(mapping, id, n)
+	}
+	if pars.Power() {
+		registers := g.RegisterCount()
+		aig.Aig_ManSetRegNum(g, 0)
+		probabilities, err := saig.SwitchingProbabilities(g, 48, 16, false)
+		aig.Aig_ManSetRegNum(g, registers)
+		if err != nil {
+			panic(err)
+		}
+		mapped := make([]float32, if_.If_ManObjNum(p))
+		for _, edge := range g.LiveEdges() {
+			if object := copies[edge.NodeID()]; object != nil {
+				mapped[if_.If_ObjId(if_.If_Regular(object))] = probabilities[edge.NodeID()]
+			}
+		}
+		p.SetSwitchingProbabilities(mapped)
+	}
+	return p
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively derives the local AIG for the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_NodeIfToHop2_rec(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vVisited *Vec_Ptr_t) *Hop_Obj_t {
-    var pCut *If_Cut_t;
-    var pTemp *If_Obj_t;
-    var gFunc, gFunc0, gFunc1 *Hop_Obj_t;
-    // get the best cut
-    pCut = If_ObjCutBest(pIfObj);
-    // if the cut is visited, return the result
-    if If_CutData(pCut) {
-        return (Hop_Obj_t *)If_CutData(pCut); }
-    // mark the node as visited
-    Vec_PtrPush( vVisited, pCut );
-    // insert the worst case
-    If_CutSetData( pCut, (void *)1 );
-    // skip in case of primary input
-    if If_ObjIsCi(pIfObj) {
-        return (Hop_Obj_t *)If_CutData(pCut); }
-    // compute the functions of the children
-    for  pTemp = pIfObj; (pTemp != nil); pTemp = pTemp.pEquiv  {
-        gFunc0 = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin0, vVisited );
-        if gFunc0 == (void *)1 {
-            continue; }
-        gFunc1 = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin1, vVisited );
-        if gFunc1 == (void *)1 {
-            continue; }
-        // both branches are solved
-        gFunc = Hop_And( pHopMan, Hop_NotCond(gFunc0, pTemp.fCompl0), Hop_NotCond(gFunc1, pTemp.fCompl1) ); 
-        if pTemp.fPhase != pIfObj.fPhase {
-            gFunc = Hop_Not(gFunc); }
-        If_CutSetData( pCut, gFunc );
-        break;
-    }
-    return (Hop_Obj_t *)If_CutData(pCut);
+func localIfFunction(h *Hop_Man_t, root *If_Obj_t, leaves []int32) *Hop_Obj_t {
+	memo := map[*If_Obj_t]*Hop_Obj_t{}
+	active := map[*If_Obj_t]bool{}
+	leafIndices := map[int32]int{}
+	for i, id := range leaves {
+		leafIndices[id] = i
+	}
+	var build func(*If_Obj_t) *Hop_Obj_t
+	build = func(edge *If_Obj_t) *Hop_Obj_t {
+		n := if_.If_Regular(edge)
+		r, ok := memo[n]
+		if !ok {
+			if index, found := leafIndices[if_.If_ObjId(n)]; found {
+				r = hop.Hop_IthVar(h, int32(index))
+			} else if if_.If_ObjIsConst1(n) != 0 {
+				r = hop.Hop_ManConst1(h)
+			} else if if_.If_ObjIsCi(n) != 0 || active[n] {
+				return nil
+			} else {
+				active[n] = true
+				for alternative := n; alternative != nil; alternative = alternative.Equivalent() {
+					a := build(if_.If_ObjFanin0(alternative))
+					if a == nil {
+						continue
+					}
+					b := build(if_.If_ObjFanin1(alternative))
+					if b == nil {
+						continue
+					}
+					a = hop.Hop_NotCond(a, if_.If_ObjFaninC0(alternative))
+					b = hop.Hop_NotCond(b, if_.If_ObjFaninC1(alternative))
+					r = hop.Hop_NotCond(hop.Hop_And(h, a, b), bit(alternative.Phase() != n.Phase()))
+					break
+				}
+				delete(active, n)
+				if r == nil {
+					return nil
+				}
+			}
+			memo[n] = r
+		}
+		return hop.Hop_NotCond(r, if_.If_IsComplement(edge))
+	}
+	result := build(root)
+	if result == nil {
+		panic("nwk: mapped cut cannot reconstruct local function")
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the local AIG for the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_NodeIfToHop(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t) *Hop_Obj_t {
-    var pCut *If_Cut_t;
-    var gFunc *Hop_Obj_t;
-    var pLeaf *If_Obj_t;
-    var i int32;
-    // get the best cut
-    pCut = If_ObjCutBest(pIfObj);
-    assert(pCut.nLeaves > 1, "pCut.nLeaves > 1");
-    // set the leaf variables
-    // inlining of macro If_CutForEachLeaf
-    for  i = 0; (i < int32((pCut).nLeaves)) && ((pLeaf) = If_ManObj(pIfMan, (pCut).pLeaves[i])); i++  {
-        If_CutSetData( If_ObjCutBest(pLeaf), Hop_IthVar(pHopMan, i) );
-    }
-    // recursively compute the function while collecting visited cuts
-    Vec_PtrClear( pIfMan.vTemp );
-    gFunc = Nwk_NodeIfToHop2_rec( pHopMan, pIfMan, pIfObj, pIfMan.vTemp ); 
-    if gFunc == (void *)1 {
-        fmt.Printf("Nwk_NodeIfToHop(): Computing local AIG has failed.\n");
-        return nil;
-    }
-//    printf( "%d ", Vec_PtrSize(p->vTemp) );
-    // clean the cuts
-    // inlining of macro If_CutForEachLeaf
-    for  i = 0; (i < int32((pCut).nLeaves)) && ((pLeaf) = If_ManObj(pIfMan, (pCut).pLeaves[i])); i++  {
-        If_CutSetData( If_ObjCutBest(pLeaf), nil );
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pIfMan.vTemp)) && (((pCut) = (If_Cut_t *)Vec_PtrEntry(pIfMan.vTemp, i)), 1); i++  {
-        If_CutSetData( pCut, nil );
-    }
-    return gFunc;
+func Nwk_NodeIfToHop2_rec(h *Hop_Man_t, p *If_Man_t, o *If_Obj_t, visited *Vec_Ptr_t) *Hop_Obj_t {
+	return Nwk_NodeIfToHop(h, p, o)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_ManFromIf(pIfMan *If_Man_t, p *Aig_Man_t, vAigToIf *Vec_Ptr_t) *Nwk_Man_t {
-    var vIfToAig *Vec_Ptr_t;
-    var pNtk *Nwk_Man_t;
-    var pObjNew *Nwk_Obj_t  = nil;
-    var pObj, pObjRepr *Aig_Obj_t;
-    var pIfObj *If_Obj_t  = nil;
-    var pCutBest *If_Cut_t;
-    var i int32;
-    var k int32;
-    var nLeaves int32;
-    var ppLeaves *int32;
-    assert(Aig_ManCiNum(p) == If_ManCiNum(pIfMan), "Aig_ManCiNum(p) == If_ManCiNum(pIfMan)");
-    assert(Aig_ManCoNum(p) == If_ManCoNum(pIfMan), "Aig_ManCoNum(p) == If_ManCoNum(pIfMan)");
-    assert(Aig_ManNodeNum(p) == If_ManAndNum(pIfMan), "Aig_ManNodeNum(p) == If_ManAndNum(pIfMan)");
-    Aig_ManCleanData( p );
-    If_ManCleanCutData( pIfMan );
-    // create mapping of IF to AIG
-    vIfToAig = Vec_PtrStart( If_ManObjNum(pIfMan) );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        pIfObj = (If_Obj_t *)Vec_PtrEntry( vAigToIf, i );
-        Vec_PtrWriteEntry( vIfToAig, pIfObj.Id, pObj );
-    }
-    }
-    // construct the network
-    pNtk = Nwk_ManAlloc();
-    pNtk.pName = Abc_UtilStrsav( p.pName );
-    pNtk.pSpec = Abc_UtilStrsav( p.pSpec );
-//    pNtk->nLatches = Aig_ManRegNum(p);
-//    pNtk->nTruePis = Nwk_ManCiNum(pNtk) - pNtk->nLatches;
-//    pNtk->nTruePos = Nwk_ManCoNum(pNtk) - pNtk->nLatches;
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        pIfObj = (If_Obj_t *)Vec_PtrEntry( vAigToIf, i );
-        if pIfObj.nRefs == 0 && !If_ObjIsTerm(pIfObj) {
-            continue; }
-        if Aig_ObjIsNode(pObj) {
-            pCutBest = If_ObjCutBest( pIfObj );
-            nLeaves  = If_CutLeaveNum( pCutBest ); 
-            ppLeaves = If_CutLeaves( pCutBest );
-            // create node
-            pObjNew = Nwk_ManCreateNode( pNtk, nLeaves, pIfObj.nRefs );
-            for  k = 0; k < nLeaves; k++  {
-                pObjRepr = (Aig_Obj_t *)Vec_PtrEntry( vIfToAig, ppLeaves[k] );
-                Nwk_ObjAddFanin( pObjNew, (Nwk_Obj_t *)pObjRepr.pData );
-            }
-            // get the functionality
-            pObjNew.pFunc = Nwk_NodeIfToHop( pNtk.pManHop, pIfMan, pIfObj );
-        
-        } else if Aig_ObjIsCi(pObj) {
-            pObjNew = Nwk_ManCreateCi( pNtk, pIfObj.nRefs );
-        } else if Aig_ObjIsCo(pObj) {
-            pObjNew = Nwk_ManCreateCo( pNtk );
-            pObjNew.fInvert = Aig_ObjFaninC0(pObj);
-            Nwk_ObjAddFanin( pObjNew, (Nwk_Obj_t *)Aig_ObjFanin0(pObj).pData );
-//printf( "%d ", pObjNew->Id );
-        
-        } else if Aig_ObjIsConst1(pObj) {
-            pObjNew = Nwk_ManCreateNode( pNtk, 0, pIfObj.nRefs );
-            pObjNew.pFunc = Hop_ManConst1( pNtk.pManHop );
-        
-        } else {
-            assert(false, "0"); }
-        pObj.pData = pObjNew;
-    }
-    }
-//printf( "\n" );
-    Vec_PtrFree( vIfToAig );
-    pNtk.pManTime = Tim_ManDup( pIfMan.pManTim, 0 );
-    Nwk_ManMinimumBase( pNtk, 0 );
-    assert(Nwk_ManCheck( pNtk ), "Nwk_ManCheck( pNtk )");
-    return pNtk;
+func Nwk_NodeIfToHop(h *Hop_Man_t, p *If_Man_t, o *If_Obj_t) *Hop_Obj_t {
+	cut := if_.If_ObjCutBest(if_.If_Regular(o))
+	leaves := if_.If_CutLeaves(cut)[:if_.If_CutLeaveNum(cut)]
+	return localIfFunction(h, o, leaves)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Interface with the FPGA mapping package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Nwk_MappingIf(p *Aig_Man_t, pManTime *Tim_Man_t, pPars *If_Par_t) *Nwk_Man_t {
-    var pNtk *Nwk_Man_t;
-    var pIfMan *If_Man_t;
-    var vAigToIf *Vec_Ptr_t;
-    // set the arrival times
-    // inlining of macro ABC_ALLOC
-    pPars.pTimesArr = ((float *) malloc(sizeof(float) * (size_t)(Aig_ManCiNum(p))));
-    memset( pPars.pTimesArr, 0, sizeof(float) * Aig_ManCiNum(p) );
-    // translate into the mapper
-    vAigToIf = Vec_PtrStart( Aig_ManObjNumMax(p) );
-    pIfMan = Nwk_ManToIf( p, pPars, vAigToIf );    
-    if pIfMan == nil {
-        return nil; }
-    pIfMan.pManTim = Tim_ManDup( pManTime, 0 );
-    pIfMan.pPars.fCutMin = 0; // is not compatible with deriving result
-    if !If_ManPerformMapping( pIfMan ) {
-        If_ManStop( pIfMan );
-        return nil;
-    }
-    // transform the result of mapping into the new network
-    pNtk = Nwk_ManFromIf( pIfMan, p, vAigToIf );
-    if pPars.fBidec && pPars.nLutSize <= 8 {
-        Nwk_ManBidecResyn( pNtk, 0 ); }
-    If_ManStop( pIfMan );
-    Vec_PtrFree( vAigToIf );
-    return pNtk;
+func Nwk_ManFromIf(p *If_Man_t, g *Aig_Man_t, aigToIf *Vec_Ptr_t) *Nwk_Man_t {
+	n := Nwk_ManAlloc()
+	n.Name = g.Name
+	n.Spec = g.Spec
+	copies := map[int32]*Nwk_Obj_t{}
+	constant := Nwk_ManCreateNode(n, 0, 0)
+	constant.Function = hop.Hop_ManConst1(n.Hop)
+	copies[if_.If_ObjId(if_.If_ManConst1(p))] = constant
+	for i := int32(0); i < if_.If_ManCiNum(p); i++ {
+		object := if_.If_ManCi(p, i)
+		copies[if_.If_ObjId(object)] = Nwk_ManCreateCi(n, 0)
+	}
+	active := map[int32]bool{}
+	var convert func(*If_Obj_t) *Nwk_Obj_t
+	convert = func(o *If_Obj_t) *Nwk_Obj_t {
+		o = if_.If_Regular(o)
+		id := if_.If_ObjId(o)
+		if copy := copies[id]; copy != nil {
+			return copy
+		}
+		if active[id] {
+			panic("nwk: cyclic mapped cut")
+		}
+		active[id] = true
+		cut := if_.If_ObjCutBest(o)
+		leaves := if_.If_CutLeaves(cut)[:if_.If_CutLeaveNum(cut)]
+		fanins := make([]*Nwk_Obj_t, len(leaves))
+		for i, leaf := range leaves {
+			fanins[i] = convert(if_.If_ManObj(p, leaf))
+		}
+		copy := Nwk_ManCreateNode(n, int32(len(leaves)), 0)
+		for _, fanin := range fanins {
+			Nwk_ObjAddFanin(copy, fanin)
+		}
+		copy.Function = localIfFunction(n.Hop, o, leaves)
+		copy.Arrival = if_.If_ObjArrTime(o)
+		copies[id] = copy
+		delete(active, id)
+		return copy
+	}
+	for i := int32(0); i < if_.If_ManCoNum(p); i++ {
+		co := if_.If_ManCo(p, i)
+		driver := if_.If_ObjFanin0(co)
+		fanin := convert(driver)
+		o := Nwk_ManCreateCo(n)
+		Nwk_ObjAddFanin(o, fanin)
+		o.Invert = if_.If_ObjFaninC0(co) != 0
+	}
+	if p.TimingManager() != nil {
+		n.Timing = tim.Tim_ManDup(p.TimingManager(), 0)
+	}
+	Nwk_ManMinimumBase(n, 0)
+	return n
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Nwk_MappingIf(g *Aig_Man_t, timing *Tim_Man_t, pars *If_Par_t) *Nwk_Man_t {
+	pars.SetArrivalTimes(make([]float32, g.InputCount()))
+	mapping := vec.Vec_PtrAlloc(0)
+	p := Nwk_ManToIf(g, pars, mapping)
+	if p == nil {
+		return nil
+	}
+	defer if_.If_ManStop(p)
+	if timing != nil {
+		p.SetTimingManager(tim.Tim_ManDup(timing, 0))
+	}
+	pars.SetCutMin(false)
+	if if_.If_ManPerformMapping(p) == 0 {
+		return nil
+	}
+	n := Nwk_ManFromIf(p, g, mapping)
+	if pars.Bidec() && pars.LUTSize() <= 8 {
+		Nwk_ManBidecResyn(n, 0)
+	}
+	return n
+}

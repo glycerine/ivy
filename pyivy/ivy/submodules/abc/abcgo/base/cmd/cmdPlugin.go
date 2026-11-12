@@ -413,3 +413,12 @@ func Cmd_CommandAbcLoadPlugIn(f *Abc_Frame_t, argc int32, argv []string) int32 {
 func init() {
 	extensionInitializers = append(extensionInitializers, func(f *Abc_Frame_t) { Cmd_CommandAdd(f, "Various", "load_plugin", Cmd_CommandAbcLoadPlugIn, 0) })
 }
+
+// CounterexampleData lets graph owners consume verified witnesses without
+// importing the command package into their own engine layer.
+func (witness *PluginCounterexample) CounterexampleData() (bits []int32, registers, inputs, frame, output int) {
+	if witness == nil {
+		return nil, 0, 0, 0, 0
+	}
+	return append([]int32(nil), witness.Bits...), witness.Registers, witness.Inputs, witness.Frame, witness.Output
+}

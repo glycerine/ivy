@@ -1,2269 +1,758 @@
 package abc
 
 import (
+	"bufio"
 	"fmt"
+	"math/rand"
+	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [abcNtk.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Network creation/duplication/deletion procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcNtk.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "abc.h"
-//#include "abcInt.h"
-//#include "base/main/main.h"
-//#include "map/mio/mio.h"
-//#include "aig/gia/gia.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates a new Ntk.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkAlloc(Type Abc_NtkType_t, Func Abc_NtkFunc_t, fUseMemMan int32) *Abc_Ntk_t {
-    var pNtk *Abc_Ntk_t;
-    pNtk = new(Abc_Ntk_t);
-    memset( pNtk, 0, sizeof(Abc_Ntk_t) );
-    pNtk.ntkType     = Type;
-    pNtk.ntkFunc     = Func;
-    // start the object storage
-    pNtk.vObjs       = Vec_PtrAlloc( 100 );
-    pNtk.vPios       = Vec_PtrAlloc( 100 );
-    pNtk.vPis        = Vec_PtrAlloc( 100 );
-    pNtk.vPos        = Vec_PtrAlloc( 100 );
-    pNtk.vCis        = Vec_PtrAlloc( 100 );
-    pNtk.vCos        = Vec_PtrAlloc( 100 );
-    pNtk.vBoxes      = Vec_PtrAlloc( 100 );
-    pNtk.vLtlProperties = Vec_PtrAlloc( 100 );
-    // start the memory managers
-    if fUseMemMan != 0 {
-        pNtk.pMmObj = Mem_FixedStart( sizeof(Abc_Obj_t) );
-    } else {
-        pNtk.pMmObj = nil;
-    }
-    if fUseMemMan != 0 {
-        pNtk.pMmStep = Mem_StepStart( ABC_NUM_STEPS );
-    } else {
-        pNtk.pMmStep = nil;
-    }
-    // get ready to assign the first Obj ID
-    pNtk.nTravIds    = 1;
-    // start the functionality manager
-    if !Abc_NtkIsStrash(pNtk) {
-        Vec_PtrPush( pNtk.vObjs, nil ); }
-    if Abc_NtkIsStrash(pNtk) {
-        pNtk.pManFunc = Abc_AigAlloc( pNtk );
-    } else if Abc_NtkHasSop(pNtk) || Abc_NtkHasBlifMv(pNtk) {
-        pNtk.pManFunc = Mem_FlexStart();
-#ifdef ABC_USE_CUDD
-    else if ( Abc_NtkHasBdd(pNtk) )
-        pNtk->pManFunc = Cudd_Init( 20, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-#endif
-    } else if Abc_NtkHasAig(pNtk) {
-        pNtk.pManFunc = Hop_ManStart();
-    } else if Abc_NtkHasMapping(pNtk) {
-        pNtk.pManFunc = Abc_FrameReadLibGen();
-    } else if !Abc_NtkHasBlackbox(pNtk) {
-        assert(false, "0"); }
-    // name manager
-    pNtk.pManName = Nm_ManCreate( 200 );
-    // attribute manager
-    pNtk.vAttrs = Vec_PtrStart( VEC_ATTR_TOTAL_NUM );
-    // estimated AndGateDelay
-    pNtk.AndGateDelay = 0.0;
-    return pNtk;
+func ntkCopyNode(dst *Network, o *Object) Edge {
+	if Abc_NtkIsStrash(o.network) != 0 {
+		return dst.AndEdges(ntkCopiedEdge(o.fanins[0]), ntkCopiedEdge(o.fanins[1]))
+	}
+	copy := Abc_NtkDupObj(dst, o, 0)
+	for _, e := range o.fanins {
+		Abc_ObjAddFanin(copy, ntkCopiedEdge(e))
+	}
+	return copy.Signal()
+}
+func ntkCopyPart(src *Network, roots, boundary []*Object, allInputs bool) *Network {
+	dst := ntkFreshLike(src, Abc_NtkType_t(src.Type), Abc_NtkFunc_t(src.Function))
+	ntkClearCopies(src)
+	setCopy(src.constant, dst.One())
+	stop := make(map[*Object]bool)
+	for _, o := range boundary {
+		stop[o] = true
+	}
+	seen := make(map[*Object]bool)
+	var order []*Object
+	var visit func(*Object)
+	visit = func(o *Object) {
+		if seen[o] {
+			return
+		}
+		seen[o] = true
+		if stop[o] || o.IsCI() || o == src.constant {
+			return
+		}
+		for _, e := range o.fanins {
+			visit(e.Object)
+		}
+		if o.Kind == ObjectNode || o.Kind == ObjectNet {
+			order = append(order, o)
+		}
+	}
+	for _, o := range roots {
+		visit(o)
+	}
+	if boundary == nil {
+		boundary = src.cis
+	}
+	for _, o := range boundary {
+		if allInputs || seen[o] {
+			pi := dst.NewObject(ObjectPI)
+			pi.SetName(o.Name())
+			setCopy(o, pi.Signal())
+		}
+	}
+	for _, o := range order {
+		if o.Kind == ObjectNet {
+			setCopy(o, ntkCopiedEdge(o.fanins[0]))
+		} else {
+			setCopy(o, ntkCopyNode(dst, o))
+		}
+	}
+	for _, o := range roots {
+		edge := getCopy(o)
+		if o.IsCO() {
+			edge = ntkCopiedEdge(o.fanins[0])
+		}
+		po := dst.NewObject(ObjectPO)
+		po.SetName(o.Name())
+		Abc_ObjAddFanin(po, edge)
+	}
+	return dst
+}
+func Abc_NtkCreateCone(src *Network, node *Object, name string, all int32) *Network {
+	dst := ntkCopyPart(src, []*Object{node}, nil, all != 0)
+	dst.Name = src.Name + "_" + name
+	dst.kindOrder[ObjectPO][0].SetName(name)
+	return dst
+}
+func Abc_NtkCreateConeArray(src *Network, roots []*Object, all int32) *Network {
+	dst := ntkCopyPart(src, roots, nil, all != 0)
+	dst.Name = src.Name + "_part"
+	return dst
+}
+func Abc_NtkAppendToCone(dst, src *Network, roots []*Object) {
+	if Abc_NtkIsStrash(dst) == 0 || Abc_NtkIsStrash(src) == 0 {
+		panic("abc: append cone requires strashed networks")
+	}
+	nodes := Abc_NtkDfsNodes(src, roots, int32(len(roots)))
+	setCopy(src.constant, dst.One())
+	byName := make(map[string]*Object)
+	for _, o := range dst.cis {
+		byName[o.Name()] = o
+	}
+	used := make(map[*Object]bool)
+	var visit func(*Object)
+	visit = func(o *Object) {
+		if used[o] {
+			return
+		}
+		used[o] = true
+		if o.IsCI() {
+			return
+		}
+		for _, e := range o.fanins {
+			visit(e.Object)
+		}
+	}
+	for _, o := range roots {
+		visit(o)
+	}
+	for _, ci := range src.cis {
+		if !used[ci] {
+			continue
+		}
+		copy := byName[ci.Name()]
+		if copy == nil {
+			copy = dst.NewObject(ObjectPI)
+			copy.SetName(ci.Name())
+			byName[ci.Name()] = copy
+		}
+		setCopy(ci, copy.Signal())
+	}
+	for _, o := range nodes {
+		setCopy(o, ntkCopyNode(dst, o))
+	}
+}
+func Abc_NtkCreateMffc(src *Network, node *Object, name string) *Network {
+	var cone, support []*Object
+	Abc_NodeDeref_rec(node)
+	Abc_NodeMffcConeSupp(node, &cone, &support)
+	Abc_NodeRef_rec(node)
+	dst := ntkCopyPart(src, []*Object{node}, support, true)
+	dst.Name = src.Name + "_" + name
+	dst.kindOrder[ObjectPO][0].SetName(name)
+	return dst
+}
+func ntkStrashNode(dst *Network, o *Object) Edge {
+	if Abc_NtkHasAig(o.network) != 0 {
+		return Abc_ConvertAigToAig(dst, o)
+	}
+	if text, ok := o.Data.(string); ok {
+		count := int(Abc_SopGetVarNum(text))
+		if count != len(o.fanins) {
+			panic("abc: SOP arity mismatch")
+		}
+		if Abc_SopIsExorType(text) != 0 {
+			result := dst.One().Not()
+			for _, e := range o.fanins {
+				result = ntkXor(dst, result, ntkCopiedEdge(e))
+			}
+			if Abc_SopGetPhase(text) == 0 {
+				result = result.Not()
+			}
+			return result
+		}
+		result := dst.One().Not()
+		for _, cube := range strings.Split(strings.TrimSuffix(text, "\n"), "\n") {
+			term := dst.One()
+			for i := 0; i < count; i++ {
+				if cube[i] == '-' {
+					continue
+				}
+				edge := ntkCopiedEdge(o.fanins[i])
+				if cube[i] == '0' {
+					edge = edge.Not()
+				}
+				term = dst.AndEdges(term, edge)
+			}
+			result = dst.AndEdges(result.Not(), term.Not()).Not()
+		}
+		if Abc_SopGetPhase(text) == 0 {
+			result = result.Not()
+		}
+		return result
+	}
+	panic("abc: target strashing requires Hop or SOP functions")
+}
+func Abc_NtkCreateTarget(src *Network, roots []*Object, values []int32) *Network {
+	if len(roots) != len(values) {
+		panic("abc: target arity mismatch")
+	}
+	ntkClearCopies(src)
+	dst := Abc_NtkAlloc(ABC_NTK_STRASH, ABC_FUNC_AIG, 1)
+	dst.Name = src.Name
+	setCopy(src.constant, dst.One())
+	for _, o := range src.cis {
+		copy := dst.NewObject(ObjectPI)
+		copy.SetName(o.Name())
+		setCopy(o, copy.Signal())
+	}
+	for _, o := range Abc_NtkDfsNodes(src, roots, int32(len(roots))) {
+		setCopy(o, ntkStrashNode(dst, o))
+	}
+	result := dst.One()
+	for i, o := range roots {
+		edge := getCopy(o)
+		if o.IsCO() {
+			edge = ntkCopiedEdge(o.fanins[0])
+		}
+		if values[i] == 0 {
+			edge = edge.Not()
+		}
+		result = dst.AndEdges(result, edge)
+	}
+	po := dst.NewObject(ObjectPO)
+	po.SetName("miter")
+	Abc_ObjAddFanin(po, result)
+	return dst
+}
+func Abc_NtkCreateFromNode(src *Network, node *Object) *Network {
+	support := make([]*Object, len(node.fanins))
+	for i, e := range node.fanins {
+		support[i] = e.Object
+	}
+	dst := ntkCopyPart(src, []*Object{node}, support, true)
+	dst.Name = node.Name()
+	return dst
+}
+func Abc_NtkCreateWithNode(sop string) *Network {
+	n := Abc_NtkCreateFromSops("ex", []string{sop})
+	for i, pi := range n.kindOrder[ObjectPI] {
+		name := string(rune('a' + i))
+		if len(n.kindOrder[ObjectPI]) >= 26 {
+			name = string(rune('a'+i%26)) + string(rune('0'+i/26))
+		}
+		pi.SetName(name)
+	}
+	n.kindOrder[ObjectPO][0].SetName("F")
+	return n
+}
+func Abc_NtkCreateFromSops(name string, sops []string) *Network {
+	n := Abc_NtkAlloc(ABC_NTK_LOGIC, ABC_FUNC_SOP, 1)
+	n.Name = name
+	if len(sops) == 0 {
+		return n
+	}
+	count := int(Abc_SopGetVarNum(sops[0]))
+	for i := 0; i < count; i++ {
+		pi := n.NewObject(ObjectPI)
+		pi.SetName(fmt.Sprintf("pi%d", i))
+	}
+	for i, sop := range sops {
+		arity := int(Abc_SopGetVarNum(sop))
+		if arity > count {
+			panic("abc: inconsistent SOP supports")
+		}
+		node := n.NewObject(ObjectNode)
+		node.Data = sop
+		for _, pi := range n.kindOrder[ObjectPI][:arity] {
+			Abc_ObjAddFanin(node, pi)
+		}
+		po := n.NewObject(ObjectPO)
+		po.SetName(fmt.Sprintf("po%d", i))
+		Abc_ObjAddFanin(po, node)
+	}
+	return n
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Starts a new network using existing network as a model.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkStartFrom(pNtk *Abc_Ntk_t, Type Abc_NtkType_t, Func Abc_NtkFunc_t) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t; 
-    var pObj *Abc_Obj_t;
-    var fCopyNames, i int32;
-    if pNtk == nil {
-        return nil; }
-    // decide whether to copy the names
-    fCopyNames = ( Type != ABC_NTK_NETLIST );
-    // start the network
-    pNtkNew = Abc_NtkAlloc( Type, Func, 1 );
-    pNtkNew.nConstrs   = pNtk.nConstrs;
-    pNtkNew.nBarBufs   = pNtk.nBarBufs;
-    // duplicate the name and the spec
-    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);
-    pNtkNew.pSpec = Extra_UtilStrsav(pNtk.pSpec);
-    // clean the node copy fields
-    Abc_NtkCleanCopy( pNtk );
-    // map the constant nodes
-    if Abc_NtkIsStrash(pNtk) && Abc_NtkIsStrash(pNtkNew) {
-        Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pNtkNew); }
-    // clone CIs/CIs/boxes
-    Abc_NtkForEachPi( pNtk, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, fCopyNames );
-    Abc_NtkForEachPo( pNtk, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, fCopyNames );
-    Abc_NtkForEachBox( pNtk, pObj, i )
-        Abc_NtkDupBox( pNtkNew, pObj, fCopyNames );
-    // transfer logic level
-    Abc_NtkForEachCi( pNtk, pObj, i )
-        pObj.pCopy.Level = pObj.Level;
-    // transfer the names
-//    Abc_NtkTrasferNames( pNtk, pNtkNew );
-    Abc_ManTimeDup( pNtk, pNtkNew );
-    if pNtk.vOnehots {
-        pNtkNew.vOnehots = (Vec_Ptr_t *)Vec_VecDupInt( (Vec_Vec_t *)pNtk.vOnehots ); }
-    if pNtk.pSeqModel {
-        pNtkNew.pSeqModel = Abc_CexDup( pNtk.pSeqModel, Abc_NtkLatchNum(pNtk) ); }
-    if pNtk.vObjPerm {
-        pNtkNew.vObjPerm = Vec_IntDup( pNtk.vObjPerm ); }
-    pNtkNew.AndGateDelay = pNtk.AndGateDelay;
-    if pNtkNew.pManTime && Abc_FrameReadLibGen() && pNtkNew.AndGateDelay == 0.0 {
-        pNtkNew.AndGateDelay = Mio_LibraryReadDelayAigNode((Mio_Library_t *)Abc_FrameReadLibGen()); }
-    // initialize logic level of the CIs
-    if pNtk.AndGateDelay != 0.0 && pNtk.pManTime != nil && pNtk.ntkType != ABC_NTK_STRASH && Type == ABC_NTK_STRASH {
-        Abc_NtkForEachCi( pNtk, pObj, i )
-            pObj.pCopy.Level = int32((Abc_MaxFloat(0, Abc_NodeReadArrivalWorst(pObj)) / pNtk.AndGateDelay));
-    }
-    // check that the CI/CO/latches are copied correctly
-    assert(Abc_NtkCiNum(pNtk)    == Abc_NtkCiNum(pNtkNew), "Abc_NtkCiNum(pNtk)    == Abc_NtkCiNum(pNtkNew)");
-    assert(Abc_NtkCoNum(pNtk)    == Abc_NtkCoNum(pNtkNew), "Abc_NtkCoNum(pNtk)    == Abc_NtkCoNum(pNtkNew)");
-    assert(Abc_NtkLatchNum(pNtk) == Abc_NtkLatchNum(pNtkNew), "Abc_NtkLatchNum(pNtk) == Abc_NtkLatchNum(pNtkNew)");
-    return pNtkNew;
+func Abc_NtkDouble(src *Network) *Network {
+	if Abc_NtkIsLogic(src) == 0 {
+		panic("abc: network doubling requires logic")
+	}
+	dst := ntkFreshLike(src, Abc_NtkType_t(src.Type), Abc_NtkFunc_t(src.Function))
+	dst.Name = src.Name + "_2x"
+	for part := 1; part <= 2; part++ {
+		ntkClearCopies(src)
+		setCopy(src.constant, dst.One())
+		for _, o := range src.Objects() {
+			if o == src.constant {
+				continue
+			}
+			copy := Abc_NtkDupObj(dst, o, 0)
+			copy.Barrier = o.Barrier
+			setCopy(o, copy.Signal())
+			if o.IsCI() || o.IsCO() {
+				copy.SetName(fmt.Sprintf("%d_%s", part, o.Name()))
+			}
+		}
+		for _, o := range src.Objects() {
+			if o == src.constant {
+				continue
+			}
+			for _, e := range o.fanins {
+				Abc_ObjAddFanin(o.Copy, ntkCopiedEdge(e))
+			}
+		}
+	}
+	Abc_NtkOrderCisCos(dst)
+	return dst
+}
+func Abc_NtkBottom(src *Network, level int32) *Network {
+	if Abc_NtkIsLogic(src) == 0 || Abc_NtkLatchNum(src) != 0 {
+		panic("abc: bottom extraction requires combinational logic")
+	}
+	dst := ntkFreshLike(src, Abc_NtkType_t(src.Type), Abc_NtkFunc_t(src.Function))
+	dst.Name = src.Name + "_bot"
+	ntkClearCopies(src)
+	setCopy(src.constant, dst.One())
+	for _, o := range src.kindOrder[ObjectPI] {
+		Abc_NtkDupObj(dst, o, 1)
+	}
+	for _, o := range src.kindOrder[ObjectNode] {
+		if o.Level <= int(level) {
+			Abc_NtkDupObj(dst, o, 0)
+		}
+	}
+	for _, o := range src.Objects() {
+		copy := getCopy(o)
+		if copy.Object != nil && o != src.constant {
+			for _, e := range o.fanins {
+				if getCopy(e.Object).Object != nil {
+					Abc_ObjAddFanin(copy.Object, ntkCopiedEdge(e))
+				}
+			}
+		}
+		if copy.Object == nil {
+			for _, e := range o.fanins {
+				if e.Object.Kind == ObjectNode && getCopy(e.Object).Object != nil {
+					po := dst.NewObject(ObjectPO)
+					Abc_ObjAddFanin(po, ntkCopiedEdge(e))
+				}
+			}
+		}
+	}
+	return dst
+}
+func Abc_NtkAttachBottom(top, bottom *Network) *Network {
+	if bottom == nil {
+		panic("abc: nil bottom network")
+	}
+	if top == nil {
+		return bottom
+	}
+	inputs := top.kindOrder[ObjectPI]
+	outputs := bottom.kindOrder[ObjectPO]
+	if len(outputs) != len(inputs) || Abc_NtkLatchNum(top) != 0 || Abc_NtkLatchNum(bottom) != 0 || Abc_NtkPiNum(bottom) >= Abc_NtkPiNum(top) {
+		panic("abc: incompatible composition interfaces")
+	}
+	var buffers []*Object
+	for _, pi := range inputs {
+		buf := Abc_NtkCreateNodeBuf(top, nil)
+		Abc_ObjTransferFanout(pi, buf)
+		buffers = append(buffers, buf)
+	}
+	for _, pi := range inputs[len(bottom.kindOrder[ObjectPI]):] {
+		Abc_NtkDeleteObj(pi)
+	}
+	setCopy(bottom.constant, top.One())
+	for i, pi := range bottom.kindOrder[ObjectPI] {
+		setCopy(pi, inputs[i].Signal())
+	}
+	for _, o := range Abc_NtkDfs(bottom, 0) {
+		setCopy(o, ntkCopyNode(top, o))
+	}
+	for i, po := range outputs {
+		Abc_ObjAddFanin(buffers[i], ntkCopiedEdge(po.fanins[0]))
+	}
+	Abc_NtkDelete(bottom)
+	return top
+}
+func Abc_NtkFixNonDrivenNets(n *Network) {
+	if len(n.kindOrder[ObjectNode]) == 0 && len(n.boxes) == 0 {
+		return
+	}
+	if net := Abc_NtkFindNet(n, "[_c1_]"); net != nil && len(net.fanins) == 0 {
+		Abc_ObjAddFanin(net, Abc_NtkCreateNodeConst1(n))
+	}
+	var fixed []string
+	for _, net := range n.kindOrder[ObjectNet] {
+		if len(net.fanins) == 0 {
+			Abc_ObjAddFanin(net, Abc_NtkCreateNodeConst0(n))
+			fixed = append(fixed, net.Name())
+		}
+	}
+	if len(fixed) > 0 {
+		fmt.Printf("Warning: Constant-0 drivers added to %d non-driven nets in network %q\n", len(fixed), n.Name)
+	}
+}
+func ntkChangeKind(o *Object, kind ObjectKind) {
+	n := o.network
+	n.kindOrder[o.Kind] = removeObjectOrder(n.kindOrder[o.Kind], o)
+	o.Kind = kind
+	n.kindOrder[kind] = append(n.kindOrder[kind], o)
+}
+func Abc_NtkMakeComb(n *Network, remove int32) {
+	if Abc_NtkLatchNum(n) == 0 {
+		return
+	}
+	if Abc_NtkIsNetlist(n) != 0 || Abc_NtkHasOnlyLatchBoxes(n) == 0 {
+		panic("abc: combinational conversion requires latch-only logic")
+	}
+	for _, latch := range append([]*Object(nil), n.boxes...) {
+		Abc_NtkDeleteObj(latch)
+	}
+	for _, bo := range n.ObjectsOfKind(ObjectBO) {
+		ntkChangeKind(bo, ObjectPI)
+	}
+	for _, bi := range n.ObjectsOfKind(ObjectBI) {
+		if remove != 0 {
+			Abc_NtkDeleteObj(bi)
+		} else {
+			ntkChangeKind(bi, ObjectPO)
+		}
+	}
+	Abc_NtkOrderCisCos(n)
+	if remove != 0 {
+		ntkSweepDangling(n)
+	}
+}
+func Abc_NtkMakeSeq(n *Network, count int32) {
+	if len(n.boxes) != 0 || count < 0 {
+		panic("abc: sequential conversion requires combinational network")
+	}
+	pis, pos := n.ObjectsOfKind(ObjectPI), n.ObjectsOfKind(ObjectPO)
+	if int(count) >= len(pis) || int(count) >= len(pos) {
+		fmt.Println("The number of latches is more or equal than the number of PIs or POs.")
+		return
+	}
+	for i := 0; i < int(count); i++ {
+		out, in := pis[len(pis)-int(count)+i], pos[len(pos)-int(count)+i]
+		ntkChangeKind(out, ObjectBO)
+		ntkChangeKind(in, ObjectBI)
+		latch := n.NewObject(ObjectLatch)
+		Abc_ObjAddFanin(latch, in)
+		Abc_ObjAddFanin(out, latch)
+		Abc_LatchSetInit0(latch)
+	}
+	Abc_NtkOrderCisCos(n)
+}
+func ntkSweepDangling(n *Network) {
+	for {
+		changed := false
+		for _, o := range n.ObjectsOfKind(ObjectNode) {
+			if len(o.fanouts) == 0 {
+				Abc_NtkDeleteObj(o)
+				changed = true
+			}
+		}
+		if !changed {
+			return
+		}
+	}
+}
+func Abc_NtkMakeOnePo(src *Network, output, count int32) *Network {
+	if output < 0 || output >= Abc_NtkPoNum(src) {
+		fmt.Println("PO index is incorrect.")
+		return nil
+	}
+	dst := Abc_NtkDup(src)
+	if count < 1 {
+		count = 1
+	}
+	for i, po := range dst.ObjectsOfKind(ObjectPO) {
+		if i < int(output) || i >= int(output+count) {
+			Abc_NtkDeleteObj(po)
+		}
+	}
+	Abc_NtkOrderCisCos(dst)
+	if Abc_NtkIsStrash(dst) != 0 {
+		Abc_AigCleanup(dst.FunctionManager.(*Abc_Aig_t))
+	}
+	return dst
+}
+func Abc_NtkTrim(n *Network) *Network {
+	for _, po := range n.ObjectsOfKind(ObjectPO) {
+		driver := po.fanins[0].Object
+		remove := len(driver.fanins) == 0 || len(driver.fanins) == 1 && driver.fanins[0].Object.Kind == ObjectPI
+		if remove {
+			Abc_NtkDeleteObj(po)
+			if driver != n.constant && driver.Kind == ObjectNode && len(driver.fanouts) == 0 {
+				Abc_NtkDeleteObj_rec(driver, 1)
+			}
+		}
+	}
+	for _, pi := range n.ObjectsOfKind(ObjectPI) {
+		if len(pi.fanouts) == 0 {
+			Abc_NtkDeleteObj(pi)
+		}
+	}
+	Abc_NtkOrderCisCos(n)
+	return Abc_NtkDup(n)
+}
+func Abc_NtkDropSatOutputs(n *Network, cexes []any, verbose int32) {
+	pos := n.ObjectsOfKind(ObjectPO)
+	if len(pos) != len(cexes) {
+		panic("abc: counterexample vector differs from outputs")
+	}
+	count := 0
+	for i, cex := range cexes {
+		if cex != nil {
+			Abc_NtkDropOneOutput(n, int32(i), 1, 0)
+			count++
+		}
+	}
+	if verbose != 0 {
+		fmt.Printf("Logic cones of %d POs have been replaced by constant 0.\n", count)
+	}
+	Abc_AigCleanup(n.FunctionManager.(*Abc_Aig_t))
+}
+func Abc_NtkDropOneOutput(n *Network, index, skip, one int32) {
+	po := n.kindOrder[ObjectPO][index]
+	edge := n.One()
+	if one == 0 {
+		edge = edge.Not()
+	}
+	if err := n.PatchFanin(po, 0, edge); err != nil {
+		panic(err)
+	}
+	if skip == 0 {
+		Abc_AigCleanup(n.FunctionManager.(*Abc_Aig_t))
+	}
+}
+func Abc_NtkSwapOneOutput(n *Network, index int32) {
+	if index == 0 {
+		return
+	}
+	a, b := n.kindOrder[ObjectPO][0], n.kindOrder[ObjectPO][index]
+	x, y := a.fanins[0], b.fanins[0]
+	if err := n.PatchFanin(a, 0, y); err != nil {
+		panic(err)
+	}
+	if err := n.PatchFanin(b, 0, x); err != nil {
+		panic(err)
+	}
+}
+func Abc_NtkRemovePo(n *Network, index, removeZero int32) {
+	po := n.kindOrder[ObjectPO][index]
+	if po.fanins[0].Object == n.constant && abcBool(po.fanins[0].Complement) == removeZero {
+		Abc_NtkDeleteObj(po)
+	}
+}
+func Abc_NtkReadFlopPerm(name string, count int32) []int32 {
+	file, err := os.Open(name)
+	if err != nil {
+		fmt.Printf("Cannot open input file %q.\n", name)
+		return nil
+	}
+	defer file.Close()
+	var perm []int32
+	seen := make(map[int]bool)
+	scan := bufio.NewScanner(file)
+	for scan.Scan() {
+		text := scan.Text()
+		if text == "" || text[0] == ' ' || text[0] == '\r' {
+			continue
+		}
+		fields := strings.Fields(text)
+		if len(fields) == 0 {
+			continue
+		}
+		v, err := strconv.Atoi(fields[0])
+		if err != nil || v < 0 || v >= int(count) || seen[v] {
+			return nil
+		}
+		seen[v] = true
+		perm = append(perm, int32(v))
+	}
+	if scan.Err() != nil || len(perm) != int(count) {
+		return nil
+	}
+	return perm
+}
+func Abc_NtkPermute(n *Network, inputs, outputs, flops int32, file string) {
+	if len(n.boxes) != len(n.kindOrder[ObjectLatch]) {
+		panic("abc: permutation requires latch-only boxes")
+	}
+	orders := [][]*Object{append([]*Object(nil), n.kindOrder[ObjectPI]...), append([]*Object(nil), n.kindOrder[ObjectPO]...), append([]*Object(nil), n.boxes...)}
+	flags := []int32{inputs, outputs, flops}
+	var fixed []int32
+	if file != "" {
+		fixed = Abc_NtkReadFlopPerm(file, int32(len(n.boxes)))
+		if fixed == nil {
+			return
+		}
+		flags = []int32{0, 0, 0}
+	}
+	n.ObjectPermutation = nil
+	for group, order := range orders {
+		perm := make([]int, len(order))
+		for i := range perm {
+			perm[i] = i
+		}
+		if flags[group] != 0 {
+			for i := range order {
+				k := rand.Intn(len(order))
+				order[i], order[k] = order[k], order[i]
+				perm[i], perm[k] = perm[k], perm[i]
+			}
+		}
+		inverse := make([]int32, len(perm))
+		for i, p := range perm {
+			inverse[p] = int32(i)
+		}
+		if group == 2 && fixed != nil {
+			for position, original := range fixed {
+				inverse[original] = int32(position)
+			}
+		}
+		n.ObjectPermutation = append(n.ObjectPermutation, inverse...)
+		orders[group] = order
+	}
+	n.kindOrder[ObjectPI], n.kindOrder[ObjectPO] = orders[0], orders[1]
+	n.boxes = orders[2]
+	n.kindOrder[ObjectLatch] = append([]*Object(nil), n.boxes...)
+	Abc_NtkOrderCisCos(n)
+}
+func Abc_NodeCompareByFanoutCount(a, b **Object) int32 {
+	if len((*a).fanouts) > len((*b).fanouts) {
+		return -1
+	}
+	if len((*a).fanouts) < len((*b).fanouts) {
+		return 1
+	}
+	return int32(strings.Compare((*a).Name(), (*b).Name()))
+}
+func Abc_NtkPermutePiUsingFanout(n *Network) {
+	sort.SliceStable(n.kindOrder[ObjectPI], func(i, j int) bool {
+		a, b := n.kindOrder[ObjectPI][i], n.kindOrder[ObjectPI][j]
+		return Abc_NodeCompareByFanoutCount(&a, &b) < 0
+	})
+	Abc_NtkOrderCisCos(n)
+}
+func Abc_NtkUnpermute(n *Network) {
+	if n.ObjectPermutation == nil {
+		fmt.Println("Abc_NtkUnpermute(): Initial permutation is not available.")
+		return
+	}
+	groups := [][]*Object{n.kindOrder[ObjectPI], n.kindOrder[ObjectPO], n.boxes}
+	offset := 0
+	for group, order := range groups {
+		if offset+len(order) > len(n.ObjectPermutation) {
+			panic("abc: invalid saved permutation")
+		}
+		restored := make([]*Object, len(order))
+		for i := range restored {
+			index := n.ObjectPermutation[offset+i]
+			if index < 0 || index >= int32(len(order)) {
+				panic("abc: invalid saved permutation index")
+			}
+			restored[i] = order[index]
+		}
+		groups[group] = restored
+		offset += len(order)
+	}
+	n.kindOrder[ObjectPI], n.kindOrder[ObjectPO], n.boxes = groups[0], groups[1], groups[2]
+	n.kindOrder[ObjectLatch] = append([]*Object(nil), n.boxes...)
+	n.ObjectPermutation = nil
+	Abc_NtkOrderCisCos(n)
+}
+func Abc_NtkNodeDup(src *Network, limit, verbose int32) *Network {
+	if limit < 2 {
+		panic("abc: fanout splitting limit must be at least two")
+	}
+	dst := Abc_NtkDup(src)
+	for {
+		var nodes []*Object
+		for _, o := range dst.kindOrder[ObjectNode] {
+			if len(o.fanouts) >= int(limit) {
+				nodes = append(nodes, o)
+			}
+		}
+		if len(nodes) == 0 {
+			return dst
+		}
+		for _, o := range nodes {
+			copy := Abc_NtkDupObj(dst, o, 0)
+			for _, e := range o.fanins {
+				Abc_ObjAddFanin(copy, e)
+			}
+			fanouts := o.Fanouts()
+			for _, fanout := range fanouts[:int(limit)/2] {
+				Abc_ObjPatchFanin(fanout, o, copy)
+			}
+		}
+		if verbose != 0 {
+			fmt.Printf("Duplicated %d nodes.\n", len(nodes))
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Starts a new network using existing network as a model.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkStartFromWithLatches(pNtk *Abc_Ntk_t, Type Abc_NtkType_t, Func Abc_NtkFunc_t, nLatches int32) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t; 
-    var pObj, pNode0, pNode1 *Abc_Obj_t;
-    var fCopyNames, i int32;
-    if pNtk == nil {
-        return nil; }
-    assert(Abc_NtkLatchNum(pNtk) == 0, "Abc_NtkLatchNum(pNtk) == 0");
-    // decide whether to copy the names
-    fCopyNames = ( Type != ABC_NTK_NETLIST );
-    // start the network
-    pNtkNew = Abc_NtkAlloc( Type, Func, 1 );
-    pNtkNew.nConstrs   = pNtk.nConstrs;
-    pNtkNew.nBarBufs   = pNtk.nBarBufs;
-    // duplicate the name and the spec
-    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);
-    pNtkNew.pSpec = Extra_UtilStrsav(pNtk.pSpec);
-    // clean the node copy fields
-    Abc_NtkCleanCopy( pNtk );
-    // map the constant nodes
-    if Abc_NtkIsStrash(pNtk) && Abc_NtkIsStrash(pNtkNew) {
-        Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pNtkNew); }
-    // clone CIs/CIs/boxes
-    for  i = 0; i < Abc_NtkPiNum(pNtk)-nLatches; i++  {
-        Abc_NtkDupObj( pNtkNew, Abc_NtkPi(pNtk, i), fCopyNames );
-    }
-    for  i = 0; i < Abc_NtkPoNum(pNtk)-nLatches; i++  {
-        Abc_NtkDupObj( pNtkNew, Abc_NtkPo(pNtk, i), fCopyNames );
-    }
-    for  i = 0; i < nLatches; i++  {
-        pObj = Abc_NtkCreateLatch(pNtkNew);
-        Abc_LatchSetInit0( pObj );
-        pNode0 = Abc_NtkCreateBi(pNtkNew);
-        Abc_NtkPo(pNtk, Abc_NtkPoNum(pNtk)-nLatches+i).pCopy = pNode0;
-        pNode1 = Abc_NtkCreateBo(pNtkNew);
-        Abc_NtkPi(pNtk, Abc_NtkPiNum(pNtk)-nLatches+i).pCopy = pNode1;
-        Abc_ObjAddFanin( pObj, pNode0 );
-        Abc_ObjAddFanin( pNode1, pObj );
-        Abc_ObjAssignName( pNode0, Abc_ObjName(pNode0), nil );
-        Abc_ObjAssignName( pNode1, Abc_ObjName(pNode1), nil );
-    }
-    // transfer logic level
-//    Abc_NtkForEachCi( pNtk, pObj, i )
-//        pObj->pCopy->Level = pObj->Level;
-    // transfer the names
-//    Abc_NtkTrasferNames( pNtk, pNtkNew );
-    Abc_ManTimeDup( pNtk, pNtkNew );
-    if pNtk.vOnehots {
-        pNtkNew.vOnehots = (Vec_Ptr_t *)Vec_VecDupInt( (Vec_Vec_t *)pNtk.vOnehots ); }
-    if pNtk.pSeqModel {
-        pNtkNew.pSeqModel = Abc_CexDup( pNtk.pSeqModel, Abc_NtkLatchNum(pNtk) ); }
-    if pNtk.vObjPerm {
-        pNtkNew.vObjPerm = Vec_IntDup( pNtk.vObjPerm ); }
-    pNtkNew.AndGateDelay = pNtk.AndGateDelay;
-    // initialize logic level of the CIs
-    if pNtk.AndGateDelay != 0.0 && pNtk.pManTime != nil && pNtk.ntkType != ABC_NTK_STRASH && Type == ABC_NTK_STRASH {
-        Abc_NtkForEachCi( pNtk, pObj, i )
-            pObj.pCopy.Level = int32((Abc_MaxFloat(0, Abc_NodeReadArrivalWorst(pObj)) / pNtk.AndGateDelay));
-    }
-    // check that the CI/CO/latches are copied correctly
-    assert(Abc_NtkCiNum(pNtk)    == Abc_NtkCiNum(pNtkNew), "Abc_NtkCiNum(pNtk)    == Abc_NtkCiNum(pNtkNew)");
-    assert(Abc_NtkCoNum(pNtk)    == Abc_NtkCoNum(pNtkNew), "Abc_NtkCoNum(pNtk)    == Abc_NtkCoNum(pNtkNew)");
-    assert(nLatches              == Abc_NtkLatchNum(pNtkNew), "nLatches              == Abc_NtkLatchNum(pNtkNew)");
-    return pNtkNew;
+// NtkLiteralNetwork accepts the native GIA literal interface without coupling
+// ABC network ownership to a particular GIA representation.
+type NtkLiteralNetwork interface {
+	ObjectCount() int
+	InputLiterals() []int32
+	OutputLiterals() []int32
+	Gate(int32) (int32, int32, int32, int)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Starts a new network using existing network as a model.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkStartFromNoLatches(pNtk *Abc_Ntk_t, Type Abc_NtkType_t, Func Abc_NtkFunc_t) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t; 
-    var pObj *Abc_Obj_t;
-    var i int32;
-    if pNtk == nil {
-        return nil; }
-    assert(Type != ABC_NTK_NETLIST, "Type != ABC_NTK_NETLIST");
-    // start the network
-    pNtkNew = Abc_NtkAlloc( Type, Func, 1 );
-    pNtkNew.nConstrs   = pNtk.nConstrs;
-    pNtkNew.nBarBufs   = pNtk.nBarBufs;
-    // duplicate the name and the spec
-    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);
-    pNtkNew.pSpec = Extra_UtilStrsav(pNtk.pSpec);
-    // clean the node copy fields
-    Abc_NtkCleanCopy( pNtk );
-    // map the constant nodes
-    if Abc_NtkIsStrash(pNtk) && Abc_NtkIsStrash(pNtkNew) {
-        Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pNtkNew); }
-    // clone CIs/CIs/boxes
-    Abc_NtkForEachPi( pNtk, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, 1 );
-    Abc_NtkForEachPo( pNtk, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, 1 );
-    Abc_NtkForEachBox( pNtk, pObj, i )
-    {
-        if Abc_ObjIsLatch(pObj) {
-            continue; }
-        Abc_NtkDupBox(pNtkNew, pObj, 1);
-    }
-    if pNtk.vObjPerm {
-        pNtkNew.vObjPerm = Vec_IntDup( pNtk.vObjPerm ); }
-    pNtkNew.AndGateDelay = pNtk.AndGateDelay;
-    // transfer the names
-//    Abc_NtkTrasferNamesNoLatches( pNtk, pNtkNew );
-    Abc_ManTimeDup( pNtk, pNtkNew );
-    // check that the CI/CO/latches are copied correctly
-    assert(Abc_NtkPiNum(pNtk) == Abc_NtkPiNum(pNtkNew), "Abc_NtkPiNum(pNtk) == Abc_NtkPiNum(pNtkNew)");
-    assert(Abc_NtkPoNum(pNtk) == Abc_NtkPoNum(pNtkNew), "Abc_NtkPoNum(pNtk) == Abc_NtkPoNum(pNtkNew)");
-    return pNtkNew;
+func Abc_NtkCreateFromGias(name string, graphs []NtkLiteralNetwork, multi NtkLiteralNetwork) *Network {
+	if multi != nil {
+		graphs = []NtkLiteralNetwork{multi}
+	}
+	dst := Abc_NtkAlloc(ABC_NTK_STRASH, ABC_FUNC_AIG, 1)
+	dst.Name = name
+	if len(graphs) == 0 {
+		return dst
+	}
+	for range graphs[0].InputLiterals() {
+		dst.NewObject(ObjectPI)
+	}
+	for _, g := range graphs {
+		if len(g.InputLiterals()) != len(dst.kindOrder[ObjectPI]) || multi == nil && len(g.OutputLiterals()) != 1 {
+			panic("abc: GIA interface differs")
+		}
+		copies := make([]Edge, g.ObjectCount())
+		copies[0] = dst.One().Not()
+		for i, lit := range g.InputLiterals() {
+			copies[lit>>1] = dst.kindOrder[ObjectPI][i].Signal()
+		}
+		var copyLit func(int32) Edge
+		copyLit = func(lit int32) Edge {
+			id := lit >> 1
+			if id < 0 || id >= int32(len(copies)) {
+				panic("abc: invalid GIA literal")
+			}
+			edge := copies[id]
+			if edge.Object == nil {
+				a, b, c, kind := g.Gate(id)
+				switch kind {
+				case 2:
+					edge = dst.AndEdges(copyLit(a), copyLit(b))
+				case 3:
+					edge = ntkXor(dst, copyLit(a), copyLit(b))
+				case 4:
+					control, x, y := copyLit(a), copyLit(b), copyLit(c)
+					edge = dst.AndEdges(dst.AndEdges(control, x).Not(), dst.AndEdges(control.Not(), y).Not()).Not()
+				case 5, 6:
+					edge = copyLit(a)
+				default:
+					panic("abc: unsupported GIA gate")
+				}
+				copies[id] = edge
+			}
+			if lit&1 != 0 {
+				edge = edge.Not()
+			}
+			return edge
+		}
+		for _, lit := range g.OutputLiterals() {
+			Abc_ObjAddFanin(dst.NewObject(ObjectPO), copyLit(lit))
+		}
+	}
+	for i, o := range dst.kindOrder[ObjectPI] {
+		o.SetName(fmt.Sprintf("pi%d", i))
+	}
+	for i, o := range dst.kindOrder[ObjectPO] {
+		o.SetName(fmt.Sprintf("po%d", i))
+	}
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Finalizes the network using the existing network as a model.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFinalize(pNtk *Abc_Ntk_t, pNtkNew *Abc_Ntk_t) {
-    var pObj, pDriver, pDriverNew *Abc_Obj_t;
-    var i int32;
-    // set the COs of the strashed network
-    Abc_NtkForEachCo( pNtk, pObj, i )
-    {
-        pDriver    = Abc_ObjFanin0Ntk( Abc_ObjFanin0(pObj) );
-        pDriverNew = Abc_ObjNotCond(pDriver.pCopy, Abc_ObjFaninC0(pObj));
-        Abc_ObjAddFanin( pObj.pCopy, pDriverNew );
-    }
-    // duplicate timing manager
-    if pNtk.pManTime {
-        Abc_NtkTimeInitialize( pNtkNew, pNtk ); }
-    if pNtk.vPhases {
-        Abc_NtkTransferPhases( pNtkNew, pNtk ); }
-    if pNtk.pWLoadUsed {
-        pNtkNew.pWLoadUsed = Abc_UtilStrsav( pNtk.pWLoadUsed ); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Starts a new network using existing network as a model.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkStartRead(pName string) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t; 
-    // allocate the empty network
-    pNtkNew = Abc_NtkAlloc( ABC_NTK_NETLIST, ABC_FUNC_SOP, 1 );
-    // set the specs
-    pNtkNew.pName = Extra_FileNameGeneric(pName);
-    pNtkNew.pSpec = Extra_UtilStrsav(pName);
-    if pNtkNew.pName == nil || len(pNtkNew.pName) == 0 {
-        ABC_FREE( pNtkNew.pName );
-        pNtkNew.pName = Extra_UtilStrsav("unknown");
-    }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Finalizes the network using the existing network as a model.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFinalizeRead(pNtk *Abc_Ntk_t) {
-    var pBox, pObj, pTerm, pNet *Abc_Obj_t;
-    var i int32;
-    if Abc_NtkHasBlackbox(pNtk) && Abc_NtkBoxNum(pNtk) == 0 {
-        pBox = Abc_NtkCreateBlackbox(pNtk);
-        Abc_NtkForEachPi( pNtk, pObj, i )
-        {
-            pTerm = Abc_NtkCreateBi(pNtk);
-            Abc_ObjAddFanin( pTerm, Abc_ObjFanout0(pObj) );
-            Abc_ObjAddFanin( pBox, pTerm );
-        }
-        Abc_NtkForEachPo( pNtk, pObj, i )
-        {
-            pTerm = Abc_NtkCreateBo(pNtk);
-            Abc_ObjAddFanin( pTerm, pBox );
-            Abc_ObjAddFanin( Abc_ObjFanin0(pObj), pTerm );
-        }
-        return;
-    }
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-
-    // check if constant 0 net is used
-    pNet = Abc_NtkFindNet( pNtk, "1\'b0" );
-    if pNet != nil {
-        if Abc_ObjFanoutNum(pNet) == 0 {
-            Abc_NtkDeleteObj(pNet);
-        } else if Abc_ObjFaninNum(pNet) == 0 {
-            Abc_ObjAddFanin( pNet, Abc_NtkCreateNodeConst0(pNtk) ); }
-    }
-    // check if constant 1 net is used
-    pNet = Abc_NtkFindNet( pNtk, "1\'b1" );
-    if pNet != nil {
-        if Abc_ObjFanoutNum(pNet) == 0 {
-            Abc_NtkDeleteObj(pNet);
-        } else if Abc_ObjFaninNum(pNet) == 0 {
-            Abc_ObjAddFanin( pNet, Abc_NtkCreateNodeConst1(pNtk) ); }
-    }
-    // fix the net drivers
-    Abc_NtkFixNonDrivenNets( pNtk );
-
-    // reorder the CI/COs to PI/POs first
-    Abc_NtkOrderCisCos( pNtk );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicate the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDup(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t; 
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k int32;
-    if pNtk == nil {
-        return nil; }
-    // start the network
-    pNtkNew = Abc_NtkStartFrom( pNtk, pNtk.ntkType, pNtk.ntkFunc );
-    // copy the internal nodes
-    if Abc_NtkIsStrash(pNtk) {
-        // copy the AND gates
-        Abc_AigForEachAnd( pNtk, pObj, i )
-            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );
-        // relink the choice nodes
-        Abc_AigForEachAnd( pNtk, pObj, i )
-            if ( pObj.pData )
-                pObj.pCopy.pData = ((Abc_Obj_t *)pObj.pData).pCopy;
-        // relink the CO nodes
-        Abc_NtkForEachCo( pNtk, pObj, i )
-            Abc_ObjAddFanin( pObj.pCopy, Abc_ObjChild0Copy(pObj) );
-        // get the number of nodes before and after
-        if Abc_NtkNodeNum(pNtk) != Abc_NtkNodeNum(pNtkNew) {
-            fmt.Printf("Warning: Structural hashing during duplication reduced %d nodes (this is a minor bug).\n", Abc_NtkNodeNum(pNtk) - Abc_NtkNodeNum(pNtkNew)); }
-    
-    } else {
-        // duplicate the nets and nodes (CIs/COs/latches already dupped)
-        Abc_NtkForEachObj( pNtk, pObj, i )
-            if ( pObj.pCopy == nil )
-                Abc_NtkDupObj(pNtkNew, pObj, Abc_NtkHasBlackbox(pNtk) && Abc_ObjIsNet(pObj));
-        // reconnect all objects (no need to transfer attributes on edges)
-        Abc_NtkForEachObj( pNtk, pObj, i )
-            if ( !Abc_ObjIsBox(pObj) && !Abc_ObjIsBo(pObj) )
-                Abc_ObjForEachFanin( pObj, pFanin, k )
-                    Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-    }
-    // duplicate the EXDC Ntk
-    if pNtk.pExdc {
-        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }
-    if pNtk.pExcare {
-        pNtkNew.pExcare = Abc_NtkDup( (Abc_Ntk_t *)pNtk.pExcare ); }
-    // duplicate timing manager
-    if pNtk.pManTime {
-        Abc_NtkTimeInitialize( pNtkNew, pNtk ); }
-    if pNtk.vPhases {
-        Abc_NtkTransferPhases( pNtkNew, pNtk ); }
-    if pNtk.pWLoadUsed {
-        pNtkNew.pWLoadUsed = Abc_UtilStrsav( pNtk.pWLoadUsed ); }
-    // check correctness
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkDup(): Network check has failed.\n"); }
-    pNtk.pCopy = pNtkNew;
-    return pNtkNew;
-}
-func Abc_NtkDupDfs(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var vNodes *Vec_Ptr_t;
-    var pNtkNew *Abc_Ntk_t; 
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k int32;
-    if pNtk == nil {
-        return nil; }
-    assert(!Abc_NtkIsStrash(pNtk) && !Abc_NtkIsNetlist(pNtk), "!Abc_NtkIsStrash(pNtk) && !Abc_NtkIsNetlist(pNtk)");
-    // start the network
-    pNtkNew = Abc_NtkStartFrom( pNtk, pNtk.ntkType, pNtk.ntkFunc );
-    // copy the internal nodes
-    vNodes = Abc_NtkDfs( pNtk, 0 );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, 0 );
-    Vec_PtrFree( vNodes );
-    // reconnect all objects (no need to transfer attributes on edges)
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        if ( !Abc_ObjIsBox(pObj) && !Abc_ObjIsBo(pObj) )
-            Abc_ObjForEachFanin( pObj, pFanin, k )
-                if ( pObj.pCopy && pFanin.pCopy )
-                    Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-    // duplicate the EXDC Ntk
-    if pNtk.pExdc {
-        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }
-    if pNtk.pExcare {
-        pNtkNew.pExcare = Abc_NtkDup( (Abc_Ntk_t *)pNtk.pExcare ); }
-    // duplicate timing manager
-    if pNtk.pManTime {
-        Abc_NtkTimeInitialize( pNtkNew, pNtk ); }
-    if pNtk.vPhases {
-        Abc_NtkTransferPhases( pNtkNew, pNtk ); }
-    if pNtk.pWLoadUsed {
-        pNtkNew.pWLoadUsed = Abc_UtilStrsav( pNtk.pWLoadUsed ); }
-    // check correctness
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkDup(): Network check has failed.\n"); }
-    pNtk.pCopy = pNtkNew;
-    return pNtkNew;
-}
-func Abc_NtkDupDfsNoBarBufs(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var vNodes *Vec_Ptr_t;
-    var pNtkNew *Abc_Ntk_t; 
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k int32;
-    if pNtk == nil {
-        return nil; }
-    assert(Abc_NtkIsLogic(pNtk), "Abc_NtkIsLogic(pNtk)");
-    assert(pNtk.nBarBufs2 > 0, "pNtk.nBarBufs2 > 0");
-    // start the network
-    pNtkNew = Abc_NtkStartFrom( pNtk, pNtk.ntkType, pNtk.ntkFunc );
-    // copy the internal nodes
-    vNodes = Abc_NtkDfs2( pNtk );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-        if ( Abc_ObjIsBarBuf(pObj) )
-            pObj.pCopy = Abc_ObjFanin0(pObj).pCopy;
-        else
-            Abc_NtkDupObj( pNtkNew, pObj, 0 );
-    Vec_PtrFree( vNodes );
-    // reconnect all objects (no need to transfer attributes on edges)
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        if ( !Abc_ObjIsBox(pObj) && !Abc_ObjIsBo(pObj) && !Abc_ObjIsBarBuf(pObj) )
-            Abc_ObjForEachFanin( pObj, pFanin, k )
-                if ( pObj.pCopy && pFanin.pCopy )
-                    Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-    // duplicate the EXDC Ntk
-    if pNtk.pExdc {
-        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }
-    if pNtk.pExcare {
-        pNtkNew.pExcare = Abc_NtkDup( (Abc_Ntk_t *)pNtk.pExcare ); }
-    // duplicate timing manager
-    if pNtk.pManTime {
-        Abc_NtkTimeInitialize( pNtkNew, pNtk ); }
-    if pNtk.vPhases {
-        Abc_NtkTransferPhases( pNtkNew, pNtk ); }
-    if pNtk.pWLoadUsed {
-        pNtkNew.pWLoadUsed = Abc_UtilStrsav( pNtk.pWLoadUsed ); }
-    // check correctness
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkDup(): Network check has failed.\n"); }
-    pNtk.pCopy = pNtkNew;
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicate the AIG while adding latches.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkRestrashWithLatches(pNtk *Abc_Ntk_t, nLatches int32) *Abc_Ntk_t {
-    var pNtkAig *Abc_Ntk_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    // start the new network (constants and CIs of the old network will point to the their counterparts in the new network)
-    pNtkAig = Abc_NtkStartFromWithLatches( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG, nLatches );
-    // restrash the nodes (assuming a topological order of the old network)
-    Abc_NtkForEachNode( pNtk, pObj, i )
-        pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkAig.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );
-    // finalize the network
-    Abc_NtkFinalize( pNtk, pNtkAig );
-    // make sure everything is okay
-    if !Abc_NtkCheck( pNtkAig ) {
-        fmt.Printf("Abc_NtkStrash: The network check has failed.\n");
-        Abc_NtkDelete( pNtkAig );
-        return nil;
-    }
-    return pNtkAig;
-
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicate the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDupTransformMiter(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
-    var pObj, pObj2, pMiter *Abc_Obj_t;
-    var i int32;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    // start the network
-    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );
-    pNtkNew.nConstrs   = pNtk.nConstrs;
-    pNtkNew.nBarBufs   = pNtk.nBarBufs;
-    // duplicate the name and the spec
-    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);
-    pNtkNew.pSpec = Extra_UtilStrsav(pNtk.pSpec);
-    // clean the node copy fields
-    Abc_NtkCleanCopy( pNtk );
-    // map the constant nodes
-     Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pNtkNew);
-    // clone CIs/CIs/boxes
-    Abc_NtkForEachPi( pNtk, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, 1 );
-    Abc_NtkForEachPo( pNtk, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, 1 );
-i++;
-    Abc_NtkForEachBox( pNtk, pObj, i )
-        Abc_NtkDupBox( pNtkNew, pObj, 1 );
-    // copy the AND gates
-    Abc_AigForEachAnd( pNtk, pObj, i )
-        pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );
-    // create new miters
-    Abc_NtkForEachPo( pNtk, pObj, i )
-    {
-        pObj2 = Abc_NtkPo( pNtk, ++i );
-        pMiter = Abc_AigXor( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Copy(pObj2) );
-        Abc_ObjAddFanin( pObj.pCopy, pMiter );
-    }
-    Abc_NtkForEachLatchInput( pNtk, pObj, i )
-        Abc_ObjAddFanin( pObj.pCopy, Abc_ObjChild0Copy(pObj) );
-    // cleanup
-    Abc_AigCleanup( (Abc_Aig_t *)pNtkNew.pManFunc );
-    // check that the CI/CO/latches are copied correctly
-    assert(Abc_NtkPiNum(pNtk) == Abc_NtkPiNum(pNtkNew), "Abc_NtkPiNum(pNtk) == Abc_NtkPiNum(pNtkNew)");
-    assert(Abc_NtkPoNum(pNtk) == 2*Abc_NtkPoNum(pNtkNew), "Abc_NtkPoNum(pNtk) == 2*Abc_NtkPoNum(pNtkNew)");
-    assert(Abc_NtkLatchNum(pNtk) == Abc_NtkLatchNum(pNtkNew), "Abc_NtkLatchNum(pNtk) == Abc_NtkLatchNum(pNtkNew)");
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicate the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDouble(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var Buffer string // was [500]byte in C
-
-    var pNtkNew *Abc_Ntk_t; 
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k int32;
-    assert(Abc_NtkIsLogic(pNtk), "Abc_NtkIsLogic(pNtk)");
-
-    // start the network
-    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );
-    Buffer = fmt.Sprintf("%s%s", pNtk.pName, "_2x");
-    pNtkNew.pName = Extra_UtilStrsav(Buffer);
-
-    // clean the node copy fields
-    Abc_NtkCleanCopy( pNtk );
-    // clone CIs/CIs/boxes
-    Abc_NtkForEachPi( pNtk, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, 0 );
-    Abc_NtkForEachPo( pNtk, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, 0 );
-    Abc_NtkForEachBox( pNtk, pObj, i )
-        Abc_NtkDupBox( pNtkNew, pObj, 0 );
-    // copy the internal nodes
-    // duplicate the nets and nodes (CIs/COs/latches already dupped)
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        if ( pObj.pCopy == nil )
-            Abc_NtkDupObj(pNtkNew, pObj, 0);
-    // reconnect all objects (no need to transfer attributes on edges)
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        if ( !Abc_ObjIsBox(pObj) && !Abc_ObjIsBo(pObj) )
-            Abc_ObjForEachFanin( pObj, pFanin, k )
-                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-
-    // clean the node copy fields
-    Abc_NtkCleanCopy( pNtk );
-    // clone CIs/CIs/boxes
-    Abc_NtkForEachPi( pNtk, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, 0 );
-    Abc_NtkForEachPo( pNtk, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, 0 );
-    Abc_NtkForEachBox( pNtk, pObj, i )
-        Abc_NtkDupBox( pNtkNew, pObj, 0 );
-    // copy the internal nodes
-    // duplicate the nets and nodes (CIs/COs/latches already dupped)
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        if ( pObj.pCopy == nil )
-            Abc_NtkDupObj(pNtkNew, pObj, 0);
-    // reconnect all objects (no need to transfer attributes on edges)
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        if ( !Abc_ObjIsBox(pObj) && !Abc_ObjIsBo(pObj) )
-            Abc_ObjForEachFanin( pObj, pFanin, k )
-                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-
-    // assign names
-    Abc_NtkForEachCi( pNtk, pObj, i )
-    {
-        Abc_ObjAssignName( Abc_NtkCi(pNtkNew,                      i), "1_", Abc_ObjName(pObj) );
-        Abc_ObjAssignName( Abc_NtkCi(pNtkNew, Abc_NtkCiNum(pNtk) + i), "2_", Abc_ObjName(pObj) );
-    }
-    Abc_NtkForEachCo( pNtk, pObj, i )
-    {
-        Abc_ObjAssignName( Abc_NtkCo(pNtkNew,                      i), "1_", Abc_ObjName(pObj) );
-        Abc_ObjAssignName( Abc_NtkCo(pNtkNew, Abc_NtkCoNum(pNtk) + i), "2_", Abc_ObjName(pObj) );
-    }
-    Abc_NtkOrderCisCos( pNtkNew );
-
-    // perform the final check
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkDup(): Network check has failed.\n"); }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicate the bottom levels of the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkBottom(pNtk *Abc_Ntk_t, Level int32) *Abc_Ntk_t {
-    var Buffer string // was [500]byte in C
-
-    var pNtkNew *Abc_Ntk_t; 
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k int32;
-    assert(Abc_NtkIsLogic(pNtk), "Abc_NtkIsLogic(pNtk)");
-    assert(Abc_NtkLatchNum(pNtk) == 0, "Abc_NtkLatchNum(pNtk) == 0");
-
-    // start the network
-    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );
-    Buffer = fmt.Sprintf("%s%s", pNtk.pName, "_bot");
-    pNtkNew.pName = Extra_UtilStrsav(Buffer);
-
-    // clean the node copy fields
-    Abc_NtkCleanCopy( pNtk );
-    // clone CIs/CIs/boxes
-    Abc_NtkForEachPi( pNtk, pObj, i )
-        Abc_NtkDupObj( pNtkNew, pObj, 1 );
-
-    // copy the internal nodes
-    // duplicate the nets and nodes (CIs/COs/latches already dupped)
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        if ( pObj.pCopy == nil && Abc_ObjIsNode(pObj) && Abc_ObjLevel(pObj) <= Level )
-            Abc_NtkDupObj(pNtkNew, pObj, 0);
-    // reconnect all objects (no need to transfer attributes on edges)
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        Abc_ObjForEachFanin( pObj, pFanin, k )
-            if ( pObj.pCopy && pFanin.pCopy )
-                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-
-    // create new primary outputs
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        Abc_ObjForEachFanin( pObj, pFanin, k )
-            if !pObj.pCopy && pFanin.pCopy && Abc_ObjIsNode(pFanin) {
-                var pNodeNew *Abc_Obj_t  = Abc_NtkCreatePo(pNtkNew);
-                Abc_ObjAddFanin( pNodeNew, pFanin.pCopy );
-                Abc_ObjAssignName( pNodeNew, Abc_ObjName(pNodeNew), nil );
-            }
-
-    // perform the final check
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkBottom(): Network check has failed.\n"); }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Attaches the second network at the bottom of the first.]
-
-  Description [Returns the first network. Deletes the second network.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkAttachBottom(pNtkTop *Abc_Ntk_t, pNtkBottom *Abc_Ntk_t) *Abc_Ntk_t {
-    var pObj, pFanin, pBuffer *Abc_Obj_t;
-    var vNodes *Vec_Ptr_t;
-    var i, k int32;
-    assert(pNtkBottom != nil, "pNtkBottom != nil");
-    if pNtkTop == nil {
-        return pNtkBottom; }
-    // make sure the networks are combinational
-    assert(Abc_NtkPiNum(pNtkTop) == Abc_NtkCiNum(pNtkTop), "Abc_NtkPiNum(pNtkTop) == Abc_NtkCiNum(pNtkTop)");
-    assert(Abc_NtkPiNum(pNtkBottom) == Abc_NtkCiNum(pNtkBottom), "Abc_NtkPiNum(pNtkBottom) == Abc_NtkCiNum(pNtkBottom)");
-    // make sure the POs of the bottom correspond to the PIs of the top
-    assert(Abc_NtkPoNum(pNtkBottom) == Abc_NtkPiNum(pNtkTop), "Abc_NtkPoNum(pNtkBottom) == Abc_NtkPiNum(pNtkTop)");
-    assert(Abc_NtkPiNum(pNtkBottom) <  Abc_NtkPiNum(pNtkTop), "Abc_NtkPiNum(pNtkBottom) <  Abc_NtkPiNum(pNtkTop)");
-    // add buffers for the PIs of the top - save results in the POs of the bottom
-    Abc_NtkForEachPi( pNtkTop, pObj, i )
-    {
-        pBuffer = Abc_NtkCreateNodeBuf( pNtkTop, nil );
-        Abc_ObjTransferFanout( pObj, pBuffer );
-        Abc_NtkPo(pNtkBottom, i).pCopy = pBuffer;
-    }
-    // remove useless PIs of the top
-    for  i = Abc_NtkPiNum(pNtkTop) - 1; i >= Abc_NtkPiNum(pNtkBottom); i--  {
-        Abc_NtkDeleteObj( Abc_NtkPi(pNtkTop, i) );
-    }
-    assert(Abc_NtkPiNum(pNtkBottom) == Abc_NtkPiNum(pNtkTop), "Abc_NtkPiNum(pNtkBottom) == Abc_NtkPiNum(pNtkTop)");
-    // copy the bottom network
-    Abc_NtkForEachPi( pNtkBottom, pObj, i )
-        Abc_NtkPi(pNtkBottom, i).pCopy = Abc_NtkPi(pNtkTop, i);
-    // construct all nodes
-    vNodes = Abc_NtkDfs( pNtkBottom, 0 );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-    {
-        Abc_NtkDupObj(pNtkTop, pObj, 0);
-        Abc_ObjForEachFanin( pObj, pFanin, k )
-            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-    }
-    Vec_PtrFree( vNodes );
-    // connect the POs
-    Abc_NtkForEachPo( pNtkBottom, pObj, i )
-        Abc_ObjAddFanin( pObj.pCopy, Abc_ObjFanin0(pObj).pCopy );
-    // delete old network
-    Abc_NtkDelete( pNtkBottom );
-    // return the network
-    if !Abc_NtkCheck( pNtkTop ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkAttachBottom(): Network check has failed.\n"); }
-    return pNtkTop;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the network composed of one logic cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCreateCone(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t, pNodeName string, fUseAllCis int32) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t; 
-    var vNodes *Vec_Ptr_t;
-    var pObj, pFanin, pNodeCoNew *Abc_Obj_t;
-    var Buffer string // was [1000]byte in C
-
-    var i, k int32;
-
-    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk), "Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk)");
-    assert(Abc_ObjIsNode(pNode) || (Abc_NtkIsStrash(pNtk) && (Abc_AigNodeIsConst(pNode) || Abc_ObjIsCi(pNode))), "Abc_ObjIsNode(pNode) || (Abc_NtkIsStrash(pNtk) && (Abc_AigNodeIsConst(pNode) || Abc_ObjIsCi(pNode)))"); 
-    
-    // start the network
-    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );
-    // set the name
-    Buffer = fmt.Sprintf("%s_%s", pNtk.pName, pNodeName);
-    pNtkNew.pName = Extra_UtilStrsav(Buffer);
-
-    // establish connection between the constant nodes
-    if Abc_NtkIsStrash(pNtk) {
-        Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pNtkNew); }
-
-    // collect the nodes in the TFI of the output (mark the TFI)
-    vNodes = Abc_NtkDfsNodes( pNtk, &pNode, 1 );
-    // create the PIs
-    Abc_NtkForEachCi( pNtk, pObj, i )
-    {
-        if (fUseAllCis != 0) || Abc_NodeIsTravIdCurrent(pObj) { // TravId is set by DFS
-        
-            pObj.pCopy = Abc_NtkCreatePi(pNtkNew);
-            Abc_ObjAssignName( pObj.pCopy, Abc_ObjName(pObj), nil );
-        }
-    }
-    // add the PO corresponding to this output
-    pNodeCoNew = Abc_NtkCreatePo( pNtkNew );
-    Abc_ObjAssignName( pNodeCoNew, pNodeName, nil );
-    // copy the nodes
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-    {
-        // if it is an AIG, add to the hash table
-        if Abc_NtkIsStrash(pNtk) {
-            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );
-        
-        } else {
-            Abc_NtkDupObj( pNtkNew, pObj, 0 );
-            Abc_ObjForEachFanin( pObj, pFanin, k )
-                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-        }
-    }
-    // connect the internal nodes to the new CO
-    Abc_ObjAddFanin( pNodeCoNew, pNode.pCopy );
-    Vec_PtrFree( vNodes );
-
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkCreateCone(): Network check has failed.\n"); }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the network composed of several logic cones.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCreateConeArray(pNtk *Abc_Ntk_t, vRoots *Vec_Ptr_t, fUseAllCis int32) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t; 
-    var vNodes *Vec_Ptr_t;
-    var pObj, pFanin, pNodeCoNew *Abc_Obj_t;
-    var Buffer string // was [1000]byte in C
-
-    var i, k int32;
-
-    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk), "Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk)");
-    
-    // start the network
-    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );
-    // set the name
-    Buffer = fmt.Sprintf("%s_part", pNtk.pName);
-    pNtkNew.pName = Extra_UtilStrsav(Buffer);
-
-    // establish connection between the constant nodes
-    if Abc_NtkIsStrash(pNtk) {
-        Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pNtkNew); }
-
-    // collect the nodes in the TFI of the output (mark the TFI)
-    vNodes = Abc_NtkDfsNodes( pNtk, (Abc_Obj_t **)Vec_PtrArray(vRoots), Vec_PtrSize(vRoots) );
-
-    // create the PIs
-    Abc_NtkForEachCi( pNtk, pObj, i )
-    {
-        if (fUseAllCis != 0) || Abc_NodeIsTravIdCurrent(pObj) { // TravId is set by DFS
-        
-            pObj.pCopy = Abc_NtkCreatePi(pNtkNew);
-            Abc_ObjAssignName( pObj.pCopy, Abc_ObjName(pObj), nil );
-        }
-    }
-
-    // copy the nodes
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-    {
-        // if it is an AIG, add to the hash table
-        if Abc_NtkIsStrash(pNtk) {
-            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );
-        
-        } else {
-            Abc_NtkDupObj( pNtkNew, pObj, 0 );
-            Abc_ObjForEachFanin( pObj, pFanin, k )
-                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-        }
-    }
-    Vec_PtrFree( vNodes );
-
-    // add the POs corresponding to the root nodes
-    Vec_PtrForEachEntry( Abc_Obj_t *, vRoots, pObj, i )
-    {
-        // create the PO node
-        pNodeCoNew = Abc_NtkCreatePo( pNtkNew );
-        // connect the internal nodes to the new CO
-        if Abc_ObjIsCo(pObj) {
-            Abc_ObjAddFanin( pNodeCoNew, Abc_ObjChild0Copy(pObj) );
-        } else {
-            Abc_ObjAddFanin( pNodeCoNew, pObj.pCopy ); }
-        // assign the name
-        Abc_ObjAssignName( pNodeCoNew, Abc_ObjName(pObj), nil );
-    }
-
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkCreateConeArray(): Network check has failed.\n"); }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Adds new nodes to the cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkAppendToCone(pNtkNew *Abc_Ntk_t, pNtk *Abc_Ntk_t, vRoots *Vec_Ptr_t) {
-    var vNodes *Vec_Ptr_t;
-    var pObj *Abc_Obj_t;
-    var i, iNodeId int32;
-
-    assert(Abc_NtkIsStrash(pNtkNew), "Abc_NtkIsStrash(pNtkNew)");
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-
-    // collect the nodes in the TFI of the output (mark the TFI)
-    vNodes = Abc_NtkDfsNodes( pNtk, (Abc_Obj_t **)Vec_PtrArray(vRoots), Vec_PtrSize(vRoots) );
-
-    // establish connection between the constant nodes
-    Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pNtkNew);
-
-    // create the PIs
-    Abc_NtkForEachCi( pNtk, pObj, i )
-    {
-        // skip CIs that are not used
-        if !Abc_NodeIsTravIdCurrent(pObj) {
-            continue; }
-        // find the corresponding CI in the new network
-        iNodeId = Nm_ManFindIdByNameTwoTypes( pNtkNew.pManName, Abc_ObjName(pObj), ABC_OBJ_PI, ABC_OBJ_BO );
-        if iNodeId == -1 {
-            pObj.pCopy = Abc_NtkCreatePi(pNtkNew);
-            Abc_ObjAssignName( pObj.pCopy, Abc_ObjName(pObj), nil );
-        
-        } else {
-            pObj.pCopy = Abc_NtkObj( pNtkNew, iNodeId ); }
-    }
-
-    // copy the nodes
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-        pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );
-    Vec_PtrFree( vNodes );
-
-    // do not add the COs
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkAppendToCone(): Network check has failed.\n"); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the network composed of MFFC of one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCreateMffc(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t, pNodeName string) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t; 
-    var pObj, pFanin, pNodeCoNew *Abc_Obj_t;
-    var vCone, vSupp *Vec_Ptr_t;
-    var Buffer string // was [1000]byte in C
-
-    var i, k int32;
-
-    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk), "Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk)");
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)"); 
-    
-    // start the network
-    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );
-    // set the name
-    Buffer = fmt.Sprintf("%s_%s", pNtk.pName, pNodeName);
-    pNtkNew.pName = Extra_UtilStrsav(Buffer);
-
-    // establish connection between the constant nodes
-    if Abc_NtkIsStrash(pNtk) {
-        Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pNtkNew); }
-
-    // collect the nodes in MFFC
-    vCone = Vec_PtrAlloc( 100 );
-    vSupp = Vec_PtrAlloc( 100 );
-    Abc_NodeDeref_rec( pNode );
-    Abc_NodeMffcConeSupp( pNode, vCone, vSupp );
-    Abc_NodeRef_rec( pNode );
-    // create the PIs
-    Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pObj, i )
-    {
-        pObj.pCopy = Abc_NtkCreatePi(pNtkNew);
-        Abc_ObjAssignName( pObj.pCopy, Abc_ObjName(pObj), nil );
-    }
-    // create the PO
-    pNodeCoNew = Abc_NtkCreatePo( pNtkNew );
-    Abc_ObjAssignName( pNodeCoNew, pNodeName, nil );
-    // copy the nodes
-    Vec_PtrForEachEntry( Abc_Obj_t *, vCone, pObj, i )
-    {
-        // if it is an AIG, add to the hash table
-        if Abc_NtkIsStrash(pNtk) {
-            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );
-        
-        } else {
-            Abc_NtkDupObj( pNtkNew, pObj, 0 );
-            Abc_ObjForEachFanin( pObj, pFanin, k )
-                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-        }
-    }
-    // connect the topmost node
-    Abc_ObjAddFanin( pNodeCoNew, pNode.pCopy );
-    Vec_PtrFree( vCone );
-    Vec_PtrFree( vSupp );
-
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkCreateMffc(): Network check has failed.\n"); }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the miter composed of one multi-output cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCreateTarget(pNtk *Abc_Ntk_t, vRoots *Vec_Ptr_t, vValues *Vec_Int_t) *Abc_Ntk_t {
-    var vNodes *Vec_Ptr_t;
-    var pNtkNew *Abc_Ntk_t; 
-    var pObj, pFinal, pOther, pNodePo *Abc_Obj_t;
-    var i int32;
-
-    assert(Abc_NtkIsLogic(pNtk), "Abc_NtkIsLogic(pNtk)");
-    
-    // start the network
-    Abc_NtkCleanCopy( pNtk );
-    pNtkNew = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );
-    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);
-
-    // collect the nodes in the TFI of the output
-    vNodes = Abc_NtkDfsNodes( pNtk, (Abc_Obj_t **)vRoots.pArray, vRoots.nSize );
-    // create the PIs
-    Abc_NtkForEachCi( pNtk, pObj, i )
-    {
-        pObj.pCopy = Abc_NtkCreatePi(pNtkNew);
-        Abc_ObjAssignName( pObj.pCopy, Abc_ObjName(pObj), nil );
-    }
-    // copy the nodes
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-        pObj.pCopy = Abc_NodeStrash( pNtkNew, pObj, 0 );
-    Vec_PtrFree( vNodes );
-
-    // add the PO
-    pFinal = Abc_AigConst1( pNtkNew );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vRoots, pObj, i )
-    {
-        if Abc_ObjIsCo(pObj) {
-            pOther = Abc_ObjFanin0(pObj).pCopy;
-        } else {
-            pOther = pObj.pCopy; }
-        if Vec_IntEntry(vValues, i) == 0 {
-            pOther = Abc_ObjNot(pOther); }
-        pFinal = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, pFinal, pOther );
-    }
-
-    // add the PO corresponding to this output
-    pNodePo = Abc_NtkCreatePo( pNtkNew );
-    Abc_ObjAddFanin( pNodePo, pFinal );
-    Abc_ObjAssignName( pNodePo, "miter", nil );
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkCreateTarget(): Network check has failed.\n"); }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the network composed of one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCreateFromNode(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t) *Abc_Ntk_t {    
-    var pNtkNew *Abc_Ntk_t; 
-    var pFanin, pNodePo *Abc_Obj_t;
-    var i int32;
-    // start the network
-    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );
-    pNtkNew.pName = Extra_UtilStrsav(Abc_ObjName(pNode));
-    // add the PIs corresponding to the fanins of the node
-    Abc_ObjForEachFanin( pNode, pFanin, i )
-    {
-        pFanin.pCopy = Abc_NtkCreatePi( pNtkNew );
-        Abc_ObjAssignName( pFanin.pCopy, Abc_ObjName(pFanin), nil );
-    }
-    // duplicate and connect the node
-    pNode.pCopy = Abc_NtkDupObj( pNtkNew, pNode, 0 );
-    Abc_ObjForEachFanin( pNode, pFanin, i )
-        Abc_ObjAddFanin( pNode.pCopy, pFanin.pCopy );
-    // create the only PO
-    pNodePo = Abc_NtkCreatePo( pNtkNew );
-    Abc_ObjAddFanin( pNodePo, pNode.pCopy );
-    Abc_ObjAssignName( pNodePo, Abc_ObjName(pNode), nil );
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkCreateFromNode(): Network check has failed.\n"); }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the network composed of one node with the given SOP.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCreateWithNode(pSop string) *Abc_Ntk_t {    
-    var pNtkNew *Abc_Ntk_t; 
-    var pFanin, pNode, pNodePo *Abc_Obj_t;
-    var vNames *Vec_Ptr_t;
-    var i, nVars int32;
-    // start the network
-    pNtkNew = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );
-    pNtkNew.pName = Extra_UtilStrsav("ex");
-    // create PIs
-    Vec_PtrPush( pNtkNew.vObjs, nil );
-    nVars = Abc_SopGetVarNum( pSop );
-    vNames = Abc_NodeGetFakeNames( nVars );
-    for  i = 0; i < nVars; i++  {
-        Abc_ObjAssignName( Abc_NtkCreatePi(pNtkNew), (char *)Vec_PtrEntry(vNames, i), nil );
-    }
-    Abc_NodeFreeNames( vNames );
-    // create the node, add PIs as fanins, set the function
-    pNode = Abc_NtkCreateNode( pNtkNew );
-    Abc_NtkForEachPi( pNtkNew, pFanin, i )
-        Abc_ObjAddFanin( pNode, pFanin );
-    pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, pSop );
-    // create the only PO
-    pNodePo = Abc_NtkCreatePo(pNtkNew);
-    Abc_ObjAddFanin( pNodePo, pNode );
-    Abc_ObjAssignName( pNodePo, "F", nil );
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkCreateWithNode(): Network check has failed.\n"); }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Deletes the Ntk.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDelete(pNtk *Abc_Ntk_t) {
-    var pObj *Abc_Obj_t;
-    var pAttrMan any;
-    var TotalMemory, i int32;
-//    int LargePiece = (4 << ABC_NUM_STEPS);
-    if pNtk == nil {
-        return; }
-    // free EXDC Ntk
-    if pNtk.pExdc {
-        Abc_NtkDelete( pNtk.pExdc ); }
-    if pNtk.pExcare {
-        Abc_NtkDelete( (Abc_Ntk_t *)pNtk.pExcare ); }
-    // dereference the BDDs
-    if Abc_NtkHasBdd(pNtk) {
-#ifdef ABC_USE_CUDD
-        Abc_NtkForEachNode( pNtk, pObj, i )
-            Cudd_RecursiveDeref( (DdManager *)pNtk->pManFunc, (DdNode *)pObj->pData );
-#endif
-    }
-    // make sure all the marks are clean
-    Abc_NtkForEachObj( pNtk, pObj, i )
-    {
-        // free large fanout arrays
-//        if ( pNtk->pMmObj && pObj->vFanouts.nCap * 4 > LargePiece )
-//            ABC_FREE( pObj->vFanouts.pArray );
-        // these flags should be always zero
-        // if this is not true, something is wrong somewhere
-        assert(pObj.fMarkA == 0, "pObj.fMarkA == 0");
-        assert(pObj.fMarkB == 0, "pObj.fMarkB == 0");
-        assert(pObj.fMarkC == 0, "pObj.fMarkC == 0");
-    }
-    // free the nodes
-    if pNtk.pMmStep == nil {
-        Abc_NtkForEachObj( pNtk, pObj, i )
-        {
-            ABC_FREE( pObj.vFanouts.pArray );
-            ABC_FREE( pObj.vFanins.pArray );
-        }
-    }
-    if pNtk.pMmObj == nil {
-        Abc_NtkForEachObj( pNtk, pObj, i )
-            ABC_FREE( pObj );
-    }
-        
-    // free the arrays
-    Vec_PtrFree( pNtk.vPios );
-    Vec_PtrFree( pNtk.vPis );
-    Vec_PtrFree( pNtk.vPos );
-    Vec_PtrFree( pNtk.vCis );
-    Vec_PtrFree( pNtk.vCos );
-    Vec_PtrFree( pNtk.vObjs );
-    Vec_PtrFree( pNtk.vBoxes );
-    ABC_FREE( pNtk.vTravIds.pArray );
-    if pNtk.vLevelsR { Vec_IntFree( pNtk.vLevelsR ); }
-    ABC_FREE( pNtk.pModel );
-    ABC_FREE( pNtk.pSeqModel );
-    if pNtk.vSeqModelVec {
-        Vec_PtrFreeFree( pNtk.vSeqModelVec ); }
-    TotalMemory  = 0;
-    TotalMemory += pNtk.pMmObj? Mem_FixedReadMemUsage(pNtk.pMmObj)  : 0;
-    TotalMemory += pNtk.pMmStep? Mem_StepReadMemUsage(pNtk.pMmStep) : 0;
-//    fprintf( stdout, "The total memory allocated internally by the network = %0.2f MB.\n", ((double)TotalMemory)/(1<<20) );
-    // free the storage 
-    if pNtk.pMmObj {
-        Mem_FixedStop( pNtk.pMmObj, 0 ); }
-    if pNtk.pMmStep {
-        Mem_StepStop ( pNtk.pMmStep, 0 ); }
-    // name manager
-    Nm_ManFree( pNtk.pManName );
-    // free the timing manager
-    if pNtk.pManTime {
-        Abc_ManTimeStop( pNtk.pManTime ); }
-    Vec_IntFreeP( &pNtk.vPhases );
-    // start the functionality manager
-    if Abc_NtkIsStrash(pNtk) {
-        Abc_AigFree( (Abc_Aig_t *)pNtk.pManFunc );
-    } else if Abc_NtkHasSop(pNtk) || Abc_NtkHasBlifMv(pNtk) {
-        Mem_FlexStop( (Mem_Flex_t *)pNtk.pManFunc, 0 );
-#ifdef ABC_USE_CUDD
-    else if ( Abc_NtkHasBdd(pNtk) )
-        Extra_StopManager( (DdManager *)pNtk->pManFunc );
-#endif
-    } else if Abc_NtkHasAig(pNtk) { if pNtk.pManFunc { Hop_ManStop( (Hop_Man_t *)pNtk.pManFunc ); } 
-    } else if Abc_NtkHasMapping(pNtk) {
-        pNtk.pManFunc = nil;
-    } else if !Abc_NtkHasBlackbox(pNtk) {
-        assert(false, "0"); }
-    // free the hierarchy
-    if pNtk.pDesign {
-        Abc_DesFree( pNtk.pDesign, pNtk );
-        pNtk.pDesign = nil;
-    }
-//    if ( pNtk->pBlackBoxes ) 
-//        Vec_IntFree( pNtk->pBlackBoxes );
-    // free node attributes
-    Vec_PtrForEachEntry( Abc_Obj_t *, pNtk.vAttrs, pAttrMan, i )
-        if ( pAttrMan )
-            Vec_AttFree( (Vec_Att_t *)pAttrMan, 1 );
-    assert(pNtk.pSCLib == nil, "pNtk.pSCLib == nil");
-    Vec_IntFreeP( &pNtk.vGates );
-    Vec_PtrFree( pNtk.vAttrs );
-    Vec_IntFreeP( &pNtk.vNameIds );
-    ABC_FREE( pNtk.pWLoadUsed );
-    ABC_FREE( pNtk.pName );
-    ABC_FREE( pNtk.pSpec );
-    ABC_FREE( pNtk.pLutTimes );
-    if pNtk.vOnehots {
-        Vec_VecFree( (Vec_Vec_t *)pNtk.vOnehots ); }
-    Vec_PtrFreeP( &pNtk.vLtlProperties );
-    Vec_IntFreeP( &pNtk.vObjPerm );
-    Vec_IntFreeP( &pNtk.vTopo );
-    Vec_IntFreeP( &pNtk.vFins );
-    ABC_FREE( pNtk );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Reads the verilog file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFixNonDrivenNets(pNtk *Abc_Ntk_t) { 
-    var vNets *Vec_Ptr_t;
-    var pNet, pNode *Abc_Obj_t;
-    var i int32;
-
-    if Abc_NtkNodeNum(pNtk) == 0 && Abc_NtkBoxNum(pNtk) == 0 {
-        return; }
-
-    // special case
-    pNet = Abc_NtkFindNet( pNtk, "[_c1_]" );
-    if pNet != nil {
-        pNode = Abc_NtkCreateNodeConst1( pNtk );
-        Abc_ObjAddFanin( pNet, pNode );
-    }
-
-    // check for non-driven nets
-    vNets = Vec_PtrAlloc( 100 );
-    Abc_NtkForEachNet( pNtk, pNet, i )
-    {
-        if Abc_ObjFaninNum(pNet) > 0 {
-            continue; }
-        // add the constant 0 driver
-        pNode = Abc_NtkCreateNodeConst0( pNtk );
-        // add the fanout net
-        Abc_ObjAddFanin( pNet, pNode );
-        // add the net to those for which the warning will be printed
-        Vec_PtrPush( vNets, pNet );
-    }
-
-    // print the warning
-    if vNets.nSize > 0 {
-        fmt.Printf("Warning: Constant-0 drivers added to %d non-driven nets in network \"%s\":\n", Vec_PtrSize(vNets), pNtk.pName);
-        Vec_PtrForEachEntry( Abc_Obj_t *, vNets, pNet, i )
-        {
-            fmt.Printf("%s%s", (i? ", ": ""), Abc_ObjName(pNet));
-            if i == 3 {
-                if Vec_PtrSize(vNets) > 3 {
-                    fmt.Printf(" ..."); }
-                break;
-            }
-        }
-        fmt.Printf("\n");
-    }
-    Vec_PtrFree( vNets );
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the network to combinational.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMakeComb(pNtk *Abc_Ntk_t, fRemoveLatches int32) {
-    var pObj *Abc_Obj_t;
-    var i int32;
-
-    if Abc_NtkIsComb(pNtk) {
-        return; }
-
-    assert(!Abc_NtkIsNetlist(pNtk), "!Abc_NtkIsNetlist(pNtk)");
-    assert(Abc_NtkHasOnlyLatchBoxes(pNtk), "Abc_NtkHasOnlyLatchBoxes(pNtk)");
-
-    // detach the latches
-//    Abc_NtkForEachLatch( pNtk, pObj, i )
-    Vec_PtrForEachEntryReverse( Abc_Obj_t *, pNtk.vBoxes, pObj, i )
-        Abc_NtkDeleteObj( pObj );
-    assert(Abc_NtkLatchNum(pNtk) == 0, "Abc_NtkLatchNum(pNtk) == 0");
-    assert(Abc_NtkBoxNum(pNtk) == 0, "Abc_NtkBoxNum(pNtk) == 0");
-
-    // move CIs to become PIs
-    Vec_PtrClear( pNtk.vPis );
-    Abc_NtkForEachCi( pNtk, pObj, i )
-    {
-        if Abc_ObjIsBo(pObj) {
-            pObj.Type = ABC_OBJ_PI;
-            pNtk.nObjCounts[ABC_OBJ_PI]++;
-            pNtk.nObjCounts[ABC_OBJ_BO]--;
-        }
-        Vec_PtrPush( pNtk.vPis, pObj );
-    }
-    assert(Abc_NtkBoNum(pNtk) == 0, "Abc_NtkBoNum(pNtk) == 0");
-
-    if fRemoveLatches != 0 {
-        // remove registers
-        var vBos *Vec_Ptr_t;
-        vBos = Vec_PtrAlloc( 100 );
-        Vec_PtrClear( pNtk.vPos );
-        Abc_NtkForEachCo( pNtk, pObj, i )
-            if ( Abc_ObjIsBi(pObj) )
-                Vec_PtrPush( vBos, pObj );
-            else
-                Vec_PtrPush( pNtk.vPos, pObj );
-        // remove COs
-        Vec_PtrFree( pNtk.vCos );
-        pNtk.vCos = nil;
-        // remove the BOs
-        Vec_PtrForEachEntry( Abc_Obj_t *, vBos, pObj, i )
-            Abc_NtkDeleteObj( pObj );
-        Vec_PtrFree( vBos );
-        // create COs
-        pNtk.vCos = Vec_PtrDup( pNtk.vPos );
-        // cleanup
-        if Abc_NtkIsLogic(pNtk) {
-            Abc_NtkCleanup( pNtk, 0 );
-        } else if Abc_NtkIsStrash(pNtk) {
-            Abc_AigCleanup( (Abc_Aig_t *)pNtk.pManFunc );
-        } else {
-            assert(false, "0"); }
-    
-    } else {
-        // move COs to become POs
-        Vec_PtrClear( pNtk.vPos );
-        Abc_NtkForEachCo( pNtk, pObj, i )
-        {
-            if Abc_ObjIsBi(pObj) {
-                pObj.Type = ABC_OBJ_PO;
-                pNtk.nObjCounts[ABC_OBJ_PO]++;
-                pNtk.nObjCounts[ABC_OBJ_BI]--;
-            }
-            Vec_PtrPush( pNtk.vPos, pObj );
-        }
-    }
-    assert(Abc_NtkBiNum(pNtk) == 0, "Abc_NtkBiNum(pNtk) == 0");
-
-    if !Abc_NtkCheck( pNtk ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkMakeComb(): Network check has failed.\n"); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the network to sequential.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMakeSeq(pNtk *Abc_Ntk_t, nLatchesToAdd int32) {
-    var pObjLi, pObjLo, pObj *Abc_Obj_t;
-    var i int32;
-    assert(Abc_NtkBoxNum(pNtk) == 0, "Abc_NtkBoxNum(pNtk) == 0");
-    if !Abc_NtkIsComb(pNtk) {
-        fmt.Printf("The network is a not a combinational one.\n");
-        return;
-    }
-    if nLatchesToAdd >= Abc_NtkPiNum(pNtk) {
-        fmt.Printf("The number of latches is more or equal than the number of PIs.\n");
-        return;
-    }
-    if nLatchesToAdd >= Abc_NtkPoNum(pNtk) {
-        fmt.Printf("The number of latches is more or equal than the number of POs.\n");
-        return;
-    }
-
-    // move the last PIs to become CIs
-    Vec_PtrClear( pNtk.vPis );
-    Abc_NtkForEachCi( pNtk, pObj, i )
-    {
-        if i < Abc_NtkCiNum(pNtk) - nLatchesToAdd {
-            Vec_PtrPush( pNtk.vPis, pObj );
-            continue;
-        }
-        pObj.Type = ABC_OBJ_BO;
-        pNtk.nObjCounts[ABC_OBJ_PI]--;
-        pNtk.nObjCounts[ABC_OBJ_BO]++;
-    }
-
-    // move the last POs to become COs
-    Vec_PtrClear( pNtk.vPos );
-    Abc_NtkForEachCo( pNtk, pObj, i )
-    {
-        if i < Abc_NtkCoNum(pNtk) - nLatchesToAdd {
-            Vec_PtrPush( pNtk.vPos, pObj );
-            continue;
-        }
-        pObj.Type = ABC_OBJ_BI;
-        pNtk.nObjCounts[ABC_OBJ_PO]--;
-        pNtk.nObjCounts[ABC_OBJ_BI]++;
-    }
-
-    // create latches
-    for  i = 0; i < nLatchesToAdd; i++  {
-        pObjLo = Abc_NtkCi( pNtk, Abc_NtkCiNum(pNtk) - nLatchesToAdd + i );
-        pObjLi = Abc_NtkCo( pNtk, Abc_NtkCoNum(pNtk) - nLatchesToAdd + i );
-        pObj = Abc_NtkCreateLatch( pNtk );
-        Abc_ObjAddFanin( pObj, pObjLi );
-        Abc_ObjAddFanin( pObjLo, pObj );
-        Abc_LatchSetInit0( pObj );
-    }
-
-    if !Abc_NtkCheck( pNtk ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkMakeSeq(): Network check has failed.\n"); }
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Removes all POs, except one.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMakeOnePo(pNtkInit *Abc_Ntk_t, Output int32, nRange int32) *Abc_Ntk_t {
-    var pNtk *Abc_Ntk_t;
-    var vPosLeft *Vec_Ptr_t;
-    var vCosLeft *Vec_Ptr_t;
-    var pNodePo *Abc_Obj_t;
-    var i int32;
-    assert(!Abc_NtkIsNetlist(pNtkInit), "!Abc_NtkIsNetlist(pNtkInit)");
-    assert(Abc_NtkHasOnlyLatchBoxes(pNtkInit), "Abc_NtkHasOnlyLatchBoxes(pNtkInit)");
-    if Output < 0 || Output >= Abc_NtkPoNum(pNtkInit) {
-        fmt.Printf("PO index is incorrect.\n");
-        return nil;
-    }
-
-    pNtk = Abc_NtkDup( pNtkInit );
-    if Abc_NtkPoNum(pNtk) == 1 {
-        return pNtk; }
-
-    if nRange < 1 {
-        nRange = 1; }
-
-    // filter POs
-    vPosLeft = Vec_PtrAlloc( nRange );
-    Abc_NtkForEachPo( pNtk, pNodePo, i )
-        if ( i < Output || i >= Output + nRange )
-            Abc_NtkDeleteObjPo( pNodePo );
-        else
-            Vec_PtrPush( vPosLeft, pNodePo );
-    // filter COs
-    vCosLeft = Vec_PtrDup( vPosLeft );
-    for  i = Abc_NtkPoNum(pNtk); i < Abc_NtkCoNum(pNtk); i++  {
-        Vec_PtrPush( vCosLeft, Abc_NtkCo(pNtk, i) );
-    }
-    // update arrays
-    Vec_PtrFree( pNtk.vPos );  pNtk.vPos = vPosLeft;
-    Vec_PtrFree( pNtk.vCos );  pNtk.vCos = vCosLeft;
-
-    // clean the network
-    if Abc_NtkIsStrash(pNtk) {
-        Abc_AigCleanup( (Abc_Aig_t *)pNtk.pManFunc );
-        fmt.Printf("Run sequential cleanup (\"scl\") to get rid of dangling logic.\n");
-    
-    } else {
-        fmt.Printf("Run sequential cleanup (\"st; scl\") to get rid of dangling logic.\n");
-    }
-
-    if !Abc_NtkCheck( pNtk ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkMakeComb(): Network check has failed.\n"); }
-    return pNtk;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Removes POs with suppsize less than 2 and PIs without fanout.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkTrim(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pObj *Abc_Obj_t;
-    var i, k, m int32;
-
-    // filter POs
-    k = m = 0;
-    Abc_NtkForEachCo( pNtk, pObj, i )
-    {  
-        if Abc_ObjIsPo(pObj) {
-            // remove constant nodes and PI pointers
-            if Abc_ObjFaninNum(Abc_ObjFanin0(pObj)) == 0 {
-                Abc_ObjDeleteFanin( pObj, Abc_ObjFanin0(pObj) );
-                if Abc_ObjFanoutNum(Abc_ObjFanin0(pObj)) == 0 && !Abc_ObjIsPi(Abc_ObjFanin0(pObj)) {
-                    Abc_NtkDeleteObj_rec( Abc_ObjFanin0(pObj), 1 ); }
-                pNtk.vObjs.pArray[pObj.Id] = nil;
-                pObj.Id = (1<<26)-1;
-                pNtk.nObjCounts[pObj.Type]--;
-                pNtk.nObjs--;
-                Abc_ObjRecycle( pObj );
-                continue;
-            }
-            // remove buffers/inverters of PIs
-            if Abc_ObjFaninNum(Abc_ObjFanin0(pObj)) == 1 {
-                if Abc_ObjIsPi(Abc_ObjFanin0(Abc_ObjFanin0(pObj))) {
-                    Abc_ObjDeleteFanin( pObj, Abc_ObjFanin0(pObj) );
-                    if Abc_ObjFanoutNum(Abc_ObjFanin0(pObj)) == 0 {
-                        Abc_NtkDeleteObj_rec( Abc_ObjFanin0(pObj), 1 ); }
-                    pNtk.vObjs.pArray[pObj.Id] = nil;
-                    pObj.Id = (1<<26)-1;
-                    pNtk.nObjCounts[pObj.Type]--;
-                    pNtk.nObjs--;
-                    Abc_ObjRecycle( pObj );
-                    continue;
-                }
-            }
-            Vec_PtrWriteEntry( pNtk.vPos, m++, pObj );
-        }
-        Vec_PtrWriteEntry( pNtk.vCos, k++, pObj );
-    }
-    Vec_PtrShrink( pNtk.vPos, m );
-    Vec_PtrShrink( pNtk.vCos, k );
-
-    // filter PIs
-    k = m = 0;
-    Abc_NtkForEachCi( pNtk, pObj, i )
-    {
-        if Abc_ObjIsPi(pObj) {
-            if Abc_ObjFanoutNum(pObj) == 0 {
-                pNtk.vObjs.pArray[pObj.Id] = nil;
-                pObj.Id = (1<<26)-1;
-                pNtk.nObjCounts[pObj.Type]--;
-                pNtk.nObjs--;
-                Abc_ObjRecycle( pObj );
-                continue;
-            }
-            Vec_PtrWriteEntry( pNtk.vPis, m++, pObj );
-        }
-        Vec_PtrWriteEntry( pNtk.vCis, k++, pObj );
-    }
-    Vec_PtrShrink( pNtk.vPis, m );
-    Vec_PtrShrink( pNtk.vCis, k );
-
-    return Abc_NtkDup( pNtk );
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDropSatOutputs(pNtk *Abc_Ntk_t, vCexes *Vec_Ptr_t, fVerbose int32) {
-    var pObj, pConst0, pFaninNew *Abc_Obj_t;
-    var i, Counter int32;
-    assert(Vec_PtrSize(vCexes) == Abc_NtkPoNum(pNtk), "Vec_PtrSize(vCexes) == Abc_NtkPoNum(pNtk)");
-    pConst0 = Abc_ObjNot( Abc_AigConst1(pNtk) );
-    Abc_NtkForEachPo( pNtk, pObj, i )
-    {
-        if Vec_PtrEntry( vCexes, i ) == nil {
-            continue; }
-        Counter++;
-        pFaninNew = Abc_ObjNotCond( pConst0, Abc_ObjFaninC0(pObj) );
-        Abc_ObjPatchFanin( pObj, Abc_ObjFanin0(pObj), pFaninNew );
-        assert(Abc_ObjChild0(pObj) == pConst0, "Abc_ObjChild0(pObj) == pConst0");
-        // if a PO is driven by a latch, they have the same name...
-//        if ( Abc_ObjIsBo(pObj) )
-//            Nm_ManDeleteIdName( pNtk->pManName, Abc_ObjId(pObj) );
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Logic cones of %d POs have been replaced by constant 0.\n", Counter); }
-    Counter = Abc_AigCleanup( (Abc_Aig_t *)pNtk.pManFunc );
-//    printf( "Cleanup removed %d nodes.\n", Counter );
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDropOneOutput(pNtk *Abc_Ntk_t, iOutput int32, fSkipSweep int32, fUseConst1 int32) {
-    var pObj, pConst0, pFaninNew *Abc_Obj_t;
-    pObj = Abc_NtkPo( pNtk, iOutput );
-    if Abc_ObjFanin0(pObj) == Abc_AigConst1(pNtk) {
-        if !Abc_ObjFaninC0(pObj) ^ fUseConst1 {
-            Abc_ObjXorFaninC( pObj, 0 ); }
-        return;
-    }
-    pConst0 = Abc_ObjNotCond( Abc_AigConst1(pNtk), !fUseConst1 );
-    pFaninNew = Abc_ObjNotCond( pConst0, Abc_ObjFaninC0(pObj) );
-    Abc_ObjPatchFanin( pObj, Abc_ObjFanin0(pObj), pFaninNew );
-    assert(Abc_ObjChild0(pObj) == pConst0, "Abc_ObjChild0(pObj) == pConst0");
-    if fSkipSweep != 0 {
-        return; }
-    Abc_AigCleanup( (Abc_Aig_t *)pNtk.pManFunc );
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkSwapOneOutput(pNtk *Abc_Ntk_t, iOutput int32) {
-    var pObj1, pObj2 *Abc_Obj_t;
-    var pChild1Old, pChild2Old *Abc_Obj_t;
-    var pChild1, pChild2 *Abc_Obj_t;
-    if iOutput == 0 {
-        return; }
-    pObj1      = Abc_NtkPo( pNtk, 0 );
-    pObj2      = Abc_NtkPo( pNtk, iOutput );
-    if Abc_ObjFanin0(pObj1) == Abc_ObjFanin0(pObj2) {
-        if Abc_ObjFaninC0(pObj1) ^ Abc_ObjFaninC0(pObj2) {
-            Abc_ObjXorFaninC( pObj1, 0 );
-            Abc_ObjXorFaninC( pObj2, 0 );
-        }
-        return;
-    }
-    pChild1Old = Abc_ObjChild0( pObj1 );
-    pChild2Old = Abc_ObjChild0( pObj2 );
-    pChild1    = Abc_ObjNotCond( pChild1Old, Abc_ObjFaninC0(pObj2) );
-    pChild2    = Abc_ObjNotCond( pChild2Old, Abc_ObjFaninC0(pObj1) );
-    Abc_ObjPatchFanin( pObj1, Abc_ObjFanin0(pObj1), pChild2 );
-    Abc_ObjPatchFanin( pObj2, Abc_ObjFanin0(pObj2), pChild1 );
-    assert(Abc_ObjChild0(pObj1) == pChild2Old, "Abc_ObjChild0(pObj1) == pChild2Old");
-    assert(Abc_ObjChild0(pObj2) == pChild1Old, "Abc_ObjChild0(pObj2) == pChild1Old");
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkRemovePo(pNtk *Abc_Ntk_t, iOutput int32, fRemoveConst0 int32) {
-    var pObj *Abc_Obj_t  = Abc_NtkPo(pNtk, iOutput);
-    if Abc_ObjFanin0(pObj) == Abc_AigConst1(pNtk) && Abc_ObjFaninC0(pObj) == fRemoveConst0 {
-        Abc_NtkDeleteObj( pObj ); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkReadFlopPerm(pFileName string, nFlops int32) *Vec_Int_t {
-    var Buffer [1000]byte;
-    var pFile *os.File;
-    var vFlops *Vec_Int_t;
-    var iFlop int32  = -1;
-    pFile = os.Open(pFileName);
-    if pFile == nil {
-        fmt.Printf("Cannot open input file \"%s\".\n", pFileName);
-        return nil;
-    }
-    vFlops = Vec_IntAlloc( nFlops );
-    for  fgets( Buffer, 1000, pFile ) != nil  {
-        if Buffer[0] == ' ' || Buffer[0] == '\r' || Buffer[0] == '\n' {
-            continue; }
-        iFlop = strconv.Atoi(Buffer);
-        if iFlop < 0 || iFlop >= nFlops {
-            fmt.Printf("Flop ID (%d) is out of range.\n", iFlop);
-            _ = (pFile).Close();
-            Vec_IntFree( vFlops );
-            return nil;
-        }
-        Vec_IntPush( vFlops, iFlop );
-    }
-    _ = (pFile).Close();
-    if Vec_IntSize(vFlops) != nFlops {
-        fmt.Printf("The number of flops read in from file (%d) is different from the number of flops in the circuit (%d).\n", iFlop, nFlops);
-        Vec_IntFree( vFlops );
-        return nil;
-    }
-    return vFlops;    
-}
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPermute(pNtk *Abc_Ntk_t, fInputs int32, fOutputs int32, fFlops int32, pFlopPermFile string) {
-    var pTemp *Abc_Obj_t;
-    var vInputs, vOutputs, vFlops, vTemp *Vec_Int_t;
-    var i, k, Entry int32;
-    // start permutation arrays
-    if pFlopPermFile {
-        vFlops = Abc_NtkReadFlopPerm( pFlopPermFile, Abc_NtkLatchNum(pNtk) );
-        if vFlops == nil {
-            return; }
-        fInputs  = 0;
-        fOutputs = 0;
-        fFlops   = 0;
-    
-    } else {
-        vFlops   = Vec_IntStartNatural( Abc_NtkLatchNum(pNtk) ); }
-    vInputs  = Vec_IntStartNatural( Abc_NtkPiNum(pNtk) );
-    vOutputs = Vec_IntStartNatural( Abc_NtkPoNum(pNtk) );
-    // permute inputs
-    if fInputs != 0 {
-    for  i = 0; i < Abc_NtkPiNum(pNtk); i++  {
-        k = rand() % Abc_NtkPiNum(pNtk);
-        // swap indexes
-        Entry = Vec_IntEntry( vInputs, i );
-        Vec_IntWriteEntry( vInputs, i, Vec_IntEntry(vInputs, k) );
-        Vec_IntWriteEntry( vInputs, k, Entry );
-        // swap PIs
-        pTemp = (Abc_Obj_t *)Vec_PtrEntry( pNtk.vPis, i );
-        Vec_PtrWriteEntry( pNtk.vPis, i, Vec_PtrEntry(pNtk.vPis, k) );
-        Vec_PtrWriteEntry( pNtk.vPis, k, pTemp );
-        // swap CIs
-        pTemp = (Abc_Obj_t *)Vec_PtrEntry( pNtk.vCis, i );
-        Vec_PtrWriteEntry( pNtk.vCis, i, Vec_PtrEntry(pNtk.vCis, k) );
-        Vec_PtrWriteEntry( pNtk.vCis, k, pTemp );
-//printf( "Swapping PIs %d and %d.\n", i, k );
-    } }
-    // permute outputs
-    if fOutputs != 0 {
-    for  i = 0; i < Abc_NtkPoNum(pNtk); i++  {
-        k = rand() % Abc_NtkPoNum(pNtk);
-        // swap indexes
-        Entry = Vec_IntEntry( vOutputs, i );
-        Vec_IntWriteEntry( vOutputs, i, Vec_IntEntry(vOutputs, k) );
-        Vec_IntWriteEntry( vOutputs, k, Entry );
-        // swap POs
-        pTemp = (Abc_Obj_t *)Vec_PtrEntry( pNtk.vPos, i );
-        Vec_PtrWriteEntry( pNtk.vPos, i, Vec_PtrEntry(pNtk.vPos, k) );
-        Vec_PtrWriteEntry( pNtk.vPos, k, pTemp );
-        // swap COs
-        pTemp = (Abc_Obj_t *)Vec_PtrEntry( pNtk.vCos, i );
-        Vec_PtrWriteEntry( pNtk.vCos, i, Vec_PtrEntry(pNtk.vCos, k) );
-        Vec_PtrWriteEntry( pNtk.vCos, k, pTemp );
-//printf( "Swapping POs %d and %d.\n", i, k );
-    } }
-    // permute flops
-    assert(Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk), "Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk)");
-    if fFlops != 0 {
-    for  i = 0; i < Abc_NtkLatchNum(pNtk); i++  {
-        k = rand() % Abc_NtkLatchNum(pNtk);
-        // swap indexes
-        Entry = Vec_IntEntry( vFlops, i );
-        Vec_IntWriteEntry( vFlops, i, Vec_IntEntry(vFlops, k) );
-        Vec_IntWriteEntry( vFlops, k, Entry );
-        // swap flops
-        pTemp = (Abc_Obj_t *)Vec_PtrEntry( pNtk.vBoxes, i );
-        Vec_PtrWriteEntry( pNtk.vBoxes, i, Vec_PtrEntry(pNtk.vBoxes, k) );
-        Vec_PtrWriteEntry( pNtk.vBoxes, k, pTemp );
-        // swap CIs
-        pTemp = (Abc_Obj_t *)Vec_PtrEntry( pNtk.vCis, Abc_NtkPiNum(pNtk)+i );
-        Vec_PtrWriteEntry( pNtk.vCis, Abc_NtkPiNum(pNtk)+i, Vec_PtrEntry(pNtk.vCis, Abc_NtkPiNum(pNtk)+k) );
-        Vec_PtrWriteEntry( pNtk.vCis, Abc_NtkPiNum(pNtk)+k, pTemp );
-        // swap COs
-        pTemp = (Abc_Obj_t *)Vec_PtrEntry( pNtk.vCos, Abc_NtkPoNum(pNtk)+i );
-        Vec_PtrWriteEntry( pNtk.vCos, Abc_NtkPoNum(pNtk)+i, Vec_PtrEntry(pNtk.vCos, Abc_NtkPoNum(pNtk)+k) );
-        Vec_PtrWriteEntry( pNtk.vCos, Abc_NtkPoNum(pNtk)+k, pTemp );
-
-//printf( "Swapping flops %d and %d.\n", i, k );
-    } }
-    // invert arrays
-    vInputs = Vec_IntInvert( vTemp = vInputs, -1 );
-    Vec_IntFree( vTemp );
-    vOutputs = Vec_IntInvert( vTemp = vOutputs, -1 );
-    Vec_IntFree( vTemp );
-    vFlops = Vec_IntInvert( vTemp = vFlops, -1 );
-    Vec_IntFree( vTemp );
-    // pack the results into the output array
-    Vec_IntFreeP( &pNtk.vObjPerm );
-    pNtk.vObjPerm = Vec_IntAlloc( Abc_NtkPiNum(pNtk) + Abc_NtkPoNum(pNtk) + Abc_NtkLatchNum(pNtk) );
-    Vec_IntForEachEntry( vInputs, Entry, i )
-        Vec_IntPush( pNtk.vObjPerm, Entry );
-    Vec_IntForEachEntry( vOutputs, Entry, i )
-        Vec_IntPush( pNtk.vObjPerm, Entry );
-    Vec_IntForEachEntry( vFlops, Entry, i )
-        Vec_IntPush( pNtk.vObjPerm, Entry );
-    // cleanup
-    Vec_IntFree( vInputs );
-    Vec_IntFree( vOutputs );
-    Vec_IntFree( vFlops );
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeCompareByFanoutCount(pp1 **Abc_Obj_t, pp2 **Abc_Obj_t) int32 {
-    var Diff int32  = Abc_ObjFanoutNum(*pp2) - Abc_ObjFanoutNum(*pp1);
-    if Diff < 0 {
-        return -1; }
-    if Diff > 0 { 
-        return 1; }
-    Diff = int32(strings.Compare(Abc_ObjName(*pp1), Abc_ObjName(*pp2)));
-    if Diff < 0 {
-        return -1; }
-    if Diff > 0 { 
-        return 1; }
-    return 0; 
-}
-func Abc_NtkPermutePiUsingFanout(pNtk *Abc_Ntk_t) {
-    var pNode *Abc_Obj_t; var i int32;
-    qsort( (void *)Vec_PtrArray(pNtk.vPis), (size_t)Vec_PtrSize(pNtk.vPis), sizeof(Abc_Obj_t *), 
-            (int (*)(void *, void *)) Abc_NodeCompareByFanoutCount );
-    Vec_PtrClear( pNtk.vCis );
-    Vec_PtrForEachEntry( Abc_Obj_t *, pNtk.vPis, pNode, i )
-        Vec_PtrPush( pNtk.vCis, pNode );
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkUnpermute(pNtk *Abc_Ntk_t) {
-    var vTemp, vTemp2, vLatch *Vec_Ptr_t;
-    var i int32;
-    var pInputs *int32;
-    var pOutputs *int32;
-    var pFlops *int32;
-    if pNtk.vObjPerm == nil {
-        fmt.Printf("Abc_NtkUnpermute(): Initial permutation is not available.\n");
-        return;
-    }
-    assert(Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk), "Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk)");
-    // get reverve permutation
-    pInputs  = Vec_IntArray( pNtk.vObjPerm );
-    pOutputs = pInputs  + Abc_NtkPiNum(pNtk);
-    pFlops   = pOutputs + Abc_NtkPoNum(pNtk);
-    // create new PI array
-    vTemp = Vec_PtrAlloc( Abc_NtkPiNum(pNtk) );
-    for  i = 0; i < Abc_NtkPiNum(pNtk); i++  {
-        Vec_PtrPush( vTemp, Abc_NtkPi(pNtk, pInputs[i]) );
-    }
-    Vec_PtrFreeP( &pNtk.vPis );
-    pNtk.vPis = vTemp;
-    // create new PO array
-    vTemp = Vec_PtrAlloc( Abc_NtkPoNum(pNtk) );
-    for  i = 0; i < Abc_NtkPoNum(pNtk); i++  {
-        Vec_PtrPush( vTemp, Abc_NtkPo(pNtk, pOutputs[i]) );
-    }
-    Vec_PtrFreeP( &pNtk.vPos );
-    pNtk.vPos = vTemp;
-    // create new CI/CO arrays
-    vTemp  = Vec_PtrDup( pNtk.vPis );
-    vTemp2 = Vec_PtrDup( pNtk.vPos );
-    vLatch = Vec_PtrAlloc( Abc_NtkLatchNum(pNtk) );
-    for  i = 0; i < Abc_NtkLatchNum(pNtk); i++  {
-//printf( "Setting flop %d to be %d.\n", i, pFlops[i] );
-        Vec_PtrPush( vTemp,  Abc_NtkCi(pNtk, Abc_NtkPiNum(pNtk) + pFlops[i]) );
-        Vec_PtrPush( vTemp2, Abc_NtkCo(pNtk, Abc_NtkPoNum(pNtk) + pFlops[i]) );
-        Vec_PtrPush( vLatch, Abc_NtkBox(pNtk, pFlops[i]) );
-    }
-    Vec_PtrFreeP( &pNtk.vCis );
-    Vec_PtrFreeP( &pNtk.vCos );
-    Vec_PtrFreeP( &pNtk.vBoxes );
-    pNtk.vCis   = vTemp;
-    pNtk.vCos   = vTemp2;
-    pNtk.vBoxes = vLatch;
-    // cleanup
-    Vec_IntFreeP( &pNtk.vObjPerm );
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkNodeDup(pNtkInit *Abc_Ntk_t, nLimit int32, fVerbose int32) *Abc_Ntk_t {
-    var vNodes, vFanouts *Vec_Ptr_t;
-    var pNtk *Abc_Ntk_t;
-    var pObj, pObjNew, pFanin, pFanout *Abc_Obj_t;
-    var i, k int32;
-    pNtk = Abc_NtkDup( pNtkInit );
-    vNodes = Vec_PtrAlloc( 100 );
-    vFanouts = Vec_PtrAlloc( 100 );
-    for
-    {
-        Vec_PtrClear( vNodes );
-        Abc_NtkForEachNode( pNtk, pObj, i )
-            if ( Abc_ObjFanoutNum(pObj) >= nLimit )
-                Vec_PtrPush( vNodes, pObj );
-        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-        {
-            pObjNew = Abc_NtkDupObj( pNtk, pObj, 0 );
-            Abc_ObjForEachFanin( pObj, pFanin, k )
-                Abc_ObjAddFanin( pObjNew, pFanin );
-            Abc_NodeCollectFanouts( pObj, vFanouts );
-            Vec_PtrShrink( vFanouts, nLimit / 2 );
-            Vec_PtrForEachEntry( Abc_Obj_t *, vFanouts, pFanout, k )
-                Abc_ObjPatchFanin( pFanout, pObj, pObjNew );
-        }
-        if fVerbose != 0 {
-            fmt.Printf("Duplicated %d nodes.\n", Vec_PtrSize(vNodes)); }
-    
-if !( Vec_PtrSize(vNodes) > 0 ) { break }
-}
-    
-    Vec_PtrFree( vFanouts );
-    Vec_PtrFree( vNodes );
-    return pNtk;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCreateFromSops(pName string, vSops *Vec_Ptr_t) *Abc_Ntk_t {
-    var i, k, nObjBeg int32;
-    var pSop string  = (char *)Vec_PtrEntry(vSops, 0);
-    var pNtk *Abc_Ntk_t  = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );
-    pNtk.pName = Extra_UtilStrsav( pName );
-    for  k = 0; pSop[k] != ' '; k++  {
-        Abc_NtkCreatePi( pNtk );
-    }
-    nObjBeg = Abc_NtkObjNumMax(pNtk);
-    Vec_PtrForEachEntry( char *, vSops, pSop, i )
-    {
-        var pObj *Abc_Obj_t  = Abc_NtkCreateNode( pNtk );
-        pObj.pData = Abc_SopRegister( (Mem_Flex_t*)pNtk.pManFunc, pSop );
-        for  k = 0; pSop[k] != ' '; k++  {
-            Abc_ObjAddFanin( pObj, Abc_NtkCi(pNtk, k) );
-        }
-    }
-    for  i = 0; i < Vec_PtrSize(vSops); i++  {
-        var pObj *Abc_Obj_t  = Abc_NtkObj( pNtk, nObjBeg + i );
-        var pObjPo *Abc_Obj_t  = Abc_NtkCreatePo( pNtk );
-        Abc_ObjAddFanin( pObjPo, pObj );
-    }
-    Abc_NtkAddDummyPiNames( pNtk );
-    Abc_NtkAddDummyPoNames( pNtk );
-    return pNtk;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCreateFromGias(pName string, vGias *Vec_Ptr_t, pMulti *Gia_Man_t) *Abc_Ntk_t {
-    var pGia *Gia_Man_t;
-    if pMulti != nil {
-        pGia = pMulti;
-    } else {
-        pGia = (Gia_Man_t *)Vec_PtrEntry(vGias, 0);
-    }
-    var pNtk *Abc_Ntk_t  = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );
-    var pAbcObj, pAbcObjPo *Abc_Obj_t;
-    var pObj *Gia_Obj_t; var i, k int32;
-    pNtk.pName = Extra_UtilStrsav( pName );
-    for  k = 0; k < Gia_ManCiNum(pGia); k++  {
-        Abc_NtkCreatePi( pNtk );
-    }
-    if pMulti != nil {
-        Gia_ManCleanValue(pGia);
-        Gia_ManForEachCi( pGia, pObj, k )
-            pObj.Value = Abc_ObjId( Abc_NtkCi(pNtk, k) );
-        Gia_ManForEachAnd( pGia, pObj, k )
-        {
-            var pAbcObj0 *Abc_Obj_t  = Abc_NtkObj( pNtk, Gia_ObjFanin0(pObj).Value );
-            var pAbcObj1 *Abc_Obj_t  = Abc_NtkObj( pNtk, Gia_ObjFanin1(pObj).Value );
-            pAbcObj0 = Abc_ObjNotCond( pAbcObj0, Gia_ObjFaninC0(pObj) );
-            pAbcObj1 = Abc_ObjNotCond( pAbcObj1, Gia_ObjFaninC1(pObj) );
-            pAbcObj  = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, pAbcObj0, pAbcObj1 );
-            pObj.Value = Abc_ObjId( pAbcObj ); 
-        }
-        Gia_ManForEachCo( pGia, pObj, k )
-        {
-            //pObj = Gia_ManCo(pGia, 0);
-            if Gia_ObjFaninId0p(pGia, pObj) == 0 {
-                pAbcObj = Abc_ObjNot( Abc_AigConst1(pNtk) );
-            } else {
-                pAbcObj = Abc_NtkObj( pNtk, Gia_ObjFanin0(pObj).Value ); }
-            pAbcObj = Abc_ObjNotCond( pAbcObj, Gia_ObjFaninC0(pObj) );
-            pAbcObjPo = Abc_NtkCreatePo( pNtk );
-            Abc_ObjAddFanin( pAbcObjPo, pAbcObj );
-        }
-    
-    } else {
-    Vec_PtrForEachEntry( Gia_Man_t *, vGias, pGia, i )
-    {
-        assert(Gia_ManCoNum(pGia) == 1, "Gia_ManCoNum(pGia) == 1");
-        Gia_ManCleanValue(pGia);
-        Gia_ManForEachCi( pGia, pObj, k )
-            pObj.Value = Abc_ObjId( Abc_NtkCi(pNtk, k) );
-        Gia_ManForEachAnd( pGia, pObj, k )
-        {
-            var pAbcObj0 *Abc_Obj_t  = Abc_NtkObj( pNtk, Gia_ObjFanin0(pObj).Value );
-            var pAbcObj1 *Abc_Obj_t  = Abc_NtkObj( pNtk, Gia_ObjFanin1(pObj).Value );
-            pAbcObj0 = Abc_ObjNotCond( pAbcObj0, Gia_ObjFaninC0(pObj) );
-            pAbcObj1 = Abc_ObjNotCond( pAbcObj1, Gia_ObjFaninC1(pObj) );
-            pAbcObj  = Abc_AigAnd( (Abc_Aig_t *)pNtk.pManFunc, pAbcObj0, pAbcObj1 );
-            pObj.Value = Abc_ObjId( pAbcObj ); 
-        }
-        pObj = Gia_ManCo(pGia, 0);
-        if Gia_ObjFaninId0p(pGia, pObj) == 0 {
-            pAbcObj = Abc_ObjNot( Abc_AigConst1(pNtk) );
-        } else {
-            pAbcObj = Abc_NtkObj( pNtk, Gia_ObjFanin0(pObj).Value ); }
-        pAbcObj = Abc_ObjNotCond( pAbcObj, Gia_ObjFaninC0(pObj) );
-        pAbcObjPo = Abc_NtkCreatePo( pNtk );
-        Abc_ObjAddFanin( pAbcObjPo, pAbcObj );
-    }
-    }
-    Abc_NtkAddDummyPiNames( pNtk );
-    Abc_NtkAddDummyPoNames( pNtk );
-    return pNtk;
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

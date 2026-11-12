@@ -1,149 +1,45 @@
 package sim
 
-import "fmt"
+import "github.com/glycerine/abcgo/aig/aig"
 
-/**CFile****************************************************************
-
-  FileName    [simSym.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Simulation to determine two-variable symmetries.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: simSym.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "sim.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
- 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Computes two variable symmetries.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sim_ComputeTwoVarSymms(pNtk *Abc_Ntk_t, fVerbose int32) int32 {
-    var p *Sym_Man_t;
-    var vResult *Vec_Ptr_t;
-    var Result int32;
-    var i int32;
-    var clk abctime;
-    var clkTotal abctime = Abc_Clock();
-
-    srand( 0xABC );
-
-    // start the simulation manager
-    p = Sym_ManStart( pNtk, fVerbose );
-    p.nPairsTotal = p.nPairsRem = Sim_UtilCountAllPairs( p.vSuppFun, p.nSimWords, p.vPairsTotal );
-    if fVerbose != 0 {
-        fmt.Printf("Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\n", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }
-
-    // detect symmetries using circuit structure
-clk = Abc_Clock();
-    Sim_SymmsStructCompute( pNtk, p.vMatrSymms, p.vSuppFun );
-p.timeStruct = Abc_Clock() - clk;
-
-    Sim_UtilCountPairsAll( p );
-    p.nPairsSymmStr = p.nPairsSymm;
-    if fVerbose != 0 {
-        fmt.Printf("Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\n", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }
-
-    // detect symmetries using simulation
-    for  i = 1; i <= 1000; i++  {
-        // simulate this pattern
-        Sim_UtilSetRandom( p.uPatRand, p.nSimWords );
-        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );
-        if i % 50 != 0 {
-            continue; }
-        // check disjointness
-        assert(Sim_UtilMatrsAreDisjoint( p ), "Sim_UtilMatrsAreDisjoint( p )");
-        // count the number of pairs
-        Sim_UtilCountPairsAll( p );
-        if i % 500 != 0 {
-            continue; }
-        if fVerbose != 0 {
-            fmt.Printf("Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\n", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }
-    }
-
-    // detect symmetries using SAT
-    for  i = 1; Sim_SymmsGetPatternUsingSat( p, p.uPatRand ); i++  {
-        // simulate this pattern in four polarities
-        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );
-        // inlining of macro Sim_XorBit
-        ((p.uPatRand)[(p.iVar1)>>5] ^= (1<<((p.iVar1) & 31)));
-        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );
-        // inlining of macro Sim_XorBit
-        ((p.uPatRand)[(p.iVar2)>>5] ^= (1<<((p.iVar2) & 31)));
-        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );
-        // inlining of macro Sim_XorBit
-        ((p.uPatRand)[(p.iVar1)>>5] ^= (1<<((p.iVar1) & 31)));
-        Sim_SymmsSimulate( p, p.uPatRand, p.vMatrNonSymms );
-        // inlining of macro Sim_XorBit
-        ((p.uPatRand)[(p.iVar2)>>5] ^= (1<<((p.iVar2) & 31)));
-/*
-        // try the previuos pair
-        Sim_XorBit( p->uPatRand, p->iVar1Old );
-        Sim_SymmsSimulate( p, p->uPatRand, p->vMatrNonSymms );
-        Sim_XorBit( p->uPatRand, p->iVar2Old );
-        Sim_SymmsSimulate( p, p->uPatRand, p->vMatrNonSymms );
-        Sim_XorBit( p->uPatRand, p->iVar1Old );
-        Sim_SymmsSimulate( p, p->uPatRand, p->vMatrNonSymms );
-*/
-        if i % 10 != 0 {
-            continue; }
-        // check disjointness
-        assert(Sim_UtilMatrsAreDisjoint( p ), "Sim_UtilMatrsAreDisjoint( p )");
-        // count the number of pairs
-        Sim_UtilCountPairsAll( p );
-        if i % 50 != 0 {
-            continue; }
-        if fVerbose != 0 {
-            fmt.Printf("Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\n", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }
-    }
-
-    // count the number of pairs
-    Sim_UtilCountPairsAll( p );
-    if fVerbose != 0 {
-        fmt.Printf("Total = %8d.  Sym = %8d.  NonSym = %8d.  Remaining = %8d.\n", p.nPairsTotal, p.nPairsSymm, p.nPairsNonSymm, p.nPairsRem); }
-//    Sim_UtilCountPairsAllPrint( p );
-
-    Result = p.nPairsSymm;
-    vResult = p.vMatrSymms;  
-p.timeTotal = Abc_Clock() - clkTotal;
-    //  p->vMatrSymms = NULL;
-    Sym_ManStop( p );
-    return Result;
+// Symmetries returns exact per-output positive (ordinary variable-swap)
+// symmetries on functional-support variables. Non-support variables are omitted.
+func Symmetries(g *aig.Graph, verbose bool) []Matrix {
+	p := Sym_ManStart(g, verbose)
+	Sim_SymmsStructCompute(g, p.Symmetric, p.Functional)
+	pattern := make([]uint32, p.Words)
+	// Source uses 1000 single-flip squares before exact SAT completion.
+	for i := 0; i < 1000; i++ {
+		fillRandom(pattern, p.rng)
+		Sim_SymmsSimulate(p, pattern, p.NonSymmetric)
+	}
+	for Sim_SymmsGetPatternUsingSat(p, pattern) {
+		for i := 0; i < 4; i++ {
+			Sim_SymmsSimulate(p, pattern, p.NonSymmetric)
+			v := p.Var1
+			if i&1 != 0 {
+				v = p.Var2
+			}
+			Sim_XorBit(pattern, v)
+		}
+	}
+	if !Sim_UtilMatrsAreDisjoint(p) {
+		panic("inconsistent symmetry proof and witness")
+	}
+	if verbose {
+		Sym_ManPrintStats(p)
+	}
+	return p.Symmetric
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Sim_ComputeTwoVarSymms(g *aig.Graph, verbose bool) int {
+	m := Symmetries(g, verbose)
+	vars := make([]int, g.InputCount())
+	for i := range vars {
+		vars[i] = i
+	}
+	total := 0
+	for _, matrix := range m {
+		total += Sim_UtilCountPairsOne(matrix, vars)
+	}
+	return total
+}

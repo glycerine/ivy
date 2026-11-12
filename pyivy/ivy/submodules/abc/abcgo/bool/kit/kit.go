@@ -44,6 +44,11 @@ func Kit_DsdObjTruth(obj *Kit_DsdObj_t) []uint32 {
 	return nil
 }
 func Kit_DsdNtkObjNum(ntk *Kit_DsdNtk_t) int32 { return int32(ntk.nVars) + int32(len(ntk.pNodes)) }
+
+// Kit_DsdNtkVarNum and Kit_DsdNtkRootLit expose the compact DSD network
+// metadata needed by downstream native ports without exposing its storage.
+func Kit_DsdNtkVarNum(ntk *Kit_DsdNtk_t) int32  { return int32(ntk.nVars) }
+func Kit_DsdNtkRootLit(ntk *Kit_DsdNtk_t) int32 { return int32(ntk.Root) }
 func Kit_DsdNtkObj(ntk *Kit_DsdNtk_t, id int32) *Kit_DsdObj_t {
 	if id < 0 || id >= Kit_DsdNtkObjNum(ntk) {
 		panic("kit: DSD object index out of bounds")

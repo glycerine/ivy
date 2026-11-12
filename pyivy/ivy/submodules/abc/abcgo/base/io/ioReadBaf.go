@@ -1,180 +1,147 @@
 package io
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
+	"os"
 	"strconv"
+
+	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/base/abc"
 )
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [ioReadBaf.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedures to read AIG in the binary format.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: ioReadBaf.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ioAbc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Reads the AIG in the binary format.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_ReadBaf(pFileName string, fCheck int32) *Abc_Ntk_t {
-    var pProgress *ProgressBar;
-    var pFile *os.File;
-    var vNodes *Vec_Ptr_t;
-    var pObj, pNode0, pNode1 *Abc_Obj_t;
-    var pNtkNew *Abc_Ntk_t;
-    var nInputs, nOutputs, nLatches, nAnds, nFileSize, Num, i int32;
-    var pContents, pName, pCur string;
-    var pBufferNode *uint32;
-    var RetValue int32;
-
-    // read the file into the buffer
-    nFileSize = Extra_FileSize( pFileName );
-    pFile = os.Open(pFileName);
-    // inlining of macro ABC_ALLOC
-    pContents = ((char *) malloc(sizeof(char) * (size_t)(nFileSize)));
-    RetValue = fread( pContents, nFileSize, 1, pFile );
-    _ = (pFile).Close();
-
-    // skip the comments (comment lines begin with '#' and end with '\n')
-    for  pCur = pContents; *pCur == '#';  {
-        for  *pCur++ != '\n'  {; }
-    }
-
-    // read the name
-    pName = pCur;             for  *pCur++  {; }
-    // read the number of inputs
-    nInputs = strconv.Atoi(pCur);   for  *pCur++  {; }
-    // read the number of outputs
-    nOutputs = strconv.Atoi(pCur);  for  *pCur++  {; }
-    // read the number of latches
-    nLatches = strconv.Atoi(pCur);  for  *pCur++  {; }
-    // read the number of nodes
-    nAnds = strconv.Atoi(pCur);     for  *pCur++  {; }
-
-    // allocate the empty AIG
-    pNtkNew = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );
-    pNtkNew.pName = Extra_UtilStrsav( pName );
-    pNtkNew.pSpec = Extra_UtilStrsav( pFileName );
-
-    // prepare the array of nodes
-    vNodes = Vec_PtrAlloc( 1 + nInputs + nLatches + nAnds );
-    Vec_PtrPush( vNodes, Abc_AigConst1(pNtkNew) );
-
-    // create the PIs
-    for  i = 0; i < nInputs; i++  {
-        pObj = Abc_NtkCreatePi(pNtkNew);    
-        Abc_ObjAssignName( pObj, pCur, nil );  for  *pCur++  {; }
-        Vec_PtrPush( vNodes, pObj );
-    }
-    // create the POs
-    for  i = 0; i < nOutputs; i++  {
-        pObj = Abc_NtkCreatePo(pNtkNew);   
-        Abc_ObjAssignName( pObj, pCur, nil );  for  *pCur++  {; } 
-    }
-    // create the latches
-    for  i = 0; i < nLatches; i++  {
-        pObj = Abc_NtkCreateLatch(pNtkNew);
-        Abc_ObjAssignName( pObj, pCur, nil );  for  *pCur++  {; } 
-
-        pNode0 = Abc_NtkCreateBi(pNtkNew);
-        Abc_ObjAssignName( pNode0, pCur, nil );  for  *pCur++  {; } 
-
-        pNode1 = Abc_NtkCreateBo(pNtkNew);
-        Abc_ObjAssignName( pNode1, pCur, nil );  for  *pCur++  {; } 
-        Vec_PtrPush( vNodes, pNode1 );
-
-        Abc_ObjAddFanin( pObj, pNode0 );
-        Abc_ObjAddFanin( pNode1, pObj );
-    }
-
-    // get the pointer to the beginning of the node array
-    pBufferNode = (unsigned *)(pContents + (nFileSize - (2 * nAnds + nOutputs + nLatches) * sizeof(int)) );
-    // make sure we are at the place where the nodes begin
-    if pBufferNode != (unsigned *)pCur {
-        pContents = nil;
-        Vec_PtrFree( vNodes );
-        Abc_NtkDelete( pNtkNew );
-        fmt.Printf("Warning: Internal reader error.\n");
-        return nil;
-    }
-
-    // create the AND gates
-    pProgress = Extra_ProgressBarStart( os.Stdout, nAnds );
-    for  i = 0; i < nAnds; i++  {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        pNode0 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, pBufferNode[2*i+0] >> 1), pBufferNode[2*i+0] & 1 );
-        pNode1 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, pBufferNode[2*i+1] >> 1), pBufferNode[2*i+1] & 1 );
-        Vec_PtrPush( vNodes, Abc_AigAnd((Abc_Aig_t *)pNtkNew.pManFunc, pNode0, pNode1) );
-    }
-    Extra_ProgressBarStop( pProgress );
-
-    // read the POs
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtkNew)) && (((pObj) = Abc_NtkCo(pNtkNew, i)), 1); i++  {
-        Num = pBufferNode[2*nAnds+i];
-        if Abc_ObjFanoutNum(pObj) > 0 && Abc_ObjIsLatch(Abc_ObjFanout0(pObj)) {
-            Abc_ObjSetData( Abc_ObjFanout0(pObj), (void *)(ABC_PTRINT_T)(Num & 3) );
-            Num >>= 2;
-        }
-        pNode0 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, Num >> 1), Num & 1 );
-        Abc_ObjAddFanin( pObj, pNode0 );
-    }
-    pContents = nil;
-    Vec_PtrFree( vNodes );
-
-    // remove the extra nodes
-//    Abc_AigCleanup( (Abc_Aig_t *)pNtkNew->pManFunc );
-
-    // check the result
-    if (fCheck != 0) && !Abc_NtkCheckRead( pNtkNew ) {
-        fmt.Printf("Io_ReadBaf: The network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
-
+// ParseBAF reads ABC's NUL-delimited header and little-endian 32-bit AIG
+// records. All lengths and references are checked before constructing a graph.
+func ParseBAF(filename string, data []byte) (*abc.Network, error) {
+	offset := 0
+	for offset < len(data) && data[offset] == '#' {
+		end := bytes.IndexByte(data[offset:], '\n')
+		if end < 0 {
+			return nil, fmt.Errorf("%s: unterminated BAF comment", filename)
+		}
+		offset += end + 1
+	}
+	field := func() (string, error) {
+		if offset >= len(data) {
+			return "", fmt.Errorf("%s: truncated BAF header", filename)
+		}
+		end := bytes.IndexByte(data[offset:], 0)
+		if end < 0 {
+			return "", fmt.Errorf("%s: missing BAF field terminator", filename)
+		}
+		value := string(data[offset : offset+end])
+		offset += end + 1
+		return value, nil
+	}
+	name, err := field()
+	if err != nil {
+		return nil, err
+	}
+	counts := make([]int, 4)
+	for i := range counts {
+		s, err := field()
+		if err != nil {
+			return nil, err
+		}
+		value, err := strconv.ParseUint(s, 10, 31)
+		if err != nil || value > uint64(len(data)) {
+			return nil, fmt.Errorf("%s: invalid BAF count", filename)
+		}
+		counts[i] = int(value)
+	}
+	ni, no, nl, na := counts[0], counts[1], counts[2], counts[3]
+	if uint64(2)*uint64(na)+uint64(no)+uint64(nl) > uint64(len(data))/4 {
+		return nil, fmt.Errorf("%s: BAF counts exceed file size", filename)
+	}
+	model := &ioa.Model{Name: name, MaxVar: uint32(ni + nl + na), Symbols: map[ioa.Symbol]string{}}
+	for i := 0; i < ni; i++ {
+		name, err := field()
+		if err != nil {
+			return nil, err
+		}
+		model.Inputs = append(model.Inputs, uint32(2*(i+1)))
+		model.Symbols[ioa.Symbol{Kind: 'i', Index: uint32(i)}] = name
+	}
+	for i := 0; i < no; i++ {
+		name, err := field()
+		if err != nil {
+			return nil, err
+		}
+		model.Symbols[ioa.Symbol{Kind: 'o', Index: uint32(i)}] = name
+	}
+	latchNames := make([][3]string, nl)
+	for i := range latchNames {
+		for j := 0; j < 3; j++ {
+			latchNames[i][j], err = field()
+			if err != nil {
+				return nil, err
+			}
+		}
+		model.Symbols[ioa.Symbol{Kind: 'l', Index: uint32(i)}] = latchNames[i][0]
+	}
+	words := 2*na + no + nl
+	if len(data)-offset != words*4 {
+		return nil, fmt.Errorf("%s: BAF payload size mismatch", filename)
+	}
+	position := offset
+	read := func() uint32 { value := binary.LittleEndian.Uint32(data[position:]); position += 4; return value }
+	decode := func(lit uint32) uint32 {
+		if lit < 2 {
+			return lit ^ 1
+		}
+		return lit
+	}
+	for i := 0; i < na; i++ {
+		left, right := read(), read()
+		limit := uint32(ni + nl + i + 1)
+		if left>>1 >= limit || right>>1 >= limit {
+			return nil, fmt.Errorf("%s: forward or invalid BAF gate reference", filename)
+		}
+		model.ANDs = append(model.ANDs, ioa.And{Literal: 2 * limit, Left: decode(left), Right: decode(right)})
+	}
+	for i := 0; i < no; i++ {
+		model.Outputs = append(model.Outputs, decode(read()))
+	}
+	initial := make([]abc.Abc_InitType_t, nl)
+	for i := 0; i < nl; i++ {
+		packed := read()
+		lit := uint32(2 * (ni + i + 1))
+		initial[i] = abc.Abc_InitType_t(packed & 3)
+		init := lit
+		if initial[i] == abc.ABC_INIT_ZERO {
+			init = 0
+		} else if initial[i] == abc.ABC_INIT_ONE {
+			init = 1
+		}
+		model.Latches = append(model.Latches, ioa.Latch{Literal: lit, Next: decode(packed >> 2), Init: init})
+	}
+	network, err := NetworkFromAigerModel(model)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", filename, err)
+	}
+	network.Spec = filename
+	for i, latch := range network.ObjectsOfKind(abc.ObjectLatch) {
+		latch.Data = initial[i]
+		latch.SetName(latchNames[i][0])
+		latch.Fanins()[0].Object.SetName(latchNames[i][1])
+		latch.Fanouts()[0].SetName(latchNames[i][2])
+	}
+	return network, nil
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func ReadBAF(filename string, check bool) (*abc.Network, error) {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	return ParseBAF(filename, data)
+}
+func Io_ReadBaf(filename string, check int32) *abc.Network {
+	n, err := ReadBAF(filename, check != 0)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return nil
+	}
+	return n
+}
+func init() { RegisterFormat(IO_FILE_BAF, ReadBAF, nil) }

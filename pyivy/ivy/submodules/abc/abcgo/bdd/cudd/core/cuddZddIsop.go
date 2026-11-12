@@ -65,9 +65,16 @@ package core
 
 // isopResult carries both results of the original Minato lower/upper-bound
 // recursion. A BDD-only invocation never constructs or grows ZDDs.
-type isopResult struct{ function, cover *DdNode }
+type isopResult struct {
+	function, cover *DdNode
+	cubes           int
+}
 
 func (dd *DdManager) isop(lower, upper *DdNode, wantCover bool) isopResult {
+	return dd.isopBounded(lower, upper, wantCover, -1)
+}
+
+func (dd *DdManager) isopBounded(lower, upper *DdNode, wantCover bool, limit int) isopResult {
 	memo := map[[2]*DdNode]isopResult{}
 	var visit func(*DdNode, *DdNode) isopResult
 	visit = func(lower, upper *DdNode) isopResult {
@@ -79,7 +86,10 @@ func (dd *DdManager) isop(lower, upper *DdNode, wantCover bool) isopResult {
 			return r
 		}
 		if upper == dd.One {
-			r := isopResult{function: dd.One}
+			if limit == 0 {
+				return isopResult{}
+			}
+			r := isopResult{function: dd.One, cubes: 1}
 			if wantCover {
 				r.cover = dd.One
 			}
@@ -106,8 +116,19 @@ func (dd *DdManager) isop(lower, upper *DdNode, wantCover bool) isopResult {
 		if common.function == nil {
 			return isopResult{}
 		}
+		count := 0
+		if limit >= 0 {
+			if negative.cubes > limit-positive.cubes {
+				return isopResult{}
+			}
+			count = negative.cubes + positive.cubes
+			if common.cubes > limit-count {
+				return isopResult{}
+			}
+			count += common.cubes
+		}
 		chosen := Cudd_bddOr(dd, Cudd_bddIte(dd, dd.Vars[index], positive.function, negative.function), common.function)
-		result := isopResult{function: chosen}
+		result := isopResult{function: chosen, cubes: count}
 		if wantCover {
 			cover := common.cover
 			if negative.cover != dd.Zero || positive.cover != dd.Zero {

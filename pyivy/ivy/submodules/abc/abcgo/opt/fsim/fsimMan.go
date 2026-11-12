@@ -14,6 +14,7 @@ func Fsim_ManCreate(g *aig.Graph) (*Manager, error) {
 	}
 	regs := int(aig.Aig_ManRegNum(g))
 	p := &Manager{Graph: g, PIs: g.InputCount() - regs, POs: g.OutputCount() - regs, CIs: g.InputCount(), COs: g.OutputCount(), sourceIDs: map[int]int{0: 1}}
+	p.words = 1
 	p.ops = []Fsim_Obj_t{{}, {Node: 1, Kind: aig.Constant}}
 	inputs := g.Inputs()
 	positions := make(map[int]int)

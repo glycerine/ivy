@@ -1,10 +1,11 @@
 # opt/sbd native port
 
-The complete package remains the target. Native components below pass explicit
-file tests, but ordinary `go test ./opt/sbd` still fails first in the active
-`sbdCore.go` draft. Core, the alternate cut server, LUT/CEGIS synthesis,
-SAT-topology synthesis, window SAT and simulation remain to be ported. No draft
-has been hidden behind build tags or substituted with a placeholder.
+The full package is native Go, including the main optimizer, incremental and
+alternate cuts, window SAT, simulation, LUT/CEGIS synthesis and fixed-topology
+synthesis. All original product files participate in ordinary package builds.
+The optimizer uses `aig.Graph`, Kit truth/ISOP algorithms, Dau decomposition,
+native Vec/util helpers and the public BSAT solver; it does not import Gia or
+CNF packages.
 
 ## Graph and mapping boundary
 
@@ -101,16 +102,89 @@ independent set unions and containments. Random reconvergent graphs are tested
 at cut sizes 4/6/8/10: every stored cut truth agrees with direct graph evaluation
 for every primary-input assignment, with mapped delay and reference checks.
 
-## Verification checkpoint
+### Alternate cuts, simulation and window SAT
 
-Completed components pass race tests (4.722 seconds) and vet together:
+The alternate cut server retains the four ordered top-reduction attempts and
+lower-level retry. Simulation uses owned packed words and a reproducible random
+source per network. Window SAT retains the original dual-network observability
+construction, core-based truth/SOP extraction and replacement relation.
+
+Readability review: explicit owned slices replace graph scratch marks and raw
+pointer lifetimes. Original experimental backward simulation is labeled as such
+and is not used as a rewrite proof. Solver inputs and source literal polarity
+are documented at their boundaries.
+
+Bug review: solver phase randomization now visits every variable rather than
+skipping indices through the source shift. Constant SAT variables are explicitly
+constrained. Native buffers receive transparent equations, observation roots,
+reference counts and critical-path traversal, preventing an unsound rewrite
+when an otherwise observed branch passes through a buffer.
+
+Validation: alternate-cut feasibility, mirrors and topology; 192-pattern packed
+simulation against direct graph evaluation; justification and complement
+classes; SAT truth, missing-divisor counterexamples, observability, replacement
+relations and care models all have behavioral regressions.
+
+### Structure and fixed-topology synthesis
+
+Ported LUT/selector CNF, parameter decoding, structure printing, the full
+counterexample-guided synthesis loop, topology constraints, delay constraints,
+random connected topology generation and fixed-topology function synthesis.
+
+Readability review: typed topology/delay records and explicit structure input
+indices replace address arithmetic. Parameter layouts and the root-last
+feed-forward order are stated at the API boundary.
+
+Bug review: the source standalone experimental setup overlapped output and
+parameter variables, used parameters as data inputs, omitted selector coverage
+and inverted substitution polarity. Native constraints implement the intended
+feed-forward cascade with distinct outputs and active-low selectors. The delay
+loop constrains every forbidden delay instead of repeating the first one.
+Truth allocation depends on actual inputs, avoiding the source maximum-size
+allocation. Random topology generation handles the exhausted-frontier boundary.
+
+Validation: all two-input LUT functions, selector one-hot constraints, actual
+CEGIS success/failure, all two-input fixed-topology functions, positive AND3 and
+negative majority3 synthesis, multiword AND8 and connected random topologies
+have independent evaluation checks.
+
+### Main optimization and mapping derivation
+
+Ported windows/TFO collection, divisor sorting, simulation columns, dominance
+and cover search, support pruning, one/two/three-LUT exploration, truth-based
+implementation, mirror/reference updates and graph/mapping derivation. Timing
+box structural links and enabled delay arcs remain separate. LUT targets 2..6
+are supported; support cuts remain bounded at ten variables.
+
+Readability review: split the original core into manager/window work,
+cover/exploration and graph derivation files. The authoritative graph and local
+mapping arrays retain source object identities until final derivation. Native
+ownership and public solver calls replace unsafe cross-package field access.
+
+Bug review: selected cover-column indices are translated back to SAT variables;
+cover cardinality follows the requested LUT size. Support queries beyond six
+variables use exact SOP/core existence proofs instead of indexing six-variable
+masks. Structural-hash self mirrors and cyclic or nonimproving replacements are
+rejected. Mirror phases feed simulation consistently. SAT conflict limits also
+apply to constant checks. Mapping setters reject duplicate/self support and
+nonlogic roots. These fixes have targeted regressions.
+
+Validation: exhaustive four-column minimum covers plus larger heuristic covers;
+random full-optimizer equivalence with mapping, extra cuts, divisors and critical
+path options; internal don't-care elimination; actual two-LUT, three-parallel
+LUT and three-cascade LUT resynthesis; five/six-input targets; timing-box
+remapping; buffer observability and structural-hash self-cycle rejection.
+Resynthesis output is checked exhaustively through ten primary inputs.
+
+## Verification
+
+Run from the repository root:
 
 ```
-GOCACHE=/tmp/abcgo-cache go -C abcgo/opt/sbd test -race sbd.c.go sbd_topology_test.go sbdCnf.go sbdCnf_test.go network.go sbdPath.go sbdPath_test.go sbdCut.go sbdCut_test.go
-GOCACHE=/tmp/abcgo-cache go -C abcgo/opt/sbd vet sbd.c.go sbd_topology_test.go sbdCnf.go sbdCnf_test.go network.go sbdPath.go sbdPath_test.go sbdCut.go sbdCut_test.go
+GOCACHE=/tmp/abcgo-cache go -C abcgo test ./opt/sbd
+GOCACHE=/tmp/abcgo-cache go -C abcgo test -race -timeout 120s ./opt/sbd
+GOCACHE=/tmp/abcgo-cache go -C abcgo vet ./opt/sbd
 ```
 
-Ordinary package verification has been rerun and currently stops at
-`sbdCore.go:49`. All remaining original source files are still active. No
-experiments were tested, no git commands were used, and no testdata directory
-was created.
+The public `bsat.SetPolarity` bridge is separately covered by API tests and the
+whole BSAT package race/vet gates. No experiments are included in these checks.

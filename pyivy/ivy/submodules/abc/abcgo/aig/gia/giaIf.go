@@ -131,13 +131,6 @@ func Gia_ManLutFaninCount(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManLutSizeMax(p *Gia_Man_t) int32 {
-    var i int32;
-    var nSizeMax int32 = -1;
-    Gia_ManForEachLut( p, i )
-        nSizeMax = Abc_MaxInt( nSizeMax, Gia_ObjLutSize(p, i) );
-    return nSizeMax;
-}
 
 /**Function*************************************************************
 

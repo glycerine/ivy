@@ -1,363 +1,239 @@
 package ssc
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/aig/gia"
+	"math/bits"
+	"math/rand"
+)
 
-  FileName    [sscSim.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [SAT sweeping under constraints.]
-
-  Synopsis    [Simulation procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 29, 2008.]
-
-  Revision    [$Id: sscSim.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sscInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Ssc_Random() word { return ((word)Gia_ManRandom(0) << 32) | ((word)Gia_ManRandom(0) << 0);              }
-func Ssc_Random1(Bit int32) word { return ((word)Gia_ManRandom(0) << 32) | ((word)Gia_ManRandom(0) << 1) | (word)Bit;  }
-func Ssc_Random2() word { return ((word)Gia_ManRandom(0) << 32) | ((word)Gia_ManRandom(0) << 2) | (word)2;    }
-
-func Ssc_SimAnd(pSim *word, pSim0 *word, pSim1 *word, nWords int32, fComp0 int32, fComp1 int32) {
-    var w int32;
-    if (fComp0 != 0) && (fComp1 != 0) { for  w = 0; w < nWords; w++  {  pSim[w] = ~(pSim0[w] | pSim1[w]); }
-    } else if fComp0 != 0 {      for  w = 0; w < nWords; w++  {  pSim[w] =  ~pSim0[w] & pSim1[w]; }
-    } else if fComp1 != 0 {      for  w = 0; w < nWords; w++  {  pSim[w] =   pSim0[w] &~pSim1[w]; }
-    } else {                    for  w = 0; w < nWords; w++  {  pSim[w] =   pSim0[w] & pSim1[w]; } }
+func Ssc_SimAnd(out, a, b []uint64, n int, ca, cb bool) {
+	for i := 0; i < n; i++ {
+		x, y := a[i], b[i]
+		if ca {
+			x = ^x
+		}
+		if cb {
+			y = ^y
+		}
+		out[i] = x & y
+	}
+}
+func Ssc_SimDup(out, a []uint64, n int, c bool) {
+	for i := 0; i < n; i++ {
+		out[i] = a[i]
+		if c {
+			out[i] = ^out[i]
+		}
+	}
+}
+func Ssc_SimConst(out []uint64, n int, c bool) {
+	for i := 0; i < n; i++ {
+		out[i] = 0
+		if c {
+			out[i] = ^uint64(0)
+		}
+	}
+}
+func Ssc_SimOr(out, a []uint64, n int, c bool) {
+	for i := 0; i < n; i++ {
+		x := a[i]
+		if c {
+			x = ^x
+		}
+		out[i] |= x
+	}
+}
+func Ssc_SimFindBitWord(x uint64) int32 {
+	if x == 0 {
+		return -1
+	}
+	return int32(bits.TrailingZeros64(x))
+}
+func Ssc_SimFindBit(a []uint64, n int) int32 {
+	for i, x := range a[:n] {
+		if x != 0 {
+			return int32(64*i) + Ssc_SimFindBitWord(x)
+		}
+	}
+	return -1
+}
+func Ssc_SimCountBitsWord(x uint64) int32 { return int32(bits.OnesCount64(x)) }
+func Ssc_SimCountBits(a []uint64, n int) int32 {
+	var count int32
+	for _, x := range a[:n] {
+		count += Ssc_SimCountBitsWord(x)
+	}
+	return count
+}
+func NewSimulation(p *gia.Gia_Man_t, words int) *Simulation {
+	s := &Simulation{Graph: p, random: rand.New(rand.NewSource(1))}
+	Ssc_GiaResetPiPattern(s, words)
+	return s
+}
+func Ssc_GiaResetPiPattern(s *Simulation, words int) {
+	if words < 1 {
+		panic("ssc: simulation needs positive words")
+	}
+	s.Words = words
+	s.Patterns = 0
+	s.Inputs = make([][]uint64, len(s.Graph.InputLiterals()))
+	for i := range s.Inputs {
+		s.Inputs[i] = make([]uint64, words)
+	}
+}
+func Ssc_GiaSavePiPattern(s *Simulation, pattern []bool) {
+	if len(pattern) != len(s.Inputs) {
+		panic("ssc: pattern size mismatch")
+	}
+	if s.Patterns == 64*s.Words {
+		for i := range s.Inputs {
+			s.Inputs[i] = append(s.Inputs[i], make([]uint64, s.Words)...)
+		}
+		s.Words *= 2
+	}
+	for i, b := range pattern {
+		if b {
+			s.Inputs[i][s.Patterns/64] |= 1 << uint(s.Patterns%64)
+		}
+	}
+	s.Patterns++
+}
+func Ssc_GiaRandomPiPattern(s *Simulation, words int, pivot []bool) {
+	Ssc_GiaResetPiPattern(s, words)
+	if pivot != nil && len(pivot) != len(s.Inputs) {
+		panic("ssc: pivot size mismatch")
+	}
+	for i := range s.Inputs {
+		for w := range s.Inputs[i] {
+			s.Inputs[i][w] = s.random.Uint64()
+		}
+		if pivot == nil {
+			s.Inputs[i][0] = s.Inputs[i][0]&^3 | 2
+		} else {
+			s.Inputs[i][0] &^= 1
+			if pivot[i] {
+				s.Inputs[i][0] |= 1
+			}
+		}
+	}
+}
+func Ssc_GiaResetSimInfo(s *Simulation) {
+	s.Values = make([][]uint64, s.Graph.ObjectCount())
+	for i := range s.Values {
+		s.Values[i] = make([]uint64, s.Words)
+	}
+}
+func Ssc_GiaSimRound(s *Simulation) {
+	Ssc_GiaResetSimInfo(s)
+	for i, lit := range s.Graph.InputLiterals() {
+		copy(s.Values[lit>>1], s.Inputs[i])
+	}
+	done := make([]bool, len(s.Values))
+	done[0] = true
+	for _, lit := range s.Graph.InputLiterals() {
+		done[lit>>1] = true
+	}
+	var node func(int32)
+	var lit func(int32, int) uint64
+	lit = func(l int32, w int) uint64 {
+		node(l >> 1)
+		v := s.Values[l>>1][w]
+		if l&1 != 0 {
+			v = ^v
+		}
+		return v
+	}
+	node = func(id int32) {
+		if done[id] {
+			return
+		}
+		a, b, c, k := s.Graph.Gate(id)
+		if k < 0 {
+			done[id] = true
+			return
+		}
+		for w := 0; w < s.Words; w++ {
+			x := lit(a, w)
+			switch k {
+			case 2:
+				s.Values[id][w] = x & lit(b, w)
+			case 3:
+				s.Values[id][w] = x ^ lit(b, w)
+			case 4:
+				s.Values[id][w] = (x & lit(b, w)) | (^x & lit(c, w))
+			case 5, 6:
+				s.Values[id][w] = x
+			default:
+				panic("ssc: invalid simulation node")
+			}
+		}
+		done[id] = true
+	}
+	for i := range s.Values {
+		node(int32(i))
+	}
 }
 
-func Ssc_SimDup(pSim *word, pSim0 *word, nWords int32, fComp0 int32) {
-    var w int32;
-    if fComp0 != 0 { for  w = 0; w < nWords; w++  {  pSim[w] = ~pSim0[w]; }
-    } else {          for  w = 0; w < nWords; w++  {  pSim[w] =  pSim0[w]; } }
+// Care masks AND outputs. Sweeping uses a simulation view of inverted violation
+// outputs; this helper itself retains the source all-outputs-true convention.
+func Ssc_GiaGetCareMask(s *Simulation) []uint64 {
+	mask := make([]uint64, s.Words)
+	for i := range mask {
+		mask[i] = ^uint64(0)
+	}
+	for _, o := range s.Graph.OutputLiterals() {
+		for w := range mask {
+			x := s.Values[o>>1][w]
+			if o&1 != 0 {
+				x = ^x
+			}
+			mask[w] &= x
+		}
+	}
+	return mask
 }
-
-func Ssc_SimConst(pSim *word, nWords int32, fComp0 int32) {
-    var w int32;
-    if fComp0 != 0 { for  w = 0; w < nWords; w++  {  pSim[w] = ~(word)0; }
-    } else {          for  w = 0; w < nWords; w++  {  pSim[w] = 0; } }
+func Ssc_GiaGetOneSim(s *Simulation) []bool {
+	bit := Ssc_SimFindBit(Ssc_GiaGetCareMask(s), s.Words)
+	if bit < 0 {
+		return nil
+	}
+	p := make([]bool, len(s.Inputs))
+	for i := range p {
+		p[i] = s.Inputs[i][bit/64]&(1<<uint(bit%64)) != 0
+	}
+	return p
 }
-
-func Ssc_SimOr(pSim *word, pSim0 *word, nWords int32, fComp0 int32) {
-    var w int32;
-    if fComp0 != 0 { for  w = 0; w < nWords; w++  {  pSim[w] |= ~pSim0[w]; }
-    } else {          for  w = 0; w < nWords; w++  {  pSim[w] |=  pSim0[w]; } }
+func Ssc_GiaFindPivotSim(s *Simulation) []bool {
+	Ssc_GiaRandomPiPattern(s, 1, nil)
+	Ssc_GiaSimRound(s)
+	return Ssc_GiaGetOneSim(s)
 }
-
-func Ssc_SimFindBitWord(t word) int32 {
-    var n int32;
-    if t == 0 { return -1; }
-    if (t & 0x00000000FFFFFFFF) == 0 { n += 32; t >>= 32; }
-    if (t & 0x000000000000FFFF) == 0 { n += 16; t >>= 16; }
-    if (t & 0x00000000000000FF) == 0 { n +=  8; t >>=  8; }
-    if (t & 0x000000000000000F) == 0 { n +=  4; t >>=  4; }
-    if (t & 0x0000000000000003) == 0 { n +=  2; t >>=  2; }
-    if (t & 0x0000000000000001) == 0 { n++; }
-    return n;
+func Ssc_GiaCountCaresSim(s *Simulation) int32 {
+	return Ssc_SimCountBits(Ssc_GiaGetCareMask(s), s.Words)
 }
-func Ssc_SimFindBit(pSim *word, nWords int32) int32 {
-    var w int32;
-    for  w = 0; w < nWords; w++  {
-        if pSim[w] {
-            return 64*w + Ssc_SimFindBitWord(pSim[w]); }
-    }
-    return -1;
+func Ssc_GiaEstimateCare(s *Simulation, words int) int32 {
+	Ssc_GiaRandomPiPattern(s, words, nil)
+	Ssc_GiaSimRound(s)
+	return Ssc_GiaCountCaresSim(s)
 }
-
-func Ssc_SimCountBitsWord(x word) int32 {
-    x = x - ((x >> 1) & ABC_CONST(0x5555555555555555));   
-    x = (x & ABC_CONST(0x3333333333333333)) + ((x >> 2) & ABC_CONST(0x3333333333333333));    
-    x = (x + (x >> 4)) & ABC_CONST(0x0F0F0F0F0F0F0F0F);    
-    x = x + (x >> 8);
-    x = x + (x >> 16);
-    x = x + (x >> 32); 
-    return int32((x & 0xFF));
+func Ssc_GiaTransferPiPattern(dst, care *Simulation, pivot []bool) int32 {
+	mask := Ssc_GiaGetCareMask(care)
+	count := Ssc_SimCountBits(mask, care.Words)
+	if count == 0 {
+		return 0
+	}
+	if len(dst.Inputs) != len(care.Inputs) || len(pivot) != len(dst.Inputs) {
+		panic("ssc: transfer interface mismatch")
+	}
+	Ssc_GiaResetPiPattern(dst, care.Words)
+	for i := range dst.Inputs {
+		for w := range mask {
+			if pivot[i] {
+				dst.Inputs[i][w] = care.Inputs[i][w] | ^mask[w]
+			} else {
+				dst.Inputs[i][w] = care.Inputs[i][w] & mask[w]
+			}
+		}
+	}
+	return count
 }
-func Ssc_SimCountBits(pSim *word, nWords int32) int32 {
-    var w, Counter int32;
-    for  w = 0; w < nWords; w++  {
-        Counter += Ssc_SimCountBitsWord(pSim[w]);
-    }
-    return Counter;
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WrdDoubleSimInfo(p *Vec_Wrd_t, nObjs int32) {
-    // inlining of macro ABC_CALLOC
-    var pArray *word  = ((word *) calloc((size_t)(2 * Vec_WrdSize(p)), sizeof(word)));
-    var i int32;
-    var nWords int32 = Vec_WrdSize(p) / nObjs;
-    assert(Vec_WrdSize(p) % nObjs == 0, "Vec_WrdSize(p) % nObjs == 0");
-    for  i = 0; i < nObjs; i++  {
-        memcpy( pArray + 2*i*nWords, p.pArray + i*nWords, sizeof(word) * nWords );
-    }
-    p.pArray = nil; p.pArray = pArray;
-    p.nSize = p.nCap = 2*nWords*nObjs;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssc_GiaResetPiPattern(p *Gia_Man_t, nWords int32) {
-    p.iPatsPi = 0;
-    if p.vSimsPi == nil {
-        p.vSimsPi = Vec_WrdStart(0); }
-    Vec_WrdFill( p.vSimsPi, nWords * Gia_ManCiNum(p), 0 );
-    assert(nWords == Gia_ObjSimWords( p ), "nWords == Gia_ObjSimWords( p )");
-}
-func Ssc_GiaSavePiPattern(p *Gia_Man_t, vPat *Vec_Int_t) {
-    var pSimPi *word;
-    var i int32;
-    assert(Vec_IntSize(vPat) == Gia_ManCiNum(p), "Vec_IntSize(vPat) == Gia_ManCiNum(p)");
-    if p.iPatsPi == 64 * Gia_ObjSimWords(p) {
-        Vec_WrdDoubleSimInfo( p.vSimsPi, Gia_ManCiNum(p) ); }
-    assert(p.iPatsPi < 64 * Gia_ObjSimWords(p), "p.iPatsPi < 64 * Gia_ObjSimWords(p)");
-    pSimPi = Gia_ObjSimPi( p, 0 );
-    for  i = 0; i < Gia_ManCiNum(p); i++, pSimPi += Gia_ObjSimWords(p)  {
-        if Vec_IntEntry(vPat, i) {
-            Abc_InfoSetBit( (unsigned *)pSimPi, p.iPatsPi ); }
-    }
-    p.iPatsPi++;
-}
-func Ssc_GiaRandomPiPattern(p *Gia_Man_t, nWords int32, vPivot *Vec_Int_t) {
-    var pSimPi *word;
-    var i, w int32;
-    Ssc_GiaResetPiPattern( p, nWords );
-    pSimPi = Gia_ObjSimPi( p, 0 );
-    for  i = 0; i < Gia_ManPiNum(p); i++, pSimPi += nWords  {
-        pSimPi[0] = vPivot ? Ssc_Random1(Vec_IntEntry(vPivot, i)) : Ssc_Random2();
-        for  w = 1; w < nWords; w++  {
-            pSimPi[w] = Ssc_Random();
-        }
-//        if ( i < 10 )
-//            Extra_PrintBinary( stdout, (unsigned *)pSimPi, 64 ), printf( "\n" );
-    }
-}
-func Ssc_GiaPrintPiPatterns(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var pSimAig *word;
-    var i int32;//, nWords = Gia_ObjSimWords( p );
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        pSimAig = Gia_ObjSimObj( p, pObj );
-//        Extra_PrintBinary( stdout, pSimAig, 64 * nWords );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Transfer the simulation pattern from pCare to pAig.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssc_GiaTransferPiPattern(pAig *Gia_Man_t, pCare *Gia_Man_t, vPivot *Vec_Int_t) int32 {
-    extern word * Ssc_GiaGetCareMask( Gia_Man_t * p );
-    var pObj *Gia_Obj_t;
-    var i int32;
-    var w int32;
-    var nWords int32 = Gia_ObjSimWords( pCare );
-    var pCareMask *word  = Ssc_GiaGetCareMask( pCare );
-    var Count int32  = Ssc_SimCountBits( pCareMask, nWords );
-    var pSimPiCare, pSimPiAig *word;
-    if Count == 0 {
-        pCareMask = nil;
-        return 0;
-    }
-    Ssc_GiaResetPiPattern( pAig, nWords );
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(pCare.vCis)) && ((pObj) = Gia_ManCi(pCare, i)); i++  {
-        pSimPiAig  = Gia_ObjSimPi( pAig, i );
-        pSimPiCare = Gia_ObjSimObj( pCare, pObj );
-        for  w = 0; w < nWords; w++  {
-            if Vec_IntEntry(vPivot, i) {
-                pSimPiAig[w] = pSimPiCare[w] | ~pCareMask[w];
-            } else {
-                pSimPiAig[w] = pSimPiCare[w] & pCareMask[w]; }
-        }
-    }
-    pCareMask = nil;
-    return Count;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssc_GiaResetSimInfo(p *Gia_Man_t) {
-    assert(Vec_WrdSize(p.vSimsPi) % Gia_ManCiNum(p) == 0, "Vec_WrdSize(p.vSimsPi) % Gia_ManCiNum(p) == 0");
-    if p.vSims == nil {
-        p.vSims = Vec_WrdAlloc(0); }
-    Vec_WrdFill( p.vSims, Gia_ObjSimWords(p) * Gia_ManObjNum(p), 0 );
-}
-func Ssc_GiaSimRound(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var pSim, pSim0, pSim1 *word;
-    var i int32;
-    var nWords int32 = Gia_ObjSimWords(p);
-    Ssc_GiaResetSimInfo( p );
-    assert(nWords == Vec_WrdSize(p.vSims) / Gia_ManObjNum(p), "nWords == Vec_WrdSize(p.vSims) / Gia_ManObjNum(p)");
-    // constant node
-    Ssc_SimConst( Gia_ObjSim(p, 0), nWords, 0 );
-    // primary inputs
-    pSim = Gia_ObjSim( p, 1 );
-    pSim0 = Gia_ObjSimPi( p, 0 );
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        assert(pSim == Gia_ObjSimObj( p, pObj ), "pSim == Gia_ObjSimObj( p, pObj )");
-        Ssc_SimDup( pSim, pSim0, nWords, 0 );
-        pSim += nWords;
-        pSim0 += nWords;
-    }
-    // intermediate nodes
-    pSim = Gia_ObjSim( p, 1+Gia_ManCiNum(p) );
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        assert(pSim == Gia_ObjSim( p, i ), "pSim == Gia_ObjSim( p, i )");
-        pSim0 = pSim - pObj.iDiff0 * nWords;
-        pSim1 = pSim - pObj.iDiff1 * nWords;
-        Ssc_SimAnd( pSim, pSim0, pSim1, nWords, Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj) );
-        pSim += nWords;
-    }
-    }
-    // primary outputs
-    pSim = Gia_ObjSim( p, Gia_ManObjNum(p) - Gia_ManPoNum(p) );
-    // inlining of macro Gia_ManForEachPo
-    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        assert(pSim == Gia_ObjSimObj( p, pObj ), "pSim == Gia_ObjSimObj( p, pObj )");
-        pSim0 = pSim - pObj.iDiff0 * nWords;
-        Ssc_SimDup( pSim, pSim0, nWords, Gia_ObjFaninC0(pObj) );
-//        Extra_PrintBinary( stdout, pSim, 64 ), printf( "\n" );
-        pSim += nWords;
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns one SAT assignment of the PIs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssc_GiaGetCareMask(p *Gia_Man_t) *word {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    var nWords int32 = Gia_ObjSimWords( p );
-    // inlining of macro ABC_FALLOC
-    var pRes *word  = ((word *) memset(malloc(sizeof(word) * (size_t)(nWords)), 0xff, sizeof(word) * (size_t)(nWords)));
-    // inlining of macro Gia_ManForEachPo
-    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        Ssc_SimAnd( pRes, pRes, Gia_ObjSimObj(p, pObj), nWords, 0, 0 );
-    }
-    return pRes;
-}
-func Ssc_GiaGetOneSim(p *Gia_Man_t) *Vec_Int_t {
-    var vInit *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    var iBit int32;
-    var nWords int32 = Gia_ObjSimWords( p );
-    var pRes *word  = Ssc_GiaGetCareMask( p );
-    iBit = Ssc_SimFindBit( pRes, nWords );
-    pRes = nil;
-    if iBit == -1 {
-        return nil; }
-    vInit = Vec_IntAlloc( 100 );
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        Vec_IntPush( vInit, Abc_InfoHasBit((unsigned *)Gia_ObjSimObj(p, pObj), iBit) );
-    }
-    return vInit;
-}
-func Ssc_GiaFindPivotSim(p *Gia_Man_t) *Vec_Int_t {
-    var vInit *Vec_Int_t;
-    Ssc_GiaRandomPiPattern( p, 1, nil );
-    Ssc_GiaSimRound( p );
-    vInit = Ssc_GiaGetOneSim( p );
-    return vInit;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssc_GiaCountCaresSim(p *Gia_Man_t) int32 {
-    var pRes *word  = Ssc_GiaGetCareMask( p );
-    var nWords int32  = Gia_ObjSimWords( p );
-    var Count int32  = Ssc_SimCountBits( pRes, nWords );
-    pRes = nil;
-    return Count;
-}
-func Ssc_GiaEstimateCare(p *Gia_Man_t, nWords int32) int32 {
-    Ssc_GiaRandomPiPattern( p, nWords, nil );
-    Ssc_GiaSimRound( p );
-    return Ssc_GiaCountCaresSim( p );
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

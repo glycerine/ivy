@@ -47,3 +47,61 @@ type Extra_SymmInfo_t struct {
 	Vars                            []int
 	Symms                           [][]bool
 }
+
+func extraValidBDD(dd *DdManager, roots ...*DdNode) bool {
+	if dd == nil {
+		return false
+	}
+	for _, f := range roots {
+		if !cudd.Cudd_bddLeq(dd, f, f) {
+			return false
+		}
+	}
+	return true
+}
+func extraSupportSet(dd *DdManager, f *DdNode) map[int]bool {
+	support := map[int]bool{}
+	for _, i := range dd.Support(f) {
+		support[i] = true
+	}
+	return support
+}
+
+func extraBDDCofactors(f *DdNode) (lo, hi *DdNode) {
+	r := cudd.Cudd_Regular(f)
+	lo, hi = r.E, r.T
+	if cudd.Cudd_IsComplement(f) {
+		lo, hi = cudd.Cudd_Not(lo), cudd.Cudd_Not(hi)
+	}
+	return
+}
+func extraPositiveCube(dd *DdManager, cube *DdNode) ([]int, bool) {
+	if !extraValidBDD(dd, cube) {
+		return nil, false
+	}
+	vars := []int{}
+	for cube != dd.One {
+		if cudd.Cudd_IsConstant(cube) || cudd.Cudd_IsComplement(cube) || cube.E != dd.LogicZero {
+			return nil, false
+		}
+		vars = append(vars, int(cube.Index))
+		cube = cube.T
+	}
+	return vars, true
+}
+
+func extraSelectSubset(dd *DdManager, f *DdNode) *DdNode {
+	cube := dd.One
+	for f != dd.One {
+		if f == dd.Zero {
+			return dd.Zero
+		}
+		if f.E != dd.Zero {
+			f = f.E
+		} else {
+			cube = cudd.Cudd_zddChange(dd, cube, int(f.Index))
+			f = f.T
+		}
+	}
+	return cube
+}

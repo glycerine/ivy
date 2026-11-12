@@ -38,10 +38,10 @@ import (
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-const MAJ_NOBJS =  32 // Const0 + Const1 + nVars + nNodes
+const MAJ_NOBJSV2 =  32 // Const0 + Const1 + nVars + nNodes
 
    
-type Maj_Man_t struct {
+type Maj_Man_tV2 struct {
     nVars               int32;     // inputs
     nNodes               int32;    // internal nodes
     nObjs               int32;     // total objects (2 consts, nVars inputs, nNodes internal nodes)
@@ -53,13 +53,13 @@ type Maj_Man_t struct {
     nRands               int32;    // number of random connections
     fVerbose               int32;  // verbose flag
     vInfo        *Vec_Wrd_t;     // Const0 + Const1 + nVars + nNodes + Maj(nVars)
-    VarMarks [MAJ_NOBJS][3][MAJ_NOBJS]int32; // variable marks
-    VarVals [MAJ_NOBJS+2]int32; // values of the first 2 + nVars variables
+    VarMarks [MAJ_NOBJSV2][3][MAJ_NOBJSV2]int32; // variable marks
+    VarVals [MAJ_NOBJSV2+2]int32; // values of the first 2 + nVars variables
     vOutLits        *Vec_Wec_t;  // output vars
     pSat       *sat_solver;      // SAT solver
 }
 
-func Maj_ManTruth(p *Maj_Man_t, v int32) *word { return Vec_WrdEntryP( p.vInfo, p.nWords * v ); }
+func Maj_ManTruthV2(p *Maj_Man_tV2, v int32) *word { return Vec_WrdEntryP( p.vInfo, p.nWords * v ); }
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
@@ -76,26 +76,26 @@ func Maj_ManTruth(p *Maj_Man_t, v int32) *word { return Vec_WrdEntryP( p.vInfo, 
   SeeAlso     []
 
 ***********************************************************************/
-func Maj_ManValue(iMint int32, nVars int32) int32 {
+func Maj_ManValueV2(iMint int32, nVars int32) int32 {
     var k, Count int32;
     for  k = 0; k < nVars; k++  {
         Count += (iMint >> k) & 1;
     }
     return int32((Count > nVars/2));
 }
-func Maj_ManTruthTables(p *Maj_Man_t) *Vec_Wrd_t {
+func Maj_ManTruthTablesV2(p *Maj_Man_tV2) *Vec_Wrd_t {
     var vInfo *Vec_Wrd_t  = p.vInfo = Vec_WrdStart( p.nWords * (p.nObjs + 1) ); 
     var i int32;
     var nMints int32 = Abc_MaxInt( 64, 1 << p.nVars );
-    Abc_TtFill( Maj_ManTruth(p, 1), p.nWords );
+    Abc_TtFill( Maj_ManTruthV2(p, 1), p.nWords );
     for  i = 0; i < p.nVars; i++  {
-        Abc_TtIthVar( Maj_ManTruth(p, i+2), i, p.nVars );
+        Abc_TtIthVar( Maj_ManTruthV2(p, i+2), i, p.nVars );
     }
     for  i = 0; i < nMints; i++  {
-        if Maj_ManValue(i, p.nVars) != 0 {
-            Abc_TtSetBit( Maj_ManTruth(p, p.nObjs), i ); }
+        if Maj_ManValueV2(i, p.nVars) != 0 {
+            Abc_TtSetBit( Maj_ManTruthV2(p, p.nObjs), i ); }
     }
-    //Dau_DsdPrintFromTruth( Maj_ManTruth(p, p->nObjs), p->nVars );
+    //Dau_DsdPrintFromTruth( Maj_ManTruthV2(p, p->nObjs), p->nVars );
     return vInfo;
 }
 func Maj_ManConnect(VarCons [][3]int32, nVars int32, nObjs int32, nRands int32, fVerbose int32) {
@@ -154,11 +154,11 @@ func Maj_ManConnect2(VarCons [][3]int32, nVars int32, nObjs int32, nRands int32)
     VarCons[13+2][2] = 11+2;
     VarCons[13+2][1] = 12+2;
 }
-func Maj_ManMarkup(p *Maj_Man_t) int32 {
-    var VarCons [MAJ_NOBJS][3]int32 = [MAJ_NOBJS][3]int32{{0}};
+func Maj_ManMarkupV2(p *Maj_Man_tV2) int32 {
+    var VarCons [MAJ_NOBJSV2][3]int32 = [MAJ_NOBJSV2][3]int32{{0}};
     var i, k, j, m int32;
     p.iVar = 1;
-    assert(p.nObjs <= MAJ_NOBJS, "p.nObjs <= MAJ_NOBJS");
+    assert(p.nObjs <= MAJ_NOBJSV2, "p.nObjs <= MAJ_NOBJSV2");
     // create connections
     if p.fUseRand {
         Maj_ManConnect( VarCons, p.nVars, p.nObjs, p.nRands, p.fVerbose ); }
@@ -219,9 +219,9 @@ func Maj_ManMarkup(p *Maj_Man_t) int32 {
     }
     return p.iVar;
 }
-func Maj_ManAlloc(nVars int32, nNodes int32, fUseConst int32, fUseLine int32, fUseRand int32, nRands int32, fVerbose int32) *Maj_Man_t {
+func Maj_ManAllocV2(nVars int32, nNodes int32, fUseConst int32, fUseLine int32, fUseRand int32, nRands int32, fVerbose int32) *Maj_Man_tV2 {
     // inlining of macro ABC_CALLOC
-    var p *Maj_Man_t  = &Maj_Man_t{};
+    var p *Maj_Man_tV2  = &Maj_Man_tV2{};
     p.nVars      = nVars;
     p.nNodes     = nNodes;
     p.nObjs      = 2 + nVars + nNodes;
@@ -232,14 +232,14 @@ func Maj_ManAlloc(nVars int32, nNodes int32, fUseConst int32, fUseLine int32, fU
     p.nRands     = nRands;
     p.nWords     = Abc_TtWordNum(nVars);
     p.vOutLits   = Vec_WecStart( p.nObjs );
-    p.iVar       = Maj_ManMarkup( p );
+    p.iVar       = Maj_ManMarkupV2( p );
     p.VarVals[1] = 1;
-    p.vInfo      = Maj_ManTruthTables( p );
+    p.vInfo      = Maj_ManTruthTablesV2( p );
     p.pSat       = sat_solver_new();
     sat_solver_setnvars( p.pSat, p.iVar );
     return p;
 }
-func Maj_ManFree(p *Maj_Man_t) {
+func Maj_ManFreeV2(p *Maj_Man_tV2) {
     sat_solver_delete( p.pSat );
     Vec_WrdFree( p.vInfo );
     Vec_WecFree( p.vOutLits );
@@ -258,7 +258,7 @@ func Maj_ManFree(p *Maj_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Maj_ManFindFanin(p *Maj_Man_t, i int32, k int32) int32 {
+func Maj_ManFindFaninV2(p *Maj_Man_tV2, i int32, k int32) int32 {
     var j int32;
     var Count int32;
     var iVar int32 = -1;
@@ -271,16 +271,16 @@ func Maj_ManFindFanin(p *Maj_Man_t, i int32, k int32) int32 {
     assert(Count == 1, "Count == 1");
     return iVar;
 }
-var spStatic_Maj_ManEval_Flag int32;
-func Maj_ManEval(p *Maj_Man_t) int32 {
+var spStatic_Maj_ManEval_FlagV2 int32;
+func Maj_ManEvalV2(p *Maj_Man_tV2) int32 {
     var fUseMiddle int32  = 1;
     
     var i, k, iMint int32; var pFanins [3]*word;
     for  i = p.nVars + 2; i < p.nObjs; i++  {
         for  k = 0; k < 3; k++  {
-            pFanins[k] = Maj_ManTruth( p, Maj_ManFindFanin(p, i, k) );
+            pFanins[k] = Maj_ManTruthV2( p, Maj_ManFindFaninV2(p, i, k) );
         }
-        Abc_TtMaj( Maj_ManTruth(p, i), pFanins[0], pFanins[1], pFanins[2], p.nWords );
+        Abc_TtMaj( Maj_ManTruthV2(p, i), pFanins[0], pFanins[1], pFanins[2], p.nWords );
     }
     if fUseMiddle != 0 {
         iMint = -1;
@@ -288,17 +288,17 @@ func Maj_ManEval(p *Maj_Man_t) int32 {
             var nOnes int32  = Abc_TtBitCount16(i);
             if nOnes < p.nVars/2 || nOnes > p.nVars/2+1 {
                 continue; }
-            if Abc_TtGetBit(Maj_ManTruth(p, p.nObjs), i) == Abc_TtGetBit(Maj_ManTruth(p, p.nObjs-1), i) {
+            if Abc_TtGetBit(Maj_ManTruthV2(p, p.nObjs), i) == Abc_TtGetBit(Maj_ManTruthV2(p, p.nObjs-1), i) {
                 continue; }
             iMint = i;
             break;
         }
     
     } else {
-        if (spStatic_Maj_ManEval_Flag != 0) && p.nVars >= 6 {
-            iMint = Abc_TtFindLastDiffBit( Maj_ManTruth(p, p.nObjs-1), Maj_ManTruth(p, p.nObjs), p.nVars );
+        if (spStatic_Maj_ManEval_FlagV2 != 0) && p.nVars >= 6 {
+            iMint = Abc_TtFindLastDiffBit( Maj_ManTruthV2(p, p.nObjs-1), Maj_ManTruthV2(p, p.nObjs), p.nVars );
         } else {
-            iMint = Abc_TtFindFirstDiffBit( Maj_ManTruth(p, p.nObjs-1), Maj_ManTruth(p, p.nObjs), p.nVars ); }
+            iMint = Abc_TtFindFirstDiffBit( Maj_ManTruthV2(p, p.nObjs-1), Maj_ManTruthV2(p, p.nObjs), p.nVars ); }
     }
     //Flag ^= 1;
     assert(iMint < (1 << p.nVars), "iMint < (1 << p.nVars)");
@@ -316,14 +316,14 @@ func Maj_ManEval(p *Maj_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Maj_ManPrintSolution(p *Maj_Man_t) {
+func Maj_ManPrintSolutionV2(p *Maj_Man_tV2) {
     var i, k, iVar int32;
     fmt.Printf("Realization of %d-input majority using %d MAJ3 gates:\n", p.nVars, p.nNodes);
 //    for ( i = p->nVars + 2; i < p->nObjs; i++ )
     for  i = p.nObjs - 1; i >= p.nVars + 2; i--  {
         fmt.Printf("%02d = MAJ(", i-2);
         for  k = 2; k >= 0; k--  {
-            iVar = Maj_ManFindFanin( p, i, k );
+            iVar = Maj_ManFindFaninV2( p, i, k );
             if iVar >= 2 && iVar < p.nVars + 2 {
                 fmt.Printf(" %c", 'a'+iVar-2);
             } else if iVar < 2 {
@@ -347,8 +347,8 @@ func Maj_ManPrintSolution(p *Maj_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Maj_ManAddCnfStart(p *Maj_Man_t) int32 {
-    var pLits [MAJ_NOBJS]int32;
+func Maj_ManAddCnfStartV2(p *Maj_Man_tV2) int32 {
+    var pLits [MAJ_NOBJSV2]int32;
     var pLits2 [2]int32;
     var i int32;
     var j int32;
@@ -398,13 +398,13 @@ func Maj_ManAddCnfStart(p *Maj_Man_t) int32 {
     }
     return 1;
 }
-func Maj_ManAddCnf(p *Maj_Man_t, iMint int32) int32 {
+func Maj_ManAddCnfV2(p *Maj_Man_tV2, iMint int32) int32 {
     // save minterm values
     var i int32;
     var k int32;
     var n int32;
     var j int32;
-    var Value int32 = Maj_ManValue(iMint, p.nVars);
+    var Value int32 = Maj_ManValueV2(iMint, p.nVars);
     for  i = 0; i < p.nVars; i++  {
         p.VarVals[i+2] = (iMint >> i) & 1;
     }
@@ -454,14 +454,14 @@ func Maj_ManAddCnf(p *Maj_Man_t, iMint int32) int32 {
 func Maj_ManExactSynthesis2(nVars int32, nNodes int32, fUseConst int32, fUseLine int32, fUseRand int32, nRands int32, fVerbose int32) int32 {
     var i, iMint int32;
     var clkTotal abctime  = Abc_Clock();
-    var p *Maj_Man_t  = Maj_ManAlloc( nVars, nNodes, fUseConst, fUseLine, fUseRand, nRands, fVerbose );
-    var status int32  = Maj_ManAddCnfStart( p );
+    var p *Maj_Man_tV2  = Maj_ManAllocV2( nVars, nNodes, fUseConst, fUseLine, fUseRand, nRands, fVerbose );
+    var status int32  = Maj_ManAddCnfStartV2( p );
     assert((status != 0), "status");
     if fVerbose != 0 {
     fmt.Printf("Running exact synthesis for %d-input majority with %d MAJ3 gates...\n", p.nVars, p.nNodes); }
     for  i = 0; iMint != -1; i++  {
         var clk abctime  = Abc_Clock();
-        if !(Maj_ManAddCnf( p, iMint ) != 0) {
+        if !(Maj_ManAddCnfV2( p, iMint ) != 0) {
             fmt.Printf("The problem has no solution after %2d iterations.  ", i+1);
             break;
         }
@@ -478,11 +478,11 @@ func Maj_ManExactSynthesis2(nVars int32, nNodes int32, fUseConst int32, fUseLine
             fmt.Printf("The problem has no solution after %2d iterations.  ", i+1);
             break;
         }
-        iMint = Maj_ManEval( p );
+        iMint = Maj_ManEvalV2( p );
     }
     if iMint == -1 {
-        Maj_ManPrintSolution( p ); }
-    Maj_ManFree( p );
+        Maj_ManPrintSolutionV2( p ); }
+    Maj_ManFreeV2( p );
     Abc_PrintTime( 1, "Total runtime", Abc_Clock() - clkTotal );
     return iMint == -1;
 }
@@ -500,7 +500,7 @@ func Maj_ManExactSynthesisTest() int32 {
 
 
    
-type Exa_Man_t struct {
+type Exa_Man_tV2 struct {
     pPars      *Bmc_EsPar_t;     // parameters
     nVars               int32;     // inputs
     nNodes               int32;    // internal nodes
@@ -509,13 +509,13 @@ type Exa_Man_t struct {
     iVar               int32;      // the next available SAT variable
     pTruth             *word;    // truth table
     vInfo        *Vec_Wrd_t;     // nVars + nNodes + 1
-    VarMarks [MAJ_NOBJS][2][MAJ_NOBJS]int32; // variable marks
-    VarVals [MAJ_NOBJS]int32; // values of the first nVars variables
+    VarMarks [MAJ_NOBJSV2][2][MAJ_NOBJSV2]int32; // variable marks
+    VarVals [MAJ_NOBJSV2]int32; // values of the first nVars variables
     vOutLits        *Vec_Wec_t;  // output vars
     pSat       *sat_solver;      // SAT solver
 }
 
-func Exa_ManTruth(p *Exa_Man_t, v int32) *word { return Vec_WrdEntryP( p.vInfo, p.nWords * v ); }
+func Exa_ManTruthV2(p *Exa_Man_tV2, v int32) *word { return Vec_WrdEntryP( p.vInfo, p.nWords * v ); }
 
 
 /**Function*************************************************************
@@ -529,17 +529,17 @@ func Exa_ManTruth(p *Exa_Man_t, v int32) *word { return Vec_WrdEntryP( p.vInfo, 
   SeeAlso     []
 
 ***********************************************************************/
-func Exa_ManTruthTables(p *Exa_Man_t) *Vec_Wrd_t {
+func Exa_ManTruthTablesV2(p *Exa_Man_tV2) *Vec_Wrd_t {
     var vInfo *Vec_Wrd_t  = p.vInfo = Vec_WrdStart( p.nWords * (p.nObjs+1) ); var i int32;
     for  i = 0; i < p.nVars; i++  {
-        Abc_TtIthVar( Exa_ManTruth(p, i), i, p.nVars );
+        Abc_TtIthVar( Exa_ManTruthV2(p, i), i, p.nVars );
     }
-    //Dau_DsdPrintFromTruth( Exa_ManTruth(p, p->nObjs), p->nVars );
+    //Dau_DsdPrintFromTruth( Exa_ManTruthV2(p, p->nObjs), p->nVars );
     return vInfo;
 }
-func Exa_ManMarkup(p *Exa_Man_t) int32 {
+func Exa_ManMarkupV2(p *Exa_Man_tV2) int32 {
     var i, k, j int32;
-    assert(p.nObjs <= MAJ_NOBJS, "p.nObjs <= MAJ_NOBJS");
+    assert(p.nObjs <= MAJ_NOBJSV2, "p.nObjs <= MAJ_NOBJSV2");
     // assign functionality
     p.iVar = 1 + p.nNodes * 3;
     // assign connectivity variables
@@ -571,9 +571,9 @@ func Exa_ManMarkup(p *Exa_Man_t) int32 {
     }
     return p.iVar;
 }
-func Exa_ManAlloc(pPars *Bmc_EsPar_t, pTruth *word) *Exa_Man_t {
+func Exa_ManAllocV2(pPars *Bmc_EsPar_t, pTruth *word) *Exa_Man_tV2 {
     // inlining of macro ABC_CALLOC
-    var p *Exa_Man_t  = &Exa_Man_t{};
+    var p *Exa_Man_tV2  = &Exa_Man_tV2{};
     p.pPars      = pPars;
     p.nVars      = pPars.nVars;
     p.nNodes     = pPars.nNodes;
@@ -581,13 +581,13 @@ func Exa_ManAlloc(pPars *Bmc_EsPar_t, pTruth *word) *Exa_Man_t {
     p.nWords     = Abc_TtWordNum(pPars.nVars);
     p.pTruth     = pTruth;
     p.vOutLits   = Vec_WecStart( p.nObjs );
-    p.iVar       = Exa_ManMarkup( p );
-    p.vInfo      = Exa_ManTruthTables( p );
+    p.iVar       = Exa_ManMarkupV2( p );
+    p.vInfo      = Exa_ManTruthTablesV2( p );
     p.pSat       = sat_solver_new();
     sat_solver_setnvars( p.pSat, p.iVar );
     return p;
 }
-func Exa_ManFree(p *Exa_Man_t) {
+func Exa_ManFreeV2(p *Exa_Man_tV2) {
     sat_solver_delete( p.pSat );
     Vec_WrdFree( p.vInfo );
     Vec_WecFree( p.vOutLits );
@@ -606,7 +606,7 @@ func Exa_ManFree(p *Exa_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Exa_ManFindFanin(p *Exa_Man_t, i int32, k int32) int32 {
+func Exa_ManFindFaninV2(p *Exa_Man_tV2, i int32, k int32) int32 {
     var j int32;
     var Count int32;
     var iVar int32 = -1;
@@ -619,27 +619,27 @@ func Exa_ManFindFanin(p *Exa_Man_t, i int32, k int32) int32 {
     assert(Count == 1, "Count == 1");
     return iVar;
 }
-var spStatic_Exa_ManEval_Flag int32;
-func Exa_ManEval(p *Exa_Man_t) int32 {
+var spStatic_Exa_ManEval_FlagV2 int32;
+func Exa_ManEvalV2(p *Exa_Man_tV2) int32 {
     
     var i, k, iMint int32; var pFanins [2]*word;
     for  i = p.nVars; i < p.nObjs; i++  {
         var iVarStart int32  = 1 + 3*(i - p.nVars);
         for  k = 0; k < 2; k++  {
-            pFanins[k] = Exa_ManTruth( p, Exa_ManFindFanin(p, i, k) );
+            pFanins[k] = Exa_ManTruthV2( p, Exa_ManFindFaninV2(p, i, k) );
         }
-        Abc_TtConst0( Exa_ManTruth(p, i), p.nWords );
+        Abc_TtConst0( Exa_ManTruthV2(p, i), p.nWords );
         for  k = 1; k < 4; k++  {
             if !sat_solver_var_value(p.pSat, iVarStart+k-1) {
                 continue; }
-            Abc_TtAndCompl( Exa_ManTruth(p, p.nObjs), pFanins[0], !(k&1), pFanins[1], !(k>>1), p.nWords );
-            Abc_TtOr( Exa_ManTruth(p, i), Exa_ManTruth(p, i), Exa_ManTruth(p, p.nObjs), p.nWords );
+            Abc_TtAndCompl( Exa_ManTruthV2(p, p.nObjs), pFanins[0], !(k&1), pFanins[1], !(k>>1), p.nWords );
+            Abc_TtOr( Exa_ManTruthV2(p, i), Exa_ManTruthV2(p, i), Exa_ManTruthV2(p, p.nObjs), p.nWords );
         }
     }
-    if (spStatic_Exa_ManEval_Flag != 0) && p.nVars >= 6 {
-        iMint = Abc_TtFindLastDiffBit( Exa_ManTruth(p, p.nObjs-1), p.pTruth, p.nVars );
+    if (spStatic_Exa_ManEval_FlagV2 != 0) && p.nVars >= 6 {
+        iMint = Abc_TtFindLastDiffBit( Exa_ManTruthV2(p, p.nObjs-1), p.pTruth, p.nVars );
     } else {
-        iMint = Abc_TtFindFirstDiffBit( Exa_ManTruth(p, p.nObjs-1), p.pTruth, p.nVars ); }
+        iMint = Abc_TtFindFirstDiffBit( Exa_ManTruthV2(p, p.nObjs-1), p.pTruth, p.nVars ); }
     //Flag ^= 1;
     assert(iMint < (1 << p.nVars), "iMint < (1 << p.nVars)");
     return iMint;
@@ -656,7 +656,7 @@ func Exa_ManEval(p *Exa_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Exa_ManPrintSolution(p *Exa_Man_t, fCompl int32) {
+func Exa_ManPrintSolutionV2(p *Exa_Man_tV2, fCompl int32) {
     var i, k, iVar int32;
     fmt.Printf("Realization of given %d-input function using %d two-input gates:\n", p.nVars, p.nNodes);
 //    for ( i = p->nVars + 2; i < p->nObjs; i++ )
@@ -670,7 +670,7 @@ func Exa_ManPrintSolution(p *Exa_Man_t, fCompl int32) {
         } else {
             fmt.Printf("%02d = 4\'b%d%d%d0(", i, Val3, Val2, Val1); }
         for  k = 1; k >= 0; k--  {
-            iVar = Exa_ManFindFanin( p, i, k );
+            iVar = Exa_ManFindFaninV2( p, i, k );
             if iVar >= 0 && iVar < p.nVars {
                 fmt.Printf(" %c", 'a'+iVar);
             } else {
@@ -692,8 +692,8 @@ func Exa_ManPrintSolution(p *Exa_Man_t, fCompl int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Exa_ManAddCnfStart(p *Exa_Man_t, fOnlyAnd int32) int32 {
-    var pLits [MAJ_NOBJS]int32;
+func Exa_ManAddCnfStartV2(p *Exa_Man_tV2, fOnlyAnd int32) int32 {
+    var pLits [MAJ_NOBJSV2]int32;
     var pLits2 [2]int32;
     var i int32;
     var j int32;
@@ -771,7 +771,7 @@ func Exa_ManAddCnfStart(p *Exa_Man_t, fOnlyAnd int32) int32 {
     }
     return 1;
 }
-func Exa_ManAddCnf(p *Exa_Man_t, iMint int32) int32 {
+func Exa_ManAddCnfV2(p *Exa_Man_tV2, iMint int32) int32 {
     // save minterm values
     var i int32;
     var k int32;
@@ -827,22 +827,22 @@ func Exa_ManAddCnf(p *Exa_Man_t, iMint int32) int32 {
     p.iVar += 3*p.nNodes;
     return 1;
 }
-func Exa_ManExactSynthesis2(pPars *Bmc_EsPar_t) {
+func Exa_ManExactSynthesisV2(pPars *Bmc_EsPar_t) {
     var i int32;
     var status int32;
     var iMint int32 = 1;
     var clkTotal abctime  = Abc_Clock();
-    var p *Exa_Man_t; var fCompl int32;
+    var p *Exa_Man_tV2; var fCompl int32;
     var pTruth [16]word; Abc_TtReadHex( pTruth, pPars.pTtStr );
     assert(pPars.nVars <= 10, "pPars.nVars <= 10");
-    p = Exa_ManAlloc( pPars, pTruth );
+    p = Exa_ManAllocV2( pPars, pTruth );
     if pTruth[0] & 1 { fCompl = 1; Abc_TtNot( pTruth, p.nWords ); }
-    status = Exa_ManAddCnfStart( p, pPars.fOnlyAnd );
+    status = Exa_ManAddCnfStartV2( p, pPars.fOnlyAnd );
     assert((status != 0), "status");
     fmt.Printf("Running exact synthesis for %d-input function with %d two-input gates...\n", p.nVars, p.nNodes);
     for  i = 0; iMint != -1; i++  {
         var clk abctime  = Abc_Clock();
-        if !(Exa_ManAddCnf( p, iMint ) != 0) {
+        if !(Exa_ManAddCnfV2( p, iMint ) != 0) {
             break; }
         status = sat_solver_solve( p.pSat, nil, nil, 0, 0, 0, 0 );
         if pPars.fVerbose {
@@ -857,11 +857,11 @@ func Exa_ManExactSynthesis2(pPars *Bmc_EsPar_t) {
             fmt.Printf("The problem has no solution.\n");
             break;
         }
-        iMint = Exa_ManEval( p );
+        iMint = Exa_ManEvalV2( p );
     }
     if iMint == -1 {
-        Exa_ManPrintSolution( p, fCompl ); }
-    Exa_ManFree( p );
+        Exa_ManPrintSolutionV2( p, fCompl ); }
+    Exa_ManFreeV2( p );
     Abc_PrintTime( 1, "Total runtime", Abc_Clock() - clkTotal );
 }
 
@@ -871,7 +871,7 @@ func Exa_ManExactSynthesis2(pPars *Bmc_EsPar_t) {
 
 
    
-type Exa3_Man_t struct {
+type Exa3_Man_tV2 struct {
     pPars      *Bmc_EsPar_t;     // parameters
     nVars               int32;     // inputs
     nNodes               int32;    // internal nodes
@@ -882,13 +882,13 @@ type Exa3_Man_t struct {
     iVar               int32;      // the next available SAT variable
     pTruth             *word;    // truth table
     vInfo        *Vec_Wrd_t;     // nVars + nNodes + 1
-    VarMarks [MAJ_NOBJS][6][MAJ_NOBJS]int32; // variable marks
-    VarVals [MAJ_NOBJS]int32; // values of the first nVars variables
+    VarMarks [MAJ_NOBJSV2][6][MAJ_NOBJSV2]int32; // variable marks
+    VarVals [MAJ_NOBJSV2]int32; // values of the first nVars variables
     vOutLits        *Vec_Wec_t;  // output vars
     pSat       *sat_solver;      // SAT solver
 }
 
-func Exa3_ManTruth(p *Exa3_Man_t, v int32) *word { return Vec_WrdEntryP( p.vInfo, p.nWords * v ); }
+func Exa3_ManTruthV2(p *Exa3_Man_tV2, v int32) *word { return Vec_WrdEntryP( p.vInfo, p.nWords * v ); }
 
 
 /**Function*************************************************************
@@ -902,17 +902,17 @@ func Exa3_ManTruth(p *Exa3_Man_t, v int32) *word { return Vec_WrdEntryP( p.vInfo
   SeeAlso     []
 
 ***********************************************************************/
-func Exa3_ManTruthTables(p *Exa3_Man_t) *Vec_Wrd_t {
+func Exa3_ManTruthTablesV2(p *Exa3_Man_tV2) *Vec_Wrd_t {
     var vInfo *Vec_Wrd_t  = p.vInfo = Vec_WrdStart( p.nWords * (p.nObjs+1) ); var i int32;
     for  i = 0; i < p.nVars; i++  {
-        Abc_TtIthVar( Exa3_ManTruth(p, i), i, p.nVars );
+        Abc_TtIthVar( Exa3_ManTruthV2(p, i), i, p.nVars );
     }
-    //Dau_DsdPrintFromTruth( Exa3_ManTruth(p, p->nObjs), p->nVars );
+    //Dau_DsdPrintFromTruth( Exa3_ManTruthV2(p, p->nObjs), p->nVars );
     return vInfo;
 }
-func Exa3_ManMarkup(p *Exa3_Man_t) int32 {
+func Exa3_ManMarkupV2(p *Exa3_Man_tV2) int32 {
     var i, k, j int32;
-    assert(p.nObjs <= MAJ_NOBJS, "p.nObjs <= MAJ_NOBJS");
+    assert(p.nObjs <= MAJ_NOBJSV2, "p.nObjs <= MAJ_NOBJSV2");
     // assign functionality variables
     p.iVar = 1 + p.LutMask * p.nNodes;
     // assign connectivity variables
@@ -946,7 +946,7 @@ func Exa3_ManMarkup(p *Exa3_Man_t) int32 {
     }
     return p.iVar;
 }
-func Exa3_ManInitPolarityFindVar(p *Exa3_Man_t, i int32, k int32, pIndex *int32) int32 {
+func Exa3_ManInitPolarityFindVar(p *Exa3_Man_tV2, i int32, k int32, pIndex *int32) int32 {
     var iVar int32;
     for {
         iVar = p.VarMarks[i][k][*pIndex];
@@ -957,7 +957,7 @@ if !( iVar <= 0 ) { break }
     //intf( "Setting var %d.\n", iVar );
     return iVar;
 }
-func Exa3_ManInitPolarity(p *Exa3_Man_t) {
+func Exa3_ManInitPolarity(p *Exa3_Man_tV2) {
     var i, k, iVar, nInputs int32;
     for  i = p.nVars; i < p.nObjs; i++  {
         // create AND-gate
@@ -989,9 +989,9 @@ fflush(os.Stdout); }
         //intf( "\n" );
     }
 }
-func Exa3_ManAlloc(pPars *Bmc_EsPar_t, pTruth *word) *Exa3_Man_t {
+func Exa3_ManAllocV2(pPars *Bmc_EsPar_t, pTruth *word) *Exa3_Man_tV2 {
     // inlining of macro ABC_CALLOC
-    var p *Exa3_Man_t  = &Exa3_Man_t{};
+    var p *Exa3_Man_tV2  = &Exa3_Man_tV2{};
     p.pPars      = pPars;
     p.nVars      = pPars.nVars;
     p.nNodes     = pPars.nNodes;
@@ -1001,14 +1001,14 @@ func Exa3_ManAlloc(pPars *Bmc_EsPar_t, pTruth *word) *Exa3_Man_t {
     p.nWords     = Abc_TtWordNum(pPars.nVars);
     p.pTruth     = pTruth;
     p.vOutLits   = Vec_WecStart( p.nObjs );
-    p.iVar       = Exa3_ManMarkup( p );
-    p.vInfo      = Exa3_ManTruthTables( p );
+    p.iVar       = Exa3_ManMarkupV2( p );
+    p.vInfo      = Exa3_ManTruthTablesV2( p );
     p.pSat       = sat_solver_new();
     sat_solver_setnvars( p.pSat, p.iVar );
     //Exa3_ManInitPolarity( p );
     return p;
 }
-func Exa3_ManFree(p *Exa3_Man_t) {
+func Exa3_ManFreeV2(p *Exa3_Man_tV2) {
     sat_solver_delete( p.pSat );
     Vec_WrdFree( p.vInfo );
     Vec_WecFree( p.vOutLits );
@@ -1027,7 +1027,7 @@ func Exa3_ManFree(p *Exa3_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Exa3_ManFindFanin(p *Exa3_Man_t, i int32, k int32) int32 {
+func Exa3_ManFindFaninV2(p *Exa3_Man_tV2, i int32, k int32) int32 {
     var j int32;
     var Count int32;
     var iVar int32 = -1;
@@ -1040,31 +1040,31 @@ func Exa3_ManFindFanin(p *Exa3_Man_t, i int32, k int32) int32 {
     assert(Count == 1, "Count == 1");
     return iVar;
 }
-var spStatic_Exa3_ManEval_Flag int32;
-func Exa3_ManEval(p *Exa3_Man_t) int32 {
+var spStatic_Exa3_ManEval_FlagV2 int32;
+func Exa3_ManEvalV2(p *Exa3_Man_tV2) int32 {
     
     var i, k, j, iMint int32; var pFanins [6]*word;
     for  i = p.nVars; i < p.nObjs; i++  {
         var iVarStart int32  = 1 + p.LutMask*(i - p.nVars);
         for  k = 0; k < p.nLutSize; k++  {
-            pFanins[k] = Exa3_ManTruth( p, Exa3_ManFindFanin(p, i, k) );
+            pFanins[k] = Exa3_ManTruthV2( p, Exa3_ManFindFaninV2(p, i, k) );
         }
-        Abc_TtConst0( Exa3_ManTruth(p, i),        p.nWords );
+        Abc_TtConst0( Exa3_ManTruthV2(p, i),        p.nWords );
         for  k = 1; k <= p.LutMask; k++  {
             if !sat_solver_var_value(p.pSat, iVarStart+k-1) {
                 continue; }
-//            Abc_TtAndCompl( Exa3_ManTruth(p, p->nObjs), pFanins[0], !(k&1), pFanins[1], !(k>>1), p->nWords );
-            Abc_TtConst1( Exa3_ManTruth(p, p.nObjs), p.nWords );
+//            Abc_TtAndCompl( Exa3_ManTruthV2(p, p->nObjs), pFanins[0], !(k&1), pFanins[1], !(k>>1), p->nWords );
+            Abc_TtConst1( Exa3_ManTruthV2(p, p.nObjs), p.nWords );
             for  j = 0; j < p.nLutSize; j++  {
-                Abc_TtAndCompl( Exa3_ManTruth(p, p.nObjs), Exa3_ManTruth(p, p.nObjs), 0, pFanins[j], !((k >> j) & 1), p.nWords );
+                Abc_TtAndCompl( Exa3_ManTruthV2(p, p.nObjs), Exa3_ManTruthV2(p, p.nObjs), 0, pFanins[j], !((k >> j) & 1), p.nWords );
             }
-            Abc_TtOr( Exa3_ManTruth(p, i), Exa3_ManTruth(p, i), Exa3_ManTruth(p, p.nObjs), p.nWords );
+            Abc_TtOr( Exa3_ManTruthV2(p, i), Exa3_ManTruthV2(p, i), Exa3_ManTruthV2(p, p.nObjs), p.nWords );
         }
     }
-    if (spStatic_Exa3_ManEval_Flag != 0) && p.nVars >= 6 {
-        iMint = Abc_TtFindLastDiffBit( Exa3_ManTruth(p, p.nObjs-1), p.pTruth, p.nVars );
+    if (spStatic_Exa3_ManEval_FlagV2 != 0) && p.nVars >= 6 {
+        iMint = Abc_TtFindLastDiffBit( Exa3_ManTruthV2(p, p.nObjs-1), p.pTruth, p.nVars );
     } else {
-        iMint = Abc_TtFindFirstDiffBit( Exa3_ManTruth(p, p.nObjs-1), p.pTruth, p.nVars ); }
+        iMint = Abc_TtFindFirstDiffBit( Exa3_ManTruthV2(p, p.nObjs-1), p.pTruth, p.nVars ); }
     //Flag ^= 1;
     assert(iMint < (1 << p.nVars), "iMint < (1 << p.nVars)");
     return iMint;
@@ -1081,7 +1081,7 @@ func Exa3_ManEval(p *Exa3_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Exa3_ManPrintSolution(p *Exa3_Man_t, fCompl int32) {
+func Exa3_ManPrintSolutionV2(p *Exa3_Man_tV2, fCompl int32) {
     var i, k, iVar int32;
     fmt.Printf("Realization of given %d-input function using %d %d-input LUTs:\n", p.nVars, p.nNodes, p.nLutSize);
     for  i = p.nObjs - 1; i >= p.nVars; i--  {
@@ -1110,7 +1110,7 @@ func Exa3_ManPrintSolution(p *Exa3_Man_t, fCompl int32) {
             fmt.Printf("0("); }
 
         for  k = p.nLutSize - 1; k >= 0; k--  {
-            iVar = Exa3_ManFindFanin( p, i, k );
+            iVar = Exa3_ManFindFaninV2( p, i, k );
             if iVar >= 0 && iVar < p.nVars {
                 fmt.Printf(" %c", 'a'+iVar);
             } else {
@@ -1132,8 +1132,8 @@ func Exa3_ManPrintSolution(p *Exa3_Man_t, fCompl int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Exa3_ManAddCnfStart(p *Exa3_Man_t, fOnlyAnd int32) int32 {
-    var pLits [MAJ_NOBJS]int32;
+func Exa3_ManAddCnfStartV2(p *Exa3_Man_tV2, fOnlyAnd int32) int32 {
+    var pLits [MAJ_NOBJSV2]int32;
     var pLits2 [2]int32;
     var i int32;
     var j int32;
@@ -1215,7 +1215,7 @@ func Exa3_ManAddCnfStart(p *Exa3_Man_t, fOnlyAnd int32) int32 {
     }
     return 1;
 }
-func Exa3_ManAddCnf(p *Exa3_Man_t, iMint int32) int32 {
+func Exa3_ManAddCnfV2(p *Exa3_Man_tV2, iMint int32) int32 {
     // save minterm values
     var i int32;
     var k int32;
@@ -1275,23 +1275,23 @@ func Exa3_ManAddCnf(p *Exa3_Man_t, iMint int32) int32 {
     p.iVar += (p.nLutSize+1)*p.nNodes;
     return 1;
 }
-func Exa3_ManExactSynthesis2(pPars *Bmc_EsPar_t) {
+func Exa3_ManExactSynthesisV2(pPars *Bmc_EsPar_t) {
     var i int32;
     var status int32;
     var iMint int32 = 1;
     var clkTotal abctime  = Abc_Clock();
-    var p *Exa3_Man_t; var fCompl int32;
+    var p *Exa3_Man_tV2; var fCompl int32;
     var pTruth [16]word; Abc_TtReadHex( pTruth, pPars.pTtStr );
     assert(pPars.nVars <= 10, "pPars.nVars <= 10");
     assert(pPars.nLutSize <= 6, "pPars.nLutSize <= 6");
-    p = Exa3_ManAlloc( pPars, pTruth );
+    p = Exa3_ManAllocV2( pPars, pTruth );
     if pTruth[0] & 1 { fCompl = 1; Abc_TtNot( pTruth, p.nWords ); }
-    status = Exa3_ManAddCnfStart( p, pPars.fOnlyAnd );
+    status = Exa3_ManAddCnfStartV2( p, pPars.fOnlyAnd );
     assert((status != 0), "status");
     fmt.Printf("Running exact synthesis for %d-input function with %d %d-input LUTs...\n", p.nVars, p.nNodes, p.nLutSize);
     for  i = 0; iMint != -1; i++  {
         var clk abctime  = Abc_Clock();
-        if !(Exa3_ManAddCnf( p, iMint ) != 0) {
+        if !(Exa3_ManAddCnfV2( p, iMint ) != 0) {
             break; }
         status = sat_solver_solve( p.pSat, nil, nil, 0, 0, 0, 0 );
         if pPars.fVerbose {
@@ -1306,11 +1306,11 @@ func Exa3_ManExactSynthesis2(pPars *Bmc_EsPar_t) {
             fmt.Printf("The problem has no solution.\n");
             break;
         }
-        iMint = Exa3_ManEval( p );
+        iMint = Exa3_ManEvalV2( p );
     }
     if iMint == -1 {
-        Exa3_ManPrintSolution( p, fCompl ); }
-    Exa3_ManFree( p );
+        Exa3_ManPrintSolutionV2( p, fCompl ); }
+    Exa3_ManFreeV2( p );
     Abc_PrintTime( 1, "Total runtime", Abc_Clock() - clkTotal );
 }
 
