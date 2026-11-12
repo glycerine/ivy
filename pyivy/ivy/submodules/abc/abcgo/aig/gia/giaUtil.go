@@ -976,48 +976,6 @@ func Gia_ManGroupProve(pInit *Gia_Man_t, pCommLine string, nGroupSize int32, fVe
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManPoXSim(p *Gia_Man_t, nFrames int32, fVerbose int32) *Vec_Int_t {
-    var vRes *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var f int32;
-    var k int32;
-    var nLeft int32 = Gia_ManPoNum(p);
-    vRes = Vec_IntAlloc( Gia_ManPoNum(p) );
-    Vec_IntFill( vRes, Gia_ManPoNum(p), nFrames );
-    Gia_ObjTerSimSet0( Gia_ManConst0(p) );
-    Gia_ManForEachRi( p, pObj, k )
-        Gia_ObjTerSimSet0( pObj );
-    for  f = 0; f < nFrames; f++  {
-        Gia_ManForEachPi( p, pObj, k )
-            Gia_ObjTerSimSetX( pObj );
-        Gia_ManForEachRo( p, pObj, k )
-            Gia_ObjTerSimRo( p, pObj );
-        Gia_ManForEachAnd( p, pObj, k )
-            Gia_ObjTerSimAnd( pObj );
-        Gia_ManForEachCo( p, pObj, k )
-            Gia_ObjTerSimCo( pObj );
-        if fVerbose != 0 {
-            Gia_ManForEachPo( p, pObj, k )
-                Gia_ObjTerSimPrint( pObj );
-            fmt.Printf("\n");
-        }
-        Gia_ManForEachPo( p, pObj, k )
-            if ( Vec_IntEntry(vRes, k) == nFrames && Gia_ObjTerSimGetX(pObj) )
-                Vec_IntWriteEntry(vRes, k, f);
-nLeft--;
-        if nLeft == 0 {
-            break; }
-    }
-    if fVerbose != 0 {
-        if nLeft == 0 {
-            fmt.Printf("Simulation converged after %d frames.\n", f+1);
-        } else {
-            fmt.Printf("Simulation terminated after %d frames.\n", nFrames); }
-    }        
-//    Vec_IntPrint( vRes );
-    return vRes;
-}
-
 const MAX_LUT_SIZE = 8
 typedef struct Gia_MapLut_t_
 {
