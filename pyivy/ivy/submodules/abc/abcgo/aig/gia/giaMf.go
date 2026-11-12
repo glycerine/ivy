@@ -932,30 +932,7 @@ func Mf_ManSetMapRefs(p *Mf_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Mf_ManDeriveMapping(p *Mf_Man_t) *Gia_Man_t {
-    var vMapping *Vec_Int_t;
-    var i int32;
-    var k int32;
-    var pCut *int32;
-    assert(!p.pPars.fCutMin && p.pGia.vMapping == nil, "!p.pPars.fCutMin && p.pGia.vMapping == nil");
-    vMapping = Vec_IntAlloc( Gia_ManObjNum(p.pGia) + int32(p.pPars.Edge) + int32(p.pPars.Area) * 2 );
-    Vec_IntFill( vMapping, Gia_ManObjNum(p.pGia), 0 );
-    Gia_ManForEachAndId( p.pGia, i )
-    {
-        if !(Mf_ObjMapRefNum(p, i) != 0) {
-            continue; }
-        pCut = Mf_ObjCutBest( p, i );
-        Vec_IntWriteEntry( vMapping, i, Vec_IntSize(vMapping) );
-        Vec_IntPush( vMapping, Mf_CutSize(pCut) );
-        for  k = 1; k <= Mf_CutSize(pCut); k++  {
-            Vec_IntPush( vMapping, pCut[k] );
-        }
-        Vec_IntPush( vMapping, i );
-    }
-    assert(Vec_IntCap(vMapping) == 16 || Vec_IntSize(vMapping) == Vec_IntCap(vMapping), "Vec_IntCap(vMapping) == 16 || Vec_IntSize(vMapping) == Vec_IntCap(vMapping)");
-    p.pGia.vMapping = vMapping;
-    return p.pGia;
-}
+
 func Mf_ManDeriveMappingCoarse(p *Mf_Man_t) *Gia_Man_t {
     var pNew *Gia_Man_t;
     var pGia *Gia_Man_t = p.pGia;
@@ -1276,47 +1253,7 @@ func Mf_ManComputeCuts(p *Mf_Man_t) {
 
 
 
-func Mf_ObjComputeBestCut(p *Mf_Man_t, iObj int32) {
-    var pBest *Mf_Obj_t  = Mf_ManObj(p, iObj);
-    var pCutSet *int32  = Mf_ObjCutSet( p, iObj );
-    var pCut *int32;
-    var pCutBest *int32 = nil;
-    var Value1 int32 = -1;
-    var Value2 int32 = -1;
-    var i int32;
-    var Time int32;
-    var TimeBest int32 = ABC_INFINITY; 
-    var Flow float32;
-    var FlowBest float32 = ABC_INFINITY;
-    if p.fUseEla && pBest.nMapRefs {
-        Value1 = Mf_CutDeref_rec( p, Mf_ObjCutBest(p, iObj) ); }
-    // inlining of macro Mf_SetForEachCut
-    for  i, pCut = 0, pCutSet + 1; i < pCutSet[0]; i++, pCut += Mf_CutSize(pCut) + 1  {
-        assert(!(Mf_CutIsTriv(pCut, iObj) != 0), "!Mf_CutIsTriv(pCut, iObj)");
-        assert(Mf_CutSize(pCut) <= p.pPars.nLutSize, "Mf_CutSize(pCut) <= p.pPars.nLutSize");
-        if p.fUseEla {
-            Flow = Mf_CutAreaDerefed2(p, pCut);
-        } else {
-            Flow = Mf_CutFlow(p, pCut, &Time);
-        }
-        if pCutBest == nil || FlowBest > Flow + MF_EPSILON || (FlowBest > Flow - MF_EPSILON && TimeBest > Time) {
-            pCutBest = pCut;
-FlowBest = Flow;
-TimeBest = Time; }
-    }
-    assert(pCutBest != nil, "pCutBest != nil");
-    if p.fUseEla && pBest.nMapRefs {
-        Value1 = Mf_CutRef_rec( p, pCutBest );
-    } else {
-        pBest.nMapRefs = 0; }
-    assert(Value1 >= Value2, "Value1 >= Value2");
-    if p.fUseEla {
-        Mf_CutFlow( p, pCutBest, &TimeBest ); }
-    pBest.Delay = TimeBest;
-    pBest.Flow  = FlowBest / Mf_ManObj(p, iObj).nFlowRefs;
-    Mf_ObjSetBestCut( pCutSet, pCutBest );
-//    Mf_CutPrint( Mf_ObjCutBest(p, iObj) ); printf( "\n" );
-}
+
 
 
 /**Function*************************************************************
@@ -1330,28 +1267,7 @@ TimeBest = Time; }
   SeeAlso     []
 
 ***********************************************************************/
-func Mf_ManMappingFromMapping(p *Mf_Man_t) int32 {
-    var pGia *Gia_Man_t  = p.pGia0;
-    var pObj *Gia_Obj_t;
-    var i, iObj, Count int32;
-    var vMapping *Vec_Int_t  = Vec_IntAlloc( 3 * Gia_ManObjNum(pGia) );
-    Vec_IntFill( vMapping, Gia_ManObjNum(pGia), 0 );
-    Gia_ManForEachAnd( pGia, pObj, iObj )
-        if Mf_ObjMapRefNum(p, iObj) != 0 {
-            var pCut *int32  = Mf_ObjCutBest(p, iObj);
-            Vec_IntWriteEntry( vMapping, iObj, Vec_IntSize(vMapping) );
-            Vec_IntPush( vMapping, Mf_CutSize(pCut) );
-            for  i = 1; i <= Mf_CutSize(pCut); i++  {
-                Vec_IntPush( vMapping, pCut[i] );
-            }
-            Vec_IntPush( vMapping, iObj );
-            Count++;
-        }
-    assert(pGia.vMapping == nil, "pGia.vMapping == nil");
-    pGia.vMapping = vMapping;
-    fmt.Printf("Mapping is %.2fx larger than AIG manager.\n", 1.0*Vec_IntSize(vMapping)/Gia_ManObjNum(pGia));
-    return Count;
-}
+
 
 /**Function*************************************************************
 
