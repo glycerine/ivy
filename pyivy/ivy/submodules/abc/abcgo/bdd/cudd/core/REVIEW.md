@@ -59,3 +59,51 @@ prevent root-package compilation; no draft files are hidden or build-tagged.
 Dependent completed packages can import this tested core while that work continues.
 Passing core tests is evidence for this implementation, not completion of CUDD
 or the full ABC port.
+
+## ADD extension: separate follow-up review passes
+
+### Compactness, idiomatic Go, and readability review
+
+- ADD construction, ITE, apply, permutation and queries live only in core; root
+  original modules contain forwarding aliases. Numeric nodes use a separate
+  unique table, so ADD's real zero is never confused with BDD's complemented one.
+- BDD and ADD support now share the same level-sorted traversal rather than
+  carrying a second copy in ADD permutation. ITE routines retain specialized
+  terminal/complement rules, keeping the distinction visible and reviewable.
+- Apply uses typed original-signature callbacks and operation-local memo tables;
+  no reflection-based function identity or unsafe conversions are needed.
+- Numeric operations use math, and IEEE NaN/infinity values remain numeric
+  constants, matching the original double-valued operation domain. Formatting
+  and exact arithmetic continue to use standard-library implementations.
+
+### Bug review and fixed findings
+
+- REO integration exposed that generic Support rejected ADD roots. Removed that
+  BDD-only gate and deleted the duplicate ADD support traversal. Tests verify
+  ADD support indices, canonical BDD support cubes and inverse permutations.
+- Generic minterm counting had the same BDD-only entry check. It now counts
+  non-background ADD terminals as well; tests compare floating and exact APA
+  counts and check numeric zero and node statistics.
+- Initial NaN rejection was stricter than the C double-valued operators. Preserve
+  IEEE NaNs, including log(-1), instead of returning an unsupported-operation
+  result. Signed zero remains canonical; infinities are distinct constants.
+- Reviewed callback cache separation: function-pointer code addresses are not
+  safe identities for Go closures. Operation-local caches prevent captured
+  callbacks from sharing results. A two-offset callback regression verifies this.
+- Apply now stops with failure when a callback cannot handle constant operands,
+  rather than recursing at an invalid constant level. Tests cover this protocol
+  boundary and foreign-family/foreign-manager results.
+- ADD tables/computed entries must be cleared on manager shutdown, and statistics
+  must include ADD nodes. Lifecycle and accounting regressions verify both.
+
+Follow-up verification:
+`GOCACHE=/tmp/abcgo-go-cache go -C abcgo test ./bdd/cudd/core ./bdd/reo -race -count=1`.
+Coverage includes exhaustive numeric leaves after permutation/inverse mapping,
+ADD/BDD family isolation, mixed-root REO integration, pointwise arithmetic,
+threshold/overwrite/comparison/agreement operators, 0/1 operators, monadic
+logarithm/negation, nonallocating constancy/order queries and callback isolation.
+
+Remaining scope is still substantial: advanced ADD abstractions/matrix operations,
+ZDD operations, dynamic reordering and many original root CUDD APIs remain drafts.
+No dynamic CUDD ReduceHeap or SYMM_SIFT implementation is claimed. The root CUDD
+package remains incomplete and its original draft files remain visible.

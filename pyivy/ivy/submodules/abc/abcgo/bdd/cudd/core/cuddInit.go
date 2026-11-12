@@ -77,6 +77,8 @@ func Cudd_Quit(dd *DdManager) {
 	clear(dd.unique)
 	clear(dd.cache)
 	clear(dd.zddUnique)
+	clear(dd.addUnique)
+	clear(dd.addCache)
 	clear(dd.constants)
 	dd.Vars = nil
 	dd.Perm = nil

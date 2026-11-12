@@ -34,6 +34,8 @@ type DdManager struct {
 	ZddSize                           int
 	Univ                              []*DdNode
 	zddUnique                         map[bddUniqueKey]*DdNode
+	addUnique                         map[bddUniqueKey]*DdNode
+	addCache                          map[bddITEKey]*DdNode
 	constants                         map[uint64]*DdNode
 	Vars                              []*DdNode
 	Perm, InvPerm                     []int
@@ -108,7 +110,7 @@ func Cudd_ReadInvPerm(dd *DdManager, level int) int {
 	return dd.InvPerm[level]
 }
 func Cudd_ReadNodeCount(dd *DdManager) int {
-	return len(dd.unique) + len(dd.zddUnique) + len(dd.constants)
+	return len(dd.unique) + len(dd.zddUnique) + len(dd.addUnique) + len(dd.constants)
 }
 func (dd *DdManager) valid(nodes ...*DdNode) bool {
 	if dd == nil || dd.closed {
@@ -248,7 +250,7 @@ func (dd *DdManager) Evaluate(n *DdNode, assignment []bool) (bool, error) {
 
 // Support returns variable indices in manager level order.
 func (dd *DdManager) Support(n *DdNode) []int {
-	if !dd.valid(n) {
+	if !(dd.valid(n) || dd.validAdd(n)) {
 		return nil
 	}
 	seen := map[*DdNode]bool{}
@@ -273,7 +275,7 @@ func (dd *DdManager) Support(n *DdNode) []int {
 	return result
 }
 func Cudd_Support(dd *DdManager, f *DdNode) *DdNode {
-	if !dd.valid(f) {
+	if !(dd.valid(f) || dd.validAdd(f)) {
 		return nil
 	}
 	cube := dd.One
@@ -458,23 +460,24 @@ func Cudd_DagSize(f *DdNode) int {
 	return len(seen)
 }
 func Cudd_CountMinterm(dd *DdManager, f *DdNode, nvars int) float64 {
-	if !dd.valid(f) || nvars < 0 {
+	if !(dd.valid(f) || dd.validAdd(f)) || nvars < 0 {
 		return math.NaN()
 	}
 	memo := map[*DdNode]float64{}
 	var probability func(*DdNode) float64
 	probability = func(n *DdNode) float64 {
-		if n == dd.One {
-			return 1
-		}
-		if n == dd.LogicZero {
-			return 0
-		}
 		if p, ok := memo[n]; ok {
 			return p
 		}
 		r := Cudd_Regular(n)
-		p := (probability(r.T) + probability(r.E)) / 2
+		var p float64
+		if Cudd_IsConstant(r) {
+			if r != dd.Zero && r != dd.Background {
+				p = 1
+			}
+		} else {
+			p = (probability(r.T) + probability(r.E)) / 2
+		}
 		if Cudd_IsComplement(n) {
 			p = 1 - p
 		}
