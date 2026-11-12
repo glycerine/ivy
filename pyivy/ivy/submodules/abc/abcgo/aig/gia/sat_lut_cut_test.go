@@ -17,3 +17,18 @@ func TestSblCutFeasibleAndDominance(t *testing.T) {
 		t.Fatal("dominated cut retained")
 	}
 }
+
+func TestSblMergeCuts(t *testing.T) {
+	left := [4][]word{{1, 2}, {0, 0}, {0, 0}, {0, 0}}
+	right := [4][]word{{4, 6}, {0, 0}, {0, 0}, {0, 0}}
+	result := sblMergeCuts(left, right, 4)
+	got := vec.Vec_WrdArray(result[0])
+	if len(got) != 2 || got[0] != 5 || got[1] != 6 {
+		t.Fatalf("minimal merged cuts %v", got)
+	}
+	for i := 1; i < 4; i++ {
+		if vec.Vec_WrdSize(result[i]) != 2 {
+			t.Fatal("unaligned cut masks")
+		}
+	}
+}
