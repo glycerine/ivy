@@ -107,3 +107,57 @@ Remaining scope is still substantial: advanced ADD abstractions/matrix operation
 ZDD operations, dynamic reordering and many original root CUDD APIs remain drafts.
 No dynamic CUDD ReduceHeap or SYMM_SIFT implementation is claimed. The root CUDD
 package remains incomplete and its original draft files remain visible.
+
+## ZDD set-operation group: separate review passes
+
+### Compactness, idiomatic Go, and readability review
+
+- The zero-suppressed unique table remains authoritative. One shared ordered
+  Shannon traversal implements union/intersection/difference with explicit
+  operation symbols and absent-variable cofactors; separate algorithms are not
+  copied into root wrappers.
+- ZDD ITE uses the exact finite-family identity `(f ∩ g) ∪ (h \ f)`, so its
+  meaning remains clear without reproducing C memory/cache machinery.
+- Positive/negative cofactors share one traversal. Variable toggling remains a
+  small distinct recursion because it exchanges inclusion and exclusion branches.
+- Exact counting uses memoized math/big integers, with bounded original-style
+  integer/double entry points. Counts are calculated over the graph rather than
+  by enumerating member sets. The returned exact integer is caller-owned.
+- Original root set/count modules forward only; copyright/licenses are retained
+  on the authoritative core modules. All executable files are gofmt-formatted.
+
+### Bug review and regression checks
+
+- ZDD zero is a real terminal, and equal then/else children must not trigger BDD
+  reduction. Reviewed all constructors for the ZDD-only rule `then == zero → else`.
+  Tests check every live ZDD node's ordering, family and reduction invariants.
+- Inclusion queries must not reuse a nonconstant sentinel as an actual result.
+  The nonallocating query has its own memo table; set operations use their own
+  canonical-edge caches. Exhaustive pair tests verify the inclusion result and
+  unchanged unique-table size.
+- Universe rebuilding originally assumed identity order. It now uses InvPermZ;
+  fresh-manager reversed-order tests verify universe membership and set results.
+  Public universe rebuilding rejects invalid permutation inventories before
+  changing the universe. This does not implement dynamic graph reordering.
+- Variable growth must remain separate from BDD inventory, preserve canonical
+  existing families, and validate indices before mutation. Growth/isolation,
+  negative/constant-boundary index, and oversized initializer tests cover this.
+- Invalid complemented/BDD/foreign-manager edges must not enter ZDD recursion.
+  Domain checks and lifecycle regressions verify rejection and cleanup.
+- Integer counts must not wrap into plausible results. Checked conversion
+  reports the existing failure sentinel on overflow; exact and double APIs
+  correctly report a universe containing 2^100 sets. Mutable return-value tests
+  verify callers cannot corrupt subsequent results.
+
+Verification:
+`GOCACHE=/tmp/abcgo-go-cache go -C abcgo test ./bdd/cudd/core ./bdd/reo -race -count=1`.
+All 256 families over three variables and all 65,536 family pairs are checked for
+canonical union/intersection/difference and nonallocating inclusion. All families
+are also checked for both cofactors, change/involution and ITE. Tests cover
+projection functions, zero suppression, universe/counting, independent variable
+inventories and a fresh nonidentity variable order.
+
+The eight original ZDD set-operation APIs and two original counting APIs are now
+implemented. ZDD product/division, covers/ISOP, conversions, dynamic reordering,
+and remaining original root CUDD APIs are still incomplete. No existing root
+draft files are hidden and no dynamic-reordering compatibility is claimed.

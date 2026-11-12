@@ -61,11 +61,20 @@ package core
 // Cudd_Init creates BDD variables and the ZDD universe. Go maps replace the
 // original raw-memory pools; sizing arguments remain allocation hints.
 func Cudd_Init(numVars, numVarsZ, numSlots, cacheSize uint32, maxMemory uint64) *DdManager {
+	if numVars >= CUDD_MAXINDEX || numVarsZ >= CUDD_MAXINDEX {
+		return nil
+	}
 	dd := NewBDDManager(int(numVars))
 	if dd == nil {
 		return nil
 	}
 	dd.ZddSize = int(numVarsZ)
+	dd.PermZ = make([]int, dd.ZddSize)
+	dd.InvPermZ = make([]int, dd.ZddSize)
+	for i := 0; i < dd.ZddSize; i++ {
+		dd.PermZ[i] = i
+		dd.InvPermZ[i] = i
+	}
 	cuddZddInitUniv(dd)
 	return dd
 }
@@ -83,16 +92,26 @@ func Cudd_Quit(dd *DdManager) {
 	dd.Vars = nil
 	dd.Perm = nil
 	dd.InvPerm = nil
+	dd.PermZ = nil
+	dd.InvPermZ = nil
 	dd.Univ = nil
 }
 func cuddZddInitUniv(dd *DdManager) int {
 	if dd == nil || dd.closed {
 		return 0
 	}
+	if dd.ZddSize < 0 || len(dd.PermZ) != dd.ZddSize || len(dd.InvPermZ) != dd.ZddSize {
+		return 0
+	}
+	for level, index := range dd.InvPermZ {
+		if index < 0 || index >= dd.ZddSize || dd.PermZ[index] != level {
+			return 0
+		}
+	}
 	dd.Univ = make([]*DdNode, dd.ZddSize)
 	result := dd.One
 	for i := dd.ZddSize - 1; i >= 0; i-- {
-		result = dd.zddNode(uint32(i), result, result)
+		result = dd.zddNode(uint32(dd.InvPermZ[i]), result, result)
 		dd.Univ[i] = result
 	}
 	return 1

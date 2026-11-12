@@ -32,6 +32,7 @@ type DdManager struct {
 	Zero, PlusInfinity, MinusInfinity *DdNode
 	Background                        *DdNode
 	ZddSize                           int
+	PermZ, InvPermZ                   []int
 	Univ                              []*DdNode
 	zddUnique                         map[bddUniqueKey]*DdNode
 	addUnique                         map[bddUniqueKey]*DdNode
@@ -50,7 +51,7 @@ type DdManager struct {
 const bddConstantIndex uint32 = CUDD_CONST_INDEX
 
 func NewBDDManager(variables int) *DdManager {
-	if variables < 0 {
+	if variables < 0 || uint64(variables) >= uint64(bddConstantIndex) {
 		return nil
 	}
 	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, nextID: 2}
