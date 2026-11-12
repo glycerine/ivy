@@ -1,6 +1,9 @@
 package fret
 
-import "os"
+import (
+	. "github.com/glycerine/abcgo/base/abc"
+	. "github.com/glycerine/abcgo/misc/vec"
+)
 
 /**CFile****************************************************************
 
@@ -47,15 +50,14 @@ import "os"
 
 
 func trace2(pObj *Abc_Obj_t) {
-  var pNext *Abc_Obj_t;
-  var i int32;
-
   print_node(pObj);
-  Abc_ObjForEachFanin(pObj, pNext, i) 
-    if pNext.Level >= pObj.Level - 1 {
-      trace2(pNext);
-      break;
-    }
+	for i := int32(0); i < Abc_ObjFaninNum(pObj); i++ {
+		pNext := Abc_ObjFanin(pObj, i)
+		if Abc_ObjLevel(pNext) >= Abc_ObjLevel(pObj)-1 {
+			trace2(pNext)
+			break
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -75,14 +77,10 @@ func trace2(pObj *Abc_Obj_t) {
 
 ***********************************************************************/
 func Abc_FlowRetime_InitTiming(pNtk *Abc_Ntk_t) {
-
-  pManMR.nConservConstraints = pManMR.nExactConstraints = 0;
-
-  pManMR.vExactNodes = Vec_PtrAlloc(1000);
-
-  pManMR.vTimeEdges = ABC_ALLOC( Vec_Ptr_t, Abc_NtkObjNumMax(pNtk)+1 );
-  assert(pManMR.vTimeEdges, "pManMR.vTimeEdges");
-  memset(pManMR.vTimeEdges, 0, (Abc_NtkObjNumMax(pNtk)+1) * sizeof(Vec_Ptr_t) );
+	pManMR.nConservConstraints = 0
+	pManMR.nExactConstraints = 0
+	pManMR.vExactNodes = Vec_PtrAlloc(1000)
+	pManMR.vTimeEdges = make([]Vec_Ptr_t, int(Abc_NtkObjNumMax(pNtk)+1))
 }
 
 

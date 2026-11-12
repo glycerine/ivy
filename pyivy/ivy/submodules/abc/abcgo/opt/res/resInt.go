@@ -1,5 +1,7 @@
 package res
 
+import "math/rand"
+
 /**CFile****************************************************************
 
   FileName    [resInt.h]
@@ -11,7 +13,7 @@ package res
   Synopsis    [Internal declarations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - January 15, 2007.]
@@ -19,10 +21,6 @@ package res
   Revision    [$Id: resInt.h,v 1.00 2007/01/15 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
- 
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
@@ -34,64 +32,60 @@ package res
 ///                         PARAMETERS                               ///
 ////////////////////////////////////////////////////////////////////////
 
-
-
 //ABC_NAMESPACE_HEADER_START
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
-   
 type Res_Win_t struct {
-    // windowing parameters
-    pNode       *Abc_Obj_t;        // the node in the center
-    nWinTfiMax              int32;   // the fanin levels
-    nWinTfoMax              int32;   // the fanout levels
-    nLevDivMax              int32;   // the maximum divisor level
-    // internal windowing parameters
-    nFanoutLimit              int32; // the limit on the fanout count of a TFO node (if more, the node is treated as a root)
-    nLevTfiMinus              int32; // the number of additional levels to search from TFO below the level of leaves
-    // derived windowing parameters
-    nLevLeafMin              int32;  // the minimum level of a leaf
-    nLevTravMin              int32;  // the minimum level to search from TFO
-    nDivsPlus              int32;    // the number of additional divisors
-    // the window data
-    vRoots       *Vec_Ptr_t;       // outputs of the window
-    vLeaves       *Vec_Ptr_t;      // inputs of the window
-    vBranches       *Vec_Ptr_t;    // side nodes of the window
-    vNodes       *Vec_Ptr_t;       // internal nodes of the window
-    vDivs       *Vec_Ptr_t;        // candidate divisors of the node
-    // temporary data
-    vMatrix       *Vec_Vec_t;      // TFI nodes below the given node
+	// windowing parameters
+	pNode      *Abc_Obj_t // the node in the center
+	nWinTfiMax int32      // the fanin levels
+	nWinTfoMax int32      // the fanout levels
+	nLevDivMax int32      // the maximum divisor level
+	// internal windowing parameters
+	nFanoutLimit int32 // the limit on the fanout count of a TFO node (if more, the node is treated as a root)
+	nLevTfiMinus int32 // the number of additional levels to search from TFO below the level of leaves
+	// derived windowing parameters
+	nLevLeafMin int32 // the minimum level of a leaf
+	nLevTravMin int32 // the minimum level to search from TFO
+	nDivsPlus   int32 // the number of additional divisors
+	// the window data
+	vRoots    *Vec_Ptr_t // outputs of the window
+	vLeaves   *Vec_Ptr_t // inputs of the window
+	vBranches *Vec_Ptr_t // side nodes of the window
+	vNodes    *Vec_Ptr_t // internal nodes of the window
+	vDivs     *Vec_Ptr_t // candidate divisors of the node
+	// temporary data
+	vMatrix *Vec_Vec_t // TFI nodes below the given node
 }
 
-   
 type Res_Sim_t struct {
-    pAig       *Abc_Ntk_t;         // AIG for simulation
-    nTruePis              int32;     // the number of true PIs of the window
-    fConst0              int32;      // the node can be replaced by constant 0
-    fConst1              int32;      // the node can be replaced by constant 0
-    // simulation parameters
-    nWords              int32;       // the number of simulation words
-    nPats              int32;        // the number of patterns
-    nWordsIn              int32;     // the number of simulation words in the input patterns
-    nPatsIn              int32;      // the number of patterns in the input patterns 
-    nBytesIn              int32;     // the number of bytes in the input patterns
-    nWordsOut              int32;    // the number of simulation words in the output patterns
-    nPatsOut              int32;     // the number of patterns in the output patterns 
-    // simulation info
-    vPats       *Vec_Ptr_t;        // input simulation patterns
-    vPats0       *Vec_Ptr_t;       // input simulation patterns
-    vPats1       *Vec_Ptr_t;       // input simulation patterns
-    vOuts       *Vec_Ptr_t;        // output simulation info
-    nPats0              int32;       // the number of 0-patterns accumulated
-    nPats1              int32;       // the number of 1-patterns accumulated
-    // resub candidates
-    vCands       *Vec_Vec_t;       // resubstitution candidates
-    // statistics
-    timeSat          abctime;
+	pAig     *Abc_Ntk_t // AIG for simulation
+	nTruePis int32      // the number of true PIs of the window
+	fConst0  int32      // the node can be replaced by constant 0
+	fConst1  int32      // the node can be replaced by constant 0
+	// simulation parameters
+	nWords    int32 // the number of simulation words
+	nPats     int32 // the number of patterns
+	nWordsIn  int32 // the number of simulation words in the input patterns
+	nPatsIn   int32 // the number of patterns in the input patterns
+	nBytesIn  int32 // the number of bytes in the input patterns
+	nWordsOut int32 // the number of simulation words in the output patterns
+	nPatsOut  int32 // the number of patterns in the output patterns
+	// simulation info
+	vPats  *Vec_Ptr_t // input simulation patterns
+	vPats0 *Vec_Ptr_t // input simulation patterns
+	vPats1 *Vec_Ptr_t // input simulation patterns
+	vOuts  *Vec_Ptr_t // output simulation info
+	nPats0 int32      // the number of 0-patterns accumulated
+	nPats1 int32      // the number of 1-patterns accumulated
+	// resub candidates
+	vCands *Vec_Vec_t // resubstitution candidates
+	// statistics
+	timeSat abctime
+	rng *rand.Rand
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -141,17 +135,8 @@ type Res_Sim_t struct {
 
 // extern int           Res_WinCompute( Abc_Obj_t * pNode, int nWinTfiMax, int nWinTfoMax, Res_Win_t * p );
 
-
-
-
-
 //ABC_NAMESPACE_HEADER_END
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-

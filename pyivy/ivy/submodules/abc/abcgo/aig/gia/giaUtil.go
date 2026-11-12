@@ -34,8 +34,8 @@ import "os"
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
  
-const NUMBER1 uint32 =  3716960521
-const NUMBER2 uint32 =  2174103536
+
+
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
@@ -52,20 +52,8 @@ const NUMBER2 uint32 =  2174103536
   SeeAlso     [http://www.codeproject.com/KB/recipes/SimpleRNG.aspx]
 
 ***********************************************************************/
-func Gia_ManRandom(fReset int32) uint32 {
-    static unsigned int m_z = NUMBER1;
-    static unsigned int m_w = NUMBER2;
-    if fReset != 0 {
-        m_z = NUMBER1;
-        m_w = NUMBER2;
-    }
-    m_z = 36969 * (m_z & 65535) + (m_z >> 16);
-    m_w = 18000 * (m_w & 65535) + (m_w >> 16);
-    return (m_z << 16) + m_w;
-}
-func Gia_ManRandomW(fReset int32) word { 
-    return ((word)Gia_ManRandom(fReset) << 32) | ((word)Gia_ManRandom(fReset) << 0);
-}
+
+
 
 
 
@@ -80,13 +68,7 @@ func Gia_ManRandomW(fReset int32) word {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManRandomInfo(vInfo *Vec_Ptr_t, iInputStart int32, iWordStart int32, iWordStop int32) {
-    var pInfo *uint32;
-    var i, w int32;
-    Vec_PtrForEachEntryStart( unsigned *, vInfo, pInfo, i, iInputStart )
-        for ( w = iWordStart; w < iWordStop; w++ )
-            pInfo[w] = Gia_ManRandom(0);
-}
+
 
 
 /**Function*************************************************************
@@ -161,12 +143,7 @@ func Gia_FileNameGenericAppend(pBase string, pSuffix string) string {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCleanMark01(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-        pObj.fMark0 = pObj.fMark1 = 0;
-}
+
 
 /**Function*************************************************************
 
@@ -197,12 +174,7 @@ func Gia_ManSetMark0(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCleanMark0(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-        pObj.fMark0 = 0;
-}
+
 
 /**Function*************************************************************
 
@@ -251,12 +223,7 @@ func Gia_ManSetMark1(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCleanMark1(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-        pObj.fMark1 = 0;
-}
+
 
 /**Function*************************************************************
 
@@ -287,12 +254,7 @@ func Gia_ManCheckMark1(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCleanValue(p *Gia_Man_t) {
-    var i int32;
-    for  i = 0; i < p.nObjs; i++  {
-        p.pObjs[i].Value = 0;
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -305,12 +267,7 @@ func Gia_ManCleanValue(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManFillValue(p *Gia_Man_t) {
-    var i int32;
-    for  i = 0; i < p.nObjs; i++  {
-        p.pObjs[i].Value = ~0;
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -323,24 +280,7 @@ func Gia_ManFillValue(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ObjSetPhase(p *Gia_Man_t, pObj *Gia_Obj_t) {
-    if Gia_ObjIsAnd(pObj) {
-        var fPhase0 int32  = Gia_ObjPhase(Gia_ObjFanin0(pObj)) ^ Gia_ObjFaninC0(pObj);
-        var fPhase1 int32  = Gia_ObjPhase(Gia_ObjFanin1(pObj)) ^ Gia_ObjFaninC1(pObj);
-        if Gia_ObjIsMux(p, pObj) {
-            var fPhase2 int32  = Gia_ObjPhase(Gia_ObjFanin2(p, pObj)) ^ Gia_ObjFaninC2(p, pObj);
-            pObj.fPhase = (fPhase2 && fPhase1) || (!fPhase2 && fPhase0);
-        
-        } else if Gia_ObjIsXor(pObj) {
-            pObj.fPhase = fPhase0 ^ fPhase1;
-        } else {
-            pObj.fPhase = fPhase0 & fPhase1; }
-    
-    } else if Gia_ObjIsCo(pObj) {
-        pObj.fPhase = (Gia_ObjPhase(Gia_ObjFanin0(pObj)) ^ Gia_ObjFaninC0(pObj));
-    } else {
-        pObj.fPhase = 0; }
-}
+
 
 /**Function*************************************************************
 
@@ -353,22 +293,8 @@ func Gia_ObjSetPhase(p *Gia_Man_t, pObj *Gia_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSetPhase(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-        Gia_ObjSetPhase( p, pObj );
-}
-func Gia_ManSetPhasePattern(p *Gia_Man_t, vCiValues *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    assert(Gia_ManCiNum(p) == Vec_IntSize(vCiValues), "Gia_ManCiNum(p) == Vec_IntSize(vCiValues)");
-    Gia_ManForEachObj( p, pObj, i )
-        if ( Gia_ObjIsCi(pObj) )
-            pObj.fPhase = Vec_IntEntry( vCiValues, Gia_ObjCioId(pObj) );
-        else
-            Gia_ObjSetPhase( p, pObj );
-}
+
+
 
 /**Function*************************************************************
 
@@ -381,15 +307,7 @@ func Gia_ManSetPhasePattern(p *Gia_Man_t, vCiValues *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSetPhase1(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachCi( p, pObj, i )
-        pObj.fPhase = 1;
-    Gia_ManForEachObj( p, pObj, i )
-        if ( !Gia_ObjIsCi(pObj) )
-            Gia_ObjSetPhase( p, pObj );
-}
+
 
 /**Function*************************************************************
 
@@ -402,12 +320,7 @@ func Gia_ManSetPhase1(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCleanPhase(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObj( p, pObj, i )
-        pObj.fPhase = 0;
-}
+
 
 /**Function*************************************************************
 
@@ -439,11 +352,7 @@ func Gia_ManCheckCoPhase(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCleanLevels(p *Gia_Man_t, Size int32) {
-    if p.vLevels == nil {
-        p.vLevels = Vec_IntAlloc( Size ); }
-    Vec_IntFill( p.vLevels, Size, 0 );
-}
+
 /**Function*************************************************************
 
   Synopsis    [Prepares copies for the model.]
@@ -472,53 +381,9 @@ func Gia_ManCleanTruth(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManLevelNum(p *Gia_Man_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManCleanLevels( p, Gia_ManObjNum(p) );
-    p.nLevels = 0;
-    Gia_ManForEachObj( p, pObj, i )
-    {
-        if !p.fGiaSimple && Gia_ObjIsBuf(pObj) {
-            Gia_ObjSetBufLevel( p, pObj );
-        } else if Gia_ObjIsAnd(pObj) {
-            Gia_ObjSetGateLevel( p, pObj );
-        } else if Gia_ObjIsCo(pObj) {
-            Gia_ObjSetCoLevel( p, pObj );
-        } else {
-            Gia_ObjSetLevel( p, pObj, 0 ); }
-        p.nLevels = Abc_MaxInt( p.nLevels, Gia_ObjLevel(p, pObj) );
-    }
-    return p.nLevels;
-}
-func Gia_ManLevelRNum(p *Gia_Man_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManCleanLevels( p, Gia_ManObjNum(p) );
-    p.nLevels = 0;
-    Gia_ManForEachObjReverse( p, pObj, i )
-    {
-        if !p.fGiaSimple && Gia_ObjIsBuf(pObj) {
-            Gia_ObjUpdateLevelId( p, Gia_ObjFaninId0(pObj, i), Gia_ObjLevel(p, pObj) );
-        } else if Gia_ObjIsAnd(pObj) {
-            Gia_ObjUpdateLevelId( p, Gia_ObjFaninId0(pObj, i), 1+Gia_ObjLevel(p, pObj) );
-            Gia_ObjUpdateLevelId( p, Gia_ObjFaninId1(pObj, i), 1+Gia_ObjLevel(p, pObj) );
-        
-        } else if Gia_ObjIsCo(pObj) {
-            Gia_ObjUpdateLevelId( p, Gia_ObjFaninId0(pObj, i), 1 );
-        } else {
-            p.nLevels = Abc_MaxInt( p.nLevels, Gia_ObjLevel(p, pObj) ); }
-    }
-    return p.nLevels;
-}
-func Gia_ManLevelAve(p *Gia_Man_t) float32 {
-    var pObj *Gia_Obj_t;
-    var i, Ave int32;
-    assert(p.vLevels, "p.vLevels");
-    Gia_ManForEachCo( p, pObj, i )
-        Ave += Gia_ObjLevel(p, pObj);
-    return float32(Ave) / Gia_ManCoNum(p);
-}
+
+
+
 
 /**Function*************************************************************
 
@@ -531,41 +396,8 @@ func Gia_ManLevelAve(p *Gia_Man_t) float32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManGetCiLevels(p *Gia_Man_t) *Vec_Int_t {
-    var vCiLevels *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    if p.vLevels == nil {
-        return nil; }
-    vCiLevels = Vec_IntAlloc( Gia_ManCiNum(p) );
-    Gia_ManForEachCi( p, pObj, i )
-        Vec_IntPush( vCiLevels, Gia_ObjLevel(p, pObj) );
-    return vCiLevels;
-}
-func Gia_ManSetLevels(p *Gia_Man_t, vCiLevels *Vec_Int_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    if vCiLevels == nil {
-        return Gia_ManLevelNum( p ); }
-    assert(Vec_IntSize(vCiLevels) == Gia_ManCiNum(p), "Vec_IntSize(vCiLevels) == Gia_ManCiNum(p)");
-    Gia_ManCleanLevels( p, Gia_ManObjNum(p) );
-    p.nLevels = 0;
-    Gia_ManForEachCi( p, pObj, i )
-    {
-        Gia_ObjSetLevel( p, pObj, Vec_IntEntry(vCiLevels, i) );
-        p.nLevels = Abc_MaxInt( p.nLevels, Gia_ObjLevel(p, pObj) );
-    }
-    Gia_ManForEachObj( p, pObj, i )
-    {
-        if Gia_ObjIsAnd(pObj) {
-            Gia_ObjSetGateLevel( p, pObj );
-        } else if Gia_ObjIsCo(pObj) {
-            Gia_ObjSetCoLevel( p, pObj );
-        } else { continue; }
-        p.nLevels = Abc_MaxInt( p.nLevels, Gia_ObjLevel(p, pObj) );
-    }
-    return p.nLevels;
-}
+
+
 
 /**Function*************************************************************
 
@@ -578,33 +410,7 @@ func Gia_ManSetLevels(p *Gia_Man_t, vCiLevels *Vec_Int_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManReverseLevel(p *Gia_Man_t) *Vec_Int_t {
-    var vLevelRev *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    vLevelRev = Vec_IntStart( Gia_ManObjNum(p) );
-    Gia_ManForEachAndReverse( p, pObj, i )
-    {
-        var LevelR int32  = Vec_IntEntry( vLevelRev, i );
-        if Gia_ObjIsMux(p, pObj) {
-            Vec_IntUpdateEntry( vLevelRev, Gia_ObjFaninId0(pObj, i), LevelR + 2 );
-            Vec_IntUpdateEntry( vLevelRev, Gia_ObjFaninId1(pObj, i), LevelR + 2 );
-            Vec_IntUpdateEntry( vLevelRev, Gia_ObjFaninId2(p, i), LevelR + 2 );
-        
-        } else if Gia_ObjIsXor(pObj) {
-            Vec_IntUpdateEntry( vLevelRev, Gia_ObjFaninId0(pObj, i), LevelR + 2 );
-            Vec_IntUpdateEntry( vLevelRev, Gia_ObjFaninId1(pObj, i), LevelR + 2 );
-        
-        } else if Gia_ObjIsBuf(pObj) {
-            Vec_IntUpdateEntry( vLevelRev, Gia_ObjFaninId0(pObj, i), LevelR );
-        
-        } else {
-            Vec_IntUpdateEntry( vLevelRev, Gia_ObjFaninId0(pObj, i), LevelR + 1 );
-            Vec_IntUpdateEntry( vLevelRev, Gia_ObjFaninId1(pObj, i), LevelR + 1 );
-        }
-    }
-    return vLevelRev;
-}
+
 
 /**Function*************************************************************
 
@@ -617,17 +423,7 @@ func Gia_ManReverseLevel(p *Gia_Man_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManRequiredLevel(p *Gia_Man_t) *Vec_Int_t {
-    var vRequired *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i, LevelMax int32;
-    vRequired = Gia_ManReverseLevel( p );
-    Gia_ManForEachCi( p, pObj, i )
-        LevelMax = Abc_MaxInt( LevelMax, Vec_IntEntry(vRequired, Gia_ObjId(p, pObj)) );
-    Gia_ManForEachObj( p, pObj, i )
-        Vec_IntWriteEntry( vRequired, i, LevelMax - Vec_IntEntry(vRequired, i) );
-    return vRequired;
-}
+
 
 /**Function*************************************************************
 
@@ -640,18 +436,7 @@ func Gia_ManRequiredLevel(p *Gia_Man_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManComputeSlacks(p *Gia_Man_t) *Vec_Int_t {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    var nLevels int32 = Gia_ManLevelNum( p );
-    var vLevelR *Vec_Int_t  = Gia_ManReverseLevel( p );
-    var vSlacks *Vec_Int_t  = Vec_IntAlloc( Gia_ManObjNum(p) );
-    Gia_ManForEachObj( p, pObj, i )
-        Vec_IntPush( vSlacks, nLevels - Gia_ObjLevelId(p, i) - Vec_IntEntry(vLevelR, i) );
-    assert(Vec_IntSize(vSlacks) == Gia_ManObjNum(p), "Vec_IntSize(vSlacks) == Gia_ManObjNum(p)");
-    Vec_IntFree( vLevelR );
-    return vSlacks;
-}
+
 
 /**Function*************************************************************
 

@@ -1,110 +1,30 @@
 package dau
 
-/**CFile****************************************************************
+import "github.com/glycerine/abcgo/aig/aig"
 
-  FileName    [dauCore.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [DAG-aware unmapping.]
-
-  Synopsis    [Disjoint-support decomposition.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: dauCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "dauInt.h"
-//#include "aig/aig/aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// parameter structure 
-   
-type Xyz_ParTry_t struct {
-    Par                int32;
-}
- 
-// operation manager
-   
+// dauCore.c is ABC's unchanged Xyz example-manager template. It contains no
+// unmapping algorithm; the only defined behavior is allocating and releasing
+// this pair of borrowed references.
+type Xyz_ParTry_t struct{ Par int32 }
 type Xyz_ManTry_t struct {
-    pPar      *Xyz_ParTry_t;           // parameters
-    pAig         *Aig_Man_t;           // user's AIG 
+	pPar *Xyz_ParTry_t
+	pAig *aig.Graph
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
- 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Xyz_ManTryAlloc(pAig *Aig_Man_t, pPar *Xyz_ParTry_t) *Xyz_ManTry_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Xyz_ManTry_t{};
-    p.pAig    = pAig;
-    p.pPar    = pPar;
-    return p;
+func Xyz_ManTryAlloc(graph *aig.Graph, params *Xyz_ParTry_t) *Xyz_ManTry_t {
+	return &Xyz_ManTry_t{pPar: params, pAig: graph}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Xyz_ManTryFree(p *Xyz_ManTry_t) {
-    p = nil;
+	if p != nil {
+		p.pPar = nil
+		p.pAig = nil
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Xyz_ManPerform(pAig *Aig_Man_t, pPar *Xyz_ParTry_t) int32 {
-    var p *Xyz_ManTry_t;
-    var RetValue int32;
-    p = Xyz_ManTryAlloc( pAig, pPar );
-    RetValue = 1;
-    Xyz_ManTryFree( p );
-    return RetValue;
+// Xyz_ManPerform reports successful manager creation and leaves the graph
+// untouched, exactly as the original template does.
+func Xyz_ManPerform(graph *aig.Graph, params *Xyz_ParTry_t) int32 {
+	p := Xyz_ManTryAlloc(graph, params)
+	Xyz_ManTryFree(p)
+	return 1
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

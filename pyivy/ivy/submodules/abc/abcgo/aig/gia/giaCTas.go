@@ -1,9 +1,12 @@
 package gia
 
+
 import (
 	"fmt"
 	"time"
 )
+
+type Tas_Man_t = Tas_Man_t_
 
 /**CFile****************************************************************
 

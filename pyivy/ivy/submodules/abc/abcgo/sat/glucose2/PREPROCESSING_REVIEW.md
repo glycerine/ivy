@@ -23,7 +23,7 @@ checking: a new resolvent is implied by its parents, which are about to be
 removed. Skipping the resolvent therefore destroys equivalence. The native source
 reproduces the bug with (x OR a OR b) AND (!x OR a OR c), frozen a/b/c and assumptions
 !a,!b,!c: native reports SAT, although exhaustive truth evaluation says UNSAT.
-The checked-in testdata/native_rcheck_bug.cpp reproduces it. Derived replacement
+The checked-in test_vectors/native_rcheck_bug.cpp reproduces it. Derived replacement
 clauses now bypass this check; ordinary input clauses still use it. A minimal
 regression exercises exactly this four-variable case.
 
@@ -36,6 +36,6 @@ comparison, assumptions and returned-model checking; asymmetric branching and
 redundancy checks are enabled on mixed trials. A separate unchanged native
 SimpSolver2.cpp/Glucose2.cpp oracle performs 1,500 reproducible default-mode
 preprocessing queries with status FNV64 hash818442487605194937, matched in Go.
-The harness is testdata/native_simp_oracle.cpp; compile as CORE_REVIEW.md plus
+The harness is test_vectors/native_simp_oracle.cpp; compile as CORE_REVIEW.md plus
 SimpSolver2.cpp. All converted core/circuit/preprocessing explicit-file race tests
 pass. Utilities and ABC integration drafts remain visible and pending.

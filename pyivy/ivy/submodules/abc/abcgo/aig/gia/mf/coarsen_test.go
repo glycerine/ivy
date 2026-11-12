@@ -293,3 +293,23 @@ func TestCoarsenHashRealExhaustive(t *testing.T) {
 		}
 	}
 }
+func TestCoarsenDegenerateSimpleAndPreservesFunction(t *testing.T) {
+	for _, b := range []int32{2, 3} {
+		n := &testNetwork{gates: []testGate{{kind: 0}, {kind: 1}, {a: 2, b: b, kind: 2}}, inputs: []int32{2}, outputs: []int32{4}}
+		out, err := Coarsen(n, 3)
+		if err != nil {
+			t.Fatal(err)
+		}
+		coarseTestEquivalent(t, n, out)
+		if b == 2 {
+			_, _, _, kind := out.Gate(2)
+			if kind != 5 {
+				t.Fatal("equal literals did not retain source buffer")
+			}
+		} else {
+			if out.OutputLiterals()[0] != 0 {
+				t.Fatal("complementary literals did not become false")
+			}
+		}
+	}
+}

@@ -11,7 +11,7 @@ package bmc
   Synopsis    [External declarations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -19,10 +19,6 @@ package bmc
   Revision    [$Id: bmc.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
- 
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
@@ -43,152 +39,143 @@ package bmc
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
-
 // exact synthesis parameters
 
-   
 type Bmc_EsPar_t struct {
-    nVars        int32; 
-    nNodes        int32;
-    nLutSize        int32;
-    nMajSupp        int32;
-    fMajority        int32;
-    fUseIncr        int32;
-    fOnlyAnd        int32;
-    fGlucose        int32;
-    fOrderNodes        int32;
-    fEnumSols        int32;
-    fFewerVars        int32;
-    RuntimeLim        int32;
-    fVerbose        int32; 
-    pTtStr      string;
+	nVars       int32
+	nNodes      int32
+	nLutSize    int32
+	nMajSupp    int32
+	fMajority   int32
+	fUseIncr    int32
+	fOnlyAnd    int32
+	fGlucose    int32
+	fOrderNodes int32
+	fEnumSols   int32
+	fFewerVars  int32
+	RuntimeLim  int32
+	fVerbose    int32
+	pTtStr      string
 }
 
 func Bmc_EsParSetDefault(pPars *Bmc_EsPar_t) {
-    *pPars = Bmc_EsPar_t{};
-    pPars.nVars       = 0; 
-    pPars.nNodes      = 0; 
-    pPars.nLutSize    = 2; 
-    pPars.nMajSupp    = 0;
-    pPars.fMajority   = 0; 
-    pPars.fUseIncr    = 0;
-    pPars.fOnlyAnd    = 0; 
-    pPars.fGlucose    = 0; 
-    pPars.fOrderNodes = 0; 
-    pPars.fEnumSols   = 0; 
-    pPars.fFewerVars  = 0; 
-    pPars.RuntimeLim  = 0;
-    pPars.fVerbose    = 1; 
+	*pPars = Bmc_EsPar_t{}
+	pPars.nVars = 0
+	pPars.nNodes = 0
+	pPars.nLutSize = 2
+	pPars.nMajSupp = 0
+	pPars.fMajority = 0
+	pPars.fUseIncr = 0
+	pPars.fOnlyAnd = 0
+	pPars.fGlucose = 0
+	pPars.fOrderNodes = 0
+	pPars.fEnumSols = 0
+	pPars.fFewerVars = 0
+	pPars.RuntimeLim = 0
+	pPars.fVerbose = 1
 }
 
+// unrolling manager
+type Unr_Man_t = Unr_Man_t_
 
-// unrolling manager 
-type Unr_Man_t = Unr_Man_t_;
-
-   
 type Saig_ParBmc_t struct {
-    nStart         int32;         // starting timeframe
-    nFramesMax         int32;     // maximum number of timeframes 
-    nConfLimit         int32;     // maximum number of conflicts at a node
-    nConfLimitJump         int32; // maximum number of conflicts after jumping
-    nFramesJump         int32;    // the number of tiemframes to jump
-    nTimeOut         int32;       // approximate timeout in seconds
-    nTimeOutGap         int32;    // approximate timeout in seconds since the last change
-    nTimeOutOne         int32;    // timeout per output in multi-output solving
-    nPisAbstract         int32;   // the number of PIs to abstract
-    fSolveAll         int32;      // does not stop at the first SAT output
-    fStoreCex         int32;      // enable storing CEXes in the MO mode
-    fUseBridge         int32;     // use bridge interface
-    fDropSatOuts         int32;   // replace sat outputs by constant 0
-    nFfToAddMax         int32;    // max number of flops to add during CBA
-    fSkipRand         int32;      // skip random decisions
-    fNoRestarts         int32;    // disables periodic restarts
-    fUseSatoko         int32;     // enables using Satoko
-    fUseGlucose         int32;    // enables using Glucose 3.0
-    nLearnedStart         int32;  // starting learned clause limit
-    nLearnedDelta         int32;  // delta of learned clause limit
-    nLearnedPerce         int32;  // ratio of learned clause limit
-    fVerbose         int32;       // verbose 
-    fNotVerbose         int32;    // skip line-by-line print-out 
-    pLogFileName       string;   // log file name
-    fSilent         int32;        // completely silent
-    iFrame         int32;         // explored up to this frame
-    nFailOuts         int32;      // the number of failed outputs
-    nDropOuts         int32;      // the number of dropped outputs
-    timeLastSolved     abctime; // the time when the last output was solved
-    int(*pFuncOnFail)(int,Abc_Cex_t*); // called for a failed output in MO mode
-    RunId         int32;          // BMC id in this run 
-    int(*pFuncStop)(int);       // callback to terminate
+	nStart         int32                         // starting timeframe
+	nFramesMax     int32                         // maximum number of timeframes
+	nConfLimit     int32                         // maximum number of conflicts at a node
+	nConfLimitJump int32                         // maximum number of conflicts after jumping
+	nFramesJump    int32                         // the number of tiemframes to jump
+	nTimeOut       int32                         // approximate timeout in seconds
+	nTimeOutGap    int32                         // approximate timeout in seconds since the last change
+	nTimeOutOne    int32                         // timeout per output in multi-output solving
+	nPisAbstract   int32                         // the number of PIs to abstract
+	fSolveAll      int32                         // does not stop at the first SAT output
+	fStoreCex      int32                         // enable storing CEXes in the MO mode
+	fUseBridge     int32                         // use bridge interface
+	fDropSatOuts   int32                         // replace sat outputs by constant 0
+	nFfToAddMax    int32                         // max number of flops to add during CBA
+	fSkipRand      int32                         // skip random decisions
+	fNoRestarts    int32                         // disables periodic restarts
+	fUseSatoko     int32                         // enables using Satoko
+	fUseGlucose    int32                         // enables using Glucose 3.0
+	nLearnedStart  int32                         // starting learned clause limit
+	nLearnedDelta  int32                         // delta of learned clause limit
+	nLearnedPerce  int32                         // ratio of learned clause limit
+	fVerbose       int32                         // verbose
+	fNotVerbose    int32                         // skip line-by-line print-out
+	pLogFileName   string                        // log file name
+	fSilent        int32                         // completely silent
+	iFrame         int32                         // explored up to this frame
+	nFailOuts      int32                         // the number of failed outputs
+	nDropOuts      int32                         // the number of dropped outputs
+	timeLastSolved abctime                       // the time when the last output was solved
+	pFuncOnFail    func(int32, *Abc_Cex_t) int32 // called for a failed output in MO mode
+	RunId          int32                         // BMC id in this run
+	pFuncStop      func(int32) int32             // callback to terminate
 }
 
- 
-   
 type Bmc_AndPar_t struct {
-    nStart         int32;         // starting timeframe
-    nFramesMax         int32;     // maximum number of timeframes 
-    nFramesAdd         int32;     // the number of additional frames
-    nConfLimit         int32;     // maximum number of conflicts at a node
-    nTimeOut         int32;       // timeout in seconds
-    nLutSize         int32;       // LUT size for cut computation
-    nProcs         int32;         // the number of parallel solvers
-    fLoadCnf         int32;       // dynamic CNF loading
-    fDumpFrames         int32;    // dump unrolled timeframes
-    fUseSynth         int32;      // use synthesis
-    fUseOldCnf         int32;     // use old CNF construction
-    fUseGlucose         int32;    // use Glucose 3.0 as the default solver
-    fUseEliminate         int32;  // use variable elimination
-    fVerbose         int32;       // verbose 
-    fVeryVerbose         int32;   // very verbose 
-    fNotVerbose         int32;    // skip line-by-line print-out 
-    iFrame         int32;         // explored up to this frame
-    nFailOuts         int32;      // the number of failed outputs
-    nDropOuts         int32;      // the number of dropped outputs
-    
-    void (*pFuncOnFrameDone)(int, int, int); // callback on each frame status (frame, po, statuss)
+	nStart        int32 // starting timeframe
+	nFramesMax    int32 // maximum number of timeframes
+	nFramesAdd    int32 // the number of additional frames
+	nConfLimit    int32 // maximum number of conflicts at a node
+	nTimeOut      int32 // timeout in seconds
+	nLutSize      int32 // LUT size for cut computation
+	nProcs        int32 // the number of parallel solvers
+	fLoadCnf      int32 // dynamic CNF loading
+	fDumpFrames   int32 // dump unrolled timeframes
+	fUseSynth     int32 // use synthesis
+	fUseOldCnf    int32 // use old CNF construction
+	fUseGlucose   int32 // use Glucose 3.0 as the default solver
+	fUseEliminate int32 // use variable elimination
+	fVerbose      int32 // verbose
+	fVeryVerbose  int32 // very verbose
+	fNotVerbose   int32 // skip line-by-line print-out
+	iFrame        int32 // explored up to this frame
+	nFailOuts     int32 // the number of failed outputs
+	nDropOuts     int32 // the number of dropped outputs
+
+	pFuncOnFrameDone func(int32, int32, int32) // callback on each frame status (frame, po, status)
 }
-  
-   
+
 type Bmc_BCorePar_t struct {
-    iFrame         int32;         // timeframe
-    iOutput         int32;        // property output
-    nTimeOut         int32;       // timeout in seconds
-    pFilePivots       string;    // file name with AIG IDs of pivot objects
-    pFileProof       string;     // file name to write the resulting proof
-    fVerbose         int32;       // verbose output
+	iFrame      int32  // timeframe
+	iOutput     int32  // property output
+	nTimeOut    int32  // timeout in seconds
+	pFilePivots string // file name with AIG IDs of pivot objects
+	pFileProof  string // file name to write the resulting proof
+	fVerbose    int32  // verbose output
 }
 
-   
 type Bmc_MulPar_t struct {
-    TimeOutGlo         int32;
-    TimeOutLoc         int32;
-    TimeOutInc         int32;
-    TimeOutGap         int32;
-    TimePerOut         int32;
-    fUseSyn         int32;
-    fDumpFinal         int32;
-    fVerbose         int32;
-    fVeryVerbose         int32;
+	TimeOutGlo   int32
+	TimeOutLoc   int32
+	TimeOutInc   int32
+	TimeOutGap   int32
+	TimePerOut   int32
+	fUseSyn      int32
+	fDumpFinal   int32
+	fVerbose     int32
+	fVeryVerbose int32
 }
 
-   
 type Bmc_ParFf_t struct {
-    pFileName      string;
-    pFormStr      string;
-    Algo        int32;
-    fComplVars        int32;
-    fStartPats        int32;
-    nTimeOut        int32;
-    nIterCheck        int32;
-    nCardConstr        int32;
-    fNonStrict        int32;
-    fBasic        int32;
-    fFfOnly        int32;
-    fCheckUntest        int32;
-    fDump        int32;
-    fDumpDelay        int32;
-    fDumpUntest        int32;
-    fDumpNewFaults        int32;
-    fVerbose        int32;
+	pFileName      string
+	pFormStr       string
+	Algo           int32
+	fComplVars     int32
+	fStartPats     int32
+	nTimeOut       int32
+	nIterCheck     int32
+	nCardConstr    int32
+	fNonStrict     int32
+	fBasic         int32
+	fFfOnly        int32
+	fCheckUntest   int32
+	fDump          int32
+	fDumpDelay     int32
+	fDumpUntest    int32
+	fDumpNewFaults int32
+	fVerbose       int32
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -254,15 +241,8 @@ type Bmc_ParFf_t struct {
 
 // extern void              Unr_ManFree( Unr_Man_t * p );
 
-
-
 //ABC_NAMESPACE_HEADER_END
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-

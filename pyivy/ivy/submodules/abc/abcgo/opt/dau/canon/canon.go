@@ -124,6 +124,22 @@ func refine(table, work, best []uint64, v int, swapOnly bool) int {
 // This is the original bounded semi-canonicalization/refinement algorithm,
 // including selection-sort ties and the maximum of five bidirectional passes.
 func Canonicalize(truth []uint64, nVars int32, perm []byte) uint32 {
+	return canonicalize(truth, nVars, perm, false, nil)
+}
+
+// CanonicalizePermutation preserves input/output phases and refines only
+// variable order, matching Abc_TtCanonicizePerm.
+func CanonicalizePermutation(truth []uint64, nVars int32, perm []byte) uint32 {
+	return canonicalize(truth, nVars, perm, true, nil)
+}
+
+// CanonicalizeWithCheckpoints exposes the original hierarchical-cache stages:
+// output polarity, input phases, variable order, and adjacent refinement.
+// A true callback result stops after that stage; counts is borrowed read-only.
+func CanonicalizeWithCheckpoints(truth []uint64, nVars int32, perm []byte, checkpoint func(int, []int) bool) uint32 {
+	return canonicalize(truth, nVars, perm, false, checkpoint)
+}
+func canonicalize(truth []uint64, nVars int32, perm []byte, onlyPermutation bool, checkpoint func(int, []int) bool) uint32 {
 	if nVars < 0 || nVars > 16 || len(perm) < int(nVars) {
 		panic("canon: invalid truth dimensions")
 	}
@@ -145,7 +161,7 @@ func Canonicalize(truth []uint64, nVars int32, perm []byte) uint32 {
 		ones += bits.OnesCount64(x)
 	}
 	var phase uint32
-	if ones > words*32 {
+	if ones > words*32 && !onlyPermutation {
 		for i := range table {
 			table[i] = ^table[i]
 		}
@@ -153,13 +169,19 @@ func Canonicalize(truth []uint64, nVars int32, perm []byte) uint32 {
 		phase |= 1 << uint(n)
 	}
 	counts[n] = ones
+	if checkpoint != nil && checkpoint(0, counts) {
+		return phase
+	}
 	for v := 0; v < n; v++ {
 		counts[v] = negativeCount(table, v)
-		if counts[v] < ones-counts[v] {
+		if counts[v] < ones-counts[v] && !onlyPermutation {
 			flip(table, v)
 			phase |= 1 << uint(v)
 			counts[v] = ones - counts[v]
 		}
+	}
+	if checkpoint != nil && checkpoint(1, counts) {
+		return phase
 	}
 	for i := 0; i < n-1; i++ {
 		best := i + 1
@@ -176,12 +198,15 @@ func Canonicalize(truth []uint64, nVars int32, perm []byte) uint32 {
 		phase = swapPhase(phase, i, best)
 		swap(table, i, best)
 	}
+	if checkpoint != nil && checkpoint(2, counts) {
+		return phase
+	}
 	work, best := make([]uint64, words), make([]uint64, words)
 	apply := func(v int) bool {
 		if counts[v] != counts[v+1] {
 			return false
 		}
-		config := refine(table, work, best, v, counts[v] != counts[n]/2)
+		config := refine(table, work, best, v, onlyPermutation || counts[v] != counts[n]/2)
 		if config == 0 {
 			return false
 		}
@@ -213,5 +238,53 @@ func Canonicalize(truth []uint64, nVars int32, perm []byte) uint32 {
 			break
 		}
 	}
+	if checkpoint != nil {
+		checkpoint(3, counts)
+	}
 	return phase
+}
+
+// CanonicalizePhase keeps variable order and greedily minimizes each input
+// phase from the highest variable down, after normalizing output polarity.
+func CanonicalizePhase(truth []uint64, nVars int32) uint32 {
+	if nVars < 0 || nVars > 30 {
+		panic("canon: invalid phase variable count")
+	}
+	words := 1
+	if nVars > 6 {
+		words = 1 << uint(nVars-6)
+	}
+	table := truth[:words]
+	var phase uint32
+	if table[words-1]>>63 != 0 {
+		for i := range table {
+			table[i] = ^table[i]
+		}
+		phase = 1 << uint(nVars)
+	}
+	work := make([]uint64, words)
+	for v := int(nVars) - 1; v >= 0; v-- {
+		copy(work, table)
+		flip(work, v)
+		if less(work, table) {
+			copy(table, work)
+			phase ^= 1 << uint(v)
+		}
+	}
+	return phase
+}
+
+// FlipVariable and SwapVariables are the shared word-parallel transforms used
+// by DAU's adaptive canonicalizer. The slice contains the complete truth table.
+func FlipVariable(truth []uint64, variable int) { flip(truth, variable) }
+func SwapVariables(truth []uint64, a, b int)    { swap(truth, a, b) }
+func SwapAdjacent(truth []uint64, variable int) { adjacent(truth, variable) }
+func CompareReverse(a, b []uint64) int {
+	if less(a, b) {
+		return -1
+	}
+	if less(b, a) {
+		return 1
+	}
+	return 0
 }

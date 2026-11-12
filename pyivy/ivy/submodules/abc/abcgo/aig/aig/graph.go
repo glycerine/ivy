@@ -1,6 +1,9 @@
 package aig
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
+)
 
 // Edge identifies a node and its complemented phase. Node zero is constant one,
 // matching ABC's AIG convention; toggling bit zero complements the function.
@@ -40,6 +43,7 @@ type edgePair struct{ a, b Edge }
 // gates; complemented edges represent inversion directly. Deletion leaves holes
 // so existing edges remain valid, and rewriting may change topological ID order.
 type Graph struct {
+	combinationalCex                  *util.Abc_Cex_t
 	PartitionInputs, PartitionOutputs []int32
 	ClockDomains                      [][]int32
 	FlopReprs                         []int32

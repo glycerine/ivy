@@ -200,3 +200,116 @@ Its graph argument is dependency-neutral (`any`), avoiding an unnecessary Gia
 cycle. No CF simulation algorithm exists in the source and none is claimed.
 The larger parent package still fails first on retained header preprocessing in
 extra.go; remaining original API groups stay in the build.
+
+The former first package blocker `extra.go` is now native Go: its twenty truth/
+bit helpers use slices, math/bits, integer flags and overflow-safe word rounding.
+C-only inline/platform spelling and redundant typedefs are removed; forward
+API documentation remains. Type aliases moved beside their owned structures.
+Separate readability and bug reviews covered shared word operators, repeated
+small-truth conventions, constants/implication, exact/partial aliases and maximum
+bit-count rounding. Native memory recycler/restart/release tests were rechecked
+after the broad ABC_FREE cleanup; no C deallocation tokens remain in completed
+components. Gen, like Cfs, faithfully retains its source-empty behavior.
+
+`extraUtilCube.go` is fully ported: state packing/permutation/bit/signature helpers
+and both original BFS enumeration modes. Complete-frontier generation preserves
+the nine original turns and state order. Sparse full-state or seven-corner maps
+replace raw hash pointers and the 4GB dense signature bit array. Tests match
+original cumulative counts 1/10/64/385/2232, validate quarter-turn order, compare
+both modes, enforce limits, and check packing and overlapping permutations.
+Readability review shares frontier and move logic; separate bug review checks
+state ownership, byte/bit indices and fixed-corner signatures. Race tests pass.
+
+`extraUtilDsd.go` and `extra_dsd_classes.go` are fully ported: all595 original DSD6
+representatives/costs, exact720-permutation schedules, configuration encoding,
+classification/composition/cut remapping, costs/stats/lifecycle/divisors and Rsb
+diagnostic. The original required dsdfuncs6.dat, which is absent here. Go accepts
+and validates the original binary format, but also supplies exact native orbit
+search when the file is absent. This is a complete search, not heuristic matching:
+cofactor signatures/phase populations only prune impossible candidates, followed
+by full truth-word equality. Query caching is bounded. Full orbit materialization
+is available through Sdm_ManBuildHashTable and reproduces all2,866,420 records.
+
+Separate readability/idiom review shares immutable permutation geometry, typed
+maps/keys and orbit primitives, avoids compulsory huge global tables for sparse
+use, and replaces unsafe binary-pointer casts with explicit encoding/binary.
+Separate bug review validates/truncation-checks records, configurations, cuts and
+permutations; permits an absent legacy data file using the exact native algorithm;
+protects shared query/stats/singleton state; makes release idempotent; resets all
+statistics coherently and avoids repeated elementary-table construction. Phase
+mask operations have a direct all64-mask bit-oracle regression.
+
+DSD tests parse/evaluate all595 original strings, check all class identities and
+random NPN transforms, differential-check lazy results/config tie ordering against
+the complete materialized table, and validate full table cardinality, malformed
+files, cut reconstruction, partial masks, constants, costs, stats and concurrent
+queries. All metadata,720 permutations and595*720 truth words match a compiled
+original-C SHA256 oracle. Focused race tests pass (including full materialization).
+
+Whole `go test ./misc/extra` now reaches `extraUtilEnum.go` syntax errors instead
+of the old header/Cube/Dsd blockers. Nine source groups remain drafts: Enum,
+Macc, Maj, Misc, Mult, Path, Prime, Supp and extraZddTrunc. These remain active
+product files; focused file-list tests do not claim whole-package completion.
+
+### Function enumeration (`extraUtilEnum.go`)
+
+Ported all three fixed datasets, formula printing and cost-ordered AND/OR
+formula enumeration, and the original reference-counted, level-ordered AIG
+enumeration with truth-based redundancy filters. The optional XOR recursion is
+retained. Dataset output dimensions are returned as a tuple. Diagnostic output
+uses native Go timing and Kit DSD printing. Sparse truth maps replace the
+original mandatory 512 MB allocation; gate-cost boundaries grow with the request.
+
+Readability review: kept original API names and traversal order, separated dataset
+transposition, formula construction, and graph recursion, and grouped standard
+library imports. Fanin order continues to encode AND versus OR in printed
+formulas; this non-obvious convention is covered by direct formula evaluation.
+
+Bug review: fixed integer overflow in dimension validation; source zero-gate
+input targets are now recognized, and printing an input node produces its letter
+rather than recursively reading sentinel fanins. The original fixed 100-element
+cost array is dynamically sized. Added regressions for these cases and restored
+references/frontiers after every graph enumeration.
+
+Validation: standalone original C oracle counters match all 18 tested combinations
+of 2–4 inputs, 1–4 gates, with and without XOR. An independent exhaustive formula
+cost oracle checks truth values and minimal costs. Dataset transpose/bit order,
+printer, and dimension checks pass. Focused race command:
+`GOCACHE=/tmp/abcgo-cache go -C abcgo/misc/extra test -race extraUtilEnum.go extraUtilEnum_test.go`.
+The full package was rerun and now first fails in the remaining active
+`extraUtilMacc.go` draft; Enum is not being used to hide that blocker.
+
+### Constant multiplier/accumulator generation (`extraUtilMacc.go`)
+
+Ported the complete signed-coefficient cost search, packed decomposition tables,
+recursive shift/add/subtract netlist generation, specification emitters, and
+file-generation commands. Emitters accept `io.Writer`, tables are owned
+`[]uint32`, and file-generation commands return errors. Coefficient widths are
+explicitly limited to 2..15, matching the packed second-operand field; malformed
+sizes are rejected before shifts/allocation. The original eight-bit examples
+remain unchanged. Diagnostic generation no longer depends on Vec containers.
+
+Readability review: factored shared module headers/output modes and sign/name
+formatting; retained the original three-operation search order and packed table
+layout. A per-module visited set shares coefficient wires instead of recursively
+emitting duplicate declarations. Documented why intermediate positive powers of
+two may equal the requested signed-coefficient upper bound.
+
+Bug review: original standalone zero-coefficient recursion did not terminate;
+zero now emits an explicit zero wire. Shared intermediate wires are emitted
+once. Tests exposed and fixed an overly strict internal signed-bound check:
+positive boundary powers of two are legal decomposition operands. Dimension
+validation uses wider arithmetic to avoid signed overflow. Missing or short
+coefficient tables fail explicitly rather than indexing arbitrary storage.
+
+Validation: complete little-endian decomposition arrays for widths 2..10 match
+the original compiled C SHA256
+`98634aa12c603fb70ad87f852f3e92ffcf119cfd0faf90ad99a16bf32f0ec306`.
+A separate evaluator checks every emitted intermediate and final multiplication
+for every signed coefficient at widths 2..9 over six input patterns, also
+rejecting duplicate or undefined wires. Zero, negative boundary power-of-two,
+and invalid dimensions have regressions. All completed native components,
+including Enum and Macc, pass the combined race test in 9.398 seconds. Full
+`go -C abcgo test ./misc/extra` was rerun and now stops at the active
+`extraUtilMaj.go` draft. Remaining drafts are Maj, Misc, Mult, Path, Prime, Supp,
+and extraZddTrunc; no file has been excluded from the full package build.

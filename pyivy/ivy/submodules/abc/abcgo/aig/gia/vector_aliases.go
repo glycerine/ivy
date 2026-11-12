@@ -5,6 +5,7 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
+type Vec_Bit_t = vec.Vec_Bit_t
 type Vec_Int_t = vec.Vec_Int_t
 type Vec_Flt_t = vec.Vec_Flt_t
 type Vec_Str_t = vec.Vec_Str_t

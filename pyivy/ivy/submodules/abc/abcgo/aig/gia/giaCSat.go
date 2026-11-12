@@ -1,9 +1,12 @@
 package gia
 
+
 import (
 	"fmt"
 	"time"
 )
+
+type Cbs_Man_t = Cbs_Man_t_
 
 /**CFile****************************************************************
 

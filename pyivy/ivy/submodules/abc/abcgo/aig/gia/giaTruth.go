@@ -69,13 +69,12 @@ func Gla_ObjTruthDup(p *Gia_Man_t, dst, src []word, c int32) []word {
 // It also supports XOR, buffer and explicit MUX objects used by modern GIA.
 type giaTruthEval struct {
 	p      *Gia_Man_t
-	n      int32
 	memo   map[int32][]word
 	leaves map[int32]bool
 }
 
 func giaNewTruthEval(p *Gia_Man_t, n int32, leaves []int32) *giaTruthEval {
-	e := &giaTruthEval{p: p, n: n, memo: map[int32][]word{0: make([]word, giaTruthWordCount64(n))}, leaves: map[int32]bool{}}
+	e := &giaTruthEval{p: p, memo: map[int32][]word{0: make([]word, giaTruthWordCount64(n))}, leaves: map[int32]bool{}}
 	for i, id := range leaves {
 		if _, ok := e.memo[id]; !ok {
 			e.memo[id] = giaTruthVariable(n, i)
@@ -126,7 +125,9 @@ func (e *giaTruthEval) node(id int32) []word {
 	e.memo[id] = r
 	return r
 }
-func giaTruthCis(p *Gia_Man_t) []int32 { return append([]int32(nil), vec.Vec_IntArray(p.vCis)...) }
+
+// giaTruthCis borrows CI IDs; callers only read them during evaluation.
+func giaTruthCis(p *Gia_Man_t) []int32 { return vec.Vec_IntArray(p.vCis) }
 func Gia_LutComputeTruth6Simple_rec(p *Gia_Man_t, id int32) word {
 	leaves := giaTruthCis(p)
 	if len(leaves) > 6 {

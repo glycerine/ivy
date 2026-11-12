@@ -9,6 +9,7 @@ import (
 // Source copy maps remain available to callers, as pData did in ABC.
 func dupMetadata(dst, src *Graph) {
 	dst.Name, dst.Spec = src.Name, src.Spec
+	dst.RetimingChanged = src.RetimingChanged
 	dst.nRegs, dst.nConstrs = src.nRegs, src.nConstrs
 	dst.Assertions, dst.BarrierBuffers = src.Assertions, src.BarrierBuffers
 	dst.PartitionInputs = slices.Clone(src.PartitionInputs)

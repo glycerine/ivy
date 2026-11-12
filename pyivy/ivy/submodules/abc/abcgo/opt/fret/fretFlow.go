@@ -1,5 +1,10 @@
 package fret
 
+import (
+	. "github.com/glycerine/abcgo/base/abc"
+	. "github.com/glycerine/abcgo/misc/vec"
+)
+
 /**CFile****************************************************************
 
   FileName    [fretFlow.c]
@@ -66,7 +71,6 @@ func dfsfast_preorder(pNtk *Abc_Ntk_t) {
   var qpos int32;
 
   // create reverse timing edges for backward traversal
-#if !defined(IGNORE_TIMING)
   if (pManMR->maxDelay) {
     Abc_NtkForEachObj( pNtk, pObj, i ) {
       Vec_PtrForEachEntry( Abc_Obj_t *, FTIMEEDGES(pObj), pNext, j ) {
@@ -78,7 +82,6 @@ func dfsfast_preorder(pNtk *Abc_Ntk_t) {
       }
     }
   }
-#endif
 
   // clear histogram
   assert(pManMR.vSinkDistHist, "pManMR.vSinkDistHist");
@@ -137,7 +140,6 @@ func dfsfast_preorder(pNtk *Abc_Ntk_t) {
           }          
 
       // 3. timimg edges (forward retiming only)
-#if !defined(IGNORE_TIMING)
         if (pManMR->maxDelay && FDATA(pObj)->vNodes)
           Vec_PtrForEachEntry(Abc_Obj_t *, FDATA(pObj)->vNodes, pNext, i ) {
             if (!FDATA(pNext)->r_dist) {
@@ -146,7 +148,6 @@ func dfsfast_preorder(pNtk *Abc_Ntk_t) {
               Vec_IntPush(qe, 'r');
             }
           }
-#endif
       }
       
     } else { // if 'e'
@@ -171,7 +172,6 @@ func dfsfast_preorder(pNtk *Abc_Ntk_t) {
           }  
 
       // 3. timimg edges (backward retiming only)
-#if !defined(IGNORE_TIMING)
         if (pManMR->maxDelay && FDATA(pObj)->vNodes)
           Vec_PtrForEachEntry(Abc_Obj_t *, FDATA(pObj)->vNodes, pNext, i ) {
             if (!FDATA(pNext)->e_dist) {
@@ -180,13 +180,11 @@ func dfsfast_preorder(pNtk *Abc_Ntk_t) {
               Vec_IntPush(qe, 'e');
             }
           }
-#endif
       }
     }
   }
  
   // free time edges
-#if !defined(IGNORE_TIMING)
   if (pManMR->maxDelay) {
     Abc_NtkForEachObj( pNtk, pObj, i ) {
       vTimeIn = FDATA(pObj)->vNodes;
@@ -196,15 +194,11 @@ func dfsfast_preorder(pNtk *Abc_Ntk_t) {
       }
     }
   }
-#endif
 
   Abc_NtkForEachObj( pNtk, pObj, i ) {
     Vec_IntAddToEntry(pManMR.vSinkDistHist, FDATA(pObj).r_dist, 1);
     Vec_IntAddToEntry(pManMR.vSinkDistHist, FDATA(pObj).e_dist, 1);
 
-#ifdef DEBUG_PREORDER
-    printf("node %d\t: r=%d\te=%d\n", Abc_ObjId(pObj), FDATA(pObj)->r_dist, FDATA(pObj)->e_dist);
-#endif
   }
 
   // printf("\t\tpre-ordered (max depth=%d)\n", d+1);
@@ -230,9 +224,6 @@ func dfsfast_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
 
   FSET(pObj, VISITED_E);
 
-#ifdef DEBUG_VISITED
-  printf("(%de=%d) ", Abc_ObjId(pObj), FDATA(pObj)->e_dist);
-#endif  
 
   // 1. structural edges
   if (pManMR.fIsForward)
@@ -240,9 +231,6 @@ func dfsfast_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
       if !FTEST(pNext, VISITED_R) &&
           FDIST(pObj, e, pNext, r) &&
           (dfsfast_r(pNext, pPred) != 0) {
-#ifdef DEBUG_PRINT_FLOWS
-        printf("o");
-#endif
         goto found;
       }
     }
@@ -251,9 +239,6 @@ func dfsfast_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
       if !FTEST(pNext, VISITED_R) &&
           FDIST(pObj, e, pNext, r) &&
           (dfsfast_r(pNext, pPred) != 0) {
-#ifdef DEBUG_PRINT_FLOWS
-        printf("o");
-#endif
         goto found;
       }
     }  
@@ -267,27 +252,19 @@ func dfsfast_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
       if !FTEST(pNext, VISITED_E) &&
           FDIST(pObj, e, pNext, e) &&
           (dfsfast_e(pNext, pPred) != 0) {
-#ifdef DEBUG_PRINT_FLOWS
-        printf("i");
-#endif
         goto found;
       }
     }
 
   // 3. timing edges (backward retiming only)
-#if !defined(IGNORE_TIMING)
     if (pManMR->maxDelay) 
       Vec_PtrForEachEntry(Abc_Obj_t *, FTIMEEDGES(pObj), pNext, i) {
         if (!FTEST(pNext, VISITED_E) &&
             FDIST(pObj, e, pNext, e) &&
             dfsfast_e(pNext, pPred)) {
-#ifdef DEBUG_PRINT_FLOWS
-          printf("o");
-#endif
           goto found;
         }
       }
-#endif
   }
   
   // unwind
@@ -298,9 +275,6 @@ func dfsfast_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
 
     FUNSET(pObj, FLOW);
     FSETPRED(pObj, nil);
-#ifdef DEBUG_PRINT_FLOWS
-    printf("u");
-#endif
     goto found;
   }
   
@@ -310,9 +284,6 @@ func dfsfast_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
   return 0;
   
  found:
-#ifdef DEBUG_PRINT_FLOWS
-  printf("%d ", Abc_ObjId(pObj));
-#endif 
   FUNSET(pObj, VISITED_E);
   return 1;
 }
@@ -323,9 +294,6 @@ func dfsfast_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
 
   if pManMR.fSinkDistTerminate { return 0; }
 
-#ifdef DEBUG_VISITED
-  printf("(%dr=%d) ", Abc_ObjId(pObj), FDATA(pObj)->r_dist);
-#endif  
 
   // have we reached the sink?
   if Abc_ObjIsLatch(pObj) ||
@@ -347,9 +315,6 @@ func dfsfast_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
 
       FSETPRED(pObj, pPred);
 
-#ifdef DEBUG_PRINT_FLOWS
-      printf("fr");
-#endif
       goto found;
     }
     
@@ -362,9 +327,6 @@ func dfsfast_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
       FSET(pObj, FLOW);
       FSETPRED(pObj, pPred);
 
-#ifdef DEBUG_PRINT_FLOWS
-      printf("f");
-#endif
       goto found;
     }
   }
@@ -376,27 +338,19 @@ func dfsfast_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
           FDIST(pObj, r, pNext, r) &&
           !Abc_ObjIsLatch(pNext) &&
           (dfsfast_r(pNext, pPred) != 0) {
-#ifdef DEBUG_PRINT_FLOWS
-        printf("i");
-#endif
         goto found;
       }
     }
   
   // 3. timing edges (forward retiming only)
-#if !defined(IGNORE_TIMING)
     if (pManMR->maxDelay) 
       Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {
         if (!FTEST(pNext, VISITED_R) &&
             FDIST(pObj, r, pNext, r) &&
             dfsfast_r(pNext, pPred)) {
-#ifdef DEBUG_PRINT_FLOWS
-          printf("o");
-#endif
           goto found;
         }
       }
-#endif
   }
   
   FUNSET(pObj, VISITED_R);
@@ -404,9 +358,6 @@ func dfsfast_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
   return 0;
 
  found:
-#ifdef DEBUG_PRINT_FLOWS
-  printf("%d ", Abc_ObjId(pObj));
-#endif
   FUNSET(pObj, VISITED_R);
   return 1;
 }
@@ -447,13 +398,11 @@ func dfsfast_e_retreat(pObj *Abc_Obj_t) {
     }
 
   // 4. timing edges (backward retiming only)
-#if !defined(IGNORE_TIMING)
     if (pManMR->maxDelay) 
       Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {
         adj_dist = FDATA(pNext)->e_dist;
         if (adj_dist) min_dist = MIN(min_dist, adj_dist);
       }
-#endif
   }
 
  update:
@@ -499,13 +448,11 @@ func dfsfast_r_retreat(pObj *Abc_Obj_t) {
       }
 
   // 3. timing edges (forward retiming only)
-#if !defined(IGNORE_TIMING)
     if (pManMR->maxDelay) 
       Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {
         adj_dist = FDATA(pNext)->r_dist;
         if (adj_dist) min_dist = MIN(min_dist, adj_dist);
       }
-#endif
   }
 
   ++min_dist;
@@ -554,9 +501,6 @@ func dfsplain_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
     Abc_ObjForEachFanout( pObj, pNext, i ) {
       if !FTEST(pNext, VISITED_R) &&
           (dfsplain_r(pNext, pPred) != 0) {
-#ifdef DEBUG_PRINT_FLOWS
-        printf("o");
-#endif
         goto found;
       }
     }
@@ -564,9 +508,6 @@ func dfsplain_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
     Abc_ObjForEachFanin( pObj, pNext, i ) {
       if !FTEST(pNext, VISITED_R) &&
           (dfsplain_r(pNext, pPred) != 0) {
-#ifdef DEBUG_PRINT_FLOWS
-        printf("o");
-#endif
         goto found;
       }
     }
@@ -579,26 +520,18 @@ func dfsplain_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
     Abc_ObjForEachFanout( pObj, pNext, i ) {
       if !FTEST(pNext, VISITED_E) &&
           (dfsplain_e(pNext, pPred) != 0) {
-#ifdef DEBUG_PRINT_FLOWS
-        printf("i");
-#endif
         goto found;
       }
     }
 
   // 3. timing edges (backward retiming only)
-#if !defined(IGNORE_TIMING)
     if (pManMR->maxDelay) 
       Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {
         if (!FTEST(pNext, VISITED_E) &&
             dfsplain_e(pNext, pPred)) {
-#ifdef DEBUG_PRINT_FLOWS
-          printf("o");
-#endif
           goto found;
         }
       }
-#endif
   }
   
   // unwind
@@ -607,18 +540,12 @@ func dfsplain_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
       (dfsplain_r(pObj, FGETPRED(pObj)) != 0) {
     FUNSET(pObj, FLOW);
     FSETPRED(pObj, nil);
-#ifdef DEBUG_PRINT_FLOWS
-    printf("u");
-#endif
     goto found;
   }
   
   return 0;
   
  found:
-#ifdef DEBUG_PRINT_FLOWS
-  printf("%d ", Abc_ObjId(pObj));
-#endif
 
   return 1;
 }
@@ -648,9 +575,6 @@ func dfsplain_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
 
       FSETPRED(pObj, pPred);
 
-#ifdef DEBUG_PRINT_FLOWS
-      printf("fr");
-#endif
       goto found;
     }
     
@@ -662,9 +586,6 @@ func dfsplain_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
       FSET(pObj, FLOW);
       FSETPRED(pObj, pPred);
 
-#ifdef DEBUG_PRINT_FLOWS
-      printf("f");
-#endif
       goto found;
     }
   }
@@ -675,34 +596,23 @@ func dfsplain_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {
       if !FTEST(pNext, VISITED_R) &&
           !Abc_ObjIsLatch(pNext) &&
           (dfsplain_r(pNext, pPred) != 0) {
-#ifdef DEBUG_PRINT_FLOWS
-        printf("i");
-#endif
         goto found;
       }
     }
   
   // 3. timing edges (forward only)
-#if !defined(IGNORE_TIMING)
     if (pManMR->maxDelay) 
       Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {
         if (!FTEST(pNext, VISITED_R) &&
             dfsplain_r(pNext, pPred)) {
-#ifdef DEBUG_PRINT_FLOWS
-          printf("o");
-#endif
           goto found;
         }
       }
-#endif
   }
   
   return 0;
 
  found:
-#ifdef DEBUG_PRINT_FLOWS
-  printf("%d ", Abc_ObjId(pObj));
-#endif
   return 1;
 }
 //ABC_NAMESPACE_IMPL_END

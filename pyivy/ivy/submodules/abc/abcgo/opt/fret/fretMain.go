@@ -3,6 +3,11 @@ package fret
 import (
 	"fmt"
 	"os"
+	. "github.com/glycerine/abcgo/base/abc"
+	. "github.com/glycerine/abcgo/aig/hop"
+	. "github.com/glycerine/abcgo/map/mio"
+	. "github.com/glycerine/abcgo/misc/mem"
+	. "github.com/glycerine/abcgo/misc/vec"
 )
 
 /**CFile****************************************************************
@@ -112,7 +117,6 @@ func Abc_FlowRetime_MinReg(pNtk *Abc_Ntk_t, fVerbose int32, fComputeInitState in
   pManMR.vInitConstraints = Vec_PtrAlloc(2);
   pManMR.pInitNtk = nil;
   pManMR.pInitToOrig = nil;
-  pManMR.sizeInitToOrig = 0;
 
   vprintf("Flow-based minimum-register retiming...\n");  
 
@@ -1101,19 +1105,25 @@ func Abc_FlowRetime_IsAcrossCut(pObj *Abc_Obj_t, pNext *Abc_Obj_t) int32 {
 
 ***********************************************************************/
 func Abc_FlowRetime_ClearFlows(fClearAll int32) {
-  var i int32;
-
-  if fClearAll != 0 {
-    memset(pManMR.pDataArray, 0, sizeof(Flow_Data_t)*pManMR.nNodes);
-  } else {
-    // clear only data related to flow problem
-    for i=0; i<pManMR.nNodes; i++ {
-      pManMR.pDataArray[i].mark &= ~(VISITED | FLOW );
-      pManMR.pDataArray[i].e_dist = 0;
-      pManMR.pDataArray[i].r_dist = 0;
-      pManMR.pDataArray[i].pred = nil;
-    }
-  }
+	if pManMR == nil {
+		return
+	}
+	n := int(pManMR.nNodes)
+	if n > len(pManMR.pDataArray) {
+		n = len(pManMR.pDataArray)
+	}
+	if fClearAll != 0 {
+		clear(pManMR.pDataArray[:n])
+		return
+	}
+	// Keep the init-state mapping and all flags outside the flow search state.
+	for i := 0; i < n; i++ {
+		data := &pManMR.pDataArray[i]
+		data.mark &^= VISITED | FLOW
+		data.e_dist = 0
+		data.r_dist = 0
+		data.pred = nil
+	}
 }
 
 

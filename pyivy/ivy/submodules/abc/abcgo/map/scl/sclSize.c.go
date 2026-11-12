@@ -1,875 +1,686 @@
+// Static and incremental timing from sclSize.c.
 package scl
 
 import (
 	"fmt"
 	"math"
 	"os"
+	"path/filepath"
+	"sort"
+	"time"
+
+	abcmain "github.com/glycerine/abcgo/base/main"
 )
 
-/**CFile****************************************************************
-
-  FileName    [sclSize.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Standard-cell library representation.]
-
-  Synopsis    [Core timing analysis used in gate-sizing.]
-
-  Author      [Alan Mishchenko, Niklas Een]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - August 24, 2012.]
-
-  Revision    [$Id: sclSize.c,v 1.0 2012/08/24 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sclSize.h"
-//#include "map/mio/mio.h"
-//#include "misc/vec/vecWec.h"
-//#include "base/main/main.h"
-
-#ifdef WIN32
-#include <windows.h>
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Finding most critical objects.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclFindCriticalCo(p *SC_Man, pfRise *int32) *Abc_Obj_t {
-    var pObj *Abc_Obj_t;
-    var pPivot *Abc_Obj_t = nil;
-    var fMaxArr float32;
-    var i int32;
-    assert(Abc_NtkPoNum(p.pNtk) > 0, "Abc_NtkPoNum(p.pNtk) > 0");
-    Abc_NtkForEachCo( p.pNtk, pObj, i )
-    {
-        var pArr *SC_Pair  = Abc_SclObjTime( p, pObj );
-        if fMaxArr < pArr.rise {  fMaxArr = pArr.rise;
-*pfRise = 1;
-pPivot = pObj; }
-        if fMaxArr < pArr.fall {  fMaxArr = pArr.fall;
-*pfRise = 0;
-pPivot = pObj; }
-    }
-    if fMaxArr == 0 {
-        pPivot = Abc_NtkPo(p.pNtk, 0); }
-    assert(pPivot != nil, "pPivot != nil");
-    return pPivot;
+func (p *SC_Man) rebuildOrder() error {
+	ids := p.Network.SclObjectIDs()
+	known := make(map[int]bool, len(ids))
+	maximum := -1
+	for _, id := range ids {
+		if id < 0 || known[id] {
+			return fmt.Errorf("SCL: invalid or duplicate object ID %d", id)
+		}
+		known[id] = true
+		maximum = max(maximum, id)
+	}
+	p.ensureCapacity(maximum + 1)
+	incoming := make(map[int]int, len(ids))
+	reverse := make(map[int][]int, len(ids))
+	for _, id := range ids {
+		for _, fanin := range p.Network.SclFanins(id) {
+			if !known[fanin] {
+				return fmt.Errorf("SCL: object %d has missing fanin %d", id, fanin)
+			}
+			incoming[id]++
+			reverse[fanin] = append(reverse[fanin], id)
+		}
+	}
+	for _, id := range ids {
+		actual := append([]int(nil), p.Network.SclFanouts(id)...)
+		expected := append([]int(nil), reverse[id]...)
+		sort.Ints(actual)
+		sort.Ints(expected)
+		if len(actual) != len(expected) {
+			return fmt.Errorf("SCL: object %d fanout multiplicity mismatch", id)
+		}
+		for i := range actual {
+			if actual[i] != expected[i] {
+				return fmt.Errorf("SCL: object %d fanout adjacency mismatch", id)
+			}
+		}
+	}
+	var queue []int
+	for _, id := range ids {
+		if incoming[id] == 0 {
+			queue = append(queue, id)
+		}
+	}
+	sort.Ints(queue)
+	order := make([]int, 0, len(ids))
+	for cursor := 0; cursor < len(queue); cursor++ {
+		id := queue[cursor]
+		order = append(order, id)
+		level := 0
+		for _, fanin := range p.Network.SclFanins(id) {
+			level = max(level, p.Levels[fanin]+1)
+		}
+		p.Levels[id] = level
+		for _, fanout := range reverse[id] {
+			incoming[fanout]--
+			if incoming[fanout] == 0 {
+				queue = append(queue, fanout)
+			}
+		}
+	}
+	if len(order) != len(ids) {
+		return fmt.Errorf("SCL: combinational cycle in timing network")
+	}
+	p.order = order
+	return nil
 }
-// assumes that slacks are not available (uses arrival times)
-func Abc_SclFindMostCriticalFanin2(p *SC_Man, pfRise *int32, pNode *Abc_Obj_t) *Abc_Obj_t {
-    var pFanin *Abc_Obj_t;
-    var pPivot *Abc_Obj_t = nil;
-    var fMaxArr float32;
-    var i int32;
-    Abc_ObjForEachFanin( pNode, pFanin, i )
-    {
-        var pArr *SC_Pair  = Abc_SclObjTime( p, pFanin );
-        if fMaxArr < pArr.rise {  fMaxArr = pArr.rise;
-*pfRise = 1;
-pPivot = pFanin; }
-        if fMaxArr < pArr.fall {  fMaxArr = pArr.fall;
-*pfRise = 0;
-pPivot = pFanin; }
-    }
-    return pPivot;
+func Abc_SclFindCriticalCo(p *SC_Man, rise *int32) int {
+	best := -1
+	maximum := float32(math.Inf(-1))
+	*rise = 0
+	for _, id := range p.Network.SclOutputs() {
+		if p.Times[id].Rise > maximum {
+			best, maximum, *rise = id, p.Times[id].Rise, 1
+		}
+		if p.Times[id].Fall > maximum {
+			best, maximum, *rise = id, p.Times[id].Fall, 0
+		}
+	}
+	return best
 }
-// assumes that slack are available
-func Abc_SclFindMostCriticalFanin(p *SC_Man, pfRise *int32, pNode *Abc_Obj_t) *Abc_Obj_t {
-    var pFanin *Abc_Obj_t;
-    var pPivot *Abc_Obj_t = nil;
-    var fMinSlack float32  = ABC_INFINITY;
-    var pArr *SC_Pair;
-    var i int32;
-    *pfRise = 0;
-    // find min-slack node
-    Abc_ObjForEachFanin( pNode, pFanin, i )
-        if fMinSlack > Abc_SclObjGetSlack( p, pFanin, p.MaxDelay0 ) {
-            fMinSlack = Abc_SclObjGetSlack( p, pFanin, p.MaxDelay0 );
-            pPivot = pFanin;
-        }
-    if pPivot == nil {
-        return nil; }
-    // find its leading phase
-    pArr = Abc_SclObjTime( p, pPivot );
-    *pfRise = (pArr.rise >= pArr.fall);
-    return pPivot;
+func Abc_SclFindMostCriticalFanin2(p *SC_Man, rise *int32, id int) int {
+	best := -1
+	maximum := float32(math.Inf(-1))
+	*rise = 0
+	for _, fanin := range p.Network.SclFanins(id) {
+		if p.Times[fanin].Rise > maximum {
+			best, maximum, *rise = fanin, p.Times[fanin].Rise, 1
+		}
+		if p.Times[fanin].Fall > maximum {
+			best, maximum, *rise = fanin, p.Times[fanin].Fall, 0
+		}
+	}
+	return best
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Printing timing information for the node/network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclTimeNodePrint(p *SC_Man, pObj *Abc_Obj_t, fRise int32, Length int32, maxDelay float32) {
-    var pCell *SC_Cell;
-    if Abc_ObjIsNode(pObj) {
-        pCell = Abc_SclObjCell(pObj);
-    } else {
-        pCell = nil;
-    }
-    fmt.Printf("%8d : ", Abc_ObjId(pObj));
-    fmt.Printf("%d ", Abc_ObjFaninNum(pObj));
-    fmt.Printf("%4d ", Abc_ObjFanoutNum(pObj));
-    fmt.Printf("%-*s ", Length, pCell ? pCell.pName : "pi");
-    fmt.Printf("A =%7.2f  ", pCell ? pCell.area : 0.0);
-    fmt.Printf("D%s =", fRise ? "r" : "f");
-    fmt.Printf("%6.1f", Abc_SclObjTimeMax(p, pObj));
-    fmt.Printf("%7.1f ps  ", -Abc_AbsFloat(Abc_SclObjTimeOne(p, pObj, 0) - Abc_SclObjTimeOne(p, pObj, 1)));
-    fmt.Printf("S =%6.1f ps  ", Abc_SclObjSlewMax(p, pObj));
-    fmt.Printf("Cin =%5.1f ff  ", pCell ? SC_CellPinCapAve(pCell) : 0.0);
-    fmt.Printf("Cout =%6.1f ff  ", Abc_SclObjLoadMax(p, pObj));
-    fmt.Printf("Cmax =%6.1f ff  ", pCell ? SC_CellPin(pCell, pCell.n_inputs).max_out_cap : 0.0);
-    fmt.Printf("G =%5d  ", pCell ? int32((100.0 * Abc_SclObjLoadAve(p, pObj) / SC_CellPinCapAve(pCell))) : 0);
-//    printf( "SL =%6.1f ps",     Abc_SclObjSlackMax(p, pObj, p->MaxDelay0) );
-    fmt.Printf("\n");
+func Abc_SclFindMostCriticalFanin(p *SC_Man, rise *int32, id int) int {
+	best := -1
+	slack := float32(math.Inf(1))
+	*rise = 0
+	for _, fanin := range p.Network.SclFanins(id) {
+		candidate := Abc_SclObjGetSlack(p, fanin, p.InitialDelay)
+		if candidate < slack {
+			best, slack = fanin, candidate
+		}
+	}
+	if best >= 0 && p.Times[best].Rise >= p.Times[best].Fall {
+		*rise = 1
+	}
+	return best
 }
-func Abc_SclTimeNtkPrint(p *SC_Man, fShowAll int32, fPrintPath int32) {
-    var fReversePath int32  = 1;
-    var i, nLength, fRise int32;
-    var pObj *Abc_Obj_t;
-    var pPivot *Abc_Obj_t = Abc_SclFindCriticalCo( p, &fRise ); 
-    var maxDelay float32  = Abc_SclObjTimeOne( p, pPivot, fRise );
-    p.ReportDelay = maxDelay;
-
-#ifdef WIN32
-    printf( "WireLoad = \"%s\"  ", p->pWLoadUsed ? p->pWLoadUsed->pName : "none" );
-    SetConsoleTextAttribute( GetStdHandle(STD_OUTPUT_HANDLE), 14 ); // yellow
-    printf( "Gates =%7d ",         Abc_NtkNodeNum(p->pNtk) );
-    SetConsoleTextAttribute( GetStdHandle(STD_OUTPUT_HANDLE), 7 );  // normal
-    printf( "(%5.1f %%)   ",       100.0 * Abc_SclGetBufInvCount(p->pNtk) / Abc_NtkNodeNum(p->pNtk) );
-    SetConsoleTextAttribute( GetStdHandle(STD_OUTPUT_HANDLE), 10 ); // green
-    printf( "Cap =%5.1f ff ",      p->EstLoadAve );
-    SetConsoleTextAttribute( GetStdHandle(STD_OUTPUT_HANDLE), 7 );  // normal
-    printf( "(%5.1f %%)   ",       Abc_SclGetAverageSize(p->pNtk) );
-    SetConsoleTextAttribute( GetStdHandle(STD_OUTPUT_HANDLE), 11 ); // blue
-    printf( "Area =%12.2f ",       Abc_SclGetTotalArea(p->pNtk) );
-    SetConsoleTextAttribute( GetStdHandle(STD_OUTPUT_HANDLE), 7 );  // normal
-    printf( "(%5.1f %%)   ",       100.0 * Abc_SclCountMinSize(p->pLib, p->pNtk, 0) / Abc_NtkNodeNum(p->pNtk) );
-    SetConsoleTextAttribute( GetStdHandle(STD_OUTPUT_HANDLE), 13 ); // magenta
-    printf( "Delay =%9.2f ps  ",   maxDelay );
-    SetConsoleTextAttribute( GetStdHandle(STD_OUTPUT_HANDLE), 7 );  // normal
-    printf( "(%5.1f %%)   ",       100.0 * Abc_SclCountNearCriticalNodes(p) / Abc_NtkNodeNum(p->pNtk) );
-    printf( "            \n" );
-#else
-    Abc_Print( 1, "WireLoad = \"%s\"  ",   p->pWLoadUsed ? p->pWLoadUsed->pName : "none" );
-    Abc_Print( 1, "%sGates =%7d%s ",       "\033[1;33m", Abc_NtkNodeNum(p->pNtk),      "\033[0m" ); // yellow
-    Abc_Print( 1, "(%5.1f %%)   ",         100.0 * Abc_SclGetBufInvCount(p->pNtk) / Abc_NtkNodeNum(p->pNtk) );
-    Abc_Print( 1, "%sCap =%5.1f ff%s ",    "\033[1;32m", p->EstLoadAve,                "\033[0m" ); // green
-    Abc_Print( 1, "(%5.1f %%)   ",         Abc_SclGetAverageSize(p->pNtk) );
-    Abc_Print( 1, "%sArea =%12.2f%s ",     "\033[1;36m", Abc_SclGetTotalArea(p->pNtk), "\033[0m" ); // blue
-    Abc_Print( 1, "(%5.1f %%)   ",         100.0 * Abc_SclCountMinSize(p->pLib, p->pNtk, 0) / Abc_NtkNodeNum(p->pNtk) );
-    Abc_Print( 1, "%sDelay =%9.2f ps%s  ", "\033[1;35m", maxDelay,                     "\033[0m" ); // magenta
-    Abc_Print( 1, "(%5.1f %%)   ",         100.0 * Abc_SclCountNearCriticalNodes(p) / Abc_NtkNodeNum(p->pNtk) );
-    Abc_Print( 1, "            \n" );
-#endif
-
-    if fShowAll != 0 {
-//        printf( "Timing information for all nodes: \n" );
-        // find the longest cell name
-        Abc_NtkForEachNodeReverse( p.pNtk, pObj, i )
-            if ( Abc_ObjFaninNum(pObj) > 0 )
-                nLength = Abc_MaxInt( nLength, len(Abc_SclObjCell(pObj).pName) );
-        // print timing
-        Abc_NtkForEachNodeReverse( p.pNtk, pObj, i )
-            if ( Abc_ObjFaninNum(pObj) > 0 )
-                Abc_SclTimeNodePrint( p, pObj, -1, nLength, maxDelay );
-    }
-    if fPrintPath != 0 {
-        var pTemp *Abc_Obj_t;
-        var pPrev *Abc_Obj_t = nil;
-        var iStart int32 = -1;
-        var iEnd int32 = -1;
-        var vPath *Vec_Ptr_t;
-//        printf( "Critical path: \n" );        
-        // find the longest cell name
-        pObj = Abc_ObjFanin0(pPivot);
-        i = 0;
-        for  (pObj != nil) && Abc_ObjIsNode(pObj)  {
-            i++;
-            nLength = Abc_MaxInt( nLength, len(Abc_SclObjCell(pObj).pName) );
-            pObj = Abc_SclFindMostCriticalFanin( p, &fRise, pObj );
-        }
-
-        // print timing
-        if !(fReversePath != 0) {
-            // print timing
-            pObj = Abc_ObjFanin0(pPivot);
-            for  pObj != nil  {//&& Abc_ObjIsNode(pObj) )
-            
-                fmt.Printf("Path%3d --", i--);
-                Abc_SclTimeNodePrint( p, pObj, fRise, nLength, maxDelay );
-                pPrev = pObj;
-                pObj = Abc_SclFindMostCriticalFanin( p, &fRise, pObj );
-            }
-        
-        } else {
-            // collect path nodes
-            vPath = Vec_PtrAlloc( 100 );
-            Vec_PtrPush( vPath, pPivot );
-            pObj = Abc_ObjFanin0(pPivot);
-            for  pObj != nil  {//&& Abc_ObjIsNode(pObj) )
-            
-                Vec_PtrPush( vPath, pObj );
-                pPrev = pObj;
-                pObj = Abc_SclFindMostCriticalFanin( p, &fRise, pObj );
-            }
-            Vec_PtrForEachEntryReverse( Abc_Obj_t *, vPath, pObj, i )
-            {
-                fmt.Printf("Path%3d --", Vec_PtrSize(vPath)-1-i);
-                Abc_SclTimeNodePrint( p, pObj, fRise, nLength, maxDelay );
-                if i == 1 {
-                    break; }
-            }
-            Vec_PtrFree( vPath );
-        }
-        // print start-point and end-point
-        Abc_NtkForEachPi( p.pNtk, pTemp, iStart )
-            if ( pTemp == pPrev )
-                break;
-        Abc_NtkForEachPo( p.pNtk, pTemp, iEnd )
-            if ( pTemp == pPivot )
-                break;
-        fmt.Printf("Start-point = pi%0*d.  End-point = po%0*d.\n", Abc_Base10Log( Abc_NtkPiNum(p.pNtk) ), iStart, Abc_Base10Log( Abc_NtkPoNum(p.pNtk) ), iEnd);
-    }
+func Abc_SclTimeFanin(p *SC_Man, timing *SC_Timing, id, fanin int) {
+	Scl_LibPinArrival(timing, &p.Times[fanin], &p.Slews[fanin], &p.Loads[id], &p.Times[id], &p.Slews[id])
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Timing computation for pin/gate/cone/network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclTimeFanin(p *SC_Man, pTime *SC_Timing, pObj *Abc_Obj_t, pFanin *Abc_Obj_t) {
-    var pArrIn *SC_Pair    = Abc_SclObjTime( p, pFanin );
-    var pSlewIn *SC_Pair   = Abc_SclObjSlew( p, pFanin );
-    var pLoad *SC_Pair     = Abc_SclObjLoad( p, pObj );
-    var pArrOut *SC_Pair   = Abc_SclObjTime( p, pObj );   // modified
-    var pSlewOut *SC_Pair  = Abc_SclObjSlew( p, pObj );   // modified
-    Scl_LibPinArrival( pTime, pArrIn, pSlewIn, pLoad, pArrOut, pSlewOut );
+func Abc_SclDeptFanin(p *SC_Man, timing *SC_Timing, id, fanin int) {
+	Scl_LibPinDeparture(timing, &p.Departures[fanin], &p.Slews[fanin], &p.Loads[id], &p.Departures[id])
 }
-func Abc_SclDeptFanin(p *SC_Man, pTime *SC_Timing, pObj *Abc_Obj_t, pFanin *Abc_Obj_t) {
-    var pDepIn *SC_Pair    = Abc_SclObjDept( p, pFanin );   // modified
-    var pSlewIn *SC_Pair   = Abc_SclObjSlew( p, pFanin );
-    var pLoad *SC_Pair     = Abc_SclObjLoad( p, pObj );
-    var pDepOut *SC_Pair   = Abc_SclObjDept( p, pObj );
-    Scl_LibPinDeparture( pTime, pDepIn, pSlewIn, pLoad, pDepOut );
+func Abc_SclTimeNode(p *SC_Man, id int, reverse int32) error {
+	if _, input := p.inputIndex[id]; input {
+		if reverse != 0 {
+			return nil
+		}
+		if p.InputDriver != nil {
+			Scl_LibHandleInputDriver(p.InputDriver, &p.Loads[id], &p.Times[id], &p.Slews[id])
+		}
+		return nil
+	}
+	fans := p.Network.SclFanins(id)
+	if _, output := p.outputIndex[id]; output {
+		if len(fans) != 1 {
+			return fmt.Errorf("SCL: output %d needs one driver", id)
+		}
+		if reverse == 0 {
+			p.Times[id], p.Slews[id] = p.Times[fans[0]], p.Slews[fans[0]]
+			p.OutputTimes[p.outputIndex[id]] = SC_PairMax(&p.Times[id])
+		}
+		return nil
+	}
+	if len(fans) == 0 {
+		return nil
+	}
+	if p.Network.SclIsBarrier(id) {
+		if len(fans) != 1 {
+			return fmt.Errorf("SCL: barrier %d needs one driver", id)
+		}
+		if reverse != 0 {
+			p.Departures[fans[0]].Rise = max(p.Departures[fans[0]].Rise, p.Departures[id].Rise)
+			p.Departures[fans[0]].Fall = max(p.Departures[fans[0]].Fall, p.Departures[id].Fall)
+		} else {
+			p.Times[id], p.Slews[id] = p.Times[fans[0]], p.Slews[fans[0]]
+		}
+		return nil
+	}
+	cell := Abc_SclObjCell(p, id)
+	if cell == nil || cell.Inputs != len(fans) {
+		return fmt.Errorf("SCL: object %d has invalid cell arity", id)
+	}
+	load, departure := p.Loads[id], p.Departures[id]
+	value := float32(0)
+	if p.EstLoadAve > 0 && p.EstLoadMax > 0 {
+		value = SC_PairAve(&load) / (p.EstLoadAve * p.EstLoadMax)
+	}
+	if value > 1 {
+		cap := p.EstLoadAve * p.EstLoadMax
+		p.Loads[id] = SC_Pair{cap, cap}
+		if reverse != 0 {
+			delta := p.EstLinear * float32(math.Log(float64(value)))
+			p.Departures[id].Rise += delta
+			p.Departures[id].Fall += delta
+		}
+		p.EstimatedNodes++
+	}
+	defer func() {
+		p.Loads[id] = load
+		if reverse != 0 {
+			p.Departures[id] = departure
+		}
+	}()
+	if reverse == 0 {
+		p.Times[id], p.Slews[id] = SC_Pair{}, SC_Pair{}
+	}
+	for pin, fanin := range fans {
+		timing := Scl_CellPinTime(cell, pin)
+		if timing == nil {
+			return fmt.Errorf("SCL: missing timing arc for %s input %d", cell.Name, pin)
+		}
+		if reverse != 0 {
+			Abc_SclDeptFanin(p, timing, id, fanin)
+		} else {
+			Abc_SclTimeFanin(p, timing, id, fanin)
+		}
+	}
+	if value > 1 && reverse == 0 {
+		delta := p.EstLinear * float32(math.Log(float64(value)))
+		p.Times[id].Rise += delta
+		p.Times[id].Fall += delta
+	}
+	return nil
 }
-func Abc_SclDeptObj(p *SC_Man, pObj *Abc_Obj_t) {
-    var pTime *SC_Timing;
-    var pFanout *Abc_Obj_t;
-    var i int32;
-    SC_PairClean( Abc_SclObjDept(p, pObj) );
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-    {
-        if Abc_ObjIsCo(pFanout) || Abc_ObjIsLatch(pFanout) {
-            continue; }
-        pTime = Scl_CellPinTime( Abc_SclObjCell(pFanout), Abc_NodeFindFanin(pFanout, pObj) );
-        Abc_SclDeptFanin( p, pTime, pFanout, pObj );
-    }
+func Abc_SclTimeCone(p *SC_Man, cone []int) error {
+	// Sort by current network levels rather than trusting the caller's ID order.
+	ordered := append([]int(nil), cone...)
+	sort.SliceStable(ordered, func(i, j int) bool { return p.Levels[ordered[i]] < p.Levels[ordered[j]] })
+	Abc_SclConeClean(p, ordered)
+	for _, id := range ordered {
+		if err := Abc_SclTimeNode(p, id, 0); err != nil {
+			return err
+		}
+	}
+	return nil
 }
-func Abc_SclObjLoadValue(p *SC_Man, pObj *Abc_Obj_t) float32 {
-//    float Value = Abc_MaxFloat(pLoad->fall, pLoad->rise) / (p->EstLoadAve * p->EstLoadMax);
-    return (0.5 * Abc_SclObjLoad(p, pObj).fall + 0.5 * Abc_SclObjLoad(p, pObj).rise) / (p.EstLoadAve * p.EstLoadMax);
+func Abc_SclTimeNtkRecompute(p *SC_Man, area, delay *float32, reverse int32, user float32) error {
+	if !sclFinite(user) || user < 0 {
+		return fmt.Errorf("SCL: invalid required delay")
+	}
+	if err := p.rebuildOrder(); err != nil {
+		return err
+	}
+	if err := ensureSclMapping(p.Lib, p.Network); err != nil {
+		return err
+	}
+	if err := Abc_SclComputeLoad(p); err != nil {
+		return err
+	}
+	Abc_SclManCleanTime(p)
+	p.EstimatedNodes = 0
+	for _, id := range p.order {
+		if err := Abc_SclTimeNode(p, id, 0); err != nil {
+			return err
+		}
+	}
+	measured := Abc_SclReadMaxDelay(p)
+	if reverse != 0 {
+		measured = max(measured, user)
+		p.EstimatedNodes = 0
+		for i := len(p.order) - 1; i >= 0; i-- {
+			if err := Abc_SclTimeNode(p, p.order[i], 1); err != nil {
+				return err
+			}
+		}
+	}
+	p.SumArea, p.MaxDelay = Abc_SclGetTotalArea(p.Network), measured
+	if area != nil {
+		*area = p.SumArea
+	}
+	if delay != nil {
+		*delay = measured
+	}
+	return nil
 }
-func Abc_SclTimeCi(p *SC_Man, pObj *Abc_Obj_t) {
-    if p.pPiDrive != nil {
-        var pLoad *SC_Pair  = Abc_SclObjLoad( p, pObj );
-        var pTime *SC_Pair  = Abc_SclObjTime( p, pObj );
-        var pSlew *SC_Pair  = Abc_SclObjSlew( p, pObj );
-        Scl_LibHandleInputDriver( p.pPiDrive, pLoad, pTime, pSlew );
-    }
+func Abc_SclDeptObj(p *SC_Man, id int) error {
+	p.Departures[id] = SC_Pair{}
+	for _, fanout := range p.Network.SclFanouts(id) {
+		if _, output := p.outputIndex[fanout]; output {
+			continue
+		}
+		if p.Network.SclIsBarrier(fanout) {
+			p.Departures[id].Rise = max(p.Departures[id].Rise, p.Departures[fanout].Rise)
+			p.Departures[id].Fall = max(p.Departures[id].Fall, p.Departures[fanout].Fall)
+			continue
+		}
+		cell := Abc_SclObjCell(p, fanout)
+		if cell == nil {
+			continue
+		}
+		for pin, fanin := range p.Network.SclFanins(fanout) {
+			if fanin != id {
+				continue
+			}
+			timing := Scl_CellPinTime(cell, pin)
+			if timing == nil {
+				return fmt.Errorf("SCL: missing departure timing arc")
+			}
+			Abc_SclDeptFanin(p, timing, fanout, id)
+		}
+	}
+	return nil
 }
-func Abc_SclTimeNode(p *SC_Man, pObj *Abc_Obj_t, fDept int32) {
-    var pTime *SC_Timing;
-    var pCell *SC_Cell;
-    var k int32;
-    var pLoad *SC_Pair  = Abc_SclObjLoad( p, pObj );
-    var LoadRise float32  = pLoad.rise;
-    var LoadFall float32  = pLoad.fall;
-    var DeptRise float32;
-    var DeptFall float32;
-    var Value float32;
-    if p.EstLoadMax {
-        Value = Abc_SclObjLoadValue( p, pObj );
-    } else {
-        Value = 0;
-    }
-    var pFanin *Abc_Obj_t;
-    if Abc_ObjIsCi(pObj) {
-        assert(!(fDept != 0), "!fDept");
-        Abc_SclTimeCi( p, pObj );
-        return;
-    }
-    if Abc_ObjIsCo(pObj) {
-        if !(fDept != 0) {
-            Abc_SclObjDupFanin( p, pObj );
-            Vec_FltWriteEntry( p.vTimesOut, pObj.iData, Abc_SclObjTimeMax(p, pObj) );
-            Vec_QueUpdate( p.vQue, pObj.iData );
-        }
-        return;
-    }
-    assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)");
-//    if ( !(Abc_ObjFaninNum(pObj) == 1 && Abc_ObjIsPi(Abc_ObjFanin0(pObj))) && p->EstLoadMax && Value > 1 )
-    if p.EstLoadMax && Value > 1 {
-        pLoad.rise = p.EstLoadAve * p.EstLoadMax;
-        pLoad.fall = p.EstLoadAve * p.EstLoadMax;
-        if fDept != 0 {
-            var pDepOut *SC_Pair   = Abc_SclObjDept( p, pObj );
-            var EstDelta float32  = p.EstLinear * math.Log(float64(Value));
-            DeptRise = pDepOut.rise;
-            DeptFall = pDepOut.fall;
-            pDepOut.rise += EstDelta;
-            pDepOut.fall += EstDelta;
-        }
-        p.nEstNodes++;
-    }
-    // get the library cell
-    pCell = Abc_SclObjCell( pObj );
-    // compute for each fanin
-    Abc_ObjForEachFanin( pObj, pFanin, k )
-    {
-        pTime = Scl_CellPinTime( pCell, k );
-        if fDept != 0 {
-            Abc_SclDeptFanin( p, pTime, pObj, pFanin );
-        } else {
-            Abc_SclTimeFanin( p, pTime, pObj, pFanin ); }
-    }
-    if p.EstLoadMax && Value > 1 {
-        pLoad.rise = LoadRise;
-        pLoad.fall = LoadFall;
-        if fDept != 0 {
-            var pDepOut *SC_Pair   = Abc_SclObjDept( p, pObj );
-            pDepOut.rise = DeptRise;
-            pDepOut.fall = DeptFall;
-        
-        } else {
-            var pArrOut *SC_Pair   = Abc_SclObjTime( p, pObj );
-            var EstDelta float32  = p.EstLinear * math.Log(float64(Value));
-            pArrOut.rise += EstDelta;
-            pArrOut.fall += EstDelta;
-        }
-    }
+func Abc_SclTimeIncInsert(p *SC_Man, id int) { p.Changed = append(p.Changed, id) }
+func Abc_SclTimeIncUpdate(p *SC_Man) (int, error) {
+	if len(p.Changed) == 0 {
+		return 0, nil
+	}
+	if err := p.rebuildOrder(); err != nil {
+		return 0, err
+	}
+	scheduled := make(map[int]bool)
+	for _, id := range p.Changed {
+		if id < 0 || id >= len(p.Times) {
+			return 0, fmt.Errorf("SCL: invalid changed object %d", id)
+		}
+		scheduled[id] = true
+		for _, fanin := range p.Network.SclFanins(id) {
+			scheduled[fanin] = true
+		}
+	}
+	p.Changed = nil
+	updates := 0
+	for _, id := range p.order {
+		if !scheduled[id] {
+			continue
+		}
+		updates++
+		oldTime, oldSlew := p.Times[id], p.Slews[id]
+		if err := Abc_SclTimeNode(p, id, 0); err != nil {
+			return updates, err
+		}
+		if !SC_PairEqualE(&oldTime, &p.Times[id], .1) || !SC_PairEqualE(&oldSlew, &p.Slews[id], .1) {
+			for _, fanout := range p.Network.SclFanouts(id) {
+				scheduled[fanout] = true
+			}
+		}
+	}
+	for i := len(p.order) - 1; i >= 0; i-- {
+		id := p.order[i]
+		if !scheduled[id] {
+			continue
+		}
+		before := p.Departures[id]
+		if err := Abc_SclDeptObj(p, id); err != nil {
+			return updates, err
+		}
+		if !SC_PairEqualE(&before, &p.Departures[id], .1) {
+			for _, fanin := range p.Network.SclFanins(id) {
+				scheduled[fanin] = true
+			}
+		}
+	}
+	p.IncrementalUpdates = updates
+	p.MaxDelay = Abc_SclReadMaxDelay(p)
+	p.SumArea = Abc_SclGetTotalArea(p.Network)
+	return updates, nil
 }
-func Abc_SclTimeCone(p *SC_Man, vCone *Vec_Int_t) {
-    var fVerbose int32;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    Abc_SclConeClean( p, vCone );
-    Abc_NtkForEachObjVec( vCone, p.pNtk, pObj, i )
-    {
-        if (fVerbose != 0) && Abc_ObjIsNode(pObj) {
-        fmt.Printf("  Updating node %d with gate %s\n", Abc_ObjId(pObj), Abc_SclObjCell(pObj).pName); }
-        if (fVerbose != 0) && Abc_ObjIsNode(pObj) {
-        fmt.Printf("    before (%6.1f ps  %6.1f ps)   ", Abc_SclObjTimeOne(p, pObj, 1), Abc_SclObjTimeOne(p, pObj, 0)); }
-        Abc_SclTimeNode( p, pObj, 0 );
-        if (fVerbose != 0) && Abc_ObjIsNode(pObj) {
-        fmt.Printf("after (%6.1f ps  %6.1f ps)\n", Abc_SclObjTimeOne(p, pObj, 1), Abc_SclObjTimeOne(p, pObj, 0)); }
-    }
+func Abc_SclTimeIncCheckLevel(network TimingNetwork) error {
+	manager, err := NewTimingManager(network.SclMapping().Lib, network)
+	if err != nil {
+		return err
+	}
+	_ = manager
+	return nil
 }
-func Abc_SclTimeNtkRecompute(p *SC_Man, pArea *float32, pDelay *float32, fReverse int32, DUser float32) {
-    var pObj *Abc_Obj_t;
-    var D float32;
-    var i int32;
-    Abc_SclComputeLoad( p );
-    Abc_SclManCleanTime( p );
-    p.nEstNodes = 0;
-    Abc_NtkForEachCi( p.pNtk, pObj, i )
-        Abc_SclTimeNode( p, pObj, 0 );
-    Abc_NtkForEachNode1( p.pNtk, pObj, i )
-        Abc_SclTimeNode( p, pObj, 0 );
-    Abc_NtkForEachCo( p.pNtk, pObj, i )
-        Abc_SclTimeNode( p, pObj, 0 );
-    D = Abc_SclReadMaxDelay( p );
-    if (fReverse != 0) && DUser > 0 && D < DUser {
-        D = DUser; }
-    if pArea != nil {
-        *pArea = Abc_SclGetTotalArea(p.pNtk); }
-    if pDelay != nil {
-        *pDelay = D; }
-    if fReverse != 0 {
-        p.nEstNodes = 0;
-        Abc_NtkForEachNodeReverse1( p.pNtk, pObj, i )
-            Abc_SclTimeNode( p, pObj, 1 );
-    }
+func Abc_SclTimeIncUpdateLevel(p *SC_Man, id int) error     { return p.rebuildOrder() }
+func Abc_SclTimeIncUpdateLevel_rec(p *SC_Man, id int) error { return p.rebuildOrder() }
+func Abc_SclManReadSlewAndLoad(p *SC_Man, network TimingNetwork) error {
+	frame := abcmain.Abc_FrameGetGlobalFrame()
+	load := frame.MaxLoad
+	if !sclFinite(load) || load < 0 {
+		return fmt.Errorf("SCL: invalid default output load")
+	}
+	for _, id := range network.SclOutputs() {
+		p.Loads[id] = SC_Pair{load, load}
+	}
+	name := frame.StringValue("pDrivingCell")
+	if name != "" {
+		cell := Abc_SclCellFind(p.Lib, name)
+		if cell < 0 || p.Lib.Cells[cell].Inputs != 1 {
+			return fmt.Errorf("SCL: default input driving cell %s unavailable or not unary", name)
+		}
+		p.InputDriver = p.Lib.Cells[cell]
+	}
+	return nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Incremental timing update.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclTimeIncUpdateClean(p *SC_Man) {
-    var vLevel *Vec_Int_t;
-    var pObj *Abc_Obj_t;
-    var i, k int32;
-    Vec_WecForEachLevel( p.vLevels, vLevel, i )
-    {
-        Abc_NtkForEachObjVec( vLevel, p.pNtk, pObj, k )
-        {
-            assert(pObj.fMarkC == 1, "pObj.fMarkC == 1");
-            pObj.fMarkC = 0;
-        }
-        Vec_IntClear( vLevel );
-    }
+func Abc_SclManStart(lib *SC_Lib, network TimingNetwork, wire, depart int32, user float32, ratio int32) (*SC_Man, error) {
+	p, err := NewTimingManager(lib, network)
+	if err != nil {
+		return nil, err
+	}
+	if ratio < 0 {
+		return nil, fmt.Errorf("SCL: negative buffer-tree ratio")
+	}
+	if ratio > 0 {
+		p.EstLoadMax = .01 * float32(ratio)
+		p.EstLinear = 100
+	}
+	if err = Abc_SclManReadSlewAndLoad(p, network); err != nil {
+		return nil, err
+	}
+	if wire != 0 {
+		p.WireLoad = Abc_SclFindWireLoadModel(lib, Abc_SclGetTotalArea(network))
+	}
+	if err = Abc_SclTimeNtkRecompute(p, &p.InitialArea, &p.InitialDelay, depart, user); err != nil {
+		return nil, err
+	}
+	return p, nil
 }
-func Abc_SclTimeIncAddNode(p *SC_Man, pObj *Abc_Obj_t) {
-    assert(!Abc_ObjIsLatch(pObj), "!Abc_ObjIsLatch(pObj)");
-    assert(pObj.fMarkC == 0, "pObj.fMarkC == 0");
-    pObj.fMarkC = 1;
-    Vec_IntPush( Vec_WecEntry(p.vLevels, Abc_ObjLevel(pObj)), Abc_ObjId(pObj) );
-    p.nIncUpdates++;
+func Abc_SclTimeNtkPrint(p *SC_Man, all, path int32) error {
+	phase := int32(0)
+	end := Abc_SclFindCriticalCo(p, &phase)
+	if end < 0 {
+		return fmt.Errorf("SCL: network has no output")
+	}
+	p.ReportDelay = SC_PairMax(&p.Times[end])
+	writer := p.Output
+	if writer == nil {
+		writer = os.Stdout
+	}
+	if _, err := fmt.Fprintf(writer, "Gates = %d Area = %.2f Delay = %.2f\n", len(sclMappedNodes(p.Network)), p.SumArea, p.ReportDelay); err != nil {
+		return err
+	}
+	printNode := func(id int) error {
+		cell := Abc_SclObjCell(p, id)
+		name := "terminal"
+		if cell != nil {
+			name = cell.Name
+		}
+		_, err := fmt.Fprintf(writer, "%d %s arrival=(%.3f,%.3f) slew=(%.3f,%.3f) load=(%.3f,%.3f) slack=%.3f\n", id, name, p.Times[id].Rise, p.Times[id].Fall, p.Slews[id].Rise, p.Slews[id].Fall, p.Loads[id].Rise, p.Loads[id].Fall, Abc_SclObjGetSlack(p, id, p.InitialDelay))
+		return err
+	}
+	if all != 0 {
+		for _, id := range p.order {
+			if p.Network.SclIsNode(id) {
+				if err := printNode(id); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	if path != 0 {
+		var trace []int
+		seen := make(map[int]bool)
+		for id := end; id >= 0; id = Abc_SclFindMostCriticalFanin(p, &phase, id) {
+			if seen[id] {
+				return fmt.Errorf("SCL: critical path cycle")
+			}
+			seen[id] = true
+			trace = append(trace, id)
+		}
+		for i := len(trace) - 1; i >= 0; i-- {
+			if err := printNode(trace[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
-func Abc_SclTimeIncAddFanins(p *SC_Man, pObj *Abc_Obj_t) {
-    var pFanin *Abc_Obj_t;
-    var i int32;
-    Abc_ObjForEachFanin( pObj, pFanin, i )
-//        if ( !pFanin->fMarkC && Abc_ObjIsNode(pFanin) )
-        if ( !pFanin.fMarkC && !Abc_ObjIsLatch(pFanin) )
-            Abc_SclTimeIncAddNode( p, pFanin );
+func Abc_SclTimePerformInt(lib *SC_Lib, network TimingNetwork, ratio, wire, all, path, dump int32) error {
+	p, err := Abc_SclManStart(lib, network, wire, 1, 0, ratio)
+	if err != nil {
+		return err
+	}
+	defer Abc_SclManFree(p)
+	if err = Abc_SclTimeNtkPrint(p, all, path); err != nil {
+		return err
+	}
+	if dump != 0 {
+		return Abc_SclDumpStats(p, "stats.txt", 0)
+	}
+	return nil
 }
-func Abc_SclTimeIncAddFanouts(p *SC_Man, pObj *Abc_Obj_t) {
-    var pFanout *Abc_Obj_t;
-    var i int32;
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-        if ( !pFanout.fMarkC && !Abc_ObjIsLatch(pFanout) )
-            Abc_SclTimeIncAddNode( p, pFanout );
+func Abc_SclTimePerform(lib *SC_Lib, network TimingNetwork, ratio, wire, all, path, dump int32) error {
+	return Abc_SclTimePerformInt(lib, network, ratio, wire, all, path, dump)
 }
-func Abc_SclTimeIncUpdateArrival(p *SC_Man) {
-    var vLevel *Vec_Int_t;
-    var ArrOut, SlewOut SC_Pair;
-    var pArrOut, pSlewOut *SC_Pair;
-    var pObj *Abc_Obj_t;
-    var E float32  = float32(0.1);
-    var i, k int32;
-    Vec_WecForEachLevel( p.vLevels, vLevel, i )
-    {
-        Abc_NtkForEachObjVec( vLevel, p.pNtk, pObj, k )
-        {
-            if Abc_ObjIsCo(pObj) {
-                Abc_SclObjDupFanin( p, pObj );
-                Vec_FltWriteEntry( p.vTimesOut, pObj.iData, Abc_SclObjTimeMax(p, pObj) );
-                Vec_QueUpdate( p.vQue, pObj.iData );
-                continue;
-            }
-            pArrOut  = Abc_SclObjTime( p, pObj );
-            pSlewOut = Abc_SclObjSlew( p, pObj );
-            SC_PairMove( &ArrOut,  pArrOut  );
-            SC_PairMove( &SlewOut, pSlewOut );
-            Abc_SclTimeNode( p, pObj, 0 );
-//            if ( !SC_PairEqual(&ArrOut, pArrOut) || !SC_PairEqual(&SlewOut, pSlewOut) )
-            if !SC_PairEqualE(&ArrOut, pArrOut, E) || !SC_PairEqualE(&SlewOut, pSlewOut, E) {
-                Abc_SclTimeIncAddFanouts( p, pObj ); }
-        }
-    }
-    p.MaxDelay = Abc_SclReadMaxDelay( p );
+func Abc_SclCheckCommonInputs(network TimingNetwork, id, fanin int) bool {
+	seen := make(map[int]bool)
+	for _, input := range network.SclFanins(fanin) {
+		seen[input] = true
+	}
+	for _, input := range network.SclFanins(id) {
+		if seen[input] {
+			return true
+		}
+	}
+	return false
 }
-func Abc_SclTimeIncUpdateDeparture(p *SC_Man) {
-    var vLevel *Vec_Int_t;
-    var DepOut SC_Pair;
-    var pDepOut *SC_Pair;
-    var pObj *Abc_Obj_t;
-    var E float32  = float32(0.1);
-    var i, k int32;
-    Vec_WecForEachLevelReverse( p.vLevels, vLevel, i )
-    {
-        Abc_NtkForEachObjVec( vLevel, p.pNtk, pObj, k )
-        {
-            pDepOut = Abc_SclObjDept( p, pObj );
-            SC_PairMove( &DepOut, pDepOut );
-            Abc_SclDeptObj( p, pObj );
-//            if ( !SC_PairEqual(&DepOut, pDepOut) )
-            if !SC_PairEqualE(&DepOut, pDepOut, E) {
-                Abc_SclTimeIncAddFanins( p, pObj ); }
-        }
-    } 
-    p.MaxDelay = Abc_SclReadMaxDelay( p );
-}
-func Abc_SclTimeIncCheckLevel(pNtk *Abc_Ntk_t) {
-    var pObj *Abc_Obj_t;
-    var i int32;
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        if ( int32(pObj.Level) != Abc_ObjLevelNew(pObj) )
-            fmt.Printf("Level of node %d is out of date!\n", i);
-}
-func Abc_SclTimeIncUpdate(p *SC_Man) int32 {
-    var pObj *Abc_Obj_t;
-    var i, RetValue int32;
-    if Vec_IntSize(p.vChanged) == 0 {
-        return 0; }
-//    Abc_SclTimeIncCheckLevel( p->pNtk );
-    Abc_NtkForEachObjVec( p.vChanged, p.pNtk, pObj, i )
-    {
-        Abc_SclTimeIncAddFanins( p, pObj );
-        if pObj.fMarkC {
-            continue; }
-        Abc_SclTimeIncAddNode( p, pObj );
-    }
-    Vec_IntClear( p.vChanged );
-    Abc_SclTimeIncUpdateArrival( p );
-    Abc_SclTimeIncUpdateDeparture( p );
-    Abc_SclTimeIncUpdateClean( p );
-    RetValue = p.nIncUpdates;
-    p.nIncUpdates = 0;
-    return RetValue;
-}
-func Abc_SclTimeIncInsert(p *SC_Man, pObj *Abc_Obj_t) {
-    Vec_IntPush( p.vChanged, Abc_ObjId(pObj) );
-}
-func Abc_SclTimeIncUpdateLevel_rec(pObj *Abc_Obj_t) {
-    var pFanout *Abc_Obj_t;
-    var i int32;
-    var LevelNew int32 = Abc_ObjLevelNew(pObj);
-    if LevelNew == int32(pObj.Level) && Abc_ObjIsNode(pObj) && Abc_ObjFaninNum(pObj) > 0 {
-        return; }
-    pObj.Level = LevelNew;
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-        Abc_SclTimeIncUpdateLevel_rec( pFanout );
-}
-func Abc_SclTimeIncUpdateLevel(pObj *Abc_Obj_t) {
-    Abc_SclTimeIncUpdateLevel_rec( pObj );
+func Abc_SclPrintFaninPairs(p *SC_Man, network TimingNetwork) {
+	for _, id := range sclMappedNodes(network) {
+		for _, fanin := range network.SclFanins(id) {
+			if network.SclIsNode(fanin) && len(network.SclFanouts(fanin)) == 1 && Abc_SclCheckCommonInputs(network, id, fanin) {
+				fmt.Fprintf(p.Output, "Node %d and fanin %d have common inputs\n", id, fanin)
+			}
+		}
+	}
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Read input slew and output load.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclManReadSlewAndLoad(p *SC_Man, pNtk *Abc_Ntk_t) {
-    if Abc_FrameReadMaxLoad() {
-        var pObj *Abc_Obj_t;  var i int32;
-        var MaxLoad float32  = Abc_FrameReadMaxLoad();
-//        printf( "Default output load is specified (%.2f ff).\n", MaxLoad );
-        Abc_NtkForEachPo( pNtk, pObj, i )
-        {
-            var pLoad *SC_Pair  = Abc_SclObjLoad( p, pObj );
-            pLoad.rise = pLoad.fall = MaxLoad;
-        }
-    }
-    if Abc_FrameReadDrivingCell() {
-        var iCell int32  = Abc_SclCellFind( p.pLib, Abc_FrameReadDrivingCell() );
-        if iCell == -1 {
-            fmt.Printf("Cannot find the default PI driving cell (%s) in the library.\n", Abc_FrameReadDrivingCell());
-        } else {
-//            printf( "Default PI driving cell is specified (%s).\n", Abc_FrameReadDrivingCell() );
-            p.pPiDrive = SC_LibCell( p.pLib, iCell );
-            assert(p.pPiDrive != nil, "p.pPiDrive != nil");
-            assert(p.pPiDrive.n_inputs == 1, "p.pPiDrive.n_inputs == 1");
-        }
-    }
+func sclIsBuffer(network TimingNetwork, id int) bool {
+	return network.SclIsNode(id) && len(network.SclFanins(id)) == 1
 }
- 
-/**Function*************************************************************
-
-  Synopsis    [Prepare timing manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclManStart(pLib *SC_Lib, pNtk *Abc_Ntk_t, fUseWireLoads int32, fDept int32, DUser float32, nTreeCRatio int32) *SC_Man {
-    var p *SC_Man  = Abc_SclManAlloc( pLib, pNtk );
-    if nTreeCRatio != 0 {
-        p.EstLoadMax = 0.01 * nTreeCRatio;  // max ratio of Cout/Cave when the estimation is used
-        p.EstLinear  = 100;                  // linear coefficient
-    }
-    Abc_SclMioGates2SclGates( pLib, pNtk );
-    Abc_SclManReadSlewAndLoad( p, pNtk );
-    if fUseWireLoads != 0 {
-        if pNtk.pWLoadUsed == nil {            
-            p.pWLoadUsed = Abc_SclFindWireLoadModel( pLib, Abc_SclGetTotalArea(p.pNtk) );
-            if p.pWLoadUsed {
-            pNtk.pWLoadUsed = Abc_UtilStrsav( p.pWLoadUsed.pName ); }
-        
-        } else {
-            p.pWLoadUsed = Abc_SclFetchWireLoadModel( pLib, pNtk.pWLoadUsed ); }
-    }
-    Abc_SclTimeNtkRecompute( p, &p.SumArea0, &p.MaxDelay0, fDept, DUser );
-    p.SumArea  = p.SumArea0;
-    p.MaxDelay = p.MaxDelay0;
-    return p;
+func Abc_SclHasBufferFanout(network TimingNetwork, id int) bool {
+	for _, fanout := range network.SclFanouts(id) {
+		if sclIsBuffer(network, fanout) {
+			return true
+		}
+	}
+	return false
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Printing out timing information for the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclTimePerformInt(pLib *SC_Lib, pNtk *Abc_Ntk_t, nTreeCRatio int32, fUseWireLoads int32, fShowAll int32, fPrintPath int32, fDumpStats int32) {
-    var p *SC_Man;
-    p = Abc_SclManStart( pLib, pNtk, fUseWireLoads, 1, 0, nTreeCRatio );
-    Abc_SclTimeNtkPrint( p, fShowAll, fPrintPath );
-    if fDumpStats != 0 {
-        Abc_SclDumpStats( p, "stats.txt", 0 ); }
-    Abc_SclManFree( p );
+func sclBufferWalk(network TimingNetwork, id int, visit func(int, bool) float32) float32 {
+	memo := make(map[int]float32)
+	active := make(map[int]bool)
+	var walk func(int) float32
+	walk = func(node int) float32 {
+		if value, ok := memo[node]; ok {
+			return value
+		}
+		if active[node] {
+			panic("SCL: cycle in buffer tree")
+		}
+		active[node] = true
+		buffer := sclIsBuffer(network, node)
+		value := visit(node, buffer)
+		if buffer {
+			for _, fanout := range network.SclFanouts(node) {
+				value += walk(fanout)
+			}
+		}
+		delete(active, node)
+		memo[node] = value
+		return value
+	}
+	return walk(id)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclTimePerform(pLib *SC_Lib, pNtk *Abc_Ntk_t, nTreeCRatio int32, fUseWireLoads int32, fShowAll int32, fPrintPath int32, fDumpStats int32) {
-    var pNtkNew *Abc_Ntk_t  = pNtk;
-    if pNtk.nBarBufs2 > 0 {
-        pNtkNew = Abc_NtkDupDfsNoBarBufs( pNtk ); }
-    Abc_SclTimePerformInt( pLib, pNtkNew, nTreeCRatio, fUseWireLoads, fShowAll, fPrintPath, fDumpStats );
-    if pNtk.nBarBufs2 > 0 {
-        Abc_NtkDelete( pNtkNew ); }
+func Abc_SclCountBufferFanoutsInt(network TimingNetwork, id int) int {
+	memo, active := make(map[int]int), make(map[int]bool)
+	var walk func(int) int
+	walk = func(node int) int {
+		if value, ok := memo[node]; ok {
+			return value
+		}
+		if active[node] {
+			panic("SCL: cycle in buffer tree")
+		}
+		active[node] = true
+		value := 0
+		if sclIsBuffer(network, node) {
+			value++
+		}
+		for _, fanout := range network.SclFanouts(node) {
+			if sclIsBuffer(network, fanout) {
+				value += walk(fanout)
+			}
+		}
+		delete(active, node)
+		memo[node] = value
+		return value
+	}
+	return walk(id)
 }
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Printing out fanin information.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SclCheckCommonInputs(pObj *Abc_Obj_t, pFanin *Abc_Obj_t) int32 {
-    var pTemp *Abc_Obj_t;
-    var i int32;
-    Abc_ObjForEachFanin( pObj, pTemp, i )
-        if Abc_NodeFindFanin( pFanin, pTemp ) >= 0 {
-            fmt.Printf("Node %d and its fanin %d have common fanin %d.\n", Abc_ObjId(pObj), Abc_ObjId(pFanin), Abc_ObjId(pTemp));
-
-            fmt.Printf("%-16s : ", Mio_GateReadName((Mio_Gate_t *)pObj.pData)); 
-            Abc_ObjPrint( os.Stdout, pObj );
-
-            fmt.Printf("%-16s : ", Mio_GateReadName((Mio_Gate_t *)pFanin.pData)); 
-            Abc_ObjPrint( os.Stdout, pFanin );
-
-            if pTemp.pData {
-            fmt.Printf("%-16s : ", Mio_GateReadName((Mio_Gate_t *)pTemp.pData)); } 
-            Abc_ObjPrint( os.Stdout, pTemp );
-            return 1;
-        }
-    return 0;
+func Abc_SclCountBufferFanouts(network TimingNetwork, id int) int {
+	count := Abc_SclCountBufferFanoutsInt(network, id)
+	if sclIsBuffer(network, id) {
+		count--
+	}
+	return count
 }
-func Abc_SclPrintFaninPairs(p *SC_Man, pNtk *Abc_Ntk_t) {
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k int32;
-    Abc_NtkForEachNode( pNtk, pObj, i )
-        Abc_ObjForEachFanin( pObj, pFanin, k )
-            if ( Abc_ObjIsNode(pFanin) && Abc_ObjFanoutNum(pFanin) == 1 )
-                Abc_SclCheckCommonInputs( pObj, pFanin );
+func Abc_SclCountNonBufferFanoutsInt(network TimingNetwork, id int) int {
+	return int(sclBufferWalk(network, id, func(_ int, buffer bool) float32 {
+		if !buffer {
+			return 1
+		}
+		return 0
+	}))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Printing out buffer information.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_ObjIsBuffer(pObj *Abc_Obj_t) int32 { return Abc_ObjIsNode(pObj) && Abc_ObjFaninNum(pObj) == 1; }
-func Abc_SclHasBufferFanout(pObj *Abc_Obj_t) int32 {
-    var pFanout *Abc_Obj_t;
-    var i int32;
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-        if ( Abc_ObjIsBuffer(pFanout) )
-            return 1;
-    return 0;
+func Abc_SclCountNonBufferFanouts(network TimingNetwork, id int) int {
+	count := 0
+	for _, fanout := range network.SclFanouts(id) {
+		count += Abc_SclCountNonBufferFanoutsInt(network, fanout)
+	}
+	return count
 }
-func Abc_SclCountBufferFanoutsInt(pObj *Abc_Obj_t) int32 {
-    var pFanout *Abc_Obj_t;
-    var i, Counter int32;
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-        if ( Abc_ObjIsBuffer(pFanout) )
-            Counter += Abc_SclCountBufferFanoutsInt( pFanout );
-    return Counter + Abc_ObjIsBuffer(pObj);
+func Abc_SclCountNonBufferDelayInt(p *SC_Man, id int) float32 {
+	return sclBufferWalk(p.Network, id, func(node int, buffer bool) float32 {
+		if buffer {
+			return 0
+		}
+		return SC_PairMax(&p.Times[node])
+	})
 }
-func Abc_SclCountBufferFanouts(pObj *Abc_Obj_t) int32 {
-    return Abc_SclCountBufferFanoutsInt(pObj) - Abc_ObjIsBuffer(pObj);
+func Abc_SclCountNonBufferDelay(p *SC_Man, id int) float32 {
+	var total float32
+	for _, fanout := range p.Network.SclFanouts(id) {
+		total += Abc_SclCountNonBufferDelayInt(p, fanout)
+	}
+	return total
 }
-func Abc_SclCountNonBufferFanoutsInt(pObj *Abc_Obj_t) int32 {
-    var pFanout *Abc_Obj_t;
-    var i, Counter int32;
-    if !(Abc_ObjIsBuffer(pObj) != 0) {
-        return 1; }
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-        Counter += Abc_SclCountNonBufferFanoutsInt( pFanout );
-    return Counter;
+func Abc_SclCountNonBufferLoadInt(p *SC_Man, id int) float32 {
+	return sclBufferWalk(p.Network, id, func(node int, buffer bool) float32 {
+		if !buffer {
+			return 0
+		}
+		cell := Abc_SclObjCell(p, node)
+		cap := float32(0)
+		if cell != nil && cell.Inputs > 0 {
+			cap = SC_CellPinCap(cell, 0)
+		}
+		return SC_PairAve(&p.Loads[node]) - cap
+	})
 }
-func Abc_SclCountNonBufferFanouts(pObj *Abc_Obj_t) int32 {
-    var pFanout *Abc_Obj_t;
-    var i, Counter int32;
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-        Counter += Abc_SclCountNonBufferFanoutsInt( pFanout );
-    return Counter;
+func Abc_SclCountNonBufferLoad(p *SC_Man, id int) float32 {
+	total := SC_PairAve(&p.Loads[id])
+	for _, fanout := range p.Network.SclFanouts(id) {
+		total += Abc_SclCountNonBufferLoadInt(p, fanout)
+	}
+	return total
 }
-func Abc_SclCountNonBufferDelayInt(p *SC_Man, pObj *Abc_Obj_t) float32 {
-    var pFanout *Abc_Obj_t;
-    var Delay float32;
-    var i int32; 
-    if !(Abc_ObjIsBuffer(pObj) != 0) {
-        return Abc_SclObjTimeMax(p, pObj); }
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-        Delay += Abc_SclCountNonBufferDelayInt( p, pFanout );
-    return Delay;
+func Abc_SclPrintBuffersOne(p *SC_Man, id, offset int) error {
+	cell := Abc_SclObjCell(p, id)
+	name := "pi"
+	area := float32(0)
+	if cell != nil {
+		name, area = cell.Name, cell.Area
+	}
+	writer := p.Output
+	if writer == nil {
+		writer = os.Stdout
+	}
+	_, err := fmt.Fprintf(writer, "%*s%d: %s fanout=%d buffers=%d endpoints=%d area=%.2f delay=(%.2f,%.2f) load=%.2f slew=%.2f slack=%.2f\n", max(offset, 0)*4, "", id, name, len(p.Network.SclFanouts(id)), Abc_SclCountBufferFanouts(p.Network, id), Abc_SclCountNonBufferFanouts(p.Network, id), area, p.Times[id].Rise, p.Times[id].Fall, SC_PairMax(&p.Loads[id]), SC_PairMax(&p.Slews[id]), Abc_SclObjGetSlack(p, id, p.InitialDelay))
+	return err
 }
-func Abc_SclCountNonBufferDelay(p *SC_Man, pObj *Abc_Obj_t) float32 {
-    var pFanout *Abc_Obj_t;
-    var Delay float32;
-    var i int32; 
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-        Delay += Abc_SclCountNonBufferDelayInt( p, pFanout );
-    return Delay;
+func Abc_SclPrintBuffersInt(p *SC_Man, id, offset int) error {
+	if err := Abc_SclPrintBuffersOne(p, id, offset); err != nil {
+		return err
+	}
+	for _, fanout := range p.Network.SclFanouts(id) {
+		if sclIsBuffer(p.Network, fanout) {
+			if err := Abc_SclPrintBuffersInt(p, fanout, offset+1); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
-func Abc_SclCountNonBufferLoadInt(p *SC_Man, pObj *Abc_Obj_t) float32 {
-    var pFanout *Abc_Obj_t;
-    var Load float32;
-    var i int32; 
-    if !(Abc_ObjIsBuffer(pObj) != 0) {
-        return 0; }
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-        Load += Abc_SclCountNonBufferLoadInt( p, pFanout );
-    Load += 0.5 * Abc_SclObjLoad(p, pObj).rise + 0.5 * Abc_SclObjLoad(p, pObj).fall;
-    Load -= 0.5 * SC_CellPin(Abc_SclObjCell(pObj), 0).rise_cap + 0.5 * SC_CellPin(Abc_SclObjCell(pObj), 0).fall_cap;
-    return Load;
+func Abc_SclPrintBufferTrees(p *SC_Man, network TimingNetwork) error {
+	for _, id := range network.SclObjectIDs() {
+		if !sclIsBuffer(network, id) && Abc_SclCountBufferFanouts(network, id) > 3 {
+			if err := Abc_SclPrintBuffersOne(p, id, 0); err != nil {
+				return err
+			}
+			for _, fanout := range network.SclFanouts(id) {
+				if sclIsBuffer(network, fanout) {
+					if err := Abc_SclPrintBuffersInt(p, fanout, 1); err != nil {
+						return err
+					}
+				}
+			}
+		}
+	}
+	return nil
 }
-func Abc_SclCountNonBufferLoad(p *SC_Man, pObj *Abc_Obj_t) float32 {
-    var pFanout *Abc_Obj_t;
-    var Load float32;
-    var i int32; 
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-        Load += Abc_SclCountNonBufferLoadInt( p, pFanout );
-    Load += 0.5 * Abc_SclObjLoad(p, pObj).rise + 0.5 * Abc_SclObjLoad(p, pObj).fall;
-    return Load;
+func Abc_SclPrintBuffers(lib *SC_Lib, network TimingNetwork, verbose int32) error {
+	p, err := Abc_SclManStart(lib, network, 0, 1, 0, 10000)
+	if err != nil {
+		return err
+	}
+	defer Abc_SclManFree(p)
+	return Abc_SclPrintBufferTrees(p, network)
 }
-func Abc_SclPrintBuffersOne(p *SC_Man, pObj *Abc_Obj_t, nOffset int32) {
-    var i int32;
-    for  i = 0; i < nOffset; i++  {
-        fmt.Printf("    ");
-    }
-    fmt.Printf("%6d: %-16s (%2d:%3d:%3d)  ", Abc_ObjId(pObj), Abc_ObjIsPi(pObj) ? "pi" : Mio_GateReadName((Mio_Gate_t *)pObj.pData), Abc_ObjFanoutNum(pObj), Abc_SclCountBufferFanouts(pObj), Abc_SclCountNonBufferFanouts(pObj));
-    for  ; i < 4; i++  {
-        fmt.Printf("    ");
-    }
-    fmt.Printf("a =%5.2f  ", Abc_ObjIsPi(pObj) ? 0 : Abc_SclObjCell(pObj).area);
-    fmt.Printf("d = (");
-    fmt.Printf("%6.0f ps; ", Abc_SclObjTimeOne(p, pObj, 1));
-    fmt.Printf("%6.0f ps)  ", Abc_SclObjTimeOne(p, pObj, 0));
-    fmt.Printf("l =%5.0f ff  ", Abc_SclObjLoadMax(p, pObj));
-    fmt.Printf("s =%5.0f ps   ", Abc_SclObjSlewMax(p, pObj));
-    fmt.Printf("sl =%5.0f ps   ", Abc_SclObjSlackMax(p, pObj, p.MaxDelay0));
-    if nOffset == 0 {
-    fmt.Printf("L =%5.0f ff   ", Abc_SclCountNonBufferLoad(p, pObj));
-    fmt.Printf("Lx =%5.0f ff  ", 100.0*Abc_SclCountNonBufferLoad(p, pObj)/p.EstLoadAve);
-    fmt.Printf("Dx =%5.0f ps  ", Abc_SclCountNonBufferDelay(p, pObj)/Abc_SclCountNonBufferFanouts(pObj) - Abc_SclObjTimeOne(p, pObj, 1));
-    fmt.Printf("Cx =%5.0f ps", (Abc_SclCountNonBufferDelay(p, pObj)/Abc_SclCountNonBufferFanouts(pObj) - Abc_SclObjTimeOne(p, pObj, 1))/math.Log(float64(Abc_SclCountNonBufferLoad(p, pObj)/p.EstLoadAve)));
-    }
-    fmt.Printf("\n");
+func Abc_SclDumpStats(p *SC_Man, filename string, elapsed time.Duration) error {
+	file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		return err
+	}
+	name := p.Network.SclName()
+	nodes := len(sclMappedNodes(p.Network))
+	if p.statsName != name || p.statsStart.IsZero() {
+		_, err = fmt.Fprintf(file, "\n%s %d %d %d %.0f %.0f ", filepath.Base(name), len(p.Network.SclInputs()), len(p.Network.SclOutputs()), nodes, p.SumArea, p.ReportDelay)
+		if err == nil {
+			p.statsName, p.statsNodes, p.statsArea, p.statsDelay, p.statsStart = name, nodes, p.SumArea, p.ReportDelay, time.Now()
+		}
+	} else {
+		ratio := func(value, baseline float32) float32 {
+			if baseline == 0 {
+				return 0
+			}
+			return 100 * value / baseline
+		}
+		if elapsed <= 0 {
+			elapsed = time.Since(p.statsStart)
+		}
+		_, err = fmt.Fprintf(file, " %.1f %.1f %.1f %.2f", ratio(float32(nodes), float32(p.statsNodes)), ratio(p.SumArea, p.statsArea), ratio(p.ReportDelay, p.statsDelay), elapsed.Seconds())
+	}
+	if closeErr := file.Close(); err == nil {
+		err = closeErr
+	}
+	return err
 }
-func Abc_SclPrintBuffersInt(p *SC_Man, pObj *Abc_Obj_t, nOffset int32) {
-    var pFanout *Abc_Obj_t;
-    var i int32;
-    Abc_SclPrintBuffersOne( p, pObj, nOffset );
-    assert((Abc_ObjIsBuffer(pObj) != 0), "Abc_ObjIsBuffer(pObj)");
-    Abc_ObjForEachFanout( pObj, pFanout, i )
-        if ( Abc_ObjIsBuffer(pFanout) )
-            Abc_SclPrintBuffersInt( p, pFanout, nOffset + 1 );
-}
-func Abc_SclPrintBufferTrees(p *SC_Man, pNtk *Abc_Ntk_t) {
-    var pObj, pFanout *Abc_Obj_t;
-    var i, k int32;
-    Abc_NtkForEachObj( pNtk, pObj, i )
-    {
-        if !(Abc_ObjIsBuffer(pObj) != 0) && Abc_SclCountBufferFanouts(pObj) > 3 {           
-            Abc_SclPrintBuffersOne( p, pObj, 0 );
-            Abc_ObjForEachFanout( pObj, pFanout, k )
-                if ( Abc_ObjIsBuffer(pFanout) )
-                    Abc_SclPrintBuffersInt( p, pFanout, 1 );
-            fmt.Printf("\n");
-        }
-    }
-}
-func Abc_SclPrintBuffers(pLib *SC_Lib, pNtk *Abc_Ntk_t, fVerbose int32) {
-    var fUseWireLoads int32;
-    var p *SC_Man;
-    assert(Abc_NtkIsMappedLogic(pNtk), "Abc_NtkIsMappedLogic(pNtk)");
-    p = Abc_SclManStart( pLib, pNtk, fUseWireLoads, 1, 0, 10000 ); 
-    Abc_SclPrintBufferTrees( p, pNtk ); 
-//    Abc_SclPrintFaninPairs( p, pNtk );
-    Abc_SclManFree( p );
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

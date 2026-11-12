@@ -47,11 +47,11 @@ DRUP regression generates pigeonhole4/3 UNSAT and independently validates each
 proof addition by reverse unit propagation, including the final empty clause.
 
 Native oracle reproduction from repository root (the harness is checked in at
-`testdata/native_status_oracle.cpp`):
+`test_vectors/native_status_oracle.cpp`):
 
 ```
 g++ -O2 -ffunction-sections -fdata-sections -DABC_USE_STDINT_H -I src \
-  abcgo/sat/glucose2/testdata/native_status_oracle.cpp \
+  abcgo/sat/glucose2/test_vectors/native_status_oracle.cpp \
   src/sat/glucose2/Glucose2.cpp src/sat/glucose2/Options2.cpp \
   src/sat/glucose2/System2.cpp -Wl,--gc-sections -o /tmp/glucose2-native-oracle
 /tmp/glucose2-native-oracle

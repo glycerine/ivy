@@ -66,16 +66,16 @@ func Res_WndStrash(p *Res_Win_t) *Abc_Ntk_t {
     pAig.pName = Extra_UtilStrsav( "window" );
     // create the inputs
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vLeaves)); i++ { pObj = Vec_PtrEntry(p.vLeaves, i);
         pObj.pCopy = Abc_NtkCreatePi( pAig );
     }
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vBranches)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vBranches, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vBranches)); i++ { pObj = Vec_PtrEntry(p.vBranches, i);
         pObj.pCopy = Abc_NtkCreatePi( pAig );
     }
     // go through the nodes in the topological order
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vNodes)); i++ { pObj = Vec_PtrEntry(p.vNodes, i);
         pObj.pCopy = Abc_ConvertAigToAig( pAig, pObj );
         if pObj == p.pNode {
             pObj.pCopy = Abc_ObjNot( pObj.pCopy ); }
@@ -83,7 +83,7 @@ func Res_WndStrash(p *Res_Win_t) *Abc_Ntk_t {
     // collect the POs
     vPairs = Vec_PtrAlloc( 2 * Vec_PtrSize(p.vRoots) );
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vRoots)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vRoots)); i++ { pObj = Vec_PtrEntry(p.vRoots, i);
         Vec_PtrPush( vPairs, pObj.pCopy );
         Vec_PtrPush( vPairs, nil );
     }
@@ -95,13 +95,13 @@ func Res_WndStrash(p *Res_Win_t) *Abc_Ntk_t {
     Abc_NodeSetTravIdPrevious( p.pNode );
     // redo strashing in the TFO
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vNodes)); i++ { pObj = Vec_PtrEntry(p.vNodes, i);
         if Abc_NodeIsTravIdCurrent(pObj) {
             pObj.pCopy = Abc_ConvertAigToAig( pAig, pObj ); }
     }
     // collect the POs
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vRoots)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vRoots)); i++ { pObj = Vec_PtrEntry(p.vRoots, i);
         Vec_PtrWriteEntry( vPairs, 2 * i + 1, pObj.pCopy );
     }
     // add the miter
@@ -112,12 +112,12 @@ func Res_WndStrash(p *Res_Win_t) *Abc_Ntk_t {
     Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), p.pNode.pCopy );
     // add the fanins
     // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(p.pNode)) && (((pObj) = Abc_ObjFanin(p.pNode, i)), 1); i++  {
+    for i = 0; (i < Abc_ObjFaninNum(p.pNode)); i++ { pObj = Abc_ObjFanin(p.pNode, i);
         Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), pObj.pCopy );
     }
     // add the divisors
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vDivs)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vDivs, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vDivs)); i++ { pObj = Vec_PtrEntry(p.vDivs, i);
         Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), pObj.pCopy );
     }
     // add the names

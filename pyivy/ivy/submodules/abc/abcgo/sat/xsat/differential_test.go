@@ -26,7 +26,7 @@ func TestOriginalCDifferential(t *testing.T) {
 	}
 	tmp := t.TempDir()
 	binary := filepath.Join(tmp, "original-xsat")
-	args := []string{"-O2", "-DABC_USE_STDINT_H", "-I" + filepath.Join(root, "src"), "testdata/original_driver.c"}
+	args := []string{"-O2", "-DABC_USE_STDINT_H", "-I" + filepath.Join(root, "src"), "test_vectors/original_driver.c"}
 	for _, file := range []string{"xsatSolver.c", "xsatSolverAPI.c", "xsatCnfReader.c"} {
 		args = append(args, filepath.Join(root, "src/sat/xsat", file))
 	}

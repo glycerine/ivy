@@ -1,479 +1,257 @@
 package saig
 
+// Fast packed-word sequential activity simulation, based on ABC's
+// saigSimFast.c (Alan Mishchenko, UC Berkeley).
 import (
 	"fmt"
-	"strconv"
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"math"
+	"math/bits"
 )
 
-/**CFile****************************************************************
-
-  FileName    [saigSimFast.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Sequential AIG package.]
-
-  Synopsis    [Fast sequential AIG simulator.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: saigSimFast.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "saig.h"
-
-//#include "base/main/main.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// the AIG manager
-   
+type fastNode struct {
+	kind   aig.NodeKind
+	fanins [2]int32
+}
 type Faig_Man_t struct {
-    // parameters
-    nPis            int32;
-    nPos            int32;
-    nCis            int32;
-    nCos            int32;
-    nFfs            int32;
-    nNos            int32;
-    // offsets
-    nPis1            int32;
-    nCis1            int32;
-    nCisNos1            int32;
-    nCisNosPos1            int32;
-    nObjs            int32;
-    // allocated data
-    nWords            int32;
-    pObjs [0]int32;
+	nPis, nPos, nFfs int32
+	ids              []aig.Edge // canonical compact order -> original graph object
+	nodes            []fastNode
+	outputs          []int32
 }
 
-func Faig_CheckIdPi(p *Faig_Man_t, i int32) int32 { return i >= 1 && i < p.nPis1;                     }
-func Faig_CheckIdLo(p *Faig_Man_t, i int32) int32 { return i >= p.nPis1 && i < p.nCis1;              }
-func Faig_CheckIdNo(p *Faig_Man_t, i int32) int32 { return i >= p.nCis1 && i < p.nCisNos1;           }
-func Faig_CheckIdPo(p *Faig_Man_t, i int32) int32 { return i >= p.nCisNos1 && i < p.nCisNosPos1;     }
-func Faig_CheckIdLi(p *Faig_Man_t, i int32) int32 { return i >= p.nCisNosPos1 && i < p.nObjs;        }
-func Faig_CheckIdCo(p *Faig_Man_t, i int32) int32 { return i >= p.nCisNos1 && i < p.nObjs;           }
-func Faig_CheckIdObj(p *Faig_Man_t, i int32) int32 { return i >= 0 && i < p.nObjs;                     }
-
-func Faig_ObjIdToNumPi(p *Faig_Man_t, i int32) int32 { assert((Faig_CheckIdPi(p,i) != 0), "Faig_CheckIdPi(p,i)"); return i - 1;              }
-func Faig_ObjIdToNumLo(p *Faig_Man_t, i int32) int32 { assert((Faig_CheckIdLo(p,i) != 0), "Faig_CheckIdLo(p,i)"); return i - p.nPis1;       }
-func Faig_ObjIdToNumNo(p *Faig_Man_t, i int32) int32 { assert((Faig_CheckIdNo(p,i) != 0), "Faig_CheckIdNo(p,i)"); return i - p.nCis1;       }
-func Faig_ObjIdToNumPo(p *Faig_Man_t, i int32) int32 { assert((Faig_CheckIdPo(p,i) != 0), "Faig_CheckIdPo(p,i)"); return i - p.nCisNos1;    }
-func Faig_ObjIdToNumLi(p *Faig_Man_t, i int32) int32 { assert((Faig_CheckIdLi(p,i) != 0), "Faig_CheckIdLi(p,i)"); return i - p.nCisNosPos1; }
-func Faig_ObjIdToNumCo(p *Faig_Man_t, i int32) int32 { assert((Faig_CheckIdCo(p,i) != 0), "Faig_CheckIdCo(p,i)"); return i - p.nCisNos1;    }
-
-func Faig_ObjLoToLi(p *Faig_Man_t, i int32) int32 { assert((Faig_CheckIdLo(p,i) != 0), "Faig_CheckIdLo(p,i)"); return p.nObjs - (p.nCis1 - i); }
-func Faig_ObjLiToLo(p *Faig_Man_t, i int32) int32 { assert((Faig_CheckIdLi(p,i) != 0), "Faig_CheckIdLi(p,i)"); return p.nCis1 - (p.nObjs - i); }
-
-func Faig_NodeChild0(p *Faig_Man_t, n int32) int32 { return p.pObjs[n<<1];             }
-func Faig_NodeChild1(p *Faig_Man_t, n int32) int32 { return p.pObjs[(n<<1)+1];         }
-func Faig_CoChild0(p *Faig_Man_t, n int32) int32 { return p.pObjs[(p.nNos<<1)+n];   }
-func Faig_ObjFaninC(iFan int32) int32 { return iFan & 1;                   }
-func Faig_ObjFanin(iFan int32) int32 { return iFan >> 1;                  }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if the manager is correct.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Faig_ManIsCorrect(pAig *Aig_Man_t) int32 {
-    return Aig_ManObjNumMax(pAig) == 
-        1 + Aig_ManCiNum(pAig) + Aig_ManNodeNum(pAig) + Aig_ManCoNum(pAig);
+func (p *Faig_Man_t) cis() int32                 { return p.nPis + p.nFfs }
+func (p *Faig_Man_t) nodeStart() int32           { return 1 + p.cis() }
+func (p *Faig_Man_t) outputStart() int32         { return p.nodeStart() + int32(len(p.nodes)) }
+func (p *Faig_Man_t) size() int32                { return int32(len(p.ids)) }
+func Faig_CheckIdPi(p *Faig_Man_t, i int32) bool { return i >= 1 && i <= p.nPis }
+func Faig_CheckIdLo(p *Faig_Man_t, i int32) bool { return i > p.nPis && i <= p.cis() }
+func Faig_CheckIdNo(p *Faig_Man_t, i int32) bool { return i >= p.nodeStart() && i < p.outputStart() }
+func Faig_CheckIdPo(p *Faig_Man_t, i int32) bool {
+	return i >= p.outputStart() && i < p.outputStart()+p.nPos
+}
+func Faig_CheckIdLi(p *Faig_Man_t, i int32) bool  { return i >= p.outputStart()+p.nPos && i < p.size() }
+func Faig_CheckIdCo(p *Faig_Man_t, i int32) bool  { return i >= p.outputStart() && i < p.size() }
+func Faig_CheckIdObj(p *Faig_Man_t, i int32) bool { return i >= 0 && i < p.size() }
+func fastRequire(ok bool) {
+	if !ok {
+		panic("saig: invalid fast simulation object")
+	}
+}
+func Faig_ObjIdToNumPi(p *Faig_Man_t, i int32) int32 { fastRequire(Faig_CheckIdPi(p, i)); return i - 1 }
+func Faig_ObjIdToNumLo(p *Faig_Man_t, i int32) int32 {
+	fastRequire(Faig_CheckIdLo(p, i))
+	return i - p.nPis - 1
+}
+func Faig_ObjIdToNumNo(p *Faig_Man_t, i int32) int32 {
+	fastRequire(Faig_CheckIdNo(p, i))
+	return i - p.nodeStart()
+}
+func Faig_ObjIdToNumPo(p *Faig_Man_t, i int32) int32 {
+	fastRequire(Faig_CheckIdPo(p, i))
+	return i - p.outputStart()
+}
+func Faig_ObjIdToNumLi(p *Faig_Man_t, i int32) int32 {
+	fastRequire(Faig_CheckIdLi(p, i))
+	return i - p.outputStart() - p.nPos
+}
+func Faig_ObjIdToNumCo(p *Faig_Man_t, i int32) int32 {
+	fastRequire(Faig_CheckIdCo(p, i))
+	return i - p.outputStart()
+}
+func Faig_ObjLoToLi(p *Faig_Man_t, i int32) int32 {
+	return p.outputStart() + p.nPos + Faig_ObjIdToNumLo(p, i)
+}
+func Faig_ObjLiToLo(p *Faig_Man_t, i int32) int32  { return p.nPis + 1 + Faig_ObjIdToNumLi(p, i) }
+func Faig_NodeChild0(p *Faig_Man_t, n int32) int32 { return p.nodes[n].fanins[0] }
+func Faig_NodeChild1(p *Faig_Man_t, n int32) int32 { return p.nodes[n].fanins[1] }
+func Faig_CoChild0(p *Faig_Man_t, n int32) int32   { return p.outputs[n] }
+func Faig_ObjFaninC(lit int32) int32               { return lit & 1 }
+func Faig_ObjFanin(lit int32) int32                { return lit >> 1 }
+func Faig_ManIsCorrect(graph *aig.Graph) int32 {
+	if graph == nil || graph.Check() != nil {
+		return 0
+	}
+	if aig.Aig_ManObjNumMax(graph) == 1+aig.Aig_ManCiNum(graph)+aig.Aig_ManNodeNum(graph)+aig.Aig_ManCoNum(graph) {
+		return 1
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates fast simulation manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Faig_ManAlloc(pAig *Aig_Man_t) *Faig_Man_t {
-    var p *Faig_Man_t;
-    var nWords int32;
-//    assert( Faig_ManIsCorrect(pAig) );
-    nWords = 2 * Aig_ManNodeNum(pAig) + Aig_ManCoNum(pAig);
-    // inlining of macro ABC_ALLOC
-    p = (Faig_Man_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Faig_Man_t) + sizeof(int) * nWords)));
-//printf( "Allocating %7.2f MB.\n", 1.0 * (sizeof(Faig_Man_t) + sizeof(int) * nWords)/(1<<20) );
-    memset( p, 0, sizeof(Faig_Man_t) );
-    p.nPis   = Aig_ManCiNum(pAig) - Aig_ManRegNum(pAig);
-    p.nPos   = Aig_ManCoNum(pAig) - Aig_ManRegNum(pAig);
-    p.nCis   = Aig_ManCiNum(pAig);
-    p.nCos   = Aig_ManCoNum(pAig);
-    p.nFfs   = Aig_ManRegNum(pAig);
-    p.nNos   = Aig_ManNodeNum(pAig);
-    // offsets
-    p.nPis1  = p.nPis + 1;
-    p.nCis1  = p.nCis + 1;
-    p.nCisNos1 = p.nCis + p.nNos + 1;
-    p.nCisNosPos1 = p.nCis + p.nNos + p.nPos + 1;
-    p.nObjs  = p.nCis + p.nNos + p.nCos + 1;
-    p.nWords = nWords;
-    return p;
+func Faig_ManAlloc(graph *aig.Graph) *Faig_Man_t { return Faig_ManCreate(graph) }
+func Faig_ManCreate(graph *aig.Graph) *Faig_Man_t {
+	if graph == nil {
+		panic("saig: nil simulation graph")
+	}
+	if err := graph.Check(); err != nil {
+		panic(err)
+	}
+	registers := aig.Aig_ManRegNum(graph)
+	p := &Faig_Man_t{nPis: int32(graph.InputCount()) - registers, nPos: int32(graph.OutputCount()) - registers, nFfs: registers, ids: []aig.Edge{graph.Const1()}}
+	mapping := map[int]int32{0: 0}
+	for _, input := range graph.Inputs() {
+		mapping[input.NodeID()] = int32(len(p.ids)) << 1
+		p.ids = append(p.ids, input)
+	}
+	active := make(map[int]bool)
+	var copyEdge func(aig.Edge) int32
+	copyEdge = func(edge aig.Edge) int32 {
+		id := edge.NodeID()
+		lit, ok := mapping[id]
+		if !ok {
+			if active[id] {
+				panic("saig: cycle in simulation graph")
+			}
+			active[id] = true
+			node := graph.Node(aig.Edge(id) << 1)
+			entry := fastNode{kind: node.Kind}
+			switch node.Kind {
+			case aig.And, aig.ExclusiveOr:
+				entry.fanins[0] = copyEdge(node.Fanins[0])
+				entry.fanins[1] = copyEdge(node.Fanins[1])
+			case aig.Buffer:
+				entry.fanins[0] = copyEdge(node.Fanins[0])
+			default:
+				panic("saig: invalid internal simulation node")
+			}
+			lit = int32(len(p.ids)) << 1
+			mapping[id] = lit
+			p.ids = append(p.ids, aig.Edge(id)<<1)
+			p.nodes = append(p.nodes, entry)
+			delete(active, id)
+		}
+		if edge.Complemented() {
+			lit ^= 1
+		}
+		return lit
+	}
+	for id, node := range graph.Nodes() {
+		edge := aig.Edge(id) << 1
+		if aig.Aig_ObjIsNone(graph, edge) || node.Kind == aig.Constant || node.Kind == aig.Input || node.Kind == aig.Output {
+			continue
+		}
+		copyEdge(edge)
+	}
+	for _, output := range graph.Outputs() {
+		p.outputs = append(p.outputs, copyEdge(graph.Node(output).Fanins[0]))
+	}
+	p.ids = append(p.ids, graph.Outputs()...)
+	return p
+}
+func fastLitValue(lit int32, values []uint32) uint32 {
+	v := values[lit>>1]
+	if lit&1 != 0 {
+		v = ^v
+	}
+	return v
+}
+func Faig_SimulateNode(p *Faig_Man_t, id int32, values []uint32) uint32 {
+	node := p.nodes[Faig_ObjIdToNumNo(p, id)]
+	a := fastLitValue(node.fanins[0], values)
+	if node.kind == aig.Buffer {
+		return a
+	}
+	b := fastLitValue(node.fanins[1], values)
+	if node.kind == aig.ExclusiveOr {
+		return a ^ b
+	}
+	return a & b
+}
+func Faig_SimulateCo(p *Faig_Man_t, id int32, values []uint32) uint32 {
+	return fastLitValue(p.outputs[Faig_ObjIdToNumCo(p, id)], values)
+}
+func Faig_SimulateRandomShift(old uint32) uint32         { return old<<16 | (old^aig.Aig_ManRandom(0))&0xffff }
+func Faig_SimulateTransferShift(old, next uint32) uint32 { return old<<16 | next&0xffff }
+func Faig_ManSimulateFrames(p *Faig_Man_t, frames, prefix, transitions int32) []int32 {
+	if frames < 0 || prefix < 0 || prefix > frames {
+		panic("saig: invalid simulation frames")
+	}
+	counts := make([]int32, p.size())
+	values := make([]uint32, p.size())
+	values[0] = ^uint32(0)
+	for frame := int32(0); frame < frames; frame++ {
+		for id := int32(1); id <= p.nPis; id++ {
+			if transitions != 0 && frame > 0 {
+				values[id] = Faig_SimulateRandomShift(values[id])
+			} else {
+				values[id] = aig.Aig_ManRandom(0)
+			}
+		}
+		for id := p.nPis + 1; id <= p.cis(); id++ {
+			next := uint32(0)
+			if frame > 0 {
+				next = values[Faig_ObjLoToLi(p, id)]
+			}
+			if transitions != 0 && frame > 0 {
+				next = Faig_SimulateTransferShift(values[id], next)
+			}
+			values[id] = next
+		}
+		for id := p.nodeStart(); id < p.outputStart(); id++ {
+			values[id] = Faig_SimulateNode(p, id, values)
+		}
+		for id := p.outputStart(); id < p.size(); id++ {
+			values[id] = Faig_SimulateCo(p, id, values)
+		}
+		if frame < prefix {
+			continue
+		}
+		for id, value := range values {
+			if transitions != 0 {
+				value = (value ^ (value >> 16)) & 0xffff
+			}
+			counts[id] += int32(bits.OnesCount32(value))
+		}
+	}
+	return counts
+}
+func Faig_ManComputeSwitching(ones, words int32) float32 {
+	if words <= 0 {
+		panic("saig: empty probability sample")
+	}
+	p := float32(ones) / (32 * float32(words))
+	return 2 * p * (1 - p)
+}
+func Faig_ManComputeProbOne(ones, words int32) float32 {
+	if words <= 0 {
+		panic("saig: empty probability sample")
+	}
+	return float32(ones) / (32 * float32(words))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates fast simulation manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Faig_ManCreate(pAig *Aig_Man_t) *Faig_Man_t {
-    var p *Faig_Man_t;
-    var pObj *Aig_Obj_t;
-    var i, iWord int32;
-    p = Faig_ManAlloc( pAig );
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        p.pObjs[iWord++] = (Aig_ObjFaninId0(pObj) << 1) | Aig_ObjFaninC0(pObj);
-        p.pObjs[iWord++] = (Aig_ObjFaninId1(pObj) << 1) | Aig_ObjFaninC1(pObj);
-    }
-    }
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-        p.pObjs[iWord++] = (Aig_ObjFaninId0(pObj) << 1) | Aig_ObjFaninC0(pObj);
-    }
-    assert(iWord == p.nWords, "iWord == p.nWords");
-    return p;
+// SwitchingProbabilities returns one probability per original object ID. It
+// retains all nodes, including dangling nodes, and remaps sparse/reordered IDs.
+func SwitchingProbabilities(graph *aig.Graph, frames, prefix int32, probabilityOne bool) ([]float32, error) {
+	if frames <= prefix || prefix < 0 {
+		return nil, fmt.Errorf("saig: total frames must exceed nonnegative prefix")
+	}
+	p := Faig_ManCreate(graph)
+	aig.Aig_ManRandom(1)
+	transitions := int32(1)
+	samples := float32(16) * float32(frames-prefix)
+	if probabilityOne {
+		transitions = 0
+		samples *= 2
+	}
+	counts := Faig_ManSimulateFrames(p, frames, prefix, transitions)
+	result := make([]float32, aig.Aig_ManObjNumMax(graph))
+	for id, edge := range p.ids {
+		result[edge.NodeID()] = float32(counts[id]) / samples
+	}
+	return result, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Simulates one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Faig_SimulateNode(p *Faig_Man_t, Id int32, pSimInfo *uint32) uint32 {
-    var n int32  = Faig_ObjIdToNumNo( p, Id );
-    var iFan0 int32  = Faig_NodeChild0( p, n );
-    var iFan1 int32  = Faig_NodeChild1( p, n );
-    if (Faig_ObjFaninC(iFan0) != 0) && (Faig_ObjFaninC(iFan1) != 0) {
-        return ~(pSimInfo[Faig_ObjFanin(iFan0)] | pSimInfo[Faig_ObjFanin(iFan1)]); }
-    if (Faig_ObjFaninC(iFan0) != 0) && !(Faig_ObjFaninC(iFan1) != 0) {
-        return (~pSimInfo[Faig_ObjFanin(iFan0)] & pSimInfo[Faig_ObjFanin(iFan1)]); }
-    if !(Faig_ObjFaninC(iFan0) != 0) && (Faig_ObjFaninC(iFan1) != 0) {
-        return (pSimInfo[Faig_ObjFanin(iFan0)] & ~pSimInfo[Faig_ObjFanin(iFan1)]); }
-    // if ( !Faig_ObjFaninC(iFan0) && !Faig_ObjFaninC(iFan1) )
-    return (pSimInfo[Faig_ObjFanin(iFan0)] & pSimInfo[Faig_ObjFanin(iFan1)]);
-} 
-
-/**Function*************************************************************
-
-  Synopsis    [Simulates one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Faig_SimulateCo(p *Faig_Man_t, Id int32, pSimInfo *uint32) uint32 {
-    var n int32  = Faig_ObjIdToNumCo( p, Id );
-    var iFan0 int32  = Faig_CoChild0( p, n );
-    if Faig_ObjFaninC(iFan0) != 0 {
-        return ~pSimInfo[Faig_ObjFanin(iFan0)]; }
-    // if ( !Faig_ObjFaninC(iFan0) )
-    return pSimInfo[Faig_ObjFanin(iFan0)];
+func Faig_ManComputeSwitchProbs4(graph *aig.Graph, frames, prefix, probabilityOne int32) *vec.Vec_Int_t {
+	probabilities, err := SwitchingProbabilities(graph, frames, prefix, probabilityOne != 0)
+	if err != nil {
+		panic(err)
+	}
+	result := vec.Vec_IntAlloc(len(probabilities))
+	for _, p := range probabilities {
+		vec.Vec_IntPush(result, int32(math.Float32bits(p)))
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Faig_SimulateRandomShift(uOld uint32) uint32 {
-    return (uOld << 16) | ((uOld ^ Aig_ManRandom(0)) & 0xffff);
+func Saig_ManComputeSwitchProb3s(graph *aig.Graph, frames, prefix, probabilityOne int32) *vec.Vec_Int_t {
+	return Faig_ManComputeSwitchProbs4(graph, frames, prefix, probabilityOne)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Faig_SimulateTransferShift(uOld uint32, uNew uint32) uint32 {
-    return (uOld << 16) | (uNew & 0xffff);
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Simulates the timeframes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Faig_ManSimulateFrames(p *Faig_Man_t, nFrames int32, nPref int32, fTrans int32) *int32 {
-    // inlining of macro ABC_CALLOC
-    var pNumOnes *int32  = ((int *) calloc((size_t)(p.nObjs), sizeof(int)));
-    // inlining of macro ABC_ALLOC
-    var pSimInfo *uint32  = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nObjs)));
-    var f, i int32;
-//printf( "Allocating %7.2f MB.\n", 1.0 * 4 * p->nObjs/(1<<20) );
-//printf( "Allocating %7.2f MB.\n", 1.0 * 4 * p->nObjs/(1<<20) );
-    // set constant 1
-    pSimInfo[0] = ~0;
-    for  f = 0; f < nFrames; f++  {
-        if fTrans != 0 {
-            for  i = 1; i < p.nPis1; i++  {
-                pSimInfo[i] = f? Faig_SimulateRandomShift( pSimInfo[i] ) : Aig_ManRandom( 0 );
-            }
-            for       ; i < p.nCis1; i++  {
-                pSimInfo[i] = f? Faig_SimulateTransferShift( pSimInfo[i], pSimInfo[Faig_ObjLoToLi(p,i)] ) : 0;
-            }
-        
-        } else {
-            for  i = 1; i < p.nPis1; i++  {
-                pSimInfo[i] = Aig_ManRandom( 0 );
-            }
-            for       ; i < p.nCis1; i++  {
-                pSimInfo[i] = f? pSimInfo[Faig_ObjLoToLi(p,i)] : 0;
-            }
-        }
-        for       ; i < p.nCisNos1; i++  {
-            pSimInfo[i] = Faig_SimulateNode( p, i, pSimInfo );
-        }
-        for       ; i < p.nObjs; i++  {
-            pSimInfo[i] = Faig_SimulateCo( p, i, pSimInfo );
-        }
-        if f < nPref {
-            continue; }
-        if fTrans != 0 {
-            for  i = 0; i < p.nObjs; i++  {
-                pNumOnes[i] += Aig_WordCountOnes( (pSimInfo[i] ^ (pSimInfo[i] >> 16)) & 0xffff );
-            }
-        
-        } else {
-            for  i = 0; i < p.nObjs; i++  {
-                pNumOnes[i] += Aig_WordCountOnes( pSimInfo[i] );
-            }
-        }
-    }
-    pSimInfo = nil;
-    return pNumOnes;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes switching activity of one node.]
-
-  Description [Uses the formula: Switching = 2 * nOnes * nZeros / (nTotal ^ 2) ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Faig_ManComputeSwitching(nOnes int32, nSimWords int32) float32 {
-    var nTotal int32  = 32 * nSimWords;
-    return float32(2.0) * nOnes / nTotal * (nTotal - nOnes) / nTotal;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes switching activity of one node.]
-
-  Description [Uses the formula: Switching = 2 * nOnes * nZeros / (nTotal ^ 2) ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Faig_ManComputeProbOne(nOnes int32, nSimWords int32) float32 {
-    var nTotal int32  = 32 * nSimWords;
-    return float32(nOnes) / nTotal;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Faig_ManComputeSwitchProbs4(p *Aig_Man_t, nFrames int32, nPref int32, fProbOne int32) *Vec_Int_t {
-    var fTrans int32  = 1;
-    var pAig *Faig_Man_t;
-    var vSwitching *Vec_Int_t;
-    var pProbs *int32;
-    var pSwitching *float32;
-    var nFramesReal int32;
-    var clk abctime;//, clkTotal = Abc_Clock();
-    if fProbOne != 0 {
-        fTrans = 0; }
-    vSwitching = Vec_IntStart( Aig_ManObjNumMax(p) );
-    pSwitching = (float *)vSwitching.pArray;
-clk = Abc_Clock();
-    pAig = Faig_ManCreate( p );
-//ABC_PRT( "\nCreation  ", Abc_Clock() - clk );
-    Aig_ManRandom( 1 );
-    // get the number of  frames to simulate
-    // if the parameter "seqsimframes" is defined, use it
-    // otherwise, use the given number of frames "nFrames"
-    nFramesReal = nFrames;
-    if Abc_FrameReadFlag("seqsimframes") {
-        nFramesReal = strconv.Atoi(Abc_FrameReadFlag("seqsimframes")); }
-    if nFramesReal <= nPref {
-        fmt.Printf("The total number of frames (%d) should exceed prefix (%d).\n", nFramesReal, nPref);
-        fmt.Printf("Setting the total number of frames to be %d.\n", nFrames);
-        nFramesReal = nFrames;
-    }
-//printf( "Simulating %d frames.\n", nFramesReal );
-clk = Abc_Clock();
-    pProbs = Faig_ManSimulateFrames( pAig, nFramesReal, nPref, fTrans );
-//ABC_PRT( "Simulation", Abc_Clock() - clk );
-clk = Abc_Clock();
-    if fTrans != 0 {
-        var pObj *Aig_Obj_t;
-        var i, Counter int32;
-        pObj = Aig_ManConst1(p);
-        pSwitching[pObj.Id] = Faig_ManComputeProbOne( pProbs[Counter++], (nFramesReal - nPref)/2 );
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            pSwitching[pObj.Id] = Faig_ManComputeProbOne( pProbs[Counter++], (nFramesReal - nPref)/2 );
-        }
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pSwitching[pObj.Id] = Faig_ManComputeProbOne( pProbs[Counter++], (nFramesReal - nPref)/2 ); }
-        }
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            pSwitching[pObj.Id] = Faig_ManComputeProbOne( pProbs[Counter++], (nFramesReal - nPref)/2 );
-        }
-        assert(Counter == pAig.nObjs, "Counter == pAig.nObjs");
-    
-    } else if fProbOne != 0 {
-        var pObj *Aig_Obj_t;
-        var i, Counter int32;
-        pObj = Aig_ManConst1(p);
-        pSwitching[pObj.Id] = Faig_ManComputeProbOne( pProbs[Counter++], nFramesReal - nPref );
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            pSwitching[pObj.Id] = Faig_ManComputeProbOne( pProbs[Counter++], nFramesReal - nPref );
-        }
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pSwitching[pObj.Id] = Faig_ManComputeProbOne( pProbs[Counter++], nFramesReal - nPref ); }
-        }
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            pSwitching[pObj.Id] = Faig_ManComputeProbOne( pProbs[Counter++], nFramesReal - nPref );
-        }
-        assert(Counter == pAig.nObjs, "Counter == pAig.nObjs");
-    
-    } else {
-        var pObj *Aig_Obj_t;
-        var i, Counter int32;
-        pObj = Aig_ManConst1(p);
-        pSwitching[pObj.Id] = Faig_ManComputeSwitching( pProbs[Counter++], nFramesReal - nPref );
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            pSwitching[pObj.Id] = Faig_ManComputeSwitching( pProbs[Counter++], nFramesReal - nPref );
-        }
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pSwitching[pObj.Id] = Faig_ManComputeSwitching( pProbs[Counter++], nFramesReal - nPref ); }
-        }
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            pSwitching[pObj.Id] = Faig_ManComputeSwitching( pProbs[Counter++], nFramesReal - nPref );
-        }
-        assert(Counter == pAig.nObjs, "Counter == pAig.nObjs");
-    }
-    pProbs = nil;
-    pAig = nil;
-//ABC_PRT( "Switch    ", Abc_Clock() - clk );
-//ABC_PRT( "TOTAL     ", Abc_Clock() - clkTotal );
-    return vSwitching;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes probability of switching (or of being 1).]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManComputeSwitchProb3s(p *Aig_Man_t, nFrames int32, nPref int32, fProbOne int32) *Vec_Int_t {
-//    return Faig_ManComputeSwitchProbs( p, nFrames, nPref, fProbOne );
-    return nil;
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

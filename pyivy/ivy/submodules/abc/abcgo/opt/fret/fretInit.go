@@ -1,6 +1,14 @@
 package fret
 
 import (
+	. "github.com/glycerine/abcgo/base/abc"
+	. "github.com/glycerine/abcgo/aig/hop"
+	. "github.com/glycerine/abcgo/map/mio"
+	. "github.com/glycerine/abcgo/misc/mem"
+	. "github.com/glycerine/abcgo/misc/vec"
+)
+
+import (
 	"fmt"
 	"os"
 )
@@ -1292,15 +1300,8 @@ func Abc_FlowRetime_AddInitBias() {
 ***********************************************************************/
 func Abc_FlowRetime_ClearInitToOrig(pInit *Abc_Obj_t) {
   var id int32  = Abc_ObjId( pInit );
-  
-  // grow data structure if necessary
-  if id >= pManMR.sizeInitToOrig {
-    var oldSize int32  = pManMR.sizeInitToOrig;
-    pManMR.sizeInitToOrig = 1.5*id + 10;
-    pManMR.pInitToOrig = (NodeLag_t*)realloc(pManMR.pInitToOrig, sizeof(NodeLag_t)*pManMR.sizeInitToOrig);
-    memset( &(pManMR.pInitToOrig[oldSize]), 0, sizeof(NodeLag_t)*(pManMR.sizeInitToOrig-oldSize) );
-  }
-  assert(pManMR.pInitToOrig, "pManMR.pInitToOrig");
+
+	ensureInitToOrig(id)
 
   pManMR.pInitToOrig[id].id = -1;
 }
@@ -1320,15 +1321,8 @@ func Abc_FlowRetime_ClearInitToOrig(pInit *Abc_Obj_t) {
 func Abc_FlowRetime_SetInitToOrig(pInit *Abc_Obj_t, pOrig *Abc_Obj_t) {
   var lag int32;
   var id int32  = Abc_ObjId( pInit );
-  
-  // grow data structure if necessary
-  if id >= pManMR.sizeInitToOrig {
-    var oldSize int32  = pManMR.sizeInitToOrig;
-    pManMR.sizeInitToOrig = 1.5*id + 10;
-    pManMR.pInitToOrig = (NodeLag_t*)realloc(pManMR.pInitToOrig, sizeof(NodeLag_t)*pManMR.sizeInitToOrig);
-    memset( &(pManMR.pInitToOrig[oldSize]), 0, sizeof(NodeLag_t)*(pManMR.sizeInitToOrig-oldSize) );
-  }
-  assert(pManMR.pInitToOrig, "pManMR.pInitToOrig");
+
+	ensureInitToOrig(id)
 
   // ignore BI, BO, and latch nodes
   if Abc_ObjIsBo(pOrig) || Abc_ObjIsBi(pOrig) || Abc_ObjIsLatch(pOrig) {
@@ -1360,7 +1354,7 @@ func Abc_FlowRetime_GetInitToOrig(pInit *Abc_Obj_t, pOrig **Abc_Obj_t, lag *int3
   var id int32  = Abc_ObjId( pInit );
   var origId int32;
 
-  assert(id < pManMR.sizeInitToOrig, "id < pManMR.sizeInitToOrig");
+	assert(id >= 0 && int(id) < len(pManMR.pInitToOrig), "id indexes pInitToOrig");
 
   origId = pManMR.pInitToOrig[id].id;
 

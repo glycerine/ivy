@@ -54,38 +54,44 @@ import "os"
 
 ***********************************************************************/
 func Bmc_ManBCoreReadPivots(pName string) *Vec_Int_t {
-    var Num int32;
-    var vPivots *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var pFile *os.File  = os.Open(pName);
-    for  fscanf( pFile, "%d", &Num ) == 1  {
-        Vec_IntPush( vPivots, Num );
+    vPivots := Vec_IntAlloc(100)
+    data, err := os.ReadFile(pName)
+    if err != nil {
+        return vPivots
     }
-    _ = (pFile).Close();
+    for _, id := range parsePivotIDs(data) {
+        Vec_IntPush(vPivots, id)
+    }
     return vPivots;
 }
 func Bmc_ManBCoreCollectPivots(p *Gia_Man_t, pName string, vVarMap *Vec_Int_t) *Vec_Int_t {
     var pObj *Gia_Obj_t;
-    var i, iVar, iFrame int32;
+    var i, iVar int32;
     var vPivots *Vec_Int_t  = Vec_IntAlloc( 100 );
     var vVars *Vec_Int_t  = Bmc_ManBCoreReadPivots( pName );
     // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
+    for i = 0; i < p.nObjs; i++ {
+        pObj = Gia_ManObj(p, i)
         pObj.fMark0 = 0;
     }
     // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vVars)) && (((iVar) = Vec_IntEntry(vVars, i)), 1); i++  {
+    for i = 0; i < Vec_IntSize(vVars); i++ {
+        iVar = Vec_IntEntry(vVars, i)
         if iVar > 0 && iVar < Gia_ManObjNum(p) {
             Gia_ManObj( p, iVar ).fMark0 = 1;
         } else {
             fmt.Printf("Cannot find object with Id %d in the given AIG.\n", iVar); }
     }
     // inlining of macro Vec_IntForEachEntryDouble
-    for  i = 0; (i+1 < Vec_IntSize(vVarMap)) && (((iVar) = Vec_IntEntry(vVarMap, i)), 1) && (((iFrame) = Vec_IntEntry(vVarMap, i+1)), 1); i += 2  {
-        if Gia_ManObj( p, iVar ).fMark0 {
+    for i = 0; i+1 < Vec_IntSize(vVarMap); i += 2 {
+        iVar = Vec_IntEntry(vVarMap, i)
+        _ = Vec_IntEntry(vVarMap, i+1) // each mapping entry is an (object, frame) pair
+        if Gia_ManObj(p, iVar).fMark0 != 0 {
             Vec_IntPush( vPivots, Abc_Lit2Var(i) ); }
     }
     // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
+    for i = 0; i < p.nObjs; i++ {
+        pObj = Gia_ManObj(p, i)
         pObj.fMark0 = 0;
     }
     Vec_IntFree( vVars );
@@ -151,7 +157,8 @@ func Bmc_ManBCoreCollect(p *Gia_Man_t, iFrame int32, iOut int32, pSat *sat_solve
         Vec_IntClear( vRoots2 );
         nNodesOld = Vec_IntSize(vNodes);
         // inlining of macro Gia_ManForEachObjVec
-        for  i = 0; (i < Vec_IntSize(vRoots)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {
+        for i = 0; i < Vec_IntSize(vRoots); i++ {
+            pObj = Gia_ManObj(p, Vec_IntEntry(vRoots, i))
             Bmc_ManBCoreCollect_rec( p, Gia_ObjFaninId0p(p, pObj), f, vNodes, vRoots2 );
         }
         if f == iFrame {
@@ -165,18 +172,21 @@ func Bmc_ManBCoreCollect(p *Gia_Man_t, iFrame int32, iOut int32, pSat *sat_solve
         } else {
             // connect current RIs to previous ROs
             // inlining of macro Gia_ManForEachObjVec
-            for  i = 0; (i < Vec_IntSize(vRoots)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {
+            for i = 0; i < Vec_IntSize(vRoots); i++ {
+                pObj = Gia_ManObj(p, Vec_IntEntry(vRoots, i))
                 sat_solver_add_buffer( pSat, pObj.Value, Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj) );
             }
         }
         // inlining of macro Gia_ManForEachObjVec
-        for  i = 0; (i < Vec_IntSize(vRoots2)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots2,i))); i++  {
+        for i = 0; i < Vec_IntSize(vRoots2); i++ {
+            pObj = Gia_ManObj(p, Vec_IntEntry(vRoots2, i))
             pObj.Value = Gia_ObjRiToRo(p, pObj).Value;
         }
         // add nodes of this timeframe
         // inlining of macro Vec_IntForEachEntryStart
-        for  i = nNodesOld; (i < Vec_IntSize(vNodes)) && (((iObj) = Vec_IntEntry(vNodes, i)), 1); i++  {
-            pObj = Gia_ManObj(p, iObj); i++;
+        for i = nNodesOld; i < Vec_IntSize(vNodes); i += 2 {
+            iObj = Vec_IntEntry(vNodes, i)
+            pObj = Gia_ManObj(p, iObj)
             if Gia_ObjIsCi(pObj) {
                 continue; }
             assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
@@ -188,7 +198,8 @@ func Bmc_ManBCoreCollect(p *Gia_Man_t, iFrame int32, iOut int32, pSat *sat_solve
     }
     // add constraint variables for the init state
     // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vRoots)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {
+    for i = 0; i < Vec_IntSize(vRoots); i++ {
+        pObj = Gia_ManObj(p, Vec_IntEntry(vRoots, i))
         sat_solver_add_constraint( pSat, pObj.Value, Abc_Lit2Var(Vec_IntSize(vNodes)), 1 );
         pObj = Gia_ObjRiToRo(p, pObj);
         Bmc_ManBCoreAssignVar( p, pObj, -1, vNodes );
@@ -215,24 +226,28 @@ func Bmc_ManBCorePerform(p *Gia_Man_t, pPars *Bmc_BCorePar_t) {
     var vVarMap, vCore *Vec_Int_t;
     var pSat *sat_solver;
     var pFile *os.File;
-    var pSatCnf any; 
+    var pSatCnf *Sto_Man_t
     var RetValue int32;
     // create SAT solver
     pSat = sat_solver_new();
     sat_solver_store_alloc( pSat ); 
     sat_solver_setnvars( pSat, 1000 );
-    sat_solver_set_runtime_limit( pSat, pPars.nTimeOut ? pPars.nTimeOut * int64(time.Second) + Abc_Clock(): 0 );
+    runtimeLimit := int64(0)
+    if pPars.nTimeOut > 0 {
+        runtimeLimit = int64(pPars.nTimeOut)*int64(time.Second) + Abc_Clock()
+    }
+    sat_solver_set_runtime_limit(pSat, runtimeLimit)
     vVarMap = Bmc_ManBCoreCollect( p, pPars.iFrame, pPars.iOutput, pSat );
     sat_solver_store_mark_roots( pSat ); 
     // create pivot variables
-    if pPars.pFilePivots {
+    if pPars.pFilePivots != "" {
         var vPivots *Vec_Int_t  = Bmc_ManBCoreCollectPivots(p, pPars.pFilePivots, vVarMap);
         sat_solver_set_pivot_variables( pSat, Vec_IntArray(vPivots), Vec_IntSize(vPivots) );
         Vec_IntReleaseArray( vPivots );
         Vec_IntFree( vPivots );
     }
     // solve the problem
-    RetValue = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
+    RetValue = sat_solver_solve(pSat, nil, 0, 0, 0, 0)
     if RetValue == l_Undef {
         Vec_IntFree( vVarMap );
         sat_solver_delete( pSat );
@@ -245,34 +260,44 @@ func Bmc_ManBCorePerform(p *Gia_Man_t, pPars *Bmc_BCorePar_t) {
         fmt.Printf("The BMC problem is SAT.\n");
         return;
     }
-    if pPars.fVerbose {
+    if pPars.fVerbose != 0 {
         fmt.Printf("SAT solver returned UNSAT after %7d conflicts.      ", int32(pSat.stats.conflicts));
         Abc_PrintTime( 1, "Time", time.Now().UnixNano() - clk );
     }
     assert(RetValue == l_False, "RetValue == l_False");
-    pSatCnf = sat_solver_store_release( pSat ); 
+    released := sat_solver_store_release(pSat)
+    pSatCnf, _ = released.(*Sto_Man_t)
 //    Sto_ManDumpClauses( (Sto_Man_t *)pSatCnf, "cnf_store.txt" );
     // derive the UNSAT core
     clk = time.Now().UnixNano();
     pManProof = Intp_ManAlloc();
-    vCore = (Vec_Int_t *)Intp_ManUnsatCore( pManProof, (Sto_Man_t *)pSatCnf, 1, pPars.fVerbose );
+    core := Intp_ManUnsatCore(pManProof, pSatCnf, 1, pPars.fVerbose)
+    vCore = Vec_IntAllocArrayCopy(core, len(core))
     Intp_ManFree( pManProof );
-    if pPars.fVerbose {
+    if pPars.fVerbose != 0 {
         fmt.Printf("UNSAT core contains %d (out of %d) learned clauses.   ", Vec_IntSize(vCore), sat_solver_nconflicts(pSat));
         Abc_PrintTime( 1, "Time", time.Now().UnixNano() - clk );
     }
     // write the problem
     Vec_IntSort( vCore, 0 );
-    if pPars.pFileProof {
-        pFile = os.OpenFile(pPars.pFileProof, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
+    if pPars.pFileProof != "" {
+        var err error
+        pFile, err = os.OpenFile(pPars.pFileProof, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+        if err != nil {
+            Vec_IntFree(vCore)
+            Vec_IntFree(vVarMap)
+            sat_solver_delete(pSat)
+            Sto_ManFree(pSatCnf)
+            return
+        }
     } else {
         pFile = os.Stdout;
     }
-    Intp_ManUnsatCorePrintForBmc( pFile, (Sto_Man_t *)pSatCnf, vCore, vVarMap );
+    Intp_ManUnsatCorePrintForBmc(pFile, pSatCnf, Vec_IntArray(vCore), Vec_IntArray(vVarMap))
     if pFile != os.Stdout {
         _ = (pFile).Close(); }
     // cleanup
-    Sto_ManFree( (Sto_Man_t *)pSatCnf );
+    Sto_ManFree(pSatCnf)
     Vec_IntFree( vVarMap );
     Vec_IntFree( vCore );
     sat_solver_delete( pSat );

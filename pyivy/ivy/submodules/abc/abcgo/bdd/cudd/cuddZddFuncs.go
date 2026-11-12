@@ -118,65 +118,7 @@ func cuddZddGetPosVarIndex(dd *DdManager, index int32) int32 { return index &^ 1
 func cuddZddGetNegVarIndex(dd *DdManager, index int32) int32 { return index | 1 }
 func cuddZddGetPosVarLevel(dd *DdManager, index int32) int32 { return int32(dd.PermZ[index&^1]) }
 func cuddZddGetNegVarLevel(dd *DdManager, index int32) int32 { return int32(dd.PermZ[index|1]) }
-// REMAINING ORIGINAL DRAFT: ZDD complement depends on cover-to-BDD conversion
-// and ISOP. These bodies deliberately remain visible and unported. Set-family
-// difference is not substituted for logical cover complementation.
-func Cudd_zddComplement(dd *DdManager, node *DdNode) *DdNode {
-    var b, isop, zdd_I *DdNode;
 
-    /* Check cache */
-    zdd_I = cuddCacheLookup1Zdd(dd, cuddZddComplement, node);
-    if zdd_I != nil {
-        return(zdd_I); }
-
-    b = Cudd_MakeBddFromZddCover(dd, node);
-    if !b {
-        return(nil); }
-    Cudd_Ref(b);
-    // inlining of macro Cudd_Not
-    isop = Cudd_zddIsop(dd, ((DdNode *)((ptrint)(b) ^ 01)), ((DdNode *)((ptrint)(b) ^ 01)), &zdd_I);
-    if !isop {
-        Cudd_RecursiveDeref(dd, b);
-        return(nil);
-    }
-    Cudd_Ref(isop);
-    Cudd_Ref(zdd_I);
-    Cudd_RecursiveDeref(dd, b);
-    Cudd_RecursiveDeref(dd, isop);
-
-    cuddCacheInsert1(dd, cuddZddComplement, node, zdd_I);
-    Cudd_Deref(zdd_I);
-    return(zdd_I);
-}
-
-func cuddZddComplement(dd *DdManager, node *DdNode) *DdNode {
-    var b, isop, zdd_I *DdNode;
-
-    /* Check cache */
-    zdd_I = cuddCacheLookup1Zdd(dd, cuddZddComplement, node);
-    if zdd_I != nil {
-        return(zdd_I); }
-
-    b = cuddMakeBddFromZddCover(dd, node);
-    if !b {
-        return(nil); }
-    // inlining of macro cuddRef
-    cuddSatInc(Cudd_Regular(b).ref);
-    // inlining of macro Cudd_Not
-    isop = cuddZddIsop(dd, ((DdNode *)((ptrint)(b) ^ 01)), ((DdNode *)((ptrint)(b) ^ 01)), &zdd_I);
-    if !isop {
-        Cudd_RecursiveDeref(dd, b);
-        return(nil);
-    }
-    // inlining of macro cuddRef
-    cuddSatInc(Cudd_Regular(isop).ref);
-    // inlining of macro cuddRef
-    cuddSatInc(Cudd_Regular(zdd_I).ref);
-    Cudd_RecursiveDeref(dd, b);
-    Cudd_RecursiveDeref(dd, isop);
-
-    cuddCacheInsert1(dd, cuddZddComplement, node, zdd_I);
-    // inlining of macro cuddDeref
-    cuddSatDec(Cudd_Regular(zdd_I).ref);
-    return(zdd_I);
-}
+// Logical cover complement is now the real cover-to-BDD/ISOP pipeline in core.
+var Cudd_zddComplement = core.Cudd_zddComplement
+var cuddZddComplement = core.Cudd_zddComplement

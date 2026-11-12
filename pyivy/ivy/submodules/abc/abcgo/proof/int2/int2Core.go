@@ -49,19 +49,6 @@ import (
   SeeAlso     []
 
 ***********************************************************************/
-func Int2_ManSetDefaultParams(p *Int2_ManPars_t) { 
-    memset( p, 0, sizeof(Int2_ManPars_t) );
-    p.nBTLimit      =  0;     // limit on the number of conflicts
-    p.nFramesS      =  1;     // the starting number timeframes
-    p.nFramesMax    =  0;     // the max number timeframes to unroll
-    p.nSecLimit     =  0;     // time limit in seconds
-    p.nFramesK      =  1;     // the number of timeframes to use in induction
-    p.fRewrite      =  0;     // use additional rewriting to simplify timeframes
-    p.fTransLoop    =  0;     // add transition into the init state under new PI var
-    p.fDropInvar    =  0;     // dump inductive invariant into file
-    p.fVerbose      =  0;     // print verbose statistics
-    p.iFrameMax     = -1;
-}
 /**Function*************************************************************
 
   Synopsis    []

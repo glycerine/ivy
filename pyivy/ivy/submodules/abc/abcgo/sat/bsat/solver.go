@@ -80,6 +80,7 @@ func (s *sat_solver_t) SetDeadline(deadline time.Time) {
 	}
 }
 func (s *sat_solver_t) Reset() {
+	s.ClearActivityFactors()
 	sat_solver_restart(s)
 	s.fSolved = 0
 	s.lastStatus = Unknown
@@ -87,11 +88,11 @@ func (s *sat_solver_t) Reset() {
 }
 
 type Statistics struct {
-	Variables                          int32
-	Clauses, Learned                   uint32
-	Decisions, Conflicts, Propagations int64
+	Variables                                       int32
+	Clauses, Learned                                uint32
+	Decisions, Conflicts, Propagations, Inspections int64
 }
 
 func (s *sat_solver_t) Statistics() Statistics {
-	return Statistics{Variables: s.size, Clauses: s.stats.clauses, Learned: s.stats.learnts, Decisions: s.stats.decisions, Conflicts: s.stats.conflicts, Propagations: s.stats.propagations}
+	return Statistics{Variables: s.size, Clauses: s.stats.clauses, Learned: s.stats.learnts, Decisions: s.stats.decisions, Conflicts: s.stats.conflicts, Propagations: s.stats.propagations, Inspections: s.stats.inspects}
 }

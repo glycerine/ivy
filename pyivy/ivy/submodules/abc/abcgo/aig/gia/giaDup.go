@@ -1648,14 +1648,7 @@ func Gia_ManDupDfs2(p *Gia_Man_t) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDupDfs_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) {
-    if ~pObj.Value {
-        return; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ManDupDfs_rec( pNew, p, Gia_ObjFanin0(pObj) );
-    Gia_ManDupDfs_rec( pNew, p, Gia_ObjFanin1(pObj) );
-    pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-}
+
 func Gia_ManDupDfs(p *Gia_Man_t) *Gia_Man_t {
     var pNew *Gia_Man_t;
     var pObj *Gia_Obj_t;
@@ -2110,25 +2103,7 @@ func Gia_ManDupDfsSkip(p *Gia_Man_t) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDupDfsCone(p *Gia_Man_t, pRoot *Gia_Obj_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    assert(Gia_ObjIsCo(pRoot), "Gia_ObjIsCo(pRoot)");
-    Gia_ManFillValue( p );
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCi(pNew);
-    }
-    Gia_ManDupDfs_rec( pNew, p, Gia_ObjFanin0(pRoot) );
-    Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pRoot) );
-    Gia_ManSetRegNum( pNew, 0 );
-    return pNew;
-}
+
 
 /**Function*************************************************************
 
@@ -3608,15 +3583,7 @@ func Gia_ManMiter2(pStart *Gia_Man_t, pInit string, fVerbose int32) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManChoiceMiter_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) int32 {
-    if ~pObj.Value {
-        return pObj.Value; }
-    Gia_ManChoiceMiter_rec( pNew, p, Gia_ObjFanin0(pObj) );
-    if Gia_ObjIsCo(pObj) {
-        return pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }
-    Gia_ManChoiceMiter_rec( pNew, p, Gia_ObjFanin1(pObj) );
-    return pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-} 
+ 
 
 /**Function*************************************************************
 
@@ -3629,48 +3596,7 @@ func Gia_ManChoiceMiter_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) int3
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManChoiceMiter(vGias *Vec_Ptr_t) *Gia_Man_t {
-    var pNew, pGia, pGia0 *Gia_Man_t;
-    var i, k, iNode, nNodes int32;
-    // make sure they have equal parameters
-    assert(Vec_PtrSize(vGias) > 0, "Vec_PtrSize(vGias) > 0");
-    pGia0 = (Gia_Man_t *)Vec_PtrEntry( vGias, 0 );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vGias)) && (((pGia) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {
-        assert(Gia_ManCiNum(pGia)  == Gia_ManCiNum(pGia0), "Gia_ManCiNum(pGia)  == Gia_ManCiNum(pGia0)");
-        assert(Gia_ManCoNum(pGia)  == Gia_ManCoNum(pGia0), "Gia_ManCoNum(pGia)  == Gia_ManCoNum(pGia0)");
-        assert(Gia_ManRegNum(pGia) == Gia_ManRegNum(pGia0), "Gia_ManRegNum(pGia) == Gia_ManRegNum(pGia0)");
-        Gia_ManFillValue( pGia );
-        Gia_ManConst0(pGia).Value = 0;
-    }
-    // start the new manager
-    pNew = Gia_ManStart( Vec_PtrSize(vGias) * Gia_ManObjNum(pGia0) );
-    pNew.pName = Abc_UtilStrsav( pGia0.pName );
-    pNew.pSpec = Abc_UtilStrsav( pGia0.pSpec );
-    // create new CIs and assign them to the old manager CIs
-    for  k = 0; k < Gia_ManCiNum(pGia0); k++  {
-        iNode = Gia_ManAppendCi(pNew);
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(vGias)) && (((pGia) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {
-            Gia_ManCi( pGia, k ).Value = iNode;
-        } 
-    }
-    // create internal nodes
-    Gia_ManHashAlloc( pNew );
-    for  k = 0; k < Gia_ManCoNum(pGia0); k++  {
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(vGias)) && (((pGia) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {
-            Gia_ManChoiceMiter_rec( pNew, pGia, Gia_ManCo( pGia, k ) );
-        }
-    }
-    Gia_ManHashStop( pNew );
-    // check the presence of dangling nodes
-    nNodes = Gia_ManHasDangling( pNew );
-    //assert( nNodes == 0 );
-    // finalize
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia0) );
-    return pNew;
-}
+
 
 /**Function*************************************************************
 

@@ -1,5 +1,23 @@
 package if_
 
+import (
+	"github.com/glycerine/abcgo/misc/mem"
+	"github.com/glycerine/abcgo/misc/tim"
+	"github.com/glycerine/abcgo/misc/vec"
+)
+
+type word = uint64
+type abctime = int64
+type Vec_Ptr_t = vec.Vec_Ptr_t
+type Vec_Int_t = vec.Vec_Int_t
+type Vec_Wrd_t = vec.Vec_Wrd_t
+type Vec_Str_t = vec.Vec_Str_t
+type Vec_Mem_t = vec.Vec_Mem_t
+type Vec_Wec_t = vec.Vec_Wec_t
+type Hash_IntMan_t = vec.Hash_IntMan_t
+type Mem_Fixed_t = mem.Mem_Fixed_t
+type Tim_Man_t = tim.Tim_Man_t
+
 /**CFile****************************************************************
 
   FileName    [if.h]
@@ -11,7 +29,7 @@ package if_
   Synopsis    [External declarations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - November 21, 2006.]
@@ -19,15 +37,11 @@ package if_
   Revision    [$Id: if.h,v 1.00 2006/11/21 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
- 
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
 ////////////////////////////////////////////////////////////////////////
- 
+
 //#include <stdio.h>
 //#include <stdlib.h>
 //#include <string.h>
@@ -45,439 +59,443 @@ package if_
 
 //ABC_NAMESPACE_HEADER_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                         PARAMETERS                               ///
 ////////////////////////////////////////////////////////////////////////
- 
-// the maximum size of LUTs used for mapping (should be the same as FPGA_MAX_LUTSIZE defined in "fpga.h"!!!)
-const IF_MAX_LUTSIZE =       32
-// the largest possible number of LUT inputs when funtionality of the LUTs are computed
-const IF_MAX_FUNC_LUTSIZE =  15
-// a very large number
-const IF_INFINITY =          100000000  
-// the largest possible user cut cost
-const IF_COST_MAX =          4095 // ((1<<12)-1)
 
-#define IF_BIG_CHAR ((char)120)
+// the maximum size of LUTs used for mapping (should be the same as FPGA_MAX_LUTSIZE defined in "fpga.h"!!!)
+const IF_MAX_LUTSIZE = 32
+
+// the largest possible number of LUT inputs when funtionality of the LUTs are computed
+const IF_MAX_FUNC_LUTSIZE = 15
+
+// a very large number
+const IF_INFINITY = 100000000
+
+// the largest possible user cut cost
+const IF_COST_MAX = 4095 // ((1<<12)-1)
+const IF_FLOAT_LARGE float32 = 1.0e20
+const IF_FLOAT_SMALL float32 = 1.0e-20
+const IF_INT_LARGE = 10000000
+
+const IF_BIG_CHAR byte = 120
 
 // object types
- type If_Type_t int32
-const ( 
-    IF_NONE If_Type_t = iota
-     // 0: non-existent object
-    IF_CONST1
-   // 1: constant 1 
-    IF_CI
-       // 2: combinational input
-    IF_CO
-       // 3: combinational output
-    IF_AND
-      // 4: AND node
-    IF_VOID      // 5: unused object
+type If_Type_t int32
+
+const (
+	IF_NONE If_Type_t = iota
+	// 0: non-existent object
+	IF_CONST1
+	// 1: constant 1
+	IF_CI
+	// 2: combinational input
+	IF_CO
+	// 3: combinational output
+	IF_AND
+	// 4: AND node
+	IF_VOID // 5: unused object
 
 )
-
- 
 
 ////////////////////////////////////////////////////////////////////////
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
-type If_Man_t =     If_Man_t_;
-type If_Par_t =     If_Par_t_;
-type If_Obj_t =     If_Obj_t_;
-type If_Cut_t =     If_Cut_t_;
-type If_Set_t =     If_Set_t_;
-type If_LibLut_t =  If_LibLut_t_;
-type If_LibBox_t =  If_LibBox_t_;
-type If_DsdMan_t =  If_DsdMan_t_;
-type Ifn_Ntk_t =    Ifn_Ntk_t_;
+type If_Man_t = If_Man_t_
+type If_Par_t = If_Par_t_
+type If_Obj_t = If_Obj_t_
+type If_Cut_t = If_Cut_t_
+type If_Set_t = If_Set_t_
+type If_LibLut_t = If_LibLut_t_
+type If_LibBox_t = If_LibBox_t_
+type If_DsdMan_t = If_DsdMan_t_
+type Ifn_Ntk_t = Ifn_Ntk_t_
 
-     
 type Ifif_Par_t struct {
-    nLutSize                int32;      // the LUT size
-    pLutLib       *If_LibLut_t;       // the LUT library
-    pLutDelays [IF_MAX_LUTSIZE]float32;  // pin-to-pin delays of the max LUT
-    DelayWire              float32;     // wire delay
-    nDegree                int32;       // structure degree 
-    fCascade                int32;      // cascade
-    fVerbose                int32;      // verbose
-    fVeryVerbose                int32;  // verbose
+	nLutSize                                  int32
+	pLutLib                                   *If_LibLut_t
+	pLutDelays                                [IF_MAX_LUTSIZE]float32
+	DelayWire                                 float32
+	nDegree, fCascade, fVerbose, fVeryVerbose int32
 }
 
-// parameters
 type If_Par_t_ struct {
-    // user-controlable parameters
-    nLutSize                int32;      // the LUT size
-    nCutsMax                int32;      // the max number of cuts
-    nFlowIters                int32;    // the number of iterations of area recovery
-    nAreaIters                int32;    // the number of iterations of area recovery
-    nGateSize                int32;     // the max size of the AND/OR gate to map into
-    nNonDecLimit                int32;  // the max size of non-dec nodes
-    DelayTarget              float32;   // delay target
-    Epsilon              float32;       // value used in comparison floating point numbers
-    nRelaxRatio                int32;   // delay relaxation ratio
-    nStructType                int32;   // type of the structure
-    nAndDelay                int32;     // delay of AND-gate in LUT library units
-    nAndArea                int32;      // area of AND-gate in LUT library units
-    fPreprocess                int32;   // preprossing
-    fArea                int32;         // area-oriented mapping
-    fFancy                int32;        // a fancy feature
-    fExpRed                int32;       // expand/reduce of the best cuts
-    fLatchPaths                int32;   // reset timing on latch paths
-    fLut6Filter                int32;   // uses filtering of 6-LUT functions
-    fEdge                int32;         // uses edge-based cut selection heuristics
-    fPower                int32;        // uses power-aware cut selection heuristics
-    fCutMin                int32;       // performs cut minimization by removing functionally reducdant variables
-    fDelayOpt                int32;     // special delay optimization
-    fDelayOptLut                int32;  // delay optimization for LUTs
-    fDsdBalance                int32;   // special delay optimization
-    fUserRecLib                int32;   // use recorded library
-    fUserSesLib                int32;   // use SAT-based synthesis
-    fBidec                int32;        // use bi-decomposition
-    fUse34Spec                int32;    // use specialized matching
-    fUseBat                int32;       // use one specialized feature
-    fUseBuffs                int32;     // use buffers to decouple outputs
-    fEnableCheck07                int32;// enable additional checking
-    fEnableCheck08                int32;// enable additional checking
-    fEnableCheck10                int32;// enable additional checking
-    fEnableCheck75                int32;// enable additional checking
-    fEnableCheck75u                int32;// enable additional checking
-    fUseDsd                int32;       // compute DSD of the cut functions
-    fUseDsdTune                int32;   // use matching based on precomputed manager
-    fUseCofVars                int32;   // use cofactoring variables
-    fUseAndVars                int32;   // use bi-decomposition
-    fUseTtPerm                int32;    // compute truth tables of the cut functions
-    fDeriveLuts                int32;   // enables deriving LUT structures
-    fDoAverage                int32;    // optimize average rather than maximum level
-    fHashMapping                int32;  // perform AIG hashing after mapping
-    fVerbose                int32;      // the verbosity flag
-    fVerboseTrace                int32; // the verbosity flag
-    pLutStruct              string;    // LUT structure
-    WireDelay              float32;     // wire delay
-    // internal parameters
-    fSkipCutFilter                int32;// skip cut filter
-    fAreaOnly                int32;     // area only mode
-    fTruth                int32;        // truth table computation enabled
-    fUsePerm                int32;      // use permutation (delay info)
-    fUseBdds                int32;      // use local BDDs as a cost function
-    fUseSops                int32;      // use local SOPs as a cost function
-    fUseCnfs                int32;      // use local CNFs as a cost function
-    fUseMv                int32;        // use local MV-SOPs as a cost function
-    nLatchesCi                int32;    // the number of latches among the CIs
-    nLatchesCo                int32;    // the number of latches among the COs
-    nLatchesCiBox                int32; // the number of white box outputs among the CIs
-    nLatchesCoBox                int32; // the number of white box inputs among the COs
-    fLiftLeaves                int32;   // shift the leaves for seq mapping
-    fUseCoAttrs                int32;   // use CO attributes
-    DelayTargetNew              float32;// new delay target
-    FinalDelay              float32;    // final delay after mapping
-    FinalArea              float32;     // final area after mapping
-    pLutLib       *If_LibLut_t;       // the LUT library
-    pTimesArr             *float32;     // arrival times
-    pTimesReq             *float32;     // required times
-    int (* pFuncCost)  (If_Man_t *, If_Cut_t *);  // procedure to compute the user's cost of a cut
-    int (* pFuncUser)  (If_Man_t *, If_Obj_t *, If_Cut_t *);            //  procedure called for each cut when cut computation is finished
-    int (* pFuncCell)  (If_Man_t *, unsigned *, int, int, char *);      //  procedure called for cut functions
-    int (* pFuncCell2) (If_Man_t *, word *, int, Vec_Str_t *, char **); //  procedure called for cut functions
-    int (* pFuncWrite) (If_Man_t *);                                    //  procedure called for cut functions
-    pReoMan              any;       // reordering manager
+	nLutSize, nCutsMax, nFlowIters, nAreaIters, nGateSize, nNonDecLimit               int32
+	DelayTarget, Epsilon                                                              float32
+	nRelaxRatio, nStructType, nAndDelay, nAndArea                                     int32
+	fPreprocess, fArea, fFancy, fExpRed, fLatchPaths, fLut6Filter                     int32
+	fEdge, fPower, fCutMin, fDelayOpt, fDelayOptLut, fDsdBalance                      int32
+	fUserRecLib, fUserSesLib, fBidec, fUse34Spec, fUseBat, fUseBuffs                  int32
+	fEnableCheck07, fEnableCheck08, fEnableCheck10, fEnableCheck75, fEnableCheck75u   int32
+	fUseDsd, fUseDsdTune, fUseCofVars, fUseAndVars, fUseTtPerm, fDeriveLuts           int32
+	fDoAverage, fHashMapping, fVerbose, fVerboseTrace                                 int32
+	pLutStruct                                                                        string
+	WireDelay                                                                         float32
+	fSkipCutFilter, fAreaOnly, fTruth, fUsePerm, fUseBdds, fUseSops, fUseCnfs, fUseMv int32
+	nLatchesCi, nLatchesCo, nLatchesCiBox, nLatchesCoBox, fLiftLeaves, fUseCoAttrs    int32
+	DelayTargetNew, FinalDelay, FinalArea                                             float32
+	pLutLib                                                                           *If_LibLut_t
+	pTimesArr, pTimesReq                                                              []float32
+	pFuncCost                                                                         func(*If_Man_t, *If_Cut_t) int32
+	pFuncUser                                                                         func(*If_Man_t, *If_Obj_t, *If_Cut_t) int32
+	pFuncCell                                                                         func(*If_Man_t, []uint32, int32, int32, string) int32
+	pFuncCell2                                                                        func(*If_Man_t, []uint64, int32, *Vec_Str_t, *[]string) int32
+	pFuncWrite                                                                        func(*If_Man_t) int32
+	pReoMan                                                                           any
 }
 
-// the LUT library
 type If_LibLut_t_ struct {
-    pName              string;         // the name of the LUT library
-    LutMax                int32;        // the maximum LUT size 
-    fVarPinDelays                int32; // set to 1 if variable pin delays are specified
-    pLutAreas [IF_MAX_LUTSIZE+1]float32; // the areas of LUTs
-    pLutDelays [IF_MAX_LUTSIZE+1][IF_MAX_LUTSIZE+1]float32;// the delays of LUTs
+	pName                 string
+	LutMax, fVarPinDelays int32
+	pLutAreas             [IF_MAX_LUTSIZE + 1]float32
+	pLutDelays            [IF_MAX_LUTSIZE + 1][IF_MAX_LUTSIZE + 1]float32
 }
 
-// manager
 type If_Man_t_ struct {
-    pName              string;
-    // mapping parameters
-    pPars          *If_Par_t;
-    // mapping nodes
-    pConst1          *If_Obj_t;       // the constant 1 node
-    vCis         *Vec_Ptr_t;          // the primary inputs
-    vCos         *Vec_Ptr_t;          // the primary outputs
-    vObjs         *Vec_Ptr_t;         // all objects
-    vObjsRev         *Vec_Ptr_t;      // reverse topological order of objects
-    vTemp         *Vec_Ptr_t;         // temporary array
-    nObjs [IF_VOID]int32;// the number of objects by type
-    // various data
-    nLevelMax                int32;     // the max number of AIG levels
-    fEpsilon              float32;      // epsilon used for comparison
-    RequiredGlo              float32;   // global required times
-    RequiredGlo2              float32;  // global required times
-    AreaGlo              float32;       // global area
-    nNets                int32;         // the sum total of fanins of all LUTs in the mapping
-    dPower              float32;        // the sum total of switching activities of all LUTs in the mapping
-    nCutsUsed                int32;     // the number of cuts currently used
-    nCutsMerged                int32;   // the total number of cuts merged
-    puTemp [4]*uint32;     // used for the truth table computation
-    puTempW              *word;       // used for the truth table computation
-    SortMode                int32;      // one of the three sorting modes
-    fNextRound                int32;    // set to 1 after the first round
-    nChoices                int32;      // the number of choice nodes
-    vSwitching         *Vec_Int_t;    // switching activity of each node
-    pPerm [3][IF_MAX_LUTSIZE]int32; // permutations
-    uSharedMask           uint32;   // mask of shared variables
-    nShared                int32;       // the number of shared variables
-    fReqTimeWarn                int32;  // warning about exceeding required times was printed
-    // SOP balancing
-    vCover         *Vec_Int_t;        // used to compute ISOP
-    vArray         *Vec_Int_t;        // intermediate storage
-    vAnds         *Vec_Wrd_t;         // intermediate storage
-    vOrGate         *Vec_Wrd_t;       // intermediate storage
-    vAndGate         *Vec_Wrd_t;      // intermediate storage
-    // sequential mapping
-    vLatchOrder         *Vec_Ptr_t;   // topological ordering of latches
-    vLags         *Vec_Int_t;         // sequentail lags of all nodes
-    nAttempts                int32;     // the number of attempts in binary search
-    nMaxIters                int32;     // the maximum number of iterations
-    Period                int32;        // the current value of the clock period (for seq mapping)
-    // memory management
-    nTruth6Words [IF_MAX_FUNC_LUTSIZE+1]int32;  // the size of the truth table if allocated
-    nPermWords                int32;    // the size of the permutation array (in words)
-    nObjBytes                int32;     // the size of the object
-    nCutBytes                int32;     // the size of the cut
-    nSetBytes                int32;     // the size of the cut set
-    pMemObj       *Mem_Fixed_t;       // memory manager for objects (entrysize = nEntrySize)
-    pMemSet       *Mem_Fixed_t;       // memory manager for sets of cuts (entrysize = nCutSize*(nCutsMax+1))
-    pMemCi          *If_Set_t;        // memory for CI cutsets
-    pMemAnd          *If_Set_t;       // memory for AND cutsets
-    pFreeList          *If_Set_t;     // the list of free cutsets
-    nSmallSupp                int32;    // the small support
-    nCutsTotal                int32;
-    nCutsUseless [32]int32;
-    nCutsCount [32]int32;
-    nCutsCountAll                int32;
-    nCutsUselessAll                int32;
-    nCuts5, nCuts5a int32;
-    pIfDsdMan       *If_DsdMan_t;     // DSD manager
-    Vec_Mem_t *        vTtMem[IF_MAX_FUNC_LUTSIZE+1];   // truth table memory and hash table
-    Vec_Wec_t *        vTtIsops[IF_MAX_FUNC_LUTSIZE+1]; // mapping of truth table into DSD
-    Vec_Int_t *        vTtDsds[IF_MAX_FUNC_LUTSIZE+1];  // mapping of truth table into DSD
-    Vec_Str_t *        vTtPerms[IF_MAX_FUNC_LUTSIZE+1]; // mapping of truth table into permutations
-    Vec_Str_t *        vTtVars[IF_MAX_FUNC_LUTSIZE+1];  // mapping of truth table into selected vars
-    Vec_Int_t *        vTtDecs[IF_MAX_FUNC_LUTSIZE+1];  // mapping of truth table into decomposition pattern
-    Vec_Int_t *        vTtOccurs[IF_MAX_FUNC_LUTSIZE+1];// truth table occurange counters
-    vPairHash     *Hash_IntMan_t;     // hashing pairs of truth tables
-    vPairRes         *Vec_Int_t;      // resulting truth table
-    vPairPerms         *Vec_Str_t;    // resulting permutation
-    vTtMem6         *Vec_Mem_t;
-    pCanonPerm [IF_MAX_LUTSIZE]byte;
-    uCanonPhase           uint32;
-    nCacheHits                int32;
-    nCacheMisses                int32;
-    abctime            timeCache[6];
-    nBestCutSmall [2]int32;
-    nCountNonDec [2]int32;
-    vCutData         *Vec_Int_t;      // cut data storage
-    pArrTimeProfile [IF_MAX_FUNC_LUTSIZE]int32;
-    vVisited         *Vec_Ptr_t;
-    pUserMan              any;
-    vDump         *Vec_Int_t;
-    pDumpIns [16]int32;
-
-    // timing manager
-    pManTim         *Tim_Man_t;
-    vCoAttrs         *Vec_Int_t;      // CO attributes   0=optimize; 1=keep; 2=relax
-    // hash table for functions
-    nTableSize [2]int32;    // hash table size
-    nTableEntries [2]int32; // hash table entries
-    void **            pHashTable[2];    // hash table bins
-    pMemEntries       *Mem_Fixed_t;      // memory manager for hash table entries
-    // statistics 
-//    abctime                timeTruth;
+	pName                                           string
+	pPars                                           *If_Par_t
+	pConst1                                         *If_Obj_t
+	vCis, vCos, vObjs, vObjsRev, vTemp              *Vec_Ptr_t
+	nObjs                                           [IF_VOID + 1]int32
+	nLevelMax                                       int32
+	fEpsilon, RequiredGlo, RequiredGlo2, AreaGlo    float32
+	nNets                                           int32
+	dPower                                          float32
+	nCutsUsed, nCutsMerged                          int32
+	puTemp                                          [4][]uint32
+	puTempW                                         []uint64
+	pTruth32                                        []uint32
+	SortMode, fNextRound, nChoices                  int32
+	vSwitching                                      *Vec_Int_t
+	pPerm                                           [3][IF_MAX_LUTSIZE]int32
+	uSharedMask                                     uint32
+	nShared, fReqTimeWarn                           int32
+	vCover, vArray                                  *Vec_Int_t
+	vAnds, vOrGate, vAndGate                        *Vec_Wrd_t
+	vLatchOrder                                     *Vec_Ptr_t
+	vLags                                           *Vec_Int_t
+	nAttempts, nMaxIters, Period                    int32
+	nTruth6Words                                    [IF_MAX_FUNC_LUTSIZE + 1]int32
+	nPermWords, nObjBytes, nCutBytes, nSetBytes     int32
+	pMemObj, pMemSet                                *Mem_Fixed_t
+	pMemCi, pMemAnd, pFreeList                      *If_Set_t
+	nSmallSupp, nCutsTotal                          int32
+	nCutsUseless, nCutsCount                        [32]int32
+	nCutsCountAll, nCutsUselessAll, nCuts5, nCuts5a int32
+	pIfDsdMan                                       *If_DsdMan_t
+	vTtMem                                          [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Mem_t
+	vTtIsops                                        [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Wec_t
+	vTtDsds                                         [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Int_t
+	vTtPerms, vTtVars                               [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Str_t
+	vTtDecs, vTtOccurs                              [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Int_t
+	vPairHash                                       *Hash_IntMan_t
+	vPairRes                                        *Vec_Int_t
+	vPairPerms                                      *Vec_Str_t
+	vTtMem6                                         *Vec_Mem_t
+	pCanonPerm                                      [IF_MAX_LUTSIZE]byte
+	uCanonPhase                                     uint32
+	nCacheHits, nCacheMisses                        int32
+	timeCache                                       [6]abctime
+	nBestCutSmall, nCountNonDec                     [2]int32
+	vCutData                                        *Vec_Int_t
+	pArrTimeProfile                                 [IF_MAX_FUNC_LUTSIZE]int32
+	vVisited                                        *Vec_Ptr_t
+	pUserMan                                        any
+	vDump                                           *Vec_Int_t
+	pDumpIns                                        [16]int32
+	pManTim                                         *Tim_Man_t
+	vCoAttrs                                        *Vec_Int_t
+	nTableSize, nTableEntries                       [2]int32
+	pHashTable                                      [2]map[uint32]any
+	pMemEntries                                     *Mem_Fixed_t
 }
 
-// priority cut
 type If_Cut_t_ struct {
-    Area              float32;          // area (or area-flow) of the cut
-    Edge              float32;          // the edge flow
-    Power              float32;         // the power flow
-    Delay              float32;         // delay of the cut
-    iCutFunc                int32;      // TT ID of the cut
-    uMaskFunc                int32;     // polarity bitmask
-    uSign           uint32;         // cut signature
-    Cost uint32; /* C bitfield: 12 bits; review packing and truncation */  // the user's cost of the cut (related to IF_COST_MAX)
-    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */  // the complemented attribute 
-    fUser uint32; /* C bitfield: 1 bits; review packing and truncation */  // using the user's area and delay
-    fUseless uint32; /* C bitfield: 1 bits; review packing and truncation */  // cannot be used in the mapping
-    fAndCut uint32; /* C bitfield: 1 bits; review packing and truncation */  // matched with AND gate
-    nLimit uint32; /* C bitfield: 8 bits; review packing and truncation */  // the maximum number of leaves
-    nLeaves uint32; /* C bitfield: 8 bits; review packing and truncation */  // the number of leaves
-    pLeaves [0]int32;
+	Area, Edge, Power, Delay                                float32
+	iCutFunc, uMaskFunc                                     int32
+	uSign                                                   uint32
+	Cost, fCompl, fUser, fUseless, fAndCut, nLimit, nLeaves uint32
+	pLeaves                                                 []int32
+	permutation                                             []byte
+	data                                                    any
+	dataInt                                                 int32
 }
 
-// set of priority cut
 type If_Set_t_ struct {
-    nCutsMax              int16;      // the max number of cuts
-    nCuts              int16;         // the current number of cuts
-    pNext          *If_Set_t;         // next cutset in the free list
-    ppCuts         **If_Cut_t;        // the array of pointers to the cuts
+	nCutsMax, nCuts int16
+	pNext           *If_Set_t
+	ppCuts          []*If_Cut_t
 }
 
-// node extension
 type If_Obj_t_ struct {
-    Type uint32; /* C bitfield: 4 bits; review packing and truncation */  // object
-    fCompl0 uint32; /* C bitfield: 1 bits; review packing and truncation */  // complemented attribute
-    fCompl1 uint32; /* C bitfield: 1 bits; review packing and truncation */  // complemented attribute
-    fPhase uint32; /* C bitfield: 1 bits; review packing and truncation */  // phase of the node
-    fRepr uint32; /* C bitfield: 1 bits; review packing and truncation */  // representative of the equivalence class
-    fMark uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mark
-    fVisit uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mark
-    fSpec uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mark
-    fDriver uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mark
-    fSkipCut uint32; /* C bitfield: 1 bits; review packing and truncation */  // multipurpose mark
-    Level uint32; /* C bitfield: 19 bits; review packing and truncation */  // logic level of the node
-    Id                int32;            // integer ID
-    IdPio                int32;         // integer ID of PIs/POs
-    nRefs                int32;         // the number of references
-    nVisits                int32;       // the number of visits to this node
-    nVisitsCopy                int32;   // the number of visits to this node
-    pFanin0          *If_Obj_t;       // the first fanin 
-    pFanin1          *If_Obj_t;       // the second fanin
-    pEquiv          *If_Obj_t;        // the choice node
-    EstRefs              float32;       // estimated reference counter
-    Required              float32;      // required time of the onde
-    LValue              float32;        // sequential arrival time of the node
-    union{
-    void *             pCopy;         // used for object duplication
-    int                iCopy;
-    };
-    
-    pCutSet          *If_Set_t;       // the pointer to the cutset
-    CutBest           If_Cut_t;       // the best cut selected 
+	Type, fCompl0, fCompl1, fPhase, fRepr, fMark, fVisit, fSpec, fDriver, fSkipCut uint32
+	Level                                                                          uint32
+	Id, IdPio, nRefs, nVisits, nVisitsCopy                                         int32
+	pFanin0, pFanin1, pEquiv                                                       *If_Obj_t
+	EstRefs, Required, LValue                                                      float32
+	pCopy                                                                          any
+	iCopy                                                                          int32
+	pCutSet                                                                        *If_Set_t
+	CutBest                                                                        If_Cut_t
+	regular                                                                        *If_Obj_t
+	complement                                                                     bool
+	complemented                                                                   *If_Obj_t
 }
 
-   
 type If_Box_t struct {
-    pName              string;
-    fSeq               byte;
-    fBlack               byte;
-    fOuter               byte;
-    fUnused               byte;
-    Id                int32;
-    nPis                int32;
-    nPos                int32;
-    pDelays               *int32;
+	pName                         string
+	fSeq, fBlack, fOuter, fUnused byte
+	Id, nPis, nPos                int32
+	pDelays                       []int32
 }
 
 type If_LibBox_t_ struct {
-    nBoxes                int32;
-    vBoxes         *Vec_Ptr_t;
+	nBoxes int32
+	vBoxes *Vec_Ptr_t
 }
 
-func If_Regular(p *If_Obj_t) *If_Obj_t { return (If_Obj_t *)((ABC_PTRUINT_T)(p) & ~01);  }
-func If_Not(p *If_Obj_t) *If_Obj_t { return (If_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);  }
-func If_NotCond(p *If_Obj_t, c int32) *If_Obj_t { return (If_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));  }
-func If_IsComplement(p *If_Obj_t) int32 { return int32( (((ABC_PTRUINT_T)p) & 01));         }
+func If_Regular(p *If_Obj_t) *If_Obj_t {
+	if p == nil {
+		return nil
+	}
+	if p.regular != nil {
+		return p.regular
+	}
+	return p
+}
+func If_Not(p *If_Obj_t) *If_Obj_t {
+	if p == nil {
+		return nil
+	}
+	p = If_Regular(p)
+	if p.complemented == nil {
+		q := *p
+		q.regular = p
+		q.complement = true
+		q.complemented = p
+		p.complemented = &q
+	}
+	return p.complemented
+}
+func If_NotCond(p *If_Obj_t, c int32) *If_Obj_t {
+	if c != 0 {
+		return If_Not(p)
+	}
+	return p
+}
+func If_IsComplement(p *If_Obj_t) int32 {
+	if p != nil && p.complement {
+		return 1
+	}
+	return 0
+}
 
-func If_ManCiNum(p *If_Man_t) int32 { return p.nObjs[IF_CI];               }
-func If_ManCoNum(p *If_Man_t) int32 { return p.nObjs[IF_CO];               }
-func If_ManAndNum(p *If_Man_t) int32 { return p.nObjs[IF_AND];              }
-func If_ManObjNum(p *If_Man_t) int32 { return Vec_PtrSize(p.vObjs);         }
+func If_ManCiNum(p *If_Man_t) int32  { return p.nObjs[IF_CI] }
+func If_ManCoNum(p *If_Man_t) int32  { return p.nObjs[IF_CO] }
+func If_ManAndNum(p *If_Man_t) int32 { return p.nObjs[IF_AND] }
+func If_ManObjNum(p *If_Man_t) int32 { return Vec_PtrSize(p.vObjs) }
 
-func If_ManConst1(p *If_Man_t) *If_Obj_t { return p.pConst1;                              }
-func If_ManCi(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCis, i );  }
-func If_ManCo(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCos, i );  }
-func If_ManLi(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCos, If_ManCoNum(p) - p.pPars.nLatchesCo + i );  }
-func If_ManLo(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vCis, If_ManCiNum(p) - p.pPars.nLatchesCi + i );  }
-func If_ManObj(p *If_Man_t, i int32) *If_Obj_t { return (If_Obj_t *)Vec_PtrEntry( p.vObjs, i ); }
+func If_ManConst1(p *If_Man_t) *If_Obj_t         { return p.pConst1 }
+func ifObjectAt(v *Vec_Ptr_t, i int32) *If_Obj_t { return Vec_PtrEntry(v, int(i)).(*If_Obj_t) }
+func If_ManCi(p *If_Man_t, i int32) *If_Obj_t    { return ifObjectAt(p.vCis, i) }
+func If_ManCo(p *If_Man_t, i int32) *If_Obj_t    { return ifObjectAt(p.vCos, i) }
+func If_ManLi(p *If_Man_t, i int32) *If_Obj_t {
+	return If_ManCo(p, If_ManCoNum(p)-p.pPars.nLatchesCo+i)
+}
+func If_ManLo(p *If_Man_t, i int32) *If_Obj_t {
+	return If_ManCi(p, If_ManCiNum(p)-p.pPars.nLatchesCi+i)
+}
+func If_ManObj(p *If_Man_t, i int32) *If_Obj_t { return ifObjectAt(p.vObjs, i) }
 
-func If_ObjIsConst1(pObj *If_Obj_t) int32 { return pObj.Type == IF_CONST1;       }
-func If_ObjIsCi(pObj *If_Obj_t) int32 { return pObj.Type == IF_CI;           }
-func If_ObjIsCo(pObj *If_Obj_t) int32 { return pObj.Type == IF_CO;           }
-func If_ObjIsTerm(pObj *If_Obj_t) int32 { return pObj.Type == IF_CI || pObj.Type == IF_CO; }
-func If_ObjIsLatch(pObj *If_Obj_t) int32 { return If_ObjIsCi(pObj) && pObj.pFanin0 != nil;  }
-func If_ObjIsAnd(pObj *If_Obj_t) int32 { return pObj.Type == IF_AND;          }
+func If_ObjIsConst1(p *If_Obj_t) int32 {
+	if p.Type == IF_CONST1 {
+		return 1
+	}
+	return 0
+}
+func If_ObjIsCi(p *If_Obj_t) int32 {
+	if p.Type == IF_CI {
+		return 1
+	}
+	return 0
+}
+func If_ObjIsCo(p *If_Obj_t) int32 {
+	if p.Type == IF_CO {
+		return 1
+	}
+	return 0
+}
+func If_ObjIsTerm(p *If_Obj_t) int32 {
+	if p.Type == IF_CI || p.Type == IF_CO {
+		return 1
+	}
+	return 0
+}
+func If_ObjIsLatch(p *If_Obj_t) int32 {
+	if If_ObjIsCi(p) != 0 && p.pFanin0 != nil {
+		return 1
+	}
+	return 0
+}
+func If_ObjIsAnd(p *If_Obj_t) int32 {
+	if p.Type == IF_AND {
+		return 1
+	}
+	return 0
+}
 
-func If_ObjId(pObj *If_Obj_t) int32 { return pObj.Id;                      }
-func If_ObjFanin0(pObj *If_Obj_t) *If_Obj_t { return pObj.pFanin0;                 }
-func If_ObjFanin1(pObj *If_Obj_t) *If_Obj_t { return pObj.pFanin1;                 }
-func If_ObjFaninC0(pObj *If_Obj_t) int32 { return pObj.fCompl0;                 }
-func If_ObjFaninC1(pObj *If_Obj_t) int32 { return pObj.fCompl1;                 }
-func If_ObjCopy(pObj *If_Obj_t) any { return pObj.pCopy;                   }
-func If_ObjLevel(pObj *If_Obj_t) int32 { return pObj.Level;                   }
-func If_ObjSetLevel(pObj *If_Obj_t, Level int32) { pObj.Level = Level;                  }
-func If_ObjSetCopy(pObj *If_Obj_t, pCopy any) { pObj.pCopy = pCopy;                  }
-func If_ObjSetChoice(pObj *If_Obj_t, pEqu *If_Obj_t) { pObj.pEquiv = pEqu;                  }
+func If_ObjId(pObj *If_Obj_t) int32                  { return pObj.Id }
+func If_ObjFanin0(pObj *If_Obj_t) *If_Obj_t          { return pObj.pFanin0 }
+func If_ObjFanin1(pObj *If_Obj_t) *If_Obj_t          { return pObj.pFanin1 }
+func If_ObjFaninC0(pObj *If_Obj_t) int32             { return int32(pObj.fCompl0) }
+func If_ObjFaninC1(pObj *If_Obj_t) int32             { return int32(pObj.fCompl1) }
+func If_ObjCopy(pObj *If_Obj_t) any                  { return pObj.pCopy }
+func If_ObjLevel(pObj *If_Obj_t) int32               { return int32(pObj.Level) }
+func If_ObjSetLevel(pObj *If_Obj_t, level int32)     { pObj.Level = uint32(level) }
+func If_ObjSetCopy(pObj *If_Obj_t, pCopy any)        { pObj.pCopy = pCopy }
+func If_ObjSetChoice(pObj *If_Obj_t, pEqu *If_Obj_t) { pObj.pEquiv = pEqu }
 
-func If_CutLeaveNum(pCut *If_Cut_t) int32 { return pCut.nLeaves;                             }
-func If_CutLeaves(pCut *If_Cut_t) *int32 { return pCut.pLeaves;                             }
-func If_CutLeaf(p *If_Man_t, pCut *If_Cut_t, i int32) *If_Obj_t { assert(i >= 0 && i < int32(pCut.nLeaves), "i >= 0 && i < int32(pCut.nLeaves)"); return If_ManObj(p, pCut.pLeaves[i]);                         }
-func If_CutSuppMask(pCut *If_Cut_t) uint32 { return (~uint32(0)) >> (32-pCut.nLeaves);      }
-func If_CutTruthWords(nVarsMax int32) int32 { if nVarsMax <= 5 {
-    return 2;
-} else {
-    return (1 << (nVarsMax - 5));
-} }
-func If_CutPermWords(nVarsMax int32) int32 { return nVarsMax / sizeof(int) + ((nVarsMax % sizeof(int)) > 0); }
-func If_CutLeafBit(pCut *If_Cut_t, i int32) int32 { return (pCut.uMaskFunc >> i) & 1;                }
-func If_CutPerm(pCut *If_Cut_t) string { return (char *)(pCut.pLeaves + pCut.nLeaves);   }
-func If_CutCopy(p *If_Man_t, pDst *If_Cut_t, pSrc *If_Cut_t) { memcpy( pDst, pSrc, (size_t)p.nCutBytes );      }
-func If_CutSetup(p *If_Man_t, pCut *If_Cut_t) { memset(pCut, 0, (size_t)p.nCutBytes); pCut.nLimit = p.pPars.nLutSize; }
+func If_CutLeaveNum(pCut *If_Cut_t) int32 { return int32(pCut.nLeaves) }
+func If_CutLeaves(pCut *If_Cut_t) []int32 { return pCut.pLeaves }
+func If_CutLeaf(p *If_Man_t, pCut *If_Cut_t, i int32) *If_Obj_t {
+	assert(i >= 0 && i < int32(pCut.nLeaves), "i >= 0 && i < int32(pCut.nLeaves)")
+	return If_ManObj(p, pCut.pLeaves[i])
+}
+func If_CutSuppMask(pCut *If_Cut_t) uint32 {
+	if pCut.nLeaves >= 32 {
+		return ^uint32(0)
+	}
+	return ^uint32(0) >> (32 - pCut.nLeaves)
+}
+func If_CutTruthWords(nVarsMax int32) int32 {
+	if nVarsMax <= 5 {
+		return 2
+	}
+	return 1 << (nVarsMax - 5)
+}
+func If_CutPermWords(nVarsMax int32) int32        { return (nVarsMax + 3) / 4 }
+func If_CutLeafBit(pCut *If_Cut_t, i int32) int32 { return int32((pCut.uMaskFunc >> uint32(i)) & 1) }
+func If_CutPerm(pCut *If_Cut_t) []byte            { return pCut.permutation }
+func If_CutCopy(_ *If_Man_t, dst, src *If_Cut_t) {
+	leaves := append([]int32(nil), src.pLeaves...)
+	permutation := append([]byte(nil), src.permutation...)
+	*dst = *src
+	dst.pLeaves, dst.permutation = leaves, permutation
+}
+func If_CutSetup(p *If_Man_t, cut *If_Cut_t) {
+	limit := uint32(p.pPars.nLutSize)
+	*cut = If_Cut_t_{nLimit: limit}
+}
 
-func If_ObjCutBest(pObj *If_Obj_t) *If_Cut_t { return &pObj.CutBest;                }
-func If_ObjCutSign(ObjId uint32) uint32 { return (1 << (ObjId % 31));           }
-func If_ObjCutSignCompute(p *If_Cut_t) uint32 { var s uint32; var i int32; for  i = 0; i < If_CutLeaveNum(p); i++  { s |= If_ObjCutSign(p.pLeaves[i]); }
- return s; }
+func If_ObjCutBest(pObj *If_Obj_t) *If_Cut_t { return &pObj.CutBest }
+func If_ObjCutSign(id uint32) uint32         { return uint32(1) << (id % 31) }
+func If_ObjCutSignCompute(p *If_Cut_t) uint32 {
+	var sign uint32
+	for _, id := range p.pLeaves {
+		sign |= If_ObjCutSign(uint32(id))
+	}
+	return sign
+}
 
-func If_ObjArrTime(pObj *If_Obj_t) float32 { return If_ObjCutBest(pObj).Delay;    }
-func If_ObjSetArrTime(pObj *If_Obj_t, ArrTime float32) { If_ObjCutBest(pObj).Delay = ArrTime; }
+func If_ObjArrTime(pObj *If_Obj_t) float32             { return If_ObjCutBest(pObj).Delay }
+func If_ObjSetArrTime(pObj *If_Obj_t, ArrTime float32) { If_ObjCutBest(pObj).Delay = ArrTime }
 
-func If_ObjLValue(pObj *If_Obj_t) float32 { return pObj.LValue;                  }
-func If_ObjSetLValue(pObj *If_Obj_t, LValue float32) { pObj.LValue = LValue;                }
+func If_ObjLValue(pObj *If_Obj_t) float32           { return pObj.LValue }
+func If_ObjSetLValue(pObj *If_Obj_t, value float32) { pObj.LValue = value }
 
-func If_CutData(pCut *If_Cut_t) any { return *(void **)pCut;                }
-func If_CutSetData(pCut *If_Cut_t, pData any) { *(void **)pCut = pData;               }
+func If_CutData(pCut *If_Cut_t) any               { return pCut.data }
+func If_CutSetData(pCut *If_Cut_t, data any)      { pCut.data = data }
+func If_CutDataInt(pCut *If_Cut_t) int32          { return pCut.dataInt }
+func If_CutSetDataInt(pCut *If_Cut_t, data int32) { pCut.dataInt = data }
 
-func If_CutDataInt(pCut *If_Cut_t) int32 { return *(int *)pCut;                  }
-func If_CutSetDataInt(pCut *If_Cut_t, Data int32) { *(int *)pCut = Data;                  }
+func If_CutTruthLit(pCut *If_Cut_t) int32 {
+	assert(pCut.iCutFunc >= 0, "pCut.iCutFunc >= 0")
+	return pCut.iCutFunc
+}
+func If_CutTruthIsCompl(pCut *If_Cut_t) int32 {
+	assert(pCut.iCutFunc >= 0, "pCut.iCutFunc >= 0")
+	return Abc_LitIsCompl(pCut.iCutFunc)
+}
+func If_CutTruthWR(p *If_Man_t, pCut *If_Cut_t) *word {
+	assert(pCut.iCutFunc >= 0, "pCut.iCutFunc >= 0")
+	v := p.vTtMem[pCut.nLeaves]
+	if v == nil {
+		return nil
+	}
+	entry := Vec_MemReadEntry(v, int(Abc_Lit2Var(pCut.iCutFunc)))
+	if len(entry) == 0 {
+		return nil
+	}
+	return &entry[0]
+}
+func If_CutTruthUR(p *If_Man_t, pCut *If_Cut_t) []uint32 {
+	words := If_CutTruthW(p, pCut)
+	if words == nil {
+		return nil
+	}
+	_ = words
+	n := int(p.nTruth6Words[pCut.nLeaves])
+	out := make([]uint32, 2*n)
+	for i, w := range p.puTempW[:n] {
+		out[2*i], out[2*i+1] = uint32(w), uint32(w>>32)
+	}
+	return out
+}
+func If_CutTruthW(p *If_Man_t, pCut *If_Cut_t) *word {
+	assert(pCut.iCutFunc >= 0, "pCut.iCutFunc >= 0")
+	n := int(p.nTruth6Words[pCut.nLeaves])
+	if n == 0 {
+		return nil
+	}
+	if len(p.puTempW) < n {
+		p.puTempW = make([]uint64, n)
+	}
+	src := If_CutTruthWR(p, pCut)
+	if src == nil {
+		return nil
+	}
+	entry := Vec_MemReadEntry(p.vTtMem[pCut.nLeaves], int(Abc_Lit2Var(pCut.iCutFunc)))
+	copy(p.puTempW[:n], entry)
+	if If_CutTruthIsCompl(pCut) != 0 {
+		for i := 0; i < n; i++ {
+			p.puTempW[i] = ^p.puTempW[i]
+		}
+	}
+	return &p.puTempW[0]
+}
+func If_CutTruth(p *If_Man_t, pCut *If_Cut_t) []uint32 { return If_CutTruthUR(p, pCut) }
 
-func If_CutTruthLit(pCut *If_Cut_t) int32 { assert(pCut.iCutFunc >= 0, "pCut.iCutFunc >= 0"); return pCut.iCutFunc;             }
-func If_CutTruthIsCompl(pCut *If_Cut_t) int32 { assert(pCut.iCutFunc >= 0, "pCut.iCutFunc >= 0"); return Abc_LitIsCompl(pCut.iCutFunc);                               }
-func If_CutTruthWR(p *If_Man_t, pCut *If_Cut_t) *word { if p.vTtMem[pCut.nLeaves] {
-    return Vec_MemReadEntry(p.vTtMem[pCut.nLeaves], Abc_Lit2Var(pCut.iCutFunc));
-} else {
-    return nil;
-}  }
-func If_CutTruthUR(p *If_Man_t, pCut *If_Cut_t) *uint32 { return (unsigned *)If_CutTruthWR(p, pCut);                        }
-func If_CutTruthW(p *If_Man_t, pCut *If_Cut_t) *word { assert(pCut.iCutFunc >= 0, "pCut.iCutFunc >= 0"); Abc_TtCopy( p.puTempW, If_CutTruthWR(p, pCut), p.nTruth6Words[pCut.nLeaves], If_CutTruthIsCompl(pCut) ); return p.puTempW;  }
-func If_CutTruth(p *If_Man_t, pCut *If_Cut_t) *uint32 { return (unsigned *)If_CutTruthW(p, pCut);                         }
-
-func If_CutDsdLit(p *If_Man_t, pCut *If_Cut_t) int32 { return Abc_Lit2LitL( Vec_IntArray(p.vTtDsds[pCut.nLeaves]), If_CutTruthLit(pCut) );               }
-func If_CutDsdIsCompl(p *If_Man_t, pCut *If_Cut_t) int32 { return Abc_LitIsCompl( If_CutDsdLit(p, pCut) );                                                     }
-func If_CutDsdPerm(p *If_Man_t, pCut *If_Cut_t) string { return Vec_StrEntryP( p.vTtPerms[pCut.nLeaves], Abc_Lit2Var(pCut.iCutFunc) * Abc_MaxInt(6, pCut.nLeaves) );           }
-
-func If_CutLutArea(p *If_Man_t, pCut *If_Cut_t) float32 { if pCut.fAndCut {
-    return p.pPars.nAndArea;
-} else {
-    if pCut.fUser {
-        return float32(pCut.Cost);
-    } else {
-        if p.pPars.pLutLib {
-            return p.pPars.pLutLib.pLutAreas[pCut.nLeaves];
-        } else {
-            return float32(1.0);
-        }
-    }
-}  }
-func If_CutLutDelay(p *If_LibLut_t, Size int32, iPin int32) float32 { if p {
-    if p.fVarPinDelays {
-        return p.pLutDelays[Size][iPin];
-    } else {
-        return p.pLutDelays[Size][0];
-    }
-} else {
-    return 1.0;
-}                              }
-
+func If_CutDsdLit(p *If_Man_t, pCut *If_Cut_t) int32 {
+	return Abc_Lit2LitL(Vec_IntArray(p.vTtDsds[pCut.nLeaves]), If_CutTruthLit(pCut))
+}
+func If_CutDsdIsCompl(p *If_Man_t, pCut *If_Cut_t) int32 {
+	return Abc_LitIsCompl(If_CutDsdLit(p, pCut))
+}
+func If_CutDsdPerm(p *If_Man_t, pCut *If_Cut_t) *byte {
+	return Vec_StrEntryP(p.vTtPerms[pCut.nLeaves], int(Abc_Lit2Var(pCut.iCutFunc)*Abc_MaxInt(6, int32(pCut.nLeaves))))
+}
+func If_CutLutArea(p *If_Man_t, pCut *If_Cut_t) float32 {
+	if pCut.fAndCut != 0 {
+		return float32(p.pPars.nAndArea)
+	}
+	if pCut.fUser != 0 {
+		return float32(pCut.Cost)
+	}
+	if p.pPars.pLutLib != nil {
+		return p.pPars.pLutLib.pLutAreas[pCut.nLeaves]
+	}
+	return 1
+}
+func If_CutLutDelay(p *If_LibLut_t, size, pin int32) float32 {
+	if p == nil {
+		return 1
+	}
+	if p.fVarPinDelays != 0 {
+		return p.pLutDelays[size][pin]
+	}
+	return p.pLutDelays[size][0]
+}
 
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///
@@ -489,11 +507,7 @@ func If_CutLutDelay(p *If_LibLut_t, Size int32, iPin int32) float32 { if p {
 // Original macro:
 // #define IF_MAX(a,b)      (((a) > (b))? (a) : (b))
 
-
 // the small and large numbers (min/max float are 1.17e-38/3.40e+38)
-#define IF_FLOAT_LARGE   ((float)1.0e+20)
-#define IF_FLOAT_SMALL   ((float)1.0e-20)
-#define IF_INT_LARGE     (10000000)
 
 // iterator over the primary inputs
 // Original macro:
@@ -515,7 +529,7 @@ func If_CutLutDelay(p *If_LibLut_t, Size int32, iPin int32) float32 { if p {
 // #define If_ManForEachPo( p, pObj, i )                                          \
 //     Vec_PtrForEachEntryStartStop( If_Obj_t *, p->vCos, pObj, i, p->pPars->nLatchesCoBox, If_ManCoNum(p) - p->pPars->nLatchesCo )
 
-// iterator over the latches 
+// iterator over the latches
 // Original macro:
 // #define If_ManForEachLatchInput( p, pObj, i )                                  \
 //     Vec_PtrForEachEntryStart( If_Obj_t *, p->vCos, pObj, i, If_ManCoNum(p) - p->pPars->nLatchesCo )
@@ -534,7 +548,7 @@ func If_CutLutDelay(p *If_LibLut_t, Size int32, iPin int32) float32 { if p {
 // #define If_ManForEachObjReverse( p, pObj, i )                                  \
 //     Vec_PtrForEachEntry( If_Obj_t *, p->vObjsRev, pObj, i )
 
-// iterator over logic nodes 
+// iterator over logic nodes
 // Original macro:
 // #define If_ManForEachNode( p, pObj, i )                                        \
 //     If_ManForEachObj( p, pObj, i ) if ( pObj->Type != IF_AND ) {} else
@@ -559,7 +573,6 @@ func If_CutLutDelay(p *If_LibLut_t, Size int32, iPin int32) float32 { if p {
 // Original macro:
 // #define If_CutForEachLeafSeq( p, pCut, pLeaf, Shift, i )                       \
 //     for ( i = 0; (i < (int)(pCut)->nLeaves) && ((pLeaf) = If_ManObj(p, (pCut)->pLeaves[i] >> 8)) && (((Shift) = ((pCut)->pLeaves[i] & 255)) >= 0); i++ )
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                    FUNCTION DECLARATIONS                         ///
@@ -648,10 +661,10 @@ func If_CutLutDelay(p *If_LibLut_t, Size int32, iPin int32) float32 { if p {
 
 // extern float           If_CutDelayLutStruct( If_Man_t * p, If_Cut_t * pCut, char * pStr, float WireDelay );
 
-// extern int             If_CluCheckExt( void * p, word * pTruth, int nVars, int nLutLeaf, int nLutRoot, 
+// extern int             If_CluCheckExt( void * p, word * pTruth, int nVars, int nLutLeaf, int nLutRoot,
 //                            char * pLut0, char * pLut1, word * pFunc0, word * pFunc1 );
 
-// extern int             If_CluCheckExt3( void * p, word * pTruth, int nVars, int nLutLeaf, int nLutLeaf2, int nLutRoot, 
+// extern int             If_CluCheckExt3( void * p, word * pTruth, int nVars, int nLutLeaf, int nLutLeaf2, int nLutRoot,
 //                            char * pLut0, char * pLut1, char * pLut2, word * pFunc0, word * pFunc1, word * pFunc2 );
 
 /*=== ifDelay.c =============================================================*/
@@ -891,7 +904,6 @@ func If_CutLutDelay(p *If_LibLut_t, Size int32, iPin int32) float32 { if p {
 
 // extern int             If_ManCrossCut( If_Man_t * p );
 
-
 // extern Vec_Ptr_t *     If_ManReverseOrder( If_Man_t * p );
 
 // extern void            If_ManMarkMapping( If_Man_t * p );
@@ -900,20 +912,14 @@ func If_CutLutDelay(p *If_LibLut_t, Size int32, iPin int32) float32 { if p {
 
 // extern Vec_Int_t *     If_ManCollectMappingInt( If_Man_t * p );
 
-
 // extern int             If_ManCountSpecialPos( If_Man_t * p );
 
 // extern void            If_CutTraverse( If_Man_t * p, If_Obj_t * pRoot, If_Cut_t * pCut, Vec_Ptr_t * vNodes );
 
 // extern void            If_ObjPrint( If_Obj_t * pObj );
 
-
-
 //ABC_NAMESPACE_HEADER_END
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-

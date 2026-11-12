@@ -25,7 +25,7 @@ func TestOriginalCDifferential(t *testing.T) {
 	}
 	tmp := t.TempDir()
 	binary := filepath.Join(tmp, "original-msat")
-	args := []string{"-O2", "-DABC_USE_STDINT_H", "-I" + filepath.Join(root, "src"), "testdata/original_driver.c"}
+	args := []string{"-O2", "-DABC_USE_STDINT_H", "-I" + filepath.Join(root, "src"), "test_vectors/original_driver.c"}
 	for _, name := range []string{"Activity", "Clause", "ClauseVec", "Mem", "OrderH", "Queue", "Read", "SolverApi", "SolverCore", "SolverIo", "SolverSearch", "Sort", "Vec"} {
 		args = append(args, filepath.Join(root, "src/sat/msat/msat"+name+".c"))
 	}

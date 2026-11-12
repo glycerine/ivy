@@ -481,7 +481,7 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 			return fmt.Errorf("negative scalar extension")
 		}
 		if tag == 'c' {
-			if value > Gia_ManPoNum(p) {
+			if int64(value)+int64(p.aigerBadOutputs) > int64(Gia_ManPoNum(p)) {
 				return fmt.Errorf("constraint count exceeds outputs")
 			}
 			p.nConstrs = value

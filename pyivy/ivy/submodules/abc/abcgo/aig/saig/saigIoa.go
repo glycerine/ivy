@@ -1,391 +1,347 @@
 package saig
 
 import (
+	"bufio"
+	"errors"
 	"fmt"
-	"math"
+	"io"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/glycerine/abcgo/aig/aig"
 )
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [saigIoa.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Sequential AIG package.]
-
-  Synopsis    [Input/output for sequential AIGs using BLIF files.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: saigIoa.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <math.h>
-//#include "saig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Saig_ObjName_Buffer string // was [16]byte in C
-
-func Saig_ObjName(p *Aig_Man_t, pObj *Aig_Obj_t) string {
-    
-    if Aig_ObjIsNode(pObj) || Aig_ObjIsConst1(pObj) {
-        spStatic_Saig_ObjName_Buffer = fmt.Sprintf("n%0*d", Abc_Base10Log(Aig_ManObjNumMax(p)), Aig_ObjId(pObj));
-    } else if Saig_ObjIsPi(p, pObj) {
-        spStatic_Saig_ObjName_Buffer = fmt.Sprintf("pi%0*d", Abc_Base10Log(Saig_ManPiNum(p)), Aig_ObjCioId(pObj));
-    } else if Saig_ObjIsPo(p, pObj) {
-        spStatic_Saig_ObjName_Buffer = fmt.Sprintf("po%0*d", Abc_Base10Log(Saig_ManPoNum(p)), Aig_ObjCioId(pObj));
-    } else if Saig_ObjIsLo(p, pObj) {
-        spStatic_Saig_ObjName_Buffer = fmt.Sprintf("lo%0*d", Abc_Base10Log(Saig_ManRegNum(p)), Aig_ObjCioId(pObj) - Saig_ManPiNum(p));
-    } else if Saig_ObjIsLi(p, pObj) {
-        spStatic_Saig_ObjName_Buffer = fmt.Sprintf("li%0*d", Abc_Base10Log(Saig_ManRegNum(p)), Aig_ObjCioId(pObj) - Saig_ManPoNum(p));
-    } else { 
-        assert(false, "0"); }
-    return spStatic_Saig_ObjName_Buffer;
+// Saig_ObjName returns the source-compatible BLIF signal name for an AIG
+// object. Unlike the C implementation, the returned string is independently
+// owned and safe to retain.
+func Saig_ObjName(p *aig.Graph, object aig.Edge) string {
+	object = aig.Aig_Regular(object)
+	nPis := int32(p.InputCount()) - aig.Aig_ManRegNum(p)
+	nPos := int32(p.OutputCount()) - aig.Aig_ManRegNum(p)
+	width := func(n int32) int {
+		if n < 1 {
+			n = 1
+		}
+		return len(strconv.FormatInt(int64(n-1), 10))
+	}
+	var prefix string
+	var index int32
+	switch {
+	case aig.Aig_ObjIsConst1(p, object), aig.Aig_ObjIsNode(p, object):
+		prefix, index = "n", aig.Aig_ObjId(object)
+		return fmt.Sprintf("%s%0*d", prefix, width(aig.Aig_ManObjNumMax(p)), index)
+	case aig.Aig_ObjIsCi(p, object):
+		index = aig.Aig_ObjCioId(p, object)
+		if index < nPis {
+			return fmt.Sprintf("pi%0*d", width(nPis), index)
+		}
+		return fmt.Sprintf("lo%0*d", width(aig.Aig_ManRegNum(p)), index-nPis)
+	case aig.Aig_ObjIsCo(p, object):
+		index = aig.Aig_ObjCioId(p, object)
+		if index < nPos {
+			return fmt.Sprintf("po%0*d", width(nPos), index)
+		}
+		return fmt.Sprintf("li%0*d", width(aig.Aig_ManRegNum(p)), index-nPos)
+	default:
+		panic("Saig_ObjName: object is not part of the sequential AIG")
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManDumpBlif(p *Aig_Man_t, pFileName string) {
-    var pFile *os.File;
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var i int32;
-    if Aig_ManCoNum(p) == 0 {
-        fmt.Printf("Aig_ManDumpBlif(): AIG manager does not have POs.\n");
-        return;
-    }
-    Aig_ManSetCioIds( p );
-    // write input file
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Printf("Saig_ManDumpBlif(): Cannot open file for writing.\n");
-        return;
-    }
-    fmt.Fprintf(pFile, "# BLIF file written by procedure Saig_ManDumpBlif()\n");
-    fmt.Fprintf(pFile, "# If unedited, this file can be read by Saig_ManReadBlif()\n");
-    fmt.Fprintf(pFile, "# AIG stats: pi=%d po=%d reg=%d and=%d obj=%d maxid=%d\n", Saig_ManPiNum(p), Saig_ManPoNum(p), Saig_ManRegNum(p), Aig_ManNodeNum(p), Aig_ManObjNum(p), Aig_ManObjNumMax(p));
-    fmt.Fprintf(pFile, ".model %s\n", p.pName);
-    // write primary inputs
-    fmt.Fprintf(pFile, ".inputs");
-    // inlining of macro Aig_ManForEachPiSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCiNum(p)-Aig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        fmt.Fprintf(pFile, " %s", Saig_ObjName(p, pObj));
-    }
-    fmt.Fprintf(pFile, "\n");
-    // write primary outputs
-    fmt.Fprintf(pFile, ".outputs");
-    // inlining of macro Aig_ManForEachPoSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCoNum(p)-Aig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        fmt.Fprintf(pFile, " %s", Saig_ObjName(p, pObj));
-    }
-    fmt.Fprintf(pFile, "\n");
-    // write registers
-    if Aig_ManRegNum(p) {
-        // inlining of macro Aig_ManForEachLiLoSeq
-        for  i = 0; (i < Aig_ManRegNum(p)) && (((pObjLi) = Aig_ManLi(p, i)), 1)            && (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {
-            fmt.Fprintf(pFile, ".latch");
-            fmt.Fprintf(pFile, " %s", Saig_ObjName(p, pObjLi));
-            fmt.Fprintf(pFile, " %s", Saig_ObjName(p, pObjLo));
-            fmt.Fprintf(pFile, " 0\n");
-        }
-    } 
-    // check if constant is used
-    if Aig_ObjRefs(Aig_ManConst1(p)) {
-        fmt.Fprintf(pFile, ".names %s\n 1\n", Saig_ObjName(p, Aig_ManConst1(p))); }
-    // write the nodes in the DFS order
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        fmt.Fprintf(pFile, ".names");
-        fmt.Fprintf(pFile, " %s", Saig_ObjName(p, Aig_ObjFanin0(pObj)));
-        fmt.Fprintf(pFile, " %s", Saig_ObjName(p, Aig_ObjFanin1(pObj)));
-        fmt.Fprintf(pFile, " %s", Saig_ObjName(p, pObj));
-        fmt.Fprintf(pFile, "\n%d%d 1\n", !Aig_ObjFaninC0(pObj), !Aig_ObjFaninC1(pObj));
-    }
-    }
-    // write the POs
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        fmt.Fprintf(pFile, ".names");
-        fmt.Fprintf(pFile, " %s", Saig_ObjName(p, Aig_ObjFanin0(pObj)));
-        fmt.Fprintf(pFile, " %s", Saig_ObjName(p, pObj));
-        fmt.Fprintf(pFile, "\n%d 1\n", !Aig_ObjFaninC0(pObj));
-    }
-    fmt.Fprintf(pFile, ".end\n");
-    _ = (pFile).Close();
+// Saig_ManDumpBlif preserves the legacy C entry point. Errors are reported to
+// stderr; new callers should use WriteBLIF to handle errors directly.
+func Saig_ManDumpBlif(p *aig.Graph, fileName string) {
+	if err := WriteBLIF(fileName, p); err != nil {
+		fmt.Fprintf(os.Stderr, "Saig_ManDumpBlif(): %v\n", err)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Reads one token from file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Saig_ManReadToken_Buffer [1000]byte;
-func Saig_ManReadToken(pFile *os.File) string {
-    
-    if fscanf( pFile, "%s", spStatic_Saig_ManReadToken_Buffer ) == 1 {
-        return spStatic_Saig_ManReadToken_Buffer; }
-    return nil;
+// WriteBLIF writes an AIG in the restricted BLIF dialect understood by
+// ReadBLIF. It follows graph topology and keeps primary and latch terminals in
+// ABC's original order.
+func WriteBLIF(fileName string, p *aig.Graph) error {
+	if p == nil {
+		return errors.New("saig: cannot write a nil AIG")
+	}
+	nRegs := aig.Aig_ManRegNum(p)
+	nPis := int32(p.InputCount()) - nRegs
+	nPos := int32(p.OutputCount()) - nRegs
+	if nPos < 0 || nPis < 0 || nRegs > int32(p.OutputCount()) {
+		return errors.New("saig: inconsistent sequential terminal counts")
+	}
+	if p.OutputCount() == 0 {
+		return errors.New("saig: AIG has no outputs")
+	}
+	f, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+	writeErr := writeBLIF(f, p, fileName, nPis, nPos, nRegs)
+	closeErr := f.Close()
+	if writeErr != nil {
+		return writeErr
+	}
+	return closeErr
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the corresponding number.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManReadNumber(p *Aig_Man_t, pToken string) int32 {
-    if pToken[0] == 'n' {
-        return strconv.Atoi(pToken + 1); }
-    if pToken[0] == 'p' {
-        return strconv.Atoi(pToken + 2); }
-    if pToken[0] == 'l' {
-        return strconv.Atoi(pToken + 2); }
-    assert(false, "0");
-    return -1;
+func writeBLIF(w io.Writer, p *aig.Graph, sourceName string, nPis, nPos, nRegs int32) error {
+	write := func(format string, args ...any) error {
+		_, err := fmt.Fprintf(w, format, args...)
+		return err
+	}
+	model := strings.TrimSuffix(filepath.Base(sourceName), filepath.Ext(sourceName))
+	if model == "" {
+		model = "aig"
+	}
+	if err := write("# BLIF file written by procedure Saig_ManDumpBlif()\n# If unedited, this file can be read by Saig_ManReadBlif()\n# AIG stats: pi=%d po=%d reg=%d and=%d obj=%d maxid=%d\n.model %s\n", nPis, nPos, nRegs, aig.Aig_ManNodeNum(p), aig.Aig_ManObjNum(p), aig.Aig_ManObjNumMax(p), model); err != nil {
+		return err
+	}
+	if err := write(".inputs"); err != nil {
+		return err
+	}
+	inputs := p.Inputs()
+	for i := int32(0); i < nPis; i++ {
+		if err := write(" %s", Saig_ObjName(p, inputs[i])); err != nil {
+			return err
+		}
+	}
+	if err := write("\n.outputs"); err != nil {
+		return err
+	}
+	outputs := p.Outputs()
+	for i := int32(0); i < nPos; i++ {
+		if err := write(" %s", Saig_ObjName(p, outputs[i])); err != nil {
+			return err
+		}
+	}
+	if err := write("\n"); err != nil {
+		return err
+	}
+	for i := int32(0); i < nRegs; i++ {
+		if err := write(".latch %s %s 0\n", Saig_ObjName(p, aig.Aig_ManLi(p, i)), Saig_ObjName(p, aig.Aig_ManLo(p, i))); err != nil {
+			return err
+		}
+	}
+	if aig.Aig_ObjRefs(p, p.Const1()) != 0 {
+		if err := write(".names %s\n 1\n", Saig_ObjName(p, p.Const1())); err != nil {
+			return err
+		}
+	}
+	for id := int32(0); id < aig.Aig_ManObjNumMax(p); id++ {
+		node := aig.Aig_ManObj(p, id)
+		if aig.Aig_ObjIsNone(p, node) || !aig.Aig_ObjIsNode(p, node) {
+			continue
+		}
+		row := fmt.Sprintf("%d%d", 1-aig.Aig_ObjFaninC0(p, node), 1-aig.Aig_ObjFaninC1(p, node))
+		if err := write(".names %s %s %s\n%s 1\n", Saig_ObjName(p, aig.Aig_ObjFanin0(p, node)), Saig_ObjName(p, aig.Aig_ObjFanin1(p, node)), Saig_ObjName(p, node), row); err != nil {
+			return err
+		}
+	}
+	for _, output := range outputs {
+		if !aig.Aig_ObjIsCo(p, output) {
+			return errors.New("saig: graph output is not represented by an output node")
+		}
+		row := 1 - aig.Aig_ObjFaninC0(p, output)
+		if err := write(".names %s %s\n%d 1\n", Saig_ObjName(p, aig.Aig_ObjFanin0(p, output)), Saig_ObjName(p, output), row); err != nil {
+			return err
+		}
+	}
+	return write(".end\n")
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the corresponding node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManReadNode(p *Aig_Man_t, pNum2Id *int32, pToken string) *Aig_Obj_t {
-    var Num int32;
-    if pToken[0] == 'n' {
-        Num = strconv.Atoi(pToken + 1);
-        return Aig_ManObj( p, pNum2Id[Num] );
-    }
-    if pToken[0] == 'p' {
-        pToken++;
-        if pToken[0] == 'i' {
-            Num = strconv.Atoi(pToken + 1);
-            return Aig_ManCi( p, Num );
-        }
-        if pToken[0] == 'o' {
-            return nil; }
-        assert(false, "0");
-        return nil;
-    }
-    if pToken[0] == 'l' {
-        pToken++;
-        if pToken[0] == 'o' {
-            Num = strconv.Atoi(pToken + 1);
-            return Saig_ManLo( p, Num );
-        }
-        if pToken[0] == 'i' {
-            return nil; }
-        assert(false, "0");
-        return nil;
-    }
-    assert(false, "0");
-    return nil;
+// Saig_ManReadBlif preserves the legacy C entry point and returns nil when a
+// file is malformed. New callers should use ReadBLIF to receive the error.
+func Saig_ManReadBlif(fileName string) *aig.Graph {
+	p, err := ReadBLIF(fileName)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Saig_ManReadBlif(): %v\n", err)
+		return nil
+	}
+	return p
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Reads BLIF previously dumped by Saig_ManDumpBlif().]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManReadBlif(pFileName string) *Aig_Man_t {
-    var pFile *os.File;
-    var p *Aig_Man_t;
-    var pFanin0, pFanin1, pNode *Aig_Obj_t;
-    var pToken string;
-    var i, nPis, nPos, nRegs, Number int32;
-    var pNum2Id *int32  = nil;  // mapping of node numbers in the file into AIG node IDs
-    // open the file
-    pFile = os.Open(pFileName);
-    if pFile == nil {
-        fmt.Printf("Saig_ManReadBlif(): Cannot open file for reading.\n");
-        return nil;
-    }
-    // skip through the comments
-    for  i = 0; (pToken = Saig_ManReadToken( pFile )) && pToken[0] != '.'; i++  {}
-    if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 1.\n"); return nil; }
-    // get he model
-    pToken = Saig_ManReadToken( pFile );
-    if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 2.\n"); return nil; }
-    // start the package
-    p = Aig_ManStart( 10000 );
-    p.pName = Abc_UtilStrsav( pToken );
-    p.pSpec = Abc_UtilStrsav( pFileName );
-    // count PIs
-    pToken = Saig_ManReadToken( pFile );
-    if pToken == nil || (int32(strings.Compare(pToken, ".inputs")) != 0) { fmt.Printf("Saig_ManReadBlif(): Error 3.\n"); Aig_ManStop(p); return nil; }
-    for  nPis = 0; (pToken = Saig_ManReadToken( pFile )) && pToken[0] != '.'; nPis++  {}
-    // count POs
-    if pToken == nil || (int32(strings.Compare(pToken, ".outputs")) != 0) { fmt.Printf("Saig_ManReadBlif(): Error 4.\n"); Aig_ManStop(p); return nil; }
-    for  nPos = 0; (pToken = Saig_ManReadToken( pFile )) && pToken[0] != '.'; nPos++  {}
-    // count latches
-    if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 5.\n"); Aig_ManStop(p); return nil; }
-    for  nRegs = 0; int32(strings.Compare(pToken, ".latch")) == 0; nRegs++  {
-        pToken = Saig_ManReadToken( pFile );
-        if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 6.\n"); Aig_ManStop(p); return nil; }
-        pToken = Saig_ManReadToken( pFile );
-        if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 7.\n"); Aig_ManStop(p); return nil; }
-        pToken = Saig_ManReadToken( pFile );
-        if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 8.\n"); Aig_ManStop(p); return nil; }
-        pToken = Saig_ManReadToken( pFile );
-        if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 9.\n"); Aig_ManStop(p); return nil; }
-    }
-    // create PIs and LOs
-    for  i = 0; i < nPis + nRegs; i++  {
-        Aig_ObjCreateCi( p );
-    }
-    Aig_ManSetRegNum( p, nRegs );
-    // create nodes
-    for  i = 0; int32(strings.Compare(pToken, ".names")) == 0; i++  {
-        // first token
-        pToken = Saig_ManReadToken( pFile );
-        if i == 0 && pToken[0] == 'n' { // constant node
-            // read 1
-            pToken = Saig_ManReadToken( pFile );
-            if pToken == nil || (int32(strings.Compare(pToken, "1")) != 0) { fmt.Printf("Saig_ManReadBlif(): Error 10.\n"); Aig_ManStop(p); return nil; }
-            // read next
-            pToken = Saig_ManReadToken( pFile );
-            if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 11.\n"); Aig_ManStop(p); return nil; }
-            continue;
-        }
-        pFanin0 = Saig_ManReadNode( p, pNum2Id, pToken );
-
-        // second token
-        pToken = Saig_ManReadToken( pFile );
-        if (pToken[0] == 'p' && pToken[1] == 'o') || (pToken[0] == 'l' && pToken[1] == 'i') { // buffer
-            // read complemented attribute
-            pToken = Saig_ManReadToken( pFile );
-            if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 12.\n"); Aig_ManStop(p); return nil; }
-            if pToken[0] == '0' {
-                pFanin0 = Aig_Not(pFanin0); }
-            // read 1
-            pToken = Saig_ManReadToken( pFile );
-            if pToken == nil || (int32(strings.Compare(pToken, "1")) != 0) { fmt.Printf("Saig_ManReadBlif(): Error 13.\n"); Aig_ManStop(p); return nil; }
-            Aig_ObjCreateCo( p, pFanin0 );
-            // read next
-            pToken = Saig_ManReadToken( pFile );
-            if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 14.\n"); Aig_ManStop(p); return nil; }
-            continue;
-        }
-
-        // third token
-        // regular node
-        pFanin1 = Saig_ManReadNode( p, pNum2Id, pToken );
-        pToken = Saig_ManReadToken( pFile );
-        Number = Saig_ManReadNumber( p, pToken );
-        // allocate mapping
-        if pNum2Id == nil {
-//            extern double pow( double x, double y );
-            var Size int32  = int32(math.Pow(float64(10.0), float64(float64((len(pToken) - 1)))));
-            // inlining of macro ABC_CALLOC
-            pNum2Id = ((int *) calloc((size_t)(Size), sizeof(int)));
-        }
-
-        // other tokens
-        // get the complemented attributes
-        pToken = Saig_ManReadToken( pFile );
-        if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 15.\n"); Aig_ManStop(p); return nil; }
-        if pToken[0] == '0' {
-            pFanin0 = Aig_Not(pFanin0); }
-        if pToken[1] == '0' {
-            pFanin1 = Aig_Not(pFanin1); }
-        // read 1
-        pToken = Saig_ManReadToken( pFile );
-        if pToken == nil || (int32(strings.Compare(pToken, "1")) != 0) { fmt.Printf("Saig_ManReadBlif(): Error 16.\n"); Aig_ManStop(p); return nil; }
-        // read next
-        pToken = Saig_ManReadToken( pFile );
-        if pToken == nil { fmt.Printf("Saig_ManReadBlif(): Error 17.\n"); Aig_ManStop(p); return nil; }
-
-        // create new node
-        pNode = Aig_And( p, pFanin0, pFanin1 );
-        if Aig_IsComplement(pNode) { fmt.Printf("Saig_ManReadBlif(): Error 18.\n"); Aig_ManStop(p); return nil; }
-        // set mapping
-        pNum2Id[ Number ] = pNode.Id;
-    }
-    if pToken == nil || (int32(strings.Compare(pToken, ".end")) != 0) { fmt.Printf("Saig_ManReadBlif(): Error 19.\n"); Aig_ManStop(p); return nil; }
-    if nPos + nRegs != Aig_ManCoNum(p) { fmt.Printf("Saig_ManReadBlif(): Error 20.\n"); Aig_ManStop(p); return nil; }
-    // add non-node objects to the mapping
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pNum2Id[pNode.Id] = pNode.Id;
-    }
-//    ABC_FREE( pNum2Id );
-    p.pData = pNum2Id;
-    // check the new manager
-    Aig_ManSetRegNum( p, nRegs );
-    if !Aig_ManCheck(p) {
-        fmt.Printf("Saig_ManReadBlif(): Check has failed.\n"); }
-    return p;
+type blifLatch struct{ input, output string }
+type blifNames struct {
+	inputs []string
+	output string
+	rows   []string
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+// ReadBLIF reads the sequential BLIF subset emitted by WriteBLIF. It rejects
+// unsupported multi-row covers instead of silently approximating them.
+func ReadBLIF(fileName string) (*aig.Graph, error) {
+	f, err := os.Open(fileName)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return readBLIF(f)
+}
 
+func readBLIF(r io.Reader) (*aig.Graph, error) {
+	scanner := bufio.NewScanner(r)
+	scanner.Buffer(make([]byte, 4096), 4<<20)
+	var piNames, poNames []string
+	var latches []blifLatch
+	var blocks []blifNames
+	var model string
+	var current *blifNames
+	seenEnd := false
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		fields := strings.Fields(line)
+		if len(fields) == 0 {
+			continue
+		}
+		if current != nil && !strings.HasPrefix(fields[0], ".") {
+			current.rows = append(current.rows, line)
+			continue
+		}
+		current = nil
+		switch fields[0] {
+		case ".model":
+			if len(fields) != 2 || model != "" {
+				return nil, errors.New("saig: malformed or repeated .model directive")
+			}
+			model = fields[1]
+		case ".inputs":
+			piNames = append(piNames, fields[1:]...)
+		case ".outputs":
+			poNames = append(poNames, fields[1:]...)
+		case ".latch":
+			if len(fields) != 4 || fields[3] != "0" {
+				return nil, errors.New("saig: only three-field zero-initialized .latch records are supported")
+			}
+			latches = append(latches, blifLatch{fields[1], fields[2]})
+		case ".names":
+			if len(fields) < 2 || len(fields) > 4 {
+				return nil, fmt.Errorf("saig: unsupported .names arity on line %q", line)
+			}
+			blocks = append(blocks, blifNames{inputs: append([]string(nil), fields[1:len(fields)-1]...), output: fields[len(fields)-1]})
+			current = &blocks[len(blocks)-1]
+		case ".end":
+			if len(fields) != 1 {
+				return nil, errors.New("saig: malformed .end directive")
+			}
+			seenEnd = true
+			current = nil
+		default:
+			return nil, fmt.Errorf("saig: unsupported directive %q", fields[0])
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	if !seenEnd || model == "" {
+		return nil, errors.New("saig: missing .model or .end")
+	}
+	for i := range blocks {
+		if len(blocks[i].rows) == 0 {
+			return nil, fmt.Errorf("saig: .names %s has no truth row", blocks[i].output)
+		}
+	}
 
-//ABC_NAMESPACE_IMPL_END
-
+	p := aig.NewGraph()
+	values := make(map[string]aig.Edge, len(piNames)+len(latches)+len(blocks))
+	for _, name := range piNames {
+		if name == "" {
+			return nil, errors.New("saig: empty primary input name")
+		}
+		if _, exists := values[name]; exists {
+			return nil, fmt.Errorf("saig: duplicate signal name %q", name)
+		}
+		values[name] = p.NewInput()
+	}
+	for _, latch := range latches {
+		if latch.output == "" {
+			return nil, errors.New("saig: empty latch output name")
+		}
+		if _, exists := values[latch.output]; exists {
+			return nil, fmt.Errorf("saig: duplicate signal name %q", latch.output)
+		}
+		values[latch.output] = p.NewInput()
+	}
+	outputNames := make(map[string]struct{}, len(poNames)+len(latches))
+	for _, name := range poNames {
+		outputNames[name] = struct{}{}
+	}
+	for _, latch := range latches {
+		outputNames[latch.input] = struct{}{}
+	}
+	oldNodeIDs := make(map[int32]int32)
+	for _, block := range blocks {
+		if block.output == "" {
+			return nil, errors.New("saig: empty .names output name")
+		}
+		if _, exists := values[block.output]; exists {
+			return nil, fmt.Errorf("saig: duplicate signal definition %q", block.output)
+		}
+		var value aig.Edge
+		switch len(block.inputs) {
+		case 0:
+			if len(block.rows) != 1 || strings.TrimSpace(block.rows[0]) != "1" {
+				return nil, fmt.Errorf("saig: unsupported constant table for %s", block.output)
+			}
+			value = p.Const1()
+		case 1:
+			if len(block.rows) != 1 {
+				return nil, fmt.Errorf("saig: unsupported multi-row buffer table for %s", block.output)
+			}
+			parts := strings.Fields(block.rows[0])
+			if len(parts) != 2 || parts[1] != "1" || (parts[0] != "0" && parts[0] != "1") {
+				return nil, fmt.Errorf("saig: malformed buffer table for %s", block.output)
+			}
+			input, ok := values[block.inputs[0]]
+			if !ok {
+				return nil, fmt.Errorf("saig: undefined input %q", block.inputs[0])
+			}
+			value = input
+			if parts[0] == "0" {
+				value = value.Not()
+			}
+		case 2:
+			if len(block.rows) != 1 {
+				return nil, fmt.Errorf("saig: unsupported multi-row AND table for %s", block.output)
+			}
+			parts := strings.Fields(block.rows[0])
+			if len(parts) != 2 || len(parts[0]) != 2 || parts[1] != "1" || (parts[0][0] != '0' && parts[0][0] != '1') || (parts[0][1] != '0' && parts[0][1] != '1') {
+				return nil, fmt.Errorf("saig: malformed AND table for %s", block.output)
+			}
+			left, ok := values[block.inputs[0]]
+			if !ok {
+				return nil, fmt.Errorf("saig: undefined input %q", block.inputs[0])
+			}
+			right, ok := values[block.inputs[1]]
+			if !ok {
+				return nil, fmt.Errorf("saig: undefined input %q", block.inputs[1])
+			}
+			if parts[0][0] == '0' {
+				left = left.Not()
+			}
+			if parts[0][1] == '0' {
+				right = right.Not()
+			}
+			value = p.AND(left, right)
+		}
+		if _, isOutput := outputNames[block.output]; isOutput {
+			values[block.output] = p.AddOutput(value)
+		} else {
+			values[block.output] = value
+			if strings.HasPrefix(block.output, "n") {
+				if oldID, err := strconv.ParseInt(block.output[1:], 10, 32); err == nil {
+					oldNodeIDs[int32(oldID)] = aig.Aig_ObjId(value)
+				}
+			}
+		}
+	}
+	if int32(p.OutputCount()) != int32(len(poNames)+len(latches)) {
+		return nil, fmt.Errorf("saig: parsed %d outputs, expected %d primary and latch outputs", p.OutputCount(), len(poNames)+len(latches))
+	}
+	aig.Aig_ManSetRegNum(p, int32(len(latches)))
+	p.Data = oldNodeIDs
+	return p, nil
+}

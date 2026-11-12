@@ -39,79 +39,7 @@ import (
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-type Ivy_FraigMan_t =        Ivy_FraigMan_t_;
-type Ivy_FraigSim_t =        Ivy_FraigSim_t_;
-         
-
-type Ivy_FraigList_t struct {
-    pHead          *Ivy_Obj_t;
-    pTail          *Ivy_Obj_t;
-    nItems                 int32;
-}
-
-type Ivy_FraigSim_t_ struct {
-    Type                 int32;
-    pNext     *Ivy_FraigSim_t;
-    pFanin0     *Ivy_FraigSim_t;
-    pFanin1     *Ivy_FraigSim_t;
-    pData [0]uint32;
-}
-
-type Ivy_FraigMan_t_ struct {
-    // general info 
-    pParams  *Ivy_FraigParams_t;        // various parameters
-    // temporary backtrack limits because "ABC_INT64_T" cannot be defined in Ivy_FraigParams_t ...
-    nBTLimitGlobal              ABC_INT64_T; // global limit on the number of backtracks
-    nInsLimitGlobal              ABC_INT64_T;// global limit on the number of clause inspects
-    // AIG manager
-    pManAig          *Ivy_Man_t;        // the starting AIG manager
-    pManFraig          *Ivy_Man_t;      // the final AIG manager
-    // simulation information
-    nSimWords                 int32;      // the number of words
-    pSimWords               string;      // the simulation info
-    pSimStart     *Ivy_FraigSim_t;      // the list of simulation info for internal nodes
-    // counter example storage
-    nPatWords                 int32;      // the number of words in the counter example
-    pPatWords           *uint32;      // the counter example
-    pPatScores                *int32;     // the scores of each pattern
-    // equivalence classes 
-    lClasses     Ivy_FraigList_t;       // equivalence classes
-    lCand     Ivy_FraigList_t;          // candidatates
-    nPairs                 int32;         // the number of pairs of nodes
-    // equivalence checking
-    pSat         *sat_solver;           // SAT solver
-    nSatVars                 int32;       // the number of variables currently used
-    vPiVars          *Vec_Ptr_t;        // the PIs of the cone used 
-    // other 
-    pProgress        *ProgressBar;
-    // statistics
-    nSimRounds                 int32;
-    nNodesMiter                 int32;
-    nClassesZero                 int32;
-    nClassesBeg                 int32;
-    nClassesEnd                 int32;
-    nPairsBeg                 int32;
-    nPairsEnd                 int32;
-    nSatCalls                 int32;
-    nSatCallsSat                 int32;
-    nSatCallsUnsat                 int32;
-    nSatProof                 int32;
-    nSatFails                 int32;
-    nSatFailsReal                 int32;
-    // runtime
-    timeSim             abctime;
-    timeTrav             abctime;
-    timeSat             abctime;
-    timeSatUnsat             abctime;
-    timeSatSat             abctime;
-    timeSatFail             abctime;
-    timeRef             abctime;
-    timeTotal             abctime;
-    time1             abctime;
-    time2             abctime;
-}
-
-        
+// FRAIG simulation state uses typed records in ivyFraigSim.go.
 type Prove_Params_t struct {
     // general parameters
     fUseFraiging     int32;          // enables fraiging
@@ -142,29 +70,50 @@ type Prove_Params_t struct {
     nTotalInspectsMade  ABC_INT64_T;    // the total number of inspects made
 }
 
-func Ivy_ObjSim(pObj *Ivy_Obj_t) *Ivy_FraigSim_t { return (Ivy_FraigSim_t *)pObj.pFanout;  }
-func Ivy_ObjClassNodeLast(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pNextFan0;  }
-func Ivy_ObjClassNodeRepr(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pNextFan0;  }
-func Ivy_ObjClassNodeNext(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pNextFan1;  }
-func Ivy_ObjNodeHashNext(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pPrevFan0;  }
-func Ivy_ObjEquivListNext(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pPrevFan0;  }
-func Ivy_ObjEquivListPrev(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pPrevFan1;  }
-func Ivy_ObjFraig(pObj *Ivy_Obj_t) *Ivy_Obj_t { return pObj.pEquiv;     }
-func Ivy_ObjSatNum(pObj *Ivy_Obj_t) int32 { return int32((ABC_PTRUINT_T))pObj.pNextFan0;         }
-func Ivy_ObjFaninVec(pObj *Ivy_Obj_t) *Vec_Ptr_t { return (Vec_Ptr_t *)pObj.pNextFan1; }
+// Ivy_ObjSim is implemented in ivyFraigSim.go.
 
-func Ivy_ObjSetSim(pObj *Ivy_Obj_t, pSim *Ivy_FraigSim_t) { pObj.pFanout = (Ivy_Obj_t *)pSim; }
-func Ivy_ObjSetClassNodeLast(pObj *Ivy_Obj_t, pLast *Ivy_Obj_t) { pObj.pNextFan0 = pLast; }
-func Ivy_ObjSetClassNodeRepr(pObj *Ivy_Obj_t, pRepr *Ivy_Obj_t) { pObj.pNextFan0 = pRepr; }
-func Ivy_ObjSetClassNodeNext(pObj *Ivy_Obj_t, pNext *Ivy_Obj_t) { pObj.pNextFan1 = pNext; }
-func Ivy_ObjSetNodeHashNext(pObj *Ivy_Obj_t, pNext *Ivy_Obj_t) { pObj.pPrevFan0 = pNext; }
-func Ivy_ObjSetEquivListNext(pObj *Ivy_Obj_t, pNext *Ivy_Obj_t) { pObj.pPrevFan0 = pNext; }
-func Ivy_ObjSetEquivListPrev(pObj *Ivy_Obj_t, pPrev *Ivy_Obj_t) { pObj.pPrevFan1 = pPrev; }
-func Ivy_ObjSetFraig(pObj *Ivy_Obj_t, pNode *Ivy_Obj_t) { pObj.pEquiv    = pNode; }
-func Ivy_ObjSetSatNum(pObj *Ivy_Obj_t, Num int32) { pObj.pNextFan0 = (Ivy_Obj_t *)(ABC_PTRUINT_T)Num;     }
-func Ivy_ObjSetFaninVec(pObj *Ivy_Obj_t, vFanins *Vec_Ptr_t) { pObj.pNextFan1 = (Ivy_Obj_t *)vFanins; }
+// Ivy_ObjClassNodeLast is implemented in ivyFraigSim.go.
 
-func Ivy_ObjRandomSim() uint32 { return (rand() << 24) ^ (rand() << 12) ^ rand(); }
+// Ivy_ObjClassNodeRepr is implemented in ivyFraigSim.go.
+
+// Ivy_ObjClassNodeNext is implemented in ivyFraigSim.go.
+
+// Ivy_ObjNodeHashNext is implemented in ivyFraigSim.go.
+
+// Ivy_ObjEquivListNext is implemented in ivyFraigSim.go.
+
+// Ivy_ObjEquivListPrev is implemented in ivyFraigSim.go.
+
+// Ivy_ObjFraig is implemented in ivyFraigSim.go.
+
+// Ivy_ObjSatNum is implemented in ivyFraigSim.go.
+
+// Ivy_ObjFaninVec is implemented in ivyFraigSim.go.
+
+
+// Ivy_ObjSetSim is implemented in ivyFraigSim.go.
+
+// Ivy_ObjSetClassNodeLast is implemented in ivyFraigSim.go.
+
+// Ivy_ObjSetClassNodeRepr is implemented in ivyFraigSim.go.
+
+// Ivy_ObjSetClassNodeNext is implemented in ivyFraigSim.go.
+
+// Ivy_ObjSetNodeHashNext is implemented in ivyFraigSim.go.
+
+// Ivy_ObjSetEquivListNext is implemented in ivyFraigSim.go.
+
+// Ivy_ObjSetEquivListPrev is implemented in ivyFraigSim.go.
+
+// Ivy_ObjSetFraig is implemented in ivyFraigSim.go.
+
+// Ivy_ObjSetSatNum is implemented in ivyFraigSim.go.
+
+// Ivy_ObjSetFaninVec is implemented in ivyFraigSim.go.
+
+
+// Ivy_ObjRandomSim is implemented in ivyFraigSim.go.
+
 
 // iterate through equivalence classes
 // Original macro:
@@ -254,23 +203,8 @@ var s_nInsLimitGlobal ABC_INT64_T;
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigParamsDefault(pParams *Ivy_FraigParams_t) {
-    memset( pParams, 0, sizeof(Ivy_FraigParams_t) );
-    pParams.nSimWords        =      32;  // the number of words in the simulation info
-    pParams.dSimSatur        =   0.005;  // the ratio of refined classes when saturation is reached
-    pParams.fPatScores       =       0;  // enables simulation pattern scoring
-    pParams.MaxScore         =      25;  // max score after which resimulation is used
-    pParams.fDoSparse        =       1;  // skips sparse functions
-//    pParams->dActConeRatio    =    0.05;  // the ratio of cone to be bumped
-//    pParams->dActConeBumpMax  =     5.0;  // the largest bump of activity
-    pParams.dActConeRatio    =     0.3;  // the ratio of cone to be bumped
-    pParams.dActConeBumpMax  =    10.0;  // the largest bump of activity
+// Ivy_FraigParamsDefault is implemented in ivyFraigSim.go.
 
-    pParams.nBTLimitNode     =     100;  // conflict limit at a node
-    pParams.nBTLimitMiter    =  500000;  // conflict limit at an output
-//    pParams->nBTLimitGlobal   =       0;  // conflict limit global
-//    pParams->nInsLimitGlobal  =       0;  // inspection limit global
-}
 
 /**Function*************************************************************
 
@@ -719,15 +653,8 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.time1)))/(float64(int64(time.Second)
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_NodeAssignRandom(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t) {
-    var pSims *Ivy_FraigSim_t;
-    var i int32;
-    assert(Ivy_ObjIsPi(pObj), "Ivy_ObjIsPi(pObj)");
-    pSims = Ivy_ObjSim(pObj);
-    for  i = 0; i < p.nSimWords; i++  {
-        pSims.pData[i] = Ivy_ObjRandomSim();
-    }
-}
+// Ivy_NodeAssignRandom is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -740,15 +667,8 @@ func Ivy_NodeAssignRandom(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_NodeAssignConst(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t, fConst1 int32) {
-    var pSims *Ivy_FraigSim_t;
-    var i int32;
-    assert(Ivy_ObjIsPi(pObj), "Ivy_ObjIsPi(pObj)");
-    pSims = Ivy_ObjSim(pObj);
-    for  i = 0; i < p.nSimWords; i++  {
-        pSims.pData[i] = fConst1? ~uint32(0) : 0;
-    }
-}
+// Ivy_NodeAssignConst is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -761,15 +681,8 @@ func Ivy_NodeAssignConst(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t, fConst1 int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigAssignRandom(p *Ivy_FraigMan_t) {
-    var pObj *Ivy_Obj_t;
-    var i int32;
-    // inlining of macro Ivy_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pManAig.vPis)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.pManAig.vPis, i)), 1); i++  {
-        Ivy_NodeAssignRandom( p, pObj );
-    }
-}
+// Ivy_FraigAssignRandom is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -782,28 +695,8 @@ func Ivy_FraigAssignRandom(p *Ivy_FraigMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigAssignDist1(p *Ivy_FraigMan_t, pPat *uint32) {
-    var pObj *Ivy_Obj_t;
-    var i, Limit int32;
-    // inlining of macro Ivy_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pManAig.vPis)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.pManAig.vPis, i)), 1); i++  {
-        Ivy_NodeAssignConst( p, pObj, Ivy_InfoHasBit(pPat, i) );
-//        printf( "%d", Ivy_InfoHasBit(pPat, i) );
-    }
-//    printf( "\n" );
+// Ivy_FraigAssignDist1 is implemented in ivyFraigSim.go.
 
-    // inlining of macro IVY_MIN
-    
-    if (Ivy_ManPiNum(p.pManAig)) < (p.nSimWords * 32 - 1) {
-        Limit = (Ivy_ManPiNum(p.pManAig));
-    } else {
-        Limit = (p.nSimWords * 32 - 1);
-    }
-    for  i = 0; i < Limit; i++  {
-        Ivy_InfoXorBit( Ivy_ObjSim( Ivy_ManPi(p.pManAig,i) ).pData, i+1 );
-    }
-}
 
 /**Function*************************************************************
 
@@ -816,16 +709,8 @@ func Ivy_FraigAssignDist1(p *Ivy_FraigMan_t, pPat *uint32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_NodeHasZeroSim(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t) int32 {
-    var pSims *Ivy_FraigSim_t;
-    var i int32;
-    pSims = Ivy_ObjSim(pObj);
-    for  i = 0; i < p.nSimWords; i++  {
-        if pSims.pData[i] {
-            return 0; }
-    }
-    return 1;
-}
+// Ivy_NodeHasZeroSim is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -838,14 +723,8 @@ func Ivy_NodeHasZeroSim(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_NodeComplementSim(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t) {
-    var pSims *Ivy_FraigSim_t;
-    var i int32;
-    pSims = Ivy_ObjSim(pObj);
-    for  i = 0; i < p.nSimWords; i++  {
-        pSims.pData[i] = ~pSims.pData[i];
-    }
-}
+// Ivy_NodeComplementSim is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -858,17 +737,8 @@ func Ivy_NodeComplementSim(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_NodeCompareSims(p *Ivy_FraigMan_t, pObj0 *Ivy_Obj_t, pObj1 *Ivy_Obj_t) int32 {
-    var pSims0, pSims1 *Ivy_FraigSim_t;
-    var i int32;
-    pSims0 = Ivy_ObjSim(pObj0);
-    pSims1 = Ivy_ObjSim(pObj1);
-    for  i = 0; i < p.nSimWords; i++  {
-        if pSims0.pData[i] != pSims1.pData[i] {
-            return 0; }
-    }
-    return 1;
-}
+// Ivy_NodeCompareSims is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -881,47 +751,8 @@ func Ivy_NodeCompareSims(p *Ivy_FraigMan_t, pObj0 *Ivy_Obj_t, pObj1 *Ivy_Obj_t) 
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_NodeSimulateSim(p *Ivy_FraigMan_t, pSims *Ivy_FraigSim_t) {
-    var pData, pData0, pData1 *uint32;
-    var i int32;
-    pData  = pSims.pData;
-    pData0 = pSims.pFanin0.pData;
-    pData1 = pSims.pFanin1.pData;
-    switch  pSims.Type  {
-    case 0:
-        for ( i = 0; i < p.nSimWords; i++ )
-            pData[i] = (pData0[i] & pData1[i]);
-        break;
-    case 1:
-        for ( i = 0; i < p.nSimWords; i++ )
-            pData[i] = ~(pData0[i] & pData1[i]);
-        break;
-    case 2:
-        for ( i = 0; i < p.nSimWords; i++ )
-            pData[i] = (pData0[i] & ~pData1[i]);
-        break;
-    case 3:
-        for ( i = 0; i < p.nSimWords; i++ )
-            pData[i] = (~pData0[i] | pData1[i]);
-        break;
-    case 4:
-        for ( i = 0; i < p.nSimWords; i++ )
-            pData[i] = (~pData0[i] & pData1[i]);
-        break;
-    case 5:
-        for ( i = 0; i < p.nSimWords; i++ )
-            pData[i] = (pData0[i] | ~pData1[i]);
-        break;
-    case 6:
-        for ( i = 0; i < p.nSimWords; i++ )
-            pData[i] = ~(pData0[i] | pData1[i]);
-        break;
-    case 7:
-        for ( i = 0; i < p.nSimWords; i++ )
-            pData[i] = (pData0[i] | pData1[i]);
-        break;
-    }
-}
+// Ivy_NodeSimulateSim is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -934,61 +765,8 @@ func Ivy_NodeSimulateSim(p *Ivy_FraigMan_t, pSims *Ivy_FraigSim_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_NodeSimulate(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t) {
-    var pSims, pSims0, pSims1 *Ivy_FraigSim_t;
-    var fCompl, fCompl0, fCompl1, i int32;
-    assert(!Ivy_IsComplement(pObj), "!Ivy_IsComplement(pObj)");
-    // get hold of the simulation information
-    pSims  = Ivy_ObjSim(pObj);
-    pSims0 = Ivy_ObjSim(Ivy_ObjFanin0(pObj));
-    pSims1 = Ivy_ObjSim(Ivy_ObjFanin1(pObj));
-    // get complemented attributes of the children using their random info
-    fCompl  = pObj.fPhase;
-    fCompl0 = Ivy_ObjFaninPhase(Ivy_ObjChild0(pObj));
-    fCompl1 = Ivy_ObjFaninPhase(Ivy_ObjChild1(pObj));
-    // simulate
-    if fCompl0 && fCompl1 {
-        if fCompl {
-            for  i = 0; i < p.nSimWords; i++  {
-                pSims.pData[i] = (pSims0.pData[i] | pSims1.pData[i]);
-            }
-        } else {
-            for  i = 0; i < p.nSimWords; i++  {
-                pSims.pData[i] = ~(pSims0.pData[i] | pSims1.pData[i]);
-            } }
-    
-    } else if fCompl0 && !fCompl1 {
-        if fCompl {
-            for  i = 0; i < p.nSimWords; i++  {
-                pSims.pData[i] = (pSims0.pData[i] | ~pSims1.pData[i]);
-            }
-        } else {
-            for  i = 0; i < p.nSimWords; i++  {
-                pSims.pData[i] = (~pSims0.pData[i] & pSims1.pData[i]);
-            } }
-    
-    } else if !fCompl0 && fCompl1 {
-        if fCompl {
-            for  i = 0; i < p.nSimWords; i++  {
-                pSims.pData[i] = (~pSims0.pData[i] | pSims1.pData[i]);
-            }
-        } else {
-            for  i = 0; i < p.nSimWords; i++  {
-                pSims.pData[i] = (pSims0.pData[i] & ~pSims1.pData[i]);
-            } }
-    
-    } else { // if ( !fCompl0 && !fCompl1 )
-    
-        if fCompl {
-            for  i = 0; i < p.nSimWords; i++  {
-                pSims.pData[i] = ~(pSims0.pData[i] & pSims1.pData[i]);
-            }
-        } else {
-            for  i = 0; i < p.nSimWords; i++  {
-                pSims.pData[i] = (pSims0.pData[i] & pSims1.pData[i]);
-            } }
-    }
-}
+// Ivy_NodeSimulate is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1016,19 +794,8 @@ var spStatic_Ivy_NodeHash_s_FPrimes [128]int32 = [128]int32{
         7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, 
         8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147,
     };
-func Ivy_NodeHash(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t) uint32 {
-    
-    var pSims *Ivy_FraigSim_t;
-    var uHash uint32;
-    var i int32;
-    assert(p.nSimWords <= 128, "p.nSimWords <= 128");
-    uHash = 0;
-    pSims  = Ivy_ObjSim(pObj);
-    for  i = 0; i < p.nSimWords; i++  {
-        uHash ^= pSims.pData[i] * spStatic_Ivy_NodeHash_s_FPrimes[i];
-    }
-    return uHash;
-}
+// Ivy_NodeHash is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1041,29 +808,8 @@ func Ivy_NodeHash(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t) uint32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigSimulateOne(p *Ivy_FraigMan_t) {
-    var pObj *Ivy_Obj_t;
-    var i int32;
-    var clk abctime;
-clk = Abc_Clock();
-    // inlining of macro Ivy_ManForEachNode
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pManAig.vObjs)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsNode(pObj) {} else {
-        Ivy_NodeSimulate( p, pObj );
-/*
-        if ( Ivy_ObjFraig(pObj) == NULL )
-            printf( "%3d --- -- %d  :  ", pObj->Id, pObj->fPhase );
-        else
-            printf( "%3d %3d %2d %d  :  ", pObj->Id, Ivy_Regular(Ivy_ObjFraig(pObj))->Id, Ivy_ObjSatNum(Ivy_Regular(Ivy_ObjFraig(pObj))), pObj->fPhase );
-        Extra_PrintBinary( stdout, Ivy_ObjSim(pObj), 30 );
-        printf( "\n" );
-*/
-    }
-    }
-p.timeSim += Abc_Clock() - clk;
-p.nSimRounds++;
-}
+// Ivy_FraigSimulateOne is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1076,16 +822,8 @@ p.nSimRounds++;
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigSimulateOneSim(p *Ivy_FraigMan_t) {
-    var pSims *Ivy_FraigSim_t;
-    var clk abctime;
-clk = Abc_Clock();
-    for  pSims = p.pSimStart; (pSims != nil); pSims = pSims.pNext  {
-        Ivy_NodeSimulateSim( p, pSims );
-    }
-p.timeSim += Abc_Clock() - clk;
-p.nSimRounds++;
-}
+// Ivy_FraigSimulateOneSim is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1098,15 +836,8 @@ p.nSimRounds++;
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_NodeAddToClass(pClass *Ivy_Obj_t, pObj *Ivy_Obj_t) {
-    if Ivy_ObjClassNodeNext(pClass) == nil {
-        Ivy_ObjSetClassNodeNext( pClass, pObj );
-    } else {
-        Ivy_ObjSetClassNodeNext( Ivy_ObjClassNodeLast(pClass), pObj ); }
-    Ivy_ObjSetClassNodeLast( pClass, pObj );
-    Ivy_ObjSetClassNodeRepr( pObj, pClass );
-    Ivy_ObjSetClassNodeNext( pObj, nil );
-}
+// Ivy_NodeAddToClass is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1119,21 +850,8 @@ func Ivy_NodeAddToClass(pClass *Ivy_Obj_t, pObj *Ivy_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigAddClass(pList *Ivy_FraigList_t, pClass *Ivy_Obj_t) {
-    if pList.pHead == nil {
-        pList.pHead = pClass;
-        pList.pTail = pClass;
-        Ivy_ObjSetEquivListPrev( pClass, nil );
-        Ivy_ObjSetEquivListNext( pClass, nil ); 
-    
-    } else {
-        Ivy_ObjSetEquivListNext( pList.pTail, pClass ); 
-        Ivy_ObjSetEquivListPrev( pClass, pList.pTail );
-        Ivy_ObjSetEquivListNext( pClass, nil ); 
-        pList.pTail = pClass;
-    }
-    pList.nItems++;
-}
+// Ivy_FraigAddClass is implemented in ivyFraigSim.go.
+
  
 /**Function*************************************************************
 
@@ -1146,16 +864,8 @@ func Ivy_FraigAddClass(pList *Ivy_FraigList_t, pClass *Ivy_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigInsertClass(pList *Ivy_FraigList_t, pBase *Ivy_Obj_t, pClass *Ivy_Obj_t) {
-    Ivy_ObjSetEquivListPrev( pClass, pBase );
-    Ivy_ObjSetEquivListNext( pClass, Ivy_ObjEquivListNext(pBase) ); 
-    if Ivy_ObjEquivListNext(pBase) != nil {
-        Ivy_ObjSetEquivListPrev( Ivy_ObjEquivListNext(pBase), pClass ); }
-    Ivy_ObjSetEquivListNext( pBase, pClass ); 
-    if pList.pTail == pBase {
-        pList.pTail = pClass; }
-    pList.nItems++;
-}
+// Ivy_FraigInsertClass is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1168,20 +878,8 @@ func Ivy_FraigInsertClass(pList *Ivy_FraigList_t, pBase *Ivy_Obj_t, pClass *Ivy_
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigRemoveClass(pList *Ivy_FraigList_t, pClass *Ivy_Obj_t) {
-    if pList.pHead == pClass {
-        pList.pHead = Ivy_ObjEquivListNext(pClass); }
-    if pList.pTail == pClass {
-        pList.pTail = Ivy_ObjEquivListPrev(pClass); }
-    if Ivy_ObjEquivListPrev(pClass) != nil {
-        Ivy_ObjSetEquivListNext( Ivy_ObjEquivListPrev(pClass), Ivy_ObjEquivListNext(pClass) ); } 
-    if Ivy_ObjEquivListNext(pClass) != nil {
-        Ivy_ObjSetEquivListPrev( Ivy_ObjEquivListNext(pClass), Ivy_ObjEquivListPrev(pClass) ); }
-    Ivy_ObjSetEquivListNext( pClass, nil ); 
-    Ivy_ObjSetEquivListPrev( pClass, nil );
-    pClass.fMarkA = 0;
-    pList.nItems--;
-}
+// Ivy_FraigRemoveClass is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1194,22 +892,8 @@ func Ivy_FraigRemoveClass(pList *Ivy_FraigList_t, pClass *Ivy_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigCountPairsClasses(p *Ivy_FraigMan_t) int32 {
-    var pClass, pNode *Ivy_Obj_t;
-    var nPairs, nNodes int32;
-    return nPairs;
+// Ivy_FraigCountPairsClasses is implemented in ivyFraigSim.go.
 
-    // inlining of macro Ivy_FraigForEachEquivClass
-    for  pClass = p.lClasses.pHead;                                                     (pClass != nil);                                                             pClass = Ivy_ObjEquivListNext(pClass)  {
-        nNodes = 0;
-        // inlining of macro Ivy_FraigForEachClassNode
-        for  pNode = pClass;                                                    (pNode != nil);                                                             pNode = Ivy_ObjClassNodeNext(pNode)  {
-            nNodes++;
-        }
-        nPairs += nNodes * (nNodes - 1) / 2;
-    }
-    return nPairs;
-}
 
 /**Function*************************************************************
 
@@ -1222,67 +906,8 @@ func Ivy_FraigCountPairsClasses(p *Ivy_FraigMan_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigCreateClasses(p *Ivy_FraigMan_t) {
-    var pTable **Ivy_Obj_t;
-    var pObj, pConst1, pBin, pEntry *Ivy_Obj_t;
-    var i, nTableSize int32;
-    var Hash uint32;
-    pConst1 = Ivy_ManConst1(p.pManAig);
-    // allocate the table
-    nTableSize = Ivy_ManObjNum(p.pManAig) / 2 + 13;
-    // inlining of macro ABC_ALLOC
-    pTable = ((Ivy_Obj_t * *) malloc(sizeof(Ivy_Obj_t *) * (size_t)(nTableSize))); 
-    memset( pTable, 0, sizeof(Ivy_Obj_t *) * nTableSize );
-    // collect nodes into the table
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pManAig.vObjs)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if !Ivy_ObjIsPi(pObj) && !Ivy_ObjIsNode(pObj) {
-            continue; }
-        Hash = Ivy_NodeHash( p, pObj );
-        if Hash == 0 && (Ivy_NodeHasZeroSim( p, pObj ) != 0) {
-            Ivy_NodeAddToClass( pConst1, pObj );
-            continue;
-        }
-        // add the node to the table
-        pBin = pTable[Hash % nTableSize];
-        // inlining of macro Ivy_FraigForEachBinNode
-        for  pEntry = pBin;                                                      (pEntry != nil);                                                             pEntry = Ivy_ObjNodeHashNext(pEntry)  {
-            if Ivy_NodeCompareSims( p, pEntry, pObj ) != 0 {
-                Ivy_NodeAddToClass( pEntry, pObj );
-                break;
-            }
-        }
-        // check if the entry was added
-        if pEntry != nil {
-            continue; }
-        Ivy_ObjSetNodeHashNext( pObj, pBin );
-        pTable[Hash % nTableSize] = pObj;
-    }
-    }
-    // collect non-trivial classes
-    assert(p.lClasses.pHead == nil, "p.lClasses.pHead == nil");
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pManAig.vObjs)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if !Ivy_ObjIsConst1(pObj) && !Ivy_ObjIsPi(pObj) && !Ivy_ObjIsNode(pObj) {
-            continue; }
-        Ivy_ObjSetNodeHashNext( pObj, nil );
-        if Ivy_ObjClassNodeRepr(pObj) == nil {
-            assert(Ivy_ObjClassNodeNext(pObj) == nil, "Ivy_ObjClassNodeNext(pObj) == nil");
-            continue;
-        }
-        // recognize the head of the class
-        if Ivy_ObjClassNodeNext( Ivy_ObjClassNodeRepr(pObj) ) != nil {
-            continue; }
-        // clean the class representative and add it to the list
-        Ivy_ObjSetClassNodeRepr( pObj, nil );
-        Ivy_FraigAddClass( &p.lClasses, pObj );
-    }
-    }
-    // free the table
-    pTable = nil;
-}
+// Ivy_FraigCreateClasses is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1295,55 +920,8 @@ func Ivy_FraigCreateClasses(p *Ivy_FraigMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigRefineClass_rec(p *Ivy_FraigMan_t, pClass *Ivy_Obj_t) int32 {
-    var pClassNew, pListOld, pListNew, pNode *Ivy_Obj_t;
-    var RetValue int32;
-    // check if there is refinement
-    pListOld = pClass;
-    // inlining of macro Ivy_FraigForEachClassNode
-    for  pClassNew = Ivy_ObjClassNodeNext(pClass);                                                    (pClassNew != nil);                                                             pClassNew = Ivy_ObjClassNodeNext(pClassNew)  {
-        if !(Ivy_NodeCompareSims(p, pClass, pClassNew) != 0) {
-            if p.pParams.fPatScores {
-                Ivy_FraigAddToPatScores( p, pClass, pClassNew ); }
-            break;
-        }
-        pListOld = pClassNew;
-    }
-    if pClassNew == nil {
-        return 0; }
-    // set representative of the new class
-    Ivy_ObjSetClassNodeRepr( pClassNew, nil );
-    // start the new list
-    pListNew = pClassNew;
-    // go through the remaining nodes and sort them into two groups:
-    // (1) matches of the old node; (2) non-matches of the old node
-    // inlining of macro Ivy_FraigForEachClassNode
-    for  pNode = Ivy_ObjClassNodeNext(pClassNew);                                                    (pNode != nil);                                                             pNode = Ivy_ObjClassNodeNext(pNode)  {
-        if Ivy_NodeCompareSims( p, pClass, pNode ) != 0 {
-            Ivy_ObjSetClassNodeNext( pListOld, pNode );
-            pListOld = pNode;
-        
-        } else {
-            Ivy_ObjSetClassNodeNext( pListNew, pNode );
-            Ivy_ObjSetClassNodeRepr( pNode, pClassNew );
-            pListNew = pNode;
-        }
-    }
-    // finish both lists
-    Ivy_ObjSetClassNodeNext( pListNew, nil );
-    Ivy_ObjSetClassNodeNext( pListOld, nil );
-    // update the list of classes
-    Ivy_FraigInsertClass( &p.lClasses, pClass, pClassNew );
-    // if the old class is trivial, remove it
-    if Ivy_ObjClassNodeNext(pClass) == nil {
-        Ivy_FraigRemoveClass( &p.lClasses, pClass ); }
-    // if the new class is trivial, remove it; otherwise, try to refine it
-    if Ivy_ObjClassNodeNext(pClassNew) == nil {
-        Ivy_FraigRemoveClass( &p.lClasses, pClassNew );
-    } else {
-        RetValue = Ivy_FraigRefineClass_rec( p, pClassNew ); }
-    return RetValue + 1;
-}
+// Ivy_FraigRefineClass_rec is implemented in ivyFraigSim.go.
+
  
 /**Function*************************************************************
 
@@ -1356,42 +934,8 @@ func Ivy_FraigRefineClass_rec(p *Ivy_FraigMan_t, pClass *Ivy_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigCheckOutputSimsSavePattern(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t) { 
-    var pSims *Ivy_FraigSim_t;
-    var i int32;
-    var k int32;
-    var BestPat int32;
-    var pModel *int32;
-    // find the word of the pattern
-    pSims = Ivy_ObjSim(pObj);
-    for  i = 0; i < p.nSimWords; i++  {
-        if pSims.pData[i] {
-            break; }
-    }
-    assert(i < p.nSimWords, "i < p.nSimWords");
-    // find the bit of the pattern
-    for  k = 0; k < 32; k++  {
-        if pSims.pData[i] & (1 << k) {
-            break; }
-    }
-    assert(k < 32, "k < 32");
-    // determine the best pattern
-    BestPat = i * 32 + k;
-    // fill in the counter-example data
-    // inlining of macro ABC_ALLOC
-    pModel = ((int *) malloc(sizeof(int) * (size_t)(Ivy_ManPiNum(p.pManFraig))));
-    // inlining of macro Ivy_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pManAig.vPis)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.pManAig.vPis, i)), 1); i++  {
-        pModel[i] = Ivy_InfoHasBit(Ivy_ObjSim(pObj).pData, BestPat);
-//        printf( "%d", pModel[i] );
-    }
-//    printf( "\n" );
-    // set the model
-    assert(p.pManFraig.pData == nil, "p.pManFraig.pData == nil");
-    p.pManFraig.pData = pModel;
-    return;
-}
+// Ivy_FraigCheckOutputSimsSavePattern is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1404,30 +948,8 @@ func Ivy_FraigCheckOutputSimsSavePattern(p *Ivy_FraigMan_t, pObj *Ivy_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigCheckOutputSims(p *Ivy_FraigMan_t) int32 {
-    var pObj *Ivy_Obj_t;
-    var i int32;
-    // make sure the reference simulation pattern does not detect the bug
-//    pObj = Ivy_ManPo( p->pManAig, 0 );
-    // inlining of macro Ivy_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pManAig.vPos)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.pManAig.vPos, i)), 1); i++  {
-        //assert( Ivy_ObjFanin0(pObj)->fPhase == (unsigned)Ivy_ObjFaninC0(pObj) ); // Ivy_ObjFaninPhase(Ivy_ObjChild0(pObj)) == 0
-        // complement simulation info
-//        if ( Ivy_ObjFanin0(pObj)->fPhase ^ Ivy_ObjFaninC0(pObj) ) // Ivy_ObjFaninPhase(Ivy_ObjChild0(pObj))
-//            Ivy_NodeComplementSim( p, Ivy_ObjFanin0(pObj) );
-        // check 
-        if !(Ivy_NodeHasZeroSim( p, Ivy_ObjFanin0(pObj) ) != 0) {
-            // create the counter-example from this pattern
-            Ivy_FraigCheckOutputSimsSavePattern( p, Ivy_ObjFanin0(pObj) );
-            return 1;
-        }
-        // complement simulation info
-//        if ( Ivy_ObjFanin0(pObj)->fPhase ^ Ivy_ObjFaninC0(pObj) )
-//            Ivy_NodeComplementSim( p, Ivy_ObjFanin0(pObj) );
-    }
-    return 0;
-}
+// Ivy_FraigCheckOutputSims is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1441,32 +963,8 @@ func Ivy_FraigCheckOutputSims(p *Ivy_FraigMan_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigRefineClasses(p *Ivy_FraigMan_t) int32 {
-    var pClass, pClass2 *Ivy_Obj_t;
-    var RetValue, Counter int32;
-    var clk abctime;
-    // check if some outputs already became non-constant
-    // this is a special case when computation can be stopped!!!
-    if p.pParams.fProve {
-        Ivy_FraigCheckOutputSims( p ); }
-    if p.pManFraig.pData {
-        return 0; }
-    // refine the classed
-clk = Abc_Clock();
-    // inlining of macro Ivy_FraigForEachEquivClassSafe
-    for  pClass = p.lClasses.pHead,                                                     pClass2 = pClass? Ivy_ObjEquivListNext(pClass): nil;                   (pClass != nil);                                                             pClass = pClass2,                                                     pClass2 = pClass? Ivy_ObjEquivListNext(pClass): nil  {
-        if pClass.fMarkA {
-            continue; }
-        RetValue = Ivy_FraigRefineClass_rec( p, pClass );
-        Counter += ( RetValue > 0 );
-//if ( Ivy_ObjIsConst1(pClass) )
-//printf( "%d ", RetValue );
-//if ( Ivy_ObjIsConst1(pClass) )
-//    p->time1 += Abc_Clock() - clk;
-    }
-p.timeRef += Abc_Clock() - clk;
-    return Counter;
-}
+// Ivy_FraigRefineClasses is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1479,15 +977,8 @@ p.timeRef += Abc_Clock() - clk;
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigPrintClass(pClass *Ivy_Obj_t) {
-    var pObj *Ivy_Obj_t;
-    fmt.Printf("Class {");
-    // inlining of macro Ivy_FraigForEachClassNode
-    for  pObj = pClass;                                                    pObj;                                                             pObj = Ivy_ObjClassNodeNext(pObj)  {
-        fmt.Printf(" %d(%d)%c", pObj.Id, pObj.Level, pObj.fPhase? '+' : '-');
-    }
-    fmt.Printf(" }\n");
-}
+// Ivy_FraigPrintClass is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1500,15 +991,8 @@ func Ivy_FraigPrintClass(pClass *Ivy_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigCountClassNodes(pClass *Ivy_Obj_t) int32 {
-    var pObj *Ivy_Obj_t;
-    var Counter int32;
-    // inlining of macro Ivy_FraigForEachClassNode
-    for  pObj = pClass;                                                    pObj;                                                             pObj = Ivy_ObjClassNodeNext(pObj)  {
-        Counter++;
-    }
-    return Counter;
-}
+// Ivy_FraigCountClassNodes is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1521,15 +1005,8 @@ func Ivy_FraigCountClassNodes(pClass *Ivy_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigPrintSimClasses(p *Ivy_FraigMan_t) {
-    var pClass *Ivy_Obj_t;
-    // inlining of macro Ivy_FraigForEachEquivClass
-    for  pClass = p.lClasses.pHead;                                                     (pClass != nil);                                                             pClass = Ivy_ObjEquivListNext(pClass)  {
-//        Ivy_FraigPrintClass( pClass );
-        fmt.Printf("%d ", Ivy_FraigCountClassNodes( pClass ));
-    }
-//    printf( "\n" );
-}
+// Ivy_FraigPrintSimClasses is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1542,9 +1019,8 @@ func Ivy_FraigPrintSimClasses(p *Ivy_FraigMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigSavePattern0(p *Ivy_FraigMan_t) {
-    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );
-}
+// Ivy_FraigSavePattern0 is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1557,9 +1033,8 @@ func Ivy_FraigSavePattern0(p *Ivy_FraigMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigSavePattern1(p *Ivy_FraigMan_t) {
-    memset( p.pPatWords, 0xff, sizeof(unsigned) * p.nPatWords );
-}
+// Ivy_FraigSavePattern1 is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1675,42 +1150,8 @@ func Ivy_FraigSavePattern3(p *Ivy_FraigMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigSimulate(p *Ivy_FraigMan_t) {
-    var nChanges, nClasses int32;
-    // start the classes
-    Ivy_FraigAssignRandom( p );
-    Ivy_FraigSimulateOne( p );
-    Ivy_FraigCreateClasses( p );
-//printf( "Starting classes = %5d.   Pairs = %6d.\n", p->lClasses.nItems, Ivy_FraigCountPairsClasses(p) );
-    // refine classes by walking 0/1 patterns
-    Ivy_FraigSavePattern0( p );
-    Ivy_FraigAssignDist1( p, p.pPatWords );
-    Ivy_FraigSimulateOne( p );
-    nChanges = Ivy_FraigRefineClasses( p );
-    if p.pManFraig.pData {
-        return; }
-//printf( "Refined classes  = %5d.   Changes = %4d.   Pairs = %6d.\n", p->lClasses.nItems, nChanges, Ivy_FraigCountPairsClasses(p) );
-    Ivy_FraigSavePattern1( p );
-    Ivy_FraigAssignDist1( p, p.pPatWords );
-    Ivy_FraigSimulateOne( p );
-    nChanges = Ivy_FraigRefineClasses( p );
-    if p.pManFraig.pData {
-        return; }
-//printf( "Refined classes  = %5d.   Changes = %4d.   Pairs = %6d.\n", p->lClasses.nItems, nChanges, Ivy_FraigCountPairsClasses(p) );
-    // refine classes by random simulation
-    for {
-        Ivy_FraigAssignRandom( p );
-        Ivy_FraigSimulateOne( p );
-        nClasses = p.lClasses.nItems;
-        nChanges = Ivy_FraigRefineClasses( p );
-        if p.pManFraig.pData {
-            return; }
-//printf( "Refined classes  = %5d.   Changes = %4d.   Pairs = %6d.\n", p->lClasses.nItems, nChanges, Ivy_FraigCountPairsClasses(p) );
-    
-if !( float64(nChanges) / nClasses > p.pParams.dSimSatur ) { break }
-} 
-//    Ivy_FraigPrintSimClasses( p );
-}
+// Ivy_FraigSimulate is implemented in ivyFraigSim.go.
+
 
 
 
@@ -1725,13 +1166,8 @@ if !( float64(nChanges) / nClasses > p.pParams.dSimSatur ) { break }
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigCleanPatScores(p *Ivy_FraigMan_t) {
-    var i int32;
-    var nLimit int32 = p.nSimWords * 32;
-    for  i = 0; i < nLimit; i++  {
-        p.pPatScores[i] = 0;
-    }
-}
+// Ivy_FraigCleanPatScores is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1744,24 +1180,8 @@ func Ivy_FraigCleanPatScores(p *Ivy_FraigMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigAddToPatScores(p *Ivy_FraigMan_t, pClass *Ivy_Obj_t, pClassNew *Ivy_Obj_t) {
-    var pSims0, pSims1 *Ivy_FraigSim_t;
-    var uDiff uint32;
-    var i, w int32;
-    // get hold of the simulation information
-    pSims0 = Ivy_ObjSim(pClass);
-    pSims1 = Ivy_ObjSim(pClassNew);
-    // iterate through the differences and record the score
-    for  w = 0; w < p.nSimWords; w++  {
-        uDiff = pSims0.pData[w] ^ pSims1.pData[w];
-        if uDiff == 0 {
-            continue; }
-        for  i = 0; i < 32; i++  {
-            if uDiff & ( 1 << i ) {
-                p.pPatScores[w*32+i]++; }
-        }
-    }
-}
+// Ivy_FraigAddToPatScores is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1774,34 +1194,8 @@ func Ivy_FraigAddToPatScores(p *Ivy_FraigMan_t, pClass *Ivy_Obj_t, pClassNew *Iv
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigSelectBestPat(p *Ivy_FraigMan_t) int32 {
-    var pSims *Ivy_FraigSim_t;
-    var pObj *Ivy_Obj_t;
-    var i int32;
-    var nLimit int32 = p.nSimWords * 32;
-    var MaxScore int32;
-    var BestPat int32 = -1;
-    for  i = 1; i < nLimit; i++  {
-        if MaxScore < p.pPatScores[i] {
-            MaxScore = p.pPatScores[i];
-            BestPat = i;
-        }
-    }
-    if MaxScore == 0 {
-        return 0; }
-//    if ( MaxScore > p->pParams->MaxScore )
-//    printf( "Max score is %3d.  ", MaxScore );
-    // copy the best pattern into the selected pattern
-    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );
-    // inlining of macro Ivy_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pManAig.vPis)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.pManAig.vPis, i)), 1); i++  {
-        pSims = Ivy_ObjSim(pObj);
-        if Ivy_InfoHasBit(pSims.pData, BestPat) {
-            Ivy_InfoSetBit(p.pPatWords, i); }
-    }
-    return MaxScore;
-}
+// Ivy_FraigSelectBestPat is implemented in ivyFraigSim.go.
+
 
 /**Function*************************************************************
 
@@ -1814,35 +1208,8 @@ func Ivy_FraigSelectBestPat(p *Ivy_FraigMan_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ivy_FraigResimulate(p *Ivy_FraigMan_t) {
-    var nChanges int32;
-    Ivy_FraigAssignDist1( p, p.pPatWords );
-    Ivy_FraigSimulateOne( p );
-    if p.pParams.fPatScores {
-        Ivy_FraigCleanPatScores( p ); }
-    nChanges = Ivy_FraigRefineClasses( p );
-    if p.pManFraig.pData {
-        return; }
-    if nChanges < 1 {
-        fmt.Printf("Error: A counter-example did not refine classes!\n"); }
-    assert(nChanges >= 1, "nChanges >= 1");
-//printf( "Refined classes! = %5d.   Changes = %4d.\n", p->lClasses.nItems, nChanges );
-    if !p.pParams.fPatScores {
-        return; }
+// Ivy_FraigResimulate is implemented in ivyFraigSim.go.
 
-    // perform additional simulation using dist1 patterns derived from successful patterns
-    for  Ivy_FraigSelectBestPat(p) > p.pParams.MaxScore  {
-        Ivy_FraigAssignDist1( p, p.pPatWords );
-        Ivy_FraigSimulateOne( p );
-        Ivy_FraigCleanPatScores( p );
-        nChanges = Ivy_FraigRefineClasses( p );
-        if p.pManFraig.pData {
-            return; }
-//printf( "Refined class!!! = %5d.   Changes = %4d.   Pairs = %6d.\n", p->lClasses.nItems, nChanges, Ivy_FraigCountPairsClasses(p) );
-        if nChanges == 0 {
-            break; }
-    }
-}
 
 
 /**Function*************************************************************

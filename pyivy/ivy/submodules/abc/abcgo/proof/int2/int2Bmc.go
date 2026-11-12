@@ -1,6 +1,10 @@
 package int2
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/glycerine/abcgo/aig/gia"
+)
 
 /**CFile****************************************************************
 
@@ -48,40 +52,47 @@ import "fmt"
 
 ***********************************************************************/
 func Int2_ManDupInit(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {
-    var pNew, pTemp *Gia_Man_t;
-    var pObj, pObjRi, pObjRo *Gia_Obj_t;
-    var i, iCtrl int32;
-    assert(Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0");
-    pNew = Gia_ManStart( 10000 );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        if i == Gia_ManPiNum(p) {
-            iCtrl = Gia_ManAppendCi( pNew ); }
-        pObj.Value = Gia_ManAppendCi( pNew );
-    }
-    Gia_ManHashAlloc( pNew );
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-    }
-    // inlining of macro Gia_ManForEachPo
-    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-    }
-    // inlining of macro Gia_ManForEachRiRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-        Gia_ManAppendCo( pNew, Gia_ManHashMux( pNew, iCtrl, pObjRo.Value, Gia_ObjFanin0Copy(pObjRi) ) );
-    }
-    Gia_ManHashStop( pNew );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    // remove dangling
-    pNew = Gia_ManCleanup( pTemp = pNew );
+	assert(Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0")
+	pNew := gia.Gia_ManStart(10000)
+	pNew.CopyIdentityFrom(p)
+	gia.Gia_ObjSetValue(gia.Gia_ManConst0(p), 0)
+
+	var iCtrl int32
+	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
+		obj := gia.Gia_ManCi(p, i)
+		if i == gia.Gia_ManPiNum(p) {
+			iCtrl = gia.Gia_ManAppendCi(pNew)
+		}
+		gia.Gia_ObjSetValue(obj, gia.Gia_ManAppendCi(pNew))
+	}
+
+	gia.Gia_ManHashAlloc(pNew)
+	for i := int32(0); i < gia.Gia_ManObjNum(p); i++ {
+		obj := gia.Gia_ManObj(p, i)
+		if gia.Gia_ObjIsAnd(obj) != 0 {
+			lit := gia.Gia_ManHashAnd(pNew, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj))
+			gia.Gia_ObjSetValue(obj, lit)
+		}
+	}
+	for i := int32(0); i < gia.Gia_ManPoNum(p); i++ {
+		obj := gia.Gia_ManPo(p, i)
+		gia.Gia_ObjSetValue(obj, gia.Gia_ManAppendCo(pNew, gia.Gia_ObjFanin0Copy(obj)))
+	}
+	for i := int32(0); i < gia.Gia_ManRegNum(p); i++ {
+		ri := gia.Gia_ManRi(p, i)
+		ro := gia.Gia_ManRo(p, i)
+		lit := gia.Gia_ManHashMux(pNew, iCtrl, gia.Gia_ObjValue(ro), gia.Gia_ObjFanin0Copy(ri))
+		gia.Gia_ManAppendCo(pNew, lit)
+	}
+	gia.Gia_ManHashStop(pNew)
+	gia.Gia_ManSetRegNum(pNew, gia.Gia_ManRegNum(p))
+	// Remove dangling nodes after the initialization transition is added.
+	pTemp := pNew
+	pNew = gia.Gia_ManCleanup(pTemp)
     if fVerbose != 0 {
-        fmt.Printf("Before cleanup = %d nodes. After cleanup = %d nodes.\n", Gia_ManAndNum(pTemp), Gia_ManAndNum(pNew)); }
-    Gia_ManStop( pTemp );
+		fmt.Printf("Before cleanup = %d nodes. After cleanup = %d nodes.\n", gia.Gia_ManAndNum(pTemp), gia.Gia_ManAndNum(pNew))
+	}
+	gia.Gia_ManStop(pTemp)
     return pNew;
 }
 
@@ -140,48 +151,46 @@ func Int2_ManCheckInit(p *Gia_Man_t) int32 {
 
 ***********************************************************************/
 func Int2_ManFrameInit(p *Gia_Man_t, nFrames int32, fVerbose int32) *Gia_Man_t {
-    var pFrames, pTemp *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i, f int32;
-    pFrames = Gia_ManStart( 10000 );
-    pFrames.pName = Abc_UtilStrsav( p.pName );
-    pFrames.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManConst0(p).Value = 0;
-    // perform structural hashing
-    Gia_ManHashAlloc( pFrames );
-    for  f = 0; f < nFrames; f++  {
-        // inlining of macro Gia_ManForEachPi
-        for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-            pObj.Value = Gia_ManAppendCi( pFrames );
-        }
-        // inlining of macro Gia_ManForEachRo
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-            if f != 0 {
-                pObj.Value = Gia_ObjRoToRi(p, pObj).Value;
-            } else {
-                pObj.Value = 0;
-            }
-        }
-        // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-            pObj.Value = Gia_ManHashAnd( pFrames, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-        }
-        // inlining of macro Gia_ManForEachRi
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {
-            pObj.Value = Gia_ObjFanin0Copy(pObj);
-        }
-    }
-    Gia_ManHashStop( pFrames );
-    // create flop inputs
-    // inlining of macro Gia_ManForEachRi
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {
-        pObj.Value = Gia_ManAppendCo( pFrames, Gia_ObjFanin0Copy(pObj) );
-    }
-    // remove dangling
-    pFrames = Gia_ManCleanup( pTemp = pFrames );
+	pFrames := gia.Gia_ManStart(gia.Gia_ManObjNum(p))
+	pFrames.CopyIdentityFrom(p)
+	gia.Gia_ObjSetValue(gia.Gia_ManConst0(p), 0)
+	gia.Gia_ManHashAlloc(pFrames)
+	for frame := int32(0); frame < nFrames; frame++ {
+		for i := int32(0); i < gia.Gia_ManPiNum(p); i++ {
+			obj := gia.Gia_ManPi(p, i)
+			gia.Gia_ObjSetValue(obj, gia.Gia_ManAppendCi(pFrames))
+		}
+		for i := int32(0); i < gia.Gia_ManRegNum(p); i++ {
+			ro := gia.Gia_ManRo(p, i)
+			value := int32(0)
+			if frame != 0 {
+				value = gia.Gia_ObjValue(gia.Gia_ObjRoToRi(p, ro))
+			}
+			gia.Gia_ObjSetValue(ro, value)
+		}
+		for i := int32(0); i < gia.Gia_ManObjNum(p); i++ {
+			obj := gia.Gia_ManObj(p, i)
+			if gia.Gia_ObjIsAnd(obj) != 0 {
+				value := gia.Gia_ManHashAnd(pFrames, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj))
+				gia.Gia_ObjSetValue(obj, value)
+			}
+		}
+		for i := int32(0); i < gia.Gia_ManRegNum(p); i++ {
+			ri := gia.Gia_ManRi(p, i)
+			gia.Gia_ObjSetValue(ri, gia.Gia_ObjFanin0Copy(ri))
+		}
+	}
+	gia.Gia_ManHashStop(pFrames)
+	for i := int32(0); i < gia.Gia_ManRegNum(p); i++ {
+		ri := gia.Gia_ManRi(p, i)
+		gia.Gia_ObjSetValue(ri, gia.Gia_ManAppendCo(pFrames, gia.Gia_ObjFanin0Copy(ri)))
+	}
+	pTemp := pFrames
+	pFrames = gia.Gia_ManCleanup(pTemp)
     if fVerbose != 0 {
-        fmt.Printf("Before cleanup = %d nodes. After cleanup = %d nodes.\n", Gia_ManAndNum(pTemp), Gia_ManAndNum(pFrames)); }
-    Gia_ManStop( pTemp );
+		fmt.Printf("Before cleanup = %d nodes. After cleanup = %d nodes.\n", gia.Gia_ManAndNum(pTemp), gia.Gia_ManAndNum(pFrames))
+	}
+	gia.Gia_ManStop(pTemp)
     return pFrames;
 }
 func Int2_ManSetupBmcSolver(p *Gia_Man_t, nFrames int32) *sat_solver {

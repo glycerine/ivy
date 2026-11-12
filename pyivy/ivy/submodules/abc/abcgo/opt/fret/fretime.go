@@ -1,214 +1,109 @@
 package fret
 
-/**CFile****************************************************************
+import (
+	hop "github.com/glycerine/abcgo/aig/hop"
+	abc "github.com/glycerine/abcgo/base/abc"
+	mio "github.com/glycerine/abcgo/map/mio"
+	mem "github.com/glycerine/abcgo/misc/mem"
+	vec "github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [fretime.h]
+type Abc_Aig_t = abc.Abc_Aig_t
+type Abc_Ntk_t = abc.Abc_Ntk_t
+type Abc_Obj_t = abc.Abc_Obj_t
+type Abc_ObjType_t = abc.Abc_ObjType_t
+type Hop_Man_t = hop.Hop_Man_t
+type Hop_Obj_t = hop.Hop_Obj_t
+type Mem_Flex_t = mem.Mem_Flex_t
+type Mio_Gate_t = mio.Mio_Gate_t
+type Vec_Int_t = vec.Vec_Int_t
+type Vec_Ptr_t = vec.Vec_Ptr_t
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+// Flow-based retiming state shared by the retiming implementation files.
+// The C header used anonymous unions and bit-fields. Separate pointer fields
+// make those alternatives explicit in Go; the mark bits remain in one word.
 
-  PackageName [Flow-based retiming package.]
+const (
+	MAX_DIST       int32 = 30000
+	VISITED_E      int32 = 0x001
+	VISITED_R      int32 = 0x002
+	VISITED        int32 = VISITED_E | VISITED_R
+	FLOW           int32 = 0x004
+	CROSS_BOUNDARY int32 = 0x008
+	BLOCK          int32 = 0x010
+	INIT_0         int32 = 0x020
+	INIT_1         int32 = 0x040
+	INIT_CARE      int32 = INIT_0 | INIT_1
+	CONSERVATIVE   int32 = 0x080
+	BLOCK_OR_CONS  int32 = BLOCK | CONSERVATIVE
+	BIAS_NODE      int32 = 0x100
+)
 
-  Synopsis    [Header file for retiming package.]
-
-  Author      [Aaron Hurst]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - January 1, 2008.]
-
-  Revision    [$Id: fretime.h,v 1.00 2008/01/01 00:00:00 ahurst Exp $]
-
-***********************************************************************/
-
-#if !defined(RETIME_H_)
-#define RETIME_H_
-
-
-#include "base/abc/abc.h"
-#include "misc/vec/vec.h"
-
-
-ABC_NAMESPACE_HEADER_START
-
-
-// #define IGNORE_TIMING
-// #define DEBUG_PRINT_FLOWS
-// #define DEBUG_VISITED
-// #define DEBUG_PREORDER
-#define DEBUG_CHECK
-// #define DEBUG_PRINT_LEVELS
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-#define MAX_DIST 30000
-
-// flags in Flow_Data structure...
-#define VISITED_E       0x001
-#define VISITED_R       0x002
-#define VISITED  (VISITED_E | VISITED_R)
-#define FLOW            0x004
-#define CROSS_BOUNDARY  0x008
-#define BLOCK           0x010
-#define INIT_0          0x020
-#define INIT_1          0x040
-#define INIT_CARE (INIT_0 | INIT_1)
-#define CONSERVATIVE    0x080
-#define BLOCK_OR_CONS (BLOCK | CONSERVATIVE)
-#define BIAS_NODE       0x100
-
-
-#define MAX(a,b) ((a)>(b)?(a):(b))
-#define MIN(a,b) ((a)<(b)?(a):(b))
-
-
-typedef struct Flow_Data_t_ {
-  unsigned int mark : 16;
-
-  union {
-    Abc_Obj_t   *pred;
-    /* unsigned int var; */
-    Abc_Obj_t   *pInitObj;
-    Abc_Obj_t   *pCopy;
-    Vec_Ptr_t   *vNodes;
-  };
-
-  unsigned int e_dist : 16;
-  unsigned int r_dist : 16;
-} Flow_Data_t;
-
-// useful macros for manipulating Flow_Data structure...
-#define FDATA( x )     (pManMR->pDataArray+Abc_ObjId(x))
-#define FSET( x, y )   FDATA(x)->mark |= y
-#define FUNSET( x, y ) FDATA(x)->mark &= ~y
-#define FTEST( x, y )  (FDATA(x)->mark & y)
-#define FTIMEEDGES( x )  &(pManMR->vTimeEdges[Abc_ObjId( x )])
-
-typedef struct NodeLag_T_ {
-  int id;
-  int lag;
-} NodeLag_t;
-
-typedef struct InitConstraint_t_ {
-  Abc_Obj_t *pBiasNode;
-
-  Vec_Int_t  vNodes;
-  Vec_Int_t  vLags;
-
-} InitConstraint_t;
-
-typedef struct MinRegMan_t_ {
- 
-  // problem description:
-  int         maxDelay;
-  int        fComputeInitState, fGuaranteeInitState, fBlockConst;
-  int         nNodes, nLatches;
-  int        fForwardOnly, fBackwardOnly;
-  int        fConservTimingOnly;
-  int         nMaxIters;
-  int        fVerbose;
-  Abc_Ntk_t  *pNtk;
-
-  int         nPreRefine;
-
-  // problem state
-  int        fIsForward;
-  int        fSinkDistTerminate;
-  int         nExactConstraints, nConservConstraints;
-  int         fSolutionIsDc;
-  int         constraintMask;
-  int         iteration, subIteration;
-  Vec_Int_t  *vLags;
-  
-  // problem data
-  Vec_Int_t   *vSinkDistHist;
-  Flow_Data_t *pDataArray;
-  Vec_Ptr_t   *vTimeEdges;
-  Vec_Ptr_t   *vExactNodes;
-  Vec_Ptr_t   *vInitConstraints;
-  Abc_Ntk_t   *pInitNtk;
-  Vec_Ptr_t   *vNodes; // re-useable struct
-  
-  NodeLag_t   *pInitToOrig;
-  int          sizeInitToOrig;
-  
-} MinRegMan_t ;
-
-extern MinRegMan_t *pManMR;
-
-#define vprintf if (pManMR->fVerbose) printf 
-
-static inline void FSETPRED(Abc_Obj_t *pObj, Abc_Obj_t *pPred) {
-  assert(!Abc_ObjIsLatch(pObj)); // must preserve field to maintain init state linkage
-  FDATA(pObj)->pred = pPred;
-}
-static inline Abc_Obj_t * FGETPRED(Abc_Obj_t *pObj) {
-  return FDATA(pObj)->pred;
+type Flow_Data_t struct {
+	mark                  int32
+	pred, pInitObj, pCopy *Abc_Obj_t
+	vNodes                *Vec_Ptr_t
+	e_dist, r_dist        int32
 }
 
-/*=== fretMain.c ==========================================================*/
+type NodeLag_t struct {
+	id, lag int32
+}
 
-Abc_Ntk_t *    Abc_FlowRetime_MinReg( Abc_Ntk_t * pNtk, int fVerbose,
-                                      int fComputeInitState, int fGuaranteeInitState, int fBlockConst,
-                                      int fForward, int fBackward, int nMaxIters,
-                                      int maxDelay, int fFastButConservative);
+type InitConstraint_t struct {
+	pBiasNode *Abc_Obj_t
+	vNodes    *Vec_Int_t
+	vLags     *Vec_Int_t
+}
 
-void print_node(Abc_Obj_t *pObj);
+type MinRegMan_t struct {
+	maxDelay, fComputeInitState, fGuaranteeInitState, fBlockConst int32
+	nNodes, nLatches, fForwardOnly, fBackwardOnly                 int32
+	fConservTimingOnly, nMaxIters, fVerbose                       int32
+	pNtk                                                          *Abc_Ntk_t
+	nPreRefine                                                    int32
+	fIsForward, fSinkDistTerminate                                int32
+	nExactConstraints, nConservConstraints                        int32
+	fSolutionIsDc, constraintMask, iteration, subIteration        int32
+	vLags, vSinkDistHist                                          *Vec_Int_t
+	pDataArray                                                    []Flow_Data_t
+	vTimeEdges                                                    []Vec_Ptr_t
+	vExactNodes, vInitConstraints, vNodes                         *Vec_Ptr_t
+	pInitNtk                                                      *Abc_Ntk_t
+	pInitToOrig                                                   []NodeLag_t
+}
 
-void Abc_ObjBetterTransferFanout( Abc_Obj_t * pFrom, Abc_Obj_t * pTo, int complement );
+func flowData(obj *Abc_Obj_t) *Flow_Data_t {
+	return &pManMR.pDataArray[Abc_ObjId(obj)]
+}
 
-int  Abc_FlowRetime_PushFlows( Abc_Ntk_t * pNtk, int fVerbose );
-int Abc_FlowRetime_IsAcrossCut( Abc_Obj_t *pCur, Abc_Obj_t *pNext );
-void Abc_FlowRetime_ClearFlows( int fClearAll );
+func ensureInitToOrig(id int32) {
+	if id < 0 {
+		panic("negative init-network object ID")
+	}
+	need := int(id) + 1
+	if need <= len(pManMR.pInitToOrig) {
+		return
+	}
+	nextLen := max(need, max(10, 2*len(pManMR.pInitToOrig)))
+	next := make([]NodeLag_t, nextLen)
+	copy(next, pManMR.pInitToOrig)
+	for i := len(pManMR.pInitToOrig); i < len(next); i++ {
+		next[i].id = -1
+	}
+	pManMR.pInitToOrig = next
+}
 
-int  Abc_FlowRetime_GetLag( Abc_Obj_t *pObj );
-void Abc_FlowRetime_SetLag( Abc_Obj_t *pObj, int lag );
-
-void Abc_FlowRetime_UpdateLags( );
-
-void Abc_ObjPrintNeighborhood( Abc_Obj_t *pObj, int depth );
-
-Abc_Ntk_t * Abc_FlowRetime_NtkSilentRestrash( Abc_Ntk_t * pNtk, int fCleanup );
-
-/*=== fretFlow.c ==========================================================*/
-
-int  dfsplain_e( Abc_Obj_t *pObj, Abc_Obj_t *pPred );
-int  dfsplain_r( Abc_Obj_t *pObj, Abc_Obj_t *pPred );
-
-void dfsfast_preorder( Abc_Ntk_t *pNtk );
-int  dfsfast_e( Abc_Obj_t *pObj, Abc_Obj_t *pPred );
-int  dfsfast_r( Abc_Obj_t *pObj, Abc_Obj_t *pPred );
-
-/*=== fretInit.c ==========================================================*/
-
-void Abc_FlowRetime_PrintInitStateInfo( Abc_Ntk_t * pNtk );
-
-void Abc_FlowRetime_InitState( Abc_Ntk_t * pNtk );
-
-void Abc_FlowRetime_UpdateForwardInit( Abc_Ntk_t * pNtk );
-void Abc_FlowRetime_UpdateBackwardInit( Abc_Ntk_t * pNtk );
-
-void Abc_FlowRetime_SetupBackwardInit( Abc_Ntk_t * pNtk );
-int  Abc_FlowRetime_SolveBackwardInit( Abc_Ntk_t * pNtk );
-
-void Abc_FlowRetime_ConstrainInit(  );
-void Abc_FlowRetime_AddInitBias(  );
-void Abc_FlowRetime_RemoveInitBias(  );
-
-/*=== fretTime.c ==========================================================*/
-
-void Abc_FlowRetime_InitTiming( Abc_Ntk_t *pNtk );
-void Abc_FlowRetime_FreeTiming( Abc_Ntk_t *pNtk );
-
-int Abc_FlowRetime_RefineConstraints( );
-
-void Abc_FlowRetime_ConstrainConserv( Abc_Ntk_t * pNtk );
-void Abc_FlowRetime_ConstrainExact( Abc_Obj_t * pObj );
-void Abc_FlowRetime_ConstrainExactAll( Abc_Ntk_t * pNtk );
-
-
-
-ABC_NAMESPACE_HEADER_END
-
-#endif
+func FSET(obj *Abc_Obj_t, mask int32)        { flowData(obj).mark |= mask }
+func FUNSET(obj *Abc_Obj_t, mask int32)      { flowData(obj).mark &^= mask }
+func FTEST(obj *Abc_Obj_t, mask int32) int32 { return flowData(obj).mark & mask }
+func FSETPRED(obj, pred *Abc_Obj_t) {
+	if abc.Abc_ObjIsLatch(obj) != 0 {
+		panic("FSETPRED: latch data is reserved for init-state mapping")
+	}
+	flowData(obj).pred = pred
+}
+func FGETPRED(obj *Abc_Obj_t) *Abc_Obj_t { return flowData(obj).pred }
+func FTIMEEDGES(obj *Abc_Obj_t) *Vec_Ptr_t {
+	return &pManMR.vTimeEdges[Abc_ObjId(obj)]
+}

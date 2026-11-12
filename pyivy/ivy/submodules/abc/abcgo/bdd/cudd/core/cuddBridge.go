@@ -187,11 +187,14 @@ func Cudd_addBddIthBit(dd *DdManager, f *DdNode, bit int) *DdNode {
 	if bit < 0 || bit > 31 {
 		return nil
 	}
-	return addToBoolean(dd, f, func(leaf float64) (bool, bool) {
-		value := math.Trunc(leaf)
-		if math.IsNaN(value) || math.IsInf(value, 0) || value < math.MinInt32 || value > math.MaxInt32 {
-			return false, false
-		}
-		return uint32(int32(value))&(uint32(1)<<uint(bit)) != 0, true
-	})
+	return addToBoolean(dd, f, func(leaf float64) (bool, bool) { return addIntegerBit(leaf, bit) })
+}
+
+// Shared with ADD-valued bit extraction, so boundary/truncation semantics agree.
+func addIntegerBit(leaf float64, bit int) (bool, bool) {
+	value := math.Trunc(leaf)
+	if math.IsNaN(value) || math.IsInf(value, 0) || value < math.MinInt32 || value > math.MaxInt32 {
+		return false, false
+	}
+	return uint32(int32(value))&(uint32(1)<<uint(bit)) != 0, true
 }

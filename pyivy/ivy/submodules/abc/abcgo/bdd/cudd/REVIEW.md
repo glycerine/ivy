@@ -37,3 +37,13 @@ compiled separately against the real core to check forwarding types. The origina
 public/internal ZDD complement draft bodies remain in `cuddZddFuncs.go`, clearly
 marked, because their BDD-cover/ISOP dependencies remain unported. No fake logical
 complement or build exclusion has been supplied to make the root package green.
+
+## ISOP completion update
+
+The prior partial-cover-module note is superseded: original ISOP, BDD-only ISOP,
+cover-to-BDD conversion and logical ZDD complement now forward to oracle-verified
+core implementations. The retained complement drafts are removed because their
+actual dependencies have been implemented, not because they were hidden or
+replaced with a placeholder. The complete ISOP/cover forwarding modules are
+formatted and compile together in the selected-file root audit. Root CUDD as a
+whole still has other unported modules and is not marked complete.

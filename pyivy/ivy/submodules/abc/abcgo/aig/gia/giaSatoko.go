@@ -1,273 +1,177 @@
 package gia
 
+// Original Gia Satoko drivers, with source MF eight-cut CNF construction.
 import (
 	"fmt"
-	"strconv"
+	"github.com/glycerine/abcgo/aig/gia/mf"
+	"github.com/glycerine/abcgo/aig/gia/satcost"
+	"github.com/glycerine/abcgo/sat/satoko"
+	"os"
+	"time"
 )
 
-/**CFile****************************************************************
+type satoko_opts_t = satoko.Options
+type satoko_t = satoko.Solver
 
-  FileName    [giaSatoko.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Scalable AIG package.]
-
-  Synopsis    [Interface to Satoko solver.]
-
-  Author      [Alan Mishchenko, Bruno Schmitt]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: giaSatoko.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "gia.h"
-//#include "sat/cnf/cnf.h"
-//#include "misc/extra/extra.h"
-//#include "sat/satoko/satoko.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCollectVars_rec(Var int32, vMapping *Vec_Int_t, vRes *Vec_Int_t, vVisit *Vec_Bit_t) {
-    var pCut *int32;
-    var i int32;
-    if Vec_BitEntry(vVisit, Var) {
-        return; }
-    Vec_BitWriteEntry(vVisit, Var, 1);
-    if Vec_IntEntry(vMapping, Var) { // primary input or constant 0
-    
-        pCut = Vec_IntEntryP( vMapping, Vec_IntEntry(vMapping, Var) );
-        for  i = 1; i <= pCut[0]; i++  {
-            Gia_ManCollectVars_rec( pCut[i], vMapping, vRes, vVisit );
-        }
-    }
-    Vec_IntPush( vRes, Var );        
+func Gia_ManCollectVars_rec(variable int32, mapping, result *Vec_Int_t, visited *Vec_Bit_t) {
+	if Vec_BitEntry(visited, int(variable)) != 0 {
+		return
+	}
+	Vec_BitWriteEntry(visited, int(variable), 1)
+	offset := Vec_IntEntry(mapping, int(variable))
+	if offset != 0 {
+		count := Vec_IntEntry(mapping, int(offset))
+		for i := int32(1); i <= count; i++ {
+			Gia_ManCollectVars_rec(Vec_IntEntry(mapping, int(offset+i)), mapping, result, visited)
+		}
+	}
+	Vec_IntPush(result, variable)
 }
-func Gia_ManCollectVars(Root int32, vMapping *Vec_Int_t, nVars int32) *Vec_Int_t {
-    var vRes *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vVisit *Vec_Bit_t  = Vec_BitStart( nVars );
-    assert(Vec_IntEntry(vMapping, Root), "Vec_IntEntry(vMapping, Root)");
-    Gia_ManCollectVars_rec( Root, vMapping, vRes, vVisit );
-    Vec_BitFree( vVisit );
-    return vRes;
+func Gia_ManCollectVars(root int32, mapping *Vec_Int_t, variables int32) *Vec_Int_t {
+	if Vec_IntEntry(mapping, int(root)) == 0 {
+		panic("gia: cone root has no mapping")
+	}
+	result := Vec_IntAlloc(100)
+	visited := Vec_BitStart(int(variables))
+	Gia_ManCollectVars_rec(root, mapping, result, visited)
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManSatokoReport(iOutput int32, status int32, clk abctime) {
-    if iOutput >= 0 {
-        Abc_Print( 1, "Output %6d : ", iOutput );
-    } else {
-        Abc_Print( 1, "Total: " ); }
-
-    if status == SATOKO_UNDEC {
-        Abc_Print( 1, "UNDECIDED      " );
-    } else if status == SATOKO_SAT {
-        Abc_Print( 1, "SATISFIABLE    " );
-    } else {
-        Abc_Print( 1, "UNSATISFIABLE  " ); }
-
-    Abc_PrintTime( 1, "Time", clk );
+func Gia_ManSatokoReport(output, status int32, elapsed time.Duration) {
+	if output >= 0 {
+		fmt.Printf("Output %6d : ", output)
+	} else {
+		fmt.Print("Total: ")
+	}
+	switch int(status) {
+	case satoko.SATOKO_UNDEC:
+		fmt.Print("UNDECIDED      ")
+	case satoko.SATOKO_SAT:
+		fmt.Print("SATISFIABLE    ")
+	default:
+		fmt.Print("UNSATISFIABLE  ")
+	}
+	fmt.Printf("Time = %.2f sec\n", elapsed.Seconds())
 }
-func Gia_ManSatokoFromDimacs(pFileName string, opts *satoko_opts_t) *satoko_t {
-    var pSat *satoko_t  = satoko_create();
-    var pBuffer string  = Extra_FileReadContents( pFileName );
-    var vLits *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var pTemp string; var fComp, Var, VarMax int32;
-    for  pTemp = pBuffer; *pTemp; pTemp++  {
-        if *pTemp == 'c' || *pTemp == 'p' {
-            for  *pTemp != '\n'  {
-                pTemp++;
-            }
-            continue;
-        }
-        for  *pTemp == ' ' || *pTemp == '\t' || *pTemp == '\r' || *pTemp == '\n'  {
-            pTemp++;
-        }
-        fComp = 0;
-        if *pTemp == '-' {
-            fComp = 1;
-pTemp++; }
-        if *pTemp == '+' {
-            pTemp++; }
-        Var = strconv.Atoi(pTemp);
-        if Var == 0 {
-            if Vec_IntSize(vLits) > 0 {
-                satoko_setnvars( pSat, VarMax+1 );
-                if !satoko_add_clause( pSat, Vec_IntArray(vLits), Vec_IntSize(vLits) ) {
-                    satoko_destroy(pSat);
-                    Vec_IntFree( vLits );
-                    // inlining of macro ABC_FREE
-                    pBuffer = "";
-                    return nil;
-                }
-                Vec_IntClear( vLits );
-            }
-        
-        } else {
-            Var--;
-            VarMax = Abc_MaxInt( VarMax, Var );
-            Vec_IntPush( vLits, Abc_Var2Lit(Var, fComp) );
-        }
-        for  *pTemp >= '0' && *pTemp <= '9'  {
-            pTemp++;
-        }
-    }
-    // inlining of macro ABC_FREE
-    pBuffer = "";
-    Vec_IntFree( vLits );
-    return pSat;
+func giaSatokoOptions(options *satoko.Options) satoko.Options {
+	if options == nil {
+		return satoko.DefaultOptions()
+	}
+	return *options
 }
-func Gia_ManSatokoDimacs(pFileName string, opts *satoko_opts_t) {
-    var clk abctime  = Abc_Clock();  
-    var status int32  = SATOKO_UNSAT;
-    var pSat *satoko_t  = Gia_ManSatokoFromDimacs( pFileName, opts );
-    if pSat != nil {
-        status = satoko_solve( pSat );
-        satoko_destroy( pSat );
-    }
-    Gia_ManSatokoReport( -1, status, Abc_Clock() - clk );
+func Gia_ManSatokoFromDimacs(path string, options *satoko_opts_t) *satoko_t {
+	file, err := os.Open(path)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return nil
+	}
+	defer file.Close()
+	solver, err := satoko.ParseDIMACS(file)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return nil
+	}
+	*solver.Options() = giaSatokoOptions(options)
+	return solver
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManSatokoInit(pCnf *Cnf_Dat_t, opts *satoko_opts_t) *satoko_t {
-    var pSat *satoko_t  = satoko_create();
-    var i int32;
-    //sat_solver_setnvars( pSat, p->nVars );
-    for  i = 0; i < pCnf.nClauses; i++  {
-        if !satoko_add_clause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1]-pCnf.pClauses[i] ) {
-            satoko_destroy( pSat );
-            return nil;
-        }
-    }
-    satoko_configure(pSat, opts);
-    return pSat;
+func Gia_ManSatokoDimacs(path string, options *satoko_opts_t) {
+	start := time.Now()
+	status := satoko.SATOKO_UNSAT
+	if solver := Gia_ManSatokoFromDimacs(path, options); solver != nil {
+		status = solver.Solve()
+	}
+	Gia_ManSatokoReport(-1, int32(status), time.Since(start))
 }
-func Gia_ManSatokoCreate(p *Gia_Man_t, opts *satoko_opts_t) *satoko_t {
-    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 0, 1, 0, 0 );
-    var pSat *satoko_t  = Gia_ManSatokoInit( pCnf, opts );
-    var status int32;
-    if pSat != nil {
-        status = satoko_simplify(pSat);
-    } else {
-        status = SATOKO_OK;
-    }
-    Cnf_DataFree( pCnf );
-    if status == SATOKO_OK {
-        return pSat; }
-    satoko_destroy( pSat );
-    return nil;
+func Gia_ManSatokoInit(cnf *Cnf_Dat_t, options *satoko_opts_t) *satoko_t {
+	if cnf == nil {
+		return nil
+	}
+	solver := satoko.New()
+	for _, clause := range cnf.Clauses {
+		literals := make([]int, len(clause))
+		for i, lit := range clause {
+			literals[i] = int(lit)
+		}
+		if !solver.AddClause(literals) {
+			return nil
+		}
+	}
+	*solver.Options() = giaSatokoOptions(options)
+	return solver
 }
-func Gia_ManSatokoCallOne(p *Gia_Man_t, opts *satoko_opts_t, iOutput int32) int32 {
-    var clk abctime  = Abc_Clock();
-    var pSat *satoko_t;
-    var status int32 = SATOKO_UNSAT;
-    var Cost int32;
-    pSat = Gia_ManSatokoCreate( p, opts );
-    if pSat != nil {
-        status = satoko_solve( pSat );
-        Cost = satoko_stats(pSat).n_conflicts;
-        satoko_destroy( pSat );
-    }
-    Gia_ManSatokoReport( iOutput, status, Abc_Clock() - clk );
-    return Cost;
+func Gia_ManSatokoCreate(p *Gia_Man_t, options *satoko_opts_t) *satoko_t {
+	cnf, err := mf.GenerateCNF(p, 8, false, true, false)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return nil
+	}
+	solver := Gia_ManSatokoInit(cnf, options)
+	if solver == nil || !solver.Simplify() {
+		return nil
+	}
+	return solver
 }
-func Gia_ManSatokoCall(p *Gia_Man_t, opts *satoko_opts_t, fSplit int32, fIncrem int32) {
-    var fUseCone int32  = 1;
-    var pOne *Gia_Man_t;
-    var pRoot *Gia_Obj_t;
-    var vCone *Vec_Int_t;
-    var i, iLit, status int32;
-    if fIncrem != 0 {
-        var clk abctime  = Abc_Clock();
-        var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 0, 0, fUseCone, 0 );
-        var pSat *satoko_t  = Gia_ManSatokoInit( pCnf, opts );
-        // inlining of macro Gia_ManForEachCo
-        for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pRoot) = Gia_ManCo(p, i)); i++  {
-            var clk abctime  = Abc_Clock();
-            iLit = Abc_Var2Lit( i+1, 0 );
-            satoko_assump_push( pSat, iLit );
-            if fUseCone != 0 {
-                vCone = Gia_ManCollectVars( i+1, pCnf.vMapping, pCnf.nVars );
-                satoko_mark_cone( pSat, Vec_IntArray(vCone), Vec_IntSize(vCone) );
-                fmt.Printf("Cone has %6d vars (out of %6d).  ", Vec_IntSize(vCone), pCnf.nVars);
-                status = satoko_solve( pSat );
-                satoko_unmark_cone( pSat, Vec_IntArray(vCone), Vec_IntSize(vCone) );
-                Vec_IntFree( vCone );
-            
-            } else {
-                status = satoko_solve( pSat );
-            }
-            satoko_assump_pop( pSat );
-            Gia_ManSatokoReport( i, status, Abc_Clock() - clk );
-        }
-        Cnf_DataFree( pCnf );
-        satoko_destroy( pSat );
-        Abc_PrintTime( 1, "Total time", Abc_Clock() - clk );
-        return;
-    }
-    if fSplit != 0 {
-        var clk abctime  = Abc_Clock();
-        // inlining of macro Gia_ManForEachCo
-        for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pRoot) = Gia_ManCo(p, i)); i++  {
-            pOne = Gia_ManDupDfsCone( p, pRoot );
-            Gia_ManSatokoCallOne( pOne, opts, i );
-            Gia_ManStop( pOne );
-        }
-        Abc_PrintTime( 1, "Total time", Abc_Clock() - clk );
-        return;
-    }
-    Gia_ManSatokoCallOne( p, opts, -1 );
-}    
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Gia_ManSatokoCallOneResult(p *Gia_Man_t, options *satoko_opts_t) (satcost.Result, error) {
+	cnf, err := mf.GenerateCNF(p, 8, false, true, false)
+	if err != nil {
+		return satcost.Result{}, err
+	}
+	result, err := satcost.RunCNF(cnf, giaSatokoOptions(options))
+	result.Backend = (satcost.MFBackend{}).Name()
+	return result, err
+}
+func Gia_ManSatokoCallOne(p *Gia_Man_t, options *satoko_opts_t, output int32) int32 {
+	start := time.Now()
+	result, err := Gia_ManSatokoCallOneResult(p, options)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return -1
+	}
+	Gia_ManSatokoReport(output, int32(result.Status), time.Since(start))
+	return int32(result.Conflicts)
+}
+func Gia_ManSatokoCall(p *Gia_Man_t, options *satoko_opts_t, split, incremental int32) {
+	start := time.Now()
+	if incremental != 0 {
+		cnf, err := mf.GenerateCNF(p, 8, false, false, true)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			return
+		}
+		solver := Gia_ManSatokoInit(cnf, options)
+		if solver == nil {
+			for i := int32(0); i < Gia_ManCoNum(p); i++ {
+				Gia_ManSatokoReport(i, satoko.SATOKO_UNSAT, 0)
+			}
+			return
+		}
+		mapping := Vec_IntAlloc(len(cnf.Mapping))
+		for _, value := range cnf.Mapping {
+			Vec_IntPush(mapping, value)
+		}
+		for i := int32(0); i < Gia_ManCoNum(p); i++ {
+			queryStart := time.Now()
+			root := i + 1
+			cone := Gia_ManCollectVars(root, mapping, int32(cnf.Variables))
+			variables := make([]int, Vec_IntSize(cone))
+			for k, id := range Vec_IntArray(cone) {
+				variables[k] = int(id)
+			}
+			solver.PushAssumption(int(root << 1))
+			solver.MarkCone(variables, true)
+			status := solver.Solve()
+			solver.MarkCone(variables, false)
+			solver.PopAssumption()
+			Gia_ManSatokoReport(i, int32(status), time.Since(queryStart))
+		}
+	} else if split != 0 {
+		for i := int32(0); i < Gia_ManCoNum(p); i++ {
+			cone := Gia_ManDupDfsCone(p, Gia_ManCo(p, i))
+			Gia_ManSatokoCallOne(cone, options, i)
+			Gia_ManStop(cone)
+		}
+	} else {
+		Gia_ManSatokoCallOne(p, options, -1)
+		return
+	}
+	fmt.Printf("Total time = %.2f sec\n", time.Since(start).Seconds())
+}

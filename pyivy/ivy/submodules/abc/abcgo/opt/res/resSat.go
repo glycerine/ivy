@@ -72,15 +72,15 @@ func Res_SatProveUnsat(pAig *Abc_Ntk_t, vFanins *Vec_Ptr_t) any {
     nNodes = 0;
     Abc_AigConst1(pAig).pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;
     // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pAig)) && (((pObj) = Abc_NtkPi(pAig, i)), 1); i++  {
+    for i = 0; (i < Abc_NtkPiNum(pAig)); i++ { pObj = Abc_NtkPi(pAig, i);
         pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;
     }
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(vNodes)); i++ { pObj = Vec_PtrEntry(vNodes, i);
         pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;
     }
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vFanins)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  { // useful POs
+    for i = 0; (i < Vec_PtrSize(vFanins)); i++ { pObj = Vec_PtrEntry(vFanins, i); // useful POs
         pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;
     }
 
@@ -92,14 +92,14 @@ func Res_SatProveUnsat(pAig *Abc_Ntk_t, vFanins *Vec_Ptr_t) any {
     Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))Abc_AigConst1(pAig).pCopy, 0 );
     // add clauses for AND gates
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(vNodes)); i++ { pObj = Vec_PtrEntry(vNodes, i);
         Res_SatAddAnd( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, 
             int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, int32((ABC_PTRUINT_T))Abc_ObjFanin1(pObj).pCopy, Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );
     }
     Vec_PtrFree( vNodes );
     // add clauses for POs
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vFanins)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(vFanins)); i++ { pObj = Vec_PtrEntry(vFanins, i);
         Res_SatAddEqual( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, 
             int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, Abc_ObjFaninC0(pObj) );
     }
@@ -117,7 +117,7 @@ func Res_SatProveUnsat(pAig *Abc_Ntk_t, vFanins *Vec_Ptr_t) any {
     Sat_SolverDoubleClauses( pSat, int32((ABC_PTRUINT_T))pObj.pCopy );
     // add the equality constraints
     // inlining of macro Vec_PtrForEachEntryStart
-    for  i = 2; (i < Vec_PtrSize(vFanins)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  {
+    for i = 2; (i < Vec_PtrSize(vFanins)); i++ { pObj = Vec_PtrEntry(vFanins, i);
         Res_SatAddEqual( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, (int32((ABC_PTRUINT_T))pObj.pCopy) + nNodes, 0 );
     }
 
@@ -172,15 +172,15 @@ func Res_SatSimulateConstr(pAig *Abc_Ntk_t, fOnSet int32) any {
     nNodes = 0;
     Abc_AigConst1(pAig).pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;
     // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pAig)) && (((pObj) = Abc_NtkPi(pAig, i)), 1); i++  {
+    for i = 0; (i < Abc_NtkPiNum(pAig)); i++ { pObj = Abc_NtkPi(pAig, i);
         pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;
     }
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(vNodes)); i++ { pObj = Vec_PtrEntry(vNodes, i);
         pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;
     }
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vFanins)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFanins, i)), 1); i++  { // useful POs
+    for i = 0; (i < Vec_PtrSize(vFanins)); i++ { pObj = Vec_PtrEntry(vFanins, i); // useful POs
         pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)nNodes++;
     }
 
@@ -191,7 +191,7 @@ func Res_SatSimulateConstr(pAig *Abc_Ntk_t, fOnSet int32) any {
     Res_SatAddConst1( pSat, int32((ABC_PTRUINT_T))Abc_AigConst1(pAig).pCopy, 0 );
     // add clauses for AND gates
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(vNodes)); i++ { pObj = Vec_PtrEntry(vNodes, i);
         Res_SatAddAnd( pSat, int32((ABC_PTRUINT_T))pObj.pCopy, 
             int32((ABC_PTRUINT_T))Abc_ObjFanin0(pObj).pCopy, int32((ABC_PTRUINT_T))Abc_ObjFanin1(pObj).pCopy, Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );
     }
@@ -292,7 +292,7 @@ func Res_SatSimulate(p *Res_Sim_t, nPatsLimit int32, fOnSet int32) int32 {
 //                value = (int)(pSat->model.ptr[Var] == l_True);
                 value = sat_solver_var_value(pSat, Var);
                 if value {
-                    Abc_InfoSetBit( (unsigned *)Vec_PtrEntry(vPats, i), k ); }
+                    Abc_InfoSetBit( resWords(Vec_PtrEntry(vPats, i)), k ); }
                 Lit = toLitCond( Var, value );
                 Vec_IntPush( vLits, Lit );
 //                printf( "%d", value );
@@ -343,73 +343,6 @@ p.timeSat += Abc_Clock() - clk;
   SeeAlso     []
 
 ***********************************************************************/
-func Res_SatAddConst1(pSat *sat_solver, iVar int32, fCompl int32) int32 {
-    var Lit lit  = toLitCond( iVar, fCompl );
-    if !sat_solver_addclause( pSat, &Lit, &Lit + 1 ) {
-        return 0; }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Asserts equality of two variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Res_SatAddEqual(pSat *sat_solver, iVar0 int32, iVar1 int32, fCompl int32) int32 {
-    var Lits [2]lit;
-
-    Lits[0] = toLitCond( iVar0, 0 );
-    Lits[1] = toLitCond( iVar1, !fCompl );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVar0, 1 );
-    Lits[1] = toLitCond( iVar1, fCompl );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Adds constraints for the two-input AND-gate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Res_SatAddAnd(pSat *sat_solver, iVar int32, iVar0 int32, iVar1 int32, fCompl0 int32, fCompl1 int32) int32 {
-    var Lits [3]lit;
-
-    Lits[0] = toLitCond( iVar, 1 );
-    Lits[1] = toLitCond( iVar0, fCompl0 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVar, 1 );
-    Lits[1] = toLitCond( iVar1, fCompl1 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 2 ) {
-        return 0; }
-
-    Lits[0] = toLitCond( iVar, 0 );
-    Lits[1] = toLitCond( iVar0, !fCompl0 );
-    Lits[2] = toLitCond( iVar1, !fCompl1 );
-    if !sat_solver_addclause( pSat, Lits, Lits + 3 ) {
-        return 0; }
-
-    return 1;
-}
-
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////

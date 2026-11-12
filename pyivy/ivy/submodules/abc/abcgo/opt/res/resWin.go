@@ -115,11 +115,11 @@ func Res_WinCollectLeavesAndNodes(p *Res_Win_t) int32 {
     // collect the leaves (nodes pTemp such that "p->pNode->Level - pTemp->Level > p->nWinTfiMax")
     Vec_PtrClear( p.vLeaves );
     // inlining of macro Vec_VecForEachLevelStartStop
-    for  i = 0; (i < p.nWinTfiMax+1) && (((vFront) = Vec_VecEntry(p.vMatrix, i)), 1); i++  {
+    for i = 0; (i < p.nWinTfiMax+1); i++ { vFront = Vec_VecEntry(p.vMatrix, i);
         // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(vFront)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFront, k)), 1); k++  {
+        for k = 0; (k < Vec_PtrSize(vFront)); k++ { pObj = Vec_PtrEntry(vFront, k);
             // inlining of macro Abc_ObjForEachFanin
-            for  m = 0; (m < Abc_ObjFaninNum(pObj)) && (((pTemp) = Abc_ObjFanin(pObj, m)), 1); m++  {
+            for m = 0; (m < Abc_ObjFaninNum(pObj)); m++ { pTemp = Abc_ObjFanin(pObj, m);
                 if Abc_NodeIsTravIdCurrent( pTemp ) {
                     continue; }
                 Abc_NodeSetTravIdCurrent( pTemp );
@@ -136,9 +136,9 @@ func Res_WinCollectLeavesAndNodes(p *Res_Win_t) int32 {
     // collect the nodes in the reverse order
     Vec_PtrClear( p.vNodes );
     // inlining of macro Vec_VecForEachLevelReverseStartStop
-    for  i = p.nWinTfiMax+1-1; (i >= 0) && (((vFront) = Vec_VecEntry(p.vMatrix, i)), 1); i--  {
+    for i = p.nWinTfiMax+1-1; (i >= 0); i-- { vFront = Vec_VecEntry(p.vMatrix, i);
         // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(vFront)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFront, k)), 1); k++  {
+        for k = 0; (k < Vec_PtrSize(vFront)); k++ { pObj = Vec_PtrEntry(vFront, k);
             Vec_PtrPush( p.vNodes, pObj );
         }
         Vec_PtrClear( vFront );
@@ -147,7 +147,7 @@ func Res_WinCollectLeavesAndNodes(p *Res_Win_t) int32 {
     // get the lowest leaf level
     p.nLevLeafMin = ABC_INFINITY;
     // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, k)), 1); k++  {
+    for k = 0; (k < Vec_PtrSize(p.vLeaves)); k++ { pObj = Vec_PtrEntry(p.vLeaves, k);
         p.nLevLeafMin = Abc_MinInt( p.nLevLeafMin, int32(pObj.Level) );
     }
 
@@ -180,7 +180,7 @@ func Res_WinComputeRootsCheck(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit in
     // (2) the node has CO fanouts
     // (3) the node has fanouts above the cutoff level
     // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pNode)) && (((pFanout) = Abc_ObjFanout(pNode, i)), 1); i++  {
+    for i = 0; (i < Abc_ObjFanoutNum(pNode)); i++ { pFanout = Abc_ObjFanout(pNode, i);
         if Abc_ObjIsCo(pFanout) || int32(pFanout.Level) > nLevelMax {
             return 1; }
     }
@@ -210,7 +210,7 @@ func Res_WinComputeRoots_rec(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit int
         Vec_PtrPush( vRoots, pNode );
     } else { // if not, explore its fanouts
         // inlining of macro Abc_ObjForEachFanout
-        for  i = 0; (i < Abc_ObjFanoutNum(pNode)) && (((pFanout) = Abc_ObjFanout(pNode, i)), 1); i++  {
+        for i = 0; (i < Abc_ObjFanoutNum(pNode)); i++ { pFanout = Abc_ObjFanout(pNode, i);
             Res_WinComputeRoots_rec( pFanout, nLevelMax, nFanoutLimit, vRoots );
         } }
 }
@@ -266,7 +266,7 @@ func Res_WinMarkPaths_rec(pNode *Abc_Obj_t, pPivot *Abc_Obj_t, nLevelMin int32) 
     // check if the fanins have access to the leaves
     RetValue = 0;
     // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
+    for i = 0; (i < Abc_ObjFaninNum(pNode)); i++ { pFanin = Abc_ObjFanin(pNode, i);
         RetValue |= Res_WinMarkPaths_rec( pFanin, pPivot, nLevelMin );
     }
     // relabel the node if it has access to the leaves
@@ -293,14 +293,14 @@ func Res_WinMarkPaths(p *Res_Win_t) {
     Abc_NtkIncrementTravId( p.pNode.pNtk );
     Abc_NtkIncrementTravId( p.pNode.pNtk );
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vLeaves)); i++ { pObj = Vec_PtrEntry(p.vLeaves, i);
         Abc_NodeSetTravIdCurrent( pObj );
     }
     // traverse from the roots and mark the nodes that can reach leaves
     // the nodes that do not reach leaves have previous trav ID
     // the nodes that reach leaves have current trav ID
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vRoots)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vRoots)); i++ { pObj = Vec_PtrEntry(p.vRoots, i);
         Res_WinMarkPaths_rec( pObj, p.pNode, p.nLevTravMin );
     }
 }
@@ -326,7 +326,7 @@ func Res_WinFinalizeRoots_rec(pObj *Abc_Obj_t, vRoots *Vec_Ptr_t) {
     assert(Abc_NodeIsTravIdCurrent(pObj), "Abc_NodeIsTravIdCurrent(pObj)");
     // check if the node has all fanouts marked
     // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pObj)) && (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {
+    for i = 0; (i < Abc_ObjFanoutNum(pObj)); i++ { pFanout = Abc_ObjFanout(pObj, i);
         if !Abc_NodeIsTravIdCurrent(pFanout) {
             break; }
     }
@@ -335,7 +335,7 @@ func Res_WinFinalizeRoots_rec(pObj *Abc_Obj_t, vRoots *Vec_Ptr_t) {
         Vec_PtrPushUnique( vRoots, pObj );
     } else {  // otherwise, call recursively
         // inlining of macro Abc_ObjForEachFanout
-        for  i = 0; (i < Abc_ObjFanoutNum(pObj)) && (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {
+        for i = 0; (i < Abc_ObjFanoutNum(pObj)); i++ { pFanout = Abc_ObjFanout(pObj, i);
             Res_WinFinalizeRoots_rec( pFanout, vRoots );
         } }
 }
@@ -394,7 +394,7 @@ func Res_WinAddMissing_rec(p *Res_Win_t, pObj *Abc_Obj_t, nLevTravMin int32) {
     Abc_NodeSetTravIdCurrent( pObj );
     // visit the fanins of the node
     // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
+    for i = 0; (i < Abc_ObjFaninNum(pObj)); i++ { pFanin = Abc_ObjFanin(pObj, i);
         Res_WinAddMissing_rec( p, pFanin, nLevTravMin );
     }
     // collect the node
@@ -418,18 +418,18 @@ func Res_WinAddMissing(p *Res_Win_t) {
     // mark the leaves
     Abc_NtkIncrementTravId( p.pNode.pNtk );
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vLeaves)); i++ { pObj = Vec_PtrEntry(p.vLeaves, i);
         Abc_NodeSetTravIdCurrent( pObj );
     }        
     // mark the already collected nodes
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vNodes)); i++ { pObj = Vec_PtrEntry(p.vNodes, i);
         Abc_NodeSetTravIdCurrent( pObj );
     }        
     // explore from the roots
     Vec_PtrClear( p.vBranches );
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vRoots)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {
+    for i = 0; (i < Vec_PtrSize(p.vRoots)); i++ { pObj = Vec_PtrEntry(p.vRoots, i);
         Res_WinAddMissing_rec( p, pObj, p.nLevTravMin );
     }
 }

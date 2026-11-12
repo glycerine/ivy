@@ -1,532 +1,370 @@
 package saig
 
+// Reference-counted packed sequential simulation from ABC's saigSimSeq.c.
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"math/bits"
 	"time"
 )
 
-/**CFile****************************************************************
-
-  FileName    [saigSimSeq.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Sequential AIG package.]
-
-  Synopsis    [Fast sequential AIG simulator.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: saigSimSeq.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "saig.h"
-//#include "proof/ssw/ssw.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// combinational simulation manager
-   
+type randomObject struct {
+	kind   aig.NodeKind
+	fanins [2]int32
+	input  int
+	refs   int32
+}
 type Raig_Man_t struct {
-    // parameters
-    pAig      *Aig_Man_t;         // the AIG to be used for simulation
-    nWords             int32;       // the number of words to simulate
-    // AIG representation
-    nPis             int32;         // the number of primary inputs
-    nPos             int32;         // the number of primary outputs
-    nCis             int32;         // the number of combinational inputs
-    nCos             int32;         // the number of combinational outputs
-    nNodes             int32;       // the number of internal nodes
-    nObjs             int32;        // nCis + nNodes + nCos + 2
-    pFans0            *int32;       // fanin0 for all objects
-    pFans1            *int32;       // fanin1 for all objects
-    vCis2Ids      *Vec_Int_t;     // mapping of CIs into their PI ids
-    vLos      *Vec_Int_t;         // register outputs
-    vLis      *Vec_Int_t;         // register inputs
-    // simulation info
-    pRefs            *int32;        // reference counter for each node
-    pSims       *uint32;        // simlulation information for each node
-    // recycable memory
-    pMems       *uint32;        // allocated simulaton memory
-    nWordsAlloc             int32;  // the number of allocated entries
-    nMems             int32;        // the number of used entries  
-    nMemsMax             int32;     // the max number of used entries 
-    MemFree             int32;      // next free entry
+	pAig                      *aig.Graph
+	nWords                    int32
+	objects                   []randomObject // 0 unused, 1 constant one
+	mapping                   map[int]int32
+	inputs, outputs, los, lis []int32
+	vCis2Ids                  *vec.Vec_Int_t
+	slots                     []int
+	blocks                    [][]uint32
+	free                      []int
+	live, maxLive             int
 }
 
-func Raig_Var2Lit(Var int32, fCompl int32) int32 { return Var + Var + fCompl; }
-func Raig_Lit2Var(Lit int32) int32 { return Lit >> 1;           }
-func Raig_LitIsCompl(Lit int32) int32 { return Lit & 1;            }
-func Raig_LitNot(Lit int32) int32 { return Lit ^ 1;            }
-func Raig_LitNotCond(Lit int32, c int32) int32 { return Lit ^ int32((c > 0)); }
-func Raig_LitRegular(Lit int32) int32 { return Lit & ~01;          }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Find the PO corresponding to the PO driver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Raig_ManFindPo(pAig *Aig_Man_t, iNode int32) int32 {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-        if pObj.iData == iNode {
-            return i; }
-    }
-    return -1;
+func Raig_Var2Lit(variable, complement int32) int32 { return variable<<1 | complement }
+func Raig_Lit2Var(lit int32) int32                  { return lit >> 1 }
+func Raig_LitIsCompl(lit int32) int32               { return lit & 1 }
+func Raig_LitNot(lit int32) int32                   { return lit ^ 1 }
+func Raig_LitNotCond(lit, condition int32) int32 {
+	if condition > 0 {
+		return lit ^ 1
+	}
+	return lit
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates fast simulation manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Raig_ManCreate_rec(p *Raig_Man_t, pObj *Aig_Obj_t) int32 {
-    var iFan0, iFan1 int32;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if pObj.iData {
-        return pObj.iData; }
-    assert(!Aig_ObjIsConst1(pObj), "!Aig_ObjIsConst1(pObj)");
-    if Aig_ObjIsNode(pObj) {
-        iFan0 = Raig_ManCreate_rec( p, Aig_ObjFanin0(pObj) );
-        iFan0 = (iFan0 << 1) | Aig_ObjFaninC0(pObj);
-        iFan1 = Raig_ManCreate_rec( p, Aig_ObjFanin1(pObj) );
-        iFan1 = (iFan1 << 1) | Aig_ObjFaninC1(pObj);
-    
-    } else if Aig_ObjIsCo(pObj) {
-        iFan0 = Raig_ManCreate_rec( p, Aig_ObjFanin0(pObj) );
-        iFan0 = (iFan0 << 1) | Aig_ObjFaninC0(pObj);
-        iFan1 = 0;
-    
-    } else {
-        iFan0 = iFan1 = 0;
-        Vec_IntPush( p.vCis2Ids, Aig_ObjCioId(pObj) );
-    }
-    p.pFans0[p.nObjs] = iFan0;
-    p.pFans1[p.nObjs] = iFan1;
-    p.pRefs[p.nObjs] = Aig_ObjRefs(pObj);
-    return pObj.iData = p.nObjs++;
+func Raig_LitRegular(lit int32) int32 { return lit &^ 1 }
+func Raig_ManFindPo(p *Raig_Man_t, id int32) int32 {
+	for i, obj := range p.outputs {
+		if obj == id {
+			return int32(i)
+		}
+	}
+	return -1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates fast simulation manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Raig_ManCreate(pAig *Aig_Man_t) *Raig_Man_t {
-    var p *Raig_Man_t;
-    var pObj *Aig_Obj_t;
-    var i, nObjs int32;
-    Aig_ManCleanData( pAig );
-    // inlining of macro ABC_ALLOC
-    p = (Raig_Man_t *)((Raig_Man_t *) malloc(sizeof(Raig_Man_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Raig_Man_t) );
-    p.pAig = pAig;
-    p.nPis = Saig_ManPiNum(pAig);
-    p.nPos = Saig_ManPoNum(pAig);
-    p.nCis = Aig_ManCiNum(pAig);
-    p.nCos = Aig_ManCoNum(pAig);
-    p.nNodes = Aig_ManNodeNum(pAig);
-    nObjs = p.nCis + p.nCos + p.nNodes + 2;
-    // inlining of macro ABC_ALLOC
-    p.pFans0 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));
-    // inlining of macro ABC_ALLOC
-    p.pFans1 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));
-    // inlining of macro ABC_ALLOC
-    p.pRefs = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));
-    // inlining of macro ABC_CALLOC
-    p.pSims = ((unsigned *) calloc((size_t)(nObjs), sizeof(unsigned)));
-    p.vCis2Ids = Vec_IntAlloc( Aig_ManCiNum(pAig) );
-    // add objects (0=unused; 1=const1)
-    p.nObjs = 2;
-    pObj = Aig_ManConst1( pAig );
-    pObj.iData = 1;
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {
-        if Aig_ObjRefs(pObj) == 0 {
-            Raig_ManCreate_rec( p, pObj ); }
-    }
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-        Raig_ManCreate_rec( p, pObj );
-    }
-    assert(Vec_IntSize(p.vCis2Ids) == Aig_ManCiNum(pAig), "Vec_IntSize(p.vCis2Ids) == Aig_ManCiNum(pAig)");
-    assert(p.nObjs == nObjs, "p.nObjs == nObjs");
-    // collect flop outputs
-    p.vLos = Vec_IntAlloc( Aig_ManRegNum(pAig) );
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {
-        Vec_IntPush( p.vLos, pObj.iData );
-    }
-    // collect flop inputs
-    p.vLis = Vec_IntAlloc( Aig_ManRegNum(pAig) );
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {
-        Vec_IntPush( p.vLis, pObj.iData );
-        assert(p.pRefs[ pObj.iData ] == 0, "p.pRefs[ pObj.iData ] == 0");
-        p.pRefs[ pObj.iData ]++;
-    }
-    return p;
+func Raig_ManCreate_rec(p *Raig_Man_t, edge aig.Edge) int32 {
+	id := edge.NodeID()
+	if mapped, ok := p.mapping[id]; ok {
+		return mapped
+	}
+	node := p.pAig.Node(aig.Edge(id) << 1)
+	obj := randomObject{kind: node.Kind, input: -1}
+	child := func(edge aig.Edge) int32 {
+		lit := Raig_ManCreate_rec(p, edge) << 1
+		if edge.Complemented() {
+			lit ^= 1
+		}
+		return lit
+	}
+	switch node.Kind {
+	case aig.Input:
+		for i, input := range p.pAig.Inputs() {
+			if input.NodeID() == id {
+				obj.input = i
+				break
+			}
+		}
+		vec.Vec_IntPush(p.vCis2Ids, int32(obj.input))
+	case aig.And, aig.ExclusiveOr:
+		obj.fanins[0] = child(node.Fanins[0])
+		obj.fanins[1] = child(node.Fanins[1])
+	case aig.Buffer, aig.Output:
+		obj.fanins[0] = child(node.Fanins[0])
+	default:
+		panic("saig: invalid random simulation object")
+	}
+	mapped := int32(len(p.objects))
+	p.mapping[id] = mapped
+	p.objects = append(p.objects, obj)
+	return mapped
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates fast simulation manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Raig_ManCreate(graph *aig.Graph) *Raig_Man_t {
+	if graph == nil {
+		panic("saig: nil random simulation graph")
+	}
+	if err := graph.Check(); err != nil {
+		panic(err)
+	}
+	p := &Raig_Man_t{pAig: graph, nWords: 1, objects: make([]randomObject, 2), mapping: map[int]int32{0: 1}, vCis2Ids: vec.Vec_IntAlloc(graph.InputCount())}
+	// Unused CIs come first, matching the source's random-number replay order.
+	for _, input := range graph.Inputs() {
+		if aig.Aig_ObjRefs(graph, input) == 0 {
+			Raig_ManCreate_rec(p, input)
+		}
+	}
+	for _, output := range graph.Outputs() {
+		p.outputs = append(p.outputs, Raig_ManCreate_rec(p, output))
+	}
+	for _, input := range graph.Inputs() {
+		if _, ok := p.mapping[input.NodeID()]; !ok {
+			Raig_ManCreate_rec(p, input)
+		}
+	}
+	for _, input := range graph.Inputs() {
+		p.inputs = append(p.inputs, p.mapping[input.NodeID()])
+	}
+	for id := 2; id < len(p.objects); id++ {
+		obj := p.objects[id]
+		switch obj.kind {
+		case aig.And, aig.ExclusiveOr:
+			p.objects[obj.fanins[1]>>1].refs++
+			fallthrough
+		case aig.Buffer, aig.Output:
+			p.objects[obj.fanins[0]>>1].refs++
+		}
+	}
+	registers := int(aig.Aig_ManRegNum(graph))
+	p.los = append(p.los, p.inputs[len(p.inputs)-registers:]...)
+	p.lis = append(p.lis, p.outputs[len(p.outputs)-registers:]...)
+	for _, id := range p.lis {
+		p.objects[id].refs++
+	}
+	p.slots = make([]int, len(p.objects))
+	return p
+}
 func Raig_ManDelete(p *Raig_Man_t) {
-    Vec_IntFree( p.vCis2Ids );
-    Vec_IntFree( p.vLos );
-    Vec_IntFree( p.vLis );
-    p.pFans0 = nil;
-    p.pFans1 = nil;
-    p.pRefs = nil;
-    p.pSims = nil;
-    p.pMems = nil;
-    p = nil;
+	if p != nil {
+		p.blocks = nil
+		p.slots = nil
+		p.free = nil
+		p.objects = nil
+		p.mapping = nil
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [References simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Raig_ManSimRef(p *Raig_Man_t, i int32) *uint32 {
-    var pSim *uint32;
-    assert(i > 1, "i > 1");
-    assert(p.pSims[i] == 0, "p.pSims[i] == 0");
-    if p.MemFree == 0 {
-        var pPlace *uint32;
-        var Ent uint32;
-        if p.nWordsAlloc == 0 {
-            assert(p.pMems == nil, "p.pMems == nil");
-            p.nWordsAlloc = (1<<17); // -> 1Mb
-            p.nMems = 1;
-        }
-        p.nWordsAlloc *= 2;
-        // inlining of macro ABC_REALLOC
-        
-        if p.pMems {
-            p.pMems = ((unsigned *) realloc((char *)(p.pMems), sizeof(unsigned) * (size_t)(p.nWordsAlloc)));
-        } else {
-            p.pMems = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWordsAlloc)));
-        }
-        memset( p.pMems, 0xff, sizeof(unsigned) * (p.nWords + 1) );
-        pPlace = (unsigned *)&p.MemFree;
-        for  Ent = p.nMems * (p.nWords + 1); 
-              Ent + p.nWords + 1 < uint32(p.nWordsAlloc); 
-              Ent += p.nWords + 1  {
-            *pPlace = Ent;
-            pPlace = p.pMems + Ent;
-        }
-        *pPlace = 0;
-    }
-    p.pSims[i] = p.MemFree;
-    pSim = p.pMems + p.MemFree;
-    p.MemFree = pSim[0];
-    pSim[0] = p.pRefs[i];
-    p.nMems++;
-    if p.nMemsMax < p.nMems {
-        p.nMemsMax = p.nMems; }
-    return pSim;
+func (p *Raig_Man_t) initialize() {
+	if p.nWords <= 0 {
+		panic("saig: nonpositive simulation word count")
+	}
+	if len(p.blocks) > 0 {
+		if len(p.blocks[0]) != int(p.nWords)+1 {
+			panic("saig: word count changed during simulation")
+		}
+		return
+	}
+	constant := make([]uint32, int(p.nWords)+1)
+	for i := range constant {
+		constant[i] = ^uint32(0)
+	}
+	p.blocks = [][]uint32{constant}
+	p.live = 1
+	p.maxLive = 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Dereference simulaton info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Raig_ManSimDeref(p *Raig_Man_t, i int32) *uint32 {
-    var pSim *uint32;
-    assert((i != 0), "i");
-    if i == 1 { // const 1
-        return p.pMems; }
-    assert(p.pSims[i] > 0, "p.pSims[i] > 0");
-    pSim = p.pMems + p.pSims[i];
-    if --pSim[0] == 0 {
-        pSim[0] = p.MemFree;
-        p.MemFree = p.pSims[i];
-        p.pSims[i] = 0;
-        p.nMems--;
-    }
-    return pSim;
+func Raig_ManSimRef(p *Raig_Man_t, id int32) []uint32 {
+	p.initialize()
+	if id <= 1 || int(id) >= len(p.objects) || p.slots[id] != 0 {
+		panic("saig: invalid simulation reference")
+	}
+	slot := 0
+	if n := len(p.free); n > 0 {
+		slot = p.free[n-1]
+		p.free = p.free[:n-1]
+	} else {
+		slot = len(p.blocks)
+		p.blocks = append(p.blocks, make([]uint32, int(p.nWords)+1))
+	}
+	p.slots[id] = slot
+	block := p.blocks[slot]
+	block[0] = uint32(p.objects[id].refs)
+	p.live++
+	p.maxLive = max(p.maxLive, p.live)
+	return block
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Simulates one round.]
-
-  Description [Returns the number of PO entry if failed; 0 otherwise.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Raig_ManSimulateRound(p *Raig_Man_t, fMiter int32, fFirst int32, piPat *int32) int32 { 
-    var pRes0, pRes1, pRes *uint32;
-    var i, w, nCis, nCos, iFan0, iFan1, iPioNum int32;
-    // nove the values to the register outputs
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vCis2Ids)) && (((iPioNum) = Vec_IntEntry(p.vCis2Ids, i)), 1); i++  {
-        if iPioNum < p.nPis {
-            continue; }
-        pRes = Raig_ManSimRef( p, Vec_IntEntry(p.vLos, iPioNum-p.nPis) );
-        if fFirst != 0 {
-            memset( pRes + 1, 0, sizeof(unsigned) * p.nWords );
-        } else {
-            pRes0 = Raig_ManSimDeref( p, Vec_IntEntry(p.vLis, iPioNum-p.nPis) );
-            for  w = 1; w <= p.nWords; w++  {
-                pRes[w] = pRes0[w];
-            }
-        }
-        // handle unused PIs
-        if pRes[0] == 0 {
-            pRes[0] = 1;
-            Raig_ManSimDeref( p, Vec_IntEntry(p.vLos, iPioNum-p.nPis) );
-        }
-    }
-    // simulate the logic
-    nCis = nCos = 0;
-    for  i = 2; i < p.nObjs; i++  {
-        if p.pFans0[i] == 0 { // ci always has zero first fanin
-        
-            iPioNum = Vec_IntEntry( p.vCis2Ids, nCis );
-            if iPioNum < p.nPis {
-                pRes = Raig_ManSimRef( p, i );
-                for  w = 1; w <= p.nWords; w++  {
-                    pRes[w] = Aig_ManRandom( 0 );
-                }
-                // handle unused PIs
-                if pRes[0] == 0 {
-                    pRes[0] = 1;
-                    Raig_ManSimDeref( p, i );
-                }
-            
-            } else {
-                assert(Vec_IntEntry(p.vLos, iPioNum-p.nPis) == i, "Vec_IntEntry(p.vLos, iPioNum-p.nPis) == i"); }
-            nCis++;
-            continue;
-        }
-        if p.pFans1[i] == 0 { // co always has non-zero 1st fanin and zero 2nd fanin
-        
-            pRes0 = Raig_ManSimDeref( p, Raig_Lit2Var(p.pFans0[i]) );
-            if nCos < p.nPos && (fMiter != 0) {
-                var Const uint32;
-                if Raig_LitIsCompl(p.pFans0[i]) != 0 {
-                    Const = ~0;
-                } else {
-                    Const = 0;
-                }
-                for  w = 1; w <= p.nWords; w++  {
-                    if pRes0[w] != Const {
-                        *piPat = 32*(w-1) + Aig_WordFindFirstBit( pRes0[w] ^ Const );
-                        return i;
-                    }
-                }
-            
-            } else {
-                pRes = Raig_ManSimRef( p, i );
-                assert(pRes[0] == 1, "pRes[0] == 1");
-                if Raig_LitIsCompl(p.pFans0[i]) != 0 {
-                    for  w = 1; w <= p.nWords; w++  {
-                        pRes[w] = ~pRes0[w];
-                    }
-                } else {
-                    for  w = 1; w <= p.nWords; w++  {
-                        pRes[w] = pRes0[w];
-                    } }
-            }
-            nCos++;
-            continue;
-        }
-        pRes  = Raig_ManSimRef( p, i );
-        assert(pRes[0] > 0, "pRes[0] > 0");
-        iFan0 = p.pFans0[i];
-        iFan1 = p.pFans1[i];
-        pRes0 = Raig_ManSimDeref( p, Raig_Lit2Var(p.pFans0[i]) );
-        pRes1 = Raig_ManSimDeref( p, Raig_Lit2Var(p.pFans1[i]) );
-        if (Raig_LitIsCompl(iFan0) != 0) && (Raig_LitIsCompl(iFan1) != 0) {
-            for  w = 1; w <= p.nWords; w++  {
-                pRes[w] = ~(pRes0[w] | pRes1[w]);
-            }
-        } else if (Raig_LitIsCompl(iFan0) != 0) && !(Raig_LitIsCompl(iFan1) != 0) {
-            for  w = 1; w <= p.nWords; w++  {
-                pRes[w] = ~pRes0[w] & pRes1[w];
-            }
-        } else if !(Raig_LitIsCompl(iFan0) != 0) && (Raig_LitIsCompl(iFan1) != 0) {
-            for  w = 1; w <= p.nWords; w++  {
-                pRes[w] = pRes0[w] & ~pRes1[w];
-            }
-        } else if !(Raig_LitIsCompl(iFan0) != 0) && !(Raig_LitIsCompl(iFan1) != 0) {
-            for  w = 1; w <= p.nWords; w++  {
-                pRes[w] = pRes0[w] & pRes1[w];
-            } }
-    }
-    assert(nCis == p.nCis, "nCis == p.nCis");
-    assert(nCos == p.nCos, "nCos == p.nCos");
-    assert(p.nMems == 1 + Vec_IntSize(p.vLis), "p.nMems == 1 + Vec_IntSize(p.vLis)");
-    return 0;
+func Raig_ManSimDeref(p *Raig_Man_t, id int32) []uint32 {
+	p.initialize()
+	if id == 1 {
+		return p.blocks[0]
+	}
+	if id <= 1 || int(id) >= len(p.slots) || p.slots[id] == 0 {
+		panic("saig: missing simulation reference")
+	}
+	slot := p.slots[id]
+	block := p.blocks[slot]
+	if block[0] == 0 {
+		panic("saig: simulation reference underflow")
+	}
+	block[0]--
+	if block[0] == 0 {
+		p.slots[id] = 0
+		p.free = append(p.free, slot)
+		p.live--
+	}
+	return block
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Raig_ManGenerateCounter(pAig *Aig_Man_t, iFrame int32, iOut int32, nWords int32, iPat int32, vCis2Ids *Vec_Int_t) *Abc_Cex_t {
-    var p *Abc_Cex_t;
-    var pData *uint32;
-    var f, i, w, iPioId, Counter int32;
-    p = Abc_CexAlloc( Aig_ManRegNum(pAig), Saig_ManPiNum(pAig), iFrame+1 );
-    p.iFrame = iFrame;
-    p.iPo = iOut;
-    // fill in the binary data
-    Aig_ManRandom( 1 );
-    Counter = p.nRegs;
-    // inlining of macro ABC_ALLOC
-    pData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nWords)));
-    for  f = 0; f <= iFrame; f++, Counter += p.nPis  {
-    for  i = 0; i < Aig_ManCiNum(pAig); i++  {
-        iPioId = Vec_IntEntry( vCis2Ids, i );
-        if iPioId >= p.nPis {
-            continue; }
-        for  w = 0; w < nWords; w++  {
-            pData[w] = Aig_ManRandom( 0 );
-        }
-        if Abc_InfoHasBit( pData, iPat ) {
-            Abc_InfoSetBit( p.pData, Counter + iPioId ); }
-    }
-    }
-    pData = nil;
-    return p;
+func (p *Raig_Man_t) releaseUnused(id int32, block []uint32) {
+	if block[0] == 0 {
+		block[0] = 1
+		Raig_ManSimDeref(p, id)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the bug is detected, 0 otherwise.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Raig_ManSimulate(pAig *Aig_Man_t, nWords int32, nIters int32, TimeLimit int32, fMiter int32, fVerbose int32) int32 {
-    var p *Raig_Man_t;
-    var Status Sec_MtrStatus_t;
-    var i, iPat, RetValue int32;
-    var clk abctime;
-    var clkTotal abctime = Abc_Clock();
-    assert(Aig_ManRegNum(pAig) > 0, "Aig_ManRegNum(pAig) > 0");
-    Status = Sec_MiterStatus( pAig );
-    if Status.nSat > 0 {
-        fmt.Printf("Miter is trivially satisfiable (output %d).\n", Status.iOut);
-        return 1;
-    }
-    if Status.nUndec == 0 {
-        fmt.Printf("Miter is trivially unsatisfiable.\n");
-        return 0;
-    }
-    Aig_ManRandom( 1 );
-    p = Raig_ManCreate( pAig );
-    p.nWords = nWords;
-    // iterate through objects
-    for  i = 0; i < nIters; i++  {
-        clk = Abc_Clock();
-        RetValue = Raig_ManSimulateRound( p, fMiter, i==0, &iPat );
-        if fVerbose != 0 {
-            fmt.Printf("Frame %4d out of %4d and timeout %3d sec. ", i+1, nIters, TimeLimit);
-            fmt.Printf("Time = %7.2f sec\r", (1.0*Abc_Clock()-clkTotal)/int64(time.Second));
-        }
-        if RetValue > 0 {
-            var iOut int32  = Raig_ManFindPo(p.pAig, RetValue);
-            assert(pAig.pSeqModel == nil, "pAig.pSeqModel == nil");
-            pAig.pSeqModel = Raig_ManGenerateCounter( pAig, i, iOut, nWords, iPat, p.vCis2Ids );
-            if fVerbose != 0 {
-            fmt.Printf("Miter is satisfiable after simulation (output %d).\n", iOut); }
-            break;
-        }
-        if (Abc_Clock() - clk)/int64(time.Second) >= TimeLimit {
-            fmt.Printf("No bug detected after %d frames with time limit %d seconds.\n", i+1, TimeLimit);
-            break;
-        }
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  ", p.nMemsMax, 1.0*(p.nObjs * 16)/(1<<20), 1.0*(p.nMemsMax * 4 * (nWords+1))/(1<<20));
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Total time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;
-    }
-    Raig_ManDelete( p );
-    return RetValue > 0;
+func Raig_ManSimulateRound(p *Raig_Man_t, miter, first int32, pattern *int32) int32 {
+	p.initialize()
+	// Transfer all previous-frame register inputs before evaluating any new gate.
+	for i, id := range p.los {
+		block := Raig_ManSimRef(p, id)
+		if first != 0 {
+			clear(block[1:])
+		} else {
+			copy(block[1:], Raig_ManSimDeref(p, p.lis[i])[1:])
+		}
+		p.releaseUnused(id, block)
+	}
+	primaryInputs := len(p.inputs) - len(p.los)
+	primaryOutputs := len(p.outputs) - len(p.lis)
+	outputNumber := make(map[int32]int, len(p.outputs))
+	for i, id := range p.outputs {
+		outputNumber[id] = i
+	}
+	for id := int32(2); int(id) < len(p.objects); id++ {
+		obj := p.objects[id]
+		if obj.kind == aig.Input {
+			if obj.input >= primaryInputs {
+				continue
+			}
+			block := Raig_ManSimRef(p, id)
+			for w := 1; w < len(block); w++ {
+				block[w] = aig.Aig_ManRandom(0)
+			}
+			p.releaseUnused(id, block)
+			continue
+		}
+		// Allocate before dereferencing fanins so live operands cannot be reused.
+		result := Raig_ManSimRef(p, id)
+		left := Raig_ManSimDeref(p, obj.fanins[0]>>1)
+		var right []uint32
+		if obj.kind == aig.And || obj.kind == aig.ExclusiveOr {
+			right = Raig_ManSimDeref(p, obj.fanins[1]>>1)
+		}
+		for w := 1; w < len(result); w++ {
+			a := left[w]
+			if obj.fanins[0]&1 != 0 {
+				a = ^a
+			}
+			if right == nil {
+				result[w] = a
+				continue
+			}
+			b := right[w]
+			if obj.fanins[1]&1 != 0 {
+				b = ^b
+			}
+			if obj.kind == aig.ExclusiveOr {
+				result[w] = a ^ b
+			} else {
+				result[w] = a & b
+			}
+		}
+		if obj.kind == aig.Output && miter != 0 && outputNumber[id] < primaryOutputs {
+			for w, value := range result[1:] {
+				if value != 0 {
+					if pattern != nil {
+						*pattern = int32(w*32 + bits.TrailingZeros32(value))
+					}
+					return id
+				}
+			}
+		}
+		p.releaseUnused(id, result)
+	}
+	if p.live != 1+len(p.lis) {
+		panic("saig: leaked simulation blocks")
+	}
+	return 0
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Raig_ManGenerateCounter(graph *aig.Graph, frame, output, words, pattern int32, order *vec.Vec_Int_t) *util.Abc_Cex_t {
+	registers := aig.Aig_ManRegNum(graph)
+	pis := int32(graph.InputCount()) - registers
+	if frame < 0 || words <= 0 || pattern < 0 || pattern >= 32*words {
+		panic("saig: invalid simulation witness coordinates")
+	}
+	cex := util.Abc_CexAlloc(registers, pis, frame+1)
+	cex.IFrame = frame
+	cex.IPo = output
+	aig.Aig_ManRandom(1)
+	for f := int32(0); f <= frame; f++ {
+		for _, input := range vec.Vec_IntArray(order) {
+			if input >= pis {
+				continue
+			}
+			for w := int32(0); w < words; w++ {
+				value := aig.Aig_ManRandom(0)
+				if w == pattern/32 && value&(1<<uint(pattern%32)) != 0 {
+					bit := registers + f*pis + input
+					cex.PData[bit>>5] |= 1 << uint(bit&31)
+				}
+			}
+		}
+	}
+	return cex
+}
+func Raig_ManSimulate(graph *aig.Graph, words, iterations, timeLimit, miter, verbose int32) int32 {
+	if words <= 0 || iterations < 0 || timeLimit < 0 || aig.Aig_ManRegNum(graph) <= 0 {
+		panic("saig: invalid sequential simulation parameters")
+	}
+	p := Raig_ManCreate(graph)
+	defer Raig_ManDelete(p)
+	p.nWords = words
+	aig.Aig_ManRandom(1)
+	started := time.Now()
+	for frame := int32(0); frame < iterations; frame++ {
+		var pattern int32
+		first := int32(0)
+		if frame == 0 {
+			first = 1
+		}
+		failed := Raig_ManSimulateRound(p, miter, first, &pattern)
+		if failed != 0 {
+			cex := Raig_ManGenerateCounter(graph, frame, Raig_ManFindPo(p, failed), words, pattern, p.vCis2Ids)
+			if err := validateRandomCounterexample(graph, cex); err != nil {
+				panic(err)
+			}
+			if err := graph.SetSequentialCounterexample(cex); err != nil {
+				panic(err)
+			}
+			if verbose != 0 {
+				fmt.Printf("Simulation found output %d at frame %d\n", cex.IPo, frame)
+			}
+			return 1
+		}
+		if timeLimit > 0 && time.Since(started) >= time.Duration(timeLimit)*time.Second {
+			break
+		}
+	}
+	if verbose != 0 {
+		fmt.Printf("Simulation finished: max live blocks %d, elapsed %s\n", p.maxLive, time.Since(started))
+	}
+	return 0
+}
+func validateRandomCounterexample(graph *aig.Graph, cex *util.Abc_Cex_t) error {
+	registers := int(cex.NRegs)
+	pis := int(cex.NPis)
+	state := make([]bool, registers)
+	for i := range state {
+		state[i] = cex.PData[i>>5]&(1<<uint(i&31)) != 0
+	}
+	for frame := 0; frame <= int(cex.IFrame); frame++ {
+		inputs := make([]bool, pis+registers)
+		copy(inputs[pis:], state)
+		for i := 0; i < pis; i++ {
+			bit := registers + frame*pis + i
+			inputs[i] = cex.PData[bit>>5]&(1<<uint(bit&31)) != 0
+		}
+		outputs, err := graph.Evaluate(inputs)
+		if err != nil {
+			return err
+		}
+		if frame == int(cex.IFrame) {
+			if cex.IPo < 0 || int(cex.IPo) >= len(outputs)-registers || !outputs[cex.IPo] {
+				return fmt.Errorf("saig: random simulation witness does not reproduce")
+			}
+			return nil
+		}
+		copy(state, outputs[len(outputs)-registers:])
+	}
+	return fmt.Errorf("saig: empty simulation witness")
+}

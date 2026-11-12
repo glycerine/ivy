@@ -1,6 +1,11 @@
 package gia
 
+
+
 import "fmt"
+
+type Gia_ManMin_t = Gia_ManMin_t_
+type Gia_Man2Min_t = Gia_Man2Min_t_
 
 /**CFile****************************************************************
 

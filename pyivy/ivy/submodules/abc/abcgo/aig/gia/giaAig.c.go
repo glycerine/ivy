@@ -1,6 +1,6 @@
 package gia
 
-import "fmt"
+import "github.com/glycerine/abcgo/aig/aig"
 
 /**CFile****************************************************************
 
@@ -13,7 +13,7 @@ import "fmt"
   Synopsis    [Transformation between AIG manager.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -30,16 +30,9 @@ import "fmt"
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
@@ -50,254 +43,151 @@ import "fmt"
   Synopsis    [Duplicates AIG in the DFS order.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Checks integrity of choice nodes.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Duplicates AIG in the DFS order.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Duplicates AIG in the DFS order.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Handles choices as additional combinational outputs.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Duplicates AIG in the DFS order.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Duplicates AIG in the DFS order.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Duplicates AIG in the DFS order.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Duplicates AIG in the DFS order.]
 
-  Synopsis    [Duplicates AIG in the DFS order.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
-func Gia_ManCofactorAig(p *Aig_Man_t, nFrames int32, nCofFanLit int32) *Aig_Man_t {
-    var pMan *Aig_Man_t;
-    var pGia, pTemp *Gia_Man_t;
-    pGia = Gia_ManFromAig( p );
-    pGia = Gia_ManUnrollAndCofactor( pTemp = pGia, nFrames, nCofFanLit, 1 );
-    Gia_ManStop( pTemp );
-    pMan = Gia_ManToAig( pGia, 0 );
-    Gia_ManStop( pGia );
-    return pMan;
+**********************************************************************
+*/
+func Gia_ManCofactorAig(p *Aig_Man_t, nFrames, nCofFanLit int32) *Aig_Man_t {
+	source := Gia_ManFromAig(p)
+	cofactored := Gia_ManUnrollAndCofactor(source, nFrames, nCofFanLit, 1)
+	Gia_ManStop(source)
+	out := Gia_ManToAig(cofactored, 0)
+	Gia_ManStop(cofactored)
+	return out
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Transfers representatives from pGia to pAig.]
-
-  Description [Assumes that pGia was created from pAig.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Transfers representatives from pAig to pGia.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Applies DC2 to the GIA manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCompress2(p *Gia_Man_t, fUpdateLevel int32, fVerbose int32) *Gia_Man_t {
-    var pGia *Gia_Man_t;
-    var pNew, pTemp *Aig_Man_t;
-    if p.pManTime && p.vLevels == nil {
-        Gia_ManLevelWithBoxes( p ); }
-    pNew = Gia_ManToAig( p, 0 );
-    pNew = Dar_ManCompress2( pTemp = pNew, 1, fUpdateLevel, 1, 0, fVerbose );
-    Aig_ManStop( pTemp );
-    pGia = Gia_ManFromAig( pNew );
-    Aig_ManStop( pNew );
-    Gia_ManTransferTiming( pGia, p );
-    return pGia;
+// Higher-level DAR/DCH drivers retain their original calls while their package
+// interface is integrated. Their algorithms must not be replaced by no-op hooks.
+func Gia_ManCompress2(p *Gia_Man_t, updateLevel, verbose int32) *Gia_Man_t {
+	if p.pManTime != nil && p.vLevels == nil {
+		Gia_ManLevelWithBoxes(p)
+	}
+	source := Gia_ManToAig(p, 0)
+	optimized := Dar_ManCompress2(source, 1, updateLevel, 1, 0, verbose)
+	aig.Aig_ManStop(source)
+	out := Gia_ManFromAig(optimized)
+	aig.Aig_ManStop(optimized)
+	Gia_ManTransferTiming(out, p)
+	return out
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManPerformDch(p *Gia_Man_t, pPars any) *Gia_Man_t {
-    var fUseMapping int32;
-    var pGia, pGia1 *Gia_Man_t;
-    var pNew *Aig_Man_t;
-    if p.pManTime && p.vLevels == nil {
-        Gia_ManLevelWithBoxes( p ); }
-    if (fUseMapping != 0) && Gia_ManHasMapping(p) {
-        pGia1 = (Gia_Man_t *)Dsm_ManDeriveGia( p, 0 );
-    } else {
-        pGia1 = Gia_ManDup( p ); }
-    pNew = Gia_ManToAig( pGia1, 0 );
-    Gia_ManStop( pGia1 );
-    pNew = Dar_ManChoiceNew( pNew, (Dch_Pars_t *)pPars );
-//    pGia = Gia_ManFromAig( pNew );
-    pGia = Gia_ManFromAigChoices( pNew );
-    Aig_ManStop( pNew );
-    Gia_ManTransferTiming( pGia, p );
-    return pGia;
+func Gia_ManPerformDch(p *Gia_Man_t, parameters any) *Gia_Man_t {
+	if p.pManTime != nil && p.vLevels == nil {
+		Gia_ManLevelWithBoxes(p)
+	}
+	// The source's local fUseMapping is always zero; its dead DSM branch is omitted.
+	source := Gia_ManDup(p)
+	converted := Gia_ManToAig(source, 0)
+	Gia_ManStop(source)
+	optimized := Dar_ManChoiceNew(converted, parameters)
+	out := Gia_ManFromAigChoices(optimized)
+	aig.Aig_ManStop(optimized)
+	Gia_ManTransferTiming(out, p)
+	return out
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes equivalences after structural sequential cleanup.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManSeqCleanupClasses(p *Gia_Man_t, fConst int32, fEquiv int32, fVerbose int32) {
-    var pNew, pTemp *Aig_Man_t;
-    pNew  = Gia_ManToAigSimple( p );
-    pTemp = Aig_ManScl( pNew, fConst, fEquiv, 0, -1, -1, fVerbose, 0 );
-    Gia_ManReprFromAigRepr( pNew, p );
-    Aig_ManStop( pTemp );
-    Aig_ManStop( pNew );
+func Gia_ManSeqCleanupClasses(p *Gia_Man_t, constant, equivalent, verbose int32) {
+	source := Gia_ManToAigSimple(p)
+	cleaned := aig.Aig_ManScl(source, constant, equivalent, 0, -1, -1, verbose, 0)
+	Gia_ManReprFromAigRepr(source, p)
+	aig.Aig_ManStop(cleaned)
+	aig.Aig_ManStop(source)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Solves SAT problem.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

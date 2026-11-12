@@ -87,13 +87,14 @@ type sat_solver_t struct {
 	nInsLimit     ABC_INT64_T // external limit on the number of implications
 	nRuntimeLimit abctime     // external limit on runtime
 
-	act_vars   veci      // variables whose activity has changed
-	factors    []float64 // the activity factors
-	nRestarts  int32     // the number of local restarts
-	nCalls     int32     // the number of local restarts
-	nCalls2    int32     // the number of local restarts
-	unit_lits  veci      // variables whose activity has changed
-	pivot_vars veci      // pivot variables
+	act_vars             veci      // variables whose activity has changed
+	factors              []float64 // the activity factors
+	activityFactorActive map[int32]bool
+	nRestarts            int32 // the number of local restarts
+	nCalls               int32 // the number of local restarts
+	nCalls2              int32 // the number of local restarts
+	unit_lits            veci  // variables whose activity has changed
+	pivot_vars           veci  // pivot variables
 
 	fSkipSimplify int32 // set to one to skip simplification of the clause database
 	fNotUseRandom int32 // do not allow random decisions with a fixed probability

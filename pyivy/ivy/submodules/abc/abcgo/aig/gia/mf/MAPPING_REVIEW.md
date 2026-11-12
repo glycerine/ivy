@@ -5,7 +5,7 @@ CNF clause-count cost, epsilon ordering, area-flow reference blending, second
 mapping round and bounded-depth exact-area round. `NetworkFromModel` preserves
 source GIA interface and AND ordering after IOA ID normalization. The required
 source-default pipeline additionally runs `Gia_ManDupMuxes(...,3)` before mapping;
-that coarsening port is being integrated separately.
+that coarsening port is integrated by `GenerateCNF`.
 
 ## Readability pass
 
@@ -28,7 +28,9 @@ that coarsening port is being integrated separately.
 - Malformed topology, outputs, duplicate/unlisted inputs return errors.
 - Original source's exact-area depth limit and flow float32 arithmetic remain.
 
-The full source-default pipeline and conflict-cost fidelity are not yet claimed.
-In particular, uncoarsened plain-AIG flow discounts need the source recognizer,
-while the target default operates on the coarsened graph. Source choices are
-seeded via optional `Sibling(id)` with independently evaluated zero phases.
+The full source-default pipeline now passes 34 original-ABC clause-by-clause
+and variable-order differential cases, including larger/reconvergent circuits.
+Uncoarsened plain-AIG flow discounts use the source recognizer precedence;
+coarsened graphs disable them through MuxesEnabled. Source choices are seeded
+via optional Sibling(id) with independently evaluated zero phases. Private
+transient mapper arrays are released after exporting the final mapping.

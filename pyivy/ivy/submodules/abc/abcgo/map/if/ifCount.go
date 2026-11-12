@@ -1,528 +1,318 @@
 package if_
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/vec"
+	"math/bits"
+)
 
-/**CFile****************************************************************
-
-  FileName    [ifCount.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [FPGA mapping based on priority cuts.]
-
-  Synopsis    [External declarations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - November 21, 2006.]
-
-  Revision    [$Id: ifCount.h,v 1.00 2006/11/21 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//ABC_NAMESPACE_HEADER_START
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
- 
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_LogCreateAnd(vAig *Vec_Int_t, iLit0 int32, iLit1 int32, nSuppAll int32) int32 {
-    var iObjId int32  = Vec_IntSize(vAig)/2 + nSuppAll;
-    assert(Abc_Lit2Var(iLit0) != Abc_Lit2Var(iLit1), "Abc_Lit2Var(iLit0) != Abc_Lit2Var(iLit1)");
-    Vec_IntPush( vAig, iLit0 );
-    Vec_IntPush( vAig, iLit1 );
-    return Abc_Var2Lit( iObjId, 0 );
+func If_LogCreateAnd(aig *Vec_Int_t, a, b, nSupport int32) int32 {
+	if a>>1 == b>>1 {
+		panic("if: log-counter AND operands have same variable")
+	}
+	id := int32(vec.Vec_IntSize(aig)/2) + nSupport
+	vec.Vec_IntPush(aig, a)
+	vec.Vec_IntPush(aig, b)
+	return id * 2
 }
-func If_LogCreateMux(vAig *Vec_Int_t, iLitC int32, iLit1 int32, iLit0 int32, nSuppAll int32) int32 {
-    var iFanLit0 int32  = If_LogCreateAnd( vAig, iLitC, iLit1, nSuppAll );
-    var iFanLit1 int32  = If_LogCreateAnd( vAig, Abc_LitNot(iLitC), iLit0, nSuppAll );
-    var iResLit int32   = If_LogCreateAnd( vAig, Abc_LitNot(iFanLit0), Abc_LitNot(iFanLit1), nSuppAll );
-    return Abc_LitNot(iResLit);
+func If_LogCreateMux(aig *Vec_Int_t, control, then, otherwise, nSupport int32) int32 {
+	a := If_LogCreateAnd(aig, control, then, nSupport)
+	b := If_LogCreateAnd(aig, control^1, otherwise, nSupport)
+	return If_LogCreateAnd(aig, a^1, b^1, nSupport) ^ 1
 }
-func If_LogCreateXor(vAig *Vec_Int_t, iLit0 int32, iLit1 int32, nSuppAll int32) int32 {
-    return If_LogCreateMux( vAig, iLit0, Abc_LitNot(iLit1), iLit1, nSuppAll );
+func If_LogCreateXor(aig *Vec_Int_t, a, b, nSupport int32) int32 {
+	return If_LogCreateMux(aig, a, b^1, b, nSupport)
 }
-func If_LogCreateAndXor(vAig *Vec_Int_t, iLit0 int32, iLit1 int32, nSuppAll int32, fXor int32) int32 {
-    if fXor != 0 {
-        return If_LogCreateXor(vAig, iLit0, iLit1, nSuppAll);
-    } else {
-        return If_LogCreateAnd(vAig, iLit0, iLit1, nSuppAll);
-    }
+func If_LogCreateAndXor(aig *Vec_Int_t, a, b, nSupport, xor int32) int32 {
+	if xor != 0 {
+		return If_LogCreateXor(aig, a, b, nSupport)
+	}
+	return If_LogCreateAnd(aig, a, b, nSupport)
 }
-func If_LogCreateAndXorMulti(vAig *Vec_Int_t, pFaninLits *int32, nFanins int32, nSuppAll int32, fXor int32) int32 {
-    var i int32;
-    assert(nFanins > 0, "nFanins > 0");
-    for  i = nFanins - 1; i > 0; i--  {
-        pFaninLits[i-1] = If_LogCreateAndXor( vAig, pFaninLits[i], pFaninLits[i-1], nSuppAll, fXor );
-    }
-    return pFaninLits[0];
-}
-func If_LogCounterAddAig(pTimes *int32, pnTimes *int32, pFaninLits *int32, Num int32, iLit int32, vAig *Vec_Int_t, nSuppAll int32, fXor int32, fXorFunc int32) int32 {
-    var nTimes int32  = *pnTimes;
-    if vAig != nil {
-        pFaninLits[nTimes] = iLit; }
-    pTimes[nTimes++] = Num;
-    if nTimes > 1 {
-        var i, k int32;
-        for  k = nTimes-1; k > 0; k--  {
-            if pTimes[k] < pTimes[k-1] {
-                break; }
-            if pTimes[k] > pTimes[k-1] { 
-                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); 
-                if vAig != nil {
-                    ABC_SWAP( int, pFaninLits[k], pFaninLits[k-1] ); } 
-                continue; 
-            }
-            pTimes[k-1] += 1 + fXor;
-            if vAig != nil {
-                pFaninLits[k-1] = If_LogCreateAndXor( vAig, pFaninLits[k], pFaninLits[k-1], nSuppAll, fXorFunc ); }
-            for  nTimes, i = nTimes-1, k; i < nTimes; i++  {
-                pTimes[i] = pTimes[i+1];
-                if vAig != nil {
-                    pFaninLits[i] = pFaninLits[i+1]; }
-            }
-        }
-    }
-    assert(nTimes > 0, "nTimes > 0");
-    *pnTimes = nTimes;
-    return pTimes[0] + (nTimes > 1 ? 1 + fXor : 0);
-}
-func If_LogCounterDelayXor(pTimes *int32, nTimes int32) int32 {
-    var i int32;
-    assert(nTimes > 0, "nTimes > 0");
-    for  i = nTimes - 1; i > 0; i--  {
-        pTimes[i-1] = 2 + Abc_MaxInt( pTimes[i], pTimes[i-1] );
-    }
-    return pTimes[0];
+func If_LogCreateAndXorMulti(aig *Vec_Int_t, lits []int32, nFanins, nSupport, xor int32) int32 {
+	if nFanins <= 0 || int(nFanins) > len(lits) {
+		panic("if: invalid multi-gate fanin count")
+	}
+	for i := nFanins - 1; i > 0; i-- {
+		lits[i-1] = If_LogCreateAndXor(aig, lits[i], lits[i-1], nSupport, xor)
+	}
+	return lits[0]
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Compute delay/area profile of the structure.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_CutPinDelayGet(D word, v int32) int32 { assert(v >= 0 && v < 16, "v >= 0 && v < 16"); return int32(((D >> (v << 2)) & 0xF));                    }
-func If_CutPinDelaySet(pD *word, v int32, d int32) { assert(v >= 0 && v < 16, "v >= 0 && v < 16"); assert(d >= 0 && d < 16, "d >= 0 && d < 16"); *pD |= ((word)d << (v << 2)); }
-func If_CutPinDelayInit(v int32) word { assert(v >= 0 && v < 16, "v >= 0 && v < 16"); return (word)1 << (v << 2);                             }
-func If_CutPinDelayMax(D1 word, D2 word, nVars int32, AddOn int32) word {
-    var v, Max int32;
-    var D word;
-    for  v = 0; v < nVars; v++  {
-        if Max = Abc_MaxInt(If_CutPinDelayGet(D1, v), If_CutPinDelayGet(D2, v)) {
-            If_CutPinDelaySet( &D, v, Abc_MinInt(Max + AddOn, 15) ); }
-    }
-    return D;
+// The timing queue is decreasing. Equal arrivals combine and carry into the
+// preceding position, preserving source topology and paired payload movement.
+func ifLogCounter(times []int32, n *int32, num, delay int32, onSwap func(int, int), onMerge func(int, int), onShift func(int, int)) int32 {
+	size := int(*n)
+	if size < 0 || size >= len(times) {
+		panic("if: log counter queue capacity exceeded")
+	}
+	times[size] = num
+	size++
+	for k := size - 1; k > 0; k-- {
+		if times[k] < times[k-1] {
+			break
+		}
+		if times[k] > times[k-1] {
+			times[k], times[k-1] = times[k-1], times[k]
+			if onSwap != nil {
+				onSwap(k, k-1)
+			}
+			continue
+		}
+		times[k-1] += delay
+		if onMerge != nil {
+			onMerge(k, k-1)
+		}
+		size--
+		for i := k; i < size; i++ {
+			times[i] = times[i+1]
+			if onShift != nil {
+				onShift(i, i+1)
+			}
+		}
+	}
+	*n = int32(size)
+	result := times[0]
+	if size > 1 {
+		result += delay
+	}
+	return result
 }
-func If_CutPinDelayDecrement(D1 word, nVars int32) word {
-    var v int32;
-    var D word;
-    for  v = 0; v < nVars; v++  {
-        if If_CutPinDelayGet(D1, v) != 0 {
-            If_CutPinDelaySet( &D, v, If_CutPinDelayGet(D1, v) - 1 ); }
-    }
-    return D;
+func If_LogCounterAdd(times []int32, n *int32, num, xor int32) int32 {
+	return ifLogCounter(times, n, num, 1+xor, nil, nil, nil)
 }
-static inline int If_CutPinDelayEqual( word D1, word D2, int nVars ) // returns 1 if D1 has the same delays than D2
-{
-    var v int32;
-    for  v = 0; v < nVars; v++  {
-        if If_CutPinDelayGet(D1, v) != If_CutPinDelayGet(D2, v) {
-            return 0; }
-    }
-    return 1;
+func If_LogCounterAddAig(times []int32, n *int32, lits []int32, num, lit int32, aig *Vec_Int_t, nSupport, xor, xorFunction int32) int32 {
+	if aig == nil {
+		return If_LogCounterAdd(times, n, num, xor)
+	}
+	if int(*n) >= len(lits) {
+		panic("if: insufficient log-counter literal storage")
+	}
+	lits[*n] = lit
+	return ifLogCounter(times, n, num, 1+xor, func(a, b int) { lits[a], lits[b] = lits[b], lits[a] }, func(a, b int) { lits[b] = If_LogCreateAndXor(aig, lits[a], lits[b], nSupport, xorFunction) }, func(a, b int) { lits[a] = lits[b] })
 }
-static inline int If_CutPinDelayDom( word D1, word D2, int nVars ) // returns 1 if D1 has the same or smaller delays than D2
-{
-    var v int32;
-    for  v = 0; v < nVars; v++  {
-        if If_CutPinDelayGet(D1, v) > If_CutPinDelayGet(D2, v) {
-            return 0; }
-    }
-    return 1;
+func If_LogCounterDelayXor(times []int32, n int32) int32 {
+	if n <= 0 || int(n) > len(times) {
+		panic("if: empty XOR counter")
+	}
+	for i := n - 1; i > 0; i-- {
+		times[i-1] = 2 + max(times[i], times[i-1])
+	}
+	return times[0]
 }
-func If_CutPinDelayTranslate(D word, nVars int32, pPerm string) {
-    var v, Delay int32;
-    for  v = 0; v < nVars; v++  {
-        Delay = If_CutPinDelayGet(D, v);
-        assert(Delay > 1, "Delay > 1");
-        pPerm[v] = Delay - 1;
-    }
+func If_CutPinDelayGet(profile uint64, pin int32) int32 {
+	if pin < 0 || pin >= 16 {
+		panic("if: pin outside delay profile")
+	}
+	return int32(profile >> uint(pin*4) & 15)
 }
-func If_CutPinDelayPrint(D word, nVars int32) {
-    var v int32;
-    fmt.Printf("Delay profile = {");
-    for  v = 0; v < nVars; v++  {
-        fmt.Printf(" %d", If_CutPinDelayGet(D, v));
-    }
-    fmt.Printf(" }\n");
+func If_CutPinDelaySet(profile *uint64, pin, delay int32) {
+	if pin < 0 || pin >= 16 || delay < 0 || delay >= 16 {
+		panic("if: invalid packed pin delay")
+	}
+	*profile |= uint64(delay) << uint(pin*4)
 }
-func If_LogCounterPinDelays(pTimes *int32, pnTimes *int32, pPinDels *word, Num int32, PinDel word, nSuppAll int32, fXor int32) int32 {
-    var nTimes int32  = *pnTimes;
-    pPinDels[nTimes] = PinDel;
-    pTimes[nTimes++] = Num;
-    if nTimes > 1 {
-        var i, k int32;
-        for  k = nTimes-1; k > 0; k--  {
-            if pTimes[k] < pTimes[k-1] {
-                break; }
-            if pTimes[k] > pTimes[k-1] { 
-                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); 
-                ABC_SWAP( word, pPinDels[k], pPinDels[k-1] ); 
-                continue; 
-            }
-            pTimes[k-1] += 1 + fXor;
-            pPinDels[k-1] = If_CutPinDelayMax( pPinDels[k], pPinDels[k-1], nSuppAll, 1 + fXor );
-            for  nTimes, i = nTimes-1, k; i < nTimes; i++  {
-                pTimes[i] = pTimes[i+1];
-                pPinDels[i] = pPinDels[i+1];
-            }
-        }
-    }
-    assert(nTimes > 0, "nTimes > 0");
-    *pnTimes = nTimes;
-    return pTimes[0] + (nTimes > 1 ? 1 + fXor : 0);
+func If_CutPinDelayInit(pin int32) uint64 {
+	if pin < 0 || pin >= 16 {
+		panic("if: pin outside delay profile")
+	}
+	return 1 << uint(pin*4)
 }
-func If_LogPinDelaysMulti(pPinDels *word, nFanins int32, nSuppAll int32, fXor int32) word {
-    var i int32;
-    assert(nFanins > 0, "nFanins > 0");
-    for  i = nFanins - 1; i > 0; i--  {
-        pPinDels[i-1] = If_CutPinDelayMax( pPinDels[i], pPinDels[i-1], nSuppAll, 1 + fXor );
-    }
-    return pPinDels[0];
+func If_CutPinDelayMax(a, b uint64, nVars, add int32) uint64 {
+	if nVars < 0 || nVars > 16 {
+		panic("if: invalid delay-profile width")
+	}
+	var result uint64
+	for v := int32(0); v < nVars; v++ {
+		delay := max(If_CutPinDelayGet(a, v), If_CutPinDelayGet(b, v))
+		if delay != 0 {
+			If_CutPinDelaySet(&result, v, min(delay+add, 15))
+		}
+	}
+	return result
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_AigVerifyArray(vAig *Vec_Int_t, nLeaves int32) word {
-    assert(Vec_IntSize(vAig) > 0, "Vec_IntSize(vAig) > 0");
-    assert(Vec_IntEntryLast(vAig) < 2, "Vec_IntEntryLast(vAig) < 2");
-    if Vec_IntSize(vAig) == 1 { // const
-        if Vec_IntEntry(vAig, 0) {
-            return ~((word)0);
-        } else {
-            return 0;
-        } }
-    if Vec_IntSize(vAig) == 2 { // variable
-    
-        assert(Vec_IntEntry(vAig, 0) == 0, "Vec_IntEntry(vAig, 0) == 0");
-        if Vec_IntEntry(vAig, 1) {
-            return ~s_Truths6[0];
-        } else {
-            return s_Truths6[0];
-        }
-    
-    } else {
-        var Truth0, Truth1, TruthR word;
-        var i, iVar0, iVar1, iLit0, iLit1 int32;
-        assert(Vec_IntSize(vAig) & 1, "Vec_IntSize(vAig) & 1");
-        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )
-        {
-            iVar0 = Abc_Lit2Var( iLit0 );
-            iVar1 = Abc_Lit2Var( iLit1 );
-            if iVar0 < nLeaves {
-                Truth0 = s_Truths6[iVar0];
-            } else {
-                Truth0 = Vec_WrdEntry( (Vec_Wrd_t *)vAig, iVar0 - nLeaves );
-            }
-            if iVar1 < nLeaves {
-                Truth1 = s_Truths6[iVar1];
-            } else {
-                Truth1 = Vec_WrdEntry( (Vec_Wrd_t *)vAig, iVar1 - nLeaves );
-            }
-            if Abc_LitIsCompl(iLit0) {
-                Truth0 = ~Truth0; }
-            if Abc_LitIsCompl(iLit1) {
-                Truth1 = ~Truth1; }
-            assert((i & 1) == 0, "(i & 1) == 0");
-            Vec_WrdWriteEntry( (Vec_Wrd_t *)vAig, Abc_Lit2Var(i), Truth0 & Truth1 );  // overwriting entries
-        }
-        assert(i == Vec_IntSize(vAig) - 1, "i == Vec_IntSize(vAig) - 1");
-        TruthR = Truth0 & Truth1;
-        if Vec_IntEntry(vAig, i) {
-            TruthR = ~TruthR; }
-        Vec_IntClear( vAig ); // useless
-        return TruthR;
-    }
+func If_CutPinDelayDecrement(a uint64, nVars int32) uint64 {
+	var result uint64
+	for v := int32(0); v < nVars; v++ {
+		if delay := If_CutPinDelayGet(a, v); delay > 0 {
+			If_CutPinDelaySet(&result, v, delay-1)
+		}
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_AigPrintArray(vAig *Vec_Int_t, nLeaves int32) {
-    assert(Vec_IntSize(vAig) > 0, "Vec_IntSize(vAig) > 0");
-    assert(Vec_IntEntryLast(vAig) < 2, "Vec_IntEntryLast(vAig) < 2");
-    if Vec_IntSize(vAig) == 1 { // const
-        fmt.Printf("Const %d\n", Vec_IntEntry(vAig, 0));
-    } else if Vec_IntSize(vAig) == 2 { // variable
-        fmt.Printf("Variable %s\n", Vec_IntEntry(vAig, 1) ? "Compl" : "");
-    } else {
-        var i, iLit0, iLit1 int32;
-        assert(Vec_IntSize(vAig) & 1, "Vec_IntSize(vAig) & 1");
-        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )
-            fmt.Printf("%d %d\n", iLit0, iLit1);
-        assert(i == Vec_IntSize(vAig) - 1, "i == Vec_IntSize(vAig) - 1");
-        fmt.Printf("%s\n", Vec_IntEntry(vAig, i) ? "Compl" : "");
-    }
+func If_CutPinDelayEqual(a, b uint64, nVars int32) int32 {
+	for v := int32(0); v < nVars; v++ {
+		if If_CutPinDelayGet(a, v) != If_CutPinDelayGet(b, v) {
+			return 0
+		}
+	}
+	return 1
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Naive implementation of log-counter.]
-
-  Description [Incrementally computes [log2(SUMi(2^di)).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_LogCounter64Eval(Count word) int32 {
-    var n int32;
-    if (Count & (Count - 1)) > 0 {
-        n = -1;
-    } else {
-        n = 0;
-    }
-    assert(Count > 0, "Count > 0");
-    if (Count & ABC_CONST(0xFFFFFFFF00000000)) == 0 { n += 32; Count <<= 32; }
-    if (Count & ABC_CONST(0xFFFF000000000000)) == 0 { n += 16; Count <<= 16; }
-    if (Count & ABC_CONST(0xFF00000000000000)) == 0 { n +=  8; Count <<=  8; }
-    if (Count & ABC_CONST(0xF000000000000000)) == 0 { n +=  4; Count <<=  4; }
-    if (Count & ABC_CONST(0xC000000000000000)) == 0 { n +=  2; Count <<=  2; }
-    if (Count & ABC_CONST(0x8000000000000000)) == 0 { n++; }
-    return 63 - n;
+func If_CutPinDelayDom(a, b uint64, nVars int32) int32 {
+	for v := int32(0); v < nVars; v++ {
+		if If_CutPinDelayGet(a, v) > If_CutPinDelayGet(b, v) {
+			return 0
+		}
+	}
+	return 1
 }
-func If_LogCounter64Add(Count word, Num int32) word {
-    assert(Num < 48, "Num < 48");
-    return Count + (((word)1) << Num);
+func If_CutPinDelayTranslate(profile uint64, nVars int32, permutation []byte) {
+	if int(nVars) > len(permutation) {
+		panic("if: insufficient delay permutation storage")
+	}
+	for v := int32(0); v < nVars; v++ {
+		delay := If_CutPinDelayGet(profile, v)
+		if delay <= 1 {
+			panic("if: missing gate delay")
+		}
+		permutation[v] = byte(delay - 1)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Implementation of log-counter.]
-
-  Description [Incrementally computes [log2(SUMi(2^di)).
-  Supposed to work correctly up to 16 entries.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_LogCounter32Eval(Count uint32, Start int32) int32 {
-    var n int32;
-    if Abc_LitIsCompl(Start) || (Count & (Count - 1)) > 0 {
-        n = -1;
-    } else {
-        n = 0;
-    }
-    assert(Count > 0, "Count > 0");
-    if (Count & 0xFFFF0000) == 0 { n += 16; Count <<= 16; }
-    if (Count & 0xFF000000) == 0 { n +=  8; Count <<=  8; }
-    if (Count & 0xF0000000) == 0 { n +=  4; Count <<=  4; }
-    if (Count & 0xC0000000) == 0 { n +=  2; Count <<=  2; }
-    if (Count & 0x80000000) == 0 { n++; }
-    return Abc_Lit2Var(Start) + 31 - n;
+func If_CutPinDelayPrint(profile uint64, nVars int32) {
+	fmt.Print("Delay profile = {")
+	for v := int32(0); v < nVars; v++ {
+		fmt.Printf(" %d", If_CutPinDelayGet(profile, v))
+	}
+	fmt.Println(" }")
 }
-func If_LogCounter32Add(Count uint32, pStart *int32, Num int32) uint32 {
-    var Start int32  = Abc_Lit2Var(*pStart);
-    if Num < Start {
-        *pStart |= 1;
-        return Count;
-    }
-    if Num > Start + 16 {
-        var Shift int32  = Num - (Start + 16);
-        if !Abc_LitIsCompl(*pStart) && (Shift >= 32 ? Count : Count & ~(~0 << Shift)) > 0 {
-            *pStart |= 1; }
-        Count >>= Shift;
-        Start += Shift;
-        *pStart = Abc_Var2Lit( Start, Abc_LitIsCompl(*pStart) );
-        assert(Num <= Start + 16, "Num <= Start + 16");
-    }
-    return Count + (1 << (Num-Start));
+func If_LogCounterPinDelays(times []int32, n *int32, profiles []uint64, num int32, profile uint64, nSupport, xor int32) int32 {
+	if int(*n) >= len(profiles) {
+		panic("if: insufficient pin-delay counter storage")
+	}
+	profiles[*n] = profile
+	return ifLogCounter(times, n, num, 1+xor, func(a, b int) { profiles[a], profiles[b] = profiles[b], profiles[a] }, func(a, b int) { profiles[b] = If_CutPinDelayMax(profiles[a], profiles[b], nSupport, 1+xor) }, func(a, b int) { profiles[a] = profiles[b] })
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Testing of the counter]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-/*
-void If_LogCounterTest2()
-{
-    word Count64 = 0;
-
-    unsigned Count = 0; 
-    int Start = 0;
-
-    int Result, Result64;
-
-    Count = If_LogCounter32Add( Count, &Start, 39 );
-    Count = If_LogCounter32Add( Count, &Start, 35 );
-    Count = If_LogCounter32Add( Count, &Start, 35 );
-    Count = If_LogCounter32Add( Count, &Start, 36 );
-    Count = If_LogCounter32Add( Count, &Start, 37 );
-    Count = If_LogCounter32Add( Count, &Start, 38 );
-    Count = If_LogCounter32Add( Count, &Start, 40 );
-    Count = If_LogCounter32Add( Count, &Start, 1 );
-    Count = If_LogCounter32Add( Count, &Start, 41 );
-    Count = If_LogCounter32Add( Count, &Start, 42 );
-
-    Count64 = If_LogCounter64Add( Count64, 1 );
-    Count64 = If_LogCounter64Add( Count64, 35 );
-    Count64 = If_LogCounter64Add( Count64, 35 );
-    Count64 = If_LogCounter64Add( Count64, 36 );
-    Count64 = If_LogCounter64Add( Count64, 37 );
-    Count64 = If_LogCounter64Add( Count64, 38 );
-    Count64 = If_LogCounter64Add( Count64, 39 );
-    Count64 = If_LogCounter64Add( Count64, 40 );
-    Count64 = If_LogCounter64Add( Count64, 41 );
-    Count64 = If_LogCounter64Add( Count64, 42 );
-
-    Result = If_LogCounter32Eval( Count, Start );
-    Result64 = If_LogCounter64Eval( Count64 );
-
-    printf( "%d  %d\n", Result, Result64 );
+func If_LogPinDelaysMulti(profiles []uint64, nFanins, nSupport, xor int32) uint64 {
+	if nFanins <= 0 || int(nFanins) > len(profiles) {
+		panic("if: invalid pin-delay fanin count")
+	}
+	for i := nFanins - 1; i > 0; i-- {
+		profiles[i-1] = If_CutPinDelayMax(profiles[i], profiles[i-1], nSupport, 1+xor)
+	}
+	return profiles[0]
 }
-*/
-
-/**Function*************************************************************
-
-  Synopsis    [Adds the number to the numbers stored.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_LogCounterAdd(pTimes *int32, pnTimes *int32, Num int32, fXor int32) int32 {
-    var nTimes int32  = *pnTimes;
-    pTimes[nTimes++] = Num;
-    if nTimes > 1 {
-        var i, k int32;
-        for  k = nTimes-1; k > 0; k--  {
-            if pTimes[k] < pTimes[k-1] {
-                break; }
-            if pTimes[k] > pTimes[k-1] { 
-                ABC_SWAP( int, pTimes[k], pTimes[k-1] ); 
-                continue; 
-            }
-            pTimes[k-1] += 1 + fXor;
-            for  nTimes, i = nTimes-1, k; i < nTimes; i++  {
-                pTimes[i] = pTimes[i+1];
-            }
-        }
-    }
-    assert(nTimes > 0, "nTimes > 0");
-    *pnTimes = nTimes;
-    return pTimes[0] + (nTimes > 1 ? 1 + fXor : 0);
+func If_AigVerifyArray(aig *Vec_Int_t, nLeaves int32) uint64 {
+	a := vec.Vec_IntArray(aig)
+	if len(a) == 0 || a[len(a)-1] < 0 || a[len(a)-1] > 1 || nLeaves < 0 || nLeaves > 6 {
+		panic("if: invalid small AIG array")
+	}
+	if len(a) == 1 {
+		if a[0] != 0 {
+			return ^uint64(0)
+		}
+		return 0
+	}
+	elementary := func(variable int32) uint64 {
+		var result uint64
+		for bit := 0; bit < 64; bit++ {
+			if bit&(1<<uint(variable)) != 0 {
+				result |= 1 << uint(bit)
+			}
+		}
+		return result
+	}
+	if len(a) == 2 {
+		if a[0] != 0 {
+			panic("if: invalid variable AIG array")
+		}
+		result := elementary(0)
+		if a[1] != 0 {
+			result = ^result
+		}
+		return result
+	}
+	if len(a)%2 != 1 {
+		panic("if: malformed gate array")
+	}
+	truth := make([]uint64, (len(a)-1)/2)
+	for i := range truth {
+		value := func(lit int32) uint64 {
+			variable := lit >> 1
+			var result uint64
+			if variable < nLeaves {
+				result = elementary(variable)
+			} else {
+				index := variable - nLeaves
+				if index < 0 || int(index) >= i {
+					panic("if: non-topological AIG array")
+				}
+				result = truth[index]
+			}
+			if lit&1 != 0 {
+				return ^result
+			}
+			return result
+		}
+		truth[i] = value(a[2*i]) & value(a[2*i+1])
+	}
+	result := truth[len(truth)-1]
+	if a[len(a)-1] != 0 {
+		result = ^result
+	}
+	vec.Vec_IntClear(aig)
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Testing of the counter]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-/*
-void If_LogCounterTest()
-{
-    int pArray[10] = { 1, 2, 4, 5, 6, 3, 1 };
-    int i, nSize = 4;
-
-    word Count64 = 0;
-    int Result, Result64;
-
-    int pTimes[100];
-    int nTimes = 0;
-
-    for ( i = 0; i < nSize; i++ )
-        Count64 = If_LogCounter64Add( Count64, pArray[i] );
-    Result64 = If_LogCounter64Eval( Count64 );
-
-    for ( i = 0; i < nSize; i++ )
-        Result = If_LogCounterAdd( pTimes, &nTimes, pArray[i], 0 );
-
-    printf( "%d  %d\n", Result64, Result );
+func If_AigPrintArray(aig *Vec_Int_t, nLeaves int32) {
+	a := vec.Vec_IntArray(aig)
+	if len(a) == 0 {
+		panic("if: empty AIG array")
+	}
+	switch len(a) {
+	case 1:
+		fmt.Printf("Const %d\n", a[0])
+	case 2:
+		fmt.Printf("Variable phase=%d\n", a[1])
+	default:
+		for i := 0; i < len(a)-1; i += 2 {
+			fmt.Printf("%d %d\n", a[i], a[i+1])
+		}
+		fmt.Printf("Phase %d\n", a[len(a)-1])
+	}
 }
-*/
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
+func If_LogCounter64Eval(count uint64) int32 {
+	if count == 0 {
+		panic("if: empty logarithmic counter")
+	}
+	return int32(bits.Len64(count - 1))
+}
+func If_LogCounter64Add(count uint64, num int32) uint64 {
+	if num < 0 || num >= 48 {
+		panic("if: log-counter exponent outside range")
+	}
+	return count + 1<<uint(num)
+}
+func If_LogCounter32Eval(count uint32, start int32) int32 {
+	if count == 0 {
+		panic("if: empty logarithmic counter")
+	}
+	result := int32(bits.Len32(count)-1) + start/2
+	if start&1 != 0 || count&(count-1) != 0 {
+		result++
+	}
+	return result
+}
+func If_LogCounter32Add(count uint32, start *int32, num int32) uint32 {
+	base := *start >> 1
+	if num < base {
+		*start |= 1
+		return count
+	}
+	if num > base+16 {
+		shift := num - (base + 16)
+		discarded := count
+		if shift < 32 {
+			discarded = count & ((1 << uint(shift)) - 1)
+		}
+		if discarded != 0 {
+			*start |= 1
+		}
+		if shift >= 32 {
+			count = 0
+		} else {
+			count >>= uint(shift)
+		}
+		base += shift
+		*start = base*2 + (*start & 1)
+	}
+	return count + 1<<uint(num-base)
+}

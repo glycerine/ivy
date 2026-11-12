@@ -397,11 +397,139 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 	}
 	return p, nil
 }
+
+// aigerNamedProperties retains ABC's legacy name-based property convention.
+func aigerNamedProperties(p *Gia_Man_t) *Gia_Man_t {
+	names := p.aigerSymbols['o']
+	changed := false
+	for _, name := range names {
+		changed = changed || strings.HasPrefix(name, "constraint:") || strings.HasPrefix(name, "invariant:")
+	}
+	if !changed {
+		return p
+	}
+	q := Gia_ManStart(p.nObjs)
+	q.pName, q.pSpec, q.fGiaSimple = p.pName, p.pSpec, p.fGiaSimple
+	mapping := make([]int32, p.nObjs)
+	for _, id := range vec.Vec_IntArray(p.vCis) {
+		mapping[id] = Gia_ManAppendCi(q)
+	}
+	literal := func(lit int32) int32 { return mapping[lit>>1] ^ (lit & 1) }
+	for id, obj := range p.pObjs {
+		if Gia_ObjIsAnd(obj) != 0 {
+			mapping[id] = q.AndLiteral(literal(Gia_ObjFaninLit0(obj, int32(id))), literal(Gia_ObjFaninLit1(obj, int32(id))), p.fGiaSimple == 0)
+		}
+	}
+	cos := vec.Vec_IntArray(p.vCos)
+	poCount := len(cos) - int(p.nRegs)
+	for category := 0; category < 2; category++ {
+		for i, id := range cos[:poCount] {
+			name := ""
+			if i < len(names) {
+				name = names[i]
+			}
+			if strings.HasPrefix(name, "invariant:") {
+				continue
+			}
+			constraint := strings.HasPrefix(name, "constraint:") || i >= poCount-int(p.nConstrs)
+			if constraint != (category == 1) {
+				continue
+			}
+			lit := literal(Gia_ObjFaninLit0(p.pObjs[id], id))
+			if constraint {
+				q.nConstrs++
+				if i < poCount-int(p.nConstrs) {
+					lit ^= 1
+				}
+			}
+			Gia_ManAppendCo(q, lit)
+		}
+	}
+	for _, id := range cos[poCount:] {
+		Gia_ManAppendCo(q, literal(Gia_ObjFaninLit0(p.pObjs[id], id)))
+	}
+	q.nRegs = p.nRegs
+	q.aigerLatchInits = append([]int32(nil), p.aigerLatchInits...)
+	return q
+}
+
+// aigerZeroInitialize implements the legacy reader's zero/undc state encoding.
+// ParseAiger itself preserves the explicit standard-AIGER reset values.
+func aigerZeroInitialize(p *Gia_Man_t) *Gia_Man_t {
+	changed, unknown := false, 0
+	for _, reset := range p.aigerLatchInits {
+		changed = changed || reset != 0
+		if reset < 0 {
+			unknown++
+		}
+	}
+	if !changed {
+		return p
+	}
+	q := Gia_ManStart(p.nObjs + int32(8*unknown))
+	q.pName, q.pSpec, q.fGiaSimple = p.pName, p.pSpec, p.fGiaSimple
+	q.nConstrs, q.aigerBadOutputs = p.nConstrs, p.aigerBadOutputs
+	mapping := make([]int32, p.nObjs)
+	cis := vec.Vec_IntArray(p.vCis)
+	piCount := len(cis) - int(p.nRegs)
+	for _, id := range cis[:piCount] {
+		mapping[id] = Gia_ManAppendCi(q)
+	}
+	choices := make([]int32, p.nRegs)
+	for i, reset := range p.aigerLatchInits {
+		if reset < 0 {
+			choices[i] = Gia_ManAppendCi(q)
+		}
+	}
+	for _, id := range cis[piCount:] {
+		mapping[id] = Gia_ManAppendCi(q)
+	}
+	var control int32
+	if unknown > 0 {
+		control = Gia_ManAppendCi(q)
+	}
+	for i, id := range cis[piCount:] {
+		switch p.aigerLatchInits[i] {
+		case 1:
+			mapping[id] ^= 1
+		case -1:
+			mapping[id] = Gia_ManAppendMux(q, control, mapping[id], choices[i])
+		}
+	}
+	literal := func(lit int32) int32 { return mapping[lit>>1] ^ (lit & 1) }
+	for id, obj := range p.pObjs {
+		if Gia_ObjIsAnd(obj) != 0 {
+			mapping[id] = q.AndLiteral(literal(Gia_ObjFaninLit0(obj, int32(id))), literal(Gia_ObjFaninLit1(obj, int32(id))), p.fGiaSimple == 0)
+		}
+	}
+	cos := vec.Vec_IntArray(p.vCos)
+	poCount := len(cos) - int(p.nRegs)
+	for i, id := range cos {
+		lit := literal(Gia_ObjFaninLit0(p.pObjs[id], id))
+		if i >= poCount && p.aigerLatchInits[i-poCount] == 1 {
+			lit ^= 1
+		}
+		Gia_ManAppendCo(q, lit)
+	}
+	if unknown > 0 {
+		Gia_ManAppendCo(q, 1)
+	}
+	q.nRegs = p.nRegs
+	if unknown > 0 {
+		q.nRegs++
+	}
+	q.aigerLatchInits = make([]int32, q.nRegs)
+	return q
+}
 func Gia_AigerReadFromMemory(contents []byte, size, fSimple, fSkip, fCheck int32) (*Gia_Man_t, error) {
 	if size < 0 || int(size) > len(contents) {
 		return nil, fmt.Errorf("gia: invalid AIGER memory size")
 	}
-	return ParseAiger(contents[:size], AigerReadOptions{Simple: fSimple != 0, SkipStrash: fSkip != 0, Check: fCheck != 0})
+	p, err := ParseAiger(contents[:size], AigerReadOptions{Simple: fSimple != 0, SkipStrash: fSkip != 0, Check: fCheck != 0})
+	if err != nil {
+		return nil, err
+	}
+	return aigerZeroInitialize(aigerNamedProperties(p)), nil
 }
 func Gia_AigerRead(name string, fSimple, fSkip, fCheck int32) (*Gia_Man_t, error) {
 	name = Gia_FileFixName(name)
@@ -423,7 +551,7 @@ func Gia_AigerRead(name string, fSimple, fSkip, fCheck int32) (*Gia_Man_t, error
 			return nil, closeErr
 		}
 	}
-	p, err := ParseAiger(data, AigerReadOptions{Simple: fSimple != 0, SkipStrash: fSkip != 0, Check: fCheck != 0})
+	p, err := Gia_AigerReadFromMemory(data, int32(len(data)), fSimple, fSkip, fCheck)
 	if err != nil {
 		return nil, err
 	}
@@ -782,6 +910,9 @@ func aigerMarshalManager(p *Gia_Man_t, opts AigerWriteOptions, depth int) ([]byt
 	return aigerMarshalWire(meta, model, opts, depth)
 }
 func aigerMarshalWire(p *Gia_Man_t, model *aigerWireModel, opts AigerWriteOptions, depth int) ([]byte, error) {
+	if len(p.aigerLatchInits) != 0 && len(p.aigerLatchInits) != model.latches {
+		return nil, fmt.Errorf("gia: latch initialization count does not match register count")
+	}
 	if depth > 64 {
 		return nil, fmt.Errorf("gia: nested AIGER write limit")
 	}
@@ -954,11 +1085,30 @@ func Gia_AigerWriteIntoMemoryStr(p *Gia_Man_t) (*Vec_Str_t, error) {
 	return aigerVecBytes(data), nil
 }
 func Gia_AigerWriteIntoMemoryStrPart(p *Gia_Man_t, cis, ands, cos *Vec_Int_t, regs int32) (*Vec_Str_t, error) {
+	if p == nil || cis == nil || ands == nil || cos == nil {
+		return nil, fmt.Errorf("gia: nil partial AIGER selection")
+	}
 	model, err := aigerWire(p, vec.Vec_IntArray(cis), vec.Vec_IntArray(ands), vec.Vec_IntArray(cos), regs, false)
 	if err != nil {
 		return nil, err
 	}
-	data, err := aigerMarshalWire(&Gia_Man_t{}, model, AigerWriteOptions{OmitExtensions: true, OmitSymbols: true}, 0)
+	meta := &Gia_Man_t{}
+	if len(p.aigerLatchInits) > 0 {
+		if len(p.aigerLatchInits) != int(p.nRegs) {
+			return nil, fmt.Errorf("gia: invalid source latch initialization count")
+		}
+		selected := vec.Vec_IntArray(cis)
+		original := vec.Vec_IntArray(p.vCis)
+		states := make(map[int32]int32)
+		for i, id := range original[len(original)-int(p.nRegs):] {
+			states[id] = p.aigerLatchInits[i]
+		}
+		meta.aigerLatchInits = make([]int32, regs)
+		for i, id := range selected[len(selected)-int(regs):] {
+			meta.aigerLatchInits[i] = states[id]
+		}
+	}
+	data, err := aigerMarshalWire(meta, model, AigerWriteOptions{OmitExtensions: true, OmitSymbols: true}, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -1044,7 +1194,7 @@ func (p *Gia_Man_t) SetAigerExtension(tag byte, payload []byte) error {
 func (p *Gia_Man_t) AigerComment() []byte           { return append([]byte(nil), p.aigerComment...) }
 func (p *Gia_Man_t) SetAigerComment(comment []byte) { p.aigerComment = append([]byte(nil), comment...) }
 func (p *Gia_Man_t) SetAigerProperties(bad, constraints int32) error {
-	if bad < 0 || constraints < 0 || bad+constraints > Gia_ManPoNum(p) {
+	if bad < 0 || constraints < 0 || int64(bad)+int64(constraints) > int64(Gia_ManPoNum(p)) {
 		return fmt.Errorf("gia: invalid property counts")
 	}
 	p.aigerBadOutputs = bad

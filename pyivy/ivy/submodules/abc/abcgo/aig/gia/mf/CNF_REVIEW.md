@@ -54,3 +54,20 @@ both phases. The C oracle runs when a compiler is available; the exhaustive Go
 semantic checks always run. No stored fixtures or testdata directory is needed.
 This review found no additional CNF semantic/ordering defects; both wide paths
 and all phase combinations pass together with the mapping/IOA tests.
+
+## Independent end-to-end original ABC differential
+
+The generate_oracle_test.go suite writes real binary AIGER through IOA and runs
+this repository's original ABC executable with `&r -s; &write_cnf -K 8`. It
+compares the variable bound and every clause/literal in order against
+GenerateModelCNF, exercising the full reader adapter, coarsener, cut selection,
+flow/ELA rounds and CNF emission. Thirty deterministic random DAGs range from
+four to twenty-four inputs and ten to 251 ANDs; four constructed reconvergent
+networks have ten to thirty-two inputs, explicit AIG XOR/MUX decompositions,
+shared intermediate outputs and paths requiring multiple eight-leaf LUTs.
+All 34 cases match the source exactly. Tests skip only when the original ABC
+binary is absent. This independent review found no additional pipeline defect.
+Random fixtures exclude same-variable fanin pairs, which the original GIA
+append routine itself rejects; an initial exploratory run confirmed that source
+assertion rather than identifying a port mismatch. No stored fixture directories
+are created; all AIGER/CNF artifacts use per-test temporary directories.

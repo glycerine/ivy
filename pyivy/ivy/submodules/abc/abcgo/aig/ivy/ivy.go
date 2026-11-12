@@ -41,6 +41,7 @@ type Ivy_FraigParams_t = Ivy_FraigParams_t_
 // regular field points at the object; no pointer bits are changed or concealed
 // from Go's garbage collector. A manager is not safe for concurrent mutation.
 type Ivy_Obj_t_ struct {
+	fraig                                               *ivyFraigNodeState
 	Id, TravId                                          int32
 	Type                                                Ivy_Type_t
 	fMarkA, fMarkB, fExFan, fPhase, fFailTfo            int32

@@ -44,7 +44,7 @@ Native oracle reproduction from repository root:
 
 ```
 g++ -O2 -ffunction-sections -fdata-sections -DABC_USE_STDINT_H -I src \
-  abcgo/sat/glucose/testdata/native_status_oracle.cpp \
+  abcgo/sat/glucose/test_vectors/native_status_oracle.cpp \
   src/sat/glucose/Glucose.cpp src/sat/glucose/Options.cpp \
   src/sat/glucose/System.cpp -Wl,--gc-sections -o /tmp/glucose-native-status
 /tmp/glucose-native-status

@@ -1942,36 +1942,8 @@ func Mf_ManPerformMapping(pGia *Gia_Man_t, pPars *Jf_Par_t) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Mf_ManGenerateCnf(pGia *Gia_Man_t, nLutSize int32, fCnfObjIds int32, fAddOrCla int32, fMapping int32, fVerbose int32) any {
-    var pNew *Gia_Man_t;
-    var Pars Jf_Par_t;
-    var pPars *Jf_Par_t = &Pars;
-    assert(nLutSize >= 3 && nLutSize <= 8, "nLutSize >= 3 && nLutSize <= 8");
-    Mf_ManSetDefaultPars( pPars );
-    pPars.fGenCnf     = 1;
-    pPars.fCoarsen    = !fCnfObjIds;
-    pPars.nLutSize    = nLutSize;
-    pPars.fCnfObjIds  = fCnfObjIds;
-    pPars.fAddOrCla   = fAddOrCla;
-    pPars.fCnfMapping = fMapping;
-    pPars.fVerbose    = fVerbose;
-    pNew = Mf_ManPerformMapping( pGia, pPars );
-    Gia_ManStopP( &pNew );
-//    Cnf_DataPrint( (Cnf_Dat_t *)pGia->pData, 1 );
-    return pGia.pData;
-}
-func Mf_ManDumpCnf(p *Gia_Man_t, pFileName string, nLutSize int32, fCnfObjIds int32, fAddOrCla int32, fVerbose int32) {
-    var clk abctime  = Abc_Clock();
-    var pCnf *Cnf_Dat_t;
-    pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, nLutSize, fCnfObjIds, fAddOrCla, 0, fVerbose );
-    Cnf_DataWriteIntoFile( pCnf, pFileName, 0, nil, nil );
-//    if ( fVerbose )
-    {
-        fmt.Printf("CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. ", pCnf.nVars, pCnf.nClauses, pCnf.nLiterals);
-        Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    }
-    Cnf_DataFree(pCnf);
-}
+
+
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///

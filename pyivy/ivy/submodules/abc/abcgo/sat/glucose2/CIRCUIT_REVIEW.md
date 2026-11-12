@@ -30,7 +30,7 @@ one and two, repeated solves and partial justification models; compare 500 rando
 nine-variable cones with ten repeated assumption requests each against exhaustive
 truth evaluation of independently constructed gate CNF.
 
-A separate unchanged native C++ oracle, testdata/native_circuit_oracle.cpp,
+A separate unchanged native C++ oracle, test_vectors/native_circuit_oracle.cpp,
 performs another 5,000 reproducible circuit solves. Its FNV64 status hash is
 2660800957835849238, matched by TestCircuitNativeStatusOracle. Compile with the
 same command as CORE_REVIEW.md, substituting the circuit harness. Core and circuit

@@ -73,7 +73,8 @@ type Saig_Bmc_t struct {
 func Saig_BmcObjFrame(p *Saig_Bmc_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { 
 //    return (Aig_Obj_t *)Vec_PtrGetEntry( p->vAig2Frm, p->nObjs*i+pObj->Id );     
     var pRes *Aig_Obj_t;
-    var vFrame *Vec_Int_t  = (Vec_Int_t *)Vec_PtrEntry( p.vAig2Frm, i );
+    vFrame, ok := Vec_PtrEntry(p.vAig2Frm, int(i)).(*Vec_Int_t)
+    assert(ok && vFrame != nil, "frame map entry is a Vec_Int_t")
     var iObjLit int32  = Vec_IntEntry( vFrame, Aig_ObjId(pObj) );
     if iObjLit == -1 {
         return nil; }
@@ -88,10 +89,11 @@ func Saig_BmcObjSetFrame(p *Saig_Bmc_t, pObj *Aig_Obj_t, i int32, pNode *Aig_Obj
 //    Vec_PtrSetEntry( p->vAig2Frm, p->nObjs*i+pObj->Id, pNode );     
     var vFrame *Vec_Int_t;
     var iObjLit int32;
-    if i == Vec_PtrSize(p.vAig2Frm) {
+    if i == int32(Vec_PtrSize(p.vAig2Frm)) {
         Vec_PtrPush( p.vAig2Frm, Vec_IntStartFull(p.nObjs) ); }
-    assert(i < Vec_PtrSize(p.vAig2Frm), "i < Vec_PtrSize(p.vAig2Frm)");
-    vFrame = (Vec_Int_t *)Vec_PtrEntry( p.vAig2Frm, i );
+    assert(i >= 0 && i < int32(Vec_PtrSize(p.vAig2Frm)), "i >= 0 && i < Vec_PtrSize(p.vAig2Frm)")
+    vFrame, ok = Vec_PtrEntry(p.vAig2Frm, int(i)).(*Vec_Int_t)
+    assert(ok && vFrame != nil, "frame map entry is a Vec_Int_t")
     if pNode == nil {
         iObjLit = -1;
     } else {
@@ -130,15 +132,20 @@ func Abs_ManSimInfoAnd(Value0 int32, Value1 int32) int32 {
 }
 
 func Abs_ManSimInfoGet(vSimInfo *Vec_Ptr_t, pObj *Aig_Obj_t, iFrame int32) int32 {
-    var pInfo *uint32  = (unsigned *)Vec_PtrEntry( vSimInfo, iFrame );
-    return 3 & (pInfo[Aig_ObjId(pObj) >> 4] >> ((Aig_ObjId(pObj) & 15) << 1));
+    pInfo, ok := Vec_PtrEntry(vSimInfo, int(iFrame)).([]uint32)
+    assert(ok && pInfo != nil, "simulation frame stores []uint32")
+    wordIndex := int(Aig_ObjId(pObj) >> 4)
+    assert(wordIndex >= 0 && wordIndex < len(pInfo), "object fits simulation frame")
+    return int32(packed2Get(pInfo[wordIndex], uint32(Aig_ObjId(pObj))))
 }
 
 func Abs_ManSimInfoSet(vSimInfo *Vec_Ptr_t, pObj *Aig_Obj_t, iFrame int32, Value int32) {
-    var pInfo *uint32  = (unsigned *)Vec_PtrEntry( vSimInfo, iFrame );
+    pInfo, ok := Vec_PtrEntry(vSimInfo, int(iFrame)).([]uint32)
+    assert(ok && pInfo != nil, "simulation frame stores []uint32")
     assert(Value >= ABS_ZER && Value <= ABS_UND, "Value >= ABS_ZER && Value <= ABS_UND");
-    Value ^= Abs_ManSimInfoGet( vSimInfo, pObj, iFrame );
-    pInfo[Aig_ObjId(pObj) >> 4] ^= (Value << ((Aig_ObjId(pObj) & 15) << 1));
+    wordIndex := int(Aig_ObjId(pObj) >> 4)
+    assert(wordIndex >= 0 && wordIndex < len(pInfo), "object fits simulation frame")
+    pInfo[wordIndex] = packed2Set(pInfo[wordIndex], uint32(Aig_ObjId(pObj)), uint32(Value))
 }
 
 /**Function*************************************************************
@@ -208,30 +215,33 @@ func Abs_ManTernarySimulate(p *Aig_Man_t, nFramesMax int32, fVerbose int32) *Vec
     nFrameWords  = Abc_BitWordNum( 2 * Aig_ManObjNum(p) );
     // allocate simulation info
     vSimInfo = Vec_PtrAlloc( nFramesLimit );
-    for  f = 0; f < nFramesLimit; f++  {
-        // inlining of macro ABC_CALLOC
-        Vec_PtrPush( vSimInfo, ((unsigned *) calloc((size_t)(nFrameWords), sizeof(unsigned))) );
+    for f = 0; f < nFramesLimit; f++ {
+        Vec_PtrPush(vSimInfo, make([]uint32, int(nFrameWords)))
         if f == 0 {
             // inlining of macro Saig_ManForEachLo
-            for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {
+            for i = 0; i < Saig_ManRegNum(p); i++ {
+                pObj, _ = Vec_PtrEntry(p.vCis, int(i+Saig_ManPiNum(p))).(*Aig_Obj_t)
                 Abs_ManSimInfoSet( vSimInfo, pObj, 0, ABS_ZER );
             }
         }
         Abs_ManSimInfoSet( vSimInfo, Aig_ManConst1(p), f, ABS_ONE );
         // inlining of macro Saig_ManForEachPi
         // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
+        for i = 0; i < Saig_ManPiNum(p); i++ {
+            pObj, _ = Vec_PtrEntry(p.vCis, int(i)).(*Aig_Obj_t)
             Abs_ManSimInfoSet( vSimInfo, pObj, f, ABS_UND );
         }
         // inlining of macro Saig_ManForEachPo
         // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPoNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
+        for i = 0; i < Saig_ManPoNum(p); i++ {
+            pObj, _ = Vec_PtrEntry(p.vCos, int(i)).(*Aig_Obj_t)
             Abs_ManExtendOneEval_rec( vSimInfo, p, pObj, f );
         }
         // check if simulation has derived at least one fail or unknown
         // inlining of macro Saig_ManForEachPo
         // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPoNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
+        for i = 0; i < Saig_ManPoNum(p); i++ {
+            pObj, _ = Vec_PtrEntry(p.vCos, int(i)).(*Aig_Obj_t)
             if Abs_ManSimInfoGet(vSimInfo, pObj, f) != ABS_ZER {
                 if fVerbose != 0 {
                     fmt.Printf("Ternary sim found non-zero output in frame %d.  Used %5.2f MB.  ", f, 0.25 * (f+1) * Aig_ManObjNum(p) / (1<<20));
