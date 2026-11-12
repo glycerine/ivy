@@ -154,3 +154,20 @@ reviewed, race-tested and committed independently. The latest additional race
 checks covered the AIG GIA ported-core harness, CUDD core/REO/MTR, SAToko and
 LSAT, RPO, DEC/DECO, and Kit. Full-module testing remains the release gate; the
 package-level commits establish only their individually tested scopes.
+
+## Latest AIG and CUDD progress
+
+The CUDD core now includes reviewed ZDD set operations and exact big-integer
+counting; the combined core/REO/MTR race suite passes. In AIG, the focused
+converted-file race suite now passes across Graph, cuts, factoring, pack/repr,
+sequential cleanup and simulation, frames, splitting, timing and related
+algorithms. A Repr bug found by sequential cleanup tests was fixed: child
+representatives are applied at fanouts, matching the C algorithm. All four Scl
+modes now reduce the fixture from three registers to one while preserving
+sequential traces. These are focused component results; the full AIG package
+still contains original drafts, now including Part, PartSat, Repar, Ret and
+RetF paths.
+
+GIA's explicit-file race suite passes after adding AGI/support and arena-backed
+memory APIs; its live-code scan confirms the reviewed free-and-clear sites now
+clear fields directly. Full GIA remains blocked by other generated algorithms.
