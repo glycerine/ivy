@@ -1,187 +1,193 @@
 package bdc
 
-/**CFile****************************************************************
+import "math/bits"
 
-  FileName    [bdcInt.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Truth-table-based bi-decomposition engine.]
-
-  Synopsis    [Internal declarations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - January 15, 2007.]
-
-  Revision    [$Id: resInt.h,v 1.00 2007/01/15 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include "bool/kit/kit.h"
-//#include "bdc.h"
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-//ABC_NAMESPACE_HEADER_START
-
-
-const BDC_SCALE = 1000  // value used to compute the cost
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
-
-// network types
- type Bdc_Type_t int32
-const ( 
-    BDC_TYPE_NONE Bdc_Type_t = 0
-  // 0:  unknown
-    BDC_TYPE_CONST1 Bdc_Type_t = BDC_TYPE_NONE + 1
-    // 1:  constant 1
-    BDC_TYPE_PI Bdc_Type_t = BDC_TYPE_CONST1 + 1
-        // 2:  primary input
-    BDC_TYPE_AND Bdc_Type_t = BDC_TYPE_PI + 1
-       // 3:  AND-gate
-    BDC_TYPE_OR Bdc_Type_t = BDC_TYPE_AND + 1
-        // 4:  OR-gate (temporary)
-    BDC_TYPE_XOR Bdc_Type_t = BDC_TYPE_OR + 1
-       // 5:  XOR-gate
-    BDC_TYPE_MUX Bdc_Type_t = BDC_TYPE_XOR + 1
-       // 6:  MUX-gate
-    BDC_TYPE_OTHER Bdc_Type_t = BDC_TYPE_MUX + 1      // 7:  unused
-
-)
-
- 
-
-type Bdc_Fun_t_ struct {
-    Type              int32;         // Const1, PI, AND, XOR, MUX
-    pFan0       *Bdc_Fun_t;        // fanin of the given node
-    pFan1       *Bdc_Fun_t;        // fanin of the given node
-    uSupp         uint32;        // bit mask of current support
-    puFunc        *uint32;       // the function of the node
-    pNext       *Bdc_Fun_t;        // next function with same support
-    union { int      iCopy;        // the literal of the node (AIG)
-    void *           pCopy; };     // the function of the node (BDD or AIG)
-
-}
-
-   
 type Bdc_Isf_t struct {
-    uSupp         uint32;        // the complete support of this component
-    uUniq         uint32;        // the unique variables of this component
-    puOn        *uint32;         // on-set
-    puOff        *uint32;        // off-set
+	Supp, Uniq uint32
+	On, Off    []uint32
+}
+type Bdc_Man_t struct {
+	Pars                                                           Bdc_Par_t
+	nVars, nNodesMax, nNodesNew                                    int32
+	nodes                                                          []*Bdc_Fun_t
+	root                                                           *Bdc_Fun_t
+	table                                                          map[uint32][]*Bdc_Fun_t
+	ol, or, al, ar                                                 Bdc_Isf_t
+	calls, numNodes, numMuxes, numAnds, numOrs, numWeaks, numReuse int32
 }
 
-type Bdc_Man_t_ struct {
-    // external parameters
-    pPars       *Bdc_Par_t;        // parameter set
-    nVars              int32;        // the number of variables
-    nWords              int32;       // the number of words 
-    nNodesMax              int32;    // the limit on the number of new nodes
-    nDivsLimit              int32;   // the limit on the number of divisors
-    // internal nodes
-    pNodes       *Bdc_Fun_t;       // storage for decomposition nodes
-    nNodesAlloc              int32;  // the number of nodes allocated  
-    nNodes              int32;       // the number of all nodes created so far
-    nNodesNew              int32;    // the number of new AND nodes created so far
-    pRoot       *Bdc_Fun_t;        // the root node
-    // resub candidates
-    pTable      **Bdc_Fun_t;       // hash table of candidates
-    nTableSize              int32;   // hash table size (1 << nVarsMax)
-    vSpots       *Vec_Int_t;       // the occupied spots in the table
-    // elementary truth tables 
-    vTruths       *Vec_Ptr_t;      // for const 1 and elementary variables
-    puTemp1        *uint32;      // temporary truth table
-    puTemp2        *uint32;      // temporary truth table
-    puTemp3        *uint32;      // temporary truth table
-    puTemp4        *uint32;      // temporary truth table
-    // temporary ISFs
-    pIsfOL *Bdc_Isf_t;
-IsfOL Bdc_Isf_t;
-    pIsfOR *Bdc_Isf_t;
-IsfOR Bdc_Isf_t;
-    pIsfAL *Bdc_Isf_t;
-IsfAL Bdc_Isf_t;
-    pIsfAR *Bdc_Isf_t;
-IsfAR Bdc_Isf_t;
-    // internal memory manager
-    vMemory       *Vec_Int_t;      // memory for internal truth tables
-    // statistics
-    numCalls              int32;
-    numNodes              int32;
-    numMuxes              int32;
-    numAnds              int32;
-    numOrs              int32;
-    numWeaks              int32;
-    numReuse              int32;
-    // runtime
-    timeCache          abctime;
-    timeCheck          abctime;
-    timeMuxes          abctime;
-    timeSupps          abctime;
-    timeTotal          abctime;
+func truthWords(n int32) int32 {
+	if n <= 5 {
+		return 1
+	}
+	return 1 << uint(n-5)
 }
-
-func Bdc_FunNew(p *Bdc_Man_t) *Bdc_Fun_t { var pRes *Bdc_Fun_t; if p.nNodes >= p.nNodesAlloc || p.nNodesNew >= p.nNodesMax { return nil; }
- pRes = p.pNodes + p.nNodes++; p.nNodesNew++; memset( pRes, 0, sizeof(Bdc_Fun_t) ); return pRes; }
-func Bdc_FunWithId(p *Bdc_Man_t, Id int32) *Bdc_Fun_t { assert(Id < p.nNodes, "Id < p.nNodes"); return p.pNodes + Id; }
-func Bdc_FunId(p *Bdc_Man_t, pFun *Bdc_Fun_t) int32 { return pFun - p.pNodes; }
-func Bdc_IsfStart(p *Bdc_Man_t, pF *Bdc_Isf_t) { pF.uSupp = 0; pF.uUniq = 0; pF.puOn = Vec_IntFetch( p.vMemory, p.nWords ); pF.puOff = Vec_IntFetch( p.vMemory, p.nWords ); assert(pF.puOff && pF.puOn, "pF.puOff && pF.puOn"); }
-func Bdc_IsfClean(p *Bdc_Isf_t) { p.uSupp = 0; p.uUniq = 0;                                      }
-func Bdc_IsfCopy(p *Bdc_Isf_t, q *Bdc_Isf_t) { var T Bdc_Isf_t  = *p; *p = *q; *q = T;                               }
-func Bdc_IsfNot(p *Bdc_Isf_t) { var puT *uint32  = p.puOn; p.puOn = p.puOff; p.puOff = puT;    }
-
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/*=== bdcDec.c ==========================================================*/
-// extern Bdc_Fun_t *      Bdc_ManDecompose_rec( Bdc_Man_t * p, Bdc_Isf_t * pIsf );
-
-// extern void             Bdc_SuppMinimize( Bdc_Man_t * p, Bdc_Isf_t * pIsf );
-
-// extern int              Bdc_ManNodeVerify( Bdc_Man_t * p, Bdc_Isf_t * pIsf, Bdc_Fun_t * pFunc );
-
-/*=== bdcTable.c ==========================================================*/
-// extern Bdc_Fun_t *      Bdc_TableLookup( Bdc_Man_t * p, Bdc_Isf_t * pIsf );
-
-// extern void             Bdc_TableAdd( Bdc_Man_t * p, Bdc_Fun_t * pFunc );
-
-// extern void             Bdc_TableClear( Bdc_Man_t * p );
-
-// extern int              Bdc_TableCheckContainment( Bdc_Man_t * p, Bdc_Isf_t * pIsf, unsigned * puTruth );
-
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
+func bdcFlag(v bool) int32 {
+	if v {
+		return 1
+	}
+	return 0
+}
+func Bdc_FunNew(p *Bdc_Man_t) *Bdc_Fun_t {
+	if len(p.nodes) >= 512 || p.nNodesNew >= p.nNodesMax {
+		return nil
+	}
+	f := &Bdc_Fun_t{id: int32(len(p.nodes))}
+	p.nodes = append(p.nodes, f)
+	p.nNodesNew++
+	return f
+}
+func Bdc_FunWithId(p *Bdc_Man_t, id int32) *Bdc_Fun_t { return p.nodes[id] }
+func Bdc_FunId(_ *Bdc_Man_t, f *Bdc_Fun_t) int32      { return Bdc_Regular(f).id }
+func Bdc_IsfStart(p *Bdc_Man_t, f *Bdc_Isf_t) {
+	*f = Bdc_Isf_t{On: make([]uint32, truthWords(p.nVars)), Off: make([]uint32, truthWords(p.nVars))}
+}
+func Bdc_IsfClean(f *Bdc_Isf_t)   { f.Supp, f.Uniq = 0, 0 }
+func Bdc_IsfCopy(a, b *Bdc_Isf_t) { *a, *b = *b, *a }
+func Bdc_IsfNot(f *Bdc_Isf_t)     { f.On, f.Off = f.Off, f.On }
+func ttZero(t []uint32) bool {
+	for _, w := range t {
+		if w != 0 {
+			return false
+		}
+	}
+	return true
+}
+func ttFull(t []uint32) bool {
+	for _, w := range t {
+		if w != ^uint32(0) {
+			return false
+		}
+	}
+	return true
+}
+func ttDisjoint(a, b []uint32) bool {
+	for i := range a {
+		if a[i]&b[i] != 0 {
+			return false
+		}
+	}
+	return true
+}
+func ttDisjoint3(a, b, c []uint32) bool {
+	for i := range a {
+		if a[i]&b[i]&c[i] != 0 {
+			return false
+		}
+	}
+	return true
+}
+func ttImpl(a, b []uint32) bool {
+	for i := range a {
+		if a[i]&^b[i] != 0 {
+			return false
+		}
+	}
+	return true
+}
+func ttBinary(a, b []uint32, op byte) []uint32 {
+	r := make([]uint32, len(a))
+	for i := range a {
+		switch op {
+		case '&':
+			r[i] = a[i] & b[i]
+		case '|':
+			r[i] = a[i] | b[i]
+		case '^':
+			r[i] = a[i] ^ b[i]
+		case '-':
+			r[i] = a[i] &^ b[i]
+		}
+	}
+	return r
+}
+func ttNot(a []uint32) []uint32 {
+	r := make([]uint32, len(a))
+	for i, w := range a {
+		r[i] = ^w
+	}
+	return r
+}
+func ttCof(a []uint32, v int32, one bool) []uint32 {
+	r := make([]uint32, len(a))
+	if v < 5 {
+		mask := [5]uint32{0xaaaaaaaa, 0xcccccccc, 0xf0f0f0f0, 0xff00ff00, 0xffff0000}[v]
+		shift := uint(1 << uint(v))
+		for i, w := range a {
+			if one {
+				w &= mask
+				r[i] = w | (w >> shift)
+			} else {
+				w &^= mask
+				r[i] = w | (w << shift)
+			}
+		}
+		return r
+	}
+	bit := 1 << uint(v-5)
+	for i := range a {
+		index := i &^ bit
+		if one {
+			index |= bit
+		}
+		r[i] = a[index]
+	}
+	return r
+}
+func ttQuant(a []uint32, v int32, forall bool) []uint32 {
+	op := byte('|')
+	if forall {
+		op = '&'
+	}
+	return ttBinary(ttCof(a, v, false), ttCof(a, v, true), op)
+}
+func ttExistSet(a []uint32, set uint32) []uint32 {
+	r := append([]uint32(nil), a...)
+	for set != 0 {
+		v := bits.TrailingZeros32(set)
+		r = ttQuant(r, int32(v), false)
+		set &= set - 1
+	}
+	return r
+}
+func ttHasVar(t []uint32, v int32) bool {
+	if v < 5 {
+		mask := [5]uint32{0xaaaaaaaa, 0xcccccccc, 0xf0f0f0f0, 0xff00ff00, 0xffff0000}[v]
+		for _, w := range t {
+			if w&^mask != (w>>uint(1<<uint(v)))&^mask {
+				return true
+			}
+		}
+		return false
+	}
+	bit := 1 << uint(v-5)
+	for i, w := range t {
+		if w != t[i^bit] {
+			return true
+		}
+	}
+	return false
+}
+func ttSupport(a []uint32, n int32) uint32 {
+	var supp uint32
+	for v := int32(0); v < n; v++ {
+		if ttHasVar(a, v) {
+			supp |= 1 << uint(v)
+		}
+	}
+	return supp
+}
+func ttCount(a []uint32) int32 {
+	n := 0
+	for _, w := range a {
+		n += bits.OnesCount32(w)
+	}
+	return int32(n)
+}
+func funTruth(f *Bdc_Fun_t) []uint32 {
+	base := Bdc_Regular(f)
+	if Bdc_IsComplement(f) != 0 {
+		return ttNot(base.Func)
+	}
+	return base.Func
+}
