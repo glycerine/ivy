@@ -104,12 +104,20 @@ func run(args []string) error {
 		}
 		results = append(results, r)
 	}
+	for _, result := range results {
+		if result.NeedsAssertHelper() {
+			if _, err := startingpoint.WriteAssertHelper(*out, packageName); err != nil {
+				return err
+			}
+			break
+		}
+	}
 	data, err := json.MarshalIndent(struct {
 		Version    string
 		Package    string
 		DurationNS int64
 		Files      []startingpoint.Result
-	}{"prototype-45", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
+	}{"prototype-46", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
 	if err != nil {
 		return err
 	}

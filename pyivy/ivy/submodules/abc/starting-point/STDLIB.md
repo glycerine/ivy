@@ -126,7 +126,7 @@ silently replaced merely because a similarly named Go operation exists.
 
 | C header/family | Go direction | Current decision |
 | --- | --- | --- |
-| assert.h | conditional checks, panic/testing | Comparison assertions; flag NDEBUG/abort differences |
+| assert.h | shared assert helper | Condition text supplied per call; repair C truth values downstream |
 | complex.h | complex64/128, math/cmplx | Review representation, component widths, functions and constants together |
 | ctype.h | ASCII checks or explicitly selected unicode policy | C-locale numeric predicates and case conversion |
 | errno.h | explicit error values/errors.Is | Review; no fake global errno |
@@ -187,7 +187,7 @@ specific argument shapes/types; `review` leaves the call visible for repair.
 | C name | Header | Mode | Go direction | Review notes |
 | --- | --- | --- | --- | --- |
 | strdup | POSIX string.h | conditional | string value | Known strings only; allocation failure and pointer identity are not retained. |
-| assert | assert.h | conditional | if !condition { panic(...) } | Boolean conditions only; NDEBUG/abort semantics differ and are flagged. |
+| assert | assert.h | convert | assert(condition, conditionText) | Shared package helper; repair C truth values downstream. NDEBUG/abort semantics differ. |
 | isalnum | ctype.h | convert | ASCII byte/range checks | C locale only; preserve numeric predicate result and EOF for case conversion, do not silently use Unicode semantics. |
 | isalpha | ctype.h | convert | ASCII byte/range checks | C locale only; preserve numeric predicate result and EOF for case conversion, do not silently use Unicode semantics. |
 | isblank | ctype.h | convert | ASCII byte/range checks | C locale only; preserve numeric predicate result and EOF for case conversion, do not silently use Unicode semantics. |
@@ -509,3 +509,29 @@ References: [Go time](https://pkg.go.dev/time),
 [OpenBSD clock](https://man.openbsd.org/clock).
 Calendar/struct tm routines remain review cases because field layout, timezone,
 static-storage behavior and strftime layouts need coordinated conversion.
+
+
+## Assertions (prototype-46)
+
+C `assert(x)` becomes `assert(x, "x")`, with quoted/escaped condition text.
+Nested library conversions can change the first argument; the message retains
+its text from before the library pass. C truth values remain downstream work.
+No inline panic blocks or closures are inserted into call sites.
+
+Tree and file-batch output generate one helper in each directory that needs it,
+using that directory's resolved package name, including an explicit -package.
+After translated files are written, choose assert.go, assert2.go, assert3.go, ...
+without overwriting any file. TreeReport.HelperFiles lists the generated paths.
+Library users can inspect Result.NeedsAssertHelper() and call WriteAssertHelper
+once per output directory after writing all drafts.
+
+```go
+func assert(x bool, message string) {
+    if !x {
+        panic("assertion failed, we do not see: " + message)
+    }
+}
+```
+
+Assertions are always active; source-defined/shadowed assert names and opaque
+preprocessor regions remain protected by the existing library-pass rules.

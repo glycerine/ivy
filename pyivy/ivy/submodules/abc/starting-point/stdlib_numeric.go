@@ -1,6 +1,9 @@
 package startingpoint
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 var mathCalls = map[string]string{
 	"acos": "Acos", "asin": "Asin", "atan": "Atan", "atan2": "Atan2", "cos": "Cos", "sin": "Sin", "tan": "Tan",
@@ -129,16 +132,10 @@ func (p *libraryPass) convertNumeric(c libraryCall) (string, string, bool) {
 		if len(a) != 1 {
 			return "", arity(c, 1), false
 		}
-		if !c.standalone {
-			return "", "assert in an expression requires control-flow repair.", false
-		}
-		// Only already-boolean Go/C comparisons; bare C integer/pointer truth values
-		// must not become invalid !integer code or suppress side effects.
 		condition := a[0]
-		if !strings.Contains(condition, "==") && !strings.Contains(condition, "!=") && !strings.Contains(condition, "<") && !strings.Contains(condition, ">") {
-			return "", "assert condition needs C-to-Go truth-value conversion before lowering.", false
-		}
-		return "if !(" + condition + ") { panic(\"C assertion failed\") }", "Always-on Go panic; C NDEBUG/abort and assertion messages require review.", true
+		message := strconv.Quote(strings.TrimSpace(c.rawArgs[0]))
+		return "assert(" + condition + ", " + message + ")", "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.", true
+
 	}
 	return "", "", false
 }

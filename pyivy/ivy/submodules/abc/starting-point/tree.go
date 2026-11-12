@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 )
@@ -26,11 +27,12 @@ type TreeFile struct {
 	FallbackLocation *SourceLocation `json:",omitempty"`
 }
 type TreeReport struct {
-	Source     string
-	Output     string
-	Files      []TreeFile
-	Fallbacks  int
-	DurationNS int64
+	HelperFiles []string `json:",omitempty"`
+	Source      string
+	Output      string
+	Files       []TreeFile
+	Fallbacks   int
+	DurationNS  int64
 }
 
 // TranslateTree mirrors C/C++ files into a new destination. The destination
@@ -105,6 +107,7 @@ func TranslateTree(source, destination string, opts Options) (TreeReport, error)
 	if err = os.Mkdir(r.Output, 0755); err != nil {
 		return r, err
 	}
+	helperPackages := map[string]string{}
 	for i, path := range files {
 		rel := rels[i]
 		target := filepath.Join(r.Output, outputNames[i])
@@ -148,6 +151,9 @@ func TranslateTree(source, destination string, opts Options) (TreeReport, error)
 		if err = os.WriteFile(target, []byte(result.Draft), 0644); err != nil {
 			return r, err
 		}
+		if result.NeedsAssertHelper() {
+			helperPackages[filepath.Dir(target)] = pkg
+		}
 		meta := filepath.Join(r.Output, "_starting-point", rel)
 		if err = os.MkdirAll(filepath.Dir(meta), 0755); err != nil {
 			return r, err
@@ -171,6 +177,22 @@ func TranslateTree(source, destination string, opts Options) (TreeReport, error)
 			}
 		}
 		r.Files = append(r.Files, TreeFile{LibraryConverted: converted, LibraryReview: review, Conditionals: result.Conditionals, Source: path, Output: outputNames[i], Package: pkg, SHA256: result.SHA256, Issues: len(result.Issues), Fallback: fallback, FallbackReason: reason, FallbackLocation: location})
+	}
+	var helperDirs []string
+	for dir := range helperPackages {
+		helperDirs = append(helperDirs, dir)
+	}
+	sort.Strings(helperDirs)
+	for _, dir := range helperDirs {
+		path, err := WriteAssertHelper(dir, helperPackages[dir])
+		if err != nil {
+			return r, err
+		}
+		rel, err := filepath.Rel(r.Output, path)
+		if err != nil {
+			return r, err
+		}
+		r.HelperFiles = append(r.HelperFiles, rel)
 	}
 	r.DurationNS = time.Since(start).Nanoseconds()
 	data, err := json.MarshalIndent(r, "", "  ")

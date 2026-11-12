@@ -294,12 +294,27 @@ func cloneLibraryImports(p *libraryImports) *libraryImports {
 	return q
 }
 func commentsRetained(before, after string) bool {
-	ts, err := Lex(before)
+	original, err := Lex(before)
 	if err != nil {
 		return false
 	}
-	for _, t := range ts {
-		if t.Kind == "comment" && strings.Count(before, t.Text) != strings.Count(after, t.Text) {
+	rewritten, err := Lex(after)
+	if err != nil {
+		return false
+	}
+	counts := map[string]int{}
+	for _, t := range original {
+		if t.Kind == "comment" {
+			counts[t.Text]++
+		}
+	}
+	for _, t := range rewritten {
+		if t.Kind == "comment" {
+			counts[t.Text]--
+		}
+	}
+	for _, count := range counts {
+		if count != 0 {
 			return false
 		}
 	}

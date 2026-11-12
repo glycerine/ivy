@@ -254,3 +254,23 @@ func TestLibraryReviewCountsPersistAndPrint(t *testing.T) {
 		t.Fatal(result.Library)
 	}
 }
+
+func TestBatchAssertHelper(t *testing.T) {
+	root := t.TempDir()
+	source := filepath.Join(root, "assert.c")
+	if err := os.WriteFile(source, []byte("void check(int x) { assert(x); }"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	out := filepath.Join(root, "out")
+	if err := run([]string{"-out", out, "-package", "checks", source}); err != nil {
+		t.Fatal(err)
+	}
+	helper, err := os.ReadFile(filepath.Join(out, "assert2.go"))
+	if err != nil || !strings.HasPrefix(string(helper), "package checks\n") || !strings.Contains(string(helper), `panic("assertion failed, we do not see: " + message)`) {
+		t.Fatal(string(helper), err)
+	}
+	draft, err := os.ReadFile(filepath.Join(out, "assert.go"))
+	if err != nil || !strings.Contains(string(draft), `assert(x, "x")`) {
+		t.Fatal(string(draft), err)
+	}
+}

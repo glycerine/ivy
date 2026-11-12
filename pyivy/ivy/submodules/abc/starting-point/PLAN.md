@@ -1597,3 +1597,29 @@ sizeof(type), and opaque conditional text are preserved. No closures are added.
 Validation: all Go tests pass, including nested casts, literal exponents, operand
 precedence, comments, macros, globals, and opaque-region protection. Installed
 prototype-45; existing output directories remain unchanged.
+
+
+## Prototype 46: shared package assertion helper
+
+User-selected design: keep call sites clean as assert(x, "x"), quoting and
+escaping the condition text. The initial inline if/panic design was withdrawn
+before installation. Generate one additional assert.go per directory using its
+resolved package; try assert2.go, assert3.go, ... if a translated filename is
+already occupied. Both recursive tree and flat batch output support this.
+Tree reports list HelperFiles; library users have Result.NeedsAssertHelper()
+and WriteAssertHelper(directory, packageName) for coordinated output.
+
+The helper has signature func assert(x bool, message string), and on false calls
+panic("assertion failed, we do not see: " + message), exactly as requested.
+Numeric/pointer truth-value mismatches remain for downstream repair. No closures
+or per-call inline panic blocks are introduced. Comment preservation now counts
+actual comment tokens, so a quoted copy of a comment in the diagnostic does not
+mistakenly block translation. Original shadowed names and opaque text remain
+protected. Nested library changes affect the condition but not its message text.
+
+Validation: all Go tests pass. Tests cover exact condition quoting, comments,
+nested calls, source-name protection, default/overridden packages, one helper
+for multiple files, assert.go/assert2.go collisions, no helper in unused packages,
+flat CLI batches, and executing translated assertions with the generated helper.
+Regenerated abcCut.c in /tmp/starting-point-v46-helper-cut and verified the helper
+and message-bearing calls. Installed prototype-46; existing outputs unchanged.

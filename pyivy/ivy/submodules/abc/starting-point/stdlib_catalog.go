@@ -49,7 +49,7 @@ func buildLibraryCatalog() []LibraryRule {
 		add(name+"l", "math.h", "review", "explicit long-double precision policy", "Go has no native long double; do not silently narrow precision.")
 	}
 	add("frexp ldexp modf remquo scalbn scalbln ilogb logb nextafter nexttoward nan nearbyint rint lrint llrint lround llround fpclassify isfinite isinf isnan isnormal signbit", "math.h", "review", "math with result/representation adaptation", "Pointer outputs, integer exponents, predicates, rounding modes or NaN details need special rules.")
-	add("assert", "assert.h", "conditional", "if !condition { panic(...) }", "Boolean conditions only; NDEBUG/abort semantics differ and are flagged.")
+	add("assert", "assert.h", "convert", "assert(condition, conditionText)", "One assert helper per output package; repair C truth values downstream. NDEBUG/abort semantics differ.")
 	add("time", "time.h", "convert", "time.Now().Unix()", "Unix seconds; preserve optional output pointer. time_t defaults to int64.")
 	add("clock CLOCKS_PER_SEC", "time.h", "conditional", "time.Now().UnixNano() / int64(time.Second)", "Explicit wall-time draft policy replaces CPU ticks; review CPU-vs-wall and monotonic timing needs.")
 	add("difftime", "time.h", "convert", "difference of int64 Unix seconds", "Unsigned magnitude subtraction avoids signed overflow and time.Duration range limits.")
