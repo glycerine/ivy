@@ -19,181 +19,130 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
+import "hash/maphash"
 
+var defaultMapSeed = maphash.MakeSeed()
 
-
-//#include "sat/glucose2/IntTypes.h"
-//#include "sat/glucose2/Vec.h"
-
-//ABC_NAMESPACE_CXX_HEADER_START
-
-namespace Gluco2 {
-
-//=================================================================================================
-// Default hash/equals functions
-//
-
-template<class K> struct Hash  { uint32_t operator()(K& k)               { return hash(k);  } };
-template<class K> struct Equal { bool     operator()(K& k1, K& k2) { return k1 == k2; } };
-
-template<class K> struct DeepHash  { uint32_t operator()(K* k)               { return hash(*k);  } };
-template<class K> struct DeepEqual { bool     operator()(K* k1, K* k2) { return *k1 == *k2; } };
-
-static inline uint32_t hash(uint32_t x){ return x; }
-static inline uint32_t hash(uint64_t x){ return (uint32_t)x; }
-static inline uint32_t hash(int32_t x) { return (uint32_t)x; }
-static inline uint32_t hash(int64_t x) { return (uint32_t)x; }
-
-
-//=================================================================================================
-// Some primes
-//
-
-static int nprimes          = 25;
-static int primes [nprimes] = { 31, 73, 151, 313, 643, 1291, 2593, 5233, 10501, 21013, 42073, 84181, 168451, 337219, 674701, 1349473, 2699299, 5398891, 10798093, 21596719, 43193641, 86387383, 172775299, 345550609, 691101253 };
-
-//=================================================================================================
-// Hash table implementation of Maps
-//
-
-template<class K, class D, class H = Hash<K>, class E = Equal<K> >
-class Map {
- public:
-    struct Pair { K key; D data; };
-
- private:
-    H          hash;
-    E          equals;
-
-    vec<Pair>* table;
-    int        cap;
-    int        size;
-
-    // Don't allow copying (error prone):
-    Map<K,D,H,E>&  operator = (Map<K,D,H,E>& other) { assert(false, "0"); }
-                   Map        (Map<K,D,H,E>& other) { assert(false, "0"); }
-
-    bool    checkCap(int new_size) { return new_size > cap; }
-
-    int32_t index  (K& k) { return hash(k) % cap; }
-    void   _insert (K& k, D& d) { 
-        vec<Pair>& ps = table[index(k)];
-        ps.push(); ps.last().key = k; ps.last().data = d; }
-
-    void    rehash () {
-        vec<Pair>* old = table;
-
-        int old_cap = cap;
-        int newsize = primes[0];
-        for (int i = 1; newsize <= cap && i < nprimes; i++)
-           newsize = primes[i];
-
-        table = new vec<Pair>[newsize];
-        cap   = newsize;
-
-        for int i = 0; i < old_cap; i++{
-            for int j = 0; j < old[i].size(); j++{
-                _insert(old[i][j].key, old[i][j].data); }}
-
-        delete [] old;
-
-        // printf(" --- rehashing, old-cap=%d, new-cap=%d\n", cap, newsize);
-    }
-
-    
- public:
-
-    Map () : table(NULL), cap(0), size(0) {}
-    Map (H& h, E& e) : hash(h), equals(e), table(NULL), cap(0), size(0){}
-    ~Map () { delete [] table; }
-
-    // PRECONDITION: the key must already exist in the map.
-    D& operator [] (K& k) 
-    {
-        assert(size != 0, "size != 0");
-        D*         res = NULL;
-        vec<Pair>& ps  = table[index(k)];
-        for (int i = 0; i < ps.size(); i++)
-            if (equals(ps[i].key, k))
-                res = &ps[i].data;
-        assert(res != NULL, "res != NULL");
-        return *res;
-    }
-
-    // PRECONDITION: the key must already exist in the map.
-    D& operator [] (K& k)
-    {
-        assert(size != 0, "size != 0");
-        D*         res = NULL;
-        vec<Pair>& ps  = table[index(k)];
-        for (int i = 0; i < ps.size(); i++)
-            if (equals(ps[i].key, k))
-                res = &ps[i].data;
-        assert(res != NULL, "res != NULL");
-        return *res;
-    }
-
-    // PRECONDITION: the key must *NOT* exist in the map.
-    void insert (K& k, D& d) { if (checkCap(size+1)) rehash(); _insert(k, d); size++; }
-    bool peek   (K& k, D& d) {
-        if (size == 0) return false;
-        vec<Pair>& ps = table[index(k)];
-        for (int i = 0; i < ps.size(); i++)
-            if equals(ps[i].key, k){
-                d = ps[i].data;
-                return true; } 
-        return false;
-    }
-
-    bool has   (K& k) {
-        if (size == 0) return false;
-        vec<Pair>& ps = table[index(k)];
-        for (int i = 0; i < ps.size(); i++)
-            if (equals(ps[i].key, k))
-                return true;
-        return false;
-    }
-
-    // PRECONDITION: the key must exist in the map.
-    void remove(K& k) {
-        assert(table != NULL, "table != NULL");
-        vec<Pair>& ps = table[index(k)];
-        int j = 0;
-        for (; j < ps.size() && !equals(ps[j].key, k); j++);
-        assert(j < ps.size(), "j < ps.size()");
-        ps[j] = ps.last();
-        ps.pop();
-        size--;
-    }
-
-    void clear  () {
-        cap = size = 0;
-        delete [] table;
-        table = NULL;
-    }
-
-    int  elems() { return size; }
-    int  bucket_count() { return cap; }
-
-    // NOTE: the hash and equality objects are not moved by this method:
-    void moveTo(Map& other){
-        delete [] other.table;
-
-        other.table = table;
-        other.cap   = cap;
-        other.size  = size;
-
-        table = NULL;
-        size = cap = 0;
-    }
-
-    // NOTE: given a bit more time, I could make a more C++-style iterator out of this:
-    vec<Pair>& bucket(int i) { return table[i]; }
-};
-
-//=================================================================================================
+type Pair[K any, V any] struct {
+	Key  K
+	Data V
 }
 
-//ABC_NAMESPACE_CXX_HEADER_END
+// Map retains source bucket iteration and caller-supplied hash/equality.
+// count caches an aggregate over independent buckets, not a slice length.
+type Map[K any, V any] struct {
+	hash    func(K) uint32
+	equal   func(K, K) bool
+	buckets [][]Pair[K, V]
+	count   int
+}
 
+var mapPrimes = []int{31, 73, 151, 313, 643, 1291, 2593, 5233, 10501, 21013, 42073, 84181, 168451, 337219, 674701, 1349473, 2699299, 5398891, 10798093, 21596719, 43193641, 86387383, 172775299, 345550609, 691101253}
 
+func NewHashMap[K any, V any](hash func(K) uint32, equal func(K, K) bool) *Map[K, V] {
+	if hash == nil || equal == nil {
+		panic("map requires hash and equality")
+	}
+	return &Map[K, V]{hash: hash, equal: equal}
+}
+func NewMap[K comparable, V any]() *Map[K, V] {
+	return NewHashMap[K, V](func(k K) uint32 {
+		switch x := any(k).(type) {
+		case int:
+			return uint32(x)
+		case int32:
+			return uint32(x)
+		case uint32:
+			return x
+		case int64:
+			return uint32(x)
+		case uint64:
+			return uint32(x)
+		case Lit:
+			return uint32(x)
+		case Var:
+			return uint32(x)
+		}
+		return uint32(maphash.Comparable(defaultMapSeed, k))
+	}, func(a, b K) bool { return a == b })
+}
+func (m *Map[K, V]) Elems() int                { return m.count }
+func (m *Map[K, V]) BucketCount() int          { return len(m.buckets) }
+func (m *Map[K, V]) Bucket(i int) []Pair[K, V] { return m.buckets[i] }
+func (m *Map[K, V]) Peek(k K) (V, bool) {
+	if m.count > 0 {
+		for _, p := range m.buckets[int(m.hash(k)%uint32(len(m.buckets)))] {
+			if m.equal(p.Key, k) {
+				return p.Data, true
+			}
+		}
+	}
+	var zero V
+	return zero, false
+}
+func (m *Map[K, V]) Has(k K) bool { _, ok := m.Peek(k); return ok }
+func (m *Map[K, V]) At(k K) *V {
+	if m.count > 0 {
+		ps := m.buckets[int(m.hash(k)%uint32(len(m.buckets)))]
+		for i := range ps {
+			if m.equal(ps[i].Key, k) {
+				return &ps[i].Data
+			}
+		}
+	}
+	panic("map key missing")
+}
+func (m *Map[K, V]) Insert(k K, v V) {
+	if m.Has(k) {
+		panic("duplicate map key")
+	}
+	if m.count+1 > len(m.buckets) {
+		n := mapPrimes[len(mapPrimes)-1]
+		for _, p := range mapPrimes {
+			if p > len(m.buckets) {
+				n = p
+				break
+			}
+		}
+		if n <= len(m.buckets) {
+			panic(OutOfMemoryException{})
+		}
+		old := m.buckets
+		m.buckets = make([][]Pair[K, V], n)
+		for _, ps := range old {
+			for _, p := range ps {
+				i := int(m.hash(p.Key) % uint32(n))
+				m.buckets[i] = append(m.buckets[i], p)
+			}
+		}
+	}
+	i := int(m.hash(k) % uint32(len(m.buckets)))
+	m.buckets[i] = append(m.buckets[i], Pair[K, V]{k, v})
+	m.count++
+}
+func (m *Map[K, V]) Remove(k K) {
+	if m.count > 0 {
+		i := int(m.hash(k) % uint32(len(m.buckets)))
+		ps := m.buckets[i]
+		for j, p := range ps {
+			if m.equal(p.Key, k) {
+				ps[j] = ps[len(ps)-1]
+				ps[len(ps)-1] = Pair[K, V]{}
+				m.buckets[i] = ps[:len(ps)-1]
+				m.count--
+				return
+			}
+		}
+	}
+	panic("map key missing")
+}
+func (m *Map[K, V]) Clear() { m.buckets = nil; m.count = 0 }
+func (m *Map[K, V]) MoveTo(to *Map[K, V]) {
+	if m == to {
+		return
+	}
+	to.buckets = m.buckets
+	to.count = m.count
+	m.buckets = nil
+	m.count = 0
+}

@@ -19,33 +19,9 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-
-
-
-#ifdef __sun
-    // Not sure if there are newer versions that support C99 headers. The
-    // needed features are implemented in the headers below though:
-
-#   include <sys/int_types.h>
-#   include <sys/int_fmtio.h>
-#   include <sys/int_limits.h>
-
-#else
-
-#define __STDC_LIMIT_MACROS
-#   include "pstdint.h"
-//#   include <inttypes.h>
-
-#endif
-
-//#include <limits.h>
-
-#ifndef PRIu64
-#define PRIu64 "lu"
-#define PRIi64 "ld"
-#endif
-//=================================================================================================
-
-//#include <misc/util/abc_namespaces.h>
-
-
+// Integer widths are explicit Go primitives rather than platform-dependent C
+// typedefs. C printf width macros become Go's width-independent fmt verbs.
+const (
+	PRIu64 = "d"
+	PRIi64 = "d"
+)

@@ -20,71 +20,35 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-
-
-
-//#include "sat/glucose2/Vec.h"
-
-//ABC_NAMESPACE_CXX_HEADER_START
-
-namespace Gluco2 {
-
-//=================================================================================================
-// Useful functions on vector-like types:
-
-//=================================================================================================
-// Removing and searching for elements:
-//
-
-template<class V, class T>
-static inline void remove(V& ts, T& t)
-{
-    int j = 0;
-    for (; j < ts.size() && ts[j] != t; j++);
-    assert(j < ts.size(), "j < ts.size()");
-    for (; j < ts.size()-1; j++) ts[j] = ts[j+1];
-    ts.pop();
+func Find[T comparable](values []T, target T) bool {
+	for _, v := range values {
+		if v == target {
+			return true
+		}
+	}
+	return false
+}
+func Remove[T comparable](values []T, target T) []T {
+	for i, v := range values {
+		if v == target {
+			copy(values[i:], values[i+1:])
+			clear(values[len(values)-1:])
+			return values[:len(values)-1]
+		}
+	}
+	panic("element not found")
 }
 
-
-template<class V, class T>
-static inline bool find(V& ts, T& t)
-{
-    int j = 0;
-    for (; j < ts.size() && ts[j] != t; j++);
-    return j < ts.size();
+// CopyValues clones nested vectors through an explicit element copier, avoiding
+// reflection and making ownership of nested slices visible at the call site.
+func CopyValues[T any](source []T, clone func(T) T) []T {
+	out := make([]T, len(source))
+	for i, v := range source {
+		if clone == nil {
+			out[i] = v
+		} else {
+			out[i] = clone(v)
+		}
+	}
+	return out
 }
-
-
-//=================================================================================================
-// Copying vectors with support for nested vector types:
-//
-
-// Base case:
-template<class T>
-static inline void copy(T& from, T& to)
-{
-    to = from;
-}
-
-// Recursive case:
-template<class T>
-static inline void copy(vec<T>& from, vec<T>& to, bool append = false)
-{
-    if (!append)
-        to.clear();
-    for int i = 0; i < from.size(); i++{
-        to.push();
-        copy(from[i], to.last());
-    }
-}
-
-template<class T>
-static inline void append(vec<T>& from, vec<T>& to){ copy(from, to, true); }
-
-//=================================================================================================
-}
-
-//ABC_NAMESPACE_CXX_HEADER_END
-
-

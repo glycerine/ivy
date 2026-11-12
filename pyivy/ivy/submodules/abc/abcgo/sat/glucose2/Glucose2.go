@@ -633,6 +633,15 @@ func (s *Solver) search() LBool {
 					break
 				}
 			}
+			if next == LitUndef && s.JustificationMode > 0 {
+				s.Decisions++
+				var reason Var
+				next, reason = s.pickJustLit()
+				if next == LitUndef {
+					return LTrue
+				}
+				s.addJwatch(next.Var(), reason)
+			}
 			if next == LitUndef {
 				s.Decisions++
 				next = s.pickBranchLit()

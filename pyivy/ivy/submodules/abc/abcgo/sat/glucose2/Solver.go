@@ -216,6 +216,17 @@ func (s *Solver) bumpVar(v Var) {
 		for i := range s.activity {
 			s.activity[i] *= 1e-100
 		}
+		if s.JustificationMode > 0 && s.circuit != nil {
+			c := s.circuit
+			for _, v := range c.heap.nodes {
+				f := c.fanins[v]
+				a, b := s.activity[f[0].Var()], s.activity[f[1].Var()]
+				if b > a {
+					a = b
+				}
+				c.data[v].ActiveFanin = a
+			}
+		}
 		s.varInc *= 1e-100
 	}
 	if s.orderHeap.InHeap(int(v)) {

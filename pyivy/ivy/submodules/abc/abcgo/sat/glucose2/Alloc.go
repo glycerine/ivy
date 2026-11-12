@@ -19,124 +19,60 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
+const RegionRefUndef uint32 = ^uint32(0)
 
-
-
-
-//#include "sat/glucose2/XAlloc.h"
-//#include "sat/glucose2/Vec.h"
-
-//ABC_NAMESPACE_CXX_HEADER_START
-
-namespace Gluco2 {
-
-//=================================================================================================
-// Simple Region-based memory allocator:
-
-template<class T>
-class RegionAllocator
-{
-    T*        memory;
-    uint32_t  sz;
-    uint32_t  cap;
-    uint32_t  wasted_;
-
-    void capacity(uint32_t min_cap);
-
- public:
-    // TODO: make this a class for better type-checking?
-    typedef uint32_t Ref;
-    const ( Ref_Undef = UINT32_MAX 
-)
-
-    const ( Unit_Size = sizeof(uint32_t) 
-)
-
-
-    explicit RegionAllocator(uint32_t start_cap = 1024*1024) : memory(NULL), sz(0), cap(0), wasted_(0){ capacity(start_cap); }
-    ~RegionAllocator()
-    {
-        if (memory != NULL)
-            ::free(memory);
-    }
-
-
-    uint32_t size      () { return sz; }
-    uint32_t wasted    () { return wasted_; }
-
-    Ref      alloc     (int size); 
-    void     free_     (int size)    { wasted_ += size; }
-    void     clear     ()            { sz = 0; wasted_=0; }
-
-    // Deref, Load Effective Address (LEA), Inverse of LEA (AEL):
-    T&       operator[](Ref r)       { assert(r >= 0 && r < sz, "r >= 0 && r < sz"); return memory[r]; }
-    T& operator[](Ref r) { assert(r >= 0 && r < sz, "r >= 0 && r < sz"); return memory[r]; }
-
-    T*       lea       (Ref r)       { assert(r >= 0 && r < sz, "r >= 0 && r < sz"); return &memory[r]; }
-    T* lea       (Ref r) { assert(r >= 0 && r < sz, "r >= 0 && r < sz"); return &memory[r]; }
-    Ref      ael       (T* t)  { assert((void*)t >= (void*)&memory[0] && (void*)t < (void*)&memory[sz-1], "(void*)t >= (void*)&memory[0] && (void*)t < (void*)&memory[sz-1]");
-        return  (Ref)(t - &memory[0]); }
-
-    void     moveTo(RegionAllocator& to) {
-        if (to.memory != NULL) ::free(to.memory);
-        to.memory = memory;
-        to.sz = sz;
-        to.cap = cap;
-        to.wasted_ = wasted_;
-
-        memory = NULL;
-        sz = cap = wasted_ = 0;
-    }
-
-
-};
-
-template<class T>
-void RegionAllocator<T>::capacity(uint32_t min_cap)
-{
-    if (cap >= min_cap) return;
-
-    uint32_t prev_cap = cap;
-    while (cap < min_cap){
-        // NOTE: Multiply by a factor (13/8) without causing overflow, then add 2 and make the
-        // result even by clearing the least significant bit. The resulting sequence of capacities
-        // is carefully chosen to hit a maximum capacity that is close to the '2^32-1' limit when
-        // using 'uint32_t' as indices so that as much as possible of this space can be used.
-        uint32_t delta = ((cap >> 1) + (cap >> 3) + 2) & ~1;
-        cap += delta;
-
-        if (cap <= prev_cap)
-            throw OutOfMemoryException();
-    }
-    //printf(" .. (%p) cap = %u\n", this, cap);
-
-    assert(cap > 0, "cap > 0");
-    memory = (T*)xrealloc(memory, sizeof(T)*cap);
+// RegionAllocator keeps integer references stable across slice reallocations.
+// Borrowed Data slices are valid until the next allocation, just as in C++.
+type RegionAllocator[T any] struct {
+	memory []T
+	wasted uint32
 }
 
-
-template<class T>
-typename RegionAllocator<T>::Ref
-RegionAllocator<T>::alloc(int size)
-{ 
-    //printf("ALLOC called (this = %p, size = %d)\n", this, size); fflush(stdout);
-    assert(size > 0, "size > 0");
-    capacity(sz + size);
-
-    uint32_t prev_sz = sz;
-    sz += size;
-    
-    // Handle overflow:
-    if (sz < prev_sz)
-        throw OutOfMemoryException();
-
-    return prev_sz;
+func NewRegionAllocator[T any](capacity int) *RegionAllocator[T] {
+	if capacity < 0 {
+		panic("negative region capacity")
+	}
+	return &RegionAllocator[T]{memory: make([]T, 0, capacity)}
+}
+func (a *RegionAllocator[T]) Size() uint32   { return uint32(len(a.memory)) }
+func (a *RegionAllocator[T]) Wasted() uint32 { return a.wasted }
+func (a *RegionAllocator[T]) Alloc(n int) uint32 {
+	if n <= 0 || uint64(len(a.memory))+uint64(n) >= uint64(RegionRefUndef) {
+		panic(OutOfMemoryException{})
+	}
+	start := uint32(len(a.memory))
+	a.memory = append(a.memory, make([]T, n)...)
+	return start
+}
+func (a *RegionAllocator[T]) Free(n uint32) {
+	if uint64(a.wasted)+uint64(n) > uint64(len(a.memory)) {
+		panic("region free exceeds allocation")
+	}
+	a.wasted += n
+}
+func (a *RegionAllocator[T]) At(ref uint32) *T { return &a.memory[ref] }
+func (a *RegionAllocator[T]) Data(ref uint32) []T {
+	if ref >= uint32(len(a.memory)) {
+		panic("region reference out of range")
+	}
+	return a.memory[ref:]
+}
+func (a *RegionAllocator[T]) Clear() { clear(a.memory); a.memory = a.memory[:0]; a.wasted = 0 }
+func (a *RegionAllocator[T]) MoveTo(to *RegionAllocator[T]) {
+	if a == to {
+		return
+	}
+	*to = *a
+	*a = RegionAllocator[T]{}
 }
 
-
-//=================================================================================================
+// AEL is the safe inverse of At. It searches by pointer equality, including the
+// final allocated element that the original strict-end assertion rejected.
+func (a *RegionAllocator[T]) AEL(element *T) uint32 {
+	for i := range a.memory {
+		if &a.memory[i] == element {
+			return uint32(i)
+		}
+	}
+	panic("pointer is outside region")
 }
-
-//ABC_NAMESPACE_CXX_HEADER_END
-
-

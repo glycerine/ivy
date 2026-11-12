@@ -1,10 +1,5 @@
 package glucose2
 
-import (
-	"fmt"
-	"os"
-)
-
 /**************************************************************************************[Options.cc]
 Copyright (c) 2008-2010, Niklas Sorensson
 
@@ -24,80 +19,97 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **************************************************************************************************/
 
-//#include "sat/glucose2/Sort.h"
-//#include "sat/glucose2/Options.h"
-//#include "sat/glucose2/ParseUtils.h"
+import (
+	"errors"
+	"fmt"
+	"io"
+	"sort"
+	"strings"
+)
 
-//ABC_NAMESPACE_IMPL_START
-
-//using namespace Gluco2;
-
-
-void Gluco2::parseOptions(int& argc, char** argv, bool strict)
-{
-    int i, j;
-    for i = j = 1; i < argc; i++{
-        char* str = argv[i];
-        if match(str, "--") && match(str, Option::getHelpPrefixString()) && match(str, "help"){
-            if (*str == '\0')
-                printUsageAndExit(argc, argv);
-            else if (match(str, "-verb"))
-                printUsageAndExit(argc, argv, true);
-        } else {
-            bool parsed_ok = false;
-        
-            for int k = 0; !parsed_ok && k < Option::getOptionList().size(); k++{
-                parsed_ok = Option::getOptionList()[k].parse(argv[i]);
-
-                // fprintf(stderr, "checking %d: %s against flag <%s> (%s)\n", i, argv[i], Option::getOptionList()[k]->name, parsed_ok ? "ok" : "skip");
-            }
-
-            if !parsed_ok {
-                if (strict && match(argv[i], "-"))
-                    fmt.Fprintf(os.Stderr, "ERROR! Unknown flag \"%s\". Use '--%shelp' for help.\n", argv[i], Option::getHelpPrefixString()), os.Exit(int(1));
-                else
-                    argv[j++] = argv[i];
-            }
-        }
-    }
-
-    argc -= (i - j);
+type OptionSet struct {
+	Options           []Option
+	Usage, HelpPrefix string
 }
 
+var DefaultOptions OptionSet
+var ErrHelpRequested = errors.New("help requested")
 
-void Gluco2::setUsageHelp      (char* str){ Option::getUsageString() = str; }
-void Gluco2::setHelpPrefixStr  (char* str){ Option::getHelpPrefixString() = str; }
-void Gluco2::printUsageAndExit (int argc, char** argv, bool verbose)
-{
-    char* usage = Option::getUsageString();
-    if (usage != NULL)
-        fmt.Fprintf(os.Stderr, usage, argv[0]);
-
-    sort(Option::getOptionList(), Option::OptionLt());
-
-    char* prev_cat  = NULL;
-    char* prev_type = NULL;
-
-    for int i = 0; i < Option::getOptionList().size(); i++{
-        char* cat  = Option::getOptionList()[i].category;
-        char* type = Option::getOptionList()[i].type_name;
-
-        if (cat != prev_cat)
-            fmt.Fprintf(os.Stderr, "\n%s OPTIONS:\n\n", cat);
-        else if (type != prev_type)
-            fmt.Fprintf(os.Stderr, "\n");
-
-        Option::getOptionList()[i].help(verbose);
-
-        prev_cat  = Option::getOptionList()[i].category;
-        prev_type = Option::getOptionList()[i].type_name;
-    }
-
-    fmt.Fprintf(os.Stderr, "\nHELP OPTIONS:\n\n");
-    fmt.Fprintf(os.Stderr, "  --%shelp        Print help message.\n", Option::getHelpPrefixString());
-    fmt.Fprintf(os.Stderr, "  --%shelp-verb   Print verbose help message.\n", Option::getHelpPrefixString());
-    fmt.Fprintf(os.Stderr, "\n");
-    os.Exit(int(0));
+func (s *OptionSet) Add(option Option) {
+	for _, o := range s.Options {
+		if o.Info().Name == option.Info().Name {
+			panic("duplicate option name")
+		}
+	}
+	s.Options = append(s.Options, option)
 }
 
-//ABC_NAMESPACE_IMPL_END
+// Parse preserves argv[0] and positional arguments, like the source in-place
+// parser. Help and invalid values return errors rather than exiting a library.
+func (s *OptionSet) Parse(argv []string, strict bool) ([]string, error) {
+	if len(argv) == 0 {
+		return nil, nil
+	}
+	remaining := []string{argv[0]}
+	for _, arg := range argv[1:] {
+		if arg == "--"+s.HelpPrefix+"help" || arg == "--"+s.HelpPrefix+"help-verb" {
+			return remaining, ErrHelpRequested
+		}
+		parsed := false
+		for _, option := range s.Options {
+			ok, err := option.Parse(arg)
+			if err != nil {
+				return remaining, fmt.Errorf("%s: %w", option.Info().Name, err)
+			}
+			if ok {
+				parsed = true
+				break
+			}
+		}
+		if !parsed {
+			if strict && strings.HasPrefix(arg, "-") {
+				return remaining, fmt.Errorf("unknown flag %q", arg)
+			}
+			remaining = append(remaining, arg)
+		}
+	}
+	return remaining, nil
+}
+func (s *OptionSet) PrintUsage(w io.Writer, program string, verbose bool) error {
+	if s.Usage != "" {
+		if _, err := io.WriteString(w, strings.ReplaceAll(s.Usage, "%s", program)); err != nil {
+			return err
+		}
+	}
+	options := append([]Option(nil), s.Options...)
+	sort.SliceStable(options, func(i, j int) bool {
+		a, b := options[i].Info(), options[j].Info()
+		if a.Category != b.Category {
+			return a.Category < b.Category
+		}
+		return a.TypeName < b.TypeName
+	})
+	previous := ""
+	for _, o := range options {
+		info := o.Info()
+		if info.Category != previous {
+			if _, err := fmt.Fprintf(w, "\n%s OPTIONS:\n\n", info.Category); err != nil {
+				return err
+			}
+			previous = info.Category
+		}
+		if err := o.Help(w, verbose); err != nil {
+			return err
+		}
+	}
+	_, err := fmt.Fprintf(w, "\nHELP OPTIONS:\n\n  --%shelp        Print help message.\n  --%shelp-verb   Print verbose help message.\n", s.HelpPrefix, s.HelpPrefix)
+	return err
+}
+func ParseOptions(argv []string, strict bool) ([]string, error) {
+	return DefaultOptions.Parse(argv, strict)
+}
+func SetUsageHelp(text string)     { DefaultOptions.Usage = text }
+func SetHelpPrefixStr(text string) { DefaultOptions.HelpPrefix = text }
+func PrintUsage(w io.Writer, program string, verbose bool) error {
+	return DefaultOptions.PrintUsage(w, program, verbose)
+}
