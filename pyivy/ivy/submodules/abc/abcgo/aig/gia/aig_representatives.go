@@ -57,7 +57,12 @@ func Gia_ManReprFromAigRepr(pAig *aig.Graph, pGia *Gia_Man_t) {
 	inverse := make(map[int]int32, pGia.nObjs)
 	for _, obj := range pGia.pObjs {
 		if Gia_ObjIsCo(obj) == 0 {
-			inverse[aig.Edge(obj.Value).NodeID()] = obj.id
+			id := aig.Edge(obj.Value).NodeID()
+			if first, ok := inverse[id]; ok {
+				giaRecordReprImport(pGia, obj.id, first)
+			} else {
+				inverse[id] = obj.id
+			}
 		}
 	}
 	for source, target := range inverse {

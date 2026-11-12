@@ -108,37 +108,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManFraigSweepPerform(p *Gia_Man_t, pPars any) {
-    var pNew *Aig_Man_t;
-    pNew = Gia_ManToAigSimple( p );
-    assert(Gia_ManObjNum(p) == Aig_ManObjNum(pNew), "Gia_ManObjNum(p) == Aig_ManObjNum(pNew)");
-    Dch_ComputeEquivalences( pNew, (Dch_Pars_t *)pPars );
-    Gia_ManReprFromAigRepr( pNew, p );
-    Aig_ManStop( pNew );
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManFraigSweepSimple(p *Gia_Man_t, pPars any) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    assert(p.pManTime == nil || Gia_ManBoxNum(p) == 0, "p.pManTime == nil || Gia_ManBoxNum(p) == 0");
-    Gia_ManFraigSweepPerform( p, pPars );
-    pNew = Gia_ManEquivReduce( p, 1, 0, 0, 0 );
-    if pNew == nil {
-        pNew = Gia_ManDup(p); }
-    Gia_ManTransferTiming( pNew, p );
-    return pNew;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Computes equivalences for one clock domain.]
