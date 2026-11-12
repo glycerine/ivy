@@ -80,7 +80,6 @@ func (s *sat_solver_t) SetDeadline(deadline time.Time) {
 	}
 }
 func (s *sat_solver_t) Reset() {
-	s.ClearActivityFactors()
 	sat_solver_restart(s)
 	s.fSolved = 0
 	s.lastStatus = Unknown

@@ -78,3 +78,21 @@ func (p *Sto_Man_t) Clauses() []StoredClause {
 	}
 	return result
 }
+
+// VariableActivity returns the actual heuristic score in its configured
+// representation; it does not apply an extra cone factor or change ordering.
+func (s *sat_solver_t) VariableActivity(variable int32) float64 {
+	if variable < 0 || variable >= s.size {
+		panic("activity variable outside solver")
+	}
+	switch s.VarActType {
+	case 0:
+		return float64(s.activity[variable])
+	case 1:
+		return math.Float64frombits(s.activity[variable])
+	case 2:
+		return Xdbl_ToDouble(s.activity[variable])
+	default:
+		panic("invalid activity representation")
+	}
+}
