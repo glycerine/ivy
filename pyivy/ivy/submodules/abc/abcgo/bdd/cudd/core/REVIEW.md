@@ -1,0 +1,61 @@
+# CUDD core review record
+
+Two distinct review passes were performed (2026-11-12).
+
+## Compactness, idiomatic Go, and readability pass
+
+- The core subpackage is the sole authoritative graph implementation. Completed
+  root CUDD modules re-export its types/functions rather than duplicate algorithms.
+- Explicit canonical complemented-edge handles replace tagged pointers. A unique
+  table and Shannon ITE engine centralize Boolean construction and normalization.
+  Node families distinguish BDD and ZDD graphs; numeric zero differs from the
+  complemented BDD-one edge.
+- Go maps own canonical nodes and computed entries. Manager lifetime, advisory
+  reference counts and external synchronization are documented. This is not a
+  reproduction of C raw-memory pools or their tuning policies.
+- Standard math/big and math/bits implement exact APA arithmetic. Formula parsing
+  remains backend-independent; the concrete adapter imports misc/parse, so no
+  package cycle or second parser is introduced.
+- Existing original modules (public declarations, initialization, BDD ITE,
+  abstraction and APA) retain their copyright/license and module organization.
+  All executable Go files are gofmt-formatted.
+
+## Bug review pass
+
+Findings were corrected with regressions before integration:
+
+1. Invalid permutation destinations could partially grow the manager or exceed
+   the constant-index boundary. Validate every used destination before mutation;
+   tests check negative/out-of-range targets and unchanged variable inventory.
+2. A BDD-only ownership test made RecursiveDeref ignore numeric ADD constants.
+   Lifecycle ownership validation now permits dereferencing those constants;
+   a reference-count regression verifies regularization and decrement.
+3. IEEE negative zero could receive a distinct constant handle. Normalize signed
+   zero before unique-table lookup; a regression checks canonical pointer identity.
+4. Node statistics omitted numeric constants and ZDD nodes. Include both unique
+   families and the constant table; a statistics regression checks the total.
+5. Abstraction initially accepted arbitrary support-bearing expressions as cubes.
+   Enforce positive-cube form; tests reject negative/disjunctive cubes.
+6. BDD implication/dependency queries must not allocate nodes. Use memoized
+   disjointness recursion and assert unchanged unique-table size in tests.
+7. Allocation-limit failure could expose partial unique-table/cache state.
+   Roll back newly allocated nodes and computed entries; tests force failure
+   after partial allocation and then verify successful subsequent operations.
+
+Verification: `GOCACHE=/tmp/abcgo-go-cache go -C abcgo test ./bdd/cudd/core -race -count=1`.
+Coverage includes 1,500 deterministic randomized Boolean operations, exhaustive
+four-variable truth tables and pointer canonicity, complement laws, node ordering,
+permutation/composition, cofactors, quantification, dependency, exact APA counts
+beyond floating precision, arithmetic aliasing/carry/borrow, writer errors, ZDD
+universe cardinality, manager ownership/lifetime, and real parser/backend parity
+including nested ranks and invalid rank shifts.
+
+## Remaining scope
+
+Root bdd/cudd is still incomplete: roughly 70,000 draft lines covering ADD/ZDD
+operations, reordering, exports, advanced decompositions and remaining CUDD APIs
+have not yet been ported. They remain in the ordinary source tree and still
+prevent root-package compilation; no draft files are hidden or build-tagged.
+Dependent completed packages can import this tested core while that work continues.
+Passing core tests is evidence for this implementation, not completion of CUDD
+or the full ABC port.
