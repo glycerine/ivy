@@ -220,3 +220,15 @@ func TestSblEvaluateMapping(t *testing.T) {
 		t.Fatalf("critical path %v", vec.Vec_IntArray(p.vPath))
 	}
 }
+
+func TestSblWholeGraphWindow(t *testing.T) {
+	g := Gia_ManStart(8)
+	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendAnd(g, a, b)
+	Gia_ManAppendCo(g, x^1)
+	p := Sbl_ManAlloc(g, 4)
+	Sbl_ManWindow(p)
+	if vec.Vec_IntSize(p.vLeaves) != 2 || vec.Vec_IntSize(p.vAnds) != 1 || vec.Vec_IntSize(p.vRoots) != 1 || vec.Vec_IntEntry(p.vRoots, 0) != x>>1 {
+		t.Fatal("invalid whole graph window")
+	}
+}

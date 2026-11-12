@@ -107,28 +107,6 @@ import (
 
 ***********************************************************************/
 
-func Sbl_ManWindow(p *Sbl_Man_t) {
-    var i, ObjId int32;
-    // collect leaves
-    Vec_IntClear( p.vLeaves );
-    // inlining of macro Gia_ManForEachCiId
-    for  i = 0; (i < Vec_IntSize(p.pGia.vCis)) && ((ObjId) = Gia_ObjId(p.pGia, Gia_ManCi(p.pGia, i))); i++  {
-        Vec_IntPush( p.vLeaves, ObjId );
-    }
-    // collect internal
-    Vec_IntClear( p.vAnds );
-    // inlining of macro Gia_ManForEachAndId
-    for  ObjId = 0; (ObjId < p.pGia.nObjs); ObjId++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(p.pGia, ObjId)) {} else {
-        Vec_IntPush( p.vAnds, ObjId ); }
-    }
-    // collect roots
-    Vec_IntClear( p.vRoots );
-    // inlining of macro Gia_ManForEachCoDriverId
-    for  i = 0; (i < Vec_IntSize(p.pGia.vCos)) && (((ObjId) = Gia_ObjFaninId0p(p.pGia, Gia_ManCo(p.pGia, i))), 1); i++  {
-        Vec_IntPush( p.vRoots, ObjId );
-    }
-}
-
 func Sbl_ManWindow2(p *Sbl_Man_t, iPivot int32) int32 {
     var clk abctime  = Abc_Clock();
     var vRoots, vNodes, vLeaves, vAnds *Vec_Int_t;
