@@ -1311,38 +1311,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteBaf(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var c int32;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    Io_Write( pAbc.pNtkCur, pFileName, IO_FILE_BAF );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_baf [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes the network into a BLIF file\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write (extension .baf)\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -1355,38 +1324,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteBblif(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var c int32;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    Io_Write( pAbc.pNtkCur, pFileName, IO_FILE_BBLIF );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_bblif [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes the network into a binary BLIF file\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write (extension .bblif)\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -1469,38 +1407,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteBlifMv(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var c int32;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    Io_Write( pAbc.pNtkCur, pFileName, IO_FILE_BLIFMV );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_blif_mv [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes the network into a BLIF-MV file\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write (extension .mv)\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -1858,38 +1765,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteDot(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var c int32;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    Io_Write( pAbc.pNtkCur, pFileName, IO_FILE_DOT );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_dot [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes the current network into a DOT file\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write\n");
-    return 1;
-}
 
 //ABC_NAMESPACE_IMPL_END
 
@@ -2225,38 +2101,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteEqn(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var c int32;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    Io_Write( pAbc.pNtkCur, pFileName, IO_FILE_EQN );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_eqn [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes the current network in the equation format\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -2269,38 +2114,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteGml(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var c int32;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    Io_Write( pAbc.pNtkCur, pFileName, IO_FILE_GML );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_gml [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes network using graph representation formal GML\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -2794,38 +2608,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteSmv(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var c int32;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    Io_Write( pAbc.pNtkCur, pFileName, IO_FILE_SMV );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_smv [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         write the network in SMV format\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help message\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write (extension .smv)\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
