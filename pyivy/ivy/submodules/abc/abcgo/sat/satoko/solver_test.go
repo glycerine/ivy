@@ -1,0 +1,174 @@
+package satoko
+
+import (
+	"bytes"
+	"math/rand"
+	"strings"
+	"testing"
+)
+
+func brute(n int, clauses [][]int, assumptions []int) bool {
+	for mask := 0; mask < 1<<n; mask++ {
+		ok := true
+		for _, a := range assumptions {
+			if ((mask>>(a>>1))&1)^(a&1) == 0 {
+				ok = false
+				break
+			}
+		}
+		if !ok {
+			continue
+		}
+		for _, c := range clauses {
+			sat := false
+			for _, lit := range c {
+				if ((mask>>(lit>>1))&1)^(lit&1) == 1 {
+					sat = true
+					break
+				}
+			}
+			if !sat {
+				ok = false
+				break
+			}
+		}
+		if ok {
+			return true
+		}
+	}
+	return false
+}
+func TestRandomCNFAgainstExhaustive(t *testing.T) {
+	rng := rand.New(rand.NewSource(7489))
+	for run := 0; run < 1500; run++ {
+		n := 1 + rng.Intn(8)
+		s := New()
+		s.SetVariables(n)
+		var clauses [][]int
+		for c := 0; c < rng.Intn(30); c++ {
+			lits := make([]int, 1+rng.Intn(5))
+			for j := range lits {
+				lits[j] = rng.Intn(2 * n)
+			}
+			clauses = append(clauses, lits)
+			s.AddClause(lits)
+		}
+		for trial := 0; trial < 5; trial++ {
+			var as []int
+			for k := 0; k < rng.Intn(4); k++ {
+				as = append(as, rng.Intn(n*2))
+			}
+			want := brute(n, clauses, as)
+			result := s.SolveAssumptions(as)
+			if (result == SATOKO_SAT) != want || result == SATOKO_UNDEC {
+				t.Fatalf("run %d assumptions %v clauses %v got %d want SAT %v", run, as, clauses, result, want)
+			}
+			if result == SATOKO_SAT {
+				for _, c := range clauses {
+					ok := false
+					for _, lit := range c {
+						if s.ModelValue(lit>>1)^(lit&1) == 1 {
+							ok = true
+						}
+					}
+					if !ok {
+						t.Fatal("invalid model", c, s.model)
+					}
+				}
+			}
+		}
+	}
+}
+func TestIncrementalAndRollback(t *testing.T) {
+	s := New()
+	s.SetVariables(2)
+	s.AddClause([]int{0, 2})
+	s.Bookmark()
+	s.AddClause([]int{1})
+	if s.Solve() != SATOKO_SAT || s.ModelValue(1) != 1 {
+		t.Fatal("first incremental solve")
+	}
+	s.AddClause([]int{3})
+	if s.Solve() != SATOKO_UNSAT {
+		t.Fatal("expected UNSAT")
+	}
+	s.Rollback()
+	if s.ClauseCount() != 1 || s.SolveAssumptions([]int{0, 3}) != SATOKO_SAT {
+		t.Fatal("rollback did not restore problem")
+	}
+	s.Reset()
+	if s.VariableCount() != 0 || s.ClauseCount() != 0 || s.Solve() != SATOKO_SAT {
+		t.Fatal("reset")
+	}
+}
+func TestAssumptionCoreAndLimits(t *testing.T) {
+	s := New()
+	s.SetVariables(2)
+	s.AddClause([]int{0, 2})
+	if s.SolveAssumptions([]int{1, 3}) != SATOKO_UNSAT {
+		t.Fatal("assumptions")
+	}
+	if len(s.FinalConflict()) != 2 {
+		t.Fatal(s.FinalConflict())
+	}
+	if s.Solve() != SATOKO_SAT {
+		t.Fatal("assumptions leaked")
+	}
+	s.opts.PropagationLimit = 1
+	if s.Solve() != SATOKO_UNDEC {
+		t.Fatal("budget")
+	}
+	s.opts.PropagationLimit = 0
+	stop := 1
+	s.stop = &stop
+	if s.Solve() != SATOKO_UNDEC {
+		t.Fatal("stop")
+	}
+	s.stop = nil
+	out, status := s.MinimizeAssumptions([]int{1, 3, 1}, -1)
+	if status != SATOKO_UNSAT || len(out) != 2 {
+		t.Fatal(out, status)
+	}
+}
+func TestDIMACSRoundTrip(t *testing.T) {
+	s, err := ParseDIMACS(strings.NewReader("c test\np cnf 3 3\n1 -2 0\n2 3\n0\n-1 0\n"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var out bytes.Buffer
+	if err = s.WriteDIMACS(&out, false, false); err != nil {
+		t.Fatal(err)
+	}
+	copy, err := ParseDIMACS(&out)
+	if err != nil || copy.Solve() != SATOKO_SAT {
+		t.Fatal(err)
+	}
+	for _, bad := range []string{"p cnf 1 1\n2 0\n", "p cnf 1 1\n1\n", "p cnf 1 2\n1 0\n"} {
+		if _, err := ParseDIMACS(strings.NewReader(bad)); err == nil {
+			t.Fatal("accepted malformed DIMACS", bad)
+		}
+	}
+}
+func TestLearningPigeonhole(t *testing.T) {
+	s := New()
+	const pigeons = 5
+	const holes = 4
+	s.SetVariables(pigeons * holes)
+	for p := 0; p < pigeons; p++ {
+		var c []int
+		for h := 0; h < holes; h++ {
+			c = append(c, Literal(p*holes+h, false))
+		}
+		s.AddClause(c)
+	}
+	for h := 0; h < holes; h++ {
+		for p := 0; p < pigeons; p++ {
+			for q := p + 1; q < pigeons; q++ {
+				s.AddClause([]int{Literal(p*holes+h, true), Literal(q*holes+h, true)})
+			}
+		}
+	}
+	if s.Solve() != SATOKO_UNSAT || s.LearntCount() == 0 {
+		t.Fatal("CDCL learning failed", s.stats)
+	}
+}

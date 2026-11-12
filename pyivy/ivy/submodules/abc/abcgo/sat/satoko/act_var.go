@@ -1,55 +1,24 @@
+// Copyright Satoko contributors. Distributed under the BSD 2-Clause License.
 package satoko
 
-//===--- act_var.h ----------------------------------------------------------===
-//
-//                     satoko: Satisfiability solver
-//
-// This file is distributed under the BSD 2-Clause License.
-// See LICENSE for details.
-//
-//===------------------------------------------------------------------------===
+import "github.com/glycerine/abcgo/sat/satoko/utils"
 
-
-
-//#include "solver.h"
-//#include "types.h"
-//#include "utils/heap.h"
-//#include "utils/sdbl.h"
-
-//#include "misc/util/abc_global.h"
-//ABC_NAMESPACE_HEADER_START
-
-/** Re-scale the activity value for all variables.
- */
-func var_act_rescale(s *solver_t) {
-    var i uint32;
-    // inlining of macro vec_act_data
-    var activity *act_t  = vec_sdbl_data(s.activity);
-
-    for i = 0; i < vec_sdbl_size(s.activity); i++ {
-        activity[i] = sdbl_div(activity[i], s.opts.var_act_rescale);
-    }
-    s.var_act_inc = sdbl_div(s.var_act_inc, s.opts.var_act_rescale);
+func (s *Solver) bumpVariable(v int) {
+	s.activity.Set(uint32(v), utils.ActivityAdd(s.activity.At(uint32(v)), s.actInc))
+	if s.activity.At(uint32(v)) > s.opts.VariableLimit {
+		for i := range s.values {
+			s.activity.Set(uint32(i), utils.ActivityRescale(s.activity.At(uint32(i)), s.opts.VariableRescale))
+		}
+		s.actInc = utils.ActivityRescale(s.actInc, s.opts.VariableRescale)
+	}
+	if s.order.Contains(uint32(v)) {
+		s.order.Update(uint32(v))
+	}
 }
-
-/** Increment the activity value of one variable ('var')
- */
-func var_act_bump(s *solver_t, var uint32) {
-    // inlining of macro vec_act_data
-    var activity *act_t  = vec_sdbl_data(s.activity);
-
-    activity[var] = sdbl_add(activity[var], s.var_act_inc);
-    if activity[var] > s.opts.var_act_limit {
-        var_act_rescale(s); }
-    if heap_in_heap(s.var_order, var) {
-        heap_decrease(s.var_order, var); }
+func (s *Solver) decayVariables() {
+	decay := s.opts.VariableDecay
+	if decay <= 0 || decay > 1 {
+		decay = 0.95
+	}
+	s.actInc = utils.ActivityMultiply(s.actInc, utils.ActivityFromFloat(1/decay))
 }
-
-/** Increment the value by which variables activity values are incremented
- */
-func var_act_decay(s *solver_t) {
-    s.var_act_inc = sdbl_mult(s.var_act_inc, double2sdbl(1 /s.opts.var_decay));
-}
-
-//ABC_NAMESPACE_HEADER_END
-
