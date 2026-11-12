@@ -1,9 +1,5 @@
 package gia
 
-import "fmt"
-
-import "os"
-
 /**CFile****************************************************************
 
   FileName    [giaShow.c]
@@ -15,7 +11,7 @@ import "os"
   Synopsis    [AIG visualization.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - May 11, 2006.]
@@ -31,7 +27,6 @@ import "os"
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
@@ -46,9 +41,9 @@ const NODE_MAX = 2000
 
   Synopsis    [Writes the graph structure of AIG for DOT.]
 
-  Description [Useful for graph visualization using tools such as GraphViz: 
+  Description [Useful for graph visualization using tools such as GraphViz:
   http://www.graphviz.org/]
-  
+
   SideEffects []
 
   SeeAlso     []
@@ -58,9 +53,9 @@ const NODE_MAX = 2000
 
   Synopsis    [Writes the graph structure of AIG for DOT.]
 
-  Description [Useful for graph visualization using tools such as GraphViz: 
+  Description [Useful for graph visualization using tools such as GraphViz:
   http://www.graphviz.org/]
-  
+
   SideEffects []
 
   SeeAlso     []
@@ -70,9 +65,9 @@ const NODE_MAX = 2000
 
   Synopsis    [Writes the graph structure of AIG for DOT.]
 
-  Description [Useful for graph visualization using tools such as GraphViz: 
+  Description [Useful for graph visualization using tools such as GraphViz:
   http://www.graphviz.org/]
-  
+
   SideEffects []
 
   SeeAlso     []
@@ -83,7 +78,7 @@ const NODE_MAX = 2000
   Synopsis    [Returns DFS ordered array of objects and their levels.]
 
   Description []
-  
+
   SideEffects []
 
   SeeAlso     []
@@ -94,53 +89,18 @@ const NODE_MAX = 2000
   Synopsis    []
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManShow(pMan *Gia_Man_t, vBold *Vec_Int_t, fAdders int32, fFadds int32, fPath int32) {
-    extern void Abc_ShowFile( char * FileNameDot );
-    var FileNameDot string // was [200]byte in C
-
-    var pFile *os.File;
-    var vXors *Vec_Int_t = nil;
-    var vAdds *Vec_Int_t;
-    if fAdders != 0 {
-        vAdds = Ree_ManComputeCuts( pMan, &vXors, 0 );
-    } else {
-        vAdds = nil;
-    }
-    FileNameDot = fmt.Sprintf("%s", Extra_FileNameGenericAppend(pMan.pName, ".dot"));
-    // check that the file can be opened
-    if (pFile = fopen( FileNameDot, "w" )) == nil {
-        fprintf( os.Stdout, "Cannot open the intermediate file \"%s\".\n", FileNameDot );
-        return;
-    }
-    _ = (pFile).Close();
-    // generate the file
-    if fPath != 0 {
-        Gia_ShowPath( pMan, FileNameDot );
-    } else if fAdders != 0 {
-        Gia_ShowProcess( pMan, FileNameDot, vBold, vAdds, vXors, fFadds );
-    } else {
-        Gia_WriteDotAigSimple( pMan, FileNameDot, vBold ); }
-    // visualize the file 
-    Abc_ShowFile( FileNameDot );
-
-    Vec_IntFreeP( &vAdds );
-    Vec_IntFreeP( &vXors );
+func Gia_ManShow(p *Gia_Man_t, bold *Vec_Int_t, adders, fullOnly, path int32) {
+	giaManShow(p, bold, adders, fullOnly, path, Ree_ManComputeCuts, Abc_ShowFile)
 }
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-
