@@ -92,7 +92,7 @@ func Dec_GraphForEachNode(g *Dec_Graph_t) iter.Seq2[int32, *Dec_Node_t] {
 		}
 	}
 }
-func Dec_NodeSetLevel(n *Dec_Node_t, level uint32) { n.Level = level & 0x3fff }
+func Dec_NodeSetLevel(n *Dec_Node_t, level uint32) { n.SetLevel(level) }
 func Dec_NodeLevel(n *Dec_Node_t) uint32           { return n.Level & 0x3fff }
 
 func normalizeEdge(e Dec_Edge_t) Dec_Edge_t { return Dec_IntToEdge(Dec_EdgeToInt(e)) }

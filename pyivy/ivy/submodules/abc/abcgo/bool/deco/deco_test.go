@@ -155,3 +155,20 @@ func TestManagerHeaderMetadata(t *testing.T) {
 		t.Fatal("manager metadata")
 	}
 }
+
+func TestNodeMetadataBitfieldWidths(t *testing.T) {
+	g := Dec_GraphCreate(1)
+	n := Dec_GraphNode(g, 0)
+	n.SetLatches([3]uint32{32, 63, 255})
+	if got := n.Latches(); got != [3]uint32{0, 31, 31} {
+		t.Fatal(got)
+	}
+	n.SetPrintingFlags([3]uint32{2, 3, 255})
+	if got := n.PrintingFlags(); got != [3]uint32{0, 1, 1} {
+		t.Fatal(got)
+	}
+	n.SetLevel(1<<14 + 3)
+	if n.Level != 3 {
+		t.Fatal(n.Level)
+	}
+}
