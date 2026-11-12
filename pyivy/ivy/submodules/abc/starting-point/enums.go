@@ -18,17 +18,26 @@ func lowerEnums(source string) (string, error) {
 		return "", err
 	}
 	var edits []Edit
-	depth := 0
+	var structStack []bool
 	for i := 0; i < len(ts); i++ {
 		if ts[i].Text == "{" {
-			depth++
+			nested := len(structStack) > 0 && structStack[len(structStack)-1]
+			if i > 0 && (ts[i-1].Text == "struct" || ts[i-1].Text == "union") {
+				nested = true
+			}
+			if i > 1 && (ts[i-2].Text == "struct" || ts[i-2].Text == "union") {
+				nested = true
+			}
+			structStack = append(structStack, nested)
 			continue
 		}
 		if ts[i].Text == "}" {
-			depth--
+			if len(structStack) > 0 {
+				structStack = structStack[:len(structStack)-1]
+			}
 			continue
 		}
-		if depth != 0 || ts[i].Text != "enum" {
+		if (len(structStack) > 0 && structStack[len(structStack)-1]) || ts[i].Text != "enum" {
 			continue
 		}
 		typedef := i > 0 && ts[i-1].Text == "typedef"
@@ -36,6 +45,11 @@ func lowerEnums(source string) (string, error) {
 		if open < len(ts) && ts[open].Kind == "word" {
 			tag = ts[open].Text
 			open++
+		}
+		if typedef && tag != "" && open+1 < len(ts) && ts[open].Kind == "word" && ts[open+1].Text == ";" {
+			edits = append(edits, Edit{ts[i-1].Start, ts[i-1].End, "type"}, Edit{ts[i].Start, ts[i].End, ts[open].Text + " ="}, Edit{ts[open].Start, ts[open].End, ""})
+			i = open + 1
+			continue
 		}
 		if open >= len(ts) || ts[open].Text != "{" {
 			continue
@@ -108,7 +122,7 @@ func lowerEnums(source string) (string, error) {
 		if typedef {
 			edits = append(edits, Edit{ts[i-1].Start, ts[i-1].End, ""}, Edit{ts[close+1].Start, ts[close+1].End, ""})
 		}
-		edits = append(edits, Edit{ts[i].Start, ts[i].End, header}, Edit{ts[open].Start, ts[open].End, "("}, Edit{ts[close].Start, ts[close].End, "\n)"}, Edit{ts[tail].Start, ts[tail].End, ""})
+		edits = append(edits, Edit{ts[i].Start, ts[i].End, header}, Edit{ts[open].Start, ts[open].End, "("}, Edit{ts[close].Start, ts[close].End, "\n)\n"}, Edit{ts[tail].Start, ts[tail].End, ""})
 		if tag != "" {
 			edits = append(edits, Edit{ts[i+1].Start, ts[i+1].End, ""})
 		}

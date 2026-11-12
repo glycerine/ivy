@@ -90,7 +90,11 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 		f.End = originalOffset(f.End, regions)
 		f.BodyStart = originalOffset(f.BodyStart, regions)
 		f.Original = originalSource[f.Start:f.End]
-		formatted, _, err = rewriteStandardLibraryContext(f.Draft, false, libraryContext)
+		if emitted, ok := libraryContext.functions[f.Name]; ok {
+			formatted = emitted
+		} else {
+			formatted, _, err = rewriteStandardLibraryContext(f.Draft, false, libraryContext)
+		}
 		if err != nil {
 			return r, transformedDiagnostic(path, "library-call rewrite of function "+f.Name, f.Draft, err)
 		}

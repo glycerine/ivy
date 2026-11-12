@@ -152,7 +152,7 @@ func TestMacroIfBraces(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(r.Draft, "if x { act(); } else { other(); }") {
+	if !strings.Contains(r.Draft, "if x != 0 { act(); } else { other(); }") {
 		t.Fatal(r.Draft)
 	}
 }

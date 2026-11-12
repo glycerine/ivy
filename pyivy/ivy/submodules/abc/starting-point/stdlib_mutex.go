@@ -46,3 +46,23 @@ func unwrapMutexOperand(s string) string {
 	}
 	return s
 }
+
+func (p *libraryPass) mutexAssertion(raw, converted string) (string, bool) {
+	ts, pairs, err := significantTokens(raw)
+	if err != nil || len(ts) < 6 || (ts[0].Text != "pthread_mutex_lock" && ts[0].Text != "pthread_mutex_unlock") || p.shadowed[ts[0].Text] || ts[1].Text != "(" {
+		return "", false
+	}
+	close := pairs[1]
+	if len(ts) != close+4 || ts[close+1].Text != "=" || ts[close+2].Text != "=" || ts[close+3].Text != "0" {
+		return "", false
+	}
+	rewritten, _, err := significantTokens(converted)
+	if err != nil || len(rewritten) < 4 {
+		return "", false
+	}
+	boundary := len(rewritten) - 3
+	if rewritten[boundary].Text != "=" || rewritten[boundary+1].Text != "=" || rewritten[boundary+2].Text != "0" {
+		return "", false
+	}
+	return strings.TrimSpace(converted[:rewritten[boundary].Start]), true
+}

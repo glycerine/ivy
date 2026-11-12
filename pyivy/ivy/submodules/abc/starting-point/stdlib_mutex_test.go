@@ -18,7 +18,7 @@ void use(pthread_mutex_t *p) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{`"sync"`, "var mutex sync.Mutex", "p *sync.Mutex", "mutex.Lock()", "p.Unlock()", "(object.mutex).Lock()", `assert(mutex.Unlock() == 0, "pthread_mutex_unlock(&mutex) == 0")`} {
+	for _, want := range []string{`"sync"`, "var mutex sync.Mutex", "p *sync.Mutex", "mutex.Lock()", "p.Unlock()", "(object.mutex).Lock()", "mutex.Unlock();"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatalf("missing %q:\n%s", want, r.Draft)
 		}
@@ -94,5 +94,18 @@ func TestStarterMutex(t *testing.T) {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatal(want)
 		}
+	}
+}
+
+func TestMutexAssertionSpacing(t *testing.T) {
+	for _, source := range []string{"assert(pthread_mutex_lock(&m)==0);", "assert(pthread_mutex_unlock ( &m ) == 0);"} {
+		draft, _, err := RewriteStandardLibrary("package p\nfunc f() { " + source + " }")
+		if err != nil || strings.Contains(draft, "assert(") || strings.Contains(draft, "==") {
+			t.Fatal(draft, err)
+		}
+	}
+	draft, _, err := RewriteStandardLibrary("package p\nfunc f() { assert(pthread_mutex_lock(&m) + next() == 0); }")
+	if err != nil || !strings.Contains(draft, "assert(") {
+		t.Fatal(draft, err)
 	}
 }

@@ -94,7 +94,7 @@ recursive mode. `Analyze`, `AnalyzeWithOptions`, and `ResolvePackage` support
 individual files and explicitly coordinated batches. The CLI is a thin wrapper.
 
 ```sh
-go test ./...
+go test . ./cmd/starting-point
 ```
 
 There are no third-party Go dependencies. The module declares Go 1.22 and was
@@ -262,3 +262,19 @@ Comments are retained. Local/scoped enums, trailing object declarations, unusual
 constant expressions and representation-sensitive widths still need repair.
 
 See [IDEAS.md](../IDEAS.md) for the output-driven mechanical conversion backlog.
+
+
+When neither `-cfg` nor `./starting.cfg` is present, a successful CLI run creates
+`./_starting.cfg`. It contains sorted, deduplicated `SYMBOL = 0` placeholders plus
+commented source locations/directives from the input inventory. This file is
+inactive: edit it and rename it to `starting.cfg` when ready. Existing templates
+are never overwritten. Config parsing accepts `//` comments through end of line,
+including after assignments. An explicit `-cfg` suppresses template generation.
+
+Run only the supported library and CLI tests:
+
+```sh
+go -C starting-point test . ./cmd/starting-point
+```
+
+Do not run tests in `experiments/`; its drafts are not expected to compile.

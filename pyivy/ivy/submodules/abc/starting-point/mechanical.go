@@ -2,6 +2,7 @@ package startingpoint
 
 import (
 	"strconv"
+	"strings"
 )
 
 func significantTokens(source string) ([]Token, map[int]int, error) {
@@ -37,13 +38,17 @@ func mechanicalSyntax(source string) (string, error) {
 					replacement = "false"
 				}
 				if t.Text == "for" && v != 0 {
+					if strings.TrimSpace(source[t.End:ts[i+1].Start]) == "" && strings.TrimSpace(source[ts[i+1].End:ts[i+2].Start]) == "" {
+						edits = append(edits, Edit{t.End, ts[i+2].Start, " "})
+						continue
+					}
 					replacement = ""
 				}
 				edits = append(edits, Edit{ts[i+1].Start, ts[i+1].End, replacement})
 			}
 		}
 		// Go's if initializer preserves evaluation order even in else-if chains.
-		if t.Text == "if" && i+3 < len(ts) && (ts[i+1].Text == "+" || ts[i+1].Text == "-") && ts[i+2].Text == ts[i+1].Text && ts[i+3].Kind == "word" {
+		if t.Text == "if" && i+3 < len(ts) && (ts[i+1].Text == "+" || ts[i+1].Text == "-") && ts[i+2].Text == ts[i+1].Text && ts[i+1].End == ts[i+2].Start && ts[i+3].Kind == "word" && (i+4 >= len(ts) || (ts[i+4].Text != "." && ts[i+4].Text != "->" && ts[i+4].Text != "[" && ts[i+4].Text != "(")) {
 			name := ts[i+3].Text
 			edits = append(edits, Edit{ts[i+1].Start, ts[i+3].End, name + ts[i+1].Text + ts[i+2].Text + "; " + name})
 		}
@@ -168,11 +173,30 @@ func lowerSwitchCases(source string) (string, error) {
 
 func mechanicalDraft(source string) (string, error) {
 	var err error
-	for _, pass := range []func(string) (string, error){lowerDoWhile, joinControlBraces, unwrapControlHeaders, mechanicalSyntax, lowerSwitchCases} {
+	for _, pass := range []func(string) (string, error){liftStaticLocals, lowerAggregateInitializers, lowerBitfields, lowerRemainingStructFields, lowerDoWhile, joinControlBraces, unwrapControlHeaders, mechanicalSyntax, lowerCommaExpressions, lowerSwitchCases, separateBlockStatements} {
 		source, err = pass(source)
 		if err != nil {
 			return "", err
 		}
 	}
 	return source, nil
+}
+
+// C permits a statement immediately after a closing block on the same line.
+// Go needs a separator there; keep else attached to its preceding if block.
+func separateBlockStatements(source string) (string, error) {
+	ts, _, err := significantTokens(source)
+	if err != nil {
+		return "", err
+	}
+	var edits []Edit
+	for i, t := range ts {
+		if t.Text != "}" || i+1 >= len(ts) || ts[i+1].Kind != "word" || (ts[i+1].Text == "else" || ts[i+1].Text == "while") {
+			continue
+		}
+		if !strings.ContainsAny(source[t.End:ts[i+1].Start], "\r\n") {
+			edits = append(edits, Edit{t.End, t.End, "\n"})
+		}
+	}
+	return ApplyEdits(source, edits)
 }

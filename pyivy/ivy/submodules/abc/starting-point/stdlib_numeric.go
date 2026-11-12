@@ -132,7 +132,13 @@ func (p *libraryPass) convertNumeric(c libraryCall) (string, string, bool) {
 		if len(a) != 1 {
 			return "", arity(c, 1), false
 		}
-		condition := a[0]
+		condition := booleanExpression(a[0], p.types, p.returnTypes())
+		// pthread lock/unlock now return no status. A direct success assertion
+		// around these operations becomes the operation itself, evaluated once.
+		if operation, ok := p.mutexAssertion(c.rawArgs[0], a[0]); ok {
+			return operation, "Go mutex methods have no integer failure status; operation retained once.", true
+		}
+
 		message := strconv.Quote(strings.TrimSpace(c.rawArgs[0]))
 		return "assert(" + condition + ", " + message + ")", "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.", true
 

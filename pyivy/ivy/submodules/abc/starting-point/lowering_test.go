@@ -49,7 +49,7 @@ func TestPackageAndMacroFunctions(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(typed.Draft, "func twice(x uint32) uint32 {\n((x)+(x))\n}") {
+	if !strings.Contains(typed.Draft, "func twice(x uint32) uint32 {\nreturn ((x)+(x));\n}") {
 		t.Fatal(typed.Draft)
 	}
 }

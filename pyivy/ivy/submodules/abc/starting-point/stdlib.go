@@ -17,6 +17,7 @@ type LibraryChange struct {
 }
 
 type libraryPass struct {
+	returns  map[string]string
 	source   string
 	ts       []Token
 	pairs    map[int]int
@@ -65,6 +66,7 @@ func rewriteStandardLibraryContext(source string, imports bool, context *library
 	}
 	if context != nil {
 		p.imports = cloneLibraryImports(context.imports)
+		p.returns = context.returns
 		for k, v := range context.types {
 			p.types[k] = v
 		}
@@ -106,6 +108,10 @@ func rewriteStandardLibraryContext(source string, imports bool, context *library
 	if err != nil {
 		return "", nil, err
 	}
+	text, err = p.rewriteTruthHeaders(text)
+	if err != nil {
+		return "", nil, err
+	}
 	if imports {
 		// Import edits refer to original header offsets, which precede all body edits.
 		text, err = ApplyEdits(text, p.imports.edits(ts))
@@ -137,6 +143,12 @@ func (p *libraryPass) collectTypes() {
 		}
 		if next == "*" && i+4 < len(p.ts) && p.ts[i+3].Text == "." && p.ts[i+4].Text == "File" {
 			set(t.Text, "file")
+		}
+		if next == "bool" {
+			set(t.Text, "bool")
+		}
+		if next == "*" && i+2 < len(p.ts) && p.ts[i+2].Kind == "word" && (i+3 >= len(p.ts) || p.ts[i+3].Text != ".") {
+			set(t.Text, "pointer:"+p.ts[i+2].Text)
 		}
 		if next == "int32" || next == "int64" || next == "int" || next == "uint32" {
 			set(t.Text, next)
@@ -380,9 +392,16 @@ func (p *libraryPass) text(expr string) (string, bool) {
 	return "", false
 }
 func (p *libraryPass) convert(c libraryCall) (string, string, bool) {
-	if c.name == "ABC_CALLOC" {
+	if c.name == "memset" && c.standalone && len(c.args) == 3 && strings.TrimSpace(c.args[1]) == "0" {
+		name := strings.TrimSpace(c.rawArgs[0])
+		typ := strings.TrimPrefix(p.types[name], "pointer:")
+		if typ != p.types[name] && p.isStructType(typ) && strings.ReplaceAll(c.rawArgs[2], " ", "") == "sizeof("+typ+")" {
+			return "*" + name + " = " + typ + "{}", "Whole known struct reset to its Go zero value; raw layout is not reproduced.", true
+		}
+	}
+	if c.name == "ABC_CALLOC" || c.name == "ABC_ALLOC" {
 		if len(c.args) == 2 && strings.TrimSpace(c.args[1]) == "1" && identifier.MatchString(strings.TrimSpace(c.args[0])) {
-			return "new(" + goType(strings.TrimSpace(c.args[0])) + ")", "Single zero-initialized object; Go allocation failure does not return C NULL.", true
+			return "new(" + goType(strings.TrimSpace(c.args[0])) + ")", "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.", true
 		}
 		return "", "Allocation count/type requires representation repair.", false
 	}
@@ -433,9 +452,11 @@ func (p *libraryPass) statementBoundary(i int) bool {
 // Reuse file-wide context for metadata rewrites instead of lexing the full
 // expanded file once per function.
 type libraryEnvironment struct {
-	imports  *libraryImports
-	types    map[string]string
-	shadowed map[string]bool
+	functions map[string]string
+	returns   map[string]string
+	imports   *libraryImports
+	types     map[string]string
+	shadowed  map[string]bool
 }
 
 func newLibraryEnvironment(source string) (*libraryEnvironment, error) {
@@ -453,9 +474,32 @@ func newLibraryEnvironment(source string) (*libraryEnvironment, error) {
 	if err != nil {
 		return nil, err
 	}
-	env := &libraryEnvironment{newLibraryImports(source, ts, pairs), map[string]string{}, map[string]bool{}}
+	env := &libraryEnvironment{imports: newLibraryImports(source, ts, pairs), types: map[string]string{}, shadowed: map[string]bool{}}
 	p := &libraryPass{ts: ts, pairs: pairs, types: env.types}
 	p.collectTypes()
+	env.functions = map[string]string{}
+	duplicates := map[string]bool{}
+	for i, t := range ts {
+		if t.Text != "func" || i+2 >= len(ts) || ts[i+1].Kind != "word" || ts[i+2].Text != "(" {
+			continue
+		}
+		open := pairs[i+2] + 1
+		for open < len(ts) && ts[open].Text != "{" && ts[open].Text != ";" {
+			open++
+		}
+		if open >= len(ts) || ts[open].Text != "{" {
+			continue
+		}
+		name := ts[i+1].Text
+		if _, exists := env.functions[name]; exists {
+			duplicates[name] = true
+		}
+		env.functions[name] = source[t.Start:ts[pairs[open]].End]
+	}
+	for name := range duplicates {
+		delete(env.functions, name)
+	}
+	env.returns = p.returnTypes()
 	for i, t := range ts {
 		if t.Text == "func" && i+1 < len(ts) {
 			env.shadowed[ts[i+1].Text] = true
@@ -480,4 +524,28 @@ func anonymousFunctions(source string) int {
 		previous = t.Text
 	}
 	return count
+}
+
+func (p *libraryPass) isStructType(name string) bool {
+	seen := map[string]bool{}
+	for !seen[name] {
+		seen[name] = true
+		next := ""
+		for i, t := range p.ts {
+			if t.Text != "type" || i+2 >= len(p.ts) || p.ts[i+1].Text != name {
+				continue
+			}
+			if p.ts[i+2].Text == "struct" {
+				return true
+			}
+			if p.ts[i+2].Text == "=" && i+3 < len(p.ts) {
+				next = p.ts[i+3].Text
+			}
+		}
+		if next == "" {
+			return false
+		}
+		name = next
+	}
+	return false
 }

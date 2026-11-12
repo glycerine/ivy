@@ -1,6 +1,7 @@
 package startingpoint
 
 import (
+	"go/parser"
 	"regexp"
 	"strings"
 )
@@ -71,7 +72,18 @@ func macroDraft(t Token, opts Options) (name, draft, message string, ok bool) {
 	if converted, err := unwrapControlHeaders(replacement); err == nil {
 		replacement = converted
 	}
+	if typed && types.Result != "" {
+		expression := strings.TrimSpace(strings.TrimSuffix(strings.TrimSpace(replacement), ";"))
+		if _, err := parser.ParseExpr(expression); err == nil {
+			replacement = "return " + expression + ";"
+		}
+	}
 	draft = original + "func " + name + "(" + strings.Join(params, ", ") + ")" + result + " {" + note + "\n" + replacement + "\n}\n"
 	message = "Mechanical macro function draft: replacement text copied after directive line splicing, with empty for-loop bodies and structural control-flow braces made explicit. Repair parameter/result types, C syntax, returns and call-site semantics in the second pass. Unspecified parameter types are int placeholders, not inferred types."
+	if !typed || types.Result == "" {
+		if _, err := parser.ParseExpr(strings.TrimSpace(strings.TrimSuffix(strings.TrimSpace(replacement), ";"))); err == nil {
+			message += " Single-expression macro: supply a reviewed result type through Options.Macros to generate a return statement."
+		}
+	}
 	return
 }

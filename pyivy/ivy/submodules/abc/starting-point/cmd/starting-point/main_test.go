@@ -270,7 +270,7 @@ func TestBatchAssertHelper(t *testing.T) {
 		t.Fatal(string(helper), err)
 	}
 	draft, err := os.ReadFile(filepath.Join(out, "assert.go"))
-	if err != nil || !strings.Contains(string(draft), `assert(x, "x")`) {
+	if err != nil || !strings.Contains(string(draft), `assert((x != 0), "x")`) {
 		t.Fatal(string(draft), err)
 	}
 }

@@ -143,6 +143,12 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 			resultErr = fmt.Errorf("transformed draft for %s (not original-source coordinates): %w", path, resultErr)
 		}
 	}()
+	discoveredTypes := discoverTypeNames(source)
+	normalized, normalizeErr := normalizeEnumReferences(source)
+	if normalizeErr != nil {
+		return Result{}, sourceError(source, normalizeErr)
+	}
+	source = normalized
 	r := Result{Configuration: opts.Defines, Schema: 2, Path: path, SHA256: fmt.Sprintf("%x", sha256.Sum256([]byte(source)))}
 	var err error
 	opts.Package, err = ResolvePackage(path, opts.Package)
@@ -166,6 +172,7 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 	edits, structIssues := structEdits(source, ts, ends, path)
 	edits = append(edits, headerGuardEdits(ts)...)
 	r.Issues = append(r.Issues, structIssues...)
+	r.Issues = append(r.Issues, mechanicalReviewIssues(path, source)...)
 	for _, t := range ts {
 		if t.Kind != "directive" {
 			continue
@@ -197,6 +204,9 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 	}
 	localTypes := declarationTypes(mask, topLevelSignatures)
 	for name := range opts.TypeNames {
+		localTypes[name] = true
+	}
+	for name := range discoveredTypes {
 		localTypes[name] = true
 	}
 	globalEdits, err := packageVariableEdits(source, ts, localTypes, opts.opaque)
@@ -324,6 +334,10 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 		if err != nil {
 			return r, err
 		}
+		r.Draft, err = lowerIntegerSuffixes(r.Draft)
+		if err != nil {
+			return r, err
+		}
 		r.Draft, err = integerDefines(r.Draft)
 		if err != nil {
 			return r, err
@@ -349,7 +363,15 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 			if err != nil {
 				return r, err
 			}
+			r.Functions[i].Draft, err = lowerEnums(r.Functions[i].Draft)
+			if err != nil {
+				return r, err
+			}
 			r.Functions[i].Draft, err = lowerFloatCasts(r.Functions[i].Draft)
+			if err != nil {
+				return r, err
+			}
+			r.Functions[i].Draft, err = lowerIntegerSuffixes(r.Functions[i].Draft)
 			if err != nil {
 				return r, err
 			}

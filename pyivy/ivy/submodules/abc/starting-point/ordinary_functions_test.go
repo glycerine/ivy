@@ -27,7 +27,7 @@ extern int k(void) { return 3; }
 	if len(r.Functions) != 4 {
 		t.Fatalf("functions: %d\n%s", len(r.Functions), r.Draft)
 	}
-	for _, want := range []string{"func f(n int32) {", "for i = 0; i < n; i++ {", "if n { // keep condition comment", "func g() int32 {", "func h() int32 {", "func k() int32 {"} {
+	for _, want := range []string{"func f(n int32) {", "for i = 0; i < n; i++ {", "if n != 0 { // keep condition comment", "func g() int32 {", "func h() int32 {", "func k() int32 {"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatalf("missing %q:\n%s", want, r.Draft)
 		}

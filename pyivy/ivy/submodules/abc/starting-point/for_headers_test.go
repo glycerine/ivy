@@ -71,7 +71,7 @@ func TestAigPackIfHeader(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(r.Draft, "if Aig_ManPackAddPatternTry( p, k, vLits ) {") {
+	if !strings.Contains(r.Draft, "if Aig_ManPackAddPatternTry( p, k, vLits ) != 0 {") {
 		t.Fatal("AIG condition not unwrapped")
 	}
 }

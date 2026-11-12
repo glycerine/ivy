@@ -45,7 +45,7 @@ struct s_ { int a[4]; unsigned bits:2; int x, y; };`
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{"type s struct", "int a[4];", "unsigned bits:2;", "int x, y;"} {
+	for _, want := range []string{"type s struct", "a [4]int32;", "bits uint32;", "x, y int32;"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatal(r.Draft)
 		}
