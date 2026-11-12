@@ -30,5 +30,6 @@ func nfMap(g *Gia_Man_t, pars *Jf_Par_t, library *nfLibrary) *Gia_Man_t {
 	for round := int32(0); round < pars.nRoundsEla; round++ {
 		matcher.exactAreaRound(refs)
 	}
+	matcher.fixOutputDrivers(refs)
 	return matcher.deriveMapping(refs)
 }
