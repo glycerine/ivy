@@ -407,65 +407,6 @@ func Sbl_ManUpdateMapping(p *Sbl_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Sbl_ManCreateCnf(p *Sbl_Man_t) int32 {
-    var i int32;
-    var k int32;
-    var c int32;
-    var pLits [2]int32;
-    var value int32;
-    var pCutsN1 *word  = Vec_WrdArray(p.vCutsN1);
-    var pCutsN2 *word  = Vec_WrdArray(p.vCutsN2);
-    assert(p.FirstVar == sat_solver_nvars(p.pSat), "p.FirstVar == sat_solver_nvars(p.pSat)");
-    sat_solver_setnvars( p.pSat, sat_solver_nvars(p.pSat) + Vec_WrdSize(p.vCutsI1) );
-    //printf( "\n" );
-    for  i = 0; i < Vec_IntSize(p.vAnds); i++  {
-        var Start0 int32  = Vec_IntEntry( p.vCutsStart, Vec_IntSize(p.vLeaves) + i );
-        var Limit0 int32  = Start0 + Vec_IntEntry( p.vCutsNum, Vec_IntSize(p.vLeaves) + i ) - 1;
-        // add main clause
-        Vec_IntClear( p.vLits );
-        Vec_IntPush( p.vLits, Abc_Var2Lit(i, 1) );
-        //printf( "Node %d implies cuts: ", i );
-        for  k = Start0; k < Limit0; k++  {
-            Vec_IntPush( p.vLits, Abc_Var2Lit(p.FirstVar+k, 0) );
-            //printf( "%d ", p->FirstVar+k );
-        }
-        //printf( "\n" );
-        value = sat_solver_addclause( p.pSat, Vec_IntArray(p.vLits), Vec_IntLimit(p.vLits)  );
-        assert((value != 0), "value");
-        // binary clauses
-        for  k = Start0; k < Limit0; k++  {
-            var Cut1 word  = pCutsN1[k];
-            var Cut2 word  = pCutsN2[k];
-            //printf( "Cut %d implies root node %d.\n", p->FirstVar+k, i );
-            // root clause
-            pLits[0] = Abc_Var2Lit( p.FirstVar+k, 1 );
-            pLits[1] = Abc_Var2Lit( i, 0 );
-            value = sat_solver_addclause( p.pSat, pLits, pLits + 2 );
-            assert((value != 0), "value");
-            // fanin clauses
-            for  c = 0; c < 64 && Cut1; c++, Cut1 >>= 1  {
-                if (Cut1 & 1) == 0 {
-                    continue; }
-                //printf( "Cut %d implies fanin %d.\n", p->FirstVar+k, c );
-                pLits[1] = Abc_Var2Lit( c, 0 );
-                value = sat_solver_addclause( p.pSat, pLits, pLits + 2 );
-                assert((value != 0), "value");
-            }
-            for  c = 0; c < 64 && Cut2; c++, Cut2 >>= 1  {
-                if (Cut2 & 1) == 0 {
-                    continue; }
-                //printf( "Cut %d implies fanin %d.\n", p->FirstVar+k, c );
-                pLits[1] = Abc_Var2Lit( c+64, 0 );
-                value = sat_solver_addclause( p.pSat, pLits, pLits + 2 );
-                assert((value != 0), "value");
-            }
-        }
-    }
-    sat_solver_set_polarity( p.pSat, Vec_IntArray(p.vPolar), Vec_IntSize(p.vPolar) );
-    return 1;
-}
-
-
 /**Function*************************************************************
 
   Synopsis    []

@@ -2,6 +2,7 @@ package gia
 
 import (
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"testing"
 )
 
@@ -94,5 +95,36 @@ func TestSblComputeWindowCuts(t *testing.T) {
 	}
 	if Gia_ManObj(g, y>>1).Value != ^uint32(0) {
 		t.Fatal("temporary object values not cleared")
+	}
+}
+
+func TestSblWindowCNF(t *testing.T) {
+	g := Gia_ManStart(8)
+	a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendAnd(g, a, b)
+	y := Gia_ManAppendAnd(g, x, c)
+	g.vMapping2 = vec.Vec_WecStart(int(g.nObjs))
+	p := Sbl_ManAlloc(g, 4)
+	p.LutSize = 4
+	for _, id := range []int32{a >> 1, b >> 1, c >> 1} {
+		vec.Vec_IntPush(p.vLeaves, id)
+	}
+	vec.Vec_IntPush(p.vAnds, x>>1)
+	vec.Vec_IntPush(p.vAnds, y>>1)
+	Sbl_ManComputeCuts(p)
+	Sbl_ManCreateCnf(p)
+	direct := Sbl_ManFindCut(p, 4, 7, 0, 0, 0)
+	via := Sbl_ManFindCut(p, 4, 4, 0, 1, 0)
+	if direct < 0 || via < 0 {
+		t.Fatal("missing cuts")
+	}
+	if p.pSat.Solve(bsat.Positive(p.FirstVar+via), bsat.Negative(0)) != bsat.Unsatisfiable {
+		t.Fatal("selected cut must require its internal fanin")
+	}
+	if p.pSat.Solve(bsat.Positive(p.FirstVar+direct), bsat.Negative(1)) != bsat.Unsatisfiable {
+		t.Fatal("selected cut must require its root")
+	}
+	if p.pSat.Solve(bsat.Positive(p.FirstVar+direct), bsat.Positive(1)) != bsat.Satisfiable {
+		t.Fatal("valid cut rejected")
 	}
 }
