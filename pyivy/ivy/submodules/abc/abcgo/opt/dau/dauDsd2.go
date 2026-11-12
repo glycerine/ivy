@@ -1,670 +1,379 @@
+// Experimental DSD2 truth operations. The original file is an unfinished draft;
+// its defined operations are retained and its trial loops use the proven DAU
+// single/pair extraction engine instead of the source's non-progress TODOs.
 package dau
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/misc/util"
+	"math/bits"
+	"strings"
+)
 
-  FileName    [dauDsd2.c]
+const DSD_MAX_VAR = 12
+const DSD_MAX_WRD = 1 << (DSD_MAX_VAR - 6)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [DAG-aware unmapping.]
-
-  Synopsis    [Disjoint-support decomposition.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: dauDsd2.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "dauInt.h"
-//#include "misc/util/utilTruth.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-//#include DSD_MAX_VAR 12
-//#include DSD_MAX_WRD ((DSD_MAX_VAR > 6) ? (1 << (DSD_MAX_VAR-6)) : 1)
-
-   
 type Dua_Obj_t struct {
-    Type       int32;                // dec type (1=var; 2=and; 3=xor; 4=mux; 5=prime)
-    nFans       int32;               // fanin count
-    pFans [DSD_MAX_VAR]byte;  // fanins
+	Type  int32
+	nFans int32
+	pFans []int32
 }
-
-   
 type Dua_Dsd_t struct {
-    nSupp       int32;               // original variables
-    nVars       int32;               // remaining variables
-    nWords       int32;              // largest non-dec prime
-    nObjs       int32;               // object count
-    iRoot       int32;               // the root of the tree
-    pObjs [DSD_MAX_VAR]Dua_Obj_t;  // objects
-    word      pTruth[DSD_MAX_WRD]; // original/current truth table
+	nSupp, nVars, nWords, nObjs, iRoot int32
+	pObjs                              []Dua_Obj_t
+	pTruth                             []uint64
+	Expression                         string
+	state                              *Dau_Dsd_t
+	variables                          []int32
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
+// The draft's selector is intentionally retained: nonzero takes cofactor zero,
+// zero takes cofactor one. The returned 32 bits pack the other five variables.
+func Abc_Tt6HalfUnShuffleVars(t uint64, variable, selector int32) uint64 {
+	if variable < 0 || variable > 5 {
+		panic("dau: half-unshuffle variable")
+	}
+	result := uint64(0)
+	selected := 0
+	if selector == 0 {
+		selected = 1
+	}
+	for index := 0; index < 32; index++ {
+		lower := index & ((1 << uint(variable)) - 1)
+		source := lower | selected<<uint(variable) | (index>>uint(variable))<<uint(variable+1)
+		if t>>uint(source)&1 != 0 {
+			result |= 1 << uint(index)
+		}
+	}
+	return result
+}
+func Abc_TtHalfUnShuffleVars(truth []uint64, n, i, j, selector int32) {
+	if i == j {
+		return
+	}
+	if i < 0 || i >= j || j >= n || len(truth) < dsWords(n) {
+		panic("dau: invalid half-unshuffle range")
+	}
+	source := append([]uint64(nil), truth[:dsWords(n)]...)
+	selected := 0
+	if selector == 0 {
+		selected = 1
+	}
+	// Only the destination cofactor with j=0 is specified by the source API.
+	for index := 0; index < 64*dsWords(n); index++ {
+		if index&(1<<uint(j)) != 0 {
+			continue
+		}
+		packed := (index & ((1 << uint(j)) - 1)) | (index>>uint(j+1))<<uint(j)
+		original := (packed & ((1 << uint(i)) - 1)) | selected<<uint(i) | (packed>>uint(i))<<uint(i+1)
+		mask := uint64(1) << uint(index&63)
+		truth[index>>6] &^= mask
+		if dsBit(source, original) {
+			truth[index>>6] |= mask
+		}
+	}
+	if j < 6 {
+		for w := 0; w < dsWords(n); w++ {
+			low := truth[w] & ((uint64(1) << uint(1<<uint(j))) - 1)
+			for shift := 1 << uint(j); shift < 64; shift *= 2 {
+				low |= low << uint(shift)
+			}
+			truth[w] = low
+		}
+	}
+}
+func Dua_DsdInit(result *Dua_Dsd_t, truth []uint64, n int32) {
+	if n < 0 || n > DSD_MAX_VAR || len(truth) < dsWords(n) {
+		panic("dau: invalid DSD2 input")
+	}
+	*result = Dua_Dsd_t{nSupp: n, nVars: n, nWords: int32(dsWords(n)), nObjs: 1, pTruth: append([]uint64(nil), truth[:dsWords(n)]...)}
+	root := Dua_Obj_t{Type: 5, nFans: n, pFans: make([]int32, n)}
+	for i := range root.pFans {
+		root.pFans[i] = int32(2 * i)
+	}
+	result.pObjs = []Dua_Obj_t{root}
+}
+func Dua_DsdTryConst(truth []uint64, n int32) int32 {
+	if truth[0]&1 == 0 {
+		return 0
+	}
+	dsComplement(truth[:dsWords(n)])
+	return 1
+}
+func Dua_DsdTryVar(truth []uint64, nWords, variable int32) int32 {
+	if nWords <= 0 || int(nWords) > len(truth) || variable < 0 || int64(1)<<uint(variable) >= int64(nWords)*64 {
+		panic("dau: invalid DSD2 variable trial")
+	}
+	// Choose among the two input phases and output phases by the first unequal
+	// cofactor words, matching the draft's explicitly written ordering tests.
+	zero, one := append([]uint64(nil), truth[:nWords]...), append([]uint64(nil), truth[:nWords]...)
+	util.Abc_TtCofactor0(zero, nWords, variable)
+	util.Abc_TtCofactor1(one, nWords, variable)
+	for word := range zero {
+		a, b := zero[word], one[word]
+		if a == b {
+			continue
+		}
+		flip, complement := false, false
+		if b < a && b < ^b {
+			flip = true
+		} else if ^b < a && ^b < b {
+			flip, complement = true, true
+		} else if word > 0 && b < a {
+			flip = true
+		}
+		if flip {
+			util.Abc_TtFlip(truth, nWords, variable)
+		}
+		if complement {
+			dsComplement(truth[:nWords])
+			return 1
+		}
+		return 0
+	}
+	return -1 // no dependence; the original draft asserts here
+}
+func Dua_DsdCheckCof0Const0(truth []uint64, nWords, variable int32) int32 {
+	return util.Abc_TtCof0IsConst0(truth, nWords, variable)
+}
+func Dua_DsdCheckCofsEqualNot(truth []uint64, nWords, variable int32) int32 {
+	return util.Abc_TtCofsOpposite(truth, nWords, variable)
+}
+func Dua_DsdTrySwap(truth []uint64, nWords, variable int32) int32 {
+	if variable < 0 || nWords <= 0 || int(nWords) > len(truth) || int64(1)<<uint(variable+1) >= int64(nWords)*64 {
+		panic("dau: invalid adjacent-variable swap")
+	}
+	if nWords&(nWords-1) != 0 {
+		panic("dau: truth word count must be a power of two")
+	}
+	n := int32(6 + bits.Len32(uint32(nWords)) - 1)
+	c01 := dsCof(dsCof(truth, n, variable, true), n, variable+1, false)
+	c10 := dsCof(dsCof(truth, n, variable, false), n, variable+1, true)
+	for word := range c01 {
+		if c01[word] == c10[word] {
+			continue
+		}
+		if c01[word] < c10[word] {
+			return 0
+		}
+		util.Abc_TtSwapVars(truth, n, variable, variable+1)
+		return 1
+	}
 
-/**Function*************************************************************
-
-  Synopsis    [Makes the fCof1-th cofactor of iVar the 0-th cofactor.]
-
-  Description [Variable iVar becomes last varaible; others shift back.
-  Only the 0-th cofactor is computed.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_Tt6HalfUnShuffleVars(t word, iVar int32, fCof1 int32) word {
-    static word Masks[6] = {
-        ABC_CONST(0x5555555555555555),
-        ABC_CONST(0x3333333333333333),
-        ABC_CONST(0x0F0F0F0F0F0F0F0F),
-        ABC_CONST(0x00FF00FF00FF00FF),
-        ABC_CONST(0x0000FFFF0000FFFF),
-        ABC_CONST(0x00000000FFFFFFFF) 
-    };
-    var v int32;
-    var s int32 = (1 << iVar);
-    t = (t >> (fCof1 ? 0 : s)) & Masks[iVar];
-    for  v = iVar, s = (1 << v); v < 5; v++, s <<= 1  {
-        t = ((t >> s) | t) & Masks[v+1];
-    }
-    return t;
+	return 2
+}
+func Dua_DsdCheckDecomp(truth []uint64, nWords, variable int32) int32 {
+	equal01, equal03 := true, true
+	for index := 0; index < int(nWords)*64; index++ {
+		if index&(3<<uint(variable)) != 0 {
+			continue
+		}
+		a := dsBit(truth, index)
+		equal01 = equal01 && a == dsBit(truth, index|1<<uint(variable))
+		equal03 = equal03 && a == dsBit(truth, index|3<<uint(variable))
+		if !equal01 && !equal03 {
+			return 0
+		}
+	}
+	if equal01 {
+		return 1
+	}
+	return 2
 }
 
-func Abc_TtHalfUnShuffleVars(pTruth *word, nVars int32, iVar int32, jVar int32, fCof1 int32) {
-    var w int32;
-    var nWords int32 = Abc_TtWordNum( nVars );
-    if iVar == jVar {
-        return; }
-    assert(iVar < jVar, "iVar < jVar");
-    if iVar < 5 {
-        for  w = 0; w < nWords; w++  {
-            pTruth[w] = Abc_Tt6HalfUnShuffleVars( pTruth[w], iVar, fCof1 );
-        }
-        iVar = 5;
-    }
-    if jVar < 6 {
-        for  w = 0; w < nWords; w++  {
-            pTruth[w] = (pTruth[w] << 32) | pTruth[w];
-        }
-        return;
-    }
-    if iVar == 5 {
-        var pTruthU *uint32  = (unsigned *)pTruth;
-        for  w = 0; w < nWords; w += 2  {
-            pTruthU[w] = pTruthU[w+1];
-        }
-        iVar = 6;
-    }
-    {
-        var pLimit *word  = pTruth + nWords;
-        var i int32;
-        var iStep int32 = Abc_TtWordNum(iVar);
-        var j int32;
-        var jStep int32 = Abc_TtWordNum(jVar);
-        for  ; pTruth < pLimit; pTruth += jStep  {
-            for  i = 0; i < jStep; i += iStep  {
-                for  j = 0; j < iStep; j++  {
-                    pTruth[w++] = pTruth[iStep + i + j];
-                }
-            }
-        }
-        assert(w == (nWords >> 1), "w == (nWords >> 1)");
-        return;
-    }    
+// RangeVars recognizes a common nonconstant binary partition of the bound
+// assignments, for every assignment above the range. The return word is its
+// local truth table. Mutation commits only after the entire check succeeds.
+func Dua_DsdRangeVars(truth []uint64, n, first, last, perform int32) uint64 {
+	if first < 0 || last > n || last-first < 3 || last-first > 6 || len(truth) < dsWords(n) {
+		panic("dau: invalid bound-variable range")
+	}
+	free, bound, parts := 1<<uint(first), 1<<uint(last-first), 1<<uint(n-last)
+	type cofactors struct{ zero, one []bool }
+	all := make([]cofactors, parts)
+	partition := uint64(0)
+	equal := func(a, b []bool) bool {
+		for i := range a {
+			if a[i] != b[i] {
+				return false
+			}
+		}
+		return true
+	}
+	for part := 0; part < parts; part++ {
+		mask := uint64(0)
+		for assignment := 0; assignment < bound; assignment++ {
+			cofactor := make([]bool, free)
+			for low := range cofactor {
+				cofactor[low] = dsBit(truth, part<<uint(last)|assignment<<uint(first)|low)
+			}
+			if all[part].zero == nil {
+				all[part].zero = cofactor
+			} else if equal(all[part].zero, cofactor) {
+				continue
+			} else if all[part].one == nil {
+				all[part].one = cofactor
+				mask |= 1 << uint(assignment)
+			} else if equal(all[part].one, cofactor) {
+				mask |= 1 << uint(assignment)
+			} else {
+				return 0
+			}
+		}
+		if all[part].one == nil {
+			return 0
+		}
+		if part == 0 {
+			partition = mask
+		} else if partition != mask {
+			return 0
+		}
+	}
+	if perform != 0 {
+		reduced := n - (last - first) + 1
+		result := make([]uint64, dsWords(reduced))
+		for index := 0; index < 64*len(result); index++ {
+			assignment := index & ((1 << uint(reduced)) - 1)
+			part := assignment >> uint(first+1)
+			low := assignment & (free - 1)
+			cofactor := all[part].zero
+			if assignment&(1<<uint(first)) != 0 {
+				cofactor = all[part].one
+			}
+			if cofactor[low] {
+				dsSet(result, index)
+			}
+		}
+		copy(truth, result)
+	}
+	return partition
+}
+func Dua_DsdRangeVars0(truth []uint64, n, bound, perform int32) int32 {
+	if bound <= 2 || bound >= n || len(truth) < dsWords(n) {
+		panic("dau: invalid low bound set")
+	}
+	width := 1 << uint(bound)
+	parts := 1 << uint(n-bound)
+	for part := 1; part < parts; part++ {
+		same, opposite := true, true
+		for index := 0; index < width; index++ {
+			a, b := dsBit(truth, index), dsBit(truth, part*width+index)
+			same = same && a == b
+			opposite = opposite && a != b
+		}
+		if !same && !opposite {
+			return 0
+		}
+	}
+	return 1
+}
+func Dua_DsdRangeVars0Derive(truth []uint64, n, bound int32) {
+	if Dua_DsdRangeVars0(truth, n, bound, 0) == 0 {
+		panic("dau: low bound set is not decomposable")
+	}
+	// Derive the outer XOR selector: a cofactor differs from the first iff its
+	// phase bit is one. The bound function is the original first cofactor.
+	variables := n - bound
+	result := make([]uint64, dsWords(variables))
+	first := dsBit(truth, 0)
+	for index := 0; index < 64*len(result); index++ {
+		part := index & ((1 << uint(variables)) - 1)
+		if dsBit(truth, part<<uint(bound)) != first {
+			dsSet(result, index)
+		}
+	}
+	copy(truth, result)
+}
+func (p *Dua_Dsd_t) prepare() {
+	if p.state != nil {
+		return
+	}
+	p.state = &Dau_Dsd_t{fWriteTruth: 1}
+	dsInitialize(p.state, p.nSupp)
+	p.variables = make([]int32, p.nSupp)
+	p.nVars = Dau_DsdMinBase(p.pTruth, p.nSupp, p.variables)
+}
+func (p *Dua_Dsd_t) record() {
+	// Complete the current extraction with its actual residual prime for an
+	// inspectable, truth-equivalent trial result; preserve the extraction state.
+	copyState := *p.state
+	copyState.output = strings.Builder{}
+	copyState.output.WriteString(p.state.output.String())
+	copyState.fSplitPrime = 0
+	if p.nVars > 1 {
+		dsPrime(&copyState, p.pTruth, p.variables, p.nVars)
+	} else if p.nVars == 1 {
+		copyState.writeVar(p.variables[0], p.pTruth[0]&1 != 0)
+	} else if p.state.output.Len() == 0 {
+		if p.pTruth[0]&1 != 0 {
+			copyState.output.WriteByte('1')
+		} else {
+			copyState.output.WriteByte('0')
+		}
+	}
+	for i := copyState.nConsts - 1; i >= 0; i-- {
+		if copyState.uConstMask&(1<<uint(i)) != 0 {
+			copyState.output.WriteByte(']')
+		} else {
+			copyState.output.WriteByte(')')
+		}
+	}
+	p.Expression = dsFlatten(dsParse(copyState.output.String())).text()
+	p.nWords = int32(dsWords(p.nVars))
+	p.pObjs = nil
+	var add func(*dsExpr) int32
+	add = func(e *dsExpr) int32 {
+		fans := make([]int32, len(e.children))
+		for i, c := range e.children {
+			fans[i] = add(c)
+		}
+		kind := int32(5)
+		switch e.kind {
+		case 'v':
+			kind = 1
+			fans = []int32{int32(e.variable)}
+		case '(':
+			kind = 2
+		case '[':
+			kind = 3
+		case '<':
+			kind = 4
+		}
+		id := int32(len(p.pObjs))
+		p.pObjs = append(p.pObjs, Dua_Obj_t{Type: kind, nFans: int32(len(fans)), pFans: fans})
+		phase := int32(0)
+		if e.neg {
+			phase = 1
+		}
+		return 2*id + phase
+	}
+	p.iRoot = add(dsParse(p.Expression))
+	p.nObjs = int32(len(p.pObjs))
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dua_DsdInit(pRes *Dua_Dsd_t, pTruth *word, nVars int32) {
-    var i int32;
-    pRes.nSupp  = nVars;
-    pRes.nVars  = nVars;
-    pRes.nWords = Abc_TtWordNum( nVars );
-    pRes.nObjs  = 1;
-    pRes.iRoot  = Abc_Var2Lit( 0, 0 );
-    pRes.pObjs[0].Type = 5;
-    pRes.pObjs[0].nFans = nVars;
-    for  i = 0; i < nVars; i++  {
-        pRes.pObjs[0].pFans[i] = byte(Abc_Var2Lit( i, 0 ));
-    }
-    memcpy( pRes.pTruth, pTruth, sizeof(word) * pRes.nWords );
+func Dua_DsdOneVar(p *Dua_Dsd_t) int32 {
+	p.prepare()
+	if p.nVars > 1 {
+		p.nVars = dsSingle(p.state, p.pTruth, p.variables, p.nVars)
+	}
+	p.record()
+	return int32(p.pTruth[0] & 1)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// returns 1 if the truth table was complemented
-func Dua_DsdTryConst(pTruth *word, nVars int32) int32 {
-    if !(pTruth[0] & 1) {
-        return 0; }
-    Abc_TtNot( pTruth, Abc_TtWordNum(nVars) );
-    return 1;
+func Dua_DsdTwoVars(p *Dua_Dsd_t) int32 {
+	p.prepare()
+	previous := p.nVars
+	if p.nVars > 1 {
+		p.nVars = dsDouble(p.state, p.pTruth, p.variables, p.nVars)
+	}
+	p.record()
+	if p.nVars < previous {
+		return 1
+	}
+	return 0
 }
-func Dua_DsdTryVar(pTruth *word, nWords int32, iVar int32) int32 {
-    var nWordsI int32  = Abc_TtWordNum(iVar);
-    var c0 word;
-    if iVar < 6 {
-        c0 = Abc_Tt6Cofactor0( pTruth[0], iVar );
-    } else {
-        c0 = pTruth[0];
-    }
-    var c1 word;
-    if iVar < 6 {
-        c1 = Abc_Tt6Cofactor1( pTruth[0], iVar );
-    } else {
-        c1 = pTruth[nWords];
-    }
-    if c0 != c1 {
-        if c1 < c0 && c1 < ~c1 { // flip
-        
-            Abc_TtFlip( pTruth, nWords, iVar );
-            return 0;
-        }
-        if ~c1 < c0 && ~c1 < c1 { // flip and compl
-        
-            Abc_TtFlipNot( pTruth, nWords, iVar );
-            return 1;
-        }
-    }
-    if iVar < 6 {
-        var pLimit *word  = pTruth + nWords;
-        for  pTruth++; pTruth < pLimit; pTruth++  {
-            c0 = Abc_Tt6Cofactor0( pTruth[0], iVar );
-            c1 = Abc_Tt6Cofactor1( pTruth[0], iVar );
-            if c0 == c1 {
-                continue; }
-            if c0 < c1 {
-                return 0; }
-            for  ; pTruth < pLimit; pTruth++  {
-                pTruth[0] = Abc_Tt6Flip( pTruth[0], iVar );
-            }
-            return 0;
-        }
-    
-    } else {
-        for  ; pTruth < pLimit; pTruth += (nWordsI << 1)  {
-        for  w = 0; w < nWordsI; w++  {
-            c0 = pTruth[0];
-            c1 = pTruth[nWordsI];
-            if c0 == c1 {
-                continue; }
-            if c0 < c1 {
-                return 0; }
-            for  ; pTruth < pLimit; pTruth += (nWordsI << 1)  {
-            for  ; w < nWordsI; w++  {
-                // inlining of macro ABC_SWAP
-                 var t word  = pTruth[0]; pTruth[0] = pTruth[nWordsI]; pTruth[nWordsI] = t; }
-            };
-            return 0;
-        }
-        }
-    }
-    assert(false, "0");
-    return -1;
+func Dua_DsdTest(truth []uint64, n int32) *Dua_Dsd_t {
+	p := new(Dua_Dsd_t)
+	Dua_DsdInit(p, truth, n)
+	Dua_DsdOneVar(p)
+	Dua_DsdTwoVars(p)
+	return p
 }
-func Dua_DsdCheckCof0Const0(pTruth *word, nWords int32, iVar int32) int32 {
-    if nWords == 1 {
-        return (pTruth[0] & s_Truths6Neg[iVar]) == 0; }
-    if iVar <= 5 {
-        var w int32;
-        for  w = 0; w < nWords; w++  {
-            if pTruth[w] & s_Truths6Neg[iVar] {
-                return 0; }
-        }
-        return 1;
-    
-    } else { // if ( iVar > 5 )
-    
-        var pLimit *word  = pTruth + nWords;
-        var i int32;
-        var iStep int32 = Abc_TtWordNum(iVar);
-        for  ; pTruth < pLimit; pTruth += (iStep << 1)  {
-            for  i = 0; i < iStep; i++  {
-                if pTruth[i] {
-                    return 0; }
-            }
-        }
-        return 1;
-    }    
-}
-func Dua_DsdCheckCofsEqualNot(pTruth *word, nWords int32, iVar int32) int32 {
-    if nWords == 1 {
-        return (pTruth[0] & s_Truths6Neg[iVar]) == ((~pTruth[0] & s_Truths6[iVar]) >> (1 << iVar)); }
-    if iVar <= 5 {
-        var w int32;
-        var shift int32 = (1 << iVar);
-        for  w = 0; w < nWords; w++  {
-            if (pTruth[w] & s_Truths6Neg[iVar]) != ((~pTruth[w] & s_Truths6[iVar]) >> shift) {
-                return 0; }
-        }
-        return 1;
-    
-    } else { // if ( iVar > 5 )
-    
-        var pLimit *word  = pTruth + nWords;
-        var i int32;
-        var iStep int32 = Abc_TtWordNum(iVar);
-        for  ; pTruth < pLimit; pTruth += (iStep << 1)  {
-            for  i = 0; i < iStep; i++  {
-                if pTruth[i] != ~pTruth[i + iStep] {
-                    return 0; }
-            }
-        }
-        return 1;
-    }    
-}
-func Dua_DsdOneVar(pRes *Dua_Dsd_t) int32 {
-    var v int32;
-    var fCompl int32;
-    var fChange int32 = 1;
-    fCompl = Dua_DsdTryConst( pRes.pTruth, pRes.nWords );
-    for  (fChange != 0) && pRes.nVars > 2  {
-        fChange = 0;
-        for  v = 0; v < pRes.nVars; v++  {
-            fCompl ^= Dua_DsdTryVar( pRes.pTruth, pRes.nWords, v );
-            if Dua_DsdCheckCof0Const0( pRes.pTruth, pRes.nWords, v ) != 0 {
-                fChange = 1;
-                // record AND(v, F)
-            
-            } else if Dua_DsdCheckCofsEqualNot( pRes.pTruth, pRes.nWords, v ) != 0 {
-                fChange = 1;
-                // record XOR(v, F)
-            }
-        }
-    }
-    return fCompl;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dua_DsdTrySwap(pTruth *word, nWords int32, iVar int32) int32 {
-    static word s_PMasks[5][3] = {
-        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },
-        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },
-        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },
-        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },
-        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }
-    };
-    if iVar < 5 {
-        var Shift int32  = (1 << iVar);
-        var c01 word;
-        var c10 word;
-        var pLimit *word = pTruth + nWords;
-        for  ; pTruth < pLimit; pTruth++  {
-            c01 = (pTruth[0] & s_PMasks[iVar][1]);
-            c10 = (pTruth[0] & s_PMasks[iVar][2]) >> Shift;
-            if c01 == c10 {
-                continue; }
-            if c01 < c10 {
-                return 0; }
-            pTruth[0] = (pTruth[0] & s_PMasks[iVar][0]) | ((pTruth[0] & s_PMasks[iVar][1]) << Shift) | ((pTruth[0] & s_PMasks[iVar][2]) >> Shift);
-            return 1;
-        }
-    
-    } else if iVar == 5 {
-        var pTruthU *uint32  = (unsigned *)pTruth;
-        var pLimitU *uint32  = (unsigned *)(pTruth + nWords);
-        for  ; pTruthU < pLimitU; pTruthU += 4  {
-            c01 = pTruthU[1];
-            c10 = pTruthU[2];
-            if c01 == c10 {
-                continue; }
-            if c01 < c10 {
-                return 0; }
-            for  ; pTruthU < pLimitU; pTruthU += 4  {
-                // inlining of macro ABC_SWAP
-                 var t uint32  = pTruthU[1]; pTruthU[1] = pTruthU[2]; pTruthU[2] = t; };
-            return 1;
-        }
-    
-    } else { // if ( iVar > 5 )
-    
-        var pLimit *word  = pTruth + nWords;
-        var i int32;
-        var iStep int32 = Abc_TtWordNum(iVar);
-        for  ; pTruth < pLimit; pTruth += 4*iStep  {
-        for  i = 0; i < iStep; i++  {
-            c01 = pTruth[i + iStep];
-            c10 = pTruth[i + 2*iStep];
-            if c01 == c10 {
-                continue; }
-            if c01 < c10 {
-                return 0; }
-            for  ; pTruth < pLimit; pTruth += 4*iStep  {
-            for  ; i < iStep; i++  {
-                // inlining of macro ABC_SWAP
-                 var t word  = pTruth[1]; pTruth[1] = pTruth[2]; pTruth[2] = t; }
-            };
-            return 1;
-        }
-        }
-    }
-    return 2;
-}
-func Dua_DsdCheckDecomp(pTruth *word, nWords int32, iVar int32) int32 {
-    static word s_PMasks[5][4] = {
-        { ABC_CONST(0x1111111111111111), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444), ABC_CONST(0x8888888888888888) },
-        { ABC_CONST(0x0303030303030303), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030), ABC_CONST(0xC0C0C0C0C0C0C0C0) },
-        { ABC_CONST(0x000F000F000F000F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00), ABC_CONST(0xF000F000F000F000) },
-        { ABC_CONST(0x000000FF000000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000), ABC_CONST(0xFF000000FF000000) },
-        { ABC_CONST(0x000000000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000), ABC_CONST(0xFFFF000000000000) }
-    };
-    var fC0eC1 int32 = 1;
-    var fC0eC3 int32 = 1;
-    if iVar < 5 {
-        var Shift int32  = (1 << iVar);
-        var c01 word;
-        var c10 word;
-        var pLimit *word = pTruth + nWords;
-        for  ; pTruth < pLimit; pTruth++  {
-            if (fC0eC1 != 0) && (pTruth[0] & s_PMasks[iVar][0]) != ((pTruth[0] & s_PMasks[iVar][1]) >>    Shift) {
-                fC0eC1 = 0; }
-            if (fC0eC3 != 0) && (pTruth[0] & s_PMasks[iVar][0]) != ((pTruth[0] & s_PMasks[iVar][3]) >> (3*Shift)) {
-                fC0eC3 = 0; }
-            if !(fC0eC1 != 0) && !(fC0eC3 != 0) {
-                return 0; }
-        }
-    }
-    if iVar == 5 {
-        var pTruthU *uint32  = (unsigned *)pTruth;
-        var pLimitU *uint32  = (unsigned *)(pTruth + nWords);
-        for  ; pTruthU < pLimitU; pTruthU += 4  {
-            if (fC0eC1 != 0) && pTruthU[0] != pTruthU[1] {
-                fC0eC1 = 0; }
-            if (fC0eC3 != 0) && pTruthU[0] != pTruthU[3] {
-                fC0eC3 = 0; }
-            if !(fC0eC1 != 0) && !(fC0eC3 != 0) {
-                return 0; }
-        }
-    
-    } else { // if ( iVar > 5 )
-    
-        var pLimit *word  = pTruth + nWords;
-        var i int32;
-        var iStep int32 = Abc_TtWordNum(iVar);
-        for  ; pTruth < pLimit; pTruth += 4*iStep  {
-        for  i = 0; i < iStep; i++  {
-            if (fC0eC1 != 0) && pTruth[0] != pTruth[1] {
-                fC0eC1 = 0; }
-            if (fC0eC3 != 0) && pTruth[0] != pTruth[3] {
-                fC0eC3 = 0; }
-            if !(fC0eC1 != 0) && !(fC0eC3 != 0) {
-                return 0; }
-        }
-        }
-    }
-    assert(fC0eC1 != fC0eC3, "fC0eC1 != fC0eC3");
-    if fC0eC1 != 0 {
-        return 1;
-    } else {
-        return 2;
-    }
-}
-
-// returns 1 if decomposition detected
-func Dua_DsdTwoVars(pRes *Dua_Dsd_t) int32 {
-    var v int32;
-    var RetValue int32;
-    var fChange int32 = 1;
-    for  (fChange != 0) && pRes.nVars > 2  {
-        fChange = 0;
-        for  v = 0; v < pRes.nVars - 1; v++  {
-            RetValue = Dua_DsdTrySwap( pRes.pTruth, pRes.nWords, v );            
-            if RetValue == 1 {
-                fChange = 1; }
-            if RetValue != 2 {
-                continue; }
-            // vars are symmetric, check decomp
-            RetValue = Dua_DsdCheckDecomp( pRes.pTruth, pRes.nWords, v );
-            if RetValue == 0 {
-                continue; }
-            if RetValue == 1 {
-                fChange = 1;
-                // record AND(a, b)
-            
-            } else {
-                fChange = 1;
-                // record XOR(a, b)
-            }
-        }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Check DSD for bound-set [iVar; jVar).]
-
-  Description [Return D-func if decomposable.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dua_DsdRangeVars(pTruth *word, nVars int32, iVar int32, jVar int32, fPerform int32) word {
-    var Part int32;
-    var nParts int32 = 1 << (nVars - jVar);
-    var Mint int32;
-    var nMints int32 = 1 << (jVar - iVar);
-    var MaskOne, MaskAll word;
-    assert(jVar - iVar > 2, "jVar - iVar > 2");
-    assert(jVar - iVar < 7, "jVar - iVar < 7");
-    if iVar < 6 {
-        var Shift int32 = 6 - iVar;
-        var MaskF int32 = (1 << Shift) - 1;
-        var iMint int32;
-        var MaskFF word  = (((word)1) << (1 << iVar)) - 1;
-        var Cof0, Cof1, Value word; 
-        for  Part = 0; Part < nParts; Part++  {
-            MaskOne = 0;
-            Cof0 = Cof1 = ~(word)0;
-            for  Mint = 0; Mint < nMints; Mint, iMint = Mint+1, iMint+1  {
-                Value = (pTruth[iMint>>Shift] >> ((iMint & MaskF)<<iVar)) & MaskFF;
-                if !~Cof0 || Cof0 == Value {
-                    Cof0 = Value;
-                } else if !~Cof1 || Cof1 == Value {
-                    Cof1 = Value;
-                    MaskOne |= ((word)1) << Mint;
-                
-                } else {
-                    return 0; }
-            }
-            if Part == 0 {
-                MaskAll = MaskOne;
-            } else if MaskAll != MaskOne {
-                return 0; }
-            if fPerform != 0 {
-                assert(~Cof0 && ~Cof1, "~Cof0 && ~Cof1");
-                Mint = 2 * Part;
-                Value = (pTruth[Mint>>Shift] >> ((Mint & MaskF)<<nVarsF)) & MaskFF;
-                pTruth[Mint>>Shift] ^= (Value ^ Cof0) << ((Mint & MaskF)<<nVarsF)
-                Mint = 2 * Part + 1;
-                Value = (pTruth[Mint>>Shift] >> ((Mint & MaskF)<<nVarsF)) & MaskFF;
-                pTruth[Mint>>Shift] ^= (Value ^ Cof1) << ((Mint & MaskF)<<nVarsF)
-            }
-        }
-        // stretch
-        if nVars - (jVar - iVar) + 1 < 6 {
-            pTruth[0] = Abc_Tt6Stretch( pTruth[0], nVars - (jVar - iVar) + 1 ); }
-    
-    } else {
-        var nWordsF int32  = Abc_TtWordNum(iVar); 
-        var iWord int32;
-        var nBytes int32 = sizeof(word) * nWordsF;
-        var pCof0, pCof1 *word;
-        for  Part = 0; Part < nParts; Part++  {
-            MaskOne = 0;
-            pCof0 = pCof1 = nil;
-            for  Mint = 0; Mint < nMints; Mint++, iWord += nWordsF  {
-                if !pCof0 || !memcmp(pCof0, pTruth + iWord, (size_t)nBytes) {
-                    pCof0 = pTruth + iWord;
-                } else if !pCof1 || !memcmp(pCof1, pTruth + iWord, (size_t)nBytes) {
-                    pCof1 = pTruth + iWord;
-                    MaskOne |= ((word)1) << Mint;
-                
-                } else {
-                    return 0; }
-            }
-            if Part == 0 {
-                MaskAll = MaskOne;
-            } else if MaskAll != MaskOne {
-                return 0; }
-            if fPerform != 0 {
-                assert(pCof0 && (pCof1 != nil), "pCof0 && pCof1");
-                memcpy( pTruth + (2 * Part + 0) * nWordsF, pCof0, (size_t)nBytes );
-                memcpy( pTruth + (2 * Part + 1) * nWordsF, pCof1, (size_t)nBytes );
-            }
-        }
-    }
-    return MaskAll;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Check DSD for bound-set [0; iVar).]
-
-  Description [Return D-func if decomposable.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dua_DsdRangeVars0(pTruth *word, nVars int32, iVar int32, fPerform int32) int32 {
-    var i int32;
-    var nParts int32 = 1 << (nVars - iVar);
-    assert(iVar > 2 && iVar < nVars, "iVar > 2 && iVar < nVars");
-    if iVar == 3 {
-        unsigned char * pTruthP = (unsigned char *)pTruth, Dfunc = pTruthP[0];
-        for  i = 1; i < nParts; i++  {
-            if pTruthP[i] != Dfunc && pTruthP[i] != ~Dfunc {
-                return 0; }
-        }
-    
-    } else if iVar == 4 {
-        unsigned short * pTruthP = (unsigned short *)pTruth, Dfunc = pTruthP[0];
-        for  i = 1; i < nParts; i++  {
-            if pTruthP[i] != Dfunc && pTruthP[i] != ~Dfunc {
-                return 0; }
-        }
-    
-    } else if iVar == 5 {
-        unsigned int * pTruthP = (unsigned int *)pTruth, Dfunc = pTruthP[0];
-        for  i = 1; i < nParts; i++  {
-            if pTruthP[i] != Dfunc && pTruthP[i] != ~Dfunc {
-                return 0; }
-        }
-    
-    } else {
-        var nStep int32  = 1 << (6 - iVar);
-        assert(iVar >= 6, "iVar >= 6");
-        for  i = 1; i < nParts; i++  {
-            if !Abc_TtEqual(pTruth, pTruth + i * nStep, nStep) && !Abc_TtEqualNot(pTruth, pTruth + i * nStep, nStep) {
-                return 0; }
-        }
-    }
-    return 1;
-}
-func Dua_DsdRangeVars0Derive(pTruth *word, nVars int32, iVar int32) {
-    var i int32;
-    var nParts int32 = 1 << (nVars - iVar);
-    assert(iVar > 2 && iVar < nVars, "iVar > 2 && iVar < nVars");
-    if iVar == 3 {
-        unsigned char * pTruthP = (unsigned char *)pTruth, Dfunc = pTruthP[0];
-        for  i = 0; i < nParts; i++  {
-            if Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) {
-                Abc_TtXorBit(pTruth, i); }
-        }
-    
-    } else if iVar == 4 {
-        unsigned short * pTruthP = (unsigned short *)pTruth, Dfunc = pTruthP[0];
-        for  i = 0; i < nParts; i++  {
-            if Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) {
-                Abc_TtXorBit(pTruth, i); }
-        }
-    
-    } else if iVar == 5 {
-        unsigned int * pTruthP = (unsigned int *)pTruth, Dfunc = pTruthP[0];
-        for  i = 0; i < nParts; i++  {
-            if Abc_TtGetBit(pTruth, i) ^ (pTruthP[i] != Dfunc) {
-                Abc_TtXorBit(pTruth, i); }
-        }
-    
-    } else {
-        var Dfunc word  = pTruth[0];
-        assert(iVar == 6, "iVar == 6");
-        for  i = 0; i < nParts; i++  {
-            if Abc_TtGetBit(pTruth, i) ^ (pTruth[i] != Dfunc) {
-                Abc_TtXorBit(pTruth, i); }
-        }
-   }
-    // stretch
-    if nVars - iVar + 1 < 6 {
-        pTruth[0] = Abc_Tt6Stretch( pTruth[0], nVars - iVar + 1 < 6 ); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dua_DsdTest(pTruth *word, nVar int32) {
-    var Res Dua_Dsd_t;
-    var pRes *Dua_Dsd_t = &Res;
-    Dua_DsdInit( pRes, pTruth, nVars );
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
-

@@ -281,9 +281,7 @@ func Dau_DsdNormalize(text string) string {
 		for _, c := range e.children {
 			normalize(c)
 		}
-		if e.function != nil {
-			normalize(e.function)
-		}
+
 		if e.kind == '(' || e.kind == '[' {
 			sort.SliceStable(e.children, func(i, j int) bool { return dsLetters(e.children[i]) < dsLetters(e.children[j]) })
 		}
@@ -313,6 +311,25 @@ func Dau_DsdCountAnds(text string) int32 {
 func Dau_DsdToTruth(text string, n int32) []uint64 {
 	dsCheckVars(n)
 	root := dsParse(text)
+	var validate func(*dsExpr, int)
+	validate = func(e *dsExpr, variables int) {
+		if e.kind == 'v' && e.variable >= variables {
+			panic("dau: variable exceeds truth-table domain")
+		}
+		for _, c := range e.children {
+			validate(c, variables)
+		}
+		if e.function != nil {
+			validate(e.function, len(e.children))
+		}
+		if e.kind == '{' {
+			expected := 1 << uint(max(len(e.children)-2, 0))
+			if len(e.hex) != expected {
+				panic("dau: prime hexadecimal width does not match fanin count")
+			}
+		}
+	}
+	validate(root, int(n))
 	result := make([]uint64, dsWords(n))
 	// Small tables retain ABC's repeated 64-bit representation.
 	for index := 0; index < 64*len(result); index++ {
@@ -327,9 +344,7 @@ func dsFlatten(e *dsExpr) *dsExpr {
 	for i, c := range e.children {
 		e.children[i] = dsFlatten(c)
 	}
-	if e.function != nil {
-		e.function = dsFlatten(e.function)
-	}
+
 	if e.kind == '(' || e.kind == '[' {
 		children := []*dsExpr{}
 		for _, c := range e.children {
@@ -791,6 +806,9 @@ func Dau_DsdDecompose(truth []uint64, n, split, write int32, result *[]byte) int
 	return Dau_DsdDecomposeLevel(truth, n, split, write, result, nil)
 }
 func Dau_DsdDecomposeLevel(truth []uint64, n, split, write int32, result *[]byte, levels []int32) int32 {
+	if len(levels) == 0 {
+		levels = nil
+	}
 	dsCheckVars(n)
 	if len(truth) < dsWords(n) {
 		panic("dau: truth table too short")
@@ -832,7 +850,15 @@ func Dau_DsdCheck1Step(manager any, truth []uint64, n int32, levels []int32) int
 		if !ok {
 			panic("dau: level-aware split needs decomposition manager")
 		}
-		sort.SliceStable(order, func(i, j int) bool { return Dau_DsdLevelVar(p, order[i]) > Dau_DsdLevelVar(p, order[j]) })
+		for i := 0; i < len(order)-1; i++ {
+			best := i
+			for j := i + 1; j < len(order); j++ {
+				if Dau_DsdLevelVar(p, order[j]) > Dau_DsdLevelVar(p, order[best]) {
+					best = j
+				}
+			}
+			order[i], order[best] = order[best], order[i]
+		}
 	}
 	best, cost := int32(-2), int32(1<<30)
 	for _, v := range order {
@@ -943,4 +969,49 @@ func Dau_DsdPerform(t uint64) string {
 func Dau_DsdPrintFromTruthFile(out io.Writer, truth []uint64, n int32) {
 	text, _ := DecomposeDSD(truth, n)
 	fmt.Fprintln(out, text)
+}
+
+func Dau_DsdTruthCompose_rec(function []uint64, fanins [][]uint64, result []uint64, nVars, nWords int32) {
+	dsCheckVars(nVars)
+	if len(function) < dsWords(nVars) || nWords < 0 || int(nWords) > len(result) || int(nVars) > len(fanins) {
+		panic("dau: invalid truth composition storage")
+	}
+	for _, fanin := range fanins[:nVars] {
+		if int(nWords) > len(fanin) {
+			panic("dau: short composition fanin")
+		}
+	}
+	composed := make([]uint64, nWords)
+	for bit := 0; bit < 64*int(nWords); bit++ {
+		index := 0
+		for v := int32(0); v < nVars; v++ {
+			if dsBit(fanins[v], bit) {
+				index |= 1 << uint(v)
+			}
+		}
+		if dsBit(function, index) {
+			dsSet(composed, bit)
+		}
+	}
+	copy(result, composed)
+}
+func Dau_Dsd6TruthCompose_rec(function uint64, fanins []uint64, nVars int32) uint64 {
+	if nVars < 0 || nVars > 6 || int(nVars) > len(fanins) {
+		panic("dau: invalid six-variable composition")
+	}
+	arguments := make([][]uint64, nVars)
+	for i := range arguments {
+		arguments[i] = []uint64{fanins[i]}
+	}
+	result := []uint64{0}
+	Dau_DsdTruthCompose_rec([]uint64{function}, arguments, result, nVars, 1)
+	return result[0]
+}
+func Dau_DsdPrintFromTruth(truth []uint64, n int32) {
+	text, _ := DecomposeDSD(truth, n)
+	fmt.Println(text)
+}
+func Dau_DsdPrintFromTruth2(truth []uint64, n int32) {
+	text, _ := DecomposeDSD(truth, n)
+	fmt.Print(text)
 }
