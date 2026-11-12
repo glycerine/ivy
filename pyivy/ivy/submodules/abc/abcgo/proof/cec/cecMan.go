@@ -1,297 +1,63 @@
 package cec
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/cec/core"
+)
 
-/**CFile****************************************************************
-
-  FileName    [cecMan.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Combinational equivalence checking.]
-
-  Synopsis    [Manager procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: cecMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "cecInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManSatCreate(pAig *Gia_Man_t, pPars *Cec_ParSat_t) *Cec_ManSat_t {
-    var p *Cec_ManSat_t;
-    // create interpolation manager
-    // inlining of macro ABC_ALLOC
-    p = ((Cec_ManSat_t *) malloc(sizeof(Cec_ManSat_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Cec_ManSat_t) );
-    p.pPars        = pPars;
-    p.pAig         = pAig;
-    // SAT solving
-    p.nSatVars     = 1;
-    // inlining of macro ABC_CALLOC
-    p.pSatVars     = ((int *) calloc((size_t)(Gia_ManObjNum(pAig)), sizeof(int)));
-    p.vUsedNodes   = Vec_PtrAlloc( 1000 );
-    p.vFanins      = Vec_PtrAlloc( 100 );
-    p.vCex         = Vec_IntAlloc( 100 );
-    p.vVisits      = Vec_IntAlloc( 100 );
-    return p;
+// Cec_ManSat_t owns incremental cone proofs and the most recent validated model.
+// The source-shaped entry points retain their status convention: 1 proved,
+// 0 disproved, -1 interrupted or invalid (Error describes the latter).
+type Cec_ManSat_t struct {
+	pAig   *Gia_Man_t
+	pPars  *Cec_ParSat_t
+	proof  *core.Manager
+	result core.Result
+	values []bool
+	vCex   *Vec_Int_t
+	Error  error
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prints statistics of the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Cec_ManSatCreate(graph *Gia_Man_t, params *Cec_ParSat_t) *Cec_ManSat_t {
+	if params == nil {
+		params = new(Cec_ParSat_t)
+		Cec_ManSatSetDefaultParams(params)
+	}
+	p := &Cec_ManSat_t{pAig: graph, pPars: params}
+	p.restart()
+	return p
+}
+func (p *Cec_ManSat_t) restart() {
+	p.values = nil
+	p.vCex = vec.Vec_IntAlloc(16)
+	o := core.Options{ConflictLimit: int64(p.pPars.nBTLimit), MaxSATVariables: int(p.pPars.nSatVarMax), RecycleQueries: int(p.pPars.nCallsRecycle), PolarFlip: p.pPars.fPolarFlip != 0, TreatRegistersAsInputs: true}
+	p.proof, p.Error = core.NewManager(p.pAig, o)
+}
 func Cec_ManSatPrintStats(p *Cec_ManSat_t) {
-    fmt.Printf("SAT solver statistics:\n");
-    Abc_Print( 1, "CO = %8d  ", Gia_ManCoNum(p.pAig) );
-    Abc_Print( 1, "AND = %8d  ", Gia_ManAndNum(p.pAig) );
-    Abc_Print( 1, "Conf = %5d  ", p.pPars.nBTLimit );
-    Abc_Print( 1, "MinVar = %5d  ", p.pPars.nSatVarMax );
-    Abc_Print( 1, "MinCalls = %5d\n", p.pPars.nCallsRecycle );
-    Abc_Print( 1, "Unsat calls %6d  (%6.2f %%)   Ave conf = %8.1f   ", 
-        p.nSatUnsat, p.nSatTotal? 100.0*p.nSatUnsat/p.nSatTotal : 0.0, p.nSatUnsat? 1.0*p.nConfUnsat/p.nSatUnsat :0.0 );
-    Abc_PrintTimeP( 1, "Time", p.timeSatUnsat, p.timeTotal );
-    Abc_Print( 1, "Sat   calls %6d  (%6.2f %%)   Ave conf = %8.1f   ", 
-        p.nSatSat,   p.nSatTotal? 100.0*p.nSatSat/p.nSatTotal : 0.0,   p.nSatSat? 1.0*p.nConfSat/p.nSatSat : 0.0 );
-    Abc_PrintTimeP( 1, "Time", p.timeSatSat,   p.timeTotal );
-    Abc_Print( 1, "Undef calls %6d  (%6.2f %%)   Ave conf = %8.1f   ", 
-        p.nSatUndec, p.nSatTotal? 100.0*p.nSatUndec/p.nSatTotal : 0.0, p.nSatUndec? 1.0*p.nConfUndec/p.nSatUndec : 0.0 );
-    Abc_PrintTimeP( 1, "Time", p.timeSatUndec, p.timeTotal );
-    Abc_PrintTime( 1, "Total time", p.timeTotal );
+	if p.proof == nil {
+		fmt.Printf("CEC SAT: %v\n", p.Error)
+		return
+	}
+	s := p.proof.Statistics()
+	fmt.Printf("CEC SAT: %d queries, %d SAT calls, %d conflicts, %d recycles\n", s.Queries, s.SATCalls, s.Conflicts, s.Recycles)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Frees the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Cec_ManSatStop(p *Cec_ManSat_t) {
-    if p.pSat {
-        sat_solver_delete( p.pSat ); }
-    Vec_IntFree( p.vCex );
-    Vec_IntFree( p.vVisits );
-    Vec_PtrFree( p.vUsedNodes );
-    Vec_PtrFree( p.vFanins );
-    p.pSatVars = nil;
-    p = nil;
+	if p != nil {
+		p.proof = nil
+		p.values = nil
+	}
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatStart() *Cec_ManPat_t { 
-    
-    // inlining of macro ABC_CALLOC
-    p := &Cec_ManPat_t{};
-    p.vStorage  = Vec_StrAlloc( 1<<20 );
-    p.vPattern1 = Vec_IntAlloc( 1000 );
-    p.vPattern2 = Vec_IntAlloc( 1000 );
-    return p;
+func Cec_ManFraStart(graph *Gia_Man_t, params *Cec_ParFra_t) *Cec_ManFra_t {
+	if params == nil {
+		params = new(Cec_ParFra_t)
+		Cec_ManFraSetDefaultParams(params)
+	}
+	return &Cec_ManFra_t{pAig: graph, pPars: params, vXorNodes: vec.Vec_IntAlloc(1000)}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatPrintStats(p *Cec_ManPat_t) { 
-    Abc_Print( 1, "Latest: P = %8d.  L = %10d.  Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\n", 
-        p.nPats, p.nPatLits, p.nPatLitsMin, 1.0 * p.nPatLitsMin/p.nPats, 
-        1.0*(Vec_StrSize(p.vStorage)-p.iStart)/(1<<20) );
-    Abc_Print( 1, "Total:  P = %8d.  L = %10d.  Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\n", 
-        p.nPatsAll, p.nPatLitsAll, p.nPatLitsMinAll, 1.0 * p.nPatLitsMinAll/p.nPatsAll, 
-        1.0*Vec_StrSize(p.vStorage)/(1<<20) );
-    Abc_PrintTimeP( 1, "Finding  ", p.timeFind,   p.timeTotal );
-    Abc_PrintTimeP( 1, "Shrinking", p.timeShrink, p.timeTotal );
-    Abc_PrintTimeP( 1, "Verifying", p.timeVerify, p.timeTotal );
-    Abc_PrintTimeP( 1, "Sorting  ", p.timeSort,   p.timeTotal );
-    Abc_PrintTimeP( 1, "Packing  ", p.timePack,   p.timeTotal );
-    Abc_PrintTime( 1, "TOTAL    ",  p.timeTotal );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Deletes AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManPatStop(p *Cec_ManPat_t) {
-    Vec_StrFree( p.vStorage );
-    Vec_IntFree( p.vPattern1 );
-    Vec_IntFree( p.vPattern2 );
-    p = nil;
-}
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManSimStart(pAig *Gia_Man_t, pPars *Cec_ParSim_t) *Cec_ManSim_t { 
-    var p *Cec_ManSim_t;
-    // inlining of macro ABC_ALLOC
-    p = ((Cec_ManSim_t *) malloc(sizeof(Cec_ManSim_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Cec_ManSim_t) );
-    p.pAig  = pAig;
-    p.pPars = pPars;
-    p.nWords = pPars.nWords;
-    // inlining of macro ABC_CALLOC
-    p.pSimInfo = ((int *) calloc((size_t)(Gia_ManObjNum(pAig)), sizeof(int)));
-    p.vClassOld  = Vec_IntAlloc( 1000 );
-    p.vClassNew  = Vec_IntAlloc( 1000 );
-    p.vClassTemp = Vec_IntAlloc( 1000 );
-    p.vRefinedC  = Vec_IntAlloc( 10000 );
-    p.vCiSimInfo = Vec_PtrAllocSimInfo( Gia_ManCiNum(p.pAig), pPars.nWords );
-    if pPars.fCheckMiter || Gia_ManRegNum(p.pAig) {
-        p.vCoSimInfo = Vec_PtrAllocSimInfo( Gia_ManCoNum(p.pAig), pPars.nWords );
-        Vec_PtrCleanSimInfo( p.vCoSimInfo, 0, pPars.nWords );
-    }
-    p.iOut = -1;
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Deletes AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManSimStop(p *Cec_ManSim_t) {
-    Vec_IntFree( p.vClassOld );
-    Vec_IntFree( p.vClassNew );
-    Vec_IntFree( p.vClassTemp );
-    Vec_IntFree( p.vRefinedC );
-    if p.vCiSimInfo { 
-        Vec_PtrFree( p.vCiSimInfo ); }
-    if p.vCoSimInfo { 
-        Vec_PtrFree( p.vCoSimInfo ); }
-    p.pScores = nil;
-    p.pCexComb = nil;
-    p.pCexes = nil;
-    p.pMems = nil;
-    p.pSimInfo = nil;
-    p = nil;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Creates AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManFraStart(pAig *Gia_Man_t, pPars *Cec_ParFra_t) *Cec_ManFra_t { 
-    var p *Cec_ManFra_t;
-    // inlining of macro ABC_ALLOC
-    p = ((Cec_ManFra_t *) malloc(sizeof(Cec_ManFra_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Cec_ManFra_t) );
-    p.pAig  = pAig;
-    p.pPars = pPars;
-    p.vXorNodes  = Vec_IntAlloc( 1000 );
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Deletes AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Cec_ManFraStop(p *Cec_ManFra_t) {
-    Vec_IntFree( p.vXorNodes );
-    p = nil;
+	if p != nil {
+		p.vXorNodes = nil
+	}
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

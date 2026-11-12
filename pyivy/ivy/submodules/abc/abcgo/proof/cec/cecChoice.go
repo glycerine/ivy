@@ -199,106 +199,7 @@ func Cec_ManCombSpecReduce(p *Gia_Man_t, pvOutputs **Vec_Int_t, fRings int32) *G
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManChoiceComputation_int(pAig *Gia_Man_t, pPars *Cec_ParChc_t) int32 {
-    var nItersMax int32  = 1000;
-    var vStatus *Vec_Str_t;
-    var vOutputs *Vec_Int_t;
-    var vCexStore *Vec_Int_t;
-    var ParsSim Cec_ParSim_t;
-    var pParsSim *Cec_ParSim_t = &ParsSim;
-    var ParsSat Cec_ParSat_t;
-    var pParsSat *Cec_ParSat_t = &ParsSat;
-    var pSim *Cec_ManSim_t;
-    var pSrm *Gia_Man_t;
-    var r, RetValue int32;
-    var clkSat abctime;
-    var clkSim abctime;
-    var clkSrm abctime;
-    var clkTotal abctime = Abc_Clock();
-    var clk2 abctime;
-    var clk abctime = Abc_Clock();
-    pAig.pReprs = nil;
-    pAig.pNexts = nil;
-    Gia_ManRandom( 1 );
-    // prepare simulation manager
-    Cec_ManSimSetDefaultParams( pParsSim );
-    pParsSim.nWords     = pPars.nWords;
-    pParsSim.nFrames    = pPars.nRounds;
-    pParsSim.fVerbose   = pPars.fVerbose;
-    pParsSim.fLatchCorr   = 0;
-    pParsSim.fSeqSimulate = 0;
-    // create equivalence classes of registers
-    pSim = Cec_ManSimStart( pAig, pParsSim );
-    Cec_ManSimClassesPrepare( pSim, -1 );
-    Cec_ManSimClassesRefine( pSim );
-    // prepare SAT solving
-    Cec_ManSatSetDefaultParams( pParsSat );
-    pParsSat.nBTLimit = pPars.nBTLimit;
-    pParsSat.fVerbose = pPars.fVerbose;
-    if pPars.fVerbose {
-        Abc_Print( 1, "Obj = %7d. And = %7d. Conf = %5d. Ring = %d. CSat = %d.\n",
-            Gia_ManObjNum(pAig), Gia_ManAndNum(pAig), pPars.nBTLimit, pPars.fUseRings, pPars.fUseCSat );
-        Cec_ManRefinedClassPrintStats( pAig, nil, 0, Abc_Clock() - clk );
-    }
-    // perform refinement of equivalence classes
-    for  r = 0; r < nItersMax; r++  { 
-        clk = Abc_Clock();
-        // perform speculative reduction
-        clk2 = Abc_Clock();
-        pSrm = Cec_ManCombSpecReduce( pAig, &vOutputs, pPars.fUseRings );
-        assert(Gia_ManRegNum(pSrm) == 0 && Gia_ManCiNum(pSrm) == Gia_ManCiNum(pAig), "Gia_ManRegNum(pSrm) == 0 && Gia_ManCiNum(pSrm) == Gia_ManCiNum(pAig)");
-        clkSrm += Abc_Clock() - clk2;
-        if Gia_ManCoNum(pSrm) == 0 {
-            if pPars.fVerbose {
-                Cec_ManRefinedClassPrintStats( pAig, nil, r+1, Abc_Clock() - clk ); }
-            Vec_IntFree( vOutputs );
-            Gia_ManStop( pSrm );            
-            break;
-        }
-//Gia_DumpAiger( pSrm, "choicesrm", r, 2 );
-        // found counter-examples to speculation
-        clk2 = Abc_Clock();
-        if pPars.fUseCSat {
-            vCexStore = Cbs_ManSolveMiterNc( pSrm, pPars.nBTLimit, &vStatus, 0, 0 );
-        } else {
-            vCexStore = Cec_ManSatSolveMiter( pSrm, pParsSat, &vStatus ); }
-        Gia_ManStop( pSrm );
-        clkSat += Abc_Clock() - clk2;
-        if Vec_IntSize(vCexStore) == 0 {
-            if pPars.fVerbose {
-                Cec_ManRefinedClassPrintStats( pAig, vStatus, r+1, Abc_Clock() - clk ); }
-            Vec_IntFree( vCexStore );
-            Vec_StrFree( vStatus );
-            Vec_IntFree( vOutputs );
-            break;
-        }
-        // refine classes with these counter-examples
-        clk2 = Abc_Clock();
-        RetValue = Cec_ManResimulateCounterExamplesComb( pSim, vCexStore );
-        Vec_IntFree( vCexStore );
-        clkSim += Abc_Clock() - clk2;
-        Gia_ManCheckRefinements( pAig, vStatus, vOutputs, pSim, pPars.fUseRings );
-        if pPars.fVerbose {
-            Cec_ManRefinedClassPrintStats( pAig, vStatus, r+1, Abc_Clock() - clk ); }
-        Vec_StrFree( vStatus );
-        Vec_IntFree( vOutputs );
-//Gia_ManEquivPrintClasses( pAig, 1, 0 );
-    }
-    // check the overflow
-    if r == nItersMax {
-        Abc_Print( 1, "The refinement was not finished. The result may be incorrect.\n" ); }
-    Cec_ManSimStop( pSim );
-    clkTotal = Abc_Clock() - clkTotal;
-    // report the results
-    if pPars.fVerbose {
-        Abc_PrintTimeP( 1, "Srm  ", clkSrm,                        clkTotal );
-        Abc_PrintTimeP( 1, "Sat  ", clkSat,                        clkTotal );
-        Abc_PrintTimeP( 1, "Sim  ", clkSim,                        clkTotal );
-        Abc_PrintTimeP( 1, "Other", clkTotal-clkSat-clkSrm-clkSim, clkTotal );
-        Abc_PrintTime( 1, "TOTAL",  clkTotal );
-    }
-    return 0;
-}
+
 
 /**Function*************************************************************
 
@@ -311,27 +212,7 @@ func Cec_ManChoiceComputation_int(pAig *Gia_Man_t, pPars *Cec_ParChc_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManChoiceComputationVec(pGia *Gia_Man_t, nGias int32, pPars *Cec_ParChc_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var RetValue int32;
-    // compute equivalences of the miter
-//    pMiter = Gia_ManChoiceMiter( vGias );
-//    Gia_ManSetRegNum( pMiter, 0 );
-    RetValue = Cec_ManChoiceComputation_int( pGia, pPars );
-    // derive AIG with choices
-    pNew = Gia_ManEquivToChoices( pGia, nGias );
-//    Gia_ManHasChoices_very_old( pNew );
-//    Gia_ManStop( pMiter );
-    // report the results
-    if pPars.fVerbose {
-//        Abc_Print( 1, "NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\n", 
-//            Gia_ManAndNum(pAig), Gia_ManAndNum(pNew), 
-//            100.0*(Gia_ManAndNum(pAig)-Gia_ManAndNum(pNew))/(Gia_ManAndNum(pAig)?Gia_ManAndNum(pAig):1), 
-//            Gia_ManRegNum(pAig), Gia_ManRegNum(pNew), 
-//            100.0*(Gia_ManRegNum(pAig)-Gia_ManRegNum(pNew))/(Gia_ManRegNum(pAig)?Gia_ManRegNum(pAig):1) );
-    }
-    return pNew;
-}
+
 
 /**Function*************************************************************
 
@@ -344,29 +225,7 @@ func Cec_ManChoiceComputationVec(pGia *Gia_Man_t, nGias int32, pPars *Cec_ParChc
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManChoiceComputation(pAig *Gia_Man_t, pParsChc *Cec_ParChc_t) *Gia_Man_t {
-//    extern Aig_Man_t * Dar_ManChoiceNew( Aig_Man_t * pAig, Dch_Pars_t * pPars );
-    var Pars Dch_Pars_t;
-    var pPars *Dch_Pars_t = &Pars;
-    var pMan, pManNew *Aig_Man_t;
-    var pGia *Gia_Man_t;
-    if false {
-        pGia = Cec_ManChoiceComputationVec( pAig, 3, pParsChc );
-    
-    } else {
-        pMan = Gia_ManToAig( pAig, 0 );
-        Dch_ManSetDefaultParams( pPars );
-        pPars.fUseGia  = 1;
-        pPars.nBTLimit = pParsChc.nBTLimit;
-        pPars.fUseCSat = pParsChc.fUseCSat;
-        pPars.fVerbose = pParsChc.fVerbose;
-        pManNew = Dar_ManChoiceNew( pMan, pPars );
-        pGia = Gia_ManFromAig( pManNew );
-        Aig_ManStop( pManNew );
-//        Aig_ManStop( pMan );
-    }
-    return pGia;
-}
+
 
 /**Function*************************************************************
 
@@ -379,24 +238,7 @@ func Cec_ManChoiceComputation(pAig *Gia_Man_t, pParsChc *Cec_ParChc_t) *Gia_Man_
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ComputeChoices(pGia *Gia_Man_t, pPars *Dch_Pars_t) *Aig_Man_t {
-    var ParsChc Cec_ParChc_t;
-    var pParsChc *Cec_ParChc_t = &ParsChc;
-    var pAig *Aig_Man_t;
-    if pPars.fVerbose {
-        Abc_PrintTime( 1, "Synthesis time", pPars.timeSynth ); }
-    Cec_ManChcSetDefaultParams( pParsChc );
-    pParsChc.nBTLimit = pPars.nBTLimit;
-    pParsChc.fUseCSat = pPars.fUseCSat;
-    if pParsChc.fUseCSat && pParsChc.nBTLimit > 100 {
-        pParsChc.nBTLimit = 100; }
-    pParsChc.fVerbose = pPars.fVerbose;
-    pGia = Cec_ManChoiceComputationVec( pGia, 3, pParsChc );
-    Gia_ManSetRegNum( pGia, Gia_ManRegNum(pGia) );
-    pAig = Gia_ManToAig( pGia, 1 );
-    Gia_ManStop( pGia );
-    return pAig;
-}
+
 
 /**Function*************************************************************
 
@@ -409,16 +251,7 @@ func Cec_ComputeChoices(pGia *Gia_Man_t, pPars *Dch_Pars_t) *Aig_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ComputeChoicesNew(pGia *Gia_Man_t, fVerbose int32) *Aig_Man_t {
-    extern void Cec4_ManSimulateTest2( Gia_Man_t * p, int fVerbose );
-    var pAig *Aig_Man_t;
-    Cec4_ManSimulateTest2( pGia, fVerbose );
-    pGia = Gia_ManEquivToChoices( pGia, 3 );
-    Gia_ManSetRegNum( pGia, Gia_ManRegNum(pGia) );
-    pAig = Gia_ManToAig( pGia, 1 );
-    Gia_ManStop( pGia );
-    return pAig;
-}
+
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///

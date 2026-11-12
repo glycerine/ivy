@@ -288,3 +288,25 @@ func TestUnrelatedInputsAreNotAllocatedAsSATVariables(t *testing.T) {
 		t.Fatalf("cone proof allocated %d variables, expected constant+one input+one gate", variables)
 	}
 }
+
+func TestMutableConflictBudget(t *testing.T) {
+	c := newCircuit(1)
+	m, err := NewManager(c)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = m.SetConflictLimit(-1); err == nil {
+		t.Fatal("negative budget accepted")
+	}
+	oldSolver := m.solver
+	if err = m.SetConflictLimit(0); err != nil {
+		t.Fatal(err)
+	}
+	if m.solver != oldSolver || m.options.ConflictLimit != 0 {
+		t.Fatal("budget update discarded solver state")
+	}
+	result, err := m.CheckPair(c.inputs[0], c.inputs[0])
+	if err != nil || result.Status != Equivalent {
+		t.Fatalf("query after budget update: %+v %v", result, err)
+	}
+}

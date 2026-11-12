@@ -412,3 +412,13 @@ func VerifyMiter(n Network, provided ...Options) (Result, error) {
 // Model returns the manager's immutable circuit snapshot for resimulation and
 // regular-object value extraction without taking a second network snapshot.
 func (m *Manager) Model() *Model { return m.models[0] }
+
+// SetConflictLimit updates the next query's conflict budget without discarding
+// learned clauses. Zero allows unlimited conflicts.
+func (m *Manager) SetConflictLimit(limit int64) error {
+	if limit < 0 {
+		return fmt.Errorf("cec: negative conflict limit")
+	}
+	m.options.ConflictLimit = limit
+	return nil
+}

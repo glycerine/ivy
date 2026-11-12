@@ -1,1240 +1,1024 @@
+// Sequential signal/latch correspondence: speculative time-frame reduction,
+// incremental SAT witnesses, packed resimulation, and class refinement.
 package cec
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/vec"
+	"slices"
 	"time"
 )
 
-/**CFile****************************************************************
-
-  FileName    [cecCorr.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Combinational equivalence checking.]
-
-  Synopsis    [Latch/signal correspondence computation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: cecCorr.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "cecInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static void Gia_ManCorrSpecReduce_rec( Gia_Man_t * pNew, Gia_Man_t * p, Gia_Obj_t * pObj, int f, int nPrefix );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the real value of the literal w/o spec reduction.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCorrSpecReal(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t, f int32, nPrefix int32) int32 {
-    if Gia_ObjIsAnd(pObj) {
-        Gia_ManCorrSpecReduce_rec( pNew, p, Gia_ObjFanin0(pObj), f, nPrefix );
-        Gia_ManCorrSpecReduce_rec( pNew, p, Gia_ObjFanin1(pObj), f, nPrefix );
-        return Gia_ManHashAnd( pNew, Gia_ObjFanin0CopyF(p, f, pObj), Gia_ObjFanin1CopyF(p, f, pObj) );
-    }
-    if f == 0 {
-        assert(Gia_ObjIsRo(p, pObj), "Gia_ObjIsRo(p, pObj)");
-        return Gia_ObjCopyF(p, f, pObj);
-    }
-    assert((f != 0) && Gia_ObjIsRo(p, pObj), "f && Gia_ObjIsRo(p, pObj)");
-    pObj = Gia_ObjRoToRi( p, pObj );
-    Gia_ManCorrSpecReduce_rec( pNew, p, Gia_ObjFanin0(pObj), f-1, nPrefix );
-    return Gia_ObjFanin0CopyF( p, f-1, pObj );
+type corrBuilder struct {
+	graph *Gia_Man_t
+	ands  map[[2]int32]int32
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Recursively performs speculative reduction for the object.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCorrSpecReduce_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t, f int32, nPrefix int32) {
-    var pRepr *Gia_Obj_t;
-    var iLitNew int32;
-    if ~Gia_ObjCopyF(p, f, pObj) {
-        return; }
-    if f >= nPrefix && (pRepr = Gia_ObjReprObj(p, Gia_ObjId(p, pObj))) {
-        Gia_ManCorrSpecReduce_rec( pNew, p, pRepr, f, nPrefix );
-        iLitNew = Abc_LitNotCond( Gia_ObjCopyF(p, f, pRepr), Gia_ObjPhase(pRepr) ^ Gia_ObjPhase(pObj) );
-        Gia_ObjSetCopyF( p, f, pObj, iLitNew );
-        return;
-    }
-    assert(Gia_ObjIsCand(pObj), "Gia_ObjIsCand(pObj)");
-    iLitNew = Gia_ManCorrSpecReal( pNew, p, pObj, f, nPrefix );
-    Gia_ObjSetCopyF( p, f, pObj, iLitNew );
+func newCorrBuilder(source *Gia_Man_t) *corrBuilder {
+	p := gia.Gia_ManStart(gia.Gia_ManObjNum(source))
+	p.CopyIdentityFrom(source)
+	return &corrBuilder{p, make(map[[2]int32]int32)}
+}
+func (b *corrBuilder) and(a, c int32) int32 {
+	if a == 0 || c == 0 || a == c^1 {
+		return 0
+	}
+	if a == 1 {
+		return c
+	}
+	if c == 1 || a == c {
+		return a
+	}
+	if a > c {
+		a, c = c, a
+	}
+	key := [2]int32{a, c}
+	if lit, ok := b.ands[key]; ok {
+		return lit
+	}
+	lit := gia.Gia_ManAppendAnd(b.graph, a, c)
+	b.ands[key] = lit
+	return lit
+}
+func (b *corrBuilder) xor(a, c int32) int32    { return b.and(b.and(a, c^1)^1, b.and(a^1, c)^1) ^ 1 }
+func (b *corrBuilder) mux(c, a, d int32) int32 { return b.and(b.and(c, a)^1, b.and(c^1, d)^1) ^ 1 }
+func (b *corrBuilder) gate(kind int, a, c, d int32) int32 {
+	switch kind {
+	case 2:
+		return b.and(a, c)
+	case 3:
+		return b.xor(a, c)
+	case 4:
+		return b.mux(a, c, d)
+	case 5, 6:
+		return a
+	}
+	panic("cec: invalid correspondence gate")
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives SRM for signal correspondence.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCorrSpecReduce(p *Gia_Man_t, nFrames int32, fScorr int32, pvOutputs **Vec_Int_t, fRings int32) *Gia_Man_t {
-    var pNew, pTemp *Gia_Man_t;
-    var pObj, pRepr *Gia_Obj_t;
-    var vXorLits *Vec_Int_t;
-    var f, i, iPrev, iObj, iPrevNew, iObjNew int32;
-    assert(nFrames > 0, "nFrames > 0");
-    assert(Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0");
-    assert(p.pReprs != nil, "p.pReprs != nil");
-    Vec_IntFill( &p.vCopies, (nFrames+fScorr)*Gia_ManObjNum(p), -1 );
-    Gia_ManSetPhase( p );
-    pNew = Gia_ManStart( nFrames * Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManHashAlloc( pNew );
-    Gia_ObjSetCopyF( p, 0, Gia_ManConst0(p), 0 );
-    // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-        Gia_ObjSetCopyF( p, 0, pObj, Gia_ManAppendCi(pNew) );
-    }
-    // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-        if pRepr = Gia_ObjReprObj(p, Gia_ObjId(p, pObj)) {
-            Gia_ObjSetCopyF( p, 0, pObj, Gia_ObjCopyF(p, 0, pRepr) ); }
-    }
-    for  f = 0; f < nFrames+fScorr; f++  { 
-        Gia_ObjSetCopyF( p, f, Gia_ManConst0(p), 0 );
-        // inlining of macro Gia_ManForEachPi
-        for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-            Gia_ObjSetCopyF( p, f, pObj, Gia_ManAppendCi(pNew) );
-        }
-    }
-    *pvOutputs = Vec_IntAlloc( 1000 );
-    vXorLits = Vec_IntAlloc( 1000 );
-    if fRings != 0 {
-        // inlining of macro Gia_ManForEachObj1
-        for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-            if Gia_ObjIsConst( p, i ) {
-                iObjNew = Gia_ManCorrSpecReal( pNew, p, pObj, nFrames, 0 );
-                iObjNew = Abc_LitNotCond( iObjNew, Gia_ObjPhase(pObj) );
-                if iObjNew != 0 {
-                    Vec_IntPush( *pvOutputs, 0 );
-                    Vec_IntPush( *pvOutputs, i );
-                    Vec_IntPush( vXorLits, iObjNew );
-                }
-            
-            } else if Gia_ObjIsHead( p, i ) {
-                iPrev = i;
-                // inlining of macro Gia_ClassForEachObj1
-                for  assert(Gia_ObjIsHead(p, i), "Gia_ObjIsHead(p, i)"), iObj = Gia_ObjNext(p, i); iObj > 0; iObj = Gia_ObjNext(p, iObj)  {
-                    iPrevNew = Gia_ManCorrSpecReal( pNew, p, Gia_ManObj(p, iPrev), nFrames, 0 );
-                    iObjNew  = Gia_ManCorrSpecReal( pNew, p, Gia_ManObj(p, iObj), nFrames, 0 );
-                    iPrevNew = Abc_LitNotCond( iPrevNew, Gia_ObjPhase(pObj) ^ Gia_ObjPhase(Gia_ManObj(p, iPrev)) );
-                    iObjNew  = Abc_LitNotCond( iObjNew,  Gia_ObjPhase(pObj) ^ Gia_ObjPhase(Gia_ManObj(p, iObj)) );
-                    if iPrevNew != iObjNew && iPrevNew != 0 && iObjNew != 1 {
-                        Vec_IntPush( *pvOutputs, iPrev );
-                        Vec_IntPush( *pvOutputs, iObj );
-                        Vec_IntPush( vXorLits, Gia_ManHashAnd(pNew, iPrevNew, Abc_LitNot(iObjNew)) );
-                    }
-                    iPrev = iObj;
-                }
-                iObj = i;
-                iPrevNew = Gia_ManCorrSpecReal( pNew, p, Gia_ManObj(p, iPrev), nFrames, 0 );
-                iObjNew  = Gia_ManCorrSpecReal( pNew, p, Gia_ManObj(p, iObj), nFrames, 0 );
-                iPrevNew = Abc_LitNotCond( iPrevNew, Gia_ObjPhase(pObj) ^ Gia_ObjPhase(Gia_ManObj(p, iPrev)) );
-                iObjNew  = Abc_LitNotCond( iObjNew,  Gia_ObjPhase(pObj) ^ Gia_ObjPhase(Gia_ManObj(p, iObj)) );
-                if iPrevNew != iObjNew && iPrevNew != 0 && iObjNew != 1 {
-                    Vec_IntPush( *pvOutputs, iPrev );
-                    Vec_IntPush( *pvOutputs, iObj );
-                    Vec_IntPush( vXorLits, Gia_ManHashAnd(pNew, iPrevNew, Abc_LitNot(iObjNew)) );
-                }
-            }
-        }
-    
-    } else {
-        // inlining of macro Gia_ManForEachObj1
-        for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-            pRepr = Gia_ObjReprObj( p, Gia_ObjId(p,pObj) );
-            if pRepr == nil {
-                continue; }
-            if Gia_ObjIsConst(p, i) {
-                iPrevNew = 0;
-            } else {
-                iPrevNew = Gia_ManCorrSpecReal( pNew, p, pRepr, nFrames, 0 );
-            }
-            iObjNew  = Gia_ManCorrSpecReal( pNew, p, pObj, nFrames, 0 );
-            iObjNew  = Abc_LitNotCond( iObjNew, Gia_ObjPhase(pRepr) ^ Gia_ObjPhase(pObj) );
-            if iPrevNew != iObjNew {
-                Vec_IntPush( *pvOutputs, Gia_ObjId(p, pRepr) );
-                Vec_IntPush( *pvOutputs, Gia_ObjId(p, pObj) );
-                Vec_IntPush( vXorLits, Gia_ManHashXor(pNew, iPrevNew, iObjNew) );
-            }
-        }
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vXorLits)) && (((iObjNew) = Vec_IntEntry(vXorLits, i)), 1); i++  {
-        Gia_ManAppendCo( pNew, iObjNew );
-    }
-    Vec_IntFree( vXorLits );
-    Gia_ManHashStop( pNew );
-    Vec_IntErase( &p.vCopies );
-//Abc_Print( 1, "Before sweeping = %d\n", Gia_ManAndNum(pNew) );
-    pNew = Gia_ManCleanup( pTemp = pNew );
-//Abc_Print( 1, "After sweeping = %d\n", Gia_ManAndNum(pNew) );
-    Gia_ManStop( pTemp );
-    return pNew;
+type corrUnroller struct {
+	source  *Gia_Man_t
+	builder *corrBuilder
+	copies  [][]int32
+	prefix  int32
+	skip    map[int32]bool
 }
 
+func (u *corrUnroller) copy(id, frame int32) int32 {
+	if lit := u.copies[frame][id]; lit >= 0 {
+		return lit
+	}
+	if frame >= u.prefix && u.source.HasRepresentatives() && !u.skip[id] {
+		repr := gia.Gia_ObjRepr(u.source, id)
+		if repr != gia.GIA_VOID {
+			lit := u.copy(repr, frame) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(u.source, repr)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(u.source, id))
+			u.copies[frame][id] = lit
+			return lit
+		}
+	}
+	lit := u.real(id, frame)
+	u.copies[frame][id] = lit
+	return lit
+}
+func (u *corrUnroller) real(id, frame int32) int32 {
+	obj := gia.Gia_ManObj(u.source, id)
+	if gia.Gia_ObjIsCi(obj) != 0 {
+		if frame == 0 {
+			return u.copies[0][id]
+		}
+		reg := gia.Gia_ObjCioId(obj) - gia.Gia_ManPiNum(u.source)
+		if reg < 0 {
+			return u.copies[frame][id]
+		}
+		lit := u.source.OutputLiterals()[gia.Gia_ManPoNum(u.source)+reg]
+		return u.copy(lit>>1, frame-1) ^ lit&1
+	}
+	a, b, c, kind := u.source.Gate(id)
+	mapped := func(lit int32) int32 { return u.copy(lit>>1, frame) ^ lit&1 }
+	av := mapped(a)
+	bv, cv := int32(0), int32(0)
+	if kind == 2 || kind == 3 || kind == 4 {
+		bv = mapped(b)
+	}
+	if kind == 4 {
+		cv = mapped(c)
+	}
+	return u.builder.gate(kind, av, bv, cv)
+}
+func cecCorrUnroller(p *Gia_Man_t, frames, prefix int32, zero bool, state *Abc_Cex_t) *corrUnroller {
+	if frames <= 0 {
+		panic("cec: nonpositive correspondence frame count")
+	}
+	u := &corrUnroller{source: p, builder: newCorrBuilder(p), prefix: prefix, copies: make([][]int32, frames)}
+	gia.Gia_ManSetPhase(p)
+	for f := range u.copies {
+		u.copies[f] = make([]int32, gia.Gia_ManObjNum(p))
+		for i := range u.copies[f] {
+			u.copies[f][i] = -1
+		}
+		u.copies[f][0] = 0
+	}
+	for r := int32(0); r < gia.Gia_ManRegNum(p); r++ {
+		id := gia.Gia_ObjId(p, gia.Gia_ManRo(p, r))
+		lit := int32(0)
+		if state == nil {
+			lit = gia.Gia_ManAppendCi(u.builder.graph)
+		}
+		if zero {
+			lit = 0
+		}
+		if state != nil {
+			lit = int32(cecBit(state.PData, r))
+		}
+		u.copies[0][id] = lit
+	}
+	if !zero && state == nil && p.HasRepresentatives() {
+		for r := int32(0); r < gia.Gia_ManRegNum(p); r++ {
+			id := gia.Gia_ObjId(p, gia.Gia_ManRo(p, r))
+			repr := gia.Gia_ObjRepr(p, id)
+			if repr != gia.GIA_VOID {
+				u.copies[0][id] = u.copies[0][repr]
+			}
+		}
+	}
+	for f := int32(0); f < frames; f++ {
+		for pi := int32(0); pi < gia.Gia_ManPiNum(p); pi++ {
+			u.copies[f][gia.Gia_ObjId(p, gia.Gia_ManPi(p, pi))] = gia.Gia_ManAppendCi(u.builder.graph)
+		}
+	}
+	return u
+}
+func Gia_ManCorrSpecReduce(p *Gia_Man_t, frames, scorr int32, outputs **Vec_Int_t, rings int32) *Gia_Man_t {
+	if frames <= 0 || gia.Gia_ManRegNum(p) == 0 || !p.HasRepresentatives() {
+		panic("cec: invalid correspondence input")
+	}
+	u := cecCorrUnroller(p, frames+scorr, 0, false, nil)
+	pairs := vec.Vec_IntAlloc(1000)
+	lits := []int32{}
+	add := func(a, b, x, y int32, ring bool) {
+		if x == y {
+			return
+		}
+		lit := int32(0)
+		if ring {
+			if x == 0 || y == 1 {
+				return
+			}
+			lit = u.builder.and(x, y^1)
+		} else {
+			lit = u.builder.xor(x, y)
+		}
+		vec.Vec_IntPush(pairs, a)
+		vec.Vec_IntPush(pairs, b)
+		lits = append(lits, lit)
+	}
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		repr := gia.Gia_ObjRepr(p, id)
+		if rings != 0 {
+			if repr == 0 {
+				lit := u.real(id, frames) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(p, id))
+				if lit != 0 {
+					vec.Vec_IntPush(pairs, 0)
+					vec.Vec_IntPush(pairs, id)
+					lits = append(lits, lit)
+				}
+			} else if gia.Gia_ObjIsHead(p, id) != 0 {
+				previous := id
+				seen := make(map[int32]bool)
+				for other := p.Next(id); ; other = p.Next(other) {
+					if other != 0 && seen[other] {
+						panic("cec: cyclic correspondence class")
+					}
+					seen[other] = true
+					if other == 0 {
+						other = id
+					}
+					phase := gia.Gia_ObjPhase(gia.Gia_ManObj(p, id))
+					x := u.real(previous, frames) ^ phase ^ gia.Gia_ObjPhase(gia.Gia_ManObj(p, previous))
+					y := u.real(other, frames) ^ phase ^ gia.Gia_ObjPhase(gia.Gia_ManObj(p, other))
+					add(previous, other, x, y, true)
+					previous = other
+					if other == id {
+						break
+					}
+				}
+			}
+		} else if repr != gia.GIA_VOID {
+			x := int32(0)
+			if repr != 0 {
+				x = u.real(repr, frames)
+			}
+			y := u.real(id, frames) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(p, repr)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(p, id))
+			add(repr, id, x, y, false)
+		}
+	}
+	for _, lit := range lits {
+		gia.Gia_ManAppendCo(u.builder.graph, lit)
+	}
+	if outputs != nil {
+		*outputs = pairs
+	}
+	result, _ := cecCorrDuplicate(u.builder.graph, false, false, nil)
+	return result
+}
+func Gia_ManCorrSpecReduceInit(p *Gia_Man_t, frames, prefix, scorr int32, outputs **Vec_Int_t, rings int32) *Gia_Man_t {
+	return cecCorrUnrollInit(p, frames, prefix, scorr, outputs, rings, nil)
+}
+func cecCorrUnrollInit(p *Gia_Man_t, frames, prefix, scorr int32, outputs **Vec_Int_t, rings int32, state *Abc_Cex_t) *Gia_Man_t {
+	u := cecCorrUnroller(p, frames+prefix+scorr, prefix, true, state)
+	if state != nil && rings != 0 {
+		colors := make([]uint8, gia.Gia_ManObjNum(p))
+		var mark func(int32, uint8)
+		mark = func(id int32, color uint8) {
+			if id == 0 || colors[id]&color != 0 {
+				return
+			}
+			colors[id] |= color
+			a, b, c, kind := p.Gate(id)
+			if kind < 2 {
+				return
+			}
+			mark(a>>1, color)
+			if kind == 2 || kind == 3 || kind == 4 {
+				mark(b>>1, color)
+			}
+			if kind == 4 {
+				mark(c>>1, color)
+			}
+		}
+		for i, lit := range p.OutputLiterals()[:gia.Gia_ManPoNum(p)] {
+			mark(lit>>1, 1<<uint(i%2))
+		}
+		u.skip = make(map[int32]bool)
+		for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+			if repr := gia.Gia_ObjRepr(p, id); repr != gia.GIA_VOID && colors[id] == colors[repr] {
+				u.skip[id] = true
+			}
+		}
+	}
 
-/**Function*************************************************************
-
-  Synopsis    [Derives SRM for signal correspondence.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCorrSpecReduceInit(p *Gia_Man_t, nFrames int32, nPrefix int32, fScorr int32, pvOutputs **Vec_Int_t, fRings int32) *Gia_Man_t {
-    var pNew, pTemp *Gia_Man_t;
-    var pObj, pRepr *Gia_Obj_t;
-    var vXorLits *Vec_Int_t;
-    var f, i, iPrevNew, iObjNew int32;
-    assert((!(fScorr != 0) && nFrames > 1) || ((fScorr != 0) && nFrames > 0) || (nPrefix != 0), "(!fScorr && nFrames > 1) || (fScorr && nFrames > 0) || nPrefix");
-    assert(Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0");
-    assert(p.pReprs != nil, "p.pReprs != nil");
-    Vec_IntFill( &p.vCopies, (nFrames+nPrefix+fScorr)*Gia_ManObjNum(p), -1 );
-    Gia_ManSetPhase( p );
-    pNew = Gia_ManStart( (nFrames+nPrefix) * Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManHashAlloc( pNew );
-    // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-        Gia_ManAppendCi(pNew);
-        Gia_ObjSetCopyF( p, 0, pObj, 0 );
-    }
-    for  f = 0; f < nFrames+nPrefix+fScorr; f++  { 
-        Gia_ObjSetCopyF( p, f, Gia_ManConst0(p), 0 );
-        // inlining of macro Gia_ManForEachPi
-        for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-            Gia_ObjSetCopyF( p, f, pObj, Gia_ManAppendCi(pNew) );
-        }
-    }
-    *pvOutputs = Vec_IntAlloc( 1000 );
-    vXorLits = Vec_IntAlloc( 1000 );
-    for  f = nPrefix; f < nFrames+nPrefix; f++  {
-        // inlining of macro Gia_ManForEachObj1
-        for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-            pRepr = Gia_ObjReprObj( p, Gia_ObjId(p,pObj) );
-            if pRepr == nil {
-                continue; }
-            if Gia_ObjIsConst(p, i) {
-                iPrevNew = 0;
-            } else {
-                iPrevNew = Gia_ManCorrSpecReal( pNew, p, pRepr, f, nPrefix );
-            }
-            iObjNew  = Gia_ManCorrSpecReal( pNew, p, pObj, f, nPrefix );
-            iObjNew  = Abc_LitNotCond( iObjNew, Gia_ObjPhase(pRepr) ^ Gia_ObjPhase(pObj) );
-            if iPrevNew != iObjNew {
-                Vec_IntPush( *pvOutputs, Gia_ObjId(p, pRepr) );
-                Vec_IntPush( *pvOutputs, Gia_ObjId(p, pObj) );
-                Vec_IntPush( vXorLits, Gia_ManHashXor(pNew, iPrevNew, iObjNew) );
-            }
-        }
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vXorLits)) && (((iObjNew) = Vec_IntEntry(vXorLits, i)), 1); i++  {
-        Gia_ManAppendCo( pNew, iObjNew );
-    }
-    Vec_IntFree( vXorLits );
-    Gia_ManHashStop( pNew );
-    Vec_IntErase( &p.vCopies );
-//Abc_Print( 1, "Before sweeping = %d\n", Gia_ManAndNum(pNew) );
-    pNew = Gia_ManCleanup( pTemp = pNew );
-//Abc_Print( 1, "After sweeping = %d\n", Gia_ManAndNum(pNew) );
-    Gia_ManStop( pTemp );
-    return pNew;
+	pairs := vec.Vec_IntAlloc(1000)
+	for frame := prefix; frame < frames+prefix; frame++ {
+		for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+			repr := gia.Gia_ObjRepr(p, id)
+			if repr == gia.GIA_VOID || u.skip[id] {
+				continue
+			}
+			x := int32(0)
+			if repr != 0 {
+				x = u.real(repr, frame)
+			}
+			y := u.real(id, frame) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(p, repr)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(p, id))
+			if x == y || state != nil && gia.Gia_ObjProved(p, id) != 0 {
+				continue
+			}
+			vec.Vec_IntPush(pairs, repr)
+			vec.Vec_IntPush(pairs, id)
+			gia.Gia_ManAppendCo(u.builder.graph, u.builder.xor(x, y))
+		}
+	}
+	if state != nil && gia.Gia_ManCoNum(u.builder.graph) == 0 {
+		gia.Gia_ManAppendCo(u.builder.graph, 0)
+	}
+	if outputs != nil {
+		*outputs = pairs
+	}
+	result, _ := cecCorrDuplicate(u.builder.graph, false, false, nil)
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Initializes simulation info for lcorr/scorr counter-examples.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManStartSimInfo(vInfo *Vec_Ptr_t, nFlops int32) {
-    var pInfo *uint32;
-    var k, w, nWords int32;
-    nWords = Vec_PtrReadWordsSimInfo( vInfo );
-    assert(nFlops <= Vec_PtrSize(vInfo), "nFlops <= Vec_PtrSize(vInfo)");
-    for  k = 0; k < nFlops; k++  {
-        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );
-        for  w = 0; w < nWords; w++  {
-            pInfo[w] = 0;
-        }
-    }
-    for  k = nFlops; k < Vec_PtrSize(vInfo); k++  {
-        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );
-        for  w = 0; w < nWords; w++  {
-            pInfo[w] = Gia_ManRandom( 0 );
-        }
-    }
+func Cec_ManStartSimInfo(info *Vec_Ptr_t, flops int32) {
+	if flops < 0 || int(flops) > vec.Vec_PtrSize(info) {
+		panic("cec: invalid initial register count")
+	}
+	for k := int32(0); int(k) < vec.Vec_PtrSize(info); k++ {
+		words := cecInfo(info, k)
+		for w := range words {
+			if k < flops {
+				words[w] = 0
+			} else {
+				words[w] = gia.Gia_ManRandom(0)
+			}
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Remaps simulation info from SRM to the original AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCorrRemapSimInfo(p *Gia_Man_t, vInfo *Vec_Ptr_t) {
-    var pObj, pRepr *Gia_Obj_t;
-    var pInfoObj, pInfoRepr *uint32;
-    var i, w, nWords int32;
-    nWords = Vec_PtrReadWordsSimInfo( vInfo );
-    // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-        // skip ROs without representatives
-        pRepr = Gia_ObjReprObj( p, Gia_ObjId(p,pObj) );
-        if pRepr == nil || Gia_ObjFailed(p, Gia_ObjId(p,pObj)) {
-            continue; }
-        pInfoObj = (unsigned *)Vec_PtrEntry( vInfo, i );
-        for  w = 0; w < nWords; w++  {
-            assert(pInfoObj[w] == 0, "pInfoObj[w] == 0");
-        }
-        // skip ROs with constant representatives
-        if Gia_ObjIsConst0(pRepr) {
-            continue; }
-        assert(Gia_ObjIsRo(p, pRepr), "Gia_ObjIsRo(p, pRepr)");
-//        Abc_Print( 1, "%d -> %d    ", i, Gia_ObjId(p, pRepr) );
-        // transfer info from the representative
-        pInfoRepr = (unsigned *)Vec_PtrEntry( vInfo, Gia_ObjCioId(pRepr) - Gia_ManPiNum(p) );
-        for  w = 0; w < nWords; w++  {
-            pInfoObj[w] = pInfoRepr[w];
-        }
-    }
-//    Abc_Print( 1, "\n" );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Collects information about remapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Gia_ManCorrCreateRemapping(p *Gia_Man_t) *Vec_Int_t {
-    var vPairs *Vec_Int_t;
-    var pObj, pRepr *Gia_Obj_t;
-    var i int32;
-    vPairs = Vec_IntAlloc( 100 );
-    // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-        // skip ROs without representatives
-        pRepr = Gia_ObjReprObj( p, Gia_ObjId(p,pObj) );
-        if pRepr == nil || Gia_ObjIsConst0(pRepr) || Gia_ObjFailed(p, Gia_ObjId(p,pObj)) {
-//        if ( pRepr == NULL || Gia_ObjIsConst0(pRepr) || Gia_ObjIsFailedPair(p, Gia_ObjId(p, pRepr), Gia_ObjId(p, pObj)) )
-            continue; }
-        assert(Gia_ObjIsRo(p, pRepr), "Gia_ObjIsRo(p, pRepr)");
-//        Abc_Print( 1, "%d -> %d    ", Gia_ObjId(p,pObj), Gia_ObjId(p, pRepr) );
-        // remember the pair
-        Vec_IntPush( vPairs, Gia_ObjCioId(pRepr) - Gia_ManPiNum(p) );
-        Vec_IntPush( vPairs, i );
-    }
-    return vPairs;
+	pairs := vec.Vec_IntAlloc(100)
+	for r := int32(0); r < gia.Gia_ManRegNum(p); r++ {
+		id := gia.Gia_ObjId(p, gia.Gia_ManRo(p, r))
+		repr := gia.Gia_ObjRepr(p, id)
+		if repr == gia.GIA_VOID || repr == 0 || gia.Gia_ObjFailed(p, id) != 0 {
+			continue
+		}
+		obj := gia.Gia_ManObj(p, repr)
+		if gia.Gia_ObjIsCi(obj) == 0 || gia.Gia_ObjCioId(obj) < gia.Gia_ManPiNum(p) {
+			panic("cec: register represented by non-register")
+		}
+		vec.Vec_IntPush(pairs, gia.Gia_ObjCioId(obj)-gia.Gia_ManPiNum(p))
+		vec.Vec_IntPush(pairs, r)
+	}
+	return pairs
+}
+func Gia_ManCorrPerformRemapping(pairs *Vec_Int_t, info *Vec_Ptr_t) {
+	data := vec.Vec_IntArray(pairs)
+	if len(data)%2 != 0 {
+		panic("cec: odd remapping pairs")
+	}
+	for i := 0; i < len(data); i += 2 {
+		destination := cecInfo(info, data[i+1])
+		for _, word := range destination {
+			if word != 0 {
+				panic("cec: remapping destination not zero")
+			}
+		}
+		copy(destination, cecInfo(info, data[i]))
+	}
+}
+func Gia_ManCorrRemapSimInfo(p *Gia_Man_t, info *Vec_Ptr_t) {
+	Gia_ManCorrPerformRemapping(Gia_ManCorrCreateRemapping(p), info)
+}
+func Cec_ManLoadCounterExamplesTry(info, presence *Vec_Ptr_t, bit int32, lits []int32, count int32) int32 {
+	for _, lit := range lits[:count] {
+		if cecBit(cecInfo(presence, lit>>1), bit) != 0 && cecBit(cecInfo(info, lit>>1), bit) == uint32(lit&1) {
+			return 0
+		}
+	}
+	for _, lit := range lits[:count] {
+		cecWriteBit(cecInfo(presence, lit>>1), bit, 1)
+		cecWriteBit(cecInfo(info, lit>>1), bit, uint32(lit&1)^1)
+	}
+	return 1
+}
+func Cec_ManLoadCounterExamples(info *Vec_Ptr_t, store *Vec_Int_t, start int32) int32 {
+	presence := vec.Vec_PtrAllocSimInfo(vec.Vec_PtrSize(info), vec.Vec_PtrReadWordsSimInfo(info))
+	bits := int32(32 * vec.Vec_PtrReadWordsSimInfo(info))
+	data := vec.Vec_IntArray(store)
+	for int(start) < len(data) {
+		if int(start)+2 > len(data) {
+			panic("cec: truncated counterexample header")
+		}
+		count := data[start+1]
+		start += 2
+		if count <= 0 {
+			continue
+		}
+		if count > int32(len(data))-start {
+			panic("cec: truncated counterexample cube")
+		}
+		pattern := data[start : start+count]
+		chosen := int32(1)
+		for ; chosen < bits; chosen++ {
+			if Cec_ManLoadCounterExamplesTry(info, presence, chosen, pattern, count) != 0 {
+				break
+			}
+		}
+		if chosen == bits {
+			return start - 2
+		} // retry this unconsumed cube in the next batch
+		start += count
+		if chosen == bits-1 {
+			break
+		}
+	}
+	return start
+}
+func Cec_ManLoadCounterExamples2(info *Vec_Ptr_t, store *Vec_Int_t, start int32) int32 {
+	data := vec.Vec_IntArray(store)
+	bits := int32(32 * vec.Vec_PtrReadWordsSimInfo(info))
+	bit := int32(1)
+	for int(start) < len(data) {
+		if int(start)+2 > len(data) {
+			panic("cec: truncated counterexample header")
+		}
+		count := data[start+1]
+		start += 2
+		if count <= 0 {
+			continue
+		}
+		if count > int32(len(data))-start {
+			panic("cec: truncated counterexample cube")
+		}
+		for _, lit := range data[start : start+count] {
+			cecWriteBit(cecInfo(info, lit>>1), bit, uint32(lit&1)^1)
+		}
+		start += count
+		bit++
+		if bit == bits {
+			break
+		}
+	}
+	return start
+}
+func Cec_ManResimulateCounterExamples(sim *Cec_ManSim_t, store *Vec_Int_t, frames int32) int32 {
+	pairs := Gia_ManCorrCreateRemapping(sim.pAig)
+	cecSimRefs(sim.pAig)
+	sim.pPars.nFrames = frames
+	info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManRegNum(sim.pAig)+gia.Gia_ManPiNum(sim.pAig)*frames), int(sim.pPars.nWords))
+	result := int32(0)
+	for start := int32(0); int(start) < vec.Vec_IntSize(store); {
+		Cec_ManStartSimInfo(info, gia.Gia_ManRegNum(sim.pAig))
+		next := Cec_ManLoadCounterExamples(info, store, start)
+		if next == start {
+			panic("cec: counterexample does not fit batch")
+		}
+		start = next
+		Gia_ManCorrPerformRemapping(pairs, info)
+		result |= Cec_ManSeqResimulate(sim, info)
+	}
+	return result
+}
+func Cec_ManResimulateCounterExamplesComb(sim *Cec_ManSim_t, store *Vec_Int_t) int32 {
+	cecSimRefs(sim.pAig)
+	sim.pPars.nFrames = 1
+	info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManCiNum(sim.pAig)), int(sim.pPars.nWords))
+	result := int32(0)
+	for start := int32(0); int(start) < vec.Vec_IntSize(store); {
+		Cec_ManStartSimInfo(info, 0)
+		next := Cec_ManLoadCounterExamples(info, store, start)
+		if next == start {
+			panic("cec: counterexample does not fit batch")
+		}
+		start = next
+		result |= Cec_ManSeqResimulate(sim, info)
+	}
+	return result
+}
+func Gia_ManCheckRefinements(p *Gia_Man_t, status *Vec_Str_t, outputs *Vec_Int_t, sim *Cec_ManSim_t, rings int32) int32 {
+	if 2*vec.Vec_StrSize(status) != vec.Vec_IntSize(outputs) {
+		panic("cec: refinement output map mismatch")
+	}
+	for i, value := range vec.Vec_StrArray(status) {
+		if int8(value) == -1 {
+			Cec_ManSimClassRemoveOne(sim, vec.Vec_IntEntry(outputs, 2*i+1))
+		}
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Remaps simulation info from SRM to the original AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCorrPerformRemapping(vPairs *Vec_Int_t, vInfo *Vec_Ptr_t) {
-    var pInfoObj, pInfoRepr *uint32;
-    var w, i, iObj, iRepr, nWords int32;
-    nWords = Vec_PtrReadWordsSimInfo( vInfo );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vPairs)) && (((iRepr) = Vec_IntEntry(vPairs, i)), 1); i++  {
-        iObj = Vec_IntEntry( vPairs, ++i );
-        pInfoObj = (unsigned *)Vec_PtrEntry( vInfo, iObj );
-        pInfoRepr = (unsigned *)Vec_PtrEntry( vInfo, iRepr );
-        for  w = 0; w < nWords; w++  {
-            assert(pInfoObj[w] == 0, "pInfoObj[w] == 0");
-            pInfoObj[w] = pInfoRepr[w];
-        }
-    }
+// Duplicate only output cones; optional sequential cleanup follows live latch
+// next-state cones to a fixed point before retaining the latch interface.
+func cecCorrDuplicate(p *Gia_Man_t, useClasses, cleanup bool, flip []uint32) (*Gia_Man_t, []int32) {
+	pis, pos, regs := gia.Gia_ManPiNum(p), gia.Gia_ManPoNum(p), gia.Gia_ManRegNum(p)
+	live := make([]bool, regs)
+	if !cleanup {
+		for i := range live {
+			live[i] = true
+		}
+	}
+	seen := make(map[int32]bool)
+	var mark func(int32)
+	mark = func(id int32) {
+		if id == 0 || seen[id] {
+			return
+		}
+		seen[id] = true
+		o := gia.Gia_ManObj(p, id)
+		if gia.Gia_ObjIsCi(o) != 0 {
+			r := gia.Gia_ObjCioId(o) - pis
+			if r >= 0 && !live[r] {
+				live[r] = true
+				mark(p.OutputLiterals()[pos+r] >> 1)
+			}
+			return
+		}
+		a, b, c, kind := p.Gate(id)
+		mark(a >> 1)
+		if kind == 2 || kind == 3 || kind == 4 {
+			mark(b >> 1)
+		}
+		if kind == 4 {
+			mark(c >> 1)
+		}
+	}
+	if cleanup {
+		for _, lit := range p.OutputLiterals()[:pos] {
+			mark(lit >> 1)
+		}
+	}
+	builder := newCorrBuilder(p)
+	mapping := make([]int32, gia.Gia_ManObjNum(p))
+	for i := range mapping {
+		mapping[i] = -1
+	}
+	mapping[0] = 0
+	inputs, outputs := []int32{}, []int32{}
+	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
+		if i >= pis && !live[i-pis] {
+			continue
+		}
+		lit := gia.Gia_ManAppendCi(builder.graph)
+		if flip != nil && i >= pis {
+			lit ^= int32(cecBit(flip, i-pis))
+		}
+		mapping[gia.Gia_ObjId(p, gia.Gia_ManCi(p, i))] = lit
+		inputs = append(inputs, i)
+	}
+	if useClasses {
+		gia.Gia_ManSetPhase(p)
+	}
+	active := make(map[int32]bool)
+	var visit func(int32) int32
+	visit = func(id int32) int32 {
+		if useClasses && id != 0 && p.HasRepresentatives() {
+			repr := gia.Gia_ObjRepr(p, id)
+			if repr != gia.GIA_VOID {
+				if active[id] {
+					panic("cec: cyclic correspondence class")
+				}
+				active[id] = true
+				lit := visit(repr) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(p, repr)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(p, id))
+				delete(active, id)
+				mapping[id] = lit
+				return lit
+			}
+		}
+		if mapping[id] >= 0 {
+			return mapping[id]
+		}
+		a, b, c, kind := p.Gate(id)
+		av := visit(a>>1) ^ a&1
+		bv, cv := int32(0), int32(0)
+		if kind == 2 || kind == 3 || kind == 4 {
+			bv = visit(b>>1) ^ b&1
+		}
+		if kind == 4 {
+			cv = visit(c>>1) ^ c&1
+		}
+		mapping[id] = builder.gate(kind, av, bv, cv)
+		return mapping[id]
+	}
+	for i, lit := range p.OutputLiterals() {
+		if int32(i) >= pos && !live[int32(i)-pos] {
+			continue
+		}
+		out := visit(lit>>1) ^ lit&1
+		if flip != nil && int32(i) >= pos {
+			out ^= int32(cecBit(flip, int32(i)-pos))
+		}
+		gia.Gia_ManAppendCo(builder.graph, out)
+		outputs = append(outputs, int32(i))
+	}
+	count := int32(0)
+	for _, yes := range live {
+		if yes {
+			count++
+		}
+	}
+	gia.Gia_ManSetRegNum(builder.graph, count)
+	if err := builder.graph.CopyIONamesFrom(p, inputs, outputs); err != nil {
+		panic(err)
+	}
+	return builder.graph, mapping
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Packs one counter-examples into the array of simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-*************************************`**********************************/
-func Cec_ManLoadCounterExamplesTry(vInfo *Vec_Ptr_t, vPres *Vec_Ptr_t, iBit int32, pLits *int32, nLits int32) int32 {
-    var pInfo, pPres *uint32;
-    var i int32;
-    for  i = 0; i < nLits; i++  {
-        pInfo = (unsigned *)Vec_PtrEntry(vInfo, Abc_Lit2Var(pLits[i]));
-        pPres = (unsigned *)Vec_PtrEntry(vPres, Abc_Lit2Var(pLits[i]));
-        if Abc_InfoHasBit( pPres, iBit ) && 
-             Abc_InfoHasBit( pInfo, iBit ) == Abc_LitIsCompl(pLits[i]) {
-             return 0; }
-    }
-    for  i = 0; i < nLits; i++  {
-        pInfo = (unsigned *)Vec_PtrEntry(vInfo, Abc_Lit2Var(pLits[i]));
-        pPres = (unsigned *)Vec_PtrEntry(vPres, Abc_Lit2Var(pLits[i]));
-        Abc_InfoSetBit( pPres, iBit );
-        if Abc_InfoHasBit( pInfo, iBit ) == Abc_LitIsCompl(pLits[i]) {
-            Abc_InfoXorBit( pInfo, iBit ); }
-    }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs bitpacking of counter-examples.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManLoadCounterExamples(vInfo *Vec_Ptr_t, vCexStore *Vec_Int_t, iStart int32) int32 { 
-    var vPat *Vec_Int_t;
-    var vPres *Vec_Ptr_t;
-    var nWords int32  = Vec_PtrReadWordsSimInfo(vInfo);
-    var nBits int32  = 32 * nWords; 
-    var k, nSize, kMax int32;//, iBit = 1;
-    vPat  = Vec_IntAlloc( 100 );
-    vPres = Vec_PtrAllocSimInfo( Vec_PtrSize(vInfo), nWords );
-    Vec_PtrCleanSimInfo( vPres, 0, nWords );
-    for  iStart < Vec_IntSize(vCexStore)  {
-        // skip the output number
-        iStart++;
-        // get the number of items
-        nSize = Vec_IntEntry( vCexStore, iStart++ );
-        if nSize <= 0 {
-            continue; }
-        // extract pattern
-        Vec_IntClear( vPat );
-        for  k = 0; k < nSize; k++  {
-            Vec_IntPush( vPat, Vec_IntEntry( vCexStore, iStart++ ) );
-        }
-        // add pattern to storage
-        for  k = 1; k < nBits; k++  {
-            if Cec_ManLoadCounterExamplesTry( vInfo, vPres, k, (int *)Vec_IntArray(vPat), Vec_IntSize(vPat) ) {
-                break; }
-        }
-        kMax = Abc_MaxInt( kMax, k );
-        if k == nBits-1 {
-            break; }
-    }
-    Vec_PtrFree( vPres );
-    Vec_IntFree( vPat );
-    return iStart;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs bitpacking of counter-examples.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManLoadCounterExamples2(vInfo *Vec_Ptr_t, vCexStore *Vec_Int_t, iStart int32) int32 { 
-    var pInfo *uint32;
-    var nBits int32  = 32 * Vec_PtrReadWordsSimInfo(vInfo); 
-    var k int32;
-    var iLit int32;
-    var nLits int32;
-    var Out int32;
-    var iBit int32 = 1;
-    for  iStart < Vec_IntSize(vCexStore)  {
-        // skip the output number
-//        iStart++;
-        Out = Vec_IntEntry( vCexStore, iStart++ );
-//        Abc_Print( 1, "iBit = %d. Out = %d.\n", iBit, Out );
-        // get the number of items
-        nLits = Vec_IntEntry( vCexStore, iStart++ );
-        if nLits <= 0 {
-            continue; }
-        // add pattern to storage
-        for  k = 0; k < nLits; k++  {
-            iLit = Vec_IntEntry( vCexStore, iStart++ );
-            pInfo = (unsigned *)Vec_PtrEntry( vInfo, Abc_Lit2Var(iLit) );
-            if Abc_InfoHasBit( pInfo, iBit ) == Abc_LitIsCompl(iLit) {
-                Abc_InfoXorBit( pInfo, iBit ); }
-        }
-        if iBit++; iBit == nBits {
-            break; }
-    }
-//    Abc_Print( 1, "added %d bits\n", iBit-1 );
-    return iStart;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Resimulates counter-examples derived by the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManResimulateCounterExamples(pSim *Cec_ManSim_t, vCexStore *Vec_Int_t, nFrames int32) int32 { 
-    var vPairs *Vec_Int_t;
-    var vSimInfo *Vec_Ptr_t; 
-    var RetValue, iStart int32;
-    vPairs = Gia_ManCorrCreateRemapping( pSim.pAig );
-    Gia_ManCreateValueRefs( pSim.pAig );
-//    pSim->pPars->nWords  = 63;
-    pSim.pPars.nFrames = nFrames;
-    vSimInfo = Vec_PtrAllocSimInfo( Gia_ManRegNum(pSim.pAig) + Gia_ManPiNum(pSim.pAig) * nFrames, pSim.pPars.nWords );
-    for  iStart < Vec_IntSize(vCexStore)  {
-        Cec_ManStartSimInfo( vSimInfo, Gia_ManRegNum(pSim.pAig) );
-        iStart = Cec_ManLoadCounterExamples( vSimInfo, vCexStore, iStart );
-//        iStart = Cec_ManLoadCounterExamples2( vSimInfo, vCexStore, iStart );
-//        Gia_ManCorrRemapSimInfo( pSim->pAig, vSimInfo );
-        Gia_ManCorrPerformRemapping( vPairs, vSimInfo );
-        RetValue |= Cec_ManSeqResimulate( pSim, vSimInfo );
-//        Cec_ManSeqResimulateInfo( pSim->pAig, vSimInfo, NULL );
-    }
-//Gia_ManEquivPrintOne( pSim->pAig, 85, 0 );
-    assert(iStart == Vec_IntSize(vCexStore), "iStart == Vec_IntSize(vCexStore)");
-    Vec_PtrFree( vSimInfo );
-    Vec_IntFree( vPairs );
-    return RetValue;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Resimulates counter-examples derived by the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManResimulateCounterExamplesComb(pSim *Cec_ManSim_t, vCexStore *Vec_Int_t) int32 { 
-    var vSimInfo *Vec_Ptr_t; 
-    var RetValue, iStart int32;
-    Gia_ManCreateValueRefs( pSim.pAig );
-    pSim.pPars.nFrames = 1;
-    vSimInfo = Vec_PtrAllocSimInfo( Gia_ManCiNum(pSim.pAig), pSim.pPars.nWords );
-    for  iStart < Vec_IntSize(vCexStore)  {
-        Cec_ManStartSimInfo( vSimInfo, 0 );
-        iStart = Cec_ManLoadCounterExamples( vSimInfo, vCexStore, iStart );
-        RetValue |= Cec_ManSeqResimulate( pSim, vSimInfo );
-    }
-    assert(iStart == Vec_IntSize(vCexStore), "iStart == Vec_IntSize(vCexStore)");
-    Vec_PtrFree( vSimInfo );
-    return RetValue;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Updates equivalence classes by marking those that timed out.]
-
-  Description [Returns 1 if all ndoes are proved.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCheckRefinements(p *Gia_Man_t, vStatus *Vec_Str_t, vOutputs *Vec_Int_t, pSim *Cec_ManSim_t, fRings int32) int32 {
-    var i, status, iRepr, iObj int32;
-    var Counter int32;
-    assert(2 * Vec_StrSize(vStatus) == Vec_IntSize(vOutputs), "2 * Vec_StrSize(vStatus) == Vec_IntSize(vOutputs)");
-    // inlining of macro Vec_StrForEachEntry
-    for  i = 0; (i < Vec_StrSize(vStatus)) && (((status) = Vec_StrEntry(vStatus, i)), 1); i++  {
-        iRepr = Vec_IntEntry( vOutputs, 2*i );
-        iObj  = Vec_IntEntry( vOutputs, 2*i+1 );
-        if status == 1 {
-            continue; }
-        if status == 0 {
-            if Gia_ObjHasSameRepr(p, iRepr, iObj) {
-                Counter++; }
-//            if ( Gia_ObjHasSameRepr(p, iRepr, iObj) )
-//                Abc_Print( 1, "Gia_ManCheckRefinements(): Disproved equivalence (%d,%d) is not refined!\n", iRepr, iObj );
-//            if ( Gia_ObjHasSameRepr(p, iRepr, iObj) )
-//                Cec_ManSimClassRemoveOne( pSim, iObj );
-            continue;
-        }
-        if status == -1 {
-//            if ( !Gia_ObjFailed( p, iObj ) )
-//                Abc_Print( 1, "Gia_ManCheckRefinements(): Failed equivalence is not marked as failed!\n" );
-//            Gia_ObjSetFailed( p, iRepr );
-//            Gia_ObjSetFailed( p, iObj );        
-//            if ( fRings )
-//            Cec_ManSimClassRemoveOne( pSim, iRepr );
-            Cec_ManSimClassRemoveOne( pSim, iObj );
-            continue;
-        }
-    }
-//    if ( Counter )
-//    Abc_Print( 1, "Gia_ManCheckRefinements(): Could not refine %d nodes.\n", Counter );
-    return 1;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the AIG in the DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManCorrReduce_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) {
-    var pRepr *Gia_Obj_t;
-    if pRepr = Gia_ObjReprObj(p, Gia_ObjId(p, pObj)) {
-        Gia_ManCorrReduce_rec( pNew, p, pRepr );
-        pObj.Value = Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) );
-        return;
-    }
-    if ~pObj.Value {
-        return; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Gia_ManCorrReduce_rec( pNew, p, Gia_ObjFanin0(pObj) );
-    Gia_ManCorrReduce_rec( pNew, p, Gia_ObjFanin1(pObj) );
-    pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Reduces AIG using equivalence classes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Gia_ManCorrReduce(p *Gia_Man_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManSetPhase( p );
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManFillValue( p );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCi(pNew);
-    }
-    Gia_ManHashAlloc( pNew );
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        Gia_ManCorrReduce_rec( pNew, p, Gia_ObjFanin0(pObj) );
-    }
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-    }
-    Gia_ManHashStop( pNew );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    return pNew;
+	result, mapping := cecCorrDuplicate(p, true, false, nil)
+	for id, lit := range mapping {
+		gia.Gia_ObjSetValue(gia.Gia_ManObj(p, int32(id)), lit)
+	}
+	return result
+}
+func Cec_ManRefinedClassPrintStats(p *Gia_Man_t, status *Vec_Str_t, iteration int32, elapsed abctime) {
+	constants, classes, literals := 0, 0, 0
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		if gia.Gia_ObjIsConst(p, id) != 0 {
+			constants++
+		}
+		if gia.Gia_ObjIsHead(p, id) != 0 {
+			classes++
+		}
+		if gia.Gia_ObjIsCand(gia.Gia_ManObj(p, id)) != 0 && gia.Gia_ObjIsNone(p, id) == 0 {
+			literals++
+		}
+	}
+	proved, disproved, failed := 0, 0, 0
+	if status != nil {
+		for _, value := range vec.Vec_StrArray(status) {
+			switch int8(value) {
+			case 1:
+				proved++
+			case 0:
+				disproved++
+			case -1:
+				failed++
+			}
+		}
+	}
+	fmt.Printf("%3d : c=%8d cl=%7d lit=%8d p=%6d d=%6d f=%6d T=%d\n", iteration, constants, classes, literals-classes, proved, disproved, failed, elapsed)
+}
+func cecCorrSim(p *Gia_Man_t, pars *Cec_ParCor_t) *Cec_ManSim_t {
+	var sim Cec_ParSim_t
+	Cec_ManSimSetDefaultParams(&sim)
+	sim.nWords = pars.nWords
+	sim.nFrames = pars.nFrames
+	sim.fVerbose = pars.fVerbose
+	sim.fLatchCorr = pars.fLatchCorr
+	sim.fConstCorr = pars.fConstCorr
+	sim.fSeqSimulate = 1
+	return Cec_ManSimStart(p, &sim)
+}
+func cecCorrCallback(pars *Cec_ParCor_t) {
+	if pars.pFunc == nil {
+		return
+	}
+	switch callback := pars.pFunc.(type) {
+	case func(any) int:
+		callback(pars.pData)
+	case func(any) int32:
+		callback(pars.pData)
+	case func(any):
+		callback(pars.pData)
+	default:
+		panic("cec: unsupported correspondence callback type")
+	}
+}
+func Cec_ManLSCorrespondenceBmc(p *Gia_Man_t, pars *Cec_ParCor_t, prefix int32) {
+	sim := cecCorrSim(p, pars)
+	defer Cec_ManSimStop(sim)
+	var sat Cec_ParSat_t
+	Cec_ManSatSetDefaultParams(&sat)
+	sat.nBTLimit = pars.nBTLimit
+	sat.fVerbose = pars.fVerbose
+	for {
+		var outputs *Vec_Int_t
+		model := Gia_ManCorrSpecReduceInit(p, pars.nFrames, prefix, 1-pars.fLatchCorr, &outputs, pars.fUseRings)
+		if gia.Gia_ManCoNum(model) == 0 {
+			break
+		}
+		if sat.nBTLimit > 0 {
+			sat.nBTLimit = int32(min(int64(sat.nBTLimit)*10, int64(1<<30)))
+		}
+		var status *Vec_Str_t
+		store := Cec_ManSatSolveMiter(model, &sat, &status)
+		if vec.Vec_IntSize(store) == 0 {
+			break
+		}
+		before := cecCorrClassSignature(p)
+		Cec_ManResimulateCounterExamples(sim, store, pars.nFrames+1+prefix)
+		Gia_ManCheckRefinements(p, status, outputs, sim, pars.fUseRings)
+		if slices.Equal(before, cecCorrClassSignature(p)) {
+			cecCorrDiscardDisproved(p, status, outputs, sim)
+		}
+		if slices.Equal(before, cecCorrClassSignature(p)) {
+			break
+		}
+	}
+}
+func cecCorrClassSignature(p *Gia_Man_t) []int32 {
+	data := make([]int32, gia.Gia_ManObjNum(p))
+	for id := range data {
+		data[id] = gia.Gia_ObjRepr(p, int32(id))
+	}
+	return data
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Prints statistics during solving.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManRefinedClassPrintStats(p *Gia_Man_t, vStatus *Vec_Str_t, iIter int32, Time abctime) { 
-    var nLits, CounterX, Counter0, Counter int32;
-    var i, Entry, nProve, nDispr, nFail int32;
-    for  i = 1; i < Gia_ManObjNum(p); i++  {
-        if Gia_ObjIsNone(p, i) {
-            CounterX++;
-        } else if Gia_ObjIsConst(p, i) {
-            Counter0++;
-        } else if Gia_ObjIsHead(p, i) {
-            Counter++; }
-    }
-    CounterX -= Gia_ManCoNum(p);
-    nLits = Gia_ManCiNum(p) + Gia_ManAndNum(p) - Counter - CounterX;
-    if iIter == -1 {
-        Abc_Print( 1, "BMC : " );
-    } else {
-        Abc_Print( 1, "%3d : ", iIter ); }
-    Abc_Print( 1, "c =%8d  cl =%7d  lit =%8d  ", Counter0, Counter, nLits );
-    if vStatus != nil {
-    // inlining of macro Vec_StrForEachEntry
-    for  i = 0; (i < Vec_StrSize(vStatus)) && (((Entry) = Vec_StrEntry(vStatus, i)), 1); i++  {
-        if Entry == 1 {
-            nProve++;
-        } else if Entry == 0 {
-            nDispr++;
-        } else if Entry == -1 {
-            nFail++; }
-    } }
-    Abc_Print( 1, "p =%6d  d =%6d  f =%6d  ", nProve, nDispr, nFail );
-    Abc_Print( 1, "%c  ", Gia_ObjIsConst( p, Gia_ObjFaninId0p(p, Gia_ManPo(p, 0)) ) ? '+' : '-' );
-    Abc_PrintTime( 1, "T", Time );
+// A validated SAT witness must refine its candidate. Sparse bit packing may
+// combine independent cubes; fall back to deleting a still-disproved member.
+func cecCorrDiscardDisproved(p *Gia_Man_t, status *Vec_Str_t, outputs *Vec_Int_t, sim *Cec_ManSim_t) {
+	for i, value := range vec.Vec_StrArray(status) {
+		if int8(value) == 0 {
+			id := vec.Vec_IntEntry(outputs, 2*i+1)
+			if gia.Gia_ObjHasRepr(p, id) != 0 || gia.Gia_ObjIsHead(p, id) != 0 {
+				Cec_ManSimClassRemoveOne(sim, id)
+			}
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Runs BMC for the equivalence classes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManLSCorrespondenceBmc(pAig *Gia_Man_t, pPars *Cec_ParCor_t, nPrefs int32) {  
-    var ParsSim Cec_ParSim_t;
-    var pParsSim *Cec_ParSim_t = &ParsSim;
-    var ParsSat Cec_ParSat_t;
-    var pParsSat *Cec_ParSat_t = &ParsSat;
-    var vStatus *Vec_Str_t;
-    var vOutputs *Vec_Int_t;
-    var vCexStore *Vec_Int_t;
-    var pSim *Cec_ManSim_t;
-    var pSrm *Gia_Man_t;
-    var fChanges, RetValue int32;
-    // prepare simulation manager
-    Cec_ManSimSetDefaultParams( pParsSim );
-    pParsSim.nWords     = pPars.nWords;
-    pParsSim.nFrames    = pPars.nRounds;
-    pParsSim.fVerbose   = pPars.fVerbose;
-    pParsSim.fLatchCorr = pPars.fLatchCorr;
-    pParsSim.fSeqSimulate = 1;
-    pSim = Cec_ManSimStart( pAig, pParsSim );
-    // prepare SAT solving
-    Cec_ManSatSetDefaultParams( pParsSat );
-    pParsSat.nBTLimit = pPars.nBTLimit;
-    pParsSat.fVerbose = pPars.fVerbose;
-    fChanges = 1;
-    for  fChanges != 0  {
-        var clkBmc abctime  = Abc_Clock();
-        fChanges = 0;
-        pSrm = Gia_ManCorrSpecReduceInit( pAig, pPars.nFrames, nPrefs, !pPars.fLatchCorr, &vOutputs, pPars.fUseRings );
-        if Gia_ManPoNum(pSrm) == 0 {
-            Gia_ManStop( pSrm );
-            Vec_IntFree( vOutputs );
-            break;
-        } 
-        pParsSat.nBTLimit *= 10;
-        if pPars.fUseCSat {
-            vCexStore = Tas_ManSolveMiterNc( pSrm, pPars.nBTLimit, &vStatus, 0 );
-        } else {
-            vCexStore = Cec_ManSatSolveMiter( pSrm, pParsSat, &vStatus ); }
-        // refine classes with these counter-examples
-        if Vec_IntSize(vCexStore) {
-            RetValue = Cec_ManResimulateCounterExamples( pSim, vCexStore, pPars.nFrames + 1 + nPrefs );
-            Gia_ManCheckRefinements( pAig, vStatus, vOutputs, pSim, pPars.fUseRings );
-            fChanges = 1;
-        }
-        if pPars.fVerbose {
-            Cec_ManRefinedClassPrintStats( pAig, vStatus, -1, Abc_Clock() - clkBmc ); }
-        // recycle
-        Vec_IntFree( vCexStore );
-        Vec_StrFree( vStatus );
-        Gia_ManStop( pSrm );
-        Vec_IntFree( vOutputs );
-    }
-    Cec_ManSimStop( pSim );
+func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) int32 {
+	if gia.Gia_ManRegNum(p) == 0 {
+		return 0
+	}
+	if pars.nFrames <= 0 || pars.nWords <= 0 {
+		panic("cec: invalid correspondence parameters")
+	}
+	gia.Gia_ManRandom(1)
+	sim := cecCorrSim(p, pars)
+	defer Cec_ManSimStop(sim)
+	if !p.HasRepresentatives() {
+		Cec_ManSimClassesPrepare(sim, pars.nLevelMax)
+		Cec_ManSimClassesRefine(sim)
+	}
+	var sat Cec_ParSat_t
+	Cec_ManSatSetDefaultParams(&sat)
+	sat.nBTLimit = pars.nBTLimit
+	sat.fVerbose = pars.fVerbose
+	if pars.fUseCSat != 0 {
+		sat.nBTLimit = min(sat.nBTLimit, 1000)
+	}
+	if pars.fLatchCorr == 0 || pars.nFrames > 1 {
+		Cec_ManLSCorrespondenceBmc(p, pars, 0)
+	}
+	cecCorrCallback(pars)
+	cecCorrCallback(pars)
+	for round := int32(0); round < 100000; round++ {
+		if pars.nStepsMax == round {
+			return 1
+		}
+		start := time.Now()
+		var outputs *Vec_Int_t
+		model := Gia_ManCorrSpecReduce(p, pars.nFrames, 1-pars.fLatchCorr, &outputs, pars.fUseRings)
+		if gia.Gia_ManCoNum(model) == 0 {
+			return 1
+		}
+		var status *Vec_Str_t
+		store := Cec_ManSatSolveMiter(model, &sat, &status)
+		if vec.Vec_IntSize(store) == 0 {
+			return 1
+		}
+		before := cecCorrClassSignature(p)
+		Cec_ManResimulateCounterExamples(sim, store, pars.nFrames+2)
+		Gia_ManCheckRefinements(p, status, outputs, sim, pars.fUseRings)
+		if slices.Equal(before, cecCorrClassSignature(p)) {
+			cecCorrDiscardDisproved(p, status, outputs, sim)
+		}
+		if pars.fVerbose != 0 {
+			Cec_ManRefinedClassPrintStats(p, status, round+1, time.Since(start).Nanoseconds())
+		}
+		cecCorrCallback(pars)
+		if pars.fStopWhenGone != 0 && gia.Gia_ManPoNum(p) == 1 && gia.Gia_ObjIsConst(p, gia.Gia_ObjFaninId0p(p, gia.Gia_ManPo(p, 0))) == 0 {
+			return 0
+		}
+		if slices.Equal(before, cecCorrClassSignature(p)) {
+			return 1
+		}
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManLSCorrAnalyzeDependence(p *Gia_Man_t, vEquivs *Vec_Int_t, vStatus *Vec_Str_t) int32 {
-    var pObj, pObjRo *Gia_Obj_t;
-    var i, Iter, iObj, iRepr, fPrev, Total, Count0, Count1 int32;
-    assert(Vec_StrSize(vStatus) * 2 == Vec_IntSize(vEquivs), "Vec_StrSize(vStatus) * 2 == Vec_IntSize(vEquivs)");
-    Total = 0;
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        assert(pObj.fMark1 == 0, "pObj.fMark1 == 0");
-        if Gia_ObjHasRepr(p, i) {
-            Total++; }
-    }
-    Count0 = 0;
-    for  i = 0; i < Vec_StrSize(vStatus); i++  {
-        iRepr = Vec_IntEntry(vEquivs, 2*i);
-        iObj = Vec_IntEntry(vEquivs, 2*i+1);
-        assert(iRepr == Gia_ObjRepr(p, iObj), "iRepr == Gia_ObjRepr(p, iObj)");
-        if Vec_StrEntry(vStatus, i) != 1 { // disproved or undecided
-        
-            Gia_ManObj(p, iObj).fMark1 = 1;
-            Count0++;
-        }
-    }
-    for  Iter = 0; Iter < 100; Iter++  {
-        var fChanges int32;
-        // inlining of macro Gia_ManForEachObj1
-        for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-            if Gia_ObjIsCi(pObj) {
-                continue; }
-            assert(Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj), "Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj)");
-//            fPrev = pObj->fMark1;
-            if Gia_ObjIsAnd(pObj) {
-                pObj.fMark1 |= Gia_ObjFanin0(pObj).fMark1 | Gia_ObjFanin1(pObj).fMark1;
-            } else {
-                pObj.fMark1 |= Gia_ObjFanin0(pObj).fMark1; }
-//            fChanges += fPrev ^ pObj->fMark1;
-        }
-        // inlining of macro Gia_ManForEachRiRo
-        for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-            fPrev = pObjRo.fMark1;
-            pObjRo.fMark1 = pObj.fMark1;
-            fChanges += fPrev ^ pObjRo.fMark1;
-        }
-        if fChanges == 0 {
-            break; }
-    }
-    Count1 = 0;
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if pObj.fMark1 && Gia_ObjHasRepr(p, i) {
-            Count1++; }
-        pObj.fMark1 = 0;
-    }
-    fmt.Printf("%5d -> %5d (%3d)  ", Count0, Count1, Iter);
-    return 0;
+func Cec_ManLSCorrAnalyzeDependence(p *Gia_Man_t, equivs *Vec_Int_t, status *Vec_Str_t) int32 {
+	if 2*vec.Vec_StrSize(status) != vec.Vec_IntSize(equivs) {
+		panic("cec: dependence pair/status size mismatch")
+	}
+	marked := make([]bool, gia.Gia_ManObjNum(p))
+	initial := 0
+	for i, value := range vec.Vec_StrArray(status) {
+		if int8(value) != 1 {
+			marked[vec.Vec_IntEntry(equivs, 2*i+1)] = true
+			initial++
+		}
+	}
+	iteration := 0
+	for ; iteration < 100; iteration++ {
+		for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+			a, b, c, kind := p.Gate(id)
+			if kind < 2 {
+				continue
+			}
+			marked[id] = marked[id] || marked[a>>1]
+			if kind == 2 || kind == 3 || kind == 4 {
+				marked[id] = marked[id] || marked[b>>1]
+			}
+			if kind == 4 {
+				marked[id] = marked[id] || marked[c>>1]
+			}
+		}
+		changes := false
+		for r := int32(0); r < gia.Gia_ManRegNum(p); r++ {
+			ro := gia.Gia_ObjId(p, gia.Gia_ManRo(p, r))
+			next := marked[gia.Gia_ObjId(p, gia.Gia_ManRi(p, r))]
+			changes = changes || marked[ro] != next
+			marked[ro] = next
+		}
+		if !changes {
+			break
+		}
+	}
+	final := 0
+	for id, yes := range marked {
+		if yes && gia.Gia_ObjHasRepr(p, int32(id)) != 0 {
+			final++
+		}
+	}
+	fmt.Printf("%5d -> %5d (%3d)  ", initial, final, iteration)
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Internal procedure for register correspondence.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManLSCorrespondenceClasses(pAig *Gia_Man_t, pPars *Cec_ParCor_t) int32 {  
-    var nIterMax int32      = 100000;
-    var nAddFrames int32    = 1; // additional timeframes to simulate
-    var fRunBmcFirst int32  = 1;
-    var vStatus *Vec_Str_t;
-    var vOutputs *Vec_Int_t;
-    var vCexStore *Vec_Int_t;
-    var ParsSim Cec_ParSim_t;
-    var pParsSim *Cec_ParSim_t = &ParsSim;
-    var ParsSat Cec_ParSat_t;
-    var pParsSat *Cec_ParSat_t = &ParsSat;
-    var pSim *Cec_ManSim_t;
-    var pSrm *Gia_Man_t;
-    var r, RetValue int32;
-    var clkTotal abctime  = Abc_Clock();
-    var clkSat, clkSim, clkSrm abctime;
-    var clk2 abctime;
-    var clk abctime = Abc_Clock();
-    if Gia_ManRegNum(pAig) == 0 {
-        Abc_Print( 1, "Cec_ManLatchCorrespondence(): Not a sequential AIG.\n" );
-        return 0;
-    }
-    Gia_ManRandom( 1 );
-    // prepare simulation manager
-    Cec_ManSimSetDefaultParams( pParsSim );
-    pParsSim.nWords     = pPars.nWords;
-    pParsSim.nFrames    = pPars.nFrames;
-    pParsSim.fVerbose   = pPars.fVerbose;
-    pParsSim.fLatchCorr = pPars.fLatchCorr;
-    pParsSim.fConstCorr = pPars.fConstCorr;
-    pParsSim.fSeqSimulate = 1;
-    // create equivalence classes of registers
-    pSim = Cec_ManSimStart( pAig, pParsSim );
-    if pAig.pReprs == nil {
-        Cec_ManSimClassesPrepare( pSim, pPars.nLevelMax );
-        Cec_ManSimClassesRefine( pSim );
-    }
-    // prepare SAT solving
-    Cec_ManSatSetDefaultParams( pParsSat );
-    pParsSat.nBTLimit = pPars.nBTLimit;
-    pParsSat.fVerbose = pPars.fVerbose;
-    // limit the number of conflicts in the circuit-based solver
-    if pPars.fUseCSat {
-        pParsSat.nBTLimit = Abc_MinInt( pParsSat.nBTLimit, 1000 ); }
-    if pPars.fVerbose {
-        Abc_Print( 1, "Obj = %7d. And = %7d. Conf = %5d. Fr = %d. Lcorr = %d. Ring = %d. CSat = %d.\n",
-            Gia_ManObjNum(pAig), Gia_ManAndNum(pAig), 
-            pPars.nBTLimit, pPars.nFrames, pPars.fLatchCorr, pPars.fUseRings, pPars.fUseCSat );
-        Cec_ManRefinedClassPrintStats( pAig, nil, 0, Abc_Clock() - clk );
-    }
-    // check the base case
-    if (fRunBmcFirst != 0) && (!pPars.fLatchCorr || pPars.nFrames > 1) {
-        Cec_ManLSCorrespondenceBmc( pAig, pPars, 0 ); }
-    if pPars.pFunc {
-        ((int (*)(void *))pPars.pFunc)( pPars.pData );
-        ((int (*)(void *))pPars.pFunc)( pPars.pData );
-    }
-    if pPars.nStepsMax == 0 {
-        Abc_Print( 1, "Stopped signal correspondence after BMC.\n" );
-        Cec_ManSimStop( pSim );
-        return 1;
-    }
-    // perform refinement of equivalence classes
-    for  r = 0; r < nIterMax; r++  { 
-        if pPars.nStepsMax == r {
-            Cec_ManSimStop( pSim );
-            Abc_Print( 1, "Stopped signal correspondence after %d refiment iterations.\n", r );
-            return 1;
-        }
-        clk = Abc_Clock();
-        // perform speculative reduction
-        clk2 = Abc_Clock();
-        pSrm = Gia_ManCorrSpecReduce( pAig, pPars.nFrames, !pPars.fLatchCorr, &vOutputs, pPars.fUseRings );
-        assert(Gia_ManRegNum(pSrm) == 0 && Gia_ManPiNum(pSrm) == Gia_ManRegNum(pAig)+(pPars.nFrames+!pPars.fLatchCorr)*Gia_ManPiNum(pAig), "Gia_ManRegNum(pSrm) == 0 && Gia_ManPiNum(pSrm) == Gia_ManRegNum(pAig)+(pPars.nFrames+!pPars.fLatchCorr)*Gia_ManPiNum(pAig)");
-        clkSrm += Abc_Clock() - clk2;
-        if Gia_ManCoNum(pSrm) == 0 {
-            Vec_IntFree( vOutputs );
-            Gia_ManStop( pSrm );            
-            break;
-        }
-//Gia_DumpAiger( pSrm, "corrsrm", r, 2 );
-        // found counter-examples to speculation
-        clk2 = Abc_Clock();
-        if pPars.fUseCSat {
-            vCexStore = Cbs_ManSolveMiterNc( pSrm, pPars.nBTLimit, &vStatus, 0, 0 );
-        } else {
-            vCexStore = Cec_ManSatSolveMiter( pSrm, pParsSat, &vStatus ); }
-        Gia_ManStop( pSrm );
-        clkSat += Abc_Clock() - clk2;
-        if Vec_IntSize(vCexStore) == 0 {
-            Vec_IntFree( vCexStore );
-            Vec_StrFree( vStatus );
-            Vec_IntFree( vOutputs );
-            break;
-        }
-//        Cec_ManLSCorrAnalyzeDependence( pAig, vOutputs, vStatus );        
-
-        // refine classes with these counter-examples
-        clk2 = Abc_Clock();
-        RetValue = Cec_ManResimulateCounterExamples( pSim, vCexStore, pPars.nFrames + 1 + nAddFrames );
-        Vec_IntFree( vCexStore );
-        clkSim += Abc_Clock() - clk2;
-        Gia_ManCheckRefinements( pAig, vStatus, vOutputs, pSim, pPars.fUseRings );
-        if pPars.fVerbose {
-            Cec_ManRefinedClassPrintStats( pAig, vStatus, r+1, Abc_Clock() - clk ); }
-        Vec_StrFree( vStatus );
-        Vec_IntFree( vOutputs );
-//Gia_ManEquivPrintClasses( pAig, 1, 0 );
-        if pPars.pFunc {
-            ((int (*)(void *))pPars.pFunc)( pPars.pData ); }
-        // quit if const is no longer there
-        if pPars.fStopWhenGone && Gia_ManPoNum(pAig) == 1 && !Gia_ObjIsConst( pAig, Gia_ObjFaninId0p(pAig, Gia_ManPo(pAig, 0)) ) {
-            fmt.Printf("Iterative refinement is stopped after iteration %d\n", r);
-            fmt.Printf("because the property output is no longer a candidate constant.\n");
-            Cec_ManSimStop( pSim );
-            return 0;
-        }
-    }
-    if pPars.fVerbose {
-        Cec_ManRefinedClassPrintStats( pAig, nil, r+1, Abc_Clock() - clk ); }
-    // check the overflow
-    if r == nIterMax {
-        Abc_Print( 1, "The refinement was not finished. The result may be incorrect.\n" ); }
-    Cec_ManSimStop( pSim );
-    // check the base case
-    if !(fRunBmcFirst != 0) && (!pPars.fLatchCorr || pPars.nFrames > 1) {
-        Cec_ManLSCorrespondenceBmc( pAig, pPars, 0 ); }
-    clkTotal = Abc_Clock() - clkTotal;
-    // report the results
-    if pPars.fVerbose {
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Srm  "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((clkSrm)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((clkSrm)))/(float64((clkTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Sat  "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((clkSat)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((clkSat)))/(float64((clkTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Sim  "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((clkSim)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((clkSim)))/(float64((clkTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Other"));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((clkTotal-clkSat-clkSrm-clkSim)))/(float64(int64(time.Second))), (float64((clkTotal)))? 100.0*(float64((clkTotal-clkSat-clkSrm-clkSim)))/(float64((clkTotal))) : 0.0);;
-        Abc_PrintTime( 1, "TOTAL",  clkTotal );
-    }
-    return 1;
-}    
-
-/**Function*************************************************************
-
-  Synopsis    [Computes new initial state.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManComputeInitState(pAig *Gia_Man_t, nFrames int32) *uint32 {  
-    var pObj, pObjRo, pObjRi *Gia_Obj_t;
-    var pInitState *uint32;
-    var i, f int32; 
-    Gia_ManRandom( 1 );
-//    Abc_Print( 1, "Simulating %d timeframes.\n", nFrames );
-    // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(pAig)) && ((pObj) = Gia_ManCi(pAig, Gia_ManPiNum(pAig)+i)); i++  {
-        pObj.fMark1 = 0;
-    }
-    for  f = 0; f < nFrames; f++  {
-        Gia_ManConst0(pAig).fMark1 = 0;
-        // inlining of macro Gia_ManForEachPi
-        for  i = 0; (i < Gia_ManPiNum(pAig)) && ((pObj) = Gia_ManCi(pAig, i)); i++  {
-            pObj.fMark1 = Gia_ManRandom(0) & 1;
-        }
-        // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < pAig.nObjs) && ((pObj) = Gia_ManObj(pAig, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-            pObj.fMark1 = (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) & 
-                (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)); }
-        }
-        // inlining of macro Gia_ManForEachRi
-        for  i = 0; (i < Gia_ManRegNum(pAig)) && ((pObj) = Gia_ManCo(pAig, Gia_ManPoNum(pAig)+i)); i++  {
-            pObj.fMark1 = (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj));
-        }
-        // inlining of macro Gia_ManForEachRiRo
-        for  i = 0; (i < Gia_ManRegNum(pAig)) && ((pObjRi) = Gia_ManCo(pAig, Gia_ManPoNum(pAig)+i)) && ((pObjRo) = Gia_ManCi(pAig, Gia_ManPiNum(pAig)+i)); i++  {
-            pObjRo.fMark1 = pObjRi.fMark1;
-        }
-    }
-    // inlining of macro ABC_CALLOC
-    pInitState = ((unsigned *) calloc((size_t)(Abc_BitWordNum(Gia_ManRegNum(pAig))), sizeof(unsigned)));
-    // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(pAig)) && ((pObj) = Gia_ManCi(pAig, Gia_ManPiNum(pAig)+i)); i++  {
-        if pObj.fMark1 {
-            Abc_InfoSetBit( pInitState, i ); }
-//        Abc_Print( 1, "%d", pObj->fMark1 );
-    }
-//    Abc_Print( 1, "\n" );
-    Gia_ManCleanMark1( pAig );
-    return pInitState;
+func Cec_ManComputeInitState(p *Gia_Man_t, frames int32) []uint32 {
+	gia.Gia_ManRandom(1)
+	state := make([]uint32, (gia.Gia_ManRegNum(p)+31)/32)
+	values := make([]uint32, gia.Gia_ManObjNum(p))
+	for frame := int32(0); frame < frames; frame++ {
+		for pi := int32(0); pi < gia.Gia_ManPiNum(p); pi++ {
+			values[gia.Gia_ObjId(p, gia.Gia_ManPi(p, pi))] = gia.Gia_ManRandom(0) & 1
+		}
+		for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+			a, b, c, kind := p.Gate(id)
+			x := values[a>>1] ^ uint32(a&1)
+			y := values[b>>1] ^ uint32(b&1)
+			switch kind {
+			case 2:
+				values[id] = x & y
+			case 3:
+				values[id] = x ^ y
+			case 4:
+				if x != 0 {
+					values[id] = y
+				} else {
+					values[id] = values[c>>1] ^ uint32(c&1)
+				}
+			case 5, 6:
+				values[id] = x
+			}
+		}
+		for r := int32(0); r < gia.Gia_ManRegNum(p); r++ {
+			values[gia.Gia_ObjId(p, gia.Gia_ManRo(p, r))] = values[gia.Gia_ObjId(p, gia.Gia_ManRi(p, r))]
+		}
+	}
+	for r := int32(0); r < gia.Gia_ManRegNum(p); r++ {
+		cecWriteBit(state, r, values[gia.Gia_ObjId(p, gia.Gia_ManRo(p, r))])
+	}
+	return state
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints flop equivalences.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Cec_ManPrintFlopEquivs(p *Gia_Man_t) {
-    var pObj, pRepr *Gia_Obj_t;
-    var i int32;
-    assert(p.vNamesIn != nil, "p.vNamesIn != nil");
-    // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-        if Gia_ObjIsConst(p, Gia_ObjId(p, pObj)) {
-            Abc_Print( 1, "Original flop %s is proved equivalent to constant.\n", Vec_PtrEntry(p.vNamesIn, Gia_ObjCioId(pObj)) );
-        } else if pRepr = Gia_ObjReprObj(p, Gia_ObjId(p, pObj)) {
-            if Gia_ObjIsCi(pRepr) {
-                Abc_Print( 1, "Original flop %s is proved equivalent to flop %s.\n",
-                    Vec_PtrEntry( p.vNamesIn, Gia_ObjCioId(pObj)  ),
-                    Vec_PtrEntry( p.vNamesIn, Gia_ObjCioId(pRepr) ) );
-            } else {
-                Abc_Print( 1, "Original flop %s is proved equivalent to internal node %d.\n",
-                    Vec_PtrEntry( p.vNamesIn, Gia_ObjCioId(pObj) ), Gia_ObjId(p, pRepr) ); }
-        }
-    }
+	names := p.InputNames()
+	if names == nil {
+		fmt.Println("Flop output names are not available. Use command &get -n.")
+		return
+	}
+	for r := int32(0); r < gia.Gia_ManRegNum(p); r++ {
+		obj := gia.Gia_ManRo(p, r)
+		id := gia.Gia_ObjId(p, obj)
+		repr := gia.Gia_ObjRepr(p, id)
+		if repr == gia.GIA_VOID {
+			continue
+		}
+		name := names[gia.Gia_ObjCioId(obj)]
+		if repr == 0 {
+			fmt.Printf("Original flop %s is proved equivalent to constant.\n", name)
+		} else if other := gia.Gia_ManObj(p, repr); gia.Gia_ObjIsCi(other) != 0 {
+			fmt.Printf("Original flop %s is proved equivalent to flop %s.\n", name, names[gia.Gia_ObjCioId(other)])
+		} else {
+			fmt.Printf("Original flop %s is proved equivalent to internal node %d.\n", name, repr)
+		}
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Top-level procedure for register correspondence.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManLSCorrespondence(pAig *Gia_Man_t, pPars *Cec_ParCor_t) *Gia_Man_t {  
-    var pNew, pTemp *Gia_Man_t;
-    var pInitState *uint32;
-    var RetValue int32;
-    pAig.pReprs = nil;
-    pAig.pNexts = nil;
-    if pPars.nPrefix == 0 {
-        RetValue = Cec_ManLSCorrespondenceClasses( pAig, pPars );
-        if RetValue == 0 {
-            return Gia_ManDup( pAig ); }
-    
-    } else {
-        // compute the cycles AIG
-        pInitState = Cec_ManComputeInitState( pAig, pPars.nPrefix );
-        pTemp = Gia_ManDupFlip( pAig, (int *)pInitState );
-        pInitState = nil;
-        // compute classes of this AIG
-        RetValue = Cec_ManLSCorrespondenceClasses( pTemp, pPars );
-        // transfer the class info
-        pAig.pReprs = pTemp.pReprs; pTemp.pReprs = nil;
-        pAig.pNexts = pTemp.pNexts; pTemp.pNexts = nil;
-        // perform additional BMC
-        pPars.fUseCSat = 0;
-        pPars.nBTLimit = Abc_MaxInt( pPars.nBTLimit, 1000 );
-        Cec_ManLSCorrespondenceBmc( pAig, pPars, pPars.nPrefix );
-/*
-        // transfer the class info back
-        pTemp->pReprs = pAig->pReprs; pAig->pReprs = NULL;
-        pTemp->pNexts = pAig->pNexts; pAig->pNexts = NULL;
-        // continue refining
-        RetValue = Cec_ManLSCorrespondenceClasses( pTemp, pPars );
-        // transfer the class info
-        pAig->pReprs = pTemp->pReprs; pTemp->pReprs = NULL;
-        pAig->pNexts = pTemp->pNexts; pTemp->pNexts = NULL;
-*/
-        Gia_ManStop( pTemp );
-    }
-    // derive reduced AIG
-    if pPars.fMakeChoices {
-        pNew = Gia_ManEquivToChoices( pAig, 1 );
-//        Gia_ManHasChoices_very_old( pNew );
-    
-    } else {
-//        Gia_ManEquivImprove( pAig );
-        pNew = Gia_ManCorrReduce( pAig );
-        pNew = Gia_ManSeqCleanup( pTemp = pNew );
-        Gia_ManStop( pTemp );
-        //Gia_AigerWrite( pNew, "reduced.aig", 0, 0, 0 );
-    }
-    // report the results
-    if pPars.fVerbose {
-        Abc_Print( 1, "NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\n", 
-            Gia_ManAndNum(pAig), Gia_ManAndNum(pNew), 
-            100.0*(Gia_ManAndNum(pAig)-Gia_ManAndNum(pNew))/(Gia_ManAndNum(pAig)?Gia_ManAndNum(pAig):1), 
-            Gia_ManRegNum(pAig), Gia_ManRegNum(pNew), 
-            100.0*(Gia_ManRegNum(pAig)-Gia_ManRegNum(pNew))/(Gia_ManRegNum(pAig)?Gia_ManRegNum(pAig):1) );
-    }
-    if pPars.nPrefix && (Gia_ManAndNum(pNew) < Gia_ManAndNum(pAig) || Gia_ManRegNum(pNew) < Gia_ManRegNum(pAig)) {
-        Abc_Print( 1, "The reduced AIG was produced using %d-th invariants and will not verify.\n", pPars.nPrefix ); }
-    // print verbose info about equivalences
-    if pPars.fVerboseFlops {
-        if pAig.vNamesIn == nil {
-            Abc_Print( 1, "Flop output names are not available. Use command \"&get -n\".\n" );
-        } else {
-            Cec_ManPrintFlopEquivs( pAig ); }
-    }
-    // copy names if present
-    if pAig.vNamesIn {
-        var pName string; var i int32;
-        pNew.vNamesIn = Vec_PtrDupStr( pAig.vNamesIn );
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Gia_ManCiNum(pNew); (i < Vec_PtrSize(pNew.vNamesIn)) && (((pName) = (char *)Vec_PtrEntry(pNew.vNamesIn, i)), 1); i++  {
-            pName = nil;
-        }
-        Vec_PtrShrink( pNew.vNamesIn, Gia_ManCiNum(pNew) );
-    }
-    if pAig.vNamesOut {
-        var pName string; var i int32;
-        pNew.vNamesOut = Vec_PtrDupStr( pAig.vNamesOut );
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Gia_ManCoNum(pNew); (i < Vec_PtrSize(pNew.vNamesOut)) && (((pName) = (char *)Vec_PtrEntry(pNew.vNamesOut, i)), 1); i++  {
-            pName = nil;
-        }
-        Vec_PtrShrink( pNew.vNamesOut, Gia_ManCoNum(pNew) );
-    }
-    return pNew;
+func Cec_ManLSCorrespondence(p *Gia_Man_t, pars *Cec_ParCor_t) *Gia_Man_t {
+	p.ClearRepresentatives()
+	if pars.nPrefix == 0 {
+		if Cec_ManLSCorrespondenceClasses(p, pars) == 0 {
+			copy, _ := cecCorrDuplicate(p, false, false, nil)
+			return copy
+		}
+	} else {
+		shifted, mapping := cecCorrDuplicate(p, false, false, Cec_ManComputeInitState(p, pars.nPrefix))
+		Cec_ManLSCorrespondenceClasses(shifted, pars)
+		inverse := make([]int32, gia.Gia_ManObjNum(shifted))
+		for i := range inverse {
+			inverse[i] = -1
+		}
+		for id, lit := range mapping {
+			if lit >= 0 && inverse[lit>>1] < 0 {
+				inverse[lit>>1] = int32(id)
+			}
+		}
+		inverse[0] = 0
+		if err := p.TransferRepresentativesFrom(shifted, inverse); err != nil {
+			panic(err)
+		}
+		pars.fUseCSat = 0
+		pars.nBTLimit = max(pars.nBTLimit, 1000)
+		Cec_ManLSCorrespondenceBmc(p, pars, pars.nPrefix)
+	}
+	if pars.fMakeChoices != 0 {
+		return cecCorrChoices(p)
+	}
+	reduced := Gia_ManCorrReduce(p)
+	result, _ := cecCorrDuplicate(reduced, false, true, nil)
+	if pars.fVerboseFlops != 0 {
+		Cec_ManPrintFlopEquivs(p)
+	}
+	return result
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Materialize proven internal alternatives without allowing a choice to depend
+// on its own representative. Register equivalences are substituted, as in C.
+func cecCorrChoices(p *Gia_Man_t) *Gia_Man_t {
+	gia.Gia_ManSetPhase(p)
+	builder := newCorrBuilder(p)
+	copies := make([]int32, gia.Gia_ManObjNum(p))
+	for i := range copies {
+		copies[i] = -1
+	}
+	copies[0] = 0
+	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
+		copies[gia.Gia_ObjId(p, gia.Gia_ManCi(p, i))] = gia.Gia_ManAppendCi(builder.graph)
+	}
+	for r := int32(0); r < gia.Gia_ManRegNum(p); r++ {
+		id := gia.Gia_ObjId(p, gia.Gia_ManRo(p, r))
+		if repr := gia.Gia_ObjRepr(p, id); repr != gia.GIA_VOID {
+			copies[id] = copies[repr]
+		}
+	}
+	classes := make(map[int32][]int32)
+	representatives := make(map[int32]int32)
+	var hasInCone func(int32, int32, map[int32]bool) bool
+	hasInCone = func(target, id int32, seen map[int32]bool) bool {
+		if id == target {
+			return true
+		}
+		if id == 0 || seen[id] {
+			return false
+		}
+		seen[id] = true
+		a, b, c, kind := builder.graph.Gate(id)
+		if kind < 2 {
+			return false
+		}
+		if hasInCone(target, a>>1, seen) {
+			return true
+		}
+		if kind == 2 || kind == 3 || kind == 4 {
+			if hasInCone(target, b>>1, seen) {
+				return true
+			}
+		}
+		if kind == 4 {
+			if hasInCone(target, c>>1, seen) {
+				return true
+			}
+		}
+		for _, other := range classes[id] {
+			if hasInCone(target, other, seen) {
+				return true
+			}
+		}
+		return false
+	}
+	var visit func(int32) int32
+	visit = func(id int32) int32 {
+		if copies[id] >= 0 {
+			return copies[id]
+		}
+		repr := gia.Gia_ObjRepr(p, id)
+		canonical := int32(-1)
+		if repr != gia.GIA_VOID {
+			canonical = visit(repr) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(p, repr)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(p, id))
+			if repr == 0 {
+				copies[id] = canonical
+				return canonical
+			}
+		}
+		a, b, c, kind := p.Gate(id)
+		av := visit(a>>1) ^ a&1
+		bv, cv := int32(0), int32(0)
+		if kind == 2 || kind == 3 || kind == 4 {
+			bv = visit(b>>1) ^ b&1
+		}
+		if kind == 4 {
+			cv = visit(c>>1) ^ c&1
+		}
+		lit := builder.gate(kind, av, bv, cv)
+		copies[id] = lit
+		if canonical >= 0 {
+			head, alternative := canonical>>1, lit>>1
+			if head != alternative && head < alternative && head != 0 {
+				if _, exists := representatives[alternative]; !exists {
+					if !hasInCone(head, alternative, make(map[int32]bool)) {
+						classes[head] = append(classes[head], alternative)
+						representatives[alternative] = head
+					}
+				}
+			}
+			copies[id] = canonical
+		}
+		return copies[id]
+	}
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		if gia.Gia_ObjIsCand(gia.Gia_ManObj(p, id)) != 0 {
+			visit(id)
+		}
+	}
+	for _, lit := range p.OutputLiterals() {
+		gia.Gia_ManAppendCo(builder.graph, visit(lit>>1)^lit&1)
+	}
+	gia.Gia_ManSetRegNum(builder.graph, gia.Gia_ManRegNum(p))
+	// Alternatives with ordinary fanouts cannot be choice-only nodes.
+	fanouts := make(map[int32]bool)
+	for id := int32(1); id < gia.Gia_ManObjNum(builder.graph); id++ {
+		a, b, c, kind := builder.graph.Gate(id)
+		if kind >= 2 {
+			fanouts[a>>1] = true
+		}
+		if kind == 2 || kind == 3 || kind == 4 {
+			fanouts[b>>1] = true
+		}
+		if kind == 4 {
+			fanouts[c>>1] = true
+		}
+	}
+	builder.graph.StartRepresentatives()
+	for head, members := range classes {
+		previous := head
+		for _, id := range members {
+			if fanouts[id] {
+				continue
+			}
+			gia.Gia_ObjSetRepr(builder.graph, id, head)
+			builder.graph.SetNext(previous, id)
+			previous = id
+		}
+	}
+	if err := builder.graph.CopyIONamesFrom(p, nil, nil); err != nil {
+		panic(err)
+	}
+	return builder.graph
+}

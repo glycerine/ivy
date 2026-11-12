@@ -49,9 +49,7 @@ func Cec_ObjSetSatNum(p *Cec_ManSat_t, pObj *Gia_Obj_t, Num int32) { p.pSatVars[
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ObjSatVarValue(p *Cec_ManSat_t, pObj *Gia_Obj_t) int32 { 
-    return sat_solver_var_value( p.pSat, Cec_ObjSatNum(p, pObj) );
-}
+
 
 /**Function*************************************************************
 
@@ -362,36 +360,7 @@ func Cec_CnfNodeAddToSolver(p *Cec_ManSat_t, pObj *Gia_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManSatSolverRecycle(p *Cec_ManSat_t) {
-    var Lit int32;
-    if p.pSat {
-        var pObj *Gia_Obj_t;
-        var i int32;
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vUsedNodes)) && (((pObj) = (Gia_Obj_t *)Vec_PtrEntry(p.vUsedNodes, i)), 1); i++  {
-            Cec_ObjSetSatNum( p, pObj, 0 );
-        }
-        Vec_PtrClear( p.vUsedNodes );
-//        memset( p->pSatVars, 0, sizeof(int) * Gia_ManObjNumMax(p->pAigTotal) );
-        sat_solver_delete( p.pSat );
-    }
-    p.pSat = sat_solver_new();
-    sat_solver_setnvars( p.pSat, 1000 );
-    // inlining of macro ABC_CALLOC
-    p.pSat.factors = ((double *) calloc((size_t)(p.pSat.cap), sizeof(double)));
-    // var 0 is not used
-    // var 1 is reserved for const0 node - add the clause
-    p.nSatVars = 1;
-//    p->nSatVars = 0;
-    Lit = toLitCond( p.nSatVars, 1 );
-//    if ( p->pPars->fPolarFlip ) // no need to normalize const0 node (bug fix by SS on 9/17/2012)
-//        Lit = lit_neg( Lit );
-    sat_solver_addclause( p.pSat, &Lit, &Lit + 1 );
-    Cec_ObjSetSatNum( p, Gia_ManConst0(p.pAig), p.nSatVars++ );
 
-    p.nRecycles++;
-    p.nCallsSince = 0;
-}
 
 /**Function*************************************************************
 
@@ -465,87 +434,7 @@ func Cec_SetActivityFactors(p *Cec_ManSat_t, pObj *Gia_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManSatCheckNode(p *Cec_ManSat_t, pObj *Gia_Obj_t) int32 {
-    var pObjR *Gia_Obj_t  = Gia_Regular(pObj);
-    var nBTLimit int32  = p.pPars.nBTLimit;
-    var Lit, RetValue, status, nConflicts int32;
-    var clk, clk2 abctime;
 
-    if pObj == Gia_ManConst0(p.pAig) {
-        return 1; }
-    if pObj == Gia_ManConst1(p.pAig) {
-        assert(false, "0");
-        return 0;
-    }
-
-    p.nCallsSince++;  // experiment with this!!!
-    p.nSatTotal++;
-    
-    // check if SAT solver needs recycling
-    if p.pSat == nil || 
-        (p.pPars.nSatVarMax && 
-         p.nSatVars > p.pPars.nSatVarMax && 
-         p.nCallsSince > p.pPars.nCallsRecycle) {
-        Cec_ManSatSolverRecycle( p ); }
-
-    // if the nodes do not have SAT variables, allocate them
-clk2 = Abc_Clock();
-    Cec_CnfNodeAddToSolver( p, pObjR );
-//ABC_PRT( "cnf", Abc_Clock() - clk2 );
-//Abc_Print( 1, "%d \n", p->pSat->size );
-
-clk2 = Abc_Clock();
-//    Cec_SetActivityFactors( p, pObjR ); 
-//ABC_PRT( "act", Abc_Clock() - clk2 );
-
-    // propage unit clauses
-    if p.pSat.qtail != p.pSat.qhead {
-        status = sat_solver_simplify(p.pSat);
-        assert(status != 0, "status != 0");
-        assert(p.pSat.qtail == p.pSat.qhead, "p.pSat.qtail == p.pSat.qhead");
-    }
-
-    // solve under assumptions
-    // A = 1; B = 0     OR     A = 1; B = 1 
-    Lit = toLitCond( Cec_ObjSatNum(p,pObjR), Gia_IsComplement(pObj) );
-    if p.pPars.fPolarFlip {
-        if pObjR.fPhase {  Lit = lit_neg( Lit ); }
-    }
-//Sat_SolverWriteDimacs( p->pSat, "temp.cnf", pLits, pLits + 2, 1 );
-clk = Abc_Clock();
-    nConflicts = p.pSat.stats.conflicts;
-
-clk2 = Abc_Clock();
-    RetValue = sat_solver_solve( p.pSat, &Lit, &Lit + 1, 
-        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-//ABC_PRT( "sat", Abc_Clock() - clk2 );
-
-    if RetValue == l_False {
-p.timeSatUnsat += Abc_Clock() - clk;
-        Lit = lit_neg( Lit );
-        RetValue = sat_solver_addclause( p.pSat, &Lit, &Lit + 1 );
-        assert((RetValue != 0), "RetValue");
-        p.nSatUnsat++;
-        p.nConfUnsat += p.pSat.stats.conflicts - nConflicts;       
-//Abc_Print( 1, "UNSAT after %d conflicts\n", p->pSat->stats.conflicts - nConflicts );
-        return 1;
-    
-    } else if RetValue == l_True {
-p.timeSatSat += Abc_Clock() - clk;
-        p.nSatSat++;
-        p.nConfSat += p.pSat.stats.conflicts - nConflicts;
-//Abc_Print( 1, "SAT after %d conflicts\n", p->pSat->stats.conflicts - nConflicts );
-        return 0;
-    
-    } else { // if ( RetValue == l_Undef )
-    
-p.timeSatUndec += Abc_Clock() - clk;
-        p.nSatUndec++;
-        p.nConfUndec += p.pSat.stats.conflicts - nConflicts;
-//Abc_Print( 1, "UNDEC after %d conflicts\n", p->pSat->stats.conflicts - nConflicts );
-        return -1;
-    }
-}
 
 /**Function*************************************************************
 
@@ -558,96 +447,7 @@ p.timeSatUndec += Abc_Clock() - clk;
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManSatCheckNodeTwo(p *Cec_ManSat_t, pObj1 *Gia_Obj_t, pObj2 *Gia_Obj_t) int32 {
-    var pObjR1 *Gia_Obj_t  = Gia_Regular(pObj1);
-    var pObjR2 *Gia_Obj_t  = Gia_Regular(pObj2);
-    var nBTLimit int32  = p.pPars.nBTLimit;
-    var Lits [2]int32;
-    var RetValue int32;
-    var status int32;
-    var nConflicts int32;
-    var clk, clk2 abctime;
 
-    if pObj1 == Gia_ManConst0(p.pAig) || pObj2 == Gia_ManConst0(p.pAig) || pObj1 == Gia_Not(pObj2) {
-        return 1; }
-    if pObj1 == Gia_ManConst1(p.pAig) && (pObj2 == nil || pObj2 == Gia_ManConst1(p.pAig)) {
-        assert(false, "0");
-        return 0;
-    }
-
-    p.nCallsSince++;  // experiment with this!!!
-    p.nSatTotal++;
-    
-    // check if SAT solver needs recycling
-    if p.pSat == nil || 
-        (p.pPars.nSatVarMax && 
-         p.nSatVars > p.pPars.nSatVarMax && 
-         p.nCallsSince > p.pPars.nCallsRecycle) {
-        Cec_ManSatSolverRecycle( p ); }
-
-    // if the nodes do not have SAT variables, allocate them
-clk2 = Abc_Clock();
-    Cec_CnfNodeAddToSolver( p, pObjR1 );
-    Cec_CnfNodeAddToSolver( p, pObjR2 );
-//ABC_PRT( "cnf", Abc_Clock() - clk2 );
-//Abc_Print( 1, "%d \n", p->pSat->size );
-
-clk2 = Abc_Clock();
-//    Cec_SetActivityFactors( p, pObjR1 ); 
-//    Cec_SetActivityFactors( p, pObjR2 ); 
-//ABC_PRT( "act", Abc_Clock() - clk2 );
-
-    // propage unit clauses
-    if p.pSat.qtail != p.pSat.qhead {
-        status = sat_solver_simplify(p.pSat);
-        assert(status != 0, "status != 0");
-        assert(p.pSat.qtail == p.pSat.qhead, "p.pSat.qtail == p.pSat.qhead");
-    }
-
-    // solve under assumptions
-    // A = 1; B = 0     OR     A = 1; B = 1 
-    Lits[0] = toLitCond( Cec_ObjSatNum(p,pObjR1), Gia_IsComplement(pObj1) );
-    Lits[1] = toLitCond( Cec_ObjSatNum(p,pObjR2), Gia_IsComplement(pObj2) );
-    if p.pPars.fPolarFlip {
-        if pObjR1.fPhase {  Lits[0] = lit_neg( Lits[0] ); }
-        if pObjR2.fPhase {  Lits[1] = lit_neg( Lits[1] ); }
-    }
-//Sat_SolverWriteDimacs( p->pSat, "temp.cnf", pLits, pLits + 2, 1 );
-clk = Abc_Clock();
-    nConflicts = p.pSat.stats.conflicts;
-
-clk2 = Abc_Clock();
-    RetValue = sat_solver_solve( p.pSat, Lits, Lits + 2, 
-        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-//ABC_PRT( "sat", Abc_Clock() - clk2 );
-
-    if RetValue == l_False {
-p.timeSatUnsat += Abc_Clock() - clk;
-        Lits[0] = lit_neg( Lits[0] );
-        Lits[1] = lit_neg( Lits[1] );
-        RetValue = sat_solver_addclause( p.pSat, Lits, Lits + 2 );
-        assert((RetValue != 0), "RetValue");
-        p.nSatUnsat++;
-        p.nConfUnsat += p.pSat.stats.conflicts - nConflicts;       
-//Abc_Print( 1, "UNSAT after %d conflicts\n", p->pSat->stats.conflicts - nConflicts );
-        return 1;
-    
-    } else if RetValue == l_True {
-p.timeSatSat += Abc_Clock() - clk;
-        p.nSatSat++;
-        p.nConfSat += p.pSat.stats.conflicts - nConflicts;
-//Abc_Print( 1, "SAT after %d conflicts\n", p->pSat->stats.conflicts - nConflicts );
-        return 0;
-    
-    } else { // if ( RetValue == l_Undef )
-    
-p.timeSatUndec += Abc_Clock() - clk;
-        p.nSatUndec++;
-        p.nConfUndec += p.pSat.stats.conflicts - nConflicts;
-//Abc_Print( 1, "UNDEC after %d conflicts\n", p->pSat->stats.conflicts - nConflicts );
-        return -1;
-    }
-}
 
 
 /**Function*************************************************************
@@ -662,26 +462,8 @@ p.timeSatUndec += Abc_Clock() - clk;
   SeeAlso     []
 
 ***********************************************************************/
-func Cex_ManGenSimple(p *Cec_ManSat_t, iOut int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    pCex = Abc_CexAlloc( 0, Gia_ManCiNum(p.pAig), 1 );
-    pCex.iPo = iOut;
-    pCex.iFrame = 0;
-    return pCex;
-}
-func Cex_ManGenCex(p *Cec_ManSat_t, iOut int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var i int32;
-    pCex = Abc_CexAlloc( 0, Gia_ManCiNum(p.pAig), 1 );
-    pCex.iPo = iOut;
-    pCex.iFrame = 0;
-    for  i = 0; i < Gia_ManCiNum(p.pAig); i++  {
-        var iVar int32  = Cec_ObjSatNum(p, Gia_ManCi(p.pAig, i));
-        if iVar > 0 && sat_solver_var_value(p.pSat, iVar) {
-            pCex.pData[i>>5] |= (1<<(i & 31)); }     
-    }
-    return pCex;
-}
+
+
 func Cec_ManSatSolve(pPat *Cec_ManPat_t, pAig *Gia_Man_t, pPars *Cec_ParSat_t, vIdsOrig *Vec_Int_t, vMiterPairs *Vec_Int_t, vEquivPairs *Vec_Int_t, f0Proved int32) {
     var pProgress *Bar_Progress_t  = nil;
     var p *Cec_ManSat_t;
@@ -840,9 +622,7 @@ func Cec_ManSatSolveCSat(pPat *Cec_ManPat_t, pAig *Gia_Man_t, pPars *Cec_ParSat_
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManSatReadCex(pSat *Cec_ManSat_t) *Vec_Int_t {
-    return pSat.vCex;
-}
+
 
 /**Function*************************************************************
 
@@ -855,22 +635,7 @@ func Cec_ManSatReadCex(pSat *Cec_ManSat_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManSatSolveSeq_rec(pSat *Cec_ManSat_t, p *Gia_Man_t, pObj *Gia_Obj_t, vInfo *Vec_Ptr_t, iPat int32, nRegs int32) {
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        var pInfo *uint32  = (unsigned *)Vec_PtrEntry( vInfo, nRegs + Gia_ObjCioId(pObj) );
-        if Cec_ObjSatVarValue( pSat, pObj ) != Abc_InfoHasBit( pInfo, iPat ) {
-            Abc_InfoXorBit( pInfo, iPat ); }
-        pSat.nCexLits++;
-//        Vec_IntPush( pSat->vCex, Abc_Var2Lit( Gia_ObjCioId(pObj), !Cec_ObjSatVarValue(pSat, pObj) ) );
-        return;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Cec_ManSatSolveSeq_rec( pSat, p, Gia_ObjFanin0(pObj), vInfo, iPat, nRegs );
-    Cec_ManSatSolveSeq_rec( pSat, p, Gia_ObjFanin1(pObj), vInfo, iPat, nRegs );
-}
+
 
 /**Function*************************************************************
 
@@ -884,73 +649,7 @@ func Cec_ManSatSolveSeq_rec(pSat *Cec_ManSat_t, p *Gia_Man_t, pObj *Gia_Obj_t, v
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManSatSolveSeq(vPatts *Vec_Ptr_t, pAig *Gia_Man_t, pPars *Cec_ParSat_t, nRegs int32, pnPats *int32) *Vec_Str_t {
-    var pProgress *Bar_Progress_t  = nil;
-    var vStatus *Vec_Str_t;
-    var p *Cec_ManSat_t;
-    var pObj *Gia_Obj_t;
-    var iPat, nPatsInit, nPats int32;
-    var i, status int32;
-    var clk abctime  = Abc_Clock();
-    nPatsInit = nPats = 32 * Vec_PtrReadWordsSimInfo(vPatts);
-    Gia_ManSetPhase( pAig );
-    Gia_ManLevelNum( pAig );
-    Gia_ManIncrementTravId( pAig );
-    p = Cec_ManSatCreate( pAig, pPars );
-    vStatus = Vec_StrAlloc( Gia_ManPoNum(pAig) );
-    pProgress = Bar_ProgressStart( os.Stdout, Gia_ManPoNum(pAig) );
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(pAig.vCos)) && ((pObj) = Gia_ManCo(pAig, i)); i++  {
-        Bar_ProgressUpdate( pProgress, i, "SAT..." );
-        if Gia_ObjIsConst0(Gia_ObjFanin0(pObj)) {
-            if Gia_ObjFaninC0(pObj) {
-//                Abc_Print( 1, "Constant 1 output of SRM!!!\n" );
-                Vec_StrPush( vStatus, 0 );
-            
-            } else {
-//                Abc_Print( 1, "Constant 0 output of SRM!!!\n" );
-                Vec_StrPush( vStatus, 1 );
-            }
-            continue;
-        }
-        status = Cec_ManSatCheckNode( p, Gia_ObjChild0(pObj) );
-//Abc_Print( 1, "output %d   status = %d\n", i, status );
-        Vec_StrPush( vStatus, byte(status) );
-        if status != 0 {
-            continue; }
-        // resize storage
-        if iPat == nPats {
-            var nWords int32  = Vec_PtrReadWordsSimInfo(vPatts);
-            Vec_PtrReallocSimInfo( vPatts );
-            Vec_PtrCleanSimInfo( vPatts, nWords, 2*nWords );
-            nPats = 32 * Vec_PtrReadWordsSimInfo(vPatts);
-        }
-        if iPat % nPatsInit == 0 {
-            iPat++; }
-        // save the pattern
-        Gia_ManIncrementTravId( pAig );
-//        Vec_IntClear( p->vCex );
-        Cec_ManSatSolveSeq_rec( p, pAig, Gia_ObjFanin0(pObj), vPatts, iPat++, nRegs );
-//        Gia_SatVerifyPattern( pAig, pObj, p->vCex, p->vVisits );
-//        Cec_ManSatAddToStore( p->vCexStore, p->vCex );
-//        if ( iPat == nPats )
-//            break;
-        // quit if one of them is solved
-//        if ( pPars->fFirstStop )
-//            break;
-//        if ( iPat == 32 * 15 * 16 - 1 )
-//            break;
-    }
-    p.timeTotal = Abc_Clock() - clk;
-    Bar_ProgressStop( pProgress );
-    if pPars.fVerbose {
-        Cec_ManSatPrintStats( p ); }
-//    Abc_Print( 1, "Total number of cex literals = %d. (Ave = %d)\n", p->nCexLits, p->nCexLits/p->nSatSat );
-    Cec_ManSatStop( p );
-    if pnPats != nil {
-        *pnPats = iPat-1; }
-    return vStatus;
-}
+
 
 
 /**Function*************************************************************
@@ -964,21 +663,7 @@ func Cec_ManSatSolveSeq(vPatts *Vec_Ptr_t, pAig *Gia_Man_t, pPars *Cec_ParSat_t,
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManSatAddToStore(vCexStore *Vec_Int_t, vCex *Vec_Int_t, Out int32) {
-    var i, Entry int32;
-    Vec_IntPush( vCexStore, Out );
-    if vCex == nil { // timeout
-    
-        Vec_IntPush( vCexStore, -1 );
-        return;
-    }
-    // write the counter-example
-    Vec_IntPush( vCexStore, Vec_IntSize(vCex) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vCex)) && (((Entry) = Vec_IntEntry(vCex, i)), 1); i++  {
-        Vec_IntPush( vCexStore, Entry );
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -1016,13 +701,7 @@ func Cec_ManSatSolveMiter_rec(pSat *Cec_ManSat_t, p *Gia_Man_t, pObj *Gia_Obj_t)
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManSavePattern(p *Cec_ManSat_t, pObj1 *Gia_Obj_t, pObj2 *Gia_Obj_t) {
-    Vec_IntClear( p.vCex );
-    Gia_ManIncrementTravId( p.pAig );
-    Cec_ManSatSolveMiter_rec( p, p.pAig, Gia_Regular(pObj1) );
-    if pObj2 != nil {
-    Cec_ManSatSolveMiter_rec( p, p.pAig, Gia_Regular(pObj2) ); }
-}
+
 
 /**Function*************************************************************
 
@@ -1036,64 +715,7 @@ func Cec_ManSavePattern(p *Cec_ManSat_t, pObj1 *Gia_Obj_t, pObj2 *Gia_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Cec_ManSatSolveMiter(pAig *Gia_Man_t, pPars *Cec_ParSat_t, pvStatus **Vec_Str_t) *Vec_Int_t {
-    var pProgress *Bar_Progress_t  = nil;
-    var vCexStore *Vec_Int_t;
-    var vStatus *Vec_Str_t;
-    var p *Cec_ManSat_t;
-    var pObj *Gia_Obj_t;
-    var i, status int32;
-    var clk abctime  = Abc_Clock();
-    // prepare AIG
-    Gia_ManSetPhase( pAig );
-    Gia_ManLevelNum( pAig );
-    Gia_ManIncrementTravId( pAig );
-    // create resulting data-structures
-    vStatus = Vec_StrAlloc( Gia_ManPoNum(pAig) );
-    vCexStore = Vec_IntAlloc( 10000 );
-    // perform solving
-    p = Cec_ManSatCreate( pAig, pPars );
-    pProgress = Bar_ProgressStart( os.Stdout, Gia_ManPoNum(pAig) );
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(pAig.vCos)) && ((pObj) = Gia_ManCo(pAig, i)); i++  {
-        Vec_IntClear( p.vCex );
-        Bar_ProgressUpdate( pProgress, i, "SAT..." );
-        if Gia_ObjIsConst0(Gia_ObjFanin0(pObj)) {
-            if Gia_ObjFaninC0(pObj) {
-//                Abc_Print( 1, "Constant 1 output of SRM!!!\n" );
-                Cec_ManSatAddToStore( vCexStore, p.vCex, i ); // trivial counter-example
-                Vec_StrPush( vStatus, 0 );
-            
-            } else {
-//                Abc_Print( 1, "Constant 0 output of SRM!!!\n" );
-                Vec_StrPush( vStatus, 1 );
-            }
-            continue;
-        }
-        status = Cec_ManSatCheckNode( p, Gia_ObjChild0(pObj) );
-        Vec_StrPush( vStatus, byte(status) );
-        if status == -1 {
-            Cec_ManSatAddToStore( vCexStore, nil, i ); // timeout
-            continue;
-        }
-        if status == 1 {
-            continue; }
-        assert(status == 0, "status == 0");
-        // save the pattern
-//        Gia_ManIncrementTravId( pAig );
-//        Cec_ManSatSolveMiter_rec( p, pAig, Gia_ObjFanin0(pObj) );
-        Cec_ManSavePattern( p, Gia_ObjFanin0(pObj), nil );
-//        Gia_SatVerifyPattern( pAig, pObj, p->vCex, p->vVisits );
-        Cec_ManSatAddToStore( vCexStore, p.vCex, i );
-    }
-    p.timeTotal = Abc_Clock() - clk;
-    Bar_ProgressStop( pProgress );
-//    if ( pPars->fVerbose )
-//        Cec_ManSatPrintStats( p );
-    Cec_ManSatStop( p );
-    *pvStatus = vStatus;
-    return vCexStore;
-}
+
 
 
 ////////////////////////////////////////////////////////////////////////
