@@ -37,6 +37,9 @@ func Str_Delay3(a, b, c, size int32) int32 {
 	return d<<4 + n
 }
 func Str_ObjDelay(p *Gia_Man_t, id, size int32, delays *Vec_Int_t) int32 {
+	if id >= int32(vec.Vec_IntSize(delays)) {
+		vec.Vec_IntFillExtra(delays, int(id+1), 0)
+	}
 	delay := vec.Vec_IntEntry(delays, int(id))
 	if delay != 0 {
 		return delay
