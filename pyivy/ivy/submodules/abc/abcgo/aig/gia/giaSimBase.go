@@ -448,99 +448,11 @@ func Gia_ManSimRelTest(p *Gia_Man_t) {
 
 
 
-func Gia_RsbFindMints(p *Gia_RsbMan_t, pMint0 *int32, pMint1 *int32) {
-    var iSetI int32  = Abc_Random(0) % Vec_IntSize(p.vActive);
-    var iSet int32   = Vec_IntEntry( p.vActive, iSetI );
-    var vArray0 *Vec_Int_t  = Vec_WecEntry(p.vSets[0], iSet);
-    var vArray1 *Vec_Int_t  = Vec_WecEntry(p.vSets[1], iSet);
-    var iMint0i int32  = Abc_Random(0) % Vec_IntSize(vArray0);
-    var iMint1i int32  = Abc_Random(0) % Vec_IntSize(vArray1);
-    var iMint0 int32  = Vec_IntEntry( vArray0, iMint0i );
-    var iMint1 int32  = Vec_IntEntry( vArray1, iMint1i );
-    *pMint0 = iMint0;
-    *pMint1 = iMint1;
-}
-func Gia_RsbFindNode(p *Gia_RsbMan_t) int32 {
-    var i int32;
-    var iObj int32;
-    var nNodes int32;
-    var nNodesNew int32 = -1;
-    var nNodesOld int32 = -1;
-    var Mint0 int32;
-    var Mint1 int32;
-    var Shift int32;
-    Abc_TtCopy( p.pSet[1], p.pSet[0], p.nWordsT, 0 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vObjs)) && (((iObj) = Vec_IntEntry(p.vObjs, i)), 1); i++  {
-        assert(Abc_TtGetBit(p.pSet[1], iObj), "Abc_TtGetBit(p.pSet[1], iObj)");
-        Abc_TtXorBit(p.pSet[1], iObj);
-    }
-    Abc_TtCopy( p.pSet[2], p.pSet[1], p.nWordsT, 0 );
-    Gia_RsbFindMints( p, &Mint0, &Mint1 );
-    nNodes = Abc_TtAndXorSum( p.pSet[1], Vec_WrdEntryP(p.vSimsT, p.nWordsT*Mint0), Vec_WrdEntryP(p.vSimsT, p.nWordsT*Mint1), p.nWordsT );
-    for  i = 0; i < 5 && nNodes > 1; i++  {
-        nNodesOld = nNodes;
-        Abc_TtCopy( p.pSet[2], p.pSet[1], p.nWordsT, 0 );
-        Gia_RsbFindMints( p, &Mint0, &Mint1 );
-        nNodesNew = Abc_TtAndXorSum( p.pSet[1], Vec_WrdEntryP(p.vSimsT, p.nWordsT*Mint0), Vec_WrdEntryP(p.vSimsT, p.nWordsT*Mint1), p.nWordsT );
-        assert(nNodesNew <= nNodes, "nNodesNew <= nNodes");
-        if nNodesNew < nNodes {
-            i = 0; }
-        nNodes = nNodesNew;
-    }
-    Shift = Abc_Random(0) % (64*p.nWordsT);
-    for  i = 0; i < 64*p.nWordsT; i++  {
-        var Index int32  = (i+Shift) % (64*p.nWordsT);
-        if Abc_TtGetBit( p.pSet[2], Index ) {
-            return Index; }
-    }
-    assert(false, "0");      
-    return -1;
-}
-func Gia_RsbCollectValid(p *Gia_RsbMan_t) int32 {
-    var vLevel [2]*Vec_Int_t; var i int32;
-    Vec_IntClear( p.vActive );
-    assert(Vec_WecSize(p.vSets[0]) == Vec_WecSize(p.vSets[1]), "Vec_WecSize(p.vSets[0]) == Vec_WecSize(p.vSets[1])");
-    // inlining of macro Vec_WecForEachLevelTwo
-    for  i = 0; (i < Vec_WecSize(p.vSets[0])) && (((vLevel[0]) = Vec_WecEntry(p.vSets[0], i)), 1) && (((vLevel[1]) = Vec_WecEntry(p.vSets[1], i)), 1); i++  {
-        if Vec_IntSize(vLevel[0]) && Vec_IntSize(vLevel[1]) {
-            Vec_IntPush( p.vActive, i ); }
-    }
-    if Vec_IntSize(p.vActive) == 0 {
-        return 0; }
-    return 1;
-}
-func Gia_RsbSolve(p *Gia_RsbMan_t) *Vec_Int_t {
-    var i, iMin int32;
-    Vec_IntClear( p.vObjs );
-    for  Gia_RsbCollectValid(p) != 0  {
-        Gia_RsbUpdateAdd( p, Gia_RsbFindNode(p) );
-    }
-    for  i = 0; i < 100; i++  {
-        var k int32;
-        var nUndo int32 = 1 + Abc_Random(0) % Vec_IntSize(p.vObjs);
-        for  k = 0; k < nUndo; k++  {
-            iMin = Gia_RsbFindNodeToRemove( p, nil );// &MinCost );
-            Gia_RsbUpdateRemove( p, iMin );
-        }
-        for  Gia_RsbCollectValid(p) != 0  {
-            Gia_RsbUpdateAdd( p, Gia_RsbFindNode(p) );
-        }
-        if Vec_IntSize(p.vObjs2) == 0 || Vec_IntSize(p.vObjs2) > Vec_IntSize(p.vObjs) {
-            Vec_IntClear( p.vObjs2 );
-            Vec_IntAppend( p.vObjs2, p.vObjs );
-        }
-    }
-    //Gia_RsbPrint( p );
-    return Vec_IntDup( p.vObjs2 );
-}
-func Gia_RsbSetFind(pOffSet *word, pOnSet *word, vSims *Vec_Wrd_t, nWords int32, vSimsT *Vec_Wrd_t, nWordsT int32, vCands *Vec_Int_t) *Vec_Int_t {
-    var p *Gia_RsbMan_t   = Gia_RsbAlloc( nil, pOffSet, pOnSet, vSims, nWords, vSimsT, nWordsT, vCands );
-    var vObjs *Vec_Int_t  = Gia_RsbSolve( p );
-    Gia_RsbFree( p );
-    Vec_IntSort( vObjs, 0 );
-    return vObjs;
-}
+
+
+
+
+
 
 /**Function*************************************************************
 
