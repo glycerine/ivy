@@ -37,19 +37,6 @@ import "os"
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-func Gia_SimData(p *Gia_ManSim_t, i int32) *uint32 { return p.pDataSim + i * p.nWords;    }
-func Gia_SimDataCi(p *Gia_ManSim_t, i int32) *uint32 { return p.pDataSimCis + i * p.nWords; }
-func Gia_SimDataCo(p *Gia_ManSim_t, i int32) *uint32 { return p.pDataSimCos + i * p.nWords; }
-
-func Gia_SimDataExt(p *Gia_ManSim_t, i int32) *uint32 { return Gia_SimData(p, i);    }
-func Gia_SimDataCiExt(p *Gia_ManSim_t, i int32) *uint32 { return Gia_SimDataCi(p, i);  }
-func Gia_SimDataCoExt(p *Gia_ManSim_t, i int32) *uint32 { return Gia_SimDataCo(p, i);  }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-
 /**Function*************************************************************
 
   Synopsis    []
@@ -109,19 +96,6 @@ func Gia_SimDataCoExt(p *Gia_ManSim_t, i int32) *uint32 { return Gia_SimDataCo(p
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimDelete(p *Gia_ManSim_t) {
-    Vec_IntFreeP( &p.vConsts );
-    Vec_IntFreeP( &p.vCis2Ids );
-    Gia_ManStopP( &p.pAig );
-    // inlining of macro ABC_FREE
-    p.pDataSim = nil;
-    // inlining of macro ABC_FREE
-    p.pDataSimCis = nil;
-    // inlining of macro ABC_FREE
-    p.pDataSimCos = nil;
-    // inlining of macro ABC_FREE
-    p = nil;
-}
 
 /**Function*************************************************************
 
@@ -134,44 +108,6 @@ func Gia_ManSimDelete(p *Gia_ManSim_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimCreate(pAig *Gia_Man_t, pPars *Gia_ParSim_t) *Gia_ManSim_t {
-    var p *Gia_ManSim_t;
-    var Entry, i int32;
-    // inlining of macro ABC_ALLOC
-    p = ((Gia_ManSim_t *) malloc(sizeof(Gia_ManSim_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Gia_ManSim_t) );
-    // look for reset signals
-    if pPars.fVerbose {
-        p.vConsts = Gia_ManSimDeriveResets( pAig ); }
-    // derive the frontier
-    p.pAig   = Gia_ManFront( pAig );
-    p.pPars  = pPars;
-    p.nWords = pPars.nWords;
-    // inlining of macro ABC_ALLOC
-    p.pDataSim = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWords * p.pAig.nFront)));
-    // inlining of macro ABC_ALLOC
-    p.pDataSimCis = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWords * Gia_ManCiNum(p.pAig))));
-    // inlining of macro ABC_ALLOC
-    p.pDataSimCos = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWords * Gia_ManCoNum(p.pAig))));
-    if !p.pDataSim || !p.pDataSimCis || !p.pDataSimCos { 
-        Abc_Print( 1, "Simulator could not allocate %.2f GB for simulation info.\n", 
-            4.0 * p.nWords * (p.pAig.nFront + Gia_ManCiNum(p.pAig) + Gia_ManCoNum(p.pAig)) / (1<<30) );
-        Gia_ManSimDelete( p );
-        return nil;
-    }
-    p.vCis2Ids = Vec_IntAlloc( Gia_ManCiNum(p.pAig) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(pAig.vCis)) && (((Entry) = Vec_IntEntry(pAig.vCis, i)), 1); i++  {
-        Vec_IntPush( p.vCis2Ids, i );
-    }  //  do we need p->vCis2Ids?
-    if pPars.fVerbose {
-    Abc_Print( 1, "AIG = %7.2f MB.   Front mem = %7.2f MB.  Other mem = %7.2f MB.\n", 
-        12.0*Gia_ManObjNum(p.pAig)/(1<<20), 
-        4.0*p.nWords*p.pAig.nFront/(1<<20), 
-        4.0*p.nWords*(Gia_ManCiNum(p.pAig) + Gia_ManCoNum(p.pAig))/(1<<20) ); }
-
-    return p;
-}
 
 /**Function*************************************************************
 
@@ -184,12 +120,6 @@ func Gia_ManSimCreate(pAig *Gia_Man_t, pPars *Gia_ParSim_t) *Gia_ManSim_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimInfoRandom(p *Gia_ManSim_t, pInfo *uint32) {
-    var w int32;
-    for  w = p.nWords-1; w >= 0; w--  {
-        pInfo[w] = Gia_ManRandom( 0 );
-    }
-}
 
 /**Function*************************************************************
 
@@ -202,12 +132,6 @@ func Gia_ManSimInfoRandom(p *Gia_ManSim_t, pInfo *uint32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimInfoZero(p *Gia_ManSim_t, pInfo *uint32) {
-    var w int32;
-    for  w = p.nWords-1; w >= 0; w--  {
-        pInfo[w] = 0;
-    }
-}
 
 /**Function*************************************************************
 
@@ -220,14 +144,6 @@ func Gia_ManSimInfoZero(p *Gia_ManSim_t, pInfo *uint32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimInfoIsZero(p *Gia_ManSim_t, pInfo *uint32) int32 {
-    var w int32;
-    for  w = 0; w < p.nWords; w++  {
-        if pInfo[w] {
-            return 32*w + Gia_WordFindFirstBit( pInfo[w] ); }
-    }
-    return -1;
-}
 
 /**Function*************************************************************
 
@@ -240,12 +156,6 @@ func Gia_ManSimInfoIsZero(p *Gia_ManSim_t, pInfo *uint32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimInfoOne(p *Gia_ManSim_t, pInfo *uint32) {
-    var w int32;
-    for  w = p.nWords-1; w >= 0; w--  {
-        pInfo[w] = ~0;
-    }
-}
 
 /**Function*************************************************************
 
@@ -258,12 +168,6 @@ func Gia_ManSimInfoOne(p *Gia_ManSim_t, pInfo *uint32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimInfoCopy(p *Gia_ManSim_t, pInfo *uint32, pInfo0 *uint32) {
-    var w int32;
-    for  w = p.nWords-1; w >= 0; w--  {
-        pInfo[w] = pInfo0[w];
-    }
-}
 
 /**Function*************************************************************
 
@@ -276,14 +180,6 @@ func Gia_ManSimInfoCopy(p *Gia_ManSim_t, pInfo *uint32, pInfo0 *uint32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimulateCi(p *Gia_ManSim_t, pObj *Gia_Obj_t, iCi int32) {
-    var pInfo *uint32   = Gia_SimData( p, Gia_ObjValue(pObj) );
-    var pInfo0 *uint32  = Gia_SimDataCi( p, iCi );
-    var w int32;
-    for  w = p.nWords-1; w >= 0; w--  {
-        pInfo[w] = pInfo0[w];
-    }
-}
 
 /**Function*************************************************************
 
@@ -296,19 +192,6 @@ func Gia_ManSimulateCi(p *Gia_ManSim_t, pObj *Gia_Obj_t, iCi int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimulateCo(p *Gia_ManSim_t, iCo int32, pObj *Gia_Obj_t) {
-    var pInfo *uint32   = Gia_SimDataCo( p, iCo );
-    var pInfo0 *uint32  = Gia_SimData( p, Gia_ObjDiff0(pObj) );
-    var w int32;
-    if Gia_ObjFaninC0(pObj) {
-        for  w = p.nWords-1; w >= 0; w--  {
-            pInfo[w] = ~pInfo0[w];
-        }
-    } else { 
-        for  w = p.nWords-1; w >= 0; w--  {
-            pInfo[w] = pInfo0[w];
-        } }
-}
 
 /**Function*************************************************************
 
@@ -321,32 +204,6 @@ func Gia_ManSimulateCo(p *Gia_ManSim_t, iCo int32, pObj *Gia_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimulateNode(p *Gia_ManSim_t, pObj *Gia_Obj_t) {
-    var pInfo *uint32   = Gia_SimData( p, Gia_ObjValue(pObj) );
-    var pInfo0 *uint32  = Gia_SimData( p, Gia_ObjDiff0(pObj) );
-    var pInfo1 *uint32  = Gia_SimData( p, Gia_ObjDiff1(pObj) );
-    var w int32;
-    if Gia_ObjFaninC0(pObj) {
-        if Gia_ObjFaninC1(pObj) {
-            for  w = p.nWords-1; w >= 0; w--  {
-                pInfo[w] = ~(pInfo0[w] | pInfo1[w]);
-            }
-        } else { 
-            for  w = p.nWords-1; w >= 0; w--  {
-                pInfo[w] = ~pInfo0[w] & pInfo1[w];
-            } }
-    
-    } else {
-        if Gia_ObjFaninC1(pObj) {
-            for  w = p.nWords-1; w >= 0; w--  {
-                pInfo[w] = pInfo0[w] & ~pInfo1[w];
-            }
-        } else { 
-            for  w = p.nWords-1; w >= 0; w--  {
-                pInfo[w] = pInfo0[w] & pInfo1[w];
-            } }
-    }
-}
 
 /**Function*************************************************************
 
@@ -359,16 +216,6 @@ func Gia_ManSimulateNode(p *Gia_ManSim_t, pObj *Gia_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimInfoInit(p *Gia_ManSim_t) {
-    var iPioNum, i int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vCis2Ids)) && (((iPioNum) = Vec_IntEntry(p.vCis2Ids, i)), 1); i++  {
-        if iPioNum < Gia_ManPiNum(p.pAig) {
-            Gia_ManSimInfoRandom( p, Gia_SimDataCi(p, i) );
-        } else {
-            Gia_ManSimInfoZero( p, Gia_SimDataCi(p, i) ); }
-    }
-}
 
 /**Function*************************************************************
 
@@ -381,16 +228,6 @@ func Gia_ManSimInfoInit(p *Gia_ManSim_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimInfoTransfer(p *Gia_ManSim_t) {
-    var iPioNum, i int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vCis2Ids)) && (((iPioNum) = Vec_IntEntry(p.vCis2Ids, i)), 1); i++  {
-        if iPioNum < Gia_ManPiNum(p.pAig) {
-            Gia_ManSimInfoRandom( p, Gia_SimDataCi(p, i) );
-        } else {
-            Gia_ManSimInfoCopy( p, Gia_SimDataCi(p, i), Gia_SimDataCo(p, Gia_ManPoNum(p.pAig)+iPioNum-Gia_ManPiNum(p.pAig)) ); }
-    }
-}
 
 /**Function*************************************************************
 
@@ -403,31 +240,6 @@ func Gia_ManSimInfoTransfer(p *Gia_ManSim_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimulateRound(p *Gia_ManSim_t) {
-    var pObj *Gia_Obj_t;
-    var i, iCis, iCos int32;
-    assert(p.pAig.nFront > 0, "p.pAig.nFront > 0");
-    assert(Gia_ManConst0(p.pAig).Value == 0, "Gia_ManConst0(p.pAig).Value == 0");
-    Gia_ManSimInfoZero( p, Gia_SimData(p, 0) );
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.pAig.nObjs) && ((pObj) = Gia_ManObj(p.pAig, i)); i++  {
-        if Gia_ObjIsAndOrConst0(pObj) {
-            assert(Gia_ObjValue(pObj) < p.pAig.nFront, "Gia_ObjValue(pObj) < p.pAig.nFront");
-            Gia_ManSimulateNode( p, pObj );
-        
-        } else if Gia_ObjIsCo(pObj) {
-            assert(Gia_ObjValue(pObj) == GIA_NONE, "Gia_ObjValue(pObj) == GIA_NONE");
-            Gia_ManSimulateCo( p, iCos++, pObj );
-        
-        } else { // if ( Gia_ObjIsCi(pObj) )
-        
-            assert(Gia_ObjValue(pObj) < p.pAig.nFront, "Gia_ObjValue(pObj) < p.pAig.nFront");
-            Gia_ManSimulateCi( p, pObj, iCis++ );
-        }
-    }
-    assert(Gia_ManCiNum(p.pAig) == iCis, "Gia_ManCiNum(p.pAig) == iCis");
-    assert(Gia_ManCoNum(p.pAig) == iCos, "Gia_ManCoNum(p.pAig) == iCos");
-}
 
 /**Function*************************************************************
 
@@ -440,18 +252,6 @@ func Gia_ManSimulateRound(p *Gia_ManSim_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCheckPos(p *Gia_ManSim_t, piPo *int32, piPat *int32) int32 {
-    var i, iPat int32;
-    for  i = 0; i < Gia_ManPoNum(p.pAig); i++  {
-        iPat = Gia_ManSimInfoIsZero( p, Gia_SimDataCo(p, i) );
-        if iPat >= 0 {
-            *piPo = i;
-            *piPat = iPat;
-            return 1;
-        }
-    }
-    return 0;
-}
 
 /**Function*************************************************************
 
