@@ -185,3 +185,14 @@ have a permanent checksum fixture derived from the original C implementation
 after a Repr fix; all four sweep drivers reduce three registers to one while
 preserving sequential traces. The full AIG package remains blocked by other
 original files, and full-module verification remains outstanding.
+
+## AIG free-to-nil audit
+
+The AIG owner scanned every `abcgo/aig/aig/*.go` file and converted all four
+remaining live null-safe free-and-clear expansions to nil assignments. The
+`pMemory` example disappeared as part of the actual `Part_Man` pool port: the
+Go manager now owns typed pooled blocks and `Part_ManStop` clears the manager,
+so there is no C-style `pMemory` local to retain. `no_c_free_test.go` lexes every
+Go file in the package and fails on live `free`/`ABC_FREE` calls while ignoring
+comments and literals. `GOCACHE=/tmp/abcgo-cache go test
+abcgo/aig/aig/no_c_free_test.go -count=1` passes.
