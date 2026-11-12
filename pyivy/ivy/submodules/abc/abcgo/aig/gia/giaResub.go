@@ -52,107 +52,9 @@ import (
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ObjCheckMffc_rec(p *Gia_Man_t, pObj *Gia_Obj_t, Limit int32, vNodes *Vec_Int_t) int32 {
-    var iFanin int32;
-    if Gia_ObjIsCi(pObj) {
-        return 1; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    iFanin = Gia_ObjFaninId0p(p, pObj);
-    Vec_IntPush( vNodes, iFanin );
-    if !Gia_ObjRefDecId(p, iFanin) && (Vec_IntSize(vNodes) > Limit || !(Gia_ObjCheckMffc_rec(p, Gia_ObjFanin0(pObj), Limit, vNodes) != 0)) {
-        return 0; }
-    iFanin = Gia_ObjFaninId1p(p, pObj);
-    Vec_IntPush( vNodes, iFanin );
-    if !Gia_ObjRefDecId(p, iFanin) && (Vec_IntSize(vNodes) > Limit || !(Gia_ObjCheckMffc_rec(p, Gia_ObjFanin1(pObj), Limit, vNodes) != 0)) {
-        return 0; }
-    if !Gia_ObjIsMux(p, pObj) {
-        return 1; }
-    iFanin = Gia_ObjFaninId2p(p, pObj);
-    Vec_IntPush( vNodes, iFanin );
-    if !Gia_ObjRefDecId(p, iFanin) && (Vec_IntSize(vNodes) > Limit || !(Gia_ObjCheckMffc_rec(p, Gia_ObjFanin2(p, pObj), Limit, vNodes) != 0)) {
-        return 0; }
-    return 1;
-}
-func Gia_ObjCheckMffc(p *Gia_Man_t, pRoot *Gia_Obj_t, Limit int32, vNodes *Vec_Int_t, vLeaves *Vec_Int_t, vInners *Vec_Int_t) int32 {
-    var RetValue, iObj, i int32;
-    Vec_IntClear( vNodes );
-    RetValue = Gia_ObjCheckMffc_rec( p, pRoot, Limit, vNodes );
-    if RetValue != 0 {
-        Vec_IntClear( vLeaves );
-        Vec_IntClear( vInners );
-        Vec_IntSort( vNodes, 0 );
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vNodes)) && (((iObj) = Vec_IntEntry(vNodes, i)), 1); i++  {
-            if Gia_ObjRefNumId(p, iObj) > 0 || Gia_ObjIsCi(Gia_ManObj(p, iObj)) {
-                if !Vec_IntSize(vLeaves) || Vec_IntEntryLast(vLeaves) != iObj {
-                    Vec_IntPush( vLeaves, iObj ); }
-            
-            } else {
-                if !Vec_IntSize(vInners) || Vec_IntEntryLast(vInners) != iObj {
-                    Vec_IntPush( vInners, iObj ); }
-            }
-        }
-        Vec_IntPush( vInners, Gia_ObjId(p, pRoot) );
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vNodes)) && (((iObj) = Vec_IntEntry(vNodes, i)), 1); i++  {
-        Gia_ObjRefIncId( p, iObj );
-    }
-    return RetValue;
-}
-func Gia_ManComputeMffcs(p *Gia_Man_t, LimitMin int32, LimitMax int32, SuppMax int32, RatioBest int32) *Vec_Wec_t {
-    var pObj *Gia_Obj_t;
-    var vMffcs *Vec_Wec_t;
-    var vNodes, vLeaves, vInners, vMffc *Vec_Int_t;
-    var i, iPivot int32;
-    assert(p.pMuxes, "p.pMuxes");
-    vNodes  = Vec_IntAlloc( 2 * LimitMax );
-    vLeaves = Vec_IntAlloc( 2 * LimitMax );
-    vInners = Vec_IntAlloc( 2 * LimitMax );
-    vMffcs  = Vec_WecAlloc( 1000 );
-    Gia_ManCreateRefs( p );
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        if !Gia_ObjRefNum(p, pObj) {
-            continue; }
-        if !(Gia_ObjCheckMffc(p, pObj, LimitMax, vNodes, vLeaves, vInners) != 0) {
-            continue; }
-        if Vec_IntSize(vInners) < LimitMin {
-            continue; }
-        if Vec_IntSize(vLeaves) > SuppMax {
-            continue; }
-        // improve cut
-        // collect cut
-        vMffc = Vec_WecPushLevel( vMffcs );
-        Vec_IntGrow( vMffc, Vec_IntSize(vLeaves) + Vec_IntSize(vInners) + 20 );
-        Vec_IntPush( vMffc, i );
-        Vec_IntPush( vMffc, Vec_IntSize(vLeaves) );
-        Vec_IntPush( vMffc, Vec_IntSize(vInners) );
-        Vec_IntAppend( vMffc, vLeaves );
-//        Vec_IntAppend( vMffc, vInners );
-        // add last entry equal to the ratio
-        Vec_IntPush( vMffc, 1000 * Vec_IntSize(vInners) / Vec_IntSize(vLeaves) );
-    }
-    }
-    Vec_IntFree( vNodes );
-    Vec_IntFree( vLeaves );
-    Vec_IntFree( vInners );
-    // sort MFFCs by their inner/leaf ratio
-    Vec_WecSortByLastInt( vMffcs, 1 );
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vMffcs)) && (((vMffc) = Vec_WecEntry(vMffcs, i)), 1); i++  {
-        Vec_IntPop( vMffc );
-    }
-    // remove those whose ratio is not good
-    iPivot = RatioBest * Vec_WecSize(vMffcs) / 100;
-    // inlining of macro Vec_WecForEachLevelStart
-    for  i = iPivot; (i < Vec_WecSize(vMffcs)) && (((vMffc) = Vec_WecEntry(vMffcs, i)), 1); i++  {
-        Vec_IntErase( vMffc );
-    }
-    assert(iPivot <= Vec_WecSize(vMffcs), "iPivot <= Vec_WecSize(vMffcs)");
-    Vec_WecShrink( vMffcs, iPivot );
-    return vMffcs;
-}
+
+
+
 
 /**Function*************************************************************
 
@@ -165,26 +67,7 @@ func Gia_ManComputeMffcs(p *Gia_Man_t, LimitMin int32, LimitMax int32, SuppMax i
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManPrintDivStats(p *Gia_Man_t, vMffcs *Vec_Wec_t, vPivots *Vec_Wec_t) {
-    var fVerbose int32;
-    var vMffc *Vec_Int_t;
-    var i, nDivs, nDivsAll, nDivs0 int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vMffcs)) && (((vMffc) = Vec_WecEntry(vMffcs, i)), 1); i++  {
-        nDivs = Vec_IntSize(vMffc) - 3 - Vec_IntEntry(vMffc, 1) - Vec_IntEntry(vMffc, 2);
-        nDivs0 += (nDivs == 0);
-        nDivsAll += nDivs;
-        if !(fVerbose != 0) {
-            continue; }
-        fmt.Printf("%6d : ", Vec_IntEntry(vMffc, 0));
-        fmt.Printf("Leaf =%3d  ", Vec_IntEntry(vMffc, 1));
-        fmt.Printf("Mffc =%4d  ", Vec_IntEntry(vMffc, 2));
-        fmt.Printf("Divs =%4d  ", nDivs);
-        fmt.Printf("\n");
-    }
-    fmt.Printf("Collected %d (%.1f %%) MFFCs and %d (%.1f %%) have no divisors (div ave for others is %.2f).\n", Vec_WecSize(vMffcs), 100.0 * Vec_WecSize(vMffcs) / Gia_ManAndNum(p), nDivs0, 100.0 * nDivs0 / Gia_ManAndNum(p), 1.0*nDivsAll/Abc_MaxInt(1, Vec_WecSize(vMffcs) - nDivs0));
-    fmt.Printf("Using %.2f MB for MFFCs and %.2f MB for pivots.   ", Vec_WecMemory(vMffcs)/(1<<20), Vec_WecMemory(vPivots)/(1<<20));
-}
+
 
 /**Function*************************************************************
 
@@ -197,75 +80,7 @@ func Gia_ManPrintDivStats(p *Gia_Man_t, vMffcs *Vec_Wec_t, vPivots *Vec_Wec_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManAddDivisors(p *Gia_Man_t, vMffcs *Vec_Wec_t) {
-    var vPivots *Vec_Wec_t;
-    var vMffc, vPivot, vPivot0, vPivot1 *Vec_Int_t;
-    var vCommon, vCommon2, vMap *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i, k, iObj, iPivot, iMffc int32;
-//abctime clkStart = Abc_Clock();
-    // initialize pivots (mapping of nodes into MFFCs whose leaves they are)
-    vMap = Vec_IntStartFull( Gia_ManObjNum(p) );
-    vPivots = Vec_WecStart( Gia_ManObjNum(p) );
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vMffcs)) && (((vMffc) = Vec_WecEntry(vMffcs, i)), 1); i++  {
-        assert(Vec_IntSize(vMffc) == 3 + Vec_IntEntry(vMffc, 1), "Vec_IntSize(vMffc) == 3 + Vec_IntEntry(vMffc, 1)");
-        iPivot = Vec_IntEntry( vMffc, 0 );
-        Vec_IntWriteEntry( vMap, iPivot, i );
-        // iterate through the MFFC leaves
-        // inlining of macro Vec_IntForEachEntryStart
-        for  k = 3; (k < Vec_IntSize(vMffc)) && (((iObj) = Vec_IntEntry(vMffc, k)), 1); k++  {
-            vPivot = Vec_WecEntry( vPivots, iObj );
-            if Vec_IntSize(vPivot) == 0 {
-                Vec_IntGrow(vPivot, 4); }
-            Vec_IntPush( vPivot, iPivot );            
-        }
-    }
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vPivots)) && (((vPivot) = Vec_WecEntry(vPivots, i)), 1); i++  {
-        Vec_IntSort( vPivot, 0 );
-    }
-    // create pivots for internal nodes while growing MFFCs
-    vCommon = Vec_IntAlloc( 100 );
-    vCommon2 = Vec_IntAlloc( 100 );
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        // find commont pivots
-        // the slow down happens because some PIs have very large sets of pivots
-        vPivot0 = Vec_WecEntry( vPivots, Gia_ObjFaninId0(pObj, i) );
-        vPivot1 = Vec_WecEntry( vPivots, Gia_ObjFaninId1(pObj, i) );
-        Vec_IntTwoFindCommon( vPivot0, vPivot1, vCommon );
-        if Gia_ObjIsMuxId(p, i) {
-            vPivot = Vec_WecEntry( vPivots, Gia_ObjFaninId2(p, i) );
-            Vec_IntTwoFindCommon( vPivot, vCommon, vCommon2 );
-            // inlining of macro ABC_SWAP
-            { var t *Vec_Int_t  = vCommon; vCommon = vCommon2; vCommon2 = t; };
-        }
-        if Vec_IntSize(vCommon) == 0 {
-            continue; }
-        // add new pivots (this trick increased memory used in vPivots)
-        vPivot = Vec_WecEntry( vPivots, i );
-        Vec_IntTwoMerge2( vPivot, vCommon, vCommon2 );
-        // inlining of macro ABC_SWAP
-        { var t Vec_Int_t  = *vPivot; *vPivot = *vCommon2; *vCommon2 = t; };
-        // grow MFFCs
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vCommon)) && (((iObj) = Vec_IntEntry(vCommon, k)), 1); k++  {
-            iMffc = Vec_IntEntry( vMap, iObj );
-            assert(iMffc != -1, "iMffc != -1");
-            vMffc = Vec_WecEntry( vMffcs, iMffc );
-            Vec_IntPush( vMffc, i );
-        }
-    }
-    }
-//Abc_PrintTime( 1, "Time", Abc_Clock() - clkStart );
-    Vec_IntFree( vCommon );
-    Vec_IntFree( vCommon2 );
-    Vec_IntFree( vMap );
-    Gia_ManPrintDivStats( p, vMffcs, vPivots );
-    Vec_WecFree( vPivots );
-    // returns the modified array of MFFCs
-}
+
 func Gia_ManResubTest(p *Gia_Man_t) {
     var vMffcs *Vec_Wec_t;
     var pNew *Gia_Man_t  = Gia_ManDupMuxes( p, 2 );
