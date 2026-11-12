@@ -4,14 +4,14 @@ package msat
 
   FileName    [msatClauseVec.c]
 
-  PackageName [A C version of SAT solver MINISAT, originally developed 
-  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of 
+  PackageName [A C version of SAT solver MINISAT, originally developed
+  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of
   Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]
 
   Synopsis    [Procedures working with arrays of SAT clauses.]
 
   Author      [Alan Mishchenko <alanmi@eecs.berkeley.edu>]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - January 1, 2004.]
@@ -20,222 +20,53 @@ package msat
 
 ***********************************************************************/
 
-//#include "msatInt.h"
+type Msat_ClauseVec_t struct{ data []*Msat_Clause_t }
 
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates a vector with the given capacity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Msat_ClauseVecAlloc(nCap int32) *Msat_ClauseVec_t {
-    var p *Msat_ClauseVec_t;
-    // inlining of macro ABC_ALLOC
-    p = ((Msat_ClauseVec_t *) malloc(sizeof(Msat_ClauseVec_t) * (size_t)(1)));
-    if nCap > 0 && nCap < 16 {
-        nCap = 16; }
-    p.nSize  = 0;
-    p.nCap   = nCap;
-    if p.nCap {
-        // inlining of macro ABC_ALLOC
-        p.pArray = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(p.nCap)));
-    } else {
-        p.pArray = nil;
-    }
-    return p;
+func Msat_ClauseVecAlloc(n int) *Msat_ClauseVec_t {
+	if n < 0 {
+		panic("negative vector capacity")
+	}
+	if n > 0 && n < 16 {
+		n = 16
+	}
+	return &Msat_ClauseVec_t{data: make([]*Msat_Clause_t, 0, n)}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Msat_ClauseVecFree(p *Msat_ClauseVec_t) {
-    // inlining of macro ABC_FREE
-    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+func Msat_ClauseVecFree(p *Msat_ClauseVec_t)                       { p.data = nil }
+func Msat_ClauseVecReadArray(p *Msat_ClauseVec_t) []*Msat_Clause_t { return p.data }
+func Msat_ClauseVecReadSize(p *Msat_ClauseVec_t) int               { return len(p.data) }
+func Msat_ClauseVecGrow(p *Msat_ClauseVec_t, n int) {
+	if n <= cap(p.data) {
+		return
+	}
+	a := make([]*Msat_Clause_t, len(p.data), n)
+	copy(a, p.data)
+	p.data = a
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Msat_ClauseVecReadArray(p *Msat_ClauseVec_t) **Msat_Clause_t {
-    return p.pArray;
+func Msat_ClauseVecShrink(p *Msat_ClauseVec_t, n int) {
+	if n < 0 || n > len(p.data) {
+		panic("invalid vector shrink")
+	}
+	p.data = p.data[:n]
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Msat_ClauseVecReadSize(p *Msat_ClauseVec_t) int32 {
-    return p.nSize;
+func Msat_ClauseVecClear(p *Msat_ClauseVec_t) { p.data = p.data[:0] }
+func Msat_ClauseVecPush(p *Msat_ClauseVec_t, value *Msat_Clause_t) {
+	if len(p.data) == cap(p.data) {
+		n := 2 * cap(p.data)
+		if n < 16 {
+			n = 16
+		}
+		Msat_ClauseVecGrow(p, n)
+	}
+	p.data = append(p.data, value)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resizes the vector to the given capacity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Msat_ClauseVecGrow(p *Msat_ClauseVec_t, nCapMin int32) {
-    if p.nCap >= nCapMin {
-        return; }
-    // inlining of macro ABC_REALLOC
-    
-    if p.pArray {
-        p.pArray = ((Msat_Clause_t * *) realloc((char *)(p.pArray), sizeof(Msat_Clause_t *) * (size_t)(nCapMin)));
-    } else {
-        p.pArray = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(nCapMin)));
-    } 
-    p.nCap   = nCapMin;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Msat_ClauseVecShrink(p *Msat_ClauseVec_t, nSizeNew int32) {
-    assert(p.nSize >= nSizeNew, "p.nSize >= nSizeNew");
-    p.nSize = nSizeNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Msat_ClauseVecClear(p *Msat_ClauseVec_t) {
-    p.nSize = 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Msat_ClauseVecPush(p *Msat_ClauseVec_t, Entry *Msat_Clause_t) {
-    if p.nSize == p.nCap {
-        if p.nCap < 16 {
-            Msat_ClauseVecGrow( p, 16 );
-        } else {
-            Msat_ClauseVecGrow( p, 2 * p.nCap ); }
-    }
-    p.pArray[p.nSize++] = Entry;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Msat_ClauseVecPop(p *Msat_ClauseVec_t) *Msat_Clause_t {
-    return p.pArray[--p.nSize];
+	if len(p.data) == 0 {
+		panic("pop empty vector")
+	}
+	i := len(p.data) - 1
+	value := p.data[i]
+	p.data = p.data[:i]
+	return value
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Msat_ClauseVecWriteEntry(p *Msat_ClauseVec_t, i int32, Entry *Msat_Clause_t) {
-    assert(i >= 0 && i < p.nSize, "i >= 0 && i < p.nSize");
-    p.pArray[i] = Entry;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Msat_ClauseVecReadEntry(p *Msat_ClauseVec_t, i int32) *Msat_Clause_t {
-    assert(i >= 0 && i < p.nSize, "i >= 0 && i < p.nSize");
-    return p.pArray[i];
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Msat_ClauseVecWriteEntry(p *Msat_ClauseVec_t, i int, value *Msat_Clause_t) { p.data[i] = value }
+func Msat_ClauseVecReadEntry(p *Msat_ClauseVec_t, i int) *Msat_Clause_t         { return p.data[i] }
