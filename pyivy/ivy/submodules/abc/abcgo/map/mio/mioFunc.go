@@ -1,322 +1,121 @@
+// Gate formula, pin ordering and derived functionality from mioFunc.c.
 package mio
 
 import (
 	"fmt"
-	"strings"
+	"github.com/glycerine/abcgo/misc/mem"
 )
 
-/**CFile****************************************************************
-
-  FileName    [mioFunc.c]
-
-  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]
-
-  Synopsis    [File reading/writing for technology mapping.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - September 8, 2003.]
-
-  Revision    [$Id: mioFunc.c,v 1.4 2004/06/28 14:20:25 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "mioInt.h"
-//#include "parse.h"
-//#include "exp.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// these symbols (and no other) can appear in the formulas
-#define MIO_SYMB_AND    '*'
-#define MIO_SYMB_AND2   '&'
-#define MIO_SYMB_OR     '+'
-#define MIO_SYMB_OR2    '|'
-#define MIO_SYMB_XOR    '^'
-#define MIO_SYMB_NOT    '!'
-#define MIO_SYMB_AFTNOT '\''
-#define MIO_SYMB_OPEN   '('
-#define MIO_SYMB_CLOSE  ')'
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Registers the cube string with the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Mio_SopRegister(pMan *Mem_Flex_t, pName string) string {
-    var pRegName string;
-    if pName == nil { return nil; }
-    pRegName = Mem_FlexEntryFetch( pMan, len(pName) + 1 );
-    pRegName = pName;
-    return pRegName;
+func Mio_SopRegister(_ *mem.Mem_Flex_t, name string) string { return name }
+func formulaNames(formula string) ([]string, error) {
+	tokens, err := formulaTokens(formula)
+	if err != nil {
+		return nil, err
+	}
+	seen := make(map[string]bool)
+	var names []string
+	for _, token := range tokens {
+		if token.text == "0" || token.text == "1" || token.text == MIO_STRING_CONST0 || token.text == MIO_STRING_CONST1 {
+			continue
+		}
+		if len(token.text) == 1 && stringsOperator(token.text[0]) {
+			continue
+		}
+		if !seen[token.text] {
+			names = append(names, token.text)
+			seen[token.text] = true
+		}
+	}
+	return names, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collect the pin names in the formula.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Mio_GateCollectNames(pFormula string, pPinNames []string) int32 {
-    var Buffer string;
-    var pTemp string;
-    var nPins, i int32;
-
-    // save the formula as it was
-    //strcpy( Buffer, pFormula );
-    Buffer = Abc_UtilStrsav( pFormula );
-
-    // remove the non-name symbols
-    for  pTemp = Buffer; *pTemp; pTemp++  {
-        if *pTemp == MIO_SYMB_AND  || *pTemp == MIO_SYMB_AND2   || 
-             *pTemp == MIO_SYMB_OR   || *pTemp == MIO_SYMB_OR2    || 
-             *pTemp == MIO_SYMB_XOR  || 
-             *pTemp == MIO_SYMB_NOT  || *pTemp == MIO_SYMB_AFTNOT ||
-             *pTemp == MIO_SYMB_OPEN || *pTemp == MIO_SYMB_CLOSE {
-             *pTemp = ' '; }
-    }
-
-    // save the names
-    nPins = 0;
-    pTemp = strtok( Buffer, " " );
-    for  pTemp  {
-        for  i = 0; i < nPins; i++  {
-            if int32(strings.Compare(pTemp, pPinNames[i])) == 0 {
-                break; }
-        }
-        if i == nPins { // cannot find this name; save it
-            pPinNames[nPins++] = Abc_UtilStrsav(pTemp);
-        }
-        // get the next name
-        pTemp = strtok( nil, " " );
-    }
-    Buffer = nil;
-    return nPins;
+func stringsOperator(c byte) bool {
+	switch c {
+	case '(', ')', '!', '*', '&', '^', '+', '|', '\'':
+		return true
+	}
+	return false
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Deriving the functionality of the gates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Mio_GateParseFormula(pGate *Mio_Gate_t) int32 {
-    var pPinNames [100]string;
-    var pPinNamesCopy [100]string;
-    var pPin *Mio_Pin_t;
-    var ppPin **Mio_Pin_t;
-    var nPins, iPin, i int32;
-
-    // set the maximum delay of the gate; count pins
-    pGate.dDelayMax = 0.0;
-    nPins = 0;
-    // inlining of macro Mio_GateForEachPin
-    for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {
-        // set the maximum delay of the gate
-        if pGate.dDelayMax < pPin.dDelayBlockMax {
-            pGate.dDelayMax = pPin.dDelayBlockMax; }
-        // count the pin
-        nPins++;
-    }
-
-    // check for the gate with const function
-    if nPins == 0 {
-        if int32(strings.Compare(pGate.pForm, MIO_STRING_CONST0)) == 0 {
-//            pGate->bFunc = b0;
-            pGate.vExpr = Exp_Const0();
-            pGate.pSop = Mio_SopRegister( (Mem_Flex_t *)pGate.pLib.pMmFlex, " 0\n" );
-            pGate.uTruth = 0;
-            pGate.pLib.pGate0 = pGate;
-        
-        } else if int32(strings.Compare(pGate.pForm, MIO_STRING_CONST1)) == 0 {
-//            pGate->bFunc = b1;
-            pGate.vExpr = Exp_Const1();
-            pGate.pSop = Mio_SopRegister( (Mem_Flex_t *)pGate.pLib.pMmFlex, " 1\n" );
-            pGate.uTruth = ~(word)0;
-            pGate.pLib.pGate1 = pGate;
-        
-        } else {
-            fmt.Printf("Cannot parse formula \"%s\" of gate \"%s\".\n", pGate.pForm, pGate.pName);
-            return 1;
-        }
-//        Cudd_Ref( pGate->bFunc );
-        return 0;
-    }
-
-    // collect the names as they appear in the formula
-    nPins = Mio_GateCollectNames( pGate.pForm, pPinNames );
-    if nPins == 0 {
-        fmt.Printf("Cannot read formula \"%s\" of gate \"%s\".\n", pGate.pForm, pGate.pName);
-        return 1;
-    }
-
-    // set the number of inputs
-    pGate.nInputs = nPins;
-
-    // consider the case when all the pins have identical pin info
-    if int32(strings.Compare(pGate.pPins.pName, "*")) == 0 {
-        // get the topmost (generic) pin
-        pPin = pGate.pPins;
-        pPin.pName = nil;
-
-        // create individual pins from the generic pin
-        ppPin = &pPin.pNext;
-        for  i = 1; i < nPins; i++  {
-            // get the new pin
-            *ppPin = Mio_PinDup( pPin );
-            // set its name
-            (*ppPin).pName = pPinNames[i];
-            // prepare the next place in the list
-            ppPin = &((*ppPin).pNext);
-        }
-        *ppPin = nil;
-
-        // set the name of the topmost pin
-        pPin.pName = pPinNames[0];
-    
-    } else {
-        // reorder the variable names to appear the save way as the pins
-        iPin = 0;
-        // inlining of macro Mio_GateForEachPin
-        for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {
-            // find the pin with the name pPin->pName
-            for  i = 0; i < nPins; i++  {
-                if pPinNames[i] && int32(strings.Compare(pPinNames[i], pPin.pName)) == 0 {
-                    // free pPinNames[i] because it is already available as pPin->pName
-                    // setting pPinNames[i] to NULL is useful to make sure that
-                    // this name is not assigned to two pins in the list
-                    pPinNames[i] = nil;
-                    pPinNamesCopy[iPin++] = pPin.pName;
-                    break;
-                }
-                if i == nPins {
-                    fmt.Printf("Cannot find pin name \"%s\" in the formula \"%s\" of gate \"%s\".\n", pPin.pName, pGate.pForm, pGate.pName);
-                    return 1;
-                }
-            }
-        }
-
-        // check for the remaining names
-        for  i = 0; i < nPins; i++  {
-            if pPinNames[i] {
-                fmt.Printf("Name \"%s\" appears in the formula \"%s\" of gate \"%s\" but there is no such pin.\n", pPinNames[i], pGate.pForm, pGate.pName);
-                return 1;
-            }
-        }
-
-        // copy the names back
-        memcpy( pPinNames, pPinNamesCopy, nPins * sizeof(char *) );
-    }
-/*
-    // expand the manager if necessary
-    if ( dd->size < nPins )
-    {
-        Cudd_Quit( dd );
-        dd = Cudd_Init( nPins + 10, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-        Cudd_zddVarsFromBddVars( dd, 2 );
-    }
-    // derive formula as the BDD
-    pGate->bFunc = Parse_FormulaParser( stdout, pGate->pForm, nPins, 0, pPinNames, dd, dd->vars );
-    if ( pGate->bFunc == NULL )
-        return 1;
-    Cudd_Ref( pGate->bFunc );
-    // derive cover
-    pGate->pSop = Abc_ConvertBddToSop( pGate->pLib->pMmFlex, dd, pGate->bFunc, pGate->bFunc, nPins, 0, pGate->pLib->vCube, -1 );
-*/
-
-    // derive expression 
-    pGate.vExpr = Mio_ParseFormula( pGate.pForm, (char **)pPinNames, nPins );
-//    Mio_ParseFormulaTruthTest( pGate->pForm, (char **)pPinNames, nPins );
-    // derive cover
-    pGate.pSop = Mio_LibDeriveSop( nPins, pGate.vExpr, pGate.pLib.vCube );
-    pGate.pSop = Mio_SopRegister( (Mem_Flex_t *)pGate.pLib.pMmFlex, pGate.pSop );
-    // derive truth table
-    if nPins <= 6 {
-        pGate.uTruth = Exp_Truth6( nPins, pGate.vExpr, nil );
-    } else if nPins <= 8 {
-        // inlining of macro ABC_CALLOC
-        pGate.pTruth = ((word *) calloc((size_t)(4), sizeof(word)));
-        Exp_Truth8( nPins, pGate.vExpr, nil, pGate.pTruth );
-    }
-
-/*
-    // verify
-    if ( pGate->nInputs <= 6 )
-    {
-        extern word Abc_SopToTruth( char * pSop, int nInputs );
-        word t2 = Abc_SopToTruth( pGate->pSop, nPins );
-        if ( pGate->uTruth != t2 )
-        {
-            printf( "%s\n", pGate->pForm );
-            Exp_Print( nPins, pGate->vExpr );
-            printf( "Verification failed!\n" );
-        }
-    }
-*/
-    return 0;
+func Mio_GateCollectNames(formula string, names []string) int32 {
+	collected, err := formulaNames(formula)
+	if err != nil || len(collected) > len(names) {
+		return -1
+	}
+	copy(names, collected)
+	return int32(len(collected))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Deriving the functionality of the gates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Mio_LibraryParseFormulas(pLib *Mio_Library_t) int32 {
-    var pGate *Mio_Gate_t;
-
-    // count the gates
-    pLib.nGates = 0;
-    // inlining of macro Mio_LibraryForEachGate
-    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {
-        pLib.nGates++;
-    }        
-
-    // for each gate, derive its function
-    // inlining of macro Mio_LibraryForEachGate
-    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {
-        if Mio_GateParseFormula( pGate ) != 0 {
-            return 1; }
-    }
-    return 0;
+func deriveGate(g *Mio_Gate_t) error {
+	names, err := formulaNames(g.pForm)
+	if err != nil {
+		return err
+	}
+	if len(names) > 16 {
+		return fmt.Errorf("gate %s exceeds compact SOP's 16-input limit", g.pName)
+	}
+	if g.pPins != nil && g.pPins.pName == "*" {
+		if g.pPins.pNext != nil {
+			return fmt.Errorf("gate %s mixes wildcard and explicit pins", g.pName)
+		}
+		template := *g.pPins
+		var tail *Mio_Pin_t
+		g.pPins = nil
+		for _, name := range names {
+			pin := template
+			pin.pName = name
+			pin.pNext = nil
+			if tail == nil {
+				g.pPins = &pin
+			} else {
+				tail.pNext = &pin
+			}
+			tail = &pin
+		}
+	} else {
+		expected := make(map[string]bool)
+		for _, name := range names {
+			expected[name] = true
+		}
+		names = nil
+		for p := g.pPins; p != nil; p = p.pNext {
+			if !expected[p.pName] {
+				return fmt.Errorf("gate %s has duplicate or unused pin %s", g.pName, p.pName)
+			}
+			delete(expected, p.pName)
+			names = append(names, p.pName)
+		}
+		if len(expected) > 0 {
+			return fmt.Errorf("gate %s formula references undeclared pins", g.pName)
+		}
+	}
+	expression, err := ParseFormula(g.pForm, names)
+	if err != nil {
+		return fmt.Errorf("gate %s: %w", g.pName, err)
+	}
+	g.nInputs = int32(len(names))
+	g.vExpr = expression
+	g.dDelayMax = 0
+	for p := g.pPins; p != nil; p = p.pNext {
+		p.dDelayBlockMax = max(p.dDelayBlockRise, p.dDelayBlockFall)
+		g.dDelayMax = max(g.dDelayMax, p.dDelayBlockMax)
+	}
+	g.pSop = Mio_LibDeriveSop(g.nInputs, expression, nil)
+	if g.nInputs <= 6 {
+		g.uTruth = Exp_Truth6(g.nInputs, expression, nil)
+		g.pTruth = nil
+	} else {
+		words := 1 << uint(g.nInputs-6)
+		g.pTruth = make([]uint64, words)
+		Exp_Truth(g.nInputs, expression, g.pTruth)
+	}
+	return nil
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Mio_GateParseFormula(g *Mio_Gate_t) int32 { return mioBool(deriveGate(g) != nil) }
+func Mio_LibraryParseFormulas(lib *Mio_Library_t) int32 {
+	lib.nGates = 0
+	for g := lib.pGates; g != nil; g = g.pNext {
+		if deriveGate(g) != nil {
+			return 1
+		}
+		lib.nGates++
+	}
+	return 0
+}
