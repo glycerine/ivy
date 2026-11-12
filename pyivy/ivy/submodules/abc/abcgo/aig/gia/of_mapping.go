@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-type ofMappingObject struct{ best, delay, required, refs, flow int32 }
+type ofMappingObject struct{ best, best2, delay, delay2, required, refs, flow int32 }
 type ofMapper struct {
 	cuts      *ofCutManager
 	objects   []ofMappingObject
@@ -17,6 +17,7 @@ func newOfMapper(cuts *ofCutManager) *ofMapper {
 	for index, id := range vec.Vec_IntArray(cuts.graph.vCis) {
 		if cuts.graph.vInArrs != nil {
 			p.objects[id].delay = int32(10 * max(0, vec.Vec_FltEntry(cuts.graph.vInArrs, index)))
+			p.objects[id].delay2 = p.objects[id].delay
 		}
 	}
 	// Initial flow estimates are distributed over graph fanouts.
