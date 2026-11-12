@@ -51,3 +51,29 @@ func TestSleComputeCuts(t *testing.T) {
 		t.Fatalf("2-LUT delay %d", got)
 	}
 }
+
+func TestSleCutFanins(t *testing.T) {
+	p := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, x, c)
+	Gia_ManAppendCo(p, y)
+	cuts := Sle_ManComputeCuts(p, 3, 0)
+	mask := Sle_ManInternalNodeMask(p)
+	fanins := Sle_ManCollectCutFanins(p, cuts, mask)
+	got := vec.Vec_IntArray(vec.Vec_WecEntry(fanins, int(y>>1)))
+	if len(got) != 1 || got[0] != x>>1 {
+		t.Fatalf("cut fanins %v", got)
+	}
+	var piOnly, internal bool
+	for _, cut := range sleList(cuts, y>>1, false) {
+		if Sle_ManCutHasPisOnly(cut, mask) != 0 {
+			piOnly = true
+		} else {
+			internal = true
+		}
+	}
+	if !piOnly || !internal {
+		t.Fatal("expected both primary-input and internal cuts")
+	}
+}
