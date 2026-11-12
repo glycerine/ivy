@@ -341,3 +341,9 @@ and BIDEC_CSAT_REVIEW.md. misc_tim's BalLut and aighop's CSatOld are independent
 completed native families. CCof integration remains unverified. The last
 ordinary `go -C abcgo test ./aig/gia` reaches giaCTas.go parser errors; the GIA
 package is still incomplete. Work stopped at the user's requested pause.
+
+The GIA manager statistics, abstraction reports, box integrity, cross-cut and
+MUX reports have been ported. The focused core suite passes; the full package
+still fails to parse the unported giaMf.go. Switching statistics currently use
+LfSwitchingProvider and will require the native simulator to be connected when
+giaSwitch.go is ported. Full-package tests and both final reviews remain open.

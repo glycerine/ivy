@@ -792,31 +792,6 @@ float Gia_ManComputeSwitching( Gia_Man_t * p, int nFrames, int nPref, int fProbO
     return SwitchTotal;
 }
 */
-func Gia_ManComputeSwitching(p *Gia_Man_t, nFrames int32, nPref int32, fProbOne int32) float32 {
-    var vSwitching *Vec_Int_t  = Gia_ManComputeSwitchProbs( p, nFrames, nPref, fProbOne );
-    var pSwi *float32 = (float *)Vec_IntArray(vSwitching);
-    var SwiTotal float32;
-    var pObj *Gia_Obj_t;
-    var i, k, iFan int32;
-    if Gia_ManHasMapping(p) {
-        // inlining of macro Gia_ManForEachLut
-        for  i = 1; i < Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {
-            // inlining of macro Gia_LutForEachFanin
-            for  k = 0; k < Gia_ObjLutSize(p,i) && ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {
-                SwiTotal += pSwi[iFan];
-            } }
-        }
-    
-    } else {
-        // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-            SwiTotal += pSwi[Gia_ObjFaninId0(pObj, i)] + pSwi[Gia_ObjFaninId1(pObj, i)]; }
-        }
-    }
-    Vec_IntFree( vSwitching );
-    return SwiTotal;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Determine probability of being 1 at the outputs.]
