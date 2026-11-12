@@ -194,28 +194,6 @@ import "time"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Sim2ClassCreate(p *Gia_Man_t, vClass *Vec_Int_t) {
-    var Repr int32 = GIA_VOID;
-    var EntPrev int32 = -1;
-    var Ent int32;
-    var i int32;
-    assert(Vec_IntSize(vClass) > 0, "Vec_IntSize(vClass) > 0");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vClass)) && (((Ent) = Vec_IntEntry(vClass, i)), 1); i++  {
-        if i == 0 {
-            Repr = Ent;
-            Gia_ObjSetRepr( p, Ent, GIA_VOID );
-            EntPrev = Ent;
-        
-        } else {
-            assert(Repr < Ent, "Repr < Ent");
-            Gia_ObjSetRepr( p, Ent, Repr );
-            Gia_ObjSetNext( p, EntPrev, Ent );
-            EntPrev = Ent;
-        }
-    }
-    Gia_ObjSetNext( p, EntPrev, 0 );
-}
 
 /**Function*************************************************************
 
@@ -228,32 +206,6 @@ func Gia_Sim2ClassCreate(p *Gia_Man_t, vClass *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Sim2ClassRefineOne(p *Gia_Sim2_t, i int32) int32 {
-    var pObj0, pObj1 *Gia_Obj_t;
-    var pSim0, pSim1 *uint32;
-    var Ent int32;
-    Vec_IntClear( p.vClassOld );
-    Vec_IntClear( p.vClassNew );
-    Vec_IntPush( p.vClassOld, i );
-    pObj0 = Gia_ManObj( p.pAig, i );
-    pSim0 = Gia_Sim2Data( p, i );
-    // inlining of macro Gia_ClassForEachObj1
-    for  assert(Gia_ObjIsHead(p.pAig, i), "Gia_ObjIsHead(p.pAig, i)"), Ent = Gia_ObjNext(p.pAig, i); Ent > 0; Ent = Gia_ObjNext(p.pAig, Ent)  {
-        pObj1 = Gia_ManObj( p.pAig, Ent );
-        pSim1 = Gia_Sim2Data( p, Ent );
-        if Gia_Sim2CompareEqual( pSim0, pSim1, p.nWords, Gia_ObjPhase(pObj0) ^ Gia_ObjPhase(pObj1) ) != 0 {
-            Vec_IntPush( p.vClassOld, Ent );
-        } else {
-            Vec_IntPush( p.vClassNew, Ent ); }
-    }
-    if Vec_IntSize( p.vClassNew ) == 0 {
-        return 0; }
-    Gia_Sim2ClassCreate( p.pAig, p.vClassOld );
-    Gia_Sim2ClassCreate( p.pAig, p.vClassNew );
-    if Vec_IntSize(p.vClassNew) > 1 {
-        return 1 + Gia_Sim2ClassRefineOne( p, Vec_IntEntry(p.vClassNew,0) ); }
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -269,21 +221,6 @@ func Gia_Sim2ClassRefineOne(p *Gia_Sim2_t, i int32) int32 {
 var spStatic_Gia_Sim2HashKey_s_Primes [16]int32 = [16]int32{ 
         1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, 
         4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };
-func Gia_Sim2HashKey(pSim *uint32, nWords int32, nTableSize int32) int32 {
-    
-    var uHash uint32;
-    var i int32;
-    if pSim[0] & 1 {
-        for  i = 0; i < nWords; i++  {
-            uHash ^= ~pSim[i] * spStatic_Gia_Sim2HashKey_s_Primes[i & 0xf];
-        }
-    } else {
-        for  i = 0; i < nWords; i++  {
-            uHash ^= pSim[i] * spStatic_Gia_Sim2HashKey_s_Primes[i & 0xf];
-        } }
-    return int32((uHash % nTableSize));
-
-}
 
 /**Function*************************************************************
 
@@ -296,46 +233,7 @@ func Gia_Sim2HashKey(pSim *uint32, nWords int32, nTableSize int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Sim2ProcessRefined(p *Gia_Sim2_t, vRefined *Vec_Int_t) {
-    var pSim *uint32;
-    var pTable *int32;
-    var nTableSize int32;
-    var i int32;
-    var k int32;
-    var Key int32;
-    if Vec_IntSize(vRefined) == 0 {
-        return; }
-    nTableSize = Abc_PrimeCudd( 1000 + Vec_IntSize(vRefined) / 3 );
-    // inlining of macro ABC_CALLOC
-    pTable = ((int *) calloc((size_t)(nTableSize), sizeof(int)));
-    // inlining of macro Vec_IntForEachEntry
-    for  k = 0; (k < Vec_IntSize(vRefined)) && (((i) = Vec_IntEntry(vRefined, k)), 1); k++  {
-        pSim = Gia_Sim2Data( p, i );
-        Key = Gia_Sim2HashKey( pSim, p.nWords, nTableSize );
-        if pTable[Key] == 0 {
-            assert(Gia_ObjRepr(p.pAig, i) == 0, "Gia_ObjRepr(p.pAig, i) == 0");
-            assert(Gia_ObjNext(p.pAig, i) == 0, "Gia_ObjNext(p.pAig, i) == 0");
-            Gia_ObjSetRepr( p.pAig, i, GIA_VOID );
-        
-        } else {
-            Gia_ObjSetNext( p.pAig, pTable[Key], i );
-            Gia_ObjSetRepr( p.pAig, i, Gia_ObjRepr(p.pAig, pTable[Key]) );
-            if Gia_ObjRepr(p.pAig, i) == GIA_VOID {
-                Gia_ObjSetRepr( p.pAig, i, pTable[Key] ); }
-            assert(Gia_ObjRepr(p.pAig, i) > 0, "Gia_ObjRepr(p.pAig, i) > 0");
-        }
-        pTable[Key] = i;
-    }
-/*
-    Vec_IntForEachEntry( vRefined, i, k )
-    {
-        if ( Gia_ObjIsHead( p->pAig, i ) )
-            Gia_Sim2ClassRefineOne( p, i );
-    }
-*/
-    // inlining of macro ABC_FREE
-    pTable = nil;
-}
+
 /**Function*************************************************************
 
   Synopsis    [Refines equivalences after one simulation round.]
@@ -347,34 +245,6 @@ func Gia_Sim2ProcessRefined(p *Gia_Sim2_t, vRefined *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Sim2InfoRefineEquivs(p *Gia_Sim2_t) {
-    var vRefined *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var pSim *uint32;
-    var i, Count int32;
-    // process constant candidates
-    vRefined = Vec_IntAlloc( 100 );
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.pAig.nObjs) && ((pObj) = Gia_ManObj(p.pAig, i)); i++  {
-        if !Gia_ObjIsConst(p.pAig, i) {
-            continue; }
-        pSim = Gia_Sim2Data( p, i );
-//Extra_PrintBinary( stdout, pSim, 32 * p->nWords );  printf( "\n" );
-        if !(Gia_Sim2CompareZero( pSim, p.nWords, Gia_ObjPhase(pObj) ) != 0) {
-            Vec_IntPush( vRefined, i );
-            Count++;
-        }
-    }
-    Gia_Sim2ProcessRefined( p, vRefined );
-    Vec_IntFree( vRefined );
-    // process other classes
-    // inlining of macro Gia_ManForEachClass
-    for  i = 1; i < Gia_ManObjNum(p.pAig); i++  { if !Gia_ObjIsHead(p.pAig, i) {} else {
-        Count += Gia_Sim2ClassRefineOne( p, i ); }
-    }
-//    if ( Count )
-//        printf( "Refined %d times.\n", Count );
-}
 
 /**Function*************************************************************
 
