@@ -28,4 +28,5 @@ length or a nonfailing trace returns failure. Initial register state is zeroed
 when expanding omitted unused primary inputs, matching the source algorithm.
 
 Race tests and vet pass for selected command core, external adapters and plugin
-files. cmdAuto.go remains unfinished; no full-package completion is claimed.
+files. The full package now passes race tests and vet; AUTO_REVIEW.md records
+the exact MF evaluator integration dependency.

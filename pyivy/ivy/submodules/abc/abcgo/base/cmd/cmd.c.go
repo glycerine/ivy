@@ -82,14 +82,25 @@ func streams(f *Abc_Frame_t) *commandStreams {
 	return state
 }
 func Cmd_End(f *Abc_Frame_t) {
+	if _, enabled := f.LookupFlag("history_file"); enabled {
+		Cmd_HistoryWrite(f, int32(^uint32(0)>>1))
+	}
 	if state, ok := f.TakeResource(streamResourceName).(*commandStreams); ok {
 		if err := state.Close(); err != nil {
 			fmt.Fprintln(f.Err, err)
 		}
 	}
-	for _, entry := range basicCommands {
-		f.RemoveCommand(entry.name)
+	for _, entry := range f.CommandList() {
+		f.RemoveCommand(entry.Name)
 	}
+	for name := range f.AliasList() {
+		f.RemoveAlias(name)
+	}
+	for name := range f.FlagList() {
+		f.DeleteFlag(name)
+	}
+	f.SetHistory(nil)
+	f.TakeResource("cmd:plugin-binaries")
 	if _, ours := f.Dispatcher.(Dispatcher); ours {
 		f.SetDispatcher(nil)
 	}

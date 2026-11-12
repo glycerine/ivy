@@ -3,6 +3,7 @@ package cmd
 import (
 	"bufio"
 	"fmt"
+	"github.com/glycerine/abcgo/aig/gia/satcost"
 	"github.com/glycerine/abcgo/aig/ioa"
 	"github.com/glycerine/abcgo/sat/satoko"
 	"io"
@@ -15,14 +16,14 @@ import (
 )
 
 // AutoEvaluator returns source-compatible MF-mapped-CNF SAT conflict cost.
-// The graph/SAT integration installs the evaluator; the command package owns no
-// substitute CNF mapper, since changing CNF changes the optimization objective.
+// The default is the audited native MF8/Satoko adapter. Injected evaluators
+// remain supported for controlled comparisons of CNF and solver implementations.
 type AutoEvaluator func(*ioa.Model, satoko.Options) (int64, error)
 
-var autoBackend struct {
+var autoBackend = struct {
 	sync.RWMutex
 	evaluate AutoEvaluator
-}
+}{evaluate: satcost.EvaluateModel}
 
 func SetAutoEvaluator(evaluate AutoEvaluator) {
 	autoBackend.Lock()

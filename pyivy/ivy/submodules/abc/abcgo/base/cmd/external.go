@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	abcmain "github.com/glycerine/abcgo/base/main"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -153,4 +154,9 @@ func init() {
 		Cmd_CommandAdd(f, "Various", "mvsis", CmdCommandMvsis, 1)
 		Cmd_CommandAdd(f, "Various", "capo", CmdCommandCapo, 0)
 	})
+}
+
+// Gia_ManGnuplotShow uses the original global-frame entry point.
+func Gia_ManGnuplotShow(filename string) {
+	Cmd_CommandExecuteGnuplot(abcmain.Abc_FrameGetGlobalFrame(), filename)
 }

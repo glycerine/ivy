@@ -89,3 +89,31 @@ func TestAutoRunSelectsFirstMinimum(t *testing.T) {
 		t.Fatal(best, out.String())
 	}
 }
+
+func TestAutoCommandDefaultMFBackend(t *testing.T) {
+	f, out := testFrame(t)
+	directory := t.TempDir()
+	config, list, aig := filepath.Join(directory, "config"), filepath.Join(directory, "list"), filepath.Join(directory, "benchmark.aig")
+	if err := os.WriteFile(config, []byte("C100\nS0.8 S0.9\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	// A real mapped cone, with an AND and a complemented output. This runs the
+	// production MF coarsening/cut/CNF backend and native Satoko in the command.
+	model := &ioa.Model{MaxVar: 3, Inputs: []uint32{2, 4}, ANDs: []ioa.And{{Literal: 6, Left: 4, Right: 2}}, Outputs: []uint32{7}}
+	if err := ioa.Ioa_WriteAiger(model, aig, 0, 0); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(list, []byte(aig+"\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if currentAutoEvaluator() == nil {
+		t.Fatal("default MF backend missing")
+	}
+	command := "autotuner -N 3 -C " + shellQuote(config) + " -F " + shellQuote(list)
+	if status := Cmd_CommandExecute(f, command); status != 0 {
+		t.Fatal(status, out.String())
+	}
+	if !strings.Contains(out.String(), "The best settings are:") || strings.Count(out.String(), "Evaluating settings:") != 2 {
+		t.Fatal(out.String())
+	}
+}

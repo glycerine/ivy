@@ -109,3 +109,18 @@ func TestAliasPrefixLoopIsBounded(t *testing.T) {
 		t.Fatal("prefix recursion succeeded", out.String())
 	}
 }
+func TestEndClearsSharedCommandState(t *testing.T) {
+	f, _ := testFrame(t)
+	f.RegisterCommand(abcmain.Command{Name: "extension", Handler: func(*abcmain.Frame, []string) int32 { return 0 }})
+	f.RegisterAlias("alias", []string{"echo"})
+	f.SetFlag("custom", "value")
+	f.AppendHistory("custom command")
+	Cmd_End(f)
+	if len(f.CommandList()) != 0 || len(f.AliasList()) != 0 || len(f.FlagList()) != 0 || len(f.History()) != 0 {
+		t.Fatal("command teardown leaked shared state")
+	}
+	Cmd_Init(f)
+	if _, ok := f.LookupCommand("echo"); !ok {
+		t.Fatal("cannot initialize after teardown")
+	}
+}

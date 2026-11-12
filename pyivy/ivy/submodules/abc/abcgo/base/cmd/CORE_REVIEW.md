@@ -2,8 +2,9 @@
 
 Scope: parser.go, cmd.h.go, cmdInt.go, cmdFlag.go, cmdAlias.go,
 cmdApi.go, cmdHist.go, cmdUtils.go, cmd.c.go, cmdLoad.go, cmdStarter.go,
-parser_test.go and core_test.go. cmdAuto.go and cmdPlugin.go remain untranslated;
-the full package is not yet importable.
+parser_test.go and core_test.go. This is the initial core-scope review; subsequent
+AUTO_REVIEW.md, PLUGIN_REVIEW.md, EXTERNAL_REVIEW.md and FILES_REVIEW.md cover
+the remaining files. The full package now builds and passes race tests and vet.
 
 ## Readability and idiomatic Go pass
 
@@ -26,6 +27,10 @@ semicolons, source nesting cleanup, alias cycles, autoexec recursion prevention,
 history logging and failed child completion. The #CEC diagnostic reads real
 Frame status instead of the source's hardcoded successful result.
 
-The selected scope passes race tests and vet. Remaining risks are the incomplete
-Auto/Plugin modules and external synthesis-tool command adapters, which are not
-claimed as completed functionality by this review.
+The selected scope passes race tests and vet. Later module reviews document
+the exact MF evaluator and Frame data-bridge integration dependencies.
+
+A subsequent lifecycle audit found Cmd_End removed only basic commands. It now
+matches the source teardown by clearing all shared commands/aliases/flags/history
+and plugin metadata, after flushing explicitly configured persistent history.
+A regression verifies extension state disappears and Cmd_Init can restart it.

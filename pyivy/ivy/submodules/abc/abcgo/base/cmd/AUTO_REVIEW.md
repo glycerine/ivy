@@ -25,15 +25,19 @@ and selection when the minimum cost equals MaxInt64.
 
 ## Exact SAT-cost integration boundary
 
-`AutoEvaluator func(*ioa.Model, satoko.Options) (int64,error)` is installed with
-`SetAutoEvaluator` or frame resource `cmd:auto-evaluator`. The source objective
-is conflict count from MF mapped CNF with 8-input cuts and one OR-of-outputs
-clause. A gate-CNF substitute changes that objective and is deliberately not
-provided. GIA owner is implementing `aig/gia/satcost.EvaluateModel` with this
-exact signature. Until installed, invocation returns an explicit missing-service
-error. The real parser, search, concurrency and selection algorithms are tested;
-the actual MF evaluator is a remaining integration dependency, not claimed done.
+`AutoEvaluator func(*ioa.Model, satoko.Options) (int64,error)` defaults to
+`aig/gia/satcost.EvaluateModel`. The actual MF8 pipeline preserves source cut
+mapping, coarsening and clause order, with native Satoko solving. GIA/Satoko
+owners report 34 complete CNF source-oracle comparisons and 100 status/conflict
+cost comparisons; broader restart/reduction/incremental traces remain outside
+that audit coverage (see satcost/REVIEW.md). No claim of universal trace identity
+is made. Explicit alternatives remain injectable through `SetAutoEvaluator` or
+frame resource `cmd:auto-evaluator`; a nil evaluator still errors.
 
-Full `go test -race ./base/cmd` and `go vet ./base/cmd` pass. Windows-only directory
-maintenance commands from cmd.c are outside this Linux command set and remain
-to be ported if the Windows API group is required.
+A command-level regression writes a real AIGER AND cone, invokes `autotuner`
+through the production dispatcher with two choices and concurrent workers, and
+checks completed evaluation/selection using the actual default backend. Both
+separate review passes confirmed no duplicate solver/CNF implementation and
+unchanged injection semantics.
+
+Full `go test -race ./base/cmd` and `go vet ./base/cmd` pass. The optional Windows directory maintenance API group is ported separately in files.go, retaining Windows-only registration.
