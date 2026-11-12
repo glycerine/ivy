@@ -29,28 +29,24 @@ func checkedDraft(t *testing.T, source string, opts Options) Result {
 	return r
 }
 
-func TestPackageAndMacroFunctions(t *testing.T) {
+func TestPackageAndMacroComments(t *testing.T) {
 	source := "// keep this comment\n#define twice(x) ((x) + (x))\n#define choose(x) ((x)>0 ? /* yes */ (x) : /* no */ -(x))\n"
 	r, err := AnalyzeWithOptions("fixture.h", source, Options{Package: "example"})
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, want := range []string{"package example\n", "func twice(x int) int { //TODO: argument types were guessed, go compiler should tell us the correction.\nreturn (x) + (x)\n}", "func choose(x int) int { //TODO: argument types were guessed, go compiler should tell us the correction.\nreturn (x)>0 ? /* yes */ (x) : /* no */ -(x)\n}"} {
+	for _, want := range []string{"package example\n", "// keep this comment", "// #define twice(x)", "// #define choose(x)"} {
 		if !strings.Contains(r.Draft, want) {
 			t.Fatalf("missing %q in %s", want, r.Draft)
 		}
+	}
+	if strings.Contains(r.Draft, "func ") {
+		t.Fatal(r.Draft)
 	}
 	for _, name := range []string{"for", "_", "bad-name"} {
 		if _, err := AnalyzeWithOptions("x", "", Options{Package: name}); err == nil {
 			t.Fatalf("accepted %q", name)
 		}
-	}
-	typed, err := AnalyzeWithOptions("x", "#define twice(x) ((x)+(x))", Options{Package: "p", Macros: map[string]MacroTypes{"twice": {[]string{"uint32"}, "uint32"}}})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !strings.Contains(typed.Draft, "func twice(x uint32) uint32 {\nreturn (x)+(x)\n}") {
-		t.Fatal(typed.Draft)
 	}
 }
 
@@ -104,56 +100,32 @@ func TestEmbeddedTernaryRetained(t *testing.T) {
 	}
 }
 
-func TestIteratorMacroMechanicalFunction(t *testing.T) {
+func TestIteratorMacroHeaderExpansion(t *testing.T) {
 	body := "for (i = 0; (i < vec_uint_size(vec)) && (((entry) = vec_uint_at(vec, i)), 1); i++)"
-	source := "#define vec_uint_foreach(vec, entry, i) " + body + "\n"
+	source := "#define vec_uint_foreach(vec, entry, i) " + body + "\nvoid walk(vec_uint_t *vec) { int i, entry; vec_uint_foreach(vec, entry, i) visit(entry); }\n"
 	r, err := Analyze("vec/vec_uint.h", source)
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := "func vec_uint_foreach(vec int, entry int, i int) int { //TODO: argument types were guessed, go compiler should tell us the correction.\n" + "for " + strings.TrimSuffix(strings.TrimPrefix(body, "for ("), ")") + " {}\nreturn 0 //TODO: statement-style macro; review placeholder result.\n}"
-	if !strings.Contains(r.Draft, want) {
-		t.Fatal(r.Draft)
+	for _, want := range []string{"for i = 0;", "i++ { visit(entry); }"} {
+		if !strings.Contains(r.Draft, want) {
+			t.Fatal(r.Draft)
+		}
 	}
-	if !strings.Contains(r.Draft, "i++ {}") {
-		t.Fatal("missing empty loop body")
+	if strings.Contains(r.Draft, "func vec_uint_foreach(") || strings.Contains(r.Draft, "i++ {}") {
+		t.Fatal(r.Draft)
 	}
 }
 
-func TestMacroReplacementTokensPreserved(t *testing.T) {
+func TestMacroDefinitionCommentsPreserved(t *testing.T) {
 	for _, body := range []string{"do { /* keep */ x++; } while (0)", "x ## suffix", "#x", "call(x)", "", "x ? yes() : no()"} {
-		r, err := Analyze("macros/file.h", "#define M(x) "+body+"\n")
+		source := "#define M(x) " + body
+		r, err := Analyze("macros/file.h", source+"\n")
 		if err != nil {
 			t.Fatal(err)
 		}
-		if !strings.Contains(r.Draft, "func M(x int) int {") {
+		if !strings.Contains(r.Draft, "// "+source) || strings.Contains(r.Draft, "func M(") || strings.Contains(r.Draft, "argument types were guessed") {
 			t.Fatal(r.Draft)
 		}
-		if body == "" || strings.HasPrefix(body, "do ") {
-			if !strings.Contains(r.Draft, body+"\nreturn 0") {
-				t.Fatal(r.Draft)
-			}
-		} else if !strings.Contains(r.Draft, "return "+body) {
-			t.Fatal(r.Draft)
-		}
-	}
-}
-
-func TestMacroKnownOrAbsentArgumentsDoNotClaimGuessedTypes(t *testing.T) {
-	for _, source := range []string{"#define EMPTY()", "#define ZERO() 0"} {
-		r, err := Analyze("p/file.h", source)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if strings.Contains(r.Draft, "argument types were guessed") {
-			t.Fatal(r.Draft)
-		}
-	}
-	r, err := AnalyzeWithOptions("p/file.h", "#define ID(x) x", Options{Macros: map[string]MacroTypes{"ID": {Parameters: []string{"uint32"}}}})
-	if err != nil {
-		t.Fatal(err)
-	}
-	if strings.Contains(r.Draft, "argument types were guessed") {
-		t.Fatal(r.Draft)
 	}
 }

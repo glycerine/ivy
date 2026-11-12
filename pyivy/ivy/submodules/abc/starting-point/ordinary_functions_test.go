@@ -96,7 +96,7 @@ func TestMacroInsideOrdinaryFunction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(r.Draft, "func f() {") || !strings.Contains(r.Draft, "func STEP(x int)") {
+	if !strings.Contains(r.Draft, "func f() {") || strings.Contains(r.Draft, "func STEP(") || !strings.Contains(r.Draft, "use(1);") {
 		t.Fatal(r.Draft)
 	}
 }

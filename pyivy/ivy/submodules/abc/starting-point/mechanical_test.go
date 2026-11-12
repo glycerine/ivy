@@ -146,17 +146,17 @@ func main() { p:=new(item);p.value=9;clear(p);fmt.Println(p.value) }
 	}
 }
 
-func TestTypedExpressionMacroAndFields(t *testing.T) {
+func TestExpandedExpressionMacroAndFields(t *testing.T) {
 	r, err := AnalyzeWithOptions("x.c", `#define ADD(a,b) ((a)+(b))
 typedef struct item item;
 struct item { int data[2]; int x,y; };
 int main(void) { item *p; p=ABC_CALLOC(item,1); p->data[1]=ADD(2,3); printf("%d\n",p->data[1]); return 0; }
-`, Options{Package: "main", Macros: map[string]MacroTypes{"ADD": {Parameters: []string{"int32", "int32"}, Result: "int32"}}})
+`, Options{Package: "main"})
 	if err != nil {
 		t.Fatal(err)
 	}
 	output, _ := runLibraryProgram(t, r.Draft)
-	if output != "5\n" || !strings.Contains(r.Draft, "return (a)+(b)") {
+	if output != "5\n" || !strings.Contains(r.Draft, "((2)+(3))") {
 		t.Fatal(output, r.Draft)
 	}
 }

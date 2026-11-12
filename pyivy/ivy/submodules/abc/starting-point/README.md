@@ -56,12 +56,16 @@ the destination. Existing files are never overwritten.
 ## Inline function-like macros
 
 ```sh
-starting-point -inlinemacros -out /tmp/abc-inline src
+starting-point -out /tmp/abc-inline src
 ```
 
-`-inlinemacros` defaults to false. When enabled, function-like macro invocations
-are expanded before the ordinary C/C++-to-Go passes instead of generating macro
-functions. Original definitions remain as comments. For example,
+Function-like macro invocations always expand before the ordinary C/C++-to-Go
+passes. There is no macro-function generation mode or `-inlinemacros` flag.
+This lets a macro supply just a loop header while the caller supplies its body.
+Original definitions remain as comments. Each expanded code line is preceded
+by a standalone `// inlining of macro NAME` comment (one per distinct macro
+name on that line, including nested expansions). Expression annotations go above
+the containing line so they do not split returns or argument lists. For example,
 `#define ADD(a,b) ((a)+(b))` makes `ADD(2,3)` become `((2)+(3))` at its use site.
 Replacement parentheses and repeated evaluation are preserved as written in C;
 no guessed parameter types, temporary functions, or closures are introduced.
@@ -84,8 +88,9 @@ remain visible for repair, with `macro-inline-review` issues in JSON metadata.
 This is a bounded draft expander, not a complete C preprocessor. Missing quoted
 includes are also reported; their macro definitions cannot be inferred.
 
-Library callers set `Options{InlineMacros: true}` and can supply `IncludePaths`
-for additional local header roots. Inline mode may read those included headers.
+Library entry points `Analyze` and `AnalyzeWithOptions` expand macros by
+default and may read included local headers. Callers can supply `IncludePaths`
+for additional local header roots.
 Results record `InlineMacros: true`; source hashes, function originals, and
 source diagnostics retain original input coordinates. Expansion is limited to
 64 nesting levels, 100,000 calls, 1 MiB per replacement, and 8 MiB of accumulated
@@ -146,7 +151,7 @@ experiment and replay script remain separate from generated drafts.
 
 See [PLAN.md](PLAN.md) for transformation rules, decisions, measurements, known
 limitations, and progress. Current transformations include source-preserving
-lexing, macro function scaffolds, typedef/struct pairs, signature conversion,
+lexing, macro expansion, typedef/struct pairs, signature conversion,
 if/for braces, while-to-for conversion, ternary lowering, header guard removal,
 and commenting out includes and standalone namespace markers. Full C++ parsing
 and preprocessor evaluation are not implemented.
@@ -346,12 +351,18 @@ floating literals remain untyped. Comments and original numeric spelling are
 preserved. Long-double literals and nonliteral expressions remain for review.
 
 
-Function macros now default to an int result and return expression values after
-removing whole-expression parentheses. Explicit MacroTypes.Result overrides the
-placeholder. Statement-style macros append a marked return 0 for downstream
-result/control-flow repair. The original macro remains in a comment.
+Function-like macros expand at use sites, retaining their replacement parentheses
+and caller-owned statement bodies. They never become Go functions with guessed
+argument or result types. Original definitions remain in comments; expanded code
+is annotated with the macro name.
 
 Empty init/post for clauses simplify to condition-only loops (or `for {}` when
 all clauses are empty). Object-like quoted string defines become Go constants;
 adjacent literals use `+`. Literal spelling and comments are preserved, so C-only
 escape conventions can still need downstream repair.
+
+Simple indexed assignments such as `dst = src[i++];` become
+`dst = src[i]; i++;`, with an equivalent rule for `i--`. This applies after
+control-flow bracing and macro expansion. Calls, control headers, larger
+expressions, and assignments that reuse the updated index elsewhere are retained
+for evaluation-order review.

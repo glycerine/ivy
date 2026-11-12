@@ -148,7 +148,7 @@ func TestQualifiedSignatureKeepsBodyBraces(t *testing.T) {
 }
 
 func TestMacroIfBraces(t *testing.T) {
-	r, err := Analyze("p/x.h", "#define CHECK(x) if (x) act(); else other();\n")
+	r, err := Analyze("p/x.h", "#define CHECK(x) if (x) act(); else other();\nvoid check(int x) { CHECK(x) }\n")
 	if err != nil {
 		t.Fatal(err)
 	}

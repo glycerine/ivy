@@ -28,6 +28,7 @@ func TestFloatCasts(t *testing.T) {
 func TestFloatCastsAcrossDraft(t *testing.T) {
 	r, err := Analyze("x.c", `#define SCALE(x) ((float)(x)/(double)2)
 double scale(double x) { return (double)(float)x; }
+double from_macro(double x) { return SCALE(x); }
 double value = (double)3;
 #if CHOICE
 double untouched = (double)4;

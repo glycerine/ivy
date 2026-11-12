@@ -23,7 +23,6 @@ func run(args []string) error {
 	flags := flag.NewFlagSet("starting-point", flag.ContinueOnError)
 	cfg := flags.String("cfg", "./starting.cfg", "platform choices file (NAME = INTEGER per line)")
 	out := flags.String("out", "", "new output directory (must not exist)")
-	inlineMacros := flags.Bool("inlinemacros", false, "inline function-like macros at call sites instead of generating functions")
 	pre := flags.Bool("pre", false, "list preserved preprocessor choices requiring review")
 	pkg := flags.String("package", "", "Go package override (default: first source file directory name, shared by all outputs)")
 	if err := flags.Parse(args); err != nil {
@@ -57,7 +56,7 @@ func run(args []string) error {
 					return err
 				}
 			}
-			report, err := startingpoint.TranslateTree(source, destination, startingpoint.Options{Package: *pkg, Defines: defines, InlineMacros: *inlineMacros})
+			report, err := startingpoint.TranslateTree(source, destination, startingpoint.Options{Package: *pkg, Defines: defines})
 			if err != nil {
 				return err
 			}
@@ -78,7 +77,7 @@ func run(args []string) error {
 		}
 	}
 	if *out == "" || flags.NArg() == 0 {
-		return fmt.Errorf("usage: starting-point [-inlinemacros] [-package NAME] [-out NEW_DIRECTORY] SOURCE_DIRECTORY; or starting-point -out NEW_DIRECTORY source.h ...")
+		return fmt.Errorf("usage: starting-point [-package NAME] [-out NEW_DIRECTORY] SOURCE_DIRECTORY; or starting-point -out NEW_DIRECTORY source.h ...")
 	}
 	packageName, err := startingpoint.ResolvePackage(flags.Arg(0), *pkg)
 	if err != nil {
@@ -114,7 +113,7 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
-		r, err := startingpoint.AnalyzeWithOptions(path, string(s), startingpoint.Options{Package: packageName, Defines: defines, TypeNames: indexed, InlineMacros: *inlineMacros})
+		r, err := startingpoint.AnalyzeWithOptions(path, string(s), startingpoint.Options{Package: packageName, Defines: defines, TypeNames: indexed})
 		if err != nil {
 			return err
 		}
@@ -143,7 +142,7 @@ func run(args []string) error {
 		Package    string
 		DurationNS int64
 		Files      []startingpoint.Result
-	}{"prototype-62", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
+	}{"prototype-64", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
 	if err != nil {
 		return err
 	}

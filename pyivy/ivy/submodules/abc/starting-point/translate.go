@@ -180,7 +180,7 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 		if t.Kind != "directive" {
 			continue
 		}
-		name, draft, message, ok := macroDraft(t, opts)
+		name, draft, message, ok := macroDraft(t)
 		if !ok {
 			continue
 		}

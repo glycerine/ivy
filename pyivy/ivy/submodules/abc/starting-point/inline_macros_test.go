@@ -12,7 +12,7 @@ import (
 
 func TestInlineMacrosBasic(t *testing.T) {
 	source := "#define ADD(a,b) ((a)+(b))\nint sum(void) { return ADD(2,3); }\n"
-	r, err := AnalyzeWithOptions("x.c", source, Options{InlineMacros: true})
+	r, err := AnalyzeWithOptions("x.c", source, Options{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -20,14 +20,14 @@ func TestInlineMacrosBasic(t *testing.T) {
 		t.Fatal(r.Draft)
 	}
 	ordinary, err := Analyze("x.c", source)
-	if err != nil || !strings.Contains(ordinary.Draft, "func ADD(") {
+	if err != nil || ordinary.Draft != r.Draft {
 		t.Fatal(err, ordinary.Draft)
 	}
 }
 
 func inlineSource(t *testing.T, source string) (string, []Issue) {
 	t.Helper()
-	p := &macroInliner{opts: Options{InlineMacros: true}, macros: map[string]inlineMacro{}, visiting: map[string]bool{}, once: map[string]bool{}}
+	p := &macroInliner{opts: Options{}, macros: map[string]inlineMacro{}, visiting: map[string]bool{}, once: map[string]bool{}}
 	out, _, err := p.process("x.c", source, true)
 	if err != nil {
 		t.Fatal(err)
@@ -120,7 +120,7 @@ int f(void) { return F(4); }
 		defines map[string]int64
 		want    string
 	}{{nil, "return F(4);"}, {map[string]int64{"FLAG": 1}, "return ((4)+2);"}, {map[string]int64{"FLAG": 0}, "return ((4)+3);"}} {
-		r, err := AnalyzeWithOptions("x.c", source, Options{InlineMacros: true, Defines: tc.defines})
+		r, err := AnalyzeWithOptions("x.c", source, Options{Defines: tc.defines})
 		if err != nil || !strings.Contains(r.Draft, tc.want) {
 			t.Fatal(err, r.Draft)
 		}
@@ -156,7 +156,7 @@ int f(int x) {
 opaque bytes
 #endif
 `
-	r, err := AnalyzeWithOptions("x.c", source, Options{InlineMacros: true})
+	r, err := AnalyzeWithOptions("x.c", source, Options{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -183,7 +183,7 @@ func TestInlineMacroRuntime(t *testing.T) {
 #define REPEAT(i,n) for (i=0;i<n;i++)
 #define INC(x) do { x++; } while (0)
 int main(void) { int i=0, n=0; REPEAT(i,3) INC(n); printf("%d",ADD(n,4)); return 0; }
-`, Options{InlineMacros: true, Package: "main"})
+`, Options{Package: "main"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -209,12 +209,12 @@ func TestInlineMacroIncludes(t *testing.T) {
 	write("include/cycle.h", "#pragma once\n#include \"helper.h\"\n#define WRAP(x) PLUS(x)\n")
 	source := "#include \"include/helper.h\"\nint f(void) { return WRAP(8); }\n"
 	write("sub/input.c", source)
-	r, err := AnalyzeWithOptions(filepath.Join(root, "sub/input.c"), source, Options{InlineMacros: true, IncludePaths: []string{root}})
+	r, err := AnalyzeWithOptions(filepath.Join(root, "sub/input.c"), source, Options{IncludePaths: []string{root}})
 	if err != nil || !strings.Contains(r.Draft, "return ((8)+1);") {
 		t.Fatal(err, r.Draft)
 	}
 	out := filepath.Join(root, "out")
-	report, err := TranslateTree(root, out, Options{InlineMacros: true})
+	report, err := TranslateTree(root, out, Options{})
 	if err != nil || len(report.Files) != 3 {
 		t.Fatal(err, report)
 	}
@@ -226,7 +226,7 @@ func TestInlineMacroIncludes(t *testing.T) {
 
 func TestInlineMacroRetainedIncludeAndCoordinates(t *testing.T) {
 	source := "#include \"missing-inline-header.h\"\n#define BIG(x) ((x)+(x)+(x))\nint f() { return BIG(3); }\n#define BAD(x,y) x+y\nint g() { return BAD(1); }\n"
-	r, err := AnalyzeWithOptions("x.c", source, Options{InlineMacros: true})
+	r, err := AnalyzeWithOptions("x.c", source, Options{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -243,7 +243,7 @@ func TestInlineMacroRetainedIncludeAndCoordinates(t *testing.T) {
 		t.Fatal("missing arity diagnostic")
 	}
 	bad := strings.Replace(source, "return BAD(1);", "return BAD(1); ]", 1)
-	_, err = AnalyzeWithOptions("x.c", bad, Options{InlineMacros: true})
+	_, err = AnalyzeWithOptions("x.c", bad, Options{})
 	var diagnostic *SourceError
 	if !errors.As(err, &diagnostic) || diagnostic.Location.ByteOffset != strings.Index(bad, "]") {
 		t.Fatal(err)
@@ -269,7 +269,7 @@ func TestInlineMacroExpansionLimits(t *testing.T) {
 
 func TestInlineMacroUnknownConditionalCallsUntouched(t *testing.T) {
 	source := "#define ID(x) x\n#if UNKNOWN\nint a() { return ID(1); }\n#endif\nint b() { return ID(2); }\n"
-	r, err := AnalyzeWithOptions("x.c", source, Options{InlineMacros: true})
+	r, err := AnalyzeWithOptions("x.c", source, Options{})
 	if err != nil || !strings.Contains(r.Draft, "return ID(1);") || !strings.Contains(r.Draft, "return 2;") {
 		t.Fatal(err, r.Draft)
 	}
@@ -282,7 +282,7 @@ func TestInlineMacroHeaderGuardOnce(t *testing.T) {
 		t.Fatal(err)
 	}
 	source := "#include \"once.h\"\n#undef F\n#include \"once.h\"\nint f() { return F(1); }\n"
-	r, err := AnalyzeWithOptions(filepath.Join(root, "x.c"), source, Options{InlineMacros: true})
+	r, err := AnalyzeWithOptions(filepath.Join(root, "x.c"), source, Options{})
 	if err != nil || !strings.Contains(r.Draft, "return F(1);") {
 		t.Fatal(err, r.Draft)
 	}
@@ -313,7 +313,7 @@ func TestInlineMacroRealReoConsumer(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	r, err := AnalyzeWithOptions(path, string(source), Options{InlineMacros: true, IncludePaths: []string{"../src"}})
+	r, err := AnalyzeWithOptions(path, string(source), Options{IncludePaths: []string{"../src"}})
 	if err != nil {
 		t.Fatal(err)
 	}

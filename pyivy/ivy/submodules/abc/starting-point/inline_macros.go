@@ -21,6 +21,7 @@ type macroInliner struct {
 	issues        []Issue
 	steps         int
 	expandedBytes int
+	annotate      bool
 }
 
 const macroExpansionLimit = 1 << 20
@@ -43,7 +44,7 @@ func macroOriginalOffset(offset int, edits []Edit) int {
 }
 
 func analyzeInlineMacros(path, source string, opts Options) (Result, error) {
-	p := &macroInliner{opts: opts, macros: map[string]inlineMacro{}, visiting: map[string]bool{}, once: map[string]bool{}}
+	p := &macroInliner{annotate: true, opts: opts, macros: map[string]inlineMacro{}, visiting: map[string]bool{}, once: map[string]bool{}}
 	expanded, edits, err := p.process(path, source, true)
 	if err != nil {
 		return Result{}, err
@@ -76,6 +77,16 @@ func analyzeInlineMacros(path, source string, opts Options) (Result, error) {
 		r.Conditionals[i].Location = SourceLocation{Line: strings.Count(prefix, "\n") + 1, Column: off - strings.LastIndex(prefix, "\n"), ByteOffset: off}
 	}
 	r.Issues = append(r.Issues, p.issues...)
+	r.Draft, err = macroInliningComments(r.Draft)
+	if err != nil {
+		return r, err
+	}
+	for i := range r.Functions {
+		r.Functions[i].Draft, err = macroInliningComments(r.Functions[i].Draft)
+		if err != nil {
+			return r, err
+		}
+	}
 	return r, nil
 }
 
@@ -376,6 +387,9 @@ func (p *macroInliner) expand(source string, disabled map[string]bool, depth int
 				value += "\n"
 			}
 			break
+		}
+		if p.annotate {
+			value = "/*__starting_point_inline_macro:" + t.Text + "__*/" + value
 		}
 		p.expandedBytes += len(value)
 		edits = append(edits, Edit{t.Start, ts[close].End, value})

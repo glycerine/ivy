@@ -102,9 +102,7 @@ func TranslateTree(source, destination string, opts Options) (TreeReport, error)
 		indexed[name] = true
 	}
 	opts.TypeNames = indexed
-	if opts.InlineMacros {
-		opts.IncludePaths = append(append([]string{}, opts.IncludePaths...), r.Source, filepath.Join(r.Source, "src"))
-	}
+	opts.IncludePaths = append(append([]string{}, opts.IncludePaths...), r.Source, filepath.Join(r.Source, "src"))
 	rels := make([]string, len(files))
 	for i, path := range files {
 		rels[i], err = filepath.Rel(r.Source, path)

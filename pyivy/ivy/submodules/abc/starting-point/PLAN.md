@@ -1970,3 +1970,52 @@ A smoke translation of all 10 REO inputs into
 fallbacks (99 converted standard-library sites, 78 retained library review sites).
 No experiment tests were run and existing out/ was not modified.
 Installed prototype-62; regenerate with -inlinemacros to use the new mode.
+
+### Prototype 63: unconditional expansion and visible macro annotations
+
+Supersedes prototype 62's opt-in policy: macro expansion is now unconditional in
+Analyze, AnalyzeWithOptions, tree translation, and CLI file batches. Removed the
+-inlinemacros flag and Options.InlineMacros switch, along with the obsolete
+macro-to-function generator and MacroTypes signature overrides. Function-like
+macros can contribute only part of a statement (notably a for header), so their
+caller's body must remain attached after expansion. Unsupported expansions
+remain explicit review sites; they never fall back to invented Go functions.
+
+Add standalone `// inlining of macro NAME` comments above expanded code lines.
+Block markers carry names through the transformation passes, then move above
+the containing line to avoid splitting return expressions or argument lists.
+Nested macro names are included; repeated names on one line are deduplicated.
+Original definitions and Function.Original remain unchanged, and function draft
+metadata includes the final annotations. Retained/unexpanded calls receive no
+misleading inlining annotation.
+
+Validation: observed the default-mode regression red before making the policy
+change. Replaced obsolete macro-function tests with definition-comment and
+call-site expansion checks. Added default CLI flat/tree checks, removed-flag
+rejection, named/nested annotations, expression safety and a compiled loop-header
+macro test whose caller-owned body contains break. Existing macro and library
+coverage remains active. Library and CLI suites pass; experiments are excluded.
+Default-mode translation of the 10 REO files to
+/tmp/starting-point-default-inline-v63 produced zero source-preserving fallbacks
+(99 converted library sites, 78 retained library review sites). Existing out/
+was not changed. README documents the new unconditional policy.
+Installed prototype-63. Regenerate normally; no macro flag is needed or accepted.
+
+### Prototype 64: postfix indices in simple assignments
+
+Observed a minimal regression fail for the aigDoms.c idiom before adding a
+mechanical pass: `dst = src[i++];` becomes `dst = src[i]; i++;` (and similarly
+for postfix decrement). Simple member/index paths are accepted; preserve
+comments and place the update immediately after the assignment. Bracing happens
+first, so the update stays inside any single-statement if/loop body. Macro
+expansions receive the same conversion and function metadata matches the draft.
+
+Do not hoist from calls, returns, compound/lazy expressions, control-header
+clauses, or assignments that mention the incremented name elsewhere. These
+require additional evaluation-order or representation decisions.
+
+Validation: red-to-green minimal case, actual aigDoms.c i++/k++ assignments,
+function metadata, label and comment handling, decrement, conservative boundary
+cases and a compiled runtime test combining arrays, macro expansion and an if
+body. Library and CLI tests run without experiments. Existing out/ is untouched.
+Library and CLI suites pass. Installed prototype-64; regenerate output to apply.
