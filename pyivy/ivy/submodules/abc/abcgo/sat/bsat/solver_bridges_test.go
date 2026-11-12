@@ -94,3 +94,28 @@ func TestPublicVariableActivityRepresentations(t *testing.T) {
 		t.Fatal("extended activity")
 	}
 }
+
+func TestPublicPropagationAndUnitQueue(t *testing.T) {
+	s := NewSolver()
+	s.AddClause(0, 2)
+	s.AddClause(1)
+	if !s.NeedsPropagation() || !s.PropagateUnits() || s.NeedsPropagation() {
+		t.Fatal("propagation state")
+	}
+	if s.PropagationCount() == 0 || s.ConflictCount() != 0 || !s.Compress() {
+		t.Fatal("propagation counters")
+	}
+	veci_push(&s.unit_lits, 2)
+	units := s.TakeUnitLiterals()
+	units[0] = 999
+	if len(s.TakeUnitLiterals()) != 0 {
+		t.Fatal("unit queue not consumed")
+	}
+	s = NewSolver()
+	s.AddClause(0, 2)
+	s.AddClause(1)
+	s.AddClause(3)
+	if s.PropagateUnits() || s.Solve() != Unsatisfiable || s.Compress() {
+		t.Fatal("root conflict forgotten")
+	}
+}

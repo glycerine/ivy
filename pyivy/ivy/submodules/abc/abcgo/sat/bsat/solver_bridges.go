@@ -96,3 +96,34 @@ func (s *sat_solver_t) VariableActivity(variable int32) float64 {
 		panic("invalid activity representation")
 	}
 }
+
+func (s *sat_solver_t) NeedsPropagation() bool  { return s.qhead != s.qtail }
+func (s *sat_solver_t) ConflictCount() int64    { return s.stats.conflicts }
+func (s *sat_solver_t) PropagationCount() int64 { return s.stats.propagations }
+
+// TakeUnitLiterals transfers a copy of newly learned units and clears the queue.
+func (s *sat_solver_t) TakeUnitLiterals() []Literal {
+	result := append([]Literal(nil), veci_begin(&s.unit_lits)...)
+	veci_resize(&s.unit_lits, 0)
+	return result
+}
+
+// PropagateUnits performs level-zero propagation. False records a permanent
+// conflict so later Solve calls remain UNSAT even after consuming the queue.
+func (s *sat_solver_t) PropagateUnits() bool {
+	if s.fSolved != 0 {
+		return false
+	}
+	if sat_solver_simplify(s) == 0 {
+		s.fSolved = 1
+		s.lastStatus = Unknown
+		return false
+	}
+	return true
+}
+func (s *sat_solver_t) Compress() bool {
+	if s.NeedsPropagation() {
+		return s.PropagateUnits()
+	}
+	return s.fSolved == 0
+}
