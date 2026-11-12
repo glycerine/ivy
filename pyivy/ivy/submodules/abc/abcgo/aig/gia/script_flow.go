@@ -176,3 +176,42 @@ func giaFlow3Commands(lutSize, cutNum int32, useMfs, useLutLib, recRunning bool)
 		fmt.Sprintf("&st; &if -%s -K 6; &synch2; &if -C %d -K %d; %s&save; &load", mode, cutNum, lutSize, mfs),
 	}
 }
+
+// giaPerformFlow3 executes each stage against the current frame graph, which
+// may change after any command. The recorder state comes from the LMS owner.
+func giaPerformFlow3(frame *abcmain.Frame, lutSize, cutNum int32, useMfs, useLutLib, recRunning, verbose bool) {
+	commands := giaFlow3Commands(lutSize, cutNum, useMfs, useLutLib, recRunning)
+	if verbose {
+		mode := "SOP balancing"
+		if recRunning {
+			mode = "LMS"
+		}
+		fmt.Printf("Trying simple synthesis with %s...\n", mode)
+	}
+	frame.Execute(commands[0])
+	if verbose {
+		frame.Execute("&ps")
+	}
+	for i, stage := range []struct {
+		limit int32
+		name  string
+	}{{200000, "medium"}, {10000, "harder"}} {
+		g, ok := abcmain.Abc_FrameReadGia(frame).(*Gia_Man_t)
+		if !ok || g == nil {
+			panic("gia: synthesis flow requires a current GIA")
+		}
+		if Gia_ManAndNum(g) < stage.limit {
+			if verbose {
+				fmt.Printf("Trying %s synthesis...\n", stage.name)
+			}
+			frame.Execute(commands[i+1])
+			if verbose {
+				frame.Execute("&ps")
+			}
+		}
+	}
+	if verbose {
+		fmt.Println("Final result...")
+		frame.Execute("&ps")
+	}
+}

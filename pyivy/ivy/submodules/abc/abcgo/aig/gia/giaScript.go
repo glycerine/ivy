@@ -1,6 +1,6 @@
 package gia
 
-import "fmt"
+import abcmain "github.com/glycerine/abcgo/base/main"
 
 /**CFile****************************************************************
 
@@ -295,31 +295,7 @@ func Gia_ManAigSynch2(pInit *Gia_Man_t, pPars0 any, nLutSize int32, nRelaxRatio 
 
 ***********************************************************************/
 func Gia_ManPerformFlow3(nLutSize int32, nCutNum int32, fBalance int32, fMinAve int32, fUseMfs int32, fUseLutLib int32, fVerbose int32) {
-    commands := giaFlow3Commands(nLutSize, nCutNum, fUseMfs != 0, fUseLutLib != 0, Abc_NtkRecIsRunning3() != 0)
-    Comm1, Comm2, Comm3 := commands[0], commands[1], commands[2]
-
-    if fVerbose != 0 { fmt.Printf("Trying simple synthesis with %s...\n", Abc_NtkRecIsRunning3() ? "LMS" : "SOP balancing"); }
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm1 );
-    if fVerbose != 0 {
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "&ps" ); }
-
-    if Gia_ManAndNum( Abc_FrameReadGia(Abc_FrameGetGlobalFrame()) ) < 200000 {
-        if fVerbose != 0 { fmt.Printf("Trying medium synthesis...\n"); }
-        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm2 );
-        if fVerbose != 0 {
-        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "&ps" ); }
-    }
-
-    if Gia_ManAndNum( Abc_FrameReadGia(Abc_FrameGetGlobalFrame()) ) < 10000 {
-        if fVerbose != 0 { fmt.Printf("Trying harder synthesis...\n"); }
-        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), Comm3 );
-        if fVerbose != 0 {
-        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "&ps" ); }
-    }
-
-    if fVerbose != 0 { fmt.Printf("Final result...\n"); }
-    if fVerbose != 0 {
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "&ps" ); }
+    giaPerformFlow3(abcmain.Abc_FrameGetGlobalFrame(), nLutSize, nCutNum, fUseMfs != 0, fUseLutLib != 0, Abc_NtkRecIsRunning3() != 0, fVerbose != 0)
 }
 
 

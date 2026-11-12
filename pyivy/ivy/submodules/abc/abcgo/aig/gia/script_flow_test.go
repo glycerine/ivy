@@ -58,3 +58,32 @@ func TestFlow3Commands(t *testing.T) {
 		}
 	}
 }
+
+type flow3Recorder struct {
+	commands []string
+	graph    *Gia_Man_t
+}
+
+func (r *flow3Recorder) Execute(_ *abcmain.Frame, command string) int32 {
+	r.commands = append(r.commands, command)
+	if len(r.commands) == 1 {
+		// The first synthesis stage changes which later stages are eligible.
+		r.graph.nObjs = 150001
+	} else if len(r.commands) == 2 {
+		r.graph.nObjs = 9001
+	}
+	return 0
+}
+
+func TestFlow3RechecksCurrentGraph(t *testing.T) {
+	frame := abcmain.NewFrame()
+	g := Gia_ManStart(8)
+	g.nObjs = 200001
+	abcmain.Abc_FrameUpdateGia(frame, g)
+	recorder := &flow3Recorder{graph: g}
+	frame.SetDispatcher(recorder)
+	giaPerformFlow3(frame, 4, 8, true, false, true, false)
+	if len(recorder.commands) != 3 || !strings.Contains(recorder.commands[1], "&dch -f") || !strings.Contains(recorder.commands[2], "&synch2") {
+		t.Fatalf("unexpected stage execution: %q", recorder.commands)
+	}
+}
