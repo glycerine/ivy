@@ -1,192 +1,102 @@
 package dch
 
-/**CFile****************************************************************
+import (
+	"fmt"
 
-  FileName    [dchMan.c]
+	aig "github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/sat/satoko"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Choice computation for tech-mapping.]
-
-  Synopsis    [Calls to the SAT solver.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 29, 2008.]
-
-  Revision    [$Id: dchMan.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "dchInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ManCreate(pAig *Aig_Man_t, pPars *Dch_Pars_t) *Dch_Man_t {
-    var p *Dch_Man_t;
-    // create interpolation manager
-    // inlining of macro ABC_ALLOC
-    p = ((Dch_Man_t *) malloc(sizeof(Dch_Man_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Dch_Man_t) );
-    p.pPars        = pPars;
-    p.pAigTotal    = pAig; //Dch_DeriveTotalAig( vAigs );
-    Aig_ManFanoutStart( p.pAigTotal );
-    // SAT solving
-    p.nSatVars     = 1;
-    // inlining of macro ABC_CALLOC
-    p.pSatVars     = ((int *) calloc((size_t)(Aig_ManObjNumMax(p.pAigTotal)), sizeof(int)));
-    p.vUsedNodes   = Vec_PtrAlloc( 1000 );
-    p.vFanins      = Vec_PtrAlloc( 100 );
-    p.vSimRoots    = Vec_PtrAlloc( 1000 );
-    p.vSimClasses  = Vec_PtrAlloc( 1000 );
-    // equivalences proved
-    // inlining of macro ABC_CALLOC
-    p.pReprsProved = ((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(p.pAigTotal)), sizeof(Aig_Obj_t *)));
-    return p;
+func newManager(g *aig.Graph, parameters *Params) (*Manager, error) {
+	if g == nil {
+		return nil, fmt.Errorf("dch: nil AIG")
+	}
+	if err := g.Check(); err != nil {
+		return nil, fmt.Errorf("dch: %w", err)
+	}
+	params := DefaultParams()
+	if parameters != nil {
+		params = *parameters
+	}
+	if params.Words <= 0 || params.ConflictLimit < 0 || params.SatVarMax < 0 || params.CallsRecycle < 0 {
+		return nil, fmt.Errorf("dch: invalid simulation/SAT parameters")
+	}
+	if params.Words > int(^uint(0)>>1)/int(aig.Aig_ManObjNumMax(g)) {
+		return nil, fmt.Errorf("dch: simulation allocation size overflows int")
+	}
+	order, err := graphOrder(g)
+	if err != nil {
+		return nil, err
+	}
+	aig.Aig_ManSetPhase(g)
+	m := &Manager{
+		graph: g, params: params, order: order,
+		proven: map[int]aig.Edge{}, blocked: map[int]bool{},
+		fanouts: map[int][]int{}, ranks: map[int]int{},
+		lastValues: make([]bool, int(aig.Aig_ManObjNumMax(g))),
+	}
+	for rank, edge := range order {
+		id := edge.NodeID()
+		n := g.Node(edge)
+		m.ranks[id] = rank
+		m.lastValues[id] = n.Phase
+		count := 0
+		switch n.Kind {
+		case aig.Buffer, aig.Output:
+			count = 1
+		case aig.And, aig.ExclusiveOr:
+			count = 2
+		}
+		for _, fanin := range n.Fanins[:count] {
+			m.fanouts[fanin.NodeID()] = append(m.fanouts[fanin.NodeID()], id)
+		}
+	}
+	return m, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints stats of the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ManPrintStats(p *Dch_Man_t) {
-    var nNodeNum int32  = Aig_ManNodeNum(p.pAigTotal) / 3;
-    Abc_Print( 1, "Parameters: Sim words = %d. Conf limit = %d. SAT var max = %d.\n", 
-        p.pPars.nWords, p.pPars.nBTLimit, p.pPars.nSatVarMax );
-    Abc_Print( 1, "AIG nodes : Total = %6d. Dangling = %6d. Main = %6d. (%6.2f %%)\n", 
-        Aig_ManNodeNum(p.pAigTotal), 
-        Aig_ManNodeNum(p.pAigTotal)-nNodeNum,
-        nNodeNum,
-        100.0 * nNodeNum/Aig_ManNodeNum(p.pAigTotal) );
-    Abc_Print( 1, "SAT solver: Vars = %d. Max cone = %d. Recycles = %d.\n", 
-        p.nSatVars, p.nConeMax, p.nRecycles );
-    Abc_Print( 1, "SAT calls : All = %6d. Unsat = %6d. Sat = %6d. Fail = %6d.\n", 
-        p.nSatCalls, p.nSatCalls-p.nSatCallsSat-p.nSatFailsReal, 
-        p.nSatCallsSat, p.nSatFailsReal );
-    Abc_Print( 1, "Choices   : Lits = %6d. Reprs = %5d. Equivs = %5d. Choices = %5d.\n", 
-        p.nLits, p.nReprs, p.nEquivs, p.nChoices );
-    Abc_Print( 1, "Choicing runtime statistics:\n" );
-    p.timeOther = p.timeTotal-p.timeSimInit-p.timeSimSat-p.timeSat-p.timeChoice;
-    Abc_PrintTimeP( 1, "Sim init   ", p.timeSimInit,  p.timeTotal );
-    Abc_PrintTimeP( 1, "Sim SAT    ", p.timeSimSat,   p.timeTotal );
-    Abc_PrintTimeP( 1, "SAT solving", p.timeSat,      p.timeTotal );
-    Abc_PrintTimeP( 1, "  sat      ", p.timeSatSat,   p.timeTotal );
-    Abc_PrintTimeP( 1, "  unsat    ", p.timeSatUnsat, p.timeTotal );
-    Abc_PrintTimeP( 1, "  undecided", p.timeSatUndec, p.timeTotal );
-    Abc_PrintTimeP( 1, "Choice     ", p.timeChoice,   p.timeTotal );
-    Abc_PrintTimeP( 1, "Other      ", p.timeOther,    p.timeTotal );
-    Abc_PrintTimeP( 1, "TOTAL      ", p.timeTotal,    p.timeTotal );
-    if p.pPars.timeSynth {
-    Abc_PrintTime( 1, "Synthesis  ", p.pPars.timeSynth );
-    }
-} 
-
-/**Function*************************************************************
-
-  Synopsis    [Frees the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ManStop(p *Dch_Man_t) {
-    Aig_ManFanoutStop( p.pAigTotal );
-    if p.pPars.fVerbose {
-        Dch_ManPrintStats( p ); }
-    if p.pAigFraig {
-        Aig_ManStop( p.pAigFraig ); }
-    if p.ppClasses {
-        Dch_ClassesStop( p.ppClasses ); }
-    if p.pSat {
-        sat_solver_delete( p.pSat ); }
-    Vec_PtrFree( p.vUsedNodes );
-    Vec_PtrFree( p.vFanins );
-    Vec_PtrFree( p.vSimRoots );
-    Vec_PtrFree( p.vSimClasses );
-    p.pReprsProved = nil;
-    p.pSatVars = nil;
-    p = nil;
+func (m *Manager) recycleSolver() {
+	m.solver = satoko.New()
+	m.variables = map[int]int{}
+	m.callsSince = 0
+	m.stats.Recycles++
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recycles the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ManSatSolverRecycle(p *Dch_Man_t) {
-    var Lit int32;
-    if p.pSat {
-        var pObj *Aig_Obj_t;
-        var i int32;
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vUsedNodes)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vUsedNodes, i)), 1); i++  {
-            Dch_ObjSetSatNum( p, pObj, 0 );
-        }
-        Vec_PtrClear( p.vUsedNodes );
-//        memset( p->pSatVars, 0, sizeof(int) * Aig_ManObjNumMax(p->pAigTotal) );
-        sat_solver_delete( p.pSat );
-    }
-    p.pSat = sat_solver_new();
-    sat_solver_setnvars( p.pSat, 1000 );
-    // var 0 is not used
-    // var 1 is reserved for const1 node - add the clause
-    p.nSatVars = 1;
-//    p->nSatVars = 0;
-    Lit = toLit( p.nSatVars );
-    if p.pPars.fPolarFlip {
-        Lit = lit_neg( Lit ); }
-    sat_solver_addclause( p.pSat, &Lit, &Lit + 1 );
-    Dch_ObjSetSatNum( p, Aig_ManConst1(p.pAigFraig), p.nSatVars++ );
-
-    p.nRecycles++;
-    p.nCallsSince = 0;
+func graphOrder(g *aig.Graph) ([]aig.Edge, error) {
+	colors := make(map[int]uint8)
+	var order []aig.Edge
+	var visit func(aig.Edge) error
+	visit = func(edge aig.Edge) error {
+		node := aig.Aig_Regular(edge)
+		id := node.NodeID()
+		if colors[id] == 2 {
+			return nil
+		}
+		if colors[id] == 1 {
+			return fmt.Errorf("dch: cyclic AIG at %d", id)
+		}
+		colors[id] = 1
+		n := g.Node(node)
+		switch n.Kind {
+		case aig.Constant, aig.Input:
+		case aig.Buffer, aig.Output:
+			if err := visit(n.Fanins[0]); err != nil {
+				return err
+			}
+		case aig.And, aig.ExclusiveOr:
+			for _, child := range n.Fanins {
+				if err := visit(child); err != nil {
+					return err
+				}
+			}
+		default:
+			return fmt.Errorf("dch: unsupported AIG node kind at %d", id)
+		}
+		colors[id] = 2
+		order = append(order, node)
+		return nil
+	}
+	for _, node := range g.LiveEdges() {
+		if err := visit(node); err != nil {
+			return nil, err
+		}
+	}
+	return order, nil
 }
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

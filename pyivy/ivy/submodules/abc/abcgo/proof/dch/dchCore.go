@@ -1,164 +1,57 @@
 package dch
 
-/**CFile****************************************************************
+import (
+	"fmt"
+	"time"
 
-  FileName    [dchCore.c]
+	aig "github.com/glycerine/abcgo/aig/aig"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Choice computation for tech-mapping.]
-
-  Synopsis    [The core procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 29, 2008.]
-
-  Revision    [$Id: dchCore.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "dchInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [This procedure sets default parameters.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ManSetDefaultParams(p *Dch_Pars_t) {
-    memset( p, 0, sizeof(Dch_Pars_t) );
-    p.nWords         =     8;  // the number of simulation words
-    p.nBTLimit       =  1000;  // conflict limit at a node
-    p.nSatVarMax     =  5000;  // the max number of SAT variables
-    p.fSynthesis     =     1;  // derives three snapshots
-    p.fPolarFlip     =     1;  // uses polarity adjustment
-    p.fSimulateTfo   =     1;  // simulate TFO
-    p.fPower         =     0;  // power-aware rewriting
-    p.fLightSynth    =     0;  // uses lighter version of synthesis
-    p.fSkipRedSupp   =     0;  // skips choices with redundant structural support
-    p.fVerbose       =     0;  // verbose stats
-    p.nNodesAhead    =  1000;  // the lookahead in terms of nodes
-    p.nCallsRecycle  =   100;  // calls to perform before recycling SAT solver
+func (m *Manager) computeEquivalences() error {
+	started := time.Now()
+	simStart := time.Now()
+	m.classes = createClasses(m.graph, m.order, m.params.Words)
+	m.stats.Simulation = time.Since(simStart)
+	m.stats.Candidates = Dch_ClassesLitNum(m.classes)
+	if err := m.sweep(); err != nil {
+		return err
+	}
+	// Only proved links survive. Never publish simulation-only candidates.
+	for _, node := range m.graph.LiveEdges() {
+		if aig.Aig_ObjRepr(m.graph, node) != aig.InvalidEdge {
+			aig.Aig_ObjSetRepr(m.graph, node, aig.InvalidEdge)
+		}
+	}
+	for id, representative := range m.proven {
+		aig.Aig_ObjSetRepr(m.graph, aig.Edge(id)<<1, representative)
+	}
+	m.stats.Total = time.Since(started)
+	return nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns verbose parameter.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ManReadVerbose(p *Dch_Pars_t) int32 {
-    return p.fVerbose;
+func ComputeEquivalences(g *aig.Graph, p *Params) error {
+	manager, err := newManager(g, p)
+	if err != nil {
+		return err
+	}
+	return manager.computeEquivalences()
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs computation of AIGs with choices.]
-
-  Description [Takes several AIGs and performs choicing.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ComputeChoices(pAig *Aig_Man_t, pPars *Dch_Pars_t) *Aig_Man_t {
-    var p *Dch_Man_t;
-    var pResult *Aig_Man_t;
-    var clk abctime;
-    var clk2 abctime = Abc_Clock();
-    var clkTotal abctime = Abc_Clock();
-    // reset random numbers
-    Aig_ManRandom(1);
-    // start the choicing manager
-    p = Dch_ManCreate( pAig, pPars );
-    // compute candidate equivalence classes
-clk = Abc_Clock(); 
-    p.ppClasses = Dch_CreateCandEquivClasses( pAig, pPars.nWords, pPars.fVerbose );
-p.timeSimInit = Abc_Clock() - clk;
-//    Dch_ClassesPrint( p->ppClasses, 0 );
-    p.nLits = Dch_ClassesLitNum( p.ppClasses );
-    // perform SAT sweeping
-    Dch_ManSweep( p );
-    // free memory ahead of time
-p.timeTotal = Abc_Clock() - clkTotal;
-    Dch_ManStop( p );
-    if pPars.fVerbose { 
-        Abc_PrintTime( 1, "Old choice computation time", Abc_Clock() - clk2 ); }
-    // create choices
-    pAig.pTable = nil;
-    pResult = Dch_DeriveChoiceAig( pAig, pPars.fSkipRedSupp );
-    // count the number of representatives
-    if pPars.fVerbose { 
-        Abc_Print( 1, "STATS:  Ands:%8d  ->%8d.  Reprs:%7d  ->%7d.  Choices =%7d.\n", 
-               Aig_ManNodeNum(pAig), 
-               Aig_ManNodeNum(pResult), 
-               Dch_DeriveChoiceCountReprs( pAig ),
-               Dch_DeriveChoiceCountEquivs( pResult ),
-               Aig_ManChoiceNum( pResult ) ); }
-    return pResult;
+func ComputeChoices(g *aig.Graph, p *Params) (*aig.Graph, error) {
+	result, _, err := ComputeChoicesWithStats(g, p)
+	return result, err
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs computation of AIGs with choices.]
-
-  Description [Takes several AIGs and performs choicing.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ComputeEquivalences(pAig *Aig_Man_t, pPars *Dch_Pars_t) {
-    var p *Dch_Man_t;
-    var clk abctime;
-    var clkTotal abctime = Abc_Clock();
-    // reset random numbers
-    Aig_ManRandom(1);
-    // start the choicing manager
-    p = Dch_ManCreate( pAig, pPars );
-    // compute candidate equivalence classes
-clk = Abc_Clock(); 
-    p.ppClasses = Dch_CreateCandEquivClasses( pAig, pPars.nWords, pPars.fVerbose );
-p.timeSimInit = Abc_Clock() - clk;
-//    Dch_ClassesPrint( p->ppClasses, 0 );
-    p.nLits = Dch_ClassesLitNum( p.ppClasses );
-    // perform SAT sweeping
-    Dch_ManSweep( p );
-    // free memory ahead of time
-p.timeTotal = Abc_Clock() - clkTotal;
-    Dch_ManStop( p );
+func ComputeChoicesWithStats(g *aig.Graph, p *Params) (*aig.Graph, Statistics, error) {
+	started := time.Now()
+	manager, err := newManager(g, p)
+	if err != nil {
+		return nil, Statistics{}, err
+	}
+	if err = manager.computeEquivalences(); err != nil {
+		return nil, manager.stats, err
+	}
+	result, err := DeriveChoiceAig(g, manager.params.SkipRedundantSupport)
+	manager.stats.Total = time.Since(started)
+	if manager.params.Verbose && err == nil {
+		fmt.Printf("DCH: candidates=%d proofs=%d sat=%d counterexamples=%d unknown=%d choices=%d\n", manager.stats.Candidates, manager.stats.Proofs, manager.stats.SATCalls, manager.stats.Counterexamples, manager.stats.Unknown, aig.Aig_ManChoiceNum(result))
+	}
+	return result, manager.stats, err
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

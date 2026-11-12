@@ -1,268 +1,109 @@
 package dch
 
-/**CFile****************************************************************
+import (
+	"container/heap"
 
-  FileName    [dchSimSat.c]
+	aig "github.com/glycerine/abcgo/aig/aig"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+type tfoEntry struct{ id, rank int }
+type tfoQueue []tfoEntry
 
-  PackageName [Choice computation for tech-mapping.]
-
-  Synopsis    [Performs resimulation using counter-examples.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 29, 2008.]
-
-  Revision    [$Id: dchSimSat.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "dchInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Collects internal nodes in the reverse DFS order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ManCollectTfoCands_rec(p *Dch_Man_t, pObj *Aig_Obj_t) {
-    var pFanout, pRepr *Aig_Obj_t;
-    var iFanout int32 = -1;
-    var i int32;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if Aig_ObjIsTravIdCurrent(p.pAigTotal, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p.pAigTotal, pObj);
-    // traverse the fanouts
-    // inlining of macro Aig_ObjForEachFanout
-    for  assert(p.pAigTotal.pFanData, "p.pAigTotal.pFanData"), i = 0; (i < int32((pObj).nRefs)) &&                         (((iFanout) = i? Aig_ObjFanoutNext(p.pAigTotal, iFanout) : Aig_ObjFanout0Int(p.pAigTotal, pObj.Id)), 1) &&           (((pFanout) = Aig_ManObj(p.pAigTotal, iFanout>>1)), 1); i++  {
-        Dch_ManCollectTfoCands_rec( p, pFanout );
-    }
-    // check if the given node has a representative
-    pRepr = Aig_ObjRepr( p.pAigTotal, pObj );
-    if pRepr == nil {
-        return; }
-    // pRepr is the constant 1 node
-    if pRepr == Aig_ManConst1(p.pAigTotal) {
-        Vec_PtrPush( p.vSimRoots, pObj );
-        return;
-    }
-    // pRepr is the representative of an equivalence class
-    if pRepr.fMarkA {
-        return; }
-    pRepr.fMarkA = 1;
-    Vec_PtrPush( p.vSimClasses, pRepr );
+func (q tfoQueue) Len() int           { return len(q) }
+func (q tfoQueue) Less(i, j int) bool { return q[i].rank < q[j].rank }
+func (q tfoQueue) Swap(i, j int)      { q[i], q[j] = q[j], q[i] }
+func (q *tfoQueue) Push(value any)    { *q = append(*q, value.(tfoEntry)) }
+func (q *tfoQueue) Pop() any {
+	last := len(*q) - 1
+	value := (*q)[last]
+	*q = (*q)[:last]
+	return value
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collect equivalence classes and const1 cands in the TFO.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
- 
-***********************************************************************/
-func Dch_ManCollectTfoCands(p *Dch_Man_t, pObj1 *Aig_Obj_t, pObj2 *Aig_Obj_t) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Vec_PtrClear( p.vSimRoots );
-    Vec_PtrClear( p.vSimClasses );
-    Aig_ManIncrementTravId( p.pAigTotal );
-    Aig_ObjSetTravIdCurrent( p.pAigTotal, Aig_ManConst1(p.pAigTotal) );    
-    Dch_ManCollectTfoCands_rec( p, pObj1 );
-    Dch_ManCollectTfoCands_rec( p, pObj2 );
-    Vec_PtrSort( p.vSimRoots, (int (*)(void))Aig_ObjCompareIdIncrease );
-    Vec_PtrSort( p.vSimClasses, (int (*)(void))Aig_ObjCompareIdIncrease );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vSimClasses)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimClasses, i)), 1); i++  {
-        pObj.fMarkA = 0;
-    }
+// Resimulate only changed TFO values, processing fanouts in topological order.
+// Controlling inputs stop propagation when a node's value does not change.
+func (m *Manager) simulateTFO(inputs []bool) map[int]bool {
+	changed, queued := map[int]bool{}, map[int]bool{}
+	pending := &tfoQueue{}
+	enqueueFanouts := func(id int) {
+		for _, fanout := range m.fanouts[id] {
+			if !queued[fanout] {
+				queued[fanout] = true
+				heap.Push(pending, tfoEntry{fanout, m.ranks[fanout]})
+			}
+		}
+	}
+	for i, input := range m.graph.Inputs() {
+		id := input.NodeID()
+		if m.lastValues[id] != inputs[i] {
+			m.lastValues[id] = inputs[i]
+			changed[id] = true
+			enqueueFanouts(id)
+		}
+	}
+	value := func(edge aig.Edge) bool { return m.lastValues[edge.NodeID()] != edge.Complemented() }
+	for pending.Len() > 0 {
+		entry := heap.Pop(pending).(tfoEntry)
+		delete(queued, entry.id)
+		n := m.graph.Node(aig.Edge(entry.id) << 1)
+		next := value(n.Fanins[0])
+		switch n.Kind {
+		case aig.And:
+			next = next && value(n.Fanins[1])
+		case aig.ExclusiveOr:
+			next = next != value(n.Fanins[1])
+		}
+		if next != m.lastValues[entry.id] {
+			m.lastValues[entry.id] = next
+			changed[entry.id] = true
+			enqueueFanouts(entry.id)
+		}
+	}
+	return changed
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Resimulates the cone of influence of the solved nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
- 
-***********************************************************************/
-func Dch_ManResimulateSolved_rec(p *Dch_Man_t, pObj *Aig_Obj_t) {
-    if Aig_ObjIsTravIdCurrent(p.pAigTotal, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p.pAigTotal, pObj);
-    if Aig_ObjIsCi(pObj) {
-        var pObjFraig *Aig_Obj_t;
-        var nVarNum int32;
-        pObjFraig = Dch_ObjFraig( pObj );
-        assert(!Aig_IsComplement(pObjFraig), "!Aig_IsComplement(pObjFraig)");
-        nVarNum = Dch_ObjSatNum( p, pObjFraig );
-        // get the value from the SAT solver
-        // (account for the fact that some vars may be minimized away)
-        if !(nVarNum != 0) {
-            pObj.fMarkB = 0;
-        } else {
-            pObj.fMarkB = sat_solver_var_value( p.pSat, nVarNum );
-        }
-//        pObj->fMarkB = !nVarNum? Aig_ManRandom(0) & 1 : sat_solver_var_value( p->pSat, nVarNum );
-        return;
-    }
-    Dch_ManResimulateSolved_rec( p, Aig_ObjFanin0(pObj) );
-    Dch_ManResimulateSolved_rec( p, Aig_ObjFanin1(pObj) );
-    pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )
-                 & ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) );
-    // count the cone size
-    if Dch_ObjSatNum( p, Aig_Regular(Dch_ObjFraig(pObj)) ) > 0 {
-        p.nConeThis++; }
+// Refine candidates with an actual SAT counterexample. Classes are partitioned
+// by the full counterexample history, so unchanged classes need no splitting.
+func (m *Manager) refineCounterexample(inputs []bool) {
+	var values []bool
+	var changed map[int]bool
+	if m.params.SimulateTFO {
+		changed = m.simulateTFO(inputs)
+		values = m.lastValues
+	} else {
+		values = simulateAssignment(m.graph, m.order, inputs)
+		m.lastValues = values
+	}
+	refined := [][]aig.Edge{}
+	for _, group := range m.classes.groups {
+		needsSplit := !m.params.SimulateTFO
+		if !needsSplit {
+			for _, node := range group {
+				if changed[node.NodeID()] {
+					needsSplit = true
+					break
+				}
+			}
+		}
+		if !needsSplit {
+			refined = append(refined, group)
+			continue
+		}
+		zero, one := []aig.Edge{}, []aig.Edge{}
+		for _, node := range group {
+			if values[node.NodeID()] != aig.Aig_ObjPhase(m.graph, node) {
+				one = append(one, node)
+			} else {
+				zero = append(zero, node)
+			}
+		}
+		if len(zero) > 0 {
+			refined = append(refined, zero)
+		}
+		if len(one) > 0 {
+			refined = append(refined, one)
+		}
+	}
+	m.classes.groups = refined
+	m.classes.index()
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resimulates the cone of influence of the other nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ManResimulateOther_rec(p *Dch_Man_t, pObj *Aig_Obj_t) {
-    if Aig_ObjIsTravIdCurrent(p.pAigTotal, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p.pAigTotal, pObj);
-    if Aig_ObjIsCi(pObj) {
-        // set random value
-        pObj.fMarkB = Aig_ManRandom(0) & 1;
-        return;
-    }
-    Dch_ManResimulateOther_rec( p, Aig_ObjFanin0(pObj) );
-    Dch_ManResimulateOther_rec( p, Aig_ObjFanin1(pObj) );
-    pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )
-                 & ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Handle the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ManResimulateCex(p *Dch_Man_t, pObj *Aig_Obj_t, pRepr *Aig_Obj_t) {
-    var pRoot *Aig_Obj_t;
-    var ppClass **Aig_Obj_t;
-    var i, k, nSize, RetValue1, RetValue2 int32;
-    var clk abctime  = Abc_Clock();
-    // get the equivalence classes
-    Dch_ManCollectTfoCands( p, pObj, pRepr );
-    // resimulate the cone of influence of the solved nodes
-    p.nConeThis = 0;
-    Aig_ManIncrementTravId( p.pAigTotal );
-    Aig_ObjSetTravIdCurrent( p.pAigTotal, Aig_ManConst1(p.pAigTotal) );
-    Dch_ManResimulateSolved_rec( p, pObj );
-    Dch_ManResimulateSolved_rec( p, pRepr );
-    p.nConeMax = Abc_MaxInt( p.nConeMax, p.nConeThis );
-    // resimulate the cone of influence of the other nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vSimRoots)) && (((pRoot) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimRoots, i)), 1); i++  {
-        Dch_ManResimulateOther_rec( p, pRoot );
-    }
-    // refine these nodes
-    RetValue1 = Dch_ClassesRefineConst1Group( p.ppClasses, p.vSimRoots, 0 );
-    // resimulate the cone of influence of the cand classes
-    RetValue2 = 0;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vSimClasses)) && (((pRoot) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimClasses, i)), 1); i++  {
-        ppClass = Dch_ClassesReadClass( p.ppClasses, pRoot, &nSize );
-        for  k = 0; k < nSize; k++  {
-            Dch_ManResimulateOther_rec( p, ppClass[k] );
-        }
-        // refine this class
-        RetValue2 += Dch_ClassesRefineOneClass( p.ppClasses, pRoot, 0 );
-    }
-    // make sure refinement happened
-    if Aig_ObjIsConst1(pRepr) {
-        assert(RetValue1, "RetValue1");
-    } else {
-        assert((RetValue2 != 0), "RetValue2"); }
-p.timeSimSat += Abc_Clock() - clk;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Handle the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Dch_ManResimulateCex2(p *Dch_Man_t, pObj *Aig_Obj_t, pRepr *Aig_Obj_t) {
-    var pRoot *Aig_Obj_t;
-    var i, RetValue int32;
-    var clk abctime  = Abc_Clock();
-    // get the equivalence class
-    if Dch_ObjIsConst1Cand(p.pAigTotal, pObj) {
-        Dch_ClassesCollectConst1Group( p.ppClasses, pObj, 500, p.vSimRoots );
-    } else {
-        Dch_ClassesCollectOneClass( p.ppClasses, pRepr, p.vSimRoots ); }
-    // resimulate the cone of influence of the solved nodes
-    p.nConeThis = 0;
-    Aig_ManIncrementTravId( p.pAigTotal );
-    Aig_ObjSetTravIdCurrent( p.pAigTotal, Aig_ManConst1(p.pAigTotal) );
-    Dch_ManResimulateSolved_rec( p, pObj );
-    Dch_ManResimulateSolved_rec( p, pRepr );
-    p.nConeMax = Abc_MaxInt( p.nConeMax, p.nConeThis );
-    // resimulate the cone of influence of the other nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vSimRoots)) && (((pRoot) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimRoots, i)), 1); i++  {
-        Dch_ManResimulateOther_rec( p, pRoot );
-    }
-    // refine this class
-    if Dch_ObjIsConst1Cand(p.pAigTotal, pObj) {
-        RetValue = Dch_ClassesRefineConst1Group( p.ppClasses, p.vSimRoots, 0 );
-    } else {
-        RetValue = Dch_ClassesRefineOneClass( p.ppClasses, pRepr, 0 ); }
-    assert((RetValue != 0), "RetValue");
-p.timeSimSat += Abc_Clock() - clk;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

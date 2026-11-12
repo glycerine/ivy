@@ -1,99 +1,44 @@
+// Package dch computes SAT-proven AIG equivalences and acyclic mapping choices.
+// The simulation, sweeping and choice construction follow ABC's DCH engine
+// (Alan Mishchenko, UC Berkeley, 2008), using explicit edges and Go-owned state.
 package dch
 
-/**CFile****************************************************************
+import (
+	"time"
 
-  FileName    [dch.h] 
+	aig "github.com/glycerine/abcgo/aig/aig"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+// Params retains the old DCH controls. Synthesis/GIA/new-engine fields are
+// consumed by the surrounding choice script, as in the source, not by old DCH.
+type Params struct {
+	Words, ConflictLimit, SatVarMax, NodesAhead, CallsRecycle          int
+	Synthesis, PolarFlip, SimulateTFO, Power                           bool
+	UseGia, UseCSat, UseNew, LightSynth, SkipRedundantSupport, Verbose bool
+	SynthDuration                                                      time.Duration
+}
+type Dch_Pars_t = Params
 
-  PackageName [Choice computation for tech-mapping.]
-
-  Synopsis    [External declarations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 29, 2008.]
-
-  Revision    [$Id: dch.h,v 1.00 2008/07/29 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-//ABC_NAMESPACE_HEADER_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
-
-// choicing parameters
-   
-type Dch_Pars_t struct {
-    nWords              int32;        // the number of simulation words
-    nBTLimit              int32;      // conflict limit at a node
-    nSatVarMax              int32;    // the max number of SAT variables
-    fSynthesis              int32;    // set to 1 to perform synthesis
-    fPolarFlip              int32;    // uses polarity adjustment
-    fSimulateTfo              int32;  // uses simulation of TFO classes
-    fPower              int32;        // uses power-aware rewriting
-    fUseGia              int32;       // uses GIA package 
-    fUseCSat              int32;      // uses circuit-based solver
-    fUseNew              int32;       // uses new implementation
-    fLightSynth              int32;   // uses lighter version of synthesis
-    fSkipRedSupp              int32;  // skip choices with redundant support vars
-    fVerbose              int32;      // verbose stats
-    timeSynth          abctime;     // synthesis runtime
-    nNodesAhead              int32;   // the lookahead in terms of nodes
-    nCallsRecycle              int32; // calls to perform before recycling SAT solver
+func DefaultParams() Params {
+	return Params{Words: 8, ConflictLimit: 1000, SatVarMax: 5000, Synthesis: true, PolarFlip: true, SimulateTFO: true, NodesAhead: 1000, CallsRecycle: 100}
+}
+func Dch_ManSetDefaultParams(p *Params) { *p = DefaultParams() }
+func Dch_ManReadVerbose(p *Params) int {
+	if p.Verbose {
+		return 1
+	}
+	return 0
 }
 
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
+// Engine adapts DCH to the typed choice engine interface used by DAR and CEC.
+type Engine struct{ Params *Params }
 
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/*=== dchAig.c ==========================================================*/
-// extern Aig_Man_t *   Dch_DeriveTotalAig( Vec_Ptr_t * vAigs );
-
-/*=== dchCore.c ==========================================================*/
-// extern void          Dch_ManSetDefaultParams( Dch_Pars_t * p );
-
-// extern int           Dch_ManReadVerbose( Dch_Pars_t * p );
-
-// extern Aig_Man_t *   Dch_ComputeChoices( Aig_Man_t * pAig, Dch_Pars_t * pPars );
-
-// extern void          Dch_ComputeEquivalences( Aig_Man_t * pAig, Dch_Pars_t * pPars );
-
-/*=== dchScript.c ==========================================================*/
-// extern Aig_Man_t *   Dar_ManChoiceNew( Aig_Man_t * pAig, Dch_Pars_t * pPars );
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
+func (e Engine) ComputeChoices(variants []*aig.Graph) (*aig.Graph, error) {
+	total, err := DeriveTotalAig(variants)
+	if err != nil {
+		return nil, err
+	}
+	return ComputeChoices(total, e.Params)
+}
+func Dch_ComputeChoices(g *aig.Graph, p *Params) (*aig.Graph, error) { return ComputeChoices(g, p) }
+func Dch_ComputeEquivalences(g *aig.Graph, p *Params) error          { return ComputeEquivalences(g, p) }
