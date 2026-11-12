@@ -50,7 +50,6 @@ func (m *Manager) Rewrite() error {
 					inputs[i] = inputs[i].Not()
 				}
 			}
-			aig.Aig_ManIncrementTravId(g)
 			oldArea := int(aig.Aig_NodeMffcLabelCut(g, root, cut.Leaves))
 			existing := make([]aig.Edge, len(class.nodes)+4)
 			levels := make([]int, len(existing))
@@ -136,7 +135,8 @@ func (m *Manager) Rewrite() error {
 		if best.complement {
 			replacement = replacement.Not()
 		}
-		if replacement.NodeID() == root.NodeID() {
+		if graphDependsOn(g, replacement, root) {
+			aig.Aig_ManCleanup(g)
 			continue
 		}
 		aig.Aig_ObjReplace(g, root, replacement, 0)
@@ -145,4 +145,29 @@ func (m *Manager) Rewrite() error {
 		m.Stats.NodesSaved += best.gain
 	}
 	return g.Check()
+}
+
+// Structural hashing may rediscover the old root inside a proposed network.
+// Reject that network before replacement rather than introducing a cycle.
+func graphDependsOn(g *aig.Graph, edge, target aig.Edge) bool {
+	seen := make(map[int]bool)
+	var visit func(aig.Edge) bool
+	visit = func(e aig.Edge) bool {
+		if e.NodeID() == target.NodeID() {
+			return true
+		}
+		if seen[e.NodeID()] {
+			return false
+		}
+		seen[e.NodeID()] = true
+		n := g.Node(e)
+		switch n.Kind {
+		case aig.And, aig.ExclusiveOr:
+			return visit(n.Fanins[0]) || visit(n.Fanins[1])
+		case aig.Buffer, aig.Output:
+			return visit(n.Fanins[0])
+		}
+		return false
+	}
+	return visit(edge)
 }

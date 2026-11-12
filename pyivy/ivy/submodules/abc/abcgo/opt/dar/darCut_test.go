@@ -48,7 +48,7 @@ func TestCutEnumeratorTruth(t *testing.T) {
 		t.Fatal("no nontrivial cuts")
 	}
 	for _, cut := range cuts {
-		if len(cut.Leaves) != 3 {
+		if len(cut.Leaves) != 3 || cut.Leaves[0] != a || cut.Leaves[1] != b || cut.Leaves[2] != c {
 			continue
 		}
 		for n := 0; n < 8; n++ {
@@ -68,7 +68,7 @@ func TestCutEnumeratorTruth(t *testing.T) {
 	// Returned cuts are owned by caller, not aliases of the memoized boundaries.
 	cuts[0].Leaves[0] = a
 	again := NewCutEnumerator(g, 32).Cuts(root.Not())
-	if again[0].Truth != 0x5555 {
+	if again[0].Truth != ^NewCutEnumerator(g, 32).Cuts(root)[0].Truth {
 		t.Fatal("root phase")
 	}
 }

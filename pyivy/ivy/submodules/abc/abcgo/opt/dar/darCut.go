@@ -1,6 +1,7 @@
 package dar
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"math/bits"
 	"sort"
@@ -109,10 +110,11 @@ func Dar_CutSuppMinimize(c *Cut) bool {
 // CutEnumerator owns a bounded memoized cut search for one immutable graph
 // snapshot. Construct a fresh enumerator after graph replacement.
 type CutEnumerator struct {
-	graph    *aig.Graph
-	limit    int
-	cuts     map[int][]Cut
-	visiting map[int]bool
+	skipTruthMin bool
+	graph        *aig.Graph
+	limit        int
+	cuts         map[int][]Cut
+	visiting     map[int]bool
 }
 
 func NewCutEnumerator(g *aig.Graph, limit int) *CutEnumerator {
@@ -169,7 +171,9 @@ func (m *CutEnumerator) compute(edge aig.Edge) []Cut {
 				} else {
 					merged.Truth = x & y
 				}
-				Dar_CutSuppMinimize(&merged)
+				if !m.skipTruthMin {
+					Dar_CutSuppMinimize(&merged)
+				}
 				duplicate := false
 				for _, old := range result {
 					if len(old.Leaves) == len(merged.Leaves) && Dar_CutCheckDominance(old, merged) {
@@ -190,4 +194,26 @@ func (m *CutEnumerator) compute(edge aig.Edge) []Cut {
 	}
 	m.cuts[id] = result
 	return result
+}
+
+// Dar_ManComputeCuts returns independently owned cut boundaries for each live
+// node. skipTruthMin preserves syntactically present but functionally unused
+// boundary variables, matching the source cut-enumeration switch.
+func Dar_ManComputeCuts(g *aig.Graph, limit int, skipTruthMin bool) (map[aig.Edge][]Cut, error) {
+	if g == nil {
+		return nil, fmt.Errorf("dar: nil graph")
+	}
+	if limit < 2 {
+		return nil, fmt.Errorf("dar: cut limit must be at least two")
+	}
+	if err := g.Check(); err != nil {
+		return nil, err
+	}
+	m := NewCutEnumerator(g, limit)
+	m.skipTruthMin = skipTruthMin
+	result := make(map[aig.Edge][]Cut)
+	for _, e := range g.LiveEdges() {
+		result[e] = m.Cuts(e)
+	}
+	return result, nil
 }
