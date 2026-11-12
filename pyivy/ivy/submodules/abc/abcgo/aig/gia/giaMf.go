@@ -39,23 +39,12 @@ import (
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-const MF_LEAF_MAX =   10
 const MF_CUT_MAX =    16
 const MF_LOG_PAGE =   12
 const MF_NO_LEAF =    31
 #define MF_TT_WORDS  ((MF_LEAF_MAX > 6) ? 1 << (MF_LEAF_MAX-6) : 1)
-const MF_NO_FUNC =    134217727     // (1<<27)-1
 const MF_EPSILON = 0.005
 
-    
-type Mf_Cut_t struct {
-    Sign            word;           // signature
-    Delay             int32;          // delay
-    Flow           float32;           // flow
-    iFunc uint32; /* C bitfield: 27 bits; review packing and truncation */   // function (MF_NO_FUNC)
-    nLeaves uint32; /* C bitfield: 5 bits; review packing and truncation */   // leaf number (MF_NO_LEAF)
-    pLeaves [MF_LEAF_MAX+1]int32; // leaves
-}
     
 type Mf_Obj_t struct {
     iCutSet             int32;        // cutset
@@ -693,28 +682,9 @@ func Mf_CutComputeTruthMux(p *Mf_Man_t, pCut0 *Mf_Cut_t, pCut1 *Mf_Cut_t, pCutC 
   SeeAlso     []
 
 ***********************************************************************/
-func Mf_CutCountBits(i word) int32 {
-    i = i - ((i >> 1) & 0x5555555555555555);
-    i = (i & 0x3333333333333333) + ((i >> 2) & 0x3333333333333333);
-    i = ((i + (i >> 4)) & 0x0F0F0F0F0F0F0F0F);
-    return (i*(0x0101010101010101))>>56;
-}
-func Mf_CutGetSign(pLeaves *int32, nLeaves int32) word {
-    var Sign word; var i int32; 
-    for  i = 0; i < nLeaves; i++  {
-        Sign |= ((word)1) << (pLeaves[i] & 0x3F);
-    }
-    return Sign;
-}
-func Mf_CutCreateUnit(p *Mf_Cut_t, i int32) int32 {
-    p.Delay      = 0;
-    p.Flow       = 0;
-    p.iFunc      = 2;
-    p.nLeaves    = 1;
-    p.pLeaves[0] = i;
-    p.Sign       = ((word)1) << (i & 0x3F);
-    return 1;
-}
+
+
+
 func Mf_CutPrint(p *Mf_Man_t, pCut *Mf_Cut_t) {
     var i int32;
     var nDigits int32 = Abc_Base10Log(Gia_ManObjNum(p.pGia)); 
@@ -803,24 +773,7 @@ func Mf_ObjSetBestCut(pCuts *int32, pCut *int32) {
   SeeAlso     []
 
 ***********************************************************************/
-static inline int Mf_CutCheck( Mf_Cut_t * pBase, Mf_Cut_t * pCut ) // check if pCut is contained in pBase
-{
-    var nSizeB int32  = pBase.nLeaves;
-    var nSizeC int32  = pCut.nLeaves;
-    var i int32;
-    var pB *int32 = pBase.pLeaves;
-    var k int32;
-    var pC *int32 = pCut.pLeaves;
-    for  i = 0; i < nSizeC; i++  {
-        for  k = 0; k < nSizeB; k++  {
-            if pC[i] == pB[k] {
-                break; }
-        }
-        if k == nSizeB {
-            return 0; }
-    }
-    return 1;
-}
+
 func Mf_SetCheckArray(ppCuts **Mf_Cut_t, nCuts int32) int32 {
     var pCut0, pCut1 *Mf_Cut_t; 
     var i, k, m, n, Value int32;
@@ -860,138 +813,9 @@ func Mf_SetCheckArray(ppCuts **Mf_Cut_t, nCuts int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Mf_CutMergeOrder(pCut0 *Mf_Cut_t, pCut1 *Mf_Cut_t, pCut *Mf_Cut_t, nLutSize int32) int32 { 
-    var nSize0 int32    = pCut0.nLeaves;
-    var nSize1 int32    = pCut1.nLeaves;
-    var i int32;
-    var pC0 *int32 = pCut0.pLeaves;
-    var k int32;
-    var pC1 *int32 = pCut1.pLeaves;
-    var c int32;
-    var pC *int32 = pCut.pLeaves;
-    // the case of the largest cut sizes
-    if nSize0 == nLutSize && nSize1 == nLutSize {
-        for  i = 0; i < nSize0; i++  {
-            if pC0[i] != pC1[i] {  return 0; }
-            pC[i] = pC0[i];
-        }
-        pCut.nLeaves = nLutSize;
-        pCut.iFunc = MF_NO_FUNC;
-        pCut.Sign = pCut0.Sign | pCut1.Sign;
-        return 1;
-    }
-    // compare two cuts with different numbers
-    i = k = c = 0;
-    if nSize0 == 0 { goto FlushCut1; }
-    if nSize1 == 0 { goto FlushCut0; }
-    for {
-        if c == nLutSize { return 0; }
-        if pC0[i] < pC1[k] {
-            pC[c++] = pC0[i++];
-            if i >= nSize0 { goto FlushCut1; }
-        
-        } else if pC0[i] > pC1[k] {
-            pC[c++] = pC1[k++];
-            if k >= nSize1 { goto FlushCut0; }
-        
-        } else {
-            pC[c++] = pC0[i++]; k++;
-            if i >= nSize0 { goto FlushCut1; }
-            if k >= nSize1 { goto FlushCut0; }
-        }
-    }
 
-FlushCut0:
-    if c + nSize0 > nLutSize + i { return 0; }
-    for  i < nSize0  {
-        pC[c++] = pC0[i++];
-    }
-    pCut.nLeaves = c;
-    pCut.iFunc = MF_NO_FUNC;
-    pCut.Sign = pCut0.Sign | pCut1.Sign;
-    return 1;
 
-FlushCut1:
-    if c + nSize1 > nLutSize + k { return 0; }
-    for  k < nSize1  {
-        pC[c++] = pC1[k++];
-    }
-    pCut.nLeaves = c;
-    pCut.iFunc = MF_NO_FUNC;
-    pCut.Sign = pCut0.Sign | pCut1.Sign;
-    return 1;
-}
-func Mf_CutMergeOrderMux(pCut0 *Mf_Cut_t, pCut1 *Mf_Cut_t, pCut2 *Mf_Cut_t, pCut *Mf_Cut_t, nLutSize int32) int32 { 
-    var x0 int32;
-    var i0 int32;
-    var nSize0 int32 = pCut0.nLeaves;
-    var pC0 *int32 = pCut0.pLeaves;
-    var x1 int32;
-    var i1 int32;
-    var nSize1 int32 = pCut1.nLeaves;
-    var pC1 *int32 = pCut1.pLeaves;
-    var x2 int32;
-    var i2 int32;
-    var nSize2 int32 = pCut2.nLeaves;
-    var pC2 *int32 = pCut2.pLeaves;
-    var xMin int32;
-    var c int32;
-    var pC *int32 = pCut.pLeaves;
-    for {
-        if i0 == nSize0 {
-            x0 = ABC_INFINITY;
-        } else {
-            x0 = pC0[i0];
-        }
-        if i1 == nSize1 {
-            x1 = ABC_INFINITY;
-        } else {
-            x1 = pC1[i1];
-        }
-        if i2 == nSize2 {
-            x2 = ABC_INFINITY;
-        } else {
-            x2 = pC2[i2];
-        }
-        xMin = Abc_MinInt( Abc_MinInt(x0, x1), x2 );
-        if xMin == ABC_INFINITY { break; }
-        if c == nLutSize { return 0; }
-        pC[c++] = xMin;
-        if x0 == xMin { i0++; }
-        if x1 == xMin { i1++; }
-        if x2 == xMin { i2++; }
-    }
-    pCut.nLeaves = c;
-    pCut.iFunc = MF_NO_FUNC;
-    pCut.Sign = pCut0.Sign | pCut1.Sign | pCut2.Sign;
-    return 1;
-}
-static inline int Mf_SetCutIsContainedOrder( Mf_Cut_t * pBase, Mf_Cut_t * pCut ) // check if pCut is contained in pBase
-{
-    var i int32;
-    var nSizeB int32 = pBase.nLeaves;
-    var k int32;
-    var nSizeC int32 = pCut.nLeaves;
-    if nSizeB == nSizeC {
-        for  i = 0; i < nSizeB; i++  {
-            if pBase.pLeaves[i] != pCut.pLeaves[i] {
-                return 0; }
-        }
-        return 1;
-    }
-    assert(nSizeB > nSizeC, "nSizeB > nSizeC"); 
-    if nSizeC == 0 {
-        return 1; }
-    for  i = k = 0; i < nSizeB; i++  {
-        if pBase.pLeaves[i] > pCut.pLeaves[k] {
-            return 0; }
-        if pBase.pLeaves[i] == pCut.pLeaves[k] {
-            if k++; k == nSizeC {
-                return 1; }
-        }
-    }
-    return 0;
-}
+
 func Mf_SetLastCutIsContained(pCuts **Mf_Cut_t, nCuts int32) int32 {
     var i int32;
     for  i = 0; i < nCuts; i++  {
