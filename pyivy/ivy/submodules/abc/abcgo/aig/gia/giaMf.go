@@ -989,55 +989,8 @@ func Mf_ManDeriveMappingGia(p *Mf_Man_t) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Mf_ManAlloc(pGia *Gia_Man_t, pPars *Jf_Par_t) *Mf_Man_t {
-    var p *Mf_Man_t;
-    var vFlowRefs *Vec_Int_t;
-    var i, Entry int32;
-    assert(pPars.nCutNum > 1  && pPars.nCutNum <= MF_CUT_MAX, "pPars.nCutNum > 1  && pPars.nCutNum <= MF_CUT_MAX");
-    assert(pPars.nLutSize > 1 && pPars.nLutSize <= MF_LEAF_MAX, "pPars.nLutSize > 1 && pPars.nLutSize <= MF_LEAF_MAX");
-    pGia.Refs = nil;
-    Vec_IntFreeP( &pGia.vMapping );
-    if Gia_ManHasChoices(pGia) {
-        Gia_ManSetPhase(pGia); }
-    p = new(Mf_Man_t);
-    p.clkStart  = Abc_Clock();
-    p.pGia      = pGia;
-    p.pPars     = pPars;
-    if pPars.fCutMin {
-        p.vTtMem = Vec_MemAllocForTT( pPars.nLutSize, 0 );
-    } else {
-        p.vTtMem = nil;
-    }
-    p.pLfObjs   = ABC_CALLOC( Mf_Obj_t, Gia_ManObjNum(pGia) );
-    p.iCur      = 2;
-    Vec_PtrGrow( &p.vPages, 256 );
-    if pPars.fGenCnf || pPars.fGenLit {
-        Vec_IntGrow( &p.vCnfSizes, 10000 );
-        Vec_IntPush( &p.vCnfSizes, 1 );
-        Vec_IntPush( &p.vCnfSizes, 2 );
-        Vec_IntGrow( &p.vCnfMem, 10000 );
-    }
-    vFlowRefs = Vec_IntAlloc(0);
-    Mf_ManSetFlowRefs( pGia, vFlowRefs );
-    Vec_IntForEachEntry( vFlowRefs, Entry, i )
-        p.pLfObjs[i].nFlowRefs = Entry;
-    Vec_IntFree(vFlowRefs);
-    return p;
-}
-func Mf_ManFree(p *Mf_Man_t) {
-    assert(!p.pPars.fGenCnf || !p.pPars.fGenLit || Vec_IntSize(&p.vCnfSizes) == Vec_MemEntryNum(p.vTtMem), "!p.pPars.fGenCnf || !p.pPars.fGenLit || Vec_IntSize(&p.vCnfSizes) == Vec_MemEntryNum(p.vTtMem)");
-    if p.pPars.fCutMin {
-        Vec_MemHashFree( p.vTtMem ); }
-    if p.pPars.fCutMin {
-        Vec_MemFree( p.vTtMem ); }
-    Vec_PtrFreeData( &p.vPages );
-    p.vCnfSizes.pArray = nil;
-    p.vCnfMem.pArray = nil;
-    p.vPages.pArray = nil;
-    p.vTemp.pArray = nil;
-    p.pLfObjs = nil;
-    p = nil;
-}
+
+
 
 /**Function*************************************************************
 
@@ -1050,30 +1003,7 @@ func Mf_ManFree(p *Mf_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Mf_ManSetDefaultPars(pPars *Jf_Par_t) {
-    memset( pPars, 0, sizeof(Jf_Par_t) );
-    pPars.nLutSize     =  6;
-    pPars.nCutNum      =  8;
-    pPars.nProcNum     =  0;
-    pPars.nRounds      =  2;
-    pPars.nRoundsEla   =  1;
-    pPars.nRelaxRatio  =  0;
-    pPars.nCoarseLimit =  3;
-    pPars.nAreaTuner   =  1;
-    pPars.nVerbLimit   =  5;
-    pPars.DelayTarget  = -1;
-    pPars.fAreaOnly    =  0;
-    pPars.fOptEdge     =  1; 
-    pPars.fCoarsen     =  1;
-    pPars.fCutMin      =  0;
-    pPars.fGenCnf      =  0;
-    pPars.fGenLit      =  0;
-    pPars.fPureAig     =  0;
-    pPars.fVerbose     =  0;
-    pPars.fVeryVerbose =  0;
-    pPars.nLutSizeMax  =  MF_LEAF_MAX;
-    pPars.nCutNumMax   =  MF_CUT_MAX;
-}
+
 func Mf_ManPrintStats(p *Mf_Man_t, pTitle string) {
     if !p.pPars.fVerbose {
         return; }
