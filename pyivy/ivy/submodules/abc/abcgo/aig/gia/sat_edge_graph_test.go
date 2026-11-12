@@ -2,6 +2,7 @@ package gia
 
 import (
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"testing"
 )
 
@@ -59,6 +60,16 @@ func TestSatEdgeManager(t *testing.T) {
 	man := Seg_ManAlloc(p, 0)
 	if man.nVars != 1 || man.DelayMax != 2 || vec.Vec_IntEntry(man.vNvars, int(y>>1)) != 2 || man.pSat.NumVars() != 3 {
 		t.Fatalf("invalid manager: vars %d delay %d total %d", man.nVars, man.DelayMax, man.pSat.NumVars())
+	}
+	Seg_ManCreateCnf(man, 0, 0)
+	if man.pSat.Solve(bsat.Positive(0), bsat.Negative(1)) != bsat.Unsatisfiable {
+		t.Fatal("selected edge must imply first delay level")
+	}
+	if man.pSat.Solve(bsat.Negative(0), bsat.Negative(2)) != bsat.Unsatisfiable {
+		t.Fatal("unselected edge must imply second delay level")
+	}
+	if man.pSat.Solve(bsat.Positive(0), bsat.Positive(1)) != bsat.Satisfiable {
+		t.Fatal("valid edge choice rejected")
 	}
 	Seg_ManClean(man)
 	if man.pSat.NumVars() != 1 || vec.Vec_IntSize(man.vEdges) != 0 {
