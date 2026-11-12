@@ -2,11 +2,12 @@ package reo
 
 import (
 	"bytes"
-	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 	"math"
 	"math/rand"
 	"strings"
 	"testing"
+
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 )
 
 func mux(dd *DdManager) *DdNode { return cudd.Cudd_bddIte(dd, dd.Vars[2], dd.Vars[1], dd.Vars[0]) }

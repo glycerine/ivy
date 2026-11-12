@@ -5,8 +5,9 @@ package reo
 
 import (
 	"fmt"
-	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 	"io"
+
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 )
 
 type DdManager = cudd.DdManager

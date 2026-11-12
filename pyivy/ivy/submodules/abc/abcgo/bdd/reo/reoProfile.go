@@ -2,8 +2,9 @@ package reo
 
 import (
 	"fmt"
-	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 	"sort"
+
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 )
 
 func cloneProfile(p Profile) Profile {

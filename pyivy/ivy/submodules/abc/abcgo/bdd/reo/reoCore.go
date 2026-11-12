@@ -3,8 +3,9 @@ package reo
 import (
 	"errors"
 	"fmt"
-	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 	"sort"
+
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 )
 
 func identity(n int) []int {

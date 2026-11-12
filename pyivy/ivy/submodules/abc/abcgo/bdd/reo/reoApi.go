@@ -1,8 +1,9 @@
 package reo
 
 import (
-	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 	"os"
+
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 )
 
 // Compatibility names retain the original REO interface; pointer arrays and

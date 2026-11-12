@@ -1,8 +1,9 @@
 package reo
 
 import (
-	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 	"testing"
+
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 )
 
 func addMux(dd *DdManager) *DdNode {
