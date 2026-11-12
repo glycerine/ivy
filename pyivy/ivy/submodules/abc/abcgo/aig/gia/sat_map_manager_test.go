@@ -50,3 +50,26 @@ func TestSbmMappingCNF(t *testing.T) {
 		t.Fatal("opposite inverter cuts must be exclusive")
 	}
 }
+
+func TestSbmAndClauses(t *testing.T) {
+	for ca := int32(0); ca < 2; ca++ {
+		for cb := int32(0); cb < 2; cb++ {
+			for cv := int32(0); cv < 2; cv++ {
+				s := bsat.NewSolver()
+				sat_solver_add_and1(s, 2, 0, 1, ca, cb, cv)
+				sat_solver_add_and2(s, 2, 0, 1, ca, cb, cv)
+				for a := int32(0); a < 2; a++ {
+					for b := int32(0); b < 2; b++ {
+						for v := int32(0); v < 2; v++ {
+							assumptions := []bsat.Literal{2*0 + (1 - a), 2*1 + (1 - b), 2*2 + (1 - v)}
+							want := ((a ^ ca) & (b ^ cb)) == (v ^ cv)
+							if got := s.Solve(assumptions...) == bsat.Satisfiable; got != want {
+								t.Fatalf("flags %d%d%d input %d%d output %d", ca, cb, cv, a, b, v)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

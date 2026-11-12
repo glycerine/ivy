@@ -60,51 +60,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func sat_solver_add_and1(pSat *sat_solver, iVar int32, iVar0 int32, iVar1 int32, fCompl0 int32, fCompl1 int32, fCompl int32) int32 {
-    var Lits [3]lit;
-    var Cid int32;
-
-    Lits[0] = toLitCond( iVar, !fCompl );
-    Lits[1] = toLitCond( iVar0, fCompl0 );
-    Cid = sat_solver_addclause( pSat, Lits, Lits + 2 );
-    assert((Cid != 0), "Cid");
-
-    Lits[0] = toLitCond( iVar, !fCompl );
-    Lits[1] = toLitCond( iVar1, fCompl1 );
-    Cid = sat_solver_addclause( pSat, Lits, Lits + 2 );
-    assert((Cid != 0), "Cid");
-/*
-    Lits[0] = toLitCond( iVar, fCompl );
-    Lits[1] = toLitCond( iVar0, !fCompl0 );
-    Lits[2] = toLitCond( iVar1, !fCompl1 );
-    Cid = sat_solver_addclause( pSat, Lits, Lits + 3 );
-    assert( Cid );
-*/
-    return 3;
-}
-
-func sat_solver_add_and2(pSat *sat_solver, iVar int32, iVar0 int32, iVar1 int32, fCompl0 int32, fCompl1 int32, fCompl int32) int32 {
-    var Lits [3]lit;
-    var Cid int32;
-/*
-    Lits[0] = toLitCond( iVar, !fCompl );
-    Lits[1] = toLitCond( iVar0, fCompl0 );
-    Cid = sat_solver_addclause( pSat, Lits, Lits + 2 );
-    assert( Cid );
-
-    Lits[0] = toLitCond( iVar, !fCompl );
-    Lits[1] = toLitCond( iVar1, fCompl1 );
-    Cid = sat_solver_addclause( pSat, Lits, Lits + 2 );
-    assert( Cid );
-*/
-    Lits[0] = toLitCond( iVar, fCompl );
-    Lits[1] = toLitCond( iVar0, !fCompl0 );
-    Lits[2] = toLitCond( iVar1, !fCompl1 );
-    Cid = sat_solver_addclause( pSat, Lits, Lits + 3 );
-    assert((Cid != 0), "Cid");
-    return 3;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Adds a general cardinality constraint in terms of vVars.]
@@ -116,40 +71,6 @@ func sat_solver_add_and2(pSat *sat_solver, iVar int32, iVar0 int32, iVar1 int32,
   SeeAlso     []
 
 ***********************************************************************/
-func Sbm_AddCardinConstrTest() {
-    var LogN int32 = 3;
-    var nVars int32 = 1 << LogN;
-    var K int32 = 2;
-    var Count int32 = 1;
-    var vVars *Vec_Int_t;
-    var vLits *Vec_Int_t = Vec_IntAlloc( nVars );
-    var pSat *sat_solver  = Sbm_AddCardinSolver( LogN, &vVars );
-    var nVarsReal int32  = sat_solver_nvars( pSat );
-
-    var Lit int32  = Abc_Var2Lit( Vec_IntEntry(vVars, K), 1 );
-    fmt.Printf("LogN = %d. N = %3d.   Vars = %5d. Clauses = %6d.  Comb = %d.\n", LogN, nVars, nVarsReal, sat_solver_nclauses(pSat), nVars * (nVars-1)/2 + nVars + 1);
-    for {
-        var i int32;
-        var status int32 = sat_solver_solve( pSat, &Lit, &Lit+1, 0, 0, 0, 0 );
-        if status != l_True {
-            break; }
-        Vec_IntClear( vLits );
-        fmt.Printf("%3d : ", Count++);
-        for  i = 0; i < nVars; i++  {
-            Vec_IntPush( vLits, Abc_Var2Lit(i, sat_solver_var_value(pSat, i)) );
-            fmt.Printf("%d", sat_solver_var_value(pSat, i));
-        }
-        fmt.Printf("\n");
-        status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + nVars );
-        if status == 0 {
-            break; }
-    }
-
-    sat_solver_delete( pSat );
-    Vec_IntFree( vVars );
-    Vec_IntFree( vLits );
-}
-
 /**Function*************************************************************
 
   Synopsis    []
