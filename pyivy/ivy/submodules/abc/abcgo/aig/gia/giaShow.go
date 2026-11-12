@@ -96,7 +96,8 @@ const NODE_MAX = 2000
 
 ***********************************************************************/
 func Gia_ManShow(p *Gia_Man_t, bold *Vec_Int_t, adders, fullOnly, path int32) {
-	giaManShow(p, bold, adders, fullOnly, path, Ree_ManComputeCuts, Abc_ShowFile)
+	compute, show := giaShowServices(adders != 0)
+	giaManShow(p, bold, adders, fullOnly, path, compute, show)
 }
 
 ////////////////////////////////////////////////////////////////////////

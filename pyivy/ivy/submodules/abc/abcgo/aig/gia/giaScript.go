@@ -138,7 +138,7 @@ func Gia_ManAigSynch2(pInit *Gia_Man_t, pars *dch.Params, nLutSize, nRelaxRatio 
 
 ***********************************************************************/
 func Gia_ManPerformFlow3(nLutSize int32, nCutNum int32, fBalance int32, fMinAve int32, fUseMfs int32, fUseLutLib int32, fVerbose int32) {
-	giaPerformFlow3(abcmain.Abc_FrameGetGlobalFrame(), nLutSize, nCutNum, fUseMfs != 0, fUseLutLib != 0, Abc_NtkRecIsRunning3() != 0, fVerbose != 0)
+	giaPerformFlow3(abcmain.Abc_FrameGetGlobalFrame(), nLutSize, nCutNum, fUseMfs != 0, fUseLutLib != 0, giaRecordingActive(), fVerbose != 0)
 }
 
 ////////////////////////////////////////////////////////////////////////
