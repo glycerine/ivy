@@ -1061,39 +1061,6 @@ package abc
 
 ***********************************************************************/
 
-func Abc_SopSynthesize(vSops *Vec_Ptr_t) *Vec_Wec_t {
-	var pNtk *Abc_Ntk_t = Abc_NtkCreateFromSops("top", vSops)
-	var pNtkNew *Abc_Ntk_t
-	Abc_FrameReplaceCurrentNetwork(Abc_FrameReadGlobalFrame(), pNtk)
-	//Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "fx; strash; balance; dc2; map -a" );
-	Abc_FrameSetBatchMode(1)
-	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "st; collapse; sop; fx; strash; &get; &ps; &deepsyn -I 4 -J 50 -T 5 -S 111 -t; &ps; &put; map -a")
-	Abc_FrameSetBatchMode(0)
-	pNtkNew = Abc_FrameReadNtk(Abc_FrameReadGlobalFrame())
-	return abcSerializeMapped(pNtkNew)
-}
-func Abc_GiaSynthesize(vGias *Vec_Ptr_t, pMulti *Gia_Man_t) *Vec_Wec_t {
-	var pNtk *Abc_Ntk_t = Abc_NtkCreateFromGias("top", vGias, pMulti)
-	var pNtkNew *Abc_Ntk_t
-	Abc_FrameReplaceCurrentNetwork(Abc_FrameReadGlobalFrame(), pNtk)
-	Abc_FrameSetBatchMode(1)
-	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "compress2rs; dch; map -a;  strash; compress2rs; dch; map -a;  strash; compress2rs; dch; map -a")
-	Abc_FrameSetBatchMode(0)
-	pNtkNew = Abc_FrameReadNtk(Abc_FrameReadGlobalFrame())
-	return abcSerializeMapped(pNtkNew)
-}
-func Abc_GiaSynthesizeInter(p *Gia_Man_t) *Gia_Man_t {
-	var pNtkNew, pNtk *Abc_Ntk_t
-	var vGias *Vec_Ptr_t = Vec_PtrAlloc(1)
-	Vec_PtrPush(vGias, p)
-	pNtk = Abc_NtkCreateFromGias("top", vGias, nil)
-	Vec_PtrFree(vGias)
-	Abc_FrameReplaceCurrentNetwork(Abc_FrameReadGlobalFrame(), pNtk)
-	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "balance; collapse; muxes; strash; dc2")
-	pNtkNew = Abc_FrameReadNtk(Abc_FrameReadGlobalFrame())
-	return Abc_NtkClpGia(pNtkNew)
-}
-
 /*
 *Function*************************************************************
 
@@ -1107,32 +1074,6 @@ func Abc_GiaSynthesizeInter(p *Gia_Man_t) *Gia_Man_t {
 
 **********************************************************************
 */
-
-func Abc_SopSynthesizeOne(pSop string, fClp int32) *Gia_Man_t {
-	var pNtkNew, pNtk *Abc_Ntk_t
-	var vSops *Vec_Ptr_t
-	if len(pSop) == 3 {
-		var pNew *Gia_Man_t = Gia_ManStart(1)
-		pNew.pName = Abc_UtilStrsav("top")
-		//Gia_ManAppendCi( pNew );
-		assert(pSop[1] == '0' || pSop[1] == '1', "pSop[1] == '0' || pSop[1] == '1'")
-		Gia_ManAppendCo(pNew, pSop[1] == '1')
-		return pNew
-	}
-	vSops = Vec_PtrAlloc(1)
-	Vec_PtrPush(vSops, pSop)
-	pNtk = Abc_NtkCreateFromSops("top", vSops)
-	Vec_PtrFree(vSops)
-	Abc_FrameReplaceCurrentNetwork(Abc_FrameReadGlobalFrame(), pNtk)
-	Abc_FrameSetBatchMode(1)
-	if fClp != 0 {
-		Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "clp; sop")
-	}
-	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "fx; strash; balance; dc2")
-	Abc_FrameSetBatchMode(0)
-	pNtkNew = Abc_FrameReadNtk(Abc_FrameReadGlobalFrame())
-	return Abc_NtkStrashToGia(pNtkNew)
-}
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
