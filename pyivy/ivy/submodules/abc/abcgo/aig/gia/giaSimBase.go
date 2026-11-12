@@ -85,79 +85,13 @@ type Gia_SimAbsMan_t struct {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimPatAssignInputs(p *Gia_Man_t, nWords int32, vSims *Vec_Wrd_t, vSimsIn *Vec_Wrd_t) {
-    var i, Id int32;
-    assert(Vec_WrdSize(vSims)   == nWords * Gia_ManObjNum(p), "Vec_WrdSize(vSims)   == nWords * Gia_ManObjNum(p)");
-    assert(Vec_WrdSize(vSimsIn) == nWords * Gia_ManCiNum(p), "Vec_WrdSize(vSimsIn) == nWords * Gia_ManCiNum(p)");
-    // inlining of macro Gia_ManForEachCiId
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((Id) = Gia_ObjId(p, Gia_ManCi(p, i))); i++  {
-        memcpy( Vec_WrdEntryP(vSims, Id*nWords), Vec_WrdEntryP(vSimsIn, i*nWords), sizeof(word)*nWords );
-    }
-}
-func Gia_ManSimPatSimAnd(p *Gia_Man_t, i int32, pObj *Gia_Obj_t, nWords int32, vSims *Vec_Wrd_t) {
-    var pComps [2]word = [2]word{ 0, ~(word)0 };
-    var Diff0 word  = pComps[Gia_ObjFaninC0(pObj)];
-    var Diff1 word  = pComps[Gia_ObjFaninC1(pObj)];
-    var pSims *word   = Vec_WrdArray(vSims);
-    var pSims0 *word  = pSims + nWords*Gia_ObjFaninId0(pObj, i);
-    var pSims1 *word  = pSims + nWords*Gia_ObjFaninId1(pObj, i);
-    var pSims2 *word  = pSims + nWords*i; var w int32;
-    if Gia_ObjIsXor(pObj) {
-        for  w = 0; w < nWords; w++  {
-            pSims2[w] = (pSims0[w] ^ Diff0) ^ (pSims1[w] ^ Diff1);
-        }
-    } else {
-        for  w = 0; w < nWords; w++  {
-            pSims2[w] = (pSims0[w] ^ Diff0) & (pSims1[w] ^ Diff1);
-        } }
-}
-func Gia_ManSimPatSimPo(p *Gia_Man_t, i int32, pObj *Gia_Obj_t, nWords int32, vSims *Vec_Wrd_t) {
-    var pComps [2]word = [2]word{ 0, ~(word)0 };
-    var Diff0 word      = pComps[Gia_ObjFaninC0(pObj)];
-    var pSims *word    = Vec_WrdArray(vSims);
-    var pSims0 *word   = pSims + nWords*Gia_ObjFaninId0(pObj, i);
-    var pSims2 *word   = pSims + nWords*i; var w int32;
-    for  w = 0; w < nWords; w++  {
-        pSims2[w]  = (pSims0[w] ^ Diff0);
-    }
-}
-func Gia_ManSimPatSimNot(p *Gia_Man_t, i int32, pObj *Gia_Obj_t, nWords int32, vSims *Vec_Wrd_t) {
-    var pSims *word    = Vec_WrdArray(vSims) + nWords*i; var w int32;
-    for  w = 0; w < nWords; w++  {
-        pSims[w]   = ~pSims[w];
-    }
-}
-func Gia_ManSimPatSim(pGia *Gia_Man_t) *Vec_Wrd_t {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    var nWords int32 = Vec_WrdSize(pGia.vSimsPi) / Gia_ManCiNum(pGia);
-    var vSims *Vec_Wrd_t  = Vec_WrdStart( Gia_ManObjNum(pGia) * nWords );
-    assert(Vec_WrdSize(pGia.vSimsPi) % Gia_ManCiNum(pGia) == 0, "Vec_WrdSize(pGia.vSimsPi) % Gia_ManCiNum(pGia) == 0");
-    Gia_ManSimPatAssignInputs( pGia, nWords, vSims, pGia.vSimsPi );
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < pGia.nObjs) && ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else { 
-        Gia_ManSimPatSimAnd( pGia, i, pObj, nWords, vSims ); }
-    }
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(pGia.vCos)) && ((pObj) = Gia_ManCo(pGia, i)); i++  {
-        Gia_ManSimPatSimPo( pGia, Gia_ObjId(pGia, pObj), pObj, nWords, vSims );
-    }
-    return vSims;
-}
-func Gia_ManSimPatResim(pGia *Gia_Man_t, vObjs *Vec_Int_t, nWords int32, vSims *Vec_Wrd_t) {
-    var pObj *Gia_Obj_t; var i int32;
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vObjs)) && ((pObj) = Gia_ManObj(pGia, Vec_IntEntry(vObjs,i))); i++  {
-        if i == 0 {
-            Gia_ManSimPatSimNot( pGia, Gia_ObjId(pGia, pObj), pObj, nWords, vSims );
-        } else if Gia_ObjIsAnd(pObj) {
-            Gia_ManSimPatSimAnd( pGia, Gia_ObjId(pGia, pObj), pObj, nWords, vSims );
-        } else if !Gia_ObjIsCo(pObj) { assert(false, "0"); }
-    }
-}
-func Gia_ManSimPatWrite(pFileName string, vSimsIn *Vec_Wrd_t, nWords int32) {
-    Vec_WrdDumpHex( pFileName, vSimsIn, nWords, 0 );
-}
+
+
+
+
+
+
+
 
 /**Function*************************************************************
 
@@ -234,31 +168,8 @@ func Gia_ManSimPatSim2(pGia *Gia_Man_t) *Vec_Wrd_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimPatValuesDerive(p *Gia_Man_t, nWords int32, vSims *Vec_Wrd_t, vValues *Vec_Wrd_t) {
-    var i, Id int32;
-    assert(Vec_WrdSize(vSims)   == nWords * Gia_ManObjNum(p), "Vec_WrdSize(vSims)   == nWords * Gia_ManObjNum(p)");
-    assert(Vec_WrdSize(vValues) == nWords * Gia_ManCoNum(p), "Vec_WrdSize(vValues) == nWords * Gia_ManCoNum(p)");
-    // inlining of macro Gia_ManForEachCoId
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((Id) = Gia_ObjId(p, Gia_ManCo(p, i))); i++  {
-        memcpy( Vec_WrdEntryP(vValues, nWords * i), Vec_WrdEntryP(vSims, nWords * Id), sizeof(word)* nWords );
-    }
-}
-func Gia_ManSimPatValues(p *Gia_Man_t) *Vec_Wrd_t {
-    var i int32;
-    var Id int32;
-    var nWords int32 = Vec_WrdSize(p.vSimsPi) / Gia_ManCiNum(p);
-    var vSims *Vec_Wrd_t    = Gia_ManSimPatSim( p ); 
-    var vValues *Vec_Wrd_t  = Vec_WrdStart( Gia_ManCoNum(p)  * nWords ); 
-    assert(Vec_WrdSize(p.vSimsPi) == nWords * Gia_ManCiNum(p), "Vec_WrdSize(p.vSimsPi) == nWords * Gia_ManCiNum(p)");
-    assert(Vec_WrdSize(vValues)    == nWords * Gia_ManCoNum(p), "Vec_WrdSize(vValues)    == nWords * Gia_ManCoNum(p)");
-    assert(Vec_WrdSize(vSims)      == nWords * Gia_ManObjNum(p), "Vec_WrdSize(vSims)      == nWords * Gia_ManObjNum(p)");
-    // inlining of macro Gia_ManForEachCoId
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((Id) = Gia_ObjId(p, Gia_ManCo(p, i))); i++  {
-        memcpy( Vec_WrdEntryP(vValues, nWords * i), Vec_WrdEntryP(vSims, nWords * Id), sizeof(word)* nWords );
-    }
-    Vec_WrdFree( vSims );
-    return vValues;
-}
+
+
 
 
 /**Function*************************************************************
