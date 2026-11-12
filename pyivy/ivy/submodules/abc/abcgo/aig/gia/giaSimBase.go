@@ -137,39 +137,7 @@ import "os"
 
 ***********************************************************************/
 
-func Gia_ManPatSatImprove(p *Gia_Man_t, nWords0 int32, fVerbose int32) {
-    extern Vec_Int_t * Cbs2_ManSolveMiterNc( Gia_Man_t * pAig, int nConfs, Vec_Str_t ** pvStatus, int fVerbose );
-    var i int32;
-    var Status int32;
-    var Counts [3]int32 ;
-    var pGia *Gia_Man_t;
-    var vSimsIn *Vec_Wrd_t  = nil;
-    var vStatus *Vec_Str_t  = nil;
-    var vCexStore *Vec_Int_t  = nil;
-    var vSims *Vec_Wrd_t  = Gia_ManSimPatSim( p );
-    //Gia_ManSimProfile( p );
-    pGia  = Gia_ManSimPatGenMiter( p, vSims );
-    vCexStore = Cbs2_ManSolveMiterNc( pGia, 1000, &vStatus, 0 );
-    Gia_ManStop( pGia );
-    // inlining of macro Vec_StrForEachEntry
-    for  i = 0; (i < Vec_StrSize(vStatus)) && (((Status) = Vec_StrEntry(vStatus, i)), 1); i++  {
-        assert(Status >= -1 && Status <= 1, "Status >= -1 && Status <= 1");
-        Counts[Status+1]++;
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Total = %d : SAT = %d.  UNSAT = %d.  UNDEC = %d.\n", Counts[1]+Counts[2]+Counts[0], Counts[1], Counts[2], Counts[0]); }
-    if Counts[1] == 0 {
-        fmt.Printf("There are no counter-examples.  No need for more simulation.\n");
-    } else {
-        vSimsIn = Gia_ManSimBitPacking( p, vCexStore, Counts[1], Counts[0] );
-        Vec_WrdFreeP( &p.vSimsPi );
-        p.vSimsPi = vSimsIn;
-        //Gia_ManSimProfile( p );
-    }
-    Vec_StrFree( vStatus );
-    Vec_IntFree( vCexStore );
-    Vec_WrdFree( vSims );
-}
+
 
 
 
@@ -305,73 +273,9 @@ func Gia_ManPatSatImprove(p *Gia_Man_t, nWords0 int32, fVerbose int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimRelPrint(p *Gia_Man_t, vRel *Vec_Wrd_t, vOutMints *Vec_Int_t) {
-    var nWords int32  = Vec_WrdSize(p.vSimsPi) / Gia_ManCiNum(p);
-    var nMints int32  = Vec_WrdSize(vRel) / nWords; 
-    var i, m, Count int32;
-/*
-    for ( i = 0; i < 64 * nWords; i++ )
-    {
-        int k;
-        for ( k = 0; k < Gia_ManCiNum(p); k++ )
-            printf( "%d", Abc_TtGetBit( Vec_WrdEntryP(p->vSimsPi, k), i ) );
-        printf( " " );
-        Count = 0;
-        for ( m = 0; m < nMints; m++ )
-        {
-            printf( "%d", Abc_TtGetBit( Vec_WrdArray(vRel), i*nMints+m ) );
-            Count += Abc_TtGetBit( Vec_WrdArray(vRel), i*nMints+m );
-        }
-        printf( "  Count = %2d ", Count );
-        if ( vOutMints )
-        {
-            printf( "   %3d ", Vec_IntEntry(vOutMints, i) );
-            if ( Abc_TtGetBit( Vec_WrdArray(vRel), i*nMints+Vec_IntEntry(vOutMints, i) ) )
-                printf( "yes" );
-            else
-                printf( "no" );
-        }
-        printf( "\n" );
-    }
-*/
-/*
-    for ( i = 0; i < 64 * nWords; i++ )
-    {
-        Count = 0;
-        for ( m = 0; m < nMints; m++ )
-            Count += Abc_TtGetBit( Vec_WrdArray(vRel), i*nMints+m );
-        printf( "%d ", Count );
-    }
-    printf( "\n" );
-*/
-    for  i = 0; i < 64 * nWords; i++  {
-        Count = 0;
-        for  m = 0; m < nMints; m++  {
-            fmt.Printf("%d", Abc_TtGetBit( Vec_WrdArray(vRel), i*nMints+m ));
-            Count += Abc_TtGetBit( Vec_WrdArray(vRel), i*nMints+m );
-        }
-        fmt.Printf("  Count = %2d \n", Count);
-    }
-}
-func Gia_ManSimPatStart(nItems int32) *Vec_Int_t {
-    var vValues *Vec_Int_t  = Vec_IntAlloc( nItems );
-    Vec_IntPush( vValues, 17 );
-    Vec_IntPush( vValues, 39 );
-    Vec_IntPush( vValues, 56 );
-    Vec_IntPush( vValues, 221 );
-    return vValues;
-}
-func Gia_ManSimRelTest(p *Gia_Man_t) {
-    //int nWords        = Vec_WrdSize(p->vSimsPi) / Gia_ManCiNum(p);
-    var vObjs *Vec_Int_t  = Gia_ManSimPatStart( 4 ); // can be CI/AND/CO
-    var vVals *Vec_Wrd_t  = Gia_ManSimPatValues( p );
-    var vRel *Vec_Wrd_t   = Gia_ManSimRel( p, vObjs, vVals );
-    assert(p.vSimsPi != nil, "p.vSimsPi != nil");
-    Gia_ManSimRelPrint( p, vRel, nil );
-    Vec_IntFree( vObjs );
-    Vec_WrdFree( vVals );
-    Vec_WrdFree( vRel );
-}
+
+
+
 
 
 
