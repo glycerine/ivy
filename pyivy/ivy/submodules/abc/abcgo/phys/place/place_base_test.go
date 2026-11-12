@@ -10,6 +10,8 @@ func resetPlacementTest() {
 	g_place_concreteCellsSize = 0
 	g_place_concreteNetsSize = 0
 	g_place_rootPartition = nil
+	g_place_qpProb = nil
+	g_place_numPartitions = 0
 }
 func TestPlacementGeometryAndEstimate(t *testing.T) {
 	resetPlacementTest()

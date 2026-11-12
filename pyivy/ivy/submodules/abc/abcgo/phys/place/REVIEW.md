@@ -122,3 +122,58 @@ For copied-source testing, `ABC_QP_REFERENCE_SOURCE` identifies the original C f
 Focused database/partition/QP tests pass with -race in
 `/tmp/abcgo-place-base-check`. Whole-package compilation still awaits the remaining
 Bookshelf harness, placement driver, pad/bin and QP-generation drafts.
+
+## Completed package integration: driver, geometry and Bookshelf
+
+The remaining source files are now production Go, including the three-file
+Bookshelf harness (reusable `RunBookshelf` plus `cmd/bookshelf`). No source drafts
+are excluded. `place_test.go` contains workflow tests rather than C syntax.
+
+A separate readability/compactness pass retained the original partition/QP flow,
+shared the two density-axis implementations, replaced raw name hashing with Go
+maps, and isolated scanner, count/number parsing and buffered output helpers.
+The existing conjugate-gradient/constraint solver was preserved.
+
+A separate bug review found and corrected:
+
+- the last leaf COG constraint being discarded by the original count decrement;
+- sparse holes and newly added cell coordinates in rebuilt quadratic problems;
+- top-boundary cleanup using the horizontal origin/extent in its denominator;
+- fixed-cell core extents confusing maximum coordinates with width/height;
+- division by zero and nonfinite results for tied density-bin coordinates;
+- density limits applying only to bin edges rather than each moved cell;
+- the vertical density pass using full height instead of half height at bounds;
+- Bookshelf output ignoring its requested filename prefix;
+- count mismatches, duplicate names, unknown pins and nonfinite input values;
+- partial database/coordinate changes after a failed read, and repeated-terminal
+  deletion overflowing the C harness's cell-count-sized temporary buffer;
+- ignored file creation, write, flush and close failures.
+
+Preplacement supports netlists without pad cells, uses the largest non-pad height
+as row height and the largest pad dimensions for a heterogeneous pad ring. Fixed
+cells retain their positions and full physical extents. Analytic global placement
+still uses the source's horizontal density pass; vertical spreading remains a
+separate callable internal operation. Density correction is not obstacle-aware.
+`Legalize` supplies deterministic nearest-row packing around fixed cells/pads;
+the original C `legalize` function was empty. It commits positions only when all
+movable cells fit, and reports failure otherwise. This greedy legalizer does not
+promise to find every feasible arrangement.
+
+Bookshelf retains ABC's center-coordinate convention; orientations and pin
+offsets are not modeled. Net import assigns unit weights, as the original
+harness did. Package database state is process-global and callers must serialize
+mutations; a passing race suite does not make concurrent database access safe.
+
+Geometry regressions cover fixed extents, pads, tied bins and movement limits,
+obstacle packing/nonoverlap and transactional failure, all leaf COG constraints,
+nonfinite input, sparse clique solves and incremental coordinate initialization.
+I/O regressions cover real files, names/fixed flags/connectivity/HPWL round trips,
+malformed records, write failures and the complete global/incremental harness.
+
+Verified on the actual full package:
+
+- `go -C abcgo test -race ./phys/place/...` passes, including the command wrapper.
+- `go -C abcgo test -count=1 -run TestQPOriginalCComparison -v ./phys/place`
+  passes all 40 original-C numerical comparisons (not skipped).
+
+These full-package checks supersede the earlier copied-source-only status above.

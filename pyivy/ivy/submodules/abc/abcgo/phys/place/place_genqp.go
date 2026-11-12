@@ -1,323 +1,132 @@
+// Quadratic connectivity and partition constraints from place_genqp.c.
 package place
 
 import "fmt"
 
-/*===================================================================*/
-//  
-//     place_genqp.c
-//
-//        Aaron P. Hurst, 2003-2007
-//              ahurst@eecs.berkeley.edu
-//
-/*===================================================================*/
+var g_place_qpProb *qps_problem_t
 
-//#include <stdlib.h>
-//#include <math.h>
-//#include <stdio.h>
-//#include <string.h>
-//#include <assert.h>
-
-//#include "place_base.h"
-//#include "place_qpsolver.h"
-//#include "place_gordian.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-// --------------------------------------------------------------------
-// Global variables
-//
-// --------------------------------------------------------------------
-
-var g_place_qpProb *qps_problem_t = nil;
-
-
-// --------------------------------------------------------------------
-// splitPenalty()
-//
-/// \brief Returns a weight for all of the edges in the clique for a multipin net.
-//
-// --------------------------------------------------------------------
 func splitPenalty(pins int32) float32 {
-
-  if pins > 1 {
-    return 1.0 + CLIQUE_PENALTY/(pins - 1);
-    // return pow(pins - 1, CLIQUE_PENALTY);
-  }
-  return 1.0 + CLIQUE_PENALTY;
+	if pins > 1 {
+		return 1 + CLIQUE_PENALTY/float32(pins-1)
+	}
+	return 1 + CLIQUE_PENALTY
 }
 
-
-// --------------------------------------------------------------------
-// constructQuadraticProblem()
-//
-/// \brief Constructs the matrices necessary to do analytical placement.
-//
-// --------------------------------------------------------------------
-func constructQuadraticProblem() {
-  var maxConnections int32  = 1;
-  var ignoreNum int32;
-  var n, t, c, c2, p int32;
-  var cell *ConcreteCell;
-  var net *ConcreteNet;
-  var cell_numTerms *int32  = calloc(g_place_numCells, sizeof(int));
-  var cell_terms ***ConcreteNet  = calloc(g_place_numCells, sizeof(ConcreteNet**));
-  var incremental bool  = false;
-  var nextIndex int32  = 1;
-  var seen *int32  = calloc(g_place_numCells, sizeof(int));
-  var weight float32;
-  var last_index int32;
-
-  // create problem object
-  if !(g_place_qpProb != nil) {
-    g_place_qpProb = malloc(sizeof(qps_problem_t));
-    g_place_qpProb.area = nil;
-    g_place_qpProb.x = nil;
-    g_place_qpProb.y = nil;
-    g_place_qpProb.fixed = nil;
-    g_place_qpProb.connect = nil;
-    g_place_qpProb.edge_weight = nil;
-  }
-
-  // count the maximum possible number of non-sparse entries
-  for n=0; n<g_place_numNets; n++ { if g_place_concreteNets[n] {
-    var net *ConcreteNet  = g_place_concreteNets[n];
-    if net.m_numTerms > IGNORE_NETSIZE {
-      ignoreNum++;
-    
-    } else {
-      maxConnections += net.m_numTerms*(net.m_numTerms-1);
-      for t=0; t<net.m_numTerms; t++ {
-        c = net.m_terms[t].m_id;
-        p = ++cell_numTerms[c];
-        cell_terms[c] = (ConcreteNet**)realloc(cell_terms[c], p*sizeof(ConcreteNet*));
-        cell_terms[c][p-1] = net;
-      }
-    }
-  }
-  }
-  if ignoreNum != 0 {
-    fmt.Printf("QMAN-10 : \t\t%d large nets ignored\n", ignoreNum);
-  }
-
-  // initialize the data structures
-  g_place_qpProb.num_cells = g_place_numCells;
-  maxConnections += g_place_numCells + 1;
-
-  g_place_qpProb.area        = realloc(g_place_qpProb.area,
-                                         sizeof(float)*g_place_numCells);// "area" matrix
-  g_place_qpProb.edge_weight = realloc(g_place_qpProb.edge_weight,
-                                         sizeof(float)*maxConnections);  // "weight" matrix
-  g_place_qpProb.connect     = realloc(g_place_qpProb.connect,
-                                         sizeof(int)*maxConnections);    // "connectivity" matrix
-  g_place_qpProb.fixed       = realloc(g_place_qpProb.fixed,
-                                         sizeof(int)*g_place_numCells);  // "fixed" matrix
-
-  // initialize or keep preexisting locations
-  if g_place_qpProb.x != nil && g_place_qpProb.y != nil {
-    fmt.Printf("QMAN-10 :\tperforming incremental placement\n");
-    incremental = true;
-  }
-  g_place_qpProb.x = (float*)realloc(g_place_qpProb.x, sizeof(float)*g_place_numCells);
-  g_place_qpProb.y = (float*)realloc(g_place_qpProb.y, sizeof(float)*g_place_numCells);
-
-  // form a row for each cell
-  // build data
-  for c = 0; c < g_place_numCells; c++ { if g_place_concreteCells[c] {
-    cell = g_place_concreteCells[c];
-    
-    // fill in the characteristics for this cell
-    g_place_qpProb.area[c] = getCellArea(cell);
-    if cell.m_fixed || cell.m_parent.m_pad {
-      g_place_qpProb.x[c] = cell.m_x;
-      g_place_qpProb.y[c] = cell.m_y;
-      g_place_qpProb.fixed[c] = 1;
-    } else {
-      if !incremental {
-        g_place_qpProb.x[c] = g_place_coreBounds.x+g_place_coreBounds.w*0.5;
-        g_place_qpProb.y[c] = g_place_coreBounds.y+g_place_coreBounds.h*0.5;
-      }
-      g_place_qpProb.fixed[c] = 0;
-    }
-
-    // update connectivity matrices
-    last_index = nextIndex;
-    for n=0; n<cell_numTerms[c]; n++ {
-      net = cell_terms[c][n];
-      weight = net.m_weight / splitPenalty(net.m_numTerms);
-      for t=0; t<net.m_numTerms; t++ {
-        c2 = net.m_terms[t].m_id;
-        if c2 == c { continue; }
-        if seen[c2] < last_index {
-          // not seen
-          g_place_qpProb.connect[nextIndex-1] = c2;
-          g_place_qpProb.edge_weight[nextIndex-1] = weight;
-          seen[c2] = nextIndex;
-          nextIndex++;
-        } else {
-          // seen
-          g_place_qpProb.edge_weight[seen[c2]-1] += weight;
-        }
-      }
-    }
-    g_place_qpProb.connect[nextIndex-1] = -1;
-    g_place_qpProb.edge_weight[nextIndex-1] = -1.0;    
-    nextIndex++;
-  } else {
-    // fill in dummy values for connectivity matrices
-    g_place_qpProb.connect[nextIndex-1] = -1;
-    g_place_qpProb.edge_weight[nextIndex-1] = -1.0;    
-    nextIndex++;    
-  }
-  }
-
-  free(cell_numTerms);
-  free(cell_terms);
-  free(seen);
+// constructQuadraticProblem retains previous movable coordinates during incremental placement.
+func constructQuadraticProblem() error {
+	n := int(g_place_numCells)
+	x, y, fixed, area := make([]float32, n), make([]float32, n), make([]bool, n), make([]float32, n)
+	for i := 0; i < n; i++ {
+		c := g_place_concreteCells[i]
+		if c == nil {
+			fixed[i] = true
+			continue
+		}
+		area[i] = getCellArea(c)
+		fixed[i] = c.m_fixed || c.m_parent.m_pad
+		x[i], y[i] = c.m_x, c.m_y
+		if !fixed[i] {
+			if g_place_qpProb != nil && i < len(g_place_qpProb.x) {
+				x[i], y[i] = g_place_qpProb.x[i], g_place_qpProb.y[i]
+			} else {
+				x[i] = g_place_coreBounds.x + g_place_coreBounds.w/2
+				y[i] = g_place_coreBounds.y + g_place_coreBounds.h/2
+			}
+		}
+	}
+	var edges []QPEdge
+	for _, net := range g_place_concreteNets {
+		if net == nil || net.m_numTerms > IGNORE_NETSIZE {
+			continue
+		}
+		weight := net.m_weight / splitPenalty(net.m_numTerms)
+		for i, a := range net.m_terms {
+			for _, b := range net.m_terms[i+1:] {
+				if a == nil || b == nil || a.m_id < 0 || b.m_id < 0 || int(a.m_id) >= n || int(b.m_id) >= n || g_place_concreteCells[a.m_id] != a || g_place_concreteCells[b.m_id] != b {
+					return fmt.Errorf("net %d contains an unregistered cell", net.m_id)
+				}
+				if a != b {
+					edges = append(edges, QPEdge{a.m_id, b.m_id, weight})
+				}
+			}
+		}
+	}
+	p, err := NewQPProblem(x, y, fixed, edges)
+	if err != nil {
+		return err
+	}
+	if err = p.SetAreas(area); err != nil {
+		return err
+	}
+	g_place_qpProb = p
+	return nil
 }
 
-typedef struct reverseCOG {
-  float      x,y;
-  Partition *part;
-  float      delta;
-}
- reverseCOG;
-
-
-// --------------------------------------------------------------------
-// generateCoGConstraints()
-//
-/// \brief Generates center of gravity constraints.
-//
-// --------------------------------------------------------------------
-func generateCoGConstraints(COG_rev []reverseCOG) int32 {
-  var numConstraints int32; // actual num constraints
-  var cogRevNum int32;
-  var stack **Partition  = malloc(sizeof(Partition*)*g_place_numPartitions*2);
-  var stackPtr int32;
-  var p *Partition;
-  var cgx, cgy float32;
-  var next_index, last_constraint int32;
-  var isTrueConstraint bool  = false;
-  var i, m int32;
-  var totarea float32;
-  var cell *ConcreteCell;
-
-  // each partition may give rise to a center-of-gravity constraint
-  stack[stackPtr] = g_place_rootPartition;
-  for stackPtr >= 0 {
-    p = stack[stackPtr]; stackPtr--;
-    assert(p, "p");
-
-    // traverse down the partition tree to leaf nodes-only
-    if !p.m_leaf {
-      stack[++stackPtr] = p.m_sub1;
-      stack[++stackPtr] = p.m_sub2;
-    } else {
-      /*
-      cout << "adding a COG constraint for box "
-       << p->bounds.x << ","
-       << p->bounds.y << " of size"
-       << p->bounds.w << "x"
-       << p->bounds.h
-       << endl;
-      */
-      cgx = p.m_bounds.x + p.m_bounds.w*0.5;
-      cgy = p.m_bounds.y + p.m_bounds.h*0.5;
-      COG_rev[cogRevNum].x = cgx;
-      COG_rev[cogRevNum].y = cgy;
-      COG_rev[cogRevNum].part = p;
-      COG_rev[cogRevNum].delta = 0;
-
-      cogRevNum++;
-    }
-  }
-
-  assert(cogRevNum == g_place_numPartitions, "cogRevNum == g_place_numPartitions");
-  
-  for i = 0; i < g_place_numPartitions; i++ {
-    p = COG_rev[i].part;
-    assert(p, "p");
-    g_place_qpProb.cog_x[numConstraints] = COG_rev[i].x;
-    g_place_qpProb.cog_y[numConstraints] = COG_rev[i].y;
-    totarea = 0.0;
-    for m=0; m<p.m_numMembers; m++ { if p.m_members[m] {
-      cell = p.m_members[m];
-      assert((cell != nil), "cell");
-
-      if !cell.m_fixed && !cell.m_parent.m_pad {
-    isTrueConstraint = true;
-      
-      } else {
-    continue;
-      }
-      g_place_qpProb.cog_list[next_index++] = cell.m_id;
-      totarea += getCellArea(cell);
-    }
-    }
-    if totarea == 0.0 {
-      isTrueConstraint = false;
-    }
-    if isTrueConstraint {
-      numConstraints++;
-      g_place_qpProb.cog_list[next_index++] = -1;
-      last_constraint = next_index;
-    
-    } else {
-      next_index = last_constraint;
-    }
-  }
-
-  free(stack);
-
-  return --numConstraints;
+type reverseCOG struct {
+	x, y  float32
+	part  *Partition
+	delta float32
 }
 
-
-// --------------------------------------------------------------------
-// solveQuadraticProblem()
-//
-/// \brief Calls quadratic solver.
-//
-// --------------------------------------------------------------------
-func solveQuadraticProblem(useCOG bool) {
-  var c int32;
-
-  var COG_rev *reverseCOG  = malloc(sizeof(reverseCOG)*g_place_numPartitions);
-
-  g_place_qpProb.cog_list = malloc(sizeof(int)*(g_place_numPartitions+g_place_numCells));
-  g_place_qpProb.cog_x = malloc(sizeof(float)*g_place_numPartitions);
-  g_place_qpProb.cog_y = malloc(sizeof(float)*g_place_numPartitions);
-
-  // memset(g_place_qpProb->x, 0, sizeof(float)*g_place_numCells);
-  // memset(g_place_qpProb->y, 0, sizeof(float)*g_place_numCells);
-
-  qps_init(g_place_qpProb);
-
-  if useCOG {
-      g_place_qpProb.cog_num = generateCoGConstraints(COG_rev);
-  } else {
-      g_place_qpProb.cog_num = 0; }
-
-  g_place_qpProb.loop_num = 0;
-
-  qps_solve(g_place_qpProb);
-
-  qps_clean(g_place_qpProb);
-
-  // set the positions
-  for c = 0; c < g_place_numCells; c++ { if g_place_concreteCells[c] {
-    g_place_concreteCells[c].m_x = g_place_qpProb.x[c];
-    g_place_concreteCells[c].m_y = g_place_qpProb.y[c];
-  }
-  }
-  
-  // clean up
-  free(g_place_qpProb.cog_list);
-  free(g_place_qpProb.cog_x);
-  free(g_place_qpProb.cog_y);
-
-  free(COG_rev);
+// generateCoGConstraints includes every nonempty positive-area leaf; unlike the C
+// implementation it does not accidentally discard the final leaf constraint.
+func generateCoGConstraints(reverse []reverseCOG) int32 {
+	p := g_place_qpProb
+	p.cog_num = 0
+	p.cog_list = nil
+	p.cog_x = nil
+	p.cog_y = nil
+	var visit func(*Partition)
+	visit = func(part *Partition) {
+		if part == nil {
+			return
+		}
+		if !part.m_leaf {
+			visit(part.m_sub1)
+			visit(part.m_sub2)
+			return
+		}
+		var members []int32
+		var area float32
+		for _, c := range part.m_members {
+			if c != nil && !c.m_fixed && !c.m_parent.m_pad {
+				members = append(members, c.m_id)
+				area += getCellArea(c)
+			}
+		}
+		if len(members) == 0 || area <= 0 {
+			return
+		}
+		x, y := part.m_bounds.x+part.m_bounds.w/2, part.m_bounds.y+part.m_bounds.h/2
+		index := int(p.cog_num)
+		_ = p.AddCenterOfGravity(members, x, y)
+		if index < len(reverse) {
+			reverse[index] = reverseCOG{x: x, y: y, part: part}
+		}
+	}
+	visit(g_place_rootPartition)
+	return p.cog_num
 }
-//ABC_NAMESPACE_IMPL_END
 
+func solveQuadraticProblem(useCOG bool) error {
+	if g_place_qpProb == nil {
+		return fmt.Errorf("quadratic problem has not been constructed")
+	}
+	p := g_place_qpProb
+	p.cog_num = 0
+	p.cog_list = nil
+	p.cog_x = nil
+	p.cog_y = nil
+	if useCOG {
+		generateCoGConstraints(nil)
+	}
+	if err := p.Solve(); err != nil {
+		return err
+	}
+	for i, c := range g_place_concreteCells {
+		if c != nil && i < len(p.x) {
+			c.m_x, c.m_y = p.x[i], p.y[i]
+		}
+	}
+	return nil
+}

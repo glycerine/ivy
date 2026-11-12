@@ -1,172 +1,90 @@
+// Analytic placement driver from place_gordian.c.
 package place
 
 import "fmt"
 
-/*===================================================================*/
-//  
-//     place_gordian.c
-//
-//        Aaron P. Hurst, 2003-2007
-//              ahurst@eecs.berkeley.edu
-//
-/*===================================================================*/
+var g_place_numPartitions int32
 
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <math.h>
-//#include <assert.h>
-//#include <limits.h>
-
-//#include "place_gordian.h"
-//#include "place_base.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-
-// --------------------------------------------------------------------
-// Global variables
-//
-// --------------------------------------------------------------------
-
-var g_place_numPartitions int32;
-
-
-// --------------------------------------------------------------------
-// globalPlace()
-//
-/// \brief Performs analytic placement using a GORDIAN-like algorithm.
-//
-/// Updates the positions of all non-fixed non-pad cells.
-///
-// --------------------------------------------------------------------
-func globalPlace() {
-  var completionFlag bool  = false;
-  var iteration int32;  
-
-  fmt.Printf("PLAC-10 : Global placement (wirelength-driven Gordian)\n");
-
-  initPartitioning();
-
-  // build matrices representing interconnections
-  fmt.Printf("QMAN-00 : \tconstructing initial quadratic problem...\n");
-  constructQuadraticProblem();
-
-  // iterate placement until termination condition is met
-  for !completionFlag {
-    fmt.Printf("QMAN-01 : \titeration %d numPartitions = %d\n", iteration, g_place_numPartitions);
-    
-    // do the global optimization in each direction
-    fmt.Printf("QMAN-01 : \t\tglobal optimization\n");
-    solveQuadraticProblem(!IGNORE_COG);
-      
-    // -------- PARTITIONING BASED CELL SPREADING ------
-
-    // bisection
-    fmt.Printf("QMAN-01 : \t\tpartition refinement\n");
-    if REALLOCATE_PARTITIONS { reallocPartitions(); }
-    completionFlag |= refinePartitions();
-      
-    fmt.Printf("QMAN-01 : \t\twirelength = %e\n", getTotalWirelength());
-      
-    iteration++;
-  }
-  
-  // final global optimization
-  fmt.Printf("QMAN-02 : \t\tfinal pass\n");
-  if FINAL_REALLOCATE_PARTITIONS { reallocPartitions(); }
-  solveQuadraticProblem(!IGNORE_COG);
-  fmt.Printf("QMAN-01 : \t\twirelength = %e\n", getTotalWirelength());
-
-  // clean up
-  sanitizePlacement();
-  fmt.Printf("QMAN-01 : \t\twirelength = %e\n", getTotalWirelength());
-  globalFixDensity(25, g_place_rowHeight*5);
-  fmt.Printf("QMAN-01 : \t\twirelength = %e\n", getTotalWirelength());
+func globalPlace() error {
+	if g_place_numCells == 0 {
+		return nil
+	}
+	initPartitioning()
+	if err := constructQuadraticProblem(); err != nil {
+		return err
+	}
+	for iteration := int32(0); ; iteration++ {
+		if iteration > g_place_numCells+1 {
+			return fmt.Errorf("partition refinement did not converge")
+		}
+		if err := solveQuadraticProblem(!IGNORE_COG); err != nil {
+			return err
+		}
+		if REALLOCATE_PARTITIONS {
+			reallocPartitions()
+		}
+		if refinePartitions() {
+			break
+		}
+	}
+	if FINAL_REALLOCATE_PARTITIONS {
+		reallocPartitions()
+	}
+	if err := solveQuadraticProblem(!IGNORE_COG); err != nil {
+		return err
+	}
+	sanitizePlacement()
+	globalFixDensity(25, g_place_rowHeight*5)
+	return nil
+}
+func globalIncremental() error {
+	if g_place_rootPartition == nil {
+		return globalPlace()
+	}
+	incrementalPartition()
+	if err := constructQuadraticProblem(); err != nil {
+		return err
+	}
+	if err := solveQuadraticProblem(!IGNORE_COG); err != nil {
+		return err
+	}
+	sanitizePlacement()
+	globalFixDensity(25, g_place_rowHeight*5)
+	return nil
 }
 
-
-// --------------------------------------------------------------------
-// globalIncremental()
-//
-/// \brief Performs analytic placement using a GORDIAN-like algorithm.
-//
-/// Requires a valid set of partitions.
-///
-// --------------------------------------------------------------------
-
-func globalIncremental() {
-  if !g_place_rootPartition {
-    fmt.Printf("WARNING: Can not perform incremental placement\n");
-    globalPlace();
-    return;
-  }
-
-  fmt.Printf("PLAC-10 : Incremental global placement\n");
-
-  incrementalPartition();
-
-  fmt.Printf("QMAN-00 : \tconstructing initial quadratic problem...\n");
-  constructQuadraticProblem();
-
-  solveQuadraticProblem(!IGNORE_COG);
-  fmt.Printf("QMAN-01 : \t\twirelength = %e\n", getTotalWirelength());
-  
-  // clean up
-  sanitizePlacement();
-  fmt.Printf("QMAN-01 : \t\twirelength = %e\n", getTotalWirelength());
-  globalFixDensity(25, g_place_rowHeight*5);
-  fmt.Printf("QMAN-01 : \t\twirelength = %e\n", getTotalWirelength());
+func clampPlacement(value, low, high float32) float32 {
+	if low > high {
+		return (low + high) / 2
+	}
+	if value < low {
+		return low
+	}
+	if value > high {
+		return high
+	}
+	return value
+}
+func sanitizeCoordinate(value, size, origin, extent, margin float32) float32 {
+	low, high := origin+size/2, origin+extent-size/2
+	if value < low {
+		value = low + margin/(1+low-value)
+	} else if value > high {
+		value = high - margin/(1+value-high)
+	}
+	return clampPlacement(value, low, high)
 }
 
-
-// --------------------------------------------------------------------
-// sanitizePlacement()
-//
-/// \brief Moves any cells that are outside of the core bounds to the nearest location within.
-//
-// --------------------------------------------------------------------
-func sanitizePlacement() { 
-  var c int32;
-  var order_width float32  = g_place_rowHeight;
-  var x, y, edge, w, h float32;
-  
-  fmt.Printf("QCLN-10 : \tsanitizing placement\n");
-
-  for c=0; c<g_place_numCells; c++ { if g_place_concreteCells[c] {
-    var cell *ConcreteCell  = g_place_concreteCells[c];
-    if cell.m_fixed || cell.m_parent.m_pad {
-      continue;
-    }
-    // the new locations of the cells will be distributed within
-    // a small margin inside the border so that ordering is preserved
-    order_width = g_place_rowHeight;
-
-    x = cell.m_x;
-y = cell.m_y;
-w = cell.m_parent.m_width;
-h = cell.m_parent.m_height;
-
-    if (edge=x-w*0.5) < g_place_coreBounds.x {
-      x = g_place_coreBounds.x+w*0.5 +
-        order_width/(1.0+g_place_coreBounds.x-edge);
-    
-    } else if (edge=x+w*0.5) > g_place_coreBounds.x+g_place_coreBounds.w {
-      x = g_place_coreBounds.x+g_place_coreBounds.w-w*0.5 -
-        order_width/(1.0+edge-g_place_coreBounds.x-g_place_coreBounds.w);
-    }
-    if (edge=y-h*0.5) < g_place_coreBounds.y {
-      y = g_place_coreBounds.y+h*0.5 +
-        order_width/(1.0+g_place_coreBounds.y-edge);
-    
-    } else if (edge=y+h*0.5) > g_place_coreBounds.y+g_place_coreBounds.h {
-      y = g_place_coreBounds.y+g_place_coreBounds.h-h*0.5 -
-        order_width/(1.0+edge-g_place_coreBounds.x-g_place_coreBounds.w);
-    }
-    cell.m_x = x;
-    cell.m_y = y;
-  }
-  }
+// sanitizePlacement keeps movable cells inside the core, preserving edge order.
+func sanitizePlacement() {
+	for _, c := range g_place_concreteCells {
+		if c == nil || c.m_fixed || c.m_parent.m_pad {
+			continue
+		}
+		c.m_x = sanitizeCoordinate(c.m_x, c.m_parent.m_width, g_place_coreBounds.x, g_place_coreBounds.w, g_place_rowHeight)
+		c.m_y = sanitizeCoordinate(c.m_y, c.m_parent.m_height, g_place_coreBounds.y, g_place_coreBounds.h, g_place_rowHeight)
+	}
 }
-//ABC_NAMESPACE_IMPL_END
-
+func GlobalPlace() error       { return globalPlace() }
+func GlobalIncremental() error { return globalIncremental() }
+func SanitizePlacement()       { sanitizePlacement() }

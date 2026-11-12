@@ -1,100 +1,126 @@
+// Bookshelf database writers from place_io.c.
 package place
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"os"
+	"strings"
+)
 
-import "os"
-
-/*===================================================================*/
-//  
-//     place_io.c
-//
-//        Aaron P. Hurst, 2003-2007
-//              ahurst@eecs.berkeley.edu
-//
-/*===================================================================*/
-
-//#include <stdlib.h>
-//#include <limits.h>
-//#include <assert.h>
-//#include <string.h>
-//#include <stdio.h>
-
-//#include "place_base.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-
-// --------------------------------------------------------------------
-// writeBookshelfNodes()
-//
-// --------------------------------------------------------------------
-func writeBookshelfNodes(filename string) {
-  
-  var c int32;
-  var numNodes, numTerms int32;
-
-  var nodesFile *os.File  = os.OpenFile(filename, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-  if !(nodesFile != nil) {
-    fmt.Printf("ERROR: Could not open .nodes file\n");
-    os.Exit(int(1));
-  }
-
-  numNodes = numTerms = 0;
-  for c=0; c<g_place_numCells; c++ { if g_place_concreteCells[c] {
-      numNodes++;
-      if g_place_concreteCells[c].m_parent.m_pad {
-        numTerms++; }
-    }
-  }
-
-
-
-  fmt.Fprintf(nodesFile, "UCLA nodes 1.0\n");
-  fmt.Fprintf(nodesFile, "NumNodes : %d\n", numNodes);
-  fmt.Fprintf(nodesFile, "NumTerminals : %d\n", numTerms);
-
-  for c=0; c<g_place_numCells; c++ { if g_place_concreteCells[c] {
-    fmt.Fprintf(nodesFile, "CELL%d %f %f %s\n", g_place_concreteCells[c].m_id, g_place_concreteCells[c].m_parent.m_width, g_place_concreteCells[c].m_parent.m_height, (g_place_concreteCells[c].m_parent.m_pad ? " terminal" : ""));
-  }
-  }
-
-  _ = (nodesFile).Close();  
+func bookshelfCellName(c *ConcreteCell) string {
+	if c.m_label != "" && len(strings.Fields(c.m_label)) == 1 && !strings.ContainsAny(c.m_label, "#\r\n") {
+		return c.m_label
+	}
+	return fmt.Sprintf("CELL%d", c.m_id)
 }
-
-
-// --------------------------------------------------------------------
-// writeBookshelfPl()
-//
-// --------------------------------------------------------------------
-func writeBookshelfPl(filename string) {
-  
-  var c int32;
-
-  var plFile *os.File  = os.OpenFile(filename, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-  if !(plFile != nil) {
-    fmt.Printf("ERROR: Could not open .pl file\n");
-    os.Exit(int(1));
-  }
-
-  fmt.Fprintf(plFile, "UCLA pl 1.0\n");
-  for c=0; c<g_place_numCells; c++ {  if g_place_concreteCells[c] {
-    fmt.Fprintf(plFile, "CELL%d %f %f : N %s\n", g_place_concreteCells[c].m_id, g_place_concreteCells[c].m_x, g_place_concreteCells[c].m_y, (g_place_concreteCells[c].m_fixed ? "\\FIXED" : ""));
-  }
-  }
-
-  _ = (plFile).Close();  
-
+func writePlacementFile(filename string, write func(io.Writer) error) error {
+	f, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	b := bufio.NewWriter(f)
+	err = write(b)
+	if flushErr := b.Flush(); err == nil {
+		err = flushErr
+	}
+	if closeErr := f.Close(); err == nil {
+		err = closeErr
+	}
+	return err
 }
-
-
-// --------------------------------------------------------------------
-// writeBookshelf()
-//
-// --------------------------------------------------------------------
-func writeBookshelf(filename string) {
-  writeBookshelfNodes("out.nodes");
-  writeBookshelfPl("out.pl");
+func writeBookshelfNodes(filename string) error {
+	return writePlacementFile(filename, func(w io.Writer) error {
+		nodes, terms := 0, 0
+		for _, c := range g_place_concreteCells {
+			if c != nil {
+				nodes++
+				if c.m_parent.m_pad {
+					terms++
+				}
+			}
+		}
+		if _, err := fmt.Fprintf(w, "UCLA nodes 1.0\nNumNodes : %d\nNumTerminals : %d\n", nodes, terms); err != nil {
+			return err
+		}
+		for _, c := range g_place_concreteCells {
+			if c == nil {
+				continue
+			}
+			terminal := ""
+			if c.m_parent.m_pad {
+				terminal = " terminal"
+			}
+			if _, err := fmt.Fprintf(w, "%s %g %g%s\n", bookshelfCellName(c), c.m_parent.m_width, c.m_parent.m_height, terminal); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
-//ABC_NAMESPACE_IMPL_END
-
+func writeBookshelfPl(filename string) error {
+	return writePlacementFile(filename, func(w io.Writer) error {
+		if _, err := fmt.Fprintln(w, "UCLA pl 1.0"); err != nil {
+			return err
+		}
+		for _, c := range g_place_concreteCells {
+			if c == nil {
+				continue
+			}
+			fixed := ""
+			if c.m_fixed {
+				fixed = " /FIXED"
+			}
+			if _, err := fmt.Fprintf(w, "%s %g %g : N%s\n", bookshelfCellName(c), c.m_x, c.m_y, fixed); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}
+func writeBookshelfNets(filename string) error {
+	return writePlacementFile(filename, func(w io.Writer) error {
+		nets, pins := 0, 0
+		for _, n := range g_place_concreteNets {
+			if n != nil {
+				nets++
+				pins += len(n.m_terms)
+			}
+		}
+		if _, err := fmt.Fprintf(w, "UCLA nets 1.0\nNumNets : %d\nNumPins : %d\n", nets, pins); err != nil {
+			return err
+		}
+		for _, n := range g_place_concreteNets {
+			if n == nil {
+				continue
+			}
+			if _, err := fmt.Fprintf(w, "NetDegree : %d NET%d\n", len(n.m_terms), n.m_id); err != nil {
+				return err
+			}
+			for _, c := range n.m_terms {
+				if _, err := fmt.Fprintf(w, "%s B\n", bookshelfCellName(c)); err != nil {
+					return err
+				}
+			}
+		}
+		return nil
+	})
+}
+func writeBookshelf(prefix string) error {
+	if _, err := bookshelfNames(g_place_concreteCells); err != nil {
+		return err
+	}
+	if err := validatePlacementGeometry(); err != nil {
+		return err
+	}
+	if err := writeBookshelfNodes(prefix + ".nodes"); err != nil {
+		return err
+	}
+	if err := writeBookshelfNets(prefix + ".nets"); err != nil {
+		return err
+	}
+	return writeBookshelfPl(prefix + ".pl")
+}
+func WriteBookshelf(prefix string) error            { return writeBookshelf(prefix) }
+func WriteBookshelfPlacement(filename string) error { return writeBookshelfPl(filename) }

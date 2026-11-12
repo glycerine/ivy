@@ -1,294 +1,117 @@
+// Area-balanced bin spreading from place_bin.c.
 package place
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
-/*===================================================================*/
-//  
-//     place_bin.c
-//
-//        Aaron P. Hurst, 2007
-//              ahurst@eecs.berkeley.edu
-//
-/*===================================================================*/
-
-//#include <stdlib.h>
-//#include <stdio.h>
-//#include <string.h>
-//#include <limits.h>
-//#include <assert.h>
-
-//#define DEBUG
-
-//#include "place_base.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-// --------------------------------------------------------------------
-// Global variables
-//
-// --------------------------------------------------------------------
-
-
-// --------------------------------------------------------------------
-// Function prototypes and local data structures
-//
-// --------------------------------------------------------------------
-
-// void spreadDensityX(int numBins, float maxMovement);
-
-// void spreadDensityY(int numBins, float maxMovement);
-
-
-
-// --------------------------------------------------------------------
-// globalFixDensity()
-//
-/// Doesn't deal well with fixed cells in the core area.
-// --------------------------------------------------------------------
-func globalFixDensity(numBins int32, maxMovement float32) {
-  
-  fmt.Printf("QCLN-10 : \tbin-based density correction\n");
-    
-  spreadDensityX(numBins, maxMovement);
-  // spreadDensityY(numBins, maxMovement);
-}
-
-
-// --------------------------------------------------------------------
-// spreadDensityX()
-//
-// --------------------------------------------------------------------
+func globalFixDensity(numBins int32, maxMovement float32) { spreadDensityX(numBins, maxMovement) }
 func spreadDensityX(numBins int32, maxMovement float32) {
-
-  var c, c2, c3, x, y int32;
-  var totalArea float32;
-  var moveableCells int32;
-  var yBinArea, yCumArea float32;
-  var yBinStart, yBinCount int32;
-  var xBinCount, xBinStart int32;
-  var xBinArea, xCumArea float32;
-  var lastOldEdge float32;
-  var lastNewEdge float32;
-  var curOldEdge, curNewEdge float32;
-  var stretch, w float32;
-  var xCell, yCell *ConcreteCell;
-  var binCells **ConcreteCell;
-  var allCells **ConcreteCell;
-
-  binCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);
-  allCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);
-
-  for c=0; c<g_place_numCells; c++ { if g_place_concreteCells[c] {
-    var cell *ConcreteCell  =  g_place_concreteCells[c];
-    if !cell.m_fixed && !cell.m_parent.m_pad {
-      allCells[moveableCells++] = cell;
-      totalArea += getCellArea(cell);
-    }
-  }
-  }
-  
-  // spread X
-  qsort(allCells, (size_t)moveableCells, sizeof(ConcreteCell*), cellSortByY);
-
-  y = 0;
-
-  // for each y-bin...
-  for c=0; c<moveableCells; c++ {
-    yCell = allCells[c];
-    yBinArea += getCellArea(yCell);
-    yCumArea += getCellArea(yCell);
-    yBinCount++;
-
-    // have we filled up a y-bin?
-    if yCumArea >= totalArea*(y+1)/numBins && yBinArea > 0 {
-      memcpy(binCells, &(allCells[yBinStart]), sizeof(ConcreteCell*)*yBinCount);
-      qsort(binCells, (size_t)yBinCount, sizeof(ConcreteCell*), cellSortByX);
-
-#if defined(DEBUG)
-      printf("y-bin %d count=%d area=%f\n",y,yBinCount, yBinArea);
-#endif
-
-      x = 0;
-      xBinCount = 0;
-xBinStart =  0;
-      xBinArea = 0;
-xCumArea = 0;
-      lastOldEdge = g_place_coreBounds.x;
-      lastNewEdge = g_place_coreBounds.x;
-
-      // for each x-bin...
-      for c2=0; c2<yBinCount; c2++ {
-        xCell = binCells[c2];
-        xBinArea += getCellArea(xCell);
-        xCumArea += getCellArea(xCell);
-        xBinCount++;
-        curOldEdge = xCell.m_x;
-        
-        fmt.Printf("%.3f ", xCell.m_x);
-
-        // have we filled up an x-bin?
-        if xCumArea >= yBinArea*(x+1)/numBins && xBinArea > 0 {
-          curNewEdge = lastNewEdge + g_place_coreBounds.w*xBinArea/yBinArea;
-
-          if curNewEdge > g_place_coreBounds.x+g_place_coreBounds.w { 
-            curNewEdge = g_place_coreBounds.x+g_place_coreBounds.w; }
-          if (curNewEdge-curOldEdge)>maxMovement { curNewEdge = curOldEdge + maxMovement; }
-          if (curOldEdge-curNewEdge)>maxMovement { curNewEdge = curOldEdge - maxMovement; }
-
-#if defined(DEBUG)
-          printf("->\tx-bin %d count=%d area=%f (%f,%f)->(%f,%f)\n",x, xBinCount, xBinArea,
-                 curOldEdge, lastOldEdge, curNewEdge, lastNewEdge);
-#endif
-          
-          stretch = (curNewEdge-lastNewEdge)/(curOldEdge-lastOldEdge);
-          
-          // stretch!
-          for c3=xBinStart; c3<xBinStart+xBinCount; c3++ {
-            if curOldEdge == lastOldEdge {
-              binCells[c3].m_x = lastNewEdge+(c3-xBinStart)*(curNewEdge-lastNewEdge);
-            } else {
-              binCells[c3].m_x = lastNewEdge+(binCells[c3].m_x-lastOldEdge)*stretch; }
-            
-              // force within core
-            w = binCells[c3].m_parent.m_width*0.5;
-            if binCells[c3].m_x-w < g_place_coreBounds.x {
-              binCells[c3].m_x = g_place_coreBounds.x+w; }
-            if binCells[c3].m_x+w > g_place_coreBounds.x+g_place_coreBounds.w {
-              binCells[c3].m_x = g_place_coreBounds.x+g_place_coreBounds.w-w; }
-          }
-          
-          lastOldEdge = curOldEdge;
-          lastNewEdge = curNewEdge;
-          x++;
-          xBinCount = 0;
-          xBinArea = 0;
-          xBinStart = c2+1;
-        }
-      }
-      
-      y++;
-      yBinCount = 0;
-      yBinArea = 0;
-      yBinStart = c+1;
-    }
-  }
-
-  free(binCells);
-  free(allCells);
+	_ = spreadDensity(numBins, maxMovement, false)
 }
-
-
-// --------------------------------------------------------------------
-// spreadDensityY()
-//
-// --------------------------------------------------------------------
 func spreadDensityY(numBins int32, maxMovement float32) {
-
-  var c, c2, c3, x, y int32;
-  var totalArea float32;
-  var moveableCells int32;
-  var xBinArea, xCumArea float32;
-  var xBinStart, xBinCount int32;
-  var yBinCount, yBinStart int32;
-  var yBinArea, yCumArea float32;
-  var lastOldEdge float32;
-  var lastNewEdge float32;
-  var curOldEdge, curNewEdge float32;
-  var stretch, h float32;
-  var xCell, yCell *ConcreteCell;
-  var binCells **ConcreteCell;
-  var allCells **ConcreteCell;
-
-  binCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);
-  allCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);
-
-  for c=0; c<g_place_numCells; c++ { if g_place_concreteCells[c] {
-    var cell *ConcreteCell  =  g_place_concreteCells[c];
-    if !cell.m_fixed && !cell.m_parent.m_pad {
-      allCells[moveableCells++] = cell;
-      totalArea += getCellArea(cell);
-    }
-  }
-  }
-  
-  // spread Y
-  qsort(allCells, moveableCells, sizeof(ConcreteCell*), cellSortByX);
-
-  x = 0;
-
-  // for each x-bin...
-  for c=0; c<moveableCells; c++ {
-    xCell = allCells[c];
-    xBinArea += getCellArea(xCell);
-    xCumArea += getCellArea(xCell);
-    xBinCount++;
-
-    // have we filled up an x-bin?
-    if xCumArea >= totalArea*(x+1)/numBins && xBinArea > 0 {
-      memcpy(binCells, &(allCells[xBinStart]), sizeof(ConcreteCell*)*xBinCount);
-      qsort(binCells, (size_t)xBinCount, sizeof(ConcreteCell*), cellSortByY);
-
-      // printf("x-bin %d count=%d area=%f\n",y,yBinCount, yBinArea);
-
-      y = 0;
-      yBinCount = 0;
-yBinStart =  0;
-      yBinArea = 0;
-yCumArea = 0;
-      lastOldEdge = g_place_coreBounds.y;
-      lastNewEdge = g_place_coreBounds.y;
-      
-      // for each y-bin...
-      for c2=0; c2<xBinCount; c2++ {
-        yCell = binCells[c2];
-        yBinArea += getCellArea(yCell);
-        yCumArea += getCellArea(yCell);
-        yBinCount++;
-        curOldEdge = yCell.m_y;
-        
-        // have we filled up an x-bin?
-        if yCumArea >= xBinArea*(y+1)/numBins && yBinArea > 0 {
-          curNewEdge = lastNewEdge + g_place_coreBounds.h*yBinArea/xBinArea;
-
-          if curNewEdge > g_place_coreBounds.y+g_place_coreBounds.h { 
-            curNewEdge = g_place_coreBounds.y+g_place_coreBounds.h; }
-          if (curNewEdge-curOldEdge)>maxMovement { curNewEdge = curOldEdge + maxMovement; }
-          if (curOldEdge-curNewEdge)>maxMovement { curNewEdge = curOldEdge - maxMovement; }
-
-          if curOldEdge == lastOldEdge { continue; } // hmmm
-          stretch = (curNewEdge-lastNewEdge)/(curOldEdge-lastOldEdge);
-
-          // stretch!
-          for c3=yBinStart; c3<yBinStart+yBinCount; c3++ {
-            binCells[c3].m_y = lastNewEdge+(binCells[c3].m_y-lastOldEdge)*stretch;
-
-            // force within core
-            h = binCells[c3].m_parent.m_height;
-            if binCells[c3].m_y-h < g_place_coreBounds.y {
-              binCells[c3].m_y = g_place_coreBounds.y+h; }
-            if binCells[c3].m_y+h > g_place_coreBounds.y+g_place_coreBounds.h {
-              binCells[c3].m_y = g_place_coreBounds.y+g_place_coreBounds.h-h; }
-          }
-
-          lastOldEdge = curOldEdge;
-          lastNewEdge = curNewEdge;
-          y++;
-          yBinCount = 0;
-          yBinArea = 0;
-          yBinStart = c2+1;
-        }
-      }
-
-      x++;
-      xBinCount = 0;
-      xBinArea = 0;
-      xBinStart = c+1;
-    }
-  }
-
-  free(binCells);
-  free(allCells);
+	_ = spreadDensity(numBins, maxMovement, true)
 }
-//ABC_NAMESPACE_IMPL_END
 
+// FixDensity applies the original horizontal density pass. It does not resolve
+// fixed-cell obstacles; Legalize performs that separate geometric operation.
+func FixDensity(numBins int32, maxMovement float32) error {
+	return spreadDensity(numBins, maxMovement, false)
+}
+
+func spreadDensity(numBins int32, maxMovement float32, vertical bool) error {
+	if err := validatePlacementGeometry(); err != nil {
+		return err
+	}
+	if numBins <= 0 || maxMovement < 0 || !qpFinite(maxMovement) {
+		return fmt.Errorf("invalid density bin count or movement limit")
+	}
+	var cells []*ConcreteCell
+	var total float32
+	for _, c := range g_place_concreteCells {
+		if c != nil && !c.m_fixed && !c.m_parent.m_pad {
+			cells = append(cells, c)
+			total += getCellArea(c)
+		}
+	}
+	if total <= 0 || len(cells) == 0 {
+		return nil
+	}
+	position := func(c *ConcreteCell) float32 {
+		if vertical {
+			return c.m_y
+		}
+		return c.m_x
+	}
+	cross := func(c *ConcreteCell) float32 {
+		if vertical {
+			return c.m_x
+		}
+		return c.m_y
+	}
+	sort.SliceStable(cells, func(i, j int) bool { return cross(cells[i]) < cross(cells[j]) })
+	origin, extent := g_place_coreBounds.x, g_place_coreBounds.w
+	if vertical {
+		origin, extent = g_place_coreBounds.y, g_place_coreBounds.h
+	}
+	if extent < 0 || !qpFinite(extent) {
+		return fmt.Errorf("invalid core extent")
+	}
+	outerStart, outerBin := 0, int32(0)
+	var outerArea, cumulative float32
+	for end, c := range cells {
+		a := getCellArea(c)
+		outerArea += a
+		cumulative += a
+		if end+1 < len(cells) && (outerArea <= 0 || cumulative < total*float32(outerBin+1)/float32(numBins)) {
+			continue
+		}
+		row := append([]*ConcreteCell(nil), cells[outerStart:end+1]...)
+		sort.SliceStable(row, func(i, j int) bool { return position(row[i]) < position(row[j]) })
+		if outerArea > 0 {
+			start, bin := 0, int32(0)
+			oldEdge, newEdge := origin, origin
+			var binArea, used float32
+			for i, c := range row {
+				a := getCellArea(c)
+				binArea += a
+				used += a
+				if i+1 < len(row) && (binArea <= 0 || used < outerArea*float32(bin+1)/float32(numBins)) {
+					continue
+				}
+				currentOld := position(c)
+				currentNew := min(origin+extent, newEdge+extent*binArea/outerArea)
+				currentNew = clampPlacement(currentNew, currentOld-maxMovement, currentOld+maxMovement)
+				for j := start; j <= i; j++ {
+					cell := row[j]
+					old := position(cell)
+					fraction := float32(j-start+1) / float32(i-start+2)
+					if currentOld != oldEdge {
+						fraction = (old - oldEdge) / (currentOld - oldEdge)
+					}
+					proposed := newEdge + fraction*(currentNew-newEdge)
+					proposed = clampPlacement(proposed, old-maxMovement, old+maxMovement)
+					size := cell.m_parent.m_width
+					if vertical {
+						size = cell.m_parent.m_height
+					}
+					proposed = clampPlacement(proposed, origin+size/2, origin+extent-size/2)
+					if vertical {
+						cell.m_y = proposed
+					} else {
+						cell.m_x = proposed
+					}
+				}
+				oldEdge, newEdge = currentOld, currentNew
+				start = i + 1
+				bin++
+				binArea = 0
+			}
+		}
+		outerStart = end + 1
+		outerBin++
+		outerArea = 0
+	}
+	return nil
+}
