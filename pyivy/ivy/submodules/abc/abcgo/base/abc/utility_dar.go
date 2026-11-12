@@ -66,3 +66,98 @@ func Abc_NtkToDar(n *Network, exors, registers int32) *aig.Graph {
 	}
 	return g
 }
+
+// Abc_NtkFromDarSeqSweep rebuilds an ABC AIG after a change in register count.
+func Abc_NtkFromDarSeqSweep(old *Network, g *aig.Graph) *Network {
+	if old == nil || g == nil || g.Assertions != 0 || old.Barriers != 0 {
+		panic("abc: invalid sequential AIG conversion")
+	}
+	regs := int(g.RegisterCount())
+	piCount, poCount := g.InputCount()-regs, g.OutputCount()-regs
+	if piCount < 0 || poCount < 0 {
+		panic("abc: invalid AIG register count")
+	}
+	dst := Abc_NtkStartFromNoLatches(old, ABC_NTK_STRASH, ABC_FUNC_AIG)
+	dst.Constraints = aig.Aig_ManConstrNum(g)
+	dst.Barriers = int(g.BarrierBuffers)
+	for len(dst.cis) < piCount {
+		obj := Abc_NtkCreatePi(dst)
+		Abc_ObjAssignName(obj, Abc_ObjName(obj), "")
+	}
+	Abc_NtkOrderCisCos(dst)
+	if len(dst.cis) != piCount || len(dst.cos) != poCount {
+		panic("abc: AIG interface mismatch")
+	}
+	copies := make([]Edge, len(g.Nodes()))
+	valid := make([]bool, len(copies))
+	copies[0], valid[0] = dst.One(), true
+	inputs := g.Inputs()
+	for i := 0; i < piCount; i++ {
+		id := inputs[i].NodeID()
+		copies[id], valid[id] = dst.cis[i].Signal(), true
+	}
+	for i := 0; i < regs; i++ {
+		output := Abc_NtkAddLatch(dst, nil, ABC_INIT_ZERO)
+		id := inputs[piCount+i].NodeID()
+		copies[id], valid[id] = output.Signal(), true
+	}
+	Abc_NtkOrderCisCos(dst)
+	manager := dst.FunctionManager.(*Abc_Aig_t)
+	var build func(aig.Edge) Edge
+	build = func(e aig.Edge) Edge {
+		id := e.NodeID()
+		if !valid[id] {
+			node := g.Node(aig.Edge(id << 1))
+			switch node.Kind {
+			case aig.And:
+				copies[id] = Abc_AigAnd(manager, build(node.Fanins[0]), build(node.Fanins[1]))
+			case aig.ExclusiveOr:
+				copies[id] = Abc_AigXor(manager, build(node.Fanins[0]), build(node.Fanins[1]))
+			case aig.Buffer:
+				copies[id] = build(node.Fanins[0])
+			default:
+				panic("abc: invalid AIG node")
+			}
+			valid[id] = true
+		}
+		result := copies[id]
+		if e.Complemented() {
+			result = result.Not()
+		}
+		return result
+	}
+	for i, output := range g.Outputs() {
+		target := dst.cos[i]
+		edge := build(g.Node(output).Fanins[0])
+		name := Abc_ObjName(target)
+		for _, ci := range dst.cis {
+			if name != "" && Abc_ObjName(ci) == name {
+				edge = ci.Signal()
+				break
+			}
+		}
+		Abc_ObjAddFanin(target, edge)
+	}
+	if len(g.FlopNumbers) == regs {
+		oldLatches := old.ObjectsOfKind(ObjectLatch)
+		newLatches := dst.ObjectsOfKind(ObjectLatch)
+		for i, num := range g.FlopNumbers {
+			if num < 0 || int(num) >= len(oldLatches) {
+				continue
+			}
+			a, b := oldLatches[num], newLatches[i]
+			if name := Abc_ObjName(a); name != "" {
+				Abc_ObjAssignName(b, name, "")
+			}
+			if name := Abc_ObjName(Abc_ObjFanin0(a)); name != "" {
+				Abc_ObjAssignName(Abc_ObjFanin0(b), name, "")
+			}
+			if name := Abc_ObjName(Abc_ObjFanout0(a)); name != "" {
+				Abc_ObjAssignName(Abc_ObjFanout0(b), name, "")
+			}
+		}
+	} else {
+		Abc_NtkAddDummyBoxNames(dst)
+	}
+	return dst
+}
