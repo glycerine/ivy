@@ -1675,62 +1675,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWritePla(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    extern int Io_WriteMoPlaM( Abc_Ntk_t * pNtk, char * pFileName, int nMints );
-    var pFileName string;
-    var c, fUseMoPla, nMints int32;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "Mmh" ) ) != -1  {
-        switch  c  {
-            case 'M':
-                if globalUtilOptind >= argc {
-                    Abc_Print( -1, "Command line switch \"-M\" should be followed by an integer.\n" );
-                    goto usage;
-                }
-                nMints = strconv.Atoi(argv[globalUtilOptind]);
-                globalUtilOptind++;
-                break;
-            case 'm':
-                fUseMoPla ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    if nMints != 0 {
-        if Abc_NtkIsBddLogic(pAbc.pNtkCur) {
-            Io_WriteMoPlaM( pAbc.pNtkCur, pFileName, nMints );
-        } else {
-            var pStrash *Abc_Ntk_t  = Abc_NtkStrash( pAbc.pNtkCur, 0, 0, 0 );
-            Io_WriteMoPlaM( pStrash, pFileName, nMints );
-            Abc_NtkDelete( pStrash );
-        }
-    
-    } else {
-        Io_Write( pAbc.pNtkCur, pFileName, fUseMoPla ? IO_FILE_MOPLA : IO_FILE_PLA ); }
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_pla [-M <num>] [-mh] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t           writes the collapsed network into a PLA file\n");
-    fmt.Fprintf(pAbc.Err, "\t-M <num> : the number of on-set minterms to write [default = %d]\n", nMints);
-    fmt.Fprintf(pAbc.Err, "\t-m       : toggle writing multi-output PLA [default = %s]\n", fUseMoPla? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h       : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile     : the name of the file to write\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -1743,65 +1688,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteVerilog(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    extern void Io_WriteVerilogLut( Abc_Ntk_t * pNtk, char * pFileName, int nLutSize );
-    var pFileName string;
-    var c, fOnlyAnds int32;
-    var nLutSize int32  = -1;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "Kah" ) ) != -1  {
-        switch  c  {
-            case 'K':
-                if globalUtilOptind >= argc {
-                    Abc_Print( -1, "Command line switch \"-K\" should be followed by an integer.\n" );
-                    goto usage;
-                }
-                nLutSize = strconv.Atoi(argv[globalUtilOptind]);
-                globalUtilOptind++;
-                if nLutSize < 2 || nLutSize > 6 {
-                    goto usage; }
-                break;
-            case 'a':
-                fOnlyAnds ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pNtkCur == nil {
-        fmt.Fprintf(pAbc.Out, "Empty network.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    // call the corresponding file writer
-    if fOnlyAnds != 0 {
-        var pNtkTemp *Abc_Ntk_t  = Abc_NtkToNetlist( pAbc.pNtkCur );
-        if !Abc_NtkHasAig(pNtkTemp) && !Abc_NtkHasMapping(pNtkTemp) {
-            Abc_NtkToAig( pNtkTemp ); }
-        Io_WriteVerilog( pNtkTemp, pFileName, 1 );
-        Abc_NtkDelete( pNtkTemp );
-    
-    } else if nLutSize >= 2 && nLutSize <= 6 {
-        Io_WriteVerilogLut( pAbc.pNtkCur, pFileName, nLutSize );
-    } else {
-        Io_Write( pAbc.pNtkCur, pFileName, IO_FILE_VERILOG ); }
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_verilog [-K num] [-ah] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes the current network in Verilog format\n");
-    fmt.Fprintf(pAbc.Err, "\t-K num : write the network using instances of K-LUTs (2 <= K <= 6) [default = not used]\n");
-    fmt.Fprintf(pAbc.Err, "\t-a     : toggle writing expressions with only ANDs (without XORs and MUXes) [default = %s]\n", fOnlyAnds? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
