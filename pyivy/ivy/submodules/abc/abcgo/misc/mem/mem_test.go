@@ -95,3 +95,54 @@ func TestFlexHandlesAcrossPages(t *testing.T) {
 		t.Fatal("page release")
 	}
 }
+
+func TestArenaAppendCannotOverwriteNeighbor(t *testing.T) {
+	p := Mem_FixedStart(8)
+	a, b := Mem_FixedEntryFetch(p), Mem_FixedEntryFetch(p)
+	b[0] = 42
+	a = append(a, 9)
+	if b[0] != 42 || len(a) != 9 {
+		t.Fatal("fixed append overwrote neighbor")
+	}
+	f := Mem_FlexStart()
+	a = Mem_FlexEntryFetch(f, 8)
+	b = Mem_FlexEntryFetch(f, 8)
+	b[0] = 42
+	a = append(a, 9)
+	if b[0] != 42 {
+		t.Fatal("flex append overwrote neighbor")
+	}
+	m := Mmr_FixedStart(5, 3)
+	h := Mmr_FixedFetch(m)
+	next := Mmr_FixedFetch(m)
+	words := Mmr_FixedEntry(m, h)
+	neighbor := Mmr_FixedEntry(m, next)
+	neighbor[0] = 42
+	words = append(words, 9)
+	if neighbor[0] != 42 {
+		t.Fatal("word append overwrote neighbor")
+	}
+}
+func TestRestartDropsChunkReferences(t *testing.T) {
+	f := Mem_FlexStart()
+	Mem_FlexEntryFetch(f, 4096)
+	Mem_FlexEntryFetch(f, 8192)
+	backing := f.chunks[:cap(f.chunks)]
+	Mem_FlexRestart(f)
+	for _, chunk := range backing[1:] {
+		if chunk != nil {
+			t.Fatal("flex retained released chunk")
+		}
+	}
+	p := Mem_FixedStart(8)
+	for i := 0; i < p.chunkSize+1; i++ {
+		Mem_FixedEntryFetch(p)
+	}
+	backing = p.chunks[:cap(p.chunks)]
+	Mem_FixedRestart(p)
+	for _, chunk := range backing[1:] {
+		if chunk != nil {
+			t.Fatal("fixed retained released chunk")
+		}
+	}
+}

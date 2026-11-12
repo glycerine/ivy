@@ -28,7 +28,7 @@ func Mem_FixedEntryFetch(p *Mem_Fixed_t) []byte {
 		chunk := make([]byte, p.entrySize*p.chunkSize)
 		p.chunks = append(p.chunks, chunk)
 		for i := p.chunkSize - 1; i >= 0; i-- {
-			p.free = append(p.free, chunk[i*p.entrySize:(i+1)*p.entrySize])
+			p.free = append(p.free, chunk[i*p.entrySize:(i+1)*p.entrySize:(i+1)*p.entrySize])
 		}
 	}
 	i := len(p.free) - 1
@@ -51,10 +51,11 @@ func Mem_FixedRestart(p *Mem_Fixed_t) {
 	if len(p.chunks) == 0 {
 		return
 	}
+	clear(p.chunks[1:])
 	p.chunks = p.chunks[:1]
 	p.free = nil
 	for i := p.chunkSize - 1; i >= 0; i-- {
-		p.free = append(p.free, p.chunks[0][i*p.entrySize:(i+1)*p.entrySize])
+		p.free = append(p.free, p.chunks[0][i*p.entrySize:(i+1)*p.entrySize:(i+1)*p.entrySize])
 	}
 	p.used = 0
 }
@@ -90,7 +91,7 @@ func Mem_FlexEntryFetch(p *Mem_Flex_t, n int32) []byte {
 		p.chunks = append(p.chunks, make([]byte, p.chunkSize))
 		p.offset = 0
 	}
-	b := p.chunks[len(p.chunks)-1][p.offset : p.offset+size]
+	b := p.chunks[len(p.chunks)-1][p.offset : p.offset+size : p.offset+size]
 	p.offset += size
 	p.used += size
 	p.entries++
@@ -100,6 +101,7 @@ func Mem_FlexRestart(p *Mem_Flex_t) {
 	if len(p.chunks) == 0 {
 		return
 	}
+	clear(p.chunks[1:])
 	p.chunks = p.chunks[:1]
 	p.offset = 0
 	p.used = 0
@@ -119,7 +121,6 @@ func Mem_FlexStop(p *Mem_Flex_t, verbose int32) {
 type Mem_Step_t struct {
 	managers []*Mem_Fixed_t
 	large    [][]byte
-	max      int
 }
 
 func Mem_StepStart(n int32) *Mem_Step_t {
@@ -130,7 +131,6 @@ func Mem_StepStart(n int32) *Mem_Step_t {
 	for i := int32(0); i < n; i++ {
 		p.managers = append(p.managers, Mem_FixedStart(8<<i))
 	}
-	p.max = 8 << uint(n-1)
 	return p
 }
 func (p *Mem_Step_t) manager(n int32) *Mem_Fixed_t {

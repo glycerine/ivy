@@ -77,7 +77,7 @@ func Mmr_FixedEntry(p *Mmr_Fixed_t, h int32) []uint64 {
 	if h <= 0 || int(page) >= len(p.pages) || off+p.nEntryWords > p.PageMask {
 		panic("invalid handle")
 	}
-	return p.pages[page][off : off+p.nEntryWords]
+	return p.pages[page][off : off+p.nEntryWords : off+p.nEntryWords]
 }
 func Mmr_FixedFetch(p *Mmr_Fixed_t) int32 {
 	if len(p.frees) == 0 {
@@ -101,8 +101,9 @@ func Mmr_FixedFetch(p *Mmr_Fixed_t) int32 {
 	return h
 }
 func Mmr_FixedRecycle(p *Mmr_Fixed_t, h int32) {
-	for i := range Mmr_FixedEntry(p, h) {
-		Mmr_FixedEntry(p, h)[i] = ^uint64(0)
+	entry := Mmr_FixedEntry(p, h)
+	for i := range entry {
+		entry[i] = ^uint64(0)
 	}
 	p.nEntries--
 	p.frees = append(p.frees, h)
