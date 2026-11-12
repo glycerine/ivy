@@ -45,3 +45,21 @@ func TestRexParallelStep(t *testing.T) {
 		}
 	}
 }
+
+func TestRexWalkAndSequence(t *testing.T) {
+	p := Gia_ManRex2Gia("(a|b)*c", 1, 0)
+	alpha := vec.Vec_IntAlloc(3)
+	for _, c := range "abc" {
+		vec.Vec_IntPush(alpha, int32(c))
+	}
+	Gia_ManAutomSimulate(p, alpha, "abc")
+	states := vec.Vec_WrdAlloc(8)
+	counts := vec.Vec_IntAlloc(8)
+	vec.Vec_WrdPush(states, 0)
+	vec.Vec_IntPush(counts, 1)
+	Gia_ManAutomWalkOne(p, 10, states, counts, vec.Vec_WrdStart(int(p.nObjs)), Gia_ManAutomInit(p))
+	if vec.Vec_WrdSize(states) != vec.Vec_IntSize(counts) {
+		t.Fatal("state and count vectors differ")
+	}
+	Gia_ManAutomWalk(p, 3, 1, 1)
+}
