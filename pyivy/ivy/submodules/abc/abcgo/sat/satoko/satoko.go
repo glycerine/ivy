@@ -17,6 +17,7 @@ type Options struct {
 	ConflictLimit, PropagationLimit                      int64
 	VariableDecay                                        float64
 	ClauseDecay                                          float32
+	FirstBlockRestart                                    uint32
 	RestartWindow, TrailWindow                           uint32
 	RestartFactor, BlockFactor                           float64
 	FirstReduce, ReduceIncrement, SpecialReduceIncrement uint32
@@ -39,7 +40,7 @@ type satoko_t = Solver
 type solver_t = Solver
 
 func DefaultOptions() Options {
-	return Options{ConflictLimit: 0, PropagationLimit: 0, VariableDecay: 0.95, ClauseDecay: 0.999, RestartWindow: 50, TrailWindow: 5000, RestartFactor: 0.8, BlockFactor: 1.4, FirstReduce: 2000, ReduceIncrement: 300, SpecialReduceIncrement: 1000, FreezeLBD: 30, LearntRatio: 0.5, VariableRescale: 200, VariableLimit: 0x014c924d692ca61b, BinaryResolutionSize: 30, BinaryResolutionLBD: 6, GarbageRatio: 0.3}
+	return Options{ConflictLimit: 0, PropagationLimit: 0, VariableDecay: 0.95, ClauseDecay: 0.999, FirstBlockRestart: 10000, RestartWindow: 50, TrailWindow: 5000, RestartFactor: 0.8, BlockFactor: 1.4, FirstReduce: 2000, ReduceIncrement: 300, SpecialReduceIncrement: 1000, FreezeLBD: 30, LearntRatio: 0.5, VariableRescale: 200, VariableLimit: 0x014c924d692ca61b, BinaryResolutionSize: 30, BinaryResolutionLBD: 6, GarbageRatio: 0.3}
 }
 func New() *Solver {
 	s := &Solver{opts: DefaultOptions(), ok: true, actInc: 1 << 47, clauseInc: 1 << 11}

@@ -2,6 +2,7 @@
 package satoko
 
 import "sort"
+import "github.com/glycerine/abcgo/sat/satoko/utils"
 
 // analyze resolves the conflicting implication graph to its first UIP. The
 // resulting asserting clause is added permanently, including across solves.
@@ -14,6 +15,12 @@ func (s *Solver) analyze(conflict int) ([]int, int, uint32) {
 	for {
 		c := s.clauses[conflict]
 		s.bumpClause(c)
+		if c.learnt && c.lbd > 2 {
+			fresh := s.clauseLBD(c.lits)
+			if fresh+1 < c.lbd {
+				c.lbd = fresh
+			}
+		}
 		for _, q := range c.lits {
 			v := q >> 1
 			if p >= 0 && v == p>>1 {
@@ -49,6 +56,7 @@ func (s *Solver) analyze(conflict int) ([]int, int, uint32) {
 		}
 	}
 	learnt[0] = p ^ 1
+	learnt = s.minimizeLearnt(learnt)
 	back := 0
 	if len(learnt) > 1 {
 		best := 1
@@ -86,6 +94,8 @@ func (s *Solver) reduce() {
 	}
 	for _, id := range ids[:int(float32(len(ids))*ratio)] {
 		s.clauses[id].deleted = true
+		s.stats.LearntLiterals -= int64(len(s.clauses[id].lits))
+		s.clauses[id].lits = nil
 	}
 	s.stats.Reductions++
 }
@@ -132,6 +142,11 @@ func (s *Solver) Solve() int {
 		window = 50
 	}
 	recent := make([]uint32, 0, window)
+	trailWindow := s.opts.TrailWindow
+	if trailWindow == 0 {
+		trailWindow = 5000
+	}
+	trailQueue := utils.NewBoundedQueue(trailWindow)
 	var sum uint64
 	var totalLBD uint64
 	reduceAt := s.opts.FirstReduce
@@ -156,6 +171,11 @@ func (s *Solver) Solve() int {
 			if s.decisionLevel() == 0 {
 				s.ok = false
 				return SATOKO_UNSAT
+			}
+			trailQueue.Push(uint32(len(s.trail)))
+			if uint32(s.stats.Conflicts) > s.opts.FirstBlockRestart && uint32(len(recent)) == window && float64(len(s.trail)) > s.opts.BlockFactor*float64(trailQueue.Average()) {
+				recent = recent[:0]
+				sum = 0
 			}
 			learnt, back, lbd := s.analyze(conflict)
 			s.cancel(back)
@@ -195,9 +215,7 @@ func (s *Solver) Solve() int {
 			lit := s.assumptions[s.decisionLevel()]
 			value := s.literalValue(lit)
 			if value == 0 {
-				for _, a := range s.assumptions {
-					s.final = append(s.final, a^1)
-				}
+				s.analyzeFinal(lit ^ 1)
 				s.cancel(0)
 				return SATOKO_UNSAT
 			}

@@ -172,3 +172,35 @@ func TestLearningPigeonhole(t *testing.T) {
 		t.Fatal("CDCL learning failed", s.stats)
 	}
 }
+
+func TestRandomThreeSATAgainstExhaustive(t *testing.T) {
+	rng := rand.New(rand.NewSource(93875))
+	for run := 0; run < 300; run++ {
+		n := 8 + rng.Intn(3)
+		s := New()
+		s.SetVariables(n)
+		var cs [][]int
+		for i := 0; i < 4*n; i++ {
+			c := []int{rng.Intn(2 * n), rng.Intn(2 * n), rng.Intn(2 * n)}
+			cs = append(cs, c)
+			s.AddClause(c)
+		}
+		want := brute(n, cs, nil)
+		if got := s.Solve(); (got == SATOKO_SAT) != want {
+			t.Fatalf("case %d result %d want %v clauses %v", run, got, want, cs)
+		}
+	}
+}
+func TestConeScope(t *testing.T) {
+	s := New()
+	s.SetVariables(3)
+	s.AddClause([]int{0, 2})
+	s.MarkCone([]int{0, 1}, true)
+	if s.Solve() != SATOKO_SAT || s.ModelValue(2) != -1 {
+		t.Fatal("cone decided unrelated variable", s.model)
+	}
+	s.MarkCone([]int{2}, true)
+	if s.Solve() != SATOKO_SAT || s.ModelValue(2) < 0 {
+		t.Fatal("cone expansion", s.model)
+	}
+}

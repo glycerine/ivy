@@ -59,6 +59,7 @@ func (s *Solver) AddClause(lits []int) bool {
 		out = append(out, lit)
 		last = lit
 	}
+	s.model = nil
 	s.addStored(out, false, 0)
 	if len(out) == 0 {
 		s.ok = false
@@ -297,4 +298,21 @@ func satoko_write_dimacs(s *Solver, path string, learnt, zero int) {
 	if err = s.WriteDIMACS(f, learnt != 0, zero != 0); err != nil {
 		panic(err)
 	}
+}
+
+// SetStopPointer supports a synchronous caller-owned cancellation flag. Use
+// SetStopFunc with an atomic load for cross-goroutine cancellation.
+func (s *Solver) SetStopPointer(flag *int)       { s.stop = flag }
+func (s *Solver) SetStopFunc(fn func(int) int)   { s.stopFunc = fn }
+func (s *Solver) SetRunID(id int)                { s.runID = id }
+func (s *Solver) SetDeadline(deadline time.Time) { s.deadline = deadline }
+func (s *Solver) Simplify() bool {
+	if !s.ok {
+		return false
+	}
+	if !s.prepare() {
+		s.ok = false
+		return false
+	}
+	return true
 }
