@@ -267,46 +267,7 @@ func Io_End(pAbc *Abc_Frame_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadAiger(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var fCheck int32;
-    var c int32;
 
-    fCheck = 1;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "ch" ) ) != -1  {
-        switch  c  {
-            case 'c':
-                fCheck ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // read the file using the corresponding file reader
-    pNtk = Io_Read( pFileName, IO_FILE_AIGER, fCheck, 0 );
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_aiger [-ch] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in the AIGER format (http://fmv.jku.at/aiger)\n");
-    fmt.Fprintf(pAbc.Err, "\t-c     : toggle network check after reading [default = %s]\n", fCheck? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -319,46 +280,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadBaf(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var fCheck int32;
-    var c int32;
 
-    fCheck = 1;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "ch" ) ) != -1  {
-        switch  c  {
-            case 'c':
-                fCheck ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // read the file using the corresponding file reader
-    pNtk = Io_Read( pFileName, IO_FILE_BAF, fCheck, 0 );
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_baf [-ch] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in Binary Aig Format (BAF)\n");
-    fmt.Fprintf(pAbc.Err, "\t-c     : toggle network check after reading [default = %s]\n", fCheck? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -371,46 +293,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadBblif(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var fCheck int32;
-    var c int32;
 
-    fCheck = 1;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "ch" ) ) != -1  {
-        switch  c  {
-            case 'c':
-                fCheck ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // read the file using the corresponding file reader
-    pNtk = Io_Read( pFileName, IO_FILE_BBLIF, fCheck, 0 );
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_bblif [-ch] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in a binary BLIF format\n");
-    fmt.Fprintf(pAbc.Err, "\t-c     : toggle network check after reading [default = %s]\n", fCheck? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -511,47 +394,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadBlifMv(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var fCheck int32;
-    var c int32;
 
-    fCheck = 1;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "ch" ) ) != -1  {
-        switch  c  {
-            case 'c':
-                fCheck ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // read the file using the corresponding file reader
-    pNtk = Io_Read( pFileName, IO_FILE_BLIFMV, fCheck, 0 );
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_blif_mv [-ch] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in BLIF-MV format\n");
-    fmt.Fprintf(pAbc.Err, "\t         (if this command does not work, try \"read\")\n");
-    fmt.Fprintf(pAbc.Err, "\t-c     : toggle network check after reading [default = %s]\n", fCheck? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -564,46 +407,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadBench(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var fCheck int32;
-    var c int32;
 
-    fCheck = 1;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "ch" ) ) != -1  {
-        switch  c  {
-            case 'c':
-                fCheck ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // read the file using the corresponding file reader
-    pNtk = Io_Read( pFileName, IO_FILE_BENCH, fCheck, 0 );
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_bench [-ch] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in BENCH format\n");
-    fmt.Fprintf(pAbc.Err, "\t-c     : toggle network check after reading [default = %s]\n", fCheck? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -675,46 +479,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadEdif(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var fCheck int32;
-    var c int32;
 
-    fCheck = 1;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "ch" ) ) != -1  {
-        switch  c  {
-            case 'c':
-                fCheck ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // read the file using the corresponding file reader
-    pNtk = Io_Read( pFileName, IO_FILE_EDIF, fCheck, 0 );
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_edif [-ch] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in EDIF (works only for ISCAS benchmarks)\n");
-    fmt.Fprintf(pAbc.Err, "\t-c     : toggle network check after reading [default = %s]\n", fCheck? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -727,46 +492,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadEqn(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var fCheck int32;
-    var c int32;
 
-    fCheck = 1;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "ch" ) ) != -1  {
-        switch  c  {
-            case 'c':
-                fCheck ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // read the file using the corresponding file reader
-    pNtk = Io_Read( pFileName, IO_FILE_EQN, fCheck, 0 );
-    if pNtk == nil {
-        return 1; }
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_eqn [-ch] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in equation format\n");
-    fmt.Fprintf(pAbc.Err, "\t-c     : toggle network check after reading [default = %s]\n", fCheck? "yes":"no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
