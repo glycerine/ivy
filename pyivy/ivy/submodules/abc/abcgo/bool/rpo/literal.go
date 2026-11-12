@@ -1,306 +1,161 @@
 package rpo
 
-/**CFile****************************************************************
-
-  FileName    [literal.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [RPO]
-
-  Synopsis    [Literal structure]
-
-  Author      [Mayler G. A. Martins / Vinicius Callegaro]
-  
-  Affiliation [UFRGS]
-
-  Date        [Ver. 1.0. Started - May 08, 2013.]
-
-  Revision    [$Id: literal.h,v 1.00 2013/05/08 00:00:00 mgamartins Exp $]
-
- ***********************************************************************/
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include "bool/kit/kit.h"
-//#include "misc/vec/vec.h"
-//#include "misc/util/abc_global.h"
-
-//ABC_NAMESPACE_HEADER_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-// associations
- type Operator_t int32
-const (
-    LIT_NONE Operator_t = 0
- // 0: unknown
-    LIT_AND Operator_t = LIT_NONE + 1
- // 1: AND association
-    LIT_OR Operator_t = LIT_AND + 1
- // 2: OR association
-    LIT_XOR Operator_t = LIT_OR + 1 // 3: XOR association (not used yet)
-
+// Literal clusters and transitions from ABC's rpo/literal.h, by Mayler G. A.
+// Martins and Vinicius Callegaro. Truth tables retain KIT's 32-bit packed and
+// stretched layout: variables below five repeat through the entire first word.
+import (
+	"fmt"
+	"slices"
 )
 
- 
+var rpoVariableMasks = [5]uint32{0xaaaaaaaa, 0xcccccccc, 0xf0f0f0f0, 0xff00ff00, 0xffff0000}
 
+type Operator_t int32
 
-   
+const (
+	LIT_NONE Operator_t = iota
+	LIT_AND
+	LIT_OR
+	LIT_XOR
+)
 
 type Literal_t struct {
-    transition  *uint32;
-    function  *uint32;
-    expression  *Vec_Str_t;
+	Transition, Function []uint32
+	Expression           string
 }
 
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Compute the positive transition]
-
-  Description [The inputs are a function, the number of variables and a variable index and the output is a function]
-               
-  SideEffects [Should this function be in kitTruth.c ?]
-
-  SeeAlso     []
-//
-***********************************************************************/
-
-func Lit_TruthPositiveTransition(pIn *uint32, pOut *uint32, nVars int32, varIdx int32) {
-    var cof0 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );
-    var cof1 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );
-    var ncof0 *uint32;
-    Kit_TruthCofactor0New(cof0, pIn,nVars,varIdx);
-    Kit_TruthCofactor1New(cof1, pIn,nVars,varIdx);
-    ncof0 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );
-    Kit_TruthNot(ncof0,cof0,nVars);
-    Kit_TruthAnd(pOut,ncof0,cof1, nVars);
-    ABC_FREE(cof0);
-    ABC_FREE(ncof0);
-    ABC_FREE(cof1);
+func rpoWordNum(vars int32) int {
+	if vars < 0 || vars > 30 {
+		panic("RPO variable count outside [0,30]")
+	}
+	if vars <= 5 {
+		return 1
+	}
+	return 1 << uint(vars-5)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Compute the negative transition]
-
-  Description [The inputs are a function, the number of variables and a variable index and the output is a function]
-               
-  SideEffects [Should this function be in kitTruth.c ?]
-
-  SeeAlso     []
-
-***********************************************************************/
-
-func Lit_TruthNegativeTransition(pIn *uint32, pOut *uint32, nVars int32, varIdx int32) {
-    var cof0 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );
-    var cof1 *uint32  = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );
-    var ncof1 *uint32;
-    Kit_TruthCofactor0New(cof0, pIn,nVars,varIdx);
-    Kit_TruthCofactor1New(cof1, pIn,nVars,varIdx);
-    ncof1 = ABC_ALLOC (unsigned, Kit_TruthWordNum(nVars) );
-    Kit_TruthNot(ncof1,cof1,nVars);
-    Kit_TruthAnd(pOut,ncof1,cof0,nVars);
-    ABC_FREE(cof0);
-    ABC_FREE(cof1);
-    ABC_FREE(ncof1);
+func rpoTruthBit(table []uint32, index int) bool { return table[index>>5]&(1<<uint(index&31)) != 0 }
+func rpoTruthSet(table []uint32, index int)      { table[index>>5] |= 1 << uint(index&31) }
+func rpoTruthConstant(table []uint32, vars int32, value uint32) bool {
+	for _, word := range table[:rpoWordNum(vars)] {
+		if word != value {
+			return false
+		}
+	}
+	return true
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Create a literal given a polarity ]
-
-  Description [The inputs are the function, index and its polarity and a the output is a literal]
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-
-func Lit_Alloc(pTruth *uint32, nVars int32, varIdx int32, pol byte) *Literal_t {
-    var transition *uint32;
-    var function *uint32;
-    var exp *Vec_Str_t;
-    var lit *Literal_t;
-    assert(pol == '+' || pol == '-', "pol == '+' || pol == '-'");
-    transition = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));
-    if pol == '+' {
-        Lit_TruthPositiveTransition(pTruth, transition, nVars, varIdx);
-    } else {
-        Lit_TruthNegativeTransition(pTruth, transition, nVars, varIdx);
-    }
-    if !Kit_TruthIsConst0(transition,nVars) {
-        function = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));
-        Kit_TruthIthVar(function, nVars, varIdx);
-        //Abc_Print(-2, "Allocating function %X %d %c \n", *function, varIdx, pol);
-        exp = Vec_StrAlloc(5);
-        if pol == '-' {
-            Kit_TruthNot(function, function, nVars);
-            Vec_StrPutC(exp, '!');
-        }
-        Vec_StrPutC(exp, byte(('a' + varIdx)));
-        Vec_StrPutC(exp, '\0');
-        lit = new(Literal_t);
-        lit.function = function;
-        lit.transition = transition;
-        lit.expression = exp;
-        return lit;
-    } else {
-        ABC_FREE(transition); // free the function.
-        return nil;
-    }
+func rpoTruthEqual(a, b []uint32, vars int32) bool {
+	return slices.Equal(a[:rpoWordNum(vars)], b[:rpoWordNum(vars)])
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Group 2 literals using AND or OR]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-
-func Lit_GroupLiterals(lit1 *Literal_t, lit2 *Literal_t, op Operator_t, nVars int32) *Literal_t {
-    var newFunction *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));
-    var newTransition *uint32  = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));
-    var newExp *Vec_Str_t  = Vec_StrAlloc(lit1.expression.nSize + lit2.expression.nSize + 3);
-    var newLiteral *Literal_t;
-    var opChar byte  = '%';
-    switch op {
-        case LIT_AND:
-        {
-            //Abc_Print(-2, "Grouping AND %X %X \n", *lit1->function, *lit2->function);
-            Kit_TruthAnd(newFunction, lit1.function, lit2.function, nVars);
-            opChar = '*';
-            break;
-        }
-        fallthrough
-case LIT_OR:
-        {
-            //Abc_Print(-2, "Grouping OR %X %X \n", *lit1->function, *lit2->function);
-            Kit_TruthOr(newFunction, lit1.function, lit2.function, nVars);
-            opChar = '+';
-            break;
-        }
-        fallthrough
-default:
-        {
-            Abc_Print(-2, "Lit_GroupLiterals with op not defined.");
-            //TODO Call ABC Abort
-        }
-    }
-
-    Kit_TruthOr(newTransition, lit1.transition, lit2.transition, nVars);
-    // create a new expression.
-    Vec_StrPutC(newExp, '(');
-    Vec_StrAppend(newExp, lit1.expression.pArray);
-    //Vec_StrPop(newExp); // pop the \0
-    Vec_StrPutC(newExp, opChar);
-    Vec_StrAppend(newExp, lit2.expression.pArray);
-    //Vec_StrPop(newExp); // pop the \0
-    Vec_StrPutC(newExp, ')');
-    Vec_StrPutC(newExp, '\0');
-
-    newLiteral = new(Literal_t);
-    newLiteral.function = newFunction;
-    newLiteral.transition = newTransition;
-    newLiteral.expression = newExp;
-    return newLiteral;
+func litTransition(input, output []uint32, vars, index int32, positive bool) {
+	if index < 0 || index >= vars {
+		panic("RPO transition variable out of range")
+	}
+	words := rpoWordNum(vars)
+	// Snapshot before clearing: the C cofactor temporaries also support aliasing.
+	input = slices.Clone(input[:words])
+	clear(output[:words])
+	if index < 5 {
+		shift := uint(1) << uint(index)
+		mask := rpoVariableMasks[index]
+		for i, word := range input {
+			low, high := word&^mask, word&mask
+			zero, one := low|low<<shift, high|high>>shift
+			if positive {
+				output[i] = one &^ zero
+			} else {
+				output[i] = zero &^ one
+			}
+		}
+		return
+	}
+	step := 1 << uint(index-5)
+	for block := 0; block < words; block += 2 * step {
+		for i := 0; i < step; i++ {
+			zero, one := input[block+i], input[block+step+i]
+			value := zero &^ one
+			if positive {
+				value = one &^ zero
+			}
+			output[block+i], output[block+step+i] = value, value
+		}
+	}
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Create a const literal ]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-
-func Lit_CreateLiteralConst(pTruth *uint32, nVars int32, constant int32) *Literal_t {
-    var exp *Vec_Str_t  = Vec_StrAlloc(3);
-    var lit *Literal_t;
-    Vec_StrPutC(exp, byte(('0' + constant)));
-    Vec_StrPutC(exp, '\0');
-    lit = new(Literal_t);
-    lit.expression = exp;
-    lit.function = pTruth;
-    lit.transition = pTruth; // wrong but no effect ###
-    return lit;
+func Lit_TruthPositiveTransition(input, output []uint32, vars, index int32) {
+	litTransition(input, output, vars, index, true)
 }
-
-func Lit_Copy(lit *Literal_t, nVars int32) *Literal_t {
-    var newLit *Literal_t  = new(Literal_t);
-    newLit.function = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));
-    Kit_TruthCopy(newLit.function,lit.function,nVars);
-    newLit.transition = ABC_ALLOC(unsigned, Kit_TruthWordNum(nVars));
-    Kit_TruthCopy(newLit.transition,lit.transition,nVars);
-    newLit.expression = Vec_StrDup(lit.expression);
-//    Abc_Print(-2,"Copying: %s\n",newLit->expression->pArray); 
-    return newLit;
+func Lit_TruthNegativeTransition(input, output []uint32, vars, index int32) {
+	litTransition(input, output, vars, index, false)
 }
-
-func Lit_PrintTT(tt *uint32, nVars int32) {
-    var w int32;
-    for w=nVars-1; w>=0; w-- {
-            Abc_Print(-2, "%08X", tt[w]);
-    }
+func Lit_Alloc(truth []uint32, vars, index int32, polarity byte) *Literal_t {
+	if polarity != '+' && polarity != '-' {
+		panic("RPO polarity must be + or -")
+	}
+	transition := make([]uint32, rpoWordNum(vars))
+	litTransition(truth, transition, vars, index, polarity == '+')
+	if rpoTruthConstant(transition, vars, 0) {
+		return nil
+	}
+	function := make([]uint32, len(transition))
+	for i := range function {
+		var value uint32
+		if index < 5 {
+			value = rpoVariableMasks[index]
+		} else if i&(1<<uint(index-5)) != 0 {
+			value = ^uint32(0)
+		}
+		if polarity == '-' {
+			value = ^value
+		}
+		function[i] = value
+	}
+	expression := string([]byte{byte('a' + index)})
+	if polarity == '-' {
+		expression = "!" + expression
+	}
+	return &Literal_t{Transition: transition, Function: function, Expression: expression}
 }
-
-func Lit_PrintExp(lit *Literal_t) {
-    Abc_Print(-2, "%s", lit.expression.pArray);
+func Lit_GroupLiterals(a, b *Literal_t, op Operator_t, vars int32) *Literal_t {
+	result := &Literal_t{Transition: make([]uint32, rpoWordNum(vars)), Function: make([]uint32, rpoWordNum(vars))}
+	symbol := ""
+	switch op {
+	case LIT_AND:
+		symbol = "*"
+		for i := range result.Function {
+			result.Function[i] = a.Function[i] & b.Function[i]
+		}
+	case LIT_OR:
+		symbol = "+"
+		for i := range result.Function {
+			result.Function[i] = a.Function[i] | b.Function[i]
+		}
+	default:
+		panic("unsupported RPO grouping operator")
+	}
+	for i := range result.Transition {
+		result.Transition[i] = a.Transition[i] | b.Transition[i]
+	}
+	result.Expression = "(" + a.Expression + symbol + b.Expression + ")"
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Delete the literal ]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-
-func Lit_Free(lit *Literal_t) {
-    if lit == nil {
-        return;
-    }
-//    Abc_Print(-2,"Freeing: %s\n",lit->expression->pArray); 
-    ABC_FREE(lit.function);
-    ABC_FREE(lit.transition);
-    Vec_StrFree(lit.expression);
-    ABC_FREE(lit);
+func Lit_CreateLiteralConst(truth []uint32, vars, constant int32) *Literal_t {
+	if constant != 0 && constant != 1 {
+		panic("invalid literal constant")
+	}
+	return &Literal_t{Transition: make([]uint32, rpoWordNum(vars)), Function: slices.Clone(truth[:rpoWordNum(vars)]), Expression: fmt.Sprint(constant)}
 }
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
+func Lit_Copy(literal *Literal_t, vars int32) *Literal_t {
+	return &Literal_t{Transition: slices.Clone(literal.Transition[:rpoWordNum(vars)]), Function: slices.Clone(literal.Function[:rpoWordNum(vars)]), Expression: literal.Expression}
+}
+func Lit_PrintTT(truth []uint32, vars int32) {
+	for w := rpoWordNum(vars) - 1; w >= 0; w-- {
+		fmt.Printf("%08X", truth[w])
+	}
+}
+func Lit_PrintExp(literal *Literal_t) { fmt.Print(literal.Expression) }
+func Lit_Free(literal *Literal_t) {
+	if literal != nil {
+		literal.Function = nil
+		literal.Transition = nil
+		literal.Expression = ""
+	}
+}
