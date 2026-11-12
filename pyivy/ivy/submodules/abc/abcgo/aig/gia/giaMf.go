@@ -531,53 +531,7 @@ func Mf_ManOptimization(p *Mf_Man_t) {
 
 ***********************************************************************/
 
-func Mf_ManPerformMapping(pGia *Gia_Man_t, pPars *Jf_Par_t) *Gia_Man_t {
-    var p *Mf_Man_t;
-    var pNew, pCls *Gia_Man_t;
-    if pPars.fGenCnf || pPars.fGenLit {
-        pPars.fCutMin = 1; }
-    if Gia_ManHasChoices(pGia) {
-        pPars.fCutMin = 1, pPars.fCoarsen = 0; } 
-    if pPars.fCoarsen {
-        pCls = Gia_ManDupMuxes(pGia, pPars.nCoarseLimit);
-    } else {
-        pCls = pGia;
-    }
-    p = Mf_ManAlloc( pCls, pPars );
-    p.pGia0 = pGia;
-    if pPars.fVerbose && pPars.fCoarsen {
-        fmt.Printf("Initial ");  Gia_ManPrintMuxStats( pGia );  fmt.Printf("\n");
-        fmt.Printf("Derived ");  Gia_ManPrintMuxStats( pCls );  fmt.Printf("\n");
-    }
-    Mf_ManPrintInit( p );
-    Mf_ManComputeCuts( p );
-    for  p.Iter = 1; p.Iter < p.pPars.nRounds; p.Iter++  {
-        Mf_ManComputeMapping( p );
-    }
-    p.fUseEla = 1;
-    for  ; p.Iter < p.pPars.nRounds + pPars.nRoundsEla; p.Iter++  {
-        Mf_ManComputeMapping( p );
-    }
-    //Mf_ManOptimization( p );
-    if pPars.fVeryVerbose && pPars.fCutMin {
-        Vec_MemDumpTruthTables( p.vTtMem, Gia_ManName(p.pGia), pPars.nLutSize ); }
-    if pPars.fCutMin {
-        pNew = Mf_ManDeriveMappingGia( p );
-    } else if pPars.fCoarsen {
-        pNew = Mf_ManDeriveMappingCoarse( p );
-    } else {
-        pNew = Mf_ManDeriveMapping( p ); }
-    if p.pPars.fGenCnf {
-        pGia.pData = Mf_ManDeriveCnf( p, p.pPars.fCnfObjIds, p.pPars.fAddOrCla ); }
-    //if ( p->pPars->fGenCnf || p->pPars->fGenLit )
-    //    Mf_ManProfileTruths( p );
-    Gia_ManMappingVerify( pNew );
-    Mf_ManPrintQuit( p, pNew );
-    Mf_ManFree( p );
-    if pCls != pGia {
-        Gia_ManStop( pCls ); }
-    return pNew;
-}
+
 
 /**Function*************************************************************
 

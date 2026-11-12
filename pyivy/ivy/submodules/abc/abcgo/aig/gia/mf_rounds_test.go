@@ -24,3 +24,23 @@ func TestMfMappingRounds(t *testing.T) {
 	mapped := Mf_ManDeriveMapping(p)
 	Gia_ManMappingVerify(mapped)
 }
+
+func TestMfPerformMappingModes(t *testing.T) {
+	for _, tc := range []struct{ coarse, truth, cnf int32 }{{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 1}} {
+		g := Gia_ManStart(12)
+		a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+		x := Gia_ManAppendAnd(g, a, b)
+		y := Gia_ManAppendAnd(g, x, c)
+		Gia_ManAppendCo(g, y)
+		var pars Jf_Par_t
+		Mf_ManSetDefaultPars(&pars)
+		pars.fCoarsen, pars.fCutMin, pars.fGenCnf = tc.coarse, tc.truth, tc.cnf
+		mapped := Mf_ManPerformMapping(g, &pars)
+		if Gia_ManLutNum(mapped) == 0 || Gia_ManPoNum(mapped) != 1 {
+			t.Fatalf("mode %+v invalid mapping", tc)
+		}
+		if tc.cnf != 0 && g.pData == nil {
+			t.Fatalf("mode %+v missing CNF", tc)
+		}
+	}
+}
