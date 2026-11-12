@@ -51,44 +51,6 @@ import (
   SeeAlso     []
 
 ***********************************************************************/
-func Sbl_ManGetCurrentMapping(p *Sbl_Man_t) {
-    var vObj *Vec_Int_t;
-    var CutI1, CutI2, CutN1, CutN2 word;
-    var i, c, b, iObj int32;
-    Vec_WecClear( p.vWindow );
-    Vec_WecInit( p.vWindow, Vec_IntSize(p.vAnds) );
-    assert(Vec_IntSize(p.vSolCur) > 0, "Vec_IntSize(p.vSolCur) > 0");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vSolCur)) && (((c) = Vec_IntEntry(p.vSolCur, i)), 1); i++  {
-        CutI1 = Vec_WrdEntry( p.vCutsI1, c );
-        CutI2 = Vec_WrdEntry( p.vCutsI2, c );
-        CutN1 = Vec_WrdEntry( p.vCutsN1, c );
-        CutN2 = Vec_WrdEntry( p.vCutsN2, c );
-        iObj  = Vec_IntEntry( p.vCutsObj, c );
-        //iObj  = Vec_IntEntry( p->vAnds, iObj );
-        vObj  = Vec_WecEntry( p.vWindow, iObj );
-        Vec_IntClear( vObj );
-        assert(Vec_IntSize(vObj) == 0, "Vec_IntSize(vObj) == 0");
-        for  b = 0; b < 64; b++  {
-            if (CutI1 >> b) & 1 {
-                Vec_IntPush( vObj, Vec_IntEntry(p.vLeaves, b) ); }
-        }
-        for  b = 0; b < 64; b++  {
-            if (CutI2 >> b) & 1 {
-                Vec_IntPush( vObj, Vec_IntEntry(p.vLeaves, 64+b) ); }
-        }
-        for  b = 0; b < 64; b++  {
-            if (CutN1 >> b) & 1 {
-                Vec_IntPush( vObj, Vec_IntEntry(p.vAnds, b) ); }
-        }
-        for  b = 0; b < 64; b++  {
-            if (CutN2 >> b) & 1 {
-                Vec_IntPush( vObj, Vec_IntEntry(p.vAnds, 64+b) ); }
-        }
-    }
-}
-
-
 /**Function*************************************************************
 
   Synopsis    [Timing computation.]
@@ -210,73 +172,6 @@ func Sbl_ManEvaluateMapping(p *Sbl_Man_t, DelayGlo int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Sbl_ManUpdateMapping(p *Sbl_Man_t) {
-//    Gia_Obj_t * pObj;
-    var vObj *Vec_Int_t;
-    var CutI1, CutI2, CutN1, CutN2 word;
-    var i, c, b, iObj, iTemp int32; 
-    assert(Vec_IntSize(p.vSolBest) < Vec_IntSize(p.vSolInit), "Vec_IntSize(p.vSolBest) < Vec_IntSize(p.vSolInit)");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vAnds)) && (((iObj) = Vec_IntEntry(p.vAnds, i)), 1); i++  {
-        vObj = Vec_WecEntry(p.pGia.vMapping2, iObj);
-        // inlining of macro Vec_IntForEachEntry
-        for  b = 0; (b < Vec_IntSize(vObj)) && (((iTemp) = Vec_IntEntry(vObj, b)), 1); b++  {
-            Gia_ObjLutRefDecId( p.pGia, iTemp );
-        }
-        Vec_IntClear( vObj );
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vSolBest)) && (((c) = Vec_IntEntry(p.vSolBest, i)), 1); i++  {
-        CutI1 = Vec_WrdEntry( p.vCutsI1, c );
-        CutI2 = Vec_WrdEntry( p.vCutsI2, c );
-        CutN1 = Vec_WrdEntry( p.vCutsN1, c );
-        CutN2 = Vec_WrdEntry( p.vCutsN2, c );
-        iObj = Vec_IntEntry( p.vCutsObj, c );
-        iObj = Vec_IntEntry( p.vAnds, iObj );
-        vObj = Vec_WecEntry( p.pGia.vMapping2, iObj );
-        Vec_IntClear( vObj );
-        assert(Vec_IntSize(vObj) == 0, "Vec_IntSize(vObj) == 0");
-        for  b = 0; b < 64; b++  {
-            if (CutI1 >> b) & 1 {
-                Vec_IntPush( vObj, Vec_IntEntry(p.vLeaves, b) ); }
-        }
-        for  b = 0; b < 64; b++  {
-            if (CutI2 >> b) & 1 {
-                Vec_IntPush( vObj, Vec_IntEntry(p.vLeaves, 64+b) ); }
-        }
-        for  b = 0; b < 64; b++  {
-            if (CutN1 >> b) & 1 {
-                Vec_IntPush( vObj, Vec_IntEntry(p.vAnds, b) ); }
-        }
-        for  b = 0; b < 64; b++  {
-            if (CutN2 >> b) & 1 {
-                Vec_IntPush( vObj, Vec_IntEntry(p.vAnds, 64+b) ); }
-        }
-        // inlining of macro Vec_IntForEachEntry
-        for  b = 0; (b < Vec_IntSize(vObj)) && (((iTemp) = Vec_IntEntry(vObj, b)), 1); b++  {
-            Gia_ObjLutRefIncId( p.pGia, iTemp );
-        }
-    }
-/*
-    // verify
-    Gia_ManForEachLut2Vec( p->pGia, vObj, i )
-        Vec_IntForEachEntry( vObj, iTemp, b )
-            Gia_ObjLutRefDecId( p->pGia, iTemp );
-    Gia_ManForEachCo( p->pGia, pObj, i )
-        Gia_ObjLutRefDecId( p->pGia, Gia_ObjFaninId0p(p->pGia, pObj) );
-
-    for ( i = 0; i < Gia_ManObjNum(p->pGia); i++ )
-        if ( p->pGia->pLutRefs[i] )
-            printf( "Object %d has %d refs\n", i, p->pGia->pLutRefs[i] );
-
-    Gia_ManForEachCo( p->pGia, pObj, i )
-        Gia_ObjLutRefIncId( p->pGia, Gia_ObjFaninId0p(p->pGia, pObj) );
-    Gia_ManForEachLut2Vec( p->pGia, vObj, i )
-        Vec_IntForEachEntry( vObj, iTemp, b )
-            Gia_ObjLutRefIncId( p->pGia, iTemp );
-*/
-}
-
 /**Function*************************************************************
 
   Synopsis    []

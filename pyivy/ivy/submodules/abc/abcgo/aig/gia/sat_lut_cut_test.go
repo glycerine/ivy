@@ -147,3 +147,42 @@ func TestSblTiming(t *testing.T) {
 		t.Fatal("incorrect arrival or required times")
 	}
 }
+
+func TestSblUpdateMapping(t *testing.T) {
+	g := Gia_ManStart(8)
+	a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendAnd(g, a, b)
+	y := Gia_ManAppendAnd(g, x, c)
+	Gia_ManAppendCo(g, y)
+	g.vMapping2 = vec.Vec_WecStart(int(g.nObjs))
+	for _, fan := range []int32{a >> 1, b >> 1} {
+		vec.Vec_WecPush(g.vMapping2, int(x>>1), fan)
+	}
+	for _, fan := range []int32{x >> 1, c >> 1} {
+		vec.Vec_WecPush(g.vMapping2, int(y>>1), fan)
+	}
+	g.pLutRefs = make([]int32, g.nObjs)
+	for _, id := range []int32{a >> 1, b >> 1, x >> 1, c >> 1} {
+		g.pLutRefs[id]++
+	}
+	p := Sbl_ManAlloc(g, 4)
+	p.LutSize = 4
+	for _, id := range []int32{a >> 1, b >> 1, c >> 1} {
+		vec.Vec_IntPush(p.vLeaves, id)
+	}
+	vec.Vec_IntPush(p.vAnds, x>>1)
+	vec.Vec_IntPush(p.vAnds, y>>1)
+	vec.Vec_IntPush(p.vRoots, y>>1)
+	Sbl_ManComputeCuts(p)
+	cut := Sbl_ManFindCut(p, 4, 7, 0, 0, 0)
+	vec.Vec_IntPush(p.vSolCur, cut)
+	vec.Vec_IntPush(p.vSolBest, cut)
+	Sbl_ManGetCurrentMapping(p)
+	if vec.Vec_IntSize(vec.Vec_WecEntry(p.vWindow, 1)) != 3 {
+		t.Fatal("window mapping not decoded")
+	}
+	Sbl_ManUpdateMapping(p)
+	if Gia_ObjIsLut2(g, x>>1) != 0 || Gia_ObjLutSize2(g, y>>1) != 3 || g.pLutRefs[x>>1] != 0 || g.pLutRefs[a>>1] != 1 {
+		t.Fatal("mapping or references not updated")
+	}
+}
