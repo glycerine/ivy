@@ -23,9 +23,32 @@ func Scl_ConFreeMan(f *abcmain.Frame)                 { f.SetResource("pAbcCon",
 func Scl_ConUpdateMan(f *abcmain.Frame, p *Scl_Con_t) { f.SetResource("pAbcCon", p) }
 func Scl_End(f *abcmain.Frame)                        { f.SetResource("pLibScl", nil); Scl_ConFreeMan(f) }
 func Scl_Init(f *abcmain.Frame) {
-	for name, handler := range map[string]func(*abcmain.Frame, int32, []string) int32{"read_constr": Scl_CommandReadConstr, "read_lib": Scl_CommandReadLib, "write_lib": Scl_CommandWriteLib, "print_lib": Scl_CommandPrintLib, "leak2area": Scl_CommandLeak2Area, "read_scl": Scl_CommandReadScl, "write_scl": Scl_CommandWriteScl, "dump_genlib": Scl_CommandDumpGen, "write_constr": Scl_CommandWriteConstr, "print_constr": Scl_CommandPrintConstr, "reset_constr": Scl_CommandResetConstr} {
-		h := handler
-		_ = f.RegisterCommand(abcmain.Command{Name: name, Group: "SCL mapping", Handler: func(f *abcmain.Frame, args []string) int32 { return h(f, int32(len(args)), args) }})
+	registrations := []struct {
+		name    string
+		handler func(*abcmain.Frame, int32, []string) int32
+		changes bool
+	}{
+		{"read_lib", Scl_CommandReadLib, false},
+		{"write_lib", Scl_CommandWriteLib, false},
+		{"print_lib", Scl_CommandPrintLib, false},
+		{"leak2area", Scl_CommandLeak2Area, false},
+		{"read_scl", Scl_CommandReadScl, false},
+		{"write_scl", Scl_CommandWriteScl, false},
+		{"dump_genlib", Scl_CommandDumpGen, false},
+		{"print_gs", Scl_CommandPrintGS, false},
+		{"stime", Scl_CommandStime, false},
+		{"minsize", Scl_CommandMinsize, true},
+		{"maxsize", Scl_CommandMaxsize, true},
+		{"dnsize", Scl_CommandDnsize, true},
+		{"print_buf", Scl_CommandPrintBuf, false},
+		{"read_constr", Scl_CommandReadConstr, false},
+		{"write_constr", Scl_CommandWriteConstr, false},
+		{"print_constr", Scl_CommandPrintConstr, false},
+		{"reset_constr", Scl_CommandResetConstr, false},
+	}
+	for _, registration := range registrations {
+		handler := registration.handler
+		_ = f.RegisterCommand(abcmain.Command{Name: registration.name, Group: "SCL mapping", ChangesNetwork: registration.changes, Handler: func(f *abcmain.Frame, args []string) int32 { return handler(f, int32(len(args)), args) }})
 	}
 	f.SetResource("mio.libertyReader", LibertyMIOReader{})
 }
@@ -69,7 +92,7 @@ func parseSclOptions(argv []string, toggles, numeric string) (sclOptions, error)
 				value = argv[i]
 			}
 			v, e := strconv.ParseFloat(value, 32)
-			if e != nil || v < 0 || v != v {
+			if e != nil || v < 0 || v != v || v > 3.402823466e38 || strings.IndexByte("SGAB", key) >= 0 && v == 0 {
 				return o, fmt.Errorf("invalid value for -%c: %s", key, value)
 			}
 			o.numbers[key] = float32(v)
@@ -145,6 +168,9 @@ func Scl_CommandReadScl(f *abcmain.Frame, argc int32, argv []string) int32 {
 		if e = Abc_SclWriteLiberty(strings.TrimSuffix(o.args[0], filepath.Ext(o.args[0]))+"_temp.lib", p); e != nil {
 			return sclCommandError(f, e)
 		}
+	}
+	if e = installFrameGenlib(f, p, 0, 0, 0); e != nil {
+		return sclCommandError(f, e)
 	}
 	f.SetResource("pLibScl", p)
 	return 0
@@ -267,6 +293,8 @@ func Scl_CommandResetConstr(f *abcmain.Frame, argc int32, argv []string) int32 {
 	if e != nil {
 		return sclCommandError(f, fmt.Errorf("usage: reset_constr [-vh]"))
 	}
+	f.SetStringValue("pDrivingCell", "")
+	f.MaxLoad = 0
 	Scl_ConFreeMan(f)
 	return 0
 }
@@ -310,5 +338,114 @@ func Scl_CommandReadConstr(f *abcmain.Frame, argc int32, argv []string) int32 {
 		return sclCommandError(f, e)
 	}
 	Scl_ConUpdateMan(f, p)
+	return 0
+}
+
+func sclMappedNetwork(f *abcmain.Frame) (*SC_Lib, TimingNetwork, error) {
+	lib, e := sclLibrary(f)
+	if e != nil {
+		return nil, nil, e
+	}
+	net, ok := f.Network().(TimingNetwork)
+	if !ok {
+		return nil, nil, fmt.Errorf("current network does not provide standard-cell topology/mapping")
+	}
+	if e = ensureSclMapping(lib, net); e != nil {
+		return nil, nil, e
+	}
+	return lib, net, nil
+}
+func Scl_CommandStime(f *abcmain.Frame, argc int32, argv []string) int32 {
+	o, e := parseSclOptions(argv, "capd", "X")
+	if e != nil || len(o.args) != 0 {
+		return sclCommandError(f, fmt.Errorf("usage: stime [-X num] [-capdh]"))
+	}
+	lib, net, e := sclMappedNetwork(f)
+	if e != nil {
+		return sclCommandError(f, e)
+	}
+	if e = Abc_SclTimePerform(lib, net, int32(o.numbers['X']), boolInt(o.flags['c']), boolInt(o.flags['a']), boolInt(o.flags['p']), boolInt(o.flags['d'])); e != nil {
+		return sclCommandError(f, e)
+	}
+	return 0
+}
+func Scl_CommandPrintGS(f *abcmain.Frame, argc int32, argv []string) int32 {
+	_, e := parseSclOptions(argv, "", "")
+	if e != nil {
+		return sclCommandError(f, fmt.Errorf("usage: print_gs [-h]"))
+	}
+	lib, net, e := sclMappedNetwork(f)
+	if e != nil {
+		return sclCommandError(f, e)
+	}
+	if e = Abc_SclPrintGateSizes(lib, net); e != nil {
+		return sclCommandError(f, e)
+	}
+	return 0
+}
+func Scl_CommandPrintBuf(f *abcmain.Frame, argc int32, argv []string) int32 {
+	o, e := parseSclOptions(argv, "v", "")
+	if e != nil {
+		return sclCommandError(f, fmt.Errorf("usage: print_buf [-vh]"))
+	}
+	lib, net, e := sclMappedNetwork(f)
+	if e != nil {
+		return sclCommandError(f, e)
+	}
+	if !Abc_SclHasDelayInfo(lib) {
+		return sclCommandError(f, fmt.Errorf("library delay info is not available"))
+	}
+	if e = Abc_SclPrintBuffers(lib, net, boolInt(o.flags['v'])); e != nil {
+		return sclCommandError(f, e)
+	}
+	return 0
+}
+func sizeExtremeCommand(f *abcmain.Frame, argv []string, maximum bool) int32 {
+	o, e := parseSclOptions(argv, "v", "")
+	if e != nil || len(o.args) != 0 {
+		return sclCommandError(f, fmt.Errorf("usage: %s [-vh]", argv[0]))
+	}
+	lib, net, e := sclMappedNetwork(f)
+	if e != nil {
+		return sclCommandError(f, e)
+	}
+	if e = Abc_SclMinsizePerform(lib, net, boolInt(maximum), boolInt(o.flags['v'])); e != nil {
+		return sclCommandError(f, e)
+	}
+	return 0
+}
+func Scl_CommandMinsize(f *abcmain.Frame, argc int32, argv []string) int32 {
+	return sizeExtremeCommand(f, argv, false)
+}
+func Scl_CommandMaxsize(f *abcmain.Frame, argc int32, argv []string) int32 {
+	return sizeExtremeCommand(f, argv, true)
+}
+func Scl_CommandDnsize(f *abcmain.Frame, argc int32, argv []string) int32 {
+	o, e := parseSclOptions(argv, "csdvw", "IJNDGTX")
+	if e != nil || len(o.args) != 0 {
+		return sclCommandError(f, fmt.Errorf("usage: dnsize [-IJNDGTX num] [-csdvwh]"))
+	}
+	pars := SC_SizePars{Iterations: 5, IterationsNoChange: 50, Notches: 1000, DelayGap: 1000, UseDepartures: !o.flags['s'], UseWireLoads: o.flags['c'], DumpStats: o.flags['d'], Verbose: o.flags['v'], VeryVerbose: o.flags['w']}
+	for key, dst := range map[byte]*int{'I': &pars.Iterations, 'J': &pars.IterationsNoChange, 'N': &pars.Notches, 'D': &pars.DelayUser, 'G': &pars.DelayGap, 'T': &pars.Timeout, 'X': &pars.BufferTreeEstimate} {
+		if v, ok := o.numbers[key]; ok {
+			if v != float32(int(v)) {
+				return sclCommandError(f, fmt.Errorf("-%c requires an integer", key))
+			}
+			*dst = int(v)
+		}
+	}
+	lib, net, e := sclMappedNetwork(f)
+	if e != nil {
+		return sclCommandError(f, e)
+	}
+	p, e := Abc_SclManStart(lib, net, boolInt(pars.UseWireLoads), boolInt(pars.UseDepartures), float32(pars.DelayUser), int32(pars.BufferTreeEstimate))
+	if e != nil {
+		return sclCommandError(f, e)
+	}
+	defer Abc_SclManFree(p)
+	p.Output = f.Out
+	if e = DownsizeManager(p, &pars); e != nil {
+		return sclCommandError(f, e)
+	}
 	return 0
 }

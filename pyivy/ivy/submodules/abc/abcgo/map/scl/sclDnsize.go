@@ -168,6 +168,9 @@ func boolInt(v bool) int32 {
 // DownsizeManager preserves the original area-priority rounds and postpones
 // overlapping windows until the next incremental timing update.
 func DownsizeManager(p *SC_Man, pars *SC_SizePars) error {
+	if p == nil || pars == nil {
+		return fmt.Errorf("downsizing requires manager and parameters")
+	}
 	start := time.Now()
 	var deadline time.Time
 	if pars.Timeout > 0 {

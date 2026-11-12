@@ -3,6 +3,7 @@ package scl
 import (
 	"bytes"
 	abcmain "github.com/glycerine/abcgo/base/main"
+	"io"
 	"os"
 	"path/filepath"
 	"testing"
@@ -66,5 +67,32 @@ func TestTimingConeStoreRestore(t *testing.T) {
 	Scl_ManCleanTime(p)
 	if p.Times[1] != (SC_Pair{}) || p.Departures[1] != (SC_Pair{}) {
 		t.Fatal("clear")
+	}
+}
+
+func TestReadSCLInstallsMIOAndResetClearsLegacyConstraints(t *testing.T) {
+	f := abcmain.NewFrame()
+	defer f.Close()
+	f.Out = io.Discard
+	f.Err = io.Discard
+	Scl_Init(f)
+	p, e := ParseLiberty("test", testLiberty)
+	if e != nil {
+		t.Fatal(e)
+	}
+	path := filepath.Join(t.TempDir(), "test.scl")
+	if e = Abc_SclWriteScl(path, p); e != nil {
+		t.Fatal(e)
+	}
+	if status := Scl_CommandReadScl(f, 2, []string{"read_scl", path}); status != 0 {
+		t.Fatal(status)
+	}
+	if f.Resource("pLibGen") == nil {
+		t.Fatal("SCL read did not install MIO")
+	}
+	f.SetStringValue("pDrivingCell", "inv")
+	f.MaxLoad = 2
+	if status := f.Execute("reset_constr"); status != 0 || f.StringValue("pDrivingCell") != "" || f.MaxLoad != 0 {
+		t.Fatal(status)
 	}
 }

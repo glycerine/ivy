@@ -88,3 +88,25 @@ func TestDownsizeWindowAndOverlap(t *testing.T) {
 		t.Fatal("accepted input pivot")
 	}
 }
+
+func TestDownsizeRejectsNoBoundaryAndRestoresTrial(t *testing.T) {
+	lib, net := downsizeFixture(t)
+	p, e := Abc_SclManStart(lib, net, 0, 1, 0, 0)
+	if e != nil {
+		t.Fatal(e)
+	}
+	defer Abc_SclManFree(p)
+	p.Output = io.Discard
+	nodes, evals, e := Abc_SclFindWindow(net, 1)
+	if e != nil {
+		t.Fatal(e)
+	}
+	before := p.Times[2]
+	changed, e := Abc_SclCheckImprovement(p, 1, nodes, evals, 0, 1)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if changed || net.mapping.GateIDs[1] != 1 || p.Times[2] != before {
+		t.Fatal("rejected trial changed state", changed, net.mapping.GateIDs, p.Times[2], before)
+	}
+}

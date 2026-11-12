@@ -203,3 +203,9 @@ func TestMIOBridge(t *testing.T) {
 		t.Fatal(id, ok)
 	}
 }
+
+func TestCommentAdjacentToIdentifier(t *testing.T) {
+	if _, e := ParseLibertyTree("test", `library/*comment*/(test){area/*comment*/:1;}`); e != nil {
+		t.Fatal(e)
+	}
+}

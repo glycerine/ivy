@@ -118,6 +118,9 @@ func libertyLex(name, text string) ([]libertyToken, error) {
 		} else {
 			start := i
 			for i < len(text) && !unicode.IsSpace(rune(text[i])) && !strings.ContainsRune("(){}:;,\"", rune(text[i])) {
+				if text[i] == '/' && i+1 < len(text) && (text[i+1] == '*' || text[i+1] == '/') {
+					break
+				}
 				advance(text[i])
 				i++
 			}
@@ -275,8 +278,8 @@ func floatVector(text string) ([]float32, error) {
 	v := make([]float32, len(fields))
 	for i, s := range fields {
 		x, err := strconv.ParseFloat(s, 32)
-		if err != nil {
-			return nil, err
+		if err != nil || x != x || x > 3.402823466e38 || x < -3.402823466e38 {
+			return nil, fmt.Errorf("invalid finite table number %q", s)
 		}
 		v[i] = float32(x)
 	}

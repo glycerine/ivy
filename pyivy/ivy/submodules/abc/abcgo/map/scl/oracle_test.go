@@ -120,3 +120,52 @@ func TestLibertyReaderOriginalC(t *testing.T) {
 		t.Fatal("SCL lengths", len(got), len(data))
 	}
 }
+
+func TestDownsizeOriginalC(t *testing.T) {
+	abc, e := filepath.Abs("../../../abc")
+	if e != nil {
+		t.Fatal(e)
+	}
+	if _, e = os.Stat(abc); e != nil {
+		t.Skip("original ABC executable unavailable")
+	}
+	lib, _ := downsizeFixture(t)
+	inv := *lib.Cells[0]
+	inv.Name = "INV"
+	inv.ID = 2
+	inv.Pins = append([]*SC_Pin(nil), inv.Pins...)
+	out := *inv.Pins[1]
+	out.Function = "!A"
+	out.Truth = []uint64{0x5555555555555555}
+	inv.Pins[1] = &out
+	zero := &SC_Cell{Name: "ZERO", ID: 3, Outputs: 1, Pins: []*SC_Pin{{Name: "Y", Direction: ScDirOutput, Function: "0", Truth: []uint64{0}}}}
+	lib.Cells = append(lib.Cells, &inv, zero)
+	Abc_SclHashCells(lib)
+	Abc_SclLinkCells(lib)
+	text, e := LibertyText(lib)
+	if e != nil {
+		t.Fatal(e)
+	}
+	dir := t.TempDir()
+	libpath := filepath.Join(dir, "test.lib")
+	genpath := filepath.Join(dir, "test.genlib")
+	netpath := filepath.Join(dir, "test.blif")
+	outpath := filepath.Join(dir, "out.blif")
+	for path, data := range map[string]string{libpath: text, genpath: Abc_SclProduceGenlibStrSimple(lib), netpath: ".model chain\n.inputs a\n.outputs y\n.gate large A=a Y=n\n.gate large A=n Y=y\n.end\n"} {
+		if e = os.WriteFile(path, []byte(data), 0600); e != nil {
+			t.Fatal(e)
+		}
+	}
+	command := fmt.Sprintf("read_lib %s; read_genlib %s; read_blif %s; dnsize -I 2 -N 4 -G 1; write_blif %s", libpath, genpath, netpath, outpath)
+	output, e := exec.Command(abc, "-s", "-c", command).CombinedOutput()
+	if e != nil {
+		t.Fatal(e, string(output))
+	}
+	result, e := os.ReadFile(outpath)
+	if e != nil {
+		t.Fatal(e, string(output))
+	}
+	if strings.Count(string(result), ".gate small") != 2 {
+		t.Fatal("original downsizing did not select both small cells", string(result), string(output))
+	}
+}
