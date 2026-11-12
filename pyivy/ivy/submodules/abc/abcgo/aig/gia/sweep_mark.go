@@ -49,7 +49,7 @@ func Gia_ManMarkSeqGiaWithBoxes(p *Gia_Man_t, sequential int32) {
 	if sequential != 0 {
 		regs = Gia_ManRegBoxNum(p)
 	}
-	if Gia_ManRegNum(p) != 0 || Gia_ManBoxNum(p) == 0 {
+	if Gia_ManRegNum(p) != 0 {
 		panic("gia: invalid boxed sequential graph")
 	}
 	Gia_ManIncrementTravId(p)

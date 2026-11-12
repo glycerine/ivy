@@ -5,9 +5,6 @@ import "github.com/glycerine/abcgo/misc/tim"
 // Gia_ManDupWithBoxes removes unmarked boxes and their unused logic while
 // keeping the timing manager and box implementation outputs in sync.
 func Gia_ManDupWithBoxes(src *Gia_Man_t, sequential int32) *Gia_Man_t {
-	if Gia_ManBoxNum(src) == 0 {
-		panic("gia: expected timing boxes")
-	}
 	timing := src.pManTime.(*tim.Tim_Man_t)
 	Gia_ManMarkSeqGiaWithBoxes(src, sequential)
 	dst := Gia_ManStart(Gia_ManObjNum(src))
