@@ -1,6 +1,9 @@
 package abc
 
 import (
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/map/mio"
 	"github.com/glycerine/abcgo/misc/nm"
 	"strconv"
 	"strings"
@@ -62,7 +65,37 @@ func Abc_NtkDupObj(n *Network, old *Object, copyName int32) *Object {
 	if cloner, ok := old.Data.(NetworkFunctionCloner); ok {
 		o.Data = cloner.CloneForNetwork(n)
 	} else {
-		o.Data = old.Data
+		switch data := old.Data.(type) {
+		case *core.DdNode:
+			source, ok := old.network.FunctionManager.(*core.DdManager)
+			if !ok {
+				panic("BDD source manager missing")
+			}
+			destination, ok := n.FunctionManager.(*core.DdManager)
+			if !ok {
+				destination = core.NewBDDManager(len(source.Vars))
+				n.FunctionManager = destination
+			}
+			if source == destination {
+				o.Data = data
+			} else {
+				o.Data = source.Transfer(data, destination, nil)
+			}
+			core.Cudd_Ref(o.Data.(*core.DdNode))
+		case *hop.Hop_Obj_t:
+			source, ok := old.network.FunctionManager.(*hop.Hop_Man_t)
+			if !ok {
+				panic("Hop source manager missing")
+			}
+			destination, ok := n.FunctionManager.(*hop.Hop_Man_t)
+			if !ok {
+				destination = hop.Hop_ManStart()
+				n.FunctionManager = destination
+			}
+			o.Data = hop.Hop_Transfer(source, destination, data, int32(len(old.fanins)))
+		default:
+			o.Data = old.Data
+		}
 	}
 	if copyName != 0 && (old.IsCI() || old.IsCO() || Abc_ObjIsBox(old) != 0 || old.Kind == ObjectNet) {
 		if name, ok := old.network.names.Lookup(int32(old.ID)); ok {
@@ -199,14 +232,101 @@ func Abc_NtkCreateNodeMux(n *Network, c, t, e *Object) *Object {
 	})
 }
 func Abc_NodeIsConst(o *Object) int32 { return abcBool(o.Kind == ObjectNode && len(o.fanins) == 0) }
-func localFunction(o *Object) func([]bool) bool {
+func booleanFunction(o *Object) (func([]bool) bool, bool) {
 	if fn, ok := o.Data.(func([]bool) bool); ok {
-		return fn
+		return fn, true
 	}
 	if o.Data == aigANDMarker {
-		return func(v []bool) bool { return v[0] && v[1] }
+		return func(v []bool) bool { return v[0] && v[1] }, true
 	}
-	panic("object functionality is not a Go Boolean function")
+	switch value := o.Data.(type) {
+	case string:
+		return func(values []bool) bool { return evaluateLocalSOP(value, values) }, true
+	case *mio.Mio_Gate_t:
+		if value == nil {
+			return nil, false
+		}
+		return func(values []bool) bool { return evaluateLocalSOP(mio.Mio_GateReadSop(value), values) }, true
+	case *core.DdNode:
+		manager, ok := o.network.FunctionManager.(*core.DdManager)
+		if !ok {
+			return nil, false
+		}
+		return func(values []bool) bool {
+			result, err := manager.Evaluate(value, values)
+			if err != nil {
+				panic(err)
+			}
+			return result
+		}, true
+	case *hop.Hop_Obj_t:
+		return func(values []bool) bool { return evaluateLocalHop(value, values) }, true
+	}
+	return nil, false
+}
+func evaluateLocalSOP(text string, values []bool) bool {
+	if zero := strings.IndexByte(text, 0); zero >= 0 {
+		text = text[:zero]
+	}
+	phase := byte('1')
+	matched := false
+	for _, line := range strings.Split(text, "\n") {
+		if line == "" {
+			continue
+		}
+		if len(line) != len(values)+2 || line[len(values)] != ' ' {
+			panic("invalid SOP arity")
+		}
+		phase = line[len(values)+1]
+		if phase == 'x' || phase == 'n' {
+			parity := false
+			for _, value := range values {
+				parity = parity != value
+			}
+			return parity != (phase == 'n')
+		}
+		match := true
+		for i, c := range line[:len(values)] {
+			if c != '-' && (c == '1') != values[i] {
+				match = false
+				break
+			}
+		}
+		matched = matched || match
+	}
+	return matched == (phase == '1')
+}
+func evaluateLocalHop(root *hop.Hop_Obj_t, values []bool) bool {
+	memo := map[*hop.Hop_Obj_t]bool{}
+	var visit func(*hop.Hop_Obj_t) bool
+	visit = func(edge *hop.Hop_Obj_t) bool {
+		node := hop.Hop_Regular(edge)
+		result, ok := memo[node]
+		if !ok {
+			switch {
+			case hop.Hop_ObjIsConst1(node) != 0:
+				result = true
+			case hop.Hop_ObjIsPi(node) != 0:
+				result = values[node.PioNum]
+			default:
+				a, b := visit(hop.Hop_ObjChild0(node)), visit(hop.Hop_ObjChild1(node))
+				if hop.Hop_ObjIsExor(node) != 0 {
+					result = a != b
+				} else {
+					result = a && b
+				}
+			}
+			memo[node] = result
+		}
+		return result != (hop.Hop_IsComplement(edge) != 0)
+	}
+	return visit(root)
+}
+func localFunction(o *Object) func([]bool) bool {
+	if function, ok := booleanFunction(o); ok {
+		return function
+	}
+	panic("object functionality is not Boolean")
 }
 func Abc_NodeIsConst0(o *Object) int32 {
 	return abcBool(Abc_NodeIsConst(o) != 0 && !localFunction(o)(nil))

@@ -5,117 +5,62 @@ import (
 	"time"
 )
 
-/**CFile****************************************************************
-
-  FileName    [amapCore.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Technology mapper for standard cells.]
-
-  Synopsis    [Core mapping procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: amapCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "amapInt.h"
-//#include "base/main/main.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [This procedure sets default parameters.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Amap_ManSetDefaultParams resets p and installs ABC's source defaults.
 func Amap_ManSetDefaultParams(p *Amap_Par_t) {
-    memset( p, 0, sizeof(Amap_Par_t) );
-    p.nIterFlow = 1;            // iterations of area flow
-    p.nIterArea = 4;            // iteratoins of exact area
-    p.nCutsMax  = 500;          // the maximum number of cuts at a node
-    p.fUseMuxes = 0;            // enables the use of MUXes
-    p.fUseXors  = 1;            // enables the use of XORs
-    p.fFreeInvs = 0;            // assume inverters are free (area = 0)
-    p.fEpsilon  = float32(0.001); // used to compare floating point numbers
-    p.fVerbose  = 0;            // verbosity flag
+	if p == nil {
+		panic("amap: nil parameters")
+	}
+	*p = Amap_Par_t{
+		nIterFlow: 1,
+		nIterArea: 4,
+		nCutsMax:  500,
+		fUseXors:  1,
+		fEpsilon:  0.001,
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Amap_ManTest runs technology mapping using the library selected in ABC's
+// process frame, preserving the C command's public entry point.
 func Amap_ManTest(pAig *Aig_Man_t, pPars *Amap_Par_t) *Vec_Ptr_t {
-//    extern void * Abc_FrameReadLibGen2();
-    var vRes *Vec_Ptr_t;
-    var p *Amap_Man_t;
-    var pLib *Amap_Lib_t;
-    var clkTotal abctime  = Abc_Clock();
-    pLib = (Amap_Lib_t *)Abc_FrameReadLibGen2();
-    if pLib == nil {
-        fmt.Printf("Library is not available.\n");
-        return nil;
-    }
-    p = Amap_ManStart( Aig_ManNodeNum(pAig) );
-    p.pPars = pPars;
-    p.pLib  = pLib;
-    if pPars.fFreeInvs {
-        p.fAreaInv = 0.0;
-    } else {
-        p.fAreaInv = pLib.pGateInv.dArea;
-    }
-    p.fUseMux = pPars.fUseMuxes && pLib.fHasMux;
-    p.fUseXor = pPars.fUseXors && pLib.fHasXor;
-    // inlining of macro ABC_CALLOC
-    p.ppCutsTemp = ((Amap_Cut_t * *) calloc((size_t)(2 * pLib.nNodes), sizeof(Amap_Cut_t *)));
-    // inlining of macro ABC_CALLOC
-    p.pMatsTemp = ((int *) calloc((size_t)(2 * pLib.nNodes), sizeof(int)));
-    Amap_ManCreate( p, pAig );
-    Amap_ManMap( p );
-    vRes = nil;
-    vRes = Amap_ManProduceMapped( p );
-    Amap_ManStop( p );
-if pPars.fVerbose {
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Total runtime"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;
-}
-    return vRes;
+	resource := Abc_FrameReadLibGen2()
+	pLib, ok := resource.(*Amap_Lib_t)
+	if !ok || pLib == nil {
+		fmt.Println("Library is not available.")
+		return nil
+	}
+	return Amap_ManMapGraph(pAig, pLib, pPars)
 }
 
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Amap_ManMapGraph is the explicit-library form of Amap_ManTest. It avoids
+// process-global library state for callers and tests that already own a cell
+// library.
+func Amap_ManMapGraph(pAig *Aig_Man_t, pLib *Amap_Lib_t, pPars *Amap_Par_t) *Vec_Ptr_t {
+	if pAig == nil || pLib == nil {
+		return nil
+	}
+	if pPars == nil {
+		pPars = &Amap_Par_t{}
+		Amap_ManSetDefaultParams(pPars)
+	}
+	started := time.Now()
+	p := Amap_ManStart(int32(pAig.NodeCount()))
+	p.pPars, p.pLib = pPars, pLib
+	if pPars.fFreeInvs != 0 {
+		p.fAreaInv = 0
+	} else if pLib.pGateInv != nil {
+		p.fAreaInv = float32(pLib.pGateInv.dArea)
+	}
+	p.fUseMux = amapBool(pPars.fUseMuxes != 0 && pLib.fHasMux != 0)
+	p.fUseXor = amapBool(pPars.fUseXors != 0 && pLib.fHasXor != 0)
+	tempSize := max(0, int(pLib.nNodes)*2)
+	p.ppCutsTemp = make([]*Amap_Cut_t, tempSize)
+	p.pMatsTemp = make([]int32, tempSize)
+	Amap_ManCreate(p, pAig)
+	Amap_ManMap(p)
+	result := Amap_ManProduceMapped(p)
+	Amap_ManStop(p)
+	if pPars.fVerbose != 0 {
+		fmt.Printf("Total runtime: %.2f sec\n", time.Since(started).Seconds())
+	}
+	return result
+}

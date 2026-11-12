@@ -1,10 +1,3 @@
-package extrab
-
-import (
-	"fmt"
-	"os"
-)
-
 /**CFile****************************************************************
 
   FileName    [extraBddAuto.c]
@@ -23,1593 +16,381 @@ import (
 
 ***********************************************************************/
 
-//#include "extraBdd.h"
+package extrab
 
-//ABC_NAMESPACE_IMPL_START
+import cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 
-
-/*---------------------------------------------------------------------------*/
-/* Constant declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Stucture declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Type declarations                                                         */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Variable declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Macro declarations                                                        */
-/*---------------------------------------------------------------------------*/
-
-
-/**AutomaticStart*************************************************************/
-
-/*---------------------------------------------------------------------------*/
-/* Static function prototypes                                                */
-/*---------------------------------------------------------------------------*/
-
-/**AutomaticEnd***************************************************************/
-
-
-/*
-    LinearSpace(f) = Space(f,f)
-
-    Space(f,g)
-    {
-        if ( f = const )
-        { 
-            if ( f = g )  return 1;
-            else          return 0;
-        }
-        if ( g = const )  return 0;
-        return x' * Space(fx',gx') * Space(fx,gx) + x * Space(fx',gx) * Space(fx,gx');
-    }
-
-    Equations(s) = Pos(s) + Neg(s);
-
-    Pos(s)
-    {
-        if ( s  = 0 )   return 1;
-        if ( s  = 1 )   return 0;
-        if ( sx'= 0 )   return Pos(sx) + x;
-        if ( sx = 0 )   return Pos(sx');
-        return 1 * [Pos(sx') & Pos(sx)] + x * [Pos(sx') & Neg(sx)];
-    }
-
-    Neg(s)
-    {
-        if ( s  = 0 )   return 1;
-        if ( s  = 1 )   return 0;
-        if ( sx'= 0 )   return Neg(sx);
-        if ( sx = 0 )   return Neg(sx') + x;
-        return 1 * [Neg(sx') & Neg(sx)] + x * [Neg(sx') & Pos(sx)];
-    }
-
-
-    SpaceP(A)
-    {
-        if ( A = 0 )    return 1;
-        if ( A = 1 )    return 1;
-        return x' * SpaceP(Ax') * SpaceP(Ax) + x * SpaceP(Ax') * SpaceN(Ax);
-    }
-
-    SpaceN(A)
-    {
-        if ( A = 0 )    return 1;
-        if ( A = 1 )    return 0;
-        return x' * SpaceN(Ax') * SpaceN(Ax) + x * SpaceN(Ax') * SpaceP(Ax);
-    }
-
-
-    LinInd(A)
-    {
-        if ( A = const )     return 1;
-        if ( !LinInd(Ax') )  return 0;
-        if ( !LinInd(Ax)  )  return 0;
-        if (  LinSumOdd(Ax')  & LinSumEven(Ax) != 0 )  return 0;
-        if (  LinSumEven(Ax') & LinSumEven(Ax) != 0 )  return 0;
-        return 1;
-    }
-
-    LinSumOdd(A)
-    {
-        if ( A = 0 )    return 0;                 // Odd0  ---e-- Odd1
-        if ( A = 1 )    return 1;                 //       \   o
-        Odd0  = LinSumOdd(Ax');  // x is absent   //         \ 
-        Even0 = LinSumEven(Ax'); // x is absent   //       /   o  
-        Odd1  = LinSumOdd(Ax);   // x is present  // Even0 ---e-- Even1 
-        Even1 = LinSumEven(Ax);  // x is absent
-        return 1 * [Odd0 + ExorP(Odd0, Even1)] + x * [Odd1 + ExorP(Odd1, Even0)];
-    }
-
-    LinSumEven(A)
-    {
-        if ( A = 0 )    return 0;
-        if ( A = 1 )    return 0;
-        Odd0  = LinSumOdd(Ax');  // x is absent
-        Even0 = LinSumEven(Ax'); // x is absent
-        Odd1  = LinSumOdd(Ax);   // x is present
-        Even1 = LinSumEven(Ax);  // x is absent
-        return 1 * [Even0 + Even1 + ExorP(Even0, Even1)] + x * [ExorP(Odd0, Odd1)];
-    }
-    
-*/
-
-/*---------------------------------------------------------------------------*/
-/* Definition of exported functions                                          */
-/*---------------------------------------------------------------------------*/
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceFromFunctionFast(dd *DdManager, bFunc *DdNode) *DdNode {
-    var pSupport *int32;
-    var pPermute *int32;
-    var pPermuteBack *int32;
-    var pCompose **DdNode;
-    var bCube, bTemp *DdNode;
-    var bSpace, bFunc1, bFunc2, bSpaceShift *DdNode;
-    var nSupp, Counter int32;
-    var i, lev int32;
-
-    // get the support
-    pSupport = ABC_ALLOC( int, ddMax(dd.size,dd.sizeZ) );
-    Extra_SupportArray( dd, bFunc, pSupport );
-    nSupp = 0;
-    for  i = 0; i < dd.size; i++  {
-        if pSupport[i] {
-            nSupp++; }
-    }
-
-    // make sure the manager has enough variables
-    if 2*nSupp > dd.size {
-        fmt.Printf("Cannot derive linear space, because DD manager does not have enough variables.\n");
-        fflush( os.Stdout );
-        ABC_FREE( pSupport );
-        return nil;
-    }
-
-    // create the permutation arrays
-    pPermute     = ABC_ALLOC( int, dd.size );
-    pPermuteBack = ABC_ALLOC( int, dd.size );
-    pCompose     = ABC_ALLOC( DdNode *, dd.size );
-    for  i = 0; i < dd.size; i++  {
-        pPermute[i]     = i;
-        pPermuteBack[i] = i;
-        pCompose[i]     = dd.vars[i];   Cudd_Ref( pCompose[i] );
-    }
-
-    // remap the function in such a way that the variables are interleaved
-    Counter = 0;
-    bCube = b1;  Cudd_Ref( bCube );
-    for  lev = 0; lev < dd.size; lev++  {
-        if pSupport[ dd.invperm[lev] ] {   // var "dd->invperm[lev]" on level "lev" should go to level 2*Counter;
-            pPermute[ dd.invperm[lev] ] = dd.invperm[2*Counter];
-            // var from level 2*Counter+1 should go back to the place of this var
-            pPermuteBack[ dd.invperm[2*Counter+1] ] = dd.invperm[lev];
-            // the permutation should be defined in such a way that variable
-            // on level 2*Counter is replaced by an EXOR of itself and var on the next level
-            Cudd_Deref( pCompose[ dd.invperm[2*Counter] ] );
-            pCompose[ dd.invperm[2*Counter] ] = 
-                Cudd_bddXor( dd, dd.vars[ dd.invperm[2*Counter] ], dd.vars[ dd.invperm[2*Counter+1] ] );  
-            Cudd_Ref( pCompose[ dd.invperm[2*Counter] ] );
-            // add this variable to the cube
-            bCube = Cudd_bddAnd( dd, bTemp = bCube, dd.vars[ dd.invperm[2*Counter] ] );  Cudd_Ref( bCube );
-            Cudd_RecursiveDeref( dd, bTemp );
-            // increment the counter
-            Counter ++;
-        }
-    }
-
-    // permute the functions
-    bFunc1 = Cudd_bddPermute( dd, bFunc, pPermute );         Cudd_Ref( bFunc1 );
-    // compose to gate the function depending on both vars
-    bFunc2 = Cudd_bddVectorCompose( dd, bFunc1, pCompose );  Cudd_Ref( bFunc2 );
-    // gate the vector space
-    // L(a) = ForAll x [ F(x) = F(x+a) ] = Not( Exist x [ F(x) (+) F(x+a) ] )
-    bSpaceShift = Cudd_bddXorExistAbstract( dd, bFunc1, bFunc2, bCube );  Cudd_Ref( bSpaceShift );
-    // inlining of macro Cudd_Not
-    bSpaceShift = ((DdNode *)((ptrint)(bSpaceShift) ^ 01));
-    // permute the space back into the original mapping
-    bSpace = Cudd_bddPermute( dd, bSpaceShift, pPermuteBack ); Cudd_Ref( bSpace );
-    Cudd_RecursiveDeref( dd, bFunc1 );
-    Cudd_RecursiveDeref( dd, bFunc2 );
-    Cudd_RecursiveDeref( dd, bSpaceShift );
-    Cudd_RecursiveDeref( dd, bCube );
-
-    for  i = 0; i < dd.size; i++  {
-        Cudd_RecursiveDeref( dd, pCompose[i] );
-    }
-    ABC_FREE( pPermute );
-    ABC_FREE( pPermuteBack );
-    ABC_FREE( pCompose );
-    ABC_FREE( pSupport );
-
-    Cudd_Deref( bSpace );
-    return bSpace;
+type autoPair struct{ f, g *DdNode }
+type autoSigned struct {
+	f        *DdNode
+	negative bool
+}
+type autoEngine struct {
+	dd                         *DdManager
+	spaces                     map[autoPair]*DdNode
+	signs, equations, matrices map[autoSigned]*DdNode
+	canonical                  map[*DdNode]*DdNode
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceFromFunction(dd *DdManager, bF *DdNode, bG *DdNode) *DdNode {
-    var bRes *DdNode;
-    for {
-        dd.reordered = 0;
-        bRes = extraBddSpaceFromFunction( dd, bF, bG );
-    
-if !(dd.reordered == 1) { break }
-} 
-    return bRes;
+func newAuto(dd *DdManager) *autoEngine {
+	return &autoEngine{dd, make(map[autoPair]*DdNode), make(map[autoSigned]*DdNode), make(map[autoSigned]*DdNode), make(map[autoSigned]*DdNode), make(map[*DdNode]*DdNode)}
+}
+func autoBDD(dd *DdManager, roots ...*DdNode) bool {
+	if dd == nil {
+		return false
+	}
+	for _, f := range roots {
+		if !cudd.Cudd_bddLeq(dd, f, f) {
+			return false
+		}
+	}
+	return true
+}
+func autoChildren(f *DdNode) (lo, hi *DdNode) {
+	r := cudd.Cudd_Regular(f)
+	lo, hi = r.E, r.T
+	if cudd.Cudd_IsComplement(f) {
+		lo, hi = cudd.Cudd_Not(lo), cudd.Cudd_Not(hi)
+	}
+	return
+}
+func (e *autoEngine) space(f, g *DdNode) *DdNode {
+	dd := e.dd
+	if cudd.Cudd_IsConstant(f) {
+		if f == g {
+			return dd.One
+		}
+		return dd.LogicZero
+	}
+	if cudd.Cudd_IsConstant(g) {
+		return dd.LogicZero
+	}
+	if f.ID > g.ID {
+		f, g = g, f
+	}
+	key := autoPair{f, g}
+	if r := e.spaces[key]; r != nil {
+		return r
+	}
+	rf, rg := cudd.Cudd_Regular(f), cudd.Cudd_Regular(g)
+	lf, lg := dd.Perm[rf.Index], dd.Perm[rg.Index]
+	index := dd.InvPerm[min(lf, lg)]
+	f0, f1 := f, f
+	if lf <= lg {
+		f0, f1 = autoChildren(f)
+	}
+	g0, g1 := g, g
+	if lg <= lf {
+		g0, g1 = autoChildren(g)
+	}
+	lo := cudd.Cudd_bddAnd(dd, e.space(f0, g0), e.space(f1, g1))
+	hi := cudd.Cudd_bddAnd(dd, e.space(f0, g1), e.space(f1, g0))
+	r := cudd.Cudd_bddIte(dd, dd.Vars[index], hi, lo)
+	e.spaces[key] = r
+	return r
+}
+func (e *autoEngine) sign(f *DdNode, negative bool) *DdNode {
+	dd := e.dd
+	if cudd.Cudd_IsConstant(f) {
+		if negative {
+			return dd.LogicZero
+		}
+		return dd.One
+	}
+	key := autoSigned{f, negative}
+	if r := e.signs[key]; r != nil {
+		return r
+	}
+	lo, hi := autoChildren(f)
+	a := cudd.Cudd_bddAnd(dd, e.sign(lo, negative), e.sign(hi, negative))
+	b := cudd.Cudd_bddAnd(dd, e.sign(lo, !negative), e.sign(hi, !negative))
+	r := cudd.Cudd_bddIte(dd, dd.Vars[cudd.Cudd_Regular(f).Index], b, a)
+	e.signs[key] = r
+	return r
+}
+func (e *autoEngine) canon(f *DdNode) *DdNode {
+	if cudd.Cudd_IsConstant(f) {
+		return f
+	}
+	if r := e.canonical[f]; r != nil {
+		return r
+	}
+	lo, hi := autoChildren(f)
+	var r *DdNode
+	if lo == e.dd.LogicZero {
+		r = e.canon(hi)
+	} else if hi == e.dd.LogicZero {
+		r = e.canon(lo)
+	} else {
+		r = cudd.Cudd_bddAnd(e.dd, e.dd.Vars[cudd.Cudd_Regular(f).Index], e.canon(lo))
+	}
+	e.canonical[f] = r
+	return r
+}
+func (e *autoEngine) zCompose(index int, with, without *DdNode) *DdNode {
+	return cudd.Cudd_zddUnion(e.dd, without, cudd.Cudd_zddChange(e.dd, with, index))
+}
+func (e *autoEngine) equation(f *DdNode, negative bool) *DdNode {
+	dd := e.dd
+	if f == dd.LogicZero {
+		return dd.One
+	}
+	if f == dd.One {
+		return dd.Zero
+	}
+	key := autoSigned{f, negative}
+	if r := e.equations[key]; r != nil {
+		return r
+	}
+	lo, hi := autoChildren(f)
+	index := 2 * int(cudd.Cudd_Regular(f).Index)
+	var r *DdNode
+	if lo == dd.LogicZero {
+		r = e.equation(hi, negative)
+		if !negative {
+			r = e.zCompose(index, dd.One, r)
+		}
+	} else if hi == dd.LogicZero {
+		r = e.equation(lo, negative)
+		if negative {
+			r = e.zCompose(index, dd.One, r)
+		}
+	} else {
+		a := e.equation(lo, negative)
+		b := e.equation(hi, negative)
+		c := e.equation(hi, !negative)
+		r = e.zCompose(index, cudd.Cudd_zddIntersect(dd, a, c), cudd.Cudd_zddIntersect(dd, a, b))
+	}
+	e.equations[key] = r
+	return r
+}
+func (e *autoEngine) matrix(f *DdNode, negative bool) *DdNode {
+	dd := e.dd
+	if f == dd.Zero {
+		return dd.One
+	}
+	if f == dd.One {
+		if negative {
+			return dd.LogicZero
+		}
+		return dd.One
+	}
+	key := autoSigned{f, negative}
+	if r := e.matrices[key]; r != nil {
+		return r
+	}
+	a := cudd.Cudd_bddAnd(dd, e.matrix(f.E, negative), e.matrix(f.T, negative))
+	b := cudd.Cudd_bddAnd(dd, e.matrix(f.E, negative), e.matrix(f.T, !negative))
+	v := cudd.Cudd_bddIthVar(dd, int(f.Index)/2)
+	r := cudd.Cudd_bddIte(dd, v, b, a)
+	e.matrices[key] = r
+	return r
+}
+func autoMatrixValid(dd *DdManager, f *DdNode) bool {
+	if dd == nil || f == nil || cudd.Cudd_zddUnion(dd, f, dd.Zero) == nil {
+		return false
+	}
+	seen := map[*DdNode]bool{}
+	var visit func(*DdNode) bool
+	visit = func(f *DdNode) bool {
+		if cudd.Cudd_IsConstant(f) || seen[f] {
+			return true
+		}
+		seen[f] = true
+		return f.Index&1 == 0 && int(f.Index)/2 < len(dd.Vars) && visit(f.T) && visit(f.E)
+	}
+	return visit(f)
+}
+func Extra_bddSpaceFromFunction(dd *DdManager, f, g *DdNode) *DdNode {
+	if !autoBDD(dd, f, g) {
+		return nil
+	}
+	return newAuto(dd).space(f, g)
+}
+func Extra_bddSpaceFromFunctionPos(dd *DdManager, f *DdNode) *DdNode {
+	if !autoBDD(dd, f) {
+		return nil
+	}
+	return newAuto(dd).sign(f, false)
+}
+func Extra_bddSpaceFromFunctionNeg(dd *DdManager, f *DdNode) *DdNode {
+	if !autoBDD(dd, f) {
+		return nil
+	}
+	return newAuto(dd).sign(f, true)
+}
+func Extra_bddSpaceCanonVars(dd *DdManager, f *DdNode) *DdNode {
+	if !autoBDD(dd, f) {
+		return nil
+	}
+	return newAuto(dd).canon(f)
+}
+func Extra_bddSpaceReduce(dd *DdManager, f, vars *DdNode) *DdNode {
+	if !autoBDD(dd, f, vars) {
+		return nil
+	}
+	cube := dd.One
+	for _, index := range dd.Support(vars) {
+		cube = cudd.Cudd_bddAnd(dd, cube, cudd.Cudd_Not(dd.Vars[index]))
+	}
+	return cudd.Cudd_Cofactor(dd, f, cube)
+}
+func Extra_bddSpaceEquationsPos(dd *DdManager, f *DdNode) *DdNode {
+	if !autoBDD(dd, f) {
+		return nil
+	}
+	return newAuto(dd).equation(f, false)
+}
+func Extra_bddSpaceEquationsNeg(dd *DdManager, f *DdNode) *DdNode {
+	if !autoBDD(dd, f) {
+		return nil
+	}
+	return newAuto(dd).equation(f, true)
+}
+func Extra_bddSpaceEquations(dd *DdManager, f *DdNode) *DdNode {
+	if !autoBDD(dd, f) {
+		return nil
+	}
+	e := newAuto(dd)
+	return cudd.Cudd_zddUnion(dd, e.equation(f, false), e.equation(f, true))
+}
+func Extra_bddSpaceFromMatrixPos(dd *DdManager, f *DdNode) *DdNode {
+	if !autoMatrixValid(dd, f) {
+		return nil
+	}
+	return newAuto(dd).matrix(f, false)
+}
+func Extra_bddSpaceFromMatrixNeg(dd *DdManager, f *DdNode) *DdNode {
+	if !autoMatrixValid(dd, f) {
+		return nil
+	}
+	return newAuto(dd).matrix(f, true)
+}
+func Extra_bddSpaceFromFunctionFast(dd *DdManager, f *DdNode) *DdNode {
+	if !autoBDD(dd, f) {
+		return nil
+	}
+	support := dd.Support(f)
+	if len(dd.Vars) < 2*len(support) {
+		return nil
+	}
+	permutation, back := make([]int, len(dd.Vars)), make([]int, len(dd.Vars))
+	vector := append([]*DdNode(nil), dd.Vars...)
+	for i := range permutation {
+		permutation[i] = i
+		back[i] = i
+	}
+	cube := dd.One
+	for k, index := range support {
+		even, odd := dd.InvPerm[2*k], dd.InvPerm[2*k+1]
+		permutation[index] = even
+		back[odd] = index
+		vector[even] = cudd.Cudd_bddXor(dd, dd.Vars[even], dd.Vars[odd])
+		cube = cudd.Cudd_bddAnd(dd, cube, dd.Vars[even])
+	}
+	first := cudd.Cudd_bddPermute(dd, f, permutation)
+	second := cudd.Cudd_bddVectorCompose(dd, first, vector)
+	different := cudd.Cudd_bddXor(dd, first, second)
+	shift := cudd.Cudd_Not(cudd.Cudd_bddExistAbstract(dd, different, cube))
+	return cudd.Cudd_bddPermute(dd, shift, back)
+}
+func Extra_zddLitCountComb(dd *DdManager, f *DdNode) int {
+	if dd == nil || f == nil || cudd.Cudd_zddUnion(dd, f, dd.Zero) == nil {
+		return -1
+	}
+	if f == dd.Zero {
+		return 0
+	}
+	count := 0
+	for f != dd.One {
+		if f.E != dd.Zero {
+			return -1
+		}
+		count++
+		f = f.T
+	}
+	return count
+}
+func autoSelectSubset(dd *DdManager, f *DdNode) *DdNode {
+	cube := dd.One
+	for f != dd.One {
+		if f == dd.Zero {
+			return dd.Zero
+		}
+		if f.E != dd.Zero {
+			f = f.E
+		} else {
+			cube = cudd.Cudd_zddChange(dd, cube, int(f.Index))
+			f = f.T
+		}
+	}
+	return cube
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceFromFunctionPos(dd *DdManager, bFunc *DdNode) *DdNode {
-    var bRes *DdNode;
-    for {
-        dd.reordered = 0;
-        bRes = extraBddSpaceFromFunctionPos( dd, bFunc );
-    
-if !(dd.reordered == 1) { break }
-} 
-    return bRes;
+// Extra_bddSpaceExorGates returns referenced equations indexed by their unique
+// reduced-function variable. Nil means the equation/basis precondition failed.
+func Extra_bddSpaceExorGates(dd *DdManager, reduced, equations *DdNode) []*DdNode {
+	if !autoBDD(dd, reduced) || !autoMatrixValid(dd, equations) {
+		return nil
+	}
+	support := map[int]bool{}
+	for _, index := range dd.Support(reduced) {
+		support[index] = true
+	}
+	result := make([]*DdNode, len(dd.Vars))
+	fail := func() []*DdNode {
+		for _, f := range result {
+			if f != nil {
+				cudd.Cudd_RecursiveDeref(dd, f)
+			}
+		}
+		return nil
+	}
+	for equations != dd.Zero {
+		cube := autoSelectSubset(dd, equations)
+		equations = cudd.Cudd_zddDiff(dd, equations, cube)
+		index := -1
+		for node := cube; node != dd.One; node = node.T {
+			v := int(node.Index) / 2
+			if support[v] {
+				if index != -1 {
+					return fail()
+				}
+				index = v
+			}
+		}
+		if index < 0 {
+			return fail()
+		}
+		if Extra_zddLitCountComb(dd, cube) > 1 {
+			if result[index] != nil {
+				return fail()
+			}
+			result[index] = cube
+			cudd.Cudd_Ref(cube)
+		}
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceFromFunctionNeg(dd *DdManager, bFunc *DdNode) *DdNode {
-    var bRes *DdNode;
-    for {
-        dd.reordered = 0;
-        bRes = extraBddSpaceFromFunctionNeg( dd, bFunc );
-    
-if !(dd.reordered == 1) { break }
-} 
-    return bRes;
+func extraBddSpaceFromFunction(dd *DdManager, f, g *DdNode) *DdNode {
+	return Extra_bddSpaceFromFunction(dd, f, g)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceCanonVars(dd *DdManager, bSpace *DdNode) *DdNode {
-    var bRes *DdNode;
-    for {
-        dd.reordered = 0;
-        bRes = extraBddSpaceCanonVars( dd, bSpace );
-    
-if !(dd.reordered == 1) { break }
-} 
-    return bRes;
+func extraBddSpaceFromFunctionPos(dd *DdManager, f *DdNode) *DdNode {
+	return Extra_bddSpaceFromFunctionPos(dd, f)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceReduce(dd *DdManager, bFunc *DdNode, bCanonVars *DdNode) *DdNode {
-    var bNegCube *DdNode;
-    var bResult *DdNode;
-    bNegCube = Extra_bddSupportNegativeCube( dd, bCanonVars );  Cudd_Ref( bNegCube );
-    bResult  = Cudd_Cofactor( dd, bFunc, bNegCube );            Cudd_Ref( bResult );
-    Cudd_RecursiveDeref( dd, bNegCube );
-    Cudd_Deref( bResult );
-    return bResult;
+func extraBddSpaceFromFunctionNeg(dd *DdManager, f *DdNode) *DdNode {
+	return Extra_bddSpaceFromFunctionNeg(dd, f)
 }
-
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceEquations(dd *DdManager, bSpace *DdNode) *DdNode {
-    var zRes *DdNode;
-    var zEquPos *DdNode;
-    var zEquNeg *DdNode;
-    zEquPos = Extra_bddSpaceEquationsPos( dd, bSpace );  Cudd_Ref( zEquPos );
-    zEquNeg = Extra_bddSpaceEquationsNeg( dd, bSpace );  Cudd_Ref( zEquNeg );
-    zRes    = Cudd_zddUnion( dd, zEquPos, zEquNeg );     Cudd_Ref( zRes );
-    Cudd_RecursiveDerefZdd( dd, zEquPos );
-    Cudd_RecursiveDerefZdd( dd, zEquNeg );
-    Cudd_Deref( zRes );
-    return zRes;
+func extraBddSpaceCanonVars(dd *DdManager, f *DdNode) *DdNode { return Extra_bddSpaceCanonVars(dd, f) }
+func extraBddSpaceEquationsPos(dd *DdManager, f *DdNode) *DdNode {
+	return Extra_bddSpaceEquationsPos(dd, f)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceEquationsPos(dd *DdManager, bSpace *DdNode) *DdNode {
-    var zRes *DdNode;
-    for {
-        dd.reordered = 0;
-        zRes = extraBddSpaceEquationsPos( dd, bSpace );
-    
-if !(dd.reordered == 1) { break }
-} 
-    return zRes;
+func extraBddSpaceEquationsNeg(dd *DdManager, f *DdNode) *DdNode {
+	return Extra_bddSpaceEquationsNeg(dd, f)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceEquationsNeg(dd *DdManager, bSpace *DdNode) *DdNode {
-    var zRes *DdNode;
-    for {
-        dd.reordered = 0;
-        zRes = extraBddSpaceEquationsNeg( dd, bSpace );
-    
-if !(dd.reordered == 1) { break }
-} 
-    return zRes;
+func extraBddSpaceFromMatrixPos(dd *DdManager, f *DdNode) *DdNode {
+	return Extra_bddSpaceFromMatrixPos(dd, f)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceFromMatrixPos(dd *DdManager, zA *DdNode) *DdNode {
-    var bRes *DdNode;
-    for {
-        dd.reordered = 0;
-        bRes = extraBddSpaceFromMatrixPos( dd, zA );
-    
-if !(dd.reordered == 1) { break }
-} 
-    return bRes;
+func extraBddSpaceFromMatrixNeg(dd *DdManager, f *DdNode) *DdNode {
+	return Extra_bddSpaceFromMatrixNeg(dd, f)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceFromMatrixNeg(dd *DdManager, zA *DdNode) *DdNode {
-    var bRes *DdNode;
-    for {
-        dd.reordered = 0;
-        bRes = extraBddSpaceFromMatrixNeg( dd, zA );
-    
-if !(dd.reordered == 1) { break }
-} 
-    return bRes;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of literals in one combination.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_zddLitCountComb(dd *DdManager, zComb *DdNode) int32 {
-    var Counter int32;
-    if zComb == z0 {
-        return 0; }
-    Counter = 0;
-    // inlining of macro cuddT
-    for  ; zComb != z1; zComb = ((zComb).type.kids.T)  {
-        Counter++;
-    }
-    return Counter;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description [Returns the array of ZDDs with the number equal to the number of 
-  vars in the DD manager. If the given var is non-canonical, this array contains
-  the referenced ZDD representing literals in the corresponding EXOR equation.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddSpaceExorGates(dd *DdManager, bFuncRed *DdNode, zEquations *DdNode) **DdNode {
-    var pzRes **DdNode;
-    var pVarsNonCan *int32;
-    var zEquRem *DdNode;
-    var iVarNonCan int32;
-    var zExor, zTemp *DdNode;
-
-    // get the set of non-canonical variables
-    pVarsNonCan = ABC_ALLOC( int, ddMax(dd.size,dd.sizeZ) );
-    Extra_SupportArray( dd, bFuncRed, pVarsNonCan );
-
-    // allocate storage for the EXOR sets
-    pzRes = ABC_ALLOC( DdNode *, dd.size );
-    memset( pzRes, 0, sizeof(DdNode *) * dd.size );
-
-    // go through all the equations
-    zEquRem = zEquations;  Cudd_Ref( zEquRem );
-    for  zEquRem != z0  {
-        // extract one product
-        zExor = Extra_zddSelectOneSubset( dd, zEquRem );   Cudd_Ref( zExor );
-        // remove it from the set
-        zEquRem = Cudd_zddDiff( dd, zTemp = zEquRem, zExor );  Cudd_Ref( zEquRem );
-        Cudd_RecursiveDerefZdd( dd, zTemp );
-
-        // locate the non-canonical variable
-        iVarNonCan = -1;
-        // inlining of macro cuddT
-        for  zTemp = zExor; zTemp != z1; zTemp = ((zTemp).type.kids.T)  {
-            if pVarsNonCan[zTemp.index/2] == 1 {
-                assert(iVarNonCan == -1, "iVarNonCan == -1");
-                iVarNonCan = zTemp.index/2;
-            }
-        }
-        assert(iVarNonCan != -1, "iVarNonCan != -1");
-
-        if Extra_zddLitCountComb( dd, zExor ) > 1 {
-            pzRes[ iVarNonCan ] = zExor; // takes ref
-        } else {
-            Cudd_RecursiveDerefZdd( dd, zExor ); }
-    }
-    Cudd_RecursiveDerefZdd( dd, zEquRem );
-
-    ABC_FREE( pVarsNonCan );
-    return pzRes;
-}
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of internal functions                                          */
-/*---------------------------------------------------------------------------*/
-
-/**Function********************************************************************
-
-  Synopsis    [Performs the recursive steps of Extra_bddSpaceFromFunction.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func extraBddSpaceFromFunction(dd *DdManager, bF *DdNode, bG *DdNode) *DdNode {
-    var bRes *DdNode;
-    var bFR, bGR *DdNode;
-
-    // inlining of macro Cudd_Regular
-    bFR = ((DdNode *)((ptruint)(bF) & ~01)); 
-    // inlining of macro Cudd_Regular
-    bGR = ((DdNode *)((ptruint)(bG) & ~01)); 
-    // inlining of macro cuddIsConstant
-    if  (bFR).index == CUDD_CONST_INDEX {
-        if bF == bG {
-            return b1;
-        } else { 
-            return b0; }
-    }
-    // inlining of macro cuddIsConstant
-    if  (bGR).index == CUDD_CONST_INDEX {
-        return b0; }
-    // both bFunc and bCore are not constants
-
-    // the operation is commutative - normalize the problem
-    if uint32((ABC_PTRUINT_T))bF > uint32((ABC_PTRUINT_T))bG {
-        return extraBddSpaceFromFunction(dd, bG, bF); }
-
-
-    if bRes = cuddCacheLookup2(dd, extraBddSpaceFromFunction, bF, bG) {
-        return bRes;
-    } else {
-        var bF0, bF1 *DdNode;
-        var bG0, bG1 *DdNode;
-        var bTemp1, bTemp2 *DdNode;
-        var bRes0, bRes1 *DdNode;
-        var LevelF, LevelG int32;
-        var index int32;
-
-        LevelF = dd.perm[bFR.index];
-        LevelG = dd.perm[bGR.index];
-        if LevelF <= LevelG {
-            index = dd.invperm[LevelF];
-            if bFR != bF {
-                // inlining of macro Cudd_Not
-                // inlining of macro cuddE
-                bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));
-                // inlining of macro Cudd_Not
-                // inlining of macro cuddT
-                bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));
-            
-            } else {
-                // inlining of macro cuddE
-                bF0 = ((bFR).type.kids.E);
-                // inlining of macro cuddT
-                bF1 = ((bFR).type.kids.T);
-            }
-        
-        } else {
-            index = dd.invperm[LevelG];
-            bF0 = bF1 = bF;
-        }
-
-        if LevelG <= LevelF {
-            if bGR != bG {
-                // inlining of macro Cudd_Not
-                // inlining of macro cuddE
-                bG0 = ((DdNode *)((ptrint)(((bGR).type.kids.E)) ^ 01));
-                // inlining of macro Cudd_Not
-                // inlining of macro cuddT
-                bG1 = ((DdNode *)((ptrint)(((bGR).type.kids.T)) ^ 01));
-            
-            } else {
-                // inlining of macro cuddE
-                bG0 = ((bGR).type.kids.E);
-                // inlining of macro cuddT
-                bG1 = ((bGR).type.kids.T);
-            }
-        
-        } else {
-            bG0 = bG1 = bG; }
-
-        bTemp1 = extraBddSpaceFromFunction( dd, bF0, bG0 );
-        if bTemp1 == nil { 
-            return nil; }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bTemp1).ref);
-
-        bTemp2 = extraBddSpaceFromFunction( dd, bF1, bG1 );
-        if bTemp2 == nil {
-            Cudd_RecursiveDeref( dd, bTemp1 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bTemp2).ref);
-
-
-        bRes0  = cuddBddAndRecur( dd, bTemp1, bTemp2 );
-        if bRes0 == nil {
-            Cudd_RecursiveDeref( dd, bTemp1 );
-            Cudd_RecursiveDeref( dd, bTemp2 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bRes0).ref);
-        Cudd_RecursiveDeref( dd, bTemp1 );
-        Cudd_RecursiveDeref( dd, bTemp2 );
-
-
-        bTemp1  = extraBddSpaceFromFunction( dd, bF0, bG1 );
-        if bTemp1 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bTemp1).ref);
-
-        bTemp2  = extraBddSpaceFromFunction( dd, bF1, bG0 );
-        if bTemp2 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            Cudd_RecursiveDeref( dd, bTemp1 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bTemp2).ref);
-
-        bRes1  = cuddBddAndRecur( dd, bTemp1, bTemp2 );
-        if bRes1 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            Cudd_RecursiveDeref( dd, bTemp1 );
-            Cudd_RecursiveDeref( dd, bTemp2 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bRes1).ref);
-        Cudd_RecursiveDeref( dd, bTemp1 );
-        Cudd_RecursiveDeref( dd, bTemp2 );
-
-
-
-        // consider the case when Res0 and Res1 are the same node 
-        if bRes0 == bRes1 {
-            bRes = bRes1;
-        // consider the case when Res1 is complemented 
-        // inlining of macro Cudd_IsComplement
-        } else if  int32( ((ptrint) (bRes1) & 01)) != 0 {
-            // inlining of macro Cudd_Not
-            bRes = cuddUniqueInter(dd, index, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)));
-            if bRes == nil {
-                Cudd_RecursiveDeref(dd,bRes0);
-                Cudd_RecursiveDeref(dd,bRes1);
-                return nil;
-            }
-            // inlining of macro Cudd_Not
-            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));
-         
-        } else {
-            bRes = cuddUniqueInter( dd, index, bRes1, bRes0 );
-            if bRes == nil {
-                Cudd_RecursiveDeref(dd,bRes0);
-                Cudd_RecursiveDeref(dd,bRes1);
-                return nil;
-            }
-        }
-        // inlining of macro cuddDeref
-        cuddSatDec(Cudd_Regular(bRes0).ref);
-        // inlining of macro cuddDeref
-        cuddSatDec(Cudd_Regular(bRes1).ref);
-            
-        // insert the result into cache 
-        cuddCacheInsert2(dd, extraBddSpaceFromFunction, bF, bG, bRes);
-        return bRes;
-    }
-}  /* end of extraBddSpaceFromFunction */
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs the recursive step of Extra_bddSpaceFromFunctionPos().]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func extraBddSpaceFromFunctionPos(dd *DdManager, bF *DdNode) *DdNode {
-    var bRes, bFR *DdNode;
-    statLine( dd );
-
-    // inlining of macro Cudd_Regular
-    bFR = ((DdNode *)((ptruint)(bF) & ~01));
-    // inlining of macro cuddIsConstant
-    if  (bFR).index == CUDD_CONST_INDEX {
-        return b1; }
-
-    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromFunctionPos, bF) {
-        return bRes;
-    } else {
-        var bF0, bF1 *DdNode;
-        var bPos0, bPos1 *DdNode;
-        var bNeg0, bNeg1 *DdNode;
-        var bRes0, bRes1 *DdNode; 
-
-        if bFR != bF { // bF is complemented 
-        
-            // inlining of macro Cudd_Not
-            // inlining of macro cuddE
-            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));
-            // inlining of macro Cudd_Not
-            // inlining of macro cuddT
-            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));
-        
-        } else {
-            // inlining of macro cuddE
-            bF0 = ((bFR).type.kids.E);
-            // inlining of macro cuddT
-            bF1 = ((bFR).type.kids.T);
-        }
-
-
-        bPos0  = extraBddSpaceFromFunctionPos( dd, bF0 );
-        if bPos0 == nil {
-            return nil; }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bPos0).ref);
-
-        bPos1  = extraBddSpaceFromFunctionPos( dd, bF1 );
-        if bPos1 == nil {
-            Cudd_RecursiveDeref( dd, bPos0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bPos1).ref);
-
-        bRes0  = cuddBddAndRecur( dd, bPos0, bPos1 );
-        if bRes0 == nil {
-            Cudd_RecursiveDeref( dd, bPos0 );
-            Cudd_RecursiveDeref( dd, bPos1 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bRes0).ref);
-        Cudd_RecursiveDeref( dd, bPos0 );
-        Cudd_RecursiveDeref( dd, bPos1 );
-
-
-        bNeg0  = extraBddSpaceFromFunctionNeg( dd, bF0 );
-        if bNeg0 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bNeg0).ref);
-
-        bNeg1  = extraBddSpaceFromFunctionNeg( dd, bF1 );
-        if bNeg1 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            Cudd_RecursiveDeref( dd, bNeg0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bNeg1).ref);
-
-        bRes1  = cuddBddAndRecur( dd, bNeg0, bNeg1 );
-        if bRes1 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            Cudd_RecursiveDeref( dd, bNeg0 );
-            Cudd_RecursiveDeref( dd, bNeg1 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bRes1).ref);
-        Cudd_RecursiveDeref( dd, bNeg0 );
-        Cudd_RecursiveDeref( dd, bNeg1 );
-
-
-        // consider the case when Res0 and Res1 are the same node 
-        if bRes0 == bRes1 {
-            bRes = bRes1;
-        // consider the case when Res1 is complemented 
-        // inlining of macro Cudd_IsComplement
-        } else if  int32( ((ptrint) (bRes1) & 01)) != 0 {
-            // inlining of macro Cudd_Not
-            bRes = cuddUniqueInter( dd, bFR.index, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );
-            if bRes == nil {
-                Cudd_RecursiveDeref(dd,bRes0);
-                Cudd_RecursiveDeref(dd,bRes1);
-                return nil;
-            }
-            // inlining of macro Cudd_Not
-            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));
-         
-        } else {
-            bRes = cuddUniqueInter( dd, bFR.index, bRes1, bRes0 );
-            if bRes == nil {
-                Cudd_RecursiveDeref(dd,bRes0);
-                Cudd_RecursiveDeref(dd,bRes1);
-                return nil;
-            }
-        }
-        // inlining of macro cuddDeref
-        cuddSatDec(Cudd_Regular(bRes0).ref);
-        // inlining of macro cuddDeref
-        cuddSatDec(Cudd_Regular(bRes1).ref);
-
-        cuddCacheInsert1( dd, extraBddSpaceFromFunctionPos, bF, bRes );
-        return bRes;
-    }
-}
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs the recursive step of Extra_bddSpaceFromFunctionPos().]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func extraBddSpaceFromFunctionNeg(dd *DdManager, bF *DdNode) *DdNode {
-    var bRes, bFR *DdNode;
-    statLine( dd );
-
-    // inlining of macro Cudd_Regular
-    bFR = ((DdNode *)((ptruint)(bF) & ~01));
-    // inlining of macro cuddIsConstant
-    if  (bFR).index == CUDD_CONST_INDEX {
-        return b0; }
-
-    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromFunctionNeg, bF) {
-        return bRes;
-    } else {
-        var bF0, bF1 *DdNode;
-        var bPos0, bPos1 *DdNode;
-        var bNeg0, bNeg1 *DdNode;
-        var bRes0, bRes1 *DdNode; 
-
-        if bFR != bF { // bF is complemented 
-        
-            // inlining of macro Cudd_Not
-            // inlining of macro cuddE
-            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));
-            // inlining of macro Cudd_Not
-            // inlining of macro cuddT
-            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));
-        
-        } else {
-            // inlining of macro cuddE
-            bF0 = ((bFR).type.kids.E);
-            // inlining of macro cuddT
-            bF1 = ((bFR).type.kids.T);
-        }
-
-
-        bPos0  = extraBddSpaceFromFunctionNeg( dd, bF0 );
-        if bPos0 == nil {
-            return nil; }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bPos0).ref);
-
-        bPos1  = extraBddSpaceFromFunctionNeg( dd, bF1 );
-        if bPos1 == nil {
-            Cudd_RecursiveDeref( dd, bPos0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bPos1).ref);
-
-        bRes0  = cuddBddAndRecur( dd, bPos0, bPos1 );
-        if bRes0 == nil {
-            Cudd_RecursiveDeref( dd, bPos0 );
-            Cudd_RecursiveDeref( dd, bPos1 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bRes0).ref);
-        Cudd_RecursiveDeref( dd, bPos0 );
-        Cudd_RecursiveDeref( dd, bPos1 );
-
-
-        bNeg0  = extraBddSpaceFromFunctionPos( dd, bF0 );
-        if bNeg0 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bNeg0).ref);
-
-        bNeg1  = extraBddSpaceFromFunctionPos( dd, bF1 );
-        if bNeg1 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            Cudd_RecursiveDeref( dd, bNeg0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bNeg1).ref);
-
-        bRes1  = cuddBddAndRecur( dd, bNeg0, bNeg1 );
-        if bRes1 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            Cudd_RecursiveDeref( dd, bNeg0 );
-            Cudd_RecursiveDeref( dd, bNeg1 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bRes1).ref);
-        Cudd_RecursiveDeref( dd, bNeg0 );
-        Cudd_RecursiveDeref( dd, bNeg1 );
-
-
-        // consider the case when Res0 and Res1 are the same node 
-        if bRes0 == bRes1 {
-            bRes = bRes1;
-        // consider the case when Res1 is complemented 
-        // inlining of macro Cudd_IsComplement
-        } else if  int32( ((ptrint) (bRes1) & 01)) != 0 {
-            // inlining of macro Cudd_Not
-            bRes = cuddUniqueInter( dd, bFR.index, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );
-            if bRes == nil {
-                Cudd_RecursiveDeref(dd,bRes0);
-                Cudd_RecursiveDeref(dd,bRes1);
-                return nil;
-            }
-            // inlining of macro Cudd_Not
-            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));
-         
-        } else {
-            bRes = cuddUniqueInter( dd, bFR.index, bRes1, bRes0 );
-            if bRes == nil {
-                Cudd_RecursiveDeref(dd,bRes0);
-                Cudd_RecursiveDeref(dd,bRes1);
-                return nil;
-            }
-        }
-        // inlining of macro cuddDeref
-        cuddSatDec(Cudd_Regular(bRes0).ref);
-        // inlining of macro cuddDeref
-        cuddSatDec(Cudd_Regular(bRes1).ref);
-
-        cuddCacheInsert1( dd, extraBddSpaceFromFunctionNeg, bF, bRes );
-        return bRes;
-    }
-}
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs the recursive step of Extra_bddSpaceCanonVars().]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func extraBddSpaceCanonVars(dd *DdManager, bF *DdNode) *DdNode {
-    var bRes, bFR *DdNode;
-    statLine( dd );
-
-    // inlining of macro Cudd_Regular
-    bFR = ((DdNode *)((ptruint)(bF) & ~01));
-    // inlining of macro cuddIsConstant
-    if  (bFR).index == CUDD_CONST_INDEX {
-        return bF; }
-
-    if bRes = cuddCacheLookup1(dd, extraBddSpaceCanonVars, bF) {
-        return bRes;
-    } else {
-        var bF0, bF1 *DdNode;
-        var bRes, bRes0 *DdNode; 
-
-        if bFR != bF { // bF is complemented 
-        
-            // inlining of macro Cudd_Not
-            // inlining of macro cuddE
-            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));
-            // inlining of macro Cudd_Not
-            // inlining of macro cuddT
-            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));
-        
-        } else {
-            // inlining of macro cuddE
-            bF0 = ((bFR).type.kids.E);
-            // inlining of macro cuddT
-            bF1 = ((bFR).type.kids.T);
-        }
-
-        if bF0 == b0 {
-            bRes = extraBddSpaceCanonVars( dd, bF1 );
-            if bRes == nil {
-                return nil; }
-        
-        } else if bF1 == b0 {
-            bRes = extraBddSpaceCanonVars( dd, bF0 );
-            if bRes == nil {
-                return nil; }
-        
-        } else {
-            bRes0 = extraBddSpaceCanonVars( dd, bF0 );
-            if bRes0 == nil {
-                return nil; }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(bRes0).ref);
-
-            bRes = cuddUniqueInter( dd, bFR.index, bRes0, b0 );
-            if bRes == nil {
-                Cudd_RecursiveDeref( dd,bRes0 );
-                return nil;
-            }
-            // inlining of macro cuddDeref
-            cuddSatDec(Cudd_Regular(bRes0).ref);
-        }
-
-        cuddCacheInsert1( dd, extraBddSpaceCanonVars, bF, bRes );
-        return bRes;
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs the recursive step of Extra_bddSpaceEquationsPos().]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func extraBddSpaceEquationsPos(dd *DdManager, bF *DdNode) *DdNode {
-    var zRes *DdNode;
-    statLine( dd );
-
-    if bF == b0 {
-        return z1; }
-    if bF == b1 {
-        return z0; }
-    
-    if zRes = cuddCacheLookup1Zdd(dd, extraBddSpaceEquationsPos, bF) {
-        return zRes;
-    } else {
-        var bFR, bF0, bF1 *DdNode;
-        var zPos0, zPos1, zNeg1 *DdNode; 
-        var zRes, zRes0, zRes1 *DdNode;
-
-        // inlining of macro Cudd_Regular
-        bFR = ((DdNode *)((ptruint)(bF) & ~01));
-        if bFR != bF { // bF is complemented 
-        
-            // inlining of macro Cudd_Not
-            // inlining of macro cuddE
-            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));
-            // inlining of macro Cudd_Not
-            // inlining of macro cuddT
-            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));
-        
-        } else {
-            // inlining of macro cuddE
-            bF0 = ((bFR).type.kids.E);
-            // inlining of macro cuddT
-            bF1 = ((bFR).type.kids.T);
-        }
-
-        if bF0 == b0 {
-            zRes1 = extraBddSpaceEquationsPos( dd, bF1 );
-            if zRes1 == nil {
-                return nil; }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zRes1).ref);
-
-            // add the current element to the set
-            zRes = cuddZddGetNode( dd, 2*bFR.index, z1, zRes1 );
-            if zRes == nil {
-                Cudd_RecursiveDerefZdd(dd, zRes1);
-                return nil;
-            }
-            // inlining of macro cuddDeref
-            cuddSatDec(Cudd_Regular(zRes1).ref);
-        
-        } else if bF1 == b0 {
-            zRes = extraBddSpaceEquationsPos( dd, bF0 );
-            if zRes == nil {
-                return nil; }
-        
-        } else {
-            zPos0 = extraBddSpaceEquationsPos( dd, bF0 );
-            if zPos0 == nil {
-                return nil; }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zPos0).ref);
-
-            zPos1 = extraBddSpaceEquationsPos( dd, bF1 );
-            if zPos1 == nil {
-                Cudd_RecursiveDerefZdd(dd, zPos0);
-                return nil;
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zPos1).ref);
-
-            zNeg1 = extraBddSpaceEquationsNeg( dd, bF1 );
-            if zNeg1 == nil {
-                Cudd_RecursiveDerefZdd(dd, zPos0);
-                Cudd_RecursiveDerefZdd(dd, zPos1);
-                return nil;
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zNeg1).ref);
-
-
-            zRes0 = cuddZddIntersect( dd, zPos0, zPos1 );
-            if zRes0 == nil {
-                Cudd_RecursiveDerefZdd(dd, zNeg1);
-                Cudd_RecursiveDerefZdd(dd, zPos0);
-                Cudd_RecursiveDerefZdd(dd, zPos1);
-                return nil;
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zRes0).ref);
-
-            zRes1 = cuddZddIntersect( dd, zPos0, zNeg1 );
-            if zRes1 == nil {
-                Cudd_RecursiveDerefZdd(dd, zRes0);
-                Cudd_RecursiveDerefZdd(dd, zNeg1);
-                Cudd_RecursiveDerefZdd(dd, zPos0);
-                Cudd_RecursiveDerefZdd(dd, zPos1);
-                return nil;
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zRes1).ref);
-            Cudd_RecursiveDerefZdd(dd, zNeg1);
-            Cudd_RecursiveDerefZdd(dd, zPos0);
-            Cudd_RecursiveDerefZdd(dd, zPos1);
-            // only zRes0 and zRes1 are refed at this point
-
-            zRes = cuddZddGetNode( dd, 2*bFR.index, zRes1, zRes0 );
-            if zRes == nil {
-                Cudd_RecursiveDerefZdd(dd, zRes0);
-                Cudd_RecursiveDerefZdd(dd, zRes1);
-                return nil;
-            }
-            // inlining of macro cuddDeref
-            cuddSatDec(Cudd_Regular(zRes0).ref);
-            // inlining of macro cuddDeref
-            cuddSatDec(Cudd_Regular(zRes1).ref);
-        }
-
-        cuddCacheInsert1( dd, extraBddSpaceEquationsPos, bF, zRes );
-        return zRes;
-    }
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs the recursive step of Extra_bddSpaceEquationsNev().]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func extraBddSpaceEquationsNeg(dd *DdManager, bF *DdNode) *DdNode {
-    var zRes *DdNode;
-    statLine( dd );
-
-    if bF == b0 {
-        return z1; }
-    if bF == b1 {
-        return z0; }
-    
-    if zRes = cuddCacheLookup1Zdd(dd, extraBddSpaceEquationsNeg, bF) {
-        return zRes;
-    } else {
-        var bFR, bF0, bF1 *DdNode;
-        var zPos0, zPos1, zNeg1 *DdNode; 
-        var zRes, zRes0, zRes1 *DdNode;
-
-        // inlining of macro Cudd_Regular
-        bFR = ((DdNode *)((ptruint)(bF) & ~01));
-        if bFR != bF { // bF is complemented 
-        
-            // inlining of macro Cudd_Not
-            // inlining of macro cuddE
-            bF0 = ((DdNode *)((ptrint)(((bFR).type.kids.E)) ^ 01));
-            // inlining of macro Cudd_Not
-            // inlining of macro cuddT
-            bF1 = ((DdNode *)((ptrint)(((bFR).type.kids.T)) ^ 01));
-        
-        } else {
-            // inlining of macro cuddE
-            bF0 = ((bFR).type.kids.E);
-            // inlining of macro cuddT
-            bF1 = ((bFR).type.kids.T);
-        }
-
-        if bF0 == b0 {
-            zRes = extraBddSpaceEquationsNeg( dd, bF1 );
-            if zRes == nil {
-                return nil; }
-        
-        } else if bF1 == b0 {
-            zRes0 = extraBddSpaceEquationsNeg( dd, bF0 );
-            if zRes0 == nil {
-                return nil; }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zRes0).ref);
-
-            // add the current element to the set
-            zRes = cuddZddGetNode( dd, 2*bFR.index, z1, zRes0 );
-            if zRes == nil {
-                Cudd_RecursiveDerefZdd(dd, zRes0);
-                return nil;
-            }
-            // inlining of macro cuddDeref
-            cuddSatDec(Cudd_Regular(zRes0).ref);
-        
-        } else {
-            zPos0 = extraBddSpaceEquationsNeg( dd, bF0 );
-            if zPos0 == nil {
-                return nil; }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zPos0).ref);
-
-            zPos1 = extraBddSpaceEquationsNeg( dd, bF1 );
-            if zPos1 == nil {
-                Cudd_RecursiveDerefZdd(dd, zPos0);
-                return nil;
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zPos1).ref);
-
-            zNeg1 = extraBddSpaceEquationsPos( dd, bF1 );
-            if zNeg1 == nil {
-                Cudd_RecursiveDerefZdd(dd, zPos0);
-                Cudd_RecursiveDerefZdd(dd, zPos1);
-                return nil;
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zNeg1).ref);
-
-
-            zRes0 = cuddZddIntersect( dd, zPos0, zPos1 );
-            if zRes0 == nil {
-                Cudd_RecursiveDerefZdd(dd, zNeg1);
-                Cudd_RecursiveDerefZdd(dd, zPos0);
-                Cudd_RecursiveDerefZdd(dd, zPos1);
-                return nil;
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zRes0).ref);
-
-            zRes1 = cuddZddIntersect( dd, zPos0, zNeg1 );
-            if zRes1 == nil {
-                Cudd_RecursiveDerefZdd(dd, zRes0);
-                Cudd_RecursiveDerefZdd(dd, zNeg1);
-                Cudd_RecursiveDerefZdd(dd, zPos0);
-                Cudd_RecursiveDerefZdd(dd, zPos1);
-                return nil;
-            }
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(zRes1).ref);
-            Cudd_RecursiveDerefZdd(dd, zNeg1);
-            Cudd_RecursiveDerefZdd(dd, zPos0);
-            Cudd_RecursiveDerefZdd(dd, zPos1);
-            // only zRes0 and zRes1 are refed at this point
-
-            zRes = cuddZddGetNode( dd, 2*bFR.index, zRes1, zRes0 );
-            if zRes == nil {
-                Cudd_RecursiveDerefZdd(dd, zRes0);
-                Cudd_RecursiveDerefZdd(dd, zRes1);
-                return nil;
-            }
-            // inlining of macro cuddDeref
-            cuddSatDec(Cudd_Regular(zRes0).ref);
-            // inlining of macro cuddDeref
-            cuddSatDec(Cudd_Regular(zRes1).ref);
-        }
-
-        cuddCacheInsert1( dd, extraBddSpaceEquationsNeg, bF, zRes );
-        return zRes;
-    }
-}
-
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs the recursive step of Extra_bddSpaceFromFunctionPos().]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func extraBddSpaceFromMatrixPos(dd *DdManager, zA *DdNode) *DdNode {
-    var bRes *DdNode;
-    statLine( dd );
-
-    if zA == z0 {
-        return b1; }
-    if zA == z1 {
-        return b1; }
-
-    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromMatrixPos, zA) {
-        return bRes;
-    } else {
-        var bP0, bP1 *DdNode;
-        var bN0, bN1 *DdNode;
-        var bRes0, bRes1 *DdNode; 
-
-        // inlining of macro cuddE
-        bP0  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.E) );
-        if bP0 == nil {
-            return nil; }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bP0).ref);
-
-        // inlining of macro cuddT
-        bP1  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.T) );
-        if bP1 == nil {
-            Cudd_RecursiveDeref( dd, bP0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bP1).ref);
-
-        bRes0  = cuddBddAndRecur( dd, bP0, bP1 );
-        if bRes0 == nil {
-            Cudd_RecursiveDeref( dd, bP0 );
-            Cudd_RecursiveDeref( dd, bP1 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bRes0).ref);
-        Cudd_RecursiveDeref( dd, bP0 );
-        Cudd_RecursiveDeref( dd, bP1 );
-
-
-        // inlining of macro cuddE
-        bN0  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.E) );
-        if bN0 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bN0).ref);
-
-        // inlining of macro cuddT
-        bN1  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.T) );
-        if bN1 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            Cudd_RecursiveDeref( dd, bN0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bN1).ref);
-
-        bRes1  = cuddBddAndRecur( dd, bN0, bN1 );
-        if bRes1 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            Cudd_RecursiveDeref( dd, bN0 );
-            Cudd_RecursiveDeref( dd, bN1 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bRes1).ref);
-        Cudd_RecursiveDeref( dd, bN0 );
-        Cudd_RecursiveDeref( dd, bN1 );
-
-
-        // consider the case when Res0 and Res1 are the same node 
-        if bRes0 == bRes1 {
-            bRes = bRes1;
-        // consider the case when Res1 is complemented 
-        // inlining of macro Cudd_IsComplement
-        } else if  int32( ((ptrint) (bRes1) & 01)) != 0 {
-            // inlining of macro Cudd_Not
-            bRes = cuddUniqueInter( dd, zA.index/2, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );
-            if bRes == nil {
-                Cudd_RecursiveDeref(dd,bRes0);
-                Cudd_RecursiveDeref(dd,bRes1);
-                return nil;
-            }
-            // inlining of macro Cudd_Not
-            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));
-         
-        } else {
-            bRes = cuddUniqueInter( dd, zA.index/2, bRes1, bRes0 );
-            if bRes == nil {
-                Cudd_RecursiveDeref(dd,bRes0);
-                Cudd_RecursiveDeref(dd,bRes1);
-                return nil;
-            }
-        }
-        // inlining of macro cuddDeref
-        cuddSatDec(Cudd_Regular(bRes0).ref);
-        // inlining of macro cuddDeref
-        cuddSatDec(Cudd_Regular(bRes1).ref);
-
-        cuddCacheInsert1( dd, extraBddSpaceFromMatrixPos, zA, bRes );
-        return bRes;
-    }
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs the recursive step of Extra_bddSpaceFromFunctionPos().]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func extraBddSpaceFromMatrixNeg(dd *DdManager, zA *DdNode) *DdNode {
-    var bRes *DdNode;
-    statLine( dd );
-
-    if zA == z0 {
-        return b1; }
-    if zA == z1 {
-        return b0; }
-
-    if bRes = cuddCacheLookup1(dd, extraBddSpaceFromMatrixNeg, zA) {
-        return bRes;
-    } else {
-        var bP0, bP1 *DdNode;
-        var bN0, bN1 *DdNode;
-        var bRes0, bRes1 *DdNode; 
-
-        // inlining of macro cuddE
-        bP0  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.E) );
-        if bP0 == nil {
-            return nil; }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bP0).ref);
-
-        // inlining of macro cuddT
-        bP1  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.T) );
-        if bP1 == nil {
-            Cudd_RecursiveDeref( dd, bP0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bP1).ref);
-
-        bRes0  = cuddBddAndRecur( dd, bP0, bP1 );
-        if bRes0 == nil {
-            Cudd_RecursiveDeref( dd, bP0 );
-            Cudd_RecursiveDeref( dd, bP1 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bRes0).ref);
-        Cudd_RecursiveDeref( dd, bP0 );
-        Cudd_RecursiveDeref( dd, bP1 );
-
-
-        // inlining of macro cuddE
-        bN0  = extraBddSpaceFromMatrixNeg( dd, ((zA).type.kids.E) );
-        if bN0 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bN0).ref);
-
-        // inlining of macro cuddT
-        bN1  = extraBddSpaceFromMatrixPos( dd, ((zA).type.kids.T) );
-        if bN1 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            Cudd_RecursiveDeref( dd, bN0 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bN1).ref);
-
-        bRes1  = cuddBddAndRecur( dd, bN0, bN1 );
-        if bRes1 == nil {
-            Cudd_RecursiveDeref( dd, bRes0 );
-            Cudd_RecursiveDeref( dd, bN0 );
-            Cudd_RecursiveDeref( dd, bN1 );
-            return nil;
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(bRes1).ref);
-        Cudd_RecursiveDeref( dd, bN0 );
-        Cudd_RecursiveDeref( dd, bN1 );
-
-
-        // consider the case when Res0 and Res1 are the same node 
-        if bRes0 == bRes1 {
-            bRes = bRes1;
-        // consider the case when Res1 is complemented 
-        // inlining of macro Cudd_IsComplement
-        } else if  int32( ((ptrint) (bRes1) & 01)) != 0 {
-            // inlining of macro Cudd_Not
-            bRes = cuddUniqueInter( dd, zA.index/2, ((DdNode *)((ptrint)(bRes1) ^ 01)), ((DdNode *)((ptrint)(bRes0) ^ 01)) );
-            if bRes == nil {
-                Cudd_RecursiveDeref(dd,bRes0);
-                Cudd_RecursiveDeref(dd,bRes1);
-                return nil;
-            }
-            // inlining of macro Cudd_Not
-            bRes = ((DdNode *)((ptrint)(bRes) ^ 01));
-         
-        } else {
-            bRes = cuddUniqueInter( dd, zA.index/2, bRes1, bRes0 );
-            if bRes == nil {
-                Cudd_RecursiveDeref(dd,bRes0);
-                Cudd_RecursiveDeref(dd,bRes1);
-                return nil;
-            }
-        }
-        // inlining of macro cuddDeref
-        cuddSatDec(Cudd_Regular(bRes0).ref);
-        // inlining of macro cuddDeref
-        cuddSatDec(Cudd_Regular(bRes1).ref);
-
-        cuddCacheInsert1( dd, extraBddSpaceFromMatrixNeg, zA, bRes );
-        return bRes;
-    }
-}
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of static functions                                            */
-/*---------------------------------------------------------------------------*/
-
-//ABC_NAMESPACE_IMPL_END
-

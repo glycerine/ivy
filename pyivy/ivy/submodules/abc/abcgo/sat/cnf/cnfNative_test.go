@@ -1,9 +1,12 @@
 package cnf
 
 import (
+	"os"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 func cnfSatisfiableWithInputs(cnf *CNF, inputs map[int]bool) bool {
@@ -103,4 +106,67 @@ func TestEncodeAIGConstantFalseOutput(t *testing.T) {
 	if cnfSatisfiableWithInputs(cnf, nil) {
 		t.Fatal("constant-false output should make the formula unsatisfiable")
 	}
+}
+
+func TestCutComposeUsesOwnedTruthTables(t *testing.T) {
+	cut := Cnf_CutFromTruth([]int32{1, 2}, []uint32{0x8}) // x AND y
+	fan := Cnf_CutFromTruth([]int32{3}, []uint32{0x2})    // z
+	composed := Cnf_CutCompose(nil, cut, fan, 2)
+	if composed == nil {
+		t.Fatal("composition returned nil")
+	}
+	if got := composed.pFanins; len(got) != 2 || got[0] != 1 || got[1] != 3 {
+		t.Fatalf("support=%v, want [1 3]", got)
+	}
+	if got := composed.truth[0]; got != 0x8 {
+		t.Fatalf("truth=%#x, want x AND z truth %#x", got, uint32(0x8))
+	}
+	Cnf_CutFree(cut)
+	Cnf_CutFree(fan)
+	if composed.truth[0] != 0x8 {
+		t.Fatal("result truth aliases freed inputs")
+	}
+}
+
+func TestDIMACSReadAndSolverBridge(t *testing.T) {
+	name := t.TempDir() + "/small.cnf"
+	if err := os.WriteFile(name, []byte("c two variables\np cnf 2 2\n1 2 0\n-1 2 0\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	data := Cnf_DataReadFromFile(name)
+	if data == nil {
+		t.Fatal("failed to read DIMACS")
+	}
+	if data.Variables != 2 || len(data.Clauses) != 2 {
+		t.Fatalf("got %d vars, %d clauses", data.Variables, len(data.Clauses))
+	}
+	solver := Cnf_DataWriteIntoSolver(data, 1, 0)
+	if solver == nil {
+		t.Fatal("expected satisfiable solver bridge")
+	}
+	if solver.Solve() != bsat.Satisfiable {
+		t.Fatal("bridge changed satisfiable CNF")
+	}
+}
+
+func TestNativeCutMappingOwnsCopies(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	root := g.AND(g.AND(a, b), c)
+	g.AddOutput(root)
+	manager := Cnf_ManStart()
+	manager.pManAig = g
+	Cnf_DeriveMapping(manager)
+	cut := manager.selectedCuts[root.NodeID()]
+	if cut == nil {
+		t.Fatal("missing selected cut")
+	}
+	if len(cut.pFanins) == 0 {
+		t.Fatal("selected cut lost its support")
+	}
+	mapping := Cnf_ManScanMapping(manager, 1, 0)
+	if vec.Vec_PtrSize(mapping) == 0 {
+		t.Fatal("mapping traversal returned no gates")
+	}
+	Cnf_ManStop(manager)
 }

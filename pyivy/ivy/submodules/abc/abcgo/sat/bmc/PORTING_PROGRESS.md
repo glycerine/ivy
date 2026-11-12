@@ -32,12 +32,29 @@ together with the packed-field helpers using the commands above with
 
 ## Current integration boundary
 
-The package remains unbuildable. `go test ./sat/bmc` currently stops while
-building its `sat/cnf` dependency, which still has syntax errors. The BMC
-header callback fields, pivot parser/loops, first two sequential-frame
-unrolling functions, and the full `bmcBmc2.go` syntax have been converted in
-the working tree. BMC algorithm type integration against native graph and
-solver APIs remains in progress.
+`sat/cnf` now builds independently, and `bmcBmc3.go` contains a native bounded
+sequential checker using AIG unrolling, the shared CNF encoder, and BSAT. Its
+focused regressions cover a one-frame counterexample and an invariant from the
+zero initial state. The `Saig_ParBmc_t` option type now lives beside this
+implementation, so these tests can run without loading unrelated legacy
+unrolling declarations:
+
+```
+go test -race ./sat/bmc/bmcBmc3.go ./sat/bmc/aliases.go ./sat/bmc/bmcBmc3_native_test.go
+go vet ./sat/bmc/bmcBmc3.go ./sat/bmc/aliases.go ./sat/bmc/bmcBmc3_native_test.go
+```
+
+`Gia_ManBmcPerform` now converts its input through the public GIA-to-AIG bridge
+and delegates to the scalable checker. It records the returned witness on the
+GIA manager through a validated, copy-owning sequential-CEX API. Adapter tests
+cover a one-frame counterexample and a bounded-safe invariant.
+
+Whole-package tests still do not pass. `go test ./sat/bmc` is currently blocked
+transitively by syntax errors in the imported `aig/gia` package, beginning at
+`giaBalAig.go:98`. The BMC package itself still has parser-invalid files such
+as `bmcBmcG.go`, `bmcBmcS.go`, and `bmcChain.go`; the syntax scan reports
+hundreds of source-conversion errors across these and other legacy algorithm
+families. Normal package race/vet verification remains outstanding.
 
 The package contains roughly 23,000 generated Go lines. A syntax scan found
 hundreds of C-style macro assignment expressions and ternaries across files.

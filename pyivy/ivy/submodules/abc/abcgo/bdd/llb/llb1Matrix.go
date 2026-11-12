@@ -143,10 +143,10 @@ func Llb_MtrAlloc(nPis, nFfs, nCols, nRows int32) *Llb_Mtr_t {
 	}
 	p := &Llb_Mtr_t_{
 		nPis: nPis, nFfs: nFfs, nCols: nCols, nRows: nRows,
-		pColSums: make([]int32, nCols),
-		pColGrps: make([]*Llb_Grp_t, nCols),
-		pRowSums: make([]int32, nRows),
-		pMatrix: make([][]bool, nCols),
+		pColSums:  make([]int32, nCols),
+		pColGrps:  make([]*Llb_Grp_t, nCols),
+		pRowSums:  make([]int32, nRows),
+		pMatrix:   make([][]bool, nCols),
 		pProdVars: make([]bool, nRows),
 		pProdNums: make([]int32, nRows),
 	}
@@ -181,10 +181,20 @@ func Llb_MtrAddColumn(p *Llb_Mtr_t, group *Llb_Grp_t) {
 			p.pRowSums[row]++
 		}
 	}
-	var obj *Aig_Obj_t
-	var i int32
-	Vec_PtrForEachEntry(Aig_Obj_t, group.vIns, obj, i) { add(obj) }
-	Vec_PtrForEachEntry(Aig_Obj_t, group.vOuts, obj, i) { add(obj) }
+	addEntries := func(entries *Vec_Ptr_t) {
+		for i := int32(0); i < Vec_PtrSize(entries); i++ {
+			switch obj := Vec_PtrEntry(entries, i).(type) {
+			case *Aig_Obj_t:
+				add(obj)
+			case Aig_Obj_t:
+				add(&obj)
+			default:
+				panic(fmt.Sprintf("unexpected AIG object entry %T", obj))
+			}
+		}
+	}
+	addEntries(group.vIns)
+	addEntries(group.vOuts)
 }
 
 func Llb_MtrRemoveSingletonRows(p *Llb_Mtr_t) {
@@ -204,8 +214,12 @@ func Llb_MtrRemoveSingletonRows(p *Llb_Mtr_t) {
 
 func Llb_MtrCreate(p *Llb_Man_t) *Llb_Mtr_t {
 	matrix := Llb_MtrAlloc(Saig_ManPiNum(p.pAig), Saig_ManRegNum(p.pAig), Vec_PtrSize(p.vGroups), Vec_IntSize(p.vVar2Obj))
-	var group *Llb_Grp_t
-	var i int32
-	Vec_PtrForEachEntry(Llb_Grp_t, p.vGroups, group, i) { Llb_MtrAddColumn(matrix, group) }
+	for i := int32(0); i < Vec_PtrSize(p.vGroups); i++ {
+		group, ok := Vec_PtrEntry(p.vGroups, i).(*Llb_Grp_t)
+		if !ok || group == nil {
+			continue
+		}
+		Llb_MtrAddColumn(matrix, group)
+	}
 	return matrix
 }

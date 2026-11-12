@@ -2,9 +2,13 @@ package core
 
 import (
 	"fmt"
+	"io"
 	"math"
+	"os"
 	"sort"
 	"time"
+
+	"github.com/glycerine/abcgo/bdd/mtr"
 )
 
 // DdNode is an edge handle. Complemented edges have their own canonical Go
@@ -35,6 +39,7 @@ type DdManager struct {
 	ZddSize                           int
 	PermZ, InvPermZ                   []int
 	Univ                              []*DdNode
+	Tree, TreeZ                       *mtr.MtrNode
 	zddUnique                         map[bddUniqueKey]*DdNode
 	addUnique                         map[bddUniqueKey]*DdNode
 	addCache                          map[bddITEKey]*DdNode
@@ -44,10 +49,23 @@ type DdManager struct {
 	unique                            map[bddUniqueKey]*DdNode
 	cache                             map[bddITEKey]*DdNode
 	nextID                            uint64
+	cacheLookups, cacheHits           uint64
 	closed                            bool
+	stdout, stderr                    io.Writer
 	allocationLimited                 bool
 	allocationCeiling                 int
 	reorderMethod                     Cudd_ReorderingType
+	autoDyn, autoDynZdd               bool
+	autoMethod, autoMethodZdd         Cudd_ReorderingType
+	realignBdd, realignZdd            bool
+	minHit, maxGrowthAlt              float64
+	looseUpTo, maxCache, maxCacheHard uint32
+	nextDyn, maxLive                  uint32
+	maxMemory                         uint64
+	boundVars                         map[int]bool
+	variableTypes                     map[int]Cudd_VariableType
+	pairIndices                       map[int]int
+	lazyGroups                        map[int]Cudd_LazyGroupType
 	reorderings                       uint
 	maxGrowth                         float64
 	siftMaxVar, siftMaxSwap           int
@@ -61,7 +79,7 @@ func NewBDDManager(variables int) *DdManager {
 	if variables < 0 || uint64(variables) >= uint64(bddConstantIndex) {
 		return nil
 	}
-	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, nextID: 2, reorderMethod: CUDD_REORDER_SIFT, maxGrowth: 1.1, siftMaxVar: 1000, siftMaxSwap: 2000000}
+	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, nextID: 2, reorderMethod: CUDD_REORDER_SIFT, maxGrowth: 1.1, maxGrowthAlt: 1.1, minHit: 30.0 / 70.0, looseUpTo: 5 * CUDD_UNIQUE_SLOTS, maxCache: 2 * CUDD_CACHE_SLOTS, maxCacheHard: 3 * CUDD_CACHE_SLOTS, siftMaxVar: 1000, siftMaxSwap: 2000000, stdout: os.Stdout, stderr: os.Stderr}
 	dd.One = &DdNode{Index: bddConstantIndex, Value: 1, ID: 0, manager: dd}
 	dd.LogicZero = &DdNode{Index: bddConstantIndex, Value: 0, ID: 1, manager: dd, regular: dd.One, inverse: dd.One}
 	dd.One.inverse = dd.LogicZero
@@ -206,7 +224,9 @@ func (dd *DdManager) ite(f, g, h *DdNode) *DdNode {
 		h = Cudd_Not(h)
 	}
 	key := bddITEKey{f, g, h}
+	dd.cacheLookups++
 	if n := dd.cache[key]; n != nil {
+		dd.cacheHits++
 		return Cudd_NotCond(n, invert)
 	}
 	level := min(dd.level(f), min(dd.level(g), dd.level(h)))

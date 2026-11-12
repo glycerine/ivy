@@ -2,8 +2,10 @@ package scl
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	abcmain "github.com/glycerine/abcgo/base/main"
+	"os"
 	"reflect"
 	"sort"
 	"testing"
@@ -18,7 +20,7 @@ type bufferingTestNetwork struct {
 	nodes           map[int]bufferingTestNode
 	inputs, outputs []int
 	mapping         NetworkMapping
-	phases          map[bufferEdge]bool
+	phases          map[FanoutPin]bool
 	enabled         bool
 }
 
@@ -50,7 +52,7 @@ func (n *bufferingTestNetwork) SclIsBarrier(id int) bool    { return n.nodes[id]
 func (n *bufferingTestNetwork) SclMapping() *NetworkMapping { return &n.mapping }
 func (n *bufferingTestNetwork) SclHasPhases() bool          { return n.enabled }
 func (n *bufferingTestNetwork) SclFaninPhase(id, pin int) bool {
-	return n.enabled && n.phases[bufferEdge{id, pin}]
+	return n.enabled && n.phases[FanoutPin{id, pin}]
 }
 func (n *bufferingTestNetwork) SclToggleFaninPhase(id, pin int) error {
 	if !n.enabled {
@@ -59,7 +61,7 @@ func (n *bufferingTestNetwork) SclToggleFaninPhase(id, pin int) error {
 	if pin < 0 || pin >= len(n.nodes[id].fanins) {
 		return fmt.Errorf("invalid phase pin")
 	}
-	edge := bufferEdge{id, pin}
+	edge := FanoutPin{id, pin}
 	n.phases[edge] = !n.phases[edge]
 	return nil
 }
@@ -107,7 +109,7 @@ func (n *bufferingTestNetwork) SclCreateNode(fanins []int, gate int32) (int, err
 	return id, nil
 }
 func (n *bufferingTestNetwork) SclClone() (TimingNetwork, error) {
-	copy := &bufferingTestNetwork{name: n.name, nodes: make(map[int]bufferingTestNode), inputs: append([]int(nil), n.inputs...), outputs: append([]int(nil), n.outputs...), mapping: n.mapping, phases: make(map[bufferEdge]bool), enabled: n.enabled}
+	copy := &bufferingTestNetwork{name: n.name, nodes: make(map[int]bufferingTestNode), inputs: append([]int(nil), n.inputs...), outputs: append([]int(nil), n.outputs...), mapping: n.mapping, phases: make(map[FanoutPin]bool), enabled: n.enabled}
 	copy.mapping.GateIDs = append([]int32(nil), n.mapping.GateIDs...)
 	copy.mapping.MioGates = append(copy.mapping.MioGates[:0:0], n.mapping.MioGates...)
 	for id, node := range n.nodes {
@@ -156,7 +158,7 @@ func bufferTestLibrary() *SC_Lib {
 }
 func bufferTestFixture(fanouts int) *bufferingTestNetwork {
 	lib := bufferTestLibrary()
-	net := &bufferingTestNetwork{name: "fanout", nodes: map[int]bufferingTestNode{0: {}, 3: {}, 5: {fanins: []int{0, 3}, node: true}}, inputs: []int{0, 3}, mapping: NetworkMapping{Lib: lib, GateIDs: make([]int32, 10+fanouts)}, phases: make(map[bufferEdge]bool)}
+	net := &bufferingTestNetwork{name: "fanout", nodes: map[int]bufferingTestNode{0: {}, 3: {}, 5: {fanins: []int{0, 3}, node: true}}, inputs: []int{0, 3}, mapping: NetworkMapping{Lib: lib, GateIDs: make([]int32, 10+fanouts)}, phases: make(map[FanoutPin]bool)}
 	for i := range net.mapping.GateIDs {
 		net.mapping.GateIDs[i] = -1
 	}
@@ -243,7 +245,7 @@ func TestInverterDegreeBufferingPreservesPhases(t *testing.T) {
 func TestBufferPhaseRoundTrip(t *testing.T) {
 	before := bufferTestFixture(2)
 	before.enabled = true
-	before.phases[bufferEdge{5, 0}] = true
+	before.phases[FanoutPin{5, 0}] = true
 	physical, err := Abc_SclBufferPhase(before, false)
 	if err != nil {
 		t.Fatal(err)
@@ -322,7 +324,7 @@ func (n *bufferingTestNetwork) SclCloneTopological() (TimingNetwork, error) {
 	if err != nil {
 		return nil, err
 	}
-	result := &bufferingTestNetwork{name: n.name, nodes: make(map[int]bufferingTestNode), mapping: NetworkMapping{Lib: n.mapping.Lib, Mio: n.mapping.Mio}, phases: make(map[bufferEdge]bool), enabled: n.enabled}
+	result := &bufferingTestNetwork{name: n.name, nodes: make(map[int]bufferingTestNode), mapping: NetworkMapping{Lib: n.mapping.Lib, Mio: n.mapping.Mio}, phases: make(map[FanoutPin]bool), enabled: n.enabled}
 	mapping := make(map[int]int)
 	copyNode := func(old int) {
 		id := len(result.nodes)
@@ -331,7 +333,7 @@ func (n *bufferingTestNetwork) SclCloneTopological() (TimingNetwork, error) {
 		fans := make([]int, len(original.fanins))
 		for pin, fanin := range original.fanins {
 			fans[pin] = mapping[fanin]
-			result.phases[bufferEdge{id, pin}] = n.phases[bufferEdge{old, pin}]
+			result.phases[FanoutPin{id, pin}] = n.phases[FanoutPin{old, pin}]
 		}
 		original.fanins = fans
 		result.nodes[id] = original
@@ -408,4 +410,160 @@ func TestDuplicatePinCapacitanceStaysPerEdge(t *testing.T) {
 	if load := Abc_NtkComputeNodeLoad(manager, 0); load != 3 {
 		t.Fatalf("distinct pin loads collapsed: %g", load)
 	}
+}
+
+func TestBufferingVectorCases(t *testing.T) {
+	var cases []struct {
+		Name       string `json:"name"`
+		Fanouts    int    `json:"fanouts"`
+		Degree     int    `json:"degree"`
+		RootDegree int    `json:"root_degree"`
+		Inverters  bool   `json:"inverters"`
+	}
+	data, err := os.ReadFile("test_vectors/buffering_cases.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = json.Unmarshal(data, &cases); err != nil {
+		t.Fatal(err)
+	}
+	for _, item := range cases {
+		t.Run(item.Name, func(t *testing.T) {
+			before := bufferTestFixture(item.Fanouts)
+			before.enabled = item.Inverters
+			after, err := Abc_SclPerformBuffering(before, item.RootDegree, item.Degree, item.Inverters, false)
+			if err != nil {
+				t.Fatal(err)
+			}
+			requireBufferEquivalent(t, before, after)
+			for _, id := range after.SclObjectIDs() {
+				if len(bufferEdges(after, id)) > item.Degree {
+					t.Fatalf("degree exceeded at %d", id)
+				}
+			}
+		})
+	}
+}
+func TestBarrierTransparentInverterBuffering(t *testing.T) {
+	before := bufferTestFixture(12)
+	before.enabled = true
+	before.nodes[8] = bufferingTestNode{fanins: []int{5}, node: true, barrier: true}
+	for _, output := range before.outputs {
+		before.SclPatchFanin(output, 0, 8)
+	}
+	after, err := Abc_SclPerformBuffering(before, 0, 3, true, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	requireBufferEquivalent(t, before, after)
+	params := SC_BusPars{GainRatio: 300, Slew: 10, Degree: 3, AddBuffers: true}
+	after, err = Abc_SclBufferingPerform(before, before.mapping.Lib, &params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	requireBufferEquivalent(t, before, after)
+}
+
+type readonlyBufferNetwork struct{ TimingNetwork }
+type shallowBufferNetwork struct{ *bufferingTestNetwork }
+
+func (n shallowBufferNetwork) SclClone() (TimingNetwork, error) { return n.bufferingTestNetwork, nil }
+func TestBufferErrorsPreserveInput(t *testing.T) {
+	before := bufferTestFixture(12)
+	originalIDs := append([]int(nil), before.SclObjectIDs()...)
+	originalFans := append([]int(nil), before.SclFanouts(5)...)
+	for _, net := range []TimingNetwork{readonlyBufferNetwork{before}, shallowBufferNetwork{before}} {
+		if _, err := Abc_SclPerformBuffering(net, 0, 3, false, false); err == nil {
+			t.Fatal("unsafe/missing clone capability accepted")
+		}
+	}
+	if _, err := Abc_SclPerformBuffering(before, 0, 1, false, false); err == nil {
+		t.Fatal("degree-one tree accepted")
+	}
+	if _, err := Abc_SclPerformBuffering(before, 0, 3, true, false); err == nil {
+		t.Fatal("inverter buffering accepted missing phases")
+	}
+	params := SC_BusPars{GainRatio: 1, Slew: 10, Degree: 2, AddBuffers: true}
+	// A low gain must terminate without altering the original network.
+	_, _ = Abc_SclBufferingPerform(before, before.mapping.Lib, &params)
+	if !reflect.DeepEqual(originalIDs, before.SclObjectIDs()) || !reflect.DeepEqual(originalFans, before.SclFanouts(5)) {
+		t.Fatal("rejected transform mutated input")
+	}
+}
+func TestBufferRejectsMissingTimingWithoutPanic(t *testing.T) {
+	before := bufferTestFixture(12)
+	before.mapping.Lib.Cells[6].Pins[2].Timings = nil
+	if _, err := Abc_SclBufPerform(before, 3, 5, false, false, false); err == nil {
+		t.Fatal("missing pin timing accepted")
+	}
+	params := SC_BusPars{GainRatio: 300, Slew: 10, Degree: 3, AddBuffers: true}
+	if _, err := Abc_SclBufferingPerform(before, before.mapping.Lib, &params); err == nil {
+		t.Fatal("load buffering accepted missing timing")
+	}
+}
+func TestBufferFanoutComparatorIsStrict(t *testing.T) {
+	p := &Bus_Man_t{FanoutInfo: map[FanoutPin]busFanout{{1, 0}: {Cin: 1, Departure: 2}, {2, 0}: {Cin: 1, Departure: 2}}}
+	a, b := FanoutPin{1, 0}, FanoutPin{2, 0}
+	if Bus_SclCompareFanouts(p, a, a) != 0 || Bus_SclCompareFanouts(p, a, b) != -Bus_SclCompareFanouts(p, b, a) {
+		t.Fatal("fanout comparator is not antisymmetric")
+	}
+}
+
+func TestForcedTwoFanoutGroupingUsesCompleteLoad(t *testing.T) {
+	net := bufferTestFixture(2)
+	params := SC_BusPars{GainRatio: 100, Slew: 10, Degree: 2, AddBuffers: true}
+	manager, err := Bus_ManStart(net, net.mapping.Lib, &params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	edges := bufferEdges(net, 5)
+	for _, edge := range edges {
+		manager.OutputLoads[edge.Node] = 4
+		manager.FanoutInfo[edge] = busFanout{Edge: edge, Cin: 4}
+	}
+	// The first fanout alone exceeds the target, but at least two must move.
+	id, remaining, err := Abc_SclAddOneInv(manager, 5, edges, 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if manager.Loads[id] != 8 || len(remaining) != 1 {
+		t.Fatalf("forced group load=%g fanouts=%v", manager.Loads[id], remaining)
+	}
+}
+
+func TestBufferPrimaryInputControlIsEffective(t *testing.T) {
+	before := bufferTestFixture(13)
+	for _, output := range before.outputs {
+		gate, err := before.SclCreateNode([]int{0, 3}, 6)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = before.SclPatchFanin(output, 0, gate); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := before.SclDeleteNode(5); err != nil {
+		t.Fatal(err)
+	}
+	disabled, err := Abc_SclBufPerform(before, 3, 5, false, false, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	enabled, err := Abc_SclBufPerform(before, 3, 5, true, false, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(bufferEdges(disabled, disabled.SclInputs()[0])) != 13 || len(bufferEdges(enabled, enabled.SclInputs()[0])) > 5 {
+		t.Fatal("old buffer PI flag had no effect")
+	}
+	requireBufferEquivalent(t, before, enabled)
+	params := SC_BusPars{GainRatio: 300, Slew: 10, Degree: 3, AddBuffers: true, BufferPIs: true}
+	enabled, err = Abc_SclBufferingPerform(before, before.mapping.Lib, &params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(bufferEdges(enabled, enabled.SclInputs()[0])) > 3 {
+		t.Fatal("load buffer PI flag had no effect")
+	}
+	requireBufferEquivalent(t, before, enabled)
 }

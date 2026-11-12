@@ -26,6 +26,7 @@ type If_DsdMan_t_ struct {
 	vTtMem                                                [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Mem_t
 	vTtDecs                                               [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Ptr_t
 	vIsops                                                [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Wec_t
+	vIsopComplement                                       [IF_MAX_FUNC_LUTSIZE + 1][]bool
 	pSched                                                [IF_MAX_FUNC_LUTSIZE][]int32
 	nTtBits, nConfigWords                                 int32
 	vConfigs                                              *Vec_Wrd_t

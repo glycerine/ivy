@@ -43,3 +43,43 @@ func TestTimingTransferSelfAndOwnership(t *testing.T) {
 		t.Fatal("transfer invalidated aliases")
 	}
 }
+
+func TestTimingBoxObjectBoundary(t *testing.T) {
+	p := Gia_ManStart(5)
+	pi, boxOut := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	Gia_ManAppendCo(p, pi)
+	Gia_ManAppendCo(p, boxOut)
+	timing := tim.Tim_ManStart(2, 2)
+	tim.Tim_ManCreateBox(timing, 0, 1, 1, 1, 0, 0)
+	p.pManTime = timing
+	if p.BoxInputObjects(pi>>1) != nil {
+		t.Fatal("PI is not a box output")
+	}
+	inputs := p.BoxInputObjects(boxOut >> 1)
+	if len(inputs) != 1 || inputs[0] != Gia_ObjId(p, Gia_ManCo(p, 0)) {
+		t.Fatal("box CO object IDs", inputs)
+	}
+	inputs[0] = 0
+	if p.BoxInputObjects(boxOut >> 1)[0] == 0 {
+		t.Fatal("box boundary aliases caller storage")
+	}
+}
+
+func TestBoxLevelBoundaryOmitsOnlyDisabledArcs(t *testing.T) {
+	p := Gia_ManStart(8)
+	a, b, out := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	Gia_ManAppendCo(p, a)
+	Gia_ManAppendCo(p, b)
+	Gia_ManAppendCo(p, out)
+	timing := tim.Tim_ManStart(3, 3)
+	tim.Tim_ManSetDelayTables(timing, [][]float32{{0, 2, 1, 2, -float32(giaInfinity)}})
+	tim.Tim_ManCreateBox(timing, 0, 2, 2, 1, 0, 0)
+	p.pManTime = timing
+	if len(p.BoxInputObjects(out>>1)) != 2 {
+		t.Fatal("structural box inputs filtered")
+	}
+	enabled := p.BoxLevelInputObjects(out >> 1)
+	if len(enabled) != 1 || enabled[0] != Gia_ObjId(p, Gia_ManCo(p, 0)) {
+		t.Fatal("enabled timing arcs", enabled)
+	}
+}

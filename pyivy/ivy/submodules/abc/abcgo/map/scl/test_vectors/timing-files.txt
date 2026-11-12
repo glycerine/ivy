@@ -1,4 +1,6 @@
 ./map/scl/assert.go
+./map/scl/buffering_reference_test.go
+./map/scl/buffering_test.go
 ./map/scl/commands_buffer.go
 ./map/scl/commands_test.go
 ./map/scl/constraints_test.go

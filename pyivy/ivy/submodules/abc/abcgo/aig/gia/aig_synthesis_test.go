@@ -33,3 +33,34 @@ func TestDarCompressionRealBridgeAndMetadataMove(t *testing.T) {
 		}
 	}
 }
+
+func TestDefaultDchChoiceBridge(t *testing.T) {
+	p := Gia_ManStart(8)
+	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	root := Gia_ManAppendAnd(p, a, b)
+	Gia_ManAppendCo(p, root)
+	out := Gia_ManPerformDch(p, nil)
+	if out == nil {
+		t.Fatal("default DCH engine failed")
+	}
+	for mask := 0; mask < 4; mask++ {
+		input := []bool{mask&1 != 0, mask&2 != 0}
+		got, err := out.Evaluate(input)
+		if err != nil || got[0] != (input[0] && input[1]) {
+			t.Fatal("DCH choice truth", mask, got, err)
+		}
+	}
+}
+
+func TestSequentialCleanupClassBridge(t *testing.T) {
+	p := Gia_ManStart(8)
+	input, first, second := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	Gia_ManAppendCo(p, Gia_ManAppendAnd(p, first, second))
+	Gia_ManAppendCo(p, input)
+	Gia_ManAppendCo(p, input)
+	Gia_ManSetRegNum(p, 2)
+	Gia_ManSeqCleanupClasses(p, 1, 1, 0)
+	if p.pReprs == nil || Gia_ObjReprSelf(p, first>>1) != Gia_ObjReprSelf(p, second>>1) || p.nRegs != 2 {
+		t.Fatal("sequential representatives not imported")
+	}
+}

@@ -1,0 +1,6 @@
+[
+  {"name":"three-input AND", "cubes":[42], "times":[0,0,0], "delay":2, "area":2},
+  {"name":"mux-like SOP", "cubes":[10,33], "times":[0,0,0], "delay":2, "area":3},
+  {"name":"late first input", "cubes":[42], "times":[3,0,1], "delay":4, "area":2},
+  {"name":"negative variable", "cubes":[1], "times":[5], "delay":5, "area":0}
+]

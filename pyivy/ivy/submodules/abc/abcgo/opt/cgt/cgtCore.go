@@ -51,6 +51,9 @@ func Cgt_ClockGatingRange(p *Manager, start int) int {
 	}
 	Cgt_ClockGatingRangeCheck(p, start, count)
 	p.Stats.Recycles++
+	if p.Params.VeryVerbose {
+		fmt.Printf("CGT partition %d:%d inputs=%d constraints=%d patterns=%d\n", start, start+count, p.Part.InputCount(), p.careCount, len(p.patterns))
+	}
 	return start + count
 }
 func Cgt_ClockGatingCandidates(g, care *aig.Graph, parameters *Cgt_Par_t, useful []bool) (Gates, error) {

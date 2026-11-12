@@ -3,10 +3,11 @@
 ## Scope
 
 The native `saigConstr2` slice includes sequential frame unrolling, AIG-to-CNF
-encoding, SAT-based implication discovery, two-frame inductive filtering, and
-functional constraint unfold/fold graph transforms. The former generated
-`saigConstr2.go` is intentionally untouched; it still depends on C-only types
-and cannot be the package build gate.
+encoding, SAT-based implication discovery, two-frame inductive filtering,
+functional constraint unfold/fold graph transforms, source-name wrappers, and
+sampled sequential output profiling. The original C-like `saigConstr2.go` body
+has been replaced by native wrappers; unsupported pointer/vector APIs are not
+retained as faux Go implementations.
 
 ## Separate review findings
 
@@ -45,7 +46,7 @@ GOCACHE=/tmp/abcgo-cache go -C abcgo vet \
 
 ## Remaining integration work
 
-The old diagnostic simulation routine and source-spelling wrappers have not
-been ported. Full `go test ./aig/saig` remains blocked by unrelated C-like
-drafts elsewhere in that package; this explicit-file gate isolates the new
-functional-constraint implementation.
+The broader package still has unrelated C-like drafts that fail parsing and
+depend on C-only manager/vector fields. Full `go test ./aig/saig` remains blocked
+by those files; this explicit-file gate isolates the functional-constraint
+implementation and its wrappers.

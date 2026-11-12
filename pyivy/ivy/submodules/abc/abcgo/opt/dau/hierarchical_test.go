@@ -132,3 +132,18 @@ func TestBalancedWrapPreservesComplementPhase(t *testing.T) {
 		t.Fatalf("wrapped complement lost output phase: truth%x phase%x", truth[0], phase)
 	}
 }
+
+func TestHierarchicalExactWideConstant(t *testing.T) {
+	p := Abc_TtHieManStart(16, 5)
+	truth := make([]uint64, 1024)
+	for i := range truth {
+		truth[i] = ^uint64(0)
+	}
+	perm := make([]byte, 16)
+	Abc_TtCanonicizeHie(p, truth, 16, perm, 1)
+	for _, w := range truth {
+		if w != 0 {
+			t.Fatal("constant did not canonicalize to zero")
+		}
+	}
+}

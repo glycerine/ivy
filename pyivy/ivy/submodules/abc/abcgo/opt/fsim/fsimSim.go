@@ -2,563 +2,274 @@ package fsim
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
+	"math/bits"
 	"time"
 )
 
-/**CFile****************************************************************
-
-  FileName    [fsimSim.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Fast sequential AIG simulator.]
-
-  Synopsis    [Simulation procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: fsimSim.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "fsimInt.h"
-//#include "aig/ssw/ssw.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimInfoRandom(p *Fsim_Man_t, pInfo *uint32) {
-    var w int32;
-    for  w = p.nWords-1; w >= 0; w--  {
-        pInfo[w] = Aig_ManRandom( 0 );
-    }
+func (p *Manager) Round(cis [][]uint32) ([][]uint32, error) {
+	if len(cis) != p.CIs {
+		return nil, fmt.Errorf("fsim: CI dimensions differ")
+	}
+	words := p.words
+	if len(cis) > 0 {
+		words = len(cis[0])
+	}
+	if words <= 0 {
+		return nil, fmt.Errorf("fsim: simulation word count must be positive")
+	}
+	for _, row := range cis {
+		if len(row) != words {
+			return nil, fmt.Errorf("fsim: inconsistent simulation word widths")
+		}
+	}
+	if p.program == nil && !p.compressed {
+		if err := Fsim_ManFront(p, false); err != nil {
+			return nil, err
+		}
+	}
+	if len(p.data) != p.Frontier*words {
+		p.data = make([]uint32, p.Frontier*words)
+	}
+	p.words = words
+	outputs := make([][]uint32, p.COs)
+	for i := range outputs {
+		outputs[i] = make([]uint32, words)
+	}
+	if p.constSlot > 0 {
+		row := p.data[p.constSlot%p.Frontier*words:][:words]
+		for i := range row {
+			row[i] = ^uint32(0)
+		}
+	}
+	if p.observer != nil {
+		one := make([]uint32, words)
+		for i := range one {
+			one[i] = ^uint32(0)
+		}
+		p.observer(0, one)
+	}
+	get := func(lit, word int) uint32 {
+		value := p.data[(lit>>1)%p.Frontier*words+word]
+		if lit&1 != 0 {
+			return ^value
+		}
+		return value
+	}
+	err := p.forEachOperation(func(o Fsim_Obj_t) {
+		var dst []uint32
+		if o.Kind == aig.Output {
+			dst = outputs[o.Index]
+		} else {
+			dst = p.data[o.Node%p.Frontier*words:][:words]
+		}
+		switch o.Kind {
+		case aig.Input:
+			copy(dst, cis[o.Index])
+		case aig.And:
+			for w := range dst {
+				dst[w] = get(o.Fan0, w) & get(o.Fan1, w)
+			}
+		case aig.ExclusiveOr:
+			for w := range dst {
+				dst[w] = get(o.Fan0, w) ^ get(o.Fan1, w)
+			}
+		case aig.Buffer, aig.Output:
+			for w := range dst {
+				dst[w] = get(o.Fan0, w)
+			}
+		}
+		if p.observer != nil {
+			p.observer(o.Source.NodeID(), dst)
+		}
+	})
+	if err != nil {
+		return nil, err
+	}
+	return outputs, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimInfoZero(p *Fsim_Man_t, pInfo *uint32) {
-    var w int32;
-    for  w = p.nWords-1; w >= 0; w--  {
-        pInfo[w] = 0;
-    }
+func Fsim_ManSimInfoIsZero(info []uint32) int {
+	for w := len(info) - 1; w >= 0; w-- {
+		if info[w] != 0 {
+			return w*32 + bits.TrailingZeros32(info[w])
+		}
+	}
+	return -1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns index of the first pattern that failed.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimInfoIsZero(p *Fsim_Man_t, pInfo *uint32) int32 {
-    var w int32;
-    for  w = p.nWords-1; w >= 0; w--  {
-        if pInfo[w] {
-            return 32*(w-1) + Aig_WordFindFirstBit( pInfo[w] ); }
-    }
-    return -1;
+func Fsim_ManCheckPos(outputs [][]uint32, nPOs int) (output, pattern int, found bool) {
+	for i := 0; i < nPOs; i++ {
+		if bit := Fsim_ManSimInfoIsZero(outputs[i]); bit >= 0 {
+			return i, bit, true
+		}
+	}
+	return 0, 0, false
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimInfoOne(p *Fsim_Man_t, pInfo *uint32) {
-    var w int32;
-    for  w = p.nWords-1; w >= 0; w--  {
-        pInfo[w] = ~0;
-    }
+func Fsim_ManGenerateCounter(g *aig.Graph, frame, output, words, pattern int, ciOrder []int) (*util.Abc_Cex_t, error) {
+	regs := int(aig.Aig_ManRegNum(g))
+	pis := g.InputCount() - regs
+	if frame < 0 || output < 0 || output >= g.OutputCount()-regs || words <= 0 || pattern < 0 || pattern >= 32*words || len(ciOrder) != g.InputCount() {
+		return nil, fmt.Errorf("fsim: invalid witness dimensions")
+	}
+	seen := make([]bool, len(ciOrder))
+	for _, i := range ciOrder {
+		if i < 0 || i >= len(seen) || seen[i] {
+			return nil, fmt.Errorf("fsim: invalid witness CI permutation")
+		}
+		seen[i] = true
+	}
+	model := util.Abc_CexAlloc(int32(regs), int32(pis), int32(frame+1))
+	model.IFrame, model.IPo = int32(frame), int32(output)
+	rng := aig.NewAigRandomSource()
+	rng.Uint32()
+	for f := 0; f <= frame; f++ {
+		for _, input := range ciOrder {
+			if input >= pis {
+				continue
+			}
+			for word := words - 1; word >= 0; word-- {
+				value := rng.Uint32()
+				if word == pattern/32 && value&(1<<uint(pattern&31)) != 0 {
+					bit := regs + f*pis + input
+					model.PData[bit>>5] |= 1 << uint(bit&31)
+				}
+			}
+		}
+	}
+	if err := verifyCounter(g, model); err != nil {
+		return nil, err
+	}
+	return model, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimInfoCopy(p *Fsim_Man_t, pInfo *uint32, pInfo0 *uint32) {
-    var w int32;
-    for  w = p.nWords-1; w >= 0; w--  {
-        pInfo[w] = pInfo0[w];
-    }
+func verifyCounter(g *aig.Graph, model *util.Abc_Cex_t) error {
+	regs := int(aig.Aig_ManRegNum(g))
+	pis, pos := g.InputCount()-regs, g.OutputCount()-regs
+	state := make([]bool, regs)
+	for r := range state {
+		state[r] = model.PData[r>>5]&(1<<uint(r&31)) != 0
+	}
+	for frame := 0; frame <= int(model.IFrame); frame++ {
+		inputs := make([]bool, pis+regs)
+		for i := 0; i < pis; i++ {
+			bit := regs + frame*pis + i
+			inputs[i] = model.PData[bit>>5]&(1<<uint(bit&31)) != 0
+		}
+		copy(inputs[pis:], state)
+		out, err := g.Evaluate(inputs)
+		if err != nil {
+			return err
+		}
+		if frame == int(model.IFrame) && !out[model.IPo] {
+			return fmt.Errorf("fsim: generated witness does not fail the reported output")
+		}
+		copy(state, out[pos:])
+	}
+	return nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimulateCi(p *Fsim_Man_t, iNode int32, iCi int32) {
-    var pInfo *uint32   = Fsim_SimData( p, iNode % p.nFront );
-    var pInfo0 *uint32  = Fsim_SimDataCi( p, iCi );
-    var w int32;
-    for  w = p.nWords-1; w >= 0; w--  {
-        pInfo[w] = pInfo0[w];
-    }
+func RunSimulation(g *aig.Graph, parameters *Fsim_ParSim_t) (*SimulationResult, error) {
+	pars := Fsim_ParSim_t{}
+	Fsim_ManSetDefaultParamsSim(&pars)
+	if parameters != nil {
+		pars = *parameters
+	}
+	if pars.Words <= 0 || pars.Iterations <= 0 || pars.TimeLimit < 0 {
+		return nil, fmt.Errorf("fsim: invalid simulation parameters")
+	}
+	p, err := Fsim_ManCreate(g)
+	if err != nil {
+		return nil, err
+	}
+	defer Fsim_ManDelete(p)
+	if aig.Aig_ManRegNum(g) <= 0 {
+		return nil, fmt.Errorf("fsim: sequential simulation needs registers")
+	}
+	if err = Fsim_ManFront(p, pars.CompressAIG); err != nil {
+		return nil, err
+	}
+	g.ClearSequentialCounterexample()
+	cis := make([][]uint32, p.CIs)
+	for i := range cis {
+		cis[i] = make([]uint32, pars.Words)
+	}
+	rng := aig.NewAigRandomSource()
+	rng.Uint32()
+	randomInputs := func() {
+		for _, i := range p.CIOrder {
+			if i >= p.PIs {
+				continue
+			}
+			for w := pars.Words - 1; w >= 0; w-- {
+				cis[i][w] = rng.Uint32()
+			}
+		}
+	}
+	randomInputs()
+	result := &SimulationResult{}
+	start := time.Now()
+	for frame := 0; frame < pars.Iterations; frame++ {
+		outputs, err := p.Round(cis)
+		if err != nil {
+			return nil, err
+		}
+		result.Frames = frame + 1
+		if pars.CheckMiter {
+			if output, pattern, found := Fsim_ManCheckPos(outputs, p.POs); found {
+				model, err := Fsim_ManGenerateCounter(g, frame, output, pars.Words, pattern, p.CIOrder)
+				if err != nil {
+					return nil, err
+				}
+				if err = g.SetSequentialCounterexample(model); err != nil {
+					return nil, err
+				}
+				result.Found, result.Counterexample = true, model
+				break
+			}
+		}
+		if pars.TimeLimit > 0 && time.Since(start) >= pars.TimeLimit {
+			result.TimedOut = true
+			break
+		}
+		for r := p.PIs; r < p.CIs; r++ {
+			copy(cis[r], outputs[p.POs+r-p.PIs])
+		}
+		randomInputs()
+	}
+	if pars.Verbose {
+		fmt.Printf("FSIM: frames=%d frontier=%d objects=%d failed=%t elapsed=%s\n", result.Frames, p.Frontier, len(p.ops), result.Found, time.Since(start))
+	}
+	return result, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimulateCo(p *Fsim_Man_t, iCo int32, iFan0 int32) {
-    var pInfo *uint32   = Fsim_SimDataCo( p, iCo );
-    var pInfo0 *uint32  = Fsim_SimData( p, Fsim_Lit2Var(iFan0) % p.nFront );
-    var w int32;
-    if Fsim_LitIsCompl(iFan0) {
-        for  w = p.nWords-1; w >= 0; w--  {
-            pInfo[w] = ~pInfo0[w];
-        }
-    } else { //if ( !Fsim_LitIsCompl(iFan0) )
-        for  w = p.nWords-1; w >= 0; w--  {
-            pInfo[w] = pInfo0[w];
-        } }
+func Fsim_ManSimulate(g *aig.Graph, pars *Fsim_ParSim_t) (bool, error) {
+	result, err := RunSimulation(g, pars)
+	if err != nil {
+		return false, err
+	}
+	return result.Found, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimulateNode(p *Fsim_Man_t, iNode int32, iFan0 int32, iFan1 int32) {
-    var pInfo *uint32   = Fsim_SimData( p, iNode % p.nFront );
-    var pInfo0 *uint32  = Fsim_SimData( p, Fsim_Lit2Var(iFan0) % p.nFront );
-    var pInfo1 *uint32  = Fsim_SimData( p, Fsim_Lit2Var(iFan1) % p.nFront );
-    var w int32;
-    if Fsim_LitIsCompl(iFan0) && Fsim_LitIsCompl(iFan1) {
-        for  w = p.nWords-1; w >= 0; w--  {
-            pInfo[w] = ~(pInfo0[w] | pInfo1[w]);
-        }
-    } else if Fsim_LitIsCompl(iFan0) && !Fsim_LitIsCompl(iFan1) {
-        for  w = p.nWords-1; w >= 0; w--  {
-            pInfo[w] = ~pInfo0[w] & pInfo1[w];
-        }
-    } else if !Fsim_LitIsCompl(iFan0) && Fsim_LitIsCompl(iFan1) {
-        for  w = p.nWords-1; w >= 0; w--  {
-            pInfo[w] = pInfo0[w] & ~pInfo1[w];
-        }
-    } else { //if ( !Fsim_LitIsCompl(iFan0) && !Fsim_LitIsCompl(iFan1) )
-        for  w = p.nWords-1; w >= 0; w--  {
-            pInfo[w] = pInfo0[w] & pInfo1[w];
-        } }
+func Fsim_ManSimulateRound(p *Manager, cis [][]uint32) ([][]uint32, error)  { return p.Round(cis) }
+func Fsim_ManSimulateRound2(p *Manager, cis [][]uint32) ([][]uint32, error) { return p.Round(cis) }
+func Fsim_ManSimulateRoundTest(p *Manager, cis [][]uint32) error {
+	compressed := p.compressed
+	if err := Fsim_ManFront(p, false); err != nil {
+		return err
+	}
+	left, err := p.Round(cis)
+	if err != nil {
+		return err
+	}
+	if err = Fsim_ManFront(p, true); err != nil {
+		return err
+	}
+	right, err := p.Round(cis)
+	if err != nil {
+		return err
+	}
+	for i := range left {
+		for w := range left[i] {
+			if left[i][w] != right[i][w] {
+				return fmt.Errorf("fsim: compressed round differs")
+			}
+		}
+	}
+	return Fsim_ManFront(p, compressed)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimInfoInit(p *Fsim_Man_t) {
-    var iPioNum, i int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vCis2Ids)) && (((iPioNum) = Vec_IntEntry(p.vCis2Ids, i)), 1); i++  {
-        if iPioNum < p.nPis {
-            Fsim_ManSimInfoRandom( p, Fsim_SimDataCi(p, i) );
-        } else {
-            Fsim_ManSimInfoZero( p, Fsim_SimDataCi(p, i) ); }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimInfoTransfer(p *Fsim_Man_t) {
-    var iPioNum, i int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vCis2Ids)) && (((iPioNum) = Vec_IntEntry(p.vCis2Ids, i)), 1); i++  {
-        if iPioNum < p.nPis {
-            Fsim_ManSimInfoRandom( p, Fsim_SimDataCi(p, i) );
-        } else {
-            Fsim_ManSimInfoCopy( p, Fsim_SimDataCi(p, i), Fsim_SimDataCo(p, p.nPos+iPioNum-p.nPis) ); }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManRestoreNum(p *Fsim_Man_t) int32 {
-    var ch, i, x int32;
-    for  i = 0; (ch = *p.pDataCur++) & 0x80; i++  {
-        x |= (ch & 0x7f) << (7 * i);
-    }
-    assert(p.pDataCur - p.pDataAig < p.nDataAig, "p.pDataCur - p.pDataAig < p.nDataAig");
-    return x | (ch << (7 * i));
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManRestoreObj(p *Fsim_Man_t, pObj *Fsim_Obj_t) int32 {
-    var iValue int32  = Fsim_ManRestoreNum( p );
-    if (iValue & 3) == 3 { // and
-    
-        pObj.iNode = (iValue >> 2) + p.iNodePrev;
-        pObj.iFan0 = (pObj.iNode << 1) - Fsim_ManRestoreNum( p );
-        pObj.iFan1 = pObj.iFan0 - Fsim_ManRestoreNum( p );
-        p.iNodePrev = pObj.iNode;
-    
-    } else if (iValue & 3) == 1 { // ci
-    
-        pObj.iNode = (iValue >> 2) + p.iNodePrev;
-        pObj.iFan0 = 0;
-        pObj.iFan1 = 0;
-        p.iNodePrev = pObj.iNode;
-    
-    } else { // if ( (iValue & 1) == 0 ) // co
-    
-        pObj.iNode = 0;
-        pObj.iFan0 = ((p.iNodePrev << 1) | 1) - (iValue >> 1);
-        pObj.iFan1 = 0;
-    }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimulateRound2(p *Fsim_Man_t) {
-    var pObj *Fsim_Obj_t;
-    var i, iCis, iCos int32;
-    if Aig_ObjRefs(Aig_ManConst1(p.pAig)) {
-        Fsim_ManSimInfoOne( p, Fsim_SimData(p, 1) ); }
-    // inlining of macro Fsim_ManForEachObj
-    for  i = 2, p.pDataCur = p.pDataAig, p.iNodePrev = 0, pObj = &p.Obj;        i < p.nObjs && (Fsim_ManRestoreObj( p, pObj ) != 0); i++  {
-        if pObj.iFan0 == 0 {
-            Fsim_ManSimulateCi( p, pObj.iNode, iCis++ );
-        } else if pObj.iFan1 == 0 {
-            Fsim_ManSimulateCo( p, iCos++, pObj.iFan0 );
-        } else {
-            Fsim_ManSimulateNode( p, pObj.iNode, pObj.iFan0, pObj.iFan1 ); }
-    }
-    assert(iCis == p.nCis, "iCis == p.nCis");
-    assert(iCos == p.nCos, "iCos == p.nCos");
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimulateRound(p *Fsim_Man_t) {
-    var pCur, pEnd *int32;
-    var iCis, iCos int32;
-    if p.pDataAig2 == nil {
-        Fsim_ManSimulateRound2( p );
-        return;
-    }
-    if Aig_ObjRefs(Aig_ManConst1(p.pAig)) {
-        Fsim_ManSimInfoOne( p, Fsim_SimData(p, 1) ); }
-    pCur = p.pDataAig2 + 6;
-    pEnd = p.pDataAig2 + 3 * p.nObjs;
-    for  pCur < pEnd  {
-        if pCur[1] == 0 {
-            Fsim_ManSimulateCi( p, pCur[0], iCis++ );
-        } else if pCur[2] == 0 {
-            Fsim_ManSimulateCo( p, iCos++, pCur[1] );
-        } else {
-            Fsim_ManSimulateNode( p, pCur[0], pCur[1], pCur[2] ); }
-        pCur += 3;
-    }
-    assert(iCis == p.nCis, "iCis == p.nCis");
-    assert(iCos == p.nCos, "iCos == p.nCos");
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimulateRoundTest(p *Fsim_Man_t) {
-    var pObj *Fsim_Obj_t;
-    var i int32;
-    var clk int64  = time.Now().UnixNano();
-    // inlining of macro Fsim_ManForEachObj
-    for  i = 2, p.pDataCur = p.pDataAig, p.iNodePrev = 0, pObj = &p.Obj;        i < p.nObjs && (Fsim_ManRestoreObj( p, pObj ) != 0); i++  {
-    }
-//    ABC_PRT( "Unpacking time", p->pPars->nIters * (clock() - clk) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns index of the PO and pattern that failed it.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManCheckPos(p *Fsim_Man_t, piPo *int32, piPat *int32) int32 {
-    var i, iPat int32;
-    for  i = 0; i < p.nPos; i++  {
-        iPat = Fsim_ManSimInfoIsZero( p, Fsim_SimDataCo(p, i) );
-        if iPat >= 0 {
-            *piPo = i;
-            *piPat = iPat;
-            return 1;
-        }
-    }
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManGenerateCounter(pAig *Aig_Man_t, iFrame int32, iOut int32, nWords int32, iPat int32, vCis2Ids *Vec_Int_t) *Abc_Cex_t {
-    var p *Abc_Cex_t;
-    var pData *uint32;
-    var f, i, w, iPioId, Counter int32;
-    p = Abc_CexAlloc( Aig_ManRegNum(pAig), Saig_ManPiNum(pAig), iFrame+1 );
-    p.iFrame = iFrame;
-    p.iPo = iOut;
-    // fill in the binary data
-    Aig_ManRandom( 1 );
-    Counter = p.nRegs;
-    // inlining of macro ABC_ALLOC
-    pData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nWords)));
-    for  f = 0; f <= iFrame; f++, Counter += p.nPis  {
-    for  i = 0; i < Aig_ManPiNum(pAig); i++  {
-        iPioId = Vec_IntEntry( vCis2Ids, i );
-        if iPioId >= p.nPis {
-            continue; }
-        for  w = nWords-1; w >= 0; w--  {
-            pData[w] = Aig_ManRandom( 0 );
-        }
-        if Aig_InfoHasBit( pData, iPat ) {
-            Aig_InfoSetBit( p.pData, Counter + iPioId ); }
-    }
-    }
-    pData = nil;
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManSimulate(pAig *Aig_Man_t, pPars *Fsim_ParSim_t) int32 {
-    var p *Fsim_Man_t;
-    var Status Sec_MtrStatus_t;
-    var i, iOut, iPat int32;
-    var clk int64;
-    var clkTotal int64 = time.Now().UnixNano();
-    var clk2 int64;
-    var clk2Total int64;
-    assert(Aig_ManRegNum(pAig) > 0, "Aig_ManRegNum(pAig) > 0");
-    if pPars.fCheckMiter {
-        Status = Sec_MiterStatus( pAig );
-        if Status.nSat > 0 {
-            fmt.Printf("Miter is trivially satisfiable (output %d).\n", Status.iOut);
-            return 1;
-        }
-        if Status.nUndec == 0 {
-            fmt.Printf("Miter is trivially unsatisfiable.\n");
-            return 0;
-        }
-    }
-    // create manager
-    clk = time.Now().UnixNano();
-    p = Fsim_ManCreate( pAig );
-    p.nWords = pPars.nWords;
-    if pPars.fVerbose {
-        fmt.Printf("Obj = %8d (%8d). Cut = %6d. Front = %6d.  FrtMem = %7.2f MB. ", p.nObjs, p.nCis + p.nNodes, p.nCrossCutMax, p.nFront, 4.0*p.nWords*(p.nFront)/(1<<20));
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;
-    }
-    // create simulation frontier
-    clk = time.Now().UnixNano();
-    Fsim_ManFront( p, pPars.fCompressAig );
-    if pPars.fVerbose {
-        fmt.Printf("Max ID = %8d. Log max ID = %2d.  AigMem = %7.2f MB (%5.2f byte/obj).  ", p.iNumber, Aig_Base2Log(p.iNumber), 1.0*(p.pDataCur-p.pDataAig)/(1<<20), 1.0*(p.pDataCur-p.pDataAig)/p.nObjs); 
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;
-    }
-    // perform simulation
-    Aig_ManRandom( 1 );
-    assert(p.pDataSim == nil, "p.pDataSim == nil");
-    // inlining of macro ABC_ALLOC
-    p.pDataSim = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWords * p.nFront)));
-    // inlining of macro ABC_ALLOC
-    p.pDataSimCis = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWords * p.nCis)));
-    // inlining of macro ABC_ALLOC
-    p.pDataSimCos = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWords * p.nCos)));
-    Fsim_ManSimInfoInit( p );
-    for  i = 0; i < pPars.nIters; i++  { 
-        Fsim_ManSimulateRound( p );
-        if pPars.fVerbose {
-            fmt.Printf("Frame %4d out of %4d and timeout %3d sec. ", i+1, pPars.nIters, pPars.TimeLimit);
-            fmt.Printf("Time = %7.2f sec\r", (1.0*time.Now().UnixNano()-clkTotal)/int64(time.Second));
-        }
-        if pPars.fCheckMiter && (Fsim_ManCheckPos( p, &iOut, &iPat ) != 0) {
-            assert(pAig.pSeqModel == nil, "pAig.pSeqModel == nil");
-            pAig.pSeqModel = Fsim_ManGenerateCounter( pAig, i, iOut, p.nWords, iPat, p.vCis2Ids );
-            if pPars.fVerbose {
-            fmt.Printf("Miter is satisfiable after simulation (output %d).\n", iOut); }
-            break;
-        }
-        if (time.Now().UnixNano() - clkTotal)/int64(time.Second) >= pPars.TimeLimit {
-            break; }
-        clk2 = time.Now().UnixNano();
-        if i < pPars.nIters - 1 {
-            Fsim_ManSimInfoTransfer( p ); }
-        clk2Total += time.Now().UnixNano() - clk2;
-    }
-    if pAig.pSeqModel == nil {
-        fmt.Printf("No bug detected after %d frames with time limit %d seconds.\n", i+1, pPars.TimeLimit); }
-    if pPars.fVerbose {
-        fmt.Printf("Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  ", p.nCrossCutMax, p.pDataAig2? 12.0*p.nObjs/(1<<20) : 1.0*(p.pDataCur-p.pDataAig)/(1<<20), 4.0*p.nWords*(p.nFront+p.nCis+p.nCos)/(1<<20));
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Sim time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((time.Now().UnixNano() - clkTotal)))/(float64(int64(time.Second))));;
-
-//        ABC_PRT( "Additional time", clk2Total );
-//        Fsim_ManSimulateRoundTest( p );
-//        Fsim_ManSimulateRoundTest2( p );
-    }
-    Fsim_ManDelete( p );
-    return pAig.pSeqModel != nil;
-
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

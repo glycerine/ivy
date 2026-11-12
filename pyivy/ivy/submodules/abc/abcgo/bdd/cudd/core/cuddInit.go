@@ -126,3 +126,32 @@ func cuddZddFreeUniv(dd *DdManager) {
 // update. It is exported for the remaining CUDD reordering modules' integration.
 func InitializeZDDUniverse(dd *DdManager) int { return cuddZddInitUniv(dd) }
 func FreeZDDUniverse(dd *DdManager)           { cuddZddFreeUniv(dd) }
+
+// Cudd_zddVarsFromBddVars aligns each BDD variable with multiplicity adjacent
+// ZDD variables and rebuilds live ZDD handles when the resulting order changes.
+func Cudd_zddVarsFromBddVars(dd *DdManager, multiplicity int) int {
+	if dd == nil || dd.closed || multiplicity < 1 || len(dd.Vars) > int(CUDD_MAXINDEX)/multiplicity {
+		return 0
+	}
+	target := len(dd.Vars) * multiplicity
+	if dd.ZddSize > target {
+		target = dd.ZddSize
+	}
+	order := make([]int, target)
+	for level, index := range dd.InvPerm {
+		for offset := 0; offset < multiplicity; offset++ {
+			order[level*multiplicity+offset] = index*multiplicity + offset
+		}
+	}
+	for level := len(dd.Vars) * multiplicity; level < target; level++ {
+		order[level] = level
+	}
+	permutation := make([]int, target)
+	for level, index := range order {
+		permutation[index] = level
+	}
+	if !reorderZdd(dd, target, permutation, order) {
+		return 0
+	}
+	return 1
+}

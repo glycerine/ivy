@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
@@ -29,6 +30,7 @@ func Cnf_ManStop(p *Cnf_Man_t) {
 	if p == nil {
 		return
 	}
+	Cnf_ManFreeCuts(p)
 	if p.vMemory != nil {
 		vec.Vec_IntFree(p.vMemory)
 	}
@@ -113,7 +115,7 @@ func Cnf_DataLift(cnf *Cnf_Dat_t, variables int32) {
 	}
 	cnf.pVarNums = append(cnf.pVarNums[:0], cnf.VarNums...)
 	for i := range cnf.Clauses {
-		for j, lit := range cnf.Clauses[i] {
+		for j := range cnf.Clauses[i] {
 			cnf.Clauses[i][j] += variables << 1
 		}
 	}
@@ -238,9 +240,8 @@ func writeCNFToWriter(writer *gzip.Writer, cnf *Cnf_Dat_t, zeroBased bool) error
 	return nil
 }
 
-func Cnf_DataWriteIntoSolverInt(solver any, cnf *Cnf_Dat_t, frames int32, _ int32) any {
-	sat, ok := solver.(*bsat.Solver)
-	if !ok || cnf == nil || frames < 1 {
+func Cnf_DataWriteIntoSolverInt(sat *bsat.Solver, cnf *Cnf_Dat_t, frames int32, init int32) *bsat.Solver {
+	if sat == nil || cnf == nil || frames < 1 {
 		return nil
 	}
 	for sat.NumVars() < int32(cnf.Variables)*frames {
@@ -262,23 +263,51 @@ func Cnf_DataWriteIntoSolverInt(solver any, cnf *Cnf_Dat_t, frames int32, _ int3
 			}
 		}
 	}
+	if frames > 1 {
+		if cnf.pMan == nil || aig.Aig_ManRegNum(cnf.pMan) == 0 {
+			return nil
+		}
+		stride := int32(cnf.Variables)
+		for frame := int32(1); frame < frames; frame++ {
+			for i := int32(0); i < aig.Aig_ManRegNum(cnf.pMan); i++ {
+				li, lo := aig.Aig_ManLi(cnf.pMan, i), aig.Aig_ManLo(cnf.pMan, i)
+				liVar, loVar := cnf.VarNums[li.NodeID()], cnf.VarNums[lo.NodeID()]
+				if liVar < 0 || loVar < 0 {
+					return nil
+				}
+				left := liVar + (frame-1)*stride
+				right := loVar + frame*stride
+				if !sat.AddClause(bsat.Negative(left), bsat.Positive(right)) || !sat.AddClause(bsat.Positive(left), bsat.Negative(right)) {
+					return nil
+				}
+			}
+		}
+		if init != 0 {
+			for i := int32(0); i < aig.Aig_ManRegNum(cnf.pMan); i++ {
+				lo := aig.Aig_ManLo(cnf.pMan, i)
+				variable := cnf.VarNums[lo.NodeID()]
+				if variable < 0 || !sat.AddClause(bsat.Negative(variable)) {
+					return nil
+				}
+			}
+		}
+	}
 	return sat
 }
-func Cnf_DataWriteIntoSolver(cnf *Cnf_Dat_t, frames int32, init int32) any {
+func Cnf_DataWriteIntoSolver(cnf *Cnf_Dat_t, frames int32, init int32) *bsat.Solver {
 	return Cnf_DataWriteIntoSolverInt(bsat.NewSolver(), cnf, frames, init)
 }
-func Cnf_DataWriteIntoSolver2(cnf *Cnf_Dat_t, frames int32, init int32) any {
+func Cnf_DataWriteIntoSolver2(cnf *Cnf_Dat_t, frames int32, init int32) *bsat.Solver {
 	return Cnf_DataWriteIntoSolver(cnf, frames, init)
 }
-func Cnf_DataWriteOrClause(solver any, cnf *Cnf_Dat_t) int32 {
+func Cnf_DataWriteOrClause(solver *bsat.Solver, cnf *Cnf_Dat_t) int32 {
 	return Cnf_DataWriteAndClauses(solver, cnf)
 }
-func Cnf_DataWriteOrClause2(solver any, cnf *Cnf_Dat_t) int32 {
+func Cnf_DataWriteOrClause2(solver *bsat.Solver, cnf *Cnf_Dat_t) int32 {
 	return Cnf_DataWriteAndClauses(solver, cnf)
 }
-func Cnf_DataWriteAndClauses(solver any, cnf *Cnf_Dat_t) int32 {
-	sat, ok := solver.(*bsat.Solver)
-	if !ok || cnf == nil {
+func Cnf_DataWriteAndClauses(sat *bsat.Solver, cnf *Cnf_Dat_t) int32 {
+	if sat == nil || cnf == nil {
 		return 0
 	}
 	for _, clause := range cnf.Clauses {
@@ -307,12 +336,11 @@ func Cnf_DataTranformPolarity(cnf *Cnf_Dat_t, transform int32) {
 	}
 	cnf.pClauses = cloneClauses(cnf.Clauses)
 }
-func Cnf_DataAddXorClause(solver any, a, b, c int32) int32 {
-	sat, ok := solver.(*bsat.Solver)
-	if !ok {
+func Cnf_DataAddXorClause(sat *bsat.Solver, a, b, c int32) int32 {
+	if sat == nil {
 		return 0
 	}
-	clauses := [][]int32{{a, b, c}, {a ^ 1, b ^ 1, c}, {a ^ 1, b, c ^ 1}, {a, b ^ 1, c ^ 1}}
+	clauses := [][]int32{{a, b, c ^ 1}, {a ^ 1, b ^ 1, c ^ 1}, {a, b ^ 1, c}, {a ^ 1, b, c}}
 	for _, clause := range clauses {
 		lits := make([]bsat.Literal, len(clause))
 		for i, lit := range clause {

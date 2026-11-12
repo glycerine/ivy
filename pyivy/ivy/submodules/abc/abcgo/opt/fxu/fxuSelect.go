@@ -1,3 +1,5 @@
+// Port of ABC/MVSIS FXU (MVSIS Group, UC Berkeley, 2003).
+// Original algorithm and licensing: src/opt/fxu; see repository copyright notice.
 package fxu
 
 const MAX_SIZE_LOOKAHEAD = 20

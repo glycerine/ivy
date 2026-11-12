@@ -1,461 +1,340 @@
 package llb
 
-import "fmt"
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [llb1Group.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [BDD based reachability.]
-
-  Synopsis    [Initial partition computation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: llb1Group.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "llbInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupAlloc(pMan *Llb_Man_t) *Llb_Grp_t {
-    var p *Llb_Grp_t;
-    p = new(Llb_Grp_t);
-    p.pMan   = pMan;
-    p.vIns   = Vec_PtrAlloc( 8 );
-    p.vOuts  = Vec_PtrAlloc( 8 );
-    p.Id     = Vec_PtrSize( pMan.vGroups );
-    Vec_PtrPush( pMan.vGroups, p );
-    return p;
+func Llb_ManGroupAlloc(manager *Llb_Man_t) *Llb_Grp_t {
+	if manager.vGroups == nil {
+		manager.vGroups = vec.Vec_PtrAlloc(8)
+	}
+	group := &Llb_Grp_t_{
+		pMan:  manager,
+		vIns:  vec.Vec_PtrAlloc(8),
+		vOuts: vec.Vec_PtrAlloc(8),
+		Id:    int32(vec.Vec_PtrSize(manager.vGroups)),
+	}
+	vec.Vec_PtrPush(manager.vGroups, group)
+	return group
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupStop(p *Llb_Grp_t) {
-    if p == nil {
-        return; }
-    Vec_PtrWriteEntry( p.pMan.vGroups, p.Id, nil );
-    Vec_PtrFreeP( &p.vIns );
-    Vec_PtrFreeP( &p.vOuts );
-    Vec_PtrFreeP( &p.vNodes );
-    ABC_FREE( p );
+func Llb_ManGroupStop(group *Llb_Grp_t) {
+	if group == nil {
+		return
+	}
+	if group.pMan != nil && group.pMan.vGroups != nil && int(group.Id) < vec.Vec_PtrSize(group.pMan.vGroups) {
+		vec.Vec_PtrWriteEntry(group.pMan.vGroups, int(group.Id), nil)
+	}
+	vec.Vec_PtrFree(group.vIns)
+	vec.Vec_PtrFree(group.vOuts)
+	vec.Vec_PtrFree(group.vNodes)
+	group.vIns, group.vOuts, group.vNodes = nil, nil, nil
 }
 
- 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupCollect_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vNodes *Vec_Ptr_t) {
-    if Aig_ObjIsTravIdCurrent(pAig, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(pAig, pObj);
-    if Aig_ObjIsConst1(pObj) {
-        return; }
-    if Aig_ObjIsCo(pObj) {
-        Llb_ManGroupCollect_rec( pAig, Aig_ObjFanin0(pObj), vNodes );
-        return;
-    }
-    assert(Aig_ObjIsAnd(pObj), "Aig_ObjIsAnd(pObj)");
-    Llb_ManGroupCollect_rec( pAig, Aig_ObjFanin0(pObj), vNodes );
-    Llb_ManGroupCollect_rec( pAig, Aig_ObjFanin1(pObj), vNodes );
-    Vec_PtrPush( vNodes, pObj );
-}
- 
-/**Function*************************************************************
-
-  Synopsis    [Collects the support of MFFC.]
-
-  Description [Returns the number of internal nodes in the MFFC.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupCollect(pGroup *Llb_Grp_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    vNodes = Vec_PtrAlloc( 100 );
-    Aig_ManIncrementTravId( pGroup.pMan.pAig );
-    Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vIns, pObj, i )
-        Aig_ObjSetTravIdCurrent( pGroup.pMan.pAig, pObj );
-    Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vOuts, pObj, i )
-        Aig_ObjSetTravIdPrevious( pGroup.pMan.pAig, pObj );
-    Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vOuts, pObj, i )
-        Llb_ManGroupCollect_rec( pGroup.pMan.pAig, pObj, vNodes );
-    return vNodes;
+func llbGroupEdge(v *Vec_Ptr_t, index int) aig.Edge {
+	value := vec.Vec_PtrEntry(v, index)
+	switch edge := value.(type) {
+	case aig.Edge:
+		return edge
+	case *aig.Edge:
+		return *edge
+	default:
+		panic(fmt.Sprintf("llb: group entry has type %T, want aig.Edge", value))
+	}
 }
 
-/**Function*************************************************************
+func llbGroupPush(v *Vec_Ptr_t, edge aig.Edge) { vec.Vec_PtrPush(v, edge) }
 
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupCreate_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vSupp *Vec_Ptr_t) { 
-    if Aig_ObjIsTravIdCurrent(pAig, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(pAig, pObj);
-    if Aig_ObjIsConst1(pObj) {
-        return; }
-    if pObj.fMarkA {
-        Vec_PtrPush( vSupp, pObj );
-        return;
-    }
-    assert(Aig_ObjIsAnd(pObj), "Aig_ObjIsAnd(pObj)");
-    Llb_ManGroupCreate_rec( pAig, Aig_ObjFanin0(pObj), vSupp );
-    Llb_ManGroupCreate_rec( pAig, Aig_ObjFanin1(pObj), vSupp );
+func Llb_ManGroupCollect_rec(graph *Aig_Man_t, edge aig.Edge, nodes *Vec_Ptr_t) {
+	if aig.Aig_ObjIsTravIdCurrent(graph, edge) {
+		return
+	}
+	aig.Aig_ObjSetTravIdCurrent(graph, edge)
+	node := graph.Node(aig.Aig_Regular(edge))
+	if node.Kind == aig.Constant {
+		return
+	}
+	if node.Kind == aig.Output {
+		Llb_ManGroupCollect_rec(graph, node.Fanins[0], nodes)
+		return
+	}
+	if node.Kind == aig.Input {
+		return
+	}
+	if node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer {
+		panic("llb: unsupported node in group cone")
+	}
+	Llb_ManGroupCollect_rec(graph, node.Fanins[0], nodes)
+	if node.Kind != aig.Buffer {
+		Llb_ManGroupCollect_rec(graph, node.Fanins[1], nodes)
+	}
+	llbGroupPush(nodes, aig.Aig_Regular(edge))
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupCreate(pMan *Llb_Man_t, pObj *Aig_Obj_t) *Llb_Grp_t {
-    var p *Llb_Grp_t;
-    assert(pObj.fMarkA == 1, "pObj.fMarkA == 1");
-    // derive group
-    p = Llb_ManGroupAlloc( pMan );
-    Vec_PtrPush( p.vOuts, pObj );
-    Aig_ManIncrementTravId( pMan.pAig );
-    if Aig_ObjIsCo(pObj) {
-        Llb_ManGroupCreate_rec( pMan.pAig, Aig_ObjFanin0(pObj), p.vIns );
-    } else {
-        Llb_ManGroupCreate_rec( pMan.pAig, Aig_ObjFanin0(pObj), p.vIns );
-        Llb_ManGroupCreate_rec( pMan.pAig, Aig_ObjFanin1(pObj), p.vIns );
-    }
-    // derive internal objects
-    assert(p.vNodes == nil, "p.vNodes == nil");
-    p.vNodes = Llb_ManGroupCollect( p );
-    return p;
+// Llb_ManGroupCollect returns internal nodes between the group's boundary sets.
+func Llb_ManGroupCollect(group *Llb_Grp_t) *Vec_Ptr_t {
+	graph := group.pMan.pAig
+	nodes := vec.Vec_PtrAlloc(100)
+	aig.Aig_ManIncrementTravId(graph)
+	for i := 0; i < vec.Vec_PtrSize(group.vIns); i++ {
+		aig.Aig_ObjSetTravIdCurrent(graph, llbGroupEdge(group.vIns, i))
+	}
+	for i := 0; i < vec.Vec_PtrSize(group.vOuts); i++ {
+		aig.Aig_ObjSetTravIdPrevious(graph, llbGroupEdge(group.vOuts, i))
+	}
+	for i := 0; i < vec.Vec_PtrSize(group.vOuts); i++ {
+		Llb_ManGroupCollect_rec(graph, llbGroupEdge(group.vOuts, i), nodes)
+	}
+	return nodes
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupCreateFirst(pMan *Llb_Man_t) *Llb_Grp_t {
-    var p *Llb_Grp_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    p = Llb_ManGroupAlloc( pMan );
-    Saig_ManForEachLo( pMan.pAig, pObj, i )
-        Vec_PtrPush( p.vOuts, pObj );
-    return p;
+func Llb_ManGroupCreate_rec(graph *Aig_Man_t, edge aig.Edge, support *Vec_Ptr_t) {
+	if aig.Aig_ObjIsTravIdCurrent(graph, edge) {
+		return
+	}
+	aig.Aig_ObjSetTravIdCurrent(graph, edge)
+	node := graph.Node(aig.Aig_Regular(edge))
+	if node.Kind == aig.Constant {
+		return
+	}
+	if aig.Aig_ObjIsMarkA(graph, edge) || node.Kind == aig.Input {
+		llbGroupPush(support, aig.Aig_Regular(edge))
+		return
+	}
+	if node.Kind == aig.Output {
+		Llb_ManGroupCreate_rec(graph, node.Fanins[0], support)
+		return
+	}
+	if node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer {
+		panic("llb: unsupported node while deriving group support")
+	}
+	Llb_ManGroupCreate_rec(graph, node.Fanins[0], support)
+	if node.Kind != aig.Buffer {
+		Llb_ManGroupCreate_rec(graph, node.Fanins[1], support)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupCreateLast(pMan *Llb_Man_t) *Llb_Grp_t {
-    var p *Llb_Grp_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    p = Llb_ManGroupAlloc( pMan );
-    Saig_ManForEachLi( pMan.pAig, pObj, i )
-        Vec_PtrPush( p.vIns, pObj );
-    return p;
+func Llb_ManGroupCreate(manager *Llb_Man_t, edge aig.Edge) *Llb_Grp_t {
+	assert(aig.Aig_ObjIsMarkA(manager.pAig, edge), "group root is marked")
+	group := Llb_ManGroupAlloc(manager)
+	llbGroupPush(group.vOuts, aig.Aig_Regular(edge))
+	aig.Aig_ManIncrementTravId(manager.pAig)
+	node := manager.pAig.Node(edge)
+	if node.Kind == aig.Output {
+		Llb_ManGroupCreate_rec(manager.pAig, node.Fanins[0], group.vIns)
+	} else {
+		Llb_ManGroupCreate_rec(manager.pAig, node.Fanins[0], group.vIns)
+		if node.Kind != aig.Buffer {
+			Llb_ManGroupCreate_rec(manager.pAig, node.Fanins[1], group.vIns)
+		}
+	}
+	group.vNodes = Llb_ManGroupCollect(group)
+	return group
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupsCombine(p1 *Llb_Grp_t, p2 *Llb_Grp_t) *Llb_Grp_t {
-    var p *Llb_Grp_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    p = Llb_ManGroupAlloc( p1.pMan );
-    // create inputs
-    Vec_PtrForEachEntry( Aig_Obj_t *, p1.vIns, pObj, i )
-        Vec_PtrPush( p.vIns, pObj );
-    Vec_PtrForEachEntry( Aig_Obj_t *, p2.vIns, pObj, i )
-        Vec_PtrPushUnique( p.vIns, pObj );
-    // create outputs
-    Vec_PtrForEachEntry( Aig_Obj_t *, p1.vOuts, pObj, i )
-        Vec_PtrPush( p.vOuts, pObj );
-    Vec_PtrForEachEntry( Aig_Obj_t *, p2.vOuts, pObj, i )
-        Vec_PtrPushUnique( p.vOuts, pObj );
-
-    // derive internal objects
-    assert(p.vNodes == nil, "p.vNodes == nil");
-    p.vNodes = Llb_ManGroupCollect( p );
-    return p;
+func Llb_ManGroupCreateFirst(manager *Llb_Man_t) *Llb_Grp_t {
+	group := Llb_ManGroupAlloc(manager)
+	inputs := manager.pAig.Inputs()
+	for i := len(inputs) - int(manager.pAig.RegisterCount()); i < len(inputs); i++ {
+		if i >= 0 {
+			llbGroupPush(group.vOuts, inputs[i])
+		}
+	}
+	return group
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupMarkNodes_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    if Aig_ObjIsTravIdPrevious(p, pObj) {
-        Aig_ObjSetTravIdCurrent(p, pObj);
-        return;
-    }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Llb_ManGroupMarkNodes_rec( p, Aig_ObjFanin0(pObj) );
-    Llb_ManGroupMarkNodes_rec( p, Aig_ObjFanin1(pObj) );
+func Llb_ManGroupCreateLast(manager *Llb_Man_t) *Llb_Grp_t {
+	group := Llb_ManGroupAlloc(manager)
+	outputs := manager.pAig.Outputs()
+	for i := len(outputs) - int(manager.pAig.RegisterCount()); i < len(outputs); i++ {
+		if i >= 0 {
+			llbGroupPush(group.vIns, outputs[i])
+		}
+	}
+	return group
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates group from two cuts derived by the flow computation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupCreateFromCuts(pMan *Llb_Man_t, vCut1 *Vec_Int_t, vCut2 *Vec_Int_t) *Llb_Grp_t {
-    var p *Llb_Grp_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    p = Llb_ManGroupAlloc( pMan );
-
-    // mark Cut1
-    Aig_ManIncrementTravId( pMan.pAig );
-    Aig_ManForEachObjVec( vCut1, pMan.pAig, pObj, i )
-        Aig_ObjSetTravIdCurrent( pMan.pAig, pObj );
-    // collect unmarked Cut2
-    Aig_ManForEachObjVec( vCut2, pMan.pAig, pObj, i )
-        if ( !Aig_ObjIsTravIdCurrent( pMan.pAig, pObj ) )
-            Vec_PtrPush( p.vOuts, pObj );
-
-    // mark nodes reachable from Cut2
-    Aig_ManIncrementTravId( pMan.pAig );
-    Aig_ManForEachObjVec( vCut2, pMan.pAig, pObj, i )
-        Llb_ManGroupMarkNodes_rec( pMan.pAig, pObj );
-    // collect marked Cut1
-    Aig_ManForEachObjVec( vCut1, pMan.pAig, pObj, i )
-        if ( Aig_ObjIsTravIdCurrent( pMan.pAig, pObj ) )
-            Vec_PtrPush( p.vIns, pObj );
-
-    // derive internal objects
-    assert(p.vNodes == nil, "p.vNodes == nil");
-    p.vNodes = Llb_ManGroupCollect( p );
-    return p;
+func Llb_ManGroupsCombine(first, second *Llb_Grp_t) *Llb_Grp_t {
+	group := Llb_ManGroupAlloc(first.pMan)
+	appendEntries := func(dst, src *Vec_Ptr_t, unique bool) {
+		for i := 0; i < vec.Vec_PtrSize(src); i++ {
+			edge := llbGroupEdge(src, i)
+			if unique {
+				found := false
+				for j := 0; j < vec.Vec_PtrSize(dst); j++ {
+					if llbGroupEdge(dst, j) == edge {
+						found = true
+						break
+					}
+				}
+				if found {
+					continue
+				}
+			}
+			llbGroupPush(dst, edge)
+		}
+	}
+	appendEntries(group.vIns, first.vIns, false)
+	appendEntries(group.vIns, second.vIns, true)
+	appendEntries(group.vOuts, first.vOuts, false)
+	appendEntries(group.vOuts, second.vOuts, true)
+	group.vNodes = Llb_ManGroupCollect(group)
+	return group
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManPrepareGroups(pMan *Llb_Man_t) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    assert(pMan.vGroups == nil, "pMan.vGroups == nil");
-    pMan.vGroups = Vec_PtrAlloc( 1000 );
-    Llb_ManGroupCreateFirst( pMan );
-    Aig_ManForEachNode( pMan.pAig, pObj, i )
-    {
-        if pObj.fMarkA {
-            Llb_ManGroupCreate( pMan, pObj ); }
-    }
-    Saig_ManForEachLi( pMan.pAig, pObj, i )
-    {
-        if pObj.fMarkA {
-            Llb_ManGroupCreate( pMan, pObj ); }
-    }
-    Llb_ManGroupCreateLast( pMan );
+func Llb_ManGroupMarkNodes_rec(graph *Aig_Man_t, edge aig.Edge) {
+	if aig.Aig_ObjIsTravIdCurrent(graph, edge) {
+		return
+	}
+	if aig.Aig_ObjIsTravIdPrevious(graph, edge) {
+		aig.Aig_ObjSetTravIdCurrent(graph, edge)
+		return
+	}
+	aig.Aig_ObjSetTravIdCurrent(graph, edge)
+	node := graph.Node(aig.Aig_Regular(edge))
+	if node.Kind == aig.Output || node.Kind == aig.Buffer {
+		Llb_ManGroupMarkNodes_rec(graph, node.Fanins[0])
+		return
+	}
+	if node.Kind != aig.And && node.Kind != aig.ExclusiveOr {
+		panic("llb: expected internal node in cut cone")
+	}
+	Llb_ManGroupMarkNodes_rec(graph, node.Fanins[0])
+	Llb_ManGroupMarkNodes_rec(graph, node.Fanins[1])
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManPrintSpan(p *Llb_Man_t) {
-    var pGroup *Llb_Grp_t;
-    var pVar *Aig_Obj_t;
-    var i, k, Span, SpanMax int32;
-    Vec_PtrForEachEntry( Llb_Grp_t *, p.vGroups, pGroup, i )
-    {
-        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vIns, pVar, k )
-            if ( Vec_IntEntry(p.vVarBegs, pVar.Id) == i )
-                Span++;
-        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vOuts, pVar, k )
-            if ( Vec_IntEntry(p.vVarBegs, pVar.Id) == i )
-                Span++;
-
-        SpanMax = Abc_MaxInt( SpanMax, Span );
-fmt.Printf("%d ", Span);
-
-        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vIns, pVar, k )
-            if ( Vec_IntEntry(p.vVarEnds, pVar.Id) == i )
-                Span--;
-        Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vOuts, pVar, k )
-            if ( Vec_IntEntry(p.vVarEnds, pVar.Id) == i )
-                Span--;
-    }
-fmt.Printf("\n");
-fmt.Printf("Max = %d\n", SpanMax);
+func Llb_ManGroupCreateFromCuts(manager *Llb_Man_t, cut1, cut2 *Vec_Int_t) *Llb_Grp_t {
+	group := Llb_ManGroupAlloc(manager)
+	firstCut, reached := map[int]bool{}, map[int]bool{}
+	for _, id := range vec.Vec_IntArray(cut1) {
+		firstCut[int(id)] = true
+	}
+	graph := manager.pAig
+	for _, id := range vec.Vec_IntArray(cut2) {
+		edge := aig.Aig_ManObj(graph, id)
+		if !firstCut[edge.NodeID()] {
+			llbGroupPush(group.vOuts, edge)
+		}
+	}
+	var visit func(aig.Edge)
+	visit = func(edge aig.Edge) {
+		id := edge.NodeID()
+		if firstCut[id] {
+			reached[id] = true
+			return
+		}
+		if reached[id] {
+			return
+		}
+		reached[id] = true
+		node := graph.Node(aig.Aig_Regular(edge))
+		switch node.Kind {
+		case aig.Constant, aig.Input:
+			return
+		case aig.Output, aig.Buffer:
+			visit(node.Fanins[0])
+		default:
+			visit(node.Fanins[0])
+			visit(node.Fanins[1])
+		}
+	}
+	for _, id := range vec.Vec_IntArray(cut2) {
+		visit(aig.Aig_ManObj(graph, id))
+	}
+	for _, id := range vec.Vec_IntArray(cut1) {
+		if reached[int(id)] {
+			llbGroupPush(group.vIns, aig.Aig_ManObj(graph, id))
+		}
+	}
+	group.vNodes = Llb_ManGroupCollect(group)
+	return group
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManGroupHasVar(p *Llb_Man_t, iGroup int32, iVar int32) int32 {
-    var pGroup *Llb_Grp_t  = (Llb_Grp_t *)Vec_PtrEntry( p.vGroups, iGroup );
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vIns, pObj, i )
-        if ( pObj.Id == iVar )
-            return 1;
-    Vec_PtrForEachEntry( Aig_Obj_t *, pGroup.vOuts, pObj, i )
-        if ( pObj.Id == iVar )
-            return 1;
-    return 0;
+func Llb_ManPrepareGroups(manager *Llb_Man_t) {
+	assert(manager.vGroups == nil, "groups are uninitialized")
+	manager.vGroups = vec.Vec_PtrAlloc(1000)
+	Llb_ManGroupCreateFirst(manager)
+	for _, edge := range manager.pAig.LiveEdges() {
+		if manager.pAig.Node(edge).Kind == aig.And && aig.Aig_ObjIsMarkA(manager.pAig, edge) {
+			Llb_ManGroupCreate(manager, edge)
+		}
+	}
+	outputs := manager.pAig.Outputs()
+	for i := len(outputs) - int(manager.pAig.RegisterCount()); i < len(outputs); i++ {
+		if i >= 0 && aig.Aig_ObjIsMarkA(manager.pAig, outputs[i]) {
+			Llb_ManGroupCreate(manager, outputs[i])
+		}
+	}
+	Llb_ManGroupCreateLast(manager)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManPrintHisto(p *Llb_Man_t) {
-    var pObj *Aig_Obj_t;
-    var i, k int32;
-    Aig_ManForEachObj( p.pAig, pObj, i )
-    {
-        if Vec_IntEntry(p.vObj2Var, i) < 0 {
-            continue; }
-        fmt.Printf("%3d :", i);
-        for  k = 0; k < Vec_IntEntry(p.vVarBegs, i); k++  {
-            fmt.Printf(" ");
-        }
-        for       ; k <= Vec_IntEntry(p.vVarEnds, i); k++  {
-            fmt.Printf("%c", Llb_ManGroupHasVar(p, k, i)? '*':'-');
-        }
-        fmt.Printf("\n");
-    }
+func Llb_ManPrintSpan(manager *Llb_Man_t) {
+	var span, maximum int32
+	for i := 0; i < vec.Vec_PtrSize(manager.vGroups); i++ {
+		group, _ := vec.Vec_PtrEntry(manager.vGroups, i).(*Llb_Grp_t)
+		if group == nil {
+			continue
+		}
+		for _, entries := range []*Vec_Ptr_t{group.vIns, group.vOuts} {
+			for k := 0; k < vec.Vec_PtrSize(entries); k++ {
+				edge := llbGroupEdge(entries, k)
+				if vec.Vec_IntEntry(manager.vVarBegs, int(aig.Aig_ObjId(edge))) == int32(i) {
+					span++
+				}
+			}
+		}
+		maximum = max(maximum, span)
+		fmt.Printf("%d ", span)
+		for _, entries := range []*Vec_Ptr_t{group.vIns, group.vOuts} {
+			for k := 0; k < vec.Vec_PtrSize(entries); k++ {
+				edge := llbGroupEdge(entries, k)
+				if vec.Vec_IntEntry(manager.vVarEnds, int(aig.Aig_ObjId(edge))) == int32(i) {
+					span--
+				}
+			}
+		}
+	}
+	fmt.Printf("\nMax = %d\n", maximum)
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Llb_ManGroupHasVar(manager *Llb_Man_t, groupID, variable int32) int32 {
+	if manager.vGroups == nil || groupID < 0 || int(groupID) >= vec.Vec_PtrSize(manager.vGroups) {
+		return 0
+	}
+	group, _ := vec.Vec_PtrEntry(manager.vGroups, int(groupID)).(*Llb_Grp_t)
+	if group == nil {
+		return 0
+	}
+	for _, entries := range []*Vec_Ptr_t{group.vIns, group.vOuts} {
+		for i := 0; i < vec.Vec_PtrSize(entries); i++ {
+			if aig.Aig_ObjId(llbGroupEdge(entries, i)) == variable {
+				return 1
+			}
+		}
+	}
+	return 0
+}
 
-
-//ABC_NAMESPACE_IMPL_END
-
+func Llb_ManPrintHisto(manager *Llb_Man_t) {
+	for _, edge := range manager.pAig.LiveEdges() {
+		id := aig.Aig_ObjId(edge)
+		if vec.Vec_IntEntry(manager.vObj2Var, int(id)) < 0 {
+			continue
+		}
+		fmt.Printf("%3d :", id)
+		for group := int32(0); group < vec.Vec_IntEntry(manager.vVarBegs, int(id)); group++ {
+			fmt.Print(" ")
+		}
+		for group := vec.Vec_IntEntry(manager.vVarBegs, int(id)); group <= vec.Vec_IntEntry(manager.vVarEnds, int(id)); group++ {
+			if Llb_ManGroupHasVar(manager, group, id) != 0 {
+				fmt.Print("*")
+			} else {
+				fmt.Print("-")
+			}
+		}
+		fmt.Println()
+	}
+}

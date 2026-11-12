@@ -2,378 +2,153 @@ package rwt
 
 import (
 	"fmt"
+	"os"
 	"time"
+
+	"github.com/glycerine/abcgo/bool/dec"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [rwtMan.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [DAG-aware AIG rewriting package.]
-
-  Synopsis    [Rewriting manager.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: rwtMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "rwt.h"
-//#include "bool/deco/deco.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-static unsigned short * s_puCanons = NULL; 
-var s_pPhases string = nil; 
-var s_pPerms string = nil; 
-static unsigned char *  s_pMap = NULL;
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Starts residual rewriting manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwt_ManGlobalStart() { 
-    if s_puCanons == nil {
-        Extra_Truth4VarNPN( &s_puCanons, &s_pPhases, &s_pPerms, &s_pMap ); }
+func Rwt_ManGlobalStart() {
+	rwtGlobal.Lock()
+	defer rwtGlobal.Unlock()
+	if rwtGlobal.canons == nil {
+		rwtGlobal.canons, rwtGlobal.phases, rwtGlobal.perms, rwtGlobal.mapping = extra.Extra_Truth4VarNPN()
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Starts residual rewriting manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwt_ManGlobalStop() { 
-    s_puCanons = nil;
-    s_pPhases = nil;
-    s_pPerms = nil;
-    s_pMap = nil;
-} 
-
-/**Function*************************************************************
-
-  Synopsis    [Starts rewriting manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwt_ManStart(fPrecompute int32) *Rwt_Man_t {
-    var p *Rwt_Man_t;
-    var clk abctime  = Abc_Clock();
-clk = Abc_Clock();
-    // inlining of macro ABC_ALLOC
-    p = ((Rwt_Man_t *) malloc(sizeof(Rwt_Man_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Rwt_Man_t) );
-    p.nFuncs = (1<<16);
-    // copy the global tables
-    Rwt_ManGlobalStart();
-    p.puCanons = s_puCanons; 
-    p.pPhases  = s_pPhases; 
-    p.pPerms   = s_pPerms; 
-    p.pMap     = s_pMap; 
-    // initialize practical NPN classes
-    p.pPractical  = Rwt_ManGetPractical( p );
-    // create the table
-    // inlining of macro ABC_ALLOC
-    p.pTable = ((Rwt_Node_t * *) malloc(sizeof(Rwt_Node_t *) * (size_t)(p.nFuncs)));
-    memset( p.pTable, 0, sizeof(Rwt_Node_t *) * p.nFuncs );
-    // create the elementary nodes
-    p.pMmNode  = Mem_FixedStart( sizeof(Rwt_Node_t) );
-    p.vForest  = Vec_PtrAlloc( 100 );
-    Rwt_ManAddVar( p, 0x0000, fPrecompute ); // constant 0
-    Rwt_ManAddVar( p, 0xAAAA, fPrecompute ); // var A
-    Rwt_ManAddVar( p, 0xCCCC, fPrecompute ); // var B
-    Rwt_ManAddVar( p, 0xF0F0, fPrecompute ); // var C
-    Rwt_ManAddVar( p, 0xFF00, fPrecompute ); // var D
-    p.nClasses = 5;
-    // other stuff
-    p.nTravIds   = 1;
-    p.pPerms4    = Extra_Permutations( 4 );
-    p.vLevNums   = Vec_IntAlloc( 50 );
-    p.vFanins    = Vec_PtrAlloc( 50 );
-    p.vFaninsCur = Vec_PtrAlloc( 50 );
-    p.vNodesTemp = Vec_PtrAlloc( 50 );
-    if fPrecompute != 0 {   // precompute subgraphs
-//        Rwt_ManPrecompute( p );
-//        Rwt_ManPrint( p );
-//        Rwt_ManWriteToArray( p );
-    
-    } else {   // load saved subgraphs
-        Rwt_ManLoadFromArray( p, 0 );
-//        Rwt_ManPrint( p );
-        Rwt_ManPreprocess( p );
-    }
-p.timeStart = Abc_Clock() - clk;
-    return p;
+func Rwt_ManGlobalStop() {
+	rwtGlobal.Lock()
+	rwtGlobal.canons = nil
+	rwtGlobal.phases = nil
+	rwtGlobal.perms = nil
+	rwtGlobal.mapping = nil
+	rwtGlobal.Unlock()
 }
 
-/**Function*************************************************************
+func Rwt_ManStart(precompute int32) *Rwt_Man_t {
+	start := time.Now()
+	Rwt_ManGlobalStart()
+	rwtGlobal.Lock()
+	canons := rwtGlobal.canons
+	phases := rwtGlobal.phases
+	perms := rwtGlobal.perms
+	mapping := rwtGlobal.mapping
+	rwtGlobal.Unlock()
+	p := &Rwt_Man_t{
+		nFuncs:     1 << 16,
+		puCanons:   canons,
+		pPhases:    phases,
+		pPerms:     perms,
+		pMap:       mapping,
+		pTable:     make([]*Rwt_Node_t, 1<<16),
+		vFanins:    vec.Vec_PtrAlloc(50),
+		vFaninsCur: vec.Vec_PtrAlloc(50),
+		vLevNums:   vec.Vec_IntAlloc(50),
+		vNodesTemp: vec.Vec_PtrAlloc(50),
+		vForest:    make([]*Rwt_Node_t, 0, 1800),
+		nTravIds:   1,
+	}
+	p.pPractical = Rwt_ManGetPractical(p)
+	p.pPerms4 = extra.Extra_Permutations(4)
+	Rwt_ManAddVar(p, 0x0000, precompute)
+	Rwt_ManAddVar(p, 0xaaaa, precompute)
+	Rwt_ManAddVar(p, 0xcccc, precompute)
+	Rwt_ManAddVar(p, 0xf0f0, precompute)
+	Rwt_ManAddVar(p, 0xff00, precompute)
+	p.nClasses = 5
+	if precompute == 0 {
+		Rwt_ManLoadFromArray(p, 0)
+		Rwt_ManPreprocess(p)
+	}
+	p.timeStart = time.Since(start)
+	return p
+}
 
-  Synopsis    [Stops rewriting manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Rwt_ManStop(p *Rwt_Man_t) {
-    if p.vClasses {
-        var pNode *Rwt_Node_t;
-        var i, k int32;
-        // inlining of macro Vec_VecForEachEntry
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; i < Vec_VecSize(p.vClasses); i++  {                                                        for  k = 0; (k < Vec_PtrSize(Vec_VecEntry(p.vClasses, i))) && (((pNode) = (Rwt_Node_t *)Vec_PtrEntry(Vec_VecEntry(p.vClasses, i), k)), 1); k++  { 
-            Dec_GraphFree( (Dec_Graph_t *)pNode.pNext );
-        }
-        }
-    }
-    if p.vClasses {  Vec_VecFree( p.vClasses ); }
-    Vec_PtrFree( p.vNodesTemp );
-    Vec_PtrFree( p.vForest );
-    Vec_IntFree( p.vLevNums );
-    Vec_PtrFree( p.vFanins );
-    Vec_PtrFree( p.vFaninsCur );
-    Mem_FixedStop( p.pMmNode, 0 );
-    p.pMapInv = nil;
-    p.pTable = nil;
-    p.pPractical = nil;
-    p.pPerms4 = nil;
-    p = nil;
+	if p == nil {
+		return
+	}
+	for _, graph := range p.nodeGraphs {
+		dec.Dec_GraphFree(graph)
+	}
+	p.nodeGraphs = nil
+	p.vClasses = nil
+	p.vNodesTemp = nil
+	p.vForest = nil
+	p.vLevNums = nil
+	p.vFanins = nil
+	p.vFaninsCur = nil
+	p.pTable = nil
+	p.pMapInv = nil
+	p.pPractical = nil
+	p.pPerms4 = nil
+	p.pGraph = nil
+	p.pCut = nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Stops the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Rwt_ManPrintStats(p *Rwt_Man_t) {
-    var i, Counter int32;
-    for  i = 0; i < 222; i++  {
-        Counter += (p.nScores[i] > 0);
-    }
-
-    fmt.Printf("Rewriting statistics:\n");
-    fmt.Printf("Total cuts tries  = %8d.\n", p.nCutsGood);
-    fmt.Printf("Bad cuts found    = %8d.\n", p.nCutsBad);
-    fmt.Printf("Total subgraphs   = %8d.\n", p.nSubgraphs);
-    fmt.Printf("Used NPN classes  = %8d.\n", Counter);
-    fmt.Printf("Nodes considered  = %8d.\n", p.nNodesConsidered);
-    fmt.Printf("Nodes rewritten   = %8d.\n", p.nNodesRewritten);
-    fmt.Printf("Calculated gain   = %8d.\n", p.nNodesGained);
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Start       "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeStart)))/(float64(int64(time.Second))));;
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Cuts        "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeCut)))/(float64(int64(time.Second))));;
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Truth       "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeTruth)))/(float64(int64(time.Second))));;
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Resynthesis "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeRes)))/(float64(int64(time.Second))));;
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("    Mffc    "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeMffc)))/(float64(int64(time.Second))));;
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("    Eval    "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeEval)))/(float64(int64(time.Second))));;
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Update      "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeUpdate)))/(float64(int64(time.Second))));;
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("TOTAL       "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;
-
-/*
-    printf( "The scores are:\n" );
-    for ( i = 0; i < 222; i++ )
-        if ( p->nScores[i] > 0 )
-        {
-            extern void Ivy_TruthDsdComputePrint( unsigned uTruth );
-            printf( "%3d = %8d  canon = %5d  ", i, p->nScores[i], p->pMapInv[i] );
-            Ivy_TruthDsdComputePrint( (unsigned)p->pMapInv[i] | ((unsigned)p->pMapInv[i] << 16) );
-        }
-    printf( "\n" );
-*/
+	if p == nil {
+		return
+	}
+	used := 0
+	for _, score := range p.nScores {
+		if score > 0 {
+			used++
+		}
+	}
+	fmt.Printf("Rewriting statistics:\n")
+	fmt.Printf("Total cuts tries  = %8d.\n", p.nCutsGood)
+	fmt.Printf("Bad cuts found    = %8d.\n", p.nCutsBad)
+	fmt.Printf("Total subgraphs   = %8d.\n", p.nSubgraphs)
+	fmt.Printf("Used NPN classes  = %8d.\n", used)
+	fmt.Printf("Nodes considered  = %8d.\n", p.nNodesConsidered)
+	fmt.Printf("Nodes rewritten   = %8d.\n", p.nNodesRewritten)
+	fmt.Printf("Calculated gain   = %8d.\n", p.nNodesGained)
+	for _, row := range []struct {
+		name string
+		d    time.Duration
+	}{{"Start", p.timeStart}, {"Cuts", p.timeCut}, {"Truth", p.timeTruth}, {"Resynthesis", p.timeRes}, {"    Mffc", p.timeMffc}, {"    Eval", p.timeEval}, {"Update", p.timeUpdate}, {"TOTAL", p.timeTotal}} {
+		fmt.Printf("%-12s = %9.2f sec\n", row.name, row.d.Seconds())
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Stops the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwt_ManPrintStatsFile(p *Rwt_Man_t) {
-    var pTable *os.File;
-    pTable = os.OpenFile("stats.txt", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666);
-    fmt.Fprintf(pTable, "%d ", p.nCutsGood);
-    fmt.Fprintf(pTable, "%d ", p.nSubgraphs);
-    fmt.Fprintf(pTable, "%d ", p.nNodesRewritten);
-    fmt.Fprintf(pTable, "%d", p.nNodesGained);
-    fmt.Fprintf(pTable, "\n");
-    _ = (pTable).Close();
+func Rwt_ManPrintStatsFile(p *Rwt_Man_t) error {
+	if p == nil {
+		return nil
+	}
+	f, err := os.OpenFile("stats.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		return err
+	}
+	_, writeErr := fmt.Fprintf(f, "%d %d %d %d\n", p.nCutsGood, p.nSubgraphs, p.nNodesRewritten, p.nNodesGained)
+	closeErr := f.Close()
+	if writeErr != nil {
+		return writeErr
+	}
+	return closeErr
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Stops the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwt_ManReadDecs(p *Rwt_Man_t) any {
-    return p.pGraph;
+func Rwt_ManAddTimeCuts(p *Rwt_Man_t, elapsed time.Duration) {
+	if p != nil {
+		p.timeCut += elapsed
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Stops the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwt_ManReadLeaves(p *Rwt_Man_t) *Vec_Ptr_t {
-    return p.vFanins;
+func Rwt_ManAddTimeUpdate(p *Rwt_Man_t, elapsed time.Duration) {
+	if p != nil {
+		p.timeUpdate += elapsed
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Stops the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwt_ManReadCompl(p *Rwt_Man_t) int32 {
-    return p.fCompl;
+func Rwt_ManAddTimeTotal(p *Rwt_Man_t, elapsed time.Duration) {
+	if p != nil {
+		p.timeTotal += elapsed
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Stops the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwt_ManAddTimeCuts(p *Rwt_Man_t, Time abctime) {
-    p.timeCut += Time;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Stops the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwt_ManAddTimeUpdate(p *Rwt_Man_t, Time abctime) {
-    p.timeUpdate += Time;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Stops the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwt_ManAddTimeTotal(p *Rwt_Man_t, Time abctime) {
-    p.timeTotal += Time;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Precomputes AIG subgraphs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Rwt_Precompute() {
-    var p *Rwt_Man_t;
-    p = Rwt_ManStart( 1 );
-    Rwt_ManStop( p );
+	p := Rwt_ManStart(1)
+	Rwt_ManStop(p)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

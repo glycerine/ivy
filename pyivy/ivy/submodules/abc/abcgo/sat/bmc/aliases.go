@@ -2,6 +2,7 @@ package bmc
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
@@ -13,6 +14,8 @@ import (
 // their names local to BMC while binding them to the native Go package types.
 type Aig_Man_t = aig.Aig_Man_t
 type Aig_Obj_t = aig.Aig_Obj_t
+type Gia_Man_t = gia.Gia_Man_t
+type Gia_Obj_t = gia.Gia_Obj_t
 type Vec_Int_t = vec.Vec_Int_t
 type Vec_Ptr_t = vec.Vec_Ptr_t
 type Vec_Str_t = vec.Vec_Str_t

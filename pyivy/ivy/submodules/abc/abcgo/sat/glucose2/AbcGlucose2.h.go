@@ -11,7 +11,7 @@ package glucose2
   Synopsis    [Interface to Glucose.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - September 6, 2017.]
@@ -19,9 +19,6 @@ package glucose2
   Revision    [$Id: AbcGlucose.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
@@ -33,10 +30,11 @@ package glucose2
 ///                         PARAMETERS                               ///
 ////////////////////////////////////////////////////////////////////////
 
-const GLUCOSE_UNSAT = -1
-const GLUCOSE_SAT =    1
-const GLUCOSE_UNDEC =  0
-
+const (
+	GLUCOSE_UNSAT int32 = -1
+	GLUCOSE_SAT   int32 = 1
+	GLUCOSE_UNDEC int32 = 0
+)
 
 //ABC_NAMESPACE_HEADER_START
 
@@ -44,24 +42,27 @@ const GLUCOSE_UNDEC =  0
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
-   
-type Glucose2_Pars struct {
-    pre int32;     // preprocessing
-    verb int32;    // verbosity
-    cust int32;    // customizable
-    nConfls int32; // conflict limit (0 = no limit)
+// Glucose2Params configures DIMACS or AIG solving.
+type Glucose2Params struct {
+	Preprocess    bool
+	Verbose       bool
+	Custom        int32
+	ConflictLimit int32 // 0 means unlimited
 }
 
-func Glucose_CreatePars(p int32, v int32, c int32, nConfls int32) Glucose2_Pars {
-    var pars Glucose2_Pars;
-    pars.pre     = p;
-    pars.verb    = v;
-    pars.cust    = c;
-    pars.nConfls = nConfls;
-    return pars;
+// Glucose2_Pars retains the source-facing name for existing callers.
+type Glucose2_Pars = Glucose2Params
+
+func NewGlucose2Params(preprocess, verbose bool, conflictLimit int32) Glucose2Params {
+	return Glucose2Params{Preprocess: preprocess, Verbose: verbose, ConflictLimit: conflictLimit}
 }
 
-typedef void bmcg2_sat_solver;
+func Glucose_CreatePars(p, v, c, nConfls int32) Glucose2Params {
+	return NewGlucose2Params(p != 0, v != 0, nConfls)
+}
+
+// ABC's former opaque C handle is represented by the concrete Go solver.
+type bmcg2_sat_solver = SimpSolver
 
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///
@@ -137,17 +138,12 @@ typedef void bmcg2_sat_solver;
 
 // extern void              bmcg2_sat_solver_mark_cone( bmcg2_sat_solver * s, int var );
 
-
 // extern void              Glucose2_SolveCnf( char * pFilename, Glucose2_Pars * pPars );
 
 // extern int               Glucose2_SolveAig( Gia_Man_t * p, Glucose2_Pars * pPars );
 
-
 //ABC_NAMESPACE_HEADER_END
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-

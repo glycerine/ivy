@@ -33,3 +33,7 @@ truncate another node's shared cover storage.
 Selected previously ported core + DFS + fan-order/API tests pass race tests and
 vet. Full base/abc next fails in untranslated abcFunc.go; package completion is
 not claimed. No C oracle differential coverage is claimed for this group.
+
+The functionality conversion review added barrier exclusions to all network-wide
+SOP transforms. A regression converts a network containing a nil-data transparent
+barrier through BDD and back, preserving its pin and data unchanged.

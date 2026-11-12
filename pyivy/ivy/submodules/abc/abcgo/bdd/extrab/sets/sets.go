@@ -69,6 +69,8 @@ type engine struct {
 	dd          *DdManager
 	memo        map[relationKey]*DdNode
 	maximalMemo map[*DdNode]*DdNode
+	minimalMemo map[*DdNode]*DdNode
+	binaryMemo  map[binaryKey]*DdNode
 }
 
 func valid(dd *DdManager, nodes ...*DdNode) bool {
@@ -83,7 +85,7 @@ func valid(dd *DdManager, nodes ...*DdNode) bool {
 	return true
 }
 func newEngine(dd *DdManager) *engine {
-	return &engine{dd, make(map[relationKey]*DdNode), make(map[*DdNode]*DdNode)}
+	return &engine{dd: dd, memo: make(map[relationKey]*DdNode), maximalMemo: make(map[*DdNode]*DdNode)}
 }
 func emptyBelongs(dd *DdManager, f *DdNode) bool {
 	for !cudd.Cudd_IsConstant(f) {

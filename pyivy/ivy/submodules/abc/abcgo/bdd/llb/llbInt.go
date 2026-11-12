@@ -11,7 +11,7 @@ package llb
   Synopsis    [External declarations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - May 8, 2010.]
@@ -19,10 +19,6 @@ package llb
   Revision    [$Id: llbInt.h,v 1.00 2010/05/08 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
- 
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
@@ -46,67 +42,69 @@ package llb
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
-type Llb_Man_t = Llb_Man_t_;
-type Llb_Mtr_t = Llb_Mtr_t_;
-type Llb_Grp_t = Llb_Grp_t_;
+type Llb_Man_t = Llb_Man_t_
+type Llb_Mtr_t = Llb_Mtr_t_
+type Llb_Grp_t = Llb_Grp_t_
 
 type Llb_Man_t_ struct {
-    pPars   *Gia_ParLlb_t;          // parameters
-    pAigGlo      *Aig_Man_t;        // initial AIG manager (owned by the caller)
-    pAig      *Aig_Man_t;           // derived AIG manager (created in this package)
-    dd      *DdManager;             // BDD manager
-    ddG      *DdManager;            // BDD manager
-    ddR      *DdManager;            // BDD manager
-    vObj2Var      *Vec_Int_t;       // mapping AIG ObjId into BDD var index
-    vVar2Obj      *Vec_Int_t;       // mapping BDD var index into AIG ObjId
-    vGroups      *Vec_Ptr_t;        // group Id into group pointer
-    pMatrix      *Llb_Mtr_t;        // dependency matrix, column-major
-    // image computation
-    vRings      *Vec_Ptr_t;         // onion rings
-    vVarBegs      *Vec_Int_t;       // the first group where the var appears  
-    vVarEnds      *Vec_Int_t;       // the last group where the var appears 
-    // variable mapping
-    vNs2Glo      *Vec_Int_t;        // next state variables into global variables
-    vCs2Glo      *Vec_Int_t;        // next state variables into global variables
-    vGlo2Cs      *Vec_Int_t;        // global variables into current state variables
-    vGlo2Ns      *Vec_Int_t;        // global variables into current state variables
-    // flow computation
-//    Vec_Int_t *     vMem;
-//    Vec_Ptr_t *     vTops;
-//    Vec_Ptr_t *     vBots;
-//    Vec_Ptr_t *     vCuts;
+	pPars    *Gia_ParLlb_t // parameters
+	pAigGlo  *Aig_Man_t    // initial AIG manager (owned by the caller)
+	pAig     *Aig_Man_t    // derived AIG manager (created in this package)
+	dd       *DdManager    // BDD manager
+	ddG      *DdManager    // BDD manager
+	ddR      *DdManager    // BDD manager
+	vObj2Var *Vec_Int_t    // mapping AIG ObjId into BDD var index
+	vVar2Obj *Vec_Int_t    // mapping BDD var index into AIG ObjId
+	vGroups  *Vec_Ptr_t    // group Id into group pointer
+	pMatrix  *Llb_Mtr_t    // dependency matrix, column-major
+	// image computation
+	vRings   *Vec_Ptr_t // onion rings
+	vVarBegs *Vec_Int_t // the first group where the var appears
+	vVarEnds *Vec_Int_t // the last group where the var appears
+	// variable mapping
+	vNs2Glo *Vec_Int_t // next state variables into global variables
+	vCs2Glo *Vec_Int_t // next state variables into global variables
+	vGlo2Cs *Vec_Int_t // global variables into current state variables
+	vGlo2Ns *Vec_Int_t // global variables into current state variables
+	// flow computation
+	//    Vec_Int_t *     vMem;
+	//    Vec_Ptr_t *     vTops;
+	//    Vec_Ptr_t *     vBots;
+	//    Vec_Ptr_t *     vCuts;
 }
 
 type Llb_Mtr_t_ struct {
-    nPis             int32;           // number of primary inputs
-    nFfs             int32;           // number of flip-flops
-    nRows             int32;          // number of rows
-    nCols             int32;          // number of columns
-    pColSums            []int32;       // sum of values in a column
-    pColGrps     []*Llb_Grp_t;       // group structure for each col
-    pRowSums            []int32;       // sum of values in a row
-    pMatrix          [][]bool;        // dependency matrix, column-major
-    pMan      *Llb_Man_t;           // manager
-    // partial product
-    pProdVars           []bool;      // variables in the partial product
-    pProdNums            []int32;      // var counts in the remaining partitions
+	nPis     int32        // number of primary inputs
+	nFfs     int32        // number of flip-flops
+	nRows    int32        // number of rows
+	nCols    int32        // number of columns
+	pColSums []int32      // sum of values in a column
+	pColGrps []*Llb_Grp_t // group structure for each col
+	pRowSums []int32      // sum of values in a row
+	pMatrix  [][]bool     // dependency matrix, column-major
+	pMan     *Llb_Man_t   // manager
+	// partial product
+	pProdVars []bool  // variables in the partial product
+	pProdNums []int32 // var counts in the remaining partitions
 }
 
 type Llb_Grp_t_ struct {
-    Id             int32;             // group ID
-    vIns      *Vec_Ptr_t;           // input AIG objs
-    vOuts      *Vec_Ptr_t;          // output AIG objs
-    vNodes      *Vec_Ptr_t;         // internal AIG objs
-    pMan      *Llb_Man_t;           // manager
-    pPrev      *Llb_Grp_t;          // previous group
-    pNext      *Llb_Grp_t;          // next group
+	Id     int32      // group ID
+	vIns   *Vec_Ptr_t // input AIG objs
+	vOuts  *Vec_Ptr_t // output AIG objs
+	vNodes *Vec_Ptr_t // internal AIG objs
+	pMan   *Llb_Man_t // manager
+	pPrev  *Llb_Grp_t // previous group
+	pNext  *Llb_Grp_t // next group
 }
 
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///
 ////////////////////////////////////////////////////////////////////////
 
-func Llb_ObjBddVar(vOrder *Vec_Int_t, pObj *Aig_Obj_t) int32 { return Vec_IntEntry(vOrder, Aig_ObjId(pObj)); }
+func Llb_ObjBddVar(vOrder *Vec_Int_t, pObj *Aig_Obj_t) int32 {
+	return Vec_IntEntry(vOrder, Aig_ObjId(pObj))
+}
 
 ////////////////////////////////////////////////////////////////////////
 ///                    FUNCTION DECLARATIONS                         ///
@@ -151,7 +149,7 @@ func Llb_ObjBddVar(vOrder *Vec_Int_t, pObj *Aig_Obj_t) int32 { return Vec_IntEnt
 // extern void            Llb_MtrPrint( Llb_Mtr_t * p, int fOrder );
 
 // extern void            Llb_MtrPrintMatrixStats( Llb_Mtr_t * p );
- 
+
 /*=== llbPart.c ======================================================*/
 // extern Llb_Grp_t *     Llb_ManGroupAlloc( Llb_Man_t * pMan );
 
@@ -176,7 +174,6 @@ func Llb_ObjBddVar(vOrder *Vec_Int_t, pObj *Aig_Obj_t) int32 { return Vec_IntEnt
 /*=== llbSched.c =====================================================*/
 // extern void            Llb_MtrSchedule( Llb_Mtr_t * p );
 
-
 /*=== llb2Bad.c ======================================================*/
 // extern DdNode *        Llb_BddComputeBad( Aig_Man_t * pInit, DdManager * dd, abctime TimeOut );
 
@@ -186,7 +183,7 @@ func Llb_ObjBddVar(vOrder *Vec_Int_t, pObj *Aig_Obj_t) int32 { return Vec_IntEnt
 // extern DdNode *        Llb_CoreComputeCube( DdManager * dd, Vec_Int_t * vVars, int fUseVarIndex, char * pValues );
 
 // extern int             Llb_CoreExperiment( Aig_Man_t * pInit, Aig_Man_t * pAig, Gia_ParLlb_t * pPars, Vec_Ptr_t * vResult, abctime TimeTarget );
- 
+
 /*=== llb2Driver.c ======================================================*/
 // extern Vec_Int_t *     Llb_DriverCountRefs( Aig_Man_t * p );
 
@@ -209,10 +206,9 @@ func Llb_ObjBddVar(vOrder *Vec_Int_t, pObj *Aig_Obj_t) int32 { return Vec_IntEnt
 
 // extern void            Llb_ImgQuantifyReset( Vec_Ptr_t * vDdMans );
 
-// extern DdNode *        Llb_ImgComputeImage( Aig_Man_t * pAig, Vec_Ptr_t * vDdMans, DdManager * dd, DdNode * bInit, 
-//                            Vec_Ptr_t * vQuant0, Vec_Ptr_t * vQuant1, Vec_Int_t * vDriRefs, 
+// extern DdNode *        Llb_ImgComputeImage( Aig_Man_t * pAig, Vec_Ptr_t * vDdMans, DdManager * dd, DdNode * bInit,
+//                            Vec_Ptr_t * vQuant0, Vec_Ptr_t * vQuant1, Vec_Int_t * vDriRefs,
 //                            abctime TimeTarget, int fBackward, int fReorder, int fVerbose );
-
 
 // extern DdManager *     Llb_NonlinImageStart( Aig_Man_t * pAig, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vRoots, int * pVars2Q, int * pOrder, int fFirst, abctime TimeTarget );
 
@@ -220,15 +216,12 @@ func Llb_ObjBddVar(vOrder *Vec_Int_t, pObj *Aig_Obj_t) int32 { return Vec_IntEnt
 
 // extern void            Llb_NonlinImageQuit();
 
-
 /*=== llb3Image.c =======================================================*/
-// extern DdNode *        Llb_NonlinImage( Aig_Man_t * pAig, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vRoots, int * pVars2Q, 
+// extern DdNode *        Llb_NonlinImage( Aig_Man_t * pAig, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vRoots, int * pVars2Q,
 //                            DdManager * dd, DdNode * bCurrent, int fReorder, int fVerbose, int * pOrder );
 
 /*=== llb3Nonlin.c ======================================================*/
 // extern DdNode *        Llb_NonlinComputeInitState( Aig_Man_t * pAig, DdManager * dd );
-
-
 
 /*=== llb4Cex.c =======================================================*/
 // extern Abc_Cex_t *     Llb4_Nonlin4TransformCex( Aig_Man_t * pAig, Vec_Ptr_t * vStates, int iCexPo, int fVerbose );
@@ -247,15 +240,8 @@ func Llb_ObjBddVar(vOrder *Vec_Int_t, pObj *Aig_Obj_t) int32 { return Vec_IntEnt
 /*=== llb4Sweep.c ======================================================*/
 // extern void            Llb4_Nonlin4Sweep( Aig_Man_t * pAig, int nSweepMax, int nClusterMax, DdManager ** pdd, Vec_Int_t ** pvOrder, Vec_Ptr_t ** pvGroups, int fVerbose );
 
- 
-
 //ABC_NAMESPACE_HEADER_END
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-

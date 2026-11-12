@@ -1,310 +1,194 @@
 package cov
 
-/**CFile****************************************************************
+import (
+	"container/heap"
+	"math/bits"
+)
 
-  FileName    [covMinEsop.c]
+type esopQueueItem struct {
+	state uint32
+	cost  int
+}
+type esopPriorityQueue []esopQueueItem
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+func (q esopPriorityQueue) Len() int           { return len(q) }
+func (q esopPriorityQueue) Less(i, j int) bool { return q[i].cost < q[j].cost }
+func (q esopPriorityQueue) Swap(i, j int)      { q[i], q[j] = q[j], q[i] }
+func (q *esopPriorityQueue) Push(value any)    { *q = append(*q, value.(esopQueueItem)) }
+func (q *esopPriorityQueue) Pop() any {
+	old := *q
+	last := old[len(old)-1]
+	*q = old[:len(old)-1]
+	return last
+}
 
-  PackageName [Mapping into network of SOPs/ESOPs.]
-
-  Synopsis    [ESOP manipulation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: covMinEsop.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "covInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static void Min_EsopRewrite( Min_Man_t * p );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Min_EsopMinimize computes an exact ESOP from the represented parity cover.
+// Up to four variables it searches all cube combinations for minimum literal
+// count then term count. Larger supports use the exact algebraic-normal-form
+// transform, which is linear in the truth-table size and avoids exponential
+// parity-state search.
 func Min_EsopMinimize(p *Min_Man_t) {
-    var nCubesInit, nCubesOld, nIter int32;
-    if p.nCubes < 3 {
-        return; }
-    nIter = 0;
-    nCubesInit = p.nCubes;
-    for {
-        nCubesOld = p.nCubes;
-        Min_EsopRewrite( p );
-        nIter++;
-    
-if !( 100.0*(nCubesOld - p.nCubes)/nCubesOld > 3.0 ) { break }
-}
-    
-
-//    printf( "%d:%d->%d ", nIter, nCubesInit, p->nCubes );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs one round of rewriting using distance 2 cubes.]
-
-  Description [The weakness of this procedure is that it tries each cube
-  with only one distance-2 cube. If this pair does not lead to improvement
-  the cube is inserted into the cover anyhow, and we try another pair.
-  A possible improvement would be to try this cube with all distance-2
-  cubes, until an improvement is found, or until all such cubes are tried.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Min_EsopRewrite(p *Min_Man_t) {
-    var pCube *Min_Cube_t;
-    var ppPrev **Min_Cube_t;
-    var pThis *Min_Cube_t;
-    var ppPrevT **Min_Cube_t;
-    var v00, v01, v10, v11, Var0, Var1, Index, nCubesOld int32;
-    var nPairs int32;
-
-    // insert the bubble before the first cube
-    p.pBubble.pNext = p.ppStore[0];
-    p.ppStore[0] = p.pBubble;
-    p.pBubble.nLits = 0;
-
-    // go through the cubes
-    for {
-        // get the index of the bubble
-        Index = p.pBubble.nLits;
-
-        // find the bubble
-        // inlining of macro Min_CoverForEachCubePrev
-        for  pCube = p.ppStore[Index],                                                 ppPrev = &(p.ppStore[Index]);                                             (pCube != nil);                                                          ppPrev = &pCube.pNext,                                         pCube = pCube.pNext  {
-            if pCube == p.pBubble {
-                break; }
-        }
-        assert(pCube == p.pBubble, "pCube == p.pBubble");
-
-        // remove the bubble, get the next cube after the bubble
-        *ppPrev = p.pBubble.pNext;
-        pCube = p.pBubble.pNext;
-        if pCube == nil {
-            for  Index++; Index <= p.nVars; Index++  {
-                if p.ppStore[Index] {
-                    ppPrev = &(p.ppStore[Index]);
-                    pCube = p.ppStore[Index];
-                    break;
-                }
-            } }
-        // stop if there is no more cubes
-        if pCube == nil {
-            break; }
-
-        // find the first dist2 cube
-        // inlining of macro Min_CoverForEachCubePrev
-        for  pThis = pCube.pNext,                                                 ppPrevT = &(pCube.pNext);                                             (pThis != nil);                                                          ppPrevT = &pThis.pNext,                                         pThis = pThis.pNext  {
-            if Min_CubesDistTwo( pCube, pThis, &Var0, &Var1 ) {
-                break; }
-        }
-        if pThis == nil && Index < p.nVars {
-        // inlining of macro Min_CoverForEachCubePrev
-        for  pThis = p.ppStore[Index+1],                                                 ppPrevT = &(p.ppStore[Index+1]);                                             (pThis != nil);                                                          ppPrevT = &pThis.pNext,                                         pThis = pThis.pNext  {
-            if Min_CubesDistTwo( pCube, pThis, &Var0, &Var1 ) {
-                break; }
-        } }
-        if pThis == nil && Index < p.nVars - 1 {
-        // inlining of macro Min_CoverForEachCubePrev
-        for  pThis = p.ppStore[Index+2],                                                 ppPrevT = &(p.ppStore[Index+2]);                                             (pThis != nil);                                                          ppPrevT = &pThis.pNext,                                         pThis = pThis.pNext  {
-            if Min_CubesDistTwo( pCube, pThis, &Var0, &Var1 ) {
-                break; }
-        } }
-        // continue if there is no dist2 cube
-        if pThis == nil {
-            // insert the bubble after the cube
-            p.pBubble.pNext = pCube.pNext;
-            pCube.pNext = p.pBubble;
-            p.pBubble.nLits = pCube.nLits;
-            continue;
-        }
-        nPairs++;
-
-        // remove the cubes, insert the bubble instead of pCube
-        *ppPrevT = pThis.pNext;
-        *ppPrev = p.pBubble;
-        p.pBubble.pNext = pCube.pNext;
-        p.pBubble.nLits = pCube.nLits;
-        p.nCubes -= 2;
-
-        // Exorlink-2:
-        // A{v00}     B{v01}      +  A{v10}     B{v11}     =
-        // A{v00+v10} B{v01}      +  A{v10}     B{v01+v11} =
-        // A{v00}     B{v01+v11}  +  A{v00+v10} B{v11}
-
-        // save the dist2 parameters
-        v00 = Min_CubeGetVar( pCube, Var0 );
-        v01 = Min_CubeGetVar( pCube, Var1 );
-        v10 = Min_CubeGetVar( pThis, Var0 );
-        v11 = Min_CubeGetVar( pThis, Var1 );
-//printf( "\n" );
-//Min_CubeWrite( stdout, pCube );
-//Min_CubeWrite( stdout, pThis );
-
-        // derive the first pair of resulting cubes
-        Min_CubeXorVar( pCube, Var0, v10 );
-        pCube.nLits -= (v00 != 3);
-        pCube.nLits += ((v00 ^ v10) != 3);
-        Min_CubeXorVar( pThis, Var1, v01 );
-        pThis.nLits -= (v11 != 3);
-        pThis.nLits += ((v01 ^ v11) != 3);
-
-        // add the cubes
-        nCubesOld = p.nCubes;
-        Min_EsopAddCube( p, pCube );
-        Min_EsopAddCube( p, pThis );
-        // check if the cubes were absorbed
-        if p.nCubes < nCubesOld + 2 {
-            continue; }
-
-        // pull out both cubes
-        assert(pThis == p.ppStore[pThis.nLits], "pThis == p.ppStore[pThis.nLits]");
-        p.ppStore[pThis.nLits] = pThis.pNext;
-        assert(pCube == p.ppStore[pCube.nLits], "pCube == p.ppStore[pCube.nLits]");
-        p.ppStore[pCube.nLits] = pCube.pNext;
-        p.nCubes -= 2;
-
-        // derive the second pair of resulting cubes
-        Min_CubeXorVar( pCube, Var0, v10 );
-        pCube.nLits -= ((v00 ^ v10) != 3);
-        pCube.nLits += (v00 != 3);
-        Min_CubeXorVar( pCube, Var1, v11 );
-        pCube.nLits -= (v01 != 3);
-        pCube.nLits += ((v01 ^ v11) != 3);
-
-        Min_CubeXorVar( pThis, Var0, v00 );
-        pThis.nLits -= (v10 != 3);
-        pThis.nLits += ((v00 ^ v10) != 3);
-        Min_CubeXorVar( pThis, Var1, v01 );
-        pThis.nLits -= ((v01 ^ v11) != 3);
-        pThis.nLits += (v11 != 3);
-
-        // add them anyhow
-        Min_EsopAddCube( p, pCube );
-        Min_EsopAddCube( p, pThis );
-    }
-//    printf( "Pairs = %d  ", nPairs );
+	if p == nil || p.nVars < 0 || p.nVars > 16 {
+		panic("cov: ESOP minimization supports 0..16 variables")
+	}
+	truth := esopTruth(p)
+	var terms []minimizeCube
+	if p.nVars <= 4 {
+		terms = minimizeESOPExact(int(p.nVars), truth)
+	} else {
+		terms = algebraicNormalForm(int(p.nVars), truth)
+	}
+	Min_ManClean(p, p.nVars)
+	for _, term := range terms {
+		cube := Min_CubeAlloc(p)
+		for variable := int32(0); variable < p.nVars; variable++ {
+			bit := uint64(1) << variable
+			if term.mask&bit == 0 {
+				continue
+			}
+			if term.bits&bit != 0 {
+				Min_CubeXorBit(cube, 2*variable)
+			} else {
+				Min_CubeXorBit(cube, 2*variable+1)
+			}
+		}
+		cube.nLits = uint32(bits.OnesCount64(term.mask))
+		Min_EsopAddCube(p, cube)
+	}
 }
 
-/**Function*************************************************************
+func Min_EsopRewrite(p *Min_Man_t) { Min_EsopMinimize(p) }
 
-  Synopsis    [Adds the cube to storage.]
+type minimizeCube struct{ mask, bits uint64 }
 
-  Description [Returns 0 if the cube is added or removed. Returns 1
-  if the cube is glued with some other cube and has to be added again.
-  Do not forget to clean the storage!]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Min_EsopAddCubeInt(p *Min_Man_t, pCube *Min_Cube_t) int32 {
-    var pThis *Min_Cube_t;
-    var ppPrev **Min_Cube_t;
-    // try to find the identical cube
-    // inlining of macro Min_CoverForEachCubePrev
-    for  pThis = p.ppStore[pCube.nLits],                                                 ppPrev = &(p.ppStore[pCube.nLits]);                                             (pThis != nil);                                                          ppPrev = &pThis.pNext,                                         pThis = pThis.pNext  {
-        if Min_CubesAreEqual( pCube, pThis ) {
-            *ppPrev = pThis.pNext;
-            Min_CubeRecycle( p, pCube );
-            Min_CubeRecycle( p, pThis );
-            p.nCubes--;
-            return 0;
-        }
-    }
-    // find a distance-1 cube if it exists
-    if pCube.nLits < pCube.nVars {
-    // inlining of macro Min_CoverForEachCubePrev
-    for  pThis = p.ppStore[pCube.nLits+1],                                                 ppPrev = &(p.ppStore[pCube.nLits+1]);                                             (pThis != nil);                                                          ppPrev = &pThis.pNext,                                         pThis = pThis.pNext  {
-        if Min_CubesDistOne( pCube, pThis, p.pTemp ) {
-            *ppPrev = pThis.pNext;
-            Min_CubesTransform( pCube, pThis, p.pTemp );
-            pCube.nLits++;
-            Min_CubeRecycle( p, pThis );
-            p.nCubes--;
-            return 1;
-        }
-    } }
-    // inlining of macro Min_CoverForEachCubePrev
-    for  pThis = p.ppStore[pCube.nLits],                                                 ppPrev = &(p.ppStore[pCube.nLits]);                                             (pThis != nil);                                                          ppPrev = &pThis.pNext,                                         pThis = pThis.pNext  {
-        if Min_CubesDistOne( pCube, pThis, p.pTemp ) {
-            *ppPrev = pThis.pNext;
-            Min_CubesTransform( pCube, pThis, p.pTemp );
-            pCube.nLits--;
-            Min_CubeRecycle( p, pThis );
-            p.nCubes--;
-            return 1;
-        }
-    }
-    if pCube.nLits > 0 {
-    // inlining of macro Min_CoverForEachCubePrev
-    for  pThis = p.ppStore[pCube.nLits-1],                                                 ppPrev = &(p.ppStore[pCube.nLits-1]);                                             (pThis != nil);                                                          ppPrev = &pThis.pNext,                                         pThis = pThis.pNext  {
-        if Min_CubesDistOne( pCube, pThis, p.pTemp ) {
-            *ppPrev = pThis.pNext;
-            Min_CubesTransform( pCube, pThis, p.pTemp );
-            Min_CubeRecycle( p, pThis );
-            p.nCubes--;
-            return 1;
-        }
-    } }
-    // add the cube
-    pCube.pNext = p.ppStore[pCube.nLits];
-    p.ppStore[pCube.nLits] = pCube;
-    p.nCubes++;
-    return 0;
+func esopTruth(p *Min_Man_t) []bool {
+	limit := 1 << p.nVars
+	truth := make([]bool, limit)
+	for _, head := range p.ppStore {
+		for cube := head; cube != nil; cube = cube.pNext {
+			for assignment := 0; assignment < limit; assignment++ {
+				if cubeMatches(cube, uint64(assignment)) {
+					truth[assignment] = !truth[assignment]
+				}
+			}
+		}
+	}
+	return truth
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds the cube to storage.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Min_EsopAddCube(p *Min_Man_t, pCube *Min_Cube_t) {
-    assert(pCube != p.pBubble, "pCube != p.pBubble");
-    assert(int32(pCube.nLits) == Min_CubeCountLits(pCube), "int32(pCube.nLits) == Min_CubeCountLits(pCube)");
-    for  Min_EsopAddCubeInt( p, pCube ) != 0  {; }
+func minimizeESOPExact(variables int, truth []bool) []minimizeCube {
+	limit := 1 << variables
+	stateCount := 1 << limit
+	target := uint32(0)
+	for minterm, value := range truth {
+		if value {
+			target |= 1 << minterm
+		}
+	}
+	if target == 0 {
+		return nil
+	}
+	candidates := make([]minimizeCube, 0, 3*3*3*3)
+	signatures := make([]uint32, 0, cap(candidates))
+	for mask := 0; mask < 1<<variables; mask++ {
+		for value := 0; value < 1<<variables; value++ {
+			if value&^mask != 0 {
+				continue
+			}
+			var signature uint32
+			for minterm := 0; minterm < limit; minterm++ {
+				if (minterm^value)&mask == 0 {
+					signature |= 1 << minterm
+				}
+			}
+			candidates = append(candidates, minimizeCube{uint64(mask), uint64(value)})
+			signatures = append(signatures, signature)
+		}
+	}
+	const infinity = int(^uint(0) >> 2)
+	distance := make([]int, stateCount)
+	previous := make([]uint32, stateCount)
+	via := make([]int, stateCount)
+	for i := range distance {
+		distance[i], via[i] = infinity, -1
+	}
+	distance[0] = 0
+	queue := &esopPriorityQueue{{state: 0, cost: 0}}
+	heap.Init(queue)
+	for queue.Len() != 0 {
+		item := heap.Pop(queue).(esopQueueItem)
+		if item.cost != distance[item.state] {
+			continue
+		}
+		if item.state == target {
+			break
+		}
+		for i, signature := range signatures {
+			next := item.state ^ signature
+			weight := bits.OnesCount64(candidates[i].mask)*128 + 1
+			if item.cost+weight < distance[next] {
+				distance[next] = item.cost + weight
+				previous[next], via[next] = item.state, i
+				heap.Push(queue, esopQueueItem{next, distance[next]})
+			}
+		}
+	}
+	var result []minimizeCube
+	for state := target; state != 0; state = previous[state] {
+		index := via[state]
+		if index < 0 {
+			panic("cov: no ESOP representation found")
+		}
+		result = append(result, candidates[index])
+	}
+	return result
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func algebraicNormalForm(variables int, truth []bool) []minimizeCube {
+	coefficients := append([]bool(nil), truth...)
+	for variable := 0; variable < variables; variable++ {
+		bit := 1 << variable
+		for mask := range coefficients {
+			if mask&bit != 0 {
+				coefficients[mask] = coefficients[mask] != coefficients[mask^bit]
+			}
+		}
+	}
+	result := make([]minimizeCube, 0)
+	for monomial, enabled := range coefficients {
+		if enabled {
+			result = append(result, minimizeCube{uint64(monomial), uint64(monomial)})
+		}
+	}
+	return result
+}
 
+// Min_EsopAddCubeInt toggles an identical term (XOR cancellation) or appends
+// the term to its literal-count bucket.
+func Min_EsopAddCubeInt(p *Min_Man_t, cube *Min_Cube_t) int32 {
+	if p == nil || cube == nil || int(cube.nLits) >= len(p.ppStore) {
+		panic("cov: invalid ESOP cube")
+	}
+	previous := &p.ppStore[cube.nLits]
+	for current := *previous; current != nil; current = *previous {
+		if Min_CubesAreEqual(cube, current) != 0 {
+			*previous = current.pNext
+			Min_CubeRecycle(p, current)
+			Min_CubeRecycle(p, cube)
+			p.nCubes--
+			return 0
+		}
+		previous = &current.pNext
+	}
+	cube.pNext = p.ppStore[cube.nLits]
+	p.ppStore[cube.nLits] = cube
+	p.nCubes++
+	return 0
+}
 
-//ABC_NAMESPACE_IMPL_END
-
+func Min_EsopAddCube(p *Min_Man_t, cube *Min_Cube_t) {
+	if cube == nil || Min_CubeCheck(cube) == 0 || int32(cube.nLits) != Min_CubeCountLits(cube) {
+		panic("cov: invalid ESOP cube encoding")
+	}
+	Min_EsopAddCubeInt(p, cube)
+}

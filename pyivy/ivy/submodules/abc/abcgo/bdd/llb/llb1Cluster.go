@@ -1,357 +1,155 @@
 package llb
 
-import "fmt"
-
-/**CFile****************************************************************
-
-  FileName    [llb1Cluster.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [BDD based reachability.]
-
-  Synopsis    [Clustering algorithm.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
- 
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: llb1Cluster.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "llbInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManComputeCommonQuant(p *Llb_Mtr_t, iCol1 int32, iCol2 int32) int32 {
-    var iVar, Weight int32;
-    for  iVar = 0; iVar < p.nRows - p.nFfs; iVar++  {
-        // count each removed variable as 2
-        if p.pMatrix[iCol1][iVar] == 1 && p.pMatrix[iCol2][iVar] == 1 && p.pRowSums[iVar] == 2 {
-            Weight += 2;
-        // count each added variale as -1
-        } else if (p.pMatrix[iCol1][iVar] == 1 && p.pMatrix[iCol2][iVar] == 0) || 
-                  (p.pMatrix[iCol1][iVar] == 0 && p.pMatrix[iCol2][iVar] == 1) {
-            Weight--; }
-    }
-    return Weight;
+func Llb_ManComputeCommonQuant(p *Llb_Mtr_t, col1, col2 int32) int32 {
+	var weight int32
+	for row := int32(0); row < p.nRows-p.nFfs; row++ {
+		a, b := p.pMatrix[col1][row], p.pMatrix[col2][row]
+		if a && b && p.pRowSums[row] == 2 {
+			weight += 2
+		} else if a != b {
+			weight--
+		}
+	}
+	return weight
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_ManComputeBestQuant(p *Llb_Mtr_t) int32 {
-    var i int32;
-    var k int32;
-    var WeightBest int32 = -100000;
-    var WeightCur int32;
-    var RetValue int32 = -1;
-    for  i = 1; i < p.nCols-1; i++  {
-    for  k = i+1; k < p.nCols-1; k++  {
-        if p.pColSums[i] == 0 || p.pColSums[i] > p.pMan.pPars.nClusterMax {
-            continue; }
-        if p.pColSums[k] == 0 || p.pColSums[k] > p.pMan.pPars.nClusterMax {
-            continue; }
-
-        WeightCur = Llb_ManComputeCommonQuant( p, i, k );
-        if WeightCur <= 0 {
-            continue; }
-        if WeightBest < WeightCur {
-            WeightBest = WeightCur;
-            RetValue   = (i << 16) | k;
-        }
-    }
-    }
-//    printf( "Choosing best quant Weight %4d\n", WeightCur );
-    return RetValue;
+	var bestWeight int32 = -100000
+	best := int32(-1)
+	for i := int32(1); i < p.nCols-1; i++ {
+		for k := i + 1; k < p.nCols-1; k++ {
+			if p.pColSums[i] == 0 || p.pColSums[i] > p.pMan.pPars.nClusterMax || p.pColSums[k] == 0 || p.pColSums[k] > p.pMan.pPars.nClusterMax {
+				continue
+			}
+			weight := Llb_ManComputeCommonQuant(p, i, k)
+			if weight > bestWeight && weight > 0 {
+				bestWeight, best = weight, (i<<16)|k
+			}
+		}
+	}
+	return best
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManComputeQuant(p *Llb_Mtr_t) **float32 {
-    var pCosts **float32;
-    var i, k int32;
-    // alloc and clean
-    pCosts = (float **)Extra_ArrayAlloc( p.nCols, p.nCols, sizeof(float) );
-    for  i = 0; i < p.nCols; i++  {
-    for  k = 0; k < p.nCols; k++  {
-        pCosts[i][i] = 0.0;
-    }
-    }
-    // fill up
-    for  i = 1; i < p.nCols-1; i++  {
-    for  k = i+1; k < p.nCols-1; k++  {
-        pCosts[i][k] = pCosts[k][i] = Llb_ManComputeCommonQuant( p, i, k );
-    }
-    }
-    return pCosts;
+func Llb_ManComputeQuant(p *Llb_Mtr_t) [][]float32 {
+	costs := make([][]float32, p.nCols)
+	for i := range costs {
+		costs[i] = make([]float32, p.nCols)
+	}
+	for i := int32(1); i < p.nCols-1; i++ {
+		for k := i + 1; k < p.nCols-1; k++ {
+			v := float32(Llb_ManComputeCommonQuant(p, i, k))
+			costs[i][k], costs[k][i] = v, v
+		}
+	}
+	return costs
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManComputeCommonAttr(p *Llb_Mtr_t, iCol1 int32, iCol2 int32) float32 {
-    var iVar, CountComm, CountDiff int32;
-    for  iVar = 0; iVar < p.nRows - p.nFfs; iVar++  {
-        if p.pMatrix[iCol1][iVar] == 1 && p.pMatrix[iCol2][iVar] == 1 {
-            CountComm++;
-        } else if p.pMatrix[iCol1][iVar] == 1 || p.pMatrix[iCol2][iVar] == 1 {
-            CountDiff++; }
-    }
-/*
-    printf( "Attr cost for %4d and %4d:  %4d %4d (%5.2f)\n", 
-        iCol1, iCol2, 
-        CountDiff, CountComm, 
-        -1.0 * CountDiff / ( CountComm + CountDiff ) );
-*/
-    return -1.0 * CountDiff / ( CountComm + CountDiff );
+func Llb_ManComputeCommonAttr(p *Llb_Mtr_t, col1, col2 int32) float32 {
+	var common, different int32
+	for row := int32(0); row < p.nRows-p.nFfs; row++ {
+		a, b := p.pMatrix[col1][row], p.pMatrix[col2][row]
+		if a && b {
+			common++
+		} else if a || b {
+			different++
+		}
+	}
+	if common+different == 0 {
+		return 0
+	}
+	return -float32(different) / float32(common+different)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_ManComputeBestAttr(p *Llb_Mtr_t) int32 {
-    var WeightBest float32 = -100000;
-    var WeightCur float32;
-    var i int32;
-    var k int32;
-    var RetValue int32 = -1;
-    for  i = 1; i < p.nCols-1; i++  {
-    for  k = i+1; k < p.nCols-1; k++  {
-        if p.pColSums[i] == 0 || p.pColSums[i] > p.pMan.pPars.nClusterMax {
-            continue; }
-        if p.pColSums[k] == 0 || p.pColSums[k] > p.pMan.pPars.nClusterMax {
-            continue; }
-        WeightCur = Llb_ManComputeCommonAttr( p, i, k );
-        if WeightBest < WeightCur {
-            WeightBest = WeightCur;
-            RetValue   = (i << 16) | k;
-        }
-    }
-    }
-    return RetValue;
+	bestWeight := float32(-100000)
+	best := int32(-1)
+	for i := int32(1); i < p.nCols-1; i++ {
+		for k := i + 1; k < p.nCols-1; k++ {
+			if p.pColSums[i] == 0 || p.pColSums[i] > p.pMan.pPars.nClusterMax || p.pColSums[k] == 0 || p.pColSums[k] > p.pMan.pPars.nClusterMax {
+				continue
+			}
+			weight := Llb_ManComputeCommonAttr(p, i, k)
+			if weight > bestWeight {
+				bestWeight, best = weight, (i<<16)|k
+			}
+		}
+	}
+	return best
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManComputeAttr(p *Llb_Mtr_t) **float32 {
-    var pCosts **float32;
-    var i, k int32;
-    // alloc and clean
-    pCosts = (float **)Extra_ArrayAlloc( p.nCols, p.nCols, sizeof(float) );
-    for  i = 0; i < p.nCols; i++  {
-    for  k = 0; k < p.nCols; k++  {
-        pCosts[i][i] = 0.0;
-    }
-    }
-    // fill up
-    for  i = 1; i < p.nCols-1; i++  {
-    for  k = i+1; k < p.nCols-1; k++  {
-        pCosts[i][k] = pCosts[k][i] = Llb_ManComputeCommonAttr( p, i, k );
-    }
-    }
-    return pCosts;
+func Llb_ManComputeAttr(p *Llb_Mtr_t) [][]float32 {
+	costs := make([][]float32, p.nCols)
+	for i := range costs {
+		costs[i] = make([]float32, p.nCols)
+	}
+	for i := int32(1); i < p.nCols-1; i++ {
+		for k := i + 1; k < p.nCols-1; k++ {
+			v := Llb_ManComputeCommonAttr(p, i, k)
+			costs[i][k], costs[k][i] = v, v
+		}
+	}
+	return costs
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of variables that will be saved.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_MtrCombineSelectedColumns(p *Llb_Mtr_t, iGrp1 int32, iGrp2 int32) {
-    var iVar int32;
-    assert(iGrp1 >= 1 && iGrp1 < p.nCols - 1, "iGrp1 >= 1 && iGrp1 < p.nCols - 1");
-    assert(iGrp2 >= 1 && iGrp2 < p.nCols - 1, "iGrp2 >= 1 && iGrp2 < p.nCols - 1");
-    assert(p.pColGrps[iGrp1] != nil, "p.pColGrps[iGrp1] != nil");
-    assert(p.pColGrps[iGrp2] != nil, "p.pColGrps[iGrp2] != nil");
-    for  iVar = 0; iVar < p.nRows; iVar++  {
-        if p.pMatrix[iGrp1][iVar] == 1 && p.pMatrix[iGrp2][iVar] == 1 {
-            p.pRowSums[iVar]--; }
-        if p.pMatrix[iGrp1][iVar] == 0 && p.pMatrix[iGrp2][iVar] == 1 {
-            p.pMatrix[iGrp1][iVar] = 1;
-            p.pColSums[iGrp1]++;
-        }
-        if p.pMatrix[iGrp2][iVar] == 1 {
-            p.pMatrix[iGrp2][iVar] = 0; }
-    }
-    p.pColSums[iGrp2] = 0;
+func Llb_MtrCombineSelectedColumns(p *Llb_Mtr_t, col1, col2 int32) {
+	assert(col1 >= 1 && col1 < p.nCols-1, "first column is interior")
+	assert(col2 >= 1 && col2 < p.nCols-1, "second column is interior")
+	assert(p.pColGrps[col1] != nil && p.pColGrps[col2] != nil, "both columns have groups")
+	for row := int32(0); row < p.nRows; row++ {
+		if p.pMatrix[col1][row] && p.pMatrix[col2][row] {
+			p.pRowSums[row]--
+		}
+		if !p.pMatrix[col1][row] && p.pMatrix[col2][row] {
+			p.pMatrix[col1][row] = true
+			p.pColSums[col1]++
+		}
+		p.pMatrix[col2][row] = false
+	}
+	p.pColSums[col2] = 0
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Combines one pair of columns.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManClusterOne(p *Llb_Mtr_t, iCol1 int32, iCol2 int32) {
-    var fVerbose int32;
-    var pGrp *Llb_Grp_t;
-    var iVar int32;
-
-    if fVerbose != 0 {
-        fmt.Printf("Combining %d and %d\n", iCol1, iCol2);
-        for  iVar = 0; iVar < p.nRows; iVar++  {
-            if p.pMatrix[iCol1][iVar] == 0 && p.pMatrix[iCol2][iVar] == 0 {
-                continue; }
-            fmt.Printf("%3d : %c%c\n", iVar, p.pMatrix[iCol1][iVar]? '*':' ', p.pMatrix[iCol2][iVar]? '*':' ');
-        }
-    }
-    pGrp = Llb_ManGroupsCombine( p.pColGrps[iCol1], p.pColGrps[iCol2] );
-    Llb_MtrCombineSelectedColumns( p, iCol1, iCol2 );
-    p.pColGrps[iCol1] = pGrp;
-    p.pColGrps[iCol2] = nil;
+func Llb_ManClusterOne(p *Llb_Mtr_t, col1, col2 int32) {
+	combined := Llb_ManGroupsCombine(p.pColGrps[col1], p.pColGrps[col2])
+	Llb_MtrCombineSelectedColumns(p, col1, col2)
+	p.pColGrps[col1], p.pColGrps[col2] = combined, nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Removes empty columns.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_ManClusterCompress(p *Llb_Mtr_t) {
-    var i, k int32;
-    for  i = 0; i < p.nCols; i++  {
-        if p.pColGrps[i] == nil {
-            assert(p.pColSums[i] == 0, "p.pColSums[i] == 0");
-            assert(p.pMatrix[i] != nil, "p.pMatrix[i] != nil");
-            ABC_FREE( p.pMatrix[i] );
-            continue;
-        }
-        p.pMatrix[k]  = p.pMatrix[i];
-        p.pColGrps[k] = p.pColGrps[i];
-        p.pColSums[k] = p.pColSums[i];
-        k++;
-    }
-    p.nCols = k;
+	write := 0
+	for read := 0; read < int(p.nCols); read++ {
+		if p.pColGrps[read] == nil {
+			assert(p.pColSums[read] == 0, "empty group has empty column")
+			continue
+		}
+		if write != read {
+			p.pMatrix[write] = p.pMatrix[read]
+			p.pColGrps[write] = p.pColGrps[read]
+			p.pColSums[write] = p.pColSums[read]
+		}
+		write++
+	}
+	p.nCols = int32(write)
+	p.pMatrix = p.pMatrix[:write]
+	p.pColGrps = p.pColGrps[:write]
+	p.pColSums = p.pColSums[:write]
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Combines one pair of columns.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Llb_ManCluster(p *Llb_Mtr_t) {
-    var RetValue int32;
-    for
-    {
-        for {
-            RetValue = Llb_ManComputeBestQuant( p );
-            if RetValue > 0 {
-                Llb_ManClusterOne( p, RetValue >> 16, RetValue & 0xffff ); }
-        
-if !( RetValue > 0 ) { break }
+	for {
+		for {
+			pair := Llb_ManComputeBestQuant(p)
+			if pair <= 0 {
+				break
+			}
+			Llb_ManClusterOne(p, pair>>16, pair&0xffff)
+		}
+		pair := Llb_ManComputeBestAttr(p)
+		if pair <= 0 {
+			break
+		}
+		Llb_ManClusterOne(p, pair>>16, pair&0xffff)
+		Llb_MtrVerifyMatrix(p)
+	}
+	Llb_ManClusterCompress(p)
+	Llb_MtrVerifyMatrix(p)
 }
-        
-
-        RetValue = Llb_ManComputeBestAttr( p );
-        if RetValue > 0 {
-            Llb_ManClusterOne( p, RetValue >> 16, RetValue & 0xffff ); }
-
-        Llb_MtrVerifyMatrix( p );
-    
-if !( RetValue > 0 ) { break }
-}
-    
-
-    Llb_ManClusterCompress( p );
-
-    Llb_MtrVerifyMatrix( p );
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

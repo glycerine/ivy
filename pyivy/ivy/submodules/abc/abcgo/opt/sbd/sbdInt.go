@@ -63,8 +63,8 @@ const SBD_FVAR_MAX =  100
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
-type Sbd_Sto_t = Sbd_Sto_t_;
-type Sbd_Srv_t = Sbd_Srv_t_; 
+// Sbd_Sto_t is declared with its implementation in sbdCut.go.
+// Sbd_Srv_t is declared with its implementation in sbdCut2.go. 
 
    
 type Sbd_Str_t struct {

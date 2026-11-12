@@ -112,7 +112,6 @@ func ParseFormula(text string) (*LTLNode, error) {
 }
 func parseFormulaCreateAST(text string) *ltlNode { node, _ := ParseFormula(text); return node }
 func readLtlFormula(text string) *ltlNode        { return parseFormulaCreateAST(text) }
-func resetGlobalVar()                            {} // The native parser has no global cursor to reset.
 func checkBooleanConstant(name string) int32 {
 	if name == "true" {
 		return 1

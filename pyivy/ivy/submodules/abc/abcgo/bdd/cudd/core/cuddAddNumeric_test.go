@@ -77,6 +77,39 @@ func TestADDAbstractionEnumeratedSumsProductsAndOr(t *testing.T) {
 		}
 	}
 }
+
+func TestADDNewVarAtLevelPreservesExistingFunctions(t *testing.T) {
+	dd := NewBDDManager(3)
+	oldOrder := append([]int(nil), dd.InvPerm...)
+	oldBDD := Cudd_bddAnd(dd, Cudd_bddIthVar(dd, 0), Cudd_bddIthVar(dd, 2))
+	oldADD := Cudd_addIthVar(dd, 1)
+	newVariable := Cudd_addNewVarAtLevel(dd, 1)
+	if newVariable == nil || Cudd_Regular(newVariable).Index != 3 {
+		t.Fatalf("new variable = %v, want index 3", newVariable)
+	}
+	if Cudd_ReadPerm(dd, 3) != 1 {
+		t.Fatalf("new variable level = %d, want 1", Cudd_ReadPerm(dd, 3))
+	}
+	wantOrder := []int{oldOrder[0], 3, oldOrder[1], oldOrder[2]}
+	for level, want := range wantOrder {
+		if dd.InvPerm[level] != want {
+			t.Fatalf("InvPerm[%d] = %d, want %d", level, dd.InvPerm[level], want)
+		}
+	}
+	if Cudd_addIthVar(dd, 3) != newVariable {
+		t.Fatal("ADD variable is not canonical after insertion")
+	}
+	if Cudd_addIthVar(dd, 1) != oldADD {
+		t.Fatal("inserting an ADD variable changed an existing ADD node")
+	}
+	for assignment := 0; assignment < 8; assignment++ {
+		bddInput := Cudd_bddIthVar(dd, 0)
+		bddInput = Cudd_bddIte(dd, Cudd_bddIthVar(dd, 2), bddInput, dd.LogicZero)
+		if bddValueAt(oldBDD, assignment) != bddValueAt(bddInput, assignment) {
+			t.Fatalf("existing BDD changed at assignment %03b", assignment)
+		}
+	}
+}
 func TestADDAbstractionInvalidCubes(t *testing.T) {
 	dd := NewBDDManager(2)
 	f := Cudd_addIthVar(dd, 0)

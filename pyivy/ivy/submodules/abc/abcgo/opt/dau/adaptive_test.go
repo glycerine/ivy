@@ -159,3 +159,33 @@ func TestAdaptiveMetadataAndConstants(t *testing.T) {
 		}
 	}
 }
+
+func TestCostAwareZeroSupportMetadata(t *testing.T) {
+	for n := int32(1); n <= 10; n++ {
+		for _, one := range []bool{false, true} {
+			for _, mode := range []int32{0, 1} {
+				truth := make([]uint64, dauCountWords(n))
+				if one {
+					for i := range truth {
+						truth[i] = ^uint64(0)
+					}
+				}
+				original := append([]uint64(nil), truth...)
+				p := Abc_TtHieManStart(n, 5)
+				perm := make([]byte, n)
+				phase := Abc_TtCanonicizeCA(p, truth, n, perm, mode)
+				var state Abc_TgMan_t
+				Abc_TgInitMan(&state, truth, int(n), 0, nil)
+				state.original = original
+				state.uPhase = phase
+				for i, v := range perm {
+					state.pPermT[i] = int(v)
+					state.pPermTRev[v] = i
+				}
+				if !Abc_TgCannonVerify(&state) {
+					t.Fatal("zero-support cost-aware metadata", n, one, mode)
+				}
+			}
+		}
+	}
+}

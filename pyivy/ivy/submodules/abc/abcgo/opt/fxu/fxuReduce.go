@@ -1,3 +1,5 @@
+// Port of ABC/MVSIS FXU (MVSIS Group, UC Berkeley, 2003).
+// Original algorithm and licensing: src/opt/fxu; see repository copyright notice.
 package fxu
 
 import "sort"
@@ -82,7 +84,7 @@ func pairPatternDistance(a, b []int32) int {
 		states[v/2] |= 1 << uint(v&1)
 	}
 	for _, v := range b {
-		states[v/2] ^= 1 << uint(2+v&1)
+		states[v/2] ^= 1 << uint(2+(v&1))
 	}
 	n := 0
 	for _, s := range states {

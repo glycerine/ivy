@@ -99,3 +99,53 @@ func Gia_ManLevelWithBoxes(p *Gia_Man_t) int32 {
 	}
 	return p.nLevels
 }
+
+// BoxInputObjects returns independent CO object IDs driving the box owning this
+// CI object, or nil for a primary input/a manager without timing boxes.
+func (p *Gia_Man_t) BoxInputObjects(ciID int32) []int32 {
+	if p.pManTime == nil {
+		return nil
+	}
+	timing, ok := p.pManTime.(*tim.Tim_Man_t)
+	if !ok {
+		panic("gia: incompatible timing manager")
+	}
+	obj := Gia_ManObj(p, ciID)
+	if Gia_ObjIsCi(obj) == 0 {
+		panic("gia: box lookup requires a CI object")
+	}
+	box := tim.Tim_ManBoxForCi(timing, int(Gia_ObjCioId(obj)))
+	if box < 0 {
+		return nil
+	}
+	first, count := tim.Tim_ManBoxInputFirst(timing, box), tim.Tim_ManBoxInputNum(timing, box)
+	result := make([]int32, count)
+	for i := range result {
+		result[i] = Gia_ObjId(p, Gia_ManCo(p, int32(first+i)))
+	}
+	return result
+}
+
+// BoxLevelInputObjects excludes disabled (-ABC_INFINITY) arcs for this box
+// output, while BoxInputObjects retains every structural box input.
+func (p *Gia_Man_t) BoxLevelInputObjects(ciID int32) []int32 {
+	inputs := p.BoxInputObjects(ciID)
+	if inputs == nil {
+		return nil
+	}
+	timing := p.pManTime.(*tim.Tim_Man_t)
+	ci := int(Gia_ObjCioId(Gia_ManObj(p, ciID)))
+	box := tim.Tim_ManBoxForCi(timing, ci)
+	output := ci - tim.Tim_ManBoxOutputFirst(timing, box)
+	table := tim.Tim_ManBoxDelayTable(timing, box)
+	if table == nil {
+		panic("gia: box level lookup requires a delay table")
+	}
+	result := make([]int32, 0, len(inputs))
+	for i, id := range inputs {
+		if int32(table[3+output*len(inputs)+i]) != -giaInfinity {
+			result = append(result, id)
+		}
+	}
+	return result
+}

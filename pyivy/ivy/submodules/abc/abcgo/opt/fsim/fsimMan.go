@@ -1,219 +1,135 @@
 package fsim
 
-/**CFile****************************************************************
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+)
 
-  FileName    [fsimMan.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Fast sequential AIG simulator.]
-
-  Synopsis    [Simulation manager.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: fsimMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "fsimInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates fast simulation manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManCreate_rec(p *Fsim_Man_t, pObj *Aig_Obj_t) int32 {
-    var iFan0, iFan1, iTemp int32;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if pObj.iData {
-        return pObj.iData; }
-    assert(!Aig_ObjIsConst1(pObj), "!Aig_ObjIsConst1(pObj)");
-    if Aig_ObjIsNode(pObj) {
-        iFan0 = Fsim_ManCreate_rec( p, Aig_ObjFanin0(pObj) );
-        iFan1 = Fsim_ManCreate_rec( p, Aig_ObjFanin1(pObj) );
-        assert(iFan0 != iFan1, "iFan0 != iFan1");
-        if --p.pRefs[iFan0] == 0 {
-            p.nCrossCut--; }
-        iFan0 = Fsim_Var2Lit( iFan0, Aig_ObjFaninC0(pObj) );
-        if --p.pRefs[iFan1] == 0 {
-            p.nCrossCut--; }
-        iFan1 = Fsim_Var2Lit( iFan1, Aig_ObjFaninC1(pObj) );
-        if p.pAig.pEquivs {
-            Fsim_ManCreate_rec( p, Aig_ObjEquiv(p.pAig, pObj) ); }
-    
-    } else if Aig_ObjIsPo(pObj) {
-        assert(Aig_ObjRefs(pObj) == 0, "Aig_ObjRefs(pObj) == 0");
-        iFan0 = Fsim_ManCreate_rec( p, Aig_ObjFanin0(pObj) );
-        if --p.pRefs[iFan0] == 0 {
-            p.nCrossCut--; }
-        iFan0 = Fsim_Var2Lit( iFan0, Aig_ObjFaninC0(pObj) );
-        iFan1 = 0;
-    
-    } else {
-        iFan0 = iFan1 = 0;
-        Vec_IntPush( p.vCis2Ids, Aig_ObjPioNum(pObj) );
-    }
-    if iFan0 < iFan1 {
-        iTemp = iFan0;
-iFan0 = iFan1;
-iFan1 = iTemp; }
-    p.pFans0[p.nObjs] = iFan0;
-    p.pFans1[p.nObjs] = iFan1;
-    p.pRefs[p.nObjs]  = Aig_ObjRefs(pObj);
-    if p.pRefs[p.nObjs] {
-        if p.nCrossCutMax < ++p.nCrossCut { 
-            p.nCrossCutMax = p.nCrossCut; } }
-    return pObj.iData = p.nObjs++;
+func Fsim_ManCreate(g *aig.Graph) (*Manager, error) {
+	if g == nil {
+		return nil, fmt.Errorf("fsim: nil graph")
+	}
+	if err := g.Check(); err != nil {
+		return nil, err
+	}
+	regs := int(aig.Aig_ManRegNum(g))
+	p := &Manager{Graph: g, PIs: g.InputCount() - regs, POs: g.OutputCount() - regs, CIs: g.InputCount(), COs: g.OutputCount(), sourceIDs: map[int]int{0: 1}}
+	p.ops = []Fsim_Obj_t{{}, {Node: 1, Kind: aig.Constant}}
+	inputs := g.Inputs()
+	positions := make(map[int]int)
+	for i, e := range inputs {
+		positions[e.NodeID()] = i
+	}
+	active := make(map[int]bool)
+	var visit func(aig.Edge) int
+	visit = func(e aig.Edge) int {
+		id := e.NodeID()
+		n := g.Node(e)
+		if n.Kind == aig.Output {
+			return visit(n.Fanins[0]) ^ int(e&1)
+		}
+		if copy, ok := p.sourceIDs[id]; ok {
+			return copy*2 + int(e&1)
+		}
+		if active[id] {
+			panic("fsim: cyclic source graph")
+		}
+		active[id] = true
+		defer delete(active, id)
+		o := Fsim_Obj_t{Kind: n.Kind, Source: aig.Edge(id * 2)}
+		switch n.Kind {
+		case aig.Input:
+			o.Index = positions[id]
+			p.CIOrder = append(p.CIOrder, o.Index)
+		case aig.And, aig.ExclusiveOr:
+			o.Fan0, o.Fan1 = visit(n.Fanins[0]), visit(n.Fanins[1])
+			if o.Fan0 < o.Fan1 {
+				o.Fan0, o.Fan1 = o.Fan1, o.Fan0
+			}
+		case aig.Buffer:
+			o.Fan0 = visit(n.Fanins[0])
+		default:
+			panic("fsim: unsupported source kind")
+		}
+		o.Node = len(p.ops)
+		p.ops = append(p.ops, o)
+		p.sourceIDs[id] = o.Node
+		return o.Node*2 + int(e&1)
+	}
+	// Preserve the source ordering: unused CIs first, then output-root DFS.
+	for _, e := range inputs {
+		if g.Node(e).Refs == 0 {
+			visit(e)
+		}
+	}
+	for i, e := range g.Outputs() {
+		driver := g.Node(e).Fanins[0]
+		literal := visit(driver)
+		p.ops = append(p.ops, Fsim_Obj_t{Node: len(p.ops), Fan0: literal, Kind: aig.Output, Index: i, Source: e})
+		p.sourceIDs[e.NodeID()] = len(p.ops) - 1
+	}
+	for _, e := range g.LiveEdges() {
+		if g.Node(e).Kind != aig.Output {
+			visit(e)
+		}
+	}
+	p.references = make([]int, len(p.ops))
+	for _, o := range p.ops[2:] {
+		for _, f := range fsimFanins(o) {
+			p.references[f>>1]++
+		}
+	}
+	refs := append([]int(nil), p.references...)
+	live := 0
+	if refs[1] > 0 {
+		live = 1
+	}
+	p.CrossCut = live
+	peakTransient := live
+	for _, o := range p.ops[2:] {
+		if o.Kind != aig.Output {
+			peakTransient = max(peakTransient, live+1)
+		}
+		for _, f := range fsimFanins(o) {
+			refs[f>>1]--
+			if refs[f>>1] == 0 {
+				live--
+			}
+		}
+		if o.Kind != aig.Output && p.references[o.Node] > 0 {
+			live++
+		}
+		p.CrossCut = max(p.CrossCut, live)
+	}
+	if live != 0 {
+		return nil, fmt.Errorf("fsim: schedule reference imbalance")
+	}
+	p.Frontier = max(2, peakTransient+1, 1+int(1.1*float64(p.CrossCut)))
+	return p, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates fast simulation manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManCreate(pAig *Aig_Man_t) *Fsim_Man_t {
-    var p *Fsim_Man_t;
-    var pObj *Aig_Obj_t;
-    var i, nObjs int32;
-    Aig_ManCleanData( pAig );
-    // inlining of macro ABC_ALLOC
-    p = (Fsim_Man_t *)((Fsim_Man_t *) malloc(sizeof(Fsim_Man_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Fsim_Man_t) );
-    p.pAig = pAig;
-    p.nPis = Saig_ManPiNum(pAig);
-    p.nPos = Saig_ManPoNum(pAig);
-    p.nCis = Aig_ManPiNum(pAig);
-    p.nCos = Aig_ManPoNum(pAig);
-    p.nNodes = Aig_ManNodeNum(pAig);
-    nObjs = p.nCis + p.nCos + p.nNodes + 2;
-    // inlining of macro ABC_ALLOC
-    p.pFans0 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));
-    // inlining of macro ABC_ALLOC
-    p.pFans1 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));
-    // inlining of macro ABC_ALLOC
-    p.pRefs  = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));
-    p.vCis2Ids = Vec_IntAlloc( Aig_ManPiNum(pAig) );
-    // add objects (0=unused; 1=const1)
-    p.pFans0[0] = p.pFans1[0] = 0;
-    p.pFans0[1] = p.pFans1[1] = 0;
-    p.pRefs[0] = 0;
-    p.nObjs = 2;
-    pObj = Aig_ManConst1( pAig );
-    pObj.iData = 1;
-    p.pRefs[1] = Aig_ObjRefs(pObj);
-    if p.pRefs[1] {
-        p.nCrossCut = 1; }
-    Aig_ManForEachPi( pAig, pObj, i )
-        if ( Aig_ObjRefs(pObj) == 0 )
-            Fsim_ManCreate_rec( p, pObj );
-    Aig_ManForEachPo( pAig, pObj, i )
-        Fsim_ManCreate_rec( p, pObj );
-    assert(Vec_IntSize(p.vCis2Ids) == Aig_ManPiNum(pAig), "Vec_IntSize(p.vCis2Ids) == Aig_ManPiNum(pAig)");
-    assert(p.nObjs == nObjs, "p.nObjs == nObjs");
-    // check references
-    assert(p.nCrossCut == 0, "p.nCrossCut == 0");
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        assert(p.pRefs[pObj.iData] == 0, "p.pRefs[pObj.iData] == 0");
-        p.pRefs[pObj.iData] = Aig_ObjRefs(pObj);
-    }
-    }
-    // collect flop outputs
-    p.vLos = Vec_IntAlloc( Aig_ManRegNum(pAig) );
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {
-        Vec_IntPush( p.vLos, pObj.iData );
-    }
-    // collect flop inputs
-    p.vLis = Vec_IntAlloc( Aig_ManRegNum(pAig) );
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {
-        Vec_IntPush( p.vLis, pObj.iData );
-    }
-    // determine the frontier size
-    p.nFront = 1 + int32((1.1 * p.nCrossCutMax)); 
-    return p;
+func Fsim_ManCreate_rec(p *Manager, root aig.Edge) (int, error) {
+	if !p.Graph.ValidEdge(root) {
+		return 0, fmt.Errorf("fsim: invalid source edge")
+	}
+	id, ok := p.sourceIDs[root.NodeID()]
+	if !ok {
+		return 0, fmt.Errorf("fsim: source edge not in schedule")
+	}
+	return id, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Deletes fast simulation manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManDelete(p *Fsim_Man_t) {
-    Vec_IntFree( p.vCis2Ids );
-    Vec_IntFree( p.vLos );
-    Vec_IntFree( p.vLis );
-    p.pDataAig2 = nil;
-    p.pDataAig = nil;
-    p.pFans0 = nil;
-    p.pFans1 = nil;
-    p.pRefs = nil;
-    p.pDataSim = nil;
-    p.pDataSimCis = nil;
-    p.pDataSimCos = nil;
-    p.pData1 = nil;
-    p.pData2 = nil;
-    p = nil;
+func Fsim_ManDelete(p *Manager) {
+	if p != nil {
+		*p = Manager{}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Testing procedure.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fsim_ManTest(pAig *Aig_Man_t) {
-    var p *Fsim_Man_t;
-    p = Fsim_ManCreate( pAig );
-    Fsim_ManFront( p, 0 );
-    Fsim_ManDelete( p );
+func Fsim_ManTest(g *aig.Graph) error {
+	p, err := Fsim_ManCreate(g)
+	if err != nil {
+		return err
+	}
+	defer Fsim_ManDelete(p)
+	if err = Fsim_ManFront(p, false); err != nil {
+		return err
+	}
+	return Fsim_ManVerifyFront(p)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

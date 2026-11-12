@@ -80,6 +80,39 @@ func Dec_GraphLeaveNum(g *Dec_Graph_t) int32            { return g.nLeaves }
 func Dec_GraphNodeNum(g *Dec_Graph_t) int32             { return int32(len(g.pNodes)) - g.nLeaves }
 func Dec_GraphNode(g *Dec_Graph_t, i int32) *Dec_Node_t { return g.pNodes[i] }
 func Dec_GraphNodeLast(g *Dec_Graph_t) *Dec_Node_t      { return g.pNodes[len(g.pNodes)-1] }
+
+// Dec_GraphSetLeafFunc assigns the caller-owned signal represented by a graph
+// leaf. Payloads remain opaque to this package and are consumed by network
+// adapters during count/build operations.
+func Dec_GraphSetLeafFunc(g *Dec_Graph_t, leaf int32, value any) {
+	if g == nil || leaf < 0 || leaf >= g.nLeaves {
+		panic("dec: leaf function index")
+	}
+	g.pNodes[leaf].pFunc = value
+}
+
+func Dec_GraphLeafFunc(g *Dec_Graph_t, leaf int32) any {
+	if g == nil || leaf < 0 || leaf >= g.nLeaves {
+		panic("dec: leaf function index")
+	}
+	return g.pNodes[leaf].pFunc
+}
+
+// Dec_GraphSetNodeFunc and Dec_GraphNodeFunc expose opaque node payloads for
+// clients that incrementally evaluate decomposition candidates.
+func Dec_GraphSetNodeFunc(g *Dec_Graph_t, index int32, value any) {
+	if g == nil || index < 0 || index >= int32(len(g.pNodes)) {
+		panic("dec: node function index")
+	}
+	g.pNodes[index].pFunc = value
+}
+
+func Dec_GraphNodeFunc(g *Dec_Graph_t, index int32) any {
+	if g == nil || index < 0 || index >= int32(len(g.pNodes)) {
+		panic("dec: node function index")
+	}
+	return g.pNodes[index].pFunc
+}
 func Dec_GraphNodeInt(g *Dec_Graph_t, n *Dec_Node_t) int32 {
 	if n != nil && n.index >= 0 && int(n.index) < len(g.pNodes) && g.pNodes[n.index] == n {
 		return n.index

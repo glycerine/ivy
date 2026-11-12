@@ -639,33 +639,7 @@ func Gia_ManDupLastPis(p *Gia_Man_t, nLastPis int32) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDupFlip(p *Gia_Man_t, pInitState *int32) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsAnd(pObj) {
-            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        } else if Gia_ObjIsCi(pObj) {
-            pObj.Value = Gia_ManAppendCi( pNew );
-            if Gia_ObjCioId(pObj) >= Gia_ManPiNum(p) {
-                pObj.Value = Abc_LitNotCond( pObj.Value, Abc_InfoHasBit((unsigned *)pInitState, Gia_ObjCioId(pObj) - Gia_ManPiNum(p)) ); }
-        
-        } else if Gia_ObjIsCo(pObj) {
-            pObj.Value = Gia_ObjFanin0Copy(pObj);
-            if Gia_ObjCioId(pObj) >= Gia_ManPoNum(p) {
-                pObj.Value = Abc_LitNotCond( pObj.Value, Abc_InfoHasBit((unsigned *)pInitState, Gia_ObjCioId(pObj) - Gia_ManPoNum(p)) ); }
-            pObj.Value = Gia_ManAppendCo( pNew, pObj.Value );
-        }
-    }
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    return pNew;
-}
+
 
 
 /**Function*************************************************************
@@ -679,53 +653,8 @@ func Gia_ManDupFlip(p *Gia_Man_t, pInitState *int32) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCycle(p *Gia_Man_t, pCex *Abc_Cex_t, nFrames int32) {
-    var pObj, pObjRi, pObjRo *Gia_Obj_t;
-    var i, k int32;
-    Gia_ManRandom( 1 );
-    assert(pCex == nil || nFrames <= pCex.IFrame, "pCex == nil || nFrames <= pCex.IFrame");
-    // iterate for the given number of frames
-    for  i = 0; i < nFrames; i++  {
-        // inlining of macro Gia_ManForEachPi
-        for  k = 0; (k < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, k)); k++  {
-            if pCex != nil {
-                pObj.fMark0 = Abc_InfoHasBit(pCex.PData, pCex.NRegs+i*pCex.NPis+k);
-            } else {
-                pObj.fMark0 = (1 & Gia_ManRandom(0));
-            }
-        }
-        // inlining of macro Gia_ManForEachAnd
-        for  k = 0; (k < p.nObjs) && ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else {
-            pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) & 
-                           (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)); }
-        }
-        // inlining of macro Gia_ManForEachCo
-        for  k = 0; (k < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, k)); k++  {
-            pObj.fMark0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj);
-        }
-        // inlining of macro Gia_ManForEachRiRo
-        for  k = 0; (k < Gia_ManRegNum(p)) && ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) && ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {
-            pObjRo.fMark0 = pObjRi.fMark0;
-        }
-    }
-}
-func Gia_ManDupCycled(p *Gia_Man_t, pCex *Abc_Cex_t, nFrames int32) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var vInits *Vec_Bit_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManCleanMark0(p);
-    Gia_ManCycle( p, pCex, nFrames );
-    vInits = Vec_BitAlloc( Gia_ManRegNum(p) );
-    // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-        Vec_BitPush( vInits, pObj.fMark0 );
-    }
-    pNew = Gia_ManDupFlip( p, Vec_BitArray(vInits) );
-    Vec_BitFree( vInits );
-    Gia_ManCleanMark0(p);
-    return pNew;
-}
+
+
 
 
 /**Function*************************************************************
@@ -739,36 +668,7 @@ func Gia_ManDupCycled(p *Gia_Man_t, pCex *Abc_Cex_t, nFrames int32) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDup(p *Gia_Man_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    if Gia_ManHasChoices(p) {
-        // inlining of macro ABC_CALLOC
-        pNew.pSibls = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int))); }
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsBuf(pObj) {
-            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );
-        } else if Gia_ObjIsAnd(pObj) {
-            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-            if Gia_ObjSibl(p, Gia_ObjId(p, pObj)) {
-                pNew.pSibls[Abc_Lit2Var(pObj.Value)] = Abc_Lit2Var(Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)).Value); }  
-        
-        } else if Gia_ObjIsCi(pObj) {
-            pObj.Value = Gia_ManAppendCi( pNew );
-        } else if Gia_ObjIsCo(pObj) {
-            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }
-    }
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    if p.pCexSeq {
-        pNew.pCexSeq = Abc_CexDup( p.pCexSeq, Gia_ManRegNum(p) ); }
-    return pNew;
-}
+
 func Gia_ManDup2(p1 *Gia_Man_t, p2 *Gia_Man_t) *Gia_Man_t {
     var pNew *Gia_Man_t;
     var pObj *Gia_Obj_t;
@@ -1398,96 +1298,7 @@ Counter2++; }
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManDupMarked(p *Gia_Man_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i, nRos, nRis int32;
-    var CountMarked int32;
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        CountMarked += pObj.fMark0;
-    }
-    Gia_ManFillValue( p );
-    pNew = Gia_ManStart( Gia_ManObjNum(p) - CountMarked );
-    if p.pMuxes {
-        // inlining of macro ABC_CALLOC
-        pNew.pMuxes = ((unsigned *) calloc((size_t)(pNew.nObjsAlloc), sizeof(unsigned))); }
-    pNew.nConstrs = p.nConstrs;
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManConst0(p).Value = 0;
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if pObj.fMark0 {
-            assert(!Gia_ObjIsBuf(pObj), "!Gia_ObjIsBuf(pObj)");
-            pObj.fMark0 = 0;
-            continue;
-        }
-        if Gia_ObjIsBuf(pObj) {
-            pObj.Value = Gia_ManAppendBuf( pNew, Gia_ObjFanin0Copy(pObj) );
-        } else if Gia_ObjIsAnd(pObj) {
-            if Gia_ObjIsXor(pObj) {
-                pObj.Value = Gia_ManAppendXorReal( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-            } else if Gia_ObjIsMux(p, pObj) {
-                pObj.Value = Gia_ManAppendMuxReal( pNew, Gia_ObjFanin2Copy(p, pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin0Copy(pObj) );
-            } else {
-                pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-        
-        } else if Gia_ObjIsCi(pObj) {
-            pObj.Value = Gia_ManAppendCi( pNew );
-            nRos += Gia_ObjIsRo(p, pObj);
-        
-        } else if Gia_ObjIsCo(pObj) {
-//            Gia_Obj_t * pFanin = Gia_ObjFanin0(pObj);
-            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-            nRis += Gia_ObjIsRi(p, pObj);
-        }
-    }
-    assert(pNew.nObjsAlloc == pNew.nObjs, "pNew.nObjsAlloc == pNew.nObjs");
-    assert(nRos == nRis, "nRos == nRis");
-    Gia_ManSetRegNum( pNew, nRos );
-    if p.pReprs && p.pNexts {
-        var pRepr *Gia_Obj_t;
-        // inlining of macro ABC_CALLOC
-        pNew.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(pNew)), sizeof(Gia_Rpr_t)));
-        for  i = 0; i < Gia_ManObjNum(pNew); i++  {
-            Gia_ObjSetRepr( pNew, i, GIA_VOID );
-        }
-        // inlining of macro Gia_ManForEachObj1
-        for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-            if !~pObj.Value {
-                continue; }
-            pRepr = Gia_ObjReprObj( p, i );
-            if pRepr == nil {
-                continue; }
-            if !~pRepr.Value {
-                continue; }
-            assert(!Gia_ObjIsBuf(pObj), "!Gia_ObjIsBuf(pObj)");
-            if Abc_Lit2Var(pObj.Value) != Abc_Lit2Var(pRepr.Value) {
-                Gia_ObjSetRepr( pNew, Abc_Lit2Var(pObj.Value), Abc_Lit2Var(pRepr.Value) ); } 
-        }
-        pNew.pNexts = Gia_ManDeriveNexts( pNew );
-    }
-    if Gia_ManHasChoices(p) {
-        var pSibl *Gia_Obj_t;
-        // inlining of macro ABC_CALLOC
-        pNew.pSibls = ((int *) calloc((size_t)(Gia_ManObjNum(pNew)), sizeof(int)));
-        // inlining of macro Gia_ManForEachObj1
-        for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-            if !~pObj.Value {
-                continue; }
-            pSibl = Gia_ObjSiblObj( p, i );
-            if pSibl == nil {
-                continue; }
-            if !~pSibl.Value {
-                continue; }
-            assert(!Gia_ObjIsBuf(pObj), "!Gia_ObjIsBuf(pObj)");
-            assert(Abc_Lit2Var(pObj.Value) > Abc_Lit2Var(pSibl.Value), "Abc_Lit2Var(pObj.Value) > Abc_Lit2Var(pSibl.Value)");
-            pNew.pSibls[Abc_Lit2Var(pObj.Value)] = Abc_Lit2Var(pSibl.Value);
-        }
-    }
-    return pNew;
-}
+
 
 /**Function*************************************************************
 

@@ -108,6 +108,22 @@ func Extra_bddNodePathsUnderCutArray(dd *DdManager, nodes, codes []*DdNode, cut 
 // interval spanned by every node's earliest incoming edge. It does not build
 // path diagrams, and runs in time proportional to graph size plus variables.
 func Extra_ProfileWidth(dd *DdManager, f *DdNode) []int {
+	if dd == nil || f == nil {
+		return nil
+	}
+	levels, count := dd.Perm, len(dd.Vars)
+	if !cudd.Cudd_bddLeq(dd, f, f) {
+		if cudd.Cudd_IsAdd(f) {
+			if cudd.Cudd_addFindMin(dd, f) == nil {
+				return nil
+			}
+		} else {
+			if cudd.Cudd_zddUnion(dd, f, dd.Zero) == nil {
+				return nil
+			}
+			levels, count = dd.PermZ, dd.ZddSize
+		}
+	}
 	earliest := make(map[*DdNode]int)
 	var visit func(*DdNode, int)
 	visit = func(n *DdNode, start int) {
@@ -124,23 +140,23 @@ func Extra_ProfileWidth(dd *DdManager, f *DdNode) []int {
 			if cudd.Cudd_IsComplement(n) {
 				t, e = cudd.Cudd_Not(t), cudd.Cudd_Not(e)
 			}
-			next := dd.Perm[r.Index] + 1
+			next := levels[r.Index] + 1
 			visit(t, next)
 			visit(e, next)
 		}
 	}
 	visit(f, 0)
-	difference := make([]int, len(dd.Vars)+2)
+	difference := make([]int, count+2)
 	for n, start := range earliest {
 		r := cudd.Cudd_Regular(n)
-		end := len(dd.Vars)
+		end := count
 		if !cudd.Cudd_IsConstant(r) {
-			end = dd.Perm[r.Index]
+			end = levels[r.Index]
 		}
 		difference[start]++
 		difference[end+1]--
 	}
-	profile := make([]int, len(dd.Vars)+1)
+	profile := make([]int, count+1)
 	width := 0
 	for cut := range profile {
 		width += difference[cut]

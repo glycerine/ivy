@@ -144,3 +144,21 @@ func TestScalarDecompositionAndSetEncoding(t *testing.T) {
 		t.Fatal("constant has a proper bound set")
 	}
 }
+
+func TestSharedSetBoundaryAndVerificationFailure(t *testing.T) {
+	set := Dau_DecReadSet("P")
+	if set != uint32(3)<<30 {
+		t.Fatalf("shared variable15 encoding%x", set)
+	}
+	var u, s, f int32
+	Dau_DecSortSet(set, 16, &u, &s, &f)
+	if u != 0 || s != 1 || f != 15 {
+		t.Fatal(u, s, f)
+	}
+	if Dau_DecVerify([]uint64{0x8080808080808080}, 3, "0", "0") != 0 {
+		t.Fatal("invalid component pair reported verified")
+	}
+	if Dau_DecVerify([]uint64{0}, 3, "0", "0") != 1 {
+		t.Fatal("constant component pair rejected")
+	}
+}

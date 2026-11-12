@@ -2,547 +2,362 @@ package extra
 
 import (
 	"fmt"
+	"math/bits"
+	"os"
 	"strconv"
+	"strings"
+	"time"
+
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-/**CFile****************************************************************
-
-  FileName    [extraUtilSupp.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [extra]
-
-  Synopsis    [Support minimization.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: extraUtilSupp.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <assert.h>
-//#include "misc/vec/vec.h"
-//#include "misc/vec/vecWec.h"
-//#include "extra.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// extern void         Extra_PrintBinary( FILE * pFile, unsigned Sign[], int nBits );
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Generate m-out-of-n vectors.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SuppCountOnes(i uint32) int32 {
-    i = i - ((i >> 1) & 0x55555555);
-    i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
-    i = ((i + (i >> 4)) & 0x0F0F0F0F);
-    return (i*(0x01010101))>>24;
+func Abc_SuppCountOnes(v uint32) int32   { return int32(bits.OnesCount32(v)) }
+func Abc_SuppCountOnes64(v uint64) int32 { return int32(bits.OnesCount64(v)) }
+func Abc_SuppGen(m, n int32) *vec.Vec_Wrd_t {
+	if n < 0 || n > 30 || m < 0 || m > n {
+		panic("invalid fixed-weight support dimensions")
+	}
+	result := vec.Vec_WrdAlloc(1000)
+	if m == 0 {
+		vec.Vec_WrdPush(result, 0)
+		return result
+	}
+	// Gosper's successor generates the same numeric order as the source's full
+	// 2^n scan while visiting only the requested fixed-weight vectors.
+	for value := uint64(1)<<m - 1; value < uint64(1)<<n; {
+		vec.Vec_WrdPush(result, value)
+		low := value & -value
+		next := value + low
+		value = next | ((value^next)>>2)/low
+	}
+	return result
 }
-func Abc_SuppGen(m int32, n int32) *Vec_Wrd_t {
-    var vRes *Vec_Wrd_t  = Vec_WrdAlloc( 1000 );
-    var i int32;
-    var Size int32 = (1 << n);
-    for  i = 0; i < Size; i++  {
-        if Abc_SuppCountOnes(i) == m {
-            Vec_WrdPush( vRes, i ); }
-    }
-    return vRes;
+func suppDimensions(n int32) {
+	if n < 1 || n > 63 {
+		panic("support dimension requires 1..63 variables")
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Perform verification.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SuppVerify(p *Vec_Wrd_t, pMatrix *word, nVars int32, nVarsMin int32) {
-    var pNew *Vec_Wrd_t;
-    var pLimit, pEntry1, pEntry2 *word;
-    var Entry, EntryNew word;
-    var i, k, v, Value, Counter int32;
-    pNew = Vec_WrdAlloc( Vec_WrdSize(p) );
-    // inlining of macro Vec_WrdForEachEntry
-    for  i = 0; (i < Vec_WrdSize(p)) && (((Entry) = Vec_WrdEntry(p, i)), 1); i++  {
-        EntryNew = 0;
-        for  v = 0; v < nVarsMin; v++  {
-            Value = 0;
-            for  k = 0; k < nVars; k++  {
-                if ((pMatrix[v] >> k) & 1) && ((Entry >> k) & 1) {
-                    Value ^= 1; }
-            }
-            if Value != 0 {
-                EntryNew |= (((word)1) << v); }            
-        }
-        Vec_WrdPush( pNew, EntryNew );
-    }
-    // check that they are disjoint
-    pLimit  = Vec_WrdLimit(pNew);
-    pEntry1 = Vec_WrdArray(pNew);
-    for  ; pEntry1 < pLimit; pEntry1++  {
-    for  pEntry2 = pEntry1 + 1; pEntry2 < pLimit; pEntry2++  {
-        if *pEntry1 == *pEntry2 {
-            Counter++; }
-    }
-    }
-    if Counter != 0 {
-        fmt.Printf("The total of %d pairs fail verification.\n", Counter);
-    } else {
-        fmt.Printf("Verification successful.\n"); }
-    Vec_WrdFree( pNew );
+func suppVerify(p *vec.Vec_Wrd_t, matrix []uint64, n, rows int32) int {
+	if n < 1 || n > 64 || rows < 0 || rows > 64 {
+		panic("invalid support verification dimensions")
+	}
+	frequency := map[uint64]int{}
+	collisions := 0
+	for _, value := range vec.Vec_WrdArray(p) {
+		var encoded uint64
+		for row, mask := range matrix[:rows] {
+			encoded |= uint64(bits.OnesCount64(value&mask)&1) << uint(row)
+		}
+		collisions += frequency[encoded]
+		frequency[encoded]++
+	}
+	return collisions
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Generate pairs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SuppGenPairs(p *Vec_Wrd_t, nBits int32) *Vec_Wrd_t {
-    var vRes *Vec_Wrd_t  = Vec_WrdAlloc( 1000 );
-    // inlining of macro ABC_CALLOC
-    var pMap *uint32  = ((unsigned *) calloc((size_t)(1 << Abc_MaxInt(0,nBits-5)), sizeof(unsigned))); 
-    var pLimit *word  = Vec_WrdLimit(p);
-    var pEntry1 *word  = Vec_WrdArray(p);
-    var pEntry2 *word;
-    var Value word;
-    for  ; pEntry1 < pLimit; pEntry1++  {
-    for  pEntry2 = pEntry1 + 1; pEntry2 < pLimit; pEntry2++  {
-        Value = *pEntry1 ^ *pEntry2;
-        if Abc_InfoHasBit(pMap, int32(Value)) {
-            continue; }
-        Abc_InfoXorBit( pMap, int32(Value) );
-        Vec_WrdPush( vRes, Value );
-    }
-    }
-    pMap = nil;
-    return vRes;
+func Abc_SuppVerify(p *vec.Vec_Wrd_t, matrix []uint64, n, rows int32) {
+	if count := suppVerify(p, matrix, n, rows); count != 0 {
+		fmt.Printf("The total of %d pairs fail verification.\n", count)
+	} else {
+		fmt.Println("Verification successful.")
+	}
 }
-func Abc_SuppGenPairs2(nOnes int32, nBits int32) *Vec_Wrd_t {
-    var vRes *Vec_Wrd_t  = Vec_WrdAlloc( 1000 );
-    var i int32;
-    var k int32;
-    var Size int32 = (1 << nBits);
-    var Value int32;
-    for  i = 0; i < Size; i++  {
-        Value = Abc_SuppCountOnes(i);
-        for  k = 1; k <= nOnes; k++  {
-            if Value == 2*k {
-                break; }
-        }
-        if k <= nOnes {
-            Vec_WrdPush( vRes, i ); }
-    }
-    return vRes;
+func Abc_SuppGenPairs(p *vec.Vec_Wrd_t, n int32) *vec.Vec_Wrd_t {
+	suppDimensions(n)
+	result := vec.Vec_WrdAlloc(1000)
+	seen := map[uint64]bool{}
+	data := vec.Vec_WrdArray(p)
+	for i, a := range data {
+		for _, b := range data[i+1:] {
+			value := a ^ b
+			if value>>n != 0 {
+				panic("support vector exceeds dimension")
+			}
+			if !seen[value] {
+				seen[value] = true
+				vec.Vec_WrdPush(result, value)
+			}
+		}
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Select variable.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SuppPrintMask(uMask word, nBits int32) {
-    var i int32;
-    for  i = 0; i < nBits; i++  {
-        fmt.Printf("%d", int32(((uMask >> i) & 1)));
-    }
-    fmt.Printf("\n");
+func Abc_SuppGenPairs2(ones, n int32) *vec.Vec_Wrd_t {
+	if n < 1 || n > 30 || ones < 0 {
+		panic("invalid support pair dimensions")
+	}
+	result := vec.Vec_WrdAlloc(1000)
+	for value := uint64(0); value < uint64(1)<<n; value++ {
+		count := bits.OnesCount64(value)
+		if count > 0 && count%2 == 0 && count <= 2*int(ones) {
+			vec.Vec_WrdPush(result, value)
+		}
+	}
+	return result
 }
-func Abc_SuppGenProfile(p *Vec_Wrd_t, nBits int32, pCounts *int32) {
-    var Ent word;
-    var i, k, b int32;
-    // inlining of macro Vec_WrdForEachEntry
-    for  i = 0; (i < Vec_WrdSize(p)) && (((Ent) = Vec_WrdEntry(p, i)), 1); i++  {
-        for  b = ((Ent >> nBits) & 1), k = 0; k < nBits; k++  {
-            pCounts[k] += ((Ent >> k) & 1) ^ b;
-        }
-    }
+func Abc_SuppPrintMask(mask uint64, n int32) {
+	for i := int32(0); i < n; i++ {
+		fmt.Printf("%d", mask>>i&1)
+	}
+	fmt.Println()
 }
-func Abc_SuppPrintProfile(p *Vec_Wrd_t, nBits int32) {
-    var k int32;
-    var Counts [64]int32 ;
-    Abc_SuppGenProfile( p, nBits, Counts );
-    for  k = 0; k < nBits; k++  {
-        fmt.Printf("%2d : %6d  %6.2f %%\n", k, Counts[k], 100.0 * Counts[k] / Vec_WrdSize(p));
-    }
+func Abc_SuppGenProfile(p *vec.Vec_Wrd_t, n int32, counts []int32) {
+	suppDimensions(n)
+	for _, value := range vec.Vec_WrdArray(p) {
+		marker := value >> n & 1
+		for k := int32(0); k < n; k++ {
+			counts[k] += int32(value>>k&1 ^ marker)
+		}
+	}
 }
-func Abc_SuppGenFindBest(p *Vec_Wrd_t, nBits int32, pMerit *int32) int32 {
-    var k int32;
-    var kBest int32;
-    var Counts [64]int32 ;
-    Abc_SuppGenProfile( p, nBits, Counts );
-    for  k = 1; k < nBits; k++  {
-        if Counts[kBest] < Counts[k] {
-            kBest = k; }
-    }
-    *pMerit = Counts[kBest];
-    return kBest;
+func Abc_SuppPrintProfile(p *vec.Vec_Wrd_t, n int32) {
+	counts := make([]int32, n)
+	Abc_SuppGenProfile(p, n, counts)
+	for k, count := range counts {
+		fmt.Printf("%2d : %6d  %6.2f %%\n", k, count, 100*float64(count)/float64(vec.Vec_WrdSize(p)))
+	}
 }
-func Abc_SuppGenSelectVar(p *Vec_Wrd_t, nBits int32, iVar int32) {
-    var pEntry *word  = Vec_WrdArray(p);
-    var pLimit *word  = Vec_WrdLimit(p);
-    for  ; pEntry < pLimit; pEntry++  {
-        if (*pEntry >> iVar) & 1 {
-            *pEntry ^= (((word)1) << nBits); }
-    }
+func Abc_SuppGenFindBest(p *vec.Vec_Wrd_t, n int32) (int32, int32) {
+	counts := make([]int32, n)
+	Abc_SuppGenProfile(p, n, counts)
+	best := int32(0)
+	for k := int32(1); k < n; k++ {
+		if counts[best] < counts[k] {
+			best = k
+		}
+	}
+	return best, counts[best]
 }
-func Abc_SuppGenFilter(p *Vec_Wrd_t, nBits int32) {
-    var Ent word;
-    var i, k int32;
-    // inlining of macro Vec_WrdForEachEntry
-    for  i = 0; (i < Vec_WrdSize(p)) && (((Ent) = Vec_WrdEntry(p, i)), 1); i++  {
-        if ((Ent >> nBits) & 1) == 0 {
-            Vec_WrdWriteEntry( p, k++, Ent ); }
-    }
-    Vec_WrdShrink( p, k );
+func Abc_SuppGenSelectVar(p *vec.Vec_Wrd_t, n, v int32) {
+	suppDimensions(n)
+	if v < 0 || v >= n {
+		panic("invalid support variable")
+	}
+	for i, value := range vec.Vec_WrdArray(p) {
+		if value>>v&1 != 0 {
+			vec.Vec_WrdArray(p)[i] ^= uint64(1) << n
+		}
+	}
 }
-func Abc_SuppFindOne(p *Vec_Wrd_t, nBits int32) word {
-    var uMask word;
-    var Prev int32 = -1;
-    var This int32;
-    var Var int32;
-    for {
-        Var = Abc_SuppGenFindBest( p, nBits, &This );
-        if Prev >= This {
-            break; }
-        Prev = This;
-        Abc_SuppGenSelectVar( p, nBits, Var );
-        uMask |= (((word)1) << Var);
-    }
-    return uMask;
+func Abc_SuppGenFilter(p *vec.Vec_Wrd_t, n int32) {
+	at := 0
+	for _, value := range vec.Vec_WrdArray(p) {
+		if value>>n&1 == 0 {
+			vec.Vec_WrdWriteEntry(p, at, value)
+			at++
+		}
+	}
+	vec.Vec_WrdShrink(p, at)
 }
-func Abc_SuppMinimize(pMatrix *word, p *Vec_Wrd_t, nBits int32, fVerbose int32) int32 {
-    var i int32;
-    for  i = 0; Vec_WrdSize(p) > 0; i++  {
-//        Abc_SuppPrintProfile( p, nBits );
-        pMatrix[i] = Abc_SuppFindOne( p, nBits );
-        Abc_SuppGenFilter( p, nBits );   
-        if !(fVerbose != 0) {
-            continue; }
-        // print stats
-        fmt.Printf("%2d : ", i);
-        fmt.Printf("%6d  ", Vec_WrdSize(p));
-        Abc_SuppPrintMask( pMatrix[i], nBits );
-//        printf( "\n" );
-    }
-    return i;
+func Abc_SuppFindOne(p *vec.Vec_Wrd_t, n int32) uint64 {
+	mask := uint64(0)
+	previous := int32(-1)
+	for {
+		v, merit := Abc_SuppGenFindBest(p, n)
+		if previous >= merit {
+			break
+		}
+		previous = merit
+		Abc_SuppGenSelectVar(p, n, v)
+		mask ^= uint64(1) << v
+	}
+	return mask
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Create representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SuppTest(nOnes int32, nVars int32, fUseSimple int32, fCheck int32, fVerbose int32) {
-    var nVarsMin int32;
-    var Matrix [64]word;
-    var clk abctime  = Abc_Clock();
-    // create the problem
-    var vRes *Vec_Wrd_t  = Abc_SuppGen( nOnes, nVars );
-    var vPairs *Vec_Wrd_t;
-    if fUseSimple != 0 {
-        vPairs = Abc_SuppGenPairs2( nOnes, nVars );
-    } else {
-        vPairs = Abc_SuppGenPairs( vRes, nVars );
-    }
-    assert(nVars < 100, "nVars < 100");
-    fmt.Printf("M = %2d  N = %2d : ", nOnes, nVars);
-    fmt.Printf("K = %6d   ", Vec_WrdSize(vRes));
-    fmt.Printf("Total = %12.0f  ", 0.5 * Vec_WrdSize(vRes) * (Vec_WrdSize(vRes) - 1));
-    fmt.Printf("Distinct = %8d  ", Vec_WrdSize(vPairs));
-    Abc_PrintTime( 1, "Reduction time", Abc_Clock() - clk );
-    // solve the problem
-    clk = Abc_Clock();
-    nVarsMin = Abc_SuppMinimize( Matrix, vPairs, nVars, fVerbose );
-    fmt.Printf("Solution with %d variables found.  ", nVarsMin);
-    Abc_PrintTime( 1, "Covering time", Abc_Clock() - clk );
-    if fCheck != 0 {
-        Abc_SuppVerify( vRes, Matrix, nVars, nVarsMin ); }
-    Vec_WrdFree( vPairs );
-    Vec_WrdFree( vRes );
+func Abc_SuppMinimize(matrix []uint64, p *vec.Vec_Wrd_t, n, verbose int32) int32 {
+	suppDimensions(n)
+	row := int32(0)
+	for vec.Vec_WrdSize(p) > 0 {
+		before := vec.Vec_WrdSize(p)
+		matrix[row] = Abc_SuppFindOne(p, n)
+		Abc_SuppGenFilter(p, n)
+		if vec.Vec_WrdSize(p) == before {
+			panic("zero difference vector cannot be separated")
+		}
+		if verbose != 0 {
+			fmt.Printf("%2d : %6d  ", row, vec.Vec_WrdSize(p))
+			Abc_SuppPrintMask(matrix[row], n)
+		}
+		row++
+	}
+	return row
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Reads the input part of the cubes specified in MIN format.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SuppReadMin(pFileName string, pnVars *int32) *Vec_Wrd_t {
-    var vRes *Vec_Wrd_t; var uCube word;
-    var nCubes int32;
-    var nVars int32 = -1;
-    var iVar int32;
-    var pCur string;
-    var pToken string;
-    var pStart string = "INPUT F-COVER";
-    var pStr string  = Extra_FileReadContents( pFileName );
-    if pStr == nil { fmt.Printf("Cannot open input file (%s).\n", pFileName); return nil; }
-    pCur = strstr( pStr, pStart );
-    if pCur == nil { fmt.Printf("Cannot find beginning of cube cover (%s).\n", pStart); return nil; }
-    pToken = strtok( pCur + len(pStart), " \t\r\n," );
-    nCubes = strconv.Atoi(pToken);
-    if nCubes < 1 || nCubes > 1000000 { fmt.Printf("The number of cubes in not in the range [1; 1000000].\n"); return nil; }
-    vRes = Vec_WrdAlloc( 1000 );
-    uCube = 0; iVar = 0;
-    for  (pToken = strtok(nil, " \t\r\n,")) != nil  {
-        if len(pToken) > 2 {
-            if !strncmp(pToken, "INPUT", len("INPUT")) {
-                break; }
-            if iVar > 64 { fmt.Printf("The number of inputs (%d) is too high.\n", iVar); Vec_WrdFree(vRes); return nil; }
-            if nVars == -1 {
-                nVars = iVar;
-            } else if nVars != iVar { fmt.Printf("The number of inputs (%d) does not match declaration (%d).\n", nVars, iVar); Vec_WrdFree(vRes); return nil; }
-            Vec_WrdPush( vRes, uCube );
-            uCube = 0; iVar = 0;
-            continue;
-        }
-        if pToken[1] == '0' && pToken[0] == '1' { // value 1
-            uCube |= (((word)1) << iVar);
-        } else if pToken[1] != '1' || pToken[0] != '0' { // value 0
-             fmt.Printf("Strange literal representation (%s) of cube %d.\n", pToken, nCubes); Vec_WrdFree(vRes); return nil; }
-        iVar++;
-    }
-    pStr = nil;
-    if Vec_WrdSize(vRes) != nCubes { fmt.Printf("The number of cubes (%d) does not match declaration (%d).\n", Vec_WrdSize(vRes), nCubes); Vec_WrdFree(vRes); return nil; 
-    } else {
-        fmt.Printf("Successfully parsed function with %d inputs and %d cubes.\n", nVars, nCubes); }
-    *pnVars = nVars;
-    return vRes;
+func Abc_SuppTest(ones, n, simple, check, verbose int32) {
+	started := time.Now()
+	vectors := Abc_SuppGen(ones, n)
+	pairs := Abc_SuppGenPairs(vectors, n)
+	if simple != 0 {
+		pairs = Abc_SuppGenPairs2(ones, n)
+	}
+	fmt.Printf("M = %2d N = %2d K = %6d Distinct = %8d Time = %v\n", ones, n, vec.Vec_WrdSize(vectors), vec.Vec_WrdSize(pairs), time.Since(started))
+	var matrix [64]uint64
+	rows := Abc_SuppMinimize(matrix[:], pairs, n, verbose)
+	fmt.Printf("Solution with %d variables found.\n", rows)
+	if check != 0 {
+		Abc_SuppVerify(vectors, matrix[:], n, rows)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SuppDiffMatrix(vCubes *Vec_Wrd_t) *Vec_Wrd_t {
-    var clk abctime  = Abc_Clock();
-    var pEnt2 *word;
-    var pEnt *word = Vec_WrdArray( vCubes );
-    var pLimit *word  = Vec_WrdLimit( vCubes );
-    var vRes *Vec_Wrd_t;
-    var vPairs *Vec_Wrd_t = Vec_WrdAlloc( Vec_WrdSize(vCubes) * (Vec_WrdSize(vCubes) - 1) / 2 );
-    var pStore *word  = Vec_WrdArray( vPairs );
-    for  ; pEnt < pLimit; pEnt++  {
-    for  pEnt2 = pEnt+1; pEnt2 < pLimit; pEnt2++  {
-        *pStore++ = *pEnt ^ *pEnt2;
-    }
-    }
-    vPairs.nSize = Vec_WrdCap(vPairs);
-    assert(pStore == Vec_WrdLimit(vPairs), "pStore == Vec_WrdLimit(vPairs)");
-//    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-//    vRes = Vec_WrdUniqifyHash( vPairs, 1 );
-    vRes = Vec_WrdDup( vPairs );
-    fmt.Printf("Successfully generated diff matrix with %10d rows (%6.2f %%).  ", Vec_WrdSize(vRes), 100.0 * Vec_WrdSize(vRes) / Vec_WrdSize(vPairs));
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    Vec_WrdFree( vPairs );
-    return vRes;    
+func Abc_SuppReadMin(name string) (*vec.Vec_Wrd_t, int32, error) {
+	data, err := os.ReadFile(name)
+	if err != nil {
+		return nil, 0, err
+	}
+	text := string(data)
+	start := strings.Index(text, "INPUT F-COVER")
+	if start < 0 {
+		return nil, 0, fmt.Errorf("missing INPUT F-COVER")
+	}
+	tokens := strings.FieldsFunc(text[start+len("INPUT F-COVER"):], func(r rune) bool { return r == ' ' || r == '\t' || r == '\r' || r == '\n' || r == ',' })
+	if len(tokens) == 0 {
+		return nil, 0, fmt.Errorf("missing cube count")
+	}
+	count, e := strconv.Atoi(tokens[0])
+	if e != nil || count < 1 || count > 1000000 {
+		return nil, 0, fmt.Errorf("invalid cube count")
+	}
+	result := vec.Vec_WrdAlloc(count)
+	var value uint64
+	vars, width := int32(0), int32(-1)
+	finish := func() error {
+		if width == -1 {
+			width = vars
+		}
+		if vars != width {
+			return fmt.Errorf("inconsistent cube width")
+		}
+		vec.Vec_WrdPush(result, value)
+		value = 0
+		vars = 0
+		return nil
+	}
+	for _, token := range tokens[1:] {
+		if strings.HasPrefix(token, "INPUT") {
+			break
+		}
+		if len(token) > 2 {
+			if err = finish(); err != nil {
+				return nil, 0, err
+			}
+			continue
+		}
+		if vars >= 64 || token != "10" && token != "01" {
+			return nil, 0, fmt.Errorf("invalid MIN literal %q", token)
+		}
+		if token == "10" {
+			value |= uint64(1) << vars
+		}
+		vars++
+	}
+	if vars != 0 {
+		if err = finish(); err != nil {
+			return nil, 0, err
+		}
+	}
+	if vec.Vec_WrdSize(result) != count {
+		return nil, 0, fmt.Errorf("expected %d cubes, got %d", count, vec.Vec_WrdSize(result))
+	}
+	return result, width, nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Solve difference matrix.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SuppCountOnes64(i word) int32 {
-    i = i - ((i >> 1) & 0x5555555555555555);
-    i = (i & 0x3333333333333333) + ((i >> 2) & 0x3333333333333333);
-    i = ((i + (i >> 4)) & 0x0F0F0F0F0F0F0F0F);
-    return (i*(0x0101010101010101))>>56;
+func Abc_SuppDiffMatrix(cubes *vec.Vec_Wrd_t) *vec.Vec_Wrd_t {
+	result := vec.Vec_WrdAlloc(1000)
+	data := vec.Vec_WrdArray(cubes)
+	for i, a := range data {
+		for _, b := range data[i+1:] {
+			vec.Vec_WrdPush(result, a^b)
+		}
+	}
+	return result
 }
-func Abc_SuppFindVar(pS *Vec_Wec_t, pD *Vec_Wec_t, nVars int32) int32 {
-    var v int32;
-    var vBest int32 = -1;
-    var dBest int32 = -1;
-    for  v = 0; v < nVars; v++  {
-        if Vec_WecLevelSize(pS, v) {
-            continue; }
-        if vBest == -1 || dBest > Vec_WecLevelSize(pD, v) {
-            vBest = v;
-dBest = Vec_WecLevelSize(pD, v); }
-    }
-    return vBest;
+func Abc_SuppFindVar(singles, doubles *vec.Vec_Wec_t, n int32) int32 {
+	return suppFindVar(singles, doubles, n, nil)
 }
-func Abc_SuppRemove(p *Vec_Wrd_t, pCounts *int32, pS *Vec_Wec_t, pD *Vec_Wec_t, iVar int32, nVars int32) {
-    var Entry word; var i, v int32;
-    assert(Vec_WecLevelSize(pS, iVar) == 0, "Vec_WecLevelSize(pS, iVar) == 0");
-    Vec_IntClear( Vec_WecEntry(pD, iVar) );
-    // inlining of macro Vec_WrdForEachEntry
-    for  i = 0; (i < Vec_WrdSize(p)) && (((Entry) = Vec_WrdEntry(p, i)), 1); i++  {
-        if ((Entry >> iVar) & 1) == 0 {
-            continue; }
-        pCounts[i]--;
-        if pCounts[i] == 1 {
-            for  v = 0; v < nVars; v++  {
-                if (Entry >> v) & 1 {
-                    Vec_IntRemove( Vec_WecEntry(pD, v), i );
-                    Vec_WecPush( pS, v, i );
-                }
-            }
-        
-        } else if pCounts[i] == 2 {
-            for  v = 0; v < nVars; v++  {
-                if (Entry >> v) & 1 {
-                    Vec_WecPush( pD, v, i ); }
-            }
-        }        
-    }
+func suppFindVar(singles, doubles *vec.Vec_Wec_t, n int32, removed []bool) int32 {
+	best := int32(-1)
+	for v := int32(0); v < n; v++ {
+		if removed != nil && removed[v] || vec.Vec_IntSize(vec.Vec_WecEntry(singles, int(v))) != 0 {
+			continue
+		}
+		if best == -1 || vec.Vec_IntSize(vec.Vec_WecEntry(doubles, int(v))) < vec.Vec_IntSize(vec.Vec_WecEntry(doubles, int(best))) {
+			best = v
+		}
+	}
+	return best
 }
-func Abc_SuppProfile(pS *Vec_Wec_t, pD *Vec_Wec_t, nVars int32) {
-    var v int32;
-    for  v = 0; v < nVars; v++  {
-        fmt.Printf("%2d : S = %3d  D = %3d\n", v, Vec_WecLevelSize(pS, v), Vec_WecLevelSize(pD, v));
-    }
+func Abc_SuppRemove(p *vec.Vec_Wrd_t, counts []int32, singles, doubles *vec.Vec_Wec_t, v, n int32) {
+	if vec.Vec_IntSize(vec.Vec_WecEntry(singles, int(v))) != 0 {
+		panic("cannot remove essential support variable")
+	}
+	vec.Vec_IntClear(vec.Vec_WecEntry(doubles, int(v)))
+	for row, value := range vec.Vec_WrdArray(p) {
+		if value>>v&1 == 0 {
+			continue
+		}
+		value &^= uint64(1) << v
+		vec.Vec_WrdArray(p)[row] = value
+		counts[row]--
+		if counts[row] == 1 {
+			for k := int32(0); k < n; k++ {
+				if value>>k&1 != 0 {
+					vec.Vec_IntRemove(vec.Vec_WecEntry(doubles, int(k)), int32(row))
+					vec.Vec_WecPush(singles, int(k), int32(row))
+				}
+			}
+		} else if counts[row] == 2 {
+			for k := int32(0); k < n; k++ {
+				if value>>k&1 != 0 {
+					vec.Vec_WecPush(doubles, int(k), int32(row))
+				}
+			}
+		}
+	}
 }
-func Abc_SuppSolve(p *Vec_Wrd_t, nVars int32) int32 {
-    var clk abctime  = Abc_Clock();
-    var pNew *Vec_Wrd_t  = Vec_WrdDup( p );
-    var vSingles *Vec_Wec_t  = Vec_WecStart( 64 );
-    var vDoubles *Vec_Wec_t  = Vec_WecStart( 64 );
-    var Entry word; var i int32;
-var v int32;
-var iVar int32;
-var nVarsNew int32 = nVars;
-    // inlining of macro ABC_ALLOC
-    var pCounts *int32  = ((int *) malloc(sizeof(int) * (size_t)(Vec_WrdSize(p))));
-    // inlining of macro Vec_WrdForEachEntry
-    for  i = 0; (i < Vec_WrdSize(p)) && (((Entry) = Vec_WrdEntry(p, i)), 1); i++  {
-        pCounts[i] = Abc_SuppCountOnes64( Entry );
-        if pCounts[i] == 1 {
-            for  v = 0; v < nVars; v++  {
-                if (Entry >> v) & 1 {
-                    Vec_WecPush( vSingles, v, i ); }
-            }
-        
-        } else if pCounts[i] == 2 {
-            for  v = 0; v < nVars; v++  {
-                if (Entry >> v) & 1 {
-                    Vec_WecPush( vDoubles, v, i ); }
-            }
-        }
-    }
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-//    Abc_SuppProfile( vSingles, vDoubles, nVars );
-    // find variable in 0 singles and the smallest doubles
-    for {
-        iVar = Abc_SuppFindVar( vSingles, vDoubles, nVars );
-        if iVar == -1 {
-            break; }
-//        printf( "Selected variable %d.\n", iVar );
-        Abc_SuppRemove( pNew, pCounts, vSingles, vDoubles, iVar, nVars );
-//        Abc_SuppProfile( vSingles, vDoubles, nVars );
-        nVarsNew--;
-    }
-//    printf( "Result = %d (out of %d)\n", nVarsNew, nVars );
-    Vec_WecFree( vSingles );
-    Vec_WecFree( vDoubles );
-    Vec_WrdFree( pNew );
-    pCounts = nil;
-    return nVarsNew;
+func Abc_SuppProfile(singles, doubles *vec.Vec_Wec_t, n int32) {
+	for v := int32(0); v < n; v++ {
+		fmt.Printf("%2d : S = %3d D = %3d\n", v, vec.Vec_IntSize(vec.Vec_WecEntry(singles, int(v))), vec.Vec_IntSize(vec.Vec_WecEntry(doubles, int(v))))
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_SuppReadMinTest(pFileName string) {
-//    int fVerbose = 0;
-    var clk abctime  = Abc_Clock();
-//    word Matrix[64];
-    var nVars, nVarsMin int32;
-    var vPairs, vCubes *Vec_Wrd_t;
-    vCubes = Abc_SuppReadMin( pFileName, &nVars );
-    if vCubes == nil {
-        return; }
-    vPairs = Abc_SuppDiffMatrix( vCubes );
-    Vec_WrdFreeP( &vCubes );
-    // solve the problem
-    clk = Abc_Clock();
-//    nVarsMin = Abc_SuppMinimize( Matrix, vPairs, nVars, fVerbose );
-    nVarsMin = Abc_SuppSolve( vPairs, nVars );
-    fmt.Printf("Solution with %d variables found.  ", nVarsMin);
-    Abc_PrintTime( 1, "Covering time", Abc_Clock() - clk );
-
-    Vec_WrdFreeP( &vPairs );
+func Abc_SuppSolve(p *vec.Vec_Wrd_t, n int32) int32 {
+	if n < 1 || n > 64 {
+		panic("invalid difference matrix dimension")
+	}
+	copyMatrix := vec.Vec_WrdAlloc(vec.Vec_WrdSize(p))
+	for _, v := range vec.Vec_WrdArray(p) {
+		if v == 0 || n < 64 && v>>n != 0 {
+			panic("invalid difference matrix row")
+		}
+		vec.Vec_WrdPush(copyMatrix, v)
+	}
+	singles, doubles := vec.Vec_WecStart(int(n)), vec.Vec_WecStart(int(n))
+	counts := make([]int32, vec.Vec_WrdSize(p))
+	for row, value := range vec.Vec_WrdArray(p) {
+		counts[row] = int32(bits.OnesCount64(value))
+		if counts[row] <= 2 {
+			target := doubles
+			if counts[row] == 1 {
+				target = singles
+			}
+			for v := int32(0); v < n; v++ {
+				if value>>v&1 != 0 {
+					vec.Vec_WecPush(target, int(v), int32(row))
+				}
+			}
+		}
+	}
+	removed := make([]bool, n)
+	remaining := n
+	for {
+		v := suppFindVar(singles, doubles, n, removed)
+		if v == -1 {
+			break
+		}
+		Abc_SuppRemove(copyMatrix, counts, singles, doubles, v, n)
+		removed[v] = true
+		remaining--
+	}
+	return remaining
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Abc_SuppReadMinTest(name string) error {
+	cubes, n, err := Abc_SuppReadMin(name)
+	if err != nil {
+		return err
+	}
+	rows := Abc_SuppDiffMatrix(cubes)
+	fmt.Printf("Solution with %d variables found.\n", Abc_SuppSolve(rows, n))
+	return nil
+}

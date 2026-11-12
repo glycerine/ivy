@@ -27,6 +27,12 @@ func CheckSafety(graph *aig.Graph, output int, options SafetyOptions) SafetyResu
 	if graph == nil || output < 0 || output >= trueOutputs(graph) {
 		return SafetyResult{Status: -1, Error: fmt.Errorf("live: invalid safety output")}
 	}
+	if err := graph.Check(); err != nil {
+		return SafetyResult{Status: -1, Error: fmt.Errorf("live: invalid graph: %w", err)}
+	}
+	if options.ConflictLimit < 0 {
+		return SafetyResult{Status: -1, Error: fmt.Errorf("live: negative SAT conflict limit")}
+	}
 	if options.MaxStates <= 0 {
 		options.MaxStates = 100000
 	}

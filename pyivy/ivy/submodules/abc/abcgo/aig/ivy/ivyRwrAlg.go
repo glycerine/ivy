@@ -1,426 +1,283 @@
 package ivy
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
-/**CFile****************************************************************
+// Ivy_ManRewriteAlg performs the algebraic cut rewrite pass. It considers
+// only nodes that existed at pass start; newly built nodes are candidates,
+// never additional roots in the same sweep.
+func Ivy_ManRewriteAlg(p *Ivy_Man_t, updateLevels, useZeroCost int32) int32 {
+	if p == nil || p.memoryStopped {
+		panic("ivy: rewrite on absent or stopped manager")
+	}
+	var required []int32
+	if updateLevels != 0 {
+		required = Ivy_ManRequiredLevels(p)
+		defer func() { p.vRequired = nil }()
+	}
+	front, leaves, cone, solutions := Vec_PtrAlloc(100), Vec_PtrAlloc(100), Vec_PtrAlloc(100), Vec_PtrAlloc(100)
+	defer Vec_PtrFree(front)
+	defer Vec_PtrFree(leaves)
+	defer Vec_PtrFree(cone)
+	defer Vec_PtrFree(solutions)
 
-  FileName    [ivyRwrAlg.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [And-Inverter Graph package.]
-
-  Synopsis    [Algebraic AIG rewriting.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - May 11, 2006.]
-
-  Revision    [$Id: ivyRwrAlg.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ivy.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static int Ivy_ManFindAlgCut( Ivy_Obj_t * pRoot, Vec_Ptr_t * vFront, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vCone );
-
-// static Ivy_Obj_t * Ivy_NodeRewriteAlg( Ivy_Obj_t * pObj, Vec_Ptr_t * vFront, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vCone, Vec_Ptr_t * vSols, int LevelR, int fUseZeroCost );
-
-// static int Ivy_NodeCountMffc( Ivy_Obj_t * pNode );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Algebraic AIG rewriting.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ManRewriteAlg(p *Ivy_Man_t, fUpdateLevel int32, fUseZeroCost int32) int32 {
-    var vRequired *Vec_Int_t;
-    var vFront, vLeaves, vCone, vSol *Vec_Ptr_t;
-    var pObj, pResult *Ivy_Obj_t;
-    var i, RetValue, LevelR, nNodesOld int32;
-    var CountUsed, CountUndo int32;
-    if fUpdateLevel != 0 {
-        vRequired = Ivy_ManRequiredLevels( p );
-    } else {
-        vRequired = nil;
-    }
-    vFront    = Vec_PtrAlloc( 100 );
-    vLeaves   = Vec_PtrAlloc( 100 );
-    vCone     = Vec_PtrAlloc( 100 );
-    vSol      = Vec_PtrAlloc( 100 );
-    // go through the nodes in the topological order
-    CountUsed = CountUndo = 0;
-    nNodesOld = Ivy_ManObjIdNext(p);
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        assert(!Ivy_ObjIsBuf(pObj), "!Ivy_ObjIsBuf(pObj)");
-        if i >= nNodesOld {
-            break; }
-        // skip no-nodes and MUX roots
-        if !Ivy_ObjIsNode(pObj) || Ivy_ObjIsExor(pObj) || Ivy_ObjIsMuxType(pObj) {
-            continue; }
-//        if ( pObj->Id > 297 ) // 296 --- 297 
-//            break;
-        if pObj.Id == 297 {
-            var x int32;
-        }
-        // get the largest algebraic cut
-        RetValue = Ivy_ManFindAlgCut( pObj, vFront, vLeaves, vCone );
-        // the case of a trivial tree cut
-        if RetValue == 1 {
-            continue; }
-        // the case of constant 0 cone
-        if RetValue == -1 {
-            Ivy_ObjReplace( pObj, Ivy_ManConst0(p), 1, 0, 1 ); 
-            continue;
-        }
-        assert(Vec_PtrSize(vLeaves) > 2, "Vec_PtrSize(vLeaves) > 2");
-        // get the required level for this node
-        if vRequired != nil {
-            LevelR = Vec_IntEntry(vRequired, pObj.Id);
-        } else {
-            LevelR = 1000000;
-        }
-        // create a new cone
-        pResult = Ivy_NodeRewriteAlg( pObj, vFront, vLeaves, vCone, vSol, LevelR, fUseZeroCost );
-        if pResult == nil || pResult == pObj {
-            continue; }
-        assert(Vec_PtrSize(vSol) == 1 || !Ivy_IsComplement(pResult), "Vec_PtrSize(vSol) == 1 || !Ivy_IsComplement(pResult)");
-        if Ivy_ObjLevel(Ivy_Regular(pResult)) > LevelR && Ivy_ObjRefs(Ivy_Regular(pResult)) == 0 {
-            Ivy_ObjDelete_rec(Ivy_Regular(pResult), 1);
-CountUndo++;
-        } else {
-            Ivy_ObjReplace( pObj, pResult, 1, 0, 1 );
-CountUsed++; } 
-    }
-    }
-    fmt.Printf("Used = %d. Undo = %d.\n", CountUsed, CountUndo);
-    Vec_PtrFree( vFront );
-    Vec_PtrFree( vCone );
-    Vec_PtrFree( vSol );
-    if vRequired != nil { Vec_IntFree( vRequired ); }
-    if i = Ivy_ManCleanup(p) {
-        fmt.Printf("Cleanup after rewriting removed %d dangling nodes.\n", i); }
-    if !Ivy_ManCheck(p) {
-        fmt.Printf("Ivy_ManRewriteAlg(): The check has failed.\n"); }
-    return 1;
+	oldNodeLimit := int32(len(p.vObjs))
+	var used, undone int32
+	for i := 1; i < len(p.vObjs); i++ {
+		node := p.vObjs[i]
+		if node == nil {
+			continue
+		}
+		if node.Id >= oldNodeLimit {
+			break
+		}
+		assert(Ivy_ObjIsBuf(node) == 0, "rewrite pass requires buffers to be propagated")
+		if Ivy_ObjIsNode(node) == 0 || Ivy_ObjIsExor(node) != 0 || Ivy_ObjIsMuxType(node) != 0 {
+			continue
+		}
+		cut := Ivy_ManFindAlgCut(node, front, leaves, cone)
+		if cut == 1 {
+			continue
+		}
+		if cut == -1 {
+			Ivy_ObjReplace(p, node, Ivy_ManConst0(p), 1, 0, 1)
+			continue
+		}
+		assert(Vec_PtrSize(leaves) > 2, "Vec_PtrSize(leaves) > 2")
+		levelLimit := int32(1 << 30)
+		if required != nil {
+			levelLimit = required[node.Id]
+		}
+		result := Ivy_NodeRewriteAlg(p, node, front, leaves, cone, solutions, levelLimit, useZeroCost)
+		if result == nil || result == node {
+			continue
+		}
+		assert(Vec_PtrSize(solutions) == 1 || Ivy_IsComplement(result) == 0,
+			"a multi-node rewrite result must be regular")
+		if Ivy_ObjLevel(result) > levelLimit && Ivy_ObjRefs(result) == 0 {
+			Ivy_ObjDelete_rec(p, result, 1)
+			undone++
+		} else {
+			Ivy_ObjReplace(p, node, result, 1, 0, 1)
+			used++
+		}
+	}
+	fmt.Printf("Used = %d. Undo = %d.\n", used, undone)
+	if removed := Ivy_ManCleanup(p); removed != 0 {
+		fmt.Printf("Cleanup after rewriting removed %d dangling nodes.\n", removed)
+	}
+	if Ivy_ManCheck(p) == 0 {
+		fmt.Printf("Ivy_ManRewriteAlg(): The check has failed.\n")
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Analizes one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_NodeRewriteAlg(pObj *Ivy_Obj_t, vFront *Vec_Ptr_t, vLeaves *Vec_Ptr_t, vCone *Vec_Ptr_t, vSols *Vec_Ptr_t, LevelR int32, fUseZeroCost int32) *Ivy_Obj_t {
-    var fVerbose int32;
-    var pTemp *Ivy_Obj_t;
-    var k, Counter, nMffc, RetValue int32;
-
-    if fVerbose != 0 {
-        if Ivy_ObjIsExor(pObj) {
-            fmt.Printf("x ");
-        } else {
-            fmt.Printf("  "); }
-    }
-
-/*       
-    printf( "%d ", Vec_PtrSize(vFront) );
-    printf( "( " );
-    Vec_PtrForEachEntry( Ivy_Obj_t *, vFront, pTemp, k )
-        printf( "%d ", Ivy_ObjRefs(Ivy_Regular(pTemp)) );
-    printf( ")\n" );
-*/
-    // collect nodes in the cone
-    if Ivy_ObjIsExor(pObj) {
-        Ivy_ManCollectCone( pObj, vFront, vCone );
-    } else {
-        Ivy_ManCollectCone( pObj, vLeaves, vCone ); }
-
-    // deref nodes in the cone
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(vCone)) && (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vCone, k)), 1); k++  {
-        Ivy_ObjRefsDec( Ivy_ObjFanin0(pTemp) );
-        Ivy_ObjRefsDec( Ivy_ObjFanin1(pTemp) );
-        pTemp.fMarkB = 1;
-    }
-
-    // count the MFFC size
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(vFront)) && (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, k)), 1); k++  {
-        Ivy_Regular(pTemp).fMarkA = 1;
-    }
-    nMffc = Ivy_NodeCountMffc( pObj );
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(vFront)) && (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, k)), 1); k++  {
-        Ivy_Regular(pTemp).fMarkA = 0;
-    }
-
-    if fVerbose != 0 {
-    Counter = 0;
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(vCone)) && (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vCone, k)), 1); k++  {
-        Counter += (Ivy_ObjRefs(pTemp) > 0);
-    }
-    fmt.Printf("%5d : Leaves = %2d. Cone = %2d. ConeRef = %2d.   Mffc = %d.   Lev = %d.  LevR = %d.\n", pObj.Id, Vec_PtrSize(vFront), Vec_PtrSize(vCone), Counter-1, nMffc, Ivy_ObjLevel(pObj), LevelR);
-    }
-/*
-    printf( "Leaves:" );
-    Vec_PtrForEachEntry( Ivy_Obj_t *, vLeaves, pTemp, k )
-        printf( " %d%s", Ivy_Regular(pTemp)->Id, Ivy_IsComplement(pTemp)? "\'" : "" );
-    printf( "\n" );
-    printf( "Cone:\n" );
-    Vec_PtrForEachEntry( Ivy_Obj_t *, vCone, pTemp, k )
-        printf( " %5d = %d%s %d%s\n", pTemp->Id,
-            Ivy_ObjFaninId0(pTemp), Ivy_ObjFaninC0(pTemp)? "\'" : "",
-            Ivy_ObjFaninId1(pTemp), Ivy_ObjFaninC1(pTemp)? "\'" : "" );
-*/
-
-    RetValue = Ivy_MultiPlus( vLeaves, vCone, Ivy_ObjType(pObj), nMffc + fUseZeroCost, vSols );
-
-    // ref nodes in the cone
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(vCone)) && (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vCone, k)), 1); k++  {
-        Ivy_ObjRefsInc( Ivy_ObjFanin0(pTemp) );
-        Ivy_ObjRefsInc( Ivy_ObjFanin1(pTemp) );
-        pTemp.fMarkA = 0;
-        pTemp.fMarkB = 0;
-    }
-
-    if !(RetValue != 0) {
-        return nil; }
-
-    if Vec_PtrSize( vSols ) == 1 {
-        return Vec_PtrEntry( vSols, 0 ); }
-    return Ivy_NodeBalanceBuildSuper( vSols, Ivy_ObjType(pObj), 1 );
+func ivyVecObj(v *Vec_Ptr_t, i int32) *Ivy_Obj_t {
+	obj, ok := Vec_PtrEntry(v, i).(*Ivy_Obj_t)
+	if !ok || obj == nil {
+		panic("ivy: invalid object vector entry")
+	}
+	return obj
 }
 
-/**Function*************************************************************
+func Ivy_NodeRewriteAlg(p *Ivy_Man_t, root *Ivy_Obj_t, front, leaves, cone, solutions *Vec_Ptr_t, levelLimit, useZeroCost int32) *Ivy_Obj_t {
+	if Ivy_ObjIsExor(root) != 0 {
+		var nodes []*Ivy_Obj_t
+		Ivy_ManCollectCone(root, vectorObjects(front), &nodes)
+		setVectorObjects(cone, nodes)
+	} else {
+		var nodes []*Ivy_Obj_t
+		Ivy_ManCollectCone(root, vectorObjects(leaves), &nodes)
+		setVectorObjects(cone, nodes)
+	}
+	coneNodes := vectorObjects(cone)
+	for _, node := range coneNodes {
+		Ivy_ObjRefsDec(Ivy_ObjFanin0(node))
+		if Ivy_ObjIsNode(node) != 0 {
+			Ivy_ObjRefsDec(Ivy_ObjFanin1(node))
+		}
+		node.fMarkB = 1
+	}
+	frontNodes := vectorObjects(front)
+	for _, node := range frontNodes {
+		Ivy_Regular(node).fMarkA = 1
+	}
+	mffc := Ivy_NodeCountMffc(root)
+	for _, node := range frontNodes {
+		Ivy_Regular(node).fMarkA = 0
+	}
 
-  Synopsis    [Comparison for node pointers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_NodeCountMffc_rec(pNode *Ivy_Obj_t) int32 {
-    if Ivy_ObjRefs(pNode) > 0 || Ivy_ObjIsCi(pNode) || pNode.fMarkA {
-        return 0; }
-    assert(pNode.fMarkB, "pNode.fMarkB");
-    pNode.fMarkA = 1;
-//    printf( "%d ", pNode->Id );
-    if Ivy_ObjIsBuf(pNode) {
-        return Ivy_NodeCountMffc_rec( Ivy_ObjFanin0(pNode) ); }
-    return 1 + Ivy_NodeCountMffc_rec( Ivy_ObjFanin0(pNode) ) + Ivy_NodeCountMffc_rec( Ivy_ObjFanin1(pNode) );
+	if Ivy_MultiPlus(p, leaves, cone, Ivy_ObjType(root), mffc+useZeroCost, solutions) == 0 {
+		for _, node := range coneNodes {
+			Ivy_ObjRefsInc(Ivy_ObjFanin0(node))
+			if Ivy_ObjIsNode(node) != 0 {
+				Ivy_ObjRefsInc(Ivy_ObjFanin1(node))
+			}
+			node.fMarkA, node.fMarkB = 0, 0
+		}
+		return nil
+	}
+	for _, node := range coneNodes {
+		Ivy_ObjRefsInc(Ivy_ObjFanin0(node))
+		if Ivy_ObjIsNode(node) != 0 {
+			Ivy_ObjRefsInc(Ivy_ObjFanin1(node))
+		}
+		node.fMarkA, node.fMarkB = 0, 0
+	}
+	if Vec_PtrSize(solutions) == 1 {
+		return ivyVecObj(solutions, 0)
+	}
+	args := vectorObjects(solutions)
+	return Ivy_NodeBalanceBuildSuper(p, &args, Ivy_ObjType(root), 1)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Comparison for node pointers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_NodeCountMffc(pNode *Ivy_Obj_t) int32 {
-    assert(pNode.fMarkB, "pNode.fMarkB");
-    return 1 + Ivy_NodeCountMffc_rec( Ivy_ObjFanin0(pNode) ) + Ivy_NodeCountMffc_rec( Ivy_ObjFanin1(pNode) );
+func vectorObjects(v *Vec_Ptr_t) []*Ivy_Obj_t {
+	objs := make([]*Ivy_Obj_t, int(Vec_PtrSize(v)))
+	for i := range objs {
+		objs[i] = ivyVecObj(v, int32(i))
+	}
+	return objs
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Comparison for node pointers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ManFindAlgCutCompare(pp1 **Ivy_Obj_t, pp2 **Ivy_Obj_t) int32 {
-    if *pp1 < *pp2 {
-        return -1; }
-    if *pp1 > *pp2 {
-        return 1; }
-    return 0;
+func setVectorObjects(v *Vec_Ptr_t, objs []*Ivy_Obj_t) {
+	Vec_PtrClear(v)
+	for _, obj := range objs {
+		Vec_PtrPush(v, obj)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computing one algebraic cut.]
-
-  Description [Returns 1 if the tree-leaves of this node where traversed 
-  and found to have no external references (and have not been collected). 
-  Returns 0 if the tree-leaves have external references and are collected.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ManFindAlgCut_rec(pObj *Ivy_Obj_t, Type Ivy_Type_t, vFront *Vec_Ptr_t, vCone *Vec_Ptr_t) int32 {
-    var RetValue0, RetValue1 int32;
-    var pObjR *Ivy_Obj_t  = Ivy_Regular(pObj);
-    assert(!Ivy_ObjIsBuf(pObjR), "!Ivy_ObjIsBuf(pObjR)");
-    assert(Type != IVY_EXOR || !Ivy_IsComplement(pObj), "Type != IVY_EXOR || !Ivy_IsComplement(pObj)");
-
-    // make sure the node is not visited twice in different polarities
-    if Ivy_IsComplement(pObj) { // if complemented, mark B
-        if pObjR.fMarkA {
-            return -1; }
-        pObjR.fMarkB = 1;
-    
-    } else { // if non-complicated, mark A
-        if pObjR.fMarkB {
-            return -1; }
-        pObjR.fMarkA = 1;
-    }
-    Vec_PtrPush( vCone, pObjR );
-
-    // if the node is the end of the tree, return
-    if Ivy_IsComplement(pObj) || Ivy_ObjType(pObj) != Type {
-        if Ivy_ObjRefs(pObjR) == 1 {
-            return 1; }
-        assert(Ivy_ObjRefs(pObjR) > 1, "Ivy_ObjRefs(pObjR) > 1");
-        Vec_PtrPush( vFront, pObj );
-        return 0;
-    }
-
-    // branch on the node
-    assert(!Ivy_IsComplement(pObj), "!Ivy_IsComplement(pObj)");
-    assert(Ivy_ObjIsNode(pObj), "Ivy_ObjIsNode(pObj)");
-    // what if buffer has more than one fanout???
-    RetValue0 = Ivy_ManFindAlgCut_rec( Ivy_ObjReal( Ivy_ObjChild0(pObj) ), Type, vFront, vCone );
-    RetValue1 = Ivy_ManFindAlgCut_rec( Ivy_ObjReal( Ivy_ObjChild1(pObj) ), Type, vFront, vCone );
-    if RetValue0 == -1 || RetValue1 == -1 {
-        return -1; }
-
-    // the case when both have no external references
-    if RetValue0 && (RetValue1 != 0) {
-        if Ivy_ObjRefs(pObj) == 1 {
-            return 1; }
-        assert(Ivy_ObjRefs(pObj) > 1, "Ivy_ObjRefs(pObj) > 1");
-        Vec_PtrPush( vFront, pObj );
-        return 0;
-    }
-    // the case when one of them has external references
-    if RetValue0 {
-        Vec_PtrPush( vFront, Ivy_ObjReal( Ivy_ObjChild0(pObj) ) ); }
-    if RetValue1 != 0 {
-        Vec_PtrPush( vFront, Ivy_ObjReal( Ivy_ObjChild1(pObj) ) ); }
-    return 0;
+func Ivy_NodeCountMffcRec(node *Ivy_Obj_t) int32 {
+	if Ivy_ObjRefs(node) > 0 || Ivy_ObjIsCi(node) != 0 || node.fMarkA != 0 {
+		return 0
+	}
+	assert(node.fMarkB != 0, "node.fMarkB != 0")
+	node.fMarkA = 1
+	if Ivy_ObjIsBuf(node) != 0 {
+		return Ivy_NodeCountMffcRec(Ivy_ObjFanin0(node))
+	}
+	return 1 + Ivy_NodeCountMffcRec(Ivy_ObjFanin0(node)) + Ivy_NodeCountMffcRec(Ivy_ObjFanin1(node))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computing one algebraic cut.]
-
-  Description [Algebraic cut stops when we hit (a) CI, (b) complemented edge,
-  (c) boundary of different gates. Returns 1 if this is a pure tree.
-  Returns -1 if the contant 0 is detected. Return 0 if the array can be used.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ManFindAlgCut(pRoot *Ivy_Obj_t, vFront *Vec_Ptr_t, vLeaves *Vec_Ptr_t, vCone *Vec_Ptr_t) int32 {
-    var pObj, pPrev *Ivy_Obj_t;
-    var RetValue, i int32;
-    assert(!Ivy_IsComplement(pRoot), "!Ivy_IsComplement(pRoot)");
-    assert(Ivy_ObjIsNode(pRoot), "Ivy_ObjIsNode(pRoot)");
-    // clear the frontier and collect the nodes
-    Vec_PtrClear( vCone );
-    Vec_PtrClear( vFront );
-    Vec_PtrClear( vLeaves );
-    RetValue = Ivy_ManFindAlgCut_rec( pRoot, Ivy_ObjType(pRoot), vFront, vCone );
-    // clean the marks
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vCone)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(vCone, i)), 1); i++  {
-        pObj.fMarkA = pObj.fMarkB = 0;
-    }
-    // quit if the same node is found in both polarities
-    if RetValue == -1 {
-        return -1; }
-    // return if the node is the root of a tree
-    if RetValue == 1 {
-        return 1; }
-    // return if the cut is composed of two nodes
-    if Vec_PtrSize(vFront) <= 2 {
-        return 1; }
-    // sort the entries in increasing order
-    Vec_PtrSort( vFront, (int (*)(void))Ivy_ManFindAlgCutCompare );
-    // remove duplicates from vFront and save the nodes in vLeaves
-    pPrev = Vec_PtrEntry(vFront, 0);
-    Vec_PtrPush( vLeaves, pPrev );
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = 1; (i < Vec_PtrSize(vFront)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {
-        // compare current entry and the previous entry
-        if pObj == pPrev {
-            if Ivy_ObjIsExor(pRoot) { // A <+> A = 0
-            
-                // vLeaves are no longer structural support of pRoot!!!
-                Vec_PtrPop(vLeaves);  
-                if Vec_PtrSize(vLeaves) == 0 {
-                    pPrev = nil;
-                } else {
-                    pPrev = Vec_PtrEntryLast(vLeaves);
-                }
-            }
-            continue;
-        }
-        if pObj == Ivy_Not(pPrev) {
-            assert(Ivy_ObjIsAnd(pRoot), "Ivy_ObjIsAnd(pRoot)");
-            return -1;
-        }
-        pPrev = pObj;
-        Vec_PtrPush( vLeaves, pObj );
-    }
-    if Vec_PtrSize(vLeaves) == 0 {
-        return -1; }
-    if Vec_PtrSize(vLeaves) <= 2 {
-        return 1; }
-    return 0;
+func Ivy_NodeCountMffc(node *Ivy_Obj_t) int32 {
+	assert(node.fMarkB != 0, "node.fMarkB != 0")
+	return 1 + Ivy_NodeCountMffcRec(Ivy_ObjFanin0(node)) + Ivy_NodeCountMffcRec(Ivy_ObjFanin1(node))
 }
 
+func Ivy_ManFindAlgCutCompare(a, b *Ivy_Obj_t) int {
+	if Ivy_ObjId(a) < Ivy_ObjId(b) {
+		return -1
+	}
+	if Ivy_ObjId(a) > Ivy_ObjId(b) {
+		return 1
+	}
+	if Ivy_IsComplement(a) < Ivy_IsComplement(b) {
+		return -1
+	}
+	if Ivy_IsComplement(a) > Ivy_IsComplement(b) {
+		return 1
+	}
+	return 0
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Ivy_ManFindAlgCutRec(edge *Ivy_Obj_t, typ Ivy_Type_t, front, cone *Vec_Ptr_t) int32 {
+	node := Ivy_Regular(edge)
+	assert(Ivy_ObjIsBuf(node) == 0, "algebraic cut cannot contain buffers")
+	assert(typ != IVY_EXOR || Ivy_IsComplement(edge) == 0, "EXOR cut root edges must be regular")
+	if Ivy_IsComplement(edge) != 0 {
+		if node.fMarkA != 0 {
+			return -1
+		}
+		node.fMarkB = 1
+	} else {
+		if node.fMarkB != 0 {
+			return -1
+		}
+		node.fMarkA = 1
+	}
+	Vec_PtrPush(cone, node)
+	if Ivy_IsComplement(edge) != 0 || Ivy_ObjType(edge) != typ {
+		if Ivy_ObjRefs(node) == 1 {
+			return 1
+		}
+		assert(Ivy_ObjRefs(node) > 1, "boundary node has external references")
+		Vec_PtrPush(front, edge)
+		return 0
+	}
+	assert(Ivy_IsComplement(edge) == 0 && Ivy_ObjIsNode(edge) != 0, "internal node must be regular logic")
+	r0 := Ivy_ManFindAlgCutRec(Ivy_ObjReal(Ivy_ObjChild0(edge)), typ, front, cone)
+	r1 := Ivy_ManFindAlgCutRec(Ivy_ObjReal(Ivy_ObjChild1(edge)), typ, front, cone)
+	if r0 == -1 || r1 == -1 {
+		return -1
+	}
+	if r0 != 0 && r1 != 0 {
+		if Ivy_ObjRefs(node) == 1 {
+			return 1
+		}
+		assert(Ivy_ObjRefs(node) > 1, "internal node has external references")
+		Vec_PtrPush(front, edge)
+		return 0
+	}
+	if r0 != 0 {
+		Vec_PtrPush(front, Ivy_ObjReal(Ivy_ObjChild0(edge)))
+	}
+	if r1 != 0 {
+		Vec_PtrPush(front, Ivy_ObjReal(Ivy_ObjChild1(edge)))
+	}
+	return 0
+}
 
-
-//ABC_NAMESPACE_IMPL_END
-
+func Ivy_ManFindAlgCut(root *Ivy_Obj_t, front, leaves, cone *Vec_Ptr_t) int32 {
+	assert(Ivy_IsComplement(root) == 0 && Ivy_ObjIsNode(root) != 0, "invalid algebraic cut root")
+	Vec_PtrClear(front)
+	Vec_PtrClear(leaves)
+	Vec_PtrClear(cone)
+	result := Ivy_ManFindAlgCutRec(root, Ivy_ObjType(root), front, cone)
+	for i := int32(0); i < Vec_PtrSize(cone); i++ {
+		node := ivyVecObj(cone, i)
+		node.fMarkA, node.fMarkB = 0, 0
+	}
+	if result != 0 {
+		return result
+	}
+	if Vec_PtrSize(front) <= 2 {
+		return 1
+	}
+	frontRaw := Vec_PtrArray(front)
+	sort.Slice(frontRaw, func(i, j int) bool {
+		return Ivy_ManFindAlgCutCompare(frontRaw[i].(*Ivy_Obj_t), frontRaw[j].(*Ivy_Obj_t)) < 0
+	})
+	var prev *Ivy_Obj_t
+	for i := 0; i < len(frontRaw); i++ {
+		obj := frontRaw[i].(*Ivy_Obj_t)
+		if prev != nil && obj == prev {
+			if Ivy_ObjIsExor(root) != 0 {
+				if Vec_PtrSize(leaves) == 0 {
+					prev = nil
+				} else {
+					Vec_PtrPop(leaves)
+					if Vec_PtrSize(leaves) == 0 {
+						prev = nil
+					} else {
+						prev = ivyVecObj(leaves, Vec_PtrSize(leaves)-1)
+					}
+				}
+			}
+			continue
+		}
+		if prev != nil && obj == Ivy_Not(prev) {
+			assert(Ivy_ObjIsAnd(root) != 0, "opposite leaves only cancel in AND cut")
+			return -1
+		}
+		prev = obj
+		Vec_PtrPush(leaves, obj)
+	}
+	if Vec_PtrSize(leaves) == 0 {
+		return -1
+	}
+	if Vec_PtrSize(leaves) <= 2 {
+		return 1
+	}
+	return 0
+}

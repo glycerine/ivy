@@ -1,0 +1,10 @@
+GATE zero 0 Y=CONST0;
+GATE one 0 Y=CONST1;
+GATE buf 1 Y=a;
+PIN * NONINV 1 999 1 0 1 0
+GATE inv 1 Y=!a;
+PIN * INV 1 999 1 0 1 0
+GATE and2 2 Y=a*b;
+PIN * NONINV 1 999 1 0 1 0
+GATE nand2 2 Y=!(a*b);
+PIN * INV 1 999 1 0 1 0

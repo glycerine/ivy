@@ -101,7 +101,9 @@ Recent completed integrations and review:
   against the original GIA manager in the focused suite.
 - `aig_conversion.go`/`aig_representatives.go` port original AIG interchange APIs
   against the AIG owner's Edge/Graph representation. The real AIG integration passes `test_aig_bridge.sh -race` after the
-  AIG package became buildable (1.754s). Higher-level DAR/DCH driver wrappers remain pending.
+  AIG package became buildable (1.754s). Higher-level DAR compression and default DCH wrappers now use real native
+  engines; CEC-specific speculative choice modes remain explicitly unsupported
+  until their engines are ported. The cofactor/unroll wrapper remains pending.
 
 Use `GOCACHE=/tmp/abcgo-cache abcgo/aig/gia/test_ported_core.sh -race` from the
 repository root for the exact focused coverage. It includes the real vec, util,
@@ -262,3 +264,26 @@ owned LUT leaves/truth through both native GIA and existing mf.Mapping, avoiding
 a second circuit model. Review caught x & !x being classified as a buffer merely
 because its two regular fanin IDs matched; classifiers now also compare phases,
 with a zero-truth/reference-count regression. Core races pass (2.830s).
+
+Box-aware levels now use the real native misc/tim manager. Timing transfer moves
+owned metadata and is a no-op for self-transfer; this fixes the source routine's
+late self-check clearing names/arrival/configuration fields. Tests cover scaled
+box arcs and aliased ownership after moves. Neutral box APIs distinguish all
+structural input COs from enabled timing arcs, supporting SBD without import
+cycles. MF mapped adapters preserve name/spec and register metadata.
+
+Real DAR compression and default DCH choice wrappers are integrated and tested
+through the actual AIG bridge. The requested CEC speculative choice modes still
+have unported engines; these modes produce explicit errors rather than silently
+using DCH. Callers can supply an actual typed DAR ChoiceEngine. Basic duplication
+preserves real gates, constraint counts and independently owned I/O metadata.
+State flip/cycle cloning handles packed register words and actual XOR/MUX gates;
+transition-coordinate/replay and cross-word bit tests cover these operations.
+
+Combinational/sequential cleanup and marked duplication now operate on the live
+manager. Tests cover choice reachability, retained combinational buffer roots,
+removed unreachable registers, no-output systems, real MUX controls, copied IO
+names and representative ownership. Review fixed empty-interface remap handling,
+rejects mismatched RO/RI retention and recounts surviving constraint metadata.
+An unreachable sequential buffer can be removed rather than failing the source's
+debug-only buffer assertion. No sources were excluded to obtain these results.

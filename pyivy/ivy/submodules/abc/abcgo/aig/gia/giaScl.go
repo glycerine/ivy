@@ -46,37 +46,8 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCombMarkUsed_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {
-    if pObj == nil {
-        return 0; }
-    if !pObj.fMark0 {
-        return 0; }
-    pObj.fMark0 = 0;
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    assert(!Gia_ObjIsBuf(pObj), "!Gia_ObjIsBuf(pObj)");
-    return 1 + Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) )
-             + Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin1(pObj) )
-             + (p.pNexts ? Gia_ManCombMarkUsed_rec( p, Gia_ObjNextObj(p, Gia_ObjId(p, pObj)) ) : 0)
-             + (p.pSibls ? Gia_ManCombMarkUsed_rec( p, Gia_ObjSiblObj(p, Gia_ObjId(p, pObj)) ) : 0)
-             + (p.pMuxes ? Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin2(p, pObj) ) : 0);
-}
-func Gia_ManCombMarkUsed(p *Gia_Man_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i, nNodes int32;
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        pObj.fMark0 = Gia_ObjIsAnd(pObj) && !Gia_ObjIsBuf(pObj);
-    }
-    // inlining of macro Gia_ManForEachBuf
-    for  i = Gia_ManBufNum(p) ? 0 : p.nObjs; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsBuf(pObj) {} else {
-        nNodes += Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) ); }
-    }
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        nNodes += Gia_ManCombMarkUsed_rec( p, Gia_ObjFanin0(pObj) );
-    }
-    return nNodes;
-}
+
+
 
 /**Function*************************************************************
 
@@ -89,10 +60,7 @@ func Gia_ManCombMarkUsed(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCleanup(p *Gia_Man_t) *Gia_Man_t {
-    Gia_ManCombMarkUsed( p );
-    return Gia_ManDupMarked( p );
-}
+
 
 /**Function*************************************************************
 
@@ -105,21 +73,7 @@ func Gia_ManCleanup(p *Gia_Man_t) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCleanupOutputs(p *Gia_Man_t, nOutputs int32) *Gia_Man_t {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    assert(Gia_ManRegNum(p) == 0, "Gia_ManRegNum(p) == 0");
-    assert(nOutputs < Gia_ManCoNum(p), "nOutputs < Gia_ManCoNum(p)");
-    Gia_ManCombMarkUsed( p );
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        if i < nOutputs {
-            pObj.fMark0 = 1;
-        } else {
-            break; }
-    }
-    return Gia_ManDupMarked( p );
-}
+
 
 
 /**Function*************************************************************
@@ -133,20 +87,7 @@ func Gia_ManCleanupOutputs(p *Gia_Man_t, nOutputs int32) *Gia_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSeqMarkUsed_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vRoots *Vec_Int_t) int32 {
-    if !pObj.fMark0 {
-        return 0; }
-    pObj.fMark0 = 0;
-    if Gia_ObjIsCo(pObj) {
-        return Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin0(pObj), vRoots ); }
-    if Gia_ObjIsRo(p, pObj) {
-        Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ObjRoToRi(p, pObj)) );
-        return 0;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    return 1 + Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin0(pObj), vRoots )
-             + Gia_ManSeqMarkUsed_rec( p, Gia_ObjFanin1(pObj), vRoots );
-}
+
 
 /**Function*************************************************************
 
@@ -159,24 +100,7 @@ func Gia_ManSeqMarkUsed_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vRoots *Vec_Int_t) in
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSeqMarkUsed(p *Gia_Man_t) int32 {
-    var vRoots *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i, nNodes int32;
-    Gia_ManSetMark0( p );
-    Gia_ManConst0(p).fMark0 = 0;
-    // inlining of macro Gia_ManForEachPi
-    for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        pObj.fMark0 = 0;
-    }
-    vRoots = Gia_ManCollectPoIds( p );
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vRoots)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRoots,i))); i++  {
-        nNodes += Gia_ManSeqMarkUsed_rec( p, pObj, vRoots );
-    }
-    Vec_IntFree( vRoots );
-    return nNodes;
-}
+
 
 /**Function*************************************************************
 
@@ -189,10 +113,7 @@ func Gia_ManSeqMarkUsed(p *Gia_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSeqCleanup(p *Gia_Man_t) *Gia_Man_t {
-    Gia_ManSeqMarkUsed( p );
-    return Gia_ManDupMarked( p );
-}
+
 
 /**Function*************************************************************
 

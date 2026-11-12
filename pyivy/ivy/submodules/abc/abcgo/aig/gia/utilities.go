@@ -66,12 +66,7 @@ func Gia_ManCreateValueRefs(p *Gia_Man_t) {
 	}
 }
 func Gia_ManMarkDangling(p *Gia_Man_t) int32 {
-	Gia_ManCleanMark0(p)
-	for _, obj := range p.pObjs {
-		for _, id := range giaObjectFanins(p, obj) {
-			p.pObjs[id].fMark0 = 1
-		}
-	}
+	Gia_ManMarkFanoutDrivers(p)
 	var count int32
 	for _, obj := range p.pObjs {
 		if Gia_ObjIsAnd(obj) != 0 && obj.fMark0 == 0 {

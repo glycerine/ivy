@@ -28,7 +28,7 @@ package cnf
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-var s_Data3 [82]byte = "!#&()*+,-.0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]abcdefghijklmnopqrstuvwxyz|"
+var s_Data3 = []byte("!#&()*+,-.0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]abcdefghijklmnopqrstuvwxyz|")
 
 var s_Data4 []string = []string{
 	"! B a . 8 .B 8a K !K T Ta j 8j Tj s ( + (B +a (. +8 .B( +8a (K +K T( +T j( ",
@@ -4517,7 +4517,7 @@ var s_Data4 []string = []string{
 	"zo ocz- 7oz= Azo zo7=D zoAc z=S S-zo S=zV Scz= zr= Azr rVz= uzAr zoY Y&zo z",
 	"oJ Yczo z7Y Y:zo 7Jzo Ycz7 SozY zoYS& ]zo zo]c zrY rYz: ]zr ]zur zx zx- zxJ",
 	" izx zx7 Azx xJz7 izAx zxS x-zS ]zx iz]x zxr zxAr zx]r |                   ",
-	nil,
+	"",
 }
 
 ////////////////////////////////////////////////////////////////////////

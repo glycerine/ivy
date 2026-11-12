@@ -192,7 +192,7 @@ func Abc_GraphDeriveGia_rec(graph *aig.Graph, level, node int32, nodes *vec.Vec_
 	low := Abc_GraphDeriveGia_rec(graph, level+1, vec.Vec_WecEntryEntry(nodes, int(level), int(2*node)), nodes, cache, buffer, edges)
 	buffer[level] = 1
 	high := Abc_GraphDeriveGia_rec(graph, level+1, vec.Vec_WecEntryEntry(nodes, int(level), int(2*node+1)), nodes, cache, buffer, edges)
-	result := graph.Mux(graph.Inputs()[level], high, low)
+	result := graph.Mux(aig.Aig_ManCi(graph, level), high, low)
 	cache[level][node] = result
 	return result
 }

@@ -1,0 +1,5 @@
+[
+  {"name":"wide_three","fanouts":13,"degree":3,"root_degree":0,"inverters":false},
+  {"name":"wide_four_inverted","fanouts":19,"degree":4,"root_degree":0,"inverters":true},
+  {"name":"root_isolation","fanouts":10,"degree":3,"root_degree":4,"inverters":false}
+]

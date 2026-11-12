@@ -100,17 +100,19 @@ type Cnf_Cut_t_ struct {
 
 // the CNF computation manager
 type Cnf_Man_t_ struct {
-	pManAig     *Aig_Man_t // the underlying AIG manager
-	pSopSizes   []byte
-	pSops       []string
-	aArea       int32         // the area of the mapping
-	pMemCuts    *Aig_MmFlex_t // memory manager for cuts
-	nMergeLimit int32         // the limit on the size of merged cut
-	pTruths     [4][]uint32
-	vMemory     *Vec_Int_t // memory for intermediate ISOP representation
-	timeCuts    abctime
-	timeMap     abctime
-	timeSave    abctime
+	pManAig      *Aig_Man_t // the underlying AIG manager
+	pCuts        *aig.Aig_ManCut_t
+	selectedCuts []*Cnf_Cut_t
+	pSopSizes    []byte
+	pSops        []string
+	aArea        int32         // the area of the mapping
+	pMemCuts     *Aig_MmFlex_t // memory manager for cuts
+	nMergeLimit  int32         // the limit on the size of merged cut
+	pTruths      [4][]uint32
+	vMemory      *Vec_Int_t // memory for intermediate ISOP representation
+	timeCuts     abctime
+	timeMap      abctime
+	timeSave     abctime
 }
 
 // inlining of macro Dar_ObjForEachCut
@@ -124,8 +126,26 @@ func Cnf_CutLeaveNum(pCut *Cnf_Cut_t) int32 { return int32(pCut.nFanins) }
 func Cnf_CutLeaves(pCut *Cnf_Cut_t) []int32 { return pCut.pFanins }
 func Cnf_CutTruth(pCut *Cnf_Cut_t) []uint32 { return pCut.truth }
 
-func Cnf_ObjBestCut(pObj *Aig_Obj_t) *Cnf_Cut_t          { return nil }
-func Cnf_ObjSetBestCut(pObj *Aig_Obj_t, pCut *Cnf_Cut_t) {}
+func Cnf_ObjBestCut(p *Cnf_Man_t, pObj *Aig_Obj_t) *Cnf_Cut_t {
+	if p == nil || pObj == nil {
+		return nil
+	}
+	id := (*pObj).NodeID()
+	if id < 0 || id >= len(p.selectedCuts) {
+		return nil
+	}
+	return p.selectedCuts[id]
+}
+func Cnf_ObjSetBestCut(p *Cnf_Man_t, pObj *Aig_Obj_t, cut *Cnf_Cut_t) {
+	if p == nil || pObj == nil {
+		return
+	}
+	id := (*pObj).NodeID()
+	if id < 0 || id >= len(p.selectedCuts) {
+		return
+	}
+	p.selectedCuts[id] = cut
+}
 
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///

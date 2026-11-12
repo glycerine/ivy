@@ -133,6 +133,7 @@ type tokenKind uint8
 
 const (
 	tokEnd tokenKind = iota
+	tokInvalid
 	tokName
 	tokZero
 	tokOne
@@ -189,7 +190,7 @@ func (p *parser) next() {
 		p.tok = token{kind: tokClose, text: ")", pos: start}
 	default:
 		if !isNameByte(c) {
-			p.tok = token{kind: tokEnd, text: string(c), pos: start}
+			p.tok = token{kind: tokInvalid, text: string(c), pos: start}
 			return
 		}
 		for p.pos < len(p.input) && isNameByte(p.input[p.pos]) {

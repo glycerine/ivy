@@ -39,7 +39,18 @@ func LivenessToSafety(network *Network, options TransformOptions) (*Network, err
 		return nil, fmt.Errorf("live: missing network")
 	}
 	p := network.Graph
+	if err := p.Check(); err != nil {
+		return nil, fmt.Errorf("live: invalid graph: %w", err)
+	}
 	regs, pis, pos := registers(p), trueInputs(p), trueOutputs(p)
+	for _, group := range [][]aig.Edge{options.Liveness, options.Fairness, options.SafetyAssertions, options.SafetyAssumptions} {
+		for _, edge := range group {
+			if aig.Aig_ObjIsNone(p, edge) {
+				return nil, fmt.Errorf("live: property signal is not in the input graph")
+			}
+		}
+	}
+
 	if options.Mode < 0 || options.Mode > 4 {
 		return nil, fmt.Errorf("live: invalid transformation mode")
 	}
@@ -149,6 +160,10 @@ func LivenessToSafety(network *Network, options TransformOptions) (*Network, err
 				if isWellFormed(node) == 0 {
 					return nil, fmt.Errorf("live: formula is outside Boolean combinations of GF")
 				}
+				if checkSignalNameExistence(network, node) == 0 {
+					return nil, fmt.Errorf("live: LTL formula names an unknown output")
+				}
+
 				// Populate all source PO copies before binding formula leaves.
 				for i := 0; i < pos; i++ {
 					copyGraph.signal(p.Outputs()[i])
@@ -239,11 +254,23 @@ func populateLivenessVector(n *Network, p *aig.Graph) []aig.Edge {
 func populateFairnessVector(n *Network, p *aig.Graph) []aig.Edge {
 	return selectOutputs(n, "assume_fair")
 }
+func selectOutputAliases(n *Network, prefixes ...string) []aig.Edge {
+	result := []aig.Edge{}
+	for i := 0; i < trueOutputs(n.Graph); i++ {
+		for _, prefix := range prefixes {
+			if strings.HasPrefix(outputName(n, i), prefix) {
+				result = append(result, n.Graph.Outputs()[i])
+				break
+			}
+		}
+	}
+	return result
+}
 func populateSafetyAssertionVector(n *Network, p *aig.Graph) []aig.Edge {
-	return selectOutputs(n, "assert_safety")
+	return selectOutputAliases(n, "assert_safety", "Assert")
 }
 func populateSafetyAssumptionVector(n *Network, p *aig.Graph) []aig.Edge {
-	return selectOutputs(n, "assume_safety")
+	return selectOutputAliases(n, "assume_safety", "Assume")
 }
 func prepareFlopVector(p *aig.Graph, length int32) []int32 {
 	if length < 0 || int(length) > registers(p) {
@@ -255,8 +282,8 @@ func prepareFlopVector(p *aig.Graph, length int32) []int32 {
 	}
 	return result
 }
-func Aig_ManCiCleanupBiere(p *aig.Graph) int32 { return 0 } // Native graph interfaces maintain their counts on every edit.
-func Aig_ManCoCleanupBiere(p *aig.Graph) int32 { return 0 }
+func Aig_ManCiCleanupBiere(p *aig.Graph) int32 { return aig.Aig_ManCiNum(p) - int32(len(p.Inputs())) } // Native graph interfaces maintain their counts on every edit.
+func Aig_ManCoCleanupBiere(p *aig.Graph) int32 { return aig.Aig_ManCoNum(p) - int32(len(p.Outputs())) }
 func getPoIndex(p *aig.Graph, pivot aig.Edge) int32 {
 	for i, e := range p.Outputs()[:trueOutputs(p)] {
 		if e == pivot {
@@ -307,6 +334,7 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 		return 1
 	}
 	options := TransformOptions{}
+	onlySafety, onlyLiveness, oneStep := false, false, false
 	args := argv
 	if len(args) > 0 && !strings.HasPrefix(args[0], "-") {
 		args = args[1:]
@@ -314,17 +342,12 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 	for i := 0; i < len(args); i++ {
 		switch args[i] {
 		case "-s":
-			options.Mode = 1
+			onlyLiveness = true
 		case "-l":
-			options.Mode = 2
+			onlySafety = true
 		case "-1":
-			if options.Mode != 1 {
-				if options.Mode == 2 {
-					options.Mode = 3
-				} else {
-					options.Mode = 4
-				}
-			}
+			oneStep = true
+
 		case "-a":
 			i++
 			if i == len(args) {
@@ -343,7 +366,26 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 			return 1
 		}
 	}
+	if simulation {
+		onlyLiveness = true
+	}
+	if onlySafety && onlyLiveness {
+		return 1
+	}
+	if onlySafety {
+		options.Mode = 1
+	} else if oneStep {
+		options.Mode = 4
+		if onlyLiveness {
+			options.Mode = 3
+		}
+	} else if onlyLiveness {
+		options.Mode = 2
+	}
 	n := frame.Network
+	if abstraction && options.ShadowRegisters == nil {
+		options.ShadowRegisters = prepareFlopVector(n.Graph, int32(registers(n.Graph)/2))
+	}
 	options.Liveness = populateLivenessVector(n, n.Graph)
 	options.Fairness = populateFairnessVector(n, n.Graph)
 	options.SafetyAssertions = populateSafetyAssertionVector(n, n.Graph)

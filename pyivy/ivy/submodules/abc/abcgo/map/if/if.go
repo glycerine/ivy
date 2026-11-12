@@ -30,6 +30,7 @@ func Abc_Lit2Var(lit int32) int32                       { return abcutil.Abc_Lit
 func Abc_LitIsCompl(lit int32) int32                    { return abcutil.Abc_LitIsCompl(lit) }
 func Abc_Lit2LitL(values []int32, lit int32) int32      { return abcutil.Abc_Lit2LitL(values, lit) }
 func Abc_MaxInt(a, b int32) int32                       { return abcutil.Abc_MaxInt(a, b) }
+func Abc_Tt4Check(truth int32) int32                    { return abcutil.Abc_Tt4Check(truth) }
 func Abc_Clock() int64                                  { return abcutil.Abc_Clock() }
 func Abc_Print(level int32, format string, args ...any) { abcutil.Abc_Print(level, format, args...) }
 func Abc_PrintTime(level int32, label string, elapsed int64) {
@@ -500,8 +501,12 @@ func If_CutDsdLit(p *If_Man_t, pCut *If_Cut_t) int32 {
 func If_CutDsdIsCompl(p *If_Man_t, pCut *If_Cut_t) int32 {
 	return Abc_LitIsCompl(If_CutDsdLit(p, pCut))
 }
-func If_CutDsdPerm(p *If_Man_t, pCut *If_Cut_t) *byte {
-	return Vec_StrEntryP(p.vTtPerms[pCut.nLeaves], int(Abc_Lit2Var(pCut.iCutFunc)*Abc_MaxInt(6, int32(pCut.nLeaves))))
+func If_CutDsdPerm(p *If_Man_t, pCut *If_Cut_t) []byte {
+	start := int(Abc_Lit2Var(pCut.iCutFunc) * Abc_MaxInt(6, int32(pCut.nLeaves)))
+	count := int(Abc_MaxInt(6, int32(pCut.nLeaves)))
+	data := vec.Vec_StrArray(p.vTtPerms[pCut.nLeaves])
+	assert(start >= 0 && start+count <= len(data), "DSD permutation range is allocated")
+	return data[start : start+count]
 }
 func If_CutLutArea(p *If_Man_t, pCut *If_Cut_t) float32 {
 	if pCut.fAndCut != 0 {

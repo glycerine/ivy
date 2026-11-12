@@ -3,6 +3,7 @@ package abc
 import (
 	"github.com/glycerine/abcgo/bdd/cudd/core"
 	"github.com/glycerine/abcgo/map/mio"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -169,4 +170,123 @@ func TestFunctionMappedGateToSOP(t *testing.T) {
 	if !reflect.DeepEqual(truth, []bool{false, false, false, true}) {
 		t.Fatal(o.Data, truth)
 	}
+}
+func TestFunctionOriginalABCOracle(t *testing.T) {
+	data, err := os.ReadFile("test_vectors/function_off_oracle.blif")
+	if err != nil {
+		t.Fatal(err)
+	}
+	n := NewNetwork("oracle")
+	n.Type = uint8(ABC_NTK_LOGIC)
+	n.Function = uint8(ABC_FUNC_SOP)
+	node := n.NewObject(ObjectNode)
+	for _, name := range []string{"a", "b", "c", "d"} {
+		pi := n.NewObject(ObjectPI)
+		pi.SetName(name)
+		Abc_ObjAddFanin(node, pi)
+	}
+	node.Data = "1-01 0\n-10- 0\n--11 0\n"
+	if Abc_NtkSopToBdd(n) != 1 || Abc_NtkBddToSop(n, -1, 100) != 1 {
+		t.Fatal("oracle conversion failed")
+	}
+	var inputs []string
+	var rows strings.Builder
+	inside := false
+	for _, line := range strings.Split(string(data), "\n") {
+		if strings.HasPrefix(line, ".names ") {
+			fields := strings.Fields(line)
+			inputs = fields[1 : len(fields)-1]
+			inside = true
+			continue
+		}
+		if strings.HasPrefix(line, ".") {
+			inside = false
+		}
+		if inside && line != "" {
+			rows.WriteString(line)
+			rows.WriteByte('\n')
+		}
+	}
+	var actual []string
+	for _, edge := range node.fanins {
+		actual = append(actual, edge.Object.Name())
+	}
+	if !reflect.DeepEqual(actual, inputs) || node.Data != rows.String() {
+		t.Fatalf("Go %v %q; original ABC %v %q", actual, node.Data, inputs, rows.String())
+	}
+}
+func TestFunctionIsoAfterManagerConversions(t *testing.T) {
+	n, node, _ := fanFixture("1-01 1\n-10- 1\n--11 1\n")
+	other := n.NewObject(ObjectNode)
+	other.Data = node.Data
+	for _, edge := range node.fanins {
+		Abc_ObjAddFanin(other, edge)
+	}
+	for _, o := range []*Object{node, other} {
+		po := n.NewObject(ObjectPO)
+		Abc_ObjAddFanin(po, o)
+	}
+	for _, convert := range []func(*Network) int32{Abc_NtkSopToAig, Abc_NtkAigToBdd} {
+		if convert(n) != 1 {
+			t.Fatal("manager conversion failed")
+		}
+		if Abc_NtkFunctionalIso(n, 0, 1, 1) != 1 {
+			t.Fatal("functional iso lost representation support", n.Function)
+		}
+	}
+}
+func TestFunctionLocalAIGCopyRetainsComplements(t *testing.T) {
+	source, node, pis := fanFixture("1-01 1\n-10- 1\n--11 1\n")
+	before := fanTruth(node, pis)
+	if Abc_NtkSopToAig(source) != 1 {
+		t.Fatal("conversion failed")
+	}
+	target := NewNetwork("target")
+	var copied []*Object
+	for _, pi := range pis {
+		input := target.NewObject(ObjectPI)
+		copied = append(copied, input)
+		pi.SetCopyEdge(input.Signal())
+	}
+	root := Abc_ConvertAigToAig(target, node)
+	for assignment, want := range before {
+		values := map[*Object]bool{}
+		for i, input := range copied {
+			values[input] = assignment&(1<<i) != 0
+		}
+		got, err := target.Evaluate(root, values)
+		if err != nil || got != want {
+			t.Fatal(assignment, got, want, err)
+		}
+	}
+}
+func TestFunctionNetworkEvaluationAcrossRepresentations(t *testing.T) {
+	n, node, pis := fanFixture("1-01 0\n-10- 0\n--11 0\n")
+	want := fanTruth(node, pis)
+	check := func() {
+		t.Helper()
+		for assignment, expected := range want {
+			values := map[*Object]bool{}
+			for i, pi := range pis {
+				values[pi] = assignment&(1<<i) != 0
+			}
+			got, err := n.Evaluate(node.Signal(), values)
+			if err != nil || got != expected {
+				t.Fatal(n.Function, assignment, got, expected, err)
+			}
+		}
+	}
+	check()
+	if Abc_NtkSopToAig(n) != 1 {
+		t.Fatal("Hop conversion failed")
+	}
+	check()
+	if Abc_NtkAigToBdd(n) != 1 {
+		t.Fatal("BDD conversion failed")
+	}
+	check()
+	if Abc_NtkBddToSop(n, -1, 100) != 1 {
+		t.Fatal("SOP conversion failed")
+	}
+	check()
 }

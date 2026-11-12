@@ -9,7 +9,7 @@ import (
 )
 
 type busFanout struct {
-	Edge           bufferEdge
+	Edge           FanoutPin
 	Cin, Departure float32
 }
 type Bus_Man_t struct {
@@ -19,7 +19,7 @@ type Bus_Man_t struct {
 	Inverter, InputDriver *SC_Cell
 	WireCaps              []float32
 	Loads, Departures     map[int]float32
-	FanoutInfo            map[bufferEdge]busFanout
+	FanoutInfo            map[FanoutPin]busFanout
 	OutputLoads           map[int]float32
 	Output                io.Writer
 	Delay                 float32
@@ -32,7 +32,7 @@ func Bus_ManStart(net BufferingTimingNetwork, lib *SC_Lib, params *SC_BusPars) (
 	if err := ensureSclMapping(lib, net); err != nil {
 		return nil, err
 	}
-	p := &Bus_Man_t{Network: net, Library: lib, Parameters: *params, Loads: make(map[int]float32), Departures: make(map[int]float32), FanoutInfo: make(map[bufferEdge]busFanout), OutputLoads: make(map[int]float32), Output: os.Stdout}
+	p := &Bus_Man_t{Network: net, Library: lib, Parameters: *params, Loads: make(map[int]float32), Departures: make(map[int]float32), FanoutInfo: make(map[FanoutPin]busFanout), OutputLoads: make(map[int]float32), Output: os.Stdout}
 	cell, err := bufferUnaryCell(net, !params.AddBuffers)
 	if err != nil {
 		return nil, err
@@ -87,18 +87,23 @@ func Bus_ManReadInOutLoads(p *Bus_Man_t) error {
 		p.OutputLoads[id] = SC_PairAve(&timing.Loads[id])
 	}
 	p.InputDriver = timing.InputDriver
+	if p.InputDriver != nil {
+		if _, err := bufferPinEstimate(p.InputDriver, 0, 0, 0); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
-func Bus_SclObjCin(p *Bus_Man_t, edge bufferEdge) float32 { return p.FanoutInfo[edge].Cin }
-func Bus_SclObjSetCin(p *Bus_Man_t, edge bufferEdge, value float32) {
+func Bus_SclObjCin(p *Bus_Man_t, edge FanoutPin) float32 { return p.FanoutInfo[edge].Cin }
+func Bus_SclObjSetCin(p *Bus_Man_t, edge FanoutPin, value float32) {
 	info := p.FanoutInfo[edge]
 	info.Edge = edge
 	info.Cin = value
 	p.FanoutInfo[edge] = info
 }
-func Bus_SclObjETime(p *Bus_Man_t, edge bufferEdge) float32 { return p.FanoutInfo[edge].Departure }
-func Bus_SclObjSetETime(p *Bus_Man_t, edge bufferEdge, value float32) {
+func Bus_SclObjETime(p *Bus_Man_t, edge FanoutPin) float32 { return p.FanoutInfo[edge].Departure }
+func Bus_SclObjSetETime(p *Bus_Man_t, edge FanoutPin, value float32) {
 	info := p.FanoutInfo[edge]
 	info.Edge = edge
 	info.Departure = value
@@ -110,7 +115,7 @@ func Bus_SclObjDept(p *Bus_Man_t, id int) float32           { return p.Departure
 func Bus_SclObjUpdateDept(p *Bus_Man_t, id int, value float32) {
 	p.Departures[id] = max(p.Departures[id], value)
 }
-func Abc_NtkComputeEdgeDept(p *Bus_Man_t, edge bufferEdge, slew float32) (float32, error) {
+func Abc_NtkComputeEdgeDept(p *Bus_Man_t, edge FanoutPin, slew float32) (float32, error) {
 	if bufferOutputs(p.Network)[edge.Node] {
 		return p.Departures[edge.Node], nil
 	}
@@ -121,7 +126,10 @@ func Abc_NtkComputeEdgeDept(p *Bus_Man_t, edge bufferEdge, slew float32) (float3
 	if cell == nil || edge.Pin < 0 || edge.Pin >= cell.Inputs {
 		return 0, fmt.Errorf("SCL: invalid timed fanout edge")
 	}
-	delay := Scl_LibPinArrivalEstimate(cell, edge.Pin, slew, p.Loads[edge.Node])
+	delay, err := bufferPinEstimate(cell, edge.Pin, slew, p.Loads[edge.Node])
+	if err != nil {
+		return 0, err
+	}
 	if !sclFinite(delay) || delay < 0 {
 		return 0, fmt.Errorf("SCL: invalid edge delay")
 	}
@@ -168,7 +176,7 @@ func Abc_NtkComputeFanoutInfo(p *Bus_Man_t, id int, slew float32) error {
 	}
 	return nil
 }
-func Abc_NtkComputeFanoutLoad(p *Bus_Man_t, edges []bufferEdge) float32 {
+func Abc_NtkComputeFanoutLoad(p *Bus_Man_t, edges []FanoutPin) float32 {
 	load := Abc_SclFindWireLoad(p.WireCaps, len(edges))
 	for _, edge := range edges {
 		load += p.FanoutInfo[edge].Cin
@@ -180,7 +188,7 @@ func Abc_NtkComputeNodeLoad(p *Bus_Man_t, id int) float32 {
 	p.Loads[id] = load
 	return load
 }
-func Bus_SclCompareFanouts(p *Bus_Man_t, a, b bufferEdge) int {
+func Bus_SclCompareFanouts(p *Bus_Man_t, a, b FanoutPin) int {
 	x, y := p.FanoutInfo[a], p.FanoutInfo[b]
 	if x.Departure < y.Departure {
 		return -1
@@ -208,14 +216,14 @@ func Bus_SclCompareFanouts(p *Bus_Man_t, a, b bufferEdge) int {
 	}
 	return 0
 }
-func Bus_SclInsertFanout(p *Bus_Man_t, edges []bufferEdge, edge bufferEdge) []bufferEdge {
+func Bus_SclInsertFanout(p *Bus_Man_t, edges []FanoutPin, edge FanoutPin) []FanoutPin {
 	index := sort.Search(len(edges), func(i int) bool { return Bus_SclCompareFanouts(p, edges[i], edge) > 0 })
-	edges = append(edges, bufferEdge{})
+	edges = append(edges, FanoutPin{})
 	copy(edges[index+1:], edges[index:])
 	edges[index] = edge
 	return edges
 }
-func Bus_SclCheckSortedFanout(p *Bus_Man_t, edges []bufferEdge) bool {
+func Bus_SclCheckSortedFanout(p *Bus_Man_t, edges []FanoutPin) bool {
 	for i := 1; i < len(edges); i++ {
 		if Bus_SclCompareFanouts(p, edges[i-1], edges[i]) > 0 {
 			return false
@@ -226,7 +234,7 @@ func Bus_SclCheckSortedFanout(p *Bus_Man_t, edges []bufferEdge) bool {
 func Abc_NtkPrintFanoutProfile(p *Bus_Man_t, id int) {
 	Abc_NtkPrintFanoutProfileVec(p, bufferEdges(p.Network, id))
 }
-func Abc_NtkPrintFanoutProfileVec(p *Bus_Man_t, edges []bufferEdge) {
+func Abc_NtkPrintFanoutProfileVec(p *Bus_Man_t, edges []FanoutPin) {
 	for _, edge := range edges {
 		info := p.FanoutInfo[edge]
 		fmt.Fprintf(p.Output, "%d:%d departure=%.2f load=%.2f\n", edge.Node, edge.Pin, info.Departure, info.Cin)
@@ -260,7 +268,7 @@ func smallestBufferGate(cell *SC_Cell, minimum float32) *SC_Cell {
 
 // AddOneInv consumes a low-departure prefix of fanouts and replaces it with
 // one appropriately sized unary stage. At least two edges are grouped.
-func Abc_SclAddOneInv(p *Bus_Man_t, driver int, fanouts []bufferEdge, gain float32) (int, []bufferEdge, error) {
+func Abc_SclAddOneInv(p *Bus_Man_t, driver int, fanouts []FanoutPin, gain float32) (int, []FanoutPin, error) {
 	if len(fanouts) < 2 || gain <= 0 || !sclFinite(gain) {
 		return -1, nil, fmt.Errorf("SCL: invalid fanout grouping")
 	}
@@ -296,13 +304,13 @@ func Abc_SclAddOneInv(p *Bus_Man_t, driver int, fanouts []bufferEdge, gain float
 	if _, err = Abc_NtkComputeNodeDeparture(p, buffer, float32(p.Parameters.Slew)); err != nil {
 		return -1, nil, err
 	}
-	edge := bufferEdge{buffer, 0}
+	edge := FanoutPin{buffer, 0}
 	departure, err := Abc_NtkComputeEdgeDept(p, edge, float32(p.Parameters.Slew))
 	if err != nil {
 		return -1, nil, err
 	}
 	p.FanoutInfo[edge] = busFanout{Edge: edge, Cin: SC_CellPinCap(cell, 0), Departure: departure}
-	remaining := append([]bufferEdge(nil), fanouts[stop:]...)
+	remaining := append([]FanoutPin(nil), fanouts[stop:]...)
 	remaining = Bus_SclInsertFanout(p, remaining, edge)
 	return buffer, remaining, nil
 }

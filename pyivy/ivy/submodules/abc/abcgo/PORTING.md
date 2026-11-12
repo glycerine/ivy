@@ -317,6 +317,20 @@ The fixture-directory convention is now `test_vectors`; a fresh directory
 scan should remain part of integration checks to prevent reintroducing
 `testdata`.
 
+## Current integration gate (2026-11-12, latest run)
+
+`GOCACHE=/tmp/abcgo-cache go -C abcgo test ./...` completed with 72 package
+results passing and 55 failing; full output is in
+`/tmp/abcgo-full-latest.log`. This run includes the newly completed `opt/cgt`
+and `proof/live` work, but still has broad generated-code frontiers. It is a
+module-wide failure, not a completion gate. The normal `map/if` package test
+still fails on C-shaped `ifDec07.go`; its selected-file race/vet manifest only
+checks the listed native files and is not package-wide evidence. SCL's package
+race/vet gate is green after correcting its original-ABC BLIF fixture, and
+DAU's plain package test/vet are green after restricting the C oracle comparison
+to defined C inputs; DAU's race and independent review were still running at
+this checkpoint. Use `test_vectors` for new fixtures.
+
 ## Follow-up integration snapshot
 
 The current `go test ./...` result remains 62 package lines passing and 60
@@ -354,3 +368,80 @@ and vet gates and was committed (`0aaf68811`); SCL still has buffer/upsize
 families in progress. SAIG cone, cleanup, structural-constraint, and I/O
 components pass explicit-file checks, while its simulation/phase group has
 source-backed fixtures; the full SAIG package remains blocked by other drafts.
+
+## Current integration gate (2026-11-12, refreshed)
+
+The next full command, `GOCACHE=/tmp/abcgo-cache go -C abcgo test ./...`,
+completed with 73 package results passing and 54 failing; full output is in
+`/tmp/abcgo-full-current2.log`. This confirms that `opt/fxu`, `misc/extra`,
+`proof/live`, `bdd/extrab/sets`, `map/amap/formula`, and `map/cov/minimize` now
+pass their normal package tests. The parent `map/amap` and `map/cov` packages
+still fail on generated draft syntax, and the full `map/if` package still fails
+on `ifDec07.go`; these leaf successes do not establish parent-package success.
+The full `opt/dau` and `map/scl` package tests pass in this run. The subsequent
+DAU race/vet reruns and independent source review also passed. `opt/fxu` passes
+its full package race/vet gate, and the full `misc/extra` package test now passes
+with source-backed Path/Prime coverage. Major remaining frontiers include GIA,
+Ivy, SAIG, base/abc, BDD CUDD/Extra/LLB, mapping, many optimization packages,
+proof, and SAT/CNF/Glucose2. This is a progress snapshot, not completion
+evidence. A fresh scan after the latest additions found no `testdata` paths;
+all new fixtures continue to use `test_vectors`.
+
+## Current integration gate (2026-11-12, newest run)
+
+`GOCACHE=/tmp/abcgo-cache go -C abcgo test ./...` completed with 74 package
+results passing and 53 failing; full output is in
+`/tmp/abcgo-full-current3.log`. The full `sat/cnf` package is now green, and
+`misc/extra`, `proof/live`, `opt/dau`, `opt/fxu`, `opt/cgt`, and SCL remain
+green in the normal package test. `sat/glucose2` and `map/if` remain red at
+their untranslated wrapper/decomposition drafts. The newest changes add
+continued native ports for Ivy and resubstitution, but Ivy and `opt/res` are
+still blocked by their package/dependency frontiers. This remains a broad
+module failure; the pass count is not a completion claim.
+
+## Current integration gate (2026-11-12, latest)
+
+The newest full run, `GOCACHE=/tmp/abcgo-cache go -C abcgo test ./...`, reports
+76 package results passing and 51 failing; full output is in
+`/tmp/abcgo-full-current6.log`. `sat/cnf` and `misc/extra` both pass their full
+package race/vet gates. SCL buffering and both `opt/fxu` and `opt/fxch` pass
+their full package race/vet gates. `map/if`, `sat/glucose2`, Ivy, `opt/res`, and
+the root `bdd/extrab` package remain blocked by untranslated package or
+dependency drafts. The overall port remains incomplete.
+
+The next whole-module run (`/tmp/abcgo-full-current7.log`) reported 74 passing
+and 54 failing package results while active edits were underway. The following
+run (`/tmp/abcgo-full-current8.log`) reported 76/53 and exposed intermediate
+test regressions. The latest run (`/tmp/abcgo-full-current9.log`) reports 77
+passing and 51 failing. The source-verified output-order expectations in
+`opt/dsc` are corrected; `opt/dsc`, `proof/live`, and `sat/glucose2` pass their
+normal package tests. `map/if` remains blocked on DSD/delay/time dependencies;
+its scoped component gates do not imply parent-package success.
+
+The next whole-module run (`/tmp/abcgo-full-current10.log`) reports 79 passing
+and 48 failing package results. It now includes ordinary package-test success
+for `opt/rwt` and `map/super`, in addition to the previously green `opt/dsc`,
+`proof/live`, `sat/glucose2`, `sat/cnf`, `misc/extra`, SCL, DAU, FXU/FXCH, and
+CGT packages. Race/vet status for the newly green RWT and Super packages is
+being confirmed by their owners. The main integration failures remain GIA/Ivy/
+SAIG/base/abc, BDD, mapping, optimization, and proof/SAT families.
+
+The follow-up run (`/tmp/abcgo-full-current11.log`) reports 79 passing and 49
+failing results. It caught a new `map/super` manager-serialization test failure;
+the owner is correcting that regression. The same run confirms `sat/glucose2`,
+`opt/dsc`, and `opt/csw` now pass ordinary package tests; their full race/vet
+gates are reported by the respective owners. LLB has moved past its matrix and
+constraint frontiers and is being ported through the manager/hint layers.
+
+The latest full run (`/tmp/abcgo-full-current13.log`) reports 80 passing and 47
+failing package results. The Super serialization regression is fixed; ordinary
+package tests pass for `map/super`, `opt/csw`, `opt/rwt`, `opt/dsc`, `proof/live`,
+and `sat/glucose2`, as well as the previously green families. The full `map/if`
+package still fails on visible `ifDsd.go` C-derived syntax; that file is restored
+and remains in the package while its native DSD engine is being implemented.
+
+The newest module run (`/tmp/abcgo-full-current14.log`) remains 80 passing and
+47 failing; its failure set is unchanged from current13. `opt/csw` now has a
+separate independent readability/bug review and full race/vet/original-C gate;
+no blocking review findings were reported. SAIG has advanced through the dual-
+rail wrapper and now reaches `saigDup.go`; the full SAIG package remains open.

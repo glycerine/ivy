@@ -4,6 +4,13 @@ import "fmt"
 
 import "os"
 
+import (
+	"unsafe"
+
+	dsc "github.com/glycerine/abcgo/opt/dsc"
+	util "github.com/glycerine/abcgo/misc/util"
+)
+
 /**CFile****************************************************************
 
   FileName    [abcDec.c]
@@ -656,20 +663,26 @@ fmt.Printf("\n"); }
                 fmt.Printf("\n"); }
         }
     } else if DecType == 6 {
-        var pDsd [DSC_MAX_STR]byte;
         /* memory pool with a capacity of storing 3*nVars
         truth-tables for negative and positive cofactors and
         the boolean difference for each input variable */
-        var mem_pool *word  = Dsc_alloc_pool(p.nVars);
+        var mem_pool []uint64 = dsc.Dsc_AllocPool(p.nVars)
+        var funcs = unsafe.Slice(p.pFuncs, int(p.nFuncs))
         for  i = 0; i < p.nFuncs; i++  {
             if fVerbose != 0 {
                 fmt.Printf("%7d :      ", i); }
-            Dsc_Decompose(p.pFuncs[i], p.nVars, pDsd, mem_pool);
+            var truth = unsafe.Slice(funcs[i], int(util.Abc_TtWordNum(p.nVars)))
+            pDsd, status := dsc.Dsc_Decompose(truth, p.nVars, mem_pool)
             if fVerbose != 0 {
-                fmt.Printf("%s\n", pDsd[0] ? pDsd : "NULL"); }
-            nNodes += Dsc_CountAnds( pDsd );
+                if status == 0 {
+                    fmt.Printf("%s\n", pDsd)
+                } else {
+                    fmt.Printf("NULL\n")
+                }
+            }
+            nNodes += dsc.Dsc_CountAnds(pDsd)
         }
-        Dsc_free_pool(mem_pool);
+        dsc.Dsc_FreePool(mem_pool)
     
     } else { assert(false, "0"); }
 

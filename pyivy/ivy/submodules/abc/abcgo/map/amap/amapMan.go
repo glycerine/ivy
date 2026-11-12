@@ -1,107 +1,44 @@
 package amap
 
-/**CFile****************************************************************
-
-  FileName    [amapMan.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Technology mapper for standard cells.]
-
-  Synopsis    [Mapping manager.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: amapMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "amapInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the AIG manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Amap_ManStart creates the state owned by one mapping operation. Node
+// addresses are stable Go allocations retained in objects; temporary cuts and
+// best-match arenas are separate so exact-area remapping can reset them.
 func Amap_ManStart(nNodes int32) *Amap_Man_t {
-    var p *Amap_Man_t;
-    // start the manager
-    // inlining of macro ABC_ALLOC
-    p = ((Amap_Man_t *) malloc(sizeof(Amap_Man_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Amap_Man_t) );
-    p.fEpsilonInternal = float32(0.01);
-    // allocate arrays for nodes
-    p.vPis    = Vec_PtrAlloc( 100 );
-    p.vPos    = Vec_PtrAlloc( 100 );
-    p.vObjs   = Vec_PtrAlloc( 100 );
-    p.vTemp   = Vec_IntAlloc( 100 );
-    p.vCuts0  = Vec_PtrAlloc( 100 );
-    p.vCuts1  = Vec_PtrAlloc( 100 );
-    p.vCuts2  = Vec_PtrAlloc( 100 );
-    p.vTempP  = Vec_PtrAlloc( 100 );
-    // prepare the memory manager
-    p.pMemObj = Aig_MmFixedStart( sizeof(Amap_Obj_t), nNodes );
-    p.pMemCuts = Aig_MmFlexStart();
-    p.pMemCutBest = Aig_MmFlexStart();
-    p.pMemTemp = Aig_MmFlexStart();
-    return p;
+	if nNodes < 0 {
+		panic("amap: negative node estimate")
+	}
+	p := &Amap_Man_t_{fEpsilonInternal: 0.01, sourceCopies: make(map[int]*Amap_Obj_t)}
+	p.objects = make([]*Amap_Obj_t, 0, nNodes+1)
+	p.vPis = Vec_PtrAlloc(100)
+	p.vPos = Vec_PtrAlloc(100)
+	p.vObjs = Vec_PtrAlloc(nNodes + 1)
+	p.vTemp = Vec_IntAlloc(100)
+	p.vCuts0 = Vec_PtrAlloc(100)
+	p.vCuts1 = Vec_PtrAlloc(100)
+	p.vCuts2 = Vec_PtrAlloc(100)
+	p.vTempP = Vec_PtrAlloc(100)
+	p.pMemCuts = Aig_MmFlexStart()
+	p.pMemCutBest = Aig_MmFlexStart()
+	p.pMemTemp = Aig_MmFlexStart()
+	return p
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Amap_ManStop releases manager-owned containers and drops all graph nodes.
+// The library belongs to the caller and is never destroyed here.
 func Amap_ManStop(p *Amap_Man_t) {
-    Vec_PtrFree( p.vPis );
-    Vec_PtrFree( p.vPos );
-    Vec_PtrFree( p.vObjs );
-    Vec_PtrFree( p.vCuts0 );
-    Vec_PtrFree( p.vCuts1 );
-    Vec_PtrFree( p.vCuts2 );
-    Vec_PtrFree( p.vTempP );
-    Vec_IntFree( p.vTemp );
-    Aig_MmFixedStop( p.pMemObj, 0 );
-    Aig_MmFlexStop( p.pMemCuts, 0 );
-    Aig_MmFlexStop( p.pMemCutBest, 0 );
-    Aig_MmFlexStop( p.pMemTemp, 0 );
-    p.pMatsTemp = nil;
-    p.ppCutsTemp = nil;
-    p.pCutsPi = nil;
-    p = nil;
+	if p == nil {
+		return
+	}
+	Vec_PtrFree(p.vPis)
+	Vec_PtrFree(p.vPos)
+	Vec_PtrFree(p.vObjs)
+	Vec_PtrFree(p.vCuts0)
+	Vec_PtrFree(p.vCuts1)
+	Vec_PtrFree(p.vCuts2)
+	Vec_PtrFree(p.vTempP)
+	Vec_IntFree(p.vTemp)
+	Aig_MmFlexStop(p.pMemCuts, 0)
+	Aig_MmFlexStop(p.pMemCutBest, 0)
+	Aig_MmFlexStop(p.pMemTemp, 0)
+	*p = Amap_Man_t_{}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

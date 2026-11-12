@@ -1,312 +1,244 @@
 package llb
 
-import "fmt"
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [llb1Constr.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [BDD based reachability.]
-
-  Synopsis    [Computing inductive constraints.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: llb1Constr.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "llbInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of constraint candidates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManCountEntries(vCands *Vec_Int_t) int32 {
-    var i, Entry, Counter int32;
-    Vec_IntForEachEntry( vCands, Entry, i )
-        Counter += ((Entry == 0) || (Entry == 1));
-    return Counter;
+// Llb_ManCountEntries counts candidate literals encoded as 0 or 1.
+func Llb_ManCountEntries(candidates *Vec_Int_t) int32 {
+	if candidates == nil {
+		return 0
+	}
+	var count int32
+	for _, entry := range vec.Vec_IntArray(candidates) {
+		if entry == 0 || entry == 1 {
+			count++
+		}
+	}
+	return count
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of constraint candidates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManPrintEntries(p *Aig_Man_t, vCands *Vec_Int_t) {
-    var i, Entry int32;
-    if vCands == nil {
-        fmt.Printf("There is no hints.\n");
-        return;
-    }
-    Entry = Llb_ManCountEntries(vCands);
-    fmt.Printf("\n*** Using %d hint%s:\n", Entry, (Entry != 1 ? "s":""));
-    Vec_IntForEachEntry( vCands, Entry, i )
-    {
-        if Entry != 0 && Entry != 1 {
-            continue; }
-        fmt.Printf("%c", Entry ? '+' : '-');
-        fmt.Printf("%-6d : ", i);
-        Aig_ObjPrint( p, Aig_ManObj(p, i) );
-        fmt.Printf("\n");
-    }
+// Llb_ManPrintEntries prints the candidate literals by AIG node ID.
+func Llb_ManPrintEntries(g *Aig_Man_t, candidates *Vec_Int_t) {
+	if candidates == nil {
+		fmt.Println("There are no hints.")
+		return
+	}
+	count := Llb_ManCountEntries(candidates)
+	suffix := "s"
+	if count == 1 {
+		suffix = ""
+	}
+	fmt.Printf("\n*** Using %d hint%s:\n", count, suffix)
+	for id, entry := range vec.Vec_IntArray(candidates) {
+		if entry != 0 && entry != 1 {
+			continue
+		}
+		sign := '-'
+		if entry == 1 {
+			sign = '+'
+		}
+		kind := "deleted"
+		e := aig.Edge(id << 1)
+		if g.ValidEdge(e) {
+			kind = fmt.Sprint(g.Node(e).Kind)
+		}
+		fmt.Printf("%c%-6d : node %d (%s)\n", sign, id, id, kind)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Dereference BDD nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManDerefenceBdds(p *Aig_Man_t, dd *DdManager) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Aig_ManForEachObj( p, pObj, i )
-        Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );
+// llbBuildBDDTable compiles graph nodes in an explicitly supplied CI valuation.
+// The inputs slice is indexed in Graph.Inputs order; a nil entry means that CI
+// should be named by its corresponding BDD variable.
+func llbBuildBDDTable(g *aig.Graph, dd *core.DdManager, inputs []*core.DdNode) []*core.DdNode {
+	nodes := g.Nodes()
+	funcs := make([]*core.DdNode, len(nodes))
+	if len(nodes) == 0 {
+		return funcs
+	}
+	funcs[0] = core.Cudd_ReadOne(dd)
+	for i, input := range g.Inputs() {
+		if i >= len(inputs) || inputs[i] == nil {
+			if i >= len(dd.Vars) {
+				return nil
+			}
+			inputs[i] = core.Cudd_bddIthVar(dd, i)
+		}
+		funcs[input.NodeID()] = inputs[i]
+	}
+	var eval func(aig.Edge, []bool) *core.DdNode
+	eval = func(edge aig.Edge, active []bool) *core.DdNode {
+		id := edge.NodeID()
+		if id < 0 || id >= len(funcs) || !g.ValidEdge(aig.Edge(id<<1)) {
+			return nil
+		}
+		base := funcs[id]
+		if base == nil {
+			if active[id] {
+				panic("llb: cycle in AIG node graph")
+			}
+			active[id] = true
+			node := nodes[id]
+			left := eval(node.Fanins[0], active)
+			switch node.Kind {
+			case aig.And:
+				right := eval(node.Fanins[1], active)
+				base = core.Cudd_bddAnd(dd, left, right)
+			case aig.ExclusiveOr:
+				right := eval(node.Fanins[1], active)
+				base = core.Cudd_bddXor(dd, left, right)
+			case aig.Buffer, aig.Output:
+				base = left
+			case aig.Constant:
+				base = core.Cudd_ReadOne(dd)
+			case aig.Input:
+				panic("llb: input node is missing its BDD variable")
+			default:
+				panic(fmt.Sprintf("llb: unsupported AIG node kind %d", node.Kind))
+			}
+			funcs[id] = base
+			active[id] = false
+		}
+		if edge.Complemented() {
+			return core.Cudd_Not(base)
+		}
+		return base
+	}
+	for _, edge := range g.LiveEdges() {
+		if funcs[edge.NodeID()] != nil {
+			continue
+		}
+		// Only invoke recursive evaluation on regular edges; polarity is applied
+		// by callers when they consume fanins.
+		_ = eval(edge, make([]bool, len(nodes)))
+	}
+	return funcs
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of constraint candidates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManComputeIndCase_rec(p *Aig_Man_t, pObj *Aig_Obj_t, dd *DdManager, vBdds *Vec_Ptr_t) *DdNode {
-    var bBdd0, bBdd1 *DdNode;
-    var bFunc *DdNode  = (DdNode *)Vec_PtrEntry( vBdds, Aig_ObjId(pObj) );
-    if bFunc != nil {
-        return bFunc; }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    bBdd0 = Llb_ManComputeIndCase_rec( p, Aig_ObjFanin0(pObj), dd, vBdds ); 
-    bBdd1 = Llb_ManComputeIndCase_rec( p, Aig_ObjFanin1(pObj), dd, vBdds ); 
-    // inlining of macro Cudd_NotCond
-    bBdd0 = ((DdNode *)((ptrint)(bBdd0) ^ (Aig_ObjFaninC0(pObj))));
-    // inlining of macro Cudd_NotCond
-    bBdd1 = ((DdNode *)((ptrint)(bBdd1) ^ (Aig_ObjFaninC1(pObj))));
-    bFunc = Cudd_bddAnd( dd, bBdd0, bBdd1 );  Cudd_Ref( bFunc );
-    Vec_PtrWriteEntry( vBdds, Aig_ObjId(pObj), bFunc );
-    return bFunc;
+func llbBDDForEdge(g *aig.Graph, funcs []*core.DdNode, edge aig.Edge) *core.DdNode {
+	if edge.NodeID() < 0 || edge.NodeID() >= len(funcs) || !g.ValidEdge(aig.Edge(edge.NodeID()<<1)) {
+		return nil
+	}
+	f := funcs[edge.NodeID()]
+	if edge.Complemented() {
+		return core.Cudd_Not(f)
+	}
+	return f
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of constraint candidates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManComputeIndCase(p *Aig_Man_t, dd *DdManager, vNodes *Vec_Int_t) {
-    var vBdds *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var bFunc *DdNode;
-    var i, Entry int32;
-    vBdds = Vec_PtrStart( Aig_ManObjNumMax(p) );
-    bFunc = Cudd_ReadOne(dd); Cudd_Ref( bFunc );
-    Vec_PtrWriteEntry( vBdds, Aig_ObjId(Aig_ManConst1(p)), bFunc );
-    Saig_ManForEachPi( p, pObj, i )
-    {
-        bFunc = Cudd_bddIthVar( dd, Aig_ManCiNum(p) + i );  Cudd_Ref( bFunc );
-        Vec_PtrWriteEntry( vBdds, Aig_ObjId(pObj), bFunc );
-    }
-    Saig_ManForEachLi( p, pObj, i )
-    {
-        bFunc = (DdNode *)pObj.pData;  Cudd_Ref( bFunc );
-        Vec_PtrWriteEntry( vBdds, Aig_ObjId(Saig_ObjLiToLo(p, pObj)), bFunc );
-    }
-    Vec_IntForEachEntry( vNodes, Entry, i )
-    { 
-        if Entry != 0 && Entry != 1 {
-            continue; }
-        pObj = Aig_ManObj( p, i );
-        bFunc = Llb_ManComputeIndCase_rec( p, pObj, dd, vBdds );
-        if Entry == 0 {
-//            Extra_bddPrint( dd, Cudd_Not(pObj->pData) );  printf( "\n" );
-//            Extra_bddPrint( dd, Cudd_Not(bFunc) );        printf( "\n" );
-            // inlining of macro Cudd_Not
-            if !Cudd_bddLeq( dd, ((DdNode *)((ptrint)(pObj.pData) ^ 01)), ((DdNode *)((ptrint)(bFunc) ^ 01)) ) {
-                Vec_IntWriteEntry( vNodes, i, -1 ); }
-        
-        } else if Entry == 1 {
-//            Extra_bddPrint( dd, pObj->pData );  printf( "\n" );
-//            Extra_bddPrint( dd, bFunc );        printf( "\n" );
-            if !Cudd_bddLeq( dd, (DdNode *)pObj.pData, bFunc ) {
-                Vec_IntWriteEntry( vNodes, i, -1 ); }
-        }
-    }
-    Vec_PtrForEachEntry( DdNode *, vBdds, bFunc, i )
-        if ( bFunc )
-            Cudd_RecursiveDeref( dd, bFunc );
-    Vec_PtrFree( vBdds );
+func llbBaseCase(g *aig.Graph, dd *core.DdManager, funcs []*core.DdNode, property *core.DdNode) *Vec_Int_t {
+	candidates := vec.Vec_IntStartFull(len(funcs))
+	notProperty := core.Cudd_Not(property)
+	for _, edge := range g.LiveEdges() {
+		node := g.Node(edge)
+		if node.Kind != aig.Input && node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer {
+			continue
+		}
+		id := edge.NodeID()
+		f := funcs[id]
+		if core.Cudd_bddLeq(dd, f, notProperty) {
+			vec.Vec_IntWriteEntry(candidates, id, 1)
+		} else if core.Cudd_bddLeq(dd, core.Cudd_Not(f), notProperty) {
+			vec.Vec_IntWriteEntry(candidates, id, 0)
+		}
+	}
+	return candidates
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of constraint candidates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManComputeBaseCase(p *Aig_Man_t, dd *DdManager) *Vec_Int_t {
-    var vNodes *Vec_Int_t;
-    var pObj, pRoot *Aig_Obj_t;
-    var i int32;
-    pRoot = Aig_ManCo( p, 0 );
-    vNodes = Vec_IntStartFull( Aig_ManObjNumMax(p) );
-    Aig_ManForEachObj( p, pObj, i )
-    {
-        if !Aig_ObjIsNode(pObj) && !Aig_ObjIsCi(pObj) {
-            continue; }
-        // inlining of macro Cudd_Not
-        if Cudd_bddLeq( dd, (DdNode *)pObj.pData, ((DdNode *)((ptrint)(pRoot.pData) ^ 01)) ) {
-            Vec_IntWriteEntry( vNodes, i, 1 );
-        // inlining of macro Cudd_Not
-        } else if Cudd_bddLeq( dd, ((DdNode *)((ptrint)((DdNode *)pObj.pData) ^ 01)), ((DdNode *)((ptrint)(pRoot.pData) ^ 01)) ) {
-            Vec_IntWriteEntry( vNodes, i, 0 ); }
-    }
-    return vNodes;
+func llbInductiveCase(g *aig.Graph, dd *core.DdManager, global []*core.DdNode, candidates *Vec_Int_t) {
+	inputs := g.Inputs()
+	outputs := g.Outputs()
+	nRegs := int(g.RegisterCount())
+	if nRegs < 0 || nRegs > len(inputs) || nRegs > len(outputs) {
+		panic("llb: invalid sequential interface")
+	}
+	nPis := len(inputs) - nRegs
+	transitionVars := make([]*core.DdNode, len(inputs))
+	for i := 0; i < nPis; i++ {
+		transitionVars[i] = core.Cudd_bddIthVar(dd, len(inputs)+i)
+	}
+	firstLatchOutput := len(outputs) - nRegs
+	for i := 0; i < nRegs; i++ {
+		nextState := llbBDDForEdge(g, global, outputs[firstLatchOutput+i])
+		transitionVars[nPis+i] = nextState
+	}
+	transition := llbBuildBDDTable(g, dd, transitionVars)
+	if transition == nil {
+		panic("llb: failed to construct transition BDD table")
+	}
+	values := vec.Vec_IntArray(candidates)
+	for id, candidate := range values {
+		if candidate != 0 && candidate != 1 {
+			continue
+		}
+		current, next := global[id], transition[id]
+		if current == nil || next == nil {
+			vec.Vec_IntWriteEntry(candidates, id, -1)
+			continue
+		}
+		preserved := false
+		if candidate == 0 {
+			preserved = core.Cudd_bddLeq(dd, core.Cudd_Not(current), core.Cudd_Not(next))
+		} else {
+			preserved = core.Cudd_bddLeq(dd, current, next)
+		}
+		if !preserved {
+			vec.Vec_IntWriteEntry(candidates, id, -1)
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Constructs global BDDs for each object in the AIG manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManConstructGlobalBdds(p *Aig_Man_t) *DdManager {
-    var dd *DdManager;
-    var bBdd0, bBdd1 *DdNode;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    dd = Cudd_Init( Aig_ManCiNum(p), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );
-    pObj = Aig_ManConst1(p);
-    pObj.pData = Cudd_ReadOne(dd);  Cudd_Ref( (DdNode *)pObj.pData );
-    Aig_ManForEachCi( p, pObj, i )
-    {
-        pObj.pData = Cudd_bddIthVar(dd, i);  Cudd_Ref( (DdNode *)pObj.pData );
-    }
-    Aig_ManForEachNode( p, pObj, i )
-    {
-        // inlining of macro Cudd_NotCond
-        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));
-        // inlining of macro Cudd_NotCond
-        bBdd1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));
-        pObj.pData = Cudd_bddAnd( dd, bBdd0, bBdd1 );   Cudd_Ref( (DdNode *)pObj.pData );
-    }
-    Aig_ManForEachCo( p, pObj, i )
-    {
-        // inlining of macro Cudd_NotCond
-        pObj.pData = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));  Cudd_Ref( (DdNode *)pObj.pData );
-    }
-    return dd;
+// Llb_ManDeriveConstraints returns literals that are both safe initially and
+// inductive for the supplied one-step transition relation. A nil result means
+// that no candidate survived.
+func Llb_ManDeriveConstraints(g *Aig_Man_t) *Vec_Int_t {
+	if g == nil {
+		return nil
+	}
+	inputs, outputs := g.Inputs(), g.Outputs()
+	nRegs := int(g.RegisterCount())
+	if nRegs < 0 || nRegs > len(inputs) || nRegs > len(outputs) {
+		return nil
+	}
+	propertyOutputs := len(outputs) - nRegs
+	if propertyOutputs != 1 {
+		fmt.Printf("The AIG has %d property outputs.\n", propertyOutputs)
+		return nil
+	}
+	dd := core.NewBDDManager(len(inputs) + len(inputs) - nRegs)
+	if dd == nil {
+		return nil
+	}
+	defer core.Cudd_Quit(dd)
+	initialVars := make([]*core.DdNode, len(inputs))
+	for i := range initialVars {
+		initialVars[i] = core.Cudd_bddIthVar(dd, i)
+	}
+	global := llbBuildBDDTable(g, dd, initialVars)
+	if global == nil {
+		return nil
+	}
+	property := llbBDDForEdge(g, global, outputs[0])
+	if property == nil {
+		return nil
+	}
+	candidates := llbBaseCase(g, dd, global, property)
+	if Llb_ManCountEntries(candidates) != 0 {
+		llbInductiveCase(g, dd, global, candidates)
+	}
+	if Llb_ManCountEntries(candidates) == 0 {
+		vec.Vec_IntFree(candidates)
+		return nil
+	}
+	return candidates
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives inductive constraints.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManDeriveConstraints(p *Aig_Man_t) *Vec_Int_t {
-    var dd *DdManager;
-    var vNodes *Vec_Int_t;
-    if Saig_ManPoNum(p) != 1 {
-        fmt.Printf("The AIG has %d property outputs.\n", Saig_ManPoNum(p));
-        return nil;
-    }
-    assert(Saig_ManPoNum(p) == 1, "Saig_ManPoNum(p) == 1");
-    dd = Llb_ManConstructGlobalBdds( p );
-    vNodes = Llb_ManComputeBaseCase( p, dd );
-    if Llb_ManCountEntries(vNodes) > 0 {
-        Llb_ManComputeIndCase( p, dd, vNodes ); }
-    if Llb_ManCountEntries(vNodes) == 0 {
-        Vec_IntFreeP( &vNodes ); }
-    Llb_ManDerefenceBdds( p, dd );
-    Extra_StopManager( dd );
-    return vNodes;
+func Llb_ManConstrTest(g *Aig_Man_t) {
+	candidates := Llb_ManDeriveConstraints(g)
+	Llb_ManPrintEntries(g, candidates)
+	vec.Vec_IntFree(candidates)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Tests derived constraints.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Llb_ManConstrTest(p *Aig_Man_t) {
-    var vNodes *Vec_Int_t;
-    vNodes = Llb_ManDeriveConstraints( p );
-    Llb_ManPrintEntries( p, vNodes );
-    Vec_IntFreeP( &vNodes );
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

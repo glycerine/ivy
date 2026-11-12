@@ -1,42 +1,32 @@
 # misc/extra port status
 
-Completed native Go implementations:
+All original source families now have active native Go implementations; the full
+`misc/extra` package builds and its package-wide tests pass. No product source is
+excluded with build tags or replaced by placeholder implementations. The Cfs/Gen
+commands are documented source-empty operations, matching their original bodies.
 
-- `extraUtilBitMatrix.go`: all 16 bit-matrix functions, with fixed-width words,
-  independently stored upper/lower relations, unions, disjointness and clique checks.
-- `extraUtilMemory.go`: all 18 fixed/flexible/stepped allocator functions. Mutable
-  entries are byte slices, replacing raw C pointers; free lists hold slices rather
-  than writing pointers into entry bytes. Allocation preserves chunk accounting,
-  recycling and restart behavior. Callers must use slice indexing for entries.
+Completed groups include header/bit helpers, bit matrices, allocation pools,
+reader/progress/file/getopt utilities, truth manipulation, N/NP/NPN canonical
+forms, ZDD permutations, Cube/DSD/Enum/Macc/Maj enumeration, general combinatorial
+helpers, BDDs, path frontiers/SAT diagnostics, primes/cube-distance hashing,
+support minimization and ZDD probability truncation. Individual sections below
+record API changes, separate readability/bug reviews, oracle hashes and tests.
+Earlier checkpoint statements about remaining drafts describe historical states.
 
-The package is not buildable yet. Other generated files still contain C syntax,
-unknown preprocessor branches and unresolved external types. Nothing is excluded
-from builds or replaced with placeholders. Important remaining dependencies include
-misc/vec, bool/kit, bdd/cudd and base/main's frame/progress configuration.
-
-Focused verification (does not imply package-wide completion):
-
-```
-go test extraUtilBitMatrix.go extraUtilBitMatrix_test.go extraUtilMemory.go extraUtilMemory_test.go
-```
-
-Full package verification remains `go test ./misc/extra` from `abcgo/`; currently
-it fails first on a retained `#` directive in `extra.go`.
-
-`misc/extra/npn` is an independently buildable native subpackage for four-input
-NPN canonicalization. It exports `Extra_Truth4VarNPN`, `Permutations`, and
-`Transform`. Canonical/phase/permutation tables match all 262144 bytes emitted
-by the original C implementation, with the oracle hash recorded in a test.
-Exhaustive tests reconstruct all 65536 truth tables and verify all 222 orbits.
-Class IDs are completed for every function, including complemented canonical
-representatives whose IDs the original C loop leaves unset.
+Current full verification from the workspace root:
 
 ```
-go test ./misc/extra/npn
+GOCACHE=/tmp/abcgo-cache go -C abcgo test -race -timeout 120s ./misc/extra ./misc/extra/npn
+GOCACHE=/tmp/abcgo-cache go -C abcgo vet ./misc/extra ./misc/extra/npn
 ```
 
-This subpackage lets consumers use canonicalization while the larger parent
-package's remaining generated source is being ported.
+The independent `misc/extra/npn` subpackage provides four-input NPN tables and
+transformations, with exhaustive original-C comparisons and all 222 orbits.
+Core dependencies are existing native `util`, `vec`, `kit`, `rsb`, `aig.Graph`,
+`ioa`, `bsat`, `opt/dau/canon` and `bdd/cudd/core`. Progress mode configuration is
+explicit (`Extra_ProgressBarSetMode`); integration with any base/main frame remains
+the caller's responsibility. The full ABC repository is a larger integration
+scope than this package's completion.
 
 ## Required review passes
 
@@ -461,3 +451,102 @@ duplicate cubes, final omitted literals and distance-2 count/repeatability.
 Focused race and vet pass with explicit files `extraUtilPrime.go`,
 `extraUtilPrime_test.go`, `extra_prime_hash.go`, `extraUtilFile.go`,
 `extraUtilTruth.go`.
+
+### Path frontiers and graph/SAT diagnostics (`extraUtilPath.go`)
+
+Ported all grid, lifetime, frontier, state construction, counting, graph
+construction, path printing, AIGER output and lexicographic SAT diagnostics.
+Uses the existing authoritative `aig.Graph`, `ioa` writer, and public `bsat`
+solver; no parallel graph representation or Gia/CNF draft dependency was added.
+The bsat owner exposed the original internal lexicographic solver as
+`SolveLexicographic`; returned lower-bound/model vectors are reused only after
+blocking the previous model, matching its source precondition. Native Tseitin
+clauses replace the mapping manager's incidental CNF feeder, preserving every
+AND/XOR/buffer/output equation and asserted output.
+
+Readability review: isolated packed frontier transitions, stable state interning,
+count memoization and graph conversion. The original degree/component packing,
+edge processing order, else-before-then branches, representative selection and
+state insertion order remain explicit. Used direct CI access during graph
+construction to avoid repeatedly cloning the entire input vector.
+
+Bug review: dynamic path buffers remove the source 1000-edge stack limit.
+SAT conversion explicitly allocates unused input variables, preserves complemented
+edges, and handles constants. Sampling includes the final satisfying model even
+when its blocking clause immediately proves UNSAT; first minterm zero uses an
+explicit sample counter instead of the original zero sentinel. Averages divide
+by actual observed intervals rather than fixed 1000 iterations; empty/single
+samples yield defined zero estimates. File output returns errors.
+
+Validation: every transition and final count for complete grids 2..6 matches
+compiled original C SHA256
+`a30dd81a6fd611a2ff8394fc8f07a69a03389b04fea768d80a44ba1fd0fe623a`
+(counts 2/12/184/8512/1262816). All assignments of 2x2/3x3 undirected grid AIGs
+match independent simple-path checks; directed sizes 1/2 match independent
+reachability DP. Exact lexicographic SAT vectors, bounded sampling, UNSAT and
+singleton results have regressions. Focused race passes with Path and its test.
+
+### Support minimization (`extraUtilSupp.go`)
+
+Ported all fixed-weight vector generation, difference generation/profiling,
+parity-cover greedy minimization, verification, MIN parsing, difference matrices
+and greedy coordinate-removal APIs. Owned vector/map storage replaces exponential
+dense presence bitmaps where appropriate. Fixed-weight generation uses Gosper's
+successor with the same numeric order as the original full scan.
+
+Readability review: separated parity-marker operations from coordinate removal;
+used bit population counts and typed vectors. MIN parsing returns dimensions
+and errors instead of mutable output pointers or global tokenization. The
+coordinate solver keeps an explicit removed-variable set and updates its private
+matrix, making the original intended greedy rule directly inspectable.
+
+Bug review: parity selection XORs a repeated variable into the result mask,
+matching actual toggled marker parity. Zero differences fail explicitly instead
+of looping without progress. Original coordinate removal never cleared removed
+bits or excluded previously removed zero-occurrence variables, permitting repeated
+removal/infinite loops; the native solver fixes both while retaining the same
+fewest-double/first-index selection policy. Input matrices remain unmodified.
+MIN parsing validates tokens before indexing, permits a final unterminated row,
+checks widths before shifts, and reports count/width errors.
+
+Validation: fixed-weight generation, ordered unique differences and complete
+parity-cover matrices for every m-out-of-n case through n=8 match original C
+SHA256 `d98b67a937954f27c1b36d8d589176e594ba40c56c1f3785ce1d30c6e78c6f03`.
+Every cover is independently checked for injectivity. One thousand randomized
+parity masks match the actual marker states, and one thousand coordinate-removal
+runs match a separate implementation that recomputes all singleton/double counts
+after each removal. Tests cover empty matrices, duplicate differences, MIN input
+errors and impossible zero differences. Focused race passes.
+
+### ZDD probability truncation (`extraZddTrunc.go`)
+
+Ported all truncation, singleton/subset construction, packed subset printing and
+diagnostic APIs against the existing authoritative `bdd/cudd/core` manager (also
+aliased by the public CUDD package). No copied integer-vector implementation or
+pointer tagging remains. Returned packed slices retain the original count plus
+-1-terminated subsets format, and else-before-then traversal order.
+
+Readability review: documented that only included variables contribute probability
+factors, and equality with the threshold is retained. Used native Vec helpers
+and core ZDD operations; singleton construction uses Change(one,var), rather
+than the distinct universe semantics of zddIthVar.
+
+Bug review: NaN probabilities/thresholds are rejected along with out-of-range
+values; indices and packed subset termination are checked. Native ownership
+removes the original per-union temporary-reference leak. Threshold pruning and
+multiplication order remain exactly as in the original recursion.
+
+Validation: all 256 families of subsets over three variables at five thresholds
+match an independent explicit probability/set oracle, including exact threshold
+boundaries and traversal order. The original ten-variable demonstration returns
+exactly subsets {2,4} and {0,3,5}; invalid probability inputs have regressions.
+Focused race passes.
+
+## Final package integration checkpoint
+
+All original misc/extra product source files remain active and the complete
+package now passes its tests. Final package-wide race verification (including
+npn) passed, with misc/extra taking 10.417 seconds; package-wide vet also passed.
+This includes the final Path direct-CI optimization and 64-variable support
+verification boundary correction. No experiment directories were tested, no
+build tags hide drafts, and no testdata directories were introduced.

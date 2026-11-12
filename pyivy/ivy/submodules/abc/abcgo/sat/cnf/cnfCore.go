@@ -1,19 +1,25 @@
 package cnf
 
 import (
-	"github.com/glycerine/abcgo/aig/aig"
+	"sync"
+
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
 var s_pManCnf *Cnf_Man_t
+var s_manCnfMu sync.Mutex
 
 func Cnf_ManPrepare() {
+	s_manCnfMu.Lock()
+	defer s_manCnfMu.Unlock()
 	if s_pManCnf == nil {
 		s_pManCnf = Cnf_ManStart()
 	}
 }
-func Cnf_ManRead() *Cnf_Man_t { return s_pManCnf }
+func Cnf_ManRead() *Cnf_Man_t { s_manCnfMu.Lock(); defer s_manCnfMu.Unlock(); return s_pManCnf }
 func Cnf_ManFree() {
+	s_manCnfMu.Lock()
+	defer s_manCnfMu.Unlock()
 	if s_pManCnf != nil {
 		Cnf_ManStop(s_pManCnf)
 		s_pManCnf = nil
@@ -49,5 +55,3 @@ func Cnf_DeriveOtherWithMan(manager *Cnf_Man_t, graph *Aig_Man_t, _ int32) *Cnf_
 func Cnf_DeriveOther(graph *Aig_Man_t, skipTTMin int32) *Cnf_Dat_t {
 	return Cnf_DeriveOtherWithMan(nil, graph, skipTTMin)
 }
-
-var _ *aig.Graph

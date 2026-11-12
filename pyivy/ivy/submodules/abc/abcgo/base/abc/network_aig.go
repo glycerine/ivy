@@ -99,13 +99,11 @@ func (n *Network) Evaluate(root Edge, inputs map[*Object]bool) (bool, error) {
 			values[o] = args[0]
 			continue
 		}
-		if fn, ok := o.Data.(func([]bool) bool); ok {
-			values[o] = fn(args)
-			continue
-		}
-		if o.Kind == ObjectNode && o.Data == aigANDMarker && len(args) == 2 {
-			values[o] = args[0] && args[1]
-			continue
+		if o.Kind == ObjectNode {
+			if fn, ok := booleanFunction(o); ok {
+				values[o] = fn(args)
+				continue
+			}
 		}
 		if (o.IsCO() || o.Kind == ObjectNet) && len(args) == 1 {
 			values[o] = args[0]

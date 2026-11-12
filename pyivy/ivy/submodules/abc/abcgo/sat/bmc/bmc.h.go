@@ -78,41 +78,6 @@ func Bmc_EsParSetDefault(pPars *Bmc_EsPar_t) {
 // unrolling manager
 type Unr_Man_t = Unr_Man_t_
 
-type Saig_ParBmc_t struct {
-	nStart         int32                         // starting timeframe
-	nFramesMax     int32                         // maximum number of timeframes
-	nConfLimit     int32                         // maximum number of conflicts at a node
-	nConfLimitJump int32                         // maximum number of conflicts after jumping
-	nFramesJump    int32                         // the number of tiemframes to jump
-	nTimeOut       int32                         // approximate timeout in seconds
-	nTimeOutGap    int32                         // approximate timeout in seconds since the last change
-	nTimeOutOne    int32                         // timeout per output in multi-output solving
-	nPisAbstract   int32                         // the number of PIs to abstract
-	fSolveAll      int32                         // does not stop at the first SAT output
-	fStoreCex      int32                         // enable storing CEXes in the MO mode
-	fUseBridge     int32                         // use bridge interface
-	fDropSatOuts   int32                         // replace sat outputs by constant 0
-	nFfToAddMax    int32                         // max number of flops to add during CBA
-	fSkipRand      int32                         // skip random decisions
-	fNoRestarts    int32                         // disables periodic restarts
-	fUseSatoko     int32                         // enables using Satoko
-	fUseGlucose    int32                         // enables using Glucose 3.0
-	nLearnedStart  int32                         // starting learned clause limit
-	nLearnedDelta  int32                         // delta of learned clause limit
-	nLearnedPerce  int32                         // ratio of learned clause limit
-	fVerbose       int32                         // verbose
-	fNotVerbose    int32                         // skip line-by-line print-out
-	pLogFileName   string                        // log file name
-	fSilent        int32                         // completely silent
-	iFrame         int32                         // explored up to this frame
-	nFailOuts      int32                         // the number of failed outputs
-	nDropOuts      int32                         // the number of dropped outputs
-	timeLastSolved abctime                       // the time when the last output was solved
-	pFuncOnFail    func(int32, *Abc_Cex_t) int32 // called for a failed output in MO mode
-	RunId          int32                         // BMC id in this run
-	pFuncStop      func(int32) int32             // callback to terminate
-}
-
 type Bmc_AndPar_t struct {
 	nStart        int32 // starting timeframe
 	nFramesMax    int32 // maximum number of timeframes

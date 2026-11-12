@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"strings"
+	"time"
 )
 
 import "os"
@@ -226,9 +227,7 @@ import "os"
 /* Variable declarations                                                     */
 /*---------------------------------------------------------------------------*/
 
-#ifndef lint
-static char rcsid[] DD_UNUSED = "$Id: cuddAPI.c,v 1.59 2009/02/19 16:14:14 fabio Exp $";
-#endif
+// C source revision identifier omitted.
 
 /*---------------------------------------------------------------------------*/
 /* Macro declarations                                                        */
@@ -270,21 +269,8 @@ static char rcsid[] DD_UNUSED = "$Id: cuddAPI.c,v 1.59 2009/02/19 16:14:14 fabio
 
 ******************************************************************************/
 func Cudd_addNewVar(dd *DdManager) *DdNode {
-    var res *DdNode;
-
-    if (unsigned int) dd.size >= CUDD_MAXINDEX - 1 { return(nil); }
-    for {
-        dd.reordered = 0;
-        // inlining of macro DD_ONE
-        // inlining of macro DD_ZERO
-        res = cuddUniqueInter(dd,dd.size,((dd).one),((dd).zero));
-    
-if !(dd.reordered == 1) { break }
-} 
-
-    return(res);
-
-} /* end of Cudd_addNewVar */
+	return core.Cudd_addNewVar(dd)
+} // Cudd_addNewVar
 
 
 /**Function********************************************************************
@@ -302,23 +288,8 @@ if !(dd.reordered == 1) { break }
 
 ******************************************************************************/
 func Cudd_addNewVarAtLevel(dd *DdManager, level int32) *DdNode {
-    var res *DdNode;
-
-    if (unsigned int) dd.size >= CUDD_MAXINDEX - 1 { return(nil); }
-    if level >= dd.size { return(Cudd_addIthVar(dd,level)); }
-    if !cuddInsertSubtables(dd,1,level) { return(nil); }
-    for {
-        dd.reordered = 0;
-        // inlining of macro DD_ONE
-        // inlining of macro DD_ZERO
-        res = cuddUniqueInter(dd,dd.size - 1,((dd).one),((dd).zero));
-    
-if !(dd.reordered == 1) { break }
-} 
-
-    return(res);
-
-} /* end of Cudd_addNewVarAtLevel */
+	return core.Cudd_addNewVarAtLevel(dd, int(level))
+} // Cudd_addNewVarAtLevel
 
 
 /**Function********************************************************************
@@ -335,15 +306,8 @@ if !(dd.reordered == 1) { break }
 
 ******************************************************************************/
 func Cudd_bddNewVar(dd *DdManager) *DdNode {
-    var res *DdNode;
-
-    if (unsigned int) dd.size >= CUDD_MAXINDEX - 1 { return(nil); }
-    // inlining of macro Cudd_Not
-    res = cuddUniqueInter(dd,dd.size,dd.one,((DdNode *)((ptrint)(dd.one) ^ 01)));
-
-    return(res);
-
-} /* end of Cudd_bddNewVar */
+	return core.Cudd_bddNewVar(dd)
+} // Cudd_bddNewVar
 
 
 /**Function********************************************************************
@@ -361,16 +325,8 @@ func Cudd_bddNewVar(dd *DdManager) *DdNode {
 
 ******************************************************************************/
 func Cudd_bddNewVarAtLevel(dd *DdManager, level int32) *DdNode {
-    var res *DdNode;
-
-    if (unsigned int) dd.size >= CUDD_MAXINDEX - 1 { return(nil); }
-    if level >= dd.size { return(Cudd_bddIthVar(dd,level)); }
-    if !cuddInsertSubtables(dd,1,level) { return(nil); }
-    res = dd.vars[dd.size - 1];
-
-    return(res);
-
-} /* end of Cudd_bddNewVarAtLevel */
+	return core.Cudd_bddNewVarAtLevel(dd, int(level))
+} // Cudd_bddNewVarAtLevel
 
 
 /**Function********************************************************************
@@ -390,21 +346,8 @@ func Cudd_bddNewVarAtLevel(dd *DdManager, level int32) *DdNode {
 
 ******************************************************************************/
 func Cudd_addIthVar(dd *DdManager, i int32) *DdNode {
-    var res *DdNode;
-
-    if (unsigned int) i >= CUDD_MAXINDEX - 1 { return(nil); }
-    for {
-        dd.reordered = 0;
-        // inlining of macro DD_ONE
-        // inlining of macro DD_ZERO
-        res = cuddUniqueInter(dd,i,((dd).one),((dd).zero));
-    
-if !(dd.reordered == 1) { break }
-} 
-
-    return(res);
-
-} /* end of Cudd_addIthVar */
+	return core.Cudd_addIthVar(dd, int(i))
+} // Cudd_addIthVar
 
 
 /**Function********************************************************************
@@ -422,19 +365,8 @@ if !(dd.reordered == 1) { break }
 
 ******************************************************************************/
 func Cudd_bddIthVar(dd *DdManager, i int32) *DdNode {
-    var res *DdNode;
-
-    if (unsigned int) i >= CUDD_MAXINDEX - 1 { return(nil); }
-    if i < dd.size {
-        res = dd.vars[i];
-    } else {
-        // inlining of macro Cudd_Not
-        res = cuddUniqueInter(dd,i,dd.one,((DdNode *)((ptrint)(dd.one) ^ 01)));
-    }
-
-    return(res);
-
-} /* end of Cudd_bddIthVar */
+	return core.Cudd_bddIthVar(dd, int(i))
+} // Cudd_bddIthVar
 
 
 /**Function********************************************************************
@@ -451,61 +383,8 @@ func Cudd_bddIthVar(dd *DdManager, i int32) *DdNode {
 
 ******************************************************************************/
 func Cudd_zddIthVar(dd *DdManager, i int32) *DdNode {
-    var res *DdNode;
-    var zvar *DdNode;
-    var lower *DdNode;
-    var j int32;
-
-    if (unsigned int) i >= CUDD_MAXINDEX - 1 { return(nil); }
-
-    /* The i-th variable function has the following structure:
-    ** at the level corresponding to index i there is a node whose "then"
-    ** child points to the universe, and whose "else" child points to zero.
-    ** Above that level there are nodes with identical children.
-    */
-
-    /* First we build the node at the level of index i. */
-    if i < dd.sizeZ - 1 {
-        lower = dd.univ[dd.permZ[i]+1];
-    } else {
-        // inlining of macro DD_ONE
-        lower = ((dd).one);
-    }
-    for {
-        dd.reordered = 0;
-        // inlining of macro DD_ZERO
-        zvar = cuddUniqueInterZdd(dd, i, lower, ((dd).zero));
-    
-if !(dd.reordered == 1) { break }
-} 
-
-    if zvar == nil {
-        return(nil); }
-    // inlining of macro cuddRef
-    cuddSatInc(Cudd_Regular(zvar).ref);
-
-    /* Now we add the "filler" nodes above the level of index i. */
-    for j = dd.permZ[i] - 1; j >= 0; j-- {
-        for {
-            dd.reordered = 0;
-            res = cuddUniqueInterZdd(dd, dd.invpermZ[j], zvar, zvar);
-        
-if !(dd.reordered == 1) { break }
-} 
-        if res == nil {
-            Cudd_RecursiveDerefZdd(dd,zvar);
-            return(nil);
-        }
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(res).ref);
-        Cudd_RecursiveDerefZdd(dd,zvar);
-        zvar = res;
-    }
-    // inlining of macro cuddDeref
-    cuddSatDec(Cudd_Regular(zvar).ref);
-    return(zvar);
-
-} /* end of Cudd_zddIthVar */
+	return core.Cudd_zddIthVar(dd, int(i))
+} // Cudd_zddIthVar
 
 
 /**Function********************************************************************
@@ -530,92 +409,9 @@ if !(dd.reordered == 1) { break }
   SeeAlso     [Cudd_bddNewVar Cudd_bddIthVar Cudd_bddNewVarAtLevel]
 
 ******************************************************************************/
-int
-Cudd_zddVarsFromBddVars(
-  DdManager * dd /* DD manager */,
-  int multiplicity /* how many ZDD variables are created for each BDD variable */)
-{
-    var res int32;
-    var i, j int32;
-    var allnew int32;
-    var permutation *int32;
-
-    if multiplicity < 1 { return(0); }
-    allnew = dd.sizeZ == 0;
-    if dd.size * multiplicity > dd.sizeZ {
-        res = cuddResizeTableZdd(dd,dd.size * multiplicity - 1);
-        if res == 0 { return(0); }
-    }
-    /* Impose the order of the BDD variables to the ZDD variables. */
-    if allnew != 0 {
-        for i = 0; i < dd.size; i++ {
-            for j = 0; j < multiplicity; j++ {
-                dd.permZ[i * multiplicity + j] =
-                    dd.perm[i] * multiplicity + j;
-                dd.invpermZ[dd.permZ[i * multiplicity + j]] =
-                    i * multiplicity + j;
-            }
-        }
-        for i = 0; i < dd.sizeZ; i++ {
-            dd.univ[i].index = dd.invpermZ[i];
-        }
-    } else {
-        permutation = ABC_ALLOC(int,dd.sizeZ);
-        if permutation == nil {
-            dd.errorCode = CUDD_MEMORY_OUT;
-            return(0);
-        }
-        for i = 0; i < dd.size; i++ {
-            for j = 0; j < multiplicity; j++ {
-                permutation[i * multiplicity + j] =
-                    dd.invperm[i] * multiplicity + j;
-            }
-        }
-        for i = dd.size * multiplicity; i < dd.sizeZ; i++ {
-            permutation[i] = i;
-        }
-        res = Cudd_zddShuffleHeap(dd, permutation);
-        ABC_FREE(permutation);
-        if res == 0 { return(0); }
-    }
-    /* Copy and expand the variable group tree if it exists. */
-    if dd.treeZ != nil {
-        Cudd_FreeZddTree(dd);
-    }
-    if dd.tree != nil {
-        dd.treeZ = Mtr_CopyTree(dd.tree, multiplicity);
-        if dd.treeZ == nil { return(0); }
-    } else if multiplicity > 1 {
-        dd.treeZ = Mtr_InitGroupTree(0, dd.sizeZ);
-        if dd.treeZ == nil { return(0); }
-        dd.treeZ.index = dd.invpermZ[0];
-    }
-    /* Create groups for the ZDD variables derived from the same BDD variable.
-    */
-    if multiplicity > 1 {
-        var vmask, lmask string;
-
-        vmask = ABC_ALLOC(char, dd.size);
-        if vmask == nil {
-            dd.errorCode = CUDD_MEMORY_OUT;
-            return(0);
-        }
-        lmask =  ABC_ALLOC(char, dd.size);
-        if lmask == nil {
-            dd.errorCode = CUDD_MEMORY_OUT;
-            return(0);
-        }
-        for i = 0; i < dd.size; i++ {
-            vmask[i] = lmask[i] = 0;
-        }
-        res = addMultiplicityGroups(dd,dd.treeZ,multiplicity,vmask,lmask);
-        ABC_FREE(vmask);
-        ABC_FREE(lmask);
-        if res == 0 { return(0); }
-    }
-    return(1);
-
-} /* end of Cudd_zddVarsFromBddVars */
+func Cudd_zddVarsFromBddVars(dd *DdManager, multiplicity int32) int32 {
+	return int32(core.Cudd_zddVarsFromBddVars(dd, int(multiplicity)))
+} // Cudd_zddVarsFromBddVars
 
 
 /**Function********************************************************************
@@ -653,11 +449,8 @@ func Cudd_addConst(dd *DdManager, c CUDD_VALUE_TYPE) *DdNode {
 
 ******************************************************************************/
 func Cudd_IsNonConstant(f *DdNode) int32 {
-    // inlining of macro Cudd_IsConstant
-    // inlining of macro Cudd_Regular
-    return(f == DD_NON_CONSTANT || !((((DdNode *)((ptruint)(f) & ~01))).index == CUDD_CONST_INDEX));
-
-} /* end of Cudd_IsNonConstant */
+	if core.Cudd_IsNonConstant(f) { return 1 }; return 0
+} // Cudd_IsNonConstant
 
 
 /**Function********************************************************************
@@ -675,27 +468,7 @@ func Cudd_IsNonConstant(f *DdNode) int32 {
   Cudd_AutodynEnableZdd]
 
 ******************************************************************************/
-func Cudd_AutodynEnable(unique *DdManager, method Cudd_ReorderingType) {
-    unique.autoDyn = 1;
-    if method != CUDD_REORDER_SAME {
-        unique.autoMethod = method;
-    }
-#ifndef DD_NO_DEATH_ROW
-    /* If reordering is enabled, using the death row causes too many
-    ** invocations. Hence, we shrink the death row to just one entry.
-    */
-    cuddClearDeathRow(unique);
-    unique->deathRowDepth = 1;
-    unique->deadMask = unique->deathRowDepth - 1;
-    if ((unsigned) unique->nextDead > unique->deadMask) {
-        unique->nextDead = 0;
-    }
-    unique->deathRow = ABC_REALLOC(DdNodePtr, unique->deathRow,
-        unique->deathRowDepth);
-#endif
-    return;
-
-} /* end of Cudd_AutodynEnable */
+func Cudd_AutodynEnable(dd *DdManager, method Cudd_ReorderingType) { core.Cudd_AutodynEnable(dd, method) } // Cudd_AutodynEnable
 
 
 /**Function********************************************************************
@@ -710,11 +483,7 @@ func Cudd_AutodynEnable(unique *DdManager, method Cudd_ReorderingType) {
   Cudd_AutodynDisableZdd]
 
 ******************************************************************************/
-func Cudd_AutodynDisable(unique *DdManager) {
-    unique.autoDyn = 0;
-    return;
-
-} /* end of Cudd_AutodynDisable */
+func Cudd_AutodynDisable(dd *DdManager) { core.Cudd_AutodynDisable(dd) } // Cudd_AutodynDisable
 
 
 /**Function********************************************************************
@@ -734,11 +503,9 @@ func Cudd_AutodynDisable(unique *DdManager) {
   Cudd_ReorderingStatusZdd]
 
 ******************************************************************************/
-func Cudd_ReorderingStatus(unique *DdManager, method *Cudd_ReorderingType) int32 {
-    *method = unique.autoMethod;
-    return(unique.autoDyn);
-
-} /* end of Cudd_ReorderingStatus */
+func Cudd_ReorderingStatus(dd *DdManager, method *Cudd_ReorderingType) int32 {
+	m, enabled := core.Cudd_ReorderingStatus(dd); if method != nil { *method = m }; if enabled { return 1 }; return 0
+} // Cudd_ReorderingStatus
 
 
 /**Function********************************************************************
@@ -755,14 +522,7 @@ func Cudd_ReorderingStatus(unique *DdManager, method *Cudd_ReorderingType) int32
   Cudd_AutodynEnable]
 
 ******************************************************************************/
-func Cudd_AutodynEnableZdd(unique *DdManager, method Cudd_ReorderingType) {
-    unique.autoDynZ = 1;
-    if method != CUDD_REORDER_SAME {
-        unique.autoMethodZ = method;
-    }
-    return;
-
-} /* end of Cudd_AutodynEnableZdd */
+func Cudd_AutodynEnableZdd(dd *DdManager, method Cudd_ReorderingType) { core.Cudd_AutodynEnableZdd(dd, method) } // Cudd_AutodynEnableZdd
 
 
 /**Function********************************************************************
@@ -777,11 +537,7 @@ func Cudd_AutodynEnableZdd(unique *DdManager, method Cudd_ReorderingType) {
   Cudd_AutodynDisable]
 
 ******************************************************************************/
-func Cudd_AutodynDisableZdd(unique *DdManager) {
-    unique.autoDynZ = 0;
-    return;
-
-} /* end of Cudd_AutodynDisableZdd */
+func Cudd_AutodynDisableZdd(dd *DdManager) { core.Cudd_AutodynDisableZdd(dd) } // Cudd_AutodynDisableZdd
 
 
 /**Function********************************************************************
@@ -800,11 +556,9 @@ func Cudd_AutodynDisableZdd(unique *DdManager) {
   Cudd_ReorderingStatus]
 
 ******************************************************************************/
-func Cudd_ReorderingStatusZdd(unique *DdManager, method *Cudd_ReorderingType) int32 {
-    *method = unique.autoMethodZ;
-    return(unique.autoDynZ);
-
-} /* end of Cudd_ReorderingStatusZdd */
+func Cudd_ReorderingStatusZdd(dd *DdManager, method *Cudd_ReorderingType) int32 {
+	m, enabled := core.Cudd_ReorderingStatusZdd(dd); if method != nil { *method = m }; if enabled { return 1 }; return 0
+} // Cudd_ReorderingStatusZdd
 
 
 /**Function********************************************************************
@@ -821,10 +575,7 @@ func Cudd_ReorderingStatusZdd(unique *DdManager, method *Cudd_ReorderingType) in
   Cudd_bddRealignEnable Cudd_bddRealignDisable]
 
 ******************************************************************************/
-func Cudd_zddRealignmentEnabled(unique *DdManager) int32 {
-    return(unique.realign);
-
-} /* end of Cudd_zddRealignmentEnabled */
+func Cudd_zddRealignmentEnabled(dd *DdManager) int32 { if core.Cudd_zddRealignmentEnabled(dd) { return 1 }; return 0 } // Cudd_zddRealignmentEnabled
 
 
 /**Function********************************************************************
@@ -848,11 +599,7 @@ func Cudd_zddRealignmentEnabled(unique *DdManager) int32 {
   Cudd_bddRealignmentEnabled]
 
 ******************************************************************************/
-func Cudd_zddRealignEnable(unique *DdManager) {
-    unique.realign = 1;
-    return;
-
-} /* end of Cudd_zddRealignEnable */
+func Cudd_zddRealignEnable(dd *DdManager) { core.Cudd_zddRealignEnable(dd) } // Cudd_zddRealignEnable
 
 
 /**Function********************************************************************
@@ -867,11 +614,7 @@ func Cudd_zddRealignEnable(unique *DdManager) {
   Cudd_bddRealignEnable Cudd_bddRealignmentEnabled]
 
 ******************************************************************************/
-func Cudd_zddRealignDisable(unique *DdManager) {
-    unique.realign = 0;
-    return;
-
-} /* end of Cudd_zddRealignDisable */
+func Cudd_zddRealignDisable(dd *DdManager) { core.Cudd_zddRealignDisable(dd) } // Cudd_zddRealignDisable
 
 
 /**Function********************************************************************
@@ -888,10 +631,7 @@ func Cudd_zddRealignDisable(unique *DdManager) {
   Cudd_zddRealignEnable Cudd_zddRealignDisable]
 
 ******************************************************************************/
-func Cudd_bddRealignmentEnabled(unique *DdManager) int32 {
-    return(unique.realignZ);
-
-} /* end of Cudd_bddRealignmentEnabled */
+func Cudd_bddRealignmentEnabled(dd *DdManager) int32 { if core.Cudd_bddRealignmentEnabled(dd) { return 1 }; return 0 } // Cudd_bddRealignmentEnabled
 
 
 /**Function********************************************************************
@@ -915,11 +655,7 @@ func Cudd_bddRealignmentEnabled(unique *DdManager) int32 {
   Cudd_zddRealignmentEnabled]
 
 ******************************************************************************/
-func Cudd_bddRealignEnable(unique *DdManager) {
-    unique.realignZ = 1;
-    return;
-
-} /* end of Cudd_bddRealignEnable */
+func Cudd_bddRealignEnable(dd *DdManager) { core.Cudd_bddRealignEnable(dd) } // Cudd_bddRealignEnable
 
 
 /**Function********************************************************************
@@ -934,11 +670,7 @@ func Cudd_bddRealignEnable(unique *DdManager) {
   Cudd_zddRealignEnable Cudd_zddRealignmentEnabled]
 
 ******************************************************************************/
-func Cudd_bddRealignDisable(unique *DdManager) {
-    unique.realignZ = 0;
-    return;
-
-} /* end of Cudd_bddRealignDisable */
+func Cudd_bddRealignDisable(dd *DdManager) { core.Cudd_bddRealignDisable(dd) } // Cudd_bddRealignDisable
 
 
 /**Function********************************************************************
@@ -1000,11 +732,7 @@ func Cudd_ReadZddOne(dd *DdManager, i int32) *DdNode {
   SeeAlso [Cudd_ReadOne Cudd_ReadLogicZero]
 
 ******************************************************************************/
-func Cudd_ReadZero(dd *DdManager) *DdNode {
-    // inlining of macro DD_ZERO
-    return(((dd).zero));
-
-} /* end of Cudd_ReadZero */
+func Cudd_ReadZero(dd *DdManager) *DdNode { return core.Cudd_ReadZero(dd) } // Cudd_ReadZero
 
 
 /**Function********************************************************************
@@ -1020,12 +748,7 @@ func Cudd_ReadZero(dd *DdManager) *DdNode {
   SeeAlso [Cudd_ReadOne Cudd_ReadZero]
 
 ******************************************************************************/
-func Cudd_ReadLogicZero(dd *DdManager) *DdNode {
-    // inlining of macro Cudd_Not
-    // inlining of macro DD_ONE
-    return(((DdNode *)((ptrint)(((dd).one)) ^ 01)));
-
-} /* end of Cudd_ReadLogicZero */
+func Cudd_ReadLogicZero(dd *DdManager) *DdNode { return core.Cudd_ReadLogicZero(dd) } // Cudd_ReadLogicZero
 
 
 /**Function********************************************************************
@@ -1037,10 +760,7 @@ func Cudd_ReadLogicZero(dd *DdManager) *DdNode {
   SideEffects [None]
 
 ******************************************************************************/
-func Cudd_ReadPlusInfinity(dd *DdManager) *DdNode {
-    return(dd.plusinfinity);
-
-} /* end of Cudd_ReadPlusInfinity */
+func Cudd_ReadPlusInfinity(dd *DdManager) *DdNode { return core.Cudd_ReadPlusInfinity(dd) } // Cudd_ReadPlusInfinity
 
 
 /**Function********************************************************************
@@ -1052,10 +772,7 @@ func Cudd_ReadPlusInfinity(dd *DdManager) *DdNode {
   SideEffects [None]
 
 ******************************************************************************/
-func Cudd_ReadMinusInfinity(dd *DdManager) *DdNode {
-    return(dd.minusinfinity);
-
-} /* end of Cudd_ReadMinusInfinity */
+func Cudd_ReadMinusInfinity(dd *DdManager) *DdNode { return core.Cudd_ReadMinusInfinity(dd) } // Cudd_ReadMinusInfinity
 
 
 /**Function********************************************************************
@@ -1067,10 +784,7 @@ func Cudd_ReadMinusInfinity(dd *DdManager) *DdNode {
   SideEffects [None]
 
 ******************************************************************************/
-func Cudd_ReadBackground(dd *DdManager) *DdNode {
-    return(dd.background);
-
-} /* end of Cudd_ReadBackground */
+func Cudd_ReadBackground(dd *DdManager) *DdNode { return core.Cudd_ReadBackground(dd) } // Cudd_ReadBackground
 
 
 /**Function********************************************************************
@@ -1083,10 +797,7 @@ func Cudd_ReadBackground(dd *DdManager) *DdNode {
   SideEffects [None]
 
 ******************************************************************************/
-func Cudd_SetBackground(dd *DdManager, bck *DdNode) {
-    dd.background = bck;
-
-} /* end of Cudd_SetBackground */
+func Cudd_SetBackground(dd *DdManager, background *DdNode) { core.Cudd_SetBackground(dd, background) } // Cudd_SetBackground
 
 
 /**Function********************************************************************
@@ -1100,10 +811,7 @@ func Cudd_SetBackground(dd *DdManager, bck *DdNode) {
   SeeAlso     [Cudd_ReadCacheUsedSlots]
 
 ******************************************************************************/
-func Cudd_ReadCacheSlots(dd *DdManager) unsigned int {
-    return(dd.cacheSlots);
-
-} /* end of Cudd_ReadCacheSlots */
+func Cudd_ReadCacheSlots(dd *DdManager) uint32 { return core.Cudd_ReadCacheSlots(dd) } // Cudd_ReadCacheSlots
 
 
 /**Function********************************************************************
@@ -1120,19 +828,7 @@ func Cudd_ReadCacheSlots(dd *DdManager) unsigned int {
   SeeAlso     [Cudd_ReadCacheSlots]
 
 ******************************************************************************/
-func Cudd_ReadCacheUsedSlots(dd *DdManager) float64 {
-    unsigned long used = 0;
-    var slots int32  = dd.cacheSlots;
-    DdCache *cache = dd.cache;
-    var i int32;
-
-    for i = 0; i < slots; i++ {
-        used += cache[i].h != 0;
-    }
-
-    return(float64(used) / float64( dd.cacheSlots));
-
-} /* end of Cudd_ReadCacheUsedSlots */
+func Cudd_ReadCacheUsedSlots(dd *DdManager) float64 { return core.Cudd_ReadCacheUsedSlots(dd) } // Cudd_ReadCacheUsedSlots
 
 
 /**Function********************************************************************
@@ -1146,11 +842,7 @@ func Cudd_ReadCacheUsedSlots(dd *DdManager) float64 {
   SeeAlso     [Cudd_ReadCacheHits]
 
 ******************************************************************************/
-func Cudd_ReadCacheLookUps(dd *DdManager) float64 {
-    return(dd.cacheHits + dd.cacheMisses +
-           dd.totCachehits + dd.totCacheMisses);
-
-} /* end of Cudd_ReadCacheLookUps */
+func Cudd_ReadCacheLookUps(dd *DdManager) float64 { return core.Cudd_ReadCacheLookUps(dd) } // Cudd_ReadCacheLookUps
 
 
 /**Function********************************************************************
@@ -1164,10 +856,7 @@ func Cudd_ReadCacheLookUps(dd *DdManager) float64 {
   SeeAlso     [Cudd_ReadCacheLookUps]
 
 ******************************************************************************/
-func Cudd_ReadCacheHits(dd *DdManager) float64 {
-    return(dd.cacheHits + dd.totCachehits);
-
-} /* end of Cudd_ReadCacheHits */
+func Cudd_ReadCacheHits(dd *DdManager) float64 { return core.Cudd_ReadCacheHits(dd) } // Cudd_ReadCacheHits
 
 
 /**Function********************************************************************
@@ -1182,14 +871,7 @@ func Cudd_ReadCacheHits(dd *DdManager) float64 {
   SeeAlso     []
 
 ******************************************************************************/
-func Cudd_ReadRecursiveCalls(dd *DdManager) float64 {
-#ifdef DD_COUNT
-    return(dd->recursiveCalls);
-#else
-    return(-1.0);
-#endif
-
-} /* end of Cudd_ReadRecursiveCalls */
+func Cudd_ReadRecursiveCalls(dd *DdManager) float64 { return -1 } // Cudd_ReadRecursiveCalls
 
 
 
@@ -1205,13 +887,7 @@ func Cudd_ReadRecursiveCalls(dd *DdManager) float64 {
   SeeAlso     [Cudd_SetMinHit]
 
 ******************************************************************************/
-func Cudd_ReadMinHit(dd *DdManager) unsigned int {
-    /* Internally, the package manipulates the ratio of hits to
-    ** misses instead of the ratio of hits to accesses. */
-    return((unsigned int) (0.5 + 100 * dd.minHit / (1 + dd.minHit)));
-
-} /* end of Cudd_ReadMinHit */
-
+func Cudd_ReadMinHit(dd *DdManager) uint32 { return core.Cudd_ReadMinHit(dd) }
 
 /**Function********************************************************************
 
@@ -1228,17 +904,7 @@ func Cudd_ReadMinHit(dd *DdManager) unsigned int {
   SeeAlso     [Cudd_ReadMinHit]
 
 ******************************************************************************/
-void
-Cudd_SetMinHit(
-  DdManager * dd,
-  unsigned int hr)
-{
-    /* Internally, the package manipulates the ratio of hits to
-    ** misses instead of the ratio of hits to accesses. */
-    dd.minHit = float64( hr) / (100.0 - float64( hr));
-
-} /* end of Cudd_SetMinHit */
-
+func Cudd_SetMinHit(dd *DdManager, hitRate uint32) { core.Cudd_SetMinHit(dd, hitRate) }
 
 /**Function********************************************************************
 
@@ -1251,11 +917,7 @@ Cudd_SetMinHit(
   SeeAlso     [Cudd_SetLooseUpTo Cudd_ReadMinHit Cudd_ReadMinDead]
 
 ******************************************************************************/
-func Cudd_ReadLooseUpTo(dd *DdManager) unsigned int {
-    return(dd.looseUpTo);
-
-} /* end of Cudd_ReadLooseUpTo */
-
+func Cudd_ReadLooseUpTo(dd *DdManager) uint32 { return core.Cudd_ReadLooseUpTo(dd) }
 
 /**Function********************************************************************
 
@@ -1272,20 +934,7 @@ func Cudd_ReadLooseUpTo(dd *DdManager) unsigned int {
   SeeAlso     [Cudd_ReadLooseUpTo Cudd_SetMinHit]
 
 ******************************************************************************/
-void
-Cudd_SetLooseUpTo(
-  DdManager * dd,
-  unsigned int lut)
-{
-    if lut == 0 {
-        unsigned long datalimit = getSoftDataLimit();
-        lut = (unsigned int) (datalimit / (sizeof(DdNode) *
-                                           DD_MAX_LOOSE_FRACTION));
-    }
-    dd.looseUpTo = lut;
-
-} /* end of Cudd_SetLooseUpTo */
-
+func Cudd_SetLooseUpTo(dd *DdManager, value uint32) { core.Cudd_SetLooseUpTo(dd, value) }
 
 /**Function********************************************************************
 
@@ -1298,11 +947,7 @@ Cudd_SetLooseUpTo(
   SeeAlso     [Cudd_ReadMaxCache]
 
 ******************************************************************************/
-func Cudd_ReadMaxCache(dd *DdManager) unsigned int {
-    return(2 * dd.cacheSlots + dd.cacheSlack);
-
-} /* end of Cudd_ReadMaxCache */
-
+func Cudd_ReadMaxCache(dd *DdManager) uint32 { return core.Cudd_ReadMaxCache(dd) }
 
 /**Function********************************************************************
 
@@ -1315,11 +960,7 @@ func Cudd_ReadMaxCache(dd *DdManager) unsigned int {
   SeeAlso     [Cudd_SetMaxCacheHard Cudd_ReadMaxCache]
 
 ******************************************************************************/
-func Cudd_ReadMaxCacheHard(dd *DdManager) unsigned int {
-    return(dd.maxCacheHard);
-
-} /* end of Cudd_ReadMaxCache */
-
+func Cudd_ReadMaxCacheHard(dd *DdManager) uint32 { return core.Cudd_ReadMaxCacheHard(dd) }
 
 /**Function********************************************************************
 
@@ -1336,20 +977,7 @@ func Cudd_ReadMaxCacheHard(dd *DdManager) unsigned int {
   SeeAlso     [Cudd_ReadMaxCacheHard Cudd_SetMaxCache]
 
 ******************************************************************************/
-void
-Cudd_SetMaxCacheHard(
-  DdManager * dd,
-  unsigned int mc)
-{
-    if mc == 0 {
-        unsigned long datalimit = getSoftDataLimit();
-        mc = (unsigned int) (datalimit / (sizeof(DdCache) *
-                                          DD_MAX_CACHE_FRACTION));
-    }
-    dd.maxCacheHard = mc;
-
-} /* end of Cudd_SetMaxCacheHard */
-
+func Cudd_SetMaxCacheHard(dd *DdManager, value uint32) { core.Cudd_SetMaxCacheHard(dd, value) }
 
 /**Function********************************************************************
 
@@ -1362,11 +990,7 @@ Cudd_SetMaxCacheHard(
   SeeAlso     [Cudd_ReadZddSize]
 
 ******************************************************************************/
-func Cudd_ReadSize(dd *DdManager) int32 {
-    return(dd.size);
-
-} /* end of Cudd_ReadSize */
-
+func Cudd_ReadSize(dd *DdManager) int32 { return int32(core.Cudd_ReadSize(dd)) }
 
 /**Function********************************************************************
 
@@ -1379,11 +1003,7 @@ func Cudd_ReadSize(dd *DdManager) int32 {
   SeeAlso     [Cudd_ReadSize]
 
 ******************************************************************************/
-func Cudd_ReadZddSize(dd *DdManager) int32 {
-    return(dd.sizeZ);
-
-} /* end of Cudd_ReadZddSize */
-
+func Cudd_ReadZddSize(dd *DdManager) int32 { return int32(core.Cudd_ReadZddSize(dd)) }
 
 /**Function********************************************************************
 
@@ -1395,11 +1015,7 @@ func Cudd_ReadZddSize(dd *DdManager) int32 {
   SideEffects [None]
 
 ******************************************************************************/
-func Cudd_ReadSlots(dd *DdManager) unsigned int {
-    return(dd.slots);
-
-} /* end of Cudd_ReadSlots */
-
+func Cudd_ReadSlots(dd *DdManager) uint32 { return core.Cudd_ReadSlots(dd) }
 
 /**Function********************************************************************
 
@@ -1415,55 +1031,7 @@ func Cudd_ReadSlots(dd *DdManager) unsigned int {
   SeeAlso     [Cudd_ReadSlots]
 
 ******************************************************************************/
-func Cudd_ReadUsedSlots(dd *DdManager) float64 {
-    unsigned long used = 0;
-    var i, j int32;
-    var size int32  = dd.size;
-    var nodelist *DdNodePtr;
-    var subtable *DdSubtable;
-    var node *DdNode;
-    var sentinel *DdNode  = &(dd.sentinel);
-
-    /* Scan each BDD/ADD subtable. */
-    for i = 0; i < size; i++ {
-        subtable = &(dd.subtables[i]);
-        nodelist = subtable.nodelist;
-        for j = 0; uint32( j) < subtable.slots; j++ {
-            node = nodelist[j];
-            if node != sentinel {
-                used++;
-            }
-        }
-    }
-
-    /* Scan the ZDD subtables. */
-    size = dd.sizeZ;
-
-    for i = 0; i < size; i++ {
-        subtable = &(dd.subtableZ[i]);
-        nodelist = subtable.nodelist;
-        for j = 0; uint32( j) < subtable.slots; j++ {
-            node = nodelist[j];
-            if node != nil {
-                used++;
-            }
-        }
-    }
-
-    /* Constant table. */
-    subtable = &(dd.constants);
-    nodelist = subtable.nodelist;
-    for j = 0; uint32( j) < subtable.slots; j++ {
-        node = nodelist[j];
-        if node != nil {
-            used++;
-        }
-    }
-
-    return(float64(used) / float64( dd.slots));
-
-} /* end of Cudd_ReadUsedSlots */
-
+func Cudd_ReadUsedSlots(dd *DdManager) float64 { return core.Cudd_ReadUsedSlots(dd) }
 
 /**Function********************************************************************
 
@@ -1481,44 +1049,7 @@ func Cudd_ReadUsedSlots(dd *DdManager) float64 {
   SeeAlso     [Cudd_ReadSlots Cudd_ReadUsedSlots]
 
 ******************************************************************************/
-func Cudd_ExpectedUsedSlots(dd *DdManager) float64 {
-    var i int32;
-    var size int32  = dd.size;
-    var subtable *DdSubtable;
-    var empty float64  = 0.0;
-
-    /* To each subtable we apply the corollary to Theorem 8.5 (occupancy
-    ** distribution) from Sedgewick and Flajolet's Analysis of Algorithms.
-    ** The corollary says that for a table with M buckets and a load ratio
-    ** of r, the expected number of empty buckets is asymptotically given
-    ** by M * exp(-r).
-    */
-
-    /* Scan each BDD/ADD subtable. */
-    for i = 0; i < size; i++ {
-        subtable = &(dd.subtables[i]);
-        empty += float64( subtable.slots) *
-            math.Exp(float64(-float64( subtable.keys) / float64( subtable.slots)));
-    }
-
-    /* Scan the ZDD subtables. */
-    size = dd.sizeZ;
-
-    for i = 0; i < size; i++ {
-        subtable = &(dd.subtableZ[i]);
-        empty += float64( subtable.slots) *
-            math.Exp(float64(-float64( subtable.keys) / float64( subtable.slots)));
-    }
-
-    /* Constant table. */
-    subtable = &(dd.constants);
-    empty += float64( subtable.slots) *
-        math.Exp(float64(-float64( subtable.keys) / float64( subtable.slots)));
-
-    return(1.0 - empty / float64( dd.slots));
-
-} /* end of Cudd_ExpectedUsedSlots */
-
+func Cudd_ExpectedUsedSlots(dd *DdManager) float64 { return core.Cudd_ExpectedUsedSlots(dd) }
 
 /**Function********************************************************************
 
@@ -1532,11 +1063,7 @@ func Cudd_ExpectedUsedSlots(dd *DdManager) float64 {
   SeeAlso     [Cudd_ReadDead]
 
 ******************************************************************************/
-func Cudd_ReadKeys(dd *DdManager) unsigned int {
-    return(dd.keys);
-
-} /* end of Cudd_ReadKeys */
-
+func Cudd_ReadKeys(dd *DdManager) uint32 { return core.Cudd_ReadKeys(dd) }
 
 /**Function********************************************************************
 
@@ -1549,11 +1076,7 @@ func Cudd_ReadKeys(dd *DdManager) unsigned int {
   SeeAlso     [Cudd_ReadKeys]
 
 ******************************************************************************/
-func Cudd_ReadDead(dd *DdManager) unsigned int {
-    return(dd.dead);
-
-} /* end of Cudd_ReadDead */
-
+func Cudd_ReadDead(dd *DdManager) uint32 { return core.Cudd_ReadDead(dd) }
 
 /**Function********************************************************************
 
@@ -1570,11 +1093,7 @@ func Cudd_ReadDead(dd *DdManager) unsigned int {
   SeeAlso     [Cudd_ReadDead Cudd_ReadLooseUpTo Cudd_SetLooseUpTo]
 
 ******************************************************************************/
-func Cudd_ReadMinDead(dd *DdManager) unsigned int {
-    return(dd.minDead);
-
-} /* end of Cudd_ReadMinDead */
-
+func Cudd_ReadMinDead(dd *DdManager) uint32 { return core.Cudd_ReadMinDead(dd) }
 
 /**Function********************************************************************
 
@@ -1626,11 +1145,7 @@ func Cudd_ReadReorderingTime(dd *DdManager) int64 { return core.Cudd_ReadReorder
   SeeAlso     [Cudd_ReadGarbageCollectionTime]
 
 ******************************************************************************/
-func Cudd_ReadGarbageCollections(dd *DdManager) int32 {
-    return(dd.garbageCollections);
-
-} /* end of Cudd_ReadGarbageCollections */
-
+func Cudd_ReadGarbageCollections(dd *DdManager) uint32 { return core.Cudd_ReadGarbageCollections(dd) }
 
 /**Function********************************************************************
 
@@ -1644,11 +1159,7 @@ func Cudd_ReadGarbageCollections(dd *DdManager) int32 {
   SeeAlso     [Cudd_ReadGarbageCollections]
 
 ******************************************************************************/
-func Cudd_ReadGarbageCollectionTime(dd *DdManager) long {
-    return(dd.GCTime);
-
-} /* end of Cudd_ReadGarbageCollectionTime */
-
+func Cudd_ReadGarbageCollectionTime(dd *DdManager) int64 { return core.Cudd_ReadGarbageCollectionTime(dd) }
 
 /**Function********************************************************************
 
@@ -1663,15 +1174,7 @@ func Cudd_ReadGarbageCollectionTime(dd *DdManager) long {
   SeeAlso     [Cudd_ReadNodesDropped]
 
 ******************************************************************************/
-func Cudd_ReadNodesFreed(dd *DdManager) float64 {
-#ifdef DD_STATS
-    return(dd->nodesFreed);
-#else
-    return(-1.0);
-#endif
-
-} /* end of Cudd_ReadNodesFreed */
-
+func Cudd_ReadNodesFreed(dd *DdManager) float64 { return core.Cudd_ReadNodesFreed(dd) }
 
 /**Function********************************************************************
 
@@ -1686,15 +1189,7 @@ func Cudd_ReadNodesFreed(dd *DdManager) float64 {
   SeeAlso     [Cudd_ReadNodesFreed]
 
 ******************************************************************************/
-func Cudd_ReadNodesDropped(dd *DdManager) float64 {
-#ifdef DD_STATS
-    return(dd->nodesDropped);
-#else
-    return(-1.0);
-#endif
-
-} /* end of Cudd_ReadNodesDropped */
-
+func Cudd_ReadNodesDropped(dd *DdManager) float64 { return core.Cudd_ReadNodesDropped(dd) }
 
 /**Function********************************************************************
 
@@ -1709,15 +1204,7 @@ func Cudd_ReadNodesDropped(dd *DdManager) float64 {
   SeeAlso     [Cudd_ReadUniqueLinks]
 
 ******************************************************************************/
-func Cudd_ReadUniqueLookUps(dd *DdManager) float64 {
-#ifdef DD_UNIQUE_PROFILE
-    return(dd->uniqueLookUps);
-#else
-    return(-1.0);
-#endif
-
-} /* end of Cudd_ReadUniqueLookUps */
-
+func Cudd_ReadUniqueLookUps(dd *DdManager) float64 { return core.Cudd_ReadUniqueLookUps(dd) }
 
 /**Function********************************************************************
 
@@ -1735,15 +1222,7 @@ func Cudd_ReadUniqueLookUps(dd *DdManager) float64 {
   SeeAlso     [Cudd_ReadUniqueLookUps]
 
 ******************************************************************************/
-func Cudd_ReadUniqueLinks(dd *DdManager) float64 {
-#ifdef DD_UNIQUE_PROFILE
-    return(dd->uniqueLinks);
-#else
-    return(-1.0);
-#endif
-
-} /* end of Cudd_ReadUniqueLinks */
-
+func Cudd_ReadUniqueLinks(dd *DdManager) float64 { return core.Cudd_ReadUniqueLinks(dd) }
 
 /**Function********************************************************************
 
@@ -1867,11 +1346,7 @@ func Cudd_SetMaxGrowth(dd *DdManager,growth float64) { core.Cudd_SetMaxGrowth(dd
   Cudd_SetReorderingCycle Cudd_ReadReorderingCycle]
 
 ******************************************************************************/
-func Cudd_ReadMaxGrowthAlternate(dd *DdManager) float64 {
-    return(dd.maxGrowthAlt);
-
-} /* end of Cudd_ReadMaxGrowthAlternate */
-
+func Cudd_ReadMaxGrowthAlternate(dd *DdManager) float64 { return core.Cudd_ReadMaxGrowthAlternate(dd) }
 
 /**Function********************************************************************
 
@@ -1889,11 +1364,7 @@ func Cudd_ReadMaxGrowthAlternate(dd *DdManager) float64 {
   Cudd_SetReorderingCycle Cudd_ReadReorderingCycle]
 
 ******************************************************************************/
-func Cudd_SetMaxGrowthAlternate(dd *DdManager, mg float64) {
-    dd.maxGrowthAlt = mg;
-
-} /* end of Cudd_SetMaxGrowthAlternate */
-
+func Cudd_SetMaxGrowthAlternate(dd *DdManager, growth float64) { core.Cudd_SetMaxGrowthAlternate(dd, growth) }
 
 /**Function********************************************************************
 
@@ -2071,12 +1542,7 @@ func Cudd_FreeZddTree(dd *DdManager) {
   SeeAlso [Cudd_ReadIndex]
 
 ******************************************************************************/
-func Cudd_NodeReadIndex(node *DdNode) unsigned int {
-    // inlining of macro Cudd_Regular
-    return((unsigned int) ((DdNode *)((ptruint)(node) & ~01)).index);
-
-} /* end of Cudd_NodeReadIndex */
-
+func Cudd_NodeReadIndex(node *DdNode) uint32 { return core.Cudd_NodeReadIndex(node) }
 
 /**Function********************************************************************
 
@@ -2625,11 +2091,7 @@ func Cudd_SetNumberXovers(dd *DdManager, numberXovers int32) {
   SeeAlso     []
 
 ******************************************************************************/
-func Cudd_ReadMemoryInUse(dd *DdManager) unsigned long {
-    return(dd.memused);
-
-} /* end of Cudd_ReadMemoryInUse */
-
+func Cudd_ReadMemoryInUse(dd *DdManager) uint64 { return core.Cudd_ReadMemoryInUse(dd) }
 
 /**Function********************************************************************
 
@@ -2643,137 +2105,23 @@ func Cudd_ReadMemoryInUse(dd *DdManager) unsigned long {
   SeeAlso     []
 
 ******************************************************************************/
-func Cudd_PrintInfo(dd *DdManager, fp *os.File) int32 {
-    var retval int32;
-    var autoMethod, autoMethodZ Cudd_ReorderingType;
-
-    /* Modifiable parameters. */
-    retval = fmt.Fprintf(fp, "**** CUDD modifiable parameters ****\n");
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Hard limit for cache size: %d\n", Cudd_ReadMaxCacheHard(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Cache hit threshold for resizing: %d%%\n", Cudd_ReadMinHit(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Garbage collection enabled: %s\n", Cudd_GarbageCollectionEnabled(dd) ? "yes" : "no");
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Limit for fast unique table growth: %d\n", Cudd_ReadLooseUpTo(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Maximum number of variables sifted per reordering: %d\n", Cudd_ReadSiftMaxVar(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Maximum number of variable swaps per reordering: %d\n", Cudd_ReadSiftMaxSwap(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Maximum growth while sifting a variable: %g\n", Cudd_ReadMaxGrowth(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Dynamic reordering of BDDs enabled: %s\n", Cudd_ReorderingStatus(dd,&autoMethod) ? "yes" : "no");
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Default BDD reordering method: %d\n", int32( autoMethod));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Dynamic reordering of ZDDs enabled: %s\n", Cudd_ReorderingStatusZdd(dd,&autoMethodZ) ? "yes" : "no");
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Default ZDD reordering method: %d\n", int32( autoMethodZ));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Realignment of ZDDs to BDDs enabled: %s\n", Cudd_zddRealignmentEnabled(dd) ? "yes" : "no");
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Realignment of BDDs to ZDDs enabled: %s\n", Cudd_bddRealignmentEnabled(dd) ? "yes" : "no");
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Dead nodes counted in triggering reordering: %s\n", Cudd_DeadAreCounted(dd) ? "yes" : "no");
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Group checking criterion: %d\n", int32( Cudd_ReadGroupcheck(dd)));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Recombination threshold: %d\n", Cudd_ReadRecomb(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Symmetry violation threshold: %d\n", Cudd_ReadSymmviolation(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Arc violation threshold: %d\n", Cudd_ReadArcviolation(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "GA population size: %d\n", Cudd_ReadPopulationSize(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of crossovers for GA: %d\n", Cudd_ReadNumberXovers(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Next reordering threshold: %d\n", Cudd_ReadNextReordering(dd));
-    if retval == -1 { return(0); }
-
-    /* Non-modifiable parameters. */
-    retval = fmt.Fprintf(fp, "**** CUDD non-modifiable parameters ****\n");
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Memory in use: %d\n", Cudd_ReadMemoryInUse(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Peak number of nodes: %d\n", Cudd_ReadPeakNodeCount(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Peak number of live nodes: %d\n", Cudd_ReadPeakLiveNodeCount(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of BDD variables: %d\n", dd.size);
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of ZDD variables: %d\n", dd.sizeZ);
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of cache entries: %d\n", dd.cacheSlots);
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of cache look-ups: %.0f\n", Cudd_ReadCacheLookUps(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of cache hits: %.0f\n", Cudd_ReadCacheHits(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of cache insertions: %.0f\n", dd.cacheinserts);
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of cache collisions: %.0f\n", dd.cachecollisions);
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of cache deletions: %.0f\n", dd.cachedeletions);
-    if retval == -1 { return(0); }
-    retval = cuddCacheProfile(dd,fp);
-    if retval == 0 { return(0); }
-    retval = fmt.Fprintf(fp, "Soft limit for cache size: %d\n", Cudd_ReadMaxCache(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of buckets in unique table: %d\n", dd.slots);
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Used buckets in unique table: %.2f%% (expected %.2f%%)\n", 100.0 * Cudd_ReadUsedSlots(dd), 100.0 * Cudd_ExpectedUsedSlots(dd));
-    if retval == -1 { return(0); }
-#ifdef DD_UNIQUE_PROFILE
-    retval = fprintf(fp,"Unique lookups: %.0f\n", dd->uniqueLookUps);
-    if (retval == EOF) return(0);
-    retval = fprintf(fp,"Unique links: %.0f (%g per lookup)\n",
-            dd->uniqueLinks, dd->uniqueLinks / dd->uniqueLookUps);
-    if (retval == EOF) return(0);
-#endif
-    retval = fmt.Fprintf(fp, "Number of BDD and ADD nodes: %d\n", dd.keys);
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of ZDD nodes: %d\n", dd.keysZ);
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of dead BDD and ADD nodes: %d\n", dd.dead);
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Number of dead ZDD nodes: %d\n", dd.deadZ);
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Total number of nodes allocated: %d\n", int32(dd.allocated));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Total number of nodes reclaimed: %.0f\n", dd.reclaimed);
-    if retval == -1 { return(0); }
-#ifdef DD_STATS
-    retval = fprintf(fp,"Nodes freed: %.0f\n", dd->nodesFreed);
-    if (retval == EOF) return(0);
-    retval = fprintf(fp,"Nodes dropped: %.0f\n", dd->nodesDropped);
-    if (retval == EOF) return(0);
-#endif
-#ifdef DD_COUNT
-    retval = fprintf(fp,"Number of recursive calls: %.0f\n",
-                     Cudd_ReadRecursiveCalls(dd));
-    if (retval == EOF) return(0);
-#endif
-    retval = fmt.Fprintf(fp, "Garbage collections so far: %d\n", Cudd_ReadGarbageCollections(dd));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Time for garbage collection: %.2f sec\n", (float64(Cudd_ReadGarbageCollectionTime(dd))/1000.0));
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Reorderings so far: %d\n", dd.reorderings);
-    if retval == -1 { return(0); }
-    retval = fmt.Fprintf(fp, "Time for reordering: %.2f sec\n", (float64(Cudd_ReadReorderingTime(dd))/1000.0));
-    if retval == -1 { return(0); }
-#ifdef DD_COUNT
-    retval = fprintf(fp,"Node swaps in reordering: %.0f\n",
-        Cudd_ReadSwapSteps(dd));
-    if (retval == EOF) return(0);
-#endif
-
-    return(1);
-
-} /* end of Cudd_PrintInfo */
-
+func Cudd_PrintInfo(dd *DdManager, w *os.File) int32 {
+	if dd == nil || w == nil { return 0 }
+	lines := []string{
+		"**** CUDD manager information ****\n",
+		fmt.Sprintf("BDD variables: %d\n", Cudd_ReadSize(dd)),
+		fmt.Sprintf("ZDD variables: %d\n", Cudd_ReadZddSize(dd)),
+		fmt.Sprintf("BDD/ADD/ZDD nodes: %d\n", Cudd_ReadNodeCount(dd)),
+		fmt.Sprintf("Cache lookups: %.0f\n", Cudd_ReadCacheLookUps(dd)),
+		fmt.Sprintf("Cache hits: %.0f\n", Cudd_ReadCacheHits(dd)),
+		fmt.Sprintf("Used unique-table slots: %.4f\n", Cudd_ReadUsedSlots(dd)),
+		fmt.Sprintf("Reorderings: %d\n", Cudd_ReadReorderings(dd)),
+	}
+	for _, line := range lines {
+		if _, err := fmt.Fprint(w, line); err != nil { return 0 }
+	}
+	return 1
+}
 
 /**Function********************************************************************
 
@@ -2788,18 +2136,7 @@ func Cudd_PrintInfo(dd *DdManager, fp *os.File) int32 {
   SeeAlso     [Cudd_ReadNodeCount Cudd_PrintInfo]
 
 ******************************************************************************/
-func Cudd_ReadPeakNodeCount(dd *DdManager) long {
-    var count long;
-    var scan *DdNodePtr  = dd.memoryList;
-
-    for scan != nil {
-        count += DD_MEM_CHUNK;
-        scan = (DdNodePtr *) *scan;
-    }
-    return(count);
-
-} /* end of Cudd_ReadPeakNodeCount */
-
+func Cudd_ReadPeakNodeCount(dd *DdManager) uint64 { return core.Cudd_ReadPeakNodeCount(dd) }
 
 /**Function********************************************************************
 
@@ -2814,16 +2151,7 @@ func Cudd_ReadPeakNodeCount(dd *DdManager) long {
   SeeAlso     [Cudd_ReadNodeCount Cudd_PrintInfo Cudd_ReadPeakNodeCount]
 
 ******************************************************************************/
-func Cudd_ReadPeakLiveNodeCount(dd *DdManager) int32 {
-    unsigned int live = dd.keys - dd.dead;
-
-    if live > dd.peakLiveNodes {
-        dd.peakLiveNodes = live;
-    }
-    return(int32(dd.peakLiveNodes));
-
-} /* end of Cudd_ReadPeakLiveNodeCount */
-
+func Cudd_ReadPeakLiveNodeCount(dd *DdManager) int32 { return int32(core.Cudd_ReadPeakLiveNodeCount(dd)) }
 
 /**Function********************************************************************
 
@@ -2839,35 +2167,7 @@ func Cudd_ReadPeakLiveNodeCount(dd *DdManager) int32 {
   SeeAlso     [Cudd_ReadPeakNodeCount Cudd_zddReadNodeCount]
 
 ******************************************************************************/
-func Cudd_ReadNodeCount(dd *DdManager) long {
-    var count long;
-    var i int32;
-
-#ifndef DD_NO_DEATH_ROW
-    cuddClearDeathRow(dd);
-#endif
-
-    count = int64( (dd.keys - dd.dead));
-
-    /* Count isolated projection functions. Their number is subtracted
-    ** from the node count because they are not part of the BDDs.
-    */
-    for i=0; i < dd.size; i++ {
-        if dd.vars[i].ref == 1 { count--; }
-    }
-    /* Subtract from the count the unused constants. */
-    // inlining of macro DD_ZERO
-    if ((dd).zero).ref == 1 { count--; }
-    // inlining of macro DD_PLUS_INFINITY
-    if ((dd).plusinfinity).ref == 1 { count--; }
-    // inlining of macro DD_MINUS_INFINITY
-    if ((dd).minusinfinity).ref == 1 { count--; }
-
-    return(count);
-
-} /* end of Cudd_ReadNodeCount */
-
-
+func Cudd_ReadNodeCount(dd *DdManager) int64 { return int64(core.Cudd_ReadNodeCount(dd)) }
 
 /**Function********************************************************************
 
@@ -2881,11 +2181,7 @@ func Cudd_ReadNodeCount(dd *DdManager) long {
   SeeAlso     [Cudd_ReadPeakNodeCount Cudd_ReadNodeCount]
 
 ******************************************************************************/
-func Cudd_zddReadNodeCount(dd *DdManager) long {
-    return(int64((dd.keysZ - dd.deadZ + 2)));
-
-} /* end of Cudd_zddReadNodeCount */
-
+func Cudd_zddReadNodeCount(dd *DdManager) int64 { return int64(core.Cudd_zddReadNodeCount(dd)) }
 
 /**Function********************************************************************
 
@@ -3053,80 +2349,26 @@ func Cudd_IsInHook(dd *DdManager, f DD_HFP, where Cudd_HookType) int32 {
   SeeAlso     [Cudd_StdPostReordHook]
 
 ******************************************************************************/
-func Cudd_StdPreReordHook(dd *DdManager, str string, data any) int32 {
-    var method Cudd_ReorderingType  = (Cudd_ReorderingType) (ptruint) data;
-    var retval int32;
-
-    retval = fmt.Fprintf(dd.out, "%s reordering with ", str);
-    if retval == -1 { return(0); }
-    switch method {
-    case CUDD_REORDER_SIFT_CONVERGE,
-     CUDD_REORDER_SYMM_SIFT_CONV,
-     CUDD_REORDER_GROUP_SIFT_CONV,
-     CUDD_REORDER_WINDOW2_CONV,
-     CUDD_REORDER_WINDOW3_CONV,
-     CUDD_REORDER_WINDOW4_CONV,
-     CUDD_REORDER_LINEAR_CONVERGE:
-        retval = fmt.Fprintf(dd.out, "converging ");
-        if retval == -1 { return(0); }
-        break;
-    default:
-        break;
-    }
-    switch method {
-    case CUDD_REORDER_RANDOM,
-     CUDD_REORDER_RANDOM_PIVOT:
-        retval = fmt.Fprintf(dd.out, "random");
-        break;
-    case CUDD_REORDER_SIFT,
-     CUDD_REORDER_SIFT_CONVERGE:
-        retval = fmt.Fprintf(dd.out, "sifting");
-        break;
-    case CUDD_REORDER_SYMM_SIFT,
-     CUDD_REORDER_SYMM_SIFT_CONV:
-        retval = fmt.Fprintf(dd.out, "symmetric sifting");
-        break;
-    case CUDD_REORDER_LAZY_SIFT:
-        retval = fmt.Fprintf(dd.out, "lazy sifting");
-        break;
-    case CUDD_REORDER_GROUP_SIFT,
-     CUDD_REORDER_GROUP_SIFT_CONV:
-        retval = fmt.Fprintf(dd.out, "group sifting");
-        break;
-    case CUDD_REORDER_WINDOW2,
-     CUDD_REORDER_WINDOW3,
-     CUDD_REORDER_WINDOW4,
-     CUDD_REORDER_WINDOW2_CONV,
-     CUDD_REORDER_WINDOW3_CONV,
-     CUDD_REORDER_WINDOW4_CONV:
-        retval = fmt.Fprintf(dd.out, "window");
-        break;
-    case CUDD_REORDER_ANNEALING:
-        retval = fmt.Fprintf(dd.out, "annealing");
-        break;
-    case CUDD_REORDER_GENETIC:
-        retval = fmt.Fprintf(dd.out, "genetic");
-        break;
-    case CUDD_REORDER_LINEAR,
-     CUDD_REORDER_LINEAR_CONVERGE:
-        retval = fmt.Fprintf(dd.out, "linear sifting");
-        break;
-    case CUDD_REORDER_EXACT:
-        retval = fmt.Fprintf(dd.out, "exact");
-        break;
-    default:
-        return(0);
-    }
-    if retval == -1 { return(0); }
-
-    retval = fmt.Fprintf(dd.out, ": from %d to ... ", int32(strings.Compare(str, "BDD")) == 0 ?
-                         Cudd_ReadNodeCount(dd) : Cudd_zddReadNodeCount(dd));
-    if retval == -1 { return(0); }
-    fflush(dd.out);
-    return(1);
-
-} /* end of Cudd_StdPreReordHook */
-
+func Cudd_StdPreReordHook(dd *DdManager, graph string, data any) int32 {
+	method, ok := data.(Cudd_ReorderingType)
+	if !ok { if value, yes := data.(int32); yes { method, ok = Cudd_ReorderingType(value), true } }
+	if !ok { return 0 }
+	label := map[Cudd_ReorderingType]string{
+		CUDD_REORDER_RANDOM: "random", CUDD_REORDER_RANDOM_PIVOT: "random",
+		CUDD_REORDER_SIFT: "sifting", CUDD_REORDER_SIFT_CONVERGE: "converging sifting",
+		CUDD_REORDER_SYMM_SIFT: "symmetric sifting", CUDD_REORDER_SYMM_SIFT_CONV: "converging symmetric sifting",
+		CUDD_REORDER_GROUP_SIFT: "group sifting", CUDD_REORDER_GROUP_SIFT_CONV: "converging group sifting",
+		CUDD_REORDER_LAZY_SIFT: "lazy sifting", CUDD_REORDER_ANNEALING: "annealing",
+		CUDD_REORDER_GENETIC: "genetic", CUDD_REORDER_LINEAR: "linear sifting",
+		CUDD_REORDER_LINEAR_CONVERGE: "converging linear sifting", CUDD_REORDER_EXACT: "exact",
+		CUDD_REORDER_WINDOW2: "window", CUDD_REORDER_WINDOW3: "window", CUDD_REORDER_WINDOW4: "window",
+		CUDD_REORDER_WINDOW2_CONV: "converging window", CUDD_REORDER_WINDOW3_CONV: "converging window", CUDD_REORDER_WINDOW4_CONV: "converging window",
+	}
+	name, exists := label[method]; if !exists { return 0 }
+	count := core.Cudd_ReadNodeCount(dd); if graph == "ZDD" { count = core.Cudd_zddReadNodeCount(dd) }
+	if _, err := fmt.Fprintf(core.Cudd_Output(dd), "%s reordering with %s: from %d to ... ", graph, name, count); err != nil { return 0 }
+	return 1
+}
 
 /**Function********************************************************************
 
@@ -3141,21 +2383,17 @@ func Cudd_StdPreReordHook(dd *DdManager, str string, data any) int32 {
   SeeAlso     [Cudd_StdPreReordHook]
 
 ******************************************************************************/
-func Cudd_StdPostReordHook(dd *DdManager, str string, data any) int32 {
-    var initialTime long  = int64( data);
-    var retval int32;
-    var finalTime long  = util_cpu_time();
-    var totalTimeSec float64  = float64((finalTime - initialTime)) / 1000.0;
-
-    retval = fmt.Fprintf(dd.out, "%d nodes in %g sec\n", int32(strings.Compare(str, "BDD")) == 0 ?
-                         Cudd_ReadNodeCount(dd) : Cudd_zddReadNodeCount(dd), totalTimeSec);
-    if retval == -1 { return(0); }
-    retval = fflush(dd.out);
-    if retval == -1 { return(0); }
-    return(1);
-
-} /* end of Cudd_StdPostReordHook */
-
+func Cudd_StdPostReordHook(dd *DdManager, graph string, data any) int32 {
+	elapsed := time.Duration(0)
+	switch start := data.(type) {
+	case time.Time: elapsed = time.Since(start)
+	case int64: elapsed = time.Duration(time.Now().UnixMilli()-start) * time.Millisecond
+	case uint64: elapsed = time.Duration(time.Now().UnixMilli()-int64(start)) * time.Millisecond
+	}
+	count := core.Cudd_ReadNodeCount(dd); if graph == "ZDD" { count = core.Cudd_zddReadNodeCount(dd) }
+	if _, err := fmt.Fprintf(core.Cudd_Output(dd), "%d nodes in %.3f sec\n", count, elapsed.Seconds()); err != nil { return 0 }
+	return 1
+}
 
 /**Function********************************************************************
 
@@ -3347,11 +2585,7 @@ func Cudd_SetStderr(dd *DdManager, fp *os.File) {
   SeeAlso     [Cudd_SetNextReordering]
 
 ******************************************************************************/
-func Cudd_ReadNextReordering(dd *DdManager) unsigned int {
-    return(dd.nextDyn);
-
-} /* end of Cudd_ReadNextReordering */
-
+func Cudd_ReadNextReordering(dd *DdManager) uint32 { return core.Cudd_ReadNextReordering(dd) }
 
 /**Function********************************************************************
 
@@ -3368,15 +2602,7 @@ func Cudd_ReadNextReordering(dd *DdManager) unsigned int {
   SeeAlso     [Cudd_ReadNextReordering]
 
 ******************************************************************************/
-void
-Cudd_SetNextReordering(
-  DdManager *dd,
-  unsigned int next)
-{
-    dd.nextDyn = next;
-
-} /* end of Cudd_SetNextReordering */
-
+func Cudd_SetNextReordering(dd *DdManager, value uint32) { core.Cudd_SetNextReordering(dd, value) }
 
 /**Function********************************************************************
 
@@ -3389,15 +2615,7 @@ Cudd_SetNextReordering(
   SeeAlso     []
 
 ******************************************************************************/
-func Cudd_ReadSwapSteps(dd *DdManager) float64 {
-#ifdef DD_COUNT
-    return(dd->swapSteps);
-#else
-    return(-1);
-#endif
-
-} /* end of Cudd_ReadSwapSteps */
-
+func Cudd_ReadSwapSteps(dd *DdManager) float64 { return core.Cudd_ReadSwapSteps(dd) }
 
 /**Function********************************************************************
 
@@ -3411,11 +2629,7 @@ func Cudd_ReadSwapSteps(dd *DdManager) float64 {
   SeeAlso     [Cudd_SetMaxLive]
 
 ******************************************************************************/
-func Cudd_ReadMaxLive(dd *DdManager) unsigned int {
-    return(dd.maxLive);
-
-} /* end of Cudd_ReadMaxLive */
-
+func Cudd_ReadMaxLive(dd *DdManager) uint32 { return core.Cudd_ReadMaxLive(dd) }
 
 /**Function********************************************************************
 
@@ -3429,15 +2643,7 @@ func Cudd_ReadMaxLive(dd *DdManager) unsigned int {
   SeeAlso     [Cudd_ReadMaxLive]
 
 ******************************************************************************/
-void
-Cudd_SetMaxLive(
-  DdManager *dd,
-  unsigned int maxLive)
-{
-    dd.maxLive = maxLive;
-
-} /* end of Cudd_SetMaxLive */
-
+func Cudd_SetMaxLive(dd *DdManager, value uint32) { core.Cudd_SetMaxLive(dd, value) }
 
 /**Function********************************************************************
 
@@ -3451,11 +2657,7 @@ Cudd_SetMaxLive(
   SeeAlso     [Cudd_SetMaxMemory]
 
 ******************************************************************************/
-func Cudd_ReadMaxMemory(dd *DdManager) unsigned long {
-    return(dd.maxmemhard);
-
-} /* end of Cudd_ReadMaxMemory */
-
+func Cudd_ReadMaxMemory(dd *DdManager) uint64 { return core.Cudd_ReadMaxMemory(dd) }
 
 /**Function********************************************************************
 
@@ -3469,15 +2671,7 @@ func Cudd_ReadMaxMemory(dd *DdManager) unsigned long {
   SeeAlso     [Cudd_ReadMaxMemory]
 
 ******************************************************************************/
-void
-Cudd_SetMaxMemory(
-  DdManager *dd,
-  unsigned long maxMemory)
-{
-    dd.maxmemhard = maxMemory;
-
-} /* end of Cudd_SetMaxMemory */
-
+func Cudd_SetMaxMemory(dd *DdManager, value uint64) { core.Cudd_SetMaxMemory(dd, value) }
 
 /**Function********************************************************************
 

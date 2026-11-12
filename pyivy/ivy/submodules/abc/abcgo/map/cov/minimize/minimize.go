@@ -144,7 +144,7 @@ func Minimize(variables int, on, dontCare []uint64) ([]Cube, error) {
 					options++
 				}
 			}
-			if options < fewest {
+			if options < fewest || options == fewest && (!found || m < pivot) {
 				pivot, fewest, found = m, options, true
 			}
 		}

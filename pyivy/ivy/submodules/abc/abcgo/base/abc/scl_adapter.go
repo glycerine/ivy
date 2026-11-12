@@ -13,6 +13,12 @@ func (n *Network) ConfigureSCL(library *scl.SC_Lib, gates *mio.Mio_Library_t) er
 	if n.Type != uint8(ABC_NTK_LOGIC) || n.Function != uint8(ABC_FUNC_MAP) {
 		return fmt.Errorf("SCL requires mapped logic")
 	}
+	if err := n.Check(); err != nil {
+		return err
+	}
+	if len(n.ObjectsOfKind(ObjectNet)) > 0 {
+		return fmt.Errorf("SCL mapped logic cannot contain explicit nets")
+	}
 	if library == nil || gates == nil {
 		return fmt.Errorf("SCL libraries are missing")
 	}
@@ -179,16 +185,29 @@ func (n *Network) SclDeleteNode(id int) error {
 	}
 	return nil
 }
-func (n *Network) SclHasPhases() bool { return n.phaseTracking }
+func (n *Network) SclHasPhases() bool {
+	if n.phaseTracking {
+		return true
+	}
+	for _, o := range n.Objects() {
+		for _, edge := range o.fanins {
+			if edge.Complement {
+				return true
+			}
+		}
+	}
+	return false
+}
 func (n *Network) SclFaninPhase(id, pin int) bool {
 	o := n.Object(id)
 	return o != nil && pin >= 0 && pin < len(o.fanins) && o.fanins[pin].Complement
 }
 func (n *Network) SclToggleFaninPhase(id, pin int) error {
 	o := n.Object(id)
-	if !n.phaseTracking || o == nil || pin < 0 || pin >= len(o.fanins) {
+	if !n.SclHasPhases() || o == nil || pin < 0 || pin >= len(o.fanins) {
 		return fmt.Errorf("invalid SCL phase toggle")
 	}
+	n.phaseTracking = true
 	o.fanins[pin].Complement = !o.fanins[pin].Complement
 	clear(n.hashed)
 	return nil

@@ -7,6 +7,7 @@ import (
 	"io"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -57,7 +58,7 @@ func modifyAigToApplySafetyInvar(p *aig.Graph, target, invariant int32) {
 	property := aig.Aig_And(p, outputDriver(p, int(target)), outputDriver(p, int(invariant)))
 	aig.Aig_ObjPatchFanin0(p, p.Outputs()[target], property)
 }
-func flipConePdr(p *aig.Graph, directive, target, invariant, absorbers int32) int32 {
+func kLiveProofModel(p *aig.Graph, directive, target, invariant int32) *aig.Graph {
 	c := newGraphCopy(p, "_proof")
 	c.copyInputs()
 	for i := 0; i < trueOutputs(p); i++ {
@@ -74,8 +75,12 @@ func flipConePdr(p *aig.Graph, directive, target, invariant, absorbers int32) in
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
-	return CheckSafety(c.destination, int(target), SafetyOptions{}).Status
+	return c.destination
 }
+func flipConePdr(p *aig.Graph, directive, target, invariant, absorbers int32) int32 {
+	return CheckSafety(kLiveProofModel(p, directive, target, invariant), int(target), SafetyOptions{}).Status
+}
+
 func findOutput(n *Network, marker string) int32 {
 	for i := 0; i < trueOutputs(n.Graph); i++ {
 		if strings.Contains(outputName(n, i), marker) {
@@ -144,6 +149,18 @@ func KLive(n *Network, options KLiveOptions) KLiveResult {
 	if n == nil || n.Graph == nil {
 		return KLiveResult{Status: -1, Error: fmt.Errorf("live: missing k-liveness network")}
 	}
+	if err := n.Graph.Check(); err != nil {
+		return KLiveResult{Status: -1, Error: fmt.Errorf("live: invalid graph: %w", err)}
+	}
+	if options.Directive < 0 || options.Directive > 4 {
+		return KLiveResult{Status: -1, Error: fmt.Errorf("live: invalid k-liveness directive")}
+	}
+	if findOutput(n, "csLiveTarget_") < 0 && options.Directive != 2 {
+		return KLiveResult{Status: -1, Error: fmt.Errorf("live: csLiveTarget_ output missing")}
+	}
+	if !options.Safety.Deadline.IsZero() && time.Now().After(options.Safety.Deadline) {
+		return KLiveResult{Status: -1}
+	}
 	checker := options.Checker
 	if checker == nil {
 		checker = CheckSafety
@@ -159,11 +176,26 @@ func KLive(n *Network, options KLiveOptions) KLiveResult {
 		barriers = collectUserGivenDisjunctiveMonotoneSignals(n)
 	}
 	if options.Directive == 2 {
-		return KLiveResult{Status: 1, Barriers: barriers, Graph: n.Graph}
+		return KLiveResult{Status: -1, Barriers: barriers, Graph: n.Graph}
 	}
 	invariant := collectSafetyInvariantPOIndex(n)
 	if (options.Directive == 1 || options.Directive == 3 || options.Directive == 4) && invariant < 0 {
 		return KLiveResult{Status: -1, Error: fmt.Errorf("live: csSafetyInvar_ output missing")}
+	}
+	if (options.Directive == 3 || options.Directive == 4) && len(barriers) > 0 {
+		if collectWindowBeginSignalWithDSC(n, n.Graph) < 0 || collectWithinWindowSignalWithDSC(n, n.Graph) < 0 || findPendingSignal(n) < 0 {
+			return KLiveResult{Status: -1, Error: fmt.Errorf("live: barrier window/pending outputs missing")}
+		}
+		for _, group := range barriers {
+			if len(group) == 0 {
+				return KLiveResult{Status: -1, Error: fmt.Errorf("live: empty barrier group")}
+			}
+			for _, index := range group {
+				if index < 0 || int(index) >= trueOutputs(n.Graph) {
+					return KLiveResult{Status: -1, Error: fmt.Errorf("live: barrier output index out of range")}
+				}
+			}
+		}
 	}
 	zero, index := int32(-1), int32(-1)
 	var working *aig.Graph
@@ -175,20 +207,11 @@ func KLive(n *Network, options KLiveOptions) KLiveResult {
 	current := introduceAbsorberLogic(working, &zero, &index, 0)
 	result := KLiveResult{Status: -1, Graph: current, Barriers: barriers}
 	for depth := 1; depth <= limit; depth++ {
-		c := newGraphCopy(current, "_proof")
-		c.copyInputs()
-		for i := 0; i < trueOutputs(current); i++ {
-			driver := c.signal(current.Outputs()[i])
-			if int32(i) == index && (options.Directive == 1 || options.Directive == 3 || options.Directive == 4) {
-				driver = aig.Aig_And(c.destination, driver, c.signal(current.Outputs()[invariant]))
-			}
-			aig.Aig_ObjCreateCo(c.destination, driver.Not())
+		if !options.Safety.Deadline.IsZero() && time.Now().After(options.Safety.Deadline) {
+			return result
 		}
-		for r := 0; r < registers(current); r++ {
-			aig.Aig_ObjCreateCo(c.destination, c.signal(current.Outputs()[trueOutputs(current)+r]))
-		}
-		aig.Aig_ManSetRegNum(c.destination, int32(registers(current)))
-		result.LastSafety = checker(c.destination, int(index), options.Safety)
+		proofModel := kLiveProofModel(current, options.Directive, index, invariant)
+		result.LastSafety = checker(proofModel, int(index), options.Safety)
 		result.Absorbers = depth
 		result.Graph = current
 		if result.LastSafety.Status == 1 {
@@ -253,7 +276,7 @@ func Abc_CommandNChooseK(frame *Frame, argc int32, argv []string) int32 {
 		}
 		k = value
 	}
-	if frame.Network == nil {
+	if frame.Network == nil || k < 0 || k > registers(frame.Network.Graph) {
 		return 1
 	}
 	result := generateGeneralDisjunctiveTester(frame.Network, frame.Network.Graph, int32(k))

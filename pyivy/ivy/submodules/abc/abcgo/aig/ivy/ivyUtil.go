@@ -2,648 +2,311 @@ package ivy
 
 import (
 	"fmt"
-	"os"
 )
 
-/**CFile****************************************************************
-
-  FileName    [ivyUtil.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [And-Inverter Graph package.]
-
-  Synopsis    [Various procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - May 11, 2006.]
-
-  Revision    [$Id: ivyUtil.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ivy.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Increments the current traversal ID of the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Ivy_ManIncrementTravId is implemented in the ported core API group.
-
-
-/**Function*************************************************************
-
-  Synopsis    [Sets the DFS ordering of the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Ivy_ManCleanTravId is implemented in the ported core API group.
-
-
-/**Function*************************************************************
-
-  Synopsis    [Computes truth table of the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ManCollectCut_rec(p *Ivy_Man_t, pNode *Ivy_Obj_t, vNodes *Vec_Int_t) {
-    if pNode.fMarkA {
-        return; }
-    pNode.fMarkA = 1;
-    assert(Ivy_ObjIsAnd(pNode) || Ivy_ObjIsExor(pNode), "Ivy_ObjIsAnd(pNode) || Ivy_ObjIsExor(pNode)");
-    Ivy_ManCollectCut_rec( p, Ivy_ObjFanin0(pNode), vNodes );
-    Ivy_ManCollectCut_rec( p, Ivy_ObjFanin1(pNode), vNodes );
-    Vec_IntPush( vNodes, pNode.Id );
+func ivyManCollectCutRec(p *Ivy_Man_t, node *Ivy_Obj_t, nodes *Vec_Int_t, oldMarks map[*Ivy_Obj_t]int32) {
+	node = Ivy_Regular(node)
+	if node == nil || node.owner != p {
+		panic("ivy: cut collection reached an invalid node")
+	}
+	if node.fMarkA != 0 {
+		return
+	}
+	oldMarks[node] = node.fMarkA
+	node.fMarkA = 1
+	assert(Ivy_ObjIsNode(node) != 0, "cut interiors must be AND/XOR nodes")
+	ivyManCollectCutRec(p, Ivy_ObjFanin0(node), nodes, oldMarks)
+	ivyManCollectCutRec(p, Ivy_ObjFanin1(node), nodes, oldMarks)
+	Vec_IntPush(nodes, node.Id)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes truth table of the cut.]
-
-  Description [Does not modify the array of leaves. Uses array vTruth to store 
-  temporary truth tables. The returned pointer should be used immediately.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ManCollectCut(p *Ivy_Man_t, pRoot *Ivy_Obj_t, vLeaves *Vec_Int_t, vNodes *Vec_Int_t) {
-    var i, Leaf int32;
-    // collect and mark the leaves
-    Vec_IntClear( vNodes );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vLeaves)) && (((Leaf) = Vec_IntEntry(vLeaves, i)), 1); i++  {
-        Vec_IntPush( vNodes, Leaf );
-        Ivy_ManObj(p, Leaf).fMarkA = 1;
-    }
-    // collect and mark the nodes
-    Ivy_ManCollectCut_rec( p, pRoot, vNodes );
-    // clean the nodes
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vNodes)) && (((Leaf) = Vec_IntEntry(vNodes, i)), 1); i++  {
-        Ivy_ManObj(p, Leaf).fMarkA = 0;
-    }
+// Ivy_ManCollectCut returns leaf IDs followed by the topologically ordered
+// internal nodes. It restores every mark even when an invalid cut is rejected.
+func Ivy_ManCollectCut(p *Ivy_Man_t, root *Ivy_Obj_t, leaves, nodes *Vec_Int_t) {
+	if p == nil || nodes == nil || leaves == nil {
+		panic("ivy: nil cut argument")
+	}
+	Vec_IntClear(nodes)
+	marked := make(map[*Ivy_Obj_t]int32, Vec_IntSize(leaves))
+	for i := int32(0); i < Vec_IntSize(leaves); i++ {
+		id := Vec_IntEntry(leaves, i)
+		leaf := Ivy_ManObj(p, id)
+		if _, seen := marked[leaf]; !seen {
+			marked[leaf] = leaf.fMarkA
+		}
+		Vec_IntPush(nodes, id)
+		leaf.fMarkA = 1
+	}
+	defer func() {
+		for node, mark := range marked {
+			node.fMarkA = mark
+		}
+	}()
+	ivyManCollectCutRec(p, root, nodes, marked)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the pointer to the truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ObjGetTruthStore(ObjNum int32, vTruth *Vec_Int_t) *uint32 {
-   return ((unsigned *)Vec_IntArray(vTruth)) + 8 * ObjNum;
+func ivyTruthStore(objNum int32, truth []uint32) []uint32 {
+	start := int(objNum) * 8
+	if objNum < 0 || start+8 > len(truth) {
+		panic("ivy: truth table slot out of bounds")
+	}
+	return truth[start : start+8]
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes truth table of the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ManCutTruthOne(p *Ivy_Man_t, pNode *Ivy_Obj_t, vTruth *Vec_Int_t, nWords int32) {
-    var pTruth, pTruth0, pTruth1 *uint32;
-    var i int32;
-    pTruth  = Ivy_ObjGetTruthStore( pNode.TravId, vTruth );
-    pTruth0 = Ivy_ObjGetTruthStore( Ivy_ObjFanin0(pNode).TravId, vTruth );
-    pTruth1 = Ivy_ObjGetTruthStore( Ivy_ObjFanin1(pNode).TravId, vTruth );
-    if Ivy_ObjIsExor(pNode) {
-        for  i = 0; i < nWords; i++  {
-            pTruth[i] = pTruth0[i] ^ pTruth1[i];
-        }
-    } else if !Ivy_ObjFaninC0(pNode) && !Ivy_ObjFaninC1(pNode) {
-        for  i = 0; i < nWords; i++  {
-            pTruth[i] = pTruth0[i] & pTruth1[i];
-        }
-    } else if !Ivy_ObjFaninC0(pNode) && Ivy_ObjFaninC1(pNode) {
-        for  i = 0; i < nWords; i++  {
-            pTruth[i] = pTruth0[i] & ~pTruth1[i];
-        }
-    } else if Ivy_ObjFaninC0(pNode) && !Ivy_ObjFaninC1(pNode) {
-        for  i = 0; i < nWords; i++  {
-            pTruth[i] = ~pTruth0[i] & pTruth1[i];
-        }
-    } else { // if ( Ivy_ObjFaninC0(pNode) && Ivy_ObjFaninC1(pNode) )
-        for  i = 0; i < nWords; i++  {
-            pTruth[i] = ~pTruth0[i] & ~pTruth1[i];
-        } }
+func Ivy_ManCutTruthOne(_ *Ivy_Man_t, node *Ivy_Obj_t, truth []uint32) {
+	out := ivyTruthStore(node.TravId, truth)
+	a := ivyTruthStore(Ivy_ObjFanin0(node).TravId, truth)
+	b := ivyTruthStore(Ivy_ObjFanin1(node).TravId, truth)
+	for i := range out {
+		switch {
+		case Ivy_ObjIsExor(node) != 0:
+			out[i] = a[i] ^ b[i]
+		case Ivy_ObjFaninC0(node) == 0 && Ivy_ObjFaninC1(node) == 0:
+			out[i] = a[i] & b[i]
+		case Ivy_ObjFaninC0(node) == 0:
+			out[i] = a[i] &^ b[i]
+		case Ivy_ObjFaninC1(node) == 0:
+			out[i] = ^a[i] & b[i]
+		default:
+			out[i] = ^a[i] &^ b[i]
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes truth table of the cut.]
-
-  Description [Does not modify the array of leaves. Uses array vTruth to store 
-  temporary truth tables. The returned pointer should be used immediately.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ManCutTruth(p *Ivy_Man_t, pRoot *Ivy_Obj_t, vLeaves *Vec_Int_t, vNodes *Vec_Int_t, vTruth *Vec_Int_t) *uint32 {
-    static unsigned uTruths[8][8] = { // elementary truth tables
-        { 0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA },
-        { 0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC },
-        { 0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0 },
-        { 0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00 },
-        { 0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000 }, 
-        { 0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF }, 
-        { 0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF }, 
-        { 0x00000000,0x00000000,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF } 
-    };
-    var i, Leaf int32;
-    // collect the cut
-    Ivy_ManCollectCut( p, pRoot, vLeaves, vNodes );
-    // set the node numbers
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vNodes)) && (((Leaf) = Vec_IntEntry(vNodes, i)), 1); i++  {
-        Ivy_ManObj(p, Leaf).TravId = i;
-    }
-    // alloc enough memory
-    Vec_IntClear( vTruth );
-    Vec_IntGrow( vTruth, 8 * Vec_IntSize(vNodes) );
-    // set the elementary truth tables
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vLeaves)) && (((Leaf) = Vec_IntEntry(vLeaves, i)), 1); i++  {
-        memcpy( Ivy_ObjGetTruthStore(i, vTruth), uTruths[i], 8 * sizeof(unsigned) );
-    }
-    // compute truths for other nodes
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = Vec_IntSize(vLeaves); (i < Vec_IntSize(vNodes)) && (((Leaf) = Vec_IntEntry(vNodes, i)), 1); i++  {
-        Ivy_ManCutTruthOne( p, Ivy_ManObj(p, Leaf), vTruth, 8 );
-    }
-    return Ivy_ObjGetTruthStore( pRoot.TravId, vTruth );
+var ivyElementaryTruth = [8][8]uint32{
+	{0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA, 0xAAAAAAAA},
+	{0xCCCCCCCC, 0xCCCCCCCC, 0xCCCCCCCC, 0xCCCCCCCC, 0xCCCCCCCC, 0xCCCCCCCC, 0xCCCCCCCC, 0xCCCCCCCC},
+	{0xF0F0F0F0, 0xF0F0F0F0, 0xF0F0F0F0, 0xF0F0F0F0, 0xF0F0F0F0, 0xF0F0F0F0, 0xF0F0F0F0, 0xF0F0F0F0},
+	{0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00, 0xFF00FF00},
+	{0xFFFF0000, 0xFFFF0000, 0xFFFF0000, 0xFFFF0000, 0xFFFF0000, 0xFFFF0000, 0xFFFF0000, 0xFFFF0000},
+	{0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF},
+	{0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF},
+	{0x00000000, 0x00000000, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF},
 }
 
-/**Function*************************************************************
+// Ivy_ManCutTruth computes the truth of root over leaves in the order given.
+// The returned word slice is owned by this call and is safe to retain.
+func Ivy_ManCutTruth(p *Ivy_Man_t, root *Ivy_Obj_t, leaves *Vec_Int_t, nodes *Vec_Int_t, scratch *Vec_Int_t) []uint32 {
+	if Vec_IntSize(leaves) > int32(len(ivyElementaryTruth)) {
+		panic("ivy: cut truth supports at most eight leaves")
+	}
+	Ivy_ManCollectCut(p, root, leaves, nodes)
+	for i := int32(0); i < Vec_IntSize(nodes); i++ {
+		Ivy_ManObj(p, Vec_IntEntry(nodes, i)).TravId = i
+	}
+	truth := make([]uint32, 8*Vec_IntSize(nodes))
+	for i := int32(0); i < Vec_IntSize(leaves); i++ {
+		copy(ivyTruthStore(i, truth), ivyElementaryTruth[i][:])
+	}
+	for i := Vec_IntSize(leaves); i < Vec_IntSize(nodes); i++ {
+		Ivy_ManCutTruthOne(p, Ivy_ManObj(p, Vec_IntEntry(nodes, i)), truth)
+	}
+	if scratch != nil {
+		Vec_IntClear(scratch)
+		Vec_IntGrow(scratch, int32(len(truth)))
+		for _, word := range truth {
+			Vec_IntPush(scratch, int32(word))
+		}
+	}
+	rootIndex := Ivy_Regular(root).TravId
+	return ivyTruthStore(rootIndex, truth)
+}
 
-  Synopsis    [Collect the latches.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Ivy_ManLatches(p *Ivy_Man_t) *Vec_Int_t {
-    var vLatches *Vec_Int_t;
-    var pObj *Ivy_Obj_t;
-    var i int32;
-    vLatches = Vec_IntAlloc( Ivy_ManLatchNum(p) );
-    // inlining of macro Ivy_ManForEachLatch
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsLatch(pObj) {} else {
-        Vec_IntPush( vLatches, pObj.Id ); }
-    }
-    return vLatches;
+	latches := Vec_IntAlloc(Ivy_ManLatchNum(p))
+	for _, node := range p.vObjs {
+		if node != nil && Ivy_ObjIsLatch(node) != 0 {
+			Vec_IntPush(latches, node.Id)
+		}
+	}
+	return latches
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collect the latches.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Ivy_ManLevels is implemented in ivyDfs.go.
-
-/**Function*************************************************************
-
-  Synopsis    [Collect the latches.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Ivy_ManResetLevels_rec is implemented in the ported manager/object API group.
-
-
-/**Function*************************************************************
-
-  Synopsis    [Collect the latches.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Ivy_ManResetLevels is implemented in the ported manager/object API group.
-
-
-/**Function*************************************************************
-
-  Synopsis    [References/references the node and returns MFFC size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ObjRefDeref(p *Ivy_Man_t, pNode *Ivy_Obj_t, fReference int32, fLabel int32) int32 {
-    var pNode0, pNode1 *Ivy_Obj_t;
-    var Counter int32;
-    // label visited nodes
-    if fLabel != 0 {
-        Ivy_ObjSetTravIdCurrent( p, pNode ); }
-    // skip the CI
-    if Ivy_ObjIsPi(pNode) {
-        return 0; }
-    assert(Ivy_ObjIsNode(pNode) || Ivy_ObjIsBuf(pNode) || Ivy_ObjIsLatch(pNode), "Ivy_ObjIsNode(pNode) || Ivy_ObjIsBuf(pNode) || Ivy_ObjIsLatch(pNode)");
-    // process the internal node
-    pNode0 = Ivy_ObjFanin0(pNode);
-    pNode1 = Ivy_ObjFanin1(pNode);
-    Counter = Ivy_ObjIsNode(pNode);
-    if fReference != 0 {
-        if pNode0.nRefs++ == 0 {
-            Counter += Ivy_ObjRefDeref( p, pNode0, fReference, fLabel ); }
-        if pNode1 && pNode1.nRefs++ == 0 {
-            Counter += Ivy_ObjRefDeref( p, pNode1, fReference, fLabel ); }
-    
-    } else {
-        assert(pNode0.nRefs > 0, "pNode0.nRefs > 0");
-        assert(pNode1 == nil || pNode1.nRefs > 0, "pNode1 == nil || pNode1.nRefs > 0");
-        if --pNode0.nRefs == 0 {
-            Counter += Ivy_ObjRefDeref( p, pNode0, fReference, fLabel ); }
-        if pNode1 && --pNode1.nRefs == 0 {
-            Counter += Ivy_ObjRefDeref( p, pNode1, fReference, fLabel ); }
-    }
-    return Counter;
+// Ivy_ObjRefDeref adjusts the reference counts of the MFFC rooted at node and
+// returns the number of internal logic nodes. fLabel stamps visited nodes.
+func Ivy_ObjRefDeref(p *Ivy_Man_t, node *Ivy_Obj_t, reference, label int32) int32 {
+	node = Ivy_Regular(node)
+	if label != 0 {
+		Ivy_ObjSetTravIdCurrent(p, node)
+	}
+	if Ivy_ObjIsPi(node) != 0 {
+		return 0
+	}
+	assert(Ivy_ObjIsNode(node) != 0 || Ivy_ObjIsBuf(node) != 0 || Ivy_ObjIsLatch(node) != 0,
+		"reference walk expects an internal node")
+	fanins := [2]*Ivy_Obj_t{Ivy_ObjFanin0(node), Ivy_ObjFanin1(node)}
+	count := Ivy_ObjIsNode(node)
+	for _, fanin := range fanins {
+		if fanin == nil {
+			continue
+		}
+		if reference != 0 {
+			if fanin.nRefs == 0 {
+				count += Ivy_ObjRefDeref(p, fanin, reference, label)
+			}
+			fanin.nRefs++
+			continue
+		}
+		assert(fanin.nRefs > 0, "fanin.nRefs > 0")
+		fanin.nRefs--
+		if fanin.nRefs == 0 {
+			count += Ivy_ObjRefDeref(p, fanin, reference, label)
+		}
+	}
+	return count
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Labels MFFC with the current label.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ObjMffcLabel(p *Ivy_Man_t, pNode *Ivy_Obj_t) int32 {
-    var nConeSize1, nConeSize2 int32;
-    assert(!Ivy_IsComplement( pNode ), "!Ivy_IsComplement( pNode )");
-    assert(Ivy_ObjIsNode( pNode ), "Ivy_ObjIsNode( pNode )");
-    nConeSize1 = Ivy_ObjRefDeref( p, pNode, 0, 1 ); // dereference
-    nConeSize2 = Ivy_ObjRefDeref( p, pNode, 1, 0 ); // reference
-    assert(nConeSize1 == nConeSize2, "nConeSize1 == nConeSize2");
-    assert(nConeSize1 > 0, "nConeSize1 > 0");
-    return nConeSize1;
+func Ivy_ObjMffcLabel(p *Ivy_Man_t, node *Ivy_Obj_t) int32 {
+	assert(Ivy_IsComplement(node) == 0 && Ivy_ObjIsNode(node) != 0, "regular logic node required")
+	removed := Ivy_ObjRefDeref(p, node, 0, 1)
+	restored := Ivy_ObjRefDeref(p, node, 1, 0)
+	assert(removed == restored && removed > 0, "MFFC dereference/reference counts must match")
+	return removed
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Recursively updates fanout levels.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Ivy_ObjUpdateLevel_rec is implemented in the ported object API group.
-
-
-/**Function*************************************************************
-
-  Synopsis    [Compute the new required level.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Ivy_ObjLevelRNew is implemented in the ported object API group.
-
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively updates fanout levels.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Ivy_ObjUpdateLevelR_rec is implemented in the ported object API group.
-
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the node is the root of MUX or EXOR/NEXOR.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Ivy_ObjIsMuxType is implemented in ivyMux.go.
-
-
-/**Function*************************************************************
-
-  Synopsis    [Recognizes what nodes are control and data inputs of a MUX.]
-
-  Description [If the node is a MUX, returns the control variable C.
-  Assigns nodes T and E to be the then and else variables of the MUX. 
-  Node C is never complemented. Nodes T and E can be complemented.
-  This function also recognizes EXOR/NEXOR gates as MUXes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Ivy_ObjRecognizeMux is implemented in ivyMux.go.
-
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the real fanin.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Ivy_ObjReal is implemented in the ported core API group.
-
-
-/**Function*************************************************************
-
-  Synopsis    [Prints node in HAIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ObjPrintVerbose(p *Ivy_Man_t, pObj *Ivy_Obj_t, fHaig int32) {
-    var pTemp *Ivy_Obj_t;
-    var fShowFanouts int32;
-    assert(!Ivy_IsComplement(pObj), "!Ivy_IsComplement(pObj)");
-    fmt.Printf("Node %5d : ", Ivy_ObjId(pObj));
-    if Ivy_ObjIsConst1(pObj) {
-        fmt.Printf("constant 1");
-    } else if Ivy_ObjIsPi(pObj) {
-        fmt.Printf("PI");
-    } else if Ivy_ObjIsPo(pObj) {
-        fmt.Printf("PO");
-    } else if Ivy_ObjIsLatch(pObj) {
-        fmt.Printf("latch (%d%s)", Ivy_ObjFanin0(pObj).Id, (Ivy_ObjFaninC0(pObj)? "\'" : " "));
-    } else if Ivy_ObjIsBuf(pObj) {
-        fmt.Printf("buffer (%d%s)", Ivy_ObjFanin0(pObj).Id, (Ivy_ObjFaninC0(pObj)? "\'" : " "));
-    } else {
-        fmt.Printf("AND( %5d%s, %5d%s )", Ivy_ObjFanin0(pObj).Id, (Ivy_ObjFaninC0(pObj)? "\'" : " "), Ivy_ObjFanin1(pObj).Id, (Ivy_ObjFaninC1(pObj)? "\'" : " ")); }
-    fmt.Printf(" (refs = %3d)", Ivy_ObjRefs(pObj));
-    if fShowFanouts != 0 {
-        var vFanouts *Vec_Ptr_t;
-        var pFanout *Ivy_Obj_t;
-        var i int32;
-        vFanouts = Vec_PtrAlloc( 10 );
-        fmt.Printf("\nFanouts:\n");
-        // inlining of macro Ivy_ObjForEachFanout
-        for  i = 0, Ivy_ObjCollectFanouts(p, pObj, vFanouts);                                  i < Vec_PtrSize(vFanouts) && ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vFanouts,i)); i++  {
-            fmt.Printf("    ");
-            fmt.Printf("Node %5d : ", Ivy_ObjId(pFanout));
-            if Ivy_ObjIsPo(pFanout) {
-                fmt.Printf("PO");
-            } else if Ivy_ObjIsLatch(pFanout) {
-                fmt.Printf("latch (%d%s)", Ivy_ObjFanin0(pFanout).Id, (Ivy_ObjFaninC0(pFanout)? "\'" : " "));
-            } else if Ivy_ObjIsBuf(pFanout) {
-                fmt.Printf("buffer (%d%s)", Ivy_ObjFanin0(pFanout).Id, (Ivy_ObjFaninC0(pFanout)? "\'" : " "));
-            } else {
-                fmt.Printf("AND( %5d%s, %5d%s )", Ivy_ObjFanin0(pFanout).Id, (Ivy_ObjFaninC0(pFanout)? "\'" : " "), Ivy_ObjFanin1(pFanout).Id, (Ivy_ObjFaninC1(pFanout)? "\'" : " ")); }
-            fmt.Printf("\n");
-        }
-        Vec_PtrFree( vFanouts );
-        return;
-    }
-    if !(fHaig != 0) {
-        if pObj.pEquiv == nil {
-            fmt.Printf(" HAIG node not given");
-        } else {
-            fmt.Printf(" HAIG node = %d%s", Ivy_Regular(pObj.pEquiv).Id, (Ivy_IsComplement(pObj.pEquiv)? "\'" : " ")); }
-        return;
-    }
-    if pObj.pEquiv == nil {
-        return; }
-    // there are choices
-    if Ivy_ObjRefs(pObj) > 0 {
-        // print equivalence class
-        fmt.Printf("  { %5d ", pObj.Id);
-        assert(!Ivy_IsComplement(pObj.pEquiv), "!Ivy_IsComplement(pObj.pEquiv)");
-        for  pTemp = pObj.pEquiv; pTemp != pObj; pTemp = Ivy_Regular(pTemp.pEquiv)  {
-            fmt.Printf(" %5d%s", pTemp.Id, (Ivy_IsComplement(pTemp.pEquiv)? "\'" : " "));
-        }
-        fmt.Printf(" }");
-        return;
-    }
-    // this is a secondary node
-    for  pTemp = Ivy_Regular(pObj.pEquiv); Ivy_ObjRefs(pTemp) == 0; pTemp = Ivy_Regular(pTemp.pEquiv)  {}
-    assert(Ivy_ObjRefs(pTemp) > 0, "Ivy_ObjRefs(pTemp) > 0");
-    fmt.Printf("  class of %d", pTemp.Id);
+func Ivy_ObjPrintVerbose(p *Ivy_Man_t, node *Ivy_Obj_t, haig int32) {
+	assert(Ivy_IsComplement(node) == 0, "regular node required")
+	fmt.Printf("Node %5d : ", Ivy_ObjId(node))
+	switch {
+	case Ivy_ObjIsConst1(node) != 0:
+		fmt.Print("constant 1")
+	case Ivy_ObjIsPi(node) != 0:
+		fmt.Print("PI")
+	case Ivy_ObjIsPo(node) != 0:
+		fmt.Print("PO")
+	case Ivy_ObjIsLatch(node) != 0:
+		fmt.Printf("latch (%d%s)", Ivy_ObjFaninId0(node), ivyPolarity(Ivy_ObjFaninC0(node)))
+	case Ivy_ObjIsBuf(node) != 0:
+		fmt.Printf("buffer (%d%s)", Ivy_ObjFaninId0(node), ivyPolarity(Ivy_ObjFaninC0(node)))
+	case Ivy_ObjIsNode(node) != 0:
+		fmt.Printf("%s( %5d%s, %5d%s )", ivyLogicName(node), Ivy_ObjFaninId0(node), ivyPolarity(Ivy_ObjFaninC0(node)), Ivy_ObjFaninId1(node), ivyPolarity(Ivy_ObjFaninC1(node)))
+	default:
+		fmt.Printf("type %d", node.Type)
+	}
+	fmt.Printf(" (refs = %3d)", Ivy_ObjRefs(node))
+	if p != nil && p.fFanout != 0 {
+		var fanouts []*Ivy_Obj_t
+		Ivy_ObjCollectFanouts(p, node, &fanouts)
+		if len(fanouts) > 0 {
+			fmt.Print("\nFanouts:")
+			for _, fanout := range fanouts {
+				fmt.Printf("\n    Node %5d : %s", Ivy_ObjId(fanout), ivyLogicName(fanout))
+			}
+		}
+	}
+	if haig == 0 {
+		if node.pEquiv == nil {
+			fmt.Print(" HAIG node not given")
+		} else {
+			fmt.Printf(" HAIG node = %d%s", Ivy_ObjId(node.pEquiv), ivyPolarity(Ivy_IsComplement(node.pEquiv)))
+		}
+		return
+	}
+	if node.pEquiv == nil {
+		return
+	}
+	if Ivy_ObjRefs(node) > 0 {
+		fmt.Printf("  { %5d", node.Id)
+		seen := map[*Ivy_Obj_t]bool{node: true}
+		for edge := node.pEquiv; edge != node; edge = Ivy_Regular(edge.pEquiv) {
+			member := Ivy_Regular(edge)
+			if member == nil || seen[member] {
+				break
+			}
+			seen[member] = true
+			fmt.Printf(" %5d%s", member.Id, ivyPolarity(Ivy_IsComplement(member.pEquiv)))
+		}
+		fmt.Print(" }")
+		return
+	}
+	for candidate := Ivy_Regular(node.pEquiv); candidate != nil; candidate = Ivy_Regular(candidate.pEquiv) {
+		if Ivy_ObjRefs(candidate) > 0 {
+			fmt.Printf("  class of %d", candidate.Id)
+			return
+		}
+	}
+	fmt.Print("  choice class has no referenced representative")
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prints node in HAIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ManPrintVerbose(p *Ivy_Man_t, fHaig int32) {
-    var vNodes *Vec_Int_t;
-    var pObj *Ivy_Obj_t;
-    var i int32;
-    fmt.Printf("PIs: ");
-    // inlining of macro Ivy_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vPis)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {
-        fmt.Printf(" %d", pObj.Id);
-    }
-    fmt.Printf("\n");
-    fmt.Printf("POs: ");
-    // inlining of macro Ivy_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vPos)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {
-        fmt.Printf(" %d", pObj.Id);
-    }
-    fmt.Printf("\n");
-    fmt.Printf("Latches: ");
-    // inlining of macro Ivy_ManForEachLatch
-    // inlining of macro Ivy_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else if !Ivy_ObjIsLatch(pObj) {} else {
-        fmt.Printf(" %d=%d%s", pObj.Id, Ivy_ObjFanin0(pObj).Id, (Ivy_ObjFaninC0(pObj)? "\'" : " ")); }
-    }
-    fmt.Printf("\n");
-    vNodes = Ivy_ManDfsSeq( p, nil );
-    // inlining of macro Ivy_ManForEachNodeVec
-    for  i = 0; i < Vec_IntSize(vNodes) && ((pObj) = Ivy_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {
-        Ivy_ObjPrintVerbose( p, pObj, fHaig );
-fmt.Printf("\n");
-    }
-    fmt.Printf("\n");
-    Vec_IntFree( vNodes );
+func ivyLogicName(node *Ivy_Obj_t) string {
+	switch {
+	case Ivy_ObjIsPi(node) != 0:
+		return "PI"
+	case Ivy_ObjIsPo(node) != 0:
+		return "PO"
+	case Ivy_ObjIsLatch(node) != 0:
+		return "latch"
+	case Ivy_ObjIsBuf(node) != 0:
+		return "buffer"
+	case Ivy_ObjIsExor(node) != 0:
+		return "EXOR"
+	case Ivy_ObjIsAnd(node) != 0:
+		return "AND"
+	default:
+		return fmt.Sprintf("type %d", Ivy_ObjType(node))
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs incremental rewriting of the AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_CutTruthPrint2(p *Ivy_Man_t, pCut *Ivy_Cut_t, uTruth uint32) int32 {
-    var i int32;
-    fmt.Printf("Trying cut : {");
-    for  i = 0; i < pCut.nSize; i++  {
-        fmt.Printf(" %6d(%d)", Ivy_LeafId(pCut.pArray[i]), Ivy_LeafLat(pCut.pArray[i]));
-    }
-    fmt.Printf(" }   ");
-    Extra_PrintBinary( os.Stdout, &uTruth, 16 );  fmt.Printf("\n");
-    return 0;
+func ivyPolarity(complement int32) string {
+	if complement != 0 {
+		return "'"
+	}
+	return " "
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs incremental rewriting of the AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_CutTruthPrint(p *Ivy_Man_t, pCut *Ivy_Cut_t, uTruth uint32) int32 {
-    var vArray *Vec_Ptr_t;
-    var pObj, pFanout *Ivy_Obj_t;
-    var nLatches int32;
-    var nPresent int32;
-    var i, k int32;
-    var fVerbose int32;
-
-    if fVerbose != 0 {
-        fmt.Printf("Trying cut : {"); }
-    for  i = 0; i < pCut.nSize; i++  {
-        if fVerbose != 0 {
-            fmt.Printf(" %6d(%d)", Ivy_LeafId(pCut.pArray[i]), Ivy_LeafLat(pCut.pArray[i])); }
-        nLatches += Ivy_LeafLat(pCut.pArray[i]);
-    }
-    if fVerbose != 0 {
-        fmt.Printf(" }   "); }
-    if fVerbose != 0 {
-        fmt.Printf("Latches = %d. ", nLatches); }
-
-    // check if there are latches on the fanout edges
-    vArray = Vec_PtrAlloc( 100 );
-    for  i = 0; i < pCut.nSize; i++  {
-        pObj = Ivy_ManObj( p, Ivy_LeafId(pCut.pArray[i]) );
-        // inlining of macro Ivy_ObjForEachFanout
-        for  k = 0, Ivy_ObjCollectFanouts(p, pObj, vArray);                                  k < Vec_PtrSize(vArray) && ((pFanout) = (Ivy_Obj_t *)Vec_PtrEntry(vArray,k)); k++  {
-            if Ivy_ObjIsLatch(pFanout) {
-                nPresent++;
-                break;
-            }
-        }
-    }
-    Vec_PtrSize( vArray );
-    if fVerbose != 0 {
-        fmt.Printf("Present = %d. ", nPresent);
-        if nLatches > nPresent {
-            fmt.Printf("Clauses = %d. ", 2*(nLatches - nPresent)); }
-        fmt.Printf("\n");
-    }
-    if nLatches > nPresent {
-        return 2*(nLatches - nPresent);
-    } else {
-        return 0;
-    }
+func Ivy_ManPrintVerbose(p *Ivy_Man_t, haig int32) {
+	fmt.Print("PIs:")
+	for _, node := range p.vPis {
+		fmt.Printf(" %d", node.Id)
+	}
+	fmt.Print("\nPOs:")
+	for _, node := range p.vPos {
+		fmt.Printf(" %d", node.Id)
+	}
+	fmt.Print("\nLatches:")
+	for _, node := range p.vObjs {
+		if node != nil && Ivy_ObjIsLatch(node) != 0 {
+			fmt.Printf(" %d=%d%s", node.Id, Ivy_ObjFaninId0(node), ivyPolarity(Ivy_ObjFaninC0(node)))
+		}
+	}
+	fmt.Println()
+	for _, id := range Ivy_ManDfsSeq(p, nil) {
+		Ivy_ObjPrintVerbose(p, Ivy_ManObj(p, id), haig)
+		fmt.Println()
+	}
+	fmt.Println()
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Ivy_CutTruthPrint2(_ *Ivy_Man_t, cut *Ivy_Cut_t, truth uint32) int32 {
+	fmt.Print("Trying cut : {")
+	for i := int32(0); i < int32(cut.nSize); i++ {
+		fmt.Printf(" %6d(%d)", Ivy_LeafId(cut.pArray[i]), Ivy_LeafLat(cut.pArray[i]))
+	}
+	fmt.Printf(" }   %016b\n", truth)
+	return 0
+}
 
-
-//ABC_NAMESPACE_IMPL_END
-
+func Ivy_CutTruthPrint(p *Ivy_Man_t, cut *Ivy_Cut_t, _ uint32) int32 {
+	var latches, present int32
+	for i := int32(0); i < int32(cut.nSize); i++ {
+		latches += Ivy_LeafLat(cut.pArray[i])
+	}
+	if p.fFanout != 0 {
+		for i := int32(0); i < int32(cut.nSize); i++ {
+			obj := Ivy_ManObj(p, Ivy_LeafId(cut.pArray[i]))
+			var fanouts []*Ivy_Obj_t
+			Ivy_ObjCollectFanouts(p, obj, &fanouts)
+			for _, fanout := range fanouts {
+				if Ivy_ObjIsLatch(fanout) != 0 {
+					present++
+					break
+				}
+			}
+		}
+	}
+	missing := latches - present
+	if missing > 0 {
+		return 2 * missing
+	}
+	return 0
+}

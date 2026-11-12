@@ -91,6 +91,7 @@ type Solver struct {
 	simpAssigns, simpProps                                              int
 	removeSatisfied                                                     bool
 	conflictBudget, propagationBudget                                   int64
+	runtimeLimit                                                        int64
 	interrupted                                                         atomic.Bool
 	analyzeToClear                                                      []Lit
 }

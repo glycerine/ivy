@@ -125,6 +125,9 @@ func If_ManMarkMapping_rec(p *If_Man_t, obj *If_Obj_t) float32 {
 	p.nNets += int32(cut.nLeaves)
 	area := If_CutLutArea(p, cut)
 	for _, leafID := range cut.pLeaves {
+		if p.pPars.fLiftLeaves != 0 {
+			leafID >>= 8
+		}
 		leaf := If_ManObj(p, leafID)
 		if p.vSwitching != nil && int(leaf.Id) < Vec_IntSize(p.vSwitching) {
 			p.dPower += float32(Vec_IntEntry(p.vSwitching, int(leaf.Id)))

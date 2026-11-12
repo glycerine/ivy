@@ -1,185 +1,230 @@
+// Package rwt implements ABC's four-input AIG rewriting library.
 package rwt
 
-/**CFile****************************************************************
+import (
+	"sync"
+	"time"
 
-  FileName    [rwt.h]
+	"github.com/glycerine/abcgo/bool/dec"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+const RWT_LIMIT = 1048576 / 4
 
-  PackageName [DAG-aware AIG rewriting package.]
+type Rwt_Man_t = Rwt_Man_t_
+type Rwt_Node_t = Rwt_Node_t_
 
-  Synopsis    [External declarations.]
+// Rwt_Node_t_ is a rewrite-forest node. Complemented edges are represented
+// by a lightweight companion handle rather than tagged machine pointers.
+type Rwt_Node_t_ struct {
+	Id, TravId int32
+	uTruth     uint32
+	Volume     uint32
+	Level      uint32
+	fUsed      bool
+	fExor      bool
+	p0, p1     *Rwt_Node_t
+	pNext      *Rwt_Node_t
 
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: rwt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <assert.h>
-
-//#include "misc/vec/vec.h"
-//#include "misc/extra/extra.h"
-//#include "misc/mem/mem.h"
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-//ABC_NAMESPACE_HEADER_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
- 
-#define RWT_LIMIT  1048576/4  // ((1 << 20) 
-// Original macro:
-// #define RWT_MIN(a,b)      (((a) < (b))? (a) : (b))
-
-// Original macro:
-// #define RWT_MAX(a,b)      (((a) > (b))? (a) : (b))
-
-
-type Rwt_Man_t =   Rwt_Man_t_;
-type Rwt_Node_t =  Rwt_Node_t_;
+	regular     *Rwt_Node_t
+	neg         *Rwt_Node_t
+	fComplement bool
+}
 
 type Rwt_Man_t_ struct {
-    // internal lookups
-    nFuncs                int32;           // number of four var functions
-    unsigned short *   puCanons;         // canonical forms
-    pPhases              string;          // canonical phases
-    pPerms              string;           // canonical permutations
-    unsigned char *    pMap;             // mapping of functions into class numbers
-    unsigned short *   pMapInv;          // mapping of classes into functions
-    pPractical              string;       // practical NPN classes
-    pPerms4             *string;          // four-var permutations
-    // node space
-    vForest         *Vec_Ptr_t;          // all the nodes
-    pTable       **Rwt_Node_t;           // the hash table of nodes by their canonical form
-    vClasses         *Vec_Vec_t;         // the nodes of the equivalence classes
-    pMmNode       *Mem_Fixed_t;          // memory for nodes and cuts
-    // statistical variables
-    nTravIds                int32;         // the counter of traversal IDs
-    nConsidered                int32;      // the number of nodes considered
-    nAdded                int32;           // the number of nodes added to lists
-    nClasses                int32;         // the number of NN classes
-    // the result of resynthesis
-    fCompl                int32;           // indicates if the output of FF should be complemented
-    pCut              any;             // the decomposition tree (temporary)
-    pGraph              any;           // the decomposition tree (temporary)
-    pPerm              string;            // permutation used for the best cut
-    vFanins         *Vec_Ptr_t;          // the fanins array (temporary)
-    vFaninsCur         *Vec_Ptr_t;       // the fanins array (temporary)
-    vLevNums         *Vec_Int_t;         // the array of levels (temporary)
-    vNodesTemp         *Vec_Ptr_t;       // the nodes in MFFC (temporary)
-    // node statistics
-    nNodesConsidered                int32;
-    nNodesRewritten                int32;
-    nNodesGained                int32;
-    nScores [222]int32;
-    nCutsGood                int32;
-    nCutsBad                int32;
-    nSubgraphs                int32;
-    // runtime statistics
-    timeStart            abctime;
-    timeTruth            abctime;
-    timeCut            abctime;
-    timeRes            abctime;
-    timeEval            abctime;
-    timeMffc            abctime;
-    timeUpdate            abctime;
-    timeTotal            abctime;
+	nFuncs              int32
+	puCanons            []uint16
+	pPhases, pPerms     []byte
+	pMap                []byte
+	pMapInv             []uint16
+	pPractical          []byte
+	pPerms4             [][]byte
+	vForest             []*Rwt_Node_t
+	pTable              []*Rwt_Node_t
+	vClasses            [][]*Rwt_Node_t
+	nodeGraphs          map[*Rwt_Node_t]*dec.Dec_Graph_t
+	nTravIds            int32
+	nConsidered         int32
+	nAdded              int32
+	nClasses            int32
+	fCompl              int32
+	pCut                any
+	pGraph              *dec.Dec_Graph_t
+	pPerm               []byte
+	vFanins             *vec.Vec_Ptr_t
+	vFaninsCur          *vec.Vec_Ptr_t
+	vLevNums            *vec.Vec_Int_t
+	vNodesTemp          *vec.Vec_Ptr_t
+	nNodesConsidered    int32
+	nNodesRewritten     int32
+	nNodesGained        int32
+	nScores             [222]int32
+	nCutsGood, nCutsBad int32
+	nSubgraphs          int32
+	timeStart           time.Duration
+	timeTruth           time.Duration
+	timeCut             time.Duration
+	timeRes             time.Duration
+	timeEval            time.Duration
+	timeMffc            time.Duration
+	timeUpdate          time.Duration
+	timeTotal           time.Duration
 }
 
-type Rwt_Node_t_ struct { // 24 bytes
-
-    Id                int32;               // ID 
-    TravId                int32;           // traversal ID
-    uTruth uint32; /* C bitfield: 16 bits; review packing and truncation */      // truth table
-    Volume uint32; /* C bitfield: 8 bits; review packing and truncation */      // volume
-    Level uint32; /* C bitfield: 6 bits; review packing and truncation */      // level
-    fUsed uint32; /* C bitfield: 1 bits; review packing and truncation */      // mark
-    fExor uint32; /* C bitfield: 1 bits; review packing and truncation */      // mark
-    p0        *Rwt_Node_t;               // first child
-    p1        *Rwt_Node_t;               // second child
-    pNext        *Rwt_Node_t;            // next in the table
+var rwtGlobal struct {
+	sync.Mutex
+	canons  []uint16
+	phases  []byte
+	perms   []byte
+	mapping []byte
 }
 
-// manipulation of complemented attributes
-func Rwt_IsComplement(p *Rwt_Node_t) int32 { return int32((((ABC_PTRUINT_T)p) & 01));            }
-func Rwt_Regular(p *Rwt_Node_t) *Rwt_Node_t { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) & ~01);  }
-func Rwt_Not(p *Rwt_Node_t) *Rwt_Node_t { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) ^  01);  }
-func Rwt_NotCond(p *Rwt_Node_t, c int32) *Rwt_Node_t { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) ^ (c));  }
+func Rwt_IsComplement(p *Rwt_Node_t) int32 {
+	if p != nil && p.fComplement {
+		return 1
+	}
+	return 0
+}
 
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
+func Rwt_Regular(p *Rwt_Node_t) *Rwt_Node_t {
+	if p != nil && p.fComplement {
+		return p.regular
+	}
+	return p
+}
 
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
+func Rwt_Not(p *Rwt_Node_t) *Rwt_Node_t {
+	if p == nil {
+		return nil
+	}
+	return p.neg
+}
 
-/*=== rwrDec.c ========================================================*/
-// extern void              Rwt_ManPreprocess( Rwt_Man_t * p );
+func Rwt_NotCond(p *Rwt_Node_t, complement int32) *Rwt_Node_t {
+	if complement&1 != 0 {
+		return Rwt_Not(p)
+	}
+	return p
+}
 
-/*=== rwrMan.c ========================================================*/
-// extern Rwt_Man_t *       Rwt_ManStart( int fPrecompute );
+// Rwt_ManCanonInfo returns the class, phase, and variable permutation for a
+// four-variable truth table. The permutation is a manager-owned immutable
+// slice; callers should treat it as read-only.
+func Rwt_ManCanonInfo(p *Rwt_Man_t, truth uint16) (class, phase byte, permutation []byte) {
+	if p == nil || int(truth) >= len(p.pMap) {
+		return 0, 0, nil
+	}
+	index := p.pPerms[truth]
+	return p.pMap[truth], p.pPhases[truth], p.pPerms4[index]
+}
 
-// extern void              Rwt_ManStop( Rwt_Man_t * p );
+func Rwt_ManReadDecs(p *Rwt_Man_t) *dec.Dec_Graph_t {
+	if p == nil {
+		return nil
+	}
+	return p.pGraph
+}
 
-// extern void              Rwt_ManPrintStats( Rwt_Man_t * p );
+func Rwt_ManReadLeaves(p *Rwt_Man_t) *vec.Vec_Ptr_t {
+	if p == nil {
+		return nil
+	}
+	return p.vFanins
+}
 
-// extern void              Rwt_ManPrintStatsFile( Rwt_Man_t * p );
+func Rwt_ManReadCurrentLeaves(p *Rwt_Man_t) *vec.Vec_Ptr_t {
+	if p == nil {
+		return nil
+	}
+	return p.vFaninsCur
+}
 
-// extern void *            Rwt_ManReadDecs( Rwt_Man_t * p );
+func Rwt_ManClassSubgraphs(p *Rwt_Man_t, class int32) []*Rwt_Node_t {
+	if p == nil || class < 0 || int(class) >= len(p.vClasses) {
+		return nil
+	}
+	return p.vClasses[class]
+}
 
-// extern Vec_Ptr_t *       Rwt_ManReadLeaves( Rwt_Man_t * p );
+func Rwt_ManNodeDecomposition(p *Rwt_Man_t, node *Rwt_Node_t) *dec.Dec_Graph_t {
+	if p == nil || node == nil {
+		return nil
+	}
+	return p.nodeGraphs[Rwt_Regular(node)]
+}
 
-// extern int               Rwt_ManReadCompl( Rwt_Man_t * p );
+func Rwt_ManRecordNodeConsidered(p *Rwt_Man_t) {
+	if p != nil {
+		p.nNodesConsidered++
+	}
+}
 
-// extern void              Rwt_ManAddTimeCuts( Rwt_Man_t * p, abctime Time );
+func Rwt_ManRecordCut(p *Rwt_Man_t, good bool) {
+	if p == nil {
+		return
+	}
+	if good {
+		p.nCutsGood++
+	} else {
+		p.nCutsBad++
+	}
+}
 
-// extern void              Rwt_ManAddTimeUpdate( Rwt_Man_t * p, abctime Time );
+func Rwt_ManAddTimeTruth(p *Rwt_Man_t, elapsed time.Duration) {
+	if p != nil {
+		p.timeTruth += elapsed
+	}
+}
 
-// extern void              Rwt_ManAddTimeTotal( Rwt_Man_t * p, abctime Time );
+func Rwt_ManAddTimeMffc(p *Rwt_Man_t, elapsed time.Duration) {
+	if p != nil {
+		p.timeMffc += elapsed
+	}
+}
 
-/*=== rwrUtil.c ========================================================*/
-// extern void              Rwt_ManLoadFromArray( Rwt_Man_t * p, int fVerbose );
+func Rwt_ManAddTimeEval(p *Rwt_Man_t, elapsed time.Duration) {
+	if p != nil {
+		p.timeEval += elapsed
+	}
+}
 
-// extern char *            Rwt_ManGetPractical( Rwt_Man_t * p );
+func Rwt_ManAddTimeResynthesis(p *Rwt_Man_t, elapsed time.Duration) {
+	if p != nil {
+		p.timeRes += elapsed
+	}
+}
 
-// extern Rwt_Node_t *      Rwt_ManAddVar( Rwt_Man_t * p, unsigned uTruth, int fPrecompute );
+func Rwt_ManAddSubgraphs(p *Rwt_Man_t, count int32) {
+	if p != nil {
+		p.nSubgraphs += count
+	}
+}
 
-// extern void              Rwt_ManIncTravId( Rwt_Man_t * p );
+// Rwt_ManStoreBest records the winning cut/decomposition selected by Ivy.
+func Rwt_ManStoreBest(p *Rwt_Man_t, graph *dec.Dec_Graph_t, complemented bool, fanins []any, truth uint16, gain int32, useZeroCost bool) {
+	if p == nil || graph == nil {
+		return
+	}
+	p.pGraph = graph
+	p.fCompl = 0
+	if complemented {
+		p.fCompl = 1
+	}
+	vec.Vec_PtrClear(p.vFanins)
+	for _, fanin := range fanins {
+		vec.Vec_PtrPush(p.vFanins, fanin)
+	}
+	class := p.pMap[truth]
+	p.nScores[class]++
+	p.nNodesGained += gain
+	if useZeroCost || gain > 0 {
+		p.nNodesRewritten++
+	}
+}
 
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
+func Rwt_ManReadCompl(p *Rwt_Man_t) int32 {
+	if p == nil {
+		return 0
+	}
+	return p.fCompl
+}

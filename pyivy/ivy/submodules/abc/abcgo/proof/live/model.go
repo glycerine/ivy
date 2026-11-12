@@ -39,6 +39,9 @@ func NewNetwork(graph *aig.Graph, inputNames, outputNames []string) (*Network, e
 	if graph == nil {
 		return nil, fmt.Errorf("live: nil graph")
 	}
+	if err := graph.Check(); err != nil {
+		return nil, fmt.Errorf("live: invalid graph: %w", err)
+	}
 	if len(inputNames) != 0 && len(inputNames) != len(graph.Inputs()) {
 		return nil, fmt.Errorf("live: input name count mismatch")
 	}

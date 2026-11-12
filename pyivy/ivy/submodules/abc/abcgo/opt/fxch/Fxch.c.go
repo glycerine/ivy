@@ -1,260 +1,178 @@
+// Port of ABC FXCH, Bruno Schmitt, UFRGS (2016); original Fxch.c.
 package fxch
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"sort"
+)
 
-/**CFile****************************************************************
-
-  FileName    [ Fxch.c ]
-
-  PackageName [ Fast eXtract with Cube Hashing (FXCH) ]
-
-  Synopsis    [ The entrance into the fast extract module. ]
-
-  Author      [ Bruno Schmitt - boschmitt at inf.ufrgs.br ]
-
-  Affiliation [ UFRGS ]
-
-  Date        [ Ver. 1.0. Started - March 6, 2016. ]
-
-  Revision    []
-
-***********************************************************************/
-//#include "Fxch.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fxch_CubesGruping(pFxchMan *Fxch_Man_t) {
-    var vCube *Vec_Int_t;
-    var iCube, nOutputs, SizeOutputID int32;
-    var pCubeHash *Hsh_VecMan_t;
-
-    /* Identify the number of Outputs and create the translation table */
-    pFxchMan.vTranslation = Vec_IntAlloc( 32 );
-    // inlining of macro Vec_WecForEachLevel
-    for  iCube = 0; (iCube < Vec_WecSize(pFxchMan.vCubes)) && (((vCube) = Vec_WecEntry(pFxchMan.vCubes, iCube)), 1); iCube++  {
-        var Id int32  = Vec_IntEntry( vCube, 0 );
-        var iTranslation int32  = Vec_IntFind( pFxchMan.vTranslation, Id );
-
-        if iTranslation == -1 {
-            Vec_IntPush( pFxchMan.vTranslation, Id ); }
-    }
-    nOutputs = Vec_IntSize( pFxchMan.vTranslation );
-
-    /* Size of the OutputID in number o ints */
-    SizeOutputID = ( nOutputs >> 5 ) + ( ( nOutputs & 31 ) > 0 );
-
-    /* Initialize needed structures */
-    pFxchMan.vOutputID = Vec_IntAlloc( 4096 );
-    // inlining of macro ABC_CALLOC
-    pFxchMan.pTempOutputID = ((int *) calloc((size_t)(SizeOutputID), sizeof(int)));
-    pFxchMan.nSizeOutputID = SizeOutputID;
-
-    pCubeHash =  Hsh_VecManStart( 1024 );
-
-    /* Identify equal cubes */
-    // inlining of macro Vec_WecForEachLevel
-    for  iCube = 0; (iCube < Vec_WecSize(pFxchMan.vCubes)) && (((vCube) = Vec_WecEntry(pFxchMan.vCubes, iCube)), 1); iCube++  {
-        var Id int32  = Vec_IntEntry( vCube, 0 );
-        var iTranslation int32  = Vec_IntFind( pFxchMan.vTranslation, Id );
-        var i int32;
-        var iCubeNoID int32;
-        var Temp int32;
-        var pEntry *int32;
-        Vec_IntWriteEntry( vCube, 0, 0 ); // Clear ID, Outputs will be identified by it later
-
-        iCubeNoID = Hsh_VecManAdd( pCubeHash, vCube );
-        Temp = ( 1 << ( iTranslation & 31 ) );
-        if iCubeNoID == Vec_IntSize( pFxchMan.vOutputID ) / SizeOutputID {
-            for  i = 0; i < SizeOutputID; i++  {
-                pFxchMan.pTempOutputID[i] = 0;
-            }
-
-            pFxchMan.pTempOutputID[ iTranslation >> 5 ] = Temp;
-            Vec_IntPushArray( pFxchMan.vOutputID, pFxchMan.pTempOutputID, SizeOutputID ); 
-        
-        } else {
-            Vec_IntClear( vCube );
-            pEntry = Vec_IntEntryP( pFxchMan.vOutputID, ( iCubeNoID * SizeOutputID ) + ( iTranslation >> 5 ) );
-            *pEntry |= Temp;
-        }
-    }
-
-    Hsh_VecManStop( pCubeHash );
-    Vec_WecRemoveEmpty( pFxchMan.vCubes );
+func Fxch_CubesGruping(p *Fxch_Man_t) {
+	indices := make(map[string]int)
+	var cubes Cubes
+	var outputs []map[int32]bool
+	for _, c := range p.Cubes {
+		key := divKey(c[1:])
+		if i, ok := indices[key]; ok {
+			outputs[i][c[0]] = true
+		} else {
+			indices[key] = len(cubes)
+			row := copyInts(c)
+			owner := row[0]
+			row[0] = 0
+			cubes = append(cubes, row)
+			outputs = append(outputs, map[int32]bool{owner: true})
+		}
+	}
+	p.Cubes = cubes
+	p.outputs = outputs
+}
+func Fxch_CubesUnGruping(p *Fxch_Man_t) {
+	var out Cubes
+	for i, c := range p.Cubes {
+		if len(c) == 0 {
+			continue
+		}
+		if c[0] != 0 {
+			out = append(out, copyInts(c))
+			continue
+		}
+		ids := make([]int, 0, len(p.outputs[i]))
+		for o := range p.outputs[i] {
+			ids = append(ids, int(o))
+		}
+		sort.Ints(ids)
+		for _, o := range ids {
+			row := copyInts(c)
+			row[0] = int32(o)
+			out = append(out, row)
+		}
+	}
+	sort.SliceStable(out, func(i, j int) bool { return out[i][0] < out[j][0] })
+	p.Cubes = out
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fxch_CubesUnGruping(pFxchMan *Fxch_Man_t) {
-    var iCube int32;
-    var i, j int32;
-    var vCube *Vec_Int_t;
-    var vNewCube *Vec_Int_t;
-
-    assert(Vec_WecSize( pFxchMan.vCubes ) == ( Vec_IntSize( pFxchMan.vOutputID ) / pFxchMan.nSizeOutputID ), "Vec_WecSize( pFxchMan.vCubes ) == ( Vec_IntSize( pFxchMan.vOutputID ) / pFxchMan.nSizeOutputID )");
-    // inlining of macro Vec_WecForEachLevel
-    for  iCube = 0; (iCube < Vec_WecSize(pFxchMan.vCubes)) && (((vCube) = Vec_WecEntry(pFxchMan.vCubes, iCube)), 1); iCube++  {
-        var pOutputID *int32;
-        var nOnes int32;
-        if Vec_IntSize( vCube ) == 0 || Vec_IntEntry( vCube, 0 ) != 0 {
-            continue; }
-
-        pOutputID = Vec_IntEntryP( pFxchMan.vOutputID, iCube * pFxchMan.nSizeOutputID );
-        nOnes = 0;
-
-        for  i = 0; i < pFxchMan.nSizeOutputID; i++  {
-            nOnes += Fxch_CountOnes( (unsigned int) pOutputID[i] );
-        }
-
-        for  i = 0; i < pFxchMan.nSizeOutputID && (nOnes != 0); i++  {
-            for  j = 0; j < 32 && (nOnes != 0); j++  {
-                if pOutputID[i] & ( 1 << j ) {
-                    if nOnes == 1 {
-                        Vec_IntWriteEntry( vCube, 0, Vec_IntEntry( pFxchMan.vTranslation, ( i << 5 ) | j ) );
-                    } else {
-                        vNewCube = Vec_WecPushLevel( pFxchMan.vCubes );
-                        Vec_IntAppend( vNewCube, vCube );
-                        Vec_IntWriteEntry( vNewCube, 0, Vec_IntEntry( pFxchMan.vTranslation, (i << 5 ) | j ) );
-                    }
-                    nOnes -= 1;
-                }
-            }
-        }
-    }
-
-    Vec_IntFree( pFxchMan.vTranslation );
-    Vec_IntFree( pFxchMan.vOutputID );
-    pFxchMan.pTempOutputID = nil;
-    return;
+// Extract mutates cubes only on success. Zero maximum means unlimited, as in C.
+func Extract(cubes *Cubes, objMax, maxDiv int32, log io.Writer) (int32, error) {
+	if cubes == nil || objMax < 0 || maxDiv < 0 {
+		return 0, fmt.Errorf("invalid FXCH arguments")
+	}
+	work := make(Cubes, len(*cubes))
+	for i, c := range *cubes {
+		if len(c) == 0 || c[0] < 0 || c[0] >= objMax {
+			return 0, fmt.Errorf("invalid FXCH owner at row %d", i)
+		}
+		work[i] = copyInts(c)
+		last := int32(-1)
+		for _, l := range c[1:] {
+			if l < 0 || l>>1 >= objMax || l <= last || last >= 0 && l>>1 == last>>1 {
+				return 0, fmt.Errorf("invalid/unsorted FXCH literal at row %d", i)
+			}
+			last = l
+		}
+	}
+	if err := validateDAG(work); err != nil {
+		return 0, err
+	}
+	if len(work) == 0 {
+		return 0, nil
+	}
+	p := Fxch_ManAlloc(work)
+	p.Log = log
+	Fxch_CubesGruping(p)
+	Fxch_ManMapLiteralsIntoCubes(p, objMax)
+	Fxch_ManGenerateLitHashKeys(p)
+	Fxch_ManComputeLevel(p)
+	Fxch_ManDivCreate(p)
+	for maxDiv == 0 || p.Extracted < maxDiv {
+		best := int32(-1)
+		weight := float32(0)
+		for i, d := range p.divisors {
+			if d.weight > weight {
+				best = int32(i)
+				weight = d.weight
+			}
+		}
+		if best < 0 {
+			break
+		}
+		Fxch_ManUpdate(p, best)
+	}
+	count := p.Extracted
+	Fxch_CubesUnGruping(p)
+	*cubes = p.Cubes
+	return count, nil
+}
+func Fxch_FastExtract(cubes *Cubes, objMax, maxDiv, verbose, veryVerbose int32) int32 {
+	var log io.Writer = io.Discard
+	count, err := Extract(cubes, objMax, maxDiv, log)
+	if err != nil {
+		return 0
+	}
+	if verbose != 0 {
+		fmt.Printf("FXCH extracted %d divisors\n", count)
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [ Performs fast extract with cube hashing on a set
-                of covers. ]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fxch_FastExtract(vCubes *Vec_Wec_t, ObjIdMax int32, nMaxDivExt int32, fVerbose int32, fVeryVerbose int32) int32 {
-    var TempTime abctime;
-    var pFxchMan *Fxch_Man_t  = Fxch_ManAlloc( vCubes );
-    var i int32;
-
-    TempTime = Abc_Clock();
-    Fxch_CubesGruping( pFxchMan );
-    Fxch_ManMapLiteralsIntoCubes( pFxchMan, ObjIdMax );
-    Fxch_ManGenerateLitHashKeys( pFxchMan );
-    Fxch_ManComputeLevel( pFxchMan );
-    Fxch_ManSCHashTablesInit( pFxchMan );
-    Fxch_ManDivCreate( pFxchMan );
-    pFxchMan.timeInit = Abc_Clock() - TempTime;
-
-    if fVeryVerbose != 0 {
-        Fxch_ManPrintDivs( pFxchMan ); }
-
-    if fVerbose != 0 {
-        Fxch_ManPrintStats( pFxchMan ); }
-
-    TempTime = Abc_Clock();
-    
-    for  i = 0; (!(nMaxDivExt != 0) || i < nMaxDivExt) && Vec_QueTopPriority( pFxchMan.vDivPrio ) > 0.0; i++  {
-        var iDiv int32  = Vec_QuePop( pFxchMan.vDivPrio );
-
-        if fVeryVerbose != 0 {
-            Fxch_DivPrint( pFxchMan, iDiv ); }
-
-        Fxch_ManUpdate( pFxchMan, iDiv );
-    }
-   
-    pFxchMan.timeExt = Abc_Clock() - TempTime;
-
-    if fVerbose != 0 {
-        Fxch_ManPrintStats( pFxchMan );
-        Abc_PrintTime( 1, "\n[FXCH] Elapsed Time", pFxchMan.timeInit + pFxchMan.timeExt );
-        Abc_PrintTime( 1, "[FXCH]    +-> Init", pFxchMan.timeInit );
-        Abc_PrintTime( 1, "[FXCH]    +-> Extr", pFxchMan.timeExt );
-    }
-
-    Fxch_CubesUnGruping( pFxchMan );
-    Fxch_ManSCHashTablesFree( pFxchMan );
-    Fxch_ManFree( pFxchMan );
-
-    Vec_WecRemoveEmpty( vCubes );
-    Vec_WecSortByFirstInt( vCubes, 0 );
-
-    return 1;
+// FXCHNetwork adapters translate native SOP graph objects into owner/literal rows.
+type FXCHNetwork interface {
+	FXCHCubes() (Cubes, int32, error)
+	ReplaceFXCHCubes(Cubes) error
 }
 
-/**Function*************************************************************
-
-  Synopsis    [ Retrives the necessary information for the fast extract
-                with cube hashing. ]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFxchPerform(pNtk *Abc_Ntk_t, nMaxDivExt int32, fVerbose int32, fVeryVerbose int32) int32 {
-    var vCubes *Vec_Wec_t;
-
-    assert(Abc_NtkIsSopLogic( pNtk ), "Abc_NtkIsSopLogic( pNtk )");
-
-    if !Abc_NtkFxCheck( pNtk ) {
-        fmt.Printf("Abc_NtkFxchPerform(): Nodes have duplicated fanins. FXCH is not performed.\n");
-        return 0;
-    }
-
-    vCubes = Abc_NtkFxRetrieve( pNtk );
-    if Fxch_FastExtract( vCubes, Abc_NtkObjNumMax( pNtk ), nMaxDivExt, fVerbose, fVeryVerbose ) > 0 {
-        Abc_NtkFxInsert( pNtk, vCubes );
-        Vec_WecFree( vCubes );
-
-        if !Abc_NtkCheck( pNtk ) {
-            fmt.Printf("Abc_NtkFxchPerform(): The network check has failed.\n"); }
-
-        return 1;
-    
-    } else {
-        fmt.Printf("Warning: The network has not been changed by \"fxch\".\n"); }
-
-    Vec_WecFree( vCubes );
-
-    return 0;
+func Abc_NtkFxchPerform(n FXCHNetwork, maxDiv, verbose, veryVerbose int32) int32 {
+	c, limit, err := n.FXCHCubes()
+	if err != nil {
+		return 0
+	}
+	if Fxch_FastExtract(&c, limit, maxDiv, verbose, veryVerbose) == 0 {
+		return 0
+	}
+	if n.ReplaceFXCHCubes(c) != nil {
+		return 0
+	}
+	return 1
 }
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Abc_NtkFxRetrieve(n FXCHNetwork) (Cubes, error) { c, _, e := n.FXCHCubes(); return c, e }
+func Abc_NtkFxInsert(n FXCHNetwork, c Cubes) error   { return n.ReplaceFXCHCubes(c) }
+func Abc_NtkFxCheck(n FXCHNetwork) int32             { _, _, e := n.FXCHCubes(); return boolInt(e == nil) }
 
-//ABC_NAMESPACE_IMPL_END
+// Validate ownership dependencies independently of numeric owner order.
+func validateDAG(c Cubes) error {
+	edges := make(map[int32][]int32)
+	for _, row := range c {
+		if _, ok := edges[row[0]]; !ok {
+			edges[row[0]] = nil
+		}
+		for _, l := range row[1:] {
+			edges[row[0]] = append(edges[row[0]], l>>1)
+		}
+	}
+	state := make(map[int32]byte)
+	var visit func(int32) error
+	visit = func(id int32) error {
+		if state[id] == 1 {
+			return fmt.Errorf("FXCH combinational cycle at node %d", id)
+		}
+		if state[id] == 2 {
+			return nil
+		}
+		state[id] = 1
+		for _, dep := range edges[id] {
+			if _, ok := edges[dep]; ok {
+				if err := visit(dep); err != nil {
+					return err
+				}
+			}
+		}
+		state[id] = 2
+		return nil
+	}
+	for id := range edges {
+		if err := visit(id); err != nil {
+			return err
+		}
+	}
+	return nil
+}

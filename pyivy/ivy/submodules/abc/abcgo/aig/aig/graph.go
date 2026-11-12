@@ -76,15 +76,16 @@ type Graph struct {
 func NewGraph() *Graph {
 	return &Graph{nodes: []Node{{Kind: Constant, Phase: true}}, hash: make(map[edgePair]Edge), deleted: make(map[int]bool)}
 }
-func (g *Graph) Const1() Edge      { return 0 }
-func (g *Graph) Const0() Edge      { return 1 }
-func (g *Graph) InputCount() int   { return len(g.inputs) }
-func (g *Graph) OutputCount() int  { return len(g.outputs) }
-func (g *Graph) NodeCount() int    { return len(g.nodes) - len(g.deleted) }
-func (g *Graph) Nodes() []Node     { return append([]Node(nil), g.nodes...) }
-func (g *Graph) Inputs() []Edge    { return append([]Edge(nil), g.inputs...) }
-func (g *Graph) Outputs() []Edge   { return append([]Edge(nil), g.outputs...) }
-func (g *Graph) valid(e Edge) bool { return e.NodeID() < len(g.nodes) && !g.deleted[e.NodeID()] }
+func (g *Graph) Const1() Edge         { return 0 }
+func (g *Graph) Const0() Edge         { return 1 }
+func (g *Graph) InputCount() int      { return len(g.inputs) }
+func (g *Graph) OutputCount() int     { return len(g.outputs) }
+func (g *Graph) NodeCount() int       { return len(g.nodes) - len(g.deleted) }
+func (g *Graph) RegisterCount() int32 { return g.nRegs }
+func (g *Graph) Nodes() []Node        { return append([]Node(nil), g.nodes...) }
+func (g *Graph) Inputs() []Edge       { return append([]Edge(nil), g.inputs...) }
+func (g *Graph) Outputs() []Edge      { return append([]Edge(nil), g.outputs...) }
+func (g *Graph) valid(e Edge) bool    { return e.NodeID() < len(g.nodes) && !g.deleted[e.NodeID()] }
 func (g *Graph) NewInput() Edge {
 	e := Edge(len(g.nodes)) << 1
 	g.nodes = append(g.nodes, Node{Kind: Input})

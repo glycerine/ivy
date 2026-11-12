@@ -159,3 +159,59 @@ func TestZDDNonidentityLevelOrderAndInitValidation(t *testing.T) {
 		t.Fatal("invalid variable counts accepted")
 	}
 }
+
+func TestZDDVarsFromBDDOrderAndLiveOrderGuard(t *testing.T) {
+	dd := NewBDDManager(3)
+	if Cudd_ShuffleHeap(dd, []int{2, 0, 1}) != 1 {
+		t.Fatal("failed to establish BDD variable order")
+	}
+	if Cudd_zddVarsFromBddVars(dd, 2) != 1 {
+		t.Fatal("failed to align ZDD variables")
+	}
+	want := []int{4, 5, 0, 1, 2, 3}
+	for level, index := range want {
+		if dd.InvPermZ[level] != index || dd.PermZ[index] != level {
+			t.Fatalf("ZDD order at level %d = %d (inverse %d), want %d", level, dd.InvPermZ[level], dd.PermZ[index], index)
+		}
+	}
+	if len(dd.Univ) != 6 || dd.Univ[0] == nil {
+		t.Fatalf("universe was not rebuilt: size=%d", len(dd.Univ))
+	}
+	root := Cudd_zddChange(dd, dd.One, 0)
+	if root == nil {
+		t.Fatal("failed to create live ZDD root")
+	}
+	Cudd_Ref(root)
+	family := func(f *DdNode) uint64 {
+		var bits uint64
+		var visit func(*DdNode, uint)
+		visit = func(n *DdNode, set uint) {
+			if n == dd.Zero {
+				return
+			}
+			if n == dd.One {
+				bits |= uint64(1) << set
+				return
+			}
+			visit(n.E, set)
+			visit(n.T, set|1<<n.Index)
+		}
+		visit(f, 0)
+		return bits
+	}
+	before := family(root)
+	if Cudd_zddVarsFromBddVars(dd, 1) != 1 {
+		t.Fatal("failed to reorder live ZDD graph")
+	}
+	if family(root) != before {
+		t.Fatalf("reordering changed a referenced family: before=%016x after=%016x", before, family(root))
+	}
+	for level, want := range []int{2, 0, 1, 3, 4, 5} {
+		if dd.InvPermZ[level] != want {
+			t.Fatalf("new ZDD order at %d = %d, want %d", level, dd.InvPermZ[level], want)
+		}
+	}
+	if family(dd.Univ[0]) != ^uint64(0) {
+		t.Fatal("universe lost members after live graph reorder")
+	}
+}

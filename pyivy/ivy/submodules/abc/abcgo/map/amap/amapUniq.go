@@ -2,313 +2,207 @@ package amap
 
 import "fmt"
 
-/**CFile****************************************************************
-
-  FileName    [amapUniq.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Technology mapper for standard cells.]
-
-  Synopsis    [Checks if the structural node already exists.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: amapUniq.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "amapInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if the entry exists and returns value.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_IntCheckWithMask(p *Vec_Int_t, Entry int32) int32 {
-    var i int32;
-    for  i = 0; i < p.nSize; i++  {
-        if (0xffff & p.pArray[i]) == (0xffff & Entry) {
-            return p.pArray[i] >> 16; }
-    }
-    return -1;
+// Vec_IntCheckWithMask finds a packed rule by its low 16-bit fanin literal.
+// The high 16 bits contain the resulting node ID.
+func Vec_IntCheckWithMask(v *Vec_Int_t, entry int32) int32 {
+	if v == nil {
+		return -1
+	}
+	for _, packed := range Vec_IntArray(v) {
+		if packed&0xffff == entry&0xffff {
+			return packed >> 16
+		}
+	}
+	return -1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Pushes entry in the natural order.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_IntPushOrderWithMask(p *Vec_Int_t, Entry int32) {
-    var i int32;
-    if p.nSize == p.nCap {
-        Vec_IntGrow( p, 2 * p.nCap ); }
-    p.nSize++;
-    for  i = p.nSize-2; i >= 0; i--  {
-        if (0xffff & p.pArray[i]) > (0xffff & Entry) {
-            p.pArray[i+1] = p.pArray[i];
-        } else {
-            break; }
-    }
-    p.pArray[i+1] = Entry;
+// Vec_IntPushOrderWithMask keeps a packed rule vector ordered by the fanin
+// literal, independently of the high bits carrying the result node ID.
+func Vec_IntPushOrderWithMask(v *Vec_Int_t, entry int32) {
+	if v == nil {
+		panic("amap: nil rule vector")
+	}
+	items := Vec_IntArray(v)
+	key := entry & 0xffff
+	index := 0
+	for index < len(items) && items[index]&0xffff <= key {
+		index++
+	}
+	vecIntInsert(v, index, entry)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibFindNode(pLib *Amap_Lib_t, iFan0 int32, iFan1 int32, fXor int32) int32 {
-    if fXor != 0 {
-        return Vec_IntCheckWithMask( (Vec_Int_t *)Vec_PtrEntry(pLib.vRulesX, iFan0), iFan1 );
-    } else {
-        return Vec_IntCheckWithMask( (Vec_Int_t *)Vec_PtrEntry(pLib.vRules, iFan0), iFan1 ); }
+func Amap_LibFindNode(lib *Amap_Lib_t, fan0, fan1 int32, xor int32) int32 {
+	if lib == nil {
+		return -1
+	}
+	rules := lib.vRules
+	if xor != 0 {
+		rules = lib.vRulesX
+	}
+	if rules == nil || fan0 < 0 || fan0 >= Vec_PtrSize(rules) {
+		return -1
+	}
+	v, ok := Vec_PtrEntry(rules, fan0).(*Vec_Int_t)
+	if !ok {
+		return -1
+	}
+	return Vec_IntCheckWithMask(v, fan1)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Checks if the three-argument rule exist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibFindMux(p *Amap_Lib_t, iFan0 int32, iFan1 int32, iFan2 int32) int32 {
-    var x int32;
-    for  x = 0; x < Vec_IntSize(p.vRules3); x += 4  {
-        if Vec_IntEntry(p.vRules3, x)   == iFan0 &&
-             Vec_IntEntry(p.vRules3, x+1) == iFan1 &&
-             Vec_IntEntry(p.vRules3, x+2) == iFan2 {
-            return Vec_IntEntry(p.vRules3, x+3);
-        }
-    }
-    return -1;
+func Amap_LibFindMux(lib *Amap_Lib_t, fan0, fan1, fan2 int32) int32 {
+	if lib == nil || lib.vRules3 == nil {
+		return -1
+	}
+	for i := int32(0); i+3 < Vec_IntSize(lib.vRules3); i += 4 {
+		if Vec_IntEntry(lib.vRules3, i) == fan0 && Vec_IntEntry(lib.vRules3, i+1) == fan1 && Vec_IntEntry(lib.vRules3, i+2) == fan2 {
+			return Vec_IntEntry(lib.vRules3, i+3)
+		}
+	}
+	return -1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates a new node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibCreateObj(p *Amap_Lib_t) *Amap_Nod_t {
-    var pNode *Amap_Nod_t;
-    if p.nNodes == p.nNodesAlloc {
-        // inlining of macro ABC_REALLOC
-        
-        if p.pNodes {
-            p.pNodes = ((Amap_Nod_t *) realloc((char *)(p.pNodes), sizeof(Amap_Nod_t) * (size_t)(2*p.nNodesAlloc)));
-        } else {
-            p.pNodes = ((Amap_Nod_t *) malloc(sizeof(Amap_Nod_t) * (size_t)(2*p.nNodesAlloc)));
-        }
-        p.nNodesAlloc *= 2;
-    }
-    pNode = Amap_LibNod( p, p.nNodes );
-    memset( pNode, 0, sizeof(Amap_Nod_t) );
-    pNode.Id = p.nNodes++;
-    Vec_PtrPush( p.vRules, Vec_IntAlloc(8) );
-    Vec_PtrPush( p.vRules, Vec_IntAlloc(8) );
-    Vec_PtrPush( p.vRulesX, Vec_IntAlloc(8) );
-    Vec_PtrPush( p.vRulesX, Vec_IntAlloc(8) );
-    return pNode;
+func Amap_LibCreateObj(lib *Amap_Lib_t) *Amap_Nod_t {
+	if lib == nil {
+		panic("amap: nil library")
+	}
+	if lib.nNodes == lib.nNodesAlloc {
+		capacity := max(256, lib.nNodesAlloc*2)
+		grown := make([]Amap_Nod_t, lib.nNodes, capacity)
+		copy(grown, lib.pNodes)
+		lib.pNodes = grown
+		lib.nNodesAlloc = int32(capacity)
+	}
+	if int(lib.nNodes) >= len(lib.pNodes) {
+		lib.pNodes = append(lib.pNodes, Amap_Nod_t{})
+	} else {
+		lib.pNodes[lib.nNodes] = Amap_Nod_t{}
+	}
+	node := &lib.pNodes[lib.nNodes]
+	node.Id = uint32(lib.nNodes)
+	lib.nNodes++
+	if lib.vRules == nil {
+		lib.vRules = Vec_PtrAlloc(16)
+	}
+	if lib.vRulesX == nil {
+		lib.vRulesX = Vec_PtrAlloc(16)
+	}
+	Vec_PtrPush(lib.vRules, Vec_IntAlloc(8))
+	Vec_PtrPush(lib.vRules, Vec_IntAlloc(8))
+	Vec_PtrPush(lib.vRulesX, Vec_IntAlloc(8))
+	Vec_PtrPush(lib.vRulesX, Vec_IntAlloc(8))
+	return node
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates a new node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibCreateVar(p *Amap_Lib_t) int32 {
-    var pNode *Amap_Nod_t;
-    // start the manager
-    assert(p.pNodes == nil, "p.pNodes == nil");
-    p.nNodesAlloc = 256;
-    // inlining of macro ABC_ALLOC
-    p.pNodes = ((Amap_Nod_t *) malloc(sizeof(Amap_Nod_t) * (size_t)(p.nNodesAlloc)));
-    // create the first node
-    pNode = Amap_LibCreateObj( p );
-    p.pNodes.Type = AMAP_OBJ_PI;
-    p.pNodes.nSuppSize = 1;
-    return 0;
+func Amap_LibCreateVar(lib *Amap_Lib_t) int32 {
+	assert(lib != nil && len(lib.pNodes) == 0 && lib.nNodes == 0, "empty library node table")
+	lib.nNodesAlloc = 256
+	lib.pNodes = make([]Amap_Nod_t, 0, int(lib.nNodesAlloc))
+	node := Amap_LibCreateObj(lib)
+	node.Type = AMAP_OBJ_PI
+	node.nSuppSize = 1
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates a new node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibCreateNode(p *Amap_Lib_t, iFan0 int32, iFan1 int32, fXor int32) int32 {
-    var pNode *Amap_Nod_t;
-    var iFan int32;
-    if iFan0 < iFan1 {
-        iFan  = iFan0;
-        iFan0 = iFan1;
-        iFan1 = iFan;
-    }
-    pNode = Amap_LibCreateObj( p );
-    if fXor != 0 {
-        pNode.Type = AMAP_OBJ_XOR;
-    } else {
-        pNode.Type = AMAP_OBJ_AND;
-    }
-    pNode.nSuppSize = p.pNodes[Abc_Lit2Var(iFan0)].nSuppSize + p.pNodes[Abc_Lit2Var(iFan1)].nSuppSize;
-    pNode.iFan0 = iFan0;
-    pNode.iFan1 = iFan1;
-if p.fVerbose {
-fmt.Printf("Creating node %5d %c :  iFan0 = %5d%c  iFan1 = %5d%c\n", pNode.Id, (fXor?'x':' '), Abc_Lit2Var(iFan0), (Abc_LitIsCompl(iFan0)?'-':'+'), Abc_Lit2Var(iFan1), (Abc_LitIsCompl(iFan1)?'-':'+')); }
-
-    if fXor != 0 {
-        if iFan0 == iFan1 {
-            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRulesX, iFan0), (pNode.Id << 16) | iFan1 );
-        } else {
-            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRulesX, iFan0), (pNode.Id << 16) | iFan1 );
-            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRulesX, iFan1), (pNode.Id << 16) | iFan0 );
-        }
-    
-    } else {
-        if iFan0 == iFan1 {
-            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRules, iFan0), (pNode.Id << 16) | iFan1 );
-        } else {
-            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRules, iFan0), (pNode.Id << 16) | iFan1 );
-            Vec_IntPushOrderWithMask( (Vec_Int_t *)Vec_PtrEntry(p.vRules, iFan1), (pNode.Id << 16) | iFan0 );
-        }
-    }
-    return pNode.Id;
+func Amap_LibCreateNode(lib *Amap_Lib_t, fan0, fan1 int32, xor int32) int32 {
+	if fan0 < fan1 {
+		fan0, fan1 = fan1, fan0
+	}
+	node := Amap_LibCreateObj(lib)
+	if xor != 0 {
+		node.Type = AMAP_OBJ_XOR
+	} else {
+		node.Type = AMAP_OBJ_AND
+	}
+	node.nSuppSize = Amap_LibNod(lib, Abc_Lit2Var(fan0)).nSuppSize + Amap_LibNod(lib, Abc_Lit2Var(fan1)).nSuppSize
+	node.iFan0, node.iFan1 = int16(fan0), int16(fan1)
+	if lib.fVerbose != 0 {
+		op := ' '
+		if xor != 0 {
+			op = 'x'
+		}
+		fmt.Printf("Creating node %5d %c : iFan0 = %5d%c iFan1 = %5d%c\n", node.Id, op,
+			Abc_Lit2Var(fan0), polarity(Abc_LitIsCompl(fan0)), Abc_Lit2Var(fan1), polarity(Abc_LitIsCompl(fan1)))
+	}
+	rules := lib.vRules
+	if xor != 0 {
+		rules = lib.vRulesX
+	}
+	insertPackedRule(rules, fan0, fan1, int32(node.Id))
+	if fan0 != fan1 {
+		insertPackedRule(rules, fan1, fan0, int32(node.Id))
+	}
+	return int32(node.Id)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates a new node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibCreateMux(p *Amap_Lib_t, iFan0 int32, iFan1 int32, iFan2 int32) int32 {
-    var pNode *Amap_Nod_t;
-    pNode = Amap_LibCreateObj( p );
-    pNode.Type  = AMAP_OBJ_MUX;
-    pNode.nSuppSize = p.pNodes[Abc_Lit2Var(iFan0)].nSuppSize + p.pNodes[Abc_Lit2Var(iFan1)].nSuppSize + p.pNodes[Abc_Lit2Var(iFan2)].nSuppSize;
-    pNode.iFan0 = iFan0;
-    pNode.iFan1 = iFan1;
-    pNode.iFan2 = iFan2;
-if p.fVerbose {
-fmt.Printf("Creating node %5d %c :  iFan0 = %5d%c  iFan1 = %5d%c  iFan2 = %5d%c\n", pNode.Id, 'm', Abc_Lit2Var(iFan0), (Abc_LitIsCompl(iFan0)?'-':'+'), Abc_Lit2Var(iFan1), (Abc_LitIsCompl(iFan1)?'-':'+'), Abc_Lit2Var(iFan2), (Abc_LitIsCompl(iFan2)?'-':'+')); }
-
-    Vec_IntPush( p.vRules3, iFan0 );
-    Vec_IntPush( p.vRules3, iFan1 );
-    Vec_IntPush( p.vRules3, iFan2 );
-    Vec_IntPush( p.vRules3, pNode.Id );
-    return pNode.Id;
+func insertPackedRule(rules *Vec_Ptr_t, index, key, node int32) {
+	if index < 0 || index >= Vec_PtrSize(rules) {
+		panic(fmt.Sprintf("amap: rule fanin literal %d outside table of %d", index, Vec_PtrSize(rules)))
+	}
+	v, ok := Vec_PtrEntry(rules, index).(*Vec_Int_t)
+	if !ok || node > 0xffff || key < 0 || key > 0xffff {
+		panic("amap: invalid packed rule")
+	}
+	Vec_IntPushOrderWithMask(v, node<<16|key)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Allocates triangular lookup table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_LibLookupTableAlloc(vVec *Vec_Ptr_t, fVerbose int32) **int32 {
-    var vOne *Vec_Int_t;
-    var pRes **int32;
-    var pBuffer *int32;
-    var i, k, nTotal, nSize, nEntries, Value int32;
-    // count the total size
-    nEntries = nSize = Vec_PtrSize( vVec );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vVec)) && (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vVec, i)), 1); i++  {
-        nEntries += Vec_IntSize(vOne);
-    }
-    // inlining of macro ABC_ALLOC
-    pBuffer = ((int *) malloc(sizeof(int) * (size_t)(nSize * sizeof(void *) + nEntries)));
-    pRes = (int **)pBuffer;
-    pRes[0] = pBuffer + nSize * sizeof(void *);
-    nTotal = 0;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vVec)) && (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vVec, i)), 1); i++  {
-        pRes[i] = pRes[0] + nTotal;
-        nTotal += Vec_IntSize(vOne) + 1;
-        if fVerbose != 0 {
-        fmt.Printf("%d : ", i); }
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vOne)) && (((Value) = Vec_IntEntry(vOne, k)), 1); k++  {
-            pRes[i][k] = Value;
-            if fVerbose != 0 {
-            fmt.Printf("%d(%d) ", Value&0xffff, Value>>16); }
-        }
-        if fVerbose != 0 {
-        fmt.Printf("\n"); }
-        pRes[i][k] = 0;
-    }
-    assert(nTotal == nEntries, "nTotal == nEntries");
-    return pRes;
+func polarity(complement int32) byte {
+	if complement != 0 {
+		return '-'
+	}
+	return '+'
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Amap_LibCreateMux(lib *Amap_Lib_t, fan0, fan1, fan2 int32) int32 {
+	node := Amap_LibCreateObj(lib)
+	node.Type = AMAP_OBJ_MUX
+	node.nSuppSize = Amap_LibNod(lib, Abc_Lit2Var(fan0)).nSuppSize +
+		Amap_LibNod(lib, Abc_Lit2Var(fan1)).nSuppSize + Amap_LibNod(lib, Abc_Lit2Var(fan2)).nSuppSize
+	node.iFan0, node.iFan1, node.iFan2 = int16(fan0), int16(fan1), int16(fan2)
+	if lib.fVerbose != 0 {
+		fmt.Printf("Creating node %5d m : iFan0 = %5d%c iFan1 = %5d%c iFan2 = %5d%c\n", node.Id,
+			Abc_Lit2Var(fan0), polarity(Abc_LitIsCompl(fan0)), Abc_Lit2Var(fan1), polarity(Abc_LitIsCompl(fan1)),
+			Abc_Lit2Var(fan2), polarity(Abc_LitIsCompl(fan2)))
+	}
+	if lib.vRules3 == nil {
+		lib.vRules3 = Vec_IntAlloc(16)
+	}
+	for _, value := range []int32{fan0, fan1, fan2, int32(node.Id)} {
+		Vec_IntPush(lib.vRules3, value)
+	}
+	return int32(node.Id)
+}
 
+// Amap_LibLookupTableAlloc copies packed vectors into native slices and adds
+// the zero terminator expected by the tight matcher loops.
+func Amap_LibLookupTableAlloc(vectors *Vec_Ptr_t, verbose int32) [][]int32 {
+	if vectors == nil {
+		return nil
+	}
+	result := make([][]int32, Vec_PtrSize(vectors))
+	for i := int32(0); i < Vec_PtrSize(vectors); i++ {
+		entries, ok := Vec_PtrEntry(vectors, i).(*Vec_Int_t)
+		if !ok || entries == nil {
+			continue
+		}
+		result[i] = append(append([]int32(nil), Vec_IntArray(entries)...), 0)
+		if verbose != 0 {
+			fmt.Printf("%d : ", i)
+			for _, value := range Vec_IntArray(entries) {
+				fmt.Printf("%d(%d) ", value&0xffff, value>>16)
+			}
+			fmt.Println()
+		}
+	}
+	return result
+}
 
-//ABC_NAMESPACE_IMPL_END
-
+func vecIntInsert(v *Vec_Int_t, index int, value int32) {
+	items := Vec_IntArray(v)
+	if index < 0 || index > len(items) {
+		panic("amap: invalid rule insertion index")
+	}
+	Vec_IntPush(v, 0)
+	items = Vec_IntArray(v)
+	copy(items[index+1:], items[index:len(items)-1])
+	items[index] = value
+}

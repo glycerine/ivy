@@ -41,6 +41,9 @@ func (p *Manager) encodePart() {
 	}
 }
 func Cgt_CheckImplication(p *Manager, gate, miter aig.Edge) int {
+	if p.Part == nil || !p.Part.ValidEdge(gate) || !p.Part.ValidEdge(miter) {
+		panic("cgt: implication literals are outside the active partition")
+	}
 	p.encodePart()
 	p.Stats.Calls++
 	status := p.solver.SolveAssumptionsLimit([]int{int(gate), int(miter)}, int64(p.Params.ConflictMax))

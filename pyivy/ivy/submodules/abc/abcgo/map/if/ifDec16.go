@@ -1,2344 +1,1239 @@
 package if_
 
-import "fmt"
+import (
+	"fmt"
+	"math/bits"
+	"slices"
+	"sort"
+)
 
-/**CFile****************************************************************
+const (
+	CLU_VAR_MAX = 16
+	CLU_WRD_MAX = 1 << (CLU_VAR_MAX - 6)
+	CLU_MEM_MAX = 1000
+	CLU_UNUSED  = 255
+)
 
-  FileName    [ifDec16.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [FPGA mapping based on priority cuts.]
-
-  Synopsis    [Fast checking procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - November 21, 2006.]
-
-  Revision    [$Id: ifDec16.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "if.h"
-//#include "bool/kit/kit.h"
-//#include "misc/vec/vecMem.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-const CLU_VAR_MAX =  16
-#define CLU_WRD_MAX  (1 << ((CLU_VAR_MAX)-6))
-const CLU_MEM_MAX =  1000  // 1 GB
-const CLU_UNUSED =   0xff
-
-// decomposition
-   
 type If_Grp_t struct {
-    nVars       byte;
-    nMyu       byte;
-    pVars [CLU_VAR_MAX]byte;
+	nVars, nMyu int32
+	pVars       [CLU_VAR_MAX]int32
 }
-
-// hash table entry
-   
 type If_Hte_t struct {
-    pNext  *If_Hte_t;
-    Group   uint32;
-    Counter   uint32;
-    word       pTruth[1];
+	pNext          *If_Hte_t
+	Group, Counter uint32
+	pTruth         []uint64
 }
 
-// variable swapping code
-var PMasks [5][3]word = [5][3]word{
-    { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },
-    { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },
-    { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },
-    { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },
-    { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) },
-};
-// elementary truth tables
-var Truth6 [6]word = [6]word{
-    ABC_CONST(0xAAAAAAAAAAAAAAAA),
-    ABC_CONST(0xCCCCCCCCCCCCCCCC),
-    ABC_CONST(0xF0F0F0F0F0F0F0F0),
-    ABC_CONST(0xFF00FF00FF00FF00),
-    ABC_CONST(0xFFFF0000FFFF0000),
-    ABC_CONST(0xFFFFFFFF00000000),
-};
-var TruthAll [CLU_VAR_MAX][CLU_WRD_MAX]word = [CLU_VAR_MAX][CLU_WRD_MAX]word{{0}};
-
-// extern void Kit_DsdPrintFromTruth( unsigned * pTruth, int nVars );
-
-// extern void Extra_PrintBinary( FILE * pFile, unsigned Sign[], int nBits );
-
-
-// extern int If_CluSupportSize( word * t, int nVars );
-
-
-var s_Count2 int32;
-var s_Count3 int32;
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-func If_CluGrp2Uns(pG *If_Grp_t) uint32 {
-    var pChar string  = (char *)pG;
-    var Res uint32;
-    var i int32;
-    for  i = 0; i < 8; i++  {
-        Res |= ((pChar[i] & 15) << (i << 2));
-    }
-    return Res;
+func If_CluGrp2Uns(g *If_Grp_t) uint32 {
+	result := uint32(g.nVars&15) | uint32(g.nMyu&15)<<4
+	for i := 0; i < 6; i++ {
+		result |= uint32(g.pVars[i]&15) << uint(8+4*i)
+	}
+	return result
 }
-
-func If_CluUns2Grp(Group uint32, pG *If_Grp_t) {
-    var pChar string  = (char *)pG;
-    var i int32;
-    for  i = 0; i < 8; i++  {
-        pChar[i] = ((Group >> (i << 2)) & 15);
-    }
+func If_CluUns2Grp(code uint32, g *If_Grp_t) {
+	g.nVars, g.nMyu = int32(code&15), int32(code>>4&15)
+	for i := 0; i < 6; i++ {
+		g.pVars[i] = int32(code >> uint(8+4*i) & 15)
+	}
 }
-
-unsigned int If_CluPrimeCudd( unsigned int p )
-{
-    var i, pn int32;
-
-    p--;
-    for {
-        p++;
-        if p&1 {
-        pn = 1;
-        i = 3;
-        for uint32( (i * i)) <= p {
-        if p % i == 0 {
-            pn = 0;
-            break;
-        }
-        i += 2;
-        }
-    } else {
-        pn = 0;
-    }
-    
-if !(!(pn != 0)) { break }
-} 
-    return(p);
-
-} /* end of Cudd_Prime */
-
-// hash table
-func If_CluWordNum(nVars int32) int32 {
-    if nVars <= 6 {
-        return 1;
-    } else {
-        return 1 << (nVars-6);
-    }
+func If_CluPrimeCudd(p uint32) uint32 {
+	if p <= 1 {
+		return 1
+	}
+	if p == 2 {
+		return 3
+	}
+	for {
+		if p&1 != 0 {
+			prime := true
+			for divisor := uint32(3); uint64(divisor)*uint64(divisor) <= uint64(p); divisor += 2 {
+				if p%divisor == 0 {
+					prime = false
+					break
+				}
+			}
+			if prime {
+				return p
+			}
+		}
+		p++
+	}
 }
-func If_CluCountOnes(t word) int32 {
-    t =    (t & ABC_CONST(0x5555555555555555)) + ((t>> 1) & ABC_CONST(0x5555555555555555));
-    t =    (t & ABC_CONST(0x3333333333333333)) + ((t>> 2) & ABC_CONST(0x3333333333333333));
-    t =    (t & ABC_CONST(0x0F0F0F0F0F0F0F0F)) + ((t>> 4) & ABC_CONST(0x0F0F0F0F0F0F0F0F));
-    t =    (t & ABC_CONST(0x00FF00FF00FF00FF)) + ((t>> 8) & ABC_CONST(0x00FF00FF00FF00FF));
-    t =    (t & ABC_CONST(0x0000FFFF0000FFFF)) + ((t>>16) & ABC_CONST(0x0000FFFF0000FFFF));
-    return (t & ABC_CONST(0x00000000FFFFFFFF)) +  (t>>32);
+func If_CluWordNum(nVars int32) int32   { return int32(ifTruthWords(int(nVars))) }
+func If_CluCountOnes(t uint64) int32    { return int32(bits.OnesCount64(t)) }
+func If_CluClear(out []uint64, n int32) { clear(out[:If_CluWordNum(n)]) }
+func If_CluFill(out []uint64, n int32) {
+	for i := range out[:If_CluWordNum(n)] {
+		out[i] = ^uint64(0)
+	}
 }
-
-func If_CluHashTableCheck(p *If_Man_t) {
-    var t int32  = 1;
-    var pEntry *If_Hte_t;
-    var i, RetValue, Status int32;
-    for  i = 0; i < p.nTableSize[t]; i++  {
-        for  pEntry = ((If_Hte_t **)p.pHashTable[t])[i]; (pEntry != nil); pEntry = pEntry.pNext  {        
-            Status = ((pEntry.Group & 15) > 0);
-            RetValue = If_CutPerformCheck16( nil, (unsigned *)pEntry.pTruth, 13, If_CluSupportSize(pEntry.pTruth, 13), "555" );
-            if RetValue != Status {
-                Kit_DsdPrintFromTruth( (unsigned*)pEntry.pTruth, 13 ); fmt.Printf("\n");
-                RetValue = If_CutPerformCheck16( nil, (unsigned *)pEntry.pTruth, 13, If_CluSupportSize(pEntry.pTruth, 13), "555" );
-                fmt.Printf("Hash table problem!!!\n");
-            }
-        }
-    }
+func If_CluCopy(out, in []uint64, n int32) { copy(out[:If_CluWordNum(n)], in[:If_CluWordNum(n)]) }
+func If_CluEqual(a, b []uint64, n int32) int32 {
+	if slices.Equal(a[:If_CluWordNum(n)], b[:If_CluWordNum(n)]) {
+		return 1
+	}
+	return 0
+}
+func If_CluAnd(out, a, b []uint64, n int32) {
+	for i := range out[:If_CluWordNum(n)] {
+		out[i] = a[i] & b[i]
+	}
+}
+func If_CluSharp(out, a, b []uint64, n int32) {
+	for i := range out[:If_CluWordNum(n)] {
+		out[i] = a[i] &^ b[i]
+	}
+}
+func If_CluOr(out, a, b []uint64, n int32) {
+	for i := range out[:If_CluWordNum(n)] {
+		out[i] = a[i] | b[i]
+	}
+}
+func If_CluAdjust(t uint64, n int32) uint64 {
+	if n < 0 || n > 6 {
+		panic("if: small truth support outside range")
+	}
+	if n == 6 {
+		return t
+	}
+	period := 1 << uint(n)
+	t &= (uint64(1) << uint(period)) - 1
+	for period < 64 {
+		t |= t << uint(period)
+		period *= 2
+	}
+	return t
+}
+func If_CluAdjustBig(table []uint64, current, maximum int32) {
+	if current < 0 || maximum < current || maximum > 16 {
+		panic("if: invalid truth stretch")
+	}
+	for v := max(current, 6); v < maximum; v++ {
+		words := If_CluWordNum(v)
+		copy(table[words:2*words], table[:words])
+	}
+}
+func cluTransform(out, in []uint64, n int32, assignment func(int) int) {
+	source := append([]uint64(nil), in[:If_CluWordNum(n)]...)
+	clear(out[:If_CluWordNum(n)])
+	for bit := 0; bit < int(If_CluWordNum(n))*64; bit++ {
+		if ifTruthBit(source, assignment(bit)) {
+			ifTruthSet(out, bit)
+		}
+	}
+}
+func If_CluSwapAdjacent(out, in []uint64, v, n int32) {
+	if v < 0 || v+1 >= n {
+		panic("if: adjacent truth swap outside support")
+	}
+	cluTransform(out, in, n, func(a int) int {
+		if a>>uint(v)&1 != a>>uint(v+1)&1 {
+			a ^= (1 << uint(v)) | (1 << uint(v+1))
+		}
+		return a
+	})
+}
+func If_CluChangePhase(table []uint64, n, v int32) {
+	if v < 0 || v >= n {
+		panic("if: truth phase outside support")
+	}
+	cluTransform(table, table, n, func(a int) int { return a ^ (1 << uint(v)) })
+}
+func If_CluSwapVars(table []uint64, n int32, v2p, p2v []int32, i, j int32) {
+	if i == j {
+		return
+	}
+	if i < 0 || j < 0 || i >= n || j >= n {
+		panic("if: variable swap outside support")
+	}
+	cluTransform(table, table, n, func(a int) int {
+		if a>>uint(i)&1 != a>>uint(j)&1 {
+			a ^= (1 << uint(i)) | (1 << uint(j))
+		}
+		return a
+	})
+	if v2p != nil && p2v != nil {
+		v2p[p2v[i]], v2p[p2v[j]] = j, i
+		p2v[i], p2v[j] = p2v[j], p2v[i]
+	}
+}
+func If_CluMoveVar2(table []uint64, n int32, v2p, p2v []int32, v, position int32) {
+	If_CluSwapVars(table, n, v2p, p2v, v2p[v], position)
+}
+func If_CluMoveVar(table []uint64, n int32, v2p, p2v []int32, v, position int32) {
+	if v < 0 || v >= n || position < 0 || position >= n {
+		panic("if: moved variable outside support")
+	}
+	for v2p[v] < position {
+		at := v2p[v]
+		If_CluSwapVars(table, n, v2p, p2v, at, at+1)
+	}
+	for v2p[v] > position {
+		at := v2p[v]
+		If_CluSwapVars(table, n, v2p, p2v, at-1, at)
+	}
+}
+func If_CluReverseOrder(table []uint64, n int32, v2p, p2v []int32, start int32) {
+	for k := int32(0); k < (n-start)/2; k++ {
+		If_CluSwapVars(table, n, v2p, p2v, start+k, n-1-k)
+	}
+}
+func If_CluReverseOrder_old(table []uint64, n int32, v2p, p2v []int32, start int32) {
+	If_CluReverseOrder(table, n, v2p, p2v, start)
+}
+func If_CluMoveGroupToMsb(table []uint64, n int32, v2p, p2v []int32, g *If_Grp_t) {
+	for v := int32(0); v < g.nVars; v++ {
+		If_CluMoveVar(table, n, v2p, p2v, g.pVars[g.nVars-1-v], n-1-v)
+	}
+}
+func If_CluCofactors(table []uint64, n, v int32, zero, one []uint64) {
+	if v < 0 || v >= n {
+		panic("if: cofactor variable outside support")
+	}
+	cluTransform(zero, table, n, func(a int) int { return a &^ (1 << uint(v)) })
+	cluTransform(one, table, n, func(a int) int { return a | (1 << uint(v)) })
+}
+func If_CluHasVar(table []uint64, n, v int32) int32 {
+	for assignment := 0; assignment < 1<<uint(n); assignment++ {
+		if assignment&(1<<uint(v)) == 0 && ifTruthBit(table, assignment) != ifTruthBit(table, assignment|(1<<uint(v))) {
+			return 1
+		}
+	}
+	return 0
+}
+func If_CluSupport(table []uint64, n int32) int32 {
+	var support int32
+	for v := int32(0); v < n; v++ {
+		if If_CluHasVar(table, n, v) != 0 {
+			support |= 1 << uint(v)
+		}
+	}
+	return support
+}
+func If_CluSupportSize(table []uint64, n int32) int32 {
+	return int32(bits.OnesCount32(uint32(If_CluSupport(table, n))))
+}
+func If_CluSuppIsMinBase(support int32) int32 {
+	if support&(support+1) == 0 {
+		return 1
+	}
+	return 0
+}
+func If_CluTruthShrink(table []uint64, n, nAll int32, support uint32) {
+	positions := make([]int32, 0, nAll)
+	for v := int32(0); v < nAll; v++ {
+		if support&(1<<uint(v)) != 0 {
+			positions = append(positions, v)
+		}
+	}
+	if int(n) != len(positions) {
+		panic("if: support count mismatch")
+	}
+	source := append([]uint64(nil), table[:If_CluWordNum(nAll)]...)
+	cluTransform(table, source, nAll, func(a int) int {
+		input := 0
+		for i, v := range positions {
+			input |= (a >> uint(i) & 1) << uint(v)
+		}
+		return input
+	})
+}
+func If_CluMinimumBase(table []uint64, supp []int32, nAll int32, n *int32) int32 {
+	mask := If_CluSupport(table, nAll)
+	count := int32(0)
+	for v := int32(0); v < nAll; v++ {
+		if mask&(1<<uint(v)) != 0 {
+			if supp != nil {
+				supp[count] = supp[v]
+			}
+			count++
+		}
+	}
+	if n != nil {
+		*n = count
+	}
+	if If_CluSuppIsMinBase(mask) != 0 {
+		return 0
+	}
+	If_CluTruthShrink(table, count, nAll, uint32(mask))
+	return 1
+}
+func If_CluCountOnesInCofs(table []uint64, n int32, store []int32) {
+	if int(2*n) > len(store) {
+		panic("if: short cofactor counts")
+	}
+	clear(store[:2*n])
+	for v := int32(0); v < n; v++ {
+		for a := 0; a < 1<<uint(n); a++ {
+			if ifTruthBit(table, a) {
+				store[2*v+int32(a>>uint(v)&1)]++
+			}
+		}
+		if n < 6 {
+			store[2*v] *= 1 << uint(6-n)
+			store[2*v+1] *= 1 << uint(6-n)
+		}
+	}
+}
+func If_CluSemiCanonicize(table []uint64, n int32, permutation []int32) uint32 {
+	counts := make([]int32, 2*n)
+	If_CluCountOnesInCofs(table, n, counts)
+	var phase uint32
+	for v := int32(0); v < n; v++ {
+		permutation[v] = v
+		if counts[2*v] > counts[2*v+1] {
+			counts[2*v], counts[2*v+1] = counts[2*v+1], counts[2*v]
+			phase |= 1 << uint(v)
+			If_CluChangePhase(table, n, v)
+		}
+	}
+	for changed := true; changed; {
+		changed = false
+		for v := int32(0); v < n-1; v++ {
+			if counts[2*v] <= counts[2*(v+1)] {
+				continue
+			}
+			counts[2*v], counts[2*(v+1)] = counts[2*(v+1)], counts[2*v]
+			counts[2*v+1], counts[2*(v+1)+1] = counts[2*(v+1)+1], counts[2*v+1]
+			permutation[v], permutation[v+1] = permutation[v+1], permutation[v]
+			If_CluSwapAdjacent(table, table, v, n)
+			changed = true
+		}
+	}
+	return phase
+}
+func If_CluSemiCanonicizeVerify(table, original []uint64, n int32, permutation []int32, phase uint32) {
+	for a := 0; a < 1<<uint(n); a++ {
+		input := 0
+		for i, v := range permutation[:n] {
+			input |= ((a >> uint(i) & 1) ^ int(phase>>uint(v)&1)) << uint(v)
+		}
+		if ifTruthBit(table, a) != ifTruthBit(original, input) {
+			panic("if: canonical transform verification failed")
+		}
+	}
+}
+func If_CluHashKey(table []uint64, nWords, size int32) int32 {
+	if size <= 0 {
+		panic("if: invalid decomposition hash size")
+	}
+	primes := [8]uint32{12582917, 25165843, 50331653, 100663319, 201326611, 402653189, 805306457, 1610612741}
+	var value uint32
+	if nWords < 4 {
+		for i := 0; i < int(nWords)*8; i++ {
+			value ^= primes[i%7] * uint32(table[i/8]>>uint(8*(i%8))&255)
+		}
+	} else {
+		for i := 0; i < int(nWords)*2; i++ {
+			value ^= primes[i%7] * uint32(table[i/2]>>uint(32*(i%2)))
+		}
+	}
+	return int32(value % uint32(size))
+}
+func If_CluHashLookup(p *If_Man_t, table []uint64, t int32) *uint32 {
+	if p == nil {
+		return nil
+	}
+	if t < 0 || t > 1 {
+		panic("if: invalid decomposition table")
+	}
+	words := If_CluWordNum(p.pPars.nLutSize)
+	if p.pHashTable[t] == nil {
+		objects := 0
+		if p.vObjs != nil {
+			objects = Vec_PtrSize(p.vObjs)
+		}
+		entries1 := int64(4) * int64(If_CluPrimeCudd(uint32(objects)*uint32(p.pPars.nCutsMax)))
+		entries2 := int64(CLU_MEM_MAX) * (1 << 20) / int64(words) / 8
+		p.nTableSize[t] = int32(If_CluPrimeCudd(uint32(min(entries1, entries2) / 2)))
+		p.pHashTable[t] = make(map[uint32]any)
+	}
+	key := uint32(If_CluHashKey(table, words, p.nTableSize[t]))
+	var head *If_Hte_t
+	if raw := p.pHashTable[t][key]; raw != nil {
+		head = raw.(*If_Hte_t)
+	}
+	for entry := head; entry != nil; entry = entry.pNext {
+		if slices.Equal(entry.pTruth, table[:words]) {
+			entry.Counter++
+			return &entry.Group
+		}
+	}
+	if p.nTableEntries[t] >= 2*p.nTableSize[t] {
+		median := uint32(If_CluHashFindMedian(p, t))
+		var kept []*If_Hte_t
+		for bucket := int32(0); bucket < p.nTableSize[t]; bucket++ {
+			if raw := p.pHashTable[t][uint32(bucket)]; raw != nil {
+				for entry := raw.(*If_Hte_t); entry != nil; entry = entry.pNext {
+					if entry.Counter > median {
+						kept = append(kept, entry)
+					}
+				}
+			}
+		}
+		p.pHashTable[t] = make(map[uint32]any)
+		for _, entry := range kept {
+			bucket := uint32(If_CluHashKey(entry.pTruth, words, p.nTableSize[t]))
+			var first *If_Hte_t
+			if raw := p.pHashTable[t][bucket]; raw != nil {
+				first = raw.(*If_Hte_t)
+			}
+			if first == nil || entry.Counter >= first.Counter {
+				entry.pNext = first
+				p.pHashTable[t][bucket] = entry
+			} else {
+				previous := first
+				for previous.pNext != nil && entry.Counter < previous.pNext.Counter {
+					previous = previous.pNext
+				}
+				entry.pNext = previous.pNext
+				previous.pNext = entry
+			}
+		}
+		p.nTableEntries[t] = int32(len(kept))
+	}
+	entry := &If_Hte_t{Group: CLU_UNUSED, Counter: 1, pTruth: append([]uint64(nil), table[:words]...)}
+	if raw := p.pHashTable[t][key]; raw == nil {
+		p.pHashTable[t][key] = entry
+	} else {
+		tail := raw.(*If_Hte_t)
+		for tail.pNext != nil {
+			tail = tail.pNext
+		}
+		tail.pNext = entry
+	}
+	p.nTableEntries[t]++
+	return &entry.Group
 }
 func If_CluHashPrintStats(p *If_Man_t, t int32) {
-    var pEntry *If_Hte_t;
-    var i, Counter int32;
-    for  i = 0; i < p.nTableSize[t]; i++  {
-        Counter = 0;
-        for  pEntry = ((If_Hte_t **)p.pHashTable[t])[i]; (pEntry != nil); pEntry = pEntry.pNext  {
-            Counter++;
-        }
-        if Counter == 0 {
-            continue; }
-        if Counter < 10 {
-            continue; }
-        fmt.Printf("%d=%d ", i, Counter);
-    }
+	for key, raw := range p.pHashTable[t] {
+		count := 0
+		for entry := raw.(*If_Hte_t); entry != nil; entry = entry.pNext {
+			count++
+		}
+		if count >= 10 {
+			fmt.Printf("%d=%d ", key, count)
+		}
+	}
 }
 func If_CluHashFindMedian(p *If_Man_t, t int32) int32 {
-    var pEntry *If_Hte_t;
-    var vCounters *Vec_Int_t;
-    var i, Max, Total, Half int32;
-    vCounters = Vec_IntStart( 1000 );
-    for  i = 0; i < p.nTableSize[t]; i++  {
-        for  pEntry = ((If_Hte_t **)p.pHashTable[t])[i]; (pEntry != nil); pEntry = pEntry.pNext  {
-            if Max < int32(pEntry.Counter) {
-                Max = pEntry.Counter;
-                Vec_IntSetEntry( vCounters, pEntry.Counter, 0 );
-            }
-            Vec_IntAddToEntry( vCounters, pEntry.Counter, 1 );
-            Total++;
-        }
-    }
-    for  i = Max; i > 0; i--  {
-        Half += Vec_IntEntry( vCounters, i );
-        if Half > Total/2 {
-            break; }
-    }
-/*
-    printf( "total = %d  ", Total );
-    printf( "half = %d  ", Half );
-    printf( "i = %d  ", i );
-    printf( "Max = %d.\n", Max );
-*/
-    Vec_IntFree( vCounters );
-    return Abc_MaxInt( i, 1 );
+	var counts []uint32
+	for _, raw := range p.pHashTable[t] {
+		for entry := raw.(*If_Hte_t); entry != nil; entry = entry.pNext {
+			counts = append(counts, entry.Counter)
+		}
+	}
+	sort.Slice(counts, func(i, j int) bool { return counts[i] > counts[j] })
+	if len(counts) == 0 {
+		return 1
+	}
+	return int32(max(counts[len(counts)/2], 1))
 }
-var spStatic_If_CluHashKey_BigPrimes [8]uint32 = [8]uint32{12582917, 25165843, 50331653, 100663319, 201326611, 402653189, 805306457, 1610612741};
-func If_CluHashKey(pTruth *word, nWords int32, Size int32) int32 {
-    
-    var Value uint32;
-    var i int32;
-    if nWords < 4 {
-        unsigned char * s = (unsigned char *)pTruth;
-        for  i = 0; i < 8 * nWords; i++  {
-            Value ^= spStatic_If_CluHashKey_BigPrimes[i % 7] * s[i];
-        }
-    
-    } else {
-        var s *uint32  = (unsigned *)pTruth;
-        for  i = 0; i < 2 * nWords; i++  {
-            Value ^= spStatic_If_CluHashKey_BigPrimes[i % 7] * s[i];
-        }
-    }
-    return Value % Size;
+func If_CluHashTableCheck(p *If_Man_t) {
+	for t, table := range p.pHashTable {
+		for _, raw := range table {
+			for entry := raw.(*If_Hte_t); entry != nil; entry = entry.pNext {
+				var group If_Grp_t
+				If_CluUns2Grp(entry.Group, &group)
+				if entry.Group == CLU_UNUSED {
+					continue
+				}
+				if group.nVars > 6 {
+					panic("if: invalid cached bound set")
+				}
+				if t == 1 && p.pPars.nLutSize == 13 {
+					found := If_CluCheck3(nil, entry.pTruth, 13, 5, 5, 5, nil, nil, nil, nil, nil).nVars > 0
+					if found != (group.nVars > 0) {
+						panic("if: cached three-LUT result disagrees with decomposition")
+					}
+				}
+			}
+		}
+	}
 }
-func If_CluHashLookup(p *If_Man_t, pTruth *word, t int32) *uint32 {
-    var pEntry, pPrev *If_Hte_t;
-    var nWords, HashKey int32;
-    if p == nil {
-        return nil; }
-    nWords = If_CluWordNum(p.pPars.nLutSize);
-    if p.pMemEntries == nil {
-        p.pMemEntries = Mem_FixedStart( sizeof(If_Hte_t) + sizeof(word) * (If_CluWordNum(p.pPars.nLutSize) - 1) ); }
-    if p.pHashTable[t] == nil {
-        // decide how large should be the table
-        var nEntriesMax1 int32  = 4 * If_CluPrimeCudd( Vec_PtrSize(p.vObjs) * p.pPars.nCutsMax );
-        var nEntriesMax2 int32  = int32(((float64(CLU_MEM_MAX) * (1 << 20)) / If_CluWordNum(p.pPars.nLutSize) / 8));
-//        int nEntriesMax2 = 10000;
-        // create table
-        p.nTableSize[t] = If_CluPrimeCudd( Abc_MinInt(nEntriesMax1, nEntriesMax2)/2 );
-        p.pHashTable[t] = ABC_CALLOC( void *, p.nTableSize[t] );
-    }
-    // check if this entry exists
-    HashKey = If_CluHashKey( pTruth, nWords, p.nTableSize[t] );
-    for  pEntry = ((If_Hte_t **)p.pHashTable[t])[HashKey]; (pEntry != nil); pEntry = pEntry.pNext  {
-        if memcmp(pEntry.pTruth, pTruth, sizeof(word) * nWords) == 0 {
-            pEntry.Counter++;
-            return &pEntry.Group;
-        }
-    }
-    // resize the hash table
-    if p.nTableEntries[t] >= 2 * p.nTableSize[t] {
-        // collect useful entries
-        var pPrev *If_Hte_t;
-        var vUseful *Vec_Ptr_t  = Vec_PtrAlloc( p.nTableEntries[t] );
-        var i int32;
-        var Median int32 = If_CluHashFindMedian( p, t );
-        for  i = 0; i < p.nTableSize[t]; i++  {
-            for  pEntry = ((If_Hte_t **)p.pHashTable[t])[i]; (pEntry != nil);  {
-                if int32(pEntry.Counter) > Median {
-                    Vec_PtrPush( vUseful, pEntry );
-                    pEntry = pEntry.pNext;
-                
-                } else {
-                    pPrev = pEntry.pNext;
-                    Mem_FixedEntryRecycle( p.pMemEntries, (char *)pEntry );
-                    pEntry = pPrev;
-                }
-            }
-        }
-        // add useful entries
-        memset( p.pHashTable[t], 0, sizeof(void *) * p.nTableSize[t] );
-        Vec_PtrForEachEntry( If_Hte_t *, vUseful, pEntry, i )
-        {
-            HashKey = If_CluHashKey( pEntry.pTruth, nWords, p.nTableSize[t] );
-            pPrev = ((If_Hte_t **)p.pHashTable[t])[HashKey];
-            if pPrev == nil || pEntry.Counter >= pPrev.Counter {
-                pEntry.pNext = pPrev;
-                ((If_Hte_t **)p.pHashTable[t])[HashKey] = pEntry;
-            
-            } else {
-                for  pPrev.pNext && pEntry.Counter < pPrev.pNext.Counter  {
-                    pPrev = pPrev.pNext;
-                }
-                pEntry.pNext = pPrev.pNext;
-                pPrev.pNext = pEntry;
-            }
-        }
-        p.nTableEntries[t] = Vec_PtrSize( vUseful );
-        Vec_PtrFree( vUseful );
-    }
-    // create entry
-    p.nTableEntries[t]++;
-    pEntry = (If_Hte_t *)Mem_FixedEntryFetch( p.pMemEntries );
-    memcpy( pEntry.pTruth, pTruth, sizeof(word) * nWords );
-    pEntry.Group = CLU_UNUSED;
-    pEntry.Counter = 1;
-    // insert at the beginning
-//    pEntry->pNext = ((If_Hte_t **)p->pHashTable[t])[HashKey];
-//    ((If_Hte_t **)p->pHashTable[t])[HashKey] = pEntry;
-    // insert at the end
-    pEntry.pNext = nil;
-    for  pPrev = ((If_Hte_t **)p.pHashTable[t])[HashKey]; (pPrev != nil) && pPrev.pNext; pPrev = pPrev.pNext  {}
-    if pPrev == nil {
-        ((If_Hte_t **)p.pHashTable[t])[HashKey] = pEntry;
-    } else {
-        pPrev.pNext = pEntry; }
-    return &pEntry.Group;
-}
-
-// variable permutation for large functions
-func If_CluClear(pIn *word, nVars int32) {
-    var w int32;
-    var nWords int32 = If_CluWordNum( nVars );
-    for  w = 0; w < nWords; w++  {
-        pIn[w] = 0;
-    }
-}
-func If_CluFill(pIn *word, nVars int32) {
-    var w int32;
-    var nWords int32 = If_CluWordNum( nVars );
-    for  w = 0; w < nWords; w++  {
-        pIn[w] = ~(word)0;
-    }
-}
-func If_CluCopy(pOut *word, pIn *word, nVars int32) {
-    var w int32;
-    var nWords int32 = If_CluWordNum( nVars );
-    for  w = 0; w < nWords; w++  {
-        pOut[w] = pIn[w];
-    }
-}
-func If_CluEqual(pOut *word, pIn *word, nVars int32) int32 {
-    var w int32;
-    var nWords int32 = If_CluWordNum( nVars );
-    for  w = 0; w < nWords; w++  {
-        if pOut[w] != pIn[w] {
-            return 0; }
-    }
-    return 1;
-}
-func If_CluAnd(pRes *word, pIn1 *word, pIn2 *word, nVars int32) {
-    var w int32;
-    var nWords int32 = If_CluWordNum( nVars );
-    for  w = 0; w < nWords; w++  {
-        pRes[w] = pIn1[w] & pIn2[w];
-    }
-}
-func If_CluSharp(pRes *word, pIn1 *word, pIn2 *word, nVars int32) {
-    var w int32;
-    var nWords int32 = If_CluWordNum( nVars );
-    for  w = 0; w < nWords; w++  {
-        pRes[w] = pIn1[w] & ~pIn2[w];
-    }
-} 
-func If_CluOr(pRes *word, pIn1 *word, pIn2 *word, nVars int32) {
-    var w int32;
-    var nWords int32 = If_CluWordNum( nVars );
-    for  w = 0; w < nWords; w++  {
-        pRes[w] = pIn1[w] | pIn2[w];
-    }
-}
-func If_CluAdjust(t word, nVars int32) word {
-    assert(nVars >= 0 && nVars <= 6, "nVars >= 0 && nVars <= 6");
-    if nVars == 6 {
-        return t; }
-    t &= (((word)1) << (1 << nVars)) - 1;
-    if nVars == 0 {
-        t |= t << (1<<nVars++); }
-    if nVars == 1 {
-        t |= t << (1<<nVars++); }
-    if nVars == 2 {
-        t |= t << (1<<nVars++); }
-    if nVars == 3 {
-        t |= t << (1<<nVars++); }
-    if nVars == 4 {
-        t |= t << (1<<nVars++); }
-    if nVars == 5 {
-        t |= t << (1<<nVars++); }
-    return t;
-}
-func If_CluAdjustBig(pF *word, nVarsCur int32, nVarsMax int32) {
-    var v, nWords int32;
-    if nVarsCur == nVarsMax {
-        return; }
-    assert(nVarsCur < nVarsMax, "nVarsCur < nVarsMax");
-    for  v = Abc_MaxInt( nVarsCur, 6 ); v < nVarsMax; v++  {
-        nWords = If_CluWordNum( v );
-        If_CluCopy( pF + nWords, pF, v );
-    }
-}
-func If_CluSwapAdjacent(pOut *word, pIn *word, iVar int32, nVars int32) {
-    var i int32;
-    var k int32;
-    var nWords int32 = If_CluWordNum( nVars );
-    assert(iVar < nVars - 1, "iVar < nVars - 1");
-    if iVar < 5 {
-        var Shift int32  = (1 << iVar);
-        for  i = 0; i < nWords; i++  {
-            pOut[i] = (pIn[i] & PMasks[iVar][0]) | ((pIn[i] & PMasks[iVar][1]) << Shift) | ((pIn[i] & PMasks[iVar][2]) >> Shift);
-        }
-    
-    } else if iVar > 5 {
-        var Step int32  = (1 << (iVar - 6));
-        for  k = 0; k < nWords; k += 4*Step  {
-            for  i = 0; i < Step; i++  {
-                pOut[i] = pIn[i];
-            }
-            for  i = 0; i < Step; i++  {
-                pOut[Step+i] = pIn[2*Step+i];
-            }
-            for  i = 0; i < Step; i++  {
-                pOut[2*Step+i] = pIn[Step+i];
-            }
-            for  i = 0; i < Step; i++  {
-                pOut[3*Step+i] = pIn[3*Step+i];
-            }
-            pIn  += 4*Step;
-            pOut += 4*Step;
-        }
-    
-    } else { // if ( iVar == 5 )
-    
-        for  i = 0; i < nWords; i += 2  {
-            pOut[i]   = (pIn[i]   & ABC_CONST(0x00000000FFFFFFFF)) | ((pIn[i+1] & ABC_CONST(0x00000000FFFFFFFF)) << 32);
-            pOut[i+1] = (pIn[i+1] & ABC_CONST(0xFFFFFFFF00000000)) | ((pIn[i]   & ABC_CONST(0xFFFFFFFF00000000)) >> 32);
-        }
-    }
-}
-
-func If_CluChangePhase(pF *word, nVars int32, iVar int32) {
-    var nWords int32  = If_CluWordNum( nVars );
-    assert(iVar < nVars, "iVar < nVars");
-    if iVar < 6 {
-        var i int32;
-        var Shift int32 = (1 << iVar);
-        for  i = 0; i < nWords; i++  {
-            pF[i] = ((pF[i] & ~Truth6[iVar]) << Shift) | ((pF[i] & Truth6[iVar]) >> Shift);
-        }
-    
-    } else {
-        var Temp word;
-        var i int32;
-        var k int32;
-        var Step int32 = (1 << (iVar - 6));
-        for  k = 0; k < nWords; k += 2*Step  {
-            for  i = 0; i < Step; i++  {
-                Temp = pF[i];
-                pF[i] = pF[Step+i];
-                pF[Step+i] = Temp;
-            }
-            pF += 2*Step;
-        }
-    }
-}
-func If_CluCountOnesInCofs(pTruth *word, nVars int32, pStore *int32) {
-    var nWords int32  = If_CluWordNum( nVars );
-    var i int32;
-    var k int32;
-    var nOnes int32;
-    var Limit int32 = Abc_MinInt( nVars, 6 );
-    memset( pStore, 0, sizeof(int) * 2 * nVars );
-    // compute positive cofactors
-    for  k = 0; k < nWords; k++  {
-        for  i = 0; i < Limit; i++  {
-            pStore[2*i+1] += If_CluCountOnes( pTruth[k] & Truth6[i] );
-        }
-    }
-    if nVars > 6 {
-    for  k = 0; k < nWords; k++  {
-        for  i = 6; i < nVars; i++  {
-            if k & (1 << (i-6)) {
-                pStore[2*i+1] += If_CluCountOnes( pTruth[k] ); }
-        }
-    } }
-    // compute negative cofactors
-    for  k = 0; k < nWords; k++  {
-        nOnes += If_CluCountOnes( pTruth[k] );
-    }
-    for  i = 0; i < nVars; i++  {
-        pStore[2*i] = nOnes - pStore[2*i+1];
-    }
-}
-func If_CluSemiCanonicize(pTruth *word, nVars int32, pCanonPerm *int32) uint32 {
-    var pFunc [CLU_WRD_MAX]word;
-    var pIn *word = pTruth;
-    var pOut *word = pFunc;
-    var pTemp *word;
-    var pStore [CLU_VAR_MAX*2]int32;
-    var uCanonPhase uint32;
-    var i, Temp, fChange, Counter int32;
-//Kit_DsdPrintFromTruth( (unsigned*)pTruth, nVars ); printf( "\n" );
-
-    // collect signatures 
-    If_CluCountOnesInCofs( pTruth, nVars, pStore );
-    // canonicize phase
-    for  i = 0; i < nVars; i++  {
-        if pStore[2*i+0] <= pStore[2*i+1] {
-            continue; }
-        uCanonPhase |= (1 << i);
-        Temp = pStore[2*i+0];
-        pStore[2*i+0] = pStore[2*i+1];
-        pStore[2*i+1] = Temp;
-        If_CluChangePhase( pIn, nVars, i );
-    }
-    // compute permutation
-    for  i = 0; i < nVars; i++  {
-        pCanonPerm[i] = i;
-    }
-    do {
-        fChange = 0;
-        for  i = 0; i < nVars-1; i++  {
-            if pStore[2*i] <= pStore[2*(i+1)] {
-                continue; }
-            Counter++;
-            fChange = 1;
-
-            Temp = pCanonPerm[i];
-            pCanonPerm[i] = pCanonPerm[i+1];
-            pCanonPerm[i+1] = Temp;
-
-            Temp = pStore[2*i];
-            pStore[2*i] = pStore[2*(i+1)];
-            pStore[2*(i+1)] = Temp;
-
-            Temp = pStore[2*i+1];
-            pStore[2*i+1] = pStore[2*(i+1)+1];
-            pStore[2*(i+1)+1] = Temp;
-
-            If_CluSwapAdjacent( pOut, pIn, i, nVars );
-            pTemp = pIn; pIn = pOut; pOut = pTemp;
-        }
-    } while ( fChange );
-    // swap if it was moved an odd number of times
-    if Counter & 1 {
-        If_CluCopy( pOut, pIn, nVars ); }
-    return uCanonPhase;
-}
-func If_CluSemiCanonicizeVerify(pTruth *word, pTruth0 *word, nVars int32, pCanonPerm *int32, uCanonPhase uint32) {
-    var pFunc [CLU_WRD_MAX]word;
-    var pGunc [CLU_WRD_MAX]word;
-    var pIn *word = pTruth;
-    var pOut *word = pFunc;
-    var pTemp *word;
-    var i, Temp, fChange, Counter int32;
-    If_CluCopy( pGunc, pTruth, nVars );
-    // undo permutation
-    do {
-        fChange = 0;
-        for  i = 0; i < nVars-1; i++  {
-            if pCanonPerm[i] < pCanonPerm[i+1] {
-                continue; }
-
-            Counter++;
-            fChange = 1;
-
-            Temp = pCanonPerm[i];
-            pCanonPerm[i] = pCanonPerm[i+1];
-            pCanonPerm[i+1] = Temp;
-
-            If_CluSwapAdjacent( pOut, pIn, i, nVars );
-            pTemp = pIn; pIn = pOut; pOut = pTemp;
-        }
-    } while ( fChange );
-    if Counter & 1 {
-        If_CluCopy( pOut, pIn, nVars ); }
-    // undo phase
-    for  i = 0; i < nVars; i++  {
-        if (uCanonPhase >> i) & 1 {
-            If_CluChangePhase( pTruth, nVars, i ); }
-    }
-    // compare
-    if !(If_CluEqual(pTruth0, pTruth, nVars) != 0) {
-        Kit_DsdPrintFromTruth( (unsigned*)pTruth0, nVars ); fmt.Printf("\n");
-        Kit_DsdPrintFromTruth( (unsigned*)pGunc, nVars ); fmt.Printf("\n");
-        Kit_DsdPrintFromTruth( (unsigned*)pTruth, nVars ); fmt.Printf("\n");
-        fmt.Printf("SemiCanonical verification FAILED!\n");
-    }
-}
-
-
 func If_CluPrintGroup(g *If_Grp_t) {
-    var i int32;
-    fmt.Printf("Vars = %d   ", g.nVars);
-    fmt.Printf("Myu = %d   {", g.nMyu);
-    for  i = 0; i < g.nVars; i++  {
-        fmt.Printf(" %c", 'a' + g.pVars[i]);
-    }
-    fmt.Printf(" }\n");
+	fmt.Printf("Group n=%d cofs=%d vars=%v\n", g.nVars, g.nMyu, g.pVars[:g.nVars])
+}
+func If_CluPrintConfig(n int32, g, r *If_Grp_t, bound uint64, free []uint64) {
+	If_CluPrintGroup(g)
+	If_CluPrintGroup(r)
+	fmt.Printf("leaf=%016x root=%x\n", bound, free)
 }
 
-func If_CluPrintConfig(nVars int32, g *If_Grp_t, r *If_Grp_t, BStruth word, pFStruth *word) {
-    assert(r.nVars == nVars - g.nVars + 1 + (g.nMyu > 2), "r.nVars == nVars - g.nVars + 1 + (g.nMyu > 2)");
-    If_CluPrintGroup( g );
-    if g.nVars < 6 {
-        BStruth = If_CluAdjust( BStruth, g.nVars ); }
-    Kit_DsdPrintFromTruth( (unsigned *)&BStruth, g.nVars );
-    fmt.Printf("\n");
-    If_CluPrintGroup( r );
-    if r.nVars < 6 {
-        pFStruth[0] = If_CluAdjust( pFStruth[0], r.nVars ); }
-    Kit_DsdPrintFromTruth( (unsigned *)pFStruth, r.nVars );
-    fmt.Printf("\n");
+// No global elementary-table initialization is needed: composition computes
+// elementary variables from assignment bits and has no mutable shared state.
+func cluIdentity(n int32) ([]int32, []int32) {
+	a, b := make([]int32, n+2), make([]int32, n+2)
+	for i := range a {
+		a[i], b[i] = int32(i), int32(i)
+	}
+	return a, b
 }
-
-
-func If_CluInitTruthTables() {
-    var i, k int32;
-    assert(CLU_VAR_MAX <= 16, "CLU_VAR_MAX <= 16");
-    for  i = 0; i < 6; i++  {
-        for  k = 0; k < CLU_WRD_MAX; k++  {
-            TruthAll[i][k] = Truth6[i];
-        }
-    }
-    for  i = 6; i < CLU_VAR_MAX; i++  {
-        for  k = 0; k < CLU_WRD_MAX; k++  {
-            TruthAll[i][k] = ((k >> (i-6)) & 1) ? ~(word)0 : 0;
-        }
-    }
-
-//    Extra_PrintHex( stdout, TruthAll[6], 8 ); printf( "\n" );
-//    Extra_PrintHex( stdout, TruthAll[7], 8 ); printf( "\n" );
+func cluCofactorRows(table []uint64, n, bound, shift int32) ([][]uint64, []int) {
+	free := n - bound
+	if bound < 1 || bound >= n || bound > 7 {
+		panic("if: invalid bound cofactor dimensions")
+	}
+	var unique [][]uint64
+	classes := make([]int, 1<<uint(bound))
+	for row := range classes {
+		cof := make([]uint64, If_CluWordNum(free))
+		for assignment := 0; assignment < 1<<uint(free); assignment++ {
+			bit := int(shift) + (row << uint(free)) + assignment
+			if ifTruthBit(table, bit) {
+				ifTruthSet(cof, assignment)
+			}
+		}
+		class := 0
+		for class < len(unique) && !slices.Equal(unique[class], cof) {
+			class++
+		}
+		if class == len(unique) {
+			unique = append(unique, cof)
+		}
+		classes[row] = class
+		if len(unique) == 5 {
+			return unique, classes
+		}
+	}
+	return unique, classes
 }
-
-
-// verification
-func If_CluComposeLut(nVars int32, g *If_Grp_t, t *word, f [][CLU_WRD_MAX]word, r *word) {
-    var c [CLU_WRD_MAX]word;
-    var m, v int32;
-    If_CluClear( r, nVars ); 
-    for  m = 0; m < (1<<g.nVars); m++  {
-        if !((t[m >> 6] >> (m & 63)) & 1) {
-            continue; }
-        If_CluFill( c, nVars );
-        for  v = 0; v < g.nVars; v++  {
-            if (m >> v) & 1 {
-                If_CluAnd( c, c, f[v], nVars );
-            } else {
-                If_CluSharp( c, c, f[v], nVars ); }
-        }
-        If_CluOr( r, r, c, nVars );
-    }
+func If_CluCountCofs(table []uint64, n, bound, shift int32, cofs [][]uint64) int32 {
+	unique, classes := cluCofactorRows(table, n, bound, shift)
+	if len(unique) <= 2 && cofs != nil {
+		if bound > 6 || len(cofs) < 3 {
+			panic("if: invalid cofactor output storage")
+		}
+		copy(cofs[0], unique[0])
+		copy(cofs[1], unique[min(1, len(unique)-1)])
+		var selection uint64
+		for i, class := range classes {
+			if class != 0 {
+				selection |= 1 << uint(i)
+			}
+		}
+		cofs[2][0] = selection
+	}
+	return int32(len(unique))
 }
-func If_CluVerify(pF *word, nVars int32, g *If_Grp_t, r *If_Grp_t, BStruth word, pFStruth *word) {
-    var pTTFans [6][CLU_WRD_MAX]word;
-    var pTTWire [CLU_WRD_MAX]word;
-    var pTTRes [CLU_WRD_MAX]word;
-    var i int32;
-    assert(g.nVars <= 6 && r.nVars <= 6, "g.nVars <= 6 && r.nVars <= 6");
-
-    if TruthAll[0][0] == 0 {
-        If_CluInitTruthTables(); }
-
-    for  i = 0; i < g.nVars; i++  {
-        If_CluCopy( pTTFans[i], TruthAll[int32(g.pVars[i])], nVars );
-    }
-    If_CluComposeLut( nVars, g, &BStruth, pTTFans, pTTWire );
-
-    for  i = 0; i < r.nVars; i++  {
-        if r.pVars[i] == nVars {
-            If_CluCopy( pTTFans[i], pTTWire, nVars );
-        } else {
-            If_CluCopy( pTTFans[i], TruthAll[int32(r.pVars[i])], nVars ); }
-    }
-    If_CluComposeLut( nVars, r, pFStruth, pTTFans, pTTRes );
-
-    if !(If_CluEqual(pTTRes, pF, nVars) != 0) {
-        fmt.Printf("\n");
-        If_CluPrintConfig( nVars, g, r, BStruth, pFStruth );
-        Kit_DsdPrintFromTruth( (unsigned*)pTTRes, nVars ); fmt.Printf("\n");
-        Kit_DsdPrintFromTruth( (unsigned*)pF, nVars ); fmt.Printf("\n");
-//        Extra_PrintHex( stdout, (unsigned *)pF, nVars ); printf( "\n" );
-        fmt.Printf("Verification FAILED!\n");
-    }
-//    else
-//        printf( "Verification succeed!\n" );
+func If_CluCountCofs4(table []uint64, n, bound int32, cofs [][]uint64) int32 {
+	unique, classes := cluCofactorRows(table, n, bound, 0)
+	if len(unique) < 3 || len(unique) > 4 || bound > 6 || len(cofs) < 6 {
+		panic("if: two-output decomposition needs three or four cofactors")
+	}
+	for i := 0; i < 4; i++ {
+		copy(cofs[i], unique[min(i, len(unique)-1)])
+	}
+	for i, class := range classes {
+		if class&1 != 0 {
+			cofs[4][0] |= 1 << uint(i)
+		}
+		if class&2 != 0 {
+			cofs[5][0] |= 1 << uint(i)
+		}
+	}
+	return int32(len(unique))
 }
-func If_CluVerify3(pF *word, nVars int32, g *If_Grp_t, g2 *If_Grp_t, r *If_Grp_t, BStruth word, BStruth2 word, FStruth word) {
-    var pTTFans [6][CLU_WRD_MAX]word;
-    var pTTWire [CLU_WRD_MAX]word;
-    var pTTWire2 [CLU_WRD_MAX]word;
-    var pTTRes [CLU_WRD_MAX]word;
-    var i int32;
-    assert(g.nVars >= 2 && g2.nVars >= 2 && r.nVars >= 2, "g.nVars >= 2 && g2.nVars >= 2 && r.nVars >= 2");
-    assert(g.nVars <= 6 && g2.nVars <= 6 && r.nVars <= 6, "g.nVars <= 6 && g2.nVars <= 6 && r.nVars <= 6");
-
-    if TruthAll[0][0] == 0 {
-        If_CluInitTruthTables(); }
-
-    for  i = 0; i < g.nVars; i++  {
-        If_CluCopy( pTTFans[i], TruthAll[int32(g.pVars[i])], nVars );
-    }
-    If_CluComposeLut( nVars, g, &BStruth, pTTFans, pTTWire );
-
-    for  i = 0; i < g2.nVars; i++  {
-        If_CluCopy( pTTFans[i], TruthAll[int32(g2.pVars[i])], nVars );
-    }
-    If_CluComposeLut( nVars, g2, &BStruth2, pTTFans, pTTWire2 );
-
-    for  i = 0; i < r.nVars; i++  {
-        if r.pVars[i] == nVars {
-            If_CluCopy( pTTFans[i], pTTWire, nVars );
-        } else if r.pVars[i] == nVars + 1 {
-            If_CluCopy( pTTFans[i], pTTWire2, nVars );
-        } else {
-            If_CluCopy( pTTFans[i], TruthAll[int32(r.pVars[i])], nVars ); }
-    }
-    If_CluComposeLut( nVars, r, &FStruth, pTTFans, pTTRes );
-
-    if !(If_CluEqual(pTTRes, pF, nVars) != 0) {
-        fmt.Printf("%d\n", nVars);
-//        If_CluPrintConfig( nVars, g, r, BStruth, pFStruth );
-//        Extra_PrintHex( stdout, (unsigned *)pF, nVars ); printf( "\n" );
-
-        Kit_DsdPrintFromTruth( (unsigned*)&BStruth, g.nVars );   fmt.Printf("    "); If_CluPrintGroup(g);  // printf( "\n" );
-        Kit_DsdPrintFromTruth( (unsigned*)&BStruth2, g2.nVars ); fmt.Printf("    "); If_CluPrintGroup(g2); // printf( "\n" );
-        Kit_DsdPrintFromTruth( (unsigned*)&FStruth, r.nVars );   fmt.Printf("    "); If_CluPrintGroup(r);  // printf( "\n" );
-
-        Kit_DsdPrintFromTruth( (unsigned*)pTTWire, nVars ); fmt.Printf("\n");
-        Kit_DsdPrintFromTruth( (unsigned*)pTTWire2, nVars ); fmt.Printf("\n");
-        Kit_DsdPrintFromTruth( (unsigned*)pTTRes, nVars ); fmt.Printf("\n");
-        Kit_DsdPrintFromTruth( (unsigned*)pF, nVars ); fmt.Printf("\n");
-//        Extra_PrintHex( stdout, (unsigned *)pF, nVars ); printf( "\n" );
-        fmt.Printf("Verification FAILED!\n");
-    }
-//    else
-//        printf( "Verification succeed!\n" );
+func If_CluDetectSpecialCaseCofs(table []uint64, n, v int32) int32 {
+	size := 1 << uint(n)
+	states := [6]bool{true, true, true, true, true, true}
+	for assignment := 0; assignment < size; assignment++ {
+		if assignment&(1<<uint(v)) != 0 {
+			continue
+		}
+		a, b := ifTruthBit(table, assignment), ifTruthBit(table, assignment|(1<<uint(v)))
+		states[0] = states[0] && !a
+		states[1] = states[1] && a
+		states[2] = states[2] && !b
+		states[3] = states[3] && b
+		states[4] = states[4] && (a != b)
+		states[5] = states[5] && (a == b)
+	}
+	for i := 0; i < 5; i++ {
+		if states[i] {
+			return int32(i)
+		}
+	}
+	return -1
 }
-
-
-
-func If_CluSwapVars(pTruth *word, nVars int32, V2P *int32, P2V *int32, iVar int32, jVar int32) {
-    var low2High, high2Low, temp word;
-    var nWords int32  = If_CluWordNum(nVars);
-    var shift, step, iStep, jStep int32;
-    var w, i, j int32;
-    static word PPMasks[6][6] = {
-        { ABC_CONST(0x2222222222222222), ABC_CONST(0x0A0A0A0A0A0A0A0A), ABC_CONST(0x00AA00AA00AA00AA), ABC_CONST(0x0000AAAA0000AAAA), ABC_CONST(0x00000000AAAAAAAA), ABC_CONST(0xAAAAAAAAAAAAAAAA) },
-        { ABC_CONST(0x0000000000000000), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x00CC00CC00CC00CC), ABC_CONST(0x0000CCCC0000CCCC), ABC_CONST(0x00000000CCCCCCCC), ABC_CONST(0xCCCCCCCCCCCCCCCC) },
-        { ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000000000), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0000F0F00000F0F0), ABC_CONST(0x00000000F0F0F0F0), ABC_CONST(0xF0F0F0F0F0F0F0F0) },
-        { ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000000000), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00000000FF00FF00), ABC_CONST(0xFF00FF00FF00FF00) },
-        { ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000000000), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0xFFFF0000FFFF0000) },
-        { ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000000000), ABC_CONST(0x0000000000000000), ABC_CONST(0xFFFFFFFF00000000) }
-    };
-    if iVar == jVar {
-        return; }
-    if jVar < iVar {
-        var varTemp int32  = jVar;
-        jVar = iVar;
-        iVar = varTemp;
-    }
-    if iVar <= 5 && jVar <= 5 {
-        shift = (1 <<  jVar) - (1 << iVar);
-        for  w = 0; w < nWords; w++  {
-            low2High = (pTruth[w] & PPMasks[iVar][jVar - 1] ) << shift;
-            pTruth[w] &= ~PPMasks[iVar][jVar - 1];
-            high2Low = (pTruth[w] & (PPMasks[iVar][jVar - 1] << shift )) >> shift;
-            pTruth[w] &= ~ (PPMasks[iVar][jVar - 1] << shift);
-            pTruth[w] = pTruth[w] | low2High | high2Low;
-        }
-    
-    } else if iVar <= 5 && jVar > 5 {
-        step = If_CluWordNum(jVar + 1)/2;
-        shift = 1 << iVar;
-        for  w = 0; w < nWords; w += 2*step  {
-            for j = 0; j < step; j++ {
-                low2High = (pTruth[w + j] & PPMasks[iVar][5]) >> shift;
-                pTruth[w + j] &= ~PPMasks[iVar][5];
-                high2Low = (pTruth[w + step + j] & (PPMasks[iVar][5] >> shift)) << shift;
-                pTruth[w + step + j] &= ~(PPMasks[iVar][5] >> shift);
-                pTruth[w + j] |= high2Low;
-                pTruth[w + step + j] |= low2High;            
-            }
-        }
-    
-    } else {
-        iStep = If_CluWordNum(iVar + 1)/2;
-        jStep = If_CluWordNum(jVar + 1)/2;
-        for w = 0; w < nWords; w += 2*jStep {
-            for i = 0; i < jStep; i += 2*iStep {
-                for j = 0; j < iStep; j++ {
-                    temp = pTruth[w + iStep + i + j];
-                    pTruth[w + iStep + i + j] = pTruth[w + jStep + i + j];
-                    pTruth[w + jStep + i + j] = temp;
-                }
-            }
-        }
-    }    
-    if (V2P != nil) && (P2V != nil) {
-        V2P[P2V[iVar]] = jVar;
-        V2P[P2V[jVar]] = iVar;
-        P2V[iVar] ^= P2V[jVar];
-        P2V[jVar] ^= P2V[iVar];
-        P2V[iVar] ^= P2V[jVar];
-    }
+func If_CluDecUsingCofs(table []uint64, n, leaf int32) If_Grp_t {
+	var group If_Grp_t
+	if n <= leaf {
+		return group
+	}
+	work := append([]uint64(nil), table[:If_CluWordNum(n)]...)
+	v2p, p2v := cluIdentity(n)
+	needed := n - leaf
+	for removed := int32(0); removed < needed; removed++ {
+		found := false
+		for v := n - 1; v >= 0; v-- {
+			state := If_CluDetectSpecialCaseCofs(work, n, v)
+			if state < 0 {
+				continue
+			}
+			original := p2v[v]
+			for v2p[original] < n-1 {
+				at := v2p[original]
+				v2p[p2v[at]], v2p[p2v[at+1]] = at+1, at
+				p2v[at], p2v[at+1] = p2v[at+1], p2v[at]
+			}
+			a, b := cluIdentity(n)
+			If_CluMoveVar(work, n, a, b, v, n-1)
+			bit := 0
+			if state == 0 || state == 1 {
+				bit = 1
+			}
+			source := append([]uint64(nil), work...)
+			cluTransform(work, source, n, func(assignment int) int { return assignment&^(1<<uint(n-1)) | bit<<uint(n-1) })
+			n--
+			found = true
+			break
+		}
+		if !found {
+			return group
+		}
+	}
+	group.nVars, group.nMyu = leaf, 2
+	copy(group.pVars[:], p2v[:leaf])
+	return group
 }
-func If_CluReverseOrder(pTruth *word, nVars int32, V2P *int32, P2V *int32, iVarStart int32) {
-    var i, j, k int32;
-    for  k = 0; k < (nVars-iVarStart)/2 ; k++  {
-        i = iVarStart + k;
-        j = nVars - 1 - k;
-        If_CluSwapVars( pTruth, nVars, V2P, P2V, i, j );
-    }
+func If_CluDeriveDisjoint(table []uint64, n int32, v2p, p2v []int32, g, r *If_Grp_t) uint64 {
+	unique, classes := cluCofactorRows(table, n, g.nVars, 0)
+	if len(unique) > 2 {
+		panic("if: group is not disjointly decomposable")
+	}
+	free := n - g.nVars
+	var selector uint64
+	for i, class := range classes {
+		if class != 0 {
+			selector |= 1 << uint(i)
+		}
+	}
+	out := make([]uint64, If_CluWordNum(free+1))
+	for assignment := 0; assignment < 1<<uint(free+1); assignment++ {
+		cof := unique[min(assignment>>uint(free), len(unique)-1)]
+		if ifTruthBit(cof, assignment&((1<<uint(free))-1)) {
+			ifTruthSet(out, assignment)
+		}
+	}
+	copy(table, out)
+	if r != nil {
+		*r = If_Grp_t{nVars: free + 1}
+		copy(r.pVars[:], p2v[:free])
+		r.pVars[free] = n
+	}
+	return selector
 }
-
-// moves one var (v) to the given position (p)
-func If_CluMoveVar2(pF *word, nVars int32, Var2Pla *int32, Pla2Var *int32, v int32, p int32) {
-    If_CluSwapVars( pF, nVars, Var2Pla, Pla2Var, Var2Pla[v], p );
+func If_CluDeriveDisjoint4(table []uint64, n int32, v2p, p2v []int32, g, r *If_Grp_t, truth0, truth1 *uint64) {
+	unique, classes := cluCofactorRows(table, n, g.nVars, 0)
+	if len(unique) < 3 || len(unique) > 4 {
+		panic("if: invalid four-cofactor decomposition")
+	}
+	free := n - g.nVars
+	out := make([]uint64, If_CluWordNum(free+2))
+	for assignment := 0; assignment < 1<<uint(free+2); assignment++ {
+		cof := unique[min(assignment>>uint(free), len(unique)-1)]
+		if ifTruthBit(cof, assignment&((1<<uint(free))-1)) {
+			ifTruthSet(out, assignment)
+		}
+	}
+	if free+2 < 6 {
+		out[0] = If_CluAdjust(out[0], free+2)
+	}
+	copy(table, out)
+	*r = If_Grp_t{nVars: free + 2}
+	copy(r.pVars[:], p2v[:free])
+	r.pVars[free], r.pVars[free+1] = n, n+1
+	var first, second uint64
+	for i, class := range classes {
+		if class&1 != 0 {
+			first |= 1 << uint(i)
+		}
+		if class&2 != 0 {
+			second |= 1 << uint(i)
+		}
+	}
+	*truth0, *truth1 = If_CluAdjust(first, g.nVars), If_CluAdjust(second, g.nVars)
 }
-
-// moves one var (v) to the given position (p)
-func If_CluMoveVar(pF *word, nVars int32, Var2Pla *int32, Pla2Var *int32, v int32, p int32) {
-    var pG [CLU_WRD_MAX]word;
-    var pIn *word = pF;
-    var pOut *word = pG;
-    var pTemp *word;
-    var iPlace0, iPlace1, Count int32;
-    assert(v >= 0 && v < nVars, "v >= 0 && v < nVars");
-    for  Var2Pla[v] < p  {
-        iPlace0 = Var2Pla[v];
-        iPlace1 = Var2Pla[v]+1;
-        If_CluSwapAdjacent( pOut, pIn, iPlace0, nVars );
-        pTemp = pIn; pIn = pOut;
-pOut = pTemp;
-        Var2Pla[Pla2Var[iPlace0]]++;
-        Var2Pla[Pla2Var[iPlace1]]--;
-        Pla2Var[iPlace0] ^= Pla2Var[iPlace1];
-        Pla2Var[iPlace1] ^= Pla2Var[iPlace0];
-        Pla2Var[iPlace0] ^= Pla2Var[iPlace1];
-        Count++;
-    }
-    for  Var2Pla[v] > p  {
-        iPlace0 = Var2Pla[v]-1;
-        iPlace1 = Var2Pla[v];
-        If_CluSwapAdjacent( pOut, pIn, iPlace0, nVars );
-        pTemp = pIn; pIn = pOut;
-pOut = pTemp;
-        Var2Pla[Pla2Var[iPlace0]]++;
-        Var2Pla[Pla2Var[iPlace1]]--;
-        Pla2Var[iPlace0] ^= Pla2Var[iPlace1];
-        Pla2Var[iPlace1] ^= Pla2Var[iPlace0];
-        Pla2Var[iPlace0] ^= Pla2Var[iPlace1];
-        Count++;
-    }
-    if Count & 1 {
-        If_CluCopy( pF, pIn, nVars ); }
-    assert(Pla2Var[p] == v, "Pla2Var[p] == v");
+func If_CluDeriveNonDisjoint(table []uint64, n int32, v2p, p2v []int32, g, r *If_Grp_t) uint64 {
+	free := n - g.nVars
+	size := If_CluWordNum(n)
+	a, b := make([]uint64, size), make([]uint64, size)
+	If_CluCofactors(table, n, n-1, a, b)
+	g.nVars--
+	truth0 := If_CluDeriveDisjoint(a, n-1, v2p, p2v, g, nil)
+	truth1 := If_CluDeriveDisjoint(b, n-1, v2p, p2v, g, nil)
+	g.nVars++
+	boundTruth := truth0 | truth1<<uint(1<<uint(g.nVars-1))
+	out := make([]uint64, If_CluWordNum(free+2))
+	for assignment := 0; assignment < 1<<uint(free+2); assignment++ {
+		cof := a
+		if assignment&(1<<uint(free+1)) != 0 {
+			cof = b
+		}
+		if ifTruthBit(cof, assignment&((1<<uint(free+1))-1)) {
+			ifTruthSet(out, assignment)
+		}
+	}
+	copy(table, out)
+	*r = If_Grp_t{nVars: free + 2}
+	copy(r.pVars[:], p2v[:free])
+	r.pVars[free], r.pVars[free+1] = n, g.pVars[g.nVars-1]
+	return boundTruth
 }
-
-// moves vars to be the most signiticant ones (Group[0] is MSB)
-func If_CluMoveGroupToMsb(pF *word, nVars int32, V2P *int32, P2V *int32, g *If_Grp_t) {
-    var v int32;
-    for  v = 0; v < g.nVars; v++  {
-        If_CluMoveVar( pF, nVars, V2P, P2V, g.pVars[g.nVars - 1 - v], nVars - 1 - v );
-    }
+func If_CluCheckNonDisjointGroup(table []uint64, n int32, v2p, p2v []int32, g *If_Grp_t) int32 {
+	if g.nMyu != 3 && g.nMyu != 4 {
+		return 0
+	}
+	for v := int32(0); v < g.nVars; v++ {
+		a, b := make([]uint64, If_CluWordNum(n)), make([]uint64, If_CluWordNum(n))
+		If_CluCofactors(table, n, v2p[g.pVars[v]], a, b)
+		if If_CluCountCofs(a, n, g.nVars, 0, nil) > 2 || If_CluCountCofs(b, n, g.nVars, 0, nil) > 2 {
+			continue
+		}
+		If_CluMoveVar(table, n, v2p, p2v, g.pVars[v], n-1)
+		copy(g.pVars[:g.nVars], p2v[n-g.nVars:n])
+		return 1
+	}
+	return 0
 }
-
-
-// reverses the variable order
-func If_CluReverseOrder_old(pF *word, nVars int32, V2P *int32, P2V *int32, iVarStart int32) {
-    var pG [CLU_WRD_MAX]word;
-    var v int32;
-
-    If_CluCopy( pG, pF, nVars );
-
-//    for ( v = 0; v < nVars; v++ )
-//        printf( "%c ", 'a' + P2V[v] );
-//    printf( "  ---  " );
-
-    for  v = iVarStart; v < nVars; v++  {
-        If_CluMoveVar( pF, nVars, V2P, P2V, P2V[iVarStart], nVars - 1 - (v - iVarStart) );
-    }
-
-//    for ( v = 0; v < nVars; v++ )
-//        printf( "%c ", 'a' + P2V[v] );
-//    printf( "\n" );
-
-//    if ( iVarStart > 0 )
-//        return;
-
-    If_CluReverseOrder( pG, nVars, nil, nil, iVarStart );
-    if If_CluEqual( pG, pF, nVars ) != 0 {
-//        printf( "+" );
-    
-    } else {
-/*
-        printf( "\n" );
-        Kit_DsdPrintFromTruth( (unsigned*)pF, nVars ); printf( "\n" );
-        Kit_DsdPrintFromTruth( (unsigned*)pG, nVars ); 
-        printf( "\n" );
-*/
-        fmt.Printf("%d ", nVars);
-    }
+func If_CluFindGroup(table []uint64, n, start, stop int32, v2p, p2v []int32, bound, disjoint int32) If_Grp_t {
+	g := If_Grp_t{nVars: bound, nMyu: If_CluCountCofs(table, n, bound, 0, nil)}
+	copy(g.pVars[:], p2v[n-bound:n])
+	if g.nMyu == 2 || disjoint == 0 && If_CluCheckNonDisjointGroup(table, n, v2p, p2v, &g) != 0 {
+		return g
+	}
+	if n == bound+start {
+		g.nVars = 0
+		return g
+	}
+	for round := 0; round < 2; round++ {
+		if bound < n-1 {
+			best := p2v[n-1-bound]
+			bestCount := If_CluCountCofs(table, n, bound+1, 0, nil)
+			for v := n - 2 - bound; v >= start; v-- {
+				If_CluMoveVar2(table, n, v2p, p2v, p2v[v], n-1-bound)
+				count := If_CluCountCofs(table, n, bound+1, 0, nil)
+				if bestCount >= count {
+					bestCount, best = count, p2v[n-1-bound]
+				}
+			}
+			If_CluMoveVar2(table, n, v2p, p2v, best, n-1-bound)
+		}
+		best := p2v[n-1-bound]
+		bestCount := If_CluCountCofs(table, n, bound, 0, nil)
+		for v := n - bound; v < n-stop; v++ {
+			If_CluMoveVar2(table, n, v2p, p2v, p2v[v], n-1-bound)
+			count := If_CluCountCofs(table, n, bound, 0, nil)
+			if bestCount >= count {
+				bestCount, best = count, p2v[n-1-bound]
+			}
+		}
+		If_CluMoveVar2(table, n, v2p, p2v, best, n-1-bound)
+		count := If_CluCountCofs(table, n, bound, 0, nil)
+		if g.nMyu >= count {
+			g.nMyu = count
+			g.nVars = bound
+			copy(g.pVars[:], p2v[n-bound:n])
+		}
+		if g.nMyu == 2 || disjoint == 0 && If_CluCheckNonDisjointGroup(table, n, v2p, p2v, &g) != 0 {
+			return g
+		}
+	}
+	g.nVars = 0
+	return g
 }
-
-// return the number of cofactors w.r.t. the topmost vars (nBSsize)
-func If_CluCountCofs(pF *word, nVars int32, nBSsize int32, iShift int32, pCofs [][CLU_WRD_MAX/4]word) int32 {
-    var iCofs [128]word ;
-    var iCof word;
-    var Result word;
-    var pCofA, pCofB *word;
-    var nMints int32  = (1 << nBSsize);
-    var i, c, w, nCofs int32;
-    assert(nBSsize >= 2 && nBSsize <= 7 && nBSsize < nVars, "nBSsize >= 2 && nBSsize <= 7 && nBSsize < nVars");
-    if nVars - nBSsize < 6 {
-        var nShift int32  = (1 << (nVars - nBSsize));
-        var Mask word   = ((((word)1) << nShift) - 1);
-        for  nCofs = i = 0; i < nMints; i++  {
-            iCof = (pF[(iShift + i * nShift) / 64] >> ((iShift + i * nShift) & 63)) & Mask;
-            for  c = 0; c < nCofs; c++  {
-                if iCof == iCofs[c] {
-                    break; }
-            }
-            if c == nCofs {
-                iCofs[nCofs++] = iCof; }
-            if pCofs && iCof != iCofs[0] {
-                Result |= (((word)1) << i); }
-            if nCofs == 5 {
-                break; }
-        }
-        if nCofs <= 2 && pCofs {
-            assert(nBSsize <= 6, "nBSsize <= 6");
-            pCofs[0][0] = iCofs[0];
-            pCofs[1][0] = (nCofs == 2) ? iCofs[1] : iCofs[0];
-            pCofs[2][0] = Result;
-        }
-    
-    } else {
-        var nWords int32  = If_CluWordNum( nVars - nBSsize );
-        assert(nWords * nMints == If_CluWordNum(nVars), "nWords * nMints == If_CluWordNum(nVars)");
-        for  nCofs = i = 0; i < nMints; i++  {
-            pCofA = pF + i * nWords;
-            for  c = 0; c < nCofs; c++  {
-                pCofB = pF + iCofs[c] * nWords;
-                for  w = 0; w < nWords; w++  {
-                    if pCofA[w] != pCofB[w] {
-                        break; }
-                }
-                if w == nWords {
-                    break; }
-            }
-            if c == nCofs {
-                iCofs[nCofs++] = i; }
-            if pCofs {
-                assert(nBSsize <= 6, "nBSsize <= 6");
-                pCofB = pF + iCofs[0] * nWords;
-                for  w = 0; w < nWords; w++  {
-                    if pCofA[w] != pCofB[w] {
-                        break; }
-                }
-                if w != nWords {
-                    Result |= (((word)1) << i); }
-            }
-            if nCofs == 5 {
-                break; }
-        }
-        if nCofs <= 2 && pCofs {
-            If_CluCopy( pCofs[0], pF + iCofs[0] * nWords, nVars - nBSsize );
-            If_CluCopy( pCofs[1], pF + ((nCofs == 2) ? iCofs[1] : iCofs[0]) * nWords, nVars - nBSsize );
-            pCofs[2][0] = Result;
-        }
-    }
-    assert(nCofs >= 1 && nCofs <= 5, "nCofs >= 1 && nCofs <= 5");
-    return nCofs;
+func If_CluCheck(p *If_Man_t, truth []uint64, n, start, stop, leaf, root int32, result *If_Grp_t, rootTruth, leafTruth *uint64, leftover []uint64, hashing int32) If_Grp_t {
+	var group If_Grp_t
+	if n < 0 || n > 16 || leaf < 2 || leaf > 6 || n <= leaf || n > leaf+root-1 {
+		return group
+	}
+	if result != nil {
+		*result = If_Grp_t{}
+		if rootTruth != nil {
+			*rootTruth = 0
+		}
+		if leafTruth != nil {
+			*leafTruth = 0
+		}
+	}
+	work := make([]uint64, CLU_WRD_MAX)
+	copy(work, truth[:If_CluWordNum(n)])
+	support := If_CluSupport(work, n)
+	if support == 0 || If_CluSuppIsMinBase(support) == 0 {
+		return group
+	}
+	v2p, p2v := cluIdentity(n)
+	var cached *uint32
+	if p != nil && hashing != 0 {
+		cached = If_CluHashLookup(p, truth, 0)
+		if *cached != CLU_UNUSED {
+			If_CluUns2Grp(*cached, &group)
+		}
+	}
+	if stop != 0 {
+		If_CluMoveVar(work, n, v2p, p2v, 0, n-1)
+	}
+	if group.nVars == 0 {
+		if start == 0 {
+			group = If_CluDecUsingCofs(truth, n, leaf)
+		}
+		if group.nVars == 0 {
+			group = If_CluFindGroup(work, n, start, stop, v2p, p2v, leaf, boolInt(leaf+root == n+1))
+			if group.nVars == 0 {
+				if n < leaf+root-2 {
+					group = If_CluFindGroup(work, n, start, stop, v2p, p2v, leaf-1, boolInt(leaf+root == n+1))
+				}
+				if leaf > 4 && n < leaf+root-3 {
+					group = If_CluFindGroup(work, n, start, stop, v2p, p2v, leaf-2, boolInt(leaf+root == n+1))
+				}
+				if group.nVars == 0 {
+					If_CluReverseOrder(work, n, v2p, p2v, start)
+					group = If_CluFindGroup(work, n, start, stop, v2p, p2v, leaf, boolInt(leaf+root == n+1))
+				}
+			}
+		}
+	}
+	if cached != nil {
+		*cached = If_CluGrp2Uns(&group)
+	}
+	if group.nVars == 0 || result == nil {
+		return group
+	}
+	If_CluMoveGroupToMsb(work, n, v2p, p2v, &group)
+	var bound uint64
+	var remaining If_Grp_t
+	if group.nMyu == 2 {
+		bound = If_CluDeriveDisjoint(work, n, v2p, p2v, &group, &remaining)
+	} else {
+		bound = If_CluDeriveNonDisjoint(work, n, v2p, p2v, &group, &remaining)
+	}
+	bound = If_CluAdjust(bound, group.nVars)
+	if remaining.nVars < 6 {
+		work[0] = If_CluAdjust(work[0], remaining.nVars)
+	}
+	newPos := remaining.nVars - 1
+	if group.nMyu > 2 {
+		newPos--
+	}
+	a, b := cluIdentity(remaining.nVars)
+	If_CluMoveVar(work, remaining.nVars, a, b, newPos, start)
+	for i := newPos; i > start; i-- {
+		remaining.pVars[i] = remaining.pVars[i-1]
+	}
+	remaining.pVars[start] = n
+	if leftover != nil {
+		copy(leftover, work[:If_CluWordNum(remaining.nVars)])
+		maximum := n
+		if p != nil {
+			maximum = p.pPars.nLutSize
+		}
+		If_CluAdjustBig(leftover, remaining.nVars, maximum)
+	}
+	*result = remaining
+	if rootTruth != nil {
+		*rootTruth = work[0]
+	}
+	if leafTruth != nil {
+		*leafTruth = bound
+	}
+	return group
 }
-
-// return the number of cofactors w.r.t. the topmost vars (nBSsize)
-func If_CluCountCofs4(pF *word, nVars int32, nBSsize int32, pCofs [][CLU_WRD_MAX/4]word) int32 {
-    var iCofs [128]word ;
-    var iCof word;
-    var Result0 word;
-    var Result1 word;
-    var nMints int32  = (1 << nBSsize);
-    var i, c, nCofs int32;
-    assert(pCofs, "pCofs");
-    assert(nBSsize >= 2 && nBSsize <= 6 && nBSsize < nVars, "nBSsize >= 2 && nBSsize <= 6 && nBSsize < nVars");
-    if nVars - nBSsize < 6 {
-        var nShift int32  = (1 << (nVars - nBSsize));
-        var Mask word   = ((((word)1) << nShift) - 1);
-        for  nCofs = i = 0; i < nMints; i++  {
-            iCof = (pF[(i * nShift) / 64] >> ((i * nShift) & 63)) & Mask;
-            for  c = 0; c < nCofs; c++  {
-                if iCof == iCofs[c] {
-                    break; }
-            }
-            if c == nCofs {
-                iCofs[nCofs++] = iCof; }
-            if c == 1 || c == 3 {
-                Result0 |= (((word)1) << i); }
-            if c == 2 || c == 3 {
-                Result1 |= (((word)1) << i); }
-        }
-        assert(nCofs >= 3 && nCofs <= 4, "nCofs >= 3 && nCofs <= 4");
-        pCofs[0][0] = iCofs[0];
-        pCofs[1][0] = iCofs[1];
-        pCofs[2][0] = iCofs[2];
-        pCofs[3][0] = (nCofs == 4) ? iCofs[3] : iCofs[2];
-        pCofs[4][0] = Result0;
-        pCofs[5][0] = Result1;
-    
-    } else {
-        assert(false, "0"); }
-    return nCofs;
+func boolInt(v bool) int32 {
+	if v {
+		return 1
+	}
+	return 0
 }
-
-func If_CluCofactors(pF *word, nVars int32, iVar int32, pCof0 *word, pCof1 *word) {
-    var nWords int32  = If_CluWordNum( nVars );
-    assert(iVar < nVars, "iVar < nVars");
-    if iVar < 6 {
-        var i int32;
-        var Shift int32 = (1 << iVar);
-        for  i = 0; i < nWords; i++  {
-            pCof0[i] = (pF[i] & ~Truth6[iVar]) | ((pF[i] & ~Truth6[iVar]) << Shift);
-            pCof1[i] = (pF[i] &  Truth6[iVar]) | ((pF[i] &  Truth6[iVar]) >> Shift);
-        }
-    
-    } else {
-        var i int32;
-        var k int32;
-        var Step int32 = (1 << (iVar - 6));
-        for  k = 0; k < nWords; k += 2*Step  {
-            for  i = 0; i < Step; i++  {
-                pCof0[i] = pCof0[Step+i] = pF[i];
-                pCof1[i] = pCof1[Step+i] = pF[Step+i];
-            }
-            pF    += 2*Step;
-            pCof0 += 2*Step;
-            pCof1 += 2*Step;
-        }
-    }
+func If_CluCheck3(p *If_Man_t, truth []uint64, n, leaf, leaf2, root int32, result, second *If_Grp_t, rootTruth, firstTruth, secondTruth *uint64) If_Grp_t {
+	leftover := make([]uint64, CLU_WRD_MAX)
+	var remaining If_Grp_t
+	var f0, f1, f2 uint64
+	first := If_CluCheck(p, truth, n, 0, 0, leaf, root+leaf2-1, &remaining, &f0, &f1, leftover, 0)
+	if first.nVars == 0 {
+		if (first.nMyu == 3 || first.nMyu == 4) && leaf == leaf2 && n-leaf+2 <= root {
+			first.nVars = leaf
+			copy(leftover, truth[:If_CluWordNum(n)])
+			v2p, p2v := cluIdentity(n)
+			If_CluMoveGroupToMsb(leftover, n, v2p, p2v, &first)
+			If_CluDeriveDisjoint4(leftover, n, v2p, p2v, &first, &remaining, &f1, &f2)
+			a, b := cluIdentity(remaining.nVars)
+			If_CluMoveVar(leftover, remaining.nVars, a, b, remaining.nVars-2, 0)
+			If_CluMoveVar(leftover, remaining.nVars, a, b, remaining.nVars-1, 1)
+			old0, old1 := remaining.pVars[remaining.nVars-2], remaining.pVars[remaining.nVars-1]
+			for i := remaining.nVars - 1; i > 1; i-- {
+				remaining.pVars[i] = remaining.pVars[i-2]
+			}
+			remaining.pVars[0], remaining.pVars[1] = old0, old1
+			f0 = leftover[0]
+			if result != nil {
+				*result = remaining
+			}
+			if second != nil {
+				*second = first
+			}
+			if rootTruth != nil {
+				*rootTruth = f0
+			}
+			if firstTruth != nil {
+				*firstTruth = f1
+			}
+			if secondTruth != nil {
+				*secondTruth = f2
+			}
+			return first
+		}
+		return first
+	}
+	if remaining.nVars <= root {
+		if result != nil {
+			*result = remaining
+		}
+		if second != nil {
+			*second = If_Grp_t{}
+		}
+		if rootTruth != nil {
+			*rootTruth = f0
+		}
+		if firstTruth != nil {
+			*firstTruth = f1
+		}
+		if secondTruth != nil {
+			*secondTruth = 0
+		}
+		return first
+	}
+	start, stop := int32(0), int32(0)
+	if p != nil {
+		switch p.pPars.nStructType {
+		case 0:
+		case 1:
+			start = 1
+		case 2:
+			stop = 1
+		default:
+			panic("if: invalid three-LUT structure restriction")
+		}
+	}
+	var final If_Grp_t
+	next := If_CluCheck(p, leftover, remaining.nVars, start, stop, leaf2, root, &final, &f0, &f2, nil, 0)
+	if next.nVars == 0 {
+		return next
+	}
+	for i := int32(0); i < next.nVars; i++ {
+		next.pVars[i] = remaining.pVars[next.pVars[i]]
+	}
+	for i := int32(0); i < final.nVars; i++ {
+		if final.pVars[i] == remaining.nVars {
+			final.pVars[i] = n + 1
+		} else {
+			final.pVars[i] = remaining.pVars[final.pVars[i]]
+		}
+	}
+	if result != nil {
+		*result = final
+	}
+	if second != nil {
+		*second = next
+	}
+	if rootTruth != nil {
+		*rootTruth = f0
+	}
+	if firstTruth != nil {
+		*firstTruth = f1
+	}
+	if secondTruth != nil {
+		*secondTruth = f2
+	}
+	return first
 }
-
-// returns 1 if we have special case of cofactors; otherwise, returns 0
-func If_CluDetectSpecialCaseCofs(pF *word, nVars int32, iVar int32) int32 {
-    var Cof0, Cof1 word;
-    var State [6]int32 ;
-    var i int32;
-    var nWords int32 = If_CluWordNum( nVars );
-    assert(iVar < nVars, "iVar < nVars");
-    if iVar < 6 {
-        var Shift int32  = (1 << iVar);
-        for  i = 0; i < nWords; i++  {
-            Cof0 =  (pF[i] & ~Truth6[iVar]);
-            Cof1 = ((pF[i] &  Truth6[iVar]) >> Shift);
-
-            if Cof0 == 0 {
-                State[0]++;
-            } else if Cof0 == ~Truth6[iVar] {
-                State[1]++;
-            } else if Cof1 == 0 {
-                State[2]++;
-            } else if Cof1 == ~Truth6[iVar] {
-                State[3]++;
-            } else if Cof0 == ~Cof1 {
-                State[4]++;
-            } else if Cof0 == Cof1 {
-                State[5]++; }
-        }
-    
-    } else {
-        var k int32;
-        var Step int32 = (1 << (iVar - 6));
-        for  k = 0; k < nWords; k += 2*Step  {
-            for  i = 0; i < Step; i++  {
-                Cof0 = pF[i];
-                Cof1 = pF[Step+i];
-
-                if Cof0 == 0 {
-                    State[0]++;
-                } else if Cof0 == ~(word)0 {
-                    State[1]++;
-                } else if Cof1 == 0 {
-                    State[2]++;
-                } else if Cof1 == ~(word)0 {
-                    State[3]++;
-                } else if Cof0 == ~Cof1 {
-                    State[4]++;
-                } else if Cof0 == Cof1 {
-                    State[5]++; }
-            }
-            pF    += 2*Step;
-        }
-        nWords /= 2;
-    }
-    assert(State[5] != nWords, "State[5] != nWords");
-    for  i = 0; i < 5; i++  {
-        assert(State[i] <= nWords, "State[i] <= nWords");
-        if State[i] == nWords {
-            return i; }
-    }
-    return -1;
+func If_CluInitTruthTables(n int32) [][]uint64 {
+	tables := make([][]uint64, n+2)
+	for v := range tables {
+		tables[v] = make([]uint64, If_CluWordNum(n))
+		if v >= int(n) {
+			continue
+		}
+		for a := 0; a < len(tables[v])*64; a++ {
+			if a>>uint(v)&1 != 0 {
+				ifTruthSet(tables[v], a)
+			}
+		}
+	}
+	return tables
 }
-
-// returns 1 if we have special case of cofactors; otherwise, returns 0
-func If_CluDecUsingCofs(pTruth *word, nVars int32, nLutLeaf int32) If_Grp_t {
-    var G If_Grp_t  ;
-    var pF2 [CLU_WRD_MAX]word;
-    var pF *word = pF2;
-    var Var2Pla, Pla2Var [CLU_VAR_MAX+2]int32;
-    var V2P, P2V [CLU_VAR_MAX+2]int32;
-    var nVarsNeeded int32  = nVars - nLutLeaf;
-    var v, i, k, iVar, State int32;
-//Kit_DsdPrintFromTruth( (unsigned*)pTruth, nVars ); printf( "\n" );
-    // create local copy
-    If_CluCopy( pF, pTruth, nVars );
-    for  k = 0; k < nVars; k++  {
-        Var2Pla[k] = Pla2Var[k] = k;
-    }
-    // find decomposable vars 
-    for  i = 0; i < nVarsNeeded; i++  {
-        for  v = nVars - 1; v >= 0; v--  {
-            State = If_CluDetectSpecialCaseCofs( pF, nVars, v );
-            if State == -1 {
-                continue; }
-            // update the variable place
-            iVar = Pla2Var[v];
-            for  Var2Pla[iVar] < nVars - 1  {
-                var iPlace0 int32  = Var2Pla[iVar];
-                var iPlace1 int32  = Var2Pla[iVar]+1;
-                Var2Pla[Pla2Var[iPlace0]]++;
-                Var2Pla[Pla2Var[iPlace1]]--;
-                Pla2Var[iPlace0] ^= Pla2Var[iPlace1];
-                Pla2Var[iPlace1] ^= Pla2Var[iPlace0];
-                Pla2Var[iPlace0] ^= Pla2Var[iPlace1];
-            }
-            // move this variable to the top
-            for  k = 0; k < nVars; k++  {
-                V2P[k] = P2V[k] = k;
-            }
-//Kit_DsdPrintFromTruth( (unsigned*)pF, nVars ); printf( "\n" );
-            If_CluMoveVar( pF, nVars, V2P, P2V, v, nVars - 1 );
-//Kit_DsdPrintFromTruth( (unsigned*)pF, nVars ); printf( "\n" );
-            // choose cofactor to follow
-            iVar = nVars - 1;
-            if State == 0 || State == 1 { // need cof1
-            
-                if iVar < 6 {
-                    pF[0] = (pF[0] &  Truth6[iVar]) | ((pF[0] &  Truth6[iVar]) >> (1 << iVar));
-                } else {
-                    pF += If_CluWordNum( nVars ) / 2; }
-            
-            } else { // need cof0
-            
-                if iVar < 6 {
-                    pF[0] = (pF[0] & ~Truth6[iVar]) | ((pF[0] & ~Truth6[iVar]) << (1 << iVar)); }
-            }
-            // update the variable count
-            nVars--;
-            break;
-        }
-        if v == -1 {
-            return G; }
-    }
-    // create the resulting group
-    G.nVars = nLutLeaf;
-    G.nMyu = 2;
-    for  v = 0; v < G.nVars; v++  {
-        G.pVars[v] = Pla2Var[v];
-    }
-    return G;
+func If_CluComposeLut(n int32, g *If_Grp_t, truth []uint64, functions [][]uint64, out []uint64) {
+	clear(out[:If_CluWordNum(n)])
+	for a := 0; a < int(If_CluWordNum(n))*64; a++ {
+		index := 0
+		for v := int32(0); v < g.nVars; v++ {
+			if ifTruthBit(functions[g.pVars[v]], a) {
+				index |= 1 << uint(v)
+			}
+		}
+		if ifTruthBit(truth, index) {
+			ifTruthSet(out, a)
+		}
+	}
 }
-
-
-
-// deriving decomposition
-func If_CluDeriveDisjoint(pF *word, nVars int32, V2P *int32, P2V *int32, g *If_Grp_t, r *If_Grp_t) word {
-    var pCofs [3][CLU_WRD_MAX/4]word;
-    var i int32;
-    var RetValue int32;
-    var nFSset int32 = nVars - g.nVars;
-    RetValue = If_CluCountCofs( pF, nVars, g.nVars, 0, pCofs );
-//    assert( RetValue == 2 );
-
-    if nFSset < 6 {
-        pF[0] = (pCofs[1][0] << (1 << nFSset)) | pCofs[0][0];
-    } else {
-        If_CluCopy( pF, pCofs[0], nFSset );
-        If_CluCopy( pF + If_CluWordNum(nFSset), pCofs[1], nFSset );
-    }
-    // create the resulting group
-    if r {
-        r.nVars = nFSset + 1;
-        r.nMyu = 0;
-        for  i = 0; i < nFSset; i++  {
-            r.pVars[i] = P2V[i];
-        }
-        r.pVars[nFSset] = nVars;
-    }
-    return pCofs[2][0];
+func If_CluVerify(truth []uint64, n int32, g, r *If_Grp_t, bound uint64, free []uint64) {
+	functions := If_CluInitTruthTables(n)
+	If_CluComposeLut(n, g, []uint64{bound}, functions, functions[n])
+	out := make([]uint64, If_CluWordNum(n))
+	If_CluComposeLut(n, r, free, functions, out)
+	if If_CluEqual(truth, out, n) == 0 {
+		panic("if: two-LUT decomposition verification failed")
+	}
 }
-func If_CluDeriveDisjoint4(pF *word, nVars int32, V2P *int32, P2V *int32, g *If_Grp_t, r *If_Grp_t, pTruth0 *word, pTruth1 *word) {
-    var pCofs [6][CLU_WRD_MAX/4]word;
-    var Cof0, Cof1 word;
-    var i int32;
-    var RetValue int32;
-    var nFSset int32 = nVars - g.nVars;
-
-    assert(g.nVars <= 6 && nFSset <= 4, "g.nVars <= 6 && nFSset <= 4");
-
-    RetValue = If_CluCountCofs4( pF, nVars, g.nVars, pCofs );
-    if RetValue != 3 && RetValue != 4 {
-        fmt.Printf("If_CluDeriveDisjoint4(): Error!!!\n"); }
-
-    Cof0  = (pCofs[1][0] << (1 << nFSset)) | pCofs[0][0];
-    Cof1  = (pCofs[3][0] << (1 << nFSset)) | pCofs[2][0];
-    pF[0] = (Cof1 << (1 << (nFSset+1))) | Cof0;
-    pF[0] = If_CluAdjust( pF[0], nFSset + 2 );
-
-    // create the resulting group
-    r.nVars = nFSset + 2;
-    r.nMyu = 0;
-    for  i = 0; i < nFSset; i++  {
-        r.pVars[i] = P2V[i];
-    }
-    r.pVars[nFSset] = nVars;
-    r.pVars[nFSset+1] = nVars+1;
-
-    *pTruth0 = If_CluAdjust( pCofs[4][0], g.nVars );
-    *pTruth1 = If_CluAdjust( pCofs[5][0], g.nVars );
+func If_CluVerify3(truth []uint64, n int32, g, g2, r *If_Grp_t, bound, bound2, free uint64) {
+	functions := If_CluInitTruthTables(n)
+	If_CluComposeLut(n, g, []uint64{bound}, functions, functions[n])
+	if g2.nVars != 0 {
+		If_CluComposeLut(n, g2, []uint64{bound2}, functions, functions[n+1])
+	}
+	out := make([]uint64, If_CluWordNum(n))
+	If_CluComposeLut(n, r, []uint64{free}, functions, out)
+	if If_CluEqual(truth, out, n) == 0 {
+		panic("if: three-LUT decomposition verification failed")
+	}
 }
-
-func If_CluDeriveNonDisjoint(pF *word, nVars int32, V2P *int32, P2V *int32, g *If_Grp_t, r *If_Grp_t) word {
-    var pCofs [2][CLU_WRD_MAX]word;
-    var Truth0, Truth1, Truth word;
-    var i int32;
-    var nFSset int32 = nVars - g.nVars;
-    var nFSset1 int32 = nFSset + 1;
-    If_CluCofactors( pF, nVars, nVars - 1, pCofs[0], pCofs[1] );
-
-//    Extra_PrintHex( stdout, (unsigned *)pCofs[0], nVars ); printf( "\n" );
-//    Extra_PrintHex( stdout, (unsigned *)pCofs[1], nVars ); printf( "\n" );
-
-    g.nVars--;
-    Truth0 = If_CluDeriveDisjoint( pCofs[0], nVars - 1, V2P, P2V, g, nil );
-    Truth1 = If_CluDeriveDisjoint( pCofs[1], nVars - 1, V2P, P2V, g, nil );
-    Truth  = (Truth1 << (1 << g.nVars)) | Truth0;
-    g.nVars++;
-    if nFSset1 < 6 {
-        pF[0] = (pCofs[1][0] << (1 << nFSset1)) | pCofs[0][0];
-    } else {
-        If_CluCopy( pF, pCofs[0], nFSset1 );
-        If_CluCopy( pF + If_CluWordNum(nFSset1), pCofs[1], nFSset1 );
-    }
-
-//    Extra_PrintHex( stdout, (unsigned *)&Truth0, 6 ); printf( "\n" );
-//    Extra_PrintHex( stdout, (unsigned *)&Truth1, 6 ); printf( "\n" );
-//    Extra_PrintHex( stdout, (unsigned *)&pCofs[0][0], 6 ); printf( "\n" );
-//    Extra_PrintHex( stdout, (unsigned *)&pCofs[1][0], 6 ); printf( "\n" );
-//    Extra_PrintHex( stdout, (unsigned *)&Truth, 6 ); printf( "\n" );
-//    Extra_PrintHex( stdout, (unsigned *)&pF[0], 6 ); printf( "\n" );
-
-    // create the resulting group
-    r.nVars = nFSset + 2;
-    r.nMyu = 0;
-    for  i = 0; i < nFSset; i++  {
-        r.pVars[i] = P2V[i];
-    }
-    r.pVars[nFSset] = nVars;
-    r.pVars[nFSset+1] = g.pVars[g.nVars - 1];
-    return Truth;
+func If_CluCheckGroup(truth []uint64, n int32, g *If_Grp_t) {
+	work := append([]uint64(nil), truth[:If_CluWordNum(n)]...)
+	a, b := cluIdentity(n)
+	If_CluMoveGroupToMsb(work, n, a, b, g)
+	if If_CluCountCofs(work, n, g.nVars, 0, nil) != g.nMyu {
+		panic("if: decomposition cofactor count mismatch")
+	}
+	if g.nMyu > 2 {
+		half := 1 << uint(n-1)
+		if If_CluCountCofs(work, n-1, g.nVars-1, 0, nil) > 2 || If_CluCountCofs(work, n-1, g.nVars-1, int32(half), nil) > 2 {
+			panic("if: incompatible shared-variable group")
+		}
+	}
 }
-
-// check non-disjoint decomposition
-func If_CluCheckNonDisjointGroup(pF *word, nVars int32, V2P *int32, P2V *int32, g *If_Grp_t) int32 {
-    var v, i, nCofsBest2 int32;
-    if g.nMyu == 3 || g.nMyu == 4 {
-        var pCofs [2][CLU_WRD_MAX]word;
-        // try cofactoring w.r.t. each variable
-        for  v = 0; v < g.nVars; v++  {
-            If_CluCofactors( pF, nVars, V2P[int32(g.pVars[v])], pCofs[0], pCofs[1] );
-            nCofsBest2 = If_CluCountCofs( pCofs[0], nVars, g.nVars, 0, nil );
-            if nCofsBest2 > 2 {
-                continue; }
-            nCofsBest2 = If_CluCountCofs( pCofs[1], nVars, g.nVars, 0, nil );
-            if nCofsBest2 > 2 {
-                continue; }
-            // found good shared variable - move to the end
-            If_CluMoveVar( pF, nVars, V2P, P2V, g.pVars[v], nVars-1 );
-            for  i = 0; i < g.nVars; i++  {
-                g.pVars[i] = P2V[nVars-g.nVars+i];
-            }
-            return 1;
-        }
-    }
-    return 0;
+func If_CluCheckPerm(truth, work []uint64, n int32, v2p, p2v []int32) {
+	for i := int32(0); i < n; i++ {
+		If_CluMoveVar(work, n, v2p, p2v, i, i)
+	}
+	if If_CluEqual(truth, work, n) == 0 {
+		panic("if: decomposition permutation mismatch")
+	}
 }
-
-
-// finds a good var group (cof count < 6; vars are MSBs)
-func If_CluFindGroup(pF *word, nVars int32, iVarStart int32, iVarStop int32, V2P *int32, P2V *int32, nBSsize int32, fDisjoint int32) If_Grp_t {
-    var fVerbose int32;
-    var nRounds int32  = 2;//nBSsize;
-    var G If_Grp_t ;
-    var g *If_Grp_t = &G;//, BestG = {0};
-    var i, r, v, nCofs, VarBest, nCofsBest2 int32;
-    assert(nVars > nBSsize && nVars >= nBSsize + iVarStart && nVars <= CLU_VAR_MAX, "nVars > nBSsize && nVars >= nBSsize + iVarStart && nVars <= CLU_VAR_MAX");
-    assert(nBSsize >= 2 && nBSsize <= 6, "nBSsize >= 2 && nBSsize <= 6");
-    assert(!(iVarStart != 0) || !(iVarStop != 0), "!iVarStart || !iVarStop");
-    // start with the default group
-    g.nVars = nBSsize;
-    g.nMyu = If_CluCountCofs( pF, nVars, nBSsize, 0, nil );
-    for  i = 0; i < nBSsize; i++  {
-        g.pVars[i] = P2V[nVars-nBSsize+i];
-    }
-    // check if good enough
-    if g.nMyu == 2 {
-        return G; }
-    if !(fDisjoint != 0) && (If_CluCheckNonDisjointGroup( pF, nVars, V2P, P2V, g ) != 0) {
-//        BestG = G;
-        return G;
-    }
-    if nVars == nBSsize + iVarStart {
-        g.nVars = 0;
-        return G;
-    }
-
-    if fVerbose != 0 {
-        fmt.Printf("Iter %2d  ", -1);
-        If_CluPrintGroup( g );
-    }
-
-    // try to find better group
-    for  r = 0; r < nRounds; r++  {
-        if nBSsize < nVars-1 {
-            // find the best var to add
-            VarBest = P2V[nVars-1-nBSsize];
-            nCofsBest2 = If_CluCountCofs( pF, nVars, nBSsize+1, 0, nil );
-            for  v = nVars-2-nBSsize; v >= iVarStart; v--  {
-//                If_CluMoveVar( pF, nVars, V2P, P2V, P2V[v], nVars-1-nBSsize );
-                If_CluMoveVar2( pF, nVars, V2P, P2V, P2V[v], nVars-1-nBSsize );
-                nCofs = If_CluCountCofs( pF, nVars, nBSsize+1, 0, nil );
-                if nCofsBest2 >= nCofs {
-                    nCofsBest2 = nCofs;
-                    VarBest = P2V[nVars-1-nBSsize];
-                }
-            }
-            // go back
-//            If_CluMoveVar( pF, nVars, V2P, P2V, VarBest, nVars-1-nBSsize );
-            If_CluMoveVar2( pF, nVars, V2P, P2V, VarBest, nVars-1-nBSsize );
-            // update best bound set
-            nCofs = If_CluCountCofs( pF, nVars, nBSsize+1, 0, nil );
-            assert(nCofs == nCofsBest2, "nCofs == nCofsBest2");
-        }
-
-        // find the best var to remove
-        VarBest = P2V[nVars-1-nBSsize];
-        nCofsBest2 = If_CluCountCofs( pF, nVars, nBSsize, 0, nil );
-        for  v = nVars-nBSsize; v < nVars-iVarStop; v++  {
-//            If_CluMoveVar( pF, nVars, V2P, P2V, P2V[v], nVars-1-nBSsize );
-            If_CluMoveVar2( pF, nVars, V2P, P2V, P2V[v], nVars-1-nBSsize );
-            nCofs = If_CluCountCofs( pF, nVars, nBSsize, 0, nil );
-            if nCofsBest2 >= nCofs {
-                nCofsBest2 = nCofs;
-                VarBest = P2V[nVars-1-nBSsize];
-            }
-        }
-
-        // go back
-//        If_CluMoveVar( pF, nVars, V2P, P2V, VarBest, nVars-1-nBSsize );
-        If_CluMoveVar2( pF, nVars, V2P, P2V, VarBest, nVars-1-nBSsize );
-        // update best bound set
-        nCofs = If_CluCountCofs( pF, nVars, nBSsize, 0, nil );
-        assert(nCofs == nCofsBest2, "nCofs == nCofsBest2");
-        if g.nMyu >= nCofs {
-            g.nVars = nBSsize;
-            g.nMyu = nCofs;
-            for  i = 0; i < nBSsize; i++  {
-                g.pVars[i] = P2V[nVars-nBSsize+i];
-            }
-        }
-
-        if fVerbose != 0 {
-            fmt.Printf("Iter %2d  ", r);
-            If_CluPrintGroup( g );
-        }
-
-        // check if good enough
-        if g.nMyu == 2 {
-            return G; }
-        if !(fDisjoint != 0) && (If_CluCheckNonDisjointGroup( pF, nVars, V2P, P2V, g ) != 0) {
-//            BestG = G;
-            return G;
-        }
-    }
-
-    assert(r == nRounds, "r == nRounds");
-    g.nVars = 0;
-    return G;
-//    return BestG;
+func cluCofactor6(truth uint64, v int32, one bool) uint64 {
+	var out uint64
+	for a := 0; a < 64; a++ {
+		index := a &^ (1 << uint(v))
+		if one {
+			index |= 1 << uint(v)
+		}
+		if truth>>uint(index)&1 != 0 {
+			out |= 1 << uint(a)
+		}
+	}
+	return out
 }
-
-
-// double check that the given group has a decomposition
-func If_CluCheckGroup(pTruth *word, nVars int32, g *If_Grp_t) {
-    var pF [CLU_WRD_MAX]word;
-    var v int32;
-    var nCofs int32;
-    var V2P [CLU_VAR_MAX]int32;
-    var P2V [CLU_VAR_MAX]int32;
-    assert(g.nVars >= 2 && g.nVars <= 6, "g.nVars >= 2 && g.nVars <= 6"); // vars
-    assert(g.nMyu >= 2 && g.nMyu <= 4, "g.nMyu >= 2 && g.nMyu <= 4"); // cofs
-    // create permutation
-    for  v = 0; v < nVars; v++  {
-        V2P[v] = P2V[v] = v;
-    }
-    // create truth table
-    If_CluCopy( pF, pTruth, nVars );
-    // move group up
-    If_CluMoveGroupToMsb( pF, nVars, V2P, P2V, g );
-    // check the number of cofactors
-    nCofs = If_CluCountCofs( pF, nVars, g.nVars, 0, nil );
-    if nCofs != g.nMyu {
-        fmt.Printf("Group check 0 has failed.\n"); }
-    // check compatible
-    if nCofs > 2 {
-        nCofs = If_CluCountCofs( pF, nVars-1, g.nVars-1, 0, nil );
-        if nCofs > 2 {
-            fmt.Printf("Group check 1 has failed.\n"); }
-        nCofs = If_CluCountCofs( pF, nVars-1, g.nVars-1, (1 << (nVars-1)), nil );
-        if nCofs > 2 {
-            fmt.Printf("Group check 2 has failed.\n"); }
-    }
+func cluCheckDecIn(truth uint64, n int32, firstOnly, unate bool) int32 {
+	for v := int32(0); v < n; v++ {
+		if firstOnly && v > 0 {
+			break
+		}
+		a, b := cluCofactor6(truth, v, false), cluCofactor6(truth, v, true)
+		for u := v + 1; u < n; u++ {
+			cofs := [4]uint64{cluCofactor6(a, u, false), cluCofactor6(a, u, true), cluCofactor6(b, u, false), cluCofactor6(b, u, true)}
+			if cofs[0] == cofs[1] && cofs[0] == cofs[2] || cofs[0] == cofs[2] && cofs[0] == cofs[3] || !unate && (cofs[0] == cofs[1] && cofs[0] == cofs[3] || cofs[1] == cofs[2] && cofs[1] == cofs[3]) {
+				return 1
+			}
+		}
+	}
+	return 0
 }
-
-
-// double check that the permutation derived is correct
-func If_CluCheckPerm(pTruth *word, pF *word, nVars int32, V2P *int32, P2V *int32) {
-    var i int32;
-    for  i = 0; i < nVars; i++  {
-        If_CluMoveVar( pF, nVars, V2P, P2V, i, i );
-    }
-
-    if !(If_CluEqual( pTruth, pF, nVars ) != 0) {
-        fmt.Printf("Permutation FAILED.\n"); }
-//    else
-//        printf( "Permutation successful\n" );
+func If_CluCheckDecInAny(t uint64, n int32) int32 { return cluCheckDecIn(t, n, false, false) }
+func If_CluCheckDecIn(t uint64, n int32) int32    { return cluCheckDecIn(t, n, true, false) }
+func If_CluCheckDecInU(t uint64, n int32) int32   { return cluCheckDecIn(t, n, true, true) }
+func If_CluCheckDecOut(t uint64, n int32) int32 {
+	for v := int32(0); v < n; v++ {
+		a, b := cluCofactor6(t, v, false), cluCofactor6(t, v, true)
+		if a == 0 || a == ^uint64(0) || b == 0 || b == ^uint64(0) {
+			return 1
+		}
+	}
+	return 0
 }
-
-
-
-
-func If_CluSuppIsMinBase(Supp int32) int32 {
-    return (Supp & (Supp+1)) == 0;
+func If_CluCheckDecOutU(t uint64, n int32) int32 {
+	for v := int32(0); v < n; v++ {
+		a := cluCofactor6(t, v, false)
+		if a == 0 || a == ^uint64(0) {
+			return 1
+		}
+	}
+	return 0
 }
-func If_CluHasVar(t *word, nVars int32, iVar int32) int32 {
-    var nWords int32  = If_CluWordNum( nVars );
-    assert(iVar < nVars, "iVar < nVars");
-    if iVar < 6 {
-        var i int32;
-        var Shift int32 = (1 << iVar);
-        for  i = 0; i < nWords; i++  {
-            if (t[i] & ~Truth6[iVar]) != ((t[i] & Truth6[iVar]) >> Shift) {
-                return 1; }
-        }
-        return 0;
-    
-    } else {
-        var i int32;
-        var k int32;
-        var Step int32 = (1 << (iVar - 6));
-        for  k = 0; k < nWords; k += 2*Step  {
-            for  i = 0; i < Step; i++  {
-                if t[i] != t[Step+i] {
-                    return 1; }
-            }
-            t += 2*Step;
-        }
-        return 0;
-    }
+func cluPackGroup(g If_Grp_t, out []byte) {
+	if len(out) < 18 {
+		panic("if: short LUT group descriptor")
+	}
+	out[0], out[1] = byte(g.nVars), byte(g.nMyu)
+	for i, v := range g.pVars {
+		out[2+i] = byte(v)
+	}
 }
-func If_CluSupport(t *word, nVars int32) int32 {
-    var v, Supp int32;
-    for  v = 0; v < nVars; v++  {
-        if If_CluHasVar( t, nVars, v ) != 0 {
-            Supp |= (1 << v); }
-    }
-    return Supp;
+func If_CluCheckExt(p *If_Man_t, truth []uint64, n, leaf, root int32, lut0, lut1 []byte, rootTruth, leafTruth *uint64) int32 {
+	var r If_Grp_t
+	g := If_CluCheck(p, truth, n, 0, 0, leaf, root, &r, rootTruth, leafTruth, nil, 0)
+	cluPackGroup(r, lut0)
+	cluPackGroup(g, lut1)
+	return boolInt(g.nVars > 0)
 }
-func If_CluSupportSize(t *word, nVars int32) int32 {
-    var v, SuppSize int32;
-    for  v = 0; v < nVars; v++  {
-        if If_CluHasVar( t, nVars, v ) != 0 {
-            SuppSize++; }
-    }
-    return SuppSize;
+func If_CluCheckExt3(p *If_Man_t, truth []uint64, n, leaf, leaf2, root int32, lut0, lut1, lut2 []byte, rootTruth, leafTruth, leafTruth2 *uint64) int32 {
+	var r, g2 If_Grp_t
+	g := If_CluCheck3(p, truth, n, leaf, leaf2, root, &r, &g2, rootTruth, leafTruth, leafTruth2)
+	cluPackGroup(r, lut0)
+	cluPackGroup(g, lut1)
+	cluPackGroup(g2, lut2)
+	return boolInt(g.nVars > 0)
 }
-func If_CluTruthShrink(pF *word, nVars int32, nVarsAll int32, Phase uint32) {
-    var pG [CLU_WRD_MAX]word;
-    var pIn *word = pF;
-    var pOut *word = pG;
-    var pTemp *word;
-    var i, k, Var, Counter int32;
-    assert(nVarsAll <= 16, "nVarsAll <= 16");
-    for  i = 0; i < nVarsAll; i++  {
-        if Phase & (1 << i) {
-            for  k = i-1; k >= Var; k--  {
-                If_CluSwapAdjacent( pOut, pIn, k, nVarsAll );
-                pTemp = pIn; pIn = pOut;
-pOut = pTemp;
-                Counter++;
-            }
-            Var++;
-        }
-    }
-    assert(Var == nVars, "Var == nVars");
-    // swap if it was moved an odd number of times
-    if Counter & 1 {
-        If_CluCopy( pOut, pIn, nVarsAll ); }
+func If_CluDelayMax(g *If_Grp_t, delays []float32) float32 {
+	var delay float32
+	for _, v := range g.pVars[:g.nVars] {
+		delay = max(delay, delays[v])
+	}
+	return delay
 }
-func If_CluMinimumBase(t *word, pSupp *int32, nVarsAll int32, pnVars *int32) int32 {
-    var v, iVar, uSupp int32;
-    assert(nVarsAll <= 16, "nVarsAll <= 16");
-    for  v = 0; v < nVarsAll; v++  {
-        if If_CluHasVar( t, nVarsAll, v ) != 0 {
-            uSupp |= (1 << v);
-            if pSupp != nil {
-                pSupp[iVar] = pSupp[v]; }
-            iVar++;
-        }
-    }
-    if pnVars != nil {
-        *pnVars = iVar; }
-    if If_CluSuppIsMinBase( uSupp ) != 0 {
-        return 0; }
-    If_CluTruthShrink( t, iVar, nVarsAll, uSupp );
-    return 1;
+func cluWords32(truth []uint32, n int32) []uint64 {
+	words := If_CluWordNum(n)
+	out := make([]uint64, words)
+	if len(truth) < int(2*words) {
+		if n <= 5 && len(truth) >= 1 {
+			out[0] = uint64(truth[0]) | uint64(truth[0])<<32
+			return out
+		}
+		panic("if: short 32-bit truth table")
+	}
+	for i := range out {
+		out[i] = uint64(truth[2*i]) | uint64(truth[2*i+1])<<32
+	}
+	return out
 }
-
-// returns the best group found
-func If_CluCheck(p *If_Man_t, pTruth0 *word, nVars int32, iVarStart int32, iVarStop int32, nLutLeaf int32, nLutRoot int32, pR *If_Grp_t, pFunc0 *word, pFunc1 *word, pLeftOver *word, fHashing int32) If_Grp_t {
-//    int fEnableHashing = 0;
-    var G1 If_Grp_t ;
-    var R If_Grp_t ;
-    var pHashed *uint32  = nil;
-    var Truth word;
-    var pTruth [CLU_WRD_MAX]word;
-    var pF [CLU_WRD_MAX]word;//, pG[CLU_WRD_MAX];
-    var V2P [CLU_VAR_MAX+2]int32;
-    var P2V [CLU_VAR_MAX+2]int32;
-    var pCanonPerm [CLU_VAR_MAX]int32;
-    var i, nSupp, uCanonPhase int32;
-    var nLutSize int32;
-    if p {
-        nLutSize = p.pPars.nLutSize;
-    } else {
-        nLutSize = nVars;
-    }
-    assert(nVars <= CLU_VAR_MAX, "nVars <= CLU_VAR_MAX");
-    assert(nVars <= nLutLeaf + nLutRoot - 1, "nVars <= nLutLeaf + nLutRoot - 1");
-
-    if pR != nil {
-        pR.nVars = 0;
-        *pFunc0 = 0;
-        *pFunc1 = 0;
-    }
-
-    // canonicize truth table
-    If_CluCopy( pTruth, pTruth0, nLutSize );
-
-    if false {
-        uCanonPhase = If_CluSemiCanonicize( pTruth, nVars, pCanonPerm );
-        If_CluAdjustBig( pTruth, nVars, nLutSize );
-    }
-
-//    If_CluSemiCanonicizeVerify( pTruth, pTruth0, nVars, pCanonPerm, uCanonPhase );
-//    If_CluCopy( pTruth, pTruth0, nLutSize );
-
- /*
-    {
-        int pCanonPerm[32];
-        short pStore[32];
-        unsigned uCanonPhase;
-        If_CluCopy( pF, pTruth, nVars );
-        uCanonPhase = Kit_TruthSemiCanonicize( pF, pG, nVars, pCanonPerm );
-        G1.nVars = 1;
-        return G1;
-    }
-*/
-    // check minnimum base
-    If_CluCopy( pF, pTruth, nVars );
-    for  i = 0; i < nVars; i++  {
-        V2P[i] = P2V[i] = i;
-    }
-    // check support
-    nSupp = If_CluSupport( pF, nVars );
-//Extra_PrintBinary( stdout, &nSupp, 16 );  printf( "\n" );
-    if !nSupp || !(If_CluSuppIsMinBase(nSupp) != 0) {
-//        assert( 0 );     
-        return G1;
-    }
-
-    // check hash table
-    if p && (fHashing != 0) {
-        pHashed = If_CluHashLookup( p, pTruth, 0 );
-        if (pHashed != nil) && *pHashed != CLU_UNUSED {
-            If_CluUns2Grp( *pHashed, &G1 ); }
-    }
-
-    // update the variable order so that the first var was the last one
-    if iVarStop != 0 {
-        If_CluMoveVar( pF, nVars, V2P, P2V, 0, nVars-1 ); }
-
-    if G1.nVars == 0 {
-        s_Count2++;
-
-        // detect easy cofs
-        if iVarStart == 0 {
-            G1 = If_CluDecUsingCofs( pTruth, nVars, nLutLeaf ); }
-        if G1.nVars == 0 {
-            // perform testing
-            G1 = If_CluFindGroup( pF, nVars, iVarStart, iVarStop, V2P, P2V, nLutLeaf, nLutLeaf + nLutRoot == nVars + 1 );
-    //        If_CluCheckPerm( pTruth, pF, nVars, V2P, P2V );
-            if G1.nVars == 0 {
-                // perform testing with a smaller set
-                if nVars < nLutLeaf + nLutRoot - 2 {
-                    nLutLeaf--;
-                    G1 = If_CluFindGroup( pF, nVars, iVarStart, iVarStop, V2P, P2V, nLutLeaf, nLutLeaf + nLutRoot == nVars + 1 );
-                    nLutLeaf++;
-                }
-                // perform testing with a smaller set
-                if nLutLeaf > 4 && nVars < nLutLeaf + nLutRoot - 3 {
-                    nLutLeaf--;
-                    nLutLeaf--;
-                    G1 = If_CluFindGroup( pF, nVars, iVarStart, iVarStop, V2P, P2V, nLutLeaf, nLutLeaf + nLutRoot == nVars + 1 );
-                    nLutLeaf++;
-                    nLutLeaf++;
-                }
-                if G1.nVars == 0 {
-                    // perform testing with a different order
-                    If_CluReverseOrder( pF, nVars, V2P, P2V, iVarStart );
-                    G1 = If_CluFindGroup( pF, nVars, iVarStart, iVarStop, V2P, P2V, nLutLeaf, nLutLeaf + nLutRoot == nVars + 1 );
-
-                    // check permutation
-    //                If_CluCheckPerm( pTruth, pF, nVars, V2P, P2V );
-                    if G1.nVars == 0 {
-                        // remember free set, just in case
-//                        for ( i = 0; i < nVars - nLutLeaf; i++ )
-///                           G1.pVars[nLutLeaf+i] = P2V[i];
-                        // if <XY>, this will not be used
-                        // if <XYZ>, this will not be hashed
-
-    /*
-                        if ( nVars == 6 )
-                        {
-                            Extra_PrintHex( stdout, (unsigned *)pF, nVars );  printf( "    " );
-                            Kit_DsdPrintFromTruth( (unsigned*)pF, nVars );  printf( "\n" );
-                            if ( !If_CutPerformCheck07( (unsigned *)pF, 6, 6, NULL ) )
-                                printf( "no\n" );
-                        } 
-    */
-                        if pHashed != nil {
-                            *pHashed = If_CluGrp2Uns( &G1 ); }
-                        return G1;
-                    }
-                }
-            }
-        }
-    }
-
-    // derive
-    if pR != nil {
-        var iNewPos int32;
-
-        If_CluMoveGroupToMsb( pF, nVars, V2P, P2V, &G1 );
-        if G1.nMyu == 2 {
-            Truth = If_CluDeriveDisjoint( pF, nVars, V2P, P2V, &G1, &R );
-            iNewPos = R.nVars - 1;
-        
-        } else {
-            Truth = If_CluDeriveNonDisjoint( pF, nVars, V2P, P2V, &G1, &R );
-            iNewPos = R.nVars - 2;
-        }
-        assert(R.pVars[iNewPos] == nVars, "R.pVars[iNewPos] == nVars");
-
-        // adjust the functions
-        Truth = If_CluAdjust( Truth, G1.nVars );
-        if R.nVars < 6 {
-            pF[0] = If_CluAdjust( pF[0], R.nVars ); }
-
-//        Kit_DsdPrintFromTruth( (unsigned*)&Truth, G1.nVars ); printf( "  ...1\n" );
-//        Kit_DsdPrintFromTruth( (unsigned*)pF, R.nVars );      printf( "  ...1\n" );
-
-        // update the variable order of R so that the new var was the first one
-//        if ( iVarStart == 0 )
-        {
-            var k int32;
-            var V2P2 [CLU_VAR_MAX+2]int32;
-            var P2V2 [CLU_VAR_MAX+2]int32;
-            assert(iNewPos >= iVarStart, "iNewPos >= iVarStart");
-            for  k = 0; k < R.nVars; k++  {
-                V2P2[k] = P2V2[k] = k;
-            }
-            If_CluMoveVar( pF, R.nVars, V2P2, P2V2, iNewPos, iVarStart );
-            for  k = iNewPos; k > iVarStart; k--  {
-                R.pVars[k] = R.pVars[k-1];
-            }
-            R.pVars[iVarStart] = nVars;
-        }
-
-//        Kit_DsdPrintFromTruth( (unsigned*)pF, R.nVars ); printf( "  ...2\n" );
-
-        if pLeftOver != nil {
-            if R.nVars < 6 {
-                *pLeftOver = If_CluAdjust( pF[0], R.nVars );
-            } else {
-                If_CluCopy( pLeftOver, pF, R.nVars ); }
-            If_CluAdjustBig( pLeftOver, R.nVars, nLutSize );
-        }
-
-        // perform checking
-        if false {
-            If_CluCheckGroup( pTruth, nVars, &G1 );
-            If_CluVerify( pTruth, nVars, &G1, &R, Truth, pF );
-        } 
-
-        // save functions
-        *pR = R;
-        if pFunc0 != nil {
-            *pFunc0 = pF[0]; }
-        if pFunc1 != nil {
-            *pFunc1 = Truth; }
-    }
-
-    if pHashed != nil {
-        *pHashed = If_CluGrp2Uns( &G1 ); }
-    return G1;
+func If_CutPerformCheck45(p *If_Man_t, truth []uint32, n, leaves int32, structure string) int32 {
+	var r If_Grp_t
+	var f0, f1 uint64
+	g := If_CluCheck(p, cluWords32(truth, n), leaves, 0, 0, 5, 4, &r, &f0, &f1, nil, 0)
+	if g.nVars == 0 {
+		return 0
+	}
+	f1 = If_CluAdjust(f1, g.nVars)
+	return boolInt(g.nVars < 5 || p.pPars.fEnableCheck75 != 0 && If_CluCheckDecOut(f1, 5) != 0 || p.pPars.fEnableCheck75u != 0 && If_CluCheckDecOutU(f1, 5) != 0)
 }
-
-/*
-static inline word Abc_Tt6Cofactor0( word t, int iVar )
-{
-    assert( iVar >= 0 && iVar < 6 );
-    return (t &~Truth6[iVar]) | ((t &~Truth6[iVar]) << (1<<iVar));
+func If_CutPerformCheck54(p *If_Man_t, truth []uint32, n, leaves int32, structure string) int32 {
+	var r If_Grp_t
+	var f0, f1 uint64
+	g := If_CluCheck(p, cluWords32(truth, n), leaves, 0, 0, 4, 5, &r, &f0, &f1, nil, 0)
+	if g.nVars == 0 {
+		return 0
+	}
+	f0 = If_CluAdjust(f0, r.nVars)
+	return boolInt(r.nVars < 5 || p.pPars.fEnableCheck75 != 0 && If_CluCheckDecIn(f0, 5) != 0 || p.pPars.fEnableCheck75u != 0 && If_CluCheckDecInU(f0, 5) != 0)
 }
-static inline word Abc_Tt6Cofactor1( word t, int iVar )
-{
-    assert( iVar >= 0 && iVar < 6 );
-    return (t & Truth6[iVar]) | ((t & Truth6[iVar]) >> (1<<iVar));
+func cluStructure(s string) ([]int32, bool) {
+	if len(s) != 2 && len(s) != 3 {
+		return nil, false
+	}
+	sizes := make([]int32, len(s))
+	for i, ch := range []byte(s) {
+		if ch < '3' || ch > '6' {
+			return nil, false
+		}
+		sizes[i] = int32(ch - '0')
+	}
+	return sizes, true
 }
-*/
-func If_CluCheckDecInAny(t word, nVars int32) int32 {
-    var v int32;
-    var u int32;
-    var Cof2 [2]int32;
-    var Cof4 [4]int32;
-    for  v = 0; v < nVars; v++  {
-        Cof2[0] = Abc_Tt6Cofactor0( t, v );
-        Cof2[1] = Abc_Tt6Cofactor1( t, v );
-        for  u = v+1; u < nVars; u++  {
-            Cof4[0] = Abc_Tt6Cofactor0( Cof2[0], u );
-            Cof4[1] = Abc_Tt6Cofactor1( Cof2[0], u );
-            Cof4[2] = Abc_Tt6Cofactor0( Cof2[1], u );
-            Cof4[3] = Abc_Tt6Cofactor1( Cof2[1], u );
-            if Cof4[0] == Cof4[1] && Cof4[0] == Cof4[2] {
-                return 1; }
-            if Cof4[0] == Cof4[2] && Cof4[0] == Cof4[3] {
-                return 1; }
-            if Cof4[0] == Cof4[1] && Cof4[0] == Cof4[3] {
-                return 1; }
-            if Cof4[1] == Cof4[2] && Cof4[1] == Cof4[3] {
-                return 1; }
-        }
-    }
-    return 0;
+func If_CutPerformCheck16(p *If_Man_t, truth []uint32, n, leaves int32, structure string) int32 {
+	sizes, ok := cluStructure(structure)
+	if !ok || leaves < 0 || leaves > 16 || n < leaves || n > 16 {
+		return 0
+	}
+	work := make([]uint64, CLU_WRD_MAX)
+	copy(work, cluWords32(truth, n))
+	maximum := n
+	if p != nil {
+		maximum = p.pPars.nLutSize
+	}
+	If_CluAdjustBig(work, leaves, maximum)
+	if p == nil || p.pPars.fCutMin == 0 {
+		If_CluMinimumBase(work, nil, leaves, &leaves)
+	}
+	capacity := sizes[0] + sizes[len(sizes)-1] - 1
+	largest := max(sizes[0], sizes[len(sizes)-1])
+	if len(sizes) == 3 {
+		capacity += sizes[1] - 1
+		largest = max(largest, sizes[1])
+	}
+	if leaves > capacity {
+		return 0
+	}
+	if leaves <= largest {
+		return 1
+	}
+	if len(sizes) == 2 {
+		return boolInt(If_CluCheck(p, work, leaves, 0, 0, sizes[0], sizes[1], nil, nil, nil, nil, 1).nVars > 0)
+	}
+	return boolInt(If_CluCheck3(p, work, leaves, sizes[0], sizes[1], sizes[2], nil, nil, nil, nil, nil).nVars > 0)
 }
-func If_CluCheckDecIn(t word, nVars int32) int32 {
-    var v int32;
-    var u int32;
-    var Cof2 [2]int32;
-    var Cof4 [4]int32;
-//    for ( v = 0; v < nVars; v++ )
-    for  v = 0; v < 1; v++  { // restrict to the first (decomposed) input
-    
-        Cof2[0] = Abc_Tt6Cofactor0( t, v );
-        Cof2[1] = Abc_Tt6Cofactor1( t, v );
-        for  u = v+1; u < nVars; u++  {
-            Cof4[0] = Abc_Tt6Cofactor0( Cof2[0], u );
-            Cof4[1] = Abc_Tt6Cofactor1( Cof2[0], u );
-            Cof4[2] = Abc_Tt6Cofactor0( Cof2[1], u );
-            Cof4[3] = Abc_Tt6Cofactor1( Cof2[1], u );
-            if Cof4[0] == Cof4[1] && Cof4[0] == Cof4[2] {
-                return 1; }
-            if Cof4[0] == Cof4[2] && Cof4[0] == Cof4[3] {
-                return 1; }
-            if Cof4[0] == Cof4[1] && Cof4[0] == Cof4[3] {
-                return 1; }
-            if Cof4[1] == Cof4[2] && Cof4[1] == Cof4[3] {
-                return 1; }
-        }
-    }
-    return 0;
+func If_CutDelayLutStruct(p *If_Man_t, c *If_Cut_t, structure string, wireDelay float32) float32 {
+	sizes, ok := cluStructure(structure)
+	if !ok || len(sizes) != 2 || int32(c.nLeaves) > sizes[0]+sizes[1]-1 {
+		return float32(IF_INFINITY)
+	}
+	n := int32(c.nLeaves)
+	delays := make([]float32, n+2)
+	for i, id := range ifLeaves(c) {
+		delays[i] = If_ManObj(p, id).CutBest.Delay
+	}
+	if n <= max(sizes[0], sizes[1]) {
+		c.permutation = make([]byte, n)
+		g := If_Grp_t{nVars: n}
+		for i := int32(0); i < n; i++ {
+			g.pVars[i] = i
+			c.permutation[i] = 1
+		}
+		return 1 + If_CluDelayMax(&g, delays)
+	}
+	If_CutTruthW(p, c)
+	g := If_CluCheck(p, p.puTempW, n, 0, 0, sizes[0], sizes[1], nil, nil, nil, nil, 1)
+	if g.nVars == 0 {
+		return float32(IF_INFINITY)
+	}
+	increment := wireDelay
+	if increment == 0 {
+		increment = 1
+	}
+	delays[n] = If_CluDelayMax(&g, delays) + increment
+	used := make([]bool, n)
+	for _, id := range g.pVars[:g.nVars] {
+		used[id] = true
+	}
+	if g.nMyu > 2 {
+		used[g.pVars[g.nVars-1]] = false
+	}
+	r := If_Grp_t{}
+	for i, v := range used {
+		if !v {
+			r.pVars[r.nVars] = int32(i)
+			r.nVars++
+		}
+	}
+	r.pVars[r.nVars] = n
+	r.nVars++
+	c.Cost = 2
+	return 1 + If_CluDelayMax(&r, delays)
 }
-func If_CluCheckDecInU(t word, nVars int32) int32 {
-    var v int32;
-    var u int32;
-    var Cof2 [2]int32;
-    var Cof4 [4]int32;
-//    for ( v = 0; v < nVars; v++ )
-    for  v = 0; v < 1; v++  { // restrict to the first (decomposed) input
-    
-        Cof2[0] = Abc_Tt6Cofactor0( t, v );
-        Cof2[1] = Abc_Tt6Cofactor1( t, v );
-        for  u = v+1; u < nVars; u++  {
-            Cof4[0] = Abc_Tt6Cofactor0( Cof2[0], u ); // 00
-            Cof4[1] = Abc_Tt6Cofactor1( Cof2[0], u ); // 01
-            Cof4[2] = Abc_Tt6Cofactor0( Cof2[1], u ); // 10
-            Cof4[3] = Abc_Tt6Cofactor1( Cof2[1], u ); // 11 
-            if Cof4[0] == Cof4[1] && Cof4[0] == Cof4[2] { //  F * a
-                return 1; }
-            if Cof4[0] == Cof4[2] && Cof4[0] == Cof4[3] { // !F * a
-                return 1; }
-        }
-    }
-    return 0;
-}
-func If_CluCheckDecOut(t word, nVars int32) int32 {
-    var v int32;
-    for  v = 0; v < nVars; v++  {
-        if (t & Truth6[v]) == 0   ||  //  F * !a
-             (~t & Truth6[v]) == 0  ||  // !F * !a
-             (t & ~Truth6[v]) == 0  ||  //  F *  a
-             (~t & ~Truth6[v]) == 0     // !F *  a   
-            {
-            return 1; }
-    }
-    return 0;
-}
-func If_CluCheckDecOutU(t word, nVars int32) int32 {
-    var v int32;
-    for  v = 0; v < nVars; v++  {
-        if (t & ~Truth6[v]) == 0  ||  //  F *  a
-             (~t & ~Truth6[v]) == 0     // !F *  a   
-            {
-            return 1; }
-    }
-    return 0;
-}
-
-func If_CutPerformCheck45(p *If_Man_t, pTruth *uint32, nVars int32, nLeaves int32, pStr string) int32 {    
-    // 5LUT -> 4LUT
-    var G, R If_Grp_t;
-    var Func0, Func1 word;
-    G = If_CluCheck( p, (word *)pTruth, nLeaves, 0, 0, 5, 4, &R, &Func0, &Func1, nil, 0 );
-    if G.nVars == 0 {
-        return 0; }
-    Func0 = If_CluAdjust( Func0, R.nVars );
-    Func1 = If_CluAdjust( Func1, G.nVars );
-     
-                                                           
-                                                                        
-                                                                        
-                           
-                           
-      
-    if G.nVars < 5 || (p.pPars.fEnableCheck75 && (If_CluCheckDecOut(Func1, 5) != 0)) || (p.pPars.fEnableCheck75u && (If_CluCheckDecOutU(Func1, 5) != 0)) {
-        return 1; }
-    return 0;
-}
-func If_CutPerformCheck54(p *If_Man_t, pTruth *uint32, nVars int32, nLeaves int32, pStr string) int32 {    
-    // 4LUT -> 5LUT
-    var G, R If_Grp_t;
-    var Func0, Func1 word;
-    G = If_CluCheck( p, (word *)pTruth, nLeaves, 0, 0, 4, 5, &R, &Func0, &Func1, nil, 0 );
-    if G.nVars == 0 {
-        return 0; }
-    Func0 = If_CluAdjust( Func0, R.nVars );
-    Func1 = If_CluAdjust( Func1, G.nVars );
-     
-                                                           
-                                                                        
-                                                                        
-                           
-                           
-      
-    if R.nVars < 5 || (p.pPars.fEnableCheck75 && (If_CluCheckDecIn(Func0, 5) != 0)) || (p.pPars.fEnableCheck75u && (If_CluCheckDecInU(Func0, 5) != 0)) {
-        return 1; }
-    return 0;
-}
-
-// returns the best group found
-var spStatic_If_CluCheck3_Counter int32;
-func If_CluCheck3(p *If_Man_t, pTruth0 *word, nVars int32, nLutLeaf int32, nLutLeaf2 int32, nLutRoot int32, pR *If_Grp_t, pG2 *If_Grp_t, pFunc0 *word, pFunc1 *word, pFunc2 *word) If_Grp_t {
-    var fEnableHashing int32;
-    
-    var pHashed *uint32  = nil;
-    var pLeftOver [CLU_WRD_MAX]word;
-    var Func0 word;
-    var Func1 word;
-    var Func2 word;
-    var G1 If_Grp_t ;
-    var G2 If_Grp_t ;
-    var R If_Grp_t ;
-    var R2 If_Grp_t ;
-    var i int32;
-    spStatic_If_CluCheck3_Counter++;
-//    if ( Counter == 37590 )
-//    {
-//        int ns = 0;
-//    }
-
-    // check hash table
-    if p && (fEnableHashing != 0) {
-        pHashed = If_CluHashLookup( p, pTruth0, 1 );
-        if (pHashed != nil) && *pHashed != CLU_UNUSED {
-            If_CluUns2Grp( *pHashed, &G1 );
-            return G1;
-        }
-    }
-    s_Count3++;
-
-    // check two-node decomposition
-    G1 = If_CluCheck( p, pTruth0, nVars, 0, 0, nLutLeaf, nLutRoot + nLutLeaf2 - 1, &R2, &Func0, &Func1, pLeftOver, 0 );
-    // decomposition does not exist
-    if G1.nVars == 0 {
-        // check for decomposition with two outputs
-        if (G1.nMyu == 3 || G1.nMyu == 4) && nLutLeaf == nLutLeaf2 && nVars - nLutLeaf + 2 <= nLutRoot {
-            var V2P, P2V [CLU_VAR_MAX+2]int32;
-            var Func0, Func1, Func2 word;
-            var iVar0, iVar1 int32;
-
-            G1.nVars = nLutLeaf;
-            If_CluCopy( pLeftOver, pTruth0, nVars );
-            for  i = 0; i < nVars; i++  {
-                V2P[i] = P2V[i] = i;
-            }
-
-            If_CluMoveGroupToMsb( pLeftOver, nVars, V2P, P2V, &G1 );
-            If_CluDeriveDisjoint4( pLeftOver, nVars, V2P, P2V, &G1, &R, &Func1, &Func2 );
-
-            // move the two vars to the front
-            for  i = 0; i < R.nVars; i++  {
-                V2P[i] = P2V[i] = i;
-            }
-            If_CluMoveVar( pLeftOver, R.nVars, V2P, P2V, R.nVars-2, 0 );
-            If_CluMoveVar( pLeftOver, R.nVars, V2P, P2V, R.nVars-1, 1 );
-            iVar0 = R.pVars[R.nVars-2];
-            iVar1 = R.pVars[R.nVars-1];
-            for  i = R.nVars-1; i > 1; i--  {
-                R.pVars[i] = R.pVars[i-2];
-            }
-            R.pVars[0] = iVar0;
-            R.pVars[1] = iVar1;
-
-            Func0 = pLeftOver[0];
-            If_CluVerify3( pTruth0, nVars, &G1, &G1, &R, Func1, Func2, Func0 );
-            if (pFunc1 != nil) && (pFunc2 != nil) {
-                *pFunc0 = Func0;
-                *pFunc1 = Func1;
-                *pFunc2 = Func2;
-                *pG2 = G1;
-                *pR = R;
-            }
-
-            if pHashed != nil {
-                *pHashed = If_CluGrp2Uns( &G1 ); }
-//                Kit_DsdPrintFromTruth( (unsigned*)pTruth0, nVars );  printf( "\n" );
-//                If_CluPrintGroup( &G1 );
-            return G1;
-        }
-
-/*
-//        if ( nVars == 6 )
-        {
-//            Extra_PrintHex( stdout, (unsigned *)pTruth0, nVars );  printf( "    " );
-            Kit_DsdPrintFromTruth( (unsigned*)pTruth0, nVars );  printf( "\n" );
-            if ( p != NULL )
-            If_CluCheck3( NULL, pTruth0, nVars, nLutLeaf, nLutLeaf2, nLutRoot, pR, pG2, pFunc0, pFunc1, pFunc2 );
-        } 
-*/
-        if pHashed != nil {
-            *pHashed = If_CluGrp2Uns( &G1 ); }
-        return G1;
-    }
-    // decomposition exists and sufficient
-    if R2.nVars <= nLutRoot {
-        if pG2 != nil {     *pG2 = G2; }
-        if pR != nil {      *pR  = R2; }
-        if pFunc0 != nil {  *pFunc0 = Func0; }
-        if pFunc1 != nil {  *pFunc1 = Func1; }
-        if pFunc2 != nil {  *pFunc2 = 0; }
-        if pHashed != nil {
-            *pHashed = If_CluGrp2Uns( &G1 ); }
-        return G1;
-    }
-
-    // try second decomposition
-    {
-        var Test int32;
-        if Test != 0 {
-            Kit_DsdPrintFromTruth( (unsigned*)&pLeftOver, R2.nVars ); fmt.Printf("\n");
-        }
-    }
-
-    // the new variable is at the bottom - skip it (iVarStart = 1)
-    if p.pPars.nStructType == 0 { // allowed
-        G2 = If_CluCheck( p, pLeftOver, R2.nVars, 0, 0, nLutLeaf2, nLutRoot, &R, &Func0, &Func2, nil, 0 );
-    } else if p.pPars.nStructType == 1 { // not allowed
-        G2 = If_CluCheck( p, pLeftOver, R2.nVars, 1, 0, nLutLeaf2, nLutRoot, &R, &Func0, &Func2, nil, 0 );
-    } else if p.pPars.nStructType == 2 { // required
-        G2 = If_CluCheck( p, pLeftOver, R2.nVars, 0, 1, nLutLeaf2, nLutRoot, &R, &Func0, &Func2, nil, 0 );
-    } else { assert(false, "0"); }
-
-    if G2.nVars == 0 {
-        if pHashed != nil {
-            *pHashed = If_CluGrp2Uns( &G2 ); }
-        return G2;
-    }
-    // remap variables
-    for  i = 0; i < G2.nVars; i++  {
-        assert(G2.pVars[i] < R2.nVars, "G2.pVars[i] < R2.nVars");
-        G2.pVars[i] = R2.pVars[ int32(G2.pVars[i]) ];
-    }
-    // remap variables
-    for  i = 0; i < R.nVars; i++  {
-        if R.pVars[i] == R2.nVars {
-            R.pVars[i] = nVars + 1;
-        } else {
-            R.pVars[i] = R2.pVars[ int32(R.pVars[i]) ]; }
-    }
-
-    // decomposition exist
-    if pG2 != nil {     *pG2 = G2; }
-    if pR != nil {      *pR  = R; }
-    if pFunc0 != nil {  *pFunc0 = Func0; }
-    if pFunc1 != nil {  *pFunc1 = Func1; }
-    if pFunc2 != nil {  *pFunc2 = Func2; }
-    if pHashed != nil {
-        *pHashed = If_CluGrp2Uns( &G1 ); }
-
-    // verify
-//    If_CluVerify3( pTruth0, nVars, &G1, &G2, &R, Func1, Func2, Func0 );
-    return G1;
-}
-
-// returns the best group found
-func If_CluCheckExt(pMan any, pTruth *word, nVars int32, nLutLeaf int32, nLutRoot int32, pLut0 string, pLut1 string, pFunc0 *word, pFunc1 *word) int32 {
-    var p *If_Man_t  = (If_Man_t *)pMan;
-    var G, R If_Grp_t;
-    G = If_CluCheck( p, pTruth, nVars, 0, 0, nLutLeaf, nLutRoot, &R, pFunc0, pFunc1, nil, 0 );
-    memcpy( pLut0, &R, sizeof(If_Grp_t) );
-    memcpy( pLut1, &G, sizeof(If_Grp_t) );
-//    memcpy( pLut2, &G2, sizeof(If_Grp_t) );
-    return (G.nVars > 0);
-}
-
-// returns the best group found
-func If_CluCheckExt3(pMan any, pTruth *word, nVars int32, nLutLeaf int32, nLutLeaf2 int32, nLutRoot int32, pLut0 string, pLut1 string, pLut2 string, pFunc0 *word, pFunc1 *word, pFunc2 *word) int32 {
-    var p *If_Man_t  = (If_Man_t *)pMan;
-    var G, G2, R If_Grp_t;
-    G = If_CluCheck3( p, pTruth, nVars, nLutLeaf, nLutLeaf2, nLutRoot, &R, &G2, pFunc0, pFunc1, pFunc2 );
-    memcpy( pLut0, &R, sizeof(If_Grp_t) );
-    memcpy( pLut1, &G, sizeof(If_Grp_t) );
-    memcpy( pLut2, &G2, sizeof(If_Grp_t) );
-    return (G.nVars > 0);
-}
-
-
-// computes delay of the decomposition
-func If_CluDelayMax(g *If_Grp_t, pDelays *float32) float32 {
-    var Delay float32  = 0.0;
-    var i int32;
-    for  i = 0; i < g.nVars; i++  {
-        Delay = Abc_MaxFloat( Delay, pDelays[int32(g.pVars[i])] );
-    }
-    return Delay;
-}
-
-// returns delay of the decomposition;  sets area of the cut as its cost
-func If_CutDelayLutStruct(p *If_Man_t, pCut *If_Cut_t, pStr string, WireDelay float32) float32 {
-    var Delays [CLU_VAR_MAX+2]float32;
-    var fUsed [CLU_VAR_MAX+2]int32 ;
-    var pLeaf *If_Obj_t;
-    var G1 If_Grp_t ;
-    var G2 If_Grp_t ;
-    var G3 If_Grp_t ;
-    var nLeaves int32  = If_CutLeaveNum(pCut);
-    var i, nLutLeaf, nLutRoot int32;
-    // mark the cut as user cut
-//    pCut->fUser = 1;
-    // quit if parameters are wrong
-    if len(pStr) != 2 {
-        fmt.Printf("Wrong LUT struct (%s)\n", pStr);
-        return ABC_INFINITY;
-    }
-    nLutLeaf = pStr[0] - '0';
-    if nLutLeaf < 3 || nLutLeaf > 6 {
-        fmt.Printf("Leaf size (%d) should belong to {3,4,5,6}.\n", nLutLeaf);
-        return ABC_INFINITY;
-    }
-    nLutRoot = pStr[1] - '0';
-    if nLutRoot < 3 || nLutRoot > 6 {
-        fmt.Printf("Root size (%d) should belong to {3,4,5,6}.\n", nLutRoot);
-        return ABC_INFINITY;
-    }
-    if nLeaves > nLutLeaf + nLutRoot - 1 {
-        fmt.Printf("The cut size (%d) is too large for the LUT structure %d%d.\n", If_CutLeaveNum(pCut), nLutLeaf, nLutRoot);
-        return ABC_INFINITY;
-    }
-
-    // remember the delays
-    If_CutForEachLeaf( p, pCut, pLeaf, i )
-        Delays[i] = If_ObjCutBest(pLeaf).Delay;
-
-    // consider easy case
-    if nLeaves <= Abc_MaxInt( nLutLeaf, nLutRoot ) {
-        var pPerm string  = If_CutPerm( pCut );
-        assert(nLeaves <= 6, "nLeaves <= 6");
-        for  i = 0; i < nLeaves; i++  {
-            pPerm[i] = 1;
-            G1.pVars[i] = i;
-        }
-        G1.nVars = nLeaves;
-        return 1.0 + If_CluDelayMax( &G1, Delays );
-    }
-
-    // derive the first group
-    G1 = If_CluCheck( p, If_CutTruthW(p, pCut), nLeaves, 0, 0, nLutLeaf, nLutRoot, nil, nil, nil, nil, 1 );
-    if G1.nVars == 0 {
-        return ABC_INFINITY; }
-
-    // compute the delay
-    Delays[nLeaves] = If_CluDelayMax( &G1, Delays ) + ((WireDelay == 0.0)?1.0:WireDelay);
-    if G2.nVars {
-        Delays[nLeaves+1] = If_CluDelayMax( &G2, Delays ) + ((WireDelay == 0.0)?1.0:WireDelay); }
-
-    // mark used groups
-    for  i = 0; i < G1.nVars; i++  {
-        fUsed[int32(G1.pVars[i])] = 1;
-    }
-    for  i = 0; i < G2.nVars; i++  {
-        fUsed[int32(G2.pVars[i])] = 1;
-    }
-    // mark unused groups
-    assert(G1.nMyu >= 2 && G1.nMyu <= 4, "G1.nMyu >= 2 && G1.nMyu <= 4");
-    if G1.nMyu > 2 {
-        fUsed[int32(G1.pVars[G1.nVars-1])] = 0; }
-    assert(!G2.nVars || (G2.nMyu >= 2 && G2.nMyu <= 4), "!G2.nVars || (G2.nMyu >= 2 && G2.nMyu <= 4)");
-    if G2.nMyu > 2 {
-        fUsed[int32(G2.pVars[G2.nVars-1])] = 0; }
-
-    // create remaining group
-    assert(G3.nVars == 0, "G3.nVars == 0");
-    for  i = 0; i < nLeaves; i++  {
-        if !fUsed[i] {
-            G3.pVars[int32(G3.nVars++)] = i; }
-    }
-    G3.pVars[int32(G3.nVars++)] = nLeaves;
-    if G2.nVars {
-        G3.pVars[int32(G3.nVars++)] = nLeaves+1; }
-    assert(G1.nVars + G2.nVars + G3.nVars == nLeaves + 
-            (G1.nVars > 0) + (G2.nVars > 0) + (G1.nMyu > 2) + (G2.nMyu > 2), "G1.nVars + G2.nVars + G3.nVars == nLeaves + \n        (G1.nVars > 0) + (G2.nVars > 0) + (G1.nMyu > 2) + (G2.nMyu > 2)");
-    // what if both non-disjoint vars are the same???
-
-    pCut.Cost = 2 + (G2.nVars > 0);
-    return 1.0 + If_CluDelayMax( &G3, Delays );
-}
-
-//#define IF_TRY_NEW
-
-#ifdef IF_TRY_NEW
-static Vec_Mem_t * s_vTtMem = NULL;
-static Vec_Mem_t * s_vTtMem2 = NULL;
-int If_TtMemCutNum()  { return Vec_MemEntryNum(s_vTtMem); }
-int If_TtMemCutNum2() { return Vec_MemEntryNum(s_vTtMem2); }
-//        printf( "Unique TTs = %d.  Unique classes = %d.    ", If_TtMemCutNum(), If_TtMemCutNum2() );
-//        printf( "Check2 = %d.  Check3 = %d.\n", s_Count2, s_Count3 );
-#endif
-
-/**Function*************************************************************
-
-  Synopsis    [Performs additional check.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_CutPerformCheck16(p *If_Man_t, pTruth0 *uint32, nVars int32, nLeaves int32, pStr string) int32 {
-    var pTruth [IF_MAX_FUNC_LUTSIZE > 5 ? 1 << (IF_MAX_FUNC_LUTSIZE - 5) : 1]uint32;
-    var G1 If_Grp_t  ;//, G3 = {0};
-    var i, nLutLeaf, nLutLeaf2, nLutRoot, Length int32;
-    // stretch the truth table
-    assert(nVars >= 6, "nVars >= 6");
-    memcpy( pTruth, pTruth0, sizeof(word) * Abc_TtWordNum(nVars) );
-    Abc_TtStretch6( (word *)pTruth, nLeaves, p.pPars.nLutSize );
-
-#ifdef IF_TRY_NEW
-    {
-        word pCopy[1024];
-        int nWords = Abc_TruthWordNum(nVars);
-        int iNum;
-        if ( s_vTtMem == NULL )
-        {
-            s_vTtMem = Vec_MemAlloc( Abc_Truth6WordNum(nVars), 12 ); // 32 KB/page for 6-var functions
-            Vec_MemHashAlloc( s_vTtMem, 10000 );
-        }
-        if ( s_vTtMem2 == NULL )
-        {
-            s_vTtMem2 = Vec_MemAlloc( Abc_Truth6WordNum(nVars), 12 ); // 32 KB/page for 6-var functions
-            Vec_MemHashAlloc( s_vTtMem2, 10000 );
-        }
-        memcpy( pCopy, pTruth, sizeof(word) * Abc_Truth6WordNum(nVars) );
-        if ( pCopy[0] & 1 )
-            for ( i = 0; i < nWords; i++ )
-                pCopy[i] = ~pCopy[i];
-        iNum = Vec_MemHashInsert( s_vTtMem, pCopy );
-        if ( iNum == Vec_MemEntryNum(s_vTtMem) - 1 )
-        {
-            int pCanonPerm[16];
-            char pCanonPermC[16];
-            Abc_TtCanonicize( pCopy, nVars, pCanonPermC );
-//            If_CluSemiCanonicize( pCopy, nVars, pCanonPerm );
-            Vec_MemHashInsert( s_vTtMem2, pCopy );
-        }
-    }
-#endif
-
-    // if cutmin is disabled, minimize the function
-    if !p.pPars.fCutMin {
-        nLeaves = Abc_TtMinBase( (word *)pTruth, nil, nLeaves, nVars ); }
-
-    // quit if parameters are wrong
-    Length = len(pStr);
-    if Length != 2 && Length != 3 {
-        fmt.Printf("Wrong LUT struct (%s)\n", pStr);
-        return 0;
-    }
-    for  i = 0; i < Length; i++  {
-        if pStr[i] - '0' < 3 || pStr[i] - '0' > 6 {
-            fmt.Printf("The LUT size (%d) should belong to {3,4,5,6}.\n", pStr[i] - '0');
-            return 0;
-        }
-    }
-
-    nLutLeaf  =                   pStr[0] - '0';
-    if Length == 3 {
-        nLutLeaf2 = pStr[1] - '0';
-    } else {
-        nLutLeaf2 = 0;
-    }
-    nLutRoot  =                   pStr[Length-1] - '0';
-    if nLeaves > nLutLeaf - 1 + (nLutLeaf2 ? nLutLeaf2 - 1 : 0) + nLutRoot {
-        fmt.Printf("The cut size (%d) is too large for the LUT structure %s.\n", nLeaves, pStr);
-        return 0;
-    }
-    // consider easy case
-    if nLeaves <= Abc_MaxInt( nLutLeaf2, Abc_MaxInt(nLutLeaf, nLutRoot) ) {
-        return 1; }
-
-    // derive the first group
-    if Length == 2 {
-        G1 = If_CluCheck( p, (word *)pTruth, nLeaves, 0, 0, nLutLeaf, nLutRoot, nil, nil, nil, nil, 1 );
-    } else {
-        G1 = If_CluCheck3( p, (word *)pTruth, nLeaves, nLutLeaf, nLutLeaf2, nLutRoot, nil, nil, nil, nil, nil ); }
-
-//    if ( G1.nVars > 0 )
-//        If_CluPrintGroup( &G1 );
-
-    return int32((G1.nVars > 0));
-}
-
-
-// testing procedure
 func If_CluTest() {
-//    word t = 0xff00f0f0ccccaaaa;
-//    word t = 0xfedcba9876543210;
-//    word t = 0xec64000000000000;
-//    word t = 0x0100200000000001;
-//    word t2[4] = { 0x0000800080008000, 0x8000000000008000, 0x8000000080008000, 0x0000000080008000 };
-//    word t = 0x07770FFF07770FFF;
-//    word t = 0x002000D000D00020;
-//    word t = 0x000F000E000F000F;
-//    word t = 0xF7FFF7F7F7F7F7F7;
-//    word t = 0x0234AFDE23400BCE;
-//    word t = 0x0080008880A088FF;
-//    word s = t;
-//    word t = 0xFFBBBBFFF0B0B0F0;
-    var t word  = ABC_CONST(0x6DD9926D962D6996);
-    var nVars int32      = 6;
-    var nLutLeaf int32   = 4;
-    var nLutLeaf2 int32  = 4;
-    var nLutRoot int32   = 4;
-/*
-    word t2[2] = { 0x7f807f807f80807f, 0x7f807f807f807f80 };
-    int nVars     = 7;
-    int nLutLeaf  = 3;
-    int nLutLeaf2 = 3;
-    int nLutRoot  = 3;
-*/
-
-    var G If_Grp_t;
-    var G2, R If_Grp_t;
-    var Func0, Func1, Func2 word;
-
-
-    return;
-
-/*
-    int pCanonPerm[CLU_VAR_MAX];
-    int uCanonPhase;
-
-    Kit_DsdPrintFromTruth( (unsigned*)&s, nVars ); printf( "\n" );
-    uCanonPhase = If_CluSemiCanonicize( &s, nVars, pCanonPerm );
-    Kit_DsdPrintFromTruth( (unsigned*)&s, nVars ); printf( "\n" );
-
-    If_CluSemiCanonicizeVerify( &s, &t, nVars, pCanonPerm, uCanonPhase );
-*/
-
-    Kit_DsdPrintFromTruth( (unsigned*)&t, nVars ); fmt.Printf("\n");
-    G = If_CluCheck3( nil, &t, nVars, nLutLeaf, nLutLeaf2, nLutRoot, &R, &G2, &Func0, &Func1, &Func2 );
-    If_CluPrintGroup( &G );
-    If_CluPrintGroup( &G2 );
-    If_CluPrintGroup( &R );
-
-//    If_CluVerify3( &t, nVars, &G, &G2, &R, Func1, Func2, Func0 );
-
-    return;
-
-//    If_CutPerformCheck07( NULL, (unsigned *)&t, 6, 6, NULL );
-//    return;
-
-//    Kit_DsdPrintFromTruth( (unsigned*)&t, nVars ); printf( "\n" );
-//    G = If_CluCheck( NULL, &t, nVars, 0, nLutLeaf, nLutRoot, NULL, NULL, NULL, NULL, 0 );
-//    If_CluPrintGroup( &G );
+	truth := []uint64{0x6dd9926d962d6996}
+	var r, g2 If_Grp_t
+	var f0, f1, f2 uint64
+	g := If_CluCheck3(nil, truth, 6, 4, 4, 4, &r, &g2, &f0, &f1, &f2)
+	if g.nVars != 0 {
+		If_CluVerify3(truth, 6, &g, &g2, &r, f1, f2, f0)
+	}
 }
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

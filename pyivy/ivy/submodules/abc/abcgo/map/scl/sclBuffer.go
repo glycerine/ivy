@@ -29,7 +29,6 @@ type ConfigurablePhases interface {
 	SclSetPhases(enabled bool) error
 }
 type FanoutPin struct{ Node, Pin int }
-type bufferEdge = FanoutPin
 
 func bufferCell(net TimingNetwork, id int) *SC_Cell {
 	m := net.SclMapping()
@@ -48,8 +47,8 @@ func bufferPhase(net TimingNetwork, node, pin int) bool {
 	}
 	return false
 }
-func bufferEdges(net TimingNetwork, driver int) []bufferEdge {
-	var edges []bufferEdge
+func bufferEdges(net TimingNetwork, driver int) []FanoutPin {
+	var edges []FanoutPin
 	seen := make(map[int]bool)
 	for _, node := range net.SclFanouts(driver) {
 		if seen[node] {
@@ -58,7 +57,7 @@ func bufferEdges(net TimingNetwork, driver int) []bufferEdge {
 		seen[node] = true
 		for pin, id := range net.SclFanins(node) {
 			if id == driver {
-				edges = append(edges, bufferEdge{node, pin})
+				edges = append(edges, FanoutPin{node, pin})
 			}
 		}
 	}
@@ -147,6 +146,11 @@ func cloneBufferNetwork(net TimingNetwork) (BufferingTimingNetwork, error) {
 	result, ok := copied.(BufferingTimingNetwork)
 	if !ok {
 		return nil, fmt.Errorf("SCL: network clone cannot create mapped nodes")
+	}
+	if phases, ok := result.(PhasedTimingNetwork); ok && phases.SclHasPhases() {
+		if _, readable := result.(ReadablePhases); !readable {
+			return nil, fmt.Errorf("SCL: network clone cannot read its fanin phases")
+		}
 	}
 	if result.SclMapping() == nil || result.SclMapping().Lib == nil {
 		return nil, fmt.Errorf("SCL: buffering requires a mapped cell library")
@@ -265,13 +269,13 @@ func cloneBufferNode(net BufferingTimingNetwork, id int) (int, error) {
 	}
 	return clone, nil
 }
-func Abc_SclReportDupFanins(net TimingNetwork) []bufferEdge {
-	var duplicates []bufferEdge
+func Abc_SclReportDupFanins(net TimingNetwork) []FanoutPin {
+	var duplicates []FanoutPin
 	for _, node := range net.SclObjectIDs() {
 		seen := make(map[int]bool)
 		for pin, id := range net.SclFanins(node) {
 			if seen[id] {
-				duplicates = append(duplicates, bufferEdge{node, pin})
+				duplicates = append(duplicates, FanoutPin{node, pin})
 			}
 			seen[id] = true
 		}
@@ -470,7 +474,11 @@ func Abc_SclUnBufferPhase(network TimingNetwork, verbose bool) (TimingNetwork, e
 	}
 	return finishBufferNetwork(net)
 }
-func Abc_NodeInvUpdateObjFanoutPolarity(net TimingNetwork, driver int, edge bufferEdge) error {
+func Abc_NodeInvUpdateObjFanoutPolarity(net TimingNetwork, driver int, edge FanoutPin) error {
+	fans := net.SclFanins(edge.Node)
+	if edge.Pin < 0 || edge.Pin >= len(fans) || fans[edge.Pin] != driver {
+		return fmt.Errorf("SCL: invalid inverter fanout edge")
+	}
 	phases, ok := net.(ReadablePhases)
 	if !ok || !phases.SclHasPhases() {
 		return fmt.Errorf("SCL: inverter insertion requires fanin phases")
@@ -507,7 +515,11 @@ func Abc_SclComputeReverseLevel(net TimingNetwork, id int) int {
 	if err != nil {
 		return -1
 	}
-	return levels[id]
+	level := 0
+	for _, fanout := range net.SclFanouts(id) {
+		level = max(level, levels[fanout])
+	}
+	return level + 1
 }
 func Abc_NodeCompareLevels(a, b int, levels map[int]int) int {
 	if levels[a] < levels[b] {
@@ -645,7 +657,7 @@ type Buf_Man_t struct {
 	Edges                                                                 map[int][]int
 	DelayMax                                                              int
 	DelayInv                                                              float32
-	NonCritical                                                           []bufferEdge
+	NonCritical                                                           []FanoutPin
 	Separate, Duplicate, BranchBuffers, BranchInverters, CriticalBranches int
 	Output                                                                io.Writer
 }
@@ -659,8 +671,46 @@ func Abc_BufSetEdgeDelay(p *Buf_Man_t, id, pin, value int) { p.Edges[id][pin] = 
 func Abc_BufNodeSlack(p *Buf_Man_t, id int) int {
 	return p.DelayMax - p.Arrivals[id] - p.Departures[id]
 }
-func Abc_BufEdgeSlack(p *Buf_Man_t, id int, edge bufferEdge) int {
+func Abc_BufEdgeSlack(p *Buf_Man_t, id int, edge FanoutPin) int {
 	return p.DelayMax - p.Arrivals[id] - p.Departures[edge.Node] - p.Edges[edge.Node][edge.Pin]
+}
+func bufferPinEstimate(cell *SC_Cell, pin int, slew, load float32) (float32, error) {
+	if cell == nil || cell.Outputs != 1 || pin < 0 || pin >= cell.Inputs || len(cell.Pins) <= cell.Inputs || cell.Pins[cell.Inputs] == nil {
+		return 0, fmt.Errorf("SCL: invalid timing cell")
+	}
+	groups := cell.Pins[cell.Inputs].Timings
+	if pin >= len(groups) || groups[pin] == nil || len(groups[pin].Timings) == 0 || groups[pin].Timings[0] == nil {
+		return 0, fmt.Errorf("SCL: missing timing arc in %s", cell.Name)
+	}
+	arc := groups[pin].Timings[0]
+	for _, surface := range []*SC_Surface{&arc.CellRise, &arc.CellFall, &arc.RiseTrans, &arc.FallTrans} {
+		a, b := len(surface.Index0), len(surface.Index1)
+		if a == 0 || b == 0 || (a == 1) != (b == 1) || len(surface.Data) != a {
+			return 0, fmt.Errorf("SCL: malformed timing surface in %s", cell.Name)
+		}
+		for _, axis := range [][]float32{surface.Index0, surface.Index1} {
+			for i, v := range axis {
+				if !sclFinite(v) || i > 0 && v <= axis[i-1] {
+					return 0, fmt.Errorf("SCL: invalid timing axis in %s", cell.Name)
+				}
+			}
+		}
+		for _, row := range surface.Data {
+			if len(row) != b {
+				return 0, fmt.Errorf("SCL: malformed timing row in %s", cell.Name)
+			}
+			for _, v := range row {
+				if !sclFinite(v) {
+					return 0, fmt.Errorf("SCL: nonfinite timing value in %s", cell.Name)
+				}
+			}
+		}
+	}
+	value := Scl_LibPinArrivalEstimate(cell, pin, slew, load)
+	if !sclFinite(value) || value < 0 {
+		return 0, fmt.Errorf("SCL: invalid estimated delay in %s", cell.Name)
+	}
+	return value, nil
 }
 func Abc_BufCreateEdges(p *Buf_Man_t, id int) error {
 	fans := p.Network.SclFanins(id)
@@ -672,11 +722,18 @@ func Abc_BufCreateEdges(p *Buf_Man_t, id int) error {
 			return fmt.Errorf("SCL: missing mapped cell %d", id)
 		}
 		for pin := range fans {
-			delay := Scl_LibPinArrivalEstimate(cell, pin, 0, 0)
+			var delay float32
 			m := p.Network.SclMapping()
 			if id < len(m.MioGates) && m.MioGates[id] != nil {
 				delay = mio.Mio_GateReadPinDelay(m.MioGates[id], int32(pin))
+			} else {
+				value, err := bufferPinEstimate(cell, pin, 0, 0)
+				if err != nil {
+					return err
+				}
+				delay = value
 			}
+
 			if !sclFinite(delay) || delay < 0 {
 				return fmt.Errorf("SCL: invalid gate delay")
 			}
@@ -733,7 +790,15 @@ func Buf_ManStart(net BufferingTimingNetwork, fanMin, fanMax int, bufferPIs bool
 	if err != nil {
 		return nil, err
 	}
-	delay := Scl_LibPinArrivalEstimate(inv, 0, 0, 0)
+	var delay float32
+	if m := net.SclMapping(); m.Mio != nil && mio.Mio_LibraryReadInv(m.Mio) != nil {
+		delay = mio.Mio_GateReadPinDelay(mio.Mio_LibraryReadInv(m.Mio), 0)
+	} else {
+		delay, err = bufferPinEstimate(inv, 0, 0, 0)
+		if err != nil {
+			return nil, err
+		}
+	}
 	if delay <= 0 || !sclFinite(delay) {
 		return nil, fmt.Errorf("SCL: invalid inverter reference delay")
 	}
@@ -790,7 +855,7 @@ func Abc_BufCollectTfiCone(p *Buf_Man_t, id int) []int {
 }
 func Abc_BufUpdateArr(p *Buf_Man_t, id int) error { return p.recompute() }
 func Abc_BufUpdateDep(p *Buf_Man_t, id int) error { return p.recompute() }
-func Abc_BufSortByDelay(p *Buf_Man_t, id int) []bufferEdge {
+func Abc_BufSortByDelay(p *Buf_Man_t, id int) []FanoutPin {
 	edges := bufferEdges(p.Network, id)
 	sort.SliceStable(edges, func(i, j int) bool {
 		a, b := Abc_BufEdgeSlack(p, id, edges[i]), Abc_BufEdgeSlack(p, id, edges[j])
@@ -804,7 +869,7 @@ func Abc_BufSortByDelay(p *Buf_Man_t, id int) []bufferEdge {
 	})
 	return edges
 }
-func Abc_BufComputeAverage(p *Buf_Man_t, id int, order []bufferEdge) int {
+func Abc_BufComputeAverage(p *Buf_Man_t, id int, order []FanoutPin) int {
 	if len(order) == 0 {
 		return 0
 	}

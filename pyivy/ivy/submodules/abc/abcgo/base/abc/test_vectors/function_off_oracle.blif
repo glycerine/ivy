@@ -1,0 +1,8 @@
+.model function_off
+.inputs a b c d
+.outputs z
+.names a d b c z
+-0-1 1
+-00- 1
+0-00 1
+.end

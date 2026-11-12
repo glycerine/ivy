@@ -1,10 +1,3 @@
-package extrab
-
-type Extra_ImageTree_t = Extra_ImageTree_t_
-type Extra_ImageTree2_t = Extra_ImageTree2_t_
-
-import "fmt"
-
 /**CFile****************************************************************
 
   FileName    [extraBddImage.c]
@@ -14,7 +7,7 @@ import "fmt"
   Synopsis    [Various reusable software utilities.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - September 1, 2003.]
@@ -23,1107 +16,380 @@ import "fmt"
 
 ***********************************************************************/
 
-//#include "extraBdd.h"
+package extrab
 
-//ABC_NAMESPACE_IMPL_START
+import (
+	"fmt"
+	"math"
+	"sort"
+	"strings"
 
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+)
 
-/* 
-    The ideas implemented in this file are inspired by the paper:
-    Pankaj Chauhan, Edmund Clarke, Somesh Jha, Jim Kukula, Tom Shiple, 
-    Helmut Veith, Dong Wang. Non-linear Quantification Scheduling in 
-    Image Computation. ICCAD, 2001.
-*/
-
-/*---------------------------------------------------------------------------*/
-/* Constant declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Stucture declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-type Extra_ImageNode_t =  Extra_ImageNode_t_;
-type Extra_ImagePart_t =  Extra_ImagePart_t_;
-type Extra_ImageVar_t =   Extra_ImageVar_t_;
-
-type Extra_ImageTree_t_ struct {
-    pRoot  *Extra_ImageNode_t;      // the root of quantification tree
-    pCare  *Extra_ImageNode_t;      // the leaf node with the care set
-    bCareSupp             *DdNode;  // the cube to quantify from the care
-    fVerbose                 int32;   // the verbosity flag
-    nNodesMax                 int32;  // the max number of nodes in one iter
-    nNodesMaxT                 int32; // the overall max number of nodes
-    nIter                 int32;      // the number of iterations with this tree
+type imagePart struct {
+	function *DdNode
+	support  map[int]bool
+	nodes    int
+}
+type imageNode struct {
+	image, cube *DdNode
+	left, right *imageNode
+	part        *imagePart
+}
+type Extra_ImageTree_t struct {
+	dd                               *DdManager
+	root, care                       *imageNode
+	careSupport                      map[int]bool
+	verbose, closed                  bool
+	NIter, NNodesMax, NNodesMaxTotal int
+}
+type Extra_ImageTree2_t struct {
+	dd                    *DdManager
+	relation, cube, image *DdNode
+	closed                bool
 }
 
-type Extra_ImageNode_t_ struct {
-    dd          *DdManager;         // the manager 
-    bCube             *DdNode;      // the cube to quantify
-    bImage             *DdNode;     // the partial image
-    pNode1  *Extra_ImageNode_t;     // the first branch
-    pNode2  *Extra_ImageNode_t;     // the second branch
-    pPart  *Extra_ImagePart_t;      // the partition (temporary)
+func imageSupport(dd *DdManager, f *DdNode) map[int]bool {
+	support := map[int]bool{}
+	for _, i := range dd.Support(f) {
+		support[i] = true
+	}
+	return support
+}
+func imageSorted(set map[int]bool) []int {
+	values := make([]int, 0, len(set))
+	for i := range set {
+		values = append(values, i)
+	}
+	sort.Ints(values)
+	return values
+}
+func imageCube(dd *DdManager, vars map[int]bool) *DdNode {
+	cube := dd.One
+	for _, index := range imageSorted(vars) {
+		cube = cudd.Cudd_bddAnd(dd, cube, dd.Vars[index])
+	}
+	return cube
+}
+func imageReplace(dd *DdManager, destination **DdNode, f *DdNode) {
+	if f != nil {
+		cudd.Cudd_Ref(f)
+	}
+	if *destination != nil {
+		cudd.Cudd_RecursiveDeref(dd, *destination)
+	}
+	*destination = f
+}
+func imageInputs(dd *DdManager, care *DdNode, nParts int, parts []*DdNode, nVars int, vars []*DdNode) (map[int]bool, bool) {
+	if !autoBDD(dd, care) || nParts < 0 || nParts > len(parts) || nVars < 0 || nVars > len(vars) {
+		return nil, false
+	}
+	for _, f := range parts[:nParts] {
+		if !autoBDD(dd, f) {
+			return nil, false
+		}
+	}
+	keep := map[int]bool{}
+	for _, v := range vars[:nVars] {
+		if !autoBDD(dd, v) || cudd.Cudd_IsConstant(v) || cudd.Cudd_IsComplement(v) || int(v.Index) >= len(dd.Vars) || dd.Vars[v.Index] != v {
+			return nil, false
+		}
+		keep[int(v.Index)] = true
+	}
+	return keep, true
+}
+func imagePartOrder(dd *DdManager, parts map[int]bool) []int {
+	ids := imageSorted(parts)
+	level := func(id int) int {
+		if id < len(dd.Perm) {
+			return dd.Perm[id]
+		}
+		return len(dd.Perm) + id
+	}
+	sort.SliceStable(ids, func(i, j int) bool { return level(ids[i]) < level(ids[j]) })
+	return ids
+}
+func imageSameParts(a, b map[int]bool) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for id := range a {
+		if !b[id] {
+			return false
+		}
+	}
+	return true
+}
+func imageCombine(dd *DdManager, cube *DdNode, left, right *imageNode) *imageNode {
+	n := &imageNode{left: left, right: right}
+	support := map[int]bool{}
+	for index := range left.part.support {
+		support[index] = true
+	}
+	for index := range right.part.support {
+		support[index] = true
+	}
+	for _, index := range dd.Support(cube) {
+		delete(support, index)
+	}
+	function := cudd.Cudd_bddAndAbstract(dd, left.part.function, right.part.function, cube)
+	n.part = &imagePart{function, support, cudd.Cudd_DagSize(function)}
+	imageReplace(dd, &n.image, cudd.Cudd_bddAndAbstract(dd, left.image, right.image, cube))
+	if cube != dd.One {
+		imageReplace(dd, &n.cube, cube)
+	}
+	return n
 }
 
-type Extra_ImagePart_t_ struct {
-    bFunc             *DdNode;      // the partition
-    bSupp             *DdNode;      // the support of this partition
-    nNodes                 int32;     // the number of BDD nodes
-    nSupp               int16;      // the number of support variables
-    iPart               int16;      // the number of this partition
+// Extra_bddImageStart builds the source's support-driven quantification tree.
+// vars are next-state/parameter projections to retain; all others are quantified.
+func Extra_bddImageStart(dd *DdManager, care *DdNode, nParts int, parts []*DdNode, nVars int, vars []*DdNode, verbose bool) *Extra_ImageTree_t {
+	keep, valid := imageInputs(dd, care, nParts, parts, nVars, vars)
+	if !valid {
+		return nil
+	}
+	nodes := make([]*imageNode, nParts+1)
+	all := append(append([]*DdNode(nil), parts[:nParts]...), care)
+	memberships := map[int]map[int]bool{}
+	for id, f := range all {
+		part := &imagePart{f, imageSupport(dd, f), cudd.Cudd_DagSize(f)}
+		nodes[id] = &imageNode{part: part}
+		for v := range part.support {
+			if keep[v] {
+				continue
+			}
+			if memberships[v] == nil {
+				memberships[v] = map[int]bool{}
+			}
+			memberships[v][id] = true
+		}
+	}
+	leafCubes := make([]map[int]bool, len(nodes))
+	for v, members := range memberships {
+		if len(members) == 1 {
+			for id := range members {
+				if leafCubes[id] == nil {
+					leafCubes[id] = map[int]bool{}
+				}
+				leafCubes[id][v] = true
+			}
+			delete(memberships, v)
+		}
+	}
+	for id, n := range nodes {
+		f := n.part.function
+		if len(leafCubes[id]) > 0 {
+			cube := imageCube(dd, leafCubes[id])
+			f = cudd.Cudd_bddExistAbstract(dd, f, cube)
+			for v := range leafCubes[id] {
+				delete(n.part.support, v)
+			}
+			n.part.function = f
+			n.part.nodes = cudd.Cudd_DagSize(f)
+			if id == nParts {
+				imageReplace(dd, &n.cube, cube)
+			}
+		}
+		imageReplace(dd, &n.image, f)
+	}
+	tree := &Extra_ImageTree_t{dd: dd, care: nodes[nParts], careSupport: imageSupport(dd, care), verbose: verbose}
+	for len(memberships) > 0 {
+		best := -1
+		costBest := math.Inf(1)
+		variables := make(map[int]bool, len(memberships))
+		for v := range memberships {
+			variables[v] = true
+		}
+		for _, v := range imageSorted(variables) {
+			cost := 0.
+			for id := range memberships[v] {
+				size := float64(nodes[id].part.nodes)
+				cost += size * size
+			}
+			if cost < costBest {
+				best, costBest = v, cost
+			}
+		}
+		members := memberships[best]
+		ids := imagePartOrder(dd, members)
+		if len(ids) < 2 {
+			panic("extrab: inconsistent image schedule")
+		}
+		quantified := map[int]bool{}
+		if len(ids) == 2 {
+			for v, m := range memberships {
+				if imageSameParts(m, members) {
+					quantified[v] = true
+					delete(memberships, v)
+				}
+			}
+		} else {
+			sort.SliceStable(ids, func(i, j int) bool { return nodes[ids[i]].part.nodes < nodes[ids[j]].part.nodes })
+		}
+		first, second := ids[0], ids[1]
+		left, right := nodes[first], nodes[second]
+		nodes[first] = imageCombine(dd, imageCube(dd, quantified), left, right)
+		nodes[second] = nil
+		for v := range right.part.support {
+			if m := memberships[v]; m != nil {
+				delete(m, second)
+				m[first] = true
+			}
+		}
+	}
+	for {
+		first, second := -1, -1
+		for id, n := range nodes {
+			if n == nil {
+				continue
+			}
+			if first < 0 {
+				first = id
+			} else {
+				second = id
+				break
+			}
+		}
+		if second < 0 {
+			tree.root = nodes[first]
+			break
+		}
+		nodes[first] = imageCombine(dd, dd.One, nodes[first], nodes[second])
+		nodes[second] = nil
+	}
+	var clean func(*imageNode)
+	clean = func(n *imageNode) {
+		if n.left != nil {
+			clean(n.left)
+			clean(n.right)
+		}
+		n.part = nil
+	}
+	clean(tree.root)
+	if verbose {
+		fmt.Printf("Image schedule: %d partitions, %d retained variables\n", nParts, len(keep))
+	}
+	return tree
 }
-
-type Extra_ImageVar_t_ struct {
-    iNum                 int32;       // the BDD index of this variable
-    bParts             *DdNode;     // the partition numbers
-    nParts                 int32;     // the number of partitions
+func imageCompute(tree *Extra_ImageTree_t, n *imageNode) {
+	dd := tree.dd
+	if n.left == nil {
+		if n.cube != nil {
+			imageReplace(dd, &n.image, cudd.Cudd_bddExistAbstract(dd, n.image, n.cube))
+		}
+		return
+	}
+	imageCompute(tree, n.left)
+	imageCompute(tree, n.right)
+	cube := n.cube
+	if cube == nil {
+		cube = dd.One
+	}
+	imageReplace(dd, &n.image, cudd.Cudd_bddAndAbstract(dd, n.left.image, n.right.image, cube))
+	if tree.verbose {
+		tree.NNodesMax = max(tree.NNodesMax, cudd.Cudd_DagSize(n.image))
+	}
 }
-
-/*---------------------------------------------------------------------------*/
-/* Type declarations                                                         */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Variable declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Macro declarations                                                        */
-/*---------------------------------------------------------------------------*/
-
-/**AutomaticStart*************************************************************/
-
-
-/*---------------------------------------------------------------------------*/
-/* Static function prototypes                                                */
-/*---------------------------------------------------------------------------*/
-
-// static Extra_ImagePart_t ** Extra_CreateParts( DdManager * dd,
-//     int nParts, DdNode ** pbParts, DdNode * bCare );
-
-// static Extra_ImageVar_t ** Extra_CreateVars( DdManager * dd,
-//     int nParts, Extra_ImagePart_t ** pParts,
-//     int nVars, DdNode ** pbVarsNs );
-
-// static Extra_ImageNode_t ** Extra_CreateNodes( DdManager * dd, 
-//     int nParts, Extra_ImagePart_t ** pParts, 
-//     int nVars,  Extra_ImageVar_t ** pVars );
-
-// static void Extra_DeleteParts_rec( Extra_ImageNode_t * pNode );
-
-// static int Extra_BuildTreeNode( DdManager * dd, 
-//     int nNodes, Extra_ImageNode_t ** pNodes, 
-//     int nVars,  Extra_ImageVar_t ** pVars );
-
-// static Extra_ImageNode_t * Extra_MergeTopNodes( DdManager * dd, 
-//     int nNodes, Extra_ImageNode_t ** pNodes );
-
-// static void Extra_bddImageTreeDelete_rec( Extra_ImageNode_t * pNode );
-
-// static void Extra_bddImageCompute_rec( Extra_ImageTree_t * pTree, Extra_ImageNode_t * pNode );
-
-// static int Extra_FindBestVariable( DdManager * dd,
-//     int nNodes, Extra_ImageNode_t ** pNodes, 
-//     int nVars,  Extra_ImageVar_t ** pVars );
-
-// static void Extra_FindBestPartitions( DdManager * dd, DdNode * bParts, 
-//     int nNodes, Extra_ImageNode_t ** pNodes, 
-//     int * piNode1, int * piNode2 );
-
-// static Extra_ImageNode_t * Extra_CombineTwoNodes( DdManager * dd, DdNode * bCube,
-//     Extra_ImageNode_t * pNode1, Extra_ImageNode_t * pNode2 );
-
-
-// static void Extra_bddImagePrintLatchDependency( DdManager * dd, DdNode * bCare,
-//     int nParts, DdNode ** pbParts,
-//     int nVars, DdNode ** pbVars );
-
-// static void Extra_bddImagePrintLatchDependencyOne( DdManager * dd, DdNode * bFunc, 
-//     DdNode * bVarsCs, DdNode * bVarsNs, int iPart );
-
-
-// static void Extra_bddImagePrintTree( Extra_ImageTree_t * pTree );
-
-// static void Extra_bddImagePrintTree_rec( Extra_ImageNode_t * pNode, int nOffset );
-
-
-
-/**AutomaticEnd***************************************************************/
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of exported functions                                          */
-/*---------------------------------------------------------------------------*/
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the image computation using tree-based scheduling.]
-
-  Description [This procedure starts the image computation. It uses
-  the given care set to test-run the image computation and creates the 
-  quantification tree by scheduling variable quantifications. The tree can 
-  be used to compute images for other care sets without rescheduling.
-  In this case, Extra_bddImageCompute() should be called.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Extra_ImageTree_t * Extra_bddImageStart( 
-    DdManager * dd, DdNode * bCare, // the care set
-    int nParts, DdNode ** pbParts,  // the partitions for image computation
-    int nVars, DdNode ** pbVars, int fVerbose )   // the NS and parameter variables (not quantified!)
-{
-    var pTree *Extra_ImageTree_t;
-    var pParts **Extra_ImagePart_t;
-    var pVars **Extra_ImageVar_t;
-    var pNodes **Extra_ImageNode_t;
-    var v int32;
-
-    if (fVerbose != 0) && dd.size <= 80 {
-        Extra_bddImagePrintLatchDependency( dd, bCare, nParts, pbParts, nVars, pbVars ); }
-
-    // create variables, partitions and leaf nodes
-    pParts = Extra_CreateParts( dd, nParts, pbParts, bCare );
-    pVars  = Extra_CreateVars( dd, nParts + 1, pParts, nVars, pbVars );
-    pNodes = Extra_CreateNodes( dd, nParts + 1, pParts, dd.size, pVars );
-    
-    // create the tree
-    pTree = new(Extra_ImageTree_t);
-    memset( pTree, 0, sizeof(Extra_ImageTree_t) );
-    pTree.pCare = pNodes[nParts];
-    pTree.fVerbose = fVerbose;
-
-    // process the nodes
-    for  Extra_BuildTreeNode( dd, nParts + 1, pNodes, dd.size, pVars ) != 0  {; }
-
-    // make sure the variables are gone
-    for  v = 0; v < dd.size; v++  {
-        assert(pVars[v] == nil, "pVars[v] == nil");
-    }
-    ABC_FREE( pVars );
-
-    // merge the topmost nodes
-    for  (pTree.pRoot = Extra_MergeTopNodes( dd, nParts + 1, pNodes )) == nil  {; }
-
-    // make sure the nodes are gone
-    for  v = 0; v < nParts + 1; v++  {
-        assert(pNodes[v] == nil, "pNodes[v] == nil");
-    }
-    ABC_FREE( pNodes );
-
-//    if ( fVerbose )
-//        Extra_bddImagePrintTree( pTree );
-
-    // set the support of the care set
-    pTree.bCareSupp = Cudd_Support( dd, bCare );  Cudd_Ref( pTree.bCareSupp );
-
-    // clean the partitions
-    Extra_DeleteParts_rec( pTree.pRoot );
-    ABC_FREE( pParts );
-    return pTree;
+func Extra_bddImageCompute(tree *Extra_ImageTree_t, care *DdNode) *DdNode {
+	if tree == nil || tree.closed || !autoBDD(tree.dd, care) {
+		return nil
+	}
+	tree.NIter++
+	for _, index := range tree.dd.Support(care) {
+		if !tree.careSupport[index] {
+			return nil
+		}
+	}
+	imageReplace(tree.dd, &tree.care.image, care)
+	tree.NNodesMax = 0
+	imageCompute(tree, tree.root)
+	tree.NNodesMaxTotal = max(tree.NNodesMaxTotal, tree.NNodesMax)
+	return tree.root.image
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Compute the image.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddImageCompute(pTree *Extra_ImageTree_t, bCare *DdNode) *DdNode {
-    var dd *DdManager  = pTree.pCare.dd;
-    var bSupp, bRem *DdNode;
-
-    pTree.nIter++;
-
-    // make sure the supports are okay
-    bSupp = Cudd_Support( dd, bCare );        Cudd_Ref( bSupp );
-    if bSupp != pTree.bCareSupp {
-        bRem = Cudd_bddExistAbstract( dd, bSupp, pTree.bCareSupp );  Cudd_Ref( bRem );
-        if bRem != b1 {
-fmt.Printf("Original care set support: ");
-ABC_PRB( dd, pTree.bCareSupp );
-fmt.Printf("Current care set support: ");
-ABC_PRB( dd, bSupp );
-            Cudd_RecursiveDeref( dd, bSupp );
-            Cudd_RecursiveDeref( dd, bRem );
-            fmt.Printf("The care set depends on some vars that were not in the care set during scheduling.\n");
-            return nil;
-        }
-        Cudd_RecursiveDeref( dd, bRem );
-    }
-    Cudd_RecursiveDeref( dd, bSupp );
-
-    // remove the previous image
-    Cudd_RecursiveDeref( dd, pTree.pCare.bImage );
-    pTree.pCare.bImage = bCare;   Cudd_Ref( bCare );
-
-    // compute the image
-    pTree.nNodesMax = 0;
-    Extra_bddImageCompute_rec( pTree, pTree.pRoot );
-    if pTree.nNodesMaxT < pTree.nNodesMax {
-        pTree.nNodesMaxT = pTree.nNodesMax; }
-
-//    if ( pTree->fVerbose )
-//        printf( "Iter %2d : Max nodes = %5d.\n", pTree->nIter, pTree->nNodesMax );
-    return pTree.pRoot.bImage;
+func Extra_bddImageRead(tree *Extra_ImageTree_t) *DdNode {
+	if tree == nil || tree.closed {
+		return nil
+	}
+	return tree.root.image
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Delete the tree.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddImageTreeDelete(pTree *Extra_ImageTree_t) {
-    if pTree.bCareSupp {
-        Cudd_RecursiveDeref( pTree.pRoot.dd, pTree.bCareSupp ); }
-    Extra_bddImageTreeDelete_rec( pTree.pRoot );
-    ABC_FREE( pTree );
+func Extra_bddImageTreeDelete(tree *Extra_ImageTree_t) {
+	if tree == nil || tree.closed {
+		return
+	}
+	var remove func(*imageNode)
+	remove = func(n *imageNode) {
+		if n.left != nil {
+			remove(n.left)
+			remove(n.right)
+		}
+		imageReplace(tree.dd, &n.cube, nil)
+		imageReplace(tree.dd, &n.image, nil)
+	}
+	remove(tree.root)
+	tree.root = nil
+	tree.care = nil
+	tree.careSupport = nil
+	tree.closed = true
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Reads the image from the tree.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddImageRead(pTree *Extra_ImageTree_t) *DdNode {
-    return pTree.pRoot.bImage;
+func Extra_bddImagePrintTree(tree *Extra_ImageTree_t) {
+	if tree == nil || tree.closed {
+		return
+	}
+	var printNode func(*imageNode, int)
+	printNode = func(n *imageNode, depth int) {
+		fmt.Printf("%simage=%d", strings.Repeat("    ", depth), cudd.Cudd_DagSize(n.image))
+		if n.cube != nil {
+			fmt.Printf(" quantify=%v", tree.dd.Support(n.cube))
+		}
+		fmt.Println()
+		if n.left != nil {
+			printNode(n.left, depth+1)
+			printNode(n.right, depth+1)
+		}
+	}
+	printNode(tree.root, 0)
 }
-
-/*---------------------------------------------------------------------------*/
-/* Definition of internal functions                                          */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Definition of static Functions                                            */
-/*---------------------------------------------------------------------------*/
-
-/**Function*************************************************************
-
-  Synopsis    [Creates partitions.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_CreateParts(dd *DdManager, nParts int32, pbParts **DdNode, bCare *DdNode) **Extra_ImagePart_t {
-    var pParts **Extra_ImagePart_t;
-    var i int32;
-
-    // start the partitions
-    pParts = ABC_ALLOC( Extra_ImagePart_t *, nParts + 1 );
-    // create structures for each variable
-    for  i = 0; i < nParts; i++  {
-        pParts[i] = new(Extra_ImagePart_t);
-        pParts[i].bFunc  = pbParts[i];                           Cudd_Ref( pParts[i].bFunc );
-        pParts[i].bSupp  = Cudd_Support( dd, pParts[i].bFunc ); Cudd_Ref( pParts[i].bSupp );
-        pParts[i].nSupp  = Extra_bddSuppSize( dd, pParts[i].bSupp );
-        pParts[i].nNodes = Cudd_DagSize( pParts[i].bFunc );
-        pParts[i].iPart  = i;
-    }
-    // add the care set as the last partition
-    pParts[nParts] = new(Extra_ImagePart_t);
-    pParts[nParts].bFunc = bCare;                                     Cudd_Ref( pParts[nParts].bFunc );
-    pParts[nParts].bSupp = Cudd_Support( dd, pParts[nParts].bFunc ); Cudd_Ref( pParts[nParts].bSupp );
-    pParts[nParts].nSupp = Extra_bddSuppSize( dd, pParts[nParts].bSupp );
-    pParts[nParts].nNodes = Cudd_DagSize( pParts[nParts].bFunc );
-    pParts[nParts].iPart  = nParts;
-    return pParts;
+func Extra_bddImageStart2(dd *DdManager, care *DdNode, nParts int, parts []*DdNode, nVars int, vars []*DdNode, verbose bool) *Extra_ImageTree2_t {
+	keep, valid := imageInputs(dd, care, nParts, parts, nVars, vars)
+	if !valid {
+		return nil
+	}
+	tree := &Extra_ImageTree2_t{dd: dd}
+	quantify := map[int]bool{}
+	for i := range dd.Vars {
+		if !keep[i] {
+			quantify[i] = true
+		}
+	}
+	imageReplace(dd, &tree.cube, imageCube(dd, quantify))
+	relation := dd.One
+	for _, f := range parts[:nParts] {
+		relation = cudd.Cudd_bddAnd(dd, relation, f)
+	}
+	imageReplace(dd, &tree.relation, relation)
+	Extra_bddImageCompute2(tree, care)
+	return tree
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_CreateVars(dd *DdManager, nParts int32, pParts **Extra_ImagePart_t, nVars int32, pbVars **DdNode) **Extra_ImageVar_t {
-    var pVars **Extra_ImageVar_t;
-    var pbFuncs **DdNode;
-    var bCubeNs, bSupp, bParts, bTemp, bSuppTemp *DdNode;
-    var nVarsTotal, iVar, p, Counter int32;
-
-    // put all the functions into one array
-    pbFuncs = ABC_ALLOC( DdNode *, nParts );
-    for  p = 0; p < nParts; p++  {
-        pbFuncs[p] = pParts[p].bSupp;
-    }
-    bSupp = Cudd_VectorSupport( dd, pbFuncs, nParts );  Cudd_Ref( bSupp );
-    ABC_FREE( pbFuncs );
-
-    // remove the NS vars
-    bCubeNs = Cudd_bddComputeCube( dd, pbVars, nil, nVars );        Cudd_Ref( bCubeNs );
-    bSupp = Cudd_bddExistAbstract( dd, bTemp = bSupp, bCubeNs );     Cudd_Ref( bSupp );
-    Cudd_RecursiveDeref( dd, bTemp );
-    Cudd_RecursiveDeref( dd, bCubeNs );
-
-    // get the number of I and CS variables to be quantified
-    nVarsTotal = Extra_bddSuppSize( dd, bSupp );
-
-    // start the variables
-    pVars = ABC_ALLOC( Extra_ImageVar_t *, dd.size );
-    memset( pVars, 0, sizeof(Extra_ImageVar_t *) * dd.size );
-    // create structures for each variable
-    // inlining of macro cuddT
-    for  bSuppTemp = bSupp; bSuppTemp != b1; bSuppTemp = ((bSuppTemp).type.kids.T)  {
-        iVar = bSuppTemp.index;
-        pVars[iVar] = new(Extra_ImageVar_t);
-        pVars[iVar].iNum = iVar;
-        // collect all the parts this var belongs to
-        Counter = 0;
-        bParts = b1; Cudd_Ref( bParts );
-        for  p = 0; p < nParts; p++  {
-            if Cudd_bddLeq( dd, pParts[p].bSupp, dd.vars[bSuppTemp.index] ) {
-                bParts = Cudd_bddAnd( dd, bTemp = bParts, dd.vars[p] );  Cudd_Ref( bParts );
-                Cudd_RecursiveDeref( dd, bTemp );
-                Counter++;
-            }
-        }
-        pVars[iVar].bParts = bParts; // takes ref
-        pVars[iVar].nParts = Counter;
-    }
-    Cudd_RecursiveDeref( dd, bSupp );
-    return pVars;
+func Extra_bddImageCompute2(tree *Extra_ImageTree2_t, care *DdNode) *DdNode {
+	if tree == nil || tree.closed || !autoBDD(tree.dd, care) {
+		return nil
+	}
+	imageReplace(tree.dd, &tree.image, cudd.Cudd_bddAndAbstract(tree.dd, tree.relation, care, tree.cube))
+	return tree.image
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_CreateNodes(dd *DdManager, nParts int32, pParts **Extra_ImagePart_t, nVars int32, pVars **Extra_ImageVar_t) **Extra_ImageNode_t {
-    var pNodes **Extra_ImageNode_t;
-    var pNode *Extra_ImageNode_t;
-    var bTemp *DdNode;
-    var i, v, iPart int32;
-/*
-    DdManager *         dd;       // the manager 
-    DdNode *            bCube;    // the cube to quantify
-    DdNode *            bImage;   // the partial image
-    Extra_ImageNode_t * pNode1;   // the first branch
-    Extra_ImageNode_t * pNode2;   // the second branch
-    Extra_ImagePart_t * pPart;    // the partition (temporary)
-*/
-    // start the partitions
-    pNodes = ABC_ALLOC( Extra_ImageNode_t *, nParts );
-    // create structures for each leaf nodes
-    for  i = 0; i < nParts; i++  {
-        pNodes[i] = new(Extra_ImageNode_t);
-        memset( pNodes[i], 0, sizeof(Extra_ImageNode_t) );
-        pNodes[i].dd    = dd;
-        pNodes[i].pPart = pParts[i];
-    }
-    // find the quantification cubes for each leaf node
-    for  v = 0; v < nVars; v++  {
-        if pVars[v] == nil {
-            continue; }
-        assert(pVars[v].nParts > 0, "pVars[v].nParts > 0");
-        if pVars[v].nParts > 1 {
-            continue; }
-        iPart = pVars[v].bParts.index;
-        if pNodes[iPart].bCube == nil {
-            pNodes[iPart].bCube = dd.vars[v];   
-            Cudd_Ref( dd.vars[v] );
-        
-        } else {
-            pNodes[iPart].bCube = Cudd_bddAnd( dd, bTemp = pNodes[iPart].bCube, dd.vars[v] );  
-            Cudd_Ref( pNodes[iPart].bCube );
-            Cudd_RecursiveDeref( dd, bTemp );
-        }
-        // remove these  variables
-        Cudd_RecursiveDeref( dd, pVars[v].bParts );
-        ABC_FREE( pVars[v] );
-    }
-
-    // assign the leaf node images
-    for  i = 0; i < nParts; i++  {
-        pNode = pNodes[i];
-        if pNode.bCube {
-            // update the partition
-            pParts[i].bFunc = Cudd_bddExistAbstract( dd, bTemp = pParts[i].bFunc, pNode.bCube );
-            Cudd_Ref( pParts[i].bFunc );
-            Cudd_RecursiveDeref( dd, bTemp );
-            // update the support the partition
-            pParts[i].bSupp = Cudd_bddExistAbstract( dd, bTemp = pParts[i].bSupp, pNode.bCube ); 
-            Cudd_Ref( pParts[i].bSupp );
-            Cudd_RecursiveDeref( dd, bTemp );
-            // update the numbers
-            pParts[i].nSupp  = Extra_bddSuppSize( dd, pParts[i].bSupp );
-            pParts[i].nNodes = Cudd_DagSize( pParts[i].bFunc );
-            // get rid of the cube
-            // save the last (care set) quantification cube
-            if i < nParts - 1 {
-                Cudd_RecursiveDeref( dd, pNode.bCube );
-                pNode.bCube = nil;
-            }
-        }
-        // copy the function
-        pNode.bImage = pParts[i].bFunc;   Cudd_Ref( pNode.bImage );
-    }
-/*
-    for ( i = 0; i < nParts; i++ )
-    {
-        pNode = pNodes[i];
-ABC_PRB( dd, pNode->bCube );
-ABC_PRB( dd, pNode->pPart->bFunc );
-ABC_PRB( dd, pNode->pPart->bSupp );
-printf( "\n" );
-    }
-*/
-    return pNodes;
+func Extra_bddImageRead2(tree *Extra_ImageTree2_t) *DdNode {
+	if tree == nil || tree.closed {
+		return nil
+	}
+	return tree.image
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Delete the partitions from the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_DeleteParts_rec(pNode *Extra_ImageNode_t) {
-    var pPart *Extra_ImagePart_t;
-    if pNode.pNode1 {
-        Extra_DeleteParts_rec( pNode.pNode1 ); }
-    if pNode.pNode2 {
-        Extra_DeleteParts_rec( pNode.pNode2 ); }
-    pPart = pNode.pPart;
-    Cudd_RecursiveDeref( pNode.dd, pPart.bFunc );
-    Cudd_RecursiveDeref( pNode.dd, pPart.bSupp );
-    ABC_FREE( pNode.pPart );
+func Extra_bddImageTreeDelete2(tree *Extra_ImageTree2_t) {
+	if tree == nil || tree.closed {
+		return
+	}
+	imageReplace(tree.dd, &tree.relation, nil)
+	imageReplace(tree.dd, &tree.cube, nil)
+	imageReplace(tree.dd, &tree.image, nil)
+	tree.closed = true
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Delete the partitions from the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddImageTreeDelete_rec(pNode *Extra_ImageNode_t) {
-    if pNode.pNode1 {
-        Extra_bddImageTreeDelete_rec( pNode.pNode1 ); }
-    if pNode.pNode2 {
-        Extra_bddImageTreeDelete_rec( pNode.pNode2 ); }
-    if pNode.bCube {
-        Cudd_RecursiveDeref( pNode.dd, pNode.bCube ); }
-    if pNode.bImage {
-        Cudd_RecursiveDeref( pNode.dd, pNode.bImage ); }
-    assert(pNode.pPart == nil, "pNode.pPart == nil");
-    ABC_FREE( pNode );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Recompute the image.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddImageCompute_rec(pTree *Extra_ImageTree_t, pNode *Extra_ImageNode_t) {
-    var dd *DdManager  = pNode.dd;
-    var bTemp *DdNode;
-    var nNodes int32;
-
-    // trivial case
-    if pNode.pNode1 == nil {
-        if pNode.bCube {
-            pNode.bImage = Cudd_bddExistAbstract( dd, bTemp = pNode.bImage, pNode.bCube ); 
-            Cudd_Ref( pNode.bImage );
-            Cudd_RecursiveDeref( dd, bTemp );
-        }
-        return;
-    }
-
-    // compute the children
-    if pNode.pNode1 {
-        Extra_bddImageCompute_rec( pTree, pNode.pNode1 ); }
-    if pNode.pNode2 {
-        Extra_bddImageCompute_rec( pTree, pNode.pNode2 ); }
-
-    // clean the old image
-    if pNode.bImage {
-        Cudd_RecursiveDeref( dd, pNode.bImage ); }
-    pNode.bImage = nil;
-
-    // compute the new image
-    if pNode.bCube {
-        pNode.bImage = Cudd_bddAndAbstract( dd, 
-            pNode.pNode1.bImage, pNode.pNode2.bImage, pNode.bCube );
-    } else {
-        pNode.bImage = Cudd_bddAnd( dd, pNode.pNode1.bImage, pNode.pNode2.bImage ); }
-    Cudd_Ref( pNode.bImage );
-
-    if pTree.fVerbose {
-        nNodes = Cudd_DagSize( pNode.bImage );
-        if pTree.nNodesMax < nNodes {
-            pTree.nNodesMax = nNodes; }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Builds the tree.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_BuildTreeNode(dd *DdManager, nNodes int32, pNodes **Extra_ImageNode_t, nVars int32, pVars **Extra_ImageVar_t) int32 {
-    var pNode1, pNode2 *Extra_ImageNode_t;
-    var pVar *Extra_ImageVar_t;
-    var pNode *Extra_ImageNode_t;
-    var bCube, bTemp, bSuppTemp, bParts *DdNode;
-    var iNode1, iNode2 int32;
-    var iVarBest, nSupp, v int32;
-
-    // find the best variable
-    iVarBest = Extra_FindBestVariable( dd, nNodes, pNodes, nVars, pVars );
-    if iVarBest == -1 {
-        return 0; }
-
-    pVar = pVars[iVarBest];
-
-    // this var cannot appear in one partition only
-    nSupp = Extra_bddSuppSize( dd, pVar.bParts );
-    assert(nSupp == pVar.nParts, "nSupp == pVar.nParts");
-    assert(nSupp != 1, "nSupp != 1");
-
-    // if it appears in only two partitions, quantify it
-    if pVar.nParts == 2 {
-        // get the nodes
-        iNode1 = pVar.bParts.index;
-        // inlining of macro cuddT
-        iNode2 = ((pVar.bParts).type.kids.T).index;
-        pNode1 = pNodes[iNode1];
-        pNode2 = pNodes[iNode2];
-
-        // get the quantification cube
-        bCube = dd.vars[pVar.iNum];    Cudd_Ref( bCube );
-        // add the variables that appear only in these partitions
-        for  v = 0; v < nVars; v++  {
-            if pVars[v] && v != iVarBest && pVars[v].bParts == pVars[iVarBest].bParts {
-                // add this var
-                bCube = Cudd_bddAnd( dd, bTemp = bCube, dd.vars[pVars[v].iNum] );   Cudd_Ref( bCube );
-                Cudd_RecursiveDeref( dd, bTemp );
-                // clean this var
-                Cudd_RecursiveDeref( dd, pVars[v].bParts );
-                ABC_FREE( pVars[v] );
-            }
-        }
-        // clean the best var
-        Cudd_RecursiveDeref( dd, pVars[iVarBest].bParts );
-        ABC_FREE( pVars[iVarBest] );
-
-        // combines two nodes
-        pNode = Extra_CombineTwoNodes( dd, bCube, pNode1, pNode2 );
-        Cudd_RecursiveDeref( dd, bCube );
-    
-    } else { // if ( pVar->nParts > 2 )
-    
-        // find two smallest BDDs that have this var
-        Extra_FindBestPartitions( dd, pVar.bParts, nNodes, pNodes, &iNode1, &iNode2 );
-        pNode1 = pNodes[iNode1];
-        pNode2 = pNodes[iNode2];
-
-        // it is not possible that a var appears only in these two
-        // otherwise, it would have a different cost
-        bParts = Cudd_bddAnd( dd, dd.vars[iNode1], dd.vars[iNode2] ); Cudd_Ref( bParts );
-        for  v = 0; v < nVars; v++  {
-            if pVars[v] && pVars[v].bParts == bParts {
-                assert(false, "0"); }
-        }
-        Cudd_RecursiveDeref( dd, bParts );
-
-        // combines two nodes
-        pNode = Extra_CombineTwoNodes( dd, b1, pNode1, pNode2 );
-    }
-
-    // clean the old nodes
-    pNodes[iNode1] = pNode;
-    pNodes[iNode2] = nil;
-    
-    // update the variables that appear in pNode[iNode2]
-    // inlining of macro cuddT
-    for  bSuppTemp = pNode2.pPart.bSupp; bSuppTemp != b1; bSuppTemp = ((bSuppTemp).type.kids.T)  {
-        pVar = pVars[bSuppTemp.index];
-        if pVar == nil { // this variable is not be quantified
-            continue; }
-        // quantify this var
-        assert(Cudd_bddLeq( dd, pVar.bParts, dd.vars[iNode2] ), "Cudd_bddLeq( dd, pVar.bParts, dd.vars[iNode2] )");
-        pVar.bParts = Cudd_bddExistAbstract( dd, bTemp = pVar.bParts, dd.vars[iNode2] ); Cudd_Ref( pVar.bParts );
-        Cudd_RecursiveDeref( dd, bTemp );
-        // add the new var
-        pVar.bParts = Cudd_bddAnd( dd, bTemp = pVar.bParts, dd.vars[iNode1] ); Cudd_Ref( pVar.bParts );
-        Cudd_RecursiveDeref( dd, bTemp );
-        // update the score
-        pVar.nParts = Extra_bddSuppSize( dd, pVar.bParts );
-    }
-    return 1;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Merges the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_MergeTopNodes(dd *DdManager, nNodes int32, pNodes **Extra_ImageNode_t) *Extra_ImageNode_t {
-    var pNode *Extra_ImageNode_t;
-    var n1 int32 = -1;
-    var n2 int32 = -1;
-    var n int32;
-
-    // find the first and the second non-empty spots
-    for  n = 0; n < nNodes; n++  {
-        if pNodes[n] {
-            if n1 == -1 {
-                n1 = n;
-            } else if n2 == -1 {
-                n2 = n;
-                break;
-            }
-        }
-    }
-    assert(n1 != -1, "n1 != -1");
-    // check the situation when only one such node is detected
-    if n2 == -1 {
-        // save the node
-        pNode = pNodes[n1];
-        // clean the node
-        pNodes[n1] = nil;
-        return pNode;
-    }
-  
-    // combines two nodes
-    pNode = Extra_CombineTwoNodes( dd, b1, pNodes[n1], pNodes[n2] );
-
-    // clean the old nodes
-    pNodes[n1] = pNode;
-    pNodes[n2] = nil;
-    return nil;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Merges two nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_CombineTwoNodes(dd *DdManager, bCube *DdNode, pNode1 *Extra_ImageNode_t, pNode2 *Extra_ImageNode_t) *Extra_ImageNode_t {
-    var pNode *Extra_ImageNode_t;
-    var pPart *Extra_ImagePart_t;
-
-    // create a new partition
-    pPart = new(Extra_ImagePart_t);
-    *pPart = Extra_ImagePart_t{};
-    // create the function
-    pPart.bFunc = Cudd_bddAndAbstract( dd, pNode1.pPart.bFunc, pNode2.pPart.bFunc, bCube );
-    Cudd_Ref( pPart.bFunc );
-    // update the support the partition
-    pPart.bSupp = Cudd_bddAndAbstract( dd, pNode1.pPart.bSupp, pNode2.pPart.bSupp, bCube );
-    Cudd_Ref( pPart.bSupp );
-    // update the numbers
-    pPart.nSupp  = Extra_bddSuppSize( dd, pPart.bSupp );
-    pPart.nNodes = Cudd_DagSize( pPart.bFunc );
-    pPart.iPart = -1;
-/*
-ABC_PRB( dd, pNode1->pPart->bSupp );
-ABC_PRB( dd, pNode2->pPart->bSupp );
-ABC_PRB( dd, pPart->bSupp );
-*/
-    // create a new node
-    pNode = new(Extra_ImageNode_t);
-    *pNode = Extra_ImageNode_t{};
-    pNode.dd     = dd;
-    pNode.pPart  = pPart;
-    pNode.pNode1 = pNode1;
-    pNode.pNode2 = pNode2;
-    // compute the image
-    pNode.bImage = Cudd_bddAndAbstract( dd, pNode1.bImage, pNode2.bImage, bCube ); 
-    Cudd_Ref( pNode.bImage );
-    // save the cube
-    if bCube != b1 {
-        pNode.bCube = bCube;   Cudd_Ref( bCube );
-    }
-    return pNode;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the best variable.]
-
-  Description [The variables is the best if the sum of squares of the
-  BDD sizes of the partitions, in which it participates, is the minimum.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_FindBestVariable(dd *DdManager, nNodes int32, pNodes **Extra_ImageNode_t, nVars int32, pVars **Extra_ImageVar_t) int32 {
-    var bTemp *DdNode;
-    var iVarBest, v int32;
-    var CostBest, CostCur float64;
-
-    CostBest = 100000000000000.0;
-    iVarBest = -1;
-    for  v = 0; v < nVars; v++  {
-        if pVars[v] {
-            CostCur = 0;
-            // inlining of macro cuddT
-            for  bTemp = pVars[v].bParts; bTemp != b1; bTemp = ((bTemp).type.kids.T)  {
-                CostCur += pNodes[bTemp.index].pPart.nNodes * 
-                           pNodes[bTemp.index].pPart.nNodes;
-            }
-            if CostBest > CostCur {
-                CostBest = CostCur;
-                iVarBest = v;
-            }
-        }
-    }
-    return iVarBest;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes two smallest partions that have this var.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_FindBestPartitions(dd *DdManager, bParts *DdNode, nNodes int32, pNodes **Extra_ImageNode_t, piNode1 *int32, piNode2 *int32) {
-    var bTemp *DdNode;
-    var iPart1, iPart2 int32;
-    var CostMin1, CostMin2, Cost int32;
-
-    // go through the partitions
-    iPart1 = iPart2 = -1;
-    CostMin1 = CostMin2 = 1000000;
-    // inlining of macro cuddT
-    for  bTemp = bParts; bTemp != b1; bTemp = ((bTemp).type.kids.T)  {
-        Cost = pNodes[bTemp.index].pPart.nNodes;
-        if CostMin1 > Cost {
-            CostMin2 = CostMin1;    iPart2 = iPart1;
-            CostMin1 = Cost;        iPart1 = bTemp.index;
-        
-        } else if CostMin2 > Cost {
-            CostMin2 = Cost;        iPart2 = bTemp.index;
-        }
-    }
-
-    *piNode1 = iPart1;
-    *piNode2 = iPart2;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Prints the latch dependency matrix.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Extra_bddImagePrintLatchDependency( 
-    DdManager * dd, DdNode * bCare, // the care set
-    int nParts, DdNode ** pbParts,  // the partitions for image computation
-    int nVars, DdNode ** pbVars )   // the NS and parameter variables (not quantified!)
-{
-    var i int32;
-    var bVarsCs, bVarsNs *DdNode;
-
-    bVarsCs = Cudd_Support( dd, bCare );                       Cudd_Ref( bVarsCs );
-    bVarsNs = Cudd_bddComputeCube( dd, pbVars, nil, nVars );  Cudd_Ref( bVarsNs );
-
-    fmt.Printf("The latch dependency matrix:\n");
-    fmt.Printf("Partitions = %d   Variables: total = %d  non-quantifiable = %d\n", nParts, dd.size, nVars);
-    fmt.Printf("     : ");
-    for  i = 0; i < dd.size; i++  {
-        fmt.Printf("%d", i % 10);
-    }
-    fmt.Printf("\n");
-
-    for  i = 0; i < nParts; i++  {
-        Extra_bddImagePrintLatchDependencyOne( dd, pbParts[i], bVarsCs, bVarsNs, i );
-    }
-    Extra_bddImagePrintLatchDependencyOne( dd, bCare, bVarsCs, bVarsNs, nParts );
-
-    Cudd_RecursiveDeref( dd, bVarsCs );
-    Cudd_RecursiveDeref( dd, bVarsNs );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Prints one row of the latch dependency matrix.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Extra_bddImagePrintLatchDependencyOne(
-    DdManager * dd, DdNode * bFunc,      // the function
-    DdNode * bVarsCs, DdNode * bVarsNs,  // the current/next state vars
-    int iPart )
-{
-    var bSupport *DdNode;
-    var v int32;
-    bSupport = Cudd_Support( dd, bFunc );  Cudd_Ref( bSupport );
-    fmt.Printf(" %3d : ", iPart);
-    for  v = 0; v < dd.size; v++  {
-        if Cudd_bddLeq( dd, bSupport, dd.vars[v] ) {
-            if Cudd_bddLeq( dd, bVarsCs, dd.vars[v] ) {
-                fmt.Printf("c");
-            } else if Cudd_bddLeq( dd, bVarsNs, dd.vars[v] ) { 
-                fmt.Printf("n");
-            } else {
-                fmt.Printf("i"); }
-        
-        } else {
-            fmt.Printf("."); }
-    }
-    fmt.Printf("\n");
-    Cudd_RecursiveDeref( dd, bSupport );
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Prints the tree for quenstification scheduling.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddImagePrintTree(pTree *Extra_ImageTree_t) {
-    fmt.Printf("The quantification scheduling tree:\n");
-    Extra_bddImagePrintTree_rec( pTree.pRoot, 1 );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Prints the tree for quenstification scheduling.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddImagePrintTree_rec(pNode *Extra_ImageNode_t, Offset int32) {
-    var Cube *DdNode;
-    var i int32;
-
-    Cube = pNode.bCube;
-
-    if pNode.pNode1 == nil {
-        fmt.Printf("<%d> ", pNode.pPart.iPart);
-        if Cube != nil {
-            ABC_PRB( pNode.dd, Cube );
-        
-        } else {
-            fmt.Printf("\n"); }
-        return;
-    }
-
-    fmt.Printf("<*> ");
-    if Cube != nil {
-        ABC_PRB( pNode.dd, Cube );
-    
-    } else {
-        fmt.Printf("\n"); }
-
-    for  i = 0; i < Offset; i++  {
-        fmt.Printf("    ");
-    }
-    Extra_bddImagePrintTree_rec( pNode.pNode1, Offset + 1 );
-
-    for  i = 0; i < Offset; i++  {
-        fmt.Printf("    ");
-    }
-    Extra_bddImagePrintTree_rec( pNode.pNode2, Offset + 1 );
-}
-
-
-
-
-
-type Extra_ImageTree2_t_ struct {
-    dd  *DdManager;
-    bRel     *DdNode;
-    bCube     *DdNode;
-    bImage     *DdNode;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the monolithic image computation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddImageStart2(dd *DdManager, bCare *DdNode, nParts int32, pbParts **DdNode, nVars int32, pbVars **DdNode, fVerbose int32) *Extra_ImageTree2_t {
-    var pTree *Extra_ImageTree2_t;
-    var bCubeAll, bCubeNot, bTemp *DdNode;
-    var i int32;
-
-    pTree = new(Extra_ImageTree2_t);
-    pTree.dd = dd;
-    pTree.bImage = nil;
-
-    bCubeAll = Extra_bddComputeCube( dd, dd.vars, dd.size );      Cudd_Ref( bCubeAll );
-    bCubeNot = Extra_bddComputeCube( dd, pbVars,   nVars );         Cudd_Ref( bCubeNot );
-    pTree.bCube = Cudd_bddExistAbstract( dd, bCubeAll, bCubeNot ); Cudd_Ref( pTree.bCube );
-    Cudd_RecursiveDeref( dd, bCubeAll );
-    Cudd_RecursiveDeref( dd, bCubeNot );
-
-    // derive the monolithic relation
-    pTree.bRel = b1;   Cudd_Ref( pTree.bRel );
-    for  i = 0; i < nParts; i++  {
-        pTree.bRel = Cudd_bddAnd( dd, bTemp = pTree.bRel, pbParts[i] ); Cudd_Ref( pTree.bRel );
-        Cudd_RecursiveDeref( dd, bTemp );
-    }
-    Extra_bddImageCompute2( pTree, bCare );
-    return pTree;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddImageCompute2(pTree *Extra_ImageTree2_t, bCare *DdNode) *DdNode {
-    if pTree.bImage {
-        Cudd_RecursiveDeref( pTree.dd, pTree.bImage ); }
-    pTree.bImage = Cudd_bddAndAbstract( pTree.dd, pTree.bRel, bCare, pTree.bCube ); 
-    Cudd_Ref( pTree.bImage );
-    return pTree.bImage;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddImageTreeDelete2(pTree *Extra_ImageTree2_t) {
-    if pTree.bRel {
-        Cudd_RecursiveDeref( pTree.dd, pTree.bRel ); }
-    if pTree.bCube {
-        Cudd_RecursiveDeref( pTree.dd, pTree.bCube ); }
-    if pTree.bImage {
-        Cudd_RecursiveDeref( pTree.dd, pTree.bImage ); }
-    ABC_FREE( pTree );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the previously computed image.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Extra_bddImageRead2(pTree *Extra_ImageTree2_t) *DdNode {
-    return pTree.bImage;
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

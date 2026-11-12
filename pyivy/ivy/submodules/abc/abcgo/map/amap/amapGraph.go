@@ -1,387 +1,264 @@
 package amap
 
-import "fmt"
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+)
 
-  FileName    [amapGraph.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Technology mapper for standard cells.]
-
-  Synopsis    [Internal AIG manager.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: amapGraph.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "amapInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates object.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Amap_ManSetupObj(p *Amap_Man_t) *Amap_Obj_t {
-    var pObj *Amap_Obj_t;
-    pObj = (Amap_Obj_t *)Aig_MmFixedEntryFetch( p.pMemObj );
-    memset( pObj, 0, sizeof(Amap_Obj_t) );
-    pObj.nFouts[0] = 1; // needed for flow to work in the first pass
-    pObj.Id = Vec_PtrSize(p.vObjs);
-    Vec_PtrPush( p.vObjs, pObj );
-    return pObj;
+	if p == nil {
+		panic("amap: nil mapping manager")
+	}
+	obj := &Amap_Obj_t_{Id: uint32(len(p.objects)), nFouts: [2]int32{1}}
+	p.objects = append(p.objects, obj)
+	Vec_PtrPush(p.vObjs, obj)
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates constant 1 node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Amap_ManCreateConst1(p *Amap_Man_t) *Amap_Obj_t {
-    var pObj *Amap_Obj_t;
-    pObj = Amap_ManSetupObj( p );
-    pObj.Type   = AMAP_OBJ_CONST1;
-    pObj.fPhase = 1;
-    p.nObjs[AMAP_OBJ_CONST1]++;
-    return pObj;
+	obj := Amap_ManSetupObj(p)
+	obj.Type = AMAP_OBJ_CONST1
+	obj.fPhase = 1
+	p.nObjs[AMAP_OBJ_CONST1]++
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates primary input.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Amap_ManCreatePi(p *Amap_Man_t) *Amap_Obj_t {
-    var pObj *Amap_Obj_t;
-    pObj = Amap_ManSetupObj( p );
-    pObj.Type  = AMAP_OBJ_PI;
-    pObj.IdPio = Vec_PtrSize( p.vPis );
-    Vec_PtrPush( p.vPis, pObj );
-    p.nObjs[AMAP_OBJ_PI]++;
-    return pObj;
+	obj := Amap_ManSetupObj(p)
+	obj.Type = AMAP_OBJ_PI
+	obj.IdPio = uint32(Vec_PtrSize(p.vPis))
+	Vec_PtrPush(p.vPis, obj)
+	p.nObjs[AMAP_OBJ_PI]++
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates primary output with the given driver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManCreatePo(p *Amap_Man_t, pFan0 *Amap_Obj_t) *Amap_Obj_t {
-    var pObj *Amap_Obj_t;
-    pObj = Amap_ManSetupObj( p );
-    pObj.IdPio  = Vec_PtrSize( p.vPos );
-    Vec_PtrPush( p.vPos, pObj );
-    pObj.Type   = AMAP_OBJ_PO;
-    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;
-    pObj.Level  = Amap_Regular(pFan0).Level;
-    if p.nLevelMax < int32(pObj.Level) {
-        p.nLevelMax = int32(pObj.Level); }
-    assert(p.nLevelMax < 4094, "p.nLevelMax < 4094"); // 2^12-2
-    p.nObjs[AMAP_OBJ_PO]++;
-    return pObj;
+func Amap_ManCreatePo(p *Amap_Man_t, fan *Amap_Obj_t) *Amap_Obj_t {
+	obj := Amap_ManSetupObj(p)
+	obj.IdPio = uint32(Vec_PtrSize(p.vPos))
+	Vec_PtrPush(p.vPos, obj)
+	obj.Type = AMAP_OBJ_PO
+	obj.Fan[0] = Amap_ObjToLit(fan)
+	Amap_Regular(fan).nRefs++
+	obj.Level = Amap_Regular(fan).Level
+	if p.nLevelMax < int32(obj.Level) {
+		p.nLevelMax = int32(obj.Level)
+	}
+	assert(p.nLevelMax < 4094, "mapping level < 4094")
+	p.nObjs[AMAP_OBJ_PO]++
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Create the new node assuming it does not exist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManCreateAnd(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t) *Amap_Obj_t {
-    var pObj *Amap_Obj_t;
-    pObj = Amap_ManSetupObj( p );
-    pObj.Type   = AMAP_OBJ_AND;
-    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;
-    pObj.Fan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1).nRefs++;
-    assert(Abc_Lit2Var(pObj.Fan[0]) != Abc_Lit2Var(pObj.Fan[1]), "Abc_Lit2Var(pObj.Fan[0]) != Abc_Lit2Var(pObj.Fan[1])");
-    pObj.fPhase = Amap_ObjPhaseReal(pFan0) & Amap_ObjPhaseReal(pFan1);
-    pObj.Level  = 1 + Abc_MaxInt( Amap_Regular(pFan0).Level, Amap_Regular(pFan1).Level );
-    if p.nLevelMax < int32(pObj.Level) {
-        p.nLevelMax = int32(pObj.Level); }
-    assert(p.nLevelMax < 4094, "p.nLevelMax < 4094"); // 2^12-2
-    p.nObjs[AMAP_OBJ_AND]++;
-    return pObj;
+func Amap_ManCreateAnd(p *Amap_Man_t, fan0, fan1 *Amap_Obj_t) *Amap_Obj_t {
+	obj := Amap_ManSetupObj(p)
+	obj.Type = AMAP_OBJ_AND
+	obj.Fan[0], obj.Fan[1] = Amap_ObjToLit(fan0), Amap_ObjToLit(fan1)
+	Amap_Regular(fan0).nRefs++
+	Amap_Regular(fan1).nRefs++
+	assert(Abc_Lit2Var(obj.Fan[0]) != Abc_Lit2Var(obj.Fan[1]), "AND fanins are distinct")
+	obj.fPhase = uint32(Amap_ObjPhaseReal(fan0) & Amap_ObjPhaseReal(fan1))
+	obj.Level = 1 + max(Amap_Regular(fan0).Level, Amap_Regular(fan1).Level)
+	if p.nLevelMax < int32(obj.Level) {
+		p.nLevelMax = int32(obj.Level)
+	}
+	assert(p.nLevelMax < 4094, "mapping level < 4094")
+	p.nObjs[AMAP_OBJ_AND]++
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Create the new node assuming it does not exist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManCreateXor(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t) *Amap_Obj_t {
-    var pObj *Amap_Obj_t;
-    pObj = Amap_ManSetupObj( p );
-    pObj.Type   = AMAP_OBJ_XOR;
-    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;
-    pObj.Fan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1).nRefs++;
-    pObj.fPhase = Amap_ObjPhaseReal(pFan0) ^ Amap_ObjPhaseReal(pFan1);
-    pObj.Level  = 2 + Abc_MaxInt( Amap_Regular(pFan0).Level, Amap_Regular(pFan1).Level );
-    if p.nLevelMax < int32(pObj.Level) {
-        p.nLevelMax = int32(pObj.Level); }
-    assert(p.nLevelMax < 4094, "p.nLevelMax < 4094"); // 2^12-2
-    p.nObjs[AMAP_OBJ_XOR]++;
-    return pObj;
+func Amap_ManCreateXor(p *Amap_Man_t, fan0, fan1 *Amap_Obj_t) *Amap_Obj_t {
+	obj := Amap_ManSetupObj(p)
+	obj.Type = AMAP_OBJ_XOR
+	obj.Fan[0], obj.Fan[1] = Amap_ObjToLit(fan0), Amap_ObjToLit(fan1)
+	Amap_Regular(fan0).nRefs++
+	Amap_Regular(fan1).nRefs++
+	obj.fPhase = uint32(Amap_ObjPhaseReal(fan0) ^ Amap_ObjPhaseReal(fan1))
+	obj.Level = 2 + max(Amap_Regular(fan0).Level, Amap_Regular(fan1).Level)
+	if p.nLevelMax < int32(obj.Level) {
+		p.nLevelMax = int32(obj.Level)
+	}
+	assert(p.nLevelMax < 4094, "mapping level < 4094")
+	p.nObjs[AMAP_OBJ_XOR]++
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Create the new node assuming it does not exist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManCreateMux(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t, pFanC *Amap_Obj_t) *Amap_Obj_t {
-    var pObj *Amap_Obj_t;
-    pObj = Amap_ManSetupObj( p );
-    pObj.Type   = AMAP_OBJ_MUX;
-    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;
-    pObj.Fan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1).nRefs++;
-    pObj.Fan[2] = Amap_ObjToLit(pFanC);  Amap_Regular(pFanC).nRefs++;
-    pObj.fPhase = (Amap_ObjPhaseReal(pFan1) &  Amap_ObjPhaseReal(pFanC)) | 
-                   (Amap_ObjPhaseReal(pFan0) & ~Amap_ObjPhaseReal(pFanC));
-    pObj.Level  = Abc_MaxInt( Amap_Regular(pFan0).Level, Amap_Regular(pFan1).Level );
-    pObj.Level  = 2 + Abc_MaxInt( pObj.Level, Amap_Regular(pFanC).Level );
-    if p.nLevelMax < int32(pObj.Level) {
-        p.nLevelMax = int32(pObj.Level); }
-    assert(p.nLevelMax < 4094, "p.nLevelMax < 4094"); // 2^12-2
-    p.nObjs[AMAP_OBJ_MUX]++;
-    return pObj;
+func Amap_ManCreateMux(p *Amap_Man_t, no, yes, control *Amap_Obj_t) *Amap_Obj_t {
+	obj := Amap_ManSetupObj(p)
+	obj.Type = AMAP_OBJ_MUX
+	obj.Fan[0], obj.Fan[1], obj.Fan[2] = Amap_ObjToLit(no), Amap_ObjToLit(yes), Amap_ObjToLit(control)
+	Amap_Regular(no).nRefs++
+	Amap_Regular(yes).nRefs++
+	Amap_Regular(control).nRefs++
+	obj.fPhase = uint32((Amap_ObjPhaseReal(yes) & Amap_ObjPhaseReal(control)) | (Amap_ObjPhaseReal(no) & (1 ^ Amap_ObjPhaseReal(control))))
+	obj.Level = 2 + max(Amap_Regular(no).Level, Amap_Regular(yes).Level, Amap_Regular(control).Level)
+	if p.nLevelMax < int32(obj.Level) {
+		p.nLevelMax = int32(obj.Level)
+	}
+	assert(p.nLevelMax < 4094, "mapping level < 4094")
+	p.nObjs[AMAP_OBJ_MUX]++
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates the choice node.]
-
-  Description [Should be called after the equivalence class nodes are linked.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManCreateChoice(p *Amap_Man_t, pObj *Amap_Obj_t) {
-    var pTemp *Amap_Obj_t;
-    // mark the node as a representative if its class
-//    assert( pObj->fRepr == 0 );
-    pObj.fRepr = 1;
-    // update the level of this node (needed for correct required time computation)
-    for  pTemp = pObj; (pTemp != nil); pTemp = Amap_ObjChoice(p, pTemp)  {
-        pObj.Level = Abc_MaxInt( pObj.Level, pTemp.Level );
-//        pTemp->nVisits++; pTemp->nVisitsCopy++;
-    }
-    // mark the largest level
-    if p.nLevelMax < int32(pObj.Level) {
-        p.nLevelMax = int32(pObj.Level); }
-    assert(p.nLevelMax < 4094, "p.nLevelMax < 4094"); // 2^12-2
+func Amap_ManCreateXorChoices(p *Amap_Man_t, a, b *Amap_Obj_t, choices []*Amap_Obj_t) {
+	if len(choices) < 4 {
+		panic("amap: four choice slots required")
+	}
+	choices[0] = Amap_ManCreateXor(p, a, b)
+	choices[1] = Amap_ManCreateXor(p, Amap_Not(a), b)
+	choices[2] = Amap_ManCreateXor(p, a, Amap_Not(b))
+	choices[3] = Amap_ManCreateXor(p, Amap_Not(a), Amap_Not(b))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates XOR/MUX choices for the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManCreateXorChoices(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t, pChoices []*Amap_Obj_t) {
-    pChoices[0] = Amap_ManCreateXor( p, pFan0,           pFan1 );
-    pChoices[1] = Amap_ManCreateXor( p, Amap_Not(pFan0), pFan1 );
-    pChoices[2] = Amap_ManCreateXor( p, pFan0,           Amap_Not(pFan1) );
-    pChoices[3] = Amap_ManCreateXor( p, Amap_Not(pFan0), Amap_Not(pFan1) );
+func Amap_ManCreateMuxChoices(p *Amap_Man_t, a, b, control *Amap_Obj_t, choices []*Amap_Obj_t) {
+	if len(choices) < 4 {
+		panic("amap: four choice slots required")
+	}
+	choices[0] = Amap_ManCreateMux(p, a, b, control)
+	choices[1] = Amap_ManCreateMux(p, Amap_Not(a), Amap_Not(b), control)
+	choices[2] = Amap_ManCreateMux(p, b, a, Amap_Not(control))
+	choices[3] = Amap_ManCreateMux(p, Amap_Not(b), Amap_Not(a), Amap_Not(control))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates XOR/MUX choices for the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManCreateMuxChoices(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t, pFanC *Amap_Obj_t, pChoices []*Amap_Obj_t) {
-    pChoices[0] = Amap_ManCreateMux( p, pFan0,           pFan1,           pFanC           );
-    pChoices[1] = Amap_ManCreateMux( p, Amap_Not(pFan0), Amap_Not(pFan1), pFanC           );
-    pChoices[2] = Amap_ManCreateMux( p, pFan1,           pFan0,           Amap_Not(pFanC) );
-    pChoices[3] = Amap_ManCreateMux( p, Amap_Not(pFan1), Amap_Not(pFan0), Amap_Not(pFanC) );
+func Amap_ManCreateChoice(p *Amap_Man_t, obj *Amap_Obj_t) {
+	obj = Amap_Regular(obj)
+	obj.fRepr = 1
+	seen := make(map[uint32]bool)
+	for current := obj; current != nil; current = Amap_ObjChoice(p, current) {
+		current = Amap_Regular(current)
+		if seen[current.Id] {
+			panic("amap: cyclic choice chain")
+		}
+		seen[current.Id] = true
+		if obj.Level < current.Level {
+			obj.Level = current.Level
+		}
+	}
+	if p.nLevelMax < int32(obj.Level) {
+		p.nLevelMax = int32(obj.Level)
+	}
+	assert(p.nLevelMax < 4094, "mapping level < 4094")
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Drags pointer out through the copy.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_AndToObj(pObj *Aig_Obj_t) *Amap_Obj_t {
-    return Amap_NotCond( (Amap_Obj_t *)Aig_Regular(pObj).pData, Aig_IsComplement(pObj) );
+func Amap_AndToObj(p *Amap_Man_t, g *aig.Graph, edge aig.Edge) *Amap_Obj_t {
+	obj := p.sourceCopies[edge.NodeID()]
+	if obj == nil {
+		panic(fmt.Sprintf("amap: source node %d has not been mapped", edge.NodeID()))
+	}
+	return Amap_NotCond(obj, int32(edge&1))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Starts the AIG manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManGetLast_rec(p *Amap_Man_t, pObj *Amap_Obj_t) *Amap_Obj_t {
-    if pObj.Equiv == 0 {
-        return pObj; }
-    return Amap_ManGetLast_rec( p, Amap_ObjChoice(p, pObj) );
+func Amap_ManGetLast_rec(p *Amap_Man_t, obj *Amap_Obj_t) *Amap_Obj_t {
+	seen := make(map[uint32]bool)
+	for obj != nil {
+		obj = Amap_Regular(obj)
+		if obj.Equiv == 0 {
+			return obj
+		}
+		if seen[obj.Id] {
+			panic("amap: cyclic equivalence chain")
+		}
+		seen[obj.Id] = true
+		obj = Amap_ObjChoice(p, obj)
+	}
+	return nil
 }
 
-/**Function*************************************************************
+// Amap_ManCreate copies an AIG graph into Amap's internal graph. The source
+// uses stable node IDs and complemented-edge bits, so a local ID map replaces
+// the C implementation's temporary pData fields.
+func Amap_ManCreate(p *Amap_Man_t, source *aig.Graph) {
+	if p == nil || source == nil {
+		panic("amap: nil source graph or manager")
+	}
+	p.sourceCopies = make(map[int]*Amap_Obj_t, source.NodeCount())
+	p.pConst1 = Amap_ManCreateConst1(p)
+	p.sourceCopies[source.Const1().NodeID()] = p.pConst1
+	for _, input := range source.Inputs() {
+		p.sourceCopies[input.NodeID()] = Amap_ManCreatePi(p)
+	}
 
-  Synopsis    [Starts the AIG manager.]
+	for _, edge := range aig.Aig_ManDfsChoices(source) {
+		id := edge.NodeID()
+		if p.sourceCopies[id] != nil {
+			continue
+		}
+		node := source.Node(edge)
+		fan0 := Amap_AndToObj(p, source, node.Fanins[0])
+		var mapped *Amap_Obj_t
+		switch node.Kind {
+		case aig.And:
+			if a, b, ok := aig.Aig_ObjRecognizeExor(source, edge); p.fUseXor != 0 && ok {
+				var choices [4]*Amap_Obj_t
+				Amap_ManCreateXorChoices(p, Amap_AndToObj(p, source, a), Amap_AndToObj(p, source, b), choices[:])
+				mapped = Amap_ManCreateAnd(p, fan0, Amap_AndToObj(p, source, node.Fanins[1]))
+				p.nChoicesAdded++
+				Amap_ObjSetChoice(mapped, choices[0])
+				for i := 0; i < 3; i++ {
+					Amap_ObjSetChoice(choices[i], choices[i+1])
+				}
+				Amap_ManCreateChoice(p, mapped)
+			} else if control, yes, no, ok := amapRecognizeMux(source, edge); p.fUseMux != 0 && ok {
+				var choices [4]*Amap_Obj_t
+				Amap_ManCreateMuxChoices(p, Amap_AndToObj(p, source, no), Amap_AndToObj(p, source, yes), Amap_AndToObj(p, source, control), choices[:])
+				mapped = Amap_ManCreateAnd(p, fan0, Amap_AndToObj(p, source, node.Fanins[1]))
+				p.nChoicesAdded++
+				Amap_ObjSetChoice(mapped, choices[0])
+				for i := 0; i < 3; i++ {
+					Amap_ObjSetChoice(choices[i], choices[i+1])
+				}
+				Amap_ManCreateChoice(p, mapped)
+			} else {
+				mapped = Amap_ManCreateAnd(p, fan0, Amap_AndToObj(p, source, node.Fanins[1]))
+			}
+		case aig.ExclusiveOr:
+			fan1 := Amap_AndToObj(p, source, node.Fanins[1])
+			if edge.Complemented() {
+				mapped = Amap_Not(Amap_ManCreateXor(p, fan0, fan1))
+			} else {
+				mapped = Amap_ManCreateXor(p, fan0, fan1)
+			}
+		default:
+			continue
+		}
+		p.sourceCopies[id] = Amap_Regular(mapped)
+		if Amap_IsComplement(mapped) != 0 {
+			// The source copy table stores the regular result; the edge's phase is
+			// reapplied by Amap_AndToObj at each use.
+			p.sourceCopies[id] = Amap_Regular(mapped)
+		}
 
-  Description []
-               
-  SideEffects []
+		// Preserve source equivalence classes as ordered choice chains.
+		alt := aig.Aig_ObjEquiv(source, aig.Aig_Regular(edge))
+		if alt != aig.InvalidEdge {
+			p.nChoicesGiven++
+			prev := Amap_Regular(mapped)
+			for alt != aig.InvalidEdge {
+				alternative := p.sourceCopies[alt.NodeID()]
+				if alternative == nil {
+					break
+				}
+				prev.fRepr = 0
+				Amap_ObjSetChoice(Amap_ManGetLast_rec(p, prev), alternative)
+				prev = alternative
+				alt = aig.Aig_ObjEquiv(source, aig.Aig_Regular(alt))
+			}
+			Amap_ManCreateChoice(p, Amap_Regular(mapped))
+		}
+	}
 
-  SeeAlso     []
-
-***********************************************************************/
-func Amap_ManCreate(p *Amap_Man_t, pAig *Aig_Man_t) {
-    var vNodes *Vec_Ptr_t;
-    var pChoices [4]*Amap_Obj_t;
-    var pObj, pFanin, pPrev, pFan0, pFan1, pFanC *Aig_Obj_t;
-    var i, fChoices int32;
-    if pAig.pEquivs {
-        vNodes = Aig_ManDfsChoices( pAig );
-    } else {
-        vNodes = Aig_ManDfs( pAig, 1 ); }
-    p.pConst1 = Amap_ManCreateConst1( p );
-    // print warning about excessive memory usage
-    if p.pPars.fVerbose {
-        if 1.0 * Aig_ManObjNum(pAig) * sizeof(Amap_Obj_t) / (1<<30) > 0.1 {
-        fmt.Printf("Warning: Mapper allocates %.3f GB for subject graph with %d objects.\n", 1.0 * Aig_ManObjNum(pAig) * sizeof(Amap_Obj_t) / (1<<30), Aig_ManObjNum(pAig)); }
-    }
-    // create PIs and remember them in the old nodes
-    Aig_ManCleanData(pAig);
-    Aig_ManConst1(pAig).pData = Amap_ManConst1( p );
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {
-        pObj.pData = Amap_ManCreatePi( p );
-    }
-    // load the AIG into the mapper
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        fChoices = 0;
-        if p.fUseXor && Aig_ObjRecognizeExor(pObj, &pFan0, &pFan1 ) {
-            Amap_ManCreateXorChoices( p, Amap_AndToObj(pFan0), Amap_AndToObj(pFan1), pChoices );
-            fChoices = 1;
-        
-        } else if p.fUseMux && Aig_ObjIsMuxType(pObj) {
-            pFanC = Aig_ObjRecognizeMux( pObj, &pFan1, &pFan0 );
-            Amap_ManCreateMuxChoices( p, Amap_AndToObj(pFan0), Amap_AndToObj(pFan1), Amap_AndToObj(pFanC), pChoices );
-            fChoices = 1;
-        }
-        pObj.pData = Amap_ManCreateAnd( p, (Amap_Obj_t *)Aig_ObjChild0Copy(pObj), (Amap_Obj_t *)Aig_ObjChild1Copy(pObj) );
-        if fChoices != 0 {
-            p.nChoicesAdded++;
-            Amap_ObjSetChoice( (Amap_Obj_t *)pObj.pData, pChoices[0] );
-            Amap_ObjSetChoice( pChoices[0], pChoices[1] );
-            Amap_ObjSetChoice( pChoices[1], pChoices[2] );
-            Amap_ObjSetChoice( pChoices[2], pChoices[3] );
-            Amap_ManCreateChoice( p, (Amap_Obj_t *)pObj.pData );
-        }
-        if Aig_ObjIsChoice( pAig, pObj ) {
-//            assert( !fChoices );
-            p.nChoicesGiven++;
-            for  pPrev = pObj, pFanin = Aig_ObjEquiv(pAig, pObj); pFanin; pPrev = pFanin, pFanin = Aig_ObjEquiv(pAig, pFanin)  {
-                ((Amap_Obj_t *)pFanin.pData).fRepr = 0;
-                Amap_ObjSetChoice( Amap_ManGetLast_rec(p, (Amap_Obj_t *)pPrev.pData), 
-                    (Amap_Obj_t *)pFanin.pData );
-            }
-            Amap_ManCreateChoice( p, (Amap_Obj_t *)pObj.pData );
-        }
-    }
-    Vec_PtrFree( vNodes );
-    // set the primary outputs without copying the phase
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-        pObj.pData = Amap_ManCreatePo( p, (Amap_Obj_t *)Aig_ObjChild0Copy(pObj) );
-    }
-    if p.pPars.fVerbose {
-        fmt.Printf("Performing mapping with %d given and %d created choices.\n", p.nChoicesGiven, p.nChoicesAdded); }
+	for _, output := range source.Outputs() {
+		driver := source.Node(output).Fanins[0]
+		Amap_ManCreatePo(p, Amap_AndToObj(p, source, driver))
+	}
+	if p.pPars != nil && p.pPars.fVerbose != 0 {
+		fmt.Printf("Performing mapping with %d given and %d created choices.\n", p.nChoicesGiven, p.nChoicesAdded)
+	}
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func amapRecognizeMux(g *aig.Graph, edge aig.Edge) (control, yes, no aig.Edge, ok bool) {
+	if !aig.Aig_ObjIsMuxType(g, edge) {
+		return aig.InvalidEdge, aig.InvalidEdge, aig.InvalidEdge, false
+	}
+	control, yes, no = aig.Aig_ObjRecognizeMux(g, edge)
+	return control, yes, no, true
+}

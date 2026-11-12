@@ -135,13 +135,15 @@ func TestAllThreeElementFamilyPairs(t *testing.T) {
 			}
 		}
 	}
-	t.Logf("original set fixture %016x", hash)
+	if hash != 0x697c168ae20d22d5 {
+		t.Fatalf("original C set fixture: %016x", hash)
+	}
 }
 func TestSetOperationsInvalidFamilyOwnership(t *testing.T) {
 	dd := cudd.NewBDDManager(1)
 	other := cudd.NewBDDManager(0)
 	foreign := cudd.Cudd_zddChange(other, other.One, 0)
-	for _, f := range []*DdNode{nil, foreign, dd.LogicZero, dd.Vars[0], cudd.Cudd_addIthVar(dd, 0)} {
+	for _, f := range []*DdNode{nil, foreign, dd.LogicZero, cudd.Cudd_addConst(dd, 2), dd.Vars[0], cudd.Cudd_addIthVar(dd, 0)} {
 		if Extra_zddSubSet(dd, f, dd.One) != nil || Extra_zddSupSet(dd, dd.One, f) != nil || Extra_zddNotSubSet(dd, f, dd.Zero) != nil || Extra_zddNotSupSet(dd, f, dd.Zero) != nil || Extra_zddMaxNotSupSet(dd, f, dd.Zero) != nil || Extra_zddMaximal(dd, f) != nil || Extra_zddEmptyBelongs(dd, f) || Extra_zddIsOneSubset(dd, f) {
 			t.Fatal("invalid family accepted")
 		}

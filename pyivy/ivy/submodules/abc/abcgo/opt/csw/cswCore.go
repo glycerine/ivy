@@ -1,103 +1,71 @@
 package csw
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
+)
 
-  FileName    [cswCore.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Cut sweeping.]
-
-  Synopsis    []
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - July 11, 2007.]
-
-  Revision    [$Id: cswCore.c,v 1.00 2007/07/11 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "cswInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Csw_Sweep(pAig *Aig_Man_t, nCutsMax int32, nLeafMax int32, fVerbose int32) *Aig_Man_t {
-    var p *Csw_Man_t;
-    var pRes *Aig_Man_t;
-    var pObj, pObjNew, pObjRes *Aig_Obj_t;
-    var i int32;
-    var clk abctime;
-clk = Abc_Clock();
-    // start the manager
-    p = Csw_ManStart( pAig, nCutsMax, nLeafMax, fVerbose );
-    // set elementary cuts at the PIs
-    Aig_ManForEachCi( p.pManRes, pObj, i )
-    {
-        Csw_ObjPrepareCuts( p, pObj, 1 );
-        Csw_ObjAddRefs( p, pObj, Aig_ManCi(p.pManAig,i).nRefs );
-    }
-    // process the nodes
-    Aig_ManForEachNode( pAig, pObj, i )
-    {
-        // create the new node
-        pObjNew = Aig_And( p.pManRes, Csw_ObjChild0Equiv(p, pObj), Csw_ObjChild1Equiv(p, pObj) );
-        // check if this node can be represented using another node
-//        pObjRes = Csw_ObjSweep( p, Aig_Regular(pObjNew), pObj->nRefs > 1 );
-//        pObjRes = Aig_NotCond( pObjRes, Aig_IsComplement(pObjNew) );
-        // try recursively if resubsitution is used
-        for {
-            pObjRes = Csw_ObjSweep( p, Aig_Regular(pObjNew), pObj.nRefs > 1 );
-            pObjRes = Aig_NotCond( pObjRes, Aig_IsComplement(pObjNew) );        
-            pObjNew = pObjRes;
-        
-if !( Csw_ObjCuts(p, Aig_Regular(pObjNew)) == nil && !Aig_ObjIsConst1(Aig_Regular(pObjNew)) ) { break }
-} 
-        // save the resulting node
-        Csw_ObjSetEquiv( p, pObj, pObjRes );
-        // add to the reference counter
-        Csw_ObjAddRefs( p, Aig_Regular(pObjRes), pObj.nRefs );
-    }
-    // add the POs
-    Aig_ManForEachCo( pAig, pObj, i )
-        Aig_ObjCreateCo( p.pManRes, Csw_ObjChild0Equiv(p, pObj) );
-    // remove dangling nodes 
-    Aig_ManCleanup( p.pManRes );
-    // return the resulting manager
-p.timeTotal = Abc_Clock() - clk;
-p.timeOther = p.timeTotal - p.timeCuts - p.timeHash;
-    pRes = p.pManRes;
-    Csw_ManStop( p );
-    return pRes;
+func Csw_Sweep(graph *aig.Graph, nCutsMax, nLeafMax, verbose int32) *aig.Graph {
+	start := util.Abc_Clock()
+	p := Csw_ManStart(graph, nCutsMax, nLeafMax, verbose)
+	inputs := graph.Inputs()
+	for i, ci := range p.pManRes.Inputs() {
+		Csw_ObjPrepareCuts(p, ci, 1)
+		Csw_ObjAddRefs(p, ci, aig.Aig_ObjRefs(graph, inputs[i]))
+	}
+	for _, obj := range aig.Aig_ManDfsAll(graph) {
+		node := graph.Node(obj)
+		switch node.Kind {
+		case aig.Buffer:
+			child := Csw_ObjChild0Equiv(p, obj)
+			e := aig.Aig_ObjCreate(p.pManRes, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{child, aig.InvalidEdge}})
+			Csw_ObjPrepareCuts(p, e, 1)
+			Csw_ObjAddRefs(p, e, int32(node.Refs))
+			Csw_ObjSetEquiv(p, obj, e)
+		case aig.Output:
+			Csw_ObjSetEquiv(p, obj, Csw_ObjChild0Equiv(p, obj))
+		case aig.And, aig.ExclusiveOr:
+			a, b := Csw_ObjChild0Equiv(p, obj), Csw_ObjChild1Equiv(p, obj)
+			var e aig.Edge
+			if node.Kind == aig.ExclusiveOr {
+				e = p.pManRes.NewXor(a, b)
+			} else {
+				e = p.pManRes.AND(a, b)
+			}
+			trivial := int32(0)
+			if node.Refs > 1 {
+				trivial = 1
+			}
+			for {
+				regular := e &^ 1
+				result := Csw_ObjSweep(p, regular, trivial)
+				if e.Complemented() {
+					result = result.Not()
+				}
+				e = result
+				if e&^1 == p.pManRes.Const1() || Csw_ObjCuts(p, e) != nil {
+					break
+				}
+			}
+			Csw_ObjSetEquiv(p, obj, e)
+			Csw_ObjAddRefs(p, e, int32(node.Refs))
+		}
+	}
+	for _, obj := range graph.Outputs() {
+		e := Csw_ObjChild0Equiv(p, obj)
+		if obj.Complemented() {
+			e = e.Not()
+		}
+		p.pManRes.AddOutput(e)
+	}
+	aig.Aig_ManSetRegNum(p.pManRes, graph.RegisterCount())
+	aig.Aig_ManSetConstrNum(p.pManRes, aig.Aig_ManConstrNum(graph))
+	p.pManRes.Assertions = graph.Assertions
+	p.pManRes.BarrierBuffers = graph.BarrierBuffers
+	aig.Aig_ManCleanup(p.pManRes)
+	p.timeTotal = util.Abc_Clock() - start
+	p.timeOther = p.timeTotal - p.timeCuts - p.timeHash
+	result := p.pManRes
+	Csw_ManStop(p)
+	return result
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

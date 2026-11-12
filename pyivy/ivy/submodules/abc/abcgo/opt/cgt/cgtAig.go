@@ -244,8 +244,14 @@ func Cgt_ManBuildClockGate(dst, src *aig.Graph, gates []aig.Edge, copies, preser
 	total := dst.Const0()
 	for _, e := range gates {
 		copy, ok := preserved[e.NodeID()]
+		if !src.ValidEdge(e) {
+			panic("cgt: invalid source gate")
+		}
 		if !ok {
-			copy = copies[e.NodeID()]
+			copy, ok = copies[e.NodeID()]
+			if !ok {
+				panic("cgt: source gate has no destination copy")
+			}
 		}
 		total = dst.OR(total, copy^aig.Edge(e&1))
 	}

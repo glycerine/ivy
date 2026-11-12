@@ -2,902 +2,623 @@ package abc
 
 import (
 	"fmt"
-	"os"
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/map/mio"
+	"sort"
 	"strings"
 )
 
-/**CFile****************************************************************
-
-  FileName    [abcHie.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Procedures to handle hierarchy.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcHie.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "abc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively flattens logic hierarchy of the netlist.]
-
-  Description [When this procedure is called, the PI/PO nets of the old 
-  netlist point to the corresponding nets of the flattened netlist.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFlattenLogicHierarchy2_rec(pNtkNew *Abc_Ntk_t, pNtk *Abc_Ntk_t, pCounter *int32) {
-    var Suffix string // was [2000]byte in C
-
-    var pNtkModel *Abc_Ntk_t;
-    var pObj, pTerm, pNet, pFanin *Abc_Obj_t;
-    var i, k int32;
-
-    // process the blackbox
-    if Abc_NtkHasBlackbox(pNtk) {
-        // duplicate the blackbox
-        assert(Abc_NtkBoxNum(pNtk) == 1, "Abc_NtkBoxNum(pNtk) == 1");
-        pObj = Abc_NtkBox( pNtk, 0 );
-        Abc_NtkDupBox( pNtkNew, pObj, 1 );
-        pObj.pCopy.pData = pNtk;
-
-        // connect blackbox fanins to the PI nets
-        assert(Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk), "Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk)");
-        // inlining of macro Abc_NtkForEachPi
-        for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-            Abc_ObjAddFanin( Abc_ObjFanin(pObj.pCopy,i), Abc_ObjFanout0(pTerm).pCopy );
-        }
-
-        // connect blackbox fanouts to the PO nets
-        assert(Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk), "Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk)");
-        // inlining of macro Abc_NtkForEachPo
-        for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-            Abc_ObjAddFanin( Abc_ObjFanin0(pTerm).pCopy, Abc_ObjFanout(pObj.pCopy,i) );
-        }
-        return;
-    }
-
-    (*pCounter)++;
-
-    // create the suffix, which will be appended to the internal names
-    if *pCounter {
-        Suffix = fmt.Sprintf("_%s_%d", Abc_NtkName(pNtk), *pCounter); }
-
-    // duplicate nets of all boxes, including latches
-    // inlining of macro Abc_NtkForEachBox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            pNet = Abc_ObjFanin0(pTerm);
-            if pNet.pCopy {
-                continue; }
-            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNameSuffix(pNet, Suffix) );
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            pNet = Abc_ObjFanout0(pTerm);
-            if pNet.pCopy {
-                continue; }
-            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNameSuffix(pNet, Suffix) );
-        }
-    }
-
-    // mark objects that will not be used
-    Abc_NtkIncrementTravId( pNtk );
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_NodeSetTravIdCurrent( pTerm );
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Abc_NodeSetTravIdCurrent( pTerm );
-        // if the netlist has net names beginning with "abc_property_"
-        // these names will be addes as primary outputs of the network
-        pNet = Abc_ObjFanin0(pTerm);
-        if strncmp( Abc_ObjName(pNet), "abc_property", 12 ) {
-            continue; }
-        Abc_ObjAddFanin( Abc_NtkCreatePo(pNet.pCopy.pNtk), pNet.pCopy );
-        if Nm_ManFindNameById(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id) {
-            Nm_ManDeleteIdName(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id); }
-        Abc_ObjAssignName( pNet.pCopy, Abc_ObjName(pNet), Suffix );
-    }
-    // inlining of macro Abc_NtkForEachBox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {
-        if Abc_ObjIsLatch(pObj) {
-            continue; }
-        Abc_NodeSetTravIdCurrent( pObj );
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            Abc_NodeSetTravIdCurrent( pTerm );
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            Abc_NodeSetTravIdCurrent( pTerm );
-        }
-    }
-
-    // duplicate objects that do not have prototypes yet
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {
-        if Abc_NodeIsTravIdCurrent(pObj) {
-            continue; }
-        if pObj.pCopy {
-            continue; }
-        Abc_NtkDupObj( pNtkNew, pObj, 0 );
-    }
-    }
-
-    // connect objects
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else
-        if !Abc_NodeIsTravIdCurrent(pObj) {
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-                if !Abc_NodeIsTravIdCurrent(pFanin) {
-                    Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }
-            } }
-    }
-
-    // call recursively
-    // inlining of macro Abc_NtkForEachBox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {
-        if Abc_ObjIsLatch(pObj) {
-            continue; }
-        pNtkModel = (Abc_Ntk_t *)pObj.pData;
-        // check the match between the number of actual and formal parameters
-        assert(Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel), "Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel)");
-        assert(Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel), "Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel)");
-        // clean the node copy fields
-        Abc_NtkCleanCopy( pNtkModel );
-        // map PIs/POs
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            Abc_ObjFanout0( Abc_NtkPi(pNtkModel, k) ).pCopy = Abc_ObjFanin0(pTerm).pCopy;
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            Abc_ObjFanin0( Abc_NtkPo(pNtkModel, k) ).pCopy = Abc_ObjFanout0(pTerm).pCopy;
-        }
-        // call recursively
-        Abc_NtkFlattenLogicHierarchy2_rec( pNtkNew, pNtkModel, pCounter );
-    }
-
-    // if it is a BLIF-MV netlist transfer the values of all nets
-    if Abc_NtkHasBlifMv(pNtk) && Abc_NtkMvVar(pNtk) {
-        if Abc_NtkMvVar( pNtkNew ) == nil {
-            Abc_NtkStartMvVars( pNtkNew ); }
-        // inlining of macro Abc_NtkForEachNet
-        for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil || !Abc_ObjIsNet(pObj) {} else {
-            Abc_NtkSetMvVarValues( pObj.pCopy, Abc_ObjMvVarNum(pObj) ); }
-        }
-    }
+func hieNetName(o *Object) string {
+	if name := o.Name(); name != "" {
+		return name
+	}
+	return fmt.Sprintf("n%d", o.ID)
+}
+func hieInputNet(o *Object) (*Object, error) {
+	if len(o.fanins) != 1 || o.fanins[0].Object.Kind != ObjectNet {
+		return nil, fmt.Errorf("terminal %d has no input net", o.ID)
+	}
+	return o.fanins[0].Object, nil
+}
+func hieOutputNet(o *Object) (*Object, error) {
+	if len(o.fanouts) != 1 || o.fanouts[0].Kind != ObjectNet {
+		return nil, fmt.Errorf("terminal %d has no output net", o.ID)
+	}
+	return o.fanouts[0], nil
+}
+func hieOrderTerminals(n *Network) {
+	n.cis = append([]*Object(nil), n.ObjectsOfKind(ObjectPI)...)
+	n.cos = append([]*Object(nil), n.ObjectsOfKind(ObjectPO)...)
+	for _, box := range n.boxes {
+		n.cis = append(n.cis, box.fanouts...)
+		for _, edge := range box.fanins {
+			n.cos = append(n.cos, edge.Object)
+		}
+	}
+}
+func hieCopyBinding(o *Object, dst *Network) *Object {
+	if o.Copy != nil && o.Copy.network == dst {
+		return o.Copy
+	}
+	return nil
+}
+func hieConnect(dst *Network, object *Object, edge Edge) error {
+	if object == nil || edge.Object == nil {
+		return fmt.Errorf("unmapped hierarchy connection")
+	}
+	return dst.AddFanin(object, edge)
+}
+func hieBridgeNet(dst *Network, input, output, formal *Object) error {
+	if input == output {
+		return nil
+	}
+	if len(output.fanins) != 0 {
+		return fmt.Errorf("multiple drivers for hierarchical net %s", hieNetName(output))
+	}
+	node := Abc_NtkCreateNodeBuf(dst, input)
+	switch Abc_NtkFunc_t(dst.Function) {
+	case ABC_FUNC_SOP:
+		node.Data = "1 1\n"
+	case ABC_FUNC_BLIFMV:
+		size := int(Abc_ObjMvVarNum(formal))
+		node.Data = &MVTable{DomainSizes: []int{size, size}, Cubes: []MVCube{{Inputs: []MVTerm{{Any: true, EqualInput: -1}}, Output: MVTerm{EqualInput: 0}}}}
+	case ABC_FUNC_AIG:
+		if manager, ok := dst.FunctionManager.(*hop.Hop_Man_t); ok {
+			node.Data = hop.Hop_IthVar(manager, 0)
+		}
+	case ABC_FUNC_BDD:
+		if manager, ok := dst.FunctionManager.(*core.DdManager); ok {
+			node.Data = core.Cudd_bddIthVar(manager, 0)
+		}
+	case ABC_FUNC_MAP:
+		manager, ok := dst.FunctionManager.(*mio.Mio_Library_t)
+		if !ok {
+			return fmt.Errorf("mapped hierarchy needs MIO library")
+		}
+		gate := mio.Mio_LibraryReadBuf(manager)
+		if gate == nil {
+			return fmt.Errorf("mapped hierarchy needs buffer cell")
+		}
+		node.Data = gate
+	}
+	return hieConnect(dst, output, node.Signal())
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Flattens the logic hierarchy of the netlist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFlattenLogicHierarchy2(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t; 
-    var pTerm, pNet *Abc_Obj_t;
-    var i, Counter int32;
-    extern Abc_Des_t * Abc_DesDupBlackboxes( Abc_Des_t * p, Abc_Ntk_t * pNtkSave );
-
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    // start the network
-    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );
-    // duplicate the name and the spec
-    pNtkNew.pName = Abc_UtilStrsav(pNtk.pName);
-    pNtkNew.pSpec = Abc_UtilStrsav(pNtk.pSpec);
-
-    // clean the node copy fields
-    Abc_NtkCleanCopy( pNtk );
-
-    // duplicate PIs/POs and their nets
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_NtkDupObj( pNtkNew, pTerm, 0 );
-        pNet = Abc_ObjFanout0( pTerm );
-        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );
-        Abc_ObjAddFanin( pNet.pCopy, pTerm.pCopy );
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Abc_NtkDupObj( pNtkNew, pTerm, 0 );
-        pNet = Abc_ObjFanin0( pTerm );
-        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );
-        Abc_ObjAddFanin( pTerm.pCopy, pNet.pCopy );
-    }
-
-    // recursively flatten hierarchy, create internal logic, add new PI/PO names if there are black boxes
-    Counter = -1;
-    Abc_NtkFlattenLogicHierarchy2_rec( pNtkNew, pNtk, &Counter );
-    fmt.Printf("Hierarchy reader flattened %d instances of logic boxes and left %d black boxes.\n", Counter, Abc_NtkBlackboxNum(pNtkNew));
-
-    if pNtk.pDesign {
-        // pass on the design
-        assert(Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk, "Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk");
-        pNtkNew.pDesign = Abc_DesDupBlackboxes( pNtk.pDesign, pNtkNew );
-        // update the pointers
-        // inlining of macro Abc_NtkForEachBlackbox
-        for  i = 0; (i < Vec_PtrSize((pNtkNew).vBoxes)) && (((pTerm) = Abc_NtkBox(pNtkNew, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pTerm) {} else {
-            pTerm.pData = ((Abc_Ntk_t *)pTerm.pData).pCopy; }
-        }
-    }
-
-    // we may have added property outputs
-    Abc_NtkOrderCisCos( pNtkNew );
-
-    // copy the timing information
-//    Abc_ManTimeDup( pNtk, pNtkNew );
-    // duplicate EXDC 
-    if pNtk.pExdc {
-        fmt.Printf("EXDC is not transformed.\n"); }
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkFlattenLogicHierarchy2(): Network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
+type hierarchyFlatten struct {
+	dst     *Network
+	counter *int32
+	suffix  bool
+	active  map[*Network]bool
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively flattens logic hierarchy of the netlist.]
-
-  Description [When this procedure is called, the PI/PO nets of the old 
-  netlist point to the corresponding nets of the flattened netlist.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFlattenLogicHierarchy_rec(pNtkNew *Abc_Ntk_t, pNtk *Abc_Ntk_t, pCounter *int32, vPref *Vec_Str_t) {
-    var pNtkModel *Abc_Ntk_t;
-    var pObj, pTerm, pNet, pFanin *Abc_Obj_t;
-    var i, k, Length int32;
-
-    // process the blackbox
-    if Abc_NtkHasBlackbox(pNtk) {
-        //printf( "Flatting black box \"%s\".\n", pNtk->pName );
-        // duplicate the blackbox
-        assert(Abc_NtkBoxNum(pNtk) == 1, "Abc_NtkBoxNum(pNtk) == 1");
-        pObj = Abc_NtkBox( pNtk, 0 );
-        Abc_NtkDupBox( pNtkNew, pObj, 1 );
-        pObj.pCopy.pData = pNtk;
-
-        // connect blackbox fanins to the PI nets
-        assert(Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk), "Abc_ObjFaninNum(pObj.pCopy) == Abc_NtkPiNum(pNtk)");
-        // inlining of macro Abc_NtkForEachPi
-        for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-            Abc_ObjAddFanin( Abc_ObjFanin(pObj.pCopy,i), Abc_ObjFanout0(pTerm).pCopy );
-        }
-
-        // connect blackbox fanouts to the PO nets
-        assert(Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk), "Abc_ObjFanoutNum(pObj.pCopy) == Abc_NtkPoNum(pNtk)");
-        // inlining of macro Abc_NtkForEachPo
-        for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-            Abc_ObjAddFanin( Abc_ObjFanin0(pTerm).pCopy, Abc_ObjFanout(pObj.pCopy,i) );
-        }
-        return;
-    }
-
-    (*pCounter)++;
-
-    // create the suffix, which will be appended to the internal names
-    if *pCounter {
-        var Buffer string // was [20]byte in C
-
-        Buffer = fmt.Sprintf("(%d)", *pCounter);
-        Vec_StrPrintStr( vPref, Buffer );
-    }
-    Vec_StrPush( vPref, '|' );
-    Vec_StrPush( vPref, 0 );
-
-    // duplicate nets of all boxes, including latches
-    // inlining of macro Abc_NtkForEachBox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            pNet = Abc_ObjFanin0(pTerm);
-            if pNet.pCopy {
-                continue; }
-            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNamePrefix(pNet, Vec_StrArray(vPref)) );
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            pNet = Abc_ObjFanout0(pTerm);
-            if pNet.pCopy {
-                continue; }
-            pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjNamePrefix(pNet, Vec_StrArray(vPref)) );
-        }
-    }
-
-    // mark objects that will not be used
-    Abc_NtkIncrementTravId( pNtk );
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_NodeSetTravIdCurrent( pTerm );
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Abc_NodeSetTravIdCurrent( pTerm );
-        // if the netlist has net names beginning with "abc_property_"
-        // these names will be addes as primary outputs of the network
-        pNet = Abc_ObjFanin0(pTerm);
-        if strncmp( Abc_ObjName(pNet), "abc_property", 12 ) {
-            continue; }
-        Abc_ObjAddFanin( Abc_NtkCreatePo(pNet.pCopy.pNtk), pNet.pCopy );
-        if Nm_ManFindNameById(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id) {
-            Nm_ManDeleteIdName(pNet.pCopy.pNtk.pManName, pNet.pCopy.Id); }
-        Abc_ObjAssignName( pNet.pCopy, Vec_StrArray(vPref), Abc_ObjName(pNet) );
-    }
-    // inlining of macro Abc_NtkForEachBox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {
-        if Abc_ObjIsLatch(pObj) {
-            continue; }
-        Abc_NodeSetTravIdCurrent( pObj );
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            Abc_NodeSetTravIdCurrent( pTerm );
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            Abc_NodeSetTravIdCurrent( pTerm );
-        }
-    }
-
-    // duplicate objects that do not have prototypes yet
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {
-        if Abc_NodeIsTravIdCurrent(pObj) {
-            continue; }
-        if pObj.pCopy {
-            continue; }
-        Abc_NtkDupObj( pNtkNew, pObj, 0 );
-    }
-    }
-
-    // connect objects
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else
-        if !Abc_NodeIsTravIdCurrent(pObj) {
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-                if !Abc_NodeIsTravIdCurrent(pFanin) {
-                    Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }
-            } }
-    }
-
-    // call recursively
-    Vec_StrPop( vPref );
-    Length = Vec_StrSize( vPref );
-    // inlining of macro Abc_NtkForEachBox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {
-        if Abc_ObjIsLatch(pObj) {
-            continue; }
-        pNtkModel = (Abc_Ntk_t *)pObj.pData;
-        // check the match between the number of actual and formal parameters
-        assert(Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel), "Abc_ObjFaninNum(pObj) == Abc_NtkPiNum(pNtkModel)");
-        assert(Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel), "Abc_ObjFanoutNum(pObj) == Abc_NtkPoNum(pNtkModel)");
-        // clean the node copy fields
-        Abc_NtkCleanCopy( pNtkModel );
-        // map PIs/POs
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            Abc_ObjFanout0( Abc_NtkPi(pNtkModel, k) ).pCopy = Abc_ObjFanin0(pTerm).pCopy;
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            Abc_ObjFanin0( Abc_NtkPo(pNtkModel, k) ).pCopy = Abc_ObjFanout0(pTerm).pCopy;
-        }
-        // create name
-        Vec_StrShrink( vPref, Length );
-        Vec_StrPrintStr( vPref, Abc_NtkName(pNtkModel) );
-        // call recursively
-        Abc_NtkFlattenLogicHierarchy_rec( pNtkNew, pNtkModel, pCounter, vPref );
-    }
-
-    // if it is a BLIF-MV netlist transfer the values of all nets
-    if Abc_NtkHasBlifMv(pNtk) && Abc_NtkMvVar(pNtk) {
-        if Abc_NtkMvVar( pNtkNew ) == nil {
-            Abc_NtkStartMvVars( pNtkNew ); }
-        // inlining of macro Abc_NtkForEachNet
-        for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil || !Abc_ObjIsNet(pObj) {} else {
-            Abc_NtkSetMvVarValues( pObj.pCopy, Abc_ObjMvVarNum(pObj) ); }
-        }
-    }
+func (context *hierarchyFlatten) flatten(src *Network, prefix string) error {
+	if context.active[src] {
+		return fmt.Errorf("recursive hierarchy at %s", src.Name)
+	}
+	context.active[src] = true
+	defer delete(context.active, src)
+	dst := context.dst
+	if src.Function == uint8(ABC_FUNC_BLACKBOX) {
+		boxes := src.Boxes()
+		if len(boxes) != 1 {
+			return fmt.Errorf("blackbox model %s has no unique body", src.Name)
+		}
+		body := boxes[0]
+		if len(body.fanins) != len(src.ObjectsOfKind(ObjectPI)) || len(body.fanouts) != len(src.ObjectsOfKind(ObjectPO)) {
+			return fmt.Errorf("blackbox model port mismatch")
+		}
+		copy := Abc_NtkDupBox(dst, body, 1)
+		copy.Data = src
+		for i, pi := range src.ObjectsOfKind(ObjectPI) {
+			net, err := hieOutputNet(pi)
+			if err != nil {
+				return err
+			}
+			if err := hieConnect(dst, copy.fanins[i].Object, Edge{Object: hieCopyBinding(net, dst)}); err != nil {
+				return err
+			}
+		}
+		for i, po := range src.ObjectsOfKind(ObjectPO) {
+			net, err := hieInputNet(po)
+			if err != nil {
+				return err
+			}
+			target := hieCopyBinding(net, dst)
+			if po.Copy != nil && po.Copy.network == dst && po.Copy.Kind == ObjectNet {
+				target = po.Copy
+			}
+			if err := hieConnect(dst, target, copy.fanouts[i].Signal()); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+	*context.counter++
+	suffix := ""
+	if context.suffix {
+		if *context.counter != 0 {
+			suffix = fmt.Sprintf("_%s_%d", src.Name, *context.counter)
+		}
+	} else {
+		if *context.counter != 0 {
+			prefix += fmt.Sprintf("(%d)", *context.counter)
+		}
+		prefix += "|"
+	}
+	nameFor := func(net *Object) string {
+		if context.suffix {
+			return hieNetName(net) + suffix
+		}
+		return prefix + hieNetName(net)
+	}
+	setCopy(src.constant, dst.One())
+	for _, net := range src.ObjectsOfKind(ObjectNet) {
+		if hieCopyBinding(net, dst) == nil {
+			setCopy(net, Abc_NtkFindOrCreateNet(dst, nameFor(net)).Signal())
+		}
+		if variable := Abc_ObjMvVar(net); variable != nil {
+			existing := Abc_ObjMvVar(net.Copy)
+			if existing != nil && existing.Values != variable.Values {
+				return fmt.Errorf("hierarchical MV domain mismatch on %s", hieNetName(net))
+			}
+			if existing == nil {
+				copyMVVariable(net, net.Copy)
+			}
+		}
+	}
+	excluded := make(map[*Object]bool)
+	for _, pi := range src.ObjectsOfKind(ObjectPI) {
+		excluded[pi] = true
+	}
+	for _, po := range src.ObjectsOfKind(ObjectPO) {
+		excluded[po] = true
+		net, err := hieInputNet(po)
+		if err != nil {
+			return err
+		}
+		if strings.HasPrefix(hieNetName(net), "abc_property") {
+			target := hieCopyBinding(net, dst)
+			if po.Copy != nil && po.Copy.network == dst && po.Copy.Kind == ObjectNet {
+				target = po.Copy
+			}
+			already := false
+			for _, fanout := range target.fanouts {
+				already = already || fanout.Kind == ObjectPO
+			}
+			if !already {
+				property := dst.NewObject(ObjectPO)
+				property.SetName(nameFor(net))
+				if err := hieConnect(dst, property, target.Signal()); err != nil {
+					return err
+				}
+			}
+			target.SetName(nameFor(net))
+		}
+	}
+	for _, box := range src.boxes {
+		if box.Kind == ObjectLatch {
+			continue
+		}
+		excluded[box] = true
+		for _, edge := range box.fanins {
+			excluded[edge.Object] = true
+		}
+		for _, bo := range box.fanouts {
+			excluded[bo] = true
+		}
+	}
+	for _, object := range src.Objects() {
+		if excluded[object] || hieCopyBinding(object, dst) != nil {
+			continue
+		}
+		copy := Abc_NtkDupObj(dst, object, 0)
+		copy.Barrier = object.Barrier
+		setCopy(object, copy.Signal())
+	}
+	for _, object := range src.Objects() {
+		if excluded[object] {
+			continue
+		}
+		copy := hieCopyBinding(object, dst)
+		for _, edge := range object.fanins {
+			if excluded[edge.Object] {
+				continue
+			}
+			if err := hieConnect(dst, copy, Edge{Object: hieCopyBinding(edge.Object, dst), Complement: edge.Complement}); err != nil {
+				return err
+			}
+		}
+	}
+	for _, box := range src.boxes {
+		if box.Kind == ObjectLatch {
+			continue
+		}
+		model, ok := box.Data.(*Network)
+		if !ok || model == nil {
+			return fmt.Errorf("box %d has no model", box.ID)
+		}
+		pis, pos := model.ObjectsOfKind(ObjectPI), model.ObjectsOfKind(ObjectPO)
+		if len(box.fanins) != len(pis) || len(box.fanouts) != len(pos) {
+			return fmt.Errorf("box %s model port mismatch", box.Name())
+		}
+		clearCopies(model)
+		for i, edge := range box.fanins {
+			actual, err := hieInputNet(edge.Object)
+			if err != nil {
+				return err
+			}
+			formal, err := hieOutputNet(pis[i])
+			if err != nil {
+				return err
+			}
+			setCopy(formal, hieCopyBinding(actual, dst).Signal())
+		}
+		for i, bo := range box.fanouts {
+			actual, err := hieOutputNet(bo)
+			if err != nil {
+				return err
+			}
+			formal, err := hieInputNet(pos[i])
+			if err != nil {
+				return err
+			}
+			target := hieCopyBinding(actual, dst)
+			if existing := hieCopyBinding(formal, dst); existing != nil && existing != target {
+				if err := hieBridgeNet(dst, existing, target, formal); err != nil {
+					return err
+				}
+			} else {
+				setCopy(formal, target.Signal())
+			}
+			setCopy(pos[i], target.Signal())
+		}
+		childPrefix := prefix + model.Name
+		if context.suffix {
+			childPrefix = ""
+		}
+		if err := context.flatten(model, childPrefix); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func Abc_NtkFlattenLogicHierarchy2_rec(dst, src *Network, counter *int32) {
+	context := hierarchyFlatten{dst: dst, counter: counter, suffix: true, active: make(map[*Network]bool)}
+	if err := context.flatten(src, ""); err != nil {
+		panic(err)
+	}
+}
+func Abc_NtkFlattenLogicHierarchy_rec(dst, src *Network, counter *int32, prefix *[]byte) {
+	context := hierarchyFlatten{dst: dst, counter: counter, active: make(map[*Network]bool)}
+	if err := context.flatten(src, string(*prefix)); err != nil {
+		panic(err)
+	}
+}
+func hieBlackboxDesign(src, dst *Network) error {
+	if src.Design == nil {
+		return nil
+	}
+	design := NewDesign(src.Design.Name)
+	if err := design.AddModule(dst); err != nil {
+		return err
+	}
+	design.Tops = []*Network{dst}
+	models := map[*Network]*Network{}
+	for _, model := range src.Design.Modules {
+		if model.Function == uint8(ABC_FUNC_BLACKBOX) && model != src {
+			copy := cloneNetwork(model)
+			if err := design.AddModule(copy); err != nil {
+				return err
+			}
+			models[model] = copy
+		}
+	}
+	for _, box := range dst.ObjectsOfKind(ObjectBlackbox) {
+		model, ok := box.Data.(*Network)
+		if !ok || model == nil {
+			return fmt.Errorf("blackbox has no model")
+		}
+		copy := models[model]
+		if copy == nil {
+			copy = cloneNetwork(model)
+			if err := design.AddModule(copy); err != nil {
+				return err
+			}
+			models[model] = copy
+		}
+		box.Data = copy
+	}
+	return nil
+}
+func flattenLogicHierarchy(src *Network, suffix bool) *Network {
+	if src.Type != uint8(ABC_NTK_NETLIST) || Abc_NtkIsAcyclicHierarchy(src) == 0 {
+		return nil
+	}
+	dst := copyNetworkMetadata(src)
+	clearCopies(src)
+	setCopy(src.constant, dst.One())
+	for _, pi := range src.ObjectsOfKind(ObjectPI) {
+		net, err := hieOutputNet(pi)
+		if err != nil {
+			return nil
+		}
+		copy := Abc_NtkDupObj(dst, pi, 1)
+		setCopy(pi, copy.Signal())
+		target := Abc_NtkFindOrCreateNet(dst, hieNetName(net))
+		setCopy(net, target.Signal())
+		if err := hieConnect(dst, target, copy.Signal()); err != nil {
+			return nil
+		}
+	}
+	for _, po := range src.ObjectsOfKind(ObjectPO) {
+		net, err := hieInputNet(po)
+		if err != nil {
+			return nil
+		}
+		copy := Abc_NtkDupObj(dst, po, 1)
+		setCopy(po, copy.Signal())
+		target := Abc_NtkFindOrCreateNet(dst, hieNetName(net))
+		setCopy(net, target.Signal())
+		if err := hieConnect(dst, copy, target.Signal()); err != nil {
+			return nil
+		}
+	}
+	counter := int32(-1)
+	context := hierarchyFlatten{dst: dst, counter: &counter, suffix: suffix, active: make(map[*Network]bool)}
+	if err := context.flatten(src, src.Name); err != nil {
+		return nil
+	}
+	if err := hieBlackboxDesign(src, dst); err != nil {
+		return nil
+	}
+	hieOrderTerminals(dst)
+	if Abc_NtkCheck(dst) == 0 {
+		return nil
+	}
+	fmt.Printf("Hierarchy reader flattened %d instances of logic boxes and left %d black boxes.\n", counter, len(dst.ObjectsOfKind(ObjectBlackbox)))
+	return dst
+}
+func Abc_NtkFlattenLogicHierarchy2(src *Network) *Network { return flattenLogicHierarchy(src, true) }
+func Abc_NtkFlattenLogicHierarchy(src *Network) *Network  { return flattenLogicHierarchy(src, false) }
+func Abc_NtkCompareNames(a, b *Network) int32             { return int32(strings.Compare(a.Name, b.Name)) }
+func Abc_NtkPrintBoxInfo(n *Network) {
+	if n.Design == nil {
+		return
+	}
+	modules := n.Design.Modules
+	sort.SliceStable(modules, func(i, j int) bool { return modules[i].Name < modules[j].Name })
+	for i, module := range modules {
+		if module == n {
+			modules[0], modules[i] = modules[i], modules[0]
+			break
+		}
+	}
+	printModel := func(model *Network) {
+		fmt.Printf("MODULE  %-30s : PI=%6d PO=%6d BB=%6d ND=%6d Lev=%5d\n", model.Name, len(model.ObjectsOfKind(ObjectPI)), len(model.ObjectsOfKind(ObjectPO)), len(model.boxes), len(model.ObjectsOfKind(ObjectNode)), Abc_NtkLevel(model))
+	}
+	for _, module := range modules {
+		if len(module.boxes) == 0 {
+			continue
+		}
+		printModel(module)
+		counts := make(map[*Network]int)
+		for _, box := range module.boxes {
+			if model, ok := box.Data.(*Network); ok {
+				counts[model]++
+			}
+		}
+		for _, model := range modules {
+			if counts[model] > 0 {
+				fmt.Printf("%15d : %s\n", counts[model], model.Name)
+			}
+		}
+	}
+	for _, module := range modules {
+		if len(module.boxes) == 0 {
+			printModel(module)
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns 0 if CI names are repeated.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCompareNames(p1 **Abc_Ntk_t, p2 **Abc_Ntk_t) int32 {
-    return int32(strings.Compare(Abc_NtkName(*p1), Abc_NtkName(*p2)));
+func Abc_NtkConvertBlackboxes(src *Network) *Network {
+	if src.Type != uint8(ABC_NTK_NETLIST) || len(src.ObjectsOfKind(ObjectWhitebox)) > 0 {
+		return nil
+	}
+	dst := copyNetworkMetadata(src)
+	clearCopies(src)
+	setCopy(src.constant, dst.One())
+	excluded := make(map[*Object]bool)
+	for _, o := range src.ObjectsOfKind(ObjectPO) {
+		excluded[o] = true
+	}
+	for _, box := range src.ObjectsOfKind(ObjectBlackbox) {
+		excluded[box] = true
+		for _, edge := range box.fanins {
+			excluded[edge.Object] = true
+		}
+		for _, bo := range box.fanouts {
+			excluded[bo] = true
+			pi := dst.NewObject(ObjectPI)
+			net, err := hieOutputNet(bo)
+			if err != nil {
+				return nil
+			}
+			pi.SetName(hieNetName(net))
+			setCopy(bo, pi.Signal())
+		}
+	}
+	for _, o := range src.Objects() {
+		if excluded[o] || o == src.constant {
+			continue
+		}
+		copy := Abc_NtkDupObj(dst, o, 1)
+		copy.Barrier = o.Barrier
+		setCopy(o, copy.Signal())
+	}
+	for _, o := range src.Objects() {
+		if excluded[o] {
+			continue
+		}
+		for _, edge := range o.fanins {
+			if err := hieConnect(dst, o.Copy, Edge{Object: hieCopyBinding(edge.Object, dst), Complement: edge.Complement}); err != nil {
+				return nil
+			}
+		}
+	}
+	seen := make(map[*Object]bool)
+	for _, co := range src.cos {
+		if len(co.fanouts) > 0 && co.fanouts[0].Kind == ObjectLatch {
+			continue
+		}
+		net, err := hieInputNet(co)
+		if err != nil {
+			return nil
+		}
+		if seen[net] {
+			continue
+		}
+		seen[net] = true
+		po := dst.NewObject(ObjectPO)
+		name := co.Name()
+		if name == "" {
+			name = hieNetName(net)
+		}
+		po.SetName(name)
+		if err := hieConnect(dst, po, net.Copy.Signal()); err != nil {
+			return nil
+		}
+	}
+	hieOrderTerminals(dst)
+	if Abc_NtkCheck(dst) == 0 {
+		return nil
+	}
+	return dst
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints information about boxes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPrintBoxInfo(pNtk *Abc_Ntk_t) {
-    var vMods *Vec_Ptr_t;
-    var pModel, pBoxModel *Abc_Ntk_t;
-    var pObj *Abc_Obj_t;
-    var vCounts *Vec_Int_t;
-    var i, k, Num int32;
-    if pNtk.pDesign == nil || pNtk.pDesign.vModules == nil {
-//        printf( "There is no hierarchy information.\n" );
-        return;
-    }
-    // sort models by name
-    vMods = pNtk.pDesign.vModules;
-    Vec_PtrSort( vMods, (int(*)())Abc_NtkCompareNames );
-//    Vec_PtrForEachEntry( Abc_Ntk_t *, vMods, pModel, i )
-//        printf( "%s\n", Abc_NtkName(pModel) );
-
-    // swap the first model
-    Num = Vec_PtrFind( vMods, pNtk );
-    assert(Num >= 0 && Num < Vec_PtrSize(vMods), "Num >= 0 && Num < Vec_PtrSize(vMods)");
-    pBoxModel = (Abc_Ntk_t *)Vec_PtrEntry(vMods, 0);
-    Vec_PtrWriteEntry(vMods, 0, (Abc_Ntk_t *)Vec_PtrEntry(vMods, Num) );
-    Vec_PtrWriteEntry(vMods, Num, pBoxModel );
-
-    // print models
-    vCounts = Vec_IntStart( Vec_PtrSize(vMods) );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vMods)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {
-        if Abc_NtkBoxNum(pModel) == 0 {
-            continue; }
-        Vec_IntFill( vCounts, Vec_IntSize(vCounts), 0 );
-        // inlining of macro Abc_NtkForEachBox
-        for  k = 0; (k < Vec_PtrSize((pModel).vBoxes)) && (((pObj) = Abc_NtkBox(pModel, k)), 1); k++  {
-            pBoxModel = (Abc_Ntk_t *)pObj.pData;
-            if pBoxModel == nil {
-                continue; }
-            Num = Vec_PtrFind( vMods, pBoxModel );
-            assert(Num >= 0 && Num < Vec_PtrSize(vMods), "Num >= 0 && Num < Vec_PtrSize(vMods)");
-            Vec_IntAddToEntry( vCounts, Num, 1 );
-        }
-
-//        Abc_NtkPrintStats( pModel, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
-        fmt.Printf("MODULE  ");
-        fmt.Printf("%-30s : ", Abc_NtkName(pModel));
-        fmt.Printf("PI=%6d ", Abc_NtkPiNum(pModel));
-        fmt.Printf("PO=%6d ", Abc_NtkPoNum(pModel));
-        fmt.Printf("BB=%6d ", Abc_NtkBoxNum(pModel));
-        fmt.Printf("ND=%6d ", Abc_NtkNodeNum(pModel)); // sans constants
-        fmt.Printf("Lev=%5d ", Abc_NtkLevel(pModel));
-        fmt.Printf("\n");
-
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vCounts)) && (((Num) = Vec_IntEntry(vCounts, k)), 1); k++  {
-            if Num != 0 {
-                fmt.Printf("%15d : %s\n", Num, Abc_NtkName((Abc_Ntk_t *)Vec_PtrEntry(vMods, k))); }
-        }
-    }
-    Vec_IntFree( vCounts );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vMods)) && (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(vMods, i)), 1); i++  {
-        if Abc_NtkBoxNum(pModel) != 0 {
-            continue; }
-        fmt.Printf("MODULE   ");
-        fmt.Printf("%-30s : ", Abc_NtkName(pModel));
-        fmt.Printf("PI=%6d ", Abc_NtkPiNum(pModel));
-        fmt.Printf("PO=%6d ", Abc_NtkPoNum(pModel));
-        fmt.Printf("BB=%6d ", Abc_NtkBoxNum(pModel));
-        fmt.Printf("ND=%6d ", Abc_NtkNodeNum(pModel));
-        fmt.Printf("Lev=%5d ", Abc_NtkLevel(pModel));
-        fmt.Printf("\n");
-    }
+func hieHasPO(net *Object) bool {
+	for _, fanout := range net.fanouts {
+		if fanout.Kind == ObjectPO {
+			return true
+		}
+	}
+	return false
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Flattens the logic hierarchy of the netlist.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFlattenLogicHierarchy(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    extern Abc_Des_t * Abc_DesDupBlackboxes( Abc_Des_t * p, Abc_Ntk_t * pNtkSave );
-    var vPref *Vec_Str_t;
-    var pNtkNew *Abc_Ntk_t; 
-    var pTerm, pNet *Abc_Obj_t;
-    var i int32;
-    var Counter int32 = -1;
-
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-//    Abc_NtkPrintBoxInfo( pNtk );
-
-    // start the network
-    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );
-    // duplicate the name and the spec
-    pNtkNew.pName = Extra_UtilStrsav(pNtk.pName);
-    pNtkNew.pSpec = Extra_UtilStrsav(pNtk.pSpec);
-
-    // clean the node copy fields
-    Abc_NtkCleanCopy( pNtk );
-
-    // duplicate PIs/POs and their nets
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_NtkDupObj( pNtkNew, pTerm, 0 );
-        pNet = Abc_ObjFanout0( pTerm );
-        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );
-        Abc_ObjAddFanin( pNet.pCopy, pTerm.pCopy );
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        Abc_NtkDupObj( pNtkNew, pTerm, 0 );
-        pNet = Abc_ObjFanin0( pTerm );
-        pNet.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNet) );
-        Abc_ObjAddFanin( pTerm.pCopy, pNet.pCopy );
-    }
-
-    // recursively flatten hierarchy, create internal logic, add new PI/PO names if there are black boxes
-    vPref = Vec_StrAlloc( 1000 );
-    Vec_StrPrintStr( vPref, Abc_NtkName(pNtk) );
-    Abc_NtkFlattenLogicHierarchy_rec( pNtkNew, pNtk, &Counter, vPref );
-    fmt.Printf("Hierarchy reader flattened %d instances of logic boxes and left %d black boxes.\n", Counter, Abc_NtkBlackboxNum(pNtkNew));
-    Vec_StrFree( vPref );
-
-    if pNtk.pDesign {
-        // pass on the design
-        assert(Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk, "Vec_PtrEntry(pNtk.pDesign.vTops, 0) == pNtk");
-        pNtkNew.pDesign = Abc_DesDupBlackboxes( pNtk.pDesign, pNtkNew );
-        // update the pointers
-        // inlining of macro Abc_NtkForEachBlackbox
-        for  i = 0; (i < Vec_PtrSize((pNtkNew).vBoxes)) && (((pTerm) = Abc_NtkBox(pNtkNew, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pTerm) {} else {
-            pTerm.pData = ((Abc_Ntk_t *)pTerm.pData).pCopy; }
-        }
-    }
-
-    // we may have added property outputs
-    Abc_NtkOrderCisCos( pNtkNew );
-
-    // copy the timing information
-//    Abc_ManTimeDup( pNtk, pNtkNew );
-    // duplicate EXDC 
-    if pNtk.pExdc {
-        fmt.Printf("EXDC is not transformed.\n"); }
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkFlattenLogicHierarchy(): Network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
+func Abc_NtkInsertNewLogic(hierarchy, logic *Network) *Network {
+	if hierarchy.Type != uint8(ABC_NTK_NETLIST) || logic.Type != uint8(ABC_NTK_NETLIST) || len(hierarchy.ObjectsOfKind(ObjectWhitebox)) > 0 || len(logic.ObjectsOfKind(ObjectWhitebox)) > 0 || len(logic.ObjectsOfKind(ObjectBlackbox)) > 0 {
+		return nil
+	}
+	dst := copyNetworkMetadata(logic)
+	dst.Name, dst.Spec = hierarchy.Name, hierarchy.Spec
+	clearCopies(logic)
+	setCopy(logic.constant, dst.One())
+	bindPI := func(oldNet *Object, target *Object) bool {
+		net := Abc_NtkFindNet(logic, hieNetName(oldNet))
+		if net == nil || len(net.fanins) != 1 || net.fanins[0].Object.Kind != ObjectPI || hieCopyBinding(net, dst) != nil {
+			return false
+		}
+		copy := Abc_NtkFindOrCreateNet(dst, hieNetName(oldNet))
+		setCopy(net, copy.Signal())
+		pi := net.fanins[0].Object
+		if target == nil {
+			target = Abc_NtkDupObj(dst, pi, 1)
+		}
+		setCopy(pi, target.Signal())
+		return true
+	}
+	for _, pi := range hierarchy.ObjectsOfKind(ObjectPI) {
+		net, err := hieOutputNet(pi)
+		if err != nil || !bindPI(net, nil) {
+			return nil
+		}
+	}
+	for _, box := range hierarchy.ObjectsOfKind(ObjectBlackbox) {
+		copy := Abc_NtkDupBox(dst, box, 1)
+		for i, bo := range box.fanouts {
+			net, err := hieOutputNet(bo)
+			if err != nil || !bindPI(net, copy.fanouts[i]) {
+				return nil
+			}
+		}
+	}
+	outputNet := func(oldNet *Object) *Object {
+		net := Abc_NtkFindNet(logic, hieNetName(oldNet))
+		if net == nil || !hieHasPO(net) {
+			return nil
+		}
+		if hieCopyBinding(net, dst) == nil {
+			setCopy(net, Abc_NtkFindOrCreateNet(dst, hieNetName(oldNet)).Signal())
+		}
+		return net.Copy
+	}
+	for _, po := range hierarchy.ObjectsOfKind(ObjectPO) {
+		net, err := hieInputNet(po)
+		if err != nil {
+			return nil
+		}
+		target := outputNet(net)
+		if target == nil {
+			return nil
+		}
+		copy := Abc_NtkDupObj(dst, po, 1)
+		if err := hieConnect(dst, copy, target.Signal()); err != nil {
+			return nil
+		}
+	}
+	for _, box := range hierarchy.ObjectsOfKind(ObjectBlackbox) {
+		for i, edge := range box.fanins {
+			net, err := hieInputNet(edge.Object)
+			if err != nil {
+				return nil
+			}
+			target := outputNet(net)
+			if target == nil {
+				return nil
+			}
+			if err := hieConnect(dst, box.Copy.fanins[i].Object, target.Signal()); err != nil {
+				return nil
+			}
+		}
+	}
+	for _, o := range logic.Objects() {
+		if o.Kind == ObjectPO || hieCopyBinding(o, dst) != nil {
+			continue
+		}
+		copy := Abc_NtkDupObj(dst, o, 1)
+		copy.Barrier = o.Barrier
+		setCopy(o, copy.Signal())
+	}
+	for _, o := range logic.Objects() {
+		if o.Kind == ObjectPO {
+			continue
+		}
+		copy := hieCopyBinding(o, dst)
+		for _, edge := range o.fanins {
+			if err := hieConnect(dst, copy, Edge{Object: hieCopyBinding(edge.Object, dst), Complement: edge.Complement}); err != nil {
+				return nil
+			}
+		}
+	}
+	hieOrderTerminals(dst)
+	if Abc_NtkCheck(dst) == 0 {
+		return nil
+	}
+	if design := hierarchy.Design; design != nil {
+		for i, module := range design.Modules {
+			if module == hierarchy {
+				design.Modules[i] = dst
+			}
+		}
+		for i, top := range design.Tops {
+			if top == hierarchy {
+				design.Tops[i] = dst
+			}
+		}
+		if design.byName == nil {
+			design.byName = make(map[string]*Network)
+		}
+		design.byName[dst.Name] = dst
+		dst.Design = design
+		hierarchy.Design = nil
+	}
+	return dst
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Extracts blackboxes by making them into additional PIs/POs.]
-
-  Description [The input netlist has not logic hierarchy. The resulting
-  netlist has additional PIs/POs for each blackbox input/output.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkConvertBlackboxes(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
-    var pObj, pNet, pFanin, pTerm *Abc_Obj_t;
-    var i, k int32;
-
-    assert(Abc_NtkIsNetlist(pNtk), "Abc_NtkIsNetlist(pNtk)");
-    assert(Abc_NtkWhiteboxNum(pNtk) == 0, "Abc_NtkWhiteboxNum(pNtk) == 0");
-
-    // start the network
-    pNtkNew = Abc_NtkAlloc( pNtk.ntkType, pNtk.ntkFunc, 1 );
-    // duplicate the name and the spec
-    pNtkNew.pName = Extra_UtilStrsav( pNtk.pName );
-    pNtkNew.pSpec = Extra_UtilStrsav( pNtk.pSpec );
-
-    // clean the node copy fields
-    Abc_NtkCleanCopy( pNtk );
-
-    // mark the nodes that should not be connected
-    Abc_NtkIncrementTravId( pNtk );
-    // inlining of macro Abc_NtkForEachBlackbox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObj) {} else {
-        Abc_NodeSetTravIdCurrent( pObj ); }
-    }
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pTerm) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        Abc_NodeSetTravIdCurrent( pTerm );
-    }
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pTerm) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Abc_NodeSetTravIdCurrent( pTerm );
-    }
-    // unmark PIs and LIs/LOs
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        Abc_NodeSetTravIdPrevious( pTerm );
-    }
-    // inlining of macro Abc_NtkForEachLatchInput
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) && (((pTerm) = Abc_ObjFanin0(Abc_NtkBox(pNtk, i))), 1)) {} else {
-        Abc_NodeSetTravIdPrevious( pTerm ); }
-    }
-    // inlining of macro Abc_NtkForEachLatchOutput
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) && (((pTerm) = Abc_ObjFanout0(Abc_NtkBox(pNtk, i))), 1)) {} else {
-        Abc_NodeSetTravIdPrevious( pTerm ); }
-    }
-    // copy the box outputs
-    // inlining of macro Abc_NtkForEachBlackbox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObj) {} else {
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pTerm) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            pTerm.pCopy = Abc_NtkCreatePi( pNtkNew );
-        } }
-    }
-
-    // duplicate other objects
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else
-        if !Abc_NodeIsTravIdCurrent(pObj) {
-            Abc_NtkDupObj( pNtkNew, pObj, Abc_ObjIsNet(pObj) ); }
-    }
-
-    // connect all objects
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else
-        if !Abc_NodeIsTravIdCurrent(pObj) {
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-            } }
-    }
-
-    // create unique PO for each net feeding into blackboxes or POs
-    Abc_NtkIncrementTravId( pNtk );
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pTerm) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        // skip latch inputs
-        assert(Abc_ObjFanoutNum(pTerm) <= 1, "Abc_ObjFanoutNum(pTerm) <= 1");
-        if Abc_ObjFanoutNum(pTerm) > 0 && Abc_ObjIsLatch(Abc_ObjFanout0(pTerm)) {
-            continue; }
-        // check if the net is visited
-        pNet = Abc_ObjFanin0(pTerm);
-        if Abc_NodeIsTravIdCurrent(pNet) {
-            continue; }
-        // create PO
-        Abc_NodeSetTravIdCurrent( pNet );
-        Abc_ObjAddFanin( Abc_NtkCreatePo(pNtkNew), pNet.pCopy );
-    }
-
-    // check integrity
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkConvertBlackboxes(): Network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Inserts blackboxes into the netlist.]
-
-  Description [The first arg is the netlist with blackboxes without logic hierarchy.
-  The second arg is a non-hierarchical netlist derived from the above netlist after processing.
-  This procedure create a new netlist, which is comparable to the original netlist with
-  blackboxes, except that it contains logic nodes from the netlist after processing.]
-               
-  SideEffects [This procedure silently assumes that blackboxes appear
-  only in the top-level model. If they appear in other models as well, 
-  the name of the model and its number were appended to the names of 
-  blackbox inputs/outputs.]
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkInsertNewLogic(pNtkH *Abc_Ntk_t, pNtkL *Abc_Ntk_t) *Abc_Ntk_t {
-    var pDesign *Abc_Des_t;
-    var pNtkNew *Abc_Ntk_t;
-    var pObjH, pObjL, pNetH, pNetL, pTermH *Abc_Obj_t;
-    var i, k int32;
-
-    assert(Abc_NtkIsNetlist(pNtkH), "Abc_NtkIsNetlist(pNtkH)");
-    assert(Abc_NtkWhiteboxNum(pNtkH) == 0, "Abc_NtkWhiteboxNum(pNtkH) == 0");
-    assert(Abc_NtkBlackboxNum(pNtkH) > 0, "Abc_NtkBlackboxNum(pNtkH) > 0");
-
-    assert(Abc_NtkIsNetlist(pNtkL), "Abc_NtkIsNetlist(pNtkL)");
-    assert(Abc_NtkWhiteboxNum(pNtkL) == 0, "Abc_NtkWhiteboxNum(pNtkL) == 0");
-    assert(Abc_NtkBlackboxNum(pNtkL) == 0, "Abc_NtkBlackboxNum(pNtkL) == 0");
-
-    // prepare the logic network for copying
-    Abc_NtkCleanCopy( pNtkL );
-
-    // start the network
-    pNtkNew = Abc_NtkAlloc( pNtkL.ntkType, pNtkL.ntkFunc, 1 );
-    // duplicate the name and the spec
-    pNtkNew.pName = Extra_UtilStrsav( pNtkH.pName );
-    pNtkNew.pSpec = Extra_UtilStrsav( pNtkH.pSpec );
-
-    // make sure every PI/PO has a PI/PO in the processed network
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtkH)) && (((pObjH) = Abc_NtkPi(pNtkH, i)), 1); i++  {
-        pNetH = Abc_ObjFanout0(pObjH);
-        pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );
-        if pNetL == nil || !Abc_ObjIsPi( Abc_ObjFanin0(pNetL) ) {
-            fmt.Printf("Error in Abc_NtkInsertNewLogic(): There is no PI corresponding to the PI %s.\n", Abc_ObjName(pNetH));
-            Abc_NtkDelete( pNtkNew );
-            return nil;
-        }
-        if pNetL.pCopy {
-            fmt.Printf("Error in Abc_NtkInsertNewLogic(): Primary input %s is repeated twice.\n", Abc_ObjName(pNetH));
-            Abc_NtkDelete( pNtkNew );
-            return nil;
-        }
-        // create the new net
-        pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );
-        Abc_NtkDupObj( pNtkNew, Abc_ObjFanin0(pNetL), 0 );
-    }
-
-    // make sure every BB has a PI/PO in the processed network
-    // inlining of macro Abc_NtkForEachBlackbox
-    for  i = 0; (i < Vec_PtrSize((pNtkH).vBoxes)) && (((pObjH) = Abc_NtkBox(pNtkH, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObjH) {} else {
-        // duplicate the box 
-        Abc_NtkDupBox( pNtkNew, pObjH, 0 );
-        pObjH.pCopy.pData = pObjH.pData;
-        // create PIs
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObjH)) && (((pTermH) = Abc_ObjFanout(pObjH, k)), 1); k++  {
-            pNetH = Abc_ObjFanout0( pTermH );
-            pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );
-            if pNetL == nil || !Abc_ObjIsPi( Abc_ObjFanin0(pNetL) ) {
-                fmt.Printf("Error in Abc_NtkInsertNewLogic(): There is no PI corresponding to the inpout %s of blackbox %s.\n", Abc_ObjName(pNetH), Abc_ObjName(pObjH));
-                Abc_NtkDelete( pNtkNew );
-                return nil;
-            }
-            if pNetL.pCopy {
-                fmt.Printf("Error in Abc_NtkInsertNewLogic(): Box output %s is repeated twice.\n", Abc_ObjName(pNetH));
-                Abc_NtkDelete( pNtkNew );
-                return nil;
-            }
-            // create net and map the PI
-            pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );
-            Abc_ObjFanin0(pNetL).pCopy = pTermH.pCopy;
-        }
-    }
-    }
-
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtkH)) && (((pObjH) = Abc_NtkPo(pNtkH, i)), 1); i++  {
-        pNetH = Abc_ObjFanin0(pObjH);
-        pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );
-        if pNetL == nil || !Abc_ObjIsPo( Abc_ObjFanout0(pNetL) ) {
-            fmt.Printf("Error in Abc_NtkInsertNewLogic(): There is no PO corresponding to the PO %s.\n", Abc_ObjName(pNetH));
-            Abc_NtkDelete( pNtkNew );
-            return nil;
-        }
-        if pNetL.pCopy {
-            continue; }
-        // create the new net
-        pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );
-        Abc_NtkDupObj( pNtkNew, Abc_ObjFanout0(pNetL), 0 );
-    }
-    // inlining of macro Abc_NtkForEachBlackbox
-    for  i = 0; (i < Vec_PtrSize((pNtkH).vBoxes)) && (((pObjH) = Abc_NtkBox(pNtkH, i)), 1); i++  {           if !Abc_ObjIsBlackbox(pObjH) {} else {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObjH)) && (((pTermH) = Abc_ObjFanin(pObjH, k)), 1); k++  {
-            var pName string;
-            pNetH = Abc_ObjFanin0( pTermH );
-            pName = Abc_ObjName(pNetH);
-            pNetL = Abc_NtkFindNet( pNtkL, Abc_ObjName(pNetH) );
-            if pNetL == nil || !Abc_ObjIsPo( Abc_ObjFanout0(pNetL) ) {
-                fmt.Printf("There is no PO corresponding to the input %s of blackbox %s.\n", Abc_ObjName(pNetH), Abc_ObjName(pObjH));
-                Abc_NtkDelete( pNtkNew );
-                return nil;
-            }
-            // create net and map the PO
-            if pNetL.pCopy {
-                if Abc_ObjFanout0(pNetL).pCopy == nil {
-                    Abc_ObjFanout0(pNetL).pCopy = pTermH.pCopy;
-                } else {
-                    Abc_ObjAddFanin( pTermH.pCopy, pNetL.pCopy ); }
-                continue;
-            }
-            pNetL.pCopy = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pNetH) );
-            Abc_ObjFanout0(pNetL).pCopy = pTermH.pCopy;
-        }
-    }
-    }
-
-    // duplicate other objects of the logic network
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtkL).vObjs)) && (((pObjL) = Abc_NtkObj(pNtkL, i)), 1); i++  {            if (pObjL) == nil {} else
-        if pObjL.pCopy == nil && !Abc_ObjIsPo(pObjL) { // skip POs feeding into PIs
-            Abc_NtkDupObj( pNtkNew, pObjL, Abc_ObjIsNet(pObjL) ); }
-    }
-
-    // connect objects
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtkL).vObjs)) && (((pObjL) = Abc_NtkObj(pNtkL, i)), 1); i++  {            if (pObjL) == nil {} else {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObjL)) && (((pNetL) = Abc_ObjFanin(pObjL, k)), 1); k++  {
-            if pObjL.pCopy {
-                Abc_ObjAddFanin( pObjL.pCopy, pNetL.pCopy ); }
-        } }
-    }
-
-    // transfer the design
-    pDesign = pNtkH.pDesign;  pNtkH.pDesign = nil;
-    assert(Vec_PtrEntry( pDesign.vModules, 0 ) == pNtkH, "Vec_PtrEntry( pDesign.vModules, 0 ) == pNtkH");
-    Vec_PtrWriteEntry( pDesign.vModules, 0, pNtkNew );
-    pNtkNew.pDesign = pDesign;
-
-    // check integrity
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkInsertNewLogic(): Network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

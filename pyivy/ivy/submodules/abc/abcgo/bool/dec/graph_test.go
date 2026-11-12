@@ -130,3 +130,38 @@ func TestNodeMetadataBounds(t *testing.T) {
 		t.Fatal("metadata changed identity")
 	}
 }
+
+func TestGraphOpaquePayloadAccess(t *testing.T) {
+	g := Dec_GraphCreate(2)
+	a, b := new(int), new(int)
+	Dec_GraphSetLeafFunc(g, 0, a)
+	Dec_GraphSetLeafFunc(g, 1, b)
+	if Dec_GraphLeafFunc(g, 0) != a || Dec_GraphLeafFunc(g, 1) != b {
+		t.Fatal("leaf payload round trip")
+	}
+	e := Dec_GraphAddNodeAnd(g, Dec_EdgeCreate(0, 0), Dec_EdgeCreate(1, 0))
+	result := new(int)
+	Dec_GraphSetNodeFunc(g, int32(e.Node), result)
+	if Dec_GraphNodeFunc(g, int32(e.Node)) != result {
+		t.Fatal("internal node payload round trip")
+	}
+}
+
+func TestGraphPayloadBounds(t *testing.T) {
+	g := Dec_GraphCreate(1)
+	for _, access := range []func(){
+		func() { Dec_GraphSetLeafFunc(g, 1, nil) },
+		func() { Dec_GraphLeafFunc(g, -1) },
+		func() { Dec_GraphSetNodeFunc(g, 1, nil) },
+		func() { Dec_GraphNodeFunc(g, -1) },
+	} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Error("out-of-range payload access did not panic")
+				}
+			}()
+			access()
+		}()
+	}
+}

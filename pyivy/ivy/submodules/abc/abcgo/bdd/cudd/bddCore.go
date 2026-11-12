@@ -13,15 +13,6 @@ var (
 	Cudd_IsConstant     = core.Cudd_IsConstant
 	Cudd_T              = core.Cudd_T
 	Cudd_E              = core.Cudd_E
-	Cudd_NodeReadIndex  = core.Cudd_NodeReadIndex
-	Cudd_ReadOne        = core.Cudd_ReadOne
-	Cudd_ReadLogicZero  = core.Cudd_ReadLogicZero
-	Cudd_ReadSize       = core.Cudd_ReadSize
-	Cudd_ReadPerm       = core.Cudd_ReadPerm
-	Cudd_ReadInvPerm    = core.Cudd_ReadInvPerm
-	Cudd_ReadNodeCount  = core.Cudd_ReadNodeCount
-	Cudd_bddIthVar      = core.Cudd_bddIthVar
-	Cudd_bddNewVar      = core.Cudd_bddNewVar
 	Cudd_Ref            = core.Cudd_Ref
 	Cudd_Deref          = core.Cudd_Deref
 	Cudd_RecursiveDeref = core.Cudd_RecursiveDeref

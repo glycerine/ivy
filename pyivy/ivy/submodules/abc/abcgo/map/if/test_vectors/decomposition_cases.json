@@ -1,0 +1,5 @@
+[
+  {"variables": 5, "truth": ["b0f3b0ffb0f3b0ff"], "cascade": true},
+  {"variables": 6, "truth": ["6996966996696996"], "cascade": true},
+  {"variables": 7, "truth": ["6996966996696996", "9669699669969669"], "cascade": true}
+]

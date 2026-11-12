@@ -39,3 +39,20 @@ func Gia_ObjLutRefDecId(p *Gia_Man_t, id int32) int32     { p.pLutRefs[id]--; re
 func Gia_ObjLutRefNum(p *Gia_Man_t, obj *Gia_Obj_t) int32 { return Gia_ObjLutRefNumId(p, obj.id) }
 func Gia_ObjLutRefInc(p *Gia_Man_t, obj *Gia_Obj_t) int32 { return Gia_ObjLutRefIncId(p, obj.id) }
 func Gia_ObjLutRefDec(p *Gia_Man_t, obj *Gia_Obj_t) int32 { return Gia_ObjLutRefDecId(p, obj.id) }
+
+func (p *Gia_Man_t) LUTReferenceCounts() []int32 { return append([]int32(nil), p.pLutRefs...) }
+func (p *Gia_Man_t) SetLUTReferenceCounts(refs []int32) {
+	if refs == nil {
+		p.pLutRefs = nil
+		return
+	}
+	if len(refs) != len(p.pObjs) {
+		panic("gia: LUT reference count size mismatch")
+	}
+	for _, count := range refs {
+		if count < 0 {
+			panic("gia: negative LUT reference count")
+		}
+	}
+	p.pLutRefs = append([]int32(nil), refs...)
+}

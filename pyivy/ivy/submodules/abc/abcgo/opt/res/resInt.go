@@ -1,6 +1,17 @@
 package res
 
-import "math/rand"
+import (
+	"math/rand"
+
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/vec"
+)
+
+// Names retained by the C-derived window routines, backed by the Go packages.
+type Abc_Ntk_t = abc.Network
+type Abc_Obj_t = abc.Object
+type Vec_Ptr_t = vec.Vec_Ptr_t
+type Vec_Vec_t = vec.Vec_Vec_t
 
 /**CFile****************************************************************
 
@@ -40,10 +51,10 @@ import "math/rand"
 
 type Res_Win_t struct {
 	// windowing parameters
-	pNode      *Abc_Obj_t // the node in the center
-	nWinTfiMax int32      // the fanin levels
-	nWinTfoMax int32      // the fanout levels
-	nLevDivMax int32      // the maximum divisor level
+	pNode      *abc.Object // the node in the center
+	nWinTfiMax int32       // the fanin levels
+	nWinTfoMax int32       // the fanout levels
+	nLevDivMax int32       // the maximum divisor level
 	// internal windowing parameters
 	nFanoutLimit int32 // the limit on the fanout count of a TFO node (if more, the node is treated as a root)
 	nLevTfiMinus int32 // the number of additional levels to search from TFO below the level of leaves
@@ -52,20 +63,20 @@ type Res_Win_t struct {
 	nLevTravMin int32 // the minimum level to search from TFO
 	nDivsPlus   int32 // the number of additional divisors
 	// the window data
-	vRoots    *Vec_Ptr_t // outputs of the window
-	vLeaves   *Vec_Ptr_t // inputs of the window
-	vBranches *Vec_Ptr_t // side nodes of the window
-	vNodes    *Vec_Ptr_t // internal nodes of the window
-	vDivs     *Vec_Ptr_t // candidate divisors of the node
+	vRoots    *vec.Vec_Ptr_t // outputs of the window
+	vLeaves   *vec.Vec_Ptr_t // inputs of the window
+	vBranches *vec.Vec_Ptr_t // side nodes of the window
+	vNodes    *vec.Vec_Ptr_t // internal nodes of the window
+	vDivs     *vec.Vec_Ptr_t // candidate divisors of the node
 	// temporary data
-	vMatrix *Vec_Vec_t // TFI nodes below the given node
+	vMatrix *vec.Vec_Vec_t // TFI nodes below the given node
 }
 
 type Res_Sim_t struct {
-	pAig     *Abc_Ntk_t // AIG for simulation
-	nTruePis int32      // the number of true PIs of the window
-	fConst0  int32      // the node can be replaced by constant 0
-	fConst1  int32      // the node can be replaced by constant 0
+	pAig     *abc.Network // AIG for simulation
+	nTruePis int32        // the number of true PIs of the window
+	fConst0  int32        // the node can be replaced by constant 0
+	fConst1  int32        // the node can be replaced by constant 0
 	// simulation parameters
 	nWords    int32 // the number of simulation words
 	nPats     int32 // the number of patterns
@@ -75,17 +86,17 @@ type Res_Sim_t struct {
 	nWordsOut int32 // the number of simulation words in the output patterns
 	nPatsOut  int32 // the number of patterns in the output patterns
 	// simulation info
-	vPats  *Vec_Ptr_t // input simulation patterns
-	vPats0 *Vec_Ptr_t // input simulation patterns
-	vPats1 *Vec_Ptr_t // input simulation patterns
-	vOuts  *Vec_Ptr_t // output simulation info
-	nPats0 int32      // the number of 0-patterns accumulated
-	nPats1 int32      // the number of 1-patterns accumulated
+	vPats  *vec.Vec_Ptr_t // input simulation patterns
+	vPats0 *vec.Vec_Ptr_t // input simulation patterns
+	vPats1 *vec.Vec_Ptr_t // output simulation info
+	vOuts  *vec.Vec_Ptr_t // output simulation info
+	nPats0 int32          // the number of 0-patterns accumulated
+	nPats1 int32          // the number of 1-patterns accumulated
 	// resub candidates
-	vCands *Vec_Vec_t // resubstitution candidates
+	vCands *vec.Vec_Vec_t // resubstitution candidates
 	// statistics
 	timeSat abctime
-	rng *rand.Rand
+	rng     *rand.Rand
 }
 
 ////////////////////////////////////////////////////////////////////////

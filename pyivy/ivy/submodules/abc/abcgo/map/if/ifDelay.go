@@ -1,454 +1,399 @@
+// SOP/LUT balancing and pin delays from ifDelay.c.
 package if_
 
-import "fmt"
-
-/**CFile****************************************************************
-
-  FileName    [ifDelay.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [FPGA mapping based on priority cuts.]
-
-  Synopsis    [Delay balancing for cut functions.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - November 21, 2006.]
-
-  Revision    [$Id: ifDelay.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "if.h"
-//#include "ifCount.h"
-//#include "bool/kit/kit.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
+import "github.com/glycerine/abcgo/misc/vec"
 
 const IF_MAX_CUBES = 70
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
- 
-/**Function*************************************************************
+var ifSopGateDelays = [20]float64{1, 1, 2, 2.58, 3, 3.32, 3.58, 3.81, 4, 4.17, 4.32, 4.46, 4.58, 4.70, 4.81, 4.91, 5, 5.09, 5.17, 5.25}
 
-  Synopsis    [Computes the SOP delay using balanced AND decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_CutMaxCubeSize(vCover *Vec_Int_t, nVars int32) int32 {
-    var i, k, Entry, Literal, Count, CountMax int32;
-    Vec_IntForEachEntry( vCover, Entry, i )
-    {
-        Count = 0;
-        for  k = 0; k < nVars; k++  {
-            Literal = (3 & (Entry >> (k << 1)));
-            if Literal == 1 || Literal == 2 {
-                Count++; }
-        }
-        CountMax = Abc_MaxInt( CountMax, Count );
-    }
-    return CountMax;
+func If_CutMaxCubeSize(cover *Vec_Int_t, n int32) int32 {
+	if n < 0 || n > 16 {
+		panic("SOP cube support outside 0..16")
+	}
+	var maximum int32
+	for _, entry := range vec.Vec_IntArray(cover) {
+		var literals int32
+		for pin := int32(0); pin < n; pin++ {
+			literal := uint32(entry) >> uint(pin*2) & 3
+			if literal == 1 || literal == 2 {
+				literals++
+			}
+		}
+		maximum = max(maximum, literals)
+	}
+	return maximum
 }
-var spStatic_If_CutDelaySop_GateDelays [20]float64 = [20]float64{ 1.00, 1.00, 2.00, 2.58, 3.00, 3.32, 3.58, 3.81, 4.00, 4.17, 4.32, 4.46, 4.58, 4.70, 4.81, 4.91, 5.00, 5.09, 5.17, 5.25 };
-func If_CutDelaySop(p *If_Man_t, pCut *If_Cut_t) int32 {
-    var pPerm string  = If_CutPerm( pCut );
-    // delay is calculated using 1+log2(NumFanins)
-    
-    var vCover *Vec_Int_t;
-    var pLeaf *If_Obj_t;
-    var i, nLitMax, Delay, DelayMax int32;
-    // mark cut as a user cut
-    pCut.fUser = 1;
-    if pCut.nLeaves == 0 {
-        return 0; }
-    if pCut.nLeaves == 1 {
-        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay); }
-    vCover = Vec_WecEntry( p.vTtIsops[pCut.nLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );
-    if Vec_IntSize(vCover) == 0 {
-        return -1; }
-    // mark the output as complemented
-//    vAnds = If_CutDelaySopAnds( p, pCut, vCover, RetValue ^ pCut->fCompl );
-    if Vec_IntSize(vCover) > p.pPars.nGateSize {
-        return -1; }
-    // set the area cost
-    assert(If_CutLeaveNum(pCut) >= 0 && If_CutLeaveNum(pCut) <= 16, "If_CutLeaveNum(pCut) >= 0 && If_CutLeaveNum(pCut) <= 16");
-    // compute the gate delay
-    nLitMax = If_CutMaxCubeSize( vCover, If_CutLeaveNum(pCut) );
-    if Vec_IntSize(vCover) < 2 {
-        pCut.Cost = Vec_IntSize(vCover);
-        Delay = int32((spStatic_If_CutDelaySop_GateDelays[If_CutLeaveNum(pCut)] + 0.5));
-        DelayMax = 0;
-        If_CutForEachLeaf( p, pCut, pLeaf, i )
-            DelayMax = Abc_MaxInt( DelayMax, If_ObjCutBest(pLeaf).Delay + (pPerm[i] = byte(Delay)) );
-    
-    } else {
-        pCut.Cost = Vec_IntSize(vCover) + 1;
-        Delay = int32((spStatic_If_CutDelaySop_GateDelays[If_CutLeaveNum(pCut)] + spStatic_If_CutDelaySop_GateDelays[nLitMax] + 0.5));
-        DelayMax = 0;
-        If_CutForEachLeaf( p, pCut, pLeaf, i )
-            DelayMax = Abc_MaxInt( DelayMax, If_ObjCutBest(pLeaf).Delay + (pPerm[i] = byte(Delay)) );
-    }
-    return DelayMax;
+func ifDelayCover(p *If_Man_t, c *If_Cut_t) (*Vec_Int_t, bool) {
+	if p == nil || c == nil || int(c.nLeaves) >= len(p.vTtIsops) || p.vTtIsops[c.nLeaves] == nil {
+		return nil, false
+	}
+	id := int(If_CutTruthLit(c) >> 1)
+	levels := p.vTtIsops[c.nLeaves]
+	if id < 0 || id >= vec.Vec_WecSize(levels) {
+		return nil, false
+	}
+	phase := false
+	if id < len(p.vTtIsopComplement[c.nLeaves]) {
+		phase = p.vTtIsopComplement[c.nLeaves][id]
+	}
+	return vec.Vec_WecEntry(levels, id), phase
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Compute pin delays.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_CutSopBalancePinDelaysInt(vCover *Vec_Int_t, pTimes *int32, pFaninRes *word, nSuppAll int32, pRes *word) int32 {
-    var pPinDelsAnd [IF_MAX_FUNC_LUTSIZE]word;
-    var pPinDelsOr [IF_MAX_CUBES]word;
-    var nCounterAnd int32;
-    var pCounterAnd [IF_MAX_FUNC_LUTSIZE]int32;
-    var nCounterOr int32;
-    var pCounterOr [IF_MAX_CUBES]int32;
-    var i, k, Entry, Literal, Delay int32;
-    var ResAnd word;
-    if Vec_IntSize(vCover) > IF_MAX_CUBES {
-        return -1; }
-    nCounterOr = 0;
-    Vec_IntForEachEntry( vCover, Entry, i )
-    { 
-        nCounterAnd = 0;
-        for  k = 0; k < nSuppAll; k++  {
-            Literal = 3 & (Entry >> (k << 1));
-            if Literal == 1 || Literal == 2 { // neg or pos literal
-                Delay = If_LogCounterPinDelays( pCounterAnd, &nCounterAnd, pPinDelsAnd, pTimes[k], pFaninRes[k], nSuppAll, 0 );
-            } else if Literal != 0 { 
-                assert(false, "0"); }
-        }
-        assert(nCounterAnd > 0, "nCounterAnd > 0");
-        ResAnd = If_LogPinDelaysMulti( pPinDelsAnd, nCounterAnd, nSuppAll, 0 );
-        Delay = If_LogCounterPinDelays( pCounterOr, &nCounterOr, pPinDelsOr, Delay, ResAnd, nSuppAll, 0 );
-    }
-    assert(nCounterOr > 0, "nCounterOr > 0");
-    *pRes = If_LogPinDelaysMulti( pPinDelsOr, nCounterOr, nSuppAll, 0 );
-    return Delay;
+func ifDelayTimes(p *If_Man_t, c *If_Cut_t) []int32 {
+	times := make([]int32, c.nLeaves)
+	for pin := range times {
+		times[pin] = int32(If_ObjCutBest(If_CutLeaf(p, c, int32(pin))).Delay)
+	}
+	return times
 }
-func If_CutSopBalancePinDelaysIntInt(vCover *Vec_Int_t, pTimes *int32, nSuppAll int32, pPerm string) int32 {
-    var i, Delay int32;
-    var Res word;
-    var FaninRes [IF_MAX_FUNC_LUTSIZE]word;
-    for  i = 0; i < nSuppAll; i++  {
-        FaninRes[i] = If_CutPinDelayInit(i);
-    }
-    Delay = If_CutSopBalancePinDelaysInt( vCover, pTimes, FaninRes, nSuppAll, &Res );
-    If_CutPinDelayTranslate( Res, nSuppAll, pPerm );
-    return Delay;
+func ifDelayPermutation(c *If_Cut_t) []byte {
+	if len(c.permutation) < int(c.nLeaves) {
+		c.permutation = make([]byte, c.nLeaves)
+	}
+	return c.permutation[:c.nLeaves]
 }
-func If_CutSopBalancePinDelays(p *If_Man_t, pCut *If_Cut_t, pPerm string) int32 {
-    if pCut.nLeaves == 0 { // const
-        return 0; }
-    if pCut.nLeaves == 1 { // variable
-    
-        pPerm[0] = 0;
-        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);
-    
-    } else {
-        var vCover *Vec_Int_t;
-        var i int32;
-        var pTimes [IF_MAX_FUNC_LUTSIZE]int32;
-        vCover = Vec_WecEntry( p.vTtIsops[pCut.nLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );
-        if Vec_IntSize(vCover) == 0 {
-            return -1; }
-        for  i = 0; i < If_CutLeaveNum(pCut); i++  {
-            pTimes[i] = int32(If_ObjCutBest(If_CutLeaf(p, pCut, i)).Delay);
-        } 
-        return If_CutSopBalancePinDelaysIntInt( vCover, pTimes, If_CutLeaveNum(pCut), pPerm );
-    }
+func If_CutDelaySop(p *If_Man_t, c *If_Cut_t) int32 {
+	c.fUser = 1
+	if c.nLeaves == 0 {
+		return 0
+	}
+	times := ifDelayTimes(p, c)
+	if c.nLeaves == 1 {
+		return times[0]
+	}
+	cover, _ := ifDelayCover(p, c)
+	if cover == nil || vec.Vec_IntSize(cover) == 0 || p.pPars == nil || int32(vec.Vec_IntSize(cover)) > p.pPars.nGateSize {
+		return -1
+	}
+	maxCube := If_CutMaxCubeSize(cover, int32(c.nLeaves))
+	delay := ifSopGateDelays[c.nLeaves]
+	cost := vec.Vec_IntSize(cover)
+	if cost > 1 {
+		delay += ifSopGateDelays[maxCube]
+		cost++
+	}
+	gateDelay := int32(delay + .5)
+	permutation := ifDelayPermutation(c)
+	maximum := int32(0)
+	for pin, time := range times {
+		permutation[pin] = byte(gateDelay)
+		maximum = max(maximum, time+gateDelay)
+	}
+	c.Cost = uint32(cost)
+	return maximum
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Evaluate delay using SOP balancing.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_CutSopBalanceEvalInt(vCover *Vec_Int_t, pTimes *int32, pFaninLits *int32, vAig *Vec_Int_t, piRes *int32, nSuppAll int32, pArea *int32) int32 {
-    var nCounterAnd int32;
-    var pCounterAnd [IF_MAX_FUNC_LUTSIZE]int32;
-    var pFaninLitsAnd [IF_MAX_FUNC_LUTSIZE]int32;
-    var nCounterOr int32;
-    var pCounterOr [IF_MAX_CUBES]int32;
-    var pFaninLitsOr [IF_MAX_CUBES]int32;
-    var i, k, Entry, Literal, nLits, Delay, iRes int32;
-    if Vec_IntSize(vCover) > IF_MAX_CUBES {
-        return -1; }
-    nCounterOr = 0;
-    Vec_IntForEachEntry( vCover, Entry, i )
-    { 
-        nCounterAnd = nLits = 0;
-        for  k = 0; k < nSuppAll; k++  {
-            Literal = 3 & (Entry >> (k << 1));
-            if Literal == 1 { // neg literal
-                nLits++, Delay = If_LogCounterAddAig( pCounterAnd, &nCounterAnd, pFaninLitsAnd, pTimes[k], vAig ? Abc_LitNot(pFaninLits[k]) : -1, vAig, nSuppAll, 0, 0 );
-            } else if Literal == 2 { // pos literal
-                nLits++, Delay = If_LogCounterAddAig( pCounterAnd, &nCounterAnd, pFaninLitsAnd, pTimes[k], vAig ? pFaninLits[k] : -1, vAig, nSuppAll, 0, 0 );
-            } else if Literal != 0 { 
-                assert(false, "0"); }
-        }
-        assert(nCounterAnd > 0, "nCounterAnd > 0");
-        assert(nLits > 0, "nLits > 0");
-        if vAig != nil {
-            iRes = If_LogCreateAndXorMulti( vAig, pFaninLitsAnd, nCounterAnd, nSuppAll, 0 );
-        } else {
-            *pArea += nLits == 1 ? 0 : nLits - 1; }
-        Delay = If_LogCounterAddAig( pCounterOr, &nCounterOr, pFaninLitsOr, Delay, vAig ? Abc_LitNot(iRes) : -1, vAig, nSuppAll, 0, 0 );
-    }
-    assert(nCounterOr > 0, "nCounterOr > 0");
-    if vAig != nil {
-        *piRes = Abc_LitNot( If_LogCreateAndXorMulti( vAig, pFaninLitsOr, nCounterOr, nSuppAll, 0 ) );
-        if (vCover.nCap >> 16) & 1 {  // hack to remember complemented attribute
-            *piRes = Abc_LitNot( *piRes ); }
-    
-    } else {       
-        *pArea += Vec_IntSize(vCover) == 1 ? 0 : Vec_IntSize(vCover) - 1; }
-    return Delay;
+func ifValidSop(cover *Vec_Int_t, times []int32, n int32) bool {
+	if cover == nil || n < 1 || n > IF_MAX_FUNC_LUTSIZE || len(times) < int(n) || vec.Vec_IntSize(cover) == 0 || vec.Vec_IntSize(cover) > IF_MAX_CUBES {
+		return false
+	}
+	for _, time := range times[:n] {
+		if time < 0 {
+			return false
+		}
+	}
+	seen := make(map[int32]bool)
+	var used uint32
+	for _, entry := range vec.Vec_IntArray(cover) {
+		if seen[entry] {
+			return false
+		}
+		seen[entry] = true
+		literalCount := 0
+		for pin := int32(0); pin < n; pin++ {
+			literal := uint32(entry) >> uint(2*pin) & 3
+			if literal == 3 {
+				return false
+			}
+			if literal != 0 {
+				used |= 1 << uint(pin)
+				literalCount++
+			}
+		}
+		if literalCount == 0 {
+			return false
+		}
+	}
+	return used == (1<<uint(n))-1
 }
-func If_CutSopBalanceEvalIntInt(vCover *Vec_Int_t, nLeaves int32, pTimes *int32, vAig *Vec_Int_t, fCompl int32, pArea *int32) int32 {
-    var pFaninLits [IF_MAX_FUNC_LUTSIZE]int32;
-    var iRes, Res, k int32;
-    if vAig != nil {
-        for  k = 0; k < nLeaves; k++  {
-            pFaninLits[k] = Abc_Var2Lit(k, 0);
-        } }
-    Res = If_CutSopBalanceEvalInt( vCover, pTimes, pFaninLits, vAig, &iRes, nLeaves, pArea );
-    if Res == -1 {
-        return -1; }
-    assert(vAig == nil || Abc_Lit2Var(iRes) == nLeaves + Abc_Lit2Var(Vec_IntSize(vAig)) - 1, "vAig == nil || Abc_Lit2Var(iRes) == nLeaves + Abc_Lit2Var(Vec_IntSize(vAig)) - 1");
-    if vAig != nil {
-        Vec_IntPush( vAig, Abc_LitIsCompl(iRes) ^ fCompl ); }
-    assert(vAig == nil || (Vec_IntSize(vAig) & 1), "vAig == nil || (Vec_IntSize(vAig) & 1)");
-    return Res;
+func If_CutSopBalancePinDelaysInt(cover *Vec_Int_t, times []int32, faninProfiles []uint64, n int32, result *uint64) int32 {
+	if !ifValidSop(cover, times, n) || len(faninProfiles) < int(n) || result == nil {
+		return -1
+	}
+	andTimes, andProfiles := make([]int32, n), make([]uint64, n)
+	orTimes, orProfiles := make([]int32, IF_MAX_CUBES), make([]uint64, IF_MAX_CUBES)
+	var orCount, delay int32
+	for _, entry := range vec.Vec_IntArray(cover) {
+		var andCount int32
+		for pin := int32(0); pin < n; pin++ {
+			literal := uint32(entry) >> uint(pin*2) & 3
+			if literal == 1 || literal == 2 {
+				delay = If_LogCounterPinDelays(andTimes, &andCount, andProfiles, times[pin], faninProfiles[pin], n, 0)
+			}
+		}
+		profile := If_LogPinDelaysMulti(andProfiles, andCount, n, 0)
+		delay = If_LogCounterPinDelays(orTimes, &orCount, orProfiles, delay, profile, n, 0)
+	}
+	*result = If_LogPinDelaysMulti(orProfiles, orCount, n, 0)
+	return delay
 }
-func If_CutSopBalanceEval(p *If_Man_t, pCut *If_Cut_t, vAig *Vec_Int_t) int32 {
-    pCut.fUser = 1;
-    if vAig != nil {
-        Vec_IntClear( vAig ); }
-    if pCut.nLeaves == 0 { // const
-    
-        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 0, "Abc_Lit2Var(If_CutTruthLit(pCut)) == 0");
-        if vAig != nil {
-            Vec_IntPush( vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) ); }
-        pCut.Cost = 0;
-        return 0;
-    }
-    if pCut.nLeaves == 1 { // variable
-    
-        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 1, "Abc_Lit2Var(If_CutTruthLit(pCut)) == 1");
-        if vAig != nil {
-            Vec_IntPush( vAig, 0 ); }
-        if vAig != nil {
-            Vec_IntPush( vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) ); }
-        pCut.Cost = 0;
-        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);
-    
-    } else {
-        var fVerbose int32;
-        var vCover *Vec_Int_t  = Vec_WecEntry( p.vTtIsops[pCut.nLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );
-        var Delay, Area int32;
-        var i int32;
-        var pTimes [IF_MAX_FUNC_LUTSIZE]int32;
-        if vCover == nil {
-            return -1; }
-        assert(Vec_IntSize(vCover) > 0, "Vec_IntSize(vCover) > 0");
-        for  i = 0; i < If_CutLeaveNum(pCut); i++  {
-            pTimes[i] = int32(If_ObjCutBest(If_CutLeaf(p, pCut, i)).Delay);
-        } 
-        Delay = If_CutSopBalanceEvalIntInt( vCover, If_CutLeaveNum(pCut), pTimes, vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) ^ pCut.fCompl, &Area );
-        pCut.Cost = Area;
-        if fVerbose != 0 {
-            var Max, Two int32;
-            for  i = 0; i < If_CutLeaveNum(pCut); i++  {
-                Max = Abc_MaxInt( Max, pTimes[i] );
-            }
-            for  i = 0; i < If_CutLeaveNum(pCut); i++  {
-                if pTimes[i] != Max {
-                    Two = Abc_MaxInt( Two, pTimes[i] ); }
-            }
-            if Two + 2 < Max && Max + 3 < Delay {
-                for  i = 0; i < If_CutLeaveNum(pCut); i++  {
-                    fmt.Printf("%3d ", pTimes[i]);
-                }
-                for  ; i < p.pPars.nLutSize; i++  {
-                    fmt.Printf("    ");
-                }
-                fmt.Printf("-> %3d   ", Delay);
-                Dau_DsdPrintFromTruth( If_CutTruthW(p, pCut), If_CutLeaveNum(pCut) );
-                Kit_TruthIsopPrintCover( vCover, If_CutLeaveNum(pCut), Abc_LitIsCompl(If_CutTruthLit(pCut)) ^ pCut.fCompl );
-                {
-                    var vIsop Vec_Int_t;
-                    var pIsop [64]int32;
-                    vIsop.nCap = vIsop.nSize = Abc_Tt6Esop( *If_CutTruthW(p, pCut), pCut.nLeaves, pIsop );
-                    vIsop.pArray = pIsop;
-                    fmt.Printf("ESOP (%d -> %d)\n", Vec_IntSize(vCover), vIsop.nSize);
-                    Kit_TruthIsopPrintCover( &vIsop, If_CutLeaveNum(pCut), 0 );
-                }
-                fmt.Printf("\n");
-            }
-        }
-        return Delay;
-    }
+func If_CutSopBalancePinDelaysIntInt(cover *Vec_Int_t, times []int32, n int32, permutation []byte) int32 {
+	if n < 0 || n > IF_MAX_FUNC_LUTSIZE || len(permutation) < int(n) {
+		return -1
+	}
+	profiles := make([]uint64, n)
+	for pin := range profiles {
+		profiles[pin] = If_CutPinDelayInit(int32(pin))
+	}
+	var result uint64
+	delay := If_CutSopBalancePinDelaysInt(cover, times, profiles, n, &result)
+	if delay < 0 {
+		return -1
+	}
+	translated := make([]byte, n)
+	for pin := int32(0); pin < n; pin++ {
+		depth := If_CutPinDelayGet(result, pin)
+		if depth == 0 {
+			return -1
+		}
+		translated[pin] = byte(depth - 1)
+	}
+	copy(permutation, translated)
+	return delay
+}
+func If_CutSopBalancePinDelays(p *If_Man_t, c *If_Cut_t, permutation []byte) int32 {
+	if c.nLeaves == 0 {
+		return 0
+	}
+	if len(permutation) < int(c.nLeaves) {
+		return -1
+	}
+	times := ifDelayTimes(p, c)
+	if c.nLeaves == 1 {
+		permutation[0] = 0
+		return times[0]
+	}
+	cover, _ := ifDelayCover(p, c)
+	return If_CutSopBalancePinDelaysIntInt(cover, times, int32(c.nLeaves), permutation)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Evaluate delay using SOP balancing.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_CutLutBalancePinDelays(p *If_Man_t, pCut *If_Cut_t, pPerm string) int32 {
-    if pCut.nLeaves == 0 { // const
-        return 0; }
-    if pCut.nLeaves == 1 { // variable
-    
-        pPerm[0] = 0;
-        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);
-    
-    } else {
-        var pCutPerm string  = If_CutDsdPerm( p, pCut );
-        var LutSize int32  = p.pPars.pLutStruct[0] - '0';
-        var i int32;
-        var Delay int32;
-        var DelayMax int32 = -1;
-        assert((If_CutLeaveNum(pCut) > LutSize) == (pCut.uMaskFunc > 0), "(If_CutLeaveNum(pCut) > LutSize) == (pCut.uMaskFunc > 0)");
-        for  i = 0; i < If_CutLeaveNum(pCut); i++  {
-            if If_CutLeaveNum(pCut) > LutSize && ((pCut.uMaskFunc >> (i << 1)) & 1) {
-                pPerm[Abc_Lit2Var(int32(pCutPerm[i]))] = 2;
-            } else {
-                pPerm[Abc_Lit2Var(int32(pCutPerm[i]))] = 1; }
-        }
-        for  i = 0; i < If_CutLeaveNum(pCut); i++  {
-            Delay = int32(If_ObjCutBest(If_CutLeaf(p, pCut, i)).Delay);
-            DelayMax = Abc_MaxInt( DelayMax, Delay + int32(pPerm[i]) );
-        }
-        return DelayMax;
-    }
+// Optional coverComplement replaces the C attribute hidden inside Vec_Int.nCap.
+func If_CutSopBalanceEvalInt(cover *Vec_Int_t, times, faninLiterals []int32, aig *Vec_Int_t, result *int32, n int32, area *int32, coverComplement ...bool) int32 {
+	if !ifValidSop(cover, times, n) || aig != nil && len(faninLiterals) < int(n) {
+		return -1
+	}
+	andTimes, andLiterals := make([]int32, n), make([]int32, n)
+	orTimes, orLiterals := make([]int32, IF_MAX_CUBES), make([]int32, IF_MAX_CUBES)
+	var orCount, delay int32
+	gates := int32(0)
+	before := 0
+	if aig != nil {
+		before = vec.Vec_IntSize(aig)
+	}
+	for _, entry := range vec.Vec_IntArray(cover) {
+		var andCount, literals int32
+		for pin := int32(0); pin < n; pin++ {
+			literal := uint32(entry) >> uint(pin*2) & 3
+			if literal == 0 {
+				continue
+			}
+			lit := int32(-1)
+			if aig != nil {
+				lit = faninLiterals[pin]
+				if literal == 1 {
+					lit ^= 1
+				}
+			}
+			literals++
+			delay = If_LogCounterAddAig(andTimes, &andCount, andLiterals, times[pin], lit, aig, n, 0, 0)
+		}
+		root := int32(0)
+		if aig != nil {
+			root = If_LogCreateAndXorMulti(aig, andLiterals, andCount, n, 0)
+		} else {
+			gates += literals - 1
+		}
+		orLit := int32(-1)
+		if aig != nil {
+			orLit = root ^ 1
+		}
+		delay = If_LogCounterAddAig(orTimes, &orCount, orLiterals, delay, orLit, aig, n, 0, 0)
+	}
+	if aig != nil {
+		root := If_LogCreateAndXorMulti(aig, orLiterals, orCount, n, 0) ^ 1
+		if len(coverComplement) > 0 && coverComplement[0] {
+			root ^= 1
+		}
+		if result != nil {
+			*result = root
+		}
+		gates = int32((vec.Vec_IntSize(aig) - before) / 2)
+	} else {
+		gates += int32(vec.Vec_IntSize(cover)) - 1
+	}
+	if area != nil {
+		*area += gates
+	}
+	return delay
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Evaluate delay using SOP balancing.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func If_CutLutBalanceEval(p *If_Man_t, pCut *If_Cut_t) int32 {
-    pCut.fUser = 1;
-    if pCut.nLeaves > 1 {
-        pCut.Cost = 1;
-    } else {
-        pCut.Cost = 0;
-    }
-    pCut.uMaskFunc = 0;
-    if pCut.nLeaves == 0 { // const
-    
-        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 0, "Abc_Lit2Var(If_CutTruthLit(pCut)) == 0");
-        return 0;
-    }
-    if pCut.nLeaves == 1 { // variable
-    
-        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 1, "Abc_Lit2Var(If_CutTruthLit(pCut)) == 1");
-        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);
-    
-    } else {
-        var pCutPerm string  = If_CutDsdPerm( p, pCut );
-        var LutSize int32  = p.pPars.pLutStruct[0] - '0';
-        var i int32;
-        var pTimes [IF_MAX_FUNC_LUTSIZE]int32;
-        var DelayMax int32 = -1;
-        var nLeafMax int32;
-        var uLeafMask uint32;
-        for  i = 0; i < If_CutLeaveNum(pCut); i++  {
-            pTimes[i] = int32(If_ObjCutBest(If_CutLeaf(p, pCut, Abc_Lit2Var(int32(pCutPerm[i])))).Delay); 
-            if DelayMax < pTimes[i] {
-                DelayMax = pTimes[i];
-nLeafMax = 1;
-uLeafMask = (1 << (i << 1));
-            } else if DelayMax == pTimes[i] {
-                nLeafMax++, uLeafMask |= (1 << (i << 1)); }
-        }
-        if If_CutLeaveNum(pCut) <= LutSize {
-            return DelayMax + 1; }
-        pCut.Cost = 2;
-        if nLeafMax <= LutSize - 1 {
-            pCut.uMaskFunc = If_DsdManCheckXY( p.pIfDsdMan, If_CutDsdLit(p, pCut), LutSize, 1, uLeafMask, 0, 0 );
-            if pCut.uMaskFunc > 0 {
-                return DelayMax + 1; }
-        }
-        pCut.uMaskFunc = If_DsdManCheckXY( p.pIfDsdMan, If_CutDsdLit(p, pCut), LutSize, 1, 0, 0, 0 );
-        if pCut.uMaskFunc == 0 {
-            return -1; }
-        return DelayMax + 2;
-    }
+func If_CutSopBalanceEvalIntInt(cover *Vec_Int_t, leaves int32, times []int32, aig *Vec_Int_t, complement int32, area *int32, coverComplement ...bool) int32 {
+	literals := make([]int32, max(leaves, 0))
+	for pin := range literals {
+		literals[pin] = int32(2 * pin)
+	}
+	root := int32(0)
+	delay := If_CutSopBalanceEvalInt(cover, times, literals, aig, &root, leaves, area, coverComplement...)
+	if delay < 0 {
+		return -1
+	}
+	if aig != nil {
+		if root>>1 != leaves+int32(vec.Vec_IntSize(aig)/2)-1 {
+			panic("balanced AIG root is not the final node")
+		}
+		if leaves == 1 && vec.Vec_IntSize(aig) == 0 {
+			vec.Vec_IntPush(aig, 0)
+		}
+		vec.Vec_IntPush(aig, root&1^complement)
+	}
+	return delay
 }
-/*
-int If_CutLutBalanceEval( If_Man_t * p, If_Cut_t * pCut )
-{
-    char pPerm[16];
-    int Delay2, Delay = If_CutLutBalanceEvalInt( p, pCut );
-    if ( Delay == -1 )
-        return -1;
-    Delay2 = If_CutLutBalancePinDelays( p, pCut, pPerm );
-    if ( Delay2 != Delay )
-    {
-        int s = 0;
-        char * pCutPerm = If_CutDsdPerm( p, pCut );
-        If_DsdManPrintNode( p->pIfDsdMan, If_CutDsdLit(p, pCut) );        Dau_DecPrintSet( pCut->uMaskFunc, pCut->nLeaves, 1 );
-        Kit_DsdPrintFromTruth( If_CutTruthUR(p, pCut), pCut->nLeaves ); printf( "\n" );
-        for ( s = 0; s < pCut->nLeaves; s++ )
-//            printf( "%d ", (int)If_ObjCutBest(If_CutLeaf(p, pCut, Abc_Lit2Var((int)pCutPerm[s])))->Delay );
-            printf( "%d ", (int)If_ObjCutBest(If_CutLeaf(p, pCut, s))->Delay );
-        printf( "\n" );
-
-        Delay  = If_CutLutBalanceEvalInt( p, pCut );
-        Delay2 = If_CutLutBalancePinDelays( p, pCut, pPerm );
-    }
-
-    return Delay;
+func If_CutSopBalanceEval(p *If_Man_t, c *If_Cut_t, aig *Vec_Int_t) int32 {
+	c.fUser = 1
+	if aig != nil {
+		vec.Vec_IntClear(aig)
+	}
+	if c.nLeaves == 0 {
+		if aig != nil {
+			vec.Vec_IntPush(aig, If_CutTruthLit(c)&1)
+		}
+		c.Cost = 0
+		return 0
+	}
+	times := ifDelayTimes(p, c)
+	if c.nLeaves == 1 {
+		if aig != nil {
+			vec.Vec_IntPush(aig, 0)
+			vec.Vec_IntPush(aig, If_CutTruthLit(c)&1)
+		}
+		c.Cost = 0
+		return times[0]
+	}
+	cover, coverPhase := ifDelayCover(p, c)
+	var area int32
+	delay := If_CutSopBalanceEvalIntInt(cover, int32(c.nLeaves), times, aig, If_CutTruthLit(c)&1^int32(c.fCompl), &area, coverPhase)
+	if delay >= 0 {
+		c.Cost = uint32(area)
+	}
+	return delay
 }
-*/
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func ifDelayLutSize(p *If_Man_t) int32 {
+	if p == nil || p.pPars == nil || len(p.pPars.pLutStruct) == 0 {
+		return 0
+	}
+	value := p.pPars.pLutStruct[0]
+	if value < '2' || value > '9' {
+		return 0
+	}
+	return int32(value - '0')
+}
+func ifDelayDsdPermutation(p *If_Man_t, c *If_Cut_t) []byte {
+	permutation := If_CutDsdPerm(p, c)
+	if len(permutation) < int(c.nLeaves) {
+		panic("short DSD permutation")
+	}
+	seen := make(map[int32]bool)
+	for _, literal := range permutation[:c.nLeaves] {
+		variable := int32(literal) >> 1
+		if variable >= int32(c.nLeaves) || seen[variable] {
+			panic("invalid DSD permutation")
+		}
+		seen[variable] = true
+	}
+	return permutation[:c.nLeaves]
+}
+func If_CutLutBalancePinDelays(p *If_Man_t, c *If_Cut_t, permutation []byte) int32 {
+	if c.nLeaves == 0 {
+		return 0
+	}
+	if len(permutation) < int(c.nLeaves) {
+		return -1
+	}
+	times := ifDelayTimes(p, c)
+	if c.nLeaves == 1 {
+		permutation[0] = 0
+		return times[0]
+	}
+	size := ifDelayLutSize(p)
+	if size == 0 {
+		return -1
+	}
+	for pin := range times {
+		permutation[pin] = 1
+	}
+	if int32(c.nLeaves) > size {
+		if c.uMaskFunc == 0 {
+			return -1
+		}
+		order := ifDelayDsdPermutation(p, c)
+		for pin, literal := range order {
+			if uint32(c.uMaskFunc)>>uint(2*pin)&1 != 0 {
+				permutation[literal>>1] = 2
+			}
+		}
+	}
+	maximum := int32(0)
+	for pin, time := range times {
+		maximum = max(maximum, time+int32(permutation[pin]))
+	}
+	return maximum
+}
+func If_CutLutBalanceEval(p *If_Man_t, c *If_Cut_t) int32 {
+	c.fUser = 1
+	c.Cost = 0
+	c.uMaskFunc = 0
+	if c.nLeaves == 0 {
+		return 0
+	}
+	times := ifDelayTimes(p, c)
+	if c.nLeaves == 1 {
+		return times[0]
+	}
+	size := ifDelayLutSize(p)
+	if size == 0 {
+		return -1
+	}
+	c.Cost = 1
+	maximum := int32(-1)
+	for _, time := range times {
+		maximum = max(maximum, time)
+	}
+	if int32(c.nLeaves) <= size {
+		return maximum + 1
+	}
+	if p.pIfDsdMan == nil {
+		return -1
+	}
+	c.Cost = 2
+	order := ifDelayDsdPermutation(p, c)
+	count := int32(0)
+	var latest uint32
+	for pin, literal := range order {
+		if times[literal>>1] == maximum {
+			count++
+			latest |= 1 << uint(2*pin)
+		}
+	}
+	dsd := If_CutDsdLit(p, c)
+	if count <= size-1 {
+		mask := If_DsdManCheckXY(p.pIfDsdMan, dsd, size, 1, latest, 0, 0)
+		if mask != 0 {
+			c.uMaskFunc = int32(mask)
+			return maximum + 1
+		}
+	}
+	mask := If_DsdManCheckXY(p.pIfDsdMan, dsd, size, 1, 0, 0, 0)
+	if mask == 0 {
+		return -1
+	}
+	c.uMaskFunc = int32(mask)
+	return maximum + 2
+}

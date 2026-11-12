@@ -1,6 +1,11 @@
 package if_
 
-import "os"
+import (
+	"os"
+
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/tim"
+)
 
 /**CFile****************************************************************
 
@@ -13,7 +18,7 @@ import "os"
   Synopsis    [Mapping procedures.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - November 21, 2006.]
@@ -37,709 +42,748 @@ import "os"
 
 // extern int    Abc_ExactDelayCost( word * pTruth, int nVars, int * pArrTimeProfile, char * pPerm, int * Cost, int AigLevel );
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Compute delay of the cut's output in terms of logic levels.]
+	Synopsis    [Compute delay of the cut's output in terms of logic levels.]
 
-  Description [Uses the best arrival time of the fanins of the cut
-  to compute the arrival times of the output of the cut.]
-               
-  SideEffects []
+	Description [Uses the best arrival time of the fanins of the cut
+	to compute the arrival times of the output of the cut.]
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func If_ManCutAigDelay_rec(p *If_Man_t, pObj *If_Obj_t, vVisited *Vec_Ptr_t) int32 {
-    var Delay0, Delay1 int32;
+	var Delay0, Delay1 int32
 	if pObj.fVisit != 0 {
-        return pObj.iCopy; }
+		return pObj.iCopy
+	}
 	if If_ObjIsCi(pObj) != 0 || If_ObjIsConst1(pObj) != 0 {
-        return -1; }
-    // store the node in the structure by level
-    assert(If_ObjIsAnd(pObj), "If_ObjIsAnd(pObj)");
-    pObj.fVisit = 1;
-    Vec_PtrPush( vVisited, pObj );
-    Delay0 = If_ManCutAigDelay_rec( p, pObj.pFanin0, vVisited );
-    Delay1 = If_ManCutAigDelay_rec( p, pObj.pFanin1, vVisited );
+		return -1
+	}
+	// store the node in the structure by level
+	assert(If_ObjIsAnd(pObj) != 0, "If_ObjIsAnd(pObj)")
+	pObj.fVisit = 1
+	Vec_PtrPush(vVisited, pObj)
+	Delay0 = If_ManCutAigDelay_rec(p, pObj.pFanin0, vVisited)
+	Delay1 = If_ManCutAigDelay_rec(p, pObj.pFanin1, vVisited)
 	if Delay0 >= 0 && Delay1 >= 0 {
-        pObj.iCopy = 1 + Abc_MaxInt(Delay0, Delay1);
-    } else {
-        pObj.iCopy = -1;
-    }
-    return pObj.iCopy;
+		pObj.iCopy = 1 + Abc_MaxInt(Delay0, Delay1)
+	} else {
+		pObj.iCopy = -1
+	}
+	return pObj.iCopy
 }
 func If_ManCutAigDelay(p *If_Man_t, pObj *If_Obj_t, pCut *If_Cut_t) int32 {
 	var Delay int32
-    Vec_PtrClear( p.vVisited );
-    // inlining of macro If_CutForEachLeaf
+	Vec_PtrClear(p.vVisited)
+	// inlining of macro If_CutForEachLeaf
 	for i := 0; i < int(pCut.nLeaves); i++ {
 		pLeaf := If_ManObj(p, pCut.pLeaves[i])
-        assert(pLeaf.fVisit == 0, "pLeaf.fVisit == 0");
-        pLeaf.fVisit = 1;
-        Vec_PtrPush( p.vVisited, pLeaf );
-        pLeaf.iCopy = If_ObjCutBest(pLeaf).Delay;
-    }
-    Delay = If_ManCutAigDelay_rec( p, pObj, p.vVisited );
-    // inlining of macro Vec_PtrForEachEntry
+		assert(pLeaf.fVisit == 0, "pLeaf.fVisit == 0")
+		pLeaf.fVisit = 1
+		Vec_PtrPush(p.vVisited, pLeaf)
+		pLeaf.iCopy = int32(If_ObjCutBest(pLeaf).Delay)
+	}
+	Delay = If_ManCutAigDelay_rec(p, pObj, p.vVisited)
+	// inlining of macro Vec_PtrForEachEntry
 	for _, entry := range Vec_PtrArray(p.vVisited) {
 		entry.(*If_Obj_t).fVisit = 0
-    }
-//    assert( Delay <= (int)pObj->Level );
-    return Delay;
+	}
+	//    assert( Delay <= (int)pObj->Level );
+	return Delay
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Counts the number of 1s in the signature.]
+	Synopsis    [Counts the number of 1s in the signature.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func If_WordCountOnes(uWord uint32) int32 {
-    uWord = (uWord & 0x55555555) + ((uWord>>1) & 0x55555555);
-    uWord = (uWord & 0x33333333) + ((uWord>>2) & 0x33333333);
-    uWord = (uWord & 0x0F0F0F0F) + ((uWord>>4) & 0x0F0F0F0F);
-    uWord = (uWord & 0x00FF00FF) + ((uWord>>8) & 0x00FF00FF);
+	uWord = (uWord & 0x55555555) + ((uWord >> 1) & 0x55555555)
+	uWord = (uWord & 0x33333333) + ((uWord >> 2) & 0x33333333)
+	uWord = (uWord & 0x0F0F0F0F) + ((uWord >> 4) & 0x0F0F0F0F)
+	uWord = (uWord & 0x00FF00FF) + ((uWord >> 8) & 0x00FF00FF)
 	return int32((uWord & 0x0000FFFF) + (uWord >> 16))
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Counts the number of 1s in the signature.]
+	Synopsis    [Counts the number of 1s in the signature.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-var spStatic_If_CutDelaySpecial_Pin2Pin [2][3]float32 = [2][3]float32{ {1.0, 1.0, 1.0}, {1.0, 1.0, 0.0} };
+	SeeAlso     []
+
+**********************************************************************
+*/
+var spStatic_If_CutDelaySpecial_Pin2Pin [2][3]float32 = [2][3]float32{{1.0, 1.0, 1.0}, {1.0, 1.0, 0.0}}
+
 func If_CutDelaySpecial(p *If_Man_t, pCut *If_Cut_t, fCarry int32) float32 {
 	var DelayCur float32
-    var Delay float32 = -IF_FLOAT_LARGE;
-    assert(pCut.nLeaves <= 3, "pCut.nLeaves <= 3");
-    // inlining of macro If_CutForEachLeaf
+	var Delay float32 = -IF_FLOAT_LARGE
+	assert(pCut.nLeaves <= 3, "pCut.nLeaves <= 3")
+	// inlining of macro If_CutForEachLeaf
 	for i := 0; i < int(pCut.nLeaves); i++ {
 		pLeaf := If_ManObj(p, pCut.pLeaves[i])
-        DelayCur = If_ObjCutBest(pLeaf).Delay;
-        // inlining of macro IF_MAX
-        
+		DelayCur = If_ObjCutBest(pLeaf).Delay
+		// inlining of macro IF_MAX
+
 		pinDelay := spStatic_If_CutDelaySpecial_Pin2Pin[int(fCarry)][i]
 		if Delay < pinDelay+DelayCur {
 			Delay = pinDelay + DelayCur
 		}
-    }
-    return Delay;
+	}
+	return Delay
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Returns arrival time profile of the cut.]
+	Synopsis    [Returns arrival time profile of the cut.]
 
-  Description [The procedure returns static storage, which should not be
-  deallocated and is only valid until before the procedure is called again.]
-               
-  SideEffects []
+	Description [The procedure returns static storage, which should not be
+	deallocated and is only valid until before the procedure is called again.]
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func If_CutArrTimeProfile(p *If_Man_t, pCut *If_Cut_t) *int32 {
-    var i int32;
-    for  i = 0; i < If_CutLeaveNum(pCut); i++  {
-        p.pArrTimeProfile[i] = int32(If_ObjCutBest(If_CutLeaf(p, pCut, i)).Delay);
-    }
-    return p.pArrTimeProfile;
+	var i int32
+	for i = 0; i < If_CutLeaveNum(pCut); i++ {
+		p.pArrTimeProfile[i] = int32(If_ObjCutBest(If_CutLeaf(p, pCut, i)).Delay)
+	}
+	return &p.pArrTimeProfile[0]
 }
 
-/**Function*************************************************************
+func ifMapFlag(value bool) int32 {
+	if value {
+		return 1
+	}
+	return 0
+}
 
-  Synopsis    [Finds the best cut for the given node.]
+func ifMapTruth32(p *If_Man_t, cut *If_Cut_t) []uint32 {
+	If_CutTruth(p, cut)
+	return p.pTruth32[:2*int(p.nTruth6Words[cut.nLeaves])]
+}
 
-  Description [Mapping modes: delay (0), area flow (1), area (2).]
-               
-  SideEffects []
+func ifMapTruth64(p *If_Man_t, cut *If_Cut_t) []uint64 {
+	If_CutTruthW(p, cut)
+	return p.puTempW[:p.nTruth6Words[cut.nLeaves]]
+}
 
-  SeeAlso     []
+const ifMapExactInfinity = int32(1_000_000_000)
 
-***********************************************************************/
+/*
+*Function*************************************************************
+
+	Synopsis    [Finds the best cut for the given node.]
+
+	Description [Mapping modes: delay (0), area flow (1), area (2).]
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
 func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreprocess int32, fFirst int32) {
-    var pCutSet *If_Set_t;
-    var pCut0, pCut1, pCut *If_Cut_t;
-    var pCut0R, pCut1R *If_Cut_t;
-    var fFunc0R, fFunc1R int32;
-    var i, k, v, iCutDsd, fChange int32;
-    var fSave0 int32  = p.pPars.fDelayOpt || p.pPars.fDelayOptLut || p.pPars.fDsdBalance || p.pPars.fUserRecLib || p.pPars.fUserSesLib || 
-        p.pPars.fUseDsdTune || p.pPars.fUseCofVars || p.pPars.fUseAndVars || p.pPars.fUse34Spec || p.pPars.pLutStruct || p.pPars.pFuncCell2;
-    var fUseAndCut int32  = (p.pPars.nAndDelay > 0) || (p.pPars.nAndArea > 0);
-    assert(!If_ObjIsAnd(pObj.pFanin0) || pObj.pFanin0.pCutSet.nCuts > 0, "!If_ObjIsAnd(pObj.pFanin0) || pObj.pFanin0.pCutSet.nCuts > 0");
-    assert(!If_ObjIsAnd(pObj.pFanin1) || pObj.pFanin1.pCutSet.nCuts > 0, "!If_ObjIsAnd(pObj.pFanin1) || pObj.pFanin1.pCutSet.nCuts > 0");
+	var pCutSet *If_Set_t
+	var pCut0, pCut1, pCut *If_Cut_t
+	var pCut0R, pCut1R *If_Cut_t
+	var fFunc0R, fFunc1R int32
+	var i, k, v, iCutDsd, fChange int32
+	fSave0 := ifMapFlag(p.pPars.fDelayOpt != 0 || p.pPars.fDelayOptLut != 0 || p.pPars.fDsdBalance != 0 || p.pPars.fUserRecLib != 0 || p.pPars.fUserSesLib != 0 ||
+		p.pPars.fUseDsdTune != 0 || p.pPars.fUseCofVars != 0 || p.pPars.fUseAndVars != 0 || p.pPars.fUse34Spec != 0 || p.pPars.pLutStruct != "" || p.pPars.pFuncCell2 != nil)
+	fUseAndCut := p.pPars.nAndDelay > 0 || p.pPars.nAndArea > 0
+	assert(If_ObjIsAnd(pObj.pFanin0) == 0 || pObj.pFanin0.pCutSet.nCuts > 0, "fanin 0 has cuts when it is an AND")
+	assert(If_ObjIsAnd(pObj.pFanin1) == 0 || pObj.pFanin1.pCutSet.nCuts > 0, "fanin 1 has cuts when it is an AND")
 
-    // prepare
-    if Mode == 0 {
-        pObj.EstRefs = float32(pObj.nRefs);
-    } else if Mode == 1 {
-        pObj.EstRefs = float32(((2.0 * pObj.EstRefs + pObj.nRefs) / 3.0)); }
-    // deref the selected cut
-    if (Mode != 0) && pObj.nRefs > 0 {
-        If_CutAreaDeref( p, If_ObjCutBest(pObj) ); }
+	// prepare
+	if Mode == 0 {
+		pObj.EstRefs = float32(pObj.nRefs)
+	} else if Mode == 1 {
+		pObj.EstRefs = (2*pObj.EstRefs + float32(pObj.nRefs)) / 3
+	}
+	// deref the selected cut
+	if Mode != 0 && pObj.nRefs > 0 {
+		If_CutAreaDeref(p, If_ObjCutBest(pObj))
+	}
 
-    // prepare the cutset
-    pCutSet = If_ManSetupNodeCutSet( p, pObj );
+	// prepare the cutset
+	pCutSet = If_ManSetupNodeCutSet(p, pObj)
 
-    // get the current assigned best cut
-    pCut = If_ObjCutBest(pObj);
-    if !(fFirst != 0) {
-        // recompute the parameters of the best cut
-        if p.pPars.fDelayOpt {
-            pCut.Delay = If_CutSopBalanceEval( p, pCut, nil );
-        } else if p.pPars.fDsdBalance {
-            pCut.Delay = If_CutDsdBalanceEval( p, pCut, nil );
-        } else if p.pPars.fUserRecLib {
-            pCut.Delay = If_CutDelayRecCost3( p, pCut, pObj ); 
-        } else if p.pPars.fUserSesLib {
-            var Cost int32;
-            pCut.fUser = 1;
-            pCut.Delay = float32(Abc_ExactDelayCost( If_CutTruthW(p, pCut), If_CutLeaveNum(pCut), If_CutArrTimeProfile(p, pCut), If_CutPerm(pCut), &Cost, If_ManCutAigDelay(p, pObj, pCut) )); 
-            if Cost == ABC_INFINITY {
-                for  v = 0; v < If_CutLeaveNum(pCut); v++  {
-                    If_CutPerm(pCut)[v] = IF_BIG_CHAR;
-                }
-                pCut.Cost = IF_COST_MAX;
-                pCut.fUseless = 1;
-            }
-        
-        } else if p.pPars.fDelayOptLut {
-            pCut.Delay = If_CutLutBalanceEval( p, pCut );
-        } else if p.pPars.nGateSize > 0 {
-            pCut.Delay = If_CutDelaySop( p, pCut );
-        } else {
-            pCut.Delay = If_CutDelay( p, pObj, pCut ); }
-        assert(pCut.Delay != -1, "pCut.Delay != -1");
-//        assert( pCut->Delay <= pObj->Required + p->fEpsilon );
-        if pCut.Delay > pObj.Required + 2*p.fEpsilon {
-            Abc_Print( 1, "If_ObjPerformMappingAnd(): Warning! Node with ID %d has delay (%f) exceeding the required times (%f).\n", 
-                pObj.Id, pCut.Delay, pObj.Required + p.fEpsilon ); }
-        if Mode == 2 {
-            pCut.Area = If_CutAreaDerefed( p, pCut );
-        } else {
-            pCut.Area = If_CutAreaFlow( p, pCut );
-        }
-        if p.pPars.fEdge {
-            if Mode == 2 {
-                pCut.Edge = If_CutEdgeDerefed( p, pCut );
-            } else {
-                pCut.Edge = If_CutEdgeFlow( p, pCut );
-            } }
-        if p.pPars.fPower {
-            if Mode == 2 {
-                pCut.Power = If_CutPowerDerefed( p, pCut, pObj );
-            } else {
-                pCut.Power = If_CutPowerFlow( p, pCut, pObj );
-            } }
-        // save the best cut from the previous iteration
-        if !(fPreprocess != 0) {
-			If_CutCopy( p, pCutSet.ppCuts[pCutSet.nCuts], pCut )
+	// get the current assigned best cut
+	pCut = If_ObjCutBest(pObj)
+	if !(fFirst != 0) {
+		// recompute the parameters of the best cut
+		if p.pPars.fDelayOpt != 0 {
+			pCut.Delay = float32(If_CutSopBalanceEval(p, pCut, nil))
+		} else if p.pPars.fDsdBalance != 0 {
+			pCut.Delay = float32(If_CutDsdBalanceEval(p, pCut, nil))
+		} else if p.pPars.fUserRecLib != 0 {
+			panic("if: recursive library delay mode is not ported")
+		} else if p.pPars.fUserSesLib != 0 {
+			panic("if: exact SAT delay mode is not ported")
+
+		} else if p.pPars.fDelayOptLut != 0 {
+			pCut.Delay = float32(If_CutLutBalanceEval(p, pCut))
+		} else if p.pPars.nGateSize > 0 {
+			pCut.Delay = float32(If_CutDelaySop(p, pCut))
+		} else {
+			pCut.Delay = If_CutDelay(p, pObj, pCut)
+		}
+		assert(pCut.Delay != -1, "pCut.Delay != -1")
+		//        assert( pCut->Delay <= pObj->Required + p->fEpsilon );
+		if pCut.Delay > pObj.Required+2*p.fEpsilon {
+			Abc_Print(1, "If_ObjPerformMappingAnd(): Warning! Node with ID %d has delay (%f) exceeding the required times (%f).\n",
+				pObj.Id, pCut.Delay, pObj.Required+p.fEpsilon)
+		}
+		if Mode == 2 {
+			pCut.Area = If_CutAreaDerefed(p, pCut)
+		} else {
+			pCut.Area = If_CutAreaFlow(p, pCut)
+		}
+		if p.pPars.fEdge != 0 {
+			if Mode == 2 {
+				pCut.Edge = If_CutEdgeDerefed(p, pCut)
+			} else {
+				pCut.Edge = If_CutEdgeFlow(p, pCut)
+			}
+		}
+		if p.pPars.fPower != 0 {
+			if Mode == 2 {
+				pCut.Power = If_CutPowerDerefed(p, pCut, pObj)
+			} else {
+				pCut.Power = If_CutPowerFlow(p, pCut, pObj)
+			}
+		}
+		// save the best cut from the previous iteration
+		if !(fPreprocess != 0) {
+			If_CutCopy(p, pCutSet.ppCuts[pCutSet.nCuts], pCut)
 			pCutSet.nCuts++
 		}
-    }
+	}
 
-    // generate cuts
-    // inlining of macro If_ObjForEachCut
+	// generate cuts
+	// inlining of macro If_ObjForEachCut
 	for i := 0; i < int(pObj.pFanin0.pCutSet.nCuts); i++ {
 		pCut0 = pObj.pFanin0.pCutSet.ppCuts[i]
-    // inlining of macro If_ObjForEachCut
-	for k := 0; k < int(pObj.pFanin1.pCutSet.nCuts); k++ {
-		pCut1 = pObj.pFanin1.pCutSet.ppCuts[k]
-        // get the next free cut
-        assert(pCutSet.nCuts <= pCutSet.nCutsMax, "pCutSet.nCuts <= pCutSet.nCutsMax");
-        pCut = pCutSet.ppCuts[pCutSet.nCuts];
-        // make sure K-feasible cut exists
-        if If_WordCountOnes(pCut0.uSign | pCut1.uSign) > p.pPars.nLutSize {
-            continue; }
+		// inlining of macro If_ObjForEachCut
+		for k := 0; k < int(pObj.pFanin1.pCutSet.nCuts); k++ {
+			pCut1 = pObj.pFanin1.pCutSet.ppCuts[k]
+			// get the next free cut
+			assert(pCutSet.nCuts <= pCutSet.nCutsMax, "pCutSet.nCuts <= pCutSet.nCutsMax")
+			pCut = pCutSet.ppCuts[pCutSet.nCuts]
+			// make sure K-feasible cut exists
+			if If_WordCountOnes(pCut0.uSign|pCut1.uSign) > p.pPars.nLutSize {
+				continue
+			}
 
-        pCut0R = pCut0;
-        pCut1R = pCut1;
-        fFunc0R = pCut0.iCutFunc ^ pCut0.fCompl ^ pObj.fCompl0;
-        fFunc1R = pCut1.iCutFunc ^ pCut1.fCompl ^ pObj.fCompl1;
-        if !p.pPars.fUseTtPerm || pCut0.nLeaves > pCut1.nLeaves || (pCut0.nLeaves == pCut1.nLeaves && fFunc0R > fFunc1R) {
-        
-        } else {
-            // inlining of macro ABC_SWAP
-            { var t *If_Cut_t  = pCut0R; pCut0R = pCut1R; pCut1R = t; };
-            // inlining of macro ABC_SWAP
-            { var t int32  = fFunc0R; fFunc0R = fFunc1R; fFunc1R = t; };
-        }        
+			pCut0R = pCut0
+			pCut1R = pCut1
+			fFunc0R = pCut0.iCutFunc ^ int32(pCut0.fCompl) ^ int32(pObj.fCompl0)
+			fFunc1R = pCut1.iCutFunc ^ int32(pCut1.fCompl) ^ int32(pObj.fCompl1)
+			if p.pPars.fUseTtPerm == 0 || pCut0.nLeaves > pCut1.nLeaves || (pCut0.nLeaves == pCut1.nLeaves && fFunc0R > fFunc1R) {
 
-        // merge the cuts
-        if p.pPars.fUseTtPerm {
-            if !If_CutMerge( p, pCut0R, pCut1R, pCut ) {
-                continue; }
-        
-        } else {
-            if !If_CutMergeOrdered( p, pCut0, pCut1, pCut ) {
-                continue; }
-        }
-        if pObj.fSpec && pCut.nLeaves == uint32(p.pPars.nLutSize) {
-            continue; }
-        p.nCutsMerged++;
-        p.nCutsTotal++;
-        // check if this cut is contained in any of the available cuts
-        if !p.pPars.fSkipCutFilter && If_CutFilter( pCutSet, pCut, fSave0 ) {
-            continue; }
-        // check if the cut is a special AND-gate cut
-        pCut.fAndCut = fUseAndCut && pCut.nLeaves == 2 && pCut.pLeaves[0] == pObj.pFanin0.Id && pCut.pLeaves[1] == pObj.pFanin1.Id;
-        //assert( pCut->nLeaves != 2 || pCut->pLeaves[0] < pCut->pLeaves[1] );
-        //assert( pCut->nLeaves != 2 || pObj->pFanin0->Id < pObj->pFanin1->Id );
-        // compute the truth table
-        pCut.iCutFunc = -1;
-        pCut.fCompl = 0;
-        if p.pPars.fTruth {
-//            int nShared = pCut0->nLeaves + pCut1->nLeaves - pCut->nLeaves;
-            var clk abctime;
-            if p.pPars.fVerbose {
-                clk = Abc_Clock(); }
-            if p.pPars.fUseTtPerm {
-                fChange = If_CutComputeTruthPerm( p, pCut, pCut0R, pCut1R, fFunc0R, fFunc1R );
-            } else {
-                fChange = If_CutComputeTruth( p, pCut, pCut0, pCut1, pObj.fCompl0, pObj.fCompl1 ); }
-            if p.pPars.fVerbose {
-                p.timeCache[4] += Abc_Clock() - clk; }
-            if !p.pPars.fSkipCutFilter && (fChange != 0) && If_CutFilter( pCutSet, pCut, fSave0 ) {
-                continue; }
-            if p.pPars.fLut6Filter && pCut.nLeaves == 6 && !If_CutCheckTruth6(p, pCut) {
-                continue; }
-            if p.pPars.fUseDsd {
-                var truthId int32  = Abc_Lit2Var(pCut.iCutFunc);
-                if truthId >= Vec_IntSize(p.vTtDsds[pCut.nLeaves]) || Vec_IntEntry(p.vTtDsds[pCut.nLeaves], truthId) == -1 {
-                    for  truthId >= Vec_IntSize(p.vTtDsds[pCut.nLeaves])  {
-                        Vec_IntPush( p.vTtDsds[pCut.nLeaves], -1 );
-                        for  v = 0; v < Abc_MaxInt(6, pCut.nLeaves); v++  {
-                            Vec_StrPush( p.vTtPerms[pCut.nLeaves], IF_BIG_CHAR );
-                        }
-                    }
-					 iCutDsd = If_DsdManCompute( p.pIfDsdMan, If_CutTruthWR(p, pCut), int32(pCut.nLeaves), If_CutDsdPerm(p, pCut), p.pPars.pLutStruct );
-                    Vec_IntWriteEntry( p.vTtDsds[pCut.nLeaves], truthId, iCutDsd );
-                }
-                assert(If_DsdManSuppSize(p.pIfDsdMan, If_CutDsdLit(p, pCut)) == int32(pCut.nLeaves), "If_DsdManSuppSize(p.pIfDsdMan, If_CutDsdLit(p, pCut)) == int32(pCut.nLeaves)");
-                //If_ManCacheRecord( p, If_CutDsdLit(p, pCut0), If_CutDsdLit(p, pCut1), nShared, If_CutDsdLit(p, pCut) );
-            }
-            // run user functions
-            pCut.fUseless = 0;
-            if p.pPars.pFuncCell || p.pPars.pFuncCell2 {
-                assert(p.pPars.fUseTtPerm == 0, "p.pPars.fUseTtPerm == 0");
-                assert(pCut.nLimit >= 4 && pCut.nLimit <= 16, "pCut.nLimit >= 4 && pCut.nLimit <= 16");
-                if p.pPars.fUseDsd {
-                    pCut.fUseless = If_DsdManCheckDec( p.pIfDsdMan, If_CutDsdLit(p, pCut) );
-                } else if p.pPars.pFuncCell2 {
-                    pCut.fUseless = !p.pPars.pFuncCell2( p, (word *)If_CutTruthW(p, pCut), pCut.nLeaves, nil, nil );
-                } else {
-                    pCut.fUseless = !p.pPars.pFuncCell( p, If_CutTruth(p, pCut), Abc_MaxInt(6, pCut.nLeaves), pCut.nLeaves, p.pPars.pLutStruct ); }
-                p.nCutsUselessAll += pCut.fUseless;
-                p.nCutsUseless[pCut.nLeaves] += pCut.fUseless;
-                p.nCutsCountAll++;
-                p.nCutsCount[pCut.nLeaves]++;
-                // skip 5-input cuts, which cannot be decomposed
-                if (p.pPars.fEnableCheck75 || p.pPars.fEnableCheck75u) && pCut.nLeaves == 5 && pCut.nLimit == 5 {
-                    extern int If_CluCheckDecInAny( word t, int nVars );
-                    extern int If_CluCheckDecOut( word t, int nVars );
-                    var TruthU uint32  = *If_CutTruth(p, pCut);
-                    var Truth word  = (((word)TruthU << 32) | (word)TruthU);
-                    p.nCuts5++;
-                    if If_CluCheckDecInAny( Truth, 5 ) {
-                        p.nCuts5a++;
-                    } else {
-                        continue; }
-                
-                } else if p.pPars.fVerbose && pCut.nLeaves == 5 {
-                    extern int If_CluCheckDecInAny( word t, int nVars );
-                    extern int If_CluCheckDecOut( word t, int nVars );
-                    var TruthU uint32  = *If_CutTruth(p, pCut);
-                    var Truth word  = (((word)TruthU << 32) | (word)TruthU);
-                    p.nCuts5++;
-                    if If_CluCheckDecInAny( Truth, 5 ) || If_CluCheckDecOut( Truth, 5 ) {
-                        p.nCuts5a++; }
-                }
-            
-            } else if p.pPars.fUseDsdTune {
-                pCut.fUseless = If_DsdManReadMark( p.pIfDsdMan, If_CutDsdLit(p, pCut) );
-                p.nCutsUselessAll += pCut.fUseless;
-                p.nCutsUseless[pCut.nLeaves] += pCut.fUseless;
-                p.nCutsCountAll++;
-                p.nCutsCount[pCut.nLeaves]++;
-            
-            } else if p.pPars.fUse34Spec {
-                assert(pCut.nLeaves <= 4, "pCut.nLeaves <= 4");
-                if pCut.nLeaves == 4 && !Abc_Tt4Check( int32((0xFFFF & *If_CutTruth(p, pCut))) ) {
-                    pCut.fUseless = 1; }
-            
-            } else {
-                if p.pPars.fUseAndVars {
-                    var iDecMask int32 = -1;
-                    var truthId int32 = Abc_Lit2Var(pCut.iCutFunc);
-                    assert(p.pPars.nLutSize <= 13, "p.pPars.nLutSize <= 13");
-                    if truthId >= Vec_IntSize(p.vTtDecs[pCut.nLeaves]) || Vec_IntEntry(p.vTtDecs[pCut.nLeaves], truthId) == -1 {
-                        for  truthId >= Vec_IntSize(p.vTtDecs[pCut.nLeaves])  {
-                            Vec_IntPush( p.vTtDecs[pCut.nLeaves], -1 );
-                        }
-                        if int32(pCut.nLeaves) > p.pPars.nLutSize / 2 && int32(pCut.nLeaves) <= 2 * (p.pPars.nLutSize / 2) {
-                            iDecMask = Abc_TtProcessBiDec( If_CutTruthWR(p, pCut), int32(pCut.nLeaves), p.pPars.nLutSize / 2 );
-                        } else {
-                            iDecMask = 0; }
-                        Vec_IntWriteEntry( p.vTtDecs[pCut.nLeaves], truthId, iDecMask );
-                    }
-                    iDecMask = Vec_IntEntry(p.vTtDecs[pCut.nLeaves], truthId);
-                    assert(iDecMask >= 0, "iDecMask >= 0");
-                    pCut.fUseless = int32((iDecMask == 0 && int32(pCut.nLeaves) > p.pPars.nLutSize / 2));
-                    p.nCutsUselessAll += pCut.fUseless;
-                    p.nCutsUseless[pCut.nLeaves] += pCut.fUseless;
-                    p.nCutsCountAll++;
-                    p.nCutsCount[pCut.nLeaves]++;
-                }
-                if p.pPars.fUseCofVars && (!p.pPars.fUseAndVars || pCut.fUseless) {
-                    var iCofVar int32 = -1;
-                    var truthId int32 = Abc_Lit2Var(pCut.iCutFunc);
-                    if truthId >= Vec_StrSize(p.vTtVars[pCut.nLeaves]) || Vec_StrEntry(p.vTtVars[pCut.nLeaves], truthId) == byte(-1) {
-                        for  truthId >= Vec_StrSize(p.vTtVars[pCut.nLeaves])  {
-                            Vec_StrPush( p.vTtVars[pCut.nLeaves], byte(-1) );
-                        }
-                        iCofVar = Abc_TtCheckCondDep( If_CutTruthWR(p, pCut), pCut.nLeaves, p.pPars.nLutSize / 2 );
-                        Vec_StrWriteEntry( p.vTtVars[pCut.nLeaves], truthId, byte(iCofVar) );
-                    }
-                    iCofVar = Vec_StrEntry(p.vTtVars[pCut.nLeaves], truthId);
-                    assert(iCofVar >= 0 && iCofVar <= int32(pCut.nLeaves), "iCofVar >= 0 && iCofVar <= int32(pCut.nLeaves)");
-                    pCut.fUseless = int32((iCofVar == int32(pCut.nLeaves) && pCut.nLeaves > 0));
-                    p.nCutsUselessAll += pCut.fUseless;
-                    p.nCutsUseless[pCut.nLeaves] += pCut.fUseless;
-                    p.nCutsCountAll++;
-                    p.nCutsCount[pCut.nLeaves]++;
-                }
-            }
-        }
-        
-        // compute the application-specific cost and depth
-        pCut.fUser = (p.pPars.pFuncCost != nil);
-        if p.pPars.pFuncCost {
-            pCut.Cost = p.pPars.pFuncCost(p, pCut);
-        } else {
-            pCut.Cost = 0;
-        }
-        if pCut.Cost == IF_COST_MAX {
-            continue; }
-        // check if the cut satisfies the required times
-        if p.pPars.fDelayOpt {
-            pCut.Delay = If_CutSopBalanceEval( p, pCut, nil );
-        } else if p.pPars.fDsdBalance {
-            pCut.Delay = If_CutDsdBalanceEval( p, pCut, nil );
-        } else if p.pPars.fUserRecLib {
-            pCut.Delay = If_CutDelayRecCost3( p, pCut, pObj ); 
-        } else if p.pPars.fUserSesLib {
-            var Cost int32;
-            pCut.fUser = 1;
-            pCut.Delay = float32(Abc_ExactDelayCost( If_CutTruthW(p, pCut), If_CutLeaveNum(pCut), If_CutArrTimeProfile(p, pCut), If_CutPerm(pCut), &Cost, If_ManCutAigDelay(p, pObj, pCut) )); 
-            if Cost == ABC_INFINITY {
-                for  v = 0; v < If_CutLeaveNum(pCut); v++  {
-                    If_CutPerm(pCut)[v] = IF_BIG_CHAR;
-                }
-                pCut.Cost = IF_COST_MAX;
-                pCut.fUseless = 1;
-            }
-        
-        } else if p.pPars.fDelayOptLut {
-            pCut.Delay = If_CutLutBalanceEval( p, pCut );
-        } else if p.pPars.nGateSize > 0 {
-            pCut.Delay = If_CutDelaySop( p, pCut );
-        } else { 
-            pCut.Delay = If_CutDelay( p, pObj, pCut ); }
-        if pCut.Delay == -1 {
-            continue; }
-        if (Mode != 0) && pCut.Delay > pObj.Required + p.fEpsilon {
-            continue; }
-        // compute area of the cut (this area may depend on the application specific cost)
-        if Mode == 2 {
-            pCut.Area = If_CutAreaDerefed( p, pCut );
-        } else {
-            pCut.Area = If_CutAreaFlow( p, pCut );
-        }
-        if p.pPars.fEdge {
-            if Mode == 2 {
-                pCut.Edge = If_CutEdgeDerefed( p, pCut );
-            } else {
-                pCut.Edge = If_CutEdgeFlow( p, pCut );
-            } }
-        if p.pPars.fPower {
-            if Mode == 2 {
-                pCut.Power = If_CutPowerDerefed( p, pCut, pObj );
-            } else {
-                pCut.Power = If_CutPowerFlow( p, pCut, pObj );
-            } }
-//        pCut->AveRefs = (Mode == 0)? (float)0.0 : If_CutAverageRefs( p, pCut );
-        // insert the cut into storage
-        If_CutSort( p, pCutSet, pCut );
-//        If_CutTraverse( p, pObj, pCut );
-    }
-    } 
-    assert(pCutSet.nCuts > 0, "pCutSet.nCuts > 0");
-//    If_CutVerifyCuts( pCutSet, !p->pPars->fUseTtPerm );
+			} else {
+				// inlining of macro ABC_SWAP
+				{
+					var t *If_Cut_t = pCut0R
+					pCut0R = pCut1R
+					pCut1R = t
+				}
+				// inlining of macro ABC_SWAP
+				{
+					var t int32 = fFunc0R
+					fFunc0R = fFunc1R
+					fFunc1R = t
+				}
+			}
 
-    // update the best cut
-    if !(fPreprocess != 0) || pCutSet.ppCuts[0].Delay <= pObj.Required + p.fEpsilon {
-        If_CutCopy( p, If_ObjCutBest(pObj), pCutSet.ppCuts[0] );
-        if p.pPars.fUserRecLib || p.pPars.fUserSesLib {
-            assert(If_ObjCutBest(pObj).Cost < IF_COST_MAX && If_ObjCutBest(pObj).Delay < ABC_INFINITY, "If_ObjCutBest(pObj).Cost < IF_COST_MAX && If_ObjCutBest(pObj).Delay < ABC_INFINITY"); }
-    }
-    // add the trivial cut to the set
-    if !pObj.fSkipCut && If_ObjCutBest(pObj).nLeaves > 1 {
-        If_ManSetupCutTriv( p, pCutSet.ppCuts[pCutSet.nCuts++], pObj.Id );
-        assert(pCutSet.nCuts <= pCutSet.nCutsMax+1, "pCutSet.nCuts <= pCutSet.nCutsMax+1");
-    }
-//    if ( If_ObjCutBest(pObj)->nLeaves == 0 )
-//        p->nBestCutSmall[0]++;
-//    else if ( If_ObjCutBest(pObj)->nLeaves == 1 )
-//        p->nBestCutSmall[1]++;
+			// merge the cuts
+			if p.pPars.fUseTtPerm != 0 {
+				if If_CutMerge(p, pCut0R, pCut1R, pCut) == 0 {
+					continue
+				}
 
-    // ref the selected cut
-    if (Mode != 0) && pObj.nRefs > 0 {
-        If_CutAreaRef( p, If_ObjCutBest(pObj) ); }
-    if If_ObjCutBest(pObj).fUseless {
-        Abc_Print( 1, "The best cut is useless.\n" ); }
-    // call the user specified function for each cut
-    if p.pPars.pFuncUser {
-        // inlining of macro If_ObjForEachCut
-        for  i = 0; (i < (pObj).pCutSet.nCuts) && ((pCut) = (pObj).pCutSet.ppCuts[i]); i++  {
-            p.pPars.pFuncUser( p, pObj, pCut );
-        } }
-    // free the cuts
-    If_ManDerefNodeCutSet( p, pObj );
+			} else {
+				if If_CutMergeOrdered(p, pCut0, pCut1, pCut) == 0 {
+					continue
+				}
+			}
+			if pObj.fSpec != 0 && pCut.nLeaves == uint32(p.pPars.nLutSize) {
+				continue
+			}
+			p.nCutsMerged++
+			p.nCutsTotal++
+			// check if this cut is contained in any of the available cuts
+			if p.pPars.fSkipCutFilter == 0 && If_CutFilter(pCutSet, pCut, fSave0) != 0 {
+				continue
+			}
+			// check if the cut is a special AND-gate cut
+			pCut.fAndCut = uint32(ifMapFlag(fUseAndCut && pCut.nLeaves == 2 && pCut.pLeaves[0] == pObj.pFanin0.Id && pCut.pLeaves[1] == pObj.pFanin1.Id))
+			//assert( pCut->nLeaves != 2 || pCut->pLeaves[0] < pCut->pLeaves[1] );
+			//assert( pCut->nLeaves != 2 || pObj->pFanin0->Id < pObj->pFanin1->Id );
+			// compute the truth table
+			pCut.iCutFunc = -1
+			pCut.fCompl = 0
+			if p.pPars.fTruth != 0 {
+				//            int nShared = pCut0->nLeaves + pCut1->nLeaves - pCut->nLeaves;
+				var clk abctime
+				if p.pPars.fVerbose != 0 {
+					clk = Abc_Clock()
+				}
+				if p.pPars.fUseTtPerm != 0 {
+					fChange = If_CutComputeTruthPerm(p, pCut, pCut0R, pCut1R, fFunc0R, fFunc1R)
+				} else {
+					fChange = If_CutComputeTruth(p, pCut, pCut0, pCut1, int32(pObj.fCompl0), int32(pObj.fCompl1))
+				}
+				if p.pPars.fVerbose != 0 {
+					p.timeCache[4] += Abc_Clock() - clk
+				}
+				if p.pPars.fSkipCutFilter == 0 && fChange != 0 && If_CutFilter(pCutSet, pCut, fSave0) != 0 {
+					continue
+				}
+				if p.pPars.fLut6Filter != 0 && pCut.nLeaves == 6 && If_CutCheckTruth6(p, pCut) == 0 {
+					continue
+				}
+				if p.pPars.fUseDsd != 0 {
+					var truthId int32 = Abc_Lit2Var(pCut.iCutFunc)
+					if truthId >= int32(Vec_IntSize(p.vTtDsds[pCut.nLeaves])) || Vec_IntEntry(p.vTtDsds[pCut.nLeaves], int(truthId)) == -1 {
+						for truthId >= int32(Vec_IntSize(p.vTtDsds[pCut.nLeaves])) {
+							Vec_IntPush(p.vTtDsds[pCut.nLeaves], -1)
+							for v = 0; v < Abc_MaxInt(6, int32(pCut.nLeaves)); v++ {
+								Vec_StrPush(p.vTtPerms[pCut.nLeaves], IF_BIG_CHAR)
+							}
+						}
+						iCutDsd = If_DsdManCompute(p.pIfDsdMan, ifMapTruth64(p, pCut), int32(pCut.nLeaves), If_CutDsdPerm(p, pCut), p.pPars.pLutStruct)
+						Vec_IntWriteEntry(p.vTtDsds[pCut.nLeaves], int(truthId), iCutDsd)
+					}
+					assert(If_DsdManSuppSize(p.pIfDsdMan, If_CutDsdLit(p, pCut)) == int32(pCut.nLeaves), "If_DsdManSuppSize(p.pIfDsdMan, If_CutDsdLit(p, pCut)) == int32(pCut.nLeaves)")
+					//If_ManCacheRecord( p, If_CutDsdLit(p, pCut0), If_CutDsdLit(p, pCut1), nShared, If_CutDsdLit(p, pCut) );
+				}
+				// run user functions
+				pCut.fUseless = 0
+				if p.pPars.pFuncCell != nil || p.pPars.pFuncCell2 != nil {
+					assert(p.pPars.fUseTtPerm == 0, "p.pPars.fUseTtPerm == 0")
+					assert(pCut.nLimit >= 4 && pCut.nLimit <= 16, "pCut.nLimit >= 4 && pCut.nLimit <= 16")
+					if p.pPars.fUseDsd != 0 {
+						pCut.fUseless = uint32(If_DsdManCheckDec(p.pIfDsdMan, If_CutDsdLit(p, pCut)))
+					} else if p.pPars.pFuncCell2 != nil {
+						pCut.fUseless = uint32(ifMapFlag(p.pPars.pFuncCell2(p, ifMapTruth64(p, pCut), int32(pCut.nLeaves), nil, nil) == 0))
+					} else {
+						pCut.fUseless = uint32(ifMapFlag(p.pPars.pFuncCell(p, ifMapTruth32(p, pCut), Abc_MaxInt(6, int32(pCut.nLeaves)), int32(pCut.nLeaves), p.pPars.pLutStruct) == 0))
+					}
+					p.nCutsUselessAll += ifMapFlag(pCut.fUseless != 0)
+					p.nCutsUseless[pCut.nLeaves] += ifMapFlag(pCut.fUseless != 0)
+					p.nCutsCountAll++
+					p.nCutsCount[pCut.nLeaves]++
+					// skip 5-input cuts, which cannot be decomposed
+					if (p.pPars.fEnableCheck75 != 0 || p.pPars.fEnableCheck75u != 0) && pCut.nLeaves == 5 && pCut.nLimit == 5 {
+						var TruthU uint32 = *If_CutTruth(p, pCut)
+						var Truth word = (word(TruthU) << 32) | word(TruthU)
+						p.nCuts5++
+						if If_CluCheckDecInAny(Truth, 5) != 0 {
+							p.nCuts5a++
+						} else {
+							continue
+						}
+
+					} else if p.pPars.fVerbose != 0 && pCut.nLeaves == 5 {
+						var TruthU uint32 = *If_CutTruth(p, pCut)
+						var Truth word = (word(TruthU) << 32) | word(TruthU)
+						p.nCuts5++
+						if If_CluCheckDecInAny(Truth, 5) != 0 || If_CluCheckDecOut(Truth, 5) != 0 {
+							p.nCuts5a++
+						}
+					}
+
+				} else if p.pPars.fUseDsdTune != 0 {
+					pCut.fUseless = uint32(If_DsdManReadMark(p.pIfDsdMan, If_CutDsdLit(p, pCut)))
+					p.nCutsUselessAll += int32(pCut.fUseless)
+					p.nCutsUseless[pCut.nLeaves] += int32(pCut.fUseless)
+					p.nCutsCountAll++
+					p.nCutsCount[pCut.nLeaves]++
+
+				} else if p.pPars.fUse34Spec != 0 {
+					assert(pCut.nLeaves <= 4, "pCut.nLeaves <= 4")
+					if pCut.nLeaves == 4 && Abc_Tt4Check(int32(0xFFFF&*If_CutTruth(p, pCut))) == 0 {
+						pCut.fUseless = 1
+					}
+
+				} else {
+					if p.pPars.fUseAndVars != 0 {
+						var iDecMask int32 = -1
+						var truthId int32 = Abc_Lit2Var(pCut.iCutFunc)
+						assert(p.pPars.nLutSize <= 13, "p.pPars.nLutSize <= 13")
+						if truthId >= int32(Vec_IntSize(p.vTtDecs[pCut.nLeaves])) || Vec_IntEntry(p.vTtDecs[pCut.nLeaves], int(truthId)) == -1 {
+							for truthId >= int32(Vec_IntSize(p.vTtDecs[pCut.nLeaves])) {
+								Vec_IntPush(p.vTtDecs[pCut.nLeaves], -1)
+							}
+							if int32(pCut.nLeaves) > p.pPars.nLutSize/2 && int32(pCut.nLeaves) <= 2*(p.pPars.nLutSize/2) {
+								iDecMask = Abc_TtProcessBiDec(ifMapTruth64(p, pCut), int32(pCut.nLeaves), p.pPars.nLutSize/2)
+							} else {
+								iDecMask = 0
+							}
+							Vec_IntWriteEntry(p.vTtDecs[pCut.nLeaves], int(truthId), iDecMask)
+						}
+						iDecMask = Vec_IntEntry(p.vTtDecs[pCut.nLeaves], int(truthId))
+						assert(iDecMask >= 0, "iDecMask >= 0")
+						pCut.fUseless = ifMapFlag(iDecMask == 0 && int32(pCut.nLeaves) > p.pPars.nLutSize/2)
+						p.nCutsUselessAll += int32(pCut.fUseless)
+						p.nCutsUseless[pCut.nLeaves] += int32(pCut.fUseless)
+						p.nCutsCountAll++
+						p.nCutsCount[pCut.nLeaves]++
+					}
+					if p.pPars.fUseCofVars != 0 && (p.pPars.fUseAndVars == 0 || pCut.fUseless != 0) {
+						var iCofVar int32 = -1
+						var truthId int32 = Abc_Lit2Var(pCut.iCutFunc)
+						if truthId >= int32(Vec_StrSize(p.vTtVars[pCut.nLeaves])) || Vec_StrEntry(p.vTtVars[pCut.nLeaves], int(truthId)) == byte(-1) {
+							for truthId >= int32(Vec_StrSize(p.vTtVars[pCut.nLeaves])) {
+								Vec_StrPush(p.vTtVars[pCut.nLeaves], byte(-1))
+							}
+							iCofVar = Abc_TtCheckCondDep(ifMapTruth64(p, pCut), int32(pCut.nLeaves), p.pPars.nLutSize/2)
+							Vec_StrWriteEntry(p.vTtVars[pCut.nLeaves], int(truthId), byte(iCofVar))
+						}
+						iCofVar = int32(Vec_StrEntry(p.vTtVars[pCut.nLeaves], int(truthId)))
+						assert(iCofVar >= 0 && iCofVar <= int32(pCut.nLeaves), "iCofVar >= 0 && iCofVar <= int32(pCut.nLeaves)")
+						pCut.fUseless = uint32(ifMapFlag(iCofVar == int32(pCut.nLeaves) && pCut.nLeaves > 0))
+						p.nCutsUselessAll += int32(pCut.fUseless)
+						p.nCutsUseless[pCut.nLeaves] += int32(pCut.fUseless)
+						p.nCutsCountAll++
+						p.nCutsCount[pCut.nLeaves]++
+					}
+				}
+			}
+
+			// compute the application-specific cost and depth
+			pCut.fUser = uint32(ifMapFlag(p.pPars.pFuncCost != nil))
+			if p.pPars.pFuncCost != nil {
+				pCut.Cost = uint32(p.pPars.pFuncCost(p, pCut))
+			} else {
+				pCut.Cost = 0
+			}
+			if pCut.Cost == IF_COST_MAX {
+				continue
+			}
+			// check if the cut satisfies the required times
+			if p.pPars.fDelayOpt != 0 {
+				pCut.Delay = If_CutSopBalanceEval(p, pCut, nil)
+			} else if p.pPars.fDsdBalance != 0 {
+				pCut.Delay = If_CutDsdBalanceEval(p, pCut, nil)
+			} else if p.pPars.fUserRecLib != 0 {
+				pCut.Delay = If_CutDelayRecCost3(p, pCut, pObj)
+			} else if p.pPars.fUserSesLib != 0 {
+				var Cost int32
+				pCut.fUser = 1
+				pCut.Delay = float32(Abc_ExactDelayCost(If_CutTruthW(p, pCut), If_CutLeaveNum(pCut), If_CutArrTimeProfile(p, pCut), If_CutPerm(pCut), &Cost, If_ManCutAigDelay(p, pObj, pCut)))
+				if Cost == ABC_INFINITY {
+					for v = 0; v < If_CutLeaveNum(pCut); v++ {
+						If_CutPerm(pCut)[v] = IF_BIG_CHAR
+					}
+					pCut.Cost = IF_COST_MAX
+					pCut.fUseless = 1
+				}
+
+			} else if p.pPars.fDelayOptLut != 0 {
+				pCut.Delay = If_CutLutBalanceEval(p, pCut)
+			} else if p.pPars.nGateSize > 0 {
+				pCut.Delay = If_CutDelaySop(p, pCut)
+			} else {
+				pCut.Delay = If_CutDelay(p, pObj, pCut)
+			}
+			if pCut.Delay == -1 {
+				continue
+			}
+			if (Mode != 0) && pCut.Delay > pObj.Required+p.fEpsilon {
+				continue
+			}
+			// compute area of the cut (this area may depend on the application specific cost)
+			if Mode == 2 {
+				pCut.Area = If_CutAreaDerefed(p, pCut)
+			} else {
+				pCut.Area = If_CutAreaFlow(p, pCut)
+			}
+			if p.pPars.fEdge != 0 {
+				if Mode == 2 {
+					pCut.Edge = If_CutEdgeDerefed(p, pCut)
+				} else {
+					pCut.Edge = If_CutEdgeFlow(p, pCut)
+				}
+			}
+			if p.pPars.fPower != 0 {
+				if Mode == 2 {
+					pCut.Power = If_CutPowerDerefed(p, pCut, pObj)
+				} else {
+					pCut.Power = If_CutPowerFlow(p, pCut, pObj)
+				}
+			}
+			//        pCut->AveRefs = (Mode == 0)? (float)0.0 : If_CutAverageRefs( p, pCut );
+			// insert the cut into storage
+			If_CutSort(p, pCutSet, pCut)
+			//        If_CutTraverse( p, pObj, pCut );
+		}
+	}
+	assert(pCutSet.nCuts > 0, "pCutSet.nCuts > 0")
+	//    If_CutVerifyCuts( pCutSet, !p->pPars->fUseTtPerm );
+
+	// update the best cut
+	if !(fPreprocess != 0) || pCutSet.ppCuts[0].Delay <= pObj.Required+p.fEpsilon {
+		If_CutCopy(p, If_ObjCutBest(pObj), pCutSet.ppCuts[0])
+		if p.pPars.fUserRecLib != 0 || p.pPars.fUserSesLib != 0 {
+			assert(If_ObjCutBest(pObj).Cost < IF_COST_MAX && If_ObjCutBest(pObj).Delay < ABC_INFINITY, "If_ObjCutBest(pObj).Cost < IF_COST_MAX && If_ObjCutBest(pObj).Delay < ABC_INFINITY")
+		}
+	}
+	// add the trivial cut to the set
+	if pObj.fSkipCut == 0 && If_ObjCutBest(pObj).nLeaves > 1 {
+		If_ManSetupCutTriv(p, pCutSet.ppCuts[pCutSet.nCuts], pObj.Id)
+		pCutSet.nCuts++
+		assert(pCutSet.nCuts <= pCutSet.nCutsMax+1, "pCutSet.nCuts <= pCutSet.nCutsMax+1")
+	}
+	//    if ( If_ObjCutBest(pObj)->nLeaves == 0 )
+	//        p->nBestCutSmall[0]++;
+	//    else if ( If_ObjCutBest(pObj)->nLeaves == 1 )
+	//        p->nBestCutSmall[1]++;
+
+	// ref the selected cut
+	if (Mode != 0) && pObj.nRefs > 0 {
+		If_CutAreaRef(p, If_ObjCutBest(pObj))
+	}
+	if If_ObjCutBest(pObj).fUseless != 0 {
+		Abc_Print(1, "The best cut is useless.\n")
+	}
+	// call the user specified function for each cut
+	if p.pPars.pFuncUser != nil {
+		// inlining of macro If_ObjForEachCut
+		for i := 0; i < int(pObj.pCutSet.nCuts); i++ {
+			pCut = pObj.pCutSet.ppCuts[i]
+			p.pPars.pFuncUser(p, pObj, pCut)
+		}
+	}
+	// free the cuts
+	If_ManDerefNodeCutSet(p, pObj)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Finds the best cut for the choice node.]
+	Synopsis    [Finds the best cut for the choice node.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func If_ObjPerformMappingChoice(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreprocess int32) {
-    var pCutSet *If_Set_t;
-    var pTemp *If_Obj_t;
-    var pCutTemp, pCut *If_Cut_t;
-    var i int32;
-    var fSave0 int32 = p.pPars.fDelayOpt || p.pPars.fDelayOptLut || p.pPars.fDsdBalance || p.pPars.fUserRecLib || p.pPars.fUserSesLib || p.pPars.fUse34Spec;
-    assert(pObj.pEquiv != nil, "pObj.pEquiv != nil");
+	var pCutSet *If_Set_t
+	var pTemp *If_Obj_t
+	var pCutTemp, pCut *If_Cut_t
+	var i int32
+	fSave0 := ifMapFlag(p.pPars.fDelayOpt != 0 || p.pPars.fDelayOptLut != 0 || p.pPars.fDsdBalance != 0 || p.pPars.fUserRecLib != 0 || p.pPars.fUserSesLib != 0 || p.pPars.fUse34Spec != 0)
+	assert(pObj.pEquiv != nil, "pObj.pEquiv != nil")
 
-    // prepare
-    if (Mode != 0) && pObj.nRefs > 0 {
-        If_CutAreaDeref( p, If_ObjCutBest(pObj) ); }
+	// prepare
+	if (Mode != 0) && pObj.nRefs > 0 {
+		If_CutAreaDeref(p, If_ObjCutBest(pObj))
+	}
 
-    // remove elementary cuts
-    for  pTemp = pObj; (pTemp != nil); pTemp = pTemp.pEquiv  {
-        if pTemp != pObj || pTemp.pCutSet.nCuts > 1 {
-            pTemp.pCutSet.nCuts--; }
-    }
+	// remove elementary cuts
+	for pTemp = pObj; pTemp != nil; pTemp = pTemp.pEquiv {
+		if pTemp != pObj || pTemp.pCutSet.nCuts > 1 {
+			pTemp.pCutSet.nCuts--
+		}
+	}
 
-    // update the cutset of the node
-    pCutSet = pObj.pCutSet;
+	// update the cutset of the node
+	pCutSet = pObj.pCutSet
 
-    // generate cuts
-    for  pTemp = pObj.pEquiv; (pTemp != nil); pTemp = pTemp.pEquiv  {
-        if pTemp.pCutSet.nCuts == 0 {
-            continue; }
-        // go through the cuts of this node
-        // inlining of macro If_ObjForEachCut
-        for  i = 0; (i < (pTemp).pCutSet.nCuts) && ((pCutTemp) = (pTemp).pCutSet.ppCuts[i]); i++  {
-            if pCutTemp.fUseless {
-                continue; }
-            // get the next free cut
-            assert(pCutSet.nCuts <= pCutSet.nCutsMax, "pCutSet.nCuts <= pCutSet.nCutsMax");
-            pCut = pCutSet.ppCuts[pCutSet.nCuts];
-            // copy the cut into storage
-            If_CutCopy( p, pCut, pCutTemp );
-            // check if this cut is contained in any of the available cuts
-            if If_CutFilter( pCutSet, pCut, fSave0 ) {
-                continue; }
-            // check if the cut satisfies the required times
-//            assert( pCut->Delay == If_CutDelay( p, pTemp, pCut ) );
-            if (Mode != 0) && pCut.Delay > pObj.Required + p.fEpsilon {
-                continue; }
-            // set the phase attribute
-            pCut.fCompl = pObj.fPhase ^ pTemp.fPhase;
-            // compute area of the cut (this area may depend on the application specific cost)
-            if Mode == 2 {
-                pCut.Area = If_CutAreaDerefed( p, pCut );
-            } else {
-                pCut.Area = If_CutAreaFlow( p, pCut );
-            }
-            if p.pPars.fEdge {
-                if Mode == 2 {
-                    pCut.Edge = If_CutEdgeDerefed( p, pCut );
-                } else {
-                    pCut.Edge = If_CutEdgeFlow( p, pCut );
-                } }
-            if p.pPars.fPower {
-                if Mode == 2 {
-                    pCut.Power = If_CutPowerDerefed( p, pCut, pObj );
-                } else {
-                    pCut.Power = If_CutPowerFlow( p, pCut, pObj );
-                } }
-//            pCut->AveRefs = (Mode == 0)? (float)0.0 : If_CutAverageRefs( p, pCut );
-            // insert the cut into storage
-            If_CutSort( p, pCutSet, pCut );
-        }
-    } 
-    assert(pCutSet.nCuts > 0, "pCutSet.nCuts > 0");
+	// generate cuts
+	for pTemp = pObj.pEquiv; pTemp != nil; pTemp = pTemp.pEquiv {
+		if pTemp.pCutSet.nCuts == 0 {
+			continue
+		}
+		// go through the cuts of this node
+		// inlining of macro If_ObjForEachCut
+		for i = 0; i < int(pTemp.pCutSet.nCuts); i++ {
+			pCutTemp = pTemp.pCutSet.ppCuts[i]
+			if pCutTemp.fUseless != 0 {
+				continue
+			}
+			// get the next free cut
+			assert(pCutSet.nCuts <= pCutSet.nCutsMax, "pCutSet.nCuts <= pCutSet.nCutsMax")
+			pCut = pCutSet.ppCuts[pCutSet.nCuts]
+			// copy the cut into storage
+			If_CutCopy(p, pCut, pCutTemp)
+			// check if this cut is contained in any of the available cuts
+			if If_CutFilter(pCutSet, pCut, fSave0) != 0 {
+				continue
+			}
+			// check if the cut satisfies the required times
+			//            assert( pCut->Delay == If_CutDelay( p, pTemp, pCut ) );
+			if Mode != 0 && pCut.Delay > pObj.Required+p.fEpsilon {
+				continue
+			}
+			// set the phase attribute
+			pCut.fCompl = pObj.fPhase ^ pTemp.fPhase
+			// compute area of the cut (this area may depend on the application specific cost)
+			if Mode == 2 {
+				pCut.Area = If_CutAreaDerefed(p, pCut)
+			} else {
+				pCut.Area = If_CutAreaFlow(p, pCut)
+			}
+			if p.pPars.fEdge != 0 {
+				if Mode == 2 {
+					pCut.Edge = If_CutEdgeDerefed(p, pCut)
+				} else {
+					pCut.Edge = If_CutEdgeFlow(p, pCut)
+				}
+			}
+			if p.pPars.fPower != 0 {
+				if Mode == 2 {
+					pCut.Power = If_CutPowerDerefed(p, pCut, pObj)
+				} else {
+					pCut.Power = If_CutPowerFlow(p, pCut, pObj)
+				}
+			}
+			//            pCut->AveRefs = (Mode == 0)? (float)0.0 : If_CutAverageRefs( p, pCut );
+			// insert the cut into storage
+			If_CutSort(p, pCutSet, pCut)
+		}
+	}
+	assert(pCutSet.nCuts > 0, "pCutSet.nCuts > 0")
 
-    // update the best cut
-    if !(fPreprocess != 0) || pCutSet.ppCuts[0].Delay <= pObj.Required + p.fEpsilon {
-        If_CutCopy( p, If_ObjCutBest(pObj), pCutSet.ppCuts[0] ); }
-    // add the trivial cut to the set
-    if !pObj.fSkipCut && If_ObjCutBest(pObj).nLeaves > 1 {
-        If_ManSetupCutTriv( p, pCutSet.ppCuts[pCutSet.nCuts++], pObj.Id );
-        assert(pCutSet.nCuts <= pCutSet.nCutsMax+1, "pCutSet.nCuts <= pCutSet.nCutsMax+1");
-    }
+	// update the best cut
+	if !(fPreprocess != 0) || pCutSet.ppCuts[0].Delay <= pObj.Required+p.fEpsilon {
+		If_CutCopy(p, If_ObjCutBest(pObj), pCutSet.ppCuts[0])
+	}
+	// add the trivial cut to the set
+	if pObj.fSkipCut == 0 && If_ObjCutBest(pObj).nLeaves > 1 {
+		If_ManSetupCutTriv(p, pCutSet.ppCuts[pCutSet.nCuts], pObj.Id)
+		pCutSet.nCuts++
+		assert(pCutSet.nCuts <= pCutSet.nCutsMax+1, "pCutSet.nCuts <= pCutSet.nCutsMax+1")
+	}
 
-    // ref the selected cut
-    if (Mode != 0) && pObj.nRefs > 0 {
-        If_CutAreaRef( p, If_ObjCutBest(pObj) ); }
-    // free the cuts
-    If_ManDerefChoiceCutSet( p, pObj );
+	// ref the selected cut
+	if Mode != 0 && pObj.nRefs > 0 {
+		If_CutAreaRef(p, If_ObjCutBest(pObj))
+	}
+	// free the cuts
+	If_ManDerefChoiceCutSet(p, pObj)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Performs one mapping pass over all nodes.]
+	Synopsis    [Performs one mapping pass over all nodes.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-func If_ManPerformMappingRound(p *If_Man_t, nCutsUsed int32, Mode int32, fPreprocess int32, fFirst int32, pLabel string) int32 {
-    var pProgress *ProgressBar  = nil;
-    var pObj *If_Obj_t;
-    var i int32;
-    var clk abctime  = Abc_Clock();
-    var arrTime float32;
-    assert(Mode >= 0 && Mode <= 2, "Mode >= 0 && Mode <= 2");
-    p.nBestCutSmall[0] = p.nBestCutSmall[1] = 0;
-    // set the sorting function
-    if (Mode != 0) || p.pPars.fArea { // area
-        p.SortMode = 1;
-    } else if p.pPars.fFancy {
-        p.SortMode = 2;
-    } else {
-        p.SortMode = 0; }
-    // set the cut number
-    p.nCutsUsed   = nCutsUsed;
-    p.nCutsMerged = 0;
-    // make sure the visit counters are all zero
-    // inlining of macro If_ManForEachNode
-    // inlining of macro If_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if pObj.Type != IF_AND {} else {
-        assert(pObj.nVisits == pObj.nVisitsCopy, "pObj.nVisits == pObj.nVisitsCopy"); }
-    }
-    // map the internal nodes
-    if p.pManTim != nil {
-        Tim_ManIncrementTravId( p.pManTim );
-        // inlining of macro If_ManForEachObj
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {
-            if If_ObjIsAnd(pObj) {
-                If_ObjPerformMappingAnd( p, pObj, Mode, fPreprocess, fFirst );
-                if pObj.fRepr {
-                    If_ObjPerformMappingChoice( p, pObj, Mode, fPreprocess ); }
-            
-            } else if If_ObjIsCi(pObj) {
-//Abc_Print( 1, "processing CI %d\n", pObj->Id );
-                arrTime = Tim_ManGetCiArrival( p.pManTim, pObj.IdPio );
-                If_ObjSetArrTime( pObj, arrTime );
-            
-            } else if If_ObjIsCo(pObj) {
-                arrTime = If_ObjArrTime( If_ObjFanin0(pObj) );
-                Tim_ManSetCoArrival( p.pManTim, pObj.IdPio, arrTime );
-            
-            } else if If_ObjIsConst1(pObj) {
-                arrTime = -IF_INFINITY;
-                If_ObjSetArrTime( pObj, arrTime );
-            
-            } else {
-                assert(false, "0"); }
-        }
-//        Tim_ManPrint( p->pManTim );
-    
-    } else {
-        pProgress = Extra_ProgressBarStart( os.Stdout, If_ManObjNum(p) );
-        // inlining of macro If_ManForEachNode
-        // inlining of macro If_ManForEachObj
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if pObj.Type != IF_AND {} else {
-            Extra_ProgressBarUpdate( pProgress, i, pLabel );
-            If_ObjPerformMappingAnd( p, pObj, Mode, fPreprocess, fFirst );
-            if pObj.fRepr {
-                If_ObjPerformMappingChoice( p, pObj, Mode, fPreprocess ); }
-        }
-        }
-    }
-    Extra_ProgressBarStop( pProgress );
-    // make sure the visit counters are all zero
-    // inlining of macro If_ManForEachNode
-    // inlining of macro If_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (If_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if pObj.Type != IF_AND {} else {
-        assert(pObj.nVisits == 0, "pObj.nVisits == 0"); }
-    }
-    // compute required times and stats
-    If_ManComputeRequired( p );
-//    Tim_ManPrint( p->pManTim );
-    if p.pPars.fVerbose {
-        var Symb byte;
-        if fPreprocess != 0 {
-            Symb = 'P';
-        } else {
-            if Mode == 0 {
-                Symb = 'D';
-            } else {
-                if Mode == 1 {
-                    Symb = 'F';
-                } else {
-                    Symb = 'A';
-                }
-            }
-        }
-        Abc_Print( 1, "%c:  Del = %7.2f.  Ar = %9.1f.  Edge = %8d.  ", 
-            Symb, p.RequiredGlo, p.AreaGlo, p.nNets );
-        if p.dPower {
-        Abc_Print( 1, "Switch = %7.2f.  ", p.dPower ); }
-        Abc_Print( 1, "Cut = %8d.  ", p.nCutsMerged );
-        Abc_PrintTime( 1, "T", Abc_Clock() - clk );
-//    Abc_Print( 1, "Max number of cuts = %d. Average number of cuts = %5.2f.\n", 
-//        p->nCutsMax, 1.0 * p->nCutsMerged / If_ManAndNum(p) );
-    }
-    return 1;
+	SeeAlso     []
+
+**********************************************************************
+*/
+func If_ManPerformMappingRound(p *If_Man_t, nCutsUsed, mode, preprocess, first int32, label string) int32 {
+	assert(mode >= 0 && mode <= 2, "mapping mode is delay, flow, or area")
+	started := Abc_Clock()
+	p.nBestCutSmall = [2]int32{}
+	p.SortMode = 0
+	if mode != 0 || p.pPars.fArea != 0 {
+		p.SortMode = 1
+	} else if p.pPars.fFancy != 0 {
+		p.SortMode = 2
+	}
+	p.nCutsUsed, p.nCutsMerged = nCutsUsed, 0
+	for _, entry := range Vec_PtrArray(p.vObjs) {
+		obj := entry.(*If_Obj_t)
+		if obj.Type == IF_AND {
+			assert(obj.nVisits == obj.nVisitsCopy, "AND visit counts are initialized")
+		}
+	}
+
+	var progress *extra.ProgressBar
+	if p.pManTim != nil {
+		tim.Tim_ManIncrementTravId(p.pManTim)
+	} else {
+		progress = extra.Extra_ProgressBarStart(os.Stdout, int32(Vec_PtrSize(p.vObjs)))
+	}
+	defer extra.Extra_ProgressBarStop(progress)
+	for i, entry := range Vec_PtrArray(p.vObjs) {
+		obj := entry.(*If_Obj_t)
+		switch obj.Type {
+		case IF_AND:
+			if progress != nil {
+				extra.Extra_ProgressBarUpdate(progress, int32(i), label)
+			}
+			If_ObjPerformMappingAnd(p, obj, mode, preprocess, first)
+			if obj.fRepr != 0 {
+				If_ObjPerformMappingChoice(p, obj, mode, preprocess)
+			}
+		case IF_CI:
+			if p.pManTim != nil {
+				If_ObjSetArrTime(obj, tim.Tim_ManGetCiArrival(p.pManTim, int(obj.IdPio)))
+			}
+		case IF_CO:
+			if p.pManTim != nil {
+				tim.Tim_ManSetCoArrival(p.pManTim, int(obj.IdPio), If_ObjArrTime(obj.pFanin0))
+			}
+		case IF_CONST1:
+			If_ObjSetArrTime(obj, -IF_INFINITY)
+		default:
+			panic("if: invalid object type in mapping pass")
+		}
+	}
+	for _, entry := range Vec_PtrArray(p.vObjs) {
+		obj := entry.(*If_Obj_t)
+		if obj.Type == IF_AND {
+			assert(obj.nVisits == 0, "AND visit counts return to zero")
+		}
+	}
+	If_ManComputeRequired(p)
+	if p.pPars.fVerbose != 0 {
+		symbol := byte('A')
+		if preprocess != 0 {
+			symbol = 'P'
+		} else if mode == 0 {
+			symbol = 'D'
+		} else if mode == 1 {
+			symbol = 'F'
+		}
+		Abc_Print(1, "%c: Del = %7.2f. Ar = %9.1f. Edge = %8d. Switch = %7.2f. Cuts = %8d. ", symbol, p.RequiredGlo, p.AreaGlo, p.nNets, p.dPower, p.nCutsMerged)
+		Abc_PrintTime(1, "T", Abc_Clock()-started)
+	}
+	return 1
 }
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

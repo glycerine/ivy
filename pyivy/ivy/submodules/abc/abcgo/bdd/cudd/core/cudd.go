@@ -69,6 +69,8 @@ const (
 	CUDD_OUT_OF_MEM             = -1
 	CUDD_UNIQUE_SLOTS           = 256
 	CUDD_CACHE_SLOTS            = 262144
+	DD_MAX_LOOSE_FRACTION        = 5
+	DD_MAX_CACHE_FRACTION        = 3
 	CUDD_RESIDUE_DEFAULT        = 0
 	CUDD_RESIDUE_MSB            = 1
 	CUDD_RESIDUE_TC             = 2
