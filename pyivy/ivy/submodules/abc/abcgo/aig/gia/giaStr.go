@@ -594,47 +594,9 @@ func Str_ManNormalize(p *Gia_Man_t) *Str_Ntk_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Str_Delay2(d0 int32, d1 int32, nLutSize int32) int32 {
-    var n int32;
-    var d int32 = Abc_MaxInt( d0 >> 4, d1 >> 4 );
-    if d == (d0 >> 4) {
-        n = (d0 & 15);
-    } else {
-        n = 1;
-    }
-    n += (d == (d1 >> 4)) ? (d1 & 15) : 1;
-    return (d << 4) + (n > nLutSize ? 18 : n);
-}
-func Str_Delay3(d0 int32, d1 int32, d2 int32, nLutSize int32) int32 {
-    var n int32;
-    var d int32 = Abc_MaxInt( Abc_MaxInt(d0 >> 4, d1 >> 4), d2 >> 4 );
-    if d == (d0 >> 4) {
-        n = (d0 & 15);
-    } else {
-        n = 1;
-    }
-    n += (d == (d1 >> 4)) ? (d1 & 15) : 1;
-    n += (d == (d2 >> 4)) ? (d2 & 15) : 1;
-    return (d << 4) + (n > nLutSize ? 19 : n);
-}
-func Str_ObjDelay(pNew *Gia_Man_t, iObj int32, nLutSize int32, vDelay *Vec_Int_t) int32 {
-    var Delay int32  = Vec_IntEntry( vDelay, iObj );
-    if Delay == 0 {
-        if Gia_ObjIsMuxId(pNew, iObj) {
-            var d0 int32  = Vec_IntEntry( vDelay, Gia_ObjFaninId0(Gia_ManObj(pNew, iObj), iObj) );
-            var d1 int32  = Vec_IntEntry( vDelay, Gia_ObjFaninId1(Gia_ManObj(pNew, iObj), iObj) );
-            var d2 int32  = Vec_IntEntry( vDelay, Gia_ObjFaninId2(pNew, iObj) );
-            Delay = Str_Delay3( d0, d1, d2, nLutSize );
-        
-        } else {
-            var d0 int32  = Vec_IntEntry( vDelay, Gia_ObjFaninId0(Gia_ManObj(pNew, iObj), iObj) );
-            var d1 int32  = Vec_IntEntry( vDelay, Gia_ObjFaninId1(Gia_ManObj(pNew, iObj), iObj) );
-            Delay = Str_Delay2( d0, d1, nLutSize );
-        }
-        Vec_IntWriteEntry( vDelay, iObj, Delay );
-    }
-    return Delay;
-}
+
+
+
 
 
 
@@ -649,18 +611,7 @@ func Str_ObjDelay(pNew *Gia_Man_t, iObj int32, nLutSize int32, vDelay *Vec_Int_t
   SeeAlso     []
 
 ***********************************************************************/
-func transpose64(A []word) {
-    var j, k int32;
-    var t word;
-    var m word = 0x00000000FFFFFFFF;
-    for  j = 32; j != 0; j = j >> 1, m = m ^ (m << j)  {
-        for  k = 0; k < 64; k = (k + j + 1) & ~j  {
-            t = (A[k] ^ (A[k+j] >> j)) & m;
-            A[k] = A[k] ^ t;
-            A[k+j] = A[k+j] ^ (t << j);
-        }
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -673,129 +624,10 @@ func transpose64(A []word) {
   SeeAlso     []
 
 ***********************************************************************/
-func Str_ManNum(p *Gia_Man_t, iObj int32) int32 { return Vec_IntEntry(&p.vCopies, iObj);     }
-func Str_ManSetNum(p *Gia_Man_t, iObj int32, Num int32) { Vec_IntWriteEntry(&p.vCopies, iObj, Num);  }
 
-func Str_ManVectorAffinity(p *Gia_Man_t, vSuper *Vec_Int_t, vDelay *Vec_Int_t, Matrix []word, nLimit int32) int32 {
-    var fVerbose int32;
-    var Levels [256]int32;
-    var nSize int32  = Vec_IntSize(vSuper);
-    var Prev int32 = nSize;
-    var nLevels int32 = 1;
-    var i, k, iLit, iFanin, nSizeNew int32;
-    var Mask word; 
-    assert(nSize > 2, "nSize > 2");
-    if nSize > 64 {
-        for  i = 0; i < 64; i++  {
-            Matrix[i] = 0;
-        }
-        return 0;
-    }
-    // mark current nodes
-    Gia_ManIncrementTravId( p );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vSuper)) && (((iLit) = Vec_IntEntry(vSuper, i)), 1); i++  {
-        Gia_ObjSetTravIdCurrentId( p, Abc_Lit2Var(iLit) );
-        Str_ManSetNum( p, Abc_Lit2Var(iLit), i );
-        Matrix[i] = ((word)1) << (63-i);
-        Levels[i] = 0;
-    }
-    // collect 64 nodes
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vSuper)) && (((iLit) = Vec_IntEntry(vSuper, i)), 1); i++  {
-        var pObj *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(iLit) );
-        if Gia_ObjIsAnd(pObj) {
-            for  k = 0; k < 2; k++  {
-                if k != 0 {
-                    iFanin = Gia_ObjFaninId1p(p, pObj);
-                } else {
-                    iFanin = Gia_ObjFaninId0p(p, pObj);
-                }
-                if !Gia_ObjIsTravIdCurrentId(p, iFanin) {
-                    if Vec_IntSize(vSuper) == nLimit {
-                        break; }
-                    Gia_ObjSetTravIdCurrentId( p, iFanin );
-                    Matrix[Vec_IntSize(vSuper)] = 0;
-                    Levels[Vec_IntSize(vSuper)] = nLevels;
-                    Str_ManSetNum( p, iFanin, Vec_IntSize(vSuper) );
-                    Vec_IntPush( vSuper, Abc_Var2Lit(iFanin, 0) );
-                }
-                Matrix[Str_ManNum(p, iFanin)] |= Matrix[i];
-            }
-        }
-        if Gia_ObjIsMux(p, pObj) {
-            iFanin = Gia_ObjFaninId2p(p, pObj);
-            if !Gia_ObjIsTravIdCurrentId(p, iFanin) {
-                if Vec_IntSize(vSuper) == nLimit {
-                    break; }
-                Gia_ObjSetTravIdCurrentId( p, iFanin );
-                Matrix[Vec_IntSize(vSuper)] = 0;
-                Levels[Vec_IntSize(vSuper)] = nLevels;
-                Str_ManSetNum( p, iFanin, Vec_IntSize(vSuper) );
-                Vec_IntPush( vSuper, Abc_Var2Lit(iFanin, 0) );
-            }
-            Matrix[Str_ManNum(p, iFanin)] |= Matrix[i];
-        }
-        if Prev == i {
-            Prev = Vec_IntSize(vSuper);
-nLevels++; }
-        if nLevels == 8 {
-            break; }
-    }
 
-    // remove those that have all 1s or only one 1
-    Mask = (~(word)0) << (64 - nSize);
-    for  k = i = 0; i < Vec_IntSize(vSuper); i++  {
-        assert(Matrix[i], "Matrix[i]");
-        if (Matrix[i] & (Matrix[i] - 1)) == 0 {
-            continue; }
-        if Matrix[i] == Mask {
-            continue; }
-        Matrix[k] = Matrix[i];
-        Levels[k] = Levels[i];
-        k++;
-        if k == 64 {
-            break; }
-    }
-    // clean the remaining ones
-    for  i = k; i < 64; i++  {
-        Matrix[i] = 0;
-    }
-    nSizeNew = k;
-    if nSizeNew == 0 {
-        Vec_IntShrink( vSuper, nSize );
-        return 0;
-    }
-/*
-    // report
-    if ( fVerbose && nSize > 20 )
-    {
-        for ( i = 0; i < nSizeNew; i++ )
-            Extra_PrintBinary( stdout, Matrix+i, 64 ), printf( "\n" );
-        printf( "\n" );
-    }
-*/
-    transpose64( Matrix );
 
-    // report
-    if (fVerbose != 0) && nSize > 10 {
-        fmt.Printf("Gate inputs = %d.  Collected fanins = %d.  All = %d.  Good = %d.  Levels = %d\n", nSize, Vec_IntSize(vSuper) - nSize, Vec_IntSize(vSuper), nSizeNew, nLevels);
-        fmt.Printf("                     ");
-        for  i = 0; i < nSizeNew; i++  {
-            fmt.Printf("%d", Levels[i]);
-        }
-        fmt.Printf("\n");
-        for  i = 0; i < nSize; i++  {
-            fmt.Printf("%6d : ", Abc_Lit2Var(Vec_IntEntry(vSuper, i)));
-            fmt.Printf("%3d   ", Vec_IntEntry(vDelay, i) >> 4);
-            fmt.Printf("%3d   ", Vec_IntEntry(vDelay, i) & 15);
-//            Extra_PrintBinary( stdout, Matrix+i, 64 ), printf( "\n" );
-        }
-        i = 0;
-    }
-    Vec_IntShrink( vSuper, nSize );
-    return nSizeNew;
-}
+
 
 /**Function*************************************************************
 
@@ -808,20 +640,7 @@ nLevels++; }
   SeeAlso     []
 
 ***********************************************************************/
-func Str_CountBits(i word) int32 {
-    if i == 0 {
-        return 0; }
-    i = (i & (i - 1));
-    if i == 0 {
-        return 1; }
-    i = (i & (i - 1));
-    if i == 0 {
-        return 2; }
-    i = i - ((i >> 1) & 0x5555555555555555);
-    i = (i & 0x3333333333333333) + ((i >> 2) & 0x3333333333333333);
-    i = ((i + (i >> 4)) & 0x0F0F0F0F0F0F0F0F);
-    return (i*(0x0101010101010101))>>56;
-}
+
 
 func Str_PrintState(pCost *int32, pSuper *int32, pMatrix *word, nSize int32) {
     var i int32;
