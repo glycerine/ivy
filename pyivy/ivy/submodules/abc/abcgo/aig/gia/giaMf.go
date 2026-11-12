@@ -39,55 +39,6 @@ import (
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-const MF_CUT_MAX =    16
-const MF_LOG_PAGE =   12
-const MF_NO_LEAF =    31
-#define MF_TT_WORDS  ((MF_LEAF_MAX > 6) ? 1 << (MF_LEAF_MAX-6) : 1)
-
-    
-type Mf_Obj_t struct {
-    iCutSet             int32;        // cutset
-    Flow           float32;           // area
-    nFlowRefs           float32;      // flow references
-    Delay uint32; /* C bitfield: 16 bits; review packing and truncation */  // delay 
-    nMapRefs uint32; /* C bitfield: 16 bits; review packing and truncation */  // map references
-}
-    
-type Mf_Man_t struct {
-    // user data
-    pGia0      *Gia_Man_t;          // original manager
-    pGia      *Gia_Man_t;           // derived manager
-    pPars       *Jf_Par_t;          // parameters
-    // cut data
-    pLfObjs       *Mf_Obj_t;        // best cuts
-    vPages       Vec_Ptr_t;         // cut memory
-    vTtMem      *Vec_Mem_t;         // truth tables
-    vCnfSizes       Vec_Int_t;      // handles to CNF
-    vCnfMem       Vec_Int_t;        // memory for CNF
-    vTemp       Vec_Int_t;          // temporary array
-    iCur             int32;           // current position
-    Iter             int32;           // mapping iterations
-    fUseEla             int32;        // use exact area
-    // statistics
-    clkStart         abctime;       // starting time
-    CutCount [4]float64;    // cut counts
-    nCutCounts [MF_LEAF_MAX+1]int32;
-}
-
-func Mf_ManObj(p *Mf_Man_t, i int32) *Mf_Obj_t { return p.pLfObjs + i;                                          }
-func Mf_ManCutSet(p *Mf_Man_t, i int32) *int32 { return (int *)Vec_PtrEntry(&p.vPages, i >> 16) + (i & 0xFFFF); }
-func Mf_ObjCutSet(p *Mf_Man_t, i int32) *int32 { return Mf_ManCutSet(p, Mf_ManObj(p, i).iCutSet);               }
-func Mf_ObjCutBest(p *Mf_Man_t, i int32) *int32 { return Mf_ObjCutSet(p, i) + 1;                                  }
-
-func Mf_ObjMapRefNum(p *Mf_Man_t, i int32) int32 { return Mf_ManObj(p, i).nMapRefs;                               }
-func Mf_ObjMapRefInc(p *Mf_Man_t, i int32) int32 { return Mf_ManObj(p, i).nMapRefs++;                             }
-func Mf_ObjMapRefDec(p *Mf_Man_t, i int32) int32 { return --Mf_ManObj(p, i).nMapRefs;                             }
-
-func Mf_CutSize(pCut *int32) int32 { return pCut[0] & MF_NO_LEAF;                                    }
-func Mf_CutFunc(pCut *int32) int32 { return (uint32(pCut[0]) >> 5);                                }
-func Mf_CutSetBoth(n int32, f int32) int32 { return n | (f << 5);                                            }
-func Mf_CutIsTriv(pCut *int32, i int32) int32 { return Mf_CutSize(pCut) == 1 && pCut[1] == i;                   } 
-
 // Original macro:
 // #define Mf_SetForEachCut( pList, pCut, i )      for ( i = 0, pCut = pList + 1; i < pList[0]; i++, pCut += Mf_CutSize(pCut) + 1 )
 
@@ -705,61 +656,9 @@ func Mf_CutPrint(p *Mf_Man_t, pCut *Mf_Cut_t) {
     } else {
         fmt.Printf("\n"); }
 }
-func Mf_ManPrepareCuts(pCuts *Mf_Cut_t, p *Mf_Man_t, iObj int32, fAddUnit int32) int32 {
-    if Mf_ManObj(p, iObj).iCutSet {
-        var pMfCut *Mf_Cut_t  = pCuts;
-        var i int32;
-        var pCut *int32;
-        var pList *int32 = Mf_ObjCutSet(p, iObj);
-        // inlining of macro Mf_SetForEachCut
-        for  i, pCut = 0, pList + 1; i < pList[0]; i++, pCut += Mf_CutSize(pCut) + 1  {
-            pMfCut.Delay   = 0;
-            pMfCut.Flow    = 0;
-            pMfCut.iFunc   = Mf_CutFunc( pCut );
-            pMfCut.nLeaves = Mf_CutSize( pCut );
-            pMfCut.Sign    = Mf_CutGetSign( pCut+1, Mf_CutSize(pCut) );
-            memcpy( pMfCut.pLeaves, pCut+1, sizeof(int) * Mf_CutSize(pCut) );
-            pMfCut++;
-        }
-        if (fAddUnit != 0) && pCuts.nLeaves > 1 {
-            return pList[0] + Mf_CutCreateUnit( pMfCut, iObj ); }
-        return pList[0];
-    }
-    return Mf_CutCreateUnit( pCuts, iObj );
-}
-func Mf_ManSaveCuts(p *Mf_Man_t, pCuts **Mf_Cut_t, nCuts int32) int32 {
-    var i int32;
-    var pPlace *int32;
-    var iCur int32;
-    var nInts int32 = 1;
-    for  i = 0; i < nCuts; i++  {
-        nInts += pCuts[i].nLeaves + 1;
-    }
-    if (p.iCur & 0xFFFF) + nInts > 0xFFFF {
-        p.iCur = ((p.iCur >> 16) + 1) << 16; }
-    if Vec_PtrSize(&p.vPages) == (p.iCur >> 16) {
-        Vec_PtrPush( &p.vPages, ABC_ALLOC(int, (1<<16)) ); }
-    iCur = p.iCur; p.iCur += nInts;
-    pPlace = Mf_ManCutSet( p, iCur );
-    *pPlace++ = nCuts;
-    for  i = 0; i < nCuts; i++  {
-        *pPlace++ = Mf_CutSetBoth(pCuts[i].nLeaves, pCuts[i].iFunc);
-        memcpy( pPlace, pCuts[i].pLeaves, sizeof(int) * pCuts[i].nLeaves );
-        pPlace += pCuts[i].nLeaves;
-    }
-    return iCur;
-}
-func Mf_ObjSetBestCut(pCuts *int32, pCut *int32) {
-    assert(pCuts < pCut, "pCuts < pCut");
-    if pCuts++; pCuts < pCut {
-        var pTemp [MF_CUT_MAX*(MF_LEAF_MAX+2)]int32;
-        var nBlock int32  = pCut - pCuts;
-        var nSize int32  = Mf_CutSize(pCut) + 1;
-        memmove( pTemp, pCuts, sizeof(int) * nBlock );
-        memmove( pCuts, pCut, sizeof(int) * nSize );
-        memmove( pCuts + nSize, pTemp, sizeof(int) * nBlock );
-    }
-}
+
+
+
 
 /**Function*************************************************************
 
