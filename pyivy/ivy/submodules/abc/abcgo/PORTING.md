@@ -190,6 +190,11 @@ original files, and full-module verification remains outstanding.
 fast/simple/swap implementations match the original C outputs, phase flags and
 permutations on 550 differential cases.
 
+`sat/msat` is also integrated as an independent solver, with its own activity,
+heap, propagation, restart, learning and assumption logic. Its race/vet suites
+pass, including 900 original-C differential comparisons; declaration-only C
+interfaces with no implementation in the checkout are documented, not stubbed.
+
 ## AIG free-to-nil audit
 
 The AIG owner scanned every `abcgo/aig/aig/*.go` file and converted all four
