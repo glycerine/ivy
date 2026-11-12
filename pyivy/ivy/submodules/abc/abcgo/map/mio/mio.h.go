@@ -36,5 +36,6 @@ func (c *Mio_Cell_t) Truth() uint64           { return c.uTruth }
 func (c *Mio_Cell2_t) Name() string           { return c.pName }
 func (c *Mio_Cell2_t) Fanins() int32          { return int32(c.nFanins) }
 func (c *Mio_Cell2_t) Truth() uint64          { return c.uTruth }
+func (c *Mio_Cell2_t) Delay(pin int) int32    { return c.iDelays[pin] }
 func (c *Mio_Cell2_t) Gate() *Mio_Gate_t      { return c.pMioGate }
 func (c *Mio_Cell2_t) Expression() *Vec_Int_t { return c.vExpr }
