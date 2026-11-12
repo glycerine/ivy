@@ -186,3 +186,37 @@ func TestSblUpdateMapping(t *testing.T) {
 		t.Fatal("mapping or references not updated")
 	}
 }
+
+func TestSblEvaluateMapping(t *testing.T) {
+	g := Gia_ManStart(8)
+	a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendAnd(g, a, b)
+	y := Gia_ManAppendAnd(g, x, c)
+	Gia_ManAppendCo(g, y)
+	g.vMapping2 = vec.Vec_WecStart(int(g.nObjs))
+	for _, fan := range []int32{a >> 1, b >> 1, c >> 1} {
+		vec.Vec_WecPush(g.vMapping2, int(y>>1), fan)
+	}
+	p := Sbl_ManAlloc(g, 4)
+	p.LutSize = 4
+	for _, id := range []int32{a >> 1, b >> 1, c >> 1} {
+		vec.Vec_IntPush(p.vLeaves, id)
+	}
+	vec.Vec_IntPush(p.vAnds, x>>1)
+	vec.Vec_IntPush(p.vAnds, y>>1)
+	vec.Vec_IntPush(p.vRoots, y>>1)
+	Sbl_ManComputeCuts(p)
+	direct := Sbl_ManFindCut(p, 4, 7, 0, 0, 0)
+	first := Sbl_ManFindCut(p, 3, 3, 0, 0, 0)
+	via := Sbl_ManFindCut(p, 4, 4, 0, 1, 0)
+	vec.Vec_IntPush(p.vSolCur, direct)
+	if Sbl_ManEvaluateMapping(p, 1) != 1 {
+		t.Fatal("matching delay rejected")
+	}
+	vec.Vec_IntClear(p.vSolCur)
+	vec.Vec_IntPush(p.vSolCur, first)
+	vec.Vec_IntPush(p.vSolCur, via)
+	if Sbl_ManEvaluateMapping(p, 1) != 0 || vec.Vec_IntSize(p.vPath) != 2 {
+		t.Fatalf("critical path %v", vec.Vec_IntArray(p.vPath))
+	}
+}
