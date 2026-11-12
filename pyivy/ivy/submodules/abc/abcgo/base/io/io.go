@@ -682,36 +682,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteAigerCex(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var c int32;
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if pAbc.pCex == nil {
-        fmt.Fprintf(pAbc.Out, "There is no current CEX.\n");
-        return 0;
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    Io_WriteAigerCex( pAbc.pCex, pAbc.pNtkCur, pAbc.pGia, pFileName );
-    return 0;
 
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_aiger_cex [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes the current CEX in the AIGER format (http://fmv.jku.at/aiger)\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
