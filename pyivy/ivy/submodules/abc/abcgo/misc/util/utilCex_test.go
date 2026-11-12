@@ -27,3 +27,22 @@ func TestCounterexampleUndc(t *testing.T) {
 		t.Fatal(q)
 	}
 }
+
+func TestCounterexamplePhaseRegisterResize(t *testing.T) {
+	p := Abc_CexCreate(2, 4, []int32{0, 0, 1, 0, 0, 1, 0, 1, 1, 0}, 1, 0, 0)
+	q := Abc_CexTransformPhase(p, 2, 1, 4)
+	if q.NBits != q.NRegs+(q.IFrame+1)*q.NPis {
+		t.Fatalf("inconsistent phase dimensions: %+v", q)
+	}
+	if q.NBits != 12 || !Abc_InfoHasBit(q.PData, 4) || !Abc_InfoHasBit(q.PData, 7) {
+		t.Fatal(q)
+	}
+}
+func TestCounterexampleAllocationOverflow(t *testing.T) {
+	defer func() {
+		if recover() == nil {
+			t.Fatal("accepted wrapped dimensions")
+		}
+	}()
+	_ = Abc_CexAlloc(0, 1<<30, 4)
+}

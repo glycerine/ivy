@@ -9,7 +9,11 @@ func Abc_CexAlloc(regs, pis, frames int32) *Abc_Cex_t {
 	if regs < 0 || pis < 0 || frames < 0 {
 		panic("negative counterexample dimensions")
 	}
-	n := regs + pis*frames
+	total := int64(regs) + int64(pis)*int64(frames)
+	if total > 1<<31-1 {
+		panic("counterexample dimensions overflow int32")
+	}
+	n := int32(total)
 	return &Abc_Cex_t{NRegs: regs, NPis: pis, NBits: n, PData: make([]uint32, Abc_BitWordNum(n))}
 }
 func Abc_CexAllocFull(regs, pis, frames int32) *Abc_Cex_t {
@@ -178,7 +182,7 @@ func Abc_CexTransformPhase(p *Abc_Cex_t, pis, pos, regs int32) *Abc_Cex_t {
 	q.NPis = pis
 	q.IPo = -1
 	q.IFrame = (p.IFrame+1)*frames - 1
-	q.NBits = p.NBits
+	// Dup already accounts for the replacement register prefix.
 	return q
 }
 func Abc_CexTransformTempor(p *Abc_Cex_t, pis, pos, regs int32) *Abc_Cex_t {

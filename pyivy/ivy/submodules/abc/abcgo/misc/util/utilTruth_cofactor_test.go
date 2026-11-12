@@ -159,3 +159,10 @@ func TestTruthHexRoundTrip(t *testing.T) {
 		t.Fatal(a)
 	}
 }
+
+func TestTruthXorVariableCofactors(t *testing.T) {
+	truth := ttMask(0) ^ ttMask(1)
+	if Abc_Tt6XorVar(truth, 0) != 1 || Abc_Tt6XorVar(truth, 1) != 1 || Abc_Tt6XorVar(truth, 2) != 0 {
+		t.Fatal("xor-variable cofactor predicate")
+	}
+}

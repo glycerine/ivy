@@ -170,10 +170,8 @@ func Abc_Tt6HasVar(t word, v int32) int32 {
 	return ttFlag(((t >> (1 << v)) &^ ttMask(v)) != (t &^ ttMask(v)))
 }
 
-// This matches the original helper's exact full-word complement comparison.
-func Abc_Tt6XorVar(t word, v int32) int32 {
-	return ttFlag(((t >> (1 << v)) &^ ttMask(v)) == ^(t &^ ttMask(v)))
-}
+// Both cofactors must differ on every minterm of the other variables.
+func Abc_Tt6XorVar(t word, v int32) int32 { return Abc_Tt6CofsOpposite(t, v) }
 func Abc_TtHasVar(t []word, n, v int32) int32 {
 	if v < 0 || v >= n {
 		panic("truth: variable outside support")

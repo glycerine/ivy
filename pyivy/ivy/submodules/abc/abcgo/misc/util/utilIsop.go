@@ -25,15 +25,8 @@ func isopWords(n int32) int {
 	}
 	return 1 << uint(n-6)
 }
-func isopMask(v int32) word {
-	var x word
-	for i := 0; i < 64; i++ {
-		if i&(1<<uint(v)) != 0 {
-			x |= 1 << uint(i)
-		}
-	}
-	return x
-}
+func isopMask(v int32) word { return s_Truths6[v] }
+
 func isopCofactor(t word, v int32, positive bool) word {
 	mask := isopMask(v)
 	shift := uint(1 << uint(v))
@@ -195,7 +188,7 @@ func isopRecur(on, dc []word, n int32, limit word, collect bool) isopSolution {
 	return result
 }
 func Abc_Isop6Cover(on, dc word, result []word, n int32, limit word, cover []int32) word {
-	if n > 6 {
+	if n < 0 || n > 6 {
 		panic("scalar ISOP supports at most six variables")
 	}
 	return isopStore(isopScalar(on, dc, n, limit, cover != nil), result, cover, limit)
@@ -561,7 +554,7 @@ func esopStore(s esopSolution, cover []int32, limit word) word {
 	return s.cost
 }
 func Abc_Esop6Cover(t word, n int32, limit word, cover []int32) word {
-	if n > 6 {
+	if n < 0 || n > 6 {
 		panic("scalar ESOP supports <=6 variables")
 	}
 	return esopStore(esopScalar(t, n, limit, cover != nil), cover, limit)
@@ -660,6 +653,7 @@ func Abc_IsopNew(on, dc, result []word, n int32, limit word, cover []int32) word
 	clear(result[:words])
 	var cost word
 	count := 0
+	cube := make([]word, words)
 	for {
 		mint := -1
 		for i, w := range remaining {
@@ -675,7 +669,6 @@ func Abc_IsopNew(on, dc, result []word, n int32, limit word, cover []int32) word
 		for v := int32(0); v < n; v++ {
 			encoded |= 1 << uint(2*v+int32((mint>>uint(v))&1))
 		}
-		cube := make([]word, words)
 		for i := range cube {
 			cube[i] = isopCubeWord(encoded, n, i)
 		}

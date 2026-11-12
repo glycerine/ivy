@@ -255,3 +255,22 @@ int Abc_Tt6HasVar(word t,int v){return Abc_Tt6Cofactor0(t,v)!=Abc_Tt6Cofactor1(t
 		}
 	}
 }
+
+func TestIsopHighVariableExpansionChecksDestination(t *testing.T) {
+	// With x6 fixed positive the cube is in the upper word. Expanding toward
+	// x6=0 must inspect the lower offset word, not the cube's empty lower word.
+	offset, cube := []word{1, 0}, []word{0, 1}
+	if Abc_TtCheckWithCubePos2Neg(offset, cube, 2, 6) != 0 {
+		t.Fatal("positive cube expanded into offset")
+	}
+	if Abc_TtCheckWithCubeNeg2Pos([]word{0, 1}, []word{1, 0}, 2, 6) != 0 {
+		t.Fatal("negative cube expanded into offset")
+	}
+	if Abc_TtCheckWithCubePos2Neg([]word{0, 0}, cube, 2, 6) == 0 {
+		t.Fatal("legal expansion rejected")
+	}
+	Abc_TtExpandCubePos2Neg(cube, 2, 6)
+	if !reflect.DeepEqual(cube, []word{1, 1}) {
+		t.Fatal(cube)
+	}
+}
