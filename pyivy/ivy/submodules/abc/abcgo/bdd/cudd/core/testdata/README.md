@@ -85,3 +85,35 @@ cc -DABC_USE_STDINT_H -I src \
   -lm -o /tmp/abcgo_reorder_oracle
 /tmp/abcgo_reorder_oracle > abcgo/bdd/cudd/core/testdata/reorder_oracle.txt
 ```
+
+## ISOP, cover conversion and logical complement oracle
+
+`zdd_isop_oracle.c` checks all 6,561 three-variable lower/upper intervals. Each
+assignment is independently OFF, don't-care, or ON, so lower is always contained
+in upper. For each interval it hashes the chosen BDD truth table, exact ZDD cube
+family, converted BDD truth table, BDD-only ISOP truth table, logical complement's
+exact cube family, and the complement's converted truth table.
+
+The combined original-C checksum is `23c2e19ddcb24343` for the identity BDD order
+and `f1ff6f7e29aa5823` after the real CUDD BDD shuffle `[2,0,1]`. Changing only the
+ZDD level order leaves those logical outputs unchanged, including both a pair-
+group permutation and reversed adjacent literal pairs. The permanent Go tests
+check six combinations, including independently different BDD/ZDD level orders.
+
+Use the earlier link command with `zdd_isop_oracle.c`, adding these optional
+compiler flags before compilation:
+
+- `-DREORDER_BDD`: original CUDD BDD shuffle to `[2,0,1]`.
+- `-DREORDER_ZDD`: original CUDD ZDD shuffle to `[4,5,0,1,2,3]`.
+- `-DREORDER_ZDD -DREVERSE_LITERAL_PAIRS`: ZDD order `[1,0,3,2,5,4]`.
+
+Both BDD and ZDD flags may be combined. The oracle disables CUDD GC through its
+public API and follows the reference protocol for all retained operands/results.
+The Go verification requires no C compiler, C object or runtime library. Source
+files `cuddZddIsop.c` and `cuddZddFuncs.c` were also freshly compiled into temporary
+objects and substituted for the cached originals: identity and combined BDD/
+reversed-literal configurations reproduced the same fixed checksums.
+
+Go's ISOP implementation is additionally checked against native truth bounds and
+cube irredundancy, not only against a checksum. BDD-only mode is checked for
+absence of ZDD allocation, and invalid intervals must leave output handles intact.

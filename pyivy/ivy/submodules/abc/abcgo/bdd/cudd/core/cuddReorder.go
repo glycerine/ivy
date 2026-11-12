@@ -97,6 +97,14 @@ func reorderBuild(dd *DdManager, roots reorderRoots, order []int) *reorderHeap {
 	for _, root := range h.active {
 		collect(root, h.nodes)
 	}
+	// Cudd_Init explicitly pins One, Zero, both infinities and the background.
+	// They contribute a fixed heap offset to growth bounds even when roots do not
+	// reach them; ignoring this changes the source's maxGrowth pruning threshold.
+	for _, constant := range []*DdNode{dd.One, dd.Zero, dd.PlusInfinity, dd.MinusInfinity, dd.Background} {
+		if constant != nil {
+			collect(transfer(constant), h.nodes)
+		}
+	}
 	h.cost = len(h.nodes)
 	for _, pin := range h.pins {
 		collect(pin, h.nodes)
@@ -172,10 +180,12 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 		return Cudd_NotCond(mapped[Cudd_Regular(fresh)], Cudd_IsComplement(fresh))
 	}
 	// Save the old tables for dead-handle invalidation before replacing them.
-	oldBDD, oldADD := dd.unique, dd.addUnique
+	oldBDD, oldADD, oldConstants := dd.unique, dd.addUnique, dd.constants
 	nextBDD, nextADD := map[bddUniqueKey]*DdNode{}, map[bddUniqueKey]*DdNode{}
+	nextConstants := map[uint64]*DdNode{}
 	for fresh, node := range mapped {
 		if Cudd_IsConstant(fresh) {
+			nextConstants[math.Float64bits(fresh.Value)] = node
 			continue
 		}
 		node.Index = fresh.Index
@@ -204,6 +214,15 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 			}
 		}
 	}
+	for _, old := range oldConstants {
+		if nextConstants[math.Float64bits(old.Value)] != old {
+			old.manager = nil
+			if old.inverse != nil {
+				old.inverse.manager = nil
+			}
+		}
+	}
+	dd.constants = nextConstants
 	dd.unique = nextBDD
 	dd.addUnique = nextADD
 	clear(dd.cache)
@@ -320,15 +339,6 @@ func mergeSymmetric(groups [][]int, heap *reorderHeap) [][]int {
 	}
 	return result
 }
-func symmetricVariables(groups [][]int) int {
-	n := 0
-	for _, group := range groups {
-		if len(group) > 1 {
-			n += len(group)
-		}
-	}
-	return n
-}
 
 // Cudd_ReduceHeap implements sifting and symmetric sifting, optionally to
 // convergence. Other heuristic enum values return failure instead of silently
@@ -349,13 +359,13 @@ func Cudd_ReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) int
 	if method != CUDD_REORDER_SIFT && method != CUDD_REORDER_SIFT_CONVERGE && !symmetric {
 		return 0
 	}
+	started := time.Now()
 	roots := dd.liveReorderRoots()
 	order := append([]int(nil), dd.InvPerm...)
 	heap := reorderBuild(dd, roots, order)
 	if len(heap.nodes) < minsize {
 		return 1
 	}
-	started := time.Now()
 	defer func() { dd.reorderingTime += time.Since(started) }()
 	dd.reorderings++
 	dd.symmetryGroups = nil

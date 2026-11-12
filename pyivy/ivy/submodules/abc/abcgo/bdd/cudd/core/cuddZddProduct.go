@@ -80,7 +80,11 @@ package core
 // pairedCover validates the original cover-domain contract: even/odd literal
 // indices occur in adjacent positive-first level pairs and no cube contains
 // both polarities. Unate APIs do not impose these paired-literal constraints.
-func (dd *DdManager) pairedCover(roots ...*DdNode) bool {
+func (dd *DdManager) pairedCover(roots ...*DdNode) bool { return dd.coverDomain(true, roots...) }
+
+// Cover conversion and ISOP accept either orientation of an adjacent pair;
+// product construction retains its stricter positive-first domain.
+func (dd *DdManager) coverDomain(positiveFirst bool, roots ...*DdNode) bool {
 	if !dd.validZdd(roots...) {
 		return false
 	}
@@ -105,14 +109,12 @@ func (dd *DdManager) pairedCover(roots ...*DdNode) bool {
 		return false
 	}
 	for index := range indices {
-		positive := index &^ 1
-		level := dd.PermZ[positive]
-		if level%2 != 0 || dd.PermZ[positive+1] != level+1 {
+		if !dd.literalPairOrder(index, positiveFirst) {
 			return false
 		}
 	}
 	for n := range seen {
-		if n.Index%2 == 0 && !Cudd_IsConstant(n.T) && n.T.Index == n.Index+1 {
+		if !Cudd_IsConstant(n.T) && n.T.Index == (n.Index^1) {
 			return false
 		}
 	}
@@ -298,11 +300,10 @@ func Cudd_zddWeakDivF(dd *DdManager, f, g *DdNode) *DdNode { return dd.weakDivid
 // subsequent original-module ports, with explicit failure instead of raw output
 // pointers. The absent part contains neither literal of the selected pair.
 func ZDDCoverCofactors(dd *DdManager, f *DdNode, index int) (positive, negative, absent *DdNode, ok bool) {
-	if index < 0 || uint64(index|1) >= uint64(CUDD_MAXINDEX-1) || !dd.pairedCover(f) || !dd.ensureZddVar(index|1) {
+	if index < 0 || uint64(index|1) >= uint64(CUDD_MAXINDEX-1) || !dd.coverDomain(false, f) || !dd.ensureZddVar(index|1) {
 		return nil, nil, nil, false
 	}
-	level := dd.PermZ[index&^1]
-	if level%2 != 0 || dd.PermZ[index|1] != level+1 {
+	if !dd.literalPairOrder(index, false) {
 		return nil, nil, nil, false
 	}
 	positive, negative, absent = dd.coverCofactors(f, index)
@@ -318,4 +319,13 @@ func ZDDCofactors(dd *DdManager, f *DdNode, index int) (positive, negative *DdNo
 	}
 	negative = Cudd_zddSubset0(dd, f, index)
 	return positive, negative, negative != nil
+}
+
+func (dd *DdManager) literalPairOrder(index int, positiveFirst bool) bool {
+	p, n := index&^1, index|1
+	if p < 0 || n >= len(dd.PermZ) {
+		return false
+	}
+	pl, nl := dd.PermZ[p], dd.PermZ[n]
+	return pl >= 0 && nl >= 0 && pl < dd.ZddSize && nl < dd.ZddSize && (pl^nl) == 1 && (!positiveFirst || pl%2 == 0)
 }

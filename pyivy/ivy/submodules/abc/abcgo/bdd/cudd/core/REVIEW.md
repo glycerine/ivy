@@ -232,3 +232,69 @@ weak-division variants are universally interchangeable.
 Full core/REO/MTR race tests and vet pass. Root CUDD remains incomplete; ZDD
 complement, cover↔BDD/ISOP, other conversions, advanced ADD operations, remaining
 root APIs and ZDD dynamic reordering are still explicit remaining work.
+
+## ISOP and logical cover complementation: separate review passes
+
+### Compactness, idiomatic Go, and readability review
+
+- A single Minato lower/upper recursion computes both the chosen BDD and its
+  irredundant ZDD cover. BDD-only mode shares the Boolean recursion but never
+  creates or grows ZDDs. Typed result pairs and operation-local memoization
+  replace the original two cache lookups and manual reference cleanup.
+- Negative, positive and common portions retain the original source ordering
+  and formulas. The common lower remainder and common upper intersection are
+  explicitly named; no alternate Boolean minimization heuristic was substituted.
+- Cover assembly uses canonical ZDD Change/Union, the order-independent equivalent
+  of the original GetNodeIVO. Cover-to-BDD conversion uses the original three-way
+  decomposition and canonical BDD ITE, so independent BDD/ZDD orders work.
+- Logical complement now uses the actual cover→BDD→ISOP pipeline. Set-family
+  difference is not a substitute. Root ISOP/cover modules only forward to core;
+  their remaining complement draft bodies have been replaced by this verified
+  implementation, with original source notices retained.
+
+### Bug review and fixed findings
+
+- An independent original-C oracle demonstrated that reversed adjacent literal
+  pairs are legal for ISOP/conversion. The first Go regression failed because
+  these paths inherited the product constructor's positive-first restriction.
+  Split cover-domain validation by operation: product/weak division retain their
+  explicit positive-first construction contract; ISOP, conversion and decomposition
+  accept either orientation within an adjacent pair. Exact-C fixtures now cover
+  both orientations, combined with different BDD level orders.
+- Contradiction detection must also work with reversed literal orientation.
+  Check an included child against either opposite literal, not only positive→
+  negative. A reversed contradictory-cube regression confirms rejection.
+- Ordinary node construction can misorder covers when BDD and ZDD orders differ.
+  Order-independent literal insertion is verified by exact cube-family goldens
+  under identity, independent pair-group order, reversed literals and BDD shuffles.
+- Invalid lower/upper bounds originally terminated the C process. Go entry points
+  instead return checked failure and leave caller output unchanged. Tests cover
+  invalid bounds, nil output, foreign/nil/closed managers and unsupported pairs.
+- BDD-only ISOP must not allocate a discarded ZDD cover. A separate mode and
+  inventory regression confirm no ZDD growth or unique nodes.
+- Double logical complementation preserves the represented function, but need
+  not preserve a redundant input cover's edge identity. Tests verify semantic
+  involution and deliberate irredundant normalization rather than false pointer
+  equality for redundant covers.
+- A referenced BDD and its cover remain equivalent after a real Go BDD heap
+  shuffle; subsequent logical complement still denotes the function's negation.
+
+Verification:
+`GOCACHE=/tmp/abcgo-go-cache go -C abcgo test ./bdd/cudd/core ./bdd/reo ./bdd/mtr -race -count=1`
+and `GOCACHE=/tmp/abcgo-go-cache go -C abcgo vet ./bdd/cudd/core ./bdd/reo ./bdd/mtr` pass.
+
+Native checks cover all 6,561 three-variable intervals: containment bounds, exact
+cover/BDD equality, consistent cubes and removal-based irredundancy. Independent
+C-derived fixtures cover six order combinations and all six result streams per
+interval. Identity-BDD checksum is `23c2e19ddcb24343`; shuffled-BDD checksum is
+`f1ff6f7e29aa5823`. These were also confirmed after fresh compilation of the
+original ISOP/cover source modules, not merely by trusting cached C objects.
+The corresponding C harness is retained solely for reproduction; normal tests
+execute only Go.
+
+The original ISOP and cover-to-BDD APIs, and real logical ZDD complement, are now
+implemented. Earlier sections' remaining-scope lists are historical and are
+superseded by this entry for those APIs. Root CUDD and the overall ABC port remain
+incomplete: advanced ADD operations, other bridge/conversion APIs, remaining root
+APIs/algorithms, and ZDD dynamic reordering still require work. No remaining
+original draft sources are hidden from the compiler.

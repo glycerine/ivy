@@ -320,3 +320,31 @@ func TestReferencedConstantOnlyHeap(t *testing.T) {
 		t.Fatal("constant handle/reference changed")
 	}
 }
+
+func TestDynamicReorderConstantPinsAndCollection(t *testing.T) {
+	dd := NewBDDManager(2)
+	dead := Cudd_addConst(dd, 123.5)
+	alive := Cudd_addConst(dd, -7)
+	Cudd_Ref(alive)
+	globals := []*DdNode{dd.One, dd.Zero, dd.PlusInfinity, dd.MinusInfinity, dd.Background}
+	if Cudd_ShuffleHeap(dd, []int{1, 0}) != 1 {
+		t.Fatal("shuffle failed")
+	}
+	if dd.validAdd(dead) {
+		t.Fatal("unreferenced unreachable ADD constant retained")
+	}
+	if !dd.validAdd(alive) || Cudd_addConst(dd, -7) != alive {
+		t.Fatal("referenced constant collected")
+	}
+	for _, constant := range globals {
+		if !dd.validAdd(constant) {
+			t.Fatal("manager constant pin collected")
+		}
+	}
+	// Four distinct manager constant pins plus the external numeric terminal.
+	roots := dd.liveReorderRoots()
+	heap := reorderBuild(dd, roots, dd.InvPerm)
+	if heap.cost != 5 {
+		t.Fatal("constant heap offset omitted", heap.cost)
+	}
+}

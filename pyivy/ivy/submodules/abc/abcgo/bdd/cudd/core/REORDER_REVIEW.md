@@ -64,3 +64,12 @@ while Go uses stable level order. No C compiler/runtime is needed for Go tests.
 Additional deterministic random five-variable referenced families are checked
 exhaustively, with BDD and ADD handle preservation and inverse canonicality.
 Run `go -C abcgo test ./bdd/cudd/core ./bdd/reo -race -count=1`.
+
+Final source audit additionally found the original initializer explicitly pins
+One, Zero and both infinities. Included these and the background in heap-cost
+offsets, so maxGrowth pruning uses the same baseline rather than only constants
+reachable from user roots. Dead unreferenced numeric terminals are collected,
+while referenced terminals/global pins retain identity. Regression checks the
+exact five-terminal cost with four distinct manager pins plus one user terminal.
+The all-512 original-C size/status/truth/symmetry oracle remains green after
+this correction. Reordering time includes initial live-heap preprocessing.
