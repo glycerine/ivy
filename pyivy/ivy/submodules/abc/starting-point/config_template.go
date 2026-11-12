@@ -3,6 +3,7 @@ package startingpoint
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
@@ -14,6 +15,7 @@ var ppInteger = regexp.MustCompile(`\b(?:0[xX][0-9a-fA-F]+|[0-9]+)[uUlL]*\b`)
 // an existing template. Directives are comments; every discovered symbol is 0.
 func WriteConfigTemplate(path string, sources []string) (bool, error) {
 	symbols := map[string]bool{}
+	guardNames := map[string]bool{}
 	var choices []string
 	for _, source := range sources {
 		data, err := os.ReadFile(source)
@@ -24,7 +26,17 @@ func WriteConfigTemplate(path string, sources []string) (bool, error) {
 		if err != nil {
 			continue
 		} // fallback files may not lex
+		guards := map[int]bool{}
+		if strings.EqualFold(filepath.Ext(source), ".h") {
+			for name, offset := range configHeaderGuards(ts) {
+				guardNames[name] = true
+				guards[offset] = true
+			}
+		}
 		for _, t := range ts {
+			if guards[t.Start] {
+				continue
+			}
 			name := directiveName(t)
 			if name != "if" && name != "ifdef" && name != "ifndef" && name != "elif" && name != "elseif" {
 				continue
@@ -44,6 +56,9 @@ func WriteConfigTemplate(path string, sources []string) (bool, error) {
 			}
 		}
 	}
+	for name := range guardNames {
+		delete(symbols, name)
+	}
 	var names []string
 	for name := range symbols {
 		names = append(names, name)
@@ -54,7 +69,7 @@ func WriteConfigTemplate(path string, sources []string) (bool, error) {
 	for _, name := range names {
 		fmt.Fprintf(&output, "%s = 0\n", name)
 	}
-	output.WriteString("\n// Observed conditional directives (including header guards):\n")
+	output.WriteString("\n// Observed conditional directives (header guards omitted):\n")
 	for _, choice := range choices {
 		output.WriteString(choice)
 	}
@@ -74,4 +89,48 @@ func WriteConfigTemplate(path string, sources []string) (bool, error) {
 		return false, closeErr
 	}
 	return true, nil
+}
+
+// Match a near-top #ifndef NAME / #define NAME pair in a header. Comments and
+// whitespace do not interrupt the pair. Preamble directives are allowed; stop
+// at ordinary code, and do not mistake nested platform choices for file guards.
+func configHeaderGuards(all []Token) map[string]int {
+	var ts []Token
+	for _, t := range all {
+		if t.Kind != "space" && t.Kind != "comment" {
+			ts = append(ts, t)
+		}
+	}
+	guards := map[string]int{}
+	depth := 0
+	for i, t := range ts {
+		if i >= 32 || t.Kind != "directive" {
+			break
+		}
+		kind := directiveName(t)
+		if depth == 0 && kind == "ifndef" && i+1 < len(ts) && directiveName(ts[i+1]) == "define" {
+			argument := func(t Token) string {
+				parts := directiveParts.FindStringSubmatch(t.Text)
+				if len(parts) < 3 {
+					return ""
+				}
+				tokens, err := Lex(parts[2])
+				if err != nil {
+					return ""
+				}
+				return strings.TrimSpace(Mask(tokens))
+			}
+			name := argument(t)
+			if identifier.MatchString(name) && argument(ts[i+1]) == name {
+				guards[name] = t.Start
+			}
+		}
+		switch kind {
+		case "if", "ifdef", "ifndef":
+			depth++
+		case "endif":
+			depth--
+		}
+	}
+	return guards
 }

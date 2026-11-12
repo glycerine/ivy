@@ -1766,3 +1766,21 @@ Final validation and boundaries:
   and non-hoisting of dynamic initialization. No new anonymous functions are used.
 - Installed prototype-52. The user's out/ tree was inspected, not overwritten;
   regenerate to use the new transformations and configuration support.
+
+
+## Prototype 53: omit include guards from configuration templates
+
+The source-transformation guard detector already required a complete outer
+#ifndef NAME / #define NAME / #endif wrapper. Configuration discovery now uses
+the user's simpler near-top .h pattern: adjacent matching #ifndef NAME and empty
+#define NAME directives, ignoring comments/whitespace and allowing leading
+preamble directives. Stop at ordinary code or after 32 significant directives;
+do not classify nested platform-condition pairs as file guards. No suffix/name
+heuristic is used. Omit guard directives from template comments and guard names
+from assignments, including names encountered in other inventoried files.
+
+Tests cover the four reported Glucose headers, comments between the pair,
+preamble directives, code outside the guard, genuine feature names ending in _h,
+valued defines, mismatches, late/nested pairs. Library and CLI tests pass; no
+experiments were tested. Installed prototype-53. Existing templates retain the
+non-overwrite policy: move an existing _starting.cfg aside before regenerating.

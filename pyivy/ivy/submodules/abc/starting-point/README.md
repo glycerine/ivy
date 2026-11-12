@@ -286,3 +286,9 @@ allocation/zeroing patterns, bitfields, aggregate declarations, and persistent
 local statics. The library/CLI regression tests exercise these together. This
 remains a draft port: union layout, tagged pointers, arbitrary allocation sizes,
 iterator expansion, thread lifecycle and ambiguous types are explicit repair work.
+
+
+Configuration templates omit recognized header guards: a matching `#ifndef NAME`
+and empty `#define NAME` pair near the top of a `.h` file, with comments and
+preamble directives allowed. This does not depend on the symbol's spelling.
+Existing `_starting.cfg` files are preserved; move one aside to regenerate it.

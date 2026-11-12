@@ -31,7 +31,7 @@ The original examples remain useful as regression targets.
 
 - [x] Config branch selection, `-cfg`, inline `//` comments, and automatic
   `_starting.cfg` discovery when the default config is absent. The template
-  lists every discovered conditional symbol as `SYMBOL = 0`, with source
+  lists discovered non-guard conditional symbols as `SYMBOL = 0`, with source
   directive comments. It is inactive and never overwrites an existing template.
 - [x] Literal loop/if conditions, switch header cleanup, adjacent empty case
   grouping, and explicit fallthrough between C cases that reach the next case.
