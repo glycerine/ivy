@@ -161,3 +161,17 @@ The eight original ZDD set-operation APIs and two original counting APIs are now
 implemented. ZDD product/division, covers/ISOP, conversions, dynamic reordering,
 and remaining original root CUDD APIs are still incomplete. No existing root
 draft files are hidden and no dynamic-reordering compatibility is claimed.
+
+### Independent original-C parity fixture
+
+The ZDD set-operation review now includes a permanent original-CUDD checksum
+fixture. A separate C harness linked the original CUDD and genuine utility
+objects, enumerated the same 65,536 family pairs and operation sequence, and
+produced `7292090e7f59522c`. Go produces that same checksum. The C harness and
+reproduction command are retained under testdata; ordinary tests execute only
+Go and need no C compiler, objects or runtime.
+
+`TestZDDOriginalCUDDOracleChecksum` checks the fixed source-derived result rather
+than deriving its expected value from the implementation under test. It covers
+327,680 union/intersection/difference/ITE/inclusion outputs in a fixed order.
+Race tests and `go vet` pass for core, REO and MTR after adding this fixture.
