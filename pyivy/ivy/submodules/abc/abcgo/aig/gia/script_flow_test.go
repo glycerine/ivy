@@ -24,3 +24,17 @@ func TestScriptMappingCommands(t *testing.T) {
 		t.Fatalf("commands %q", recorder.commands)
 	}
 }
+
+func TestScriptFlow2Commands(t *testing.T) {
+	prior := abcmain.Abc_FrameReadGlobalFrame()
+	defer abcmain.Abc_FrameSetGlobalFrame(prior)
+	frame := abcmain.NewFrame()
+	recorder := &scriptRecorder{}
+	frame.SetDispatcher(recorder)
+	abcmain.Abc_FrameSetGlobalFrame(frame)
+	Gia_ManPerformFlow2(1, 100001, 0, 4, 8, 1, 1, 1, 0)
+	joined := strings.Join(recorder.commands, "\n")
+	if !strings.Contains(joined, "&synch2 -K 4 -C 500;  &if -mt -K 4 -C 8") || !strings.Contains(joined, "&sopb -R 10 -C 4") || strings.Count(joined, "&sopb") != 1 || strings.Count(joined, "&load") != 2 {
+		t.Fatalf("unexpected flow: %s", joined)
+	}
+}

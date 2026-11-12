@@ -80,3 +80,75 @@ func Gia_ManPerformFlow(mapped, ands, levels, lutSize, cutNum, minAve, useMfs, v
 	frame.Execute("&st; &sopb")
 	Gia_ManPerformRound(mapped, ands, levels, lutSize, cutNum, minAve, useMfs, verbose)
 }
+
+func Gia_ManPerformFlow2(mapped, ands, levels, lutSize, cutNum, balance, minAve, useMfs, verbose int32) {
+	_ = levels
+	frame := abcmain.Abc_FrameGetGlobalFrame()
+	run := func(s string) { frame.Execute(s) }
+	suffix := ""
+	if minAve != 0 {
+		suffix = "t"
+	}
+	mfs := ""
+	if useMfs != 0 {
+		mfs = "&put; mfs2 -W 4 -M 500 -C 7000; &get -m;"
+	}
+	syncSize := lutSize
+	if syncSize == 0 {
+		syncSize = 6
+	}
+	kopt := ""
+	if lutSize != 0 {
+		kopt = fmt.Sprintf("-K %d ", lutSize)
+	}
+	c1 := fmt.Sprintf("&synch2 -K %d -C 500;  &if -m%s %s-C %d; %s &save", syncSize, suffix, kopt, cutNum, mfs)
+	c2 := fmt.Sprintf("&dch -C 500;          &if -m%s %s-C %d; %s &save", suffix, kopt, cutNum+4, mfs)
+	c3 := fmt.Sprintf("&synch2 -K %d -C 500;  &lf -m%s -E 5 %s-C %d; %s &save", syncSize, suffix, kopt, cutNum, mfs)
+	if verbose != 0 {
+		fmt.Println("Trying synthesis...")
+	}
+	if mapped != 0 {
+		run("&st")
+	}
+	run(c1)
+	if verbose != 0 {
+		run("&ps")
+	}
+	run("&st")
+	run(c2)
+	if verbose != 0 {
+		run("&ps")
+	}
+	run("&load")
+	if verbose != 0 {
+		run("&ps")
+	}
+	stages := []struct {
+		limit   int32
+		command string
+	}{{0, "&st; &sopb -R 10 -C 4"}, {100000, "&st; &sopb -R 10"}, {50000, "&st; &sopb -R 10"}}
+	for _, stage := range stages {
+		if stage.limit != 0 && ands > stage.limit {
+			break
+		}
+		if balance != 0 {
+			if verbose != 0 {
+				fmt.Println("Trying SOP balancing...")
+			}
+			run(stage.command)
+		}
+		run(c3)
+		if verbose != 0 {
+			run("&ps")
+		}
+		run("&st")
+		run(c2)
+		if verbose != 0 {
+			run("&ps")
+		}
+		run("&load")
+		if verbose != 0 {
+			run("&ps")
+		}
+	}
+}
