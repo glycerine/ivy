@@ -453,54 +453,8 @@ func Nf_StoDelete(p *Nf_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Nf_CutComputeTruth6(p *Nf_Man_t, pCut0 *Nf_Cut_t, pCut1 *Nf_Cut_t, fCompl0 int32, fCompl1 int32, pCutR *Nf_Cut_t, fIsXor int32) int32 {
-//    extern int Nf_ManTruthCanonicize( word * t, int nVars );
-    var nOldSupp int32 = pCutR.nLeaves;
-    var truthId int32;
-    var fCompl int32; var t word;
-    var t0 word  = *Vec_MemReadEntry(p.vTtMem, Abc_Lit2Var(pCut0.iFunc));
-    var t1 word  = *Vec_MemReadEntry(p.vTtMem, Abc_Lit2Var(pCut1.iFunc));
-    if Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 { t0 = ~t0; }
-    if Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 { t1 = ~t1; }
-    t0 = Abc_Tt6Expand( t0, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );
-    t1 = Abc_Tt6Expand( t1, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );
-    if fIsXor != 0 {
-        t = t0 ^ t1;
-    } else {
-        t = t0 & t1;
-    }
-    if fCompl = int32((t & 1)) { t = ~t; }
-    pCutR.nLeaves = Abc_Tt6MinBase( &t, pCutR.pLeaves, pCutR.nLeaves );
-    assert(int32((t & 1)) == 0, "int32((t & 1)) == 0");
-    truthId        = Vec_MemHashInsert(p.vTtMem, &t);
-    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );
-    pCutR.Useless = Nf_ObjCutUseless( p, truthId );
-    assert(int32(pCutR.nLeaves) <= nOldSupp, "int32(pCutR.nLeaves) <= nOldSupp");
-    return int32(pCutR.nLeaves) < nOldSupp;
-}
-func Nf_CutComputeTruthMux6(p *Nf_Man_t, pCut0 *Nf_Cut_t, pCut1 *Nf_Cut_t, pCutC *Nf_Cut_t, fCompl0 int32, fCompl1 int32, fComplC int32, pCutR *Nf_Cut_t) int32 {
-    var nOldSupp int32 = pCutR.nLeaves;
-    var truthId int32;
-    var fCompl int32; var t word;
-    var t0 word  = *Vec_MemReadEntry(p.vTtMem, Abc_Lit2Var(pCut0.iFunc));
-    var t1 word  = *Vec_MemReadEntry(p.vTtMem, Abc_Lit2Var(pCut1.iFunc));
-    var tC word  = *Vec_MemReadEntry(p.vTtMem, Abc_Lit2Var(pCutC.iFunc));
-    if Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 { t0 = ~t0; }
-    if Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 { t1 = ~t1; }
-    if Abc_LitIsCompl(pCutC.iFunc) ^ fComplC { tC = ~tC; }
-    t0 = Abc_Tt6Expand( t0, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );
-    t1 = Abc_Tt6Expand( t1, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );
-    tC = Abc_Tt6Expand( tC, pCutC.pLeaves, pCutC.nLeaves, pCutR.pLeaves, pCutR.nLeaves );
-    t = (tC & t1) | (~tC & t0);
-    if fCompl = int32((t & 1)) { t = ~t; }
-    pCutR.nLeaves = Abc_Tt6MinBase( &t, pCutR.pLeaves, pCutR.nLeaves );
-    assert(int32((t & 1)) == 0, "int32((t & 1)) == 0");
-    truthId        = Vec_MemHashInsert(p.vTtMem, &t);
-    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );
-    pCutR.Useless = Nf_ObjCutUseless( p, truthId );
-    assert(int32(pCutR.nLeaves) <= nOldSupp, "int32(pCutR.nLeaves) <= nOldSupp");
-    return int32(pCutR.nLeaves) < nOldSupp;
-}
+
+
 
 
 /**Function*************************************************************
