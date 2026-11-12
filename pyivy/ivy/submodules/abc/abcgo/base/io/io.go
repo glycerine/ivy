@@ -436,57 +436,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadInit(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pOut, pErr *os.File;
-    var pNtk *Abc_Ntk_t;
-    var pFileName string;
-    var c int32;
 
-    pNtk = Abc_FrameReadNtk(pAbc);
-    pOut = Abc_FrameReadOut(pAbc);
-    pErr = Abc_FrameReadErr(pAbc);
-
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "h" ) ) != -1  {
-        switch  c  {
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind && argc != globalUtilOptind + 1 {
-        goto usage; }
-
-    if pNtk == nil {
-        fmt.Fprintf(pErr, "Empty network.\n");
-        return 1;
-    }
-    // get the input file name
-    if argc == globalUtilOptind + 1 {
-        pFileName = argv[globalUtilOptind];
-    } else if pNtk.pSpec {
-        pFileName = Extra_FileNameGenericAppend( pNtk.pSpec, ".init" );
-    } else {
-        fmt.Printf("File name should be given on the command line.\n");
-        return 1;
-    }
-
-    // read the file using the corresponding file reader
-    pNtk = Abc_NtkDup( pNtk );
-    Io_ReadBenchInit( pNtk, pFileName );
-    // replace the current network
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-    Abc_FrameClearVerifStatus( pAbc );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_init [-h] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads initial state of the network in BENCH format\n");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
