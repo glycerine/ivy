@@ -75,7 +75,7 @@ func main() {
 	cmd := exec.Command("go", append([]string{"run"}, files...)...)
 	cmd.Env = append(os.Environ(), "GOWORK=off")
 	output, err := cmd.CombinedOutput()
-	if err != nil || string(output) != "assertion failed, we do not see: x > 0\n" {
+	if err != nil || string(output) != "assert.go:3: assertion failed, we do not see: x > 0\n" {
 		t.Fatal(string(output), err)
 	}
 	if _, err := os.Stat(filepath.Join(out, "plain/assert.go")); !os.IsNotExist(err) {

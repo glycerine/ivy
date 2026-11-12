@@ -266,7 +266,7 @@ func TestBatchAssertHelper(t *testing.T) {
 		t.Fatal(err)
 	}
 	helper, err := os.ReadFile(filepath.Join(out, "assert2.go"))
-	if err != nil || !strings.HasPrefix(string(helper), "package checks\n") || !strings.Contains(string(helper), `panic("assertion failed, we do not see: " + message)`) {
+	if err != nil || !strings.HasPrefix(string(helper), "package checks\n") || !strings.Contains(string(helper), `panic(where + "assertion failed, we do not see: " + message)`) {
 		t.Fatal(string(helper), err)
 	}
 	draft, err := os.ReadFile(filepath.Join(out, "assert.go"))

@@ -1623,3 +1623,28 @@ for multiple files, assert.go/assert2.go collisions, no helper in unused package
 flat CLI batches, and executing translated assertions with the generated helper.
 Regenerated abcCut.c in /tmp/starting-point-v46-helper-cut and verified the helper
 and message-bearing calls. Installed prototype-46; existing outputs unchanged.
+
+
+## Prototype 47: assertion caller location
+
+Generate the user's requested helper template with fmt/runtime/path imports,
+an early return on true, runtime.Caller(2), and a basename:line prefix when
+caller information is available. Keep the chosen directory package and filename
+collision policy. Caller(2) intentionally reports the caller of the function
+containing assert, as requested; it is not the direct assert line (Caller(1)).
+Updated the execution regression to verify the exact main.go:6 location prefix
+through a translated check function, including the successful assertion path.
+
+Validation: all Go tests pass, including the generated helper runtime check.
+Installed prototype-47. Existing generated outputs are unchanged until regeneration.
+
+
+## Prototype 48: immediate assertion location
+
+Correct the helper to runtime.Caller(1), per user clarification. The reported
+location now identifies the assert call itself, not its caller's caller.
+Update the runtime regression to expect assert.go:3 in the translated check
+function instead of main.go:6. This supersedes prototype-47's frame choice.
+
+Validation: all Go tests pass, including the exact immediate call-site check.
+Installed prototype-48; regenerate outputs to update existing helper files.

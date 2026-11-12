@@ -24,7 +24,27 @@ func WriteAssertHelper(directory, packageName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	source := "package " + pkg + "\n\nfunc assert(x bool, message string) {\n\tif !x {\n\t\tpanic(\"assertion failed, we do not see: \" + message)\n\t}\n}\n"
+	source := "package " + pkg + `
+
+import (
+	"fmt"
+	"runtime"
+	"path"
+)
+
+func assert(x bool, message string) {
+	if x {
+		return
+	}
+	_, fileName, fileLine, ok := runtime.Caller(1)
+	var where string
+	if ok {
+		where = fmt.Sprintf("%s:%d: ", path.Base(fileName), fileLine)
+	}
+	panic(where + "assertion failed, we do not see: " + message)
+}
+`
+
 	for n := 1; ; n++ {
 		name := "assert.go"
 		if n > 1 {

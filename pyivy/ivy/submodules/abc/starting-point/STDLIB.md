@@ -527,11 +527,21 @@ once per output directory after writing all drafts.
 
 ```go
 func assert(x bool, message string) {
-    if !x {
-        panic("assertion failed, we do not see: " + message)
+    if x {
+        return
     }
+    _, fileName, fileLine, ok := runtime.Caller(1)
+    var where string
+    if ok {
+        where = fmt.Sprintf("%s:%d: ", path.Base(fileName), fileLine)
+    }
+    panic(where + "assertion failed, we do not see: " + message)
 }
 ```
 
 Assertions are always active; source-defined/shadowed assert names and opaque
 preprocessor regions remain protected by the existing library-pass rules.
+
+Prototype-48 uses runtime.Caller(1) to report the immediate assertion call site.
+The filename is reduced with path.Base; unavailable caller information leaves
+the prefix empty. Successful assertions return before collecting stack data.
