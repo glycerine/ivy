@@ -294,3 +294,56 @@ functions and compares every delay and support on 200 seeded random AIGs.
 The connected suite passes race testing and vet. Whole-package compilation now
 first fails in visible ivyFraig.go drafts, and the remaining fraiging/history/
 rewriting/sequential synthesis scope is still unfinished.
+
+## Functional reduction (FRAIG)
+
+The complete active ivyFraig.c family is now ported across ivyFraigSim.go,
+ivyFraigSat.go, ivyFraigDriver.go and ivyFraigCone.go. The source-name file points
+to these implementations. This includes normalized word simulation, candidate
+classes and refinement, distinguishing-pattern scoring, supergate/MUX CNF,
+incremental implication checks, native XOR CNF, SAT counterexamples, simulation
+resaturation, sweep/reduction, miter proving and the iterative resource-limited
+prove driver. The optional CUDD-backed equivalence entry point uses a real local
+reduced ordered BDD with unique/apply tables, removing the external C dependency.
+Fresh cone extraction returns the existing aig.Graph type and preserves phase.
+
+The separate readability pass replaced overloaded fanout-pointer storage with
+lazy typed FRAIG state per node. Real fanout lists therefore remain usable while
+simulation and SAT metadata exist. Simulation data, patterns, SAT frontiers and
+class links have explicit types; the manager owns its RNG and scratch storage.
+Intrusive class APIs retain their original list behavior, while class grouping
+uses Go maps. Temporary CNF literals are slices. The SAT bridge uses the real
+ported bsat.Solver, including activity factors, per-call/global budgets and model
+values; no solver or equivalence routine is a stub.
+
+The separate bug review corrected phase handling for constant-one and
+complemented simulated outputs, so saved models actually satisfy the output.
+Startup ownership validation happens before mutation, simulation state is
+released, and cyclic class links are rejected. Pair counting now returns the
+actual number rather than the source's unconditional zero. Native XORs retain
+XOR behavior in simulation, CNF and copying instead of being treated as ANDs.
+Constant SAT variable zero is explicitly constrained true. Topological copying
+handles rewritten object IDs. The prove driver avoids division by zero on an
+empty output boundary; its rewriting block remains inactive as in the active C
+source. Original solver global nInsLimit semantics count propagations, while the
+outer returned inspection statistic counts watched-clause inspections; these
+units are kept distinct through the bsat bridge.
+
+Tests cover all simulation phase opcodes against a scalar reference and 8,192
+cases against the unchanged source-C simulation routine (harness in
+test_vectors/). Class partition/refinement, pattern neighborhoods and scoring,
+repeated ownership rejection, stop/restart and live fanout preservation have
+regressions. CNF tests exhaust every three-input MUX polarity and native XOR
+assignment; SAT/BDD equivalence and counterexamples are checked against scalar
+truth. Deliberately false simulation candidates force SAT-driven resimulation.
+Forty seeded random reductions exhaust all 16 input assignments and check BDD
+results. Miter SAT/UNSAT, prove-driver ownership, fresh cone SAT and marks are
+covered. The original ABC executable's ifraig command processes the
+fraig_associativity.blif fixture; reduced node count and every output assignment
+match the Go implementation. Connected tests pass under the race detector and
+go vet. Whole Ivy compilation now first fails in the visible ivyHaig.go draft.
+
+The connected test/vet scripts now run from abcgo/ so imports resolve through
+its module. They include all completed files plus the FRAIG files and tests;
+`bash /tmp/test-ivy-core.sh -race` and `bash /tmp/vet-ivy-core.sh` are the exact
+current commands. No experiments directory is built or tested.

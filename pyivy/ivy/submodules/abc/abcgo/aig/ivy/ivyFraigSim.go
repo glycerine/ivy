@@ -4,6 +4,7 @@ package ivy
 import (
 	"encoding/binary"
 	"fmt"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"math/bits"
 	"math/rand/v2"
 	"slices"
@@ -26,16 +27,23 @@ type ivyFraigNodeState struct {
 	fanins                                                     []*Ivy_Obj_t
 }
 type Ivy_FraigMan_t struct {
-	pParams            *Ivy_FraigParams_t
-	pManAig, pManFraig *Ivy_Man_t
-	nSimWords          int32
-	pSimStart          *Ivy_FraigSim_t
-	pPatWords          []uint32
-	pPatScores         []int32
-	lClasses, lCand    Ivy_FraigList_t
-	nPairs, nSimRounds int32
-	timeSim, timeRef   time.Duration
-	rng                *rand.Rand
+	pSat                                                                              *bsat.Solver
+	nSatVars                                                                          int32
+	vPiVars                                                                           []*Ivy_Obj_t
+	nBTLimitGlobal, nInsLimitGlobal                                                   int64
+	nSatCalls, nSatCallsSat, nSatCallsUnsat, nSatProof, nSatFails, nSatFailsReal      int32
+	nNodesMiter, nClassesZero, nClassesBeg, nClassesEnd, nPairsBeg, nPairsEnd         int32
+	timeSat, timeSatSat, timeSatUnsat, timeSatFail, timeTrav, timeTotal, time1, time2 time.Duration
+	pParams                                                                           *Ivy_FraigParams_t
+	pManAig, pManFraig                                                                *Ivy_Man_t
+	nSimWords                                                                         int32
+	pSimStart                                                                         *Ivy_FraigSim_t
+	pPatWords                                                                         []uint32
+	pPatScores                                                                        []int32
+	lClasses, lCand                                                                   Ivy_FraigList_t
+	nPairs, nSimRounds                                                                int32
+	timeSim, timeRef                                                                  time.Duration
+	rng                                                                               *rand.Rand
 }
 
 func ivyFraigState(n *Ivy_Obj_t) *ivyFraigNodeState {
