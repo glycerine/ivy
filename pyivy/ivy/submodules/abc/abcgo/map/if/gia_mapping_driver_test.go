@@ -58,7 +58,7 @@ func TestGiaMappingDriverSimpleNetwork(t *testing.T) {
 }
 
 func TestGiaBalancingDriversPreserveTruth(t *testing.T) {
-	for _, kind := range []string{"sop", "dsd"} {
+	for _, kind := range []string{"sop", "dsd", "registered-sop", "registered-dsd"} {
 		t.Run(kind, func(t *testing.T) {
 			src := Gia_ManStart(12)
 			a, b, c := Gia_ManAppendCi(src), Gia_ManAppendCi(src), Gia_ManAppendCi(src)
@@ -66,10 +66,15 @@ func TestGiaBalancingDriversPreserveTruth(t *testing.T) {
 			y := gia.Gia_ManAppendAnd(src, x, c)
 			Gia_ManAppendCo(src, y^1)
 			var result *Gia_Man_t
-			if kind == "sop" {
+			switch kind {
+			case "sop":
 				result = Gia_ManPerformSopBalance(src, 8, 0, 0)
-			} else {
+			case "dsd":
 				result = Gia_ManPerformDsdBalance(src, 6, 8, 0, 0)
+			case "registered-sop":
+				result = gia.Gia_ManPerformSopBalance(src, 8, 0, 0)
+			case "registered-dsd":
+				result = gia.Gia_ManPerformDsdBalance(src, 6, 8, 0, 0)
 			}
 			if result == nil {
 				t.Fatal("balancing failed")
