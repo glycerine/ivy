@@ -39,40 +39,6 @@ import "fmt"
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-type Sfm_Fun_t_ struct {
-    Next             int32;          // next function in the list
-    Area             int32;          // area of this function
-    pFansT [SFM_SUPP_MAX+1]byte;     // top gate ID, followed by fanin perm
-    pFansB [SFM_SUPP_MAX+1]byte;     // bottom gate ID, followed by fanin perm
-}
-type Sfm_Lib_t_ struct {
-    nVars             int32;         // variable count
-    nWords             int32;        // truth table words
-    fVerbose             int32;      // verbose statistics
-    pCells    *Mio_Cell2_t;        // library gates
-    nCells             int32;        // library gate count
-    fDelay             int32;        // uses delay profile
-    nObjs             int32;         // object count
-    nObjsAlloc             int32;    // object count
-    pObjs      *Sfm_Fun_t;         // objects  
-    vTtMem      *Vec_Mem_t;        // truth tables
-    vLists       Vec_Int_t;        // lists of funcs for each truth table
-    vCounts       Vec_Int_t;       // counters of functions for each truth table
-    vHits       Vec_Int_t;         // the number of times this function was used
-    vProfs       Vec_Int_t;        // area/delay profiles
-    vStore       Vec_Int_t;        // storage for area/delay profiles
-    vTemp       Vec_Int_t;         // temporary storage for candidates
-    nObjSkipped             int32;
-    nObjRemoved             int32;
-}
-
-func Sfm_LibFun(p *Sfm_Lib_t, i int32) *Sfm_Fun_t { if i == -1 {
-    return nil;
-} else {
-    return p.pObjs + i;
-} }
-func Sfm_LibFunId(p *Sfm_Lib_t, pFun *Sfm_Fun_t) int32 { return pFun - p.pObjs;               }
-
 // Original macro:
 // #define Sfm_LibForEachSuper( p, pObj, Func ) \
 //     for ( pObj = Sfm_LibFun(p, Vec_IntEntry(&p->vLists, Func)); pObj; pObj = Sfm_LibFun(p, pObj->Next) )
@@ -146,42 +112,8 @@ var s_Truth8 [8][4]word = [8][4]word{
   SeeAlso     []
 
 ***********************************************************************/
-func Sfm_LibStart(nVars int32, fDelay int32, fVerbose int32) *Sfm_Lib_t {
-    // inlining of macro ABC_CALLOC
-    var p *Sfm_Lib_t  = &Sfm_Lib_t{};
-    assert(nVars <= SFM_SUPP_MAX, "nVars <= SFM_SUPP_MAX");
-    p.vTtMem = Vec_MemAllocForTT( nVars, 0 );   
-    Vec_IntGrow( &p.vLists,  (1 << 16) );
-    Vec_IntGrow( &p.vCounts, (1 << 16) );
-    Vec_IntGrow( &p.vHits,   (1 << 16) );
-    Vec_IntFill( &p.vLists,  2, -1 );
-    Vec_IntFill( &p.vCounts, 2, -1 );
-    Vec_IntFill( &p.vHits,   2, -1 );
-    p.nObjsAlloc = (1 << 16);
-    // inlining of macro ABC_CALLOC
-    p.pObjs = ((Sfm_Fun_t *) calloc((size_t)(p.nObjsAlloc), sizeof(Sfm_Fun_t)));
-    p.fDelay = fDelay;
-    if fDelay != 0 { Vec_IntGrow( &p.vProfs,  (1 << 16) ); }
-    if fDelay != 0 { Vec_IntGrow( &p.vStore,  (1 << 18) ); }
-    Vec_IntGrow( &p.vTemp, 16 );
-    p.nVars = nVars;
-    p.nWords = Abc_TtWordNum( nVars );
-    p.fVerbose = fVerbose;
-    return p;
-}
-func Sfm_LibStop(p *Sfm_Lib_t) {
-    Vec_MemHashFree( p.vTtMem );
-    Vec_MemFree( p.vTtMem );
-    Vec_IntErase( &p.vLists );
-    Vec_IntErase( &p.vCounts );
-    Vec_IntErase( &p.vHits );
-    Vec_IntErase( &p.vProfs );
-    Vec_IntErase( &p.vStore );
-    Vec_IntErase( &p.vTemp );
-    p.pCells = nil;
-    p.pObjs = nil;
-    p = nil;
-}
+
+
 
 /**Function*************************************************************
 
@@ -224,117 +156,7 @@ void Sfm_LibCellProfile( Mio_Cell2_t * pCellBot, Mio_Cell2_t * pCellTop, int InT
 
 
 
-func Sfm_LibPrepareAdd(p *Sfm_Lib_t, pTruth *word, Perm *int32, nFanins int32, pCellBot *Mio_Cell2_t, pCellTop *Mio_Cell2_t, InTop int32) {
-    var pObj *Sfm_Fun_t;
-    var InvPerm, Profile [SFM_SUPP_MAX]int32;
-    var Area int32  = int32(pCellBot.AreaW) + (pCellTop ? int32(pCellTop.AreaW) : 0);
-    var i int32;
-    var k int32;
-    var Id int32;
-    var Prev int32;
-    var Offset int32;
-    var pProf *int32;
-    var iFunc int32 = Vec_MemHashInsert( p.vTtMem, pTruth );
-    if iFunc == Vec_IntSize(&p.vLists) {
-        Vec_IntPush( &p.vLists, -1 );
-        Vec_IntPush( &p.vCounts, 0 );
-        Vec_IntPush( &p.vHits,   0 );
-    }
-    assert(pCellBot != nil, "pCellBot != nil");
-    // iterate through the supergates of this truth table
-    if p.fDelay {
-        assert(Vec_IntSize(&p.vProfs) == p.nObjs, "Vec_IntSize(&p.vProfs) == p.nObjs");
-        Sfm_LibCellProfile( pCellBot, pCellTop, InTop, nFanins, Perm, Profile );
-        // check if new one is contained in old ones
-        Vec_IntClear( &p.vTemp );
-        // inlining of macro Sfm_LibForEachSuper
-        for  pObj = Sfm_LibFun(p, Vec_IntEntry(&p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {
-            Vec_IntPush( &p.vTemp, Sfm_LibFunId(p, pObj) );
-            Offset = Vec_IntEntry( &p.vProfs, Sfm_LibFunId(p, pObj) );
-            pProf  = Vec_IntEntryP( &p.vStore, Offset );
-            if Sfm_LibNewIsContained(pObj, pProf, Area, Profile, nFanins) != 0 {
-                p.nObjSkipped++;
-                return;
-            }
-        }
-        // check if old ones are contained in new one
-        k = 0;
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(&p.vTemp)) && (((Id) = Vec_IntEntry(&p.vTemp, i)), 1); i++  {
-            Offset = Vec_IntEntry( &p.vProfs, Id );
-            pProf  = Vec_IntEntryP( &p.vStore, Offset );
-            if !(Sfm_LibNewContains(Sfm_LibFun(p, Id), pProf, Area, Profile, nFanins) != 0) {
-                Vec_IntWriteEntry( &p.vTemp, k++, Id );
-            } else {
-                p.nObjRemoved++; }
-        }
-        if k < i { // change
-        
-            if k == 0 {
-                Vec_IntWriteEntry( &p.vLists, iFunc, -1 );
-            } else {
-                Vec_IntShrink( &p.vTemp, k );
-                Prev = Vec_IntEntry(&p.vTemp, 0);
-                Vec_IntWriteEntry( &p.vLists, iFunc, Prev );
-                // inlining of macro Vec_IntForEachEntryStart
-                for  i = 1; (i < Vec_IntSize(&p.vTemp)) && (((Id) = Vec_IntEntry(&p.vTemp, i)), 1); i++  {
-                    Sfm_LibFun(p, Prev).Next = Id;
-                    Prev = Id;
-                }
-                Sfm_LibFun(p, Prev).Next = -1;
-            }
-        }
-    
-    } else {
-        // inlining of macro Sfm_LibForEachSuper
-        for  pObj = Sfm_LibFun(p, Vec_IntEntry(&p.vLists, iFunc)); (pObj != nil); pObj = Sfm_LibFun(p, pObj.Next)  {
-            if Area >= pObj.Area {
-                return; }
-        }
-    }
-    for  k = 0; k < nFanins; k++  {
-        InvPerm[Perm[k]] = k;
-    }
-    // create delay profile
-    if p.fDelay {
-        Vec_IntPush( &p.vProfs, Vec_IntSize(&p.vStore) );
-        for  k = 0; k < nFanins; k++  {
-            Vec_IntPush( &p.vStore, Profile[k] );
-        }
-    }
-    // create new object
-    if p.nObjs == p.nObjsAlloc {
-        var nObjsAlloc int32  = 2 * p.nObjsAlloc;
-        // inlining of macro ABC_REALLOC
-        
-        if p.pObjs {
-            p.pObjs = ((Sfm_Fun_t *) realloc((char *)(p.pObjs), sizeof(Sfm_Fun_t) * (size_t)(nObjsAlloc)));
-        } else {
-            p.pObjs = ((Sfm_Fun_t *) malloc(sizeof(Sfm_Fun_t) * (size_t)(nObjsAlloc)));
-        }
-        memset( p.pObjs + p.nObjsAlloc, 0, sizeof(Sfm_Fun_t) * p.nObjsAlloc );
-        p.nObjsAlloc = nObjsAlloc;
-    }
-    pObj = p.pObjs + p.nObjs;
-    pObj.Area = Area;
-    pObj.Next = Vec_IntEntry(&p.vLists, iFunc);
-    Vec_IntWriteEntry( &p.vLists, iFunc, p.nObjs++ );
-    Vec_IntAddToEntry( &p.vCounts, iFunc, 1 );
-    // create gate
-    assert(pCellBot.Id < 128, "pCellBot.Id < 128");
-    pObj.pFansB[0] = byte(pCellBot.Id);
-    for  k = 0; k < int32(pCellBot.nFanins); k++  {
-        pObj.pFansB[k+1] = InvPerm[k];
-    }
-    if pCellTop == nil {
-        return; }
-    assert(pCellTop.Id < 128, "pCellTop.Id < 128");
-    pObj.pFansT[0] = byte(pCellTop.Id);
-    for  i = 0; i < int32(pCellTop.nFanins); i++  {
-        pObj.pFansT[i+1] = byte((i == InTop ? 16 : InvPerm[k++]));
-    }
-    assert(k == nFanins, "k == nFanins");
-}
+
 func Sfm_LibPrepare(nVars int32, fTwo int32, fDelay int32, fVerbose int32, fLibVerbose int32) *Sfm_Lib_t {
     var clk abctime  = Abc_Clock();
     var p *Sfm_Lib_t  = Sfm_LibStart( nVars, fDelay, fLibVerbose );
