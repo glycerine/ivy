@@ -1,139 +1,75 @@
 package gia
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-/**CFile****************************************************************
-
-  FileName    [gia.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Scalable AIG package.]
-
-  Synopsis    []
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: gia.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "gia.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Sat_ObjXValue(pObj *Gia_Obj_t) int32 { return (pObj.fMark1 << 1) | pObj.fMark0;             }
-func Sat_ObjSetXValue(pObj *Gia_Obj_t, v int32) { pObj.fMark0 = (v & 1); pObj.fMark1 = ((v >> 1) & 1); }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Collects nodes in the cone and initialized them to x.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_SatCollectCone_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vVisit *Vec_Int_t) {
-    if Sat_ObjXValue(pObj) == GIA_UND {
-        return; }
-    if Gia_ObjIsAnd(pObj) {
-        Gia_SatCollectCone_rec( p, Gia_ObjFanin0(pObj), vVisit );
-        Gia_SatCollectCone_rec( p, Gia_ObjFanin1(pObj), vVisit );
-    }
-    assert(Sat_ObjXValue(pObj) == 0, "Sat_ObjXValue(pObj) == 0");
-    Sat_ObjSetXValue( pObj, GIA_UND );
-    Vec_IntPush( vVisit, Gia_ObjId(p, pObj) );
+func Sat_ObjXValue(obj *Gia_Obj_t) int32 { return int32(obj.fMark1<<1 | obj.fMark0) }
+func Sat_ObjSetXValue(obj *Gia_Obj_t, value int32) {
+	obj.fMark0 = uint32(value) & 1
+	obj.fMark1 = (uint32(value) >> 1) & 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collects nodes in the cone and initialized them to x.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_SatCollectCone(p *Gia_Man_t, pObj *Gia_Obj_t, vVisit *Vec_Int_t) {
-    assert(!Gia_IsComplement(pObj), "!Gia_IsComplement(pObj)");
-    assert(!Gia_ObjIsConst0(pObj), "!Gia_ObjIsConst0(pObj)");
-    assert(Sat_ObjXValue(pObj) == 0, "Sat_ObjXValue(pObj) == 0");
-    Vec_IntClear( vVisit );
-    Gia_SatCollectCone_rec( p, pObj, vVisit );
+// Gia_SatCollectCone_rec appends the cone in fanin-first order and marks it
+// unknown for ternary simulation.
+func Gia_SatCollectCone_rec(p *Gia_Man_t, obj *Gia_Obj_t, visit *Vec_Int_t) {
+	if Sat_ObjXValue(obj) == GIA_UND {
+		return
+	}
+	if Gia_ObjIsAnd(obj) != 0 {
+		Gia_SatCollectCone_rec(p, Gia_ObjFanin0(obj), visit)
+		Gia_SatCollectCone_rec(p, Gia_ObjFanin1(obj), visit)
+	}
+	if Sat_ObjXValue(obj) != 0 {
+		panic("gia: pattern cone marks are not clean")
+	}
+	Sat_ObjSetXValue(obj, GIA_UND)
+	vec.Vec_IntPush(visit, Gia_ObjId(p, obj))
+}
+func Gia_SatCollectCone(p *Gia_Man_t, obj *Gia_Obj_t, visit *Vec_Int_t) {
+	if Gia_IsComplement(obj) != 0 || Gia_ObjIsConst0(obj) != 0 || Sat_ObjXValue(obj) != 0 {
+		panic("gia: invalid pattern cone root")
+	}
+	vec.Vec_IntClear(visit)
+	Gia_SatCollectCone_rec(p, obj, visit)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Checks if the counter-examples asserts the output.]
-
-  Description [Assumes that fMark0 and fMark1 are clean. Leaves them clean.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_SatVerifyPattern(p *Gia_Man_t, pRoot *Gia_Obj_t, vCex *Vec_Int_t, vVisit *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    var i, Entry, Value, Value0, Value1 int32;
-    assert(Gia_ObjIsCo(pRoot), "Gia_ObjIsCo(pRoot)");
-    assert(!Gia_ObjIsConst0(Gia_ObjFanin0(pRoot)), "!Gia_ObjIsConst0(Gia_ObjFanin0(pRoot))");
-    // collect nodes and initialized them to x
-    Gia_SatCollectCone( p, Gia_ObjFanin0(pRoot), vVisit );
-    // set binary values to nodes in the counter-example
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vCex)) && (((Entry) = Vec_IntEntry(vCex, i)), 1); i++  {
-//        Sat_ObjSetXValue( Gia_ManObj(p, Abc_Lit2Var(Entry)), Abc_LitIsCompl(Entry)? GIA_ZER : GIA_ONE );
-        Sat_ObjSetXValue( Gia_ManCi(p, Abc_Lit2Var(Entry)), Abc_LitIsCompl(Entry)? GIA_ZER : GIA_ONE );
-    }
-    // simulate
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vVisit)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vVisit,i))); i++  {
-        if Gia_ObjIsCi(pObj) {
-            continue; }
-        assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-        Value0 = Sat_ObjXValue( Gia_ObjFanin0(pObj) );
-        Value1 = Sat_ObjXValue( Gia_ObjFanin1(pObj) );
-        Value = Gia_XsimAndCond( Value0, Gia_ObjFaninC0(pObj), Value1, Gia_ObjFaninC1(pObj) );
-        Sat_ObjSetXValue( pObj, Value );
-    }
-    Value = Sat_ObjXValue( Gia_ObjFanin0(pRoot) );
-    Value = Gia_XsimNotCond( Value, Gia_ObjFaninC0(pRoot) );
-    if Value != GIA_ONE {
-        fmt.Printf("Gia_SatVerifyPattern(): Verification FAILED.\n"); }
-//    else
-//        printf( "Gia_SatVerifyPattern(): Verification succeeded.\n" );
-//    assert( Value == GIA_ONE );
-    // clean the nodes
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vVisit)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vVisit,i))); i++  {
-        Sat_ObjSetXValue( pObj, 0 );
-    }
+// Gia_SatVerifyPattern checks whether a partial CI assignment asserts root.
+// All marks set by the check are cleared, including CIs outside its cone.
+func Gia_SatVerifyPattern(p *Gia_Man_t, root *Gia_Obj_t, cex, visit *Vec_Int_t) {
+	if Gia_ObjIsCo(root) == 0 || Gia_ObjIsConst0(Gia_ObjFanin0(root)) != 0 {
+		panic("gia: invalid pattern output")
+	}
+	Gia_SatCollectCone(p, Gia_ObjFanin0(root), visit)
+	defer func() {
+		for _, id := range vec.Vec_IntArray(visit) {
+			Sat_ObjSetXValue(Gia_ManObj(p, id), 0)
+		}
+		for _, lit := range vec.Vec_IntArray(cex) {
+			Sat_ObjSetXValue(Gia_ManCi(p, lit>>1), 0)
+		}
+	}()
+	for _, lit := range vec.Vec_IntArray(cex) {
+		value := int32(GIA_ONE)
+		if lit&1 != 0 {
+			value = GIA_ZER
+		}
+		Sat_ObjSetXValue(Gia_ManCi(p, lit>>1), value)
+	}
+	for _, id := range vec.Vec_IntArray(visit) {
+		obj := Gia_ManObj(p, id)
+		if Gia_ObjIsCi(obj) != 0 {
+			continue
+		}
+		if Gia_ObjIsAnd(obj) == 0 {
+			panic("gia: invalid pattern cone object")
+		}
+		value := Gia_XsimAndCond(Sat_ObjXValue(Gia_ObjFanin0(obj)), Gia_ObjFaninC0(obj), Sat_ObjXValue(Gia_ObjFanin1(obj)), Gia_ObjFaninC1(obj))
+		Sat_ObjSetXValue(obj, value)
+	}
+	value := Gia_XsimNotCond(Sat_ObjXValue(Gia_ObjFanin0(root)), Gia_ObjFaninC0(root))
+	if value != GIA_ONE {
+		fmt.Println("Gia_SatVerifyPattern(): Verification FAILED.")
+	}
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
