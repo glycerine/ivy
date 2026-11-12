@@ -189,31 +189,7 @@ func Io_WriteVerilogInt(pFile *os.File, pNtk *Abc_Ntk_t, fOnlyAnds int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Io_WriteVerilogPis(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {
-    var pTerm, pNet *Abc_Obj_t;
-    var LineLength int32;
-    var AddedLength int32;
-    var NameCounter int32;
-    var i int32;
-
-    LineLength  = Start;
-    NameCounter = 0;
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        pNet = Abc_ObjFanout0(pTerm);
-        // get the line length after this name is written
-        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;
-        if (NameCounter != 0) && LineLength + AddedLength + 3 > IO_WRITE_LINE_LENGTH { // write the line extender
-            fmt.Fprintf(pFile, "\n   ");
-            // reset the line length
-            LineLength  = 3;
-            NameCounter = 0;
-        }
-        fmt.Fprintf(pFile, " %s%s", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (i==Abc_NtkPiNum(pNtk)-1)? "" : ",");
-        LineLength += AddedLength;
-        NameCounter++;
-    }
-} 
+ 
 
 /**Function*************************************************************
 
@@ -226,53 +202,7 @@ func Io_WriteVerilogPis(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Io_WriteVerilogPos(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {
-    var pTerm, pNet, pSkip *Abc_Obj_t;
-    var LineLength int32;
-    var AddedLength int32;
-    var NameCounter int32;
-    var i int32;
-    var nskip int32;
 
-    pSkip = 0;
-    nskip = 0;
-
-    LineLength  = Start;
-    NameCounter = 0;
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        pNet = Abc_ObjFanin0(pTerm);
-        
-        if Abc_ObjIsPi(Abc_ObjFanin0(pNet)) {
-            // Skip this output since it is a feedthrough -- the same
-            // name will appear as an input and an output which other
-            // tools reading verilog do not like.
-            
-            nskip++;
-            pSkip = pNet;   // save an example of skipped net
-            continue;
-        }
-        
-        // get the line length after this name is written
-        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;
-        if (NameCounter != 0) && LineLength + AddedLength + 3 > IO_WRITE_LINE_LENGTH { // write the line extender
-            fmt.Fprintf(pFile, "\n   ");
-            // reset the line length
-            LineLength  = 3;
-            NameCounter = 0;
-        }
-        fmt.Fprintf(pFile, " %s%s", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (i==Abc_NtkPoNum(pNtk)-1)? "" : ",");
-        LineLength += AddedLength;
-        NameCounter++;
-    }
-
-    if nskip != 0 {
-        assert((pSkip != nil), "pSkip");
-        fmt.Printf("Io_WriteVerilogPos(): Omitted %d feedthrough nets from output list of module (e.g. %s).\n", nskip, Abc_ObjName(pSkip));
-        return;
-    }
-
-}
 
 /**Function*************************************************************
 
@@ -285,99 +215,7 @@ func Io_WriteVerilogPos(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Io_WriteVerilogWires(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {
-    var pObj, pNet, pBox, pTerm *Abc_Obj_t;
-    var LineLength int32;
-    var AddedLength int32;
-    var NameCounter int32;
-    var i, k, Counter, nNodes int32;
 
-    // count the number of wires
-    nNodes = Io_WriteVerilogWiresCount( pNtk );
-
-    // write the wires
-    Counter = 0;
-    LineLength  = Start;
-    NameCounter = 0;
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        if i == 0 { 
-            continue; }
-        pNet = Abc_ObjFanout0(pObj);
-        if Abc_ObjFanoutNum(pNet) > 0 && Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {
-            continue; }
-        Counter++;
-        // get the line length after this name is written
-        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;
-        if (NameCounter != 0) && LineLength + AddedLength + 3 > IO_WRITE_LINE_LENGTH { // write the line extender
-            fmt.Fprintf(pFile, "\n   ");
-            // reset the line length
-            LineLength  = 3;
-            NameCounter = 0;
-        }
-        fmt.Fprintf(pFile, " %s%s", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? "" : ",");
-        LineLength += AddedLength;
-        NameCounter++;
-    }
-    }
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {
-        pNet = Abc_ObjFanin0(Abc_ObjFanin0(pObj));
-        Counter++;
-        // get the line length after this name is written
-        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;
-        if (NameCounter != 0) && LineLength + AddedLength + 3 > IO_WRITE_LINE_LENGTH { // write the line extender
-            fmt.Fprintf(pFile, "\n   ");
-            // reset the line length
-            LineLength  = 3;
-            NameCounter = 0;
-        }
-        fmt.Fprintf(pFile, " %s%s", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? "" : ",");
-        LineLength += AddedLength;
-        NameCounter++;
-    }
-    }
-    // inlining of macro Abc_NtkForEachBox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {
-        if Abc_ObjIsLatch(pBox) {
-            continue; }
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pBox)) && (((pTerm) = Abc_ObjFanin(pBox, k)), 1); k++  {
-            pNet = Abc_ObjFanin0(pTerm);
-            Counter++;
-            // get the line length after this name is written
-            AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;
-            if (NameCounter != 0) && LineLength + AddedLength + 3 > IO_WRITE_LINE_LENGTH { // write the line extender
-                fmt.Fprintf(pFile, "\n   ");
-                // reset the line length
-                LineLength  = 3;
-                NameCounter = 0;
-            }
-            fmt.Fprintf(pFile, " %s%s", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? "" : ",");
-            LineLength += AddedLength;
-            NameCounter++;
-        }
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pBox)) && (((pTerm) = Abc_ObjFanout(pBox, k)), 1); k++  {
-            pNet = Abc_ObjFanout0(pTerm);
-            if Abc_ObjFanoutNum(pNet) > 0 && Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {
-                continue; }
-            Counter++;
-            // get the line length after this name is written
-            AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;
-            if (NameCounter != 0) && LineLength + AddedLength + 3 > IO_WRITE_LINE_LENGTH { // write the line extender
-                fmt.Fprintf(pFile, "\n   ");
-                // reset the line length
-                LineLength  = 3;
-                NameCounter = 0;
-            }
-            fmt.Fprintf(pFile, " %s%s", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? "" : ",");
-            LineLength += AddedLength;
-            NameCounter++;
-        }
-    }
-    assert(Counter == nNodes, "Counter == nNodes");
-}
 
 /**Function*************************************************************
 
@@ -390,38 +228,7 @@ func Io_WriteVerilogWires(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Io_WriteVerilogRegs(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {
-    var pLatch, pNet *Abc_Obj_t;
-    var LineLength int32;
-    var AddedLength int32;
-    var NameCounter int32;
-    var i, Counter, nNodes int32;
 
-    // count the number of latches
-    nNodes = Abc_NtkLatchNum(pNtk);
-
-    // write the wires
-    Counter = 0;
-    LineLength  = Start;
-    NameCounter = 0;
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {
-        pNet = Abc_ObjFanout0(Abc_ObjFanout0(pLatch));
-        Counter++;
-        // get the line length after this name is written
-        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;
-        if (NameCounter != 0) && LineLength + AddedLength + 3 > IO_WRITE_LINE_LENGTH { // write the line extender
-            fmt.Fprintf(pFile, "\n   ");
-            // reset the line length
-            LineLength  = 3;
-            NameCounter = 0;
-        }
-        fmt.Fprintf(pFile, " %s%s", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? "" : ",");
-        LineLength += AddedLength;
-        NameCounter++;
-    }
-    }
-}
 
 /**Function*************************************************************
 
@@ -587,35 +394,7 @@ func Io_WriteVerilogObjects(pFile *os.File, pNtk *Abc_Ntk_t, fOnlyAnds int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Io_WriteVerilogWiresCount(pNtk *Abc_Ntk_t) int32 {
-    var pObj, pNet, pBox *Abc_Obj_t;
-    var i, k, nWires int32;
-    nWires = Abc_NtkLatchNum(pNtk);
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        if i == 0 { 
-            continue; }
-        pNet = Abc_ObjFanout0(pObj);
-        if Abc_ObjFanoutNum(pNet) > 0 && Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {
-            continue; }
-        nWires++;
-    }
-    }
-    // inlining of macro Abc_NtkForEachBox
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {
-        if Abc_ObjIsLatch(pBox) {
-            continue; }
-        nWires += Abc_ObjFaninNum(pBox);
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pBox)) && (((pObj) = Abc_ObjFanout(pBox, k)), 1); k++  {
-            pNet = Abc_ObjFanout0(pObj);
-            if Abc_ObjFanoutNum(pNet) > 0 && Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {
-                continue; }
-            nWires++;
-        }
-    }
-    return nWires;
-}
+
 
 /**Function*************************************************************
 
