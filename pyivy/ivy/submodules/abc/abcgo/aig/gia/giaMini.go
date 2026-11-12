@@ -330,41 +330,6 @@ func Abc_FrameReadMiniLutNameMapping(pAbc *Abc_Frame_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManMapEquivAfterScorr(p *Gia_Man_t, vMap *Vec_Int_t) *Vec_Int_t {
-    var vRes *Vec_Int_t  = Vec_IntStartFull( Vec_IntSize(vMap) );
-    var vGia2Mini *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );
-    var pObj, pRepr *Gia_Obj_t;
-    var i, iObjLit, iReprLit, fCompl, iReprGia, iReprMini int32;
-    Vec_IntForEachEntry( vMap, iObjLit, i )
-    {
-        if iObjLit == -1 {
-            continue; }
-        iReprGia = Gia_ObjReprSelf( p, Abc_Lit2Var(iObjLit) );
-        iReprMini = Vec_IntEntry( vGia2Mini, iReprGia );
-        if iReprMini == -1 {
-            Vec_IntWriteEntry( vGia2Mini, iReprGia, i );
-            continue;
-        }
-        if iReprMini == i {
-            continue; }
-        assert(iReprMini < i, "iReprMini < i");
-        Vec_IntWriteEntry( vRes, i, iReprMini );
-    }
-    Vec_IntFree( vGia2Mini );
-    Gia_ManSetPhase( p );
-    Vec_IntForEachEntry( vRes, iReprMini, i )
-    {
-        if iReprMini == -1 {
-            continue; }
-        iObjLit  = Vec_IntEntry(vMap, i);
-        iReprLit = Vec_IntEntry(vMap, iReprMini);
-        pObj     = Gia_ManObj( p, Abc_Lit2Var(iObjLit) );
-        pRepr    = Gia_ManObj( p, Abc_Lit2Var(iReprLit) );
-        fCompl   = Abc_LitIsCompl(iObjLit) ^ Abc_LitIsCompl(iReprLit) ^ pObj.fPhase ^ pRepr.fPhase;
-        Vec_IntWriteEntry( vRes, i, Abc_Var2Lit(iReprMini, fCompl) );
-    }
-    return vRes;
-}
 func Abc_FrameReadMiniAigEquivClasses(pAbc *Abc_Frame_t) *int32 {
     var vRes *Vec_Int_t;
     var pRes *int32;
@@ -396,94 +361,6 @@ func Abc_FrameReadMiniAigEquivClasses(pAbc *Abc_Frame_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_MiniAigReduce(p *Mini_Aig_t, pEquivs *int32) *Gia_Man_t {
-    var pGia, pTemp *Gia_Man_t;
-    var vCopies *Vec_Int_t;
-    var i, iGiaLit, nNodes int32;
-    // get the number of nodes
-    nNodes = Mini_AigNodeNum(p);
-    // create ABC network
-    pGia = Gia_ManStart( nNodes );
-    pGia.pName = Abc_UtilStrsav( "MiniAig" );
-    // create mapping from MiniAIG objects into ABC objects
-    vCopies = Vec_IntAlloc( nNodes );
-    Vec_IntPush( vCopies, 0 );
-    // iterate through the objects
-    Gia_ManHashAlloc( pGia );
-    for  i = 1; i < nNodes; i++  {
-        if Mini_AigNodeIsPi( p, i ) {
-            iGiaLit = Gia_ManAppendCi(pGia);
-        } else if Mini_AigNodeIsPo( p, i ) {
-            iGiaLit = Gia_ManAppendCo(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i));
-        } else if Mini_AigNodeIsAnd( p, i ) {
-            iGiaLit = Gia_ManHashAnd(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i), Gia_ObjFromMiniFanin1Copy(pGia, vCopies, p, i));
-        } else { assert(false, "0"); }
-        if pEquivs[i] != -1 {
-            iGiaLit = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(pEquivs[i])), Abc_LitIsCompl(pEquivs[i]) ); }
-        Vec_IntPush( vCopies, iGiaLit );
-    }
-    Gia_ManHashStop( pGia );
-    assert(Vec_IntSize(vCopies) == nNodes, "Vec_IntSize(vCopies) == nNodes");
-    Vec_IntFree( vCopies );
-    Gia_ManSetRegNum( pGia, Mini_AigRegNum(p) );
-    pGia = Gia_ManSeqCleanup( pTemp = pGia );
-    Gia_ManStop( pTemp );
-    return pGia;
-}
-func Gia_MiniAigMiter(p *Mini_Aig_t, pEquivs *int32) *Gia_Man_t {
-    var pGia, pTemp *Gia_Man_t;
-    var vCopies *Vec_Int_t;
-    var i, iGiaLit, iGiaLit2, nNodes, iPos, nPos, Temp int32;
-    // get the number of nodes
-    nNodes = Mini_AigNodeNum(p);
-    // create ABC network
-    pGia = Gia_ManStart( 2 * nNodes );
-    pGia.pName = Abc_UtilStrsav( "MiniAig" );
-    // create mapping from MiniAIG objects into ABC objects
-    vCopies = Vec_IntAlloc( nNodes );
-    Vec_IntPush( vCopies, 0 );
-    // iterate through the objects
-    Gia_ManHashAlloc( pGia );
-    for  i = 1; i < nNodes; i++  {
-        if Mini_AigNodeIsPi( p, i ) {
-            iGiaLit = Gia_ManAppendCi(pGia);
-        } else if Mini_AigNodeIsPo( p, i ) {
-            nPos++;
-            Vec_IntPush( vCopies, -1 );
-            continue;
-        
-        } else if Mini_AigNodeIsAnd( p, i ) {
-            iGiaLit = Gia_ManHashAnd(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i), Gia_ObjFromMiniFanin1Copy(pGia, vCopies, p, i));
-        } else { assert(false, "0"); }
-        Vec_IntPush( vCopies, iGiaLit );
-    }
-    assert(Vec_IntSize(vCopies) == nNodes, "Vec_IntSize(vCopies) == nNodes");
-    assert(nPos > Mini_AigRegNum(p), "nPos > Mini_AigRegNum(p)");
-    // create miters for each equiv class
-    for  i = 1; i < nNodes; i++  {
-        if pEquivs[i] == -1 {
-            continue; }
-        iGiaLit = Vec_IntEntry(vCopies, i);
-        iGiaLit2 = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(pEquivs[i])), Abc_LitIsCompl(pEquivs[i]) );
-        Gia_ManAppendCo( pGia, Gia_ManHashXor(pGia, iGiaLit, iGiaLit2) );
-    }
-    // create flop inputs
-    Temp = Gia_ManCoNum(pGia);
-    for  i = 1; i < nNodes; i++  {
-        if !Mini_AigNodeIsPo( p, i ) {
-            continue; }
-        if iPos++ >= nPos - Mini_AigRegNum(p) {
-            Gia_ManAppendCo(pGia, Gia_ObjFromMiniFanin0Copy(pGia, vCopies, p, i)); }
-    }
-    assert(iPos == nPos, "iPos == nPos");
-    assert(Mini_AigRegNum(p) == Gia_ManCoNum(pGia) - Temp, "Mini_AigRegNum(p) == Gia_ManCoNum(pGia) - Temp");
-    Gia_ManSetRegNum( pGia, Mini_AigRegNum(p) );
-    Gia_ManHashStop( pGia );
-    Vec_IntFree( vCopies );
-    pGia = Gia_ManCleanup( pTemp = pGia );
-    Gia_ManStop( pTemp );
-    return pGia;
-}
 func Gia_MiniAigVerify(pAbc *Abc_Frame_t, pFileName string) {
     var pEquivs *int32;
     var pGia *Gia_Man_t;
