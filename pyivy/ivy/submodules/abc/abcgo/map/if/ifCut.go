@@ -57,6 +57,9 @@ func If_CutVerifyCuts(set *If_Set_t, ordered int32) int32 {
 	return 1
 }
 func If_CutFilter(set *If_Set_t, c *If_Cut_t, saveFirst int32) int32 {
+	if set.nCuts < 0 || int(set.nCuts) >= len(set.ppCuts) || set.ppCuts[set.nCuts] != c {
+		panic("if: filter candidate is outside scratch slot")
+	}
 	for i := 0; i < int(set.nCuts); i++ {
 		other := set.ppCuts[i]
 		if other.nLeaves > c.nLeaves {
@@ -205,6 +208,9 @@ func If_ManSortCompare(p *If_Man_t, a, b *If_Cut_t) int32 {
 func If_ManSortCompare_old(p *If_Man_t, a, b *If_Cut_t) int32 {
 	if p.SortMode == 1 {
 		return ifCompare(p, a, b, "and")
+	}
+	if p.SortMode == 0 {
+		return ifCompare(p, a, b, "dna")
 	}
 	return ifCompare(p, a, b, "dan")
 }

@@ -3,6 +3,7 @@ package if_
 import (
 	"github.com/glycerine/abcgo/misc/mem"
 	"github.com/glycerine/abcgo/misc/tim"
+	abcutil "github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -16,7 +17,19 @@ type Vec_Mem_t = vec.Vec_Mem_t
 type Vec_Wec_t = vec.Vec_Wec_t
 type Hash_IntMan_t = vec.Hash_IntMan_t
 type Mem_Fixed_t = mem.Mem_Fixed_t
+type Mem_Flex_t = mem.Mem_Flex_t
 type Tim_Man_t = tim.Tim_Man_t
+
+func Vec_PtrSize(v *Vec_Ptr_t) int                  { return vec.Vec_PtrSize(v) }
+func Vec_PtrEntry(v *Vec_Ptr_t, i int) any          { return vec.Vec_PtrEntry(v, i) }
+func Vec_PtrArray(v *Vec_Ptr_t) []any               { return vec.Vec_PtrArray(v) }
+func Vec_IntArray(v *Vec_Int_t) []int32             { return vec.Vec_IntArray(v) }
+func Vec_MemReadEntry(v *Vec_Mem_t, i int) []uint64 { return vec.Vec_MemReadEntry(v, i) }
+func Vec_StrEntryP(v *Vec_Str_t, i int) *byte       { return vec.Vec_StrEntryP(v, i) }
+func Abc_Lit2Var(lit int32) int32                   { return abcutil.Abc_Lit2Var(lit) }
+func Abc_LitIsCompl(lit int32) int32                { return abcutil.Abc_LitIsCompl(lit) }
+func Abc_Lit2LitL(values []int32, lit int32) int32  { return abcutil.Abc_Lit2LitL(values, lit) }
+func Abc_MaxInt(a, b int32) int32                   { return abcutil.Abc_MaxInt(a, b) }
 
 /**CFile****************************************************************
 
@@ -180,12 +193,16 @@ type If_Man_t_ struct {
 	nPermWords, nObjBytes, nCutBytes, nSetBytes     int32
 	pMemObj, pMemSet                                *Mem_Fixed_t
 	pMemCi, pMemAnd, pFreeList                      *If_Set_t
+	ciCutSets                                       []*If_Set_t
+	ownedCutSets                                    []*If_Set_t
+	stopped                                         bool
 	nSmallSupp, nCutsTotal                          int32
 	nCutsUseless, nCutsCount                        [32]int32
 	nCutsCountAll, nCutsUselessAll, nCuts5, nCuts5a int32
 	pIfDsdMan                                       *If_DsdMan_t
 	vTtMem                                          [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Mem_t
 	vTtIsops                                        [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Wec_t
+	vTtIsopComplement                               [IF_MAX_FUNC_LUTSIZE + 1][]bool
 	vTtDsds                                         [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Int_t
 	vTtPerms, vTtVars                               [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Str_t
 	vTtDecs, vTtOccurs                              [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Int_t
@@ -229,18 +246,19 @@ type If_Set_t_ struct {
 }
 
 type If_Obj_t_ struct {
-	Type, fCompl0, fCompl1, fPhase, fRepr, fMark, fVisit, fSpec, fDriver, fSkipCut uint32
-	Level                                                                          uint32
-	Id, IdPio, nRefs, nVisits, nVisitsCopy                                         int32
-	pFanin0, pFanin1, pEquiv                                                       *If_Obj_t
-	EstRefs, Required, LValue                                                      float32
-	pCopy                                                                          any
-	iCopy                                                                          int32
-	pCutSet                                                                        *If_Set_t
-	CutBest                                                                        If_Cut_t
-	regular                                                                        *If_Obj_t
-	complement                                                                     bool
-	complemented                                                                   *If_Obj_t
+	Type                                                                     If_Type_t
+	fCompl0, fCompl1, fPhase, fRepr, fMark, fVisit, fSpec, fDriver, fSkipCut uint32
+	Level                                                                    uint32
+	Id, IdPio, nRefs, nVisits, nVisitsCopy                                   int32
+	pFanin0, pFanin1, pEquiv                                                 *If_Obj_t
+	EstRefs, Required, LValue                                                float32
+	pCopy                                                                    any
+	iCopy                                                                    int32
+	pCutSet                                                                  *If_Set_t
+	CutBest                                                                  If_Cut_t
+	regular                                                                  *If_Obj_t
+	complement                                                               bool
+	complemented                                                             *If_Obj_t
 }
 
 type If_Box_t struct {
@@ -268,6 +286,9 @@ func If_Not(p *If_Obj_t) *If_Obj_t {
 	if p == nil {
 		return nil
 	}
+	if p.complement {
+		return If_Regular(p)
+	}
 	p = If_Regular(p)
 	if p.complemented == nil {
 		q := *p
@@ -294,7 +315,7 @@ func If_IsComplement(p *If_Obj_t) int32 {
 func If_ManCiNum(p *If_Man_t) int32  { return p.nObjs[IF_CI] }
 func If_ManCoNum(p *If_Man_t) int32  { return p.nObjs[IF_CO] }
 func If_ManAndNum(p *If_Man_t) int32 { return p.nObjs[IF_AND] }
-func If_ManObjNum(p *If_Man_t) int32 { return Vec_PtrSize(p.vObjs) }
+func If_ManObjNum(p *If_Man_t) int32 { return int32(Vec_PtrSize(p.vObjs)) }
 
 func If_ManConst1(p *If_Man_t) *If_Obj_t         { return p.pConst1 }
 func ifObjectAt(v *Vec_Ptr_t, i int32) *If_Obj_t { return Vec_PtrEntry(v, int(i)).(*If_Obj_t) }
@@ -429,18 +450,20 @@ func If_CutTruthWR(p *If_Man_t, pCut *If_Cut_t) *word {
 	}
 	return &entry[0]
 }
-func If_CutTruthUR(p *If_Man_t, pCut *If_Cut_t) []uint32 {
+func If_CutTruthUR(p *If_Man_t, pCut *If_Cut_t) *uint32 {
 	words := If_CutTruthW(p, pCut)
 	if words == nil {
 		return nil
 	}
 	_ = words
 	n := int(p.nTruth6Words[pCut.nLeaves])
-	out := make([]uint32, 2*n)
-	for i, w := range p.puTempW[:n] {
-		out[2*i], out[2*i+1] = uint32(w), uint32(w>>32)
+	if len(p.pTruth32) < 2*n {
+		p.pTruth32 = make([]uint32, 2*n)
 	}
-	return out
+	for i, w := range p.puTempW[:n] {
+		p.pTruth32[2*i], p.pTruth32[2*i+1] = uint32(w), uint32(w>>32)
+	}
+	return &p.pTruth32[0]
 }
 func If_CutTruthW(p *If_Man_t, pCut *If_Cut_t) *word {
 	assert(pCut.iCutFunc >= 0, "pCut.iCutFunc >= 0")
@@ -464,7 +487,7 @@ func If_CutTruthW(p *If_Man_t, pCut *If_Cut_t) *word {
 	}
 	return &p.puTempW[0]
 }
-func If_CutTruth(p *If_Man_t, pCut *If_Cut_t) []uint32 { return If_CutTruthUR(p, pCut) }
+func If_CutTruth(p *If_Man_t, pCut *If_Cut_t) *uint32 { return If_CutTruthUR(p, pCut) }
 
 func If_CutDsdLit(p *If_Man_t, pCut *If_Cut_t) int32 {
 	return Abc_Lit2LitL(Vec_IntArray(p.vTtDsds[pCut.nLeaves]), If_CutTruthLit(pCut))
