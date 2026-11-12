@@ -97,25 +97,6 @@ func Gia_ManAutomSimulate(p *Gia_Man_t, vAlpha *Vec_Int_t, pSim string) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManBuild1Hot_rec(p *Gia_Man_t, pLits *int32, nLits int32, pZero *int32, pOne *int32) {
-    var Zero0, One0, Zero1, One1 int32;
-    if nLits == 1 {
-        *pZero = Abc_LitNot(pLits[0]);
-        *pOne  = pLits[0];
-        return;
-    }
-    Gia_ManBuild1Hot_rec( p, pLits,           nLits/2,         &Zero0, &One0 );
-    Gia_ManBuild1Hot_rec( p, pLits + nLits/2, nLits - nLits/2, &Zero1, &One1 );
-    *pZero = Gia_ManHashAnd( p, Zero0, Zero1 );
-    *pOne  = Gia_ManHashOr( p, Gia_ManHashAnd(p, Zero0, One1), Gia_ManHashAnd(p, Zero1, One0) );
-}
-func Gia_ManBuild1Hot(p *Gia_Man_t, vLits *Vec_Int_t) int32 {
-    var Zero, One int32;
-    assert(Vec_IntSize(vLits) > 0, "Vec_IntSize(vLits) > 0");
-    Gia_ManBuild1Hot_rec( p, Vec_IntArray(vLits), Vec_IntSize(vLits), &Zero, &One );
-    return One;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Converting regular expressions into sequential AIGs.]
@@ -127,26 +108,6 @@ func Gia_ManBuild1Hot(p *Gia_Man_t, vLits *Vec_Int_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_SymbSpecial(c byte) int32 { return c == '(' || c == ')' || c == '*' || c == '|'; }
-// collects info about input alphabet and state of the automaton
-func Gia_ManRexNumInputs(pStr string, pvAlphas **Vec_Int_t, pvStr2Sta **Vec_Int_t) int32 {
-    var i int32;
-    var nStates int32;
-    var Length int32 = len(pStr);
-    var vAlphas *Vec_Int_t   = Vec_IntAlloc( 100 );            // alphabet
-    var vStr2Sta *Vec_Int_t  = Vec_IntStartFull( Length + 1 ); // symbol to state
-    for  i = 0; i < Length; i++  {
-        if Gia_SymbSpecial(pStr[i]) != 0 {
-            continue; }
-        if Vec_IntFind(vAlphas, pStr[i]) == -1 {
-            Vec_IntPush( vAlphas, pStr[i] ); }
-        Vec_IntWriteEntry( vStr2Sta, i, nStates++ );
-    }
-    Vec_IntWriteEntry( vStr2Sta, i, nStates );
-    *pvAlphas  = vAlphas;
-    *pvStr2Sta = vStr2Sta;
-    return nStates;
-}
 // prints automaton
 func Gia_ManPrintAutom(pStr string, vStaTrans *Vec_Int_t) {
     var i int32;
@@ -189,25 +150,6 @@ func Gia_ManCollectReached(pStr string, vStaTrans *Vec_Int_t, iState int32, vRea
     Gia_ManPrintReached_rec( pStr, vStaTrans, iState + 1, vReached, vVisited, TravId );
 }
 // preprocesses the regular expression
-func Gia_ManRexPreprocess(pStr string) string {
-    // inlining of macro ABC_CALLOC
-    var pCopy string  = ((char *) calloc((size_t)(len(pStr) * 2 + 10), sizeof(char)));
-    var i, k int32;
-    pCopy[k++] = '(';
-    pCopy[k++] = '(';
-    for  i = 0; pStr[i]; i++  {
-        if pStr[i] == '(' {
-            pCopy[k++] = '(';
-        } else if pStr[i] == ')' {
-            pCopy[k++] = ')'; }
-        if pStr[i] != ' ' && pStr[i] != '\t' && pStr[i] != '\n' && pStr[i] != '\r' {
-            pCopy[k++] = pStr[i]; }
-    }
-    pCopy[k++] = ')';
-    pCopy[k++] = ')';
-    pCopy[k++] = '\0';
-    return pCopy;
-}
 // construct sequential AIG for the automaton
 func Gia_ManRex2Gia(pStrInit string, fOrder int32, fVerbose int32) *Gia_Man_t {
     var pNew *Gia_Man_t = nil;
