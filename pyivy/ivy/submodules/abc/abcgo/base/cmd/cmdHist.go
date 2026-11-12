@@ -1,177 +1,108 @@
 package cmd
 
-/**CFile****************************************************************
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+)
 
-  FileName    [cmdHist.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedures working with history.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: cmdHist.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "base/main/mainInt.h"
-//#include "cmd.h"
-//#include "cmdInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-const ABC_USE_HISTORY = 1
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cmd_HistoryAddCommand(p *Abc_Frame_t, command string) {
-    var nLastLooked int32  =   10;  // do not add history if the same entry appears among the last entries
-    var nLastSaved int32   = 1000;  // when saving a file, save no more than this number of last entries
-    var Buffer [ABC_MAX_STR]byte;
-    var Len int32;
-    if p.fBatchMode {
-        return; }
-    Len = len(command);
-    strcpy( Buffer, command );
-    if Len > 0 && Buffer[Len-1] == '\n' {
-        Buffer[Len-1] = 0; }
-    if strlen(Buffer) > 3 &&
-         strncmp(Buffer,"set",3) && 
-         strncmp(Buffer,"unset",5) && 
-         strncmp(Buffer,"time",4) && 
-         strncmp(Buffer,"quit",4) && 
-         strncmp(Buffer,"alias",5) && 
-         strncmp(Buffer,"source abc.rc",13) && 
-         strncmp(Buffer,"source ..\\abc.rc",16) && 
-         strncmp(Buffer,"history",7) && strncmp(Buffer,"hi ", 3) && strcmp(Buffer,"hi") &&
-         Buffer[strlen(Buffer)-1] != '?' {
-        var pStr string  = nil;
-        var i int32;
-        var Start int32 = Abc_MaxInt( 0, Vec_PtrSize(p.aHistory) - nLastLooked );
-        // do not enter if the same command appears among nLastLooked commands
-        Vec_PtrForEachEntryStart( char *, p.aHistory, pStr, i, Start )
-            if ( !strcmp(pStr, Buffer) )
-                break;
-        if i == Vec_PtrSize(p.aHistory) { // add new entry
-            Vec_PtrPush( p.aHistory, Extra_UtilStrsav(Buffer) );
-            Cmd_HistoryWrite( p, nLastSaved );
-        
-        } else { // put at the end
-            Vec_PtrRemove( p.aHistory, pStr );
-            Vec_PtrPush( p.aHistory, pStr );
-        }
-    }
+func Cmd_HistoryAddCommand(f *Abc_Frame_t, line string) {
+	if f.BatchMode {
+		return
+	}
+	line = strings.TrimSuffix(line, "\n")
+	line = strings.TrimSuffix(line, "\r")
+	if len(line) <= 3 || strings.HasSuffix(line, "?") {
+		return
+	}
+	for _, prefix := range []string{"set", "unset", "time", "quit", "alias", "source abc.rc", "source ..\\abc.rc", "history", "hi "} {
+		if strings.HasPrefix(line, prefix) {
+			return
+		}
+	}
+	if line == "hi" {
+		return
+	}
+	history := f.History()
+	start := len(history) - 10
+	if start < 0 {
+		start = 0
+	}
+	for i := start; i < len(history); i++ {
+		if history[i] == line {
+			history = append(history[:i], history[i+1:]...)
+			history = append(history, line)
+			f.SetHistory(history)
+			return
+		}
+	}
+	f.AppendHistory(line)
+	if _, exists := f.LookupFlag("history_file"); exists {
+		Cmd_HistoryWrite(f, 1000)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cmd_HistoryRead(p *Abc_Frame_t) {
-#if defined(WIN32) && defined(ABC_USE_HISTORY)
-    char Buffer[ABC_MAX_STR];
-    FILE * pFile;
-    assert( Vec_PtrSize(p->aHistory) == 0 );
-    pFile = fopen( "abc.history", "rb" );
-    if ( pFile == NULL )
-        return;
-    while ( fgets( Buffer, ABC_MAX_STR, pFile ) != NULL )
-    {
-        int Len = strlen(Buffer);
-        if ( Buffer[Len-1] == '\n' )
-            Buffer[Len-1] = 0;
-        Vec_PtrPush( p->aHistory, Extra_UtilStrsav(Buffer) );
-    }
-    fclose( pFile );
-#endif
+func historyPath(f *Abc_Frame_t) string {
+	if path, exists := f.LookupFlag("history_file"); exists {
+		return path
+	}
+	return "abc.history"
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cmd_HistoryWrite(p *Abc_Frame_t, Limit int32) {
-#if defined(WIN32) && defined(ABC_USE_HISTORY)
-    FILE * pFile;
-    char * pStr; 
-    int i;
-    pFile = fopen( "abc.history", "wb" );
-    if ( pFile == NULL )
-    {
-        Abc_Print( 0, "Cannot open file \"abc.history\" for writing.\n" );
-        return;
-    }
-    Limit = Abc_MaxInt( 0, Vec_PtrSize(p->aHistory)-Limit );
-    Vec_PtrForEachEntryStart( char *, p->aHistory, pStr, i, Limit )
-        fprintf( pFile, "%s\n", pStr );
-    fclose( pFile );
-#endif
+func Cmd_HistoryRead(f *Abc_Frame_t) {
+	file, err := os.Open(historyPath(f))
+	if os.IsNotExist(err) {
+		return
+	}
+	if err != nil {
+		fmt.Fprintln(f.Err, err)
+		return
+	}
+	defer file.Close()
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	scanner.Buffer(make([]byte, 4096), 1<<20)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintln(f.Err, err)
+		return
+	}
+	f.SetHistory(lines)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cmd_HistoryPrint(p *Abc_Frame_t, Limit int32) {
-#if defined(WIN32) && defined(ABC_USE_HISTORY) 
-    char * pStr; 
-    int i;
-    Limit = Abc_MaxInt( 0, Vec_PtrSize(p->aHistory)-Limit );
-    printf( "================== Command history ==================\n" );
-    Vec_PtrForEachEntryStart( char *, p->aHistory, pStr, i, Limit )
-        printf( "%s\n", pStr );
-    printf( "=====================================================\n" );
-#endif
+func Cmd_HistoryWrite(f *Abc_Frame_t, limit int32) {
+	history := f.History()
+	if limit < 0 {
+		limit = 0
+	}
+	if int(limit) < len(history) {
+		history = history[len(history)-int(limit):]
+	}
+	file, err := os.Create(historyPath(f))
+	if err != nil {
+		fmt.Fprintln(f.Err, err)
+		return
+	}
+	for _, line := range history {
+		if _, err := fmt.Fprintln(file, line); err != nil {
+			fmt.Fprintln(f.Err, err)
+			break
+		}
+	}
+	if err := file.Close(); err != nil {
+		fmt.Fprintln(f.Err, err)
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-//ABC_NAMESPACE_IMPL_END
-
+func Cmd_HistoryPrint(f *Abc_Frame_t, limit int32) {
+	history := f.History()
+	start := len(history) - int(limit)
+	if start < 0 {
+		start = 0
+	}
+	if start > len(history) {
+		start = len(history)
+	}
+	for i := start; i < len(history); i++ {
+		fmt.Fprintf(f.Out, "%2d : %s\n", len(history)-i, history[i])
+	}
+}

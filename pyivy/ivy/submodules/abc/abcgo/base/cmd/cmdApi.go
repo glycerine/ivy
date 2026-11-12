@@ -2,286 +2,196 @@ package cmd
 
 import (
 	"fmt"
+	abcmain "github.com/glycerine/abcgo/base/main"
+	"math"
 	"strconv"
 	"strings"
 )
 
-/**CFile****************************************************************
-
-  FileName    [cmdApi.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [External procedures of the command package.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: cmdApi.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "base/main/mainInt.h"
-//#include "cmdInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-func Cmd_CommandNameToId(sName string) Cmd_CommandId_t {
-    if !(int32(strings.Compare(sName, "alias")) != 0) {
-        return CMD_COMMAND_ALIAS; }
-    if !(int32(strings.Compare(sName, "source")) != 0) {
-        return CMD_COMMAND_SOURCE; }
-    if !(int32(strings.Compare(sName, "set")) != 0) {
-        return CMD_COMMAND_SET; }
-    if !(int32(strings.Compare(sName, "read_blif")) != 0) {
-        return CMD_COMMAND_READ_BLIF; }
-    if !(int32(strings.Compare(sName, "read_aiger")) != 0) {
-        return CMD_COMMAND_READ_AIGER; }
-    if !(int32(strings.Compare(sName, "strash")) != 0) {
-        return CMD_COMMAND_STRASH; }
-    if !(int32(strings.Compare(sName, "print_stats")) != 0) {
-        return CMD_COMMAND_PRINT_STATS; }
-    if !(int32(strings.Compare(sName, "pdr")) != 0) {
-        return CMD_COMMAND_PDR; }
-    if !(int32(strings.Compare(sName, "write_aiger_cex")) != 0) {
-        return CMD_COMMAND_WRITE_AIGER_CEX; }
-    return CMD_COMMAND_UNKNOWN;
+func Cmd_CommandNameToId(name string) Cmd_CommandId_t {
+	switch name {
+	case "alias":
+		return CMD_COMMAND_ALIAS
+	case "source":
+		return CMD_COMMAND_SOURCE
+	case "set":
+		return CMD_COMMAND_SET
+	case "read_blif":
+		return CMD_COMMAND_READ_BLIF
+	case "read_aiger":
+		return CMD_COMMAND_READ_AIGER
+	case "strash":
+		return CMD_COMMAND_STRASH
+	case "print_stats":
+		return CMD_COMMAND_PRINT_STATS
+	case "pdr":
+		return CMD_COMMAND_PDR
+	case "write_aiger_cex":
+		return CMD_COMMAND_WRITE_AIGER_CEX
+	}
+	return CMD_COMMAND_UNKNOWN
+}
+func Cmd_CommandIsDefined(f *Abc_Frame_t, name string) int32 {
+	_, exists := f.LookupCommand(name)
+	if exists {
+		return 1
+	}
+	return 0
+}
+func Cmd_CommandAdd(f *Abc_Frame_t, group, name string, handler Cmd_CommandFuncType, changes int32) {
+	if handler == nil {
+		panic("nil command handler")
+	}
+	if _, exists := f.LookupCommand(name); exists {
+		fmt.Fprintf(f.Err, "Cmd warning: redefining '%s'\n", name)
+	}
+	if err := f.RegisterCommand(abcmain.Command{Name: name, Group: group, ChangesNetwork: changes != 0, Handler: func(frame *abcmain.Frame, args []string) int32 { return handler(frame, int32(len(args)), args) }}); err != nil {
+		panic(err)
+	}
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cmd_CommandIsDefined(pAbc *Abc_Frame_t, sName string) int32 {
-    return st__is_member( pAbc.tCommands, sName );
+// StatisticsProvider is implemented by mapped-network adapters without making
+// the command interpreter depend on concrete network or gate-library packages.
+type StatisticsProvider interface {
+	CommandStatistics() (inputs, outputs, nodes int, area float64, depth int)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cmd_CommandAdd(pAbc *Abc_Frame_t, sGroup string, sName string, pFunc Cmd_CommandFuncType, fChanges int32) {
-    char * key;
-    var value string;
-    var pCommand *Abc_Command;
-    var fStatus int32;
-
-    key = sName;
-    if st__delete( pAbc.tCommands, &key, &value ) {
-        // delete existing definition for this command 
-        fmt.Fprintf(pAbc.Err, "Cmd warning: redefining '%s'\n", sName);
-        CmdCommandFree( (Abc_Command *)value );
-    }
-
-    // create the new command
-    pCommand = new(Abc_Command);
-    pCommand.sName   = Extra_UtilStrsav( sName );
-    pCommand.sGroup  = Extra_UtilStrsav( sGroup );
-    pCommand.Id      = Cmd_CommandNameToId( sName );
-    pCommand.pFunc   = pFunc;
-    pCommand.fChange = fChanges;
-    fStatus = st__insert( pAbc.tCommands, pCommand.sName, (char *)pCommand );
-    assert(!(fStatus != 0), "!fStatus");  // the command should not be in the table
+func Cmd_CommandHandleSpecial(f *Abc_Frame_t, text string) int32 {
+	pi, po, nodes, depth := 0, 0, 0, 0
+	area := 0.0
+	if provider, ok := f.Network().(StatisticsProvider); ok {
+		pi, po, nodes, area, depth = provider.CommandStatistics()
+	}
+	if strings.Contains(text, "#PS") {
+		fmt.Fprintf(f.Out, "pi=%d po=%d fn=%d ma=%.1f de=%d\n", pi, po, nodes, area, depth)
+		return 1
+	}
+	if strings.Contains(text, "#CEC") {
+		fmt.Fprintf(f.Out, "proofStatus=%d\n", f.Status)
+		return 1
+	}
+	if !strings.Contains(text, "#ASSERT") {
+		return 0
+	}
+	at := strings.LastIndexByte(text, '=')
+	if at < 0 {
+		return 0
+	}
+	want, err := strconv.ParseFloat(strings.TrimSpace(text[at+1:]), 64)
+	if err != nil {
+		return 0
+	}
+	got := 0.0
+	epsilon := 0.0
+	switch {
+	case strings.Contains(text, "_PI_"):
+		got = float64(pi)
+	case strings.Contains(text, "_PO_"):
+		got = float64(po)
+	case strings.Contains(text, "_NODE_"):
+		got = float64(nodes)
+	case strings.Contains(text, "_AREA_"):
+		got = area
+		epsilon = 1
+	case strings.Contains(text, "_DEPTH_"):
+		got = float64(depth)
+	default:
+		return 0
+	}
+	passed := false
+	if strings.Contains(text, "==") {
+		passed = math.Abs(got-want) <= epsilon
+	} else if strings.Contains(text, "<=") {
+		passed = got <= want+epsilon
+	} else {
+		return 0
+	}
+	if passed {
+		fmt.Fprintln(f.Out, "succeeded")
+	} else {
+		fmt.Fprintln(f.Out, "failed")
+	}
+	return 1
 }
 
-/**Function*************************************************************
+// Dispatcher installs the complete command language on Frame's shared registry.
+type Dispatcher struct{}
 
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cmd_CommandHandleSpecial(pAbc *Abc_Frame_t, sCommand string) int32 {
-    var pNtk *Abc_Ntk_t  = Abc_FrameReadNtk(pAbc);
-    var piCountNew int32;
-    if (pNtk != nil) && Abc_NtkHasMapping(pNtk) {
-        piCountNew = Abc_NtkCiNum(pNtk);
-    } else {
-        piCountNew = 0;
-    }
-    var piCount int32;
-    var poCountNew int32;
-    if (pNtk != nil) && Abc_NtkHasMapping(pNtk) {
-        poCountNew = Abc_NtkCoNum(pNtk);
-    } else {
-        poCountNew = 0;
-    }
-    var poCount int32;
-    var ndCountNew int32;
-    if (pNtk != nil) && Abc_NtkHasMapping(pNtk) {
-        ndCountNew = Abc_NtkNodeNum(pNtk);
-    } else {
-        ndCountNew = 0;
-    }
-    var ndCount int32;
-    var AreaNew float64;
-    if (pNtk != nil) && Abc_NtkHasMapping(pNtk) {
-        AreaNew = Abc_NtkGetMappedArea(pNtk);
-    } else {
-        AreaNew = 0;
-    }
-    var Area float64;
-    var DepthNew int32;
-    if (pNtk != nil) && Abc_NtkHasMapping(pNtk) {
-        DepthNew = Abc_NtkLevel(pNtk);
-    } else {
-        DepthNew = 0;
-    }
-    var Depth int32;
-    if strstr(sCommand, "#PS") {
-        fmt.Printf("pi=%d ", piCountNew);
-        fmt.Printf("po=%d ", poCountNew);
-        fmt.Printf("fn=%d ", ndCountNew);
-        fmt.Printf("ma=%.1f ", AreaNew);
-        fmt.Printf("de=%d ", DepthNew);
-        fmt.Printf("\n");
-        return 1;
-    }
-    if strstr(sCommand, "#CEC") {
-        //int proofStatus = Abc_NtkVerifyUsingCec(pNtk);
-        var proofStatus int32  = 1;
-        // -1 (undecided), 0 (different), 1 (equivalent)
-        fmt.Printf("proofStatus=%d\n", proofStatus);
-        return 1;
-    }
-    if strstr(sCommand, "#ASSERT") {
-        var Status int32;
-        var pNumb string   = strrchr( (char *)sCommand, '=' );
-        if strstr(sCommand, "_PI_") {
-            if pNumb {
-                piCount = strconv.Atoi(pNumb+1);
-            } else {
-                piCount = 0;
-            }
-            if strstr( sCommand, "==" ) {
-                Status = piCountNew == piCount;
-            } else if strstr( sCommand, "<=" ) {
-                Status = piCountNew <= piCount;
-            } else { return 0; }
-        
-        } else if strstr(sCommand, "_PO_") {
-            if pNumb {
-                poCount = strconv.Atoi(pNumb+1);
-            } else {
-                poCount = 0;
-            }
-            if strstr( sCommand, "==" ) {
-                Status = poCountNew == poCount;
-            } else if strstr( sCommand, "<=" ) {
-                Status = poCountNew <= poCount;
-            } else { return 0; }
-        
-        } else if strstr(sCommand, "_NODE_") {
-            if pNumb {
-                ndCount = strconv.Atoi(pNumb+1);
-            } else {
-                ndCount = 0;
-            }
-            if strstr( sCommand, "==" ) {
-                Status = ndCountNew == ndCount;
-            } else if strstr( sCommand, "<=" ) {
-                Status = ndCountNew <= ndCount;
-            } else { return 0; }
-        
-        } else if strstr(sCommand, "_AREA_") {
-            var Eplison float64  = 1.0;
-            if pNumb {
-                Area = atof(pNumb+1);
-            } else {
-                Area = 0;
-            }
-            if strstr( sCommand, "==" ) {
-                Status = AreaNew >= Area - Eplison && AreaNew <= Area + Eplison;
-            } else if strstr( sCommand, "<=" ) {
-                Status = AreaNew <= Area + Eplison;
-            } else { return 0; }
-        
-        } else if strstr(sCommand, "_DEPTH_") {
-            if pNumb {
-                Depth = strconv.Atoi(pNumb+1);
-            } else {
-                Depth = 0;
-            }
-            if strstr( sCommand, "==" ) {
-                Status = DepthNew == Depth;
-            } else if strstr( sCommand, "<=" ) {
-                Status = DepthNew <= Depth;
-            } else { return 0; }
-        
-        } else { return 0; }
-        fmt.Printf("%s\n", Status ? "succeeded" : "failed");
-        return 1;
-    }
-    return 0;
+func (Dispatcher) Execute(f *abcmain.Frame, text string) int32 {
+	return executeLine(f, text, true, new(int))
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cmd_CommandExecute(pAbc *Abc_Frame_t, sCommand string) int32 {
-    var fStatus, argc, loop int32;
-    char * sCommandNext;
-    var argv *string;
-
-    if !pAbc.fAutoexac && !pAbc.fSource { 
-        Cmd_HistoryAddCommand(pAbc, sCommand); }
-    sCommandNext = sCommand;
-    for 
-    {
-        if sCommandNext[0] == '#' && (Cmd_CommandHandleSpecial( pAbc, sCommandNext ) != 0) {
-            break; }
-        sCommandNext = CmdSplitLine( pAbc, sCommandNext, &argc, &argv );
-        loop = 0;
-        fStatus = CmdApplyAlias( pAbc, &argc, &argv, &loop );
-        if fStatus == 0 { 
-            fStatus = CmdCommandDispatch( pAbc, &argc, &argv ); }
-        CmdFreeArgv( argc, argv );
-    
-if !( fStatus == 0 && *sCommandNext != '\0' ) { break }
-} 
-    
-    return fStatus;
+func Cmd_CommandExecute(f *Abc_Frame_t, text string) int32 {
+	return executeLine(f, text, true, new(int))
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
+func executeLine(f *Abc_Frame_t, text string, history bool, expansions *int) int32 {
+	if history && f.SourceDepth() == 0 {
+		Cmd_HistoryAddCommand(f, text)
+		if state, ok := f.Resource("cmd:owned-streams").(*commandStreams); ok && state.history != nil {
+			fmt.Fprintln(state.history, text)
+		}
+	}
+	for text != "" {
+		if strings.HasPrefix(strings.TrimSpace(text), "#") && Cmd_CommandHandleSpecial(f, strings.TrimSpace(text)) != 0 {
+			return 0
+		}
+		command, rest, err := SplitCommand(text)
+		if err != nil {
+			fmt.Fprintln(f.Err, err)
+			return 1
+		}
+		text = rest
+		if len(command.Args) == 0 {
+			continue
+		}
+		if status := executeParsed(f, command, expansions, true); status != 0 {
+			return status
+		}
+	}
+	return 0
+}
+func executeParsed(f *Abc_Frame_t, command ParsedCommand, expansions *int, aliases bool) int32 {
+	if aliases {
+		if parts, ok := f.LookupAlias(command.Args[0]); ok {
+			*expansions++
+			if *expansions > 200 {
+				fmt.Fprintln(f.Err, "** cmd warning: alias loop")
+				return 1
+			}
+			commands, err := ParseCommands(strings.Join(parts, " "))
+			if err != nil {
+				fmt.Fprintln(f.Err, err)
+				return 1
+			}
+			if len(commands) == 0 {
+				return 0
+			}
+			last := len(commands) - 1
+			commands[last].Args = append(commands[last].Args, command.Args[1:]...)
+			for _, arg := range command.Args[1:] {
+				commands[last].Raw += " " + shellQuote(arg)
+			}
+			for i, next := range commands {
+				allow := !(i == 0 && len(next.Args) > 0 && next.Args[0] == command.Args[0])
+				if status := executeParsed(f, next, expansions, allow); status != 0 {
+					return status
+				}
+			}
+			return 0
+		}
+	}
+	if strings.HasPrefix(command.Args[0], "!") {
+		return executeShell(f, strings.TrimSpace(strings.TrimPrefix(command.Raw, "!")))
+	}
+	args := command.Args
+	if _, exists := f.LookupCommand(args[0]); !exists && len(args) == 1 && strings.Contains(args[0], ".") {
+		args = append([]string{"read"}, args...)
+	}
+	status := f.Dispatch(args)
+	if status == 0 {
+		if automatic, exists := f.LookupFlag("autoexec"); exists && automatic != "" && f.EnterAutoexec() {
+			status = executeLine(f, automatic, false, new(int))
+			f.LeaveAutoexec()
+		}
+	}
+	return status
+}

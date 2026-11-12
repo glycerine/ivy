@@ -1,0 +1,31 @@
+# Command core review
+
+Scope: parser.go, cmd.h.go, cmdInt.go, cmdFlag.go, cmdAlias.go,
+cmdApi.go, cmdHist.go, cmdUtils.go, cmd.c.go, cmdLoad.go, cmdStarter.go,
+parser_test.go and core_test.go. cmdAuto.go and cmdPlugin.go remain untranslated;
+the full package is not yet importable.
+
+## Readability and idiomatic Go pass
+
+Frame owns commands, aliases, flags, history, backups, timing and lifecycle.
+The command package installs a dispatcher and registers definitions rather than
+maintaining parallel registries. Shell commands retain their original quoted
+text; external executable commands pass arguments directly to os/exec. Starter
+uses a bounded worker pool and waits for every child instead of polling a global
+thread counter. Redirected streams are lifecycle resources with explicit close.
+
+## Separate bug and fidelity pass
+
+Fixed exact `~` expansion (previously produced home/~). Alias commands preceding
+the final alias expansion now share the recursion budget, with a regression for
+recursive prefixes. History redirection now actually writes executed commands;
+regression reads the file. Starter rejects fewer than two cores instead of
+reproducing the source's infinite wait, propagates child failures, and serializes
+shared writers. Its error variable is local to each worker. Tests cover quoted
+semicolons, source nesting cleanup, alias cycles, autoexec recursion prevention,
+history logging and failed child completion. The #CEC diagnostic reads real
+Frame status instead of the source's hardcoded successful result.
+
+The selected scope passes race tests and vet. Remaining risks are the incomplete
+Auto/Plugin modules and external synthesis-tool command adapters, which are not
+claimed as completed functionality by this review.
