@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/aig/miniaig"
 	abcmain "github.com/glycerine/abcgo/base/main"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -39,7 +40,7 @@ func (p *Gia_Man_t) AigerModel() (*ioa.Model, error) {
 }
 
 func (bridge *FrameDataBridge) Export(frame *abcmain.Frame, format string) (any, error) {
-	if format != "gia-aiger" {
+	if format != "gia-aiger" && format != "gia-mini-aig" && format != "gia-mini-lut" && format != "gia-mini-lut-attributes" {
 		if bridge.Other != nil {
 			return bridge.Other.Export(frame, format)
 		}
@@ -49,8 +50,33 @@ func (bridge *FrameDataBridge) Export(frame *abcmain.Frame, format string) (any,
 	if !ok || p == nil {
 		return nil, fmt.Errorf("gia: frame has no manager")
 	}
-	// Snapshot now: a later frame replacement must not invalidate the export.
-	return p.AigerModel()
+	switch format {
+	case "gia-mini-aig":
+		return Gia_ManToMiniAig(p), nil
+	case "gia-mini-lut":
+		if Gia_ManHasMapping(p) == 0 {
+			return nil, fmt.Errorf("gia: MiniLUT export requires mapping")
+		}
+		mini := Gia_ManToMiniLut(p)
+		var copies *Vec_Int_t
+		snapshot := Gia_ManFromMiniLut(mini, &copies)
+		frame.SetResource("pGiaMiniLut", snapshot)
+		frame.SetResource("vCopyMiniLut", copies)
+		return mini, nil
+	case "gia-mini-lut-attributes":
+		mini, ok := frame.Resource("miniLutAttrInput").(*miniaig.Mini_Lut_t)
+		if !ok || mini == nil || Gia_ManHasMapping(p) == 0 {
+			return nil, fmt.Errorf("gia: MiniLUT attributes require a mapped manager and LUT")
+		}
+		for id := int32(1); id < p.nObjs; id++ {
+			if Gia_ObjIsLut(p, id) != 0 && p.pObjs[id].Value >= uint32(miniaig.Mini_LutNodeNum(mini)) {
+				return nil, fmt.Errorf("gia: MiniLUT does not match the last export")
+			}
+		}
+		return string(Gia_ManToMiniLutAttr(p, mini)), nil
+	default:
+		return p.AigerModel()
+	}
 }
 
 type frameWitness interface {
@@ -58,6 +84,34 @@ type frameWitness interface {
 }
 
 func (bridge *FrameDataBridge) Import(frame *abcmain.Frame, format string, value any) error {
+	if format == "gia-mini-lut-attributes" {
+		mini, ok := value.(*miniaig.Mini_Lut_t)
+		if !ok || mini == nil || !miniaig.Mini_LutCheck(mini) {
+			return fmt.Errorf("gia: invalid MiniLUT")
+		}
+		frame.SetResource("miniLutAttrInput", mini)
+		return nil
+	}
+	if format == "gia-mini-aig" {
+		mini, ok := value.(*miniaig.Mini_Aig_t)
+		if !ok || mini == nil || !miniaig.Mini_AigCheck(mini) {
+			return fmt.Errorf("gia: invalid MiniAIG")
+		}
+		var copies *Vec_Int_t
+		p := Gia_ManFromMiniAig(mini, &copies)
+		frame.SetResource("pGiaMiniAig", Gia_ManDup(p))
+		frame.SetResource("vCopyMiniAig", copies)
+		frame.SetResource("pGia", p)
+		return nil
+	}
+	if format == "gia-mini-lut" {
+		mini, ok := value.(*miniaig.Mini_Lut_t)
+		if !ok || mini == nil || !miniaig.Mini_LutCheck(mini) {
+			return fmt.Errorf("gia: invalid MiniLUT")
+		}
+		frame.SetResource("pGia", Gia_ManFromMiniLut(mini, nil))
+		return nil
+	}
 	if format == "gia-aiger" {
 		provider, ok := value.(ioa.AigerProvider)
 		if !ok {

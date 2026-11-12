@@ -56,26 +56,8 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Abc_FrameGiaInputMiniAig(pAbc *Abc_Frame_t, p any) {
-    var pGia *Gia_Man_t;
-    if pAbc == nil {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n"); }
-    Gia_ManStopP( &pAbc.pGiaMiniAig );
-    Vec_IntFreeP( &pAbc.vCopyMiniAig );
-    pGia = Gia_ManFromMiniAig( (Mini_Aig_t *)p, &pAbc.vCopyMiniAig );
-    Abc_FrameUpdateGia( pAbc, pGia );
-    pAbc.pGiaMiniAig = Gia_ManDup( pGia );
-//    Gia_ManDelete( pGia );
-}
-func Abc_FrameGiaOutputMiniAig(pAbc *Abc_Frame_t) any {
-    var pGia *Gia_Man_t;
-    if pAbc == nil {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n"); }
-    pGia = Abc_FrameReadGia( pAbc );
-    if pGia == nil {
-        fmt.Printf("Current network in ABC framework is not defined.\n"); }
-    return Gia_ManToMiniAig( pGia );
-}
+
+
 
 /**Function*************************************************************
 
@@ -130,37 +112,9 @@ func Gia_ManWriteMiniAig(pGia *Gia_Man_t, pFileName string) {
   SeeAlso     []
 
 ***********************************************************************/
-func Abc_FrameGiaInputMiniLut(pAbc *Abc_Frame_t, p any) {
-    var pGia *Gia_Man_t;
-    if pAbc == nil {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n"); }
-    pGia = Gia_ManFromMiniLut( (Mini_Lut_t *)p, nil );
-    Abc_FrameUpdateGia( pAbc, pGia );
-//    Gia_ManDelete( pGia );
-}
-func Abc_FrameGiaOutputMiniLut(pAbc *Abc_Frame_t) any {
-    var pRes *Mini_Lut_t  = nil;
-    var pGia *Gia_Man_t;
-    if pAbc == nil {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n"); }
-    Gia_ManStopP( &pAbc.pGiaMiniLut );
-    Vec_IntFreeP( &pAbc.vCopyMiniLut );
-    pGia = Abc_FrameReadGia( pAbc );
-    if pGia == nil {
-        fmt.Printf("Current network in ABC framework is not defined.\n"); }
-    pRes = Gia_ManToMiniLut( pGia );
-    pAbc.pGiaMiniLut = Gia_ManFromMiniLut( pRes, &pAbc.vCopyMiniLut );
-    return pRes;
-}
-func Abc_FrameGiaOutputMiniLutAttr(pAbc *Abc_Frame_t, pMiniLut any) string {
-    var pGia *Gia_Man_t;
-    if pAbc == nil {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n"); }
-    pGia = Abc_FrameReadGia( pAbc );
-    if pGia == nil {
-        fmt.Printf("Current network in ABC framework is not defined.\n"); }
-    return Gia_ManToMiniLutAttr( pGia, pMiniLut );
-}
+
+
+
 
 /**Function*************************************************************
 
