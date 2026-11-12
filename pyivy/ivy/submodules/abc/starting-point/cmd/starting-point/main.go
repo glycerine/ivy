@@ -142,7 +142,7 @@ func run(args []string) error {
 		Package    string
 		DurationNS int64
 		Files      []startingpoint.Result
-	}{"prototype-53", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
+	}{"prototype-54", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
 	if err != nil {
 		return err
 	}

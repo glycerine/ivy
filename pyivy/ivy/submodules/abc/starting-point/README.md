@@ -292,3 +292,9 @@ Configuration templates omit recognized header guards: a matching `#ifndef NAME`
 and empty `#define NAME` pair near the top of a `.h` file, with comments and
 preamble directives allowed. This does not depend on the symbol's spelling.
 Existing `_starting.cfg` files are preserved; move one aside to regenerate it.
+
+Template guard filtering also recognizes `#if !defined(NAME)` and early empty
+header-specific marker definitions used by irregular ABC headers (including
+markers defined before their later guard test). Valued or unrelated feature
+macros remain configuration candidates; this filtering does not select source
+branches automatically.

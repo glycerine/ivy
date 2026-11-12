@@ -28,7 +28,7 @@ func WriteConfigTemplate(path string, sources []string) (bool, error) {
 		} // fallback files may not lex
 		guards := map[int]bool{}
 		if strings.EqualFold(filepath.Ext(source), ".h") {
-			for name, offset := range configHeaderGuards(ts) {
+			for name, offset := range configHeaderGuards(ts, source) {
 				guardNames[name] = true
 				guards[offset] = true
 			}
@@ -94,7 +94,7 @@ func WriteConfigTemplate(path string, sources []string) (bool, error) {
 // Match a near-top #ifndef NAME / #define NAME pair in a header. Comments and
 // whitespace do not interrupt the pair. Preamble directives are allowed; stop
 // at ordinary code, and do not mistake nested platform choices for file guards.
-func configHeaderGuards(all []Token) map[string]int {
+func configHeaderGuards(all []Token, source string) map[string]int {
 	var ts []Token
 	for _, t := range all {
 		if t.Kind != "space" && t.Kind != "comment" {
@@ -102,27 +102,54 @@ func configHeaderGuards(all []Token) map[string]int {
 		}
 	}
 	guards := map[string]int{}
+	argument := func(t Token) string {
+		parts := directiveParts.FindStringSubmatch(t.Text)
+		if len(parts) < 3 {
+			return ""
+		}
+		tokens, err := Lex(parts[2])
+		if err != nil {
+			return ""
+		}
+		return strings.TrimSpace(Mask(tokens))
+	}
+	guardCondition := func(t Token) string {
+		name := argument(t)
+		if directiveName(t) == "ifndef" && identifier.MatchString(name) {
+			return name
+		}
+		if directiveName(t) == "if" {
+			if match := negativeDefinedGuard.FindStringSubmatch(name); match != nil {
+				if match[1] != "" {
+					return match[1]
+				}
+				return match[2]
+			}
+		}
+		return ""
+	}
 	depth := 0
 	for i, t := range ts {
 		if i >= 32 || t.Kind != "directive" {
 			break
 		}
 		kind := directiveName(t)
-		if depth == 0 && kind == "ifndef" && i+1 < len(ts) && directiveName(ts[i+1]) == "define" {
-			argument := func(t Token) string {
-				parts := directiveParts.FindStringSubmatch(t.Text)
-				if len(parts) < 3 {
-					return ""
-				}
-				tokens, err := Lex(parts[2])
-				if err != nil {
-					return ""
-				}
-				return strings.TrimSpace(Mask(tokens))
-			}
+		// Some ABC headers define their internal marker before testing it, or
+		// define it under a differently named outer guard. Require header identity
+		// and an empty definition; never treat a valued feature macro as a guard.
+		if kind == "define" && depth <= 1 {
 			name := argument(t)
-			if identifier.MatchString(name) && argument(ts[i+1]) == name {
+			if identifier.MatchString(name) && headerSpecificGuard(name, source) {
+				guards[name] = -1
+			}
+		}
+		if depth == 0 && i+1 < len(ts) && directiveName(ts[i+1]) == "define" {
+			name, defined := guardCondition(t), argument(ts[i+1])
+			if name != "" && (defined == name || (headerSpecificGuard(name, source) && headerSpecificGuard(defined, source))) {
 				guards[name] = t.Start
+				if defined != name {
+					guards[defined] = t.Start
+				}
 			}
 		}
 		switch kind {
@@ -132,5 +159,22 @@ func configHeaderGuards(all []Token) map[string]int {
 			depth--
 		}
 	}
+	// A reversed guard test may occur after declarations or namespace markers.
+	for _, t := range ts {
+		name := guardCondition(t)
+		if _, ok := guards[name]; ok {
+			guards[name] = t.Start
+		}
+	}
 	return guards
+}
+
+var negativeDefinedGuard = regexp.MustCompile(`^!\s*defined\s*(?:\(\s*([A-Za-z_]\w*)\s*\)|([A-Za-z_]\w*))$`)
+
+func headerSpecificGuard(name, source string) bool {
+	stem := strings.ReplaceAll(filepath.Base(source), ".", "_")
+	if strings.EqualFold(strings.Trim(name, "_"), stem) {
+		return true
+	}
+	return strings.HasPrefix(name, "ABC__") && strings.HasSuffix(strings.ToLower(name), "__"+strings.ToLower(stem))
 }

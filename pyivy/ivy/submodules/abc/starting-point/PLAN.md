@@ -1784,3 +1784,24 @@ preamble directives, code outside the guard, genuine feature names ending in _h,
 valued defines, mismatches, late/nested pairs. Library and CLI tests pass; no
 experiments were tested. Installed prototype-53. Existing templates retain the
 non-overwrite policy: move an existing _starting.cfg aside before regenerating.
+
+
+## Prototype 54: irregular ABC header guards in configuration templates
+
+Inspected the actual missed headers. espresso.h defines its ABC__...__espresso_h
+marker at line 21 before testing it at line 58. place_base.h tests
+!defined(PLACE_BASE_H_) at line 10, defines a differently named ABC__...__place_base_h
+marker at line 11, and tests that marker again at line 24. Neither matches the
+ordinary adjacent same-name ifndef/define pattern.
+
+Extend template-only detection to near-top empty definitions whose names identify
+the current header (basename-derived names or ABC__...__basename_h), including
+later reversed tests. Recognize #if !defined(NAME) as well. A mismatched outer
+pair is accepted only when both names identify this header. Valued definitions,
+unrelated header names and ordinary feature flags remain configurable. This does
+not change source branch selection or remove these unconventional source blocks.
+
+Regression tests use both real headers and verify IBM_WATC, IBMPC and BPI remain
+in the template. Existing Glucose tests and guard-boundary tests continue to pass.
+Library/CLI tests pass; experiments excluded. Installed prototype-54. Existing
+templates are still not overwritten automatically.
