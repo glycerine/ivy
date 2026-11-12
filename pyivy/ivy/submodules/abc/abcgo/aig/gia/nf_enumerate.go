@@ -12,6 +12,7 @@ type nfCutManager struct {
 	sets, delays []int32
 	flows, refs  []float32
 	counts       [6]float64
+	exactFlow    bool
 }
 
 func newNfCutManager(g *Gia_Man_t, pars *Jf_Par_t, library *nfLibrary) *nfCutManager {
@@ -84,7 +85,7 @@ func (p *nfCutManager) merge(id int32) {
 			*cuts[n] = third[i]
 			cuts[n].iFunc ^= uint32(complement)
 			p.params(cuts[n], p.refs[id])
-			n = Nf_SetAddCut(cuts[:], n, cap)
+			n = p.addCut(cuts[:], n, cap)
 		}
 	}
 	if Gia_ObjIsMuxId(p.graph, id) != 0 {
@@ -107,7 +108,7 @@ func (p *nfCutManager) merge(id int32) {
 						cuts[n].Sign = Nf_CutGetSign(cuts[n].pLeaves[:cuts[n].nLeaves])
 					}
 					p.params(cuts[n], p.refs[id])
-					n = Nf_SetAddCut(cuts[:], n, cap)
+					n = p.addCut(cuts[:], n, cap)
 				}
 			}
 		}
@@ -128,7 +129,7 @@ func (p *nfCutManager) merge(id int32) {
 					cuts[n].Sign = Nf_CutGetSign(cuts[n].pLeaves[:cuts[n].nLeaves])
 				}
 				p.params(cuts[n], p.refs[id])
-				n = Nf_SetAddCut(cuts[:], n, cap)
+				n = p.addCut(cuts[:], n, cap)
 			}
 		}
 	}
@@ -159,4 +160,25 @@ func (p *nfCutManager) computeCuts() {
 			p.merge(id)
 		}
 	}
+}
+
+// addCut uses Pf's exact flow comparison when requested; Nf uses its
+// epsilon-aware comparison.
+func (p *nfCutManager) addCut(cuts []*Nf_Cut_t, n, limit int32) int32 {
+	if !p.exactFlow {
+		return Nf_SetAddCut(cuts, n, limit)
+	}
+	if n == 0 {
+		return 1
+	}
+	n = Nf_SetLastCutContainsArea(cuts, n)
+	for i := n; i > 0; i-- {
+		a, b := cuts[i-1], cuts[i]
+		less := a.Useless < b.Useless || a.Useless == b.Useless && (a.Flow < b.Flow || a.Flow == b.Flow && (a.Delay < b.Delay || a.Delay == b.Delay && a.nLeaves < b.nLeaves))
+		if less {
+			break
+		}
+		cuts[i-1], cuts[i] = cuts[i], cuts[i-1]
+	}
+	return min(n+1, limit-1)
 }
