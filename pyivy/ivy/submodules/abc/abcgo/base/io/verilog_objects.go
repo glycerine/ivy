@@ -12,38 +12,7 @@ import (
 )
 
 func Io_WriteVerilogObjects(w io.Writer, n *abc.Network, onlyAnds int32) {
-	boxes := n.Boxes()
-	count := 0
-	for _, box := range boxes {
-		if box.Kind != abc.ObjectLatch {
-			count++
-		}
-	}
-	width := len(strconv.Itoa(count))
-	index := 0
-	for _, box := range boxes {
-		if box.Kind == abc.ObjectLatch {
-			continue
-		}
-		model, ok := box.Data.(*abc.Network)
-		if !ok || model == nil {
-			panic("io: box has no network model")
-		}
-		fmt.Fprintf(w, "  %s box%0*d(", model.Name, width, index)
-		index++
-		var pins []string
-		for i, port := range model.ObjectsOfKind(abc.ObjectPI) {
-			formal := abc.Abc_ObjFanout0(port)
-			actual := abc.Abc_ObjFanin0(abc.Abc_ObjFanin(box, int32(i)))
-			pins = append(pins, fmt.Sprintf(".%s(%s)", Io_WriteVerilogGetName(abc.Abc_ObjName(formal)), Io_WriteVerilogGetName(abc.Abc_ObjName(actual))))
-		}
-		for i, port := range model.ObjectsOfKind(abc.ObjectPO) {
-			formal := abc.Abc_ObjFanin0(port)
-			actual := abc.Abc_ObjFanout0(abc.Abc_ObjFanout(box, int32(i)))
-			pins = append(pins, fmt.Sprintf(".%s(%s)", Io_WriteVerilogGetName(abc.Abc_ObjName(formal)), Io_WriteVerilogGetName(abc.Abc_ObjName(actual))))
-		}
-		fmt.Fprintln(w, strings.Join(pins, ", ")+");")
-	}
+	writeVerilogBoxes(w, n)
 	nodes := n.ObjectsOfKind(abc.ObjectNode)
 	if abc.Abc_NtkHasMapping(n) != 0 {
 		lib, ok := n.FunctionManager.(*mio.Mio_Library_t)
@@ -51,8 +20,8 @@ func Io_WriteVerilogObjects(w io.Writer, n *abc.Network, onlyAnds int32) {
 			panic("io: mapped network has no gate library")
 		}
 		length := mio.Mio_LibraryReadGateNameMax(lib)
-		width = len(strconv.Itoa(len(nodes)))
-		index = 0
+		width := len(strconv.Itoa(len(nodes)))
+		index := 0
 		for _, node := range nodes {
 			gate, ok := node.Data.(*mio.Mio_Gate_t)
 			if !ok || gate == nil {
@@ -103,5 +72,40 @@ func Io_WriteVerilogObjects(w io.Writer, n *abc.Network, onlyAnds int32) {
 		for i := range node.Fanins() {
 			hop.Hop_ObjSetData(hop.Hop_IthVar(manager, int32(i)), nil)
 		}
+	}
+}
+
+func writeVerilogBoxes(w io.Writer, n *abc.Network) {
+	boxes := n.Boxes()
+	count := 0
+	for _, box := range boxes {
+		if box.Kind != abc.ObjectLatch {
+			count++
+		}
+	}
+	width := len(strconv.Itoa(count))
+	index := 0
+	for _, box := range boxes {
+		if box.Kind == abc.ObjectLatch {
+			continue
+		}
+		model, ok := box.Data.(*abc.Network)
+		if !ok || model == nil {
+			panic("io: box has no network model")
+		}
+		fmt.Fprintf(w, "  %s box%0*d(", model.Name, width, index)
+		index++
+		var pins []string
+		for i, port := range model.ObjectsOfKind(abc.ObjectPI) {
+			formal := abc.Abc_ObjFanout0(port)
+			actual := abc.Abc_ObjFanin0(abc.Abc_ObjFanin(box, int32(i)))
+			pins = append(pins, fmt.Sprintf(".%s(%s)", Io_WriteVerilogGetName(abc.Abc_ObjName(formal)), Io_WriteVerilogGetName(abc.Abc_ObjName(actual))))
+		}
+		for i, port := range model.ObjectsOfKind(abc.ObjectPO) {
+			formal := abc.Abc_ObjFanin0(port)
+			actual := abc.Abc_ObjFanout0(abc.Abc_ObjFanout(box, int32(i)))
+			pins = append(pins, fmt.Sprintf(".%s(%s)", Io_WriteVerilogGetName(abc.Abc_ObjName(formal)), Io_WriteVerilogGetName(abc.Abc_ObjName(actual))))
+		}
+		fmt.Fprintln(w, strings.Join(pins, ", ")+");")
 	}
 }

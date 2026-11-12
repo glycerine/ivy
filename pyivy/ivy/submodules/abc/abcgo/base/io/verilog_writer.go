@@ -50,6 +50,10 @@ func Io_WriteVerilog(n *abc.Network, filename string, onlyAnds int32) {
 }
 
 func Io_WriteVerilogInt(w io.Writer, n *abc.Network, onlyAnds int32) {
+	writeVerilogModule(w, n, func() { Io_WriteVerilogObjects(w, n, onlyAnds) })
+}
+
+func writeVerilogModule(w io.Writer, n *abc.Network, emitObjects func()) {
 	inputs, outputs := n.ObjectsOfKind(abc.ObjectPI), n.ObjectsOfKind(abc.ObjectPO)
 	latches := n.ObjectsOfKind(abc.ObjectLatch)
 	clock := len(latches) > 0
@@ -96,7 +100,7 @@ func Io_WriteVerilogInt(w io.Writer, n *abc.Network, onlyAnds int32) {
 			Io_WriteVerilogWires(w, n, 4)
 			fmt.Fprintln(w, ";")
 		}
-		Io_WriteVerilogObjects(w, n, onlyAnds)
+		emitObjects()
 		Io_WriteVerilogLatches(w, n)
 	}
 	fmt.Fprint(w, "endmodule\n\n")
