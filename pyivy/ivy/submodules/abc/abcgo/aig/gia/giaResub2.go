@@ -281,78 +281,6 @@ func Abc_ResubPrintDivs(ppDivs *any, nDivs int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_RsbEnumerateWindows(p *Gia_Man_t, nInputsMax int32, nLevelsMax int32) {
-    var fVerbose int32;
-    var fUseHash int32;
-    var i, nWins, nWinSize, nInsSize, nOutSize, nNodeGain int32;
-    var vLevels *Vec_Wec_t  = Vec_WecStart( Gia_ManLevelNum(p)+1 );
-    var vPaths *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );
-    var vRefs *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );
-    var pHash *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );
-    var pObj *Gia_Obj_t;
-    var pIn, pOut *Gia_Man_t;
-    var clk abctime  = Abc_Clock();
-    Gia_ManStaticFanoutStart( p );
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        var vWin, vIns, vOuts *Vec_Int_t;
-        if !(Gia_RsbWindowCompute( p, i, nInputsMax, nLevelsMax, vLevels, vPaths, &vWin, &vIns ) != 0) {
-            continue; }
-        vOuts = Gia_RsbFindOutputs( p, vWin, vIns, vRefs );
-        nWins++;
-        nWinSize += Vec_IntSize(vWin);
-        nInsSize += Vec_IntSize(vIns);
-        nOutSize += Vec_IntSize(vOuts);
-   
-
-        if fVerbose != 0 {
-            fmt.Printf("\n\nObj %d\n", i);
-            Vec_IntPrint( vWin );    
-            Vec_IntPrint( vIns );    
-            Vec_IntPrint( vOuts );    
-            fmt.Printf("\n");
-        
-        } else if Vec_IntSize(vWin) > 1000 {
-            fmt.Printf("Obj %d.   Window: Ins = %d. Ands = %d. Outs = %d.\n", i, Vec_IntSize(vIns), Vec_IntSize(vWin)-Vec_IntSize(vIns), Vec_IntSize(vOuts)); }
-
-        if fUseHash != 0 {
-            var nEntries int32  = Hsh_VecSize(pHash);
-            Hsh_VecManAdd( pHash, vWin );
-            if nEntries == Hsh_VecSize(pHash) {
-                Vec_IntFree( vWin );
-                Vec_IntFree( vIns );
-                Vec_IntFree( vOuts );
-                continue;
-            }
-        }
-
-        pIn = Gia_RsbDeriveGiaFromWindows( p, vWin, vIns, vOuts );
-        pOut = Gia_ManResub2Test( pIn );
-        //pOut = Gia_ManDup( pIn );
-        if !(Gia_ManVerifyTwoTruths( pIn, pOut ) != 0) {
-            Gia_ManPrint( pIn );
-            Gia_ManPrint( pOut );
-            pOut = pOut;
-        }
-
-        nNodeGain += Gia_ManAndNum(pIn) - Gia_ManAndNum(pOut);
-        Gia_ManStop( pIn );
-        Gia_ManStop( pOut );
-
-        Vec_IntFree( vWin );
-        Vec_IntFree( vIns );
-        Vec_IntFree( vOuts );
-    }
-    }
-    Gia_ManStaticFanoutStop( p );
-    Vec_WecFree( vLevels );
-    Vec_IntFree( vPaths );
-    Vec_IntFree( vRefs );
-    fmt.Printf("Computed windows for %d nodes (out of %d). Unique = %d. Ave inputs = %.2f. Ave outputs = %.2f. Ave volume = %.2f.  Gain = %d. ", nWins, Gia_ManAndNum(p), Hsh_VecSize(pHash), 1.0*nInsSize/Abc_MaxInt(1,nWins), 1.0*nOutSize/Abc_MaxInt(1,nWins), 1.0*nWinSize/Abc_MaxInt(1,nWins), nNodeGain);
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    Hsh_VecManStop( pHash );
-}
-
 /**Function*************************************************************
 
   Synopsis    [Apply k-resub to one AIG.]
@@ -364,10 +292,6 @@ func Gia_RsbEnumerateWindows(p *Gia_Man_t, nInputsMax int32, nLevelsMax int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_RsbTryOneWindow(p *Gia_Man_t) *Gia_Man_t {
-    return Gia_ManResub2Test( p );
-}
-
 /**Function*************************************************************
 
   Synopsis    [Apply k-resub to one AIG.]

@@ -77,3 +77,13 @@ func TestRsb2GrowAlternativeWindow(t *testing.T) {
 		}
 	}
 }
+
+func TestRsb2EnumerateWindows(t *testing.T) {
+	p := Gia_ManStart(12)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, a, c)
+	root := Gia_ManAppendAnd(p, x, y)
+	Gia_ManAppendCo(p, root)
+	Gia_RsbEnumerateWindows(p, 3, 8)
+}
