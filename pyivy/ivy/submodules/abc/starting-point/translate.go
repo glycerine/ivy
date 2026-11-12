@@ -45,6 +45,7 @@ type Issue struct {
 	Start, End                            int
 }
 type Result struct {
+	InlineMacros  bool             `json:",omitempty"`
 	Configuration map[string]int64 `json:",omitempty"`
 	Schema        int
 	Path, SHA256  string

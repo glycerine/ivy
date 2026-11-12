@@ -30,6 +30,9 @@ type conditionalNode struct {
 // A delimiter-only projection is used for parsing; original islands are restored
 // after all rewriting, and all reported offsets are mapped to original bytes.
 func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
+	if opts.InlineMacros && !opts.inlinePrepared {
+		return analyzeInlineMacros(path, source, opts)
+	}
 	originalSource := source
 	selected, err := selectConfiguredBranches(source, opts.Defines)
 	if err != nil {

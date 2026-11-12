@@ -13,11 +13,14 @@ type MacroTypes struct {
 	Result     string
 }
 type Options struct {
-	TypeNames map[string]bool  // Known typedef spellings from an input inventory.
-	Defines   map[string]int64 // Explicit platform choices; zero means disabled.
-	opaque    []opaqueRegion
-	Package   string
-	Macros    map[string]MacroTypes
+	InlineMacros   bool     // Expand function-like macros at call sites instead of generating functions.
+	IncludePaths   []string // Additional local header search directories for macro inlining.
+	inlinePrepared bool
+	TypeNames      map[string]bool  // Known typedef spellings from an input inventory.
+	Defines        map[string]int64 // Explicit platform choices; zero means disabled.
+	opaque         []opaqueRegion
+	Package        string
+	Macros         map[string]MacroTypes
 }
 
 var functionMacro = regexp.MustCompile(`^\s*#\s*define\s+([A-Za-z_]\w*)\(([^)]*)\)[ \t]*([\s\S]*)$`)
@@ -32,6 +35,9 @@ func macroDraft(t Token, opts Options) (name, draft, message string, ok bool) {
 	}
 	name, ok = m[1], true
 	original := "// Original macro:\n// " + strings.ReplaceAll(t.Text, "\n", "\n// ") + "\n"
+	if opts.InlineMacros {
+		return name, original, "Function-like macro retained as a comment; inline mode expands supported visible invocations and reports retained calls separately.", true
+	}
 	var args []string
 	if strings.TrimSpace(m[2]) != "" {
 		args = strings.Split(m[2], ",")
