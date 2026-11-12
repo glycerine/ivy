@@ -241,42 +241,7 @@ func Io_WriteVerilogInt(pFile *os.File, pNtk *Abc_Ntk_t, fOnlyAnds int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Io_WriteVerilogLatches(pFile *os.File, pNtk *Abc_Ntk_t) {
-    var pLatch *Abc_Obj_t;
-    var i int32;
-    if Abc_NtkLatchNum(pNtk) == 0 {
-        return; }
-    // write the latches
-//    fprintf( pFile, "  always @(posedge %s) begin\n", Io_WriteVerilogGetName(Abc_ObjFanout0(Abc_NtkPi(pNtk,0))) );
-//    fprintf( pFile, "  always begin\n" );
-    fmt.Fprintf(pFile, "  always @ (posedge clock) begin\n");
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {
-        fmt.Fprintf(pFile, "    %s", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))));
-        fmt.Fprintf(pFile, " <= %s;\n", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pLatch)))));
-    }
-    }
-    fmt.Fprintf(pFile, "  end\n");
-    // check if there are initial values
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else
-        if Abc_LatchInit(pLatch) == ABC_INIT_ZERO || Abc_LatchInit(pLatch) == ABC_INIT_ONE {
-            break; }
-    }
-    if i == Abc_NtkLatchNum(pNtk) {
-        return; }
-    // write the initial values
-    fmt.Fprintf(pFile, "  initial begin\n");
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {
-        if Abc_LatchInit(pLatch) == ABC_INIT_ZERO {
-            fmt.Fprintf(pFile, "    %s <= 1\'b0;\n", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))));
-        } else if Abc_LatchInit(pLatch) == ABC_INIT_ONE {
-            fmt.Fprintf(pFile, "    %s <= 1\'b1;\n", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch))))); }
-    }
-    }
-    fmt.Fprintf(pFile, "  end\n");
-}
+
 
 /**Function*************************************************************
 
