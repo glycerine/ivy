@@ -27,12 +27,13 @@ type TreeFile struct {
 	FallbackLocation *SourceLocation `json:",omitempty"`
 }
 type TreeReport struct {
-	HelperFiles []string `json:",omitempty"`
-	Source      string
-	Output      string
-	Files       []TreeFile
-	Fallbacks   int
-	DurationNS  int64
+	Configuration map[string]int64 `json:",omitempty"`
+	HelperFiles   []string         `json:",omitempty"`
+	Source        string
+	Output        string
+	Files         []TreeFile
+	Fallbacks     int
+	DurationNS    int64
 }
 
 // TranslateTree mirrors C/C++ files into a new destination. The destination
@@ -40,7 +41,7 @@ type TreeReport struct {
 // fallback draft and diagnostic; filesystem failures stop the run with an error.
 func TranslateTree(source, destination string, opts Options) (TreeReport, error) {
 	start := time.Now()
-	r := TreeReport{}
+	r := TreeReport{Configuration: opts.Defines}
 	var err error
 	r.Source, err = filepath.Abs(source)
 	if err != nil {
@@ -93,6 +94,14 @@ func TranslateTree(source, destination string, opts Options) (TreeReport, error)
 	if err != nil {
 		return r, err
 	}
+	indexed, err := CollectTypeNames(files)
+	if err != nil {
+		return r, err
+	}
+	for name := range opts.TypeNames {
+		indexed[name] = true
+	}
+	opts.TypeNames = indexed
 	rels := make([]string, len(files))
 	for i, path := range files {
 		rels[i], err = filepath.Rel(r.Source, path)

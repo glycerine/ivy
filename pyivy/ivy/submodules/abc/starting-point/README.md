@@ -216,3 +216,49 @@ wall-time policy: time.Now().UnixNano(), int64 clock_t, and time.Second for
 CLOCKS_PER_SEC. This changes CPU-time semantics; time.Time/time.Since is the
 preferred later repair for monotonic elapsed timing. Calendar/struct tm routines
 still require representation decisions.
+
+
+## Platform choices and enums
+
+The CLI reads `./starting.cfg` if it exists. Override its location with `-cfg`:
+
+```text
+WIN32 = 0
+LINUX = 1
+```
+
+```sh
+starting-point -cfg /path/to/starting.cfg -out new-output src
+```
+
+Settings are integer values split on `=`. Blank lines and full-line `#` or `//`
+comments are accepted. Malformed/duplicate entries are errors. A missing default
+file is ignored; an explicitly supplied missing path is an error. Library callers
+use `ParseConfig`/`ReadConfig` and `Options.Defines`; analysis does not implicitly
+read configuration from disk. Settings are saved in result/tree metadata.
+
+These are explicit platform choices: **zero disables a symbol**, including
+`#ifdef`/`defined`, while nonzero enables it. This differs from C's distinction
+between an undefined macro and a defined macro whose value is zero. Unlisted
+symbols remain unknown. Supported conditions include integer constants, names,
+parentheses, `defined`, `!`, `&&`, `||`, and comparisons. Support covers `#if`,
+`#ifdef`, `#ifndef`, `#elif`/`#elseif`, `#else`, and `#endif`.
+
+A fully decidable chain selects its active branch; nested selected branches are
+processed recursively, including inside ordinary header guards. If an enclosing
+choice remains unknown, its whole block remains opaque. Unsupported expressions
+are also preserved. Removed bytes are blanked internally to retain original
+line/column/offset reporting. This is not a full C macro preprocessor: configured
+values are authoritative, and source #define expansion is not implemented.
+
+Includes of pthread.h are commented even in preserved conditional blocks.
+Other contents of unresolved blocks remain untouched.
+
+Standalone file-scope `enum` and `typedef enum` definitions now become Go
+`const (...)` groups. Fully implicit values use `iota`; mixed explicit/implicit
+values use the explicit expression and `Previous + 1`, preserving C resets.
+Named enums use the existing int32 draft policy, with tag aliases where needed.
+Comments are retained. Local/scoped enums, trailing object declarations, unusual
+constant expressions and representation-sensitive widths still need repair.
+
+See [IDEAS.md](../IDEAS.md) for the output-driven mechanical conversion backlog.

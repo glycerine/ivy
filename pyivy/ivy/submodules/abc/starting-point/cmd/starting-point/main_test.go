@@ -274,3 +274,117 @@ func TestBatchAssertHelper(t *testing.T) {
 		t.Fatal(string(draft), err)
 	}
 }
+
+func TestConfigFlagAndDefault(t *testing.T) {
+	root := t.TempDir()
+	previous, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = os.Chdir(root); err != nil {
+		t.Fatal(err)
+	}
+	defer os.Chdir(previous)
+	source := filepath.Join(root, "input.c")
+	if err = os.WriteFile(source, []byte("#ifdef WIN32\nint windows;\n#else\nint portable;\n#endif\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	if err = os.WriteFile("starting.cfg", []byte("WIN32 = 0\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	if err = os.WriteFile("alternate.cfg", []byte("WIN32 = 1\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	for _, test := range []struct {
+		name string
+		args []string
+		want string
+	}{
+		{"default", nil, "var portable int32;"},
+		{"override", []string{"-cfg", "alternate.cfg"}, "var windows int32;"},
+	} {
+		out := filepath.Join(root, test.name)
+		args := append([]string{"-out", out}, test.args...)
+		args = append(args, source)
+		if err := run(args); err != nil {
+			t.Fatal(err)
+		}
+		draft, err := os.ReadFile(filepath.Join(out, "input.go"))
+		if err != nil || !strings.Contains(string(draft), test.want) || strings.Contains(string(draft), "#ifdef") {
+			t.Fatal(string(draft), err)
+		}
+	}
+	badOut := filepath.Join(root, "bad")
+	if err := run([]string{"-cfg", "missing.cfg", "-out", badOut, source}); err == nil {
+		t.Fatal("missing explicit config accepted")
+	}
+	if _, err := os.Stat(badOut); !os.IsNotExist(err) {
+		t.Fatal("created output before config validation")
+	}
+}
+
+func TestMissingConfigTemplate(t *testing.T) {
+	root := t.TempDir()
+	previous, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = os.Chdir(root); err != nil {
+		t.Fatal(err)
+	}
+	defer os.Chdir(previous)
+	source := filepath.Join(root, "input.c")
+	text := "#if defined(WIN32) || LEVEL >= 0xFFu // ignoredWord\nint first;\n#elif OTHER\nint second;\n#endif\n"
+	if err = os.WriteFile(source, []byte(text), 0644); err != nil {
+		t.Fatal(err)
+	}
+	if err = run([]string{"-out", "out", source}); err != nil {
+		t.Fatal(err)
+	}
+	data, err := os.ReadFile("_starting.cfg")
+	if err != nil {
+		t.Fatal(err)
+	}
+	cfg, err := startingpoint.ParseConfig(string(data))
+	if err != nil || len(cfg) != 3 {
+		t.Fatal(string(data), cfg, err)
+	}
+	for _, name := range []string{"WIN32", "LEVEL", "OTHER"} {
+		if value, ok := cfg[name]; !ok || value != 0 {
+			t.Fatal(cfg)
+		}
+	}
+	if !strings.Contains(string(data), "input.c:1: #if") {
+		t.Fatal(string(data))
+	}
+	// An edited template is never overwritten by another run.
+	if err = os.WriteFile("_starting.cfg", []byte("WIN32 = 1 // edited\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	if err = run([]string{"-out", "out2", source}); err != nil {
+		t.Fatal(err)
+	}
+	data, _ = os.ReadFile("_starting.cfg")
+	if string(data) != "WIN32 = 1 // edited\n" {
+		t.Fatal(string(data))
+	}
+}
+
+// CLI tests may generate a config template in their working directory.
+func TestMain(m *testing.M) {
+	previous, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	dir, err := os.MkdirTemp("", "starting-point-cli-tests-")
+	if err != nil {
+		panic(err)
+	}
+	if err = os.Chdir(dir); err != nil {
+		panic(err)
+	}
+	code := m.Run()
+	os.Chdir(previous)
+	os.RemoveAll(dir)
+	os.Exit(code)
+}

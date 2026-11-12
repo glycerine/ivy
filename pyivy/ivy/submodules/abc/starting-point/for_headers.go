@@ -22,7 +22,7 @@ func unwrapControlHeaders(source string) (string, error) {
 	}
 	var edits []Edit
 	for i, t := range ts {
-		if t.Kind != "word" || (t.Text != "for" && t.Text != "if") || i+1 >= len(ts) || ts[i+1].Text != "(" {
+		if t.Kind != "word" || (t.Text != "for" && t.Text != "if" && t.Text != "switch") || i+1 >= len(ts) || ts[i+1].Text != "(" {
 			continue
 		}
 		end, ok := pairs[i+1]

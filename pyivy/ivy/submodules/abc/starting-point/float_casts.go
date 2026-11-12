@@ -4,7 +4,7 @@ import "regexp"
 
 var castNumber = regexp.MustCompile(`^(?:0[xX](?:[0-9a-fA-F]+(?:\.[0-9a-fA-F]*)?|\.[0-9a-fA-F]+)(?:[pP][+-]?[0-9]+)?|(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)[uUlLfF]*`)
 
-// lowerFloatCasts converts only scalar float/double casts. Token boundaries keep
+// lowerFloatCasts converts scalar C casts (the original name is retained). Token boundaries keep
 // strings, comments, declarations and pointer casts out of this rewrite.
 func lowerFloatCasts(source string) (string, error) {
 	all, err := Lex(source)
@@ -22,7 +22,7 @@ func lowerFloatCasts(source string) (string, error) {
 		return "", err
 	}
 	cast := func(i int) bool {
-		return i+2 < len(ts) && ts[i].Text == "(" && (ts[i+1].Text == "double" || ts[i+1].Text == "float") && ts[i+2].Text == ")"
+		return i+2 < len(ts) && ts[i].Text == "(" && scalarCastType(ts[i+1].Text) != "" && ts[i+2].Text == ")"
 	}
 	var unaryEnd func(int) int
 	unaryEnd = func(i int) int {
@@ -83,13 +83,22 @@ func lowerFloatCasts(source string) (string, error) {
 		if end <= i+3 {
 			continue
 		}
-		typ := "float64"
-		if ts[i+1].Text == "float" {
-			typ = "float32"
-		}
+		typ := scalarCastType(ts[i+1].Text)
 		trivia := source[ts[i].End:ts[i+1].Start] + source[ts[i+1].End:ts[i+2].Start]
 		edits = append(edits, Edit{ts[i].Start, ts[i+2].End, typ + "(" + trivia})
 		edits = append(edits, Edit{ts[end-1].End, ts[end-1].End, ")"})
 	}
 	return ApplyEdits(source, edits)
+}
+
+func scalarCastType(name string) string {
+	switch name {
+	case "double", "float", "int", "unsigned", "char":
+		return goType(name)
+	case "short":
+		return "int16"
+	case "long":
+		return "int64"
+	}
+	return ""
 }

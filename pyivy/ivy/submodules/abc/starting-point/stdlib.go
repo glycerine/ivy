@@ -380,6 +380,12 @@ func (p *libraryPass) text(expr string) (string, bool) {
 	return "", false
 }
 func (p *libraryPass) convert(c libraryCall) (string, string, bool) {
+	if c.name == "ABC_CALLOC" {
+		if len(c.args) == 2 && strings.TrimSpace(c.args[1]) == "1" && identifier.MatchString(strings.TrimSpace(c.args[0])) {
+			return "new(" + goType(strings.TrimSpace(c.args[0])) + ")", "Single zero-initialized object; Go allocation failure does not return C NULL.", true
+		}
+		return "", "Allocation count/type requires representation repair.", false
+	}
 	if result, note, ok := p.convertMutex(c); ok || note != "" {
 		return result, note, ok
 	}

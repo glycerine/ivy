@@ -25,17 +25,24 @@ type conditionalNode struct {
 	otherwise  bool
 }
 
-// AnalyzeWithOptions isolates preprocessing choices without evaluating them.
+// AnalyzeWithOptions selects explicitly configured preprocessing choices and
+// isolates unresolved choices without guessing their values.
 // A delimiter-only projection is used for parsing; original islands are restored
 // after all rewriting, and all reported offsets are mapped to original bytes.
 func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
+	originalSource := source
+	selected, err := selectConfiguredBranches(source, opts.Defines)
+	if err != nil {
+		return Result{}, sourceError(source, err)
+	}
+	source = selected
 	projected, regions, err := projectConditionals(source)
 	if err != nil {
 		return Result{}, sourceError(source, err)
 	}
 	opts.opaque = regions
 	r, err := analyzeCore(path, projected, opts)
-	r.SHA256 = fmt.Sprintf("%x", sha256.Sum256([]byte(source)))
+	r.SHA256 = fmt.Sprintf("%x", sha256.Sum256([]byte(originalSource)))
 	if err != nil {
 		var diagnostic *SourceError
 		if errors.As(err, &diagnostic) {
@@ -73,18 +80,26 @@ func AnalyzeWithOptions(path, source string, opts Options) (Result, error) {
 		return r, transformedDiagnostic(path, "library metadata", r.Draft, err)
 	}
 	r.Draft = restoreRegions(r.Draft, regions)
+	r.Draft, err = commentPthreadIncludes(r.Draft)
+	if err != nil {
+		return r, err
+	}
 	for i := range r.Functions {
 		f := &r.Functions[i]
 		f.Start = originalOffset(f.Start, regions)
 		f.End = originalOffset(f.End, regions)
 		f.BodyStart = originalOffset(f.BodyStart, regions)
-		f.Original = source[f.Start:f.End]
+		f.Original = originalSource[f.Start:f.End]
 		formatted, _, err = rewriteStandardLibraryContext(f.Draft, false, libraryContext)
 		if err != nil {
 			return r, transformedDiagnostic(path, "library-call rewrite of function "+f.Name, f.Draft, err)
 		}
 		f.Draft = formatted
 		f.Draft = restoreRegions(f.Draft, regions)
+		f.Draft, err = commentPthreadIncludes(f.Draft)
+		if err != nil {
+			return r, err
+		}
 	}
 	for i := range r.Issues {
 		r.Issues[i].Start = originalOffset(r.Issues[i].Start, regions)

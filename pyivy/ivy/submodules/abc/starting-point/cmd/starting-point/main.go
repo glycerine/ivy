@@ -21,10 +21,22 @@ func main() {
 }
 func run(args []string) error {
 	flags := flag.NewFlagSet("starting-point", flag.ContinueOnError)
+	cfg := flags.String("cfg", "./starting.cfg", "platform choices file (NAME = INTEGER per line)")
 	out := flags.String("out", "", "new output directory (must not exist)")
 	pre := flags.Bool("pre", false, "list preserved preprocessor choices requiring review")
 	pkg := flags.String("package", "", "Go package override (default: first source file directory name, shared by all outputs)")
 	if err := flags.Parse(args); err != nil {
+		return err
+	}
+	explicitConfig := false
+	flags.Visit(func(f *flag.Flag) {
+		if f.Name == "cfg" {
+			explicitConfig = true
+		}
+	})
+	defines, err := startingpoint.ReadConfig(*cfg)
+	generateConfig := os.IsNotExist(err) && !explicitConfig
+	if err != nil && !(os.IsNotExist(err) && !explicitConfig) {
 		return err
 	}
 	if flags.NArg() == 1 {
@@ -44,9 +56,18 @@ func run(args []string) error {
 					return err
 				}
 			}
-			report, err := startingpoint.TranslateTree(source, destination, startingpoint.Options{Package: *pkg})
+			report, err := startingpoint.TranslateTree(source, destination, startingpoint.Options{Package: *pkg, Defines: defines})
 			if err != nil {
 				return err
+			}
+			if generateConfig {
+				var sources []string
+				for _, file := range report.Files {
+					sources = append(sources, file.Source)
+				}
+				if _, err := startingpoint.WriteConfigTemplate("./_starting.cfg", sources); err != nil {
+					return err
+				}
 			}
 			printTreeReport(os.Stdout, report, *pre)
 			return nil
@@ -81,6 +102,10 @@ func run(args []string) error {
 	if err := os.Mkdir(*out, 0755); err != nil {
 		return err
 	}
+	indexed, err := startingpoint.CollectTypeNames(flags.Args())
+	if err != nil {
+		return err
+	}
 	start := time.Now()
 	var results []startingpoint.Result
 	for i, path := range flags.Args() {
@@ -88,7 +113,7 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
-		r, err := startingpoint.AnalyzeWithOptions(path, string(s), startingpoint.Options{Package: packageName})
+		r, err := startingpoint.AnalyzeWithOptions(path, string(s), startingpoint.Options{Package: packageName, Defines: defines, TypeNames: indexed})
 		if err != nil {
 			return err
 		}
@@ -117,11 +142,18 @@ func run(args []string) error {
 		Package    string
 		DurationNS int64
 		Files      []startingpoint.Result
-	}{"prototype-50", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
+	}{"prototype-51", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(filepath.Join(*out, "run.json"), append(data, '\n'), 0644)
+	if err := os.WriteFile(filepath.Join(*out, "run.json"), append(data, '\n'), 0644); err != nil {
+		return err
+	}
+	if generateConfig {
+		_, err = startingpoint.WriteConfigTemplate("./_starting.cfg", flags.Args())
+		return err
+	}
+	return nil
 }
 
 // A bare project name also denotes the current checkout when its basename

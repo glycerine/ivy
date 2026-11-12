@@ -12,9 +12,11 @@ type MacroTypes struct {
 	Result     string
 }
 type Options struct {
-	opaque  []opaqueRegion
-	Package string
-	Macros  map[string]MacroTypes
+	TypeNames map[string]bool  // Known typedef spellings from an input inventory.
+	Defines   map[string]int64 // Explicit platform choices; zero means disabled.
+	opaque    []opaqueRegion
+	Package   string
+	Macros    map[string]MacroTypes
 }
 
 var functionMacro = regexp.MustCompile(`^\s*#\s*define\s+([A-Za-z_]\w*)\(([^)]*)\)[ \t]*([\s\S]*)$`)

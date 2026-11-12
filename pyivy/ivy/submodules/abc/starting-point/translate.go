@@ -45,13 +45,14 @@ type Issue struct {
 	Start, End                            int
 }
 type Result struct {
-	Schema       int
-	Path, SHA256 string
-	Library      []LibraryChange     `json:",omitempty"`
-	Conditionals []ConditionalReview `json:",omitempty"`
-	Functions    []Function
-	Issues       []Issue
-	Draft        string
+	Configuration map[string]int64 `json:",omitempty"`
+	Schema        int
+	Path, SHA256  string
+	Library       []LibraryChange     `json:",omitempty"`
+	Conditionals  []ConditionalReview `json:",omitempty"`
+	Functions     []Function
+	Issues        []Issue
+	Draft         string
 }
 
 var signature = regexp.MustCompile(`\b([A-Za-z_][A-Za-z_0-9 \t*]*?)\s*\b([A-Za-z_]\w*)\s*\(([^{};]*)\)\s*\{`)
@@ -142,7 +143,7 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 			resultErr = fmt.Errorf("transformed draft for %s (not original-source coordinates): %w", path, resultErr)
 		}
 	}()
-	r := Result{Schema: 2, Path: path, SHA256: fmt.Sprintf("%x", sha256.Sum256([]byte(source)))}
+	r := Result{Configuration: opts.Defines, Schema: 2, Path: path, SHA256: fmt.Sprintf("%x", sha256.Sum256([]byte(source)))}
 	var err error
 	opts.Package, err = ResolvePackage(path, opts.Package)
 	if err != nil {
@@ -195,6 +196,9 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 		}
 	}
 	localTypes := declarationTypes(mask, topLevelSignatures)
+	for name := range opts.TypeNames {
+		localTypes[name] = true
+	}
 	globalEdits, err := packageVariableEdits(source, ts, localTypes, opts.opaque)
 	if err != nil {
 		return r, err
@@ -308,6 +312,14 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 		if err != nil {
 			return r, err
 		}
+		r.Draft, err = mechanicalDraft(r.Draft)
+		if err != nil {
+			return r, err
+		}
+		r.Draft, err = lowerEnums(r.Draft)
+		if err != nil {
+			return r, err
+		}
 		r.Draft, err = lowerFloatCasts(r.Draft)
 		if err != nil {
 			return r, err
@@ -333,6 +345,10 @@ func analyzeCore(path, source string, opts Options) (result Result, resultErr er
 	}
 	if err == nil {
 		for i := range r.Functions {
+			r.Functions[i].Draft, err = mechanicalDraft(r.Functions[i].Draft)
+			if err != nil {
+				return r, err
+			}
 			r.Functions[i].Draft, err = lowerFloatCasts(r.Functions[i].Draft)
 			if err != nil {
 				return r, err

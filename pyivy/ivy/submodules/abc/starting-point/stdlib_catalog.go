@@ -17,6 +17,7 @@ func buildLibraryCatalog() []LibraryRule {
 			out = append(out, LibraryRule{name, header, mode, target, note})
 		}
 	}
+	add("ABC_CALLOC", "ABC allocation macro", "conditional", "new(T)", "Only single-object zero allocations; array/ownership cases need representation review.")
 	add("pthread_mutex_t PTHREAD_MUTEX_INITIALIZER", "pthread.h", "convert", "sync.Mutex zero value", "Zero-value mutex; review attributes and copying after use.")
 	add("pthread_mutex_lock pthread_mutex_unlock", "pthread.h", "convert", "Mutex.Lock / Mutex.Unlock", "Go methods return no status; repair uses of the C integer result downstream.")
 	add("pthread_mutex_init pthread_mutex_destroy pthread_mutex_trylock pthread_mutex_timedlock", "pthread.h", "review", "sync.Mutex", "Initialization attributes, destruction, try-lock status and timeouts require surrounding-code repair.")

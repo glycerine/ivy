@@ -92,3 +92,20 @@ func commentScaffolding(source string) (string, error) {
 	}
 	return ApplyEdits(source, edits)
 }
+
+var pthreadInclude = regexp.MustCompile(`^#\s*include\s*[<"]pthread\.h[>"]`)
+
+// Unlike general includes, pthread.h is commented even in restored opaque regions.
+func commentPthreadIncludes(source string) (string, error) {
+	ts, err := Lex(source)
+	if err != nil {
+		return "", err
+	}
+	var edits []Edit
+	for _, t := range ts {
+		if t.Kind == "directive" && pthreadInclude.MatchString(t.Text) {
+			edits = append(edits, Edit{t.Start, t.End, "//" + strings.ReplaceAll(t.Text, "\n", "\n//")})
+		}
+	}
+	return ApplyEdits(source, edits)
+}
