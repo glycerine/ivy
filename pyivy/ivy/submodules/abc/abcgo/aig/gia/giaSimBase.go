@@ -136,53 +136,8 @@ type Gia_SimAbsMan_t struct {
 
 ***********************************************************************/
 
-func Gia_ManSimBitPackOne(nWords int32, vSimsIn *Vec_Wrd_t, vSimsCare *Vec_Wrd_t, iPat int32, pLits *int32, nLits int32) int32 {
-    var pSimsI, pSimsC *word; var i, k int32;
-    for  i = 0; i < iPat; i++  {
-        for  k = 0; k < nLits; k++  {
-            var iVar int32  = Abc_Lit2Var( pLits[k] );
-            pSimsI = Vec_WrdEntryP( vSimsIn,   nWords * iVar );
-            pSimsC = Vec_WrdEntryP( vSimsCare, nWords * iVar );
-            if Abc_TtGetBit(pSimsC, i) && (Abc_TtGetBit(pSimsI, i) == Abc_LitIsCompl(pLits[k])) {
-                break; }
-        }
-        if k == nLits {
-            break; }
-    }
-    for  k = 0; k < nLits; k++  {
-        var iVar int32  = Abc_Lit2Var( pLits[k] );
-        pSimsI = Vec_WrdEntryP( vSimsIn,   nWords * iVar );
-        pSimsC = Vec_WrdEntryP( vSimsCare, nWords * iVar );
-        if !Abc_TtGetBit(pSimsC, i) && Abc_TtGetBit(pSimsI, i) == Abc_LitIsCompl(pLits[k]) {
-            Abc_TtXorBit( pSimsI, i ); }
-        Abc_TtSetBit( pSimsC, i );
-        assert(Abc_TtGetBit(pSimsC, i) && (Abc_TtGetBit(pSimsI, i) != Abc_LitIsCompl(pLits[k])), "Abc_TtGetBit(pSimsC, i) && (Abc_TtGetBit(pSimsI, i) != Abc_LitIsCompl(pLits[k]))");
-    }
-    return int32((i == iPat));
-}
-func Gia_ManSimBitPacking(p *Gia_Man_t, vCexStore *Vec_Int_t, nCexes int32, nUnDecs int32) *Vec_Wrd_t {
-    var c, iCur, iPat int32;
-    var nWordsMax int32  = Abc_Bit6WordNum( nCexes ); 
-    var vSimsIn *Vec_Wrd_t    = Vec_WrdStartRandom( Gia_ManCiNum(p) * nWordsMax );
-    var vSimsCare *Vec_Wrd_t  = Vec_WrdStart( Gia_ManCiNum(p) * nWordsMax );
-    var vSimsRes *Vec_Wrd_t   = nil;
-    for  c = 0; c < nCexes + nUnDecs; c++  {
-        var Out int32   = Vec_IntEntry( vCexStore, iCur++ );
-        var Size int32  = Vec_IntEntry( vCexStore, iCur++ );
-        if Size == -1 {
-            continue; }
-        iPat += Gia_ManSimBitPackOne( nWordsMax, vSimsIn, vSimsCare, iPat, Vec_IntEntryP(vCexStore, iCur), Size );
-        iCur += Size;
-        assert(iPat <= nCexes + nUnDecs, "iPat <= nCexes + nUnDecs");
-        Out = 0;
-    }
-    assert(iCur == Vec_IntSize(vCexStore), "iCur == Vec_IntSize(vCexStore)");
-    vSimsRes = Gia_ManSimCombine( Gia_ManCiNum(p), p.vSimsPi, vSimsIn, Abc_Bit6WordNum(iPat+1) );
-    fmt.Printf("Compressed %d CEXes into %d patterns and added %d words to available %d words.\n", nCexes, iPat, Abc_Bit6WordNum(iPat+1), Vec_WrdSize(p.vSimsPi) / Gia_ManCiNum(p));
-    Vec_WrdFree( vSimsIn );
-    Vec_WrdFree( vSimsCare );
-    return vSimsRes;
-}
+
+
 
 
 /**Function*************************************************************
