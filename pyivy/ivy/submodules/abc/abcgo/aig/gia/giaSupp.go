@@ -613,64 +613,6 @@ func Gia_Min2ObjGetCnfVar(p *Gia_Man2Min_t, iObj int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Man2SupportAnd(p *Gia_Man2Min_t, iLit0 int32, iLit1 int32) int32 {
-    p.nCalls++;
-    //return Gia_ManHashAnd( p->pGia, iLit0, iLit1 );
-    p.iLits[0] = iLit0;
-    p.iLits[1] = iLit1;
-    if iLit0 < 2 || iLit1 < 2 || Abc_Lit2Var(iLit0) == Abc_Lit2Var(iLit1) || Gia_ManHashLookupInt(p.pGia, iLit0, iLit1) || 
-         !(Gia_Min2ManGatherSupp(p) != 0) || !(Gia_Min2ManSimulate(p) != 0) || !(Gia_Min2ManSolve(p) != 0) {
-        return Gia_ManHashAnd( p.pGia, iLit0, iLit1 ); }
-    //printf( "%d %d\n", iLit0, iLit1 );
-    p.nSatUnsat++;
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Testbench.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_Man2SupportAndTest(pGia *Gia_Man_t) *Gia_Man_t {
-    var pMan *Gia_Man2Min_t;
-    var pNew, pTemp *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManRandomW( 1 );
-    Gia_ManFillValue( pGia );
-    pNew = Gia_ManStart( Gia_ManObjNum(pGia) );
-    pNew.pName = Abc_UtilStrsav( pGia.pName );
-    pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );
-    Gia_ManHashAlloc( pNew );
-    Gia_ManConst0(pGia).Value = 0;
-    pMan = Gia_Man2SuppStart( pNew );
-    Gia_ManForEachObj1( pGia, pObj, i )
-    {
-        if Gia_ObjIsAnd(pObj) {
-//            pObj->Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-            pObj.Value = Gia_Man2SupportAnd( pMan, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        
-        } else if Gia_ObjIsCi(pObj) {
-            pObj.Value = Gia_ManAppendCi( pNew );
-        } else if Gia_ObjIsCo(pObj) {
-            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-        } else { assert(false, "0"); }
-
-        //if ( i % 10000 == 0 )
-        //    printf( "%d\n", i );
-    }
-    Gia_Man2SuppStop( pMan );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    return pNew;
-}
 
 
 
