@@ -1,457 +1,289 @@
 package vec
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+	"os"
+	"slices"
+	"unsafe"
+)
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [vecMem.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Resizable arrays.]
-
-  Synopsis    [Resizable array of memory pieces.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - July 20, 2012.]
-
-  Revision    [$Id: vecMem.h,v 1.00 2012/07/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include <stdio.h>
-
-//ABC_NAMESPACE_HEADER_START
-
-/* 
-   This vector stores pieces of memory of the given size.
-   It is useful for representing truth tables and any other objects
-   of the fixed size.  It is better that Extra_MmFixed because the
-   entry IDs can be used as handles to retrieve memory pieces without 
-   the need for an array of pointers from entry IDs into memory pieces
-   (this can save 8(4) bytes per object on a 64(32)-bit platform).
-*/
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
-
-         
+// Vec_Mem_t keeps fixed-sized word records in pages so record slices remain
+// stable when more pages are allocated. Hash buckets contain record indices.
 type Vec_Mem_t struct {
-    nEntrySize              int32;  // entry size (in terms of 8-byte words)
-    nEntries              int32;    // number of entries currently used
-    LogPageSze              int32;  // log2 of page size (in terms of entries)
-    PageMask              int32;    // page mask
-    nPageAlloc              int32;  // number of pages currently allocated
-    iPage              int32;       // the number of a page currently used   
-    ppPages           **word;     // memory pages
-    vTable       *Vec_Int_t;      // hash table
-    vNexts       *Vec_Int_t;      // next pointers
+	nEntrySize, nEntries, LogPageSze, PageMask, nPageAlloc, iPage int
+	ppPages                                                       [][]uint64
+	vTable, vNexts                                                *Vec_Int_t
 }
 
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
-
-// Original macro:
-// #define Vec_MemForEachEntry( p, pEntry, i )                                              \
-//     for ( i = 0; (i < Vec_MemEntryNum(p)) && ((pEntry) = Vec_MemReadEntry(p, i)); i++ )
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates a memory vector.]
-
-  Description [Entry size is in terms of 8-byte words. Page size is log2
-  of the number of entries on one page.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemAlloc_(p *Vec_Mem_t, nEntrySize int32, LogPageSze int32) {
-    *p = Vec_Mem_t{};
-    p.nEntrySize = nEntrySize;
-    p.LogPageSze = LogPageSze;
-    p.PageMask   = (1 << p.LogPageSze) - 1;
-    p.iPage      = -1;
+func Vec_MemAlloc_(p *Vec_Mem_t, size, logPage int) {
+	if size <= 0 || logPage < 0 || logPage > 30 {
+		panic("invalid paged vector geometry")
+	}
+	*p = Vec_Mem_t{nEntrySize: size, LogPageSze: logPage, PageMask: (1 << logPage) - 1, iPage: -1}
 }
-func Vec_MemAlloc(nEntrySize int32, LogPageSze int32) *Vec_Mem_t {
-    var p *Vec_Mem_t;
-    p = new(Vec_Mem_t);
-    p.nEntrySize = nEntrySize;
-    p.LogPageSze = LogPageSze;
-    p.PageMask   = (1 << p.LogPageSze) - 1;
-    p.iPage      = -1;
-    return p;
+func Vec_MemAlloc(size, logPage int) *Vec_Mem_t {
+	p := new(Vec_Mem_t)
+	Vec_MemAlloc_(p, size, logPage)
+	return p
 }
 func Vec_MemFree(p *Vec_Mem_t) {
-    var i int32;
-    for  i = 0; i <= p.iPage; i++  {
-        ABC_FREE( p.ppPages[i] );
-    }
-    ABC_FREE( p.ppPages );
-    ABC_FREE( p );
+	if p != nil {
+		*p = Vec_Mem_t{iPage: -1}
+	}
 }
-func Vec_MemFreeP(p **Vec_Mem_t) {
-    if *p == nil {
-        return; }
-    Vec_MemFree( *p );
-    *p = nil;
-}
-func Vec_MemDup(pVec *Vec_Mem_t) *Vec_Mem_t {
-    var p *Vec_Mem_t  = nil;
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the integer array.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemFill(pVec *Vec_Mem_t, nEntries int32) {
-}
-func Vec_MemClean(pVec *Vec_Mem_t, nEntries int32) {
+func Vec_MemFreeP(p **Vec_Mem_t) { Vec_MemFree(*p); *p = nil }
+func Vec_MemDup(p *Vec_Mem_t) *Vec_Mem_t {
+	q := Vec_MemAlloc(p.nEntrySize, p.LogPageSze)
+	for i := range p.nEntries {
+		Vec_MemPush(q, Vec_MemReadEntry(p, i))
+	}
+	if p.vTable != nil {
+		Vec_MemHashAlloc(q, p.vTable.nSize)
+		Vec_MemHashResize(q)
+	}
+	return q
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemEntrySize(p *Vec_Mem_t) int32 {
-    return p.nEntrySize;
+// Fill/Clean provide the zero-filled record operations left unimplemented in
+// the original header. Existing records retain stable page storage.
+func Vec_MemFill(p *Vec_Mem_t, n int) {
+	if n < 0 {
+		panic("negative entry count")
+	}
+	if n > 0 {
+		Vec_MemGetEntry(p, n-1)
+	}
+	if n < p.nEntries {
+		Vec_MemShrink(p, n)
+	}
+	Vec_MemClean(p, n)
 }
-func Vec_MemEntryNum(p *Vec_Mem_t) int32 {
-    return p.nEntries;
+func Vec_MemClean(p *Vec_Mem_t, n int) {
+	if n < 0 || n > p.nEntries {
+		panic("clean range")
+	}
+	for i := range n {
+		clear(Vec_MemReadEntry(p, i))
+	}
 }
-func Vec_MemPageSize(p *Vec_Mem_t) int32 {
-    return p.LogPageSze;
-}
-func Vec_MemPageNum(p *Vec_Mem_t) int32 {
-    return p.iPage+1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Vec_MemEntrySize(p *Vec_Mem_t) int { return p.nEntrySize }
+func Vec_MemEntryNum(p *Vec_Mem_t) int  { return p.nEntries }
+func Vec_MemPageSize(p *Vec_Mem_t) int  { return p.LogPageSze }
+func Vec_MemPageNum(p *Vec_Mem_t) int   { return p.iPage + 1 }
 func Vec_MemMemory(p *Vec_Mem_t) float64 {
-    return float64(sizeof(word)) * p.nEntrySize * (1 << p.LogPageSze) * (p.iPage + 1) + float64(sizeof(word *)) * p.nPageAlloc + float64(sizeof(Vec_Mem_t));
+	if p == nil {
+		return 0
+	}
+	return float64(8*p.nEntrySize*(1<<p.LogPageSze)*(p.iPage+1) + p.nPageAlloc*int(unsafe.Sizeof(uintptr(0))) + int(unsafe.Sizeof(*p)))
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemReadEntry(p *Vec_Mem_t, i int32) *word {
-    assert(i >= 0 && i < p.nEntries, "i >= 0 && i < p.nEntries");
-    return p.ppPages[i >> p.LogPageSze] + p.nEntrySize * (i & p.PageMask);
+func Vec_MemReadEntry(p *Vec_Mem_t, i int) []uint64 {
+	if i < 0 || i >= p.nEntries {
+		panic("memory vector index")
+	}
+	start := p.nEntrySize * (i & p.PageMask)
+	return p.ppPages[i>>p.LogPageSze][start : start+p.nEntrySize]
 }
-func Vec_MemReadEntryLast(p *Vec_Mem_t) *word {
-    assert(p.nEntries > 0, "p.nEntries > 0");
-    return Vec_MemReadEntry( p, p.nEntries-1 );
+func Vec_MemReadEntryLast(p *Vec_Mem_t) []uint64 { return Vec_MemReadEntry(p, p.nEntries-1) }
+func Vec_MemWriteEntry(p *Vec_Mem_t, i int, data []uint64) {
+	copy(Vec_MemReadEntry(p, i), data[:p.nEntrySize])
 }
-func Vec_MemWriteEntry(p *Vec_Mem_t, i int32, pEntry *word) {
-    var pPlace *word  = Vec_MemReadEntry( p, i );
-    memmove( pPlace, pEntry, sizeof(word) * p.nEntrySize );
+func Vec_MemGetEntry(p *Vec_Mem_t, i int) []uint64 {
+	if i < 0 {
+		panic("negative entry index")
+	}
+	if i >= p.nEntries {
+		page := i >> p.LogPageSze
+		if page >= p.nPageAlloc {
+			n := max(2*p.nPageAlloc, page+32)
+			p.ppPages = append(p.ppPages, make([][]uint64, n-p.nPageAlloc)...)
+			p.nPageAlloc = n
+		}
+		for k := p.iPage + 1; k <= page; k++ {
+			p.ppPages[k] = make([]uint64, p.nEntrySize*(1<<p.LogPageSze))
+		}
+		p.iPage = max(p.iPage, page)
+		p.nEntries = i + 1
+	}
+	return Vec_MemReadEntry(p, i)
 }
-func Vec_MemGetEntry(p *Vec_Mem_t, i int32) *word {
-    assert(i >= 0, "i >= 0");
-    if i >= p.nEntries {
-        var k int32;
-        var iPageNew int32 = (i >> p.LogPageSze);
-        if p.iPage < iPageNew {
-            // realloc page pointers if needed
-            if iPageNew >= p.nPageAlloc {
-                p.ppPages = ABC_REALLOC( word *, p.ppPages, (p.nPageAlloc = p.nPageAlloc ? 2 * p.nPageAlloc : iPageNew + 32) ); }
-            // allocate new pages if needed
-            for  k = p.iPage + 1; k <= iPageNew; k++  {
-                p.ppPages[k] = ABC_ALLOC( word, p.nEntrySize * (1 << p.LogPageSze) );
-            }
-            // update page counter
-            p.iPage = iPageNew;
-        }
-        // update entry counter
-        p.nEntries = i + 1;
-    }
-    return Vec_MemReadEntry( p, i );
+func Vec_MemSetEntry(p *Vec_Mem_t, i int, data []uint64) {
+	copy(Vec_MemGetEntry(p, i), data[:p.nEntrySize])
 }
-func Vec_MemSetEntry(p *Vec_Mem_t, i int32, pEntry *word) {
-    var pPlace *word  = Vec_MemGetEntry( p, i );
-    memmove( pPlace, pEntry, sizeof(word) * (size_t)p.nEntrySize );
+func Vec_MemPush(p *Vec_Mem_t, data []uint64) { Vec_MemSetEntry(p, p.nEntries, data) }
+func Vec_MemShrink(p *Vec_Mem_t, n int) {
+	if n < 0 || n > p.nEntries {
+		panic("memory vector shrink")
+	}
+	last := -1
+	if n > 0 {
+		last = (n - 1) >> p.LogPageSze
+	}
+	for k := last + 1; k <= p.iPage; k++ {
+		p.ppPages[k] = nil
+	}
+	p.nEntries = n
+	p.iPage = last
+	if p.vNexts != nil {
+		Vec_MemHashResize(p)
+	}
 }
-func Vec_MemPush(p *Vec_Mem_t, pEntry *word) {
-    var pPlace *word  = Vec_MemGetEntry( p, p.nEntries );
-    memmove( pPlace, pEntry, sizeof(word) * (size_t)p.nEntrySize );
+func Vec_MemDumpDigit(w io.Writer, digit int) {
+	if digit < 0 || digit > 15 {
+		panic("hexadecimal digit")
+	}
+	fmt.Fprintf(w, "%c", "0123456789ABCDEF"[digit])
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemShrink(p *Vec_Mem_t, nEntriesNew int32) {
-    var i int32;
-    var iPageOld int32 = p.iPage;
-    assert(nEntriesNew <= p.nEntries, "nEntriesNew <= p.nEntries");
-    p.nEntries = nEntriesNew;
-    p.iPage = (nEntriesNew >> p.LogPageSze);
-    for  i = p.iPage + 1; i <= iPageOld; i++  {
-        ABC_FREE( p.ppPages[i] );
-    }
+func Vec_MemDump(w io.Writer, p *Vec_Mem_t) {
+	if w == os.Stdout {
+		fmt.Printf("Memory vector has %d entries: \n", p.nEntries)
+	}
+	for i := range p.nEntries {
+		a := Vec_MemReadEntry(p, i)
+		for j := len(a) - 1; j >= 0; j-- {
+			fmt.Fprintf(w, "%016X", a[j])
+		}
+		fmt.Fprintln(w)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemDumpDigit(pFile *os.File, HexDigit int32) {
-    assert(HexDigit >= 0 && HexDigit < 16, "HexDigit >= 0 && HexDigit < 16");
-    if HexDigit < 10 {
-        fmt.Fprintf(pFile, "%d", HexDigit);
-    } else {
-        fmt.Fprintf(pFile, "%c", 'A' + HexDigit-10); }
+func vecMemPrime(n int) int {
+	n = max(n, 2)
+	for {
+		prime := true
+		for d := 2; d <= n/d; d++ {
+			if n%d == 0 {
+				prime = false
+				break
+			}
+		}
+		if prime {
+			return n
+		}
+		n++
+	}
 }
-func Vec_MemDump(pFile *os.File, pVec *Vec_Mem_t) {
-    var pEntry *word;
-    var i, w, d int32;
-    if pFile == os.Stdout {
-        fmt.Printf("Memory vector has %d entries: \n", Vec_MemEntryNum(pVec)); }
-    // inlining of macro Vec_MemForEachEntry
-    for  i = 0; (i < Vec_MemEntryNum(pVec)) && ((pEntry) = Vec_MemReadEntry(pVec, i)); i++  {
-        for  w = pVec.nEntrySize - 1; w >= 0; w--  {
-            for  d = 15; d >= 0; d--  {
-                Vec_MemDumpDigit( pFile, int32((pEntry[w] >> (d<<2))) & 15 );
-            }
-        }
-        fmt.Fprintf(pFile, "\n");
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Hashing entries in the memory vector.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemHashAlloc(p *Vec_Mem_t, nTableSize int32) {
-    assert(p.vTable == nil && p.vNexts == nil, "p.vTable == nil && p.vNexts == nil");
-    p.vTable = Vec_IntStartFull( Abc_PrimeCudd(nTableSize) );
-    p.vNexts = Vec_IntAlloc( nTableSize );
+func Vec_MemHashAlloc(p *Vec_Mem_t, n int) {
+	if p.vTable != nil || p.vNexts != nil {
+		panic("hash already allocated")
+	}
+	p.vTable = Vec_IntStartFull(vecMemPrime(n))
+	p.vNexts = Vec_IntAlloc(n)
 }
 func Vec_MemHashFree(p *Vec_Mem_t) {
-    if p == nil {
-        return; }
-    Vec_IntFreeP( &p.vTable );
-    Vec_IntFreeP( &p.vNexts );
+	if p != nil {
+		Vec_IntFreeP(&p.vTable)
+		Vec_IntFreeP(&p.vNexts)
+	}
 }
-var spStatic_Vec_MemHashKey_s_Primes [8]int32 = [8]int32{ 1699, 4177, 5147, 5647, 6343, 7103, 7873, 8147 };
-func Vec_MemHashKey(p *Vec_Mem_t, pEntry *word) uint32 {
-    
-    var i int32;
-    var nData int32 = 2 * p.nEntrySize;
-    var pData *uint32  = (unsigned *)pEntry;
-    var uHash uint32;
-    for  i = 0; i < nData; i++  {
-        uHash += pData[i] * spStatic_Vec_MemHashKey_s_Primes[i & 0x7];
-    }
-    return uHash % Vec_IntSize(p.vTable);
+func Vec_MemHashKey(p *Vec_Mem_t, data []uint64) uint32 {
+	primes := [8]uint32{1699, 4177, 5147, 5647, 6343, 7103, 7873, 8147}
+	var key uint32
+	for i, x := range data[:p.nEntrySize] {
+		key += uint32(x)*primes[(2*i)&7] + uint32(x>>32)*primes[(2*i+1)&7]
+	}
+	return key % uint32(p.vTable.nSize)
 }
-func Vec_MemHashLookup(p *Vec_Mem_t, pEntry *word) *int32 {
-    var pSpot *int32  = Vec_IntEntryP( p.vTable, Vec_MemHashKey(p, pEntry) );
-    for  ; *pSpot != -1; pSpot = Vec_IntEntryP(p.vNexts, *pSpot)  {
-        if !memcmp( Vec_MemReadEntry(p, *pSpot), pEntry, sizeof(word) * p.nEntrySize ) { // equal
-            return pSpot; }
-    }
-    return pSpot;
+func Vec_MemHashLookup(p *Vec_Mem_t, data []uint64) *int32 {
+	spot := Vec_IntEntryP(p.vTable, int(Vec_MemHashKey(p, data)))
+	for *spot != -1 {
+		if slices.Equal(Vec_MemReadEntry(p, int(*spot)), data[:p.nEntrySize]) {
+			return spot
+		}
+		spot = Vec_IntEntryP(p.vNexts, int(*spot))
+	}
+	return spot
 }
 func Vec_MemHashProfile(p *Vec_Mem_t) {
-    var e int32;
-    for  e = 0; e < 1000; e++  {
-        var Count int32;
-        var pSpot *int32  = Vec_IntEntryP( p.vTable, e );
-        for  ; *pSpot != -1; pSpot = Vec_IntEntryP(p.vNexts, *pSpot)  {
-            Count++;
-        }
-        fmt.Printf("%d ", Count);
-    }
-    fmt.Printf("\n");
+	for _, head := range Vec_IntArray(p.vTable) {
+		n := 0
+		for head != -1 {
+			n++
+			head = Vec_IntEntry(p.vNexts, int(head))
+		}
+		fmt.Printf("%d ", n)
+	}
+	fmt.Println()
 }
 func Vec_MemHashResize(p *Vec_Mem_t) {
-    var pEntry *word;
-    var i int32;
-    var pSpot *int32;
-    //Vec_MemHashProfile( p );
-    Vec_IntFill( p.vTable, Abc_PrimeCudd(2 * Vec_IntSize(p.vTable)), -1 );
-    Vec_IntClear( p.vNexts );
-    // inlining of macro Vec_MemForEachEntry
-    for  i = 0; (i < Vec_MemEntryNum(p)) && ((pEntry) = Vec_MemReadEntry(p, i)); i++  {
-        pSpot = Vec_MemHashLookup( p, pEntry );
-        assert(*pSpot == -1, "*pSpot == -1");
-        *pSpot = Vec_IntSize(p.vNexts);
-        Vec_IntPush( p.vNexts, -1 );
-    }
-    assert(p.nEntries == Vec_IntSize(p.vNexts), "p.nEntries == Vec_IntSize(p.vNexts)");
+	Vec_IntFill(p.vTable, vecMemPrime(2*p.vTable.nSize), -1)
+	Vec_IntClear(p.vNexts)
+	for i := range p.nEntries {
+		spot := Vec_MemHashLookup(p, Vec_MemReadEntry(p, i))
+		if *spot != -1 {
+			panic("duplicate memory hash entry")
+		}
+		*spot = int32(p.vNexts.nSize)
+		Vec_IntPush(p.vNexts, -1)
+	}
 }
-func Vec_MemHashInsert(p *Vec_Mem_t, pEntry *word) int32 {
-    var pSpot *int32;
-    if p.nEntries > Vec_IntSize(p.vTable) {
-        Vec_MemHashResize( p ); }
-    pSpot = Vec_MemHashLookup( p, pEntry );
-    if *pSpot != -1 {
-        return *pSpot; }
-    *pSpot = Vec_IntSize(p.vNexts);
-    Vec_IntPush( p.vNexts, -1 );
-    Vec_MemPush( p, pEntry );
-    assert(p.nEntries == Vec_IntSize(p.vNexts), "p.nEntries == Vec_IntSize(p.vNexts)");
-    return Vec_IntSize(p.vNexts) - 1;
+func Vec_MemHashInsert(p *Vec_Mem_t, data []uint64) int {
+	if p.vTable == nil {
+		panic("hash not allocated")
+	}
+	if p.nEntries > p.vTable.nSize {
+		Vec_MemHashResize(p)
+	}
+	spot := Vec_MemHashLookup(p, data)
+	if *spot != -1 {
+		return int(*spot)
+	}
+	id := p.vNexts.nSize
+	*spot = int32(id)
+	Vec_IntPush(p.vNexts, -1)
+	Vec_MemPush(p, data)
+	return id
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates memory vector for storing truth tables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_MemAllocForTTSimple(nVars int32) *Vec_Mem_t {
-    var nWords int32;
-    if nVars <= 6 {
-        nWords = 1;
-    } else {
-        nWords = (1 << (nVars - 6));
-    }
-    var vTtMem *Vec_Mem_t  = Vec_MemAlloc( nWords, 12 );
-    Vec_MemHashAlloc( vTtMem, 10000 );
-    return vTtMem;
+func Vec_MemAllocForTTSimple(vars int) *Vec_Mem_t {
+	words := 1
+	if vars > 6 {
+		words = 1 << (vars - 6)
+	}
+	p := Vec_MemAlloc(words, 12)
+	Vec_MemHashAlloc(p, 10000)
+	return p
 }
-func Vec_MemAllocForTT(nVars int32, fCompl int32) *Vec_Mem_t {
-    var Value int32;
-    var nWords int32;
-    if nVars <= 6 {
-        nWords = 1;
-    } else {
-        nWords = (1 << (nVars - 6));
-    }
-    var uTruth *word  = ABC_ALLOC( word, nWords ); 
-    var vTtMem *Vec_Mem_t  = Vec_MemAlloc( nWords, 12 );
-    Vec_MemHashAlloc( vTtMem, 10000 );
-    memset( uTruth, 0x00, sizeof(word) * nWords );
-    Value = Vec_MemHashInsert( vTtMem, uTruth ); assert(Value == 0, "Value == 0");
-    if fCompl != 0 {
-        memset( uTruth, 0x55, sizeof(word) * nWords );
-    } else {
-        memset( uTruth, 0xAA, sizeof(word) * nWords ); }
-    Value = Vec_MemHashInsert( vTtMem, uTruth ); assert(Value == 1, "Value == 1");
-    ABC_FREE( uTruth );
-    return vTtMem;
+func Vec_MemAllocForTT(vars, complement int) *Vec_Mem_t {
+	p := Vec_MemAllocForTTSimple(vars)
+	data := make([]uint64, p.nEntrySize)
+	if Vec_MemHashInsert(p, data) != 0 {
+		panic("constant truth ID")
+	}
+	for i := range data {
+		data[i] = 0xaaaaaaaaaaaaaaaa
+		if complement != 0 {
+			data[i] = 0x5555555555555555
+		}
+	}
+	if Vec_MemHashInsert(p, data) != 1 {
+		panic("variable truth ID")
+	}
+	return p
 }
-func Vec_MemAddMuxTT(p *Vec_Mem_t, nVars int32) {
-    var Value int32;
-    var nWords int32;
-    if nVars <= 6 {
-        nWords = 1;
-    } else {
-        nWords = (1 << (nVars - 6));
-    }
-    var uTruth *word  = ABC_ALLOC( word, nWords ); 
-    memset( uTruth, 0xCA, sizeof(word) * nWords );
-    Value = Vec_MemHashInsert( p, uTruth ); assert(Value == 2, "Value == 2");
-    ABC_FREE( uTruth );
+func Vec_MemAddMuxTT(p *Vec_Mem_t, vars int) {
+	words := 1
+	if vars > 6 {
+		words = 1 << (vars - 6)
+	}
+	data := make([]uint64, words)
+	for i := range data {
+		data[i] = 0xcacacacacacacaca
+	}
+	if Vec_MemHashInsert(p, data) != 2 {
+		panic("mux truth ID")
+	}
 }
-func Vec_MemDumpTruthTables(p *Vec_Mem_t, pName string, nLutSize int32) {
-    var pFile *os.File;
-    var pFileName string // was [1000]byte in C
-
-    pFileName = fmt.Sprintf("tt_%s_%02d.txt", pName ? pName : nil, nLutSize);
-    if pName {
-        pFile = fopen( pFileName, "wb" );
-    } else {
-        pFile = os.Stdout;
-    }
-    Vec_MemDump( pFile, p );
-    if pFile != os.Stdout {
-        _ = (pFile).Close(); }
-    fmt.Printf("Dumped %d %d-var truth tables into file \"%s\" (%.2f MB).\n", Vec_MemEntryNum(p), nLutSize, pName ? pFileName : "stdout", 8.0 * Vec_MemEntryNum(p) * Vec_MemEntrySize(p) / (1 << 20));
+func Vec_MemDumpTruthTables(p *Vec_Mem_t, name string, lutSize int) {
+	var w io.Writer = os.Stdout
+	path := "stdout"
+	if name != "" {
+		path = fmt.Sprintf("tt_%s_%02d.txt", name, lutSize)
+		f, err := os.Create(path)
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+		w = f
+	}
+	Vec_MemDump(w, p)
+	fmt.Printf("Dumped %d %d-var truth tables into file %q (%.2f MB).\n", p.nEntries, lutSize, path, float64(8*p.nEntries*p.nEntrySize)/(1<<20))
 }
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-

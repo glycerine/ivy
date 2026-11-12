@@ -1,745 +1,270 @@
 package vec
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+	"unsafe"
+)
 
-/**CFile****************************************************************
-
-  FileName    [vecWec.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Resizable arrays.]
-
-  Synopsis    [Resizable vector of resizable vectors.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: vecWec.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include <stdio.h>
-
-//ABC_NAMESPACE_HEADER_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
-
-         
 type Vec_Wec_t struct {
-    nCap              int32;
-    nSize              int32;
-    pArray       *Vec_Int_t;
+	nCap, nSize int
+	pArray      []Vec_Int_t
 }
 
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
-
-// iterators through levels 
-// Original macro:
-// #define Vec_WecForEachLevel( vGlob, vVec, i )                                              \
-//     for ( i = 0; (i < Vec_WecSize(vGlob)) && (((vVec) = Vec_WecEntry(vGlob, i)), 1); i++ )
-
-// Original macro:
-// #define Vec_WecForEachLevelVec( vLevels, vGlob, vVec, i )                                  \
-//     for ( i = 0; (i < Vec_IntSize(vLevels)) && (((vVec) = Vec_WecEntry(vGlob, Vec_IntEntry(vLevels, i))), 1); i++ )
-
-// Original macro:
-// #define Vec_WecForEachLevelStart( vGlob, vVec, i, LevelStart )                             \
-//     for ( i = LevelStart; (i < Vec_WecSize(vGlob)) && (((vVec) = Vec_WecEntry(vGlob, i)), 1); i++ )
-
-// Original macro:
-// #define Vec_WecForEachLevelStop( vGlob, vVec, i, LevelStop )                               \
-//     for ( i = 0; (i < LevelStop) && (((vVec) = Vec_WecEntry(vGlob, i)), 1); i++ )
-
-// Original macro:
-// #define Vec_WecForEachLevelStartStop( vGlob, vVec, i, LevelStart, LevelStop )              \
-//     for ( i = LevelStart; (i < LevelStop) && (((vVec) = Vec_WecEntry(vGlob, i)), 1); i++ )
-
-// Original macro:
-// #define Vec_WecForEachLevelReverse( vGlob, vVec, i )                                       \
-//     for ( i = Vec_WecSize(vGlob)-1; (i >= 0) && (((vVec) = Vec_WecEntry(vGlob, i)), 1); i-- )
-
-// Original macro:
-// #define Vec_WecForEachLevelReverseStartStop( vGlob, vVec, i, LevelStart, LevelStop )       \
-//     for ( i = LevelStart-1; (i >= LevelStop) && (((vVec) = Vec_WecEntry(vGlob, i)), 1); i-- )
-
-// Original macro:
-// #define Vec_WecForEachLevelTwo( vGlob1, vGlob2, vVec1, vVec2, i )                          \
-//     for ( i = 0; (i < Vec_WecSize(vGlob1)) && (((vVec1) = Vec_WecEntry(vGlob1, i)), 1) && (((vVec2) = Vec_WecEntry(vGlob2, i)), 1); i++ )
-
-// Original macro:
-// #define Vec_WecForEachLevelDouble( vGlob, vVec1, vVec2, i )                                \
-//     for ( i = 0; (i < Vec_WecSize(vGlob)) && (((vVec1) = Vec_WecEntry(vGlob, i)), 1) && (((vVec2) = Vec_WecEntry(vGlob, i+1)), 1); i += 2 )
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates a vector with the given capacity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecAlloc(nCap int32) *Vec_Wec_t {
-    var p *Vec_Wec_t;
-    p = new(Vec_Wec_t);
-    if nCap > 0 && nCap < 8 {
-        nCap = 8; }
-    p.nSize  = 0;
-    p.nCap   = nCap;
-    if p.nCap {
-        p.pArray = ABC_CALLOC( Vec_Int_t, p.nCap );
-    } else {
-        p.pArray = nil;
-    }
-    return p;
+func Vec_WecAlloc(n int) *Vec_Wec_t {
+	if n > 0 && n < 8 {
+		n = 8
+	}
+	return Vec_WecAllocExact(n)
 }
-func Vec_WecAllocExact(nCap int32) *Vec_Wec_t {
-    var p *Vec_Wec_t;
-    assert(nCap >= 0, "nCap >= 0");
-    p = new(Vec_Wec_t);
-    p.nSize  = 0;
-    p.nCap   = nCap;
-    if p.nCap {
-        p.pArray = ABC_CALLOC( Vec_Int_t, p.nCap );
-    } else {
-        p.pArray = nil;
-    }
-    return p;
+func Vec_WecAllocExact(n int) *Vec_Wec_t { return &Vec_Wec_t{nCap: n, pArray: make([]Vec_Int_t, n)} }
+func Vec_WecStart(n int) *Vec_Wec_t      { p := Vec_WecAlloc(n); p.nSize = n; return p }
+func Vec_WecGrow(p *Vec_Wec_t, n int) {
+	if n > p.nCap {
+		p.pArray = append(p.pArray, make([]Vec_Int_t, n-p.nCap)...)
+		p.nCap = n
+	}
 }
-func Vec_WecStart(nSize int32) *Vec_Wec_t {
-    var p *Vec_Wec_t;
-    p = Vec_WecAlloc( nSize );
-    p.nSize = nSize;
-    return p;
+func Vec_WecInit(p *Vec_Wec_t, n int)                { Vec_WecGrow(p, n); p.nSize = n }
+func Vec_WecEntry(p *Vec_Wec_t, i int) *Vec_Int_t    { return &p.pArray[:p.nSize][i] }
+func Vec_WecEntryLast(p *Vec_Wec_t) *Vec_Int_t       { return Vec_WecEntry(p, p.nSize-1) }
+func Vec_WecEntryEntry(p *Vec_Wec_t, i, k int) int32 { return Vec_IntEntry(Vec_WecEntry(p, i), k) }
+func Vec_WecArray(p *Vec_Wec_t) []Vec_Int_t          { return p.pArray[:p.nSize] }
+func Vec_WecLevelId(p *Vec_Wec_t, level *Vec_Int_t) int {
+	for i := range p.nSize {
+		if &p.pArray[i] == level {
+			return i
+		}
+	}
+	panic("level not in vector")
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resizes the vector to the given capacity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecGrow(p *Vec_Wec_t, nCapMin int32) {
-    if p.nCap >= nCapMin {
-        return; }
-    p.pArray = ABC_REALLOC( Vec_Int_t, p.pArray, nCapMin ); 
-    memset( p.pArray + p.nCap, 0, sizeof(Vec_Int_t) * (size_t)(nCapMin - p.nCap) );
-    p.nCap   = nCapMin;
+func Vec_WecCap(p *Vec_Wec_t) int              { return p.nCap }
+func Vec_WecSize(p *Vec_Wec_t) int             { return p.nSize }
+func Vec_WecLevelSize(p *Vec_Wec_t, i int) int { return Vec_IntSize(Vec_WecEntry(p, i)) }
+func Vec_WecSizeSize(p *Vec_Wec_t) int {
+	n := 0
+	for i := range p.nSize {
+		n += p.pArray[i].nSize
+	}
+	return n
 }
-func Vec_WecInit(p *Vec_Wec_t, nSize int32) {
-    Vec_WecGrow( p, nSize );
-    p.nSize = nSize;
+func Vec_WecSizeUsed(p *Vec_Wec_t) int { return Vec_WecSizeUsedLimits(p, 0, p.nSize) }
+func Vec_WecSizeUsedLimits(p *Vec_Wec_t, start, stop int) int {
+	n := 0
+	for _, v := range p.pArray[start:stop] {
+		if v.nSize > 0 {
+			n++
+		}
+	}
+	return n
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecEntry(p *Vec_Wec_t, i int32) *Vec_Int_t {
-    assert(i >= 0 && i < p.nSize, "i >= 0 && i < p.nSize");
-    return p.pArray + i;
+func Vec_WecShrink(p *Vec_Wec_t, n int) {
+	if n < 0 || n > p.nSize {
+		panic("level shrink")
+	}
+	for i := n; i < p.nSize; i++ {
+		Vec_IntClear(&p.pArray[i])
+	}
+	p.nSize = n
 }
-func Vec_WecEntryLast(p *Vec_Wec_t) *Vec_Int_t {
-    assert(p.nSize > 0, "p.nSize > 0");
-    return p.pArray + p.nSize - 1;
-}
-func Vec_WecEntryEntry(p *Vec_Wec_t, i int32, k int32) int32 {
-    return Vec_IntEntry( Vec_WecEntry(p, i), k );
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecArray(p *Vec_Wec_t) *Vec_Int_t {
-    return p.pArray;
-}
-func Vec_WecLevelId(p *Vec_Wec_t, vLevel *Vec_Int_t) int32 {
-    assert(p.pArray <= vLevel && vLevel < p.pArray + p.nSize, "p.pArray <= vLevel && vLevel < p.pArray + p.nSize");
-    return vLevel - p.pArray;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecCap(p *Vec_Wec_t) int32 {
-    return p.nCap;
-}
-func Vec_WecSize(p *Vec_Wec_t) int32 {
-    return p.nSize;
-}
-func Vec_WecLevelSize(p *Vec_Wec_t, i int32) int32 {
-    assert(i >= 0 && i < p.nSize, "i >= 0 && i < p.nSize");
-    return Vec_IntSize( p.pArray + i );
-}
-func Vec_WecSizeSize(p *Vec_Wec_t) int32 {
-    var vVec *Vec_Int_t;
-    var i, Counter int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(p)) && (((vVec) = Vec_WecEntry(p, i)), 1); i++  {
-        Counter += Vec_IntSize(vVec);
-    }
-    return Counter;
-}
-func Vec_WecSizeUsed(p *Vec_Wec_t) int32 {
-    var vVec *Vec_Int_t;
-    var i, Counter int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(p)) && (((vVec) = Vec_WecEntry(p, i)), 1); i++  {
-        Counter += int32((Vec_IntSize(vVec) > 0));
-    }
-    return Counter;
-}
-func Vec_WecSizeUsedLimits(p *Vec_Wec_t, iStart int32, iStop int32) int32 {
-    var vVec *Vec_Int_t;
-    var i, Counter int32;
-    // inlining of macro Vec_WecForEachLevelStartStop
-    for  i = iStart; (i < iStop) && (((vVec) = Vec_WecEntry(p, i)), 1); i++  {
-        Counter += int32((Vec_IntSize(vVec) > 0));
-    }
-    return Counter;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecShrink(p *Vec_Wec_t, nSizeNew int32) {
-    var vVec *Vec_Int_t; var i int32;
-    // inlining of macro Vec_WecForEachLevelStart
-    for  i = nSizeNew; (i < Vec_WecSize(p)) && (((vVec) = Vec_WecEntry(p, i)), 1); i++  {
-        Vec_IntShrink( vVec, 0 );
-    }
-    assert(p.nSize >= nSizeNew, "p.nSize >= nSizeNew");
-    p.nSize = nSizeNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecClear(p *Vec_Wec_t) {
-    var vVec *Vec_Int_t;
-    var i int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(p)) && (((vVec) = Vec_WecEntry(p, i)), 1); i++  {
-        Vec_IntClear( vVec );
-    }
-    p.nSize = 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecPush(p *Vec_Wec_t, Level int32, Entry int32) {
-    if p.nSize < Level + 1 {
-        Vec_WecGrow( p, Abc_MaxInt(2*p.nSize, Level + 1) );
-        p.nSize = Level + 1;
-    }
-    Vec_IntPush( Vec_WecEntry(p, Level), Entry );
+func Vec_WecClear(p *Vec_Wec_t) { Vec_WecShrink(p, 0) }
+func Vec_WecPush(p *Vec_Wec_t, level int, x int32) {
+	if level >= p.nSize {
+		Vec_WecGrow(p, max(2*p.nSize, level+1))
+		p.nSize = level + 1
+	}
+	Vec_IntPush(Vec_WecEntry(p, level), x)
 }
 func Vec_WecPushLevel(p *Vec_Wec_t) *Vec_Int_t {
-    if p.nSize == p.nCap {
-        if p.nCap < 16 {
-            Vec_WecGrow( p, 16 );
-        } else {
-            Vec_WecGrow( p, 2 * p.nCap ); }
-    }
-    ++p.nSize;
-    return Vec_WecEntryLast( p );
+	if p.nSize == p.nCap {
+		Vec_WecGrow(p, max(16, 2*p.nCap))
+	}
+	p.nSize++
+	return Vec_WecEntryLast(p)
 }
-func Vec_WecInsertLevel(p *Vec_Wec_t, i int32) *Vec_Int_t {
-    var pTemp *Vec_Int_t;
-    if p.nSize == p.nCap {
-        if p.nCap < 16 {
-            Vec_WecGrow( p, 16 );
-        } else {
-            Vec_WecGrow( p, 2 * p.nCap ); }
-    }
-    ++p.nSize;
-    assert(i >= 0 && i < p.nSize, "i >= 0 && i < p.nSize");
-    for  pTemp = p.pArray + p.nSize - 2; pTemp >= p.pArray + i; pTemp--  {
-        pTemp[1] = pTemp[0];
-    }
-    Vec_IntZero( p.pArray + i );
-    return p.pArray + i;
+func Vec_WecInsertLevel(p *Vec_Wec_t, i int) *Vec_Int_t {
+	if i < 0 || i > p.nSize {
+		panic("level insert")
+	}
+	Vec_WecPushLevel(p)
+	copy(p.pArray[i+1:p.nSize], p.pArray[i:p.nSize-1])
+	p.pArray[i] = Vec_Int_t{}
+	return &p.pArray[i]
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Vec_WecMemory(p *Vec_Wec_t) float64 {
-    var i int32;
-    var Mem float64;
-    if p == nil {  return 0.0; }
-    Mem = sizeof(Vec_Int_t) * Vec_WecCap(p);
-    for  i = 0; i < p.nSize; i++  {
-        Mem += sizeof(int) * (size_t)Vec_IntCap( Vec_WecEntry(p, i) );
-    }
-    return Mem;
+	if p == nil {
+		return 0
+	}
+	n := p.nCap * int(unsafe.Sizeof(Vec_Int_t{}))
+	for i := range p.nSize {
+		n += 4 * p.pArray[i].nCap
+	}
+	return float64(n)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Frees the vector.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecZero(p *Vec_Wec_t) {
-    p.pArray = nil;
-    p.nSize = 0;
-    p.nCap = 0;
-}
-func Vec_WecErase(p *Vec_Wec_t) {
-    var i int32;
-    for  i = 0; i < p.nCap; i++  {
-        ABC_FREE( p.pArray[i].pArray );
-    }
-    ABC_FREE( p.pArray );
-    p.nSize = 0;
-    p.nCap = 0;
-}
+func Vec_WecZero(p *Vec_Wec_t)  { *p = Vec_Wec_t{} }
+func Vec_WecErase(p *Vec_Wec_t) { Vec_WecZero(p) }
 func Vec_WecFree(p *Vec_Wec_t) {
-    Vec_WecErase( p );
-    ABC_FREE( p );
+	if p != nil {
+		Vec_WecErase(p)
+	}
 }
-func Vec_WecFreeP(p **Vec_Wec_t) {
-    if *p == nil {
-        return; }
-    Vec_WecFree( *p );
-    *p = nil;
+func Vec_WecFreeP(p **Vec_Wec_t) { Vec_WecFree(*p); *p = nil }
+func Vec_WecPushUnique(p *Vec_Wec_t, level int, x int32) {
+	if level >= p.nSize {
+		Vec_WecPush(p, level, x)
+	} else {
+		Vec_IntPushUnique(Vec_WecEntry(p, level), x)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecPushUnique(p *Vec_Wec_t, Level int32, Entry int32) {
-    if p.nSize < Level + 1 {
-        Vec_WecPush( p, Level, Entry );
-    } else {
-        Vec_IntPushUnique( Vec_WecEntry(p, Level), Entry ); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Frees the vector.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Vec_WecDup(p *Vec_Wec_t) *Vec_Wec_t {
-    var vNew *Vec_Wec_t;
-    var vVec *Vec_Int_t;
-    var i, k, Entry int32;
-    vNew = Vec_WecAlloc( Vec_WecSize(p) );
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(p)) && (((vVec) = Vec_WecEntry(p, i)), 1); i++  {
-        Vec_IntForEachEntry( vVec, Entry, k )
-            Vec_WecPush( vNew, i, Entry );
-    }
-    return vNew;
+	q := Vec_WecStart(p.nSize)
+	for i := range p.nSize {
+		q.pArray[i] = *Vec_IntDup(&p.pArray[i])
+	}
+	return q
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Sorting by array size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecSortCompare1(p1 *Vec_Int_t, p2 *Vec_Int_t) int32 {
-    if Vec_IntSize(p1) < Vec_IntSize(p2) {
-        return -1; }
-    if Vec_IntSize(p1) > Vec_IntSize(p2) { 
-        return 1; }
-    return 0; 
+func Vec_WecSortCompare1(p, q *Vec_Int_t) int {
+	if p.nSize < q.nSize {
+		return -1
+	}
+	if p.nSize > q.nSize {
+		return 1
+	}
+	return 0
 }
-func Vec_WecSortCompare2(p1 *Vec_Int_t, p2 *Vec_Int_t) int32 {
-    if Vec_IntSize(p1) > Vec_IntSize(p2) {
-        return -1; }
-    if Vec_IntSize(p1) < Vec_IntSize(p2) { 
-        return 1; }
-    return 0; 
+func Vec_WecSortCompare2(p, q *Vec_Int_t) int { return -Vec_WecSortCompare1(p, q) }
+func Vec_WecSortCompare3(p, q *Vec_Int_t) int {
+	a, b := Vec_IntEntry(p, 0), Vec_IntEntry(q, 0)
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
 }
-func Vec_WecSort(p *Vec_Wec_t, fReverse int32) {
-    if fReverse != 0 { 
-        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(Vec_Int_t), 
-                        (int (*)(void *, void *)) Vec_WecSortCompare2 );
-    } else {
-        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(Vec_Int_t), 
-                        (int (*)(void *, void *)) Vec_WecSortCompare1 ); }
+func Vec_WecSortCompare4(p, q *Vec_Int_t) int { return -Vec_WecSortCompare3(p, q) }
+func Vec_WecSortCompare5(p, q *Vec_Int_t) int {
+	a, b := Vec_IntEntryLast(p), Vec_IntEntryLast(q)
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Sorting by the first entry.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecSortCompare3(p1 *Vec_Int_t, p2 *Vec_Int_t) int32 {
-    if Vec_IntEntry(p1,0) < Vec_IntEntry(p2,0) {
-        return -1; }
-    if Vec_IntEntry(p1,0) > Vec_IntEntry(p2,0) { 
-        return 1; }
-    return 0; 
+func Vec_WecSortCompare6(p, q *Vec_Int_t) int { return -Vec_WecSortCompare5(p, q) }
+func wecSort(p *Vec_Wec_t, reverse int, compare func(*Vec_Int_t, *Vec_Int_t) int) {
+	sort.SliceStable(Vec_WecArray(p), func(i, j int) bool {
+		v := compare(&p.pArray[i], &p.pArray[j])
+		if reverse != 0 {
+			return v > 0
+		}
+		return v < 0
+	})
 }
-func Vec_WecSortCompare4(p1 *Vec_Int_t, p2 *Vec_Int_t) int32 {
-    if Vec_IntEntry(p1,0) > Vec_IntEntry(p2,0) {
-        return -1; }
-    if Vec_IntEntry(p1,0) < Vec_IntEntry(p2,0) { 
-        return 1; }
-    return 0; 
-}
-func Vec_WecSortByFirstInt(p *Vec_Wec_t, fReverse int32) {
-    if fReverse != 0 { 
-        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(Vec_Int_t), 
-                        (int (*)(void *, void *)) Vec_WecSortCompare4 );
-    } else {
-        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(Vec_Int_t), 
-                        (int (*)(void *, void *)) Vec_WecSortCompare3 ); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Sorting by the last entry.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecSortCompare5(p1 *Vec_Int_t, p2 *Vec_Int_t) int32 {
-    if Vec_IntEntryLast(p1) < Vec_IntEntryLast(p2) {
-        return -1; }
-    if Vec_IntEntryLast(p1) > Vec_IntEntryLast(p2) { 
-        return 1; }
-    return 0; 
-}
-func Vec_WecSortCompare6(p1 *Vec_Int_t, p2 *Vec_Int_t) int32 {
-    if Vec_IntEntryLast(p1) > Vec_IntEntryLast(p2) {
-        return -1; }
-    if Vec_IntEntryLast(p1) < Vec_IntEntryLast(p2) { 
-        return 1; }
-    return 0; 
-}
-func Vec_WecSortByLastInt(p *Vec_Wec_t, fReverse int32) {
-    if fReverse != 0 { 
-        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(Vec_Int_t), 
-                        (int (*)(void *, void *)) Vec_WecSortCompare6 );
-    } else {
-        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(Vec_Int_t), 
-                        (int (*)(void *, void *)) Vec_WecSortCompare5 ); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecPrint(p *Vec_Wec_t, fSkipSingles int32) {
-    var vVec *Vec_Int_t;
-    var i, k, Entry int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(p)) && (((vVec) = Vec_WecEntry(p, i)), 1); i++  {
-        if (fSkipSingles != 0) && Vec_IntSize(vVec) == 1 {
-            continue; }
-        fmt.Printf(" %4d : {", i);
-        Vec_IntForEachEntry( vVec, Entry, k )
-            fmt.Printf(" %d", Entry);
-        fmt.Printf(" }\n");
-    }
+func Vec_WecSort(p *Vec_Wec_t, reverse int)           { wecSort(p, reverse, Vec_WecSortCompare1) }
+func Vec_WecSortByFirstInt(p *Vec_Wec_t, reverse int) { wecSort(p, reverse, Vec_WecSortCompare3) }
+func Vec_WecSortByLastInt(p *Vec_Wec_t, reverse int)  { wecSort(p, reverse, Vec_WecSortCompare5) }
+func Vec_WecPrint(p *Vec_Wec_t, skipSingles int) {
+	for i := range p.nSize {
+		v := &p.pArray[i]
+		if skipSingles != 0 && v.nSize == 1 {
+			continue
+		}
+		fmt.Printf(" %4d : {", i)
+		for _, x := range Vec_IntArray(v) {
+			fmt.Printf(" %d", x)
+		}
+		fmt.Println(" }")
+	}
 }
 func Vec_WecPrintLits(p *Vec_Wec_t) {
-    var vVec *Vec_Int_t;
-    var i, k, iLit int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(p)) && (((vVec) = Vec_WecEntry(p, i)), 1); i++  {
-        fmt.Printf(" %4d : %2d  {", i, Vec_IntSize(vVec));
-        Vec_IntForEachEntry( vVec, iLit, k )
-            fmt.Printf(" %c%d", Abc_LitIsCompl(iLit) ? '-' : '+', Abc_Lit2Var(iLit));
-        fmt.Printf(" }\n");
-    }
+	for i := range p.nSize {
+		v := &p.pArray[i]
+		fmt.Printf(" %4d : %2d  {", i, v.nSize)
+		for _, lit := range Vec_IntArray(v) {
+			sign := '+'
+			if lit&1 != 0 {
+				sign = '-'
+			}
+			fmt.Printf(" %c%d", sign, lit>>1)
+		}
+		fmt.Println(" }")
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the set of equivalence classes.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecCreateClasses(vMap *Vec_Int_t) *Vec_Wec_t {
-    var vClasses *Vec_Wec_t;
-    var i, Entry int32;
-    vClasses = Vec_WecStart( Vec_IntFindMax(vMap) + 1 );
-    Vec_IntForEachEntry( vMap, Entry, i )
-        Vec_WecPush( vClasses, Entry, i );
-    return vClasses;
+func Vec_WecCreateClasses(mapping *Vec_Int_t) *Vec_Wec_t {
+	q := Vec_WecStart(int(Vec_IntFindMax(mapping)) + 1)
+	for i, x := range Vec_IntArray(mapping) {
+		Vec_WecPush(q, int(x), int32(i))
+	}
+	return q
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecCountNonTrivial(p *Vec_Wec_t, pnUsed *int32) int32 {
-    var vClass *Vec_Int_t;
-    var i, nClasses int32;
-    *pnUsed = 0;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(p)) && (((vClass) = Vec_WecEntry(p, i)), 1); i++  {
-        if Vec_IntSize(vClass) < 2 {
-            continue; }
-        nClasses++;
-        (*pnUsed) += Vec_IntSize(vClass);
-    }
-    return nClasses;
+func Vec_WecCountNonTrivial(p *Vec_Wec_t, used *int) int {
+	*used = 0
+	n := 0
+	for _, v := range Vec_WecArray(p) {
+		if v.nSize >= 2 {
+			n++
+			*used += v.nSize
+		}
+	}
+	return n
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Vec_WecCollectFirsts(p *Vec_Wec_t) *Vec_Int_t {
-    var vFirsts, vLevel *Vec_Int_t;
-    var i int32;
-    vFirsts = Vec_IntAlloc( Vec_WecSize(p) );
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(p)) && (((vLevel) = Vec_WecEntry(p, i)), 1); i++  {
-        if Vec_IntSize(vLevel) > 0 {
-            Vec_IntPush( vFirsts, Vec_IntEntry(vLevel, 0) ); }
-    }
-    return vFirsts;
+	q := Vec_IntAlloc(p.nSize)
+	for i := range p.nSize {
+		v := &p.pArray[i]
+		if v.nSize > 0 {
+			Vec_IntPush(q, Vec_IntEntry(v, 0))
+		}
+	}
+	return q
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Vec_WecConvertToVecPtr(p *Vec_Wec_t) *Vec_Ptr_t {
-    var vCopy *Vec_Ptr_t;
-    var vLevel *Vec_Int_t;
-    var i int32;
-    vCopy = Vec_PtrAlloc( Vec_WecSize(p) );
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(p)) && (((vLevel) = Vec_WecEntry(p, i)), 1); i++  {
-        Vec_PtrPush( vCopy, Vec_IntDup(vLevel) );
-    }
-    return vCopy;
+	q := Vec_PtrAlloc(p.nSize)
+	for i := range p.nSize {
+		Vec_PtrPush(q, Vec_IntDup(&p.pArray[i]))
+	}
+	return q
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Temporary vector marking.]
-
-  Description [The vector should be static when the marking is used.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecIntHasMark(vVec *Vec_Int_t) int32 { return (vVec.nCap >> 30) & 1; }
-func Vec_WecIntSetMark(vVec *Vec_Int_t) { vVec.nCap |= (1<<30);         }
-func Vec_WecIntXorMark(vVec *Vec_Int_t) { vVec.nCap ^= (1<<30);         }
-func Vec_WecMarkLevels(vCubes *Vec_Wec_t, vLevels *Vec_Int_t) {
-    var vCube *Vec_Int_t;
-    var i int32;
-    // inlining of macro Vec_WecForEachLevelVec
-    for  i = 0; (i < Vec_IntSize(vLevels)) && (((vCube) = Vec_WecEntry(vCubes, Vec_IntEntry(vLevels, i))), 1); i++  {
-        assert(!(Vec_WecIntHasMark( vCube ) != 0), "!Vec_WecIntHasMark( vCube )");
-        Vec_WecIntXorMark( vCube );
-    }
+// Marks live separately from capacity: Go slices must never use tagged lengths.
+func Vec_WecIntHasMark(p *Vec_Int_t) int {
+	if p.marked {
+		return 1
+	}
+	return 0
 }
-func Vec_WecUnmarkLevels(vCubes *Vec_Wec_t, vLevels *Vec_Int_t) {
-    var vCube *Vec_Int_t;
-    var i int32;
-    // inlining of macro Vec_WecForEachLevelVec
-    for  i = 0; (i < Vec_IntSize(vLevels)) && (((vCube) = Vec_WecEntry(vCubes, Vec_IntEntry(vLevels, i))), 1); i++  {
-        assert((Vec_WecIntHasMark( vCube ) != 0), "Vec_WecIntHasMark( vCube )");
-        Vec_WecIntXorMark( vCube );
-    }
+func Vec_WecIntSetMark(p *Vec_Int_t) { p.marked = true }
+func Vec_WecIntXorMark(p *Vec_Int_t) { p.marked = !p.marked }
+func Vec_WecMarkLevels(p *Vec_Wec_t, levels *Vec_Int_t) {
+	for _, i := range Vec_IntArray(levels) {
+		v := Vec_WecEntry(p, int(i))
+		if v.marked {
+			panic("level already marked")
+		}
+		v.marked = true
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Removes 0-size vectors.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_WecRemoveEmpty(vCubes *Vec_Wec_t) {
-    var vCube *Vec_Int_t;
-    var i, k int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vCubes)) && (((vCube) = Vec_WecEntry(vCubes, i)), 1); i++  {
-        if Vec_IntSize(vCube) > 0 {
-            vCubes.pArray[k++] = *vCube;
-        } else {
-            ABC_FREE( vCube.pArray ); }
-    }
-    for  i = k; i < Vec_WecSize(vCubes); i++  {
-        Vec_IntZero( Vec_WecEntry(vCubes, i) );
-    }
-    Vec_WecShrink( vCubes, k );
-//    Vec_WecSortByFirstInt( vCubes, 0 );
+func Vec_WecUnmarkLevels(p *Vec_Wec_t, levels *Vec_Int_t) {
+	for _, i := range Vec_IntArray(levels) {
+		v := Vec_WecEntry(p, int(i))
+		if !v.marked {
+			panic("level not marked")
+		}
+		v.marked = false
+	}
 }
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
+func Vec_WecRemoveEmpty(p *Vec_Wec_t) {
+	k := 0
+	for i := range p.nSize {
+		if p.pArray[i].nSize > 0 {
+			p.pArray[k] = p.pArray[i]
+			k++
+		}
+	}
+	clear(p.pArray[k:p.nSize])
+	p.nSize = k
+}
