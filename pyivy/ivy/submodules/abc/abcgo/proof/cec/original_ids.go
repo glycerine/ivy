@@ -2,6 +2,7 @@ package cec
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
+	abcmain "github.com/glycerine/abcgo/base/main"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -30,4 +31,9 @@ func Gia_ManComputeGiaEquivs(graph *gia.Gia_Man_t, conflicts, verbose int32) *gi
 	}
 	graph.ClearRepresentatives()
 	return gia.Gia_ManOrigIdsReduce(graph, pairs)
+}
+
+// InstallMiniLutNameMapping connects the frame's GIA bridge to SAT sweeping.
+func InstallMiniLutNameMapping(frame *abcmain.Frame) {
+	gia.InstallFrameEquivalenceComputer(frame, Gia_ManComputeGiaEquivs)
 }
