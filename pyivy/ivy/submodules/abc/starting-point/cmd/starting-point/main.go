@@ -78,7 +78,7 @@ func run(args []string) error {
 		}
 	}
 	if *out == "" || flags.NArg() == 0 {
-		return fmt.Errorf("usage: starting-point [-package NAME] [-out NEW_DIRECTORY] SOURCE_DIRECTORY; or starting-point -out NEW_DIRECTORY source.h ...")
+		return fmt.Errorf("usage: starting-point [-inlinemacros] [-package NAME] [-out NEW_DIRECTORY] SOURCE_DIRECTORY; or starting-point -out NEW_DIRECTORY source.h ...")
 	}
 	packageName, err := startingpoint.ResolvePackage(flags.Arg(0), *pkg)
 	if err != nil {
@@ -143,7 +143,7 @@ func run(args []string) error {
 		Package    string
 		DurationNS int64
 		Files      []startingpoint.Result
-	}{"prototype-61", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
+	}{"prototype-62", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
 	if err != nil {
 		return err
 	}

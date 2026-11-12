@@ -306,3 +306,21 @@ func TestInlineMacroSideEffectsAndComments(t *testing.T) {
 		}
 	}
 }
+
+func TestInlineMacroRealReoConsumer(t *testing.T) {
+	path := "../src/bdd/reo/reoTransfer.c"
+	source, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	r, err := AnalyzeWithOptions(path, string(source), Options{InlineMacros: true, IncludePaths: []string{"../src"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(r.Draft, "Unit_Regular(pUnit)") || !strings.Contains(r.Draft, "ABC_PTRUINT_T") {
+		t.Fatal("header macro not expanded", r.Draft)
+	}
+	if !r.InlineMacros {
+		t.Fatal("inline policy missing from metadata")
+	}
+}

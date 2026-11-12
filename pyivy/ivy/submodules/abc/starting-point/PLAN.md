@@ -1931,3 +1931,42 @@ Validation: minimal red-to-green test and actual abcHie.c output, function
 metadata, unrelated/nested buffers, retained calls, aliases, and a compiled
 runtime test pass. Library and CLI suites pass; experiments are excluded.
 Existing out/ is unchanged until regenerated.
+
+### Prototype 62: opt-in function macro expansion
+
+Added CLI -inlinemacros (default false) and library Options.InlineMacros. The
+first basic regression was observed red before expansion was implemented.
+Macro definitions remain source comments; supported invocations expand before
+ordinary translation so declarations, control-flow bracing, ternaries, loops,
+assertions and standard-library rewrites continue to apply. Default macro-to-
+function behavior is unchanged.
+
+Token substitution protects strings/comments and preserves C replacement
+parentheses and repeated argument evaluation. Support fixed-arity/empty calls,
+nested arguments and macro references, line continuations, source-order
+redefinitions/undef, local included headers, standard include guards and pragma
+once. Tree mode searches the source root and its src directory in addition to
+each including directory; library callers can set IncludePaths. Unknown #if
+regions remain opaque, and branch-dependent macros are blocked rather than
+selecting a definition. No anonymous functions or compiler dependency.
+
+Preserve unsupported variadic/stringification/token-pasting calls and recursive,
+wrong-arity or bounded-expansion cases with macro-inline-review issues. Keep
+expansion diagnostics anchored to original invocations; map downstream function
+spans, conditional coordinates and source errors back to original input bytes.
+Source hashes and Function.Original remain original, and metadata records the
+inline policy. This is intentionally a bounded draft expander, not a complete
+preprocessor. Object-like macros retain existing constant processing.
+
+Validation: library and CLI suites pass, excluding experiments. Coverage includes
+default-off behavior; both flat and tree CLI modes; lexical substitution and
+comments; nested/multiline/CRLF/empty/statement macros; side effects/precedence;
+include cycles, header guards, include roots, redefinition and undef; configured
+and unknown branches; recursive and unsupported forms; depth/size limits;
+original coordinates/hash; metadata and real reoTransfer.c header expansion.
+A compiled runtime test combines macro expansion, loops, do/while and printf.
+A smoke translation of all 10 REO inputs into
+/tmp/starting-point-inline-reo-test completed with zero source-preserving
+fallbacks (99 converted standard-library sites, 78 retained library review sites).
+No experiment tests were run and existing out/ was not modified.
+Installed prototype-62; regenerate with -inlinemacros to use the new mode.

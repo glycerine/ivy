@@ -53,6 +53,44 @@ starting-point -package shared abc
 `-package` overrides package declarations throughout the tree. `-out` overrides
 the destination. Existing files are never overwritten.
 
+## Inline function-like macros
+
+```sh
+starting-point -inlinemacros -out /tmp/abc-inline src
+```
+
+`-inlinemacros` defaults to false. When enabled, function-like macro invocations
+are expanded before the ordinary C/C++-to-Go passes instead of generating macro
+functions. Original definitions remain as comments. For example,
+`#define ADD(a,b) ((a)+(b))` makes `ADD(2,3)` become `((2)+(3))` at its use site.
+Replacement parentheses and repeated evaluation are preserved as written in C;
+no guessed parameter types, temporary functions, or closures are introduced.
+Object-like constants keep their existing constant conversion.
+
+Expansion handles fixed-arity arguments (including empty arguments), nesting,
+multiline definitions, statement/loop macros, redefinitions, and `#undef` in
+source order. Strings and comments are not substituted. Expanded statements
+still receive declaration, loop, conditional, assertion, and library rewrites.
+Local includes are searched relative to the including file; tree mode also
+searches the input root and its `src/` directory. Standard header guards and
+`#pragma once` prevent repeated header loading; include cycles terminate.
+No system compiler or system include directories are required or searched.
+
+Configured preprocessor choices apply before expansion. Unresolved conditional
+regions stay opaque, and macros whose definitions depend on those choices are
+retained at their use sites. Variadic macros, stringification (`#`), token pasting
+(`##`), recursive calls, argument-count mismatches, and expansion-limit cases
+remain visible for repair, with `macro-inline-review` issues in JSON metadata.
+This is a bounded draft expander, not a complete C preprocessor. Missing quoted
+includes are also reported; their macro definitions cannot be inferred.
+
+Library callers set `Options{InlineMacros: true}` and can supply `IncludePaths`
+for additional local header roots. Inline mode may read those included headers.
+Results record `InlineMacros: true`; source hashes, function originals, and
+source diagnostics retain original input coordinates. Expansion is limited to
+64 nesting levels, 100,000 calls, 1 MiB per replacement, and 8 MiB of accumulated
+replacement text per input file (including nested expansions).
+
 ## Flat file batches
 
 The earlier file-list mode remains available:
