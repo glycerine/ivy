@@ -628,31 +628,7 @@ func Io_WriteVerilogWiresCount(pNtk *Abc_Ntk_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-var spStatic_Io_WriteVerilogGetName_Buffer [500]byte;
-func Io_WriteVerilogGetName(pName string) string {
-    
-    var Length, i int32;
-    Length = len(pName);
-    // consider the case of a signal having name "0" or "1"
-    if !(Length == 1 && (pName[0] == '0' || pName[0] == '1')) {
-        for  i = 0; i < Length; i++  {
-            if !((pName[i] >= 'a' && pName[i] <= 'z') || 
-                 (pName[i] >= 'A' && pName[i] <= 'Z') || 
-                 (pName[i] >= '0' && pName[i] <= '9') || pName[i] == '_') {
-                 break; }
-        }
-        if i == Length {
-            return pName; }
-    }
-    // create Verilog style name
-    spStatic_Io_WriteVerilogGetName_Buffer[0] = '\\';
-    for  i = 0; i < Length; i++  {
-        spStatic_Io_WriteVerilogGetName_Buffer[i+1] = pName[i];
-    }
-    spStatic_Io_WriteVerilogGetName_Buffer[Length+1] = ' ';
-    spStatic_Io_WriteVerilogGetName_Buffer[Length+2] = 0;
-    return spStatic_Io_WriteVerilogGetName_Buffer;
-}
+
 
 
 /**Function*************************************************************
@@ -666,11 +642,7 @@ func Io_WriteVerilogGetName(pName string) string {
   SeeAlso     []
 
 ***********************************************************************/
-func Io_WriteLutModule(pFile *os.File, nLutSize int32) {    
-    fmt.Fprintf(pFile, "module lut%d #( parameter TT = %d\'h0 ) ( input [%d:0] in, output out );\n", nLutSize, 1<<nLutSize, nLutSize-1);
-    fmt.Fprintf(pFile, "    assign out = TT[in];\n");
-    fmt.Fprintf(pFile, "endmodule\n\n");
-}
+
 func Io_WriteVerilogObjectsLut(pFile *os.File, pNtk *Abc_Ntk_t, nLutSize int32) {
     var pNtkBox *Abc_Ntk_t;
     var pObj, pTerm *Abc_Obj_t;
