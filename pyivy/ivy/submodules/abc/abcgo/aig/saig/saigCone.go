@@ -1,180 +1,94 @@
 package saig
 
-import "fmt"
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+)
 
-  FileName    [saigCone.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Sequential AIG package.]
-
-  Synopsis    [Cone of influence computation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: saigCone.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "saig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManSupport_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vSupp *Vec_Ptr_t) {
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    if Aig_ObjIsConst1(pObj) {
-        return; }
-    if Aig_ObjIsCi(pObj) {
-        if Saig_ObjIsLo(p,pObj) {
-            pObj = Saig_ManLi( p, Aig_ObjCioId(pObj)-Saig_ManPiNum(p) );
-            Vec_PtrPush( vSupp, pObj );
-        }
-        return;
-    }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Saig_ManSupport_rec( p, Aig_ObjFanin0(pObj), vSupp );
-    Saig_ManSupport_rec( p, Aig_ObjFanin1(pObj), vSupp );
+// Saig_ManSupport returns the latch-input outputs in the transitive support
+// of the supplied AIG outputs. Primary inputs and constants are not state
+// support. The result is unique and follows first-visit traversal order.
+func Saig_ManSupport(p *aig.Graph, outputs []aig.Edge) []aig.Edge {
+	seenNodes := make(map[aig.Edge]struct{})
+	seenRegs := make(map[aig.Edge]struct{})
+	support := make([]aig.Edge, 0)
+	nPis := int32(p.InputCount()) - aig.Aig_ManRegNum(p)
+	var visit func(aig.Edge)
+	visit = func(edge aig.Edge) {
+		edge = aig.Aig_Regular(edge)
+		if _, ok := seenNodes[edge]; ok {
+			return
+		}
+		seenNodes[edge] = struct{}{}
+		if aig.Aig_ObjIsConst1(p, edge) {
+			return
+		}
+		if aig.Aig_ObjIsCi(p, edge) {
+			if aig.Aig_ObjCioId(p, edge) >= nPis {
+				li := aig.Aig_ManLi(p, aig.Aig_ObjCioId(p, edge)-nPis)
+				if _, exists := seenRegs[li]; !exists {
+					seenRegs[li] = struct{}{}
+					support = append(support, li)
+				}
+			}
+			return
+		}
+		if aig.Aig_ObjIsNode(p, edge) || aig.Aig_ObjIsBuf(p, edge) {
+			visit(aig.Aig_ObjChild0(p, edge))
+			if aig.Aig_ObjIsNode(p, edge) {
+				visit(aig.Aig_ObjChild1(p, edge))
+			}
+		}
+	}
+	for _, output := range outputs {
+		output = aig.Aig_Regular(output)
+		if aig.Aig_ObjIsCo(p, output) {
+			visit(aig.Aig_ObjFanin0(p, output))
+		} else {
+			visit(output)
+		}
+	}
+	return support
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Counts the support size of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManSupport(p *Aig_Man_t, vNodes *Vec_Ptr_t) *Vec_Ptr_t {
-    var vSupp *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    vSupp = Vec_PtrAlloc( 100 );
-    Aig_ManIncrementTravId( p );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        assert(Aig_ObjIsCo(pObj), "Aig_ObjIsCo(pObj)");
-        Saig_ManSupport_rec( p, Aig_ObjFanin0(pObj), vSupp );
-    }
-    return vSupp;
+// Saig_ManPrintConeOne prints successive state-support frontiers for one
+// primary output object.
+func Saig_ManPrintConeOne(p *aig.Graph, output aig.Edge) {
+	frontier := Saig_ManSupport(p, []aig.Edge{output})
+	previous := make(map[aig.Edge]struct{})
+	total := make(map[aig.Edge]struct{})
+	fmt.Printf("    PO %3d  ", aig.Aig_ObjCioId(p, output))
+	for depth := 0; ; depth++ {
+		var fresh, repeatedPrevious, repeatedOlder int
+		for _, edge := range frontier {
+			if _, ok := total[edge]; !ok {
+				total[edge] = struct{}{}
+				fresh++
+			} else if _, ok := previous[edge]; ok {
+				repeatedPrevious++
+			} else {
+				repeatedOlder++
+			}
+		}
+		fmt.Printf("%d:%d %d=%d+%d+%d  ", depth, len(total), len(frontier), fresh, repeatedPrevious, repeatedOlder)
+		if fresh == 0 {
+			break
+		}
+		previous = make(map[aig.Edge]struct{}, len(frontier))
+		for _, edge := range frontier {
+			previous[edge] = struct{}{}
+		}
+		frontier = Saig_ManSupport(p, frontier)
+	}
+	fmt.Println()
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Prints information about cones of influence of the POs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManPrintConeOne(p *Aig_Man_t, pObj *Aig_Obj_t) {
-    var vPrev, vCur, vTotal *Vec_Ptr_t;
-    var s, i, nCurNew, nCurPrev, nCurOld int32;
-    assert(Saig_ObjIsPo(p, pObj), "Saig_ObjIsPo(p, pObj)");
-    // start the array
-    vPrev = Vec_PtrAlloc( 100 );
-    Vec_PtrPush( vPrev, pObj );
-    // get the current support
-    vCur = Saig_ManSupport( p, vPrev );  
-    Vec_PtrClear( vPrev );
-    fmt.Printf("    PO %3d  ", Aig_ObjCioId(pObj));
-    // continue computing supports as long as there are now nodes
-    vTotal = Vec_PtrAlloc( 100 );
-    for  s = 0; ; s++  {
-        // classify current into those new, prev, and older 
-        nCurNew = nCurPrev = nCurOld = 0;
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(vCur)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCur, i)), 1); i++  {
-            if Vec_PtrFind(vTotal, pObj) == -1 {
-                Vec_PtrPush( vTotal, pObj );
-                nCurNew++;
-            
-            } else if Vec_PtrFind(vPrev, pObj) >= 0 {
-                nCurPrev++;
-            } else {
-                nCurOld++; }
-        }
-        assert(nCurNew + nCurPrev + nCurOld == Vec_PtrSize(vCur), "nCurNew + nCurPrev + nCurOld == Vec_PtrSize(vCur)");
-        // print the result
-        fmt.Printf("%d:%d %d=%d+%d+%d  ", s, Vec_PtrSize(vTotal), Vec_PtrSize(vCur), nCurNew, nCurPrev, nCurOld); 
-        if nCurNew == 0 {
-            break; }
-        // compute one more step
-        Vec_PtrFree( vPrev );
-        vCur = Saig_ManSupport( p, vPrev = vCur );
-    }
-    fmt.Printf("\n");
-    Vec_PtrFree( vPrev );
-    Vec_PtrFree( vCur );
-    Vec_PtrFree( vTotal );
+// Saig_ManPrintCones reports the sequential support frontier of every primary
+// output. Register outputs are excluded from the primary-output prefix.
+func Saig_ManPrintCones(p *aig.Graph) {
+	nPos := int32(p.OutputCount()) - aig.Aig_ManRegNum(p)
+	for i := int32(0); i < nPos; i++ {
+		Saig_ManPrintConeOne(p, aig.Aig_ManCo(p, i))
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints information about cones of influence of the POs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManPrintCones(p *Aig_Man_t) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    fmt.Printf("The format of this print-out: For each PO, x:a b=c+d+e, where \n");
-    fmt.Printf("- x is the time-frame counting back from the PO\n");
-    fmt.Printf("- a is the total number of registers in the COI of the PO so far\n");
-    fmt.Printf("- b is the number of registers in the COI of the PO in this time-frame\n");
-    fmt.Printf("- c is the number of registers in b that are new (appear for the first time)\n");
-    fmt.Printf("- d is the number of registers in b in common with the previous time-frame\n");
-    fmt.Printf("- e is the number of registers in b in common with other time-frames\n");
-    Aig_ManSetCioIds( p );
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        Saig_ManPrintConeOne( p, pObj );
-    }
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
