@@ -1,5 +1,25 @@
 package dau
 
+/**CFile****************************************************************
+
+  FileName    [dauTree.c]
+
+  SystemName  [ABC: Logic synthesis and verification system.]
+
+  PackageName [DAG-aware unmapping.]
+
+  Synopsis    [Canonical DSD package.]
+
+  Author      [Alan Mishchenko]
+
+  Affiliation [UC Berkeley]
+
+  Date        [Ver. 1.0. Started - June 20, 2005.]
+
+  Revision    [$Id: dauTree.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
+
+***********************************************************************/
+
 import (
 	"encoding/binary"
 	"fmt"
@@ -68,9 +88,13 @@ func Dss_NotCond(p *Dss_Obj_t, c int32) *Dss_Obj_t {
 	}
 	return p
 }
-func Dss_IsComplement(p *Dss_Obj_t) int32                { return dauBool(p != nil && p.regular != nil) }
-func Dss_ObjTruth(p *Dss_Obj_t) []uint64                 { return Dss_Regular(p).Truth }
-func Dss_ObjClean(p *Dss_Obj_t)                          { *Dss_Regular(p) = Dss_Obj_t{} }
+func Dss_IsComplement(p *Dss_Obj_t) int32 { return dauBool(p != nil && p.regular != nil) }
+func Dss_ObjTruth(p *Dss_Obj_t) []uint64  { return Dss_Regular(p).Truth }
+func Dss_ObjClean(p *Dss_Obj_t) {
+	regular := Dss_Regular(p)
+	negative := regular.negative
+	*regular = Dss_Obj_t{negative: negative}
+}
 func Dss_ObjId(p *Dss_Obj_t) int32                       { return Dss_Regular(p).ID }
 func Dss_ObjType(p *Dss_Obj_t) Dau_DsdType_t             { return Dss_Regular(p).Type }
 func Dss_ObjSuppSize(p *Dss_Obj_t) int32                 { return Dss_Regular(p).support }
@@ -157,6 +181,7 @@ func dssAllocate(objects *[]*Dss_Obj_t, kind Dau_DsdType_t, fans, truthVars int3
 	if truthVars > 0 {
 		o.Truth = make([]uint64, dssWords(truthVars))
 	}
+	o.negative = &Dss_Obj_t{regular: o}
 	*objects = append(*objects, o)
 	return o
 }
@@ -218,7 +243,7 @@ func (p *dssParser) parse() (*dssExpr, error) {
 		p.pos++
 	}
 	hex := p.text[hexStart:p.pos]
-	if p.pos == len(p.text) && len(hex) == 1 && (hex == "0" || hex == "1") {
+	if len(hex) == 1 && (hex == "0" || hex == "1") && (p.pos == len(p.text) || p.text[p.pos] != '{') {
 		return &dssExpr{kind: DAU_DSD_CONST0, phase: phase != (hex == "1"), start: start, open: hexStart, end: p.pos}, nil
 	}
 	if len(hex) > 0 && p.pos < len(p.text) && p.text[p.pos] != '{' {
@@ -264,6 +289,36 @@ func (p *dssParser) parse() (*dssExpr, error) {
 	}
 	p.pos++
 	e.end = p.pos
+	if kind == DAU_DSD_MUX && p.pos < len(p.text) && p.text[p.pos] == '{' {
+		open := p.pos
+		p.pos++
+		var arguments []*dssExpr
+		for p.pos < len(p.text) && p.text[p.pos] != '}' {
+			argument, err := p.parse()
+			if err != nil {
+				return nil, err
+			}
+			arguments = append(arguments, argument)
+		}
+		if p.pos >= len(p.text) {
+			return nil, fmt.Errorf("unclosed DSD composition")
+		}
+		p.pos++
+		if len(arguments) < 2 || len(arguments) > DAU_MAX_VAR {
+			return nil, fmt.Errorf("invalid DSD composition argument count")
+		}
+		variables := make(map[int32]bool)
+		dssExprVars(e, variables)
+		for v := range variables {
+			if int(v) >= len(arguments) {
+				return nil, fmt.Errorf("DSD composition variable outside argument list")
+			}
+		}
+		phase := e.phase
+		e.phase = false
+		truth := dssExprTruth(e, int32(len(arguments)))
+		return &dssExpr{kind: DAU_DSD_PRIME, phase: phase, children: arguments, truth: truth, start: start, open: open, end: p.pos}, nil
+	}
 	if len(e.children) < 2 || len(e.children) > DAU_MAX_VAR || kind == DAU_DSD_MUX && len(e.children) != 3 {
 		return nil, fmt.Errorf("invalid DSD fanin count %d", len(e.children))
 	}
@@ -335,6 +390,7 @@ func ParseDssNetwork(text string, nVars int32, primeTruth []uint64) (*Dss_Ntk_t,
 		return nil, err
 	}
 	p := Dss_NtkAlloc(nVars)
+	used := make(map[int32]bool)
 	var build func(*dssExpr) (int32, error)
 	build = func(e *dssExpr) (int32, error) {
 		phase := dauBool(e.phase)
@@ -345,6 +401,10 @@ func ParseDssNetwork(text string, nVars int32, primeTruth []uint64) (*Dss_Ntk_t,
 			if e.variable >= nVars {
 				return 0, fmt.Errorf("variable outside network support")
 			}
+			if used[e.variable] {
+				return 0, fmt.Errorf("DSD network repeats variable %c", 'a'+e.variable)
+			}
+			used[e.variable] = true
 			return (e.variable+1)*2 + phase, nil
 		}
 		fans := make([]int32, len(e.children))
@@ -390,15 +450,24 @@ func dssWriteNode(w io.Writer, objects []*Dss_Obj_t, o *Dss_Obj_t, leaf func(*Ds
 		_, err := fmt.Fprint(w, phase)
 		return err
 	}
+	if o.Type == DAU_DSD_VAR {
+		name := leaf(o)
+		if phase != 0 {
+			if strings.HasPrefix(name, "!") {
+				name = name[1:]
+			} else {
+				name = "!" + name
+			}
+		}
+		_, err := io.WriteString(w, name)
+		return err
+	}
 	if phase != 0 {
 		if _, err := io.WriteString(w, "!"); err != nil {
 			return err
 		}
 	}
-	if o.Type == DAU_DSD_VAR {
-		_, err := io.WriteString(w, leaf(o))
-		return err
-	}
+
 	opens, closes := "???([<{", "???)]>}"
 	if o.Type == DAU_DSD_PRIME {
 		if _, err := io.WriteString(w, dssTruthHex(o.Truth, len(o.Fans))); err != nil {

@@ -1,5 +1,25 @@
 package dau
 
+/**CFile****************************************************************
+
+  FileName    [dauTree.c]
+
+  SystemName  [ABC: Logic synthesis and verification system.]
+
+  PackageName [DAG-aware unmapping.]
+
+  Synopsis    [Canonical DSD package.]
+
+  Author      [Alan Mishchenko]
+
+  Affiliation [UC Berkeley]
+
+  Date        [Ver. 1.0. Started - June 20, 2005.]
+
+  Revision    [$Id: dauTree.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
+
+***********************************************************************/
+
 import (
 	"fmt"
 	"io"
@@ -150,6 +170,11 @@ func Dss_ObjFindOrAdd(p *Dss_Man_t, kind Dau_DsdType_t, fans []int32, truth []ui
 	return o
 }
 func Dss_ObjHashKey(p *Dss_Man_t, kind Dau_DsdType_t, fans []int32, truth []uint64) uint32 {
+	if kind != DAU_DSD_PRIME {
+		truth = nil
+	} else {
+		truth = truth[:dssWords(int32(len(fans)))]
+	}
 	key := dssNodeKey(kind, fans, truth)
 	h := uint32(2166136261)
 	for _, v := range []byte(key) {
@@ -160,6 +185,8 @@ func Dss_ObjHashKey(p *Dss_Man_t, kind Dau_DsdType_t, fans []int32, truth []uint
 func Dss_ObjHashLookup(p *Dss_Man_t, kind Dau_DsdType_t, fans []int32, truth []uint64) *Dss_Obj_t {
 	if kind != DAU_DSD_PRIME {
 		truth = nil
+	} else {
+		truth = truth[:dssWords(int32(len(fans)))]
 	}
 	id, ok := p.unique[dssNodeKey(kind, fans, truth)]
 	if !ok {
@@ -222,10 +249,17 @@ func Dss_ManPrint_rec(w io.Writer, p *Dss_Man_t, obj *Dss_Obj_t, perm []int32, c
 		return prefix + string(rune('a'+lit/2))
 	})
 }
-func Dss_ManPrintOne(w io.Writer, p *Dss_Man_t, lit int32, perm []int32) error {
+func Dss_ManExpression(p *Dss_Man_t, lit int32, perm []int32) string {
+	var b strings.Builder
 	count := int32(0)
-	return Dss_ManPrint_rec(w, p, Dss_Lit2Obj(p.Objects, lit), perm, &count)
+	Dss_ManPrint_rec(&b, p, Dss_Lit2Obj(p.Objects, lit), perm, &count)
+	return b.String()
 }
+func Dss_ManPrintOne(w io.Writer, p *Dss_Man_t, lit int32, perm []int32) error {
+	_, err := fmt.Fprintf(w, "%6d : %2d %s\n", lit/2, Dss_VecLitSuppSize(p.Objects, lit), Dss_ManExpression(p, lit, perm))
+	return err
+}
+
 func Dss_ManCheckNonDec_rec(p *Dss_Man_t, obj *Dss_Obj_t) int32 {
 	o := Dss_Regular(obj)
 	max := int32(0)
@@ -242,9 +276,7 @@ func Dss_ManCheckNonDec_rec(p *Dss_Man_t, obj *Dss_Obj_t) int32 {
 func Dss_ManDump(p *Dss_Man_t) string {
 	var b strings.Builder
 	for _, o := range p.Objects {
-		fmt.Fprintf(&b, "%d: ", o.ID)
 		Dss_ManPrintOne(&b, p, o.ID*2, nil)
-		b.WriteByte('\n')
 	}
 	return b.String()
 }
@@ -393,7 +425,15 @@ func Dss_ManOperation(p *Dss_Man_t, kind Dau_DsdType_t, lits []int32, n int32, p
 		}
 	}
 	if kind == DAU_DSD_AND || kind == DAU_DSD_XOR {
-		sort.SliceStable(children, func(i, j int) bool { return Dss_ObjCompare(p.Objects, children[i].obj, children[j].obj) < 0 })
+		for i := 0; i < len(children)-1; i++ {
+			best := i
+			for j := i + 1; j < len(children); j++ {
+				if Dss_ObjCompare(p.Objects, children[best].obj, children[j].obj) > 0 {
+					best = j
+				}
+			}
+			children[i], children[best] = children[best], children[i]
+		}
 	}
 	if kind == DAU_DSD_MUX {
 		if len(children) != 3 {
@@ -427,4 +467,243 @@ func Dss_ManOperationFun(p *Dss_Man_t, lits []int32, total int32) *Dss_Fun_t {
 	f := &Dss_Fun_t{Fans: make([]byte, total)}
 	f.Dsd = Dss_ManOperation(p, DAU_DSD_AND, lits, 2, f.Fans, nil)
 	return f
+}
+
+func Dss_EntPrint(e *Dss_Ent_t, f *Dss_Fun_t) string {
+	return fmt.Sprintf("%d %d shared=%v result=%d perm=%v", e.Dsd0, e.Dsd1, e.Shared, f.Dsd, f.Fans)
+}
+func Dss_ManBooleanAnd(p *Dss_Man_t, e *Dss_Ent_t, counter int32) *Dss_Fun_t {
+	n0, n1 := Dss_VecLitSuppSize(p.Objects, e.Dsd0), Dss_VecLitSuppSize(p.Objects, e.Dsd1)
+	mapping := make([]int32, 0, n0+n1)
+	perm0 := make([]int32, n0)
+	for i := int32(0); i < n0; i++ {
+		perm0[i] = i * 2
+		mapping = append(mapping, i)
+	}
+	first := Dss_ManComputeTruth(p, e.Dsd0, p.NVars, perm0)
+	perm1 := make([]int32, n1)
+	for i := range perm1 {
+		perm1[i] = -1
+	}
+	for i := 0; i < len(e.Shared); i += 2 {
+		local, lit := int(e.Shared[i]), int32(e.Shared[i+1])
+		if local >= len(perm1) || lit/2 >= n0 {
+			panic("invalid shared DSD map")
+		}
+		perm1[local] = lit
+	}
+	support := n0
+	for i := int32(0); i < n1; i++ {
+		if perm1[i] < 0 {
+			perm1[i] = support * 2
+			mapping = append(mapping, n0+i)
+			support++
+		}
+	}
+	if support > p.NVars {
+		return nil
+	}
+	second := Dss_ManComputeTruth(p, e.Dsd1, p.NVars, perm1)
+	for i := range first {
+		first[i] &= second[i]
+	}
+	formula, nondec := DecomposeDSD(first, support)
+	if nondec < 0 || p.NonDecLimit != 0 && nondec > p.NonDecLimit {
+		return nil
+	}
+	ntk, err := ParseDssNetwork(formula, p.NVars, nil)
+	if err != nil {
+		panic(err)
+	}
+	permDsd := make([]int32, p.NVars)
+	Dss_NtkTransform(ntk, permDsd)
+	lit := Dss_NtkRebuild(p, ntk)
+	fans := make([]byte, Dss_VecLitSuppSize(p.Objects, lit))
+	for i := range fans {
+		source := permDsd[i]
+		fans[i] = byte(mapping[source/2]*2 + source&1)
+	}
+	return &Dss_Fun_t{Dsd: lit, Fans: fans}
+}
+func Dss_ManSharedMap(p *Dss_Man_t, lits, fanCounts []int32, fans [][]int32, shared uint32) *Dss_Ent_t {
+	e := &Dss_Ent_t{Dsd0: lits[0], Dsd1: lits[1]}
+	first := make(map[int32]int32)
+	for i, v := range fans[0][:fanCounts[0]] {
+		first[v/2] = int32(i)*2 + (v & 1)
+	}
+	for i, v := range fans[1][:fanCounts[1]] {
+		if shared>>uint(v/2)&1 == 0 {
+			continue
+		}
+		local, ok := first[v/2]
+		if !ok {
+			panic("shared variable is absent from first function")
+		}
+		e.Shared = append(e.Shared, byte(i), byte(local^(v&1)))
+	}
+	return e
+}
+func Dss_ManSharedMapDerive(p *Dss_Man_t, a, b int32, shared []byte) *Dss_Ent_t {
+	if len(shared)%2 != 0 {
+		panic("odd shared-map length")
+	}
+	return &Dss_Ent_t{Dsd0: a, Dsd1: b, Shared: append([]byte(nil), shared...)}
+}
+func dssGetAnd(p *Dss_Man_t, e *Dss_Ent_t, total int32) *Dss_Fun_t {
+	if p.cache != nil {
+		if hit := Dss_ManCacheLookup(p, e); hit != nil {
+			return hit.Func
+		}
+	}
+	var f *Dss_Fun_t
+	if len(e.Shared) == 0 {
+		f = Dss_ManOperationFun(p, []int32{e.Dsd0, e.Dsd1}, total)
+	} else {
+		f = Dss_ManBooleanAnd(p, e, 0)
+	}
+	if f != nil && p.cache != nil {
+		f = Dss_ManCacheCreate(p, e, f).Func
+	}
+	return f
+}
+func Dss_ManMerge(p *Dss_Man_t, lits, fanCounts []int32, fans [][]int32, shared uint32, lutSize int32, resultPerm []byte, truth []uint64) int32 {
+	if lutSize > DAU_MAX_VAR || lutSize > p.NVars {
+		return -1
+	}
+	if len(lits) < 2 || len(fanCounts) < 2 || len(fans) < 2 {
+		panic("two DSD operands required")
+	}
+	if lits[0] > lits[1] {
+		panic("DSD operands must be ordered")
+	}
+	for i, lit := range lits[:2] {
+		if fanCounts[i] != Dss_VecLitSuppSize(p.Objects, lit) {
+			panic("operand support count mismatch")
+		}
+	}
+	if lits[0] == 0 || lits[1] == 0 {
+		return 0
+	}
+	if lits[0] == 1 || lits[1] == 1 {
+		which := 0
+		if lits[0] == 1 {
+			which = 1
+		}
+		if fanCounts[which] > lutSize {
+			return -1
+		}
+		for i, v := range fans[which][:fanCounts[which]] {
+			resultPerm[i] = byte(v)
+		}
+		return lits[which]
+	}
+	entry := Dss_ManSharedMap(p, lits, fanCounts, fans, shared)
+	total := fanCounts[0] + fanCounts[1] - int32(len(entry.Shared)/2)
+	if total > lutSize {
+		return -1
+	}
+	f := dssGetAnd(p, entry, fanCounts[0]+fanCounts[1])
+	if f == nil || int32(len(f.Fans)) > lutSize {
+		return -1
+	}
+	for i, v := range f.Fans {
+		if int32(v) < fanCounts[0]*2 {
+			resultPerm[i] = byte(Dss_Lit2Lit(fans[0], int32(v)))
+		} else {
+			resultPerm[i] = byte(Dss_Lit2Lit(fans[1], int32(v)-fanCounts[0]*2))
+		}
+	}
+	if shared != 0 && len(f.Fans) > 1 {
+		variables := make([]int, 0, len(f.Fans))
+		present := make(map[int]bool)
+		for _, v := range resultPerm[:len(f.Fans)] {
+			variable := int(v / 2)
+			if !present[variable] {
+				present[variable] = true
+				variables = append(variables, variable)
+			}
+		}
+		sort.Ints(variables)
+		position := make(map[int]byte)
+		for i, v := range variables {
+			position[v] = byte(i)
+		}
+		for i, v := range resultPerm[:len(f.Fans)] {
+			resultPerm[i] = position[int(v/2)]*2 + v&1
+		}
+	}
+	return f.Dsd
+}
+func Mpm_FuncCompute(p *Dss_Man_t, a, b int32, shared []byte, perm []int32, leaves *int32) int32 {
+	if *leaves > DAU_MAX_VAR {
+		return -1
+	}
+	entry := Dss_ManSharedMapDerive(p, a, b, shared)
+	f := dssGetAnd(p, entry, *leaves)
+	if f == nil || len(f.Fans) > int(*leaves) {
+		return -1
+	}
+	*leaves = int32(len(f.Fans))
+	for i, v := range f.Fans {
+		perm[i] = int32(v)
+	}
+	return f.Dsd
+}
+func Dss_ObjCheckTransparent(p *Dss_Man_t, obj *Dss_Obj_t) int32 {
+	o := Dss_Regular(obj)
+	switch o.Type {
+	case DAU_DSD_VAR:
+		return 1
+	case DAU_DSD_AND, DAU_DSD_CONST0, DAU_DSD_PRIME:
+		return 0
+	case DAU_DSD_XOR:
+		for _, lit := range o.Fans {
+			if Dss_ObjCheckTransparent(p, Dss_Lit2Obj(p.Objects, lit)) != 0 {
+				return 1
+			}
+		}
+		return 0
+	case DAU_DSD_MUX:
+		return Dss_ObjCheckTransparent(p, Dss_Lit2Obj(p.Objects, o.Fans[1])) & Dss_ObjCheckTransparent(p, Dss_Lit2Obj(p.Objects, o.Fans[2]))
+	}
+	panic("unknown DSD node")
+}
+
+// Dss_ManTtElems returns independent elementary tables, including the source's
+// final scratch-table slot. It avoids mutable process-global scratch storage.
+func Dss_ManTtElems() [][]uint64 {
+	tables := make([][]uint64, DAU_MAX_VAR+1)
+	for v := 0; v <= DAU_MAX_VAR; v++ {
+		tables[v] = make([]uint64, dssWords(DAU_MAX_VAR))
+		if v < DAU_MAX_VAR {
+			for bit := 0; bit < 64*len(tables[v]); bit++ {
+				if bit&(1<<uint(v)) != 0 {
+					dssSet(tables[v], bit)
+				}
+			}
+		}
+	}
+	return tables
+}
+func Dau_DsdTest__() { ntk := Dss_NtkCreate("(!(a!(bh))[cde]!(fg))", 8, nil); Dss_NtkFree(ntk) }
+
+// The original enumeration driver returns before its body (dauTree.c:1852).
+func Dau_DsdTest() {}
+func Dau_DsdTest444() {
+	p := Dss_ManAlloc(6, 0)
+	inner := Dss_ManOperation(p, DAU_DSD_AND, []int32{2, 2}, 2, nil, nil) ^ 1
+	left := Dss_ManOperation(p, DAU_DSD_AND, []int32{inner, inner}, 2, nil, nil) ^ 1
+	right := Dss_ManOperation(p, DAU_DSD_AND, []int32{2, 2, 2}, 3, nil, nil)
+	fans := [][]int32{{0, 2, 5, 6}, {2, 9, 10}}
+	perm := make([]byte, 6)
+	result := Dss_ManMerge(p, []int32{left, right}, []int32{4, 3}, fans, 2, 6, perm, nil)
+	Dss_ManPrintOne(os.Stdout, p, left, fans[0])
+	Dss_ManPrintOne(os.Stdout, p, right, fans[1])
+	if result >= 0 {
+		mapped := make([]int32, Dss_VecLitSuppSize(p.Objects, result))
+		for i := range mapped {
+			mapped[i] = int32(perm[i])
+		}
+		Dss_ManPrintOne(os.Stdout, p, result, mapped)
+	}
 }

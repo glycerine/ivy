@@ -1,0 +1,2 @@
+#include "opt/dau/dauTree.c"
+int main(int argc,char **argv){Dss_Man_t *p=Dss_ManAlloc(4,0);int var[2]={2,2};int ids[2]={Dss_ManOperation(p,DAU_DSD_AND,var,2,0,0),Dss_ManOperation(p,DAU_DSD_XOR,var,2,0,0)};int nFans[2]={2,2};int a[2]={0,2},b[2]={2,4};int *fans[2]={a,b};unsigned char perm[4]={0};int result=Dss_ManMerge(p,ids,nFans,fans,2,4,perm,0);printf("%d %d %d %d\n",result,perm[0],perm[1],perm[2]);int p32[4]={perm[0],perm[1],perm[2]};word *truth=Dss_ManComputeTruth(p,result,4,p32);printf("%016llx\n",(unsigned long long)truth[0]);return 0;}

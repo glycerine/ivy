@@ -1,0 +1,2 @@
+#include "opt/dau/dauTree.c"
+int main(int argc,char **argv){Dss_Ntk_t *constant=Dss_NtkCreate("1",3,0);printf("constant1=");Dss_NtkPrint(constant);int pa[1]={0},pb[1]={2};printf("constantMerge=%s\n",Dau_DsdMerge("1",pa,"a",pb,0,0,3));word prime=0x9696969696969696ULL;Dss_Ntk_t *ntk=Dss_NtkCreate("(!96{abc}d)",4,&prime);int perm[4];Dss_NtkTransform(ntk,perm);Dss_Man_t *m=Dss_ManAlloc(4,0);int result=Dss_NtkRebuild(m,ntk);printf("nestedNegatedPrime=%016llx\n",(unsigned long long)Dss_ManComputeTruth(m,result,4,perm)[0]);return 0;}
