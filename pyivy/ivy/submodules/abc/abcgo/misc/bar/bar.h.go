@@ -1,85 +1,10 @@
 package bar
 
-/**CFile****************************************************************
+const BAR_PROGRESS_USE = 1
 
-  FileName    [bar.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Progress bar.]
-
-  Synopsis    [External declarations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: bar.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-
-
-
-
-#ifdef _WIN32
-#define inline __inline // compatible with MS VS 6.0
-#endif
-
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-//ABC_NAMESPACE_HEADER_START
-
-
-const BAR_PROGRESS_USE =   1
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
- 
-type Bar_Progress_t = Bar_Progress_t_;
-
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/*=== bar.c ==========================================================*/
-// extern Bar_Progress_t *  Bar_ProgressStart( FILE * pFile, int nItemsTotal );
-
-// extern void              Bar_ProgressStop( Bar_Progress_t * p );
-
-// extern void              Bar_ProgressUpdate_int( Bar_Progress_t * p, int nItemsCur, char * pString );
-
-
-func Bar_ProgressUpdate(p *Bar_Progress_t, nItemsCur int32, pString string) {  
-    if BAR_PROGRESS_USE && p && (nItemsCur < *((int*)p)) { return; }
-    Bar_ProgressUpdate_int(p, nItemsCur, pString);
+// Bar_ProgressUpdate performs the same throttling as the original inline wrapper.
+// The check is synchronized by the implementation rather than type-punning the
+// progress object's first field as an int pointer.
+func Bar_ProgressUpdate(p *Bar_Progress_t, current int32, label string) {
+	Bar_ProgressUpdate_int(p, current, label)
 }
-
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-

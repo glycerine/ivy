@@ -1,668 +1,362 @@
 package avl
 
-import "fmt"
-
-/*
- * Revision Control Information
- *
- * $Source: /vol/opua/opua2/sis/sis-1.2/common/src/sis/avl/RCS/avl.c,v $
- * $Author: sis $
- * $Revision: 1.3 $
- * $Date: 1994/07/15 23:00:40 $
- *
- */
-/* LINTLIBRARY */
-
-
-//#include <stdio.h>
-//#include <stdlib.h>
-
-//#include "avl.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-
-
-// Original macro:
-// #define HEIGHT(node) (node == NIL(avl_node) ? -1 : (node)->height)
-
-// Original macro:
-// #define BALANCE(node) (HEIGHT((node)->right) - HEIGHT((node)->left))
-
-
-// Original macro:
-// #define compute_height(node) {                \
-//     int x=HEIGHT(node->left), y=HEIGHT(node->right);    \
-//     (node)->height = MAX(x,y) + 1;            \
-// }
-
-
-// Original macro:
-// #define COMPARE(key, nodekey, compare)             \
-//     ((compare == avl_numcmp) ?                 \
-//     (int) key - (int) nodekey :             \
-//     (*compare)(key, nodekey))
-
-
-
-const STACK_SIZE =    50
-
-// static avl_node *new_node ();
-
-// static avl_node *find_rightmost ();
-
-// static void do_rebalance ();
-
-static rotate_left ();
-static rotate_right ();
-// static int do_check_tree ();
-
-
-avl_tree *
-avl_init_table (compar)
- int (*compar) ();
-{
-    avl_tree *tree;
-
-    // inlining of macro ALLOC
-    tree = ((avl_tree *) malloc(sizeof(avl_tree) * (1)));
-    // inlining of macro NIL
-    tree.root = ((avl_node *) 0);
-    tree.compar = compar;
-    tree.num_entries = 0;
-    return tree;
+// This is a Go port of src/misc/avl/avl.c. Rotations preserve node identity,
+// allowing FindOrAdd's value slot to remain valid until that entry is deleted.
+func height(n *node) int {
+	if n == nil {
+		return -1
+	}
+	return n.height
+}
+func update(n *node) { n.height = max(height(n.left), height(n.right)) + 1 }
+func rotateLeft(n *node) *node {
+	r := n.right
+	n.right = r.left
+	r.left = n
+	update(n)
+	update(r)
+	return r
+}
+func rotateRight(n *node) *node {
+	l := n.left
+	n.left = l.right
+	l.right = n
+	update(n)
+	update(l)
+	return l
+}
+func balance(n *node) *node {
+	if n == nil {
+		return nil
+	}
+	update(n)
+	if height(n.left)-height(n.right) > 1 {
+		if height(n.left.left) < height(n.left.right) {
+			n.left = rotateLeft(n.left)
+		}
+		return rotateRight(n)
+	}
+	if height(n.right)-height(n.left) > 1 {
+		if height(n.right.right) < height(n.right.left) {
+			n.right = rotateRight(n.right)
+		}
+		return rotateLeft(n)
+	}
+	return n
 }
 
+// Insert always adds an entry. It reports whether an equal key already existed.
+func (t *Tree) Insert(key, value any) bool {
+	found := false
+	var insert func(*node) *node
+	insert = func(n *node) *node {
+		if n == nil {
+			return &node{key: key, value: value}
+		}
+		c := t.compare(key, n.key)
+		if c == 0 {
+			found = true
+		}
+		if c < 0 {
+			n.left = insert(n.left)
+		} else {
+			n.right = insert(n.right)
+		}
+		return balance(n)
+	}
+	t.root = insert(t.root)
+	t.count++
+	return found
+}
+func (t *Tree) find(key any) *node {
+	for n := t.root; n != nil; {
+		c := t.compare(key, n.key)
+		if c == 0 {
+			return n
+		}
+		if c < 0 {
+			n = n.left
+		} else {
+			n = n.right
+		}
+	}
+	return nil
+}
+func (t *Tree) Lookup(key any) (any, bool) {
+	n := t.find(key)
+	if n == nil {
+		return nil, false
+	}
+	return n.value, true
+}
+func (t *Tree) Contains(key any) bool { return t.find(key) != nil }
+func (t *Tree) Count() int            { return t.count }
 
-
-avl_lookup (tree, key, value_p)
- var tree *avl_tree;
- register char *key;
- var value_p *string;
-{
-    register avl_node *node;
-    register int (*compare) () = tree.compar, diff;
-
-    node = tree.root;
-    // inlining of macro NIL
-    while (node != ((avl_node *) 0)) {
-        // inlining of macro COMPARE
-        diff = ((compare == avl_numcmp) ?                     int32( key) - int32( node.key) :                 (*compare)(key, node.key));
-        if diff == 0 {
-            /* got a match */
-            // inlining of macro NIL
-            if (value_p != ((char * *) 0))
-                 *value_p = node.value;
-            return 1;
-        }
-        node = (diff < 0) ? node.left : node.right;
-    }
-    return 0;
+// FindOrAdd returns a writable value slot and whether the key was present.
+// A newly added entry starts with a nil value, as in the C implementation.
+func (t *Tree) FindOrAdd(key any) (*any, bool) {
+	if n := t.find(key); n != nil {
+		return &n.value, true
+	}
+	var added *node
+	var insert func(*node) *node
+	insert = func(n *node) *node {
+		if n == nil {
+			added = &node{key: key}
+			return added
+		}
+		if t.compare(key, n.key) < 0 {
+			n.left = insert(n.left)
+		} else {
+			n.right = insert(n.right)
+		}
+		return balance(n)
+	}
+	t.root = insert(t.root)
+	t.count++
+	return &added.value, false
+}
+func (t *Tree) First() (key, value any, ok bool) {
+	n := t.root
+	if n == nil {
+		return nil, nil, false
+	}
+	for n.left != nil {
+		n = n.left
+	}
+	return n.key, n.value, true
+}
+func (t *Tree) Last() (key, value any, ok bool) {
+	n := t.root
+	if n == nil {
+		return nil, nil, false
+	}
+	for n.right != nil {
+		n = n.right
+	}
+	return n.key, n.value, true
 }
 
-avl_first (tree, key_p, value_p)
- var tree *avl_tree;
- var key_p *string;
- var value_p *string;
-{
-    register avl_node *node;
-
-    if tree.root == 0 {
-        return 0;                /* no entries */
-    }
-    else {
-        /* walk down the tree; stop at leftmost leaf */
-        for node = tree.root; node.left != 0; node = node.left {
-        }
-        // inlining of macro NIL
-        if (key_p != ((char * *) 0))
-             *key_p = node.key;
-        // inlining of macro NIL
-        if (value_p != ((char * *) 0))
-             *value_p = node.value;
-        return 1;
-    }
+// detachMax removes a node without copying its key/value into a different node.
+func detachMax(n *node) (*node, *node) {
+	if n.right == nil {
+		return n.left, n
+	}
+	var result *node
+	n.right, result = detachMax(n.right)
+	return balance(n), result
 }
 
-
-avl_last (tree, key_p, value_p)
- var tree *avl_tree;
- var key_p *string;
- var value_p *string;
-{
-    register avl_node *node;
-
-    if tree.root == 0 {
-        return 0;                /* no entries */
-    }
-    else {
-        /* walk down the tree; stop at rightmost leaf */
-        for node = tree.root; node.right != 0; node = node.right {
-        }
-        // inlining of macro NIL
-        if (key_p != ((char * *) 0))
-             *key_p = node.key;
-        // inlining of macro NIL
-        if (value_p != ((char * *) 0))
-             *value_p = node.value;
-        return 1;
-    }
+// Delete removes one matching entry and returns its stored key and value.
+func (t *Tree) Delete(key any) (storedKey, value any, ok bool) {
+	var remove func(*node) *node
+	remove = func(n *node) *node {
+		if n == nil {
+			return nil
+		}
+		c := t.compare(key, n.key)
+		if c < 0 {
+			n.left = remove(n.left)
+			return balance(n)
+		}
+		if c > 0 {
+			n.right = remove(n.right)
+			return balance(n)
+		}
+		storedKey, value, ok = n.key, n.value, true
+		if n.left == nil {
+			return n.right
+		}
+		var replacement *node
+		n.left, replacement = detachMax(n.left)
+		replacement.left = n.left
+		replacement.right = n.right
+		return balance(replacement)
+	}
+	t.root = remove(t.root)
+	if ok {
+		t.count--
+	}
+	return
+}
+func walk(n *node, reverse bool, visit func(*node)) {
+	if n == nil {
+		return
+	}
+	first, last := n.left, n.right
+	if reverse {
+		first, last = last, first
+	}
+	walk(first, reverse, visit)
+	visit(n)
+	walk(last, reverse, visit)
+}
+func (t *Tree) Foreach(visit func(key, value any), direction int) {
+	walk(t.root, direction != AVL_FORWARD, func(n *node) { visit(n.key, n.value) })
 }
 
-avl_insert (tree, key, value)
- var tree *avl_tree;
- var key string;
- var value string;
-{
-    register avl_node **node_p, *node;
-    register int stack_n = 0;
-    register int (*compare) () = tree.compar;
-    avl_node **stack_nodep[STACK_SIZE];
-    int diff, status;
-
-    node_p = &tree.root;
-
-    /* walk down the tree (saving the path); stop at insertion point */
-    status = 0;
-    // inlining of macro NIL
-    while ((node = *node_p) != ((avl_node *) 0)) {
-        stack_nodep[stack_n++] = node_p;
-        // inlining of macro COMPARE
-        diff = ((compare == avl_numcmp) ?                     int32( key) - int32( node.key) :                 (*compare)(key, node.key));
-        if (diff == 0)
-            status = 1;
-        node_p = (diff < 0) ? &node.left : &node.right;
-    }
-
-    /* insert the item and re-balance the tree */
-    *node_p = new_node (key, value);
-    do_rebalance (stack_nodep, stack_n);
-    tree.num_entries++;
-    tree.modified = 1;
-    return status;
+// Generator snapshots the ordered node list, matching the C generator. Mutating
+// the tree while generating is unsupported; changes to a stored value are seen.
+func (t *Tree) Generator(direction int) *Generator {
+	g := &Generator{nodes: make([]*node, 0, t.count)}
+	walk(t.root, direction != AVL_FORWARD, func(n *node) { g.nodes = append(g.nodes, n) })
+	return g
+}
+func (g *Generator) Next() (key, value any, ok bool) {
+	if g == nil || g.next == len(g.nodes) {
+		return nil, nil, false
+	}
+	n := g.nodes[g.next]
+	g.next++
+	return n.key, n.value, true
+}
+func (g *Generator) Close() {
+	if g != nil {
+		g.nodes = nil
+		g.next = 0
+	}
 }
 
-
-
-avl_find_or_add (tree, key, slot_p)
- var tree *avl_tree;
- var key string;
- var slot_p **string;
-{
-    register avl_node **node_p, *node;
-    register int stack_n = 0;
-    register int (*compare) () = tree.compar;
-    avl_node **stack_nodep[STACK_SIZE];
-    int diff;
-
-    node_p = &tree.root;
-
-    /* walk down the tree (saving the path); stop at insertion point */
-    // inlining of macro NIL
-    while ((node = *node_p) != ((avl_node *) 0)) {
-        stack_nodep[stack_n++] = node_p;
-        // inlining of macro COMPARE
-        diff = ((compare == avl_numcmp) ?                     int32( key) - int32( node.key) :                 (*compare)(key, node.key));
-        if diff == 0 {
-            if (slot_p != 0)
-                *slot_p = &node.value;
-            return 1;            /* found */
-        }
-        node_p = (diff < 0) ? &node.left : &node.right;
-    }
-
-    /* insert the item and re-balance the tree */
-    // inlining of macro NIL
-    *node_p = new_node (key, ((char *) 0));
-    if (slot_p != 0)
-        *slot_p = &(*node_p).value;
-    do_rebalance (stack_nodep, stack_n);
-    tree.num_entries++;
-    tree.modified = 1;
-    return 0;                    /* not already in tree */
+// Clear visits entries in postorder before releasing the tree, as free_table did.
+func (t *Tree) Clear(keyFree, valueFree func(any)) {
+	var free func(*node)
+	free = func(n *node) {
+		if n == nil {
+			return
+		}
+		free(n.left)
+		free(n.right)
+		if keyFree != nil {
+			keyFree(n.key)
+		}
+		if valueFree != nil {
+			valueFree(n.value)
+		}
+	}
+	free(t.root)
+	t.root = nil
+	t.count = 0
 }
 
-avl_delete (tree, key_p, value_p)
- var tree *avl_tree;
- var key_p *string;
- var value_p *string;
-{
-    register avl_node **node_p, *node, *rightmost;
-    register int stack_n = 0;
-    char *key = *key_p;
-    int (*compare) () = tree.compar;
-diff;
-    avl_node **stack_nodep[STACK_SIZE];
-
-    node_p = &tree.root;
-
-    /* Walk down the tree saving the path; return if not found */
-    // inlining of macro NIL
-    while ((node = *node_p) != ((avl_node *) 0)) {
-        // inlining of macro COMPARE
-        diff = ((compare == avl_numcmp) ?                     int32( key) - int32( node.key) :                 (*compare)(key, node.key));
-        if (diff == 0)
-            goto delete_item;
-        stack_nodep[stack_n++] = node_p;
-        node_p = (diff < 0) ? &node.left : &node.right;
-    }
-    return 0;                    /* not found */
-
-    /* prepare to delete node and replace it with rightmost of left tree */
-  delete_item:
-    *key_p = node.key;
-    if (value_p != 0)
-        *value_p = node.value;
-    // inlining of macro NIL
-    if node.left == ((avl_node *) 0) {
-        *node_p = node.right;
-    }
-    else {
-        rightmost = find_rightmost (&node.left);
-        rightmost.left = node.left;
-        rightmost.right = node.right;
-        rightmost.height = -2;    /* mark bogus height for do_rebal */
-        *node_p = rightmost;
-        stack_nodep[stack_n++] = node_p;
-    }
-    // inlining of macro FREE
-    free((char *) (node));
-
-    /* work our way back up, re-balancing the tree */
-    do_rebalance (stack_nodep, stack_n);
-    tree.num_entries--;
-    tree.modified = 1;
-    return 1;
+// Check returns the number of height, ordering, balance or count violations.
+func (t *Tree) Check() int {
+	errors, count := 0, 0
+	var previous any
+	havePrevious := false
+	var check func(*node) int
+	check = func(n *node) int {
+		if n == nil {
+			return -1
+		}
+		l := check(n.left)
+		if havePrevious && t.compare(previous, n.key) > 0 {
+			errors++
+		}
+		previous = n.key
+		havePrevious = true
+		count++
+		r := check(n.right)
+		h := max(l, r) + 1
+		if h != n.height {
+			errors++
+		}
+		if l-r > 1 || r-l > 1 {
+			errors++
+		}
+		return h
+	}
+	check(t.root)
+	if count != t.count {
+		errors++
+	}
+	return errors
 }
 
-static void
-avl_record_gen_forward (node, gen)
- var node *avl_node;
- var gen *avl_generator;
-{
-    // inlining of macro NIL
-    if node != ((avl_node *) 0) {
-        avl_record_gen_forward (node.left, gen);
-        gen.nodelist[gen.count++] = node;
-        avl_record_gen_forward (node.right, gen);
-    }
+// Compatibility entry points use Go output pointers and integer C status codes.
+func status(ok bool) int {
+	if ok {
+		return 1
+	}
+	return 0
 }
-
-
-static void
-avl_record_gen_backward (node, gen)
- var node *avl_node;
- var gen *avl_generator;
-{
-    // inlining of macro NIL
-    if node != ((avl_node *) 0) {
-        avl_record_gen_backward (node.right, gen);
-        gen.nodelist[gen.count++] = node;
-        avl_record_gen_backward (node.left, gen);
-    }
+func Avl_init_table(compare Compare) *Tree   { return New(compare) }
+func Avl_insert(t *Tree, key, value any) int { return status(t.Insert(key, value)) }
+func Avl_lookup(t *Tree, key any, value *any) int {
+	v, ok := t.Lookup(key)
+	if ok && value != nil {
+		*value = v
+	}
+	return status(ok)
 }
-
-
-avl_generator *
-avl_init_gen (tree, dir)
- var tree *avl_tree;
- var dir int32;
-{
-    avl_generator *gen;
-
-    /* what a hack */
-    // inlining of macro ALLOC
-    gen = ((avl_generator *) malloc(sizeof(avl_generator) * (1)));
-    gen.tree = tree;
-    // inlining of macro ALLOC
-    gen.nodelist = ((avl_node * *) malloc(sizeof(avl_node *) * (avl_count (tree))));
-    gen.count = 0;
-    if dir == AVL_FORWARD {
-        avl_record_gen_forward (tree.root, gen);
-    }
-    else {
-        avl_record_gen_backward (tree.root, gen);
-    }
-    gen.count = 0;
-
-    /* catch any attempt to modify the tree while we generate */
-    tree.modified = 0;
-    return gen;
+func Avl_is_member(t *Tree, key any) int { return status(t.Contains(key)) }
+func Avl_find_or_add(t *Tree, key any, slot **any) int {
+	p, ok := t.FindOrAdd(key)
+	if slot != nil {
+		*slot = p
+	}
+	return status(ok)
 }
-
-
-avl_gen (gen, key_p, value_p)
- var gen *avl_generator;
- var key_p *string;
- var value_p *string;
-{
-    avl_node *node;
-
-    if gen.count == gen.tree.num_entries {
-        return 0;
-    }
-    else {
-        node = gen.nodelist[gen.count++];
-        // inlining of macro NIL
-        if (key_p != ((char * *) 0))
-             *key_p = node.key;
-        // inlining of macro NIL
-        if (value_p != ((char * *) 0))
-             *value_p = node.value;
-        return 1;
-    }
+func Avl_delete(t *Tree, key, value *any) int {
+	k, v, ok := t.Delete(*key)
+	if ok {
+		*key = k
+		if value != nil {
+			*value = v
+		}
+	}
+	return status(ok)
 }
-
-
-void
-avl_free_gen (gen)
- var gen *avl_generator;
-{
-    // inlining of macro FREE
-    free((char *) (gen.nodelist));
-    // inlining of macro FREE
-    free((char *) (gen));
+func Avl_first(t *Tree, key, value *any) int {
+	k, v, ok := t.First()
+	if ok {
+		if key != nil {
+			*key = k
+		}
+		if value != nil {
+			*value = v
+		}
+	}
+	return status(ok)
 }
-
-static avl_node *
-find_rightmost (node_p)
- register avl_node **node_p;
-{
-    register avl_node *node;
-    register int stack_n = 0;
-    avl_node **stack_nodep[STACK_SIZE];
-
-    node = *node_p;
-    // inlining of macro NIL
-    while (node.right != ((avl_node *) 0)) {
-        stack_nodep[stack_n++] = node_p;
-        node_p = &node.right;
-        node = *node_p;
-    }
-    *node_p = node.left;
-
-    do_rebalance (stack_nodep, stack_n);
-    return node;
+func Avl_last(t *Tree, key, value *any) int {
+	k, v, ok := t.Last()
+	if ok {
+		if key != nil {
+			*key = k
+		}
+		if value != nil {
+			*value = v
+		}
+	}
+	return status(ok)
 }
-
-
-static void
-do_rebalance (stack_nodep, stack_n)
- register avl_node ***stack_nodep;
- register int stack_n;
-{
-    register avl_node **node_p, *node;
-    register int hl, hr;
-    int height;
-
-    /* work our way back up, re-balancing the tree */
-    while (--stack_n >= 0) {
-        node_p = stack_nodep[stack_n];
-        node = *node_p;
-        // inlining of macro HEIGHT
-        // inlining of macro NIL
-        hl = (node.left == ((avl_node *) 0) ? -1 : (node.left).height);    /* watch for NIL */
-        // inlining of macro HEIGHT
-        // inlining of macro NIL
-        hr = (node.right == ((avl_node *) 0) ? -1 : (node.right).height);    /* watch for NIL */
-        if (hr - hl) < -1 {
-            rotate_right (node_p);
-        }
-        else if (hr - hl) > 1 {
-            rotate_left (node_p);
-        }
-        else {
-            // inlining of macro MAX
-            height = ((hl) > (hr) ? (hl) : (hr)) + 1;
-            if (height == node.height)
-                break;
-            node.height = height;
-        }
-    }
+func Avl_count(t *Tree) int                          { return t.Count() }
+func Avl_init_gen(t *Tree, direction int) *Generator { return t.Generator(direction) }
+func Avl_gen(g *Generator, key, value *any) int {
+	k, v, ok := g.Next()
+	if ok {
+		if key != nil {
+			*key = k
+		}
+		if value != nil {
+			*value = v
+		}
+	}
+	return status(ok)
 }
+func Avl_free_gen(g *Generator)                                { g.Close() }
+func Avl_foreach(t *Tree, visit func(any, any), direction int) { t.Foreach(visit, direction) }
+func Avl_free_table(t *Tree, keyFree, valueFree func(any))     { t.Clear(keyFree, valueFree) }
+func Avl_check_tree(t *Tree) int                               { return t.Check() }
 
-static
-rotate_left (node_p)
- register avl_node **node_p;
-{
-    register avl_node *old_root = *node_p, *new_root, *new_right;
-
-    // inlining of macro BALANCE
-    // inlining of macro HEIGHT
-    // inlining of macro NIL
-    if (((old_root.right).right == ((avl_node *) 0) ? -1 : ((old_root.right).right).height) - ((old_root.right).left == ((avl_node *) 0) ? -1 : ((old_root.right).left).height)) >= 0 {
-        *node_p = new_root = old_root.right;
-        old_root.right = new_root.left;
-        new_root.left = old_root;
-    }
-    else {
-        new_right = old_root.right;
-        *node_p = new_root = new_right.left;
-        old_root.right = new_root.left;
-        new_right.left = new_root.right;
-        new_root.right = new_right;
-        new_root.left = old_root;
-        // inlining of macro compute_height
-        // inlining of macro HEIGHT
-        // inlining of macro NIL
-        // inlining of macro MAX
-        {                    int x=(new_right.left == ((avl_node *) 0) ? -1 : (new_right.left).height), y=(new_right.right == ((avl_node *) 0) ? -1 : (new_right.right).height);        (new_right).height = ((x) > (y) ? (x) : (y)) + 1;            };
-    }
-    // inlining of macro compute_height
-    // inlining of macro HEIGHT
-    // inlining of macro NIL
-    // inlining of macro MAX
-    {                    int x=(old_root.left == ((avl_node *) 0) ? -1 : (old_root.left).height), y=(old_root.right == ((avl_node *) 0) ? -1 : (old_root.right).height);        (old_root).height = ((x) > (y) ? (x) : (y)) + 1;            };
-    // inlining of macro compute_height
-    // inlining of macro HEIGHT
-    // inlining of macro NIL
-    // inlining of macro MAX
-    {                    int x=(new_root.left == ((avl_node *) 0) ? -1 : (new_root.left).height), y=(new_root.right == ((avl_node *) 0) ? -1 : (new_root.right).height);        (new_root).height = ((x) > (y) ? (x) : (y)) + 1;            };
+// Avl_numcmp replaces the C pointer-to-integer comparison with integer keys.
+func Avl_numcmp(x, y any) int {
+	a, b := x.(int), y.(int)
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
 }
-
-
-static
-rotate_right (node_p)
- var node_p **avl_node;
-{
-    register avl_node *old_root = *node_p, *new_root, *new_left;
-
-    // inlining of macro BALANCE
-    // inlining of macro HEIGHT
-    // inlining of macro NIL
-    if (((old_root.left).right == ((avl_node *) 0) ? -1 : ((old_root.left).right).height) - ((old_root.left).left == ((avl_node *) 0) ? -1 : ((old_root.left).left).height)) <= 0 {
-        *node_p = new_root = old_root.left;
-        old_root.left = new_root.right;
-        new_root.right = old_root;
-    }
-    else {
-        new_left = old_root.left;
-        *node_p = new_root = new_left.right;
-        old_root.left = new_root.right;
-        new_left.right = new_root.left;
-        new_root.left = new_left;
-        new_root.right = old_root;
-        // inlining of macro compute_height
-        // inlining of macro HEIGHT
-        // inlining of macro NIL
-        // inlining of macro MAX
-        {                    int x=(new_left.left == ((avl_node *) 0) ? -1 : (new_left.left).height), y=(new_left.right == ((avl_node *) 0) ? -1 : (new_left.right).height);        (new_left).height = ((x) > (y) ? (x) : (y)) + 1;            };
-    }
-    // inlining of macro compute_height
-    // inlining of macro HEIGHT
-    // inlining of macro NIL
-    // inlining of macro MAX
-    {                    int x=(old_root.left == ((avl_node *) 0) ? -1 : (old_root.left).height), y=(old_root.right == ((avl_node *) 0) ? -1 : (old_root.right).height);        (old_root).height = ((x) > (y) ? (x) : (y)) + 1;            };
-    // inlining of macro compute_height
-    // inlining of macro HEIGHT
-    // inlining of macro NIL
-    // inlining of macro MAX
-    {                    int x=(new_root.left == ((avl_node *) 0) ? -1 : (new_root.left).height), y=(new_root.right == ((avl_node *) 0) ? -1 : (new_root.right).height);        (new_root).height = ((x) > (y) ? (x) : (y)) + 1;            };
-}
-
-static void
-avl_walk_forward (node, func)
- var node *avl_node;
- void (*func) ();
-{
-    // inlining of macro NIL
-    if node != ((avl_node *) 0) {
-        avl_walk_forward (node.left, func);
-        (*func) (node.key, node.value);
-        avl_walk_forward (node.right, func);
-    }
-}
-
-
-static void
-avl_walk_backward (node, func)
- var node *avl_node;
- void (*func) ();
-{
-    // inlining of macro NIL
-    if node != ((avl_node *) 0) {
-        avl_walk_backward (node.right, func);
-        (*func) (node.key, node.value);
-        avl_walk_backward (node.left, func);
-    }
-}
-
-
-void
-avl_foreach (tree, func, direction)
- var tree *avl_tree;
- void (*func) ();
- var direction int32;
-{
-    if direction == AVL_FORWARD {
-        avl_walk_forward (tree.root, func);
-    }
-    else {
-        avl_walk_backward (tree.root, func);
-    }
-}
-
-
-static void
-free_entry (node, key_free, value_free)
- var node *avl_node;
- void (*key_free) ();
- void (*value_free) ();
-{
-    // inlining of macro NIL
-    if node != ((avl_node *) 0) {
-        free_entry (node.left, key_free, value_free);
-        free_entry (node.right, key_free, value_free);
-        if (key_free != 0)
-            (*key_free) (node.key);
-        if (value_free != 0)
-            (*value_free) (node.value);
-        // inlining of macro FREE
-        free((char *) (node));
-    }
-}
-
-
-void
-avl_free_table (tree, key_free, value_free)
- var tree *avl_tree;
- void (*key_free) ();
- void (*value_free) ();
-{
-    free_entry (tree.root, key_free, value_free);
-    // inlining of macro FREE
-    free((char *) (tree));
-}
-
-
-int
-avl_count (tree)
- var tree *avl_tree;
-{
-    return tree.num_entries;
-}
-
-static avl_node *
-new_node (key, value)
- var key string;
- var value string;
-{
-    register avl_node *new;
-
-    // inlining of macro ALLOC
-    new = ((avl_node *) malloc(sizeof(avl_node) * (1)));
-    new.key = key;
-    new.value = value;
-    new.height = 0;
-    // inlining of macro NIL
-    new.left = new.right = ((avl_node *) 0);
-    return new;
-}
-
-
-int
-avl_numcmp (x, y)
- var x, y string;
-{
-    return int32( x) - int32( y);
-}
-
-int
-avl_check_tree (tree)
- var tree *avl_tree;
-{
-    int error = 0;
-    (void) do_check_tree (tree.root, tree.compar, &error);
-    return error;
-}
-
-
-static int
-do_check_tree (node, compar, error)
- var node *avl_node;
- int (*compar) ();
- var error *int32;
-{
-    int l_height, r_height, comp_height, bal;
-
-    // inlining of macro NIL
-    if node == ((avl_node *) 0) {
-        return -1;
-    }
-
-    r_height = do_check_tree (node.right, compar, error);
-    l_height = do_check_tree (node.left, compar, error);
-
-    // inlining of macro MAX
-    comp_height = ((l_height) > (r_height) ? (l_height) : (r_height)) + 1;
-    bal = r_height - l_height;
-
-    if comp_height != node.height {
-        (void) fmt.Printf("Bad height for 0x%08x: computed=%d stored=%d\n", node, comp_height, node.height);
-        ++*error;
-    }
-
-    if bal > 1 || bal < -1 {
-        (void) fmt.Printf("Out of balance at node 0x%08x, balance = %d\n", node, bal);
-        ++*error;
-    }
-
-    // inlining of macro NIL
-    if node.left != ((avl_node *) 0) &&
-        (*compar) (node.left.key, node.key) > 0 {
-        (void) fmt.Printf("Bad ordering between 0x%08x and 0x%08x", node, node.left);
-        ++*error;
-    }
-
-    // inlining of macro NIL
-    if node.right != ((avl_node *) 0) &&
-        (*compar) (node.key, node.right.key) > 0 {
-        (void) fmt.Printf("Bad ordering between 0x%08x and 0x%08x", node, node.right);
-        ++*error;
-    }
-
-    return comp_height;
-}
-//ABC_NAMESPACE_IMPL_END
-

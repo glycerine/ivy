@@ -1,198 +1,139 @@
+// Package bar provides ABC's throttled text progress indicator.
+// Ported from src/misc/bar/bar.c (Alan Mishchenko).
 package bar
 
-import "fmt"
+import (
+	"io"
+	"strings"
+	"sync"
+	"sync/atomic"
+)
 
-import "os"
+// Frame-independent controls let the command layer supply its progress and
+// batch-mode settings without introducing a dependency cycle through base/main.
+var progressDisabled atomic.Bool
+var batchMode atomic.Bool
 
-/**CFile****************************************************************
+func Bar_SetEnabled(enabled bool) { progressDisabled.Store(!enabled) }
+func Bar_SetBatchMode(batch bool) { batchMode.Store(batch) }
 
-  FileName    [bar.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [extra]
-
-  Synopsis    [Progress bar.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: bar.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-
-//#include "misc/util/abc_global.h"
-//#include "base/main/main.h"
-//#include "bar.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-type Bar_Progress_t_ struct {
-    nItemsNext              int32;   // the number of items for the next update of the progress bar
-    nItemsTotal              int32;  // the total number of items
-    posTotal              int32;     // the total number of positions
-    posCur              int32;       // the current position
-    pFile            *os.File;        // the output stream 
+type Bar_Progress_t struct {
+	mu          sync.Mutex
+	nItemsNext  int32
+	nItemsTotal int32
+	posTotal    int32
+	posCur      int32
+	pFile       io.Writer
+	stopped     bool
+	err         error
 }
+type Bar_Progress_t_ = Bar_Progress_t
 
-// static void Bar_ProgressShow( Bar_Progress_t * p, char * pString );
-
-// static void Bar_ProgressClean( Bar_Progress_t * p );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the progress bar.]
-
-  Description [The first parameter is the output stream (pFile), where
-  the progress is printed. The current printing position should be the
-  first one on the given line. The second parameters is the total
-  number of items that correspond to 100% position of the progress bar.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Bar_ProgressStart(pFile *os.File, nItemsTotal int32) *Bar_Progress_t {
-    var p *Bar_Progress_t;
-    var pFrame *Abc_Frame_t;
-    pFrame = Abc_FrameReadGlobalFrame();
-    if pFrame == nil {
-        return nil; }
-    if !Abc_FrameShowProgress(pFrame) { return nil; }
-    // inlining of macro ABC_ALLOC
-    p = ((Bar_Progress_t *) malloc(sizeof(Bar_Progress_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Bar_Progress_t) );
-    p.pFile       = pFile;
-    p.nItemsTotal = nItemsTotal;
-    p.posTotal    = 78;
-    p.posCur      = 1;
-    p.nItemsNext  = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));
-    Bar_ProgressShow( p, nil );
-    return p;
+// Bar_ProgressStart draws the initial indicator. Nil output or disabled progress
+// returns nil, which all update/stop functions accept.
+func Bar_ProgressStart(output io.Writer, total int32) *Bar_Progress_t {
+	if output == nil || progressDisabled.Load() {
+		return nil
+	}
+	p := &Bar_Progress_t{pFile: output, nItemsTotal: total, posTotal: 78, posCur: 1}
+	p.nItemsNext = int32(int64(7+p.posCur) * int64(total) / int64(p.posTotal))
+	Bar_ProgressShow(p, "")
+	return p
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Updates the progress bar.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Bar_ProgressUpdate_int(p *Bar_Progress_t, nItemsCur int32, pString string) {
-    if p == nil { return; }
-    if nItemsCur < p.nItemsNext {
-        return; }
-    if nItemsCur >= p.nItemsTotal {
-        p.posCur = 78;
-        p.nItemsNext = 0x7FFFFFFF;
-    
-    } else {
-        p.posCur += 7;
-        p.nItemsNext = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));
-    }
-    Bar_ProgressShow( p, pString );
+func Bar_ProgressUpdate_int(p *Bar_Progress_t, current int32, label string) {
+	if p == nil {
+		return
+	}
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	if p.stopped || current < p.nItemsNext {
+		return
+	}
+	if current >= p.nItemsTotal {
+		p.posCur = 78
+		p.nItemsNext = 1<<31 - 1
+	} else {
+		p.posCur += 7
+		p.nItemsNext = int32(int64(7+p.posCur) * int64(p.nItemsTotal) / int64(p.posTotal))
+	}
+	p.show(label)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Stops the progress bar.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Bar_ProgressStop(p *Bar_Progress_t) {
-    if p == nil { return; }
-    Bar_ProgressClean( p );
-    // inlining of macro ABC_FREE
-    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+	if p == nil {
+		return
+	}
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	if p.stopped {
+		return
+	}
+	p.clean()
+	p.stopped = true
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints the progress bar of the given size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Bar_ProgressShow(p *Bar_Progress_t, pString string) {
-    var i int32;
-    if p == nil { 
-        return; }
-    if Abc_FrameIsBatchMode() {
-        return; }
-    if pString {
-        fmt.Fprintf(p.pFile, "%s ", pString); }
-    for  i = (pString? len(pString) + 1 : 0); i < p.posCur; i++  {
-        fmt.Fprintf(p.pFile, "-");
-    }
-    if i == p.posCur {
-        fmt.Fprintf(p.pFile, ">"); }
-    for  i++  ; i <= p.posTotal; i++  {
-        fmt.Fprintf(p.pFile, " ");
-    }
-    fmt.Fprintf(p.pFile, "\r");
-    fflush( os.Stdout );
+func Bar_ProgressShow(p *Bar_Progress_t, label string) {
+	if p == nil {
+		return
+	}
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	if !p.stopped {
+		p.show(label)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Cleans the progress bar before quitting.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Bar_ProgressClean(p *Bar_Progress_t) {
-    var i int32;
-    if p == nil { 
-        return; }
-    if Abc_FrameIsBatchMode() {
-        return; }
-    for  i = 0; i <= p.posTotal; i++  {
-        fmt.Fprintf(p.pFile, " ");
-    }
-    fmt.Fprintf(p.pFile, "\r");
-    fflush( os.Stdout );
+	if p == nil {
+		return
+	}
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	if !p.stopped {
+		p.clean()
+	}
+}
+func (p *Bar_Progress_t) write(text string) {
+	if p.err != nil {
+		return
+	}
+	_, p.err = io.WriteString(p.pFile, text)
+	if f, ok := p.pFile.(interface{ Flush() error }); ok && p.err == nil {
+		p.err = f.Flush()
+	}
+}
+func (p *Bar_Progress_t) show(label string) {
+	if batchMode.Load() {
+		return
+	}
+	var b strings.Builder
+	i := int32(0)
+	if label != "" {
+		b.WriteString(label)
+		b.WriteByte(' ')
+		i = int32(len(label) + 1)
+	}
+	for ; i < p.posCur; i++ {
+		b.WriteByte('-')
+	}
+	if i == p.posCur {
+		b.WriteByte('>')
+	}
+	for i++; i <= p.posTotal; i++ {
+		b.WriteByte(' ')
+	}
+	b.WriteByte('\r')
+	p.write(b.String())
+}
+func (p *Bar_Progress_t) clean() {
+	if !batchMode.Load() {
+		p.write(strings.Repeat(" ", int(p.posTotal)+1) + "\r")
+	}
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Err reports a write/flush error encountered while rendering progress.
+func (p *Bar_Progress_t) Err() error {
+	if p == nil {
+		return nil
+	}
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	return p.err
+}

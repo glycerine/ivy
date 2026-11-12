@@ -1,292 +1,187 @@
+// Copyright Satoko contributors. Distributed under the BSD 2-Clause License.
+// Go port of src/sat/satoko/utils/vec/vec_uint.h.
 package vec
 
-import (
-	"fmt"
-	"os"
-)
+import "fmt"
+import "sort"
 
-//===--- vec_uint.h ---------------------------------------------------------===
-//
-//                     satoko: Satisfiability solver
-//
-// This file is distributed under the BSD 2-Clause License.
-// See LICENSE for details.
-//
-//===------------------------------------------------------------------------===
-
-
-
-//#include <assert.h>
-//#include <stdio.h>
-//#include <string.h>
-
-//#include "../mem.h"
-
-//#include "misc/util/abc_global.h"
-//ABC_NAMESPACE_HEADER_START
-
-   
+// vec_uint_t stores a contiguous Go-owned buffer. size is the active prefix.
 type vec_uint_t struct {
-    cap uint32;
-    size uint32;
-    data *uint32;
+	cap, size uint32
+	data      []uint32
 }
 
-//===------------------------------------------------------------------------===
-// Vector Macros
-//===------------------------------------------------------------------------===
-// Original macro:
-// #define vec_uint_foreach(vec, entry, i) \
-//     for (i = 0; (i < vec_uint_size(vec)) && (((entry) = vec_uint_at(vec, i)), 1); i++)
-
-
-// Original macro:
-// #define vec_uint_foreach_start(vec, entry, i, start) \
-//     for (i = start; (i < vec_uint_size(vec)) && (((entry) = vec_uint_at(vec, i)), 1); i++)
-
-
-// Original macro:
-// #define vec_uint_foreach_stop(vec, entry, i, stop) \
-//     for (i = 0; (i < stop) && (((entry) = vec_uint_at(vec, i)), 1); i++)
-
-
-//===------------------------------------------------------------------------===
-// Vector API
-//===------------------------------------------------------------------------===
-func vec_uint_alloc(cap uint32) *vec_uint_t {
-    // inlining of macro satoko_alloc
-    var p *vec_uint_t  = ((vec_uint_t *) malloc((1) * sizeof(vec_uint_t)));
-
-    if cap > 0 && cap < 16 {
-        cap = 16; }
-    p.size = 0;
-    p.cap = cap;
-    if p.cap {
-        // inlining of macro satoko_alloc
-        p.data = ((unsigned *) malloc((p.cap) * sizeof(unsigned)));
-    } else {
-        p.data = nil;
-    }
-    return p;
+func vec_uint_alloc(capacity uint32) *vec_uint_t {
+	if capacity > 0 && capacity < 16 {
+		capacity = 16
+	}
+	return vec_uint_alloc_exact(capacity)
 }
-
-func vec_uint_alloc_exact(cap uint32) *vec_uint_t {
-    // inlining of macro satoko_alloc
-    var p *vec_uint_t  = ((vec_uint_t *) malloc((1) * sizeof(vec_uint_t)));
-
-    cap = 0;
-    p.size = 0;
-    p.cap = cap;
-    if p.cap {
-        // inlining of macro satoko_alloc
-        p.data = ((unsigned *) malloc((p.cap) * sizeof(unsigned)));
-    } else {
-        p.data = nil;
-    }
-    return p;
+func vec_uint_alloc_exact(capacity uint32) *vec_uint_t {
+	return &vec_uint_t{cap: capacity, data: make([]uint32, capacity)}
 }
-
 func vec_uint_init(size uint32, value uint32) *vec_uint_t {
-    // inlining of macro satoko_alloc
-    var p *vec_uint_t  = ((vec_uint_t *) malloc((1) * sizeof(vec_uint_t)));
-
-    p.cap = size;
-    p.size = size;
-    if p.cap {
-        // inlining of macro satoko_alloc
-        p.data = ((unsigned *) malloc((p.cap) * sizeof(unsigned)));
-    } else {
-        p.data = nil;
-    }
-    memset(p.data, value, sizeof(unsigned) * p.size);
-    return p;
+	p := vec_uint_alloc_exact(size)
+	p.size = size
+	for i := range p.data {
+		p.data[i] = value
+	}
+	return p
 }
-
 func vec_uint_free(p *vec_uint_t) {
-    if p.data != nil {
-        // inlining of macro satoko_free
-        for { free(p.data); p.data = nil; 
-if !(false) { break }
-}  }
-    // inlining of macro satoko_free
-    for { free(p); p = nil; 
-if !(false) { break }
-} 
+	if p != nil {
+		*p = vec_uint_t{}
+	}
 }
-
-func vec_uint_size(p *vec_uint_t) uint32 {
-    return p.size;
-}
-
-func vec_uint_resize(p *vec_uint_t, new_size uint32) {
-    p.size = new_size;
-    if p.cap >= new_size {
-        return; }
-    // inlining of macro satoko_realloc
-    p.data = ((unsigned *) realloc(p.data, (new_size) * sizeof(unsigned)));
-    assert(p.data != nil, "p.data != nil");
-    p.cap = new_size;
-}
-
-func vec_uint_shrink(p *vec_uint_t, new_size uint32) {
-    assert(p.cap >= new_size, "p.cap >= new_size");
-    p.size = new_size;
-}
-
-func vec_uint_reserve(p *vec_uint_t, new_cap uint32) {
-    if p.cap >= new_cap {
-        return; }
-    // inlining of macro satoko_realloc
-    p.data = ((unsigned *) realloc(p.data, (new_cap) * sizeof(unsigned)));
-    assert(p.data != nil, "p.data != nil");
-    p.cap = new_cap;
-}
-
-func vec_uint_capacity(p *vec_uint_t) uint32 {
-    return p.cap;
-}
-
+func vec_uint_size(p *vec_uint_t) uint32     { return p.size }
+func vec_uint_capacity(p *vec_uint_t) uint32 { return p.cap }
 func vec_uint_empty(p *vec_uint_t) int32 {
-    if p.size {
-        return 0;
-    } else {
-        return 1;
-    }
+	if p.size == 0 {
+		return 1
+	}
+	return 0
 }
-
-func vec_uint_erase(p *vec_uint_t) {
-    // inlining of macro satoko_free
-    for { free(p.data); p.data = nil; 
-if !(false) { break }
-} 
-    p.size = 0;
-    p.cap = 0;
+func vec_uint_reserve(p *vec_uint_t, n uint32) {
+	if n <= p.cap {
+		return
+	}
+	buf := make([]uint32, n)
+	copy(buf, p.data)
+	p.data = buf
+	p.cap = n
 }
-
-func vec_uint_at(p *vec_uint_t, idx uint32) uint32 {
-    assert(idx >= 0 && idx < p.size, "idx >= 0 && idx < p.size");
-    return p.data[idx];
+func vec_uint_resize(p *vec_uint_t, n uint32) { vec_uint_reserve(p, n); p.size = n }
+func vec_uint_shrink(p *vec_uint_t, n uint32) {
+	if n > p.cap {
+		panic("vector shrink exceeds capacity")
+	}
+	p.size = n
 }
-
-func vec_uint_at_ptr(p *vec_uint_t, idx uint32) *uint32 {
-    assert(idx >= 0 && idx < p.size, "idx >= 0 && idx < p.size");
-    return p.data + idx;
+func vec_uint_erase(p *vec_uint_t) { p.data = nil; p.size = 0; p.cap = 0 }
+func vec_uint_at(p *vec_uint_t, i uint32) uint32 {
+	if i >= p.size {
+		panic("vector index out of range")
+	}
+	return p.data[i]
 }
-
-func vec_uint_find(p *vec_uint_t, entry uint32) uint32 {
-    var i uint32;
-    for i = 0; i < p.size; i++ {
-        if p.data[i] == entry {
-            return 1; }
-    }
-    return 0;
+func vec_uint_at_ptr(p *vec_uint_t, i uint32) *uint32 {
+	if i >= p.size {
+		panic("vector index out of range")
+	}
+	return &p.data[i]
 }
-
-func vec_uint_data(p *vec_uint_t) *uint32 {
-    assert((p != nil), "p");
-    return p.data;
+func vec_uint_data(p *vec_uint_t) []uint32 { return p.data[:p.size] }
+func vec_uint_duplicate(dst, src *vec_uint_t) {
+	if dst == src {
+		return
+	}
+	vec_uint_resize(dst, src.cap)
+	copy(dst.data, src.data)
+	dst.size = src.size
 }
-
-func vec_uint_duplicate(dest *vec_uint_t, src *vec_uint_t) {
-    assert(dest != nil && src != nil, "dest != nil && src != nil");
-    vec_uint_resize(dest, src.cap);
-    memcpy(dest.data, src.data, sizeof(unsigned) * src.cap);
-    dest.size = src.size;
+func vec_uint_copy(dst, src *vec_uint_t) {
+	if dst == src {
+		return
+	}
+	vec_uint_resize(dst, src.size)
+	copy(dst.data, src.data[:src.size])
 }
-
-func vec_uint_copy(dest *vec_uint_t, src *vec_uint_t) {
-    assert(dest != nil && src != nil, "dest != nil && src != nil");
-    vec_uint_resize(dest, src.size);
-    memcpy(dest.data, src.data, sizeof(unsigned) * src.size);
-    dest.size = src.size;
-}
-
 func vec_uint_push_back(p *vec_uint_t, value uint32) {
-    if p.size == p.cap {
-        if p.cap < 16 {
-            vec_uint_reserve(p, 16);
-        } else {
-            vec_uint_reserve(p, 2 * p.cap); }
-    }
-    p.data[p.size] = value;
-    p.size++;
+	if p.size == p.cap {
+		n := 2 * p.cap
+		if n < 16 {
+			n = 16
+		}
+		vec_uint_reserve(p, n)
+	}
+	p.data[p.size] = value
+	p.size++
 }
-
 func vec_uint_pop_back(p *vec_uint_t) uint32 {
-    assert((p != nil) && p.size, "p && p.size");
-    return p.data[--p.size];
+	if p.size == 0 {
+		panic("pop empty vector")
+	}
+	p.size--
+	return p.data[p.size]
+}
+func vec_uint_assign(p *vec_uint_t, i uint32, value uint32) {
+	if i >= p.size {
+		panic("vector index out of range")
+	}
+	p.data[i] = value
 }
 
-func vec_uint_assign(p *vec_uint_t, idx uint32, value uint32) {
-    assert((idx >= 0) && (idx < vec_uint_size(p)), "(idx >= 0) && (idx < vec_uint_size(p))");
-    p.data[idx] = value;
+// Insert shifts the entire old suffix, including its last element.
+func vec_uint_insert(p *vec_uint_t, i uint32, value uint32) {
+	if i >= p.size {
+		panic("vector index out of range")
+	}
+	vec_uint_push_back(p, 0)
+	copy(p.data[i+1:p.size], p.data[i:p.size-1])
+	p.data[i] = value
 }
-
-func vec_uint_insert(p *vec_uint_t, idx uint32, value uint32) {
-    assert((idx >= 0) && (idx < vec_uint_size(p)), "(idx >= 0) && (idx < vec_uint_size(p))");
-    vec_uint_push_back(p, 0);
-    memmove(p.data + idx + 1, p.data + idx, (p.size - idx - 2) * sizeof(unsigned));
-    p.data[idx] = value;
+func vec_uint_drop(p *vec_uint_t, i uint32) {
+	if i >= p.size {
+		panic("vector index out of range")
+	}
+	copy(p.data[i:p.size-1], p.data[i+1:p.size])
+	p.size--
 }
-
-func vec_uint_drop(p *vec_uint_t, idx uint32) {
-    assert((idx >= 0) && (idx < vec_uint_size(p)), "(idx >= 0) && (idx < vec_uint_size(p))");
-    memmove(p.data + idx, p.data + idx + 1, (p.size - idx - 1) * sizeof(unsigned));
-    p.size -= 1;
+func vec_uint_clear(p *vec_uint_t) { p.size = 0 }
+func vec_uint_asc_compare(a, b *uint32) int32 {
+	if *a < *b {
+		return -1
+	}
+	if *a > *b {
+		return 1
+	}
+	return 0
 }
-
-func vec_uint_clear(p *vec_uint_t) {
-    p.size = 0;
-}
-
-func vec_uint_asc_compare(p1 any, p2 any) int32 {
-    unsigned *pp1 = (unsigned *) p1;
-    unsigned *pp2 = (unsigned *) p2;
-
-    if *pp1 < *pp2 {
-        return -1; }
-    if *pp1 > *pp2 {
-        return 1; }
-    return 0;
-}
-
-func vec_uint_desc_compare(p1 any, p2 any) int32 {
-    unsigned *pp1 = (unsigned *) p1;
-    unsigned *pp2 = (unsigned *) p2;
-
-    if *pp1 > *pp2 {
-        return -1; }
-    if *pp1 < *pp2 {
-        return 1; }
-    return 0;
-}
-
+func vec_uint_desc_compare(a, b *uint32) int32 { return vec_uint_asc_compare(b, a) }
 func vec_uint_sort(p *vec_uint_t, ascending int32) {
-    if ascending != 0 {
-        qsort((void *) p.data, (size_t)p.size, sizeof(unsigned),
-                      (int (*)(void *, void *)) vec_uint_asc_compare);
-    } else {
-        qsort((void*) p.data, (size_t)p.size, sizeof(unsigned),
-                      (int (*)(void *, void *)) vec_uint_desc_compare); }
+	sort.Slice(p.data[:p.size], func(i, j int) bool {
+		if ascending != 0 {
+			return p.data[i] < p.data[j]
+		}
+		return p.data[i] > p.data[j]
+	})
 }
-
-func vec_uint_memory(p *vec_uint_t) long {
-    if p == nil {
-        return 0;
-    } else {
-        return sizeof(unsigned) * p.cap + sizeof(vec_uint_t);
-    }
+func vec_uint_memory(p *vec_uint_t) int64 {
+	if p == nil {
+		return 0
+	}
+	return int64(p.cap)*4 + 32
 }
-
 func vec_uint_print(p *vec_uint_t) {
-    var i uint32;
-    assert(p != nil, "p != nil");
-    fmt.Fprintf(os.Stdout, "Vector has %d(%d) entries: {", p.size, p.cap);
-    for i = 0; i < p.size; i++ {
-        fmt.Fprintf(os.Stdout, " %d", p.data[i]);
-    }
-    fmt.Fprintf(os.Stdout, " }\n");
+	fmt.Printf("Vector has %d(%d) entries: {", p.size, p.cap)
+	for _, v := range p.data[:p.size] {
+		fmt.Printf(" %v", v)
+	}
+	fmt.Println(" }")
 }
 
-//ABC_NAMESPACE_HEADER_END
+func vec_uint_find(p *vec_uint_t, value uint32) uint32 {
+	for _, v := range p.data[:p.size] {
+		if v == value {
+			return 1
+		}
+	}
+	return 0
+}
 
+// Uints is a Go-owned Satoko vector. Data exposes the active elements.
+type Uints = vec_uint_t
+
+func NewUints(capacity uint32) *Uints           { return vec_uint_alloc(capacity) }
+func (p *vec_uint_t) Len() uint32               { return p.size }
+func (p *vec_uint_t) Cap() uint32               { return p.cap }
+func (p *vec_uint_t) Data() []uint32            { return vec_uint_data(p) }
+func (p *vec_uint_t) At(i uint32) uint32        { return vec_uint_at(p, i) }
+func (p *vec_uint_t) Set(i uint32, v uint32)    { vec_uint_assign(p, i, v) }
+func (p *vec_uint_t) Push(v uint32)             { vec_uint_push_back(p, v) }
+func (p *vec_uint_t) Pop() uint32               { return vec_uint_pop_back(p) }
+func (p *vec_uint_t) Resize(n uint32)           { vec_uint_resize(p, n) }
+func (p *vec_uint_t) Reserve(n uint32)          { vec_uint_reserve(p, n) }
+func (p *vec_uint_t) Clear()                    { vec_uint_clear(p) }
+func (p *vec_uint_t) Insert(i uint32, v uint32) { vec_uint_insert(p, i, v) }
+func (p *vec_uint_t) Drop(i uint32)             { vec_uint_drop(p, i) }

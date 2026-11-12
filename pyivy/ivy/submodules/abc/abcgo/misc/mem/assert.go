@@ -2,8 +2,8 @@ package mem
 
 import (
 	"fmt"
-	"runtime"
 	"path"
+	"runtime"
 )
 
 func assert(x bool, message string) {

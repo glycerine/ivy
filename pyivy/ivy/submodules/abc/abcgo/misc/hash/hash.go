@@ -1,72 +1,14 @@
+// Package hash implements ABC's chained hash tables using Go-owned storage.
 package hash
 
-/**CFile****************************************************************
-
-  FileName    [hash.h]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Hash map.]
-
-  Synopsis    [External declarations.]
-
-  Author      [Aaron P. Hurst]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - May 16, 2005.]
-
-  Revision    [$Id: vec.h,v 1.00 2005/06/20 00:00:00 ahurst Exp $]
-
-***********************************************************************/
- 
-
-
-
-
-#ifdef _WIN32
-#define inline __inline // compatible with MS VS 6.0
-#endif
-////////////////////////////////////////////////////////////////////////
-///                          INCLUDES                                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include "misc/util/abc_global.h"
-
-//#include "hashInt.h"
-//#include "hashFlt.h"
-//#include "hashPtr.h"
-
-//ABC_NAMESPACE_HEADER_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                         BASIC TYPES                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                      MACRO DEFINITIONS                           ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                    FUNCTION DECLARATIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-func Hash_DefaultHashFunc(key int32, nBins int32) int32 {
-  return Abc_AbsInt( ( (key+11)*(key)*7+3 ) % nBins );
+// Hash_DefaultHashFunc preserves the original 32-bit C integer arithmetic.
+func Hash_DefaultHashFunc(key, nBins int32) int32 {
+	if nBins <= 0 {
+		panic("hash: nonpositive bin count")
+	}
+	h := ((key+11)*key*7 + 3) % nBins
+	if h < 0 {
+		h = -h
+	}
+	return h
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-

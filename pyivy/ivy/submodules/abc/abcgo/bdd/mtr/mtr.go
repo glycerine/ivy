@@ -1,5 +1,3 @@
-package mtr
-
 /**CHeaderFile*****************************************************************
 
   FileName    [mtr.h]
@@ -58,157 +56,28 @@ package mtr
 
 ******************************************************************************/
 
+// Package mtr implements the CUDD multiway group-tree algorithms in Go.
+// Original algorithms: src/bdd/mtr (University of Colorado BSD license).
+package mtr
 
+type MtrHalfWord = uint32
 
+const (
+	MTR_DEFAULT  uint32 = 0
+	MTR_TERMINAL uint32 = 1
+	MTR_SOFT     uint32 = 2
+	MTR_FIXED    uint32 = 4
+	MTR_NEWNODE  uint32 = 8
+	MTR_MAXHIGH  uint32 = 0x7fffffff
+)
 
-/*---------------------------------------------------------------------------*/
-/* Nested includes                                                           */
-/*---------------------------------------------------------------------------*/
-
-//ABC_NAMESPACE_HEADER_START
-
-/*---------------------------------------------------------------------------*/
-/* Constant declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-#ifndef SIZEOF_VOID_P
-#define SIZEOF_VOID_P 4
-#endif
-#ifndef SIZEOF_INT
-#define SIZEOF_INT 4
-#endif
-
-//#undef CONST
-//#if defined(__STDC__) || defined(__cplusplus)
-//#define CONST           const
-//#else /* !(__STDC__ || __cplusplus) */
-//#define CONST
-//#endif /* !(__STDC__ || __cplusplus) */
-
-#if defined(__GNUC__)
-#define MTR_INLINE __inline__
-# if (__GNUC__ >2 || __GNUC_MINOR__ >=7)
-#   define MTR_UNUSED __attribute__ ((unused))
-# else
-#   define MTR_UNUSED
-# endif
-#else
-#define MTR_INLINE
-#define MTR_UNUSED
-#endif
-
-/* Flag definitions */
-const MTR_DEFAULT =     0x00000000
-const MTR_TERMINAL =    0x00000001
-const MTR_SOFT =        0x00000002
-const MTR_FIXED =       0x00000004
-const MTR_NEWNODE =     0x00000008
-
-/* MTR_MAXHIGH is defined in such a way that on 32-bit and 64-bit
-** machines one can cast a value to (int) without generating a negative
-** number.
-*/
-#if SIZEOF_VOID_P == 8 && SIZEOF_INT == 4
-#define MTR_MAXHIGH     (((MtrHalfWord) ~0) >> 1)
-#else
-#define MTR_MAXHIGH     ((MtrHalfWord) ~0)
-#endif
-
-
-/*---------------------------------------------------------------------------*/
-/* Stucture declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-
-/*---------------------------------------------------------------------------*/
-/* Type declarations                                                         */
-/*---------------------------------------------------------------------------*/
-
-#if SIZEOF_VOID_P == 8 && SIZEOF_INT == 4
-typedef unsigned int   MtrHalfWord;
-#else
-typedef unsigned short MtrHalfWord;
-#endif
-
-typedef struct MtrNode {
-    MtrHalfWord flags;
-    MtrHalfWord low;
-    MtrHalfWord size;
-    MtrHalfWord index;
-    struct MtrNode *parent;
-    struct MtrNode *child;
-    struct MtrNode *elder;
-    struct MtrNode *younger;
+// MtrNode is an ordered multiway tree node. Low and Size identify a contiguous
+// half-open leaf interval. Sibling links are doubly linked.
+type MtrNode struct {
+	Flags, Low, Size, Index       uint32
+	Parent, Child, Elder, Younger *MtrNode
 }
- MtrNode;
 
-
-/*---------------------------------------------------------------------------*/
-/* Variable declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-
-/*---------------------------------------------------------------------------*/
-/* Macro declarations                                                        */
-/*---------------------------------------------------------------------------*/
-
-/* Flag manipulation macros */
-// Original macro:
-// #define MTR_SET(node, flag)             (node->flags |= (flag))
-
-// Original macro:
-// #define MTR_RESET(node, flag)   (node->flags &= ~ (flag))
-
-// Original macro:
-// #define MTR_TEST(node, flag)    (node->flags & (flag))
-
-
-
-/**AutomaticStart*************************************************************/
-
-/*---------------------------------------------------------------------------*/
-/* Function prototypes                                                       */
-/*---------------------------------------------------------------------------*/
-
-// extern MtrNode * Mtr_AllocNode (void);
-
-// extern void Mtr_DeallocNode (MtrNode *node);
-
-// extern MtrNode * Mtr_InitTree (void);
-
-// extern void Mtr_FreeTree (MtrNode *node);
-
-// extern MtrNode * Mtr_CopyTree (MtrNode *node, int expansion);
-
-// extern void Mtr_MakeFirstChild (MtrNode *parent, MtrNode *child);
-
-// extern void Mtr_MakeLastChild (MtrNode *parent, MtrNode *child);
-
-// extern MtrNode * Mtr_CreateFirstChild (MtrNode *parent);
-
-// extern MtrNode * Mtr_CreateLastChild (MtrNode *parent);
-
-// extern void Mtr_MakeNextSibling (MtrNode *first, MtrNode *second);
-
-// extern void Mtr_PrintTree (MtrNode *node);
-
-// extern MtrNode * Mtr_InitGroupTree (int lower, int size);
-
-// extern MtrNode * Mtr_MakeGroup (MtrNode *root, unsigned int low, unsigned int high, unsigned int flags);
-
-// extern MtrNode * Mtr_DissolveGroup (MtrNode *group);
-
-// extern MtrNode * Mtr_FindGroup (MtrNode *root, unsigned int low, unsigned int high);
-
-// extern int Mtr_SwapGroups (MtrNode *first, MtrNode *second);
-
-// extern void Mtr_PrintGroups (MtrNode *root, int silent);
-
-// extern MtrNode * Mtr_ReadGroups (FILE *fp, int nleaves);
-
-
-/**AutomaticEnd***************************************************************/
-
-//ABC_NAMESPACE_HEADER_END
-
-
+func MTR_SET(n *MtrNode, f uint32)         { n.Flags |= f }
+func MTR_RESET(n *MtrNode, f uint32)       { n.Flags &^= f }
+func MTR_TEST(n *MtrNode, f uint32) uint32 { return n.Flags & f }
