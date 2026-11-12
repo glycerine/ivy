@@ -1,107 +1,71 @@
 package dsd
 
-/**CFile****************************************************************
+import bdd "github.com/glycerine/abcgo/bdd/cudd/core"
 
-  FileName    [dsdInt.h]
-
-  PackageName [DSD: Disjoint-support decomposition package.]
-
-  Synopsis    [Internal declarations of the package.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 8.0. Started - September 22, 2003.]
-
-  Revision    [$Id: dsdInt.h,v 1.0 2002/22/09 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-
-
-
-
-//#include "bdd/extrab/extraBdd.h"
-//#include "dsd.h"
-
-//ABC_NAMESPACE_HEADER_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                      TYPEDEF DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
- 
-typedef unsigned char byte;
-
-////////////////////////////////////////////////////////////////////////
-///                    STRUCTURE DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-// DSD manager
-type Dsd_Manager_t_ struct {
-    dd     *DdManager;         // the BDD manager
-    Table      *st__table;      // the mapping of BDDs into their DEs
-    nInputs            int32;    // the number of primary inputs
-    nRoots            int32;     // the number of primary outputs
-    nRootsAlloc            int32;// the number of primary outputs
-    pInputs   **Dsd_Node_t;    // the primary input nodes
-    pRoots   **Dsd_Node_t;     // the primary output nodes
-    pConst1    *Dsd_Node_t;    // the constant node
-    fVerbose            int32;   // the verbosity level 
+func function(p *Dsd_Node_t) *DdNode { return bdd.Cudd_NotCond(Dsd_Regular(p).G, Dsd_IsComplement(p)) }
+func level(dd *DdManager, f *DdNode) int {
+	r := bdd.Cudd_Regular(f)
+	if bdd.Cudd_IsConstant(r) {
+		return int(bdd.CUDD_CONST_INDEX)
+	}
+	return dd.Perm[r.Index]
 }
-
-// DSD node
-type Dsd_Node_t_ struct {
-    Type     Dsd_Type_t;       // decomposition type
-    G        *DdNode;          // function of the node   
-    S        *DdNode;          // support of this function
-    pDecs   **Dsd_Node_t;      // pointer to structures for formal inputs
-    Mark            int32;       // the mark used by CASE 4 of disjoint decomposition
-    nDecs          int16;      // the number of formal inputs
-    nVisits          int16;    // the counter of visits
+func split(dd *DdManager, f *DdNode, lev int) (*DdNode, *DdNode) {
+	if level(dd, f) != lev {
+		return f, f
+	}
+	r := bdd.Cudd_Regular(f)
+	return bdd.Cudd_NotCond(r.E, bdd.Cudd_IsComplement(f)), bdd.Cudd_NotCond(r.T, bdd.Cudd_IsComplement(f))
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       MACRO DEFINITIONS                          ///
-////////////////////////////////////////////////////////////////////////
-
-const MAXINPUTS = 1000
-
-////////////////////////////////////////////////////////////////////////
-///                         PARAMETERS                               ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DECLARATIONS                        ///
-////////////////////////////////////////////////////////////////////////
-
-/*=== dsdCheck.c =======================================================*/
-// extern void         Dsd_CheckCacheAllocate( int nEntries );
-
-// extern void         Dsd_CheckCacheDeallocate();
-
-// extern void         Dsd_CheckCacheClear();
-
-// extern int          Dsd_CheckRootFunctionIdentity( DdManager * dd, DdNode * bF1, DdNode * bF2, DdNode * bC1, DdNode * bC2 );
-
-/*=== dsdTree.c =======================================================*/
-// extern Dsd_Node_t * Dsd_TreeNodeCreate( int Type, int nDecs, int BlockNum );
-
-// extern void         Dsd_TreeNodeDelete( DdManager * dd, Dsd_Node_t * pNode );
-
-// extern void         Dsd_TreeUnmark( Dsd_Manager_t * dMan );
-
-// extern DdNode *     Dsd_TreeGetPrimeFunctionOld( DdManager * dd, Dsd_Node_t * pNode, int fRemap );
-
-
-
-
-//ABC_NAMESPACE_HEADER_END
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                           END OF FILE                            ///
-////////////////////////////////////////////////////////////////////////
-
+func suppContains(dd *DdManager, a, b *DdNode) bool { // support cubes: does a contain b?
+	for b != dd.One {
+		if a == dd.One {
+			return false
+		}
+		la, lb := level(dd, a), level(dd, b)
+		if la > lb {
+			return false
+		}
+		if la == lb {
+			b = b.T
+		}
+		a = a.T
+	}
+	return true
+}
+func suppOverlap(dd *DdManager, a, b *DdNode) bool {
+	for a != dd.One && b != dd.One {
+		la, lb := level(dd, a), level(dd, b)
+		if la == lb {
+			return true
+		}
+		if la < lb {
+			a = a.T
+		} else {
+			b = b.T
+		}
+	}
+	return false
+}
+func suppSize(dd *DdManager, a *DdNode) int {
+	n := 0
+	for a != dd.One {
+		n++
+		a = a.T
+	}
+	return n
+}
+func suppHas(dd *DdManager, s, v *DdNode) bool {
+	target := level(dd, v)
+	for s != dd.One {
+		l := level(dd, s)
+		if l == target {
+			return true
+		}
+		if l > target {
+			return false
+		}
+		s = s.T
+	}
+	return false
+}
