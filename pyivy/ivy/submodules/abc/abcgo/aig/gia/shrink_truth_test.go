@@ -43,3 +43,24 @@ func TestShrinkManagerDivisors(t *testing.T) {
 		t.Fatal("shrink cleanup failed")
 	}
 }
+
+func TestShrinkBidecomposition(t *testing.T) {
+	g := Gia_ManStart(10)
+	Gia_ManAppendCi(g)
+	Gia_ManAppendCi(g)
+	p := Shr_ManAlloc(g)
+	a, b := Gia_ManAppendCi(p.pNew), Gia_ManAppendCi(p.pNew)
+	leaves := vec.Vec_IntAlloc(2)
+	vec.Vec_IntPush(leaves, a>>1)
+	vec.Vec_IntPush(leaves, b>>1)
+	lit := Shr_ObjPerformBidec(p, p.pManDec, p.pNew, leaves, 0x2222222222222222, ^word(0))
+	truth := Shr_ManComputeTruth6(p.pNew, Gia_ManObj(p.pNew, lit>>1), leaves, p.vTruths)
+	if lit&1 != 0 {
+		truth = ^truth
+	}
+	if truth != 0x2222222222222222 {
+		t.Fatalf("truth %x", truth)
+	}
+	Gia_ManAppendCo(p.pNew, lit)
+	Shr_ManFree(p)
+}
