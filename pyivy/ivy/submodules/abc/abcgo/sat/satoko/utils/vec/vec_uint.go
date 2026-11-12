@@ -2,9 +2,11 @@
 // Go port of src/sat/satoko/utils/vec/vec_uint.h.
 package vec
 
-import "fmt"
-import "sort"
-import "strconv"
+import (
+	"fmt"
+	"sort"
+	"strconv"
+)
 
 // vec_uint_t owns its active elements. len(data) and cap(data) are authoritative.
 type vec_uint_t struct{ data []uint32 }
