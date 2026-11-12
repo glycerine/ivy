@@ -1,0 +1,10 @@
+# Source-format oracle with explicit opposite, absent and full output codes.
+.type fdr
+.i 5
+.o 2
+.p 4
+00000 1~
+10000 01
+11000 -0
+11100 2~
+.e

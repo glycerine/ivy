@@ -1,10 +1,5 @@
 package pla
 
-import (
-	"fmt"
-	"os"
-)
-
 /**CFile****************************************************************
 
   FileName    [plaHash.c]
@@ -16,7 +11,7 @@ import (
   Synopsis    [Scalable SOP transformations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - March 18, 2015.]
@@ -25,320 +20,208 @@ import (
 
 ***********************************************************************/
 
-//#include "pla.h"
+import (
+	"encoding/binary"
+	"fmt"
+	"math/bits"
+	"sort"
+)
 
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-const PLA_HASH_VALUE_NUM = 256
-var s_PlaHashValues [PLA_HASH_VALUE_NUM]uint32 = [PLA_HASH_VALUE_NUM]uint32{
-    0x984b6ad9,0x18a6eed3,0x950353e2,0x6222f6eb,0xdfbedd47,0xef0f9023,0xac932a26,0x590eaf55,
-    0x97d0a034,0xdc36cd2e,0x22736b37,0xdc9066b0,0x2eb2f98b,0x5d9c7baf,0x85747c9e,0x8aca1055,
-    0x50d66b74,0x2f01ae9e,0xa1a80123,0x3e1ce2dc,0xebedbc57,0x4e68bc34,0x855ee0cf,0x17275120,
-    0x2ae7f2df,0xf71039eb,0x7c283eec,0x70cd1137,0x7cf651f3,0xa87bfa7a,0x14d87f02,0xe82e197d,
-    0x8d8a5ebe,0x1e6a15dc,0x197d49db,0x5bab9c89,0x4b55dea7,0x55dede49,0x9a6a8080,0xe5e51035,
-    0xe148d658,0x8a17eb3b,0xe22e4b38,0xe5be2a9a,0xbe938cbb,0x3b981069,0x7f9c0c8e,0xf756df10,
-    0x8fa783f7,0x252062ce,0x3dc46b4b,0xf70f6432,0x3f378276,0x44b137a1,0x2bf74b77,0x04892ed6,
-    0xfd318de1,0xd58c235e,0x94c6d25b,0x7aa5f218,0x35c9e921,0x5732fbbb,0x06026481,0xf584a44f,
-    0x946e1b5f,0x8463d5b2,0x4ebca7b2,0x54887b15,0x08d1e804,0x5b22067d,0x794580f6,0xb351ea43,
-    0xbce555b9,0x19ae2194,0xd32f1396,0x6fc1a7f1,0x1fd8a867,0x3a89fdb0,0xea49c61c,0x25f8a879,
-    0xde1e6437,0x7c74afca,0x8ba63e50,0xb1572074,0xe4655092,0xdb6f8b1c,0xc2955f3c,0x327f85ba,
-    0x60a17021,0x95bd261d,0xdea94f28,0x04528b65,0xbe0109cc,0x26dd5688,0x6ab2729d,0xc4f029ce,
-    0xacf7a0be,0x4c912f55,0x34c06e65,0x4fbb938e,0x1533fb5f,0x03da06bd,0x48262889,0xc2523d7d,
-    0x28a71d57,0x89f9713a,0xf574c551,0x7a99deb5,0x52834d91,0x5a6f4484,0xc67ba946,0x13ae698f,
-    0x3e390f34,0x34fc9593,0x894c7932,0x6cf414a3,0xdb7928ab,0x13a3b8a3,0x4b381c1d,0xa10b54cb,
-    0x55359d9d,0x35a3422a,0x58d1b551,0x0fd4de20,0x199eb3f4,0x167e09e2,0x3ee6a956,0x5371a7fa,
-    0xd424efda,0x74f521c5,0xcb899ff6,0x4a42e4f4,0x747917b6,0x4b08df0b,0x090c7a39,0x11e909e4,
-    0x258e2e32,0xd9fad92d,0x48fe5f69,0x0545cde6,0x55937b37,0x9b4ae4e4,0x1332b40e,0xc3792351,
-    0xaff982ef,0x4dba132a,0x38b81ef1,0x28e641bf,0x227208c1,0xec4bbe37,0xc4e1821c,0x512c9d09,
-    0xdaef1257,0xb63e7784,0x043e04d7,0x9c2cea47,0x45a0e59a,0x281315ca,0x849f0aac,0xa4071ed3,
-    0x0ef707b3,0xfe8dac02,0x12173864,0x471f6d46,0x24a53c0a,0x35ab9265,0xbbf77406,0xa2144e79,
-    0xb39a884a,0x0baf5b6d,0xcccee3dd,0x12c77584,0x2907325b,0xfd1adcd2,0xd16ee972,0x345ad6c1,
-    0x315ebe66,0xc7ad2b8d,0x99e82c8d,0xe52da8c8,0xba50f1d3,0x66689cd8,0x2e8e9138,0x43e15e74,
-    0xf1ced14d,0x188ec52a,0xe0ef3cbb,0xa958aedc,0x4107a1bc,0x5a9e7a3e,0x3bde939f,0xb5b28d5a,
-    0x596fe848,0xe85ad00c,0x0b6b3aae,0x44503086,0x25b5695c,0xc0c31dcd,0x5ee617f0,0x74d40c3a,
-    0xd2cb2b9f,0x1e19f5fa,0x81e24faf,0xa01ed68f,0xcee172fc,0x7fdf2e4d,0x002f4774,0x664f82dd,
-    0xc569c39a,0xa2d4dcbe,0xaadea306,0xa4c947bf,0xa413e4e3,0x81fb5486,0x8a404970,0x752c980c,
-    0x98d1d881,0x5c932c1e,0xeee65dfb,0x37592cdd,0x0fd4e65b,0xad1d383f,0x62a1452f,0x8872f68d,
-    0xb58c919b,0x345c8ee3,0xb583a6d6,0x43d72cb3,0x77aaa0aa,0xeb508242,0xf2db64f8,0x86294328,
-    0x82211731,0x1239a9d5,0x673ba5de,0xaf4af007,0x44203b19,0x2399d955,0xa175cd12,0x595928a7,
-    0x6918928b,0xde3126bb,0x6c99835c,0x63ba1fa2,0xdebbdff0,0x3d02e541,0xd6f7aac6,0xe80b4cd0,
-    0xd0fa29f1,0x804cac5e,0x2c226798,0x462f624c,0xad05b377,0x22924fcd,0xfbea205c,0x1b47586d,
-};
-
-func Pla_HashValue(i int32) int32 { assert(i >= 0 && i < PLA_HASH_VALUE_NUM, "i >= 0 && i < PLA_HASH_VALUE_NUM"); return s_PlaHashValues[i] & 0x3FFFFFF; }
-
-
-const PLA_LIT_UNUSED = 0xFFFF
-
-   
-type Tab_Obj_t struct {
-    Table         int32;
-    Next         int32;
-    Cube         int32;
-    VarA uint32; /* C bitfield: 16 bits; review packing and truncation */
-    VarB uint32; /* C bitfield: 16 bits; review packing and truncation */
+var plaHashValues = []uint32{
+	0x984b6ad9, 0x18a6eed3, 0x950353e2, 0x6222f6eb, 0xdfbedd47, 0xef0f9023, 0xac932a26, 0x590eaf55,
+	0x97d0a034, 0xdc36cd2e, 0x22736b37, 0xdc9066b0, 0x2eb2f98b, 0x5d9c7baf, 0x85747c9e, 0x8aca1055,
+	0x50d66b74, 0x2f01ae9e, 0xa1a80123, 0x3e1ce2dc, 0xebedbc57, 0x4e68bc34, 0x855ee0cf, 0x17275120,
+	0x2ae7f2df, 0xf71039eb, 0x7c283eec, 0x70cd1137, 0x7cf651f3, 0xa87bfa7a, 0x14d87f02, 0xe82e197d,
+	0x8d8a5ebe, 0x1e6a15dc, 0x197d49db, 0x5bab9c89, 0x4b55dea7, 0x55dede49, 0x9a6a8080, 0xe5e51035,
+	0xe148d658, 0x8a17eb3b, 0xe22e4b38, 0xe5be2a9a, 0xbe938cbb, 0x3b981069, 0x7f9c0c8e, 0xf756df10,
+	0x8fa783f7, 0x252062ce, 0x3dc46b4b, 0xf70f6432, 0x3f378276, 0x44b137a1, 0x2bf74b77, 0x04892ed6,
+	0xfd318de1, 0xd58c235e, 0x94c6d25b, 0x7aa5f218, 0x35c9e921, 0x5732fbbb, 0x06026481, 0xf584a44f,
+	0x946e1b5f, 0x8463d5b2, 0x4ebca7b2, 0x54887b15, 0x08d1e804, 0x5b22067d, 0x794580f6, 0xb351ea43,
+	0xbce555b9, 0x19ae2194, 0xd32f1396, 0x6fc1a7f1, 0x1fd8a867, 0x3a89fdb0, 0xea49c61c, 0x25f8a879,
+	0xde1e6437, 0x7c74afca, 0x8ba63e50, 0xb1572074, 0xe4655092, 0xdb6f8b1c, 0xc2955f3c, 0x327f85ba,
+	0x60a17021, 0x95bd261d, 0xdea94f28, 0x04528b65, 0xbe0109cc, 0x26dd5688, 0x6ab2729d, 0xc4f029ce,
+	0xacf7a0be, 0x4c912f55, 0x34c06e65, 0x4fbb938e, 0x1533fb5f, 0x03da06bd, 0x48262889, 0xc2523d7d,
+	0x28a71d57, 0x89f9713a, 0xf574c551, 0x7a99deb5, 0x52834d91, 0x5a6f4484, 0xc67ba946, 0x13ae698f,
+	0x3e390f34, 0x34fc9593, 0x894c7932, 0x6cf414a3, 0xdb7928ab, 0x13a3b8a3, 0x4b381c1d, 0xa10b54cb,
+	0x55359d9d, 0x35a3422a, 0x58d1b551, 0x0fd4de20, 0x199eb3f4, 0x167e09e2, 0x3ee6a956, 0x5371a7fa,
+	0xd424efda, 0x74f521c5, 0xcb899ff6, 0x4a42e4f4, 0x747917b6, 0x4b08df0b, 0x090c7a39, 0x11e909e4,
+	0x258e2e32, 0xd9fad92d, 0x48fe5f69, 0x0545cde6, 0x55937b37, 0x9b4ae4e4, 0x1332b40e, 0xc3792351,
+	0xaff982ef, 0x4dba132a, 0x38b81ef1, 0x28e641bf, 0x227208c1, 0xec4bbe37, 0xc4e1821c, 0x512c9d09,
+	0xdaef1257, 0xb63e7784, 0x043e04d7, 0x9c2cea47, 0x45a0e59a, 0x281315ca, 0x849f0aac, 0xa4071ed3,
+	0x0ef707b3, 0xfe8dac02, 0x12173864, 0x471f6d46, 0x24a53c0a, 0x35ab9265, 0xbbf77406, 0xa2144e79,
+	0xb39a884a, 0x0baf5b6d, 0xcccee3dd, 0x12c77584, 0x2907325b, 0xfd1adcd2, 0xd16ee972, 0x345ad6c1,
+	0x315ebe66, 0xc7ad2b8d, 0x99e82c8d, 0xe52da8c8, 0xba50f1d3, 0x66689cd8, 0x2e8e9138, 0x43e15e74,
+	0xf1ced14d, 0x188ec52a, 0xe0ef3cbb, 0xa958aedc, 0x4107a1bc, 0x5a9e7a3e, 0x3bde939f, 0xb5b28d5a,
+	0x596fe848, 0xe85ad00c, 0x0b6b3aae, 0x44503086, 0x25b5695c, 0xc0c31dcd, 0x5ee617f0, 0x74d40c3a,
+	0xd2cb2b9f, 0x1e19f5fa, 0x81e24faf, 0xa01ed68f, 0xcee172fc, 0x7fdf2e4d, 0x002f4774, 0x664f82dd,
+	0xc569c39a, 0xa2d4dcbe, 0xaadea306, 0xa4c947bf, 0xa413e4e3, 0x81fb5486, 0x8a404970, 0x752c980c,
+	0x98d1d881, 0x5c932c1e, 0xeee65dfb, 0x37592cdd, 0x0fd4e65b, 0xad1d383f, 0x62a1452f, 0x8872f68d,
+	0xb58c919b, 0x345c8ee3, 0xb583a6d6, 0x43d72cb3, 0x77aaa0aa, 0xeb508242, 0xf2db64f8, 0x86294328,
+	0x82211731, 0x1239a9d5, 0x673ba5de, 0xaf4af007, 0x44203b19, 0x2399d955, 0xa175cd12, 0x595928a7,
+	0x6918928b, 0xde3126bb, 0x6c99835c, 0x63ba1fa2, 0xdebbdff0, 0x3d02e541, 0xd6f7aac6, 0xe80b4cd0,
+	0xd0fa29f1, 0x804cac5e, 0x2c226798, 0x462f624c, 0xad05b377, 0x22924fcd, 0xfbea205c, 0x1b47586d,
 }
-   
+
+const PLA_LIT_UNUSED int32 = 0xffff
+
+type Tab_Obj_t struct{ Cube, VarA int32 }
 type Tab_Man_t struct {
-    SizeMask         int32; // table size (2^Degree-1)
-    nBins         int32;    // number of entries
-    pBins  *Tab_Obj_t;    // hash table (lits -> cube + lit + lit)
-    pMan  *Pla_Man_t;     // manager
+	mask    uint32
+	bins    map[uint32][]Tab_Obj_t
+	manager *Pla_Man_t
 }
 
-func Tab_ManBin(p *Tab_Man_t, Value int32) *Tab_Obj_t { return p.pBins + (Value & p.SizeMask); }
-func Tab_ManEntry(p *Tab_Man_t, i int32) *Tab_Obj_t { if i != 0 {
-    return p.pBins + i;
-} else {
-    return nil;
-}          }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Tab_ManAlloc(LogSize int32, pMan *Pla_Man_t) *Tab_Man_t {
-    var p *Tab_Man_t  = new(Tab_Man_t);
-    assert(LogSize >= 4 && LogSize <= 26, "LogSize >= 4 && LogSize <= 26");
-    p.SizeMask = (1 << LogSize) - 1;
-    p.pBins = ABC_CALLOC( Tab_Obj_t, p.SizeMask + 1 );
-    p.nBins = 1;
-    p.pMan  = pMan;
-    return p;
+func Pla_HashValue(i int32) int32 {
+	if i < 0 {
+		panic("negative literal hash")
+	}
+	if int(i) < len(plaHashValues) {
+		return int32(plaHashValues[i] & 0x3ffffff)
+	}
+	x := uint32(i)
+	x ^= x >> 16
+	x *= 0x7feb352d
+	x ^= x >> 15
+	return int32(x & 0x3ffffff)
 }
-func Tab_ManFree(p *Tab_Man_t) {
-    ABC_FREE( p.pBins );
-    ABC_FREE( p );
+func Tab_ManAlloc(logSize int32, p *Pla_Man_t) *Tab_Man_t {
+	if logSize < 4 {
+		logSize = 4
+	}
+	if logSize > 26 {
+		panic("PLA hash table size exceeds source limit")
+	}
+	return &Tab_Man_t{mask: (1 << uint(logSize)) - 1, bins: make(map[uint32][]Tab_Obj_t), manager: p}
 }
-func Tab_ManHashInsert(p *Tab_Man_t, Value int32, iCube int32, iVar int32) {
-    var pBin *Tab_Obj_t   = Tab_ManBin( p, Value );
-    var pCell *Tab_Obj_t  = p.pBins + p.nBins;
-    pCell.Cube = iCube;
-    pCell.VarA = iVar;
-    pCell.Next = pBin.Table;
-    pBin.Table = p.nBins++;
+func Tab_ManFree(p *Tab_Man_t) { p.bins = nil; p.manager = nil }
+func Tab_ManHashInsert(p *Tab_Man_t, value, cube, variable int32) {
+	key := uint32(value) & p.mask
+	p.bins[key] = append(p.bins[key], Tab_Obj_t{cube, variable})
 }
-func Tab_ManHashLookup(p *Tab_Man_t, Value int32, vCube *Vec_Int_t) int32 {
-    var pEnt *Tab_Obj_t;
-    var pBin *Tab_Obj_t = Tab_ManBin( p, Value );
-    for  pEnt = Tab_ManEntry(p, pBin.Table); (pEnt != nil); pEnt = Tab_ManEntry(p, pEnt.Next)  {
-       if Vec_IntEqual( Vec_WecEntry(&p.pMan.vCubeLits, pEnt.Cube), vCube ) {
-            return 1; }
-    }
-    return 0;
+func equalInts(a, b []int32) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
 }
-func Tab_ManHashCollect(p *Tab_Man_t, iBin int32, vEntries *Vec_Int_t) {
-    var pEnt *Tab_Obj_t;
-    var pBin *Tab_Obj_t = Tab_ManBin( p, iBin );
-    Vec_IntClear( vEntries );
-    for  pEnt = Tab_ManEntry(p, pBin.Table); (pEnt != nil); pEnt = Tab_ManEntry(p, pEnt.Next)  {
-        Vec_IntPushTwo( vEntries, pEnt.Cube, pEnt.VarA );
-    }
+func Tab_ManHashLookup(p *Tab_Man_t, value int32, cube []int32) int32 {
+	for _, entry := range p.bins[uint32(value)&p.mask] {
+		if equalInts(p.manager.CubeLits[entry.Cube], cube) {
+			return 1
+		}
+	}
+	return 0
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pla_CubeHashValue(vCube *Vec_Int_t) int32 {
-    var i, Lit, Value int32;
-    Vec_IntForEachEntry( vCube, Lit, i )
-        Value += Pla_HashValue(Lit);
-    return Value;
+func Tab_ManHashCollect(p *Tab_Man_t, bin int32) []int32 {
+	entries := p.bins[uint32(bin)&p.mask]
+	var result []int32
+	for i := len(entries) - 1; i >= 0; i-- {
+		result = append(result, entries[i].Cube, entries[i].VarA)
+	}
+	return result
 }
-func Pla_ManHashCubes(p *Pla_Man_t, pTab *Tab_Man_t) {
-    var vCube *Vec_Int_t; var i, Value int32;
-    Vec_IntClear( &p.vHashes );
-    Vec_IntGrow( &p.vHashes, Pla_ManCubeNum(p) );
-    Vec_WecForEachLevel( &p.vCubeLits, vCube, i )
-    {
-        Value = Pla_CubeHashValue(vCube);
-        Vec_IntPush( &p.vHashes, Value );
-        Tab_ManHashInsert( pTab, Value, i, PLA_LIT_UNUSED );
-    }
+func Pla_CubeHashValue(cube []int32) int32 {
+	value := int32(0)
+	for _, lit := range cube {
+		value += Pla_HashValue(lit)
+	}
+	return value
+}
+func Pla_ManHashCubes(p *Pla_Man_t, table *Tab_Man_t) {
+	for i, cube := range p.CubeLits {
+		Tab_ManHashInsert(table, Pla_CubeHashValue(cube), int32(i), PLA_LIT_UNUSED)
+	}
 }
 func Pla_ManHashDistance1(p *Pla_Man_t) int32 {
-    var pTab *Tab_Man_t;
-    var vCube *Vec_Int_t;
-    var vCubeCopy *Vec_Int_t  = Vec_IntAlloc( p.nIns );
-    var nBits int32  = Abc_Base2Log( Pla_ManCubeNum(p) ) + 2;
-    var i, k, Lit, Value, ValueCopy, Count int32;
-    assert(nBits <= 26, "nBits <= 26");
-    pTab = Tab_ManAlloc( nBits, p );
-    Pla_ManConvertFromBits( p );
-    Pla_ManHashCubes( p, pTab );
-    Vec_WecForEachLevel( &p.vCubeLits, vCube, i )
-    {
-        Vec_IntClear( vCubeCopy );
-        Vec_IntAppend( vCubeCopy, vCube );
-        Value = ValueCopy = Vec_IntEntry( &p.vHashes, i );
-        Vec_IntForEachEntry( vCubeCopy, Lit, k )
-        {
-            // create new
-            Value += Pla_HashValue(Abc_LitNot(Lit)) - Pla_HashValue(Lit);
-            Vec_IntWriteEntry( vCubeCopy, k, Abc_LitNot(Lit) );
-            // check the cube
-            Count += Tab_ManHashLookup( pTab, Value, vCubeCopy );
-            // create old
-            Value -= Pla_HashValue(Abc_LitNot(Lit)) - Pla_HashValue(Lit);
-            Vec_IntWriteEntry( vCubeCopy, k, Lit );
-        }
-        assert(Value == ValueCopy, "Value == ValueCopy");
-    }
-    Vec_IntFree( vCubeCopy );
-    Tab_ManFree( pTab );
-    assert(!(Count & 1), "!(Count & 1)");
-    return Count/2;
+	Pla_ManConvertFromBits(p)
+	table := Tab_ManAlloc(int32(bits.Len(uint(len(p.Cubes))))+2, p)
+	Pla_ManHashCubes(p, table)
+	count := int32(0)
+	for _, cube := range p.CubeLits {
+		copyCube := append([]int32(nil), cube...)
+		for k, lit := range cube {
+			copyCube[k] = lit ^ 1
+			// Every matching row is a distinct cube; the source boolean lookup
+			// undercounted duplicate cubes and could make its even-count assertion fail.
+			for _, entry := range table.bins[uint32(Pla_CubeHashValue(copyCube))&table.mask] {
+				if equalInts(p.CubeLits[entry.Cube], copyCube) {
+					count++
+				}
+			}
+			copyCube[k] = lit
+		}
+	}
+	return count / 2
 }
 func Pla_ManHashDist1NumTest(p *Pla_Man_t) int32 {
-    var clk abctime  = Abc_Clock();
-    var Count int32  = Pla_ManHashDistance1( p );
-    fmt.Printf("Found %d pairs among %d cubes using cube hashing.  ", Count, Pla_ManCubeNum(p));
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    return 1;
+	fmt.Printf("Found %d pairs among %d cubes using cube hashing.\n", Pla_ManHashDistance1(p), len(p.Cubes))
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pla_PrintCube(vLits *Vec_Int_t, nVars int32, iVar int32) {
-    var v, Lit int32;
-    var vStr *Vec_Str_t  = Vec_StrStart( nVars + 1 );
-    Vec_StrFill( vStr, nVars, '-' );
-    Vec_IntForEachEntry( vLits, Lit, v )
-        Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), byte((Abc_LitIsCompl(Lit) ? '0' : '1')) );
-    fmt.Fprintf(os.Stdout, "%s %d\n", Vec_StrArray(vStr), iVar);
-    Vec_StrFree( vStr );
+func Pla_PrintCube(lits []int32, n, variable int32) string {
+	str := make([]byte, n)
+	for i := range str {
+		str[i] = '-'
+	}
+	for _, lit := range lits {
+		str[lit/2] = '1' - byte(lit&1)
+	}
+	return fmt.Sprintf("%s %d\n", str, variable)
 }
-func Pla_ManHashCubes2(p *Pla_Man_t, pTab *Tab_Man_t) {
-    var vCube *Vec_Int_t; 
-    var i, v, Lit, Value int32;
-    Vec_WecForEachLevel( &p.vCubeLits, vCube, i )
-    {
-        Value = Pla_CubeHashValue(vCube);
-        Vec_IntForEachEntry( vCube, Lit, v )
-        {
-            Value -= Pla_HashValue(Lit);
-            Tab_ManHashInsert( pTab, Value, i, v );
-            Value += Pla_HashValue(Lit);
-        }
-    }
+func Pla_ManHashCubes2(p *Pla_Man_t, table *Tab_Man_t) {
+	for i, cube := range p.CubeLits {
+		value := Pla_CubeHashValue(cube)
+		for v, lit := range cube {
+			Tab_ManHashInsert(table, value-Pla_HashValue(lit), int32(i), int32(v))
+		}
+	}
 }
-func Vec_IntCopySkip(vCube *Vec_Int_t, iVar int32, vRes *Vec_Int_t) {
-    var i int32;
-    Vec_IntClear( vRes );
-    for  i = 0; i < Vec_IntSize(vCube); i++  {
-        if i != iVar {
-            Vec_IntPush( vRes, Vec_IntEntry(vCube, i) ); }
-    }
+func Vec_IntCopySkip(cube []int32, skip int32) []int32 {
+	result := make([]int32, 0, len(cube))
+	for i, v := range cube {
+		if int32(i) != skip {
+			result = append(result, v)
+		}
+	}
+	return result
 }
-func Pla_ManComputeDistance1Int(p *Pla_Man_t) *Vec_Int_t {
-    var pTab *Tab_Man_t;
-    var vCube1, vCube2 *Vec_Int_t;
-    var vTemp1 *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vTemp2 *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vPairs *Vec_Int_t  = Vec_IntAlloc( 1000 );
-    var vCounts *Vec_Int_t  = Vec_IntStart( Vec_WecSize(&p.vCubeLits) );
-    var vEntries *Vec_Int_t  = Vec_IntAlloc( p.nIns );
-    var nBits int32  = Abc_Base2Log( Vec_WecSizeSize(&p.vCubeLits) ) + 2;
-    var v, i, k int32;//, Count = 0;
-    var iCube1, iCube2, iVar1, iVar2 int32;
-    assert(nBits <= 26, "nBits <= 26");
-    pTab = Tab_ManAlloc( nBits, p );
-    //Pla_ManConvertFromBits( p );
-    Pla_ManHashCubes2( p, pTab );
-    // iterate through the hash bins
-    for  v = 0; v <= pTab.SizeMask; v++  {
-        Tab_ManHashCollect( pTab, v, vEntries );
-        for  i = 0; i < Vec_IntSize(vEntries)/2; i++  {
-        for  k = i+1; k < Vec_IntSize(vEntries)/2; k++  {
-            iCube1 = Vec_IntEntry(vEntries, 2*i);
-            iCube2 = Vec_IntEntry(vEntries, 2*k);
-            iVar1 = Vec_IntEntry(vEntries, 2*i+1);
-            iVar2 = Vec_IntEntry(vEntries, 2*k+1);
-
-            vCube1 = Vec_WecEntry(&p.vCubeLits, iCube1);
-            vCube2 = Vec_WecEntry(&p.vCubeLits, iCube2);
-/*
-            Pla_PrintCube( vCube1, p->nIns, iVar1 );
-            Pla_PrintCube( vCube2, p->nIns, iVar2 );
-            printf( "\n" );
-*/
-            if Vec_IntSize(vCube1) != Vec_IntSize(vCube2) {
-                continue; }
-            Vec_IntCopySkip( vCube1, iVar1, vTemp1 );
-            Vec_IntCopySkip( vCube2, iVar2, vTemp2 );
-            if !Vec_IntEqual( vTemp1, vTemp2 ) {
-                continue; }
-
-            fmt.Printf("%d %d  ", iCube1, iCube2);
-
-            Vec_IntPushTwo( vPairs, iCube1, iVar1 );
-            Vec_IntPushTwo( vPairs, iCube2, iVar2 );
-
-            Vec_IntAddToEntry( vCounts, iCube1, 1 );
-            Vec_IntAddToEntry( vCounts, iCube2, 1 );
-        }
-        }
-    }
-    Vec_IntPrint( vCounts );
-
-    Vec_IntFree( vCounts );
-    Vec_IntFree( vTemp1 );
-    Vec_IntFree( vTemp2 );
-    Vec_IntFree( vEntries );
-    Tab_ManFree( pTab );
-    return vPairs;
+func cubeKey(cube []int32) string {
+	data := make([]byte, len(cube)*4)
+	for i, v := range cube {
+		binary.LittleEndian.PutUint32(data[i*4:], uint32(v))
+	}
+	return string(data)
 }
-func Pla_ManComputeDistance1(p *Pla_Man_t) *Vec_Int_t {
-    var clk abctime  = Abc_Clock();
-    var vPairs *Vec_Int_t  = Pla_ManComputeDistance1Int( p );
-    fmt.Printf("Found %d pairs among %d cubes using cube hashing.  ", Vec_IntSize(vPairs)/4, Pla_ManCubeNum(p));
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    return vPairs;
+func Pla_ManComputeDistance1Int(p *Pla_Man_t) []int32 {
+	total := 0
+	for _, c := range p.CubeLits {
+		total += len(c)
+	}
+	table := Tab_ManAlloc(int32(bits.Len(uint(total)))+2, p)
+	Pla_ManHashCubes2(p, table)
+	keys := make([]uint32, 0, len(table.bins))
+	for key := range table.bins {
+		keys = append(keys, key)
+	}
+	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+	var pairs []int32
+	for _, key := range keys {
+		entries := table.bins[key]
+		for i := len(entries) - 1; i >= 0; i-- {
+			for k := i - 1; k >= 0; k-- {
+				a, b := entries[i], entries[k]
+				ca, cb := p.CubeLits[a.Cube], p.CubeLits[b.Cube]
+				if len(ca) == len(cb) && equalInts(Vec_IntCopySkip(ca, a.VarA), Vec_IntCopySkip(cb, b.VarA)) {
+					pairs = append(pairs, a.Cube, a.VarA, b.Cube, b.VarA)
+				}
+			}
+		}
+	}
+	return pairs
 }
-func Pla_ManComputeDist1Test(p *Pla_Man_t) {
-    var vPairs *Vec_Int_t;
-    Pla_ManConvertFromBits( p );
-    vPairs = Pla_ManComputeDistance1( p );
-    Vec_IntFree( vPairs );
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Pla_ManComputeDistance1(p *Pla_Man_t) []int32 { return Pla_ManComputeDistance1Int(p) }
+func Pla_ManComputeDist1Test(p *Pla_Man_t)         { Pla_ManConvertFromBits(p); Pla_ManComputeDistance1(p) }

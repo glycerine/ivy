@@ -1,3 +1,5 @@
+// Package pla implements ABC's scalable packed two-bit SOP manager and binary
+// PLA format. It is independent of the Espresso positional-cube PLA subsystem.
 package pla
 
 /**CFile****************************************************************
@@ -11,7 +13,7 @@ package pla
   Synopsis    [Scalable SOP transformations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - March 18, 2015.]
@@ -19,36 +21,3 @@ package pla
   Revision    [$Id: pla.c,v 1.00 2014/09/12 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
-
-//#include "pla.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

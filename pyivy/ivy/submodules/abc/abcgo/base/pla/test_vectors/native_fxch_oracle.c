@@ -1,0 +1,4 @@
+#include "base/pla/plaFxch.c"
+unsigned Gia_ManRandom(int reset){static unsigned z=3716960521u,w=2174103536u;if(reset){z=3716960521u;w=2174103536u;}z=36969*(z&65535)+(z>>16);w=18000*(w&65535)+(w>>16);return(z<<16)+w;}
+char * Extra_TimeStamp(void){return "ORACLE";}
+int main(int argc,char **argv){Vec_Wec_t *cubes=Vec_WecStart(3),*occurs=Vec_WecStart(10);for(int i=0;i<3;i++){int row[3]={0,2,4+2*i};for(int k=0;k<3;k++){Vec_WecPush(cubes,i,row[k]);Vec_WecPush(occurs,row[k],i);}}Fxch_Man_t *p=Fxch_ManStart(cubes,occurs);Fxch_ManFastExtract(p,0,0);printf("divisors %d\n",Vec_WrdSize(&p->vDivs));for(int i=0;i<Vec_WrdSize(&p->vDivs);i++)printf("%016llx ",(unsigned long long)Vec_WrdEntry(&p->vDivs,i));printf("\n");for(int i=0;i<Vec_WecSize(&p->vCubes);i++){Vec_Int_t *row=Vec_WecEntry(&p->vCubes,i);for(int k=0;k<Vec_IntSize(row);k++)printf("%d ",Vec_IntEntry(row,k));printf("\n");}Fxch_ManStop(p);ABC_FREE(cubes);ABC_FREE(occurs);}

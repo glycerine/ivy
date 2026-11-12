@@ -11,7 +11,7 @@ package pla
   Synopsis    [Scalable SOP transformations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - March 18, 2015.]
@@ -20,37 +20,6 @@ package pla
 
 ***********************************************************************/
 
-//#include "pla.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pla_ManDist1Merge(p *Pla_Man_t) int32 {
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Pla_ManDist1Merge is intentionally inactive in the original plaMerge.c:43.
+// Distance enumeration and extraction have separate, implemented APIs.
+func Pla_ManDist1Merge(p *Pla_Man_t) int32 { return 0 }
