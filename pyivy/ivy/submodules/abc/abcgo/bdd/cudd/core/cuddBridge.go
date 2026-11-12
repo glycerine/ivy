@@ -73,6 +73,8 @@
 
 package core
 
+import "math"
+
 // Cudd_BddToAdd converts a Boolean diagram to a numeric 0/1 ADD.
 func Cudd_BddToAdd(dd *DdManager, f *DdNode) *DdNode {
 	if dd == nil || !dd.valid(f) {
@@ -104,26 +106,7 @@ func Cudd_BddToAdd(dd *DdManager, f *DdNode) *DdNode {
 
 // Cudd_addBddPattern maps each nonzero ADD leaf to Boolean true.
 func Cudd_addBddPattern(dd *DdManager, f *DdNode) *DdNode {
-	if dd == nil || !dd.validAdd(f) {
-		return nil
-	}
-	cache := make(map[*DdNode]*DdNode)
-	var visit func(*DdNode) *DdNode
-	visit = func(n *DdNode) *DdNode {
-		if Cudd_IsConstant(n) {
-			if n.Value == 0 {
-				return dd.LogicZero
-			}
-			return dd.One
-		}
-		if r := cache[n]; r != nil {
-			return r
-		}
-		r := Cudd_bddIte(dd, Cudd_bddIthVar(dd, int(n.Index)), visit(n.T), visit(n.E))
-		cache[n] = r
-		return r
-	}
-	return visit(f)
+	return addToBoolean(dd, f, func(value float64) (bool, bool) { return value != 0, true })
 }
 
 // Cudd_bddNewVarAtLevel inserts a fresh projection without changing the
@@ -145,4 +128,70 @@ func Cudd_bddNewVarAtLevel(dd *DdManager, level int) *DdNode {
 	}
 	dd.symmetryGroups = nil
 	return v
+}
+
+// addToBoolean maps numeric leaves while preserving the ADD's shared graph.
+// Returning nil from predicate validation makes invalid integer-bit extraction
+// fail as a whole instead of silently constructing a partial BDD.
+func addToBoolean(dd *DdManager, f *DdNode, predicate func(float64) (bool, bool)) *DdNode {
+	if dd == nil || !dd.validAdd(f) {
+		return nil
+	}
+	memo := make(map[*DdNode]*DdNode)
+	var visit func(*DdNode) *DdNode
+	visit = func(n *DdNode) *DdNode {
+		if r := memo[n]; r != nil {
+			return r
+		}
+		if Cudd_IsConstant(n) {
+			value, valid := predicate(n.Value)
+			if !valid {
+				return nil
+			}
+			if value {
+				return dd.One
+			}
+			return dd.LogicZero
+		}
+		t := visit(n.T)
+		if t == nil {
+			return nil
+		}
+		e := visit(n.E)
+		if e == nil {
+			return nil
+		}
+		r := Cudd_bddIte(dd, Cudd_bddIthVar(dd, int(n.Index)), t, e)
+		memo[n] = r
+		return r
+	}
+	return visit(f)
+}
+
+// Cudd_addBddThreshold selects leaves at least value. Negated comparisons
+// deliberately retain CUDD's behavior for IEEE NaN leaves and thresholds.
+func Cudd_addBddThreshold(dd *DdManager, f *DdNode, value float64) *DdNode {
+	return addToBoolean(dd, f, func(leaf float64) (bool, bool) { return !(leaf < value), true })
+}
+func Cudd_addBddStrictThreshold(dd *DdManager, f *DdNode, value float64) *DdNode {
+	return addToBoolean(dd, f, func(leaf float64) (bool, bool) { return !(leaf <= value), true })
+}
+func Cudd_addBddInterval(dd *DdManager, f *DdNode, lower, upper float64) *DdNode {
+	return addToBoolean(dd, f, func(leaf float64) (bool, bool) { return !(leaf < lower || leaf > upper), true })
+}
+
+// Cudd_addBddIthBit extracts a bit of the truncated signed C int (32 bits).
+// Inputs outside C's defined float-to-int domain and shifts outside [0,31]
+// fail with nil; the original C operations have undefined behavior there.
+func Cudd_addBddIthBit(dd *DdManager, f *DdNode, bit int) *DdNode {
+	if bit < 0 || bit > 31 {
+		return nil
+	}
+	return addToBoolean(dd, f, func(leaf float64) (bool, bool) {
+		value := math.Trunc(leaf)
+		if math.IsNaN(value) || math.IsInf(value, 0) || value < math.MinInt32 || value > math.MaxInt32 {
+			return false, false
+		}
+		return uint32(int32(value))&(uint32(1)<<uint(bit)) != 0, true
+	})
 }
