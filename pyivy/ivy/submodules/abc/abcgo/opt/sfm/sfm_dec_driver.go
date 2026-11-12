@@ -2,6 +2,7 @@ package sfm
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/glycerine/abcgo/map/mio"
 )
@@ -47,8 +48,19 @@ func sfmOptimizeMappedArea(p *Sfm_Ntk_t, pars Sfm_Par_t, library *Sfm_Lib_t, han
 		return -1
 	}
 	if !pars.AreaRev {
+		ids := make([]int, 0, stop-p.Pis)
 		for id := p.Pis; id < stop; id++ {
-			if pars.NodesMax > 0 && id > pars.NodesMax {
+			ids = append(ids, id)
+		}
+		if len(p.SourceIDs) >= stop {
+			sort.Slice(ids, func(i, j int) bool { return p.SourceIDs[ids[i]] < p.SourceIDs[ids[j]] })
+		}
+		for _, id := range ids {
+			sourceID := id
+			if len(p.SourceIDs) >= stop {
+				sourceID = p.SourceIDs[id]
+			}
+			if pars.NodesMax > 0 && sourceID > pars.NodesMax {
 				break
 			}
 			try(id)

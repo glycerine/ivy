@@ -58,7 +58,9 @@ type Sfm_Ntk_t struct {
 	Stats                 Stats
 	// Mapping associates each internal object with a library gate (nil for LUTs).
 	// Mapped algorithms share the same object IDs and fanin ordering.
-	Mapping                        []*Gate
+	Mapping []*Gate
+	// SourceIDs holds caller object IDs for the original mapped objects.
+	SourceIDs                      []int
 	pivot                          int
 	nodes, divs, roots, tfo, order []int
 	solver                         *satoko.Solver
