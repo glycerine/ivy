@@ -119,51 +119,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSweepComputeOneDomainEquivs(p *Gia_Man_t, vRegClasses *Vec_Int_t, iDom int32, pParsS any, fConst int32, fEquiv int32, fVerbose int32) {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var vPerm *Vec_Int_t;
-    var i, Class, nFlops int32;
-    var nDoms int32  = Vec_IntFindMax(vRegClasses);
-    assert(iDom >= 1 && iDom <= nDoms, "iDom >= 1 && iDom <= nDoms");
-    assert(p.pManTime == nil, "p.pManTime == nil");
-    assert(Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0");
-    // create required flop permutation
-    vPerm = Vec_IntAlloc( Gia_ManRegNum(p) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vRegClasses)) && (((Class) = Vec_IntEntry(vRegClasses, i)), 1); i++  {
-        if Class != iDom {
-            Vec_IntPush( vPerm, i ); }
-    }
-    nFlops = Vec_IntSize( vPerm );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vRegClasses)) && (((Class) = Vec_IntEntry(vRegClasses, i)), 1); i++  {
-        if Class == iDom {
-            Vec_IntPush( vPerm, i ); }
-    }
-    nFlops = Vec_IntSize(vPerm) - nFlops;
-    assert(Vec_IntSize(vPerm) == Gia_ManRegNum(p), "Vec_IntSize(vPerm) == Gia_ManRegNum(p)");
-    // derive new AIG
-    pNew = Gia_ManDupPermFlop( p, vPerm );
-    assert(Gia_ManObjNum(pNew) == Gia_ManObjNum(p), "Gia_ManObjNum(pNew) == Gia_ManObjNum(p)");
-    Vec_IntFree( vPerm );
-    // perform computation of equivalences 
-    pNew.nRegs = nFlops;
-    if pParsS {
-        Cec_ManLSCorrespondenceClasses( pNew, (Cec_ParCor_t *)pParsS );
-    } else { 
-        Gia_ManSeqCleanupClasses( pNew, fConst, fEquiv, fVerbose ); }
-    pNew.nRegs = Gia_ManRegNum(p);
-    // make new point to old
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        assert(!Abc_LitIsCompl(pObj.Value), "!Abc_LitIsCompl(pObj.Value)");
-        Gia_ManObj(pNew, Abc_Lit2Var(pObj.Value)).Value = Abc_Var2Lit(i, 0);
-    }
-    // transfer
-    Gia_ManDupRemapEquiv( p, pNew );
-    Gia_ManStop( pNew );
-}
 func Gia_ManSweepWithBoxesAndDomains(p *Gia_Man_t, pParsS any, fConst int32, fEquiv int32, fVerbose int32, fVerbEquivs int32) *Gia_Man_t { 
     var pClp, pNew, pTemp *Gia_Man_t;
     var nDoms int32  = Vec_IntFindMax(p.vRegClasses);
