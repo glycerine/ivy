@@ -94,3 +94,35 @@ func TestSleManagerVariables(t *testing.T) {
 	}
 	Sle_ManStop(m)
 }
+
+func TestSleInitialMapping(t *testing.T) {
+	p := Gia_ManStart(10)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, x, c)
+	Gia_ManAppendCo(p, y)
+	p.vMapping = vec.Vec_IntStart(int(p.nObjs))
+	for _, lut := range []struct {
+		id int32
+		in []int32
+	}{{x >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{x >> 1, c >> 1}}} {
+		vec.Vec_IntWriteEntry(p.vMapping, int(lut.id), int32(vec.Vec_IntSize(p.vMapping)))
+		vec.Vec_IntPush(p.vMapping, int32(len(lut.in)))
+		for _, fan := range lut.in {
+			vec.Vec_IntPush(p.vMapping, fan)
+		}
+		vec.Vec_IntPush(p.vMapping, lut.id)
+	}
+	edges := vec.Vec_IntAlloc(2)
+	vec.Vec_IntPushTwo(edges, x>>1, y>>1)
+	Gia_ManEdgeFromArray(p, edges)
+	m := Sle_ManAlloc(p, 0, 0)
+	Sle_ManMarkupVariables(m)
+	Sle_ManDeriveInit(m)
+	polar := vec.Vec_IntArray(m.vPolars)
+	for _, expected := range []int32{x >> 1, y >> 1, vec.Vec_IntEntry(m.vCutFirst, int(x>>1)), vec.Vec_IntEntry(m.vEdgeFirst, int(y>>1))} {
+		if vec.Vec_IntFind(m.vPolars, expected) < 0 {
+			t.Fatalf("missing %d in %v", expected, polar)
+		}
+	}
+}
