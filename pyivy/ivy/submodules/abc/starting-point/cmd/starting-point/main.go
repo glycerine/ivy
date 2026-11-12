@@ -14,11 +14,22 @@ import (
 )
 
 func main() {
-	if err := run(os.Args[1:]); err != nil {
+	started := time.Now()
+	err := run(os.Args[1:])
+	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
+	}
+	printElapsed(os.Stdout, time.Since(started))
+	if err != nil {
 		os.Exit(1)
 	}
 }
+
+func printElapsed(w io.Writer, elapsed time.Duration) {
+	seconds := int64(elapsed / time.Second)
+	fmt.Fprintf(w, "elapsed: %dm %dsec\n", seconds/60, seconds%60)
+}
+
 func run(args []string) error {
 	flags := flag.NewFlagSet("starting-point", flag.ContinueOnError)
 	cfg := flags.String("cfg", "./starting.cfg", "platform choices file (NAME = INTEGER per line)")
@@ -142,7 +153,7 @@ func run(args []string) error {
 		Package    string
 		DurationNS int64
 		Files      []startingpoint.Result
-	}{"prototype-65", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
+	}{"prototype-66", packageName, time.Since(start).Nanoseconds(), results}, "", "  ")
 	if err != nil {
 		return err
 	}

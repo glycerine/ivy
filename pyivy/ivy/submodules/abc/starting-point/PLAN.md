@@ -2057,3 +2057,16 @@ signatures and compiled callback behavior. Library and CLI suites exclude
 experiments. A fresh flat output is in /tmp/starting-point-glucose2-v65; existing
 out/ was not changed. README documents branch selection and C++ draft mappings.
 Library and CLI suites pass. Installed prototype-65; regenerate output to apply.
+
+### Prototype 66: elapsed runtime as the final CLI line
+
+Time the whole CLI run from main entry, including input setup, translation and
+reporting. Print `elapsed: Nm Ssec` last, using whole elapsed seconds and total
+minutes. Print after any error diagnostic too, retaining the existing nonzero
+exit status. Tree and flat-file modes share the same timing path.
+
+Validation: CLI tests cover subsecond/minute/hour formatting, and execute the
+built binary for tree, flat and error cases to verify exactly one elapsed line
+at the end of the combined output, including after -pre details. No experiment
+tests were run.
+CLI tests pass. Installed prototype-66.

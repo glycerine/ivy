@@ -377,3 +377,7 @@ Simple indexed assignments such as `dst = src[i++];` become
 control-flow bracing and macro expansion. Calls, control headers, larger
 expressions, and assignments that reuse the updated index elsewhere are retained
 for evaluation-order review.
+
+The CLI prints total elapsed runtime as its final line, for example
+`elapsed: 2m 3sec`. Timing includes setup, translation and reporting, and is
+also printed after an error diagnostic.
