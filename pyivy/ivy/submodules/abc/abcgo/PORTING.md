@@ -300,7 +300,10 @@ library and command adapters (`6383ecff3`), Int2 default parameters
 cost corrections (`da41ab7f9`). Each was checked with race tests and vet; the
 Int2 commit covers only its explicit-file component because the full package
 still has generated syntax/API blockers. `base/pla` subsequently passed its
-full package race/vet gates and was committed as `846c02ed8`.
+full package race/vet gates and was committed as `846c02ed8`. CEC SAT sweep and
+correspondence (`1f537cb50`) passed native and sequential race tests plus vet;
+the verified CUDD numeric bridge (`a18663189`) passed core/CAS/cascade race
+tests and root bridge tests/vet.
 
 The latest whole-module test run is `/tmp/abcgo-full-current.log`: 62 package
 lines pass and 60 fail. `base/pla`, `map/mio`, `bdd/cas`, and the connected Ivy
