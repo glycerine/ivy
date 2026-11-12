@@ -184,9 +184,14 @@ func Mvc_UtilsCheckUnusedZeros(c *Mvc_Cover_t) bool {
 	}
 	return true
 }
+
+// Copy exactly the original source entries, including when appending to self.
 func Mvc_CoverCopyAndAppendCubes(a, b *Mvc_Cover_t) {
-	for x := b.Cubes.Head; x != nil; x = x.Next {
+	remaining := b.Cubes.Items
+	for x := b.Cubes.Head; x != nil && remaining > 0; remaining-- {
+		next := x.Next
 		Mvc_CoverAddDupCubeTail(a, x)
+		x = next
 	}
 }
 func Mvc_CoverRemoveCubes(c *Mvc_Cover_t) { Mvc_CoverMakeEmpty(c) }

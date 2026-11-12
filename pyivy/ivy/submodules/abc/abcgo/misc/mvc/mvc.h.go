@@ -10,22 +10,22 @@ const BITS_FULL uint32 = 0xffffffff
 
 type Mvc_CubeWord_t = uint32
 type Mvc_Cube_t struct {
-	Next               *Mvc_Cube_t
-	Last, Unused, Ones int
-	Prime, Essen       bool
-	Data               []uint32
+	Next         *Mvc_Cube_t
+	Unused, Ones int
+	Prime, Essen bool
+	Data         []uint32
 }
 type Mvc_List_t struct {
 	Head, Tail *Mvc_Cube_t
 	Items      int
 }
 type Mvc_Cover_t struct {
-	NWords, NUnused, NBits int
-	Cubes                  Mvc_List_t
-	Array                  []*Mvc_Cube_t
-	Lits                   []int
-	Mask                   *Mvc_Cube_t
-	Mem                    *Mvc_Manager_t
+	NBits int
+	Cubes Mvc_List_t
+	Array []*Mvc_Cube_t
+	Lits  []int
+	Mask  *Mvc_Cube_t
+	Mem   *Mvc_Manager_t
 }
 type Mvc_Manager_t struct{}
 type Mvc_Data_t struct {

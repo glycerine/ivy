@@ -32,7 +32,7 @@ func WriteCubeBinary(w io.Writer, c *Mvc_Cover_t, x *Mvc_Cube_t) {
 	fmt.Fprintln(w)
 }
 func writeCover(w io.Writer, c *Mvc_Cover_t, binary bool) {
-	fmt.Fprintf(w, "The cover contains %d cubes (%d bits and %d words)\n", c.Cubes.Items, c.NBits, c.NWords)
+	fmt.Fprintf(w, "The cover contains %d cubes (%d bits and %d words)\n", c.Cubes.Items, c.NBits, Mvc_CoverReadWordNum(c))
 	for x := c.Cubes.Head; x != nil; x = x.Next {
 		if binary {
 			WriteCubeBinary(w, c, x)

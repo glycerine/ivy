@@ -188,3 +188,47 @@ func TestBinaryCofactorAndFlip(t *testing.T) {
 		t.Fatal(output.String())
 	}
 }
+
+func TestDerivedCubeMetadata(t *testing.T) {
+	c := Mvc_CoverAlloc(nil, 65)
+	if Mvc_CoverReadWordNum(c) != 3 {
+		t.Fatal("word count")
+	}
+	x := Mvc_CubeAlloc(c)
+	if Mvc_CubeReadLast(x) != 2 || !Mvc_CubeNWords(x) {
+		t.Fatal("last index")
+	}
+	Mvc_CubeSetLast(x, 0)
+	if len(x.Data) != 1 || !Mvc_Cube1Words(x) || Mvc_CubeReadLast(x) != 0 {
+		t.Fatal("shorten")
+	}
+	Mvc_CubeSetLast(x, 1)
+	if len(x.Data) != 2 || !Mvc_Cube2Words(x) {
+		t.Fatal("extend capacity")
+	}
+	Mvc_CubeSetLast(x, 5)
+	if len(x.Data) != 6 || Mvc_CubeReadLast(x) != 5 {
+		t.Fatal("grow storage")
+	}
+}
+
+func TestCopyAppendToSelf(t *testing.T) {
+	c := Mvc_CoverAlloc(nil, 8)
+	addBits(c, 1, 3)
+	addBits(c, 2, 4)
+	before := terms(c)
+	Mvc_CoverCopyAndAppendCubes(c, c)
+	if c.Cubes.Items != 4 {
+		t.Fatal("self append count")
+	}
+	for term, n := range before {
+		if terms(c)[term] != 2*n {
+			t.Fatal("self append content")
+		}
+	}
+	first, last := c.Cubes.Head, c.Cubes.Tail
+	Mvc_CubeBitInsert(last, 7)
+	if Mvc_CubeBitValue(first, 7) {
+		t.Fatal("appended cubes alias")
+	}
+}

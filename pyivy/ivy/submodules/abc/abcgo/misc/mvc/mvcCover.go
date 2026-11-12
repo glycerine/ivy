@@ -4,7 +4,7 @@ func Mvc_CoverAlloc(mem *Mvc_Manager_t, bits int) *Mvc_Cover_t {
 	if bits < 0 {
 		panic("mvc: negative bit count")
 	}
-	return &Mvc_Cover_t{NBits: bits, NWords: (bits + 31) / 32, NUnused: (32 - bits%32) % 32, Mem: mem}
+	return &Mvc_Cover_t{NBits: bits, Mem: mem}
 }
 func Mvc_CoverClone(c *Mvc_Cover_t) *Mvc_Cover_t { return Mvc_CoverAlloc(c.Mem, c.NBits) }
 func Mvc_CoverDup(c *Mvc_Cover_t) *Mvc_Cover_t {

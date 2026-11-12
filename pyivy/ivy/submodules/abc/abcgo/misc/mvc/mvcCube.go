@@ -1,7 +1,7 @@
 package mvc
 
 func Mvc_CubeAlloc(c *Mvc_Cover_t) *Mvc_Cube_t {
-	return &Mvc_Cube_t{Data: make([]uint32, max(1, c.NWords)), Last: max(0, c.NWords-1), Unused: c.NUnused}
+	return &Mvc_Cube_t{Data: make([]uint32, max(1, Mvc_CoverReadWordNum(c))), Unused: (32 - c.NBits%32) % 32}
 }
 func Mvc_CubeDup(c *Mvc_Cover_t, x *Mvc_Cube_t) *Mvc_Cube_t {
 	r := Mvc_CubeAlloc(c)
@@ -16,13 +16,22 @@ func Mvc_CubeDup(c *Mvc_Cover_t, x *Mvc_Cube_t) *Mvc_Cube_t {
 func Mvc_CubeFree(_ *Mvc_Cover_t, _ *Mvc_Cube_t)   {}
 func Mvc_CubeReadNext(c *Mvc_Cube_t) *Mvc_Cube_t   { return c.Next }
 func Mvc_CubeReadNextP(c *Mvc_Cube_t) **Mvc_Cube_t { return &c.Next }
-func Mvc_CubeReadLast(c *Mvc_Cube_t) int           { return c.Last }
+func Mvc_CubeReadLast(c *Mvc_Cube_t) int           { return len(c.Data) - 1 }
 func Mvc_CubeReadSize(c *Mvc_Cube_t) int           { return c.Ones }
 func Mvc_CubeSetNext(c, n *Mvc_Cube_t)             { c.Next = n }
-func Mvc_CubeSetLast(c *Mvc_Cube_t, n int)         { c.Last = n }
-func Mvc_CubeSetSize(c *Mvc_Cube_t, n int)         { c.Ones = n }
-func Mvc_CubeWhichWord(bit int) int                { return bit >> 5 }
-func Mvc_CubeWhichBit(bit int) int                 { return bit & 31 }
+func Mvc_CubeSetLast(c *Mvc_Cube_t, n int) {
+	if n < 0 {
+		panic("mvc: negative last word")
+	}
+	if n+1 <= cap(c.Data) {
+		c.Data = c.Data[:n+1]
+	} else {
+		c.Data = append(c.Data, make([]uint32, n+1-len(c.Data))...)
+	}
+}
+func Mvc_CubeSetSize(c *Mvc_Cube_t, n int) { c.Ones = n }
+func Mvc_CubeWhichWord(bit int) int        { return bit >> 5 }
+func Mvc_CubeWhichBit(bit int) int         { return bit & 31 }
 func Mvc_CubeBitValue(c *Mvc_Cube_t, bit int) bool {
 	return c.Data[bit>>5]&(uint32(1)<<uint(bit&31)) != 0
 }
@@ -104,9 +113,9 @@ func Mvc_CubeBitLess(a, b *Mvc_Cube_t) bool {
 }
 func Mvc_CubeBitMore(a, b *Mvc_Cube_t) bool { return Mvc_CubeBitLess(b, a) }
 func Mvc_CubeBitCleanUnused(c *Mvc_Cube_t)  { c.Data[len(c.Data)-1] &= cubeMask(c) }
-func Mvc_Cube1Words(c *Mvc_Cube_t) bool     { return c.Last == 0 }
-func Mvc_Cube2Words(c *Mvc_Cube_t) bool     { return c.Last == 1 }
-func Mvc_CubeNWords(c *Mvc_Cube_t) bool     { return c.Last > 1 }
+func Mvc_Cube1Words(c *Mvc_Cube_t) bool     { return len(c.Data)-1 == 0 }
+func Mvc_Cube2Words(c *Mvc_Cube_t) bool     { return len(c.Data)-1 == 1 }
+func Mvc_CubeNWords(c *Mvc_Cube_t) bool     { return len(c.Data)-1 > 1 }
 func Mvc_CubeBitNotImpl(a, b *Mvc_Cube_t) bool {
 	for i := range a.Data {
 		if a.Data[i]&^b.Data[i] != 0 {

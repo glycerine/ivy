@@ -1,6 +1,6 @@
 package mvc
 
-func Mvc_CoverReadWordNum(c *Mvc_Cover_t) int            { return c.NWords }
+func Mvc_CoverReadWordNum(c *Mvc_Cover_t) int            { return (c.NBits + 31) / 32 }
 func Mvc_CoverReadBitNum(c *Mvc_Cover_t) int             { return c.NBits }
 func Mvc_CoverReadCubeNum(c *Mvc_Cover_t) int            { return c.Cubes.Items }
 func Mvc_CoverReadCubeHead(c *Mvc_Cover_t) *Mvc_Cube_t   { return c.Cubes.Head }
