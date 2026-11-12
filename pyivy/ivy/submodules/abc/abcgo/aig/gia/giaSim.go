@@ -264,33 +264,6 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManGenerateCounter(pAig *Gia_Man_t, iFrame int32, iOut int32, nWords int32, iPat int32, vCis2Ids *Vec_Int_t) *Abc_Cex_t {
-    var p *Abc_Cex_t;
-    var pData *uint32;
-    var f, i, w, iPioId, Counter int32;
-    p = Abc_CexAlloc( Gia_ManRegNum(pAig), Gia_ManPiNum(pAig), iFrame+1 );
-    p.iFrame = iFrame;
-    p.iPo    = iOut;
-    // fill in the binary data
-    Counter = p.nRegs;
-    // inlining of macro ABC_ALLOC
-    pData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nWords)));
-    for  f = 0; f <= iFrame; f++, Counter += p.nPis  {
-    for  i = 0; i < Gia_ManPiNum(pAig); i++  {
-        iPioId = Vec_IntEntry( vCis2Ids, i );
-        if iPioId >= p.nPis {
-            continue; }
-        for  w = nWords-1; w >= 0; w--  {
-            pData[w] = Gia_ManRandom( 0 );
-        }
-        if Abc_InfoHasBit( pData, iPat ) {
-            Abc_InfoSetBit( p.pData, Counter + iPioId ); }
-    }
-    }
-    // inlining of macro ABC_FREE
-    pData = nil;
-    return p;
-}
 
 /**Function*************************************************************
 
@@ -303,13 +276,6 @@ func Gia_ManGenerateCounter(pAig *Gia_Man_t, iFrame int32, iOut int32, nWords in
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManResetRandom(pPars *Gia_ParSim_t) {
-    var i int32;
-    Gia_ManRandom( 1 );
-    for  i = 0; i < pPars.RandSeed; i++  {
-        Gia_ManRandom( 0 );
-    }
-}
 
 /**Function*************************************************************
 
@@ -322,61 +288,8 @@ func Gia_ManResetRandom(pPars *Gia_ParSim_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimSimulate(pAig *Gia_Man_t, pPars *Gia_ParSim_t) int32 {
-    extern int Gia_ManSimSimulateEquiv( Gia_Man_t * pAig, Gia_ParSim_t * pPars );
-    var p *Gia_ManSim_t;
-    var clkTotal abctime  = Abc_Clock();
-    var i, iOut, iPat, RetValue int32;
-    var nTimeToStop abctime;
-    if pPars.TimeLimit {
-        nTimeToStop = pPars.TimeLimit * int64(time.Second) + Abc_Clock();
-    } else {
-        nTimeToStop = 0;
-    }
-    if pAig.pReprs && pAig.pNexts {
-        return Gia_ManSimSimulateEquiv( pAig, pPars ); }
-    // inlining of macro ABC_FREE
-    pAig.pCexSeq = nil;
-    p = Gia_ManSimCreate( pAig, pPars );
-    Gia_ManResetRandom( pPars );
-    Gia_ManSimInfoInit( p );
-    for  i = 0; i < pPars.nIters; i++  {
-        Gia_ManSimulateRound( p );
-        if pPars.fVerbose {
-            Abc_Print( 1, "Frame %4d out of %4d and timeout %3d sec. ", i+1, pPars.nIters, pPars.TimeLimit );
-            Abc_Print( 1, "Time = %7.2f sec\r", (1.0*Abc_Clock()-clkTotal)/int64(time.Second) );
-        }
-        if pPars.fCheckMiter && (Gia_ManCheckPos( p, &iOut, &iPat ) != 0) {
-            Gia_ManResetRandom( pPars );
-            pPars.iOutFail = iOut;
-            pAig.pCexSeq = Gia_ManGenerateCounter( pAig, i, iOut, p.nWords, iPat, p.vCis2Ids );
-            Abc_Print( 1, "Output %d of miter \"%s\" was asserted in frame %d.  ", iOut, pAig.pName, i );
-            if !Gia_ManVerifyCex( pAig, pAig.pCexSeq, 0 ) {
-//                Abc_Print( 1, "\n" );
-                Abc_Print( 1, "\nGenerated counter-example is INVALID.                    " );
-//                Abc_Print( 1, "\n" );
-            
-            } else {
-//                Abc_Print( 1, "\n" );
-//                if ( pPars->fVerbose )
-//                Abc_Print( 1, "\nGenerated counter-example is verified correctly.         " );
-//                Abc_Print( 1, "\n" );
-            }
-            RetValue = 1;
-            break;
-        }
-        if Abc_Clock() > nTimeToStop {
-            i++;
-            break;
-        }
-        if i < pPars.nIters - 1 {
-            Gia_ManSimInfoTransfer( p ); }
-    }
-    Gia_ManSimDelete( p );
-    if pAig.pCexSeq == nil {
-        Abc_Print( 1, "No bug detected after simulating %d frames with %d words.  ", i, pPars.nWords ); }
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clkTotal );
-    return RetValue;
+func Gia_ManSimSimulate(g *Gia_Man_t, pars *Gia_ParSim_t) int32 {
+    return giaSimSimulate(g, pars, Gia_ManSimSimulateEquiv)
 }
 
 /**Function*************************************************************
