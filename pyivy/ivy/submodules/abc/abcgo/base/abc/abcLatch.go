@@ -143,36 +143,8 @@ func Abc_NtkCRetime(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {
     pNtk = Abc_NtkDup( pNtk );
 
     // update registers
-    vControls    = Vec_PtrAlloc( 100 );
-    vFlopClasses = Vec_IntAlloc( 100 );
-    Abc_NtkForEachLatch( pNtk, pObj, i )
-    {
-        pFlopOut = Abc_ObjFanout0(pObj);
-        pDriver = Abc_ObjFanin0( Abc_ObjFanin0(pObj) );
-        if Abc_ObjFaninNum(pDriver) != 3 {
-            Vec_IntPush( vFlopClasses, -1 );
-            CountN++;
-            continue;
-        }
-        if Abc_ObjFanin(pDriver, 1) != pFlopOut && Abc_ObjFanin(pDriver, 2) != pFlopOut {
-            Vec_IntPush( vFlopClasses, -1 );
-            Count2++;
-            continue;
-        }
-        if Abc_ObjFanin(pDriver, 1) == pFlopOut {
-            Vec_IntPush( vFlopClasses, -1 );
-            Count1++;
-            continue;
-        }
-        assert(Abc_ObjFanin(pDriver, 2) == pFlopOut, "Abc_ObjFanin(pDriver, 2) == pFlopOut");
-        Count0++;
-        Vec_PtrPushUnique( vControls, Abc_ObjFanin0(pDriver) );
-        // set the flop class
-        iFlop = Vec_PtrFind( vControls, Abc_ObjFanin0(pDriver) );
-        Vec_IntPush( vFlopClasses, iFlop );
-        // update
-        Abc_ObjPatchFanin( Abc_ObjFanin0(pObj), pDriver, Abc_ObjFanin(pDriver, 1) );
-    }
+    vControls, vFlopClasses, counts := abcClassifyLatchControls(pNtk)
+    CountN, Count2, Count1, Count0 = int32(counts.notMux), int32(counts.other), int32(counts.opposite), int32(counts.enabled)
     if Count1 {
         fmt.Printf("Opposite phase enable is present in %d flops (out of %d).\n", Count1, Abc_NtkLatchNum(pNtk)); }
     if fVerbose != 0 {
