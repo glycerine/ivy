@@ -66,4 +66,7 @@ func TestUnmapRepeatedDecomposablePairs(t *testing.T) {
 	if vec.Vec_IntSize(decomp) != 6 {
 		t.Fatalf("expected two decomposable pairs, got %v", vec.Vec_IntArray(decomp))
 	}
+	if result := Unm_ManTest(g); result != nil {
+		t.Fatal("experimental analysis should not return a graph")
+	}
 }

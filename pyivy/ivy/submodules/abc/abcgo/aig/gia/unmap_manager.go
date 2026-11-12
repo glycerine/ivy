@@ -74,3 +74,23 @@ func Unm_ManComputeTruths(p *Unm_Man_t) *Vec_Wrd_t {
 	}
 	return result
 }
+
+// Unm_ManWork identifies repeated LUT fanin pairs that can be decomposed.
+func Unm_ManWork(p *Unm_Man_t) {
+	pairs := Unm_ManComputePairs(p, 1)
+	p.vUsed = Unm_ManFindUsedNodes(pairs, p.pGia.nObjs)
+	p.vId2Used = vec.Vec_IntStartFull(int(p.pGia.nObjs))
+	for i, id := range vec.Vec_IntArray(p.vUsed) {
+		vec.Vec_IntWriteEntry(p.vId2Used, int(id), int32(i))
+	}
+	p.vTruths = Unm_ManComputeTruths(p)
+	Unm_ManCollectDecomp(p, pairs, 1)
+}
+
+// Unm_ManTest runs the experimental analysis; the original returns no graph.
+func Unm_ManTest(g *Gia_Man_t) *Gia_Man_t {
+	p := Unm_ManAlloc(g)
+	Unm_ManWork(p)
+	fmt.Printf("Time: %s\n", time.Since(p.clkStart))
+	return Unm_ManFree(p)
+}
