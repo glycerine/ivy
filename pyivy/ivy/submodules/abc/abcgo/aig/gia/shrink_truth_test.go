@@ -20,3 +20,26 @@ func TestShrinkDivisorTruths(t *testing.T) {
 		t.Fatalf("truth %x", got)
 	}
 }
+
+func TestShrinkManagerDivisors(t *testing.T) {
+	original := Gia_ManStart(10)
+	Gia_ManAppendCi(original)
+	Gia_ManAppendCi(original)
+	p := Shr_ManAlloc(original)
+	a, b := Gia_ManAppendCi(p.pNew), Gia_ManAppendCi(p.pNew)
+	x := Gia_ManHashAnd(p.pNew, a, b)
+	Gia_ObjSetAndLevel(p.pNew, Gia_ManObj(p.pNew, x>>1))
+	Shr_ManAddFanout(p, a>>1, x>>1)
+	Shr_ManAddFanout(p, b>>1, x>>1)
+	leaves := vec.Vec_IntAlloc(2)
+	vec.Vec_IntPush(leaves, a>>1)
+	vec.Vec_IntPush(leaves, b>>1)
+	if n := Shr_ManCollectDivisors(p, leaves, 8, 10); n != 3 || vec.Vec_IntEntry(p.vDivs, 2) != x>>1 {
+		t.Fatalf("divisors %v", vec.Vec_IntArray(p.vDivs))
+	}
+	Gia_ManAppendCo(p.pNew, x)
+	result := Shr_ManFree(p)
+	if Gia_ManCoNum(result) != 1 {
+		t.Fatal("shrink cleanup failed")
+	}
+}
