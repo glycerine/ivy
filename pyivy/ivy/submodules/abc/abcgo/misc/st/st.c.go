@@ -168,7 +168,7 @@ func st__lookup(t *Table, k any, out *any) int {
 func st__lookup_int(t *Table, k any, out *int) int {
 	v, ok := t.Lookup(k)
 	if ok && out != nil {
-		*out = v.(int)
+		*out = int(identity(v))
 	}
 	return truth(ok)
 }
@@ -211,7 +211,7 @@ func st__delete_int(t *Table, k *int, out *any) int {
 	key := any(*k)
 	ok := st__delete(t, &key, out)
 	if ok != 0 {
-		*k = key.(int)
+		*k = int(identity(key))
 	}
 	return ok
 }
@@ -235,7 +235,7 @@ func st__gen_int(g *Generator, k *any, v *int) int {
 	var value any
 	ok := st__gen(g, k, &value)
 	if ok != 0 && v != nil {
-		*v = value.(int)
+		*v = int(identity(value))
 	}
 	return ok
 }
@@ -284,3 +284,30 @@ func st__numhash(k any, n int) int { return int(identity(k) % uint64(n)) }
 func st__ptrhash(k any, n int) int { return int((identity(k) >> 2) % uint64(n)) }
 func st__numcmp(a, b any) int      { return truth(identity(a) != identity(b)) }
 func st__ptrcmp(a, b any) int      { return st__numcmp(a, b) }
+
+// StringCompare and StringHash select string-content keys rather than pointer
+// identity. Numeric and pointer comparators treat the key as an opaque identity.
+func StringCompare(a, b any) int   { return st__strcmp(a, b) }
+func StringHash(k any, n int) int  { return st__strhash(k, n) }
+func NumericCompare(a, b any) int  { return st__numcmp(a, b) }
+func NumericHash(k any, n int) int { return st__numhash(k, n) }
+func PointerCompare(a, b any) int  { return st__ptrcmp(a, b) }
+func PointerHash(k any, n int) int { return st__ptrhash(k, n) }
+
+// Find returns a stable value slot until its entry is removed or the table is
+// cleared. Rehashing preserves slot addresses, as in the original C table.
+func (t *Table) Find(k any) (*any, bool) {
+	e := *t.find(k)
+	if e == nil {
+		return nil, false
+	}
+	return &e.Value, true
+}
+func (t *Table) FindOrAdd(k any) (*any, bool) {
+	if slot, ok := t.Find(k); ok {
+		return slot, true
+	}
+	t.AddDirect(k, nil)
+	slot, _ := t.Find(k)
+	return slot, false
+}

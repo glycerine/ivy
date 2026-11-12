@@ -97,3 +97,21 @@ func TestStringsPointersAndMemoryManaged(t *testing.T) {
 		t.Fatal("memory-managed clear")
 	}
 }
+
+func TestNumericCompatibilityWidths(t *testing.T) {
+	table := New(NumericCompare, NumericHash)
+	table.Insert(int32(-3), int64(-7))
+	var value int
+	if st__lookup_int(table, int(-3), &value) != 1 || value != -7 {
+		t.Fatal(value)
+	}
+	g := table.Generator()
+	var key any
+	if st__gen_int(g, &key, &value) != 1 || value != -7 {
+		t.Fatal(value)
+	}
+	k := -3
+	if st__delete_int(table, &k, nil) != 1 || k != -3 {
+		t.Fatal(k)
+	}
+}
