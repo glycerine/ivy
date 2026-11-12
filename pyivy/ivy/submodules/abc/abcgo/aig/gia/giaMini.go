@@ -268,93 +268,9 @@ func Gia_MiniAigVerify(pAbc *Abc_Frame_t, pFileName string) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_MiniAigProcessFile() *Vec_Int_t {
-    var vTriples *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var pFileName string  = "test.txt";
-    var pFile *os.File  = os.Open(pFileName);
-    if pFile == nil {
-        fmt.Printf("Cannot open the file.\n");
-    } else {
-        var nLines, nLinesAll int32;
-        var pToken string;
-        var Buffer [1000]byte;
-        for  fgets( Buffer, 1000, pFile ) != nil  {
-            nLinesAll++;
-            if Buffer[0] != '#' {
-                continue; }
-            //printf( "%s", Buffer );
-            nLines++;
-            pToken = strtok( Buffer+3, " \r\n\r+=" );
-            for  pToken  {
-                Vec_IntPush( vTriples, strconv.Atoi(pToken) );
-                pToken = strtok( nil, " \r\n\r+=" );
-            }
-        }
-        _ = (pFile).Close();
-        fmt.Printf("Collected %d (out of %d) lines.\n", nLines, nLinesAll);
-        fmt.Printf("Entries = %d\n", Vec_IntSize(vTriples));
-    }
-    return vTriples;
-}
-func Gia_MiniAigGenerate_rec(p *Mini_Aig_t, vTriples *Vec_Int_t, iObj int32, vDefs *Vec_Int_t, vMap *Vec_Int_t) {
-    var Index, Entry0, Entry1, Entry2, Value int32;
-    if Vec_IntEntry(vMap, iObj) >= 0 {
-        return; }
-    Index  = Vec_IntEntry( vDefs, iObj );
-    Entry0 = Vec_IntEntry( vTriples, 3*Index+0 );
-    Entry1 = Vec_IntEntry( vTriples, 3*Index+1 );
-    Entry2 = Vec_IntEntry( vTriples, 3*Index+2 );
-    Gia_MiniAigGenerate_rec( p, vTriples, Entry1, vDefs, vMap );
-    Gia_MiniAigGenerate_rec( p, vTriples, Entry2, vDefs, vMap );
-    assert(Vec_IntEntry(vMap, Entry1) >= 0, "Vec_IntEntry(vMap, Entry1) >= 0");
-    assert(Vec_IntEntry(vMap, Entry2) >= 0, "Vec_IntEntry(vMap, Entry2) >= 0");
-    Value  = Mini_AigAnd( p, Vec_IntEntry(vMap, Entry1), Vec_IntEntry(vMap, Entry2) );
-    Vec_IntWriteEntry( vMap, Entry0, Value );
-}
-func Gia_MiniAigGenerateFromFile() {
-    var p *Mini_Aig_t  = Mini_AigStart();
-    var vTriples *Vec_Int_t  = Gia_MiniAigProcessFile();
-    var vDefs *Vec_Int_t     = Vec_IntStartFull( Vec_IntSize(vTriples) ); 
-    var vMap *Vec_Int_t      = Vec_IntStartFull( Vec_IntSize(vTriples) ); 
-    var vMapIn *Vec_Int_t    = Vec_IntStart( Vec_IntSize(vTriples) );
-    var vMapOut *Vec_Int_t   = Vec_IntStart( Vec_IntSize(vTriples) );
-    var vPis *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vPos *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var i, ObjOut, ObjIn int32;
-    assert(Vec_IntSize(vTriples) % 3 == 0, "Vec_IntSize(vTriples) % 3 == 0");
-    for  i = 0; i < Vec_IntSize(vTriples)/3; i++  {
-        var Entry0 int32  = Vec_IntEntry(vTriples, 3*i+0);
-        var Entry1 int32  = Vec_IntEntry(vTriples, 3*i+1);
-        var Entry2 int32  = Vec_IntEntry(vTriples, 3*i+2);
-        Vec_IntWriteEntry( vDefs,   Entry0, i );
-        Vec_IntAddToEntry( vMapOut, Entry0, 1 );
-        Vec_IntAddToEntry( vMapIn,  Entry1, 1 );
-        Vec_IntAddToEntry( vMapIn,  Entry2, 1 );
-    }
-    Vec_IntForEachEntryTwo( vMapOut, vMapIn, ObjOut, ObjIn, i )
-        if ( !ObjOut && ObjIn )
-            Vec_IntPush( vPis, i );
-        else if ( ObjOut && !ObjIn )
-            Vec_IntPush( vPos, i );
-    Vec_IntForEachEntry( vPis, ObjIn, i )
-        Vec_IntWriteEntry( vMap, ObjIn, Mini_AigCreatePi(p) );
-    Vec_IntForEachEntry( vPos, ObjOut, i )
-        Gia_MiniAigGenerate_rec( p, vTriples, ObjOut, vDefs, vMap );
-    Vec_IntForEachEntry( vPos, ObjOut, i )
-    {
-        assert(Vec_IntEntry(vMap, ObjOut) >= 0, "Vec_IntEntry(vMap, ObjOut) >= 0");
-        Mini_AigCreatePo( p, Vec_IntEntry(vMap, ObjOut) );
-    }
-    Vec_IntFree( vTriples );
-    Vec_IntFree( vDefs );
-    Vec_IntFree( vMap );
-    Vec_IntFree( vMapIn );
-    Vec_IntFree( vMapOut );
-    Vec_IntFree( vPis );
-    Vec_IntFree( vPos );
-    Mini_AigDump( p, "test.miniaig" );
-    Mini_AigStop( p );
-}
+
+
+
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
