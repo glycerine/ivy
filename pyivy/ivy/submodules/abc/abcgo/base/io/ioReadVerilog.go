@@ -1,104 +1,57 @@
 package io
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/base/abc"
+)
 
-  FileName    [ioReadVerilog.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Command processing package.]
-
-  Synopsis    [Procedure to read network from file.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: ioReadVerilog.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ioAbc.h"
-//#include "base/ver/ver.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-//extern Abc_Des_t * Ver_ParseFile( char * pFileName, Abc_Des_t * pGateLib, int fCheck, int fUseMemMan );
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Reads hierarchical design from the Verilog file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_ReadVerilog(pFileName string, fCheck int32) *Abc_Ntk_t {
-    var pNtk, pTemp *Abc_Ntk_t;
-    var pDesign *Abc_Des_t;
-    var i, RetValue int32;
-
-    // parse the verilog file
-    pDesign = Ver_ParseFile( pFileName, nil, fCheck, 1 );
-    if pDesign == nil {
-        return nil; }
-
-    // detect top-level model
-    RetValue = Abc_DesFindTopLevelModels( pDesign );
-    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( pDesign.vTops, 0 );
-    if RetValue > 1 {
-        fmt.Printf("Warning: The design has %d root-level modules: ", Vec_PtrSize(pDesign.vTops));
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pDesign.vTops)) && (((pTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pDesign.vTops, i)), 1); i++  {
-            fmt.Printf(" %s", Abc_NtkName(pTemp));
-        }
-        fmt.Printf("\n");
-        fmt.Printf("The first one (%s) will be used.\n", pNtk.pName);
-    }
-
-    // extract the master network
-    pNtk.pDesign = pDesign;
-    pDesign.pManFunc = nil;
-
-    // verify the design for cyclic dependence
-    assert(Vec_PtrSize(pDesign.vModules) > 0, "Vec_PtrSize(pDesign.vModules) > 0");
-    if Vec_PtrSize(pDesign.vModules) == 1 {
-//        printf( "Warning: The design is not hierarchical.\n" );
-        Abc_DesFree( pDesign, pNtk );
-        pNtk.pDesign = nil;
-        pNtk.pSpec = Extra_UtilStrsav( pFileName );
-    
-    } else {
-        // check that there is no cyclic dependency
-        Abc_NtkIsAcyclicHierarchy( pNtk );
-    }
-
-//Io_WriteVerilog( pNtk, "_temp.v" );
-//    Abc_NtkPrintBoxInfo( pNtk );
-    return pNtk;
+var verilogParser struct {
+	sync.RWMutex
+	parse func(string, int32) *abc.Design
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+// RegisterVerilogParser connects the Verilog parser without an import cycle.
+func RegisterVerilogParser(parse func(string, int32) *abc.Design) {
+	verilogParser.Lock()
+	verilogParser.parse = parse
+	verilogParser.Unlock()
+}
 
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Io_ReadVerilog selects the first top-level module from a parsed design.
+func Io_ReadVerilog(filename string, check int32) *abc.Network {
+	verilogParser.RLock()
+	parse := verilogParser.parse
+	verilogParser.RUnlock()
+	if parse == nil {
+		panic("io: Verilog parser is not registered")
+	}
+	design := parse(filename, check)
+	if design == nil {
+		return nil
+	}
+	count := abc.Abc_DesFindTopLevelModels(design)
+	if count == 0 || len(design.Modules) == 0 {
+		abc.Abc_DesFree(design, nil)
+		return nil
+	}
+	root := design.Tops[0]
+	if count > 1 {
+		fmt.Printf("Warning: The design has %d root-level modules:", count)
+		for _, top := range design.Tops {
+			fmt.Printf(" %s", top.Name)
+		}
+		fmt.Printf("\nThe first one (%s) will be used.\n", root.Name)
+	}
+	root.Design = design
+	design.FunctionManager = nil
+	if len(design.Modules) == 1 {
+		abc.Abc_DesFree(design, root)
+		root.Design = nil
+		root.Spec = filename
+	} else {
+		abc.Abc_NtkIsAcyclicHierarchy(root)
+	}
+	return root
+}
