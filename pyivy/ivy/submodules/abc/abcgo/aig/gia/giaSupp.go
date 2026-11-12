@@ -5,7 +5,6 @@ package gia
 import "fmt"
 
 type Gia_ManMin_t = Gia_ManMin_t_
-type Gia_Man2Min_t = Gia_Man2Min_t_
 
 /**CFile****************************************************************
 
@@ -339,78 +338,6 @@ func Gia_ManSupportAndTest(pGia *Gia_Man_t) *Gia_Man_t {
 
 
 
-
-type Gia_Man2Min_t_ struct {
-    // problem formulation
-    pGia      *Gia_Man_t;
-    iLits [2]int32;
-    // structural information
-    Vec_Int_t *     vCis[2];
-    Vec_Int_t *     vObjs[2];
-    // SAT solving
-    pSat       *satoko_t;           // SAT solver
-    vSims      *Vec_Wrd_t;          // simulation
-    vFrontier      *Vec_Ptr_t;      // CNF construction
-    vFanins      *Vec_Ptr_t;        // CNF construction
-    vSatVars      *Vec_Int_t;       // nodes
-    nCisOld             int32;        // previous number of CIs
-    iPattern             int32;       // the next pattern to write
-    nSatSat             int32;
-    nSatUnsat             int32;
-    nCalls             int32;
-    nSims             int32;
-    nSupps             int32;
-}
-
-func Gia_Min2ObjSatId(p *Gia_Man_t, pObj *Gia_Obj_t) int32 { return Gia_ObjCopyArray(p, Gia_ObjId(p, pObj));                                                        }
-func Gia_Min2ObjSetSatId(p *Gia_Man_t, pObj *Gia_Obj_t, Num int32) int32 { assert(Gia_Min2ObjSatId(p, pObj) == -1, "Gia_Min2ObjSatId(p, pObj) == -1"); Gia_ObjSetCopyArray(p, Gia_ObjId(p, pObj), Num); return Num;  }
-func Gia_Min2ObjCleanSatId(p *Gia_Man_t, pObj *Gia_Obj_t) { assert(Gia_Min2ObjSatId(p, pObj) != -1, "Gia_Min2ObjSatId(p, pObj) != -1"); Gia_ObjSetCopyArray(p, Gia_ObjId(p, pObj), -1);               }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Create/delete the data representation manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_Man2SuppStart(pGia *Gia_Man_t) *Gia_Man2Min_t {
-    var p *Gia_Man2Min_t;
-    p = new(Gia_Man2Min_t);
-    p.pGia      = pGia;
-    p.vCis[0]   = Vec_IntAlloc( 512 );
-    p.vCis[1]   = Vec_IntAlloc( 512 );
-    p.vObjs[0]  = Vec_IntAlloc( 512 );
-    p.vObjs[1]  = Vec_IntAlloc( 512 );
-    // SAT solving
-    p.pSat      = satoko_create();
-    p.vSims     = Vec_WrdAlloc( 1000 );
-    p.vFrontier = Vec_PtrAlloc( 1000 );
-    p.vFanins   = Vec_PtrAlloc( 100 );
-    p.vSatVars  = Vec_IntAlloc( 100 );
-    p.iPattern  = 1;
-    satoko_options(p.pSat).learnt_ratio = 0; // prevent garbage collection
-    return p;
-}
-func Gia_Man2SuppStop(p *Gia_Man2Min_t) {
-//    printf( "Total calls = %8d.  Supps = %6d.  Sims = %6d.   SAT = %6d.  UNSAT = %6d.\n", 
-//        p->nCalls, p->nSupps, p->nSims, p->nSatSat, p->nSatUnsat );
-    Vec_IntFreeP( &p.vCis[0] );
-    Vec_IntFreeP( &p.vCis[1] );
-    Vec_IntFreeP( &p.vObjs[0] );
-    Vec_IntFreeP( &p.vObjs[1] );
-    Gia_ManCleanMark01( p.pGia );
-    satoko_destroy( p.pSat );
-    Vec_WrdFreeP( &p.vSims );
-    Vec_PtrFreeP( &p.vFrontier );
-    Vec_PtrFreeP( &p.vFanins );
-    Vec_IntFreeP( &p.vSatVars );
-    p = nil;
-}
 
 /**Function*************************************************************
 
@@ -778,20 +705,6 @@ func Gia_Min2ManSolve(p *Gia_Man2Min_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_Min2ManGatherSupp(p *Gia_Man2Min_t) int32 {
-    var n, Overlap int32;
-    p.nSupps++;
-    Gia_ManIncrementTravId( p.pGia );
-    for  n = 0; n < 2; n++  {
-        Vec_IntClear( p.vCis[n] );
-        Vec_IntClear( p.vObjs[n] );
-        Gia_ManIncrementTravId( p.pGia );
-        Overlap = Gia_Min2ManGatherSupp_rec( p.pGia, Abc_Lit2Var(p.iLits[n]), p.vCis[n], p.vObjs[n] );
-        assert(n || !(Overlap != 0), "n || !Overlap");
-    }
-    return Overlap;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Takes a literal and returns a support-minized literal.]
