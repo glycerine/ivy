@@ -38,6 +38,8 @@ func Sfm_LibFindDelayMatches(p *Sfm_Lib_t, truth []uint64) []Sfm_LibMatch {
 	}
 	return result
 }
+
+// A top-gate fanin of -1 denotes the newly constructed bottom gate.
 func Sfm_LibImplementGatesDelay(fanins []int32, bottom, top *mio.Mio_Gate_t, bottomPins, topPins []byte) ([]int32, [][]int32) {
 	gates := []int32{mio.Mio_GateReadValue(bottom)}
 	levels := [][]int32{make([]int32, len(bottomPins))}
@@ -51,7 +53,7 @@ func Sfm_LibImplementGatesDelay(fanins []int32, bottom, top *mio.Mio_Gate_t, bot
 	levels = append(levels, make([]int32, len(topPins)))
 	for i, pin := range topPins {
 		if pin == 16 {
-			levels[1][i] = 0
+			levels[1][i] = -1
 		} else {
 			levels[1][i] = fanins[pin]
 		}

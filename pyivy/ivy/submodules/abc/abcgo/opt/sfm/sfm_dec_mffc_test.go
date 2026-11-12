@@ -33,7 +33,7 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 2 0
 	if err != nil {
 		t.Fatal(err)
 	}
-	Sfm_LibPreprocess(lib)
+	_, _, _, handles := Sfm_LibPreprocess(lib)
 	prepared := sfmLibPrepareCells(6, 0, 0, 0, 0, mio.Mio_CollectRootsNew2(lib, 6, nil, 0))
 	defer Sfm_LibStop(prepared)
 	p := testNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
@@ -42,5 +42,27 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 2 0
 	gates, fanins, order, cone, ok := sfmFindAreaNodeMatch(p, 3, pars, prepared)
 	if !ok || len(gates) != 1 || len(fanins) != 1 || len(fanins[0]) != 2 || !reflect.DeepEqual(cone, []int{2, 3}) || len(order) != 4 {
 		t.Fatalf("match: %v %v %v %v %v", gates, fanins, order, cone, ok)
+	}
+	want := coreTable(t, p)
+	if !sfmInsertAreaMatch(p, 3, gates, fanins, order, cone, handles) {
+		t.Fatal("replacement rejected")
+	}
+	if !reflect.DeepEqual(coreTable(t, p), want) || !p.Deleted[2] || !p.Deleted[3] {
+		t.Fatalf("replacement changed behavior or retained old cone: %v", p.Fanins)
+	}
+	// A two-gate replacement must distinguish its bottom gate from input 0.
+	p = testNetwork(t, [][]int{nil, nil, {0, 1}, {2}}, 2, 1, []uint64{0, 0, 8, 0})
+	want = coreTable(t, p)
+	var and, buf int32 = -1, -1
+	for i, gate := range handles {
+		switch mio.Mio_GateReadName(gate) {
+		case "and2":
+			and = int32(i)
+		case "buf":
+			buf = int32(i)
+		}
+	}
+	if !sfmInsertAreaMatch(p, 2, []int32{and, buf}, [][]int32{{0, 1}, {-1}}, []int{0, 1}, []int{2}, handles) || !reflect.DeepEqual(coreTable(t, p), want) {
+		t.Fatal("two-gate replacement changed behavior")
 	}
 }
