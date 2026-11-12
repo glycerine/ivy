@@ -71,6 +71,10 @@ func Abc_NtkExtractSfm(n *Network) (*sfm.Sfm_Ntk_t, []*Object, error) {
 		return nil, nil, err
 	}
 	copy(result.Mapping, gates)
+	result.SourceIDs = make([]int, len(objects))
+	for i, obj := range objects {
+		result.SourceIDs[i] = obj.ID
+	}
 	return result, objects, nil
 }
 
@@ -169,9 +173,6 @@ func Abc_NtkPerformMfs3(n *Network, pars *sfm.Sfm_Par_t) (int, error) {
 		return 0, err
 	}
 	options := *pars
-	if options.NodesMax != 0 {
-		return 0, fmt.Errorf("sfm: ABC object ID limit is not yet supported")
-	}
 	if options.NodeOne != 0 {
 		id := -1
 		for i, obj := range objects {

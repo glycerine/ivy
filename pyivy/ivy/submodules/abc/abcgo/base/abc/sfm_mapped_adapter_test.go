@@ -89,7 +89,13 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 2 0
 	out := n.NewObject(ObjectPO)
 	Abc_ObjAddFanin(out, y)
 	pars := sfm.Sfm_Par_t{Area: true, TfoLevMax: 2, TfiLevMax: 3, FanoutMax: 10, MffcMax: 3, VarMax: 6, UseAndOr: true, NodeOne: y.ID}
+	pars.NodesMax = y.ID - 1
 	changed, err := Abc_NtkPerformMfs3(n, &pars)
+	if err != nil || changed != 0 {
+		t.Fatalf("node limit: changed %d: %v", changed, err)
+	}
+	pars.NodesMax = y.ID
+	changed, err = Abc_NtkPerformMfs3(n, &pars)
 	if err != nil || changed != 1 {
 		t.Fatalf("changed %d: %v", changed, err)
 	}
