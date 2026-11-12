@@ -1,239 +1,145 @@
+// Package exor implements exclusive sum-of-products cover minimization.
 package exor
 
-/**CFile****************************************************************
+import "fmt"
 
-  FileName    [exor.h]
+type VarValue uint8
+type varvalue = VarValue
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Exclusive sum-of-product minimization.]
-
-  Synopsis    [Internal declarations.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: exor.h,v 1.0 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-////////////////////////////////////////////////////////////////////////
-///                                                                  ///
-///                    Interface of EXORCISM - 4                     ///
-///              An Exclusive Sum-of-Product Minimizer               ///
-///               Alan Mishchenko  <alanmi@ee.pdx.edu>               ///
-///                                                                  ///
-////////////////////////////////////////////////////////////////////////
-///                                                                  ///
-///                         Main Module                              ///
-///                                                                  ///
-///  Ver. 1.0. Started - July 15, 2000. Last update - July 20, 2000  ///
-///  Ver. 1.4. Started - Aug 10, 2000.  Last update - Aug 10, 2000   ///
-///  Ver. 1.7. Started - Sep 20, 2000.  Last update - Sep 23, 2000   ///
-///                                                                  ///
-////////////////////////////////////////////////////////////////////////
-///   This software was tested with the BDD package "CUDD", v.2.3.0  ///
-///                          by Fabio Somenzi                        ///
-///                  http://vlsi.colorado.edu/~fabio/                ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <assert.h>
-//#include <time.h>
-//#include "misc/vec/vec.h"
-//#include "misc/vec/vecWec.h"
-
-//ABC_NAMESPACE_HEADER_START 
-
-////////////////////////////////////////////////////////////////////////
-///                       MACRO DEFINITIONS                          ///
-////////////////////////////////////////////////////////////////////////
-
-// the number of bits per integer (can be 16, 32, 64 - tested for 32)
-const BPI =                 32 
-const BPIMASK =             31 
-const LOGBPI =               5
-
-// the maximum number of input variables
-const MAXVARS =           1000
-
-// the number of cubes that are allocated additionally
-const ADDITIONAL_CUBES =    33
-
-// the factor showing how many cube pairs will be allocated
-const CUBE_PAIR_FACTOR =    20
-// the following number of cube pairs are allocated:
-// nCubesAlloc/CUBE_PAIR_FACTOR
-
-             
-                                      
-                                                                                                                           
-               
-const DIFFERENT =   0x55555555
-// Original macro:
-// #define BIT_COUNT(w)   (BitCount[(w)&0xffff] + BitCount[(w)>>16])
-
-     
-                          
-                                      
-      
-
-
-// Original macro:
-// #define VarWord(element)  ((element)>>LOGBPI)
-
-// Original macro:
-// #define VarBit(element)   ((element)&BPIMASK)
-
-
-// Original macro:
-// #define TICKS_TO_SECONDS(time) ((float)(time)/(float)(CLOCKS_PER_SEC))
-
-
-////////////////////////////////////////////////////////////////////////
-///                  CUBE COVER and CUBE typedefs                    ///
-////////////////////////////////////////////////////////////////////////
-
- type type int32
-const ( MULTI_OUTPUT type = 1
- SINGLE_NODE type = MULTI_OUTPUT + 1
- MULTI_NODE type = SINGLE_NODE + 1  
+const (
+	VAR_NEG VarValue = 1
+	VAR_POS VarValue = 2
+	VAR_ABS VarValue = 3
 )
 
- 
+type CubeDist int
+type cubedist = CubeDist
 
-// infomation about the cover
-typedef struct cinfo_tag 
-{
-    int nVarsIn;        // number of input binary variables in the cubes
-    int nVarsOut;       // number of output binary variables in the cubes
-    int nWordsIn;       // number of input words used to represent the cover
-    int nWordsOut;      // number of output words used to represent the cover
-    int nCubesAlloc;    // the number of allocated cubes 
-    int nCubesBefore;   // number of cubes before simplification
-    int nCubesInUse;    // number of cubes after simplification
-    int nCubesFree;     // number of free cubes
-    int nLiteralsBefore;// number of literals before
-    int nLiteralsAfter; // number of literals after
-    int QCostBefore;    // q-cost before
-    int QCostAfter;     // q-cost after
-    int cIDs;           // the counter of cube IDs
+const (
+	DIST2 CubeDist = iota
+	DIST3
+	DIST4
+)
+const (
+	BPI              = 32
+	LOGBPI           = 5
+	BPIMASK          = 31
+	ADDITIONAL_CUBES = 33
+	CUBE_PAIR_FACTOR = 20
+)
 
-    int Verbosity;      // verbosity level
-    int Quality;        // quality
-    int nCubesMax;      // maximum number of cubes in starting cover
-    int fUseQCost;      // use q-cost instead of literal count
-
-    abctime TimeRead;   // reading time
-    abctime TimeStart;  // starting cover computation time
-    abctime TimeMin;    // pure minimization time
+// Cube holds packed two-bit input value sets and one-bit output coefficients.
+// XORing input value sets implements literal complementation/absence identities.
+type Cube struct {
+	Inputs, Outputs []uint32
+	ID              uint64
+	active          bool
 }
- cinfo;
 
-// representation of one cube (24 bytes + bit info)
-typedef unsigned int  drow;
-typedef unsigned char byte;
-typedef struct cube 
-{
-    byte  fMark;        // the flag which is TRUE if the cubes is enabled
-    byte  ID;           // (almost) unique ID of the cube
-    short a;            // the number of literals
-    short z;            // the number of 1's in the output part
-    short q;            // user cost
-    drow* pCubeDataIn;  // a pointer to the bit string representing literals
-    drow* pCubeDataOut; // a pointer to the bit string representing literals
-    struct cube* Prev;  // pointers to the previous/next cubes in the list/ring 
-    struct cube* Next;
+func NewCube(inputs []VarValue, outputs []bool) *Cube {
+	c := &Cube{Inputs: make([]uint32, (len(inputs)+15)/16), Outputs: make([]uint32, (len(outputs)+31)/32)}
+	for i, v := range inputs {
+		if v < 1 || v > 3 {
+			panic("exor: invalid cube literal")
+		}
+		c.Inputs[i/16] |= uint32(v) << uint(2*(i%16))
+	}
+	for i, v := range outputs {
+		if v {
+			c.Outputs[i/32] |= 1 << uint(i%32)
+		}
+	}
+	return c
 }
- Cube;
+func (c *Cube) Clone() *Cube {
+	return &Cube{Inputs: append([]uint32(nil), c.Inputs...), Outputs: append([]uint32(nil), c.Outputs...)}
+}
+func (c *Cube) Output(i int) bool { return c.Outputs[i/32]&(1<<uint(i%32)) != 0 }
+func (c *Cube) setVar(i int, v VarValue) {
+	if v < 1 || v > 3 {
+		panic("exor: invalid literal")
+	}
+	shift := uint(2 * (i % 16))
+	c.Inputs[i/16] = c.Inputs[i/16]&^(3<<shift) | uint32(v)<<shift
+}
 
+type Options struct {
+	Quality, Verbosity, MaxCubes int
+	UseQCost                     bool
+}
+type Statistics struct{ CubesBefore, CubesAfter, LiteralsBefore, LiteralsAfter, QCostBefore, QCostAfter, Rewrites int }
+type cubePair struct {
+	a, b     *Cube
+	distance int
+}
 
-// preparation
-// extern void PrepareBitSetModule();
+// Manager owns its cubes, iterators, pair queues and free storage. Managers can
+// be minimized concurrently; one manager is used by one goroutine at a time.
+type Manager struct {
+	Inputs, Outputs int
+	Options         Options
+	Stats           Statistics
+	Cubes           []*Cube
+	free            []*Cube
+	nextID          uint64
+	iter            int
+	pairs           []cubePair
+	pairIndex       int
+	current         cubePair
+	mark            int
+	rangeStart      int
+	undo            []*Cube
+	linkGroups      [][]*Cube
+	linkIndex       int
+}
+type cinfo = Statistics
 
-// extern int WriteResultIntoFile( char * pFileName );
-
-
-// iterative ExorLink
-// extern int IterativelyApplyExorLink2( char fDistEnable );
-   
-// extern int IterativelyApplyExorLink3( char fDistEnable );
-   
-// extern int IterativelyApplyExorLink4( char fDistEnable );
-   
-
-// cube storage allocation/delocation
-// extern int AllocateCubeSets( int nVarsIn, int nVarsOut );
-
-// extern void DelocateCubeSets();
-
-
-// adjacency queque allocation/delocation procedures
-// extern int AllocateQueques( int nPlaces );
-
-// extern void DelocateQueques();
-
-
-// extern int AllocateCover( int nCubes, int nWordsIn, int nWordsOut );
-
-// extern void DelocateCover();
-
-
-// extern void AddToFreeCubes( Cube* pC );
-
-// extern Cube* GetFreeCube();
-
-// getting and returning free cubes to the heap
-
-// extern void InsertVarsWithoutClearing( Cube * pC, int * pVars, int nVarsIn, int * pVarValues, int Output );
-
-// extern int CheckForCloseCubes( Cube* p, int fAddCube );
-
-
-// extern int FindDiffVars( int *pDiffVars, Cube* pC1, Cube* pC2 );
-
-// determines the variables that are different in cubes pC1 and pC2
-// returns the number of variables
-
-// extern int ComputeQCost( Vec_Int_t * vCube );
-
-// extern int ComputeQCostBits( Cube * p );
-
-
-// extern int CountLiterals();
-
-// extern int CountQCost();
-
-
-////////////////////////////////////////////////////////////////////////
-///              VARVALUE and CUBEDIST enum typedefs                 ///
-////////////////////////////////////////////////////////////////////////
-
-// literal values
- type varvalue int32
-const ( VAR_NEG varvalue = 1
- VAR_POS varvalue = VAR_NEG + 1
- VAR_ABS varvalue = VAR_POS + 1  
-)
-
- 
-
-// the flag in some function calls can take one of the follwing values
- type cubedist int32
-const ( DIST2 cubedist = iota
- DIST3
- DIST4 
-)
-
- 
-
-//ABC_NAMESPACE_HEADER_END
-
-
+func NewManager(inputs, outputs int, options Options) (*Manager, error) {
+	if inputs < 0 || outputs <= 0 {
+		return nil, fmt.Errorf("exor: invalid cover dimensions %d/%d", inputs, outputs)
+	}
+	if options.Quality < 0 || options.MaxCubes < 0 {
+		return nil, fmt.Errorf("exor: negative minimization option")
+	}
+	return &Manager{Inputs: inputs, Outputs: outputs, Options: options, nextID: 1}, nil
+}
+func (m *Manager) validate(c *Cube) error {
+	if c == nil || len(c.Inputs) != (m.Inputs+15)/16 || len(c.Outputs) != (m.Outputs+31)/32 {
+		return fmt.Errorf("exor: cube dimensions do not match manager")
+	}
+	for i := 0; i < m.Inputs; i++ {
+		if GetVar(c, i) == 0 {
+			return fmt.Errorf("exor: empty input value set at %d", i)
+		}
+	}
+	if m.Inputs%16 != 0 && len(c.Inputs) > 0 && c.Inputs[len(c.Inputs)-1]>>uint(2*(m.Inputs%16)) != 0 {
+		return fmt.Errorf("exor: nonzero input padding")
+	}
+	if m.Outputs%32 != 0 && c.Outputs[len(c.Outputs)-1]>>uint(m.Outputs%32) != 0 {
+		return fmt.Errorf("exor: nonzero output padding")
+	}
+	return nil
+}
+func (m *Manager) Add(c *Cube) error {
+	if err := m.validate(c); err != nil {
+		return err
+	}
+	if m.Options.MaxCubes > 0 && len(m.Cubes) >= m.Options.MaxCubes {
+		return fmt.Errorf("exor: maximum cover size exceeded")
+	}
+	c = c.Clone()
+	c.ID = m.nextID
+	m.nextID++
+	c.active = true
+	m.Cubes = append(m.Cubes, c)
+	return nil
+}
+func cloneCubes(a []*Cube) []*Cube {
+	b := make([]*Cube, len(a))
+	for i, c := range a {
+		b[i] = c.Clone()
+		b[i].ID = c.ID
+		b[i].active = c.active
+	}
+	return b
+}

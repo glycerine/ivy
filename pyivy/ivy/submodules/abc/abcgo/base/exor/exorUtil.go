@@ -1,234 +1,188 @@
 package exor
 
 import (
+	"bufio"
 	"fmt"
-	"time"
+	"io"
+	"os"
+	"strconv"
+	"strings"
 )
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [exorUtil.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Exclusive sum-of-product minimization.]
-
-  Synopsis    [Utilities.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: exorUtil.c,v 1.0 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-////////////////////////////////////////////////////////////////////////
-///                                                                  ///
-///                  Implementation of EXORCISM - 4                  ///
-///              An Exclusive Sum-of-Product Minimizer               ///
-///               Alan Mishchenko  <alanmi@ee.pdx.edu>               ///
-///                                                                  ///
-////////////////////////////////////////////////////////////////////////
-///                                                                  ///
-///                        Utility Functions                         ///
-///                                                                  ///
-///       1) allocating memory for and creating the ESOP cover       ///
-///       2) writing the resultant cover into an ESOP PLA file       ///
-///                                                                  ///
-///  Ver. 1.0. Started - July 15, 2000. Last update - July 20, 2000  ///
-///  Ver. 1.4. Started -  Aug 10, 2000. Last update -  Aug 10, 2000  ///
-///  Ver. 1.5. Started -  Aug 19, 2000. Last update -  Aug 19, 2000  ///
-///  Ver. 1.7. Started -  Sep 20, 2000. Last update -  Sep 23, 2000  ///
-///                                                                  ///
-////////////////////////////////////////////////////////////////////////
-///   This software was tested with the BDD package "CUDD", v.2.3.0  ///
-///                          by Fabio Somenzi                        ///
-///                  http://vlsi.colorado.edu/~fabio/                ///
-////////////////////////////////////////////////////////////////////////
-
-//#include "exor.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                      EXTERNAL VARIABLES                         ////
-////////////////////////////////////////////////////////////////////////
-
-// information about the options, the function, and the cover
-var g_CoverInfo cinfo;
-
-////////////////////////////////////////////////////////////////////////
-///                        EXTERNAL FUNCTIONS                        ///
-////////////////////////////////////////////////////////////////////////
-
-// Cube Cover Iterator
-// starts an iterator that traverses all the cubes in the ring
-// extern Cube* IterCubeSetStart();
-
-// returns the next cube in the ring
-// extern Cube* IterCubeSetNext();
-
-
-// retrieves the variable from the cube
-// extern varvalue GetVar( Cube* pC, int Var );
-
-
-////////////////////////////////////////////////////////////////////////
-///                      FUNCTION DECLARATIONS                       ///
-////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////
-////////////       Cover Service Procedures       /////////////////
-///////////////////////////////////////////////////////////////////
-
-func CountLiterals() int32 {
-    var p *Cube;
-    var LitCounter int32;
-    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {
-        LitCounter += p.a;
-    }
-    return LitCounter;
+func writeText(w io.Writer, s string) error {
+	n, err := io.WriteString(w, s)
+	if err == nil && n != len(s) {
+		return io.ErrShortWrite
+	}
+	return err
 }
-
-func CountLiteralsCheck() int32 {
-    var p *Cube;
-    var Value, v int32;
-    var LitCounter int32;
-    var LitCounterControl int32;
-
-    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {
-        LitCounterControl += p.a;
-
-        assert(p.fMark == 0, "p.fMark == 0");
-
-        // write the input variables
-        for  v = 0; v < g_CoverInfo.nVarsIn; v++  {
-            Value = GetVar( p, v );
-            if Value == VAR_NEG {
-                LitCounter++;
-            } else if Value == VAR_POS {
-                LitCounter++;
-            } else if Value != VAR_ABS {
-                assert(false, "0");
-            }
-        }
-    }
-
-    if LitCounterControl != LitCounter {
-        fmt.Printf("Warning! The recorded number of literals (%d) differs from the actual number (%d)\n", LitCounterControl, LitCounter); }
-    return LitCounter;
+func WriteTableIntoFile(m *Manager, w io.Writer) error {
+	for _, c := range m.Cubes {
+		var line strings.Builder
+		for i := 0; i < m.Inputs; i++ {
+			switch GetVar(c, i) {
+			case VAR_NEG:
+				line.WriteByte('0')
+			case VAR_POS:
+				line.WriteByte('1')
+			case VAR_ABS:
+				line.WriteByte('-')
+			default:
+				return fmt.Errorf("exor: invalid literal")
+			}
+		}
+		line.WriteByte(' ')
+		for i := 0; i < m.Outputs; i++ {
+			if c.Output(i) {
+				line.WriteByte('1')
+			} else {
+				line.WriteByte('0')
+			}
+		}
+		line.WriteByte('\n')
+		if err := writeText(w, line.String()); err != nil {
+			return err
+		}
+	}
+	return nil
 }
-
-func CountQCost() int32 {
-    var p *Cube;
-    var QCost int32;
-    var QCostControl int32;
-    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {
-        QCostControl += p.q;
-        QCost += ComputeQCostBits( p );
-    }
-//    if ( QCostControl != QCost )
-//        printf( "Warning! The recorded number of literals (%d) differs from the actual number (%d)\n", QCostControl, QCost );
-    return QCost;
+func (m *Manager) WritePLA(w io.Writer) error {
+	if err := writeText(w, fmt.Sprintf("# EXORCISM Go ESOP cover\n.i %d\n.o %d\n.p %d\n.type esop\n", m.Inputs, m.Outputs, len(m.Cubes))); err != nil {
+		return err
+	}
+	if err := WriteTableIntoFile(m, w); err != nil {
+		return err
+	}
+	return writeText(w, ".e\n")
 }
-
-
-void WriteTableIntoFile( FILE * pFile )
-// nCubesAlloc is the number of allocated cubes 
-{
-    var v, w int32;
-    var p *Cube;
-    var cOutputs int32;
-    var nOutput int32;
-    var WordSize int32;
-
-    for  p = IterCubeSetStart( ); (p != nil); p = IterCubeSetNext()  {
-        assert(p.fMark == 0, "p.fMark == 0");
-
-        // write the input variables
-        for  v = 0; v < g_CoverInfo.nVarsIn; v++  {
-            var Value int32  = GetVar( p, v );
-            if Value == VAR_NEG {
-                fmt.Fprintf(pFile, "0");
-            } else if Value == VAR_POS {
-                fmt.Fprintf(pFile, "1");
-            } else if Value == VAR_ABS {
-                fmt.Fprintf(pFile, "-");
-            } else {
-                assert(false, "0"); }
-        }
-        fmt.Fprintf(pFile, " ");
-
-        // write the output variables
-        cOutputs = 0;
-        nOutput = g_CoverInfo.nVarsOut;
-        WordSize = 8*sizeof( unsigned );
-        for  w = 0; w < g_CoverInfo.nWordsOut; w++  {
-            for  v = 0; v < WordSize; v++  {
-                if p.pCubeDataOut[w] & (1<<v) {
-                    fmt.Fprintf(pFile, "1");
-                } else {
-                    fmt.Fprintf(pFile, "0"); }
-                if cOutputs++; cOutputs == nOutput {
-                    break; }
-            }
-        }
-        fmt.Fprintf(pFile, "\n");
-    }
+func WriteResultIntoFile(m *Manager, path string) error {
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	writeErr := m.WritePLA(f)
+	closeErr := f.Close()
+	if writeErr != nil {
+		return writeErr
+	}
+	return closeErr
 }
-
-
-int WriteResultIntoFile( char * pFileName )
-// write the ESOP cover into the PLA file <NewFileName>
-{
-    var pFile *os.File;
-    var ltime int64;
-    var TimeStr string;
-
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Fprintf(pFile, "\n\nCannot open the output file\n");
-        return 1;
-    }
-
-    // get current time
-    time( &ltime );
-    TimeStr = asctime( localtime( &ltime ) );
-    // get the number of literals
-    g_CoverInfo.nLiteralsAfter = CountLiteralsCheck();
-    g_CoverInfo.QCostAfter = CountQCost();
-    fmt.Fprintf(pFile, "# EXORCISM-4 output for command line arguments: ");
-    fmt.Fprintf(pFile, "\"-Q %d -V %d\"\n", g_CoverInfo.Quality, g_CoverInfo.Verbosity);
-    fmt.Fprintf(pFile, "# Minimization performed %s", TimeStr);
-    fmt.Fprintf(pFile, "# Initial statistics: ");
-    fmt.Fprintf(pFile, "Cubes = %d  Literals = %d  QCost = %d\n", g_CoverInfo.nCubesBefore, g_CoverInfo.nLiteralsBefore, g_CoverInfo.QCostBefore);
-    fmt.Fprintf(pFile, "# Final   statistics: ");
-    fmt.Fprintf(pFile, "Cubes = %d  Literals = %d  QCost = %d\n", g_CoverInfo.nCubesInUse, g_CoverInfo.nLiteralsAfter, g_CoverInfo.QCostAfter);
-    // inlining of macro TICKS_TO_SECONDS
-    fmt.Fprintf(pFile, "# File reading and reordering time = %.2f sec\n", (float32((g_CoverInfo.TimeRead))/float32((int64(time.Second)))));
-    // inlining of macro TICKS_TO_SECONDS
-    fmt.Fprintf(pFile, "# Starting cover generation time   = %.2f sec\n", (float32((g_CoverInfo.TimeStart))/float32((int64(time.Second)))));
-    // inlining of macro TICKS_TO_SECONDS
-    fmt.Fprintf(pFile, "# Pure ESOP minimization time      = %.2f sec\n", (float32((g_CoverInfo.TimeMin))/float32((int64(time.Second)))));
-    fmt.Fprintf(pFile, ".i %d\n", g_CoverInfo.nVarsIn);
-    fmt.Fprintf(pFile, ".o %d\n", g_CoverInfo.nVarsOut);
-    fmt.Fprintf(pFile, ".p %d\n", g_CoverInfo.nCubesInUse);
-    fmt.Fprintf(pFile, ".type esop\n");
-    WriteTableIntoFile( pFile );
-    fmt.Fprintf(pFile, ".e\n");
-    _ = (pFile).Close();
-    return 0;
+func ReadPLA(r io.Reader) (*Manager, error) {
+	scan := bufio.NewScanner(r)
+	scan.Buffer(make([]byte, 4096), 16<<20)
+	ni, no, declared := -1, -1, -1
+	var rows []string
+	ended := false
+	esop := false
+	line := 0
+	for scan.Scan() {
+		line++
+		s := strings.TrimSpace(strings.SplitN(scan.Text(), "#", 2)[0])
+		if s == "" {
+			continue
+		}
+		fields := strings.Fields(s)
+		if fields[0][0] != '.' {
+			if ended {
+				return nil, fmt.Errorf("exor: data after .e at line %d", line)
+			}
+			rows = append(rows, s)
+			continue
+		}
+		switch fields[0] {
+		case ".i", ".o", ".p":
+			if len(fields) != 2 {
+				return nil, fmt.Errorf("exor: invalid directive at line %d", line)
+			}
+			n, err := strconv.Atoi(fields[1])
+			if err != nil || n < 0 {
+				return nil, fmt.Errorf("exor: invalid count at line %d", line)
+			}
+			switch fields[0] {
+			case ".i":
+				ni = n
+			case ".o":
+				no = n
+			case ".p":
+				declared = n
+			}
+		case ".type":
+			esop = true
+			if len(fields) != 2 || fields[1] != "esop" {
+				return nil, fmt.Errorf("exor: expected .type esop")
+			}
+		case ".e", ".end":
+			ended = true
+		default:
+			return nil, fmt.Errorf("exor: unsupported PLA directive %s", fields[0])
+		}
+	}
+	if err := scan.Err(); err != nil {
+		return nil, err
+	}
+	if !esop {
+		return nil, fmt.Errorf("exor: explicit .type esop is required")
+	}
+	m, err := NewManager(ni, no, Options{})
+	if err != nil {
+		return nil, err
+	}
+	if declared >= 0 && declared != len(rows) {
+		return nil, fmt.Errorf("exor: declared cube count does not match rows")
+	}
+	for _, row := range rows {
+		f := strings.Fields(row)
+		if ni == 0 && len(f) == 1 {
+			f = append([]string{""}, f...)
+		}
+		if len(f) != 2 || len(f[0]) != ni || len(f[1]) != no {
+			return nil, fmt.Errorf("exor: incorrect PLA row dimensions")
+		}
+		inputs := make([]VarValue, ni)
+		outputs := make([]bool, no)
+		for i, ch := range f[0] {
+			switch ch {
+			case '0':
+				inputs[i] = VAR_NEG
+			case '1':
+				inputs[i] = VAR_POS
+			case '-':
+				inputs[i] = VAR_ABS
+			default:
+				return nil, fmt.Errorf("exor: invalid PLA input")
+			}
+		}
+		for i, ch := range f[1] {
+			if ch != '0' && ch != '1' {
+				return nil, fmt.Errorf("exor: invalid PLA output")
+			}
+			outputs[i] = ch == '1'
+		}
+		if err = m.Add(NewCube(inputs, outputs)); err != nil {
+			return nil, err
+		}
+	}
+	return m, nil
 }
-
-///////////////////////////////////////////////////////////////////
-////////////              End of File             /////////////////
-///////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func (m *Manager) Evaluate(inputs []bool) ([]bool, error) {
+	if len(inputs) != m.Inputs {
+		return nil, fmt.Errorf("exor: wrong input count")
+	}
+	out := make([]bool, m.Outputs)
+	for _, c := range m.Cubes {
+		active := true
+		for i, v := range inputs {
+			lit := GetVar(c, i)
+			if lit == VAR_NEG && v || lit == VAR_POS && !v {
+				active = false
+				break
+			}
+		}
+		if active {
+			for i := range out {
+				out[i] = out[i] != c.Output(i)
+			}
+		}
+	}
+	return out, nil
+}
