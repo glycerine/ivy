@@ -491,45 +491,7 @@ func Gia_ManSimRelTest(p *Gia_Man_t) {
 
 
 
-func Gia_ManPatRareImprove(p *Gia_Man_t, RareLimit int32, fVerbose int32) {
-    var clk abctime  = Abc_Clock();
-    var FinalTotal, InitTotal float32;
-    var n int32;
-    var nRares int32;
-    var nChanges int32;
-    var nWords int32 = Vec_WrdSize(p.vSimsPi) / Gia_ManCiNum(p);
-    var vPatterns *Vec_Wrd_t  = p.vSimsPi; p.vSimsPi = nil;
-    InitTotal = Gia_ManPatGetTotalQuo( p, RareLimit, vPatterns, nWords );
-    for  n = 0; n < 64*nWords; n++  {
-        var clk abctime  = Abc_Clock();
-        var vRareCounts *Vec_Int_t  = Gia_SimCollectRare( p, vPatterns, RareLimit );
-        var vPat *Vec_Int_t         = Gia_ManPatCollectOne( p, vPatterns, n, nWords );
-        var vQuoIncs *Vec_Flt_t     = Gia_SimQualityImpact( p, vPat, vRareCounts );
-        var vBest *Vec_Int_t        = Gia_SimCollectBest( vQuoIncs );
-        if fVerbose != 0 {
-            var PatQuo float32  = Gia_ManPatGetOneQuo( p, RareLimit, vPatterns, nWords, n );
-            fmt.Printf("Pat %5d : Rare = %4d  Cands = %3d  Value = %8.3f  Change = %8.3f  ", n, Vec_IntSize(vRareCounts)/2, vBest ? Vec_IntSize(vBest) : 0, PatQuo, vBest ? Vec_FltEntry(vQuoIncs, Vec_IntEntry(vBest,0)) : 0);
-            Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-        }
-        if vBest != nil {
-            var VarBest int32  = Vec_IntEntry( vBest, rand()%Vec_IntSize(vBest) );
-            Abc_TtXorBit( Vec_WrdEntryP(vPatterns, VarBest*nWords), n );
-            nChanges++;
-        }
-        nRares = Vec_IntSize(vRareCounts)/2;
-        Vec_IntFree( vRareCounts );
-        Vec_IntFree( vPat );
-        Vec_FltFree( vQuoIncs );
-        Vec_IntFreeP( &vBest );
-    }
-    if fVerbose != 0 {
-        fmt.Printf("\n"); }
-    FinalTotal = Gia_ManPatGetTotalQuo( p, RareLimit, vPatterns, nWords );
-    p.vSimsPi = vPatterns;
 
-    fmt.Printf("Improved %d out of %d patterns using %d rare nodes: %.2f -> %.2f.  ", nChanges, 64*nWords, nRares, InitTotal, FinalTotal);
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-}
 
 /**Function*************************************************************
 
