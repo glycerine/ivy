@@ -33,70 +33,6 @@ import "fmt"
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-const STR_SUPER =  100
-const MAX_TREE = 10000
-
-const ( 
-    STR_NONE   =  0
-
-    STR_CONST0 =  1
-
-    STR_PI     =  2
-
-    STR_AND    =  3
-
-    STR_XOR    =  4
-
-    STR_MUX    =  5
-
-    STR_BUF    =  6
-
-    STR_PO     =  7
-
-    STR_UNUSED =  8      
-
-)
-
-
-    
-type Str_Obj_t struct {
-    Type uint32; /* C bitfield: 4 bits; review packing and truncation */     // object type
-    nFanins uint32; /* C bitfield: 28 bits; review packing and truncation */     // fanin count
-    iOffset            int32;          // place where fanins are stored
-    iTop            int32;             // top level MUX
-    iCopy            int32;            // copy of this node
-}
-    
-type Str_Ntk_t struct {
-    nObjs            int32;            // object count
-    nObjsAlloc            int32;       // alloc objects
-    pObjs     *Str_Obj_t;            // objects 
-    vFanins      Vec_Int_t;          // object fanins
-    nObjCount [STR_UNUSED]int32;
-    nTrees            int32;
-    nGroups            int32;
-    DelayGain            int32;
-}
-    
-type Str_Man_t struct {
-    // user data
-    pOld      *Gia_Man_t;            // manager
-    nLutSize             int32;        // LUT size
-    fCutMin             int32;         // cut minimization
-    // internal data
-    pNtk      *Str_Ntk_t;            // balanced network
-    // AIG under construction
-    pNew      *Gia_Man_t;            // newly constructed 
-    vDelays      *Vec_Int_t;         // delays of each object
-}
-
-func Str_NtkObj(p *Str_Ntk_t, i int32) *Str_Obj_t { assert(i < p.nObjs, "i < p.nObjs");  return p.pObjs + i;                                        }
-func Str_ObjFaninId(p *Str_Ntk_t, pObj *Str_Obj_t, i int32) int32 { return Abc_Lit2Var( Vec_IntEntry(&p.vFanins, pObj.iOffset + i) );                  }
-func Str_ObjFanin(p *Str_Ntk_t, pObj *Str_Obj_t, i int32) *Str_Obj_t { return Str_NtkObj( p, Str_ObjFaninId(p, pObj, i) );                                  }
-func Str_ObjFaninC(p *Str_Ntk_t, pObj *Str_Obj_t, i int32) int32 { return Abc_LitIsCompl( Vec_IntEntry(&p.vFanins, pObj.iOffset + i) );               }
-func Str_ObjFaninCopy(p *Str_Ntk_t, pObj *Str_Obj_t, i int32) int32 { return Abc_LitNotCond( Str_ObjFanin(p, pObj, i).iCopy, Str_ObjFaninC(p, pObj, i) ); }
-func Str_ObjId(p *Str_Ntk_t, pObj *Str_Obj_t) int32 { return pObj - p.pObjs;                                                              }
-
 // Original macro:
 // #define Str_NtkManForEachObj( p, pObj )  \
 //     for ( pObj = p->pObjs; Str_ObjId(p, pObj) < p->nObjs; pObj++ )
@@ -121,106 +57,13 @@ func Str_ObjId(p *Str_Ntk_t, pObj *Str_Obj_t) int32 { return pObj - p.pObjs;    
   SeeAlso     []
 
 ***********************************************************************/
-func Str_ObjCreate(p *Str_Ntk_t, Type int32, nFanins int32, pFanins *int32) int32 {
-    var pObj *Str_Obj_t  = p.pObjs + p.nObjs; var i int32;
-    assert(p.nObjs < p.nObjsAlloc, "p.nObjs < p.nObjsAlloc");
-    pObj.Type    = Type;
-    pObj.nFanins = nFanins;
-    pObj.iOffset = Vec_IntSize(&p.vFanins);
-    pObj.iTop    = pObj.iCopy = -1;
-    for  i = 0; i < nFanins; i++  {
-        Vec_IntPush( &p.vFanins, pFanins[i] );
-        assert(pFanins[i] >= 0, "pFanins[i] >= 0");
-    }
-    p.nObjCount[Type]++;
-    return Abc_Var2Lit( p.nObjs++, 0 );
-}
-func Str_NtkCreate(nObjsAlloc int32, nFaninsAlloc int32) *Str_Ntk_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Str_Ntk_t{};
-    // inlining of macro ABC_ALLOC
-    p.pObjs = ((Str_Obj_t *) malloc(sizeof(Str_Obj_t) * (size_t)(nObjsAlloc)));
-    p.nObjsAlloc = nObjsAlloc;
-    Str_ObjCreate( p, STR_CONST0, 0, nil );
-    Vec_IntGrow( &p.vFanins, nFaninsAlloc );
-    return p;
-}
-func Str_NtkDelete(p *Str_Ntk_t) {
-//    printf( "Total delay gain = %d.\n", p->DelayGain );
-    // inlining of macro ABC_FREE
-    p.vFanins.pArray = nil;
-    // inlining of macro ABC_FREE
-    p.pObjs = nil;
-    // inlining of macro ABC_FREE
-    p = nil;
-}
-func Str_NtkPs(p *Str_Ntk_t, clk abctime) {
-    fmt.Printf("Network contains %d ands, %d xors, %d muxes (%d trees in %d groups).  ", p.nObjCount[STR_AND], p.nObjCount[STR_XOR], p.nObjCount[STR_MUX], p.nTrees, p.nGroups);
-    Abc_PrintTime( 1, "Time", clk );
-}
-func Str_ObjReadGroup(p *Str_Ntk_t, pObj *Str_Obj_t, pnGroups *int32, pnMuxes *int32) {
-    var pObj1, pObj2 *Str_Obj_t;
-    *pnGroups = *pnMuxes = 0;
-    if pObj.iTop == 0 {
-        return; }
-    pObj1 = Str_NtkObj( p, pObj.iTop ); 
-    pObj2 = Str_NtkObj( p, pObj1.iTop );
-    *pnMuxes  = pObj1 - pObj + 1;
-    *pnGroups = (pObj2 - pObj + 1) / *pnMuxes;
-}
-func Str_NtkPrintGroups(p *Str_Ntk_t) {
-    var pObj *Str_Obj_t; 
-    var nGroups, nMuxes int32;
-    // inlining of macro Str_NtkManForEachObj
-    for  pObj = p.pObjs; Str_ObjId(p, pObj) < p.nObjs; pObj++  {
-        if pObj.Type == STR_MUX && pObj.iTop > 0 {
-            Str_ObjReadGroup( p, pObj, &nGroups, &nMuxes );
-            pObj += nGroups * nMuxes - 1;
-            fmt.Printf("%d x %d  ", nGroups, nMuxes);
-        }
-    }
-    fmt.Printf("\n");
-}
-func Str_NtkToGia(pGia *Gia_Man_t, p *Str_Ntk_t) *Gia_Man_t {
-    var pNew, pTemp *Gia_Man_t;
-    var pObj *Str_Obj_t; var k int32;
-    assert(pGia.pMuxes == nil, "pGia.pMuxes == nil");
-    pNew = Gia_ManStart( 3 * Gia_ManObjNum(pGia) / 2 );
-    pNew.pName = Abc_UtilStrsav( pGia.pName );
-    pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );
-    Gia_ManHashStart( pNew );
-    // inlining of macro Str_NtkManForEachObj
-    for  pObj = p.pObjs; Str_ObjId(p, pObj) < p.nObjs; pObj++  {
-        if pObj.Type == STR_PI {
-            pObj.iCopy = Gia_ManAppendCi( pNew );
-        } else if pObj.Type == STR_AND {
-            pObj.iCopy = 1;
-            for  k = 0; k < int32(pObj.nFanins); k++  {
-                pObj.iCopy = Gia_ManHashAnd( pNew, pObj.iCopy, Str_ObjFaninCopy(p, pObj, k) );
-            }
-        
-        } else if pObj.Type == STR_XOR {
-            pObj.iCopy = 0;
-            for  k = 0; k < int32(pObj.nFanins); k++  {
-                pObj.iCopy = Gia_ManHashXor( pNew, pObj.iCopy, Str_ObjFaninCopy(p, pObj, k) );
-            }
-        
-        } else if pObj.Type == STR_MUX {
-            pObj.iCopy = Gia_ManHashMux( pNew, Str_ObjFaninCopy(p, pObj, 2), Str_ObjFaninCopy(p, pObj, 1), Str_ObjFaninCopy(p, pObj, 0) );
-        } else if pObj.Type == STR_PO {
-            pObj.iCopy = Gia_ManAppendCo( pNew, Str_ObjFaninCopy(p, pObj, 0) );
-        } else if pObj.Type == STR_CONST0 {
-            pObj.iCopy = 0;
-        } else { assert(false, "0"); }
-    }
-    Gia_ManHashStop( pNew );
-//    assert( Gia_ManObjNum(pNew) <= Gia_ManObjNum(pGia) );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(pGia) );
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    return pNew;
-}
+
+
+
+
+
+
+
 
 
 /**Function*************************************************************
@@ -534,50 +377,8 @@ func Str_ManCheckOverlap(p *Gia_Man_t, vGroups *Vec_Wec_t) {   // check that mem
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManSimplifyXor(vSuper *Vec_Int_t) {
-    var i int32;
-    var k int32;
-    var Prev int32 = -1;
-    var This int32;
-    var fCompl int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vSuper)) && (((This) = Vec_IntEntry(vSuper, i)), 1); i++  {
-        if This == 0 {
-            continue; }
-        if This == 1 {
-            fCompl ^= 1; 
-        } else if Prev != This {
-            Vec_IntWriteEntry( vSuper, k++, This );
-Prev = This;
-        } else {
-            Prev = -1;
-k--; }
-    }
-    Vec_IntShrink( vSuper, k );
-    if Vec_IntSize( vSuper ) == 0 {
-        Vec_IntPush( vSuper, fCompl );
-    } else if fCompl != 0 {
-        Vec_IntWriteEntry( vSuper, 0, Abc_LitNot(Vec_IntEntry(vSuper, 0)) ); }
-}
-func Gia_ManSimplifyAnd(vSuper *Vec_Int_t) {
-    var i int32;
-    var k int32;
-    var Prev int32 = -1;
-    var This int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vSuper)) && (((This) = Vec_IntEntry(vSuper, i)), 1); i++  {
-        if This == 0 { Vec_IntFill(vSuper, 1, 0); return; }
-        if This == 1 {
-            continue; }
-        if Prev == -1 || Abc_Lit2Var(Prev) != Abc_Lit2Var(This) {
-            Vec_IntWriteEntry( vSuper, k++, This );
-Prev = This;
-        } else if Prev != This { Vec_IntFill(vSuper, 1, 0); return; }
-    }
-    Vec_IntShrink( vSuper, k );
-    if Vec_IntSize( vSuper ) == 0 {
-        Vec_IntPush( vSuper, 1 ); }
-}
+
+
 
 /**Function*************************************************************
 
